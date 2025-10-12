@@ -1,0 +1,2 @@
+This is a placeholder for the Sector_A map.
+Organize each sector as a separate map. Each map should reference sector Blueprints, planets, stations, and any sector-specific events.
