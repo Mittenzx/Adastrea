@@ -1,0 +1,2 @@
+This is a placeholder for space station templates.
+Define station archetypes, default modules, and customization options.
