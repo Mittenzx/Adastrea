@@ -1,0 +1,63 @@
+# Unreal Engine
+
+# Binaries
+/Binaries/
+/Build/
+/DerivedDataCache/
+/Intermediate/
+/Saved/
+/Source/ThirdParty/
+/Source/ThirdParty/**/Build/
+
+# Visual Studio
+.vs/
+*.sln
+*.suo
+*.user
+*.userprefs
+*.dbmdl
+*.dbproj
+*.dbproj.user
+
+# Mac
+*.DS_Store
+
+# Logs
+*.log
+
+# Backup
+*.bak
+*.tmp
+
+# Others
+*.pdb
+*.exe
+*.dll
+*.app
+*.dSYM/
+*.lib
+*.idb
+*.obj
+*.o
+*.class
+*.jar
+*.apk
+*.a
+*.so
+*.dylib
+*.ipa
+*.apk
+*.pdb
+*.tga
+*.jpg
+*.png
+*.wav
+*.mp3
+*.mp4
+*.mov
+*.fbx
+*.obj
+*.uasset
+*.umap
+*.uplugin
+*.uproject
