@@ -2,10 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "SpaceshipInterior.h"
 #include "Spaceship.generated.h"
-
-class ASpaceshipWeaponModule;
-class ASpaceshipEngineModule;
 
 UCLASS()
 class ADASTREA_API ASpaceship : public APawn
@@ -15,15 +13,14 @@ class ADASTREA_API ASpaceship : public APawn
 public:
     ASpaceship();
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Modules")
-    TArray<ASpaceshipWeaponModule*> WeaponModules;
+    // Reference to the walkable interior
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
+    ASpaceshipInterior* InteriorInstance;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Modules")
-    TArray<ASpaceshipEngineModule*> EngineModules;
+    // Call to enter the interior
+    UFUNCTION(BlueprintCallable, Category="Spaceship")
+    void EnterInterior(class APlayerController* PlayerController);
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stats")
-    float Health;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stats")
-    float Shield;
+protected:
+    virtual void BeginPlay() override;
 };
