@@ -1,0 +1,3 @@
+This is a placeholder for a Space Station Module Blueprint.
+Use this to create attachable modules (e.g. docking bay, trade hub, shield generator).
+BP_SpaceStation should expose attach points for these modules and allow dynamic customization.
