@@ -1,0 +1,2 @@
+This is a placeholder for the sector map UI widget.
+Create a widget Blueprint to display sectors, planets, stations, and allow navigation or fast travel.
