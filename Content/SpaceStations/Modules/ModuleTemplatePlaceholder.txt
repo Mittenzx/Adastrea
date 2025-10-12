@@ -1,0 +1,2 @@
+This is a placeholder for space station module templates.
+Create templates for common modules: docking bay, trade hub, defense turret, hangar, etc.
