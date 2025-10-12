@@ -1,0 +1,2 @@
+This is a placeholder for the Planet Blueprint.
+Use BP_Planet to create planets with customizable properties, resources, and appearance.
