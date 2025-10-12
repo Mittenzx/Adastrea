@@ -1,0 +1,2 @@
+This is a placeholder for the Sector_B map.
+Use multiple sector maps for a larger universe, loaded dynamically with World Partition or level streaming.
