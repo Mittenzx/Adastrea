@@ -1,0 +1,2 @@
+This is a placeholder for the Sector Blueprint.
+Use BP_Sector to manage sector boundaries, contained planets, stations, and events.
