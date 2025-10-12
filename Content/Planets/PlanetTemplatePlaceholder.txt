@@ -1,0 +1,2 @@
+This is a placeholder for planet templates or data assets.
+Store planet types, resources, lore, and procedural generation settings here.
