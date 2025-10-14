@@ -1,0 +1,3 @@
+// Contents of SpaceshipWeaponModule.h
+
+// ... existing code ...
