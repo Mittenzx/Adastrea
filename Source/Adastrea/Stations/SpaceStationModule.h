@@ -4,6 +4,20 @@
 #include "GameFramework/Actor.h"
 #include "SpaceStationModule.generated.h"
 
+UENUM(BlueprintType)
+enum class EStationModuleGroup : uint8
+{
+    Docking,
+    Power,
+    Storage,
+    Processing,
+    Defence,
+    Habitation,
+    Public,
+    Connection,
+    Other
+};
+
 UCLASS()
 class ADASTREA_API ASpaceStationModule : public AActor
 {
@@ -17,4 +31,7 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Module")
     float ModulePower;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Module")
+    EStationModuleGroup ModuleGroup;
 };
