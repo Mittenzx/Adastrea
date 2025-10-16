@@ -1,0 +1,255 @@
+================================================
+SPACE STATION EDITOR SYSTEM - BLUEPRINT WORKFLOW
+================================================
+
+This document provides guidance on implementing the UI for the Space Station Editor
+system using Blueprints. The C++ classes provide the foundational logic and hooks
+for Blueprint extension.
+
+================================================
+OVERVIEW
+================================================
+
+The Station Editor system consists of:
+1. ASpaceStation (C++) - Core station actor with module management
+2. ASpaceStationModule (C++) - Individual station modules
+3. UStationEditorWidget (C++) - Widget class with editor functionality
+
+================================================
+BLUEPRINT IMPLEMENTATION GUIDE
+================================================
+
+1. CREATE STATION BLUEPRINT (BP_SpaceStation)
+   - Parent Class: ASpaceStation (C++)
+   - Add visual components (meshes, effects)
+   - Add collision for module attachment points
+   - Optionally override/extend module management functions
+
+2. CREATE MODULE BLUEPRINT (BP_StationModule_Base)
+   - Parent Class: ASpaceStationModule (C++)
+   - Add module-specific components (mesh, lights, etc.)
+   - Set ModuleType property (e.g., "Docking", "Commerce", "Defense")
+   - Set ModulePower and other gameplay properties
+   
+   Example Module Types:
+   - BP_StationModule_DockingBay
+   - BP_StationModule_TradeHub
+   - BP_StationModule_ShieldGenerator
+   - BP_StationModule_ResearchLab
+   - BP_StationModule_HabitatSection
+
+3. CREATE EDITOR WIDGET BLUEPRINT (WBP_StationEditor)
+   - Parent Class: UStationEditorWidget (C++)
+   - Design UI layout with UMG:
+     * Module palette (list of available module types)
+     * 3D viewport/preview area
+     * Module properties panel
+     * Placement grid/snap controls
+     * Save/Load buttons
+   
+   Key UI Elements:
+   - Module selection buttons (call AddModule with different ModuleClass)
+   - Delete button (call RemoveModule on selected module)
+   - Position sliders/input fields (call MoveModule with new location)
+   - Module list view (use GetAllModules to populate)
+
+================================================
+SAMPLE BLUEPRINT EVENT GRAPH WORKFLOWS
+================================================
+
+WORKFLOW 1: Adding a Module from UI
+------------------------------------
+1. User clicks "Add Docking Bay" button in UI
+2. Button OnClicked event calls:
+   - Get Module Class (BP_StationModule_DockingBay)
+   - Calculate placement location (grid snap or mouse position)
+   - Call AddModule(ModuleClass, RelativeLocation)
+3. Update UI to show new module in list
+4. Select newly added module for editing
+
+Event Graph pseudocode:
+  OnAddModuleButtonClicked
+    → Get Selected Module Class
+    → Get Placement Location (from mouse/grid)
+    → Call AddModule(ModuleClass, Location)
+    → If Result IsValid
+        → Update Module List UI
+        → Select New Module
+
+WORKFLOW 2: Removing a Module
+------------------------------
+1. User selects module from list or in viewport
+2. User clicks "Remove" button
+3. Button OnClicked event calls:
+   - RemoveModule(SelectedModule)
+4. Update UI to remove module from list
+5. Optional: Play removal animation/effect
+
+Event Graph pseudocode:
+  OnRemoveButtonClicked
+    → Get Selected Module
+    → Call RemoveModule(SelectedModule)
+    → If Success
+        → Update Module List UI
+        → Clear Selection
+
+WORKFLOW 3: Moving a Module
+----------------------------
+1. User selects module from list
+2. User drags module in 3D viewport or adjusts position sliders
+3. On drag/value change:
+   - Calculate new relative location
+   - Call IsValidPlacement(NewLocation) to validate
+   - If valid, call MoveModule(SelectedModule, NewLocation)
+4. Update UI to reflect new position
+
+Event Graph pseudocode:
+  OnModuleDragged (or OnPositionSliderChanged)
+    → Get New Location from input
+    → Call IsValidPlacement(NewLocation)
+    → If Valid
+        → Call MoveModule(SelectedModule, NewLocation)
+        → Update position display in UI
+    → Else
+        → Show error feedback
+
+WORKFLOW 4: Initializing the Editor
+------------------------------------
+1. Widget is constructed (NativeConstruct called)
+2. Find or spawn a SpaceStation actor
+3. Call SetStation(StationActor)
+4. Call GetAllModules() to populate initial UI
+5. Setup input bindings for module manipulation
+
+Event Graph pseudocode:
+  On Widget Constructed
+    → Find or Spawn Station Actor
+    → Call SetStation(StationActor)
+    → Call GetAllModules()
+    → Populate Module List UI
+    → Setup Camera for editor view
+
+================================================
+ADVANCED FEATURES (OPTIONAL BLUEPRINT EXTENSIONS)
+================================================
+
+1. GRID SNAPPING
+   - Create a snap-to-grid function in Blueprint
+   - Round module positions to grid increments
+   - Visual grid overlay in 3D viewport
+
+2. COLLISION DETECTION
+   - Extend IsValidPlacement in Blueprint
+   - Use sphere/box traces to detect overlaps
+   - Highlight invalid placement areas in red
+
+3. MODULE PREVIEW
+   - Spawn a preview/ghost module while placing
+   - Show semi-transparent mesh at cursor location
+   - Update color based on valid/invalid placement
+
+4. SAVE/LOAD SYSTEM
+   - Save module array to file (positions, types, properties)
+   - Load saved configurations
+   - Support multiple station templates
+
+5. MODULE PROPERTIES EDITING
+   - Create UI panel to edit ModuleType, ModulePower
+   - Add custom properties per module type
+   - Real-time property updates
+
+6. VISUAL FEEDBACK
+   - Highlight selected module with outline
+   - Show attachment points/connectors
+   - Display module power consumption/generation
+   - Show station stats (total power, module count, etc.)
+
+================================================
+C++ FUNCTIONS AVAILABLE IN BLUEPRINT
+================================================
+
+ASpaceStation Class:
+  - AddModule(Module) → void (simple version, no position)
+  - AddModuleAtLocation(Module, RelativeLocation) → bool
+  - RemoveModule(Module) → bool
+  - MoveModule(Module, NewRelativeLocation) → bool
+  - GetModules() → Array<ASpaceStationModule>
+  - GetModulesByType(ModuleType) → Array<ASpaceStationModule>
+  - GetModuleCount() → int32
+  - Modules (Array) → Direct access to all modules
+
+UStationEditorWidget Class:
+  - AddModule(ModuleClass, RelativeLocation) → ASpaceStationModule
+  - RemoveModule(Module) → bool
+  - MoveModule(Module, NewRelativeLocation) → bool
+  - GetAllModules() → Array<ASpaceStationModule>
+  - SetStation(Station) → void
+  - IsValidPlacement(Location) → bool
+  - CurrentStation → Reference to the station being edited
+
+ASpaceStationModule Class:
+  - ModuleType (String) → Type identifier
+  - ModulePower (Float) → Power consumption/generation
+  - ModuleGroup (EStationModuleGroup) → Module category enum
+
+================================================
+EXAMPLE UI LAYOUT
+================================================
+
+┌─────────────────────────────────────────────────────────────┐
+│  Station Editor                                    [X] Close │
+├─────────────────┬───────────────────────────────────────────┤
+│                 │                                             │
+│ Module Palette  │        3D Viewport / Preview               │
+│                 │                                             │
+│ [Docking Bay]   │                                             │
+│ [Trade Hub]     │          [Station with Modules]            │
+│ [Defense]       │                                             │
+│ [Research Lab]  │                                             │
+│ [Habitat]       │                                             │
+│                 │                                             │
+├─────────────────┼───────────────────────────────────────────┤
+│                 │                                             │
+│ Module List     │        Properties Panel                    │
+│                 │                                             │
+│ • Docking-1     │  Selected: Docking Bay                     │
+│ • Trade-1       │  Type: Docking                              │
+│ • Defense-1     │  Power: -500.0                             │
+│                 │                                             │
+│ [Add] [Remove]  │  Position: X[___] Y[___] Z[___]           │
+│                 │                                             │
+└─────────────────┴───────────────────────────────────────────┘
+
+================================================
+IMPLEMENTATION CHECKLIST
+================================================
+
+□ Create BP_SpaceStation blueprint
+□ Create module blueprint variants (Docking, Trade, etc.)
+□ Create WBP_StationEditor widget blueprint
+□ Design UI layout in UMG
+□ Implement Add Module workflow
+□ Implement Remove Module workflow
+□ Implement Move Module workflow
+□ Add module selection/highlighting
+□ Implement module list view
+□ Add property editing panel
+□ Test module placement and removal
+□ Add visual feedback (highlights, previews)
+□ Optional: Add save/load functionality
+□ Optional: Add grid snapping
+□ Optional: Add collision detection
+
+================================================
+NOTES
+================================================
+
+- All C++ functions are exposed as BlueprintCallable for easy integration
+- The C++ layer handles core logic; Blueprint handles UI and user interaction
+- Extend C++ classes in Blueprint for game-specific functionality
+- Use the existing ASpaceStationModule as a base for all module types
+- CurrentStation reference must be set before using editor functions
+- Modules are automatically attached to the station when added
+- RemoveModule detaches but doesn't destroy (allows for re-use)
+
+================================================
