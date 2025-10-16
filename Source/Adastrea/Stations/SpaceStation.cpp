@@ -106,3 +106,57 @@ void ASpaceStation::SetFaction(UFactionDataAsset* NewFaction)
 {
     Faction = NewFaction;
 }
+
+// ====================
+// Advanced Trait & Diplomacy Hooks
+// ====================
+
+bool ASpaceStation::HasFactionTrait(FName TraitID) const
+{
+    if (!Faction)
+    {
+        return false;
+    }
+    
+    return Faction->HasTrait(TraitID);
+}
+
+float ASpaceStation::GetFactionTraitModifier(FName TraitID) const
+{
+    if (!Faction)
+    {
+        return 0.0f;
+    }
+    
+    return Faction->GetTraitModifier(TraitID);
+}
+
+bool ASpaceStation::IsAlliedWithFaction(FName OtherFactionID) const
+{
+    if (!Faction)
+    {
+        return false;
+    }
+    
+    return Faction->IsAlliedWith(OtherFactionID);
+}
+
+bool ASpaceStation::IsAtWarWithFaction(FName OtherFactionID) const
+{
+    if (!Faction)
+    {
+        return false;
+    }
+    
+    return Faction->IsAtWarWith(OtherFactionID);
+}
+
+int32 ASpaceStation::GetFactionRelationship(FName OtherFactionID) const
+{
+    if (!Faction)
+    {
+        return 0;
+    }
+    
+    return Faction->GetRelationshipValue(OtherFactionID);
+}

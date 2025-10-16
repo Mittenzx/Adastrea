@@ -60,6 +60,50 @@ public:
     UFUNCTION(BlueprintCallable, Category="Station")
     void SetFaction(UFactionDataAsset* NewFaction);
 
+    // ====================
+    // Advanced Trait & Diplomacy Hooks
+    // ====================
+
+    /**
+     * Check if this station's faction has a specific trait
+     * @param TraitID The trait to check for
+     * @return True if the faction has the trait
+     */
+    UFUNCTION(BlueprintCallable, Category="Station|Traits")
+    bool HasFactionTrait(FName TraitID) const;
+
+    /**
+     * Get the trait modifier value for the station's faction
+     * @param TraitID The trait to get modifier for
+     * @return The modifier value
+     */
+    UFUNCTION(BlueprintCallable, Category="Station|Traits")
+    float GetFactionTraitModifier(FName TraitID) const;
+
+    /**
+     * Check if this station's faction is allied with another faction
+     * @param OtherFactionID The faction to check alliance with
+     * @return True if allied
+     */
+    UFUNCTION(BlueprintCallable, Category="Station|Diplomacy")
+    bool IsAlliedWithFaction(FName OtherFactionID) const;
+
+    /**
+     * Check if this station's faction is at war with another faction
+     * @param OtherFactionID The faction to check war status with
+     * @return True if at war
+     */
+    UFUNCTION(BlueprintCallable, Category="Station|Diplomacy")
+    bool IsAtWarWithFaction(FName OtherFactionID) const;
+
+    /**
+     * Get relationship value between this station's faction and another
+     * @param OtherFactionID The faction to get relationship with
+     * @return Relationship value (-100 to 100)
+     */
+    UFUNCTION(BlueprintCallable, Category="Station|Diplomacy")
+    int32 GetFactionRelationship(FName OtherFactionID) const;
+
 protected:
     virtual void BeginPlay() override;
 };

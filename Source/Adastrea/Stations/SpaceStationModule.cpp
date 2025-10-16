@@ -1,4 +1,5 @@
 #include "Stations/SpaceStationModule.h"
+#include "Factions/FactionDataAsset.h"
 
 ASpaceStationModule::ASpaceStationModule()
 {
@@ -8,4 +9,15 @@ ASpaceStationModule::ASpaceStationModule()
     ModuleType = TEXT("Generic");
     ModulePower = 0.0f;
     ModuleGroup = EStationModuleGroup::Other;
+    ModuleFaction = nullptr;
+}
+
+UFactionDataAsset* ASpaceStationModule::GetModuleFaction() const
+{
+    return ModuleFaction;
+}
+
+void ASpaceStationModule::SetModuleFaction(UFactionDataAsset* NewFaction)
+{
+    ModuleFaction = NewFaction;
 }
