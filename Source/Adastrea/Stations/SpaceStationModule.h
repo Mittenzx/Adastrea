@@ -11,7 +11,7 @@ enum class EStationModuleGroup : uint8
     Power,
     Storage,
     Processing,
-    Defence,
+    Defense,
     Habitation,
     Public,
     Connection,
