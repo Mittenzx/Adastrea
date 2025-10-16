@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Stations/SpaceStationModule.h"
+#include "SpaceStationModule.h"
 #include "SpaceStation.generated.h"
 
 UCLASS()
