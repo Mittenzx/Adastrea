@@ -52,6 +52,32 @@ public:
     UFUNCTION(BlueprintCallable, Category="Station Editor")
     bool IsValidPlacement(FVector Location);
 
+    // ====================
+    // Faction Integration Hooks
+    // ====================
+
+    /**
+     * Set the faction for the current station
+     * @param NewFaction The faction to assign to the station
+     */
+    UFUNCTION(BlueprintCallable, Category="Station Editor|Faction")
+    void SetStationFaction(UFactionDataAsset* NewFaction);
+
+    /**
+     * Get available module types that match the station's faction technology level
+     * @return Array of module types that can be built
+     */
+    UFUNCTION(BlueprintCallable, Category="Station Editor|Faction")
+    TArray<FString> GetAvailableModuleTypes() const;
+
+    /**
+     * Check if a module can be added based on faction restrictions
+     * @param ModuleClass The module class to check
+     * @return True if the module can be added
+     */
+    UFUNCTION(BlueprintCallable, Category="Station Editor|Faction")
+    bool CanAddModuleForFaction(TSubclassOf<ASpaceStationModule> ModuleClass) const;
+
 protected:
     // Called when the widget is constructed
     virtual void NativeConstruct() override;
