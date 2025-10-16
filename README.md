@@ -63,19 +63,46 @@ A modular space station construction system that enables designers to build, cus
 4. Use Blueprint-callable functions to add, remove, and position modules
 
 ### Faction System
-The game includes a flexible faction system that allows designers to create and manage various galactic factions. Each faction has unique attributes, colors, and relationships.
+The game includes a flexible faction system that allows designers to create and manage various galactic factions. Each faction has unique attributes, colors, relationships, traits, and diplomacy options.
 
 **Key Components:**
 - `UFactionDataAsset` - C++ Data Asset class for defining factions
+- `FFactionTrait` - Struct for faction traits with gameplay modifiers
+- `FFactionRelationship` - Struct for inter-faction diplomacy
 - `ASpaceStation::Faction` - Reference property to assign factions to stations
+- `ASpaceStationModule::ModuleFaction` - Module-level faction assignment
 - 10 pre-designed faction templates (Solaris Union, Ironclad Consortium, etc.)
 
-**For detailed setup instructions, see:** [Assets/FactionSetupGuide.md](Assets/FactionSetupGuide.md)
+**Advanced Features:**
+- **Trait System**: Factions can have multiple traits with gameplay modifiers
+  - Blueprint-callable functions: `HasTrait()`, `GetTraitModifier()`, `GetTraits()`
+  - Categories: Military, Economic, Scientific, Diplomatic, Special
+  - Support for runtime trait addition/removal (see IterationGuide.md)
+  
+- **Diplomacy System**: Define relationships between factions
+  - Alliance and war status tracking
+  - Relationship values (-100 to 100)
+  - Trade modifiers based on relationships
+  - Blueprint-callable functions: `IsAlliedWith()`, `IsAtWarWith()`, `GetRelationship()`
+
+- **Station Integration**: Factions integrate with station and module systems
+  - Tech level restrictions on modules
+  - Faction-specific traits affect gameplay
+  - Blueprint-callable hooks on stations: `HasFactionTrait()`, `IsAlliedWithFaction()`
+
+**Documentation:**
+- **Complete Guide**: [Assets/BlueprintFactionAssetGuide.md](Assets/BlueprintFactionAssetGuide.md) - Step-by-step faction creation
+- **Faction Templates**: [Assets/FactionSetupGuide.md](Assets/FactionSetupGuide.md) - 10 pre-made factions with full specs
+- **Blueprint Workflows**: [Assets/BlueprintWorkflowTemplates.md](Assets/BlueprintWorkflowTemplates.md) - UI implementation examples
+- **Playtesting Guide**: [Assets/PlaytestingChecklist.md](Assets/PlaytestingChecklist.md) - Verification and QA checklist
+- **Iteration Guide**: [Assets/IterationGuide.md](Assets/IterationGuide.md) - Expanding faction behaviors and systems
+- **Designer Onboarding**: [Assets/DesignerOnboarding.md](Assets/DesignerOnboarding.md) - Best practices and quick start
 
 **Quick Usage:**
 1. Create a new FactionDataAsset in the Content Browser
-2. Configure faction properties (name, colors, attributes, etc.)
+2. Configure faction properties (name, colors, attributes, traits, relationships)
 3. Assign the faction to any Space Station via the Faction property
+4. Use Blueprint-callable functions to query traits and diplomacy in gameplay
 
 ## Contributing
 Contributions are welcome! Please submit a pull request or create an issue for any suggestions or improvements.

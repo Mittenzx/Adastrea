@@ -107,11 +107,23 @@ All functions marked with `UFUNCTION(BlueprintCallable)` are available as Bluepr
 ## Next Steps
 
 1. ✅ C++ foundation classes created
-2. ⏸ Create Blueprint variants (BP_SpaceStation, module BPs)
-3. ⏸ Design Widget Blueprint UI (WBP_StationEditor)
-4. ⏸ Implement event graphs for add/remove/move operations
-5. ⏸ Add visual feedback (selection highlights, placement preview)
-6. ⏸ Test in-editor and in-game
+2. ✅ Trait and diplomacy systems implemented
+3. ✅ Faction integration with stations and modules
+4. ✅ Comprehensive documentation created
+5. ⏸ Create Blueprint variants (BP_SpaceStation, module BPs)
+6. ⏸ Design Widget Blueprint UI (WBP_StationEditor)
+7. ⏸ Implement event graphs for add/remove/move operations
+8. ⏸ Add visual feedback (selection highlights, placement preview)
+9. ⏸ Test in-editor and in-game
+
+## Additional Documentation
+
+**For detailed Blueprint implementation:**
+- [Assets/BlueprintWorkflowTemplates.md](../Assets/BlueprintWorkflowTemplates.md) - Complete UI workflows and sample graphs
+- [Assets/BlueprintFactionAssetGuide.md](../Assets/BlueprintFactionAssetGuide.md) - Faction creation and integration
+- [Assets/PlaytestingChecklist.md](../Assets/PlaytestingChecklist.md) - Testing and verification guide
+- [Assets/IterationGuide.md](../Assets/IterationGuide.md) - Future expansion plans
+- [Assets/DesignerOnboarding.md](../Assets/DesignerOnboarding.md) - Team onboarding and best practices
 
 ## Notes
 

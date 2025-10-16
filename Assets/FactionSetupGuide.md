@@ -342,3 +342,67 @@ Set Initial Reputation (New Value)
 ## Support
 
 For questions or issues with the faction system, contact the development team or refer to the engine documentation for Data Assets and Blueprint integration.
+
+---
+
+## Advanced Features
+
+### Traits System
+
+Factions can now have traits that provide unique bonuses or modifiers. See [BlueprintFactionAssetGuide.md](BlueprintFactionAssetGuide.md) for detailed trait creation instructions.
+
+**Example Traits:**
+```
+Elite Training
+  - Trait ID: EliteTraining
+  - Modifier: 0.25
+  - Effect: +25% combat effectiveness
+
+Trade Hub
+  - Trait ID: TradeHub
+  - Modifier: 0.15
+  - Effect: +15% trade income
+```
+
+### Diplomacy System
+
+Factions can define relationships with other factions including alliances, wars, and trade agreements. See [BlueprintFactionAssetGuide.md](BlueprintFactionAssetGuide.md) for diplomacy setup.
+
+**Example Relationships:**
+```
+Nova Vanguard ↔ Solaris Union
+  - Relationship: 60 (friendly)
+  - Allied: Yes
+  - Trade Modifier: 1.3
+```
+
+---
+
+## Additional Documentation
+
+**For comprehensive guides, see:**
+
+- **[BlueprintFactionAssetGuide.md](BlueprintFactionAssetGuide.md)** - Complete step-by-step faction creation guide
+  - Includes trait system setup
+  - Includes diplomacy configuration
+  - Includes Blueprint integration examples
+  
+- **[BlueprintWorkflowTemplates.md](BlueprintWorkflowTemplates.md)** - Blueprint UI workflows
+  - Faction selection UI
+  - Sample event graphs
+  - Best practices
+  
+- **[PlaytestingChecklist.md](PlaytestingChecklist.md)** - Verification and testing guide
+  - Asset verification
+  - Trait system testing
+  - Diplomacy testing
+  
+- **[IterationGuide.md](IterationGuide.md)** - Expanding faction systems
+  - Runtime trait system
+  - Dynamic diplomacy
+  - Future features
+  
+- **[DesignerOnboarding.md](DesignerOnboarding.md)** - Team onboarding guide
+  - Quick start tutorials
+  - Best practices
+  - Common pitfalls
