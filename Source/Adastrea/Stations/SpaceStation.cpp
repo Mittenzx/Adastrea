@@ -10,7 +10,18 @@ void ASpaceStation::BeginPlay()
     Super::BeginPlay();
 }
 
-bool ASpaceStation::AddModule(ASpaceStationModule* Module, FVector RelativeLocation)
+void ASpaceStation::AddModule(ASpaceStationModule* Module)
+{
+    if (Module && !Modules.Contains(Module))
+    {
+        Modules.Add(Module);
+        
+        // Attach the module to this station
+        Module->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
+    }
+}
+
+bool ASpaceStation::AddModuleAtLocation(ASpaceStationModule* Module, FVector RelativeLocation)
 {
     if (!Module)
     {
@@ -21,8 +32,11 @@ bool ASpaceStation::AddModule(ASpaceStationModule* Module, FVector RelativeLocat
     Module->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
     Module->SetActorRelativeLocation(RelativeLocation);
 
-    // Add to modules array
-    Modules.Add(Module);
+    // Add to modules array if not already present
+    if (!Modules.Contains(Module))
+    {
+        Modules.Add(Module);
+    }
 
     return true;
 }
@@ -34,11 +48,11 @@ bool ASpaceStation::RemoveModule(ASpaceStationModule* Module)
         return false;
     }
 
-    // Detach the module from this station
-    Module->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-
     // Remove from modules array
     Modules.Remove(Module);
+    
+    // Detach the module from this station
+    Module->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 
     return true;
 }
@@ -56,6 +70,11 @@ bool ASpaceStation::MoveModule(ASpaceStationModule* Module, FVector NewRelativeL
     return true;
 }
 
+TArray<ASpaceStationModule*> ASpaceStation::GetModules() const
+{
+    return Modules;
+}
+
 TArray<ASpaceStationModule*> ASpaceStation::GetModulesByType(const FString& ModuleType)
 {
     TArray<ASpaceStationModule*> MatchingModules;
@@ -69,4 +88,9 @@ TArray<ASpaceStationModule*> ASpaceStation::GetModulesByType(const FString& Modu
     }
 
     return MatchingModules;
+}
+
+int32 ASpaceStation::GetModuleCount() const
+{
+    return Modules.Num();
 }

@@ -169,10 +169,13 @@ C++ FUNCTIONS AVAILABLE IN BLUEPRINT
 ================================================
 
 ASpaceStation Class:
-  - AddModule(Module, RelativeLocation) → bool
+  - AddModule(Module) → void (simple version, no position)
+  - AddModuleAtLocation(Module, RelativeLocation) → bool
   - RemoveModule(Module) → bool
   - MoveModule(Module, NewRelativeLocation) → bool
+  - GetModules() → Array<ASpaceStationModule>
   - GetModulesByType(ModuleType) → Array<ASpaceStationModule>
+  - GetModuleCount() → int32
   - Modules (Array) → Direct access to all modules
 
 UStationEditorWidget Class:
@@ -187,6 +190,7 @@ UStationEditorWidget Class:
 ASpaceStationModule Class:
   - ModuleType (String) → Type identifier
   - ModulePower (Float) → Power consumption/generation
+  - ModuleGroup (EStationModuleGroup) → Module category enum
 
 ================================================
 EXAMPLE UI LAYOUT

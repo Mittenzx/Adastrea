@@ -12,10 +12,13 @@ Main station actor that manages all attached modules.
 
 **Key Features:**
 - `TArray<ASpaceStationModule*> Modules` - Stores all attached modules
-- `AddModule(Module, Location)` - Attaches a module at a specific location
+- `AddModule(Module)` - Attaches a module to the station (simple version)
+- `AddModuleAtLocation(Module, Location)` - Attaches a module at a specific location
 - `RemoveModule(Module)` - Detaches a module from the station
 - `MoveModule(Module, NewLocation)` - Repositions an attached module
+- `GetModules()` - Returns all attached modules
 - `GetModulesByType(Type)` - Filters modules by their type string
+- `GetModuleCount()` - Returns the number of attached modules
 
 #### 2. **ASpaceStationModule** (`Source/Adastrea/Stations/SpaceStationModule.h/cpp`)
 Base class for all station modules (docking bays, trade hubs, etc.).
@@ -23,6 +26,7 @@ Base class for all station modules (docking bays, trade hubs, etc.).
 **Key Properties:**
 - `FString ModuleType` - Identifies the module type (e.g., "Docking", "Commerce")
 - `float ModulePower` - Power consumption or generation
+- `EStationModuleGroup ModuleGroup` - Module category enum (Docking, Power, Storage, etc.)
 
 #### 3. **UStationEditorWidget** (`Source/Adastrea/UI/StationEditorWidget.h/cpp`)
 Widget class providing UI hooks for the station editor.
@@ -84,10 +88,13 @@ All classes are ready to use. Simply include the headers in your code:
 All functions marked with `UFUNCTION(BlueprintCallable)` are available as Blueprint nodes:
 
 **From ASpaceStation:**
-- Add Module
+- Add Module (simple version)
+- Add Module At Location
 - Remove Module
 - Move Module
+- Get Modules
 - Get Modules By Type
+- Get Module Count
 
 **From UStationEditorWidget:**
 - Add Module (spawns and adds)

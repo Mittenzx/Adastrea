@@ -39,8 +39,8 @@ ASpaceStationModule* UStationEditorWidget::AddModule(TSubclassOf<ASpaceStationMo
 
     if (NewModule)
     {
-        // Add the module to the station
-        CurrentStation->AddModule(NewModule, RelativeLocation);
+        // Add the module to the station at the specified location
+        CurrentStation->AddModuleAtLocation(NewModule, RelativeLocation);
     }
 
     return NewModule;

@@ -7,4 +7,5 @@ ASpaceStationModule::ASpaceStationModule()
     // Default values
     ModuleType = TEXT("Generic");
     ModulePower = 0.0f;
+    ModuleGroup = EStationModuleGroup::Other;
 }
