@@ -45,6 +45,23 @@ adastrea/
 
 ## Features
 
+### Space Station Editor System
+A modular space station construction system that enables designers to build, customize, and manage space stations through Blueprint-friendly C++ classes.
+
+**Key Components:**
+- `ASpaceStation` - Core station actor with module management (add, remove, move modules)
+- `ASpaceStationModule` - Base class for station modules with type classification
+- `UStationEditorWidget` - Widget class providing UI hooks for station editing
+- `EStationModuleGroup` - Module categorization enum (Docking, Power, Storage, Defence, etc.)
+
+**For detailed implementation guide, see:** [Content/Blueprints/STATION_EDITOR_README.md](Content/Blueprints/STATION_EDITOR_README.md)
+
+**Quick Usage:**
+1. Create Blueprint extending `ASpaceStation` for your custom station
+2. Create module Blueprints extending `ASpaceStationModule` (e.g., docking bays, trade hubs)
+3. Create Widget Blueprint extending `UStationEditorWidget` for the editor UI
+4. Use Blueprint-callable functions to add, remove, and position modules
+
 ### Faction System
 The game includes a flexible faction system that allows designers to create and manage various galactic factions. Each faction has unique attributes, colors, and relationships.
 
