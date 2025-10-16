@@ -25,15 +25,40 @@ AdAstra is an open-world space flight game built on Unreal Engine. Players can e
 ## Folder Structure
 ```
 adastrea/
-├── Assets/                 # Game assets (models, textures, sounds)
+├── Assets/                 # Game assets and documentation
+│   └── FactionSetupGuide.md # Faction system documentation
 ├── Blueprints/             # Game blueprints
 ├── Config/                 # Configuration files
 ├── Content/                # Game content (levels, materials)
 ├── Source/                 # Source code
 │   ├── AdAstra/            # Main game module
-│   └── AdAstraEditor/      # Editor module
+│   ├── AdAstraEditor/      # Editor module
+│   └── Adastrea/           # Game systems
+│       ├── Characters/     # Character classes
+│       ├── Factions/       # Faction system (Data Assets)
+│       ├── Planets/        # Planet actors
+│       ├── Ships/          # Spaceship actors and components
+│       ├── Stations/       # Space station actors
+│       └── UI/             # User interface widgets
 └── README.md               # Project documentation
 ```
+
+## Features
+
+### Faction System
+The game includes a flexible faction system that allows designers to create and manage various galactic factions. Each faction has unique attributes, colors, and relationships.
+
+**Key Components:**
+- `UFactionDataAsset` - C++ Data Asset class for defining factions
+- `ASpaceStation::Faction` - Reference property to assign factions to stations
+- 10 pre-designed faction templates (Solaris Union, Ironclad Consortium, etc.)
+
+**For detailed setup instructions, see:** [Assets/FactionSetupGuide.md](Assets/FactionSetupGuide.md)
+
+**Quick Usage:**
+1. Create a new FactionDataAsset in the Content Browser
+2. Configure faction properties (name, colors, attributes, etc.)
+3. Assign the faction to any Space Station via the Faction property
 
 ## Contributing
 Contributions are welcome! Please submit a pull request or create an issue for any suggestions or improvements.

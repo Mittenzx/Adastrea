@@ -5,6 +5,9 @@
 #include "SpaceStationModule.h"
 #include "SpaceStation.generated.h"
 
+// Forward declaration
+class UFactionDataAsset;
+
 UCLASS()
 class ADASTREA_API ASpaceStation : public AActor
 {
@@ -12,6 +15,10 @@ class ADASTREA_API ASpaceStation : public AActor
 
 public:
     ASpaceStation();
+
+    // Faction this station belongs to
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station")
+    UFactionDataAsset* Faction;
 
     // Array of attached modules
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station")
@@ -32,6 +39,14 @@ public:
     // Get the number of attached modules
     UFUNCTION(BlueprintCallable, Category="Station")
     int32 GetModuleCount() const;
+
+    // Get the faction this station belongs to
+    UFUNCTION(BlueprintCallable, Category="Station")
+    UFactionDataAsset* GetFaction() const;
+
+    // Set the faction this station belongs to
+    UFUNCTION(BlueprintCallable, Category="Station")
+    void SetFaction(UFactionDataAsset* NewFaction);
 
 protected:
     virtual void BeginPlay() override;

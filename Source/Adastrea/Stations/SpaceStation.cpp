@@ -1,8 +1,10 @@
 #include "Stations/SpaceStation.h"
+#include "Factions/FactionDataAsset.h"
 
 ASpaceStation::ASpaceStation()
 {
     PrimaryActorTick.bCanEverTick = false;
+    Faction = nullptr;
 }
 
 void ASpaceStation::BeginPlay()
@@ -44,4 +46,14 @@ TArray<ASpaceStationModule*> ASpaceStation::GetModules() const
 int32 ASpaceStation::GetModuleCount() const
 {
     return Modules.Num();
+}
+
+UFactionDataAsset* ASpaceStation::GetFaction() const
+{
+    return Faction;
+}
+
+void ASpaceStation::SetFaction(UFactionDataAsset* NewFaction)
+{
+    Faction = NewFaction;
 }
