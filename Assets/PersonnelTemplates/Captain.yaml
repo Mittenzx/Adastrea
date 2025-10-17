@@ -1,0 +1,126 @@
+# Captain Personnel Template
+# Copy this template and fill in the values to create a new Captain personnel asset
+
+PersonnelID: "Captain_[YourName]"  # Unique identifier (e.g., "Captain_JohnSmith")
+PersonnelName: "[Captain's Name]"  # Display name (e.g., "Captain John Smith")
+
+# Basic Identity
+Biography: |
+  [Write the captain's background story here.
+  Include their career history, major achievements, and motivations.
+  This can be multiple lines.]
+Age: 45  # Typically 35-60 for captains
+Gender: "Male"  # Male, Female, Non-Binary, Other
+Species: "Human"  # Human, Alien, Synthetic, etc.
+Nationality: "United Earth"  # Origin faction or planet
+Tags:
+  - "Captain"
+  - "Leader"
+  - "Experienced"
+
+# Role and Assignment
+PrimaryRole: "Captain"
+CurrentAssignment: "[Ship/Station Name]"  # e.g., "USS Endeavor"
+Department: "Command"
+ManagerID: "None"  # Captains typically report to no one or fleet admirals
+DirectReports:
+  - "XO_[Name]"
+  - "Navigator_[Name]"
+  - "Engineer_[Name]"
+  # Add more as needed
+
+# Skills and Experience
+OverallSkillLevel: 9  # 1-10, captains should be 8-10
+TotalExperience: 25000  # Total experience points earned
+Skills:
+  - SkillName: "Leadership"
+    SkillLevel: 10
+    ExperiencePoints: 5000
+  - SkillName: "Navigation"
+    SkillLevel: 8
+    ExperiencePoints: 3000
+  - SkillName: "Tactical"
+    SkillLevel: 9
+    ExperiencePoints: 4000
+  - SkillName: "Diplomacy"
+    SkillLevel: 7
+    ExperiencePoints: 2000
+  - SkillName: "Engineering"
+    SkillLevel: 6
+    ExperiencePoints: 1500
+Specialties:
+  - "Command and Control"
+  - "Crisis Management"
+  - "Fleet Coordination"
+
+# Status and Condition
+Morale: 80  # 0-100, captains should maintain high morale
+Health: 90  # 0-100
+Fatigue: 20  # 0-100, lower is better
+Loyalty: 85  # 0-100, loyalty to player/organization
+Reputation: 75  # -100 to 100, standing in the galaxy
+
+# Employment
+Salary: 15000  # Monthly salary in credits
+ContractDuration: 0  # 0 = indefinite, or number of months
+ContractMonthsRemaining: 0  # Months left on contract
+
+# Personality and Traits
+PersonalityType: "Charismatic Leader"
+PersonalityDescription: |
+  [Describe the captain's personality, leadership style, and character traits.
+  Are they stern but fair? Diplomatic? Bold and aggressive?]
+Traits:
+  - TraitName: "Natural Leader"
+    TraitDescription: "Inspires crew and improves overall morale"
+    TraitID: "NaturalLeader"
+    ModifierValue: 1.2  # 20% bonus to crew morale
+  - TraitName: "Combat Veteran"
+    TraitDescription: "Experienced in ship-to-ship combat"
+    TraitID: "CombatVeteran"
+    ModifierValue: 1.15  # 15% bonus to tactical effectiveness
+  - TraitName: "Diplomatic"
+    TraitDescription: "Skilled in negotiations and conflict resolution"
+    TraitID: "Diplomatic"
+    ModifierValue: 1.1  # 10% bonus to diplomacy checks
+
+# Relationships
+Relationships:
+  - TargetPersonnelID: "XO_[Name]"
+    RelationshipType: "Trusted Second"
+    RelationshipStrength: 80  # -100 to 100
+    Notes: "Long-time friend and trusted advisor"
+  - TargetPersonnelID: "Engineer_[Name]"
+    RelationshipType: "Professional"
+    RelationshipStrength: 50
+    Notes: "Respects their technical expertise"
+  # Add more relationships as needed
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Leadership Effectiveness"
+    Value: 90  # 0-100
+    Trend: 5.0  # Positive = improving
+  - MetricName: "Mission Success Rate"
+    Value: 85
+    Trend: 2.0
+  - MetricName: "Crew Satisfaction"
+    Value: 80
+    Trend: 3.0
+  - MetricName: "Combat Performance"
+    Value: 88
+    Trend: 1.0
+
+# Past Assignments
+PastAssignments:
+  - AssignmentLocation: "[Previous Ship Name]"
+    RoleHeld: "Executive Officer"
+    DurationMonths: 36
+    PerformanceRating: 5  # 1-5 stars
+    Notes: "Promoted to Captain after exemplary service"
+  - AssignmentLocation: "[Earlier Ship Name]"
+    RoleHeld: "Navigator"
+    DurationMonths: 24
+    PerformanceRating: 4
+    Notes: "Led several successful deep-space missions"
+  # Add more as needed

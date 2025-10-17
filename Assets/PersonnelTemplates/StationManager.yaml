@@ -1,0 +1,145 @@
+# Station Manager Personnel Template
+# Copy this template and fill in the values to create a new Station Manager personnel asset
+
+PersonnelID: "StationManager_[YourName]"  # Unique identifier (e.g., "StationManager_CommGray")
+PersonnelName: "[Station Manager's Name]"  # Display name (e.g., "Commander Rachel Gray")
+
+# Basic Identity
+Biography: |
+  [Write the station manager's background story here.
+  Include their administrative experience, major achievements, and leadership style.
+  This can be multiple lines.]
+Age: 48
+Gender: "Female"
+Species: "Human"
+Nationality: "Outer Rim Colonies"
+Tags:
+  - "StationManager"
+  - "Administrator"
+  - "Leader"
+
+# Role and Assignment
+PrimaryRole: "StationManager"
+CurrentAssignment: "[Station Name]"
+Department: "Station Command"
+ManagerID: "None"  # Station managers typically report to regional authorities
+DirectReports:
+  - "StationStaff_[Name1]"
+  - "StationStaff_[Name2]"
+  - "ModuleStaff_[Name3]"
+  - "SecurityOfficer_[Name]"
+  - "Quartermaster_[Name]"
+  # Add more as needed
+
+# Skills and Experience
+OverallSkillLevel: 9  # 1-10, station managers should be 8-10
+TotalExperience: 22000
+Skills:
+  - SkillName: "Administration"
+    SkillLevel: 10
+    ExperiencePoints: 6000
+  - SkillName: "Leadership"
+    SkillLevel: 9
+    ExperiencePoints: 5000
+  - SkillName: "Resource Management"
+    SkillLevel: 9
+    ExperiencePoints: 4500
+  - SkillName: "Diplomacy"
+    SkillLevel: 8
+    ExperiencePoints: 3000
+  - SkillName: "Trade & Commerce"
+    SkillLevel: 8
+    ExperiencePoints: 2500
+  - SkillName: "Security Management"
+    SkillLevel: 7
+    ExperiencePoints: 2000
+Specialties:
+  - "Station Operations"
+  - "Trade Negotiations"
+  - "Crisis Management"
+
+# Status and Condition
+Morale: 75
+Health: 85
+Fatigue: 30
+Loyalty: 80
+Reputation: 70
+
+# Employment
+Salary: 12000
+ContractDuration: 0  # Indefinite contract
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Pragmatic Administrator"
+PersonalityDescription: |
+  [Describe the station manager's personality. Are they business-focused or people-focused?
+  How do they balance competing interests? What's their management style?]
+Traits:
+  - TraitName: "Efficient Manager"
+    TraitDescription: "Optimizes station operations and resource usage"
+    TraitID: "EfficientManager"
+    ModifierValue: 1.20  # 20% bonus to station productivity
+  - TraitName: "Negotiator"
+    TraitDescription: "Skilled at trade deals and conflict resolution"
+    TraitID: "Negotiator"
+    ModifierValue: 1.15  # 15% bonus to trade profits
+  - TraitName: "Well Connected"
+    TraitDescription: "Has extensive network of contacts across the sector"
+    TraitID: "WellConnected"
+    ModifierValue: 1.10  # 10% bonus to reputation gains
+
+# Relationships
+Relationships:
+  - TargetPersonnelID: "SecurityOfficer_[Name]"
+    RelationshipType: "Direct Report"
+    RelationshipStrength: 70
+    Notes: "Depends on them to maintain station security"
+  - TargetPersonnelID: "Quartermaster_[Name]"
+    RelationshipType: "Direct Report"
+    RelationshipStrength: 75
+    Notes: "Works closely on resource management"
+  - TargetPersonnelID: "Trader_[Name]"
+    RelationshipType: "Business Partner"
+    RelationshipStrength: 65
+    Notes: "Frequent trade negotiations"
+  - TargetPersonnelID: "Captain_[Name]"
+    RelationshipType: "Professional"
+    RelationshipStrength: 60
+    Notes: "Regular visitor to the station"
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Station Efficiency"
+    Value: 90
+    Trend: 3.0
+  - MetricName: "Trade Volume"
+    Value: 85
+    Trend: 4.0
+  - MetricName: "Staff Satisfaction"
+    Value: 80
+    Trend: 2.0
+  - MetricName: "Security Incidents"
+    Value: 88  # Higher = fewer incidents
+    Trend: 1.0
+  - MetricName: "Profit Margin"
+    Value: 82
+    Trend: 5.0
+
+# Past Assignments
+PastAssignments:
+  - AssignmentLocation: "[Previous Station]"
+    RoleHeld: "Deputy Station Manager"
+    DurationMonths: 42
+    PerformanceRating: 5
+    Notes: "Promoted to full manager after exceptional performance"
+  - AssignmentLocation: "[Trading Hub]"
+    RoleHeld: "Trade Coordinator"
+    DurationMonths: 36
+    PerformanceRating: 4
+    Notes: "Increased trade volume by 40%"
+  - AssignmentLocation: "[Corporate Office]"
+    RoleHeld: "Operations Manager"
+    DurationMonths: 24
+    PerformanceRating: 4
+    Notes: "Managed logistics for multiple facilities"
