@@ -1,0 +1,62 @@
+# Sovereign-class Command Cruiser Template
+# Capital flagship with command facilities, combat prowess, and diplomatic capabilities
+
+BasicInfo:
+  ShipName: "Sovereign Command Cruiser"
+  Description: "A capital-class command vessel designed to serve as a fleet flagship. The Sovereign combines formidable combat capabilities with advanced command and control systems, diplomatic facilities, and carrier operations."
+  ShipClass: "Command Cruiser"
+  ShipID: "SovereignCommand"
+
+CoreStats:
+  HullStrength: 15000.0         # Massive capital ship hull
+  CargoCapacity: 2000.0         # Substantial supply capacity
+  CrewRequired: 200             # Large command crew
+  MaxCrew: 500                  # Full fleet staff
+  ModularPoints: 20             # Extensive customization
+
+CombatStats:
+  ArmorRating: 400.0            # Capital ship armor
+  ShieldStrength: 8000.0        # Powerful military shields
+  ShieldRechargeRate: 50.0      # Advanced shield generators
+  WeaponSlots: 15               # Multiple weapon batteries
+  WeaponPowerCapacity: 15000.0  # Massive weapons power
+  PointDefenseRating: 10.0      # Maximum point defense coverage
+
+MobilityStats:
+  MaxSpeed: 450.0               # Moderate speed for size
+  Acceleration: 35.0            # Slow acceleration (capital ship)
+  Maneuverability: 4            # Limited maneuverability
+  JumpRange: 15.0               # Good jump range
+  FuelCapacity: 5000.0          # Massive fuel reserves
+  FuelConsumptionRate: 250.0    # Heavy fuel consumption
+
+UtilityStats:
+  SensorRange: 30000.0          # Fleet-wide sensor coverage
+  SensorResolution: 10          # Maximum sensor resolution
+  StealthRating: 2              # Poor stealth (capital ship signature)
+  RepairSystemRating: 9         # Advanced repair facilities
+  ScienceRating: 8              # Comprehensive science labs
+  MedicalRating: 10             # Full hospital facilities
+
+OperationalStats:
+  PowerCapacity: 25000.0        # Enormous power generation
+  LifeSupportRating: 10         # Advanced life support
+  MaintenanceLevel: 9           # High maintenance requirements
+  HangarCapacity: 20            # Full fighter wing
+  DroneCapacity: 100            # Extensive drone complement
+  AISystemRating: 10            # Advanced tactical AI
+
+AdvancedStats:
+  DiplomacyRating: 9            # Extensive diplomatic facilities
+  BoardingCapability: 9         # Elite marine complement
+  CustomizableSlots: 15         # Command module customization
+  EWarRating: 10                # Advanced electronic warfare suite
+  MiningRating: 0               # No mining capability
+
+Lore:
+  Manufacturer: "Imperial Fleet Yards"
+  YearBuilt: 2505
+  RarityTier: "Legendary"
+  LoreNotes: "The Sovereign-class represents the ultimate expression of naval engineering. These flagship vessels serve as mobile command centers, capable of coordinating entire fleet operations while holding their own in any engagement. Only the most accomplished commanders are entrusted with these prestigious vessels."
+  PrimaryColor: [0.1, 0.2, 0.4, 1.0]    # Navy blue
+  SecondaryColor: [0.9, 0.8, 0.2, 1.0]  # Gold trim
