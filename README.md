@@ -45,6 +45,48 @@ adastrea/
 
 ## Features
 
+### Spaceship Data Asset System
+A comprehensive spaceship specification system that allows designers to create detailed ship configurations as Blueprint Data Assets without writing C++ code.
+
+**Key Components:**
+- `USpaceshipDataAsset` - Complete ship specification data asset with all stat categories
+- Core Stats: Hull strength, cargo capacity, crew requirements, modular points
+- Combat Stats: Armor, shields, weapons, point defense systems
+- Mobility Stats: Speed, acceleration, maneuverability, jump range, fuel
+- Utility Stats: Sensors, stealth, repair, science, medical systems
+- Operational Stats: Power, life support, maintenance, hangars, drones, AI
+- Advanced Stats: Diplomacy, boarding, customization slots, electronic warfare, mining
+- Lore/Flavor: Manufacturer, year built, rarity tier, colors, lore notes
+
+**Ship Templates Available:**
+- **Pathfinder Scout** - Fast reconnaissance vessel with exceptional sensors
+- **Warhammer Gunship** - Heavy combat ship with devastating firepower
+- **Merchant Trader** - Large cargo hauler optimized for trade routes
+- **Starliner Luxury** - Premium passenger vessel with diplomatic facilities
+- **Excavator Mining** - Industrial mining barge with resource extraction tools
+- **Sovereign Command** - Capital flagship with command and carrier operations
+
+**Blueprint-Callable Functions:**
+- `GetCombatRating()` - Calculate overall combat effectiveness (0-100)
+- `GetMobilityRating()` - Calculate overall mobility (0-100)
+- `GetUtilityRating()` - Calculate overall utility (0-100)
+- `IsSuitableForRole(Role)` - Check if ship fits a specific role
+- `GetSizeCategory()` - Get ship size classification
+- `GetOperationalCost()` - Calculate daily maintenance cost
+
+**Documentation:**
+- **Complete Guide**: [Assets/SpaceshipDataAssetGuide.md](Assets/SpaceshipDataAssetGuide.md) - Full ship creation walkthrough
+- **Templates Reference**: [Assets/SpaceshipTemplates.md](Assets/SpaceshipTemplates.md) - All ship templates with stats
+- **Workflow Guide**: [Assets/SpaceshipDesignerWorkflow.md](Assets/SpaceshipDesignerWorkflow.md) - Best practices and workflows
+- **YAML Templates**: [Assets/SpaceshipTemplates/](Assets/SpaceshipTemplates/) - Copy-paste ready ship configurations
+
+**Quick Usage:**
+1. Create a new SpaceshipDataAsset in the Content Browser
+2. Use YAML templates from `Assets/SpaceshipTemplates/` as reference
+3. Configure all stat categories (core, combat, mobility, utility, operational, advanced, lore)
+4. Test with Blueprint-callable helper functions
+5. Integrate into your spaceship Blueprint actors
+
 ### Space Station Editor System
 A modular space station construction system that enables designers to build, customize, and manage space stations through Blueprint-friendly C++ classes.
 

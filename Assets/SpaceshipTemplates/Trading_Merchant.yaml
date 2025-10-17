@@ -1,0 +1,62 @@
+# Merchant-class Trading Vessel Template
+# Large cargo hauler optimized for commercial trade routes
+
+BasicInfo:
+  ShipName: "Merchant Trader"
+  Description: "A reliable cargo hauler built for the commercial shipping lanes. The Merchant-class prioritizes cargo capacity, fuel efficiency, and crew comfort over combat capabilities."
+  ShipClass: "Trading Vessel"
+  ShipID: "MerchantTrader"
+
+CoreStats:
+  HullStrength: 2500.0          # Moderate hull strength
+  CargoCapacity: 5000.0         # Massive cargo hold
+  CrewRequired: 8               # Small crew for automation
+  MaxCrew: 15                   # Additional crew quarters
+  ModularPoints: 10             # Excellent customization
+
+CombatStats:
+  ArmorRating: 80.0             # Light commercial armor
+  ShieldStrength: 1200.0        # Basic defensive shields
+  ShieldRechargeRate: 12.0      # Standard recharge
+  WeaponSlots: 2                # Minimal defensive weapons
+  WeaponPowerCapacity: 1000.0   # Limited weapons capacity
+  PointDefenseRating: 4.0       # Basic point defense
+
+MobilityStats:
+  MaxSpeed: 550.0               # Moderate cruise speed
+  Acceleration: 55.0            # Decent acceleration
+  Maneuverability: 5            # Average maneuverability
+  JumpRange: 18.0               # Good jump range for trade routes
+  FuelCapacity: 4000.0          # Large fuel tanks
+  FuelConsumptionRate: 120.0    # Efficient for size
+
+UtilityStats:
+  SensorRange: 10000.0          # Standard sensor range
+  SensorResolution: 5           # Adequate sensors
+  StealthRating: 3              # Poor stealth (large cargo vessel)
+  RepairSystemRating: 5         # Good maintenance systems
+  ScienceRating: 2              # Minimal science equipment
+  MedicalRating: 4              # Basic medical bay
+
+OperationalStats:
+  PowerCapacity: 6000.0         # Good power generation
+  LifeSupportRating: 8          # Excellent life support
+  MaintenanceLevel: 4           # Moderate maintenance
+  HangarCapacity: 1             # Single shuttle bay
+  DroneCapacity: 8              # Cargo handling drones
+  AISystemRating: 7             # Advanced navigation/trade AI
+
+AdvancedStats:
+  DiplomacyRating: 6            # Trade negotiations
+  BoardingCapability: 2         # Minimal boarding defense
+  CustomizableSlots: 8          # Cargo module customization
+  EWarRating: 2                 # Basic electronic systems
+  MiningRating: 1               # No mining, but can haul ore
+
+Lore:
+  Manufacturer: "Stellar Commerce Industries"
+  YearBuilt: 2495
+  RarityTier: "Common"
+  LoreNotes: "The workhorse of civilian shipping, the Merchant-class can be found in every major trade hub across known space. Reliable, efficient, and profitable - the three pillars of successful commerce."
+  PrimaryColor: [0.9, 0.7, 0.2, 1.0]    # Gold/yellow
+  SecondaryColor: [0.3, 0.3, 0.4, 1.0]  # Blue-gray

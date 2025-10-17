@@ -1,0 +1,62 @@
+# Starliner-class Luxury Liner Template
+# Premium passenger vessel with exceptional comfort and amenities
+
+BasicInfo:
+  ShipName: "Starliner Luxury Cruiser"
+  Description: "An opulent passenger vessel designed for the wealthy elite. The Starliner offers unparalleled comfort, entertainment, and diplomatic facilities, making it the choice for high-society travel and negotiations."
+  ShipClass: "Luxury Liner"
+  ShipID: "StarlinerLuxury"
+
+CoreStats:
+  HullStrength: 3000.0          # Solid hull with safety features
+  CargoCapacity: 500.0          # Moderate cargo for supplies/luggage
+  CrewRequired: 40              # Large service crew
+  MaxCrew: 200                  # Massive passenger capacity
+  ModularPoints: 12             # Extensive customization options
+
+CombatStats:
+  ArmorRating: 100.0            # Reinforced passenger protection
+  ShieldStrength: 2000.0        # Strong protective shields
+  ShieldRechargeRate: 20.0      # Good shield systems
+  WeaponSlots: 3                # Defensive weapons only
+  WeaponPowerCapacity: 1500.0   # Limited offensive capability
+  PointDefenseRating: 8.0       # Excellent point defense for safety
+
+MobilityStats:
+  MaxSpeed: 650.0               # Fast cruise speed
+  Acceleration: 70.0            # Smooth acceleration
+  Maneuverability: 6            # Good handling
+  JumpRange: 20.0               # Excellent jump range
+  FuelCapacity: 3500.0          # Large fuel capacity
+  FuelConsumptionRate: 140.0    # Moderate consumption
+
+UtilityStats:
+  SensorRange: 12000.0          # Good sensor suite
+  SensorResolution: 7           # High-quality sensors
+  StealthRating: 4              # Average stealth
+  RepairSystemRating: 7         # Excellent maintenance systems
+  ScienceRating: 4              # Moderate science facilities
+  MedicalRating: 9              # State-of-the-art medical bay
+
+OperationalStats:
+  PowerCapacity: 10000.0        # High power for amenities
+  LifeSupportRating: 10         # Luxury life support
+  MaintenanceLevel: 6           # Higher maintenance for luxury systems
+  HangarCapacity: 3             # VIP shuttles
+  DroneCapacity: 20             # Service drones
+  AISystemRating: 8             # Advanced hospitality AI
+
+AdvancedStats:
+  DiplomacyRating: 10           # Exceptional diplomatic facilities
+  BoardingCapability: 3         # Security personnel only
+  CustomizableSlots: 10         # Extensive interior customization
+  EWarRating: 3                 # Basic electronic systems
+  MiningRating: 0               # No mining capability
+
+Lore:
+  Manufacturer: "Celestial Voyages Corporation"
+  YearBuilt: 2503
+  RarityTier: "Legendary"
+  LoreNotes: "The Starliner-class represents the apex of civilian spacecraft design. Used by diplomats, celebrities, and the ultra-wealthy, these vessels feature private suites, gourmet dining, entertainment venues, and conference facilities that rival planetary installations."
+  PrimaryColor: [0.95, 0.95, 0.98, 1.0]  # Pearl white
+  SecondaryColor: [0.7, 0.5, 0.9, 1.0]   # Royal purple
