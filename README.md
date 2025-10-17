@@ -104,55 +104,6 @@ The game includes a flexible faction system that allows designers to create and 
 3. Assign the faction to any Space Station via the Faction property
 4. Use Blueprint-callable functions to query traits and diplomacy in gameplay
 
-### Material Data Asset System
-A comprehensive material and resource management system that defines all physical items, resources, and commodities in the game. Materials integrate with station modules, storage systems, and the economy.
-
-**Key Components:**
-- `UMaterialDataAsset` - C++ Data Asset class for defining materials
-- `EMaterialCategory` - Material classification (Mineral, Component, Electronics, ShipPart, Food, etc.)
-- `EStorageType` - Storage requirements (Solid, Liquid, Gas, Refrigerated, Hazardous)
-- `EMaterialRarity` - Rarity levels (Common to Legendary)
-- Material stats: value, mass, tags, module compatibility
-
-**Material Categories:**
-- **Minerals**: Raw ores (iron ore, titanium ore, crystalline quartz)
-- **Refined Minerals**: Processed materials (iron ingot, titanium ingot, steel alloy)
-- **Components**: Manufactured parts (actuators, power cells, cooling systems)
-- **Electronics**: Tech components (circuit boards, quantum processors, sensor arrays)
-- **Construction Parts**: Building materials (hull plates, support beams, pressure seals)
-- **Ship Parts**: Spacecraft components (reactor cores, thruster assemblies, shield generators)
-- **Food**: Consumables (protein rations, hydroponic vegetables, nutrient paste)
-- **Research**: Scientific items (research data, alien artifacts, experimental compounds)
-- **Organic**: Biological materials (bio samples, medical supplies, genetic material)
-- **Synthetic**: Manufactured substances (nanomaterials, synthetic fuel, polymers)
-
-**Advanced Features:**
-- **Tag System**: General gameplay tags for filtering and queries
-  - Blueprint-callable functions: `HasTag()`, `GetTags()`
-  - Categories: Metal, RawMaterial, Electronics, Construction, Energy, Food, Research, etc.
-  
-- **Module Integration**: Materials specify compatible station modules
-  - Module tags define which modules can process materials
-  - Blueprint-callable functions: `CanBeProcessedByModule()`, `GetModuleTags()`
-  - Supports crafting chains and resource processing
-
-- **Storage Management**: Automatic volume calculations and special requirements
-  - Storage type determines handling needs
-  - Blueprint-callable functions: `GetStorageVolume()`, `RequiresSpecialStorage()`
-  - Integration with station storage modules
-
-**Documentation:**
-- **Complete Guide**: [Assets/MaterialSystemGuide.md](Assets/MaterialSystemGuide.md) - Full designer documentation
-- **Material Templates**: [Assets/MaterialTemplates.yaml](Assets/MaterialTemplates.yaml) - 25+ example materials with all categories
-- **Integration Notes**: Module connectivity, storage systems, and crafting chains
-
-**Quick Usage:**
-1. Create a new MaterialDataAsset in the Content Browser
-2. Configure material properties (name, category, storage type, stats)
-3. Add gameplay tags and module tags for integration
-4. Use Blueprint-callable functions to query material properties in gameplay
-5. Connect materials to station modules via module tags
-
 ## Contributing
 Contributions are welcome! Please submit a pull request or create an issue for any suggestions or improvements.
 
