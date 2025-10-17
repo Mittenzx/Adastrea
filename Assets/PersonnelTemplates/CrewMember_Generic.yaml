@@ -1,0 +1,112 @@
+# Generic Crew Member Personnel Template
+# Copy this template and fill in the values to create a new Crew Member personnel asset
+# This template is for general crew members without specialized roles
+
+PersonnelID: "Crew_[YourName]"  # Unique identifier (e.g., "Crew_TomJohnson")
+PersonnelName: "[Crew Member's Name]"  # Display name (e.g., "Tom Johnson")
+
+# Basic Identity
+Biography: |
+  [Write the crew member's background story here.
+  Include their background, how they ended up in space, and their goals.
+  This can be multiple lines.]
+Age: 26
+Gender: "Male"
+Species: "Human"
+Nationality: "Earth - United States"
+Tags:
+  - "Crew"
+  - "General Duty"
+
+# Role and Assignment
+PrimaryRole: "CrewMember"
+CurrentAssignment: "[Ship/Station Name]"
+Department: "General Operations"
+ManagerID: "XO_[Name]"  # Or relevant department head
+DirectReports: []  # General crew typically don't have direct reports
+
+# Skills and Experience
+OverallSkillLevel: 5  # 1-10, general crew typically 4-6
+TotalExperience: 3000
+Skills:
+  - SkillName: "General Maintenance"
+    SkillLevel: 6
+    ExperiencePoints: 1200
+  - SkillName: "Cargo Handling"
+    SkillLevel: 5
+    ExperiencePoints: 800
+  - SkillName: "Ship Systems"
+    SkillLevel: 4
+    ExperiencePoints: 600
+  - SkillName: "Emergency Procedures"
+    SkillLevel: 5
+    ExperiencePoints: 700
+Specialties:
+  - "Maintenance"
+  - "Cargo Operations"
+
+# Status and Condition
+Morale: 60
+Health: 90
+Fatigue: 20
+Loyalty: 65
+Reputation: 10
+
+# Employment
+Salary: 2000
+ContractDuration: 12
+ContractMonthsRemaining: 8
+
+# Personality and Traits
+PersonalityType: "Hardworking"
+PersonalityDescription: |
+  [Describe the crew member's personality. Are they ambitious or content?
+  Do they work well with others? What are their aspirations?]
+Traits:
+  - TraitName: "Reliable"
+    TraitDescription: "Can be counted on to complete assigned tasks"
+    TraitID: "Reliable"
+    ModifierValue: 1.10  # 10% bonus to task completion
+  - TraitName: "Team Player"
+    TraitDescription: "Works well with others"
+    TraitID: "TeamPlayer"
+    ModifierValue: 1.05  # 5% bonus to crew cooperation
+
+# Relationships
+Relationships:
+  - TargetPersonnelID: "XO_[Name]"
+    RelationshipType: "Supervisor"
+    RelationshipStrength: 50
+    Notes: "Standard working relationship"
+  - TargetPersonnelID: "Crew_[OtherName]"
+    RelationshipType: "Friend"
+    RelationshipStrength: 70
+    Notes: "Bunkmates and friends"
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Task Completion"
+    Value: 75
+    Trend: 2.0
+  - MetricName: "Teamwork"
+    Value: 70
+    Trend: 1.0
+  - MetricName: "Attendance"
+    Value: 85
+    Trend: 0.0
+  - MetricName: "Safety Compliance"
+    Value: 80
+    Trend: 1.0
+
+# Past Assignments
+PastAssignments:
+  - AssignmentLocation: "[Previous Ship/Station]"
+    RoleHeld: "Deck Hand"
+    DurationMonths: 10
+    PerformanceRating: 3
+    Notes: "Learned basic ship operations"
+  - AssignmentLocation: "[Civilian Job]"
+    RoleHeld: "Warehouse Worker"
+    DurationMonths: 18
+    PerformanceRating: 3
+    Notes: "Pre-spacefaring career"

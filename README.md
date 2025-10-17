@@ -104,6 +104,88 @@ The game includes a flexible faction system that allows designers to create and 
 3. Assign the faction to any Space Station via the Faction property
 4. Use Blueprint-callable functions to query traits and diplomacy in gameplay
 
+### Personnel Management System
+The game includes a comprehensive personnel/crew management system for creating and managing crew members, staff, and character progression.
+
+**Key Components:**
+- `UPersonnelDataAsset` - C++ Data Asset class for defining personnel with 31 role types
+- `FPersonnelTrait` - Struct for personnel traits with gameplay modifiers
+- `FPersonnelRelationship` - Struct for interpersonal relationships
+- `FPersonnelSkill` - Struct for skill tracking with levels and experience
+- `FPerformanceMetric` - Struct for tracking effectiveness over time
+- 7 ready-to-use YAML templates for common roles
+
+**Advanced Features:**
+- **Role System**: 31 distinct roles from Captain to Janitor
+  - Command: Captain, XO, Station Manager
+  - Flight: Pilot, Navigator
+  - Technical: Engineer, AI Operator, Researcher
+  - Combat: Gunnery Chief, Gunner, Security Officer
+  - Medical: Medical Officer, Science Officer
+  - Support: Quartermaster, Chef, Bartender, Janitor
+  - Specialized: Diplomat, Trader, Salvage Specialist, Mining Specialist, Smuggler
+  - General: Crew Member, Station Staff, Entertainment, Civilian, Ambassador
+
+- **Skill System**: Multi-level skill tracking with experience points
+  - Blueprint-callable functions: `GetSkillByName()`, `GetSkillLevel()`, `HasSpecialty()`
+  - Individual skill levels (1-10) and experience points
+  - Support for skill progression and career development
+
+- **Status Tracking**: Comprehensive personnel condition monitoring
+  - Health, Morale, Fatigue, Loyalty, Reputation
+  - Blueprint-callable functions: `IsInGoodCondition()`, `NeedsRest()`, `IsLoyal()`, `HasLowMorale()`
+  - Real-time status affects performance
+
+- **Relationship System**: Track interpersonal connections
+  - Friend, Rival, Mentor, Professional, Family relationships
+  - Relationship strength (-100 to 100)
+  - Blueprint-callable functions: `IsFriendsWith()`, `IsRivalWith()`, `GetRelationshipStrength()`
+
+- **Performance Metrics**: Track effectiveness and career history
+  - Multiple customizable performance metrics
+  - Trend tracking (improving/declining)
+  - Past assignments with ratings
+  - Blueprint-callable functions: `GetPerformanceMetric()`, `GetAveragePerformance()`, `IsPerformingWell()`
+
+- **Command Hierarchy**: Build organizational structures
+  - Manager/Direct Report relationships
+  - Department assignment
+  - Role-based queries: `IsInLeadershipRole()`, `IsInCombatRole()`, `GetDirectReportCount()`
+
+- **Employment System**: Contract and compensation management
+  - Salary tracking
+  - Contract duration and remaining time
+  - Employment history
+
+- **Trait System**: Unique characteristics with gameplay modifiers
+  - Blueprint-callable functions: `HasTrait()`, `GetTraitModifier()`, `GetTraits()`
+  - Support for stacking modifiers
+  - Personality types and descriptions
+
+**YAML Templates:**
+- `Captain.yaml` - Ship commander template with leadership stats
+- `Pilot.yaml` - Flight operations specialist
+- `Gunner.yaml` - Weapons operator template
+- `Engineer.yaml` - Technical specialist template
+- `MedicalOfficer.yaml` - Healthcare provider template
+- `StationManager.yaml` - Station operations manager
+- `CrewMember_Generic.yaml` - General crew member template
+
+**Documentation:**
+- **Complete Guide**: [Assets/PersonnelSystemGuide.md](Assets/PersonnelSystemGuide.md) - Full system documentation
+- **Role Templates**: [Assets/PersonnelTemplates.md](Assets/PersonnelTemplates.md) - All 31 roles with stats and examples
+- **Designer Workflow**: [Assets/PersonnelDesignerWorkflow.md](Assets/PersonnelDesignerWorkflow.md) - Step-by-step creation workflows
+- **YAML Templates**: [Assets/PersonnelTemplates/](Assets/PersonnelTemplates/) - 7 ready-to-use templates
+
+**Quick Usage:**
+1. Create a new PersonnelDataAsset in the Content Browser
+2. Configure personnel properties (role, skills, status, relationships, traits)
+3. Use YAML templates as reference for typical values and structure
+4. Assign to ships/stations via CurrentAssignment property
+5. Use Blueprint-callable functions to query personnel data in gameplay
+6. Build command hierarchies using Manager ID and Direct Reports
+7. Create relationships between personnel for team dynamics
+
 ## Contributing
 Contributions are welcome! Please submit a pull request or create an issue for any suggestions or improvements.
 

@@ -1,0 +1,134 @@
+# Medical Officer Personnel Template
+# Copy this template and fill in the values to create a new Medical Officer personnel asset
+
+PersonnelID: "MedicalOfficer_[YourName]"  # Unique identifier (e.g., "MedicalOfficer_DrPatel")
+PersonnelName: "[Medical Officer's Name]"  # Display name (e.g., "Dr. Priya Patel")
+
+# Basic Identity
+Biography: |
+  [Write the medical officer's background story here.
+  Include their medical training, areas of expertise, and what motivates them.
+  This can be multiple lines.]
+Age: 42
+Gender: "Female"
+Species: "Human"
+Nationality: "Earth - India"
+Tags:
+  - "Medical"
+  - "Doctor"
+  - "Healthcare"
+
+# Role and Assignment
+PrimaryRole: "MedicalOfficer"
+CurrentAssignment: "[Ship/Station Name]"
+Department: "Medical"
+ManagerID: "Captain_[Name]"  # Reports to Captain or Chief Medical Officer
+DirectReports:
+  - "MedicalOfficer_[NurseName]"  # Medical support staff
+  # Add more as needed
+
+# Skills and Experience
+OverallSkillLevel: 9  # 1-10, doctors should be 8-10
+TotalExperience: 18000
+Skills:
+  - SkillName: "Medicine"
+    SkillLevel: 10
+    ExperiencePoints: 6000
+  - SkillName: "Surgery"
+    SkillLevel: 9
+    ExperiencePoints: 4500
+  - SkillName: "Xenobiology"
+    SkillLevel: 7
+    ExperiencePoints: 2500
+  - SkillName: "Emergency Medicine"
+    SkillLevel: 9
+    ExperiencePoints: 4000
+  - SkillName: "Pharmacology"
+    SkillLevel: 8
+    ExperiencePoints: 3000
+  - SkillName: "Psychology"
+    SkillLevel: 6
+    ExperiencePoints: 1500
+Specialties:
+  - "Trauma Surgery"
+  - "Space Medicine"
+  - "Infectious Diseases"
+
+# Status and Condition
+Morale: 70
+Health: 95
+Fatigue: 35  # Medical staff work irregular hours
+Loyalty: 85
+Reputation: 60
+
+# Employment
+Salary: 8000
+ContractDuration: 36
+ContractMonthsRemaining: 24
+
+# Personality and Traits
+PersonalityType: "Compassionate Professional"
+PersonalityDescription: |
+  [Describe the medical officer's personality. Are they empathetic or clinical?
+  How do they handle medical emergencies? What's their bedside manner?]
+Traits:
+  - TraitName: "Gifted Healer"
+    TraitDescription: "Exceptional medical skills and patient recovery rates"
+    TraitID: "GiftedHealer"
+    ModifierValue: 1.30  # 30% bonus to healing effectiveness
+  - TraitName: "Steady Hands"
+    TraitDescription: "Precise and calm during surgery"
+    TraitID: "SteadyHands"
+    ModifierValue: 1.20  # 20% bonus to surgical success
+  - TraitName: "Empathetic"
+    TraitDescription: "Understands and cares for crew mental health"
+    TraitID: "Empathetic"
+    ModifierValue: 1.15  # 15% bonus to crew morale when recovering
+
+# Relationships
+Relationships:
+  - TargetPersonnelID: "Captain_[Name]"
+    RelationshipType: "Trusted Advisor"
+    RelationshipStrength: 75
+    Notes: "Provides medical advice for crew decisions"
+  - TargetPersonnelID: "MedicalOfficer_[NurseName]"
+    RelationshipType: "Mentor"
+    RelationshipStrength: 80
+    Notes: "Training junior medical staff"
+  - TargetPersonnelID: "Pilot_[Name]"
+    RelationshipType: "Patient"
+    RelationshipStrength: 60
+    Notes: "Regular check-ups for flight certification"
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Patient Recovery Rate"
+    Value: 94
+    Trend: 2.0
+  - MetricName: "Surgical Success Rate"
+    Value: 96
+    Trend: 1.0
+  - MetricName: "Emergency Response Time"
+    Value: 90
+    Trend: 3.0
+  - MetricName: "Crew Health Score"
+    Value: 88
+    Trend: 2.0
+
+# Past Assignments
+PastAssignments:
+  - AssignmentLocation: "[Previous Ship]"
+    RoleHeld: "Chief Medical Officer"
+    DurationMonths: 30
+    PerformanceRating: 5
+    Notes: "Managed medical emergencies during deep space mission"
+  - AssignmentLocation: "[Planetary Hospital]"
+    RoleHeld: "Trauma Surgeon"
+    DurationMonths: 48
+    PerformanceRating: 5
+    Notes: "Specialized in emergency surgery"
+  - AssignmentLocation: "[Medical School]"
+    RoleHeld: "Resident"
+    DurationMonths: 48
+    PerformanceRating: 4
+    Notes: "Completed residency with distinction"

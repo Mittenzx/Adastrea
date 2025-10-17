@@ -1,0 +1,121 @@
+# Pilot Personnel Template
+# Copy this template and fill in the values to create a new Pilot personnel asset
+
+PersonnelID: "Pilot_[YourName]"  # Unique identifier (e.g., "Pilot_SarahChen")
+PersonnelName: "[Pilot's Name]"  # Display name (e.g., "Sarah Chen")
+
+# Basic Identity
+Biography: |
+  [Write the pilot's background story here.
+  Include their flight training, notable missions, and what drives them.
+  This can be multiple lines.]
+Age: 32  # Typically 25-45 for pilots
+Gender: "Female"
+Species: "Human"
+Nationality: "Mars Colony"
+Tags:
+  - "Pilot"
+  - "Combat"
+  - "Skilled"
+
+# Role and Assignment
+PrimaryRole: "Pilot"
+CurrentAssignment: "[Ship Name]"
+Department: "Flight Operations"
+ManagerID: "Captain_[Name]"  # Reports to Captain or Flight Commander
+DirectReports: []  # Pilots typically don't have direct reports
+
+# Skills and Experience
+OverallSkillLevel: 8  # 1-10, skilled pilots should be 7-9
+TotalExperience: 12000
+Skills:
+  - SkillName: "Piloting"
+    SkillLevel: 9
+    ExperiencePoints: 5000
+  - SkillName: "Navigation"
+    SkillLevel: 8
+    ExperiencePoints: 3000
+  - SkillName: "Tactical Maneuvering"
+    SkillLevel: 8
+    ExperiencePoints: 2500
+  - SkillName: "Emergency Procedures"
+    SkillLevel: 7
+    ExperiencePoints: 1500
+  - SkillName: "Ship Systems"
+    SkillLevel: 6
+    ExperiencePoints: 1000
+Specialties:
+  - "Combat Flight"
+  - "Evasive Maneuvers"
+  - "Docking Procedures"
+
+# Status and Condition
+Morale: 75
+Health: 95  # Pilots need to be in top physical condition
+Fatigue: 25
+Loyalty: 70
+Reputation: 40
+
+# Employment
+Salary: 5000
+ContractDuration: 24
+ContractMonthsRemaining: 18
+
+# Personality and Traits
+PersonalityType: "Confident Risk-Taker"
+PersonalityDescription: |
+  [Describe the pilot's personality. Are they cool under pressure?
+  Do they love the thrill of flight? How do they handle stress?]
+Traits:
+  - TraitName: "Ace Pilot"
+    TraitDescription: "Exceptional piloting skills in all conditions"
+    TraitID: "AcePilot"
+    ModifierValue: 1.25  # 25% bonus to piloting effectiveness
+  - TraitName: "Quick Reflexes"
+    TraitDescription: "Fast reaction time in combat situations"
+    TraitID: "QuickReflexes"
+    ModifierValue: 1.15  # 15% bonus to evasion
+  - TraitName: "Nerves of Steel"
+    TraitDescription: "Remains calm under extreme pressure"
+    TraitID: "NervesOfSteel"
+    ModifierValue: 0.8  # 20% reduction in stress/fatigue gain
+
+# Relationships
+Relationships:
+  - TargetPersonnelID: "Gunner_[Name]"
+    RelationshipType: "Flight Partner"
+    RelationshipStrength: 70
+    Notes: "Works closely during combat missions"
+  - TargetPersonnelID: "Engineer_[Name]"
+    RelationshipType: "Professional"
+    RelationshipStrength: 60
+    Notes: "Depends on them to keep the ship flying"
+  # Add more relationships as needed
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Flight Precision"
+    Value: 92
+    Trend: 3.0
+  - MetricName: "Combat Effectiveness"
+    Value: 88
+    Trend: 2.0
+  - MetricName: "Mission Success Rate"
+    Value: 90
+    Trend: 1.0
+  - MetricName: "Safety Record"
+    Value: 85
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments:
+  - AssignmentLocation: "[Previous Ship/Squadron]"
+    RoleHeld: "Fighter Pilot"
+    DurationMonths: 18
+    PerformanceRating: 5
+    Notes: "Top of class in combat flight school"
+  - AssignmentLocation: "[Training Facility]"
+    RoleHeld: "Trainee Pilot"
+    DurationMonths: 12
+    PerformanceRating: 4
+    Notes: "Graduated with honors"

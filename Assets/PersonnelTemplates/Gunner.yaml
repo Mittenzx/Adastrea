@@ -1,0 +1,124 @@
+# Gunner Personnel Template
+# Copy this template and fill in the values to create a new Gunner personnel asset
+
+PersonnelID: "Gunner_[YourName]"  # Unique identifier (e.g., "Gunner_MarcusReed")
+PersonnelName: "[Gunner's Name]"  # Display name (e.g., "Marcus Reed")
+
+# Basic Identity
+Biography: |
+  [Write the gunner's background story here.
+  Include their weapons training, combat experience, and motivations.
+  This can be multiple lines.]
+Age: 28
+Gender: "Male"
+Species: "Human"
+Nationality: "Belt Colonies"
+Tags:
+  - "Gunner"
+  - "Combat"
+  - "Weapons Expert"
+
+# Role and Assignment
+PrimaryRole: "Gunner"
+CurrentAssignment: "[Ship Name]"
+Department: "Tactical"
+ManagerID: "GunneryChief_[Name]"  # Reports to Gunnery Chief or Captain
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 7  # 1-10, gunners should be 6-8
+TotalExperience: 8000
+Skills:
+  - SkillName: "Gunnery"
+    SkillLevel: 9
+    ExperiencePoints: 4000
+  - SkillName: "Weapons Systems"
+    SkillLevel: 8
+    ExperiencePoints: 2500
+  - SkillName: "Target Tracking"
+    SkillLevel: 8
+    ExperiencePoints: 2000
+  - SkillName: "Fire Control"
+    SkillLevel: 7
+    ExperiencePoints: 1500
+  - SkillName: "Tactical Awareness"
+    SkillLevel: 6
+    ExperiencePoints: 1000
+Specialties:
+  - "Heavy Weapons"
+  - "Point Defense Systems"
+  - "Energy Weapons"
+
+# Status and Condition
+Morale: 70
+Health: 90
+Fatigue: 30
+Loyalty: 75
+Reputation: 30
+
+# Employment
+Salary: 4000
+ContractDuration: 18
+ContractMonthsRemaining: 12
+
+# Personality and Traits
+PersonalityType: "Focused Professional"
+PersonalityDescription: |
+  [Describe the gunner's personality. Are they aggressive or calculated?
+  How do they handle the stress of combat?]
+Traits:
+  - TraitName: "Dead Shot"
+    TraitDescription: "Exceptional accuracy with all weapon systems"
+    TraitID: "DeadShot"
+    ModifierValue: 1.20  # 20% bonus to accuracy
+  - TraitName: "Combat Focus"
+    TraitDescription: "Maintains concentration during intense battles"
+    TraitID: "CombatFocus"
+    ModifierValue: 1.15  # 15% bonus to sustained fire effectiveness
+  - TraitName: "Weapon Specialist"
+    TraitDescription: "Expert knowledge of various weapon systems"
+    TraitID: "WeaponSpecialist"
+    ModifierValue: 1.10  # 10% bonus to weapon damage
+
+# Relationships
+Relationships:
+  - TargetPersonnelID: "GunneryChief_[Name]"
+    RelationshipType: "Mentor"
+    RelationshipStrength: 65
+    Notes: "Learning advanced tactics from the chief"
+  - TargetPersonnelID: "Pilot_[Name]"
+    RelationshipType: "Flight Partner"
+    RelationshipStrength: 70
+    Notes: "Coordination in combat is critical"
+  - TargetPersonnelID: "Engineer_[Name]"
+    RelationshipType: "Friendly"
+    RelationshipStrength: 50
+    Notes: "Appreciates weapon maintenance support"
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Target Accuracy"
+    Value: 88
+    Trend: 4.0
+  - MetricName: "Weapon System Uptime"
+    Value: 82
+    Trend: 2.0
+  - MetricName: "Combat Effectiveness"
+    Value: 85
+    Trend: 3.0
+  - MetricName: "Reaction Time"
+    Value: 90
+    Trend: 1.0
+
+# Past Assignments
+PastAssignments:
+  - AssignmentLocation: "[Previous Ship]"
+    RoleHeld: "Junior Gunner"
+    DurationMonths: 14
+    PerformanceRating: 4
+    Notes: "Participated in several successful combat operations"
+  - AssignmentLocation: "[Military Training Facility]"
+    RoleHeld: "Weapons Trainee"
+    DurationMonths: 8
+    PerformanceRating: 4
+    Notes: "Certified in multiple weapon systems"
