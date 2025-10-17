@@ -1,7 +1,7 @@
 # Merchant-class Trading Vessel Template
 # Large cargo hauler optimized for commercial trade routes
 
-BasicorizInfo:
+BasicInfo:
   ShipName: "Merchant Trader"
   Description: "A reliable cargo hauler built for the commercial shipping lanes. The Merchant-class prioritizes cargo capacity, fuel efficiency, and crew comfort over combat capabilities."
   ShipClass: "Trading Vessel"
