@@ -1,0 +1,58 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# Top-most EditorConfig file
+root = true
+
+# All files
+[*]
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Code files
+[*.{cpp,h,cs}]
+indent_style = space
+indent_size = 4
+end_of_line = lf
+
+# Blueprint files (text-based export)
+[*.{uasset,umap}]
+# These are binary, but if exported as text:
+indent_style = space
+indent_size = 2
+
+# Configuration files
+[*.{ini,cfg,config}]
+indent_style = space
+indent_size = 4
+
+# Data files
+[*.{json,yaml,yml}]
+indent_style = space
+indent_size = 2
+
+# Documentation
+[*.md]
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = false
+
+# Unreal specific
+[*.uplugin]
+indent_style = space
+indent_size = 2
+
+[*.uproject]
+indent_style = space
+indent_size = 2
+
+# Scripts
+[*.{bat,sh}]
+end_of_line = lf
+
+[*.bat]
+end_of_line = crlf
+
+# Makefiles
+[Makefile]
+indent_style = tab
