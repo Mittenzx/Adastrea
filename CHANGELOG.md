@@ -1,11 +1,53 @@
 # Changelog
 
-All notable changes to the AdAstra project will be documented in this file.
+All notable changes to the Adastrea project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+### Changed - Name Normalization (2025-10-18)
+- **Module Renaming**: Renamed `AdAstreaEditor` module to `AdastreaEditor` to match canonical project name
+  - Renamed directory: `Source/AdAstreaEditor/` → `Source/AdastreaEditor/`
+  - Renamed files: `AdAstreaEditor.Build.cs`, `AdAstreaEditor.cpp`, `AdAstreaEditor.h` → `AdastreaEditor.*`
+  - Updated class names: `FAdAstreaEditorModule` → `FAdastreaEditorModule`
+  - Updated module name in `Adastrea.uproject`: `"AdAstreaEditor"` → `"AdastreaEditor"`
+  - Updated `AdastreaEditor.Target.cs` to reference correct module name
+- **GameMode Renaming**: Renamed GameMode class to match canonical name
+  - Renamed files: `AdAstraGameMode.cpp`, `AdAstraGameMode.h` → `AdastreaGameMode.*`
+  - Updated class name: `AAdAstraGameMode` → `AAdastreaGameMode`
+  - Updated generated header include: `AdAstraGameMode.generated.h` → `AdastreaGameMode.generated.h`
+- **Documentation Updates**: Normalized all textual references from "AdAstra" and "AdAstrea" to canonical "Adastrea"
+  - Updated README.md project title and references
+  - Updated ARCHITECTURE.md documentation
+  - Updated CHANGELOG.md references
+  - Updated CONTRIBUTING.md, CODE_STYLE.md, QUICKSTART.md, CHEATSHEET.md
+  - Updated BLUEPRINT_CREATION_GUIDE.md, CONTENT_CREATION_QUICKSTART.md
+  - Updated AUDIT_SUMMARY.md
+  - Updated Config/README.md
+  - Updated Assets documentation files (MaterialSystemGuide, TradingAPIReference, etc.)
+- **Project Description**: Updated .uproject description from "AdAstra" to "Adastrea"
+- **Removed Empty Directory**: Removed empty `Source/AdAstrea/` directory (contained only .keep file)
+
+**Rebuild Instructions:**
+After pulling these changes, you must regenerate project files and rebuild:
+1. Right-click `Adastrea.uproject` and select "Generate Visual Studio project files"
+2. Rebuild the solution in "Development Editor" configuration
+3. The editor will now load the renamed `AdastreaEditor` module
+
+**Verification Steps:**
+- Verify the editor launches without module loading errors
+- Check that all editor customizations work as expected
+- Confirm no references to "AdAstrea" or "AdAstra" remain in code/docs
+
+**Rollback Instructions:**
+If issues arise, revert the changes with:
+```bash
+git revert HEAD
+git push origin copilot/normalize-adastrea-names
+```
+Then regenerate project files and rebuild.
 
 ### Added - Repository Infrastructure (2025-10-18)
 - **MIT License**: Added proper LICENSE file
@@ -35,8 +77,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed - Critical Issues
 - **Gitignore**: Now properly tracks .uproject, .uplugin, and .uasset files (was incorrectly ignoring them)
-- **Naming Consistency**: Clarified AdAstra vs Adastrea naming throughout project
-- **Module Organization**: Documented purpose of empty AdAstrea/AdAstreaEditor modules
+- **Naming Consistency**: Clarified Adastrea naming throughout project (note: fully normalized in later version)
+- **Module Organization**: Documented purpose of editor module
 
 ### Documentation Structure
 ```
@@ -185,7 +227,7 @@ Updated Files:
 
 ## Project Goals and Vision
 
-AdAstra is an open-world space flight game focused on:
+Adastrea is an open-world space flight game focused on:
 - **Exploration**: Vast galaxies to discover
 - **Space Combat**: Thrilling tactical battles
 - **Station Building**: Modular space station construction

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document provides a comprehensive summary of the Personnel Management System implementation for the AdAstrea project. The system enables designers to create, manage, and track crew members and staff throughout the game with detailed attributes, relationships, skills, and career progression.
+This document provides a comprehensive summary of the Personnel Management System implementation for the Adastrea project. The system enables designers to create, manage, and track crew members and staff throughout the game with detailed attributes, relationships, skills, and career progression.
 
 ## Implementation Date
 

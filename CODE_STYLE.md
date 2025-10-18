@@ -1,6 +1,6 @@
 # Code Style Guide
 
-This document defines the coding standards for the AdAstra project. Following these guidelines ensures consistency and maintainability.
+This document defines the coding standards for the Adastrea project. Following these guidelines ensures consistency and maintainability.
 
 ## Table of Contents
 

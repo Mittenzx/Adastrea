@@ -1,6 +1,6 @@
 # Content Creation Guide - Quick Start to Playability
 
-This guide will help you create the minimum content needed to make AdAstra playable in ~30 minutes.
+This guide will help you create the minimum content needed to make Adastrea playable in ~30 minutes.
 
 ## Prerequisites
 
@@ -106,7 +106,7 @@ Event Tick
 ### Step 1: Create GameMode Blueprint
 
 1. **Content Browser → Blueprint Class**
-2. **Parent**: `AdAstraGameMode` (your C++ class)
+2. **Parent**: `AdastreaGameMode` (your C++ class)
 3. **Name**: `BP_SpaceGameMode`
 4. **Location**: `Content/Blueprints/GameModes/`
 

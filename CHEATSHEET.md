@@ -1,6 +1,6 @@
 # Developer Cheat Sheet
 
-Quick reference for common AdAstra development tasks.
+Quick reference for common Adastrea development tasks.
 
 ## Quick Links
 

@@ -1,4 +1,4 @@
-# AdAstra - Open World Space Flight Game
+# Adastrea - Open World Space Flight Game
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Unreal Engine](https://img.shields.io/badge/Unreal%20Engine-5.x-blue.svg)](https://www.unrealengine.com/)
@@ -24,7 +24,7 @@
 
 ## About
 
-**AdAstra** is an open-world space flight game built on Unreal Engine. Players can explore vast galaxies, engage in thrilling space battles, discover new planets, manage space stations, build crew relationships, and participate in a dynamic galactic economy.
+**Adastrea** is an open-world space flight game built on Unreal Engine. Players can explore vast galaxies, engage in thrilling space battles, discover new planets, manage space stations, build crew relationships, and participate in a dynamic galactic economy.
 
 ### Key Highlights
 
@@ -105,8 +105,7 @@ Adastrea/
 │   └── UI/                # UI widgets
 │
 └── Source/                 # C++ source code
-    ├── AdAstrea/          # Main game module (reserved)
-    ├── AdAstreaEditor/    # Editor customizations (reserved)
+    ├── AdastreaEditor/    # Editor customizations module
     └── Adastrea/          # Core game systems
         ├── AI/            # AI logic classes
         ├── Characters/    # Character and personnel
