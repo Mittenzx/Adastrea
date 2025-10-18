@@ -4,17 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "AdAstraGameMode.generated.h"
+#include "AdastreaGameMode.generated.h"
 
 /**
- * Base game mode for AdAstra
+ * Base game mode for Adastrea
  * This is the primary game mode that controls gameplay rules and state
  */
 UCLASS(minimalapi)
-class AAdAstraGameMode : public AGameModeBase
+class AAdastreaGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
 public:
-	AAdAstraGameMode();
+	AAdastreaGameMode();
 };

@@ -70,7 +70,7 @@ bDefaultViewportMouseLock=True
 [/Script/EngineSettings.GameMapsSettings]
 GameDefaultMap=/Game/Maps/MainMenu
 EditorStartupMap=/Game/Maps/TestLevel
-GlobalDefaultGameMode=/Script/Adastrea.AdAstraGameMode
+GlobalDefaultGameMode=/Script/Adastrea.AdastreaGameMode
 ```
 
 ## Project-Specific Notes

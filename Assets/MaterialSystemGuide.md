@@ -44,7 +44,7 @@ A Material Data Asset represents any physical item, resource, or commodity in th
 ## Getting Started
 
 ### Prerequisites
-- Unreal Engine project with AdAstrea source code compiled
+- Unreal Engine project with Adastrea source code compiled
 - Access to Content Browser
 - Familiarity with Data Assets (similar to Faction system)
 

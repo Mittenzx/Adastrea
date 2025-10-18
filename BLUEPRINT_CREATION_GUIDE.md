@@ -278,7 +278,7 @@ Enable Mouse Over Events: false
 ## Game Mode Blueprint
 
 **File**: `Content/Blueprints/GameModes/BP_SpaceGameMode`  
-**Parent Class**: `AdAstraGameMode` (C++ class)
+**Parent Class**: `AdastreaGameMode` (C++ class)
 
 ### Class Defaults
 
@@ -421,7 +421,7 @@ Event Tick
 Canvas Panel (Root)
 ├── Image - Background
 ├── Vertical Box (Center)
-│   ├── Text - Title "AdAstra"
+│   ├── Text - Title "Adastrea"
 │   ├── Spacer
 │   ├── Button - Start Game
 │   │   └── Text - "Start Game"

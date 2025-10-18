@@ -1,7 +1,7 @@
 # Trading System - Complete Designer & Programmer Guide
 
 ## Overview
-The AdAstrea Trading System is a comprehensive, Blueprint-friendly economic simulation framework that provides:
+The Adastrea Trading System is a comprehensive, Blueprint-friendly economic simulation framework that provides:
 - **Dynamic pricing** based on supply/demand, rarity, and market events
 - **AI trading agents** with arbitrage, speculation, and market manipulation
 - **Trade contracts** for missions and delivery quests

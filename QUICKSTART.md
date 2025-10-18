@@ -1,6 +1,6 @@
-# Quick Start Guide - AdAstra
+# Quick Start Guide - Adastrea
 
-Welcome to AdAstra! This guide will get you up and running in 15 minutes.
+Welcome to Adastrea! This guide will get you up and running in 15 minutes.
 
 ## Prerequisites Check
 
@@ -221,7 +221,7 @@ Pick one system to dive deep:
 - [Unreal Engine C++ Quick Start](https://docs.unrealengine.com/5.0/en-US/programming-quick-start-for-unreal-engine/)
 - [UE4/UE5 C++ Tutorial](https://www.tomlooman.com/unreal-engine-cpp-tutorials/)
 
-### AdAstra-Specific
+### Adastrea-Specific
 - All guides in `Assets/` folder
 - Example YAML templates for reference
 - Blueprint examples in `Content/Blueprints/`
@@ -268,4 +268,4 @@ Choose your path:
 
 ---
 
-**Welcome to AdAstra! Happy developing! 🚀✨**
+**Welcome to Adastrea! Happy developing! 🚀✨**

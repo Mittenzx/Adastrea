@@ -9,7 +9,7 @@
  * Editor module for Adastrea
  * This module provides editor customizations and tools for the Adastrea game
  */
-class FAdAstreaEditorModule : public IModuleInterface
+class FAdastreaEditorModule : public IModuleInterface
 {
 public:
 	/** IModuleInterface implementation */

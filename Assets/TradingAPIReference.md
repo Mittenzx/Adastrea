@@ -1,7 +1,7 @@
 # Trading System - API Reference
 
 ## Overview
-Complete API reference for the AdAstrea Trading System. This document covers all public classes, functions, events, and data structures.
+Complete API reference for the Adastrea Trading System. This document covers all public classes, functions, events, and data structures.
 
 ---
 

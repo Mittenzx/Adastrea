@@ -1,6 +1,6 @@
-# AdAstra Architecture Overview
+# Adastrea Architecture Overview
 
-This document provides a high-level overview of the AdAstra project architecture, code organization, and design patterns.
+This document provides a high-level overview of the Adastrea project architecture, code organization, and design patterns.
 
 ## Table of Contents
 
@@ -41,8 +41,7 @@ Adastrea/
 │   └── UI/                     # UI widgets and assets
 │
 └── Source/                      # C++ source code
-    ├── AdAstrea/               # Main game module (empty - reserved for future)
-    ├── AdAstreaEditor/         # Editor customizations (empty - reserved for future)
+    ├── AdastreaEditor/         # Editor customizations module
     └── Adastrea/               # Core game systems
         ├── AI/                 # AI logic classes
         ├── Characters/         # Character and personnel classes
@@ -144,13 +143,10 @@ The main game logic module, organized by feature:
 - **SectorMapWidget**: Galactic navigation
 - **Sector**: Spatial regions
 
-### Reserved Modules
+### Editor Module
 
-#### AdAstrea Module
-Reserved for main game module code (currently empty, ready for future expansion).
-
-#### AdAstreaEditor Module
-Reserved for Unreal Editor customizations (currently empty, ready for custom editors and tools).
+#### AdastreaEditor Module
+This module provides Unreal Editor customizations and tools for the Adastrea game.
 
 ## Design Patterns
 
@@ -424,7 +420,7 @@ All systems follow this documentation structure:
 - **Exploration System**: Procedural generation
 
 ### Planned Improvements
-- Custom Unreal Editor tools (using AdAstreaEditor module)
+- Custom Unreal Editor tools (using AdastreaEditor module)
 - Visual programming for AI behaviors
 - In-game station editor UI
 - Dynamic event system

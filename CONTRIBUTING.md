@@ -1,6 +1,6 @@
-# Contributing to AdAstra
+# Contributing to Adastrea
 
-First off, thank you for considering contributing to AdAstra! It's people like you that make AdAstra such a great project.
+First off, thank you for considering contributing to Adastrea! It's people like you that make Adastrea such a great project.
 
 ## Table of Contents
 
@@ -241,4 +241,4 @@ By contributing, you agree that your contributions will be licensed under the MI
 
 ---
 
-Thank you for contributing to AdAstra! 🚀✨
+Thank you for contributing to Adastrea! 🚀✨
