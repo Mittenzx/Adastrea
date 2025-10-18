@@ -2,9 +2,9 @@
 
 using UnrealBuildTool;
 
-public class AdAstreaEditor : ModuleRules
+public class AdastreaEditor : ModuleRules
 {
-	public AdAstreaEditor(ReadOnlyTargetRules Target) : base(Target)
+	public AdastreaEditor(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 

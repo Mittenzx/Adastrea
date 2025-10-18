@@ -2,7 +2,7 @@
 	"FileVersion": 3,
 	"EngineAssociation": "5.3",
 	"Category": "",
-	"Description": "AdAstra - Open World Space Flight Game",
+	"Description": "Adastrea - Open World Space Flight Game",
 	"Modules": [
 		{
 			"Name": "Adastrea",
@@ -14,7 +14,7 @@
 			]
 		},
 		{
-			"Name": "AdAstreaEditor",
+			"Name": "AdastreaEditor",
 			"Type": "Editor",
 			"LoadingPhase": "PostEngineInit",
 			"AdditionalDependencies": [

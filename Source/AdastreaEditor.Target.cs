@@ -11,6 +11,6 @@ public class AdastreaEditorTarget : TargetRules
 		DefaultBuildSettings = BuildSettingsVersion.V4;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_3;
 		ExtraModuleNames.Add("Adastrea");
-		ExtraModuleNames.Add("AdAstreaEditor");
+		ExtraModuleNames.Add("AdastreaEditor");
 	}
 }
