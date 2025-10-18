@@ -1,0 +1,93 @@
+# Market: Free Port Station
+# Type: Open Market
+# Size: Large Hub
+# Description: Major trading hub with diverse goods
+
+MarketName: "Free Port Station"
+MarketID: "Market_FreePort"
+Description: |
+  A bustling trade hub in neutral space. All are welcome here,
+  from legitimate merchants to shadowy smugglers. The station
+  maintains strict neutrality and charges fair taxes.
+  
+MarketType: OpenMarket
+MarketSize: Large
+
+# Faction Control
+ControllingFaction: "DA_Faction_FreeTraders"
+
+# ====================
+# MARKET CONFIGURATION
+# ====================
+TransactionTaxRate: 0.05
+SellPriceMarkup: 1.15
+BuyPriceMarkdown: 0.85
+
+bAllowPlayerBuying: true
+bAllowPlayerSelling: true
+bAllowAITraders: true
+MinReputationRequired: -50
+
+# ====================
+# INVENTORY TEMPLATE
+# ====================
+StockRefreshRate: 24.0
+
+# Sample inventory entries
+InventoryEntries:
+  - TradeItem: "DA_TradeItem_IronOre"
+    CurrentStock: 5000
+    MaxStock: 10000
+    SupplyLevel: 1.0
+    DemandLevel: 1.0
+    
+  - TradeItem: "DA_TradeItem_FoodRations"
+    CurrentStock: 2000
+    MaxStock: 5000
+    SupplyLevel: 1.2
+    DemandLevel: 0.8
+    
+  - TradeItem: "DA_TradeItem_FuelCells"
+    CurrentStock: 1500
+    MaxStock: 3000
+    SupplyLevel: 0.9
+    DemandLevel: 1.1
+    
+  - TradeItem: "DA_TradeItem_QuantumProcessor"
+    CurrentStock: 50
+    MaxStock: 100
+    SupplyLevel: 0.7
+    DemandLevel: 1.3
+
+# ====================
+# MARKET EVENTS
+# ====================
+RandomEventChance: 0.15
+
+# Sample market events
+SampleEvents:
+  - EventName: "Supply Shortage"
+    EventID: "Event_Shortage_IronOre"
+    AffectedItemIDs:
+      - "TradeItem_IronOre"
+    PriceMultiplier: 1.5
+    SupplyMultiplier: 0.5
+    DemandMultiplier: 1.5
+    DurationHours: 48.0
+    
+  - EventName: "Technology Expo"
+    EventID: "Event_TechExpo"
+    AffectedItemIDs:
+      - "TradeItem_QuantumProcessor"
+      - "TradeItem_DataCore"
+    PriceMultiplier: 1.3
+    SupplyMultiplier: 1.2
+    DemandMultiplier: 1.8
+    DurationHours: 72.0
+
+# ====================
+# AI TRADER SETTINGS
+# ====================
+AITraderCount: 15
+AITradeFrequency: 20
+bAllowAIPriceManipulation: true
