@@ -1,0 +1,594 @@
+# Material Data Asset Templates
+# Use these templates as examples when creating new materials in Unreal Engine
+# Copy the relevant section and fill in your own values
+
+# ====================
+# MINERALS (Raw Resources)
+# ====================
+
+IronOre:
+  MaterialName: "Iron Ore"
+  Description: "Common metallic ore found throughout the galaxy. Essential base material for refining into usable iron ingots."
+  Category: Mineral
+  StorageType: Solid
+  Rarity: Common
+  Value: 10.0
+  Mass: 5.0
+  Tags:
+    - Metal
+    - RawMaterial
+    - Mining
+  ModuleTags:
+    - Refinery
+    - CargoStorage
+    - MiningProcessor
+
+TitaniumOre:
+  MaterialName: "Titanium Ore"
+  Description: "Rare metallic ore prized for its strength-to-weight ratio. Used in advanced construction and spacecraft manufacturing."
+  Category: Mineral
+  StorageType: Solid
+  Rarity: Rare
+  Value: 150.0
+  Mass: 4.5
+  Tags:
+    - Metal
+    - RawMaterial
+    - Mining
+    - Advanced
+  ModuleTags:
+    - Refinery
+    - CargoStorage
+    - MiningProcessor
+
+CrystallineQuartz:
+  MaterialName: "Crystalline Quartz"
+  Description: "High-purity silicon-based crystals essential for electronics manufacturing and optical systems."
+  Category: Mineral
+  StorageType: Solid
+  Rarity: Uncommon
+  Value: 75.0
+  Mass: 2.5
+  Tags:
+    - Crystal
+    - RawMaterial
+    - Electronics
+  ModuleTags:
+    - Refinery
+    - ElectronicsLab
+    - CargoStorage
+
+# ====================
+# REFINED MINERALS (Processed Materials)
+# ====================
+
+IronIngot:
+  MaterialName: "Iron Ingot"
+  Description: "Refined iron ready for construction and manufacturing. The backbone of industrial civilization."
+  Category: RefinedMineral
+  StorageType: Solid
+  Rarity: Common
+  Value: 25.0
+  Mass: 4.8
+  Tags:
+    - Metal
+    - Refined
+    - Construction
+    - Manufacturing
+  ModuleTags:
+    - ConstructionBay
+    - CargoStorage
+    - ManufacturingPlant
+
+TitaniumIngot:
+  MaterialName: "Titanium Ingot"
+  Description: "Refined titanium alloy with exceptional strength and corrosion resistance. Premium construction material."
+  Category: RefinedMineral
+  StorageType: Solid
+  Rarity: Rare
+  Value: 350.0
+  Mass: 4.0
+  Tags:
+    - Metal
+    - Refined
+    - Advanced
+    - Lightweight
+  ModuleTags:
+    - ConstructionBay
+    - ShipyardFacility
+    - CargoStorage
+
+SteelAlloy:
+  MaterialName: "Steel Alloy"
+  Description: "Durable iron-carbon alloy used in structural components and heavy construction."
+  Category: RefinedMineral
+  StorageType: Solid
+  Rarity: Common
+  Value: 35.0
+  Mass: 7.5
+  Tags:
+    - Metal
+    - Refined
+    - Construction
+    - Durable
+  ModuleTags:
+    - ConstructionBay
+    - CargoStorage
+    - ManufacturingPlant
+
+# ====================
+# COMPONENTS (Manufactured Parts)
+# ====================
+
+Actuator:
+  MaterialName: "Actuator"
+  Description: "Precision mechanical device that converts energy into motion. Essential for automated systems and robotics."
+  Category: Component
+  StorageType: Solid
+  Rarity: Uncommon
+  Value: 120.0
+  Mass: 2.0
+  Tags:
+    - Mechanical
+    - Precision
+    - Automation
+  ModuleTags:
+    - ManufacturingPlant
+    - CargoStorage
+    - AssemblyLine
+
+PowerCell:
+  MaterialName: "Power Cell"
+  Description: "Compact energy storage unit. Standard power source for portable equipment and small devices."
+  Category: Component
+  StorageType: Solid
+  Rarity: Common
+  Value: 45.0
+  Mass: 0.5
+  Tags:
+    - Energy
+    - Portable
+    - Electronics
+  ModuleTags:
+    - ElectronicsLab
+    - CargoStorage
+    - PowerPlant
+
+CoolingSystem:
+  MaterialName: "Cooling System"
+  Description: "Advanced thermal management system capable of dissipating extreme heat. Critical for high-performance machinery."
+  Category: Component
+  StorageType: Solid
+  Rarity: Uncommon
+  Value: 180.0
+  Mass: 8.0
+  Tags:
+    - Thermal
+    - System
+    - Engineering
+  ModuleTags:
+    - ManufacturingPlant
+    - EngineeringBay
+    - CargoStorage
+
+# ====================
+# ELECTRONICS (Advanced Tech)
+# ====================
+
+CircuitBoard:
+  MaterialName: "Circuit Board"
+  Description: "Multi-layer electronic circuit board. Foundation of all modern computer systems and control interfaces."
+  Category: Electronics
+  StorageType: Solid
+  Rarity: Uncommon
+  Value: 95.0
+  Mass: 0.3
+  Tags:
+    - Electronics
+    - Computing
+    - Tech
+  ModuleTags:
+    - ElectronicsLab
+    - CargoStorage
+    - TechWorkshop
+
+QuantumProcessor:
+  MaterialName: "Quantum Processor"
+  Description: "State-of-the-art quantum computing core. Enables complex calculations and AI processing at unprecedented speeds."
+  Category: Electronics
+  StorageType: Solid
+  Rarity: VeryRare
+  Value: 2500.0
+  Mass: 0.8
+  Tags:
+    - Electronics
+    - Quantum
+    - Advanced
+    - AI
+  ModuleTags:
+    - ResearchLab
+    - ElectronicsLab
+    - CargoStorage
+
+SensorArray:
+  MaterialName: "Sensor Array"
+  Description: "Integrated sensor package for detection and scanning operations. Essential for navigation and reconnaissance."
+  Category: Electronics
+  StorageType: Solid
+  Rarity: Uncommon
+  Value: 220.0
+  Mass: 3.5
+  Tags:
+    - Electronics
+    - Sensors
+    - Detection
+  ModuleTags:
+    - ElectronicsLab
+    - ShipyardFacility
+    - CargoStorage
+
+# ====================
+# CONSTRUCTION PARTS (Station/Base Building)
+# ====================
+
+HullPlate:
+  MaterialName: "Hull Plate"
+  Description: "Reinforced structural plating for station and ship construction. Provides primary defense against impacts and radiation."
+  Category: ConstructionPart
+  StorageType: Solid
+  Rarity: Common
+  Value: 85.0
+  Mass: 50.0
+  Tags:
+    - Construction
+    - Structural
+    - Armor
+    - Heavy
+  ModuleTags:
+    - ConstructionBay
+    - ShipyardFacility
+    - CargoStorage
+
+PressureSeal:
+  MaterialName: "Pressure Seal"
+  Description: "High-grade sealing component for maintaining atmospheric pressure in habitable modules."
+  Category: ConstructionPart
+  StorageType: Solid
+  Rarity: Common
+  Value: 55.0
+  Mass: 2.0
+  Tags:
+    - Construction
+    - Sealing
+    - Atmosphere
+  ModuleTags:
+    - ConstructionBay
+    - CargoStorage
+
+SupportBeam:
+  MaterialName: "Support Beam"
+  Description: "Load-bearing structural element for large constructions. Reinforced with titanium for maximum strength."
+  Category: ConstructionPart
+  StorageType: Solid
+  Rarity: Common
+  Value: 65.0
+  Mass: 25.0
+  Tags:
+    - Construction
+    - Structural
+    - Support
+    - Heavy
+  ModuleTags:
+    - ConstructionBay
+    - CargoStorage
+
+# ====================
+# SHIP PARTS (Spacecraft Components)
+# ====================
+
+ReactorCore:
+  MaterialName: "Reactor Core"
+  Description: "Advanced fusion reactor core. Primary power source for capital ships and large stations."
+  Category: ShipPart
+  StorageType: Hazardous
+  Rarity: VeryRare
+  Value: 5000.0
+  Mass: 150.0
+  Tags:
+    - Power
+    - Reactor
+    - Nuclear
+    - Hazardous
+  ModuleTags:
+    - ShipyardFacility
+    - EngineeringBay
+    - HazardStorage
+
+ThrusterAssembly:
+  MaterialName: "Thruster Assembly"
+  Description: "Complete ion thruster system for spacecraft propulsion. Provides efficient sublight maneuvering."
+  Category: ShipPart
+  StorageType: Solid
+  Rarity: Rare
+  Value: 1200.0
+  Mass: 80.0
+  Tags:
+    - Propulsion
+    - Engine
+    - Ship
+  ModuleTags:
+    - ShipyardFacility
+    - CargoStorage
+
+ShieldGenerator:
+  MaterialName: "Shield Generator"
+  Description: "Energy shield projection system. Creates protective barrier against weapons fire and debris."
+  Category: ShipPart
+  StorageType: Solid
+  Rarity: Rare
+  Value: 1800.0
+  Mass: 45.0
+  Tags:
+    - Defense
+    - Shield
+    - Energy
+  ModuleTags:
+    - ShipyardFacility
+    - EngineeringBay
+    - CargoStorage
+
+# ====================
+# FOOD (Consumables)
+# ====================
+
+ProteinRations:
+  MaterialName: "Protein Rations"
+  Description: "Processed protein bars with long shelf life. Standard emergency food supply for space crews."
+  Category: Food
+  StorageType: Solid
+  Rarity: Common
+  Value: 5.0
+  Mass: 0.5
+  Tags:
+    - Food
+    - Consumable
+    - Protein
+  ModuleTags:
+    - FoodStorage
+    - CargoStorage
+
+HydroponicVegetables:
+  MaterialName: "Hydroponic Vegetables"
+  Description: "Fresh vegetables grown in station hydroponics. Provides essential nutrients and improves crew morale."
+  Category: Food
+  StorageType: Refrigerated
+  Rarity: Uncommon
+  Value: 15.0
+  Mass: 1.0
+  Tags:
+    - Food
+    - Fresh
+    - Organic
+    - Vitamins
+  ModuleTags:
+    - Hydroponics
+    - FoodStorage
+    - RefrigeratedStorage
+
+NutrientPaste:
+  MaterialName: "Nutrient Paste"
+  Description: "Synthetic food compound containing all essential nutrients. Efficient but unappetizing sustenance."
+  Category: Food
+  StorageType: Refrigerated
+  Rarity: Common
+  Value: 3.0
+  Mass: 0.8
+  Tags:
+    - Food
+    - Synthetic
+    - Consumable
+  ModuleTags:
+    - FoodStorage
+    - RefrigeratedStorage
+    - CargoStorage
+
+# ====================
+# RESEARCH (Scientific Data/Samples)
+# ====================
+
+ResearchData:
+  MaterialName: "Research Data"
+  Description: "Encrypted data storage containing valuable scientific research and experimental results."
+  Category: Research
+  StorageType: Solid
+  Rarity: Rare
+  Value: 500.0
+  Mass: 0.1
+  Tags:
+    - Data
+    - Research
+    - Science
+    - Digital
+  ModuleTags:
+    - ResearchLab
+    - DataStorage
+    - CargoStorage
+
+AlienArtifact:
+  MaterialName: "Alien Artifact"
+  Description: "Mysterious object of unknown origin. Requires extensive study to understand its purpose and technology."
+  Category: Research
+  StorageType: Other
+  Rarity: Legendary
+  Value: 10000.0
+  Mass: 5.0
+  Tags:
+    - Alien
+    - Artifact
+    - Research
+    - Unique
+  ModuleTags:
+    - ResearchLab
+    - SecureStorage
+    - CargoStorage
+
+ExperimentalCompound:
+  MaterialName: "Experimental Compound"
+  Description: "Unstable chemical compound with promising properties. Handle with extreme caution."
+  Category: Research
+  StorageType: Hazardous
+  Rarity: Rare
+  Value: 750.0
+  Mass: 2.0
+  Tags:
+    - Chemical
+    - Research
+    - Hazardous
+    - Experimental
+  ModuleTags:
+    - ResearchLab
+    - HazardStorage
+
+# ====================
+# ORGANIC (Biological Materials)
+# ====================
+
+BioSample:
+  MaterialName: "Bio Sample"
+  Description: "Preserved biological specimen from alien ecosystem. Valuable for xenobiology research."
+  Category: Organic
+  StorageType: Refrigerated
+  Rarity: Uncommon
+  Value: 200.0
+  Mass: 0.5
+  Tags:
+    - Organic
+    - Biology
+    - Research
+    - Alien
+  ModuleTags:
+    - ResearchLab
+    - MedicalBay
+    - RefrigeratedStorage
+
+MedicalSupplies:
+  MaterialName: "Medical Supplies"
+  Description: "Comprehensive medical kit including bandages, antibiotics, and emergency treatment supplies."
+  Category: Organic
+  StorageType: Refrigerated
+  Rarity: Common
+  Value: 80.0
+  Mass: 3.0
+  Tags:
+    - Medical
+    - Consumable
+    - Emergency
+  ModuleTags:
+    - MedicalBay
+    - RefrigeratedStorage
+    - CargoStorage
+
+GeneticMaterial:
+  MaterialName: "Genetic Material"
+  Description: "Carefully preserved DNA samples for cloning and genetic research purposes."
+  Category: Organic
+  StorageType: Refrigerated
+  Rarity: VeryRare
+  Value: 1500.0
+  Mass: 0.2
+  Tags:
+    - Genetic
+    - DNA
+    - Research
+    - Biological
+  ModuleTags:
+    - ResearchLab
+    - MedicalBay
+    - RefrigeratedStorage
+
+# ====================
+# SYNTHETIC (Manufactured Substances)
+# ====================
+
+Nanomaterial:
+  MaterialName: "Nanomaterial"
+  Description: "Advanced carbon nanostructure with programmable properties. Used in cutting-edge technology."
+  Category: Synthetic
+  StorageType: Solid
+  Rarity: VeryRare
+  Value: 2000.0
+  Mass: 0.3
+  Tags:
+    - Synthetic
+    - Advanced
+    - Nano
+    - Tech
+  ModuleTags:
+    - ResearchLab
+    - ManufacturingPlant
+    - CargoStorage
+
+SyntheticFuel:
+  MaterialName: "Synthetic Fuel"
+  Description: "High-efficiency fuel synthesized from hydrogen and carbon compounds. Clean-burning and powerful."
+  Category: Synthetic
+  StorageType: Liquid
+  Rarity: Common
+  Value: 40.0
+  Mass: 10.0
+  Tags:
+    - Fuel
+    - Energy
+    - Synthetic
+    - Liquid
+  ModuleTags:
+    - FuelStorage
+    - Refinery
+    - CargoStorage
+
+PolymerCompound:
+  MaterialName: "Polymer Compound"
+  Description: "Versatile synthetic polymer used in manufacturing various products from containers to insulation."
+  Category: Synthetic
+  StorageType: Solid
+  Rarity: Common
+  Value: 30.0
+  Mass: 2.0
+  Tags:
+    - Polymer
+    - Synthetic
+    - Manufacturing
+  ModuleTags:
+    - ManufacturingPlant
+    - CargoStorage
+
+# ====================
+# USAGE NOTES
+# ====================
+# 
+# To create a new material in Unreal Engine:
+# 1. Navigate to Content/Materials/ in Content Browser
+# 2. Right-click → Miscellaneous → Data Asset
+# 3. Select MaterialDataAsset
+# 4. Name it: DA_Material_[YourMaterialName]
+# 5. Fill in properties based on these templates
+#
+# Field Guidelines:
+# - Value: Price in credits per unit (balance around common = 1-50, rare = 100-1000, very rare = 1000+)
+# - Mass: Weight in kilograms (affects cargo capacity)
+# - Tags: General gameplay identifiers for queries and filtering
+# - ModuleTags: Specific station modules that can process this material
+#
+# Common Module Tags:
+# - CargoStorage: General storage module
+# - Refinery: Ore processing facility
+# - ManufacturingPlant: Parts manufacturing
+# - ElectronicsLab: Electronics assembly
+# - ShipyardFacility: Ship construction
+# - ConstructionBay: Station/base building
+# - ResearchLab: Scientific research
+# - MedicalBay: Medical treatment
+# - Hydroponics: Food production
+# - FuelStorage: Fuel containment
+# - HazardStorage: Hazardous material containment
+# - RefrigeratedStorage: Temperature-controlled storage

@@ -1,0 +1,62 @@
+# Warhammer-class Gunship Template
+# Heavy combat vessel with superior firepower and armor
+
+BasicInfo:
+  ShipName: "Warhammer Gunship"
+  Description: "A heavily armed and armored assault vessel designed to dominate combat zones. The Warhammer sacrifices speed and cargo capacity for devastating firepower and resilience."
+  ShipClass: "Gunship"
+  ShipID: "WarhammerGunship"
+
+CoreStats:
+  HullStrength: 5000.0          # Heavy reinforced hull
+  CargoCapacity: 150.0          # Limited cargo for ammunition
+  CrewRequired: 15              # Combat crew
+  MaxCrew: 25                   # Full combat complement
+  ModularPoints: 8              # Good weapon customization
+
+CombatStats:
+  ArmorRating: 250.0            # Heavy armor plating
+  ShieldStrength: 3000.0        # Strong military shields
+  ShieldRechargeRate: 25.0      # Military-grade recharge
+  WeaponSlots: 8                # Multiple weapon hardpoints
+  WeaponPowerCapacity: 8000.0   # Massive weapons power
+  PointDefenseRating: 9.0       # Excellent point defense
+
+MobilityStats:
+  MaxSpeed: 400.0               # Moderate speed
+  Acceleration: 40.0            # Slower acceleration
+  Maneuverability: 4            # Less maneuverable
+  JumpRange: 8.0                # Short jump range
+  FuelCapacity: 2000.0          # Standard fuel capacity
+  FuelConsumptionRate: 200.0    # Heavy fuel consumption
+
+UtilityStats:
+  SensorRange: 8000.0           # Combat sensors
+  SensorResolution: 6           # Adequate sensors
+  StealthRating: 2              # Poor stealth (large signature)
+  RepairSystemRating: 6         # Good repair systems
+  ScienceRating: 2              # Minimal science equipment
+  MedicalRating: 5              # Combat medical bay
+
+OperationalStats:
+  PowerCapacity: 12000.0        # High power for weapons
+  LifeSupportRating: 7          # Good life support
+  MaintenanceLevel: 7           # High maintenance needs
+  HangarCapacity: 2             # Small fighter complement
+  DroneCapacity: 15             # Combat drones
+  AISystemRating: 6             # Combat AI systems
+
+AdvancedStats:
+  DiplomacyRating: 1            # Military vessel, not diplomatic
+  BoardingCapability: 8         # Strong boarding parties
+  CustomizableSlots: 6          # Weapon customization
+  EWarRating: 5                 # Electronic warfare
+  MiningRating: 0               # No mining capability
+
+Lore:
+  Manufacturer: "Ironforge Military Systems"
+  YearBuilt: 2502
+  RarityTier: "Rare"
+  LoreNotes: "The Warhammer-class represents the pinnacle of gunship design. When you need overwhelming firepower and survivability, there's no better choice. Used extensively by military fleets and elite mercenary groups."
+  PrimaryColor: [0.6, 0.1, 0.1, 1.0]    # Dark red
+  SecondaryColor: [0.2, 0.2, 0.2, 1.0]  # Dark gray

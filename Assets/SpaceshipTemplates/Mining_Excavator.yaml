@@ -1,0 +1,62 @@
+# Excavator-class Mining Barge Template
+# Industrial mining vessel with advanced extraction and processing systems
+
+BasicInfo:
+  ShipName: "Excavator Mining Barge"
+  Description: "A specialized industrial vessel designed for asteroid mining and resource extraction. The Excavator features powerful mining lasers, ore processing facilities, and massive cargo holds."
+  ShipClass: "Mining Barge"
+  ShipID: "ExcavatorMining"
+
+CoreStats:
+  HullStrength: 4000.0          # Reinforced industrial hull
+  CargoCapacity: 8000.0         # Enormous cargo capacity for ore
+  CrewRequired: 25              # Mining crew
+  MaxCrew: 50                   # Full shift rotation
+  ModularPoints: 15             # Mining equipment customization
+
+CombatStats:
+  ArmorRating: 150.0            # Heavy industrial armor
+  ShieldStrength: 1500.0        # Industrial shields
+  ShieldRechargeRate: 15.0      # Standard recharge
+  WeaponSlots: 4                # Mining lasers double as weapons
+  WeaponPowerCapacity: 3000.0   # High power for lasers
+  PointDefenseRating: 5.0       # Basic defensive systems
+
+MobilityStats:
+  MaxSpeed: 350.0               # Slow (heavy industrial vessel)
+  Acceleration: 30.0            # Poor acceleration
+  Maneuverability: 3            # Poor maneuverability
+  JumpRange: 12.0               # Moderate jump range
+  FuelCapacity: 3000.0          # Large fuel capacity
+  FuelConsumptionRate: 180.0    # Heavy consumption
+
+UtilityStats:
+  SensorRange: 15000.0          # Resource detection sensors
+  SensorResolution: 8           # High-res for mineral scanning
+  StealthRating: 1              # Very poor stealth (industrial signature)
+  RepairSystemRating: 8         # Excellent repair systems
+  ScienceRating: 6              # Geology and metallurgy labs
+  MedicalRating: 5              # Industrial medical bay
+
+OperationalStats:
+  PowerCapacity: 15000.0        # Massive power for mining equipment
+  LifeSupportRating: 7          # Good life support
+  MaintenanceLevel: 8           # High maintenance (industrial equipment)
+  HangarCapacity: 4             # Mining shuttle bays
+  DroneCapacity: 50             # Mining drones and excavators
+  AISystemRating: 7             # Advanced mining automation
+
+AdvancedStats:
+  DiplomacyRating: 2            # Industrial vessel, not diplomatic
+  BoardingCapability: 4         # Basic security
+  CustomizableSlots: 12         # Mining module customization
+  EWarRating: 1                 # Basic electronics
+  MiningRating: 10              # Maximum mining capability
+
+Lore:
+  Manufacturer: "Titan Industrial Works"
+  YearBuilt: 2500
+  RarityTier: "Uncommon"
+  LoreNotes: "The Excavator-class is the backbone of deep space mining operations. Its combination of powerful extraction tools, processing facilities, and cargo capacity make it invaluable for resource gathering operations in asteroid fields and planetary rings."
+  PrimaryColor: [0.9, 0.5, 0.1, 1.0]    # Industrial orange
+  SecondaryColor: [0.3, 0.3, 0.3, 1.0]  # Dark gray

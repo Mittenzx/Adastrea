@@ -1,0 +1,62 @@
+# Pathfinder-class Scout Ship Template
+# Fast, agile reconnaissance vessel with excellent sensors and long jump range
+
+BasicInfo:
+  ShipName: "Pathfinder Scout"
+  Description: "A lightweight reconnaissance vessel designed for deep space exploration and intelligence gathering. The Pathfinder trades armor and firepower for speed, sensors, and fuel efficiency."
+  ShipClass: "Scout"
+  ShipID: "PathfinderScout"
+
+CoreStats:
+  HullStrength: 800.0          # Low hull for light frame
+  CargoCapacity: 50.0           # Minimal cargo space
+  CrewRequired: 2               # Pilot and sensor operator
+  MaxCrew: 4                    # Small crew complement
+  ModularPoints: 6              # Decent customization
+
+CombatStats:
+  ArmorRating: 20.0             # Light armor plating
+  ShieldStrength: 400.0         # Basic shields
+  ShieldRechargeRate: 15.0      # Fast shield recharge
+  WeaponSlots: 1                # Single defensive weapon
+  WeaponPowerCapacity: 500.0    # Limited weapons power
+  PointDefenseRating: 7.0       # Good anti-missile defense
+
+MobilityStats:
+  MaxSpeed: 900.0               # Very fast
+  Acceleration: 120.0           # Excellent acceleration
+  Maneuverability: 9            # Highly maneuverable
+  JumpRange: 25.0               # Excellent jump range
+  FuelCapacity: 1500.0          # Large fuel tanks for range
+  FuelConsumptionRate: 50.0     # Efficient fuel use
+
+UtilityStats:
+  SensorRange: 25000.0          # Exceptional sensor range
+  SensorResolution: 9           # High-resolution sensors
+  StealthRating: 8              # Good stealth capabilities
+  RepairSystemRating: 4         # Basic repair systems
+  ScienceRating: 6              # Moderate science equipment
+  MedicalRating: 2              # Basic medical supplies
+
+OperationalStats:
+  PowerCapacity: 3000.0         # Moderate power for sensors
+  LifeSupportRating: 6          # Good life support
+  MaintenanceLevel: 3           # Low maintenance needs
+  HangarCapacity: 0             # No hangar
+  DroneCapacity: 10             # Good probe complement
+  AISystemRating: 7             # Advanced navigation AI
+
+AdvancedStats:
+  DiplomacyRating: 2            # Not diplomatic
+  BoardingCapability: 1         # Minimal boarding ability
+  CustomizableSlots: 4          # Good customization
+  EWarRating: 6                 # Electronic warfare suite
+  MiningRating: 0               # No mining equipment
+
+Lore:
+  Manufacturer: "Vanguard Aerospace"
+  YearBuilt: 2498
+  RarityTier: "Uncommon"
+  LoreNotes: "The Pathfinder-class has been the gold standard for scout vessels for over a decade. Its combination of speed, stealth, and sensor capabilities make it invaluable for reconnaissance missions in hostile territory."
+  PrimaryColor: [0.2, 0.3, 0.6, 1.0]    # Deep blue
+  SecondaryColor: [0.8, 0.8, 0.85, 1.0] # Light gray

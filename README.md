@@ -158,14 +158,6 @@ The game includes a flexible faction system that allows designers to create and 
 2. Configure faction properties (name, colors, attributes, traits, relationships)
 3. Assign the faction to any Space Station via the Faction property
 4. Use Blueprint-callable functions to query traits and diplomacy in gameplay
-
-*Creating Homeworlds:*
-1. Create a new HomeworldDataAsset in the Content Browser (e.g., `Content/Homeworlds/`)
-2. Configure homeworld name, description, and ID
-3. Add Faction Relations entries with starting reputation values for each faction (-100 to 100)
-4. In character creation Blueprint, call `InitializeFactionReputationFromHomeworld()`
-5. Store resulting FactionReputationMap (TMap<UFactionDataAsset*, int32>) on player character
-
 ### Personnel Management System
 The game includes a comprehensive personnel/crew management system for creating and managing crew members, staff, and character progression.
 
