@@ -1,51 +1,126 @@
 # AdAstra - Open World Space Flight Game
 
-## Project Description
-AdAstra is an open-world space flight game built on Unreal Engine. Players can explore vast galaxies, engage in thrilling space battles, and discover new planets. The game aims to provide an immersive experience with stunning visuals and dynamic gameplay.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Unreal Engine](https://img.shields.io/badge/Unreal%20Engine-5.x-blue.svg)](https://www.unrealengine.com/)
 
-## Quick Start Instructions
+> An open-world space flight game featuring exploration, combat, faction diplomacy, crew management, and dynamic trading economies.
+
+## Table of Contents
+
+- [About](#about)
+- [Quick Start](#quick-start)
+- [Project Structure](#project-structure)
+- [Core Features](#core-features)
+  - [Spaceship System](#spaceship-data-asset-system)
+  - [Space Station System](#space-station-editor-system)
+  - [Faction System](#faction-system)
+  - [Personnel Management](#personnel-management-system)
+  - [AI System](#faction-and-personnel-ai-system)
+  - [Trading System](#trading-system)
+  - [Material System](#material-system)
+- [Documentation](#documentation)
+- [Contributing](#contributing)
+- [License](#license)
+
+## About
+
+**AdAstra** is an open-world space flight game built on Unreal Engine. Players can explore vast galaxies, engage in thrilling space battles, discover new planets, manage space stations, build crew relationships, and participate in a dynamic galactic economy.
+
+### Key Highlights
+
+- 🚀 **Data-Driven Design**: All game content uses Blueprint Data Assets
+- 🎮 **Designer-Friendly**: Minimal C++ knowledge required
+- 🏗️ **Modular Architecture**: Systems work independently and integrate seamlessly
+- 📚 **Comprehensive Documentation**: Guides, templates, and workflows for everything
+- 🔧 **Blueprint First**: Full Blueprint exposure for all systems
+
+## Quick Start
+
+### Prerequisites
+
+- **Unreal Engine 5.x** (check the .uproject file for exact version)
+- **Visual Studio 2022** (Windows) or **Xcode** (Mac) for C++ development
+- **Git** for version control
+
+### Installation
+
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/Mittenzx/adastrea.git
-   cd adastrea
+   git clone https://github.com/Mittenzx/Adastrea.git
+   cd Adastrea
    ```
 
-2. **Install Unreal Engine**:
-   Make sure you have Unreal Engine installed. You can download it from the [Epic Games website](https://www.unrealengine.com/).
+2. **Generate Project Files**:
+   - Right-click on the `.uproject` file
+   - Select "Generate Visual Studio project files"
 
-3. **Open the project**:
-   Open the project by double-clicking the `.uproject` file in the cloned repository.
+3. **Build the project**:
+   - Open the generated `.sln` file in Visual Studio
+   - Build in "Development Editor" configuration
+   - Or open the `.uproject` file directly in Unreal Engine
 
-4. **Build the project**:
-   If necessary, build the project by selecting "Build" from the "File" menu in Unreal Engine.
+4. **Verify Installation**:
+   - Launch the editor
+   - Check that all example Data Assets load correctly
+   - Run the game with the Play button
 
-5. **Run the game**:
-   Click the "Play" button in the Unreal Engine editor to start the game.
+### First Steps
 
-## Folder Structure
+1. **For Designers**: Read [Assets/DesignerOnboarding.md](Assets/DesignerOnboarding.md)
+2. **For Programmers**: Read [CONTRIBUTING.md](CONTRIBUTING.md) and [ARCHITECTURE.md](ARCHITECTURE.md)
+3. **Quick Reference**: See individual system guides in the Assets/ folder
+
+## Project Structure
 ```
-adastrea/
-├── Assets/                 # Game assets and documentation
-│   └── FactionSetupGuide.md # Faction system documentation
-├── Blueprints/             # Game blueprints
-├── Config/                 # Configuration files
-├── Content/                # Game content (levels, materials)
-├── Source/                 # Source code
-│   ├── AdAstra/            # Main game module
-│   ├── AdAstraEditor/      # Editor module
-│   └── Adastrea/           # Game systems
-│       ├── AI/             # AI logic classes (NPC, Faction, Personnel)
-│       ├── Characters/     # Character classes
-│       ├── Factions/       # Faction system (Data Assets)
-│       ├── Planets/        # Planet actors
-│       ├── Player/         # Player-related systems (Homeworld)
-│       ├── Ships/          # Spaceship actors and components
-│       ├── Stations/       # Space station actors
-│       └── UI/             # User interface widgets
-└── README.md               # Project documentation
+Adastrea/
+├── .editorconfig           # Code formatting configuration
+├── .gitignore              # Git ignore patterns
+├── ARCHITECTURE.md         # Architecture and design documentation
+├── CHANGELOG.md            # Version history and changes
+├── CONTRIBUTING.md         # Contribution guidelines
+├── LICENSE                 # MIT License
+├── README.md               # This file
+│
+├── Assets/                 # Documentation and YAML templates
+│   ├── *Guide.md          # Comprehensive system guides
+│   ├── *Templates.md      # Reference documentation
+│   ├── *Workflow.md       # Designer workflows
+│   ├── *SUMMARY.md        # Technical summaries
+│   ├── FactionAITemplates/    # YAML templates for faction AI
+│   ├── PersonnelAITemplates/  # YAML templates for personnel AI
+│   ├── PersonnelTemplates/    # YAML templates for crew roles
+│   ├── SpaceshipTemplates/    # YAML templates for ships
+│   └── TradingTemplates/      # YAML templates for trading
+│
+├── Blueprints/             # Blueprint documentation
+│
+├── Config/                 # Unreal Engine configuration
+│
+├── Content/                # Game content (UE assets)
+│   ├── Blueprints/        # Blueprint classes
+│   ├── Homeworlds/        # Homeworld assets
+│   ├── Maps/              # Level maps
+│   ├── Planets/           # Planet assets
+│   ├── SpaceStations/     # Station assets and modules
+│   └── UI/                # UI widgets
+│
+└── Source/                 # C++ source code
+    ├── AdAstrea/          # Main game module (reserved)
+    ├── AdAstreaEditor/    # Editor customizations (reserved)
+    └── Adastrea/          # Core game systems
+        ├── AI/            # AI logic classes
+        ├── Characters/    # Character and personnel
+        ├── Factions/      # Faction system
+        ├── Materials/     # Material system
+        ├── Planets/       # Planet classes
+        ├── Player/        # Player-specific systems
+        ├── Ships/         # Spaceship classes
+        ├── Stations/      # Space station classes
+        ├── Trading/       # Trading economy
+        └── UI/            # UI widgets
 ```
 
-## Features
+## Core Features
 
 ### Spaceship Data Asset System
 A comprehensive spaceship specification system that allows designers to create detailed ship configurations as Blueprint Data Assets without writing C++ code.
@@ -319,8 +394,94 @@ The game includes a comprehensive personnel/crew management system for creating 
 6. Build command hierarchies using Manager ID and Direct Reports
 7. Create relationships between personnel for team dynamics
 
+## Documentation
+
+### Quick Start Guides
+- [Designer Onboarding](Assets/DesignerOnboarding.md) - Start here if you're new to the project
+- [Architecture Overview](ARCHITECTURE.md) - Technical overview of project structure
+- [Contributing Guidelines](CONTRIBUTING.md) - How to contribute to the project
+
+### System Documentation
+
+#### Core Systems
+- [Spaceship System Guide](Assets/SpaceshipDataAssetGuide.md)
+- [Space Station System](Content/Blueprints/STATION_EDITOR_README.md)
+- [Faction System Guide](Assets/BlueprintFactionAssetGuide.md)
+- [Personnel System Guide](Assets/PersonnelSystemGuide.md)
+
+#### Advanced Systems
+- [AI System Overview](Assets/AI_QUICK_START.md)
+  - [Faction AI Setup](Assets/FactionAISetupGuide.md)
+  - [Personnel AI Setup](Assets/PersonnelAISetupGuide.md)
+  - [AI Designer Workflow](Assets/AIDesignerWorkflow.md)
+- [Trading System Guide](Assets/TradingSystemGuide.md)
+- [Material System Guide](Assets/MaterialSystemGuide.md)
+- [Homeworld System Guide](Assets/HomeworldSystemGuide.md)
+
+#### Templates and References
+- [Spaceship Templates](Assets/SpaceshipTemplates.md) - 6 pre-built ship designs
+- [Faction Templates](Assets/FactionSetupGuide.md) - 10 pre-made factions
+- [Personnel Templates](Assets/PersonnelTemplates.md) - 31 role templates
+- [Blueprint Workflows](Assets/BlueprintWorkflowTemplates.md)
+- [Trading API Reference](Assets/TradingAPIReference.md)
+
+#### Integration Guides
+- [AI System Integration](Assets/AISystemIntegration.md)
+- [Material-Station Integration](Assets/MaterialStationIntegration.md)
+- [Trading Blueprint Guide](Blueprints/TradingSystemBlueprintGuide.md)
+
+#### Workflows and Best Practices
+- [Spaceship Designer Workflow](Assets/SpaceshipDesignerWorkflow.md)
+- [Personnel Designer Workflow](Assets/PersonnelDesignerWorkflow.md)
+- [Trading Designer Workflow](Assets/TradingDesignerWorkflow.md)
+- [Playtesting Checklist](Assets/PlaytestingChecklist.md)
+- [Iteration Guide](Assets/IterationGuide.md)
+
+### YAML Templates
+
+All systems include ready-to-use YAML templates in their respective folders:
+- `Assets/SpaceshipTemplates/` - Ship configurations
+- `Assets/FactionAITemplates/` - Faction AI behaviors
+- `Assets/PersonnelAITemplates/` - Personnel AI personalities
+- `Assets/PersonnelTemplates/` - Crew member profiles
+- `Assets/TradingTemplates/` - Trade items and markets
+
 ## Contributing
-Contributions are welcome! Please submit a pull request or create an issue for any suggestions or improvements.
+
+We welcome contributions! Here's how to get started:
+
+1. **Read the Guidelines**: See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed instructions
+2. **Check Issues**: Look for issues labeled "good first issue" or "help wanted"
+3. **Fork & Clone**: Fork the repository and create a feature branch
+4. **Make Changes**: Follow our coding standards and best practices
+5. **Test Thoroughly**: Ensure your changes work in-editor
+6. **Submit PR**: Open a pull request with a clear description
+
+### Ways to Contribute
+- 🐛 **Bug Reports**: Found a bug? Open an issue with reproduction steps
+- ✨ **New Features**: Have an idea? Discuss it in an issue first
+- 📚 **Documentation**: Improve guides, fix typos, add examples
+- 🎨 **Assets**: Create example ships, factions, or other content
+- 🧪 **Testing**: Help test features and report issues
+
+### Code of Conduct
+Be respectful, constructive, and welcoming. We're all here to build something great together!
 
 ## License
-This project is licensed under the MIT License. See the LICENSE file for details.
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Version History
+
+See [CHANGELOG.md](CHANGELOG.md) for detailed version history and release notes.
+
+## Support
+
+- **Documentation Issues**: Open an issue with the "documentation" label
+- **Bug Reports**: Use the bug report template
+- **Feature Requests**: Use the feature request template
+- **General Questions**: Start a discussion in the repository
+
+---
+
+**Built with ❤️ using Unreal Engine**

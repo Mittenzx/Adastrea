@@ -1,63 +1,93 @@
-# Unreal Engine
-
-# Binaries
+# Unreal Engine - Generated Files
 /Binaries/
 /Build/
 /DerivedDataCache/
 /Intermediate/
 /Saved/
-/Source/ThirdParty/
-/Source/ThirdParty/**/Build/
+
+# Unreal Engine - Plugin Binaries
+/Plugins/*/Binaries/
+/Plugins/*/Intermediate/
 
 # Visual Studio
 .vs/
 *.sln
 *.suo
 *.user
+*.userosscache
+*.sln.docstates
 *.userprefs
-*.dbmdl
-*.dbproj
-*.dbproj.user
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Rider
+.idea/
+*.sln.iml
 
 # Mac
-*.DS_Store
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Compiled Object files
+*.o
+*.obj
+*.lo
+*.slo
+*.ko
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.a
+*.lib
+*.lai
+*.la
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
 
 # Logs
 *.log
+*.tlog
 
-# Backup
+# Backup and temporary files
 *.bak
 *.tmp
+*~
+*.swp
+*.swo
 
-# Others
-*.pdb
-*.exe
-*.dll
-*.app
-*.dSYM/
-*.lib
-*.idb
-*.obj
-*.o
+# Build artifacts
+*.pyc
 *.class
 *.jar
-*.apk
-*.a
-*.so
-*.dylib
-*.ipa
-*.apk
-*.pdb
-*.tga
-*.jpg
-*.png
-*.wav
-*.mp3
-*.mp4
-*.mov
-*.fbx
-*.obj
-*.uasset
-*.umap
-*.uplugin
-*.uproject
+
+# Don't ignore important Unreal files - these should be tracked!
+# .uproject files
+# .uplugin files
+# .uasset and .umap files (Content assets)
+# Config/ directory files
