@@ -34,6 +34,7 @@ adastrea/
 │   ├── AdAstra/            # Main game module
 │   ├── AdAstraEditor/      # Editor module
 │   └── Adastrea/           # Game systems
+│       ├── AI/             # AI logic classes (NPC, Faction, Personnel)
 │       ├── Characters/     # Character classes
 │       ├── Factions/       # Faction system (Data Assets)
 │       ├── Planets/        # Planet actors
@@ -158,6 +159,84 @@ The game includes a flexible faction system that allows designers to create and 
 2. Configure faction properties (name, colors, attributes, traits, relationships)
 3. Assign the faction to any Space Station via the Faction property
 4. Use Blueprint-callable functions to query traits and diplomacy in gameplay
+
+### Faction and Personnel AI System
+The game includes a complete AI framework for data-driven faction and personnel behaviors, supporting peaceful/exploration early-game priorities and personality-driven decision making.
+
+**Key Components:**
+- `UNPCLogicBase` - Base class for all NPC AI logic with BlueprintNativeEvent hooks
+- `UFactionLogic` - Faction-level strategic AI (macro decisions: expansion, trade, diplomacy)
+- `UPersonnelLogic` - Individual crew AI (micro decisions: tasks, social, training)
+- Early Game Priorities - Configurable peaceful/exploration focus for factions
+- 8 Personality Dispositions - Cautious, Bold, Analytical, Empathetic, Pragmatic, Curious, Disciplined, Creative
+- Truces and Relationships - Diplomatic systems for peaceful gameplay
+- Task Priorities - Dynamic daily scheduling for personnel based on personality
+
+**Advanced Features:**
+- **Blueprint-Friendly Extension**: All AI logic uses BlueprintNativeEvent pattern
+  - Override any behavior in Blueprints without C++ knowledge
+  - Call parent implementation when needed
+  - Mix C++ performance with Blueprint flexibility
+
+- **Peaceful Early-Game AI**: Factions support exploration-focused gameplay
+  - Configurable priority system (0-10 scale for each activity)
+  - Automatic transition from early to mid/late game
+  - Truce system for maintaining peace
+  - Trade and diplomacy emphasis over conflict
+
+- **Personality-Driven Personnel**: 8 dispositions affect all decisions
+  - Curious: Exploration and research focus
+  - Disciplined: Protocol adherence, by-the-book
+  - Empathetic: People-focused, supportive
+  - Pragmatic: Efficiency and results
+  - Bold: Risk-taking, decisive
+  - Cautious: Safety-first, methodical
+  - Analytical: Logic and calculation
+  - Creative: Innovation and unconventional solutions
+
+- **Social and Relationship Systems**: Dynamic crew interactions
+  - Friendship and rivalry development
+  - Personality compatibility affects collaboration
+  - Morale impacts based on social dynamics
+  - Command hierarchy with manager/report relationships
+
+**YAML Templates:**
+- `FactionAI/PeacefulExplorers.yaml` - Exploration-focused peaceful faction
+- `FactionAI/TradeCoalition.yaml` - Commerce-focused merchant faction
+- `PersonnelAI/CuriousExplorer.yaml` - Inquisitive science officer
+- `PersonnelAI/DisciplinedSecurity.yaml` - By-the-book security officer
+- `PersonnelAI/EmpatheticMedic.yaml` - Caring medical officer
+
+**Documentation:**
+- **Faction AI Guide**: [Assets/FactionAISetupGuide.md](Assets/FactionAISetupGuide.md) - Complete faction AI setup
+- **Personnel AI Guide**: [Assets/PersonnelAISetupGuide.md](Assets/PersonnelAISetupGuide.md) - Complete personnel AI setup
+- **Designer Workflow**: [Assets/AIDesignerWorkflow.md](Assets/AIDesignerWorkflow.md) - No C++ workflow for designers
+- **System Integration**: [Assets/AISystemIntegration.md](Assets/AISystemIntegration.md) - Connecting AI to game systems
+- **YAML Templates**: [Assets/FactionAITemplates/](Assets/FactionAITemplates/) and [Assets/PersonnelAITemplates/](Assets/PersonnelAITemplates/)
+
+**Quick Usage:**
+
+*Creating Faction AI:*
+1. Create a FactionDataAsset with traits and relationships
+2. Create a Blueprint based on UFactionLogic
+3. Assign FactionDataAsset and configure Early Game Priorities
+4. Override BlueprintNativeEvents to customize behavior (optional)
+5. Integrate with ships/stations via component or reference
+
+*Creating Personnel AI:*
+1. Create a PersonnelDataAsset with skills, traits, and relationships
+2. Create a Blueprint based on UPersonnelLogic
+3. Assign PersonnelDataAsset and set Disposition
+4. Override BlueprintNativeEvents for custom personality (optional)
+5. Add to character actors and update in Tick
+
+*For Designers (No C++ Required):*
+- Use YAML templates as reference for values
+- Configure all behavior through Data Assets
+- Customize decisions in Blueprint visual scripting
+- Test and iterate without recompiling
+- All AI hooks are BlueprintNativeEvents
+
 ### Personnel Management System
 The game includes a comprehensive personnel/crew management system for creating and managing crew members, staff, and character progression.
 

@@ -1,0 +1,209 @@
+# Curious Explorer Personnel AI Template
+# This template represents a crew member with an inquisitive, exploration-focused personality
+# Ideal for science officers, researchers, and scouts
+
+# ====================
+# Basic Identity
+# ====================
+PersonnelName: "Dr. Alex Rivera"
+PersonnelID: "Explorer_001"
+Age: 32
+Gender: "Non-binary"
+Species: "Human"
+Nationality: "Solar Federation"
+
+Biography: |
+  Dr. Alex Rivera joined the exploration corps right out of academy, driven by an 
+  insatiable curiosity about the unknown. They've made several notable discoveries 
+  in xenobiology and always volunteer for away missions. Known for asking "what if?" 
+  at every opportunity.
+
+Tags:
+  - "Scientist"
+  - "Explorer"
+  - "First Contact Specialist"
+
+# ====================
+# Role and Assignment
+# ====================
+PrimaryRole: "Science Officer"    # See EPersonnelRole enum for all options
+CurrentAssignment: "UESS Discovery"
+Department: "Science & Research"
+
+# Command hierarchy
+ManagerID: "Captain_001"
+DirectReports: []  # No subordinates yet
+
+# ====================
+# AI Personality Configuration
+# ====================
+Disposition: "Curious"  # Cautious, Bold, Analytical, Empathetic, Pragmatic, Curious, Disciplined, Creative
+AIBehaviorMode: "Exploration"
+bIsActive: true
+UpdateInterval: 1.0  # Personnel update more frequently than factions
+
+# ====================
+# AI Task Preferences (influenced by Disposition)
+# ====================
+# Curious disposition naturally gravitates toward:
+# - Exploration tasks (highest priority when available)
+# - Training/learning opportunities
+# - Social interactions to share discoveries
+# - Personal projects during off-duty time
+
+CurrentTask: "Exploration"  # Emergency, DutyStation, Maintenance, Social, Personal, Training, Exploration
+bOnDuty: true
+HoursUntilNextShift: 6.0
+HoursUntilTaskComplete: 2.5
+
+# ====================
+# Skills and Experience
+# ====================
+OverallSkillLevel: 7
+TotalExperience: 12500
+
+Skills:
+  - SkillName: "Xenobiology"
+    SkillLevel: 9
+    ExperiencePoints: 4500
+
+  - SkillName: "Sensor Operations"
+    SkillLevel: 8
+    ExperiencePoints: 3200
+
+  - SkillName: "Data Analysis"
+    SkillLevel: 7
+    ExperiencePoints: 2800
+
+  - SkillName: "First Contact Protocol"
+    SkillLevel: 6
+    ExperiencePoints: 1500
+
+  - SkillName: "Field Research"
+    SkillLevel: 8
+    ExperiencePoints: 3800
+
+Specialties:
+  - "Alien Ecosystems"
+  - "Anomaly Investigation"
+  - "Sample Collection"
+
+# ====================
+# Status and Condition
+# ====================
+Health: 85.0        # Good health
+Morale: 75.0        # High morale (loves the job)
+Fatigue: 35.0       # Moderate fatigue (enthusiastic despite tiredness)
+Loyalty: 80.0       # Very loyal
+Reputation: 45      # Well-regarded for discoveries
+
+# ====================
+# Social Network
+# ====================
+FriendsList:
+  - "Engineer_003"   # Bonds over solving problems
+  - "Pilot_001"      # Adventure buddies
+  - "MedicalOfficer_001"  # Shares research interests
+
+ConflictList:
+  # Empty - curious personalities are generally friendly
+
+Relationships:
+  - TargetPersonnelID: "Engineer_003"
+    RelationshipType: "Friend"
+    RelationshipStrength: 60
+    Notes: "Collaborate on sensor upgrades and field equipment modifications."
+
+  - TargetPersonnelID: "Pilot_001"
+    RelationshipType: "Friend"
+    RelationshipStrength: 55
+    Notes: "Share excitement for exploring new places. Often request to be on same away missions."
+
+  - TargetPersonnelID: "Captain_001"
+    RelationshipType: "Professional"
+    RelationshipStrength: 45
+    Notes: "Sometimes too eager, needs reminders about safety protocols."
+
+# ====================
+# Personality and Traits
+# ====================
+PersonalityType: "INTP - The Thinker"
+PersonalityDescription: |
+  Intensely curious and always seeking to understand the 'why' behind everything. 
+  Can get lost in research for hours. Sometimes forgets to eat when engrossed in 
+  a fascinating discovery. Excellent at connecting disparate pieces of information.
+
+Traits:
+  - TraitID: "Insatiably_Curious"
+    TraitName: "Insatiably Curious"
+    TraitDescription: "Cannot resist investigating anomalies and unknowns. Gains bonus to exploration and research tasks."
+    ModifierValue: 1.3        # 30% bonus to exploration/research
+
+  - TraitID: "Quick_Learner"
+    TraitName: "Quick Learner"
+    TraitDescription: "Picks up new skills and knowledge rapidly."
+    ModifierValue: 1.25       # 25% faster skill progression
+
+  - TraitID: "Risk_Taker"
+    TraitName: "Calculated Risk Taker"
+    TraitDescription: "Willing to take chances for discovery, but analyzes risks first."
+    ModifierValue: 1.1        # 10% bonus to bold actions
+
+# ====================
+# Performance Metrics
+# ====================
+PerformanceMetrics:
+  - MetricName: "Research Output"
+    Value: 85.0
+    Trend: 5.0       # Improving
+
+  - MetricName: "Safety Compliance"
+    Value: 65.0      # Sometimes too eager
+    Trend: 2.0       # Slowly improving
+
+  - MetricName: "Team Collaboration"
+    Value: 78.0
+    Trend: 3.0       # Getting better
+
+PastAssignments:
+  - AssignmentLocation: "Research Station Kepler-7"
+    RoleHeld: "Junior Researcher"
+    DurationMonths: 18
+    PerformanceRating: 4
+    Notes: "Discovered three new bacterial species. Commendation for dedication."
+
+  - AssignmentLocation: "Survey Ship Magellan"
+    RoleHeld: "Science Officer"
+    DurationMonths: 24
+    PerformanceRating: 5
+    Notes: "Led first contact protocols with peaceful species. Exemplary performance."
+
+# ====================
+# Employment
+# ====================
+Salary: 4500
+ContractDuration: 36    # 3 year contract
+ContractMonthsRemaining: 22
+
+# ====================
+# Blueprint Integration Notes
+# ====================
+# Curious Disposition Behavior Patterns:
+# - Volunteers for exploration tasks
+# - Asks many questions in social interactions
+# - Pursues training opportunities during downtime
+# - May ignore fatigue if investigating something interesting
+# - Makes decisions favoring discovery over safety (within reason)
+#
+# Recommended Blueprint Overrides:
+# - EvaluateTaskPriority: Prioritize Exploration even when tired
+# - HandleSocialInteraction: Ask questions, share discoveries
+# - MakePersonalityDrivenDecision: Choose options mentioning "new" or "explore"
+# - ShouldPursueTraining: Almost always true
+# - HandleStressChange: Reduce stress when making discoveries
+#
+# This personality works well for:
+# - Science Officer roles
+# - Survey missions
+# - First contact scenarios
+# - Research-heavy gameplay

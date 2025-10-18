@@ -1,0 +1,218 @@
+# Empathetic Medical Officer Personnel AI Template
+# This template represents a compassionate healthcare professional
+# Ideal for medical officers, counselors, and support staff
+
+# ====================
+# Basic Identity
+# ====================
+PersonnelName: "Dr. Amara Okonkwo"
+PersonnelID: "Medical_001"
+Age: 41
+Gender: "Female"
+Species: "Human"
+Nationality: "Earth - Nigeria"
+
+Biography: |
+  Dr. Okonkwo has dedicated her life to caring for others. With a background in 
+  both medicine and psychology, she provides comprehensive care for crew wellbeing. 
+  Known for her warm bedside manner and ability to put even the most anxious 
+  patients at ease. Often serves as unofficial ship counselor.
+
+Tags:
+  - "Medical"
+  - "Counselor"
+  - "Morale Officer"
+
+# ====================
+# Role and Assignment
+# ====================
+PrimaryRole: "Medical Officer"
+CurrentAssignment: "UESS Discovery"
+Department: "Medical & Wellness"
+
+ManagerID: "Captain_001"
+DirectReports:
+  - "Nurse_001"
+  - "Nurse_002"
+
+# ====================
+# AI Personality Configuration
+# ====================
+Disposition: "Empathetic"  # People-focused, supportive
+AIBehaviorMode: "Peaceful"
+bIsActive: true
+UpdateInterval: 1.0
+
+# ====================
+# AI Task Preferences
+# ====================
+# Empathetic disposition gravitates toward:
+# - Social interactions (checking on crew wellbeing)
+# - Duty station (caring for patients)
+# - Personal time spent helping others
+# - Minimal focus on personal needs (self-sacrificing)
+
+CurrentTask: "Social"
+bOnDuty: true
+HoursUntilNextShift: 5.0
+HoursUntilTaskComplete: 1.0
+
+# ====================
+# Skills and Experience
+# ====================
+OverallSkillLevel: 9
+TotalExperience: 24000
+
+Skills:
+  - SkillName: "Medical Treatment"
+    SkillLevel: 10
+    ExperiencePoints: 8000
+
+  - SkillName: "Psychology"
+    SkillLevel: 9
+    ExperiencePoints: 6500
+
+  - SkillName: "Emergency Response"
+    SkillLevel: 8
+    ExperiencePoints: 4500
+
+  - SkillName: "Pharmacology"
+    SkillLevel: 8
+    ExperiencePoints: 3000
+
+  - SkillName: "Crew Counseling"
+    SkillLevel: 9
+    ExperiencePoints: 5000
+
+Specialties:
+  - "Trauma Care"
+  - "Mental Health"
+  - "Crew Morale Management"
+
+# ====================
+# Status and Condition
+# ====================
+Health: 75.0        # Good health (sometimes neglects self-care)
+Morale: 80.0        # High morale (fulfilled by helping others)
+Fatigue: 45.0       # Moderate fatigue (works extra hours)
+Loyalty: 85.0       # Very loyal (cares deeply about crew)
+Reputation: 75      # Highly regarded and trusted
+
+# ====================
+# Social Network
+# ====================
+FriendsList:
+  - "Explorer_001"     # Science collaboration
+  - "Captain_001"      # Mutual respect
+  - "Chef_001"         # Wellness partners
+  - "Bartender_001"    # Information sharing
+
+ConflictList:
+  # Empty - empathetic nature prevents conflicts
+
+Relationships:
+  - TargetPersonnelID: "Explorer_001"
+    RelationshipType: "Friend"
+    RelationshipStrength: 65
+    Notes: "Shares interest in xenobiology from medical perspective. Often reminds them to rest."
+
+  - TargetPersonnelID: "Captain_001"
+    RelationshipType: "Professional"
+    RelationshipStrength: 70
+    Notes: "Trusted advisor on crew welfare issues."
+
+  - TargetPersonnelID: "Security_001"
+    RelationshipType: "Professional"
+    RelationshipStrength: 40
+    Notes: "Helping him open up more emotionally. Slow progress."
+
+  - TargetPersonnelID: "Nurse_001"
+    RelationshipType: "Mentor"
+    RelationshipStrength: 80
+    Notes: "Mentoring them in patient care and bedside manner."
+
+# ====================
+# Personality and Traits
+# ====================
+PersonalityType: "ENFJ - The Teacher"
+PersonalityDescription: |
+  Warm, empathetic, and deeply invested in the wellbeing of others. Has an 
+  intuitive understanding of people's emotional needs. Sometimes takes on too 
+  much responsibility for others' problems. Excellent at defusing tensions and 
+  bringing people together.
+
+Traits:
+  - TraitID: "Healing_Presence"
+    TraitName: "Healing Presence"
+    TraitDescription: "Natural ability to comfort and heal. Patients recover faster under their care."
+    ModifierValue: 1.4        # 40% bonus to medical effectiveness
+
+  - TraitID: "Emotional_Intelligence"
+    TraitName: "High Emotional Intelligence"
+    TraitDescription: "Exceptional understanding of emotions and social dynamics."
+    ModifierValue: 1.35       # 35% bonus to social interactions
+
+  - TraitID: "Compassion_Fatigue"
+    TraitName: "Compassion Fatigue"
+    TraitDescription: "Tendency to absorb others' stress and pain, affecting personal wellbeing."
+    ModifierValue: 1.15       # 15% more stress from others
+
+# ====================
+# Performance Metrics
+# ====================
+PerformanceMetrics:
+  - MetricName: "Patient Care Quality"
+    Value: 95.0
+    Trend: 2.0       # Consistently excellent
+
+  - MetricName: "Crew Morale Impact"
+    Value: 88.0
+    Trend: 4.0       # Strong positive influence
+
+  - MetricName: "Self-Care"
+    Value: 55.0
+    Trend: -2.0      # Declining (needs attention)
+
+PastAssignments:
+  - AssignmentLocation: "Earth Medical Center - Lagos"
+    RoleHeld: "Trauma Surgeon"
+    DurationMonths: 72
+    PerformanceRating: 5
+    Notes: "Led team through major disaster response. Saved hundreds of lives."
+
+  - AssignmentLocation: "Colony Ship Horizon"
+    RoleHeld: "Chief Medical Officer"
+    DurationMonths: 48
+    PerformanceRating: 5
+    Notes: "Maintained crew health through 4-year voyage. Zero preventable deaths."
+
+# ====================
+# Employment
+# ====================
+Salary: 6800
+ContractDuration: 60
+ContractMonthsRemaining: 48
+
+# ====================
+# Blueprint Integration Notes
+# ====================
+# Empathetic Disposition Behavior Patterns:
+# - Frequently initiates social interactions to check on others
+# - Prioritizes helping crew over personal needs
+# - Makes decisions considering impact on people
+# - Experiences stress from others' suffering
+# - Natural mediator in conflicts
+#
+# Recommended Blueprint Overrides:
+# - EvaluateTaskPriority: Social interactions if crew morale is low
+# - HandleSocialInteraction: Always positive, supportive responses
+# - MakePersonalityDrivenDecision: Choose options mentioning "crew" or "people"
+# - HandleStressChange: Amplified when others are suffering
+# - OnTaskCompleted: Gain morale from helping others
+#
+# This personality works well for:
+# - Medical Officer roles
+# - Counselor positions
+# - Diplomatic missions
+# - Morale management
+# - Conflict resolution

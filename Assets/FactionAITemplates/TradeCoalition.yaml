@@ -1,0 +1,129 @@
+# Trade-Focused Merchant Faction AI Template
+# This template represents a faction focused on commerce and economic expansion
+# Ideal for peaceful gameplay with emphasis on trade networks
+
+# ====================
+# Basic Faction Info
+# ====================
+FactionName: "Merchant Coalition"
+Description: "A powerful trade organization dedicated to profit, commerce, and economic dominance. They maintain peaceful relations for business purposes and avoid conflicts that disrupt trade."
+
+# Faction Colors
+PrimaryColor:
+  R: 0.9
+  G: 0.7
+  B: 0.2
+  A: 1.0
+
+SecondaryColor:
+  R: 1.0
+  G: 0.9
+  B: 0.6
+  A: 1.0
+
+# ====================
+# Faction Attributes
+# ====================
+TechnologyLevel: 5        # Medium tech
+MilitaryStrength: 4       # Low-medium military (for escort duty)
+EconomicPower: 9          # Very strong economy
+InitialReputation: 15     # Neutral-positive with player
+bHostileByDefault: false  # Business-friendly
+
+# ====================
+# AI Behavior Configuration
+# ====================
+AIBehaviorMode: "Trading"
+bIsEarlyGame: true
+UpdateInterval: 5.0
+
+# ====================
+# Early Game Priorities
+# ====================
+EarlyGamePriorities:
+  TradePriority: 10        # Maximum - primary focus
+  DiplomacyPriority: 8     # High - for trade agreements
+  ExpansionPriority: 6     # Medium-high - for trade routes
+  ExplorationPriority: 5   # Medium - finding resources
+  ResearchPriority: 4      # Medium-low - practical tech only
+  DefensePriority: 3       # Low - just enough to protect trade
+
+# ====================
+# Strategic State
+# ====================
+TerritoryCount: 2           # Trading posts
+EconomicStrength: 85.0      # Very strong economy
+MilitaryPower: 35.0         # Modest defensive force
+DiplomaticInfluence: 70.0   # Good connections
+
+# ====================
+# Diplomacy Configuration
+# ====================
+TruceList:
+  - "SolarisUnion"
+  - "PeacefulExplorers"
+  - "AgriculturalSyndicate"
+  - "ManufacturingGuild"
+
+FactionRelationships:
+  - TargetFactionID: "SolarisUnion"
+    RelationshipValue: 40
+    bIsAllied: false
+    bAtWar: false
+    TradeModifier: 1.25
+
+  - TargetFactionID: "PeacefulExplorers"
+    RelationshipValue: 50
+    bIsAllied: true           # Trade alliance
+    bAtWar: false
+    TradeModifier: 1.4
+
+  - TargetFactionID: "AgriculturalSyndicate"
+    RelationshipValue: 70     # Major trading partner
+    bIsAllied: true
+    bAtWar: false
+    TradeModifier: 1.5
+
+  - TargetFactionID: "IroncladConsortium"
+    RelationshipValue: -10    # Competitors
+    bIsAllied: false
+    bAtWar: false
+    TradeModifier: 1.0
+
+  - TargetFactionID: "PirateClans"
+    RelationshipValue: -80    # Major threat to trade
+    bIsAllied: false
+    bAtWar: false
+    TradeModifier: 0.3
+
+# ====================
+# Faction Traits
+# ====================
+Traits:
+  - TraitID: "CommerceExpert"
+    TraitName: "Commerce Expertise"
+    TraitDescription: "Decades of trading experience grant superior negotiation skills and better deals."
+    ModifierValue: 1.4         # 40% trade bonus
+
+  - TraitID: "MerchantFleet"
+    TraitName: "Vast Merchant Fleet"
+    TraitDescription: "Extensive cargo fleet enables large-scale trade operations."
+    ModifierValue: 1.3         # 30% more cargo capacity
+
+  - TraitID: "TradeIntelligence"
+    TraitName: "Market Intelligence"
+    TraitDescription: "Superior information networks identify profitable opportunities."
+    ModifierValue: 1.2         # 20% better trade route efficiency
+
+# ====================
+# Blueprint Integration Notes
+# ====================
+# This faction is optimized for trade-focused gameplay:
+# - High trade priorities ensure constant commerce activity
+# - Alliance system creates stable trade networks
+# - Avoids conflict to maintain business relationships
+#
+# Recommended Blueprint Overrides:
+# - ShouldInitiateTrade: Always returns true for most factions
+# - HandleDiplomaticInteraction: Focus on trade deals
+# - UpdateStrategicGoals: Adjust based on economic strength
