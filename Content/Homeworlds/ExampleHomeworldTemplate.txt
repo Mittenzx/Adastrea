@@ -1,0 +1,126 @@
+# Example Homeworld Data Asset Configuration
+
+This file demonstrates how to configure a Homeworld Data Asset in the Unreal Engine editor.
+
+## Step-by-Step Instructions:
+
+1. Create a new Homeworld Data Asset:
+   - Right-click in Content Browser
+   - Miscellaneous → Data Asset
+   - Select "HomeworldDataAsset"
+   - Name it: DA_Homeworld_[YourName]
+
+2. Configure the following properties:
+
+---
+
+## Example 1: Core World Homeworld (Terra Prime)
+
+**Homeworld Info:**
+- Homeworld Name: "Terra Prime"
+- Homeworld ID: TerraPrime
+- Description: "A prosperous core world colony loyal to advanced civilizations. 
+  Citizens enjoy high technology and strong military protection."
+
+**Faction Relations:**
+  Entry [0]:
+    - Faction: DA_Faction_SolarisUnion (select from dropdown)
+    - Starting Reputation: 75
+
+  Entry [1]:
+    - Faction: DA_Faction_IroncladConsortium
+    - Starting Reputation: 40
+
+  Entry [2]:
+    - Faction: DA_Faction_FreeTradersGuild
+    - Starting Reputation: 20
+
+  Entry [3]:
+    - Faction: DA_Faction_CrimsonArmada
+    - Starting Reputation: -70
+
+---
+
+## Example 2: Frontier Homeworld (Last Light Station)
+
+**Homeworld Info:**
+- Homeworld Name: "Last Light Station"
+- Homeworld ID: LastLightStation
+- Description: "A hardscrabble frontier outpost on the edge of civilized space. 
+  Residents are independent and suspicious of core world authority."
+
+**Faction Relations:**
+  Entry [0]:
+    - Faction: DA_Faction_FrontierAlliance
+    - Starting Reputation: 80
+
+  Entry [1]:
+    - Faction: DA_Faction_FreeTradersGuild
+    - Starting Reputation: 30
+
+  Entry [2]:
+    - Faction: DA_Faction_SolarisUnion
+    - Starting Reputation: -35
+
+  Entry [3]:
+    - Faction: DA_Faction_CrimsonArmada
+    - Starting Reputation: -80
+
+---
+
+## Example 3: Trading Hub Homeworld (Port Haven)
+
+**Homeworld Info:**
+- Homeworld Name: "Port Haven"
+- Homeworld ID: PortHaven
+- Description: "A neutral trading station that maintains careful balance between 
+  all major powers, prioritizing profit over politics."
+
+**Faction Relations:**
+  Entry [0]:
+    - Faction: DA_Faction_FreeTradersGuild
+    - Starting Reputation: 65
+
+  Entry [1]:
+    - Faction: DA_Faction_IroncladConsortium
+    - Starting Reputation: 50
+
+  Entry [2]:
+    - Faction: DA_Faction_SolarisUnion
+    - Starting Reputation: 15
+
+  Entry [3]:
+    - Faction: DA_Faction_FrontierAlliance
+    - Starting Reputation: 25
+
+  Entry [4]:
+    - Faction: DA_Faction_CrimsonArmada
+    - Starting Reputation: -20
+
+---
+
+## Reputation Scale Reference:
+
+-100 to -50: Hostile (faction attacks on sight)
+-49 to -25:  Very Unfriendly (closed borders, no trade)
+-24 to -1:   Unfriendly (limited interaction)
+0 to 24:     Neutral (standard diplomacy)
+25 to 49:    Friendly (trade bonuses)
+50 to 74:    Very Friendly (alliance opportunities)
+75 to 100:   Allied (maximum cooperation)
+
+---
+
+## Important Notes:
+
+1. Each homeworld should have 5-10 faction relationship entries
+2. Not all factions need entries (undefined = neutral/0 reputation)
+3. Ensure Faction references point to valid FactionDataAsset objects
+4. Homeworld IDs must be unique across all homeworlds
+5. Balance friendly vs hostile factions for gameplay variety
+
+---
+
+For complete documentation, see:
+- Assets/HomeworldSystemGuide.md - Detailed setup guide
+- Blueprints/HomeworldBlueprintTemplates.md - Blueprint integration
