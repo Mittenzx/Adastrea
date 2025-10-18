@@ -1,0 +1,134 @@
+# Peaceful Explorers Faction AI Template
+# This template represents a faction focused on discovery and peaceful expansion
+# Ideal for early-game gameplay with low conflict
+
+# ====================
+# Basic Faction Info
+# ====================
+FactionName: "Peaceful Explorers"
+Description: "A peaceful faction dedicated to discovery, scientific advancement, and diplomatic relations. They avoid conflict and seek to understand the galaxy through exploration and cooperation."
+
+# Faction Colors (FLinearColor - R, G, B, A values 0-1)
+PrimaryColor:
+  R: 0.2
+  G: 0.6
+  B: 0.9
+  A: 1.0
+
+SecondaryColor:
+  R: 0.8
+  G: 0.9
+  B: 1.0
+  A: 1.0
+
+# ====================
+# Faction Attributes
+# ====================
+TechnologyLevel: 6        # Medium-high tech (1-10 scale)
+MilitaryStrength: 3       # Low military focus (1-10 scale)
+EconomicPower: 7          # Strong economy for trade (1-10 scale)
+InitialReputation: 25     # Slightly positive with player (-100 to 100)
+bHostileByDefault: false  # Never hostile by default
+
+# ====================
+# AI Behavior Configuration
+# ====================
+AIBehaviorMode: "Peaceful"  # Peaceful, Defensive, Aggressive, Trading, Exploration, Diplomatic, Resource, Stealth
+bIsEarlyGame: true          # Enable early game AI priorities
+
+# Update interval for AI decisions (in seconds)
+# Factions update less frequently than individual NPCs
+UpdateInterval: 5.0
+
+# ====================
+# Early Game Priorities (0-10 scale)
+# These determine faction behavior in the early stages
+# ====================
+EarlyGamePriorities:
+  ExplorationPriority: 9   # Very high - main focus
+  TradePriority: 7         # High - economic development
+  DiplomacyPriority: 8     # High - building alliances
+  ResearchPriority: 7      # High - technology advancement
+  ExpansionPriority: 4     # Medium-low - peaceful claims only
+  DefensePriority: 3       # Low - minimal military
+
+# ====================
+# Strategic State (Runtime Values)
+# These are initial values; they change during gameplay
+# ====================
+TerritoryCount: 1           # Starting territories
+EconomicStrength: 60.0      # Economic power (0-100)
+MilitaryPower: 25.0         # Military strength (0-100)
+DiplomaticInfluence: 65.0   # Diplomatic reach (0-100)
+
+# ====================
+# Diplomacy Configuration
+# ====================
+TruceList:
+  # List factions this faction has truces with (by FactionID)
+  - "SolarisUnion"
+  - "ResearchCollective"
+  - "TradeGuild"
+
+# Relationships with other factions
+FactionRelationships:
+  - TargetFactionID: "SolarisUnion"
+    RelationshipValue: 50      # Friendly (0 = neutral, positive = friendly)
+    bIsAllied: false           # Not formally allied yet
+    bAtWar: false
+    TradeModifier: 1.2         # 20% better trade deals
+
+  - TargetFactionID: "ResearchCollective"
+    RelationshipValue: 60      # Very friendly
+    bIsAllied: true            # Research alliance
+    bAtWar: false
+    TradeModifier: 1.3         # 30% better trade deals
+
+  - TargetFactionID: "IroncladConsortium"
+    RelationshipValue: -20     # Slightly negative (ideological differences)
+    bIsAllied: false
+    bAtWar: false
+    TradeModifier: 0.9         # 10% worse trade deals
+
+  - TargetFactionID: "PirateClans"
+    RelationshipValue: -60     # Hostile
+    bIsAllied: false
+    bAtWar: false              # Not at war, but avoid
+    TradeModifier: 0.5         # Poor trade terms
+
+# ====================
+# Faction Traits
+# Traits provide unique modifiers and characteristics
+# ====================
+Traits:
+  - TraitID: "ScientificMindset"
+    TraitName: "Scientific Mindset"
+    TraitDescription: "This faction prioritizes research and discovery above all else, gaining bonuses to technology advancement and exploration."
+    ModifierValue: 1.25        # 25% bonus to research/exploration
+
+  - TraitID: "PacifistPhilosophy"
+    TraitName: "Pacifist Philosophy"
+    TraitDescription: "Committed to peaceful resolution of conflicts. Gains diplomatic bonuses but suffers penalties in warfare."
+    ModifierValue: 1.3         # 30% bonus to diplomacy, -30% to combat
+
+  - TraitID: "TradeNetwork"
+    TraitName: "Extensive Trade Network"
+    TraitDescription: "Well-established trade routes and commercial connections provide economic benefits."
+    ModifierValue: 1.15        # 15% bonus to trade income
+
+# ====================
+# Blueprint Integration Notes
+# ====================
+# To use this template in Unreal:
+# 1. Create a new FactionDataAsset in Content Browser
+# 2. Copy these values into the appropriate fields
+# 3. Create a Blueprint based on UFactionLogic
+# 4. Assign the FactionDataAsset to the FactionLogic Blueprint
+# 5. The AI will automatically use these priorities and relationships
+#
+# You can override any BlueprintNativeEvent in the FactionLogic Blueprint:
+# - EvaluateStrategicPriority - Customize how priorities are chosen
+# - HandleDiplomaticInteraction - Custom diplomacy behavior
+# - OnTerritoryDiscovered - Custom exploration response
+# - ShouldInitiateTrade - Custom trade logic
+# - UpdateStrategicGoals - Custom goal adjustment

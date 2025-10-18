@@ -1,0 +1,211 @@
+# Disciplined Security Officer Personnel AI Template
+# This template represents a by-the-book security professional
+# Ideal for security officers, guards, and military personnel
+
+# ====================
+# Basic Identity
+# ====================
+PersonnelName: "Lieutenant Marcus Chen"
+PersonnelID: "Security_001"
+Age: 38
+Gender: "Male"
+Species: "Human"
+Nationality: "Mars Defense Force"
+
+Biography: |
+  Lt. Chen served 15 years in planetary defense before joining civilian service. 
+  Known for impeccable adherence to regulations and protocols. Maintains peak 
+  physical fitness and regularly reviews security procedures. Former military 
+  training makes him a natural leader during crisis situations.
+
+Tags:
+  - "Security"
+  - "Military Veteran"
+  - "Protocol Expert"
+
+# ====================
+# Role and Assignment
+# ====================
+PrimaryRole: "Security Officer"
+CurrentAssignment: "UESS Discovery"
+Department: "Security & Safety"
+
+ManagerID: "ChiefSecurity_001"
+DirectReports:
+  - "SecurityGuard_001"
+  - "SecurityGuard_002"
+
+# ====================
+# AI Personality Configuration
+# ====================
+Disposition: "Disciplined"  # By-the-book, orderly
+AIBehaviorMode: "Defensive"
+bIsActive: true
+UpdateInterval: 1.0
+
+# ====================
+# AI Task Preferences
+# ====================
+# Disciplined disposition gravitates toward:
+# - Duty station tasks (highest priority)
+# - Maintenance and upkeep
+# - Following schedules rigidly
+# - Training to stay sharp
+# - Minimal social interaction (professional only)
+
+CurrentTask: "DutyStation"
+bOnDuty: true
+HoursUntilNextShift: 7.0
+HoursUntilTaskComplete: 4.0
+
+# ====================
+# Skills and Experience
+# ====================
+OverallSkillLevel: 8
+TotalExperience: 18500
+
+Skills:
+  - SkillName: "Combat Training"
+    SkillLevel: 9
+    ExperiencePoints: 5500
+
+  - SkillName: "Security Protocols"
+    SkillLevel: 10
+    ExperiencePoints: 6000
+
+  - SkillName: "Threat Assessment"
+    SkillLevel: 8
+    ExperiencePoints: 4000
+
+  - SkillName: "Equipment Maintenance"
+    SkillLevel: 7
+    ExperiencePoints: 2000
+
+  - SkillName: "Leadership"
+    SkillLevel: 7
+    ExperiencePoints: 3500
+
+Specialties:
+  - "Crisis Management"
+  - "Boarding Defense"
+  - "Patrol Procedures"
+
+# ====================
+# Status and Condition
+# ====================
+Health: 95.0        # Excellent health (fitness focused)
+Morale: 70.0        # Good morale (satisfied with clear duties)
+Fatigue: 20.0       # Low fatigue (disciplined rest schedule)
+Loyalty: 90.0       # Very loyal (duty-bound)
+Reputation: 55      # Respected for reliability
+
+# ====================
+# Social Network
+# ====================
+FriendsList:
+  - "ChiefSecurity_001"  # Mentor relationship
+
+ConflictList:
+  # Empty - maintains professional distance
+
+Relationships:
+  - TargetPersonnelID: "ChiefSecurity_001"
+    RelationshipType: "Mentor"
+    RelationshipStrength: 70
+    Notes: "Former commanding officer. Deep professional respect."
+
+  - TargetPersonnelID: "Explorer_001"
+    RelationshipType: "Professional"
+    RelationshipStrength: 20
+    Notes: "Concerns about safety protocol compliance. Often has to remind them."
+
+  - TargetPersonnelID: "SecurityGuard_001"
+    RelationshipType: "Professional"
+    RelationshipStrength: 50
+    Notes: "Direct report. Training them in proper procedures."
+
+# ====================
+# Personality and Traits
+# ====================
+PersonalityType: "ISTJ - The Inspector"
+PersonalityDescription: |
+  Methodical, reliable, and dedicated to duty. Lives by a strict code of conduct 
+  and expects the same from others. Prefers clear hierarchies and well-defined 
+  procedures. Can be inflexible but is invaluable in crisis situations where 
+  protocol saves lives.
+
+Traits:
+  - TraitID: "By_The_Book"
+    TraitName: "By The Book"
+    TraitDescription: "Follows regulations precisely. Gains bonus to protocol-based tasks but may struggle with improvisation."
+    ModifierValue: 1.35       # 35% bonus to protocol tasks
+
+  - TraitID: "Disciplined_Mind"
+    TraitName: "Disciplined Mind"
+    TraitDescription: "Mental fortitude and self-control provide resistance to stress and fear."
+    ModifierValue: 0.7        # 30% less stress impact
+
+  - TraitID: "Reliable"
+    TraitName: "Utterly Reliable"
+    TraitDescription: "Can always be counted on to complete assigned duties."
+    ModifierValue: 1.25       # 25% bonus to duty performance
+
+# ====================
+# Performance Metrics
+# ====================
+PerformanceMetrics:
+  - MetricName: "Duty Compliance"
+    Value: 98.0
+    Trend: 1.0       # Consistently high
+
+  - MetricName: "Response Time"
+    Value: 92.0
+    Trend: 0.0       # Stable excellence
+
+  - MetricName: "Team Leadership"
+    Value: 75.0
+    Trend: 3.0       # Improving
+
+PastAssignments:
+  - AssignmentLocation: "Mars Defense Station Alpha"
+    RoleHeld: "Security Sergeant"
+    DurationMonths: 60
+    PerformanceRating: 5
+    Notes: "Exemplary service. Zero security breaches during tenure."
+
+  - AssignmentLocation: "Transport Vessel Meridian"
+    RoleHeld: "Security Chief"
+    DurationMonths: 24
+    PerformanceRating: 5
+    Notes: "Successfully repelled pirate boarding attempt. Commendation for valor."
+
+# ====================
+# Employment
+# ====================
+Salary: 5200
+ContractDuration: 48
+ContractMonthsRemaining: 36
+
+# ====================
+# Blueprint Integration Notes
+# ====================
+# Disciplined Disposition Behavior Patterns:
+# - Always prioritizes duty station when on shift
+# - Follows schedule precisely
+# - Performs regular maintenance checks
+# - Maintains professional boundaries
+# - Makes decisions based on regulations
+# - Low stress tolerance for rule-breaking
+#
+# Recommended Blueprint Overrides:
+# - EvaluateTaskPriority: DutyStation if on duty, Maintenance if off duty
+# - HandleSocialInteraction: Brief, professional exchanges
+# - MakePersonalityDrivenDecision: Choose options mentioning "protocol" or "regulation"
+# - ShouldPursueTraining: True for combat/security skills
+# - HandleStressChange: Reduced stress impact due to mental discipline
+#
+# This personality works well for:
+# - Security Officer roles
+# - Military personnel
+# - Station guards
+# - Crisis response teams
