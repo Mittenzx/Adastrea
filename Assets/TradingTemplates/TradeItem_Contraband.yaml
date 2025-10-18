@@ -1,0 +1,60 @@
+# Trade Item: Contraband Neural Stims
+# Category: Contraband
+# Description: Illegal performance-enhancing drugs
+
+ItemName: "Neural Stims"
+ItemID: "TradeItem_NeuralStims"
+Description: |
+  Illegal neural enhancement drugs that boost cognitive
+  performance but carry serious health risks.
+  Highly profitable but extremely dangerous to trade.
+  
+Category: Contraband
+
+# ====================
+# PRICING
+# ====================
+BasePrice: 1500.0
+PriceVolatility:
+  VolatilityMultiplier: 3.0
+  MinPriceDeviation: 0.3
+  MaxPriceDeviation: 5.0
+  
+bAffectedBySupplyDemand: true
+bAffectedByMarketEvents: true
+
+# ====================
+# LEGALITY & RESTRICTIONS
+# ====================
+LegalityStatus: Illegal
+TradeRestrictions:
+  BannedFactions:
+    - "SolarisUnion"
+    - "TerranFederation"
+    - "ZenithCoalition"
+  RequiresPermitFactions: []
+  MinReputationRequired: -100
+  
+ContrabandFineMultiplier: 10.0
+
+# ====================
+# TRADE PROPERTIES
+# ====================
+VolumePerUnit: 0.05
+MassPerUnit: 0.1
+StandardLotSize: 5
+TypicalMarketStock: 20
+ReplenishmentRate: 2
+
+# ====================
+# AI TRADER BEHAVIOR
+# ====================
+AITradePriority: 10
+bAIHoardable: true
+bAIArbitrageEnabled: true
+BehaviorTags:
+  - "HighValue"
+  - "Contraband"
+  - "HighRisk"
+  - "BlackMarket"
+  - "Smuggling"

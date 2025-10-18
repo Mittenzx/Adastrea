@@ -1,0 +1,57 @@
+# Trade Item: Iron Ore
+# Category: Raw Materials
+# Description: Basic mineral resource for industrial production
+
+ItemName: "Iron Ore"
+ItemID: "TradeItem_IronOre"
+Description: |
+  Raw iron ore extracted from asteroids and planetary mines.
+  Essential for metal production and construction.
+  
+Category: RawMaterials
+
+# Material Data Reference (optional)
+MaterialData: "DA_Material_IronOre"
+
+# ====================
+# PRICING
+# ====================
+BasePrice: 50.0
+PriceVolatility:
+  VolatilityMultiplier: 1.2
+  MinPriceDeviation: 0.6
+  MaxPriceDeviation: 1.8
+  
+bAffectedBySupplyDemand: true
+bAffectedByMarketEvents: true
+
+# ====================
+# LEGALITY & RESTRICTIONS
+# ====================
+LegalityStatus: Legal
+TradeRestrictions:
+  BannedFactions: []
+  RequiresPermitFactions: []
+  MinReputationRequired: -100
+  
+ContrabandFineMultiplier: 0.0
+
+# ====================
+# TRADE PROPERTIES
+# ====================
+VolumePerUnit: 1.0
+MassPerUnit: 2.5
+StandardLotSize: 100
+TypicalMarketStock: 5000
+ReplenishmentRate: 500
+
+# ====================
+# AI TRADER BEHAVIOR
+# ====================
+AITradePriority: 6
+bAIHoardable: false
+bAIArbitrageEnabled: true
+BehaviorTags:
+  - "BasicResource"
+  - "Industrial"
+  - "HighVolume"

@@ -1,0 +1,72 @@
+# Trade Contract: Basic Delivery Mission
+# Type: Delivery
+# Difficulty: Easy
+# Description: Simple cargo delivery contract
+
+ContractName: "Routine Supply Delivery"
+ContractID: "Contract_SupplyDelivery_001"
+Description: |
+  Transport basic supplies from Free Port Station to
+  Mining Colony Alpha. Standard delivery contract with
+  minimal risk and fair compensation.
+  
+ContractType: Delivery
+Difficulty: Easy
+
+# Contract Giver
+ContractGiver: "DA_Faction_FreeTraders"
+
+# ====================
+# CONTRACT DETAILS
+# ====================
+RequiredCargo:
+  - TradeItem: "DA_TradeItem_FoodRations"
+    Quantity: 500
+    bRequiresPristineCondition: false
+    
+  - TradeItem: "DA_TradeItem_MedicalSupplies"
+    Quantity: 100
+    bRequiresPristineCondition: true
+
+# Origin and Destination
+OriginLocation:
+  LocationName: "Free Port Station"
+  Coordinates: [1000, 2000, 500]
+  MarketID: "Market_FreePort"
+  ControllingFaction: "DA_Faction_FreeTraders"
+  
+DestinationLocation:
+  LocationName: "Mining Colony Alpha"
+  Coordinates: [5000, 3000, 1000]
+  MarketID: "Market_MiningColony"
+  ControllingFaction: "DA_Faction_Miners"
+
+Distance: 5500.0
+TimeLimit: 48.0
+MinReputationRequired: 0
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 5000
+  ReputationGain: 10
+  ExperiencePoints: 100
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 1000
+  ReputationPenalty: 5
+  CollateralDeposit: 500
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: true
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "BasicDelivery"
+  - "LowRisk"
+  - "Repeatable"

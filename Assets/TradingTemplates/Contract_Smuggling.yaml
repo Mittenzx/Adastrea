@@ -1,0 +1,78 @@
+# Trade Contract: Smuggling Mission
+# Type: Smuggling
+# Difficulty: Very Hard
+# Description: High-risk contraband delivery
+
+ContractName: "Shadow Run: Neural Stim Delivery"
+ContractID: "Contract_Smuggling_NeuralStims"
+Description: |
+  Transport contraband neural enhancement drugs through
+  heavily patrolled space. Avoid detection at all costs.
+  High reward, extreme risk. For experienced smugglers only.
+  
+ContractType: Smuggling
+Difficulty: VeryHard
+
+# Contract Giver
+ContractGiver: "DA_Faction_PirateAlliance"
+
+# ====================
+# CONTRACT DETAILS
+# ====================
+RequiredCargo:
+  - TradeItem: "DA_TradeItem_NeuralStims"
+    Quantity: 50
+    bRequiresPristineCondition: true
+
+# Origin and Destination
+OriginLocation:
+  LocationName: "Shadow Haven"
+  Coordinates: [-5000, -8000, -2000]
+  MarketID: "Market_ShadowHaven"
+  ControllingFaction: "DA_Faction_PirateAlliance"
+  
+DestinationLocation:
+  LocationName: "Corporate Megalopolis"
+  Coordinates: [10000, 5000, 3000]
+  MarketID: "Market_CorpMega"
+  ControllingFaction: "DA_Faction_IroncladConsortium"
+
+Distance: 18500.0
+TimeLimit: 72.0
+MinReputationRequired: -25
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 75000
+  ReputationGain: 25
+  ExperiencePoints: 500
+  BonusItems:
+    - TradeItem: "DA_TradeItem_SmugglerBadge"
+      Quantity: 1
+      bRequiresPristineCondition: false
+
+Penalties:
+  CreditPenalty: 50000
+  ReputationPenalty: 50
+  CollateralDeposit: 25000
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: false
+bRequiresStealth: true
+bCombatExpected: true
+HostileFactions:
+  - "DA_Faction_SolarisUnion"
+  - "DA_Faction_TerranFederation"
+  - "DA_Faction_AuthorityPatrol"
+  
+ContractTags:
+  - "Smuggling"
+  - "HighRisk"
+  - "HighReward"
+  - "Contraband"
+  - "StealthRequired"
+  - "CombatPossible"

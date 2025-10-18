@@ -1,0 +1,59 @@
+# Trade Item: Quantum Processor
+# Category: Technology
+# Description: High-value advanced technology component
+
+ItemName: "Quantum Processor"
+ItemID: "TradeItem_QuantumProcessor"
+Description: |
+  Advanced quantum computing processor used in high-end
+  ship systems, AI cores, and research facilities.
+  Rare and valuable technology.
+  
+Category: Technology
+
+# ====================
+# PRICING
+# ====================
+BasePrice: 5000.0
+PriceVolatility:
+  VolatilityMultiplier: 2.5
+  MinPriceDeviation: 0.4
+  MaxPriceDeviation: 3.0
+  
+bAffectedBySupplyDemand: true
+bAffectedByMarketEvents: true
+
+# ====================
+# LEGALITY & RESTRICTIONS
+# ====================
+LegalityStatus: Regulated
+TradeRestrictions:
+  BannedFactions:
+    - "PirateAlliance"
+  RequiresPermitFactions:
+    - "SolarisUnion"
+    - "IroncladConsortium"
+  MinReputationRequired: 25
+  
+ContrabandFineMultiplier: 2.0
+
+# ====================
+# TRADE PROPERTIES
+# ====================
+VolumePerUnit: 0.1
+MassPerUnit: 0.5
+StandardLotSize: 10
+TypicalMarketStock: 50
+ReplenishmentRate: 5
+
+# ====================
+# AI TRADER BEHAVIOR
+# ====================
+AITradePriority: 9
+bAIHoardable: true
+bAIArbitrageEnabled: true
+BehaviorTags:
+  - "HighValue"
+  - "Technology"
+  - "Rare"
+  - "Regulated"

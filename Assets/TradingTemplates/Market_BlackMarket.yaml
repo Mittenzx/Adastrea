@@ -1,0 +1,92 @@
+# Market: Black Market Den
+# Type: Black Market
+# Size: Small Outpost
+# Description: Illicit trading post for contraband
+
+MarketName: "Shadow Haven"
+MarketID: "Market_ShadowHaven"
+Description: |
+  A hidden station in the outer reaches where the law
+  doesn't reach. Here, anything can be bought or sold
+  for the right price. Discretion is paramount.
+  
+MarketType: BlackMarket
+MarketSize: Small
+
+# Faction Control
+ControllingFaction: "DA_Faction_PirateAlliance"
+
+# ====================
+# MARKET CONFIGURATION
+# ====================
+TransactionTaxRate: 0.20
+SellPriceMarkup: 1.5
+BuyPriceMarkdown: 0.6
+
+bAllowPlayerBuying: true
+bAllowPlayerSelling: true
+bAllowAITraders: true
+MinReputationRequired: -25
+
+# ====================
+# INVENTORY TEMPLATE
+# ====================
+StockRefreshRate: 12.0
+
+# Sample inventory entries - mostly contraband
+InventoryEntries:
+  - TradeItem: "DA_TradeItem_NeuralStims"
+    CurrentStock: 50
+    MaxStock: 100
+    SupplyLevel: 1.5
+    DemandLevel: 2.0
+    
+  - TradeItem: "DA_TradeItem_StolenGoods"
+    CurrentStock: 200
+    MaxStock: 500
+    SupplyLevel: 1.8
+    DemandLevel: 1.2
+    
+  - TradeItem: "DA_TradeItem_MilitaryWeapons"
+    CurrentStock: 30
+    MaxStock: 50
+    SupplyLevel: 0.8
+    DemandLevel: 2.5
+    
+  - TradeItem: "DA_TradeItem_CounterfeitCredits"
+    CurrentStock: 100
+    MaxStock: 200
+    SupplyLevel: 1.2
+    DemandLevel: 1.8
+
+# ====================
+# MARKET EVENTS
+# ====================
+RandomEventChance: 0.25
+
+# Sample market events
+SampleEvents:
+  - EventName: "Authority Raid"
+    EventID: "Event_AuthorityRaid"
+    AffectedItemIDs: []  # Affects all items
+    PriceMultiplier: 2.0
+    SupplyMultiplier: 0.3
+    DemandMultiplier: 0.5
+    DurationHours: 6.0
+    
+  - EventName: "Smuggling Run Success"
+    EventID: "Event_SmugglingSuccess"
+    AffectedItemIDs:
+      - "TradeItem_NeuralStims"
+      - "TradeItem_MilitaryWeapons"
+    PriceMultiplier: 0.7
+    SupplyMultiplier: 2.0
+    DemandMultiplier: 0.8
+    DurationHours: 24.0
+
+# ====================
+# AI TRADER SETTINGS
+# ====================
+AITraderCount: 5
+AITradeFrequency: 15
+bAllowAIPriceManipulation: true
