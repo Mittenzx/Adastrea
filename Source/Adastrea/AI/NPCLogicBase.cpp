@@ -1,4 +1,5 @@
 #include "AI/NPCLogicBase.h"
+#include "AdastreaLog.h"
 
 UNPCLogicBase::UNPCLogicBase()
 {
@@ -15,15 +16,21 @@ UNPCLogicBase::UNPCLogicBase()
 
 void UNPCLogicBase::InitializeAI_Implementation()
 {
-    // Default implementation - can be overridden in Blueprint
+    // Reset timing
     TimeSinceLastUpdate = 0.0f;
     
-    // Log initialization for debugging
-    if (GEngine)
+    // Validate update interval
+    if (UpdateInterval <= 0.0f)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
-            FString::Printf(TEXT("AI Initialized: %s"), *GetName()));
+        UE_LOG(LogAdastreaAI, Warning, TEXT("AI %s: Invalid UpdateInterval %.2f, setting to 1.0"), *GetName(), UpdateInterval);
+        UpdateInterval = 1.0f;
     }
+    
+    // Log initialization for debugging
+    UE_LOG(LogAdastreaAI, Log, TEXT("AI Initialized: %s (Mode: %s, Interval: %.2f)"), 
+        *GetName(), 
+        *UEnum::GetValueAsString(CurrentBehaviorMode),
+        UpdateInterval);
 }
 
 void UNPCLogicBase::OnTickAI_Implementation(float DeltaTime)
@@ -47,38 +54,27 @@ void UNPCLogicBase::OnTickAI_Implementation(float DeltaTime)
 
 void UNPCLogicBase::OnActivateAI_Implementation()
 {
-    // Default implementation
+    // Activate the AI
     bIsActive = true;
     
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
-            FString::Printf(TEXT("AI Activated: %s"), *GetName()));
-    }
+    UE_LOG(LogAdastreaAI, Log, TEXT("AI Activated: %s"), *GetName());
 }
 
 void UNPCLogicBase::OnDeactivateAI_Implementation()
 {
-    // Default implementation
+    // Deactivate the AI
     bIsActive = false;
     
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, 
-            FString::Printf(TEXT("AI Deactivated: %s"), *GetName()));
-    }
+    UE_LOG(LogAdastreaAI, Log, TEXT("AI Deactivated: %s"), *GetName());
 }
 
 void UNPCLogicBase::OnBehaviorModeChanged_Implementation(EAIBehaviorMode OldMode, EAIBehaviorMode NewMode)
 {
-    // Default implementation - log the change
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, 
-            FString::Printf(TEXT("AI Mode Changed: %s -> %s"), 
-                *UEnum::GetValueAsString(OldMode),
-                *UEnum::GetValueAsString(NewMode)));
-    }
+    // Log the mode change
+    UE_LOG(LogAdastreaAI, Log, TEXT("AI Mode Changed for %s: %s -> %s"), 
+        *GetName(),
+        *UEnum::GetValueAsString(OldMode),
+        *UEnum::GetValueAsString(NewMode));
 }
 
 // ====================
@@ -169,6 +165,14 @@ FString UNPCLogicBase::GetAIStateDescription() const
 
 void UNPCLogicBase::UpdateAI(float DeltaTime)
 {
+    // Validate DeltaTime
+    if (DeltaTime < 0.0f)
+    {
+        UE_LOG(LogAdastreaAI, Warning, TEXT("AI %s: Invalid DeltaTime %.2f"), *GetName(), DeltaTime);
+        return;
+    }
+
+    // Skip update if AI is not active
     if (!bIsActive)
     {
         return;

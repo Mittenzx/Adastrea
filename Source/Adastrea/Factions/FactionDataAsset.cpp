@@ -1,4 +1,5 @@
 #include "Factions/FactionDataAsset.h"
+#include "AdastreaLog.h"
 
 UFactionDataAsset::UFactionDataAsset()
 {
@@ -26,6 +27,13 @@ TArray<FFactionTrait> UFactionDataAsset::GetTraits() const
 
 bool UFactionDataAsset::HasTrait(FName TraitID) const
 {
+    // Early exit for invalid input
+    if (TraitID.IsNone())
+    {
+        return false;
+    }
+
+    // Use range-based for loop with const reference for better performance
     for (const FFactionTrait& Trait : Traits)
     {
         if (Trait.TraitID == TraitID)
@@ -38,6 +46,12 @@ bool UFactionDataAsset::HasTrait(FName TraitID) const
 
 bool UFactionDataAsset::GetTraitByID(FName TraitID, FFactionTrait& OutTrait) const
 {
+    // Early exit for invalid input
+    if (TraitID.IsNone())
+    {
+        return false;
+    }
+
     for (const FFactionTrait& Trait : Traits)
     {
         if (Trait.TraitID == TraitID)
@@ -51,8 +65,15 @@ bool UFactionDataAsset::GetTraitByID(FName TraitID, FFactionTrait& OutTrait) con
 
 float UFactionDataAsset::GetTraitModifier(FName TraitID) const
 {
+    // Early exit for invalid input
+    if (TraitID.IsNone())
+    {
+        return 0.0f;
+    }
+
     float TotalModifier = 0.0f;
     
+    // Sum all modifiers for traits matching the given ID
     for (const FFactionTrait& Trait : Traits)
     {
         if (Trait.TraitID == TraitID)
@@ -70,6 +91,12 @@ float UFactionDataAsset::GetTraitModifier(FName TraitID) const
 
 bool UFactionDataAsset::GetRelationship(FName OtherFactionID, FFactionRelationship& OutRelationship) const
 {
+    // Early exit for invalid input
+    if (OtherFactionID.IsNone())
+    {
+        return false;
+    }
+
     for (const FFactionRelationship& Relationship : FactionRelationships)
     {
         if (Relationship.TargetFactionID == OtherFactionID)
@@ -83,6 +110,12 @@ bool UFactionDataAsset::GetRelationship(FName OtherFactionID, FFactionRelationsh
 
 bool UFactionDataAsset::IsAlliedWith(FName OtherFactionID) const
 {
+    // Early exit for invalid input
+    if (OtherFactionID.IsNone())
+    {
+        return false;
+    }
+
     for (const FFactionRelationship& Relationship : FactionRelationships)
     {
         if (Relationship.TargetFactionID == OtherFactionID)
@@ -95,6 +128,12 @@ bool UFactionDataAsset::IsAlliedWith(FName OtherFactionID) const
 
 bool UFactionDataAsset::IsAtWarWith(FName OtherFactionID) const
 {
+    // Early exit for invalid input
+    if (OtherFactionID.IsNone())
+    {
+        return false;
+    }
+
     for (const FFactionRelationship& Relationship : FactionRelationships)
     {
         if (Relationship.TargetFactionID == OtherFactionID)
@@ -107,6 +146,12 @@ bool UFactionDataAsset::IsAtWarWith(FName OtherFactionID) const
 
 int32 UFactionDataAsset::GetRelationshipValue(FName OtherFactionID) const
 {
+    // Early exit for invalid input
+    if (OtherFactionID.IsNone())
+    {
+        return 0;
+    }
+
     for (const FFactionRelationship& Relationship : FactionRelationships)
     {
         if (Relationship.TargetFactionID == OtherFactionID)
@@ -119,6 +164,12 @@ int32 UFactionDataAsset::GetRelationshipValue(FName OtherFactionID) const
 
 float UFactionDataAsset::GetTradeModifier(FName OtherFactionID) const
 {
+    // Early exit for invalid input
+    if (OtherFactionID.IsNone())
+    {
+        return 1.0f;
+    }
+
     for (const FFactionRelationship& Relationship : FactionRelationships)
     {
         if (Relationship.TargetFactionID == OtherFactionID)
