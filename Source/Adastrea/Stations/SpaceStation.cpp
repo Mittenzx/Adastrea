@@ -14,19 +14,35 @@ void ASpaceStation::BeginPlay()
 
 void ASpaceStation::AddModule(ASpaceStationModule* Module)
 {
-    if (Module && !Modules.Contains(Module))
+    // Input validation
+    if (!Module)
     {
-        Modules.Add(Module);
-        
-        // Attach the module to this station
-        Module->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
+        UE_LOG(LogTemp, Warning, TEXT("SpaceStation::AddModule - Invalid module pointer"));
+        return;
     }
+
+    // Check if module is already added
+    if (Modules.Contains(Module))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("SpaceStation::AddModule - Module already exists in station"));
+        return;
+    }
+
+    // Add module to array
+    Modules.Add(Module);
+    
+    // Attach the module to this station
+    Module->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
+    
+    UE_LOG(LogTemp, Log, TEXT("SpaceStation::AddModule - Successfully added module to station %s"), *GetName());
 }
 
 bool ASpaceStation::AddModuleAtLocation(ASpaceStationModule* Module, FVector RelativeLocation)
 {
+    // Input validation
     if (!Module)
     {
+        UE_LOG(LogTemp, Warning, TEXT("SpaceStation::AddModuleAtLocation - Invalid module pointer"));
         return false;
     }
 
@@ -40,13 +56,25 @@ bool ASpaceStation::AddModuleAtLocation(ASpaceStationModule* Module, FVector Rel
         Modules.Add(Module);
     }
 
+    UE_LOG(LogTemp, Log, TEXT("SpaceStation::AddModuleAtLocation - Added module at location (%.2f, %.2f, %.2f)"), 
+        RelativeLocation.X, RelativeLocation.Y, RelativeLocation.Z);
+    
     return true;
 }
 
 bool ASpaceStation::RemoveModule(ASpaceStationModule* Module)
 {
-    if (!Module || !Modules.Contains(Module))
+    // Input validation
+    if (!Module)
     {
+        UE_LOG(LogTemp, Warning, TEXT("SpaceStation::RemoveModule - Invalid module pointer"));
+        return false;
+    }
+
+    // Check if module exists in station
+    if (!Modules.Contains(Module))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("SpaceStation::RemoveModule - Module not found in station"));
         return false;
     }
 
@@ -56,19 +84,32 @@ bool ASpaceStation::RemoveModule(ASpaceStationModule* Module)
     // Detach the module from this station
     Module->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 
+    UE_LOG(LogTemp, Log, TEXT("SpaceStation::RemoveModule - Successfully removed module from station %s"), *GetName());
     return true;
 }
 
 bool ASpaceStation::MoveModule(ASpaceStationModule* Module, FVector NewRelativeLocation)
 {
-    if (!Module || !Modules.Contains(Module))
+    // Input validation
+    if (!Module)
     {
+        UE_LOG(LogTemp, Warning, TEXT("SpaceStation::MoveModule - Invalid module pointer"));
+        return false;
+    }
+
+    // Check if module exists in station
+    if (!Modules.Contains(Module))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("SpaceStation::MoveModule - Module not found in station"));
         return false;
     }
 
     // Update the module's relative location
     Module->SetActorRelativeLocation(NewRelativeLocation);
 
+    UE_LOG(LogTemp, Log, TEXT("SpaceStation::MoveModule - Moved module to (%.2f, %.2f, %.2f)"), 
+        NewRelativeLocation.X, NewRelativeLocation.Y, NewRelativeLocation.Z);
+    
     return true;
 }
 
@@ -81,8 +122,20 @@ TArray<ASpaceStationModule*> ASpaceStation::GetModulesByType(const FString& Modu
 {
     TArray<ASpaceStationModule*> MatchingModules;
 
+    // Input validation
+    if (ModuleType.IsEmpty())
+    {
+        UE_LOG(LogTemp, Warning, TEXT("SpaceStation::GetModulesByType - Empty module type"));
+        return MatchingModules;
+    }
+
+    // Reserve space for better performance if we have a reasonable number of modules
+    MatchingModules.Reserve(Modules.Num() / 4);  // Estimate 25% might match
+
+    // Find all matching modules
     for (ASpaceStationModule* Module : Modules)
     {
+        // Null check for safety
         if (Module && Module->ModuleType == ModuleType)
         {
             MatchingModules.Add(Module);
@@ -113,7 +166,8 @@ void ASpaceStation::SetFaction(UFactionDataAsset* NewFaction)
 
 bool ASpaceStation::HasFactionTrait(FName TraitID) const
 {
-    if (!Faction)
+    // Early validation
+    if (!Faction || TraitID.IsNone())
     {
         return false;
     }
@@ -123,7 +177,8 @@ bool ASpaceStation::HasFactionTrait(FName TraitID) const
 
 float ASpaceStation::GetFactionTraitModifier(FName TraitID) const
 {
-    if (!Faction)
+    // Early validation
+    if (!Faction || TraitID.IsNone())
     {
         return 0.0f;
     }
@@ -133,7 +188,8 @@ float ASpaceStation::GetFactionTraitModifier(FName TraitID) const
 
 bool ASpaceStation::IsAlliedWithFaction(FName OtherFactionID) const
 {
-    if (!Faction)
+    // Early validation
+    if (!Faction || OtherFactionID.IsNone())
     {
         return false;
     }
@@ -143,7 +199,8 @@ bool ASpaceStation::IsAlliedWithFaction(FName OtherFactionID) const
 
 bool ASpaceStation::IsAtWarWithFaction(FName OtherFactionID) const
 {
-    if (!Faction)
+    // Early validation
+    if (!Faction || OtherFactionID.IsNone())
     {
         return false;
     }
@@ -153,7 +210,8 @@ bool ASpaceStation::IsAtWarWithFaction(FName OtherFactionID) const
 
 int32 ASpaceStation::GetFactionRelationship(FName OtherFactionID) const
 {
-    if (!Faction)
+    // Early validation
+    if (!Faction || OtherFactionID.IsNone())
     {
         return 0;
     }

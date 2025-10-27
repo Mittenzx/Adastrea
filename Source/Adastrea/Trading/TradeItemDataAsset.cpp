@@ -25,33 +25,55 @@ UTradeItemDataAsset::UTradeItemDataAsset()
 
 float UTradeItemDataAsset::CalculatePrice(float Supply, float Demand, float MarketEventMultiplier) const
 {
-	float CalculatedPrice = BasePrice;
+    // Define price calculation constants
+    static constexpr float kMinSupplyValue = 0.1f;
+    static constexpr float kNormalMultiplier = 1.0f;
+    
+    // Input validation
+    if (Supply < 0.0f || Demand < 0.0f || MarketEventMultiplier < 0.0f)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("TradeItemDataAsset::CalculatePrice - Invalid input parameters for %s"), *ItemID.ToString());
+        return BasePrice;
+    }
 
-	// Apply supply/demand if enabled
-	if (bAffectedBySupplyDemand)
-	{
-		// Supply reduces price (more supply = lower price)
-		float SupplyFactor = FMath::Clamp(1.0f / FMath::Max(Supply, 0.1f), PriceVolatility.MinPriceDeviation, PriceVolatility.MaxPriceDeviation);
-		
-		// Demand increases price (more demand = higher price)
-		float DemandFactor = FMath::Clamp(Demand, PriceVolatility.MinPriceDeviation, PriceVolatility.MaxPriceDeviation);
-		
-		CalculatedPrice *= SupplyFactor * DemandFactor * PriceVolatility.VolatilityMultiplier;
-	}
+    float CalculatedPrice = BasePrice;
 
-	// Apply market events if enabled
-	if (bAffectedByMarketEvents)
-	{
-		CalculatedPrice *= MarketEventMultiplier;
-	}
+    // Apply supply/demand if enabled
+    if (bAffectedBySupplyDemand)
+    {
+        // Supply reduces price (more supply = lower price)
+        // Use FMath::Max to prevent division by very small numbers
+        const float SupplyFactor = FMath::Clamp(
+            kNormalMultiplier / FMath::Max(Supply, kMinSupplyValue), 
+            PriceVolatility.MinPriceDeviation, 
+            PriceVolatility.MaxPriceDeviation
+        );
+        
+        // Demand increases price (more demand = higher price)
+        const float DemandFactor = FMath::Clamp(
+            Demand, 
+            PriceVolatility.MinPriceDeviation, 
+            PriceVolatility.MaxPriceDeviation
+        );
+        
+        CalculatedPrice *= SupplyFactor * DemandFactor * PriceVolatility.VolatilityMultiplier;
+    }
 
-	// Clamp final price to reasonable bounds
-	CalculatedPrice = FMath::Clamp(CalculatedPrice, 
-		BasePrice * PriceVolatility.MinPriceDeviation,
-		BasePrice * PriceVolatility.MaxPriceDeviation);
+    // Apply market events if enabled
+    if (bAffectedByMarketEvents)
+    {
+        CalculatedPrice *= MarketEventMultiplier;
+    }
 
-	// Call Blueprint override if implemented
-	return OnCalculateCustomPrice(Supply, Demand, MarketEventMultiplier, CalculatedPrice);
+    // Clamp final price to reasonable bounds
+    CalculatedPrice = FMath::Clamp(
+        CalculatedPrice, 
+        BasePrice * PriceVolatility.MinPriceDeviation,
+        BasePrice * PriceVolatility.MaxPriceDeviation
+    );
+
+    // Call Blueprint override if implemented
+    return OnCalculateCustomPrice(Supply, Demand, MarketEventMultiplier, CalculatedPrice);
 }
 
 float UTradeItemDataAsset::GetFactionModifiedPrice(float BasePriceToModify, FName BuyerFactionID, FName SellerFactionID) const
@@ -64,63 +86,106 @@ float UTradeItemDataAsset::GetFactionModifiedPrice(float BasePriceToModify, FNam
 
 bool UTradeItemDataAsset::CanBeTradedByFaction(FName FactionID, int32 Reputation) const
 {
-	// Check if faction is banned from trading this item
-	if (TradeRestrictions.BannedFactions.Contains(FactionID))
-	{
-		return false;
-	}
+    // Input validation
+    if (FactionID.IsNone())
+    {
+        UE_LOG(LogTemp, Warning, TEXT("TradeItemDataAsset::CanBeTradedByFaction - Invalid FactionID for %s"), *ItemID.ToString());
+        return false;
+    }
 
-	// Check reputation requirement
-	if (Reputation < TradeRestrictions.MinReputationRequired)
-	{
-		return false;
-	}
+    // Check if faction is banned from trading this item
+    if (TradeRestrictions.BannedFactions.Contains(FactionID))
+    {
+        return false;
+    }
 
-	// Check legality status
-	if (LegalityStatus == ELegalityStatus::Illegal || LegalityStatus == ELegalityStatus::Contraband)
-	{
-		// Illegal items may still be traded by certain factions (smugglers, etc.)
-		// This would be checked in a more complex system
-		return false; // For now, assume illegal = cannot trade
-	}
+    // Check reputation requirement
+    if (Reputation < TradeRestrictions.MinReputationRequired)
+    {
+        return false;
+    }
 
-	return true;
+    // Check legality status
+    if (LegalityStatus == ELegalityStatus::Illegal || LegalityStatus == ELegalityStatus::Contraband)
+    {
+        // Illegal items may still be traded by certain factions (smugglers, etc.)
+        // This would be checked in a more complex system
+        return false; // For now, assume illegal = cannot trade
+    }
+
+    return true;
 }
 
 bool UTradeItemDataAsset::RequiresPermit(FName FactionID) const
 {
-	return TradeRestrictions.RequiresPermitFactions.Contains(FactionID);
+    // Input validation
+    if (FactionID.IsNone())
+    {
+        return false;
+    }
+
+    return TradeRestrictions.RequiresPermitFactions.Contains(FactionID);
 }
 
 float UTradeItemDataAsset::CalculateContrabandFine(int32 Quantity) const
 {
-	if (LegalityStatus == ELegalityStatus::Legal)
-	{
-		return 0.0f;
-	}
+    // Validate quantity
+    if (Quantity <= 0)
+    {
+        return 0.0f;
+    }
 
-	return BasePrice * Quantity * ContrabandFineMultiplier;
+    // Legal items have no fine
+    if (LegalityStatus == ELegalityStatus::Legal)
+    {
+        return 0.0f;
+    }
+
+    return BasePrice * Quantity * ContrabandFineMultiplier;
 }
 
 bool UTradeItemDataAsset::HasBehaviorTag(FName Tag) const
 {
-	return BehaviorTags.Contains(Tag);
+    // Input validation
+    if (Tag.IsNone())
+    {
+        return false;
+    }
+
+    return BehaviorTags.Contains(Tag);
 }
 
 float UTradeItemDataAsset::GetTotalVolume(int32 Quantity) const
 {
-	return VolumePerUnit * Quantity;
+    // Validate quantity
+    if (Quantity < 0)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("TradeItemDataAsset::GetTotalVolume - Negative quantity %d for %s"), Quantity, *ItemID.ToString());
+        return 0.0f;
+    }
+
+    return VolumePerUnit * Quantity;
 }
 
 float UTradeItemDataAsset::GetTotalMass(int32 Quantity) const
 {
-	return MassPerUnit * Quantity;
+    // Validate quantity
+    if (Quantity < 0)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("TradeItemDataAsset::GetTotalMass - Negative quantity %d for %s"), Quantity, *ItemID.ToString());
+        return 0.0f;
+    }
+
+    return MassPerUnit * Quantity;
 }
 
 bool UTradeItemDataAsset::IsHighValue() const
 {
-	// Consider items with base price > 1000 as high-value
-	return BasePrice > 1000.0f;
+    // Define high-value threshold as a constant
+    static constexpr float kHighValueThreshold = 1000.0f;
+    
+    // Consider items with base price above threshold as high-value
+    return BasePrice > kHighValueThreshold;
 }
 
 // BlueprintNativeEvent implementations
