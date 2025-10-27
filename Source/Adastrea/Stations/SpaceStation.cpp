@@ -1,5 +1,6 @@
 #include "Stations/SpaceStation.h"
 #include "Factions/FactionDataAsset.h"
+#include "AdastreaLog.h"
 
 ASpaceStation::ASpaceStation()
 {
@@ -17,14 +18,14 @@ void ASpaceStation::AddModule(ASpaceStationModule* Module)
     // Input validation
     if (!Module)
     {
-        UE_LOG(LogTemp, Warning, TEXT("SpaceStation::AddModule - Invalid module pointer"));
+        UE_LOG(LogAdastreaStations, Warning, TEXT("SpaceStation::AddModule - Invalid module pointer"));
         return;
     }
 
     // Check if module is already added
     if (Modules.Contains(Module))
     {
-        UE_LOG(LogTemp, Warning, TEXT("SpaceStation::AddModule - Module already exists in station"));
+        UE_LOG(LogAdastreaStations, Warning, TEXT("SpaceStation::AddModule - Module already exists in station"));
         return;
     }
 
@@ -34,7 +35,7 @@ void ASpaceStation::AddModule(ASpaceStationModule* Module)
     // Attach the module to this station
     Module->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
     
-    UE_LOG(LogTemp, Log, TEXT("SpaceStation::AddModule - Successfully added module to station %s"), *GetName());
+    UE_LOG(LogAdastreaStations, Log, TEXT("SpaceStation::AddModule - Successfully added module to station %s"), *GetName());
 }
 
 bool ASpaceStation::AddModuleAtLocation(ASpaceStationModule* Module, FVector RelativeLocation)
@@ -42,7 +43,7 @@ bool ASpaceStation::AddModuleAtLocation(ASpaceStationModule* Module, FVector Rel
     // Input validation
     if (!Module)
     {
-        UE_LOG(LogTemp, Warning, TEXT("SpaceStation::AddModuleAtLocation - Invalid module pointer"));
+        UE_LOG(LogAdastreaStations, Warning, TEXT("SpaceStation::AddModuleAtLocation - Invalid module pointer"));
         return false;
     }
 
@@ -56,7 +57,7 @@ bool ASpaceStation::AddModuleAtLocation(ASpaceStationModule* Module, FVector Rel
         Modules.Add(Module);
     }
 
-    UE_LOG(LogTemp, Log, TEXT("SpaceStation::AddModuleAtLocation - Added module at location (%.2f, %.2f, %.2f)"), 
+    UE_LOG(LogAdastreaStations, Log, TEXT("SpaceStation::AddModuleAtLocation - Added module at location (%.2f, %.2f, %.2f)"), 
         RelativeLocation.X, RelativeLocation.Y, RelativeLocation.Z);
     
     return true;
@@ -67,14 +68,14 @@ bool ASpaceStation::RemoveModule(ASpaceStationModule* Module)
     // Input validation
     if (!Module)
     {
-        UE_LOG(LogTemp, Warning, TEXT("SpaceStation::RemoveModule - Invalid module pointer"));
+        UE_LOG(LogAdastreaStations, Warning, TEXT("SpaceStation::RemoveModule - Invalid module pointer"));
         return false;
     }
 
     // Check if module exists in station
     if (!Modules.Contains(Module))
     {
-        UE_LOG(LogTemp, Warning, TEXT("SpaceStation::RemoveModule - Module not found in station"));
+        UE_LOG(LogAdastreaStations, Warning, TEXT("SpaceStation::RemoveModule - Module not found in station"));
         return false;
     }
 
@@ -84,7 +85,7 @@ bool ASpaceStation::RemoveModule(ASpaceStationModule* Module)
     // Detach the module from this station
     Module->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 
-    UE_LOG(LogTemp, Log, TEXT("SpaceStation::RemoveModule - Successfully removed module from station %s"), *GetName());
+    UE_LOG(LogAdastreaStations, Log, TEXT("SpaceStation::RemoveModule - Successfully removed module from station %s"), *GetName());
     return true;
 }
 
@@ -93,21 +94,21 @@ bool ASpaceStation::MoveModule(ASpaceStationModule* Module, FVector NewRelativeL
     // Input validation
     if (!Module)
     {
-        UE_LOG(LogTemp, Warning, TEXT("SpaceStation::MoveModule - Invalid module pointer"));
+        UE_LOG(LogAdastreaStations, Warning, TEXT("SpaceStation::MoveModule - Invalid module pointer"));
         return false;
     }
 
     // Check if module exists in station
     if (!Modules.Contains(Module))
     {
-        UE_LOG(LogTemp, Warning, TEXT("SpaceStation::MoveModule - Module not found in station"));
+        UE_LOG(LogAdastreaStations, Warning, TEXT("SpaceStation::MoveModule - Module not found in station"));
         return false;
     }
 
     // Update the module's relative location
     Module->SetActorRelativeLocation(NewRelativeLocation);
 
-    UE_LOG(LogTemp, Log, TEXT("SpaceStation::MoveModule - Moved module to (%.2f, %.2f, %.2f)"), 
+    UE_LOG(LogAdastreaStations, Log, TEXT("SpaceStation::MoveModule - Moved module to (%.2f, %.2f, %.2f)"), 
         NewRelativeLocation.X, NewRelativeLocation.Y, NewRelativeLocation.Z);
     
     return true;
@@ -125,7 +126,7 @@ TArray<ASpaceStationModule*> ASpaceStation::GetModulesByType(const FString& Modu
     // Input validation
     if (ModuleType.IsEmpty())
     {
-        UE_LOG(LogTemp, Warning, TEXT("SpaceStation::GetModulesByType - Empty module type"));
+        UE_LOG(LogAdastreaStations, Warning, TEXT("SpaceStation::GetModulesByType - Empty module type"));
         return MatchingModules;
     }
 

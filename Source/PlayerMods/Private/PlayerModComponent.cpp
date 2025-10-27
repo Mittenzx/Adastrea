@@ -4,6 +4,7 @@
 #include "Net/UnrealNetwork.h"
 #include "PlayerModData.h"
 #include "GameFramework/Actor.h"
+#include "AdastreaLog.h"
 
 UPlayerModComponent::UPlayerModComponent()
 {
@@ -22,7 +23,7 @@ bool UPlayerModComponent::InstallMod(UPlayerModDataAsset* ModAsset)
     // Input validation
     if (!ModAsset)
     {
-        UE_LOG(LogTemp, Warning, TEXT("PlayerModComponent::InstallMod - Invalid ModAsset"));
+        UE_LOG(LogAdastreaPlayerMods, Warning, TEXT("PlayerModComponent::InstallMod - Invalid ModAsset"));
         return false;
     }
 
@@ -39,7 +40,7 @@ bool UPlayerModComponent::InstallMod(UPlayerModDataAsset* ModAsset)
     // Check if already installed
     if (FindActiveEntry(Def.ModID))
     {
-        UE_LOG(LogTemp, Warning, TEXT("PlayerModComponent::InstallMod - Mod %s already installed"), *Def.ModID.ToString());
+        UE_LOG(LogAdastreaPlayerMods, Warning, TEXT("PlayerModComponent::InstallMod - Mod %s already installed"), *Def.ModID.ToString());
         return false;
     }
 
@@ -56,7 +57,7 @@ bool UPlayerModComponent::InstallMod(UPlayerModDataAsset* ModAsset)
         ApplyStatModifiers(Def, 1);
     }
 
-    UE_LOG(LogTemp, Log, TEXT("PlayerModComponent::InstallMod - Successfully installed %s"), *Def.ModID.ToString());
+    UE_LOG(LogAdastreaPlayerMods, Log, TEXT("PlayerModComponent::InstallMod - Successfully installed %s"), *Def.ModID.ToString());
     return true;
 }
 
@@ -65,7 +66,7 @@ bool UPlayerModComponent::UninstallMod(FName ModID)
     // Input validation
     if (ModID.IsNone())
     {
-        UE_LOG(LogTemp, Warning, TEXT("PlayerModComponent::UninstallMod - Invalid ModID"));
+        UE_LOG(LogAdastreaPlayerMods, Warning, TEXT("PlayerModComponent::UninstallMod - Invalid ModID"));
         return false;
     }
 
@@ -91,7 +92,7 @@ bool UPlayerModComponent::UninstallMod(FName ModID)
         return E.ModAsset.IsValid() && E.ModAsset->ModDefinition.ModID == ModID; 
     });
     
-    UE_LOG(LogTemp, Log, TEXT("PlayerModComponent::UninstallMod - Successfully uninstalled %s"), *ModID.ToString());
+    UE_LOG(LogAdastreaPlayerMods, Log, TEXT("PlayerModComponent::UninstallMod - Successfully uninstalled %s"), *ModID.ToString());
     return true;
 }
 
@@ -118,7 +119,7 @@ bool UPlayerModComponent::ActivateMod(FName ModID)
     // Input validation
     if (ModID.IsNone())
     {
-        UE_LOG(LogTemp, Warning, TEXT("PlayerModComponent::ActivateMod - Invalid ModID"));
+        UE_LOG(LogAdastreaPlayerMods, Warning, TEXT("PlayerModComponent::ActivateMod - Invalid ModID"));
         return false;
     }
 
@@ -131,7 +132,7 @@ bool UPlayerModComponent::ActivateMod(FName ModID)
     FActiveModEntry* Entry = FindActiveEntry(ModID);
     if (!Entry || !Entry->ModAsset.IsValid())
     {
-        UE_LOG(LogTemp, Warning, TEXT("PlayerModComponent::ActivateMod - Mod %s not found"), *ModID.ToString());
+        UE_LOG(LogAdastreaPlayerMods, Warning, TEXT("PlayerModComponent::ActivateMod - Mod %s not found"), *ModID.ToString());
         return false;
     }
 
@@ -144,7 +145,7 @@ bool UPlayerModComponent::ActivateMod(FName ModID)
     const FPlayerModDefinition& Def = Asset->ModDefinition;
     if (Def.Type != EModType::Active)
     {
-        UE_LOG(LogTemp, Warning, TEXT("PlayerModComponent::ActivateMod - Mod %s is not an Active type"), *ModID.ToString());
+        UE_LOG(LogAdastreaPlayerMods, Warning, TEXT("PlayerModComponent::ActivateMod - Mod %s is not an Active type"), *ModID.ToString());
         return false;
     }
 
@@ -152,7 +153,7 @@ bool UPlayerModComponent::ActivateMod(FName ModID)
     Entry->TimeRemaining = Def.Cooldown;
     ApplyStatModifiers(Def, Entry->Stacks);
 
-    UE_LOG(LogTemp, Log, TEXT("PlayerModComponent::ActivateMod - Successfully activated %s"), *ModID.ToString());
+    UE_LOG(LogAdastreaPlayerMods, Log, TEXT("PlayerModComponent::ActivateMod - Successfully activated %s"), *ModID.ToString());
     return true;
 }
 
@@ -197,7 +198,7 @@ void UPlayerModComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
                         if (Asset)
                         {
                             RemoveStatModifiers(Asset->ModDefinition);
-                            UE_LOG(LogTemp, Log, TEXT("PlayerModComponent::Tick - Mod %s expired"), 
+                            UE_LOG(LogAdastreaPlayerMods, Log, TEXT("PlayerModComponent::Tick - Mod %s expired"), 
                                 *Asset->ModDefinition.ModID.ToString());
                         }
                     }
@@ -214,7 +215,7 @@ void UPlayerModComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 void UPlayerModComponent::OnRep_ActiveMods()
 {
     // Clients can update HUD/VFX on mod list change
-    UE_LOG(LogTemp, Verbose, TEXT("PlayerModComponent::OnRep_ActiveMods - Active mods replicated"));
+    UE_LOG(LogAdastreaPlayerMods, Verbose, TEXT("PlayerModComponent::OnRep_ActiveMods - Active mods replicated"));
 }
 
 void UPlayerModComponent::ApplyStatModifiers(const FPlayerModDefinition& Def, int32 Stacks)
@@ -222,7 +223,7 @@ void UPlayerModComponent::ApplyStatModifiers(const FPlayerModDefinition& Def, in
     // TODO: Implement stat modification system
     // This should integrate with the player's stats component
     // Example: Owner->FindComponentByClass<UPlayerStatsComponent>()->ModifyStat(...)
-    UE_LOG(LogTemp, Verbose, TEXT("PlayerModComponent::ApplyStatModifiers - Applied modifiers for %s (Stacks: %d)"), 
+    UE_LOG(LogAdastreaPlayerMods, Verbose, TEXT("PlayerModComponent::ApplyStatModifiers - Applied modifiers for %s (Stacks: %d)"), 
         *Def.ModID.ToString(), Stacks);
 }
 
@@ -230,7 +231,7 @@ void UPlayerModComponent::RemoveStatModifiers(const FPlayerModDefinition& Def)
 {
     // TODO: Implement stat modifier removal
     // Reverse the effects applied in ApplyStatModifiers
-    UE_LOG(LogTemp, Verbose, TEXT("PlayerModComponent::RemoveStatModifiers - Removed modifiers for %s"), 
+    UE_LOG(LogAdastreaPlayerMods, Verbose, TEXT("PlayerModComponent::RemoveStatModifiers - Removed modifiers for %s"), 
         *Def.ModID.ToString());
 }
 

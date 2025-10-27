@@ -1,5 +1,6 @@
 #include "TradeItemDataAsset.h"
 #include "../Materials/MaterialDataAsset.h"
+#include "AdastreaLog.h"
 
 UTradeItemDataAsset::UTradeItemDataAsset()
 	: ItemName(FText::FromString(TEXT("Trade Item")))
@@ -32,7 +33,7 @@ float UTradeItemDataAsset::CalculatePrice(float Supply, float Demand, float Mark
     // Input validation
     if (Supply < 0.0f || Demand < 0.0f || MarketEventMultiplier < 0.0f)
     {
-        UE_LOG(LogTemp, Warning, TEXT("TradeItemDataAsset::CalculatePrice - Invalid input parameters for %s"), *ItemID.ToString());
+        UE_LOG(LogAdastreaTrading, Warning, TEXT("TradeItemDataAsset::CalculatePrice - Invalid input parameters for %s"), *ItemID.ToString());
         return BasePrice;
     }
 
@@ -89,7 +90,7 @@ bool UTradeItemDataAsset::CanBeTradedByFaction(FName FactionID, int32 Reputation
     // Input validation
     if (FactionID.IsNone())
     {
-        UE_LOG(LogTemp, Warning, TEXT("TradeItemDataAsset::CanBeTradedByFaction - Invalid FactionID for %s"), *ItemID.ToString());
+        UE_LOG(LogAdastreaTrading, Warning, TEXT("TradeItemDataAsset::CanBeTradedByFaction - Invalid FactionID for %s"), *ItemID.ToString());
         return false;
     }
 
@@ -160,7 +161,7 @@ float UTradeItemDataAsset::GetTotalVolume(int32 Quantity) const
     // Validate quantity
     if (Quantity < 0)
     {
-        UE_LOG(LogTemp, Warning, TEXT("TradeItemDataAsset::GetTotalVolume - Negative quantity %d for %s"), Quantity, *ItemID.ToString());
+        UE_LOG(LogAdastreaTrading, Warning, TEXT("TradeItemDataAsset::GetTotalVolume - Negative quantity %d for %s"), Quantity, *ItemID.ToString());
         return 0.0f;
     }
 
@@ -172,7 +173,7 @@ float UTradeItemDataAsset::GetTotalMass(int32 Quantity) const
     // Validate quantity
     if (Quantity < 0)
     {
-        UE_LOG(LogTemp, Warning, TEXT("TradeItemDataAsset::GetTotalMass - Negative quantity %d for %s"), Quantity, *ItemID.ToString());
+        UE_LOG(LogAdastreaTrading, Warning, TEXT("TradeItemDataAsset::GetTotalMass - Negative quantity %d for %s"), Quantity, *ItemID.ToString());
         return 0.0f;
     }
 

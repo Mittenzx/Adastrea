@@ -1,4 +1,5 @@
 #include "AI/NPCLogicBase.h"
+#include "AdastreaLog.h"
 
 UNPCLogicBase::UNPCLogicBase()
 {
@@ -21,12 +22,12 @@ void UNPCLogicBase::InitializeAI_Implementation()
     // Validate update interval
     if (UpdateInterval <= 0.0f)
     {
-        UE_LOG(LogTemp, Warning, TEXT("AI %s: Invalid UpdateInterval %.2f, setting to 1.0"), *GetName(), UpdateInterval);
+        UE_LOG(LogAdastreaAI, Warning, TEXT("AI %s: Invalid UpdateInterval %.2f, setting to 1.0"), *GetName(), UpdateInterval);
         UpdateInterval = 1.0f;
     }
     
     // Log initialization for debugging
-    UE_LOG(LogTemp, Log, TEXT("AI Initialized: %s (Mode: %s, Interval: %.2f)"), 
+    UE_LOG(LogAdastreaAI, Log, TEXT("AI Initialized: %s (Mode: %s, Interval: %.2f)"), 
         *GetName(), 
         *UEnum::GetValueAsString(CurrentBehaviorMode),
         UpdateInterval);
@@ -56,7 +57,7 @@ void UNPCLogicBase::OnActivateAI_Implementation()
     // Activate the AI
     bIsActive = true;
     
-    UE_LOG(LogTemp, Log, TEXT("AI Activated: %s"), *GetName());
+    UE_LOG(LogAdastreaAI, Log, TEXT("AI Activated: %s"), *GetName());
 }
 
 void UNPCLogicBase::OnDeactivateAI_Implementation()
@@ -64,13 +65,13 @@ void UNPCLogicBase::OnDeactivateAI_Implementation()
     // Deactivate the AI
     bIsActive = false;
     
-    UE_LOG(LogTemp, Log, TEXT("AI Deactivated: %s"), *GetName());
+    UE_LOG(LogAdastreaAI, Log, TEXT("AI Deactivated: %s"), *GetName());
 }
 
 void UNPCLogicBase::OnBehaviorModeChanged_Implementation(EAIBehaviorMode OldMode, EAIBehaviorMode NewMode)
 {
     // Log the mode change
-    UE_LOG(LogTemp, Log, TEXT("AI Mode Changed for %s: %s -> %s"), 
+    UE_LOG(LogAdastreaAI, Log, TEXT("AI Mode Changed for %s: %s -> %s"), 
         *GetName(),
         *UEnum::GetValueAsString(OldMode),
         *UEnum::GetValueAsString(NewMode));
@@ -167,7 +168,7 @@ void UNPCLogicBase::UpdateAI(float DeltaTime)
     // Validate DeltaTime
     if (DeltaTime < 0.0f)
     {
-        UE_LOG(LogTemp, Warning, TEXT("AI %s: Invalid DeltaTime %.2f"), *GetName(), DeltaTime);
+        UE_LOG(LogAdastreaAI, Warning, TEXT("AI %s: Invalid DeltaTime %.2f"), *GetName(), DeltaTime);
         return;
     }
 

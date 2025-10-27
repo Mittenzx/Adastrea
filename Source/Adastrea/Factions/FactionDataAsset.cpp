@@ -1,4 +1,5 @@
 #include "Factions/FactionDataAsset.h"
+#include "AdastreaLog.h"
 
 UFactionDataAsset::UFactionDataAsset()
 {
