@@ -14,10 +14,7 @@ ASpaceSectorMap::ASpaceSectorMap()
 	// Create billboard component for editor visualization
 	SectorMarker = CreateDefaultSubobject<UBillboardComponent>(TEXT("SectorMarker"));
 	SectorMarker->SetupAttachment(RootComponent);
-	
-#if WITH_EDITORONLY_DATA
 	SectorMarker->bIsScreenSizeScaled = true;
-#endif
 
 	// Default sector name
 	SectorName = FText::FromString(TEXT("Unnamed Sector"));

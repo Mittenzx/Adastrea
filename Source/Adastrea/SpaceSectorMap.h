@@ -45,7 +45,7 @@ public:
 	ASpaceSectorMap();
 
 	// Sector size in Unreal Units (centimeters)
-	// 200km = 200,000 meters = 20,000,000 centimeters
+	// 200 km = 200 km × 1000 m/km = 200,000 m = 200,000 m × 100 cm/m = 20,000,000 cm
 	static constexpr float SectorSize = 20000000.0f;
 
 	/**
