@@ -42,6 +42,52 @@
 - **Visual Studio 2022** (Windows) or **Xcode** (Mac) for C++ development
 - **Git** for version control
 
+### Robust Setup Validation
+
+Before building the project, it's **highly recommended** to run our automated setup validation scripts to ensure your development environment is properly configured. These scripts check for all prerequisites, validate project structure, and can optionally perform static analysis.
+
+#### Option 1: Shell Script (Linux/Mac/WSL)
+
+```bash
+# Basic validation
+./SetupCheck.sh
+
+# Validation with build folder cleanup
+./SetupCheck.sh --clean
+
+# Validation with static analysis (requires cppcheck)
+./SetupCheck.sh --analyze
+
+# Display help
+./SetupCheck.sh --help
+```
+
+#### Option 2: Python Script (Cross-Platform)
+
+```bash
+# Basic validation (works on Windows, Linux, Mac)
+python SetupCheck.py
+
+# Validation with static analysis (requires cppcheck)
+python SetupCheck.py --analyze
+
+# Verbose output with detailed information
+python SetupCheck.py --verbose
+
+# Display help
+python SetupCheck.py --help
+```
+
+The validation scripts check for:
+- ✓ Unreal Engine version compatibility (5.3)
+- ✓ C++ compiler availability (MSVC, GCC, Clang)
+- ✓ Required project folders (Source, Config, Content, Assets)
+- ✓ Required project files (.uproject, module headers)
+- ✓ Essential documentation files
+- ✓ Optional: Static code analysis with cppcheck
+
+**Note**: These scripts automate many of the manual checks from [Assets/PlaytestingChecklist.md](Assets/PlaytestingChecklist.md). While the scripts handle environment validation, the playtesting checklist is still valuable for in-editor verification and quality assurance.
+
 ### Installation
 
 1. **Clone the repository**:
@@ -50,19 +96,31 @@
    cd Adastrea
    ```
 
-2. **Generate Project Files**:
+2. **Run Setup Validation** (Recommended):
+   ```bash
+   # Linux/Mac/WSL
+   ./SetupCheck.sh
+   
+   # Or cross-platform Python
+   python SetupCheck.py
+   ```
+   
+   This validates your environment and identifies any missing prerequisites before building.
+
+3. **Generate Project Files**:
    - Right-click on the `.uproject` file
    - Select "Generate Visual Studio project files"
 
-3. **Build the project**:
+4. **Build the project**:
    - Open the generated `.sln` file in Visual Studio
    - Build in "Development Editor" configuration
    - Or open the `.uproject` file directly in Unreal Engine
 
-4. **Verify Installation**:
+5. **Verify Installation**:
    - Launch the editor
    - Check that all example Data Assets load correctly
    - Run the game with the Play button
+   - (Optional) Run [AdastreaAssetValidator.py](AdastreaAssetValidator.py) in the Unreal Editor Python console for asset validation
 
 ### First Steps
 

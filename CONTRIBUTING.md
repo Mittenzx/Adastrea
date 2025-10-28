@@ -33,17 +33,34 @@ This project and everyone participating in it is governed by our commitment to f
    cd Adastrea
    ```
 
-2. **Generate Project Files**
+2. **Validate Environment** (Recommended)
+   ```bash
+   # Use the automated setup validation scripts
+   ./SetupCheck.sh              # Linux/Mac/WSL
+   # or
+   python SetupCheck.py         # Cross-platform
+   ```
+   
+   These scripts verify:
+   - Unreal Engine version compatibility
+   - C++ compiler availability
+   - Required project folders and files
+   - Optional: Static code analysis with cppcheck
+   
+   See [README.md](README.md#robust-setup-validation) for detailed usage.
+
+3. **Generate Project Files**
    - Right-click on the `.uproject` file and select "Generate Visual Studio project files"
 
-3. **Build the Project**
+4. **Build the Project**
    - Open the generated `.sln` file in Visual Studio
    - Build the project in Development Editor configuration
    - Or open the `.uproject` file directly in Unreal Engine and let it compile
 
-4. **Verify Setup**
+5. **Verify Setup**
    - Launch the editor and ensure all systems load correctly
    - Check that all example Blueprints and Data Assets work
+   - Refer to [Assets/PlaytestingChecklist.md](Assets/PlaytestingChecklist.md) for comprehensive verification
 
 ## Development Workflow
 
