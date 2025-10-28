@@ -3,6 +3,13 @@
 ## Overview
 This comprehensive checklist ensures that all faction system and station editor features are properly implemented, tested, and ready for production use. Use this document during development iterations and before releasing content to the team.
 
+**Quick Start**: Before running manual tests, consider using the automated setup validation scripts to verify your environment:
+- Run `./SetupCheck.sh` (Linux/Mac/WSL) or `python SetupCheck.py` (cross-platform) to check prerequisites
+- Use `./SetupCheck.sh --clean` to automatically clean build folders before testing
+- See [README.md](../README.md#robust-setup-validation) for detailed usage
+
+The automated scripts handle environment validation (Unreal Engine version, compilers, project structure). This checklist focuses on in-editor verification and quality assurance.
+
 ---
 
 ## Table of Contents
@@ -25,7 +32,7 @@ This comprehensive checklist ensures that all faction system and station editor 
 
 - [ ] **Clean Build**
   - Close Unreal Engine
-  - Delete `Intermediate`, `Saved`, and `Binaries` folders
+  - Delete `Intermediate`, `Saved`, and `Binaries` folders (or run `./SetupCheck.sh --clean` to automate this)
   - Rebuild project from Visual Studio/Rider
   - Verify no compilation errors
 
