@@ -20,6 +20,8 @@ This guide will help you quickly get up to speed with the Faction System and Sta
 
 ## Quick Start (30 Minutes)
 
+**Before you begin:** Ensure your development environment is properly set up. Run `python SetupCheck.py` or `./SetupCheck.sh` from the project root to verify all prerequisites are met. See [README.md](../README.md#robust-setup-validation) for details.
+
 ### Your First Faction (15 minutes)
 
 **Goal:** Create a complete faction from scratch.
