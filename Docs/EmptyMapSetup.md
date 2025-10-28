@@ -10,11 +10,12 @@ This guide provides step-by-step instructions for creating and configuring an em
 2. [Creating a New Empty Map](#creating-a-new-empty-map)
 3. [Adding Space Sector Markers](#adding-space-sector-markers)
 4. [Configuring World Settings](#configuring-world-settings)
-5. [Setting Up Lighting](#setting-up-lighting)
-6. [Adding Background Elements](#adding-background-elements)
-7. [Testing Your Map](#testing-your-map)
-8. [Best Practices](#best-practices)
-9. [Next Steps](#next-steps)
+5. [Automatic Player Spaceship Spawning](#automatic-player-spaceship-spawning)
+6. [Setting Up Lighting](#setting-up-lighting)
+7. [Adding Background Elements](#adding-background-elements)
+8. [Testing Your Map](#testing-your-map)
+9. [Best Practices](#best-practices)
+10. [Next Steps](#next-steps)
 
 ---
 
@@ -126,6 +127,162 @@ Before starting, ensure you have:
 1. In the **Game Mode** category:
 2. Set **GameMode Override** to `AAdastreaGameMode` (or your custom game mode)
 3. Configure **Default Pawn Class** as needed for space flight
+
+---
+
+## Automatic Player Spaceship Spawning
+
+**New Feature**: Adastrea now automatically spawns the player in a spaceship when a map with a SpaceSectorMap loads!
+
+### Overview
+
+When using `AAdastreaGameMode` (or a Blueprint derived from it), the game will automatically:
+1. Find the SpaceSectorMap actor in your level
+2. Spawn a player spaceship at the sector center or a random position
+3. Possess the spaceship with the PlayerController
+
+This eliminates the need for manual player start placement and ensures the player always begins inside the sector bounds.
+
+### Configuration (C++ GameMode)
+
+The auto-spawn feature is controlled by three properties in the GameMode:
+
+**In World Settings → Game Mode Override → Selected GameMode Details:**
+
+1. **Default Spaceship Class** (`TSubclassOf<ASpaceship>`)
+   - Set this to your spaceship Blueprint class
+   - Example: `BP_Spaceship_Starter` or `BP_Ship_Fighter`
+   - **Required**: Auto-spawn will not work if this is not set
+
+2. **Auto Spawn Player Ship** (`bool`)
+   - Default: `true`
+   - Toggle to enable/disable automatic spawning
+   - Set to `false` if you want to manually control player spawn
+
+3. **Spawn At Center** (`bool`)
+   - Default: `false` (random position)
+   - If `true`: Spawns at exact sector center
+   - If `false`: Spawns at random position within sector bounds
+   - Random positioning provides variety on each play session
+
+### Setup Steps (C++)
+
+1. **Create a Spaceship Blueprint**:
+   - Create a Blueprint based on `ASpaceship` class
+   - Configure the ship's mesh, components, and properties
+   - Save as `BP_PlayerShip` (or your preferred name)
+
+2. **Configure GameMode**:
+   - In World Settings, set GameMode Override to `AAdastreaGameMode`
+   - Expand the GameMode details in World Settings
+   - Find the **Player Spawn** category
+   - Set **Default Spaceship Class** to your spaceship Blueprint
+   - Verify **Auto Spawn Player Ship** is checked (enabled)
+   - Choose spawn location type with **Spawn At Center** checkbox
+
+3. **Place SpaceSectorMap**:
+   - Add a SpaceSectorMap actor to your level (see [Adding Space Sector Markers](#adding-space-sector-markers))
+   - Position it at (0, 0, 0) for consistent spawning
+
+4. **Test**:
+   - Click Play in the editor
+   - You should spawn inside your spaceship
+   - Check the Output Log for spawn confirmation messages
+
+### Blueprint Alternative (For Designers)
+
+If you prefer to use Blueprint instead of the C++ GameMode, you can create your own spawn logic:
+
+**Create a Blueprint based on AAdastreaGameMode:**
+
+1. **Create GameMode Blueprint**:
+   - Content Browser → Right-click → Blueprint Class
+   - Parent Class: `AAdastreaGameMode`
+   - Name: `BP_MyGameMode`
+
+2. **Override BeginPlay Event**:
+   ```
+   Event BeginPlay
+       ↓
+   [Optional] Call Parent BeginPlay (if you want auto-spawn)
+       ↓
+   [Your custom logic here]
+   ```
+
+3. **Manual Spawn Logic** (if disabling auto-spawn):
+   ```
+   Event BeginPlay
+       ↓
+   Get All Actors of Class → ASpaceSectorMap
+       ↓
+   Get (index 0) → Cast to SpaceSectorMap
+       ↓
+   Get Sector Center (or Get Random Position In Sector)
+       ↓
+   Spawn Actor from Class → [Your Spaceship Blueprint]
+       ↓  ↓
+   Location   Rotation (0, 0, 0)
+       ↓
+   Get Player Controller (Index 0)
+       ↓
+   Possess → [Spawned Spaceship]
+   ```
+
+4. **Set in World Settings**:
+   - World Settings → GameMode Override → `BP_MyGameMode`
+
+### Logging and Debugging
+
+The auto-spawn feature logs its actions to the Output Log with the `LogAdastrea` category:
+
+- **Success**: `"AdastreaGameMode: Successfully spawned player spaceship at [location]"`
+- **No Spaceship Class**: `"Cannot auto-spawn - DefaultSpaceshipClass is not set"`
+- **No Sector Map**: `"No SpaceSectorMap found in level"`
+- **Possession**: `"Player controller possessed spaceship"`
+
+**Tip**: Enable verbose logging for troubleshooting:
+```
+Log LogAdastrea Verbose
+```
+
+### Common Issues
+
+**Issue**: Player doesn't spawn in a spaceship
+- **Solution 1**: Verify DefaultSpaceshipClass is set in GameMode details
+- **Solution 2**: Check that SpaceSectorMap actor exists in the level
+- **Solution 3**: Ensure Auto Spawn Player Ship is enabled (checked)
+
+**Issue**: Player spawns at world origin (0,0,0) instead of in sector
+- **Solution**: Verify SpaceSectorMap is properly placed in the level
+- **Solution**: Check Output Log for error messages about sector map
+
+**Issue**: Want to spawn at specific location, not random
+- **Solution**: Enable "Spawn At Center" checkbox in GameMode
+- **Solution**: Or override SpawnPlayerSpaceship() in Blueprint/C++ for custom logic
+
+**Issue**: Want to disable auto-spawn entirely
+- **Solution**: Uncheck "Auto Spawn Player Ship" in GameMode settings
+- **Solution**: Implement your own spawn logic in Blueprint
+
+### Advanced: Custom Spawn Logic
+
+For advanced users who want full control over spawning:
+
+**Override in C++**:
+```cpp
+void AMyCustomGameMode::SpawnPlayerSpaceship()
+{
+    // Your custom spawn logic here
+    // You can call Super::SpawnPlayerSpaceship() to use default behavior
+    // Or implement completely custom logic
+}
+```
+
+**Override in Blueprint**:
+1. Create Blueprint based on AAdastreaGameMode
+2. Override `SpawnPlayerSpaceship` function
+3. Add your custom logic
+4. Optionally call Parent function for default behavior
 
 ---
 
