@@ -353,10 +353,116 @@ When creating Data Assets, always:
 - [ ] Save in appropriate folder
 - [ ] Document any special properties
 
+---
+
+## Example 9: Faction with Categorized Traits (NEW)
+
+**Asset Type**: FactionDataAsset  
+**Name**: DA_Faction_SolarisUnion  
+**Location**: Content/DataAssets/Factions/
+
+### Faction Info
+```
+FactionName: Solaris Union
+FactionID: solaris_union
+Description: A democratic alliance of solar systems focused on scientific advancement and peaceful expansion.
+PrimaryColor: (R=0.2, G=0.5, B=0.9, A=1.0)  // Blue
+SecondaryColor: (R=0.9, G=0.9, B=0.95, A=1.0)  // White
+```
+
+### Faction Attributes
+```
+InitialReputation: 0
+bHostileByDefault: false
+TechnologyLevel: 8
+MilitaryStrength: 6
+EconomicPower: 7
+```
+
+### Traits (with Categories)
+```
+Trait 1:
+  TraitID: scientific_excellence
+  TraitName: Scientific Excellence
+  TraitDescription: Advanced research facilities provide technology bonuses
+  Category: Scientific
+  ModifierValue: 1.3
+
+Trait 2:
+  TraitID: peaceful_traders
+  TraitName: Peaceful Traders
+  TraitDescription: Improved trade relationships and better prices
+  Category: Economic
+  ModifierValue: 1.2
+
+Trait 3:
+  TraitID: diplomatic_corps
+  TraitName: Diplomatic Corps
+  TraitDescription: Skilled diplomats improve faction relationships
+  Category: Diplomatic
+  ModifierValue: 1.15
+
+Trait 4:
+  TraitID: defensive_stance
+  TraitName: Defensive Stance
+  TraitDescription: Strong defense but limited offensive capability
+  Category: Military
+  ModifierValue: 0.8
+```
+
+### Faction Relationships
+```
+Relationship 1:
+  TargetFactionID: nova_vanguard
+  RelationshipValue: 50
+  bIsAllied: true
+  bAtWar: false
+  TradeModifier: 1.2
+
+Relationship 2:
+  TargetFactionID: obsidian_order
+  RelationshipValue: -30
+  bIsAllied: false
+  bAtWar: false
+  TradeModifier: 1.1
+
+Relationship 3:
+  TargetFactionID: pirates_consortium
+  RelationshipValue: -75
+  bIsAllied: false
+  bAtWar: true
+  TradeModifier: 0.0
+```
+
+### Usage with New Systems
+
+**In Blueprints:**
+```
+1. Create Faction Runtime State component
+2. Initialize From Template → Select DA_Faction_SolarisUnion
+3. Access via Get Faction State → Modify Player Reputation
+4. Get Traits By Category → Filter by Scientific/Economic/etc
+5. Use with Diplomacy Manager for faction interactions
+```
+
+**Example Integration:**
+```cpp
+// Get all scientific traits
+TArray<FFactionTrait> ScienceTraits = FactionAsset->GetTraitsByCategory(EFactionTraitCategory::Scientific);
+
+// Calculate research bonus
+float ResearchBonus = FactionAsset->GetCategoryModifierTotal(EFactionTraitCategory::Scientific);
+// Result: 1.3 from Scientific Excellence trait
+```
+
+---
+
 ## See Also
 
 - `Assets/SpaceshipTemplates.md` - More ship examples
 - `Assets/FactionSetupGuide.md` - More faction examples
+- `Assets/FactionSystemQuickReference.md` - **NEW** Quick reference for faction, reputation, and diplomacy systems
 - `Assets/PersonnelTemplates.md` - More personnel examples
 - `Assets/TradingSystemGuide.md` - More trading examples
 - `CONTENT_CREATION_QUICKSTART.md` - How to use these assets
+- `WHATS_STILL_NEEDED.md` - Implementation status and next steps

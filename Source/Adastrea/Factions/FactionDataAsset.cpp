@@ -85,6 +85,48 @@ float UFactionDataAsset::GetTraitModifier(FName TraitID) const
     return TotalModifier;
 }
 
+TArray<FFactionTrait> UFactionDataAsset::GetTraitsByCategory(EFactionTraitCategory Category) const
+{
+    TArray<FFactionTrait> CategoryTraits;
+    
+    for (const FFactionTrait& Trait : Traits)
+    {
+        if (Trait.Category == Category)
+        {
+            CategoryTraits.Add(Trait);
+        }
+    }
+    
+    return CategoryTraits;
+}
+
+bool UFactionDataAsset::HasTraitInCategory(EFactionTraitCategory Category) const
+{
+    for (const FFactionTrait& Trait : Traits)
+    {
+        if (Trait.Category == Category)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+float UFactionDataAsset::GetCategoryModifierTotal(EFactionTraitCategory Category) const
+{
+    float TotalModifier = 0.0f;
+    
+    for (const FFactionTrait& Trait : Traits)
+    {
+        if (Trait.Category == Category)
+        {
+            TotalModifier += Trait.ModifierValue;
+        }
+    }
+    
+    return TotalModifier;
+}
+
 // ====================
 // Diplomacy System Implementation
 // ====================

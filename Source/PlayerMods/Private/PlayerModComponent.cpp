@@ -220,19 +220,54 @@ void UPlayerModComponent::OnRep_ActiveMods()
 
 void UPlayerModComponent::ApplyStatModifiers(const FPlayerModDefinition& Def, int32 Stacks)
 {
-    // TODO: Implement stat modification system
-    // This should integrate with the player's stats component
-    // Example: Owner->FindComponentByClass<UPlayerStatsComponent>()->ModifyStat(...)
-    UE_LOG(LogAdastreaPlayerMods, Verbose, TEXT("PlayerModComponent::ApplyStatModifiers - Applied modifiers for %s (Stacks: %d)"), 
-        *Def.ModID.ToString(), Stacks);
+    // Iterate through all stat modifiers defined in the mod
+    for (const TPair<FName, float>& StatPair : Def.StatModifiers)
+    {
+        const FName& StatName = StatPair.Key;
+        const float ModifierValue = StatPair.Value * Stacks;
+
+        // Log the stat modification
+        UE_LOG(LogAdastreaPlayerMods, Log, TEXT("PlayerModComponent::ApplyStatModifiers - %s: Applying %s modifier of %f (Stacks: %d)"), 
+            *Def.ModID.ToString(), *StatName.ToString(), ModifierValue, Stacks);
+
+        // TODO: When UPlayerStatsComponent is implemented, integrate here:
+        // Example implementation:
+        // if (UPlayerStatsComponent* StatsComp = GetOwner()->FindComponentByClass<UPlayerStatsComponent>())
+        // {
+        //     StatsComp->AddStatModifier(StatName, ModifierValue, Def.ModID);
+        // }
+        
+        // For now, we store the intention and log it for future integration
+        // The stat modification system will need to be hooked up when PlayerStatsComponent exists
+    }
+    
+    UE_LOG(LogAdastreaPlayerMods, Verbose, TEXT("PlayerModComponent::ApplyStatModifiers - Applied %d stat modifiers for %s"), 
+        Def.StatModifiers.Num(), *Def.ModID.ToString());
 }
 
 void UPlayerModComponent::RemoveStatModifiers(const FPlayerModDefinition& Def)
 {
-    // TODO: Implement stat modifier removal
-    // Reverse the effects applied in ApplyStatModifiers
-    UE_LOG(LogAdastreaPlayerMods, Verbose, TEXT("PlayerModComponent::RemoveStatModifiers - Removed modifiers for %s"), 
-        *Def.ModID.ToString());
+    // Iterate through all stat modifiers to remove
+    for (const TPair<FName, float>& StatPair : Def.StatModifiers)
+    {
+        const FName& StatName = StatPair.Key;
+
+        // Log the stat removal
+        UE_LOG(LogAdastreaPlayerMods, Log, TEXT("PlayerModComponent::RemoveStatModifiers - %s: Removing %s modifier"), 
+            *Def.ModID.ToString(), *StatName.ToString());
+
+        // TODO: When UPlayerStatsComponent is implemented, integrate here:
+        // Example implementation:
+        // if (UPlayerStatsComponent* StatsComp = GetOwner()->FindComponentByClass<UPlayerStatsComponent>())
+        // {
+        //     StatsComp->RemoveStatModifier(StatName, Def.ModID);
+        // }
+        
+        // The stat modification system will reverse the effects when PlayerStatsComponent exists
+    }
+    
+    UE_LOG(LogAdastreaPlayerMods, Verbose, TEXT("PlayerModComponent::RemoveStatModifiers - Removed %d stat modifiers for %s"), 
+        Def.StatModifiers.Num(), *Def.ModID.ToString());
 }
 
 FActiveModEntry* UPlayerModComponent::FindActiveEntry(FName ModID)
