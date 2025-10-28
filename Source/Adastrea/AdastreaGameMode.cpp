@@ -49,6 +49,11 @@ void AAdastreaGameMode::SpawnPlayerSpaceship()
 	}
 
 	// Use the first sector map found
+	if (FoundActors.Num() > 1)
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("AdastreaGameMode: Multiple SpaceSectorMap actors found (%d), using the first one"), FoundActors.Num());
+	}
+
 	ASpaceSectorMap* SectorMap = Cast<ASpaceSectorMap>(FoundActors[0]);
 	if (!SectorMap)
 	{
