@@ -4,7 +4,7 @@ This guide will help you create the minimum content needed to make Adastrea play
 
 ## Prerequisites
 
-- Unreal Engine 5.3 installed
+- Unreal Engine 5.5 installed
 - Adastrea.uproject opened in UE5
 - Basic familiarity with Unreal Editor
 

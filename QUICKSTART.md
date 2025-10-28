@@ -6,7 +6,7 @@ Welcome to Adastrea! This guide will get you up and running in 15 minutes.
 
 Before you begin, make sure you have:
 
-- [ ] **Unreal Engine 5.x** installed ([Download here](https://www.unrealengine.com/))
+- [ ] **Unreal Engine 5.5** installed ([Download here](https://www.unrealengine.com/))
 - [ ] **Visual Studio 2022** (Windows) or **Xcode** (Mac)
 - [ ] **Git** installed and configured
 - [ ] At least **20GB of free disk space**

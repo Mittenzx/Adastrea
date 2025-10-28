@@ -110,7 +110,7 @@ class SetupValidator:
         self.print_header("1. Checking Unreal Engine Version")
         
         uproject_file = self.project_root / "Adastrea.uproject"
-        required_version = "5.3"
+        required_version = "5.5"
         
         try:
             with open(uproject_file, 'r', encoding='utf-8') as f:
