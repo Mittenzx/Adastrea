@@ -263,10 +263,10 @@ bool UFactionDiplomacyManager::AreFactionsAtWar(FName FactionA, FName FactionB) 
     }
 
     UFactionRuntimeState* StateA = GetFactionState(FactionA);
-    if (StateA)
+    if (StateA && StateA->FactionTemplate)
     {
         FFactionRelationship Relationship;
-        if (StateA->GetFactionState()->GetRelationship(FactionB, Relationship))
+        if (StateA->FactionTemplate->GetRelationship(FactionB, Relationship))
         {
             return Relationship.bAtWar;
         }
