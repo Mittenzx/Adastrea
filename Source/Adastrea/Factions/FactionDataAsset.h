@@ -5,6 +5,19 @@
 #include "FactionDataAsset.generated.h"
 
 /**
+ * Category for organizing faction traits
+ */
+UENUM(BlueprintType)
+enum class EFactionTraitCategory : uint8
+{
+    Military    UMETA(DisplayName = "Military"),    // Combat and defense bonuses
+    Economic    UMETA(DisplayName = "Economic"),    // Trade and resource bonuses
+    Scientific  UMETA(DisplayName = "Scientific"),  // Research and technology bonuses
+    Diplomatic  UMETA(DisplayName = "Diplomatic"),  // Relationship modifiers
+    Special     UMETA(DisplayName = "Special")      // Unique faction abilities
+};
+
+/**
  * Trait structure for faction gameplay modifiers
  * Traits define unique characteristics that affect faction behavior and interactions
  */
@@ -25,6 +38,10 @@ struct FFactionTrait
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Trait")
     FName TraitID;
 
+    // Category for organizing and filtering traits
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Trait")
+    EFactionTraitCategory Category;
+
     // Modifier value for gameplay effects (can be positive or negative)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Trait")
     float ModifierValue;
@@ -33,6 +50,7 @@ struct FFactionTrait
         : TraitName(FText::FromString(TEXT("Unknown Trait")))
         , TraitDescription(FText::FromString(TEXT("No description available.")))
         , TraitID(NAME_None)
+        , Category(EFactionTraitCategory::Special)
         , ModifierValue(0.0f)
     {}
 };
@@ -171,6 +189,30 @@ public:
      */
     UFUNCTION(BlueprintCallable, Category="Faction Traits")
     float GetTraitModifier(FName TraitID) const;
+
+    /**
+     * Get all traits in a specific category
+     * @param Category The category to filter by
+     * @return Array of traits in the specified category
+     */
+    UFUNCTION(BlueprintCallable, Category="Faction Traits")
+    TArray<FFactionTrait> GetTraitsByCategory(EFactionTraitCategory Category) const;
+
+    /**
+     * Check if faction has any traits in a specific category
+     * @param Category The category to check
+     * @return True if faction has at least one trait in the category
+     */
+    UFUNCTION(BlueprintCallable, Category="Faction Traits")
+    bool HasTraitInCategory(EFactionTraitCategory Category) const;
+
+    /**
+     * Get the total modifier value for all traits in a category
+     * @param Category The category to sum modifiers for
+     * @return Combined modifier value from all traits in the category
+     */
+    UFUNCTION(BlueprintCallable, Category="Faction Traits")
+    float GetCategoryModifierTotal(EFactionTraitCategory Category) const;
 
     // ====================
     // Diplomacy System Hooks
