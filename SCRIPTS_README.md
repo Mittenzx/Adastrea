@@ -196,15 +196,18 @@ def validate_faction_data_assets(self):
     faction_assets = asset_registry.get_assets_by_class('FactionDataAsset', True)
     
     for asset_data in faction_assets:
-        asset = unreal.load_asset(asset_data.package_name)
-        if asset:
-            # Validate Faction ID
-            if not asset.faction_id or asset.faction_id == "":
-                self.log_error(f"{asset.get_name()}: Faction ID is empty")
-            
-            # Validate Tech Level
-            if asset.tech_level < 1 or asset.tech_level > 10:
-                self.log_error(f"{asset.get_name()}: Tech level out of range")
+        try:
+            asset = unreal.load_asset(asset_data.package_name)
+            if asset:
+                # Validate Faction ID
+                if not asset.faction_id:
+                    self.log_error(f"{asset.get_name()}: Faction ID is empty")
+                
+                # Validate Tech Level
+                if asset.tech_level < 1 or asset.tech_level > 10:
+                    self.log_error(f"{asset.get_name()}: Tech level out of range")
+        except Exception as e:
+            self.log_error(f"Failed to load asset {asset_data.package_name}: {e}")
 ```
 
 ## Integration with Workflows
@@ -282,7 +285,7 @@ brew install cppcheck
 ```
 
 **Windows:**
-Download from http://cppcheck.sourceforge.net/
+Install via package manager or download from https://github.com/danmar/cppcheck/releases
 
 ### Script won't run - "Permission denied"
 
