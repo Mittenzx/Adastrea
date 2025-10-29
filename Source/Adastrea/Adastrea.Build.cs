@@ -8,6 +8,15 @@ public class Adastrea : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
+		// Expose public headers for cross-module includes
+		PublicIncludePaths.AddRange(new string[] 
+		{
+			"Adastrea/Public",
+			"Adastrea/Public/AI",
+			"Adastrea/Public/Ships",
+			"Adastrea/Public/Factions"
+		});
+
 		PublicDependencyModuleNames.AddRange(new string[] 
 		{ 
 			"Core", 
