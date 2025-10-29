@@ -1,4 +1,4 @@
-#include "Ships/SpaceshipInterior.h"
+#include "Ships/SpaceshipInterior.h" // Now resolves to Public/Ships/SpaceshipInterior.h
 
 ASpaceshipInterior::ASpaceshipInterior()
 {
