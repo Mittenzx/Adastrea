@@ -8,6 +8,10 @@ public class PlayerMods : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
+		// Include paths for this module
+		PublicIncludePaths.Add("PlayerMods/Public");
+		PrivateIncludePaths.Add("PlayerMods/Private");
+
 		PublicDependencyModuleNames.AddRange(new string[] 
 		{ 
 			"Core", 
