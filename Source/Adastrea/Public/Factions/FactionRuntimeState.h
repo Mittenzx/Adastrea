@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "FactionDataAsset.h"
+#include "Public/Factions/FactionDataAsset.h"
 #include "FactionRuntimeState.generated.h"
 
 /**

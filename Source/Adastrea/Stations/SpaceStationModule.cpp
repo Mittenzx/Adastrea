@@ -1,5 +1,5 @@
 #include "Stations/SpaceStationModule.h"
-#include "Factions/FactionDataAsset.h"
+#include "Public/Factions/FactionDataAsset.h"
 
 ASpaceStationModule::ASpaceStationModule()
 {

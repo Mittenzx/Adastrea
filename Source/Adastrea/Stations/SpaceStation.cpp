@@ -1,5 +1,5 @@
 #include "Stations/SpaceStation.h"
-#include "Factions/FactionDataAsset.h"
+#include "Public/Factions/FactionDataAsset.h"
 #include "AdastreaLog.h"
 
 ASpaceStation::ASpaceStation()

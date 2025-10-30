@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
-#include "FactionDataAsset.h"
+#include "Public/Factions/FactionDataAsset.h"
 #include "FactionDiplomacyManager.generated.h"
 
 // Forward declarations

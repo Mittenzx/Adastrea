@@ -1,4 +1,4 @@
-#include "AI/FactionLogic.h"
+#include "Public/AI/FactionLogic.h"
 
 UFactionLogic::UFactionLogic()
 {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AI/NPCLogicBase.h"
+#include "Public/AI/NPCLogicBase.h"
 #include "Characters/PersonnelDataAsset.h"
 #include "PersonnelLogic.generated.h"
 

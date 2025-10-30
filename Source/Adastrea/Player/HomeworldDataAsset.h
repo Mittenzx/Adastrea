@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "Factions/FactionDataAsset.h"
+#include "Public/Factions/FactionDataAsset.h"
 #include "HomeworldDataAsset.generated.h"
 
 /**

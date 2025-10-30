@@ -1,6 +1,6 @@
 #include "UI/StationEditorWidget.h"
 #include "Kismet/GameplayStatics.h"
-#include "Factions/FactionDataAsset.h"
+#include "Public/Factions/FactionDataAsset.h"
 
 void UStationEditorWidget::NativeConstruct()
 {
