@@ -1,4 +1,4 @@
-#include "Public/Factions/FactionDataAsset.h"
+#include "Factions/FactionDataAsset.h"
 #include "AdastreaLog.h"
 
 UFactionDataAsset::UFactionDataAsset()

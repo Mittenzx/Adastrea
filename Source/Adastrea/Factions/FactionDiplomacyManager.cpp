@@ -1,5 +1,5 @@
-#include "Public/Factions/FactionDiplomacyManager.h"
-#include "Public/Factions/FactionRuntimeState.h"
+#include "Factions/FactionDiplomacyManager.h"
+#include "Factions/FactionRuntimeState.h"
 #include "AdastreaLog.h"
 
 UFactionDiplomacyManager::UFactionDiplomacyManager()

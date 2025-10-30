@@ -2,7 +2,7 @@
 #include "MarketDataAsset.h"
 #include "TradeItemDataAsset.h"
 #include "TradeContractDataAsset.h"
-#include "Public/Factions/FactionDataAsset.h"
+#include "Factions/FactionDataAsset.h"
 
 UAITraderComponent::UAITraderComponent()
 	: TraderFaction(nullptr)
