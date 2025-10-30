@@ -1,4 +1,4 @@
-#include "Public/AI/PersonnelLogic.h"
+#include "AI/PersonnelLogic.h"
 
 UPersonnelLogic::UPersonnelLogic()
 {

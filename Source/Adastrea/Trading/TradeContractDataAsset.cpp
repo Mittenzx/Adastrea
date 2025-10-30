@@ -1,6 +1,6 @@
 #include "TradeContractDataAsset.h"
 #include "TradeItemDataAsset.h"
-#include "Public/Factions/FactionDataAsset.h"
+#include "Factions/FactionDataAsset.h"
 
 UTradeContractDataAsset::UTradeContractDataAsset()
 	: ContractName(FText::FromString(TEXT("Trade Contract")))

@@ -1,5 +1,5 @@
 #include "Ships/Spaceship.h"
-#include "Public/Ships/SpaceshipInterior.h"
+#include "Ships/SpaceshipInterior.h"
 #include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
 

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Public/AI/NPCLogicBase.h"
-#include "Public/Factions/FactionDataAsset.h"
+#include "AI/NPCLogicBase.h"
+#include "Factions/FactionDataAsset.h"
 #include "FactionLogic.generated.h"
 
 /**

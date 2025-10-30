@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "Public/Ships/SpaceshipInterior.h"
+#include "Ships/SpaceshipInterior.h"
 #include "Spaceship.generated.h"
 
 /**

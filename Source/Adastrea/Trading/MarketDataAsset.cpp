@@ -1,6 +1,6 @@
 #include "MarketDataAsset.h"
 #include "TradeItemDataAsset.h"
-#include "Public/Factions/FactionDataAsset.h"
+#include "Factions/FactionDataAsset.h"
 
 UMarketDataAsset::UMarketDataAsset()
 	: MarketName(FText::FromString(TEXT("Trade Market")))
