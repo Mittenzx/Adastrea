@@ -1,4 +1,4 @@
-#include "AI/NPCLogicBase.h"
+#include "Public/AI/NPCLogicBase.h"
 #include "AdastreaLog.h"
 
 UNPCLogicBase::UNPCLogicBase()

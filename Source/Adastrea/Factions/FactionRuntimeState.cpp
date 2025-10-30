@@ -1,4 +1,4 @@
-#include "Factions/FactionRuntimeState.h"
+#include "Public/Factions/FactionRuntimeState.h"
 #include "AdastreaLog.h"
 
 UFactionRuntimeState::UFactionRuntimeState()
