@@ -18,28 +18,28 @@
  */
 
 // Core game systems
-DECLARE_LOG_CATEGORY_EXTERN(LogAdastrea, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogAdastrea, Log, All, ADASTREA_API);
 
 // Spaceship system
-DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaShips, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaShips, Log, All, ADASTREA_API);
 
 // Faction system
-DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaFactions, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaFactions, Log, All, ADASTREA_API);
 
 // Personnel/Crew system
-DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaPersonnel, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaPersonnel, Log, All, ADASTREA_API);
 
 // AI systems
-DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaAI, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaAI, Log, All, ADASTREA_API);
 
 // Station system
-DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaStations, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaStations, Log, All, ADASTREA_API);
 
 // Trading/Economy system
-DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaTrading, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaTrading, Log, All, ADASTREA_API);
 
 // Player modifications
-DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaPlayerMods, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaPlayerMods, Log, All, ADASTREA_API);
 
 // Material system
-DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaMaterials, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaMaterials, Log, All, ADASTREA_API);
