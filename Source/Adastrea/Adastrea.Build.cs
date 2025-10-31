@@ -9,15 +9,14 @@ public class Adastrea : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		// Expose public headers for cross-module includes
+		// Add base "Adastrea" path to support folder-prefixed includes like "Stations/SpaceStationModule.h"
 		PublicIncludePaths.AddRange(new string[] 
 		{
+			"Adastrea",
 			"Adastrea/Public",
 			"Adastrea/Public/AI",
 			"Adastrea/Public/Ships",
-			"Adastrea/Public/Factions",
-			"Adastrea/Characters",
-			"Adastrea/Ships",
-			"Adastrea/Stations"
+			"Adastrea/Public/Factions"
 		});
 
 		PublicDependencyModuleNames.AddRange(new string[] 
