@@ -13,13 +13,13 @@ class ADASTREA_API ULivingShipOrganismComponent : public UActorComponent
 public:
     ULivingShipOrganismComponent();
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Organism")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category="Organism")
     float Health;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Organism")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category="Organism")
     float Mood; // -100 (distressed) ... 0 (neutral) ... +100 (happy)
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Organism")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category="Organism")
     float MutationLevel;
 
     UFUNCTION(BlueprintCallable, Category="Organism")
@@ -33,4 +33,7 @@ public:
 
     UFUNCTION(BlueprintCallable, Category="Organism")
     FString GetOrganismDialogue() const;
+
+protected:
+    virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };
