@@ -1,4 +1,5 @@
 #include "AI/PersonnelLogic.h"
+#include "Characters/PersonnelDataAsset.h"
 
 UPersonnelLogic::UPersonnelLogic()
 {

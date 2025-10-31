@@ -4,6 +4,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Stations/SpaceStation.h"
 #include "Stations/SpaceStationModule.h"
+#include "Factions/FactionDataAsset.h"
 #include "StationEditorWidget.generated.h"
 
 /**
