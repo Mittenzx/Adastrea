@@ -53,6 +53,7 @@ void ULivingShipOrganismComponent::TakeDamage(float Amount)
 
 void ULivingShipOrganismComponent::Mutate(float Amount)
 {
+    // Note: Amount can be negative to reduce mutation level (de-mutation)
     MutationLevel = FMath::Clamp(MutationLevel + Amount, 0.0f, 100.0f);
     
     UE_LOG(LogAdastreaShips, Log, TEXT("LivingShipOrganismComponent::Mutate - Mutated by %f, new mutation level: %f"), Amount, MutationLevel);
