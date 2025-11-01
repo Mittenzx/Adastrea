@@ -11,6 +11,7 @@ public class AdastreaEditorTarget : TargetRules
 		DefaultBuildSettings = BuildSettingsVersion.V5;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
 		ExtraModuleNames.Add("Adastrea");
+		ExtraModuleNames.Add("PlayerMods");
 		ExtraModuleNames.Add("AdastreaEditor");
 	}
 }
