@@ -21,6 +21,41 @@ The following issues have been fixed in the latest version:
 **Status**: ✅ FIXED  
 **Solution**: Updated to `EngineIncludeOrderVersion.Latest` and `BuildSettingsVersion.V5` in both Target.cs files.
 
+### 4. Module Fails to Load in Unreal Engine
+**Issue**: Project builds successfully in Visual Studio but fails to load in Unreal Engine with errors about missing modules (e.g., "PlayerMods")  
+**Status**: ✅ FIXED  
+**Symptom**: Build compiles without errors in VS, but UE gives "Plugin 'X' failed to load" or "Module 'X' could not be loaded"  
+**Root Cause**: Module declared in `.uproject` but missing from `ExtraModuleNames` in Target.cs files  
+**Solution**: Added all runtime modules to both `Adastrea.Target.cs` and `AdastreaEditor.Target.cs`
+
+**Technical Details**:
+In Unreal Engine, modules must be registered in two places:
+1. **`.uproject` file** - Declares the module exists and defines its type (Runtime/Editor)
+2. **Target.cs files** - Tells UBT to include the module in the build target
+
+If a module is only in the `.uproject` file:
+- ✅ Visual Studio will compile it (parses .uproject)
+- ❌ Unreal Engine won't load it at runtime (needs Target.cs)
+
+**How to Add a New Module**:
+1. Create module folder structure: `Source/ModuleName/{Public,Private,ModuleName.Build.cs}`
+2. Add module to `.uproject`:
+   ```json
+   {
+     "Name": "ModuleName",
+     "Type": "Runtime",
+     "LoadingPhase": "Default"
+   }
+   ```
+3. Add module to `Adastrea.Target.cs`:
+   ```csharp
+   ExtraModuleNames.Add("ModuleName");
+   ```
+4. If needed in editor, add to `AdastreaEditor.Target.cs`:
+   ```csharp
+   ExtraModuleNames.Add("ModuleName");
+   ```
+
 ## Unreal Build Tool (UBT) .NET Issues
 
 If you encounter .NET-related errors during build, these are typically issues with Unreal Build Tool (UBT) itself, not your project code.

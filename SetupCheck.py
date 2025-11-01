@@ -188,6 +188,7 @@ class SetupValidator:
         self.print_info("Checking Source structure...")
         source_modules = [
             "Source/Adastrea",
+            "Source/PlayerMods",
             "Source/AdastreaEditor"
         ]
         
