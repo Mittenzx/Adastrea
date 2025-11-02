@@ -7,6 +7,19 @@ ASpaceship::ASpaceship()
 {
     PrimaryActorTick.bCanEverTick = false;
     InteriorInstance = nullptr;
+
+    // Initialize default movement properties
+    DefaultMaxSpeed = 3000.0f;
+    DefaultAcceleration = 1000.0f;
+    DefaultDeceleration = 1000.0f;
+    DefaultTurningBoost = 8.0f;
+
+    // Create and configure the floating pawn movement component
+    MovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("MovementComponent"));
+    MovementComponent->MaxSpeed = DefaultMaxSpeed;
+    MovementComponent->Acceleration = DefaultAcceleration;
+    MovementComponent->Deceleration = DefaultDeceleration;
+    MovementComponent->TurningBoost = DefaultTurningBoost;
 }
 
 void ASpaceship::BeginPlay()

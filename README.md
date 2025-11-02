@@ -180,9 +180,10 @@ Adastrea/
 ## Core Features
 
 ### Spaceship Data Asset System
-A comprehensive spaceship specification system that allows designers to create detailed ship configurations as Blueprint Data Assets without writing C++ code.
+A comprehensive spaceship specification system that allows designers to create detailed ship configurations as Blueprint Data Assets without writing C++ code. The base `ASpaceship` class includes FloatingPawnMovement for 3D space flight capabilities.
 
 **Key Components:**
+- `ASpaceship` - Base ship actor with FloatingPawnMovement component for space flight
 - `USpaceshipDataAsset` - Complete ship specification data asset with all stat categories
 - Core Stats: Hull strength, cargo capacity, crew requirements, modular points
 - Combat Stats: Armor, shields, weapons, point defense systems

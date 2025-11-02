@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "GameFramework/FloatingPawnMovement.h"
 #include "Ships/SpaceshipInterior.h"
 #include "Spaceship.generated.h"
 
@@ -26,6 +27,26 @@ class ADASTREA_API ASpaceship : public APawn
 
 public:
     ASpaceship();
+
+    // Movement component for floating pawn movement in space
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Movement")
+    UFloatingPawnMovement* MovementComponent;
+
+    // Default maximum movement speed
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(ClampMin="0.0"))
+    float DefaultMaxSpeed;
+
+    // Default acceleration rate
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(ClampMin="0.0"))
+    float DefaultAcceleration;
+
+    // Default deceleration rate
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(ClampMin="0.0"))
+    float DefaultDeceleration;
+
+    // Default turning boost multiplier
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(ClampMin="0.0"))
+    float DefaultTurningBoost;
 
     // Reference to the walkable interior
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")

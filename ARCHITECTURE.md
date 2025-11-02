@@ -101,7 +101,10 @@ The main game logic module, organized by feature:
 - Starting experience customization
 
 #### Ships System (`Source/Adastrea/Ships/`)
-- **Spaceship**: Base ship actor
+- **Spaceship**: Base ship actor with FloatingPawnMovement component
+  - Supports 3D space flight movement
+  - Configurable movement properties (speed, acceleration, turning)
+  - Blueprint-accessible movement component
 - **SpaceshipDataAsset**: Complete ship specifications
   - Core, Combat, Mobility stats
   - Utility, Operational, Advanced stats
@@ -114,6 +117,7 @@ The main game logic module, organized by feature:
 - 6 pre-built templates
 - Blueprint-callable rating functions
 - Designer-friendly without C++ knowledge
+- Full 3D movement capabilities for space flight
 
 #### Stations System (`Source/Adastrea/Stations/`)
 - **SpaceStation**: Core station actor with module management
