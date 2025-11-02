@@ -128,6 +128,19 @@ Ready-to-use YAML templates covering major ship roles:
 4. Use helper functions: GetCombatRating(), IsSuitableForRole("Combat")
 ```
 
+**Movement System:**
+The ASpaceship class includes a FloatingPawnMovement component for 3D space flight:
+```
+- MovementComponent property is available in Blueprints (VisibleAnywhere, BlueprintReadOnly)
+- Default properties configured for space flight:
+  - MaxSpeed: 3000.0
+  - Acceleration: 1000.0
+  - Deceleration: 1000.0
+  - TurningBoost: 8.0
+- Can be customized per-ship in Blueprint child classes
+- Can be integrated with SpaceshipDataAsset mobility stats
+```
+
 **Example Integration:**
 ```
 Event BeginPlay
