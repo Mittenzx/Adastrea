@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "GameFramework/FloatingPawnMovement.h"
 #include "Ships/SpaceshipInterior.h"
 #include "Spaceship.generated.h"
 
@@ -26,6 +27,10 @@ class ADASTREA_API ASpaceship : public APawn
 
 public:
     ASpaceship();
+
+    // Movement component for floating pawn movement in space
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Movement")
+    UFloatingPawnMovement* MovementComponent;
 
     // Reference to the walkable interior
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")

@@ -7,6 +7,17 @@ ASpaceship::ASpaceship()
 {
     PrimaryActorTick.bCanEverTick = false;
     InteriorInstance = nullptr;
+
+    // Create and configure the floating pawn movement component
+    MovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("MovementComponent"));
+    if (MovementComponent)
+    {
+        // Configure default movement properties suitable for space flight
+        MovementComponent->MaxSpeed = 3000.0f;
+        MovementComponent->Acceleration = 1000.0f;
+        MovementComponent->Deceleration = 1000.0f;
+        MovementComponent->TurningBoost = 8.0f;
+    }
 }
 
 void ASpaceship::BeginPlay()
