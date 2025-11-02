@@ -132,13 +132,13 @@ Ready-to-use YAML templates covering major ship roles:
 The ASpaceship class includes a FloatingPawnMovement component for 3D space flight:
 ```
 - MovementComponent property is available in Blueprints (VisibleAnywhere, BlueprintReadOnly)
-- Default properties configured for space flight:
-  - MaxSpeed: 3000.0
-  - Acceleration: 1000.0
-  - Deceleration: 1000.0
-  - TurningBoost: 8.0
-- Can be customized per-ship in Blueprint child classes
-- Can be integrated with SpaceshipDataAsset mobility stats
+- Configurable movement properties (EditAnywhere, BlueprintReadWrite):
+  - DefaultMaxSpeed: 3000.0 (can be modified in Blueprint)
+  - DefaultAcceleration: 1000.0 (can be modified in Blueprint)
+  - DefaultDeceleration: 1000.0 (can be modified in Blueprint)
+  - DefaultTurningBoost: 8.0 (can be modified in Blueprint)
+- Properties can be customized per-ship in Blueprint child classes
+- Can be integrated with SpaceshipDataAsset mobility stats via Blueprint logic
 ```
 
 **Example Integration:**
