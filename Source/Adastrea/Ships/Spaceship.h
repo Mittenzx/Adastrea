@@ -52,6 +52,10 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
     ASpaceshipInterior* InteriorInstance;
 
+    // Turn rate for ship rotation (degrees per second)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Control", meta=(ClampMin="0.0"))
+    float TurnRate;
+
     /**
      * Transition player into the ship's interior space
      * @param PlayerController The controller to transition into the interior
@@ -59,6 +63,40 @@ public:
     UFUNCTION(BlueprintCallable, Category="Spaceship")
     void EnterInterior(class APlayerController* PlayerController);
 
+    /**
+     * Begin controlling the ship from interior console
+     * Saves the walking pawn and possesses the ship
+     * @param PC The player controller taking control
+     * @param ExternalPawn The walking pawn to save for later restoration
+     */
+    UFUNCTION(BlueprintCallable, Category="Control")
+    void BeginControl(class APlayerController* PC, class APawn* ExternalPawn);
+
+    /**
+     * End controlling the ship and return to walking pawn
+     * Restores the saved walking pawn
+     * @param PC The player controller releasing control
+     */
+    UFUNCTION(BlueprintCallable, Category="Control")
+    void EndControl(class APlayerController* PC);
+
+    /**
+     * Setup input component for ship control
+     * Binds axis and action inputs for movement and rotation
+     */
+    virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 protected:
     virtual void BeginPlay() override;
+
+    // Saved reference to the walking pawn when controlling the ship
+    UPROPERTY()
+    APawn* SavedExternalPawn;
+
+    // Movement input handlers
+    void MoveForward(float Value);
+    void MoveRight(float Value);
+    void MoveUp(float Value);
+    void Turn(float Value);
+    void LookUp(float Value);
 };

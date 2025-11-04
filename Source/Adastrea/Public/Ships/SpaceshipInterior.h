@@ -38,6 +38,13 @@ public:
     UFUNCTION(BlueprintCallable, Category="Interior")
     FRotator GetEntryRotation() const;
 
+    /**
+     * Get the exit point location for player when leaving ship control
+     * @return World location where player should be placed when exiting control
+     */
+    UFUNCTION(BlueprintCallable, Category="Interior")
+    FVector GetExitLocation() const;
+
 protected:
     // World location where players spawn when entering the interior
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
@@ -46,4 +53,8 @@ protected:
     // Rotation players face when entering the interior
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
     FRotator EntryRotation;
+
+    // World location where players spawn when exiting ship control
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
+    FVector ExitLocation;
 };
