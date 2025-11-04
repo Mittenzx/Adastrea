@@ -101,7 +101,7 @@ void ASpaceship::MoveUp(float Value)
 
 void ASpaceship::Turn(float Value)
 {
-    if (Value != 0.0f && GetController())
+    if (Value != 0.0f && GetController() && GetWorld())
     {
         GetController()->AddYawInput(Value * TurnRate * GetWorld()->GetDeltaSeconds());
     }
@@ -109,7 +109,7 @@ void ASpaceship::Turn(float Value)
 
 void ASpaceship::LookUp(float Value)
 {
-    if (Value != 0.0f && GetController())
+    if (Value != 0.0f && GetController() && GetWorld())
     {
         GetController()->AddPitchInput(Value * TurnRate * GetWorld()->GetDeltaSeconds());
     }
@@ -118,6 +118,12 @@ void ASpaceship::LookUp(float Value)
 void ASpaceship::BeginControl(APlayerController* PC, APawn* ExternalPawn)
 {
     if (!PC || !ExternalPawn)
+    {
+        return;
+    }
+
+    // Check if already controlling - prevent overwriting saved pawn
+    if (SavedExternalPawn != nullptr)
     {
         return;
     }

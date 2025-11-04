@@ -87,12 +87,22 @@ void AShipControlConsole::Interact(APlayerController* PlayerController)
     {
         // Release control - return to walking pawn
         OwningShip->EndControl(PlayerController);
-        bIsControlActive = false;
+        
+        // Verify we're no longer controlling the ship
+        if (PlayerController->GetPawn() != OwningShip)
+        {
+            bIsControlActive = false;
+        }
     }
     else
     {
         // Take control - possess the ship
         OwningShip->BeginControl(PlayerController, CurrentPawn);
-        bIsControlActive = true;
+        
+        // Verify we're now controlling the ship
+        if (PlayerController->GetPawn() == OwningShip)
+        {
+            bIsControlActive = true;
+        }
     }
 }
