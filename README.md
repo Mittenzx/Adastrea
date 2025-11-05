@@ -498,6 +498,10 @@ The game includes a comprehensive personnel/crew management system for creating 
 - [Playtesting Checklist](Assets/PlaytestingChecklist.md)
 - [Iteration Guide](Assets/IterationGuide.md)
 
+#### Editor Development
+- [AdastreaEditor Analysis](ADASTREA_EDITOR_ANALYSIS.md) - Complete module analysis and implementation state
+- [AdastreaEditor Next Steps](ADASTREA_EDITOR_NEXT_STEPS.md) - Quick start guide for implementing editor customizations
+
 ### YAML Templates
 
 All systems include ready-to-use YAML templates in their respective folders:

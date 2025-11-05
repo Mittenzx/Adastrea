@@ -155,6 +155,19 @@ The main game logic module, organized by feature:
 #### AdastreaEditor Module
 This module provides Unreal Editor customizations and tools for the Adastrea game.
 
+**Current Status:** Foundation stage with infrastructure in place but no customizations implemented yet.
+
+**Documentation:**
+- Complete analysis and state: [ADASTREA_EDITOR_ANALYSIS.md](ADASTREA_EDITOR_ANALYSIS.md)
+- Implementation guide: [ADASTREA_EDITOR_NEXT_STEPS.md](ADASTREA_EDITOR_NEXT_STEPS.md)
+
+**Planned Features:**
+- Detail customizations for Data Assets (SpaceshipDataAsset, FactionDataAsset, etc.)
+- Property type customizations for complex structs (FFactionTrait, FPersonnelSkill, etc.)
+- Asset validators for data integrity
+- Custom asset actions for workflow optimization
+- Visual editor tools (Faction Relationship Graph, Trade Route Designer)
+
 ## Design Patterns
 
 ### 1. Data Asset Pattern
