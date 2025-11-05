@@ -5,12 +5,21 @@
 
 UTradeTransactionManager::UTradeTransactionManager()
 	: MaxHistorySize(10000)
+	, CachedLatestTimestamp(0.0f)
+	, bCacheValid(false)
 {
 }
 
 void UTradeTransactionManager::RecordTransaction(const FTradeTransaction& Transaction)
 {
 	TransactionHistory.Add(Transaction);
+	
+	// Update cached latest timestamp for performance optimization
+	if (Transaction.Timestamp > CachedLatestTimestamp)
+	{
+		CachedLatestTimestamp = Transaction.Timestamp;
+		bCacheValid = true;
+	}
 	
 	// Prune if necessary
 	PruneOldTransactions();
@@ -19,6 +28,9 @@ void UTradeTransactionManager::RecordTransaction(const FTradeTransaction& Transa
 TArray<FTradeTransaction> UTradeTransactionManager::GetTransactionsByItem(FName ItemID) const
 {
 	TArray<FTradeTransaction> Result;
+	
+	// Reserve space based on estimate (assume 10% might match)
+	Result.Reserve(TransactionHistory.Num() / 10);
 	
 	for (const FTradeTransaction& Transaction : TransactionHistory)
 	{
@@ -35,6 +47,9 @@ TArray<FTradeTransaction> UTradeTransactionManager::GetTransactionsByMarket(UMar
 {
 	TArray<FTradeTransaction> Result;
 	
+	// Reserve space to avoid reallocation
+	Result.Reserve(TransactionHistory.Num() / 10);
+	
 	for (const FTradeTransaction& Transaction : TransactionHistory)
 	{
 		if (Transaction.Market == Market)
@@ -49,6 +64,9 @@ TArray<FTradeTransaction> UTradeTransactionManager::GetTransactionsByMarket(UMar
 TArray<FTradeTransaction> UTradeTransactionManager::GetTransactionsByTrader(FName TraderID) const
 {
 	TArray<FTradeTransaction> Result;
+	
+	// Reserve space to avoid reallocation
+	Result.Reserve(TransactionHistory.Num() / 10);
 	
 	for (const FTradeTransaction& Transaction : TransactionHistory)
 	{
@@ -117,13 +135,16 @@ float UTradeTransactionManager::GetPriceTrend(FName ItemID, float TimeWindow) co
 		return 0.0f;
 	}
 
-	// Get latest timestamp
-	float LatestTime = 0.0f;
-	for (const FTradeTransaction& Transaction : TransactionHistory)
+	// Use cached latest timestamp if available, otherwise calculate
+	float LatestTime = bCacheValid ? CachedLatestTimestamp : 0.0f;
+	if (!bCacheValid)
 	{
-		if (Transaction.Timestamp > LatestTime)
+		for (const FTradeTransaction& Transaction : TransactionHistory)
 		{
-			LatestTime = Transaction.Timestamp;
+			if (Transaction.Timestamp > LatestTime)
+			{
+				LatestTime = Transaction.Timestamp;
+			}
 		}
 	}
 
@@ -206,17 +227,27 @@ int32 UTradeTransactionManager::GetPlayerProfitLoss(FName PlayerID) const
 void UTradeTransactionManager::ClearHistory()
 {
 	TransactionHistory.Empty();
+	CachedLatestTimestamp = 0.0f;
+	bCacheValid = false;
 }
 
 FString UTradeTransactionManager::ExportToString() const
 {
-	// Simple CSV export
-	FString Result = TEXT("TransactionID,Type,ItemID,Quantity,PricePerUnit,TotalValue,BuyerID,SellerID,Timestamp\n");
+	// Performance optimization: Pre-allocate string capacity
+	// Estimate ~200 characters per transaction line
+	const int32 EstimatedSize = TransactionHistory.Num() * 200 + 100;
 	
+	TArray<FString> Lines;
+	Lines.Reserve(TransactionHistory.Num() + 1);
+	
+	// Add header
+	Lines.Add(TEXT("TransactionID,Type,ItemID,Quantity,PricePerUnit,TotalValue,BuyerID,SellerID,Timestamp"));
+	
+	// Build lines array first (more efficient than repeated string concatenation)
 	for (const FTradeTransaction& Transaction : TransactionHistory)
 	{
 		FString ItemID = Transaction.TradeItem ? Transaction.TradeItem->ItemID.ToString() : TEXT("None");
-		Result += FString::Printf(TEXT("%s,%d,%s,%d,%.2f,%d,%s,%s,%.2f\n"),
+		Lines.Add(FString::Printf(TEXT("%s,%d,%s,%d,%.2f,%d,%s,%s,%.2f"),
 			*Transaction.TransactionID.ToString(),
 			(int32)Transaction.TransactionType,
 			*ItemID,
@@ -226,10 +257,11 @@ FString UTradeTransactionManager::ExportToString() const
 			*Transaction.BuyerID.ToString(),
 			*Transaction.SellerID.ToString(),
 			Transaction.Timestamp
-		);
+		));
 	}
 	
-	return Result;
+	// Join all lines efficiently with newline delimiter
+	return FString::Join(Lines, TEXT("\n"));
 }
 
 bool UTradeTransactionManager::ImportFromString(const FString& Data)
@@ -279,4 +311,7 @@ void UTradeTransactionManager::PruneOldTransactions()
 	
 	// Remove oldest
 	TransactionHistory.RemoveAt(0, NumToRemove);
+	
+	// Invalidate cache after pruning since we might have removed the latest timestamp
+	bCacheValid = false;
 }

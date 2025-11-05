@@ -1,4 +1,5 @@
 #include "AI/FactionLogic.h"
+#include "AdastreaLog.h"
 
 UFactionLogic::UFactionLogic()
 {
@@ -68,12 +69,11 @@ void UFactionLogic::HandleDiplomaticInteraction_Implementation(FName OtherFactio
     if (!FactionData->GetRelationship(OtherFactionID, Relationship))
     {
         // No existing relationship - create neutral contact
-        if (GEngine && bInitiatedByUs)
+        if (bInitiatedByUs)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,
-                FString::Printf(TEXT("Faction %s: Making first contact with %s"),
-                    *FactionData->FactionName.ToString(),
-                    *OtherFactionID.ToString()));
+            UE_LOG(LogAdastreaAI, Log, TEXT("Faction %s: Making first contact with %s"),
+                *FactionData->FactionName.ToString(),
+                *OtherFactionID.ToString());
         }
         return;
     }
@@ -82,12 +82,11 @@ void UFactionLogic::HandleDiplomaticInteraction_Implementation(FName OtherFactio
     if (Relationship.bIsAllied)
     {
         // Allied factions - cooperative behavior
-        if (GEngine && bInitiatedByUs)
+        if (bInitiatedByUs)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
-                FString::Printf(TEXT("Faction %s: Coordinating with ally %s"),
-                    *FactionData->FactionName.ToString(),
-                    *OtherFactionID.ToString()));
+            UE_LOG(LogAdastreaAI, Log, TEXT("Faction %s: Coordinating with ally %s"),
+                *FactionData->FactionName.ToString(),
+                *OtherFactionID.ToString());
         }
     }
     else if (Relationship.bAtWar)
@@ -95,24 +94,19 @@ void UFactionLogic::HandleDiplomaticInteraction_Implementation(FName OtherFactio
         // At war - hostile behavior (if not in peaceful mode)
         if (!IsPeaceful())
         {
-            if (GEngine)
-            {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
-                    FString::Printf(TEXT("Faction %s: Hostile encounter with enemy %s"),
-                        *FactionData->FactionName.ToString(),
-                        *OtherFactionID.ToString()));
-            }
+            UE_LOG(LogAdastreaAI, Warning, TEXT("Faction %s: Hostile encounter with enemy %s"),
+                *FactionData->FactionName.ToString(),
+                *OtherFactionID.ToString());
         }
     }
     else if (HasTruceWith(OtherFactionID))
     {
         // Truce - maintain peace
-        if (GEngine && bInitiatedByUs)
+        if (bInitiatedByUs)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
-                FString::Printf(TEXT("Faction %s: Respecting truce with %s"),
-                    *FactionData->FactionName.ToString(),
-                    *OtherFactionID.ToString()));
+            UE_LOG(LogAdastreaAI, Log, TEXT("Faction %s: Respecting truce with %s"),
+                *FactionData->FactionName.ToString(),
+                *OtherFactionID.ToString());
         }
     }
     else
@@ -120,27 +114,19 @@ void UFactionLogic::HandleDiplomaticInteraction_Implementation(FName OtherFactio
         // Neutral or friendly - opportunity for trade/diplomacy
         if (IsPeaceful() && bInitiatedByUs)
         {
-            if (GEngine)
-            {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,
-                    FString::Printf(TEXT("Faction %s: Peaceful interaction with %s"),
-                        *FactionData->FactionName.ToString(),
-                        *OtherFactionID.ToString()));
-            }
+            UE_LOG(LogAdastreaAI, Verbose, TEXT("Faction %s: Peaceful interaction with %s"),
+                *FactionData->FactionName.ToString(),
+                *OtherFactionID.ToString());
         }
     }
 }
 
 void UFactionLogic::OnTerritoryDiscovered_Implementation(const FString& TerritoryName, float TerritoryValue)
 {
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,
-            FString::Printf(TEXT("Faction %s: Discovered territory '%s' (Value: %.1f)"),
-                FactionData ? *FactionData->FactionName.ToString() : TEXT("Unknown"),
-                *TerritoryName,
-                TerritoryValue));
-    }
+    UE_LOG(LogAdastreaAI, Log, TEXT("Faction %s: Discovered territory '%s' (Value: %.1f)"),
+        FactionData ? *FactionData->FactionName.ToString() : TEXT("Unknown"),
+        *TerritoryName,
+        TerritoryValue);
 
     // Evaluate if we should claim this territory
     if (bIsEarlyGame && IsExplorationFocused())
@@ -148,13 +134,9 @@ void UFactionLogic::OnTerritoryDiscovered_Implementation(const FString& Territor
         // Early game exploration - likely to claim
         if (TerritoryValue > 50.0f)
         {
-            if (GEngine)
-            {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
-                    FString::Printf(TEXT("Faction %s: Claiming territory '%s'"),
-                        FactionData ? *FactionData->FactionName.ToString() : TEXT("Unknown"),
-                        *TerritoryName));
-            }
+            UE_LOG(LogAdastreaAI, Log, TEXT("Faction %s: Claiming territory '%s'"),
+                FactionData ? *FactionData->FactionName.ToString() : TEXT("Unknown"),
+                *TerritoryName);
             TerritoryCount++;
         }
     }
@@ -228,13 +210,9 @@ void UFactionLogic::UpdateStrategicGoals_Implementation()
     {
         CurrentStrategicPriority = NewPriority;
         
-        if (GEngine)
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
-                FString::Printf(TEXT("Faction %s: Strategic priority changed to %s"),
-                    FactionData ? *FactionData->FactionName.ToString() : TEXT("Unknown"),
-                    *UEnum::GetValueAsString(NewPriority)));
-        }
+        UE_LOG(LogAdastreaAI, Log, TEXT("Faction %s: Strategic priority changed to %s"),
+            FactionData ? *FactionData->FactionName.ToString() : TEXT("Unknown"),
+            *UEnum::GetValueAsString(NewPriority));
     }
 
     // Check if we should transition out of early game
@@ -245,12 +223,8 @@ void UFactionLogic::UpdateStrategicGoals_Implementation()
         {
             bIsEarlyGame = false;
             
-            if (GEngine)
-            {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,
-                    FString::Printf(TEXT("Faction %s: Transitioned out of early game phase"),
-                        FactionData ? *FactionData->FactionName.ToString() : TEXT("Unknown")));
-            }
+            UE_LOG(LogAdastreaAI, Log, TEXT("Faction %s: Transitioned out of early game phase"),
+                FactionData ? *FactionData->FactionName.ToString() : TEXT("Unknown"));
         }
     }
 }
@@ -270,13 +244,9 @@ void UFactionLogic::AddTruce(FName OtherFactionID)
     {
         TruceList.Add(OtherFactionID);
         
-        if (GEngine)
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
-                FString::Printf(TEXT("Faction %s: Truce established with %s"),
-                    FactionData ? *FactionData->FactionName.ToString() : TEXT("Unknown"),
-                    *OtherFactionID.ToString()));
-        }
+        UE_LOG(LogAdastreaAI, Log, TEXT("Faction %s: Truce established with %s"),
+            FactionData ? *FactionData->FactionName.ToString() : TEXT("Unknown"),
+            *OtherFactionID.ToString());
     }
 }
 
@@ -284,13 +254,9 @@ void UFactionLogic::RemoveTruce(FName OtherFactionID)
 {
     if (TruceList.Remove(OtherFactionID) > 0)
     {
-        if (GEngine)
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
-                FString::Printf(TEXT("Faction %s: Truce ended with %s"),
-                    FactionData ? *FactionData->FactionName.ToString() : TEXT("Unknown"),
-                    *OtherFactionID.ToString()));
-        }
+        UE_LOG(LogAdastreaAI, Log, TEXT("Faction %s: Truce ended with %s"),
+            FactionData ? *FactionData->FactionName.ToString() : TEXT("Unknown"),
+            *OtherFactionID.ToString());
     }
 }
 
@@ -336,44 +302,34 @@ bool UFactionLogic::CanPeacefullyInteract(FName OtherFactionID) const
 
 EFactionPriority UFactionLogic::GetTopEarlyGamePriority() const
 {
-    // Find the highest priority from early game priorities
+    // Use a data-driven approach to find highest priority
+    // This array pairs priority values with their corresponding enum
+    struct FPriorityPair
+    {
+        int32 Value;
+        EFactionPriority Type;
+    };
+    
+    const FPriorityPair Priorities[] = {
+        { EarlyGamePriorities.ExplorationPriority, EFactionPriority::Exploration },
+        { EarlyGamePriorities.TradePriority, EFactionPriority::Trade },
+        { EarlyGamePriorities.DiplomacyPriority, EFactionPriority::Diplomacy },
+        { EarlyGamePriorities.ResearchPriority, EFactionPriority::Research },
+        { EarlyGamePriorities.ExpansionPriority, EFactionPriority::Expansion },
+        { EarlyGamePriorities.DefensePriority, EFactionPriority::Defense }
+    };
+    
+    // Find maximum priority in single pass
     int32 MaxPriority = 0;
     EFactionPriority TopPriority = EFactionPriority::Exploration;
-
-    if (EarlyGamePriorities.ExplorationPriority > MaxPriority)
+    
+    for (const FPriorityPair& Pair : Priorities)
     {
-        MaxPriority = EarlyGamePriorities.ExplorationPriority;
-        TopPriority = EFactionPriority::Exploration;
-    }
-
-    if (EarlyGamePriorities.TradePriority > MaxPriority)
-    {
-        MaxPriority = EarlyGamePriorities.TradePriority;
-        TopPriority = EFactionPriority::Trade;
-    }
-
-    if (EarlyGamePriorities.DiplomacyPriority > MaxPriority)
-    {
-        MaxPriority = EarlyGamePriorities.DiplomacyPriority;
-        TopPriority = EFactionPriority::Diplomacy;
-    }
-
-    if (EarlyGamePriorities.ResearchPriority > MaxPriority)
-    {
-        MaxPriority = EarlyGamePriorities.ResearchPriority;
-        TopPriority = EFactionPriority::Research;
-    }
-
-    if (EarlyGamePriorities.ExpansionPriority > MaxPriority)
-    {
-        MaxPriority = EarlyGamePriorities.ExpansionPriority;
-        TopPriority = EFactionPriority::Expansion;
-    }
-
-    if (EarlyGamePriorities.DefensePriority > MaxPriority)
-    {
-        MaxPriority = EarlyGamePriorities.DefensePriority;
-        TopPriority = EFactionPriority::Defense;
+        if (Pair.Value > MaxPriority)
+        {
+            MaxPriority = Pair.Value;
+            TopPriority = Pair.Type;
+        }
     }
 
     return TopPriority;
@@ -430,12 +386,11 @@ void UFactionLogic::InitializeAI_Implementation()
     // Set initial strategic priority
     CurrentStrategicPriority = EvaluateStrategicPriority();
 
-    if (GEngine && FactionData)
+    if (FactionData)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,
-            FString::Printf(TEXT("Faction AI Initialized: %s - Priority: %s"),
-                *FactionData->FactionName.ToString(),
-                *UEnum::GetValueAsString(CurrentStrategicPriority)));
+        UE_LOG(LogAdastreaAI, Log, TEXT("Faction AI Initialized: %s - Priority: %s"),
+            *FactionData->FactionName.ToString(),
+            *UEnum::GetValueAsString(CurrentStrategicPriority));
     }
 }
 

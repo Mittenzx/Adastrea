@@ -1,5 +1,6 @@
 #include "AI/PersonnelLogic.h"
 #include "Characters/PersonnelDataAsset.h"
+#include "AdastreaLog.h"
 
 UPersonnelLogic::UPersonnelLogic()
 {
@@ -99,14 +100,10 @@ void UPersonnelLogic::HandleSocialInteraction_Implementation(FName OtherPersonne
     FPersonnelRelationship Relationship;
     bool bHasRelationship = PersonnelData->GetRelationship(OtherPersonnelID, Relationship);
 
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Cyan,
-            FString::Printf(TEXT("%s: %s interaction with %s"),
+    UE_LOG(LogAdastreaAI, Log, FString::Printf(TEXT("%s: %s interaction with %s"),
                 *PersonnelData->PersonnelName.ToString(),
                 *InteractionType,
                 *OtherPersonnelID.ToString()));
-    }
 
     // Handle based on relationship and disposition
     if (bHasRelationship)
@@ -133,12 +130,8 @@ void UPersonnelLogic::HandleSocialInteraction_Implementation(FName OtherPersonne
     // Empathetic disposition gains more from social interactions
     if (Disposition == EPersonnelDisposition::Empathetic)
     {
-        if (GEngine)
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green,
-                FString::Printf(TEXT("%s: Enjoys the social interaction"),
+        UE_LOG(LogAdastreaAI, Log, FString::Printf(TEXT("%s: Enjoys the social interaction"),
                     *PersonnelData->PersonnelName.ToString()));
-        }
     }
 }
 
@@ -251,12 +244,8 @@ void UPersonnelLogic::UpdateDailyRoutine_Implementation()
         bOnDuty = true;
         HoursUntilNextShift = 8.0f; // 8 hour shift
         
-        if (GEngine && PersonnelData)
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Cyan,
-                FString::Printf(TEXT("%s: Starting duty shift"),
+        UE_LOG(LogAdastreaAI, Log, FString::Printf(TEXT("%s: Starting duty shift"),
                     *PersonnelData->PersonnelName.ToString()));
-        }
     }
     else if (HoursUntilNextShift <= -8.0f && bOnDuty)
     {
@@ -264,12 +253,8 @@ void UPersonnelLogic::UpdateDailyRoutine_Implementation()
         bOnDuty = false;
         HoursUntilNextShift = 16.0f; // 16 hours until next shift
         
-        if (GEngine && PersonnelData)
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow,
-                FString::Printf(TEXT("%s: Ending duty shift"),
+        UE_LOG(LogAdastreaAI, Log, FString::Printf(TEXT("%s: Ending duty shift"),
                     *PersonnelData->PersonnelName.ToString()));
-        }
     }
 
     // Check if should be resting
@@ -383,13 +368,9 @@ void UPersonnelLogic::MakeFriend(FName OtherPersonnelID)
     {
         FriendsList.Add(OtherPersonnelID);
         
-        if (GEngine && PersonnelData)
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green,
-                FString::Printf(TEXT("%s: Made friends with %s"),
+        UE_LOG(LogAdastreaAI, Log, FString::Printf(TEXT("%s: Made friends with %s"),
                     *PersonnelData->PersonnelName.ToString(),
                     *OtherPersonnelID.ToString()));
-        }
     }
 }
 
@@ -404,13 +385,9 @@ void UPersonnelLogic::AddConflict(FName OtherPersonnelID)
     {
         ConflictList.Add(OtherPersonnelID);
         
-        if (GEngine && PersonnelData)
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red,
-                FString::Printf(TEXT("%s: Conflict with %s"),
+        UE_LOG(LogAdastreaAI, Log, FString::Printf(TEXT("%s: Conflict with %s"),
                     *PersonnelData->PersonnelName.ToString(),
                     *OtherPersonnelID.ToString()));
-        }
     }
 }
 
@@ -418,13 +395,9 @@ void UPersonnelLogic::ResolveConflict(FName OtherPersonnelID)
 {
     if (ConflictList.Remove(OtherPersonnelID) > 0)
     {
-        if (GEngine && PersonnelData)
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow,
-                FString::Printf(TEXT("%s: Resolved conflict with %s"),
+        UE_LOG(LogAdastreaAI, Log, FString::Printf(TEXT("%s: Resolved conflict with %s"),
                     *PersonnelData->PersonnelName.ToString(),
                     *OtherPersonnelID.ToString()));
-        }
     }
 }
 
@@ -547,13 +520,9 @@ void UPersonnelLogic::InitializeAI_Implementation()
     // Set initial task
     CurrentTask = EvaluateTaskPriority();
 
-    if (GEngine && PersonnelData)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,
-            FString::Printf(TEXT("Personnel AI Initialized: %s - Task: %s"),
+    UE_LOG(LogAdastreaAI, Log, FString::Printf(TEXT("Personnel AI Initialized: %s - Task: %s"),
                 *PersonnelData->PersonnelName.ToString(),
                 *UEnum::GetValueAsString(CurrentTask)));
-    }
 }
 
 void UPersonnelLogic::OnTickAI_Implementation(float DeltaTime)
@@ -567,13 +536,9 @@ void UPersonnelLogic::OnTickAI_Implementation(float DeltaTime)
     {
         CurrentTask = NewTask;
         
-        if (GEngine && PersonnelData)
-        {
-            GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Cyan,
-                FString::Printf(TEXT("%s: Switching to %s"),
+        UE_LOG(LogAdastreaAI, Log, FString::Printf(TEXT("%s: Switching to %s"),
                     *PersonnelData->PersonnelName.ToString(),
                     *UEnum::GetValueAsString(CurrentTask)));
-        }
     }
 
     // Call parent implementation
