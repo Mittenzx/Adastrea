@@ -233,13 +233,21 @@ void UTradeTransactionManager::ClearHistory()
 
 FString UTradeTransactionManager::ExportToString() const
 {
-	// Simple CSV export
-	FString Result = TEXT("TransactionID,Type,ItemID,Quantity,PricePerUnit,TotalValue,BuyerID,SellerID,Timestamp\n");
+	// Performance optimization: Pre-allocate string capacity
+	// Estimate ~200 characters per transaction line
+	const int32 EstimatedSize = TransactionHistory.Num() * 200 + 100;
 	
+	TArray<FString> Lines;
+	Lines.Reserve(TransactionHistory.Num() + 1);
+	
+	// Add header
+	Lines.Add(TEXT("TransactionID,Type,ItemID,Quantity,PricePerUnit,TotalValue,BuyerID,SellerID,Timestamp"));
+	
+	// Build lines array first (more efficient than repeated string concatenation)
 	for (const FTradeTransaction& Transaction : TransactionHistory)
 	{
 		FString ItemID = Transaction.TradeItem ? Transaction.TradeItem->ItemID.ToString() : TEXT("None");
-		Result += FString::Printf(TEXT("%s,%d,%s,%d,%.2f,%d,%s,%s,%.2f\n"),
+		Lines.Add(FString::Printf(TEXT("%s,%d,%s,%d,%.2f,%d,%s,%s,%.2f"),
 			*Transaction.TransactionID.ToString(),
 			(int32)Transaction.TransactionType,
 			*ItemID,
@@ -249,10 +257,11 @@ FString UTradeTransactionManager::ExportToString() const
 			*Transaction.BuyerID.ToString(),
 			*Transaction.SellerID.ToString(),
 			Transaction.Timestamp
-		);
+		));
 	}
 	
-	return Result;
+	// Join all lines efficiently with newline delimiter
+	return FString::Join(Lines, TEXT("\n"));
 }
 
 bool UTradeTransactionManager::ImportFromString(const FString& Data)
