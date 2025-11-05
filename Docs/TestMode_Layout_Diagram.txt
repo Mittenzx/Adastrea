@@ -1,0 +1,257 @@
+# Test Mode Level Layout Diagram
+
+## Top-Down View (X-Y Plane)
+
+```
+                    North (+Y)
+                        ↑
+                        |
+                        |
+        ←─────────────(0,0)─────────────→
+      West              |              East
+      (-X)              |              (+X)
+                        |
+                    South (-Y)
+```
+
+## Side View (X-Z Plane) - Looking from South
+
+```
+            Sky Atmosphere (∞)
+                 ☁️☁️☁️
+                   ⭐
+            Sky Light (diffuse ambient)
+            
+            ☀️ Directional Light
+               (angled down -45°)
+                   ↘️
+                   
+     Z=200  ✈️ Spaceship Spawn Point
+              (500, 0, 200)
+              [Tagged: "SpaceshipSpawnPoint"]
+              
+     Z=100  🧍 Player Start
+              (0, 0, 100)
+              
+     Z=0    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            Floor Plane (scaled 100x100x1)
+            Located at world origin (0,0,0)
+            ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+```
+
+## 3D Perspective View
+
+```
+                      Sky ☁️
+                       /\
+                      /  \
+        Directional  /    \
+           Light ☀️ /      \
+                   /        \
+                  /   ✈️     \ (Spaceship at 500,0,200)
+                 /  Spaceship \
+                /              \
+               /     🧍         \
+              /   Player Start   \ (at 0,0,100)
+             /                    \
+            /________________________\
+           /                          \
+          /____Floor (0,0,0)___________\
+         /  100 units wide & deep      \
+        ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+```
+
+## Detailed Coordinate Reference
+
+### Actor Positions (Unreal Units)
+
+| Actor | X | Y | Z | Description |
+|-------|---|---|---|-------------|
+| Floor Center | 0 | 0 | 0 | World origin, ground reference |
+| Player Start | 0 | 0 | 100 | 100 units above floor |
+| Spaceship Spawn | 500 | 0 | 200 | 500 units forward, 200 up |
+| Directional Light | Any | Any | High | Angled -45° pitch |
+
+### Distances Between Key Points
+
+| From | To | Distance | Notes |
+|------|----|---------:|-------|
+| Player Start | Spaceship | ~539 units | Diagonal distance |
+| Player Start | Floor | 100 units | Vertical drop |
+| Spaceship | Floor | 200 units | Vertical clearance |
+| Floor Center | Spaceship | ~536 units | Horizontal + vertical |
+
+### Scale Reference
+
+```
+1 Unreal Unit ≈ 1 centimeter (default)
+
+Therefore:
+- Floor dimensions: ~1000m x 1000m (at scale 100,100,1)
+- Player height: ~1m above floor
+- Spaceship height: ~2m above floor
+- Spaceship distance: ~5m forward from player
+```
+
+## Viewing Angles
+
+### Recommended Camera Positions for Testing
+
+**Testing Floor Collision:**
+```
+Position: (0, -200, 50)
+Looking at: (0, 0, 50)
+```
+
+**Testing Spaceship Spawn:**
+```
+Position: (300, -200, 150)
+Looking at: (500, 0, 200)
+```
+
+**Bird's Eye View:**
+```
+Position: (250, 0, 500)
+Looking at: (250, 0, 0)
+```
+
+## Actor Hierarchy
+
+```
+TestMode Level
+├── Environment
+│   ├── Floor (Static Mesh Actor)
+│   │   └── Plane Mesh (scaled)
+│   ├── Directional Light
+│   ├── Sky Light
+│   ├── Sky Atmosphere
+│   └── Post Process Volume (infinite extent)
+│
+├── Spawning
+│   ├── Player Start (0, 0, 100)
+│   └── Target Point (500, 0, 200)
+│       └── Tag: "SpaceshipSpawnPoint"
+│
+└── World Settings
+    └── GameMode: BP_TestModeGameMode
+        ├── DefaultSpaceshipClass: BP_PlayerShip
+        ├── bAutoSpawnPlayerShip: true
+        └── bSpawnAtCenter: false
+```
+
+## Visual Debugging Markers (Optional)
+
+Add these for visual reference during development:
+
+```
+Distance Markers:
+├── 100 units: Small red sphere at (100, 0, 50)
+├── 500 units: Medium green sphere at (500, 0, 100)
+└── 1000 units: Large blue sphere at (1000, 0, 100)
+
+Direction Markers:
+├── North: Blue arrow pointing +Y
+├── East: Red arrow pointing +X
+└── Up: Green arrow pointing +Z
+```
+
+## Collision Boundaries
+
+```
+Recommended Test Area:
+┌─────────────────────────────────┐
+│                                 │
+│    Collision-enabled floor:     │
+│    X: -5000 to +5000           │
+│    Y: -5000 to +5000           │
+│    Z: 0 (floor level)          │
+│                                 │
+│    No collision above Z=0      │
+│    (open sky for flying)        │
+│                                 │
+└─────────────────────────────────┘
+```
+
+## Lighting Setup Diagram
+
+```
+        ☀️ Directional Light
+           Rotation: (0, 0, -45)
+           Intensity: 5.0
+           Color: White (255,255,255)
+              ↓ ↓ ↓ (parallel rays)
+           
+        ☁️ Sky Atmosphere
+           (atmospheric scattering)
+           
+        💡 Sky Light
+           (ambient fill light)
+           Intensity: 1.0
+           Color: Light Blue (200,220,255)
+           
+        [Post Process Volume]
+           Exposure: Manual 0.5
+           Bloom: Enabled
+           Anti-aliasing: TAA
+```
+
+## Material Setup (Optional Enhancement)
+
+### Floor Grid Material Visualization
+
+```
+  Grid Pattern (top view):
+  
+  +-----+-----+-----+-----+
+  |     |     |     |     |
+  +-----+-----+-----+-----+
+  |     | 🧍 |     |     |
+  +-----+-----+-----+-----+  100 unit squares
+  |     |     |     |     |
+  +-----+-----+-----+-----+
+  |     |     |     |     |
+  +-----+-----+-----+-----+
+  
+  Each grid square = 100 Unreal Units
+  Color: Dark Gray (50,50,50)
+  Grid Lines: Light Gray (150,150,150)
+```
+
+## Quick Setup Visual Checklist
+
+```
+Step-by-Step Visual Guide:
+
+1. [✓] Create empty level
+   │
+   ├─→ 2. [✓] Add floor plane at origin
+   │       └── Scale: 100, 100, 1
+   │
+   ├─→ 3. [✓] Add Player Start at (0,0,100)
+   │
+   ├─→ 4. [✓] Add Target Point at (500,0,200)
+   │       └── Tag: "SpaceshipSpawnPoint"
+   │
+   ├─→ 5. [✓] Add lighting (Directional, Sky, Atmosphere)
+   │
+   ├─→ 6. [✓] Add Post Process Volume
+   │       └── Infinite Extent: true
+   │
+   ├─→ 7. [✓] Configure World Settings
+   │       └── GameMode: BP_TestModeGameMode
+   │
+   └─→ 8. [✓] Test with Play button
+           └── Spaceship spawns and is controllable
+```
+
+## Related Documentation
+
+- Main Specification: Content/Maps/TestMode.umap.txt
+- Blueprint Setup: Content/Blueprints/BP_TestModeSetup_Guide.txt  
+- Quick Reference: Docs/TestMode_QuickReference.md
+
+---
+
+**Purpose**: Visual reference for Test Mode level layout and spatial relationships
+**Created**: 2025-11-05
+**Coordinate System**: Unreal Engine standard (X=forward, Y=right, Z=up)

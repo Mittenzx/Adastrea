@@ -65,6 +65,7 @@ Verify spaceship spawns and is controllable
 For complete instructions, see:
 - **Level Specification**: [Content/Maps/TestMode.umap.txt](../Content/Maps/TestMode.umap.txt)
 - **Blueprint Setup**: [Content/Blueprints/BP_TestModeSetup_Guide.txt](../Content/Blueprints/BP_TestModeSetup_Guide.txt)
+- **Layout Diagram**: [TestMode_Layout_Diagram.txt](TestMode_Layout_Diagram.txt)
 
 ## Coordinate Reference
 
