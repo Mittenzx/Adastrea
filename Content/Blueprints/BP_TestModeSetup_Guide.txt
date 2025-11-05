@@ -1,0 +1,362 @@
+# Test Mode Blueprint Setup Guide
+
+## Overview
+This guide provides step-by-step instructions for creating the Blueprints needed for the Test Mode level to function properly.
+
+## Required Blueprints
+
+### 1. BP_TestModeGameMode
+
+This Game Mode Blueprint handles spawning and initialization for the Test Mode level.
+
+#### Creation Steps
+
+1. **Create the Blueprint**:
+   - Navigate to Content/Blueprints/
+   - Right-click in empty space
+   - Select "Blueprint Class"
+   - Search for and select "AdastreaGameMode" as parent class
+   - Name: BP_TestModeGameMode
+   - Click "Create"
+
+2. **Configure Class Defaults**:
+   - Open BP_TestModeGameMode
+   - Click "Class Defaults" button in toolbar
+   - In Details panel, find "Player Spawn" category:
+     - **DefaultSpaceshipClass**: Select BP_PlayerShip (or your spaceship Blueprint)
+     - **bAutoSpawnPlayerShip**: Check this box (true)
+     - **bSpawnAtCenter**: Uncheck (false) - will use spawn point location
+
+3. **Compile and Save**:
+   - Click "Compile" button
+   - Click "Save" button
+   - Close the Blueprint
+
+#### Alternative: Custom Spawn Logic (Optional)
+
+If you need more control over spawning, add custom logic to Event Graph:
+
+1. **Open Event Graph**:
+   - Open BP_TestModeGameMode
+   - Switch to "Event Graph" tab
+
+2. **Add Custom Spawn Logic**:
+   ```
+   Event BeginPlay
+   ↓
+   [Branch] Check bAutoSpawnPlayerShip
+   ↓ (True)
+   Get All Actors of Class
+      (Actor Class: Target Point)
+   ↓
+   ForEachLoop
+   ↓
+   [Branch] Actor Has Tag?
+      (Tag: "SpaceshipSpawnPoint")
+   ↓ (True)
+   Get Actor Location
+   ↓
+   Get Actor Rotation
+   ↓
+   Spawn Actor from Class
+      (Class: DefaultSpaceshipClass)
+      (Spawn Transform: Location and Rotation from above)
+      (Collision Handling Override: Always Spawn, Ignore Collisions)
+   ↓
+   Get Player Controller (Index 0)
+   ↓
+   Possess
+      (Controller: Player Controller)
+      (Pawn: Spawned Actor - spaceship)
+   ↓
+   Print String: "Test Mode: Player spaceship spawned successfully"
+   ```
+
+3. **Compile and Save**
+
+### 2. BP_PlayerShip (If Not Already Created)
+
+This is the basic player spaceship for testing.
+
+#### Creation Steps
+
+1. **Create the Blueprint**:
+   - Navigate to Content/Blueprints/Ships/ (create folder if needed)
+   - Right-click → Blueprint Class
+   - Search for and select "Spaceship" as parent class
+   - Name: BP_PlayerShip
+   - Click "Create"
+
+2. **Add Visual Components**:
+   - Open BP_PlayerShip
+   - Click "Add Component" → Static Mesh
+   - Rename to "ShipMesh"
+   - In Details panel:
+     - Static Mesh: Select a placeholder mesh (e.g., Engine Content → Basic Shapes → Cube)
+     - Scale: X=2.0, Y=1.0, Z=0.5 (basic ship shape)
+     - Material: Apply any material for visibility
+
+3. **Add Camera**:
+   - Click "Add Component" → Spring Arm
+   - Rename to "SpringArm"
+   - In Details panel:
+     - Target Arm Length: 800
+     - Enable "Use Pawn Control Rotation"
+   
+   - With SpringArm selected, click "Add Component" → Camera
+   - Rename to "FollowCamera"
+   - This attaches camera to spring arm
+
+4. **Configure Movement**:
+   - Click "Class Defaults"
+   - Find MovementComponent settings:
+     - Max Speed: 2000
+     - Acceleration: 1000
+     - Deceleration: 2000
+     - Turning Boost: 8.0
+   - Turn Rate: 50.0
+
+5. **Compile and Save**
+
+#### Optional: Add Basic Input (If Not Already Configured)
+
+If you want to test movement immediately:
+
+1. **Open Event Graph**
+2. **Add Input Events**:
+   ```
+   Input Axis MoveForward (W/S keys)
+   ↓
+   Add Movement Input
+      World Direction: Get Actor Forward Vector
+      Scale Value: Axis Value
+   
+   Input Axis MoveRight (A/D keys)
+   ↓
+   Add Movement Input
+      World Direction: Get Actor Right Vector
+      Scale Value: Axis Value
+   
+   Input Axis Turn (Mouse X)
+   ↓
+   Add Controller Yaw Input
+      Val: Axis Value
+   
+   Input Axis LookUp (Mouse Y)
+   ↓
+   Add Controller Pitch Input
+      Val: Axis Value * -1
+   ```
+
+3. **Compile and Save**
+
+**Note**: For proper input handling, you should configure Enhanced Input system (see ENHANCED_INPUT_GUIDE.md)
+
+### 3. BP_FloorPlane (Optional Enhancement)
+
+A customized floor with grid material for better visual reference.
+
+#### Creation Steps
+
+1. **Create the Blueprint**:
+   - Navigate to Content/Blueprints/Environment/ (create folder if needed)
+   - Right-click → Blueprint Class
+   - Select "Actor" as parent class
+   - Name: BP_FloorPlane
+   - Click "Create"
+
+2. **Add Static Mesh Component**:
+   - Open BP_FloorPlane
+   - Click "Add Component" → Static Mesh
+   - In Details panel:
+     - Static Mesh: Plane (from Engine Content → Basic Shapes)
+     - Scale: X=100, Y=100, Z=1
+
+3. **Create Grid Material** (Quick version):
+   - In Viewport, select the static mesh
+   - In Details → Materials → Element 0:
+     - Create new Material Instance
+     - Name: MI_TestFloor_Grid
+   - Open the material instance
+   - Set Base Color: RGB(100, 100, 100) - medium gray
+   - Save
+
+4. **Enable Collision**:
+   - Select Static Mesh component
+   - Details → Collision → Collision Presets: BlockAll
+
+5. **Compile and Save**
+
+## Level Configuration
+
+### Applying the Game Mode to Test Mode Level
+
+1. **Open TestMode Level**:
+   - Content Browser → Maps → TestMode.umap
+   - Double-click to open
+
+2. **Set Game Mode**:
+   - Window → World Settings
+   - Under "Game Mode" section:
+     - **GameMode Override**: Select BP_TestModeGameMode
+     - Save the level (Ctrl+S)
+
+3. **Verify Setup**:
+   - Click "Play" button (or Alt+P)
+   - Verify spaceship spawns
+   - Verify you can control the spaceship
+   - Check Output Log for any errors
+
+## Project Settings Configuration
+
+### Setting Test Mode as Editor Startup Map
+
+1. **Open Project Settings**:
+   - Edit → Project Settings
+
+2. **Configure Maps**:
+   - Maps & Modes section
+   - **Editor Startup Map**: /Game/Maps/TestMode
+   - **Game Default Map**: /Game/Maps/MainMenu (or /Game/Maps/TestMode for testing)
+
+3. **Close and Restart Editor** to verify startup map loads correctly
+
+## Input Configuration (If Not Already Set)
+
+### Quick Input Setup for Testing
+
+1. **Open Project Settings**:
+   - Edit → Project Settings
+   - Engine → Input
+
+2. **Add Axis Mappings**:
+   - Axis Mappings section, click "+" to add new:
+     - **MoveForward**:
+       - W: Scale 1.0
+       - S: Scale -1.0
+     - **MoveRight**:
+       - D: Scale 1.0
+       - A: Scale -1.0
+     - **Turn**:
+       - Mouse X: Scale 1.0
+     - **LookUp**:
+       - Mouse Y: Scale 1.0
+
+3. **Add Action Mappings** (optional):
+   - Action Mappings section, click "+":
+     - **Boost**: Left Shift
+     - **Brake**: Space Bar
+
+4. **Save and Close**
+
+**Note**: For production, use Enhanced Input system instead (see ENHANCED_INPUT_GUIDE.md)
+
+## Testing and Validation
+
+### Quick Test Procedure
+
+1. **Open Test Mode Level**
+2. **Click Play (Alt+P)**
+3. **Verify**:
+   - [ ] Level loads without errors
+   - [ ] Spaceship spawns at correct location
+   - [ ] Camera follows spaceship
+   - [ ] Can control spaceship with keyboard/mouse
+   - [ ] Floor is visible and has collision
+   - [ ] Lighting is adequate
+
+### Debugging Common Issues
+
+#### Issue: Spaceship Doesn't Spawn
+
+**Solutions**:
+- Check Output Log for errors
+- Verify BP_TestModeGameMode is set in World Settings
+- Ensure DefaultSpaceshipClass is set in BP_TestModeGameMode
+- Verify SpaceshipSpawnPoint tag is correctly set in level
+- Check that BP_PlayerShip Blueprint compiles without errors
+
+#### Issue: Can't Control Spaceship
+
+**Solutions**:
+- Verify Input mappings are configured (MoveForward, MoveRight, Turn, LookUp)
+- Check that spaceship is possessed by player controller (add debug print in spawn logic)
+- Ensure MovementComponent is properly configured on spaceship
+- Check PlayerController class in World Settings
+
+#### Issue: Camera Not Following Ship
+
+**Solutions**:
+- Verify Spring Arm and Camera components are added to BP_PlayerShip
+- Check that "Use Pawn Control Rotation" is enabled on Spring Arm
+- Ensure Camera is attached to Spring Arm, not root component
+- Set Target Arm Length to reasonable value (500-1000)
+
+#### Issue: Ship Falls Through Floor
+
+**Solutions**:
+- Enable collision on floor mesh
+- Verify spaceship spawn point Z coordinate is above floor
+- Check that floor has proper collision settings (BlockAll)
+- Ensure spaceship has collision capsule/box
+
+## Blueprint Organization
+
+### Recommended Folder Structure
+
+```
+Content/Blueprints/
+├── GameModes/
+│   └── BP_TestModeGameMode
+├── Ships/
+│   ├── BP_PlayerShip
+│   └── BP_EnemyShip (future)
+├── Environment/
+│   ├── BP_FloorPlane
+│   └── BP_SpaceEnvironment (future)
+└── Testing/
+    └── BP_TestHelpers (future)
+```
+
+## Blueprint Naming Conventions
+
+Follow the project naming conventions:
+- Game Modes: `BP_[Context]GameMode`
+- Ships: `BP_[ShipType]Ship`
+- Environment: `BP_[Type]_[Variant]`
+- Testing: `BP_Test[Purpose]`
+
+## Next Steps
+
+After completing the basic setup:
+
+1. **Create Data Assets**:
+   - Create SpaceshipDataAsset for detailed ship configuration
+   - Link Data Asset to BP_PlayerShip
+
+2. **Add Enhanced Input**:
+   - Follow ENHANCED_INPUT_GUIDE.md
+   - Replace legacy input with Enhanced Input system
+
+3. **Add Visual Effects**:
+   - Engine thrust particles
+   - Weapon effects
+   - UI elements
+
+4. **Expand Test Environment**:
+   - Add target dummies
+   - Add obstacle course
+   - Add test stations
+
+## Related Documentation
+
+- Content/Maps/TestMode.umap.txt - Level specification
+- ENHANCED_INPUT_GUIDE.md - Input system setup
+- Assets/SpaceshipSystemGuide.md - Spaceship system details
+- BLUEPRINT_CREATION_GUIDE.md - General Blueprint guide
+
+---
+
+**Created**: 2025-11-05
+**Purpose**: Blueprint setup instructions for Test Mode level
+**Maintainer**: Development Team

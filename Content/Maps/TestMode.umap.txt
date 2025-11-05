@@ -1,0 +1,280 @@
+# Test Mode Level - Specification and Setup Guide
+
+## Overview
+Test Mode is a minimal test level designed for rapid gameplay testing and development. It provides a controlled environment with:
+- A simple floor for spatial reference
+- Player start position
+- Spaceship spawn point
+- Basic lighting and atmosphere
+
+## Level Requirements
+
+### 1. Level Setup
+This level should be created in Unreal Editor as `TestMode.umap` in the `Content/Maps/` directory.
+
+### 2. Essential Components
+
+#### Floor
+- **Actor**: Static Mesh Actor with a plane mesh
+- **Mesh**: Use Engine Content → Basic Shapes → Plane (or create a custom floor mesh)
+- **Scale**: 100, 100, 1 (or larger as needed for testing)
+- **Position**: X=0, Y=0, Z=0 (world origin)
+- **Material**: Apply a simple grid material for visual reference
+- **Collision**: Enable collision for character walking
+
+#### Player Start
+- **Actor**: Player Start actor
+- **Position**: X=0, Y=0, Z=100 (100 units above the floor)
+- **Rotation**: Facing forward (Yaw=0)
+- **Purpose**: Default spawn point for player controller
+
+#### Spaceship Spawn Point
+- **Actor**: Target Point actor (or custom spawn point marker)
+- **Tag**: Add Actor Tag "SpaceshipSpawnPoint"
+- **Position**: X=500, Y=0, Z=200 (500 units in front, 200 units above floor)
+- **Rotation**: Yaw=0 (facing same direction as player start)
+- **Purpose**: Location where the player's spaceship will be spawned
+
+### 3. Environment Setup
+
+#### Lighting
+- **Directional Light**: 
+  - Position: Above the level
+  - Rotation: Angled down (Pitch=-45)
+  - Intensity: 5.0
+  - Color: White (255, 255, 255)
+  - **Purpose**: Primary light source simulating a sun/star
+
+- **Sky Light**:
+  - Source Type: SLS Captured Scene
+  - Intensity: 1.0
+  - Color: Light blue (200, 220, 255)
+  - **Purpose**: Ambient lighting for space environment
+
+- **Sky Atmosphere**:
+  - Default settings
+  - **Purpose**: Provides atmospheric scattering effects
+
+#### Post Process Volume
+- **Actor**: Post Process Volume
+- **Infinite Extent**: Enabled (affects entire level)
+- **Settings**: Configure for space environment:
+  - Exposure: Manual, set to 0.5
+  - Bloom: Enabled, Intensity 0.5
+  - Anti-aliasing: TAA
+
+### 4. Game Mode Configuration
+
+#### World Settings
+In the World Settings panel:
+1. **GameMode Override**: Set to BP_TestModeGameMode (or AdastreaGameMode)
+2. **Default Pawn Class**: Leave as default or set to BP_PlayerShip
+3. **Player Controller Class**: Use default or custom controller
+
+#### Game Mode Properties
+If using AdastreaGameMode:
+- **DefaultSpaceshipClass**: Set to BP_PlayerShip (or your spaceship Blueprint)
+- **bAutoSpawnPlayerShip**: true
+- **bSpawnAtCenter**: false (will use the SpaceshipSpawnPoint location)
+
+### 5. Optional Testing Elements
+
+#### Visual Reference Markers
+- Add colored cubes or spheres at key distances (100, 500, 1000 units) for scale reference
+- Use different colors for easy identification
+
+#### Target Dummy
+- Place a static mesh actor as a target for weapon/interaction testing
+- Position: X=2000, Y=0, Z=200
+- Scale: 2, 2, 2
+
+#### Boundary Markers
+- Add visual markers or invisible collision boxes to define the test area
+- Helps prevent players from flying too far during testing
+
+## Step-by-Step Creation Guide
+
+### Creating the Level in Unreal Editor
+
+1. **Open Unreal Editor** and load the Adastrea project
+
+2. **Create New Level**:
+   - File → New Level
+   - Select "Empty Level" template
+   - This gives you a clean slate
+
+3. **Save the Level**:
+   - File → Save Current Level As...
+   - Navigate to: Content/Maps/
+   - Name: TestMode
+   - Click Save
+
+4. **Add the Floor**:
+   - Content Browser → Engine Content → Basic Shapes
+   - Drag "Plane" into the viewport
+   - Set Location: X=0, Y=0, Z=0
+   - Set Scale: X=100, Y=100, Z=1
+   - In Details panel → Collision → Set Collision Complexity to "Use Complex Collision as Simple"
+
+5. **Add Player Start**:
+   - Place Actors panel → Basic → Player Start
+   - Drag into viewport
+   - Set Location: X=0, Y=0, Z=100
+   - Leave rotation at default (0, 0, 0)
+
+6. **Add Spaceship Spawn Point**:
+   - Place Actors panel → All Classes → Target Point
+   - Drag into viewport
+   - Set Location: X=500, Y=0, Z=200
+   - In Details panel → Tags → Add new tag "SpaceshipSpawnPoint"
+
+7. **Add Lighting**:
+   - Directional Light:
+     - Place Actors panel → Lights → Directional Light
+     - Set Rotation: Pitch=-45, Yaw=0, Roll=0
+     - Intensity: 5.0
+   
+   - Sky Light:
+     - Place Actors panel → Lights → Sky Light
+     - Keep at default position
+     - Intensity: 1.0
+   
+   - Sky Atmosphere:
+     - Place Actors panel → Visual Effects → Sky Atmosphere
+     - Use default settings
+
+8. **Add Post Process Volume**:
+   - Place Actors panel → Visual → Post Process Volume
+   - In Details panel → Post Process Volume Settings:
+     - Check "Infinite Extent (Unbound)"
+   - Configure post process settings as specified above
+
+9. **Configure World Settings**:
+   - Window → World Settings
+   - Under Game Mode section:
+     - GameMode Override: Select AdastreaGameMode or BP_TestModeGameMode
+   
+10. **Build Lighting** (Optional):
+    - Build → Build Lighting Only
+    - This bakes lighting for better performance
+    - Can skip for rapid iteration testing
+
+11. **Save and Test**:
+    - Ctrl+S to save
+    - Click Play (or Alt+P) to test the level
+    - Verify player spawns at Player Start position
+    - Verify spaceship appears at spawn point
+
+## Blueprint Setup for Spaceship Spawning
+
+If the spaceship doesn't automatically spawn, you may need to create a custom Game Mode Blueprint:
+
+### BP_TestModeGameMode
+
+1. **Create Blueprint**:
+   - Content Browser → Blueprints folder
+   - Right-click → Blueprint Class
+   - Parent Class: AdastreaGameMode
+   - Name: BP_TestModeGameMode
+
+2. **Configure in Event Graph**:
+   ```
+   Event BeginPlay
+   ↓
+   Get All Actors With Tag
+      Tag: "SpaceshipSpawnPoint"
+   ↓
+   Get (index 0) → Get Actor Location → Store in variable "SpawnLocation"
+   ↓
+   Spawn Actor from Class
+      Class: BP_PlayerShip (or your spaceship Blueprint)
+      Location: SpawnLocation
+      Rotation: (0, 0, 0)
+   ↓
+   Get Player Controller (Index 0)
+   ↓
+   Possess (Controller = Player Controller, Pawn = Spawned Spaceship)
+   ```
+
+3. **Assign in World Settings**:
+   - Set GameMode Override to BP_TestModeGameMode
+
+## Testing Checklist
+
+After creating the level, verify the following:
+
+- [ ] Level opens without errors
+- [ ] Floor is visible and has collision
+- [ ] Lighting is adequate (not too dark, not too bright)
+- [ ] Player Start is positioned correctly
+- [ ] Spaceship Spawn Point is marked and visible
+- [ ] Pressing Play spawns the player at the correct location
+- [ ] Spaceship spawns at the designated spawn point
+- [ ] Player can control the spaceship (if input is configured)
+- [ ] No console errors or warnings on level load
+
+## Usage in Development
+
+### Setting as Editor Startup Map
+To automatically load this level when opening the editor:
+1. Edit → Project Settings
+2. Maps & Modes → Editor Startup Map
+3. Select: /Game/Maps/TestMode
+
+### Setting as Game Default Map
+To use this as the default game map:
+1. Edit → Project Settings
+2. Maps & Modes → Game Default Map
+3. Select: /Game/Maps/TestMode
+
+## Notes
+
+- **Performance**: This is a minimal level optimized for quick loading and testing
+- **Iteration**: Feel free to modify lighting, floor size, or spawn positions as needed
+- **Assets**: This level uses only built-in engine content for maximum compatibility
+- **Version Control**: The actual .umap file should be committed to source control after creation
+
+## Integration with Existing Systems
+
+This level integrates with:
+- **AdastreaGameMode**: Handles player and spaceship spawning
+- **Spaceship System**: Uses Spaceship C++ class and Blueprint
+- **Player Controller**: Standard Unreal player controller
+- **Input System**: Enhanced Input system (if configured)
+
+## Troubleshooting
+
+### Spaceship Doesn't Spawn
+- Check that DefaultSpaceshipClass is set in GameMode
+- Verify bAutoSpawnPlayerShip is true
+- Ensure spaceship Blueprint is valid and compiles
+- Check Output Log for spawn errors
+
+### Floor Not Visible
+- Verify Static Mesh is assigned to floor actor
+- Check that actor is not hidden in the viewport
+- Ensure material is assigned
+
+### Dark Level
+- Verify Directional Light and Sky Light are present
+- Check light intensities are not zero
+- Build lighting (Build → Build Lighting Only)
+- Enable "Unbuilt Preview" in viewport if lighting not built
+
+### Player Falls Through Floor
+- Check floor collision is enabled
+- Verify floor scale is large enough
+- Ensure Player Start is above the floor (Z > 0)
+
+## Related Documentation
+
+- Content/CONTENT_ORGANIZATION.md - Content structure guidelines
+- CONTENT_CREATION_QUICKSTART.md - Quick start guide for content creation
+- Source/Adastrea/AdastreaGameMode.h - Game mode implementation
+- Source/Adastrea/Ships/Spaceship.h - Spaceship class reference
+
+---
+
+**Created**: 2025-11-05
+**Purpose**: Provide complete specification for Test Mode level creation
+**Maintainer**: Development Team
