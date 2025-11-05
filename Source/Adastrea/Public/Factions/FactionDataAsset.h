@@ -153,15 +153,6 @@ public:
 
     UFactionDataAsset();
 
-private:
-    // Performance optimization: cached relationship map for O(1) lookups
-    // Built lazily on first access
-    mutable TMap<FName, const FFactionRelationship*> RelationshipCache;
-    mutable bool bRelationshipCacheValid;
-    
-    // Rebuild the relationship cache from the array
-    void RebuildRelationshipCache() const;
-
     // ====================
     // Trait System Hooks
     // ====================
@@ -267,4 +258,13 @@ private:
      */
     UFUNCTION(BlueprintCallable, Category="Faction Diplomacy")
     float GetTradeModifier(FName OtherFactionID) const;
+
+private:
+    // Performance optimization: cached relationship map for O(1) lookups
+    // Built lazily on first access
+    mutable TMap<FName, const FFactionRelationship*> RelationshipCache;
+    mutable bool bRelationshipCacheValid;
+    
+    // Rebuild the relationship cache from the array
+    void RebuildRelationshipCache() const;
 };

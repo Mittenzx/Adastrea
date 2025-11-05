@@ -119,7 +119,7 @@ TArray<ASpaceStationModule*> ASpaceStation::GetModules() const
     return Modules;
 }
 
-TArray<ASpaceStationModule*> ASpaceStation::GetModulesByType(const FString& ModuleType)
+TArray<ASpaceStationModule*> ASpaceStation::GetModulesByType(const FString& ModuleType) const
 {
     TArray<ASpaceStationModule*> MatchingModules;
 
