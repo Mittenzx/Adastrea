@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added - Test Mode Level Documentation (2025-11-05)
+- **Test Mode Level Specification**: Created comprehensive documentation for Test Mode level
+  - Added `Content/Maps/TestMode.umap.txt` with complete level specification
+  - Added `Content/Blueprints/BP_TestModeSetup_Guide.txt` with Blueprint setup instructions
+  - Added `Docs/TestMode_QuickReference.md` for quick reference
+  - Updated README.md to reference Test Mode documentation
+- **Test Mode Features**:
+  - Simple floor for spatial reference
+  - Player start position at (0, 0, 100)
+  - Spaceship spawn point at (500, 0, 200) with tag "SpaceshipSpawnPoint"
+  - Basic lighting setup (Directional Light, Sky Light, Sky Atmosphere)
+  - Game Mode configuration for automatic spaceship spawning
+- **Documentation Purpose**: Provides step-by-step instructions for designers to create a minimal test level in Unreal Editor for rapid gameplay testing
+
+**Setup Instructions:**
+1. Follow the guide in `Docs/TestMode_QuickReference.md` for quick setup
+2. See `Content/Maps/TestMode.umap.txt` for detailed level specification
+3. See `Content/Blueprints/BP_TestModeSetup_Guide.txt` for Blueprint creation
+
 ### Changed - Name Normalization (2025-10-18)
 - **Module Renaming**: Renamed `AdAstreaEditor` module to `AdastreaEditor` to match canonical project name
   - Renamed directory: `Source/AdAstreaEditor/` → `Source/AdastreaEditor/`
