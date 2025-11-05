@@ -457,10 +457,22 @@ The game includes a comprehensive personnel/crew management system for creating 
 
 ## Documentation
 
+### Developer Documentation
+
+Comprehensive technical documentation for contributors and developers:
+
+- **[Architecture Overview](ARCHITECTURE.md)** - High-level system architecture with visual diagrams
+- **[Contributing Guidelines](CONTRIBUTING.md)** - How to contribute code, documentation, and assets
+- **[Code Style Guide](CODE_STYLE.md)** - C++ and Blueprint coding standards
+- **[Build Troubleshooting](BUILD_TROUBLESHOOTING.md)** - Common build issues and solutions
+- **[Implementation Summary](IMPLEMENTATION_SUMMARY.md)** - Technical implementation details
+- **[Performance Improvements](PERFORMANCE_IMPROVEMENTS.md)** - Optimization guidelines
+- **[Audit Summary](AUDIT_SUMMARY.md)** - Security and code quality audit results
+
 ### Quick Start Guides
 - [Designer Onboarding](Assets/DesignerOnboarding.md) - Start here if you're new to the project
-- [Architecture Overview](ARCHITECTURE.md) - Technical overview of project structure
-- [Contributing Guidelines](CONTRIBUTING.md) - How to contribute to the project
+- [Quick Start](QUICKSTART.md) - Get up and running quickly
+- [Content Creation Quick Start](CONTENT_CREATION_QUICKSTART.md) - For content creators
 
 ### System Documentation
 

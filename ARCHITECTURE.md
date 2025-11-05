@@ -4,12 +4,72 @@ This document provides a high-level overview of the Adastrea project architectur
 
 ## Table of Contents
 
+- [Architecture Overview](#architecture-overview)
 - [Project Structure](#project-structure)
 - [Module Organization](#module-organization)
 - [Design Patterns](#design-patterns)
 - [Data Flow](#data-flow)
 - [Blueprint Integration](#blueprint-integration)
 - [Extension Points](#extension-points)
+
+## Architecture Overview
+
+The following diagram illustrates the high-level architecture and relationships between core game systems:
+
+```mermaid
+graph TB
+    subgraph "Game Framework"
+        GameInstance[UAdastreaGameInstance<br/>Game-Wide State]
+        GameState[AAdastreaGameState<br/>Replicated Session State]
+        GameMode[AAdastreaGameMode<br/>Game Rules & Spawning]
+        PlayerController[AAdastreaPlayerController<br/>Player Input & Control]
+    end
+
+    subgraph "Core Managers"
+        FactionDiplomacy[UFactionDiplomacyManager<br/>Global Faction Relations]
+        PlayerReputation[UPlayerReputationComponent<br/>Player Faction Standing]
+    end
+
+    subgraph "Game Systems"
+        Spaceship[ASpaceship<br/>Player & NPC Ships]
+        SpaceStation[ASpaceStation<br/>Modular Stations]
+        Trading[Trading System<br/>Markets & Contracts]
+        AI[AI System<br/>Faction & Personnel Logic]
+    end
+
+    subgraph "Data Assets"
+        FactionData[UFactionDataAsset<br/>Faction Definitions]
+        SpaceshipData[USpaceshipDataAsset<br/>Ship Specifications]
+        PersonnelData[UPersonnelDataAsset<br/>Crew Members]
+        HomeworldData[UHomeworldDataAsset<br/>Starting Locations]
+    end
+
+    GameInstance --> FactionDiplomacy
+    GameInstance --> GameState
+    GameMode --> PlayerController
+    PlayerController --> Spaceship
+    PlayerController --> PlayerReputation
+    GameState --> Trading
+    GameState --> AI
+    SpaceStation --> FactionData
+    Spaceship --> SpaceshipData
+    Spaceship --> PersonnelData
+    FactionDiplomacy --> FactionData
+    PlayerReputation --> FactionData
+    HomeworldData --> FactionData
+    Trading --> SpaceStation
+    AI --> FactionData
+    AI --> PersonnelData
+```
+
+**Key Relationships:**
+- **UAdastreaGameInstance** manages persistent state across level transitions and owns the global FactionDiplomacyManager
+- **AAdastreaGameState** stores replicated session state, including active events, time progression, and market conditions
+- **AAdastreaPlayerController** handles player input and manages the possessed Spaceship actor
+- **AAdastreaGameMode** controls game rules, player spawning, and session lifecycle
+- **Managers** coordinate cross-system functionality (diplomacy, reputation)
+- **Game Systems** implement core gameplay features (ships, stations, trading, AI)
+- **Data Assets** provide designer-friendly configuration without C++ code
 
 ## Project Structure
 
@@ -96,7 +156,11 @@ The main game logic module, organized by feature:
 - Station construction integration
 
 #### Player System (`Source/Adastrea/Player/`)
+- **AdastreaPlayerController**: Player input handling and interaction
+- **AdastreaGameInstance**: Game-wide persistent state management
+- **AdastreaGameState**: Replicated session state for multiplayer
 - **HomeworldDataAsset**: Starting location with faction relationships
+- **PlayerReputationComponent**: Tracks player standing with factions
 - Initial reputation system
 - Starting experience customization
 
