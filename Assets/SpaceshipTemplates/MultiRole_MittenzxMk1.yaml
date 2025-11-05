@@ -1,0 +1,62 @@
+# Mittenzx Mk1 Multi-Role Ship Template
+# Versatile spacecraft with balanced capabilities for multiple mission types
+
+BasicInfo:
+  ShipName: "Mittenzx Mk1"
+  Description: "A versatile multi-role spacecraft designed for balanced performance. Ideal for pilots who need a reliable all-rounder for exploration, light combat, and trade missions."
+  ShipClass: "Multi-Role"
+  ShipID: "MittenzxMk1"
+
+CoreStats:
+  HullStrength: 1000.0          # Solid hull for durability
+  CargoCapacity: 75.0           # Good cargo space
+  CrewRequired: 2               # Pilot and co-pilot
+  MaxCrew: 4                    # Small crew complement
+  ModularPoints: 10             # Excellent customization
+
+CombatStats:
+  ArmorRating: 35.0             # Decent armor plating
+  ShieldStrength: 500.0         # Good shields
+  ShieldRechargeRate: 18.0      # Good shield recharge
+  WeaponSlots: 2                # Dual weapons for versatility
+  WeaponPowerCapacity: 650.0    # Good weapons power
+  PointDefenseRating: 4.0       # Solid anti-missile defense
+
+MobilityStats:
+  MaxSpeed: 750.0               # Good speed
+  Acceleration: 110.0           # Good acceleration
+  Maneuverability: 7            # Good maneuverability
+  JumpRange: 22.0               # Good jump range
+  FuelCapacity: 1800.0          # Large fuel tanks
+  FuelConsumptionRate: 55.0     # Balanced fuel use
+
+UtilityStats:
+  SensorRange: 12000.0          # Good sensor range
+  SensorResolution: 7           # Good sensors
+  StealthRating: 5              # Moderate stealth
+  RepairSystemRating: 5         # Good repair systems
+  ScienceRating: 5              # Balanced science equipment
+  MedicalRating: 4              # Good medical facilities
+
+OperationalStats:
+  PowerCapacity: 4500.0         # Good power generation
+  LifeSupportRating: 7          # Excellent life support
+  MaintenanceLevel: 4           # Moderate maintenance needs
+  HangarCapacity: 1             # Small hangar bay
+  DroneCapacity: 12             # Good drone complement
+  AISystemRating: 6             # Good AI systems
+
+AdvancedStats:
+  DiplomacyRating: 3            # Some diplomatic capability
+  BoardingCapability: 2         # Basic boarding ability
+  CustomizableSlots: 6          # Very good customization
+  EWarRating: 5                 # Balanced electronic warfare
+  MiningRating: 3               # Basic mining capability
+
+Lore:
+  Manufacturer: "Mittenzx Industries"
+  YearBuilt: 2550
+  RarityTier: "Uncommon"
+  LoreNotes: "The Mittenzx Mk1 represents the next evolution in versatile spacecraft design. Built by the renowned Mittenzx Industries, this ship combines reliable performance across multiple roles without sacrificing capability. Popular among independent pilots and small trade fleets alike, the Mk1 has earned a reputation for dependability in diverse situations."
+  PrimaryColor: [0.6, 0.2, 0.8, 1.0]    # Purple
+  SecondaryColor: [0.2, 0.2, 0.2, 1.0]  # Dark gray

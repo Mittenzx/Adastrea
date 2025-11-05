@@ -8,6 +8,7 @@ This document provides a quick reference for all available spaceship templates. 
 
 | Template | Role | Size | Crew | Combat | Mobility | Utility | Rarity |
 |----------|------|------|------|--------|----------|---------|--------|
+| Mittenzx Mk1 | Multi-Role | Corvette | 2-4 | ⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐ | Uncommon |
 | Pathfinder Scout | Reconnaissance | Corvette | 2-4 | ⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | Uncommon |
 | Warhammer Gunship | Combat | Frigate | 15-25 | ⭐⭐⭐⭐⭐ | ⭐⭐ | ⭐⭐ | Rare |
 | Merchant Trader | Cargo Transport | Cruiser | 8-15 | ⭐⭐ | ⭐⭐⭐ | ⭐⭐ | Common |
@@ -17,7 +18,55 @@ This document provides a quick reference for all available spaceship templates. 
 
 ---
 
-## 1. Pathfinder Scout
+## 1. Mittenzx Mk1
+
+**File:** `MultiRole_MittenzxMk1.yaml`
+
+### Role & Purpose
+Versatile multi-role spacecraft with balanced capabilities for various mission types.
+
+### Key Strengths
+- ✅ Balanced stats across all categories
+- ✅ Good cargo capacity (75 tons)
+- ✅ Dual weapon slots for versatility
+- ✅ Excellent customization options (10 modular points)
+- ✅ Includes small hangar bay
+
+### Key Weaknesses
+- ❌ Jack-of-all-trades, master of none
+- ❌ Moderate speed (slower than dedicated scouts)
+- ❌ Average sensor range
+- ❌ Not specialized for any single role
+
+### Stat Highlights
+```yaml
+HullStrength: 1000
+MaxSpeed: 750
+Maneuverability: 7
+JumpRange: 22.0
+SensorRange: 12000
+WeaponSlots: 2
+CargoCapacity: 75
+ModularPoints: 10
+```
+
+### Best Used For
+- Independent pilot operations
+- Multi-mission contracts
+- Small trade runs
+- Light exploration
+- Self-defense scenarios
+- Learning game mechanics
+
+### Customization Ideas
+- **Combat Focus**: Add +2 weapon slots, increase armor to 50
+- **Trade Variant**: Increase cargo to 150, reduce weapons to 1
+- **Explorer**: Increase sensors to 18,000, add +3 to science rating
+- **Fast Courier**: Increase speed to 850, reduce cargo to 50
+
+---
+
+## 2. Pathfinder Scout
 
 **File:** `Scout_Pathfinder.yaml`
 
