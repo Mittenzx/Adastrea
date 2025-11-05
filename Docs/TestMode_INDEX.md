@@ -16,7 +16,7 @@ Test Mode provides a controlled environment for:
 ## Documentation Structure
 
 ### Quick Start (5-10 minutes)
-**→ [TestMode_QuickReference.md](TestMode_QuickReference.md)**
+**→ [TestMode_QuickReference.md](./TestMode_QuickReference.md)**
 - Minimal setup checklist
 - Coordinate reference table
 - Common issues and solutions
@@ -45,7 +45,7 @@ Test Mode provides a controlled environment for:
 **Best for:** Creating and configuring Blueprints for Test Mode
 
 ### Visual Layout Reference
-**→ [TestMode_Layout_Diagram.txt](TestMode_Layout_Diagram.txt)**
+**→ [TestMode_Layout_Diagram.txt](./TestMode_Layout_Diagram.txt)**
 - ASCII art diagrams (top-down, side, 3D views)
 - Coordinate reference with distances
 - Actor hierarchy
@@ -78,14 +78,14 @@ Adastrea/
 ### What to Read When...
 
 **I want to create Test Mode for the first time:**
-1. Start with [TestMode_QuickReference.md](TestMode_QuickReference.md)
+1. Start with [TestMode_QuickReference.md](./TestMode_QuickReference.md)
 2. Follow steps in order
 3. Refer to [TestMode.umap.txt](../Content/Maps/TestMode.umap.txt) for details
 4. Use [BP_TestModeSetup_Guide.txt](../Content/Blueprints/BP_TestModeSetup_Guide.txt) for Blueprints
 
 **I need to understand the level layout:**
-- Read [TestMode_Layout_Diagram.txt](TestMode_Layout_Diagram.txt)
-- Check coordinate reference in [TestMode_QuickReference.md](TestMode_QuickReference.md#coordinate-reference)
+- Read [TestMode_Layout_Diagram.txt](./TestMode_Layout_Diagram.txt)
+- Check coordinate reference in [TestMode_QuickReference.md](./TestMode_QuickReference.md#coordinate-reference)
 
 **I'm having issues with spaceship spawning:**
 - See "Debugging Common Issues" in [BP_TestModeSetup_Guide.txt](../Content/Blueprints/BP_TestModeSetup_Guide.txt#debugging-common-issues)
@@ -93,7 +93,7 @@ Adastrea/
 
 **I want to customize Test Mode:**
 - Read "Optional Testing Elements" in [TestMode.umap.txt](../Content/Maps/TestMode.umap.txt#optional-testing-elements)
-- See "Visual Debugging Markers" in [TestMode_Layout_Diagram.txt](TestMode_Layout_Diagram.txt#visual-debugging-markers-optional)
+- See "Visual Debugging Markers" in [TestMode_Layout_Diagram.txt](./TestMode_Layout_Diagram.txt#visual-debugging-markers-optional)
 
 ## Key Concepts
 
@@ -147,7 +147,7 @@ Before creating Test Mode, ensure you have:
 ## Related Project Documentation
 
 ### Unreal Engine Setup
-- [EmptyMapSetup.md](EmptyMapSetup.md) - Creating large sector maps (200km)
+- [EmptyMapSetup.md](./EmptyMapSetup.md) - Creating large sector maps (200km)
 - [../CONTENT_CREATION_QUICKSTART.md](../CONTENT_CREATION_QUICKSTART.md) - General content creation
 
 ### Input System

@@ -47,27 +47,27 @@ If you need more control over spawning, add custom logic to Event Graph:
    [Branch] Check bAutoSpawnPlayerShip
    ↓ (True)
    Get All Actors of Class
-      Actor Class: Target Point
+      (Actor Class: Target Point)
    ↓
    ForEachLoop
    ↓
    [Branch] Actor Has Tag?
-      Tag: "SpaceshipSpawnPoint"
+      (Tag: "SpaceshipSpawnPoint")
    ↓ (True)
    Get Actor Location
    ↓
    Get Actor Rotation
    ↓
    Spawn Actor from Class
-      Class: DefaultSpaceshipClass
-      Spawn Transform: Location and Rotation from above
-      Collision Handling Override: Always Spawn, Ignore Collisions
+      (Class: DefaultSpaceshipClass)
+      (Spawn Transform: Location and Rotation from above)
+      (Collision Handling Override: Always Spawn, Ignore Collisions)
    ↓
    Get Player Controller (Index 0)
    ↓
    Possess
-      Controller: Player Controller
-      Pawn: Spawned Actor (spaceship)
+      (Controller: Player Controller)
+      (Pawn: Spawned Actor - spaceship)
    ↓
    Print String: "Test Mode: Player spaceship spawned successfully"
    ```
