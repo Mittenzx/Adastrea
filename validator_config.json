@@ -1,0 +1,186 @@
+{
+  "description": "Configuration file for Adastrea Asset Validator",
+  "version": "1.0",
+  "naming_conventions": {
+    "blueprints": {
+      "prefix": "BP_",
+      "pattern": "^BP_[A-Z][A-Za-z0-9_]*$",
+      "examples": [
+        "BP_Ship_Fighter",
+        "BP_Station_TradeHub",
+        "BP_Module_Docking"
+      ]
+    },
+    "widgets": {
+      "prefix": "WBP_",
+      "pattern": "^WBP_[A-Z][A-Za-z0-9_]*$",
+      "examples": [
+        "WBP_HUD_Main",
+        "WBP_Menu_Settings",
+        "WBP_Station_Editor"
+      ]
+    },
+    "data_assets": {
+      "prefix": "DA_",
+      "pattern": "^DA_[A-Z][A-Za-z0-9_]*$",
+      "examples": [
+        "DA_Ship_Pathfinder",
+        "DA_Faction_SolarisUnion",
+        "DA_Personnel_Captain"
+      ]
+    },
+    "materials": {
+      "prefix": "M_",
+      "pattern": "^M_[A-Z][A-Za-z0-9_]*$",
+      "examples": [
+        "M_Ship_Hull",
+        "M_Station_Metal"
+      ]
+    },
+    "material_instances": {
+      "prefix": "MI_",
+      "pattern": "^MI_[A-Z][A-Za-z0-9_]*$",
+      "examples": [
+        "MI_Ship_Hull_Blue",
+        "MI_Station_Metal_Rusted"
+      ]
+    },
+    "textures": {
+      "prefix": "T_",
+      "suffixes": {
+        "diffuse": "_D",
+        "normal": "_N",
+        "roughness": "_R",
+        "metallic": "_M",
+        "emissive": "_E",
+        "ambient_occlusion": "_AO",
+        "height": "_H"
+      },
+      "pattern": "^T_[A-Z][A-Za-z0-9_]*(_D|_N|_R|_M|_E|_AO|_H)?$",
+      "examples": [
+        "T_ShipHull_D",
+        "T_ShipHull_N",
+        "T_Station_Metal_R"
+      ]
+    },
+    "static_meshes": {
+      "prefix": "SM_",
+      "pattern": "^SM_[A-Z][A-Za-z0-9_]*$",
+      "examples": [
+        "SM_Station_Module",
+        "SM_Ship_Fighter"
+      ]
+    },
+    "skeletal_meshes": {
+      "prefix": "SK_",
+      "pattern": "^SK_[A-Z][A-Za-z0-9_]*$",
+      "examples": [
+        "SK_Character_Crew",
+        "SK_NPC_Trader"
+      ]
+    },
+    "animations": {
+      "prefix": "A_",
+      "pattern": "^A_[A-Z][A-Za-z0-9_]*$",
+      "examples": [
+        "A_Character_Walk",
+        "A_Character_Idle"
+      ]
+    },
+    "sounds": {
+      "prefix": "S_",
+      "pattern": "^S_[A-Z][A-Za-z0-9_]*$",
+      "examples": [
+        "S_Engine_Idle",
+        "S_Weapon_Fire"
+      ]
+    },
+    "particles": {
+      "prefix": "P_",
+      "pattern": "^P_[A-Z][A-Za-z0-9_]*$",
+      "examples": [
+        "P_Engine_Thrust",
+        "P_Explosion"
+      ]
+    }
+  },
+  "validation_rules": {
+    "data_assets": {
+      "faction": {
+        "required_fields": [
+          "FactionID",
+          "DisplayName",
+          "TechLevel"
+        ],
+        "tech_level_range": [1, 10],
+        "relationship_value_range": [-100, 100]
+      },
+      "spaceship": {
+        "required_fields": [
+          "DisplayName",
+          "HullStrength",
+          "CrewMin"
+        ],
+        "stat_ranges": {
+          "min": 0,
+          "max": 1000
+        }
+      },
+      "personnel": {
+        "required_fields": [
+          "DisplayName",
+          "Role"
+        ],
+        "valid_roles": [
+          "Captain",
+          "XO",
+          "Pilot",
+          "Navigator",
+          "Engineer",
+          "Gunner",
+          "MedicalOfficer",
+          "SecurityOfficer",
+          "Quartermaster",
+          "CrewMember"
+        ],
+        "skill_level_range": [1, 10],
+        "status_range": [0, 100]
+      }
+    },
+    "blueprints": {
+      "max_nodes_warning": 500,
+      "max_nodes_error": 1000,
+      "require_comments": true
+    },
+    "materials": {
+      "max_texture_size_warning": 2048,
+      "max_texture_size_error": 4096,
+      "max_instructions_warning": 300,
+      "max_instructions_error": 500
+    },
+    "textures": {
+      "allowed_formats": [
+        "PNG",
+        "TGA",
+        "EXR"
+      ],
+      "power_of_two_required": true,
+      "max_size_warning": 2048,
+      "max_size_error": 4096
+    }
+  },
+  "ignore_patterns": [
+    "*/Developers/*",
+    "*/Test/*",
+    "*/Debug/*",
+    "*_OLD",
+    "*_Backup"
+  ],
+  "auto_fix": {
+    "enabled": false,
+    "rules": [
+      "trailing_whitespace",
+      "empty_categories"
+    ]
+  }
+}
