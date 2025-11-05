@@ -154,10 +154,12 @@ TArray<FTradeRoute> UAITraderComponent::FindBestTradeRoutes(int32 MaxRoutes)
 					continue;
 				}
 				
-				// Simplified distance calculation
+				// Simplified distance calculation using name hash as placeholder
+				// TODO: Replace with actual market world positions when available
+				// For now, this provides consistent relative distances for route prioritization
 				float Distance = FVector::Dist(
-					FVector(Origin->GetFName().GetNumber(), 0, 0),
-					FVector(Destination->GetFName().GetNumber(), 0, 0)
+					FVector(static_cast<float>(Origin->GetFName().GetNumber()), 0, 0),
+					FVector(static_cast<float>(Destination->GetFName().GetNumber()), 0, 0)
 				);
 				float TravelTime = TravelSpeed > 0.0f ? Distance / TravelSpeed : 0.0f;
 				float ProfitabilityScore = TravelTime > 0.0f ? ProfitPerUnit / TravelTime : ProfitPerUnit;
@@ -183,8 +185,8 @@ TArray<FTradeRoute> UAITraderComponent::FindBestTradeRoutes(int32 MaxRoutes)
 				Route.ProfitPerUnit = SellPrice - BuyPrice;
 				
 				Route.Distance = FVector::Dist(
-					FVector(Origin->GetFName().GetNumber(), 0, 0),
-					FVector(BestDestination->GetFName().GetNumber(), 0, 0)
+					FVector(static_cast<float>(Origin->GetFName().GetNumber()), 0, 0),
+					FVector(static_cast<float>(BestDestination->GetFName().GetNumber()), 0, 0)
 				);
 				Route.TravelTime = TravelSpeed > 0.0f ? Route.Distance / TravelSpeed : 0.0f;
 				Route.ProfitabilityScore = BestProfitability;
@@ -455,10 +457,11 @@ float UAITraderComponent::TravelToMarket(UMarketDataAsset* DestinationMarket)
 		return 0.0f;
 	}
 
-	// Calculate travel time (simplified)
+	// Calculate travel time using placeholder distance (name hash)
+	// TODO: Replace with actual market world positions when available
 	float Distance = FVector::Dist(
-		FVector(CurrentLocation->GetFName().GetNumber(), 0, 0),
-		FVector(DestinationMarket->GetFName().GetNumber(), 0, 0)
+		FVector(static_cast<float>(CurrentLocation->GetFName().GetNumber()), 0, 0),
+		FVector(static_cast<float>(DestinationMarket->GetFName().GetNumber()), 0, 0)
 	);
 	
 	float TravelTime = TravelSpeed > 0.0f ? Distance / TravelSpeed : 0.0f;
