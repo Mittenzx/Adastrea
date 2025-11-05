@@ -726,10 +726,13 @@ bool UStationEditorWidget::CanAddModuleForFaction(TSubclassOf<ASpaceStationModul
 - `BlueprintFactionAssetGuide.md` - Detailed faction creation
 - `BlueprintWorkflowTemplates.md` - Blueprint examples
 - `FactionSetupGuide.md` - Faction templates
+- `SpaceshipDataAssetGuide.md` - Ship creation walkthrough
+- `SpaceshipInteriorGuide.md` - Interior implementation guide
 
 **Advanced Reading:**
 - `IterationGuide.md` - Future expansion plans
 - `PlaytestingChecklist.md` - Quality assurance
+- `ShipControlGuide.md` - Ship control system
 
 ### Example Assets
 

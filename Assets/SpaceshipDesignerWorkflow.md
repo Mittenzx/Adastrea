@@ -645,6 +645,8 @@ These workflows provide structure for efficient ship creation and management. Ad
 For more resources:
 - **SpaceshipDataAssetGuide.md** - Detailed stat explanations
 - **SpaceshipTemplates.md** - Pre-made ship references
+- **SpaceshipInteriorGuide.md** - Complete interior implementation guide
+- **ShipControlGuide.md** - Ship control system from interiors
 - **Assets/SpaceshipTemplates/** - YAML template files
 
 Happy ship designing!
