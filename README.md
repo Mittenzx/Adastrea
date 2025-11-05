@@ -213,6 +213,8 @@ A comprehensive spaceship specification system that allows designers to create d
 - **Complete Guide**: [Assets/SpaceshipDataAssetGuide.md](Assets/SpaceshipDataAssetGuide.md) - Full ship creation walkthrough
 - **Templates Reference**: [Assets/SpaceshipTemplates.md](Assets/SpaceshipTemplates.md) - All ship templates with stats
 - **Workflow Guide**: [Assets/SpaceshipDesignerWorkflow.md](Assets/SpaceshipDesignerWorkflow.md) - Best practices and workflows
+- **Interior Guide**: [Assets/SpaceshipInteriorGuide.md](Assets/SpaceshipInteriorGuide.md) - Complete interior implementation guide
+- **Control Guide**: [Assets/ShipControlGuide.md](Assets/ShipControlGuide.md) - Ship control system from interiors
 - **YAML Templates**: [Assets/SpaceshipTemplates/](Assets/SpaceshipTemplates/) - Copy-paste ready ship configurations
 
 **Quick Usage:**

@@ -109,7 +109,8 @@ The main game logic module, organized by feature:
   - Core, Combat, Mobility stats
   - Utility, Operational, Advanced stats
   - Lore and flavor data
-- **SpaceshipInterior**: Interior spaces
+- **SpaceshipInterior**: Interior spaces (walkable, entry/exit points)
+- **ShipControlConsole**: Interactive control console for piloting from interior
 - **Component Placeholders**: Engines, weapons, organisms
 
 **Design Philosophy**:
@@ -118,6 +119,8 @@ The main game logic module, organized by feature:
 - Blueprint-callable rating functions
 - Designer-friendly without C++ knowledge
 - Full 3D movement capabilities for space flight
+- Interior implementation: Separate level or embedded approach
+- Control console system for boarding and piloting
 
 #### Stations System (`Source/Adastrea/Stations/`)
 - **SpaceStation**: Core station actor with module management
