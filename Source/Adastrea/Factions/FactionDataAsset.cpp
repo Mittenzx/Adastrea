@@ -2,6 +2,7 @@
 #include "AdastreaLog.h"
 
 UFactionDataAsset::UFactionDataAsset()
+    : bRelationshipCacheValid(false)
 {
     // Set default values
     FactionName = FText::FromString(TEXT("Unknown Faction"));
@@ -14,6 +15,21 @@ UFactionDataAsset::UFactionDataAsset()
     MilitaryStrength = 5;
     EconomicPower = 5;
     FactionID = FName(TEXT("UnknownFaction"));
+}
+
+void UFactionDataAsset::RebuildRelationshipCache() const
+{
+    RelationshipCache.Empty(FactionRelationships.Num());
+    
+    for (const FFactionRelationship& Relationship : FactionRelationships)
+    {
+        if (!Relationship.TargetFactionID.IsNone())
+        {
+            RelationshipCache.Add(Relationship.TargetFactionID, &Relationship);
+        }
+    }
+    
+    bRelationshipCacheValid = true;
 }
 
 // ====================
@@ -139,14 +155,19 @@ bool UFactionDataAsset::GetRelationship(FName OtherFactionID, FFactionRelationsh
         return false;
     }
 
-    for (const FFactionRelationship& Relationship : FactionRelationships)
+    // Build cache if needed
+    if (!bRelationshipCacheValid)
     {
-        if (Relationship.TargetFactionID == OtherFactionID)
-        {
-            OutRelationship = Relationship;
-            return true;
-        }
+        RebuildRelationshipCache();
     }
+
+    // O(1) lookup using cache
+    if (const FFactionRelationship* const* FoundPtr = RelationshipCache.Find(OtherFactionID))
+    {
+        OutRelationship = **FoundPtr;
+        return true;
+    }
+    
     return false;
 }
 
@@ -158,13 +179,18 @@ bool UFactionDataAsset::IsAlliedWith(FName OtherFactionID) const
         return false;
     }
 
-    for (const FFactionRelationship& Relationship : FactionRelationships)
+    // Build cache if needed
+    if (!bRelationshipCacheValid)
     {
-        if (Relationship.TargetFactionID == OtherFactionID)
-        {
-            return Relationship.bIsAllied;
-        }
+        RebuildRelationshipCache();
     }
+
+    // O(1) lookup using cache
+    if (const FFactionRelationship* const* FoundPtr = RelationshipCache.Find(OtherFactionID))
+    {
+        return (*FoundPtr)->bIsAllied;
+    }
+    
     return false;
 }
 
@@ -176,13 +202,18 @@ bool UFactionDataAsset::IsAtWarWith(FName OtherFactionID) const
         return false;
     }
 
-    for (const FFactionRelationship& Relationship : FactionRelationships)
+    // Build cache if needed
+    if (!bRelationshipCacheValid)
     {
-        if (Relationship.TargetFactionID == OtherFactionID)
-        {
-            return Relationship.bAtWar;
-        }
+        RebuildRelationshipCache();
     }
+
+    // O(1) lookup using cache
+    if (const FFactionRelationship* const* FoundPtr = RelationshipCache.Find(OtherFactionID))
+    {
+        return (*FoundPtr)->bAtWar;
+    }
+    
     return false;
 }
 
@@ -194,13 +225,18 @@ int32 UFactionDataAsset::GetRelationshipValue(FName OtherFactionID) const
         return 0;
     }
 
-    for (const FFactionRelationship& Relationship : FactionRelationships)
+    // Build cache if needed
+    if (!bRelationshipCacheValid)
     {
-        if (Relationship.TargetFactionID == OtherFactionID)
-        {
-            return Relationship.RelationshipValue;
-        }
+        RebuildRelationshipCache();
     }
+
+    // O(1) lookup using cache
+    if (const FFactionRelationship* const* FoundPtr = RelationshipCache.Find(OtherFactionID))
+    {
+        return (*FoundPtr)->RelationshipValue;
+    }
+    
     return 0; // Neutral if no relationship exists
 }
 
@@ -212,12 +248,17 @@ float UFactionDataAsset::GetTradeModifier(FName OtherFactionID) const
         return 1.0f;
     }
 
-    for (const FFactionRelationship& Relationship : FactionRelationships)
+    // Build cache if needed
+    if (!bRelationshipCacheValid)
     {
-        if (Relationship.TargetFactionID == OtherFactionID)
-        {
-            return Relationship.TradeModifier;
-        }
+        RebuildRelationshipCache();
     }
+
+    // O(1) lookup using cache
+    if (const FFactionRelationship* const* FoundPtr = RelationshipCache.Find(OtherFactionID))
+    {
+        return (*FoundPtr)->TradeModifier;
+    }
+    
     return 1.0f; // Normal trade if no relationship exists
 }
