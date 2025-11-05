@@ -126,7 +126,7 @@ The validation scripts check for:
 
 1. **For Designers**: Read [Assets/DesignerOnboarding.md](Assets/DesignerOnboarding.md)
 2. **For Programmers**: Read [CONTRIBUTING.md](CONTRIBUTING.md) and [ARCHITECTURE.md](ARCHITECTURE.md)
-3. **For Testing**: Create a Test Mode level using [Docs/TestMode_QuickReference.md](Docs/TestMode_QuickReference.md)
+3. **For Testing**: Create a Test Mode level - see [Docs/TestMode_INDEX.md](Docs/TestMode_INDEX.md) for complete guide
 4. **Quick Reference**: See individual system guides in the Assets/ folder
 
 ## Project Structure
