@@ -92,7 +92,7 @@ public:
      * @return Array of matching modules
      */
     UFUNCTION(BlueprintCallable, Category="Station")
-    TArray<ASpaceStationModule*> GetModulesByType(const FString& ModuleType);
+    TArray<ASpaceStationModule*> GetModulesByType(const FString& ModuleType) const;
 
     /**
      * Get the number of attached modules
