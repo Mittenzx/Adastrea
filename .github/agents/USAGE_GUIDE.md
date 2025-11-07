@@ -17,7 +17,10 @@ Unlike general-purpose AI, this agent provides **specific, accurate answers** ba
 
 ### In VS Code with GitHub Copilot
 
-1. Open the Chat panel (Ctrl+Shift+I or Cmd+Shift+I)
+1. Open the Chat panel
+   - Windows/Linux: `Ctrl+Shift+I` (may vary by VS Code version)
+   - Mac: `Cmd+Shift+I` (may vary by VS Code version)
+   - Alternative: View menu → Command Palette → "GitHub Copilot: Open Chat"
 2. Type `@workspace` followed by your question
 3. Reference the agent: `/agent adastrea-developer`
 

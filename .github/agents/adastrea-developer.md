@@ -16,7 +16,7 @@ Adastrea is an open-world space flight game featuring exploration, combat, facti
 - **Languages**: C++ (primary), Blueprint (visual scripting)
 - **Platforms**: Windows, Mac, Linux
 - **Build System**: Unreal Build Tool (UBT)
-- **Version Control**: Git with Git LFS
+- **Version Control**: Git with Git LFS (required for large assets like .uasset, .umap files)
 
 ## Core Game Systems
 
@@ -248,12 +248,14 @@ Always reference these for accurate information:
 
 ## Implementation Statistics
 
-Current project status:
+Current project status (as of 2025-11-07 - verify with WHATS_STILL_NEEDED.md for latest):
 - **~8,587 lines** of C++ code
 - **9 core systems** implemented
 - **58% of core features** complete
 - **Priority 1 objectives**: 100% complete
 - **100+ documentation files** with guides, templates, and workflows
+
+Note: These statistics should be updated regularly. Always check WHATS_STILL_NEEDED.md, IMPLEMENTATION_SUMMARY.md, and recent commits for the most current status.
 
 ## Your Role as Expert Agent
 
