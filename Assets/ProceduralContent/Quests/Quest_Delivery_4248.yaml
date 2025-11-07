@@ -1,0 +1,60 @@
+# Quest: Express Cargo
+# Type: Delivery
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated quest/mission
+
+ContractName: "Express Cargo"
+ContractID: "Quest_Delivery_4248"
+Description: |
+  Transport cargo from Zeta 34 to Cosmo 291. Ensure timely delivery.
+  
+ContractType: Delivery
+Difficulty: Medium
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Zeta 34"
+  Coordinates: [9281, 1160, 120]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Cosmo 291"
+  Coordinates: [7172, 2276, 525]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 19019.35
+TimeLimit: 113
+MinReputationRequired: 22
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 5232
+  ReputationGain: 38
+  ExperiencePoints: 674
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 1308
+  ReputationPenalty: 19
+  CollateralDeposit: 523
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: true
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Delivery"
+  - "Medium"
+  - "Procedural"

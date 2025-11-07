@@ -1,0 +1,63 @@
+# Swift - Fighter Class
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated ship variant
+
+BasicInfo:
+  ShipName: "Swift"
+  Description: "A fighter class vessel with unique characteristics."
+  ShipClass: "Fighter"
+  ShipID: "Swift"
+
+CoreStats:
+  HullStrength: 956.4
+  CargoCapacity: 59.3
+  CrewRequired: 5
+  MaxCrew: 17
+  ModularPoints: 7
+
+CombatStats:
+  ArmorRating: 64.2
+  ShieldStrength: 432.4
+  ShieldRechargeRate: 10.0
+  WeaponSlots: 2
+  WeaponPowerCapacity: 1000.0
+  PointDefenseRating: 5.0
+
+MobilityStats:
+  MaxSpeed: 789.0
+  Acceleration: 100.0
+  Maneuverability: 9
+  JumpRange: 15.0
+  FuelCapacity: 1000.0
+  FuelConsumptionRate: 80.0
+
+UtilityStats:
+  SensorRange: 10000.0
+  SensorResolution: 5
+  StealthRating: 3
+  RepairSystemRating: 3
+  ScienceRating: 3
+  MedicalRating: 2
+
+OperationalStats:
+  PowerCapacity: 2500.0
+  LifeSupportRating: 5
+  MaintenanceLevel: 3
+  HangarCapacity: 0
+  DroneCapacity: 5
+  AISystemRating: 5
+
+AdvancedStats:
+  DiplomacyRating: 2
+  BoardingCapability: 2
+  CustomizableSlots: 3
+  EWarRating: 3
+  MiningRating: 0
+
+Lore:
+  Manufacturer: "Vanguard Aerospace"
+  YearBuilt: 2454
+  RarityTier: "Rare"
+  LoreNotes: "A procedurally generated variant of the Fighter class."
+  PrimaryColor: [0.64, 0.26, 0.58, 1.0]
+  SecondaryColor: [0.18, 0.47, 0.28, 1.0]

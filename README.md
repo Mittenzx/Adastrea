@@ -143,13 +143,43 @@ python AutomationRunner.py --all --schedule "23:00"
 
 See [TESTING_AUTOMATION_GUIDE.md](TESTING_AUTOMATION_GUIDE.md) for complete documentation.
 
+### Procedural Content Generation
+
+Generate randomized game content quickly with the procedural generation system:
+
+```bash
+# Generate everything at once (star systems, NPCs, quests, ships)
+python ProceduralGenerators.py --type all
+
+# Generate specific content
+python ProceduralGenerators.py --type galaxy --count 10    # Star systems
+python ProceduralGenerators.py --type npc --count 25       # Crew members
+python ProceduralGenerators.py --type quest --count 20     # Missions
+python ProceduralGenerators.py --type ship --count 8       # Ship variants
+
+# Interactive menu
+python ProceduralGenerators.py
+```
+
+**What Gets Generated:**
+- 🌌 **Galaxy Systems** - Complete star systems with planets, asteroids, stations, and factions
+- 👥 **NPCs** - Crew members with realistic names, skills, backstories, and personality traits
+- 📜 **Quests** - Missions with objectives, rewards, difficulty scaling, and special conditions
+- 🚀 **Ship Variants** - Randomized ship designs with class-appropriate stats and unique names
+
+All generated content is saved as YAML files compatible with the existing Data Asset system and can be imported directly into Unreal Engine.
+
+**Quick Start**: See [PROCEDURAL_GENERATION_QUICKSTART.md](PROCEDURAL_GENERATION_QUICKSTART.md)  
+**Full Guide**: See [PROCEDURAL_GENERATION_GUIDE.md](PROCEDURAL_GENERATION_GUIDE.md)
+
 ### First Steps
 
 1. **For Designers**: Read [Assets/DesignerOnboarding.md](Assets/DesignerOnboarding.md)
 2. **For Programmers**: Read [CONTRIBUTING.md](CONTRIBUTING.md) and [ARCHITECTURE.md](ARCHITECTURE.md)
 3. **For Testing**: Create a Test Mode level - see [Docs/TestMode_INDEX.md](Docs/TestMode_INDEX.md) for complete guide
 4. **For Automation**: See [TESTING_AUTOMATION_GUIDE.md](TESTING_AUTOMATION_GUIDE.md) for automated testing
-5. **Quick Reference**: See individual system guides in the Assets/ folder
+5. **For Procedural Content**: See [PROCEDURAL_GENERATION_QUICKSTART.md](PROCEDURAL_GENERATION_QUICKSTART.md)
+6. **Quick Reference**: See individual system guides in the Assets/ folder
 
 ## Project Structure
 ```
@@ -192,6 +222,7 @@ Adastrea/
 │   ├── AutomationRunner.py    # CLI automation orchestrator
 │   ├── AdastreaAssetValidator.py  # Asset validation
 │   ├── EditorUtilities.py     # Editor utility functions
+│   ├── ProceduralGenerators.py # Procedural content generation
 │   ├── TemplateGenerator.py   # YAML template generator
 │   ├── GuideGenerator.py      # Documentation generator
 │   ├── YAMLtoDataAsset.py     # YAML import tool

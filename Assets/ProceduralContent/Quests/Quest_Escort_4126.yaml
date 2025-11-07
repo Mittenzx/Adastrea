@@ -1,0 +1,60 @@
+# Quest: Safe Passage
+# Type: Escort
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated quest/mission
+
+ContractName: "Safe Passage"
+ContractID: "Quest_Escort_4126"
+Description: |
+  Protect convoy traveling from Delta 130 to Gamma Ascendant.
+  
+ContractType: Escort
+Difficulty: Medium
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Delta 130"
+  Coordinates: [5087, 3096, 452]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Gamma Ascendant"
+  Coordinates: [4525, 3982, 352]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 45003.66
+TimeLimit: 42
+MinReputationRequired: -4
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 6614
+  ReputationGain: 12
+  ExperiencePoints: 104
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 1653
+  ReputationPenalty: 6
+  CollateralDeposit: 661
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: true
+bRequiresStealth: false
+bCombatExpected: true
+HostileFactions: []
+ContractTags:
+  - "Escort"
+  - "Medium"
+  - "Procedural"

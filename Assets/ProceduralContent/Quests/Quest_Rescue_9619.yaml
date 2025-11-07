@@ -1,0 +1,60 @@
+# Quest: Rescue Operation
+# Type: Rescue
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated quest/mission
+
+ContractName: "Rescue Operation"
+ContractID: "Quest_Rescue_9619"
+Description: |
+  Respond to distress call from Stellar 226. Lives are at stake.
+  
+ContractType: Rescue
+Difficulty: Medium
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Zeta 989"
+  Coordinates: [9978, 5640, 567]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Stellar 226"
+  Coordinates: [7145, 619, 591]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 16100.51
+TimeLimit: 113
+MinReputationRequired: 9
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 4828
+  ReputationGain: 20
+  ExperiencePoints: 958
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 1207
+  ReputationPenalty: 10
+  CollateralDeposit: 482
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: false
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Rescue"
+  - "Medium"
+  - "Procedural"

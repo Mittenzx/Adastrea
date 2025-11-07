@@ -1,0 +1,63 @@
+# Tiger - Fighter Class
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated ship variant
+
+BasicInfo:
+  ShipName: "Tiger"
+  Description: "A fighter class vessel with unique characteristics."
+  ShipClass: "Fighter"
+  ShipID: "Tiger"
+
+CoreStats:
+  HullStrength: 990.2
+  CargoCapacity: 75.6
+  CrewRequired: 4
+  MaxCrew: 15
+  ModularPoints: 13
+
+CombatStats:
+  ArmorRating: 28.8
+  ShieldStrength: 514.2
+  ShieldRechargeRate: 10.0
+  WeaponSlots: 2
+  WeaponPowerCapacity: 1000.0
+  PointDefenseRating: 5.0
+
+MobilityStats:
+  MaxSpeed: 616.9
+  Acceleration: 100.0
+  Maneuverability: 7
+  JumpRange: 15.0
+  FuelCapacity: 1000.0
+  FuelConsumptionRate: 80.0
+
+UtilityStats:
+  SensorRange: 10000.0
+  SensorResolution: 5
+  StealthRating: 3
+  RepairSystemRating: 3
+  ScienceRating: 3
+  MedicalRating: 2
+
+OperationalStats:
+  PowerCapacity: 2500.0
+  LifeSupportRating: 5
+  MaintenanceLevel: 3
+  HangarCapacity: 0
+  DroneCapacity: 5
+  AISystemRating: 5
+
+AdvancedStats:
+  DiplomacyRating: 2
+  BoardingCapability: 2
+  CustomizableSlots: 3
+  EWarRating: 3
+  MiningRating: 0
+
+Lore:
+  Manufacturer: "Vanguard Aerospace"
+  YearBuilt: 2492
+  RarityTier: "Rare"
+  LoreNotes: "A procedurally generated variant of the Fighter class."
+  PrimaryColor: [0.26, 0.38, 0.06, 1.0]
+  SecondaryColor: [0.54, 0.26, 0.73, 1.0]

@@ -1,0 +1,86 @@
+# Star System: Nova Major
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated galaxy content
+
+SystemName: "Nova Major"
+SystemID: "NovaMajor"
+
+# ====================
+# STAR PROPERTIES
+# ====================
+StarType: "Blue Giant"
+StarMass: 1.74  # Solar masses
+StarLuminosity: 28.13  # Solar luminosity
+
+# ====================
+# COORDINATES
+# ====================
+Coordinates:
+  X: 3291
+  Y: -9039
+  Z: -319
+
+# ====================
+# PLANETS
+# ====================
+Planets:
+  - Name: "Ember Settlement"
+    Type: "Lava"
+    OrbitNumber: 1
+    OrbitDistance: 69484.9302177171  # km from star
+    Size: 11317.95  # km diameter
+    Mass: 9.52  # Earth masses
+    Gravity: 0.35  # Earth gravity
+    Temperature: -120  # Celsius
+    HasAtmosphere: false
+    Habitability: 1  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Helium-3"
+      - "Rare Metals"
+    HasMoons: false
+    NumberOfMoons: 5
+
+# ====================
+# ASTEROID BELTS
+# ====================
+AsteroidBelts:
+  - Name: "Nova Major Asteroid Belt A"
+    OrbitDistance: 283839.8358888569
+    Density: "Dense"
+    Resources:
+      - "Titanium"
+      - "Platinum"
+      - "Iron"
+
+  - Name: "Nova Major Asteroid Belt B"
+    OrbitDistance: 345396.9456957183
+    Density: "Sparse"
+    Resources:
+      - "Platinum"
+      - "Titanium"
+
+  - Name: "Nova Major Asteroid Belt C"
+    OrbitDistance: 315485.0467980448
+    Density: "Moderate"
+    Resources:
+      - "Titanium"
+
+# ====================
+# SPACE STATIONS
+# ====================
+Stations:
+  - Name: "Nova Major Station 1"
+    Type: "Military Outpost"
+    OrbitDistance: 261213.3442929936
+    Population: 1931
+
+# ====================
+# SYSTEM INFO
+# ====================
+Factions:
+  - "Free Traders"
+
+DangerLevel: "Low"
+TrafficLevel: "Light"
+bHasJumpGate: false

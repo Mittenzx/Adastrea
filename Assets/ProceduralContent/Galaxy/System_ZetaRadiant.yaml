@@ -1,0 +1,82 @@
+# Star System: Zeta Radiant
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated galaxy content
+
+SystemName: "Zeta Radiant"
+SystemID: "ZetaRadiant"
+
+# ====================
+# STAR PROPERTIES
+# ====================
+StarType: "White Dwarf"
+StarMass: 2.01  # Solar masses
+StarLuminosity: 73.16  # Solar luminosity
+
+# ====================
+# COORDINATES
+# ====================
+Coordinates:
+  X: -2116
+  Y: -859
+  Z: -418
+
+# ====================
+# PLANETS
+# ====================
+Planets:
+  - Name: "Lava Refuge IV"
+    Type: "Ocean"
+    OrbitNumber: 1
+    OrbitDistance: 70864.51094549982  # km from star
+    Size: 12445.34  # km diameter
+    Mass: 3.64  # Earth masses
+    Gravity: 1.49  # Earth gravity
+    Temperature: -86  # Celsius
+    HasAtmosphere: true
+    Habitability: 1  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Uranium"
+      - "Minerals"
+      - "Organics"
+    HasMoons: false
+    NumberOfMoons: 0
+
+# ====================
+# ASTEROID BELTS
+# ====================
+AsteroidBelts:
+  - Name: "Zeta Radiant Asteroid Belt A"
+    OrbitDistance: 396708.158660674
+    Density: "Sparse"
+    Resources:
+      - "Titanium"
+      - "Rare Earth"
+      - "Platinum"
+
+  - Name: "Zeta Radiant Asteroid Belt B"
+    OrbitDistance: 189173.29359874624
+    Density: "Moderate"
+    Resources:
+      - "Titanium"
+      - "Iron"
+
+# ====================
+# SPACE STATIONS
+# ====================
+Stations:
+  - Name: "Zeta Radiant Station 1"
+    Type: "Trading Hub"
+    OrbitDistance: 268359.0963008632
+    Population: 546
+
+# ====================
+# SYSTEM INFO
+# ====================
+Factions:
+  - "Research Consortium"
+  - "Mining Guild"
+
+DangerLevel: "Safe"
+TrafficLevel: "None"
+bHasJumpGate: false

@@ -1,0 +1,85 @@
+# Personnel: Aaron Stewart
+# Role: Scientist
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated NPC
+
+PersonnelID: "Scientist_AaronStewart"
+PersonnelName: "Aaron Stewart"
+
+# Basic Identity
+Biography: |
+  This individual worked as a mining surveyor in the outer colonies. They are feared by enemies and respected by allies and earned multiple commendations for bravery and service.
+  
+Age: 36
+Gender: "Male"
+Species: "Human"
+Nationality: "Core Worlds"
+Tags:
+  - "Scientist"
+  - "Level9"
+
+# Role and Assignment
+PrimaryRole: "Scientist"
+Department: "Science"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 10
+TotalExperience: 47552
+Skills:
+  - SkillName: "Research"
+    SkillLevel: 6
+    ExperiencePoints: 1416
+  - SkillName: "Analysis"
+    SkillLevel: 9
+    ExperiencePoints: 1863
+  - SkillName: "Biology"
+    SkillLevel: 10
+    ExperiencePoints: 3720
+  - SkillName: "Physics"
+    SkillLevel: 6
+    ExperiencePoints: 1800
+
+Specialties:
+  - "Scientist Specialist"
+
+# Status and Condition
+Morale: 76
+Health: 93
+Fatigue: 1
+Loyalty: 83
+Reputation: 34
+
+# Employment
+Salary: 8178
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Leader"
+PersonalityDescription: |
+  Leader personality with focus on scientist duties.
+  
+Traits:
+  - TraitName: "Natural Leader"
+    TraitDescription: "Inspires crew"
+    TraitID: "NaturalLeader"
+    ModifierValue: 1.2
+  - TraitName: "Cautious"
+    TraitDescription: "Reduced risk taking"
+    TraitID: "Cautious"
+    ModifierValue: 0.9
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

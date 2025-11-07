@@ -1,0 +1,89 @@
+# Personnel: Scott Bell
+# Role: SecurityOfficer
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated NPC
+
+PersonnelID: "SecurityOfficer_ScottBell"
+PersonnelName: "Scott Bell"
+
+# Basic Identity
+Biography: |
+  This individual started as a cargo hauler and worked their way up through the ranks. They are admired for their unwavering loyalty and published research that advanced the field of ship systems.
+  
+Age: 64
+Gender: "Male"
+Species: "Human"
+Nationality: "Free Systems"
+Tags:
+  - "SecurityOfficer"
+  - "Level9"
+
+# Role and Assignment
+PrimaryRole: "SecurityOfficer"
+Department: "Security"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 10
+TotalExperience: 3688
+Skills:
+  - SkillName: "Combat"
+    SkillLevel: 5
+    ExperiencePoints: 2410
+  - SkillName: "Security"
+    SkillLevel: 5
+    ExperiencePoints: 1825
+  - SkillName: "Tactics"
+    SkillLevel: 6
+    ExperiencePoints: 648
+  - SkillName: "Investigation"
+    SkillLevel: 4
+    ExperiencePoints: 700
+
+Specialties:
+  - "SecurityOfficer Specialist"
+
+# Status and Condition
+Morale: 97
+Health: 74
+Fatigue: 28
+Loyalty: 47
+Reputation: 43
+
+# Employment
+Salary: 3581
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Aggressive"
+PersonalityDescription: |
+  Aggressive personality with focus on securityofficer duties.
+  
+Traits:
+  - TraitName: "Brave"
+    TraitDescription: "Performs well under pressure"
+    TraitID: "Brave"
+    ModifierValue: 1.1
+  - TraitName: "Diplomat"
+    TraitDescription: "Better negotiations"
+    TraitID: "Diplomat"
+    ModifierValue: 1.1
+  - TraitName: "Quick Learner"
+    TraitDescription: "Gains XP faster"
+    TraitID: "QuickLearner"
+    ModifierValue: 1.1
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

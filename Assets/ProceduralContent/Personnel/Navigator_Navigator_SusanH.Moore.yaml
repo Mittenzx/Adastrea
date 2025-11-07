@@ -1,0 +1,89 @@
+# Personnel: Susan H. Moore
+# Role: Navigator
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated NPC
+
+PersonnelID: "Navigator_SusanH.Moore"
+PersonnelName: "Susan H. Moore"
+
+# Basic Identity
+Biography: |
+  This individual started as a cargo hauler and worked their way up through the ranks. They are respected for their tactical brilliance and trained the next generation of Navigators at the academy.
+  
+Age: 32
+Gender: "Female"
+Species: "Human"
+Nationality: "Core Worlds"
+Tags:
+  - "Navigator"
+  - "Level3"
+
+# Role and Assignment
+PrimaryRole: "Navigator"
+Department: "Flight"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 6
+TotalExperience: 2242
+Skills:
+  - SkillName: "Navigation"
+    SkillLevel: 5
+    ExperiencePoints: 1405
+  - SkillName: "Astrogation"
+    SkillLevel: 10
+    ExperiencePoints: 1100
+  - SkillName: "Sensors"
+    SkillLevel: 4
+    ExperiencePoints: 2000
+  - SkillName: "Cartography"
+    SkillLevel: 9
+    ExperiencePoints: 1224
+
+Specialties:
+  - "Navigator Specialist"
+
+# Status and Condition
+Morale: 63
+Health: 79
+Fatigue: 25
+Loyalty: 77
+Reputation: 3
+
+# Employment
+Salary: 6785
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Analytical"
+PersonalityDescription: |
+  Analytical personality with focus on navigator duties.
+  
+Traits:
+  - TraitName: "Cautious"
+    TraitDescription: "Reduced risk taking"
+    TraitID: "Cautious"
+    ModifierValue: 0.9
+  - TraitName: "Technical Genius"
+    TraitDescription: "Engineering bonus"
+    TraitID: "TechnicalGenius"
+    ModifierValue: 1.25
+  - TraitName: "Combat Veteran"
+    TraitDescription: "Experienced in combat"
+    TraitID: "CombatVeteran"
+    ModifierValue: 1.15
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

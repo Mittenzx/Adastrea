@@ -1,0 +1,63 @@
+# Eternal - Fighter Class
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated ship variant
+
+BasicInfo:
+  ShipName: "Eternal"
+  Description: "A fighter class vessel with unique characteristics."
+  ShipClass: "Fighter"
+  ShipID: "Eternal"
+
+CoreStats:
+  HullStrength: 1096.9
+  CargoCapacity: 58.5
+  CrewRequired: 8
+  MaxCrew: 20
+  ModularPoints: 4
+
+CombatStats:
+  ArmorRating: 61.8
+  ShieldStrength: 544.7
+  ShieldRechargeRate: 10.0
+  WeaponSlots: 3
+  WeaponPowerCapacity: 1000.0
+  PointDefenseRating: 5.0
+
+MobilityStats:
+  MaxSpeed: 650.3
+  Acceleration: 100.0
+  Maneuverability: 10
+  JumpRange: 15.0
+  FuelCapacity: 1000.0
+  FuelConsumptionRate: 80.0
+
+UtilityStats:
+  SensorRange: 10000.0
+  SensorResolution: 5
+  StealthRating: 3
+  RepairSystemRating: 3
+  ScienceRating: 3
+  MedicalRating: 2
+
+OperationalStats:
+  PowerCapacity: 2500.0
+  LifeSupportRating: 5
+  MaintenanceLevel: 3
+  HangarCapacity: 0
+  DroneCapacity: 5
+  AISystemRating: 5
+
+AdvancedStats:
+  DiplomacyRating: 2
+  BoardingCapability: 2
+  CustomizableSlots: 3
+  EWarRating: 3
+  MiningRating: 0
+
+Lore:
+  Manufacturer: "Stellar Dynamics"
+  YearBuilt: 2471
+  RarityTier: "Common"
+  LoreNotes: "A procedurally generated variant of the Fighter class."
+  PrimaryColor: [0.77, 0.39, 0.16, 1.0]
+  SecondaryColor: [0.17, 0.12, 1.00, 1.0]

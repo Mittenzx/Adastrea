@@ -1,0 +1,81 @@
+# Personnel: Kenneth Evans
+# Role: SensorOperator
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated NPC
+
+PersonnelID: "SensorOperator_KennethEvans"
+PersonnelName: "Kenneth Evans"
+
+# Basic Identity
+Biography: |
+  This individual trained as an engineer at the prestigious Stellar Institute. They are feared by enemies and respected by allies and published research that advanced the field of trade economics.
+  
+Age: 56
+Gender: "Male"
+Species: "Human"
+Nationality: "Outer Rim"
+Tags:
+  - "SensorOperator"
+  - "Level8"
+
+# Role and Assignment
+PrimaryRole: "SensorOperator"
+Department: "Operations"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 5
+TotalExperience: 41298
+Skills:
+  - SkillName: "Sensors"
+    SkillLevel: 9
+    ExperiencePoints: 3807
+  - SkillName: "Detection"
+    SkillLevel: 8
+    ExperiencePoints: 1424
+  - SkillName: "Analysis"
+    SkillLevel: 4
+    ExperiencePoints: 592
+  - SkillName: "Tracking"
+    SkillLevel: 7
+    ExperiencePoints: 2303
+
+Specialties:
+  - "SensorOperator Specialist"
+
+# Status and Condition
+Morale: 72
+Health: 85
+Fatigue: 43
+Loyalty: 66
+Reputation: 1
+
+# Employment
+Salary: 15304
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Leader"
+PersonalityDescription: |
+  Leader personality with focus on sensoroperator duties.
+  
+Traits:
+  - TraitName: "Quick Learner"
+    TraitDescription: "Gains XP faster"
+    TraitID: "QuickLearner"
+    ModifierValue: 1.1
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

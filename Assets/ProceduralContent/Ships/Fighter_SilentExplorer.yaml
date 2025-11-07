@@ -1,0 +1,63 @@
+# Silent Explorer - Fighter Class
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated ship variant
+
+BasicInfo:
+  ShipName: "Silent Explorer"
+  Description: "A fighter class vessel with unique characteristics."
+  ShipClass: "Fighter"
+  ShipID: "SilentExplorer"
+
+CoreStats:
+  HullStrength: 926.3
+  CargoCapacity: 133.9
+  CrewRequired: 1
+  MaxCrew: 12
+  ModularPoints: 10
+
+CombatStats:
+  ArmorRating: 50.9
+  ShieldStrength: 755.2
+  ShieldRechargeRate: 10.0
+  WeaponSlots: 4
+  WeaponPowerCapacity: 1000.0
+  PointDefenseRating: 5.0
+
+MobilityStats:
+  MaxSpeed: 753.2
+  Acceleration: 100.0
+  Maneuverability: 4
+  JumpRange: 15.0
+  FuelCapacity: 1000.0
+  FuelConsumptionRate: 80.0
+
+UtilityStats:
+  SensorRange: 10000.0
+  SensorResolution: 5
+  StealthRating: 3
+  RepairSystemRating: 3
+  ScienceRating: 3
+  MedicalRating: 2
+
+OperationalStats:
+  PowerCapacity: 2500.0
+  LifeSupportRating: 5
+  MaintenanceLevel: 3
+  HangarCapacity: 0
+  DroneCapacity: 5
+  AISystemRating: 5
+
+AdvancedStats:
+  DiplomacyRating: 2
+  BoardingCapability: 2
+  CustomizableSlots: 3
+  EWarRating: 3
+  MiningRating: 0
+
+Lore:
+  Manufacturer: "Stellar Dynamics"
+  YearBuilt: 2469
+  RarityTier: "Uncommon"
+  LoreNotes: "A procedurally generated variant of the Fighter class."
+  PrimaryColor: [0.98, 0.66, 0.21, 1.0]
+  SecondaryColor: [0.70, 0.86, 0.77, 1.0]

@@ -1,0 +1,60 @@
+# Quest: Investigate Anomaly
+# Type: Investigation
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated quest/mission
+
+ContractName: "Investigate Anomaly"
+ContractID: "Quest_Investigation_4346"
+Description: |
+  Investigate unusual activity near Epsilon Radiant on behalf of Stellar 806.
+  
+ContractType: Investigation
+Difficulty: Medium
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Stellar 806"
+  Coordinates: [6109, 8318, 573]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Epsilon Radiant"
+  Coordinates: [6579, 2545, 368]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 21972.64
+TimeLimit: 120
+MinReputationRequired: 24
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 3812
+  ReputationGain: 34
+  ExperiencePoints: 356
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 953
+  ReputationPenalty: 17
+  CollateralDeposit: 381
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: false
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Investigation"
+  - "Medium"
+  - "Procedural"

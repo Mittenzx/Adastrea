@@ -1,0 +1,81 @@
+# Personnel: Joshua M. Reyes
+# Role: Scientist
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated NPC
+
+PersonnelID: "Scientist_JoshuaM.Reyes"
+PersonnelName: "Joshua M. Reyes"
+
+# Basic Identity
+Biography: |
+  This individual graduated from the academy with honors and has been rising steadily. They are noted for their strong moral compass and defended a civilian station against pirate raiders.
+  
+Age: 31
+Gender: "Male"
+Species: "Human"
+Nationality: "Outer Rim"
+Tags:
+  - "Scientist"
+  - "Level10"
+
+# Role and Assignment
+PrimaryRole: "Scientist"
+Department: "Science"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 8
+TotalExperience: 24107
+Skills:
+  - SkillName: "Research"
+    SkillLevel: 5
+    ExperiencePoints: 1560
+  - SkillName: "Analysis"
+    SkillLevel: 6
+    ExperiencePoints: 1644
+  - SkillName: "Biology"
+    SkillLevel: 4
+    ExperiencePoints: 808
+  - SkillName: "Physics"
+    SkillLevel: 10
+    ExperiencePoints: 4180
+
+Specialties:
+  - "Scientist Specialist"
+
+# Status and Condition
+Morale: 91
+Health: 72
+Fatigue: 44
+Loyalty: 82
+Reputation: 40
+
+# Employment
+Salary: 16126
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Adventurous"
+PersonalityDescription: |
+  Adventurous personality with focus on scientist duties.
+  
+Traits:
+  - TraitName: "Lucky"
+    TraitDescription: "Occasional bonuses"
+    TraitID: "Lucky"
+    ModifierValue: 1.05
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

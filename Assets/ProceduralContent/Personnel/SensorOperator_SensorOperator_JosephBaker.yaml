@@ -1,0 +1,85 @@
+# Personnel: Joseph Baker
+# Role: SensorOperator
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated NPC
+
+PersonnelID: "SensorOperator_JosephBaker"
+PersonnelName: "Joseph Baker"
+
+# Basic Identity
+Biography: |
+  This individual was a trader on the frontier worlds before seeking more stable employment. They are celebrated for their innovative problem-solving and defended a civilian station against pirate raiders.
+  
+Age: 52
+Gender: "Male"
+Species: "Human"
+Nationality: "United Earth"
+Tags:
+  - "SensorOperator"
+  - "Level8"
+
+# Role and Assignment
+PrimaryRole: "SensorOperator"
+Department: "Operations"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 9
+TotalExperience: 37351
+Skills:
+  - SkillName: "Sensors"
+    SkillLevel: 8
+    ExperiencePoints: 2888
+  - SkillName: "Detection"
+    SkillLevel: 9
+    ExperiencePoints: 1404
+  - SkillName: "Analysis"
+    SkillLevel: 3
+    ExperiencePoints: 1164
+  - SkillName: "Tracking"
+    SkillLevel: 4
+    ExperiencePoints: 1748
+
+Specialties:
+  - "SensorOperator Specialist"
+
+# Status and Condition
+Morale: 63
+Health: 76
+Fatigue: 30
+Loyalty: 50
+Reputation: -1
+
+# Employment
+Salary: 13874
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Adventurous"
+PersonalityDescription: |
+  Adventurous personality with focus on sensoroperator duties.
+  
+Traits:
+  - TraitName: "Combat Veteran"
+    TraitDescription: "Experienced in combat"
+    TraitID: "CombatVeteran"
+    ModifierValue: 1.15
+  - TraitName: "Quick Learner"
+    TraitDescription: "Gains XP faster"
+    TraitID: "QuickLearner"
+    ModifierValue: 1.1
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

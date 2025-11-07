@@ -1,0 +1,60 @@
+# Quest: Safe Passage
+# Type: Escort
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated quest/mission
+
+ContractName: "Safe Passage"
+ContractID: "Quest_Escort_1379"
+Description: |
+  Protect convoy traveling from Celestia 708 to Beta Borealis.
+  
+ContractType: Escort
+Difficulty: VeryHard
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Celestia 708"
+  Coordinates: [8477, 5875, 744]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Beta Borealis"
+  Coordinates: [6893, 1148, 29]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 17685.86
+TimeLimit: 56
+MinReputationRequired: 21
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 21960
+  ReputationGain: 95
+  ExperiencePoints: 2195
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 5490
+  ReputationPenalty: 47
+  CollateralDeposit: 2196
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: true
+bRequiresStealth: false
+bCombatExpected: true
+HostileFactions: []
+ContractTags:
+  - "Escort"
+  - "VeryHard"
+  - "Procedural"

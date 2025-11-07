@@ -1,0 +1,85 @@
+# Personnel: Robert Lewis
+# Role: Communications
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated NPC
+
+PersonnelID: "Communications_RobertLewis"
+PersonnelName: "Robert Lewis"
+
+# Basic Identity
+Biography: |
+  This individual started as a cargo hauler and worked their way up through the ranks. They are known for their calm demeanor under pressure and negotiated a peace treaty between two warring factions.
+  
+Age: 42
+Gender: "Male"
+Species: "Human"
+Nationality: "United Earth"
+Tags:
+  - "Communications"
+  - "Level9"
+
+# Role and Assignment
+PrimaryRole: "Communications"
+Department: "Communications"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 6
+TotalExperience: 12577
+Skills:
+  - SkillName: "Communications"
+    SkillLevel: 5
+    ExperiencePoints: 1855
+  - SkillName: "Linguistics"
+    SkillLevel: 10
+    ExperiencePoints: 3750
+  - SkillName: "Diplomacy"
+    SkillLevel: 7
+    ExperiencePoints: 2926
+  - SkillName: "Signals"
+    SkillLevel: 4
+    ExperiencePoints: 476
+
+Specialties:
+  - "Communications Specialist"
+
+# Status and Condition
+Morale: 52
+Health: 92
+Fatigue: 15
+Loyalty: 40
+Reputation: 44
+
+# Employment
+Salary: 9195
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Analytical"
+PersonalityDescription: |
+  Analytical personality with focus on communications duties.
+  
+Traits:
+  - TraitName: "Cautious"
+    TraitDescription: "Reduced risk taking"
+    TraitID: "Cautious"
+    ModifierValue: 0.9
+  - TraitName: "Quick Learner"
+    TraitDescription: "Gains XP faster"
+    TraitID: "QuickLearner"
+    ModifierValue: 1.1
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

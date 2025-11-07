@@ -1,0 +1,60 @@
+# Quest: Acquisition Request
+# Type: Procurement
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated quest/mission
+
+ContractName: "Acquisition Request"
+ContractID: "Quest_Procurement_6382"
+Description: |
+  Acquire specified goods and deliver to Theta 38.
+  
+ContractType: Procurement
+Difficulty: VeryHard
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Theta 38"
+  Coordinates: [3586, 200, 758]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Lux 657"
+  Coordinates: [1986, 3218, 395]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 43765.35
+TimeLimit: 143
+MinReputationRequired: 1
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 16155
+  ReputationGain: 25
+  ExperiencePoints: 2300
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 4038
+  ReputationPenalty: 12
+  CollateralDeposit: 1615
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: false
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Procurement"
+  - "VeryHard"
+  - "Procedural"

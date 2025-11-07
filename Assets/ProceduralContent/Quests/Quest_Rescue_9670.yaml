@@ -1,0 +1,60 @@
+# Quest: Save Mission
+# Type: Rescue
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated quest/mission
+
+ContractName: "Save Mission"
+ContractID: "Quest_Rescue_9670"
+Description: |
+  Respond to distress call from Beta 670. Lives are at stake.
+  
+ContractType: Rescue
+Difficulty: Medium
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Stellar Prime"
+  Coordinates: [5876, 835, 444]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Beta 670"
+  Coordinates: [9256, 4551, 973]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 2392.27
+TimeLimit: 129
+MinReputationRequired: 17
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 9416
+  ReputationGain: 34
+  ExperiencePoints: 994
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 2354
+  ReputationPenalty: 17
+  CollateralDeposit: 941
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: true
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Rescue"
+  - "Medium"
+  - "Procedural"
