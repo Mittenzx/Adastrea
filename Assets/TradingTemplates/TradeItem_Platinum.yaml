@@ -1,0 +1,55 @@
+# Trade Item: Platinum
+# Category: RawMaterials
+# Generated on 2025-11-07 13:59:55
+
+ItemName: "Platinum"
+ItemID: "TradeItem_Platinum"
+Description: |
+  [Describe the trade item, its uses, and importance in the economy]
+  
+Category: RawMaterials
+
+# Material Data Reference (optional)
+MaterialData: "DA_Material_Platinum"
+
+# ====================
+# PRICING
+# ====================
+BasePrice: 100.0
+PriceVolatility:
+  VolatilityMultiplier: 1.0
+  MinPriceDeviation: 0.7
+  MaxPriceDeviation: 1.5
+  
+bAffectedBySupplyDemand: true
+bAffectedByMarketEvents: true
+
+# ====================
+# LEGALITY & RESTRICTIONS
+# ====================
+LegalityStatus: Legal       # Legal, Restricted, Contraband
+TradeRestrictions:
+  BannedFactions: []
+  RequiresPermitFactions: []
+  MinReputationRequired: -100
+  
+ContrabandFineMultiplier: 0.0
+
+# ====================
+# TRADE PROPERTIES
+# ====================
+VolumePerUnit: 1.0
+MassPerUnit: 1.0
+StandardLotSize: 100
+TypicalMarketStock: 1000
+ReplenishmentRate: 100
+
+# ====================
+# AI TRADER BEHAVIOR
+# ====================
+AITradePriority: 5          # 1-10 priority for AI traders
+bAIHoardable: false
+bAIArbitrageEnabled: true
+BehaviorTags:
+  - "RawMaterials"
+  - "StandardItem"
