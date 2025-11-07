@@ -42,17 +42,19 @@ try:
     UNREAL_AVAILABLE = True
 except ImportError:
     UNREAL_AVAILABLE = False
-    print("ERROR: This script must be run inside Unreal Editor with Python plugin enabled!")
-    sys.exit(1)
+    print("WARNING: This script must be run inside Unreal Editor with Python plugin enabled!")
+    print("Some features will be limited or unavailable outside the editor.")
 
 # Try to import PyYAML (should be available in Unreal's Python)
 try:
     import yaml
+    YAML_AVAILABLE = True
 except ImportError:
-    print("ERROR: PyYAML not available. Installing...")
-    import subprocess
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "pyyaml"])
-    import yaml
+    YAML_AVAILABLE = False
+    print("ERROR: PyYAML not available.")
+    print("To install PyYAML, run in Unreal Editor Python Console:")
+    print("  import subprocess, sys")
+    print("  subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'pyyaml'])")
 
 
 class YAMLtoDataAssetImporter:
@@ -62,6 +64,9 @@ class YAMLtoDataAssetImporter:
         """Initialize the importer"""
         if not UNREAL_AVAILABLE:
             raise RuntimeError("This script must be run inside Unreal Editor!")
+        
+        if not YAML_AVAILABLE:
+            raise RuntimeError("PyYAML is required. See error messages above for installation instructions.")
         
         self.project_dir = Path(unreal.SystemLibrary.get_project_directory())
         self.assets_dir = self.project_dir / "Assets"
@@ -167,8 +172,8 @@ class YAMLtoDataAssetImporter:
         # Find SpaceshipDataAsset class
         try:
             spaceship_class = unreal.load_class(None, "/Script/Adastrea.SpaceshipDataAsset")
-        except:
-            self.log("SpaceshipDataAsset class not found. Ensure the project is compiled.", "error")
+        except Exception as e:
+            self.log(f"SpaceshipDataAsset class not found. Ensure the project is compiled. Error: {e}", "error")
             return None
         
         # Create the Data Asset
@@ -250,8 +255,8 @@ class YAMLtoDataAssetImporter:
         # Find PersonnelDataAsset class
         try:
             personnel_class = unreal.load_class(None, "/Script/Adastrea.PersonnelDataAsset")
-        except:
-            self.log("PersonnelDataAsset class not found. Ensure the project is compiled.", "error")
+        except Exception as e:
+            self.log(f"PersonnelDataAsset class not found. Ensure the project is compiled. Error: {e}", "error")
             return None
         
         # Create the Data Asset
