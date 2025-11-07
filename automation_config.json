@@ -1,0 +1,38 @@
+{
+  "description": "Configuration for Adastrea Automation Test Runner",
+  "version": "1.0",
+  "test_execution": {
+    "run_smoke_tests": true,
+    "run_screenshot_tests": true,
+    "run_asset_validation": false,
+    "stop_on_first_failure": false,
+    "parallel_execution": false
+  },
+  "scheduling": {
+    "enabled": false,
+    "time": "23:00",
+    "repeat_daily": false,
+    "days_of_week": [
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday"
+    ]
+  },
+  "reporting": {
+    "output_directory": "TestReports/Automation",
+    "consolidate_reports": true,
+    "generate_summary": true,
+    "email_notifications": false,
+    "email_recipients": [],
+    "timestamp_format": "%Y-%m-%d_%H-%M-%S"
+  },
+  "smoke_test_config": "smoke_test_config.json",
+  "screenshot_test_config": "screenshot_test_config.json",
+  "logging": {
+    "log_level": "INFO",
+    "log_file": "TestReports/Automation/automation.log",
+    "console_output": true
+  }
+}

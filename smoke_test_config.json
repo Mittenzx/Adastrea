@@ -1,0 +1,50 @@
+{
+  "description": "Configuration for Adastrea Smoke Testing",
+  "version": "1.0",
+  "test_settings": {
+    "load_timeout_seconds": 30,
+    "screenshot_on_error": true,
+    "verbose_logging": true,
+    "stop_on_first_error": false
+  },
+  "map_discovery": {
+    "search_paths": [
+      "/Game/Maps/",
+      "/Game/Content/Maps/",
+      "/Game/Levels/"
+    ],
+    "exclude_patterns": [
+      "*_Backup",
+      "*_OLD",
+      "*_Test",
+      "*/Developers/*",
+      "*/Debug/*"
+    ],
+    "include_sublevels": true
+  },
+  "error_detection": {
+    "check_missing_assets": true,
+    "check_broken_references": true,
+    "check_blueprint_errors": true,
+    "check_material_errors": true,
+    "capture_warnings": true,
+    "error_keywords": [
+      "Failed to load",
+      "Missing",
+      "Broken",
+      "Error",
+      "Cannot find",
+      "Invalid reference",
+      "Unresolved",
+      "Corrupt"
+    ]
+  },
+  "reporting": {
+    "output_directory": "TestReports/SmokeTests",
+    "generate_html": true,
+    "generate_json": true,
+    "generate_csv": false,
+    "include_screenshots": true,
+    "timestamp_format": "%Y-%m-%d_%H-%M-%S"
+  }
+}
