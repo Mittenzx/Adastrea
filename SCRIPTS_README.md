@@ -1,14 +1,26 @@
 # Adastrea Setup and Validation Scripts
 
-This directory contains automated scripts to validate your development environment and project setup before building the Adastrea Unreal Engine project.
+This directory contains automated scripts to validate your development environment, project setup, and generate templates and documentation for the Adastrea Unreal Engine project.
 
 ## Overview
+
+### Validation Scripts
 
 Three scripts are provided to ensure your development environment is properly configured:
 
 1. **SetupCheck.sh** - Shell script for Linux/Mac/WSL
 2. **SetupCheck.py** - Cross-platform Python script
 3. **AdastreaAssetValidator.py** - Unreal Editor Python script for asset validation
+
+### Generator Scripts
+
+Three powerful scripts for creating templates and documentation:
+
+4. **TemplateGenerator.py** - Generate YAML templates for game systems
+5. **GuideGenerator.py** - Generate Markdown documentation guides
+6. **EditorUtilities.py** - Unified interface for Unreal Editor
+
+> **Note**: For detailed documentation on the generator scripts, see [GENERATOR_SCRIPTS_README.md](GENERATOR_SCRIPTS_README.md)
 
 ## SetupCheck.sh (Shell Script)
 
@@ -302,27 +314,68 @@ This is normal for older Windows versions. Colors will be disabled automatically
 
 ## Best Practices
 
+### For Validation Scripts
+
 1. **Run Before Every Build** - Validate environment before major builds
 2. **Use --clean Periodically** - Clean build folders to avoid stale artifacts
 3. **Run --analyze Before PR** - Catch issues before code review
 4. **Keep Scripts Updated** - Update scripts when adding new project requirements
 5. **Extend for Your Needs** - Add custom checks for project-specific requirements
 
+### For Generator Scripts
+
+1. **Generate Early** - Create templates when starting new content
+2. **Customize Freely** - Templates are starting points, not final products
+3. **Use Meaningful Names** - Follow naming conventions for consistency
+4. **Document Systems** - Generate complete documentation sets for new systems
+5. **Share Templates** - Commit useful templates for team use
+
+## Template and Guide Generation
+
+For creating templates and documentation, use the generator scripts:
+
+```bash
+# Generate a spaceship template
+python TemplateGenerator.py --type spaceship --name "MyShip" --class Fighter
+
+# Generate system documentation
+python GuideGenerator.py --type system --name "MySystem"
+
+# Use unified interface in Unreal Editor
+python EditorUtilities.py --menu
+```
+
+See [GENERATOR_SCRIPTS_README.md](GENERATOR_SCRIPTS_README.md) for complete documentation.
+
 ## Contributing
 
 When adding new features or systems to Adastrea:
 
+### For Validation
 1. Update SetupCheck.sh and SetupCheck.py to validate new requirements
 2. Add new validation methods to AdastreaAssetValidator.py for new Data Assets
 3. Update this README with new checks and usage examples
 4. Test scripts on multiple platforms (Windows, Linux, Mac)
 
+### For Generators
+1. Create templates using TemplateGenerator.py for new content types
+2. Generate documentation using GuideGenerator.py for new systems
+3. Update generator scripts if adding new template types
+4. Share useful templates with the team
+
 ## Additional Resources
 
+### Validation Scripts
 - [README.md](README.md#robust-setup-validation) - Main project documentation
 - [CONTRIBUTING.md](CONTRIBUTING.md) - Contribution guidelines
 - [Assets/PlaytestingChecklist.md](Assets/PlaytestingChecklist.md) - Manual testing checklist
 - [Unreal Engine Python API](https://docs.unrealengine.com/en-US/ProductionPipelines/ScriptingAndAutomation/Python/) - For extending AdastreaAssetValidator.py
+
+### Generator Scripts
+- [GENERATOR_SCRIPTS_README.md](GENERATOR_SCRIPTS_README.md) - Complete generator documentation
+- [TemplateGenerator.py](TemplateGenerator.py) - YAML template generation
+- [GuideGenerator.py](GuideGenerator.py) - Markdown guide generation
+- [EditorUtilities.py](EditorUtilities.py) - Unified Unreal Editor interface
 
 ---
 
