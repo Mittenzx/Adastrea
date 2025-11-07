@@ -1,0 +1,54 @@
+BasicInfo:
+  ShipID: MerchantTrader
+  ShipName: Merchant Trader
+  Description: A reliable cargo hauler built for the commercial shipping lanes. The
+    Merchant-class prioritizes cargo capacity, fuel efficiency, and crew comfort over
+    combat capabilities.
+  ShipClass: Trading Vessel
+CoreStats:
+  HullStrength: 2500.0
+  CargoCapacity: 5000.0
+  CrewRequired: 8
+  MaxCrew: 15
+  ModularPoints: 10
+CombatStats:
+  ArmorRating: 80.0
+  ShieldStrength: 1200.0
+  ShieldRechargeRate: 12.0
+  WeaponSlots: 2
+  WeaponPowerCapacity: 1000.0
+  PointDefenseRating: 4.0
+MobilityStats:
+  MaxSpeed: 550.0
+  Acceleration: 55.0
+  Maneuverability: 5
+  JumpRange: 18.0
+  FuelCapacity: 4000.0
+  FuelConsumptionRate: 120.0
+UtilityStats:
+  SensorRange: 10000.0
+  SensorResolution: 5
+  StealthRating: 3
+  RepairSystemRating: 5
+  ScienceRating: 2
+  MedicalRating: 4
+OperationalStats:
+  PowerCapacity: 6000.0
+  LifeSupportRating: 8
+  MaintenanceLevel: 4
+  HangarCapacity: 1
+  DroneCapacity: 8
+  AISystemRating: 7
+AdvancedStats:
+  DiplomacyRating: 6
+  BoardingCapability: 2
+  CustomizableSlots: 8
+  EWarRating: 2
+  MiningRating: 1
+Lore:
+  Manufacturer: Stellar Commerce Industries
+  YearBuilt: 2495
+  RarityTier: Common
+  LoreNotes: The workhorse of civilian shipping, the Merchant-class can be found in
+    every major trade hub across known space. Reliable, efficient, and profitable
+    - the three pillars of successful commerce.

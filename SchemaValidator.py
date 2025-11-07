@@ -199,7 +199,7 @@ class SchemaValidator:
             source_name: Name of data source
             
         Returns:
-            List of error messages
+            List[str]: Error messages
         """
         errors = []
         

@@ -1,0 +1,54 @@
+BasicInfo:
+  ShipID: WarhammerGunship
+  ShipName: Warhammer Gunship
+  Description: A heavily armed and armored assault vessel designed to dominate combat
+    zones. The Warhammer sacrifices speed and cargo capacity for devastating firepower
+    and resilience.
+  ShipClass: Gunship
+CoreStats:
+  HullStrength: 5000.0
+  CargoCapacity: 150.0
+  CrewRequired: 15
+  MaxCrew: 25
+  ModularPoints: 8
+CombatStats:
+  ArmorRating: 250.0
+  ShieldStrength: 3000.0
+  ShieldRechargeRate: 25.0
+  WeaponSlots: 8
+  WeaponPowerCapacity: 8000.0
+  PointDefenseRating: 9.0
+MobilityStats:
+  MaxSpeed: 400.0
+  Acceleration: 40.0
+  Maneuverability: 4
+  JumpRange: 8.0
+  FuelCapacity: 2000.0
+  FuelConsumptionRate: 200.0
+UtilityStats:
+  SensorRange: 8000.0
+  SensorResolution: 6
+  StealthRating: 2
+  RepairSystemRating: 6
+  ScienceRating: 2
+  MedicalRating: 5
+OperationalStats:
+  PowerCapacity: 12000.0
+  LifeSupportRating: 7
+  MaintenanceLevel: 7
+  HangarCapacity: 2
+  DroneCapacity: 15
+  AISystemRating: 6
+AdvancedStats:
+  DiplomacyRating: 1
+  BoardingCapability: 8
+  CustomizableSlots: 6
+  EWarRating: 5
+  MiningRating: 0
+Lore:
+  Manufacturer: Ironforge Military Systems
+  YearBuilt: 2502
+  RarityTier: Rare
+  LoreNotes: The Warhammer-class represents the pinnacle of gunship design. When you
+    need overwhelming firepower and survivability, there's no better choice. Used
+    extensively by military fleets and elite mercenary groups.

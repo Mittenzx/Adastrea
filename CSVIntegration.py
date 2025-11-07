@@ -360,7 +360,8 @@ class CSVIntegration:
         
         try:
             if value_type == 'integer':
-                return int(float(value))
+                # Convert directly to int, handling potential float strings
+                return int(float(str(value)))
             elif value_type == 'number':
                 return float(value)
             elif value_type == 'boolean':

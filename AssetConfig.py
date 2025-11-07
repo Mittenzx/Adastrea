@@ -132,7 +132,7 @@ def get_asset_configs() -> Dict[str, Dict[str, Any]]:
             'id_field': 'FactionID',
             'name_field': 'FactionName',
             'sheet_name': 'Factions',
-            'columns': []  # To be defined
+            'columns': []  # TODO: Define faction columns when faction schema is implemented
         },
         'personnel': {
             'schema_name': 'personnel',
@@ -141,6 +141,6 @@ def get_asset_configs() -> Dict[str, Dict[str, Any]]:
             'id_field': 'PersonnelID',
             'name_field': 'DisplayName',
             'sheet_name': 'Personnel',
-            'columns': []  # To be defined
+            'columns': []  # TODO: Define personnel columns when personnel schema is implemented
         }
     }
