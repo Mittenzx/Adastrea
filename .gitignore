@@ -89,6 +89,14 @@ Desktop.ini
 # Test Reports and Generated Files
 /TestReports/
 
+# Google Sheets Integration
+credentials.json
+token.pickle
+
+# Validation Reports (optional - uncomment to track in git)
+# *_validation_report.txt
+# validation_report.txt
+
 # Don't ignore important Unreal files - these should be tracked!
 # .uproject files
 # .uplugin files
