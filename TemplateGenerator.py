@@ -701,6 +701,155 @@ bStrategicResource: false
         print(f"✓ Created material template: {filepath}")
         return filepath
     
+    def generate_station_module_template(self, module_name: str, module_group: str = "Connection",
+                                        output_dir: Optional[Path] = None) -> Path:
+        """
+        Generate a station module template YAML file
+        
+        Args:
+            module_name: Name of the station module
+            module_group: Module group (Docking, Power, Storage, Processing, Defence, Habitation, Public, Connection, Other)
+            output_dir: Output directory (defaults to Assets/StationModuleTemplates/)
+            
+        Returns:
+            Path to the created template file
+        """
+        if output_dir is None:
+            output_dir = self.templates_dir / "StationModuleTemplates"
+        output_dir.mkdir(parents=True, exist_ok=True)
+        
+        clean_name = module_name.replace(" ", "")
+        filename = f"{module_group}_{clean_name}.yaml"
+        filepath = output_dir / filename
+        
+        # Determine default values based on module group
+        power_default = 0.0
+        capacity_default = 0
+        defense_default = 0.0
+        
+        if module_group == "Power":
+            power_default = -1000.0  # Negative means generates power
+        elif module_group in ["Processing", "Defence", "Habitation", "Public"]:
+            power_default = 500.0  # These consume power
+        elif module_group == "Docking":
+            power_default = 200.0
+            capacity_default = 10
+        elif module_group == "Storage":
+            power_default = 100.0
+            capacity_default = 10000
+        elif module_group == "Defence":
+            defense_default = 100.0
+        
+        template_content = f"""# Station Module: {module_name}
+# Module Group: {module_group}
+# Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+ModuleID: "{module_group}_{clean_name}"
+ModuleName: "{module_name}"
+ModuleType: "{module_name}"
+
+# ====================
+# MODULE CLASSIFICATION
+# ====================
+ModuleGroup: "{module_group}"
+# Valid groups: Docking, Power, Storage, Processing, Defence, Habitation, Public, Connection, Other
+
+# ====================
+# DESCRIPTION
+# ====================
+Description: |
+  [Describe the module's purpose, capabilities, and features.
+  Include what makes this module unique or special.]
+
+# ====================
+# POWER & RESOURCES
+# ====================
+ModulePower: {power_default}
+# Negative values = generates power
+# Positive values = consumes power
+# Example: -1000.0 for a reactor, +500.0 for a habitat
+
+# ====================
+# CAPACITY & STORAGE
+# ====================
+CargoCapacity: {capacity_default}
+# Storage capacity in tons (for Storage modules)
+# Docking capacity (number of ships for Docking modules)
+# Population capacity (for Habitation modules)
+
+# ====================
+# OPERATIONAL STATS
+# ====================
+CrewRequired: 5
+# Minimum crew to operate this module
+
+MaintenanceCost: 100
+# Hourly maintenance cost in credits
+
+ConstructionCost: 50000
+# Initial cost to build this module
+
+ConstructionTime: 24
+# Hours required to construct
+
+# ====================
+# MODULE CAPABILITIES
+# ====================
+DefenseRating: {defense_default}
+# Defense contribution (for Defence modules)
+
+ProductionRate: 0.0
+# Production output per hour (for Processing modules)
+
+ServiceCapacity: 0
+# Number of simultaneous services (for Public modules)
+
+# ====================
+# SPECIAL FEATURES
+# ====================
+SpecialFeatures:
+  - "[Feature 1]"
+  - "[Feature 2]"
+
+# ====================
+# REQUIREMENTS
+# ====================
+RequiredTechnology: "None"
+# Technology prerequisite to unlock
+
+RequiredModules: []
+# List of module IDs that must be present
+
+# ====================
+# FACTION ASSIGNMENT
+# ====================
+ModuleFaction: "None"
+# Faction ID that owns this module (can differ from station faction)
+
+# ====================
+# VISUAL & LORE
+# ====================
+ModelAsset: "SM_{clean_name}"
+# Static mesh reference
+
+Rarity: "Common"
+# Common, Uncommon, Rare, Legendary
+
+LoreNotes: |
+  [Add background information about this module type.
+  Include historical context, manufacturer, or interesting details.]
+
+Tags:
+  - "{module_group}"
+  - "Standard"
+"""
+        
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(template_content)
+        
+        print(f"✓ Created station module template: {filepath}")
+        return filepath
+    
     def interactive_mode(self):
         """Run the template generator in interactive mode"""
         print("=" * 60)
@@ -715,11 +864,12 @@ bStrategicResource: false
         print("  5. Contract")
         print("  6. Faction AI")
         print("  7. Material")
+        print("  8. Station Module")
         print("  0. Exit")
         print()
         
         while True:
-            choice = input("Select template type (0-7): ").strip()
+            choice = input("Select template type (0-8): ").strip()
             
             if choice == "0":
                 print("Exiting...")
@@ -750,8 +900,12 @@ bStrategicResource: false
             elif choice == "7":
                 name = input("Enter material name: ").strip()
                 self.generate_material_template(name)
+            elif choice == "8":
+                name = input("Enter module name: ").strip()
+                module_group = input("Enter module group (Docking/Power/Storage/Processing/Defence/Habitation/Public/Connection/Other): ").strip() or "Connection"
+                self.generate_station_module_template(name, module_group)
             else:
-                print("Invalid choice. Please select 0-7.")
+                print("Invalid choice. Please select 0-8.")
             
             print()
 
@@ -776,11 +930,12 @@ Examples:
   python TemplateGenerator.py --type contract --name "Delivery Mission" --contract-type Delivery
   python TemplateGenerator.py --type factionai --name "Trade Federation"
   python TemplateGenerator.py --type material --name "Steel Alloy"
+  python TemplateGenerator.py --type stationmodule --name "Docking Bay" --module-group Docking
         """
     )
     
     parser.add_argument('--type', choices=['spaceship', 'personnel', 'tradeitem', 'market', 
-                                          'contract', 'factionai', 'material'],
+                                          'contract', 'factionai', 'material', 'stationmodule'],
                        help='Type of template to generate')
     parser.add_argument('--name', help='Name for the template')
     parser.add_argument('--class', dest='ship_class', help='Ship class (for spaceship templates)')
@@ -788,6 +943,7 @@ Examples:
     parser.add_argument('--category', help='Item category (for trade item templates)')
     parser.add_argument('--market-type', help='Market type (for market templates)')
     parser.add_argument('--contract-type', help='Contract type (for contract templates)')
+    parser.add_argument('--module-group', help='Module group (for station module templates)')
     parser.add_argument('--output', help='Output directory (optional)')
     
     args = parser.parse_args()
@@ -826,6 +982,9 @@ Examples:
         generator.generate_faction_ai_template(args.name, output_dir)
     elif args.type == 'material':
         generator.generate_material_template(args.name, output_dir)
+    elif args.type == 'stationmodule':
+        module_group = args.module_group or "Connection"
+        generator.generate_station_module_template(args.name, module_group, output_dir)
 
 
 if __name__ == '__main__':
