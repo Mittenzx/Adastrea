@@ -1,0 +1,54 @@
+BasicInfo:
+  ShipID: PathfinderScout
+  ShipName: Pathfinder Scout
+  Description: A lightweight reconnaissance vessel designed for deep space exploration
+    and intelligence gathering. The Pathfinder trades armor and firepower for speed,
+    sensors, and fuel efficiency.
+  ShipClass: Scout
+CoreStats:
+  HullStrength: 800.0
+  CargoCapacity: 50.0
+  CrewRequired: 2
+  MaxCrew: 4
+  ModularPoints: 6
+CombatStats:
+  ArmorRating: 20.0
+  ShieldStrength: 400.0
+  ShieldRechargeRate: 15.0
+  WeaponSlots: 1
+  WeaponPowerCapacity: 500.0
+  PointDefenseRating: 7.0
+MobilityStats:
+  MaxSpeed: 900.0
+  Acceleration: 120.0
+  Maneuverability: 9
+  JumpRange: 25.0
+  FuelCapacity: 1500.0
+  FuelConsumptionRate: 50.0
+UtilityStats:
+  SensorRange: 25000.0
+  SensorResolution: 9
+  StealthRating: 8
+  RepairSystemRating: 4
+  ScienceRating: 6
+  MedicalRating: 2
+OperationalStats:
+  PowerCapacity: 3000.0
+  LifeSupportRating: 6
+  MaintenanceLevel: 3
+  HangarCapacity: 0
+  DroneCapacity: 10
+  AISystemRating: 7
+AdvancedStats:
+  DiplomacyRating: 2
+  BoardingCapability: 1
+  CustomizableSlots: 4
+  EWarRating: 6
+  MiningRating: 0
+Lore:
+  Manufacturer: Vanguard Aerospace
+  YearBuilt: 2498
+  RarityTier: Uncommon
+  LoreNotes: The Pathfinder-class has been the gold standard for scout vessels for
+    over a decade. Its combination of speed, stealth, and sensor capabilities make
+    it invaluable for reconnaissance missions in hostile territory.

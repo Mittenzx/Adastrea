@@ -1,0 +1,55 @@
+BasicInfo:
+  ShipID: ExcavatorMining
+  ShipName: Excavator Mining Barge
+  Description: A specialized industrial vessel designed for asteroid mining and resource
+    extraction. The Excavator features powerful mining lasers, ore processing facilities,
+    and massive cargo holds.
+  ShipClass: Mining Barge
+CoreStats:
+  HullStrength: 4000.0
+  CargoCapacity: 8000.0
+  CrewRequired: 25
+  MaxCrew: 50
+  ModularPoints: 15
+CombatStats:
+  ArmorRating: 150.0
+  ShieldStrength: 1500.0
+  ShieldRechargeRate: 15.0
+  WeaponSlots: 4
+  WeaponPowerCapacity: 3000.0
+  PointDefenseRating: 5.0
+MobilityStats:
+  MaxSpeed: 350.0
+  Acceleration: 30.0
+  Maneuverability: 3
+  JumpRange: 12.0
+  FuelCapacity: 3000.0
+  FuelConsumptionRate: 180.0
+UtilityStats:
+  SensorRange: 15000.0
+  SensorResolution: 8
+  StealthRating: 1
+  RepairSystemRating: 8
+  ScienceRating: 6
+  MedicalRating: 5
+OperationalStats:
+  PowerCapacity: 15000.0
+  LifeSupportRating: 7
+  MaintenanceLevel: 8
+  HangarCapacity: 4
+  DroneCapacity: 50
+  AISystemRating: 7
+AdvancedStats:
+  DiplomacyRating: 2
+  BoardingCapability: 4
+  CustomizableSlots: 12
+  EWarRating: 1
+  MiningRating: 10
+Lore:
+  Manufacturer: Titan Industrial Works
+  YearBuilt: 2500
+  RarityTier: Uncommon
+  LoreNotes: The Excavator-class is the backbone of deep space mining operations.
+    Its combination of powerful extraction tools, processing facilities, and cargo
+    capacity make it invaluable for resource gathering operations in asteroid fields
+    and planetary rings.

@@ -1,0 +1,56 @@
+BasicInfo:
+  ShipID: MittenzxMk1
+  ShipName: Mittenzx Mk1
+  Description: A versatile multi-role spacecraft designed for balanced performance.
+    Ideal for pilots who need a reliable all-rounder for exploration, light combat,
+    and trade missions.
+  ShipClass: Multi-Role
+CoreStats:
+  HullStrength: 1000.0
+  CargoCapacity: 75.0
+  CrewRequired: 2
+  MaxCrew: 4
+  ModularPoints: 10
+CombatStats:
+  ArmorRating: 35.0
+  ShieldStrength: 500.0
+  ShieldRechargeRate: 18.0
+  WeaponSlots: 2
+  WeaponPowerCapacity: 650.0
+  PointDefenseRating: 4.0
+MobilityStats:
+  MaxSpeed: 750.0
+  Acceleration: 110.0
+  Maneuverability: 7
+  JumpRange: 22.0
+  FuelCapacity: 1800.0
+  FuelConsumptionRate: 55.0
+UtilityStats:
+  SensorRange: 12000.0
+  SensorResolution: 7
+  StealthRating: 5
+  RepairSystemRating: 5
+  ScienceRating: 5
+  MedicalRating: 4
+OperationalStats:
+  PowerCapacity: 4500.0
+  LifeSupportRating: 7
+  MaintenanceLevel: 4
+  HangarCapacity: 1
+  DroneCapacity: 12
+  AISystemRating: 6
+AdvancedStats:
+  DiplomacyRating: 3
+  BoardingCapability: 2
+  CustomizableSlots: 6
+  EWarRating: 5
+  MiningRating: 3
+Lore:
+  Manufacturer: Mittenzx Industries
+  YearBuilt: 2550
+  RarityTier: Uncommon
+  LoreNotes: The Mittenzx Mk1 represents the next evolution in versatile spacecraft
+    design. Built by the renowned Mittenzx Industries, this ship combines reliable
+    performance across multiple roles without sacrificing capability. Popular among
+    independent pilots and small trade fleets alike, the Mk1 has earned a reputation
+    for dependability in diverse situations.

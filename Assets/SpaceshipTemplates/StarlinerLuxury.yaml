@@ -1,0 +1,55 @@
+BasicInfo:
+  ShipID: StarlinerLuxury
+  ShipName: Starliner Luxury Cruiser
+  Description: An opulent passenger vessel designed for the wealthy elite. The Starliner
+    offers unparalleled comfort, entertainment, and diplomatic facilities, making
+    it the choice for high-society travel and negotiations.
+  ShipClass: Luxury Liner
+CoreStats:
+  HullStrength: 3000.0
+  CargoCapacity: 500.0
+  CrewRequired: 40
+  MaxCrew: 200
+  ModularPoints: 12
+CombatStats:
+  ArmorRating: 100.0
+  ShieldStrength: 2000.0
+  ShieldRechargeRate: 20.0
+  WeaponSlots: 3
+  WeaponPowerCapacity: 1500.0
+  PointDefenseRating: 8.0
+MobilityStats:
+  MaxSpeed: 650.0
+  Acceleration: 70.0
+  Maneuverability: 6
+  JumpRange: 20.0
+  FuelCapacity: 3500.0
+  FuelConsumptionRate: 140.0
+UtilityStats:
+  SensorRange: 12000.0
+  SensorResolution: 7
+  StealthRating: 4
+  RepairSystemRating: 7
+  ScienceRating: 4
+  MedicalRating: 9
+OperationalStats:
+  PowerCapacity: 10000.0
+  LifeSupportRating: 10
+  MaintenanceLevel: 6
+  HangarCapacity: 3
+  DroneCapacity: 20
+  AISystemRating: 8
+AdvancedStats:
+  DiplomacyRating: 10
+  BoardingCapability: 3
+  CustomizableSlots: 10
+  EWarRating: 3
+  MiningRating: 0
+Lore:
+  Manufacturer: Celestial Voyages Corporation
+  YearBuilt: 2503
+  RarityTier: Legendary
+  LoreNotes: The Starliner-class represents the apex of civilian spacecraft design.
+    Used by diplomats, celebrities, and the ultra-wealthy, these vessels feature private
+    suites, gourmet dining, entertainment venues, and conference facilities that rival
+    planetary installations.

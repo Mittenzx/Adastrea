@@ -1,0 +1,55 @@
+BasicInfo:
+  ShipID: SovereignCommand
+  ShipName: Sovereign Command Cruiser
+  Description: A capital-class command vessel designed to serve as a fleet flagship.
+    The Sovereign combines formidable combat capabilities with advanced command and
+    control systems, diplomatic facilities, and carrier operations.
+  ShipClass: Command Cruiser
+CoreStats:
+  HullStrength: 15000.0
+  CargoCapacity: 2000.0
+  CrewRequired: 200
+  MaxCrew: 500
+  ModularPoints: 20
+CombatStats:
+  ArmorRating: 400.0
+  ShieldStrength: 8000.0
+  ShieldRechargeRate: 50.0
+  WeaponSlots: 15
+  WeaponPowerCapacity: 15000.0
+  PointDefenseRating: 10.0
+MobilityStats:
+  MaxSpeed: 450.0
+  Acceleration: 35.0
+  Maneuverability: 4
+  JumpRange: 15.0
+  FuelCapacity: 5000.0
+  FuelConsumptionRate: 250.0
+UtilityStats:
+  SensorRange: 30000.0
+  SensorResolution: 10
+  StealthRating: 2
+  RepairSystemRating: 9
+  ScienceRating: 8
+  MedicalRating: 10
+OperationalStats:
+  PowerCapacity: 25000.0
+  LifeSupportRating: 10
+  MaintenanceLevel: 9
+  HangarCapacity: 20
+  DroneCapacity: 100
+  AISystemRating: 10
+AdvancedStats:
+  DiplomacyRating: 9
+  BoardingCapability: 9
+  CustomizableSlots: 15
+  EWarRating: 10
+  MiningRating: 0
+Lore:
+  Manufacturer: Imperial Fleet Yards
+  YearBuilt: 2505
+  RarityTier: Legendary
+  LoreNotes: The Sovereign-class represents the ultimate expression of naval engineering.
+    These flagship vessels serve as mobile command centers, capable of coordinating
+    entire fleet operations while holding their own in any engagement. Only the most
+    accomplished commanders are entrusted with these prestigious vessels.
