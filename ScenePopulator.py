@@ -55,7 +55,7 @@ try:
     YAML_AVAILABLE = True
 except ImportError:
     YAML_AVAILABLE = False
-    print("Warning: PyYAML not available. Install with: pip install pyyaml")
+    print("Warning: PyYAML not available. Install with: pip install PyYAML")
 
 
 class PlacementPattern:
