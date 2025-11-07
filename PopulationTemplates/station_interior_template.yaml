@@ -1,0 +1,122 @@
+# Station Interior Layout Template
+# This YAML file defines rooms and corridors for a space station interior
+
+# List of rooms to create
+rooms:
+  # Main command bridge
+  - type: bridge
+    center: [0, 0, 200]
+    size: [3000, 3000, 400]
+    theme: military
+    prop_density: 1.5
+  
+  # Main cargo bay
+  - type: cargo_bay
+    center: [8000, 0, 100]
+    size: [5000, 5000, 600]
+    theme: industrial
+    prop_density: 1.2
+  
+  # Engineering section
+  - type: engineering
+    center: [-8000, 0, 100]
+    size: [4000, 4000, 500]
+    theme: industrial
+    prop_density: 1.8
+  
+  # Living quarters - multiple rooms
+  - type: living_quarters
+    center: [0, 6000, 200]
+    size: [2000, 2000, 300]
+    theme: civilian
+    prop_density: 1.0
+  
+  - type: living_quarters
+    center: [0, 9000, 200]
+    size: [2000, 2000, 300]
+    theme: civilian
+    prop_density: 1.0
+  
+  # Mess hall
+  - type: mess_hall
+    center: [0, 12000, 200]
+    size: [3000, 2500, 350]
+    theme: civilian
+    prop_density: 1.5
+  
+  # Medical bay
+  - type: medbay
+    center: [0, -6000, 200]
+    size: [2500, 2500, 350]
+    theme: civilian
+    prop_density: 1.3
+  
+  # Armory
+  - type: armory
+    center: [6000, -6000, 200]
+    size: [2000, 3000, 350]
+    theme: military
+    prop_density: 1.4
+  
+  # Hangar bay
+  - type: hangar
+    center: [15000, 0, 100]
+    size: [6000, 6000, 800]
+    theme: industrial
+    prop_density: 0.8
+
+# List of corridors connecting rooms
+corridors:
+  # Bridge to cargo bay
+  - start: [1500, 0, 200]
+    end: [6000, 0, 100]
+    width: 400
+    height: 350
+    theme: military
+  
+  # Bridge to engineering
+  - start: [-1500, 0, 200]
+    end: [-6000, 0, 100]
+    width: 400
+    height: 350
+    theme: military
+  
+  # Bridge to living quarters
+  - start: [0, 1500, 200]
+    end: [0, 5000, 200]
+    width: 400
+    height: 300
+    theme: civilian
+  
+  # Living quarters to mess hall
+  - start: [0, 7000, 200]
+    end: [0, 11000, 200]
+    width: 350
+    height: 300
+    theme: civilian
+  
+  # Bridge to medbay
+  - start: [0, -1500, 200]
+    end: [0, -5000, 200]
+    width: 400
+    height: 300
+    theme: civilian
+  
+  # Cargo to hangar
+  - start: [10000, 0, 100]
+    end: [14000, 0, 100]
+    width: 500
+    height: 400
+    theme: industrial
+
+# Metadata
+metadata:
+  name: "Standard Space Station Interior"
+  description: "Complete interior layout for a medium-sized military space station"
+  station_type: "Military Hub"
+  total_rooms: 9
+  total_corridors: 6
+  theme: "military_industrial"
+  author: "Adastrea Team"
+  created: "2025-11-07"
+  version: "1.0"

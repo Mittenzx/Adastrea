@@ -18,6 +18,7 @@
   - [AI System](#faction-and-personnel-ai-system)
   - [Trading System](#trading-system)
   - [Material System](#material-system)
+- [Scene and Asset Population](#scene-and-asset-population)
 - [Documentation](#documentation)
 - [Contributing](#contributing)
 - [License](#license)
@@ -31,6 +32,7 @@
 - 🚀 **Data-Driven Design**: All game content uses Blueprint Data Assets
 - 🎮 **Designer-Friendly**: Minimal C++ knowledge required
 - 🏗️ **Modular Architecture**: Systems work independently and integrate seamlessly
+- 🤖 **Automated Scene Population**: Quickly populate levels with actors and interior layouts
 - 📚 **Comprehensive Documentation**: Guides, templates, and workflows for everything
 - 🔧 **Blueprint First**: Full Blueprint exposure for all systems
 
@@ -222,11 +224,14 @@ Adastrea/
 │   ├── AutomationRunner.py    # CLI automation orchestrator
 │   ├── AdastreaAssetValidator.py  # Asset validation
 │   ├── EditorUtilities.py     # Editor utility functions
+│   ├── ScenePopulator.py      # Automated scene population
+│   ├── InteriorLayoutPopulator.py # Interior layout automation
 │   ├── ProceduralGenerators.py # Procedural content generation
 │   ├── TemplateGenerator.py   # YAML template generator
 │   ├── GuideGenerator.py      # Documentation generator
 │   ├── YAMLtoDataAsset.py     # YAML import tool
 │   ├── SetupCheck.py          # Environment validation
+│   ├── PopulationTemplates/   # Scene population config templates
 │   ├── smoke_test_config.json      # Smoke test configuration
 │   ├── screenshot_test_config.json # Screenshot test configuration
 │   └── automation_config.json      # Automation runner configuration

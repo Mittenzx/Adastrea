@@ -1,0 +1,9 @@
+asset_path,x,y,z,pitch,yaw,roll,scale_x,scale_y,scale_z
+/Game/Ships/Blueprints/BP_Ship_Fighter,0,0,0,0,0,0,1,1,1
+/Game/Ships/Blueprints/BP_Ship_Fighter,5000,0,0,0,45,0,1,1,1
+/Game/Ships/Blueprints/BP_Ship_Fighter,10000,0,0,0,90,0,1,1,1
+/Game/Stations/Blueprints/BP_Station_Small,0,5000,0,0,0,0,1.5,1.5,1.5
+/Game/Stations/Blueprints/BP_Station_Small,0,10000,0,0,0,0,1.5,1.5,1.5
+/Game/Planets/Blueprints/BP_Asteroid,1000,1000,500,15,30,45,0.8,0.8,0.8
+/Game/Planets/Blueprints/BP_Asteroid,2000,1500,300,25,60,90,1.2,1.2,1.2
+/Game/Ships/Blueprints/BP_Ship_Cargo,15000,0,0,0,180,0,1,1,1
