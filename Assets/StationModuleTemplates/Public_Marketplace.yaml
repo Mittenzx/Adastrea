@@ -1,0 +1,102 @@
+# Station Module: Marketplace
+# Module Group: Public
+# Generated on 2025-11-07 13:48:05
+
+ModuleID: "Public_Marketplace"
+ModuleName: "Marketplace"
+ModuleType: "Marketplace"
+
+# ====================
+# MODULE CLASSIFICATION
+# ====================
+ModuleGroup: "Public"
+# Valid groups: Docking, Power, Storage, Processing, Defence, Habitation, Public, Connection, Other
+
+# ====================
+# DESCRIPTION
+# ====================
+Description: |
+  [Describe the module's purpose, capabilities, and features.
+  Include what makes this module unique or special.]
+
+# ====================
+# POWER & RESOURCES
+# ====================
+ModulePower: 500.0
+# Negative values = generates power
+# Positive values = consumes power
+# Example: -1000.0 for a reactor, +500.0 for a habitat
+
+# ====================
+# CAPACITY & STORAGE
+# ====================
+CargoCapacity: 0
+# Storage capacity in tons (for Storage modules)
+# Docking capacity (number of ships for Docking modules)
+# Population capacity (for Habitation modules)
+
+# ====================
+# OPERATIONAL STATS
+# ====================
+CrewRequired: 5
+# Minimum crew to operate this module
+
+MaintenanceCost: 100
+# Hourly maintenance cost in credits
+
+ConstructionCost: 50000
+# Initial cost to build this module
+
+ConstructionTime: 24
+# Hours required to construct
+
+# ====================
+# MODULE CAPABILITIES
+# ====================
+DefenseRating: 0.0
+# Defense contribution (for Defence modules)
+
+ProductionRate: 0.0
+# Production output per hour (for Processing modules)
+
+ServiceCapacity: 0
+# Number of simultaneous services (for Public modules)
+
+# ====================
+# SPECIAL FEATURES
+# ====================
+SpecialFeatures:
+  - "[Feature 1]"
+  - "[Feature 2]"
+
+# ====================
+# REQUIREMENTS
+# ====================
+RequiredTechnology: "None"
+# Technology prerequisite to unlock
+
+RequiredModules: []
+# List of module IDs that must be present
+
+# ====================
+# FACTION ASSIGNMENT
+# ====================
+ModuleFaction: "None"
+# Faction ID that owns this module (can differ from station faction)
+
+# ====================
+# VISUAL & LORE
+# ====================
+ModelAsset: "SM_Marketplace"
+# Static mesh reference
+
+Rarity: "Common"
+# Common, Uncommon, Rare, Legendary
+
+LoreNotes: |
+  [Add background information about this module type.
+  Include historical context, manufacturer, or interesting details.]
+
+Tags:
+  - "Public"
+  - "Standard"
