@@ -1,14 +1,17 @@
 # Adastrea Template and Guide Generator Scripts
 
-This directory contains Python scripts for generating YAML templates and Markdown documentation guides for the Adastrea project. These scripts can be run from the command line or directly within Unreal Editor's Python environment.
+This directory contains Python scripts for generating YAML templates, Markdown documentation guides, AND importing YAML templates as Unreal Engine Data Assets for the Adastrea project. These scripts can be run from the command line or directly within Unreal Editor's Python environment.
 
 ## Overview
 
-Three powerful scripts are provided:
+Four powerful scripts are provided:
 
 1. **TemplateGenerator.py** - Generate YAML template files for game systems
 2. **GuideGenerator.py** - Generate Markdown documentation and guides
 3. **EditorUtilities.py** - Unified interface for both, optimized for Unreal Editor
+4. **YAMLtoDataAsset.py** - Import YAML templates as Unreal Engine Data Assets (NEW!)
+
+> **Complete Workflow**: Create YAML template → Edit in text editor → Import as Data Asset → Use in Blueprints!
 
 ## Quick Start
 
@@ -38,6 +41,81 @@ EditorUtilities.show_menu()
 # Or call specific functions
 EditorUtilities.generate_spaceship("MyShip", "Fighter")
 EditorUtilities.generate_system_guide("MySystem")
+```
+
+### Importing YAML as Data Assets (NEW!)
+
+1. Enable "Python Editor Script Plugin" in Unreal Engine
+2. Go to **Tools → Python → Execute Python Script**
+3. Select `YAMLtoDataAsset.py` or run in Python console:
+
+```python
+import YAMLtoDataAsset
+
+# Import single file
+YAMLtoDataAsset.import_spaceship_yaml("Assets/SpaceshipTemplates/Scout_Pathfinder.yaml")
+
+# Batch import all ships
+YAMLtoDataAsset.batch_import_spaceships()
+
+# Interactive menu
+YAMLtoDataAsset.show_menu()
+```
+
+> **See [YAML_IMPORT_GUIDE.md](YAML_IMPORT_GUIDE.md) for complete import documentation!**
+
+---
+
+## YAMLtoDataAsset.py (NEW!)
+
+### Purpose
+Reads existing YAML template files and creates Unreal Engine Data Assets from them automatically.
+
+### What It Does
+- **Imports YAML** templates as Data Assets
+- **Maps properties** from YAML to Unreal asset fields
+- **Batch import** entire directories at once
+- **Updates existing** assets without duplication
+- **Auto-installs** PyYAML if needed
+
+### Supported Types
+- ✅ Spaceships (all ship classes)
+- ✅ Personnel (all crew roles)
+- 🚧 Trade Items (coming soon)
+- 🚧 Markets (coming soon)
+- 🚧 Contracts (coming soon)
+- 🚧 Faction AI (coming soon)
+
+### Usage
+
+**Single Import:**
+```python
+import YAMLtoDataAsset
+YAMLtoDataAsset.import_spaceship_yaml("Assets/SpaceshipTemplates/Fighter_Viper.yaml")
+# Creates: /Game/Spaceships/DataAssets/DA_Ship_Viper
+```
+
+**Batch Import:**
+```python
+import YAMLtoDataAsset
+YAMLtoDataAsset.batch_import_spaceships()
+# Imports ALL YAML files in Assets/SpaceshipTemplates/
+```
+
+### Complete Workflow Example
+
+```bash
+# 1. Generate YAML template (optional - or edit existing)
+python TemplateGenerator.py --type spaceship --name "MyShip" --class Fighter
+
+# 2. Edit the YAML file in your text editor
+# Assets/SpaceshipTemplates/Fighter_MyShip.yaml
+
+# 3. In Unreal Editor Python Console:
+import YAMLtoDataAsset
+YAMLtoDataAsset.import_spaceship_yaml("Assets/SpaceshipTemplates/Fighter_MyShip.yaml")
+
+# 4. Data Asset created at /Game/Spaceships/DataAssets/DA_Ship_MyShip!
 ```
 
 ---

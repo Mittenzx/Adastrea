@@ -6,6 +6,7 @@ This guide will get you started using the new template and guide generator scrip
 
 - **Generate YAML templates** for spaceships, personnel, trading items, markets, contracts, factions, and materials
 - **Generate Markdown guides** for system documentation, workflows, quick references, and API docs
+- **Import YAML as Data Assets** directly into Unreal Editor (NEW!)
 - **Work anywhere**: Command line OR Unreal Editor
 
 ## Quick Examples
@@ -18,7 +19,17 @@ python TemplateGenerator.py --type spaceship --name "Viper" --class Fighter
 
 This creates `Assets/SpaceshipTemplates/Fighter_Viper.yaml` ready to customize!
 
-### 2. Generate a Character Template
+### 2. Import YAML as Data Asset (NEW!)
+
+**In Unreal Editor Python Console:**
+```python
+import YAMLtoDataAsset
+YAMLtoDataAsset.import_spaceship_yaml("Assets/SpaceshipTemplates/Scout_Pathfinder.yaml")
+```
+
+This creates a Data Asset at `/Game/Spaceships/DataAssets/DA_Ship_PathfinderScout` with all properties set!
+
+### 3. Generate a Character Template
 
 ```bash
 python TemplateGenerator.py --type personnel --name "Captain Smith" --role Captain
@@ -26,7 +37,7 @@ python TemplateGenerator.py --type personnel --name "Captain Smith" --role Capta
 
 This creates `Assets/PersonnelTemplates/Captain_CaptainSmith.yaml` with all fields!
 
-### 3. Generate System Documentation
+### 4. Generate System Documentation
 
 ```bash
 python GuideGenerator.py --type system --name "MyNewSystem"
@@ -34,7 +45,7 @@ python GuideGenerator.py --type system --name "MyNewSystem"
 
 This creates a complete system guide in `Assets/MyNewSystemSystemGuide.md`!
 
-### 4. Interactive Mode (Easiest!)
+### 5. Interactive Mode (Easiest!)
 
 ```bash
 python EditorUtilities.py --menu
@@ -75,7 +86,27 @@ python TemplateGenerator.py --type spaceship --name "Interceptor" --class Fighte
 
 # 2. Edit Assets/SpaceshipTemplates/Fighter_Interceptor.yaml
 # 3. Customize the values
-# 4. Create Data Asset in Unreal Editor from template
+# 4. Import to Unreal Editor (NEW!)
+```
+
+**Then in Unreal Editor:**
+```python
+import YAMLtoDataAsset
+YAMLtoDataAsset.import_spaceship_yaml("Assets/SpaceshipTemplates/Fighter_Interceptor.yaml")
+# Done! Data Asset created instantly!
+```
+
+### Creating From Existing Templates (NEW!)
+
+```python
+# In Unreal Editor Python Console:
+import YAMLtoDataAsset
+
+# Import one of the existing templates
+YAMLtoDataAsset.import_spaceship_yaml("Assets/SpaceshipTemplates/Scout_Pathfinder.yaml")
+
+# Or batch import ALL ships at once!
+YAMLtoDataAsset.batch_import_spaceships()
 ```
 
 ### Documenting a New System
@@ -100,14 +131,35 @@ python TemplateGenerator.py
 - Recommended value ranges
 - Ready to customize
 
+### Data Assets (NEW!)
+- Created directly in Unreal Editor from YAML
+- All properties automatically set
+- No manual data entry needed
+- Instant import of templates
+
 ### Guides (Markdown)
 - Complete documentation structure
 - Examples and code snippets
 - Best practices
 - Troubleshooting sections
 
+## Complete Workflow (NEW!)
+
+1. **Generate or Edit YAML**: `TemplateGenerator.py` or edit existing template
+2. **Customize Values**: Edit YAML in your favorite text editor
+3. **Import to Unreal**: `YAMLtoDataAsset.py` creates Data Asset
+4. **Use in Game**: Reference Data Asset in Blueprints
+
+**Advantages:**
+✓ Version control YAML files easily  
+✓ Share templates with team  
+✓ Edit outside Unreal Editor  
+✓ Batch import dozens of assets  
+✓ No manual data entry!
+
 ## Need More Help?
 
+- **YAML Import**: [YAML_IMPORT_GUIDE.md](YAML_IMPORT_GUIDE.md) - Complete import guide
 - **Full Documentation**: [GENERATOR_SCRIPTS_README.md](GENERATOR_SCRIPTS_README.md)
 - **Command Help**: `python TemplateGenerator.py --help`
 - **Script Overview**: [SCRIPTS_README.md](SCRIPTS_README.md)
