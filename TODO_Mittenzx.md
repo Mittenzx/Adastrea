@@ -3,12 +3,12 @@ GitHub Copilot Chat Assistant
 Here is the full content you can save as TODO_Mittenzx.md at the repo root.
 
 ---
-TODO_Mittenzx — Get Game Mode running in UE 5.5 (Windows, mixed C++ / Blueprints)
+TODO_Mittenzx — Get Game Mode running in UE 5.6 (Windows, mixed C++ / Blueprints)
 Summary
-- Goal: Open Adastrea in Unreal Engine 5.5 on Windows, build (if needed), open a demo map, and confirm Game Mode runs (player spawns, input works, basic HUD or debug text appears).
+- Goal: Open Adastrea in Unreal Engine 5.6 on Windows, build (if needed), open a demo map, and confirm Game Mode runs (player spawns, input works, basic HUD or debug text appears).
 
 Prerequisites
-- Windows with UE 5.5 installed.
+- Windows with UE 5.6 installed.
 - Visual Studio (recommended: 2022) with "Game development with C++" workload.
 - Git, Git LFS installed and authenticated.
 - Python (to run SetupCheck.py) optional but recommended.
@@ -24,7 +24,7 @@ Quick checklist (one-shot)
 File-level tasks (ordered, actionable)
 1) Confirm engine version
 - File: Adastrea.uproject
-- Task: Open and note "EngineAssociation" or "EngineVersion". Use UE 5.5 or install matching engine.
+- Task: Open and note "EngineAssociation" or "EngineVersion". Use UE 5.6 or install matching engine.
 
 2) Run environment checks
 - File: SetupCheck.py and SetupCheck.sh
@@ -52,7 +52,7 @@ File-level tasks (ordered, actionable)
 
 6) Generate Visual Studio project files
 - Action: In Explorer, right-click Adastrea.uproject → Generate Visual Studio project files
-- Alternative: Open with UE5.5 and let Editor generate files.
+- Alternative: Open with UE5.6 and let Editor generate files.
 - Output: Adastrea.sln
 
 7) Build project in Visual Studio
@@ -118,7 +118,7 @@ File-level tasks (ordered, actionable)
   - Open Demo map → Play
   - Where to find logs (Saved/Logs)
 - Example snippet to paste into README (short):
-  - Prereq: UE 5.5, Visual Studio 2022 (Game dev C++)
+  - Prereq: UE 5.6, Visual Studio 2022 (Game dev C++)
   - git clone ... && git lfs install && git lfs pull
   - Right-click Adastrea.uproject → Generate Visual Studio project files
   - Open Adastrea.sln → Build (Development Editor, Win64)
@@ -142,7 +142,7 @@ Notes & useful paths
 Commit suggestion (if you want to add this file yourself)
 - Branch name: add-todo-mittenzx
 - File: TODO_Mittenzx.md at repo root
-- Commit message: "Add TODO_Mittenzx: UE5.5 GameMode run checklist"
+- Commit message: "Add TODO_Mittenzx: UE5.6 GameMode run checklist"
 
 If you want, I can now:
 - Produce the exact Markdown text with any wording edits you prefer (e.g., more/less detail).

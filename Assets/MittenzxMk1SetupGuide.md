@@ -81,7 +81,7 @@ The Mittenzx Mk1 is implemented as a C++ class for performance and consistency.
 - **Template**: `Assets/SpaceshipTemplates/MultiRole_MittenzxMk1.yaml`
 
 #### Building the Code
-1. Ensure Unreal Engine 5.5 is installed
+1. Ensure Unreal Engine 5.6 is installed
 2. Right-click `Adastrea.uproject` → **Generate Visual Studio project files**
 3. Open `Adastrea.sln` in Visual Studio
 4. Build in **Development Editor** configuration
