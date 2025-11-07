@@ -1,0 +1,96 @@
+{
+  "description": "Configuration for Adastrea Screenshot Testing and Visual Regression",
+  "version": "1.0",
+  "test_settings": {
+    "screenshot_width": 1920,
+    "screenshot_height": 1080,
+    "comparison_threshold": 0.01,
+    "pixel_tolerance": 5,
+    "update_golden_masters": false,
+    "verbose_logging": true
+  },
+  "capture_locations": [
+    {
+      "name": "Main_Menu_View",
+      "map": "/Game/Maps/MainMenu",
+      "camera_location": {
+        "x": 0,
+        "y": 0,
+        "z": 200
+      },
+      "camera_rotation": {
+        "pitch": -15,
+        "yaw": 0,
+        "roll": 0
+      },
+      "wait_time_seconds": 2.0,
+      "description": "Main menu overview from default camera position"
+    },
+    {
+      "name": "Station_Front_View",
+      "map": "/Game/Maps/TestStation",
+      "camera_location": {
+        "x": 1000,
+        "y": 0,
+        "z": 500
+      },
+      "camera_rotation": {
+        "pitch": -20,
+        "yaw": 180,
+        "roll": 0
+      },
+      "wait_time_seconds": 3.0,
+      "description": "Front view of test station"
+    },
+    {
+      "name": "Station_Top_View",
+      "map": "/Game/Maps/TestStation",
+      "camera_location": {
+        "x": 0,
+        "y": 0,
+        "z": 1500
+      },
+      "camera_rotation": {
+        "pitch": -90,
+        "yaw": 0,
+        "roll": 0
+      },
+      "wait_time_seconds": 3.0,
+      "description": "Top-down view of test station"
+    }
+  ],
+  "asset_screenshots": [
+    {
+      "name": "Ship_Fighter_Thumbnail",
+      "asset_path": "/Game/Blueprints/Ships/BP_Ship_Fighter",
+      "thumbnail_size": 512,
+      "background_color": {
+        "r": 0.1,
+        "g": 0.1,
+        "b": 0.1,
+        "a": 1.0
+      },
+      "description": "Thumbnail preview of Fighter ship"
+    },
+    {
+      "name": "Station_Module_Docking",
+      "asset_path": "/Game/Blueprints/Stations/BP_Module_Docking",
+      "thumbnail_size": 512,
+      "background_color": {
+        "r": 0.1,
+        "g": 0.1,
+        "b": 0.1,
+        "a": 1.0
+      },
+      "description": "Thumbnail preview of Docking module"
+    }
+  ],
+  "reporting": {
+    "output_directory": "TestReports/Screenshots",
+    "golden_masters_directory": "TestReports/GoldenMasters",
+    "diff_directory": "TestReports/ScreenshotDiffs",
+    "generate_html": true,
+    "generate_json": true,
+    "timestamp_format": "%Y-%m-%d_%H-%M-%S"
+  }
+}

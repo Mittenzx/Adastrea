@@ -122,12 +122,34 @@ The validation scripts check for:
    - Run the game with the Play button
    - (Optional) Run [AdastreaAssetValidator.py](AdastreaAssetValidator.py) in the Unreal Editor Python console for asset validation
 
+### Testing and Automation
+
+The project includes comprehensive automated testing tools for reliability and validation:
+
+- **Smoke Tests**: Automatically load all maps and detect missing assets, broken references, and errors
+- **Screenshot Tests**: Capture screenshots and perform visual regression testing against golden masters
+- **Automation Runner**: CLI utility for running tests and scheduling overnight validation runs
+
+```bash
+# Run all automated tests
+python AutomationRunner.py --all
+
+# Run only smoke tests
+python AutomationRunner.py --smoke-test
+
+# Schedule overnight validation at 11 PM
+python AutomationRunner.py --all --schedule "23:00"
+```
+
+See [TESTING_AUTOMATION_GUIDE.md](TESTING_AUTOMATION_GUIDE.md) for complete documentation.
+
 ### First Steps
 
 1. **For Designers**: Read [Assets/DesignerOnboarding.md](Assets/DesignerOnboarding.md)
 2. **For Programmers**: Read [CONTRIBUTING.md](CONTRIBUTING.md) and [ARCHITECTURE.md](ARCHITECTURE.md)
 3. **For Testing**: Create a Test Mode level - see [Docs/TestMode_INDEX.md](Docs/TestMode_INDEX.md) for complete guide
-4. **Quick Reference**: See individual system guides in the Assets/ folder
+4. **For Automation**: See [TESTING_AUTOMATION_GUIDE.md](TESTING_AUTOMATION_GUIDE.md) for automated testing
+5. **Quick Reference**: See individual system guides in the Assets/ folder
 
 ## Project Structure
 ```
@@ -139,6 +161,7 @@ Adastrea/
 ├── CONTRIBUTING.md         # Contribution guidelines
 ├── LICENSE                 # MIT License
 ├── README.md               # This file
+├── TESTING_AUTOMATION_GUIDE.md  # Testing and automation documentation
 │
 ├── Assets/                 # Documentation and YAML templates
 │   ├── *Guide.md          # Comprehensive system guides
@@ -162,6 +185,20 @@ Adastrea/
 │   ├── Planets/           # Planet assets
 │   ├── SpaceStations/     # Station assets and modules
 │   └── UI/                # UI widgets
+│
+├── Python Scripts/         # Automation and testing
+│   ├── SmokeTest.py           # Smoke testing script
+│   ├── ScreenshotTester.py    # Screenshot and visual regression testing
+│   ├── AutomationRunner.py    # CLI automation orchestrator
+│   ├── AdastreaAssetValidator.py  # Asset validation
+│   ├── EditorUtilities.py     # Editor utility functions
+│   ├── TemplateGenerator.py   # YAML template generator
+│   ├── GuideGenerator.py      # Documentation generator
+│   ├── YAMLtoDataAsset.py     # YAML import tool
+│   ├── SetupCheck.py          # Environment validation
+│   ├── smoke_test_config.json      # Smoke test configuration
+│   ├── screenshot_test_config.json # Screenshot test configuration
+│   └── automation_config.json      # Automation runner configuration
 │
 └── Source/                 # C++ source code
     ├── AdastreaEditor/    # Editor customizations module

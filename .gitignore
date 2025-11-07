@@ -86,6 +86,9 @@ Desktop.ini
 *.class
 *.jar
 
+# Test Reports and Generated Files
+/TestReports/
+
 # Don't ignore important Unreal files - these should be tracked!
 # .uproject files
 # .uplugin files
