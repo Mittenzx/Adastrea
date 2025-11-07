@@ -708,7 +708,7 @@ bStrategicResource: false
         
         Args:
             module_name: Name of the station module
-            module_group: Module group (Docking, Power, Storage, Processing, Defence, Habitation, Public, Connection, Other)
+            module_group: Module group (Core, Docking, Power, Storage, Processing, Defence, Habitation, Public, Connection, Utility, Other)
             output_dir: Output directory (defaults to Assets/StationModuleTemplates/)
             
         Returns:
@@ -740,6 +740,10 @@ bStrategicResource: false
         elif module_group == "Storage":
             power_default = 100.0
             capacity_default = 10000
+        elif module_group == "Utility":
+            power_default = 300.0  # Medical, communications, etc. consume moderate power
+        elif module_group == "Core":
+            power_default = 0.0  # Structural cores are typically neutral
         
         template_content = f"""# Station Module: {module_name}
 # Module Group: {module_group}
@@ -753,7 +757,7 @@ ModuleType: "{module_name}"
 # MODULE CLASSIFICATION
 # ====================
 ModuleGroup: "{module_group}"
-# Valid groups: Docking, Power, Storage, Processing, Defence, Habitation, Public, Connection, Other
+# Valid groups: Core, Docking, Power, Storage, Processing, Defence, Habitation, Public, Connection, Utility, Other
 
 # ====================
 # DESCRIPTION

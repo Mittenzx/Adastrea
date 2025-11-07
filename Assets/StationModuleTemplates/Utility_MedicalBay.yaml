@@ -1,6 +1,6 @@
 # Station Module: Medical Bay
 # Module Group: Utility
-# Generated on 2025-11-07 13:48:05
+# Generated on 2025-11-07 13:53:53
 
 ModuleID: "Utility_MedicalBay"
 ModuleName: "Medical Bay"
@@ -10,7 +10,7 @@ ModuleType: "Medical Bay"
 # MODULE CLASSIFICATION
 # ====================
 ModuleGroup: "Utility"
-# Valid groups: Docking, Power, Storage, Processing, Defence, Habitation, Public, Connection, Other
+# Valid groups: Core, Docking, Power, Storage, Processing, Defence, Habitation, Public, Connection, Utility, Other
 
 # ====================
 # DESCRIPTION
@@ -22,7 +22,7 @@ Description: |
 # ====================
 # POWER & RESOURCES
 # ====================
-ModulePower: 0.0
+ModulePower: 300.0
 # Negative values = generates power
 # Positive values = consumes power
 # Example: -1000.0 for a reactor, +500.0 for a habitat

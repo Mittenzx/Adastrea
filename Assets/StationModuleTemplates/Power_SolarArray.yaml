@@ -10,7 +10,7 @@ ModuleType: "Solar Array"
 # MODULE CLASSIFICATION
 # ====================
 ModuleGroup: "Power"
-# Valid groups: Docking, Power, Storage, Processing, Defence, Habitation, Public, Connection, Other
+# Valid groups: Core, Docking, Power, Storage, Processing, Defence, Habitation, Public, Connection, Utility, Other
 
 # ====================
 # DESCRIPTION
