@@ -88,7 +88,8 @@ class AutomationConfig:
     
     def __init__(self, config_path: Optional[str] = None):
         """Initialize configuration"""
-        self.config = self.DEFAULT_CONFIG.copy()
+        import copy
+        self.config = copy.deepcopy(self.DEFAULT_CONFIG)
         if config_path and os.path.exists(config_path):
             self.load_config(config_path)
     
@@ -477,12 +478,24 @@ class AutomationRunner:
             self.log(f"Tests will run at {target.strftime('%Y-%m-%d %H:%M:%S')}")
             self.log(f"Waiting {wait_seconds:.0f} seconds...")
             
-            # Wait until scheduled time
-            time.sleep(wait_seconds)
+            # Wait until scheduled time with interruptible sleep (check every minute)
+            # This allows for graceful shutdown if needed
+            check_interval = 60  # Check every minute
+            while wait_seconds > 0:
+                sleep_time = min(check_interval, wait_seconds)
+                time.sleep(sleep_time)
+                wait_seconds -= sleep_time
+                
+                # Log progress every 10 minutes
+                if wait_seconds > 0 and int(wait_seconds) % 600 == 0:
+                    self.log(f"Still waiting... {wait_seconds:.0f} seconds until test execution")
             
             # Run tests
             self.run_all_tests()
             
+        except KeyboardInterrupt:
+            self.log("Scheduled test execution interrupted by user", "WARNING")
+            raise
         except Exception as e:
             self.log(f"Error scheduling tests: {e}", "ERROR")
             self.log(traceback.format_exc(), "ERROR")

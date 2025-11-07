@@ -93,7 +93,8 @@ class SmokeTestConfig:
     
     def __init__(self, config_path: Optional[str] = None):
         """Initialize configuration"""
-        self.config = self.DEFAULT_CONFIG.copy()
+        import copy
+        self.config = copy.deepcopy(self.DEFAULT_CONFIG)
         if config_path and os.path.exists(config_path):
             self.load_config(config_path)
     

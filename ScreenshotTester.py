@@ -99,7 +99,8 @@ class ScreenshotTestConfig:
     
     def __init__(self, config_path: Optional[str] = None):
         """Initialize configuration"""
-        self.config = self.DEFAULT_CONFIG.copy()
+        import copy
+        self.config = copy.deepcopy(self.DEFAULT_CONFIG)
         if config_path and os.path.exists(config_path):
             self.load_config(config_path)
     
@@ -115,7 +116,7 @@ class ScreenshotTestConfig:
     def _merge_config(self, user_config: Dict):
         """Merge user configuration with defaults"""
         for key, value in user_config.items():
-            if key in self.config and isinstance(value, dict) and not isinstance(value, list):
+            if key in self.config and isinstance(value, dict):
                 self.config[key].update(value)
             else:
                 self.config[key] = value
@@ -379,19 +380,20 @@ class ScreenshotTestRunner:
             # Calculate difference
             diff = ImageChops.difference(current, golden)
             
-            # Count different pixels
+            # Count different pixels using efficient method
             pixel_tolerance = self.config.get("test_settings", "pixel_tolerance")
             
             width, height = current.size
             total_pixels = width * height
-            different_pixels = 0
             
-            for x in range(width):
-                for y in range(height):
-                    pixel_diff = diff.getpixel((x, y))
-                    # Check if any channel exceeds tolerance
-                    if any(channel > pixel_tolerance for channel in pixel_diff):
-                        different_pixels += 1
+            # Convert to list for efficient processing (faster than getpixel in loop)
+            diff_data = list(diff.getdata())
+            
+            # Count pixels that exceed tolerance in any channel
+            different_pixels = sum(
+                1 for pixel in diff_data
+                if any(channel > pixel_tolerance for channel in pixel)
+            )
             
             # Calculate percentage
             difference_percentage = (different_pixels / total_pixels) * 100
