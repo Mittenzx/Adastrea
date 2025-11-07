@@ -433,7 +433,7 @@ bool IsSuitableForRole(const FString& Role) const;
 
 ```
 Core Dependencies:
-- Unreal Engine 5.5
+- Unreal Engine 5.6
 - C++ Standard Library
 - Unreal Core, Engine modules
 

@@ -20,7 +20,7 @@ This project and everyone participating in it is governed by our commitment to f
 
 ### Prerequisites
 
-- **Unreal Engine 5.5** (check the .uproject file for the exact version)
+- **Unreal Engine 5.6** (check the .uproject file for the exact version)
 - **Visual Studio 2022** (Windows) or **Xcode** (Mac) for C++ development
 - **Git** for version control
 - Basic knowledge of Unreal Engine, C++, and Blueprint scripting

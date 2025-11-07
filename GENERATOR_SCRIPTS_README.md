@@ -742,7 +742,7 @@ A: No! All scripts use only Python standard library.
 A: Yes! TemplateGenerator.py and GuideGenerator.py work standalone.
 
 **Q: What version of Python is required?**  
-A: Python 3.6 or higher. Unreal Engine 5.5 includes Python 3.9+.
+A: Python 3.6 or higher. Unreal Engine 5.6 includes Python 3.9+.
 
 **Q: Can I customize the generated templates?**  
 A: Absolutely! They're meant to be starting points - customize freely.

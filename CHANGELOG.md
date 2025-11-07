@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed - Unreal Engine Version Update (2025-11-07)
+- **Engine Version Update**: Updated project from Unreal Engine 5.5 to 5.6.1
+  - Updated `Adastrea.uproject` EngineAssociation from "5.5" to "5.6"
+  - Updated validation scripts:
+    - `SetupCheck.py` - updated required_version to "5.6"
+    - `SetupCheck.sh` - updated REQUIRED_UE_VERSION to "5.6"
+  - Updated documentation files:
+    - `README.md` - Prerequisites and version compatibility references
+    - `CONTRIBUTING.md` - Prerequisites section
+    - `ARCHITECTURE.md` - System dependencies
+    - `BUILD_TROUBLESHOOTING.md` - All UE version references and documentation links
+    - `TESTING_AUTOMATION_GUIDE.md` - Prerequisites
+    - `GENERATOR_SCRIPTS_README.md` - FAQ section
+    - `YAML_IMPORT_GUIDE.md` - Requirements
+    - `CONTENT_CREATION_QUICKSTART.md` - Prerequisites
+    - `SCRIPTS_README.md` - Version checks and requirements
+    - `Docs/EmptyMapSetup.md` - Overview and prerequisites
+    - `Docs/TestMode_INDEX.md` - Prerequisites
+    - `Plugins/README.md` - Documentation links
+    - `GuideGenerator.py` - API reference template
+- **Build Compatibility**: No code changes required - UE 5.6.1 maintains backward compatibility with existing C++ code and Build.cs configurations
+
+**Migration Notes:**
+- When pulling these changes, regenerate project files in Unreal Engine 5.6.1:
+  1. Right-click `Adastrea.uproject` and select "Switch Unreal Engine version..." to 5.6
+  2. Generate Visual Studio project files
+  3. Rebuild in "Development Editor" configuration
+- All existing Data Assets, Blueprints, and content are compatible with 5.6.1
+- No API changes affect current codebase
+
 ### Added - Test Mode Level Documentation (2025-11-05)
 - **Test Mode Level Specification**: Created comprehensive documentation for Test Mode level
   - Added `Content/Maps/TestMode.umap.txt` with complete level specification
