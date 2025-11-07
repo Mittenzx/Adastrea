@@ -62,6 +62,25 @@ This project and everyone participating in it is governed by our commitment to f
    - Check that all example Blueprints and Data Assets work
    - Refer to [Assets/PlaytestingChecklist.md](Assets/PlaytestingChecklist.md) for comprehensive verification
 
+### Using Custom Agents
+
+Adastrea provides custom AI agents for GitHub Copilot that have deep knowledge of the project:
+
+**Adastrea Developer Expert** - Available in `.github/agents/adastrea-developer.md`
+
+This agent has expertise in:
+- All core game systems (Spaceships, Factions, Personnel, AI, Trading, etc.)
+- Unreal Engine 5.5 and C++ best practices specific to Adastrea
+- Data Asset architecture and Blueprint integration patterns
+- Project coding standards and conventions
+
+**How to use:**
+```
+@workspace /agent adastrea-developer How do I implement a new faction trait?
+```
+
+See [.github/agents/README.md](.github/agents/README.md) for more information about custom agents.
+
 ## Development Workflow
 
 ### Branching Strategy

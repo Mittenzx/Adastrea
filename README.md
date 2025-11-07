@@ -541,6 +541,7 @@ Comprehensive technical documentation for contributors and developers:
 - **[Implementation Summary](IMPLEMENTATION_SUMMARY.md)** - Technical implementation details
 - **[Performance Improvements](PERFORMANCE_IMPROVEMENTS.md)** - Optimization guidelines
 - **[Audit Summary](AUDIT_SUMMARY.md)** - Security and code quality audit results
+- **[Custom Agents](.github/agents/README.md)** - AI assistants with project expertise for GitHub Copilot
 
 ### Quick Start Guides
 - [Designer Onboarding](Assets/DesignerOnboarding.md) - Start here if you're new to the project
