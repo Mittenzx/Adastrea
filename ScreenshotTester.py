@@ -28,6 +28,7 @@ Usage from CLI (requires Unreal Engine command line):
 import json
 import os
 import sys
+import copy
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
@@ -99,7 +100,6 @@ class ScreenshotTestConfig:
     
     def __init__(self, config_path: Optional[str] = None):
         """Initialize configuration"""
-        import copy
         self.config = copy.deepcopy(self.DEFAULT_CONFIG)
         if config_path and os.path.exists(config_path):
             self.load_config(config_path)
