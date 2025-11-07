@@ -609,7 +609,7 @@ ExpansionStrategy:
     - "ResourceRich"
     - "StrategicLocation"
   ColonizationRate: 5       # 1-10 scale
-  bAgressiveExpansion: false
+  bAggressiveExpansion: false
 
 # ====================
 # SPECIAL BEHAVIORS
