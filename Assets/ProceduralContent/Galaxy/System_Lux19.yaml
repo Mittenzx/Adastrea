@@ -1,0 +1,85 @@
+# Star System: Lux 19
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated galaxy content
+
+SystemName: "Lux 19"
+SystemID: "Lux19"
+
+# ====================
+# STAR PROPERTIES
+# ====================
+StarType: "Blue Giant"
+StarMass: 1.22  # Solar masses
+StarLuminosity: 41.96  # Solar luminosity
+
+# ====================
+# COORDINATES
+# ====================
+Coordinates:
+  X: 8407
+  Y: 5512
+  Z: -814
+
+# ====================
+# PLANETS
+# ====================
+Planets:
+  - Name: "Golden Outpost"
+    Type: "Desert"
+    OrbitNumber: 1
+    OrbitDistance: 62617.276535186975  # km from star
+    Size: 5010.36  # km diameter
+    Mass: 6.03  # Earth masses
+    Gravity: 1.97  # Earth gravity
+    Temperature: -108  # Celsius
+    HasAtmosphere: false
+    Habitability: 18  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Exotic Matter"
+      - "Minerals"
+    HasMoons: true
+    NumberOfMoons: 0
+
+  - Name: "Crimson Haven"
+    Type: "Lava"
+    OrbitNumber: 2
+    OrbitDistance: 175899.98114996994  # km from star
+    Size: 27975.45  # km diameter
+    Mass: 4.5  # Earth masses
+    Gravity: 0.86  # Earth gravity
+    Temperature: 213  # Celsius
+    HasAtmosphere: false
+    Habitability: 26  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Water"
+    HasMoons: false
+    NumberOfMoons: 4
+
+# ====================
+# ASTEROID BELTS
+# ====================
+AsteroidBelts:
+  - Name: "Lux 19 Asteroid Belt A"
+    OrbitDistance: 272270.6120211747
+    Density: "Moderate"
+    Resources:
+      - "Platinum"
+      - "Titanium"
+
+# ====================
+# SPACE STATIONS
+# ====================
+Stations:
+# ====================
+# SYSTEM INFO
+# ====================
+Factions:
+  - "Independent"
+  - "Research Consortium"
+  - "Free Traders"
+
+DangerLevel: "High"
+TrafficLevel: "Light"
+bHasJumpGate: false

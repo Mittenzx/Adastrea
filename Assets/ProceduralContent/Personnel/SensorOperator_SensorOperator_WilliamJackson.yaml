@@ -1,0 +1,89 @@
+# Personnel: William Jackson
+# Role: SensorOperator
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated NPC
+
+PersonnelID: "SensorOperator_WilliamJackson"
+PersonnelName: "William Jackson"
+
+# Basic Identity
+Biography: |
+  This individual graduated from the academy with honors and has been rising steadily. They are valued for their diplomatic skills and defended a civilian station against pirate raiders.
+  
+Age: 50
+Gender: "Male"
+Species: "Human"
+Nationality: "United Earth"
+Tags:
+  - "SensorOperator"
+  - "Level7"
+
+# Role and Assignment
+PrimaryRole: "SensorOperator"
+Department: "Operations"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 9
+TotalExperience: 38784
+Skills:
+  - SkillName: "Sensors"
+    SkillLevel: 4
+    ExperiencePoints: 1824
+  - SkillName: "Detection"
+    SkillLevel: 4
+    ExperiencePoints: 1544
+  - SkillName: "Analysis"
+    SkillLevel: 6
+    ExperiencePoints: 864
+  - SkillName: "Tracking"
+    SkillLevel: 5
+    ExperiencePoints: 2405
+
+Specialties:
+  - "SensorOperator Specialist"
+
+# Status and Condition
+Morale: 84
+Health: 83
+Fatigue: 46
+Loyalty: 69
+Reputation: 62
+
+# Employment
+Salary: 3139
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Adventurous"
+PersonalityDescription: |
+  Adventurous personality with focus on sensoroperator duties.
+  
+Traits:
+  - TraitName: "Lucky"
+    TraitDescription: "Occasional bonuses"
+    TraitID: "Lucky"
+    ModifierValue: 1.05
+  - TraitName: "Quick Learner"
+    TraitDescription: "Gains XP faster"
+    TraitID: "QuickLearner"
+    ModifierValue: 1.1
+  - TraitName: "Technical Genius"
+    TraitDescription: "Engineering bonus"
+    TraitID: "TechnicalGenius"
+    ModifierValue: 1.25
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

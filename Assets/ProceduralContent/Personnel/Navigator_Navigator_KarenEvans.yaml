@@ -1,0 +1,89 @@
+# Personnel: Karen Evans
+# Role: Navigator
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated NPC
+
+PersonnelID: "Navigator_KarenEvans"
+PersonnelName: "Karen Evans"
+
+# Basic Identity
+Biography: |
+  This individual spent years as a freelance pilot before joining organized service. They are recognized for their technical expertise and led a successful rescue operation in hostile territory.
+  
+Age: 33
+Gender: "Female"
+Species: "Human"
+Nationality: "Outer Rim"
+Tags:
+  - "Navigator"
+  - "Level1"
+
+# Role and Assignment
+PrimaryRole: "Navigator"
+Department: "Flight"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 6
+TotalExperience: 7744
+Skills:
+  - SkillName: "Navigation"
+    SkillLevel: 4
+    ExperiencePoints: 1000
+  - SkillName: "Astrogation"
+    SkillLevel: 9
+    ExperiencePoints: 3222
+  - SkillName: "Sensors"
+    SkillLevel: 8
+    ExperiencePoints: 2920
+  - SkillName: "Cartography"
+    SkillLevel: 6
+    ExperiencePoints: 1860
+
+Specialties:
+  - "Navigator Specialist"
+
+# Status and Condition
+Morale: 72
+Health: 93
+Fatigue: 34
+Loyalty: 64
+Reputation: 55
+
+# Employment
+Salary: 15225
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Cautious"
+PersonalityDescription: |
+  Cautious personality with focus on navigator duties.
+  
+Traits:
+  - TraitName: "Brave"
+    TraitDescription: "Performs well under pressure"
+    TraitID: "Brave"
+    ModifierValue: 1.1
+  - TraitName: "Technical Genius"
+    TraitDescription: "Engineering bonus"
+    TraitID: "TechnicalGenius"
+    ModifierValue: 1.25
+  - TraitName: "Lucky"
+    TraitDescription: "Occasional bonuses"
+    TraitID: "Lucky"
+    ModifierValue: 1.05
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

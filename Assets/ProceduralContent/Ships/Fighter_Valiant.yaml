@@ -1,32 +1,32 @@
-# Swift - Fighter Class
+# Valiant - Fighter Class
 # Generated on 2025-11-07 17:16:44
 # Procedurally generated ship variant
 
 BasicInfo:
-  ShipName: "Swift"
+  ShipName: "Valiant"
   Description: "A fighter class vessel with unique characteristics."
   ShipClass: "Fighter"
-  ShipID: "Swift"
+  ShipID: "Valiant"
 
 CoreStats:
-  HullStrength: 956.4
-  CargoCapacity: 59.3
-  CrewRequired: 5
-  MaxCrew: 17
-  ModularPoints: 7
+  HullStrength: 1178.4
+  CargoCapacity: 51.9
+  CrewRequired: 7
+  MaxCrew: 16
+  ModularPoints: 8
 
 CombatStats:
-  ArmorRating: 64.2
-  ShieldStrength: 432.4
+  ArmorRating: 58.8
+  ShieldStrength: 322.4
   ShieldRechargeRate: 10.0
-  WeaponSlots: 2
+  WeaponSlots: 3
   WeaponPowerCapacity: 1000.0
   PointDefenseRating: 5.0
 
 MobilityStats:
-  MaxSpeed: 789.0
+  MaxSpeed: 864.4
   Acceleration: 100.0
-  Maneuverability: 9
+  Maneuverability: 3
   JumpRange: 15.0
   FuelCapacity: 1000.0
   FuelConsumptionRate: 80.0
@@ -55,9 +55,9 @@ AdvancedStats:
   MiningRating: 0
 
 Lore:
-  Manufacturer: "Vanguard Aerospace"
-  YearBuilt: 2454
+  Manufacturer: "Frontier Shipworks"
+  YearBuilt: 2480
   RarityTier: "Rare"
   LoreNotes: "A procedurally generated variant of the Fighter class."
-  PrimaryColor: [0.64, 0.26, 0.58, 1.0]
-  SecondaryColor: [0.18, 0.47, 0.28, 1.0]
+  PrimaryColor: [0.06, 0.27, 0.04, 1.0]
+  SecondaryColor: [0.44, 0.21, 0.61, 1.0]

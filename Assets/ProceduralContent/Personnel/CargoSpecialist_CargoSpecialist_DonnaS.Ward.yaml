@@ -1,0 +1,81 @@
+# Personnel: Donna S. Ward
+# Role: CargoSpecialist
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated NPC
+
+PersonnelID: "CargoSpecialist_DonnaS.Ward"
+PersonnelName: "Donna S. Ward"
+
+# Basic Identity
+Biography: |
+  This individual comes from a long line of spacers dating back three generations. They are feared by enemies and respected by allies and discovered a new jump route saving weeks of travel time.
+  
+Age: 27
+Gender: "Female"
+Species: "Human"
+Nationality: "Outer Rim"
+Tags:
+  - "CargoSpecialist"
+  - "Level8"
+
+# Role and Assignment
+PrimaryRole: "CargoSpecialist"
+Department: "Operations"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 7
+TotalExperience: 6759
+Skills:
+  - SkillName: "Logistics"
+    SkillLevel: 9
+    ExperiencePoints: 1125
+  - SkillName: "Organization"
+    SkillLevel: 8
+    ExperiencePoints: 1672
+  - SkillName: "Trading"
+    SkillLevel: 7
+    ExperiencePoints: 1995
+  - SkillName: "LoadBalancing"
+    SkillLevel: 8
+    ExperiencePoints: 1208
+
+Specialties:
+  - "CargoSpecialist Specialist"
+
+# Status and Condition
+Morale: 79
+Health: 84
+Fatigue: 32
+Loyalty: 82
+Reputation: 26
+
+# Employment
+Salary: 10224
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Leader"
+PersonalityDescription: |
+  Leader personality with focus on cargospecialist duties.
+  
+Traits:
+  - TraitName: "Combat Veteran"
+    TraitDescription: "Experienced in combat"
+    TraitID: "CombatVeteran"
+    ModifierValue: 1.15
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

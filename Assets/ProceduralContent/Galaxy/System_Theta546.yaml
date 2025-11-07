@@ -1,0 +1,215 @@
+# Star System: Theta 546
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated galaxy content
+
+SystemName: "Theta 546"
+SystemID: "Theta546"
+
+# ====================
+# STAR PROPERTIES
+# ====================
+StarType: "Red Dwarf"
+StarMass: 2.31  # Solar masses
+StarLuminosity: 66.93  # Solar luminosity
+
+# ====================
+# COORDINATES
+# ====================
+Coordinates:
+  X: -4143
+  Y: -9842
+  Z: 984
+
+# ====================
+# PLANETS
+# ====================
+Planets:
+  - Name: "Crimson Colony IV"
+    Type: "Terran"
+    OrbitNumber: 1
+    OrbitDistance: 61438.62169291731  # km from star
+    Size: 12579.22  # km diameter
+    Mass: 4.53  # Earth masses
+    Gravity: 2.16  # Earth gravity
+    Temperature: -160  # Celsius
+    HasAtmosphere: true
+    Habitability: 84  # 0-100 scale
+    Population: 535921
+    Resources:
+      - "Rare Metals"
+      - "Water"
+      - "Organics"
+    HasMoons: true
+    NumberOfMoons: 5
+
+  - Name: "Aqua Station V"
+    Type: "Rocky"
+    OrbitNumber: 2
+    OrbitDistance: 135607.0051685433  # km from star
+    Size: 14845.13  # km diameter
+    Mass: 9.73  # Earth masses
+    Gravity: 1.48  # Earth gravity
+    Temperature: 119  # Celsius
+    HasAtmosphere: true
+    Habitability: 14  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Exotic Matter"
+      - "Helium-3"
+      - "Water"
+    HasMoons: false
+    NumberOfMoons: 0
+
+  - Name: "Frost Sanctuary III"
+    Type: "Ocean"
+    OrbitNumber: 3
+    OrbitDistance: 164180.41786483518  # km from star
+    Size: 29767.35  # km diameter
+    Mass: 0.78  # Earth masses
+    Gravity: 2.0  # Earth gravity
+    Temperature: 181  # Celsius
+    HasAtmosphere: true
+    Habitability: 29  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Rare Metals"
+      - "Water"
+    HasMoons: false
+    NumberOfMoons: 5
+
+  - Name: "Lava Base VI"
+    Type: "Terran"
+    OrbitNumber: 4
+    OrbitDistance: 396810.15142064966  # km from star
+    Size: 11816.27  # km diameter
+    Mass: 6.9  # Earth masses
+    Gravity: 2.49  # Earth gravity
+    Temperature: -140  # Celsius
+    HasAtmosphere: true
+    Habitability: 74  # 0-100 scale
+    Population: 720938
+    Resources:
+      - "Rare Metals"
+      - "Helium-3"
+      - "Organics"
+      - "Exotic Matter"
+    HasMoons: false
+    NumberOfMoons: 0
+
+  - Name: "Verde Expanse"
+    Type: "Desert"
+    OrbitNumber: 5
+    OrbitDistance: 341782.85780471755  # km from star
+    Size: 13982.6  # km diameter
+    Mass: 7.43  # Earth masses
+    Gravity: 0.86  # Earth gravity
+    Temperature: 447  # Celsius
+    HasAtmosphere: false
+    Habitability: 32  # 0-100 scale
+    Population: 190668
+    Resources:
+      - "Uranium"
+      - "Helium-3"
+      - "Rare Metals"
+      - "Exotic Matter"
+    HasMoons: false
+    NumberOfMoons: 5
+
+  - Name: "Silver Haven I"
+    Type: "Terran"
+    OrbitNumber: 6
+    OrbitDistance: 345483.2562291311  # km from star
+    Size: 13173.05  # km diameter
+    Mass: 3.02  # Earth masses
+    Gravity: 0.63  # Earth gravity
+    Temperature: -51  # Celsius
+    HasAtmosphere: true
+    Habitability: 93  # 0-100 scale
+    Population: 970092
+    Resources:
+      - "Exotic Matter"
+    HasMoons: true
+    NumberOfMoons: 0
+
+  - Name: "Aqua Frontier"
+    Type: "Ocean"
+    OrbitNumber: 7
+    OrbitDistance: 612892.4138270058  # km from star
+    Size: 16097.52  # km diameter
+    Mass: 7.28  # Earth masses
+    Gravity: 0.81  # Earth gravity
+    Temperature: 204  # Celsius
+    HasAtmosphere: true
+    Habitability: 39  # 0-100 scale
+    Population: 440354
+    Resources:
+      - "Helium-3"
+      - "Uranium"
+    HasMoons: false
+    NumberOfMoons: 3
+
+  - Name: "Lava Base"
+    Type: "Desert"
+    OrbitNumber: 8
+    OrbitDistance: 669738.3250187058  # km from star
+    Size: 13556.43  # km diameter
+    Mass: 1.38  # Earth masses
+    Gravity: 1.83  # Earth gravity
+    Temperature: 374  # Celsius
+    HasAtmosphere: false
+    Habitability: 26  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Rare Metals"
+      - "Water"
+    HasMoons: true
+    NumberOfMoons: 0
+
+# ====================
+# ASTEROID BELTS
+# ====================
+AsteroidBelts:
+  - Name: "Theta 546 Asteroid Belt A"
+    OrbitDistance: 262325.211913517
+    Density: "Dense"
+    Resources:
+      - "Platinum"
+
+  - Name: "Theta 546 Asteroid Belt B"
+    OrbitDistance: 350983.17540304456
+    Density: "Moderate"
+    Resources:
+      - "Iron"
+      - "Rare Earth"
+      - "Titanium"
+
+  - Name: "Theta 546 Asteroid Belt C"
+    OrbitDistance: 498253.27198982023
+    Density: "Moderate"
+    Resources:
+      - "Rare Earth"
+
+# ====================
+# SPACE STATIONS
+# ====================
+Stations:
+  - Name: "Theta 546 Station 1"
+    Type: "Research Facility"
+    OrbitDistance: 522446.633121913
+    Population: 827
+
+  - Name: "Theta 546 Station 2"
+    Type: "Military Outpost"
+    OrbitDistance: 795802.7558515291
+    Population: 4720
+
+# ====================
+# SYSTEM INFO
+# ====================
+Factions:
+  - "Independent"
+  - "United Earth"
+
+DangerLevel: "High"
+TrafficLevel: "Light"
+bHasJumpGate: false

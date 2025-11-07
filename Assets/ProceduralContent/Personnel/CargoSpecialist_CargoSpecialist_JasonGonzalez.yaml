@@ -1,0 +1,89 @@
+# Personnel: Jason Gonzalez
+# Role: CargoSpecialist
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated NPC
+
+PersonnelID: "CargoSpecialist_JasonGonzalez"
+PersonnelName: "Jason Gonzalez"
+
+# Basic Identity
+Biography: |
+  This individual was a renowned scientist before transitioning to space operations. They are admired for their unwavering loyalty and successfully completed 30 deep space missions.
+  
+Age: 35
+Gender: "Male"
+Species: "Human"
+Nationality: "United Earth"
+Tags:
+  - "CargoSpecialist"
+  - "Level1"
+
+# Role and Assignment
+PrimaryRole: "CargoSpecialist"
+Department: "Operations"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 9
+TotalExperience: 22853
+Skills:
+  - SkillName: "Logistics"
+    SkillLevel: 8
+    ExperiencePoints: 1504
+  - SkillName: "Organization"
+    SkillLevel: 7
+    ExperiencePoints: 3101
+  - SkillName: "Trading"
+    SkillLevel: 8
+    ExperiencePoints: 1288
+  - SkillName: "LoadBalancing"
+    SkillLevel: 5
+    ExperiencePoints: 1220
+
+Specialties:
+  - "CargoSpecialist Specialist"
+
+# Status and Condition
+Morale: 93
+Health: 82
+Fatigue: 39
+Loyalty: 71
+Reputation: 72
+
+# Employment
+Salary: 11348
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Leader"
+PersonalityDescription: |
+  Leader personality with focus on cargospecialist duties.
+  
+Traits:
+  - TraitName: "Quick Learner"
+    TraitDescription: "Gains XP faster"
+    TraitID: "QuickLearner"
+    ModifierValue: 1.1
+  - TraitName: "Lucky"
+    TraitDescription: "Occasional bonuses"
+    TraitID: "Lucky"
+    ModifierValue: 1.05
+  - TraitName: "Diplomat"
+    TraitDescription: "Better negotiations"
+    TraitID: "Diplomat"
+    ModifierValue: 1.1
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

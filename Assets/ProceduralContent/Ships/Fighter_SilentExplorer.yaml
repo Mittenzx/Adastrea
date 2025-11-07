@@ -1,32 +1,32 @@
-# Swift - Fighter Class
+# Silent Explorer - Fighter Class
 # Generated on 2025-11-07 17:16:44
 # Procedurally generated ship variant
 
 BasicInfo:
-  ShipName: "Swift"
+  ShipName: "Silent Explorer"
   Description: "A fighter class vessel with unique characteristics."
   ShipClass: "Fighter"
-  ShipID: "Swift"
+  ShipID: "SilentExplorer"
 
 CoreStats:
-  HullStrength: 956.4
-  CargoCapacity: 59.3
-  CrewRequired: 5
-  MaxCrew: 17
-  ModularPoints: 7
+  HullStrength: 926.3
+  CargoCapacity: 133.9
+  CrewRequired: 1
+  MaxCrew: 12
+  ModularPoints: 10
 
 CombatStats:
-  ArmorRating: 64.2
-  ShieldStrength: 432.4
+  ArmorRating: 50.9
+  ShieldStrength: 755.2
   ShieldRechargeRate: 10.0
-  WeaponSlots: 2
+  WeaponSlots: 4
   WeaponPowerCapacity: 1000.0
   PointDefenseRating: 5.0
 
 MobilityStats:
-  MaxSpeed: 789.0
+  MaxSpeed: 753.2
   Acceleration: 100.0
-  Maneuverability: 9
+  Maneuverability: 4
   JumpRange: 15.0
   FuelCapacity: 1000.0
   FuelConsumptionRate: 80.0
@@ -55,9 +55,9 @@ AdvancedStats:
   MiningRating: 0
 
 Lore:
-  Manufacturer: "Vanguard Aerospace"
-  YearBuilt: 2454
-  RarityTier: "Rare"
+  Manufacturer: "Stellar Dynamics"
+  YearBuilt: 2469
+  RarityTier: "Uncommon"
   LoreNotes: "A procedurally generated variant of the Fighter class."
-  PrimaryColor: [0.64, 0.26, 0.58, 1.0]
-  SecondaryColor: [0.18, 0.47, 0.28, 1.0]
+  PrimaryColor: [0.98, 0.66, 0.21, 1.0]
+  SecondaryColor: [0.70, 0.86, 0.77, 1.0]

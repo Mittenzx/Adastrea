@@ -1,32 +1,32 @@
-# Swift - Fighter Class
+# Hunter - Fighter Class
 # Generated on 2025-11-07 17:16:44
 # Procedurally generated ship variant
 
 BasicInfo:
-  ShipName: "Swift"
+  ShipName: "Hunter"
   Description: "A fighter class vessel with unique characteristics."
   ShipClass: "Fighter"
-  ShipID: "Swift"
+  ShipID: "Hunter"
 
 CoreStats:
-  HullStrength: 956.4
-  CargoCapacity: 59.3
-  CrewRequired: 5
-  MaxCrew: 17
+  HullStrength: 801.9
+  CargoCapacity: 77.3
+  CrewRequired: 8
+  MaxCrew: 19
   ModularPoints: 7
 
 CombatStats:
-  ArmorRating: 64.2
-  ShieldStrength: 432.4
+  ArmorRating: 28.9
+  ShieldStrength: 791.5
   ShieldRechargeRate: 10.0
-  WeaponSlots: 2
+  WeaponSlots: 3
   WeaponPowerCapacity: 1000.0
   PointDefenseRating: 5.0
 
 MobilityStats:
-  MaxSpeed: 789.0
+  MaxSpeed: 610.8
   Acceleration: 100.0
-  Maneuverability: 9
+  Maneuverability: 7
   JumpRange: 15.0
   FuelCapacity: 1000.0
   FuelConsumptionRate: 80.0
@@ -55,9 +55,9 @@ AdvancedStats:
   MiningRating: 0
 
 Lore:
-  Manufacturer: "Vanguard Aerospace"
-  YearBuilt: 2454
-  RarityTier: "Rare"
+  Manufacturer: "Stellar Dynamics"
+  YearBuilt: 2472
+  RarityTier: "Common"
   LoreNotes: "A procedurally generated variant of the Fighter class."
-  PrimaryColor: [0.64, 0.26, 0.58, 1.0]
-  SecondaryColor: [0.18, 0.47, 0.28, 1.0]
+  PrimaryColor: [0.01, 0.92, 0.83, 1.0]
+  SecondaryColor: [0.75, 0.78, 0.98, 1.0]

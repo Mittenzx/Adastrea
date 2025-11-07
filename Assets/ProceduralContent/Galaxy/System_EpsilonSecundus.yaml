@@ -1,0 +1,220 @@
+# Star System: Epsilon Secundus
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated galaxy content
+
+SystemName: "Epsilon Secundus"
+SystemID: "EpsilonSecundus"
+
+# ====================
+# STAR PROPERTIES
+# ====================
+StarType: "Red Giant"
+StarMass: 2.48  # Solar masses
+StarLuminosity: 40.31  # Solar luminosity
+
+# ====================
+# COORDINATES
+# ====================
+Coordinates:
+  X: 220
+  Y: -1145
+  Z: -994
+
+# ====================
+# PLANETS
+# ====================
+Planets:
+  - Name: "Aqua Base I"
+    Type: "Rocky"
+    OrbitNumber: 1
+    OrbitDistance: 63932.082442472856  # km from star
+    Size: 6682.93  # km diameter
+    Mass: 6.3  # Earth masses
+    Gravity: 0.54  # Earth gravity
+    Temperature: 358  # Celsius
+    HasAtmosphere: true
+    Habitability: 33  # 0-100 scale
+    Population: 76345
+    Resources:
+      - "Water"
+      - "Organics"
+      - "Rare Metals"
+    HasMoons: true
+    NumberOfMoons: 0
+
+  - Name: "Silver Sanctuary"
+    Type: "Gas Giant"
+    OrbitNumber: 2
+    OrbitDistance: 131395.72166647948  # km from star
+    Size: 117487.33  # km diameter
+    Mass: 3.02  # Earth masses
+    Gravity: 1.33  # Earth gravity
+    Temperature: 337  # Celsius
+    HasAtmosphere: true
+    Habitability: 0  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Rare Metals"
+      - "Minerals"
+    HasMoons: true
+    NumberOfMoons: 0
+
+  - Name: "Crystal Prime VIII"
+    Type: "Lava"
+    OrbitNumber: 3
+    OrbitDistance: 262817.5247784931  # km from star
+    Size: 9870.01  # km diameter
+    Mass: 5.38  # Earth masses
+    Gravity: 2.4  # Earth gravity
+    Temperature: -120  # Celsius
+    HasAtmosphere: true
+    Habitability: 28  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Rare Metals"
+      - "Exotic Matter"
+      - "Water"
+      - "Helium-3"
+    HasMoons: true
+    NumberOfMoons: 0
+
+  - Name: "Crimson Settlement"
+    Type: "Rocky"
+    OrbitNumber: 4
+    OrbitDistance: 258146.41265333694  # km from star
+    Size: 8981.95  # km diameter
+    Mass: 3.1  # Earth masses
+    Gravity: 1.85  # Earth gravity
+    Temperature: 413  # Celsius
+    HasAtmosphere: true
+    Habitability: 2  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Water"
+      - "Organics"
+      - "Minerals"
+    HasMoons: true
+    NumberOfMoons: 3
+
+  - Name: "Storm World"
+    Type: "Rocky"
+    OrbitNumber: 5
+    OrbitDistance: 401996.3473188962  # km from star
+    Size: 8328.49  # km diameter
+    Mass: 0.86  # Earth masses
+    Gravity: 2.05  # Earth gravity
+    Temperature: 463  # Celsius
+    HasAtmosphere: true
+    Habitability: 43  # 0-100 scale
+    Population: 394525
+    Resources:
+      - "Uranium"
+    HasMoons: true
+    NumberOfMoons: 0
+
+  - Name: "Crystal Station III"
+    Type: "Gas Giant"
+    OrbitNumber: 6
+    OrbitDistance: 573800.5072193043  # km from star
+    Size: 124196.85  # km diameter
+    Mass: 7.05  # Earth masses
+    Gravity: 2.14  # Earth gravity
+    Temperature: 479  # Celsius
+    HasAtmosphere: true
+    Habitability: 0  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Organics"
+      - "Rare Metals"
+      - "Uranium"
+      - "Exotic Matter"
+    HasMoons: true
+    NumberOfMoons: 0
+
+  - Name: "Terra Colony"
+    Type: "Terran"
+    OrbitNumber: 7
+    OrbitDistance: 483179.9889253792  # km from star
+    Size: 11434.36  # km diameter
+    Mass: 4.41  # Earth masses
+    Gravity: 0.36  # Earth gravity
+    Temperature: 137  # Celsius
+    HasAtmosphere: true
+    Habitability: 64  # 0-100 scale
+    Population: 407824
+    Resources:
+      - "Uranium"
+      - "Helium-3"
+    HasMoons: false
+    NumberOfMoons: 0
+
+  - Name: "Crystal Refuge III"
+    Type: "Gas Giant"
+    OrbitNumber: 8
+    OrbitDistance: 647077.3325362657  # km from star
+    Size: 111573.88  # km diameter
+    Mass: 2.47  # Earth masses
+    Gravity: 2.35  # Earth gravity
+    Temperature: 27  # Celsius
+    HasAtmosphere: true
+    Habitability: 0  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Helium-3"
+      - "Water"
+      - "Minerals"
+    HasMoons: false
+    NumberOfMoons: 0
+
+# ====================
+# ASTEROID BELTS
+# ====================
+AsteroidBelts:
+  - Name: "Epsilon Secundus Asteroid Belt A"
+    OrbitDistance: 300426.31470371527
+    Density: "Sparse"
+    Resources:
+      - "Iron"
+      - "Rare Earth"
+
+  - Name: "Epsilon Secundus Asteroid Belt B"
+    OrbitDistance: 468345.06017816934
+    Density: "Sparse"
+    Resources:
+      - "Titanium"
+      - "Platinum"
+      - "Rare Earth"
+
+  - Name: "Epsilon Secundus Asteroid Belt C"
+    OrbitDistance: 359818.1020519617
+    Density: "Dense"
+    Resources:
+      - "Rare Earth"
+      - "Iron"
+      - "Titanium"
+
+# ====================
+# SPACE STATIONS
+# ====================
+Stations:
+  - Name: "Epsilon Secundus Station 1"
+    Type: "Research Facility"
+    OrbitDistance: 101000.8960834724
+    Population: 861
+
+  - Name: "Epsilon Secundus Station 2"
+    Type: "Research Facility"
+    OrbitDistance: 484977.1276102449
+    Population: 3993
+
+# ====================
+# SYSTEM INFO
+# ====================
+Factions:
+  - "Free Traders"
+  - "Independent"
+  - "United Earth"
+
+DangerLevel: "Safe"
+TrafficLevel: "Light"
+bHasJumpGate: true

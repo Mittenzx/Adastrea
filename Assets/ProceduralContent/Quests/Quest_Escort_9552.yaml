@@ -1,0 +1,60 @@
+# Quest: Convoy Escort
+# Type: Escort
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated quest/mission
+
+ContractName: "Convoy Escort"
+ContractID: "Quest_Escort_9552"
+Description: |
+  Protect convoy traveling from Beta Borealis to Epsilon Centauri.
+  
+ContractType: Escort
+Difficulty: Easy
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Beta Borealis"
+  Coordinates: [2628, 8581, 0]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Epsilon Centauri"
+  Coordinates: [6200, 8124, 550]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 23078.75
+TimeLimit: 95
+MinReputationRequired: -10
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 1745
+  ReputationGain: 8
+  ExperiencePoints: 407
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 436
+  ReputationPenalty: 4
+  CollateralDeposit: 174
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: true
+bRequiresStealth: false
+bCombatExpected: true
+HostileFactions: []
+ContractTags:
+  - "Escort"
+  - "Easy"
+  - "Procedural"

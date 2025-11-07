@@ -1,0 +1,81 @@
+# Personnel: Patrick C. Morgan
+# Role: SecurityOfficer
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated NPC
+
+PersonnelID: "SecurityOfficer_PatrickC.Morgan"
+PersonnelName: "Patrick C. Morgan"
+
+# Basic Identity
+Biography: |
+  This individual was a trader on the frontier worlds before seeking more stable employment. They are admired for their unwavering loyalty and successfully completed 76 deep space missions.
+  
+Age: 33
+Gender: "Male"
+Species: "Human"
+Nationality: "Core Worlds"
+Tags:
+  - "SecurityOfficer"
+  - "Level6"
+
+# Role and Assignment
+PrimaryRole: "SecurityOfficer"
+Department: "Security"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 9
+TotalExperience: 14683
+Skills:
+  - SkillName: "Combat"
+    SkillLevel: 4
+    ExperiencePoints: 1164
+  - SkillName: "Security"
+    SkillLevel: 6
+    ExperiencePoints: 2742
+  - SkillName: "Tactics"
+    SkillLevel: 9
+    ExperiencePoints: 3510
+  - SkillName: "Investigation"
+    SkillLevel: 9
+    ExperiencePoints: 1188
+
+Specialties:
+  - "SecurityOfficer Specialist"
+
+# Status and Condition
+Morale: 52
+Health: 77
+Fatigue: 35
+Loyalty: 60
+Reputation: -15
+
+# Employment
+Salary: 8705
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Adventurous"
+PersonalityDescription: |
+  Adventurous personality with focus on securityofficer duties.
+  
+Traits:
+  - TraitName: "Combat Veteran"
+    TraitDescription: "Experienced in combat"
+    TraitID: "CombatVeteran"
+    ModifierValue: 1.15
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

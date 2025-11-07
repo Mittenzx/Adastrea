@@ -1,0 +1,60 @@
+# Quest: Investigate Anomaly
+# Type: Investigation
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated quest/mission
+
+ContractName: "Investigate Anomaly"
+ContractID: "Quest_Investigation_6100"
+Description: |
+  Investigate unusual activity near Celestia 608 on behalf of Zeta 745.
+  
+ContractType: Investigation
+Difficulty: VeryHard
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Zeta 745"
+  Coordinates: [6178, 6880, 289]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Celestia 608"
+  Coordinates: [6748, 55, 900]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 10055.04
+TimeLimit: 41
+MinReputationRequired: 27
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 13170
+  ReputationGain: 25
+  ExperiencePoints: 985
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 3292
+  ReputationPenalty: 12
+  CollateralDeposit: 1317
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: true
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Investigation"
+  - "VeryHard"
+  - "Procedural"

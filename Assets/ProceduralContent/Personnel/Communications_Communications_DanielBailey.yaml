@@ -1,0 +1,81 @@
+# Personnel: Daniel Bailey
+# Role: Communications
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated NPC
+
+PersonnelID: "Communications_DanielBailey"
+PersonnelName: "Daniel Bailey"
+
+# Basic Identity
+Biography: |
+  This individual served in the military for 12 years before retiring to private sector. They are has a reputation for being tough but fair and led a successful rescue operation in hostile territory.
+  
+Age: 61
+Gender: "Male"
+Species: "Human"
+Nationality: "Colonial Alliance"
+Tags:
+  - "Communications"
+  - "Level1"
+
+# Role and Assignment
+PrimaryRole: "Communications"
+Department: "Communications"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 5
+TotalExperience: 33050
+Skills:
+  - SkillName: "Communications"
+    SkillLevel: 8
+    ExperiencePoints: 3208
+  - SkillName: "Linguistics"
+    SkillLevel: 4
+    ExperiencePoints: 944
+  - SkillName: "Diplomacy"
+    SkillLevel: 4
+    ExperiencePoints: 1308
+  - SkillName: "Signals"
+    SkillLevel: 10
+    ExperiencePoints: 1010
+
+Specialties:
+  - "Communications Specialist"
+
+# Status and Condition
+Morale: 80
+Health: 95
+Fatigue: 19
+Loyalty: 66
+Reputation: 37
+
+# Employment
+Salary: 2449
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Adventurous"
+PersonalityDescription: |
+  Adventurous personality with focus on communications duties.
+  
+Traits:
+  - TraitName: "Quick Learner"
+    TraitDescription: "Gains XP faster"
+    TraitID: "QuickLearner"
+    ModifierValue: 1.1
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

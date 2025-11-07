@@ -1,0 +1,60 @@
+# Quest: Supply Run
+# Type: Delivery
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated quest/mission
+
+ContractName: "Supply Run"
+ContractID: "Quest_Delivery_5318"
+Description: |
+  Transport cargo from Theta Luminous to Theta Australis. Ensure timely delivery.
+  
+ContractType: Delivery
+Difficulty: VeryHard
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Theta Luminous"
+  Coordinates: [1484, 3059, 425]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Theta Australis"
+  Coordinates: [8799, 2432, 899]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 14658.49
+TimeLimit: 91
+MinReputationRequired: -9
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 20295
+  ReputationGain: 45
+  ExperiencePoints: 445
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 5073
+  ReputationPenalty: 22
+  CollateralDeposit: 2029
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: false
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Delivery"
+  - "VeryHard"
+  - "Procedural"

@@ -1,0 +1,60 @@
+# Quest: Resource Gathering
+# Type: Procurement
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated quest/mission
+
+ContractName: "Resource Gathering"
+ContractID: "Quest_Procurement_6010"
+Description: |
+  Acquire specified goods and deliver to Zeta 712.
+  
+ContractType: Procurement
+Difficulty: Easy
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Zeta 712"
+  Coordinates: [5519, 5915, 719]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Astro 805"
+  Coordinates: [2990, 2422, 452]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 11958.95
+TimeLimit: 168
+MinReputationRequired: 28
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 2558
+  ReputationGain: 20
+  ExperiencePoints: 113
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 639
+  ReputationPenalty: 10
+  CollateralDeposit: 255
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: true
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Procurement"
+  - "Easy"
+  - "Procedural"

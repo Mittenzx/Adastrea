@@ -1,0 +1,81 @@
+# Personnel: Diane Lee
+# Role: Trader
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated NPC
+
+PersonnelID: "Trader_DianeLee"
+PersonnelName: "Diane Lee"
+
+# Basic Identity
+Biography: |
+  This individual served in the military for 3 years before retiring to private sector. They are celebrated for their innovative problem-solving and earned multiple commendations for bravery and service.
+  
+Age: 40
+Gender: "Female"
+Species: "Human"
+Nationality: "Colonial Alliance"
+Tags:
+  - "Trader"
+  - "Level8"
+
+# Role and Assignment
+PrimaryRole: "Trader"
+Department: "Operations"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 6
+TotalExperience: 38445
+Skills:
+  - SkillName: "Trading"
+    SkillLevel: 3
+    ExperiencePoints: 582
+  - SkillName: "Negotiation"
+    SkillLevel: 5
+    ExperiencePoints: 1770
+  - SkillName: "Economics"
+    SkillLevel: 4
+    ExperiencePoints: 1212
+  - SkillName: "Appraisal"
+    SkillLevel: 8
+    ExperiencePoints: 2600
+
+Specialties:
+  - "Trader Specialist"
+
+# Status and Condition
+Morale: 61
+Health: 70
+Fatigue: 31
+Loyalty: 65
+Reputation: 27
+
+# Employment
+Salary: 14687
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Analytical"
+PersonalityDescription: |
+  Analytical personality with focus on trader duties.
+  
+Traits:
+  - TraitName: "Diplomat"
+    TraitDescription: "Better negotiations"
+    TraitID: "Diplomat"
+    ModifierValue: 1.1
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

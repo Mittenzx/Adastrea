@@ -1,0 +1,89 @@
+# Personnel: Susan Wright
+# Role: Gunner
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated NPC
+
+PersonnelID: "Gunner_SusanWright"
+PersonnelName: "Susan Wright"
+
+# Basic Identity
+Biography: |
+  This individual was a trader on the frontier worlds before seeking more stable employment. They are feared by enemies and respected by allies and defended a civilian station against pirate raiders.
+  
+Age: 53
+Gender: "Female"
+Species: "Human"
+Nationality: "Colonial Alliance"
+Tags:
+  - "Gunner"
+  - "Level3"
+
+# Role and Assignment
+PrimaryRole: "Gunner"
+Department: "Tactical"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 9
+TotalExperience: 35101
+Skills:
+  - SkillName: "Gunnery"
+    SkillLevel: 9
+    ExperiencePoints: 4266
+  - SkillName: "Targeting"
+    SkillLevel: 7
+    ExperiencePoints: 2933
+  - SkillName: "Tactical"
+    SkillLevel: 5
+    ExperiencePoints: 2165
+  - SkillName: "WeaponSystems"
+    SkillLevel: 3
+    ExperiencePoints: 915
+
+Specialties:
+  - "Gunner Specialist"
+
+# Status and Condition
+Morale: 53
+Health: 71
+Fatigue: 38
+Loyalty: 49
+Reputation: 53
+
+# Employment
+Salary: 6577
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Analytical"
+PersonalityDescription: |
+  Analytical personality with focus on gunner duties.
+  
+Traits:
+  - TraitName: "Natural Leader"
+    TraitDescription: "Inspires crew"
+    TraitID: "NaturalLeader"
+    ModifierValue: 1.2
+  - TraitName: "Combat Veteran"
+    TraitDescription: "Experienced in combat"
+    TraitID: "CombatVeteran"
+    ModifierValue: 1.15
+  - TraitName: "Brave"
+    TraitDescription: "Performs well under pressure"
+    TraitID: "Brave"
+    ModifierValue: 1.1
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

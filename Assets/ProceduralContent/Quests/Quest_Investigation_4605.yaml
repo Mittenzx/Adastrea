@@ -1,0 +1,60 @@
+# Quest: Investigate Anomaly
+# Type: Investigation
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated quest/mission
+
+ContractName: "Investigate Anomaly"
+ContractID: "Quest_Investigation_4605"
+Description: |
+  Investigate unusual activity near Zeta Australis on behalf of Delta Major.
+  
+ContractType: Investigation
+Difficulty: VeryHard
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Delta Major"
+  Coordinates: [9978, 1703, 99]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Zeta Australis"
+  Coordinates: [8513, 3982, 68]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 45770.27
+TimeLimit: 67
+MinReputationRequired: 8
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 19095
+  ReputationGain: 70
+  ExperiencePoints: 2245
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 4773
+  ReputationPenalty: 35
+  CollateralDeposit: 1909
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: false
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Investigation"
+  - "VeryHard"
+  - "Procedural"

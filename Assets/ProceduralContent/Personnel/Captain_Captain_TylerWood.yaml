@@ -1,0 +1,85 @@
+# Personnel: Tyler Wood
+# Role: Captain
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated NPC
+
+PersonnelID: "Captain_TylerWood"
+PersonnelName: "Tyler Wood"
+
+# Basic Identity
+Biography: |
+  This individual comes from a long line of spacers dating back three generations. They are respected for their tactical brilliance and successfully completed 51 deep space missions.
+  
+Age: 65
+Gender: "Male"
+Species: "Human"
+Nationality: "United Earth"
+Tags:
+  - "Captain"
+  - "Level5"
+
+# Role and Assignment
+PrimaryRole: "Captain"
+Department: "Command"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 8
+TotalExperience: 18012
+Skills:
+  - SkillName: "Leadership"
+    SkillLevel: 9
+    ExperiencePoints: 3969
+  - SkillName: "Tactical"
+    SkillLevel: 10
+    ExperiencePoints: 3830
+  - SkillName: "Navigation"
+    SkillLevel: 10
+    ExperiencePoints: 3250
+  - SkillName: "Diplomacy"
+    SkillLevel: 4
+    ExperiencePoints: 860
+
+Specialties:
+  - "Captain Specialist"
+
+# Status and Condition
+Morale: 66
+Health: 73
+Fatigue: 41
+Loyalty: 86
+Reputation: 46
+
+# Employment
+Salary: 6035
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Aggressive"
+PersonalityDescription: |
+  Aggressive personality with focus on captain duties.
+  
+Traits:
+  - TraitName: "Cautious"
+    TraitDescription: "Reduced risk taking"
+    TraitID: "Cautious"
+    ModifierValue: 0.9
+  - TraitName: "Quick Learner"
+    TraitDescription: "Gains XP faster"
+    TraitID: "QuickLearner"
+    ModifierValue: 1.1
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

@@ -966,12 +966,15 @@ ContractTags:
             "ShieldStrength": random.uniform(300, 800),
             "Maneuverability": random.randint(3, 10),
             "CrewRequired": random.randint(1, 8),
-            "MaxCrew": random.randint(4, 20),
+            "MaxCrew": 0,  # Will be set after CrewRequired
             "ModularPoints": random.randint(4, 16),
             "Manufacturer": random.choice(["Vanguard Aerospace", "Stellar Dynamics",
                                           "Nova Industries", "Frontier Shipworks"]),
             "RarityTier": random.choice(["Common", "Uncommon", "Rare"])
         }
+        
+        # Ensure MaxCrew is always >= CrewRequired
+        ship_data["MaxCrew"] = ship_data["CrewRequired"] + random.randint(2, 12)
         
         return ship_data
     

@@ -1,0 +1,60 @@
+# Quest: Mining Operation
+# Type: Mining
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated quest/mission
+
+ContractName: "Mining Operation"
+ContractID: "Quest_Mining_6342"
+Description: |
+  Extract and deliver resources from asteroid field near Beta 465.
+  
+ContractType: Mining
+Difficulty: Hard
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Zeta 580"
+  Coordinates: [4040, 8447, 55]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Beta 465"
+  Coordinates: [4524, 1435, 668]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 18172.55
+TimeLimit: 104
+MinReputationRequired: 3
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 11886
+  ReputationGain: 36
+  ExperiencePoints: 480
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 2971
+  ReputationPenalty: 18
+  CollateralDeposit: 1188
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: false
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Mining"
+  - "Hard"
+  - "Procedural"

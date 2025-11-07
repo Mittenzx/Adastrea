@@ -1,0 +1,60 @@
+# Quest: Discovery
+# Type: Exploration
+# Generated on 2025-11-07 17:16:44
+# Procedurally generated quest/mission
+
+ContractName: "Discovery"
+ContractID: "Quest_Exploration_8039"
+Description: |
+  Survey the Eta Luminous system and report findings to Stellar 329.
+  
+ContractType: Exploration
+Difficulty: VeryHard
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Stellar 329"
+  Coordinates: [3090, 4423, 611]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Eta Luminous"
+  Coordinates: [5297, 9787, 304]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 44953.38
+TimeLimit: 128
+MinReputationRequired: 17
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 16895
+  ReputationGain: 50
+  ExperiencePoints: 2225
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 4223
+  ReputationPenalty: 25
+  CollateralDeposit: 1689
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: true
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Exploration"
+  - "VeryHard"
+  - "Procedural"
