@@ -40,7 +40,7 @@
 
 ### Prerequisites
 
-- **Unreal Engine 5.5** (check the .uproject file for exact version)
+- **Unreal Engine 5.6** (check the .uproject file for exact version)
 - **Visual Studio 2022** (Windows) or **Xcode** (Mac) for C++ development
 - **Git** for version control
 
@@ -81,7 +81,7 @@ python SetupCheck.py --help
 ```
 
 The validation scripts check for:
-- ✓ Unreal Engine version compatibility (5.5)
+- ✓ Unreal Engine version compatibility (5.6)
 - ✓ C++ compiler availability (MSVC, GCC, Clang)
 - ✓ Required project folders (Source, Config, Content, Assets)
 - ✓ Required project files (.uproject, module headers)

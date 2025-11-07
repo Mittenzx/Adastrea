@@ -1,7 +1,7 @@
 # Empty Map Setup Guide - Adastrea
 
 ## Overview
-This guide provides step-by-step instructions for creating and configuring an empty 200km x 200km space map in Unreal Engine 5.5+ for the Adastrea project. These maps serve as the foundation for procedural generation, manual content placement, and sector-based open world design.
+This guide provides step-by-step instructions for creating and configuring an empty 200km x 200km space map in Unreal Engine 5.6+ for the Adastrea project. These maps serve as the foundation for procedural generation, manual content placement, and sector-based open world design.
 
 ---
 
@@ -22,7 +22,7 @@ This guide provides step-by-step instructions for creating and configuring an em
 ## Prerequisites
 
 Before starting, ensure you have:
-- Unreal Engine 5.5 or later installed
+- Unreal Engine 5.6 or later installed
 - Adastrea project compiled successfully
 - Basic familiarity with Unreal Engine editor
 - Understanding of level design concepts
@@ -585,5 +585,5 @@ UE_LOG(LogAdastrea, Log, TEXT("Random position: %s"), *RandomPos.ToString());
 
 **Last Updated**: 2025-10-28  
 **Version**: 1.0  
-**Unreal Engine**: 5.3+  
+**Unreal Engine**: 5.6+  
 **Maintained by**: Adastrea Development Team

@@ -12,7 +12,7 @@ Adastrea is an open-world space flight game featuring exploration, combat, facti
 
 ## Technology Stack
 
-- **Engine**: Unreal Engine 5.3
+- **Engine**: Unreal Engine 5.6
 - **Languages**: C++ (primary), Blueprint (visual scripting)
 - **Platforms**: Windows, Mac, Linux
 - **Build System**: Unreal Build Tool (UBT)
@@ -377,7 +377,7 @@ Content/
 
 ### Core Dependencies
 
-- Unreal Engine 5.3 Core modules
+- Unreal Engine 5.6 Core modules
 - Standard C++ Library
 - Unreal Engine modules: Engine, CoreUObject, UnrealEd (for editor)
 

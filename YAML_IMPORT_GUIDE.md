@@ -207,7 +207,7 @@ YAMLtoDataAsset.import_spaceship_yaml("Assets/SpaceshipTemplates/Fighter_MyShip.
 
 ## Requirements
 
-- Unreal Engine 5.5+
+- Unreal Engine 5.6+
 - Python Editor Script Plugin enabled
 - PyYAML (auto-installed if missing)
 - Project must be compiled (for C++ Data Asset classes)

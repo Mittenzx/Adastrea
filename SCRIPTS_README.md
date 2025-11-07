@@ -49,7 +49,7 @@ Validates the development environment on Linux, Mac, and Windows Subsystem for L
 
 ### What It Checks
 
-1. **Unreal Engine Version** - Verifies .uproject file specifies Unreal Engine 5.5
+1. **Unreal Engine Version** - Verifies .uproject file specifies Unreal Engine 5.6
 2. **C++ Compiler** - Checks for g++ or clang++ availability
 3. **Required Folders** - Validates existence of Source, Config, Content
 4. **Required Files** - Checks for .uproject, module headers, config files
@@ -73,7 +73,7 @@ Checking development environment...
 ========================================
 1. Checking Unreal Engine Version
 ========================================
-✓ Required Unreal Engine version: 5.5
+✓ Required Unreal Engine version: 5.6
 
 ========================================
 2. Checking C++ Compiler
@@ -141,7 +141,7 @@ Python: 3.12.3
 ============================================================
 1. Checking Unreal Engine Version
 ============================================================
-✓ Required Unreal Engine version: 5.5
+✓ Required Unreal Engine version: 5.6
 
 ...
 
@@ -157,7 +157,7 @@ Setup Check Summary
 Validates Data Assets and Blueprints from within the Unreal Editor using the Python Editor Script Plugin.
 
 ### Requirements
-- Unreal Engine 5.5 with Python Editor Script Plugin enabled
+- Unreal Engine 5.6 with Python Editor Script Plugin enabled
 - Must be run inside Unreal Editor, not from command line
 
 ### Setup
@@ -282,7 +282,7 @@ xcode-select --install
 
 ### "Unreal Engine version mismatch"
 
-Check the .uproject file and ensure you have Unreal Engine 5.5 installed. Update the engine association if needed.
+Check the .uproject file and ensure you have Unreal Engine 5.6 installed. Update the engine association if needed.
 
 ### "cppcheck not found" (when using --analyze)
 

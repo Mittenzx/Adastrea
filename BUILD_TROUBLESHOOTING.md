@@ -17,7 +17,7 @@ The following issues have been fixed in the latest version:
 **Solution**: Added `Adastrea/Characters`, `Adastrea/Ships`, `Adastrea/Stations` to PublicIncludePaths in `Adastrea.Build.cs`.
 
 ### 3. Deprecated Include Order Version
-**Issue**: `EngineIncludeOrderVersion.Unreal5_3` is obsolete for UE 5.5  
+**Issue**: `EngineIncludeOrderVersion.Unreal5_3` is obsolete for UE 5.6  
 **Status**: ✅ FIXED  
 **Solution**: Updated to `EngineIncludeOrderVersion.Latest` and `BuildSettingsVersion.V5` in both Target.cs files.
 
@@ -73,7 +73,7 @@ Microsoft.Build 17.14.28 restored for .NETFramework instead of target 'net8.0'
 **Solutions**:
 - Ensure you have the correct .NET SDK installed (check UE documentation for required version)
 - Clear NuGet cache: `dotnet nuget locals all --clear`
-- Re-install Unreal Engine 5.5
+- Re-install Unreal Engine 5.6
 - Check Epic Games' Known Issues for your UE version
 
 #### 2. Assembly Version Conflicts
@@ -84,7 +84,7 @@ Assembly version conflicts: System.Text.Json, System.Diagnostics.DiagnosticSourc
 **Cause**: Multiple .NET versions or UBT dependency conflicts.
 
 **Solutions**:
-- Ensure you only have the .NET versions required by UE 5.5 installed
+- Ensure you only have the .NET versions required by UE 5.6 installed
 - Clear intermediate build files: Delete `Intermediate/`, `Binaries/`, `Saved/` folders
 - Regenerate project files: Right-click .uproject → Generate Visual Studio project files
 
@@ -98,7 +98,7 @@ References to EpicGames.Build.dll, EpicGames.Core.dll causing conflicts
 **Solutions**:
 - These assemblies are part of Epic's Unreal Build Tool
 - You cannot modify them
-- Ensure you're using the correct UE version (5.5 for this project)
+- Ensure you're using the correct UE version (5.6 for this project)
 - Verify your UE installation is not corrupted
 
 ### Verifying Your Build Environment
@@ -107,7 +107,7 @@ References to EpicGames.Build.dll, EpicGames.Core.dll causing conflicts
    ```bash
    dotnet --version
    ```
-   Should match the version required by UE 5.5 (consult Epic's documentation)
+   Should match the version required by UE 5.6 (consult Epic's documentation)
 
 2. **Clean Build**:
    ```bash
@@ -124,7 +124,7 @@ References to EpicGames.Build.dll, EpicGames.Core.dll causing conflicts
 
 3. **Verify UE Installation**:
    - Open Epic Games Launcher
-   - Verify Unreal Engine 5.5 installation
+   - Verify Unreal Engine 5.6 installation
    - Click "Verify" on the engine version
    - Repair if necessary
 
@@ -162,11 +162,11 @@ These are not compiled as separate .NET projects. They are processed by UBT when
 
 If you continue to experience build issues:
 
-1. **Check Unreal Engine Version**: This project requires UE 5.5
+1. **Check Unreal Engine Version**: This project requires UE 5.6
    ```bash
    # Verify in Adastrea.uproject
    grep "EngineAssociation" Adastrea.uproject
-   # Should show: "EngineAssociation": "5.5"
+   # Should show: "EngineAssociation": "5.6"
    ```
 
 2. **Run Setup Validation**:
@@ -175,8 +175,8 @@ If you continue to experience build issues:
    ```
 
 3. **Check Epic's Documentation**:
-   - [Unreal Engine Build Configuration](https://docs.unrealengine.com/5.5/en-US/build-configuration-for-unreal-engine/)
-   - [Building Unreal Engine from Source](https://docs.unrealengine.com/5.5/en-US/building-unreal-engine-from-source/)
+   - [Unreal Engine Build Configuration](https://docs.unrealengine.com/5.6/en-US/build-configuration-for-unreal-engine/)
+   - [Building Unreal Engine from Source](https://docs.unrealengine.com/5.6/en-US/building-unreal-engine-from-source/)
 
 4. **Search Epic's Known Issues**:
    - Check [Unreal Engine Issues & Bug Tracker](https://issues.unrealengine.com/)
@@ -193,12 +193,12 @@ If you continue to experience build issues:
 - ✅ All C++ build issues have been fixed
 - ✅ Include paths are correct
 - ✅ Log categories have no duplicates
-- ✅ Target configurations are up-to-date for UE 5.5
+- ✅ Target configurations are up-to-date for UE 5.6
 
 **If you see .NET errors**:
 - These are UBT (Epic's tool) issues, not project issues
 - Follow the UBT troubleshooting steps above
-- Ensure your UE 5.5 installation is correct
+- Ensure your UE 5.6 installation is correct
 - Check Epic's documentation and known issues
 
 **This project does NOT have**:

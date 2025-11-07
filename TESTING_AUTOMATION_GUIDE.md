@@ -36,7 +36,7 @@ All testing scripts are designed to run inside the Unreal Editor's Python enviro
 
 ### Prerequisites
 
-1. **Unreal Engine 5.5** with Python Editor Script Plugin enabled
+1. **Unreal Engine 5.6** with Python Editor Script Plugin enabled
 2. **Python 3.6+** for standalone script execution
 3. **PIL/Pillow** (optional, for screenshot comparison):
    ```bash

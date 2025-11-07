@@ -1349,7 +1349,7 @@ Content/{system_name}/Blueprints/Examples/
 
 **Version**: 1.0  
 **Last Updated**: {datetime.now().strftime('%Y-%m-%d')}  
-**Engine**: Unreal Engine 5.5
+**Engine**: Unreal Engine 5.6
 
 ---
 

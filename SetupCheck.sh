@@ -98,7 +98,7 @@ WARNINGS=0
 ################################################################################
 print_header "1. Checking Unreal Engine Version"
 
-REQUIRED_UE_VERSION="5.5"
+REQUIRED_UE_VERSION="5.6"
 if [ -f "Adastrea.uproject" ]; then
     UE_VERSION=$(grep -o '"EngineAssociation": *"[^"]*"' Adastrea.uproject | cut -d'"' -f4)
     if [ "$UE_VERSION" == "$REQUIRED_UE_VERSION" ]; then

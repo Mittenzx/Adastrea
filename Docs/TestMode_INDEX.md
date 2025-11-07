@@ -127,7 +127,7 @@ The spaceship spawn system uses:
 ## Prerequisites
 
 Before creating Test Mode, ensure you have:
-- ✅ Unreal Engine 5.5 installed
+- ✅ Unreal Engine 5.6 installed
 - ✅ Adastrea project opened in UE Editor
 - ✅ Basic familiarity with Unreal Editor
 - ✅ Understanding of Blueprints (or willingness to learn)

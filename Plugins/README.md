@@ -42,8 +42,8 @@ Alternatively, you can use the Unreal Engine command line tools or manually crea
 ## Documentation
 
 For more information about Unreal Engine plugins, see:
-- [Unreal Engine Plugin Documentation](https://docs.unrealengine.com/5.5/en-US/plugins-in-unreal-engine/)
-- [Creating Plugins](https://docs.unrealengine.com/5.5/en-US/creating-plugins-in-unreal-engine/)
+- [Unreal Engine Plugin Documentation](https://docs.unrealengine.com/5.6/en-US/plugins-in-unreal-engine/)
+- [Creating Plugins](https://docs.unrealengine.com/5.6/en-US/creating-plugins-in-unreal-engine/)
 
 ## .gitignore
 

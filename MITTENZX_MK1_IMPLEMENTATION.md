@@ -268,7 +268,7 @@ UPrimaryDataAsset
 - All inputs validated via UProperty clamps
 
 ### Manual Testing: ⏳ PENDING
-Requires Unreal Engine 5.5 environment:
+Requires Unreal Engine 5.6 environment:
 - [ ] Compile C++ code
 - [ ] Create Blueprint assets
 - [ ] Configure Game Mode
@@ -283,7 +283,7 @@ Requires Unreal Engine 5.5 environment:
 ## Compilation Requirements
 
 ### Prerequisites
-- Unreal Engine 5.5
+- Unreal Engine 5.6
 - Visual Studio 2022 (Windows) or Xcode (Mac)
 - C++ compiler with C++17 support
 
@@ -307,7 +307,7 @@ After successful build:
 
 ## Known Limitations
 
-1. **Requires Compilation**: C++ code must be compiled in UE5.5 environment
+1. **Requires Compilation**: C++ code must be compiled in UE5.6 environment
 2. **Blueprint Required**: Data Asset alone won't spawn - needs Blueprint wrapper
 3. **Visual Mesh Required**: Ship has no default mesh - designer must add one
 4. **Interior Layout**: Interior is empty by default - designer must populate
@@ -359,7 +359,7 @@ For questions:
 - 2 C++ files created (header + implementation)
 - 3 documentation files created (guide, template, reference update)
 - All code reviewed and security checked
-- Ready for compilation in Unreal Engine 5.5
+- Ready for compilation in Unreal Engine 5.6
 
 ✅ **Features Verified**
 - Auto-spawn on game start: Supported via AAdastreaGameMode
