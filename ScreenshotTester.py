@@ -449,8 +449,8 @@ class ScreenshotTestRunner:
         
         # Add labels
         draw = ImageDraw.Draw(comparison)
-        # Use default font
-        font = None  # ImageFont.load_default()
+        # Use default font (PIL's built-in)
+        font = None
         
         draw.text((10, 10), "Golden Master", fill=(255, 255, 0), font=font)
         draw.text((width + 10, 10), "Current", fill=(255, 255, 0), font=font)

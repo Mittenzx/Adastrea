@@ -39,7 +39,6 @@ import json
 import os
 import sys
 import time
-import subprocess
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Any, Optional

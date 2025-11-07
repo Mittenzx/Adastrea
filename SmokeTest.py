@@ -61,7 +61,7 @@ class SmokeTestConfig:
             "exclude_patterns": [
                 "*_Backup",
                 "*_OLD",
-                "*Test*",
+                "*_Test",
                 "*/Developers/*"
             ],
             "include_sublevels": True
