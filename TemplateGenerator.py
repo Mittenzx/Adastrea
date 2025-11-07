@@ -729,7 +729,10 @@ bStrategicResource: false
         
         if module_group == "Power":
             power_default = -1000.0  # Negative means generates power
-        elif module_group in ["Processing", "Defence", "Habitation", "Public"]:
+        elif module_group == "Defence":
+            power_default = 500.0  # Consumes power
+            defense_default = 100.0  # Defense contribution
+        elif module_group in ["Processing", "Habitation", "Public"]:
             power_default = 500.0  # These consume power
         elif module_group == "Docking":
             power_default = 200.0
@@ -737,8 +740,6 @@ bStrategicResource: false
         elif module_group == "Storage":
             power_default = 100.0
             capacity_default = 10000
-        elif module_group == "Defence":
-            defense_default = 100.0
         
         template_content = f"""# Station Module: {module_name}
 # Module Group: {module_group}

@@ -1,6 +1,6 @@
 # Station Module: Point Defense Turret
 # Module Group: Defence
-# Generated on 2025-11-07 13:48:05
+# Generated on 2025-11-07 13:51:04
 
 ModuleID: "Defence_PointDefenseTurret"
 ModuleName: "Point Defense Turret"
@@ -53,7 +53,7 @@ ConstructionTime: 24
 # ====================
 # MODULE CAPABILITIES
 # ====================
-DefenseRating: 0.0
+DefenseRating: 100.0
 # Defense contribution (for Defence modules)
 
 ProductionRate: 0.0
