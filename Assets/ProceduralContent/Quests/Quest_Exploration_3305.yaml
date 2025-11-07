@@ -1,0 +1,60 @@
+# Quest: Mapping Run
+# Type: Exploration
+# Generated on 2025-11-07 17:12:34
+# Procedurally generated quest/mission
+
+ContractName: "Mapping Run"
+ContractID: "Quest_Exploration_3305"
+Description: |
+  Survey the Astro Ascendant system and report findings to Delta Minor.
+  
+ContractType: Exploration
+Difficulty: Hard
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Delta Minor"
+  Coordinates: [8516, 626, 199]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Astro Ascendant"
+  Coordinates: [8837, 9174, 784]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 19815.54
+TimeLimit: 56
+MinReputationRequired: -2
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 9435
+  ReputationGain: 54
+  ExperiencePoints: 954
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 2358
+  ReputationPenalty: 27
+  CollateralDeposit: 943
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: true
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Exploration"
+  - "Hard"
+  - "Procedural"

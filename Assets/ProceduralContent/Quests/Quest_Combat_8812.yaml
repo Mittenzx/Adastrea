@@ -1,0 +1,60 @@
+# Quest: Eliminate Threat
+# Type: Combat
+# Generated on 2025-11-07 17:12:34
+# Procedurally generated quest/mission
+
+ContractName: "Eliminate Threat"
+ContractID: "Quest_Combat_8812"
+Description: |
+  Eliminate hostile forces in the Theta Prime sector. High danger expected.
+  
+ContractType: Combat
+Difficulty: Easy
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Eta 753"
+  Coordinates: [5372, 6343, 338]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Theta Prime"
+  Coordinates: [7840, 6586, 952]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 6669.06
+TimeLimit: 143
+MinReputationRequired: 18
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 1120
+  ReputationGain: 7
+  ExperiencePoints: 388
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 280
+  ReputationPenalty: 3
+  CollateralDeposit: 112
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: true
+bRequiresStealth: false
+bCombatExpected: true
+HostileFactions: []
+ContractTags:
+  - "Combat"
+  - "Easy"
+  - "Procedural"

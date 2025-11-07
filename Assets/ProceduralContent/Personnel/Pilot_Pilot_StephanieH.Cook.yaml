@@ -1,0 +1,81 @@
+# Personnel: Stephanie H. Cook
+# Role: Pilot
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated NPC
+
+PersonnelID: "Pilot_StephanieH.Cook"
+PersonnelName: "Stephanie H. Cook"
+
+# Basic Identity
+Biography: |
+  This individual worked as a mining surveyor in the outer colonies. They are recognized for their technical expertise and developed an improved navigation protocol still in use today.
+  
+Age: 43
+Gender: "Female"
+Species: "Human"
+Nationality: "Free Systems"
+Tags:
+  - "Pilot"
+  - "Level3"
+
+# Role and Assignment
+PrimaryRole: "Pilot"
+Department: "Flight"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 5
+TotalExperience: 22401
+Skills:
+  - SkillName: "Piloting"
+    SkillLevel: 8
+    ExperiencePoints: 912
+  - SkillName: "Navigation"
+    SkillLevel: 7
+    ExperiencePoints: 3080
+  - SkillName: "Reaction"
+    SkillLevel: 7
+    ExperiencePoints: 861
+  - SkillName: "Maneuvering"
+    SkillLevel: 6
+    ExperiencePoints: 2580
+
+Specialties:
+  - "Pilot Specialist"
+
+# Status and Condition
+Morale: 78
+Health: 91
+Fatigue: 22
+Loyalty: 72
+Reputation: 24
+
+# Employment
+Salary: 14563
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Adventurous"
+PersonalityDescription: |
+  Adventurous personality with focus on pilot duties.
+  
+Traits:
+  - TraitName: "Quick Learner"
+    TraitDescription: "Gains XP faster"
+    TraitID: "QuickLearner"
+    ModifierValue: 1.1
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

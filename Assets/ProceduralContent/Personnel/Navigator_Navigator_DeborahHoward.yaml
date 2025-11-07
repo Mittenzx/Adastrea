@@ -1,0 +1,89 @@
+# Personnel: Deborah Howard
+# Role: Navigator
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated NPC
+
+PersonnelID: "Navigator_DeborahHoward"
+PersonnelName: "Deborah Howard"
+
+# Basic Identity
+Biography: |
+  This individual was a renowned scientist before transitioning to space operations. They are noted for their strong moral compass and negotiated a peace treaty between two warring factions.
+  
+Age: 52
+Gender: "Female"
+Species: "Human"
+Nationality: "Core Worlds"
+Tags:
+  - "Navigator"
+  - "Level3"
+
+# Role and Assignment
+PrimaryRole: "Navigator"
+Department: "Flight"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 8
+TotalExperience: 10386
+Skills:
+  - SkillName: "Navigation"
+    SkillLevel: 7
+    ExperiencePoints: 826
+  - SkillName: "Astrogation"
+    SkillLevel: 4
+    ExperiencePoints: 876
+  - SkillName: "Sensors"
+    SkillLevel: 8
+    ExperiencePoints: 1600
+  - SkillName: "Cartography"
+    SkillLevel: 7
+    ExperiencePoints: 1099
+
+Specialties:
+  - "Navigator Specialist"
+
+# Status and Condition
+Morale: 53
+Health: 99
+Fatigue: 17
+Loyalty: 90
+Reputation: -9
+
+# Employment
+Salary: 12811
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Adventurous"
+PersonalityDescription: |
+  Adventurous personality with focus on navigator duties.
+  
+Traits:
+  - TraitName: "Lucky"
+    TraitDescription: "Occasional bonuses"
+    TraitID: "Lucky"
+    ModifierValue: 1.05
+  - TraitName: "Diplomat"
+    TraitDescription: "Better negotiations"
+    TraitID: "Diplomat"
+    ModifierValue: 1.1
+  - TraitName: "Technical Genius"
+    TraitDescription: "Engineering bonus"
+    TraitID: "TechnicalGenius"
+    ModifierValue: 1.25
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

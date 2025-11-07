@@ -1,0 +1,60 @@
+# Quest: Ore Collection
+# Type: Mining
+# Generated on 2025-11-07 17:12:34
+# Procedurally generated quest/mission
+
+ContractName: "Ore Collection"
+ContractID: "Quest_Mining_3476"
+Description: |
+  Extract and deliver resources from asteroid field near Epsilon 90.
+  
+ContractType: Mining
+Difficulty: Medium
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Epsilon Tertius"
+  Coordinates: [8086, 8802, 167]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Epsilon 90"
+  Coordinates: [5250, 3657, 445]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 10981.67
+TimeLimit: 159
+MinReputationRequired: 20
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 5584
+  ReputationGain: 18
+  ExperiencePoints: 626
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 1396
+  ReputationPenalty: 9
+  CollateralDeposit: 558
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: false
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Mining"
+  - "Medium"
+  - "Procedural"

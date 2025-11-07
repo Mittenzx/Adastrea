@@ -1,0 +1,63 @@
+# Azure Striker - Fighter Class
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated ship variant
+
+BasicInfo:
+  ShipName: "Azure Striker"
+  Description: "A fighter class vessel with unique characteristics."
+  ShipClass: "Fighter"
+  ShipID: "AzureStriker"
+
+CoreStats:
+  HullStrength: 1133.2
+  CargoCapacity: 59.1
+  CrewRequired: 2
+  MaxCrew: 16
+  ModularPoints: 4
+
+CombatStats:
+  ArmorRating: 22.7
+  ShieldStrength: 755.4
+  ShieldRechargeRate: 10.0
+  WeaponSlots: 4
+  WeaponPowerCapacity: 1000.0
+  PointDefenseRating: 5.0
+
+MobilityStats:
+  MaxSpeed: 890.8
+  Acceleration: 100.0
+  Maneuverability: 4
+  JumpRange: 15.0
+  FuelCapacity: 1000.0
+  FuelConsumptionRate: 80.0
+
+UtilityStats:
+  SensorRange: 10000.0
+  SensorResolution: 5
+  StealthRating: 3
+  RepairSystemRating: 3
+  ScienceRating: 3
+  MedicalRating: 2
+
+OperationalStats:
+  PowerCapacity: 2500.0
+  LifeSupportRating: 5
+  MaintenanceLevel: 3
+  HangarCapacity: 0
+  DroneCapacity: 5
+  AISystemRating: 5
+
+AdvancedStats:
+  DiplomacyRating: 2
+  BoardingCapability: 2
+  CustomizableSlots: 3
+  EWarRating: 3
+  MiningRating: 0
+
+Lore:
+  Manufacturer: "Vanguard Aerospace"
+  YearBuilt: 2473
+  RarityTier: "Rare"
+  LoreNotes: "A procedurally generated variant of the Fighter class."
+  PrimaryColor: [0.63, 0.29, 0.38, 1.0]
+  SecondaryColor: [0.21, 0.88, 0.79, 1.0]

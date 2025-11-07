@@ -1,0 +1,60 @@
+# Quest: Defense Mission
+# Type: Combat
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated quest/mission
+
+ContractName: "Defense Mission"
+ContractID: "Quest_Combat_9894"
+Description: |
+  Eliminate hostile forces in the Cosmo Proxima sector. High danger expected.
+  
+ContractType: Combat
+Difficulty: Medium
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Alpha 212"
+  Coordinates: [3272, 5829, 538]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Cosmo Proxima"
+  Coordinates: [5644, 5031, 88]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 17329.0
+TimeLimit: 101
+MinReputationRequired: -6
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 4032
+  ReputationGain: 26
+  ExperiencePoints: 558
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 1008
+  ReputationPenalty: 13
+  CollateralDeposit: 403
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: false
+bRequiresStealth: false
+bCombatExpected: true
+HostileFactions: []
+ContractTags:
+  - "Combat"
+  - "Medium"
+  - "Procedural"

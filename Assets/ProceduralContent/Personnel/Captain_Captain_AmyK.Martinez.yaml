@@ -1,0 +1,89 @@
+# Personnel: Amy K. Martinez
+# Role: Captain
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated NPC
+
+PersonnelID: "Captain_AmyK.Martinez"
+PersonnelName: "Amy K. Martinez"
+
+# Basic Identity
+Biography: |
+  This individual served in the military for 23 years before retiring to private sector. They are noted for their strong moral compass and developed an improved navigation protocol still in use today.
+  
+Age: 57
+Gender: "Female"
+Species: "Human"
+Nationality: "United Earth"
+Tags:
+  - "Captain"
+  - "Level7"
+
+# Role and Assignment
+PrimaryRole: "Captain"
+Department: "Command"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 9
+TotalExperience: 18334
+Skills:
+  - SkillName: "Leadership"
+    SkillLevel: 7
+    ExperiencePoints: 3066
+  - SkillName: "Tactical"
+    SkillLevel: 3
+    ExperiencePoints: 783
+  - SkillName: "Navigation"
+    SkillLevel: 8
+    ExperiencePoints: 1464
+  - SkillName: "Diplomacy"
+    SkillLevel: 8
+    ExperiencePoints: 2536
+
+Specialties:
+  - "Captain Specialist"
+
+# Status and Condition
+Morale: 68
+Health: 83
+Fatigue: 36
+Loyalty: 60
+Reputation: 50
+
+# Employment
+Salary: 18115
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Diplomatic"
+PersonalityDescription: |
+  Diplomatic personality with focus on captain duties.
+  
+Traits:
+  - TraitName: "Brave"
+    TraitDescription: "Performs well under pressure"
+    TraitID: "Brave"
+    ModifierValue: 1.1
+  - TraitName: "Cautious"
+    TraitDescription: "Reduced risk taking"
+    TraitID: "Cautious"
+    ModifierValue: 0.9
+  - TraitName: "Combat Veteran"
+    TraitDescription: "Experienced in combat"
+    TraitID: "CombatVeteran"
+    ModifierValue: 1.15
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

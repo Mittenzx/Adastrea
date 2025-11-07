@@ -1,0 +1,85 @@
+# Personnel: Matthew S. Edwards
+# Role: Engineer
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated NPC
+
+PersonnelID: "Engineer_MatthewS.Edwards"
+PersonnelName: "Matthew S. Edwards"
+
+# Basic Identity
+Biography: |
+  This individual spent years as a freelance pilot before joining organized service. They are recognized for their technical expertise and negotiated a peace treaty between two warring factions.
+  
+Age: 36
+Gender: "Male"
+Species: "Human"
+Nationality: "Free Systems"
+Tags:
+  - "Engineer"
+  - "Level8"
+
+# Role and Assignment
+PrimaryRole: "Engineer"
+Department: "Engineering"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 8
+TotalExperience: 33236
+Skills:
+  - SkillName: "Engineering"
+    SkillLevel: 5
+    ExperiencePoints: 1765
+  - SkillName: "Repair"
+    SkillLevel: 7
+    ExperiencePoints: 2282
+  - SkillName: "Systems"
+    SkillLevel: 3
+    ExperiencePoints: 498
+  - SkillName: "PowerManagement"
+    SkillLevel: 4
+    ExperiencePoints: 1632
+
+Specialties:
+  - "Engineer Specialist"
+
+# Status and Condition
+Morale: 59
+Health: 79
+Fatigue: 35
+Loyalty: 51
+Reputation: 4
+
+# Employment
+Salary: 1780
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Diplomatic"
+PersonalityDescription: |
+  Diplomatic personality with focus on engineer duties.
+  
+Traits:
+  - TraitName: "Cautious"
+    TraitDescription: "Reduced risk taking"
+    TraitID: "Cautious"
+    ModifierValue: 0.9
+  - TraitName: "Diplomat"
+    TraitDescription: "Better negotiations"
+    TraitID: "Diplomat"
+    ModifierValue: 1.1
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

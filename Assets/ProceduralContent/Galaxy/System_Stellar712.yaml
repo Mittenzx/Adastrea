@@ -1,0 +1,197 @@
+# Star System: Stellar 712
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated galaxy content
+
+SystemName: "Stellar 712"
+SystemID: "Stellar712"
+
+# ====================
+# STAR PROPERTIES
+# ====================
+StarType: "White Dwarf"
+StarMass: 2.0  # Solar masses
+StarLuminosity: 12.85  # Solar luminosity
+
+# ====================
+# COORDINATES
+# ====================
+Coordinates:
+  X: -8574
+  Y: -5736
+  Z: -76
+
+# ====================
+# PLANETS
+# ====================
+Planets:
+  - Name: "Terra Base"
+    Type: "Desert"
+    OrbitNumber: 1
+    OrbitDistance: 58901.29863295029  # km from star
+    Size: 13566.79  # km diameter
+    Mass: 9.44  # Earth masses
+    Gravity: 1.15  # Earth gravity
+    Temperature: 443  # Celsius
+    HasAtmosphere: true
+    Habitability: 40  # 0-100 scale
+    Population: 381144
+    Resources:
+      - "Organics"
+      - "Exotic Matter"
+    HasMoons: true
+    NumberOfMoons: 0
+
+  - Name: "Verde Haven I"
+    Type: "Rocky"
+    OrbitNumber: 2
+    OrbitDistance: 123114.72613896527  # km from star
+    Size: 10304.27  # km diameter
+    Mass: 3.46  # Earth masses
+    Gravity: 1.07  # Earth gravity
+    Temperature: 218  # Celsius
+    HasAtmosphere: false
+    Habitability: 23  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Helium-3"
+      - "Water"
+      - "Organics"
+    HasMoons: false
+    NumberOfMoons: 0
+
+  - Name: "Terra Settlement I"
+    Type: "Ice"
+    OrbitNumber: 3
+    OrbitDistance: 206916.44772696824  # km from star
+    Size: 26295.83  # km diameter
+    Mass: 9.3  # Earth masses
+    Gravity: 2.17  # Earth gravity
+    Temperature: -31  # Celsius
+    HasAtmosphere: false
+    Habitability: 14  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Minerals"
+      - "Organics"
+    HasMoons: true
+    NumberOfMoons: 0
+
+  - Name: "Crystal Expanse I"
+    Type: "Terran"
+    OrbitNumber: 4
+    OrbitDistance: 344578.24315015756  # km from star
+    Size: 10769.26  # km diameter
+    Mass: 3.5  # Earth masses
+    Gravity: 2.45  # Earth gravity
+    Temperature: 12  # Celsius
+    HasAtmosphere: true
+    Habitability: 94  # 0-100 scale
+    Population: 562217
+    Resources:
+      - "Minerals"
+      - "Helium-3"
+      - "Rare Metals"
+      - "Organics"
+    HasMoons: true
+    NumberOfMoons: 2
+
+  - Name: "Ember Sanctuary"
+    Type: "Rocky"
+    OrbitNumber: 5
+    OrbitDistance: 337077.6696872889  # km from star
+    Size: 9852.78  # km diameter
+    Mass: 4.37  # Earth masses
+    Gravity: 1.64  # Earth gravity
+    Temperature: -187  # Celsius
+    HasAtmosphere: true
+    Habitability: 38  # 0-100 scale
+    Population: 133444
+    Resources:
+      - "Water"
+      - "Minerals"
+      - "Exotic Matter"
+      - "Uranium"
+    HasMoons: true
+    NumberOfMoons: 0
+
+  - Name: "Terra Outpost"
+    Type: "Desert"
+    OrbitNumber: 6
+    OrbitDistance: 593604.5451007804  # km from star
+    Size: 5457.42  # km diameter
+    Mass: 1.33  # Earth masses
+    Gravity: 1.16  # Earth gravity
+    Temperature: -182  # Celsius
+    HasAtmosphere: false
+    Habitability: 23  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Exotic Matter"
+    HasMoons: false
+    NumberOfMoons: 0
+
+  - Name: "Frost World"
+    Type: "Terran"
+    OrbitNumber: 7
+    OrbitDistance: 629506.7404505437  # km from star
+    Size: 12936.16  # km diameter
+    Mass: 2.81  # Earth masses
+    Gravity: 1.62  # Earth gravity
+    Temperature: 396  # Celsius
+    HasAtmosphere: true
+    Habitability: 67  # 0-100 scale
+    Population: 827360
+    Resources:
+      - "Water"
+      - "Exotic Matter"
+      - "Organics"
+    HasMoons: false
+    NumberOfMoons: 0
+
+  - Name: "Terra Refuge"
+    Type: "Gas Giant"
+    OrbitNumber: 8
+    OrbitDistance: 533577.4657191016  # km from star
+    Size: 113304.01  # km diameter
+    Mass: 9.65  # Earth masses
+    Gravity: 0.59  # Earth gravity
+    Temperature: 500  # Celsius
+    HasAtmosphere: true
+    Habitability: 0  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Exotic Matter"
+    HasMoons: true
+    NumberOfMoons: 0
+
+# ====================
+# ASTEROID BELTS
+# ====================
+AsteroidBelts:
+  - Name: "Stellar 712 Asteroid Belt A"
+    OrbitDistance: 156765.38972162947
+    Density: "Sparse"
+    Resources:
+      - "Titanium"
+      - "Iron"
+
+# ====================
+# SPACE STATIONS
+# ====================
+Stations:
+  - Name: "Stellar 712 Station 1"
+    Type: "Trading Hub"
+    OrbitDistance: 611356.7225485074
+    Population: 194
+
+# ====================
+# SYSTEM INFO
+# ====================
+Factions:
+  - "United Earth"
+  - "Independent"
+  - "Mining Guild"
+
+DangerLevel: "Safe"
+TrafficLevel: "Light"
+bHasJumpGate: false

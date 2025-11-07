@@ -1,0 +1,63 @@
+# Wolf Ranger - Fighter Class
+# Generated on 2025-11-07 17:12:34
+# Procedurally generated ship variant
+
+BasicInfo:
+  ShipName: "Wolf Ranger"
+  Description: "A fighter class vessel with unique characteristics."
+  ShipClass: "Fighter"
+  ShipID: "WolfRanger"
+
+CoreStats:
+  HullStrength: 963.0
+  CargoCapacity: 125.1
+  CrewRequired: 8
+  MaxCrew: 20
+  ModularPoints: 13
+
+CombatStats:
+  ArmorRating: 60.5
+  ShieldStrength: 516.4
+  ShieldRechargeRate: 10.0
+  WeaponSlots: 4
+  WeaponPowerCapacity: 1000.0
+  PointDefenseRating: 5.0
+
+MobilityStats:
+  MaxSpeed: 810.3
+  Acceleration: 100.0
+  Maneuverability: 10
+  JumpRange: 15.0
+  FuelCapacity: 1000.0
+  FuelConsumptionRate: 80.0
+
+UtilityStats:
+  SensorRange: 10000.0
+  SensorResolution: 5
+  StealthRating: 3
+  RepairSystemRating: 3
+  ScienceRating: 3
+  MedicalRating: 2
+
+OperationalStats:
+  PowerCapacity: 2500.0
+  LifeSupportRating: 5
+  MaintenanceLevel: 3
+  HangarCapacity: 0
+  DroneCapacity: 5
+  AISystemRating: 5
+
+AdvancedStats:
+  DiplomacyRating: 2
+  BoardingCapability: 2
+  CustomizableSlots: 3
+  EWarRating: 3
+  MiningRating: 0
+
+Lore:
+  Manufacturer: "Vanguard Aerospace"
+  YearBuilt: 2476
+  RarityTier: "Rare"
+  LoreNotes: "A procedurally generated variant of the Fighter class."
+  PrimaryColor: [0.07, 0.65, 0.33, 1.0]
+  SecondaryColor: [0.76, 0.34, 0.44, 1.0]

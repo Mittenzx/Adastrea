@@ -1,0 +1,60 @@
+# Quest: Resource Extraction
+# Type: Mining
+# Generated on 2025-11-07 17:12:34
+# Procedurally generated quest/mission
+
+ContractName: "Resource Extraction"
+ContractID: "Quest_Mining_7597"
+Description: |
+  Extract and deliver resources from asteroid field near Theta Major.
+  
+ContractType: Mining
+Difficulty: Medium
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Cosmo Tertius"
+  Coordinates: [9927, 3104, 32]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Theta Major"
+  Coordinates: [540, 9555, 217]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 21915.99
+TimeLimit: 66
+MinReputationRequired: 26
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 2294
+  ReputationGain: 10
+  ExperiencePoints: 910
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 573
+  ReputationPenalty: 5
+  CollateralDeposit: 229
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: true
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Mining"
+  - "Medium"
+  - "Procedural"

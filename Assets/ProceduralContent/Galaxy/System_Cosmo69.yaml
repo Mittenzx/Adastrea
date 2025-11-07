@@ -1,0 +1,142 @@
+# Star System: Cosmo 69
+# Generated on 2025-11-07 17:12:34
+# Procedurally generated galaxy content
+
+SystemName: "Cosmo 69"
+SystemID: "Cosmo69"
+
+# ====================
+# STAR PROPERTIES
+# ====================
+StarType: "Blue Giant"
+StarMass: 0.95  # Solar masses
+StarLuminosity: 89.77  # Solar luminosity
+
+# ====================
+# COORDINATES
+# ====================
+Coordinates:
+  X: 2818
+  Y: 2911
+  Z: -473
+
+# ====================
+# PLANETS
+# ====================
+Planets:
+  - Name: "New Settlement"
+    Type: "Rocky"
+    OrbitNumber: 1
+    OrbitDistance: 92204.65230173123  # km from star
+    Size: 14535.44  # km diameter
+    Mass: 1.5  # Earth masses
+    Gravity: 1.74  # Earth gravity
+    Temperature: -161  # Celsius
+    HasAtmosphere: false
+    Habitability: 42  # 0-100 scale
+    Population: 420069
+    Resources:
+      - "Water"
+      - "Organics"
+      - "Rare Metals"
+      - "Helium-3"
+    HasMoons: true
+    NumberOfMoons: 0
+
+  - Name: "Crimson Base"
+    Type: "Lava"
+    OrbitNumber: 2
+    OrbitDistance: 132244.32202639244  # km from star
+    Size: 18993.12  # km diameter
+    Mass: 6.02  # Earth masses
+    Gravity: 1.18  # Earth gravity
+    Temperature: 387  # Celsius
+    HasAtmosphere: true
+    Habitability: 21  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Rare Metals"
+      - "Exotic Matter"
+      - "Organics"
+    HasMoons: true
+    NumberOfMoons: 0
+
+  - Name: "Terra Settlement"
+    Type: "Desert"
+    OrbitNumber: 3
+    OrbitDistance: 257098.6266674779  # km from star
+    Size: 7114.75  # km diameter
+    Mass: 7.68  # Earth masses
+    Gravity: 0.87  # Earth gravity
+    Temperature: 20  # Celsius
+    HasAtmosphere: false
+    Habitability: 36  # 0-100 scale
+    Population: 445674
+    Resources:
+      - "Organics"
+      - "Exotic Matter"
+      - "Minerals"
+      - "Water"
+    HasMoons: true
+    NumberOfMoons: 0
+
+  - Name: "Silver Expanse"
+    Type: "Desert"
+    OrbitNumber: 4
+    OrbitDistance: 246942.85198620835  # km from star
+    Size: 7707.19  # km diameter
+    Mass: 0.83  # Earth masses
+    Gravity: 1.18  # Earth gravity
+    Temperature: 91  # Celsius
+    HasAtmosphere: false
+    Habitability: 0  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Uranium"
+      - "Rare Metals"
+      - "Helium-3"
+    HasMoons: false
+    NumberOfMoons: 0
+
+  - Name: "Verde Station"
+    Type: "Ocean"
+    OrbitNumber: 5
+    OrbitDistance: 293426.3859159364  # km from star
+    Size: 9686.87  # km diameter
+    Mass: 2.47  # Earth masses
+    Gravity: 0.86  # Earth gravity
+    Temperature: 190  # Celsius
+    HasAtmosphere: false
+    Habitability: 25  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Water"
+      - "Minerals"
+      - "Uranium"
+    HasMoons: false
+    NumberOfMoons: 0
+
+# ====================
+# ASTEROID BELTS
+# ====================
+AsteroidBelts:
+  - Name: "Cosmo 69 Asteroid Belt A"
+    OrbitDistance: 418123.56471133634
+    Density: "Dense"
+    Resources:
+      - "Platinum"
+
+# ====================
+# SPACE STATIONS
+# ====================
+Stations:
+# ====================
+# SYSTEM INFO
+# ====================
+Factions:
+  - "Independent"
+  - "Mining Guild"
+
+DangerLevel: "High"
+TrafficLevel: "Heavy"
+bHasJumpGate: true

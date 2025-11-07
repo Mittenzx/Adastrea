@@ -1,0 +1,60 @@
+# Quest: Survey Mission
+# Type: Exploration
+# Generated on 2025-11-07 17:12:34
+# Procedurally generated quest/mission
+
+ContractName: "Survey Mission"
+ContractID: "Quest_Exploration_4809"
+Description: |
+  Survey the Delta 497 system and report findings to Zeta 690.
+  
+ContractType: Exploration
+Difficulty: Medium
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Zeta 690"
+  Coordinates: [1015, 8190, 607]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Delta 497"
+  Coordinates: [4012, 8181, 157]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 12688.3
+TimeLimit: 82
+MinReputationRequired: -4
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 8406
+  ReputationGain: 36
+  ExperiencePoints: 746
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 2101
+  ReputationPenalty: 18
+  CollateralDeposit: 840
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: true
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Exploration"
+  - "Medium"
+  - "Procedural"

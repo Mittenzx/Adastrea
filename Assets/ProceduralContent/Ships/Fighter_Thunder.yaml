@@ -1,0 +1,63 @@
+# Thunder - Fighter Class
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated ship variant
+
+BasicInfo:
+  ShipName: "Thunder"
+  Description: "A fighter class vessel with unique characteristics."
+  ShipClass: "Fighter"
+  ShipID: "Thunder"
+
+CoreStats:
+  HullStrength: 885.3
+  CargoCapacity: 108.7
+  CrewRequired: 7
+  MaxCrew: 20
+  ModularPoints: 7
+
+CombatStats:
+  ArmorRating: 42.6
+  ShieldStrength: 358.9
+  ShieldRechargeRate: 10.0
+  WeaponSlots: 2
+  WeaponPowerCapacity: 1000.0
+  PointDefenseRating: 5.0
+
+MobilityStats:
+  MaxSpeed: 625.5
+  Acceleration: 100.0
+  Maneuverability: 4
+  JumpRange: 15.0
+  FuelCapacity: 1000.0
+  FuelConsumptionRate: 80.0
+
+UtilityStats:
+  SensorRange: 10000.0
+  SensorResolution: 5
+  StealthRating: 3
+  RepairSystemRating: 3
+  ScienceRating: 3
+  MedicalRating: 2
+
+OperationalStats:
+  PowerCapacity: 2500.0
+  LifeSupportRating: 5
+  MaintenanceLevel: 3
+  HangarCapacity: 0
+  DroneCapacity: 5
+  AISystemRating: 5
+
+AdvancedStats:
+  DiplomacyRating: 2
+  BoardingCapability: 2
+  CustomizableSlots: 3
+  EWarRating: 3
+  MiningRating: 0
+
+Lore:
+  Manufacturer: "Stellar Dynamics"
+  YearBuilt: 2473
+  RarityTier: "Common"
+  LoreNotes: "A procedurally generated variant of the Fighter class."
+  PrimaryColor: [0.54, 0.36, 0.78, 1.0]
+  SecondaryColor: [0.22, 0.83, 0.46, 1.0]

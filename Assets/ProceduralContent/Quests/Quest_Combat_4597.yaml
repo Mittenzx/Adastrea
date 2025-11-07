@@ -1,0 +1,60 @@
+# Quest: Eliminate Threat
+# Type: Combat
+# Generated on 2025-11-07 17:12:34
+# Procedurally generated quest/mission
+
+ContractName: "Eliminate Threat"
+ContractID: "Quest_Combat_4597"
+Description: |
+  Eliminate hostile forces in the Stellar 792 sector. High danger expected.
+  
+ContractType: Combat
+Difficulty: Hard
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Nova Secundus"
+  Coordinates: [9148, 686, 380]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Stellar 792"
+  Coordinates: [2876, 9596, 668]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 6982.78
+TimeLimit: 144
+MinReputationRequired: 11
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 11502
+  ReputationGain: 48
+  ExperiencePoints: 1260
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 2875
+  ReputationPenalty: 24
+  CollateralDeposit: 1150
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: true
+bRequiresStealth: false
+bCombatExpected: true
+HostileFactions: []
+ContractTags:
+  - "Combat"
+  - "Hard"
+  - "Procedural"

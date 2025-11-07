@@ -1,0 +1,85 @@
+# Personnel: Angela Diaz
+# Role: Engineer
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated NPC
+
+PersonnelID: "Engineer_AngelaDiaz"
+PersonnelName: "Angela Diaz"
+
+# Basic Identity
+Biography: |
+  This individual was a trader on the frontier worlds before seeking more stable employment. They are known for their calm demeanor under pressure and saved their crew from certain disaster during a reactor failure.
+  
+Age: 54
+Gender: "Female"
+Species: "Human"
+Nationality: "Free Systems"
+Tags:
+  - "Engineer"
+  - "Level10"
+
+# Role and Assignment
+PrimaryRole: "Engineer"
+Department: "Engineering"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 9
+TotalExperience: 37565
+Skills:
+  - SkillName: "Engineering"
+    SkillLevel: 4
+    ExperiencePoints: 796
+  - SkillName: "Repair"
+    SkillLevel: 4
+    ExperiencePoints: 516
+  - SkillName: "Systems"
+    SkillLevel: 10
+    ExperiencePoints: 1280
+  - SkillName: "PowerManagement"
+    SkillLevel: 6
+    ExperiencePoints: 2604
+
+Specialties:
+  - "Engineer Specialist"
+
+# Status and Condition
+Morale: 57
+Health: 84
+Fatigue: 47
+Loyalty: 47
+Reputation: 66
+
+# Employment
+Salary: 9032
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Cautious"
+PersonalityDescription: |
+  Cautious personality with focus on engineer duties.
+  
+Traits:
+  - TraitName: "Lucky"
+    TraitDescription: "Occasional bonuses"
+    TraitID: "Lucky"
+    ModifierValue: 1.05
+  - TraitName: "Quick Learner"
+    TraitDescription: "Gains XP faster"
+    TraitID: "QuickLearner"
+    ModifierValue: 1.1
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

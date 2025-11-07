@@ -1,0 +1,60 @@
+# Quest: Eliminate Threat
+# Type: Combat
+# Generated on 2025-11-07 17:12:34
+# Procedurally generated quest/mission
+
+ContractName: "Eliminate Threat"
+ContractID: "Quest_Combat_9209"
+Description: |
+  Eliminate hostile forces in the Zeta Centauri sector. High danger expected.
+  
+ContractType: Combat
+Difficulty: Hard
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Delta Luminous"
+  Coordinates: [1501, 6956, 89]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Zeta Centauri"
+  Coordinates: [4918, 5411, 828]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 36007.95
+TimeLimit: 56
+MinReputationRequired: 17
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 11976
+  ReputationGain: 45
+  ExperiencePoints: 366
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 2994
+  ReputationPenalty: 22
+  CollateralDeposit: 1197
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: true
+bRequiresStealth: false
+bCombatExpected: true
+HostileFactions: []
+ContractTags:
+  - "Combat"
+  - "Hard"
+  - "Procedural"

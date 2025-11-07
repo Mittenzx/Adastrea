@@ -1,0 +1,60 @@
+# Quest: Save Mission
+# Type: Rescue
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated quest/mission
+
+ContractName: "Save Mission"
+ContractID: "Quest_Rescue_8899"
+Description: |
+  Respond to distress call from Epsilon Radiant. Lives are at stake.
+  
+ContractType: Rescue
+Difficulty: VeryHard
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Epsilon Australis"
+  Coordinates: [4190, 1165, 575]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Epsilon Radiant"
+  Coordinates: [7844, 5851, 946]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 45561.61
+TimeLimit: 24
+MinReputationRequired: 18
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 9955
+  ReputationGain: 35
+  ExperiencePoints: 380
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 2488
+  ReputationPenalty: 17
+  CollateralDeposit: 995
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: true
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Rescue"
+  - "VeryHard"
+  - "Procedural"

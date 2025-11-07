@@ -1,0 +1,60 @@
+# Quest: Protection Detail
+# Type: Escort
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated quest/mission
+
+ContractName: "Protection Detail"
+ContractID: "Quest_Escort_6644"
+Description: |
+  Protect convoy traveling from Epsilon 244 to Nova 548.
+  
+ContractType: Escort
+Difficulty: Hard
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Epsilon 244"
+  Coordinates: [3245, 4422, 88]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Nova 548"
+  Coordinates: [9742, 7239, 814]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 39875.82
+TimeLimit: 132
+MinReputationRequired: 16
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 3075
+  ReputationGain: 24
+  ExperiencePoints: 660
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 768
+  ReputationPenalty: 12
+  CollateralDeposit: 307
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: false
+bRequiresStealth: false
+bCombatExpected: true
+HostileFactions: []
+ContractTags:
+  - "Escort"
+  - "Hard"
+  - "Procedural"

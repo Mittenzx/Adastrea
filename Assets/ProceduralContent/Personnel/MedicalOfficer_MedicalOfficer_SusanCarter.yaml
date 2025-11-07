@@ -1,0 +1,89 @@
+# Personnel: Susan Carter
+# Role: MedicalOfficer
+# Generated on 2025-11-07 17:12:34
+# Procedurally generated NPC
+
+PersonnelID: "MedicalOfficer_SusanCarter"
+PersonnelName: "Susan Carter"
+
+# Basic Identity
+Biography: |
+  This individual comes from a long line of spacers dating back three generations. They are has a reputation for being tough but fair and developed an improved navigation protocol still in use today.
+  
+Age: 55
+Gender: "Female"
+Species: "Human"
+Nationality: "Colonial Alliance"
+Tags:
+  - "MedicalOfficer"
+  - "Level3"
+
+# Role and Assignment
+PrimaryRole: "MedicalOfficer"
+Department: "Medical"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 8
+TotalExperience: 41304
+Skills:
+  - SkillName: "Medicine"
+    SkillLevel: 9
+    ExperiencePoints: 3897
+  - SkillName: "Surgery"
+    SkillLevel: 10
+    ExperiencePoints: 2690
+  - SkillName: "Biology"
+    SkillLevel: 6
+    ExperiencePoints: 1050
+  - SkillName: "Chemistry"
+    SkillLevel: 8
+    ExperiencePoints: 2400
+
+Specialties:
+  - "MedicalOfficer Specialist"
+
+# Status and Condition
+Morale: 61
+Health: 80
+Fatigue: 5
+Loyalty: 84
+Reputation: 14
+
+# Employment
+Salary: 10635
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Diplomatic"
+PersonalityDescription: |
+  Diplomatic personality with focus on medicalofficer duties.
+  
+Traits:
+  - TraitName: "Lucky"
+    TraitDescription: "Occasional bonuses"
+    TraitID: "Lucky"
+    ModifierValue: 1.05
+  - TraitName: "Cautious"
+    TraitDescription: "Reduced risk taking"
+    TraitID: "Cautious"
+    ModifierValue: 0.9
+  - TraitName: "Combat Veteran"
+    TraitDescription: "Experienced in combat"
+    TraitID: "CombatVeteran"
+    ModifierValue: 1.15
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

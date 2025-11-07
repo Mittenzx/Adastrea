@@ -1,0 +1,63 @@
+# Phoenix Explorer - Fighter Class
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated ship variant
+
+BasicInfo:
+  ShipName: "Phoenix Explorer"
+  Description: "A fighter class vessel with unique characteristics."
+  ShipClass: "Fighter"
+  ShipID: "PhoenixExplorer"
+
+CoreStats:
+  HullStrength: 836.4
+  CargoCapacity: 65.3
+  CrewRequired: 8
+  MaxCrew: 6
+  ModularPoints: 12
+
+CombatStats:
+  ArmorRating: 54.1
+  ShieldStrength: 707.2
+  ShieldRechargeRate: 10.0
+  WeaponSlots: 2
+  WeaponPowerCapacity: 1000.0
+  PointDefenseRating: 5.0
+
+MobilityStats:
+  MaxSpeed: 650.9
+  Acceleration: 100.0
+  Maneuverability: 7
+  JumpRange: 15.0
+  FuelCapacity: 1000.0
+  FuelConsumptionRate: 80.0
+
+UtilityStats:
+  SensorRange: 10000.0
+  SensorResolution: 5
+  StealthRating: 3
+  RepairSystemRating: 3
+  ScienceRating: 3
+  MedicalRating: 2
+
+OperationalStats:
+  PowerCapacity: 2500.0
+  LifeSupportRating: 5
+  MaintenanceLevel: 3
+  HangarCapacity: 0
+  DroneCapacity: 5
+  AISystemRating: 5
+
+AdvancedStats:
+  DiplomacyRating: 2
+  BoardingCapability: 2
+  CustomizableSlots: 3
+  EWarRating: 3
+  MiningRating: 0
+
+Lore:
+  Manufacturer: "Vanguard Aerospace"
+  YearBuilt: 2463
+  RarityTier: "Uncommon"
+  LoreNotes: "A procedurally generated variant of the Fighter class."
+  PrimaryColor: [0.62, 0.21, 0.57, 1.0]
+  SecondaryColor: [0.94, 0.09, 0.29, 1.0]

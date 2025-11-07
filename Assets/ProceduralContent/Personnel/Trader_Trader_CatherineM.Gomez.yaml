@@ -1,0 +1,85 @@
+# Personnel: Catherine M. Gomez
+# Role: Trader
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated NPC
+
+PersonnelID: "Trader_CatherineM.Gomez"
+PersonnelName: "Catherine M. Gomez"
+
+# Basic Identity
+Biography: |
+  This individual graduated from the academy with honors and has been rising steadily. They are respected for their tactical brilliance and earned multiple commendations for bravery and service.
+  
+Age: 57
+Gender: "Female"
+Species: "Human"
+Nationality: "Colonial Alliance"
+Tags:
+  - "Trader"
+  - "Level1"
+
+# Role and Assignment
+PrimaryRole: "Trader"
+Department: "Operations"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 8
+TotalExperience: 28851
+Skills:
+  - SkillName: "Trading"
+    SkillLevel: 4
+    ExperiencePoints: 1208
+  - SkillName: "Negotiation"
+    SkillLevel: 10
+    ExperiencePoints: 3000
+  - SkillName: "Economics"
+    SkillLevel: 6
+    ExperiencePoints: 2622
+  - SkillName: "Appraisal"
+    SkillLevel: 6
+    ExperiencePoints: 1446
+
+Specialties:
+  - "Trader Specialist"
+
+# Status and Condition
+Morale: 60
+Health: 98
+Fatigue: 27
+Loyalty: 67
+Reputation: 29
+
+# Employment
+Salary: 5418
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Cautious"
+PersonalityDescription: |
+  Cautious personality with focus on trader duties.
+  
+Traits:
+  - TraitName: "Lucky"
+    TraitDescription: "Occasional bonuses"
+    TraitID: "Lucky"
+    ModifierValue: 1.05
+  - TraitName: "Cautious"
+    TraitDescription: "Reduced risk taking"
+    TraitID: "Cautious"
+    ModifierValue: 0.9
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

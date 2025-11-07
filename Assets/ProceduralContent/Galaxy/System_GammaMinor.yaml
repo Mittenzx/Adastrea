@@ -1,0 +1,101 @@
+# Star System: Gamma Minor
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated galaxy content
+
+SystemName: "Gamma Minor"
+SystemID: "GammaMinor"
+
+# ====================
+# STAR PROPERTIES
+# ====================
+StarType: "Red Dwarf"
+StarMass: 2.8  # Solar masses
+StarLuminosity: 65.61  # Solar luminosity
+
+# ====================
+# COORDINATES
+# ====================
+Coordinates:
+  X: 5027
+  Y: 1608
+  Z: -549
+
+# ====================
+# PLANETS
+# ====================
+Planets:
+  - Name: "Arid Station"
+    Type: "Lava"
+    OrbitNumber: 1
+    OrbitDistance: 81101.67528350152  # km from star
+    Size: 29042.43  # km diameter
+    Mass: 4.74  # Earth masses
+    Gravity: 2.44  # Earth gravity
+    Temperature: -10  # Celsius
+    HasAtmosphere: true
+    Habitability: 23  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Rare Metals"
+      - "Uranium"
+    HasMoons: true
+    NumberOfMoons: 0
+
+  - Name: "New Refuge"
+    Type: "Rocky"
+    OrbitNumber: 2
+    OrbitDistance: 181810.92320026882  # km from star
+    Size: 11975.79  # km diameter
+    Mass: 3.81  # Earth masses
+    Gravity: 1.1  # Earth gravity
+    Temperature: 396  # Celsius
+    HasAtmosphere: true
+    Habitability: 6  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Rare Metals"
+      - "Uranium"
+    HasMoons: true
+    NumberOfMoons: 0
+
+  - Name: "Crimson Refuge"
+    Type: "Desert"
+    OrbitNumber: 3
+    OrbitDistance: 236363.1691988361  # km from star
+    Size: 12147.16  # km diameter
+    Mass: 9.12  # Earth masses
+    Gravity: 2.24  # Earth gravity
+    Temperature: 346  # Celsius
+    HasAtmosphere: true
+    Habitability: 43  # 0-100 scale
+    Population: 761440
+    Resources:
+      - "Organics"
+    HasMoons: false
+    NumberOfMoons: 0
+
+# ====================
+# ASTEROID BELTS
+# ====================
+AsteroidBelts:
+  - Name: "Gamma Minor Asteroid Belt A"
+    OrbitDistance: 350529.9167894187
+    Density: "Moderate"
+    Resources:
+      - "Titanium"
+
+# ====================
+# SPACE STATIONS
+# ====================
+Stations:
+# ====================
+# SYSTEM INFO
+# ====================
+Factions:
+  - "Research Consortium"
+  - "United Earth"
+  - "Free Traders"
+
+DangerLevel: "Extreme"
+TrafficLevel: "Heavy"
+bHasJumpGate: true

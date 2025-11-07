@@ -1,0 +1,60 @@
+# Quest: Mining Operation
+# Type: Mining
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated quest/mission
+
+ContractName: "Mining Operation"
+ContractID: "Quest_Mining_1054"
+Description: |
+  Extract and deliver resources from asteroid field near Gamma 592.
+  
+ContractType: Mining
+Difficulty: Medium
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Eta Centauri"
+  Coordinates: [6101, 3841, 484]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Gamma 592"
+  Coordinates: [6281, 7067, 782]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 49915.3
+TimeLimit: 86
+MinReputationRequired: -2
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 6376
+  ReputationGain: 18
+  ExperiencePoints: 818
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 1594
+  ReputationPenalty: 9
+  CollateralDeposit: 637
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: false
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Mining"
+  - "Medium"
+  - "Procedural"

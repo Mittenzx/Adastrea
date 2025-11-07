@@ -1,0 +1,127 @@
+# Star System: Gamma Centauri
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated galaxy content
+
+SystemName: "Gamma Centauri"
+SystemID: "GammaCentauri"
+
+# ====================
+# STAR PROPERTIES
+# ====================
+StarType: "Red Giant"
+StarMass: 0.54  # Solar masses
+StarLuminosity: 23.96  # Solar luminosity
+
+# ====================
+# COORDINATES
+# ====================
+Coordinates:
+  X: 9193
+  Y: -2327
+  Z: 304
+
+# ====================
+# PLANETS
+# ====================
+Planets:
+  - Name: "Verde Refuge"
+    Type: "Terran"
+    OrbitNumber: 1
+    OrbitDistance: 65227.59502733992  # km from star
+    Size: 11418.93  # km diameter
+    Mass: 5.07  # Earth masses
+    Gravity: 0.5  # Earth gravity
+    Temperature: 114  # Celsius
+    HasAtmosphere: true
+    Habitability: 60  # 0-100 scale
+    Population: 396269
+    Resources:
+      - "Rare Metals"
+      - "Organics"
+      - "Water"
+      - "Minerals"
+    HasMoons: true
+    NumberOfMoons: 1
+
+  - Name: "Silver World"
+    Type: "Gas Giant"
+    OrbitNumber: 2
+    OrbitDistance: 114586.6611959194  # km from star
+    Size: 77393.25  # km diameter
+    Mass: 0.99  # Earth masses
+    Gravity: 2.06  # Earth gravity
+    Temperature: 260  # Celsius
+    HasAtmosphere: true
+    Habitability: 0  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Exotic Matter"
+      - "Organics"
+      - "Uranium"
+      - "Minerals"
+    HasMoons: false
+    NumberOfMoons: 0
+
+  - Name: "New Settlement VII"
+    Type: "Ice"
+    OrbitNumber: 3
+    OrbitDistance: 200302.74550161633  # km from star
+    Size: 8214.19  # km diameter
+    Mass: 5.74  # Earth masses
+    Gravity: 0.46  # Earth gravity
+    Temperature: 231  # Celsius
+    HasAtmosphere: false
+    Habitability: 13  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Exotic Matter"
+      - "Organics"
+      - "Water"
+      - "Minerals"
+    HasMoons: true
+    NumberOfMoons: 5
+
+# ====================
+# ASTEROID BELTS
+# ====================
+AsteroidBelts:
+  - Name: "Gamma Centauri Asteroid Belt A"
+    OrbitDistance: 164525.59773947718
+    Density: "Sparse"
+    Resources:
+      - "Iron"
+
+  - Name: "Gamma Centauri Asteroid Belt B"
+    OrbitDistance: 164586.01093597626
+    Density: "Sparse"
+    Resources:
+      - "Iron"
+      - "Platinum"
+
+  - Name: "Gamma Centauri Asteroid Belt C"
+    OrbitDistance: 259235.94568030807
+    Density: "Sparse"
+    Resources:
+      - "Iron"
+      - "Rare Earth"
+      - "Platinum"
+
+# ====================
+# SPACE STATIONS
+# ====================
+Stations:
+  - Name: "Gamma Centauri Station 1"
+    Type: "Trading Hub"
+    OrbitDistance: 603172.9915508496
+    Population: 1526
+
+# ====================
+# SYSTEM INFO
+# ====================
+Factions:
+  - "Research Consortium"
+  - "Mining Guild"
+
+DangerLevel: "High"
+TrafficLevel: "Heavy"
+bHasJumpGate: false

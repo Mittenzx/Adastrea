@@ -1,0 +1,63 @@
+# Storm Odyssey - Fighter Class
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated ship variant
+
+BasicInfo:
+  ShipName: "Storm Odyssey"
+  Description: "A fighter class vessel with unique characteristics."
+  ShipClass: "Fighter"
+  ShipID: "StormOdyssey"
+
+CoreStats:
+  HullStrength: 1126.3
+  CargoCapacity: 71.4
+  CrewRequired: 7
+  MaxCrew: 17
+  ModularPoints: 7
+
+CombatStats:
+  ArmorRating: 76.2
+  ShieldStrength: 557.9
+  ShieldRechargeRate: 10.0
+  WeaponSlots: 4
+  WeaponPowerCapacity: 1000.0
+  PointDefenseRating: 5.0
+
+MobilityStats:
+  MaxSpeed: 702.8
+  Acceleration: 100.0
+  Maneuverability: 5
+  JumpRange: 15.0
+  FuelCapacity: 1000.0
+  FuelConsumptionRate: 80.0
+
+UtilityStats:
+  SensorRange: 10000.0
+  SensorResolution: 5
+  StealthRating: 3
+  RepairSystemRating: 3
+  ScienceRating: 3
+  MedicalRating: 2
+
+OperationalStats:
+  PowerCapacity: 2500.0
+  LifeSupportRating: 5
+  MaintenanceLevel: 3
+  HangarCapacity: 0
+  DroneCapacity: 5
+  AISystemRating: 5
+
+AdvancedStats:
+  DiplomacyRating: 2
+  BoardingCapability: 2
+  CustomizableSlots: 3
+  EWarRating: 3
+  MiningRating: 0
+
+Lore:
+  Manufacturer: "Vanguard Aerospace"
+  YearBuilt: 2466
+  RarityTier: "Common"
+  LoreNotes: "A procedurally generated variant of the Fighter class."
+  PrimaryColor: [0.96, 0.40, 0.90, 1.0]
+  SecondaryColor: [0.12, 0.02, 0.65, 1.0]

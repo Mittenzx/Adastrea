@@ -1,0 +1,85 @@
+# Personnel: Edward Myers
+# Role: Engineer
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated NPC
+
+PersonnelID: "Engineer_EdwardMyers"
+PersonnelName: "Edward Myers"
+
+# Basic Identity
+Biography: |
+  This individual comes from a long line of spacers dating back three generations. They are celebrated for their innovative problem-solving and earned multiple commendations for bravery and service.
+  
+Age: 29
+Gender: "Male"
+Species: "Human"
+Nationality: "Outer Rim"
+Tags:
+  - "Engineer"
+  - "Level6"
+
+# Role and Assignment
+PrimaryRole: "Engineer"
+Department: "Engineering"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 9
+TotalExperience: 39724
+Skills:
+  - SkillName: "Engineering"
+    SkillLevel: 10
+    ExperiencePoints: 4140
+  - SkillName: "Repair"
+    SkillLevel: 6
+    ExperiencePoints: 1236
+  - SkillName: "Systems"
+    SkillLevel: 6
+    ExperiencePoints: 2682
+  - SkillName: "PowerManagement"
+    SkillLevel: 4
+    ExperiencePoints: 1564
+
+Specialties:
+  - "Engineer Specialist"
+
+# Status and Condition
+Morale: 98
+Health: 72
+Fatigue: 49
+Loyalty: 64
+Reputation: 34
+
+# Employment
+Salary: 13842
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Analytical"
+PersonalityDescription: |
+  Analytical personality with focus on engineer duties.
+  
+Traits:
+  - TraitName: "Quick Learner"
+    TraitDescription: "Gains XP faster"
+    TraitID: "QuickLearner"
+    ModifierValue: 1.1
+  - TraitName: "Technical Genius"
+    TraitDescription: "Engineering bonus"
+    TraitID: "TechnicalGenius"
+    ModifierValue: 1.25
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

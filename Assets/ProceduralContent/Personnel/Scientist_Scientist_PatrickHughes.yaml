@@ -1,0 +1,89 @@
+# Personnel: Patrick Hughes
+# Role: Scientist
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated NPC
+
+PersonnelID: "Scientist_PatrickHughes"
+PersonnelName: "Patrick Hughes"
+
+# Basic Identity
+Biography: |
+  This individual served as a medical officer during the border conflicts. They are known for their calm demeanor under pressure and led a successful rescue operation in hostile territory.
+  
+Age: 38
+Gender: "Male"
+Species: "Human"
+Nationality: "Outer Rim"
+Tags:
+  - "Scientist"
+  - "Level2"
+
+# Role and Assignment
+PrimaryRole: "Scientist"
+Department: "Science"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 9
+TotalExperience: 1691
+Skills:
+  - SkillName: "Research"
+    SkillLevel: 7
+    ExperiencePoints: 2254
+  - SkillName: "Analysis"
+    SkillLevel: 3
+    ExperiencePoints: 1209
+  - SkillName: "Biology"
+    SkillLevel: 3
+    ExperiencePoints: 1011
+  - SkillName: "Physics"
+    SkillLevel: 7
+    ExperiencePoints: 1113
+
+Specialties:
+  - "Scientist Specialist"
+
+# Status and Condition
+Morale: 83
+Health: 83
+Fatigue: 0
+Loyalty: 93
+Reputation: 64
+
+# Employment
+Salary: 4664
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Cautious"
+PersonalityDescription: |
+  Cautious personality with focus on scientist duties.
+  
+Traits:
+  - TraitName: "Lucky"
+    TraitDescription: "Occasional bonuses"
+    TraitID: "Lucky"
+    ModifierValue: 1.05
+  - TraitName: "Combat Veteran"
+    TraitDescription: "Experienced in combat"
+    TraitID: "CombatVeteran"
+    ModifierValue: 1.15
+  - TraitName: "Diplomat"
+    TraitDescription: "Better negotiations"
+    TraitID: "Diplomat"
+    ModifierValue: 1.1
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

@@ -1,0 +1,63 @@
+# Tiger Warden - Fighter Class
+# Generated on 2025-11-07 17:12:34
+# Procedurally generated ship variant
+
+BasicInfo:
+  ShipName: "Tiger Warden"
+  Description: "A fighter class vessel with unique characteristics."
+  ShipClass: "Fighter"
+  ShipID: "TigerWarden"
+
+CoreStats:
+  HullStrength: 821.8
+  CargoCapacity: 96.8
+  CrewRequired: 1
+  MaxCrew: 12
+  ModularPoints: 13
+
+CombatStats:
+  ArmorRating: 28.6
+  ShieldStrength: 624.4
+  ShieldRechargeRate: 10.0
+  WeaponSlots: 4
+  WeaponPowerCapacity: 1000.0
+  PointDefenseRating: 5.0
+
+MobilityStats:
+  MaxSpeed: 650.6
+  Acceleration: 100.0
+  Maneuverability: 5
+  JumpRange: 15.0
+  FuelCapacity: 1000.0
+  FuelConsumptionRate: 80.0
+
+UtilityStats:
+  SensorRange: 10000.0
+  SensorResolution: 5
+  StealthRating: 3
+  RepairSystemRating: 3
+  ScienceRating: 3
+  MedicalRating: 2
+
+OperationalStats:
+  PowerCapacity: 2500.0
+  LifeSupportRating: 5
+  MaintenanceLevel: 3
+  HangarCapacity: 0
+  DroneCapacity: 5
+  AISystemRating: 5
+
+AdvancedStats:
+  DiplomacyRating: 2
+  BoardingCapability: 2
+  CustomizableSlots: 3
+  EWarRating: 3
+  MiningRating: 0
+
+Lore:
+  Manufacturer: "Nova Industries"
+  YearBuilt: 2453
+  RarityTier: "Rare"
+  LoreNotes: "A procedurally generated variant of the Fighter class."
+  PrimaryColor: [0.96, 0.48, 0.49, 1.0]
+  SecondaryColor: [0.14, 0.45, 0.32, 1.0]

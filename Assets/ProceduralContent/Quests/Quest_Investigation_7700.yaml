@@ -1,0 +1,60 @@
+# Quest: Investigate Anomaly
+# Type: Investigation
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated quest/mission
+
+ContractName: "Investigate Anomaly"
+ContractID: "Quest_Investigation_7700"
+Description: |
+  Investigate unusual activity near Beta Major on behalf of Delta 619.
+  
+ContractType: Investigation
+Difficulty: Hard
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Delta 619"
+  Coordinates: [3528, 2789, 553]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Beta Major"
+  Coordinates: [9404, 3631, 951]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 6450.25
+TimeLimit: 24
+MinReputationRequired: 23
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 5922
+  ReputationGain: 33
+  ExperiencePoints: 957
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 1480
+  ReputationPenalty: 16
+  CollateralDeposit: 592
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: false
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Investigation"
+  - "Hard"
+  - "Procedural"

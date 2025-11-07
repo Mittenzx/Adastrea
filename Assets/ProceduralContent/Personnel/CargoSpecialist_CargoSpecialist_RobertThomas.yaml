@@ -1,0 +1,81 @@
+# Personnel: Robert Thomas
+# Role: CargoSpecialist
+# Generated on 2025-11-07 17:12:34
+# Procedurally generated NPC
+
+PersonnelID: "CargoSpecialist_RobertThomas"
+PersonnelName: "Robert Thomas"
+
+# Basic Identity
+Biography: |
+  This individual worked as a mining surveyor in the outer colonies. They are valued for their diplomatic skills and led a successful rescue operation in hostile territory.
+  
+Age: 41
+Gender: "Male"
+Species: "Human"
+Nationality: "Outer Rim"
+Tags:
+  - "CargoSpecialist"
+  - "Level9"
+
+# Role and Assignment
+PrimaryRole: "CargoSpecialist"
+Department: "Operations"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 6
+TotalExperience: 15606
+Skills:
+  - SkillName: "Logistics"
+    SkillLevel: 8
+    ExperiencePoints: 2032
+  - SkillName: "Organization"
+    SkillLevel: 9
+    ExperiencePoints: 4005
+  - SkillName: "Trading"
+    SkillLevel: 6
+    ExperiencePoints: 1290
+  - SkillName: "LoadBalancing"
+    SkillLevel: 7
+    ExperiencePoints: 2709
+
+Specialties:
+  - "CargoSpecialist Specialist"
+
+# Status and Condition
+Morale: 53
+Health: 79
+Fatigue: 19
+Loyalty: 42
+Reputation: 58
+
+# Employment
+Salary: 6971
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Leader"
+PersonalityDescription: |
+  Leader personality with focus on cargospecialist duties.
+  
+Traits:
+  - TraitName: "Lucky"
+    TraitDescription: "Occasional bonuses"
+    TraitID: "Lucky"
+    ModifierValue: 1.05
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

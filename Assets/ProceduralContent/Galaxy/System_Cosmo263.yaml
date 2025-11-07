@@ -1,0 +1,152 @@
+# Star System: Cosmo 263
+# Generated on 2025-11-07 17:12:34
+# Procedurally generated galaxy content
+
+SystemName: "Cosmo 263"
+SystemID: "Cosmo263"
+
+# ====================
+# STAR PROPERTIES
+# ====================
+StarType: "Blue Giant"
+StarMass: 1.73  # Solar masses
+StarLuminosity: 20.3  # Solar luminosity
+
+# ====================
+# COORDINATES
+# ====================
+Coordinates:
+  X: -6295
+  Y: 1596
+  Z: 395
+
+# ====================
+# PLANETS
+# ====================
+Planets:
+  - Name: "Terra Sanctuary"
+    Type: "Terran"
+    OrbitNumber: 1
+    OrbitDistance: 63872.008902237474  # km from star
+    Size: 13328.19  # km diameter
+    Mass: 4.61  # Earth masses
+    Gravity: 0.52  # Earth gravity
+    Temperature: 108  # Celsius
+    HasAtmosphere: true
+    Habitability: 66  # 0-100 scale
+    Population: 516994
+    Resources:
+      - "Water"
+      - "Helium-3"
+      - "Exotic Matter"
+      - "Minerals"
+    HasMoons: false
+    NumberOfMoons: 0
+
+  - Name: "Crystal World"
+    Type: "Ice"
+    OrbitNumber: 2
+    OrbitDistance: 171742.89829942677  # km from star
+    Size: 19136.28  # km diameter
+    Mass: 6.18  # Earth masses
+    Gravity: 2.04  # Earth gravity
+    Temperature: -181  # Celsius
+    HasAtmosphere: true
+    Habitability: 18  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Uranium"
+      - "Water"
+    HasMoons: false
+    NumberOfMoons: 0
+
+  - Name: "New Base II"
+    Type: "Desert"
+    OrbitNumber: 3
+    OrbitDistance: 211446.7861038431  # km from star
+    Size: 10944.37  # km diameter
+    Mass: 9.43  # Earth masses
+    Gravity: 0.51  # Earth gravity
+    Temperature: 178  # Celsius
+    HasAtmosphere: true
+    Habitability: 10  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Organics"
+      - "Rare Metals"
+    HasMoons: true
+    NumberOfMoons: 4
+
+  - Name: "Frost Colony II"
+    Type: "Terran"
+    OrbitNumber: 4
+    OrbitDistance: 230383.293263604  # km from star
+    Size: 13233.41  # km diameter
+    Mass: 6.41  # Earth masses
+    Gravity: 1.88  # Earth gravity
+    Temperature: 319  # Celsius
+    HasAtmosphere: true
+    Habitability: 94  # 0-100 scale
+    Population: 83302
+    Resources:
+      - "Water"
+      - "Uranium"
+      - "Helium-3"
+      - "Organics"
+    HasMoons: true
+    NumberOfMoons: 0
+
+  - Name: "Storm Station"
+    Type: "Desert"
+    OrbitNumber: 5
+    OrbitDistance: 300763.16602693475  # km from star
+    Size: 14003.71  # km diameter
+    Mass: 4.41  # Earth masses
+    Gravity: 0.31  # Earth gravity
+    Temperature: 225  # Celsius
+    HasAtmosphere: false
+    Habitability: 33  # 0-100 scale
+    Population: 454965
+    Resources:
+      - "Minerals"
+    HasMoons: false
+    NumberOfMoons: 0
+
+  - Name: "Lava Haven"
+    Type: "Lava"
+    OrbitNumber: 6
+    OrbitDistance: 548636.3092899432  # km from star
+    Size: 20019.1  # km diameter
+    Mass: 5.88  # Earth masses
+    Gravity: 0.85  # Earth gravity
+    Temperature: 115  # Celsius
+    HasAtmosphere: true
+    Habitability: 19  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Water"
+    HasMoons: false
+    NumberOfMoons: 0
+
+# ====================
+# ASTEROID BELTS
+# ====================
+AsteroidBelts:
+# ====================
+# SPACE STATIONS
+# ====================
+Stations:
+  - Name: "Cosmo 263 Station 1"
+    Type: "Trading Hub"
+    OrbitDistance: 422308.5886261254
+    Population: 2115
+
+# ====================
+# SYSTEM INFO
+# ====================
+Factions:
+  - "United Earth"
+
+DangerLevel: "Safe"
+TrafficLevel: "Light"
+bHasJumpGate: false

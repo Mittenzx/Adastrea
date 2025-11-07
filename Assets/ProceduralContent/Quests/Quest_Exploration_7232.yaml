@@ -1,0 +1,60 @@
+# Quest: Uncharted Territory
+# Type: Exploration
+# Generated on 2025-11-07 17:12:34
+# Procedurally generated quest/mission
+
+ContractName: "Uncharted Territory"
+ContractID: "Quest_Exploration_7232"
+Description: |
+  Survey the Cosmo 541 system and report findings to Theta 181.
+  
+ContractType: Exploration
+Difficulty: Medium
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Theta 181"
+  Coordinates: [5348, 1031, 290]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Cosmo 541"
+  Coordinates: [8958, 9888, 427]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 36721.29
+TimeLimit: 75
+MinReputationRequired: 27
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 2250
+  ReputationGain: 16
+  ExperiencePoints: 514
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 562
+  ReputationPenalty: 8
+  CollateralDeposit: 225
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: true
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Exploration"
+  - "Medium"
+  - "Procedural"

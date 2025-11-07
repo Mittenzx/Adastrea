@@ -1,0 +1,81 @@
+# Personnel: Rachel Parker
+# Role: CargoSpecialist
+# Generated on 2025-11-07 17:12:34
+# Procedurally generated NPC
+
+PersonnelID: "CargoSpecialist_RachelParker"
+PersonnelName: "Rachel Parker"
+
+# Basic Identity
+Biography: |
+  This individual graduated from the academy with honors and has been rising steadily. They are feared by enemies and respected by allies and successfully completed 21 deep space missions.
+  
+Age: 43
+Gender: "Female"
+Species: "Human"
+Nationality: "Core Worlds"
+Tags:
+  - "CargoSpecialist"
+  - "Level2"
+
+# Role and Assignment
+PrimaryRole: "CargoSpecialist"
+Department: "Operations"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 7
+TotalExperience: 34451
+Skills:
+  - SkillName: "Logistics"
+    SkillLevel: 3
+    ExperiencePoints: 894
+  - SkillName: "Organization"
+    SkillLevel: 8
+    ExperiencePoints: 2760
+  - SkillName: "Trading"
+    SkillLevel: 3
+    ExperiencePoints: 615
+  - SkillName: "LoadBalancing"
+    SkillLevel: 4
+    ExperiencePoints: 1588
+
+Specialties:
+  - "CargoSpecialist Specialist"
+
+# Status and Condition
+Morale: 60
+Health: 77
+Fatigue: 19
+Loyalty: 72
+Reputation: 28
+
+# Employment
+Salary: 1958
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Cautious"
+PersonalityDescription: |
+  Cautious personality with focus on cargospecialist duties.
+  
+Traits:
+  - TraitName: "Natural Leader"
+    TraitDescription: "Inspires crew"
+    TraitID: "NaturalLeader"
+    ModifierValue: 1.2
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

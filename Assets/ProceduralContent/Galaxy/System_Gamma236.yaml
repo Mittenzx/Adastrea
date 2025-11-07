@@ -1,0 +1,178 @@
+# Star System: Gamma 236
+# Generated on 2025-11-07 17:12:34
+# Procedurally generated galaxy content
+
+SystemName: "Gamma 236"
+SystemID: "Gamma236"
+
+# ====================
+# STAR PROPERTIES
+# ====================
+StarType: "Red Giant"
+StarMass: 2.47  # Solar masses
+StarLuminosity: 91.46  # Solar luminosity
+
+# ====================
+# COORDINATES
+# ====================
+Coordinates:
+  X: 9747
+  Y: 227
+  Z: 827
+
+# ====================
+# PLANETS
+# ====================
+Planets:
+  - Name: "Lava Settlement II"
+    Type: "Ocean"
+    OrbitNumber: 1
+    OrbitDistance: 54536.51429613731  # km from star
+    Size: 6366.11  # km diameter
+    Mass: 1.54  # Earth masses
+    Gravity: 2.48  # Earth gravity
+    Temperature: 302  # Celsius
+    HasAtmosphere: false
+    Habitability: 30  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Water"
+      - "Exotic Matter"
+      - "Uranium"
+    HasMoons: false
+    NumberOfMoons: 0
+
+  - Name: "Silver Outpost I"
+    Type: "Desert"
+    OrbitNumber: 2
+    OrbitDistance: 179390.9770534152  # km from star
+    Size: 7278.09  # km diameter
+    Mass: 7.27  # Earth masses
+    Gravity: 0.79  # Earth gravity
+    Temperature: 292  # Celsius
+    HasAtmosphere: false
+    Habitability: 30  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Uranium"
+      - "Minerals"
+      - "Rare Metals"
+    HasMoons: false
+    NumberOfMoons: 0
+
+  - Name: "Aqua Settlement VII"
+    Type: "Lava"
+    OrbitNumber: 3
+    OrbitDistance: 218793.44370016694  # km from star
+    Size: 7868.5  # km diameter
+    Mass: 3.41  # Earth masses
+    Gravity: 0.7  # Earth gravity
+    Temperature: -102  # Celsius
+    HasAtmosphere: true
+    Habitability: 4  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Rare Metals"
+      - "Organics"
+    HasMoons: true
+    NumberOfMoons: 0
+
+  - Name: "Ember Colony"
+    Type: "Ocean"
+    OrbitNumber: 4
+    OrbitDistance: 252750.5685187601  # km from star
+    Size: 28765.49  # km diameter
+    Mass: 9.23  # Earth masses
+    Gravity: 1.83  # Earth gravity
+    Temperature: 339  # Celsius
+    HasAtmosphere: false
+    Habitability: 5  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Minerals"
+      - "Uranium"
+      - "Rare Metals"
+    HasMoons: false
+    NumberOfMoons: 2
+
+  - Name: "Golden Outpost II"
+    Type: "Ice"
+    OrbitNumber: 5
+    OrbitDistance: 418551.0494578986  # km from star
+    Size: 19422.54  # km diameter
+    Mass: 6.89  # Earth masses
+    Gravity: 1.36  # Earth gravity
+    Temperature: 133  # Celsius
+    HasAtmosphere: true
+    Habitability: 31  # 0-100 scale
+    Population: 616304
+    Resources:
+      - "Organics"
+      - "Helium-3"
+      - "Exotic Matter"
+    HasMoons: false
+    NumberOfMoons: 1
+
+  - Name: "Silver Base"
+    Type: "Ocean"
+    OrbitNumber: 6
+    OrbitDistance: 397173.00610118534  # km from star
+    Size: 27141.76  # km diameter
+    Mass: 3.61  # Earth masses
+    Gravity: 1.62  # Earth gravity
+    Temperature: 374  # Celsius
+    HasAtmosphere: true
+    Habitability: 1  # 0-100 scale
+    Population: 0
+    Resources:
+      - "Minerals"
+      - "Exotic Matter"
+      - "Helium-3"
+    HasMoons: true
+    NumberOfMoons: 3
+
+# ====================
+# ASTEROID BELTS
+# ====================
+AsteroidBelts:
+  - Name: "Gamma 236 Asteroid Belt A"
+    OrbitDistance: 321723.0839384008
+    Density: "Moderate"
+    Resources:
+      - "Rare Earth"
+      - "Platinum"
+      - "Iron"
+
+  - Name: "Gamma 236 Asteroid Belt B"
+    OrbitDistance: 255316.4181054252
+    Density: "Moderate"
+    Resources:
+      - "Iron"
+      - "Rare Earth"
+      - "Platinum"
+
+# ====================
+# SPACE STATIONS
+# ====================
+Stations:
+  - Name: "Gamma 236 Station 1"
+    Type: "Mining Station"
+    OrbitDistance: 249117.58825838027
+    Population: 418
+
+  - Name: "Gamma 236 Station 2"
+    Type: "Mining Station"
+    OrbitDistance: 446867.35434283863
+    Population: 398
+
+# ====================
+# SYSTEM INFO
+# ====================
+Factions:
+  - "Research Consortium"
+  - "Mining Guild"
+  - "Independent"
+
+DangerLevel: "Moderate"
+TrafficLevel: "Moderate"
+bHasJumpGate: false

@@ -1,0 +1,89 @@
+# Personnel: Douglas B. Green
+# Role: Trader
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated NPC
+
+PersonnelID: "Trader_DouglasB.Green"
+PersonnelName: "Douglas B. Green"
+
+# Basic Identity
+Biography: |
+  This individual comes from a long line of spacers dating back three generations. They are celebrated for their innovative problem-solving and developed an improved navigation protocol still in use today.
+  
+Age: 42
+Gender: "Male"
+Species: "Human"
+Nationality: "Core Worlds"
+Tags:
+  - "Trader"
+  - "Level9"
+
+# Role and Assignment
+PrimaryRole: "Trader"
+Department: "Operations"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 6
+TotalExperience: 49400
+Skills:
+  - SkillName: "Trading"
+    SkillLevel: 4
+    ExperiencePoints: 1592
+  - SkillName: "Negotiation"
+    SkillLevel: 9
+    ExperiencePoints: 2205
+  - SkillName: "Economics"
+    SkillLevel: 8
+    ExperiencePoints: 2304
+  - SkillName: "Appraisal"
+    SkillLevel: 5
+    ExperiencePoints: 1140
+
+Specialties:
+  - "Trader Specialist"
+
+# Status and Condition
+Morale: 52
+Health: 77
+Fatigue: 29
+Loyalty: 46
+Reputation: 21
+
+# Employment
+Salary: 8940
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Adventurous"
+PersonalityDescription: |
+  Adventurous personality with focus on trader duties.
+  
+Traits:
+  - TraitName: "Quick Learner"
+    TraitDescription: "Gains XP faster"
+    TraitID: "QuickLearner"
+    ModifierValue: 1.1
+  - TraitName: "Cautious"
+    TraitDescription: "Reduced risk taking"
+    TraitID: "Cautious"
+    ModifierValue: 0.9
+  - TraitName: "Diplomat"
+    TraitDescription: "Better negotiations"
+    TraitID: "Diplomat"
+    ModifierValue: 1.1
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

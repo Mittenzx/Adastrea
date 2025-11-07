@@ -1,0 +1,60 @@
+# Quest: Acquisition Request
+# Type: Procurement
+# Generated on 2025-11-07 17:12:34
+# Procedurally generated quest/mission
+
+ContractName: "Acquisition Request"
+ContractID: "Quest_Procurement_9253"
+Description: |
+  Acquire specified goods and deliver to Beta 482.
+  
+ContractType: Procurement
+Difficulty: Hard
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Beta 482"
+  Coordinates: [2105, 1529, 59]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Delta Luminous"
+  Coordinates: [9623, 9642, 559]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 19164.71
+TimeLimit: 145
+MinReputationRequired: -6
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 8841
+  ReputationGain: 15
+  ExperiencePoints: 1332
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 2210
+  ReputationPenalty: 7
+  CollateralDeposit: 884
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: false
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Procurement"
+  - "Hard"
+  - "Procedural"

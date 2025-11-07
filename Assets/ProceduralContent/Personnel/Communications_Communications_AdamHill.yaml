@@ -1,0 +1,85 @@
+# Personnel: Adam Hill
+# Role: Communications
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated NPC
+
+PersonnelID: "Communications_AdamHill"
+PersonnelName: "Adam Hill"
+
+# Basic Identity
+Biography: |
+  This individual served as a medical officer during the border conflicts. They are feared by enemies and respected by allies and published research that advanced the field of trade economics.
+  
+Age: 40
+Gender: "Male"
+Species: "Human"
+Nationality: "Outer Rim"
+Tags:
+  - "Communications"
+  - "Level3"
+
+# Role and Assignment
+PrimaryRole: "Communications"
+Department: "Communications"
+CurrentAssignment: "Unassigned"
+ManagerID: "None"
+DirectReports: []
+
+# Skills and Experience
+OverallSkillLevel: 7
+TotalExperience: 37590
+Skills:
+  - SkillName: "Communications"
+    SkillLevel: 5
+    ExperiencePoints: 2290
+  - SkillName: "Linguistics"
+    SkillLevel: 5
+    ExperiencePoints: 1400
+  - SkillName: "Diplomacy"
+    SkillLevel: 4
+    ExperiencePoints: 696
+  - SkillName: "Signals"
+    SkillLevel: 4
+    ExperiencePoints: 1492
+
+Specialties:
+  - "Communications Specialist"
+
+# Status and Condition
+Morale: 89
+Health: 81
+Fatigue: 17
+Loyalty: 80
+Reputation: -4
+
+# Employment
+Salary: 2006
+ContractDuration: 0
+ContractMonthsRemaining: 0
+
+# Personality and Traits
+PersonalityType: "Analytical"
+PersonalityDescription: |
+  Analytical personality with focus on communications duties.
+  
+Traits:
+  - TraitName: "Technical Genius"
+    TraitDescription: "Engineering bonus"
+    TraitID: "TechnicalGenius"
+    ModifierValue: 1.25
+  - TraitName: "Quick Learner"
+    TraitDescription: "Gains XP faster"
+    TraitID: "QuickLearner"
+    ModifierValue: 1.1
+
+# Relationships
+Relationships: []
+
+# Performance Metrics
+PerformanceMetrics:
+  - MetricName: "Overall Performance"
+    Value: 75
+    Trend: 0.0
+
+# Past Assignments
+PastAssignments: []

@@ -1,0 +1,60 @@
+# Quest: Express Cargo
+# Type: Delivery
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated quest/mission
+
+ContractName: "Express Cargo"
+ContractID: "Quest_Delivery_1168"
+Description: |
+  Transport cargo from Theta Prime to Gamma 664. Ensure timely delivery.
+  
+ContractType: Delivery
+Difficulty: VeryHard
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Theta Prime"
+  Coordinates: [6898, 1054, 654]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Gamma 664"
+  Coordinates: [4004, 9350, 911]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 27847.95
+TimeLimit: 139
+MinReputationRequired: 29
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 24855
+  ReputationGain: 70
+  ExperiencePoints: 1930
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 6213
+  ReputationPenalty: 35
+  CollateralDeposit: 2485
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: false
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Delivery"
+  - "VeryHard"
+  - "Procedural"

@@ -1,0 +1,60 @@
+# Quest: Investigate Anomaly
+# Type: Investigation
+# Generated on 2025-11-07 17:12:41
+# Procedurally generated quest/mission
+
+ContractName: "Investigate Anomaly"
+ContractID: "Quest_Investigation_9902"
+Description: |
+  Investigate unusual activity near Delta 500 on behalf of Astro 320.
+  
+ContractType: Investigation
+Difficulty: Medium
+
+# Contract Giver (placeholder - assign appropriate faction)
+ContractGiver: "DA_Faction_Independent"
+
+# ====================
+# LOCATIONS
+# ====================
+OriginLocation:
+  LocationName: "Astro 320"
+  Coordinates: [9992, 9801, 738]
+  MarketID: "Market_Origin"
+  ControllingFaction: null
+
+DestinationLocation:
+  LocationName: "Delta 500"
+  Coordinates: [9833, 8659, 951]
+  MarketID: "Market_Destination"
+  ControllingFaction: null
+
+Distance: 24122.33
+TimeLimit: 97
+MinReputationRequired: 15
+
+# ====================
+# REWARDS & PENALTIES
+# ====================
+Rewards:
+  Credits: 3142
+  ReputationGain: 32
+  ExperiencePoints: 552
+  BonusItems: []
+
+Penalties:
+  CreditPenalty: 785
+  ReputationPenalty: 16
+  CollateralDeposit: 314
+
+# ====================
+# SPECIAL CONDITIONS
+# ====================
+bRepeatable: true
+bRequiresStealth: false
+bCombatExpected: false
+HostileFactions: []
+ContractTags:
+  - "Investigation"
+  - "Medium"
+  - "Procedural"
