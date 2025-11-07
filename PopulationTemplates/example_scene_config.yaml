@@ -1,0 +1,78 @@
+# Scene Population Configuration
+# This YAML file defines actors to spawn in a level
+
+# List of spawn groups - each group uses a pattern to place multiple actors
+spawn_groups:
+  # Spawn fighters in orbit around center
+  - asset_path: "/Game/Ships/Blueprints/BP_Ship_Fighter"
+    pattern: orbit
+    count: 8
+    pattern_params:
+      radius: 15000
+      center: [0, 0, 0]
+      z_variation: 500
+    rotation_randomness: 15  # Random rotation variation in degrees
+    scale_randomness: 0.1    # Random scale variation (0-1)
+  
+  # Spawn stations in grid pattern
+  - asset_path: "/Game/Stations/Blueprints/BP_Station_Small"
+    pattern: grid
+    count: 4
+    pattern_params:
+      spacing: 20000
+      center: [50000, 0, 0]
+    rotation_randomness: 0
+    scale_randomness: 0
+  
+  # Spawn asteroids randomly in a sphere
+  - asset_path: "/Game/Planets/Blueprints/BP_Asteroid"
+    pattern: random
+    count: 50
+    pattern_params:
+      radius: 100000
+      center: [0, 0, 0]
+    rotation_randomness: 180
+    scale_randomness: 0.3
+  
+  # Spawn cargo ships in cluster pattern
+  - asset_path: "/Game/Ships/Blueprints/BP_Ship_Cargo"
+    pattern: cluster
+    count: 20
+    pattern_params:
+      cluster_count: 4
+      cluster_radius: 2000
+      spread: 30000
+      center: [0, 50000, 0]
+    rotation_randomness: 45
+    scale_randomness: 0.15
+  
+  # Spawn patrol ships in spiral pattern
+  - asset_path: "/Game/Ships/Blueprints/BP_Ship_Scout"
+    pattern: spiral
+    count: 12
+    pattern_params:
+      radius: 25000
+      height: 5000
+      center: [-50000, 0, 0]
+      turns: 2
+    rotation_randomness: 30
+    scale_randomness: 0.05
+  
+  # Spawn defense satellites in line
+  - asset_path: "/Game/Stations/Blueprints/BP_DefenseSatellite"
+    pattern: line
+    count: 10
+    pattern_params:
+      spacing: 5000
+      start: [0, -50000, 0]
+      direction: [1, 0, 0]
+    rotation_randomness: 0
+    scale_randomness: 0
+
+# Metadata
+metadata:
+  name: "Basic Space Sector"
+  description: "A basic populated space sector with ships, stations, and asteroids"
+  author: "Adastrea Team"
+  created: "2025-11-07"
+  version: "1.0"

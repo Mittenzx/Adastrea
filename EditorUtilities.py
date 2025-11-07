@@ -3,7 +3,7 @@
 Adastrea - Unreal Editor Utilities Script
 
 This script provides utilities that can be run inside the Unreal Editor's Python environment.
-It combines template generation and guide generation into a unified tool.
+It combines template generation, guide generation, and scene population into a unified tool.
 
 To use this script in Unreal Editor:
 1. Enable the "Python Editor Script Plugin" in Unreal Engine
@@ -17,6 +17,7 @@ Features:
 - Validate template structure
 - Interactive menu system
 - Command-line compatible
+- Scene and interior population
 
 Usage in Unreal Editor Python Console:
     import EditorUtilities
@@ -25,6 +26,7 @@ Usage in Unreal Editor Python Console:
     # Or call specific functions
     EditorUtilities.generate_spaceship("MyShip", "Fighter")
     EditorUtilities.generate_system_guide("MySystem")
+    EditorUtilities.populate_from_config("scene_config.yaml")
 """
 
 import os
@@ -49,6 +51,15 @@ try:
 except ImportError:
     GENERATORS_AVAILABLE = False
     print("Warning: Could not import generator modules. They should be in the same directory.")
+
+# Import scene population modules
+try:
+    from ScenePopulator import ScenePopulator
+    from InteriorLayoutPopulator import InteriorLayoutPopulator
+    POPULATION_AVAILABLE = True
+except ImportError:
+    POPULATION_AVAILABLE = False
+    print("Warning: Could not import population modules.")
 
 
 class EditorUtilities:
@@ -367,10 +378,16 @@ class EditorUtilities:
             print("  13. List All Guides")
             print("\nBatch Operations:")
             print("  14. Generate Complete System Documentation Set")
+            print("\nScene Population:")
+            print("  15. Populate Level from Config")
+            print("  16. Spawn Actors (Grid Pattern)")
+            print("  17. Spawn Actors (Orbit Pattern)")
+            print("  18. Populate Station Interior")
+            print("  19. Clear Spawned Actors")
             print("\n  0. Exit")
             print("=" * 60)
             
-            choice = input("\nSelect option (0-14): ").strip()
+            choice = input("\nSelect option (0-19): ").strip()
             
             if choice == "0":
                 print("Exiting...")
@@ -420,8 +437,26 @@ class EditorUtilities:
             elif choice == "14":
                 name = input("System name: ").strip()
                 self.generate_complete_documentation_set(name)
+            elif choice == "15":
+                config_path = input("Config file path (YAML/CSV): ").strip()
+                self.populate_from_config(config_path)
+            elif choice == "16":
+                asset_path = input("Asset path (e.g., /Game/Ships/BP_Fighter): ").strip()
+                count = int(input("Number of actors: ").strip() or "10")
+                spacing = float(input("Grid spacing: ").strip() or "5000")
+                self.spawn_actors_grid(asset_path, count, spacing)
+            elif choice == "17":
+                asset_path = input("Asset path (e.g., /Game/Ships/BP_Fighter): ").strip()
+                count = int(input("Number of actors: ").strip() or "8")
+                radius = float(input("Orbit radius: ").strip() or "10000")
+                self.spawn_actors_orbit(asset_path, count, radius)
+            elif choice == "18":
+                theme = input("Theme (military/luxury/industrial/civilian): ").strip() or "military"
+                self.populate_station_interior(theme)
+            elif choice == "19":
+                self.clear_spawned_actors()
             else:
-                print("Invalid choice. Please select 0-14.")
+                print("Invalid choice. Please select 0-19.")
     
     def generate_complete_documentation_set(self, system_name: str):
         """Generate a complete set of documentation for a system"""
@@ -463,6 +498,98 @@ class EditorUtilities:
             if path:
                 print(f"  → {path}")
         print("=" * 60)
+
+
+    # ==================== Scene Population Functions ====================
+    
+    def populate_from_config(self, config_path: str) -> bool:
+        """
+        Populate level from YAML/CSV configuration file
+        
+        Args:
+            config_path: Path to configuration file
+            
+        Returns:
+            True if successful
+        """
+        if not POPULATION_AVAILABLE:
+            self.log_message("Scene population modules not available", "error")
+            return False
+        
+        populator = ScenePopulator()
+        return populator.populate_from_config(config_path)
+    
+    def spawn_actors_grid(self, asset_path: str, count: int = 10, spacing: float = 5000) -> List[Any]:
+        """
+        Spawn actors in grid pattern
+        
+        Args:
+            asset_path: Asset path
+            count: Number of actors
+            spacing: Grid spacing
+            
+        Returns:
+            List of spawned actors
+        """
+        if not POPULATION_AVAILABLE:
+            self.log_message("Scene population modules not available", "error")
+            return []
+        
+        populator = ScenePopulator()
+        return populator.spawn_actors_pattern(asset_path, 'grid', count, {'spacing': spacing})
+    
+    def spawn_actors_orbit(self, asset_path: str, count: int = 8, radius: float = 10000) -> List[Any]:
+        """
+        Spawn actors in orbit pattern
+        
+        Args:
+            asset_path: Asset path
+            count: Number of actors
+            radius: Orbit radius
+            
+        Returns:
+            List of spawned actors
+        """
+        if not POPULATION_AVAILABLE:
+            self.log_message("Scene population modules not available", "error")
+            return []
+        
+        populator = ScenePopulator()
+        return populator.spawn_actors_pattern(asset_path, 'orbit', count, {'radius': radius})
+    
+    def populate_station_interior(self, theme: str = 'military') -> bool:
+        """
+        Populate a basic station interior
+        
+        Args:
+            theme: Theme name (military, luxury, industrial, civilian)
+            
+        Returns:
+            True if successful
+        """
+        if not POPULATION_AVAILABLE:
+            self.log_message("Interior population modules not available", "error")
+            return False
+        
+        populator = InteriorLayoutPopulator()
+        
+        # Create basic station layout
+        populator.create_room('bridge', (0, 0, 100), (3000, 3000, 400), theme)
+        populator.create_corridor((1500, 0, 100), (5000, 0, 100), theme=theme)
+        populator.create_room('cargo_bay', (5000, 0, 100), (4000, 4000, 600), theme)
+        
+        self.log_message(f"Created basic station interior with {theme} theme")
+        return True
+    
+    def clear_spawned_actors(self):
+        """Clear all spawned actors"""
+        if not POPULATION_AVAILABLE:
+            self.log_message("Scene population modules not available", "error")
+            return
+        
+        populator = ScenePopulator()
+        populator.clear_spawned_actors()
+        self.log_message("Cleared spawned actors")
 
 
 # ==================== Module Functions ====================
