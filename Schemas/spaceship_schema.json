@@ -21,8 +21,9 @@
         },
         "ShipClass": {
           "type": "string",
-          "enum": ["Scout", "Fighter", "Gunship", "Bomber", "Interceptor", "Corvette", "Frigate", "Destroyer", "Cruiser", "Battlecruiser", "Battleship", "Carrier", "Dreadnought", "Freighter", "Transport", "Mining", "Salvage", "Research", "Command", "MultiRole", "Luxury", "Trading", "Industrial", "Support", "Other"],
-          "description": "Ship class/type"
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Ship class/type (e.g., Scout, Fighter, Gunship, etc.)"
         },
         "ShipID": {
           "type": "string",
@@ -97,7 +98,7 @@
         "WeaponPowerCapacity": {
           "type": "number",
           "minimum": 0,
-          "maximum": 10000,
+          "maximum": 100000,
           "description": "Total weapon power capacity"
         },
         "PointDefenseRating": {
