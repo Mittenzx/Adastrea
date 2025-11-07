@@ -1,0 +1,151 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Trade Item Data Asset Schema",
+  "description": "Schema definition for Trade Item Data Assets in Adastrea",
+  "type": "object",
+  "properties": {
+    "ItemName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "description": "Display name of the trade item"
+    },
+    "ItemID": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_]*$",
+      "description": "Unique identifier for the trade item"
+    },
+    "Description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Description of the trade item"
+    },
+    "Category": {
+      "type": "string",
+      "enum": ["RawMaterials", "RefinedGoods", "Components", "Technology", "Food", "Luxury", "Contraband", "Military", "Medical", "Data", "Other"],
+      "description": "Trade item category"
+    },
+    "MaterialData": {
+      "type": "string",
+      "description": "Optional reference to material data asset (e.g., DA_Material_Platinum)"
+    },
+    "BasePrice": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Base price in credits"
+    },
+    "PriceVolatility": {
+      "type": "object",
+      "properties": {
+        "VolatilityMultiplier": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 5,
+          "description": "Base volatility multiplier (0.0 = stable, 1.0 = normal, 2.0+ = very volatile)"
+        },
+        "MinPriceDeviation": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Minimum price deviation as percentage (e.g., 0.5 = 50% below base)"
+        },
+        "MaxPriceDeviation": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Maximum price deviation as percentage (e.g., 2.0 = 200% above base)"
+        }
+      }
+    },
+    "bAffectedBySupplyDemand": {
+      "type": "boolean",
+      "description": "Whether this item's price is affected by supply/demand"
+    },
+    "bAffectedByMarketEvents": {
+      "type": "boolean",
+      "description": "Whether this item's price is affected by market events"
+    },
+    "LegalityStatus": {
+      "type": "string",
+      "enum": ["Legal", "Regulated", "Restricted", "Illegal", "Contraband"],
+      "description": "Legal status of this item"
+    },
+    "TradeRestrictions": {
+      "type": "object",
+      "properties": {
+        "BannedFactions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Factions that ban this item completely"
+        },
+        "RequiresPermitFactions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Factions that require special permits"
+        },
+        "MinReputationRequired": {
+          "type": "integer",
+          "minimum": -100,
+          "maximum": 100,
+          "description": "Minimum faction reputation required to trade"
+        }
+      }
+    },
+    "ContrabandFineMultiplier": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Contraband fine multiplier if caught (1.0 = base price)"
+    },
+    "VolumePerUnit": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Volume per unit (cubic meters)"
+    },
+    "MassPerUnit": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Mass per unit (kilograms)"
+    },
+    "StandardLotSize": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Typical lot size for bulk trading"
+    },
+    "TypicalMarketStock": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Maximum quantity typically available in markets"
+    },
+    "ReplenishmentRate": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "How quickly stock replenishes (units per game day)"
+    },
+    "AITradePriority": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10,
+      "description": "Priority for AI traders (1-10, higher = more desirable)"
+    },
+    "bAIHoardable": {
+      "type": "boolean",
+      "description": "Whether AI traders will hoard this during shortages"
+    },
+    "bAIArbitrageEnabled": {
+      "type": "boolean",
+      "description": "Whether AI traders will use this for arbitrage"
+    },
+    "BehaviorTags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tags for AI behavior and categorization"
+    }
+  },
+  "required": ["ItemName", "ItemID", "Category", "BasePrice"]
+}

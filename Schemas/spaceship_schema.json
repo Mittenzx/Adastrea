@@ -1,0 +1,319 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Spaceship Data Asset Schema",
+  "description": "Schema definition for Spaceship Data Assets in Adastrea",
+  "type": "object",
+  "properties": {
+    "BasicInfo": {
+      "type": "object",
+      "required": ["ShipName", "ShipClass", "ShipID"],
+      "properties": {
+        "ShipName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Display name of the spaceship"
+        },
+        "Description": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "Brief description of the spaceship"
+        },
+        "ShipClass": {
+          "type": "string",
+          "enum": ["Scout", "Fighter", "Gunship", "Bomber", "Interceptor", "Corvette", "Frigate", "Destroyer", "Cruiser", "Battlecruiser", "Battleship", "Carrier", "Dreadnought", "Freighter", "Transport", "Mining", "Salvage", "Research", "Command", "MultiRole", "Luxury", "Trading", "Industrial", "Support", "Other"],
+          "description": "Ship class/type"
+        },
+        "ShipID": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*$",
+          "description": "Unique identifier for the ship type"
+        }
+      }
+    },
+    "CoreStats": {
+      "type": "object",
+      "required": ["HullStrength", "CargoCapacity", "CrewRequired", "MaxCrew"],
+      "properties": {
+        "HullStrength": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 100000,
+          "description": "Maximum hull strength (health points)"
+        },
+        "CargoCapacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 50000,
+          "description": "Cargo capacity in tons"
+        },
+        "CrewRequired": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000,
+          "description": "Minimum crew required to operate"
+        },
+        "MaxCrew": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000,
+          "description": "Maximum crew capacity"
+        },
+        "ModularPoints": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Modular points for customization"
+        }
+      }
+    },
+    "CombatStats": {
+      "type": "object",
+      "properties": {
+        "ArmorRating": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000,
+          "description": "Armor rating (damage reduction)"
+        },
+        "ShieldStrength": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100000,
+          "description": "Shield strength (additional health layer)"
+        },
+        "ShieldRechargeRate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000,
+          "description": "Shield recharge rate per second"
+        },
+        "WeaponSlots": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 50,
+          "description": "Number of weapon hardpoints"
+        },
+        "WeaponPowerCapacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10000,
+          "description": "Total weapon power capacity"
+        },
+        "PointDefenseRating": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Point defense rating (anti-missile/fighter)"
+        }
+      }
+    },
+    "MobilityStats": {
+      "type": "object",
+      "properties": {
+        "MaxSpeed": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10000,
+          "description": "Maximum speed in m/s"
+        },
+        "Acceleration": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000,
+          "description": "Acceleration in m/s²"
+        },
+        "Maneuverability": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Maneuverability rating (0-10)"
+        },
+        "JumpRange": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Jump range in light years"
+        },
+        "FuelCapacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100000,
+          "description": "Fuel capacity"
+        },
+        "FuelConsumptionRate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10000,
+          "description": "Fuel consumption rate"
+        }
+      }
+    },
+    "UtilityStats": {
+      "type": "object",
+      "properties": {
+        "SensorRange": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100000,
+          "description": "Sensor range in meters"
+        },
+        "SensorResolution": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Sensor resolution rating (0-10)"
+        },
+        "StealthRating": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Stealth capabilities rating (0-10)"
+        },
+        "RepairSystemRating": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Repair system rating (0-10)"
+        },
+        "ScienceRating": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Science equipment rating (0-10)"
+        },
+        "MedicalRating": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Medical facilities rating (0-10)"
+        }
+      }
+    },
+    "OperationalStats": {
+      "type": "object",
+      "properties": {
+        "PowerCapacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100000,
+          "description": "Total power capacity"
+        },
+        "LifeSupportRating": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Life support system rating (0-10)"
+        },
+        "MaintenanceLevel": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Maintenance requirements (0-10, higher = more maintenance)"
+        },
+        "HangarCapacity": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Number of small craft in hangar"
+        },
+        "DroneCapacity": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000,
+          "description": "Number of drones/probes"
+        },
+        "AISystemRating": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "AI system capabilities rating (0-10)"
+        }
+      }
+    },
+    "AdvancedStats": {
+      "type": "object",
+      "properties": {
+        "DiplomacyRating": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Diplomatic capabilities rating (0-10)"
+        },
+        "BoardingCapability": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Boarding and capture rating (0-10)"
+        },
+        "CustomizableSlots": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 50,
+          "description": "Number of customizable slots"
+        },
+        "EWarRating": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Electronic warfare rating (0-10)"
+        },
+        "MiningRating": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Mining capabilities rating (0-10)"
+        }
+      }
+    },
+    "Lore": {
+      "type": "object",
+      "properties": {
+        "Manufacturer": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Ship manufacturer name"
+        },
+        "YearBuilt": {
+          "type": "integer",
+          "minimum": 2000,
+          "maximum": 3000,
+          "description": "Year of manufacture"
+        },
+        "RarityTier": {
+          "type": "string",
+          "enum": ["Common", "Uncommon", "Rare", "Epic", "Legendary", "Unique"],
+          "description": "Rarity classification"
+        },
+        "LoreNotes": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "Background lore and story"
+        },
+        "PrimaryColor": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "minItems": 4,
+          "maxItems": 4,
+          "description": "Primary color as RGBA array (0.0-1.0)"
+        },
+        "SecondaryColor": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "minItems": 4,
+          "maxItems": 4,
+          "description": "Secondary color as RGBA array (0.0-1.0)"
+        }
+      }
+    }
+  },
+  "required": ["BasicInfo", "CoreStats"]
+}
