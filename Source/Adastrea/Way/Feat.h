@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "Way.h"
+#include "Rivals/Antagonist.h"
 #include "Feat.generated.h"
 
 /**
@@ -46,6 +47,74 @@ enum class EFeatRarity : uint8
     Epic        UMETA(DisplayName = "Epic"),        // Exceptional deeds few players achieve
     Legendary   UMETA(DisplayName = "Legendary"),   // World-renowned accomplishments of legend
     Mythic      UMETA(DisplayName = "Mythic")       // Once-in-a-generation legendary feats
+};
+
+/**
+ * Structure defining if and how a Feat can spawn an antagonist (rival).
+ * 
+ * When a player completes a legendary Feat, it may attract the attention of a rival
+ * who will become a recurring antagonist throughout the player's journey.
+ * This creates personal, emergent narrative moments similar to manga rivals.
+ * 
+ * Design Philosophy:
+ * - Not all Feats spawn antagonists (only significant ones)
+ * - Antagonist motivation is tied to the nature of the Feat
+ * - Initial heat level determines how aggressively they pursue the player
+ * - Optional faction affiliation ties antagonist to game world
+ * 
+ * Usage:
+ * - Add to high-tier Feats (Epic, Legendary, Mythic) where appropriate
+ * - Choose Goal that makes narrative sense (e.g., "Dragon-Slayer" → Revenge)
+ * - Set SpawnChance < 100% for variety across playthroughs
+ * - Leave bShouldSpawnAntagonist = false for Feats that shouldn't spawn rivals
+ * 
+ * Example:
+ * - Feat: "Star-Charter" (first to map unknown sector)
+ * - Goal: Competition (another explorer wants to outdo you)
+ * - InitialHeat: 60 (moderately aggressive pursuit)
+ * - SpawnChance: 75% (doesn't happen every playthrough)
+ */
+USTRUCT(BlueprintType)
+struct FAntagonistTrigger
+{
+    GENERATED_BODY()
+
+    /** Whether this Feat should spawn an antagonist */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Antagonist")
+    bool bShouldSpawnAntagonist;
+
+    /** Primary motivation of the spawned antagonist */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Antagonist", meta=(EditCondition="bShouldSpawnAntagonist"))
+    EAntagonistGoal RivalGoal;
+
+    /** Initial heat level for the spawned antagonist (0-100) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Antagonist", meta=(ClampMin="0", ClampMax="100", EditCondition="bShouldSpawnAntagonist"))
+    int32 InitialHeat;
+
+    /** Chance (0-100%) that this Feat will spawn an antagonist when completed */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Antagonist", meta=(ClampMin="0", ClampMax="100", EditCondition="bShouldSpawnAntagonist"))
+    int32 SpawnChance;
+
+    /** Optional: Faction the antagonist should be affiliated with */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Antagonist", meta=(EditCondition="bShouldSpawnAntagonist"))
+    FName PreferredFaction;
+
+    /** Optional: Custom traits to apply to the spawned antagonist */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Antagonist", meta=(EditCondition="bShouldSpawnAntagonist"))
+    TArray<FName> CustomTraits;
+
+    /** Optional: Designer notes about why this spawns an antagonist */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Antagonist", meta=(MultiLine=true, EditCondition="bShouldSpawnAntagonist"))
+    FText DesignerNotes;
+
+    FAntagonistTrigger()
+        : bShouldSpawnAntagonist(false)
+        , RivalGoal(EAntagonistGoal::Competition)
+        , InitialHeat(50)
+        , SpawnChance(100)
+        , PreferredFaction(NAME_None)
+        , DesignerNotes(FText::FromString(TEXT("This feat spawns a rival.")))
+    {}
 };
 
 /**
@@ -137,6 +206,18 @@ public:
     /** Reputation gain is multiplied by (PreceptValue * AlignmentStrength / 10000) */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Reputation")
     float ReputationMultiplier;
+
+    // ====================
+    // Antagonist Spawning
+    // ====================
+
+    /** 
+     * Antagonist trigger configuration for this Feat.
+     * Defines if and how this Feat can spawn a rival NPC.
+     * Typically used for high-tier Feats (Epic, Legendary, Mythic).
+     */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Antagonist")
+    FAntagonistTrigger AntagonistTrigger;
 
     // ====================
     // Precept Query Functions

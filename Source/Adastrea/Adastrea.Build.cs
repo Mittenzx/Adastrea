@@ -17,7 +17,8 @@ public class Adastrea : ModuleRules
 			"Adastrea/Public/AI",
 			"Adastrea/Public/Ships",
 			"Adastrea/Public/Factions",
-			"Adastrea/Way"
+			"Adastrea/Way",
+			"Adastrea/Rivals"
 		});
 
 		PublicDependencyModuleNames.AddRange(new string[] 
