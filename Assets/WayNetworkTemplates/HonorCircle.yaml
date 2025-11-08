@@ -1,0 +1,67 @@
+# The Honor Circle
+# A network of warrior guilds upholding martial traditions and protective duties
+
+NetworkName: "The Honor Circle"
+NetworkID: "HonorCircle"
+Description: |
+  An ancient alliance of warrior guilds and protector orders bound by codes of 
+  honor and martial excellence. They maintain combat standards, adjudicate disputes, 
+  and offer their services to protect the innocent.
+
+NetworkColor:
+  R: 0.9
+  G: 0.1
+  B: 0.1
+  A: 1.0
+
+# Member Ways
+MemberWays:
+  - MemberWay: "DA_Way_WarriorsGuild"
+    InfluenceLevel: 85
+    CommitmentLevel: 90
+    RoleDescription: "Ancient order of honorable warriors"
+    
+  - MemberWay: "DA_Way_DuelistAcademy"
+    InfluenceLevel: 70
+    CommitmentLevel: 85
+    RoleDescription: "Masters of personal combat and ship dueling"
+    
+  - MemberWay: "DA_Way_ProtectorsOrder"
+    InfluenceLevel: 75
+    CommitmentLevel: 80
+    RoleDescription: "Defenders of trade routes and civilians"
+    
+  - MemberWay: "DA_Way_BountyHunterCollective"
+    InfluenceLevel: 60
+    CommitmentLevel: 70
+    RoleDescription: "Hunters of criminals and fugitives"
+
+# Shared Precepts
+SharedPrecepts:
+  - Precept: Honor
+    ImportanceValue: 95
+    Description: "Uphold principles even when costly"
+    
+  - Precept: Strength
+    ImportanceValue: 85
+    Description: "Martial excellence and power"
+    
+  - Precept: Justice
+    ImportanceValue: 75
+    Description: "Protect the innocent, punish the guilty"
+
+# Network Mechanics
+ReputationSpilloverPercent: 30
+NetworkAlignmentBonus: 1.7
+MinimumReputationThreshold: 35
+
+# Network Status
+bIsActive: true
+FormationDate: "2341-01-01"  # One of the oldest networks
+
+# Usage Notes:
+# - Complete honorable combat Feats for 1.7x reputation bonus
+# - Dishonorable actions hurt reputation with entire network
+# - Minimum 35 rep to access advanced training
+# - Offers: Combat training, dueling arenas, protection contracts
+# - Warning: Cheating or cowardice severely damages network reputation

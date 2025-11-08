@@ -1,0 +1,61 @@
+# The Craftsmen's Compact
+# A network of guilds dedicated to excellence in engineering and ship construction
+
+NetworkName: "The Craftsmen's Compact"
+NetworkID: "CraftsmenCompact"
+Description: |
+  An alliance of master craftsmen, engineers, and ship-builders united by their 
+  dedication to excellence in construction and innovation. Members share techniques, 
+  resources, and apprentices to advance the art of spacecraft engineering.
+
+NetworkColor:
+  R: 0.8
+  G: 0.6
+  B: 0.2
+  A: 1.0
+
+# Member Ways (2-5 guilds in the network)
+MemberWays:
+  - MemberWay: "DA_Way_EngineersGuild"  # Reference to Way Data Asset
+    InfluenceLevel: 70
+    CommitmentLevel: 90
+    RoleDescription: "Masters of propulsion and power systems"
+    
+  - MemberWay: "DA_Way_ShipBuildersUnion"
+    InfluenceLevel: 80
+    CommitmentLevel: 85
+    RoleDescription: "Expert hull designers and construction specialists"
+    
+  - MemberWay: "DA_Way_RefineryCollective"
+    InfluenceLevel: 50
+    CommitmentLevel: 70
+    RoleDescription: "Providers of high-quality materials and components"
+
+# Shared Precepts that unite the network
+SharedPrecepts:
+  - Precept: Craftsmanship
+    ImportanceValue: 90
+    Description: "We believe in excellence in all things built"
+    
+  - Precept: Mastery
+    ImportanceValue: 85
+    Description: "Continuous improvement and skill perfection"
+    
+  - Precept: Innovation
+    ImportanceValue: 70
+    Description: "Push the boundaries of what's possible"
+
+# Network Mechanics Configuration
+ReputationSpilloverPercent: 40
+NetworkAlignmentBonus: 1.8
+MinimumReputationThreshold: 30
+
+# Network Status
+bIsActive: true
+FormationDate: "2384-03-15"  # Lore date
+
+# Usage Notes:
+# - Complete crafting/engineering Feats for 1.8x reputation bonus
+# - Reputation with one guild grants 40% to other members
+# - Minimum 30 rep required to access network-wide benefits
+# - Offers: Joint workshops, shared apprenticeship programs, bulk material discounts

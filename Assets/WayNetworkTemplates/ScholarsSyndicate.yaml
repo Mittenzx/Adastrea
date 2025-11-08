@@ -1,0 +1,62 @@
+# The Scholars' Syndicate
+# A network of research institutions dedicated to knowledge and innovation
+
+NetworkName: "The Scholars' Syndicate"
+NetworkID: "ScholarsSyndicate"
+Description: |
+  An alliance of research academies, scientific societies, and technology institutes. 
+  United by their pursuit of knowledge, they share research findings, laboratory access, 
+  and collaborate on breakthrough discoveries.
+
+NetworkColor:
+  R: 0.5
+  G: 0.3
+  B: 0.9
+  A: 1.0
+
+# Member Ways
+MemberWays:
+  - MemberWay: "DA_Way_ResearchCollective"
+    InfluenceLevel: 85
+    CommitmentLevel: 95
+    RoleDescription: "Pure research and theoretical advancement"
+    
+  - MemberWay: "DA_Way_TechnologyInstitute"
+    InfluenceLevel: 75
+    CommitmentLevel: 85
+    RoleDescription: "Applied sciences and engineering applications"
+    
+  - MemberWay: "DA_Way_ArchivistsSociety"
+    InfluenceLevel: 55
+    CommitmentLevel: 80
+    RoleDescription: "Preservation and organization of knowledge"
+
+# Shared Precepts
+SharedPrecepts:
+  - Precept: Discovery
+    ImportanceValue: 90
+    Description: "Uncover the secrets of the universe"
+    
+  - Precept: Innovation
+    ImportanceValue: 85
+    Description: "Create new solutions to old problems"
+    
+  - Precept: Mastery
+    ImportanceValue: 75
+    Description: "Deep understanding of specialized fields"
+
+# Network Mechanics
+ReputationSpilloverPercent: 35
+NetworkAlignmentBonus: 1.9
+MinimumReputationThreshold: 30
+
+# Network Status
+bIsActive: true
+FormationDate: "2368-05-07"
+
+# Usage Notes:
+# - Complete research/discovery Feats for 1.9x reputation bonus
+# - Reputation with one institution grants 35% to other members
+# - Minimum 30 rep to access research databases
+# - Offers: Research collaboration, laboratory access, academic credentials
+# - Special: Completing research chains unlocks breakthrough technologies

@@ -1,0 +1,61 @@
+# The Frontier Alliance
+# A network of explorers and pioneers mapping the unknown reaches of space
+
+NetworkName: "The Frontier Alliance"
+NetworkID: "FrontierAlliance"
+Description: |
+  A coalition of scouts, cartographers, and frontier traders who venture into 
+  uncharted space. United by their love of discovery and independence, they 
+  share maps, survival techniques, and safe haven locations.
+
+NetworkColor:
+  R: 0.2
+  G: 0.7
+  B: 0.9
+  A: 1.0
+
+# Member Ways
+MemberWays:
+  - MemberWay: "DA_Way_ScoutsLeague"
+    InfluenceLevel: 75
+    CommitmentLevel: 95
+    RoleDescription: "First to chart dangerous territories"
+    
+  - MemberWay: "DA_Way_CartographersSociety"
+    InfluenceLevel: 60
+    CommitmentLevel: 80
+    RoleDescription: "Mapmakers and spatial analysts"
+    
+  - MemberWay: "DA_Way_PioneerTraders"
+    InfluenceLevel: 65
+    CommitmentLevel: 75
+    RoleDescription: "First to establish routes to new sectors"
+
+# Shared Precepts
+SharedPrecepts:
+  - Precept: Discovery
+    ImportanceValue: 95
+    Description: "The thrill of being first to see the unknown"
+    
+  - Precept: Freedom
+    ImportanceValue: 80
+    Description: "Independence from established powers"
+    
+  - Precept: Survival
+    ImportanceValue: 70
+    Description: "Endurance in hostile environments"
+
+# Network Mechanics
+ReputationSpilloverPercent: 35
+NetworkAlignmentBonus: 2.0
+MinimumReputationThreshold: 25
+
+# Network Status
+bIsActive: true
+FormationDate: "2379-08-22"
+
+# Usage Notes:
+# - Complete exploration/discovery Feats for 2.0x reputation bonus
+# - Reputation with one guild grants 35% to other members
+# - Minimum 25 rep to access shared cartographic data
+# - Offers: Map sharing, safe haven network, exploration contracts

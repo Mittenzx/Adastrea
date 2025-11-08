@@ -7,6 +7,7 @@
 // Forward declarations
 class UFeatDataAsset;
 class UWayDataAsset;
+class UWayNetworkDataAsset;
 enum class EReputationLevel : uint8;
 
 /**
@@ -61,10 +62,67 @@ public:
     UFUNCTION(BlueprintPure, Category = "Verse")
     bool HasCompletedFeat(const UFeatDataAsset* FeatToCheck) const;
 
+    // ====================
+    // Network Functions
+    // ====================
+
+    /**
+     * Register a Way Network for reputation tracking.
+     * Networks allow micro-alliances between Ways with shared Precepts.
+     * @param Network The network to register
+     */
+    UFUNCTION(BlueprintCallable, Category = "Verse|Networks")
+    void RegisterNetwork(UWayNetworkDataAsset* Network);
+
+    /**
+     * Unregister a Way Network (e.g., when network dissolves).
+     * @param Network The network to unregister
+     */
+    UFUNCTION(BlueprintCallable, Category = "Verse|Networks")
+    void UnregisterNetwork(UWayNetworkDataAsset* Network);
+
+    /**
+     * Get all registered networks that a Way belongs to.
+     * @param Way The Way to check membership for
+     * @return Array of networks this Way is part of
+     */
+    UFUNCTION(BlueprintPure, Category = "Verse|Networks")
+    TArray<UWayNetworkDataAsset*> GetNetworksForWay(const UWayDataAsset* Way) const;
+
+    /**
+     * Calculate aggregate Verse score for all Ways in a network.
+     * This represents the player's overall standing with the network.
+     * @param Network The network to calculate score for
+     * @return Aggregate network reputation score
+     */
+    UFUNCTION(BlueprintPure, Category = "Verse|Networks")
+    float GetNetworkVerseScore(const UWayNetworkDataAsset* Network) const;
+
+    /**
+     * Check if player qualifies for network-wide bonuses.
+     * @param Network The network to check
+     * @return True if player meets reputation threshold with any member
+     */
+    UFUNCTION(BlueprintPure, Category = "Verse|Networks")
+    bool QualifiesForNetworkBonuses(const UWayNetworkDataAsset* Network) const;
+
+    /**
+     * Award a Feat with network spillover effects.
+     * When player completes a Feat, reputation gains spillover to network members.
+     * @param FeatToRecord The Feat being awarded
+     * @param bApplyNetworkEffects Whether to apply network spillover (default true)
+     */
+    UFUNCTION(BlueprintCallable, Category = "Verse|Networks")
+    void RecordFeatWithNetworkEffects(const UFeatDataAsset* FeatToRecord, bool bApplyNetworkEffects = true);
+
 private:
     /** The set of all Feats the player has successfully completed. Should be loaded from save data. */
     UPROPERTY(VisibleAnywhere, Category = "Verse State")
     TSet<TObjectPtr<const UFeatDataAsset>> CompletedFeats;
+
+    /** All registered Way Networks in the universe */
+    UPROPERTY(VisibleAnywhere, Category = "Verse State")
+    TArray<TObjectPtr<UWayNetworkDataAsset>> RegisteredNetworks;
 
     /**
      * Placeholder function to load the player's saved Feats.
