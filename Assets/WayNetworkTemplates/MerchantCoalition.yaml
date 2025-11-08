@@ -1,0 +1,62 @@
+# The Merchant Coalition
+# A network of trade guilds focused on prosperity and market efficiency
+
+NetworkName: "The Merchant Coalition"
+NetworkID: "MerchantCoalition"
+Description: |
+  A pragmatic alliance of trading guilds, merchant houses, and logistics coordinators. 
+  United by the pursuit of profit and efficient commerce, they maintain standardized 
+  trade agreements and share market intelligence.
+
+NetworkColor:
+  R: 0.2
+  G: 0.8
+  B: 0.3
+  A: 1.0
+
+# Member Ways
+MemberWays:
+  - MemberWay: "DA_Way_FreeTradersGuild"
+    InfluenceLevel: 80
+    CommitmentLevel: 85
+    RoleDescription: "Independent merchants with extensive trade routes"
+    
+  - MemberWay: "DA_Way_LogisticsSyndicate"
+    InfluenceLevel: 70
+    CommitmentLevel: 90
+    RoleDescription: "Specialists in cargo management and routing"
+    
+  - MemberWay: "DA_Way_MarketAnalysts"
+    InfluenceLevel: 65
+    CommitmentLevel: 75
+    RoleDescription: "Providers of market intelligence and forecasts"
+
+# Shared Precepts
+SharedPrecepts:
+  - Precept: Prosperity
+    ImportanceValue: 90
+    Description: "Wealth creation benefits all"
+    
+  - Precept: Efficiency
+    ImportanceValue: 85
+    Description: "Optimize resource usage and trade routes"
+    
+  - Precept: Cunning
+    ImportanceValue: 70
+    Description: "Strategic thinking in negotiations"
+
+# Network Mechanics
+ReputationSpilloverPercent: 45
+NetworkAlignmentBonus: 1.6
+MinimumReputationThreshold: 20
+
+# Network Status
+bIsActive: true
+FormationDate: "2376-11-10"
+
+# Usage Notes:
+# - Complete trading/commerce Feats for 1.6x reputation bonus
+# - Reputation with one guild grants 45% to other members
+# - Minimum 20 rep to access shared trade routes
+# - Offers: Better prices, trade route intel, joint ventures
+# - Focus: Profit over politics, pragmatic alliances
