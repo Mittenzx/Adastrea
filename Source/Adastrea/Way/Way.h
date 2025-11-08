@@ -48,6 +48,19 @@ enum class EPrecept : uint8
 };
 
 /**
+ * Reputation levels representing the player's standing with a Way.
+ * These qualitative levels are derived from the player's Verse score with that Way.
+ */
+UENUM(BlueprintType)
+enum class EReputationLevel : uint8
+{
+    Distrusted      UMETA(DisplayName = "Distrusted"),      // Negative reputation, Way opposes player
+    Neutral         UMETA(DisplayName = "Neutral"),         // No strong opinion, neutral standing
+    Respected       UMETA(DisplayName = "Respected"),       // Positive reputation, Way respects player
+    Trusted         UMETA(DisplayName = "Trusted")          // Excellent reputation, Way trusts player
+};
+
+/**
  * Structure defining how strongly a group values a particular Precept.
  * Groups can have multiple Precepts with varying importance levels.
  */
