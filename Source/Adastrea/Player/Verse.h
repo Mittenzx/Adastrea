@@ -229,7 +229,7 @@ public:
      * @return Number of earned Feats of this rarity
      */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category="Verse|Statistics")
-    int32 GetFeatCountByRarity(enum class EFeatRarity Rarity) const;
+    int32 GetFeatCountByRarity(EFeatRarity Rarity) const;
 
     /**
      * Get the most recently earned Feat

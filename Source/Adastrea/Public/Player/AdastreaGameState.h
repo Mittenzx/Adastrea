@@ -7,6 +7,34 @@
 #include "AdastreaGameState.generated.h"
 
 /**
+ * Structure representing an active galactic event
+ * Used for replication instead of TMap (which is not supported)
+ */
+USTRUCT(BlueprintType)
+struct FActiveEvent
+{
+	GENERATED_BODY()
+
+	/** Name of the active event */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Events")
+	FName EventName;
+
+	/** Days remaining for the event (0 = indefinite) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Events")
+	int32 DaysRemaining;
+
+	FActiveEvent()
+		: EventName(NAME_None)
+		, DaysRemaining(0)
+	{}
+
+	FActiveEvent(FName InEventName, int32 InDaysRemaining)
+		: EventName(InEventName)
+		, DaysRemaining(InDaysRemaining)
+	{}
+};
+
+/**
  * Game State for Adastrea
  * 
  * This class stores replicated game state information that should be synchronized
@@ -91,11 +119,11 @@ protected:
 	int32 CurrentGameDay;
 
 	/**
-	 * Map of active galactic events and their remaining durations
-	 * Key: Event name, Value: Days remaining (0 = indefinite)
+	 * Array of active galactic events and their remaining durations
+	 * Replicated to all clients
 	 */
 	UPROPERTY(Replicated, BlueprintReadOnly, Category="Events")
-	TMap<FName, int32> ActiveEvents;
+	TArray<FActiveEvent> ActiveEvents;
 
 	/**
 	 * List of all active NPC trader ships in the current session
