@@ -1,8 +1,10 @@
 #include "Factions/FactionDataAsset.h"
+#include "Way/Way.h"
 #include "AdastreaLog.h"
 
 UFactionDataAsset::UFactionDataAsset()
     : bRelationshipCacheValid(false)
+    , WayReputationSpillover(25) // Default 25% spillover
 {
     // Set default values
     FactionName = FText::FromString(TEXT("Unknown Faction"));

@@ -4,6 +4,9 @@
 #include "Engine/DataAsset.h"
 #include "FactionDataAsset.generated.h"
 
+// Forward declarations
+class UWayDataAsset;
+
 /**
  * Category for organizing faction traits
  */
@@ -151,6 +154,26 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Faction Diplomacy")
     TArray<FFactionRelationship> FactionRelationships;
 
+    // ====================
+    // Way System Integration
+    // ====================
+
+    /**
+     * Ways (guilds/schools/syndicates) associated with this faction
+     * These are smaller organizations that operate within or alongside the faction
+     * Player reputation with Ways can influence faction standing
+     */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Faction|Ways")
+    TArray<UWayDataAsset*> AssociatedWays;
+
+    /**
+     * Reputation spillover percentage from associated Ways to faction (0-100)
+     * When player gains reputation with a Way, this % applies to the faction
+     * Example: 25 = gaining 100 rep with a Way grants 25 rep to the faction
+     */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Faction|Ways", meta=(ClampMin="0", ClampMax="100"))
+    int32 WayReputationSpillover;
+
     UFactionDataAsset();
 
     // ====================
@@ -258,6 +281,33 @@ public:
      */
     UFUNCTION(BlueprintCallable, Category="Faction Diplomacy")
     float GetTradeModifier(FName OtherFactionID) const;
+
+    // ====================
+    // Way System Hooks
+    // ====================
+
+    /**
+     * Get all Ways associated with this faction
+     * @return Array of associated Way data assets
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction|Ways")
+    TArray<UWayDataAsset*> GetAssociatedWays() const;
+
+    /**
+     * Check if a specific Way is associated with this faction
+     * @param Way The Way to check
+     * @return True if the Way is associated with this faction
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction|Ways")
+    bool HasAssociatedWay(const UWayDataAsset* Way) const;
+
+    /**
+     * Calculate faction reputation gain from a Way reputation gain
+     * @param WayReputationGain Reputation gained with a Way
+     * @return Spillover reputation for the faction
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction|Ways")
+    int32 CalculateWayReputationSpillover(int32 WayReputationGain) const;
 
 private:
     // Performance optimization: cached relationship map for O(1) lookups
