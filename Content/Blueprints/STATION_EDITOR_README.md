@@ -28,8 +28,10 @@ Base class for all station modules (docking bays, trade hubs, etc.).
 - `float ModulePower` - Power consumption or generation
 - `EStationModuleGroup ModuleGroup` - Module category enum (Docking, Power, Storage, etc.)
 
-#### 3. **UStationEditorWidget** (`Source/Adastrea/UI/StationEditorWidget.h/cpp`)
+#### 3. **UStationEditorWidget** (`Source/StationEditor/UI/StationEditorWidget.h/cpp`)
 Widget class providing UI hooks for the station editor.
+
+**Note:** This is part of the **StationEditor** runtime module, which contains all player-facing in-game station editing features.
 
 **Key Features:**
 - `CurrentStation` - Reference to the station being edited
@@ -57,8 +59,10 @@ All classes are ready to use. Simply include the headers in your code:
 ```cpp
 #include "Stations/SpaceStation.h"
 #include "Stations/SpaceStationModule.h"
-#include "UI/StationEditorWidget.h"
+#include "UI/StationEditorWidget.h"  // From StationEditor module
 ```
+
+**Module Dependency:** The StationEditor module depends on the Adastrea module. Make sure your Build.cs file includes both modules if you need to reference station editor functionality.
 
 ### For Blueprint Developers
 1. Create a Blueprint extending `ASpaceStation` (e.g., `BP_SpaceStation`)

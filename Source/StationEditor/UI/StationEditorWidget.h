@@ -10,9 +10,12 @@
 /**
  * Station Editor Widget - UI for managing space station modules
  * This class provides C++ hooks for Blueprint UI implementation
+ * 
+ * This is a runtime, player-facing UI widget that allows players to
+ * construct and modify space stations in-game.
  */
 UCLASS()
-class ADASTREA_API UStationEditorWidget : public UUserWidget
+class STATIONEDITOR_API UStationEditorWidget : public UUserWidget
 {
     GENERATED_BODY()
 

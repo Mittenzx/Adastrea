@@ -1,17 +1,20 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "AdastreaEditor.h"
-#include "Modules/ModuleManager.h"
+#include "StationEditor.h"
 
-void FAdastreaEditorModule::StartupModule()
+#define LOCTEXT_NAMESPACE "FStationEditorModule"
+
+void FStationEditorModule::StartupModule()
 {
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
 }
 
-void FAdastreaEditorModule::ShutdownModule()
+void FStationEditorModule::ShutdownModule()
 {
 	// This function may be called during shutdown to clean up your module. For modules that support dynamic reloading,
 	// we call this function before unloading the module.
 }
 
-IMPLEMENT_MODULE(FAdastreaEditorModule, AdastreaEditor);
+#undef LOCTEXT_NAMESPACE
+	
+IMPLEMENT_MODULE(FStationEditorModule, StationEditor)

@@ -15,9 +15,9 @@
       "LoadingPhase": "Default"
     },
     {
-      "Name": "AdastreaEditor",
-      "Type": "Editor",
-      "LoadingPhase": "PostEngineInit"
+      "Name": "StationEditor",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
     }
   ],
   "Plugins": [

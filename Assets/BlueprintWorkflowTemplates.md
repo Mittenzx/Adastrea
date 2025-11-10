@@ -29,7 +29,7 @@ This document provides detailed Blueprint workflow templates for implementing th
 
 2. **Set Parent Class**
    - In **File → Reparent Blueprint**
-   - Search for and select **StationEditorWidget**
+   - Search for and select **StationEditorWidget** (from StationEditor module)
    - This gives you access to all C++ functions
 
 3. **Design UI Layout**
@@ -60,7 +60,7 @@ Refresh UI (custom event)
 
 **Node Details:**
 - `Event Construct`: Called when widget is created
-- `Set Station`: C++ function from StationEditorWidget
+- `Set Station`: C++ function from UStationEditorWidget (StationEditor module)
 - `Refresh UI`: Custom event to update all UI elements
 
 ---
@@ -791,7 +791,7 @@ Update UI with Results
 
 ## Quick Reference: Essential Blueprint Nodes
 
-### From StationEditorWidget (C++)
+### From UStationEditorWidget (StationEditor Module C++)
 - `Set Station` - Assign the station to edit
 - `Add Module` - Spawn and add module
 - `Remove Module` - Remove module from station
@@ -823,7 +823,7 @@ Update UI with Results
 When creating your Station Editor widget:
 
 1. **Setup Phase**
-   - [ ] Create WBP_StationEditor extending StationEditorWidget
+   - [ ] Create WBP_StationEditor extending UStationEditorWidget (StationEditor module)
    - [ ] Design UI layout
    - [ ] Add all necessary UI components
 

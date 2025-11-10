@@ -101,8 +101,7 @@ Adastrea/
 │   └── UI/                     # UI widgets and assets
 │
 └── Source/                      # C++ source code
-    ├── AdastreaEditor/         # Editor customizations module
-    └── Adastrea/               # Core game systems
+    ├── Adastrea/               # Core game systems
         ├── AI/                 # AI logic classes
         ├── Characters/         # Character and personnel classes
         ├── Factions/           # Faction system
@@ -210,27 +209,26 @@ The main game logic module, organized by feature:
 - AI-driven markets
 
 #### UI System (`Source/Adastrea/UI/`)
-- **StationEditorWidget**: Station construction UI
 - **SectorMapWidget**: Galactic navigation
 - **Sector**: Spatial regions
 
-### Editor Module
+### StationEditor Module (`Source/StationEditor/`)
 
-#### AdastreaEditor Module
-This module provides Unreal Editor customizations and tools for the Adastrea game.
+**Runtime module** providing in-game, player-facing space station editor features. This module contains all UI and gameplay systems for the station construction editor that players interact with during gameplay.
 
-**Current Status:** Foundation stage with infrastructure in place but no customizations implemented yet.
+**Key Components:**
+- **UStationEditorWidget** (`UI/StationEditorWidget.h/cpp`): Player-facing station construction UI
+  - Blueprint-callable functions for adding/removing/moving station modules
+  - Faction integration for technology-level restrictions
+  - Validation hooks for module placement
+
+**Module Type:** Runtime (available in both editor and packaged builds)
 
 **Documentation:**
-- Complete analysis and state: [ADASTREA_EDITOR_ANALYSIS.md](ADASTREA_EDITOR_ANALYSIS.md)
-- Implementation guide: [ADASTREA_EDITOR_NEXT_STEPS.md](ADASTREA_EDITOR_NEXT_STEPS.md)
+- Blueprint workflows: [Content/Blueprints/STATION_EDITOR_README.md](Content/Blueprints/STATION_EDITOR_README.md)
+- Implementation templates: [Assets/BlueprintWorkflowTemplates.md](Assets/BlueprintWorkflowTemplates.md)
 
-**Planned Features:**
-- Detail customizations for Data Assets (SpaceshipDataAsset, FactionDataAsset, etc.)
-- Property type customizations for complex structs (FFactionTrait, FPersonnelSkill, etc.)
-- Asset validators for data integrity
-- Custom asset actions for workflow optimization
-- Visual editor tools (Faction Relationship Graph, Trade Route Designer)
+**Note:** The AdastreaEditor module has been removed from the project. All player-facing station editing features are now in the StationEditor runtime module. Future editor customizations can be added as needed.
 
 ## Design Patterns
 
@@ -504,11 +502,10 @@ All systems follow this documentation structure:
 - **Exploration System**: Procedural generation
 
 ### Planned Improvements
-- Custom Unreal Editor tools (using AdastreaEditor module)
+- Custom Unreal Editor tools (can be added as separate editor module if needed)
 - Visual programming for AI behaviors
-- In-game station editor UI
 - Dynamic event system
-- Modding API
+- Modding API enhancements
 
 ---
 

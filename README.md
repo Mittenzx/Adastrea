@@ -237,8 +237,7 @@ Adastrea/
 │   └── automation_config.json      # Automation runner configuration
 │
 └── Source/                 # C++ source code
-    ├── AdastreaEditor/    # Editor customizations module
-    └── Adastrea/          # Core game systems
+    ├── Adastrea/          # Core game systems
         ├── AI/            # AI logic classes
         ├── Characters/    # Character and personnel
         ├── Factions/      # Faction system
@@ -299,20 +298,25 @@ A comprehensive spaceship specification system that allows designers to create d
 5. Integrate into your spaceship Blueprint actors
 
 ### Space Station Editor System
-A modular space station construction system that enables designers to build, customize, and manage space stations through Blueprint-friendly C++ classes.
+A modular space station construction system that enables players to build, customize, and manage space stations in-game. The system uses Blueprint-friendly C++ classes and is provided through the **StationEditor** runtime module.
 
 **Key Components:**
-- `ASpaceStation` - Core station actor with module management (add, remove, move modules)
-- `ASpaceStationModule` - Base class for station modules with type classification
-- `UStationEditorWidget` - Widget class providing UI hooks for station editing
-- `EStationModuleGroup` - Module categorization enum (Docking, Power, Storage, Defence, etc.)
+- `ASpaceStation` - Core station actor with module management (add, remove, move modules) [Adastrea module]
+- `ASpaceStationModule` - Base class for station modules with type classification [Adastrea module]
+- `UStationEditorWidget` - Player-facing UI widget for station editing [StationEditor module]
+- `EStationModuleGroup` - Module categorization enum (Docking, Power, Storage, Defence, etc.) [Adastrea module]
+
+**Module Organization:**
+- **StationEditor module** (Runtime): In-game player-facing station editor UI
+- **Adastrea module** (Runtime): Core station and module actors
+- **PlayerMods module** (Runtime): Player modification system
 
 **For detailed implementation guide, see:** [Content/Blueprints/STATION_EDITOR_README.md](Content/Blueprints/STATION_EDITOR_README.md)
 
 **Quick Usage:**
 1. Create Blueprint extending `ASpaceStation` for your custom station
 2. Create module Blueprints extending `ASpaceStationModule` (e.g., docking bays, trade hubs)
-3. Create Widget Blueprint extending `UStationEditorWidget` for the editor UI
+3. Create Widget Blueprint extending `UStationEditorWidget` for the in-game editor UI
 4. Use Blueprint-callable functions to add, remove, and position modules
 
 ### Faction System
@@ -585,8 +589,7 @@ Comprehensive technical documentation for contributors and developers:
 - [Iteration Guide](Assets/IterationGuide.md)
 
 #### Editor Development
-- [AdastreaEditor Analysis](ADASTREA_EDITOR_ANALYSIS.md) - Complete module analysis and implementation state
-- [AdastreaEditor Next Steps](ADASTREA_EDITOR_NEXT_STEPS.md) - Quick start guide for implementing editor customizations
+*Note: The AdastreaEditor module has been removed. Future editor customizations can be added as needed.*
 
 ### YAML Templates
 

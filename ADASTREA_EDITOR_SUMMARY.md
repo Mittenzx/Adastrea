@@ -1,35 +1,44 @@
-# AdastreaEditor Module: Executive Summary
+# AdastreaEditor Module: Removed
 
-**Quick Reference Guide**
-
----
-
-## What is AdastreaEditor?
-
-The **AdastreaEditor** module is an Unreal Engine editor module that provides custom tools, UI enhancements, and workflow improvements specifically for the Adastrea game. It's separate from the runtime game code to ensure editor-specific functionality doesn't bloat the shipped game.
+**Status: Module Removed from Project**
 
 ---
 
-## Current State: Foundation Only (5% Complete)
+## What Happened?
 
-### ✅ What's Working
+The **AdastreaEditor** module has been removed from the Adastrea project. It was originally created as a placeholder for editor-only developer/designer tools but had no actual functionality implemented.
 
-- **Module Infrastructure:** Complete and correctly configured
-- **Build System:** Properly integrated with Unreal Build Tool
-- **Dependencies:** All required editor modules are linked
-- **Loading:** Module loads successfully in Unreal Editor
+### Why Was It Removed?
 
-### ❌ What's Missing
+- The module was just infrastructure with no implemented features
+- All player-facing station editing features have been moved to the **StationEditor** runtime module
+- No immediate need for editor customizations
+- Can be re-added in the future if editor tools are needed
 
-- **No editor customizations implemented**
-- No detail panel customizations
-- No property editors
-- No asset validators
-- No custom tools or widgets
+### Module Structure Now
 
-### Summary
+- **StationEditor** (Runtime): In-game player-facing station construction UI
+  - Station module placement
+  - Player construction interface
+  - Available in packaged builds
+  
+- **Adastrea** (Runtime): Core game systems
+  - Stations, ships, factions, trading, etc.
+  
+- **PlayerMods** (Runtime): Player modification system
 
-The module is a **skeleton waiting for implementation**. All infrastructure is in place, but it currently provides zero functionality to designers or developers.
+---
+
+## If You Need Editor Customizations
+
+If you need to add editor-only tools in the future (property customizations, asset validators, etc.), you can:
+
+1. Create a new editor module following Unreal Engine conventions
+2. Add it to the `.uproject` file as Type: "Editor"
+3. Create a corresponding Editor target file
+4. Implement the needed customizations
+
+Refer to Unreal Engine documentation for creating editor modules.
 
 ---
 
