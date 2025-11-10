@@ -54,7 +54,7 @@ This document summarizes all the advanced features added to the Adastrea project
 
 #### Station Editor Widget (Source/StationEditor/UI/StationEditorWidget.h/cpp)
 
-**Note:** This component has been moved to the **StationEditor** runtime module (separate from AdastreaEditor).
+**Note:** This component is part of the **StationEditor** runtime module.
 
 **New BlueprintCallable Functions:**
 - `SetStationFaction(NewFaction)` - Assign faction to current station

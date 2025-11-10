@@ -237,8 +237,7 @@ Adastrea/
 │   └── automation_config.json      # Automation runner configuration
 │
 └── Source/                 # C++ source code
-    ├── AdastreaEditor/    # Editor customizations module
-    └── Adastrea/          # Core game systems
+    ├── Adastrea/          # Core game systems
         ├── AI/            # AI logic classes
         ├── Characters/    # Character and personnel
         ├── Factions/      # Faction system
@@ -310,7 +309,7 @@ A modular space station construction system that enables players to build, custo
 **Module Organization:**
 - **StationEditor module** (Runtime): In-game player-facing station editor UI
 - **Adastrea module** (Runtime): Core station and module actors
-- **AdastreaEditor module** (Editor-only): Developer/designer tools for content creation
+- **PlayerMods module** (Runtime): Player modification system
 
 **For detailed implementation guide, see:** [Content/Blueprints/STATION_EDITOR_README.md](Content/Blueprints/STATION_EDITOR_README.md)
 
@@ -590,8 +589,7 @@ Comprehensive technical documentation for contributors and developers:
 - [Iteration Guide](Assets/IterationGuide.md)
 
 #### Editor Development
-- [AdastreaEditor Analysis](ADASTREA_EDITOR_ANALYSIS.md) - Complete module analysis and implementation state
-- [AdastreaEditor Next Steps](ADASTREA_EDITOR_NEXT_STEPS.md) - Quick start guide for implementing editor customizations
+*Note: The AdastreaEditor module has been removed. Future editor customizations can be added as needed.*
 
 ### YAML Templates
 

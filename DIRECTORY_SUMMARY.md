@@ -105,11 +105,6 @@ Contains the player-accessible station editor UI and gameplay systems that allow
 - `StationEditor.h/cpp` - Module initialization
 - `UI/StationEditorWidget.h/cpp` - Station editor UI widget
 
-### Source/AdastreaEditor/
-**Developer/designer editor tools** - Editor-only customizations for Unreal Editor.
-
-Contains editor-only code for custom asset editors, property customizations, asset validators, and workflow improvements. This module is only loaded in the Unreal Editor and is not included in packaged builds.
-
 ### Source/PlayerMods/
 **Player modification system** - Modding support and extensibility.
 

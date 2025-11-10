@@ -31,7 +31,7 @@ Base class for all station modules (docking bays, trade hubs, etc.).
 #### 3. **UStationEditorWidget** (`Source/StationEditor/UI/StationEditorWidget.h/cpp`)
 Widget class providing UI hooks for the station editor.
 
-**Note:** This is part of the **StationEditor** runtime module, which is separate from the **AdastreaEditor** module. The StationEditor module contains player-facing in-game features, while AdastreaEditor contains developer/designer tools for the Unreal Editor.
+**Note:** This is part of the **StationEditor** runtime module, which contains all player-facing in-game station editing features.
 
 **Key Features:**
 - `CurrentStation` - Reference to the station being edited

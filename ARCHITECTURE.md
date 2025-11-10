@@ -101,8 +101,7 @@ Adastrea/
 │   └── UI/                     # UI widgets and assets
 │
 └── Source/                      # C++ source code
-    ├── AdastreaEditor/         # Editor customizations module
-    └── Adastrea/               # Core game systems
+    ├── Adastrea/               # Core game systems
         ├── AI/                 # AI logic classes
         ├── Characters/         # Character and personnel classes
         ├── Factions/           # Faction system
@@ -229,25 +228,7 @@ The main game logic module, organized by feature:
 - Blueprint workflows: [Content/Blueprints/STATION_EDITOR_README.md](Content/Blueprints/STATION_EDITOR_README.md)
 - Implementation templates: [Assets/BlueprintWorkflowTemplates.md](Assets/BlueprintWorkflowTemplates.md)
 
-### Editor Module
-
-#### AdastreaEditor Module (`Source/AdastreaEditor/`)
-This module provides **developer and designer tools** for the Unreal Editor only. It contains customizations for editing game content, property panels, asset validators, and workflow improvements.
-
-**Module Type:** Editor-only (not included in packaged builds)
-
-**Current Status:** Foundation stage with infrastructure in place but no customizations implemented yet.
-
-**Documentation:**
-- Complete analysis and state: [ADASTREA_EDITOR_ANALYSIS.md](ADASTREA_EDITOR_ANALYSIS.md)
-- Implementation guide: [ADASTREA_EDITOR_NEXT_STEPS.md](ADASTREA_EDITOR_NEXT_STEPS.md)
-
-**Planned Features:**
-- Detail customizations for Data Assets (SpaceshipDataAsset, FactionDataAsset, etc.)
-- Property type customizations for complex structs (FFactionTrait, FPersonnelSkill, etc.)
-- Asset validators for data integrity
-- Custom asset actions for workflow optimization
-- Visual editor tools (Faction Relationship Graph, Trade Route Designer)
+**Note:** The AdastreaEditor module has been removed from the project. All player-facing station editing features are now in the StationEditor runtime module. Future editor customizations can be added as needed.
 
 ## Design Patterns
 
@@ -521,11 +502,10 @@ All systems follow this documentation structure:
 - **Exploration System**: Procedural generation
 
 ### Planned Improvements
-- Custom Unreal Editor tools (using AdastreaEditor module)
+- Custom Unreal Editor tools (can be added as separate editor module if needed)
 - Visual programming for AI behaviors
-- In-game station editor UI
 - Dynamic event system
-- Modding API
+- Modding API enhancements
 
 ---
 
