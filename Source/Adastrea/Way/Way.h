@@ -89,6 +89,54 @@ struct FPreceptValue
 };
 
 /**
+ * Diplomatic relationship between two Ways
+ * Defines standing, alliance status, trade agreements, and conflicts
+ */
+USTRUCT(BlueprintType)
+struct FWayRelationship
+{
+    GENERATED_BODY()
+
+    /** The Way this relationship is with */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Diplomacy")
+    FName TargetWayID;
+
+    /** Relationship status (-100 to 100, negative is hostile, positive is friendly) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Diplomacy", meta=(ClampMin="-100", ClampMax="100"))
+    int32 RelationshipValue;
+
+    /** Whether there is an active alliance */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Diplomacy")
+    bool bIsAllied;
+
+    /** Whether there is an active conflict/rivalry */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Diplomacy")
+    bool bInConflict;
+
+    /** Trade agreement multiplier (1.0 = normal, higher = better trade) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Diplomacy", meta=(ClampMin="0.0", ClampMax="3.0"))
+    float TradeModifier;
+
+    /** Whether this Way shares resources with the target */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Diplomacy")
+    bool bSharesResources;
+
+    /** Optional notes about the relationship */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Diplomacy", meta=(MultiLine=true))
+    FText RelationshipNotes;
+
+    FWayRelationship()
+        : TargetWayID(NAME_None)
+        , RelationshipValue(0)
+        , bIsAllied(false)
+        , bInConflict(false)
+        , TradeModifier(1.0f)
+        , bSharesResources(false)
+        , RelationshipNotes(FText::GetEmpty())
+    {}
+};
+
+/**
  * Data Asset representing a Way - the identity and philosophy of a group.
  * A Way defines who a group is (School or Syndicate) and what they value (Precepts).
  * 
@@ -141,6 +189,34 @@ public:
     /** Secondary color for UI representation */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Identity")
     FLinearColor SecondaryColor;
+
+    // ====================
+    // Organizational Attributes
+    // ====================
+
+    /** Technology level of this Way (1-10) */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Attributes", meta=(ClampMin="1", ClampMax="10"))
+    int32 TechnologyLevel;
+
+    /** Military/Combat strength of this Way (1-10) */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Attributes", meta=(ClampMin="1", ClampMax="10"))
+    int32 MilitaryStrength;
+
+    /** Economic power/wealth of this Way (1-10) */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Attributes", meta=(ClampMin="1", ClampMax="10"))
+    int32 EconomicPower;
+
+    /** Influence/political power of this Way (1-10) */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Attributes", meta=(ClampMin="1", ClampMax="10"))
+    int32 InfluencePower;
+
+    /** Territory sectors controlled by this Way */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Territory")
+    TArray<FName> ControlledSectors;
+
+    /** Home base or headquarters location */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Territory")
+    FName HomeBaseID;
 
     // ====================
     // Core Values (Precepts)
