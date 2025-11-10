@@ -12,6 +12,14 @@ First off, thank you for considering contributing to Adastrea! It's people like 
 - [Reporting Bugs](#reporting-bugs)
 - [Feature Requests](#feature-requests)
 
+## Before You Start
+
+📍 **Check the Project Roadmap**: Before contributing, review our [ROADMAP.md](ROADMAP.md) to understand:
+- Current development priorities and phases
+- Planned features and systems
+- Timeline and milestones
+- How your contribution fits into the bigger picture
+
 ## Code of Conduct
 
 This project and everyone participating in it is governed by our commitment to fostering an open and welcoming environment. Please be respectful and constructive in all interactions.

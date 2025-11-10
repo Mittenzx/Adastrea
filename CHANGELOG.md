@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added - Comprehensive Project Roadmap (2025-11-10)
+- **Project Roadmap**: Created comprehensive ROADMAP.md with detailed development plan
+  - Added complete project vision and core pillars
+  - Documented 6 development phases from Foundation to Release & Beyond
+  - Included detailed feature roadmap for all major systems
+  - Added technical roadmap with engine updates and optimization plans
+  - Documented community and modding ecosystem plans
+  - Created system maturity matrix showing current state of all systems
+  - Added risk management section with mitigation strategies
+  - Included contribution guidelines for all contributor types
+  - Timeline spans from Q4 2025 (completed) through 2027 (release and beyond)
+  - Updated README.md to reference the new roadmap in multiple sections
+  - Added roadmap link to Documentation section
+
+**Roadmap Highlights**:
+- **Phase 1-2 (Complete)**: Foundation and core systems including all 8 major game systems
+- **Phase 3 (In Progress)**: Advanced systems - Combat, Navigation, Quest, Exploration
+- **Phase 4 (Q1-Q2 2026)**: Gameplay & Polish - Player progression, save system, UI/UX
+- **Phase 5 (Q3-Q4 2026)**: Content & Beta - Substantial content creation, procedural generation
+- **Phase 6 (2027+)**: Release & Beyond - Public launch, ongoing support, expansions
+
+**System Maturity**:
+- 8 core systems at 75-95% completion
+- 4 advanced systems at 10-60% completion (in progress)
+- 3 future systems in planning phase
+
 ### Changed - Unreal Engine Version Update (2025-11-07)
 - **Engine Version Update**: Updated project from Unreal Engine 5.5 to 5.6.1
   - Updated `Adastrea.uproject` EngineAssociation from "5.5" to "5.6"
