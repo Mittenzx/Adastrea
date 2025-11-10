@@ -12,6 +12,23 @@ UWayDataAsset::UWayDataAsset()
     // Default UI colors
     PrimaryColor = FLinearColor(0.2f, 0.5f, 0.8f, 1.0f);
     SecondaryColor = FLinearColor(0.1f, 0.3f, 0.5f, 1.0f);
+    
+    // Default organizational attributes
+    TechnologyLevel = 5;
+    MilitaryStrength = 5;
+    EconomicPower = 5;
+    InfluencePower = 5;
+    HomeBaseID = NAME_None;
+    
+    // Default specialization
+    PrimaryIndustry = EWayIndustry::Trading;
+    QualityReputation = EQualityTier::Standard;
+    SpecializationDescription = FText::FromString(TEXT("This Way specializes in various trades and services."));
+    MemberCount = 100;
+    
+    // Default governance settings
+    bParticipatesInCouncils = true;
+    BaseVotingWeight = 10;
 }
 
 // ====================
@@ -148,4 +165,252 @@ FText UWayDataAsset::GetPreceptDescription(EPrecept Precept)
         default:
             return FText::FromString(TEXT("A core value of this group"));
     }
+}
+
+// ====================
+// Relationship Query Functions
+// ====================
+
+TArray<FWayRelationship> UWayDataAsset::GetRelationships() const
+{
+    return WayRelationships;
+}
+
+bool UWayDataAsset::GetRelationship(FName OtherWayID, FWayRelationship& OutRelationship) const
+{
+    for (const FWayRelationship& Relationship : WayRelationships)
+    {
+        if (Relationship.TargetWayID == OtherWayID)
+        {
+            OutRelationship = Relationship;
+            return true;
+        }
+    }
+    return false;
+}
+
+bool UWayDataAsset::HasPartnership(FName OtherWayID) const
+{
+    FWayRelationship Relationship;
+    if (GetRelationship(OtherWayID, Relationship))
+    {
+        return Relationship.bHasPartnership;
+    }
+    return false;
+}
+
+bool UWayDataAsset::IsCompeting(FName OtherWayID) const
+{
+    FWayRelationship Relationship;
+    if (GetRelationship(OtherWayID, Relationship))
+    {
+        return Relationship.bInCompetition;
+    }
+    return false;
+}
+
+int32 UWayDataAsset::GetRelationshipValue(FName OtherWayID) const
+{
+    FWayRelationship Relationship;
+    if (GetRelationship(OtherWayID, Relationship))
+    {
+        return Relationship.RelationshipValue;
+    }
+    return 0;
+}
+
+float UWayDataAsset::GetTradeModifier(FName OtherWayID) const
+{
+    FWayRelationship Relationship;
+    if (GetRelationship(OtherWayID, Relationship))
+    {
+        return Relationship.TradeModifier;
+    }
+    return 1.0f;
+}
+
+// ====================
+// Governance Functions
+// ====================
+
+bool UWayDataAsset::IsRepresentedInSector(FName SectorID) const
+{
+    return RepresentedSectors.Contains(SectorID) || ControlledSectors.Contains(SectorID);
+}
+
+TArray<FName> UWayDataAsset::GetRepresentedSectors() const
+{
+    return RepresentedSectors;
+}
+
+int32 UWayDataAsset::GetVotingWeight() const
+{
+    return BaseVotingWeight;
+}
+
+// ====================
+// Trade Specialization Functions
+// ====================
+
+EWayIndustry UWayDataAsset::GetPrimaryIndustry() const
+{
+    return PrimaryIndustry;
+}
+
+TArray<EWayIndustry> UWayDataAsset::GetAllIndustries() const
+{
+    TArray<EWayIndustry> AllIndustries;
+    AllIndustries.Add(PrimaryIndustry);
+    AllIndustries.Append(SecondaryIndustries);
+    return AllIndustries;
+}
+
+bool UWayDataAsset::OperatesInIndustry(EWayIndustry Industry) const
+{
+    if (PrimaryIndustry == Industry)
+    {
+        return true;
+    }
+    return SecondaryIndustries.Contains(Industry);
+}
+
+EQualityTier UWayDataAsset::GetQualityReputation() const
+{
+    return QualityReputation;
+}
+
+TArray<FWayResource> UWayDataAsset::GetProducedResources() const
+{
+    return ProducedResources;
+}
+
+TArray<FWayResource> UWayDataAsset::GetConsumedResources() const
+{
+    return ConsumedResources;
+}
+
+bool UWayDataAsset::ProducesResource(FName ResourceID) const
+{
+    for (const FWayResource& Resource : ProducedResources)
+    {
+        if (Resource.ResourceID == ResourceID && Resource.bIsProduced)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool UWayDataAsset::ConsumesResource(FName ResourceID) const
+{
+    for (const FWayResource& Resource : ConsumedResources)
+    {
+        if (Resource.ResourceID == ResourceID && !Resource.bIsProduced)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+int32 UWayDataAsset::GetProductionQuantity(FName ResourceID) const
+{
+    for (const FWayResource& Resource : ProducedResources)
+    {
+        if (Resource.ResourceID == ResourceID && Resource.bIsProduced)
+        {
+            return Resource.Quantity;
+        }
+    }
+    return 0;
+}
+
+int32 UWayDataAsset::GetConsumptionQuantity(FName ResourceID) const
+{
+    for (const FWayResource& Resource : ConsumedResources)
+    {
+        if (Resource.ResourceID == ResourceID && !Resource.bIsProduced)
+        {
+            return Resource.Quantity;
+        }
+    }
+    return 0;
+}
+
+TArray<FSupplyChainLink> UWayDataAsset::GetSupplyChains() const
+{
+    return SupplyChains;
+}
+
+TArray<UWayDataAsset*> UWayDataAsset::GetSuppliers() const
+{
+    TArray<UWayDataAsset*> Suppliers;
+    for (const FSupplyChainLink& Link : SupplyChains)
+    {
+        if (Link.ConsumerWay == this && Link.SupplierWay)
+        {
+            Suppliers.AddUnique(Link.SupplierWay);
+        }
+    }
+    return Suppliers;
+}
+
+TArray<UWayDataAsset*> UWayDataAsset::GetCustomers() const
+{
+    TArray<UWayDataAsset*> Customers;
+    for (const FSupplyChainLink& Link : SupplyChains)
+    {
+        if (Link.SupplierWay == this && Link.ConsumerWay)
+        {
+            Customers.AddUnique(Link.ConsumerWay);
+        }
+    }
+    return Customers;
+}
+
+bool UWayDataAsset::HasSupplyRelationship(const UWayDataAsset* OtherWay) const
+{
+    if (!OtherWay)
+    {
+        return false;
+    }
+    
+    for (const FSupplyChainLink& Link : SupplyChains)
+    {
+        if ((Link.SupplierWay == this && Link.ConsumerWay == OtherWay) ||
+            (Link.ConsumerWay == this && Link.SupplierWay == OtherWay))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+int32 UWayDataAsset::GetMemberCount() const
+{
+    return MemberCount;
+}
+
+// ====================
+// Utility Functions
+// ====================
+
+FText UWayDataAsset::GetIndustryDisplayName(EWayIndustry Industry)
+{
+    const UEnum* EnumPtr = FindObject<UEnum>(nullptr, TEXT("/Script/Adastrea.EWayIndustry"), true);
+    if (EnumPtr)
+    {
+        return EnumPtr->GetDisplayNameTextByValue(static_cast<int64>(Industry));
+    }
+    return FText::FromString(TEXT("Unknown Industry"));
+}
+
+FText UWayDataAsset::GetQualityDisplayName(EQualityTier Quality)
+{
+    const UEnum* EnumPtr = FindObject<UEnum>(nullptr, TEXT("/Script/Adastrea.EQualityTier"), true);
+    if (EnumPtr)
+    {
+        return EnumPtr->GetDisplayNameTextByValue(static_cast<int64>(Quality));
+    }
+    return FText::FromString(TEXT("Unknown Quality"));
 }

@@ -61,6 +61,45 @@ enum class EReputationLevel : uint8
 };
 
 /**
+ * Industry categories that Ways can specialize in
+ * Each Way focuses on specific trade/craft areas
+ */
+UENUM(BlueprintType)
+enum class EWayIndustry : uint8
+{
+    Mining          UMETA(DisplayName = "Mining"),          // Extract raw materials (ore, gas, ice)
+    Refining        UMETA(DisplayName = "Refining"),        // Process raw materials into usable resources
+    Manufacturing   UMETA(DisplayName = "Manufacturing"),   // Craft components and parts
+    Shipbuilding    UMETA(DisplayName = "Shipbuilding"),    // Build and repair spaceships
+    Trading         UMETA(DisplayName = "Trading"),         // Buy and sell goods, merchant services
+    Exploration     UMETA(DisplayName = "Exploration"),     // Survey, map, and discover new areas
+    Research        UMETA(DisplayName = "Research"),        // Develop new technologies and knowledge
+    Agriculture     UMETA(DisplayName = "Agriculture"),     // Produce food and organic materials
+    Medical         UMETA(DisplayName = "Medical"),         // Healthcare and pharmaceutical services
+    Security        UMETA(DisplayName = "Security"),        // Protection, escort, and defense services
+    Salvage         UMETA(DisplayName = "Salvage"),         // Recovery and recycling of materials
+    Entertainment   UMETA(DisplayName = "Entertainment"),   // Leisure and cultural services
+    Transport       UMETA(DisplayName = "Transport"),       // Cargo hauling and passenger services
+    Engineering     UMETA(DisplayName = "Engineering"),     // Technical services and maintenance
+    Custom          UMETA(DisplayName = "Custom")           // Unique specialty (define in description)
+};
+
+/**
+ * Quality tier for products/services provided by a Way
+ * Affects pricing, reputation, and customer satisfaction
+ */
+UENUM(BlueprintType)
+enum class EQualityTier : uint8
+{
+    Basic           UMETA(DisplayName = "Basic"),           // Cheap, functional, gets the job done
+    Standard        UMETA(DisplayName = "Standard"),        // Average quality, fair price
+    Quality         UMETA(DisplayName = "Quality"),         // Above average, reliable
+    Premium         UMETA(DisplayName = "Premium"),         // High quality, expensive
+    Elite           UMETA(DisplayName = "Elite"),           // Exceptional quality, very expensive
+    Legendary       UMETA(DisplayName = "Legendary")        // Best in class, priceless reputation
+};
+
+/**
  * Structure defining how strongly a group values a particular Precept.
  * Groups can have multiple Precepts with varying importance levels.
  */
@@ -85,6 +124,97 @@ struct FPreceptValue
         : Precept(EPrecept::Honor)
         , ImportanceValue(50)
         , Description(FText::FromString(TEXT("A core value of this group.")))
+    {}
+};
+
+/**
+ * Structure defining a resource that a Way produces or consumes
+ * Used for supply chain and trade mechanics
+ */
+USTRUCT(BlueprintType)
+struct FWayResource
+{
+    GENERATED_BODY()
+
+    /** Name of the resource (e.g., "Iron Ore", "Ship Components", "Medical Supplies") */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Resource")
+    FText ResourceName;
+
+    /** Unique identifier for this resource type */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Resource")
+    FName ResourceID;
+
+    /** Quantity produced or consumed per cycle (e.g., per day/week) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Resource", meta=(ClampMin="0"))
+    int32 Quantity;
+
+    /** Quality tier of this resource */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Resource")
+    EQualityTier QualityLevel;
+
+    /** Whether this is a produced resource (true) or consumed resource (false) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Resource")
+    bool bIsProduced;
+
+    /** Optional notes about this resource */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Resource", meta=(MultiLine=true))
+    FText ResourceNotes;
+
+    FWayResource()
+        : ResourceName(FText::FromString(TEXT("Unknown Resource")))
+        , ResourceID(NAME_None)
+        , Quantity(100)
+        , QualityLevel(EQualityTier::Standard)
+        , bIsProduced(true)
+        , ResourceNotes(FText::GetEmpty())
+    {}
+};
+
+/**
+ * Structure defining a trade relationship/supply chain between Ways
+ * Example: Mining Way supplies ore to Crafting Way
+ */
+USTRUCT(BlueprintType)
+struct FSupplyChainLink
+{
+    GENERATED_BODY()
+
+    /** The Way that supplies resources */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Supply Chain")
+    UWayDataAsset* SupplierWay;
+
+    /** The Way that receives/consumes resources */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Supply Chain")
+    UWayDataAsset* ConsumerWay;
+
+    /** Resource being supplied */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Supply Chain")
+    FName ResourceID;
+
+    /** Quantity supplied per cycle */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Supply Chain", meta=(ClampMin="0"))
+    int32 SupplyQuantity;
+
+    /** Price per unit (can be negotiated) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Supply Chain", meta=(ClampMin="0"))
+    int32 PricePerUnit;
+
+    /** Whether this is an exclusive supply contract */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Supply Chain")
+    bool bIsExclusive;
+
+    /** Contract duration (in game days, 0 = indefinite) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Supply Chain", meta=(ClampMin="0"))
+    int32 ContractDuration;
+
+    FSupplyChainLink()
+        : SupplierWay(nullptr)
+        , ConsumerWay(nullptr)
+        , ResourceID(NAME_None)
+        , SupplyQuantity(100)
+        , PricePerUnit(10)
+        , bIsExclusive(false)
+        , ContractDuration(0)
     {}
 };
 
@@ -217,6 +347,42 @@ public:
     /** Home base or headquarters location */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Territory")
     FName HomeBaseID;
+
+    // ====================
+    // Trade Specialization
+    // ====================
+
+    /** Primary industry this Way specializes in */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Specialization")
+    EWayIndustry PrimaryIndustry;
+
+    /** Secondary industries (if any) */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Specialization")
+    TArray<EWayIndustry> SecondaryIndustries;
+
+    /** Overall quality tier for this Way's products/services */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Specialization")
+    EQualityTier QualityReputation;
+
+    /** Detailed description of what this Way does */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Specialization", meta=(MultiLine=true))
+    FText SpecializationDescription;
+
+    /** Resources this Way produces */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Trade")
+    TArray<FWayResource> ProducedResources;
+
+    /** Resources this Way consumes/requires */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Trade")
+    TArray<FWayResource> ConsumedResources;
+
+    /** Established supply chain relationships */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Trade")
+    TArray<FSupplyChainLink> SupplyChains;
+
+    /** Approximate member count of this Way */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organization", meta=(ClampMin="1", ClampMax="10000"))
+    int32 MemberCount;
 
     // ====================
     // Core Values (Precepts)
@@ -399,4 +565,135 @@ public:
      */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Governance")
     int32 GetVotingWeight() const;
+
+    // ====================
+    // Trade Specialization Functions
+    // ====================
+
+    /**
+     * Get the primary industry this Way specializes in
+     * @return Primary industry enum
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Specialization")
+    EWayIndustry GetPrimaryIndustry() const;
+
+    /**
+     * Get all industries this Way operates in (primary + secondary)
+     * @return Array of industries
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Specialization")
+    TArray<EWayIndustry> GetAllIndustries() const;
+
+    /**
+     * Check if this Way operates in a specific industry
+     * @param Industry The industry to check
+     * @return True if Way operates in this industry
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Specialization")
+    bool OperatesInIndustry(EWayIndustry Industry) const;
+
+    /**
+     * Get this Way's quality reputation
+     * @return Quality tier enum
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Specialization")
+    EQualityTier GetQualityReputation() const;
+
+    /**
+     * Get all resources this Way produces
+     * @return Array of produced resources
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Trade")
+    TArray<FWayResource> GetProducedResources() const;
+
+    /**
+     * Get all resources this Way consumes
+     * @return Array of consumed resources
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Trade")
+    TArray<FWayResource> GetConsumedResources() const;
+
+    /**
+     * Check if this Way produces a specific resource
+     * @param ResourceID The resource to check
+     * @return True if Way produces this resource
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Trade")
+    bool ProducesResource(FName ResourceID) const;
+
+    /**
+     * Check if this Way consumes a specific resource
+     * @param ResourceID The resource to check
+     * @return True if Way consumes this resource
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Trade")
+    bool ConsumesResource(FName ResourceID) const;
+
+    /**
+     * Get production quantity for a specific resource
+     * @param ResourceID The resource to query
+     * @return Quantity produced per cycle, 0 if not produced
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Trade")
+    int32 GetProductionQuantity(FName ResourceID) const;
+
+    /**
+     * Get consumption quantity for a specific resource
+     * @param ResourceID The resource to query
+     * @return Quantity consumed per cycle, 0 if not consumed
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Trade")
+    int32 GetConsumptionQuantity(FName ResourceID) const;
+
+    /**
+     * Get all supply chain links for this Way (both as supplier and consumer)
+     * @return Array of supply chain relationships
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Trade")
+    TArray<FSupplyChainLink> GetSupplyChains() const;
+
+    /**
+     * Get Ways that supply resources to this Way
+     * @return Array of supplier Ways
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Trade")
+    TArray<UWayDataAsset*> GetSuppliers() const;
+
+    /**
+     * Get Ways that this Way supplies resources to
+     * @return Array of customer Ways
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Trade")
+    TArray<UWayDataAsset*> GetCustomers() const;
+
+    /**
+     * Check if this Way has a supply relationship with another Way
+     * @param OtherWay The Way to check
+     * @return True if there's a supply chain connection
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Trade")
+    bool HasSupplyRelationship(const UWayDataAsset* OtherWay) const;
+
+    /**
+     * Get member count of this Way
+     * @return Number of members
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Organization")
+    int32 GetMemberCount() const;
+
+    /**
+     * Get display name for an industry type
+     * @param Industry The industry to get name for
+     * @return Localized display name
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Utility")
+    static FText GetIndustryDisplayName(EWayIndustry Industry);
+
+    /**
+     * Get display name for a quality tier
+     * @param Quality The quality tier to get name for
+     * @return Localized display name
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Utility")
+    static FText GetQualityDisplayName(EQualityTier Quality);
 };
