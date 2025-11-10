@@ -2,10 +2,12 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "Way/Way.h"
 #include "FactionDataAsset.generated.h"
 
 // Forward declarations
 class UWayDataAsset;
+struct FFeatPreceptAlignment;
 
 /**
  * Category for organizing faction traits
@@ -174,6 +176,45 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Faction|Ways", meta=(ClampMin="0", ClampMax="100"))
     int32 WayReputationSpillover;
 
+    /**
+     * Reverse spillover: faction reputation affects associated Ways (0-100)
+     * When player gains faction reputation, this % flows to associated Ways
+     * Example: 15 = gaining 100 faction rep grants 15 rep to each associated Way
+     */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Faction|Ways", meta=(ClampMin="0", ClampMax="100"))
+    int32 FactionToWaySpillover;
+
+    /**
+     * Whether this faction's diplomacy is influenced by Way Networks
+     * If true, the faction considers network memberships in diplomatic decisions
+     */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Faction|Ways")
+    bool bNetworkInfluencesDiplomacy;
+
+    /**
+     * Weight of Way reputation in overall faction standing (0.0-1.0)
+     * 0.0 = Way reputation doesn't affect faction standing
+     * 0.5 = Way reputation is 50% of faction standing calculation
+     * 1.0 = Way reputation completely determines faction standing
+     */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Faction|Ways", meta=(ClampMin="0.0", ClampMax="1.0"))
+    float WayReputationWeight;
+
+    /**
+     * Precepts that define this faction's philosophical alignment
+     * Derived from or aligned with associated Ways' Precepts
+     * Used for determining faction reactions to player Feats
+     */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Faction|Philosophy")
+    TArray<FPreceptValue> FactionPrecepts;
+
+    /**
+     * Whether faction traits are automatically derived from Way Precepts
+     * If true, faction gains traits based on its Ways' primary Precepts
+     */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Faction|Ways")
+    bool bDeriveTraitsFromWays;
+
     UFactionDataAsset();
 
     // ====================
@@ -308,6 +349,87 @@ public:
      */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction|Ways")
     int32 CalculateWayReputationSpillover(int32 WayReputationGain) const;
+
+    /**
+     * Calculate Way reputation gain from faction reputation gain (reverse spillover)
+     * @param FactionReputationGain Reputation gained with the faction
+     * @return Spillover reputation for each associated Way
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction|Ways")
+    int32 CalculateFactionToWaySpillover(int32 FactionReputationGain) const;
+
+    /**
+     * Get aggregated reputation score across all associated Ways
+     * @param WayReputationScores Map of Way IDs to their reputation scores
+     * @return Weighted aggregate reputation from all Ways
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction|Ways")
+    float CalculateAggregateWayReputation(const TMap<FName, float>& WayReputationScores) const;
+
+    /**
+     * Calculate combined faction standing including Way influence
+     * @param BaseReputation Base faction reputation
+     * @param WayAggregate Aggregate reputation from Ways
+     * @return Combined reputation score with Way weighting applied
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction|Ways")
+    float CalculateCombinedStanding(int32 BaseReputation, float WayAggregate) const;
+
+    /**
+     * Get all Precepts valued by this faction
+     * @return Array of faction Precepts
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction|Philosophy")
+    TArray<FPreceptValue> GetFactionPrecepts() const;
+
+    /**
+     * Check if faction values a specific Precept
+     * @param Precept The Precept to check
+     * @return True if faction has this Precept
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction|Philosophy")
+    bool HasFactionPrecept(EPrecept Precept) const;
+
+    /**
+     * Get the importance value for a specific Precept
+     * @param Precept The Precept to query
+     * @return Importance value (0-100), returns 0 if not valued
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction|Philosophy")
+    int32 GetPreceptImportance(EPrecept Precept) const;
+
+    /**
+     * Calculate philosophical alignment with another faction based on shared Precepts
+     * @param OtherFaction The faction to check alignment with
+     * @return Alignment score (0.0-1.0), higher means more aligned
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction|Philosophy")
+    float CalculatePhilosophicalAlignment(const UFactionDataAsset* OtherFaction) const;
+
+    /**
+     * Get traits derived from associated Ways' Precepts
+     * Automatically generates traits based on Way philosophies
+     * @return Array of dynamically generated traits
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction|Ways")
+    TArray<FFactionTrait> GetDerivedTraitsFromWays() const;
+
+    /**
+     * Get all Ways that share a specific Precept with this faction
+     * @param Precept The Precept to match
+     * @param MinimumImportance Minimum importance value to consider (default 50)
+     * @return Array of Ways that strongly value this Precept
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction|Ways")
+    TArray<UWayDataAsset*> GetWaysByPrecept(EPrecept Precept, int32 MinimumImportance = 50) const;
+
+    /**
+     * Calculate reputation modifier for a Feat based on Precept alignment
+     * @param FeatPrecepts The Precepts embodied by the Feat
+     * @return Reputation modifier multiplier (0.0-3.0)
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction|Philosophy")
+    float CalculateFeatReputationModifier(const TArray<FFeatPreceptAlignment>& FeatPrecepts) const;
 
 private:
     // Performance optimization: cached relationship map for O(1) lookups
