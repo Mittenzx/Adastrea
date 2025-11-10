@@ -542,9 +542,7 @@ Comprehensive technical documentation for contributors and developers:
 - **[Contributing Guidelines](CONTRIBUTING.md)** - How to contribute code, documentation, and assets
 - **[Code Style Guide](CODE_STYLE.md)** - C++ and Blueprint coding standards
 - **[Build Troubleshooting](BUILD_TROUBLESHOOTING.md)** - Common build issues and solutions
-- **[Implementation Summary](IMPLEMENTATION_SUMMARY.md)** - Technical implementation details
 - **[Performance Improvements](PERFORMANCE_IMPROVEMENTS.md)** - Optimization guidelines
-- **[Audit Summary](AUDIT_SUMMARY.md)** - Security and code quality audit results
 - **[Custom Agents](.github/agents/README.md)** - AI assistants with project expertise for GitHub Copilot
 
 ### Quick Start Guides

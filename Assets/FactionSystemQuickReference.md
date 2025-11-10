@@ -469,7 +469,7 @@ A: Integration with gameplay systems is pending. Use trait modifiers in your sys
 
 For more details, see:
 - [Assets/IterationGuide.md](Assets/IterationGuide.md) - Complete faction system guide
-- [WHATS_STILL_NEEDED.md](WHATS_STILL_NEEDED.md) - Implementation status
+- [CHANGELOG.md](../CHANGELOG.md) - Implementation status and release history
 - [EXAMPLE_DATA_ASSETS.md](EXAMPLE_DATA_ASSETS.md) - Data asset examples
 
 _Last updated: 2025-10-28_

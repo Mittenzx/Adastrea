@@ -434,7 +434,7 @@ The agent is production-ready and includes complete documentation, test cases, a
 **Version:** 1.0  
 **Last Updated:** 2025-11-07
 
-Note: Statistics in this document reflect the state at implementation time. For current project status, see WHATS_STILL_NEEDED.md and recent commits.
+Note: Statistics in this document reflect the state at implementation time. For current project status, see recent commits and the CHANGELOG.md.
 
 ---
 
