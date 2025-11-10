@@ -25,7 +25,7 @@ enum class ESectorPolicyType : uint8
  * Structure representing a sector policy decision
  */
 USTRUCT(BlueprintType)
-struct FSectorPolicy
+struct ADASTREA_API FSectorPolicy
 {
     GENERATED_BODY()
 
@@ -67,7 +67,7 @@ struct FSectorPolicy
  * Structure representing a Way's representative on a sector council
  */
 USTRUCT(BlueprintType)
-struct FCouncilRepresentative
+struct ADASTREA_API FCouncilRepresentative
 {
     GENERATED_BODY()
 
@@ -104,7 +104,7 @@ struct FCouncilRepresentative
  * Structure representing a vote on a sector issue
  */
 USTRUCT(BlueprintType)
-struct FCouncilVote
+struct ADASTREA_API FCouncilVote
 {
     GENERATED_BODY()
 

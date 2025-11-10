@@ -293,7 +293,7 @@ bool UWayDataAsset::ProducesResource(FName ResourceID) const
 {
     for (const FWayResource& Resource : ProducedResources)
     {
-        if (Resource.ResourceID == ResourceID && Resource.bIsProduced)
+        if (Resource.ResourceID == ResourceID)
         {
             return true;
         }
@@ -305,7 +305,7 @@ bool UWayDataAsset::ConsumesResource(FName ResourceID) const
 {
     for (const FWayResource& Resource : ConsumedResources)
     {
-        if (Resource.ResourceID == ResourceID && !Resource.bIsProduced)
+        if (Resource.ResourceID == ResourceID)
         {
             return true;
         }
@@ -317,7 +317,7 @@ int32 UWayDataAsset::GetProductionQuantity(FName ResourceID) const
 {
     for (const FWayResource& Resource : ProducedResources)
     {
-        if (Resource.ResourceID == ResourceID && Resource.bIsProduced)
+        if (Resource.ResourceID == ResourceID)
         {
             return Resource.Quantity;
         }
@@ -329,7 +329,7 @@ int32 UWayDataAsset::GetConsumptionQuantity(FName ResourceID) const
 {
     for (const FWayResource& Resource : ConsumedResources)
     {
-        if (Resource.ResourceID == ResourceID && !Resource.bIsProduced)
+        if (Resource.ResourceID == ResourceID)
         {
             return Resource.Quantity;
         }

@@ -132,7 +132,7 @@ struct FPreceptValue
  * Used for supply chain and trade mechanics
  */
 USTRUCT(BlueprintType)
-struct FWayResource
+struct ADASTREA_API FWayResource
 {
     GENERATED_BODY()
 
@@ -175,7 +175,7 @@ struct FWayResource
  * Example: Mining Way supplies ore to Crafting Way
  */
 USTRUCT(BlueprintType)
-struct FSupplyChainLink
+struct ADASTREA_API FSupplyChainLink
 {
     GENERATED_BODY()
 
@@ -223,7 +223,7 @@ struct FSupplyChainLink
  * Defines trade agreements, partnerships, and operational relationships
  */
 USTRUCT(BlueprintType)
-struct FWayRelationship
+struct ADASTREA_API FWayRelationship
 {
     GENERATED_BODY()
 

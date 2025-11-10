@@ -1,6 +1,5 @@
 #include "Way/SectorCouncil.h"
 #include "Way/Way.h"
-#include "AdastreaLog.h"
 
 USectorCouncilDataAsset::USectorCouncilDataAsset()
 {
