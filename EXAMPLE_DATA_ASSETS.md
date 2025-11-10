@@ -465,4 +465,4 @@ float ResearchBonus = FactionAsset->GetCategoryModifierTotal(EFactionTraitCatego
 - `Assets/PersonnelTemplates.md` - More personnel examples
 - `Assets/TradingSystemGuide.md` - More trading examples
 - `CONTENT_CREATION_QUICKSTART.md` - How to use these assets
-- `WHATS_STILL_NEEDED.md` - Implementation status and next steps
+- `CHANGELOG.md` - Implementation status and release history
