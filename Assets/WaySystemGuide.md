@@ -253,7 +253,7 @@ The Way System documentation is organized into specialized guides:
 
 ### Getting Started
 - **[WaySystemOverview.md](WaySystemOverview.md)** - High-level introduction
-- **[WaySystemQuickReference.md](WaySystemQuickReference.md)** - Quick lookup (to be created)
+- **[WaySystemQuickReference.md](WaySystemQuickReference.md)** - Quick lookup
 - **[WayCreationGuide.md](WayCreationGuide.md)** - Step-by-step Way creation
 
 ### Way Networks
@@ -268,7 +268,7 @@ The Way System documentation is organized into specialized guides:
 - **[WayNetworkTemplates/](WayNetworkTemplates/)** - Ready-to-use YAML templates
 
 ### Developer Reference
-- **[WaySystemAPIReference.md](WaySystemAPIReference.md)** - C++ and Blueprint API (to be created)
+- **[WaySystemAPIReference.md](WaySystemAPIReference.md)** - C++ and Blueprint API
 
 ## Integration with Other Systems
 
@@ -329,8 +329,8 @@ The Way System documentation is organized into specialized guides:
 
 ### Templates and References
 - [Way Network Templates](WayNetworkTemplates/) - YAML configurations
-- Way System API Reference (coming soon) - Developer reference
-- Way System Quick Reference (coming soon) - Quick lookup
+- [Way System API Reference](WaySystemAPIReference.md) - Developer reference
+- [Way System Quick Reference](WaySystemQuickReference.md) - Quick lookup
 
 ### Related Systems
 - [Faction System Guide](BlueprintFactionAssetGuide.md)
