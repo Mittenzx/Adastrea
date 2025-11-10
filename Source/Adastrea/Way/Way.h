@@ -89,8 +89,8 @@ struct FPreceptValue
 };
 
 /**
- * Diplomatic relationship between two Ways
- * Defines standing, alliance status, trade agreements, and conflicts
+ * Business relationship between two Ways
+ * Defines trade agreements, partnerships, and operational relationships
  */
 USTRUCT(BlueprintType)
 struct FWayRelationship
@@ -98,38 +98,38 @@ struct FWayRelationship
     GENERATED_BODY()
 
     /** The Way this relationship is with */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Diplomacy")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Relationships")
     FName TargetWayID;
 
-    /** Relationship status (-100 to 100, negative is hostile, positive is friendly) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Diplomacy", meta=(ClampMin="-100", ClampMax="100"))
+    /** Relationship status (-100 to 100, negative is competitive, positive is cooperative) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Relationships", meta=(ClampMin="-100", ClampMax="100"))
     int32 RelationshipValue;
 
-    /** Whether there is an active alliance */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Diplomacy")
-    bool bIsAllied;
+    /** Whether there is an active partnership agreement */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Relationships")
+    bool bHasPartnership;
 
-    /** Whether there is an active conflict/rivalry */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Diplomacy")
-    bool bInConflict;
+    /** Whether there is an active business conflict/rivalry */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Relationships")
+    bool bInCompetition;
 
-    /** Trade agreement multiplier (1.0 = normal, higher = better trade) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Diplomacy", meta=(ClampMin="0.0", ClampMax="3.0"))
+    /** Trade agreement multiplier (1.0 = normal, higher = better rates) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Relationships", meta=(ClampMin="0.0", ClampMax="3.0"))
     float TradeModifier;
 
     /** Whether this Way shares resources with the target */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Diplomacy")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Relationships")
     bool bSharesResources;
 
-    /** Optional notes about the relationship */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Diplomacy", meta=(MultiLine=true))
+    /** Optional notes about the business relationship */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Relationships", meta=(MultiLine=true))
     FText RelationshipNotes;
 
     FWayRelationship()
         : TargetWayID(NAME_None)
         , RelationshipValue(0)
-        , bIsAllied(false)
-        , bInConflict(false)
+        , bHasPartnership(false)
+        , bInCompetition(false)
         , TradeModifier(1.0f)
         , bSharesResources(false)
         , RelationshipNotes(FText::GetEmpty())
@@ -227,6 +227,39 @@ public:
     TArray<FPreceptValue> CorePrecepts;
 
     // ====================
+    // Business Relationships
+    // ====================
+
+    /** Relationships with other Ways (trade agreements, partnerships, competitions) */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Relationships")
+    TArray<FWayRelationship> WayRelationships;
+
+    // ====================
+    // Sector Governance Participation
+    // ====================
+
+    /** 
+     * Whether this Way participates in sector council governance
+     * Ways with presence in a sector automatically get representation
+     */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Governance")
+    bool bParticipatesInCouncils;
+
+    /**
+     * Default voting weight for this Way's representative in councils (0-100)
+     * Based on the Way's influence, member count, and resources
+     */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Governance", meta=(ClampMin="0", ClampMax="100"))
+    int32 BaseVotingWeight;
+
+    /**
+     * Sectors where this Way has significant presence and council representation
+     * Automatically grants a council seat in these sectors
+     */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Governance")
+    TArray<FName> RepresentedSectors;
+
+    // ====================
     // Precept Query Functions
     // ====================
 
@@ -288,4 +321,82 @@ public:
      */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Utility")
     static FText GetPreceptDescription(EPrecept Precept);
+
+    // ====================
+    // Relationship Query Functions
+    // ====================
+
+    /**
+     * Get all relationships this Way has with other Ways
+     * @return Array of Way relationships
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Relationships")
+    TArray<FWayRelationship> GetRelationships() const;
+
+    /**
+     * Get relationship with a specific Way
+     * @param OtherWayID The Way to get relationship with
+     * @param OutRelationship The relationship data (if found)
+     * @return True if relationship exists
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Relationships")
+    bool GetRelationship(FName OtherWayID, FWayRelationship& OutRelationship) const;
+
+    /**
+     * Check if this Way has a partnership with another
+     * @param OtherWayID The Way to check partnership with
+     * @return True if partnered
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Relationships")
+    bool HasPartnership(FName OtherWayID) const;
+
+    /**
+     * Check if this Way is in competition with another
+     * @param OtherWayID The Way to check competition with
+     * @return True if in competition
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Relationships")
+    bool IsCompeting(FName OtherWayID) const;
+
+    /**
+     * Get the relationship value with another Way
+     * @param OtherWayID The Way to get relationship value with
+     * @return Relationship value (-100 to 100), returns 0 if no relationship exists
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Relationships")
+    int32 GetRelationshipValue(FName OtherWayID) const;
+
+    /**
+     * Get trade modifier with another Way
+     * @param OtherWayID The Way to get trade modifier with
+     * @return Trade modifier (1.0 = normal), returns 1.0 if no relationship exists
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Relationships")
+    float GetTradeModifier(FName OtherWayID) const;
+
+    // ====================
+    // Governance Functions
+    // ====================
+
+    /**
+     * Check if this Way has representation in a specific sector
+     * @param SectorID The sector to check
+     * @return True if Way is represented in the sector council
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Governance")
+    bool IsRepresentedInSector(FName SectorID) const;
+
+    /**
+     * Get all sectors where this Way has council representation
+     * @return Array of sector IDs
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Governance")
+    TArray<FName> GetRepresentedSectors() const;
+
+    /**
+     * Get this Way's voting weight for council decisions
+     * @return Base voting weight (0-100)
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Governance")
+    int32 GetVotingWeight() const;
 };
