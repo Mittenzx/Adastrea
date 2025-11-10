@@ -1,6 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "AdastreaGameState.h"
+#include "Player/AdastreaGameState.h"
 #include "Net/UnrealNetwork.h"
 
 AAdastreaGameState::AAdastreaGameState()
