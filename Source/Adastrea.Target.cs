@@ -12,5 +12,6 @@ public class AdastreaTarget : TargetRules
 		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
 		ExtraModuleNames.Add("Adastrea");
 		ExtraModuleNames.Add("PlayerMods");
+		ExtraModuleNames.Add("StationEditor");
 	}
 }
