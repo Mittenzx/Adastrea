@@ -6,7 +6,22 @@
 
 ## What is AdastreaEditor?
 
-The **AdastreaEditor** module is an Unreal Engine editor module that provides custom tools, UI enhancements, and workflow improvements specifically for the Adastrea game. It's separate from the runtime game code to ensure editor-specific functionality doesn't bloat the shipped game.
+The **AdastreaEditor** module is an Unreal Engine editor module that provides **developer and designer tools** for editing game content in the Unreal Editor. It contains custom property panels, asset validators, and workflow improvements for content creators.
+
+**Important:** This module is **editor-only** and is NOT included in packaged builds. It is separate from the **StationEditor** runtime module which provides in-game, player-facing station editing features.
+
+### Module Separation
+
+- **AdastreaEditor** (Editor-only): Developer/designer tools for Unreal Editor
+  - Property customizations
+  - Asset validators
+  - Custom asset actions
+  - Detail panel customizations
+  
+- **StationEditor** (Runtime): In-game player-facing station construction UI
+  - Station module placement
+  - Player construction interface
+  - Available in packaged builds
 
 ---
 

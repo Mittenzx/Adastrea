@@ -305,7 +305,7 @@ Avoid:
 1. **Create Widget Blueprint**
    - Right-click → User Interface → Widget Blueprint
    - Name: `WBP_FactionSelector`
-   - Parent: Can stay as UserWidget (or extend StationEditorWidget for advanced)
+   - Parent: Can stay as UserWidget (or extend UStationEditorWidget from StationEditor module for advanced station features)
 
 2. **Design Layout**
    - Add a Combo Box (String) for faction dropdown

@@ -52,7 +52,9 @@ This document summarizes all the advanced features added to the Adastrea project
 - `GetModuleFaction()` - Get the module's assigned faction
 - `SetModuleFaction(NewFaction)` - Set the module's faction
 
-#### Station Editor Widget (StationEditorWidget.h/cpp)
+#### Station Editor Widget (Source/StationEditor/UI/StationEditorWidget.h/cpp)
+
+**Note:** This component has been moved to the **StationEditor** runtime module (separate from AdastreaEditor).
 
 **New BlueprintCallable Functions:**
 - `SetStationFaction(NewFaction)` - Assign faction to current station
@@ -165,9 +167,10 @@ Adastrea/
 │   │   ├── SpaceStation.cpp           [UPDATED - Implementation]
 │   │   ├── SpaceStationModule.h       [UPDATED - Module faction]
 │   │   └── SpaceStationModule.cpp     [UPDATED - Implementation]
+├── StationEditor/                      [NEW MODULE - Runtime station editor]
 │   └── UI/
-│       ├── StationEditorWidget.h      [UPDATED - Faction integration]
-│       └── StationEditorWidget.cpp    [UPDATED - Implementation]
+│       ├── StationEditorWidget.h      [MOVED from Adastrea/UI - Faction integration]
+│       └── StationEditorWidget.cpp    [MOVED from Adastrea/UI - Implementation]
 ├── Assets/
 │   ├── BlueprintFactionAssetGuide.md  [NEW - Complete faction guide]
 │   ├── BlueprintWorkflowTemplates.md  [NEW - Blueprint workflows]

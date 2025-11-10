@@ -210,14 +210,31 @@ The main game logic module, organized by feature:
 - AI-driven markets
 
 #### UI System (`Source/Adastrea/UI/`)
-- **StationEditorWidget**: Station construction UI
 - **SectorMapWidget**: Galactic navigation
 - **Sector**: Spatial regions
 
+### StationEditor Module (`Source/StationEditor/`)
+
+**Runtime module** providing in-game, player-facing space station editor features. This module contains all UI and gameplay systems for the station construction editor that players interact with during gameplay.
+
+**Key Components:**
+- **UStationEditorWidget** (`UI/StationEditorWidget.h/cpp`): Player-facing station construction UI
+  - Blueprint-callable functions for adding/removing/moving station modules
+  - Faction integration for technology-level restrictions
+  - Validation hooks for module placement
+
+**Module Type:** Runtime (available in both editor and packaged builds)
+
+**Documentation:**
+- Blueprint workflows: [Content/Blueprints/STATION_EDITOR_README.md](Content/Blueprints/STATION_EDITOR_README.md)
+- Implementation templates: [Assets/BlueprintWorkflowTemplates.md](Assets/BlueprintWorkflowTemplates.md)
+
 ### Editor Module
 
-#### AdastreaEditor Module
-This module provides Unreal Editor customizations and tools for the Adastrea game.
+#### AdastreaEditor Module (`Source/AdastreaEditor/`)
+This module provides **developer and designer tools** for the Unreal Editor only. It contains customizations for editing game content, property panels, asset validators, and workflow improvements.
+
+**Module Type:** Editor-only (not included in packaged builds)
 
 **Current Status:** Foundation stage with infrastructure in place but no customizations implemented yet.
 
