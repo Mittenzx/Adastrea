@@ -146,21 +146,21 @@ TArray<UFeatDataAsset*> UFeatDataAsset::GetPrerequisites() const
 // Helper Functions
 // ====================
 
-FText UFeatDataAsset::GetRarityDisplayName(EFeatRarity Rarity)
+FText UFeatDataAsset::GetRarityDisplayName(EFeatRarity InRarity)
 {
     // Return the enum display name defined in the UMETA tag
     const UEnum* EnumPtr = FindObject<UEnum>(nullptr, TEXT("/Script/Adastrea.EFeatRarity"), true);
     if (EnumPtr)
     {
-        return EnumPtr->GetDisplayNameTextByValue(static_cast<int64>(Rarity));
+        return EnumPtr->GetDisplayNameTextByValue(static_cast<int64>(InRarity));
     }
     return FText::FromString(TEXT("Unknown"));
 }
 
-FLinearColor UFeatDataAsset::GetRarityColor(EFeatRarity Rarity)
+FLinearColor UFeatDataAsset::GetRarityColor(EFeatRarity InRarity)
 {
     // Return appropriate colors for each rarity tier
-    switch (Rarity)
+    switch (InRarity)
     {
         case EFeatRarity::Common:
             return FLinearColor(0.8f, 0.8f, 0.8f, 1.0f); // Light gray

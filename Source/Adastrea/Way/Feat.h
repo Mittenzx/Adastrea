@@ -287,17 +287,17 @@ public:
 
     /**
      * Get display name for a Feat rarity
-     * @param Rarity The rarity to get name for
+     * @param InRarity The rarity to get name for
      * @return Localized display name
      */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category="Feat|Utility")
-    static FText GetRarityDisplayName(EFeatRarity Rarity);
+    static FText GetRarityDisplayName(EFeatRarity InRarity);
 
     /**
      * Get color associated with a Feat rarity (for UI)
-     * @param Rarity The rarity to get color for
+     * @param InRarity The rarity to get color for
      * @return Color representing the rarity tier
      */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category="Feat|Utility")
-    static FLinearColor GetRarityColor(EFeatRarity Rarity);
+    static FLinearColor GetRarityColor(EFeatRarity InRarity);
 };
