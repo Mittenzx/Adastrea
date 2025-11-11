@@ -114,7 +114,7 @@
 ### 🔄 In Progress (0.9.x - 1.0.0)
 
 **Current Development Focus**:
-- 🔄 **Way Navigation System** - Pathfinding and space routes (WayNetworkGuide.md)
+- 🔄 **Navigation System** - Pathfinding and space routes
 - 🔄 **Combat System** - Weapons, targeting, and damage mechanics
 - 🔄 **Quest System** - Mission generation and tracking
 - 🔄 **Enhanced Input System** - Advanced control schemes
@@ -242,7 +242,7 @@
 #### Active Development
 
 **Navigation System** (60% complete):
-- 🔄 Way Network implementation (nodes, routes, connections)
+- 🔄 Waypoint network implementation (nodes, routes, connections)
 - 🔄 3D pathfinding in space
 - 🔄 Jump drive mechanics
 - 🔄 Auto-pilot system
