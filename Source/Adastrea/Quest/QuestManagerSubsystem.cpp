@@ -5,6 +5,11 @@
 
 UQuestManagerSubsystem::UQuestManagerSubsystem()
 {
+    // Default quest generation configuration
+    CreditsPerDifficulty = 1000;
+    ExperiencePerDifficulty = 100;
+    ReputationPerDifficulty = 5;
+    DefaultLocationThreshold = 500.0f;
 }
 
 void UQuestManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -217,7 +222,8 @@ void UQuestManagerSubsystem::NotifyLocationReached(FVector Location)
             if (Objective.Type == EObjectiveType::ReachLocation && !Objective.bIsCompleted)
             {
                 float Distance = FVector::Dist(Location, Objective.TargetLocation);
-                if (Distance <= 500.0f) // Within 500 meters
+                float Threshold = Objective.LocationThreshold > 0.0f ? Objective.LocationThreshold : DefaultLocationThreshold;
+                if (Distance <= Threshold)
                 {
                     CompleteObjective(Quest.Quest->QuestID, i);
                 }
@@ -377,10 +383,10 @@ UQuestDataAsset* UQuestManagerSubsystem::GenerateRandomQuest(EQuestType Type, in
             break;
         }
 
-        // Set rewards based on difficulty
-        GeneratedQuest->Rewards.Credits = Difficulty * 1000;
-        GeneratedQuest->Rewards.ExperiencePoints = Difficulty * 100;
-        GeneratedQuest->Rewards.ReputationGain = Difficulty * 5;
+        // Set rewards based on difficulty and configured multipliers
+        GeneratedQuest->Rewards.Credits = Difficulty * CreditsPerDifficulty;
+        GeneratedQuest->Rewards.ExperiencePoints = Difficulty * ExperiencePerDifficulty;
+        GeneratedQuest->Rewards.ReputationGain = Difficulty * ReputationPerDifficulty;
         GeneratedQuest->Rewards.WayID = QuestGiver;
 
         UE_LOG(LogAdastrea, Log, TEXT("QuestManagerSubsystem: Generated quest '%s'"), *GeneratedQuest->QuestName.ToString());

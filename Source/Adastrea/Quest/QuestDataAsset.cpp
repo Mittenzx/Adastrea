@@ -106,26 +106,25 @@ int32 UQuestDataAsset::GetTotalRewardValue() const
 
 FText UQuestDataAsset::GetDifficultyText() const
 {
-    switch (Difficulty)
-    {
-    case 1:
-    case 2:
+    // Difficulty range constants
+    static constexpr int32 EasyMax = 2;
+    static constexpr int32 NormalMax = 4;
+    static constexpr int32 ModerateMax = 6;
+    static constexpr int32 HardMax = 8;
+    static constexpr int32 VeryHardMax = 10;
+
+    if (Difficulty <= EasyMax)
         return FText::FromString(TEXT("Easy"));
-    case 3:
-    case 4:
+    else if (Difficulty <= NormalMax)
         return FText::FromString(TEXT("Normal"));
-    case 5:
-    case 6:
+    else if (Difficulty <= ModerateMax)
         return FText::FromString(TEXT("Moderate"));
-    case 7:
-    case 8:
+    else if (Difficulty <= HardMax)
         return FText::FromString(TEXT("Hard"));
-    case 9:
-    case 10:
+    else if (Difficulty <= VeryHardMax)
         return FText::FromString(TEXT("Very Hard"));
-    default:
+    else
         return FText::FromString(TEXT("Unknown"));
-    }
 }
 
 FText UQuestDataAsset::GetQuestTypeDisplayName(EQuestType Type)

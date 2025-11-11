@@ -97,6 +97,10 @@ struct FQuestObjective
     UPROPERTY(BlueprintReadOnly, Category="Objective")
     bool bIsCompleted;
 
+    /** Distance threshold for location objectives (0 = use default 500m) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Objective", meta=(ClampMin="0", ClampMax="10000"))
+    float LocationThreshold;
+
     FQuestObjective()
         : Type(EObjectiveType::ReachLocation)
         , Description(FText::GetEmpty())
@@ -107,6 +111,7 @@ struct FQuestObjective
         , CurrentProgress(0)
         , bIsOptional(false)
         , bIsCompleted(false)
+        , LocationThreshold(0.0f)
     {}
 };
 

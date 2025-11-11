@@ -216,6 +216,22 @@ public:
     // QUEST GENERATION
     // ====================
 
+    /** Credits reward multiplier per difficulty level */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest Generation", meta=(ClampMin="0"))
+    int32 CreditsPerDifficulty;
+
+    /** Experience points multiplier per difficulty level */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest Generation", meta=(ClampMin="0"))
+    int32 ExperiencePerDifficulty;
+
+    /** Reputation gain multiplier per difficulty level */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest Generation", meta=(ClampMin="0"))
+    int32 ReputationPerDifficulty;
+
+    /** Default location threshold for generated quests (meters) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest Generation", meta=(ClampMin="0", ClampMax="10000"))
+    float DefaultLocationThreshold;
+
     /**
      * Generate a random quest based on parameters
      * @param Type Preferred quest type

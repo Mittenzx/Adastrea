@@ -17,6 +17,12 @@ UNavigationComponent::UNavigationComponent()
     bAvoidObstacles = true;
     ObstacleDetectionRange = 2000.0f;
     FollowDistance = 500.0f;
+    
+    // Pathfinding configuration
+    PathSegmentDistance = 1000.0f;
+    ObstacleAvoidanceOffset = 500.0f;
+    ApproachDistance = 1000.0f;
+    FollowDistanceTolerance = 100.0f;
 
     // Initial state
     CurrentMode = ENavigationMode::Manual;
@@ -193,7 +199,7 @@ bool UNavigationComponent::FindPath3D(FVector Start, FVector End, TArray<FNaviga
     // This is a simplified 3D pathfinding - can be enhanced with proper navigation mesh
     FVector Direction = (End - Start).GetSafeNormal();
     float TotalDistance = FVector::Dist(Start, End);
-    int32 NumSegments = FMath::CeilToInt(TotalDistance / 1000.0f); // Segment every 1000 meters
+    int32 NumSegments = FMath::CeilToInt(TotalDistance / PathSegmentDistance);
 
     for (int32 i = 1; i <= NumSegments; ++i)
     {
@@ -204,7 +210,7 @@ bool UNavigationComponent::FindPath3D(FVector Start, FVector End, TArray<FNaviga
         if (!IsPathClear(i > 1 ? OutPath.Last().Location : Start, SegmentLocation))
         {
             // Offset perpendicular to path direction
-            FVector PerpendicularOffset = FVector::CrossProduct(Direction, FVector::UpVector) * 500.0f;
+            FVector PerpendicularOffset = FVector::CrossProduct(Direction, FVector::UpVector) * ObstacleAvoidanceOffset;
             SegmentLocation += PerpendicularOffset;
         }
 
@@ -409,7 +415,7 @@ void UNavigationComponent::UpdateFollowing(float DeltaTime)
     float CurrentDistance = ToTarget.Size();
 
     // Maintain follow distance
-    if (CurrentDistance > FollowDistance + 100.0f)
+    if (CurrentDistance > FollowDistance + FollowDistanceTolerance)
     {
         FVector DesiredLocation = TargetLocation - ToTarget.GetSafeNormal() * FollowDistance;
         FVector DesiredVelocity = CalculateSteeringToTarget(DesiredLocation, DeltaTime);
@@ -417,7 +423,7 @@ void UNavigationComponent::UpdateFollowing(float DeltaTime)
         CurrentVelocity = FMath::VInterpTo(CurrentVelocity, DesiredVelocity, DeltaTime, TurnSmoothing * 3.0f);
         ApplyVelocity(DeltaTime);
     }
-    else if (CurrentDistance < FollowDistance - 100.0f)
+    else if (CurrentDistance < FollowDistance - FollowDistanceTolerance)
     {
         // Too close, slow down
         CurrentVelocity = FMath::VInterpTo(CurrentVelocity, FVector::ZeroVector, DeltaTime, TurnSmoothing * 2.0f);
@@ -467,9 +473,9 @@ FVector UNavigationComponent::CalculateSteeringToTarget(FVector TargetLocation, 
     float DesiredSpeed = MaxNavigationSpeed;
 
     // Slow down when approaching waypoint
-    if (Distance < 1000.0f)
+    if (Distance < ApproachDistance)
     {
-        DesiredSpeed = FMath::Lerp(ApproachSpeed, MaxNavigationSpeed, Distance / 1000.0f);
+        DesiredSpeed = FMath::Lerp(ApproachSpeed, MaxNavigationSpeed, Distance / ApproachDistance);
     }
 
     return Direction * DesiredSpeed;
