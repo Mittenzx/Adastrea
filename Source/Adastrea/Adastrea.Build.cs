@@ -20,6 +20,7 @@ public class Adastrea : ModuleRules
 			"Adastrea/Public/Combat",
 			"Adastrea/Public/Navigation",
 			"Adastrea/Public/Quest",
+			"Adastrea/Public/Input",
 			"Adastrea/Way",
 			"Adastrea/Rivals"
 		});
