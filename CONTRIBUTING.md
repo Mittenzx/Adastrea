@@ -217,6 +217,10 @@ public:
    - Update README.md if you add/change features
    - Add/update guides in `Assets/` folder
    - Include code comments and docstrings
+   - **Update ROADMAP.md** if your changes affect project milestones, phases, or system status
+     - See [ROADMAP_UPDATE_GUIDELINES.md](ROADMAP_UPDATE_GUIDELINES.md) for detailed guidance
+     - Update required for: system completion, phase transitions, new major features, timeline changes
+     - Not required for: minor bug fixes, documentation-only changes, small incremental work
 
 2. **Ensure Quality**
    - Code compiles without errors or warnings
@@ -230,6 +234,7 @@ public:
    - Use a clear, descriptive title
    - Fill out the PR template completely
    - Reference any related issues
+   - Check the ROADMAP.md update box if applicable
 
 4. **PR Description Should Include**:
    - Summary of changes
@@ -238,11 +243,13 @@ public:
    - Testing performed
    - Screenshots (if UI changes)
    - Checklist of completed items
+   - Note if ROADMAP.md was updated and why
 
 5. **Review Process**
    - Respond to feedback promptly
    - Make requested changes in new commits
    - Be open to suggestions and discussion
+   - Reviewers may request ROADMAP.md updates if not included
 
 ## Reporting Bugs
 

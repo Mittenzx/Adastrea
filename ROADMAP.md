@@ -954,7 +954,9 @@ This roadmap is a living document and will be updated regularly to reflect:
 - **Quarterly**: Major roadmap revisions and priority adjustments
 - **As Needed**: Critical changes or pivots
 
-**Last Updated**: November 10, 2025  
+**How to Update**: Contributors should update this roadmap when their PRs affect project milestones, phases, or system status. See [ROADMAP_UPDATE_GUIDELINES.md](ROADMAP_UPDATE_GUIDELINES.md) for detailed guidance on when and how to update.
+
+**Last Updated**: November 11, 2025  
 **Next Review**: December 2025
 
 ---
@@ -965,6 +967,7 @@ This roadmap is a living document and will be updated regularly to reflect:
 - **[ARCHITECTURE.md](ARCHITECTURE.md)** - Technical architecture and design patterns
 - **[CHANGELOG.md](CHANGELOG.md)** - Detailed version history
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute to the project
+- **[ROADMAP_UPDATE_GUIDELINES.md](ROADMAP_UPDATE_GUIDELINES.md)** - When and how to update this roadmap
 - **[QUICKSTART.md](QUICKSTART.md)** - Get started in 15 minutes
 
 ### System Guides

@@ -29,6 +29,7 @@ Thank you for contributing to Adastrea! Please ensure you've completed the follo
 - [ ] README.md updated (if user-facing changes)
 - [ ] Relevant documentation files updated (Assets/, Docs/, etc.)
 - [ ] PR description clearly explains what changed and why
+- [ ] ROADMAP.md updated if this PR affects project milestones, phases, or system status (see [Roadmap Update Guidelines](../ROADMAP_UPDATE_GUIDELINES.md))
 
 ## Pre-Merge Instructions for Reviewers
 After merging this PR, reviewers should:
