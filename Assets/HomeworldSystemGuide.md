@@ -1,7 +1,9 @@
 # Homeworld-Based Faction Relationship System Guide
 
 ## Overview
-This guide explains the Homeworld Data Asset system, which defines players' starting locations and initial faction relationships. Each homeworld provides unique diplomatic standings with various factions, creating diverse starting experiences for players.
+This guide explains the Homeworld Data Asset system, which defines players' starting locations and initial political faction relationships. Each homeworld provides unique diplomatic standings with various factions, creating diverse starting experiences for players.
+
+**Note:** Homeworlds define relationships with **political factions**. For starting relationships with specialized economic guilds (Ways), see the [Way System Guide](WaySystemGuide.md).
 
 ---
 

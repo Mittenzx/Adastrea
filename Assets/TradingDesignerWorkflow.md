@@ -3,6 +3,8 @@
 ## Overview
 This guide provides step-by-step workflows for game designers to create and configure trading content without writing C++ code. All examples use Blueprint and Data Assets.
 
+**Important:** The trading system integrates with the [Way System](WaySystemGuide.md), where specialized guilds (Ways) and their networks manage day-to-day economic activities, supply chains, and trade relationships. This guide covers the technical setup of trade items and markets.
+
 ---
 
 ## Table of Contents

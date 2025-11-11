@@ -1,7 +1,9 @@
 # Faction System Setup Guide
 
 ## Overview
-The Faction System allows designers to create and manage factions within the game using Blueprint Data Assets. Each faction has unique properties that define its identity, relationships, and attributes.
+The Faction System allows designers to create and manage large political and military organizations within the game using Blueprint Data Assets. Each faction has unique properties that define its identity, political relationships, and military/technological attributes.
+
+**Important:** Factions focus on **politics, warfare, and diplomacy**. For economic activities, trade, and industry specialization, see the [Way System](WaySystemGuide.md) which handles specialized guilds and micro-alliances.
 
 ## Setup Instructions
 
@@ -47,7 +49,7 @@ Use the following functions to work with factions:
 ### Faction Attributes
 - **Technology Level** (Integer 1-10): Technological advancement (affects available equipment/modules)
 - **Military Strength** (Integer 1-10): Combat capability and fleet size
-- **Economic Power** (Integer 1-10): Trade influence and resource availability
+- **Economic Power** (Integer 1-10): Overall economic scale and resources (Note: Day-to-day trade and industry is handled by Ways within the faction)
 
 ---
 
@@ -366,7 +368,9 @@ Trade Hub
 
 ### Diplomacy System
 
-Factions can define relationships with other factions including alliances, wars, and trade agreements. See [BlueprintFactionAssetGuide.md](BlueprintFactionAssetGuide.md) for diplomacy setup.
+Factions can define **political relationships** with other factions including alliances, wars, and diplomatic agreements. See [BlueprintFactionAssetGuide.md](BlueprintFactionAssetGuide.md) for diplomacy setup.
+
+**Note:** While factions have political alliances, **economic relationships and trade networks** are handled by the [Way System](WaySystemGuide.md). Ways are specialized guilds that form micro-alliances (2-5 members) within or across factions for economic cooperation.
 
 **Example Relationships:**
 ```

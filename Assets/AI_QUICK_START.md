@@ -3,6 +3,11 @@
 
 This is the fastest path to creating your first working AI. Follow these steps and you'll have a functional faction or personnel AI running in your game within 30 minutes.
 
+**AI System Overview:**
+- **Faction AI** - Political and military strategy (this guide)
+- **Personnel AI** - Individual character behavior (this guide)
+- **Way System AI** - Economic activities and trade operations (see [Way System Guide](WaySystemGuide.md))
+
 ---
 
 ## Choose Your Path

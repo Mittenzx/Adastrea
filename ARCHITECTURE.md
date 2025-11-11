@@ -151,15 +151,17 @@ The main game logic module, organized by feature:
   - Command hierarchy
 
 #### Faction System (`Source/Adastrea/Factions/`)
-- **FactionDataAsset**: Faction definition and attributes
-- **FFactionTrait**: Gameplay modifiers
-- **FFactionRelationship**: Inter-faction diplomacy
+- **FactionDataAsset**: Large political/military organization definition and attributes
+- **FFactionTrait**: Political and military gameplay modifiers
+- **FFactionRelationship**: Inter-faction political diplomacy
+
+**Focus**: Political diplomacy, warfare, military alliances
 
 **Integration Points**:
-- Space stations (faction ownership)
-- Trading (relationship-based prices)
-- AI (faction-level strategic decisions)
-- Homeworlds (starting relationships)
+- Space stations (political ownership and military protection)
+- Trading (political access and embargoes; day-to-day trade via Way System)
+- AI (faction-level political and military strategic decisions)
+- Homeworlds (starting political relationships)
 
 #### Way System (`Source/Adastrea/Way/`)
 - **WayDataAsset**: Specialized guild definitions

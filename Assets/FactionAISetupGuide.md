@@ -20,12 +20,14 @@ This guide provides step-by-step instructions for setting up faction-level AI in
 
 ### What is Faction AI?
 
-Faction AI handles **macro-level strategic decisions** for entire factions:
+Faction AI handles **macro-level strategic and political decisions** for entire factions:
 - **Territory expansion** and control
-- **Diplomatic relations** with other factions  
-- **Economic policies** and trade
+- **Political diplomacy** with other factions  
 - **Military strategies** and warfare
+- **High-level resource allocation**
 - **Research priorities** and technology
+
+**Note:** Day-to-day economic activities, trade, and production are handled by the [Way System](WaySystemGuide.md) AI. Faction AI focuses on political and military strategy, while Way AI handles economic operations and guild management.
 
 ### Key Components
 

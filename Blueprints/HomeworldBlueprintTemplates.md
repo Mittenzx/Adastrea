@@ -1,7 +1,9 @@
 # Homeworld System - Blueprint Logic Templates
 
 ## Overview
-This document provides detailed Blueprint implementation templates for the Homeworld-based faction relationship system. These templates show how to initialize and manage player faction reputations based on their chosen homeworld.
+This document provides detailed Blueprint implementation templates for the Homeworld-based faction relationship system. These templates show how to initialize and manage player political faction reputations based on their chosen homeworld.
+
+**Note:** Homeworlds define relationships with political **factions**. For economic guild (Way) relationships, see the [Way System Guide](../Assets/WaySystemGuide.md).
 
 ---
 

@@ -244,12 +244,14 @@ Operational Cost should scale with power:
 2. Choose template matching faction style
 3. Adjust stats to reflect faction strengths
    - Military faction: +combat stats
-   - Economic faction: +cargo, +trade
+   - Trade-focused faction: +cargo, +operational efficiency (or design for Way System guilds)
    - Scientific faction: +sensors, +science
 4. Use faction colors for Primary/Secondary Color
-5. Set manufacturer to faction-appropriate company
+5. Set manufacturer to faction-appropriate company (or Way guild if ship is guild-specific)
 6. Write lore connecting to faction history
 7. Consider adding faction requirement in Blueprint
+
+**Note:** For ships operated by economic guilds, see the [Way System Guide](WaySystemGuide.md) for guild-specific ship design considerations.
 
 ### Task: "Balance a ship that's too powerful"
 

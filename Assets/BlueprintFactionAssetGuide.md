@@ -1,7 +1,9 @@
 # Blueprint Faction Asset Creation - Step-by-Step Guide
 
 ## Overview
-This guide walks you through creating a complete Faction Data Asset in Unreal Engine, including basic properties, traits, and diplomacy relationships. Perfect for designers who want to create rich, interactive factions for the game.
+This guide walks you through creating a complete Faction Data Asset in Unreal Engine, including basic properties, traits, and political diplomacy relationships. Perfect for designers who want to create rich, interactive factions for the game.
+
+**Important:** Factions represent large political and military organizations that handle warfare, diplomacy, and political alliances. For economic activities, trade, and industry specialization, see the [Way System Guide](WaySystemGuide.md).
 
 ---
 

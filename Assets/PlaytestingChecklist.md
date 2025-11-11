@@ -1,7 +1,9 @@
 # Playtesting and Asset Verification Checklist
 
 ## Overview
-This comprehensive checklist ensures that all faction system and station editor features are properly implemented, tested, and ready for production use. Use this document during development iterations and before releasing content to the team.
+This comprehensive checklist ensures that all faction system (political/military organizations) and station editor features are properly implemented, tested, and ready for production use. Use this document during development iterations and before releasing content to the team.
+
+**Note:** For economic guild (Way System) testing, see the [Way System Guide](WaySystemGuide.md). This checklist focuses on political faction testing.
 
 **Quick Start**: Before running manual tests, consider using the automated setup validation scripts to verify your environment:
 - Run `./SetupCheck.sh` (Linux/Mac/WSL) or `python SetupCheck.py` (cross-platform) to check prerequisites

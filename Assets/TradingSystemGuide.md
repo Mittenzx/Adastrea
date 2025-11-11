@@ -7,9 +7,12 @@ The Adastrea Trading System is a comprehensive, Blueprint-friendly economic simu
 - **Trade contracts** for missions and delivery quests
 - **Transaction tracking** for analytics and player history
 - **Market events** that affect prices and availability
-- **Faction relationships** that influence trade opportunities
+- **Way System integration** - specialized guilds that handle trade and production
+- **Faction relationships** that influence political access to markets
 
 All systems are built with **Blueprint extensibility** in mind, using `BlueprintNativeEvent` hooks for designer customization.
+
+**Important:** The trading system is primarily managed by the [Way System](WaySystemGuide.md), where specialized guilds (Ways) and their networks handle day-to-day economic activities, supply chains, and trade relationships. Factions provide the political framework and military protection, but Ways drive the economy.
 
 ---
 
@@ -102,7 +105,8 @@ protected:
 - **Dynamic pricing** based on supply/demand
 - **Market events** that affect prices
 - **AI trader operations**
-- **Faction control** and access restrictions
+- **Way System integration** - markets operated by specialized guilds
+- **Faction control** and political access restrictions
 
 ### Trade Contracts
 **TradeContractDataAsset** represents missions:

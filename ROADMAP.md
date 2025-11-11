@@ -35,16 +35,16 @@
 
 ### Project Vision
 
-**Adastrea** is an open-world space flight game that empowers players to explore vast galaxies, engage in thrilling space combat, build and manage space stations, develop crew relationships, participate in faction diplomacy, and thrive in dynamic trading economies—all while providing a designer-friendly, data-driven development experience.
+**Adastrea** is an open-world space flight game that empowers players to explore vast galaxies, engage in thrilling space combat, build and manage space stations, develop crew relationships, participate in political faction diplomacy and economic guild networks, and thrive in dynamic trading economies—all while providing a designer-friendly, data-driven development experience.
 
 ### Core Pillars
 
 1. **Exploration** - Discover uncharted systems, planets, and celestial phenomena
 2. **Combat** - Engage in tactical space battles with diverse ship classes
 3. **Construction** - Build and customize modular space stations
-4. **Diplomacy** - Navigate complex faction relationships and alliances
+4. **Diplomacy** - Navigate complex faction relationships and political alliances
 5. **Management** - Recruit, train, and manage crew with unique personalities
-6. **Economy** - Participate in dynamic, AI-driven trading markets
+6. **Economy** - Participate in dynamic, AI-driven trading markets and specialized guild networks
 7. **Narrative** - Experience procedural and handcrafted story content
 
 ### Design Goals
@@ -93,11 +93,12 @@
 **Core Game Systems**:
 - ✅ **Spaceship System** - Complete ship specification with 6 templates
 - ✅ **Space Station System** - Modular construction framework
-- ✅ **Faction System** - 10 factions with traits and diplomacy
+- ✅ **Faction System** - 10 political factions with traits and diplomacy
+- ✅ **Way System** - Specialized guilds and micro-alliance networks
 - ✅ **Personnel System** - 31 crew roles with skills and relationships
 - ✅ **Trading System** - Markets, contracts, and AI traders
 - ✅ **Material System** - Resource types and station integration
-- ✅ **AI System** - Faction and personnel logic with personalities
+- ✅ **AI System** - Faction, personnel, and Way logic with personalities
 - ✅ **Homeworld System** - Player starting locations with faction relations
 
 **Developer Tools**:
