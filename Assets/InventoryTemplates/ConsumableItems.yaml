@@ -1,0 +1,102 @@
+# Consumable Inventory Items
+# Use these templates for one-time use items
+
+---
+ItemName: "Repair Kit"
+Description: |
+  Emergency ship repair kit. Restores 25% hull integrity.
+  Essential for long voyages and combat situations.
+Category: Consumable
+Rarity: Common
+MaxStackSize: 10
+Weight: 2.5
+BaseValue: 500
+bCanBeSold: true
+bCanBeDropped: true
+bIsQuestItem: false
+bCanBeUsed: true
+UsageCooldown: 60.0
+CustomProperties:
+  HealAmount: "25"
+  HealType: "Hull"
+
+---
+ItemName: "Shield Booster"
+Description: |
+  Temporary shield enhancement. Increases shield capacity by 50% for 30 seconds.
+  Does not stack with other boosters.
+Category: Consumable
+Rarity: Uncommon
+MaxStackSize: 5
+Weight: 1.0
+BaseValue: 800
+bCanBeSold: true
+bCanBeDropped: true
+bIsQuestItem: false
+bCanBeUsed: true
+UsageCooldown: 120.0
+CustomProperties:
+  BoostAmount: "50"
+  Duration: "30"
+  TargetStat: "Shield"
+
+---
+ItemName: "Nanite Paste"
+Description: |
+  Advanced repair nanites. Restores 100% hull integrity over 10 seconds.
+  Cannot be used during combat.
+Category: Consumable
+Rarity: Rare
+MaxStackSize: 3
+Weight: 0.5
+BaseValue: 2000
+bCanBeSold: true
+bCanBeDropped: true
+bIsQuestItem: false
+bCanBeUsed: true
+UsageCooldown: 300.0
+CustomProperties:
+  HealAmount: "100"
+  Duration: "10"
+  HealType: "HullOverTime"
+  CombatRestriction: "true"
+
+---
+ItemName: "Adrenaline Injector"
+Description: |
+  Enhances pilot reflexes. Increases ship maneuverability by 30% for 45 seconds.
+  Minor health drain as side effect.
+Category: Consumable
+Rarity: Uncommon
+MaxStackSize: 8
+Weight: 0.2
+BaseValue: 600
+bCanBeSold: true
+bCanBeDropped: true
+bIsQuestItem: false
+bCanBeUsed: true
+UsageCooldown: 90.0
+CustomProperties:
+  BoostAmount: "30"
+  Duration: "45"
+  TargetStat: "Maneuverability"
+  SideEffect: "HealthDrain"
+
+---
+ItemName: "Jump Fuel Cell"
+Description: |
+  Specialized fuel cell for FTL jumps. Required for inter-system travel.
+  One cell allows one jump.
+Category: Consumable
+Rarity: Common
+MaxStackSize: 50
+Weight: 5.0
+BaseValue: 100
+bCanBeSold: true
+bCanBeDropped: true
+bIsQuestItem: false
+bCanBeUsed: true
+UsageCooldown: 0.0
+CustomProperties:
+  FuelType: "Jump"
+  JumpDistance: "Standard"

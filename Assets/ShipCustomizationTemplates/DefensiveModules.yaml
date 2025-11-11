@@ -1,0 +1,106 @@
+# Defensive Module Templates
+# Shields, armor, and defensive systems
+
+---
+CustomizationName: "Mk.I Shield Generator"
+Description: |
+  Basic shield generator providing moderate protection.
+  Standard recharge rate and capacity.
+CustomizationType: ShieldModule
+RequiredHardpoint: Internal
+PowerConsumption: 80.0
+Mass: 60.0
+BaseValue: 6000
+MinimumTechLevel: 1
+StatModifiers:
+  ShieldCapacity: 300.0
+  ShieldRecharge: 30.0
+  ShieldDelay: 5.0
+CustomProperties:
+  ShieldType: "Energy"
+  ResistanceBonus: "0"
+  RechargeDelay: "5.0"
+
+---
+CustomizationName: "Mk.II Shield Generator"
+Description: |
+  Advanced shield generator with improved capacity and recharge.
+  Better efficiency and faster recovery.
+CustomizationType: ShieldModule
+RequiredHardpoint: Internal
+PowerConsumption: 100.0
+Mass: 80.0
+BaseValue: 12000
+MinimumTechLevel: 3
+StatModifiers:
+  ShieldCapacity: 500.0
+  ShieldRecharge: 50.0
+  ShieldDelay: 3.0
+CustomProperties:
+  ShieldType: "Energy"
+  ResistanceBonus: "10"
+  RechargeDelay: "3.0"
+  AdaptiveShielding: "true"
+
+---
+CustomizationName: "Heavy Armor Plating"
+Description: |
+  Reinforced hull armor providing excellent damage resistance.
+  Increases mass significantly.
+CustomizationType: ArmorPlating
+RequiredHardpoint: Internal
+PowerConsumption: 0.0
+Mass: 150.0
+BaseValue: 8000
+MinimumTechLevel: 2
+StatModifiers:
+  HullIntegrity: 200.0
+  DamageResistance: 0.15
+  MaxSpeed: -50.0
+  Acceleration: -10.0
+CustomProperties:
+  ArmorType: "Composite"
+  KineticResistance: "20"
+  EnergyResistance: "10"
+
+---
+CustomizationName: "Reactive Armor"
+Description: |
+  Smart armor that adapts to damage types.
+  Provides balanced protection with minimal weight.
+CustomizationType: ArmorPlating
+RequiredHardpoint: Internal
+PowerConsumption: 20.0
+Mass: 80.0
+BaseValue: 15000
+MinimumTechLevel: 4
+StatModifiers:
+  HullIntegrity: 150.0
+  DamageResistance: 0.20
+  MaxSpeed: -20.0
+CustomProperties:
+  ArmorType: "Reactive"
+  KineticResistance: "15"
+  EnergyResistance: "15"
+  ExplosiveResistance: "15"
+  AdaptiveProtection: "true"
+
+---
+CustomizationName: "Point Defense System"
+Description: |
+  Automated defense system that intercepts incoming missiles.
+  Provides active protection against projectiles.
+CustomizationType: ShieldModule
+RequiredHardpoint: Utility
+PowerConsumption: 40.0
+Mass: 25.0
+BaseValue: 10000
+MinimumTechLevel: 3
+StatModifiers:
+  MissileInterception: 0.70
+  ProjectileInterception: 0.30
+CustomProperties:
+  InterceptionRange: "500"
+  TrackingSpeed: "High"
+  AmmoCapacity: "200"
+  ReloadTime: "30"

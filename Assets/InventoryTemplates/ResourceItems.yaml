@@ -1,0 +1,94 @@
+# Resource Inventory Items
+# Use these templates for raw materials and crafting components
+
+---
+ItemName: "Iron Ore"
+Description: |
+  Common metal ore used in basic ship construction and repairs.
+  Found in asteroid fields throughout the galaxy.
+Category: Resource
+Rarity: Common
+MaxStackSize: 999
+Weight: 1.0
+BaseValue: 10
+bCanBeSold: true
+bCanBeDropped: true
+bIsQuestItem: false
+bCanBeUsed: false
+CustomProperties:
+  ResourceType: "Metal"
+  Grade: "Basic"
+
+---
+ItemName: "Titanium Alloy"
+Description: |
+  Refined metal alloy used in advanced ship components.
+  Provides excellent strength-to-weight ratio.
+Category: Resource
+Rarity: Uncommon
+MaxStackSize: 500
+Weight: 2.5
+BaseValue: 50
+bCanBeSold: true
+bCanBeDropped: true
+bIsQuestItem: false
+bCanBeUsed: false
+CustomProperties:
+  ResourceType: "Metal"
+  Grade: "Advanced"
+
+---
+ItemName: "Fusion Cells"
+Description: |
+  High-density power cells used in energy weapons and shields.
+  Requires careful handling due to volatility.
+Category: Resource
+Rarity: Rare
+MaxStackSize: 100
+Weight: 5.0
+BaseValue: 200
+bCanBeSold: true
+bCanBeDropped: true
+bIsQuestItem: false
+bCanBeUsed: false
+CustomProperties:
+  ResourceType: "Energy"
+  Grade: "Advanced"
+  Volatile: "true"
+
+---
+ItemName: "Exotic Matter"
+Description: |
+  Mysterious substance with unique properties.
+  Used in experimental technology and rare equipment.
+Category: Resource
+Rarity: Legendary
+MaxStackSize: 50
+Weight: 0.1
+BaseValue: 5000
+bCanBeSold: true
+bCanBeDropped: true
+bIsQuestItem: false
+bCanBeUsed: false
+CustomProperties:
+  ResourceType: "Exotic"
+  Grade: "Experimental"
+  RadioActive: "true"
+
+---
+ItemName: "Ship Parts"
+Description: |
+  Salvaged components from destroyed or derelict ships.
+  Can be used for repairs or sold for profit.
+Category: Resource
+Rarity: Common
+MaxStackSize: 250
+Weight: 3.0
+BaseValue: 25
+bCanBeSold: true
+bCanBeDropped: true
+bIsQuestItem: false
+bCanBeUsed: false
+CustomProperties:
+  ResourceType: "Salvage"
+  Grade: "Mixed"
