@@ -115,10 +115,6 @@ public:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Point Defense State")
     TArray<AActor*> EngagedThreats;
 
-    /** Whether point defense is active */
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Point Defense State")
-    bool bIsActive;
-
 protected:
     /** Time since last threat scan */
     float TimeSinceLastScan;
@@ -138,14 +134,12 @@ public:
     /**
      * Activate point defense system
      */
-    UFUNCTION(BlueprintCallable, Category="Point Defense")
-    void Activate();
+    virtual void Activate(bool bReset = false) override;
 
     /**
      * Deactivate point defense system
      */
-    UFUNCTION(BlueprintCallable, Category="Point Defense")
-    void Deactivate();
+    virtual void Deactivate() override;
 
     /**
      * Manually add a weapon to point defense
