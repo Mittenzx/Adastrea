@@ -303,8 +303,8 @@ bool UPointDefenseComponent::IsValidThreat(AActor* Actor) const
         return false;
     }
 
-    // Check if actor is pending kill
-    if (Actor->IsPendingKill())
+    // Check if actor is valid (not pending kill, not null, not destroyed)
+    if (!IsValid(Actor))
     {
         return false;
     }
@@ -492,7 +492,7 @@ void UPointDefenseComponent::UpdateThreats()
         AActor* Threat = ThreatInfo.ThreatActor;
 
         // Check if threat is still valid
-        if (!Threat || Threat->IsPendingKill())
+        if (!IsValid(Threat))
         {
             DisengageThreat(Threat);
             TrackedThreats.RemoveAt(i);

@@ -515,8 +515,8 @@ bool UTargetingComponent::IsValidTarget(AActor* Target) const
         return false;
     }
 
-    // Check if target is pending kill
-    if (Target->IsPendingKill())
+    // Check if target is valid (not pending kill, not destroyed)
+    if (!IsValid(Target))
     {
         return false;
     }
