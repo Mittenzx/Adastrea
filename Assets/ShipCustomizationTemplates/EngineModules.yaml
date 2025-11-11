@@ -1,0 +1,107 @@
+# Engine Module Templates
+# Engine upgrades and propulsion systems
+
+---
+CustomizationName: "Standard Engine"
+Description: |
+  Basic propulsion system with balanced performance.
+  Good all-around stats for general use.
+CustomizationType: EngineModule
+RequiredHardpoint: Internal
+PowerConsumption: 50.0
+Mass: 100.0
+BaseValue: 5000
+MinimumTechLevel: 1
+StatModifiers:
+  MaxSpeed: 300.0
+  Acceleration: 50.0
+  Maneuverability: 1.0
+CustomProperties:
+  EngineType: "Ion"
+  FuelEfficiency: "Standard"
+
+---
+CustomizationName: "Racing Engine"
+Description: |
+  High-performance engine optimized for speed.
+  Maximum velocity at cost of efficiency.
+CustomizationType: EngineModule
+RequiredHardpoint: Internal
+PowerConsumption: 80.0
+Mass: 90.0
+BaseValue: 12000
+MinimumTechLevel: 2
+StatModifiers:
+  MaxSpeed: 500.0
+  Acceleration: 80.0
+  Maneuverability: 1.2
+  FuelConsumption: -30.0
+CustomProperties:
+  EngineType: "Plasma"
+  FuelEfficiency: "Low"
+  TopSpeedBonus: "true"
+
+---
+CustomizationName: "Afterburner Module"
+Description: |
+  Provides short-duration speed boost capability.
+  Essential for combat and quick escapes.
+CustomizationType: EngineModule
+RequiredHardpoint: Internal
+PowerConsumption: 75.0
+Mass: 50.0
+BaseValue: 8000
+MinimumTechLevel: 3
+StatModifiers:
+  MaxSpeed: 200.0
+  Acceleration: 50.0
+  BoostSpeed: 500.0
+  FuelConsumption: -25.0
+CustomProperties:
+  EngineType: "Hybrid"
+  BoostDuration: "5.0"
+  BoostCooldown: "15.0"
+  FuelEfficiency: "Standard"
+
+---
+CustomizationName: "Efficient Drive"
+Description: |
+  Optimized for fuel economy and long-range travel.
+  Lower top speed but excellent efficiency.
+CustomizationType: EngineModule
+RequiredHardpoint: Internal
+PowerConsumption: 40.0
+Mass: 110.0
+BaseValue: 7000
+MinimumTechLevel: 2
+StatModifiers:
+  MaxSpeed: 250.0
+  Acceleration: 40.0
+  Maneuverability: 0.9
+  FuelConsumption: 50.0
+CustomProperties:
+  EngineType: "Ion"
+  FuelEfficiency: "High"
+  RangeBonus: "true"
+
+---
+CustomizationName: "Combat Maneuvering System"
+Description: |
+  Enhanced thruster array for superior maneuverability.
+  Perfect for dogfighting and evasive maneuvers.
+CustomizationType: EngineModule
+RequiredHardpoint: Internal
+PowerConsumption: 60.0
+Mass: 70.0
+BaseValue: 10000
+MinimumTechLevel: 3
+StatModifiers:
+  MaxSpeed: 320.0
+  Acceleration: 70.0
+  Maneuverability: 1.5
+  TurnRate: 50.0
+CustomProperties:
+  EngineType: "Vectored"
+  FuelEfficiency: "Standard"
+  StrafingCapability: "true"
+  RollRate: "High"

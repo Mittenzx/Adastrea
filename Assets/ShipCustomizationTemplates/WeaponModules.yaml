@@ -1,0 +1,98 @@
+# Weapon Module Templates
+# Use these for creating ship-mounted weapons
+
+---
+CustomizationName: "Pulse Laser Mk.I"
+Description: |
+  Standard energy weapon with good accuracy and moderate damage.
+  Effective against shields, low power consumption.
+CustomizationType: WeaponModule
+RequiredHardpoint: Small
+PowerConsumption: 50.0
+Mass: 15.0
+BaseValue: 3000
+MinimumTechLevel: 1
+StatModifiers:
+  DPS: 100.0
+  Range: 2000.0
+  Accuracy: 0.85
+  FireRate: 5.0
+  EnergyDamage: 20.0
+CustomProperties:
+  DamageType: "Energy"
+  ProjectileSpeed: "1500"
+  HeatGeneration: "25"
+  EffectiveVsShields: "true"
+
+---
+CustomizationName: "Heavy Autocannon"
+Description: |
+  Rapid-fire kinetic weapon with high damage output.
+  Excellent against armor, requires ammunition.
+CustomizationType: WeaponModule
+RequiredHardpoint: Medium
+PowerConsumption: 80.0
+Mass: 45.0
+BaseValue: 8000
+MinimumTechLevel: 2
+StatModifiers:
+  DPS: 200.0
+  Range: 1500.0
+  Accuracy: 0.70
+  FireRate: 15.0
+  KineticDamage: 13.3
+CustomProperties:
+  DamageType: "Kinetic"
+  ProjectileSpeed: "800"
+  AmmoCapacity: "500"
+  AmmoType: "20mm"
+  EffectiveVsArmor: "true"
+
+---
+CustomizationName: "Plasma Cannon"
+Description: |
+  High-power plasma weapon with devastating damage.
+  High heat generation and power consumption.
+CustomizationType: WeaponModule
+RequiredHardpoint: Large
+PowerConsumption: 200.0
+Mass: 80.0
+BaseValue: 20000
+MinimumTechLevel: 4
+StatModifiers:
+  DPS: 400.0
+  Range: 2500.0
+  Accuracy: 0.75
+  FireRate: 2.0
+  PlasmaDamage: 200.0
+CustomProperties:
+  DamageType: "Plasma"
+  ProjectileSpeed: "1000"
+  HeatGeneration: "150"
+  SplashDamage: "50"
+  EffectiveVsAll: "true"
+
+---
+CustomizationName: "Missile Pod"
+Description: |
+  Multiple missile launcher with lock-on capability.
+  High alpha damage, limited ammunition.
+CustomizationType: WeaponModule
+RequiredHardpoint: Medium
+PowerConsumption: 30.0
+Mass: 35.0
+BaseValue: 12000
+MinimumTechLevel: 3
+StatModifiers:
+  DPS: 250.0
+  Range: 3000.0
+  Accuracy: 0.95
+  FireRate: 1.0
+  ExplosiveDamage: 250.0
+CustomProperties:
+  DamageType: "Explosive"
+  ProjectileSpeed: "500"
+  AmmoCapacity: "24"
+  AmmoType: "Missiles"
+  LockOnTime: "2.0"
+  HomingCapability: "true"
