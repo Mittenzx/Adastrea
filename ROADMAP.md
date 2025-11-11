@@ -1,7 +1,7 @@
 # Adastrea - Project Roadmap
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Unreal Engine](https://img.shields.io/badge/Unreal%20Engine-5.6-blue.svg)](https://www.unrealengine.com/)
+[![Unreal Engine](https://img.shields.io/badge/Unreal%20Engine-5.6.1-blue.svg)](https://www.unrealengine.com/)
 
 > This roadmap outlines the development plan, milestones, and future vision for the Adastrea open-world space flight game.
 
@@ -605,7 +605,7 @@
 - [ ] Signal identification
 
 #### Phase 2: Discovery System (Q1 2026)
-- [ ] Anomaly system (spacial phenomena)
+- [ ] Anomaly system (spatial phenomena)
 - [ ] Discovery database and tracking
 - [ ] Rarity and reward systems
 - [ ] Archaeological sites

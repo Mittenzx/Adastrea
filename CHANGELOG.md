@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **System Maturity**:
 - 8 core systems at 75-95% completion
-- 4 advanced systems at 10-60% completion (in progress)
+- 3 advanced systems at 10-60% completion (in progress)
 - 3 future systems in planning phase
 
 ### Changed - Unreal Engine Version Update (2025-11-07)
