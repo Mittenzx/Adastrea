@@ -660,6 +660,7 @@ Comprehensive technical documentation for contributors and developers:
 - [Designer Onboarding](Assets/DesignerOnboarding.md) - Start here if you're new to the project
 - [Quick Start](QUICKSTART.md) - Get up and running quickly
 - [Content Creation Quick Start](CONTENT_CREATION_QUICKSTART.md) - For content creators
+- [Editor Implementation Guide](EDITOR_IMPLEMENTATION_GUIDE.md) - Complete guide to working in Unreal Engine editor
 
 ### System Documentation
 
