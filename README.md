@@ -335,7 +335,9 @@ A modular space station construction system that enables players to build, custo
 4. Use Blueprint-callable functions to add, remove, and position modules
 
 ### Faction System
-The game includes a flexible faction system that allows designers to create and manage various galactic factions. Each faction has unique attributes, colors, relationships, traits, and diplomacy options. The system includes homeworld-based faction relationships for diverse player starting experiences.
+The game includes a flexible faction system that allows designers to create and manage large political and military organizations. Each faction has unique attributes, colors, relationships, traits, and political diplomacy options. Factions focus on **politics, warfare, and military alliances**. The system includes homeworld-based faction relationships for diverse player starting experiences.
+
+**Note:** For economic activities, trade, and industry specialization, see the [Way System](#way-system) which handles specialized guilds and micro-alliances.
 
 **Key Components:**
 - `UFactionDataAsset` - C++ Data Asset class for defining factions

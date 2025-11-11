@@ -3,6 +3,13 @@
 
 This guide shows how to integrate the AI framework into your actual game, connecting data assets and logic blueprints to ships, stations, characters, and gameplay systems.
 
+**AI System Overview:**
+- **Faction AI** - Handles political diplomacy, military strategy, and high-level decisions
+- **Personnel AI** - Handles individual character behavior and crew management
+- **Way System AI** - Handles economic activities, trade, and guild operations (see [Way System Guide](WaySystemGuide.md))
+
+This guide focuses on Faction and Personnel AI. For economic and trade-focused AI, refer to the Way System documentation.
+
 ---
 
 ## Table of Contents
@@ -332,17 +339,21 @@ In Shift Management System:
 
 ### Trade System
 
-**Faction AI → Trade Decisions:**
+**Note:** Day-to-day trade and economic operations are primarily managed by the [Way System](WaySystemGuide.md). Faction AI focuses on high-level political trade agreements and embargoes.
+
+**Faction AI → Political Trade Decisions:**
 
 ```
 In Trade System:
-1. When trade opportunity appears:
+1. When political trade agreement is proposed:
    a. Get Faction's FactionLogic
-   b. Call "Should Initiate Trade" with partner faction
+   b. Call "Should Initiate Trade" with partner faction (political decision)
    c. If true:
-      - Calculate prices using Trade Modifier
-      - Execute trade
-      - Update economic strength
+      - Set diplomatic trade modifier
+      - Allow Way System to operate trade routes
+      - Update political/economic alliance status
+
+Note: Actual trade operations are handled by Ways within the faction
 ```
 
 ### Combat System

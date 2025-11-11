@@ -1,7 +1,13 @@
 # Iteration Guide: Expanding Faction Behaviors, Trait-Driven Gameplay, and Diplomacy
 
 ## Overview
-This guide provides a roadmap for expanding the faction system beyond its current foundation. It's designed for programmers and designers who want to build upon the existing trait and diplomacy systems to create deeper, more dynamic gameplay.
+This guide provides a roadmap for expanding the faction system (political and military) and the Way System (economic and trade) beyond their current foundations. It's designed for programmers and designers who want to build upon the existing trait, diplomacy, and network systems to create deeper, more dynamic gameplay.
+
+**Important Context:**
+- **Faction System** - Handles political diplomacy, warfare, and military alliances
+- **Way System** - Handles economic activities, trade, industry specialization, and micro-alliances (see [Way System Guide](WaySystemGuide.md))
+
+This guide focuses on Faction iteration. For Way System iteration, see the Way System documentation.
 
 ---
 
@@ -583,7 +589,9 @@ Branch (Mission Type)
 
 ### Trade System Integration
 
-**Goal:** Faction relationships affect trade prices and availability.
+**Goal:** Faction political relationships affect high-level trade access and embargoes.
+
+**Note:** Day-to-day trade operations are handled by the [Way System](WaySystemGuide.md). This section focuses on how faction politics affect overall trade permissions.
 
 **Implementation:**
 

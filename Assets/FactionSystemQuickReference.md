@@ -1,6 +1,8 @@
 # Faction System Quick Reference
 
-This guide provides quick examples and usage patterns for the newly implemented faction, reputation, and diplomacy systems.
+This guide provides quick examples and usage patterns for the faction system, which handles political diplomacy, warfare, and large-scale military operations.
+
+**Note:** For economic activities, trade, and industry specialization, see the [Way System Guide](WaySystemGuide.md). Factions focus on politics and military power, while Ways handle economic matters.
 
 ---
 

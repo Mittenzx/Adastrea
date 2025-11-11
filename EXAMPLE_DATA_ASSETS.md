@@ -104,8 +104,10 @@ SecondaryColor: RGB(0.9, 0.9, 0.9) - Silver
 ```
 FactionName: United Terran Alliance
 FactionID: player_alliance
-Description: A democratic coalition of human colonies dedicated to exploration, trade, and mutual defense.
+Description: A democratic coalition of human colonies dedicated to exploration, political diplomacy, and mutual military defense.
 ```
+
+**Note**: For economic guilds and trade operations, see the [Way System Guide](Assets/WaySystemGuide.md).
 
 ### Colors
 ```
