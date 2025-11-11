@@ -14,6 +14,7 @@
   - [Spaceship System](#spaceship-data-asset-system)
   - [Space Station System](#space-station-editor-system)
   - [Faction System](#faction-system)
+  - [Way System](#way-system)
   - [Personnel Management](#personnel-management-system)
   - [AI System](#faction-and-personnel-ai-system)
   - [Trading System](#trading-system)
@@ -373,6 +374,93 @@ The game includes a flexible faction system that allows designers to create and 
 3. Assign the faction to any Space Station via the Faction property
 4. Use Blueprint-callable functions to query traits and diplomacy in gameplay
 
+### Way System
+The Way System provides specialized guilds (Ways) and micro-alliances (Way Networks) based on shared values (Precepts). Ways are small focused organizations (50-1000 members) that handle specific industries and form networks where reputation with one member affects the entire alliance.
+
+**Key Components:**
+- `UWayDataAsset` - Specialized guild definition with industry, quality, and Precepts
+- `UWayNetworkDataAsset` - Micro-alliance of 2-5 Ways with shared values
+- `UVerseSubsystem` - Global network management and reputation tracking
+- `UVerse` - Player component tracking Way reputation and completed Feats
+- Reputation Spillover - Actions with one network member affect all members
+- Network Bonuses - Reputation multipliers for aligned accomplishments
+
+**Advanced Features:**
+- **Industry Specialization**: 15 industry types (Mining, Manufacturing, Exploration, etc.)
+  - Each Way focuses on specific production/consumption
+  - Supply chain relationships between Ways
+  - Quality reputation tiers (Basic to Legendary)
+
+- **Way Networks**: Micro-alliances of 2-5 Ways
+  - Blueprint-callable functions: `RegisterNetwork()`, `GetNetworksForWay()`, `GetNetworkVerseScore()`
+  - Shared Precepts (values) unite network members
+  - Configurable spillover (20-70% typical)
+  - Network bonuses (1.5-2.5x multipliers)
+  - Minimum reputation thresholds for benefits
+
+- **Precepts and Feats**: Value-driven reputation system
+  - Precepts: Core values (Craftsmanship, Discovery, Honor, etc.)
+  - Feats: Legendary accomplishments that grant reputation
+  - Alignment-based rewards (matching Precepts earn more rep)
+  - Automatic network spillover with `RecordFeatWithNetworkEffects()`
+
+- **Sector Councils**: Practical governance (not political)
+  - Ways participate in sector decision-making
+  - Tax rates and budget allocation
+  - Weighted voting based on influence
+  - Players can join councils through Way leadership
+
+- **Economic Integration**: Supply chains and trading
+  - Ways produce and consume resources
+  - Trade agreements and pricing
+  - Network member trading bonuses
+  - Joint contracts for high-reputation players
+
+**Example Networks:**
+- **Craftsmen's Compact** - Engineering excellence (Engineers, Ship-Builders, Refiners)
+- **Frontier Alliance** - Exploration and discovery (Scouts, Cartographers, Pioneers)
+- **Honor Circle** - Warrior traditions (Warriors, Duelists, Protectors, Bounty Hunters)
+- **Merchant Coalition** - Trade and commerce (Traders, Brokers, Transport Union)
+- **Scholars' Syndicate** - Knowledge and research (Researchers, Archivists, Scientists)
+
+**Documentation:**
+- **Complete Guide**: [Assets/WaySystemGuide.md](Assets/WaySystemGuide.md) - Comprehensive system overview
+- **Overview**: [Assets/WaySystemOverview.md](Assets/WaySystemOverview.md) - Introduction to Ways and Networks
+- **Quick Reference**: [Assets/WaySystemQuickReference.md](Assets/WaySystemQuickReference.md) - Fast lookup tables
+- **API Reference**: [Assets/WaySystemAPIReference.md](Assets/WaySystemAPIReference.md) - Developer C++/Blueprint reference
+- **Way Creation**: [Assets/WayCreationGuide.md](Assets/WayCreationGuide.md) - Step-by-step Way creation
+- **Network Guide**: [Assets/WayNetworkGuide.md](Assets/WayNetworkGuide.md) - Complete network documentation
+- **Network Quick Start**: [Assets/WayNetworkQuickStart.md](Assets/WayNetworkQuickStart.md) - 5-minute setup
+- **Network Workflow**: [Assets/WayNetworkWorkflow.md](Assets/WayNetworkWorkflow.md) - Designer workflow
+- **Blueprint Examples**: [Blueprints/WayNetworkBlueprintExamples.md](Blueprints/WayNetworkBlueprintExamples.md) - Copy-paste examples
+- **YAML Templates**: [Assets/WayNetworkTemplates/](Assets/WayNetworkTemplates/) - 5 ready-to-use network configs
+
+**Quick Usage:**
+
+*Creating a Way:*
+1. Create a new WayDataAsset in the Content Browser
+2. Configure identity (name, ID, description)
+3. Set specialization (industry, quality tier, member count)
+4. Define Core Precepts (3-5 values with importance levels)
+5. Add produced/consumed resources for supply chains
+6. Set organizational attributes (tech, military, economic, influence)
+
+*Creating a Network:*
+1. Create a new WayNetworkDataAsset in the Content Browser
+2. Add 2-5 member Ways with influence and commitment levels
+3. Define Shared Precepts (copy from member Ways)
+4. Configure spillover percentage (30-50% typical)
+5. Set network alignment bonus (1.5-2.0x typical)
+6. Set minimum reputation threshold (20-40 typical)
+7. Register network with VerseSubsystem on game start
+
+*Using in Gameplay:*
+- Complete Feats aligned with Way Precepts to earn reputation
+- Reach reputation thresholds to access network bonuses
+- Gain spillover reputation with entire network automatically
+- Access network-exclusive missions, discounts, and rewards
+- Participate in sector council decisions as Way leader
+
 ### Faction and Personnel AI System
 The game includes a complete AI framework for data-driven faction and personnel behaviors, supporting peaceful/exploration early-game priorities and personality-driven decision making.
 
@@ -556,6 +644,14 @@ Comprehensive technical documentation for contributors and developers:
 - [Spaceship System Guide](Assets/SpaceshipDataAssetGuide.md)
 - [Space Station System](Content/Blueprints/STATION_EDITOR_README.md)
 - [Faction System Guide](Assets/BlueprintFactionAssetGuide.md)
+- [Way System Guide](Assets/WaySystemGuide.md)
+  - [Way System Overview](Assets/WaySystemOverview.md)
+  - [Way System Quick Reference](Assets/WaySystemQuickReference.md)
+  - [Way System API Reference](Assets/WaySystemAPIReference.md)
+  - [Way Creation Guide](Assets/WayCreationGuide.md)
+  - [Way Network Guide](Assets/WayNetworkGuide.md)
+  - [Way Network Quick Start](Assets/WayNetworkQuickStart.md)
+  - [Way Network Workflow](Assets/WayNetworkWorkflow.md)
 - [Personnel System Guide](Assets/PersonnelSystemGuide.md)
 
 #### Advanced Systems

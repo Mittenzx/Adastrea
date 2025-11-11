@@ -28,6 +28,7 @@ graph TB
     subgraph "Core Managers"
         FactionDiplomacy[UFactionDiplomacyManager<br/>Global Faction Relations]
         PlayerReputation[UPlayerReputationComponent<br/>Player Faction Standing]
+        VerseSubsystem[UVerseSubsystem<br/>Way Network Management]
     end
 
     subgraph "Game Systems"
@@ -35,6 +36,7 @@ graph TB
         SpaceStation[ASpaceStation<br/>Modular Stations]
         Trading[Trading System<br/>Markets & Contracts]
         AI[AI System<br/>Faction & Personnel Logic]
+        Ways[Way System<br/>Guilds & Networks]
     end
 
     subgraph "Data Assets"
@@ -42,9 +44,12 @@ graph TB
         SpaceshipData[USpaceshipDataAsset<br/>Ship Specifications]
         PersonnelData[UPersonnelDataAsset<br/>Crew Members]
         HomeworldData[UHomeworldDataAsset<br/>Starting Locations]
+        WayData[UWayDataAsset<br/>Guild Definitions]
+        WayNetworkData[UWayNetworkDataAsset<br/>Network Alliances]
     end
 
     GameInstance --> FactionDiplomacy
+    GameInstance --> VerseSubsystem
     GameInstance --> GameState
     GameMode --> PlayerController
     PlayerController --> Spaceship
@@ -52,23 +57,28 @@ graph TB
     GameState --> Trading
     GameState --> AI
     SpaceStation --> FactionData
+    SpaceStation --> WayData
     Spaceship --> SpaceshipData
     Spaceship --> PersonnelData
     FactionDiplomacy --> FactionData
     PlayerReputation --> FactionData
     HomeworldData --> FactionData
     Trading --> SpaceStation
+    Trading --> Ways
     AI --> FactionData
     AI --> PersonnelData
+    Ways --> WayData
+    Ways --> WayNetworkData
+    VerseSubsystem --> WayNetworkData
 ```
 
 **Key Relationships:**
-- **UAdastreaGameInstance** manages persistent state across level transitions and owns the global FactionDiplomacyManager
+- **UAdastreaGameInstance** manages persistent state across level transitions and owns global managers (FactionDiplomacy, VerseSubsystem)
 - **AAdastreaGameState** stores replicated session state, including active events, time progression, and market conditions
 - **AAdastreaPlayerController** handles player input and manages the possessed Spaceship actor
 - **AAdastreaGameMode** controls game rules, player spawning, and session lifecycle
-- **Managers** coordinate cross-system functionality (diplomacy, reputation)
-- **Game Systems** implement core gameplay features (ships, stations, trading, AI)
+- **Managers** coordinate cross-system functionality (diplomacy, reputation, Way networks)
+- **Game Systems** implement core gameplay features (ships, stations, trading, AI, Ways)
 - **Data Assets** provide designer-friendly configuration without C++ code
 
 ## Project Structure
@@ -84,7 +94,8 @@ Adastrea/
 │   ├── PersonnelAITemplates/   # YAML templates for personnel AI
 │   ├── PersonnelTemplates/     # YAML templates for crew roles
 │   ├── SpaceshipTemplates/     # YAML templates for ships
-│   └── TradingTemplates/       # YAML templates for trading
+│   ├── TradingTemplates/       # YAML templates for trading
+│   └── WayNetworkTemplates/    # YAML templates for Way networks
 │
 ├── Blueprints/                  # Blueprint documentation
 │   ├── HomeworldBlueprintTemplates.md
@@ -107,11 +118,12 @@ Adastrea/
         ├── Factions/           # Faction system
         ├── Materials/          # Material system
         ├── Planets/            # Planet classes
-        ├── Player/             # Player-specific systems
+        ├── Player/             # Player-specific systems (includes Verse component)
         ├── Ships/              # Spaceship classes
         ├── Stations/           # Space station classes
         ├── Trading/            # Trading economy system
-        └── UI/                 # UI widgets and HUD
+        ├── UI/                 # UI widgets and HUD
+        └── Way/                # Way system (guilds and networks)
 ```
 
 ## Module Organization
@@ -148,6 +160,43 @@ The main game logic module, organized by feature:
 - Trading (relationship-based prices)
 - AI (faction-level strategic decisions)
 - Homeworlds (starting relationships)
+
+#### Way System (`Source/Adastrea/Way/`)
+- **WayDataAsset**: Specialized guild definitions
+  - Industry specialization (15 types)
+  - Quality reputation tiers
+  - Core Precepts (value system)
+  - Supply chain relationships
+  - Sector council participation
+- **WayNetworkDataAsset**: Micro-alliance of 2-5 Ways
+  - Member Ways with influence/commitment levels
+  - Shared Precepts
+  - Reputation spillover mechanics (20-70%)
+  - Network alignment bonuses (1.5-3.0x)
+  - Qualification thresholds
+- **VerseSubsystem**: Global network management
+  - Network registration and tracking
+  - Reputation calculations
+  - Network score aggregation
+  - Feat recording with spillover
+- **Verse Component**: Player reputation tracking
+  - Way reputation storage
+  - Completed Feats tracking
+  - Verse score calculation
+
+**Key Features**:
+- Small focused guilds (50-1000 members)
+- Value-driven alliances (Precepts)
+- Reputation spillover between network members
+- Economic supply chains
+- Sector governance (non-political)
+
+**Integration Points**:
+- Trading (supply chains, network discounts)
+- Factions (Ways belong to larger factions)
+- Stations (Way ownership and operations)
+- Quests (network-wide missions and rewards)
+- Personnel (guild membership and careers)
 
 #### Material System (`Source/Adastrea/Materials/`)
 - **MaterialDataAsset**: Raw materials and refined goods
