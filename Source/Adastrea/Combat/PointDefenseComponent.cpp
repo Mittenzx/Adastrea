@@ -22,7 +22,6 @@ UPointDefenseComponent::UPointDefenseComponent()
     FighterTags.Add(FName(TEXT("Bomber")));
 
     // Default state
-    bIsActive = true;
     TimeSinceLastScan = 0.0f;
 }
 
@@ -68,15 +67,15 @@ void UPointDefenseComponent::TickComponent(float DeltaTime, ELevelTick TickType,
     UpdateWeaponFiring(DeltaTime);
 }
 
-void UPointDefenseComponent::Activate()
+void UPointDefenseComponent::Activate(bool bReset)
 {
-    bIsActive = true;
+    Super::Activate(bReset);
     UE_LOG(LogAdastrea, Log, TEXT("Point defense activated"));
 }
 
 void UPointDefenseComponent::Deactivate()
 {
-    bIsActive = false;
+    Super::Deactivate();
     ClearAllThreats();
     UE_LOG(LogAdastrea, Log, TEXT("Point defense deactivated"));
 }
