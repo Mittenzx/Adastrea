@@ -17,6 +17,7 @@ public class Adastrea : ModuleRules
 			"Adastrea/Public/AI",
 			"Adastrea/Public/Ships",
 			"Adastrea/Public/Factions",
+			"Adastrea/Public/Combat",
 			"Adastrea/Way",
 			"Adastrea/Rivals"
 		});
