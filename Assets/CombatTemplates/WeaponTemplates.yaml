@@ -1,0 +1,479 @@
+# Weapon Configuration Templates for Adastrea Combat System
+# Copy and modify these templates to create your own weapons
+# All values are examples and can be adjusted for game balance
+
+# ============================================
+# ENERGY WEAPONS
+# ============================================
+
+pulse_laser_small:
+  weapon_name: "Pulse Laser"
+  description: "Standard energy weapon with rapid fire capability. Good against shields, moderate against armor."
+  weapon_type: "Energy"
+  damage_type: "Energy"
+  mount_size: "Small"
+  
+  # Damage Stats
+  base_damage: 100
+  armor_penetration: 40
+  shield_penetration: 70
+  critical_chance: 0.05
+  critical_multiplier: 2.0
+  
+  # Firing Characteristics
+  rate_of_fire: 5.0
+  max_range: 3000
+  optimal_range: 1500
+  projectile_speed: 0  # Instant hit
+  tracking_speed: 90
+  accuracy: 85
+  
+  # Resources
+  power_per_shot: 25
+  ammo_capacity: 0  # Energy weapon
+  reload_time: 0
+  heat_generation: 15
+  cooling_rate: 10
+  
+  # Special
+  point_defense_capable: false
+  aoe_radius: 0
+  emp_strength: 0
+  homing_rating: 0
+  
+  # Lore
+  manufacturer: "Solaris Industries"
+  tech_level: 3
+  rarity: "Common"
+
+beam_weapon_medium:
+  weapon_name: "Particle Beam"
+  description: "Continuous beam weapon that deals sustained damage. Excellent shield penetration."
+  weapon_type: "Beam"
+  damage_type: "Energy"
+  mount_size: "Medium"
+  
+  base_damage: 300
+  armor_penetration: 30
+  shield_penetration: 90
+  critical_chance: 0.03
+  critical_multiplier: 1.5
+  
+  rate_of_fire: 1.0  # Continuous beam simulated as 1/sec
+  max_range: 4000
+  optimal_range: 2000
+  projectile_speed: 0
+  tracking_speed: 45
+  accuracy: 95
+  
+  power_per_shot: 150
+  ammo_capacity: 0
+  reload_time: 0
+  heat_generation: 30
+  cooling_rate: 8
+  
+  point_defense_capable: false
+  aoe_radius: 0
+  emp_strength: 20
+  homing_rating: 0
+  
+  manufacturer: "Helios Systems"
+  tech_level: 5
+  rarity: "Uncommon"
+
+# ============================================
+# PROJECTILE WEAPONS
+# ============================================
+
+autocannon_small:
+  weapon_name: "30mm Autocannon"
+  description: "Rapid-fire projectile weapon. Good armor penetration but limited ammunition."
+  weapon_type: "Projectile"
+  damage_type: "Kinetic"
+  mount_size: "Small"
+  
+  base_damage: 80
+  armor_penetration: 60
+  shield_penetration: 40
+  critical_chance: 0.08
+  critical_multiplier: 2.5
+  
+  rate_of_fire: 8.0
+  max_range: 2500
+  optimal_range: 1200
+  projectile_speed: 2000
+  tracking_speed: 120
+  accuracy: 75
+  
+  power_per_shot: 10
+  ammo_capacity: 500
+  reload_time: 5.0
+  heat_generation: 8
+  cooling_rate: 15
+  
+  point_defense_capable: true  # Can engage missiles
+  aoe_radius: 0
+  emp_strength: 0
+  homing_rating: 0
+  
+  manufacturer: "Titan Armaments"
+  tech_level: 2
+  rarity: "Common"
+
+railgun_large:
+  weapon_name: "Heavy Railgun"
+  description: "High-velocity magnetic accelerator. Extreme armor penetration, low rate of fire."
+  weapon_type: "Projectile"
+  damage_type: "Kinetic"
+  mount_size: "Large"
+  
+  base_damage: 800
+  armor_penetration: 95
+  shield_penetration: 30
+  critical_chance: 0.10
+  critical_multiplier: 3.0
+  
+  rate_of_fire: 0.4
+  max_range: 10000
+  optimal_range: 5000
+  projectile_speed: 5000
+  tracking_speed: 15
+  accuracy: 90
+  
+  power_per_shot: 500
+  ammo_capacity: 50
+  reload_time: 15.0
+  heat_generation: 40
+  cooling_rate: 5
+  
+  point_defense_capable: false
+  aoe_radius: 0
+  emp_strength: 0
+  homing_rating: 0
+  
+  manufacturer: "Magnus Heavy Industries"
+  tech_level: 6
+  rarity: "Rare"
+
+# ============================================
+# MISSILES & TORPEDOES
+# ============================================
+
+light_missile_small:
+  weapon_name: "Viper Light Missile"
+  description: "Fast, maneuverable missile with moderate damage. Good homing capability."
+  weapon_type: "Missile"
+  damage_type: "Explosive"
+  mount_size: "Small"
+  
+  base_damage: 400
+  armor_penetration: 50
+  shield_penetration: 50
+  critical_chance: 0.15
+  critical_multiplier: 2.0
+  
+  rate_of_fire: 0.5
+  max_range: 8000
+  optimal_range: 4000
+  projectile_speed: 800
+  tracking_speed: 0  # Missile handles tracking
+  accuracy: 70  # Chance to evade PD
+  
+  power_per_shot: 50
+  ammo_capacity: 20
+  reload_time: 10.0
+  heat_generation: 5
+  cooling_rate: 10
+  
+  point_defense_capable: false
+  aoe_radius: 50
+  emp_strength: 0
+  homing_rating: 7
+  
+  manufacturer: "Viper Defense Systems"
+  tech_level: 4
+  rarity: "Uncommon"
+
+heavy_torpedo_capital:
+  weapon_name: "Leviathan Torpedo"
+  description: "Massive anti-capital ship torpedo. Devastating damage, slow and vulnerable to PD."
+  weapon_type: "Torpedo"
+  damage_type: "Explosive"
+  mount_size: "Capital"
+  
+  base_damage: 3000
+  armor_penetration: 70
+  shield_penetration: 70
+  critical_chance: 0.20
+  critical_multiplier: 2.5
+  
+  rate_of_fire: 0.1
+  max_range: 15000
+  optimal_range: 7500
+  projectile_speed: 400
+  tracking_speed: 0
+  accuracy: 50  # Easy to intercept
+  
+  power_per_shot: 200
+  ammo_capacity: 6
+  reload_time: 30.0
+  heat_generation: 10
+  cooling_rate: 5
+  
+  point_defense_capable: false
+  aoe_radius: 200
+  emp_strength: 0
+  homing_rating: 5
+  
+  manufacturer: "Atlas Ordnance"
+  tech_level: 7
+  rarity: "Rare"
+
+# ============================================
+# POINT DEFENSE WEAPONS
+# ============================================
+
+point_defense_laser:
+  weapon_name: "PD Laser Turret"
+  description: "Fast-tracking laser designed for missile interception. High rate of fire."
+  weapon_type: "Energy"
+  damage_type: "Energy"
+  mount_size: "Small"
+  
+  base_damage: 50
+  armor_penetration: 20
+  shield_penetration: 80
+  critical_chance: 0.02
+  critical_multiplier: 1.5
+  
+  rate_of_fire: 10.0
+  max_range: 1500
+  optimal_range: 750
+  projectile_speed: 0
+  tracking_speed: 180
+  accuracy: 90
+  
+  power_per_shot: 15
+  ammo_capacity: 0
+  reload_time: 0
+  heat_generation: 12
+  cooling_rate: 20
+  
+  point_defense_capable: true
+  aoe_radius: 0
+  emp_strength: 0
+  homing_rating: 0
+  
+  manufacturer: "Aegis Defense"
+  tech_level: 4
+  rarity: "Common"
+
+flak_cannon:
+  weapon_name: "Flak Cannon"
+  description: "Proximity-fused explosive shells. Area denial against missiles and fighters."
+  weapon_type: "Projectile"
+  damage_type: "Explosive"
+  mount_size: "Small"
+  
+  base_damage: 40
+  armor_penetration: 30
+  shield_penetration: 40
+  critical_chance: 0.05
+  critical_multiplier: 1.8
+  
+  rate_of_fire: 6.0
+  max_range: 2000
+  optimal_range: 1000
+  projectile_speed: 1500
+  tracking_speed: 150
+  accuracy: 80
+  
+  power_per_shot: 8
+  ammo_capacity: 300
+  reload_time: 8.0
+  heat_generation: 10
+  cooling_rate: 12
+  
+  point_defense_capable: true
+  aoe_radius: 30  # Proximity detonation
+  emp_strength: 0
+  homing_rating: 0
+  
+  manufacturer: "Bulwark Systems"
+  tech_level: 3
+  rarity: "Common"
+
+# ============================================
+# SPECIALIZED WEAPONS
+# ============================================
+
+emp_cannon:
+  weapon_name: "Ion Disruptor"
+  description: "EMP weapon that disables enemy systems. Low damage but high utility."
+  weapon_type: "Energy"
+  damage_type: "EMP"
+  mount_size: "Medium"
+  
+  base_damage: 50  # Low hull damage
+  armor_penetration: 10
+  shield_penetration: 90  # Bypasses shields
+  critical_chance: 0.05
+  critical_multiplier: 1.0
+  
+  rate_of_fire: 0.5
+  max_range: 5000
+  optimal_range: 2500
+  projectile_speed: 0
+  tracking_speed: 60
+  accuracy: 85
+  
+  power_per_shot: 200
+  ammo_capacity: 0
+  reload_time: 0
+  heat_generation: 25
+  cooling_rate: 10
+  
+  point_defense_capable: false
+  aoe_radius: 0
+  emp_strength: 90  # High system disruption
+  homing_rating: 0
+  
+  manufacturer: "Nexus Technologies"
+  tech_level: 6
+  rarity: "Rare"
+
+plasma_cannon_large:
+  weapon_name: "Plasma Accelerator"
+  description: "Superheated plasma projectile. Balanced penetration, thermal damage over time."
+  weapon_type: "Plasma"
+  damage_type: "Thermal"
+  mount_size: "Large"
+  
+  base_damage: 600
+  armor_penetration: 65
+  shield_penetration: 65
+  critical_chance: 0.12
+  critical_multiplier: 2.2
+  
+  rate_of_fire: 0.8
+  max_range: 6000
+  optimal_range: 3000
+  projectile_speed: 1200
+  tracking_speed: 30
+  accuracy: 80
+  
+  power_per_shot: 300
+  ammo_capacity: 0
+  reload_time: 0
+  heat_generation: 35
+  cooling_rate: 7
+  
+  point_defense_capable: false
+  aoe_radius: 20  # Splash damage
+  emp_strength: 0
+  homing_rating: 0
+  
+  manufacturer: "Stellar Forge"
+  tech_level: 7
+  rarity: "Rare"
+
+# ============================================
+# CAPITAL SHIP WEAPONS
+# ============================================
+
+spinal_laser_capital:
+  weapon_name: "Spinal Lance"
+  description: "Capital ship main weapon. Devastating power, slow traverse, massive power draw."
+  weapon_type: "Beam"
+  damage_type: "Energy"
+  mount_size: "Capital"
+  
+  base_damage: 2500
+  armor_penetration: 50
+  shield_penetration: 95
+  critical_chance: 0.08
+  critical_multiplier: 2.0
+  
+  rate_of_fire: 0.2
+  max_range: 20000
+  optimal_range: 10000
+  projectile_speed: 0
+  tracking_speed: 5  # Very slow
+  accuracy: 98
+  
+  power_per_shot: 2000
+  ammo_capacity: 0
+  reload_time: 0
+  heat_generation: 50
+  cooling_rate: 3
+  
+  point_defense_capable: false
+  aoe_radius: 0
+  emp_strength: 30
+  homing_rating: 0
+  
+  manufacturer: "Titan Prime Shipyards"
+  tech_level: 9
+  rarity: "Legendary"
+
+broadside_cannon_capital:
+  weapon_name: "Heavy Mass Driver"
+  description: "Capital ship broadside weapon. Extreme kinetic damage, fixed forward arc."
+  weapon_type: "Projectile"
+  damage_type: "Kinetic"
+  mount_size: "Capital"
+  
+  base_damage: 2000
+  armor_penetration: 98
+  shield_penetration: 40
+  critical_chance: 0.15
+  critical_multiplier: 3.5
+  
+  rate_of_fire: 0.3
+  max_range: 15000
+  optimal_range: 7500
+  projectile_speed: 3000
+  tracking_speed: 8
+  accuracy: 92
+  
+  power_per_shot: 800
+  ammo_capacity: 30
+  reload_time: 20.0
+  heat_generation: 30
+  cooling_rate: 4
+  
+  point_defense_capable: false
+  aoe_radius: 0
+  emp_strength: 0
+  homing_rating: 0
+  
+  manufacturer: "Dreadnought Arms"
+  tech_level: 9
+  rarity: "Legendary"
+
+# ============================================
+# USAGE NOTES
+# ============================================
+# 
+# To create a weapon in Unreal:
+# 1. Create Blueprint based on WeaponDataAsset
+# 2. Copy values from template above
+# 3. Adjust for your game balance needs
+# 4. Test in-game and iterate
+#
+# Balance Guidelines:
+# - Small weapons: 50-150 DPS
+# - Medium weapons: 150-400 DPS  
+# - Large weapons: 300-800 DPS
+# - Capital weapons: 500-1500 DPS
+#
+# - Point defense: High RoF (5-15/s), short range (1000-2500m)
+# - Anti-ship: Moderate RoF (0.5-5/s), long range (5000-15000m)
+# - Missiles: Low RoF (0.1-1/s), very long range (8000-20000m)
+#
+# Penetration Guidelines:
+# - Energy: High shield (70-90), low armor (20-50)
+# - Kinetic: High armor (70-95), low shield (20-50)
+# - Explosive: Balanced (50-70 both)
+# - Thermal: Balanced (60-75 both)
+# - EMP: Very high shield (90+), very low armor (10-20)
