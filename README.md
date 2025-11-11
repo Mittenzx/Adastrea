@@ -9,6 +9,7 @@
 
 - [About](#about)
 - [Quick Start](#quick-start)
+- [Project Roadmap](#project-roadmap)
 - [Project Structure](#project-structure)
 - [Core Features](#core-features)
   - [Spaceship System](#spaceship-data-asset-system)
@@ -183,6 +184,19 @@ All generated content is saved as YAML files compatible with the existing Data A
 4. **For Automation**: See [TESTING_AUTOMATION_GUIDE.md](TESTING_AUTOMATION_GUIDE.md) for automated testing
 5. **For Procedural Content**: See [PROCEDURAL_GENERATION_QUICKSTART.md](PROCEDURAL_GENERATION_QUICKSTART.md)
 6. **Quick Reference**: See individual system guides in the Assets/ folder
+
+## Project Roadmap
+
+📍 **Want to see where the project is headed?** Check out our comprehensive [ROADMAP.md](ROADMAP.md) for:
+- Development phases and timelines
+- Completed, in-progress, and planned features
+- Detailed feature breakdowns for all systems
+- Technical roadmap and optimization plans
+- Community and modding ecosystem plans
+- How to contribute to upcoming features
+
+**Current Status**: Pre-Alpha 0.9.0 - Phase 3 (Advanced Systems) in progress  
+**Next Milestone**: Phase 4 (Gameplay & Polish) - Q1-Q2 2026
 
 ## Project Structure
 ```
@@ -621,6 +635,10 @@ The game includes a comprehensive personnel/crew management system for creating 
 7. Create relationships between personnel for team dynamics
 
 ## Documentation
+
+### Project Planning
+
+- **[Project Roadmap](ROADMAP.md)** - Development phases, timelines, and future features
 
 ### Developer Documentation
 
