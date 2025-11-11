@@ -18,6 +18,8 @@ public class Adastrea : ModuleRules
 			"Adastrea/Public/Ships",
 			"Adastrea/Public/Factions",
 			"Adastrea/Public/Combat",
+			"Adastrea/Public/Navigation",
+			"Adastrea/Public/Quest",
 			"Adastrea/Way",
 			"Adastrea/Rivals"
 		});
@@ -28,6 +30,7 @@ public class Adastrea : ModuleRules
 			"CoreUObject", 
 			"Engine", 
 			"InputCore",
+			"EnhancedInput",
 			"UMG",
 			"Slate",
 			"SlateCore"
