@@ -14,12 +14,12 @@ FString UShipCustomizationDataAsset::GetCustomProperty(FName PropertyName, const
 
 bool UShipCustomizationDataAsset::IsCompatibleWithShip(const FString& ShipClassName) const
 {
-	// If no restrictions, compatible with all ships
-	if (RestrictedToFactions.Num() == 0)
+	// If no ship class restrictions, compatible with all ships
+	if (RestrictedToShipClasses.Num() == 0)
 	{
 		return true;
 	}
 
 	// Check if ship class is in the allowed list
-	return RestrictedToFactions.Contains(ShipClassName);
+	return RestrictedToShipClasses.Contains(ShipClassName);
 }

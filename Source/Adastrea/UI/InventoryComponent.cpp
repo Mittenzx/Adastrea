@@ -230,6 +230,9 @@ void UInventoryComponent::SortInventory()
 		if (!A.IsEmpty() && B.IsEmpty()) return true;
 		if (A.IsEmpty() && B.IsEmpty()) return false;
 
+		// Additional null check to prevent crashes
+		if (!A.Item || !B.Item) return false;
+
 		// Sort by category
 		if (A.Item->Category != B.Item->Category)
 		{

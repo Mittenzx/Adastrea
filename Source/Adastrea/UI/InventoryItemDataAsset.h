@@ -113,7 +113,7 @@ public:
 	bool bCanBeUsed;
 
 	/** Cooldown time after use in seconds */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Usage", meta=(ClampMin="0.0", EditCondition="bCanBeUsed", EditConditionHides))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Usage", meta=(ClampMin="0.0", EditCondition="bCanBeUsed"))
 	float UsageCooldown;
 
 	/** Custom data for item-specific behavior */

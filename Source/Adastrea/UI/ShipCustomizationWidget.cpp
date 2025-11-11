@@ -165,6 +165,8 @@ bool UShipCustomizationWidget::CanInstallModule(UShipCustomizationDataAsset* Mod
 	// Check if compatible with ship (if spaceship reference exists)
 	if (Spaceship)
 	{
+		// Note: Uses internal UE class name (e.g., 'BP_Ship_Fighter_C' for Blueprints)
+		// RestrictedToShipClasses in module data assets must use these exact internal names
 		FString ShipClassName = Spaceship->GetClass()->GetName();
 		if (!Module->IsCompatibleWithShip(ShipClassName))
 		{

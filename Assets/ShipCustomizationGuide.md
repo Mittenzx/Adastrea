@@ -114,7 +114,7 @@ EShipHardpointType RequiredHardpoint     // Required slot type
 float PowerConsumption         // Power draw
 float Mass                    // Module weight
 int32 MinimumTechLevel        // Tech requirement
-TArray<FString> RestrictedToFactions  // Faction restrictions
+TArray<FString> RestrictedToShipClasses  // Ship class restrictions (empty = all ships)
 
 // Economy
 int32 BaseValue               // Value in credits
@@ -668,9 +668,10 @@ Visual Customization:
    Player tech level >= Module.MinimumTechLevel
    ```
 
-4. Check faction restrictions:
+4. Check ship class restrictions:
    ```
-   If RestrictedToFactions not empty, must match
+   If RestrictedToShipClasses not empty, must match
+   Note: Uses internal UE class names (e.g., 'BP_Ship_Fighter_C')
    ```
 
 ### Stats Not Updating

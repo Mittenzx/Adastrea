@@ -114,9 +114,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Requirements", meta=(ClampMin="1", ClampMax="10"))
 	int32 MinimumTechLevel;
 
-	/** Faction restrictions (empty = available to all) */
+	/** Ship class restrictions (empty = available to all ship classes) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Requirements")
-	TArray<FString> RestrictedToFactions;
+	TArray<FString> RestrictedToShipClasses;
 
 	/**
 	 * Get a stat modifier value
