@@ -198,6 +198,8 @@ All generated content is saved as YAML files compatible with the existing Data A
 **Current Status**: Pre-Alpha 0.9.0 - Phase 3 (Advanced Systems) in progress  
 **Next Milestone**: Phase 4 (Gameplay & Polish) - Q1-Q2 2026
 
+**📝 Contributing to the Roadmap**: When submitting PRs that affect project milestones or system status, please update ROADMAP.md following the [Roadmap Update Guidelines](ROADMAP_UPDATE_GUIDELINES.md).
+
 ## Project Structure
 ```
 Adastrea/
@@ -641,6 +643,7 @@ The game includes a comprehensive personnel/crew management system for creating 
 ### Project Planning
 
 - **[Project Roadmap](ROADMAP.md)** - Development phases, timelines, and future features
+- **[Roadmap Update Guidelines](ROADMAP_UPDATE_GUIDELINES.md)** - When and how to update the roadmap
 
 ### Developer Documentation
 
