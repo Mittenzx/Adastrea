@@ -2,6 +2,7 @@
 
 #include "Player/AdastreaPlayerController.h"
 #include "Ships/Spaceship.h"
+#include "AdastreaLog.h"
 
 AAdastreaPlayerController::AAdastreaPlayerController()
 {
@@ -26,7 +27,7 @@ void AAdastreaPlayerController::OnPossessSpaceship_Implementation(ASpaceship* Ne
 	// Can be overridden in Blueprints
 	if (NewSpaceship)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Player controller possessing spaceship: %s"), *NewSpaceship->GetName());
+		UE_LOG(LogAdastrea, Log, TEXT("Player controller possessing spaceship: %s"), *NewSpaceship->GetName());
 	}
 }
 

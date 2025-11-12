@@ -2,6 +2,7 @@
 
 #include "Player/AdastreaGameInstance.h"
 #include "Factions/FactionDiplomacyManager.h"
+#include "AdastreaLog.h"
 #include "Kismet/GameplayStatics.h"
 
 UAdastreaGameInstance::UAdastreaGameInstance()
@@ -32,7 +33,7 @@ bool UAdastreaGameInstance::SaveGame(const FString& SlotName)
 {
 	// TODO: Implement save game functionality
 	// This would serialize player state, factions, and other persistent data
-	UE_LOG(LogTemp, Warning, TEXT("SaveGame called but not yet implemented"));
+	UE_LOG(LogAdastrea, Warning, TEXT("SaveGame called but not yet implemented"));
 	return false;
 }
 
@@ -40,7 +41,7 @@ bool UAdastreaGameInstance::LoadGame(const FString& SlotName)
 {
 	// TODO: Implement load game functionality
 	// This would deserialize player state, factions, and other persistent data
-	UE_LOG(LogTemp, Warning, TEXT("LoadGame called but not yet implemented"));
+	UE_LOG(LogAdastrea, Warning, TEXT("LoadGame called but not yet implemented"));
 	return false;
 }
 

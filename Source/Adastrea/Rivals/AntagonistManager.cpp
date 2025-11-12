@@ -2,6 +2,7 @@
 
 #include "Rivals/AntagonistManager.h"
 #include "Way/Feat.h"
+#include "AdastreaLog.h"
 #include "TimerManager.h"
 #include "Engine/World.h"
 
@@ -34,7 +35,7 @@ void UAntagonistManager::OnFeatCompleted(UFeatDataAsset* CompletedFeat)
 	
 	// TODO: Check if the Feat has an antagonist trigger
 	// For now, this is a placeholder implementation
-	UE_LOG(LogTemp, Log, TEXT("Feat completed: %s - checking for antagonist triggers"), *CompletedFeat->GetName());
+	UE_LOG(LogAdastrea, Log, TEXT("Feat completed: %s - checking for antagonist triggers"), *CompletedFeat->GetName());
 }
 
 FActiveAntagonist UAntagonistManager::SpawnAntagonist(UFeatDataAsset* SourceFeat, EAntagonistGoal Goal, int32 InitialHeat)
@@ -52,7 +53,7 @@ FActiveAntagonist UAntagonistManager::SpawnAntagonist(UFeatDataAsset* SourceFeat
 	// Add to the list of antagonists
 	Antagonists.Add(NewAntagonist);
 	
-	UE_LOG(LogTemp, Log, TEXT("Spawned new antagonist: %s (Heat: %d)"), 
+	UE_LOG(LogAdastrea, Log, TEXT("Spawned new antagonist: %s (Heat: %d)"), 
 		*NewAntagonist.AntagonistName.ToString(), NewAntagonist.HeatLevel);
 	
 	return NewAntagonist;
@@ -137,7 +138,7 @@ bool UAntagonistManager::ModifyAntagonistHeat(const FGuid& AntagonistID, int32 H
 		if (Antagonist.AntagonistID == AntagonistID)
 		{
 			Antagonist.HeatLevel = FMath::Clamp(Antagonist.HeatLevel + HeatDelta, 0, 100);
-			UE_LOG(LogTemp, Log, TEXT("Modified antagonist %s heat by %d to %d"), 
+			UE_LOG(LogAdastrea, Log, TEXT("Modified antagonist %s heat by %d to %d"), 
 				*Antagonist.AntagonistName.ToString(), HeatDelta, Antagonist.HeatLevel);
 			return true;
 		}
@@ -155,7 +156,7 @@ bool UAntagonistManager::RecordEncounter(const FGuid& AntagonistID)
 			Antagonist.EncounterCount++;
 			// Increase heat slightly on encounter
 			Antagonist.HeatLevel = FMath::Clamp(Antagonist.HeatLevel + 5, 0, 100);
-			UE_LOG(LogTemp, Log, TEXT("Recorded encounter with antagonist %s (Total: %d)"), 
+			UE_LOG(LogAdastrea, Log, TEXT("Recorded encounter with antagonist %s (Total: %d)"), 
 				*Antagonist.AntagonistName.ToString(), Antagonist.EncounterCount);
 			return true;
 		}
@@ -171,7 +172,7 @@ bool UAntagonistManager::DeactivateAntagonist(const FGuid& AntagonistID)
 		if (Antagonist.AntagonistID == AntagonistID)
 		{
 			Antagonist.bIsActive = false;
-			UE_LOG(LogTemp, Log, TEXT("Deactivated antagonist: %s"), 
+			UE_LOG(LogAdastrea, Log, TEXT("Deactivated antagonist: %s"), 
 				*Antagonist.AntagonistName.ToString());
 			return true;
 		}
@@ -187,7 +188,7 @@ bool UAntagonistManager::ReactivateAntagonist(const FGuid& AntagonistID)
 		if (Antagonist.AntagonistID == AntagonistID)
 		{
 			Antagonist.bIsActive = true;
-			UE_LOG(LogTemp, Log, TEXT("Reactivated antagonist: %s"), 
+			UE_LOG(LogAdastrea, Log, TEXT("Reactivated antagonist: %s"), 
 				*Antagonist.AntagonistName.ToString());
 			return true;
 		}
@@ -204,7 +205,7 @@ void UAntagonistManager::UpdateAntagonists(float DeltaTime)
 void UAntagonistManager::ClearAllAntagonists()
 {
 	Antagonists.Empty();
-	UE_LOG(LogTemp, Log, TEXT("Cleared all antagonists"));
+	UE_LOG(LogAdastrea, Log, TEXT("Cleared all antagonists"));
 }
 
 int32 UAntagonistManager::GetTotalAntagonistCount() const
