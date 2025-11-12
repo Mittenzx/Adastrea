@@ -245,6 +245,10 @@ FText UAntagonistManager::GenerateAntagonistName(UFeatDataAsset* SourceFeat, EAn
 		case EAntagonistGoal::Justice:
 			BaseName = TEXT("The Justicar");
 			break;
+		default:
+			BaseName = TEXT("Rival");
+			UE_LOG(LogAdastrea, Warning, TEXT("Unknown antagonist goal type (%d), using default name"), static_cast<int32>(Goal));
+			break;
 	}
 	
 	return FText::FromString(BaseName);
@@ -270,10 +274,11 @@ void UAntagonistManager::StartUpdateTimer()
 	if (UWorld* World = GetWorld())
 	{
 		// Update every 60 seconds
-		World->GetTimerManager().SetTimer(UpdateTimerHandle, [this]()
+		const float UpdateInterval = 60.0f;
+		World->GetTimerManager().SetTimer(UpdateTimerHandle, [this, UpdateInterval]()
 		{
-			UpdateAntagonists(60.0f);
-		}, 60.0f, true);
+			UpdateAntagonists(UpdateInterval);
+		}, UpdateInterval, true);
 	}
 }
 

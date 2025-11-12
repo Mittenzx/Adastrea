@@ -3,7 +3,6 @@
 #include "Player/AdastreaGameInstance.h"
 #include "Factions/FactionDiplomacyManager.h"
 #include "AdastreaLog.h"
-#include "Kismet/GameplayStatics.h"
 
 UAdastreaGameInstance::UAdastreaGameInstance()
 	: FactionDiplomacyManager(nullptr)
@@ -47,11 +46,5 @@ bool UAdastreaGameInstance::LoadGame(const FString& SlotName)
 
 void UAdastreaGameInstance::ModifyPlayerCredits(int32 Amount)
 {
-	PlayerCredits += Amount;
-	
-	// Clamp to prevent negative credits
-	if (PlayerCredits < 0)
-	{
-		PlayerCredits = 0;
-	}
+	PlayerCredits = FMath::Max(0, PlayerCredits + Amount);
 }
