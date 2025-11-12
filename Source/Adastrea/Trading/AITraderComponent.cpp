@@ -180,9 +180,9 @@ TArray<FTradeRoute> UAITraderComponent::FindBestTradeRoutes(int32 MaxRoutes)
 				Route.DestinationMarket = BestDestination;
 				Route.TradeItem = Entry.TradeItem;
 				
-				float BuyPrice = Origin->GetItemPrice(Entry.TradeItem, true);
-				float SellPrice = BestDestination->GetItemPrice(Entry.TradeItem, false);
-				Route.ProfitPerUnit = SellPrice - BuyPrice;
+				float RouteBuyPrice = Origin->GetItemPrice(Entry.TradeItem, true);
+				float RouteSellPrice = BestDestination->GetItemPrice(Entry.TradeItem, false);
+				Route.ProfitPerUnit = RouteSellPrice - RouteBuyPrice;
 				
 				Route.Distance = FVector::Dist(
 					FVector(static_cast<float>(Origin->GetFName().GetNumber()), 0, 0),

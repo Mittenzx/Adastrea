@@ -74,8 +74,8 @@ void UInventoryWidget::OnDropItem_Implementation(int32 SlotIndex, int32 Quantity
 {
 	if (InventoryComponent)
 	{
-		FInventorySlot Slot = InventoryComponent->GetItemInSlot(SlotIndex);
-		if (!Slot.IsEmpty() && Slot.Item && Slot.Item->bCanBeDropped)
+		FInventorySlot ItemSlot = InventoryComponent->GetItemInSlot(SlotIndex);
+		if (!ItemSlot.IsEmpty() && ItemSlot.Item && ItemSlot.Item->bCanBeDropped)
 		{
 			InventoryComponent->RemoveItemFromSlot(SlotIndex, Quantity);
 			RefreshInventory_Implementation();

@@ -2,6 +2,7 @@
 #include "AdastreaLog.h"
 #include "GameFramework/Actor.h"
 #include "Engine/World.h"
+#include "Engine/OverlapResult.h"
 
 UPointDefenseComponent::UPointDefenseComponent()
 {
@@ -30,7 +31,7 @@ void UPointDefenseComponent::BeginPlay()
     Super::BeginPlay();
 
     // Perform initial scan
-    if (bIsActive)
+    if (IsActive())
     {
         ScanForThreats();
     }
@@ -40,7 +41,7 @@ void UPointDefenseComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-    if (!bIsActive)
+    if (!IsActive())
     {
         return;
     }
