@@ -100,10 +100,10 @@ void UPersonnelLogic::HandleSocialInteraction_Implementation(FName OtherPersonne
     FPersonnelRelationship Relationship;
     bool bHasRelationship = PersonnelData->GetRelationship(OtherPersonnelID, Relationship);
 
-    UE_LOG(LogAdastreaAI, Log, FString::Printf(TEXT("%s: %s interaction with %s"),
+    UE_LOG(LogAdastreaAI, Log, TEXT("%s: %s interaction with %s"),
                 *PersonnelData->PersonnelName.ToString(),
                 *InteractionType,
-                *OtherPersonnelID.ToString()));
+                *OtherPersonnelID.ToString());
 
     // Handle based on relationship and disposition
     if (bHasRelationship)
@@ -130,8 +130,8 @@ void UPersonnelLogic::HandleSocialInteraction_Implementation(FName OtherPersonne
     // Empathetic disposition gains more from social interactions
     if (Disposition == EPersonnelDisposition::Empathetic)
     {
-        UE_LOG(LogAdastreaAI, Log, FString::Printf(TEXT("%s: Enjoys the social interaction"),
-                    *PersonnelData->PersonnelName.ToString()));
+        UE_LOG(LogAdastreaAI, Log, TEXT("%s: Enjoys the social interaction"),
+                    *PersonnelData->PersonnelName.ToString());
     }
 }
 
@@ -244,8 +244,8 @@ void UPersonnelLogic::UpdateDailyRoutine_Implementation()
         bOnDuty = true;
         HoursUntilNextShift = 8.0f; // 8 hour shift
         
-        UE_LOG(LogAdastreaAI, Log, FString::Printf(TEXT("%s: Starting duty shift"),
-                    *PersonnelData->PersonnelName.ToString()));
+        UE_LOG(LogAdastreaAI, Log, TEXT("%s: Starting duty shift"),
+                    *PersonnelData->PersonnelName.ToString());
     }
     else if (HoursUntilNextShift <= -8.0f && bOnDuty)
     {
@@ -253,8 +253,8 @@ void UPersonnelLogic::UpdateDailyRoutine_Implementation()
         bOnDuty = false;
         HoursUntilNextShift = 16.0f; // 16 hours until next shift
         
-        UE_LOG(LogAdastreaAI, Log, FString::Printf(TEXT("%s: Ending duty shift"),
-                    *PersonnelData->PersonnelName.ToString()));
+        UE_LOG(LogAdastreaAI, Log, TEXT("%s: Ending duty shift"),
+                    *PersonnelData->PersonnelName.ToString());
     }
 
     // Check if should be resting
@@ -368,9 +368,9 @@ void UPersonnelLogic::MakeFriend(FName OtherPersonnelID)
     {
         FriendsList.Add(OtherPersonnelID);
         
-        UE_LOG(LogAdastreaAI, Log, FString::Printf(TEXT("%s: Made friends with %s"),
+        UE_LOG(LogAdastreaAI, Log, TEXT("%s: Made friends with %s"),
                     *PersonnelData->PersonnelName.ToString(),
-                    *OtherPersonnelID.ToString()));
+                    *OtherPersonnelID.ToString());
     }
 }
 
@@ -385,9 +385,9 @@ void UPersonnelLogic::AddConflict(FName OtherPersonnelID)
     {
         ConflictList.Add(OtherPersonnelID);
         
-        UE_LOG(LogAdastreaAI, Log, FString::Printf(TEXT("%s: Conflict with %s"),
+        UE_LOG(LogAdastreaAI, Log, TEXT("%s: Conflict with %s"),
                     *PersonnelData->PersonnelName.ToString(),
-                    *OtherPersonnelID.ToString()));
+                    *OtherPersonnelID.ToString());
     }
 }
 
@@ -395,9 +395,9 @@ void UPersonnelLogic::ResolveConflict(FName OtherPersonnelID)
 {
     if (ConflictList.Remove(OtherPersonnelID) > 0)
     {
-        UE_LOG(LogAdastreaAI, Log, FString::Printf(TEXT("%s: Resolved conflict with %s"),
+        UE_LOG(LogAdastreaAI, Log, TEXT("%s: Resolved conflict with %s"),
                     *PersonnelData->PersonnelName.ToString(),
-                    *OtherPersonnelID.ToString()));
+                    *OtherPersonnelID.ToString());
     }
 }
 
@@ -520,9 +520,9 @@ void UPersonnelLogic::InitializeAI_Implementation()
     // Set initial task
     CurrentTask = EvaluateTaskPriority();
 
-    UE_LOG(LogAdastreaAI, Log, FString::Printf(TEXT("Personnel AI Initialized: %s - Task: %s"),
+    UE_LOG(LogAdastreaAI, Log, TEXT("Personnel AI Initialized: %s - Task: %s"),
                 *PersonnelData->PersonnelName.ToString(),
-                *UEnum::GetValueAsString(CurrentTask)));
+                *UEnum::GetValueAsString(CurrentTask));
 }
 
 void UPersonnelLogic::OnTickAI_Implementation(float DeltaTime)
@@ -536,9 +536,9 @@ void UPersonnelLogic::OnTickAI_Implementation(float DeltaTime)
     {
         CurrentTask = NewTask;
         
-        UE_LOG(LogAdastreaAI, Log, FString::Printf(TEXT("%s: Switching to %s"),
+        UE_LOG(LogAdastreaAI, Log, TEXT("%s: Switching to %s"),
                     *PersonnelData->PersonnelName.ToString(),
-                    *UEnum::GetValueAsString(CurrentTask)));
+                    *UEnum::GetValueAsString(CurrentTask));
     }
 
     // Call parent implementation

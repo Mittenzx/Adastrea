@@ -3,6 +3,7 @@
 #include "GameFramework/Actor.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
+#include "Engine/OverlapResult.h"
 
 UTargetingComponent::UTargetingComponent()
 {

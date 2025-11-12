@@ -101,17 +101,17 @@ void ASpaceship::MoveUp(float Value)
 
 void ASpaceship::Turn(float Value)
 {
-    if (Value != 0.0f && GetController() && GetWorld())
+    if (Value != 0.0f && GetWorld())
     {
-        GetController()->AddYawInput(Value * TurnRate * GetWorld()->GetDeltaSeconds());
+        AddControllerYawInput(Value * TurnRate * GetWorld()->GetDeltaSeconds());
     }
 }
 
 void ASpaceship::LookUp(float Value)
 {
-    if (Value != 0.0f && GetController() && GetWorld())
+    if (Value != 0.0f && GetWorld())
     {
-        GetController()->AddPitchInput(Value * TurnRate * GetWorld()->GetDeltaSeconds());
+        AddControllerPitchInput(Value * TurnRate * GetWorld()->GetDeltaSeconds());
     }
 }
 
