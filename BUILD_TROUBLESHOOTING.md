@@ -43,7 +43,20 @@ The following issues have been fixed in the latest version:
 **Status**: ✅ FIXED  
 **Solution**: Updated to `EngineIncludeOrderVersion.Latest` and `BuildSettingsVersion.V5` in both Target.cs files.
 
-### 4. Module Fails to Load in Unreal Engine
+### 4. Missing AdastreaEditor.Target.cs File
+**Issue**: Build scripts fail with "AdastreaEditor" target not found  
+**Status**: ✅ FIXED  
+**Symptom**: Running `build_windows.bat` or `build_unix.sh` fails with error about missing "AdastreaEditor" target  
+**Root Cause**: Unreal Engine projects require two target files:
+- `ProjectName.Target.cs` - For standalone game builds
+- `ProjectNameEditor.Target.cs` - For editor builds
+
+The project only had `Adastrea.Target.cs` but was missing `AdastreaEditor.Target.cs`.  
+**Solution**: Created `Source/AdastreaEditor.Target.cs` with proper editor configuration including all runtime modules (Adastrea, PlayerMods, StationEditor)
+
+**Important Note**: The `AdastreaEditor.Target.cs` file is NOT the same as an "AdastreaEditor module". The C++ module was intentionally removed, but the target file is still required for building in Unreal Editor.
+
+### 5. Module Fails to Load in Unreal Engine
 **Issue**: Project builds successfully in Visual Studio but fails to load in Unreal Engine with errors about missing modules (e.g., "PlayerMods")  
 **Status**: ✅ FIXED  
 **Symptom**: Build compiles without errors in VS, but UE gives "Plugin 'X' failed to load" or "Module 'X' could not be loaded"  
