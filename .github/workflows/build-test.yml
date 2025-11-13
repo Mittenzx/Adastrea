@@ -41,6 +41,9 @@ jobs:
     # Only run if linux or both is selected
     if: github.event.inputs.platform == 'linux' || github.event.inputs.platform == 'both'
     
+    permissions:
+      contents: read
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -127,6 +130,9 @@ jobs:
     runs-on: self-hosted
     # Only run if windows or both is selected
     if: github.event.inputs.platform == 'windows' || github.event.inputs.platform == 'both'
+    
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout code
