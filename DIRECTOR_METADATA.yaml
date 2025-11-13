@@ -1,0 +1,471 @@
+# Adastrea Director Metadata
+# Machine-readable metadata for Adastrea-Director AI tool
+# Last Updated: 2025-11-13
+# Version: 1.0
+
+project:
+  name: "Adastrea"
+  type: "Game"
+  engine: "Unreal Engine 5.6"
+  genre: "Open World Space Flight"
+  status: "Alpha"
+  version: "1.0.0"
+  license: "MIT"
+  repository: "https://github.com/Mittenzx/Adastrea"
+
+# Primary entry points for Director ingestion
+primary_documentation:
+  - file: "DIRECTOR_KNOWLEDGE_BASE.md"
+    priority: 1
+    description: "Comprehensive knowledge base - START HERE"
+  - file: "DOCUMENTATION_INDEX.md"
+    priority: 2
+    description: "Complete documentation index"
+  - file: "README.md"
+    priority: 3
+    description: "Project overview"
+  - file: "ARCHITECTURE.md"
+    priority: 4
+    description: "System architecture"
+  - file: ".github/copilot-instructions.md"
+    priority: 5
+    description: "Coding standards and patterns"
+
+# Core game systems with documentation locations
+systems:
+  spaceship:
+    name: "Spaceship System"
+    description: "Player and NPC ship management with data-driven configuration"
+    primary_guide: "Assets/SpaceshipDataAssetGuide.md"
+    workflow: "Assets/SpaceshipDesignerWorkflow.md"
+    templates: "Assets/SpaceshipTemplates.md"
+    class: "USpaceshipDataAsset"
+    complexity: "medium"
+    
+  faction:
+    name: "Faction System"
+    description: "Political factions, diplomacy, and relationships"
+    primary_guide: "Assets/FactionSetupGuide.md"
+    quick_ref: "Assets/FactionSystemQuickReference.md"
+    class: "UFactionDataAsset"
+    complexity: "high"
+    
+  personnel:
+    name: "Personnel System"
+    description: "Crew member management with skills, traits, and AI"
+    primary_guide: "Assets/PersonnelSystemGuide.md"
+    workflow: "Assets/PersonnelDesignerWorkflow.md"
+    templates: "Assets/PersonnelTemplates.md"
+    class: "UPersonnelDataAsset"
+    complexity: "high"
+    
+  trading:
+    name: "Trading System"
+    description: "Dynamic economy with supply/demand and contracts"
+    primary_guide: "Assets/TradingSystemGuide.md"
+    workflow: "Assets/TradingDesignerWorkflow.md"
+    api_ref: "Assets/TradingAPIReference.md"
+    complexity: "high"
+    
+  way:
+    name: "Way System (Guilds)"
+    description: "Specialized guild networks for trading and social systems"
+    index: "Assets/WAY_SYSTEM_INDEX.md"
+    primary_guide: "Assets/WaySystemGuide.md"
+    overview: "Assets/WaySystemOverview.md"
+    quick_ref: "Assets/WaySystemQuickReference.md"
+    api_ref: "Assets/WaySystemAPIReference.md"
+    class: "UWayDataAsset"
+    complexity: "high"
+    
+  ai:
+    name: "AI System"
+    description: "Autonomous behavior for factions and personnel"
+    primary_guide: "Assets/AISystemIntegration.md"
+    quick_start: "Assets/AI_QUICK_START.md"
+    workflow: "Assets/AIDesignerWorkflow.md"
+    faction_ai: "Assets/FactionAISetupGuide.md"
+    personnel_ai: "Assets/PersonnelAISetupGuide.md"
+    class: "UNPCLogicBase"
+    complexity: "high"
+    
+  combat:
+    name: "Combat System"
+    description: "Tactical space combat with weapons and defenses"
+    summary: "COMBAT_SYSTEM_SUMMARY.md"
+    primary_guide: "Assets/CombatSystemGuide.md"
+    quick_ref: "Assets/CombatQuickReference.md"
+    complexity: "high"
+    
+  navigation:
+    name: "Navigation System"
+    description: "Ship movement and pathfinding"
+    primary_guide: "Assets/NavigationSystemGuide.md"
+    complexity: "medium"
+    
+  quest:
+    name: "Quest System"
+    description: "Missions and objectives"
+    primary_guide: "Assets/QuestSystemGuide.md"
+    complexity: "medium"
+    
+  material:
+    name: "Material System"
+    description: "Resource gathering and crafting"
+    primary_guide: "Assets/MaterialSystemGuide.md"
+    quick_start: "Assets/MaterialQuickStart.md"
+    integration: "Assets/MaterialStationIntegration.md"
+    complexity: "medium"
+    
+  hud:
+    name: "HUD/UI System"
+    description: "User interface and player feedback"
+    primary_guide: "Assets/HUDSystemGuide.md"
+    quick_ref: "Assets/HUD_QUICK_REFERENCE.md"
+    complexity: "medium"
+    
+  station:
+    name: "Space Station System"
+    description: "Modular station construction"
+    primary_guide: "Content/Blueprints/STATION_EDITOR_README.md"
+    class: "ASpaceStation"
+    complexity: "medium"
+    
+  inventory:
+    name: "Inventory System"
+    description: "Item storage and management"
+    primary_guide: "Assets/InventorySystemGuide.md"
+    complexity: "low"
+    
+  homeworld:
+    name: "Homeworld System"
+    description: "Player starting location"
+    primary_guide: "Assets/HomeworldSystemGuide.md"
+    class: "UHomeworldDataAsset"
+    complexity: "low"
+    
+  ship_control:
+    name: "Ship Control System"
+    description: "Player ship control and input"
+    primary_guide: "Assets/ShipControlGuide.md"
+    summary: "Assets/ShipControlImplementationSummary.md"
+    complexity: "medium"
+    
+  customization:
+    name: "Ship Customization System"
+    description: "Ship modifications and upgrades"
+    primary_guide: "Assets/ShipCustomizationGuide.md"
+    complexity: "medium"
+    
+  interior:
+    name: "Interior System"
+    description: "Ship interior layouts"
+    primary_guide: "Assets/SpaceshipInteriorGuide.md"
+    complexity: "low"
+
+# Development workflows
+workflows:
+  content_creation:
+    name: "Content Creation"
+    entry_point: "CONTENT_CREATION_QUICKSTART.md"
+    onboarding: "Assets/DesignerOnboarding.md"
+    target_audience: "designers"
+    
+  code_development:
+    name: "Code Development"
+    architecture: "ARCHITECTURE.md"
+    style_guide: "CODE_STYLE.md"
+    contributing: "CONTRIBUTING.md"
+    target_audience: "programmers"
+    
+  testing:
+    name: "Testing & Validation"
+    automation_guide: "TESTING_AUTOMATION_GUIDE.md"
+    quick_ref: "TESTING_QUICK_REFERENCE.md"
+    target_audience: "all"
+    
+  build:
+    name: "Build & Setup"
+    build_guide: "UNREAL_BUILD_GUIDE.md"
+    troubleshooting: "BUILD_TROUBLESHOOTING.md"
+    debugging: "BUILD_ERROR_DEBUGGING.md"
+    target_audience: "all"
+
+# Automation tools and scripts
+automation:
+  content_generation:
+    - name: "Procedural Generators"
+      script: "ProceduralGenerators.py"
+      guide: "PROCEDURAL_GENERATION_GUIDE.md"
+      quickstart: "PROCEDURAL_GENERATION_QUICKSTART.md"
+      
+  yaml_import:
+    - name: "YAML to Data Asset"
+      script: "YAMLtoDataAsset.py"
+      guide: "YAML_IMPORT_GUIDE.md"
+      schema_guide: "SCHEMA_GUIDE.md"
+      
+  validation:
+    - name: "Setup Check"
+      scripts: ["SetupCheck.py", "SetupCheck.sh"]
+      
+    - name: "Asset Validator"
+      script: "AdastreaAssetValidator.py"
+      
+    - name: "Schema Validator"
+      script: "SchemaValidator.py"
+      
+  testing:
+    - name: "Smoke Test"
+      script: "SmokeTest.py"
+      
+    - name: "Screenshot Test"
+      script: "ScreenshotTester.py"
+      
+    - name: "Automation Runner"
+      script: "AutomationRunner.py"
+      guide: "TESTING_AUTOMATION_GUIDE.md"
+      
+  scene_population:
+    - name: "Scene Populator"
+      script: "ScenePopulator.py"
+      guide: "SCENE_POPULATION_GUIDE.md"
+      
+    - name: "Interior Layout Populator"
+      script: "InteriorLayoutPopulator.py"
+
+# Design patterns used in the project
+design_patterns:
+  - name: "Data Asset Pattern"
+    description: "Primary content creation using Blueprint Data Assets"
+    importance: "critical"
+    documentation: ".github/copilot-instructions.md"
+    
+  - name: "BlueprintNativeEvent Pattern"
+    description: "C++ implementation with Blueprint override capability"
+    importance: "critical"
+    documentation: ".github/copilot-instructions.md"
+    
+  - name: "Trait System Pattern"
+    description: "Reusable modifiers across systems"
+    importance: "high"
+    systems: ["faction", "personnel"]
+    
+  - name: "Relationship System Pattern"
+    description: "Social mechanics with -100 to +100 scale"
+    importance: "high"
+    systems: ["faction", "personnel"]
+
+# Code organization
+code_structure:
+  source_root: "Source/Adastrea/"
+  modules:
+    - name: "AI"
+      path: "AI/"
+      description: "AI logic classes"
+      
+    - name: "Characters"
+      path: "Characters/"
+      description: "Character and personnel"
+      
+    - name: "Factions"
+      path: "Factions/"
+      description: "Faction system"
+      
+    - name: "Materials"
+      path: "Materials/"
+      description: "Material system"
+      
+    - name: "Ships"
+      path: "Ships/"
+      description: "Spaceship classes"
+      
+    - name: "Stations"
+      path: "Stations/"
+      description: "Space station classes"
+      
+    - name: "Trading"
+      path: "Trading/"
+      description: "Trading economy"
+      
+    - name: "UI"
+      path: "UI/"
+      description: "UI widgets"
+
+# Naming conventions
+naming_conventions:
+  cpp_classes:
+    uobject_derived: "UClassName (e.g., USpaceshipDataAsset)"
+    aactor_derived: "AClassName (e.g., ASpaceStation)"
+    struct: "FStructName (e.g., FFactionTrait)"
+    enum: "EEnumName (e.g., EPersonnelRole)"
+    
+  blueprints:
+    blueprint: "BP_SystemName_Purpose (e.g., BP_Ship_Fighter)"
+    widget: "WBP_WidgetName (e.g., WBP_HUD_Main)"
+    data_asset: "DA_Type_Name (e.g., DA_Ship_Pathfinder)"
+    
+  assets:
+    material: "M_Name"
+    material_instance: "MI_Name"
+    texture: "T_Name_Suffix"
+    static_mesh: "SM_Name"
+    skeletal_mesh: "SK_Name"
+
+# Common queries and answers
+common_queries:
+  - query: "How do I create a new spaceship?"
+    answer: "See Assets/SpaceshipDesignerWorkflow.md"
+    
+  - query: "How do I create a new faction?"
+    answer: "See Assets/FactionSetupGuide.md"
+    
+  - query: "How do I validate YAML files?"
+    answer: "Run: python SchemaValidator.py --yaml your_file.yaml"
+    
+  - query: "How do I build the project?"
+    answer: "See UNREAL_BUILD_GUIDE.md"
+    
+  - query: "What are the coding standards?"
+    answer: "See CODE_STYLE.md and .github/copilot-instructions.md"
+    
+  - query: "How do I contribute?"
+    answer: "See CONTRIBUTING.md"
+    
+  - query: "Where are YAML templates?"
+    answer: "In Assets/ subdirectories (SpaceshipTemplates/, PersonnelTemplates/, etc.)"
+    
+  - query: "How do I set up AI behavior?"
+    answer: "See Assets/AIDesignerWorkflow.md"
+
+# System relationships and dependencies
+system_relationships:
+  spaceship:
+    depends_on: []
+    used_by: ["player", "combat", "trading"]
+    integrates_with: ["personnel", "inventory", "customization"]
+    
+  faction:
+    depends_on: []
+    used_by: ["stations", "trading", "ai", "personnel"]
+    integrates_with: ["way", "homeworld"]
+    
+  personnel:
+    depends_on: ["faction"]
+    used_by: ["spaceship", "ai"]
+    integrates_with: []
+    
+  trading:
+    depends_on: ["station", "faction"]
+    used_by: ["ai"]
+    integrates_with: ["way", "inventory"]
+    
+  way:
+    depends_on: ["faction"]
+    used_by: ["trading"]
+    integrates_with: []
+    
+  ai:
+    depends_on: ["faction", "personnel"]
+    used_by: ["all_npcs"]
+    integrates_with: ["trading", "combat"]
+
+# Quick start paths for different user types
+quick_start_paths:
+  designer:
+    - "README.md"
+    - "Assets/DesignerOnboarding.md"
+    - "CONTENT_CREATION_QUICKSTART.md"
+    - "Choose system guide from Assets/"
+    
+  programmer:
+    - "README.md"
+    - "ARCHITECTURE.md"
+    - "CODE_STYLE.md"
+    - "CONTRIBUTING.md"
+    - ".github/copilot-instructions.md"
+    
+  director_ai:
+    - "DIRECTOR_KNOWLEDGE_BASE.md"
+    - "DOCUMENTATION_INDEX.md"
+    - "README.md"
+    - "ARCHITECTURE.md"
+    - "All Assets/*.md files"
+
+# Documentation statistics
+documentation_stats:
+  total_markdown_files: 108
+  root_level: 39
+  assets_directory: 48
+  github_directory: 7
+  docs_directory: 5
+  blueprints_directory: 3
+  content_directory: 3
+  other_directories: 3
+
+# Project philosophy
+philosophy:
+  - "Data-Driven Design: All content uses Blueprint Data Assets"
+  - "Designer-Friendly: Minimal C++ knowledge required"
+  - "Modular Architecture: Independent systems that integrate seamlessly"
+  - "Blueprint First: Full Blueprint exposure for all systems"
+  - "Documentation First: Every feature has comprehensive guides"
+  - "Testing Culture: Automated validation at every step"
+
+# Development status
+development:
+  current_phase: "Phase 3 - Advanced Systems"
+  phase_status: "Complete"
+  next_phase: "Phase 4 - Gameplay & Polish"
+  next_phase_timeline: "Q1-Q2 2026"
+  
+  completed_phases:
+    - "Phase 1: Foundation"
+    - "Phase 2: Core Systems"
+    - "Phase 3: Advanced Systems"
+    
+  upcoming_phases:
+    - "Phase 4: Gameplay & Polish (Q1-Q2 2026)"
+    - "Phase 5: Content & Beta (Q3-Q4 2026)"
+    - "Phase 6: Release & Beyond (2027)"
+
+# Integration with Adastrea-Director
+director_integration:
+  recommended_ingestion_order:
+    1: "DIRECTOR_KNOWLEDGE_BASE.md"
+    2: "DOCUMENTATION_INDEX.md"
+    3: "README.md"
+    4: "ARCHITECTURE.md"
+    5: "CODE_STYLE.md"
+    6: "CONTRIBUTING.md"
+    7: ".github/copilot-instructions.md"
+    8: "All Assets/*.md system guides"
+    9: "All *Workflow.md files"
+    10: "All *QuickReference.md files"
+    11: "All *Templates.md files"
+    12: "Automation guides"
+    
+  optimal_for:
+    - "Context-aware documentation search"
+    - "Code generation assistance"
+    - "Task decomposition and planning"
+    - "System integration understanding"
+    - "Best practices queries"
+    
+  director_analysis:
+    file: "ADASTREA_DIRECTOR_ANALYSIS.md"
+    description: "Comprehensive analysis of Director tool capabilities"
+    date: "2025-11-13"
+
+# Update information
+metadata_info:
+  last_updated: "2025-11-13"
+  version: "1.0"
+  maintained_by: "Adastrea Development Team"
+  update_frequency: "As needed when structure changes"
+  
+  update_triggers:
+    - "New systems added"
+    - "Documentation reorganized"
+    - "File locations changed"
+    - "New workflows established"
