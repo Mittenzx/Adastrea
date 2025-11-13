@@ -735,6 +735,32 @@ See [BUILD_TROUBLESHOOTING.md](BUILD_TROUBLESHOOTING.md) for more details.
 
 ## Integration with CI/CD
 
+### Manual Build Test Workflow
+
+The repository includes a manually triggerable GitHub Actions workflow for testing builds. This workflow uses the build scripts (`build_windows.bat` and `build_unix.sh`) and can be run on-demand from the GitHub Actions tab.
+
+**Location**: `.github/workflows/build-test.yml`
+
+**Features**:
+- Manually triggered via GitHub Actions UI (`workflow_dispatch`)
+- Supports Linux, Windows, or both platforms
+- Configurable build options:
+  - Platform selection (linux/windows/both)
+  - Build configuration (editor/game/shipping)
+  - Clean build option
+  - Verbose output
+- Uploads build logs as artifacts
+- Requires self-hosted runner with Unreal Engine 5.6 installed
+
+**To run the workflow**:
+1. Go to the "Actions" tab in GitHub
+2. Select "Manual Build Test" workflow
+3. Click "Run workflow"
+4. Choose your build options
+5. Click "Run workflow" to start
+
+This workflow is ideal for testing builds without committing to the repository or for verifying environment setup on CI runners.
+
 ### GitHub Actions Example
 
 Create `.github/workflows/build.yml`:

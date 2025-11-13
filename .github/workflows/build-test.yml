@@ -1,0 +1,257 @@
+name: Manual Build Test
+
+# This workflow can be manually triggered to test building the project
+# It uses the build scripts added in PR #108
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Platform to build'
+        required: true
+        default: 'linux'
+        type: choice
+        options:
+          - linux
+          - windows
+          - both
+      configuration:
+        description: 'Build configuration'
+        required: true
+        default: 'editor'
+        type: choice
+        options:
+          - editor
+          - game
+          - shipping
+      clean:
+        description: 'Clean build (delete artifacts first)'
+        required: false
+        default: false
+        type: boolean
+      verbose:
+        description: 'Verbose output'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  build-linux:
+    name: Build Linux (Development Editor)
+    runs-on: [self-hosted, linux]
+    # Only run if linux or both is selected
+    if: github.event.inputs.platform == 'linux' || github.event.inputs.platform == 'both'
+    
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Display build configuration
+        run: |
+          echo "=== Build Configuration ==="
+          echo "Platform: Linux"
+          echo "Configuration: ${{ github.event.inputs.configuration }}"
+          echo "Clean Build: ${{ github.event.inputs.clean }}"
+          echo "Verbose: ${{ github.event.inputs.verbose }}"
+          echo "=========================="
+      
+      - name: Check Unreal Engine installation
+        run: |
+          if [ -z "$UE_ROOT" ]; then
+            echo "WARNING: UE_ROOT environment variable not set"
+            echo "Using default path: $HOME/UnrealEngine"
+          else
+            echo "Unreal Engine path: $UE_ROOT"
+          fi
+          
+          # Detect platform
+          case "$(uname -s)" in
+              Darwin*)
+                  PLATFORM="Mac"
+                  ;;
+              Linux*)
+                  PLATFORM="Linux"
+                  ;;
+              *)
+                  echo "ERROR: Unsupported platform: $(uname -s)"
+                  exit 1
+                  ;;
+          esac
+          
+          # Check if Build.sh exists (same path as build_unix.sh uses)
+          UE_PATH="${UE_ROOT:-$HOME/UnrealEngine}"
+          BUILD_TOOL="$UE_PATH/Engine/Build/BatchFiles/$PLATFORM/Build.sh"
+          
+          if [ ! -f "$BUILD_TOOL" ]; then
+            echo "ERROR: Build.sh not found at expected location"
+            echo "Expected: $BUILD_TOOL"
+            echo ""
+            echo "Please ensure:"
+            echo "  1. Unreal Engine 5.6 is installed"
+            echo "  2. UE_ROOT environment variable points to the installation"
+            echo ""
+            exit 1
+          fi
+          
+          echo "✓ Build.sh found at $BUILD_TOOL"
+      
+      - name: Build Project
+        run: |
+          # Validate configuration input
+          case "${{ github.event.inputs.configuration }}" in
+            editor|game|shipping)
+              CONFIG="${{ github.event.inputs.configuration }}"
+              ;;
+            *)
+              echo "ERROR: Invalid configuration"
+              exit 1
+              ;;
+          esac
+          
+          # Build command based on inputs
+          BUILD_CMD="./build_unix.sh"
+          
+          if [ "${{ github.event.inputs.clean }}" = "true" ]; then
+            BUILD_CMD="$BUILD_CMD clean"
+          fi
+          
+          BUILD_CMD="$BUILD_CMD $CONFIG"
+          
+          if [ "${{ github.event.inputs.verbose }}" = "true" ]; then
+            BUILD_CMD="$BUILD_CMD verbose"
+          fi
+          
+          echo "Running: $BUILD_CMD"
+          $BUILD_CMD
+      
+      - name: Upload Build Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs-linux-${{ github.event.inputs.configuration }}
+          path: |
+            Saved/Logs/
+            Binaries/Linux/
+          retention-days: 7
+      
+      - name: Build Summary
+        if: success()
+        run: |
+          echo "✓ Build completed successfully"
+          echo "Configuration: ${{ github.event.inputs.configuration }}"
+          echo "Platform: Linux"
+          
+          # List built binaries if they exist
+          if [ -d "Binaries/Linux" ]; then
+            echo ""
+            echo "Built binaries:"
+            ls -lh Binaries/Linux/ || true
+          fi
+
+  build-windows:
+    name: Build Windows (Development Editor)
+    runs-on: [self-hosted, windows]
+    # Only run if windows or both is selected
+    if: github.event.inputs.platform == 'windows' || github.event.inputs.platform == 'both'
+    
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Display build configuration
+        run: |
+          echo "=== Build Configuration ==="
+          echo "Platform: Windows"
+          echo "Configuration: ${{ github.event.inputs.configuration }}"
+          echo "Clean Build: ${{ github.event.inputs.clean }}"
+          echo "Verbose: ${{ github.event.inputs.verbose }}"
+          echo "=========================="
+        shell: cmd
+      
+      - name: Check Unreal Engine installation
+        run: |
+          if "%UE_ROOT%"=="" (
+            echo WARNING: UE_ROOT environment variable not set
+            echo Using default path: C:\Program Files\Epic Games\UE_5.6
+          ) else (
+            echo Unreal Engine path: %UE_ROOT%
+          )
+          
+          REM Check if Build.bat exists (same path as build_windows.bat uses)
+          if "%UE_ROOT%"=="" (
+            set "UE_PATH=C:\Program Files\Epic Games\UE_5.6"
+          ) else (
+            set "UE_PATH=%UE_ROOT%"
+          )
+          
+          set "BUILD_TOOL=%UE_PATH%\Engine\Build\BatchFiles\Build.bat"
+          
+          if not exist "%BUILD_TOOL%" (
+            echo ERROR: Build.bat not found at expected location
+            echo Expected: %BUILD_TOOL%
+            echo.
+            echo Please ensure:
+            echo   1. Unreal Engine 5.6 is installed
+            echo   2. UE_ROOT environment variable points to the installation
+            echo.
+            exit /b 1
+          )
+          
+          echo ✓ Build.bat found at %BUILD_TOOL%
+        shell: cmd
+      
+      - name: Build Project
+        run: |
+          REM Validate configuration input
+          set "CONFIG=${{ github.event.inputs.configuration }}"
+          if not "%CONFIG%"=="editor" if not "%CONFIG%"=="game" if not "%CONFIG%"=="shipping" (
+            echo ERROR: Invalid configuration
+            exit /b 1
+          )
+          
+          REM Build command based on inputs
+          set "BUILD_CMD=.\build_windows.bat"
+          
+          if "${{ github.event.inputs.clean }}"=="true" (
+            set "BUILD_CMD=%BUILD_CMD% clean"
+          )
+          
+          set "BUILD_CMD=%BUILD_CMD% %CONFIG%"
+          
+          if "${{ github.event.inputs.verbose }}"=="true" (
+            set "BUILD_CMD=%BUILD_CMD% verbose"
+          )
+          
+          echo Running: %BUILD_CMD%
+          %BUILD_CMD%
+        shell: cmd
+      
+      - name: Upload Build Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs-windows-${{ github.event.inputs.configuration }}
+          path: |
+            Saved/Logs/
+            Binaries/Win64/
+          retention-days: 7
+      
+      - name: Build Summary
+        if: success()
+        run: |
+          echo ✓ Build completed successfully
+          echo Configuration: ${{ github.event.inputs.configuration }}
+          echo Platform: Windows
+          
+          REM List built binaries if they exist
+          if exist "Binaries\Win64" (
+            echo.
+            echo Built binaries:
+            dir /b Binaries\Win64\
+          )
+        shell: cmd
