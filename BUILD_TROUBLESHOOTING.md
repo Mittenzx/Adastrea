@@ -20,7 +20,9 @@ build_windows.bat
 ./build_unix.sh
 ```
 
-For complete documentation, build script usage, and advanced options, refer to [UNREAL_BUILD_GUIDE.md](UNREAL_BUILD_GUIDE.md).
+**For Build Error Debugging**: See [BUILD_ERROR_DEBUGGING.md](BUILD_ERROR_DEBUGGING.md) for a quick reference on debugging build errors using command-line tools.
+
+**For Complete Documentation**: Refer to [UNREAL_BUILD_GUIDE.md](UNREAL_BUILD_GUIDE.md) for comprehensive build documentation, advanced options, and CI/CD integration.
 
 ## Unreal C++ Build Issues - RESOLVED ✓
 
