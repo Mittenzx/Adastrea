@@ -37,7 +37,7 @@ Adastrea-Director is an AI-powered development assistant specifically designed f
 1. [What is Adastrea-Director?](#what-is-adastrea-director)
 2. [Current State Analysis](#current-state-analysis-phases-1-2)
 3. [Future Roadmap Analysis](#future-roadmap-analysis-phases-3-4)
-4. [Alignment with Adastrea Roadmap](#alignment-with-adastrea-game-roadmap)
+4. [Alignment with Adastrea Game Roadmap](#alignment-with-adastrea-game-roadmap)
 5. [Integration Recommendations](#integration-recommendations)
 6. [Improvements & Suggestions](#improvements--feature-suggestions)
 7. [Critical Analysis](#critical-analysis--concerns)
