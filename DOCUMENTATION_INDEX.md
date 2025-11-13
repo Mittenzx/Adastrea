@@ -43,7 +43,7 @@ Documentation for AI-powered development tools:
 | **DIRECTOR_KNOWLEDGE_BASE.md** | Primary knowledge base for Adastrea-Director AI tool | Root |
 | **ADASTREA_DIRECTOR_ANALYSIS.md** | Comprehensive analysis of Director tool capabilities and roadmap | Root |
 | **.github/copilot-instructions.md** | GitHub Copilot configuration with project context | .github/ |
-| **CUSTOM_AGENT_IMPLEMENTATION.md** | Guide for implementing custom AI agents | Root |
+| **.github/agents/CUSTOM_AGENT_IMPLEMENTATION.md** | Guide for implementing custom AI agents | .github/agents/ |
 
 ---
 
@@ -232,8 +232,8 @@ Concise reference documents:
 | **ARCHITECTURE.md** | System architecture and design patterns | Root |
 | **CODE_STYLE.md** | C++ and Blueprint coding standards | Root |
 | **CONTRIBUTING.md** | Contribution guidelines | Root |
-| **ADVANCED_DATA_MANAGEMENT.md** | Advanced data management techniques | Root |
-| **IMPLEMENTATION_SUMMARY.md** | Implementation overview | Root |
+| **Assets/ADVANCED_DATA_MANAGEMENT.md** | Advanced data management techniques | Assets/ |
+| **Docs/IMPLEMENTATION_SUMMARY.md** | Implementation overview | Docs/ |
 | **Docs/BEST_PRACTICES_CLASS_SETUP.md** | Class setup best practices | Docs/ |
 | **Docs/CLASS_SETUP_AUDIT_SUMMARY.md** | Class setup audit results | Docs/ |
 
