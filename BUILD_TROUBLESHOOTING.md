@@ -2,6 +2,26 @@
 
 This document helps resolve common build issues for the Adastrea project.
 
+## Building with UnrealBuildTool Instead of Visual Studio
+
+For detailed instructions on building with Unreal Engine's command-line tools instead of Visual Studio or other IDEs, see **[UNREAL_BUILD_GUIDE.md](UNREAL_BUILD_GUIDE.md)**. This is particularly useful for:
+
+- **Build error debugging**: Get detailed compiler output without IDE overhead
+- **CI/CD pipelines**: Automate builds in continuous integration systems
+- **Build scripts**: Create custom build automation
+- **Cross-platform development**: Build on Linux/Mac without full IDE setup
+
+**Quick Start**:
+```bash
+# Windows
+build_windows.bat
+
+# Mac/Linux
+./build_unix.sh
+```
+
+For complete documentation, build script usage, and advanced options, refer to [UNREAL_BUILD_GUIDE.md](UNREAL_BUILD_GUIDE.md).
+
 ## Unreal C++ Build Issues - RESOLVED ✓
 
 The following issues have been fixed in the latest version:

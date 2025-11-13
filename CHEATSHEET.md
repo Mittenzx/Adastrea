@@ -34,13 +34,37 @@ git merge main
 ```
 
 ### Building
+
+**Quick Build** (Recommended - Using build scripts):
+```bash
+# Windows
+build_windows.bat
+
+# Mac/Linux
+./build_unix.sh
+
+# Clean build
+build_windows.bat clean        # Windows
+./build_unix.sh clean          # Mac/Linux
+
+# Shipping build
+build_windows.bat shipping     # Windows
+./build_unix.sh shipping       # Mac/Linux
+```
+
+**Manual UnrealBuildTool** (Advanced):
 ```bash
 # Windows (from project root)
-"C:\Program Files\Epic Games\UE_5.x\Engine\Build\BatchFiles\Build.bat" AdastreaEditor Win64 Development -Project="path\to\Adastrea.uproject"
+"C:\Program Files\Epic Games\UE_5.6\Engine\Build\BatchFiles\Build.bat" AdastreaEditor Win64 Development -Project="%CD%\Adastrea.uproject"
 
 # Mac
-/Users/Shared/Epic Games/UE_5.x/Engine/Build/BatchFiles/Mac/Build.sh AdastreaEditor Mac Development -Project="path/to/Adastrea.uproject"
+"/Users/Shared/Epic Games/UE_5.6/Engine/Build/BatchFiles/Mac/Build.sh" AdastreaEditor Mac Development -Project="$(pwd)/Adastrea.uproject"
+
+# Linux
+"~/UnrealEngine/Engine/Build/BatchFiles/Linux/Build.sh" AdastreaEditor Linux Development -Project="$(pwd)/Adastrea.uproject"
 ```
+
+See [UNREAL_BUILD_GUIDE.md](UNREAL_BUILD_GUIDE.md) for complete build documentation.
 
 ### Cleaning Build
 ```bash

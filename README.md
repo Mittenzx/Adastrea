@@ -116,9 +116,22 @@ The validation scripts check for:
    - Select "Generate Visual Studio project files"
 
 4. **Build the project**:
+   
+   **Option A: Using Build Scripts** (Recommended for command-line builds):
+   ```bash
+   # Windows
+   build_windows.bat
+   
+   # Mac/Linux
+   ./build_unix.sh
+   ```
+   
+   **Option B: Using IDE**:
    - Open the generated `.sln` file in Visual Studio
    - Build in "Development Editor" configuration
    - Or open the `.uproject` file directly in Unreal Engine
+   
+   For detailed build instructions and debugging, see [UNREAL_BUILD_GUIDE.md](UNREAL_BUILD_GUIDE.md)
 
 5. **Verify Installation**:
    - Launch the editor
