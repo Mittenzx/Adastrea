@@ -22,9 +22,9 @@ Adastrea-Director is an AI-powered development assistant specifically designed f
 The Adastrea-Director system has been successfully migrated from OpenAI's GPT-4 to Google's Gemini 1.5 Pro. This migration delivers:
 - **40% cost reduction** on API usage
 - **Maintained quality** across all agent functions
-- **Improved ROI** from 210% to 230% for Phase 1-2
-- **Faster payback period** (1.8 months vs 2 months)
-- **Enhanced long-term value** ($42k-52k annually vs $40k-50k)
+- **Improved ROI** from 210% to 222-230% for Phase 1-2
+- **Faster payback period** (1.8-1.9 months vs 2 months)
+- **Enhanced long-term value** ($33.8k-40.9k annually vs $40k-50k with original higher costs)
 
 ### Current State Value (Phases 1-2): 7/10 ⭐⭐⭐⭐⭐⭐⭐
 
@@ -833,8 +833,8 @@ Expected: References PersonnelSystem + SaveSystem with common issues
 
 **Investment:** $7,000 + ($45-75 × 6) = $7,270-7,450  
 **Benefits:** $4,000/month × 6 = $24,000  
-**ROI:** 230% return  
-**Payback Period:** 1.8 months
+**ROI:** 222-230% return  
+**Payback Period:** 1.8-1.9 months
 
 **Migration Impact:** Lower Gemini API costs improve payback period by 10%.
 
@@ -842,12 +842,12 @@ Expected: References PersonnelSystem + SaveSystem with common issues
 
 **Investment:** $31,000 + ($135-225 × 12) = $32,620-33,700  
 **Benefits:** $4,000/month × 12 = $48,000 + $10,000 quality improvements = $58,000  
-**ROI:** 72% return  
-**Payback Period:** 6-7 months
+**ROI:** 72-78% return  
+**Payback Period:** 8.4-8.9 months
 
 **Migration Impact:** Reduced API costs improve ROI by approximately 12%.
 
-**Long-Term Net Benefit (Year 2+):** $42,000-52,000 annually (improved with Gemini cost savings)
+**Long-Term Net Benefit (Year 2+):** $33,840-40,920 annually (improved with Gemini cost savings)
 
 ---
 
@@ -871,7 +871,7 @@ The Adastrea-Director system has been successfully migrated from OpenAI's GPT-4 
 #### Cost Structure
 - **Phase 1-2 Monthly:** $50-100 → $30-60 (40% reduction)
 - **Phase 3 Monthly:** $100-200 → $60-120 (40% reduction)
-- **Per Query Session:** $0.02-0.05 → $0.01-0.03 (30-40% reduction)
+- **Per Query Session:** $0.02-0.05 → $0.01-0.03 (40-50% reduction)
 - **Planning Session:** $0.10-0.20 → $0.06-0.12 (40% reduction)
 
 ### What Stayed the Same
@@ -888,10 +888,10 @@ The Adastrea-Director system has been successfully migrated from OpenAI's GPT-4 
 | Aspect | Improvement |
 |--------|-------------|
 | **Cost Savings** | 40% reduction in API costs |
-| **ROI (Phase 1-2)** | Improved from 210% to 230% |
-| **Payback Period** | Reduced from 2.0 to 1.8 months |
-| **ROI (Phase 3)** | Improved from 63% to 72% |
-| **Annual Benefit** | Increased from $40k-50k to $42k-52k |
+| **ROI (Phase 1-2)** | Improved from 210% to 222-230% |
+| **Payback Period** | Reduced from 2.0 to 1.8-1.9 months |
+| **ROI (Phase 3)** | Improved from 63% to 72-78% |
+| **Annual Benefit** | Net benefit $33.8k-40.9k annually |
 | **Quality** | Maintained at same high level |
 
 ### Setup Changes for Users
@@ -950,13 +950,13 @@ The migration demonstrates the system's flexibility regarding LLM backends. Futu
    - Intelligent planning and task decomposition
    - 100% test passing, zero security vulnerabilities
    - Successfully migrated from OpenAI to Gemini for cost efficiency
-   - **ROI: 230% return in 6 months (improved with Gemini)**
+   - **ROI: 222-230% return in 6 months (improved with Gemini)**
 
 2. **Future State (Phases 3-4): Game-Changing Automation**
    - Autonomous performance profiling and bug detection
    - Real-time Unreal Engine integration via Remote Control API
    - AI-assisted creative content generation
-   - **ROI: 72% return in 12 months, then $42k+ annually (improved with Gemini)**
+   - **ROI: 72-78% return in 12 months, then $33.8k-40.9k annually (improved with Gemini)**
 
 3. **Strategic Alignment: Near-Perfect Timing**
    - Director Phase 3 aligns with Adastrea Phase 4 (polish)
