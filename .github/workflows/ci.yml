@@ -115,10 +115,58 @@ jobs:
           echo "  - Material Assets"
           echo "  - Texture Assets"
 
-  # Future jobs can be added here:
+  # Uncomment and configure these jobs when self-hosted runners are available:
+  # Required environment setup for runners:
+  #   - Install Unreal Engine 5.6
+  #   - Set UE_ROOT environment variable to UE installation path (e.g., "C:\Program Files\Epic Games\UE_5.6")
+  #   - Ensure build tools are available (Visual Studio on Windows, Xcode on Mac, build-essential on Linux)
+  #
+  # build-windows:
+  #   name: Build Windows (Development Editor)
+  #   runs-on: self-hosted
+  #   # Requires: Windows runner with UE 5.6 installed and UE_ROOT environment variable set
+  #   
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #     
+  #     - name: Build Project
+  #       run: |
+  #         .\build_windows.bat
+  #       shell: cmd
+  #     
+  #     - name: Upload Build Logs
+  #       if: always()
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: build-logs-windows
+  #         path: Saved/Logs/
+  #
+  # build-linux:
+  #   name: Build Linux (Development Editor)
+  #   runs-on: self-hosted
+  #   # Requires: Linux runner with UE 5.6 installed
+  #   
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #     
+  #     - name: Build Project
+  #       run: |
+  #         ./build_unix.sh
+  #     
+  #     - name: Upload Build Logs
+  #       if: always()
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: build-logs-linux
+  #         path: Saved/Logs/
+  #
+  # For detailed build configuration and CI/CD integration examples,
+  # see UNREAL_BUILD_GUIDE.md
+  #
+  # Future jobs can be added:
   # - cpp-lint: C++ code style checking with clang-format
   # - cpp-static-analysis: Static analysis with clang-tidy or cppcheck
-  # - build-windows: Windows build on self-hosted runner
-  # - build-linux: Linux build on self-hosted runner
   # - unit-tests: C++ unit tests
   # - integration-tests: Unreal automation tests

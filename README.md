@@ -116,9 +116,22 @@ The validation scripts check for:
    - Select "Generate Visual Studio project files"
 
 4. **Build the project**:
+   
+   **Option A: Using Build Scripts** (Recommended for command-line builds):
+   ```bash
+   # Windows
+   build_windows.bat
+   
+   # Mac/Linux
+   ./build_unix.sh
+   ```
+   
+   **Option B: Using IDE**:
    - Open the generated `.sln` file in Visual Studio
    - Build in "Development Editor" configuration
    - Or open the `.uproject` file directly in Unreal Engine
+   
+   For detailed build instructions and debugging, see [UNREAL_BUILD_GUIDE.md](UNREAL_BUILD_GUIDE.md)
 
 5. **Verify Installation**:
    - Launch the editor
@@ -652,6 +665,8 @@ Comprehensive technical documentation for contributors and developers:
 - **[Architecture Overview](ARCHITECTURE.md)** - High-level system architecture with visual diagrams
 - **[Contributing Guidelines](CONTRIBUTING.md)** - How to contribute code, documentation, and assets
 - **[Code Style Guide](CODE_STYLE.md)** - C++ and Blueprint coding standards
+- **[Unreal Build Guide](UNREAL_BUILD_GUIDE.md)** - Complete guide for building with UnrealBuildTool instead of IDE
+- **[Build Error Debugging](BUILD_ERROR_DEBUGGING.md)** - Quick reference for debugging build errors
 - **[Build Troubleshooting](BUILD_TROUBLESHOOTING.md)** - Common build issues and solutions
 - **[Performance Improvements](PERFORMANCE_IMPROVEMENTS.md)** - Optimization guidelines
 - **[Custom Agents](.github/agents/README.md)** - AI assistants with project expertise for GitHub Copilot
