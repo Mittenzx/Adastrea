@@ -653,6 +653,11 @@ The game includes a comprehensive personnel/crew management system for creating 
 
 ## Documentation
 
+### AI Tool Integration
+
+- **[Director Knowledge Base](DIRECTOR_KNOWLEDGE_BASE.md)** - Comprehensive knowledge base for Adastrea-Director AI tool
+- **[Director Analysis Report](ADASTREA_DIRECTOR_ANALYSIS.md)** - Detailed analysis of the Adastrea-Director tool capabilities
+
 ### Project Planning
 
 - **[Project Roadmap](ROADMAP.md)** - Development phases, timelines, and future features

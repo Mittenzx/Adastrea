@@ -255,7 +255,7 @@ Current project status (as of 2025-11-07 - verify with WHATS_STILL_NEEDED.md for
 - **Priority 1 objectives**: 100% complete
 - **100+ documentation files** with guides, templates, and workflows
 
-Note: These statistics should be updated regularly. Always check WHATS_STILL_NEEDED.md, IMPLEMENTATION_SUMMARY.md, and recent commits for the most current status.
+Note: These statistics should be updated regularly. Always check WHATS_STILL_NEEDED.md, Docs/IMPLEMENTATION_SUMMARY.md, and recent commits for the most current status.
 
 ## Your Role as Expert Agent
 
