@@ -727,7 +727,7 @@ Comprehensive technical documentation for contributors and developers:
 - [Iteration Guide](Assets/IterationGuide.md)
 
 #### Editor Development
-*Note: The AdastreaEditor module has been removed. Future editor customizations can be added as needed.*
+*Note: The AdastreaEditor C++ module has been removed, but `AdastreaEditor.Target.cs` is included for building the project in Unreal Editor. Future editor customizations can be added as a new module if needed.*
 
 ### YAML Templates
 

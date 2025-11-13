@@ -279,7 +279,7 @@ The main game logic module, organized by feature:
 - Blueprint workflows: [Content/Blueprints/STATION_EDITOR_README.md](Content/Blueprints/STATION_EDITOR_README.md)
 - Implementation templates: [Assets/BlueprintWorkflowTemplates.md](Assets/BlueprintWorkflowTemplates.md)
 
-**Note:** The AdastreaEditor module has been removed from the project. All player-facing station editing features are now in the StationEditor runtime module. Future editor customizations can be added as needed.
+**Note:** The AdastreaEditor C++ module has been removed from the project. All player-facing station editing features are now in the StationEditor runtime module. However, the `AdastreaEditor.Target.cs` file remains necessary for building the project in Unreal Editor - this target file is separate from the module and tells Unreal Build Tool how to compile for editor mode. Future editor customizations can be added as a new module if needed.
 
 ## Design Patterns
 
