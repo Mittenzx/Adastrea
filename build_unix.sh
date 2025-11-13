@@ -156,7 +156,7 @@ if [ ! -d "$UE_ROOT" ]; then
     echo
     echo "Please set the UE_ROOT environment variable or edit this script."
     echo "Common locations:"
-    if [ "$PLATFORM" == "Mac" ]; then
+    if [ "$PLATFORM" = "Mac" ]; then
         echo "  - /Users/Shared/Epic Games/UE_5.6"
         echo "  - /Applications/Epic Games/UE_5.6"
     else
@@ -288,7 +288,7 @@ if [ $BUILD_RESULT -ne 0 ]; then
     echo "  1. Check the error messages above for specific issues"
     echo "  2. Try running: $0 clean"
     echo "  3. Check BUILD_TROUBLESHOOTING.md for common solutions"
-    echo "  4. Run with verbose: $0 $@ verbose"
+    echo "  4. Run with verbose: $0 verbose"
     echo
     echo "Build logs are in: $PROJECT_ROOT/Saved/Logs/"
     echo
@@ -299,7 +299,7 @@ else
     echo
     echo "Build Time: ${BUILD_DURATION} seconds"
     echo
-    if [ "$TARGET" == "AdastreaEditor" ]; then
+    if [ "$TARGET" = "AdastreaEditor" ]; then
         echo "You can now open the project in Unreal Editor:"
         echo "  $PROJECT_FILE"
     else

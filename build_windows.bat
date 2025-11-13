@@ -145,21 +145,33 @@ if "%CLEAN_BUILD%"=="1" (
     if exist "%PROJECT_ROOT%Binaries" (
         echo   Deleting Binaries...
         rmdir /s /q "%PROJECT_ROOT%Binaries" 2>nul
+        if exist "%PROJECT_ROOT%Binaries" (
+            echo   WARNING: Failed to delete Binaries. Check permissions or files in use.
+        )
     )
     
     if exist "%PROJECT_ROOT%Intermediate" (
         echo   Deleting Intermediate...
         rmdir /s /q "%PROJECT_ROOT%Intermediate" 2>nul
+        if exist "%PROJECT_ROOT%Intermediate" (
+            echo   WARNING: Failed to delete Intermediate. Check permissions or files in use.
+        )
     )
     
     if exist "%PROJECT_ROOT%Saved\Logs" (
         echo   Deleting logs...
         rmdir /s /q "%PROJECT_ROOT%Saved\Logs" 2>nul
+        if exist "%PROJECT_ROOT%Saved\Logs" (
+            echo   WARNING: Failed to delete Saved\Logs. Check permissions or files in use.
+        )
     )
     
     if exist "%PROJECT_ROOT%.vs" (
         echo   Deleting Visual Studio cache...
         rmdir /s /q "%PROJECT_ROOT%.vs" 2>nul
+        if exist "%PROJECT_ROOT%.vs" (
+            echo   WARNING: Failed to delete .vs. Check permissions or files in use.
+        )
     )
     
     echo   Clean completed.
@@ -213,7 +225,7 @@ if %BUILD_RESULT% NEQ 0 (
     echo   1. Check the error messages above for specific issues
     echo   2. Try running: build_windows.bat clean
     echo   3. Check BUILD_TROUBLESHOOTING.md for common solutions
-    echo   4. Run with verbose: build_windows.bat %1 verbose
+    echo   4. Run with verbose: build_windows.bat verbose
     echo.
     echo Build logs are in: %PROJECT_ROOT%Saved\Logs\
     echo.

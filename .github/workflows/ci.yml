@@ -116,11 +116,15 @@ jobs:
           echo "  - Texture Assets"
 
   # Uncomment and configure these jobs when self-hosted runners are available:
+  # Required environment setup for runners:
+  #   - Install Unreal Engine 5.6
+  #   - Set UE_ROOT environment variable to UE installation path (e.g., "C:\Program Files\Epic Games\UE_5.6")
+  #   - Ensure build tools are available (Visual Studio on Windows, Xcode on Mac, build-essential on Linux)
   #
   # build-windows:
   #   name: Build Windows (Development Editor)
   #   runs-on: self-hosted
-  #   # Requires: Windows runner with UE 5.6 installed
+  #   # Requires: Windows runner with UE 5.6 installed and UE_ROOT environment variable set
   #   
   #   steps:
   #     - name: Checkout code

@@ -317,6 +317,9 @@ build_windows.bat verbose
 # Source/Adastrea/Ships/MyShip.cpp(10): error C1083: Cannot open include file: 'SpaceshipDataAsset.h'
 
 # Check if file exists
+# On Windows Command Prompt:
+dir /s /b Source\SpaceshipDataAsset.h
+# On Git Bash/WSL/Mac/Linux:
 find Source -name "SpaceshipDataAsset.h"
 # Output: Source/Adastrea/Ships/SpaceshipDataAsset.h
 
@@ -338,7 +341,10 @@ build_windows.bat verbose
 # error LNK2019: unresolved external symbol "void UMyClass::MyFunction(void)"
 
 # Check .cpp file has implementation
-cat Source/Adastrea/MyModule/MyClass.cpp | grep "MyFunction"
+# On Windows Command Prompt:
+findstr "MyFunction" Source\Adastrea\MyModule\MyClass.cpp
+# On Git Bash/WSL/PowerShell/Mac/Linux:
+grep "MyFunction" Source/Adastrea/MyModule/MyClass.cpp
 
 # If missing, add implementation:
 # void UMyClass::MyFunction()

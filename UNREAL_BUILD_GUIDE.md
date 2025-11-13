@@ -319,7 +319,7 @@ PLATFORM="Mac"
 TARGET="AdastreaEditor"
 
 # Clean previous build (optional)
-if [ "$1" == "clean" ]; then
+if [ "$1" = "clean" ]; then
     echo "Cleaning build artifacts..."
     rm -rf "$PROJECT_ROOT/Binaries"
     rm -rf "$PROJECT_ROOT/Intermediate"
@@ -375,7 +375,7 @@ PLATFORM="Linux"
 TARGET="AdastreaEditor"
 
 # Clean previous build (optional)
-if [ "$1" == "clean" ]; then
+if [ "$1" = "clean" ]; then
     echo "Cleaning build artifacts..."
     rm -rf "$PROJECT_ROOT/Binaries"
     rm -rf "$PROJECT_ROOT/Intermediate"
@@ -718,9 +718,9 @@ xcode-select --install
 sudo apt-get install build-essential clang
 ```
 
-### .NET Errors with UnrealBuildTool
+### .NET SDK Errors when Running UnrealBuildTool
 
-If you see .NET-related errors, these are UBT (Epic's tool) issues:
+If you see .NET-related errors when running UnrealBuildTool, these are usually issues with UBT's .NET SDK dependencies (not problems with UBT itself):
 
 **Solutions**:
 1. Verify .NET SDK version matches UE requirements
