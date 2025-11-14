@@ -22,7 +22,7 @@ This package includes all files that were removed from the main repository:
 
 **Created from**: PR #120 (commit 7ffc4368a4b45088c187608da9a66029fbbcde57)  
 **Removal date**: 2025-11-14  
-**Total size**: ~60.6 KB (documentation and scripts)  
+**Total size**: ~86 KB (documentation and scripts)  
 **Purpose**: Migration to separate build tooling repository
 
 ## File Sizes

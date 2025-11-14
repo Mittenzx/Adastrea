@@ -82,7 +82,7 @@ After running the extraction script locally:
 1. **Check file count**:
    ```bash
    ls -1 build_package/*.{bat,sh,md} build_package/.github/workflows/*.yml 2>/dev/null | wc -l
-   # Should show: 9 files
+   # Should show: 12 files
    ```
 
 2. **Check file sizes**:
