@@ -1,3 +1,5 @@
+// Copyright (c) 2025 Mittenzx. Licensed under MIT.
+
 #include "Combat/PointDefenseComponent.h"
 #include "AdastreaLog.h"
 #include "GameFramework/Actor.h"
@@ -71,14 +73,14 @@ void UPointDefenseComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 void UPointDefenseComponent::Activate(bool bReset)
 {
     Super::Activate(bReset);
-    UE_LOG(LogAdastrea, Log, TEXT("Point defense activated"));
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Point defense activated"));
 }
 
 void UPointDefenseComponent::Deactivate()
 {
     Super::Deactivate();
     ClearAllThreats();
-    UE_LOG(LogAdastrea, Log, TEXT("Point defense deactivated"));
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Point defense deactivated"));
 }
 
 bool UPointDefenseComponent::AddPointDefenseWeapon(UWeaponComponent* Weapon)
@@ -91,7 +93,7 @@ bool UPointDefenseComponent::AddPointDefenseWeapon(UWeaponComponent* Weapon)
     // Check if weapon is point defense capable
     if (!Weapon->WeaponData->bPointDefenseCapable)
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("Weapon %s is not point defense capable"), 
+        UE_LOG(LogAdastreaCombat, Warning, TEXT("Weapon %s is not point defense capable"), 
             *Weapon->WeaponData->WeaponName.ToString());
         return false;
     }
@@ -331,17 +333,17 @@ bool UPointDefenseComponent::IsValidThreat(AActor* Actor) const
 
 void UPointDefenseComponent::OnThreatDetected_Implementation(AActor* Threat)
 {
-    UE_LOG(LogAdastrea, Log, TEXT("Point defense threat detected: %s"), *Threat->GetName());
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Point defense threat detected: %s"), *Threat->GetName());
 }
 
 void UPointDefenseComponent::OnThreatEngaged_Implementation(AActor* Threat, UWeaponComponent* Weapon)
 {
-    UE_LOG(LogAdastrea, Log, TEXT("Point defense engaging: %s"), *Threat->GetName());
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Point defense engaging: %s"), *Threat->GetName());
 }
 
 void UPointDefenseComponent::OnThreatNeutralized_Implementation(AActor* Threat, bool bDestroyed)
 {
-    UE_LOG(LogAdastrea, Log, TEXT("Threat neutralized: %s (destroyed: %s)"), 
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Threat neutralized: %s (destroyed: %s)"), 
         *Threat->GetName(), bDestroyed ? TEXT("yes") : TEXT("no"));
 }
 

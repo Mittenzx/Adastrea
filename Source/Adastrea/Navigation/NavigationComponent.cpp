@@ -1,3 +1,5 @@
+// Copyright (c) 2025 Mittenzx. Licensed under MIT.
+
 #include "Navigation/NavigationComponent.h"
 #include "AdastreaLog.h"
 #include "GameFramework/Actor.h"
@@ -66,7 +68,7 @@ bool UNavigationComponent::ActivateAutopilot(FVector TargetLocation)
 {
     if (!GetOwner())
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("NavigationComponent: Cannot activate autopilot - no owner"));
+        UE_LOG(LogAdastreaNavigation, Warning, TEXT("NavigationComponent: Cannot activate autopilot - no owner"));
         return false;
     }
 
@@ -85,7 +87,7 @@ bool UNavigationComponent::ActivateAutopilot(FVector TargetLocation)
 
     OnAutopilotActivated();
 
-    UE_LOG(LogAdastrea, Log, TEXT("NavigationComponent: Autopilot activated to %s"), *TargetLocation.ToString());
+    UE_LOG(LogAdastreaNavigation, Log, TEXT("NavigationComponent: Autopilot activated to %s"), *TargetLocation.ToString());
     return true;
 }
 
@@ -93,7 +95,7 @@ bool UNavigationComponent::ActivateAutopilotPath(const TArray<FNavigationWaypoin
 {
     if (!GetOwner() || Waypoints.Num() == 0)
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("NavigationComponent: Cannot activate autopilot path - invalid parameters"));
+        UE_LOG(LogAdastreaNavigation, Warning, TEXT("NavigationComponent: Cannot activate autopilot path - invalid parameters"));
         return false;
     }
 
@@ -104,7 +106,7 @@ bool UNavigationComponent::ActivateAutopilotPath(const TArray<FNavigationWaypoin
 
     OnAutopilotActivated();
 
-    UE_LOG(LogAdastrea, Log, TEXT("NavigationComponent: Autopilot path activated with %d waypoints"), Waypoints.Num());
+    UE_LOG(LogAdastreaNavigation, Log, TEXT("NavigationComponent: Autopilot path activated with %d waypoints"), Waypoints.Num());
     return true;
 }
 
@@ -118,7 +120,7 @@ void UNavigationComponent::DeactivateAutopilot()
         
         OnAutopilotDeactivated();
         
-        UE_LOG(LogAdastrea, Log, TEXT("NavigationComponent: Autopilot deactivated"));
+        UE_LOG(LogAdastreaNavigation, Log, TEXT("NavigationComponent: Autopilot deactivated"));
     }
 }
 
@@ -126,7 +128,7 @@ bool UNavigationComponent::StartFollowing(AActor* Target, float Distance)
 {
     if (!Target || !GetOwner())
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("NavigationComponent: Cannot start following - invalid target or no owner"));
+        UE_LOG(LogAdastreaNavigation, Warning, TEXT("NavigationComponent: Cannot start following - invalid target or no owner"));
         return false;
     }
 
@@ -135,7 +137,7 @@ bool UNavigationComponent::StartFollowing(AActor* Target, float Distance)
     CurrentMode = ENavigationMode::Following;
     bAutopilotActive = true;
 
-    UE_LOG(LogAdastrea, Log, TEXT("NavigationComponent: Following %s at distance %.0f"), *Target->GetName(), Distance);
+    UE_LOG(LogAdastreaNavigation, Log, TEXT("NavigationComponent: Following %s at distance %.0f"), *Target->GetName(), Distance);
     return true;
 }
 
@@ -146,7 +148,7 @@ void UNavigationComponent::StopFollowing()
         FollowTarget = nullptr;
         DeactivateAutopilot();
         
-        UE_LOG(LogAdastrea, Log, TEXT("NavigationComponent: Stopped following"));
+        UE_LOG(LogAdastreaNavigation, Log, TEXT("NavigationComponent: Stopped following"));
     }
 }
 
@@ -154,7 +156,7 @@ void UNavigationComponent::AddWaypoint(FNavigationWaypoint Waypoint)
 {
     WaypointPath.Add(Waypoint);
     
-    UE_LOG(LogAdastrea, Verbose, TEXT("NavigationComponent: Waypoint added at %s"), *Waypoint.Location.ToString());
+    UE_LOG(LogAdastreaNavigation, Verbose, TEXT("NavigationComponent: Waypoint added at %s"), *Waypoint.Location.ToString());
 }
 
 void UNavigationComponent::ClearWaypoints()
@@ -162,7 +164,7 @@ void UNavigationComponent::ClearWaypoints()
     WaypointPath.Empty();
     CurrentWaypointIndex = 0;
     
-    UE_LOG(LogAdastrea, Verbose, TEXT("NavigationComponent: Waypoints cleared"));
+    UE_LOG(LogAdastreaNavigation, Verbose, TEXT("NavigationComponent: Waypoints cleared"));
 }
 
 bool UNavigationComponent::SkipToNextWaypoint()
@@ -170,7 +172,7 @@ bool UNavigationComponent::SkipToNextWaypoint()
     if (CurrentWaypointIndex + 1 < WaypointPath.Num())
     {
         CurrentWaypointIndex++;
-        UE_LOG(LogAdastrea, Log, TEXT("NavigationComponent: Skipped to waypoint %d"), CurrentWaypointIndex);
+        UE_LOG(LogAdastreaNavigation, Log, TEXT("NavigationComponent: Skipped to waypoint %d"), CurrentWaypointIndex);
         return true;
     }
     
@@ -346,13 +348,13 @@ bool UNavigationComponent::IsAutopilotActive() const
 void UNavigationComponent::OnWaypointReached_Implementation(const FNavigationWaypoint& Waypoint, int32 WaypointIndex)
 {
     // Default implementation - can be overridden in Blueprint
-    UE_LOG(LogAdastrea, Log, TEXT("NavigationComponent: Waypoint %d reached"), WaypointIndex);
+    UE_LOG(LogAdastreaNavigation, Log, TEXT("NavigationComponent: Waypoint %d reached"), WaypointIndex);
 }
 
 void UNavigationComponent::OnDestinationReached_Implementation()
 {
     // Default implementation - can be overridden in Blueprint
-    UE_LOG(LogAdastrea, Log, TEXT("NavigationComponent: Destination reached"));
+    UE_LOG(LogAdastreaNavigation, Log, TEXT("NavigationComponent: Destination reached"));
 }
 
 void UNavigationComponent::OnAutopilotActivated_Implementation()
@@ -368,7 +370,7 @@ void UNavigationComponent::OnAutopilotDeactivated_Implementation()
 void UNavigationComponent::OnObstacleDetected_Implementation(FVector ObstacleLocation)
 {
     // Default implementation - can be overridden in Blueprint
-    UE_LOG(LogAdastrea, Warning, TEXT("NavigationComponent: Obstacle detected at %s"), *ObstacleLocation.ToString());
+    UE_LOG(LogAdastreaNavigation, Warning, TEXT("NavigationComponent: Obstacle detected at %s"), *ObstacleLocation.ToString());
 }
 
 // ====================

@@ -1,3 +1,5 @@
+// Copyright (c) 2025 Mittenzx. Licensed under MIT.
+
 #include "Combat/WeaponDataAsset.h"
 #include "AdastreaLog.h"
 

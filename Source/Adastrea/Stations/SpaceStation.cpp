@@ -1,3 +1,5 @@
+// Copyright (c) 2025 Mittenzx. Licensed under MIT.
+
 #include "Stations/SpaceStation.h"
 #include "Factions/FactionDataAsset.h"
 #include "AdastreaLog.h"

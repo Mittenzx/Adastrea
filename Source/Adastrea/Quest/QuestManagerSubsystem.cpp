@@ -16,14 +16,14 @@ void UQuestManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
     
-    UE_LOG(LogAdastrea, Log, TEXT("QuestManagerSubsystem: Initialized"));
+    UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Initialized"));
 }
 
 void UQuestManagerSubsystem::Deinitialize()
 {
     Super::Deinitialize();
     
-    UE_LOG(LogAdastrea, Log, TEXT("QuestManagerSubsystem: Deinitialized"));
+    UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Deinitialized"));
 }
 
 // ====================
@@ -34,21 +34,21 @@ bool UQuestManagerSubsystem::AcceptQuest(UQuestDataAsset* Quest)
 {
     if (!Quest)
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("QuestManagerSubsystem: Cannot accept null quest"));
+        UE_LOG(LogAdastreaQuest, Warning, TEXT("QuestManagerSubsystem: Cannot accept null quest"));
         return false;
     }
 
     // Check if already active
     if (IsQuestActive(Quest->QuestID))
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("QuestManagerSubsystem: Quest %s is already active"), *Quest->QuestID.ToString());
+        UE_LOG(LogAdastreaQuest, Warning, TEXT("QuestManagerSubsystem: Quest %s is already active"), *Quest->QuestID.ToString());
         return false;
     }
 
     // Check prerequisites
     if (!Quest->CheckPrerequisites())
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("QuestManagerSubsystem: Prerequisites not met for quest %s"), *Quest->QuestName.ToString());
+        UE_LOG(LogAdastreaQuest, Warning, TEXT("QuestManagerSubsystem: Prerequisites not met for quest %s"), *Quest->QuestName.ToString());
         return false;
     }
 
@@ -64,7 +64,7 @@ bool UQuestManagerSubsystem::AcceptQuest(UQuestDataAsset* Quest)
 
     OnQuestAccepted.Broadcast(Quest);
 
-    UE_LOG(LogAdastrea, Log, TEXT("QuestManagerSubsystem: Accepted quest '%s'"), *Quest->QuestName.ToString());
+    UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Accepted quest '%s'"), *Quest->QuestName.ToString());
 
     return true;
 }
@@ -74,14 +74,14 @@ bool UQuestManagerSubsystem::AbandonQuest(FName QuestID)
     FActiveQuest* Quest = FindActiveQuest(QuestID);
     if (!Quest)
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("QuestManagerSubsystem: Cannot abandon quest %s - not active"), *QuestID.ToString());
+        UE_LOG(LogAdastreaQuest, Warning, TEXT("QuestManagerSubsystem: Cannot abandon quest %s - not active"), *QuestID.ToString());
         return false;
     }
 
     Quest->Status = EQuestStatus::Abandoned;
     ActiveQuests.RemoveAll([QuestID](const FActiveQuest& Q) { return Q.Quest && Q.Quest->QuestID == QuestID; });
 
-    UE_LOG(LogAdastrea, Log, TEXT("QuestManagerSubsystem: Abandoned quest %s"), *QuestID.ToString());
+    UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Abandoned quest %s"), *QuestID.ToString());
 
     return true;
 }
@@ -91,13 +91,13 @@ bool UQuestManagerSubsystem::CompleteQuest(FName QuestID)
     FActiveQuest* Quest = FindActiveQuest(QuestID);
     if (!Quest)
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("QuestManagerSubsystem: Cannot complete quest %s - not active"), *QuestID.ToString());
+        UE_LOG(LogAdastreaQuest, Warning, TEXT("QuestManagerSubsystem: Cannot complete quest %s - not active"), *QuestID.ToString());
         return false;
     }
 
     if (!Quest->Quest->AreAllRequiredObjectivesComplete())
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("QuestManagerSubsystem: Cannot complete quest %s - objectives not complete"), *QuestID.ToString());
+        UE_LOG(LogAdastreaQuest, Warning, TEXT("QuestManagerSubsystem: Cannot complete quest %s - objectives not complete"), *QuestID.ToString());
         return false;
     }
 
@@ -128,7 +128,7 @@ bool UQuestManagerSubsystem::CompleteQuest(FName QuestID)
     // Remove from active quests
     ActiveQuests.RemoveAll([QuestID](const FActiveQuest& Q) { return Q.Quest && Q.Quest->QuestID == QuestID; });
 
-    UE_LOG(LogAdastrea, Log, TEXT("QuestManagerSubsystem: Completed quest %s"), *QuestID.ToString());
+    UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Completed quest %s"), *QuestID.ToString());
 
     return true;
 }
@@ -138,7 +138,7 @@ bool UQuestManagerSubsystem::FailQuest(FName QuestID, const FString& Reason)
     FActiveQuest* Quest = FindActiveQuest(QuestID);
     if (!Quest)
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("QuestManagerSubsystem: Cannot fail quest %s - not active"), *QuestID.ToString());
+        UE_LOG(LogAdastreaQuest, Warning, TEXT("QuestManagerSubsystem: Cannot fail quest %s - not active"), *QuestID.ToString());
         return false;
     }
 
@@ -150,7 +150,7 @@ bool UQuestManagerSubsystem::FailQuest(FName QuestID, const FString& Reason)
     // Remove from active quests
     ActiveQuests.RemoveAll([QuestID](const FActiveQuest& Q) { return Q.Quest && Q.Quest->QuestID == QuestID; });
 
-    UE_LOG(LogAdastrea, Log, TEXT("QuestManagerSubsystem: Failed quest %s - %s"), *QuestID.ToString(), *Reason);
+    UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Failed quest %s - %s"), *QuestID.ToString(), *Reason);
 
     return true;
 }
@@ -176,7 +176,7 @@ bool UQuestManagerSubsystem::UpdateObjectiveProgress(FName QuestID, int32 Object
         Objective.bIsCompleted = true;
         OnObjectiveCompleted.Broadcast(QuestID, ObjectiveIndex);
         
-        UE_LOG(LogAdastrea, Log, TEXT("QuestManagerSubsystem: Completed objective %d for quest %s"), ObjectiveIndex, *QuestID.ToString());
+        UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Completed objective %d for quest %s"), ObjectiveIndex, *QuestID.ToString());
 
         // Check if quest is now complete
         CheckQuestCompletion(*Quest);
@@ -203,7 +203,7 @@ bool UQuestManagerSubsystem::CompleteObjective(FName QuestID, int32 ObjectiveInd
 
     OnObjectiveCompleted.Broadcast(QuestID, ObjectiveIndex);
 
-    UE_LOG(LogAdastrea, Log, TEXT("QuestManagerSubsystem: Completed objective %d for quest %s"), ObjectiveIndex, *QuestID.ToString());
+    UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Completed objective %d for quest %s"), ObjectiveIndex, *QuestID.ToString());
 
     // Check if quest is now complete
     CheckQuestCompletion(*Quest);
@@ -389,7 +389,7 @@ UQuestDataAsset* UQuestManagerSubsystem::GenerateRandomQuest(EQuestType Type, in
         GeneratedQuest->Rewards.ReputationGain = Difficulty * ReputationPerDifficulty;
         GeneratedQuest->Rewards.WayID = QuestGiver;
 
-        UE_LOG(LogAdastrea, Log, TEXT("QuestManagerSubsystem: Generated quest '%s'"), *GeneratedQuest->QuestName.ToString());
+        UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Generated quest '%s'"), *GeneratedQuest->QuestName.ToString());
     }
 
     return GeneratedQuest;
@@ -423,18 +423,18 @@ void UQuestManagerSubsystem::GiveQuestRewards(const FQuestReward& Rewards)
     
     if (Rewards.Credits > 0)
     {
-        UE_LOG(LogAdastrea, Log, TEXT("QuestManagerSubsystem: Rewarding %d credits"), Rewards.Credits);
+        UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Rewarding %d credits"), Rewards.Credits);
     }
     
     if (Rewards.ReputationGain != 0)
     {
-        UE_LOG(LogAdastrea, Log, TEXT("QuestManagerSubsystem: Rewarding %d reputation with %s"), 
+        UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Rewarding %d reputation with %s"), 
                Rewards.ReputationGain, *Rewards.WayID.ToString());
     }
     
     if (Rewards.ExperiencePoints > 0)
     {
-        UE_LOG(LogAdastrea, Log, TEXT("QuestManagerSubsystem: Rewarding %d XP"), Rewards.ExperiencePoints);
+        UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Rewarding %d XP"), Rewards.ExperiencePoints);
     }
 }
 
@@ -442,7 +442,7 @@ bool UQuestManagerSubsystem::CheckQuestCompletion(FActiveQuest& Quest)
 {
     if (Quest.Quest && Quest.Quest->AreAllRequiredObjectivesComplete())
     {
-        UE_LOG(LogAdastrea, Log, TEXT("QuestManagerSubsystem: Quest %s ready for completion"), 
+        UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Quest %s ready for completion"), 
                *Quest.Quest->QuestName.ToString());
         return true;
     }

@@ -1,3 +1,5 @@
+// Copyright (c) 2025 Mittenzx. Licensed under MIT.
+
 #include "Combat/TargetingComponent.h"
 #include "AdastreaLog.h"
 #include "GameFramework/Actor.h"
@@ -345,13 +347,13 @@ int32 UTargetingComponent::GetDetectedTargetCount() const
 void UTargetingComponent::OnTargetLocked_Implementation(AActor* Target)
 {
     // Default implementation
-    UE_LOG(LogAdastrea, Log, TEXT("Target locked: %s"), Target ? *Target->GetName() : TEXT("nullptr"));
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Target locked: %s"), Target ? *Target->GetName() : TEXT("nullptr"));
 }
 
 void UTargetingComponent::OnTargetLost_Implementation(const FString& Reason)
 {
     // Default implementation
-    UE_LOG(LogAdastrea, Log, TEXT("Target lost: %s"), *Reason);
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Target lost: %s"), *Reason);
 }
 
 float UTargetingComponent::CalculateThreatLevel_Implementation(AActor* Target) const

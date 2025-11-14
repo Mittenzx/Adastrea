@@ -8,7 +8,7 @@ void UVerseSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
     LoadVerseState();
-    UE_LOG(LogAdastrea, Log, TEXT("Verse Subsystem Initialized."));
+    UE_LOG(LogAdastreaWay, Log, TEXT("Verse Subsystem Initialized."));
 }
 
 void UVerseSubsystem::Deinitialize()
@@ -21,7 +21,7 @@ void UVerseSubsystem::RecordFeat(const UFeatDataAsset* FeatToRecord)
 {
     if (!FeatToRecord)
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("RecordFeat called with a null FeatDataAsset."));
+        UE_LOG(LogAdastreaWay, Warning, TEXT("RecordFeat called with a null FeatDataAsset."));
         return;
     }
 
@@ -30,7 +30,7 @@ void UVerseSubsystem::RecordFeat(const UFeatDataAsset* FeatToRecord)
 
     if (!bAlreadyCompleted)
     {
-        UE_LOG(LogAdastrea, Log, TEXT("New Feat Recorded: '%s' (Title: %s)"), *FeatToRecord->FeatID.ToString(), *FeatToRecord->TitleName.ToString());
+        UE_LOG(LogAdastreaWay, Log, TEXT("New Feat Recorded: '%s' (Title: %s)"), *FeatToRecord->FeatID.ToString(), *FeatToRecord->TitleName.ToString());
         // In a full game, you would likely want to broadcast a delegate here to notify the UI.
         // OnFeatRecorded.Broadcast(FeatToRecord);
     }
@@ -40,7 +40,7 @@ float UVerseSubsystem::GetVerseScore(const UWayDataAsset* TargetWay) const
 {
     if (!TargetWay)
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("GetVerseScore called with a null WayDataAsset."));
+        UE_LOG(LogAdastreaWay, Warning, TEXT("GetVerseScore called with a null WayDataAsset."));
         return 0.0f;
     }
 
@@ -119,7 +119,7 @@ void UVerseSubsystem::LoadVerseState()
     // For now, we will clear any existing feats to ensure a clean state on start.
     CompletedFeats.Empty();
     RegisteredNetworks.Empty();
-    UE_LOG(LogAdastrea, Log, TEXT("Verse state loaded (cleared for new session). Player has %d completed Feats."), CompletedFeats.Num());
+    UE_LOG(LogAdastreaWay, Log, TEXT("Verse state loaded (cleared for new session). Player has %d completed Feats."), CompletedFeats.Num());
 }
 
 // ====================
@@ -130,14 +130,14 @@ void UVerseSubsystem::RegisterNetwork(UWayNetworkDataAsset* Network)
 {
     if (!Network)
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("RegisterNetwork called with null Network"));
+        UE_LOG(LogAdastreaWay, Warning, TEXT("RegisterNetwork called with null Network"));
         return;
     }
 
     if (!RegisteredNetworks.Contains(Network))
     {
         RegisteredNetworks.Add(Network);
-        UE_LOG(LogAdastrea, Log, TEXT("Registered Way Network: %s with %d members"), 
+        UE_LOG(LogAdastreaWay, Log, TEXT("Registered Way Network: %s with %d members"), 
             *Network->NetworkName.ToString(), Network->GetMemberCount());
     }
 }
@@ -146,13 +146,13 @@ void UVerseSubsystem::UnregisterNetwork(UWayNetworkDataAsset* Network)
 {
     if (!Network)
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("UnregisterNetwork called with null Network"));
+        UE_LOG(LogAdastreaWay, Warning, TEXT("UnregisterNetwork called with null Network"));
         return;
     }
 
     if (RegisteredNetworks.Remove(Network) > 0)
     {
-        UE_LOG(LogAdastrea, Log, TEXT("Unregistered Way Network: %s"), *Network->NetworkName.ToString());
+        UE_LOG(LogAdastreaWay, Log, TEXT("Unregistered Way Network: %s"), *Network->NetworkName.ToString());
     }
 }
 
@@ -236,7 +236,7 @@ void UVerseSubsystem::RecordFeatWithNetworkEffects(const UFeatDataAsset* FeatToR
 {
     if (!FeatToRecord)
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("RecordFeatWithNetworkEffects called with null Feat"));
+        UE_LOG(LogAdastreaWay, Warning, TEXT("RecordFeatWithNetworkEffects called with null Feat"));
         return;
     }
 
@@ -265,7 +265,7 @@ void UVerseSubsystem::RecordFeatWithNetworkEffects(const UFeatDataAsset* FeatToR
         
         if (NetworkAlignment > 0.0f)
         {
-            UE_LOG(LogAdastrea, Log, TEXT("Feat '%s' aligns with network '%s' (Alignment: %.2f)"), 
+            UE_LOG(LogAdastreaWay, Log, TEXT("Feat '%s' aligns with network '%s' (Alignment: %.2f)"), 
                 *FeatToRecord->TitleName.ToString(), 
                 *Network->NetworkName.ToString(), 
                 NetworkAlignment);
@@ -273,7 +273,7 @@ void UVerseSubsystem::RecordFeatWithNetworkEffects(const UFeatDataAsset* FeatToR
             // Apply network alignment bonus
             float BonusAlignment = NetworkAlignment * Network->NetworkAlignmentBonus;
             
-            UE_LOG(LogAdastrea, Log, TEXT("  Network bonus applied: %.2f (%.2fx multiplier)"), 
+            UE_LOG(LogAdastreaWay, Log, TEXT("  Network bonus applied: %.2f (%.2fx multiplier)"), 
                 BonusAlignment, 
                 Network->NetworkAlignmentBonus);
         }

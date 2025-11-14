@@ -1,3 +1,5 @@
+// Copyright (c) 2025 Mittenzx. Licensed under MIT.
+
 #include "Combat/BoardingComponent.h"
 #include "AdastreaLog.h"
 #include "GameFramework/Actor.h"
@@ -50,14 +52,14 @@ bool UBoardingComponent::InitiateBoardingAction(AActor* TargetShip, int32 Boardi
     // Check if already in boarding action
     if (bIsBoardingActive)
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("Already engaged in boarding action"));
+        UE_LOG(LogAdastreaCombat, Warning, TEXT("Already engaged in boarding action"));
         return false;
     }
 
     // Validate crew count
     if (BoardingCrewCount <= 0 || BoardingCrewCount > MaxBoardingCrew)
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("Invalid boarding crew count: %d"), BoardingCrewCount);
+        UE_LOG(LogAdastreaCombat, Warning, TEXT("Invalid boarding crew count: %d"), BoardingCrewCount);
         return false;
     }
 
@@ -65,14 +67,14 @@ bool UBoardingComponent::InitiateBoardingAction(AActor* TargetShip, int32 Boardi
     UBoardingComponent* TargetBoarding = GetTargetBoardingComponent();
     if (!TargetBoarding || !TargetBoarding->bCanBeBoarded)
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("Target cannot be boarded"));
+        UE_LOG(LogAdastreaCombat, Warning, TEXT("Target cannot be boarded"));
         return false;
     }
 
     // Check if target is already captured
     if (TargetBoarding->bIsCaptured)
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("Target is already captured"));
+        UE_LOG(LogAdastreaCombat, Warning, TEXT("Target is already captured"));
         return false;
     }
 
@@ -112,7 +114,7 @@ bool UBoardingComponent::InitiateBoardingAction(AActor* TargetShip, int32 Boardi
 
     OnBoardingStarted(TargetShip, true);
 
-    UE_LOG(LogAdastrea, Log, TEXT("Boarding action initiated with %d crew"), BoardingCrewCount);
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Boarding action initiated with %d crew"), BoardingCrewCount);
 
     return true;
 }
@@ -145,7 +147,7 @@ void UBoardingComponent::SurrenderShip(AController* Attacker)
 
     OnShipCaptured(Attacker);
 
-    UE_LOG(LogAdastrea, Warning, TEXT("Ship surrendered to %s"), *Attacker->GetName());
+    UE_LOG(LogAdastreaCombat, Warning, TEXT("Ship surrendered to %s"), *Attacker->GetName());
 }
 
 bool UBoardingComponent::RecaptureShip(AController* RescuingController)
@@ -160,7 +162,7 @@ bool UBoardingComponent::RecaptureShip(AController* RescuingController)
 
     OnShipRecaptured(RescuingController);
 
-    UE_LOG(LogAdastrea, Log, TEXT("Ship recaptured by %s"), *RescuingController->GetName());
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Ship recaptured by %s"), *RescuingController->GetName());
 
     return true;
 }
@@ -264,39 +266,39 @@ float UBoardingComponent::GetDefenderCombatStrength() const
 
 void UBoardingComponent::OnBoardingStarted_Implementation(AActor* TargetShip, bool bAsAttacker)
 {
-    UE_LOG(LogAdastrea, Log, TEXT("Boarding started as %s"), bAsAttacker ? TEXT("attacker") : TEXT("defender"));
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Boarding started as %s"), bAsAttacker ? TEXT("attacker") : TEXT("defender"));
 }
 
 void UBoardingComponent::OnBreachComplete_Implementation()
 {
-    UE_LOG(LogAdastrea, Log, TEXT("Hull breach complete, entering combat"));
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Hull breach complete, entering combat"));
 }
 
 void UBoardingComponent::OnCombatResolved_Implementation(int32 AttackerCasualties, int32 DefenderCasualties)
 {
-    UE_LOG(LogAdastrea, Log, TEXT("Combat resolved - Attacker casualties: %d, Defender casualties: %d"), 
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Combat resolved - Attacker casualties: %d, Defender casualties: %d"), 
         AttackerCasualties, DefenderCasualties);
 }
 
 void UBoardingComponent::OnBoardingSuccessful_Implementation(AActor* CapturedShip, AController* NewOwner)
 {
-    UE_LOG(LogAdastrea, Warning, TEXT("Boarding successful! Ship captured by %s"), 
+    UE_LOG(LogAdastreaCombat, Warning, TEXT("Boarding successful! Ship captured by %s"), 
         NewOwner ? *NewOwner->GetName() : TEXT("Unknown"));
 }
 
 void UBoardingComponent::OnBoardingFailed_Implementation(const FString& Reason)
 {
-    UE_LOG(LogAdastrea, Warning, TEXT("Boarding failed: %s"), *Reason);
+    UE_LOG(LogAdastreaCombat, Warning, TEXT("Boarding failed: %s"), *Reason);
 }
 
 void UBoardingComponent::OnShipCaptured_Implementation(AController* Captor)
 {
-    UE_LOG(LogAdastrea, Error, TEXT("Ship captured by %s"), Captor ? *Captor->GetName() : TEXT("Unknown"));
+    UE_LOG(LogAdastreaCombat, Error, TEXT("Ship captured by %s"), Captor ? *Captor->GetName() : TEXT("Unknown"));
 }
 
 void UBoardingComponent::OnShipRecaptured_Implementation(AController* Rescuer)
 {
-    UE_LOG(LogAdastrea, Log, TEXT("Ship recaptured by %s"), Rescuer ? *Rescuer->GetName() : TEXT("Unknown"));
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Ship recaptured by %s"), Rescuer ? *Rescuer->GetName() : TEXT("Unknown"));
 }
 
 void UBoardingComponent::UpdateBoardingAction(float DeltaTime)
