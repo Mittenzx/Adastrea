@@ -1,6 +1,7 @@
 // Copyright (c) 2025 Mittenzx. Licensed under MIT.
 
 #include "Combat/TargetingComponent.h"
+#include "Combat/WeaponComponent.h"
 #include "AdastreaLog.h"
 #include "GameFramework/Actor.h"
 #include "Kismet/GameplayStatics.h"
@@ -366,20 +367,31 @@ float UTargetingComponent::CalculateThreatLevel_Implementation(AActor* Target) c
     // Base threat calculation
     float ThreatLevel = 50.0f;
 
-    // Closer targets are more threatening
     const AActor* Owner = GetOwner();
-    if (Owner)
+    if (!Owner)
     {
-        const float Distance = FVector::Dist(Owner->GetActorLocation(), Target->GetActorLocation());
-        const float DistanceFactor = 1.0f - FMath::Clamp(Distance / MaxTargetingRange, 0.0f, 1.0f);
-        ThreatLevel += DistanceFactor * 25.0f;
+        return ThreatLevel;
     }
 
-    // TODO: Add more threat calculation factors
-    // - Target's weapon strength
-    // - Target's size
-    // - Target's aggression level
-    // - Whether target is targeting us
+    // Distance factor: Closer targets are more threatening (up to +25)
+    const float Distance = FVector::Dist(Owner->GetActorLocation(), Target->GetActorLocation());
+    const float DistanceFactor = 1.0f - FMath::Clamp(Distance / MaxTargetingRange, 0.0f, 1.0f);
+    ThreatLevel += DistanceFactor * 25.0f;
+
+    // Velocity factor: Targets moving toward us are more threatening (up to +15)
+    const FVector ToTarget = Target->GetActorLocation() - Owner->GetActorLocation();
+    const FVector TargetVelocity = Target->GetVelocity();
+    const float ApproachSpeed = FVector::DotProduct(TargetVelocity.GetSafeNormal(), ToTarget.GetSafeNormal());
+    if (ApproachSpeed < 0.0f) // Negative means approaching
+    {
+        ThreatLevel += FMath::Abs(ApproachSpeed) * 15.0f;
+    }
+
+    // Check if target has combat components (weapon, targeting, health)
+    if (Target->FindComponentByClass<UWeaponComponent>())
+    {
+        ThreatLevel += 10.0f; // Armed targets are more dangerous
+    }
 
     return FMath::Clamp(ThreatLevel, 0.0f, 100.0f);
 }
