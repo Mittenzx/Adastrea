@@ -42,6 +42,8 @@ Documentation for AI-powered development tools:
 |----------|---------|----------|
 | **DIRECTOR_KNOWLEDGE_BASE.md** | Primary knowledge base for Adastrea-Director AI tool | Root |
 | **ADASTREA_DIRECTOR_ANALYSIS.md** | Comprehensive analysis of Director tool capabilities and roadmap | Root |
+| **UE_PLUGIN_FEASIBILITY_REPORT.md** | Technical feasibility study for native UE plugin conversion | Root |
+| **PLUGIN_DEVELOPMENT_GUIDE.md** | Implementation roadmap for Adastrea-Director plugin | Root |
 | **.github/copilot-instructions.md** | GitHub Copilot configuration with project context | .github/ |
 | **.github/agents/CUSTOM_AGENT_IMPLEMENTATION.md** | Guide for implementing custom AI agents | .github/agents/ |
 
