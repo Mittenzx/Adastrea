@@ -1,7 +1,7 @@
 # Adastrea Director Knowledge Base
 
-**Last Updated**: November 13, 2025  
-**Version**: 1.0  
+**Last Updated**: November 14, 2025  
+**Version**: 1.1  
 **Purpose**: Comprehensive knowledge base optimized for Adastrea-Director AI tool ingestion
 
 ---
@@ -10,7 +10,12 @@
 
 This document serves as the primary knowledge base entry point for the **Adastrea-Director** AI tool. It provides a structured overview of the Adastrea project, its systems, documentation, and development workflows to enable the Director to understand and assist with game development.
 
-For the comprehensive analysis of the Adastrea-Director tool itself, see [ADASTREA_DIRECTOR_ANALYSIS.md](ADASTREA_DIRECTOR_ANALYSIS.md).
+**Key Resources:**
+- [ADASTREA_DIRECTOR_ANALYSIS.md](ADASTREA_DIRECTOR_ANALYSIS.md) - Analysis of external Director tool
+- [UE_PLUGIN_FEASIBILITY_REPORT.md](UE_PLUGIN_FEASIBILITY_REPORT.md) - Plugin conversion feasibility study
+- [PLUGIN_DEVELOPMENT_GUIDE.md](PLUGIN_DEVELOPMENT_GUIDE.md) - Plugin implementation roadmap
+
+> **📢 Plugin Development:** A native Unreal Engine plugin version of Adastrea-Director is planned for Q1-Q3 2026, providing seamless AI assistance within the editor. See the [Plugin Development Guide](PLUGIN_DEVELOPMENT_GUIDE.md) for details.
 
 ---
 

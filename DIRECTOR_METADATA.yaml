@@ -456,6 +456,15 @@ director_integration:
     file: "ADASTREA_DIRECTOR_ANALYSIS.md"
     description: "Comprehensive analysis of Director tool capabilities"
     date: "2025-11-13"
+    
+  plugin_development:
+    overview: "DIRECTOR_PLUGIN_OVERVIEW.md"
+    feasibility_report: "UE_PLUGIN_FEASIBILITY_REPORT.md"
+    development_guide: "PLUGIN_DEVELOPMENT_GUIDE.md"
+    status: "Planning Phase"
+    timeline: "Q1-Q3 2026"
+    architecture: "Hybrid C++/Python"
+    code_reuse: "95%"
 
 # Update information
 metadata_info:

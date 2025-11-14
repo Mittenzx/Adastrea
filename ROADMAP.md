@@ -306,12 +306,15 @@
 **Timeline**: April - June 2026  
 **Status**: ⏳ Planned
 
+> **🔧 Development Tools Update:** During Phase 4, we will also begin development of the [Adastrea-Director Plugin](PLUGIN_DEVELOPMENT_GUIDE.md), converting the external AI development assistant into a native Unreal Engine plugin. See [UE Plugin Feasibility Report](UE_PLUGIN_FEASIBILITY_REPORT.md) for technical details.
+
 #### Objectives
 - Polish existing systems for cohesive gameplay experience
 - Implement player progression systems
 - Add save/load functionality
 - Optimize performance for larger environments
 - Enhance visual and audio feedback
+- **NEW:** Begin Adastrea-Director plugin development (PoC + Foundation)
 
 #### Planned Features
 
@@ -357,17 +360,20 @@
 - ⏳ Player progression system implementation
 - ⏳ Save system architecture complete
 - ⏳ HUD redesign started
+- ⏳ **Director Plugin: Proof of Concept (6 weeks)**
 
 **May 2026**:
 - ⏳ Save/load fully functional
 - ⏳ UI/UX polish pass
 - ⏳ Performance optimization pass #1
+- ⏳ **Director Plugin: Foundation Phase begins**
 
 **June 2026**:
 - ⏳ Tutorial system implementation
 - ⏳ Audio integration
 - ⏳ Visual effects polish
 - ⏳ Alpha build ready
+- ⏳ **Director Plugin: Core Integration (RAG system)**
 
 #### Key Deliverables
 - Complete player progression system
@@ -376,6 +382,7 @@
 - Performance optimizations (60+ FPS target)
 - Tutorial and onboarding experience
 - Alpha-quality build
+- **Adastrea-Director Plugin PoC + Phase 1-2** (see [Plugin Development Guide](PLUGIN_DEVELOPMENT_GUIDE.md))
 
 ---
 
@@ -383,12 +390,15 @@
 **Timeline**: July - December 2026  
 **Status**: ⏳ Planned
 
+> **🤖 AI Tools Integration:** Phase 5 will benefit from the completed [Adastrea-Director Plugin](PLUGIN_DEVELOPMENT_GUIDE.md), providing AI-assisted content generation, automated testing, and performance profiling during content creation.
+
 #### Objectives
 - Create substantial game content
 - Implement procedural generation systems
 - Conduct extensive beta testing
 - Refine gameplay balance
 - Prepare for public release
+- **NEW:** Complete Adastrea-Director plugin with autonomous agents
 
 #### Planned Features
 
@@ -438,16 +448,19 @@
 - ⏳ Content creation pipeline established
 - ⏳ Procedural generation systems started
 - ⏳ Beta program announced
+- ⏳ **Director Plugin: Planning System integration complete**
 
 **August 2026**:
 - ⏳ 50% of planned content created
 - ⏳ Procedural generation functional
 - ⏳ Closed beta begins
+- ⏳ **Director Plugin: Autonomous Agents Phase begins**
 
 **September 2026**:
 - ⏳ Main story campaign complete
 - ⏳ All faction storylines implemented
 - ⏳ Beta feedback round #1
+- ⏳ **Director Plugin: Performance profiling agent active**
 
 **October 2026**:
 - ⏳ 80% of planned content complete
