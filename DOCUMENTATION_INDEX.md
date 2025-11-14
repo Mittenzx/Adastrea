@@ -40,6 +40,7 @@ Documentation for AI-powered development tools:
 
 | Document | Purpose | Location |
 |----------|---------|----------|
+| **DIRECTOR_PLUGIN_OVERVIEW.md** | ⭐ Executive overview of plugin development strategy | Root |
 | **DIRECTOR_KNOWLEDGE_BASE.md** | Primary knowledge base for Adastrea-Director AI tool | Root |
 | **ADASTREA_DIRECTOR_ANALYSIS.md** | Comprehensive analysis of Director tool capabilities and roadmap | Root |
 | **UE_PLUGIN_FEASIBILITY_REPORT.md** | Technical feasibility study for native UE plugin conversion | Root |

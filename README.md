@@ -642,8 +642,11 @@ The game includes a comprehensive personnel/crew management system for creating 
 
 ### AI Tool Integration
 
+- **[Director Plugin Overview](DIRECTOR_PLUGIN_OVERVIEW.md)** - Executive overview of plugin development strategy
 - **[Director Knowledge Base](DIRECTOR_KNOWLEDGE_BASE.md)** - Comprehensive knowledge base for Adastrea-Director AI tool
 - **[Director Analysis Report](ADASTREA_DIRECTOR_ANALYSIS.md)** - Detailed analysis of the Adastrea-Director tool capabilities
+- **[UE Plugin Feasibility Report](UE_PLUGIN_FEASIBILITY_REPORT.md)** - Technical feasibility analysis for native plugin
+- **[Plugin Development Guide](PLUGIN_DEVELOPMENT_GUIDE.md)** - Implementation roadmap for plugin conversion
 
 ### Project Planning
 
