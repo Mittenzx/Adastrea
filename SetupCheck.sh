@@ -158,7 +158,7 @@ done
 
 # Check Source subfolders
 print_info "Checking Source structure..."
-SOURCE_MODULES=("Source/Adastrea" "Source/AdastreaEditor")
+SOURCE_MODULES=("Source/Adastrea" "Source/PlayerMods" "Source/StationEditor")
 
 for module in "${SOURCE_MODULES[@]}"; do
     if [ -d "$module" ]; then

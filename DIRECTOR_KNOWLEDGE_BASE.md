@@ -508,18 +508,21 @@ GitHub-specific configuration:
 
 ```
 Source/
-├── AdastreaEditor/          # Editor customizations
-└── Adastrea/                # Core game systems
-    ├── AI/                  # AI logic classes
-    ├── Characters/          # Character and personnel
-    ├── Factions/            # Faction system
-    ├── Materials/           # Material system
-    ├── Planets/             # Planet classes
-    ├── Player/              # Player-specific systems
-    ├── Ships/               # Spaceship classes
-    ├── Stations/            # Space station classes
-    ├── Trading/             # Trading economy
-    └── UI/                  # UI widgets
+├── Adastrea.Target.cs           # Runtime build target
+├── AdastreaEditor.Target.cs     # Editor build target
+├── Adastrea/                    # Core game systems
+│   ├── AI/                      # AI logic classes
+│   ├── Characters/              # Character and personnel
+│   ├── Factions/                # Faction system
+│   ├── Materials/               # Material system
+│   ├── Planets/                 # Planet classes
+│   ├── Player/                  # Player-specific systems
+│   ├── Ships/                   # Spaceship classes
+│   ├── Stations/                # Space station classes
+│   ├── Trading/                 # Trading economy
+│   └── UI/                      # UI widgets
+├── PlayerMods/                  # Player modding system
+└── StationEditor/               # Station construction editor
 ```
 
 ### Content Organization

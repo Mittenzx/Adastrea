@@ -189,7 +189,7 @@ class SetupValidator:
         source_modules = [
             "Source/Adastrea",
             "Source/PlayerMods",
-            "Source/AdastreaEditor"
+            "Source/StationEditor"
         ]
         
         for module in source_modules:
