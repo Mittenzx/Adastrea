@@ -47,9 +47,14 @@ These files can be moved to a separate repository dedicated to build tooling and
 "C:\Program Files\Epic Games\UE_5.6\Engine\Build\BatchFiles\Build.bat" AdastreaEditor Win64 Development -Project="%CD%\Adastrea.uproject"
 ```
 
-**Mac/Linux:**
+**Mac:**
 ```bash
 "/path/to/UE_5.6/Engine/Build/BatchFiles/Mac/Build.sh" AdastreaEditor Mac Development -Project="$PWD/Adastrea.uproject"
+```
+
+**Linux:**
+```bash
+"/path/to/UE_5.6/Engine/Build/BatchFiles/Linux/Build.sh" AdastreaEditor Linux Development -Project="$PWD/Adastrea.uproject"
 ```
 
 ## Setup Validation
