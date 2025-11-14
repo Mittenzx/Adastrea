@@ -4,8 +4,8 @@
 # To make this agent available, merge this file into the default repository branch.
 # For format details, see: https://gh.io/customagents/config
 
-name:Mittenzx
-description:Senior game Developer and Unreal Engine expert
+name: Mittenzx
+description: Senior game Developer and Unreal Engine expert
 ---
 
 # Adastrea Development Expert Agent
