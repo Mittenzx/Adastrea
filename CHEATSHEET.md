@@ -47,7 +47,7 @@ git merge main
 "~/UnrealEngine/Engine/Build/BatchFiles/Linux/Build.sh" AdastreaEditor Linux Development -Project="$(pwd)/Adastrea.uproject"
 ```
 
-See [UNREAL_BUILD_GUIDE.md](UNREAL_BUILD_GUIDE.md) for complete build documentation.
+See [BUILD_FILES_MOVED.md](BUILD_FILES_MOVED.md) for information about build scripts.
 
 ### Cleaning Build
 ```bash

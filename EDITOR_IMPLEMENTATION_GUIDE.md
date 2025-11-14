@@ -79,7 +79,7 @@ Tasks that benefit from both approaches:
 ❌ C++ code implementation (see [ARCHITECTURE.md](ARCHITECTURE.md))  
 ❌ External scripting (see [GENERATOR_SCRIPTS_README.md](GENERATOR_SCRIPTS_README.md))  
 ❌ Version control workflows (see [CONTRIBUTING.md](CONTRIBUTING.md))  
-❌ Build and compilation (see [BUILD_TROUBLESHOOTING.md](BUILD_TROUBLESHOOTING.md))
+❌ Build and compilation (see [BUILD_FILES_MOVED.md](BUILD_FILES_MOVED.md))
 
 ---
 

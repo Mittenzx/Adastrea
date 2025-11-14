@@ -657,9 +657,7 @@ Comprehensive technical documentation for contributors and developers:
 - **[Architecture Overview](ARCHITECTURE.md)** - High-level system architecture with visual diagrams
 - **[Contributing Guidelines](CONTRIBUTING.md)** - How to contribute code, documentation, and assets
 - **[Code Style Guide](CODE_STYLE.md)** - C++ and Blueprint coding standards
-- **[Unreal Build Guide](UNREAL_BUILD_GUIDE.md)** - Complete guide for building with UnrealBuildTool instead of IDE
-- **[Build Error Debugging](BUILD_ERROR_DEBUGGING.md)** - Quick reference for debugging build errors
-- **[Build Troubleshooting](BUILD_TROUBLESHOOTING.md)** - Common build issues and solutions
+- **[Build Files Moved](BUILD_FILES_MOVED.md)** - Information about build scripts and documentation (moved to separate repo)
 - **[Performance Improvements](PERFORMANCE_IMPROVEMENTS.md)** - Optimization guidelines
 - **[Custom Agents](.github/agents/README.md)** - AI assistants with project expertise for GitHub Copilot
 
