@@ -61,22 +61,9 @@ This project and everyone participating in it is governed by our commitment to f
    - Right-click on the `.uproject` file and select "Generate Visual Studio project files"
 
 4. **Build the Project**
-   
-   **Option A: Using Build Scripts** (Recommended for command-line workflow):
-   ```bash
-   # Windows
-   build_windows.bat
-   
-   # Mac/Linux
-   ./build_unix.sh
-   ```
-   
-   **Option B: Using IDE**:
    - Open the generated `.sln` file in Visual Studio
    - Build the project in Development Editor configuration
    - Or open the `.uproject` file directly in Unreal Engine and let it compile
-   
-   For detailed build instructions, debugging, and CI/CD integration, see [UNREAL_BUILD_GUIDE.md](UNREAL_BUILD_GUIDE.md)
 
 5. **Verify Setup**
    - Launch the editor and ensure all systems load correctly
