@@ -465,15 +465,18 @@ Blueprint uses results for gameplay
 
 ## Additional Resources
 
-- [Unreal Engine Documentation](https://docs.unrealengine.com/)
-- [Unreal Engine Coding Standard](https://docs.unrealengine.com/5.0/en-US/epic-cplusplus-coding-standard-for-unreal-engine/)
-- [Project README](../README.md)
-- [Architecture Overview](../ARCHITECTURE.md)
-- [Code Style Guide](../CODE_STYLE.md)
-- [Contributing Guidelines](../CONTRIBUTING.md)
+For quick reference information, see:
+- `.github/copilot-knowledge.md` - Repository structure and key files index
+- `README.md` - Project overview and quick start
+- `ARCHITECTURE.md` - System architecture and design patterns
+- `CODE_STYLE.md` - Detailed C++ and Blueprint style guide
+- `CONTRIBUTING.md` - Contribution guidelines and workflows
+- `DOCUMENTATION_INDEX.md` - Complete documentation catalog
+
+For Unreal Engine reference, consult the official Unreal Engine documentation and coding standards (available online).
 
 ---
 
-**Last Updated**: 2025-10-18  
-**Version**: 1.0  
+**Last Updated**: 2025-11-14  
+**Version**: 1.1  
 **Maintained by**: Adastrea Development Team
