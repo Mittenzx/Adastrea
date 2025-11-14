@@ -97,6 +97,10 @@ token.pickle
 # *_validation_report.txt
 # validation_report.txt
 
+# Build package (for moving to another repo - not tracked)
+build_package/
+*.tar.gz
+
 # Don't ignore important Unreal files - these should be tracked!
 # .uproject files
 # .uplugin files

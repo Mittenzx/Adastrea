@@ -99,11 +99,6 @@ For the comprehensive analysis of the Adastrea-Director tool itself, see [ADASTR
 - **[SCHEMA_GUIDE.md](SCHEMA_GUIDE.md)** - YAML schema validation
 - **[YAML_IMPORT_GUIDE.md](YAML_IMPORT_GUIDE.md)** - YAML to Data Asset import
 
-#### Setup & Build (3 files)
-- **[UNREAL_BUILD_GUIDE.md](UNREAL_BUILD_GUIDE.md)** - Build instructions
-- **[BUILD_TROUBLESHOOTING.md](BUILD_TROUBLESHOOTING.md)** - Build issues
-- **[BUILD_ERROR_DEBUGGING.md](BUILD_ERROR_DEBUGGING.md)** - Debug strategies
-
 #### Automation & Scripts (4 files)
 - **[GENERATOR_SCRIPTS_README.md](GENERATOR_SCRIPTS_README.md)** - Content generation
 - **[SCRIPTS_README.md](SCRIPTS_README.md)** - Utility scripts
@@ -627,11 +622,6 @@ python YAMLtoDataAsset.py --input my_fighter.yaml --output DA_Ship_MyFighter
 - **smoke_test_config.json** - Smoke test configuration
 - **screenshot_test_config.json** - Screenshot test settings
 
-### Build Scripts
-
-- **build_unix.sh** - Unix/Linux build script
-- **build_windows.bat** - Windows build script
-
 ---
 
 ## Common Tasks & Queries
@@ -668,18 +658,14 @@ python SetupCheck.py
 
 ### "How do I build the project?"
 
-See **UNREAL_BUILD_GUIDE.md** for comprehensive instructions.
-
-Quick start:
+Build using Unreal Editor or IDE:
 ```bash
 # Validate environment first
 python SetupCheck.py
 
-# Build (Unix/Linux/Mac)
-./build_unix.sh
-
-# Build (Windows)
-build_windows.bat
+# Open the .uproject file in Unreal Engine Editor, or
+# Open the generated .sln file in Visual Studio
+# Build in Development Editor configuration
 ```
 
 ### "What coding standards should I follow?"
@@ -798,13 +784,10 @@ See:
 | Testing | TESTING_QUICK_REFERENCE.md | Root |
 | Scene Population | SCENE_POPULATION_QUICK_REFERENCE.md | Root |
 
-### Build & Setup
+### Setup
 
 | Purpose | File | Location |
 |---------|------|----------|
-| Build Guide | UNREAL_BUILD_GUIDE.md | Root |
-| Build Troubleshooting | BUILD_TROUBLESHOOTING.md | Root |
-| Build Error Debugging | BUILD_ERROR_DEBUGGING.md | Root |
 | Setup Validation | SetupCheck.py | Root |
 
 ### Automation & Scripts

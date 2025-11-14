@@ -270,13 +270,8 @@ Concise reference documents:
 
 | Document | Purpose | Location |
 |----------|---------|----------|
-| **UNREAL_BUILD_GUIDE.md** | Complete build instructions | Root |
-| **BUILD_TROUBLESHOOTING.md** | Common build issues | Root |
-| **BUILD_ERROR_DEBUGGING.md** | Debug strategies | Root |
 | **SetupCheck.py** | Environment validation script | Root |
 | **SetupCheck.sh** | Environment validation script (Unix) | Root |
-| **build_unix.sh** | Unix/Linux build script | Root |
-| **build_windows.bat** | Windows build script | Root |
 
 ---
 
@@ -398,13 +393,6 @@ Designer workflows and best practices:
 | **PlaytestingChecklist.md** | Testing | QA checklist | Assets/ |
 
 ---
-
-## Troubleshooting
-
-| Document | Topic | Location |
-|----------|-------|----------|
-| **BUILD_TROUBLESHOOTING.md** | Build issues and solutions | Root |
-| **BUILD_ERROR_DEBUGGING.md** | Debug strategies | Root |
 
 ---
 

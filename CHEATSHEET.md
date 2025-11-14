@@ -35,24 +35,7 @@ git merge main
 
 ### Building
 
-**Quick Build** (Recommended - Using build scripts):
-```bash
-# Windows
-build_windows.bat
-
-# Mac/Linux
-./build_unix.sh
-
-# Clean build
-build_windows.bat clean        # Windows
-./build_unix.sh clean          # Mac/Linux
-
-# Shipping build
-build_windows.bat shipping     # Windows
-./build_unix.sh shipping       # Mac/Linux
-```
-
-**Manual UnrealBuildTool** (Advanced):
+**UnrealBuildTool**:
 ```bash
 # Windows (from project root)
 "C:\Program Files\Epic Games\UE_5.6\Engine\Build\BatchFiles\Build.bat" AdastreaEditor Win64 Development -Project="%CD%\Adastrea.uproject"
