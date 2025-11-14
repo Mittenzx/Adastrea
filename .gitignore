@@ -97,8 +97,16 @@ token.pickle
 # *_validation_report.txt
 # validation_report.txt
 
-# Build package (for moving to another repo - not tracked)
-build_package/
+# Build package (for moving to another repo)
+# Track extraction tooling but ignore extracted build files
+build_package/*.bat
+build_package/build_unix.sh
+build_package/BUILD_*.md
+build_package/UNREAL_BUILD_GUIDE.md
+build_package/.github/
+# Keep extraction script (force-added)
+!build_package/extract_files.sh
+# Ignore tar.gz archives
 *.tar.gz
 
 # Don't ignore important Unreal files - these should be tracked!
