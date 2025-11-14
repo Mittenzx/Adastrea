@@ -80,8 +80,8 @@ An AI-powered development assistant that provides:
 - Reuses 95% of existing [Adastrea-Director](https://github.com/Mittenzx/Adastrea-Director) codebase
 
 **Timeline:**
-- Q1 2026: Proof of Concept (6 weeks)
-- Q1-Q2 2026: Foundation & Core Integration
+- Q2 2026: Proof of Concept (6 weeks)
+- Q2 2026: Foundation & Core Integration
 - Q2 2026: Planning System
 - Q2-Q3 2026: Autonomous Agents
 - Q3 2026: Beta & Release

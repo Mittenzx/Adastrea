@@ -2,7 +2,7 @@
 
 **Last Updated:** November 14, 2025  
 **Status:** Planning Phase  
-**Target Release:** Q2 2026
+**Target Release:** Q3 2026
 
 ---
 
@@ -55,7 +55,7 @@ This guide outlines the development plan for converting Adastrea-Director from a
 
 | Adastrea Game Phase | Director Plugin Phase | Timeline | Synergy |
 |---------------------|----------------------|----------|---------|
-| Phase 4: Gameplay & Polish | Plugin Phase 1-2: Foundation & Core | Q1 2026 | PoC during polish phase |
+| Phase 4: Gameplay & Polish | Plugin Phase 1-2: Foundation & Core | Q2 2026 | PoC during polish phase |
 | Phase 5: Content & Beta | Plugin Phase 3: Planning System | Q2 2026 | Planning aids content creation |
 | Phase 6: Release | Plugin Phase 4: Autonomous Agents | Q3 2026 | QA automation for release |
 
@@ -143,7 +143,7 @@ Plugins/AdastreaDirector/
 
 ## Development Phases
 
-### Phase 0: Proof of Concept (6 weeks) - Q1 2026
+### Phase 0: Proof of Concept (6 weeks) - Q2 2026
 
 **Goals:**
 - Validate technical feasibility
@@ -168,7 +168,7 @@ Plugins/AdastreaDirector/
 - Week 3-4: IPC implementation, basic UI
 - Week 5-6: Integration testing, demo
 
-### Phase 1: Foundation (4-6 weeks) - Q1 2026
+### Phase 1: Foundation (4-6 weeks) - Q2 2026
 
 **Goals:**
 - Production-quality plugin structure
@@ -193,7 +193,7 @@ Plugins/AdastreaDirector/
 - Week 3-4: Python integration, IPC protocol
 - Week 5-6: UI framework, testing
 
-### Phase 2: Core Integration (4-6 weeks) - Q1-Q2 2026
+### Phase 2: Core Integration (4-6 weeks) - Q2 2026
 
 **Goals:**
 - Integrate Phase 1 (RAG system)
@@ -698,7 +698,7 @@ The Adastrea-Director plugin development represents a strategic evolution from e
 **Next Steps:**
 1. Review and approve this development guide
 2. Allocate resources for Phase 0 PoC
-3. Begin implementation in Q1 2026
+3. Begin implementation in Q2 2026
 4. Regular progress reviews
 5. Adjust timeline based on feedback
 
@@ -713,7 +713,7 @@ The Adastrea-Director plugin development represents a strategic evolution from e
 
 **Document Status:** ✅ Complete  
 **Approval Required:** Yes  
-**Target Start Date:** Q1 2026  
+**Target Start Date:** Q2 2026  
 **Estimated Completion:** Q3 2026
 
 For questions or feedback, please create an issue in the [Adastrea GitHub repository](https://github.com/Mittenzx/Adastrea).

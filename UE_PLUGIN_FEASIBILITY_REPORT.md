@@ -12,7 +12,8 @@
 
 **Confidence Level:** HIGH (85%)  
 **Complexity Rating:** MODERATE (6/10)  
-**Estimated Timeline:** 16-20 weeks (realistic with experienced team)  
+**Estimated Timeline:** 28-36 weeks including PoC (6 + 4-6 + 4-6 + 4-6 + 8-10 + 2-4 weeks)  
+**Core Development:** 22-32 weeks (Phases 1-5, post-PoC)  
 **Risk Level:** MEDIUM (manageable with proper planning)
 
 The conversion of Adastrea Director from an external Python tool to a native Unreal Engine plugin is **technically feasible** and has a **clear implementation path**. The existing codebase already includes significant UE integration infrastructure (Remote Control API client), which reduces development complexity.
@@ -475,9 +476,32 @@ def ipc_server(port=5555):
 
 ## Implementation Roadmap
 
-### Phase 1: Plugin Foundation (4-6 weeks)
+### Phase 0: Proof of Concept (6 weeks) - Q2 2026
 
-**Goal:** Create basic plugin structure with Python subprocess
+**Goal:** Validate technical feasibility of core plugin concepts and Python integration
+
+**Tasks:**
+1. Create minimal plugin structure (`.uplugin`, basic module)
+2. Implement basic Python subprocess manager
+3. Establish simple IPC communication (local sockets)
+4. Create prototype UI panel in UE
+5. Test Python process lifecycle (start, stop, restart)
+
+**Deliverables:**
+- Working PoC plugin that loads in UE
+- Python subprocess launches and communicates with UE
+- Simple UI panel for sending/receiving test messages
+- Technical report summarizing feasibility, risks, and next steps
+
+**Success Criteria:**
+- Plugin loads in UE 5.6 without errors
+- Python subprocess starts/stops reliably
+- Can send/receive simple messages via IPC
+- No critical technical blockers identified
+
+### Phase 1: Plugin Foundation (4-6 weeks) - Q2 2026
+
+**Goal:** Create production-quality plugin structure with robust Python subprocess management
 
 **Tasks:**
 1. Create plugin boilerplate (`.uplugin`, module structure)
@@ -497,7 +521,7 @@ def ipc_server(port=5555):
 - Python subprocess communicates reliably
 - UI panel docks properly in editor
 
-### Phase 2: Core Integration (4-6 weeks)
+### Phase 2: Core Integration (4-6 weeks) - Q2 2026
 
 **Goal:** Integrate Phase 1 (RAG documentation system)
 
@@ -520,7 +544,7 @@ def ipc_server(port=5555):
 - Response time < 2 seconds
 - Stable operation over extended use
 
-### Phase 3: Planning System (4-6 weeks)
+### Phase 3: Planning System (4-6 weeks) - Q2 2026
 
 **Goal:** Integrate Phase 2 (planning and code generation)
 
@@ -543,7 +567,7 @@ def ipc_server(port=5555):
 - Can insert code into project files
 - Planning session saves/restores
 
-### Phase 4: Autonomous Agents (8-10 weeks)
+### Phase 4: Autonomous Agents (8-10 weeks) - Q2-Q3 2026
 
 **Goal:** Implement Phase 3 autonomous agents
 
@@ -566,7 +590,7 @@ def ipc_server(port=5555):
 - Actionable insights provided
 - Minimal false positives
 
-### Phase 5: Polish & Distribution (2-4 weeks)
+### Phase 5: Polish & Distribution (2-4 weeks) - Q3 2026
 
 **Goal:** Prepare for release
 
@@ -766,7 +790,7 @@ void SAdastreaPanel::OnQuerySubmitted() {
 - 1x UI/UX Developer (Slate experience)
 - 0.5x QA Engineer (testing)
 
-**Timeline:** 16-20 weeks total
+**Timeline:** 28-36 weeks total (including PoC)
 
 ### Infrastructure
 
@@ -895,7 +919,8 @@ void SAdastreaPanel::OnQuerySubmitted() {
    - Local socket IPC
    - Slate UI
 
-3. **Timeline: 16-20 weeks** 📅
+3. **Timeline: 28-36 weeks total** 📅
+   - Phase 0: Proof of Concept (6 weeks)
    - Phase 1: Foundation (4-6 weeks)
    - Phase 2: Core Integration (4-6 weeks)
    - Phase 3: Planning System (4-6 weeks)
@@ -905,7 +930,7 @@ void SAdastreaPanel::OnQuerySubmitted() {
 4. **Resource Requirements: Moderate** 💰
    - ~$100k development cost
    - 2-3 person team
-   - 4-5 months timeline
+   - 6-8 months timeline (including PoC)
 
 5. **Risk Level: MEDIUM** ⚠️
    - Manageable with proper planning
@@ -918,7 +943,7 @@ void SAdastreaPanel::OnQuerySubmitted() {
 
 The conversion of Adastrea-Director to a native UE plugin is **feasible and recommended**. The hybrid architecture approach provides the best balance of:
 - Code reuse (95%)
-- Development speed (4-5 months)
+- Development speed (6-8 months including PoC)
 - Maintainability (Python for AI)
 - User experience (native integration)
 
@@ -934,12 +959,12 @@ The conversion of Adastrea-Director to a native UE plugin is **feasible and reco
    - Validate key technical decisions
    - Adjust timeline if needed
 
-3. **Full Development** (Weeks 8-23)
-   - Implement all phases
+3. **Full Development** (Weeks 8-39)
+   - Implement all phases (Phases 1-5)
    - Continuous testing
    - Regular stakeholder updates
 
-4. **Beta & Release** (Weeks 24-26)
+4. **Beta & Release** (Final weeks)
    - Beta testing program
    - Collect feedback
    - Final polish
