@@ -188,7 +188,7 @@ echo ===========================================================================
 echo.
 
 REM Construct build command
-set "BUILD_CMD=%BUILD_TOOL% %TARGET% %PLATFORM% %BUILD_CONFIG% -Project=%PROJECT_FILE%"
+set "BUILD_CMD=^"%BUILD_TOOL%^" %TARGET% %PLATFORM% %BUILD_CONFIG% -Project=^"%PROJECT_FILE%^""
 
 REM Add optional flags
 if "%VERBOSE_OUTPUT%"=="1" (
