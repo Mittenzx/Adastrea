@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "HAL/PlatformMemory.h"
 #include "TimerManager.h"
+#include "EngineUtils.h"
 
 UPerformanceProfiler::UPerformanceProfiler()
 	: bProfilingEnabled(true)

@@ -227,6 +227,20 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Achievement|Query")
 	TArray<FAchievementTracker> GetRecentlyCompletedAchievements(int32 MaxCount = 5) const;
 
+	/**
+	 * Find achievement tracker by ID
+	 * @param AchievementID ID to find
+	 * @return Pointer to tracker, or nullptr
+	 */
+	FAchievementTracker* FindAchievementTracker(FName AchievementID);
+
+	/**
+	 * Find achievement tracker (const version)
+	 * @param AchievementID ID to find
+	 * @return Pointer to tracker, or nullptr
+	 */
+	const FAchievementTracker* FindAchievementTracker(FName AchievementID) const;
+
 	// ====================
 	// Events
 	// ====================
@@ -247,20 +261,6 @@ public:
 	FOnStatUpdated OnStatUpdated;
 
 protected:
-	/**
-	 * Find achievement tracker by ID
-	 * @param AchievementID ID to find
-	 * @return Pointer to tracker, or nullptr
-	 */
-	FAchievementTracker* FindAchievementTracker(FName AchievementID);
-
-	/**
-	 * Find achievement tracker (const version)
-	 * @param AchievementID ID to find
-	 * @return Pointer to tracker, or nullptr
-	 */
-	const FAchievementTracker* FindAchievementTracker(FName AchievementID) const;
-
 	/**
 	 * Grant achievement rewards
 	 * @param Achievement Achievement to grant rewards from

@@ -8,7 +8,7 @@
 UStationManagementWidget::UStationManagementWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 	, ManagedStation(nullptr)
-	, SelectedModuleGroup(EStationModuleGroup::None)
+	, SelectedModuleGroup(EStationModuleGroup::Other)
 	, bBuildModeActive(false)
 {
 }
@@ -75,8 +75,8 @@ TArray<ASpaceStationModule*> UStationManagementWidget::GetModulesByGroup(EStatio
 		ASpaceStationModule* Module = Cast<ASpaceStationModule>(Actor);
 		if (Module)
 		{
-			// Filter by group if specified
-			if (Group == EStationModuleGroup::None || Module->GetModuleGroup() == Group)
+			// Filter by group if specified (Other means all modules)
+			if (Group == EStationModuleGroup::Other || Module->ModuleGroup == Group)
 			{
 				FilteredModules.Add(Module);
 			}
@@ -88,7 +88,7 @@ TArray<ASpaceStationModule*> UStationManagementWidget::GetModulesByGroup(EStatio
 
 int32 UStationManagementWidget::GetTotalModuleCount() const
 {
-	return GetModulesByGroup(EStationModuleGroup::None).Num();
+	return GetModulesByGroup(EStationModuleGroup::Other).Num();
 }
 
 float UStationManagementWidget::GetOperationalStatusPercent() const
@@ -98,20 +98,24 @@ float UStationManagementWidget::GetOperationalStatusPercent() const
 		return 0.0f;
 	}
 
-	TArray<ASpaceStationModule*> AllModules = GetModulesByGroup(EStationModuleGroup::None);
+	TArray<ASpaceStationModule*> AllModules = GetModulesByGroup(EStationModuleGroup::Other);
 	if (AllModules.Num() == 0)
 	{
 		return 100.0f; // No modules = fully operational (empty station)
 	}
 
-	int32 OperationalCount = 0;
-	for (ASpaceStationModule* Module : AllModules)
-	{
-		if (Module && Module->IsOperational())
-		{
-			OperationalCount++;
-		}
-	}
+	// For now, assume all modules are operational since IsOperational() doesn't exist yet
+	// TODO: Implement IsOperational() method in ASpaceStationModule when needed
+	int32 OperationalCount = AllModules.Num();
+	
+	// Alternative: We could check if modules are valid and not hidden as a simple operational check
+	// for (ASpaceStationModule* Module : AllModules)
+	// {
+	// 	if (Module && !Module->IsHidden())
+	// 	{
+	// 		OperationalCount++;
+	// 	}
+	// }
 
 	return (static_cast<float>(OperationalCount) / static_cast<float>(AllModules.Num())) * 100.0f;
 }
