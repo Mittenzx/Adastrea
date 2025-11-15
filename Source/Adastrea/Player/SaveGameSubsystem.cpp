@@ -196,7 +196,11 @@ bool USaveGameSubsystem::AutoSave()
 
 void USaveGameSubsystem::AutoSaveTimerCallback()
 {
-	AutoSave();
+	bool bSuccess = AutoSave();
+	if (!bSuccess)
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("SaveGameSubsystem: Auto-save failed"));
+	}
 }
 
 bool USaveGameSubsystem::DoesSaveExist(const FString& SlotName) const
