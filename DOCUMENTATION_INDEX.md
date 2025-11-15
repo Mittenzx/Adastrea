@@ -1,7 +1,7 @@
 # Adastrea Documentation Index
 
-**Last Updated**: November 13, 2025  
-**Version**: 1.0  
+**Last Updated**: November 15, 2025  
+**Version**: 1.0.0-alpha  
 **Purpose**: Comprehensive index of all documentation in the Adastrea project
 
 ---
