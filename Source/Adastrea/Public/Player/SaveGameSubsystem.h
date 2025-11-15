@@ -307,4 +307,10 @@ protected:
 	 * @param SaveGameObject Save to update
 	 */
 	void UpdatePlaytime(UAdastreaSaveGame* SaveGameObject);
+
+	/**
+	 * Timer callback for auto-save
+	 * Wrapper for AutoSave() that returns void for timer compatibility
+	 */
+	void AutoSaveTimerCallback();
 };

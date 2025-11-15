@@ -194,6 +194,15 @@ bool USaveGameSubsystem::AutoSave()
 	return SaveGame(AutoSaveSlotName, true);
 }
 
+void USaveGameSubsystem::AutoSaveTimerCallback()
+{
+	bool bSuccess = AutoSave();
+	if (!bSuccess)
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("SaveGameSubsystem: Auto-save failed"));
+	}
+}
+
 bool USaveGameSubsystem::DoesSaveExist(const FString& SlotName) const
 {
 	return UGameplayStatics::DoesSaveGameExist(SlotName, 0);
@@ -277,7 +286,8 @@ void USaveGameSubsystem::EnableAutoSave(float IntervalSeconds)
 	{
 		World->GetTimerManager().SetTimer(
 			AutoSaveTimerHandle,
-			FTimerDelegate::CreateUObject(this, &USaveGameSubsystem::AutoSave),
+			this,
+			&USaveGameSubsystem::AutoSaveTimerCallback,
 			AutoSaveIntervalSeconds,
 			true
 		);
