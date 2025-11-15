@@ -1,3 +1,5 @@
+// Copyright (c) 2025 Mittenzx. Licensed under MIT.
+
 #include "Combat/CombatHealthComponent.h"
 #include "AdastreaLog.h"
 #include "GameFramework/Actor.h"
@@ -251,7 +253,7 @@ void UCombatHealthComponent::DestroyShip()
     CurrentHullStrength = 0.0f;
     CurrentShieldStrength = 0.0f;
 
-    UE_LOG(LogAdastrea, Warning, TEXT("Ship destroyed: %s"), *GetOwner()->GetName());
+    UE_LOG(LogAdastreaCombat, Warning, TEXT("Ship destroyed: %s"), *GetOwner()->GetName());
 }
 
 float UCombatHealthComponent::GetHullPercentage() const
@@ -319,34 +321,34 @@ EShieldFacing UCombatHealthComponent::GetHitFacing(FVector HitDirection) const
 
 void UCombatHealthComponent::OnHullDamaged_Implementation(float DamageAmount, AActor* DamageCauser)
 {
-    UE_LOG(LogAdastrea, Log, TEXT("Hull damaged: %.1f (%.1f%% remaining)"), 
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Hull damaged: %.1f (%.1f%% remaining)"), 
         DamageAmount, GetHullPercentage() * 100.0f);
 }
 
 void UCombatHealthComponent::OnShieldDamaged_Implementation(float DamageAmount, EShieldFacing Facing, AActor* DamageCauser)
 {
-    UE_LOG(LogAdastrea, Log, TEXT("Shield damaged: %.1f to %s facing (%.1f%% remaining)"), 
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Shield damaged: %.1f to %s facing (%.1f%% remaining)"), 
         DamageAmount, *UEnum::GetValueAsString(Facing), GetShieldFacingPercentage(Facing) * 100.0f);
 }
 
 void UCombatHealthComponent::OnShieldsDepleted_Implementation(EShieldFacing Facing)
 {
-    UE_LOG(LogAdastrea, Warning, TEXT("Shields depleted: %s"), *UEnum::GetValueAsString(Facing));
+    UE_LOG(LogAdastreaCombat, Warning, TEXT("Shields depleted: %s"), *UEnum::GetValueAsString(Facing));
 }
 
 void UCombatHealthComponent::OnShieldsRecharged_Implementation(EShieldFacing Facing)
 {
-    UE_LOG(LogAdastrea, Log, TEXT("Shields recharged: %s"), *UEnum::GetValueAsString(Facing));
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Shields recharged: %s"), *UEnum::GetValueAsString(Facing));
 }
 
 void UCombatHealthComponent::OnCriticalDamage_Implementation()
 {
-    UE_LOG(LogAdastrea, Warning, TEXT("Ship critically damaged!"));
+    UE_LOG(LogAdastreaCombat, Warning, TEXT("Ship critically damaged!"));
 }
 
 void UCombatHealthComponent::OnShipDestroyed_Implementation(AController* Killer)
 {
-    UE_LOG(LogAdastrea, Error, TEXT("Ship destroyed by %s"), 
+    UE_LOG(LogAdastreaCombat, Error, TEXT("Ship destroyed by %s"), 
         Killer ? *Killer->GetName() : TEXT("Unknown"));
 }
 

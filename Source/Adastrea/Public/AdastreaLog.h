@@ -43,3 +43,18 @@ ADASTREA_API DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaPlayerMods, Log, All);
 
 // Material system
 ADASTREA_API DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaMaterials, Log, All);
+
+// Combat system
+ADASTREA_API DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaCombat, Log, All);
+
+// Navigation system
+ADASTREA_API DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaNavigation, Log, All);
+
+// Quest system
+ADASTREA_API DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaQuest, Log, All);
+
+// Way/Guild system
+ADASTREA_API DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaWay, Log, All);
+
+// Input system
+ADASTREA_API DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaInput, Log, All);

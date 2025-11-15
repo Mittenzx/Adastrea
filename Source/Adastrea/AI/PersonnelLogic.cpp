@@ -1,3 +1,5 @@
+// Copyright (c) 2025 Mittenzx. Licensed under MIT.
+
 #include "AI/PersonnelLogic.h"
 #include "Characters/PersonnelDataAsset.h"
 #include "AdastreaLog.h"

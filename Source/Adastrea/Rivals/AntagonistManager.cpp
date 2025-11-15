@@ -6,6 +6,15 @@
 #include "TimerManager.h"
 #include "Engine/World.h"
 
+// File-scope constants for antagonist name generation
+namespace AntagonistNames
+{
+	static const TArray<FString> Prefixes = {
+		TEXT("Captain"), TEXT("Commander"), TEXT("Admiral"), TEXT("Lord"), TEXT("Lady"),
+		TEXT("Baron"), TEXT("Baroness"), TEXT("Director"), TEXT("Overseer"), TEXT("Warlord")
+	};
+}
+
 UAntagonistManager::UAntagonistManager()
 {
 }
@@ -215,43 +224,46 @@ int32 UAntagonistManager::GetTotalAntagonistCount() const
 
 FText UAntagonistManager::GenerateAntagonistName(UFeatDataAsset* SourceFeat, EAntagonistGoal Goal) const
 {
-	// Simple name generation based on goal
-	// TODO: Implement more sophisticated name generation
-	FString BaseName = TEXT("Rival");
-	
+	// Surnames based on goal type
+	TArray<FString> Surnames;
 	switch (Goal)
 	{
 		case EAntagonistGoal::Revenge:
-			BaseName = TEXT("The Avenger");
+			Surnames = { TEXT("Vex"), TEXT("Rancor"), TEXT("Vendetta"), TEXT("Fury"), TEXT("Wraith") };
 			break;
 		case EAntagonistGoal::Competition:
-			BaseName = TEXT("The Challenger");
+			Surnames = { TEXT("Challenger"), TEXT("Rival"), TEXT("Defiant"), TEXT("Victor"), TEXT("Ascendant") };
 			break;
 		case EAntagonistGoal::Obsession:
-			BaseName = TEXT("The Stalker");
+			Surnames = { TEXT("Stalker"), TEXT("Hunter"), TEXT("Shadow"), TEXT("Watcher"), TEXT("Pursuer") };
 			break;
 		case EAntagonistGoal::Jealousy:
-			BaseName = TEXT("The Envious");
+			Surnames = { TEXT("Envious"), TEXT("Covetous"), TEXT("Desirous"), TEXT("Grudge"), TEXT("Spite") };
 			break;
 		case EAntagonistGoal::Honor:
-			BaseName = TEXT("The Honorbound");
+			Surnames = { TEXT("Honorbound"), TEXT("Duelist"), TEXT("Oath"), TEXT("Vanguard"), TEXT("Sentinel") };
 			break;
 		case EAntagonistGoal::Curiosity:
-			BaseName = TEXT("The Seeker");
+			Surnames = { TEXT("Seeker"), TEXT("Scholar"), TEXT("Inquirer"), TEXT("Delver"), TEXT("Explorer") };
 			break;
 		case EAntagonistGoal::Greed:
-			BaseName = TEXT("The Profiteer");
+			Surnames = { TEXT("Profiteer"), TEXT("Hoarder"), TEXT("Tycoon"), TEXT("Mogul"), TEXT("Raider") };
 			break;
 		case EAntagonistGoal::Justice:
-			BaseName = TEXT("The Justicar");
+			Surnames = { TEXT("Justicar"), TEXT("Lawbringer"), TEXT("Arbiter"), TEXT("Judge"), TEXT("Enforcer") };
 			break;
 		default:
-			BaseName = TEXT("Rival");
-			UE_LOG(LogAdastrea, Warning, TEXT("Unknown antagonist goal type (%d), using default name"), static_cast<int32>(Goal));
+			Surnames = { TEXT("Nemesis"), TEXT("Adversary"), TEXT("Rival"), TEXT("Antagonist") };
+			UE_LOG(LogAdastrea, Warning, TEXT("Unknown antagonist goal type (%d), using default names"), static_cast<int32>(Goal));
 			break;
 	}
 	
-	return FText::FromString(BaseName);
+	// Randomly select prefix and surname for variation
+	const int32 PrefixIndex = FMath::RandRange(0, AntagonistNames::Prefixes.Num() - 1);
+	const int32 SurnameIndex = FMath::RandRange(0, Surnames.Num() - 1);
+	
+	const FString GeneratedName = FString::Printf(TEXT("%s %s"), *AntagonistNames::Prefixes[PrefixIndex], *Surnames[SurnameIndex]);
+	return FText::FromString(GeneratedName);
 }
 
 void UAntagonistManager::ApplyHeatDecay(float DeltaTime)

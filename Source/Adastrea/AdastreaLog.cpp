@@ -12,3 +12,8 @@ DEFINE_LOG_CATEGORY(LogAdastreaStations);
 DEFINE_LOG_CATEGORY(LogAdastreaTrading);
 DEFINE_LOG_CATEGORY(LogAdastreaPlayerMods);
 DEFINE_LOG_CATEGORY(LogAdastreaMaterials);
+DEFINE_LOG_CATEGORY(LogAdastreaCombat);
+DEFINE_LOG_CATEGORY(LogAdastreaNavigation);
+DEFINE_LOG_CATEGORY(LogAdastreaQuest);
+DEFINE_LOG_CATEGORY(LogAdastreaWay);
+DEFINE_LOG_CATEGORY(LogAdastreaInput);

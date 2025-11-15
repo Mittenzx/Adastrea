@@ -1,3 +1,5 @@
+// Copyright (c) 2025 Mittenzx. Licensed under MIT.
+
 #include "Combat/WeaponComponent.h"
 #include "AdastreaLog.h"
 #include "GameFramework/Actor.h"
@@ -55,7 +57,7 @@ bool UWeaponComponent::Fire(AActor* Target)
     // Validate weapon data
     if (!WeaponData)
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("WeaponComponent: Cannot fire - no WeaponData assigned"));
+        UE_LOG(LogAdastreaCombat, Warning, TEXT("WeaponComponent: Cannot fire - no WeaponData assigned"));
         return false;
     }
 
@@ -257,25 +259,25 @@ float UWeaponComponent::GetHeatPercentage() const
 void UWeaponComponent::OnWeaponFired_Implementation(AActor* Target)
 {
     // Default implementation - override in Blueprint for effects
-    UE_LOG(LogAdastrea, Log, TEXT("Weapon fired at %s"), Target ? *Target->GetName() : TEXT("no target"));
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Weapon fired at %s"), Target ? *Target->GetName() : TEXT("no target"));
 }
 
 void UWeaponComponent::OnReloadStarted_Implementation()
 {
     // Default implementation - override in Blueprint for effects
-    UE_LOG(LogAdastrea, Log, TEXT("Weapon reload started"));
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Weapon reload started"));
 }
 
 void UWeaponComponent::OnReloadCompleted_Implementation()
 {
     // Default implementation - override in Blueprint for effects
-    UE_LOG(LogAdastrea, Log, TEXT("Weapon reload completed"));
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Weapon reload completed"));
 }
 
 void UWeaponComponent::OnWeaponOverheated_Implementation()
 {
     // Default implementation - override in Blueprint for effects
-    UE_LOG(LogAdastrea, Warning, TEXT("Weapon overheated"));
+    UE_LOG(LogAdastreaCombat, Warning, TEXT("Weapon overheated"));
 }
 
 void UWeaponComponent::UpdateCooling(float DeltaTime)
@@ -338,7 +340,7 @@ void UWeaponComponent::ApplyDamageToTarget(AActor* Target)
     if (RandomValue < WeaponData->CriticalChance)
     {
         DamageAmount *= WeaponData->CriticalMultiplier;
-        UE_LOG(LogAdastrea, Log, TEXT("Critical hit! Damage: %.1f"), DamageAmount);
+        UE_LOG(LogAdastreaCombat, Log, TEXT("Critical hit! Damage: %.1f"), DamageAmount);
     }
 
     // Apply distance-based accuracy falloff
@@ -358,7 +360,7 @@ void UWeaponComponent::ApplyDamageToTarget(AActor* Target)
     const float HitChance = (WeaponData->Accuracy / 100.0f) * AccuracyModifier;
     if (FMath::FRand() > HitChance)
     {
-        UE_LOG(LogAdastrea, Log, TEXT("Weapon missed target"));
+        UE_LOG(LogAdastreaCombat, Log, TEXT("Weapon missed target"));
         return;
     }
 
@@ -371,5 +373,5 @@ void UWeaponComponent::ApplyDamageToTarget(AActor* Target)
         UDamageType::StaticClass()
     );
 
-    UE_LOG(LogAdastrea, Log, TEXT("Weapon dealt %.1f damage to %s"), DamageAmount, *Target->GetName());
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Weapon dealt %.1f damage to %s"), DamageAmount, *Target->GetName());
 }
