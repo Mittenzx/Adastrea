@@ -143,8 +143,9 @@ properties:
   bPauseGame: false
   UIElementToHighlight: ""
   ActionToWaitFor: ""
+  # NOTE: 'class: BP_PracticeTarget' is a placeholder. In Unreal Editor, set 'ActorToSpawn' to reference a Blueprint class asset (e.g., BP_PracticeTarget) using the asset picker. Do NOT use a string name; use the actual asset reference for TSubclassOf<AActor>.
   ActorToSpawn:
-    class: BP_PracticeTarget
+    class: BP_PracticeTarget  # Replace with actual Blueprint class asset reference in Data Asset editor
   VoiceoverAudio: null
   BackgroundImage: null
 

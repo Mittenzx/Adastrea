@@ -71,8 +71,8 @@ TArray<UTradeItemDataAsset*> UTradingInterfaceWidget::GetSortedItems() const
 	if (SortMode == "Price")
 	{
 		Items.Sort([this](const UTradeItemDataAsset& A, const UTradeItemDataAsset& B) {
-			float PriceA = GetItemPrice(const_cast<UTradeItemDataAsset*>(&A), 1, bShowBuyView);
-			float PriceB = GetItemPrice(const_cast<UTradeItemDataAsset*>(&B), 1, bShowBuyView);
+			float PriceA = GetItemPrice(&A, 1, bShowBuyView);
+			float PriceB = GetItemPrice(&B, 1, bShowBuyView);
 			return PriceA < PriceB;
 		});
 	}
@@ -86,7 +86,7 @@ TArray<UTradeItemDataAsset*> UTradingInterfaceWidget::GetSortedItems() const
 	return Items;
 }
 
-float UTradingInterfaceWidget::GetItemPrice(UTradeItemDataAsset* Item, int32 Quantity, bool bBuying) const
+float UTradingInterfaceWidget::GetItemPrice(const UTradeItemDataAsset* Item, int32 Quantity, bool bBuying) const
 {
 	if (!Item)
 	{

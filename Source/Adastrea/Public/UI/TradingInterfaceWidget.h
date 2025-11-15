@@ -134,7 +134,7 @@ protected:
 	 * @return Final price
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Trading")
-	float GetItemPrice(UTradeItemDataAsset* Item, int32 Quantity, bool bBuying) const;
+	float GetItemPrice(const UTradeItemDataAsset* Item, int32 Quantity, bool bBuying) const;
 
 	/**
 	 * Get price trend indicator for an item (-1 = down, 0 = stable, 1 = up)

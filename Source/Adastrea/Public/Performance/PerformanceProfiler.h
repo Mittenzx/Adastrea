@@ -8,41 +8,45 @@
 
 /**
  * Performance metrics structure
+ * 
+ * Note: Currently functional metrics are FPS, FrameTimeMS, MemoryUsedMB, and VisibleActors.
+ * Metrics requiring engine stats APIs (GameThreadTimeMS, RenderThreadTimeMS, GPUTimeMS, DrawCalls)
+ * are placeholders and will always be zero in this implementation.
  */
 USTRUCT(BlueprintType)
 struct FPerformanceMetrics
 {
 	GENERATED_BODY()
 
-	/** Current frames per second */
+	/** Current frames per second (FUNCTIONAL) */
 	UPROPERTY(BlueprintReadOnly, Category = "Performance")
 	float FPS;
 
-	/** Frame time in milliseconds */
+	/** Frame time in milliseconds (FUNCTIONAL) */
 	UPROPERTY(BlueprintReadOnly, Category = "Performance")
 	float FrameTimeMS;
 
-	/** Game thread time in milliseconds */
+	/** Game thread time in milliseconds (PLACEHOLDER - always zero) */
 	UPROPERTY(BlueprintReadOnly, Category = "Performance")
 	float GameThreadTimeMS;
 
-	/** Render thread time in milliseconds */
+	/** Render thread time in milliseconds (PLACEHOLDER - always zero) */
 	UPROPERTY(BlueprintReadOnly, Category = "Performance")
 	float RenderThreadTimeMS;
 
-	/** GPU time in milliseconds */
+	/** GPU time in milliseconds (PLACEHOLDER - always zero) */
 	UPROPERTY(BlueprintReadOnly, Category = "Performance")
 	float GPUTimeMS;
 
-	/** Memory used in megabytes */
+	/** Memory used in megabytes (FUNCTIONAL) */
 	UPROPERTY(BlueprintReadOnly, Category = "Performance")
 	float MemoryUsedMB;
 
-	/** Number of draw calls */
+	/** Number of draw calls (PLACEHOLDER - always zero) */
 	UPROPERTY(BlueprintReadOnly, Category = "Performance")
 	int32 DrawCalls;
 
-	/** Number of visible actors */
+	/** Number of visible actors (FUNCTIONAL) */
 	UPROPERTY(BlueprintReadOnly, Category = "Performance")
 	int32 VisibleActors;
 

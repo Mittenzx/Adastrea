@@ -157,9 +157,17 @@ void UPerformanceProfiler::UpdateMetrics()
 		}
 	}
 
-	// Note: Game thread, render thread, GPU time, and draw calls
-	// require engine stats API which may not be available in all builds
-	// These would be filled in using FEngineLoop stats or RHI queries in shipping
+	// NOTE: Only the following metrics are currently functional:
+	//   - FPS
+	//   - FrameTimeMS
+	//   - MemoryUsedMB
+	//   - VisibleActors
+	// The following metrics are placeholders and will always be zero in this implementation:
+	//   - GameThreadTimeMS
+	//   - RenderThreadTimeMS
+	//   - GPUTimeMS
+	//   - DrawCalls
+	// These require engine stats APIs (FEngineLoop stats or RHI queries) which may not be available in all builds.
 
 	// Check for performance warnings
 	if (bLogPerformanceWarnings)

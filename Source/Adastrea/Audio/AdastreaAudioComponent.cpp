@@ -95,6 +95,7 @@ void UAdastreaAudioComponent::StopSoundsByCategory(ESoundEffectCategory Category
 {
 	// Note: Category tracking would require storing the SoundEffectDataAsset reference
 	// For now, this is a placeholder. Full implementation would need a TMap to track categories
+	UE_LOG(LogTemp, Warning, TEXT("StopSoundsByCategory called, but category filtering is not implemented. All sounds will be stopped."));
 	StopAllSounds();
 }
 
@@ -120,6 +121,7 @@ float UAdastreaAudioComponent::GetCurrentAudioLoad() const
 bool UAdastreaAudioComponent::IsCategoryPlaying(ESoundEffectCategory Category) const
 {
 	// Note: Would need category tracking implementation
+	UE_LOG(LogTemp, Warning, TEXT("IsCategoryPlaying called for category %d, but category tracking is not implemented. Returns true if any audio is playing, regardless of category."), static_cast<int32>(Category));
 	return ActiveAudioComponents.Num() > 0;
 }
 
