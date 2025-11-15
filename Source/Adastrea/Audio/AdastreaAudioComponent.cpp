@@ -163,7 +163,12 @@ UAudioComponent* UAdastreaAudioComponent::GetAvailableAudioComponent()
 	if (NewAudioComp)
 	{
 		NewAudioComp->RegisterComponent();
-		NewAudioComp->AttachToComponent(this, FAttachmentTransformRules::SnapToTargetIncludingScale);
+		// Attach to owner's root component if it's a scene component
+		AActor* Owner = GetOwner();
+		if (Owner && Owner->GetRootComponent())
+		{
+			NewAudioComp->AttachToComponent(Owner->GetRootComponent(), FAttachmentTransformRules::SnapToTargetIncludingScale);
+		}
 	}
 
 	return NewAudioComp;

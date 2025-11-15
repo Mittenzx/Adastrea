@@ -113,7 +113,7 @@ protected:
 
 	/**
 	 * Get all modules in the station filtered by group
-	 * @param Group Module group to filter by (None = all modules)
+	 * @param Group Module group to filter by (All = all modules, no filtering)
 	 * @return Array of modules
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Station Management")

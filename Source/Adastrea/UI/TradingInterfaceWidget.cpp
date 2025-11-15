@@ -79,7 +79,7 @@ TArray<UTradeItemDataAsset*> UTradingInterfaceWidget::GetSortedItems() const
 	else if (SortMode == "Name")
 	{
 		Items.Sort([](const UTradeItemDataAsset& A, const UTradeItemDataAsset& B) {
-			return A.DisplayName.CompareTo(B.DisplayName) < 0;
+			return A.ItemName.CompareTo(B.ItemName) < 0;
 		});
 	}
 

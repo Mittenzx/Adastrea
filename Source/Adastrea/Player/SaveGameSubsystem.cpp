@@ -277,8 +277,7 @@ void USaveGameSubsystem::EnableAutoSave(float IntervalSeconds)
 	{
 		World->GetTimerManager().SetTimer(
 			AutoSaveTimerHandle,
-			this,
-			&USaveGameSubsystem::AutoSave,
+			FTimerDelegate::CreateUObject(this, &USaveGameSubsystem::AutoSave),
 			AutoSaveIntervalSeconds,
 			true
 		);

@@ -8,7 +8,7 @@
 UStationManagementWidget::UStationManagementWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 	, ManagedStation(nullptr)
-	, SelectedModuleGroup(EStationModuleGroup::None)
+	, SelectedModuleGroup(EStationModuleGroup::All)
 	, bBuildModeActive(false)
 {
 }
@@ -75,8 +75,8 @@ TArray<ASpaceStationModule*> UStationManagementWidget::GetModulesByGroup(EStatio
 		ASpaceStationModule* Module = Cast<ASpaceStationModule>(Actor);
 		if (Module)
 		{
-			// Filter by group if specified
-			if (Group == EStationModuleGroup::None || Module->GetModuleGroup() == Group)
+			// Filter by group if specified (All means no filtering)
+			if (Group == EStationModuleGroup::All || Module->ModuleGroup == Group)
 			{
 				FilteredModules.Add(Module);
 			}
@@ -88,7 +88,7 @@ TArray<ASpaceStationModule*> UStationManagementWidget::GetModulesByGroup(EStatio
 
 int32 UStationManagementWidget::GetTotalModuleCount() const
 {
-	return GetModulesByGroup(EStationModuleGroup::None).Num();
+	return GetModulesByGroup(EStationModuleGroup::All).Num();
 }
 
 float UStationManagementWidget::GetOperationalStatusPercent() const
@@ -98,16 +98,18 @@ float UStationManagementWidget::GetOperationalStatusPercent() const
 		return 0.0f;
 	}
 
-	TArray<ASpaceStationModule*> AllModules = GetModulesByGroup(EStationModuleGroup::None);
+	TArray<ASpaceStationModule*> AllModules = GetModulesByGroup(EStationModuleGroup::All);
 	if (AllModules.Num() == 0)
 	{
 		return 100.0f; // No modules = fully operational (empty station)
 	}
 
+	// TODO: Implement IsOperational() method in ASpaceStationModule when needed
+	// For now, use a simple heuristic: modules that are not hidden are considered operational
 	int32 OperationalCount = 0;
 	for (ASpaceStationModule* Module : AllModules)
 	{
-		if (Module && Module->IsOperational())
+		if (Module && !Module->IsHidden())
 		{
 			OperationalCount++;
 		}

@@ -90,39 +90,39 @@ FText UShipUpgradeDataAsset::GetCategoryDisplayName() const
 
 FText UShipUpgradeDataAsset::GetRequirementsDescription() const
 {
-	TArray<FString> Requirements;
+	TArray<FString> RequirementsList;
 
 	if (this->Requirements.CreditCost > 0)
 	{
-		Requirements.Add(FString::Printf(TEXT("Credits: %d"), this->Requirements.CreditCost));
+		RequirementsList.Add(FString::Printf(TEXT("Credits: %d"), this->Requirements.CreditCost));
 	}
 
 	if (this->Requirements.RequiredPlayerLevel > 1)
 	{
-		Requirements.Add(FString::Printf(TEXT("Level: %d"), this->Requirements.RequiredPlayerLevel));
+		RequirementsList.Add(FString::Printf(TEXT("Level: %d"), this->Requirements.RequiredPlayerLevel));
 	}
 
 	if (this->Requirements.RequiredFactionID != NAME_None)
 	{
-		Requirements.Add(FString::Printf(TEXT("Reputation: %s (%d)"),
+		RequirementsList.Add(FString::Printf(TEXT("Reputation: %s (%d)"),
 			*this->Requirements.RequiredFactionID.ToString(),
 			this->Requirements.MinimumReputation));
 	}
 
 	if (this->Requirements.RequiredMaterials.Num() > 0)
 	{
-		Requirements.Add(FString::Printf(TEXT("Materials: %d types"), this->Requirements.RequiredMaterials.Num()));
+		RequirementsList.Add(FString::Printf(TEXT("Materials: %d types"), this->Requirements.RequiredMaterials.Num()));
 	}
 
 	if (this->Requirements.PrerequisiteUpgrades.Num() > 0)
 	{
-		Requirements.Add(FString::Printf(TEXT("Prerequisites: %d upgrades"), this->Requirements.PrerequisiteUpgrades.Num()));
+		RequirementsList.Add(FString::Printf(TEXT("Prerequisites: %d upgrades"), this->Requirements.PrerequisiteUpgrades.Num()));
 	}
 
-	if (Requirements.Num() == 0)
+	if (RequirementsList.Num() == 0)
 	{
 		return FText::FromString("No requirements");
 	}
 
-	return FText::FromString(FString::Join(Requirements, TEXT(", ")));
+	return FText::FromString(FString::Join(RequirementsList, TEXT(", ")));
 }
