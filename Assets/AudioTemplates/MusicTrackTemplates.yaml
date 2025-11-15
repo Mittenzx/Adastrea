@@ -1,0 +1,252 @@
+# Music Track Data Asset Templates
+# Copy and modify these templates to create your own music tracks
+
+---
+# Example 1: Peaceful Exploration - Low Intensity
+name: DA_Music_PeacefulLow
+type: MusicTrackDataAsset
+properties:
+  DisplayName: "Peaceful Exploration (Calm)"
+  Description: "Relaxed exploration music for safe space"
+  MusicTrack:
+    path: "/Game/Audio/Music/M_Peaceful_Low"
+  Volume: 0.7
+  Mood: Peaceful
+  Intensity: Low
+  FadeInTime: 3.0
+  FadeOutTime: 3.0
+  bAllowCrossfade: true
+  Priority: 0.5
+  bIsLayer: false
+  BaseTrack: null
+  LayerVolume: 0.0
+
+---
+# Example 2: Combat Theme - High Intensity
+name: DA_Music_CombatHigh
+type: MusicTrackDataAsset
+properties:
+  DisplayName: "Combat Theme (Intense)"
+  Description: "Fast-paced battle music"
+  MusicTrack:
+    path: "/Game/Audio/Music/M_Combat_High"
+  Volume: 0.8
+  Mood: Combat
+  Intensity: High
+  FadeInTime: 1.0  # Quick fade for urgency
+  FadeOutTime: 2.0
+  bAllowCrossfade: true
+  Priority: 0.9  # High priority for combat
+  bIsLayer: false
+  BaseTrack: null
+  LayerVolume: 0.0
+
+---
+# Example 3: Combat Theme - Low Intensity
+name: DA_Music_CombatLow
+type: MusicTrackDataAsset
+properties:
+  DisplayName: "Combat Theme (Building Tension)"
+  Description: "Combat music for light engagement"
+  MusicTrack:
+    path: "/Game/Audio/Music/M_Combat_Low"
+  Volume: 0.7
+  Mood: Combat
+  Intensity: Low
+  FadeInTime: 2.0
+  FadeOutTime: 2.0
+  bAllowCrossfade: true
+  Priority: 0.6
+  bIsLayer: false
+  BaseTrack: null
+  LayerVolume: 0.0
+
+---
+# Example 4: Exploration Theme - Medium Intensity
+name: DA_Music_ExplorationMedium
+type: MusicTrackDataAsset
+properties:
+  DisplayName: "Discovery Theme"
+  Description: "Exploring unknown systems"
+  MusicTrack:
+    path: "/Game/Audio/Music/M_Exploration_Medium"
+  Volume: 0.75
+  Mood: Exploration
+  Intensity: Medium
+  FadeInTime: 4.0  # Slow fade for atmosphere
+  FadeOutTime: 4.0
+  bAllowCrossfade: true
+  Priority: 0.6
+  bIsLayer: false
+  BaseTrack: null
+  LayerVolume: 0.0
+
+---
+# Example 5: Tense/Suspense Music
+name: DA_Music_TenseMedium
+type: MusicTrackDataAsset
+properties:
+  DisplayName: "Approaching Danger"
+  Description: "Tension building, something coming"
+  MusicTrack:
+    path: "/Game/Audio/Music/M_Tense_Medium"
+  Volume: 0.7
+  Mood: Tense
+  Intensity: Medium
+  FadeInTime: 2.5
+  FadeOutTime: 2.5
+  bAllowCrossfade: true
+  Priority: 0.7
+  bIsLayer: false
+  BaseTrack: null
+  LayerVolume: 0.0
+
+---
+# Example 6: Victory Theme
+name: DA_Music_Victory
+type: MusicTrackDataAsset
+properties:
+  DisplayName: "Victory Fanfare"
+  Description: "Combat victory celebration"
+  MusicTrack:
+    path: "/Game/Audio/Music/M_Victory"
+  Volume: 0.8
+  Mood: Victory
+  Intensity: High
+  FadeInTime: 1.0
+  FadeOutTime: 3.0
+  bAllowCrossfade: false  # Immediate victory sound
+  Priority: 1.0
+  bIsLayer: false
+  BaseTrack: null
+  LayerVolume: 0.0
+
+---
+# Example 7: Ambient Menu Music
+name: DA_Music_MenuAmbient
+type: MusicTrackDataAsset
+properties:
+  DisplayName: "Main Menu Theme"
+  Description: "Calm menu background music"
+  MusicTrack:
+    path: "/Game/Audio/Music/M_Menu_Ambient"
+  Volume: 0.6
+  Mood: Ambient
+  Intensity: Low
+  FadeInTime: 2.0
+  FadeOutTime: 2.0
+  bAllowCrossfade: true
+  Priority: 0.4
+  bIsLayer: false
+  BaseTrack: null
+  LayerVolume: 0.0
+
+---
+# Example 8: Layered Music - Base Track
+name: DA_Music_ExplorationBase
+type: MusicTrackDataAsset
+properties:
+  DisplayName: "Exploration Base Layer"
+  Description: "Foundation track for exploration"
+  MusicTrack:
+    path: "/Game/Audio/Music/M_Exploration_Base"
+  Volume: 0.7
+  Mood: Exploration
+  Intensity: Low
+  FadeInTime: 3.0
+  FadeOutTime: 3.0
+  bAllowCrossfade: true
+  Priority: 0.5
+  bIsLayer: false  # This is the base
+  BaseTrack: null
+  LayerVolume: 0.0
+
+---
+# Example 9: Layered Music - Percussion Layer
+name: DA_Music_ExplorationPercussion
+type: MusicTrackDataAsset
+properties:
+  DisplayName: "Exploration Percussion Layer"
+  Description: "Adds percussion to base track"
+  MusicTrack:
+    path: "/Game/Audio/Music/M_Exploration_Percussion"
+  Volume: 0.5
+  Mood: Exploration
+  Intensity: Medium
+  FadeInTime: 2.0
+  FadeOutTime: 2.0
+  bAllowCrossfade: true
+  Priority: 0.5
+  bIsLayer: true  # This is a layer
+  BaseTrack:
+    asset: DA_Music_ExplorationBase
+  LayerVolume: 0.6
+
+---
+# Example 10: Dramatic/Story Moment
+name: DA_Music_DramaticHigh
+type: MusicTrackDataAsset
+properties:
+  DisplayName: "Dramatic Moment"
+  Description: "Epic story beat or revelation"
+  MusicTrack:
+    path: "/Game/Audio/Music/M_Dramatic_High"
+  Volume: 0.85
+  Mood: Dramatic
+  Intensity: High
+  FadeInTime: 1.5
+  FadeOutTime: 3.0
+  bAllowCrossfade: false  # Immediate impact
+  Priority: 0.95
+  bIsLayer: false
+  BaseTrack: null
+  LayerVolume: 0.0
+
+---
+# Template Guidelines:
+#
+# Mood Types:
+# - Peaceful: Safe exploration, idle
+# - Tense: Danger approaching, suspense
+# - Combat: Active fighting
+# - Exploration: Discovery, wonder
+# - Dramatic: Story moments, revelations
+# - Victory: Success, achievement
+# - Defeat: Loss, failure
+# - Ambient: Menu, background
+#
+# Intensity Levels:
+# - Low: Minimal action, calm
+# - Medium: Moderate engagement
+# - High: Intense action, climax
+#
+# Volume Guidelines:
+# - High intensity: 0.75-0.85
+# - Medium intensity: 0.65-0.75
+# - Low intensity: 0.55-0.70
+# - Ambient/menu: 0.5-0.65
+#
+# Fade Time Guidelines:
+# - Urgent changes: 1.0-1.5 seconds
+# - Standard: 2.0-3.0 seconds
+# - Atmospheric: 3.0-5.0 seconds
+#
+# Priority Guidelines:
+# - Must play (victory, dramatic): 0.9-1.0
+# - High priority (combat): 0.7-0.9
+# - Standard (exploration, tense): 0.5-0.7
+# - Low priority (ambient): 0.3-0.5
+#
+# Layering:
+# - Base track: bIsLayer = false
+# - Additional layers: bIsLayer = true
+# - Set BaseTrack to reference base
+# - LayerVolume: 0.4-0.7 typical
+# - Layers share same Mood
+# - Different Intensities trigger layers
+#
+# Crossfading:
+# - Enable for smooth transitions
+# - Disable for immediate changes
+# - Victory/Defeat usually immediate
+# - Exploration/Combat usually crossfade

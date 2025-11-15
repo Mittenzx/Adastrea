@@ -1,0 +1,449 @@
+# Tutorial Step Data Asset Templates
+# Copy and modify these templates to create tutorial sequences
+
+---
+# ==============================================================================
+# TUTORIAL SEQUENCE 1: Basic Flight Controls
+# ==============================================================================
+
+---
+# Step 1: Welcome Message
+name: DA_Tutorial_Flight_Welcome
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Welcome to Flight Training"
+  StepDescription: "Let's learn how to pilot your spacecraft. This tutorial will teach you the basic controls."
+  StepType: Message
+  TimeLimit: 5.0
+  bCanSkip: true
+  bPauseGame: false
+  UIElementToHighlight: ""
+  ActionToWaitFor: ""
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# Step 2: Forward Movement
+name: DA_Tutorial_Flight_Forward
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Move Forward"
+  StepDescription: "Press W or the Up Arrow key to move forward. Try it now!"
+  StepType: WaitForAction
+  TimeLimit: 30.0
+  bCanSkip: false  # Must complete
+  bPauseGame: false
+  UIElementToHighlight: ""
+  ActionToWaitFor: "MoveForward"
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# Step 3: Turning
+name: DA_Tutorial_Flight_Turn
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Turning Your Ship"
+  StepDescription: "Move your mouse left and right to turn your spacecraft. Practice turning in both directions."
+  StepType: WaitForAction
+  TimeLimit: 30.0
+  bCanSkip: true
+  bPauseGame: false
+  UIElementToHighlight: ""
+  ActionToWaitFor: "Turn"
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# Step 4: Boost
+name: DA_Tutorial_Flight_Boost
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Engine Boost"
+  StepDescription: "Hold Shift to boost your engines for faster travel. Release to return to normal speed."
+  StepType: WaitForAction
+  TimeLimit: 30.0
+  bCanSkip: true
+  bPauseGame: false
+  UIElementToHighlight: ""
+  ActionToWaitFor: "Boost"
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# Step 5: Complete
+name: DA_Tutorial_Flight_Complete
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Flight Training Complete!"
+  StepDescription: "Excellent work! You now know the basic flight controls. Continue exploring the galaxy!"
+  StepType: Message
+  TimeLimit: 5.0
+  bCanSkip: true
+  bPauseGame: false
+  UIElementToHighlight: ""
+  ActionToWaitFor: ""
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# ==============================================================================
+# TUTORIAL SEQUENCE 2: Combat Basics
+# ==============================================================================
+
+---
+# Step 1: Combat Intro
+name: DA_Tutorial_Combat_Intro
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Combat Training"
+  StepDescription: "Learn how to engage enemies and defend yourself in space combat."
+  StepType: Message
+  TimeLimit: 5.0
+  bCanSkip: true
+  bPauseGame: false
+  UIElementToHighlight: ""
+  ActionToWaitFor: ""
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# Step 2: Targeting
+name: DA_Tutorial_Combat_Targeting
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Target an Enemy"
+  StepDescription: "Press T to cycle through targets. Lock onto the practice target."
+  StepType: WaitForAction
+  TimeLimit: 30.0
+  bCanSkip: false
+  bPauseGame: false
+  UIElementToHighlight: "TargetingReticle"
+  ActionToWaitFor: "CycleTarget"
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# Step 3: Spawn Practice Targets
+name: DA_Tutorial_Combat_SpawnTargets
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Target Practice"
+  StepDescription: "Practice targets will now appear. Destroy all 3 targets to continue."
+  StepType: SpawnActor
+  TimeLimit: 0.0  # No time limit
+  bCanSkip: false
+  bPauseGame: false
+  UIElementToHighlight: ""
+  ActionToWaitFor: ""
+  # NOTE: 'class: BP_PracticeTarget' is a placeholder. In Unreal Editor, set 'ActorToSpawn' to reference a Blueprint class asset (e.g., BP_PracticeTarget) using the asset picker. Do NOT use a string name; use the actual asset reference for TSubclassOf<AActor>.
+  ActorToSpawn:
+    class: BP_PracticeTarget  # Replace with actual Blueprint class asset reference in Data Asset editor
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# Step 4: Fire Weapons
+name: DA_Tutorial_Combat_Fire
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Fire Your Weapons"
+  StepDescription: "Press Left Mouse Button to fire your primary weapon. Destroy the targets!"
+  StepType: WaitForAction
+  TimeLimit: 60.0
+  bCanSkip: false
+  bPauseGame: false
+  UIElementToHighlight: ""
+  ActionToWaitFor: "FireWeapon"
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# Step 5: Shields
+name: DA_Tutorial_Combat_Shields
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Shield Management"
+  StepDescription: "Your shields are shown in the top-left corner. They regenerate when not taking damage."
+  StepType: HighlightUI
+  TimeLimit: 10.0
+  bCanSkip: true
+  bPauseGame: false
+  UIElementToHighlight: "ShieldBar_Widget"
+  ActionToWaitFor: ""
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# Step 6: Combat Complete
+name: DA_Tutorial_Combat_Complete
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Combat Training Complete!"
+  StepDescription: "You're ready for combat! Remember: target enemies, manage your shields, and keep moving."
+  StepType: Message
+  TimeLimit: 5.0
+  bCanSkip: true
+  bPauseGame: false
+  UIElementToHighlight: ""
+  ActionToWaitFor: ""
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# ==============================================================================
+# TUTORIAL SEQUENCE 3: Trading Basics
+# ==============================================================================
+
+---
+# Step 1: Trading Intro
+name: DA_Tutorial_Trading_Intro
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Trading Tutorial"
+  StepDescription: "Learn how to buy and sell goods at space stations to make credits."
+  StepType: Message
+  TimeLimit: 5.0
+  bCanSkip: true
+  bPauseGame: false
+  UIElementToHighlight: ""
+  ActionToWaitFor: ""
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# Step 2: Approach Station
+name: DA_Tutorial_Trading_Approach
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Find a Trade Station"
+  StepDescription: "Navigate to the marked trade station. Use autopilot (G key) if needed."
+  StepType: WaitForCondition
+  TimeLimit: 60.0
+  bCanSkip: true
+  bPauseGame: false
+  UIElementToHighlight: ""
+  ActionToWaitFor: ""
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# Step 3: Dock at Station
+name: DA_Tutorial_Trading_Dock
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Dock at the Station"
+  StepDescription: "Get close to the station and press F to dock. This will open the trade interface."
+  StepType: WaitForAction
+  TimeLimit: 45.0
+  bCanSkip: false
+  bPauseGame: false
+  UIElementToHighlight: ""
+  ActionToWaitFor: "Dock"
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# Step 4: Trading UI
+name: DA_Tutorial_Trading_UI
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Trading Interface"
+  StepDescription: "This is the trading interface. You can buy items on the left and sell items on the right."
+  StepType: Message
+  TimeLimit: 8.0
+  bCanSkip: true
+  bPauseGame: true  # Pause to read
+  UIElementToHighlight: ""
+  ActionToWaitFor: ""
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# Step 5: Buy Item
+name: DA_Tutorial_Trading_Buy
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Buy Trade Goods"
+  StepDescription: "Select an item in the buy panel and add it to your cart. Then click Execute Trade."
+  StepType: WaitForCondition
+  TimeLimit: 60.0
+  bCanSkip: true
+  bPauseGame: false
+  UIElementToHighlight: ""
+  ActionToWaitFor: ""
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# Step 6: Trading Complete
+name: DA_Tutorial_Trading_Complete
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Trading Tutorial Complete!"
+  StepDescription: "You now know how to trade! Buy low, sell high, and explore trade routes for maximum profit."
+  StepType: Message
+  TimeLimit: 5.0
+  bCanSkip: true
+  bPauseGame: false
+  UIElementToHighlight: ""
+  ActionToWaitFor: ""
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# ==============================================================================
+# TUTORIAL SEQUENCE 4: UI Overview
+# ==============================================================================
+
+---
+# Step 1: HUD Overview
+name: DA_Tutorial_UI_Overview
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Heads-Up Display"
+  StepDescription: "Let's familiarize you with the HUD elements that show important information."
+  StepType: Message
+  TimeLimit: 5.0
+  bCanSkip: true
+  bPauseGame: true
+  UIElementToHighlight: ""
+  ActionToWaitFor: ""
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# Step 2: Health Display
+name: DA_Tutorial_UI_Health
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Hull Integrity"
+  StepDescription: "Your hull health is displayed here. If it reaches zero, your ship is destroyed."
+  StepType: HighlightUI
+  TimeLimit: 8.0
+  bCanSkip: true
+  bPauseGame: false
+  UIElementToHighlight: "HealthBar_Widget"
+  ActionToWaitFor: ""
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# Step 3: Shield Display
+name: DA_Tutorial_UI_Shields
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Shield Status"
+  StepDescription: "Your shields protect you from damage and regenerate over time when not under fire."
+  StepType: HighlightUI
+  TimeLimit: 8.0
+  bCanSkip: true
+  bPauseGame: false
+  UIElementToHighlight: "ShieldBar_Widget"
+  ActionToWaitFor: ""
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# Step 4: Speed Display
+name: DA_Tutorial_UI_Speed
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Speed Indicator"
+  StepDescription: "This shows your current velocity in meters per second."
+  StepType: HighlightUI
+  TimeLimit: 6.0
+  bCanSkip: true
+  bPauseGame: false
+  UIElementToHighlight: "SpeedDisplay_Widget"
+  ActionToWaitFor: ""
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# Step 5: Target Info
+name: DA_Tutorial_UI_Target
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "Target Information"
+  StepDescription: "When you target something, its information appears here including distance and status."
+  StepType: HighlightUI
+  TimeLimit: 8.0
+  bCanSkip: true
+  bPauseGame: false
+  UIElementToHighlight: "TargetInfo_Widget"
+  ActionToWaitFor: ""
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# Step 6: UI Complete
+name: DA_Tutorial_UI_Complete
+type: TutorialStepDataAsset
+properties:
+  StepTitle: "HUD Tutorial Complete!"
+  StepDescription: "You now understand the HUD. These indicators will help you survive in space!"
+  StepType: Message
+  TimeLimit: 5.0
+  bCanSkip: true
+  bPauseGame: false
+  UIElementToHighlight: ""
+  ActionToWaitFor: ""
+  ActorToSpawn: null
+  VoiceoverAudio: null
+  BackgroundImage: null
+
+---
+# Template Usage Notes:
+#
+# Step Types:
+# - Message: Simple text display
+# - HighlightUI: Focus on UI element (set UIElementToHighlight)
+# - WaitForAction: Wait for input (set ActionToWaitFor)
+# - WaitForCondition: Wait for game state (check in blueprint)
+# - PlayAnimation: Show demonstration (implement in blueprint)
+# - SpawnActor: Create practice objects (set ActorToSpawn)
+#
+# Time Limits:
+# - 0.0 = No limit
+# - 5-10 seconds for simple messages
+# - 30-60 seconds for actions
+# - Adjust based on difficulty
+#
+# Skip Options:
+# - true: Player can skip this step
+# - false: Must complete (use for critical learning)
+#
+# Pause Game:
+# - true: Pause to read instructions
+# - false: Continue gameplay
+# - Use sparingly, only for complex info
+#
+# Action Names (must match Enhanced Input):
+# - "MoveForward", "MoveBackward"
+# - "Turn", "LookUp"
+# - "FireWeapon", "SecondaryFire"
+# - "CycleTarget", "Boost"
+# - "Dock", "Undock"
+# - etc. (see EnhancedInputImplementation.md)
