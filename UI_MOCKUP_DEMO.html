@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adastrea - UI Mockup Demo</title>
+    <style>
+        :root {
+            --color-deep-space: #0A0E1A;
+            --color-ui-bg-primary: #1A2332;
+            --color-ui-bg-secondary: #0F1419;
+            --color-ui-accent: #4A9EFF;
+            --color-text-primary: #E8F0FF;
+            --color-text-secondary: #8C9AAF;
+            --color-success: #2ECC71;
+            --color-warning: #F39C12;
+            --color-danger: #E74C3C;
+            --color-info: #3498DB;
+            --color-energy: #9B59B6;
+            --color-gold: #FFD700;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--color-deep-space);
+            color: var(--color-text-primary);
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1920px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1A2332 0%, #0F1419 100%);
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 2px solid #4A9EFF;
+        }
+        
+        header h1 {
+            font-size: 3rem;
+            color: #4A9EFF;
+            text-shadow: 0 0 20px rgba(74, 158, 255, 0.5);
+            margin-bottom: 0.5rem;
+        }
+        
+        header p {
+            color: #8C9AAF;
+            font-size: 1.2rem;
+        }
+        
+        nav {
+            background: #1A2332;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #4A9EFF;
+        }
+        
+        nav button {
+            background: linear-gradient(135deg, #2E5EAA 0%, #4A9EFF 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        nav button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(74, 158, 255, 0.5);
+        }
+        
+        nav button.active {
+            background: linear-gradient(135deg, #FFD700 0%, #FF8C42 100%);
+        }
+        
+        .mockup-section {
+            display: none;
+            padding: 2rem;
+        }
+        
+        .mockup-section.active {
+            display: block;
+        }
+        
+        .mockup-title {
+            font-size: 2.5rem;
+            color: #4A9EFF;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .mockup-subtitle {
+            font-size: 1.5rem;
+            color: #8C9AAF;
+            margin: 2rem 0 1rem 0;
+        }
+        
+        /* Main Menu Mockup */
+        .main-menu {
+            position: relative;
+            height: 80vh;
+            background: linear-gradient(to bottom, #0A0E1A 0%, #1A2332 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .starfield {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, white, transparent),
+                radial-gradient(2px 2px at 60px 70px, white, transparent),
+                radial-gradient(1px 1px at 50px 50px, white, transparent),
+                radial-gradient(1px 1px at 130px 80px, white, transparent),
+                radial-gradient(2px 2px at 90px 10px, white, transparent);
+            background-size: 200px 200px;
+            animation: stars 60s linear infinite;
+        }
+        
+        @keyframes stars {
+            from { background-position: 0 0; }
+            to { background-position: -200px 200px; }
+        }
+        
+        .menu-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+        
+        .game-title {
+            font-size: 5rem;
+            color: #FFD700;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+            margin-bottom: 1rem;
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+        
+        .menu-button {
+            background: rgba(26, 35, 50, 0.8);
+            border: 2px solid #4A9EFF;
+            color: #E8F0FF;
+            padding: 1rem 4rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+        }
+        
+        .menu-button:hover {
+            background: rgba(74, 158, 255, 0.3);
+            border-color: #FFD700;
+            transform: translateX(10px);
+            box-shadow: 0 6px 12px rgba(74, 158, 255, 0.5);
+        }
+        
+        /* HUD Mockup */
+        .hud-mockup {
+            position: relative;
+            height: 80vh;
+            background: radial-gradient(ellipse at center, #1A2332 0%, #0A0E1A 100%);
+            display: grid;
+            grid-template-areas:
+                "top-left top-center top-right"
+                "mid-left viewport mid-right"
+                "bottom-left bottom-center bottom-right";
+            grid-template-columns: 300px 1fr 300px;
+            grid-template-rows: 120px 1fr 120px;
+            gap: 1rem;
+            padding: 1rem;
+        }
+        
+        .hud-panel {
+            background: rgba(26, 35, 50, 0.8);
+            border: 1px solid #4A9EFF;
+            border-radius: 5px;
+            padding: 1rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .hud-top-left { grid-area: top-left; }
+        .hud-top-right { grid-area: top-right; }
+        .hud-bottom-left { grid-area: bottom-left; }
+        .hud-bottom-right { grid-area: bottom-right; }
+        
+        .hud-viewport {
+            grid-area: viewport;
+            background: radial-gradient(circle at 50% 50%, #2E5EAA 0%, #0A0E1A 70%);
+            border: 2px solid #4A9EFF;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ship-silhouette {
+            width: 200px;
+            height: 150px;
+            background: linear-gradient(135deg, #708090 0%, #4A9EFF 100%);
+            clip-path: polygon(50% 0%, 100% 100%, 50% 85%, 0% 100%);
+            box-shadow: 0 0 50px rgba(74, 158, 255, 0.8);
+        }
+        
+        .stat-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .stat-label {
+            color: #8C9AAF;
+            font-size: 0.9rem;
+        }
+        
+        .stat-value {
+            color: #2ECC71;
+            font-weight: bold;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #0F1419;
+            border: 1px solid #4A9EFF;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.25rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2ECC71 0%, #3498DB 100%);
+            transition: width 0.3s;
+        }
+        
+        .progress-fill.warning {
+            background: linear-gradient(90deg, #F39C12 0%, #E74C3C 100%);
+        }
+        
+        /* Station Construction */
+        .station-builder {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            gap: 1rem;
+            height: 80vh;
+        }
+        
+        .module-palette {
+            background: rgba(26, 35, 50, 0.9);
+            border: 1px solid #4A9EFF;
+            border-radius: 5px;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        
+        .module-item {
+            background: rgba(15, 20, 25, 0.8);
+            border: 1px solid #8C9AAF;
+            border-radius: 3px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .module-item:hover {
+            border-color: #FFD700;
+            background: rgba(74, 158, 255, 0.2);
+            transform: translateX(5px);
+        }
+        
+        .station-viewport {
+            background: radial-gradient(circle, #1A2332 0%, #0A0E1A 100%);
+            border: 2px solid #4A9EFF;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .station-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 80px);
+            grid-template-rows: repeat(5, 80px);
+            gap: 10px;
+        }
+        
+        .grid-cell {
+            border: 1px dashed #4A9EFF;
+            border-radius: 5px;
+            opacity: 0.3;
+        }
+        
+        .grid-cell.occupied {
+            background: linear-gradient(135deg, #2E5EAA 0%, #4A9EFF 100%);
+            border: 2px solid #FFD700;
+            opacity: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+        }
+        
+        .info-panel {
+            background: rgba(26, 35, 50, 0.9);
+            border: 1px solid #4A9EFF;
+            border-radius: 5px;
+            padding: 1rem;
+        }
+        
+        .info-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .info-section h3 {
+            color: #4A9EFF;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Faction Colors */
+        .faction-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin: 0.25rem;
+        }
+        
+        .solaris-union {
+            background: linear-gradient(135deg, #FFD700 0%, #87CEEB 50%);
+            color: #000;
+        }
+        
+        .ironclad-consortium {
+            background: linear-gradient(135deg, #708090 0%, #FF6B35 50%);
+            color: #fff;
+        }
+        
+        .neon-collective {
+            background: linear-gradient(135deg, #00FFFF 0%, #FF10F0 50%);
+            color: #000;
+        }
+        
+        .void-walkers {
+            background: linear-gradient(135deg, #8B0000 0%, #B7410E 50%);
+            color: #fff;
+        }
+        
+        footer {
+            background: #0F1419;
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid #4A9EFF;
+            margin-top: 2rem;
+        }
+        
+        footer p {
+            color: #8C9AAF;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✦ ADASTREA ✦</h1>
+            <p>Open World Space Flight Game - UI Mockup Demo</p>
+        </header>
+        
+        <nav>
+            <button onclick="showSection('main-menu', event)" aria-current="page" aria-label="Navigate to Main Menu section" class="active">Main Menu</button>
+            <button onclick="showSection('hud', event)" aria-label="Navigate to Space Flight HUD section">Space Flight HUD</button>
+            <button onclick="showSection('station', event)" aria-label="Navigate to Station Builder section">Station Builder</button>
+            <button onclick="showSection('factions', event)" aria-label="Navigate to Factions section">Factions</button>
+        </nav>
+        
+        <!-- Main Menu Section -->
+        <div id="main-menu" class="mockup-section active">
+            <h2 class="mockup-title">Main Menu Mockup</h2>
+            <div class="main-menu">
+                <div class="starfield"></div>
+                <div class="menu-content">
+                    <h1 class="game-title">✦ ADASTREA ✦</h1>
+                    <p style="font-size: 1.5rem; color: #8C9AAF;">Open World Space Flight</p>
+                    <div class="menu-buttons">
+                        <button class="menu-button" aria-label="New Game">▶ NEW GAME</button>
+                        <button class="menu-button" aria-label="Continue">⟳ CONTINUE</button>
+                        <button class="menu-button" aria-label="Options">⚙ OPTIONS</button>
+                        <button class="menu-button" aria-label="Credits">ℹ CREDITS</button>
+                        <button class="menu-button" aria-label="Quit">⊗ QUIT</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- HUD Section -->
+        <div id="hud" class="mockup-section">
+            <h2 class="mockup-title">Space Flight HUD Mockup</h2>
+            <div class="hud-mockup">
+                <div class="hud-panel hud-top-left">
+                    <h3 style="color: #4A9EFF; margin-bottom: 0.5rem;">Ship Status</h3>
+                    <div class="stat-bar">
+                        <span class="stat-label">HULL:</span>
+                        <span class="stat-value">85%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 85%;"></div>
+                    </div>
+                    
+                    <div class="stat-bar" style="margin-top: 0.5rem;">
+                        <span class="stat-label">SHIELDS:</span>
+                        <span class="stat-value">52%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill warning" style="width: 52%;"></div>
+                    </div>
+                </div>
+                
+                <div class="hud-panel hud-top-right">
+                    <h3 style="color: #4A9EFF; margin-bottom: 0.5rem;">Resources</h3>
+                    <div class="stat-bar">
+                        <span class="stat-label">POWER:</span>
+                        <span class="stat-value">100%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%;"></div>
+                    </div>
+                    
+                    <div class="stat-bar" style="margin-top: 0.5rem;">
+                        <span class="stat-label">FUEL:</span>
+                        <span class="stat-value">82%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 82%;"></div>
+                    </div>
+                </div>
+                
+                <div class="hud-viewport">
+                    <div class="ship-silhouette"></div>
+                    <div aria-hidden="true" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 2px solid #FFD700; border-radius: 50%; box-shadow: 0 0 20px #FFD700;"></div>
+                </div>
+                
+                <div class="hud-panel hud-bottom-left">
+                    <h3 style="color: #4A9EFF; margin-bottom: 0.5rem;">Radar</h3>
+                    <div style="width: 100px; height: 100px; border: 2px solid #4A9EFF; border-radius: 50%; position: relative; margin: 0 auto;">
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; background: #FFD700; border-radius: 50%;"></div>
+                        <div style="position: absolute; top: 20%; left: 60%; width: 6px; height: 6px; background: #2ECC71; border-radius: 50%;"></div>
+                        <div style="position: absolute; top: 70%; left: 30%; width: 6px; height: 6px; background: #E74C3C; border-radius: 50%;"></div>
+                    </div>
+                </div>
+                
+                <div class="hud-panel hud-bottom-right">
+                    <h3 style="color: #4A9EFF; margin-bottom: 0.5rem;">Communications</h3>
+                    <div style="font-size: 0.9rem; color: #8C9AAF;">
+                        <p style="margin-bottom: 0.5rem;">⚠ Pirate Scan Detected</p>
+                        <p style="margin-bottom: 0.5rem;">📡 Station Hail</p>
+                        <p>💰 Trade Opportunity</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Station Builder Section -->
+        <div id="station" class="mockup-section">
+            <h2 class="mockup-title">Station Construction Interface</h2>
+            <div class="station-builder">
+                <div class="module-palette">
+                    <h3 style="color: #4A9EFF; margin-bottom: 1rem;">Module Palette</h3>
+                    <div class="module-item">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">⚡</div>
+                        <div>Power Generator</div>
+                    </div>
+                    <div class="module-item">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">🔌</div>
+                        <div>Docking Bay</div>
+                    </div>
+                    <div class="module-item">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">📦</div>
+                        <div>Cargo Hold</div>
+                    </div>
+                    <div class="module-item">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">🏪</div>
+                        <div>Trade Hub</div>
+                    </div>
+                    <div class="module-item">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">💥</div>
+                        <div>Turret Array</div>
+                    </div>
+                    <div class="module-item">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">🛰️</div>
+                        <div>Shield Generator</div>
+                    </div>
+                </div>
+                
+                <div class="station-viewport">
+                    <div class="station-grid">
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell occupied">⚡</div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell occupied">🔌</div>
+                        <div class="grid-cell occupied">🏢</div>
+                        <div class="grid-cell occupied">📦</div>
+                        <div class="grid-cell"></div>
+                        
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell occupied">🛰️</div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                </div>
+                
+                <div class="info-panel">
+                    <div class="info-section">
+                        <h3>Station Info</h3>
+                        <p style="color: #8C9AAF; font-size: 0.9rem;">
+                            Name: Frontier Outpost<br>
+                            Modules: 5/25<br>
+                            Population: 450/1000
+                        </p>
+                    </div>
+                    <div class="info-section">
+                        <h3>Resources</h3>
+                        <div class="stat-bar">
+                            <span class="stat-label">Steel:</span>
+                            <span>1,250/2,000</span>
+                        </div>
+                        <div class="stat-bar">
+                            <span class="stat-label">Electronics:</span>
+                            <span>450</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Factions Section -->
+        <div id="factions" class="mockup-section">
+            <h2 class="mockup-title">Faction System</h2>
+            <div style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
+                <h3 class="mockup-subtitle">Major Factions</h3>
+                
+                <div style="background: rgba(26, 35, 50, 0.8); padding: 1.5rem; border-radius: 10px; margin-bottom: 1rem; border-left: 5px solid #FFD700;">
+                    <h3 style="color: #FFD700; font-size: 1.8rem; margin-bottom: 0.5rem;">☀️ Solaris Union</h3>
+                    <p style="color: #8C9AAF; margin-bottom: 1rem;">Democratic Federation | Tech Level: 8</p>
+                    <div class="stat-bar" style="margin-bottom: 0.5rem;">
+                        <span class="stat-label">Your Standing:</span>
+                        <span class="stat-value">+82 (Allied)</span>
+                    </div>
+                    <div class="progress-bar" style="margin-bottom: 1rem;">
+                        <div class="progress-fill" style="width: 82%;"></div>
+                    </div>
+                    <div>
+                        <span class="faction-badge solaris-union">Democratic</span>
+                        <span class="faction-badge solaris-union">Peaceful</span>
+                        <span class="faction-badge solaris-union">Scientific</span>
+                    </div>
+                </div>
+                
+                <div style="background: rgba(26, 35, 50, 0.8); padding: 1.5rem; border-radius: 10px; margin-bottom: 1rem; border-left: 5px solid #708090;">
+                    <h3 style="color: #708090; font-size: 1.8rem; margin-bottom: 0.5rem;">⚙️ Ironclad Consortium</h3>
+                    <p style="color: #8C9AAF; margin-bottom: 1rem;">Corporate Oligarchy | Tech Level: 7</p>
+                    <div class="stat-bar" style="margin-bottom: 0.5rem;">
+                        <span class="stat-label">Your Standing:</span>
+                        <span class="stat-value">+95 (Close Ally) ⭐</span>
+                    </div>
+                    <div class="progress-bar" style="margin-bottom: 1rem;">
+                        <div class="progress-fill" style="width: 95%;"></div>
+                    </div>
+                    <div>
+                        <span class="faction-badge ironclad-consortium">Militaristic</span>
+                        <span class="faction-badge ironclad-consortium">Industrial</span>
+                        <span class="faction-badge ironclad-consortium">Pragmatic</span>
+                    </div>
+                </div>
+                
+                <div style="background: rgba(26, 35, 50, 0.8); padding: 1.5rem; border-radius: 10px; margin-bottom: 1rem; border-left: 5px solid #00FFFF;">
+                    <h3 style="color: #00FFFF; font-size: 1.8rem; margin-bottom: 0.5rem;">💠 Neon Collective</h3>
+                    <p style="color: #8C9AAF; margin-bottom: 1rem;">Technocracy | Tech Level: 9</p>
+                    <div class="stat-bar" style="margin-bottom: 0.5rem;">
+                        <span class="stat-label">Your Standing:</span>
+                        <span style="color: #F39C12;">+30 (Tense)</span>
+                    </div>
+                    <div class="progress-bar" style="margin-bottom: 1rem;">
+                        <div class="progress-fill warning" style="width: 30%;"></div>
+                    </div>
+                    <div>
+                        <span class="faction-badge neon-collective">Technological</span>
+                        <span class="faction-badge neon-collective">Elitist</span>
+                        <span class="faction-badge neon-collective">Advanced</span>
+                    </div>
+                </div>
+                
+                <div style="background: rgba(26, 35, 50, 0.8); padding: 1.5rem; border-radius: 10px; border-left: 5px solid #8B0000;">
+                    <h3 style="color: #E74C3C; font-size: 1.8rem; margin-bottom: 0.5rem;">💀 Void Walkers</h3>
+                    <p style="color: #8C9AAF; margin-bottom: 1rem;">Nomadic Raiders | Tech Level: 5</p>
+                    <div class="stat-bar" style="margin-bottom: 0.5rem;">
+                        <span class="stat-label">Your Standing:</span>
+                        <span style="color: #E74C3C;">-80 (Hostile) ⚠️</span>
+                    </div>
+                    <div class="progress-bar" style="margin-bottom: 1rem;">
+                        <div class="progress-fill warning" style="width: 20%;"></div>
+                    </div>
+                    <div>
+                        <span class="faction-badge void-walkers">Hostile</span>
+                        <span class="faction-badge void-walkers">Nomadic</span>
+                        <span class="faction-badge void-walkers">Raider</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Adastrea - Open World Space Flight Game</p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem;">UI Mockup Demo | Version 1.0 | November 2025</p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem;">Built with HTML/CSS for visual reference</p>
+        </footer>
+    </div>
+    
+    <script>
+        function showSection(sectionId, event) {
+            // Hide all sections
+            document.querySelectorAll('.mockup-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('nav button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

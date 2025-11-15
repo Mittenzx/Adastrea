@@ -653,6 +653,11 @@ The game includes a comprehensive personnel/crew management system for creating 
 - **[Project Roadmap](ROADMAP.md)** - Development phases, timelines, and future features
 - **[Roadmap Update Guidelines](ROADMAP_UPDATE_GUIDELINES.md)** - When and how to update the roadmap
 
+### Visual Design
+
+- **[Game Mockups](GAME_MOCKUPS.md)** - Comprehensive visual mockups showing current vs. desired UI/UX for all game screens
+- **[Interactive UI Demo](UI_MOCKUP_DEMO.html)** - HTML/CSS interactive demo of game interfaces (open in browser)
+
 ### Developer Documentation
 
 Comprehensive technical documentation for contributors and developers:
