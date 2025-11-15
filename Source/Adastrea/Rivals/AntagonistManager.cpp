@@ -6,6 +6,15 @@
 #include "TimerManager.h"
 #include "Engine/World.h"
 
+// File-scope constants for antagonist name generation
+namespace AntagonistNames
+{
+	static const TArray<FString> Prefixes = {
+		TEXT("Captain"), TEXT("Commander"), TEXT("Admiral"), TEXT("Lord"), TEXT("Lady"),
+		TEXT("Baron"), TEXT("Baroness"), TEXT("Director"), TEXT("Overseer"), TEXT("Warlord")
+	};
+}
+
 UAntagonistManager::UAntagonistManager()
 {
 }
@@ -215,12 +224,6 @@ int32 UAntagonistManager::GetTotalAntagonistCount() const
 
 FText UAntagonistManager::GenerateAntagonistName(UFeatDataAsset* SourceFeat, EAntagonistGoal Goal) const
 {
-	// Name prefixes for variety
-	static const TArray<FString> Prefixes = {
-		TEXT("Captain"), TEXT("Commander"), TEXT("Admiral"), TEXT("Lord"), TEXT("Lady"),
-		TEXT("Baron"), TEXT("Baroness"), TEXT("Director"), TEXT("Overseer"), TEXT("Warlord")
-	};
-	
 	// Surnames based on goal type
 	TArray<FString> Surnames;
 	switch (Goal)
@@ -256,10 +259,10 @@ FText UAntagonistManager::GenerateAntagonistName(UFeatDataAsset* SourceFeat, EAn
 	}
 	
 	// Randomly select prefix and surname for variation
-	const int32 PrefixIndex = FMath::RandRange(0, Prefixes.Num() - 1);
+	const int32 PrefixIndex = FMath::RandRange(0, AntagonistNames::Prefixes.Num() - 1);
 	const int32 SurnameIndex = FMath::RandRange(0, Surnames.Num() - 1);
 	
-	const FString GeneratedName = FString::Printf(TEXT("%s %s"), *Prefixes[PrefixIndex], *Surnames[SurnameIndex]);
+	const FString GeneratedName = FString::Printf(TEXT("%s %s"), *AntagonistNames::Prefixes[PrefixIndex], *Surnames[SurnameIndex]);
 	return FText::FromString(GeneratedName);
 }
 
