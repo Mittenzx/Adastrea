@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adastrea - UI Mockup Demo</title>
     <style>
+        :root {
+            --color-deep-space: #0A0E1A;
+            --color-ui-bg-primary: #1A2332;
+            --color-ui-bg-secondary: #0F1419;
+            --color-ui-accent: #4A9EFF;
+            --color-text-primary: #E8F0FF;
+            --color-text-secondary: #8C9AAF;
+            --color-success: #2ECC71;
+            --color-warning: #F39C12;
+            --color-danger: #E74C3C;
+            --color-info: #3498DB;
+            --color-energy: #9B59B6;
+            --color-gold: #FFD700;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -13,8 +28,8 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0A0E1A;
-            color: #E8F0FF;
+            background: var(--color-deep-space);
+            color: var(--color-text-primary);
             overflow-x: hidden;
         }
         
@@ -392,10 +407,10 @@
         </header>
         
         <nav>
-            <button onclick="showSection('main-menu')" class="active">Main Menu</button>
-            <button onclick="showSection('hud')">Space Flight HUD</button>
-            <button onclick="showSection('station')">Station Builder</button>
-            <button onclick="showSection('factions')">Factions</button>
+            <button onclick="showSection('main-menu', event)" aria-current="page" aria-label="Navigate to Main Menu section" class="active">Main Menu</button>
+            <button onclick="showSection('hud', event)" aria-label="Navigate to Space Flight HUD section">Space Flight HUD</button>
+            <button onclick="showSection('station', event)" aria-label="Navigate to Station Builder section">Station Builder</button>
+            <button onclick="showSection('factions', event)" aria-label="Navigate to Factions section">Factions</button>
         </nav>
         
         <!-- Main Menu Section -->
@@ -407,11 +422,11 @@
                     <h1 class="game-title">✦ ADASTREA ✦</h1>
                     <p style="font-size: 1.5rem; color: #8C9AAF;">Open World Space Flight</p>
                     <div class="menu-buttons">
-                        <button class="menu-button">▶ NEW GAME</button>
-                        <button class="menu-button">⟳ CONTINUE</button>
-                        <button class="menu-button">⚙ OPTIONS</button>
-                        <button class="menu-button">ℹ CREDITS</button>
-                        <button class="menu-button">⊗ QUIT</button>
+                        <button class="menu-button" aria-label="New Game">▶ NEW GAME</button>
+                        <button class="menu-button" aria-label="Continue">⟳ CONTINUE</button>
+                        <button class="menu-button" aria-label="Options">⚙ OPTIONS</button>
+                        <button class="menu-button" aria-label="Credits">ℹ CREDITS</button>
+                        <button class="menu-button" aria-label="Quit">⊗ QUIT</button>
                     </div>
                 </div>
             </div>
@@ -461,7 +476,7 @@
                 
                 <div class="hud-viewport">
                     <div class="ship-silhouette"></div>
-                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 2px solid #FFD700; border-radius: 50%; box-shadow: 0 0 20px #FFD700;"></div>
+                    <div aria-hidden="true" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 2px solid #FFD700; border-radius: 50%; box-shadow: 0 0 20px #FFD700;"></div>
                 </div>
                 
                 <div class="hud-panel hud-bottom-left">
@@ -658,7 +673,7 @@
     </div>
     
     <script>
-        function showSection(sectionId) {
+        function showSection(sectionId, event) {
             // Hide all sections
             document.querySelectorAll('.mockup-section').forEach(section => {
                 section.classList.remove('active');
