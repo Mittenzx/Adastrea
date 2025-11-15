@@ -27,7 +27,7 @@
 
 ## About
 
-**Adastrea** is an open-world space flight game built on Unreal Engine. Players can explore vast galaxies, engage in thrilling space battles, discover new planets, manage space stations, build crew relationships, and participate in a dynamic galactic economy.
+**Adastrea** is an open-world space flight game built on Unreal Engine 5.6. Players can explore vast galaxies, engage in thrilling space battles, discover new planets, manage space stations, build crew relationships, and participate in a dynamic galactic economy. The project features 22 major game systems with over 33,000 lines of C++ code and comprehensive Blueprint integration.
 
 ### Key Highlights
 
@@ -195,8 +195,8 @@ All generated content is saved as YAML files compatible with the existing Data A
 - Community and modding ecosystem plans
 - How to contribute to upcoming features
 
-**Current Status**: Pre-Alpha 0.9.0 - Phase 3 (Advanced Systems) in progress  
-**Next Milestone**: Phase 4 (Gameplay & Polish) - Q1-Q2 2026
+**Current Status**: Alpha 1.0.0-alpha - Phase 4 (Gameplay & Polish) 70% complete  
+**Next Milestone**: Phase 4 completion and Phase 5 (Content & Beta) - Q1-Q3 2026
 
 **📝 Contributing to the Roadmap**: When submitting PRs that affect project milestones or system status, please update ROADMAP.md following the [Roadmap Update Guidelines](ROADMAP_UPDATE_GUIDELINES.md).
 
@@ -637,6 +637,28 @@ The game includes a comprehensive personnel/crew management system for creating 
 5. Use Blueprint-callable functions to query personnel data in gameplay
 6. Build command hierarchies using Manager ID and Direct Reports
 7. Create relationships between personnel for team dynamics
+
+### Additional Core Systems
+
+**Combat System** - Complete weapon, targeting, and damage mechanics with 6 weapon types, directional shields, point defense, and 5-phase boarding. See [Assets/CombatSystemGuide.md](Assets/CombatSystemGuide.md).
+
+**Navigation System** - Autopilot, 3D pathfinding, and AI following behavior. Supports multi-waypoint paths with obstacle avoidance. See [Assets/NavigationSystemGuide.md](Assets/NavigationSystemGuide.md).
+
+**Quest System** - Mission tracking with 10 quest types and 9 objective types. Supports quest chains, procedural generation, and difficulty-scaled rewards. See [Assets/QuestSystemGuide.md](Assets/QuestSystemGuide.md).
+
+**Enhanced Input System** - Centralized input configuration with 30+ actions organized into categories (Movement, Combat, Navigation, System, Camera). See [Assets/EnhancedInputImplementation.md](Assets/EnhancedInputImplementation.md).
+
+**Save System** - Complete save/load with multiple slots, auto-save, metadata tracking, and version control. See [Assets/SaveSystemGuide.md](Assets/SaveSystemGuide.md).
+
+**Tutorial System** - Interactive tutorials with 6 step types (Message, UI Highlight, Wait for Action, etc.). Progress tracking and designer-friendly. See [Assets/TutorialSystemGuide.md](Assets/TutorialSystemGuide.md).
+
+**Audio System** - Sound effects with 8 categories and dynamic music system with 8 moods. Includes spatial audio and priority management. See [Assets/AudioSystemGuide.md](Assets/AudioSystemGuide.md).
+
+**Player Progression** - Leveling, reputation tracking, ship upgrades, and unlock systems. See [Assets/PlayerProgressionGuide.md](Assets/PlayerProgressionGuide.md).
+
+**UI Systems** - Complete HUD (AdastreaHUDWidget), Inventory management (InventoryWidget), Ship Customization (ShipCustomizationWidget), Trading interface (TradingInterfaceWidget), and Station Management (StationManagementWidget). See system-specific guides in Assets/.
+
+**Performance Tools** - LOD management (LODManagerComponent) and performance profiling (PerformanceProfiler). See [Assets/PerformanceOptimizationGuide.md](Assets/PerformanceOptimizationGuide.md).
 
 ## Documentation
 
