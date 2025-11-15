@@ -21,6 +21,10 @@ public class Adastrea : ModuleRules
 			"Adastrea/Public/Navigation",
 			"Adastrea/Public/Quest",
 			"Adastrea/Public/Input",
+			"Adastrea/Public/Audio",
+			"Adastrea/Public/Performance",
+			"Adastrea/Public/UI",
+			"Adastrea/Public/Tutorial",
 			"Adastrea/Way",
 			"Adastrea/Rivals"
 		});
