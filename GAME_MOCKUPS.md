@@ -6,7 +6,7 @@
 > Visual concept mockups showing the current baseline vs. desired future look for Adastrea's open-world space flight game.
 
 **Last Updated**: November 15, 2025  
-**Version**: 1.0  
+**Version**: 1.0.0-alpha  
 **Purpose**: Visual design reference for UI/UX, environment art, and gameplay presentation
 
 ---
@@ -317,7 +317,7 @@ These mockups serve as:
 ║                                                                ║
 ║                                                                ║
 ║                                                                ║
-║               Version 0.9.0 - Pre-Alpha                        ║
+║               Version 1.0.0-alpha - Alpha                      ║
 ╚════════════════════════════════════════════════════════════════╝
 ```
 

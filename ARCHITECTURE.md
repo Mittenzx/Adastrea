@@ -259,9 +259,90 @@ The main game logic module, organized by feature:
 - Contract quest system
 - AI-driven markets
 
+#### Combat System (`Source/Adastrea/Public/Combat/`)
+- **WeaponComponent**: Weapon firing, ammunition, heat management
+- **TargetingComponent**: Target acquisition, lock-on, lead calculation
+- **CombatHealthComponent**: Hull integrity, shields, damage application
+- **PointDefenseComponent**: Automated missile interception
+- **BoardingComponent**: 5-phase boarding mechanics with crew combat
+- **WeaponDataAsset**: 6 weapon types, 5 damage types
+
+**Features**:
+- Directional shields (4 facings)
+- Armor penetration mechanics
+- Multi-weapon coordination
+- Threat assessment and prioritization
+
+#### Navigation System (`Source/Adastrea/Public/Navigation/`)
+- **NavigationComponent**: Autopilot, pathfinding, following behavior
+- Multi-waypoint navigation with individual settings
+- 3D pathfinding with obstacle avoidance
+- Configurable speed, distance, and turn smoothing
+
+#### Quest System (`Source/Adastrea/Public/Quest/`)
+- **QuestDataAsset**: 10 quest types, 9 objective types
+- **QuestManagerSubsystem**: Quest tracking, progress, events
+- Quest chains with prerequisites
+- Difficulty-scaled rewards (credits, reputation, items, XP)
+- Procedural generation support
+
+#### Enhanced Input System (`Source/Adastrea/Public/Input/`)
+- **InputConfigDataAsset**: Centralized input action storage
+- 30+ predefined input actions organized in categories
+- Multiple mapping contexts (Spaceship, Menu)
+- Validation functions for configuration
+
+#### Audio System (`Source/Adastrea/Public/Audio/`)
+- **AdastreaAudioComponent**: Sound effect playback with priorities
+- **MusicManagerSubsystem**: Dynamic music with 8 moods
+- **SoundEffectDataAsset**: 8 audio categories
+- **MusicTrackDataAsset**: Mood-based music selection
+- Spatial audio with attenuation
+- Smooth crossfading between tracks
+
+#### Performance System (`Source/Adastrea/Public/Performance/`)
+- **PerformanceProfiler**: Runtime performance monitoring
+- **LODManagerComponent**: Level-of-detail management
+- Profiling tools for optimization
+- Scalable architecture support
+
+#### Tutorial System (`Source/Adastrea/Public/Tutorial/`)
+- **TutorialStepDataAsset**: 6 tutorial step types
+- **TutorialManagerSubsystem**: Progress tracking and saving
+- Interactive tutorials with UI highlighting
+- Wait for action/condition support
+- Voiceover and animation support
+
+#### Save System (`Source/Adastrea/Public/Player/`)
+- **SaveGameSubsystem**: Complete save/load with multiple slots
+- Auto-save functionality
+- Save file metadata for UI display
+- Version control and compatibility checking
+- Player and world state serialization
+
 #### UI System (`Source/Adastrea/UI/`)
+- **AdastreaHUDWidget**: Complete heads-up display
+- **InventoryWidget**: Item management interface
+- **InventoryComponent**: Item storage with weight/volume limits
+- **ShipCustomizationWidget**: Visual customization and loadouts
+- **TradingInterfaceWidget**: Trading UI
+- **StationManagementWidget**: Station management interface
 - **SectorMapWidget**: Galactic navigation
 - **Sector**: Spatial regions
+
+#### Player Progression (`Source/Adastrea/Public/Player/`)
+- **PlayerProgressionComponent**: Leveling and experience
+- **ShipUpgradeComponent**: Ship upgrade trees
+- **PlayerReputationComponent**: Faction reputation tracking
+- **ShipUpgradeDataAsset**: Upgrade definitions
+- Unlock systems for ships, modules, equipment
+- Achievement framework (needs content)
+
+#### Rivals/Antagonists (`Source/Adastrea/Rivals/`)
+- **AntagonistManager**: Nemesis spawning and tracking
+- **Antagonist**: Rival character actors
+- Relationship tracking with player
+- Dynamic rival generation
 
 ### StationEditor Module (`Source/StationEditor/`)
 
@@ -484,16 +565,24 @@ bool IsSuitableForRole(const FString& Role) const;
 Core Dependencies:
 - Unreal Engine 5.6
 - C++ Standard Library
-- Unreal Core, Engine modules
+- Unreal Core, Engine, EnhancedInput modules
 
 System Interdependencies:
-- Faction System ← Personnel, Stations, Trading, AI
-- Ship System ← Personnel (crew), Trading (cargo)
-- Station System ← Factions, Materials (construction)
-- Trading System ← Factions (relationships), Ships (cargo)
+- Faction System ← Personnel, Stations, Trading, AI, Ways
+- Ship System ← Personnel (crew), Trading (cargo), Combat, Navigation
+- Station System ← Factions, Materials (construction), Trading
+- Trading System ← Factions (relationships), Ships (cargo), Ways (supply chains)
 - AI System ← Factions, Personnel (behavior)
-- Personnel System ← Ships/Stations (assignments)
+- Personnel System ← Ships/Stations (assignments), AI
 - Homeworld System ← Factions (relationships)
+- Combat System ← Targeting, Weapons, Health components
+- Navigation System ← Pathfinding, Waypoint management
+- Quest System ← Objectives, Rewards, Faction reputation
+- Way System ← Networks, Precepts, Verse reputation
+- Audio System ← Music tracks, Sound effects
+- Tutorial System ← Step definitions, Progress tracking
+- Save System ← Player state, World state serialization
+- Player Progression ← Reputation, Unlocks, Experience
 ```
 
 ## Performance Considerations
@@ -545,12 +634,18 @@ All systems follow this documentation structure:
 
 ## Future Architecture Plans
 
-### Planned Modules
-- **Networking Module**: Multiplayer support
-- **Save System**: Persistence and serialization
-- **Quest System**: Dynamic mission generation
-- **Combat System**: Detailed combat mechanics
-- **Exploration System**: Procedural generation
+### Completed in Phase 4 (November 2025) ✅
+- ✅ **Save System**: Complete persistence with SaveGameSubsystem
+- ✅ **Combat System**: Full weapons, targeting, damage mechanics
+- ✅ **Navigation System**: Autopilot and 3D pathfinding
+- ✅ **Quest System**: Mission tracking with 10 types
+- ✅ **Audio System**: Dynamic music and sound effects
+- ✅ **Tutorial System**: Interactive onboarding
+- ✅ **Performance Tools**: Profiling and LOD management
+
+### Planned Modules (Phase 5+)
+- **Networking Module**: Multiplayer support (Q3-Q4 2026)
+- **Exploration Module**: Galaxy and planet generation (Q2-Q3 2026)
 
 ### Planned Improvements
 - Custom Unreal Editor tools (can be added as separate editor module if needed)
@@ -560,5 +655,5 @@ All systems follow this documentation structure:
 
 ---
 
-Last Updated: 2025-10-18
-Version: 1.0
+Last Updated: 2025-11-15
+Version: 1.0.0-alpha

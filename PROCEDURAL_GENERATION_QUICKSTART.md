@@ -14,7 +14,7 @@ Get started with procedural content generation in under 5 minutes!
 **No installation needed!** ProceduralGenerators.py uses only Python standard library.
 
 Requirements:
-- Python 3.6 or higher (included with Unreal Engine 5.x)
+- Python 3.6 or higher (included with Unreal Engine 5.6)
 
 ## Quick Commands
 
