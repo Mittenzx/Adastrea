@@ -54,7 +54,7 @@ TArray<UTradeItemDataAsset*> UTradingInterfaceWidget::GetFilteredItems(const FSt
 		}
 
 		// Apply category filter if specified
-		if (Category.IsEmpty() || Item->Category.ToString() == Category)
+		if (Category.IsEmpty() || UEnum::GetValueAsString(Item->Category) == Category)
 		{
 			FilteredItems.Add(Item);
 		}
