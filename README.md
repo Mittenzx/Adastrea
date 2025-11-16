@@ -198,6 +198,8 @@ All generated content is saved as YAML files compatible with the existing Data A
 **Current Status**: Alpha 1.0.0-alpha - Phase 4 (Gameplay & Polish) 70% complete  
 **Next Milestone**: Phase 4 completion and Phase 5 (Content & Beta) - Q1-Q3 2026
 
+**📋 Active Development**: See [NEXT_2_WEEKS_TASKS.md](NEXT_2_WEEKS_TASKS.md) for the current 2-week sprint plan (Nov 16-30, 2025)
+
 **📝 Contributing to the Roadmap**: When submitting PRs that affect project milestones or system status, please update ROADMAP.md following the [Roadmap Update Guidelines](ROADMAP_UPDATE_GUIDELINES.md).
 
 ## Project Structure
@@ -673,6 +675,7 @@ The game includes a comprehensive personnel/crew management system for creating 
 ### Project Planning
 
 - **[Project Roadmap](ROADMAP.md)** - Development phases, timelines, and future features
+- **[Next 2 Weeks Tasks](NEXT_2_WEEKS_TASKS.md)** - Current sprint plan (Nov 16-30, 2025) with detailed task breakdown
 - **[Roadmap Update Guidelines](ROADMAP_UPDATE_GUIDELINES.md)** - When and how to update the roadmap
 
 ### Visual Design
