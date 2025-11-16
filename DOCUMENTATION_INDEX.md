@@ -75,7 +75,8 @@ Fast-track guides for getting started:
 |----------|----------|---------|----------|
 | **QUICKSTART.md** | All | Fast project setup | Root |
 | **CONTENT_CREATION_QUICKSTART.md** | Designers | Content creation basics | Root |
-| **BLUEPRINT_CHECKLIST.md** | Designers | Blueprint creation checklist | Root |
+| **BLUEPRINT_CHECKLIST.md** | Designers | ⭐ Blueprint creation checklist | Root |
+| **BLUEPRINT_QUICK_REFERENCE.md** | Designers | ⭐ One-page Blueprint reference | Root |
 | **Assets/DesignerOnboarding.md** | Designers | New designer comprehensive guide | Assets/ |
 | **GENERATOR_QUICK_START.md** | Designers | Script automation basics | Root |
 | **PROCEDURAL_GENERATION_QUICKSTART.md** | All | Procedural content generation | Root |
@@ -247,8 +248,9 @@ Concise reference documents:
 
 | Document | Purpose | Location |
 |----------|---------|----------|
-| **BLUEPRINT_REQUIREMENTS_LIST.md** | ⭐ Comprehensive list of all required Blueprints | Root |
-| **BLUEPRINT_CHECKLIST.md** | Quick checklist for Blueprint creation | Root |
+| **BLUEPRINT_REQUIREMENTS_LIST.md** | ⭐ Comprehensive list of all required Blueprints (882 lines) | Root |
+| **BLUEPRINT_CHECKLIST.md** | Quick checklist for Blueprint creation (372 lines) | Root |
+| **BLUEPRINT_QUICK_REFERENCE.md** | One-page visual reference card | Root |
 | **BLUEPRINT_CREATION_GUIDE.md** | Blueprint best practices | Root |
 | **Assets/BlueprintWorkflowTemplates.md** | Blueprint workflow templates | Assets/ |
 

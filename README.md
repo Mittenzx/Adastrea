@@ -699,8 +699,9 @@ Comprehensive technical documentation for contributors and developers:
 - [Editor Implementation Guide](EDITOR_IMPLEMENTATION_GUIDE.md) - Complete guide to working in Unreal Engine editor
 
 ### Blueprint Documentation
-- **[Blueprint Requirements List](BLUEPRINT_REQUIREMENTS_LIST.md)** - Comprehensive list of all user-created Blueprints needed in the editor
-- **[Blueprint Checklist](BLUEPRINT_CHECKLIST.md)** - Quick checklist for creating required Blueprints
+- **[Blueprint Requirements List](BLUEPRINT_REQUIREMENTS_LIST.md)** - Comprehensive list of all user-created Blueprints needed in the editor (~100+ Blueprints organized by priority)
+- **[Blueprint Checklist](BLUEPRINT_CHECKLIST.md)** - Quick checklist for creating required Blueprints in phases
+- **[Blueprint Quick Reference](BLUEPRINT_QUICK_REFERENCE.md)** - One-page visual reference card with priorities and paths
 - [Blueprint Creation Guide](BLUEPRINT_CREATION_GUIDE.md) - Step-by-step Blueprint creation instructions
 
 ### System Documentation
