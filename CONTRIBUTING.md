@@ -78,7 +78,7 @@ Adastrea provides custom AI agents for GitHub Copilot that have deep knowledge o
 
 This agent has expertise in:
 - All core game systems (Spaceships, Factions, Personnel, AI, Trading, etc.)
-- Unreal Engine 5.5 and C++ best practices specific to Adastrea
+- Unreal Engine 5.6 and C++ best practices specific to Adastrea
 - Data Asset architecture and Blueprint integration patterns
 - Project coding standards and conventions
 

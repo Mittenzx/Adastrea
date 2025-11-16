@@ -78,10 +78,10 @@ Depending on your changes, update the relevant sections:
 Update if completing or making significant progress on systems:
 
 ```markdown
-### ✅ Completed Systems (0.9.0)
+### ✅ Completed Systems (1.0.0-alpha)
 - Add newly completed systems here
 
-### 🔄 In Progress (0.9.x - 1.0.0)
+### 🔄 In Progress (1.0.0-alpha - 1.0.0)
 - Update progress on active development
 - Move completed items to "Completed Systems"
 
