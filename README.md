@@ -180,10 +180,11 @@ All generated content is saved as YAML files compatible with the existing Data A
 
 1. **For Designers**: Read [Assets/DesignerOnboarding.md](Assets/DesignerOnboarding.md)
 2. **For Programmers**: Read [CONTRIBUTING.md](CONTRIBUTING.md) and [ARCHITECTURE.md](ARCHITECTURE.md)
-3. **For Testing**: Create a Test Mode level - see [Docs/TestMode_INDEX.md](Docs/TestMode_INDEX.md) for complete guide
-4. **For Automation**: See [TESTING_AUTOMATION_GUIDE.md](TESTING_AUTOMATION_GUIDE.md) for automated testing
-5. **For Procedural Content**: See [PROCEDURAL_GENERATION_QUICKSTART.md](PROCEDURAL_GENERATION_QUICKSTART.md)
-6. **Quick Reference**: See individual system guides in the Assets/ folder
+3. **For Blueprint Creation**: See [BLUEPRINT_REQUIREMENTS_LIST.md](BLUEPRINT_REQUIREMENTS_LIST.md) for complete list of required Blueprints
+4. **For Testing**: Create a Test Mode level - see [Docs/TestMode_INDEX.md](Docs/TestMode_INDEX.md) for complete guide
+5. **For Automation**: See [TESTING_AUTOMATION_GUIDE.md](TESTING_AUTOMATION_GUIDE.md) for automated testing
+6. **For Procedural Content**: See [PROCEDURAL_GENERATION_QUICKSTART.md](PROCEDURAL_GENERATION_QUICKSTART.md)
+7. **Quick Reference**: See individual system guides in the Assets/ folder
 
 ## Project Roadmap
 
@@ -696,6 +697,11 @@ Comprehensive technical documentation for contributors and developers:
 - [Quick Start](QUICKSTART.md) - Get up and running quickly
 - [Content Creation Quick Start](CONTENT_CREATION_QUICKSTART.md) - For content creators
 - [Editor Implementation Guide](EDITOR_IMPLEMENTATION_GUIDE.md) - Complete guide to working in Unreal Engine editor
+
+### Blueprint Documentation
+- **[Blueprint Requirements List](BLUEPRINT_REQUIREMENTS_LIST.md)** - Comprehensive list of all user-created Blueprints needed in the editor
+- **[Blueprint Checklist](BLUEPRINT_CHECKLIST.md)** - Quick checklist for creating required Blueprints
+- [Blueprint Creation Guide](BLUEPRINT_CREATION_GUIDE.md) - Step-by-step Blueprint creation instructions
 
 ### System Documentation
 
