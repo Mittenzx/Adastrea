@@ -12,11 +12,13 @@
 This task list covers the final 30% of Phase 4 work needed to reach alpha build quality. Tasks are organized by priority (P0-P2) and assigned based on expertise areas.
 
 **Key Objectives for Next 2 Weeks**:
-1. Complete visual/audio polish for combat and space flight
-2. Implement remaining performance optimizations
-3. Create achievement content and test progression system
-4. Begin Director Plugin proof of concept
-5. Prepare alpha build checklist
+1. Complete visual/audio polish for combat and space flight **(P0 - Critical)**
+2. Implement remaining performance optimizations **(P0 - Critical)**
+3. Create achievement, tutorial, and audio content **(P1 - Minimum viable scope)**
+4. Begin Director Plugin proof of concept **(P1 - Initial implementation)**
+5. Prepare alpha build checklist **(P0 - Critical)**
+
+> **Sprint Realism Note:** The estimated workload (11-15 days per person) exceeds the 10 working days available in a 2-week sprint. This is intentional to provide a comprehensive task list with clear priorities. Focus is on completing all P0 (Critical) tasks, with P1 (High) and P2 (Medium) tasks completed as time permits. Some content creation goals have been scoped down to minimum viable targets to ensure alpha quality is achieved.
 
 ---
 
@@ -729,63 +731,71 @@ This task list covers the final 30% of Phase 4 work needed to reach alpha build 
 
 ## 🎯 Success Criteria for 2-Week Period
 
-### Must Have (Required for Success)
+### Must Have (Required for Success - P0 Tasks)
 - ✅ All P0 tasks completed (combat VFX, engine effects, both optimization passes, alpha build)
 - ✅ Alpha build packaged and tested
 - ✅ Performance targets met (60 FPS @ 1080p, <8GB RAM)
-- ✅ At least 50 achievements created and tested
-- ✅ All 5 core tutorials complete and playable
-
-### Should Have (Highly Desirable)
-- ✅ Audio assets integrated (at least 50% of planned sounds)
-- ✅ Director Plugin PoC started (initial implementation complete)
-- ✅ Content creation pipeline documented
 - ✅ Visual polish complete (post-processing, lighting)
 
-### Nice to Have (Bonus)
+### Should Have (Highly Desirable - P1 Tasks, Minimum Viable Scope)
+- ✅ At least 30-40 achievements created and tested (reduced from original 66)
+- ✅ At least 3 core tutorials complete and playable (reduced from original 5)
+- ✅ Audio assets integrated (at least 40-50 sounds, reduced from original 80+)
+- ✅ Director Plugin PoC started (initial implementation, continuing beyond sprint)
+- ✅ Content creation pipeline documented (if time permits)
+
+### Nice to Have (Bonus - P2 Tasks, If Time Permits)
 - ✅ Cloud save research complete
 - ✅ Modding API documentation draft started
 - ✅ Performance benchmarking suite implemented
+
+> **Note:** Success is defined by completing all P0 tasks and achieving minimum viable scope for P1 tasks. Full content goals (66 achievements, 5 tutorials, 80+ audio) are stretch goals that may extend into subsequent sprints.
 
 ---
 
 ## 📊 Task Assignment Summary
 
 ### 👤 **Mittenzx** (Visual/Content Lead)
-**Estimated Total**: 10-12 days of work
+**Estimated Core Workload**: 11-14 days (P0/P1 tasks only)  
+**Optional Tasks (if time permits)**: Additional content creation tasks may extend beyond sprint
 
-**Week 1**:
-- P0.1: Combat Visual Effects (3-4 days)
-- P1.1: Achievement System Content (2 days)
-- P1.2: Tutorial Content Creation (2-3 days)
-- P1.3: Audio Asset Creation (2-3 days)
+**Week 1** (Priority Focus):
+- P0.1: Combat Visual Effects (3-4 days) - **CRITICAL**
+- P1.1: Achievement System Content (2 days) - Target: 30-40 achievements minimum
+- P1.2: Tutorial Content Creation (2-3 days) - _May be partially completed, aim for 3 core tutorials_
+- P1.3: Audio Asset Creation (2-3 days) - _If time permits, target 40-50 sounds minimum_
 
 **Week 2**:
-- P0.4: Post-Processing and Visual Polish (2-3 days)
-- P0.6: Alpha Build Preparation (2 days, collaborative)
-- P1.5: Content Creation Pipeline Documentation (1-2 days)
+- P0.4: Post-Processing and Visual Polish (2-3 days) - **CRITICAL**
+- P0.6: Alpha Build Preparation (2 days, collaborative) - **CRITICAL**
+- P1.5: Content Creation Pipeline Documentation (1-2 days) - _If time permits_
 
 **Focus Areas**: Visual effects, content creation, UX/tutorials, audio
+
+> **Note:** The total estimated workload exceeds the available 10 working days in this period. Tasks marked _"if time permits"_ or with reduced scope should be prioritized after P0 objectives. Remaining content (achievements, tutorials, audio) can be completed in subsequent sprints.
 
 ---
 
 ### 👤 **Copilot** (Technical Lead)
-**Estimated Total**: 10-13 days of work
+**Estimated Core Workload**: 12-15 days (P0/P1 tasks only)  
+**Optional Tasks (if time permits)**: +3-4 days (P2 tasks)
 
-**Week 1**:
-- P0.2: Engine and Thruster Particle Systems (2-3 days)
-- P0.3: Performance Optimization Pass #1 (3 days)
-- P2.1: Cloud Save Support Research (1 day)
-- P2.2: Director Plugin PoC Planning (1-2 days)
+**Week 1** (Priority Focus):
+- P0.2: Engine and Thruster Particle Systems (2-3 days) - **CRITICAL**
+- P0.3: Performance Optimization Pass #1 (3 days) - **CRITICAL**
+- P2.1: Cloud Save Support Research (1 day) - _If time permits_
+- P2.2: Director Plugin PoC Planning (1-2 days) - _If time permits, can extend into Week 2_
 
 **Week 2**:
-- P0.5: Performance Optimization Pass #2 (2-3 days)
-- P0.6: Alpha Build Preparation (2 days, collaborative)
-- P1.4: Director Plugin PoC Implementation (3-4 days)
-- P2.3: Modding API Documentation Draft (1-2 days, if time permits)
-- P2.4: Performance Benchmarking Suite (1 day, if time permits)
+- P0.5: Performance Optimization Pass #2 (2-3 days) - **CRITICAL**
+- P0.6: Alpha Build Preparation (2 days, collaborative) - **CRITICAL**
+- P1.4: Director Plugin PoC Implementation (3-4 days) - _Initial implementation only, PoC continues beyond sprint_
+- P2.3: Modding API Documentation Draft (1-2 days) - _If time permits_
+- P2.4: Performance Benchmarking Suite (1 day) - _If time permits_
 
 **Focus Areas**: Performance optimization, technical implementation, plugin development, testing
+
+> **Note:** The estimated core workload (12-15 days) exceeds a standard 2-week sprint. P1.4 (Director Plugin) is a 6-week project; this sprint covers initial implementation only. Optional P2 tasks will be addressed only if time permits after core P0/P1 tasks are completed.
 
 ---
 

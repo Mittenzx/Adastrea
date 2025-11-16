@@ -41,22 +41,27 @@ A comprehensive 2-week task list for Copilot and Mittenzx covering November 16-3
 ## Workload Distribution
 
 ### Mittenzx (Visual/Content Lead)
-**Total**: 10-12 days of work
-- Combat and engine visual effects
-- 66 achievements creation
-- 5 core tutorials
-- 80+ audio assets
-- Post-processing polish
-- Content pipeline documentation
+**Core Workload**: 11-14 days (P0/P1 tasks)
+- Combat and engine visual effects (P0 - Critical)
+- 30-40 achievements creation minimum (P1 - reduced scope)
+- 3 core tutorials minimum (P1 - reduced scope)
+- 40-50 audio assets minimum (P1 - reduced scope)
+- Post-processing polish (P0 - Critical)
+- Content pipeline documentation (P1 - if time permits)
+
+_Note: Full content goals (66 achievements, 5 tutorials, 80+ audio) may extend beyond this sprint._
 
 ### Copilot (Technical Lead)
-**Total**: 10-13 days of work
-- Performance optimization (2 passes)
-- Director Plugin PoC (planning + implementation)
-- Cloud save research
-- Alpha build testing
-- Benchmarking suite
-- Modding API documentation
+**Core Workload**: 12-15 days (P0/P1 tasks only)  
+**Optional Tasks**: +3-4 days (P2 tasks, if time permits)
+- Performance optimization - 2 passes (P0 - Critical)
+- Director Plugin PoC - initial implementation (P1 - 6-week project, starts here)
+- Cloud save research (P2 - if time permits)
+- Alpha build testing (P0 - Critical)
+- Benchmarking suite (P2 - if time permits)
+- Modding API documentation (P2 - if time permits)
+
+_Note: Core workload exceeds 10-day sprint. P2 tasks addressed only if time permits._
 
 ## Success Criteria
 
@@ -64,8 +69,10 @@ By November 30, 2025:
 - ✅ All P0 (Critical) tasks completed
 - ✅ Alpha build packaged and tested
 - ✅ Performance: 60 FPS @ 1080p, <8GB RAM
-- ✅ 50+ achievements, 5 tutorials, 50+ audio assets
-- ✅ Phase 4 reaches 100% completion
+- ✅ Minimum viable content: 30-40 achievements, 3 core tutorials, 40-50 audio assets
+- ✅ Phase 4 reaches 100% completion (with realistic scope)
+
+_Note: Full content goals (66 achievements, 5 tutorials, 80+ audio) are stretch goals that may extend beyond this sprint._
 
 ## Documentation Updates
 
