@@ -646,9 +646,6 @@ All systems follow this documentation structure:
 ### Planned Modules (Phase 5+)
 - **Networking Module**: Multiplayer support (Q3-Q4 2026)
 - **Exploration Module**: Galaxy and planet generation (Q2-Q3 2026)
-- **Quest System**: Dynamic mission generation
-- **Combat System**: Detailed combat mechanics
-- **Exploration System**: Procedural generation
 
 ### Planned Improvements
 - Custom Unreal Editor tools (can be added as separate editor module if needed)

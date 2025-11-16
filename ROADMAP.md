@@ -998,7 +998,7 @@ This roadmap is a living document and will be updated regularly to reflect:
 - **System Maturity Matrix**: Added 9 new completed systems (Save, Tutorial, Audio, Performance, Player Progression, HUD, Inventory, Ship Customization, Rivals/Antagonists)
 - **Phase 4 Status**: Updated from "Planned" to "In Progress (70% Complete)" - most core features delivered
 - **Version Standardized**: All docs now reference 1.0.0-alpha consistently
-- **LOC Statistics**: Updated to reflect 33,096 lines of C++ code (150 files across 17 systems)
+- **LOC Statistics**: Updated to reflect 33,096 lines of C++ code (150 files across 19 systems)
 - **Completed Systems Count**: Now 22 major systems complete (up from 12 in previous update)
 - **Documentation**: 28 comprehensive system guides now available
 
