@@ -58,7 +58,7 @@
 ```bash
 # Test particle systems
 cd /home/runner/work/Adastrea/Adastrea
-# Test in editor: Load TestMap_Ships.umap
+# Test in editor: Load a test map from Content/Maps/
 # Spawn 10 ships and verify effects
 ```
 
@@ -115,9 +115,9 @@ cd /home/runner/work/Adastrea/Adastrea
 **Testing**:
 ```bash
 # Run performance profiling
-python3 Scripts/AutomationRunner.py --benchmark
+python3 AutomationRunner.py --benchmark
 # Run stability test
-python3 Scripts/AutomationRunner.py --stability-test --duration 7200
+python3 AutomationRunner.py --stability-test --duration 7200
 ```
 
 ---
@@ -256,11 +256,11 @@ python3 Scripts/AutomationRunner.py --stability-test --duration 7200
 **Testing**:
 ```bash
 # Run optimization verification
-python3 Scripts/AutomationRunner.py --benchmark --compare baseline.json
+python3 AutomationRunner.py --benchmark --compare baseline.json
 # Run memory leak test
-python3 Scripts/AutomationRunner.py --memory-test --duration 7200
+python3 AutomationRunner.py --memory-test --duration 7200
 # Test with high NPC count
-python3 Scripts/AutomationRunner.py --stress-test --npcs 200
+python3 AutomationRunner.py --stress-test --npcs 200
 ```
 
 ---
@@ -320,10 +320,10 @@ python3 Scripts/AutomationRunner.py --stress-test --npcs 200
 **Testing**:
 ```bash
 # Run comprehensive smoke tests
-python3 Scripts/SmokeTest.py --all-maps
-python3 Scripts/AdastreaAssetValidator.py --validate-all
+python3 SmokeTest.py --all-maps
+python3 AdastreaAssetValidator.py --validate-all
 # Test packaged build
-python3 Scripts/AutomationRunner.py --test-package ./Build/Windows/Adastrea.exe
+python3 AutomationRunner.py --test-package ./Build/Windows/Adastrea.exe
 ```
 
 ---
@@ -470,7 +470,7 @@ python3 Scripts/AutomationRunner.py --test-package ./Build/Windows/Adastrea.exe
 
 **Purpose**: Automate performance testing for future development
 
-**Location**: `Scripts/BenchmarkRunner.py`
+**Location**: `BenchmarkRunner.py`
 
 ---
 
