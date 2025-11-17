@@ -275,8 +275,12 @@ void USpaceshipParticleComponent::UpdateEngineGlow(float DeltaTime)
 		if (DamageState == EEngineDamageState::Damaged)
 		{
 			// Flickering effect for damaged state
-			float FlickerAmount = FMath::Sin(GetWorld()->GetTimeSeconds() * 10.0f) * 0.3f;
-			GlowIntensity *= (0.7f + FlickerAmount);
+			UWorld* World = GetWorld();
+			if (World)
+			{
+				float FlickerAmount = FMath::Sin(World->GetTimeSeconds() * 10.0f) * 0.3f;
+				GlowIntensity *= (0.7f + FlickerAmount);
+			}
 		}
 		else if (DamageState == EEngineDamageState::Critical)
 		{
@@ -298,20 +302,25 @@ void USpaceshipParticleComponent::ActivateRCSThruster(ERCSThrusterAxis Axis, flo
 		RCSComponent->SetFloatParameter(FName("Intensity"), FMath::Clamp(Intensity, 0.0f, 1.0f));
 		RCSComponent->Activate(true);
 
-		// Auto-deactivate after duration
-		FTimerHandle TimerHandle;
-		GetWorld()->GetTimerManager().SetTimer(
-			TimerHandle,
-			[RCSComponent]()
-			{
-				if (RCSComponent)
+		// Auto-deactivate after duration using weak pointer to safely handle component destruction
+		UWorld* World = GetWorld();
+		if (World)
+		{
+			FTimerHandle TimerHandle;
+			TWeakObjectPtr<UParticleSystemComponent> WeakRCSComponent = RCSComponent;
+			World->GetTimerManager().SetTimer(
+				TimerHandle,
+				[WeakRCSComponent]()
 				{
-					RCSComponent->Deactivate();
-				}
-			},
-			RCSThrusterDuration,
-			false
-		);
+					if (WeakRCSComponent.IsValid())
+					{
+						WeakRCSComponent->Deactivate();
+					}
+				},
+				RCSThrusterDuration,
+				false
+			);
+		}
 	}
 }
 
