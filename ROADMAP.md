@@ -131,6 +131,7 @@
 - ✅ **Inventory System** - Item management with categories, weight/volume limits (InventoryComponent, InventoryWidget)
 - ✅ **Ship Customization** - Visual customization, loadout management (ShipCustomizationWidget)
 - ✅ **Antagonist/Rival System** - Nemesis spawning and tracking (AntagonistManager, Antagonist)
+- ✅ **Particle Systems** - Engine and thruster visual effects (SpaceshipParticleComponent) - **NEW Nov 17, 2025**
 
 **Comprehensive Documentation** (28 complete system guides):
 - ✅ NavigationSystemGuide.md, QuestSystemGuide.md, EnhancedInputImplementation.md
@@ -372,8 +373,9 @@
 **Audio & Visual Polish** 🔄 In Progress:
 - ✅ Sound effect system (AdastreaAudioComponent, SoundEffectDataAsset)
 - ✅ Music system with dynamic mixing (MusicManagerSubsystem, MusicTrackDataAsset)
+- ✅ Particle systems for spaceship engines (SpaceshipParticleComponent) - **NEW Nov 17, 2025**
 - ⏳ Visual effects for combat (planned)
-- ⏳ Particle systems for engines and weapons (planned)
+- ⏳ Particle systems for weapons (planned)
 - ⏳ Post-processing and cinematics (planned)
 
 #### Milestones
@@ -388,8 +390,9 @@
 - ✅ Performance profiling tools (PerformanceProfiler, LODManagerComponent)
 
 **December 2025 - February 2026** 🔄 In Progress:
+- ✅ Particle systems for engines (SpaceshipParticleComponent) - **COMPLETE Nov 17, 2025**
 - 🔄 Visual effects for combat
-- 🔄 Particle systems for engines and weapons
+- 🔄 Particle systems for weapons
 - ⏳ Achievement content creation
 - ⏳ Performance optimization pass #1
 - ⏳ **Director Plugin: Proof of Concept (6 weeks)**
