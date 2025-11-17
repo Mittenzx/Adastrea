@@ -4,6 +4,7 @@
 #include "GameFramework/Pawn.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Ships/SpaceshipInterior.h"
+#include "Ships/SpaceshipParticleComponent.h"
 #include "Spaceship.generated.h"
 
 /**
@@ -31,6 +32,10 @@ public:
     // Movement component for floating pawn movement in space
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Movement")
     UFloatingPawnMovement* MovementComponent;
+
+    // Particle system component for engine and thruster effects
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Effects")
+    USpaceshipParticleComponent* ParticleComponent;
 
     // Default maximum movement speed
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(ClampMin="0.0"))

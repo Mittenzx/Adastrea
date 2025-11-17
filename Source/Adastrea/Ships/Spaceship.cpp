@@ -22,6 +22,9 @@ ASpaceship::ASpaceship()
     MovementComponent->Acceleration = DefaultAcceleration;
     MovementComponent->Deceleration = DefaultDeceleration;
     MovementComponent->TurningBoost = DefaultTurningBoost;
+
+    // Create and configure the particle component
+    ParticleComponent = CreateDefaultSubobject<USpaceshipParticleComponent>(TEXT("ParticleComponent"));
 }
 
 void ASpaceship::BeginPlay()
@@ -80,6 +83,22 @@ void ASpaceship::MoveForward(float Value)
     if (Value != 0.0f)
     {
         AddMovementInput(GetActorForwardVector(), Value);
+        
+        // Update particle throttle based on forward movement
+        if (ParticleComponent)
+        {
+            ParticleComponent->UpdateThrottle(FMath::Abs(Value));
+            
+            // Activate RCS thrusters based on direction
+            if (Value > 0.0f)
+            {
+                ParticleComponent->ActivateRCSThruster(ERCSThrusterAxis::Backward, Value);
+            }
+            else
+            {
+                ParticleComponent->ActivateRCSThruster(ERCSThrusterAxis::Forward, FMath::Abs(Value));
+            }
+        }
     }
 }
 
@@ -88,6 +107,19 @@ void ASpaceship::MoveRight(float Value)
     if (Value != 0.0f)
     {
         AddMovementInput(GetActorRightVector(), Value);
+        
+        // Activate RCS thrusters for strafing
+        if (ParticleComponent)
+        {
+            if (Value > 0.0f)
+            {
+                ParticleComponent->ActivateRCSThruster(ERCSThrusterAxis::Left, Value);
+            }
+            else
+            {
+                ParticleComponent->ActivateRCSThruster(ERCSThrusterAxis::Right, FMath::Abs(Value));
+            }
+        }
     }
 }
 
@@ -96,6 +128,19 @@ void ASpaceship::MoveUp(float Value)
     if (Value != 0.0f)
     {
         AddMovementInput(GetActorUpVector(), Value);
+        
+        // Activate RCS thrusters for vertical movement
+        if (ParticleComponent)
+        {
+            if (Value > 0.0f)
+            {
+                ParticleComponent->ActivateRCSThruster(ERCSThrusterAxis::Down, Value);
+            }
+            else
+            {
+                ParticleComponent->ActivateRCSThruster(ERCSThrusterAxis::Up, FMath::Abs(Value));
+            }
+        }
     }
 }
 
