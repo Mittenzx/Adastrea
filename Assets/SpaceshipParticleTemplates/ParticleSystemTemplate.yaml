@@ -1,0 +1,30 @@
+# Spaceship Particle System Configuration Template
+# Use this template to configure particle effects for spaceships in Adastrea
+
+ship_name: "Example Ship Name"
+ship_class: "Corvette"  # Corvette, Frigate, Cruiser, Battleship, Capital
+
+# ====================
+# MAIN ENGINE SETTINGS
+# ====================
+main_engine:
+  particle_template: "PS_MainEngine"  # Name of GPU particle system in Content Browser
+  spawn_rate: 350  # Particles per second (200-500 recommended)
+  particle_lifetime: 1.5  # Seconds (1.0-2.0 recommended)
+  min_rate_multiplier: 0.2  # Minimum intensity (idle)
+  max_rate_multiplier: 3.0  # Maximum intensity (full throttle)
+
+# ====================
+# PERFORMANCE SETTINGS
+# ====================
+performance:
+  max_particles_per_ship: 10000  # Budget limit
+  total_estimate: 5900  # Good margin under budget
+
+# ====================
+# METADATA
+# ====================
+version: "1.0"
+created: "2025-11-17"
+author: "Adastrea Development Team"
+compatible_with: "Unreal Engine 5.6"
