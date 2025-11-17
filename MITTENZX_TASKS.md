@@ -73,10 +73,11 @@ Visual effects for 6 weapon types, impacts, shields, and heat management.
 
 **Where to Start**:
 1. Open Unreal Editor
-2. Navigate to `Content/VFX/Combat/Weapons/`
-3. Study existing particle system examples
-4. Create your first effect (Energy Weapon - easiest to start)
-5. Test in `Content/Maps/TestMap_Combat.umap`
+2. Create the directory structure `Content/VFX/Combat/Weapons/` (if it does not already exist)
+3. Navigate to `Content/VFX/Combat/Weapons/`
+4. Study existing particle system examples
+5. Create your first effect (Energy Weapon - easiest to start)
+6. Test in a combat test map located in `Content/Maps/` (e.g., `TestMap_Combat.umap` if available)
 
 **Performance Goal**: <5ms per effect
 
@@ -122,11 +123,12 @@ Achievement content across different gameplay areas.
 - [ ] Test achievement unlocking
 
 **How to Create**:
-1. Navigate to `Content/DataAssets/Achievements/`
-2. Right-click → Blueprint → Achievement Data Asset
-3. Name it (e.g., `DA_Achievement_FirstContact`)
-4. Fill in properties
-5. Save and test!
+1. If the `Content/DataAssets/Achievements/` directory does not exist, create it in the Unreal Editor's Content Browser.
+2. Navigate to `Content/DataAssets/Achievements/`
+3. Right-click → Blueprint → Achievement Data Asset
+4. Name it (e.g., `DA_Achievement_FirstContact`)
+5. Fill in properties
+6. Save and test!
 
 **Example Achievement**:
 - **Name**: "First Contact"
@@ -178,10 +180,11 @@ Interactive tutorial sequences teaching game basics.
 7. "Press F to dock"
 
 **How to Create**:
-1. Navigate to `Content/DataAssets/Tutorials/`
-2. Create Tutorial Step Data Asset
-3. Fill in instruction text, UI highlight, completion criteria
-4. Link steps together (Step1 → Step2 → Step3)
+1. If `Content/DataAssets/Tutorials/` does not exist, create the directory.
+2. Navigate to `Content/DataAssets/Tutorials/`
+3. Create Tutorial Step Data Asset
+4. Fill in instruction text, UI highlight, completion criteria
+5. Link steps together (Step1 → Step2 → Step3)
 
 **Deliverables**:
 - 3 tutorial sequences (25-30 total steps)
@@ -237,10 +240,11 @@ Sound effects and music for combat, UI, engines.
 - Naming: `SE_Combat_LaserFire_01.wav`, `MUS_Exploration_01.wav`
 
 **How to Implement**:
-1. Import WAV files to `Content/Audio/`
-2. Create SoundCue assets for complex sounds
-3. Set up attenuation for 3D sounds
-4. Configure music transitions
+1. Create the directory `Content/Audio/` in your project if it does not already exist.
+2. Import WAV files to `Content/Audio/`
+3. Create SoundCue assets for complex sounds
+4. Set up attenuation for 3D sounds
+5. Configure music transitions
 
 **Deliverables**:
 - 40-50+ sound effects
@@ -471,12 +475,12 @@ Help Needed:
 - [ROADMAP.md](ROADMAP.md)
 
 **Content Directories**:
-- Visual Effects: `Content/VFX/`
-- Audio: `Content/Audio/`
-- Data Assets: `Content/DataAssets/`
-- Blueprints: `Content/Blueprints/`
-- Materials: `Content/Materials/`
-- UI: `Content/UI/`
+- Visual Effects: `Content/VFX/` (create if needed)
+- Audio: `Content/Audio/` (create if needed)
+- Data Assets: `Content/DataAssets/` (create if needed)
+- Blueprints: `Content/Blueprints/` (exists)
+- Materials: `Content/Materials/` (create if needed)
+- UI: `Content/UI/` (exists)
 
 ---
 

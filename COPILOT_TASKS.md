@@ -518,7 +518,7 @@ python3 AutomationRunner.py --test-package ./Build/Windows/Adastrea.exe
 - `/home/runner/work/Adastrea/Adastrea/Source/Adastrea/`
 
 **Scripts**:
-- `/home/runner/work/Adastrea/Adastrea/Scripts/`
+- `/home/runner/work/Adastrea/Adastrea/`
   - `SmokeTest.py`
   - `AutomationRunner.py`
   - `AdastreaAssetValidator.py`
