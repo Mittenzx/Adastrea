@@ -1,0 +1,56 @@
+# Unreal Engine Plugin - Build Artifacts
+
+# Binaries
+Binaries/
+Intermediate/
+
+# Build files
+*.dll
+*.dylib
+*.so
+*.a
+*.lib
+*.pdb
+
+# Visual Studio
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+
+# Rider
+.idea/
+
+# macOS
+.DS_Store
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so.*
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+
+# Debug files
+*.dSYM/
+*.su
+
+# Backup files
+*~
+*.bak
+*.tmp
+
+# Cache files
+DerivedDataCache/
