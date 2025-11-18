@@ -233,11 +233,12 @@ protected:
 	/**
 	 * Update a single shield facing visual
 	 * @param FacingVisual The facing visual data to update
+	 * @param Facing The shield facing being updated
 	 * @param ShieldStrength Current shield strength (0-1)
 	 * @param IsRecharging Whether shield is recharging
 	 * @param DeltaTime Time since last update
 	 */
-	void UpdateFacingVisual(FShieldFacingVisual& FacingVisual, float ShieldStrength, bool IsRecharging, float DeltaTime);
+	void UpdateFacingVisual(FShieldFacingVisual& FacingVisual, EShieldFacing Facing, float ShieldStrength, bool IsRecharging, float DeltaTime);
 
 	/**
 	 * Get color for current shield state

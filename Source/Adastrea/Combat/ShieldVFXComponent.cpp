@@ -84,13 +84,13 @@ void UShieldVFXComponent::UpdateShieldVisuals()
 
 		float DeltaTime = GetWorld()->GetDeltaSeconds();
 
-		UpdateFacingVisual(ForwardFacing, ForwardData.CurrentStrength / FMath::Max(ForwardData.MaxStrength, 1.0f), 
+		UpdateFacingVisual(ForwardFacing, EShieldFacing::Forward, ForwardData.CurrentStrength / FMath::Max(ForwardData.MaxStrength, 1.0f), 
 			ForwardData.RechargeDelay > 0.0f, DeltaTime);
-		UpdateFacingVisual(AftFacing, AftData.CurrentStrength / FMath::Max(AftData.MaxStrength, 1.0f), 
+		UpdateFacingVisual(AftFacing, EShieldFacing::Aft, AftData.CurrentStrength / FMath::Max(AftData.MaxStrength, 1.0f), 
 			AftData.RechargeDelay > 0.0f, DeltaTime);
-		UpdateFacingVisual(PortFacing, PortData.CurrentStrength / FMath::Max(PortData.MaxStrength, 1.0f), 
+		UpdateFacingVisual(PortFacing, EShieldFacing::Port, PortData.CurrentStrength / FMath::Max(PortData.MaxStrength, 1.0f), 
 			PortData.RechargeDelay > 0.0f, DeltaTime);
-		UpdateFacingVisual(StarboardFacing, StarboardData.CurrentStrength / FMath::Max(StarboardData.MaxStrength, 1.0f), 
+		UpdateFacingVisual(StarboardFacing, EShieldFacing::Starboard, StarboardData.CurrentStrength / FMath::Max(StarboardData.MaxStrength, 1.0f), 
 			StarboardData.RechargeDelay > 0.0f, DeltaTime);
 	}
 	else
@@ -100,7 +100,7 @@ void UShieldVFXComponent::UpdateShieldVisuals()
 		bool bIsRecharging = CombatHealthComponent->IsRecharging();
 		float DeltaTime = GetWorld()->GetDeltaSeconds();
 
-		UpdateFacingVisual(OmnidirectionalShield, ShieldPercentage, bIsRecharging, DeltaTime);
+		UpdateFacingVisual(OmnidirectionalShield, EShieldFacing::Omnidirectional, ShieldPercentage, bIsRecharging, DeltaTime);
 	}
 
 	// Check for state transitions
@@ -121,7 +121,7 @@ void UShieldVFXComponent::UpdateShieldVisuals()
 	bWereShieldsFull = bShieldsFull;
 }
 
-void UShieldVFXComponent::UpdateFacingVisual(FShieldFacingVisual& FacingVisual, float ShieldStrength, bool IsRecharging, float DeltaTime)
+void UShieldVFXComponent::UpdateFacingVisual(FShieldFacingVisual& FacingVisual, EShieldFacing Facing, float ShieldStrength, bool IsRecharging, float DeltaTime)
 {
 	// Determine new state
 	EShieldVisualState OldState = FacingVisual.State;
@@ -148,7 +148,7 @@ void UShieldVFXComponent::UpdateFacingVisual(FShieldFacingVisual& FacingVisual, 
 	if (OldState != NewState)
 	{
 		FacingVisual.State = NewState;
-		OnShieldStateChanged(EShieldFacing::Forward, OldState, NewState);  // Note: In full impl, pass correct facing
+		OnShieldStateChanged(Facing, OldState, NewState);
 	}
 
 	// Update pulse animation

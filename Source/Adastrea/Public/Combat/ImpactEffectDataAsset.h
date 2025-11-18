@@ -215,7 +215,7 @@ struct FExplosionEffect
  * - Effects are triggered automatically on damage events
  */
 UCLASS(BlueprintType)
-class ADASTREA_API UImpactEffectDataAsset : public UPrimaryDataAsset
+class ADASTREA_API UImpactEffectDataAsset : public UDataAsset
 {
 	GENERATED_BODY()
 

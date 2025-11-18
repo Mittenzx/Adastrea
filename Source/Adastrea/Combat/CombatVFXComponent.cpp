@@ -348,11 +348,15 @@ void UCombatVFXComponent::UpdateWeaponHeatVisuals(UWeaponComponent* WeaponCompon
 	}
 
 	// Play heat vent effects when cooling
-	if (HeatPercentage > 0.5f && HeatPercentage < WeaponComponent->GetHeatPercentage())
+	float PreviousHeat = PreviousHeatPercentages.Contains(WeaponComponent) ? PreviousHeatPercentages[WeaponComponent] : HeatPercentage;
+	if (HeatPercentage > 0.5f && HeatPercentage < PreviousHeat)
 	{
 		FVector VentLocation = WeaponComponent->GetWeaponWorldPosition();
 		PlayHeatVentEffect(VentLocation, HeatPercentage);
 	}
+	
+	// Store current heat for next frame comparison
+	PreviousHeatPercentages.Add(WeaponComponent, HeatPercentage);
 }
 
 void UCombatVFXComponent::PlayHeatVentEffect(FVector VentLocation, float Intensity)
@@ -504,7 +508,7 @@ void UCombatVFXComponent::PlayHullImpact(FVector ImpactLocation, FVector ImpactN
 		if (Decal && ImpactEffectData->HullImpact.DecalLifetime > 0.0f)
 		{
 			Decal->SetFadeScreenSize(0.001f);
-			Decal->FadeScreenSize = 0.001f;
+			Decal->SetFadeOut(ImpactEffectData->HullImpact.DecalLifetime, 1.0f, false);
 		}
 	}
 

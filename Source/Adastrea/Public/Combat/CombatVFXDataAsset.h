@@ -162,7 +162,7 @@ struct FWeaponHeatVisuals
  * - Effects will be automatically played when weapon fires
  */
 UCLASS(BlueprintType)
-class ADASTREA_API UCombatVFXDataAsset : public UPrimaryDataAsset
+class ADASTREA_API UCombatVFXDataAsset : public UDataAsset
 {
 	GENERATED_BODY()
 

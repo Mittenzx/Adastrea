@@ -283,4 +283,8 @@ protected:
 	/** Map of weapon components to their heat materials */
 	UPROPERTY()
 	TMap<UWeaponComponent*, UMaterialInstanceDynamic*> WeaponHeatMaterials;
+
+	/** Map of weapon components to their previous heat percentage for cooling detection */
+	UPROPERTY()
+	TMap<UWeaponComponent*, float> PreviousHeatPercentages;
 };
