@@ -363,8 +363,8 @@ ensure(Condition); // Warning if false
 
 ### Documentation
 - [Unreal Engine Docs](https://docs.unrealengine.com/)
-- [C++ API Reference](https://docs.unrealengine.com/5.0/en-US/API/)
-- [Blueprint API](https://docs.unrealengine.com/5.0/en-US/BlueprintAPI/)
+- [C++ API Reference](https://docs.unrealengine.com/5.6/en-US/API/)
+- [Blueprint API](https://docs.unrealengine.com/5.6/en-US/BlueprintAPI/)
 
 ### Learning
 - [Unreal Engine Learning Portal](https://www.unrealengine.com/en-US/onlinelearning-courses)
