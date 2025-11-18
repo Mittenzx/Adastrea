@@ -32,7 +32,7 @@
 11. ✅ **IA_Fire_Primary** - Shoot weapon
 12. ✅ **IA_PauseMenu** - Pause game
 13. ✅ **DA_Ship_PlayerScout** - Ship stats
-14. ✅ **DA_Faction_PlayerAlliance** - Your faction
+14. ✅ **DA_Way_TradersGuild** - Your starting guild/Way
 15. ✅ **DA_InputConfig** - Input setup
 
 **Test**: Can you fly around and see your HUD?
@@ -48,7 +48,7 @@
 - **5 Combat Blueprints**: 3 weapons + 2 projectiles
 - **5 Trading Blueprints**: UI + 4 trade items
 - **3 Ship Variants**: Fighter, NPC fighter data
-- **7 More Systems**: Inventory, factions, quests, personnel
+- **7 More Systems**: Inventory, Ways (guilds), quests, personnel
 
 **Test**: Can you dock, trade, and shoot things?
 
@@ -130,7 +130,7 @@ Content/
 │
 ├── DataAssets/
 │   ├── Ships/          ← Ship stats
-│   ├── Factions/       ← Faction configs
+│   ├── Ways/           ← Way/guild configs
 │   ├── Trading/        ← Trade items
 │   ├── Weapons/        ← Weapon specs
 │   └── Input/          ← Input config

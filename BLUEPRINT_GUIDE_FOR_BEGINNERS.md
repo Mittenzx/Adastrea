@@ -29,7 +29,7 @@ Think of Blueprints as **visual templates** for game objects. Instead of writing
 
 - **Blueprint Actors** = Things that exist in the game world (ships, stations, planets)
 - **Blueprint Widgets** = UI elements (menus, HUD, inventory screens)
-- **Blueprint Data Assets** = Configuration files (ship stats, faction info, weapon specs)
+- **Blueprint Data Assets** = Configuration files (ship stats, Way guild info, weapon specs)
 - **Blueprint Components** = Parts of actors (weapons, health, navigation)
 
 ### Why Blueprints Matter
@@ -206,15 +206,15 @@ The parent class gives your Blueprint built-in functionality. You just fill in t
       - Maneuverability = 70
       - (many more stats available)
 
-13. **DA_Faction_PlayerAlliance**
+13. **DA_Way_TradersGuild**
     - **Type**: Data Asset
-    - **Parent**: `UFactionDataAsset`
-    - **Location**: `Content/DataAssets/Factions/`
-    - **What it does**: Your starting faction configuration
+    - **Parent**: `UWayDataAsset` (Way system - specialized guilds)
+    - **Location**: `Content/DataAssets/Ways/`
+    - **What it does**: Your starting guild/Way configuration
     - **What you set**:
-      - FactionName = "Terran Alliance"
-      - TechLevel = 3
-      - Colors (faction color scheme)
+      - WayName = "Traders Guild"
+      - Specialization = "Trading"
+      - Colors (guild color scheme)
 
 14. **DA_InputConfig**
     - **Type**: Data Asset
@@ -252,7 +252,7 @@ The parent class gives your Blueprint built-in functionality. You just fill in t
     - **Parent**: `ASpaceStation`
     - **Location**: `Content/Blueprints/Stations/`
     - **What it does**: Main station you can dock at
-    - **What you set**: Faction, initial modules
+    - **What you set**: Owning Way (optional), initial modules
 
 17. **BP_Module_Docking**
     - **Type**: Blueprint Class
@@ -403,19 +403,19 @@ The parent class gives your Blueprint built-in functionality. You just fill in t
     - **Location**: `Content/UI/Inventory/`
     - **What it does**: Shows player's cargo and items
 
-35. **DA_Faction_Merchants**
+35. **DA_Way_Merchants**
     - **Type**: Data Asset
-    - **Parent**: `UFactionDataAsset`
-    - **Location**: `Content/DataAssets/Factions/`
-    - **What it does**: Trading guild faction
-    - **Traits**: Economic bonuses
+    - **Parent**: `UWayDataAsset` (Way system)
+    - **Location**: `Content/DataAssets/Ways/`
+    - **What it does**: Trading guild/Way
+    - **Traits**: Economic bonuses, trade focus
 
-36. **DA_Faction_Pirates**
+36. **DA_Way_Freelancers**
     - **Type**: Data Asset
-    - **Parent**: `UFactionDataAsset`
-    - **Location**: `Content/DataAssets/Factions/`
-    - **What it does**: Hostile pirate faction
-    - **Traits**: Combat bonuses, negative relations
+    - **Parent**: `UWayDataAsset` (Way system)
+    - **Location**: `Content/DataAssets/Ways/`
+    - **What it does**: Independent operators guild/Way
+    - **Traits**: Flexible roles, no allegiances
 
 37. **DA_Quest_Tutorial_FirstFlight**
     - **Type**: Data Asset
@@ -429,7 +429,7 @@ The parent class gives your Blueprint built-in functionality. You just fill in t
     - **Parent**: `UHomeworldDataAsset`
     - **Location**: `Content/DataAssets/Homeworlds/`
     - **What it does**: Starting location
-    - **What you set**: Starting faction, credits, ship
+    - **What you set**: Starting location, credits, ship
 
 39. **DA_Personnel_Captain**
     - **Type**: Data Asset
@@ -491,7 +491,7 @@ The parent class gives your Blueprint built-in functionality. You just fill in t
 
 #### More Data Assets (30+)
 
-72-76. **5 More Factions** - Diverse faction types
+72-76. **5 More Ways** - Diverse guild/specialization types (Explorers, Mercenaries, Miners, Scientists)
 77-96. **20 More Personnel Roles** - Complete crew roster
 97-106. **10 More Trade Items** - Full economy
 107-116. **10 More Quests** - Story content
@@ -1037,7 +1037,7 @@ Left Mouse Button → No modifiers
 
 **Templates**:
 - `Assets/SpaceshipTemplates/*.yaml` - Ship templates
-- `Assets/FactionSetupGuide.md` - Faction configuration
+- `Assets/WaySystemGuide.md` - Way system (guilds) configuration
 - `Assets/PersonnelTemplates/*.yaml` - Crew templates
 
 **Tools**:

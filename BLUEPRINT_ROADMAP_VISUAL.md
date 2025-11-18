@@ -34,7 +34,7 @@ START HERE
     │
     ├─→ Data Assets (3)
     │   ├─ DA_Ship_PlayerScout
-    │   ├─ DA_Faction_PlayerAlliance
+    │   ├─ DA_Way_TradersGuild
     │   └─ DA_InputConfig
     │
     └─→ UI (1)
@@ -76,8 +76,8 @@ START HERE
     │
     └─→ Systems (7)
         ├─ WBP_InventoryWidget
-        ├─ DA_Faction_Merchants
-        ├─ DA_Faction_Pirates
+        ├─ DA_Way_Merchants
+        ├─ DA_Way_Freelancers
         ├─ DA_Quest_Tutorial_FirstFlight
         ├─ DA_Homeworld_EarthStation
         ├─ DA_Personnel_Captain
@@ -122,7 +122,7 @@ START HERE
     │   └─ (TargetNext, Fire_Secondary, Autopilot, etc.)
     │
     ├─→ More Data Assets (30+)
-    │   ├─ 5 More Factions
+    │   ├─ 5 More Ways (guilds)
     │   ├─ 20 More Personnel Roles
     │   ├─ 10 More Trade Items
     │   └─ 10+ More Quests, etc.
@@ -249,7 +249,7 @@ Total: ~100 Blueprints
 
 Data Assets (40%)        ████████████████████████████████████████
 ├─ Ship configs
-├─ Faction configs
+├─ Way/guild configs
 ├─ Trade items
 ├─ Weapon specs
 ├─ Personnel roles
@@ -365,7 +365,7 @@ Can Create in Parallel:
 ```
 Templates:                  Documentation:
 ├─ SpaceshipTemplates/     ├─ BLUEPRINT_GUIDE_FOR_BEGINNERS.md
-├─ FactionSetupGuide.md    ├─ BLUEPRINT_REQUIREMENTS_LIST.md
+├─ WaySystemGuide.md       ├─ BLUEPRINT_REQUIREMENTS_LIST.md
 ├─ PersonnelTemplates/     ├─ BLUEPRINT_CHECKLIST.md
 └─ TradingTemplates/       └─ BLUEPRINT_QUICK_REFERENCE.md
 
