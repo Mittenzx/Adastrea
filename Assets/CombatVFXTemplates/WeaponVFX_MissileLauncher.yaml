@@ -1,0 +1,73 @@
+# Combat VFX Data Asset Template: Missile Launcher
+# Smoke trail with engine glow effects
+
+---
+weapon_vfx:
+  # Basic Information
+  vfx_name: "Missile Launcher Effects"
+  description: "Guided missile with smoke trail and engine glow"
+  weapon_type: Missile
+  
+  # Fire Effect Configuration
+  fire_effect:
+    # Niagara Systems
+    muzzle_flash_effect: "NS_Missile_Launch"
+    beam_effect: null
+    projectile_trail_effect: "NS_Missile_SmokeTrail"
+    
+    # Sound
+    fire_sound: "S_Missile_Launch"
+    
+    # Projectile Properties
+    beam_type: Projectile
+    beam_duration: 0.0  # Follows missile
+    beam_width: 20.0    # Smoke trail width
+    beam_color:
+      r: 1.0
+      g: 0.5
+      b: 0.2
+      a: 1.0  # Orange engine glow
+    
+    # Visual Properties
+    glow_intensity: 2.0       # Engine glow
+    heat_distortion_strength: 0.4  # From exhaust
+    
+    # Camera Shake
+    camera_shake: "CS_MissileLaunch"
+  
+  # Heat Management Visuals
+  heat_visuals:
+    heat_vent_effect: "NS_Weapon_HeatVent"
+    heat_gradient_material: "M_Weapon_HeatGradient"
+    
+    cool_color:
+      r: 0.2
+      g: 0.2
+      b: 0.3
+      a: 1.0  # Dark gray when cool
+    
+    warning_color:
+      r: 1.0
+      g: 0.5
+      b: 0.0
+      a: 1.0  # Orange
+    
+    overheat_color:
+      r: 1.0
+      g: 0.0
+      b: 0.0
+      a: 1.0  # Red
+    
+    max_shimmer_intensity: 0.6
+  
+  # Performance Settings
+  performance:
+    max_particles: 600        # For persistent smoke trail
+    effect_priority: 7        # High priority (visible weapon)
+    max_render_distance: 20000.0  # Long range visibility
+
+# Special Notes for Missiles:
+# - Smoke trail should persist for several seconds
+# - Engine glow should pulse slightly
+# - Include launch blast effect
+# - Trail should thin out over distance

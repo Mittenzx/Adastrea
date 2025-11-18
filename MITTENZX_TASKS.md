@@ -52,24 +52,24 @@ You'll be working on the **visual polish and content creation** that will make A
 Visual effects for 6 weapon types, impacts, shields, and heat management.
 
 **Tasks**:
-- [ ] Design weapon fire effects for 6 types
-  - [ ] Energy weapons: Laser beam with glow and heat distortion
-  - [ ] Projectile weapons: Tracer rounds with muzzle flash
-  - [ ] Missile weapons: Smoke trail and engine glow
-  - [ ] Torpedo weapons: Plasma trail effect
-  - [ ] Beam weapons: Sustained beam with start/end points
-  - [ ] Plasma weapons: Ball lightning with arcing
-- [ ] Create impact effects
-  - [ ] Shield impact: Hexagonal ripple with energy dissipation
-  - [ ] Hull impact: Sparks, debris, damage decals
-  - [ ] Explosion effects: Small/Medium/Large scales
-- [ ] Design shield recharge feedback
-  - [ ] Shield down: Red glow on damaged facing
-  - [ ] Recharging: Blue pulse
-  - [ ] Full shield: Green steady glow
-- [ ] Add weapon heat effects
-  - [ ] Cooling vents with steam/heat shimmer
-  - [ ] Overheating warning: Orange→red gradient
+- [x] Design weapon fire effects for 6 types
+  - [x] Energy weapons: Laser beam with glow and heat distortion
+  - [x] Projectile weapons: Tracer rounds with muzzle flash
+  - [x] Missile weapons: Smoke trail and engine glow
+  - [x] Torpedo weapons: Plasma trail effect
+  - [x] Beam weapons: Sustained beam with start/end points
+  - [x] Plasma weapons: Ball lightning with arcing
+- [x] Create impact effects
+  - [x] Shield impact: Hexagonal ripple with energy dissipation
+  - [x] Hull impact: Sparks, debris, damage decals
+  - [x] Explosion effects: Small/Medium/Large scales
+- [x] Design shield recharge feedback
+  - [x] Shield down: Red glow on damaged facing
+  - [x] Recharging: Blue pulse
+  - [x] Full shield: Green steady glow
+- [x] Add weapon heat effects
+  - [x] Cooling vents with steam/heat shimmer
+  - [x] Overheating warning: Orange→red gradient
 
 **Where to Start**:
 1. Open Unreal Editor

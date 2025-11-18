@@ -38,7 +38,8 @@ public class Adastrea : ModuleRules
 			"EnhancedInput",
 			"UMG",
 			"Slate",
-			"SlateCore"
+			"SlateCore",
+			"Niagara"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] 

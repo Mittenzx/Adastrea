@@ -1,0 +1,73 @@
+# Combat VFX Data Asset Template: Plasma Cannon
+# Ball lightning with electrical arcing effects
+
+---
+weapon_vfx:
+  # Basic Information
+  vfx_name: "Plasma Cannon Effects"
+  description: "Green ball lightning with electrical arcing"
+  weapon_type: Plasma
+  
+  # Fire Effect Configuration
+  fire_effect:
+    # Niagara Systems
+    muzzle_flash_effect: "NS_Plasma_MuzzleFlash"
+    beam_effect: null  # Not used for projectile weapons
+    projectile_trail_effect: "NS_Plasma_BallLightning"
+    
+    # Sound
+    fire_sound: "S_Plasma_Fire"
+    
+    # Beam Properties (for projectile appearance)
+    beam_type: Projectile
+    beam_duration: 0.0  # Follows projectile
+    beam_width: 15.0    # Plasma ball size
+    beam_color:
+      r: 0.0
+      g: 1.0
+      b: 0.4
+      a: 1.0  # Green plasma
+    
+    # Visual Properties
+    glow_intensity: 2.5       # High glow for plasma
+    heat_distortion_strength: 0.5  # Medium distortion
+    
+    # Camera Shake
+    camera_shake: "CS_WeaponFire_Medium"
+  
+  # Heat Management Visuals
+  heat_visuals:
+    heat_vent_effect: "NS_Weapon_HeatVent_Heavy"
+    heat_gradient_material: "M_Weapon_HeatGradient"
+    
+    cool_color:
+      r: 0.0
+      g: 0.4
+      b: 0.2
+      a: 1.0  # Dark green when cool
+    
+    warning_color:
+      r: 1.0
+      g: 0.6
+      b: 0.0
+      a: 1.0  # Orange warning
+    
+    overheat_color:
+      r: 1.0
+      g: 0.0
+      b: 0.0
+      a: 1.0  # Red overheat
+    
+    max_shimmer_intensity: 1.0  # High shimmer for plasma
+  
+  # Performance Settings
+  performance:
+    max_particles: 800        # Higher for lightning arcs
+    effect_priority: 6        # Medium-high priority
+    max_render_distance: 15000.0
+
+# Special Notes for Plasma:
+# - Include lightning arc effect in projectile trail
+# - Use electrical sound effects
+# - Ball should pulse with energy
+# - Arcing should reach out to nearby objects

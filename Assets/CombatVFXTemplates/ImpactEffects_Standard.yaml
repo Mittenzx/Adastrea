@@ -1,0 +1,107 @@
+# Impact Effect Data Asset Template: Standard Configuration
+# Shield and hull impact effects, plus explosions
+
+---
+impact_effects:
+  # Basic Information
+  effect_name: "Standard Impact Effects"
+  description: "Default impact and explosion effects for all weapon types"
+  
+  # Shield Impact Configuration
+  shield_impact:
+    # Niagara Systems (assign in Editor)
+    ripple_effect: "NS_Shield_ImpactRipple"
+    dissipation_effect: "NS_Shield_EnergyDissipation"
+    
+    # Material (assign in Editor)
+    shield_flash_material: "M_Shield_ImpactFlash"
+    
+    # Sound
+    impact_sound: "S_Shield_Impact"
+    
+    # Ripple Properties
+    ripple_speed: 1000.0      # cm/s expansion rate
+    ripple_duration: 1.0      # seconds
+    ripple_color:             # Base color (varies by damage)
+      r: 0.0
+      g: 0.5
+      b: 1.0
+      a: 1.0  # Blue default
+    max_ripple_radius: 200.0  # cm
+    
+    # Effect Intensity
+    dissipation_intensity: 1.0  # Particle count multiplier
+  
+  # Hull Impact Configuration
+  hull_impact:
+    # Niagara Systems
+    spark_effect: "NS_Hull_ImpactSparks"
+    debris_effect: "NS_Hull_Debris"
+    
+    # Decal Material
+    damage_decal: "M_Decal_HullDamage"
+    
+    # Sound
+    impact_sound: "S_Hull_Impact"
+    
+    # Effect Intensities
+    spark_intensity: 1.0      # Spark count multiplier
+    debris_intensity: 1.0     # Debris count multiplier
+    
+    # Decal Properties
+    decal_size: 50.0         # cm
+    decal_lifetime: 60.0     # seconds (0 = permanent)
+    flash_intensity: 1.0     # Impact flash brightness
+  
+  # Explosion Effects
+  explosions:
+    # Small Explosion (fighters, small projectiles)
+    small:
+      explosion_effect: "NS_Explosion_Small"
+      shockwave_effect: "NS_Shockwave_Small"
+      fireball_effect: null  # Not used for small
+      explosion_sound: "S_Explosion_Small"
+      
+      explosion_size: Small
+      explosion_radius: 200.0    # cm
+      flash_intensity: 2.0
+      camera_shake: "CS_Explosion_Small"
+      shockwave_speed: 1000.0    # cm/s
+    
+    # Medium Explosion (missiles, torpedoes)
+    medium:
+      explosion_effect: "NS_Explosion_Medium"
+      shockwave_effect: "NS_Shockwave_Medium"
+      fireball_effect: null
+      explosion_sound: "S_Explosion_Medium"
+      
+      explosion_size: Medium
+      explosion_radius: 500.0
+      flash_intensity: 5.0
+      camera_shake: "CS_Explosion_Medium"
+      shockwave_speed: 2000.0
+    
+    # Large Explosion (capital ships, stations)
+    large:
+      explosion_effect: "NS_Explosion_Large"
+      shockwave_effect: "NS_Shockwave_Large"
+      fireball_effect: "NS_Fireball_Large"  # Only large has fireball
+      explosion_sound: "S_Explosion_Large"
+      
+      explosion_size: Large
+      explosion_radius: 1000.0
+      flash_intensity: 10.0
+      camera_shake: "CS_Explosion_Large"
+      shockwave_speed: 3000.0
+  
+  # Performance Settings
+  performance:
+    max_particles: 2000       # Total across all impact types
+    effect_priority: 7        # High priority for impacts
+
+# Usage Notes:
+# 1. Create ImpactEffectDataAsset in Content Browser
+# 2. Name it: DA_Impact_Standard
+# 3. Configure properties to match this template
+# 4. Assign to CombatVFXComponent on ships
+# 5. One impact asset can be shared across multiple ships
