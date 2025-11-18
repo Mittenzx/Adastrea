@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-The **Adastrea-Director Plugin Proof of Concept** has been **successfully completed** with **all acceptance criteria met** and **verified in production environment**.
+The **Adastrea-Director Plugin Proof of Concept** has been **successfully completed** with **all acceptance criteria met** and **verified in Unreal Engine Editor**.
 
 ### Achievement Highlights
 
