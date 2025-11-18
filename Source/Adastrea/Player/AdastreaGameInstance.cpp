@@ -2,12 +2,10 @@
 
 #include "Player/AdastreaGameInstance.h"
 #include "Player/SaveGameSubsystem.h"
-#include "Factions/FactionDiplomacyManager.h"
 #include "AdastreaLog.h"
 
 UAdastreaGameInstance::UAdastreaGameInstance()
-	: FactionDiplomacyManager(nullptr)
-	, PlayerCredits(10000)
+	: PlayerCredits(10000)
 {
 }
 
@@ -25,9 +23,6 @@ void UAdastreaGameInstance::Shutdown()
 
 void UAdastreaGameInstance::InitializeGameSystems()
 {
-	// Create the faction diplomacy manager subsystem
-	FactionDiplomacyManager = GetSubsystem<UFactionDiplomacyManager>();
-	
 	// Initialize save game subsystem (will auto-initialize via subsystem system)
 	USaveGameSubsystem* SaveSystem = GetSubsystem<USaveGameSubsystem>();
 	if (SaveSystem)
