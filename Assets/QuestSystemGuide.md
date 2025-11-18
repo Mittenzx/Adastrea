@@ -517,21 +517,39 @@ void UNavigationComponent::OnDestinationReached_Implementation()
 }
 ```
 
-### With Faction System
+### With Way System (Guild Reputation)
 
 ```cpp
-// Quest affects faction reputation
+// Quest affects guild (Way) reputation
 void GiveQuestRewards(const FQuestReward& Rewards)
 {
-    // Update faction reputation via FactionDiplomacyManager
-    UFactionDiplomacyManager* DiplomacyMgr = ...;
-    DiplomacyMgr->ModifyRelationship(
-        PlayerFactionID,
-        Rewards.WayID,
-        Rewards.ReputationGain
-    );
+    // Update Way reputation via Verse component
+    UVerse* PlayerVerse = PlayerPawn->FindComponentByClass<UVerse>();
+    if (PlayerVerse && !Rewards.WayID.IsEmpty())
+    {
+        // Award reputation with the quest-giving Way
+        PlayerVerse->ModifyWayReputation(
+            FName(Rewards.WayID),
+            Rewards.ReputationGain
+        );
+        
+        // Record as a Feat if significant achievement
+        if (Rewards.ReputationGain >= 50)
+        {
+            // This will trigger network spillover if Way is in a network
+            UVerseSubsystem* VerseSystem = GetGameInstance()->GetSubsystem<UVerseSubsystem>();
+            VerseSystem->RecordFeatWithNetworkEffects(
+                PlayerVerse,
+                FName(Rewards.WayID),
+                FFeatData(/* feat details */),
+                Rewards.ReputationGain
+            );
+        }
+    }
 }
 ```
+
+**Note:** Quests are primarily given by Ways (specialized guilds), not political factions. For political/military missions, use faction-specific quest systems. See [Way System Guide](WaySystemGuide.md) for guild reputation mechanics.
 
 ## UI Integration
 
