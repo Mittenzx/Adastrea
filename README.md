@@ -339,69 +339,6 @@ A modular space station construction system that enables players to build, custo
 3. Create Widget Blueprint extending `UStationEditorWidget` for the in-game editor UI
 4. Use Blueprint-callable functions to add, remove, and position modules
 
-### Faction System
-The game includes a flexible faction system that allows designers to create and manage large political and military organizations. Each faction has unique attributes, colors, relationships, traits, and political diplomacy options. Factions focus on **politics, warfare, and military alliances**. The system includes homeworld-based faction relationships for diverse player starting experiences.
-
-**System Scope - Factions vs Ways:**
-
-| System | Size | Focus | Examples |
-|--------|------|-------|----------|
-| **Factions** | Millions | Politics, warfare, territory | Galactic empires, military alliances, governments |
-| **Ways** | 50-1,000 | Economics, trade, production | Merchant guilds, mining collectives, craft unions |
-
-Factions provide the political framework and military power. For economic activities, trade networks, and industry specialization, see the [Way System](#way-system) which handles specialized guilds and micro-alliances. Ways can belong to factions but operate independently for economic matters.
-
-**Key Components:**
-- `UFactionDataAsset` - C++ Data Asset class for defining factions
-- `UHomeworldDataAsset` - C++ Data Asset class for player starting locations with initial faction relationships
-- `FFactionTrait` - Struct for faction traits with gameplay modifiers
-- `FFactionRelationship` - Struct for inter-faction diplomacy
-- `FFactionRelationEntry` - Struct for homeworld faction starting reputations
-- `ASpaceStation::Faction` - Reference property to assign factions to stations
-- `ASpaceStationModule::ModuleFaction` - Module-level faction assignment
-- 10 pre-designed faction templates (Solaris Union, Ironclad Consortium, etc.)
-
-**Advanced Features:**
-- **Trait System**: Factions can have multiple traits with gameplay modifiers
-  - Blueprint-callable functions: `HasTrait()`, `GetTraitModifier()`, `GetTraits()`
-  - Categories: Military, Economic, Scientific, Diplomatic, Special
-  - Support for runtime trait addition/removal (see IterationGuide.md)
-  
-- **Diplomacy System**: Define relationships between factions
-  - Alliance and war status tracking
-  - Relationship values (-100 to 100)
-  - Trade modifiers based on relationships
-  - Blueprint-callable functions: `IsAlliedWith()`, `IsAtWarWith()`, `GetRelationship()`
-
-- **Station Integration**: Factions integrate with station and module systems
-  - Tech level restrictions on modules
-  - Faction-specific traits affect gameplay
-  - Blueprint-callable hooks on stations: `HasFactionTrait()`, `IsAlliedWithFaction()`
-
-- **Homeworld System**: Define player starting locations with unique faction relationships
-  - Create diverse starting experiences for players
-  - Initialize player faction reputation based on chosen homeworld
-  - Blueprint-callable functions: `GetStartingReputation()`, `HasRelationshipWith()`
-  - Store player reputation as TMap for efficient runtime queries
-
-**Documentation:**
-- **Complete Guide**: [Assets/BlueprintFactionAssetGuide.md](Assets/BlueprintFactionAssetGuide.md) - Step-by-step faction creation
-- **Faction Templates**: [Assets/FactionSetupGuide.md](Assets/FactionSetupGuide.md) - 10 pre-made factions with full specs
-- **Homeworld System**: [Assets/HomeworldSystemGuide.md](Assets/HomeworldSystemGuide.md) - Homeworld setup and faction relationships
-- **Blueprint Workflows**: [Assets/BlueprintWorkflowTemplates.md](Assets/BlueprintWorkflowTemplates.md) - UI implementation examples
-- **Homeworld Blueprints**: [Blueprints/HomeworldBlueprintTemplates.md](Blueprints/HomeworldBlueprintTemplates.md) - Blueprint logic for reputation system
-- **Playtesting Guide**: [Assets/PlaytestingChecklist.md](Assets/PlaytestingChecklist.md) - Verification and QA checklist
-- **Iteration Guide**: [Assets/IterationGuide.md](Assets/IterationGuide.md) - Expanding faction behaviors and systems
-- **Designer Onboarding**: [Assets/DesignerOnboarding.md](Assets/DesignerOnboarding.md) - Best practices and quick start
-
-**Quick Usage:**
-
-*Creating Factions:*
-1. Create a new FactionDataAsset in the Content Browser
-2. Configure faction properties (name, colors, attributes, traits, relationships)
-3. Assign the faction to any Space Station via the Faction property
-4. Use Blueprint-callable functions to query traits and diplomacy in gameplay
-
 ### Way System
 The Way System provides specialized guilds (Ways) and micro-alliances (Way Networks) based on shared values (Precepts). Ways are small focused organizations (50-1000 members) that handle specific industries and form networks where reputation with one member affects the entire alliance.
 

@@ -549,7 +549,7 @@ void GiveQuestRewards(const FQuestReward& Rewards)
 }
 ```
 
-**Note:** Quests are primarily given by Ways (specialized guilds), not political factions. For political/military missions, use faction-specific quest systems. See [Way System Guide](WaySystemGuide.md) for guild reputation mechanics.
+**Note:** Quests are given by Ways (specialized guilds). All quest mechanics should use the Way system. See [Way System Guide](WaySystemGuide.md) for guild reputation mechanics.
 
 ## UI Integration
 
