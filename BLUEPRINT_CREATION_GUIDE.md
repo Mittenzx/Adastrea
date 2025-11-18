@@ -2,6 +2,8 @@
 
 Complete instructions for creating all essential Blueprints to make the game playable.
 
+**⭐ New to Blueprints?** Consider starting with [BLUEPRINT_GUIDE_FOR_BEGINNERS.md](BLUEPRINT_GUIDE_FOR_BEGINNERS.md) - it's designed for complete beginners and explains everything from the ground up!
+
 ## Table of Contents
 
 1. [Player Ship Blueprint](#player-ship-blueprint)
