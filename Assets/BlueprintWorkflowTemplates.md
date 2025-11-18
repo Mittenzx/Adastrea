@@ -783,7 +783,7 @@ Update UI with Results
 ## Additional Resources
 
 - **UMG Best Practices**: Unreal Engine Documentation
-- **Data Binding**: See UE4/UE5 Property Binding guide
+- **Data Binding**: See UE5 Property Binding guide in Unreal Engine documentation
 - **C++ Function Reference**: See header files for complete API
 - **Example Widgets**: Check `Content/UI/Examples/` (if available)
 

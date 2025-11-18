@@ -215,10 +215,10 @@ Pick one system to dive deep:
 ### Unreal Engine Basics
 - [Official Unreal Engine Documentation](https://docs.unrealengine.com/)
 - [Unreal Engine for Beginners](https://www.unrealengine.com/en-US/onlinelearning-courses)
-- [Blueprint Quickstart Guide](https://docs.unrealengine.com/5.0/en-US/blueprints-quick-start-guide/)
+- [Blueprint Quickstart Guide](https://docs.unrealengine.com/5.6/en-US/blueprints-quick-start-guide/)
 
 ### C++ with Unreal
-- [Unreal Engine C++ Quick Start](https://docs.unrealengine.com/5.0/en-US/programming-quick-start-for-unreal-engine/)
+- [Unreal Engine C++ Quick Start](https://docs.unrealengine.com/5.6/en-US/programming-quick-start-for-unreal-engine/)
 - [UE4/UE5 C++ Tutorial](https://www.tomlooman.com/unreal-engine-cpp-tutorials/)
 
 ### Adastrea-Specific
