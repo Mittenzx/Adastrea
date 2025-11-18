@@ -249,7 +249,9 @@ Concise reference documents:
 
 | Document | Purpose | Location |
 |----------|---------|----------|
-| **BLUEPRINT_GUIDE_FOR_BEGINNERS.md** | ⭐ **START HERE!** Complete beginner-friendly guide (assumes zero Blueprint knowledge) | Root |
+| **BLUEPRINT_GUIDE_FOR_BEGINNERS.md** | ⭐ **START HERE!** Complete beginner-friendly guide (assumes zero Blueprint knowledge, 1146 lines) | Root |
+| **BLUEPRINT_QUICK_START_SUMMARY.md** | One-page printable summary with all essentials | Root |
+| **BLUEPRINT_ROADMAP_VISUAL.md** | Visual progression map with flowcharts and dependency chains | Root |
 | **BLUEPRINT_REQUIREMENTS_LIST.md** | Comprehensive list of all required Blueprints (882 lines) | Root |
 | **BLUEPRINT_CHECKLIST.md** | Quick checklist for Blueprint creation (372 lines) | Root |
 | **BLUEPRINT_QUICK_REFERENCE.md** | One-page visual reference card | Root |

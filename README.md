@@ -703,6 +703,8 @@ Comprehensive technical documentation for contributors and developers:
 
 ### Blueprint Documentation
 - **[Blueprint Guide for Beginners](BLUEPRINT_GUIDE_FOR_BEGINNERS.md)** - ⭐ **START HERE!** Complete beginner-friendly guide assuming zero Blueprint knowledge
+- **[Blueprint Quick Start Summary](BLUEPRINT_QUICK_START_SUMMARY.md)** - One-page printable summary with all essentials
+- **[Blueprint Roadmap Visual](BLUEPRINT_ROADMAP_VISUAL.md)** - Visual progression map and flowcharts
 - **[Blueprint Requirements List](BLUEPRINT_REQUIREMENTS_LIST.md)** - Comprehensive list of all user-created Blueprints needed in the editor (~100+ Blueprints organized by priority)
 - **[Blueprint Checklist](BLUEPRINT_CHECKLIST.md)** - Quick checklist for creating required Blueprints in phases
 - **[Blueprint Quick Reference](BLUEPRINT_QUICK_REFERENCE.md)** - One-page visual reference card with priorities and paths
