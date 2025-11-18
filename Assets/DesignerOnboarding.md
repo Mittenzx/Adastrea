@@ -100,18 +100,28 @@ Module Properties:
 **Definition:** A faction is a large political and military organization in the game world with its own identity, goals, and relationships. Factions handle **political diplomacy, warfare, and large-scale military operations**.
 
 **Think of it like:**
-- A country in Civilization (political power)
-- A major alliance in EVE Online (military force)
-- A house in Game of Thrones (political intrigue)
+- A country in Civilization (political power, declares wars)
+- A major alliance in EVE Online (military force, territorial control)
+- A house in Game of Thrones (political intrigue, power struggles)
 
 **What makes a good faction:**
-- Clear political identity (who are they?)
-- Distinct visual style (colors, symbols)
-- Unique strengths and weaknesses
-- Interesting political relationships with other factions
-- Room for storytelling
+- Clear political identity (who are they? what do they stand for?)
+- Distinct visual style (colors, symbols, military aesthetics)
+- Unique strengths and weaknesses (tech level, military power)
+- Interesting political relationships with other factions (allies, enemies, rivals)
+- Room for political storytelling (wars, treaties, betrayals)
 
-**Note:** For economic activities, trade, and industry specialization, see the Way System below. Factions focus on politics and military power, while Ways handle economic and practical matters.
+**Critical Note - Factions vs Ways:**
+
+| Aspect | Factions | Ways |
+|--------|----------|------|
+| **Size** | Millions of members | 50-1,000 members |
+| **Focus** | Politics & Military | Economics & Trade |
+| **Decisions** | Wars, treaties, territory | Trade routes, production, pricing |
+| **Examples** | Galactic Empire, Trade Federation | Miners Guild, Merchants League |
+| **When to Use** | Political storylines, wars | Economic gameplay, guilds |
+
+For economic activities, trade networks, and industry specialization, use the Way System (see below). Factions provide the political framework; Ways drive the economy.
 
 ### Faction Data Assets vs. Runtime State
 

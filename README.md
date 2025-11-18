@@ -342,7 +342,14 @@ A modular space station construction system that enables players to build, custo
 ### Faction System
 The game includes a flexible faction system that allows designers to create and manage large political and military organizations. Each faction has unique attributes, colors, relationships, traits, and political diplomacy options. Factions focus on **politics, warfare, and military alliances**. The system includes homeworld-based faction relationships for diverse player starting experiences.
 
-**Note:** For economic activities, trade, and industry specialization, see the [Way System](#way-system) which handles specialized guilds and micro-alliances.
+**System Scope - Factions vs Ways:**
+
+| System | Size | Focus | Examples |
+|--------|------|-------|----------|
+| **Factions** | Millions | Politics, warfare, territory | Galactic empires, military alliances, governments |
+| **Ways** | 50-1,000 | Economics, trade, production | Merchant guilds, mining collectives, craft unions |
+
+Factions provide the political framework and military power. For economic activities, trade networks, and industry specialization, see the [Way System](#way-system) which handles specialized guilds and micro-alliances. Ways can belong to factions but operate independently for economic matters.
 
 **Key Components:**
 - `UFactionDataAsset` - C++ Data Asset class for defining factions
