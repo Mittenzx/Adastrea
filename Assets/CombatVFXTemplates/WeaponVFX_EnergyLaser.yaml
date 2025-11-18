@@ -1,0 +1,78 @@
+# Combat VFX Data Asset Template: Energy Laser Weapon
+# Copy this template and customize for your energy weapon
+
+---
+weapon_vfx:
+  # Basic Information
+  vfx_name: "Energy Laser Effects"
+  description: "Blue laser beam with glow and heat distortion"
+  weapon_type: Energy  # Options: Energy, Projectile, Missile, Torpedo, Beam, Plasma
+  
+  # Fire Effect Configuration
+  fire_effect:
+    # Niagara Systems (assign in Unreal Editor)
+    muzzle_flash_effect: "NS_Energy_MuzzleFlash"
+    beam_effect: "NS_Energy_LaserBeam"
+    projectile_trail_effect: null  # Not used for instant hit weapons
+    
+    # Sound
+    fire_sound: "S_EnergyLaser_Fire"
+    
+    # Beam Properties
+    beam_type: Instant  # Options: Instant, Sustained, Projectile
+    beam_duration: 0.1  # seconds (for instant beams)
+    beam_width: 5.0     # cm
+    beam_color:
+      r: 0.0
+      g: 0.5
+      b: 1.0
+      a: 1.0  # Blue laser
+    
+    # Visual Properties
+    glow_intensity: 2.0       # Multiplier for glow
+    heat_distortion_strength: 0.3  # 0-1, distortion effect
+    
+    # Camera Shake (optional, assign in Unreal Editor)
+    camera_shake: "CS_WeaponFire_Light"
+  
+  # Heat Management Visuals
+  heat_visuals:
+    # Niagara Systems
+    heat_vent_effect: "NS_Weapon_HeatVent"
+    
+    # Material (assign in Unreal Editor)
+    heat_gradient_material: "M_Weapon_HeatGradient"
+    
+    # Heat Colors (RGB 0-1)
+    cool_color:      # 0% heat - Blue
+      r: 0.1
+      g: 0.3
+      b: 0.5
+      a: 1.0
+    
+    warning_color:   # 50% heat - Orange
+      r: 1.0
+      g: 0.5
+      b: 0.0
+      a: 1.0
+    
+    overheat_color:  # 100% heat - Red
+      r: 1.0
+      g: 0.0
+      b: 0.0
+      a: 1.0
+    
+    max_shimmer_intensity: 0.8  # 0-1, heat shimmer at max
+  
+  # Performance Settings
+  performance:
+    max_particles: 500        # Particle budget for this effect
+    effect_priority: 5        # 0-10, higher = more important
+    max_render_distance: 10000.0  # meters, culling distance
+
+# Usage Notes:
+# 1. Create CombatVFXDataAsset in Content Browser
+# 2. Name it: DA_VFX_EnergyLaser
+# 3. Configure properties to match this template
+# 4. Assign Niagara systems and materials in Unreal Editor
+# 5. Assign to CombatVFXComponent on your ship
