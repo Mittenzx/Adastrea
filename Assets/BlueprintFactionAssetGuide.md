@@ -3,7 +3,19 @@
 ## Overview
 This guide walks you through creating a complete Faction Data Asset in Unreal Engine, including basic properties, traits, and political diplomacy relationships. Perfect for designers who want to create rich, interactive factions for the game.
 
-**Important:** Factions represent large political and military organizations that handle warfare, diplomacy, and political alliances. For economic activities, trade, and industry specialization, see the [Way System Guide](WaySystemGuide.md).
+**System Scope - Understanding Factions vs Ways:**
+
+| Aspect | Factions (This Guide) | Ways (See Way System) |
+|--------|----------------------|----------------------|
+| **Size** | Large political organizations (millions) | Small specialized guilds (50-1,000 members) |
+| **Focus** | Politics, warfare, diplomacy | Trade, production, guild activities |
+| **Relationships** | Political alliances, wars, treaties | Economic partnerships, Way Networks |
+| **Examples** | Nations, empires, military coalitions | Merchant guilds, mining collectives, craft unions |
+| **Documentation** | This guide | [Way System Guide](WaySystemGuide.md) |
+
+**When to use Factions:** Creating large political entities, military powers, or governments that declare wars, form political alliances, and control territory through military might.
+
+**When to use Ways:** Creating specialized trade guilds, merchant leagues, craft unions, or industrial cooperatives that form economic partnerships. See [Way System Guide](WaySystemGuide.md) for guild creation.
 
 ---
 
@@ -105,14 +117,16 @@ In the **Faction Attributes** category:
    - Example: 10 (strongest military)
 
 3. **Economic Power** (Integer: 1-10)
-   - Trade influence and resource availability
-   - Affects trade prices and station amenities
+   - Overall economic scale and political influence from economic resources
+   - Represents the faction's ability to fund military/political operations
+   - **Note:** Actual trade operations, supply chains, and guild activities are handled by the [Way System](WaySystemGuide.md)
    - Guidelines:
-     - 1-3: Poor/Struggling economy
-     - 4-6: Stable economy
-     - 7-9: Wealthy/Prosperous
-     - 10: Economic superpower
+     - 1-3: Poor/Struggling economy (limited political funding)
+     - 4-6: Stable economy (adequate political resources)
+     - 7-9: Wealthy/Prosperous (strong economic backing)
+     - 10: Economic superpower (unlimited political funding)
    - Example: 5 (moderate economy)
+   - **For detailed trade mechanics:** See [Way System Guide](WaySystemGuide.md) which handles merchant guilds, production chains, and actual trading
 
 ### Step 5: Save Your Asset
 
@@ -173,17 +187,22 @@ Trait: Defensive Doctrine
 ```
 
 #### Economic Traits
+
+**Note:** For detailed economic gameplay, use the [Way System](WaySystemGuide.md). Faction economic traits represent high-level political advantages that benefit Ways within the faction.
+
 ```
-Trait: Trade Hub
-- Trait ID: TradeHub
-- Description: +15% trade income from all sources
+Trait: Trade-Friendly Policy
+- Trait ID: TradeFriendlyPolicy
+- Description: Political policies favorable to trade (Ways get bonuses)
 - Modifier: 0.15
 
-Trait: Resource Rich
-- Trait ID: ResourceRich
-- Description: Mining operations yield 30% more materials
+Trait: Resource Nationalization
+- Trait ID: ResourceNationalization  
+- Description: Government controls mining rights (affects Way operations)
 - Modifier: 0.30
 ```
+
+**Integration with Ways:** Faction economic traits provide political environment bonuses to Ways operating within that faction's territory. Individual Ways handle the actual trade, mining, and production activities. See [Way System Guide](WaySystemGuide.md) for creating merchant guilds, mining collectives, etc.
 
 #### Technological Traits
 ```
@@ -444,11 +463,19 @@ While Faction Data Assets are static templates, you can:
 
 ### Integration with Gameplay Systems
 
-Factions can affect:
-- **Station Trading**: Prices based on relationship values
-- **Combat AI**: Behavior based on hostility and military strength
-- **Mission Generation**: Quests based on faction relationships
-- **Territory Control**: Tech level affects available modules
+Factions affect political and military gameplay:
+- **Political Access**: Faction reputation determines if you can enter territory
+- **Combat AI**: Behavior based on hostility and military strength (war vs peace)
+- **Mission Generation**: Political quests (diplomacy, espionage, military contracts)
+- **Territory Control**: Military control affects station ownership
+
+**For Economic Integration:**
+- **Trading**: Use the [Way System](WaySystemGuide.md) - Ways handle actual pricing, supply chains
+- **Production**: Ways manage production facilities and resource chains
+- **Guild Missions**: Way-specific quests for trade, mining, crafting
+- **Economic Networks**: Way Networks provide micro-alliance bonuses
+
+**Connection:** Ways belong to Factions (political alignment) but operate independently for economic matters. A faction's political stance affects which Ways can operate in their territory.
 
 ### Future Expansion Ideas
 

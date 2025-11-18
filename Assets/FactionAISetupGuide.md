@@ -21,13 +21,20 @@ This guide provides step-by-step instructions for setting up faction-level AI in
 ### What is Faction AI?
 
 Faction AI handles **macro-level strategic and political decisions** for entire factions:
-- **Territory expansion** and control
-- **Political diplomacy** with other factions  
-- **Military strategies** and warfare
-- **High-level resource allocation**
-- **Research priorities** and technology
+- **Territory expansion** and control (military conquest and political annexation)
+- **Political diplomacy** with other factions (alliances, wars, treaties)
+- **Military strategies** and warfare (fleet movements, military buildup)
+- **High-level resource allocation** (political/military budget decisions)
+- **Research priorities** and technology (military R&D, political tech)
 
-**Note:** Day-to-day economic activities, trade, and production are handled by the [Way System](WaySystemGuide.md) AI. Faction AI focuses on political and military strategy, while Way AI handles economic operations and guild management.
+**Critical Scope Distinction:**
+
+| System | Scope | Examples |
+|--------|-------|----------|
+| **Faction AI** | Politics & Military | War declarations, military alliances, territory control, fleet strategy |
+| **Way AI** | Economics & Trade | Supply chain management, trade routes, production quotas, guild cooperation |
+
+For economic activities, trade operations, production management, and guild coordination, see the [Way System Guide](WaySystemGuide.md) and [Way AI documentation](WaySystemAPIReference.md). Ways are specialized guilds that operate within or across factions, handling the economic side of the game while Faction AI handles politics and warfare.
 
 ### Key Components
 
@@ -225,11 +232,15 @@ Set priorities for **non-aggressive** growth:
 
 ### Trade-Focused Strategy
 
-For **economic** peaceful factions:
-1. **Very High Trade** (9-10) - Primary focus
-2. **High Diplomacy** (7-9) - Good relations = good business
-3. **Medium Exploration** (5-7) - Find trade routes
-4. **High Expansion** (6-8) - Build trade posts
+**Important:** For detailed economic and trade AI, use the [Way System](WaySystemGuide.md). Faction AI sets high-level economic policy, but Ways handle actual trade operations.
+
+For **economically-oriented** peaceful factions (political support for trade):
+1. **High Diplomacy** (8-10) - Political support for trade agreements
+2. **Medium Trade** (5-7) - High-level trade policy (Ways handle specifics)
+3. **Medium Exploration** (5-7) - Political expansion to secure trade routes
+4. **Low Military** (3-5) - Minimal military, rely on trade wealth
+
+**Note:** Individual trade routes, supply chains, merchant guild operations, and detailed pricing are handled by Ways (small specialized guilds) that form trade networks within or across factions. See [Way System Guide](WaySystemGuide.md) for economic gameplay.
 
 ---
 
@@ -286,17 +297,19 @@ Example: Only Claim High-Value Territories
 
 #### 4. Event Should Initiate Trade
 
-**When:** Deciding whether to trade with another faction  
-**Use:** Custom trade logic
+**When:** Deciding whether to allow trade agreements with another faction (high-level policy)
+**Use:** Custom diplomatic trade policy
+
+**Note:** This controls whether factions allow economic cooperation at a political level. Actual trade operations are handled by Ways. See [Way System](WaySystemGuide.md) for detailed trade mechanics.
 
 ```
-Example: Trade with Anyone Not at War
+Example: Allow Trade Based on Political Relations
 1. Add Event: "Event Should Initiate Trade"
 2. Call "Is At War With" function with Other Faction ID
-3. If NOT at war:
-   - Return TRUE
+3. If NOT at war AND relationship > 0:
+   - Return TRUE (allow Ways to trade)
 4. Else:
-   - Return FALSE
+   - Return FALSE (block trade at political level)
 ```
 
 #### 5. Event Update Strategic Goals
@@ -495,7 +508,14 @@ Override "Update Strategic Goals":
 
 ## See Also
 
+### AI Systems
 - [Personnel AI Setup Guide](PersonnelAISetupGuide.md) - Individual crew AI
 - [AI Designer Workflow](AIDesignerWorkflow.md) - Overall AI system workflow
 - [AI System Integration](AISystemIntegration.md) - Connecting AI to game systems
 - [Faction Templates](FactionAITemplates/) - Pre-made YAML configurations
+
+### Related Systems
+- [Way System Guide](WaySystemGuide.md) - Economic/guild system (complementary to Faction AI)
+- [Way AI Documentation](WaySystemAPIReference.md) - Economic AI for trade and production
+- [Trading System Guide](TradingSystemGuide.md) - How Ways implement actual trading
+- [Faction Setup Guide](FactionSetupGuide.md) - Creating faction data assets

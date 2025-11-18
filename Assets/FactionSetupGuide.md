@@ -3,7 +3,11 @@
 ## Overview
 The Faction System allows designers to create and manage large political and military organizations within the game using Blueprint Data Assets. Each faction has unique properties that define its identity, political relationships, and military/technological attributes.
 
-**Important:** Factions focus on **politics, warfare, and diplomacy**. For economic activities, trade, and industry specialization, see the [Way System](WaySystemGuide.md) which handles specialized guilds and micro-alliances.
+**Important Scope Distinction:** 
+- **Factions** focus on **politics, warfare, and diplomacy** - large political entities with military power
+- **Ways** handle **economics, trade, and guild activities** - small specialized guilds (50-1000 members) that form micro-alliances
+
+For economic activities, trade networks, industry specialization, and guild management, see the [Way System Guide](WaySystemGuide.md) which handles specialized guilds and micro-alliances. Ways can belong to larger Factions but operate independently for economic matters.
 
 ## Setup Instructions
 
@@ -49,7 +53,7 @@ Use the following functions to work with factions:
 ### Faction Attributes
 - **Technology Level** (Integer 1-10): Technological advancement (affects available equipment/modules)
 - **Military Strength** (Integer 1-10): Combat capability and fleet size
-- **Economic Power** (Integer 1-10): Overall economic scale and resources (Note: Day-to-day trade and industry is handled by Ways within the faction)
+- **Economic Power** (Integer 1-10): Overall economic scale, resources, and political influence (Note: Actual trade operations, supply chains, and guild activities are handled by the [Way System](WaySystemGuide.md). Ways within a faction execute the day-to-day economic activities.)
 
 ---
 
@@ -253,9 +257,10 @@ Below are templates for 10 factions. Copy these into your data assets and adjust
 - **Faction ID:** `GalacticGuild`
 - **Description:**
   ```
-  An ancient trade organization with roots predating modern space travel. The Galactic Guild 
-  maintains neutral trading hubs throughout the galaxy, offering banking services, commodity 
-  exchanges, and contract work to anyone with credits to spend.
+  An ancient political federation representing trade interests across the galaxy. The Galactic 
+  Guild maintains diplomatic neutrality and lobbies for trade-friendly policies. While the 
+  faction provides political protection, actual trade operations are conducted by numerous 
+  specialized Ways (guilds) that operate under the faction's political umbrella.
   ```
 - **Primary Color:** Merchant Gold (R: 0.83, G: 0.69, B: 0.22)
 - **Secondary Color:** Royal Blue (R: 0.25, G: 0.41, B: 0.88)
@@ -264,6 +269,8 @@ Below are templates for 10 factions. Copy these into your data assets and adjust
 - **Technology Level:** 6
 - **Military Strength:** 4
 - **Economic Power:** 10
+
+**Note:** For actual trading operations, merchant guilds, and economic activities, see the [Way System](WaySystemGuide.md). The Galactic Guild would contain multiple Ways such as merchant leagues, banker guilds, and commodity brokers.
 
 ---
 
@@ -370,7 +377,11 @@ Trade Hub
 
 Factions can define **political relationships** with other factions including alliances, wars, and diplomatic agreements. See [BlueprintFactionAssetGuide.md](BlueprintFactionAssetGuide.md) for diplomacy setup.
 
-**Note:** While factions have political alliances, **economic relationships and trade networks** are handled by the [Way System](WaySystemGuide.md). Ways are specialized guilds that form micro-alliances (2-5 members) within or across factions for economic cooperation.
+**Critical Distinction:** 
+- **Faction Diplomacy**: Political alliances, wars, military pacts between large political organizations
+- **Way Networks**: Economic cooperation, trade agreements, guild partnerships between small specialized guilds
+
+The [Way System](WaySystemGuide.md) handles economic relationships through "Way Networks" - micro-alliances of 2-5 specialized guilds (Ways) that work together for mutual economic benefit. Ways can belong to the same or different factions, creating cross-faction economic cooperation even during political tensions.
 
 **Example Relationships:**
 ```

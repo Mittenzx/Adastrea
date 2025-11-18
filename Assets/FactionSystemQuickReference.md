@@ -2,7 +2,11 @@
 
 This guide provides quick examples and usage patterns for the faction system, which handles political diplomacy, warfare, and large-scale military operations.
 
-**Note:** For economic activities, trade, and industry specialization, see the [Way System Guide](WaySystemGuide.md). Factions focus on politics and military power, while Ways handle economic matters.
+**System Scope:**
+- **Factions** = Large political/military organizations handling diplomacy, warfare, and political power
+- **Ways** = Small specialized guilds (50-1000 members) handling trade, production, and economic cooperation
+
+For economic activities, trade networks, guild management, and industry specialization, see the [Way System Guide](WaySystemGuide.md). Ways can belong to factions but operate independently for economic matters through "Way Networks" (micro-alliances of 2-5 guilds).
 
 ---
 
@@ -271,22 +275,23 @@ float DiplomaticBonus = FactionDataAsset->GetCategoryModifierTotal(EFactionTrait
 
 ### Example 1: Trading System Integration
 
+**Note:** For actual trading operations, use the [Way System](WaySystemGuide.md) which provides detailed supply chains, guild-specific pricing, and Way Network bonuses. Faction reputation affects high-level access but Ways handle the specifics.
+
 ```cpp
-// In your trading system
-float CalculateTradePrice(UPlayerReputationComponent* Reputation, FName FactionID, float BasePrice)
+// Basic faction reputation check for trading access
+float CalculateBaseTradingAccess(UPlayerReputationComponent* Reputation, FName FactionID)
 {
-    // Get reputation modifier
+    // Faction reputation determines if you can trade at all
     float ReputationModifier = Reputation->GetTradePriceModifier(FactionID);
     
-    // Get faction economic trait bonus
-    UFactionDataAsset* Faction = GetFactionDataAsset(FactionID);
-    float TraitBonus = Faction->GetCategoryModifierTotal(EFactionTraitCategory::Economic);
+    // For detailed pricing, supply/demand, and guild bonuses, 
+    // integrate with the Way System (see WaySystemAPIReference.md)
     
-    // Calculate final price
-    float FinalPrice = BasePrice * ReputationModifier * (1.0f - (TraitBonus * 0.1f));
-    
-    return FinalPrice;
+    return ReputationModifier;
 }
+
+// For actual trade pricing, use Way System:
+// float finalPrice = WayNetwork->CalculatePrice(item, playerVerse);
 ```
 
 ### Example 2: NPC Hostility Check
@@ -461,17 +466,27 @@ A: Integration with gameplay systems is pending. Use trait modifiers in your sys
 
 ## Next Steps
 
-1. **Integrate with existing systems** (trading, combat, missions)
-2. **Create content** (faction data assets with categorized traits)
-3. **Implement UI** (reputation display, diplomacy panel)
+1. **Integrate with existing systems** (combat, missions, political storylines)
+2. **Create content** (faction data assets with political/military traits)
+3. **Implement UI** (reputation display, diplomacy panel, war declarations)
 4. **Add persistence** (save/load faction states)
 5. **Extend event system** (implement diplomatic event listeners)
+6. **Integrate with Way System** (link factions to their constituent Ways for economic activities)
 
 ---
 
-For more details, see:
-- [Assets/IterationGuide.md](Assets/IterationGuide.md) - Complete faction system guide
-- [CHANGELOG.md](../CHANGELOG.md) - Implementation status and release history
-- [EXAMPLE_DATA_ASSETS.md](EXAMPLE_DATA_ASSETS.md) - Data asset examples
+## Related Documentation
 
-_Last updated: 2025-10-28_
+### Faction System (Political/Military)
+- [Assets/IterationGuide.md](Assets/IterationGuide.md) - Complete faction system guide
+- [Assets/FactionSetupGuide.md](Assets/FactionSetupGuide.md) - Faction creation guide
+- [Assets/BlueprintFactionAssetGuide.md](Assets/BlueprintFactionAssetGuide.md) - Blueprint integration
+- [CHANGELOG.md](../CHANGELOG.md) - Implementation status
+
+### Way System (Economic/Guild)
+- [Assets/WAY_SYSTEM_INDEX.md](Assets/WAY_SYSTEM_INDEX.md) - Way system documentation index
+- [Assets/WaySystemGuide.md](Assets/WaySystemGuide.md) - Complete Way system guide
+- [Assets/WayCreationGuide.md](Assets/WayCreationGuide.md) - Creating guilds and networks
+- [Assets/WaySystemAPIReference.md](Assets/WaySystemAPIReference.md) - Programming API
+
+_Last updated: 2025-11-18_
