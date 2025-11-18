@@ -1,13 +1,11 @@
 // Copyright (c) 2025 Mittenzx. Licensed under MIT.
 
 #include "Stations/SpaceStation.h"
-#include "Factions/FactionDataAsset.h"
 #include "AdastreaLog.h"
 
 ASpaceStation::ASpaceStation()
 {
     PrimaryActorTick.bCanEverTick = false;
-    Faction = nullptr;
 }
 
 void ASpaceStation::BeginPlay()
@@ -151,73 +149,4 @@ TArray<ASpaceStationModule*> ASpaceStation::GetModulesByType(const FString& Modu
 int32 ASpaceStation::GetModuleCount() const
 {
     return Modules.Num();
-}
-
-UFactionDataAsset* ASpaceStation::GetFaction() const
-{
-    return Faction;
-}
-
-void ASpaceStation::SetFaction(UFactionDataAsset* NewFaction)
-{
-    Faction = NewFaction;
-}
-
-// ====================
-// Advanced Trait & Diplomacy Hooks
-// ====================
-
-bool ASpaceStation::HasFactionTrait(FName TraitID) const
-{
-    // Early validation
-    if (!Faction || TraitID.IsNone())
-    {
-        return false;
-    }
-    
-    return Faction->HasTrait(TraitID);
-}
-
-float ASpaceStation::GetFactionTraitModifier(FName TraitID) const
-{
-    // Early validation
-    if (!Faction || TraitID.IsNone())
-    {
-        return 0.0f;
-    }
-    
-    return Faction->GetTraitModifier(TraitID);
-}
-
-bool ASpaceStation::IsAlliedWithFaction(FName OtherFactionID) const
-{
-    // Early validation
-    if (!Faction || OtherFactionID.IsNone())
-    {
-        return false;
-    }
-    
-    return Faction->IsAlliedWith(OtherFactionID);
-}
-
-bool ASpaceStation::IsAtWarWithFaction(FName OtherFactionID) const
-{
-    // Early validation
-    if (!Faction || OtherFactionID.IsNone())
-    {
-        return false;
-    }
-    
-    return Faction->IsAtWarWith(OtherFactionID);
-}
-
-int32 ASpaceStation::GetFactionRelationship(FName OtherFactionID) const
-{
-    // Early validation
-    if (!Faction || OtherFactionID.IsNone())
-    {
-        return 0;
-    }
-    
-    return Faction->GetRelationshipValue(OtherFactionID);
 }

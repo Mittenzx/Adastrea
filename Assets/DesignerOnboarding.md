@@ -95,47 +95,6 @@ Module Properties:
 
 ## Core Concepts
 
-### What is a Faction?
-
-**Definition:** A faction is a large political and military organization in the game world with its own identity, goals, and relationships. Factions handle **political diplomacy, warfare, and large-scale military operations**.
-
-**Think of it like:**
-- A country in Civilization (political power)
-- A major alliance in EVE Online (military force)
-- A house in Game of Thrones (political intrigue)
-
-**What makes a good faction:**
-- Clear political identity (who are they?)
-- Distinct visual style (colors, symbols)
-- Unique strengths and weaknesses
-- Interesting political relationships with other factions
-- Room for storytelling
-
-**Note:** For economic activities, trade, and industry specialization, see the Way System below. Factions focus on politics and military power, while Ways handle economic and practical matters.
-
-### Faction Data Assets vs. Runtime State
-
-**Important Distinction:**
-
-```
-📦 Faction Data Asset (Static Template)
-  - Created by designers in the editor
-  - Defines faction's "blueprint"
-  - Doesn't change during gameplay
-  - Examples: Base colors, starting attributes, default traits
-
-🎮 Runtime State (Dynamic)
-  - Created by code during gameplay
-  - Tracks changing data
-  - Examples: Current player reputation, temporary traits, war/peace status
-```
-
-**What this means for you:**
-- Design the "ideal" faction in the data asset
-- Code will handle changes during gameplay
-- You can't change runtime state from the data asset
-- Use data assets as templates, not save files
-
 ### What is a Way?
 
 **Definition:** A Way is a small specialized guild (50-1000 members) focused on specific industries and economic activities. Ways handle **trade, production, industry specialization, and practical governance**.
@@ -151,16 +110,6 @@ Module Properties:
 - Economic goals and trade relationships
 - Membership in Way Networks (micro-alliances of 2-5 Ways)
 - Integration with trading and production systems
-
-**Key Differences from Factions:**
-
-| Aspect | Factions | Ways |
-|--------|----------|------|
-| **Size** | Large (thousands to millions) | Small (50-1000 members) |
-| **Focus** | Politics, warfare, diplomacy | Economy, trade, industry |
-| **Relationships** | Political alliances and wars | Economic networks and supply chains |
-| **Governance** | Political leadership | Practical/economic governance |
-| **Examples** | Solar Union, Nova Vanguard | Dwarven Mining Way, Pure Crafters |
 
 **See Also:** [Way System Guide](WaySystemGuide.md) for complete documentation on creating and managing Ways.
 

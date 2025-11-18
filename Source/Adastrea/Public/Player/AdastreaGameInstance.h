@@ -15,7 +15,6 @@
  * Key Responsibilities:
  * - Managing save/load operations for player progress
  * - Storing persistent player data (credits, reputation, inventory)
- * - Coordinating faction diplomacy state across the galaxy
  * - Managing global economy and market conditions
  * - Handling game settings and configuration
  * 
@@ -31,7 +30,6 @@
  * - Create Blueprints derived from this class for project-specific state
  * 
  * Integration Points:
- * - UFactionDiplomacyManager for galaxy-wide faction relationships
  * - Trading system for market state and economy
  * - Save/load system for persistence
  * - Player progression and career tracking
@@ -47,13 +45,6 @@ public:
 	virtual void Init() override;
 
 	virtual void Shutdown() override;
-
-	/**
-	 * Get the faction diplomacy manager for the current game session
-	 * @return The global faction diplomacy manager instance
-	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Factions")
-	class UFactionDiplomacyManager* GetFactionDiplomacyManager() const { return FactionDiplomacyManager; }
 
 	/**
 	 * Save the current game state to a save slot
@@ -86,13 +77,6 @@ public:
 	void ModifyPlayerCredits(int32 Amount);
 
 protected:
-	/**
-	 * Global faction diplomacy manager
-	 * Tracks relationships between all factions in the galaxy
-	 */
-	UPROPERTY()
-	class UFactionDiplomacyManager* FactionDiplomacyManager;
-
 	/**
 	 * Player's current credit balance
 	 */

@@ -2,36 +2,21 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "Factions/FactionDataAsset.h"
 #include "HomeworldDataAsset.generated.h"
 
 /**
- * Faction relationship entry for homeworld
- * Defines the starting reputation with a specific faction
- */
-USTRUCT(BlueprintType)
-struct FFactionRelationEntry
-{
-	GENERATED_BODY()
-
-	// The faction this relationship applies to
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Faction Relations")
-	UFactionDataAsset* Faction;
-
-	// Starting reputation with this faction (-100 to 100)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Faction Relations", meta=(ClampMin="-100", ClampMax="100"))
-	int32 StartingReputation;
-
-	FFactionRelationEntry()
-		: Faction(nullptr)
-		, StartingReputation(0)
-	{}
-};
-
-/**
  * Data Asset for storing homeworld information.
- * Homeworlds define the player's starting location and initial faction relationships.
- * Each homeworld sets up unique diplomatic standings with various factions.
+ * 
+ * Homeworlds represent the player's origin within the Adastrea universe and are central to the Way system.
+ * Each homeworld determines the player's initial location, available resources, lore background, and starting conditions.
+ * In the current design, homeworlds are used to set up the player's initial context, influence narrative paths,
+ * and provide unique gameplay modifiers or opportunities based on their attributes.
+ * Designers can configure homeworlds to affect progression, available technologies, and story branches via Data Assets.
+ * 
+ * Usage Example:
+ * - Create a new Homeworld Data Asset in the editor
+ * - Set properties such as name, description, starting location, and unique ID
+ * - Reference the Data Asset in player setup or Way system logic to initialize the game state
  */
 UCLASS(BlueprintType)
 class ADASTREA_API UHomeworldDataAsset : public UPrimaryDataAsset
@@ -51,33 +36,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Homeworld Info")
 	FName HomeworldID;
 
-	// Initial faction relationships for players from this homeworld
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Faction Relations")
-	TArray<FFactionRelationEntry> FactionRelations;
+	// Starting location coordinates
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Homeworld Info")
+	FVector StartingLocation;
 
 	UHomeworldDataAsset();
-
-	/**
-	 * Get the starting reputation with a specific faction
-	 * @param Faction The faction to get starting reputation for
-	 * @param OutReputation The starting reputation value (if found)
-	 * @return True if a relationship entry exists for this faction
-	 */
-	UFUNCTION(BlueprintCallable, Category="Faction Relations")
-	bool GetStartingReputation(const UFactionDataAsset* Faction, int32& OutReputation) const;
-
-	/**
-	 * Get all faction relationships for this homeworld
-	 * @return Array of faction relation entries
-	 */
-	UFUNCTION(BlueprintCallable, Category="Faction Relations")
-	TArray<FFactionRelationEntry> GetFactionRelations() const;
-
-	/**
-	 * Check if this homeworld has a defined relationship with a faction
-	 * @param Faction The faction to check
-	 * @return True if a relationship exists
-	 */
-	UFUNCTION(BlueprintCallable, Category="Faction Relations")
-	bool HasRelationshipWith(const UFactionDataAsset* Faction) const;
 };
