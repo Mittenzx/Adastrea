@@ -2,6 +2,8 @@
 
 > **One-page visual reference for Blueprint creation**
 
+**⭐ New to Blueprints?** See [BLUEPRINT_GUIDE_FOR_BEGINNERS.md](BLUEPRINT_GUIDE_FOR_BEGINNERS.md) for step-by-step instructions!
+
 ---
 
 ## 🎯 Priority Levels

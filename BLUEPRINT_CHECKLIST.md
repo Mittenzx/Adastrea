@@ -2,6 +2,8 @@
 
 > **Quick checklist for creating required Blueprints in Unreal Engine Editor**
 
+**New to Blueprints?** Start with [BLUEPRINT_GUIDE_FOR_BEGINNERS.md](BLUEPRINT_GUIDE_FOR_BEGINNERS.md) for a complete beginner-friendly guide!
+
 **For detailed instructions, see**: `BLUEPRINT_REQUIREMENTS_LIST.md`
 
 ---

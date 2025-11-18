@@ -6,6 +6,8 @@
 **For Version**: 1.0.0-alpha  
 **Target Engine**: Unreal Engine 5.6
 
+**⭐ New to Blueprints?** Start with [BLUEPRINT_GUIDE_FOR_BEGINNERS.md](BLUEPRINT_GUIDE_FOR_BEGINNERS.md) - it explains everything from scratch!
+
 ---
 
 ## Table of Contents
