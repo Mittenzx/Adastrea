@@ -494,7 +494,7 @@ Use `.editorconfig` for consistent formatting:
 
 ## References
 
-- [Unreal Engine Coding Standard](https://docs.unrealengine.com/5.0/en-US/epic-cplusplus-coding-standard-for-unreal-engine/)
+- [Unreal Engine Coding Standard](https://docs.unrealengine.com/5.6/en-US/epic-cplusplus-coding-standard-for-unreal-engine/)
 - [UE4 Style Guide](https://github.com/Allar/ue5-style-guide)
 - [Modern C++ Best Practices](https://isocpp.github.io/CppCoreGuidelines/)
 

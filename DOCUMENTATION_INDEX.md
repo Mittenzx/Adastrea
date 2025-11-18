@@ -42,7 +42,6 @@ Documentation for AI-powered development tools:
 |----------|---------|----------|
 | **DIRECTOR_PLUGIN_OVERVIEW.md** | ⭐ Executive overview of plugin development strategy | Root |
 | **DIRECTOR_KNOWLEDGE_BASE.md** | Primary knowledge base for Adastrea-Director AI tool | Root |
-| **ADASTREA_DIRECTOR_ANALYSIS.md** | Comprehensive analysis of Director tool capabilities and roadmap | Root |
 | **UE_PLUGIN_FEASIBILITY_REPORT.md** | Technical feasibility study for native UE plugin conversion | Root |
 | **PLUGIN_DEVELOPMENT_GUIDE.md** | Implementation roadmap for Adastrea-Director plugin | Root |
 | **.github/copilot-instructions.md** | ⭐ GitHub Copilot custom instructions and coding standards | .github/ |
@@ -177,7 +176,6 @@ Concise reference documents:
 
 | Document | Type | Purpose | Location |
 |----------|------|---------|----------|
-| **COMBAT_SYSTEM_SUMMARY.md** | Summary | Combat overview | Root |
 | **CombatSystemGuide.md** | Guide | Complete combat documentation | Assets/ |
 | **CombatQuickReference.md** | Quick Ref | Combat quick reference | Assets/ |
 
@@ -488,14 +486,14 @@ Non-markdown configuration files for tools and automation:
 
 ## Documentation Statistics
 
-- **Total Markdown Files**: 108
-- **Root Level**: 39 files
+- **Total Markdown Files**: 157 (across entire repository)
+- **Root Level**: 40 files
 - **Assets/ Directory**: 48 files
 - **.github/ Directory**: 7 files
 - **Docs/ Directory**: 5 files
 - **Blueprints/ Directory**: 3 files
 - **Content/ Directory**: 3 files
-- **Other Directories**: 3 files
+- **Other Directories**: 51+ files (templates, examples, etc.)
 
 ---
 
@@ -545,9 +543,9 @@ This index should be updated when:
 
 ### Last Updated
 
-**Date**: November 13, 2025  
+**Date**: November 18, 2025  
 **Updated By**: GitHub Copilot (SWE Agent)  
-**Version**: 1.0
+**Version**: 1.1 - Removed outdated temporary documents
 
 ---
 

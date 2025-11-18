@@ -196,10 +196,8 @@ All generated content is saved as YAML files compatible with the existing Data A
 - Community and modding ecosystem plans
 - How to contribute to upcoming features
 
-**Current Status**: Alpha 1.0.0-alpha - Phase 4 (Gameplay & Polish) 70% complete  
-**Next Milestone**: Phase 4 completion and Phase 5 (Content & Beta) - Q1-Q3 2026
-
-**📋 Active Development**: See [NEXT_2_WEEKS_TASKS.md](NEXT_2_WEEKS_TASKS.md) for the current 2-week sprint plan (Nov 16-30, 2025)
+**Current Status**: Alpha 1.0.0-alpha - Phase 4 (Gameplay & Polish) in progress  
+**Next Milestone**: Phase 4 completion and Phase 5 (Content & Beta) - 2026
 
 **📝 Contributing to the Roadmap**: When submitting PRs that affect project milestones or system status, please update ROADMAP.md following the [Roadmap Update Guidelines](ROADMAP_UPDATE_GUIDELINES.md).
 
@@ -669,14 +667,12 @@ The game includes a comprehensive personnel/crew management system for creating 
 
 - **[Director Plugin Overview](DIRECTOR_PLUGIN_OVERVIEW.md)** - Executive overview of plugin development strategy
 - **[Director Knowledge Base](DIRECTOR_KNOWLEDGE_BASE.md)** - Comprehensive knowledge base for Adastrea-Director AI tool
-- **[Director Analysis Report](ADASTREA_DIRECTOR_ANALYSIS.md)** - Detailed analysis of the Adastrea-Director tool capabilities
 - **[UE Plugin Feasibility Report](UE_PLUGIN_FEASIBILITY_REPORT.md)** - Technical feasibility analysis for native plugin
 - **[Plugin Development Guide](PLUGIN_DEVELOPMENT_GUIDE.md)** - Implementation roadmap for plugin conversion
 
 ### Project Planning
 
 - **[Project Roadmap](ROADMAP.md)** - Development phases, timelines, and future features
-- **[Next 2 Weeks Tasks](NEXT_2_WEEKS_TASKS.md)** - Current sprint plan (Nov 16-30, 2025) with detailed task breakdown
 - **[Roadmap Update Guidelines](ROADMAP_UPDATE_GUIDELINES.md)** - When and how to update the roadmap
 
 ### Visual Design
@@ -691,7 +687,6 @@ Comprehensive technical documentation for contributors and developers:
 - **[Architecture Overview](ARCHITECTURE.md)** - High-level system architecture with visual diagrams
 - **[Contributing Guidelines](CONTRIBUTING.md)** - How to contribute code, documentation, and assets
 - **[Code Style Guide](CODE_STYLE.md)** - C++ and Blueprint coding standards
-- **[Build Files Moved](BUILD_FILES_MOVED.md)** - Information about build scripts and documentation (moved to separate repo)
 - **[Performance Improvements](PERFORMANCE_IMPROVEMENTS.md)** - Optimization guidelines
 - **[Custom Agents](.github/agents/README.md)** - AI assistants with project expertise for GitHub Copilot
 
