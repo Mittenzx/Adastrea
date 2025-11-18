@@ -239,6 +239,6 @@ Add Mapping Context (IMC_MenuOpen, Priority 1)
 - Start: Pause Menu
 
 ## See Also
-- [Unreal Engine Enhanced Input Documentation](https://docs.unrealengine.com/5.3/en-US/enhanced-input-in-unreal-engine/)
+- [Unreal Engine Enhanced Input Documentation](https://docs.unrealengine.com/5.6/en-US/enhanced-input-in-unreal-engine/)
 - `CONTENT_CREATION_QUICKSTART.md` - Content creation guide
 - `CODE_STYLE.md` - Blueprint naming conventions

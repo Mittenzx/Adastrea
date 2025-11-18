@@ -891,7 +891,7 @@ For optimal understanding, the Director should ingest documentation in this orde
 ### External Links
 
 - **Unreal Engine Documentation**: <https://docs.unrealengine.com/>
-- **Unreal Engine Coding Standard**: <https://docs.unrealengine.com/5.0/en-US/epic-cplusplus-coding-standard-for-unreal-engine/>
+- **Unreal Engine Coding Standard**: <https://docs.unrealengine.com/5.6/en-US/epic-cplusplus-coding-standard-for-unreal-engine/>
 - **Adastrea Repository**: <https://github.com/Mittenzx/Adastrea>
 - **Adastrea-Director Repository**: <https://github.com/Mittenzx/Adastrea-Director>
 
