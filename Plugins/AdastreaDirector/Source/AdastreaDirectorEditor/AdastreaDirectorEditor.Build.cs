@@ -48,6 +48,7 @@ public class AdastreaDirectorEditor : ModuleRules
 				"JsonUtilities",
 				"WorkspaceMenuStructure",
 				"LevelEditor",
+				"DesktopPlatform",
 				// ... add private dependencies that you statically link with here ...	
 			}
 		);

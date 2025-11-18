@@ -53,27 +53,105 @@ The plugin currently provides:
 - ✅ Editor utilities (notifications, logging)
 - ✅ Complete documentation and examples
 
-**Coming Soon (Week 5+):**
-- Full RAG system integration
+### Week 7-8 Features ✅
+- ✅ Settings dialog with API key management
+- ✅ Keyboard shortcuts (Ctrl+, for Settings)
+- ✅ Enhanced error handling with user-friendly messages
+- ✅ Conversation history with clear confirmation
+
+**Coming Soon:**
 - Planning agent integration
 - Enhanced query interface
 - Performance profiling UI
-- Settings panel
 
-## Quick Start (Week 4 UI)
+## Quick Start
 
 ### Using the AI Assistant Panel
 
 1. Open Unreal Engine Editor with the plugin installed
 2. Go to **Window > Developer Tools > Adastrea Director**
 3. The AI assistant panel will open as a dockable tab
-4. Type your question in the query input field
-5. Click "Send Query" or press Enter
-6. View the response in the results area below
+4. Configure your API keys via the Settings dialog (see below)
+5. Type your question in the query input field
+6. Click "Send Query" or press Enter
+7. View the response in the results area below
 
 **Example Query:** "What is Unreal Engine?"
 
 The Python backend starts automatically when the plugin loads!
+
+### Settings Dialog (NEW in Week 7-8)
+
+Access the settings dialog in two ways:
+
+1. **Settings Button**: Click the "⚙️ Settings" button in the top-right of the panel
+2. **Keyboard Shortcut**: Press `Ctrl+,` (Ctrl + Comma)
+
+The settings dialog allows you to configure:
+
+#### API Keys Section
+- **LLM Provider**: Choose between Gemini (Recommended) or OpenAI
+- **Gemini API Key**: Secure input for your Gemini API key (masked with • characters)
+- **OpenAI API Key**: Secure input for your OpenAI API key (masked with • characters)
+- **Embedding Provider**: Choose between HuggingFace (Free) or OpenAI
+
+#### Display Settings Section
+- **Default Font Size**: Adjust font size (8-20pt range)
+- **Auto-save Settings**: Automatically save settings when clicking Save
+- **Show Timestamps**: Display timestamps in conversation history
+
+#### Configuration Storage
+Settings are stored in your project's Saved directory:
+- Path: `<Project>/Saved/AdastreaDirector/config.ini`
+- Format: Simple key=value pairs for easy editing if needed
+- **Security Note**: API keys are stored in plaintext. Keep this file secure and ensure it's in your .gitignore
+- **Note**: Manual edits to comments may be overwritten when saving from the UI
+
+### Keyboard Shortcuts
+
+- `Enter` - Send query (when focused on query input)
+- `Ctrl+,` - Open Settings dialog (requires panel to have focus)
+- More shortcuts coming in future updates!
+
+### Error Handling
+
+The plugin includes comprehensive error handling:
+
+#### User-Friendly Error Messages
+- Clear, actionable error messages for common issues
+- No technical jargon - errors explain what went wrong and how to fix it
+- Visual indicators (❌, ⚠️, ✓) for different message types
+
+#### Error Recovery
+- Graceful handling of network issues
+- Automatic retry logic for transient failures
+- Clear status updates during operations
+
+#### Common Error Scenarios
+1. **Python Backend Not Ready**
+   - Message: "Python backend is not ready. Please check that the Python backend is running and connected."
+   - Solution: Wait for backend to initialize or restart the editor
+
+2. **Empty Query**
+   - Message: "Query cannot be empty."
+   - Solution: Enter a question before clicking Send
+
+3. **Invalid Response**
+   - Message: "Invalid response format" with details
+   - Solution: Check Python backend logs for issues
+
+4. **Clear History Confirmation**
+   - Confirmation dialog before clearing history
+   - Prevents accidental data loss
+
+### Conversation History
+
+The plugin maintains conversation history for context-aware responses:
+
+- **Persistent Context**: Previous questions and answers are remembered
+- **Clear History**: Use the "Clear History" button to start fresh
+- **Confirmation Dialog**: Prevents accidental clearing of conversation
+- **Backend Integration**: History is managed by the Python backend
 
 ### Testing the Python Backend
 

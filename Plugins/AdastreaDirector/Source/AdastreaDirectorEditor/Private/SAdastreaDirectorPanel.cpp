@@ -1,6 +1,7 @@
 // Copyright (c) 2025 Mittenzx. All Rights Reserved.
 
 #include "SAdastreaDirectorPanel.h"
+#include "SSettingsDialog.h"
 #include "AdastreaDirectorEditorModule.h"
 #include "AdastreaDirectorModule.h"
 #include "PythonBridge.h"
@@ -25,6 +26,7 @@
 #include "Framework/Application/SlateApplication.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
+#include "Misc/MessageDialog.h"
 
 #define LOCTEXT_NAMESPACE "AdastreaDirectorPanel"
 
@@ -60,9 +62,24 @@ void SAdastreaDirectorPanel::Construct(const FArguments& InArgs)
 		.AutoHeight()
 		.Padding(10.0f, 10.0f, 10.0f, 5.0f)
 		[
-			SNew(STextBlock)
-			.Text(LOCTEXT("PanelTitle", "Adastrea Director - AI Assistant"))
-			.Font(FCoreStyle::GetDefaultFontStyle("Bold", 16))
+			SNew(SHorizontalBox)
+			
+			+ SHorizontalBox::Slot()
+			.FillWidth(1.0f)
+			[
+				SNew(STextBlock)
+				.Text(LOCTEXT("PanelTitle", "Adastrea Director - AI Assistant"))
+				.Font(FCoreStyle::GetDefaultFontStyle("Bold", 16))
+			]
+			
+			+ SHorizontalBox::Slot()
+			.AutoWidth()
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("SettingsButton", "Settings"))
+				.ToolTipText(LOCTEXT("SettingsTooltip", "Open Settings (Ctrl+, - requires panel focus)"))
+				.OnClicked(this, &SAdastreaDirectorPanel::OnSettingsClicked)
+			]
 		]
 
 		+ SVerticalBox::Slot()
@@ -457,6 +474,17 @@ bool SAdastreaDirectorPanel::IsSendButtonEnabled() const
 
 FReply SAdastreaDirectorPanel::OnClearHistoryClicked()
 {
+	// Show confirmation dialog
+	const FText Title = LOCTEXT("ClearHistoryTitle", "Clear Conversation History");
+	const FText Message = LOCTEXT("ClearHistoryMessage", "Are you sure you want to clear the conversation history?\n\nThis action cannot be undone.");
+	
+	EAppReturnType::Type UserResponse = FMessageDialog::Open(EAppMsgType::YesNo, Message, &Title);
+	
+	if (UserResponse != EAppReturnType::Yes)
+	{
+		return FReply::Handled();
+	}
+
 	// Get the Python bridge
 	FAdastreaDirectorModule* RuntimeModule = FModuleManager::GetModulePtr<FAdastreaDirectorModule>("AdastreaDirector");
 	
@@ -480,13 +508,19 @@ FReply SAdastreaDirectorPanel::OnClearHistoryClicked()
 
 	if (bSuccess)
 	{
-		UpdateResults(TEXT("Conversation history cleared."));
+		UpdateResults(TEXT("✓ Conversation history cleared successfully."));
 	}
 	else
 	{
 		UpdateResults(TEXT("Error: Failed to clear history."));
 	}
 
+	return FReply::Handled();
+}
+
+FReply SAdastreaDirectorPanel::OnSettingsClicked()
+{
+	SSettingsDialog::OpenDialog();
 	return FReply::Handled();
 }
 
@@ -724,6 +758,18 @@ void SAdastreaDirectorPanel::Tick(const FGeometry& AllottedGeometry, const doubl
 			LastProgressUpdateTime = InCurrentTime;
 		}
 	}
+}
+
+FReply SAdastreaDirectorPanel::OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent)
+{
+	// Handle Ctrl+, (Ctrl+Comma) for Settings
+	if (InKeyEvent.GetKey() == EKeys::Comma && InKeyEvent.IsControlDown())
+	{
+		SSettingsDialog::OpenDialog();
+		return FReply::Handled();
+	}
+
+	return SCompoundWidget::OnKeyDown(MyGeometry, InKeyEvent);
 }
 
 #undef LOCTEXT_NAMESPACE

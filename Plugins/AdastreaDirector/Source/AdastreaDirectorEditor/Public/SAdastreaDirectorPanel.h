@@ -30,6 +30,9 @@ public:
 	/** Tick method for updating progress */
 	virtual void Tick(const FGeometry& AllottedGeometry, const double InCurrentTime, const float InDeltaTime) override;
 
+	/** Handle keyboard shortcuts */
+	virtual FReply OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent) override;
+
 private:
 	// Query tab widgets
 	/** Query input text box */
@@ -105,6 +108,9 @@ private:
 
 	/** Called when Clear History button is clicked */
 	FReply OnClearHistoryClicked();
+
+	/** Called when Settings button is clicked */
+	FReply OnSettingsClicked();
 
 	// Ingestion tab methods
 	/** Called when Browse button is clicked for docs path */
