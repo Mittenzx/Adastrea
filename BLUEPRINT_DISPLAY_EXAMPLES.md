@@ -26,22 +26,26 @@ This document provides practical, real-world examples of Blueprint documentation
 ### Scenario
 Initializing a player's inventory when they start the game.
 
-### Format A: Mermaid (Recommended for Documentation)
+### Format A: Unreal Node Style (Recommended for Documentation)
 
 ```mermaid
-graph TD
-    A[📅 Event Begin Play] --> B[📦 Get Player Controller]
-    B --> C[🎭 Cast to AdastreaPlayerController]
-    C --> D[📦 Get Inventory Component]
-    D --> E[⚙️ Initialize Inventory]
-    E --> F[➕ Add Starting Items]
-    F --> G[📊 Set Max Capacity: 100]
-    G --> H[✅ Complete]
+graph LR
+    A[["⚡ Event Begin Play"]] --> B[["📦 Get Player Controller"]]
+    B --> C[["🎭 Cast to AdastreaPlayerController"]]
+    C --> D[["📦 Get Inventory Component"]]
+    D --> E[["⚙️ Initialize Inventory"]]
+    E --> F[["➕ Add Starting Items"]]
+    F --> G[["📊 Set Max Capacity: 100"]]
+    G --> H[["✅ Complete"]]
     
-    style A fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
-    style C fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
-    style E fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
-    style H fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
+    style A fill:#1a1a1a,stroke:#DC3545,stroke-width:4px,color:#fff,rx:10,ry:10
+    style B fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style C fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style D fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style E fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style F fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style G fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style H fill:#1a1a1a,stroke:#28a745,stroke-width:3px,color:#fff,rx:10,ry:10
 ```
 
 ### Format B: Enhanced Text (Good for Code Comments)
@@ -91,40 +95,47 @@ EXECUTION FLOW
 ### Scenario
 Checking if a player can purchase an item from a vendor.
 
-### Format A: Mermaid with Multiple Branches
+### Format A: Unreal Node Style with Multiple Branches
 
 ```mermaid
-graph TD
-    A[🖱️ OnBuyButtonClicked] --> B[📦 Get Selected Item]
-    B --> C{✓ Item Valid?}
-    C -->|No| D[❌ Error: No item selected]
-    C -->|Yes| E[💰 Get Item Price]
-    E --> F[📊 Calculate Total Cost]
-    F --> G{✓ Has Credits?}
-    G -->|No| H[❌ Error: Insufficient funds<br/>Show required amount]
-    G -->|Yes| I{✓ Has Inventory Space?}
-    I -->|No| J[❌ Error: Inventory full<br/>Suggest selling items]
-    I -->|Yes| K[💳 Deduct Credits]
-    K --> L[📦 Add Item to Inventory]
-    L --> M[🎵 Play Purchase Sound]
-    M --> N[🎨 Show Success Animation]
-    N --> O[🔄 Refresh UI]
-    O --> P[✅ Transaction Complete]
-    D --> Q[End]
+graph LR
+    A[["🎮 OnBuyButtonClicked"]] --> B[["📦 Get Selected Item"]]
+    B --> C{{"✓ Item Valid?"}}
+    C -->|"✗ No"| D[["❌ Error: No item"]]
+    C -->|"✓ Yes"| E[["💰 Get Item Price"]]
+    E --> F[["🧮 Calculate Total"]]
+    F --> G{{"💳 Has Credits?"}}
+    G -->|"✗ No"| H[["❌ Error: Insufficient<br/>funds"]]
+    G -->|"✓ Yes"| I{{"📦 Has Space?"}}
+    I -->|"✗ No"| J[["❌ Error: Inventory<br/>full"]]
+    I -->|"✓ Yes"| K[["💸 Deduct Credits"]]
+    K --> L[["📦 Add to Inventory"]]
+    L --> M[["🔊 Play Sound"]]
+    M --> N[["🎨 Show Animation"]]
+    N --> O[["🔄 Refresh UI"]]
+    O --> P[["✅ Complete"]]
+    D --> Q(( ))
     H --> Q
     J --> Q
     P --> Q
     
-    style A fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
-    style C fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
-    style G fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
-    style I fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
-    style D fill:#F44336,stroke:#C62828,stroke-width:2px,color:#fff
-    style H fill:#F44336,stroke:#C62828,stroke-width:2px,color:#fff
-    style J fill:#F44336,stroke:#C62828,stroke-width:2px,color:#fff
-    style K fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
-    style L fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
-    style P fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
+    style A fill:#1a1a1a,stroke:#DC3545,stroke-width:4px,color:#fff,rx:10,ry:10
+    style B fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style C fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#17a2b8
+    style D fill:#1a1a1a,stroke:#DC3545,stroke-width:3px,color:#fff,rx:10,ry:10
+    style E fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style F fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style G fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#17a2b8
+    style H fill:#1a1a1a,stroke:#DC3545,stroke-width:3px,color:#fff,rx:10,ry:10
+    style I fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#17a2b8
+    style J fill:#1a1a1a,stroke:#DC3545,stroke-width:3px,color:#fff,rx:10,ry:10
+    style K fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style L fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style M fill:#1a1a1a,stroke:#6f42c1,stroke-width:3px,color:#fff,rx:10,ry:10
+    style N fill:#1a1a1a,stroke:#6f42c1,stroke-width:3px,color:#fff,rx:10,ry:10
+    style O fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style P fill:#1a1a1a,stroke:#28a745,stroke-width:3px,color:#fff,rx:10,ry:10
+    style Q fill:#1a1a1a,stroke:#6c757d,stroke-width:2px,color:#fff
 ```
 
 ### Format B: Node Card (For Function Reference)

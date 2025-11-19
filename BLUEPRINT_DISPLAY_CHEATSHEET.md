@@ -17,35 +17,37 @@ Teaching/Tutorial? → Use Hybrid (Multiple formats)
 
 ---
 
-## Mermaid Quick Start
+## Mermaid Quick Start (Unreal Engine Style)
 
 ### Basic Template
 
 ````markdown
 ```mermaid
-graph TD
-    A[Start Node] --> B[Action Node]
-    B --> C{Decision?}
-    C -->|Yes| D[True Path]
-    C -->|No| E[False Path]
-    D --> F[End]
+graph LR
+    A[["⚡ Event Start"]] --> B[["⚙️ Action Node"]]
+    B --> C{{"✓ Decision?"}}
+    C -->|"✓ Yes"| D[["⚙️ True Path"]]
+    C -->|"✗ No"| E[["❌ False Path"]]
+    D --> F(( ))
     E --> F
     
-    style A fill:#4CAF50,stroke:#2E7D32,color:#fff
-    style C fill:#2196F3,stroke:#1565C0,color:#fff
-    style F fill:#9E9E9E,stroke:#616161,color:#fff
+    style A fill:#1a1a1a,stroke:#DC3545,stroke-width:4px,color:#fff,rx:10,ry:10
+    style B fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style C fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#17a2b8
+    style D fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style E fill:#1a1a1a,stroke:#DC3545,stroke-width:3px,color:#fff,rx:10,ry:10
+    style F fill:#1a1a1a,stroke:#6c757d,stroke-width:2px,color:#fff
 ```
 ````
 
-### Node Shapes
+### Unreal Node Shapes
 
-| Code | Shape | Use For |
-|------|-------|---------|
-| `[Text]` | Rectangle | Actions, functions |
-| `{Text?}` | Diamond | Decisions, branches |
-| `([Text])` | Stadium | Start/End points |
-| `((Text))` | Circle | Small actions |
-| `[Text]` | Rectangle | Default |
+| Code | Shape | Use For | Unreal Node Type |
+|------|-------|---------|------------------|
+| `[["Text"]]` | Rounded Rectangle | Functions, actions | Standard nodes |
+| `{{"Text?"}}` | Diamond | Decisions, branches | Branch nodes |
+| `(( ))` | Circle | End points | Flow control |
+| `[["⚡ Text"]]` | Thick bordered | Events | Event nodes (4px border) |
 
 ### Common Arrows
 
@@ -58,19 +60,27 @@ graph TD
 
 ---
 
-## Color Codes (Copy-Paste Ready)
+## Unreal Color Codes (Copy-Paste Ready)
 
 ```
-Event/Start:   style Node fill:#4CAF50,stroke:#2E7D32,color:#fff
-Function:      style Node fill:#FF9800,stroke:#E65100,color:#fff
-Branch:        style Node fill:#2196F3,stroke:#1565C0,color:#fff
-Loop:          style Node fill:#00BCD4,stroke:#006064,color:#fff
-Variable:      style Node fill:#9C27B0,stroke:#6A1B9A,color:#fff
-Pure Function: style Node fill:#009688,stroke:#004D40,color:#fff
-Error:         style Node fill:#F44336,stroke:#C62828,color:#fff
-Success:       style Node fill:#4CAF50,stroke:#2E7D32,color:#fff
-End:           style Node fill:#9E9E9E,stroke:#616161,color:#fff
+Event (Red):      style Node fill:#1a1a1a,stroke:#DC3545,stroke-width:4px,color:#fff,rx:10,ry:10
+Function (Blue):  style Node fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+Branch (Cyan):    style Node fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#17a2b8
+Loop (Teal):      style Node fill:#1a1a1a,stroke:#20c997,stroke-width:3px,color:#fff,rx:10,ry:10
+Variable (Purple):style Node fill:#1a1a1a,stroke:#6f42c1,stroke-width:3px,color:#fff,rx:10,ry:10
+Pure (Cyan):      style Node fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#fff,rx:10,ry:10
+Error (Red):      style Node fill:#1a1a1a,stroke:#DC3545,stroke-width:3px,color:#fff,rx:10,ry:10
+Success (Green):  style Node fill:#1a1a1a,stroke:#28a745,stroke-width:3px,color:#fff,rx:10,ry:10
+End (Gray):       style Node fill:#1a1a1a,stroke:#6c757d,stroke-width:2px,color:#fff
 ```
+
+**Key Styling Rules:**
+- All nodes: Dark background `#1a1a1a` (authentic Unreal look)
+- Events: 4px stroke width (thicker than others)
+- Standard nodes: 3px stroke width
+- White text: `color:#fff` for contrast
+- Rounded corners: `rx:10,ry:10` on rectangular nodes
+- Branch nodes: No rx/ry (diamond shape)
 
 ---
 
@@ -207,58 +217,71 @@ graph TD
 
 ---
 
-## Common Patterns
+## Common Patterns (Unreal Style)
 
 ### Simple Function
 
 ```mermaid
-graph TD
-    A[Start] --> B[Action]
-    B --> C[End]
+graph LR
+    A[["⚡ Start"]] --> B[["⚙️ Action"]]
+    B --> C(( ))
     
-    style A fill:#4CAF50,stroke:#2E7D32,color:#fff
+    style A fill:#1a1a1a,stroke:#DC3545,stroke-width:4px,color:#fff,rx:10,ry:10
+    style B fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style C fill:#1a1a1a,stroke:#6c757d,stroke-width:2px,color:#fff
 ```
 
 ### Branch Pattern
 
 ```mermaid
-graph TD
-    A[Start] --> B{Check?}
-    B -->|Yes| C[True]
-    B -->|No| D[False]
-    C --> E[End]
+graph LR
+    A[["⚡ Start"]] --> B{{"✓ Check?"}}
+    B -->|"✓ Yes"| C[["⚙️ True Path"]]
+    B -->|"✗ No"| D[["❌ False Path"]]
+    C --> E(( ))
     D --> E
     
-    style B fill:#2196F3,stroke:#1565C0,color:#fff
+    style A fill:#1a1a1a,stroke:#DC3545,stroke-width:4px,color:#fff,rx:10,ry:10
+    style B fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#17a2b8
+    style C fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style D fill:#1a1a1a,stroke:#DC3545,stroke-width:3px,color:#fff,rx:10,ry:10
+    style E fill:#1a1a1a,stroke:#6c757d,stroke-width:2px,color:#fff
 ```
 
 ### Loop Pattern
 
 ```mermaid
-graph TD
-    A[Start] --> B[🔄 Loop]
-    B --> C[Action]
-    C --> D{More?}
-    D -->|Yes| B
-    D -->|No| E[End]
+graph LR
+    A[["⚡ Start"]] --> B[["🔄 ForEach Loop"]]
+    B --> C[["⚙️ Action"]]
+    C --> D{{"✓ More?"}}
+    D -->|"✓ Yes"| B
+    D -->|"✗ No"| E(( ))
     
-    style B fill:#00BCD4,stroke:#006064,color:#fff
-    style D fill:#2196F3,stroke:#1565C0,color:#fff
+    style A fill:#1a1a1a,stroke:#DC3545,stroke-width:4px,color:#fff,rx:10,ry:10
+    style B fill:#1a1a1a,stroke:#20c997,stroke-width:3px,color:#fff,rx:10,ry:10
+    style C fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style D fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#17a2b8
+    style E fill:#1a1a1a,stroke:#6c757d,stroke-width:2px,color:#fff
 ```
 
 ### Error Handling
 
 ```mermaid
-graph TD
-    A[Try] --> B{Success?}
-    B -->|Yes| C[✅ Continue]
-    B -->|No| D[❌ Error]
-    D --> E[Handle]
-    E --> F[End]
+graph LR
+    A[["⚙️ Try Operation"]] --> B{{"✓ Success?"}}
+    B -->|"✓ Yes"| C[["✅ Continue"]]
+    B -->|"✗ No"| D[["❌ Error"]]
+    D --> E[["⚙️ Handle Error"]]
+    E --> F(( ))
     C --> F
     
-    style D fill:#F44336,stroke:#C62828,color:#fff
-    style C fill:#4CAF50,stroke:#2E7D32,color:#fff
+    style A fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style B fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#17a2b8
+    style C fill:#1a1a1a,stroke:#28a745,stroke-width:3px,color:#fff,rx:10,ry:10
+    style D fill:#1a1a1a,stroke:#DC3545,stroke-width:3px,color:#fff,rx:10,ry:10
+    style E fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style F fill:#1a1a1a,stroke:#6c757d,stroke-width:2px,color:#fff
 ```
 
 ---

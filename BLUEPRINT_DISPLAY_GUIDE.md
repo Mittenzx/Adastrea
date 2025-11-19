@@ -70,118 +70,129 @@ Mermaid diagrams render natively on GitHub and provide professional flowchart vi
 - 🎯 **Clear**: Easy to follow execution flow
 - 📱 **Responsive**: Works on all devices
 
-### Basic Structure
-
-```mermaid
-graph TD
-    Start[Event Begin Play] --> Check{Is Valid?}
-    Check -->|Yes| Process[Process Data]
-    Check -->|No| Error[Show Error]
-    Process --> End[Complete]
-    Error --> End
-    
-    style Start fill:#4CAF50,stroke:#2E7D32,color:#fff
-    style Check fill:#2196F3,stroke:#1565C0,color:#fff
-    style Process fill:#FF9800,stroke:#E65100,color:#fff
-    style Error fill:#F44336,stroke:#C62828,color:#fff
-    style End fill:#9E9E9E,stroke:#616161,color:#fff
-```
-
-### Example: Trading System Buy Flow
-
-```mermaid
-graph TD
-    A[🖱️ OnBuyButtonClicked] --> B[Get Selected Item]
-    B --> C{Item Valid?}
-    C -->|No| D[❌ Show Error:<br/>Select an item]
-    C -->|Yes| E[Get Item Price]
-    E --> F[Calculate Total Cost]
-    F --> G{Player Has Credits?}
-    G -->|No| H[❌ Show Error:<br/>Insufficient funds]
-    G -->|Yes| I[Deduct Credits]
-    I --> J[Add Item to Inventory]
-    J --> K[▶️ Play Buy Sound]
-    K --> L[🔄 Refresh UI]
-    L --> M[✅ Success]
-    D --> N[End]
-    H --> N
-    M --> N
-    
-    style A fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
-    style C fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
-    style G fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
-    style D fill:#F44336,stroke:#C62828,stroke-width:2px,color:#fff
-    style H fill:#F44336,stroke:#C62828,stroke-width:2px,color:#fff
-    style M fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
-    style I fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
-    style J fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
-    style K fill:#9C27B0,stroke:#6A1B9A,stroke-width:2px,color:#fff
-    style L fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
-```
-
-### Mermaid Node Types
+### Basic Structure (Unreal Engine Node Style)
 
 ```mermaid
 graph LR
-    Event[📅 Event Node] --> Function[⚙️ Function Call]
-    Function --> Branch{❓ Branch/Decision}
-    Branch -->|True| Action[🔧 Action Node]
-    Branch -->|False| Loop[🔄 Loop Node]
-    Action --> Variable[📦 Variable Set]
-    Variable --> Pure[🔍 Pure Function]
-    Pure --> Output[📤 Return/Output]
+    Start[["⚡ Event Begin Play"]] --> Check{{"🔍 Is Valid?"}}
+    Check -->|"✓ True"| Process[["⚙️ Process Data"]]
+    Check -->|"✗ False"| Error[["❌ Show Error"]]
+    Process --> End[["✅ Complete"]]
+    Error --> End
     
-    style Event fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
-    style Function fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
-    style Branch fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
-    style Action fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
-    style Loop fill:#00BCD4,stroke:#006064,stroke-width:2px,color:#fff
-    style Variable fill:#9C27B0,stroke:#6A1B9A,stroke-width:2px,color:#fff
-    style Pure fill:#009688,stroke:#004D40,stroke-width:2px,color:#fff
-    style Output fill:#9E9E9E,stroke:#424242,stroke-width:2px,color:#fff
+    style Start fill:#1a1a1a,stroke:#4CAF50,stroke-width:3px,color:#fff,rx:10,ry:10
+    style Check fill:#1a1a1a,stroke:#2196F3,stroke-width:3px,color:#fff
+    style Process fill:#1a1a1a,stroke:#FF9800,stroke-width:3px,color:#fff,rx:10,ry:10
+    style Error fill:#1a1a1a,stroke:#F44336,stroke-width:3px,color:#fff,rx:10,ry:10
+    style End fill:#1a1a1a,stroke:#4CAF50,stroke-width:3px,color:#fff,rx:10,ry:10
+```
+
+### Example: Trading System Buy Flow (Unreal Node Style)
+
+```mermaid
+graph LR
+    A[["🎮 OnBuyButtonClicked"]] --> B[["📦 Get Selected Item"]]
+    B --> C{{"✓ Item Valid?"}}
+    C -->|"✗ False"| D[["❌ Show Error<br/>Select an item"]]
+    C -->|"✓ True"| E[["💰 Get Item Price"]]
+    E --> F[["🧮 Calculate Total Cost"]]
+    F --> G{{"💳 Has Credits?"}}
+    G -->|"✗ False"| H[["❌ Show Error<br/>Insufficient funds"]]
+    G -->|"✓ True"| I[["💸 Deduct Credits"]]
+    I --> J[["📦 Add to Inventory"]]
+    J --> K[["🔊 Play Buy Sound"]]
+    K --> L[["🔄 Refresh UI"]]
+    L --> M[["✅ Success"]]
+    D --> N(( ))
+    H --> N
+    M --> N
+    
+    style A fill:#1a1a1a,stroke:#DC3545,stroke-width:4px,color:#fff,rx:10,ry:10
+    style B fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style C fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#17a2b8
+    style D fill:#1a1a1a,stroke:#DC3545,stroke-width:3px,color:#fff,rx:10,ry:10
+    style E fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style F fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style G fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#17a2b8
+    style H fill:#1a1a1a,stroke:#DC3545,stroke-width:3px,color:#fff,rx:10,ry:10
+    style I fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style J fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style K fill:#1a1a1a,stroke:#6f42c1,stroke-width:3px,color:#fff,rx:10,ry:10
+    style L fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style M fill:#1a1a1a,stroke:#28a745,stroke-width:3px,color:#fff,rx:10,ry:10
+    style N fill:#1a1a1a,stroke:#6c757d,stroke-width:2px,color:#fff
+```
+
+### Mermaid Node Types (Unreal Engine Style)
+
+```mermaid
+graph LR
+    Event[["⚡ Event Node"]] --> Function[["⚙️ Function Call"]]
+    Function --> Branch{{"🔀 Branch"}}
+    Branch -->|"✓ True"| Action[["🔧 Action Node"]]
+    Branch -->|"✗ False"| Loop[["🔄 ForEach Loop"]]
+    Action --> Variable[["📦 Set Variable"]]
+    Variable --> Pure[["🔍 Pure Function"]]
+    Pure --> Output[["📤 Return Node"]]
+    
+    style Event fill:#1a1a1a,stroke:#DC3545,stroke-width:4px,color:#fff,rx:10,ry:10
+    style Function fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style Branch fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#17a2b8
+    style Action fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style Loop fill:#1a1a1a,stroke:#20c997,stroke-width:3px,color:#fff,rx:10,ry:10
+    style Variable fill:#1a1a1a,stroke:#6f42c1,stroke-width:3px,color:#fff,rx:10,ry:10
+    style Pure fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#fff,rx:10,ry:10
+    style Output fill:#1a1a1a,stroke:#6c757d,stroke-width:3px,color:#fff,rx:10,ry:10
 ```
 
 ### Complex Example: Station Module Addition
 
 ```mermaid
-graph TD
-    A[🖱️ Button: Add Module] --> B[📦 Get Selected Module Class]
-    B --> C{✓ Is Valid?}
-    C -->|No| D[❌ Error: Select module type]
-    C -->|Yes| E[📍 Get Placement Location]
-    E --> F[⚙️ Is Valid Placement?]
-    F -->|No| G[❌ Error: Invalid location]
-    F -->|Yes| H[🔧 Can Add Module For Faction?]
-    H -->|No| I[📊 Get Current Faction]
-    I --> J[🔢 Get Tech Level]
-    J --> K[📝 Format Error Message]
-    K --> L[❌ Show Tech Requirement Error]
-    H -->|Yes| M[➕ Add Module<br/>C++ Function]
-    M --> N{✓ Module Created?}
-    N -->|No| O[❌ Error: Creation failed]
-    N -->|Yes| P[🔄 Update Module List UI]
-    P --> Q[🎵 Play Success Sound]
-    Q --> R[🧹 Clear Selection]
-    R --> S[✅ Success Complete]
-    D --> T[End]
+graph LR
+    A[["🎮 Button: Add Module"]] --> B[["📦 Get Module Class"]]
+    B --> C{{"✓ Valid?"}}
+    C -->|"✗ No"| D[["❌ Error: Select module"]]
+    C -->|"✓ Yes"| E[["📍 Get Location"]]
+    E --> F{{"✓ Valid Placement?"}}
+    F -->|"✗ No"| G[["❌ Error: Invalid location"]]
+    F -->|"✓ Yes"| H{{"✓ Faction Compatible?"}}
+    H -->|"✗ No"| I[["📊 Get Faction"]]
+    I --> J[["🔢 Get Tech Level"]]
+    J --> K[["📝 Format Error"]]
+    K --> L[["❌ Tech Requirement"]]
+    H -->|"✓ Yes"| M[["⚙️ Add Module<br/>(C++ Call)"]]
+    M --> N{{"✓ Created?"}}
+    N -->|"✗ No"| O[["❌ Creation Failed"]]
+    N -->|"✓ Yes"| P[["🔄 Update UI"]]
+    P --> Q[["🔊 Play Sound"]]
+    Q --> R[["🧹 Clear Selection"]]
+    R --> S[["✅ Complete"]]
+    D --> T(( ))
     G --> T
     L --> T
     O --> T
     S --> T
     
-    style A fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
-    style C fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
-    style F fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
-    style H fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
-    style N fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
-    style D fill:#F44336,stroke:#C62828,stroke-width:2px,color:#fff
-    style G fill:#F44336,stroke:#C62828,stroke-width:2px,color:#fff
-    style L fill:#F44336,stroke:#C62828,stroke-width:2px,color:#fff
-    style O fill:#F44336,stroke:#C62828,stroke-width:2px,color:#fff
-    style M fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
-    style P fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
-    style Q fill:#9C27B0,stroke:#6A1B9A,stroke-width:2px,color:#fff
-    style S fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
+    style A fill:#1a1a1a,stroke:#DC3545,stroke-width:4px,color:#fff,rx:10,ry:10
+    style B fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style C fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#17a2b8
+    style D fill:#1a1a1a,stroke:#DC3545,stroke-width:3px,color:#fff,rx:10,ry:10
+    style E fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style F fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#17a2b8
+    style G fill:#1a1a1a,stroke:#DC3545,stroke-width:3px,color:#fff,rx:10,ry:10
+    style H fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#17a2b8
+    style I fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style J fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style K fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style L fill:#1a1a1a,stroke:#DC3545,stroke-width:3px,color:#fff,rx:10,ry:10
+    style M fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style N fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#17a2b8
+    style O fill:#1a1a1a,stroke:#DC3545,stroke-width:3px,color:#fff,rx:10,ry:10
+    style P fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style Q fill:#1a1a1a,stroke:#6f42c1,stroke-width:3px,color:#fff,rx:10,ry:10
+    style R fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style S fill:#1a1a1a,stroke:#28a745,stroke-width:3px,color:#fff,rx:10,ry:10
+    style T fill:#1a1a1a,stroke:#6c757d,stroke-width:2px,color:#fff
 ```
 
 ### Mermaid Best Practices
@@ -567,67 +578,109 @@ PHASE 3: EXECUTE TRANSACTION
 
 ---
 
-## Color Coding Standards
+## Color Coding Standards (Unreal Engine Style)
 
 ### Standard Color Palette
 
 ```mermaid
 graph LR
-    Event[🟢 Events<br/>Begin Play, Input Actions] 
-    Function[🟠 Functions<br/>Any function call]
-    Branch[🔵 Branches<br/>Decisions, Switches]
-    Loop[🟦 Loops<br/>ForEach, While]
-    Variable[🟣 Variables<br/>Get/Set operations]
-    Pure[🟩 Pure Functions<br/>Getters, calculations]
-    Error[🔴 Errors<br/>Failures, warnings]
-    Success[🟢 Success<br/>Completion, validation]
+    Event[["⚡ Events<br/>Begin Play, Input"]] 
+    Function[["⚙️ Functions<br/>Any call"]]
+    Branch{{"🔀 Branches<br/>Decisions"}}
+    Loop[["🔄 Loops<br/>ForEach, While"]]
+    Variable[["📦 Variables<br/>Get/Set"]]
+    Pure[["🔍 Pure Functions<br/>Calculations"]]
+    Error[["❌ Errors<br/>Failures"]]
+    Success[["✅ Success<br/>Complete"]]
     
-    style Event fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
-    style Function fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
-    style Branch fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
-    style Loop fill:#00BCD4,stroke:#006064,stroke-width:2px,color:#fff
-    style Variable fill:#9C27B0,stroke:#6A1B9A,stroke-width:2px,color:#fff
-    style Pure fill:#009688,stroke:#004D40,stroke-width:2px,color:#fff
-    style Error fill:#F44336,stroke:#C62828,stroke-width:2px,color:#fff
-    style Success fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
+    style Event fill:#1a1a1a,stroke:#DC3545,stroke-width:4px,color:#fff,rx:10,ry:10
+    style Function fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style Branch fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#17a2b8
+    style Loop fill:#1a1a1a,stroke:#20c997,stroke-width:3px,color:#fff,rx:10,ry:10
+    style Variable fill:#1a1a1a,stroke:#6f42c1,stroke-width:3px,color:#fff,rx:10,ry:10
+    style Pure fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#fff,rx:10,ry:10
+    style Error fill:#1a1a1a,stroke:#DC3545,stroke-width:3px,color:#fff,rx:10,ry:10
+    style Success fill:#1a1a1a,stroke:#28a745,stroke-width:3px,color:#fff,rx:10,ry:10
 ```
 
-### Color Meanings
+### Unreal Engine Color Meanings
 
-| Color | Node Type | Hex Code | When to Use |
-|-------|-----------|----------|-------------|
-| 🟢 Green | Events, Success | `#4CAF50` | Start points, successful outcomes |
-| 🟠 Orange | Functions | `#FF9800` | Function calls, actions |
-| 🔵 Blue | Branches | `#2196F3` | Decisions, conditionals |
-| 🟦 Cyan | Loops | `#00BCD4` | Iterations, repeated operations |
-| 🟣 Purple | Variables | `#9C27B0` | Get/Set variable operations |
-| 🟩 Teal | Pure Functions | `#009688` | Calculations without side effects |
-| 🔴 Red | Errors | `#F44336` | Error states, failures |
-| ⚪ Gray | End Points | `#9E9E9E` | Completion, exit points |
+| Color | Node Type | Stroke Color | Background | When to Use |
+|-------|-----------|--------------|------------|-------------|
+| 🔴 Red | Events | `#DC3545` (Red) | `#1a1a1a` (Dark) | Entry points like Begin Play, Input Actions |
+| 🔵 Blue | Functions | `#0d6efd` (Blue) | `#1a1a1a` (Dark) | Function calls, actions, operations |
+| 🔷 Cyan | Branches | `#17a2b8` (Cyan) | `#1a1a1a` (Dark) | Decisions, conditionals, switches |
+| 🟢 Green | Loops | `#20c997` (Teal) | `#1a1a1a` (Dark) | Iterations, ForEach, While loops |
+| 🟣 Purple | Variables | `#6f42c1` (Purple) | `#1a1a1a` (Dark) | Get/Set variable operations |
+| 🔷 Cyan | Pure Functions | `#17a2b8` (Cyan) | `#1a1a1a` (Dark) | Getters, calculations (no side effects) |
+| 🔴 Red | Errors | `#DC3545` (Red) | `#1a1a1a` (Dark) | Error states, failures |
+| 🟢 Green | Success | `#28a745` (Green) | `#1a1a1a` (Dark) | Completion, success outcomes |
+| ⚪ Gray | Flow Control | `#6c757d` (Gray) | `#1a1a1a` (Dark) | Flow control, end points |
+
+### Unreal Node Styling Rules
+
+1. **Dark Background**: All nodes use `#1a1a1a` for authentic Unreal appearance
+2. **Thick Event Borders**: Event nodes use 4px stroke width (thicker than others)
+3. **Rounded Rectangles**: Most nodes use `[[double brackets]]` for rounded corners
+4. **Diamond Shapes**: Branch/decision nodes use `{{double braces}}`
+5. **White Text**: All text is white (`color:#fff`) for contrast against dark background
+6. **Consistent Spacing**: Use `rx:10,ry:10` for border radius on rectangular nodes
 
 ---
 
 ## Node Type Reference
 
-### Complete Node Type Guide
+### Complete Node Type Guide (Unreal Style)
 
-| Node Type | Symbol | Mermaid Shape | Color | Example |
-|-----------|--------|---------------|-------|---------|
-| Event | 📅 | `[Event Name]` | Green | `[📅 Begin Play]` |
-| Function Call | ⚙️ | `[Function]` | Orange | `[⚙️ Fire Weapon]` |
-| Branch | ❓ | `{Decision?}` | Blue | `{❓ Is Valid?}` |
-| Switch | 🔀 | `{Switch}` | Blue | `{🔀 Enum Value}` |
-| Loop | 🔄 | `[Loop]` | Cyan | `[🔄 ForEach]` |
-| Variable Get | 📦 | `[Get Var]` | Purple | `[📦 PlayerHealth]` |
-| Variable Set | 📝 | `[Set Var]` | Purple | `[📝 Set Score]` |
-| Pure Function | 🔍 | `[Pure Func]` | Teal | `[🔍 Calculate]` |
-| Cast | 🎭 | `[Cast To]` | Orange | `[🎭 Cast to Player]` |
-| Spawn Actor | ➕ | `[Spawn]` | Orange | `[➕ Spawn Projectile]` |
-| Delay | ⏱️ | `[Delay]` | Gray | `[⏱️ Wait 2s]` |
-| Print/Log | 📝 | `[Print]` | Gray | `[📝 Log Message]` |
-| Return | 📤 | `[Return]` | Gray | `[📤 Return Value]` |
-| Error | ❌ | `[Error]` | Red | `[❌ Show Error]` |
-| Success | ✅ | `[Success]` | Green | `[✅ Complete]` |
+| Node Type | Symbol | Mermaid Shape | Stroke Color | Example |
+|-----------|--------|---------------|--------------|---------|
+| Event | ⚡ | `[["Event"]]` | Red (#DC3545) | `[["⚡ Begin Play"]]` |
+| Function Call | ⚙️ | `[["Function"]]` | Blue (#0d6efd) | `[["⚙️ Fire Weapon"]]` |
+| Branch | 🔀 | `{{"Decision?"}}` | Cyan (#17a2b8) | `{{"✓ Is Valid?"}}` |
+| Switch | 🔀 | `{{"Switch"}}` | Cyan (#17a2b8) | `{{"🔀 Enum Value"}}` |
+| Loop | 🔄 | `[["Loop"]]` | Teal (#20c997) | `[["🔄 ForEach"]]` |
+| Variable Get | 📦 | `[["Get Var"]]` | Purple (#6f42c1) | `[["📦 PlayerHealth"]]` |
+| Variable Set | 📝 | `[["Set Var"]]` | Purple (#6f42c1) | `[["📝 Set Score"]]` |
+| Pure Function | 🔍 | `[["Pure"]]` | Cyan (#17a2b8) | `[["🔍 Calculate"]]` |
+| Cast | 🎭 | `[["Cast"]]` | Blue (#0d6efd) | `[["🎭 Cast to Player"]]` |
+| Spawn Actor | ➕ | `[["Spawn"]]` | Blue (#0d6efd) | `[["➕ Spawn Projectile"]]` |
+| Delay | ⏱️ | `[["Delay"]]` | Gray (#6c757d) | `[["⏱️ Wait 2s"]]` |
+| Print/Log | 📝 | `[["Print"]]` | Gray (#6c757d) | `[["📝 Log Message"]]` |
+| Return | 📤 | `[["Return"]]` | Gray (#6c757d) | `[["📤 Return Value"]]` |
+| Error | ❌ | `[["Error"]]` | Red (#DC3545) | `[["❌ Show Error"]]` |
+| Success | ✅ | `[["Success"]]` | Green (#28a745) | `[["✅ Complete"]]` |
+
+### Unreal Node Syntax Reference
+
+**Standard Node (Rounded Rectangle)**:
+```
+NodeName[["⚙️ Node Label"]]
+style NodeName fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+```
+
+**Event Node (Thicker Border)**:
+```
+EventName[["⚡ Event Begin Play"]]
+style EventName fill:#1a1a1a,stroke:#DC3545,stroke-width:4px,color:#fff,rx:10,ry:10
+```
+
+**Branch/Decision Node (Diamond)**:
+```
+BranchName{{"✓ Is Valid?"}}
+style BranchName fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#17a2b8
+```
+
+**Connection Labels**:
+```
+NodeA -->|"✓ True"| NodeB
+NodeA -->|"✗ False"| NodeC
+```
+
+**End Point (Circle)**:
+```
+End(( ))
+style End fill:#1a1a1a,stroke:#6c757d,stroke-width:2px,color:#fff
+```
 
 ### Special Nodes
 
@@ -713,21 +766,22 @@ Branch
               (Store on Player Character)
 ```
 
-#### After (New Mermaid Style)
+#### After (New Unreal Node Style)
 
 ```mermaid
-graph TD
-    A[📥 Input: SelectedHomeworld] --> B{✓ Is Valid?}
-    B -->|No| C[❌ Print Error:<br/>Invalid Homeworld]
-    C --> D[📤 Return False]
-    B -->|Yes| E[📦 Set CurrentHomeworld]
-    E --> F[✅ Continue Processing]
+graph LR
+    A[["📥 Input: SelectedHomeworld"]] --> B{{"✓ Valid?"}}
+    B -->|"✗ No"| C[["❌ Print Error<br/>Invalid Homeworld"]]
+    C --> D[["📤 Return False"]]
+    B -->|"✓ Yes"| E[["📦 Set CurrentHomeworld"]]
+    E --> F[["✅ Continue"]]
     
-    style A fill:#9C27B0,stroke:#6A1B9A,color:#fff
-    style B fill:#2196F3,stroke:#1565C0,color:#fff
-    style C fill:#F44336,stroke:#C62828,color:#fff
-    style E fill:#FF9800,stroke:#E65100,color:#fff
-    style F fill:#4CAF50,stroke:#2E7D32,color:#fff
+    style A fill:#1a1a1a,stroke:#6f42c1,stroke-width:3px,color:#fff,rx:10,ry:10
+    style B fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#17a2b8
+    style C fill:#1a1a1a,stroke:#DC3545,stroke-width:3px,color:#fff,rx:10,ry:10
+    style D fill:#1a1a1a,stroke:#6c757d,stroke-width:3px,color:#fff,rx:10,ry:10
+    style E fill:#1a1a1a,stroke:#6f42c1,stroke-width:3px,color:#fff,rx:10,ry:10
+    style F fill:#1a1a1a,stroke:#28a745,stroke-width:3px,color:#fff,rx:10,ry:10
 ```
 
 ### Conversion Checklist
@@ -761,20 +815,22 @@ grep -B5 "Blueprint Graph:" --include="*.md" . | grep -v "mermaid"
 
 ## Templates
 
-### Template 1: Simple Function (Mermaid)
+### Template 1: Simple Function (Unreal Node Style)
 
 ```mermaid
-graph TD
-    A[📅 Function Start] --> B[📦 Get Input Data]
-    B --> C[⚙️ Process Data]
-    C --> D{✓ Success?}
-    D -->|Yes| E[✅ Return Success]
-    D -->|No| F[❌ Return Error]
+graph LR
+    A[["⚡ Function Start"]] --> B[["📦 Get Input Data"]]
+    B --> C[["⚙️ Process Data"]]
+    C --> D{{"✓ Success?"}}
+    D -->|"✓ Yes"| E[["✅ Return Success"]]
+    D -->|"✗ No"| F[["❌ Return Error"]]
     
-    style A fill:#4CAF50,stroke:#2E7D32,color:#fff
-    style D fill:#2196F3,stroke:#1565C0,color:#fff
-    style E fill:#4CAF50,stroke:#2E7D32,color:#fff
-    style F fill:#F44336,stroke:#C62828,color:#fff
+    style A fill:#1a1a1a,stroke:#DC3545,stroke-width:4px,color:#fff,rx:10,ry:10
+    style B fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style C fill:#1a1a1a,stroke:#0d6efd,stroke-width:3px,color:#fff,rx:10,ry:10
+    style D fill:#1a1a1a,stroke:#17a2b8,stroke-width:3px,color:#17a2b8
+    style E fill:#1a1a1a,stroke:#28a745,stroke-width:3px,color:#fff,rx:10,ry:10
+    style F fill:#1a1a1a,stroke:#DC3545,stroke-width:3px,color:#fff,rx:10,ry:10
 ```
 
 ### Template 2: Enhanced Text Flow
