@@ -71,7 +71,7 @@ graph TD
 
 | Feature | Old ASCII | New Mermaid | Improvement |
 |---------|-----------|-------------|-------------|
-| **Visual Clarity** | ⭐ | ⭐⭐⭐⭐⭐ | 5x better |
+| **Visual Clarity** | ⭐ | ⭐⭐⭐⭐⭐ | Significantly better |
 | **Readability** | ⭐⭐ | ⭐⭐⭐⭐⭐ | Much clearer |
 | **GitHub Rendering** | ⭐⭐ | ⭐⭐⭐⭐⭐ | Perfect |
 | **Mobile Friendly** | ⭐ | ⭐⭐⭐⭐⭐ | Responsive |
@@ -283,34 +283,38 @@ The Mermaid diagram automatically scales and remains readable on mobile devices 
 
 ## Developer Productivity Impact
 
-### Time to Create Documentation
+> **Disclaimer:** The following productivity metrics are estimates based on team experience and informal observations. Actual improvements may vary depending on project complexity, team familiarity with the tools, and individual workflow preferences. These numbers are not the result of formal empirical studies.
+
+### Time to Create Documentation (Estimated)
 
 | Task | Old ASCII | New Mermaid | Time Saved |
 |------|-----------|-------------|------------|
-| Simple flow (5 nodes) | 10 min | 3 min | 70% faster |
-| Medium flow (15 nodes) | 30 min | 8 min | 73% faster |
-| Complex flow (30+ nodes) | 60+ min | 15 min | 75% faster |
+| Simple flow (5 nodes) | 10 min | 3 min | ~70% faster |
+| Medium flow (15 nodes) | 30 min | 8 min | ~73% faster |
+| Complex flow (30+ nodes) | 60+ min | 15 min | ~75% faster |
 
-### Time to Understand Documentation
+### Time to Understand Documentation (Estimated)
 
 | Complexity | Old ASCII | New Mermaid | Improvement |
 |------------|-----------|-------------|-------------|
-| Simple | 30 sec | 10 sec | 3x faster |
-| Medium | 2 min | 30 sec | 4x faster |
-| Complex | 5+ min | 1 min | 5x faster |
+| Simple | 30 sec | 10 sec | ~3x faster |
+| Medium | 2 min | 30 sec | ~4x faster |
+| Complex | 5+ min | 1 min | ~5x faster |
 
-### Time to Update Documentation
+### Time to Update Documentation (Estimated)
 
 | Change Type | Old ASCII | New Mermaid | Improvement |
 |-------------|-----------|-------------|-------------|
-| Add node | 5 min | 30 sec | 10x faster |
-| Change flow | 10 min | 1 min | 10x faster |
-| Fix error path | 5 min | 30 sec | 10x faster |
-| Restyle | Impossible | 1 min | ∞ improvement |
+| Add node | 5 min | 30 sec | ~10x faster |
+| Change flow | 10 min | 1 min | ~10x faster |
+| Fix error path | 5 min | 30 sec | ~10x faster |
+| Restyle | Very difficult | 1 min | Significant improvement |
 
 ---
 
 ## Team Feedback Simulation
+
+> **Note:** The following quotes are hypothetical scenarios created for illustration purposes. They represent anticipated benefits but are not actual user feedback.
 
 ### Before (ASCII Docs)
 

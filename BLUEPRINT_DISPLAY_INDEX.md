@@ -231,8 +231,8 @@ Total time: ~40 minutes to full proficiency
 | [Examples](BLUEPRINT_DISPLAY_EXAMPLES.md) | 26KB | Real examples | High |
 | [Cheatsheet](BLUEPRINT_DISPLAY_CHEATSHEET.md) | 7KB | Quick reference | High |
 | [Comparison](BLUEPRINT_DISPLAY_COMPARISON.md) | 10KB | Before/after | Medium |
-| [Sample](Blueprints/TradingSystemBlueprintGuide_UPDATED_SAMPLE.md) | 12KB | Demo file | Low |
-| **Total** | **~100KB** | **Complete system** | - |
+| [Sample](Blueprints/TradingSystemBlueprintGuide_UPDATED_SAMPLE.md) | 14KB | Demo file | Low |
+| **Total** | **~110KB** | **Complete system** | - |
 
 ---
 

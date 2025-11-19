@@ -26,7 +26,7 @@ This document provides practical, real-world examples of Blueprint documentation
 ### Scenario
 Initializing a player's inventory when they start the game.
 
-### Format A: Unreal Node Style (Recommended for Documentation)
+### Format A: Blueprint-Inspired Style (Recommended for Documentation)
 
 ```mermaid
 graph LR
@@ -95,7 +95,7 @@ EXECUTION FLOW
 ### Scenario
 Checking if a player can purchase an item from a vendor.
 
-### Format A: Unreal Node Style with Multiple Branches
+### Format A: Blueprint-Inspired Style with Multiple Branches
 
 ```mermaid
 graph LR

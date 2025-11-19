@@ -62,7 +62,9 @@ This guide establishes consistent, clear, and maintainable standards for documen
 ## Format 1: Mermaid Flowcharts (Recommended)
 
 ### Overview
-Mermaid diagrams render natively on GitHub and provide professional flowchart visualization.
+Mermaid diagrams render natively on GitHub and provide professional flowchart visualization with a Blueprint-inspired appearance.
+
+> **Note:** The color scheme and node shapes used in these diagrams are inspired by Blueprint visual concepts for readability in markdown. They do not exactly match Unreal Engine's Blueprint editor appearance, but provide a professional, consistent style for documenting Blueprint logic.
 
 ### Advantages
 - 🎨 **Visual**: Automatic layout and styling
@@ -70,7 +72,7 @@ Mermaid diagrams render natively on GitHub and provide professional flowchart vi
 - 🎯 **Clear**: Easy to follow execution flow
 - 📱 **Responsive**: Works on all devices
 
-### Basic Structure (Unreal Engine Node Style)
+### Basic Structure (Blueprint-Inspired Style)
 
 ```mermaid
 graph LR
@@ -87,7 +89,7 @@ graph LR
     style End fill:#1a1a1a,stroke:#4CAF50,stroke-width:3px,color:#fff,rx:10,ry:10
 ```
 
-### Example: Trading System Buy Flow (Unreal Node Style)
+### Example: Trading System Buy Flow (Blueprint-Inspired Style)
 
 ```mermaid
 graph LR
@@ -123,7 +125,7 @@ graph LR
     style N fill:#1a1a1a,stroke:#6c757d,stroke-width:2px,color:#fff
 ```
 
-### Mermaid Node Types (Unreal Engine Style)
+### Mermaid Node Types (Blueprint-Inspired Style)
 
 ```mermaid
 graph LR
@@ -578,7 +580,7 @@ PHASE 3: EXECUTE TRANSACTION
 
 ---
 
-## Color Coding Standards (Unreal Engine Style)
+## Color Coding Standards (Blueprint-Inspired Style)
 
 ### Standard Color Palette
 
@@ -603,7 +605,7 @@ graph LR
     style Success fill:#1a1a1a,stroke:#28a745,stroke-width:3px,color:#fff,rx:10,ry:10
 ```
 
-### Unreal Engine Color Meanings
+### Blueprint-Inspired Color Meanings
 
 | Color | Node Type | Stroke Color | Background | When to Use |
 |-------|-----------|--------------|------------|-------------|
@@ -617,20 +619,22 @@ graph LR
 | 🟢 Green | Success | `#28a745` (Green) | `#1a1a1a` (Dark) | Completion, success outcomes |
 | ⚪ Gray | Flow Control | `#6c757d` (Gray) | `#1a1a1a` (Dark) | Flow control, end points |
 
-### Unreal Node Styling Rules
+### Blueprint-Inspired Styling Rules
 
-1. **Dark Background**: All nodes use `#1a1a1a` for authentic Unreal appearance
-2. **Thick Event Borders**: Event nodes use 4px stroke width (thicker than others)
+1. **Dark Background**: All nodes use `#1a1a1a` for a professional appearance optimized for markdown
+2. **Consistent Borders**: Standard nodes use 3px stroke width; event nodes use 4px for emphasis
 3. **Rounded Rectangles**: Most nodes use `[[double brackets]]` for rounded corners
-4. **Diamond Shapes**: Branch/decision nodes use `{{double braces}}`
+4. **Diamond Shapes**: Branch/decision nodes use `{{double braces}}` for visual distinction in flowcharts
 5. **White Text**: All text is white (`color:#fff`) for contrast against dark background
 6. **Consistent Spacing**: Use `rx:10,ry:10` for border radius on rectangular nodes
+
+> **Note:** These styling rules are designed for optimal readability in markdown documentation and do not exactly replicate Unreal Engine's Blueprint editor appearance.
 
 ---
 
 ## Node Type Reference
 
-### Complete Node Type Guide (Unreal Style)
+### Complete Node Type Guide (Blueprint-Inspired Style)
 
 | Node Type | Symbol | Mermaid Shape | Stroke Color | Example |
 |-----------|--------|---------------|--------------|---------|
@@ -650,7 +654,7 @@ graph LR
 | Error | ❌ | `[["Error"]]` | Red (#DC3545) | `[["❌ Show Error"]]` |
 | Success | ✅ | `[["Success"]]` | Green (#28a745) | `[["✅ Complete"]]` |
 
-### Unreal Node Syntax Reference
+### Blueprint Node Syntax Reference
 
 **Standard Node (Rounded Rectangle)**:
 ```
@@ -766,7 +770,7 @@ Branch
               (Store on Player Character)
 ```
 
-#### After (New Unreal Node Style)
+#### After (New Blueprint-Inspired Style)
 
 ```mermaid
 graph LR
@@ -815,7 +819,7 @@ grep -B5 "Blueprint Graph:" --include="*.md" . | grep -v "mermaid"
 
 ## Templates
 
-### Template 1: Simple Function (Unreal Node Style)
+### Template 1: Simple Function (Blueprint-Inspired Style)
 
 ```mermaid
 graph LR

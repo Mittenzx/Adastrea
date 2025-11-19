@@ -17,7 +17,9 @@ Teaching/Tutorial? → Use Hybrid (Multiple formats)
 
 ---
 
-## Mermaid Quick Start (Unreal Engine Style)
+## Mermaid Quick Start (Blueprint-Inspired Style)
+
+> **Note:** The following Mermaid template uses colors and shapes optimized for readability in markdown documentation. These do **not** match Unreal Engine's Blueprint editor exactly, but are inspired by common Blueprint node concepts.
 
 ### Basic Template
 
@@ -40,10 +42,10 @@ graph LR
 ```
 ````
 
-### Unreal Node Shapes
+### Blueprint Node Shapes
 
-| Code | Shape | Use For | Unreal Node Type |
-|------|-------|---------|------------------|
+| Code | Shape | Use For | Node Type |
+|------|-------|---------|-----------|
 | `[["Text"]]` | Rounded Rectangle | Functions, actions | Standard nodes |
 | `{{"Text?"}}` | Diamond | Decisions, branches | Branch nodes |
 | `(( ))` | Circle | End points | Flow control |
@@ -60,7 +62,7 @@ graph LR
 
 ---
 
-## Unreal Color Codes (Copy-Paste Ready)
+## Blueprint-Inspired Color Codes (Copy-Paste Ready)
 
 ```
 Event (Red):      style Node fill:#1a1a1a,stroke:#DC3545,stroke-width:4px,color:#fff,rx:10,ry:10
@@ -75,12 +77,12 @@ End (Gray):       style Node fill:#1a1a1a,stroke:#6c757d,stroke-width:2px,color:
 ```
 
 **Key Styling Rules:**
-- All nodes: Dark background `#1a1a1a` (authentic Unreal look)
-- Events: 4px stroke width (thicker than others)
+- All nodes: Dark background `#1a1a1a` for professional appearance
+- Events: 4px stroke width (emphasized for visual hierarchy)
 - Standard nodes: 3px stroke width
 - White text: `color:#fff` for contrast
 - Rounded corners: `rx:10,ry:10` on rectangular nodes
-- Branch nodes: No rx/ry (diamond shape)
+- Branch nodes: No rx/ry (diamond shape in flowcharts)
 
 ---
 
@@ -217,7 +219,7 @@ graph TD
 
 ---
 
-## Common Patterns (Unreal Style)
+## Common Patterns (Blueprint-Inspired Style)
 
 ### Simple Function
 
