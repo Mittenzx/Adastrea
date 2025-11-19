@@ -176,6 +176,15 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Reputation")
 	TArray<FPlayerFactionReputation> GetAllReputations() const;
 
+	/**
+	 * Check if reputation meets or exceeds a minimum value
+	 * @param FactionID The faction to check
+	 * @param MinReputation Minimum reputation value required
+	 * @return True if reputation is at least the minimum value
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Reputation")
+	bool IsReputationAtLeast(FName FactionID, int32 MinReputation) const;
+
 protected:
 	virtual void BeginPlay() override;
 };
