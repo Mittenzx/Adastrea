@@ -457,44 +457,45 @@ Most components are C++ classes, but you may want to create Blueprint child comp
 
 ### Enhanced Input Assets
 
+**⚠️ IMPORTANT**: The Enhanced Input system uses the C++ `InputConfigDataAsset` class for centralized configuration. Some basic Input Actions already exist in `Content/Input/`. You can either use the C++ approach (recommended) or manually create additional Input Actions as needed.
+
+**See**: [Assets/EnhancedInputImplementation.md](Assets/EnhancedInputImplementation.md) for complete C++ setup guide.
+
+#### DA_InputConfig
+- **Location**: `Content/DataAssets/Input/DA_InputConfig.uasset`
+- **Parent Class**: `UInputConfigDataAsset` (C++)
+- **Purpose**: Central input configuration that references all Input Actions and Mapping Contexts
+- **Status**: ✅ **C++ class exists** - Create Blueprint Data Asset instance
+- **Priority**: ⚠️ **CRITICAL** - Enhanced Input system
+
 #### IMC_Spaceship
 - **Location**: `Content/Input/IMC_Spaceship.uasset`
 - **Type**: Input Mapping Context
+- **Status**: ✅ **Already exists** in repository
 - **Purpose**: Maps input actions to keys for spaceship control
-- **Required Mappings**:
-  - IA_Move → WASD keys
-  - IA_Look → Mouse movement
-  - IA_Boost → Left Shift
-  - IA_Fire_Primary → Left Mouse Button
-  - IA_Fire_Secondary → Right Mouse Button
-  - IA_TargetNext → Tab
-  - IA_TargetPrevious → Shift+Tab
-  - IA_Autopilot → Z
 - **Priority**: ⚠️ **CRITICAL** - Input won't work without this
 
-#### IA_[ActionName]
-Create Input Actions:
-- **IA_Move** - Movement (Vector2D)
-- **IA_Look** - Camera look (Vector2D)
-- **IA_Boost** - Speed boost (Boolean)
-- **IA_Fire_Primary** - Primary weapon (Boolean)
+#### Input Actions (Some Already Exist)
+
+**Existing Input Actions** (in `Content/Input/Actions/`):
+- ✅ **IA_Move** - Movement (Vector2D) - Already exists
+- ✅ **IA_Look** - Camera look (Vector2D) - Already exists
+- ✅ **IA_Boost** - Speed boost (Boolean) - Already exists
+- ✅ **IA_Fire_Primary** - Primary weapon (Boolean) - Already exists
+- ✅ **IA_PauseMenu** - Pause game (Boolean) - Already exists
+
+**Additional Input Actions to Create** (if needed):
 - **IA_Fire_Secondary** - Secondary weapon (Boolean)
 - **IA_TargetNext** - Next target (Boolean)
 - **IA_TargetPrevious** - Previous target (Boolean)
 - **IA_Autopilot** - Toggle autopilot (Boolean)
 - **IA_OpenInventory** - Open inventory (Boolean)
 - **IA_OpenMap** - Open map (Boolean)
-- **IA_PauseMenu** - Pause game (Boolean)
 
 - **Location**: `Content/Input/Actions/`
 - **Type**: Input Action
 - **Priority**: ⚠️ **CRITICAL** - Input system
-
-#### DA_InputConfig
-- **Location**: `Content/DataAssets/Input/DA_InputConfig.uasset`
-- **Parent Class**: `UInputConfigDataAsset` (C++)
-- **Purpose**: Central input configuration
-- **Priority**: ⚠️ **CRITICAL** - Enhanced Input system
+- **Note**: Reference these in your `DA_InputConfig` Data Asset instance
 
 ---
 
