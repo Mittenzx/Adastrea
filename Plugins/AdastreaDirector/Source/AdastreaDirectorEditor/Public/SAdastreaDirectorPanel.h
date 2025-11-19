@@ -10,6 +10,7 @@ class SMultiLineEditableTextBox;
 class SEditableTextBox;
 class STextBlock;
 class SProgressBar;
+class SWidgetSwitcher;
 
 /**
  * Main Slate panel widget for Adastrea Director.
@@ -34,6 +35,13 @@ public:
 	virtual FReply OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent) override;
 
 private:
+	// Tab management
+	/** Current active tab (0 = Query, 1 = Ingestion) */
+	int32 CurrentTabIndex;
+
+	/** Content switcher widget to hold tab contents */
+	TSharedPtr<SWidgetSwitcher> TabContentSwitcher;
+
 	// Query tab widgets
 	/** Query input text box */
 	TSharedPtr<SEditableTextBox> QueryInputBox;
@@ -111,6 +119,13 @@ private:
 
 	/** Called when Settings button is clicked */
 	FReply OnSettingsClicked();
+
+	// Tab switching methods
+	/** Called when a tab button is clicked */
+	FReply OnTabButtonClicked(int32 TabIndex);
+
+	/** Get the checked state for a tab button */
+	ECheckBoxState GetTabButtonCheckedState(int32 TabIndex) const;
 
 	// Ingestion tab methods
 	/** Called when Browse button is clicked for docs path */

@@ -546,7 +546,7 @@ As expected for Week 2, the following are not yet implemented:
 ### Reference Documentation
 
 - [PLUGIN_DEVELOPMENT_FEASIBILITY.md](../../PLUGIN_DEVELOPMENT_FEASIBILITY.md) - Architecture
-- [PLUGIN_PHASE1_WEEK1_SUMMARY.md](../../PLUGIN_PHASE1_WEEK1_SUMMARY.md) - Week 1 summary
+- [PLUGIN_PHASE1_WEEK1_SUMMARY.md](../../docs/completed/PLUGIN_PHASE1_WEEK1_SUMMARY.md) - Week 1 summary
 - [WEEK1_COMPLETION.md](WEEK1_COMPLETION.md) - Week 1 detailed report
 
 ---

@@ -59,10 +59,17 @@ The plugin currently provides:
 - ✅ Enhanced error handling with user-friendly messages
 - ✅ Conversation history with clear confirmation
 
+### UI Enhancement: Tabbed Interface ✅ (November 2025)
+- ✅ Professional tabbed interface with Query and Ingestion tabs
+- ✅ Radio button style tab switching
+- ✅ Full access to document ingestion features
+- ✅ Progress bar and status updates during ingestion
+- ✅ Smooth tab switching with state preservation
+
 **Coming Soon:**
 - Planning agent integration
-- Enhanced query interface
 - Performance profiling UI
+- Agent orchestration dashboard
 
 ## Quick Start
 
@@ -72,11 +79,22 @@ The plugin currently provides:
 2. Go to **Window > Developer Tools > Adastrea Director**
 3. The AI assistant panel will open as a dockable tab
 4. Configure your API keys via the Settings dialog (see below)
-5. Type your question in the query input field
-6. Click "Send Query" or press Enter
-7. View the response in the results area below
+
+#### Query Tab
+5. Click the **Query** tab (default view)
+6. Type your question in the query input field
+7. Click "Send Query" or press Enter
+8. View the response in the results area below
 
 **Example Query:** "What is Unreal Engine?"
+
+#### Ingestion Tab
+5. Click the **Ingestion** tab
+6. Select your documentation folder (Browse button)
+7. Configure your database path (Browse button or default)
+8. Click "Start Ingestion" to process documents
+9. Monitor progress with the real-time progress bar
+10. View detailed status messages during processing
 
 The Python backend starts automatically when the plugin loads!
 
@@ -112,6 +130,52 @@ Settings are stored in your project's Saved directory:
 - `Enter` - Send query (when focused on query input)
 - `Ctrl+,` - Open Settings dialog (requires panel to have focus)
 - More shortcuts coming in future updates!
+
+### Tabbed Interface (NEW - November 2025)
+
+The plugin now features a professional tabbed interface that provides access to all functionality:
+
+#### Query Tab (Default)
+The Query tab is the main interface for interacting with the AI assistant:
+- **Query Input**: Enter your questions or commands
+- **Send Query Button**: Submit your query to the AI backend
+- **Clear History Button**: Clear conversation history (with confirmation)
+- **Results Display**: View AI-generated responses with context from your documentation
+- **Features**:
+  - Enter key support for quick queries
+  - Conversation history maintained across queries
+  - Context-aware responses using RAG (Retrieval Augmented Generation)
+  - Scrollable results with text selection
+
+#### Ingestion Tab
+The Ingestion tab allows you to populate the knowledge base:
+- **Documentation Folder**: Select the folder containing your documentation
+  - Browse button for easy folder selection
+  - Default path: `<Project>/Docs`
+  - Supports: Markdown, Python, C++, C#, JSON, YAML, and more
+- **Database Path**: Configure where ChromaDB stores the vector database
+  - Browse button for path selection
+  - Default path: `<Project>/chroma_db`
+- **Control Buttons**:
+  - Start Ingestion: Begin processing documents
+  - Stop: Halt ingestion process
+- **Progress Monitoring**:
+  - Real-time progress bar (0-100%)
+  - Status messages showing current operation
+  - Detailed information about files being processed
+- **Features**:
+  - Incremental ingestion (only processes new/changed files)
+  - Hash-based change detection
+  - Batch processing for performance
+  - Error handling and recovery
+
+#### Tab Switching
+- Click any tab button to switch views
+- Only one tab can be active at a time
+- Tab state is preserved when switching
+- Radio button style indicates active tab
+
+**Note**: For detailed technical information about the tabbed interface implementation, see [UI_ENHANCEMENT_TABBED_INTERFACE.md](UI_ENHANCEMENT_TABBED_INTERFACE.md).
 
 ### Error Handling
 

@@ -16,6 +16,8 @@
 #include "Widgets/Layout/SBorder.h"
 #include "Widgets/Layout/SGridPanel.h"
 #include "Widgets/Notifications/SProgressBar.h"
+#include "Widgets/Layout/SWidgetSwitcher.h"
+#include "Widgets/Input/SCheckBox.h"
 #include "Styling/AppStyle.h"
 #include "Styling/SlateTypes.h"
 #include "Dom/JsonObject.h"
@@ -49,6 +51,7 @@ void SAdastreaDirectorPanel::Construct(const FArguments& InArgs)
 	IngestionDetailsMessage = FText::GetEmpty();
 	CurrentResults = LOCTEXT("WelcomeMessage", "Welcome to Adastrea Director!\n\nEnter a query above and click 'Send Query' or press Enter to get started.\n\nExample: \"What is Unreal Engine?\"");
 	LastProgressUpdateTime = 0.0;
+	CurrentTabIndex = 0; // Start with Query tab
 	
 	// Setup progress file path
 	ProgressFilePath = FPaths::ProjectIntermediateDir() / TEXT("AdastreaDirector") / TEXT("ingestion_progress.json");
@@ -90,11 +93,81 @@ void SAdastreaDirectorPanel::Construct(const FArguments& InArgs)
 			.Orientation(Orient_Horizontal)
 		]
 
-		// Main content - simple vertical layout for query (ingestion to be added)
+		// Tab buttons
+		+ SVerticalBox::Slot()
+		.AutoHeight()
+		.Padding(10.0f, 5.0f, 10.0f, 5.0f)
+		[
+			SNew(SHorizontalBox)
+			
+			// Query Tab Button
+			+ SHorizontalBox::Slot()
+			.AutoWidth()
+			.Padding(0.0f, 0.0f, 5.0f, 0.0f)
+			[
+				SNew(SCheckBox)
+				.Style(FAppStyle::Get(), "RadioButton")
+				.IsChecked(this, &SAdastreaDirectorPanel::GetTabButtonCheckedState, 0)
+				.OnCheckStateChanged_Lambda([this](ECheckBoxState NewState) {
+					if (NewState == ECheckBoxState::Checked)
+					{
+						OnTabButtonClicked(0);
+					}
+				})
+				[
+					SNew(STextBlock)
+					.Text(LOCTEXT("QueryTabButton", "Query"))
+					.Font(FCoreStyle::GetDefaultFontStyle("Bold", 10))
+				]
+			]
+
+			// Ingestion Tab Button
+			+ SHorizontalBox::Slot()
+			.AutoWidth()
+			[
+				SNew(SCheckBox)
+				.Style(FAppStyle::Get(), "RadioButton")
+				.IsChecked(this, &SAdastreaDirectorPanel::GetTabButtonCheckedState, 1)
+				.OnCheckStateChanged_Lambda([this](ECheckBoxState NewState) {
+					if (NewState == ECheckBoxState::Checked)
+					{
+						OnTabButtonClicked(1);
+					}
+				})
+				[
+					SNew(STextBlock)
+					.Text(LOCTEXT("IngestionTabButton", "Ingestion"))
+					.Font(FCoreStyle::GetDefaultFontStyle("Bold", 10))
+				]
+			]
+		]
+
+		+ SVerticalBox::Slot()
+		.AutoHeight()
+		.Padding(10.0f, 0.0f, 10.0f, 5.0f)
+		[
+			SNew(SSeparator)
+			.Orientation(Orient_Horizontal)
+		]
+
+		// Tab content area with widget switcher
 		+ SVerticalBox::Slot()
 		.FillHeight(1.0f)
 		[
-			CreateQueryTab()
+			SAssignNew(TabContentSwitcher, SWidgetSwitcher)
+			.WidgetIndex_Lambda([this]() { return CurrentTabIndex; })
+			
+			// Query Tab (index 0)
+			+ SWidgetSwitcher::Slot()
+			[
+				CreateQueryTab()
+			]
+			
+			// Ingestion Tab (index 1)
+			+ SWidgetSwitcher::Slot()
+			[
+				CreateIngestionTab()
+			]
 		]
 	];
 }
@@ -770,6 +843,20 @@ FReply SAdastreaDirectorPanel::OnKeyDown(const FGeometry& MyGeometry, const FKey
 	}
 
 	return SCompoundWidget::OnKeyDown(MyGeometry, InKeyEvent);
+}
+
+FReply SAdastreaDirectorPanel::OnTabButtonClicked(int32 TabIndex)
+{
+	if (TabIndex >= 0 && TabIndex <= 1)
+	{
+		CurrentTabIndex = TabIndex;
+	}
+	return FReply::Handled();
+}
+
+ECheckBoxState SAdastreaDirectorPanel::GetTabButtonCheckedState(int32 TabIndex) const
+{
+	return (CurrentTabIndex == TabIndex) ? ECheckBoxState::Checked : ECheckBoxState::Unchecked;
 }
 
 #undef LOCTEXT_NAMESPACE
