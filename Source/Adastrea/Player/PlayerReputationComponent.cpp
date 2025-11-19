@@ -20,7 +20,7 @@ void UPlayerReputationComponent::InitializeFactionReputation(FName FactionID, in
 		return;
 	}
 
-	FPlayerFactionReputation NewReputation(FactionID, InitialReputation);
+	FPlayerFactionReputation NewReputation(FactionID, FMath::Clamp(InitialReputation, -100, 100));
 	FactionReputations.Add(FactionID, NewReputation);
 }
 
@@ -44,8 +44,8 @@ void UPlayerReputationComponent::ModifyReputation(FName FactionID, int32 Amount)
 	FPlayerFactionReputation* Reputation = FactionReputations.Find(FactionID);
 	if (!Reputation)
 	{
-		// Initialize if doesn't exist
-		InitializeFactionReputation(FactionID, Amount);
+		// Initialize if doesn't exist, clamping the amount to valid range
+		InitializeFactionReputation(FactionID, FMath::Clamp(Amount, -100, 100));
 		return;
 	}
 

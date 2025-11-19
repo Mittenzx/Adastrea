@@ -4,8 +4,8 @@
 
 UFactionDataAsset::UFactionDataAsset()
 {
-	FactionName = FText::FromString(TEXT("New Faction"));
-	Description = FText::FromString(TEXT("A faction in the Adastrea universe"));
+	FactionName = INVTEXT("New Faction");
+	Description = INVTEXT("A faction in the Adastrea universe");
 	FactionID = NAME_None;
 	InitialReputation = 0;
 	bIsHostileByDefault = false;

@@ -73,15 +73,17 @@ Actor component for tracking player reputation with all factions.
 
 ## Reputation Tiers
 
-| Tier | Range | Trade Modifier | Description |
-|------|-------|----------------|-------------|
-| Hostile | -100 to -60 | 1.30x (30% more expensive) | Will attack on sight |
-| Unfriendly | -59 to -20 | 1.15x (15% more expensive) | Distrustful, limited access |
-| Neutral | -19 to 19 | 1.00x (normal prices) | Default state |
-| Friendly | 20 to 59 | 0.90x (10% discount) | Helpful, better services |
-| Honored | 60 to 89 | 0.80x (20% discount) | Respected member |
-| Revered | 90 to 99 | 0.75x (25% discount) | Highly honored |
+| Tier | Range | Trade Modifier (actual) | Description |
+|------|-------|-------------------------|-------------|
+| Hostile | -100 to -60 | 1.30x – 1.18x (30–18% more expensive) | Will attack on sight |
+| Unfriendly | -59 to -20 | 1.177x – 1.06x (17.7–6% more expensive) | Distrustful, limited access |
+| Neutral | -19 to 19 | 1.057x – 0.943x (5.7% more expensive – 5.7% discount) | Default state |
+| Friendly | 20 to 59 | 0.94x – 0.823x (6–17.7% discount) | Helpful, better services |
+| Honored | 60 to 89 | 0.82x – 0.733x (18–26.7% discount) | Respected member |
+| Revered | 90 to 99 | 0.73x – 0.703x (27–29.7% discount) | Highly honored |
 | Exalted | 100 | 0.70x (30% discount) | Maximum reputation |
+
+> **Note:** The trade price modifier is calculated as `1.0 - (Reputation * 0.003)`, where Reputation ranges from -100 to +100. The modifier is applied linearly across the reputation scale.
 
 ## Example: Creating a Faction
 

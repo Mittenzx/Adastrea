@@ -30,7 +30,7 @@ enum class EReputationTier : uint8
  * Stored as part of save game data
  */
 USTRUCT(BlueprintType)
-struct FPlayerFactionReputation
+struct ADASTREA_API FPlayerFactionReputation
 {
 	GENERATED_BODY()
 
@@ -66,8 +66,8 @@ struct FPlayerFactionReputation
 		if (Reputation >= 90) return EReputationTier::Revered;
 		if (Reputation >= 60) return EReputationTier::Honored;
 		if (Reputation >= 20) return EReputationTier::Friendly;
-		if (Reputation >= -19) return EReputationTier::Neutral;
-		if (Reputation >= -59) return EReputationTier::Unfriendly;
+		if (Reputation > -20) return EReputationTier::Neutral;
+		if (Reputation > -60) return EReputationTier::Unfriendly;
 		return EReputationTier::Hostile;
 	}
 };
@@ -107,7 +107,7 @@ public:
 	// ====================
 
 	/** Map of faction ID to reputation data */
-	UPROPERTY(BlueprintReadOnly, Category="Reputation")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Reputation")
 	TMap<FName, FPlayerFactionReputation> FactionReputations;
 
 	// ====================
