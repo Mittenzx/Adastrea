@@ -149,51 +149,36 @@ The parent class gives your Blueprint built-in functionality. You just fill in t
      - Progress Bar: Shields
      - Image: Crosshair
 
-#### Enhanced Input System (6 Blueprints)
+#### Enhanced Input System (1-2 Blueprints Needed)
 
-6. **IMC_Spaceship**
-   - **Type**: Input Mapping Context
-   - **Location**: `Content/Input/`
-   - **What it does**: Maps keyboard/mouse to ship controls
-   - **What you map**:
-     - IA_Move → WASD keys
-     - IA_Look → Mouse X/Y
-     - IA_Boost → Left Shift
-     - IA_Fire_Primary → Left Mouse Button
+**⚠️ GOOD NEWS**: Most Input Actions already exist! The game uses C++ `InputConfigDataAsset` for centralized input management.
 
-7. **IA_Move**
-   - **Type**: Input Action
-   - **Value Type**: Vector2D (2 axes)
-   - **Location**: `Content/Input/Actions/`
-   - **What it does**: Forward/back, left/right movement
+**What Already Exists** (in `Content/Input/`):
+- ✅ `IMC_Spaceship` - Input Mapping Context
+- ✅ `IA_Move` - Movement input
+- ✅ `IA_Look` - Camera look input
+- ✅ `IA_Boost` - Speed boost input
+- ✅ `IA_Fire_Primary` - Primary weapon input
+- ✅ `IA_PauseMenu` - Pause menu input
 
-8. **IA_Look**
-   - **Type**: Input Action
-   - **Value Type**: Vector2D (2 axes)
-   - **Location**: `Content/Input/Actions/`
-   - **What it does**: Camera look around (pitch/yaw)
+**What You Need to Create**:
 
-9. **IA_Boost**
-   - **Type**: Input Action
-   - **Value Type**: Boolean (pressed/released)
-   - **Location**: `Content/Input/Actions/`
-   - **What it does**: Speed boost toggle
+6. **DA_InputConfig** (Most Important)
+   - **Type**: Data Asset
+   - **Parent**: `UInputConfigDataAsset` (C++ class)
+   - **Location**: `Content/DataAssets/Input/`
+   - **What it does**: References all Input Actions and Mapping Contexts in one place
+   - **What you set**: Assign the existing Input Actions and IMC_Spaceship
+   - **Priority**: ⚠️ **Create this first!**
 
-10. **IA_Fire_Primary**
-    - **Type**: Input Action
-    - **Value Type**: Boolean
-    - **Location**: `Content/Input/Actions/`
-    - **What it does**: Fire primary weapon
+7. **Additional Input Actions** (Only if needed)
+   - Create more Input Actions in `Content/Input/Actions/` if you need additional controls
+   - Examples: `IA_Fire_Secondary`, `IA_TargetNext`, `IA_Autopilot`
+   - See [Assets/EnhancedInputImplementation.md](Assets/EnhancedInputImplementation.md) for full list
 
-11. **IA_PauseMenu**
-    - **Type**: Input Action
-    - **Value Type**: Boolean
-    - **Location**: `Content/Input/Actions/`
-    - **What it does**: Opens pause menu
+#### Data Assets (2 Blueprints)
 
-#### Data Assets (3 Blueprints)
-
-12. **DA_Ship_PlayerScout**
+8. **DA_Ship_PlayerScout**
     - **Type**: Data Asset
     - **Parent**: `USpaceshipDataAsset`
     - **Location**: `Content/DataAssets/Ships/`
@@ -206,7 +191,7 @@ The parent class gives your Blueprint built-in functionality. You just fill in t
       - Maneuverability = 70
       - (many more stats available)
 
-13. **DA_Way_TradersGuild**
+9. **DA_Way_TradersGuild**
     - **Type**: Data Asset
     - **Parent**: `UWayDataAsset` (Way system - specialized guilds)
     - **Location**: `Content/DataAssets/Ways/`
@@ -216,16 +201,9 @@ The parent class gives your Blueprint built-in functionality. You just fill in t
       - Specialization = "Trading"
       - Colors (guild color scheme)
 
-14. **DA_InputConfig**
-    - **Type**: Data Asset
-    - **Parent**: `UInputConfigDataAsset`
-    - **Location**: `Content/DataAssets/Input/`
-    - **What it does**: Central input configuration
-    - **What you set**: Link all your Input Actions here
-
 #### UI (1 Blueprint)
 
-15. **WBP_MainMenu**
+10. **WBP_MainMenu**
     - **Type**: Widget Blueprint
     - **Parent**: `UUserWidget`
     - **Location**: `Content/UI/Menus/`
@@ -247,35 +225,35 @@ The parent class gives your Blueprint built-in functionality. You just fill in t
 
 #### Space Stations (5 Blueprints)
 
-16. **BP_SpaceStation_Main**
+11. **BP_SpaceStation_Main**
     - **Type**: Blueprint Class
     - **Parent**: `ASpaceStation`
     - **Location**: `Content/Blueprints/Stations/`
     - **What it does**: Main station you can dock at
     - **What you set**: Owning Way (optional), initial modules
 
-17. **BP_Module_Docking**
+12. **BP_Module_Docking**
     - **Type**: Blueprint Class
     - **Parent**: `ASpaceStationModule`
     - **Location**: `Content/Blueprints/Stations/Modules/`
     - **What it does**: Docking port for ships
     - **Visual**: Connection point for ships
 
-18. **BP_Module_Power**
+13. **BP_Module_Power**
     - **Type**: Blueprint Class
     - **Parent**: `ASpaceStationModule`
     - **Location**: `Content/Blueprints/Stations/Modules/`
     - **What it does**: Generates power for station
     - **Visual**: Generator or reactor appearance
 
-19. **BP_Module_Storage**
+14. **BP_Module_Storage**
     - **Type**: Blueprint Class
     - **Parent**: `ASpaceStationModule`
     - **Location**: `Content/Blueprints/Stations/Modules/`
     - **What it does**: Cargo storage area
     - **Visual**: Warehouse module
 
-20. **BP_Module_Defence**
+15. **BP_Module_Defence**
     - **Type**: Blueprint Class
     - **Parent**: `ASpaceStationModule`
     - **Location**: `Content/Blueprints/Stations/Modules/`

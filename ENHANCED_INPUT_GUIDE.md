@@ -2,7 +2,27 @@
 
 This document explains how to set up Enhanced Input for the spaceship controls.
 
-## Input Actions
+## ⚠️ Important: C++ Implementation Available
+
+**The Enhanced Input system is already implemented in C++ via `InputConfigDataAsset`.**
+
+You have two options:
+
+### Option 1: Use C++ Implementation (Recommended)
+- **Pros**: Centralized configuration, type-safe, validation built-in, easier to maintain
+- **Approach**: Use `DA_InputConfig` Data Asset (based on `InputConfigDataAsset`) to reference all Input Actions
+- **See**: [Assets/EnhancedInputImplementation.md](Assets/EnhancedInputImplementation.md) for complete C++ setup guide
+
+### Option 2: Manual Blueprint Setup
+- **Pros**: More control over individual mappings, good for learning
+- **Approach**: Manually create and wire up Input Actions and Mapping Contexts
+- **See**: Instructions below for manual setup
+
+**This guide covers Option 2 (Manual Setup).** For most users, Option 1 with the C++ `InputConfigDataAsset` is recommended.
+
+---
+
+## Input Actions (Manual Setup)
 
 ### IA_Move (Input Action)
 **Value Type**: Vector2D (Axis2D)

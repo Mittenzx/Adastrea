@@ -4,12 +4,26 @@
 
 The Adastrea Enhanced Input System provides a comprehensive input configuration framework using Unreal Engine 5's Enhanced Input plugin. This guide covers the C++ implementation and Blueprint setup for spaceship controls.
 
+## ⭐ Recommended Approach: Use C++ InputConfigDataAsset
+
+**This is the preferred method** for setting up Enhanced Input in Adastrea. The C++ `InputConfigDataAsset` class provides centralized, type-safe input configuration that's easier to maintain than manually creating dozens of Input Actions.
+
+**Benefits of C++ Approach:**
+- ✅ Centralized configuration in one Data Asset
+- ✅ Type-safe references to Input Actions
+- ✅ Built-in validation functions
+- ✅ Consistent with project's data-driven design philosophy
+- ✅ Easier debugging and maintenance
+
+**Alternative**: See [ENHANCED_INPUT_GUIDE.md](../ENHANCED_INPUT_GUIDE.md) for manual Blueprint-only setup (not recommended for new users).
+
 ## System Status: ✅ COMPLETE (C++ Foundation)
 
 The Enhanced Input System C++ foundation is complete:
 - **InputConfigDataAsset** - Centralized input action storage
 - **EnhancedInput** module integrated
-- **Ready for Blueprint setup** - Input Actions and Mapping Contexts
+- **Basic Input Actions exist** - Some Input Actions already created in `Content/Input/`
+- **Ready for use** - Create `DA_InputConfig` Data Asset and reference existing actions
 
 ## Core Components
 
