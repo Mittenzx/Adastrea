@@ -48,9 +48,10 @@ This directory now contains 24 total ship templates (14 original + 10 new).
 
 ### Quick Stats:
 
-- **Total Ships**: 24 templates
+- **Total Ships**: 24 templates (14 original + 10 new)
+- **New Ships**: 10 templates added
 - **Size Range**: Single-pilot fighters to 3,000-crew colony ships
-- **Rarity Spread**: 4 Common, 7 Uncommon, 4 Rare, 3 Legendary
+- **Rarity Spread (new ships only)**: 2 Common, 4 Uncommon, 3 Rare, 1 Legendary
 - **All ships validated**: Schema validation passed ✓
 
 ### Usage:

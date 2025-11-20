@@ -1,50 +1,55 @@
+# Lifeline Medical Cruiser - Hospital Ship
+# State-of-the-art mobile hospital with maximum medical and life support capabilities
+
 BasicInfo:
   ShipID: LifelineMedical
   ShipName: Lifeline Medical Cruiser
   Description: A state-of-the-art hospital ship equipped with advanced medical facilities, surgical theaters, and life support systems. The Lifeline serves as a mobile medical center, providing critical care in disaster zones, battlefields, and remote colonies.
   ShipClass: Medical Cruiser
 CoreStats:
-  HullStrength: 4500.0
-  CargoCapacity: 800.0
-  CrewRequired: 35
-  MaxCrew: 120
-  ModularPoints: 15
+  HullStrength: 4500.0          # Strong hull for protection
+  CargoCapacity: 800.0          # Medical supplies storage
+  CrewRequired: 35              # Medical staff and crew
+  MaxCrew: 120                  # Large patient capacity
+  ModularPoints: 15             # Extensive medical modules
 CombatStats:
-  ArmorRating: 100.0
-  ShieldStrength: 2500.0
-  ShieldRechargeRate: 15.0
-  WeaponSlots: 2
-  WeaponPowerCapacity: 800.0
-  PointDefenseRating: 6.0
+  ArmorRating: 100.0            # Protected non-combatant
+  ShieldStrength: 2500.0        # Good defensive shields
+  ShieldRechargeRate: 15.0      # Moderate shield recharge
+  WeaponSlots: 2                # Minimal defensive weapons
+  WeaponPowerCapacity: 800.0    # Limited weapons power
+  PointDefenseRating: 6.0       # Adequate point defense
 MobilityStats:
-  MaxSpeed: 500.0
-  Acceleration: 50.0
-  Maneuverability: 4
-  JumpRange: 20.0
-  FuelCapacity: 5000.0
-  FuelConsumptionRate: 110.0
+  MaxSpeed: 500.0               # Moderate cruiser speed
+  Acceleration: 50.0            # Moderate acceleration
+  Maneuverability: 4            # Low maneuverability
+  JumpRange: 20.0               # Good jump range
+  FuelCapacity: 5000.0          # Large fuel capacity
+  FuelConsumptionRate: 110.0    # Moderate fuel consumption
 UtilityStats:
-  SensorRange: 12000.0
-  SensorResolution: 8
-  StealthRating: 3
-  RepairSystemRating: 8
-  ScienceRating: 9
-  MedicalRating: 10
+  SensorRange: 12000.0          # Standard sensor range
+  SensorResolution: 8           # Good sensor resolution
+  StealthRating: 3              # Low stealth profile
+  RepairSystemRating: 8         # Excellent repair systems
+  ScienceRating: 9              # Advanced medical science
+  MedicalRating: 10             # Maximum medical capability
 OperationalStats:
-  PowerCapacity: 10000.0
-  LifeSupportRating: 10
-  MaintenanceLevel: 6
-  HangarCapacity: 3
-  DroneCapacity: 20
-  AISystemRating: 8
+  PowerCapacity: 10000.0        # High power for medical systems
+  LifeSupportRating: 10         # Maximum life support
+  MaintenanceLevel: 6           # Moderate maintenance needs
+  HangarCapacity: 3             # Medical shuttles
+  DroneCapacity: 20             # Medical drones
+  AISystemRating: 8             # Advanced medical AI
 AdvancedStats:
-  DiplomacyRating: 9
-  BoardingCapability: 2
-  CustomizableSlots: 10
-  EWarRating: 3
-  MiningRating: 0
+  DiplomacyRating: 9            # High diplomatic status
+  BoardingCapability: 2         # Minimal boarding ability
+  CustomizableSlots: 10         # Medical customization
+  EWarRating: 3                 # Basic electronic warfare
+  MiningRating: 0               # No mining equipment
 Lore:
   Manufacturer: Humanitarian Spaceworks
   YearBuilt: 2500
   RarityTier: Rare
   LoreNotes: The Lifeline-class represents the pinnacle of medical ship design. Under galactic convention, these vessels are protected non-combatants and are welcomed in all territories regardless of political tensions. Their distinctive red cross markings are recognized throughout known space as symbols of hope and healing.
+  PrimaryColor: [1.0, 1.0, 1.0, 1.0]        # White for medical theme
+  SecondaryColor: [1.0, 0.18, 0.18, 1.0]    # Red cross medical accent

@@ -1,50 +1,55 @@
+# Vanguard Escort Carrier - Fighter Operations Platform
+# Compact carrier focused on fighter and drone projection for force multiplication
+
 BasicInfo:
   ShipID: VanguardEscort
   ShipName: Vanguard Escort Carrier
   Description: A compact carrier designed to project fighter and drone power across the battlefield. The Vanguard sacrifices heavy weapons for extensive hangar facilities and drone control systems, making it a force multiplier for any fleet.
   ShipClass: Escort Carrier
 CoreStats:
-  HullStrength: 6500.0
-  CargoCapacity: 400.0
-  CrewRequired: 40
-  MaxCrew: 85
-  ModularPoints: 14
+  HullStrength: 6500.0          # Strong capital ship hull
+  CargoCapacity: 400.0          # Limited cargo space
+  CrewRequired: 40              # Flight operations crew
+  MaxCrew: 85                   # Full flight wing complement
+  ModularPoints: 14             # Good hangar customization
 CombatStats:
-  ArmorRating: 180.0
-  ShieldStrength: 3500.0
-  ShieldRechargeRate: 20.0
-  WeaponSlots: 4
-  WeaponPowerCapacity: 2500.0
-  PointDefenseRating: 9.0
+  ArmorRating: 180.0            # Heavy armor plating
+  ShieldStrength: 3500.0        # Strong defensive shields
+  ShieldRechargeRate: 20.0      # Fast shield recharge
+  WeaponSlots: 4                # Moderate direct weapons
+  WeaponPowerCapacity: 2500.0   # Moderate weapons power
+  PointDefenseRating: 9.0       # Excellent point defense
 MobilityStats:
-  MaxSpeed: 480.0
-  Acceleration: 55.0
-  Maneuverability: 4
-  JumpRange: 18.0
-  FuelCapacity: 4500.0
-  FuelConsumptionRate: 140.0
+  MaxSpeed: 480.0               # Good speed for carrier
+  Acceleration: 55.0            # Moderate acceleration
+  Maneuverability: 4            # Low maneuverability
+  JumpRange: 18.0               # Good jump range
+  FuelCapacity: 4500.0          # Large fuel capacity
+  FuelConsumptionRate: 140.0    # High fuel consumption
 UtilityStats:
-  SensorRange: 22000.0
-  SensorResolution: 8
-  StealthRating: 3
-  RepairSystemRating: 7
-  ScienceRating: 5
-  MedicalRating: 6
+  SensorRange: 22000.0          # Excellent tactical sensors
+  SensorResolution: 8           # Good sensor resolution
+  StealthRating: 3              # Low stealth profile
+  RepairSystemRating: 7         # Good repair capability
+  ScienceRating: 5              # Moderate science systems
+  MedicalRating: 6              # Good medical facilities
 OperationalStats:
-  PowerCapacity: 11000.0
-  LifeSupportRating: 8
-  MaintenanceLevel: 7
-  HangarCapacity: 12
-  DroneCapacity: 40
-  AISystemRating: 9
+  PowerCapacity: 11000.0        # High power for operations
+  LifeSupportRating: 8          # Extended life support
+  MaintenanceLevel: 7           # High maintenance needs
+  HangarCapacity: 12            # Large hangar capacity
+  DroneCapacity: 40             # Massive drone complement
+  AISystemRating: 9             # Advanced flight control AI
 AdvancedStats:
-  DiplomacyRating: 4
-  BoardingCapability: 5
-  CustomizableSlots: 10
-  EWarRating: 7
-  MiningRating: 0
+  DiplomacyRating: 4            # Basic diplomatic capability
+  BoardingCapability: 5         # Moderate boarding ability
+  CustomizableSlots: 10         # Extensive customization
+  EWarRating: 7                 # Good electronic warfare
+  MiningRating: 0               # No mining equipment
 Lore:
   Manufacturer: Fleet Systems Alliance
   YearBuilt: 2504
   RarityTier: Rare
   LoreNotes: The Vanguard-class represents a new philosophy in carrier design - smaller, faster, and more flexible than traditional capital carriers. By focusing on fighter and drone operations rather than direct firepower, it can dominate large areas of space with coordinated strike craft. Military strategists are still debating whether this marks the future of naval warfare.
+  PrimaryColor: [0.16, 0.23, 0.43, 1.0]     # Deep navy blue
+  SecondaryColor: [0.9, 0.78, 0.36, 1.0]    # Gold accent

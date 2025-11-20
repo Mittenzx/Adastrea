@@ -1,50 +1,55 @@
+# Raptor Assault Corvette - Boarding Operations Specialist
+# Fast boarding vessel with maximum capture capability and breaching systems
+
 BasicInfo:
   ShipID: RaptorAssault
   ShipName: Raptor Assault Corvette
   Description: A specialized boarding and close-quarters combat vessel designed to disable and capture enemy ships. The Raptor combines breaching systems, assault shuttles, and heavy point defense to deliver boarding teams directly into hostile vessels.
   ShipClass: Assault Corvette
 CoreStats:
-  HullStrength: 2200.0
-  CargoCapacity: 150.0
-  CrewRequired: 15
-  MaxCrew: 40
-  ModularPoints: 9
+  HullStrength: 2200.0          # Moderate hull strength
+  CargoCapacity: 150.0          # Small cargo for equipment
+  CrewRequired: 15              # Core crew and team leaders
+  MaxCrew: 40                   # Full boarding team capacity
+  ModularPoints: 9              # Boarding equipment modules
 CombatStats:
-  ArmorRating: 100.0
-  ShieldStrength: 1400.0
-  ShieldRechargeRate: 16.0
-  WeaponSlots: 4
-  WeaponPowerCapacity: 2200.0
-  PointDefenseRating: 8.0
+  ArmorRating: 100.0            # Heavy armor for assault
+  ShieldStrength: 1400.0        # Good defensive shields
+  ShieldRechargeRate: 16.0      # Fast shield recharge
+  WeaponSlots: 4                # Disable weapons focus
+  WeaponPowerCapacity: 2200.0   # Good weapons power
+  PointDefenseRating: 8.0       # Excellent point defense
 MobilityStats:
-  MaxSpeed: 720.0
-  Acceleration: 95.0
-  Maneuverability: 8
-  JumpRange: 17.0
-  FuelCapacity: 2200.0
-  FuelConsumptionRate: 95.0
+  MaxSpeed: 720.0               # Fast approach speed
+  Acceleration: 95.0            # Excellent acceleration
+  Maneuverability: 8            # Highly maneuverable
+  JumpRange: 17.0               # Good jump range
+  FuelCapacity: 2200.0          # Standard fuel capacity
+  FuelConsumptionRate: 95.0     # Moderate fuel consumption
 UtilityStats:
-  SensorRange: 13000.0
-  SensorResolution: 7
-  StealthRating: 5
-  RepairSystemRating: 6
-  ScienceRating: 3
-  MedicalRating: 5
+  SensorRange: 13000.0          # Standard sensor range
+  SensorResolution: 7           # Good sensor resolution
+  StealthRating: 5              # Moderate stealth profile
+  RepairSystemRating: 6         # Moderate repair capability
+  ScienceRating: 3              # Basic science equipment
+  MedicalRating: 5              # Combat medical facilities
 OperationalStats:
-  PowerCapacity: 6500.0
-  LifeSupportRating: 8
-  MaintenanceLevel: 6
-  HangarCapacity: 4
-  DroneCapacity: 10
-  AISystemRating: 7
+  PowerCapacity: 6500.0         # Good power generation
+  LifeSupportRating: 8          # Extended life support
+  MaintenanceLevel: 6           # Moderate maintenance
+  HangarCapacity: 4             # Assault shuttle bays
+  DroneCapacity: 10             # Breaching drones
+  AISystemRating: 7             # Advanced tactical AI
 AdvancedStats:
-  DiplomacyRating: 2
-  BoardingCapability: 10
-  CustomizableSlots: 7
-  EWarRating: 6
-  MiningRating: 0
+  DiplomacyRating: 2            # Minimal diplomatic function
+  BoardingCapability: 10        # Maximum boarding capability
+  CustomizableSlots: 7          # Good customization options
+  EWarRating: 6                 # Moderate electronic warfare
+  MiningRating: 0               # No mining equipment
 Lore:
   Manufacturer: Talon Combat Systems
   YearBuilt: 2502
   RarityTier: Uncommon
   LoreNotes: The Raptor-class was developed specifically for ship capture operations, whether for salvage, piracy, or military special operations. Its crew compartments can house a full boarding team, and its advanced breaching systems can cut through most hull materials. Pirates and special forces alike prize these vessels for their unique capabilities.
+  PrimaryColor: [0.7, 0.13, 0.13, 1.0]      # Firebrick Red
+  SecondaryColor: [0.18, 0.18, 0.18, 1.0]   # Dark Gray

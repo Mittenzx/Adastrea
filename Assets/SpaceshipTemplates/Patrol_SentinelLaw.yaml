@@ -1,50 +1,55 @@
+# Sentinel Patrol Ship - Law Enforcement Vessel
+# Versatile patrol craft with excellent sensors and diplomatic capabilities for peacekeeping
+
 BasicInfo:
   ShipID: SentinelPatrol
   ShipName: Sentinel Patrol Ship
   Description: A versatile law enforcement and security vessel designed for patrol duties, customs inspection, and peacekeeping operations. The Sentinel balances speed, sensors, and firepower to respond effectively to threats while maintaining a non-threatening diplomatic presence.
   ShipClass: Patrol Ship
 CoreStats:
-  HullStrength: 1800.0
-  CargoCapacity: 200.0
-  CrewRequired: 8
-  MaxCrew: 16
-  ModularPoints: 10
+  HullStrength: 1800.0          # Moderate hull strength
+  CargoCapacity: 200.0          # Evidence storage space
+  CrewRequired: 8               # Law enforcement crew
+  MaxCrew: 16                   # Full patrol team
+  ModularPoints: 10             # Good customization options
 CombatStats:
-  ArmorRating: 60.0
-  ShieldStrength: 1000.0
-  ShieldRechargeRate: 15.0
-  WeaponSlots: 3
-  WeaponPowerCapacity: 1800.0
-  PointDefenseRating: 7.0
+  ArmorRating: 60.0             # Moderate armor plating
+  ShieldStrength: 1000.0        # Good defensive shields
+  ShieldRechargeRate: 15.0      # Fast shield recharge
+  WeaponSlots: 3                # Non-lethal focus weapons
+  WeaponPowerCapacity: 1800.0   # Good weapons power
+  PointDefenseRating: 7.0       # Good point defense
 MobilityStats:
-  MaxSpeed: 780.0
-  Acceleration: 105.0
-  Maneuverability: 8
-  JumpRange: 21.0
-  FuelCapacity: 2800.0
-  FuelConsumptionRate: 85.0
+  MaxSpeed: 780.0               # Fast pursuit speed
+  Acceleration: 105.0           # Excellent acceleration
+  Maneuverability: 8            # Highly maneuverable
+  JumpRange: 21.0               # Good patrol range
+  FuelCapacity: 2800.0          # Extended patrol capacity
+  FuelConsumptionRate: 85.0     # Efficient fuel use
 UtilityStats:
-  SensorRange: 24000.0
-  SensorResolution: 9
-  StealthRating: 4
-  RepairSystemRating: 5
-  ScienceRating: 6
-  MedicalRating: 4
+  SensorRange: 24000.0          # Excellent detection range
+  SensorResolution: 9           # High-resolution sensors
+  StealthRating: 4              # Low stealth profile
+  RepairSystemRating: 5         # Moderate repair capability
+  ScienceRating: 6              # Forensic analysis systems
+  MedicalRating: 4              # Basic medical facilities
 OperationalStats:
-  PowerCapacity: 6000.0
-  LifeSupportRating: 7
-  MaintenanceLevel: 4
-  HangarCapacity: 2
-  DroneCapacity: 15
-  AISystemRating: 8
+  PowerCapacity: 6000.0         # Good power generation
+  LifeSupportRating: 7          # Good life support
+  MaintenanceLevel: 4           # Low maintenance needs
+  HangarCapacity: 2             # Patrol shuttle bays
+  DroneCapacity: 15             # Surveillance drones
+  AISystemRating: 8             # Advanced law enforcement AI
 AdvancedStats:
-  DiplomacyRating: 8
-  BoardingCapability: 5
-  CustomizableSlots: 8
-  EWarRating: 7
-  MiningRating: 0
+  DiplomacyRating: 8            # High diplomatic capability
+  BoardingCapability: 5         # Moderate boarding ability
+  CustomizableSlots: 8          # Good customization options
+  EWarRating: 7                 # Good electronic warfare
+  MiningRating: 0               # No mining equipment
 Lore:
   Manufacturer: Galactic Security Solutions
   YearBuilt: 2500
   RarityTier: Common
   LoreNotes: The Sentinel-class is the standard patrol vessel for law enforcement agencies across civilized space. Its distinctive blue and white livery is recognized as a symbol of order and protection. While not as heavily armed as military vessels, the Sentinel's combination of sensors, speed, and diplomatic capabilities makes it ideal for maintaining peace in busy trade lanes.
+  PrimaryColor: [0.1, 0.3, 1.0, 1.0]        # Blue law enforcement livery
+  SecondaryColor: [1.0, 1.0, 1.0, 1.0]      # White accent
