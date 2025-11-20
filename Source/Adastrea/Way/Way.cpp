@@ -35,7 +35,7 @@ UWayDataAsset::UWayDataAsset()
 // Precept Query Functions
 // ====================
 
-const TArray<FPreceptValue>& UWayDataAsset::GetPrecepts() const
+TArray<FPreceptValue> UWayDataAsset::GetPrecepts() const
 {
     return CorePrecepts;
 }

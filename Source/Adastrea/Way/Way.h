@@ -434,7 +434,7 @@ public:
      * @return Array of Precept values
      */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way|Precepts")
-    const TArray<FPreceptValue>& GetPrecepts() const;
+    TArray<FPreceptValue> GetPrecepts() const;
 
     /**
      * Check if this Way values a specific Precept
