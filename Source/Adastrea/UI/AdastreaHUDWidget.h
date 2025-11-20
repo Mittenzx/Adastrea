@@ -150,4 +150,119 @@ protected:
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="HUD")
 	class ASpaceship* GetControlledSpaceship() const;
+
+	// ====================
+	// PLAYER INFO DISPLAY
+	// ====================
+
+	/**
+	 * Update player name display
+	 * @param PlayerName The player's name
+	 */
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="HUD|Player Info")
+	void UpdatePlayerName(const FText& PlayerName);
+	virtual void UpdatePlayerName_Implementation(const FText& PlayerName);
+
+	/**
+	 * Update player level display
+	 * @param Level The player's current level
+	 */
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="HUD|Player Info")
+	void UpdatePlayerLevel(int32 Level);
+	virtual void UpdatePlayerLevel_Implementation(int32 Level);
+
+	/**
+	 * Update player credits display
+	 * @param Credits The player's current credits
+	 */
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="HUD|Player Info")
+	void UpdatePlayerCredits(int32 Credits);
+	virtual void UpdatePlayerCredits_Implementation(int32 Credits);
+
+	/**
+	 * Update all player information at once
+	 * @param PlayerName The player's name
+	 * @param Level The player's level
+	 * @param Credits The player's credits
+	 */
+	UFUNCTION(BlueprintCallable, Category="HUD|Player Info")
+	void UpdatePlayerInfo(const FText& PlayerName, int32 Level, int32 Credits);
+
+	// ====================
+	// SHIP INFO DISPLAY
+	// ====================
+
+	/**
+	 * Update ship name display
+	 * @param ShipName The name of the ship
+	 */
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="HUD|Ship Info")
+	void UpdateShipName(const FText& ShipName);
+	virtual void UpdateShipName_Implementation(const FText& ShipName);
+
+	/**
+	 * Update ship class display
+	 * @param ShipClass The class/type of the ship
+	 */
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="HUD|Ship Info")
+	void UpdateShipClass(const FText& ShipClass);
+	virtual void UpdateShipClass_Implementation(const FText& ShipClass);
+
+	/**
+	 * Update ship integrity (hull strength) display
+	 * @param CurrentIntegrity Current hull integrity
+	 * @param MaxIntegrity Maximum hull integrity
+	 */
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="HUD|Ship Info")
+	void UpdateShipIntegrity(float CurrentIntegrity, float MaxIntegrity);
+	virtual void UpdateShipIntegrity_Implementation(float CurrentIntegrity, float MaxIntegrity);
+
+	/**
+	 * Update all ship information at once
+	 * @param ShipName The ship's name
+	 * @param ShipClass The ship's class
+	 * @param CurrentIntegrity Current hull integrity
+	 * @param MaxIntegrity Maximum hull integrity
+	 */
+	UFUNCTION(BlueprintCallable, Category="HUD|Ship Info")
+	void UpdateShipInfo(const FText& ShipName, const FText& ShipClass, float CurrentIntegrity, float MaxIntegrity);
+
+	/**
+	 * Get player information from game instance
+	 * Automatically updates player info displays
+	 */
+	UFUNCTION(BlueprintCallable, Category="HUD|Player Info")
+	void RefreshPlayerInfo();
+
+	/**
+	 * Get ship information from controlled spaceship
+	 * Automatically updates ship info displays
+	 */
+	UFUNCTION(BlueprintCallable, Category="HUD|Ship Info")
+	void RefreshShipInfo();
+
+protected:
+	/** Current player name for display */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|State")
+	FText CurrentPlayerName;
+
+	/** Current player level for display */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|State")
+	int32 CurrentPlayerLevel;
+
+	/** Current player credits for display */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|State")
+	int32 CurrentPlayerCredits;
+
+	/** Current ship name for display */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|State")
+	FText CurrentShipName;
+
+	/** Current ship class for display */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|State")
+	FText CurrentShipClass;
+
+	/** Current ship integrity percentage for display */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|State")
+	float ShipIntegrityPercent;
 };

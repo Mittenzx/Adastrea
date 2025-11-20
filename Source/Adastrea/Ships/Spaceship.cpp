@@ -1,5 +1,6 @@
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipInterior.h"
+#include "Ships/SpaceshipDataAsset.h"
 #include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -9,6 +10,7 @@ ASpaceship::ASpaceship()
     PrimaryActorTick.bCanEverTick = true;
     InteriorInstance = nullptr;
     SavedExternalPawn = nullptr;
+    ShipDataAsset = nullptr;
 
     // Initialize default movement properties
     DefaultMaxSpeed = 3000.0f;
@@ -17,6 +19,9 @@ ASpaceship::ASpaceship()
     DefaultTurningBoost = 8.0f;
     TurnRate = 45.0f;
 
+    // Initialize ship status
+    CurrentHullIntegrity = 1000.0f;
+    MaxHullIntegrity = 1000.0f;
     // Initialize X4-style flight control parameters
     bFlightAssistEnabled = true;              // Flight assist on by default
     RotationDampingFactor = 0.85f;            // Smooth rotation with high damping
@@ -55,6 +60,13 @@ ASpaceship::ASpaceship()
 void ASpaceship::BeginPlay()
 {
     Super::BeginPlay();
+
+    // Initialize hull integrity from data asset if available
+    if (ShipDataAsset)
+    {
+        MaxHullIntegrity = ShipDataAsset->HullStrength;
+        CurrentHullIntegrity = MaxHullIntegrity; // Start at full health
+    }
 
     // Spawn the interior actor if needed
     if (!InteriorInstance)
@@ -341,6 +353,44 @@ void ASpaceship::EndControl(APlayerController* PC)
     SavedExternalPawn = nullptr;
 }
 
+FText ASpaceship::GetShipName() const
+{
+    // If we have a data asset, use its name
+    if (ShipDataAsset)
+    {
+        return ShipDataAsset->ShipName;
+    }
+    
+    // Otherwise, use the actor's label or name
+    FString ActorName = GetActorLabel();
+    if (ActorName.IsEmpty())
+    {
+        ActorName = GetName();
+    }
+    
+    return FText::FromString(ActorName);
+}
+
+FText ASpaceship::GetShipClass() const
+{
+    // If we have a data asset, use its class
+    if (ShipDataAsset)
+    {
+        return ShipDataAsset->ShipClass;
+    }
+    
+    // Default fallback
+    return FText::FromString("Starship");
+}
+
+float ASpaceship::GetCurrentHullIntegrity() const
+{
+    return CurrentHullIntegrity;
+}
+
+float ASpaceship::GetMaxHullIntegrity() const
+{
+    return MaxHullIntegrity;
 // ==========================================
 // X4-STYLE FLIGHT CONTROL IMPLEMENTATION
 // ==========================================
