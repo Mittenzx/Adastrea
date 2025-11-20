@@ -1,0 +1,50 @@
+BasicInfo:
+  ShipID: OdysseyResearch
+  ShipName: Odyssey Research Vessel
+  Description: A dedicated scientific exploration ship packed with cutting-edge research equipment, laboratories, and sensor arrays. The Odyssey is designed for long-duration deep space missions, planetary surveys, and xenobiological studies in uncharted regions.
+  ShipClass: Research Vessel
+CoreStats:
+  HullStrength: 3200.0
+  CargoCapacity: 600.0
+  CrewRequired: 20
+  MaxCrew: 45
+  ModularPoints: 14
+CombatStats:
+  ArmorRating: 70.0
+  ShieldStrength: 1800.0
+  ShieldRechargeRate: 14.0
+  WeaponSlots: 1
+  WeaponPowerCapacity: 600.0
+  PointDefenseRating: 5.0
+MobilityStats:
+  MaxSpeed: 600.0
+  Acceleration: 70.0
+  Maneuverability: 6
+  JumpRange: 30.0
+  FuelCapacity: 6000.0
+  FuelConsumptionRate: 70.0
+UtilityStats:
+  SensorRange: 35000.0
+  SensorResolution: 10
+  StealthRating: 4
+  RepairSystemRating: 7
+  ScienceRating: 10
+  MedicalRating: 7
+OperationalStats:
+  PowerCapacity: 9000.0
+  LifeSupportRating: 9
+  MaintenanceLevel: 5
+  HangarCapacity: 2
+  DroneCapacity: 25
+  AISystemRating: 9
+AdvancedStats:
+  DiplomacyRating: 7
+  BoardingCapability: 1
+  CustomizableSlots: 12
+  EWarRating: 6
+  MiningRating: 3
+Lore:
+  Manufacturer: Cosmos Scientific Industries
+  YearBuilt: 2501
+  RarityTier: Uncommon
+  LoreNotes: The Odyssey-class continues the ancient tradition of exploration vessels bearing names of legendary journeys. Equipped with the most advanced scientific instruments available, these ships have made countless breakthrough discoveries in fields ranging from astrophysics to xenobiology. Every major university and research institute dreams of acquiring one.

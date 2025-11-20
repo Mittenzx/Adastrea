@@ -1,0 +1,50 @@
+BasicInfo:
+  ShipID: ShadowbladeStealth
+  ShipName: Shadowblade Stealth Frigate
+  Description: A cutting-edge stealth frigate designed for covert operations behind enemy lines. The Shadowblade combines advanced sensor masking, electronic warfare capabilities, and precision strike weapons to operate undetected in hostile space.
+  ShipClass: Stealth Frigate
+CoreStats:
+  HullStrength: 2800.0
+  CargoCapacity: 200.0
+  CrewRequired: 12
+  MaxCrew: 18
+  ModularPoints: 12
+CombatStats:
+  ArmorRating: 60.0
+  ShieldStrength: 1500.0
+  ShieldRechargeRate: 18.0
+  WeaponSlots: 4
+  WeaponPowerCapacity: 3500.0
+  PointDefenseRating: 7.0
+MobilityStats:
+  MaxSpeed: 650.0
+  Acceleration: 85.0
+  Maneuverability: 7
+  JumpRange: 22.0
+  FuelCapacity: 3500.0
+  FuelConsumptionRate: 90.0
+UtilityStats:
+  SensorRange: 20000.0
+  SensorResolution: 9
+  StealthRating: 10
+  RepairSystemRating: 5
+  ScienceRating: 7
+  MedicalRating: 4
+OperationalStats:
+  PowerCapacity: 7500.0
+  LifeSupportRating: 7
+  MaintenanceLevel: 8
+  HangarCapacity: 1
+  DroneCapacity: 12
+  AISystemRating: 9
+AdvancedStats:
+  DiplomacyRating: 3
+  BoardingCapability: 6
+  CustomizableSlots: 8
+  EWarRating: 10
+  MiningRating: 0
+Lore:
+  Manufacturer: Phantom Technologies
+  YearBuilt: 2505
+  RarityTier: Rare
+  LoreNotes: The Shadowblade project was developed in secret by Phantom Technologies using experimental stealth coating and ECM systems. Its existence is officially denied by most governments, though intelligence agencies across the galaxy desperately seek to acquire them. Only a handful are known to exist.

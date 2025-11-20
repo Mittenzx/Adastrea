@@ -1,0 +1,50 @@
+BasicInfo:
+  ShipID: VanguardEscort
+  ShipName: Vanguard Escort Carrier
+  Description: A compact carrier designed to project fighter and drone power across the battlefield. The Vanguard sacrifices heavy weapons for extensive hangar facilities and drone control systems, making it a force multiplier for any fleet.
+  ShipClass: Escort Carrier
+CoreStats:
+  HullStrength: 6500.0
+  CargoCapacity: 400.0
+  CrewRequired: 40
+  MaxCrew: 85
+  ModularPoints: 14
+CombatStats:
+  ArmorRating: 180.0
+  ShieldStrength: 3500.0
+  ShieldRechargeRate: 20.0
+  WeaponSlots: 4
+  WeaponPowerCapacity: 2500.0
+  PointDefenseRating: 9.0
+MobilityStats:
+  MaxSpeed: 480.0
+  Acceleration: 55.0
+  Maneuverability: 4
+  JumpRange: 18.0
+  FuelCapacity: 4500.0
+  FuelConsumptionRate: 140.0
+UtilityStats:
+  SensorRange: 22000.0
+  SensorResolution: 8
+  StealthRating: 3
+  RepairSystemRating: 7
+  ScienceRating: 5
+  MedicalRating: 6
+OperationalStats:
+  PowerCapacity: 11000.0
+  LifeSupportRating: 8
+  MaintenanceLevel: 7
+  HangarCapacity: 12
+  DroneCapacity: 40
+  AISystemRating: 9
+AdvancedStats:
+  DiplomacyRating: 4
+  BoardingCapability: 5
+  CustomizableSlots: 10
+  EWarRating: 7
+  MiningRating: 0
+Lore:
+  Manufacturer: Fleet Systems Alliance
+  YearBuilt: 2504
+  RarityTier: Rare
+  LoreNotes: The Vanguard-class represents a new philosophy in carrier design - smaller, faster, and more flexible than traditional capital carriers. By focusing on fighter and drone operations rather than direct firepower, it can dominate large areas of space with coordinated strike craft. Military strategists are still debating whether this marks the future of naval warfare.

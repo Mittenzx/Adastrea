@@ -1,0 +1,50 @@
+BasicInfo:
+  ShipID: GenesisColony
+  ShipName: Genesis Colony Ship
+  Description: A massive colony transport designed to carry thousands of colonists, equipment, and supplies to establish new settlements on distant worlds. The Genesis is a self-contained ecosystem capable of sustaining its population for years during long-duration voyages to the frontier.
+  ShipClass: Colony Ship
+CoreStats:
+  HullStrength: 12000.0
+  CargoCapacity: 15000.0
+  CrewRequired: 80
+  MaxCrew: 3000
+  ModularPoints: 20
+CombatStats:
+  ArmorRating: 200.0
+  ShieldStrength: 4000.0
+  ShieldRechargeRate: 18.0
+  WeaponSlots: 4
+  WeaponPowerCapacity: 2000.0
+  PointDefenseRating: 6.0
+MobilityStats:
+  MaxSpeed: 300.0
+  Acceleration: 25.0
+  Maneuverability: 2
+  JumpRange: 25.0
+  FuelCapacity: 20000.0
+  FuelConsumptionRate: 200.0
+UtilityStats:
+  SensorRange: 16000.0
+  SensorResolution: 7
+  StealthRating: 1
+  RepairSystemRating: 9
+  ScienceRating: 8
+  MedicalRating: 9
+OperationalStats:
+  PowerCapacity: 15000.0
+  LifeSupportRating: 10
+  MaintenanceLevel: 6
+  HangarCapacity: 8
+  DroneCapacity: 30
+  AISystemRating: 8
+AdvancedStats:
+  DiplomacyRating: 7
+  BoardingCapability: 3
+  CustomizableSlots: 15
+  EWarRating: 3
+  MiningRating: 4
+Lore:
+  Manufacturer: New Horizons Colonization Corp
+  YearBuilt: 2498
+  RarityTier: Legendary
+  LoreNotes: The Genesis-class represents humanity's boldest dreams of expansion. These massive vessels are mobile worlds, carrying everything needed to establish a thriving colony from scratch. Each Genesis departure is a major event, as it represents thousands of people leaving everything behind to build new lives among the stars. Only a dozen have been built, and each bears the hopes of an entire civilization.

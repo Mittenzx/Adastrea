@@ -1,0 +1,50 @@
+BasicInfo:
+  ShipID: SentinelPatrol
+  ShipName: Sentinel Patrol Ship
+  Description: A versatile law enforcement and security vessel designed for patrol duties, customs inspection, and peacekeeping operations. The Sentinel balances speed, sensors, and firepower to respond effectively to threats while maintaining a non-threatening diplomatic presence.
+  ShipClass: Patrol Ship
+CoreStats:
+  HullStrength: 1800.0
+  CargoCapacity: 200.0
+  CrewRequired: 8
+  MaxCrew: 16
+  ModularPoints: 10
+CombatStats:
+  ArmorRating: 60.0
+  ShieldStrength: 1000.0
+  ShieldRechargeRate: 15.0
+  WeaponSlots: 3
+  WeaponPowerCapacity: 1800.0
+  PointDefenseRating: 7.0
+MobilityStats:
+  MaxSpeed: 780.0
+  Acceleration: 105.0
+  Maneuverability: 8
+  JumpRange: 21.0
+  FuelCapacity: 2800.0
+  FuelConsumptionRate: 85.0
+UtilityStats:
+  SensorRange: 24000.0
+  SensorResolution: 9
+  StealthRating: 4
+  RepairSystemRating: 5
+  ScienceRating: 6
+  MedicalRating: 4
+OperationalStats:
+  PowerCapacity: 6000.0
+  LifeSupportRating: 7
+  MaintenanceLevel: 4
+  HangarCapacity: 2
+  DroneCapacity: 15
+  AISystemRating: 8
+AdvancedStats:
+  DiplomacyRating: 8
+  BoardingCapability: 5
+  CustomizableSlots: 8
+  EWarRating: 7
+  MiningRating: 0
+Lore:
+  Manufacturer: Galactic Security Solutions
+  YearBuilt: 2500
+  RarityTier: Common
+  LoreNotes: The Sentinel-class is the standard patrol vessel for law enforcement agencies across civilized space. Its distinctive blue and white livery is recognized as a symbol of order and protection. While not as heavily armed as military vessels, the Sentinel's combination of sensors, speed, and diplomatic capabilities makes it ideal for maintaining peace in busy trade lanes.

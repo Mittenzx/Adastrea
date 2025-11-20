@@ -1,0 +1,50 @@
+BasicInfo:
+  ShipID: LifelineMedical
+  ShipName: Lifeline Medical Cruiser
+  Description: A state-of-the-art hospital ship equipped with advanced medical facilities, surgical theaters, and life support systems. The Lifeline serves as a mobile medical center, providing critical care in disaster zones, battlefields, and remote colonies.
+  ShipClass: Medical Cruiser
+CoreStats:
+  HullStrength: 4500.0
+  CargoCapacity: 800.0
+  CrewRequired: 35
+  MaxCrew: 120
+  ModularPoints: 15
+CombatStats:
+  ArmorRating: 100.0
+  ShieldStrength: 2500.0
+  ShieldRechargeRate: 15.0
+  WeaponSlots: 2
+  WeaponPowerCapacity: 800.0
+  PointDefenseRating: 6.0
+MobilityStats:
+  MaxSpeed: 500.0
+  Acceleration: 50.0
+  Maneuverability: 4
+  JumpRange: 20.0
+  FuelCapacity: 5000.0
+  FuelConsumptionRate: 110.0
+UtilityStats:
+  SensorRange: 12000.0
+  SensorResolution: 8
+  StealthRating: 3
+  RepairSystemRating: 8
+  ScienceRating: 9
+  MedicalRating: 10
+OperationalStats:
+  PowerCapacity: 10000.0
+  LifeSupportRating: 10
+  MaintenanceLevel: 6
+  HangarCapacity: 3
+  DroneCapacity: 20
+  AISystemRating: 8
+AdvancedStats:
+  DiplomacyRating: 9
+  BoardingCapability: 2
+  CustomizableSlots: 10
+  EWarRating: 3
+  MiningRating: 0
+Lore:
+  Manufacturer: Humanitarian Spaceworks
+  YearBuilt: 2500
+  RarityTier: Rare
+  LoreNotes: The Lifeline-class represents the pinnacle of medical ship design. Under galactic convention, these vessels are protected non-combatants and are welcomed in all territories regardless of political tensions. Their distinctive red cross markings are recognized throughout known space as symbols of hope and healing.

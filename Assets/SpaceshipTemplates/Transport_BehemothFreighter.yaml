@@ -1,0 +1,50 @@
+BasicInfo:
+  ShipID: BehemothFreighter
+  ShipName: Behemoth Heavy Freighter
+  Description: A colossal cargo hauler designed to transport massive quantities of goods across vast interstellar distances. The Behemoth prioritizes cargo capacity and fuel efficiency above all else, making it the backbone of large-scale commercial shipping operations.
+  ShipClass: Heavy Freighter
+CoreStats:
+  HullStrength: 8000.0
+  CargoCapacity: 20000.0
+  CrewRequired: 18
+  MaxCrew: 30
+  ModularPoints: 12
+CombatStats:
+  ArmorRating: 150.0
+  ShieldStrength: 2000.0
+  ShieldRechargeRate: 10.0
+  WeaponSlots: 2
+  WeaponPowerCapacity: 1200.0
+  PointDefenseRating: 4.0
+MobilityStats:
+  MaxSpeed: 350.0
+  Acceleration: 30.0
+  Maneuverability: 2
+  JumpRange: 16.0
+  FuelCapacity: 12000.0
+  FuelConsumptionRate: 150.0
+UtilityStats:
+  SensorRange: 8000.0
+  SensorResolution: 4
+  StealthRating: 1
+  RepairSystemRating: 6
+  ScienceRating: 1
+  MedicalRating: 3
+OperationalStats:
+  PowerCapacity: 8000.0
+  LifeSupportRating: 7
+  MaintenanceLevel: 5
+  HangarCapacity: 2
+  DroneCapacity: 12
+  AISystemRating: 6
+AdvancedStats:
+  DiplomacyRating: 5
+  BoardingCapability: 2
+  CustomizableSlots: 8
+  EWarRating: 2
+  MiningRating: 0
+Lore:
+  Manufacturer: Titan Heavy Industries
+  YearBuilt: 2496
+  RarityTier: Common
+  LoreNotes: The Behemoth-class is the largest civilian cargo vessel in common production. Its sheer size makes it an icon of interstellar commerce - seeing a Behemoth in orbit means goods are flowing and the economy is healthy. While slow and vulnerable, its massive cargo holds make it indispensable to galactic trade networks.
