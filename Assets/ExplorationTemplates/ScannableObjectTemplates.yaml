@@ -1,0 +1,366 @@
+# Scannable Object Templates
+# Configuration templates for different object types
+
+---
+# Cargo Freighter - Civilian Ship
+name: "Cargo Freighter"
+type: civilian_ship
+
+scannable_config:
+  display_name: "Cargo Freighter"
+  signal_type: Ship
+  signature_strength: 70
+  object_size: 5000           # 50 meters
+  passively_detectable: true
+  stealth_enabled: false
+  masked_signature: false
+  
+  basic_scan_data:
+    object_name: "Unknown Ship"
+    signal_type: Ship
+    detail_level: Basic
+    mass: 50000
+    composition: "Metallic hull"
+    is_hostile: false
+  
+  detailed_scan_data:
+    object_name: "Cargo Freighter"
+    signal_type: Ship
+    detail_level: Detailed
+    mass: 50000
+    composition: "Titanium alloy hull"
+    faction_id: "merchants_guild"
+    additional_details: "Carrying trade goods. IFF: Friendly"
+    is_hostile: false
+  
+  complete_scan_data:
+    object_name: "Cargo Freighter 'Star Merchant'"
+    signal_type: Ship
+    detail_level: Complete
+    mass: 52340
+    composition: "Titanium alloy hull. Cargo: Electronics, rare minerals"
+    faction_id: "merchants_guild"
+    additional_details: "Captain: John Smith. Destination: Station Alpha. Cargo Value: 50,000 credits. Shield: 30%. Hull: 95%."
+    is_hostile: false
+
+---
+# Military Corvette - Combat Ship
+name: "Military Corvette"
+type: military_ship
+
+scannable_config:
+  display_name: "Military Corvette"
+  signal_type: Ship
+  signature_strength: 85
+  object_size: 4000           # 40 meters
+  passively_detectable: true
+  stealth_enabled: false
+  
+  basic_scan_data:
+    object_name: "Armed Vessel"
+    signal_type: Ship
+    detail_level: Basic
+    mass: 35000
+    composition: "Heavy armor plating"
+    is_hostile: false  # Depends on faction relations
+  
+  detailed_scan_data:
+    object_name: "Military Corvette"
+    signal_type: Ship
+    detail_level: Detailed
+    mass: 35000
+    composition: "Reinforced titanium armor. Active weapon signatures"
+    faction_id: "solar_navy"
+    additional_details: "Armed: Energy weapons, missile pods. Shields: Active. Threat Level: Medium"
+    is_hostile: false
+  
+  complete_scan_data:
+    object_name: "SNV Defender - Military Corvette"
+    signal_type: Ship
+    detail_level: Complete
+    mass: 36200
+    composition: "Reinforced titanium armor. Weapon loadout: 4x Pulse Lasers, 2x Missile Pods, Point Defense"
+    faction_id: "solar_navy"
+    additional_details: "Captain: Commander Sarah Chen. Mission: Border patrol. Shield: 100%. Hull: 100%. Crew: 12"
+    is_hostile: false
+
+---
+# Stealth Infiltrator - Hidden Ship
+name: "Stealth Infiltrator"
+type: stealth_ship
+
+scannable_config:
+  display_name: "Stealth Infiltrator"
+  signal_type: Ship
+  signature_strength: 20      # Very low signature
+  object_size: 2500           # 25 meters
+  passively_detectable: false # Only active scans
+  stealth_enabled: true
+  masked_signature: true
+  masked_signal_type: Debris  # Masquerading as debris
+  
+  basic_scan_data:
+    object_name: "Debris Fragment"
+    signal_type: Debris
+    detail_level: Basic
+    mass: 5000
+    composition: "Metallic debris"
+    is_hostile: false
+  
+  detailed_scan_data:
+    object_name: "Unknown Vessel"
+    signal_type: Ship
+    detail_level: Detailed
+    mass: 18000
+    composition: "Advanced composite materials. Stealth coating detected"
+    faction_id: "unknown"
+    additional_details: "Stealth technology active. Unable to identify faction"
+    is_hostile: true
+  
+  complete_scan_data:
+    object_name: "Stealth Infiltrator - Shadow Class"
+    signal_type: Ship
+    detail_level: Complete
+    mass: 18500
+    composition: "Radar-absorbent composite armor. Advanced ECM suite"
+    faction_id: "crimson_syndicate"
+    additional_details: "Weapons: Covert torpedoes. Mission: Unknown. Threat Level: High. Crew: 4"
+    is_hostile: true
+
+---
+# Space Station
+name: "Trading Station"
+type: station
+
+scannable_config:
+  display_name: "Trading Station"
+  signal_type: Station
+  signature_strength: 95      # Very strong signature
+  object_size: 50000          # 500 meters
+  passively_detectable: true
+  stealth_enabled: false
+  
+  basic_scan_data:
+    object_name: "Space Station"
+    signal_type: Station
+    detail_level: Basic
+    mass: 5000000
+    composition: "Large orbital structure"
+    is_hostile: false
+  
+  detailed_scan_data:
+    object_name: "Trading Hub Station"
+    signal_type: Station
+    detail_level: Detailed
+    mass: 5200000
+    composition: "Modular station with docking bays, trading facilities"
+    faction_id: "merchants_guild"
+    additional_details: "Active: 15 docking ports. Services: Trade, refuel, repair. Population: 2,000"
+    is_hostile: false
+  
+  complete_scan_data:
+    object_name: "Merchants Guild Trade Hub 'Prosperity'"
+    signal_type: Station
+    detail_level: Complete
+    mass: 5235000
+    composition: "Advanced modular construction. Modules: 45 (15 Docking, 10 Trade, 8 Storage, 12 Living)"
+    faction_id: "merchants_guild"
+    additional_details: "Station Master: Director Marcus Vale. Daily traffic: 200 ships. Market prices: Standard. Defense: 8 turrets"
+    is_hostile: false
+
+---
+# Rocky Planet
+name: "Rocky Planet"
+type: planet
+
+scannable_config:
+  display_name: "Rocky Planet"
+  signal_type: Planet
+  signature_strength: 100     # Always detectable
+  object_size: 1000000        # 10 km (small planet)
+  passively_detectable: true
+  stealth_enabled: false
+  
+  basic_scan_data:
+    object_name: "Planetary Body"
+    signal_type: Planet
+    detail_level: Basic
+    mass: 5972000000000000000000000  # Earth-like mass
+    composition: "Rocky planet"
+    is_hostile: false
+  
+  detailed_scan_data:
+    object_name: "Rocky Planet (M-Class)"
+    signal_type: Planet
+    detail_level: Detailed
+    mass: 5972000000000000000000000
+    composition: "Iron core, silicate mantle. Thin atmosphere: CO2, Nitrogen"
+    additional_details: "Surface temperature: -50°C to 20°C. No life detected. Mineral deposits: Iron, Copper, Uranium"
+    is_hostile: false
+  
+  complete_scan_data:
+    object_name: "Planet Kepler-442b"
+    signal_type: Planet
+    detail_level: Complete
+    mass: 5972000000000000000000000
+    composition: "Iron-nickel core (30%), Silicate mantle (65%), Thin crust (5%). Atmosphere: 95% CO2, 3% N2, 2% Ar"
+    additional_details: "Orbital period: 112 days. Rotation: 24.2 hours. Resources: Rich iron deposits (north), uranium veins (equator), rare earth elements (south pole). Colonization potential: Medium"
+    is_hostile: false
+
+---
+# Asteroid Field
+name: "Asteroid Field"
+type: asteroid
+
+scannable_config:
+  display_name: "Asteroid Field"
+  signal_type: Asteroid
+  signature_strength: 60
+  object_size: 10000          # 100 meters (large asteroid)
+  passively_detectable: true
+  stealth_enabled: false
+  
+  basic_scan_data:
+    object_name: "Asteroid Cluster"
+    signal_type: Asteroid
+    detail_level: Basic
+    mass: 1000000
+    composition: "Rocky material"
+    is_hostile: false
+  
+  detailed_scan_data:
+    object_name: "Metallic Asteroid Field"
+    signal_type: Asteroid
+    detail_level: Detailed
+    mass: 1200000
+    composition: "High concentration of metallic ores. Iron, Nickel, Platinum traces"
+    additional_details: "Approximate count: 50 asteroids. Size range: 10m - 100m. Mining potential: Good"
+    is_hostile: false
+  
+  complete_scan_data:
+    object_name: "Asteroid Belt Sector 7-G"
+    signal_type: Asteroid
+    detail_level: Complete
+    mass: 1235000
+    composition: "Composition: 60% Iron, 25% Nickel, 10% Silicates, 5% Rare metals (Platinum, Iridium)"
+    additional_details: "Total asteroids: 52. Largest: 120m diameter. Mining yield estimate: 500 tons/hour. Hazard level: Low. Recommended equipment: Standard mining laser"
+    is_hostile: false
+
+---
+# Spatial Anomaly
+name: "Quantum Anomaly"
+type: anomaly
+
+scannable_config:
+  display_name: "Spatial Anomaly"
+  signal_type: Anomaly
+  signature_strength: 90
+  object_size: 15000          # 150 meters
+  passively_detectable: true
+  stealth_enabled: false
+  
+  basic_scan_data:
+    object_name: "Unknown Energy Signature"
+    signal_type: Anomaly
+    detail_level: Basic
+    mass: 0  # Unknown or variable
+    composition: "Exotic energy readings"
+    is_hostile: false
+  
+  detailed_scan_data:
+    object_name: "Quantum Fluctuation"
+    signal_type: Anomaly
+    detail_level: Detailed
+    mass: 0
+    composition: "Temporal distortion. High exotic particle emissions"
+    additional_details: "Type: Wormhole candidate. Stability: Fluctuating. Radiation: Moderate. Caution advised"
+    is_hostile: false
+  
+  complete_scan_data:
+    object_name: "Stable Wormhole - Rift Omega-7"
+    signal_type: Anomaly
+    detail_level: Complete
+    mass: 0
+    composition: "Exotic matter stabilizing space-time tear. Quantum signature: Type-IV traversable wormhole"
+    additional_details: "Destination: Unknown sector (coordinates available). Navigable: Yes. Radiation: High but shielded. Recommended approach: 500m minimum. Discovered: 2287. Last transit: 6 months ago"
+    is_hostile: false
+
+---
+# Debris Field
+name: "Battle Debris"
+type: debris
+
+scannable_config:
+  display_name: "Debris Field"
+  signal_type: Debris
+  signature_strength: 40
+  object_size: 3000           # 30 meters
+  passively_detectable: true
+  stealth_enabled: false
+  
+  basic_scan_data:
+    object_name: "Debris"
+    signal_type: Debris
+    detail_level: Basic
+    mass: 15000
+    composition: "Metal fragments"
+    is_hostile: false
+  
+  detailed_scan_data:
+    object_name: "Ship Wreckage"
+    signal_type: Debris
+    detail_level: Detailed
+    mass: 15000
+    composition: "Hull fragments from destroyed spacecraft. Signs of weapon damage"
+    additional_details: "Origin: Unknown ship class. Condition: Salvageable components detected. Age: Recent (< 1 week)"
+    is_hostile: false
+  
+  complete_scan_data:
+    object_name: "Wreckage of 'Starlight Runner'"
+    signal_type: Debris
+    detail_level: Complete
+    mass: 15340
+    composition: "Destroyed cargo freighter. Titanium hull fragments, intact cargo pods"
+    additional_details: "Destroyed: 4 days ago. Cause: Weapons fire (energy and projectile). Salvage potential: High. Cargo: Electronics (intact), rare materials. No survivors detected. Black box: Located"
+    is_hostile: false
+
+---
+# Navigation Beacon
+name: "Navigation Beacon"
+type: beacon
+
+scannable_config:
+  display_name: "Navigation Beacon"
+  signal_type: Beacon
+  signature_strength: 100     # Maximum visibility
+  object_size: 500            # 5 meters
+  passively_detectable: true
+  stealth_enabled: false
+  
+  basic_scan_data:
+    object_name: "Beacon Signal"
+    signal_type: Beacon
+    detail_level: Basic
+    mass: 200
+    composition: "Transmitting device"
+    is_hostile: false
+  
+  detailed_scan_data:
+    object_name: "Navigation Beacon"
+    signal_type: Beacon
+    detail_level: Detailed
+    mass: 200
+    composition: "Automated navigation aid. Solar-powered transmitter"
+    faction_id: "space_authority"
+    additional_details: "Function: Jump point marker. Status: Active. Range: 100km. Last maintenance: 2 months ago"
+    is_hostile: false
+  
+  complete_scan_data:
+    object_name: "NavBeacon Alpha-7"
+    signal_type: Beacon
+    detail_level: Complete
+    mass: 215
+    composition: "Autonomous beacon. Components: Transmitter, solar array, position keeping thrusters"
+    faction_id: "space_authority"
+    additional_details: "ID: NAV-A7-2287. Function: Marks safe jump point to Sector 5. Frequency: 2.4 GHz. Power: 100%. Position accuracy: ±10m. Deployed: 5 years ago"
+    is_hostile: false

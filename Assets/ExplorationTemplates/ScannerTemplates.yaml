@@ -1,0 +1,285 @@
+# Scanner System Templates
+# Complete scanner configurations for different ship types
+
+---
+# Basic Scanner - Starter/Civilian Ships
+name: "Basic Scanner"
+description: "Standard ship scanner with basic detection capabilities. Suitable for civilian vessels and starter ships."
+type: basic_scanner
+
+scanner_config:
+  scanner_type: Basic
+  
+  passive_scanning:
+    range: 1000000          # 10 km
+    scan_interval: 2.0      # Update every 2 seconds
+    detection_threshold: 50 # Minimum signature to detect
+    can_detect_stealth: false
+  
+  active_scanning:
+    range: 5000000          # 50 km
+    scan_duration: 5.0      # 5 seconds to complete
+    scan_cooldown: 10.0     # 10 second cooldown
+    energy_cost: 50
+    can_deep_scan: false
+  
+  signal_identification:
+    accuracy: 60            # 60% identification accuracy
+    detail_reveal_distance: 500000  # 5 km for full details
+    supported_signal_types: []      # Empty = supports all
+  
+  sensor_resolution:
+    minimum_object_size: 100        # 1 meter minimum
+    max_simultaneous_targets: 50
+    angular_resolution: 5.0         # 5 degrees
+
+stats:
+  detection_rating: 3/10
+  range_rating: 3/10
+  accuracy_rating: 6/10
+  cost: 5000
+
+---
+# Advanced Scanner - Mid-Tier Exploration
+name: "Advanced Scanner"
+description: "Enhanced scanner with improved range and deep scan capability. Ideal for exploration vessels."
+type: advanced_scanner
+
+scanner_config:
+  scanner_type: Advanced
+  
+  passive_scanning:
+    range: 2000000          # 20 km
+    scan_interval: 1.5      # Faster updates
+    detection_threshold: 40
+    can_detect_stealth: false
+  
+  active_scanning:
+    range: 10000000         # 100 km
+    scan_duration: 3.0      # Faster scanning
+    scan_cooldown: 8.0
+    energy_cost: 75
+    can_deep_scan: true
+    deep_scan_duration_multiplier: 2.0
+  
+  signal_identification:
+    accuracy: 80            # 80% accuracy
+    detail_reveal_distance: 1000000  # 10 km
+    supported_signal_types: []
+  
+  sensor_resolution:
+    minimum_object_size: 75
+    max_simultaneous_targets: 100
+    angular_resolution: 3.0
+
+stats:
+  detection_rating: 6/10
+  range_rating: 6/10
+  accuracy_rating: 8/10
+  cost: 25000
+
+---
+# Military Scanner - Combat Focus
+name: "Military Scanner"
+description: "Tactical scanner optimized for threat detection. Can detect stealth vessels and prioritize combat contacts."
+type: military_scanner
+
+scanner_config:
+  scanner_type: Military
+  
+  passive_scanning:
+    range: 3000000          # 30 km
+    scan_interval: 1.0      # Fast updates for combat
+    detection_threshold: 30
+    can_detect_stealth: true     # Key military feature
+  
+  active_scanning:
+    range: 15000000         # 150 km
+    scan_duration: 2.0      # Fast tactical scans
+    scan_cooldown: 5.0
+    energy_cost: 100
+    can_deep_scan: false    # Not needed for combat
+  
+  signal_identification:
+    accuracy: 90            # Very accurate identification
+    detail_reveal_distance: 2000000  # 20 km
+    supported_signal_types:         # Combat focus
+      - Ship
+      - Station
+      - Debris
+  
+  sensor_resolution:
+    minimum_object_size: 50
+    max_simultaneous_targets: 150
+    angular_resolution: 1.5  # Very precise
+
+stats:
+  detection_rating: 9/10
+  range_rating: 8/10
+  accuracy_rating: 9/10
+  cost: 50000
+  special: "Detects stealth vessels"
+
+---
+# Scientific Scanner - Research & Analysis
+name: "Scientific Scanner"
+description: "High-precision scanner for detailed analysis. Essential for research missions and anomaly investigation."
+type: scientific_scanner
+
+scanner_config:
+  scanner_type: Scientific
+  
+  passive_scanning:
+    range: 1500000          # 15 km (moderate)
+    scan_interval: 2.5
+    detection_threshold: 45
+    can_detect_stealth: false
+  
+  active_scanning:
+    range: 20000000         # 200 km (very long range)
+    scan_duration: 8.0      # Slow but thorough
+    scan_cooldown: 15.0
+    energy_cost: 150
+    can_deep_scan: true
+    deep_scan_duration_multiplier: 3.0  # Very detailed
+  
+  signal_identification:
+    accuracy: 95            # Highest accuracy
+    detail_reveal_distance: 1000000  # 10 km
+    supported_signal_types: []  # Detects everything
+  
+  sensor_resolution:
+    minimum_object_size: 25  # Detects very small objects
+    max_simultaneous_targets: 80
+    angular_resolution: 0.5  # Extremely precise
+
+stats:
+  detection_rating: 7/10
+  range_rating: 10/10
+  accuracy_rating: 10/10
+  cost: 75000
+  special: "Best for anomalies and planets"
+
+---
+# Exploration Scanner - Long-Range Discovery
+name: "Exploration Scanner"
+description: "Wide-range scanner optimized for discovery. Perfect for deep space exploration and surveying."
+type: exploration_scanner
+
+scanner_config:
+  scanner_type: Exploration
+  
+  passive_scanning:
+    range: 5000000          # 50 km (very wide)
+    scan_interval: 1.8
+    detection_threshold: 35
+    can_detect_stealth: false
+  
+  active_scanning:
+    range: 25000000         # 250 km (longest range)
+    scan_duration: 4.0
+    scan_cooldown: 10.0
+    energy_cost: 100
+    can_deep_scan: true
+    deep_scan_duration_multiplier: 2.5
+  
+  signal_identification:
+    accuracy: 75
+    detail_reveal_distance: 3000000  # 30 km
+    supported_signal_types: []
+  
+  sensor_resolution:
+    minimum_object_size: 50
+    max_simultaneous_targets: 200   # Track many objects
+    angular_resolution: 2.0
+
+stats:
+  detection_rating: 10/10
+  range_rating: 10/10
+  accuracy_rating: 7/10
+  cost: 60000
+  special: "Best passive range for discovery"
+
+---
+# Stealth Scanner - Covert Operations
+name: "Stealth Scanner"
+description: "Low-power scanner that doesn't reveal user's position. Used for stealth operations."
+type: stealth_scanner
+
+scanner_config:
+  scanner_type: Basic  # Based on basic tech
+  
+  passive_scanning:
+    range: 800000           # 8 km (reduced)
+    scan_interval: 3.0      # Slower updates
+    detection_threshold: 55
+    can_detect_stealth: true     # Specialized
+  
+  active_scanning:
+    range: 3000000          # 30 km (reduced)
+    scan_duration: 10.0     # Very slow
+    scan_cooldown: 30.0     # Long cooldown
+    energy_cost: 25         # Low energy signature
+    can_deep_scan: false
+  
+  signal_identification:
+    accuracy: 70
+    detail_reveal_distance: 400000  # 4 km
+    supported_signal_types:
+      - Ship
+      - Station
+  
+  sensor_resolution:
+    minimum_object_size: 150
+    max_simultaneous_targets: 30
+    angular_resolution: 8.0
+
+stats:
+  detection_rating: 5/10
+  range_rating: 2/10
+  accuracy_rating: 7/10
+  cost: 40000
+  special: "Low energy signature, detects stealth"
+
+---
+# Survey Scanner - Planetary Analysis
+name: "Survey Scanner"
+description: "Specialized scanner for planetary and asteroid analysis. Optimized for resource detection."
+type: survey_scanner
+
+scanner_config:
+  scanner_type: Scientific
+  
+  passive_scanning:
+    range: 1200000          # 12 km
+    scan_interval: 2.0
+    detection_threshold: 40
+    can_detect_stealth: false
+  
+  active_scanning:
+    range: 8000000          # 80 km
+    scan_duration: 6.0
+    scan_cooldown: 12.0
+    energy_cost: 120
+    can_deep_scan: true
+    deep_scan_duration_multiplier: 4.0  # Very thorough
+  
+  signal_identification:
+    accuracy: 85
+    detail_reveal_distance: 500000  # 5 km
+    supported_signal_types:
+      - Planet
+      - Asteroid
+      - Anomaly
+  
+  sensor_resolution:
+    minimum_object_size: 10  # Detects small asteroids
+    max_simultaneous_targets: 300  # Many asteroids
+    angular_resolution: 1.0
+
+stats:
+  detection_rating: 6/10
+  range_rating: 5/10
+  accuracy_rating: 8/10
+  cost: 45000
+  special: "Best for resource scanning"

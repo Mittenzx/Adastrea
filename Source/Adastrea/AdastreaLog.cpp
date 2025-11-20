@@ -17,3 +17,4 @@ DEFINE_LOG_CATEGORY(LogAdastreaNavigation);
 DEFINE_LOG_CATEGORY(LogAdastreaQuest);
 DEFINE_LOG_CATEGORY(LogAdastreaWay);
 DEFINE_LOG_CATEGORY(LogAdastreaInput);
+DEFINE_LOG_CATEGORY(LogAdastreaExploration);

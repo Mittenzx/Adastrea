@@ -70,6 +70,22 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input Actions|Movement")
     UInputAction* RollAction;
 
+    /** Input action for throttle up (increase target velocity) */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input Actions|Movement")
+    UInputAction* ThrottleUpAction;
+
+    /** Input action for throttle down (decrease target velocity) */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input Actions|Movement")
+    UInputAction* ThrottleDownAction;
+
+    /** Input action for toggle flight assist mode */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input Actions|Movement")
+    UInputAction* ToggleFlightAssistAction;
+
+    /** Input action for toggle travel mode (high-speed cruise) */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input Actions|Movement")
+    UInputAction* ToggleTravelModeAction;
+
     // ====================
     // COMBAT INPUT ACTIONS
     // ====================

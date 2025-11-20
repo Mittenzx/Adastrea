@@ -58,3 +58,6 @@ ADASTREA_API DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaWay, Log, All);
 
 // Input system
 ADASTREA_API DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaInput, Log, All);
+
+// Exploration system
+ADASTREA_API DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaExploration, Log, All);
