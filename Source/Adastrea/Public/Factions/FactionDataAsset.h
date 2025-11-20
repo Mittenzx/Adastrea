@@ -33,6 +33,9 @@ class ADASTREA_API UFactionDataAsset : public UPrimaryDataAsset
 public:
 	UFactionDataAsset();
 
+	/** Default technology level for new factions */
+	static constexpr int32 DEFAULT_TECHNOLOGY_LEVEL = 5;
+
 	// ====================
 	// Basic Info
 	// ====================

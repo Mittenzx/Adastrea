@@ -107,7 +107,7 @@ public:
 protected:
     virtual void BeginPlay() override;
 
-    /** The faction that owns this station */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Station")
+    /** The faction that owns this station (can be null for neutral stations) */
+    UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category="Station", meta=(AllowPrivateAccess="true"))
     class UFactionDataAsset* OwningFaction;
 };
