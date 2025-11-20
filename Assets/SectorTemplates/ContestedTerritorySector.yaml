@@ -1,0 +1,122 @@
+# Contested Territory Sector Council
+# Unstable sector with competing factions and shifting control
+
+Identity:
+  SectorName: "Disputed Reaches"
+  SectorID: DisputedReaches
+  Description: |
+    A volatile sector where multiple powerful Ways compete for control and
+    influence. The council is deadlocked between competing interests, leading
+    to political gridlock and shifting alliances. Some stations align with
+    different Ways, creating a patchwork of local authorities. Perfect for
+    players who enjoy political intrigue and faction gameplay.
+
+Council:
+  TotalSeats: 14
+  PassThreshold: 60  # Hard to reach consensus
+  
+  Representatives:
+    - RepresentingWay: Military_Industrial
+      RepresentativeName: "Admiral Viktor Kozlov"
+      VotingWeight: 20
+      YearsOfService: 4
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Corporate_Syndicate
+      RepresentativeName: "CEO Diana Ashford"
+      VotingWeight: 19
+      YearsOfService: 3
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Labor_Union
+      RepresentativeName: "Union Boss Marcus Flynn"
+      VotingWeight: 18
+      YearsOfService: 6
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Religious_Order
+      RepresentativeName: "High Priestess Amara"
+      VotingWeight: 15
+      YearsOfService: 8
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Mining_Collective
+      RepresentativeName: "Foreman Boris Volkov"
+      VotingWeight: 16
+      YearsOfService: 5
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Merchant_Coalition
+      RepresentativeName: "Trader Guild Master Chen"
+      VotingWeight: 14
+      YearsOfService: 2
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Independent_Bloc
+      RepresentativeName: "Representative Sarah Black"
+      VotingWeight: 12
+      YearsOfService: 1
+      IsPlayerControlled: true  # Player seat available!
+
+Taxation:
+  SecurityTaxRate: 15       # High - internal conflict
+  InfrastructureTaxRate: 7  # Moderate - neglected due to politics
+  AdministrationTaxRate: 8  # High - bureaucratic inefficiency
+  # Total: 30%
+
+Budget:
+  SecurityBudgetPercent: 55      # 55% to security (internal + external)
+  InfrastructureBudgetPercent: 25 # 25% to infrastructure (underfunded)
+  EmergencyReservePercent: 20    # 20% reserve (frequent crises)
+  TreasuryFunds: 2500000         # Moderate funds, mismanaged
+
+ActivePolicies:
+  - PolicyType: SecurityBudget
+    PolicyName: "Peace Keeping Operations"
+    Description: |
+      Funding for security to maintain order between competing factions.
+      Forces try to remain neutral but allegiances are suspected.
+      Effectiveness questionable.
+    PolicyValue: 60
+    IsActive: true
+    
+  - PolicyType: TradeRegulation
+    PolicyName: "Competing Trade Standards"
+    Description: |
+      Different Ways push different trade rules. Result is a confusing
+      patchwork of regulations that changes by station. Enforcement
+      inconsistent based on local power dynamics.
+    PolicyValue: 55
+    IsActive: true
+    
+  - PolicyType: ResourceAllocation
+    PolicyName: "Contested Resource Claims"
+    Description: |
+      Multiple Ways claim rights to asteroid belts and resources.
+      Council votes repeatedly fail to resolve disputes. Small conflicts
+      flare up regularly over mining rights.
+    PolicyValue: 45
+    IsActive: true
+    
+  - PolicyType: InfrastructureFund
+    PolicyName: "Partisan Infrastructure"
+    Description: |
+      Infrastructure spending favors stations controlled by council
+      majority. Opposition stations receive minimal funding. Projects
+      often half-finished when power shifts.
+    PolicyValue: 40
+    IsActive: true
+
+Notes: |
+  The Disputed Reaches is politically unstable and perfect for intrigue.
+  Shifting alliances mean player choices matter significantly. Support
+  one Way and antagonize another. Perfect for diplomatic gameplay and
+  players who want to play kingmaker or rise to power themselves.
+  
+  Council dynamics: Extremely contentious with three major power blocs:
+  1) Military-Industrial alliance (authoritarian approach)
+  2) Corporate-Merchant alliance (capitalist approach)  
+  3) Labor-Religious-Independent alliance (populist approach)
+  
+  Votes often fail. When they pass, it's because two blocs temporarily
+  aligned against the third. Player vote could be the deciding factor!

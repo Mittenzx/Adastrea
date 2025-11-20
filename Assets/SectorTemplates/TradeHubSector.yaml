@@ -1,0 +1,114 @@
+# Trade Hub Sector Council
+# Bustling commerce center with merchant-focused governance
+
+Identity:
+  SectorName: "Crossroads Trade Hub"
+  SectorID: CrossroadsHub
+  Description: |
+    The premier trading sector where major trade routes intersect. The council
+    is dominated by merchant guilds who prioritize commerce, infrastructure
+    for trade, and security for cargo protection. Low taxes on trade encourage
+    high volume business, with revenue coming from transaction volume rather
+    than high tax rates.
+
+Council:
+  TotalSeats: 15
+  PassThreshold: 55  # Moderate majority needed
+  
+  Representatives:
+    - RepresentingWay: Merchant_Coalition
+      RepresentativeName: "Alderman Gustav Richter"
+      VotingWeight: 22
+      YearsOfService: 10
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Freight_Haulers
+      RepresentativeName: "Captain Sarah 'Swift' Johnson"
+      VotingWeight: 18
+      YearsOfService: 7
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Banking_Consortium
+      RepresentativeName: "Victor Sterling"
+      VotingWeight: 20
+      YearsOfService: 12
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Station_Services
+      RepresentativeName: "Maria Castellano"
+      VotingWeight: 15
+      YearsOfService: 5
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Luxury_Traders
+      RepresentativeName: "Duchess Elara Vance"
+      VotingWeight: 14
+      YearsOfService: 8
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Ship_Builders_Union
+      RepresentativeName: "Engineer Zhang Wei"
+      VotingWeight: 13
+      YearsOfService: 6
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Security_Division
+      RepresentativeName: "Commander Alex Torres"
+      VotingWeight: 16
+      YearsOfService: 4
+      IsPlayerControlled: false
+
+Taxation:
+  SecurityTaxRate: 7        # Low-moderate - protect trade
+  InfrastructureTaxRate: 8  # Moderate - trade infrastructure
+  AdministrationTaxRate: 3  # Low - efficient merchant-run gov
+  # Total: 18% (lowest overall tax rate)
+
+Budget:
+  SecurityBudgetPercent: 40      # 40% to security (protect merchants)
+  InfrastructureBudgetPercent: 45 # 45% to infrastructure (docks, warehouses)
+  EmergencyReservePercent: 15    # 15% reserve
+  TreasuryFunds: 8000000         # Very wealthy from trade volume
+
+ActivePolicies:
+  - PolicyType: TradeRegulation
+    PolicyName: "Open Markets Act"
+    Description: |
+      Minimal regulations on trade to maximize transaction volume.
+      Standardized contracts and dispute resolution keep things fair
+      without slowing down commerce.
+    PolicyValue: 25
+    IsActive: true
+    
+  - PolicyType: InfrastructureFund
+    PolicyName: "Trade Infrastructure Priority"
+    Description: |
+      Major investment in docking bays, cargo handling, warehouses,
+      and market facilities. Best trading infrastructure in the sector.
+    PolicyValue: 80
+    IsActive: true
+    
+  - PolicyType: SecurityBudget
+    PolicyName: "Cargo Protection Protocol"
+    Description: |
+      Security forces focused on protecting cargo shipments and
+      preventing piracy near trade lanes. Fast response to threats.
+    PolicyValue: 70
+    IsActive: true
+    
+  - PolicyType: PatrolFrequency
+    PolicyName: "Trade Route Escorts"
+    Description: |
+      Regular patrols along major trade routes with escort services
+      available for high-value shipments.
+    PolicyValue: 65
+    IsActive: true
+
+Notes: |
+  The Crossroads Trade Hub is the economic heart of the region. Everything
+  revolves around commerce - buy, sell, trade. Perfect for merchant players
+  and those looking to make credits through trading.
+  
+  Council dynamics: Highly cooperative as all Ways benefit from increased
+  trade. Occasional disagreements over infrastructure spending priorities.
+  The Banking Consortium and Merchant Coalition form a powerful alliance.

@@ -1,0 +1,91 @@
+# Frontier Mining Sector Council
+# Rough, independent mining territory with minimal governance
+
+Identity:
+  SectorName: "Frontier Mining Territories"
+  SectorID: FrontierMining
+  Description: |
+    A rough-and-tumble mining sector on the edge of civilized space. The council
+    is pragmatic and focused on survival. High security spending keeps pirates
+    at bay, while low taxes attract independent miners and prospectors. 
+    Infrastructure is basic but functional.
+
+Council:
+  TotalSeats: 8
+  PassThreshold: 51  # Simple majority - quick decisions needed
+  
+  Representatives:
+    - RepresentingWay: Dwarven_Mining_Way
+      RepresentativeName: "Thorin Ironforge"
+      VotingWeight: 25
+      YearsOfService: 4
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Salvage_Collective
+      RepresentativeName: "Rita Scrap"
+      VotingWeight: 18
+      YearsOfService: 3
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Freight_Haulers
+      RepresentativeName: "Jake 'Hauler' Morrison"
+      VotingWeight: 15
+      YearsOfService: 2
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Bounty_Hunters_Guild
+      RepresentativeName: "Vera Lynch"
+      VotingWeight: 20
+      YearsOfService: 5
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Independent_Refiners
+      RepresentativeName: "Chen Wei"
+      VotingWeight: 12
+      YearsOfService: 1
+      IsPlayerControlled: false
+
+Taxation:
+  SecurityTaxRate: 18       # High - need protection from pirates
+  InfrastructureTaxRate: 3  # Low - minimal services
+  AdministrationTaxRate: 2  # Very low - small government
+  # Total: 23%
+
+Budget:
+  SecurityBudgetPercent: 70      # 70% to security (top priority!)
+  InfrastructureBudgetPercent: 15 # 15% to infrastructure (bare minimum)
+  EmergencyReservePercent: 15    # 15% reserve (emergencies common)
+  TreasuryFunds: 750000          # Modest treasury
+
+ActivePolicies:
+  - PolicyType: SecurityBudget
+    PolicyName: "Frontier Defense Initiative"
+    Description: |
+      Maximum funding for security patrols and rapid response teams.
+      Pirates are a constant threat and must be dealt with aggressively.
+    PolicyValue: 90
+    IsActive: true
+    
+  - PolicyType: TradeRegulation
+    PolicyName: "Free Market Policy"
+    Description: |
+      Minimal trade regulations to encourage prospectors and independent
+      operators. "Don't ask, don't tell" approach to cargo contents.
+    PolicyValue: 15
+    IsActive: true
+    
+  - PolicyType: PatrolFrequency
+    PolicyName: "Heavy Patrol Coverage"
+    Description: |
+      Constant patrols of mining zones and trade routes. Security forces
+      given broad authority to engage threats immediately.
+    PolicyValue: 85
+    IsActive: true
+
+Notes: |
+  The Frontier Mining Sector is a dangerous but opportunity-rich area.
+  High risk, high reward. Good for experienced players who want to mine
+  valuable resources while dealing with pirate threats.
+  
+  Council dynamics: Unified on security needs, debates over whether to
+  spend on better infrastructure or keep taxes ultra-low.

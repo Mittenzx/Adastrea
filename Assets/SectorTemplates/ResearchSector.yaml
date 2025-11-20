@@ -1,0 +1,102 @@
+# Research Sector Council
+# Scientific research hub with scholar-focused governance
+
+Identity:
+  SectorName: "Nexus Research Zone"
+  SectorID: NexusResearch
+  Description: |
+    An academic and research-focused sector home to universities, laboratories,
+    and prototype testing facilities. The council is dominated by scholars and
+    scientists who prioritize knowledge advancement. Moderate taxes fund
+    excellent infrastructure and research grants. Access to cutting-edge
+    technology and experimental equipment.
+
+Council:
+  TotalSeats: 10
+  PassThreshold: 66  # High threshold - careful consideration required
+  
+  Representatives:
+    - RepresentingWay: Scholars_Syndicate
+      RepresentativeName: "Dr. Evelyn Blackwood"
+      VotingWeight: 25
+      YearsOfService: 15
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Research_Academy
+      RepresentativeName: "Professor Kenji Tanaka"
+      VotingWeight: 22
+      YearsOfService: 18
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Engineers_Guild
+      RepresentativeName: "Master Engineer Ivan Petrov"
+      VotingWeight: 18
+      YearsOfService: 10
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Medical_Research
+      RepresentativeName: "Dr. Amira Hassan"
+      VotingWeight: 16
+      YearsOfService: 8
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Technology_Consortium
+      RepresentativeName: "Director Yuki Sato"
+      VotingWeight: 20
+      YearsOfService: 12
+      IsPlayerControlled: false
+
+Taxation:
+  SecurityTaxRate: 5        # Low - peaceful area
+  InfrastructureTaxRate: 12 # High - labs need excellent facilities
+  AdministrationTaxRate: 6  # Moderate - research grant management
+  # Total: 23%
+
+Budget:
+  SecurityBudgetPercent: 20      # 20% to security (low priority)
+  InfrastructureBudgetPercent: 60 # 60% to infrastructure (research facilities!)
+  EmergencyReservePercent: 20    # 20% reserve (equipment is expensive)
+  TreasuryFunds: 4000000         # Well-funded from patents
+
+ActivePolicies:
+  - PolicyType: InfrastructureFund
+    PolicyName: "Advanced Research Facilities Initiative"
+    Description: |
+      Significant investment in state-of-the-art laboratories, testing
+      facilities, and computing infrastructure. Maintains position as
+      premier research destination.
+    PolicyValue: 85
+    IsActive: true
+    
+  - PolicyType: ResourceAllocation
+    PolicyName: "Research Grant Program"
+    Description: |
+      Allocation of resources to promising research projects. Peer-reviewed
+      grant system ensures funding goes to the most innovative work.
+    PolicyValue: 75
+    IsActive: true
+    
+  - PolicyType: TradeRegulation
+    PolicyName: "Technology Export Controls"
+    Description: |
+      Careful regulation of cutting-edge technology exports to prevent
+      dangerous innovations from falling into wrong hands.
+    PolicyValue: 70
+    IsActive: true
+    
+  - PolicyType: SecurityBudget
+    PolicyName: "Intellectual Property Protection"
+    Description: |
+      Security focuses on protecting research data and preventing
+      industrial espionage rather than military threats.
+    PolicyValue: 40
+    IsActive: true
+
+Notes: |
+  The Nexus Research Zone is where innovation happens. Peaceful, intellectual
+  atmosphere with focus on advancement. Great for players interested in
+  technology upgrades, ship modifications, and discovering new systems.
+  
+  Council dynamics: Highly collaborative with spirited academic debates.
+  Generally unified on infrastructure and research funding. Occasional
+  ethical discussions about experimental technologies.

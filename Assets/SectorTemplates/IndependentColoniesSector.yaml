@@ -1,0 +1,98 @@
+# Independent Colonies Sector Council
+# Loosely governed territory with minimal central authority
+
+Identity:
+  SectorName: "Free Colonies Region"
+  SectorID: FreeColonies
+  Description: |
+    A sector of independent colonies and stations that value autonomy above all.
+    The council exists more as a coordination body than a government. Minimal
+    taxation, minimal services, maximum freedom. Each station makes its own
+    rules. The council only handles sector-wide emergencies and inter-station
+    disputes. Libertarian in spirit.
+
+Council:
+  TotalSeats: 7
+  PassThreshold: 70  # High threshold - hard to pass anything
+  
+  Representatives:
+    - RepresentingWay: Independent_Traders
+      RepresentativeName: "Captain 'Free' Jake Morrison"
+      VotingWeight: 16
+      YearsOfService: 3
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Colonist_Cooperative
+      RepresentativeName: "Governor Maria Vasquez"
+      VotingWeight: 18
+      YearsOfService: 5
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Freelancers_Guild
+      RepresentativeName: "Vera 'Solo' Chen"
+      VotingWeight: 14
+      YearsOfService: 2
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Homesteaders_Alliance
+      RepresentativeName: "Rancher Tom Bridger"
+      VotingWeight: 15
+      YearsOfService: 4
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Volunteer_Defense
+      RepresentativeName: "Militia Commander Sarah Stone"
+      VotingWeight: 13
+      YearsOfService: 1
+      IsPlayerControlled: false
+
+Taxation:
+  SecurityTaxRate: 4        # Minimal - volunteer militia
+  InfrastructureTaxRate: 2  # Minimal - DIY approach
+  AdministrationTaxRate: 1  # Minimal - almost no government
+  # Total: 7% (ultra-low taxes)
+
+Budget:
+  SecurityBudgetPercent: 40      # 40% to security (militia support)
+  InfrastructureBudgetPercent: 35 # 35% to infrastructure (basics only)
+  EmergencyReservePercent: 25    # 25% reserve (self-reliance culture)
+  TreasuryFunds: 200000          # Small treasury by design
+
+ActivePolicies:
+  - PolicyType: TradeRegulation
+    PolicyName: "No Questions Asked"
+    Description: |
+      Absolute minimum trade regulations. Each station sets its own rules.
+      Council doesn't interfere unless sector-wide crisis occurs.
+      Buyer beware philosophy.
+    PolicyValue: 5
+    IsActive: true
+    
+  - PolicyType: SecurityBudget
+    PolicyName: "Voluntary Defense Pact"
+    Description: |
+      Minimal funding for coordinated defense in emergencies. Colonies
+      mostly defend themselves with local militia. Council coordinates
+      large-scale threats only.
+    PolicyValue: 30
+    IsActive: true
+    
+  - PolicyType: ResourceAllocation
+    PolicyName: "Station Autonomy Charter"
+    Description: |
+      Each colony manages its own resources. Council doesn't redistribute
+      or mandate sharing. Emergency aid voted on case-by-case basis.
+    PolicyValue: 10
+    IsActive: true
+
+Notes: |
+  The Free Colonies Region is the ultimate frontier experience. Minimal
+  law, minimal order, maximum freedom and responsibility. Great for
+  players who want to be left alone and make their own way. Dangerous
+  due to lack of organized security, but opportunities abound for the
+  self-reliant.
+  
+  Council dynamics: Representatives are fiercely independent and resist
+  any expansion of central authority. Meetings are contentious. Emergency
+  cooperation only when absolutely necessary. Player could gain significant
+  influence with a small investment due to weak central government.

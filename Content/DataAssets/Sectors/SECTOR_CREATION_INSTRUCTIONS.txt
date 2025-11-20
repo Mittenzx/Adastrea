@@ -1,0 +1,177 @@
+==============================================
+SECTOR COUNCIL DATA ASSET CREATION INSTRUCTIONS
+==============================================
+
+This file provides step-by-step instructions for creating Sector Council
+Data Assets in Unreal Engine Editor.
+
+PREREQUISITES:
+--------------
+1. Unreal Engine project is open
+2. You have reviewed the templates in /Assets/SectorTemplates/
+3. You have the corresponding Way Data Assets created
+
+STEPS TO CREATE A SECTOR COUNCIL:
+----------------------------------
+
+1. NAVIGATE TO THIS FOLDER
+   - Open Content Browser
+   - Navigate to Content/DataAssets/Sectors/
+
+2. CREATE NEW DATA ASSET
+   - Right-click in empty space
+   - Select "Blueprint Class"
+   - In the "Pick Parent Class" dialog, search for: SectorCouncilDataAsset
+   - Select "SectorCouncilDataAsset"
+   - Name it: DA_Council_YourSectorName
+   - Press Enter to create
+
+3. OPEN THE DATA ASSET
+   - Double-click on the newly created asset
+   - The Details panel will show all properties
+
+4. CONFIGURE IDENTITY SECTION
+   - Sector Name: Enter the sector's display name (e.g., "Core Systems")
+   - Sector ID: Enter unique identifier (e.g., CoreSystems)
+   - Description: Enter multi-line description of the sector
+
+5. CONFIGURE COUNCIL SECTION
+   - Total Seats: Set number of council positions (typically 8-15)
+   - Pass Threshold: Set percentage needed to pass votes (51-70 typical)
+
+6. ADD REPRESENTATIVES
+   For each Way that has a council seat:
+   
+   - Click the "+" button on Representatives array
+   - Representing Way: Select the Way Data Asset from dropdown
+   - Representative Name: Enter the individual's name
+   - Voting Weight: Set influence (10-25 typical)
+   - Years of Service: Set experience (0-20)
+   - Is Player Controlled: Check if this is a player seat
+   
+   Repeat for each representative
+
+7. CONFIGURE TAXATION
+   - Security Tax Rate: Set 0-50 (typical: 5-20)
+   - Infrastructure Tax Rate: Set 0-50 (typical: 3-15)
+   - Administration Tax Rate: Set 0-50 (typical: 1-10)
+
+8. CONFIGURE BUDGET
+   ⚠️ IMPORTANT: Must sum to 100%
+   
+   - Security Budget Percent: Set 0-100
+   - Infrastructure Budget Percent: Set 0-100
+   - Emergency Reserve Percent: Set 0-100
+   - Treasury Funds: Set starting funds (100,000 to 10,000,000)
+   
+   Verify: Security% + Infrastructure% + Reserve% = 100%
+
+9. ADD ACTIVE POLICIES (Optional)
+   For each policy you want active:
+   
+   - Click the "+" button on Active Policies array
+   - Policy Type: Select from dropdown (SecurityBudget, TradeRegulation, etc.)
+   - Policy Name: Enter policy name
+   - Description: Enter what the policy does
+   - Policy Value: Set effectiveness (0-100)
+   - Is Active: Check to activate
+   - Enacted Date: Set when policy was enacted
+   
+   Repeat for each policy
+
+10. SAVE THE DATA ASSET
+    - Click "Save" button or Ctrl+S
+    - Close the editor window
+
+11. CREATE CORRESPONDING SECTOR MAP ACTOR
+    - Open your level in the Level Editor
+    - Search Actors: SpaceSectorMap
+    - Drag into level at sector center location
+    - Select the actor
+    - Set Sector Name to match your council's Sector Name
+    - Set Description if desired
+    - Position at appropriate coordinates
+
+12. TEST THE SECTOR
+    - Hit Play to enter play mode
+    - Check Output Log for sector initialization
+    - Verify no errors
+    - Test functions if needed
+
+VALIDATION CHECKLIST:
+--------------------
+□ SectorID is unique (no other sector uses same ID)
+□ Budget allocation sums to exactly 100%
+□ All Way references point to valid Data Assets
+□ Representative voting weights are reasonable (10-25)
+□ Pass threshold is between 51-100
+□ Tax rates don't exceed 50% individually
+□ Treasury funds is positive
+□ SpaceSectorMap actor exists in level with matching name
+
+USING TEMPLATES:
+---------------
+To create sectors from templates:
+
+1. Open the appropriate YAML file from /Assets/SectorTemplates/
+2. Follow the steps above
+3. Copy values from YAML into corresponding properties
+4. Adjust as needed for your specific use case
+
+Available templates:
+- CoreSystemsSector.yaml - Safe, balanced
+- FrontierMiningSector.yaml - Dangerous frontier
+- TradeHubSector.yaml - Commerce hub
+- ResearchSector.yaml - Scientific center
+- MilitaryBorderSector.yaml - Military zone
+- IndependentColoniesSector.yaml - Minimal governance
+- ContestedTerritorySector.yaml - Political intrigue
+
+COMMON MISTAKES TO AVOID:
+-------------------------
+✗ Budget not summing to 100%
+✗ Duplicate Sector IDs
+✗ Invalid Way references
+✗ Missing SpaceSectorMap actor in level
+✗ Sector Name mismatch between council and map actor
+✗ Voting weights that don't make sense (e.g., 100)
+✗ Pass threshold over 100 or under 51
+
+EXAMPLE QUICK SETUP:
+-------------------
+For a basic trading sector:
+
+Identity:
+  Sector Name: "Trading Post Alpha"
+  Sector ID: TradingPostAlpha
+  Description: "Small trading outpost"
+
+Council:
+  Total Seats: 8
+  Pass Threshold: 55
+
+Representatives: (example)
+  1. Merchant Coalition - 18 voting weight
+  2. Freight Haulers - 15 voting weight
+  3. Station Services - 12 voting weight
+
+Taxation:
+  Security: 7%
+  Infrastructure: 8%
+  Administration: 3%
+  Total: 18%
+
+Budget: (sums to 100%)
+  Security: 35%
+  Infrastructure: 50%
+  Reserve: 15%
+  Treasury: 1,000,000
+
+GETTING HELP:
+------------
+For more information, consult:
+- /Assets/SectorCreationGuide.md (comprehensive guide)
+- /Assets/SectorTemplates/README.md (template documentation)
+- /Assets/WaySystemGuide.md (Way system integration)
+
+==============================================

@@ -1,0 +1,97 @@
+# Core Systems Sector Council
+# Established, well-balanced governance in the central systems
+
+Identity:
+  SectorName: "Core Systems"
+  SectorID: CoreSystems
+  Description: |
+    The heart of civilization, this sector represents the oldest and most established
+    territories. The council is mature, balanced, and focused on maintaining stability
+    while encouraging economic growth. High infrastructure investment and moderate
+    taxation create a prosperous environment for all Ways.
+
+Council:
+  TotalSeats: 12
+  PassThreshold: 60  # Requires 60% to pass (supermajority)
+  
+  Representatives:
+    - RepresentingWay: Engineers_Guild
+      RepresentativeName: "Marcus Steel"
+      VotingWeight: 18
+      YearsOfService: 12
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Traders_Guild  
+      RepresentativeName: "Elena Rostova"
+      VotingWeight: 15
+      YearsOfService: 8
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Ship_Builders_Union
+      RepresentativeName: "Thomas Kane"
+      VotingWeight: 14
+      YearsOfService: 10
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Medical_Services
+      RepresentativeName: "Dr. Sarah Chen"
+      VotingWeight: 12
+      YearsOfService: 6
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Research_Academy
+      RepresentativeName: "Professor Leon Hart"
+      VotingWeight: 13
+      YearsOfService: 15
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Security_Division
+      RepresentativeName: "Captain James Rodriguez"
+      VotingWeight: 11
+      YearsOfService: 5
+      IsPlayerControlled: false
+
+Taxation:
+  SecurityTaxRate: 8        # Low - area is safe
+  InfrastructureTaxRate: 10 # High - maintain quality infrastructure
+  AdministrationTaxRate: 5  # Moderate - efficient government
+  # Total: 23%
+
+Budget:
+  SecurityBudgetPercent: 30      # 30% to security (low crime)
+  InfrastructureBudgetPercent: 55 # 55% to infrastructure (priority)
+  EmergencyReservePercent: 15    # 15% reserve
+  TreasuryFunds: 5000000         # Well-funded treasury
+
+ActivePolicies:
+  - PolicyType: InfrastructureFund
+    PolicyName: "Core Systems Renewal Initiative"
+    Description: |
+      Increased funding for station maintenance and upgrades to ensure
+      the Core Systems remain the technological showcase of civilization.
+    PolicyValue: 75
+    IsActive: true
+    
+  - PolicyType: TradeRegulation
+    PolicyName: "Fair Trade Standards"
+    Description: |
+      Regulations ensuring quality standards and fair pricing practices
+      throughout the sector. Protects consumers while allowing competition.
+    PolicyValue: 60
+    IsActive: true
+    
+  - PolicyType: PatrolFrequency
+    PolicyName: "Standard Patrol Schedule"
+    Description: |
+      Regular patrol routes ensuring safety without excessive presence.
+      Balanced approach to security.
+    PolicyValue: 50
+    IsActive: true
+
+Notes: |
+  The Core Systems represent a mature, stable governance model. This sector
+  should feel safe, prosperous, and well-maintained. Good for new players
+  to start in, as it has balanced economics and minimal danger.
+  
+  Council dynamics: Generally cooperative with occasional debates over
+  infrastructure priorities vs. tax levels.
