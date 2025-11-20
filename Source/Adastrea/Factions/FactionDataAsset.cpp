@@ -10,4 +10,5 @@ UFactionDataAsset::UFactionDataAsset()
 	InitialReputation = 0;
 	bIsHostileByDefault = false;
 	bIsMajorFaction = false;
+	TechnologyLevel = DEFAULT_TECHNOLOGY_LEVEL;
 }

@@ -33,6 +33,9 @@ class ADASTREA_API UFactionDataAsset : public UPrimaryDataAsset
 public:
 	UFactionDataAsset();
 
+	/** Default technology level for new factions */
+	static constexpr int32 DEFAULT_TECHNOLOGY_LEVEL = 5;
+
 	// ====================
 	// Basic Info
 	// ====================
@@ -64,6 +67,10 @@ public:
 	/** Whether this is a major faction (affects gameplay systems) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Faction Config")
 	bool bIsMajorFaction;
+
+	/** Technology level of this faction (1-10, affects available modules and equipment) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Faction Config", meta=(ClampMin="1", ClampMax="10"))
+	int32 TechnologyLevel;
 
 	// ====================
 	// Blueprint Functions

@@ -6,6 +6,7 @@
 ASpaceStation::ASpaceStation()
 {
     PrimaryActorTick.bCanEverTick = false;
+    OwningFaction = nullptr;
 }
 
 void ASpaceStation::BeginPlay()
@@ -149,4 +150,25 @@ TArray<ASpaceStationModule*> ASpaceStation::GetModulesByType(const FString& Modu
 int32 ASpaceStation::GetModuleCount() const
 {
     return Modules.Num();
+}
+
+void ASpaceStation::SetFaction(UFactionDataAsset* NewFaction)
+{
+    // Note: Null factions are allowed - stations can be neutral/unaffiliated
+    OwningFaction = NewFaction;
+    
+    if (NewFaction)
+    {
+        UE_LOG(LogAdastreaStations, Log, TEXT("SpaceStation::SetFaction - Set faction for station %s to %s"), 
+            *GetName(), *NewFaction->GetFactionName().ToString());
+    }
+    else
+    {
+        UE_LOG(LogAdastreaStations, Log, TEXT("SpaceStation::SetFaction - Cleared faction for station %s (now neutral)"), *GetName());
+    }
+}
+
+UFactionDataAsset* ASpaceStation::GetFaction() const
+{
+    return OwningFaction;
 }
