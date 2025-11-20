@@ -101,6 +101,7 @@ Concise reference documents:
 | **Assets/CombatQuickReference.md** | Combat system | Assets/ |
 | **Assets/HUD_QUICK_REFERENCE.md** | HUD/UI system | Assets/ |
 | **Assets/WaySystemQuickReference.md** | Way system | Assets/ |
+| **Assets/SectorSystemQuickReference.md** | ⭐ **NEW!** Sector governance system | Assets/ |
 | **Docs/TestMode_QuickReference.md** | Test mode setup | Docs/ |
 
 ---
@@ -162,6 +163,23 @@ Concise reference documents:
 | **WayNetworkWorkflow.md** | Workflow | Network creation workflow | Assets/ |
 | **WayNetworkTemplates/README.md** | Templates | Network templates | Assets/WayNetworkTemplates/ |
 | **Blueprints/WayNetworkBlueprintExamples.md** | Examples | Blueprint examples | Blueprints/ |
+
+### Sector System (Governance)
+
+| Document | Type | Purpose | Location |
+|----------|------|---------|----------|
+| **SectorCreationGuide.md** | Guide | ⭐ **NEW!** Complete sector creation documentation | Assets/ |
+| **SectorMapPlacementGuide.md** | Guide | ⭐ **NEW!** Sector map actor placement guide | Assets/ |
+| **SectorTemplates/README.md** | Templates | ⭐ **NEW!** 7 sector council templates with usage guide | Assets/SectorTemplates/ |
+| **SectorTemplates/CoreSystemsSector.yaml** | Template | Safe, balanced governance template | Assets/SectorTemplates/ |
+| **SectorTemplates/FrontierMiningSector.yaml** | Template | Dangerous mining territory template | Assets/SectorTemplates/ |
+| **SectorTemplates/TradeHubSector.yaml** | Template | Commerce-focused governance template | Assets/SectorTemplates/ |
+| **SectorTemplates/ResearchSector.yaml** | Template | Scientific research hub template | Assets/SectorTemplates/ |
+| **SectorTemplates/MilitaryBorderSector.yaml** | Template | Military border defense template | Assets/SectorTemplates/ |
+| **SectorTemplates/IndependentColoniesSector.yaml** | Template | Minimal governance template | Assets/SectorTemplates/ |
+| **SectorTemplates/ContestedTerritorySector.yaml** | Template | Political intrigue template | Assets/SectorTemplates/ |
+| **Content/DataAssets/Sectors/README.md** | Guide | Data asset directory documentation | Content/DataAssets/Sectors/ |
+| **Content/DataAssets/Sectors/SECTOR_CREATION_INSTRUCTIONS.txt** | Instructions | Step-by-step creation in Unreal Editor | Content/DataAssets/Sectors/ |
 
 ### AI System
 

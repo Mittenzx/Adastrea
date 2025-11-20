@@ -1,0 +1,127 @@
+# Military Border Sector Council
+# Fortified border zone with security-focused governance
+
+Identity:
+  SectorName: "Sentinel Border Zone"
+  SectorID: SentinelBorder
+  Description: |
+    A militarized border sector facing external threats. The council operates
+    under emergency protocols with military representatives having significant
+    influence. High security spending and strict regulations maintain order
+    in this tense region. Infrastructure focuses on defense installations
+    and rapid deployment capabilities.
+
+Council:
+  TotalSeats: 9
+  PassThreshold: 51  # Simple majority for quick decisions
+  
+  Representatives:
+    - RepresentingWay: Defense_Coalition
+      RepresentativeName: "General Marcus Steele"
+      VotingWeight: 28
+      YearsOfService: 8
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Security_Division
+      RepresentativeName: "Colonel Sarah Reeves"
+      VotingWeight: 24
+      YearsOfService: 6
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Ship_Builders_Union
+      RepresentativeName: "Defense Contractor Jack Morrison"
+      VotingWeight: 18
+      YearsOfService: 5
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Medical_Services
+      RepresentativeName: "Major Dr. Chen Li"
+      VotingWeight: 12
+      YearsOfService: 4
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Supply_Logistics
+      RepresentativeName: "Quartermaster Elena Volkov"
+      VotingWeight: 15
+      YearsOfService: 7
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Intelligence_Office
+      RepresentativeName: "Captain Nadia Petrov"
+      VotingWeight: 10
+      YearsOfService: 5
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Engineering_Corps
+      RepresentativeName: "Chief Engineer Tomasz Nowak"
+      VotingWeight: 8
+      YearsOfService: 6
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Civilian_Liaison
+      RepresentativeName: "Advisor Miriam Okafor"
+      VotingWeight: 6
+      YearsOfService: 3
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Communications_Command
+      RepresentativeName: "Lieutenant Raul Ortega"
+      VotingWeight: 5
+      YearsOfService: 2
+      IsPlayerControlled: false
+
+Taxation:
+  SecurityTaxRate: 25       # Very high - military operations costly
+  InfrastructureTaxRate: 6  # Low - only essential infrastructure
+  AdministrationTaxRate: 4  # Low - streamlined wartime government
+  # Total: 35% (highest tax rate)
+
+Budget:
+  SecurityBudgetPercent: 80      # 80% to security (overwhelming priority)
+  InfrastructureBudgetPercent: 10 # 10% to infrastructure (military only)
+  EmergencyReservePercent: 10    # 10% reserve (mobilization funds)
+  TreasuryFunds: 3000000         # Moderate funds, constant spending
+
+ActivePolicies:
+  - PolicyType: SecurityBudget
+    PolicyName: "Border Defense Protocol"
+    Description: |
+      Maximum security spending for border patrols, early warning systems,
+      and rapid response fleets. All civilians must register vessels and
+      maintain IFF transponders.
+    PolicyValue: 95
+    IsActive: true
+    
+  - PolicyType: PatrolFrequency
+    PolicyName: "Constant Vigilance Doctrine"
+    Description: |
+      24/7 patrol coverage with layered defense zones. Unidentified vessels
+      challenged immediately. Military escorts available for civilian traffic.
+    PolicyValue: 95
+    IsActive: true
+    
+  - PolicyType: TradeRegulation
+    PolicyName: "Wartime Trade Restrictions"
+    Description: |
+      Strict cargo inspections and permits required for certain goods.
+      Priority given to military supplies. Some luxuries restricted.
+    PolicyValue: 85
+    IsActive: true
+    
+  - PolicyType: EmergencyReserve
+    PolicyName: "Mobilization Readiness Fund"
+    Description: |
+      Funds maintained for rapid military expansion if threats escalate.
+      Can requisition civilian vessels in emergency.
+    PolicyValue: 75
+    IsActive: true
+
+Notes: |
+  The Sentinel Border Zone is a high-tension area where external threats
+  are real and present. Players here will encounter military operations,
+  strict security checks, and potential combat scenarios. Good for
+  combat-focused players and those interested in military missions.
+  
+  Council dynamics: Highly unified due to external threat. Military
+  representatives have de facto authority during emergencies. Civilian
+  Ways accept restrictions as necessary for survival.
