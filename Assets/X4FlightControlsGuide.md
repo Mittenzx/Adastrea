@@ -154,15 +154,13 @@ All parameters can be tuned in the Unreal Editor or via Blueprint:
 
 | Action | Key/Input | Description |
 |--------|-----------|-------------|
-| Move Forward | `W` | Forward thrust |
-| Move Backward | `S` | Backward thrust |
+| Forward Speed | `Mouse Wheel Up` or `=` | Increase forward speed (+10% throttle) |
+| Forward Speed | `Mouse Wheel Down` or `-` | Decrease forward speed (-10% throttle) |
+| Move Up | `W` or `Space` | Vertical thrust up |
+| Move Down | `S` or `Left Ctrl` | Vertical thrust down |
 | Strafe Left | `A` | Strafe left |
 | Strafe Right | `D` | Strafe right |
-| Strafe Up | `Space` | Vertical thrust up |
-| Strafe Down | `Left Ctrl` | Vertical thrust down |
 | Rotate | `Mouse Movement` | Pitch and yaw rotation |
-| Throttle Up | `Mouse Wheel Up` or `=` | Increase throttle by 10% |
-| Throttle Down | `Mouse Wheel Down` or `-` | Decrease throttle by 10% |
 | Boost | `Left Shift` (hold) | Activate boost mode |
 | Flight Assist | `V` | Toggle flight assist on/off |
 | Travel Mode | `J` | Toggle travel mode on/off |
@@ -271,16 +269,17 @@ The ship uses a rotation velocity system for smooth rotation:
 The system supports two input modes:
 
 **Throttle Mode (X4-style):**
-- Set target velocity with throttle
-- WASD provides additional maneuvering thrust
+- Set forward velocity with mouse wheel throttle
+- W/S controls vertical movement (up/down)
+- A/D provides lateral strafing
 - Good for long-distance travel and exploration
 
 **Direct Input Mode (Traditional):**
-- WASD directly controls thrust
-- No throttle system
+- Mouse wheel directly controls forward speed
+- W/S for vertical thrust
 - Good for combat and precision maneuvering
 
-Currently, both systems work together. WASD provides direct thrust while throttle controls baseline forward velocity.
+The throttle system (mouse wheel) controls forward speed, while W/S/A/D handle vertical and lateral strafing.
 
 ## Troubleshooting
 

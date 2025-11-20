@@ -164,7 +164,7 @@ float GetEffectiveMaxSpeed() const;  // BlueprintPure
 
 ### Manual Testing Checklist
 
-- [ ] Basic movement (WASD, Space, Ctrl) works correctly
+- [ ] Basic movement (W/S for up/down, A/D for strafe, Space/Ctrl for up/down) works correctly
 - [ ] Mouse rotation is smooth and responsive
 - [ ] Throttle up/down changes speed correctly (Mouse Wheel / +/-)
 - [ ] Flight assist toggle works (V key)

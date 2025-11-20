@@ -4,15 +4,13 @@
 
 | Action | Key | Description |
 |--------|-----|-------------|
-| **Forward** | W | Forward thrust |
-| **Backward** | S | Backward thrust |
+| **Forward Speed** | Mouse Wheel Up / = | Increase forward speed (+10% throttle) |
+| **Forward Speed** | Mouse Wheel Down / - | Decrease forward speed (-10% throttle) |
+| **Up** | W / Space | Move up |
+| **Down** | S / Left Ctrl | Move down |
 | **Strafe Left** | A | Move left |
 | **Strafe Right** | D | Move right |
-| **Up** | Space | Move up |
-| **Down** | Left Ctrl | Move down |
 | **Rotate** | Mouse | Pitch & Yaw |
-| **Throttle Up** | Mouse Wheel Up / = | +10% throttle |
-| **Throttle Down** | Mouse Wheel Down / - | -10% throttle |
 | **Boost** | Left Shift (hold) | 2x speed boost |
 | **Flight Assist** | V | Toggle assist on/off |
 | **Travel Mode** | J | Toggle 5x cruise speed |
