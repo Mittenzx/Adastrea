@@ -1,0 +1,55 @@
+# Shadowblade Stealth Frigate - Covert Operations Vessel
+# Advanced stealth frigate with maximum sensor masking and electronic warfare capabilities
+
+BasicInfo:
+  ShipID: ShadowbladeStealth
+  ShipName: Shadowblade Stealth Frigate
+  Description: A cutting-edge stealth frigate designed for covert operations behind enemy lines. The Shadowblade combines advanced sensor masking, electronic warfare capabilities, and precision strike weapons to operate undetected in hostile space.
+  ShipClass: Stealth Frigate
+CoreStats:
+  HullStrength: 2800.0          # Moderate hull strength
+  CargoCapacity: 200.0          # Limited cargo for covert ops
+  CrewRequired: 12              # Specialized crew complement
+  MaxCrew: 18                   # Small elite crew
+  ModularPoints: 12             # Good customization options
+CombatStats:
+  ArmorRating: 60.0             # Moderate armor plating
+  ShieldStrength: 1500.0        # Good shield protection
+  ShieldRechargeRate: 18.0      # Fast shield recharge
+  WeaponSlots: 4                # Precision strike weapons
+  WeaponPowerCapacity: 3500.0   # High weapons power
+  PointDefenseRating: 7.0       # Good point defense
+MobilityStats:
+  MaxSpeed: 650.0               # Good speed for frigate
+  Acceleration: 85.0            # Moderate acceleration
+  Maneuverability: 7            # Agile for size
+  JumpRange: 22.0               # Good jump range
+  FuelCapacity: 3500.0          # Extended fuel capacity
+  FuelConsumptionRate: 90.0     # Moderate fuel consumption
+UtilityStats:
+  SensorRange: 20000.0          # Excellent sensor range
+  SensorResolution: 9           # High-resolution sensors
+  StealthRating: 10             # Maximum stealth capability
+  RepairSystemRating: 5         # Moderate repair systems
+  ScienceRating: 7              # Good science equipment
+  MedicalRating: 4              # Basic medical facilities
+OperationalStats:
+  PowerCapacity: 7500.0         # High power generation
+  LifeSupportRating: 7          # Good life support
+  MaintenanceLevel: 8           # High maintenance needs
+  HangarCapacity: 1             # Single small craft bay
+  DroneCapacity: 12             # Good drone complement
+  AISystemRating: 9             # Advanced AI systems
+AdvancedStats:
+  DiplomacyRating: 3            # Limited diplomatic function
+  BoardingCapability: 6         # Good boarding capability
+  CustomizableSlots: 8          # Extensive customization
+  EWarRating: 10                # Maximum electronic warfare
+  MiningRating: 0               # No mining equipment
+Lore:
+  Manufacturer: Phantom Technologies
+  YearBuilt: 2505
+  RarityTier: Rare
+  LoreNotes: The Shadowblade project was developed in secret by Phantom Technologies using experimental stealth coating and ECM systems. Its existence is officially denied by most governments, though intelligence agencies across the galaxy desperately seek to acquire them. Only a handful are known to exist.
+  PrimaryColor: [0.13, 0.13, 0.2, 1.0]      # Dark blue-gray for stealth
+  SecondaryColor: [0.27, 0.27, 0.33, 1.0]   # Muted steel blue accent

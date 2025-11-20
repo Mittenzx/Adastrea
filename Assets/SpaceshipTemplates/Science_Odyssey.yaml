@@ -1,0 +1,55 @@
+# Odyssey Research Vessel - Scientific Exploration Ship
+# Premier science vessel with maximum research capability and exceptional sensors
+
+BasicInfo:
+  ShipID: OdysseyResearch
+  ShipName: Odyssey Research Vessel
+  Description: A dedicated scientific exploration ship packed with cutting-edge research equipment, laboratories, and sensor arrays. The Odyssey is designed for long-duration deep space missions, planetary surveys, and xenobiological studies in uncharted regions.
+  ShipClass: Research Vessel
+CoreStats:
+  HullStrength: 3200.0          # Moderate hull strength
+  CargoCapacity: 600.0          # Sample and equipment storage
+  CrewRequired: 20              # Scientific crew complement
+  MaxCrew: 45                   # Research team capacity
+  ModularPoints: 14             # Extensive science modules
+CombatStats:
+  ArmorRating: 70.0             # Moderate armor
+  ShieldStrength: 1800.0        # Good shields for exploration
+  ShieldRechargeRate: 14.0      # Moderate shield recharge
+  WeaponSlots: 1                # Single defensive weapon
+  WeaponPowerCapacity: 600.0    # Minimal weapons power
+  PointDefenseRating: 5.0       # Basic point defense
+MobilityStats:
+  MaxSpeed: 600.0               # Good exploration speed
+  Acceleration: 70.0            # Moderate acceleration
+  Maneuverability: 6            # Adequate maneuverability
+  JumpRange: 30.0               # Excellent jump range
+  FuelCapacity: 6000.0          # Large fuel capacity
+  FuelConsumptionRate: 70.0     # Efficient fuel use
+UtilityStats:
+  SensorRange: 35000.0          # Exceptional sensor range
+  SensorResolution: 10          # Maximum sensor resolution
+  StealthRating: 4              # Low stealth profile
+  RepairSystemRating: 7         # Good repair capability
+  ScienceRating: 10             # Maximum science capability
+  MedicalRating: 7              # Good medical facilities
+OperationalStats:
+  PowerCapacity: 9000.0         # High power for instruments
+  LifeSupportRating: 9          # Extended life support
+  MaintenanceLevel: 5           # Moderate maintenance
+  HangarCapacity: 2             # Research shuttles
+  DroneCapacity: 25             # Large probe capacity
+  AISystemRating: 9             # Advanced research AI
+AdvancedStats:
+  DiplomacyRating: 7            # Good diplomatic capability
+  BoardingCapability: 1         # Minimal boarding ability
+  CustomizableSlots: 12         # Extensive customization
+  EWarRating: 6                 # Moderate electronic warfare
+  MiningRating: 3               # Basic mining capability
+Lore:
+  Manufacturer: Cosmos Scientific Industries
+  YearBuilt: 2501
+  RarityTier: Uncommon
+  LoreNotes: The Odyssey-class continues the ancient tradition of exploration vessels bearing names of legendary journeys. Equipped with the most advanced scientific instruments available, these ships have made countless breakthrough discoveries in fields ranging from astrophysics to xenobiology. Every major university and research institute dreams of acquiring one.
+  PrimaryColor: [0.23, 0.56, 0.86, 1.0]     # Science blue
+  SecondaryColor: [0.9, 0.9, 0.9, 1.0]      # Clean white/silver

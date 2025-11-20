@@ -1,0 +1,55 @@
+# Phoenix Salvage Ship - Wreck Recovery Specialist
+# Specialized salvage vessel with maximum repair capability and wreck detection systems
+
+BasicInfo:
+  ShipID: PhoenixSalvage
+  ShipName: Phoenix Salvage Ship
+  Description: A specialized vessel designed for recovering wreckage, derelict ships, and valuable materials from debris fields. The Phoenix combines powerful tractor beams, cutting equipment, and large cargo holds to turn space junk into profit.
+  ShipClass: Salvage Ship
+CoreStats:
+  HullStrength: 3500.0          # Good hull strength
+  CargoCapacity: 2500.0         # Large salvage storage
+  CrewRequired: 10              # Specialized salvage crew
+  MaxCrew: 20                   # Full salvage team
+  ModularPoints: 10             # Salvage equipment modules
+CombatStats:
+  ArmorRating: 120.0            # Heavy armor for debris
+  ShieldStrength: 1600.0        # Good defensive shields
+  ShieldRechargeRate: 12.0      # Moderate shield recharge
+  WeaponSlots: 2                # Minimal defensive weapons
+  WeaponPowerCapacity: 1000.0   # Limited weapons power
+  PointDefenseRating: 5.0       # Basic point defense
+MobilityStats:
+  MaxSpeed: 450.0               # Moderate speed
+  Acceleration: 45.0            # Moderate acceleration
+  Maneuverability: 5            # Average maneuverability
+  JumpRange: 19.0               # Good jump range
+  FuelCapacity: 3500.0          # Good fuel capacity
+  FuelConsumptionRate: 100.0    # Moderate fuel consumption
+UtilityStats:
+  SensorRange: 18000.0          # Excellent wreck detection
+  SensorResolution: 8           # Good sensor resolution
+  StealthRating: 4              # Low stealth profile
+  RepairSystemRating: 10        # Maximum repair capability
+  ScienceRating: 5              # Material analysis systems
+  MedicalRating: 3              # Basic medical facilities
+OperationalStats:
+  PowerCapacity: 8500.0         # High power for equipment
+  LifeSupportRating: 7          # Good life support
+  MaintenanceLevel: 6           # Moderate maintenance
+  HangarCapacity: 2             # Salvage shuttle bays
+  DroneCapacity: 20             # Salvage drone fleet
+  AISystemRating: 7             # Advanced salvage AI
+AdvancedStats:
+  DiplomacyRating: 4            # Basic diplomatic capability
+  BoardingCapability: 3         # Limited boarding ability
+  CustomizableSlots: 10         # Extensive customization
+  EWarRating: 4                 # Basic electronic warfare
+  MiningRating: 6               # Good cutting equipment
+Lore:
+  Manufacturer: Reclamation Systems Corp
+  YearBuilt: 2499
+  RarityTier: Uncommon
+  LoreNotes: The Phoenix-class earned its name from its ability to resurrect value from the ashes of destroyed vessels. Salvage crews using these ships operate in the dangerous aftermath of battles and disasters, recovering everything from precious metals to classified technology. It's a risky business, but one Phoenix haul can set a crew up for life.
+  PrimaryColor: [1.0, 0.53, 0.0, 1.0]       # Industrial Orange
+  SecondaryColor: [0.33, 0.33, 0.33, 1.0]   # Steel Gray

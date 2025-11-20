@@ -1,0 +1,55 @@
+# Viper Interceptor - Fast Attack Fighter
+# Lightning-fast dogfighter with maximum speed and agility for hit-and-run tactics
+
+BasicInfo:
+  ShipID: ViperInterceptor
+  ShipName: Viper Interceptor
+  Description: A lightning-fast interceptor designed for rapid strike missions and dogfighting. The Viper sacrifices armor and cargo for unmatched speed and agility, making it the premier choice for hit-and-run tactics and fighter superiority.
+  ShipClass: Interceptor
+CoreStats:
+  HullStrength: 600.0           # Minimal hull for lightweight design
+  CargoCapacity: 30.0           # Very small cargo space
+  CrewRequired: 1               # Single pilot operation
+  MaxCrew: 2                    # Pilot + optional copilot
+  ModularPoints: 5              # Limited customization
+CombatStats:
+  ArmorRating: 15.0             # Light armor for speed
+  ShieldStrength: 350.0         # Minimal shields
+  ShieldRechargeRate: 20.0      # Fast shield regeneration
+  WeaponSlots: 4                # Multiple weapon hardpoints
+  WeaponPowerCapacity: 2000.0   # Good weapons power
+  PointDefenseRating: 8.0       # Excellent anti-missile systems
+MobilityStats:
+  MaxSpeed: 1200.0              # Maximum speed class
+  Acceleration: 180.0           # Exceptional acceleration
+  Maneuverability: 10           # Perfect maneuverability
+  JumpRange: 15.0               # Short jump range
+  FuelCapacity: 1200.0          # Small fuel tanks
+  FuelConsumptionRate: 80.0     # Moderate fuel consumption
+UtilityStats:
+  SensorRange: 14000.0          # Basic sensor suite
+  SensorResolution: 7           # Good sensor resolution
+  StealthRating: 6              # Moderate stealth profile
+  RepairSystemRating: 3         # Basic repair capability
+  ScienceRating: 2              # Minimal science equipment
+  MedicalRating: 1              # Basic medical supplies
+OperationalStats:
+  PowerCapacity: 4500.0         # Good power generation
+  LifeSupportRating: 5          # Minimal life support
+  MaintenanceLevel: 5           # Moderate maintenance needs
+  HangarCapacity: 0             # No hangar space
+  DroneCapacity: 4              # Small probe capacity
+  AISystemRating: 8             # Advanced targeting AI
+AdvancedStats:
+  DiplomacyRating: 1            # No diplomatic function
+  BoardingCapability: 1         # Minimal boarding ability
+  CustomizableSlots: 4          # Some customization options
+  EWarRating: 5                 # Basic electronic warfare
+  MiningRating: 0               # No mining equipment
+Lore:
+  Manufacturer: Velocity Dynamics
+  YearBuilt: 2503
+  RarityTier: Uncommon
+  LoreNotes: The Viper series revolutionized interceptor design with its focus on pure speed and agility. Originally developed for planetary defense, it quickly became the standard for carrier-based strike craft and escort missions. Pilots who can master the Viper's twitchy controls are nearly untouchable in combat.
+  PrimaryColor: [0.85, 0.1, 0.1, 1.0]       # Bright red signature
+  SecondaryColor: [0.15, 0.15, 0.18, 1.0]   # Dark gray accent
