@@ -61,6 +61,32 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Control", meta=(ClampMin="0.0"))
     float TurnRate;
 
+    // Reference to the ship's data asset with detailed stats
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Data")
+    class USpaceshipDataAsset* ShipDataAsset;
+
+    // Current hull integrity (health)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Status", meta=(ClampMin="0.0"))
+    float CurrentHullIntegrity;
+
+    // Maximum hull integrity
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Status", meta=(ClampMin="0.0"))
+    float MaxHullIntegrity;
+
+    /**
+     * Get the ship's display name
+     * @return The ship's name from DataAsset or actor label
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship")
+    FText GetShipName() const;
+
+    /**
+     * Get the ship's class/type
+     * @return The ship's class from DataAsset or default
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship")
+    FText GetShipClass() const;
+
     /**
      * Transition player into the ship's interior space
      * @param PlayerController The controller to transition into the interior

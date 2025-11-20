@@ -1,6 +1,9 @@
 #include "UI/AdastreaHUDWidget.h"
 #include "Ships/Spaceship.h"
 #include "GameFramework/PlayerController.h"
+#include "Player/AdastreaGameInstance.h"
+#include "Player/AdastreaSaveGame.h"
+#include "Kismet/GameplayStatics.h"
 
 UAdastreaHUDWidget::UAdastreaHUDWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -9,6 +12,12 @@ UAdastreaHUDWidget::UAdastreaHUDWidget(const FObjectInitializer& ObjectInitializ
 	, CurrentSpeedValue(0.0f)
 	, bHasTarget(false)
 	, ControlledSpaceship(nullptr)
+	, CurrentPlayerName(FText::FromString("Player"))
+	, CurrentPlayerLevel(1)
+	, CurrentPlayerCredits(0)
+	, CurrentShipName(FText::FromString("Ship"))
+	, CurrentShipClass(FText::FromString("Unknown"))
+	, ShipIntegrityPercent(1.0f)
 {
 }
 
@@ -108,4 +117,107 @@ ASpaceship* UAdastreaHUDWidget::GetControlledSpaceship() const
 		return Cast<ASpaceship>(PC->GetPawn());
 	}
 	return nullptr;
+}
+
+// ====================
+// PLAYER INFO DISPLAY IMPLEMENTATIONS
+// ====================
+
+void UAdastreaHUDWidget::UpdatePlayerName_Implementation(const FText& PlayerName)
+{
+	CurrentPlayerName = PlayerName;
+	// Blueprint implementation handles visual display
+}
+
+void UAdastreaHUDWidget::UpdatePlayerLevel_Implementation(int32 Level)
+{
+	CurrentPlayerLevel = Level;
+	// Blueprint implementation handles visual display
+}
+
+void UAdastreaHUDWidget::UpdatePlayerCredits_Implementation(int32 Credits)
+{
+	CurrentPlayerCredits = Credits;
+	// Blueprint implementation handles visual display
+}
+
+void UAdastreaHUDWidget::UpdatePlayerInfo(const FText& PlayerName, int32 Level, int32 Credits)
+{
+	UpdatePlayerName(PlayerName);
+	UpdatePlayerLevel(Level);
+	UpdatePlayerCredits(Credits);
+}
+
+// ====================
+// SHIP INFO DISPLAY IMPLEMENTATIONS
+// ====================
+
+void UAdastreaHUDWidget::UpdateShipName_Implementation(const FText& ShipName)
+{
+	CurrentShipName = ShipName;
+	// Blueprint implementation handles visual display
+}
+
+void UAdastreaHUDWidget::UpdateShipClass_Implementation(const FText& ShipClass)
+{
+	CurrentShipClass = ShipClass;
+	// Blueprint implementation handles visual display
+}
+
+void UAdastreaHUDWidget::UpdateShipIntegrity_Implementation(float CurrentIntegrity, float MaxIntegrity)
+{
+	if (MaxIntegrity > 0.0f)
+	{
+		ShipIntegrityPercent = FMath::Clamp(CurrentIntegrity / MaxIntegrity, 0.0f, 1.0f);
+	}
+	else
+	{
+		ShipIntegrityPercent = 0.0f;
+	}
+	// Blueprint implementation handles visual display
+}
+
+void UAdastreaHUDWidget::UpdateShipInfo(const FText& ShipName, const FText& ShipClass, float CurrentIntegrity, float MaxIntegrity)
+{
+	UpdateShipName(ShipName);
+	UpdateShipClass(ShipClass);
+	UpdateShipIntegrity(CurrentIntegrity, MaxIntegrity);
+}
+
+void UAdastreaHUDWidget::RefreshPlayerInfo()
+{
+	// Get game instance to access player data
+	UAdastreaGameInstance* GameInstance = Cast<UAdastreaGameInstance>(UGameplayStatics::GetGameInstance(this));
+	if (GameInstance)
+	{
+		// Get player credits from game instance
+		int32 Credits = GameInstance->GetPlayerCredits();
+		
+		// Try to get more detailed player info from save game if available
+		// For now, use defaults for name and level
+		FText PlayerName = FText::FromString("Captain");
+		int32 PlayerLevel = 1;
+		
+		// Update the displays
+		UpdatePlayerInfo(PlayerName, PlayerLevel, Credits);
+	}
+}
+
+void UAdastreaHUDWidget::RefreshShipInfo()
+{
+	// Get the currently controlled spaceship
+	ASpaceship* Ship = GetControlledSpaceship();
+	if (Ship)
+	{
+		// Get ship name and class from the ship
+		FText ShipName = Ship->GetShipName();
+		FText ShipClass = Ship->GetShipClass();
+		
+		// Get hull integrity values
+		float CurrentIntegrity = Ship->CurrentHullIntegrity;
+		float MaxIntegrity = Ship->MaxHullIntegrity;
+		
+		// Update the displays
+		UpdateShipInfo(ShipName, ShipClass, CurrentIntegrity, MaxIntegrity);
+	}
 }
