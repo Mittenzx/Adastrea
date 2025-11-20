@@ -632,7 +632,7 @@ void UWayLogic::UpdateStrategy()
 
 **Purpose**: Tracks dynamic Way (guild) state that changes during gameplay (not static config).
 
-**Header File** (`Source/Adastrea/Public/Way/WayRuntimeState.h`):
+**Header File** (`Source/Adastrea/Way/WayRuntimeState.h`):
 
 ```cpp
 #pragma once
@@ -855,7 +855,7 @@ protected:
 
 **Purpose**: Enables crafting of refined materials from raw resources.
 
-**Header File** (`Source/Adastrea/Public/Materials/MaterialCraftingComponent.h`):
+**Header File** (`Source/Adastrea/Materials/MaterialCraftingComponent.h`):
 
 ```cpp
 #pragma once
@@ -1013,7 +1013,7 @@ private:
 
 **Purpose**: Simulates supply/demand economics across all markets.
 
-**Header File** (`Source/Adastrea/Public/Trading/MarketSimulatorSubsystem.h`):
+**Header File** (`Source/Adastrea/Trading/MarketSimulatorSubsystem.h`):
 
 ```cpp
 #pragma once
@@ -1268,7 +1268,7 @@ void AAdastreaGameState::OnRep_GameStateChanged()
 **Purpose**: Reuse projectile objects instead of spawning/destroying.
 
 ```cpp
-// Header: Source/Adastrea/Public/Combat/ProjectilePoolSubsystem.h
+// Header: Source/Adastrea/Combat/ProjectilePoolSubsystem.h
 #pragma once
 
 #include "CoreMinimal.h"
@@ -1354,7 +1354,7 @@ void UpdateLODLevel()
 ### Custom Game Instance Subsystem Example
 
 ```cpp
-// Header: Source/Adastrea/Public/YourSystem/YourSubsystem.h
+// Header: Source/Adastrea/YourSystem/YourSubsystem.h
 #pragma once
 
 #include "CoreMinimal.h"
@@ -1423,7 +1423,7 @@ void UYourSubsystem::Deinitialize()
 **Purpose**: Enable loose coupling between components using C++ interfaces.
 
 ```cpp
-// Header: Source/Adastrea/Public/Interfaces/IDamageable.h
+// Header: Source/Adastrea/Public/Combat/IDamageable.h
 #pragma once
 
 #include "CoreMinimal.h"
@@ -1509,7 +1509,7 @@ void UWeaponComponent::FireAtTarget(AActor* Target)
 **Purpose**: Prevent frame drops during expensive operations.
 
 ```cpp
-// Header: Source/Adastrea/Public/AsyncTasks/PathfindingTask.h
+// Header: Source/Adastrea/Public/Navigation/PathfindingTask.h
 #pragma once
 
 #include "CoreMinimal.h"
@@ -1559,7 +1559,15 @@ private:
     }
 };
 
-// Usage in component:
+// Usage in component (add to header):
+class UNavigationComponent : public UActorComponent
+{
+    // ...
+private:
+    FAutoDeleteAsyncTask<FPathfindingTask>* AsyncTask;
+};
+
+// Implementation:
 void UNavigationComponent::FindPathAsync(const FVector& Start, const FVector& Goal)
 {
     // Start async task
@@ -1577,6 +1585,18 @@ void UNavigationComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
         TArray<FVector> Path = AsyncTask->GetTask().GetPath();
         OnPathFound.Broadcast(Path);
         AsyncTask = nullptr; // Auto-deleted
+    }
+}
+
+// Proper cleanup in component destruction:
+void UNavigationComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    Super::EndPlay(EndPlayReason);
+    
+    if (AsyncTask && !AsyncTask->IsDone())
+    {
+        AsyncTask->EnsureCompletion();
+        AsyncTask = nullptr;
     }
 }
 ```
@@ -1697,37 +1717,43 @@ struct FShipCapabilities_Inefficient
     // 8 bytes total
 };
 
-// Better: Use bitfield (takes 1 byte total):
+// Better: Use UENUM with Bitflags for proper Unreal integration:
+UENUM(BlueprintType, meta = (Bitflags))
+enum class EShipCapability : uint8
+{
+    None                = 0 UMETA(Hidden),
+    CanLandOnPlanets    = 1 << 0,
+    CanDockWithStations = 1 << 1,
+    CanWarpJump         = 1 << 2,
+    CanCarryCargo       = 1 << 3,
+    HasCloakingDevice   = 1 << 4,
+    HasShields          = 1 << 5,
+    HasWeapons          = 1 << 6,
+    HasScanner          = 1 << 7
+};
+
+ENUM_CLASS_FLAGS(EShipCapability)
+
 USTRUCT(BlueprintType)
 struct FShipCapabilities
 {
     GENERATED_BODY()
     
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(Bitmask))
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(Bitmask, BitmaskEnum="EShipCapability"))
     uint8 Capabilities;
     
-    // Define bit flags
-    static constexpr uint8 CanLandOnPlanets = 1 << 0;  // 0b00000001
-    static constexpr uint8 CanDockWithStations = 1 << 1; // 0b00000010
-    static constexpr uint8 CanWarpJump = 1 << 2;       // 0b00000100
-    static constexpr uint8 CanCarryCargo = 1 << 3;     // 0b00001000
-    static constexpr uint8 HasCloakingDevice = 1 << 4; // 0b00010000
-    static constexpr uint8 HasShields = 1 << 5;        // 0b00100000
-    static constexpr uint8 HasWeapons = 1 << 6;        // 0b01000000
-    static constexpr uint8 HasScanner = 1 << 7;        // 0b10000000
-    
-    // Helper functions
-    bool HasCapability(uint8 Flag) const { return (Capabilities & Flag) != 0; }
-    void AddCapability(uint8 Flag) { Capabilities |= Flag; }
-    void RemoveCapability(uint8 Flag) { Capabilities &= ~Flag; }
+    // Helper functions with FORCEINLINE for performance
+    FORCEINLINE bool HasCapability(EShipCapability Flag) const { return (Capabilities & static_cast<uint8>(Flag)) != 0; }
+    FORCEINLINE void AddCapability(EShipCapability Flag) { Capabilities |= static_cast<uint8>(Flag); }
+    FORCEINLINE void RemoveCapability(EShipCapability Flag) { Capabilities &= ~static_cast<uint8>(Flag); }
 };
 
 // Usage:
 FShipCapabilities Caps;
-Caps.AddCapability(FShipCapabilities::CanWarpJump);
-Caps.AddCapability(FShipCapabilities::HasWeapons);
+Caps.AddCapability(EShipCapability::CanWarpJump);
+Caps.AddCapability(EShipCapability::HasWeapons);
 
-if (Caps.HasCapability(FShipCapabilities::CanWarpJump))
+if (Caps.HasCapability(EShipCapability::CanWarpJump))
 {
     // Ship can warp
 }
