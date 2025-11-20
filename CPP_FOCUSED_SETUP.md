@@ -298,12 +298,1054 @@ Input in C++ Workflow:
 
 **Bottom Line**: You're working in C++, but you need a few data assets for configuration. This is normal for Unreal Engine and doesn't mean you're "doing Blueprints."
 
+## Advanced C++ Systems - Future Implementations
+
+The following sections describe advanced C++ systems you can implement to expand Adastrea's capabilities. All systems follow the data-driven design pattern with Blueprint exposure.
+
+---
+
+## Faction Logic System (C++ Implementation)
+
+### UFactionLogic - Strategic AI for Factions
+
+**Purpose**: Implements strategic decision-making for factions at a high level.
+
+**Header File** (`Source/Adastrea/Public/AI/FactionLogic.h`):
+
+```cpp
+#pragma once
+
+#include "CoreMinimal.h"
+#include "AI/NPCLogicBase.h"
+#include "Factions/FactionDataAsset.h"
+#include "FactionLogic.generated.h"
+
+/**
+ * Faction Logic - Strategic AI for faction-level decisions
+ * 
+ * Handles:
+ * - Diplomatic actions (declare war, make peace, form alliances)
+ * - Economic decisions (trade routes, market manipulation)
+ * - Military strategy (fleet movements, territory control)
+ * - Research priorities (technology advancement)
+ * 
+ * Usage:
+ * 1. Create Blueprint based on this class
+ * 2. Override BlueprintNativeEvent functions for custom behavior
+ * 3. Attach to faction-controlled actors or game state
+ */
+UCLASS(BlueprintType, Blueprintable)
+class ADASTREA_API UFactionLogic : public UNPCLogicBase
+{
+    GENERATED_BODY()
+
+public:
+    UFactionLogic();
+
+    // ====================
+    // Configuration
+    // ====================
+
+    /** Faction data this logic controls */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Faction Logic")
+    UFactionDataAsset* FactionData;
+
+    /** How aggressive the faction is (0.0 = peaceful, 1.0 = aggressive) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Faction Logic", meta=(ClampMin=0.0, ClampMax=1.0))
+    float AggressionLevel;
+
+    /** How much the faction prioritizes economic growth */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Faction Logic", meta=(ClampMin=0.0, ClampMax=1.0))
+    float EconomicFocus;
+
+    /** How much the faction prioritizes military strength */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Faction Logic", meta=(ClampMin=0.0, ClampMax=1.0))
+    float MilitaryFocus;
+
+    /** How much the faction prioritizes diplomacy */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Faction Logic", meta=(ClampMin=0.0, ClampMax=1.0))
+    float DiplomaticFocus;
+
+    // ====================
+    // Decision Functions (BlueprintNativeEvent)
+    // ====================
+
+    /**
+     * Decide on diplomatic action toward another faction
+     * @param TargetFaction The faction to interact with
+     * @param CurrentRelationship Current relationship value (-100 to 100)
+     * @return Decision: 0=No Action, 1=Improve Relations, 2=Worsen Relations, 3=Declare War, 4=Propose Alliance
+     */
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Faction Logic|Diplomacy")
+    int32 DecideDiplomaticAction(UFactionDataAsset* TargetFaction, int32 CurrentRelationship);
+
+    /**
+     * Decide on economic action
+     * @param MarketConditions Current market state data
+     * @return Decision: 0=Hold, 1=Invest, 2=Sell, 3=Embargo, 4=Trade Agreement
+     */
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Faction Logic|Economy")
+    int32 DecideEconomicAction(const FString& MarketConditions);
+
+    /**
+     * Decide on military action
+     * @param ThreatLevel Perceived threat level (0.0 to 1.0)
+     * @param AvailableForces Number of available military units
+     * @return Decision: 0=Defend, 1=Patrol, 2=Attack, 3=Retreat, 4=Fortify
+     */
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Faction Logic|Military")
+    int32 DecideMilitaryAction(float ThreatLevel, int32 AvailableForces);
+
+    /**
+     * Evaluate if faction should go to war
+     * @param TargetFaction Potential war target
+     * @param RelationshipValue Current relationship (-100 to 100)
+     * @return True if faction should declare war
+     */
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Faction Logic|Diplomacy")
+    bool ShouldDeclareWar(UFactionDataAsset* TargetFaction, int32 RelationshipValue);
+
+    /**
+     * Calculate trade price modifier based on faction relationships
+     * @param OtherFaction Faction trading with
+     * @param BasePrice Base price of goods
+     * @return Modified price
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction Logic|Trading")
+    float CalculateTradePriceModifier(UFactionDataAsset* OtherFaction, float BasePrice) const;
+
+    // ====================
+    // State Management
+    // ====================
+
+    /**
+     * Update faction strategy based on game state
+     * Called periodically by game systems
+     */
+    UFUNCTION(BlueprintCallable, Category="Faction Logic")
+    void UpdateStrategy();
+
+protected:
+    // Default C++ implementations
+    virtual int32 DecideDiplomaticAction_Implementation(UFactionDataAsset* TargetFaction, int32 CurrentRelationship);
+    virtual int32 DecideEconomicAction_Implementation(const FString& MarketConditions);
+    virtual int32 DecideMilitaryAction_Implementation(float ThreatLevel, int32 AvailableForces);
+    virtual bool ShouldDeclareWar_Implementation(UFactionDataAsset* TargetFaction, int32 RelationshipValue);
+
+private:
+    /** Time since last strategy update */
+    float TimeSinceLastUpdate;
+
+    /** Cached strategic priorities */
+    TMap<FString, float> StrategicPriorities;
+};
+```
+
+**Implementation File** (`Source/Adastrea/AI/FactionLogic.cpp`):
+
+```cpp
+#include "AI/FactionLogic.h"
+
+UFactionLogic::UFactionLogic()
+{
+    AggressionLevel = 0.3f;
+    EconomicFocus = 0.5f;
+    MilitaryFocus = 0.3f;
+    DiplomaticFocus = 0.5f;
+    TimeSinceLastUpdate = 0.0f;
+}
+
+int32 UFactionLogic::DecideDiplomaticAction_Implementation(UFactionDataAsset* TargetFaction, int32 CurrentRelationship)
+{
+    if (!TargetFaction || !FactionData)
+    {
+        return 0; // No action
+    }
+
+    // Peaceful factions focus on diplomacy
+    if (AggressionLevel < 0.3f)
+    {
+        if (CurrentRelationship < 50)
+        {
+            return 1; // Improve relations
+        }
+        else if (CurrentRelationship > 70)
+        {
+            return 4; // Propose alliance
+        }
+    }
+    // Aggressive factions may declare war
+    else if (AggressionLevel > 0.7f)
+    {
+        if (CurrentRelationship < -50)
+        {
+            return 3; // Declare war
+        }
+        else if (CurrentRelationship < 0)
+        {
+            return 2; // Worsen relations
+        }
+    }
+
+    return 0; // No action
+}
+
+int32 UFactionLogic::DecideEconomicAction_Implementation(const FString& MarketConditions)
+{
+    // Economic-focused factions prioritize trade
+    if (EconomicFocus > 0.6f)
+    {
+        return 4; // Trade agreement
+    }
+    
+    // Default: hold position
+    return 0;
+}
+
+int32 UFactionLogic::DecideMilitaryAction_Implementation(float ThreatLevel, int32 AvailableForces)
+{
+    // High threat: defend or retreat
+    if (ThreatLevel > 0.7f)
+    {
+        return AvailableForces > 10 ? 0 : 3; // Defend or Retreat
+    }
+    
+    // Medium threat: patrol
+    if (ThreatLevel > 0.3f)
+    {
+        return 1; // Patrol
+    }
+    
+    // Low threat and aggressive: attack
+    if (AggressionLevel > 0.6f && MilitaryFocus > 0.5f)
+    {
+        return 2; // Attack
+    }
+    
+    return 0; // Defend
+}
+
+bool UFactionLogic::ShouldDeclareWar_Implementation(UFactionDataAsset* TargetFaction, int32 RelationshipValue)
+{
+    // Only aggressive factions with military focus declare war
+    if (AggressionLevel < 0.5f || MilitaryFocus < 0.4f)
+    {
+        return false;
+    }
+    
+    // Relationship must be very negative
+    return RelationshipValue < -70;
+}
+
+float UFactionLogic::CalculateTradePriceModifier(UFactionDataAsset* OtherFaction, float BasePrice) const
+{
+    // Implement based on PlayerReputationComponent pattern
+    // Friendly factions: discount
+    // Hostile factions: premium
+    // This is a placeholder - integrate with reputation system
+    return BasePrice;
+}
+
+void UFactionLogic::UpdateStrategy()
+{
+    // Update strategic priorities based on game state
+    // This would integrate with UAdastreaGameState
+    TimeSinceLastUpdate = 0.0f;
+}
+```
+
+---
+
+## Faction Runtime State System
+
+### UFactionRuntimeState - Dynamic Faction State Tracking
+
+**Purpose**: Tracks dynamic faction state that changes during gameplay (not static config).
+
+**Header File** (`Source/Adastrea/Public/Factions/FactionRuntimeState.h`):
+
+```cpp
+#pragma once
+
+#include "CoreMinimal.h"
+#include "UObject/Object.h"
+#include "Factions/FactionDataAsset.h"
+#include "FactionRuntimeState.generated.h"
+
+/**
+ * Faction Runtime State
+ * Tracks dynamic state of a faction during gameplay
+ * 
+ * Separated from FactionDataAsset to keep configuration immutable
+ * and runtime state mutable.
+ * 
+ * Tracks:
+ * - Current resources and wealth
+ * - Territory control
+ * - Active wars and alliances
+ * - Military strength
+ * - Economic power
+ * - Research progress
+ */
+UCLASS(BlueprintType)
+class ADASTREA_API UFactionRuntimeState : public UObject
+{
+    GENERATED_BODY()
+
+public:
+    UFactionRuntimeState();
+
+    // ====================
+    // Configuration
+    // ====================
+
+    /** Reference to static faction configuration */
+    UPROPERTY(BlueprintReadOnly, Category="Faction State")
+    UFactionDataAsset* FactionData;
+
+    // ====================
+    // Economic State
+    // ====================
+
+    /** Current faction wealth */
+    UPROPERTY(BlueprintReadWrite, Category="Faction State|Economy")
+    int64 CurrentWealth;
+
+    /** Income per game cycle */
+    UPROPERTY(BlueprintReadOnly, Category="Faction State|Economy")
+    int32 IncomeRate;
+
+    /** Number of trade routes controlled */
+    UPROPERTY(BlueprintReadOnly, Category="Faction State|Economy")
+    int32 TradeRoutes;
+
+    // ====================
+    // Military State
+    // ====================
+
+    /** Total military power rating */
+    UPROPERTY(BlueprintReadOnly, Category="Faction State|Military")
+    float MilitaryPower;
+
+    /** Number of ships in faction fleet */
+    UPROPERTY(BlueprintReadWrite, Category="Faction State|Military")
+    int32 FleetSize;
+
+    /** Number of stations controlled */
+    UPROPERTY(BlueprintReadWrite, Category="Faction State|Military")
+    int32 StationsControlled;
+
+    // ====================
+    // Diplomatic State
+    // ====================
+
+    /** Factions currently at war with */
+    UPROPERTY(BlueprintReadWrite, Category="Faction State|Diplomacy")
+    TArray<UFactionDataAsset*> FactionsAtWar;
+
+    /** Allied factions */
+    UPROPERTY(BlueprintReadWrite, Category="Faction State|Diplomacy")
+    TArray<UFactionDataAsset*> AlliedFactions;
+
+    /** Relationship values with other factions */
+    UPROPERTY(BlueprintReadWrite, Category="Faction State|Diplomacy")
+    TMap<UFactionDataAsset*, int32> FactionRelationships;
+
+    // ====================
+    // Territory State
+    // ====================
+
+    /** Systems controlled by this faction */
+    UPROPERTY(BlueprintReadWrite, Category="Faction State|Territory")
+    TArray<FName> ControlledSystems;
+
+    /** Influence score in galaxy */
+    UPROPERTY(BlueprintReadOnly, Category="Faction State|Territory")
+    float GalacticInfluence;
+
+    // ====================
+    // Blueprint Functions
+    // ====================
+
+    /**
+     * Initialize runtime state from faction data asset
+     * @param InFactionData Static faction configuration
+     */
+    UFUNCTION(BlueprintCallable, Category="Faction State")
+    void Initialize(UFactionDataAsset* InFactionData);
+
+    /**
+     * Update faction state (called periodically by game)
+     * @param DeltaTime Time since last update
+     */
+    UFUNCTION(BlueprintCallable, Category="Faction State")
+    void UpdateState(float DeltaTime);
+
+    /**
+     * Check if faction is at war with another
+     * @param OtherFaction Faction to check
+     * @return True if at war
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction State")
+    bool IsAtWarWith(UFactionDataAsset* OtherFaction) const;
+
+    /**
+     * Check if faction is allied with another
+     * @param OtherFaction Faction to check
+     * @return True if allied
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction State")
+    bool IsAlliedWith(UFactionDataAsset* OtherFaction) const;
+
+    /**
+     * Get relationship value with another faction
+     * @param OtherFaction Faction to query
+     * @return Relationship value (-100 to 100)
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction State")
+    int32 GetRelationshipWith(UFactionDataAsset* OtherFaction) const;
+
+    /**
+     * Modify relationship with another faction
+     * @param OtherFaction Target faction
+     * @param Delta Amount to change (positive or negative)
+     */
+    UFUNCTION(BlueprintCallable, Category="Faction State")
+    void ModifyRelationship(UFactionDataAsset* OtherFaction, int32 Delta);
+
+    /**
+     * Declare war on another faction
+     * @param TargetFaction Faction to declare war on
+     */
+    UFUNCTION(BlueprintCallable, Category="Faction State")
+    void DeclareWar(UFactionDataAsset* TargetFaction);
+
+    /**
+     * Make peace with a faction at war
+     * @param TargetFaction Faction to make peace with
+     */
+    UFUNCTION(BlueprintCallable, Category="Faction State")
+    void MakePeace(UFactionDataAsset* TargetFaction);
+
+    /**
+     * Form alliance with another faction
+     * @param TargetFaction Faction to ally with
+     */
+    UFUNCTION(BlueprintCallable, Category="Faction State")
+    void FormAlliance(UFactionDataAsset* TargetFaction);
+
+    /**
+     * Calculate total faction power (economic + military)
+     * @return Total power rating
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction State")
+    float CalculateTotalPower() const;
+
+protected:
+    /** Time accumulator for periodic updates */
+    float TimeAccumulator;
+};
+```
+
+---
+
+## Material Crafting System (C++ Implementation)
+
+### UMaterialCraftingComponent - Crafting System for Materials
+
+**Purpose**: Enables crafting of refined materials from raw resources.
+
+**Header File** (`Source/Adastrea/Public/Materials/MaterialCraftingComponent.h`):
+
+```cpp
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Components/ActorComponent.h"
+#include "Materials/MaterialDataAsset.h"
+#include "MaterialCraftingComponent.generated.h"
+
+/**
+ * Recipe for crafting materials
+ */
+USTRUCT(BlueprintType)
+struct FCraftingRecipe
+{
+    GENERATED_BODY()
+
+    /** Recipe name */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FText RecipeName;
+
+    /** Input materials and quantities */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TMap<UMaterialDataAsset*, int32> InputMaterials;
+
+    /** Output material */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UMaterialDataAsset* OutputMaterial;
+
+    /** Output quantity */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int32 OutputQuantity;
+
+    /** Time to craft (seconds) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float CraftingTime;
+
+    /** Required crafting skill level */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    int32 RequiredSkillLevel;
+};
+
+/**
+ * Material Crafting Component
+ * Handles crafting of materials from resources
+ * 
+ * Usage:
+ * - Attach to player ship, space station, or crafting facility
+ * - Load crafting recipes
+ * - Call CraftMaterial to begin crafting
+ * - Track progress and collect results
+ */
+UCLASS(BlueprintType, ClassGroup=(Adastrea), meta=(BlueprintSpawnableComponent))
+class ADASTREA_API UMaterialCraftingComponent : public UActorComponent
+{
+    GENERATED_BODY()
+
+public:
+    UMaterialCraftingComponent();
+
+    // ====================
+    // Configuration
+    // ====================
+
+    /** Available crafting recipes */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Crafting")
+    TArray<FCraftingRecipe> AvailableRecipes;
+
+    /** Crafting speed multiplier */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Crafting", meta=(ClampMin=0.1, ClampMax=10.0))
+    float CraftingSpeedMultiplier;
+
+    /** Maximum concurrent crafting operations */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Crafting")
+    int32 MaxConcurrentCrafts;
+
+    // ====================
+    // Crafting Functions
+    // ====================
+
+    /**
+     * Start crafting a material
+     * @param Recipe Recipe to craft
+     * @return True if crafting started successfully
+     */
+    UFUNCTION(BlueprintCallable, Category="Crafting")
+    bool StartCrafting(const FCraftingRecipe& Recipe);
+
+    /**
+     * Cancel current crafting operation
+     * @param CraftIndex Index of craft to cancel
+     */
+    UFUNCTION(BlueprintCallable, Category="Crafting")
+    void CancelCrafting(int32 CraftIndex);
+
+    /**
+     * Get crafting progress
+     * @param CraftIndex Index of craft
+     * @return Progress (0.0 to 1.0)
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Crafting")
+    float GetCraftingProgress(int32 CraftIndex) const;
+
+    /**
+     * Check if can craft recipe
+     * @param Recipe Recipe to check
+     * @return True if all requirements met
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Crafting")
+    bool CanCraftRecipe(const FCraftingRecipe& Recipe) const;
+
+    /**
+     * Get all available recipes
+     * @return Array of recipes
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Crafting")
+    TArray<FCraftingRecipe> GetAvailableRecipes() const { return AvailableRecipes; }
+
+    // ====================
+    // Component Overrides
+    // ====================
+
+    virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+protected:
+    virtual void BeginPlay() override;
+
+private:
+    /** Active crafting operations */
+    struct FActiveCraft
+    {
+        FCraftingRecipe Recipe;
+        float TimeElapsed;
+        bool bComplete;
+    };
+
+    TArray<FActiveCraft> ActiveCrafts;
+
+    /** Check inventory for materials */
+    bool HasRequiredMaterials(const FCraftingRecipe& Recipe) const;
+
+    /** Consume input materials */
+    void ConsumeMaterials(const FCraftingRecipe& Recipe);
+
+    /** Grant output materials */
+    void GrantOutputMaterials(const FCraftingRecipe& Recipe);
+};
+```
+
+---
+
+## Advanced Trading Market Simulator
+
+### UMarketSimulatorSubsystem - Dynamic Market Simulation
+
+**Purpose**: Simulates supply/demand economics across all markets.
+
+**Header File** (`Source/Adastrea/Public/Trading/MarketSimulatorSubsystem.h`):
+
+```cpp
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Subsystems/GameInstanceSubsystem.h"
+#include "Trading/TradeItemDataAsset.h"
+#include "Trading/MarketDataAsset.h"
+#include "MarketSimulatorSubsystem.generated.h"
+
+/**
+ * Market state for a specific trade item in a market
+ */
+USTRUCT(BlueprintType)
+struct FMarketItemState
+{
+    GENERATED_BODY()
+
+    /** Trade item */
+    UPROPERTY(BlueprintReadOnly)
+    UTradeItemDataAsset* Item;
+
+    /** Current supply */
+    UPROPERTY(BlueprintReadOnly)
+    int32 Supply;
+
+    /** Current demand */
+    UPROPERTY(BlueprintReadOnly)
+    int32 Demand;
+
+    /** Current price (modified by supply/demand) */
+    UPROPERTY(BlueprintReadOnly)
+    float CurrentPrice;
+
+    /** Base price */
+    UPROPERTY(BlueprintReadOnly)
+    float BasePrice;
+
+    /** Price trend (positive = rising, negative = falling) */
+    UPROPERTY(BlueprintReadOnly)
+    float PriceTrend;
+};
+
+/**
+ * Market Simulator Subsystem
+ * Simulates economy across all markets
+ * 
+ * Features:
+ * - Dynamic supply/demand simulation
+ * - Price fluctuations based on trading activity
+ * - Market events (shortages, surpluses, blockades)
+ * - AI trader simulation
+ * - Cross-market arbitrage
+ * 
+ * Runs as GameInstance subsystem for persistence
+ */
+UCLASS()
+class ADASTREA_API UMarketSimulatorSubsystem : public UGameInstanceSubsystem
+{
+    GENERATED_BODY()
+
+public:
+    // ====================
+    // Configuration
+    // ====================
+
+    /** How often to update markets (seconds) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Market Simulator")
+    float UpdateInterval;
+
+    /** Price volatility (0.0 = stable, 1.0 = very volatile) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Market Simulator", meta=(ClampMin=0.0, ClampMax=1.0))
+    float PriceVolatility;
+
+    /** Enable AI traders */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Market Simulator")
+    bool bEnableAITraders;
+
+    /** Number of AI traders per market */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Market Simulator")
+    int32 AITradersPerMarket;
+
+    // ====================
+    // Market Functions
+    // ====================
+
+    /**
+     * Register a market for simulation
+     * @param Market Market to register
+     */
+    UFUNCTION(BlueprintCallable, Category="Market Simulator")
+    void RegisterMarket(UMarketDataAsset* Market);
+
+    /**
+     * Unregister a market
+     * @param Market Market to unregister
+     */
+    UFUNCTION(BlueprintCallable, Category="Market Simulator")
+    void UnregisterMarket(UMarketDataAsset* Market);
+
+    /**
+     * Get current price for item in market
+     * @param Market Market to query
+     * @param Item Trade item
+     * @return Current price
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Market Simulator")
+    float GetCurrentPrice(UMarketDataAsset* Market, UTradeItemDataAsset* Item) const;
+
+    /**
+     * Get market state for item
+     * @param Market Market to query
+     * @param Item Trade item
+     * @return Market state
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Market Simulator")
+    FMarketItemState GetMarketState(UMarketDataAsset* Market, UTradeItemDataAsset* Item) const;
+
+    /**
+     * Simulate player buying items
+     * @param Market Market to buy from
+     * @param Item Trade item
+     * @param Quantity Quantity to buy
+     */
+    UFUNCTION(BlueprintCallable, Category="Market Simulator")
+    void SimulateBuy(UMarketDataAsset* Market, UTradeItemDataAsset* Item, int32 Quantity);
+
+    /**
+     * Simulate player selling items
+     * @param Market Market to sell to
+     * @param Item Trade item
+     * @param Quantity Quantity to sell
+     */
+    UFUNCTION(BlueprintCallable, Category="Market Simulator")
+    void SimulateSell(UMarketDataAsset* Market, UTradeItemDataAsset* Item, int32 Quantity);
+
+    /**
+     * Trigger market event
+     * @param Market Affected market
+     * @param EventType Type of event (shortage, surplus, blockade, etc.)
+     */
+    UFUNCTION(BlueprintCallable, Category="Market Simulator")
+    void TriggerMarketEvent(UMarketDataAsset* Market, const FString& EventType);
+
+    // ====================
+    // Subsystem Overrides
+    // ====================
+
+    virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+    virtual void Deinitialize() override;
+
+protected:
+    /** Periodic market update */
+    void UpdateMarkets();
+
+    /** Simulate AI trader activity */
+    void SimulateAITraders();
+
+    /** Calculate price based on supply/demand */
+    float CalculatePrice(int32 Supply, int32 Demand, float BasePrice) const;
+
+private:
+    /** Registered markets */
+    UPROPERTY()
+    TArray<UMarketDataAsset*> RegisteredMarkets;
+
+    /** Market states */
+    TMap<UMarketDataAsset*, TMap<UTradeItemDataAsset*, FMarketItemState>> MarketStates;
+
+    /** Timer handle for updates */
+    FTimerHandle UpdateTimerHandle;
+};
+```
+
+---
+
+## Multiplayer Networking Foundation
+
+### Replication and Network Architecture
+
+**Purpose**: Foundation for future multiplayer support using Unreal's replication system.
+
+**Header File** (`Source/Adastrea/Public/Player/AdastreaGameState.h` - Enhanced):
+
+```cpp
+// Add to existing AdastreaGameState.h
+
+// ====================
+// Network Replication
+// ====================
+
+/**
+ * Setup replication for game state variables
+ * Override in subclass to add more replicated properties
+ */
+virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+/**
+ * Called on clients when replicated property changes
+ * @param PropertyName Name of property that changed
+ */
+UFUNCTION()
+virtual void OnRep_GameStateChanged();
+
+/** Server time for synchronization */
+UPROPERTY(Replicated, BlueprintReadOnly, Category="Network")
+float ServerTime;
+
+/** Number of players in session */
+UPROPERTY(Replicated, BlueprintReadOnly, Category="Network")
+int32 PlayerCount;
+
+/** Is server authoritative for game state */
+UPROPERTY(Replicated, BlueprintReadOnly, Category="Network")
+bool bIsServerAuthoritative;
+```
+
+**Example Implementation**:
+
+```cpp
+#include "Net/UnrealNetwork.h"
+
+void AAdastreaGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+    // Replicate server time to all clients
+    DOREPLIFETIME(AAdastreaGameState, ServerTime);
+    
+    // Replicate player count
+    DOREPLIFETIME(AAdastreaGameState, PlayerCount);
+    
+    // Replicate server authority flag
+    DOREPLIFETIME(AAdastreaGameState, bIsServerAuthoritative);
+    
+    // Add more replicated properties as needed
+}
+
+void AAdastreaGameState::OnRep_GameStateChanged()
+{
+    // Handle replicated property changes on clients
+    // Update UI, trigger events, etc.
+}
+```
+
+---
+
+## C++ Performance Optimization Patterns
+
+### Object Pooling for Projectiles
+
+**Purpose**: Reuse projectile objects instead of spawning/destroying.
+
+```cpp
+// Header: Source/Adastrea/Public/Combat/ProjectilePoolSubsystem.h
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Subsystems/WorldSubsystem.h"
+#include "ProjectilePoolSubsystem.generated.h"
+
+UCLASS()
+class ADASTREA_API UProjectilePoolSubsystem : public UWorldSubsystem
+{
+    GENERATED_BODY()
+
+public:
+    /**
+     * Get or spawn a projectile from pool
+     * @param ProjectileClass Class of projectile to get
+     * @param Location Spawn location
+     * @param Rotation Spawn rotation
+     * @return Pooled projectile actor
+     */
+    UFUNCTION(BlueprintCallable, Category="Object Pool")
+    AActor* GetPooledProjectile(TSubclassOf<AActor> ProjectileClass, 
+                                const FVector& Location, 
+                                const FRotator& Rotation);
+
+    /**
+     * Return projectile to pool
+     * @param Projectile Projectile to return
+     */
+    UFUNCTION(BlueprintCallable, Category="Object Pool")
+    void ReturnToPool(AActor* Projectile);
+
+protected:
+    /** Pool of inactive projectiles */
+    UPROPERTY()
+    TMap<TSubclassOf<AActor>, TArray<AActor*>> ProjectilePools;
+
+    /** Maximum pool size per projectile type */
+    UPROPERTY(EditAnywhere, Category="Object Pool")
+    int32 MaxPoolSize = 100;
+};
+```
+
+### LOD Management for Distant Objects
+
+```cpp
+// In any actor that needs LOD management
+UFUNCTION(BlueprintCallable, Category="Performance")
+void UpdateLODLevel()
+{
+    if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
+    {
+        float Distance = FVector::Dist(GetActorLocation(), PC->GetPawn()->GetActorLocation());
+        
+        // Set LOD based on distance
+        if (Distance < 1000.0f)
+        {
+            // High detail - LOD 0
+            SetLODLevel(0);
+        }
+        else if (Distance < 5000.0f)
+        {
+            // Medium detail - LOD 1
+            SetLODLevel(1);
+        }
+        else if (Distance < 10000.0f)
+        {
+            // Low detail - LOD 2
+            SetLODLevel(2);
+        }
+        else
+        {
+            // Very low detail or culled - LOD 3
+            SetLODLevel(3);
+        }
+    }
+}
+```
+
+---
+
+## C++ Subsystem Creation Pattern
+
+### Custom Game Instance Subsystem Example
+
+```cpp
+// Header: Source/Adastrea/Public/YourSystem/YourSubsystem.h
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Subsystems/GameInstanceSubsystem.h"
+#include "YourSubsystem.generated.h"
+
+/**
+ * Your Custom Subsystem
+ * Game Instance subsystems persist across level transitions
+ * Perfect for global managers and state
+ */
+UCLASS()
+class ADASTREA_API UYourSubsystem : public UGameInstanceSubsystem
+{
+    GENERATED_BODY()
+
+public:
+    // ====================
+    // Subsystem Lifecycle
+    // ====================
+
+    /** Called when subsystem is created */
+    virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+
+    /** Called when subsystem is destroyed */
+    virtual void Deinitialize() override;
+
+    /** Should this subsystem be created? */
+    virtual bool ShouldCreateSubsystem(UObject* Outer) const override { return true; }
+
+    // ====================
+    // Your Subsystem Functions
+    // ====================
+
+    UFUNCTION(BlueprintCallable, Category="Your Subsystem")
+    void YourFunction();
+
+protected:
+    /** Your subsystem state */
+    UPROPERTY()
+    TArray<UObject*> YourState;
+};
+
+// Implementation
+void UYourSubsystem::Initialize(FSubsystemCollectionBase& Collection)
+{
+    Super::Initialize(Collection);
+    // Initialize your subsystem
+    UE_LOG(LogTemp, Log, TEXT("YourSubsystem initialized"));
+}
+
+void UYourSubsystem::Deinitialize()
+{
+    // Cleanup
+    YourState.Empty();
+    Super::Deinitialize();
+}
+```
+
+---
+
 ## Additional Resources
 
 - **C++ Input Handling**: See `InputConfigDataAsset.h` for reference
 - **Enhanced Input Docs**: [Unreal Engine Enhanced Input](https://docs.unrealengine.com/5.6/en-US/enhanced-input-in-unreal-engine/)
 - **Data-Driven C++**: All Adastrea systems use Data Assets for configuration while keeping logic in C++
+- **Networking**: [Unreal Engine Networking](https://docs.unrealengine.com/5.6/en-US/networking-and-multiplayer-in-unreal-engine/)
+- **Subsystems**: [Unreal Engine Subsystems](https://docs.unrealengine.com/5.6/en-US/programming-subsystems-in-unreal-engine/)
+- **Performance**: [Unreal Engine Performance Guidelines](https://docs.unrealengine.com/5.6/en-US/performance-guidelines-for-unreal-engine/)
 
 ---
 
-**Questions?** The input system in Adastrea is already C++-focused. The Input Actions are just lightweight configuration data, not Blueprint "graphs."
+## Summary: Extending Adastrea with C++
+
+This guide has shown you:
+
+1. **Minimal Setup** - Essential Blueprints for C++ workflow
+2. **Input System** - C++ implementation with Enhanced Input
+3. **FactionLogic** - Strategic AI for factions
+4. **FactionRuntimeState** - Dynamic faction state tracking
+5. **MaterialCrafting** - Crafting system implementation
+6. **MarketSimulator** - Advanced trading simulation
+7. **Networking Foundation** - Multiplayer preparation
+8. **Performance Patterns** - Object pooling, LOD management
+9. **Subsystem Creation** - Custom game subsystems
+
+**All examples follow Adastrea's core principles:**
+- ✅ Data-Driven Design (Data Assets for config)
+- ✅ Blueprint Exposure (BlueprintCallable, BlueprintNativeEvent)
+- ✅ C++ Performance (Core logic in C++)
+- ✅ Designer-Friendly (Blueprint override capability)
+- ✅ Modular Architecture (Independent, reusable systems)
+
+**Questions?** The input system in Adastrea is already C++-focused. The Input Actions are just lightweight configuration data, not Blueprint "graphs." Use these patterns to extend Adastrea with additional C++ systems while maintaining designer accessibility.
