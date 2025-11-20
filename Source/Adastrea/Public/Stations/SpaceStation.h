@@ -90,6 +90,24 @@ public:
     UFUNCTION(BlueprintCallable, Category="Station")
     int32 GetModuleCount() const;
 
+    /**
+     * Set the faction that owns this station
+     * @param NewFaction The faction to assign to this station
+     */
+    UFUNCTION(BlueprintCallable, Category="Station")
+    void SetFaction(class UFactionDataAsset* NewFaction);
+
+    /**
+     * Get the faction that owns this station
+     * @return The faction data asset, or nullptr if no faction is assigned
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station")
+    class UFactionDataAsset* GetFaction() const;
+
 protected:
     virtual void BeginPlay() override;
+
+    /** The faction that owns this station */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Station")
+    class UFactionDataAsset* OwningFaction;
 };

@@ -65,6 +65,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Faction Config")
 	bool bIsMajorFaction;
 
+	/** Technology level of this faction (1-10, affects available modules and equipment) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Faction Config", meta=(ClampMin="1", ClampMax="10"))
+	int32 TechnologyLevel;
+
 	// ====================
 	// Blueprint Functions
 	// ====================
