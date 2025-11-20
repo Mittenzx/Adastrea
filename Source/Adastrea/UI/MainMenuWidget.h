@@ -110,7 +110,7 @@ protected:
 	/**
 	 * Version string to display on the menu
 	 */
-	UPROPERTY(BlueprintReadOnly, Category="Main Menu|Display")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Main Menu|Display")
 	FText VersionText;
 
 	/**

@@ -17,7 +17,7 @@ void UMainMenuWidget::NativeConstruct()
 	Super::NativeConstruct();
 	
 	// Initialize the menu when constructed
-	InitializeMenu_Implementation();
+	InitializeMenu();
 	
 	UE_LOG(LogAdastrea, Log, TEXT("MainMenuWidget: Menu constructed"));
 }
@@ -63,7 +63,7 @@ void UMainMenuWidget::OnStartGameClicked_Implementation()
 	}
 	
 	// Transition to gameplay level
-	TransitionToGameplay_Implementation(GameplayLevelName);
+	TransitionToGameplay(GameplayLevelName);
 }
 
 void UMainMenuWidget::OnSettingsClicked_Implementation()
@@ -79,7 +79,7 @@ void UMainMenuWidget::OnQuitClicked_Implementation()
 	UE_LOG(LogAdastrea, Log, TEXT("MainMenuWidget: Quit clicked"));
 	
 	// Show confirmation dialog (can be overridden in Blueprint)
-	ShowQuitConfirmation_Implementation();
+	ShowQuitConfirmation();
 }
 
 void UMainMenuWidget::UpdateVersionText(const FText& NewVersionText)
