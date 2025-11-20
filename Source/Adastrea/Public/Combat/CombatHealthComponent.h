@@ -236,6 +236,21 @@ public:
     UFUNCTION(BlueprintCallable, BlueprintPure, Category="Combat Health")
     EShieldFacing GetHitFacing(FVector HitDirection) const;
 
+    /**
+     * Get shield facing data for a specific facing
+     * @param Facing Shield facing to query
+     * @return Shield facing data
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Combat Health")
+    FShieldFacingData GetShieldFacingData(EShieldFacing Facing) const;
+
+    /**
+     * Check if shields are currently recharging
+     * @return true if shields are recharging
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Combat Health")
+    bool IsRecharging() const;
+
     // ====================
     // BLUEPRINT NATIVE EVENTS
     // ====================

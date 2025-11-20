@@ -22,21 +22,6 @@ void AAdastreaGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-           FAdastreaDirectorModule & Module = FModuleManager::LoadModuleChecked<FAdastreaDirectorModule>("AdastreaDirector");
-            FPythonBridge* Bridge = Module.GetPythonBridge();
-
-    if (Bridge)
-    {
-        UE_LOG(LogTemp, Log, TEXT("Python bridge found"));
-        UE_LOG(LogTemp, Log, TEXT("Is Ready: %s"), Bridge->IsReady() ? TEXT("Yes") : TEXT("No"));
-        UE_LOG(LogTemp, Log, TEXT("Process ID: %d"), Bridge->GetProcessId());
-    }
-    Make sure your C++ is set up so Bridge->IsReady(), Bridge->GetProcessId() can be called.
-        Blueprint:
-
-    You’ll typically need a wrapper function, or expose this logic via blueprint callable nodes.
-
-
 	// Automatically spawn player spaceship if enabled and configured
 	if (bAutoSpawnPlayerShip)
 	{

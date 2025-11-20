@@ -319,6 +319,59 @@ EShieldFacing UCombatHealthComponent::GetHitFacing(FVector HitDirection) const
     }
 }
 
+FShieldFacingData UCombatHealthComponent::GetShieldFacingData(EShieldFacing Facing) const
+{
+    if (bUseDirectionalShields && ShieldFacings.Contains(Facing))
+    {
+        FShieldFacingData Data = ShieldFacings[Facing];
+        // Calculate recharge delay based on time since last damage
+        Data.RechargeDelay = FMath::Max(0.0f, ShieldRechargeDelay - TimeSinceLastDamage);
+        return Data;
+    }
+    
+    // Return empty data if not using directional shields or facing not found
+    FShieldFacingData EmptyData;
+    EmptyData.CurrentStrength = 0.0f;
+    EmptyData.MaxStrength = 0.0f;
+    EmptyData.RechargeDelay = 0.0f;
+    return EmptyData;
+}
+
+bool UCombatHealthComponent::IsRecharging() const
+{
+    // Shields are recharging if:
+    // 1. Not destroyed
+    // 2. Not overloaded
+    // 3. Past the recharge delay
+    // 4. Current shield strength is less than max
+    if (bIsDestroyed || bShieldsOverloaded || MaxShieldStrength <= 0.0f)
+    {
+        return false;
+    }
+    
+    if (TimeSinceLastDamage < ShieldRechargeDelay)
+    {
+        return false;
+    }
+    
+    if (bUseDirectionalShields)
+    {
+        // Check if any facing is recharging
+        for (const auto& Pair : ShieldFacings)
+        {
+            if (Pair.Value.CurrentStrength < Pair.Value.MaxStrength)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    else
+    {
+        return CurrentShieldStrength < MaxShieldStrength;
+    }
+}
+
 void UCombatHealthComponent::OnHullDamaged_Implementation(float DamageAmount, AActor* DamageCauser)
 {
     UE_LOG(LogAdastreaCombat, Log, TEXT("Hull damaged: %.1f (%.1f%% remaining)"), 
