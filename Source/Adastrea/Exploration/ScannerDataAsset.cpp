@@ -34,6 +34,7 @@ UScannerDataAsset::UScannerDataAsset()
 
 EScanDetailLevel UScannerDataAsset::GetDetailLevelAtDistance(float Distance) const
 {
+	// Note: Logic assumes ActiveRange > PassiveRange > DetailRevealDistance (e.g., 50km > 10km > 5km)
 	if (Distance > ActiveRange)
 	{
 		return EScanDetailLevel::None;

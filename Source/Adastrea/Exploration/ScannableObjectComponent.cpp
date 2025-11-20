@@ -145,7 +145,12 @@ void UScannableObjectComponent::MarkAsScanned(EScanDetailLevel DetailLevel)
 	bool bFirstScan = !bHasBeenScanned;
 
 	bHasBeenScanned = true;
-	DiscoveryTime = GetWorld()->GetTimeSeconds();
+
+	// Only set discovery time on first scan
+	if (bFirstScan)
+	{
+		DiscoveryTime = GetWorld()->GetTimeSeconds();
+	}
 
 	// Update highest scan level if this is better
 	if (DetailLevel > HighestScanLevel)

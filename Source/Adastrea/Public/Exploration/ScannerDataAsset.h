@@ -28,7 +28,7 @@ enum class EScanMode : uint8
 	Passive			UMETA(DisplayName = "Passive Scanning"),
 	Active			UMETA(DisplayName = "Active Scanning"),
 	DeepScan		UMETA(DisplayName = "Deep Scan"),
-	Surface			UMETA(DisplayName = "Surface Scan")
+	Surface			UMETA(DisplayName = "Surface Scan")		// Reserved for Phase 2: Planetary surface scanning
 };
 
 /**
@@ -195,7 +195,7 @@ public:
 	 * @param Distance Distance to target in cm
 	 * @return Detail level available at this distance
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Scanner")
+	UFUNCTION(BlueprintPure, Category="Scanner")
 	EScanDetailLevel GetDetailLevelAtDistance(float Distance) const;
 
 	/**
@@ -203,7 +203,7 @@ public:
 	 * @param SignalType Type of signal to check
 	 * @return True if scanner supports this signal type
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Scanner")
+	UFUNCTION(BlueprintPure, Category="Scanner")
 	bool CanDetectSignalType(ESignalType SignalType) const;
 
 	/**
@@ -211,7 +211,7 @@ public:
 	 * @param bDeepScan Whether performing a deep scan
 	 * @return Time in seconds to complete scan
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Scanner")
+	UFUNCTION(BlueprintPure, Category="Scanner")
 	float GetScanTime(bool bDeepScan = false) const;
 
 	/**
@@ -219,6 +219,6 @@ public:
 	 * @param ScanMode Mode of scanning
 	 * @return Range in cm
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Scanner")
+	UFUNCTION(BlueprintPure, Category="Scanner")
 	float GetEffectiveRange(EScanMode ScanMode) const;
 };

@@ -172,14 +172,14 @@ public:
 	 * @param SignalType Type of signal to filter
 	 * @return Array of detected objects
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Passive Scanning")
+	UFUNCTION(BlueprintPure, Category="Passive Scanning")
 	TArray<FDetectedObject> GetDetectedObjectsByType(ESignalType SignalType) const;
 
 	/**
 	 * Get nearest detected object
 	 * @return Nearest detected object, or invalid if none
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Passive Scanning")
+	UFUNCTION(BlueprintPure, Category="Passive Scanning")
 	FDetectedObject GetNearestDetectedObject() const;
 
 	/**
@@ -187,7 +187,7 @@ public:
 	 * @param Actor Actor to check
 	 * @return True if detected
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Passive Scanning")
+	UFUNCTION(BlueprintPure, Category="Passive Scanning")
 	bool IsObjectDetected(AActor* Actor) const;
 
 	// ====================
@@ -227,14 +227,14 @@ public:
 	 * @param OutReason Reason why scan cannot start (if false)
 	 * @return True if can start scan
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Active Scanning")
+	UFUNCTION(BlueprintCallable, Category="Active Scanning")
 	bool CanStartActiveScan(AActor* Target, FText& OutReason) const;
 
 	/**
 	 * Get scan progress (0-1)
 	 * @return Progress of current scan, 0 if no scan in progress
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Active Scanning")
+	UFUNCTION(BlueprintPure, Category="Active Scanning")
 	float GetScanProgress() const;
 
 	// ====================

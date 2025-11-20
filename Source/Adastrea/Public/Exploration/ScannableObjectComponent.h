@@ -171,7 +171,7 @@ public:
 	 * @param DetailLevel Level of detail to retrieve
 	 * @return Scan data at this detail level
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Scannable Object")
+	UFUNCTION(BlueprintPure, Category="Scannable Object")
 	FScanData GetScanData(EScanDetailLevel DetailLevel) const;
 
 	/**
@@ -181,7 +181,7 @@ public:
 	 * @param bIsActiveScan Is this an active scan?
 	 * @return True if detectable
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Scannable Object")
+	UFUNCTION(BlueprintPure, Category="Scannable Object")
 	bool IsDetectable(const UScannerDataAsset* ScannerData, float Distance, bool bIsActiveScan) const;
 
 	/**
@@ -189,7 +189,7 @@ public:
 	 * @param ScannerData Scanner configuration
 	 * @return Signal type visible to this scanner
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Scannable Object")
+	UFUNCTION(BlueprintPure, Category="Scannable Object")
 	ESignalType GetVisibleSignalType(const UScannerDataAsset* ScannerData) const;
 
 	/**

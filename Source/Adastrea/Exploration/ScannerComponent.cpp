@@ -2,6 +2,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Actor.h"
 #include "Engine/World.h"
+#include "AdastreaLog.h"
 
 UScannerComponent::UScannerComponent()
 {
@@ -25,7 +26,7 @@ void UScannerComponent::BeginPlay()
 
 	if (!ScannerData)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ScannerComponent: No ScannerDataAsset assigned!"));
+		UE_LOG(LogAdastreaExploration, Warning, TEXT("ScannerComponent: No ScannerDataAsset assigned!"));
 	}
 }
 
@@ -129,7 +130,7 @@ void UScannerComponent::UpdatePassiveScanning(float DeltaTime)
 
 			if (bDebugShowDetections)
 			{
-				UE_LOG(LogTemp, Log, TEXT("Scanner: Detected new object '%s' at distance %.0f cm"), 
+				UE_LOG(LogAdastreaExploration, Log, TEXT("Scanner: Detected new object '%s' at distance %.0f cm"), 
 					*Scannable->DisplayName.ToString(), Distance);
 			}
 
@@ -147,7 +148,7 @@ void UScannerComponent::UpdatePassiveScanning(float DeltaTime)
 
 			if (bDebugShowDetections && LostObject.ScannableComponent)
 			{
-				UE_LOG(LogTemp, Log, TEXT("Scanner: Lost object '%s'"), 
+				UE_LOG(LogAdastreaExploration, Log, TEXT("Scanner: Lost object '%s'"), 
 					*LostObject.ScannableComponent->DisplayName.ToString());
 			}
 
@@ -192,32 +193,38 @@ TArray<UScannableObjectComponent*> UScannerComponent::FindScannableObjectsInRang
 	TArray<UScannableObjectComponent*> Result;
 
 	AActor* OwnerActor = GetOwner();
-	if (!OwnerActor)
+	if (!OwnerActor || !GetWorld())
 	{
 		return Result;
 	}
 
 	FVector ScanOrigin = OwnerActor->GetActorLocation();
 
-	// Find all actors with scannable components
-	TArray<AActor*> AllActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AActor::StaticClass(), AllActors);
+	// Use spatial query to find actors within range
+	// This is much more efficient than GetAllActorsOfClass
+	TArray<FOverlapResult> OverlapResults;
+	FCollisionShape SphereShape = FCollisionShape::MakeSphere(Range);
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(OwnerActor);
 
-	for (AActor* Actor : AllActors)
+	GetWorld()->OverlapMultiByChannel(
+		OverlapResults,
+		ScanOrigin,
+		FQuat::Identity,
+		ECC_WorldDynamic,  // Consider using a custom channel for scannable objects
+		SphereShape,
+		QueryParams
+	);
+
+	// Extract scannable components from overlapped actors
+	for (const FOverlapResult& Overlap : OverlapResults)
 	{
+		AActor* Actor = Overlap.GetActor();
 		if (!Actor || Actor == OwnerActor)
 		{
 			continue;
 		}
 
-		// Check distance
-		float Distance = FVector::Dist(ScanOrigin, Actor->GetActorLocation());
-		if (Distance > Range)
-		{
-			continue;
-		}
-
-		// Check for scannable component
 		UScannableObjectComponent* Scannable = Actor->FindComponentByClass<UScannableObjectComponent>();
 		if (Scannable)
 		{
@@ -303,12 +310,13 @@ bool UScannerComponent::StartActiveScan(AActor* Target, EScanMode ScanMode)
 
 	bScanInProgress = true;
 
-	// Start cooldown
+	// Start cooldown immediately to prevent scan spam
+	// Note: Cooldown applies even if scan is cancelled to prevent abuse
 	ScanCooldownRemaining = ScannerData->ScanCooldown;
 
 	if (bDebugShowDetections)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Scanner: Started %s scan of '%s' (%.1f seconds)"), 
+		UE_LOG(LogAdastreaExploration, Log, TEXT("Scanner: Started %s scan of '%s' (%.1f seconds)"), 
 			ScanMode == EScanMode::DeepScan ? TEXT("deep") : TEXT("active"),
 			*Target->GetName(), CurrentScan.Duration);
 	}
@@ -322,7 +330,7 @@ void UScannerComponent::CancelActiveScan()
 	{
 		if (bDebugShowDetections)
 		{
-			UE_LOG(LogTemp, Log, TEXT("Scanner: Active scan cancelled"));
+			UE_LOG(LogAdastreaExploration, Log, TEXT("Scanner: Active scan cancelled"));
 		}
 
 		OnScanFailed(FText::FromString("Scan cancelled"));
@@ -443,7 +451,7 @@ void UScannerComponent::CompleteActiveScan()
 
 	if (bDebugShowDetections)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Scanner: Scan complete for '%s' - Detail Level: %d"), 
+		UE_LOG(LogAdastreaExploration, Log, TEXT("Scanner: Scan complete for '%s' - Detail Level: %d"), 
 			*ScanData.ObjectName.ToString(), (int32)DetailLevel);
 	}
 
