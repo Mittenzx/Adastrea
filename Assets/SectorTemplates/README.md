@@ -124,7 +124,7 @@ Sector Councils are the practical governance bodies for 200km x 200km regions of
 
 1. **Create Data Asset:**
    - In Unreal Editor, navigate to `Content/DataAssets/Sectors/`
-   - Right-click → Blueprint Class → Parent Class: `SectorCouncilDataAsset`
+   - Right-click → Miscellaneous → Data Asset → Data Asset Class: `SectorCouncilDataAsset`
    - Name: `DA_Council_SectorName` (e.g., `DA_Council_CoreSystems`)
 
 2. **Copy Values from YAML:**

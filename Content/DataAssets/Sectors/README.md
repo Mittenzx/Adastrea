@@ -7,7 +7,7 @@ This directory contains Sector Council Data Assets for different regions of spac
 ### Method 1: Manual Creation in Unreal Editor
 
 1. Right-click in this folder
-2. Blueprint Class → Parent Class: `SectorCouncilDataAsset`
+2. Miscellaneous → Data Asset → Data Asset Class: `SectorCouncilDataAsset`
 3. Name: `DA_Council_SectorName`
 4. Double-click to open and configure properties
 5. Use YAML templates from `Assets/SectorTemplates/` for reference

@@ -44,6 +44,24 @@ Council:
       VotingWeight: 12
       YearsOfService: 1
       IsPlayerControlled: false
+      
+    - RepresentingWay: Prospectors_Union
+      RepresentativeName: "Lars Feldman"
+      VotingWeight: 8
+      YearsOfService: 2
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Mining_Equipment_Suppliers
+      RepresentativeName: "Sasha Volkov"
+      VotingWeight: 10
+      YearsOfService: 3
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Local_Settlers_Coalition
+      RepresentativeName: "Maria Lopez"
+      VotingWeight: 7
+      YearsOfService: 1
+      IsPlayerControlled: false
 
 Taxation:
   SecurityTaxRate: 18       # High - need protection from pirates

@@ -45,6 +45,36 @@ Council:
       VotingWeight: 20
       YearsOfService: 12
       IsPlayerControlled: false
+      
+    - RepresentingWay: Bioinformatics_Alliance
+      RepresentativeName: "Dr. Priya Raman"
+      VotingWeight: 14
+      YearsOfService: 7
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Quantum_Research_Group
+      RepresentativeName: "Professor Markus Lindholm"
+      VotingWeight: 13
+      YearsOfService: 6
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Experimental_Physics_Forum
+      RepresentativeName: "Dr. Sofia Alvarez"
+      VotingWeight: 12
+      YearsOfService: 5
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Applied_Mathematics_Union
+      RepresentativeName: "Professor Wei Zhang"
+      VotingWeight: 11
+      YearsOfService: 4
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Robotics_Innovation_Circle
+      RepresentativeName: "Chief Roboticist Samuel Okoye"
+      VotingWeight: 9
+      YearsOfService: 3
+      IsPlayerControlled: false
 
 Taxation:
   SecurityTaxRate: 5        # Low - peaceful area

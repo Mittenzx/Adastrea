@@ -70,7 +70,7 @@ Pick from `Assets/SectorTemplates/` based on desired gameplay
 ### Step 2: Create Data Asset
 ```
 Content/DataAssets/Sectors/ → Right-click
-→ Blueprint Class → SectorCouncilDataAsset
+→ Miscellaneous → Data Asset → SectorCouncilDataAsset
 → Name: DA_Council_YourSectorName
 ```
 

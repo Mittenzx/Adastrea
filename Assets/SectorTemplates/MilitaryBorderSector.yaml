@@ -45,6 +45,30 @@ Council:
       VotingWeight: 15
       YearsOfService: 7
       IsPlayerControlled: false
+      
+    - RepresentingWay: Intelligence_Office
+      RepresentativeName: "Captain Nadia Petrov"
+      VotingWeight: 10
+      YearsOfService: 5
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Engineering_Corps
+      RepresentativeName: "Chief Engineer Tomasz Nowak"
+      VotingWeight: 8
+      YearsOfService: 6
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Civilian_Liaison
+      RepresentativeName: "Advisor Miriam Okafor"
+      VotingWeight: 6
+      YearsOfService: 3
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Communications_Command
+      RepresentativeName: "Lieutenant Raul Ortega"
+      VotingWeight: 5
+      YearsOfService: 2
+      IsPlayerControlled: false
 
 Taxation:
   SecurityTaxRate: 25       # Very high - military operations costly

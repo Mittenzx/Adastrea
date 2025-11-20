@@ -45,6 +45,18 @@ Council:
       VotingWeight: 13
       YearsOfService: 1
       IsPlayerControlled: false
+      
+    - RepresentingWay: Frontier_Medics
+      RepresentativeName: "Dr. Hassan Khalid"
+      VotingWeight: 12
+      YearsOfService: 2
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Salvage_Cooperative
+      RepresentativeName: "Rita 'Scrap' Morrison"
+      VotingWeight: 11
+      YearsOfService: 3
+      IsPlayerControlled: false
 
 Taxation:
   SecurityTaxRate: 4        # Minimal - volunteer militia

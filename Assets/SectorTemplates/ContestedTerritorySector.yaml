@@ -57,6 +57,48 @@ Council:
       VotingWeight: 12
       YearsOfService: 1
       IsPlayerControlled: true  # Player seat available!
+      
+    - RepresentingWay: Frontier_Settlers
+      RepresentativeName: "Governor Tom Bridger"
+      VotingWeight: 10
+      YearsOfService: 4
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Salvage_Guild
+      RepresentativeName: "Rita 'Scrap' Chen"
+      VotingWeight: 9
+      YearsOfService: 2
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Research_Collective
+      RepresentativeName: "Dr. Elena Volkov"
+      VotingWeight: 8
+      YearsOfService: 3
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Security_Contractors
+      RepresentativeName: "Captain Jack Morrison"
+      VotingWeight: 11
+      YearsOfService: 5
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Medical_Coalition
+      RepresentativeName: "Dr. Sarah Hassan"
+      VotingWeight: 7
+      YearsOfService: 2
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Transport_Alliance
+      RepresentativeName: "Pilot Commander Lisa Tanaka"
+      VotingWeight: 8
+      YearsOfService: 3
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Agricultural_Cooperative
+      RepresentativeName: "Farmer Carlos Verde"
+      VotingWeight: 6
+      YearsOfService: 1
+      IsPlayerControlled: false
 
 Taxation:
   SecurityTaxRate: 15       # High - internal conflict

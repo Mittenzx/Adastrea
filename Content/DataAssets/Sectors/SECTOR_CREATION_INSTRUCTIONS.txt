@@ -20,8 +20,8 @@ STEPS TO CREATE A SECTOR COUNCIL:
 
 2. CREATE NEW DATA ASSET
    - Right-click in empty space
-   - Select "Blueprint Class"
-   - In the "Pick Parent Class" dialog, search for: SectorCouncilDataAsset
+   - Select "Miscellaneous" → "Data Asset" (or search for "Data Asset")
+   - In the "Pick Data Asset Class" dialog, search for: SectorCouncilDataAsset
    - Select "SectorCouncilDataAsset"
    - Name it: DA_Council_YourSectorName
    - Press Enter to create

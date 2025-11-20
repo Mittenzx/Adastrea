@@ -71,8 +71,8 @@ Pick a template from `Assets/SectorTemplates/` based on your desired gameplay:
 **In Unreal Editor:**
 
 1. Navigate to `Content/DataAssets/Sectors/`
-2. Right-click → Blueprint Class
-3. Search for and select: `SectorCouncilDataAsset`
+2. Right-click → Miscellaneous → Data Asset (or search for "Data Asset")
+3. Select `SectorCouncilDataAsset` as the Data Asset class
 4. Name it: `DA_Council_YourSectorName`
 5. Double-click to open
 

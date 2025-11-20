@@ -50,6 +50,42 @@ Council:
       VotingWeight: 11
       YearsOfService: 5
       IsPlayerControlled: false
+      
+    - RepresentingWay: Logistics_Consortium
+      RepresentativeName: "Aisha Patel"
+      VotingWeight: 10
+      YearsOfService: 7
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Agricultural_Union
+      RepresentativeName: "Samuel Green"
+      VotingWeight: 9
+      YearsOfService: 9
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Civic_Planning_Board
+      RepresentativeName: "Maria Lopez"
+      VotingWeight: 8
+      YearsOfService: 6
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Cultural_Committee
+      RepresentativeName: "Yuri Petrov"
+      VotingWeight: 7
+      YearsOfService: 4
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Environmental_Agency
+      RepresentativeName: "Dr. Linh Tran"
+      VotingWeight: 6
+      YearsOfService: 8
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Education_Council
+      RepresentativeName: "Helen Carter"
+      VotingWeight: 5
+      YearsOfService: 3
+      IsPlayerControlled: false
 
 Taxation:
   SecurityTaxRate: 8        # Low - area is safe

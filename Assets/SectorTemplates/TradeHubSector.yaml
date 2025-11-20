@@ -57,6 +57,54 @@ Council:
       VotingWeight: 16
       YearsOfService: 4
       IsPlayerControlled: false
+      
+    - RepresentingWay: Food_Importers
+      RepresentativeName: "Helena Markov"
+      VotingWeight: 10
+      YearsOfService: 3
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Tech_Consortium
+      RepresentativeName: "Dr. Felix Orin"
+      VotingWeight: 11
+      YearsOfService: 2
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Passenger_Transit
+      RepresentativeName: "Lia Sato"
+      VotingWeight: 9
+      YearsOfService: 4
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Dock_Operators
+      RepresentativeName: "Boris Petrov"
+      VotingWeight: 8
+      YearsOfService: 5
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Medical_Services
+      RepresentativeName: "Dr. Amira Hassan"
+      VotingWeight: 7
+      YearsOfService: 6
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Energy_Providers
+      RepresentativeName: "Galen Price"
+      VotingWeight: 6
+      YearsOfService: 2
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Small_Business_Alliance
+      RepresentativeName: "Rosa Kim"
+      VotingWeight: 5
+      YearsOfService: 1
+      IsPlayerControlled: false
+      
+    - RepresentingWay: Cargo_Insurance
+      RepresentativeName: "Samuel DeWitt"
+      VotingWeight: 6
+      YearsOfService: 3
+      IsPlayerControlled: false
 
 Taxation:
   SecurityTaxRate: 7        # Low-moderate - protect trade
