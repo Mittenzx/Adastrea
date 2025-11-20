@@ -2,7 +2,6 @@
 #include "Ships/Spaceship.h"
 #include "GameFramework/PlayerController.h"
 #include "Player/AdastreaGameInstance.h"
-#include "Player/AdastreaSaveGame.h"
 #include "Kismet/GameplayStatics.h"
 
 UAdastreaHUDWidget::UAdastreaHUDWidget(const FObjectInitializer& ObjectInitializer)
@@ -214,8 +213,8 @@ void UAdastreaHUDWidget::RefreshShipInfo()
 		FText ShipClass = Ship->GetShipClass();
 		
 		// Get hull integrity values
-		float CurrentIntegrity = Ship->CurrentHullIntegrity;
-		float MaxIntegrity = Ship->MaxHullIntegrity;
+		float CurrentIntegrity = Ship->GetCurrentHullIntegrity();
+		float MaxIntegrity = Ship->GetMaxHullIntegrity();
 		
 		// Update the displays
 		UpdateShipInfo(ShipName, ShipClass, CurrentIntegrity, MaxIntegrity);

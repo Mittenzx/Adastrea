@@ -88,6 +88,20 @@ public:
     FText GetShipClass() const;
 
     /**
+     * Get the current hull integrity
+     * @return The current hull integrity value
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship")
+    float GetCurrentHullIntegrity() const;
+
+    /**
+     * Get the maximum hull integrity
+     * @return The maximum hull integrity value
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship")
+    float GetMaxHullIntegrity() const;
+
+    /**
      * Transition player into the ship's interior space
      * @param PlayerController The controller to transition into the interior
      */

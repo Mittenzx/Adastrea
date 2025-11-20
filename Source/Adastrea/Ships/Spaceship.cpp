@@ -258,3 +258,13 @@ FText ASpaceship::GetShipClass() const
     // Default fallback
     return FText::FromString("Starship");
 }
+
+float ASpaceship::GetCurrentHullIntegrity() const
+{
+    return CurrentHullIntegrity;
+}
+
+float ASpaceship::GetMaxHullIntegrity() const
+{
+    return MaxHullIntegrity;
+}
