@@ -247,7 +247,7 @@ AMySpaceship::AMySpaceship()
 ❌ **Blueprint Actor Classes** - Use pure C++ actors
 ❌ **Blueprint Function Libraries** - Use C++ static functions
 ❌ **Blueprint Interfaces** - Use C++ interfaces (IInterface)
-❌ **Blueprint AI Logic** - Use C++ AI classes (`UFactionLogic`, `UPersonnelLogic`)
+❌ **Blueprint AI Logic** - Use C++ AI classes (`UWayLogic`, `UPersonnelLogic`)
 
 ### Exception: Visual Assets
 ✅ **Static Meshes, Materials, Textures** - These are always assets (not Blueprints)
@@ -304,446 +304,546 @@ The following sections describe advanced C++ systems you can implement to expand
 
 ---
 
-## Faction Logic System (C++ Implementation)
+## Way Logic System (C++ Implementation)
 
-### UFactionLogic - Strategic AI for Factions
+### UWayLogic - Economic AI for Ways (Guilds)
 
-**Purpose**: Implements strategic decision-making for factions at a high level.
+**Purpose**: Implements economic and operational decision-making for Ways (specialized guilds).
 
-**Header File** (`Source/Adastrea/Public/AI/FactionLogic.h`):
+**Header File** (`Source/Adastrea/Public/AI/WayLogic.h`):
 
 ```cpp
 #pragma once
 
 #include "CoreMinimal.h"
 #include "AI/NPCLogicBase.h"
-#include "Factions/FactionDataAsset.h"
-#include "FactionLogic.generated.h"
+#include "Way/Way.h"
+#include "WayLogic.generated.h"
 
 /**
- * Faction Logic - Strategic AI for faction-level decisions
+ * Way Logic - Economic AI for guild-level decisions
  * 
  * Handles:
- * - Diplomatic actions (declare war, make peace, form alliances)
- * - Economic decisions (trade routes, market manipulation)
- * - Military strategy (fleet movements, territory control)
- * - Research priorities (technology advancement)
+ * - Production decisions (what to produce, quantity)
+ * - Trade agreements (forming supply chains with other Ways)
+ * - Quality management (maintaining reputation tier)
+ * - Resource allocation (workers, materials, capital)
+ * - Network participation (cooperation within Way Networks)
  * 
  * Usage:
  * 1. Create Blueprint based on this class
  * 2. Override BlueprintNativeEvent functions for custom behavior
- * 3. Attach to faction-controlled actors or game state
+ * 3. Attach to Way-controlled actors or stations
  */
 UCLASS(BlueprintType, Blueprintable)
-class ADASTREA_API UFactionLogic : public UNPCLogicBase
+class ADASTREA_API UWayLogic : public UNPCLogicBase
 {
     GENERATED_BODY()
 
 public:
-    UFactionLogic();
+    UWayLogic();
 
     // ====================
     // Configuration
     // ====================
 
-    /** Faction data this logic controls */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Faction Logic")
-    UFactionDataAsset* FactionData;
+    /** Way data this logic controls */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Way Logic")
+    UWayDataAsset* WayData;
 
-    /** How aggressive the faction is (0.0 = peaceful, 1.0 = aggressive) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Faction Logic", meta=(ClampMin=0.0, ClampMax=1.0))
-    float AggressionLevel;
+    /** How aggressively the Way pursues growth (0.0 = conservative, 1.0 = aggressive) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Way Logic", meta=(ClampMin=0.0, ClampMax=1.0))
+    float GrowthAmbition;
 
-    /** How much the faction prioritizes economic growth */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Faction Logic", meta=(ClampMin=0.0, ClampMax=1.0))
-    float EconomicFocus;
+    /** How much the Way prioritizes quality over quantity */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Way Logic", meta=(ClampMin=0.0, ClampMax=1.0))
+    float QualityFocus;
 
-    /** How much the faction prioritizes military strength */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Faction Logic", meta=(ClampMin=0.0, ClampMax=1.0))
-    float MilitaryFocus;
+    /** How much the Way prioritizes network cooperation */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Way Logic", meta=(ClampMin=0.0, ClampMax=1.0))
+    float CooperationLevel;
 
-    /** How much the faction prioritizes diplomacy */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Faction Logic", meta=(ClampMin=0.0, ClampMax=1.0))
-    float DiplomaticFocus;
+    /** How risk-tolerant the Way is in business decisions */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Way Logic", meta=(ClampMin=0.0, ClampMax=1.0))
+    float RiskTolerance;
 
     // ====================
     // Decision Functions (BlueprintNativeEvent)
     // ====================
 
     /**
-     * Decide on diplomatic action toward another faction
-     * @param TargetFaction The faction to interact with
-     * @param CurrentRelationship Current relationship value (-100 to 100)
-     * @return Decision: 0=No Action, 1=Improve Relations, 2=Worsen Relations, 3=Declare War, 4=Propose Alliance
+     * Decide on production strategy
+     * @param CurrentDemand Market demand for products (0.0 to 1.0)
+     * @param AvailableResources Current resource availability
+     * @return Decision: 0=Reduce Production, 1=Maintain, 2=Increase Production, 3=Upgrade Quality
      */
-    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Faction Logic|Diplomacy")
-    int32 DecideDiplomaticAction(UFactionDataAsset* TargetFaction, int32 CurrentRelationship);
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Way Logic|Production")
+    int32 DecideProductionStrategy(float CurrentDemand, int32 AvailableResources);
 
     /**
-     * Decide on economic action
-     * @param MarketConditions Current market state data
-     * @return Decision: 0=Hold, 1=Invest, 2=Sell, 3=Embargo, 4=Trade Agreement
+     * Decide whether to form trade agreement with another Way
+     * @param OtherWay The Way proposing agreement
+     * @param ProposedTerms Description of agreement terms
+     * @return True if Way should accept agreement
      */
-    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Faction Logic|Economy")
-    int32 DecideEconomicAction(const FString& MarketConditions);
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Way Logic|Trade")
+    bool ShouldAcceptTradeAgreement(UWayDataAsset* OtherWay, const FString& ProposedTerms);
 
     /**
-     * Decide on military action
-     * @param ThreatLevel Perceived threat level (0.0 to 1.0)
-     * @param AvailableForces Number of available military units
-     * @return Decision: 0=Defend, 1=Patrol, 2=Attack, 3=Retreat, 4=Fortify
+     * Decide how to respond to player's feat (accomplishment)
+     * @param FeatPrecepts Precepts aligned with the feat
+     * @param FeatMagnitude How impressive the feat is (0.0 to 1.0)
+     * @return Reputation change to grant player (-10 to +50)
      */
-    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Faction Logic|Military")
-    int32 DecideMilitaryAction(float ThreatLevel, int32 AvailableForces);
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Way Logic|Reputation")
+    int32 EvaluateFeatReward(const TArray<EPrecept>& FeatPrecepts, float FeatMagnitude);
 
     /**
-     * Evaluate if faction should go to war
-     * @param TargetFaction Potential war target
-     * @param RelationshipValue Current relationship (-100 to 100)
-     * @return True if faction should declare war
+     * Decide on resource allocation strategy
+     * @param AvailableCapital Amount of capital available
+     * @param CurrentProduction Current production output
+     * @return Decision: 0=Save, 1=Hire Workers, 2=Buy Materials, 3=Upgrade Facility, 4=Research
      */
-    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Faction Logic|Diplomacy")
-    bool ShouldDeclareWar(UFactionDataAsset* TargetFaction, int32 RelationshipValue);
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Way Logic|Resources")
+    int32 DecideResourceAllocation(int32 AvailableCapital, float CurrentProduction);
 
     /**
-     * Calculate trade price modifier based on faction relationships
-     * @param OtherFaction Faction trading with
-     * @param BasePrice Base price of goods
+     * Calculate price modifier for player based on reputation
+     * @param PlayerReputation Player's Verse score with this Way
+     * @param BasePrice Base price of goods/services
      * @return Modified price
      */
-    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction Logic|Trading")
-    float CalculateTradePriceModifier(UFactionDataAsset* OtherFaction, float BasePrice) const;
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way Logic|Pricing")
+    float CalculatePriceModifier(int32 PlayerReputation, float BasePrice) const;
+
+    /**
+     * Determine if Way should join or leave a Way Network
+     * @param Network The network being considered
+     * @param CurrentMembership True if already a member
+     * @return True if should be/remain in network
+     */
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Way Logic|Network")
+    bool EvaluateNetworkMembership(UWayNetworkDataAsset* Network, bool CurrentMembership);
 
     // ====================
     // State Management
     // ====================
 
     /**
-     * Update faction strategy based on game state
+     * Update Way strategy based on market conditions
      * Called periodically by game systems
      */
-    UFUNCTION(BlueprintCallable, Category="Faction Logic")
+    UFUNCTION(BlueprintCallable, Category="Way Logic")
     void UpdateStrategy();
 
 protected:
     // Default C++ implementations
-    virtual int32 DecideDiplomaticAction_Implementation(UFactionDataAsset* TargetFaction, int32 CurrentRelationship);
-    virtual int32 DecideEconomicAction_Implementation(const FString& MarketConditions);
-    virtual int32 DecideMilitaryAction_Implementation(float ThreatLevel, int32 AvailableForces);
-    virtual bool ShouldDeclareWar_Implementation(UFactionDataAsset* TargetFaction, int32 RelationshipValue);
+    virtual int32 DecideProductionStrategy_Implementation(float CurrentDemand, int32 AvailableResources);
+    virtual bool ShouldAcceptTradeAgreement_Implementation(UWayDataAsset* OtherWay, const FString& ProposedTerms);
+    virtual int32 EvaluateFeatReward_Implementation(const TArray<EPrecept>& FeatPrecepts, float FeatMagnitude);
+    virtual int32 DecideResourceAllocation_Implementation(int32 AvailableCapital, float CurrentProduction);
+    virtual bool EvaluateNetworkMembership_Implementation(UWayNetworkDataAsset* Network, bool CurrentMembership);
 
 private:
     /** Time since last strategy update */
     float TimeSinceLastUpdate;
 
-    /** Cached strategic priorities */
-    TMap<FString, float> StrategicPriorities;
+    /** Cached market analysis data */
+    TMap<FString, float> MarketTrends;
 };
 ```
 
-**Implementation File** (`Source/Adastrea/AI/FactionLogic.cpp`):
+**Implementation File** (`Source/Adastrea/AI/WayLogic.cpp`):
 
 ```cpp
-#include "AI/FactionLogic.h"
+#include "AI/WayLogic.h"
+#include "Way/WayNetwork.h"
 
-UFactionLogic::UFactionLogic()
+UWayLogic::UWayLogic()
 {
-    AggressionLevel = 0.3f;
-    EconomicFocus = 0.5f;
-    MilitaryFocus = 0.3f;
-    DiplomaticFocus = 0.5f;
+    GrowthAmbition = 0.5f;
+    QualityFocus = 0.6f;
+    CooperationLevel = 0.7f;
+    RiskTolerance = 0.4f;
     TimeSinceLastUpdate = 0.0f;
 }
 
-int32 UFactionLogic::DecideDiplomaticAction_Implementation(UFactionDataAsset* TargetFaction, int32 CurrentRelationship)
+int32 UWayLogic::DecideProductionStrategy_Implementation(float CurrentDemand, int32 AvailableResources)
 {
-    if (!TargetFaction || !FactionData)
+    if (!WayData)
     {
-        return 0; // No action
+        return 1; // Maintain
     }
 
-    // Peaceful factions focus on diplomacy
-    if (AggressionLevel < 0.3f)
+    // High demand and resources: increase or upgrade
+    if (CurrentDemand > 0.7f && AvailableResources > 100)
     {
-        if (CurrentRelationship < 50)
+        // Quality-focused Ways upgrade rather than expand
+        if (QualityFocus > 0.6f)
         {
-            return 1; // Improve relations
+            return 3; // Upgrade Quality
         }
-        else if (CurrentRelationship > 70)
+        else if (GrowthAmbition > 0.5f)
         {
-            return 4; // Propose alliance
+            return 2; // Increase Production
         }
     }
-    // Aggressive factions may declare war
-    else if (AggressionLevel > 0.7f)
+    
+    // Low demand: reduce production
+    if (CurrentDemand < 0.3f)
     {
-        if (CurrentRelationship < -50)
-        {
-            return 3; // Declare war
-        }
-        else if (CurrentRelationship < 0)
-        {
-            return 2; // Worsen relations
-        }
+        return 0; // Reduce Production
     }
-
-    return 0; // No action
+    
+    return 1; // Maintain
 }
 
-int32 UFactionLogic::DecideEconomicAction_Implementation(const FString& MarketConditions)
+bool UWayLogic::ShouldAcceptTradeAgreement_Implementation(UWayDataAsset* OtherWay, const FString& ProposedTerms)
 {
-    // Economic-focused factions prioritize trade
-    if (EconomicFocus > 0.6f)
-    {
-        return 4; // Trade agreement
-    }
-    
-    // Default: hold position
-    return 0;
-}
-
-int32 UFactionLogic::DecideMilitaryAction_Implementation(float ThreatLevel, int32 AvailableForces)
-{
-    // High threat: defend or retreat
-    if (ThreatLevel > 0.7f)
-    {
-        return AvailableForces > 10 ? 0 : 3; // Defend or Retreat
-    }
-    
-    // Medium threat: patrol
-    if (ThreatLevel > 0.3f)
-    {
-        return 1; // Patrol
-    }
-    
-    // Low threat and aggressive: attack
-    if (AggressionLevel > 0.6f && MilitaryFocus > 0.5f)
-    {
-        return 2; // Attack
-    }
-    
-    return 0; // Defend
-}
-
-bool UFactionLogic::ShouldDeclareWar_Implementation(UFactionDataAsset* TargetFaction, int32 RelationshipValue)
-{
-    // Only aggressive factions with military focus declare war
-    if (AggressionLevel < 0.5f || MilitaryFocus < 0.4f)
+    if (!OtherWay || !WayData)
     {
         return false;
     }
+
+    // Cooperative Ways more likely to accept agreements
+    if (CooperationLevel > 0.6f)
+    {
+        return true;
+    }
     
-    // Relationship must be very negative
-    return RelationshipValue < -70;
+    // Risk-tolerant Ways willing to try new partnerships
+    if (RiskTolerance > 0.7f)
+    {
+        return true;
+    }
+    
+    // Default: accept if beneficial (placeholder logic)
+    return FMath::RandRange(0.0f, 1.0f) > 0.5f;
 }
 
-float UFactionLogic::CalculateTradePriceModifier(UFactionDataAsset* OtherFaction, float BasePrice) const
+int32 UWayLogic::EvaluateFeatReward_Implementation(const TArray<EPrecept>& FeatPrecepts, float FeatMagnitude)
 {
-    // Implement based on PlayerReputationComponent pattern
-    // Friendly factions: discount
-    // Hostile factions: premium
-    // This is a placeholder - integrate with reputation system
-    return BasePrice;
+    if (!WayData || FeatPrecepts.Num() == 0)
+    {
+        return 0;
+    }
+
+    // Calculate alignment with Way's Precepts
+    float AlignmentScore = 0.0f;
+    int32 AlignedPrecepts = 0;
+    
+    // Check each feat Precept against Way's values
+    for (const EPrecept& FeatPrecept : FeatPrecepts)
+    {
+        // In real implementation, check WayData->Precepts
+        // For now, simple placeholder
+        AlignedPrecepts++;
+        AlignmentScore += FeatMagnitude;
+    }
+    
+    if (AlignedPrecepts == 0)
+    {
+        return 0; // No alignment, no reward
+    }
+    
+    // Scale reward by alignment and magnitude
+    float RewardFloat = (AlignmentScore / AlignedPrecepts) * 50.0f;
+    return FMath::Clamp(FMath::RoundToInt(RewardFloat), 0, 50);
 }
 
-void UFactionLogic::UpdateStrategy()
+int32 UWayLogic::DecideResourceAllocation_Implementation(int32 AvailableCapital, float CurrentProduction)
 {
-    // Update strategic priorities based on game state
-    // This would integrate with UAdastreaGameState
+    // Low capital: save
+    if (AvailableCapital < 1000)
+    {
+        return 0; // Save
+    }
+    
+    // Quality-focused Ways invest in upgrades
+    if (QualityFocus > 0.7f && AvailableCapital > 5000)
+    {
+        return 3; // Upgrade Facility
+    }
+    
+    // Growth-focused Ways expand workforce
+    if (GrowthAmbition > 0.6f && CurrentProduction < 100.0f)
+    {
+        return 1; // Hire Workers
+    }
+    
+    // Default: buy materials
+    return 2; // Buy Materials
+}
+
+float UWayLogic::CalculatePriceModifier(int32 PlayerReputation, float BasePrice) const
+{
+    // Reputation-based pricing
+    // Respected/Trusted players get discounts
+    // Distrusted players pay premium
+    
+    float Modifier = 1.0f;
+    
+    if (PlayerReputation >= 75)
+    {
+        Modifier = 0.85f; // 15% discount for Trusted
+    }
+    else if (PlayerReputation >= 25)
+    {
+        Modifier = 0.95f; // 5% discount for Respected
+    }
+    else if (PlayerReputation <= -25)
+    {
+        Modifier = 1.15f; // 15% markup for Distrusted
+    }
+    
+    return BasePrice * Modifier;
+}
+
+bool UWayLogic::EvaluateNetworkMembership_Implementation(UWayNetworkDataAsset* Network, bool CurrentMembership)
+{
+    if (!Network || !WayData)
+    {
+        return CurrentMembership;
+    }
+
+    // Cooperative Ways prefer to join networks
+    if (!CurrentMembership && CooperationLevel > 0.7f)
+    {
+        return true;
+    }
+    
+    // Stay in network unless there's a reason to leave
+    return CurrentMembership;
+}
+
+void UWayLogic::UpdateStrategy()
+{
+    // Update market analysis and strategic priorities
+    // This would integrate with trading and economy systems
     TimeSinceLastUpdate = 0.0f;
 }
 ```
 
 ---
 
-## Faction Runtime State System
+## Way Runtime State System
 
-### UFactionRuntimeState - Dynamic Faction State Tracking
+### UWayRuntimeState - Dynamic Way State Tracking
 
-**Purpose**: Tracks dynamic faction state that changes during gameplay (not static config).
+**Purpose**: Tracks dynamic Way (guild) state that changes during gameplay (not static config).
 
-**Header File** (`Source/Adastrea/Public/Factions/FactionRuntimeState.h`):
+**Header File** (`Source/Adastrea/Public/Way/WayRuntimeState.h`):
 
 ```cpp
 #pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
-#include "Factions/FactionDataAsset.h"
-#include "FactionRuntimeState.generated.h"
+#include "Way/Way.h"
+#include "WayRuntimeState.generated.h"
 
 /**
- * Faction Runtime State
- * Tracks dynamic state of a faction during gameplay
+ * Way Runtime State
+ * Tracks dynamic state of a Way (guild) during gameplay
  * 
- * Separated from FactionDataAsset to keep configuration immutable
+ * Separated from WayDataAsset to keep configuration immutable
  * and runtime state mutable.
  * 
  * Tracks:
- * - Current resources and wealth
- * - Territory control
- * - Active wars and alliances
- * - Military strength
- * - Economic power
- * - Research progress
+ * - Current capital and resources
+ * - Production output and quality
+ * - Trade agreements with other Ways
+ * - Member count and worker allocation
+ * - Reputation and quality tier
+ * - Network membership status
  */
 UCLASS(BlueprintType)
-class ADASTREA_API UFactionRuntimeState : public UObject
+class ADASTREA_API UWayRuntimeState : public UObject
 {
     GENERATED_BODY()
 
 public:
-    UFactionRuntimeState();
+    UWayRuntimeState();
 
     // ====================
     // Configuration
     // ====================
 
-    /** Reference to static faction configuration */
-    UPROPERTY(BlueprintReadOnly, Category="Faction State")
-    UFactionDataAsset* FactionData;
+    /** Reference to static Way configuration */
+    UPROPERTY(BlueprintReadOnly, Category="Way State")
+    UWayDataAsset* WayData;
 
     // ====================
     // Economic State
     // ====================
 
-    /** Current faction wealth */
-    UPROPERTY(BlueprintReadWrite, Category="Faction State|Economy")
-    int64 CurrentWealth;
+    /** Current capital (funds) */
+    UPROPERTY(BlueprintReadWrite, Category="Way State|Economy")
+    int32 CurrentCapital;
 
-    /** Income per game cycle */
-    UPROPERTY(BlueprintReadOnly, Category="Faction State|Economy")
-    int32 IncomeRate;
+    /** Income per production cycle */
+    UPROPERTY(BlueprintReadOnly, Category="Way State|Economy")
+    int32 IncomePerCycle;
 
-    /** Number of trade routes controlled */
-    UPROPERTY(BlueprintReadOnly, Category="Faction State|Economy")
-    int32 TradeRoutes;
-
-    // ====================
-    // Military State
-    // ====================
-
-    /** Total military power rating */
-    UPROPERTY(BlueprintReadOnly, Category="Faction State|Military")
-    float MilitaryPower;
-
-    /** Number of ships in faction fleet */
-    UPROPERTY(BlueprintReadWrite, Category="Faction State|Military")
-    int32 FleetSize;
-
-    /** Number of stations controlled */
-    UPROPERTY(BlueprintReadWrite, Category="Faction State|Military")
-    int32 StationsControlled;
+    /** Current material reserves */
+    UPROPERTY(BlueprintReadWrite, Category="Way State|Economy")
+    TMap<FName, int32> MaterialReserves;
 
     // ====================
-    // Diplomatic State
+    // Production State
     // ====================
 
-    /** Factions currently at war with */
-    UPROPERTY(BlueprintReadWrite, Category="Faction State|Diplomacy")
-    TArray<UFactionDataAsset*> FactionsAtWar;
+    /** Current production output per cycle */
+    UPROPERTY(BlueprintReadOnly, Category="Way State|Production")
+    float ProductionRate;
 
-    /** Allied factions */
-    UPROPERTY(BlueprintReadWrite, Category="Faction State|Diplomacy")
-    TArray<UFactionDataAsset*> AlliedFactions;
+    /** Current quality tier being maintained */
+    UPROPERTY(BlueprintReadWrite, Category="Way State|Production")
+    EQualityTier CurrentQualityTier;
 
-    /** Relationship values with other factions */
-    UPROPERTY(BlueprintReadWrite, Category="Faction State|Diplomacy")
-    TMap<UFactionDataAsset*, int32> FactionRelationships;
+    /** Number of workers allocated to production */
+    UPROPERTY(BlueprintReadWrite, Category="Way State|Production")
+    int32 WorkerCount;
+
+    /** Facility upgrade level (0-5) */
+    UPROPERTY(BlueprintReadWrite, Category="Way State|Production")
+    int32 FacilityLevel;
 
     // ====================
-    // Territory State
+    // Trade State
     // ====================
 
-    /** Systems controlled by this faction */
-    UPROPERTY(BlueprintReadWrite, Category="Faction State|Territory")
-    TArray<FName> ControlledSystems;
+    /** Active trade agreements with other Ways */
+    UPROPERTY(BlueprintReadWrite, Category="Way State|Trade")
+    TArray<UWayDataAsset*> TradePartners;
 
-    /** Influence score in galaxy */
-    UPROPERTY(BlueprintReadOnly, Category="Faction State|Territory")
-    float GalacticInfluence;
+    /** Pending trade proposals */
+    UPROPERTY(BlueprintReadWrite, Category="Way State|Trade")
+    TMap<UWayDataAsset*, FString> PendingProposals;
+
+    // ====================
+    // Reputation State
+    // ====================
+
+    /** Player's current Verse (reputation) score with this Way */
+    UPROPERTY(BlueprintReadWrite, Category="Way State|Reputation")
+    int32 PlayerVerseScore;
+
+    /** Recent player feats evaluated by this Way */
+    UPROPERTY(BlueprintReadWrite, Category="Way State|Reputation")
+    TArray<FName> EvaluatedFeats;
+
+    // ====================
+    // Network State
+    // ====================
+
+    /** Way Networks this Way is a member of */
+    UPROPERTY(BlueprintReadWrite, Category="Way State|Network")
+    TArray<UWayNetworkDataAsset*> ActiveNetworks;
+
+    /** Pending network invitations */
+    UPROPERTY(BlueprintReadWrite, Category="Way State|Network")
+    TArray<UWayNetworkDataAsset*> NetworkInvitations;
 
     // ====================
     // Blueprint Functions
     // ====================
 
     /**
-     * Initialize runtime state from faction data asset
-     * @param InFactionData Static faction configuration
+     * Initialize runtime state from Way data asset
+     * @param InWayData Static Way configuration
      */
-    UFUNCTION(BlueprintCallable, Category="Faction State")
-    void Initialize(UFactionDataAsset* InFactionData);
+    UFUNCTION(BlueprintCallable, Category="Way State")
+    void Initialize(UWayDataAsset* InWayData);
 
     /**
-     * Update faction state (called periodically by game)
+     * Update Way state (called periodically by game)
      * @param DeltaTime Time since last update
      */
-    UFUNCTION(BlueprintCallable, Category="Faction State")
+    UFUNCTION(BlueprintCallable, Category="Way State")
     void UpdateState(float DeltaTime);
 
     /**
-     * Check if faction is at war with another
-     * @param OtherFaction Faction to check
-     * @return True if at war
+     * Process production cycle
+     * @return Amount of product created this cycle
      */
-    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction State")
-    bool IsAtWarWith(UFactionDataAsset* OtherFaction) const;
+    UFUNCTION(BlueprintCallable, Category="Way State")
+    int32 ProcessProductionCycle();
 
     /**
-     * Check if faction is allied with another
-     * @param OtherFaction Faction to check
-     * @return True if allied
+     * Add new trade partner
+     * @param Partner Way to establish agreement with
+     * @param Terms Description of agreement terms
      */
-    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction State")
-    bool IsAlliedWith(UFactionDataAsset* OtherFaction) const;
+    UFUNCTION(BlueprintCallable, Category="Way State")
+    void AddTradePartner(UWayDataAsset* Partner, const FString& Terms);
 
     /**
-     * Get relationship value with another faction
-     * @param OtherFaction Faction to query
-     * @return Relationship value (-100 to 100)
+     * Remove trade partner
+     * @param Partner Way to end agreement with
      */
-    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction State")
-    int32 GetRelationshipWith(UFactionDataAsset* OtherFaction) const;
+    UFUNCTION(BlueprintCallable, Category="Way State")
+    void RemoveTradePartner(UWayDataAsset* Partner);
 
     /**
-     * Modify relationship with another faction
-     * @param OtherFaction Target faction
-     * @param Delta Amount to change (positive or negative)
+     * Update player reputation based on feat
+     * @param FeatID Identifier of the feat
+     * @param ReputationChange Amount to change reputation
      */
-    UFUNCTION(BlueprintCallable, Category="Faction State")
-    void ModifyRelationship(UFactionDataAsset* OtherFaction, int32 Delta);
+    UFUNCTION(BlueprintCallable, Category="Way State")
+    void ProcessPlayerFeat(FName FeatID, int32 ReputationChange);
 
     /**
-     * Declare war on another faction
-     * @param TargetFaction Faction to declare war on
+     * Join a Way Network
+     * @param Network Network to join
      */
-    UFUNCTION(BlueprintCallable, Category="Faction State")
-    void DeclareWar(UFactionDataAsset* TargetFaction);
+    UFUNCTION(BlueprintCallable, Category="Way State")
+    void JoinNetwork(UWayNetworkDataAsset* Network);
 
     /**
-     * Make peace with a faction at war
-     * @param TargetFaction Faction to make peace with
+     * Leave a Way Network
+     * @param Network Network to leave
      */
-    UFUNCTION(BlueprintCallable, Category="Faction State")
-    void MakePeace(UFactionDataAsset* TargetFaction);
+    UFUNCTION(BlueprintCallable, Category="Way State")
+    void LeaveNetwork(UWayNetworkDataAsset* Network);
 
     /**
-     * Form alliance with another faction
-     * @param TargetFaction Faction to ally with
+     * Upgrade facility to next level
+     * @param Cost Capital cost of upgrade
+     * @return True if upgrade successful
      */
-    UFUNCTION(BlueprintCallable, Category="Faction State")
-    void FormAlliance(UFactionDataAsset* TargetFaction);
+    UFUNCTION(BlueprintCallable, Category="Way State")
+    bool UpgradeFacility(int32 Cost);
 
     /**
-     * Calculate total faction power (economic + military)
-     * @return Total power rating
+     * Hire additional workers
+     * @param Count Number of workers to hire
+     * @param CostPerWorker Capital cost per worker
+     * @return True if hiring successful
      */
-    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction State")
-    float CalculateTotalPower() const;
+    UFUNCTION(BlueprintCallable, Category="Way State")
+    bool HireWorkers(int32 Count, int32 CostPerWorker);
+
+    /**
+     * Get current reputation tier with player
+     * @return Reputation level enum
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way State")
+    EReputationLevel GetPlayerReputationTier() const;
+
+    /**
+     * Calculate total Way influence (economic power)
+     * @return Influence rating
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way State")
+    float CalculateTotalInfluence() const;
 
 protected:
-    /** Time accumulator for periodic updates */
-    float TimeAccumulator;
+    /** Time accumulator for production cycles */
+    float ProductionTimeAccumulator;
+    
+    /** Cached market demand data */
+    float CachedMarketDemand;
 };
 ```
 
@@ -1832,8 +1932,8 @@ This guide has shown you:
 
 1. **Minimal Setup** - Essential Blueprints for C++ workflow
 2. **Input System** - C++ implementation with Enhanced Input
-3. **FactionLogic** - Strategic AI for factions
-4. **FactionRuntimeState** - Dynamic faction state tracking
+3. **WayLogic** - Economic AI for Ways (specialized guilds)
+4. **WayRuntimeState** - Dynamic Way state tracking
 5. **MaterialCrafting** - Crafting system implementation
 6. **MarketSimulator** - Advanced trading simulation
 7. **Networking Foundation** - Multiplayer preparation
