@@ -236,7 +236,7 @@ int32 UVerseComponent::CalculateVerseReputation(UWayDataAsset* GroupWay) const
     }
     
     int32 TotalReputation = 0;
-    TArray<FPreceptValue> WayPrecepts = GroupWay->GetPrecepts();
+    const TArray<FPreceptValue>& WayPrecepts = GroupWay->GetPrecepts();
     
     // Calculate reputation from all earned Feats
     for (const FEarnedFeat& EarnedFeat : EarnedFeats)
