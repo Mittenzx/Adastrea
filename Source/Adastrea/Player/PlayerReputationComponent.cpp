@@ -91,3 +91,9 @@ TArray<FPlayerFactionReputation> UPlayerReputationComponent::GetAllReputations()
 	FactionReputations.GenerateValueArray(Result);
 	return Result;
 }
+
+bool UPlayerReputationComponent::IsReputationAtLeast(FName FactionID, int32 MinReputation) const
+{
+	int32 CurrentReputation = GetReputation(FactionID);
+	return CurrentReputation >= MinReputation;
+}
