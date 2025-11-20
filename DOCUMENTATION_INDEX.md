@@ -1,6 +1,6 @@
 # Adastrea Documentation Index
 
-**Last Updated**: November 15, 2025  
+**Last Updated**: November 20, 2025  
 **Version**: 1.0.0-alpha  
 **Purpose**: Comprehensive index of all documentation in the Adastrea project
 
@@ -199,6 +199,14 @@ Concise reference documents:
 | Document | Type | Purpose | Location |
 |----------|------|---------|----------|
 | **QuestSystemGuide.md** | Guide | Quest and mission system | Assets/ |
+
+### Exploration System
+
+| Document | Type | Purpose | Location |
+|----------|------|---------|----------|
+| **ExplorationSystemGuide.md** | Guide | Scanner, sensors, and discovery system | Assets/ |
+| **ExplorationTemplates/ScannerTemplates.yaml** | Templates | 7 pre-configured scanner types | Assets/ExplorationTemplates/ |
+| **ExplorationTemplates/ScannableObjectTemplates.yaml** | Templates | 9 scannable object configurations | Assets/ExplorationTemplates/ |
 
 ### HUD/UI System
 

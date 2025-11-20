@@ -25,6 +25,7 @@ public class Adastrea : ModuleRules
 			"Adastrea/Public/Performance",
 			"Adastrea/Public/UI",
 			"Adastrea/Public/Tutorial",
+			"Adastrea/Public/Exploration",
 			"Adastrea/Way",
 			"Adastrea/Rivals"
 		});

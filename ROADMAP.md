@@ -131,14 +131,16 @@
 - ✅ **Inventory System** - Item management with categories, weight/volume limits (InventoryComponent, InventoryWidget)
 - ✅ **Ship Customization** - Visual customization, loadout management (ShipCustomizationWidget)
 - ✅ **Antagonist/Rival System** - Nemesis spawning and tracking (AntagonistManager, Antagonist)
-- ✅ **Particle Systems** - Engine and thruster visual effects (SpaceshipParticleComponent) - **NEW Nov 17, 2025**
+- ✅ **Particle Systems** - Engine and thruster visual effects (SpaceshipParticleComponent) - **Nov 17, 2025**
+- ✅ **Exploration System Phase 1** - Scanner & sensors with passive/active scanning (ScannerComponent, ScannableObjectComponent) - **NEW Nov 20, 2025**
 
-**Comprehensive Documentation** (28 complete system guides):
+**Comprehensive Documentation** (29 complete system guides):
 - ✅ NavigationSystemGuide.md, QuestSystemGuide.md, EnhancedInputImplementation.md
 - ✅ CombatSystemGuide.md, CombatQuickReference.md
 - ✅ SaveSystemGuide.md, TutorialSystemGuide.md, AudioSystemGuide.md
 - ✅ PerformanceOptimizationGuide.md, PlayerProgressionGuide.md
 - ✅ HUDSystemGuide.md, InventorySystemGuide.md, ShipCustomizationGuide.md
+- ✅ ExplorationSystemGuide.md - **NEW Nov 20, 2025**
 - ✅ All core system guides (Spaceship, Station, Faction, Personnel, Trading, Material, AI, Way)
 
 ### 📊 System Maturity Matrix
@@ -167,7 +169,7 @@
 | Ship Customization | ✅ Complete | 85% | ✅ Excellent | ⚠️ Moderate | More options |
 | Way System | ✅ Complete | 95% | ✅ Excellent | ✅ Good | Network expansion |
 | Rivals/Antagonists | ✅ Complete | 90% | ⚠️ Moderate | ⚠️ Moderate | Documentation expansion |
-| Exploration | ❌ Planned | 10% | ❌ None | ❌ None | System design |
+| Exploration | 🔄 In Progress | 35% | ✅ Good | ⚠️ Moderate | Phase 2: Discovery System |
 | Multiplayer | ❌ Planned | 0% | ❌ None | ❌ None | Technical research |
 
 **Legend**:
@@ -326,7 +328,7 @@
 
 ### Phase 4: Gameplay & Polish (November 2025 - Q2 2026)
 **Timeline**: November 2025 - June 2026  
-**Status**: 🔄 In Progress (70% Complete)
+**Status**: 🔄 In Progress (75% Complete)
 
 > **🔧 Development Tools Update:** During Phase 4, we will also begin development of the [Adastrea-Director Plugin](PLUGIN_DEVELOPMENT_GUIDE.md), converting the external AI development assistant into a native Unreal Engine plugin. See [UE Plugin Feasibility Report](UE_PLUGIN_FEASIBILITY_REPORT.md) for technical details.
 
@@ -391,8 +393,10 @@
 
 **December 2025 - February 2026** 🔄 In Progress:
 - ✅ Particle systems for engines (SpaceshipParticleComponent) - **COMPLETE Nov 17, 2025**
+- ✅ Exploration System Phase 1: Scanner & Sensors - **COMPLETE Nov 20, 2025**
 - 🔄 Visual effects for combat
 - 🔄 Particle systems for weapons
+- ⏳ Exploration System Phase 2: Discovery & Anomalies
 - ⏳ Achievement content creation
 - ⏳ Performance optimization pass #1
 - ⏳ **Director Plugin: Proof of Concept (6 weeks)**
@@ -632,15 +636,20 @@
 
 ### Exploration System (Detailed)
 
-**Current Status**: 10% complete  
+**Current Status**: 35% complete (Phase 1 Complete ✅)  
 **Target Completion**: Q1-Q2 2026
 
-#### Phase 1: Scanner & Sensors (Q1 2026)
-- [ ] Scanner data asset framework
-- [ ] Passive scanning (detect ships, stations)
-- [ ] Active scanning (analyze planets, asteroids)
-- [ ] Sensor range and resolution
-- [ ] Signal identification
+#### Phase 1: Scanner & Sensors (Q1 2026) ✅ Complete
+- [x] Scanner data asset framework (ScannerDataAsset)
+- [x] Passive scanning (detect ships, stations)
+- [x] Active scanning (analyze planets, asteroids)
+- [x] Sensor range and resolution
+- [x] Signal identification (8 signal types)
+- [x] Stealth detection and signal masking
+- [x] ScannableObjectComponent for detectable objects
+- [x] ScannerComponent with passive/active modes
+- [x] Documentation (ExplorationSystemGuide.md, 22KB)
+- [x] YAML templates (7 scanners, 9 object types)
 
 #### Phase 2: Discovery System (Q1 2026)
 - [ ] Anomaly system (spatial phenomena)
@@ -993,10 +1002,18 @@ This roadmap is a living document and will be updated regularly to reflect:
 
 **How to Update**: Contributors should update this roadmap when their PRs affect project milestones, phases, or system status. See [ROADMAP_UPDATE_GUIDELINES.md](ROADMAP_UPDATE_GUIDELINES.md) for detailed guidance on when and how to update.
 
-**Last Updated**: November 15, 2025 (Comprehensive documentation audit)  
+**Last Updated**: November 20, 2025 (Exploration System Phase 1 Complete)  
 **Next Review**: December 2025
 
-### Recent Updates (November 15, 2025)
+### Recent Updates
+
+#### November 20, 2025
+- **Exploration System Phase 1 Complete**: Scanner & Sensors system implemented (3 new classes, ~3,200 LOC)
+- **Phase 4 Progress**: Updated from 70% to 75% complete
+- **System Maturity**: Exploration system now 35% complete (Phase 1 done)
+- **Documentation**: Added ExplorationSystemGuide.md (22KB) + YAML templates
+
+#### November 15, 2025
 - **Major Documentation Update**: Comprehensive audit of all system implementations
 - **System Maturity Matrix**: Added 9 new completed systems (Save, Tutorial, Audio, Performance, Player Progression, HUD, Inventory, Ship Customization, Rivals/Antagonists)
 - **Phase 4 Status**: Updated from "Planned" to "In Progress (70% Complete)" - most core features delivered
