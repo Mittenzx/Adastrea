@@ -65,7 +65,11 @@ public:
     // X4-STYLE FLIGHT CONTROL PARAMETERS
     // ==========================================
 
-    /** Flight assist enabled - ship maintains orientation and velocity when no input */
+    /**
+     * Flight assist enabled - provides rotation damping and auto-leveling for smoother control.
+     * When enabled, rotation smoothly damps to zero when no input is given, and the ship
+     * automatically levels its roll. The throttle system controls forward velocity independently.
+     */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flight Control|Flight Assist")
     bool bFlightAssistEnabled;
 

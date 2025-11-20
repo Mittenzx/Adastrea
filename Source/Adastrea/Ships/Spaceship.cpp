@@ -74,16 +74,28 @@ void ASpaceship::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
+    // Only apply flight physics if ship is possessed by a controller
+    // This avoids unnecessary CPU usage on unpossessed NPC ships
+    if (!GetController())
+    {
+        return;
+    }
+
     // Apply X4-style flight physics when flight assist is enabled
     if (bFlightAssistEnabled)
     {
         ApplyFlightAssist(DeltaTime);
     }
 
-    // Update velocity based on throttle setting
-    UpdateThrottleVelocity(DeltaTime);
+    // Update velocity based on throttle setting (only when flight assist is on)
+    if (bFlightAssistEnabled)
+    {
+        UpdateThrottleVelocity(DeltaTime);
+    }
 
-    // Apply auto-leveling when enabled and no roll input
+    // Apply auto-leveling when enabled and no rotation input
+    // Note: Currently we don't have explicit roll input, so we check for no yaw input
+    // as a proxy for when the player is not actively rotating
     if (bFlightAssistEnabled && FMath::IsNearlyZero(YawInput, 0.01f))
     {
         ApplyAutoLeveling(DeltaTime);
@@ -138,8 +150,8 @@ void ASpaceship::MoveForward(float Value)
     // Store input for smooth interpolation
     ForwardInput = Value;
 
-    // X4-style: WASD provides direct velocity input when flight assist is on
-    // Without flight assist, it adds acceleration like Newtonian physics
+    // X4-style: With flight assist, WASD provides direct velocity control
+    // Without flight assist, it applies Newtonian acceleration to velocity
     if (bFlightAssistEnabled)
     {
         // Flight assist mode: direct velocity control
@@ -147,8 +159,13 @@ void ASpaceship::MoveForward(float Value)
     }
     else
     {
-        // No flight assist: add acceleration to current velocity
-        AddMovementInput(GetActorForwardVector(), Value);
+        // No flight assist: apply Newtonian acceleration
+        // Increment velocity in forward direction based on input
+        if (GetWorld() && MovementComponent)
+        {
+            FVector AccelerationVector = GetActorForwardVector() * Value * DefaultAcceleration * GetWorld()->GetDeltaSeconds();
+            MovementComponent->Velocity += AccelerationVector;
+        }
     }
     
     // Update particle throttle based on forward movement
@@ -222,20 +239,22 @@ void ASpaceship::Turn(float Value)
 
     if (GetWorld())
     {
+        const float DeltaSeconds = GetWorld()->GetDeltaSeconds();
+        
         if (bFlightAssistEnabled)
         {
             // X4-style: smooth rotation with damping
             // Apply mouse flight sensitivity for better control
-            float RotationRate = Value * TurnRate * MouseFlightSensitivity * GetWorld()->GetDeltaSeconds();
+            float RotationRate = Value * TurnRate * MouseFlightSensitivity * DeltaSeconds;
             
             // Interpolate rotation velocity for smooth feel
-            RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, RotationRate, GetWorld()->GetDeltaSeconds(), FlightAssistResponsiveness);
+            RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, RotationRate, DeltaSeconds, FlightAssistResponsiveness);
             AddControllerYawInput(RotationVelocity.Yaw);
         }
         else
         {
             // Without flight assist: direct rotation
-            AddControllerYawInput(Value * TurnRate * GetWorld()->GetDeltaSeconds());
+            AddControllerYawInput(Value * TurnRate * DeltaSeconds);
         }
     }
 }
@@ -247,19 +266,21 @@ void ASpaceship::LookUp(float Value)
 
     if (GetWorld())
     {
+        const float DeltaSeconds = GetWorld()->GetDeltaSeconds();
+        
         if (bFlightAssistEnabled)
         {
             // X4-style: smooth rotation with damping
-            float RotationRate = Value * TurnRate * MouseFlightSensitivity * GetWorld()->GetDeltaSeconds();
+            float RotationRate = Value * TurnRate * MouseFlightSensitivity * DeltaSeconds;
             
             // Interpolate rotation velocity for smooth feel
-            RotationVelocity.Pitch = FMath::FInterpTo(RotationVelocity.Pitch, RotationRate, GetWorld()->GetDeltaSeconds(), FlightAssistResponsiveness);
+            RotationVelocity.Pitch = FMath::FInterpTo(RotationVelocity.Pitch, RotationRate, DeltaSeconds, FlightAssistResponsiveness);
             AddControllerPitchInput(RotationVelocity.Pitch);
         }
         else
         {
             // Without flight assist: direct rotation
-            AddControllerPitchInput(Value * TurnRate * GetWorld()->GetDeltaSeconds());
+            AddControllerPitchInput(Value * TurnRate * DeltaSeconds);
         }
     }
 }
@@ -456,6 +477,15 @@ void ASpaceship::ApplyFlightAssist(float DeltaTime)
     {
         // In X4, with flight assist, the ship maintains its velocity
         // This is different from atmosphere flight where you'd slow down
+        // Preserve the current velocity to maintain inertia
+        if (!CurrentVelocity.IsNearlyZero())
+        {
+            MovementComponent->Velocity = CurrentVelocity;
+        }
+    }
+    else
+    {
+        // Update CurrentVelocity when there is input
         CurrentVelocity = MovementComponent->Velocity;
     }
 }
@@ -465,10 +495,11 @@ void ASpaceship::ApplyAutoLeveling(float DeltaTime)
     /**
      * X4-style Auto-Leveling:
      * 
-     * When no yaw input is given, the ship automatically levels its roll
+     * When no rotation input is given, the ship automatically levels its roll
      * to the ecliptic plane (assuming Z-up in Unreal). This makes it easier
      * to maintain orientation during exploration and combat.
      * 
+     * Note: Currently triggered by no yaw input as we don't have explicit roll input.
      * The strength can be tuned via AutoLevelStrength (0 = off, 1 = instant).
      */
 
