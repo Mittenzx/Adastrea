@@ -1316,6 +1316,505 @@ void UYourSubsystem::Deinitialize()
 
 ---
 
+## Advanced C++ Component Patterns
+
+### Actor Component Communication via Interfaces
+
+**Purpose**: Enable loose coupling between components using C++ interfaces.
+
+```cpp
+// Header: Source/Adastrea/Public/Interfaces/IDamageable.h
+#pragma once
+
+#include "CoreMinimal.h"
+#include "UObject/Interface.h"
+#include "IDamageable.generated.h"
+
+// This class does not need to be modified.
+UINTERFACE(MinimalAPI, Blueprintable)
+class UDamageable : public UInterface
+{
+    GENERATED_BODY()
+};
+
+/**
+ * IDamageable Interface
+ * Implement on any actor that can take damage
+ */
+class ADASTREA_API IDamageable
+{
+    GENERATED_BODY()
+
+public:
+    /**
+     * Apply damage to this actor
+     * @param DamageAmount Amount of damage to apply
+     * @param DamageType Type of damage (Energy, Kinetic, etc.)
+     * @param DamageInstigator Actor that caused the damage
+     * @return Actual damage dealt after armor/shields
+     */
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Damage")
+    float ApplyDamage(float DamageAmount, const FName& DamageType, AActor* DamageInstigator);
+
+    /**
+     * Check if actor is still alive
+     * @return True if alive
+     */
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Damage")
+    bool IsAlive() const;
+};
+
+// Implementation in actor:
+class ASpaceship : public APawn, public IDamageable
+{
+    // ...
+    
+    virtual float ApplyDamage_Implementation(float DamageAmount, const FName& DamageType, AActor* DamageInstigator) override
+    {
+        if (HealthComponent)
+        {
+            return HealthComponent->TakeDamage(DamageAmount, DamageType);
+        }
+        return 0.0f;
+    }
+    
+    virtual bool IsAlive_Implementation() const override
+    {
+        return HealthComponent && HealthComponent->GetCurrentHealth() > 0.0f;
+    }
+};
+
+// Usage in other code:
+void UWeaponComponent::FireAtTarget(AActor* Target)
+{
+    if (IDamageable* DamageableTarget = Cast<IDamageable>(Target))
+    {
+        float DamageDealt = IDamageable::Execute_ApplyDamage(Target, WeaponDamage, DamageType, GetOwner());
+        
+        if (!IDamageable::Execute_IsAlive(Target))
+        {
+            // Target destroyed
+            OnTargetDestroyed.Broadcast(Target);
+        }
+    }
+}
+```
+
+---
+
+## Async Task Execution (for Heavy Calculations)
+
+### Running Heavy Calculations Off Game Thread
+
+**Purpose**: Prevent frame drops during expensive operations.
+
+```cpp
+// Header: Source/Adastrea/Public/AsyncTasks/PathfindingTask.h
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Async/AsyncWork.h"
+
+/**
+ * Async pathfinding task
+ * Runs pathfinding calculation on background thread
+ */
+class FPathfindingTask : public FNonAbandonableTask
+{
+    friend class FAutoDeleteAsyncTask<FPathfindingTask>;
+
+public:
+    FPathfindingTask(const FVector& InStart, const FVector& InGoal)
+        : StartLocation(InStart)
+        , GoalLocation(InGoal)
+    {
+    }
+
+    // Required by FNonAbandonableTask
+    void DoWork()
+    {
+        // Heavy pathfinding calculation here
+        PathResult = CalculatePath(StartLocation, GoalLocation);
+    }
+
+    FORCEINLINE TStatId GetStatId() const
+    {
+        RETURN_QUICK_DECLARE_CYCLE_STAT(FPathfindingTask, STATGROUP_ThreadPoolAsyncTasks);
+    }
+
+    // Get result (call from game thread)
+    TArray<FVector> GetPath() const { return PathResult; }
+
+private:
+    FVector StartLocation;
+    FVector GoalLocation;
+    TArray<FVector> PathResult;
+
+    TArray<FVector> CalculatePath(const FVector& Start, const FVector& Goal)
+    {
+        // A* or other pathfinding algorithm
+        TArray<FVector> Path;
+        // ... complex calculation ...
+        return Path;
+    }
+};
+
+// Usage in component:
+void UNavigationComponent::FindPathAsync(const FVector& Start, const FVector& Goal)
+{
+    // Start async task
+    AsyncTask = new FAutoDeleteAsyncTask<FPathfindingTask>(Start, Goal);
+    AsyncTask->StartBackgroundTask();
+}
+
+void UNavigationComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+    Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+    // Check if async task is done
+    if (AsyncTask && AsyncTask->IsDone())
+    {
+        TArray<FVector> Path = AsyncTask->GetTask().GetPath();
+        OnPathFound.Broadcast(Path);
+        AsyncTask = nullptr; // Auto-deleted
+    }
+}
+```
+
+---
+
+## Smart Pointer Usage for Memory Safety
+
+### Using TSharedPtr, TWeakPtr, TUniquePtr
+
+**Purpose**: Prevent memory leaks and dangling pointers.
+
+```cpp
+// For non-UObject classes that need shared ownership:
+class FCustomDataProcessor
+{
+public:
+    void ProcessData() { /* ... */ }
+};
+
+// Shared pointer (reference counted)
+TSharedPtr<FCustomDataProcessor> Processor = MakeShared<FCustomDataProcessor>();
+
+// Weak pointer (doesn't keep object alive)
+TWeakPtr<FCustomDataProcessor> WeakProcessor = Processor;
+
+// Later, check if still valid:
+if (TSharedPtr<FCustomDataProcessor> SharedProcessor = WeakProcessor.Pin())
+{
+    SharedProcessor->ProcessData();
+}
+
+// Unique pointer (single ownership)
+TUniquePtr<FCustomDataProcessor> UniqueProcessor = MakeUnique<FCustomDataProcessor>();
+
+// For UObject*, always use TWeakObjectPtr or TSoftObjectPtr:
+UPROPERTY()
+TWeakObjectPtr<ASpaceship> TargetShip;
+
+// Check validity before use:
+if (TargetShip.IsValid())
+{
+    TargetShip->TakeDamage(10.0f);
+}
+```
+
+---
+
+## Delegates and Events for Decoupled Communication
+
+### Multicast Delegates for Broadcasting Events
+
+```cpp
+// In header:
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnShieldDepleted, ASpaceship*, Ship, float, LastDamage);
+
+class ADASTREA_API UCombatHealthComponent : public UActorComponent
+{
+    GENERATED_BODY()
+
+public:
+    /** Fired when shields are depleted */
+    UPROPERTY(BlueprintAssignable, Category="Combat|Events")
+    FOnShieldDepleted OnShieldDepleted;
+
+    void TakeDamage(float Damage)
+    {
+        ShieldStrength -= Damage;
+        
+        if (ShieldStrength <= 0.0f)
+        {
+            // Broadcast to all listeners
+            OnShieldDepleted.Broadcast(Cast<ASpaceship>(GetOwner()), Damage);
+        }
+    }
+};
+
+// Binding in Blueprint or C++:
+void ASpaceship::BeginPlay()
+{
+    Super::BeginPlay();
+    
+    if (HealthComponent)
+    {
+        // Bind C++ function to delegate
+        HealthComponent->OnShieldDepleted.AddDynamic(this, &ASpaceship::HandleShieldDepleted);
+    }
+}
+
+void ASpaceship::HandleShieldDepleted(ASpaceship* Ship, float LastDamage)
+{
+    UE_LOG(LogTemp, Warning, TEXT("Shields depleted! Last damage: %f"), LastDamage);
+    // Play warning sound, activate visual effect, etc.
+}
+```
+
+---
+
+## Struct Optimization for Data Assets
+
+### Using Bit Packing for Boolean Flags
+
+```cpp
+// Instead of many bool properties (each takes 1 byte):
+USTRUCT(BlueprintType)
+struct FShipCapabilities_Inefficient
+{
+    GENERATED_BODY()
+    
+    UPROPERTY(EditAnywhere) bool bCanLandOnPlanets;
+    UPROPERTY(EditAnywhere) bool bCanDockWithStations;
+    UPROPERTY(EditAnywhere) bool bCanWarpJump;
+    UPROPERTY(EditAnywhere) bool bCanCarryCargo;
+    UPROPERTY(EditAnywhere) bool bHasCloakingDevice;
+    UPROPERTY(EditAnywhere) bool bHasShields;
+    UPROPERTY(EditAnywhere) bool bHasWeapons;
+    UPROPERTY(EditAnywhere) bool bHasScanner;
+    // 8 bytes total
+};
+
+// Better: Use bitfield (takes 1 byte total):
+USTRUCT(BlueprintType)
+struct FShipCapabilities
+{
+    GENERATED_BODY()
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(Bitmask))
+    uint8 Capabilities;
+    
+    // Define bit flags
+    static constexpr uint8 CanLandOnPlanets = 1 << 0;  // 0b00000001
+    static constexpr uint8 CanDockWithStations = 1 << 1; // 0b00000010
+    static constexpr uint8 CanWarpJump = 1 << 2;       // 0b00000100
+    static constexpr uint8 CanCarryCargo = 1 << 3;     // 0b00001000
+    static constexpr uint8 HasCloakingDevice = 1 << 4; // 0b00010000
+    static constexpr uint8 HasShields = 1 << 5;        // 0b00100000
+    static constexpr uint8 HasWeapons = 1 << 6;        // 0b01000000
+    static constexpr uint8 HasScanner = 1 << 7;        // 0b10000000
+    
+    // Helper functions
+    bool HasCapability(uint8 Flag) const { return (Capabilities & Flag) != 0; }
+    void AddCapability(uint8 Flag) { Capabilities |= Flag; }
+    void RemoveCapability(uint8 Flag) { Capabilities &= ~Flag; }
+};
+
+// Usage:
+FShipCapabilities Caps;
+Caps.AddCapability(FShipCapabilities::CanWarpJump);
+Caps.AddCapability(FShipCapabilities::HasWeapons);
+
+if (Caps.HasCapability(FShipCapabilities::CanWarpJump))
+{
+    // Ship can warp
+}
+```
+
+---
+
+## Custom Logging Categories
+
+### Organized Logging for Debugging
+
+```cpp
+// In a header (e.g., AdastreaLog.h):
+DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaShip, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaFaction, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaTrading, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaAI, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaQuest, Log, All);
+
+// In a .cpp file:
+DEFINE_LOG_CATEGORY(LogAdastreaShip);
+DEFINE_LOG_CATEGORY(LogAdastreaFaction);
+DEFINE_LOG_CATEGORY(LogAdastreaTrading);
+DEFINE_LOG_CATEGORY(LogAdastreaAI);
+DEFINE_LOG_CATEGORY(LogAdastreaQuest);
+
+// Usage throughout codebase:
+UE_LOG(LogAdastreaShip, Warning, TEXT("Ship %s health critical: %f"), *GetName(), CurrentHealth);
+UE_LOG(LogAdastreaFaction, Display, TEXT("Faction %s declared war on %s"), 
+    *FactionA->GetFactionName().ToString(), *FactionB->GetFactionName().ToString());
+UE_LOG(LogAdastreaTrading, Error, TEXT("Failed to complete trade: insufficient funds"));
+
+// Filter logs in editor console:
+// Log LogAdastreaShip All    <- Show all ship logs
+// Log LogAdastreaShip Off    <- Hide ship logs
+// Log LogAdastreaAI Verbose  <- Show verbose AI logs
+```
+
+---
+
+## Blueprint Function Library for Utilities
+
+### Static Helper Functions Accessible from Blueprints
+
+```cpp
+// Header: Source/Adastrea/Public/AdastreaFunctionLibrary.h
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Kismet/BlueprintFunctionLibrary.h"
+#include "AdastreaFunctionLibrary.generated.h"
+
+/**
+ * Adastrea Blueprint Function Library
+ * Static utility functions accessible from Blueprints and C++
+ */
+UCLASS()
+class ADASTREA_API UAdastreaFunctionLibrary : public UBlueprintFunctionLibrary
+{
+    GENERATED_BODY()
+
+public:
+    /**
+     * Calculate travel time between two points
+     * @param StartLocation Starting position
+     * @param EndLocation Destination position
+     * @param ShipSpeed Ship's maximum speed
+     * @return Time in seconds
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Adastrea|Travel")
+    static float CalculateTravelTime(const FVector& StartLocation, const FVector& EndLocation, float ShipSpeed);
+
+    /**
+     * Get faction relationship tier name
+     * @param RelationshipValue Value from -100 to 100
+     * @return Tier name (e.g., "Hostile", "Neutral", "Friendly")
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Adastrea|Faction")
+    static FText GetRelationshipTierName(int32 RelationshipValue);
+
+    /**
+     * Format credits amount with commas
+     * @param Amount Credit amount
+     * @return Formatted string (e.g., "1,234,567 Cr")
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Adastrea|Formatting")
+    static FText FormatCredits(int64 Amount);
+
+    /**
+     * Get random point within sphere
+     * @param Origin Center of sphere
+     * @param Radius Sphere radius
+     * @return Random point
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Adastrea|Math")
+    static FVector GetRandomPointInSphere(const FVector& Origin, float Radius);
+
+    /**
+     * Check if location is in space (not near planet)
+     * @param Location Location to check
+     * @param WorldContextObject World context
+     * @return True if in open space
+     */
+    UFUNCTION(BlueprintCallable, Category="Adastrea|Space", meta=(WorldContext="WorldContextObject"))
+    static bool IsLocationInOpenSpace(UObject* WorldContextObject, const FVector& Location);
+};
+
+// Implementation:
+float UAdastreaFunctionLibrary::CalculateTravelTime(const FVector& StartLocation, const FVector& EndLocation, float ShipSpeed)
+{
+    float Distance = FVector::Dist(StartLocation, EndLocation);
+    return ShipSpeed > 0.0f ? Distance / ShipSpeed : 0.0f;
+}
+
+FText UAdastreaFunctionLibrary::GetRelationshipTierName(int32 RelationshipValue)
+{
+    if (RelationshipValue >= 75) return FText::FromString("Allied");
+    if (RelationshipValue >= 50) return FText::FromString("Friendly");
+    if (RelationshipValue >= 25) return FText::FromString("Cordial");
+    if (RelationshipValue >= -25) return FText::FromString("Neutral");
+    if (RelationshipValue >= -50) return FText::FromString("Unfriendly");
+    if (RelationshipValue >= -75) return FText::FromString("Hostile");
+    return FText::FromString("Enemy");
+}
+
+FText UAdastreaFunctionLibrary::FormatCredits(int64 Amount)
+{
+    FNumberFormattingOptions Options;
+    Options.UseGrouping = true;
+    Options.GroupingSeparator = FText::FromString(",");
+    
+    FText FormattedNumber = FText::AsNumber(Amount, &Options);
+    return FText::Format(FText::FromString("{0} Cr"), FormattedNumber);
+}
+
+FVector UAdastreaFunctionLibrary::GetRandomPointInSphere(const FVector& Origin, float Radius)
+{
+    return Origin + FMath::VRand() * FMath::RandRange(0.0f, Radius);
+}
+```
+
+---
+
+## Data Validation for Data Assets
+
+### Ensure Data Assets Have Valid Configuration
+
+```cpp
+// In your Data Asset class:
+#if WITH_EDITOR
+virtual EDataValidationResult IsDataValid(TArray<FText>& ValidationErrors) override
+{
+    EDataValidationResult Result = Super::IsDataValid(ValidationErrors);
+    
+    // Validate faction name
+    if (FactionName.IsEmpty())
+    {
+        ValidationErrors.Add(FText::FromString("Faction name cannot be empty"));
+        Result = EDataValidationResult::Invalid;
+    }
+    
+    // Validate reputation range
+    if (InitialReputation < -100 || InitialReputation > 100)
+    {
+        ValidationErrors.Add(FText::Format(
+            FText::FromString("Initial reputation {0} is out of range (-100 to 100)"),
+            FText::AsNumber(InitialReputation)
+        ));
+        Result = EDataValidationResult::Invalid;
+    }
+    
+    // Validate required references
+    if (!HomeworldLocation)
+    {
+        ValidationErrors.Add(FText::FromString("Faction must have a homeworld location"));
+        Result = EDataValidationResult::Invalid;
+    }
+    
+    return Result;
+}
+#endif
+
+// Unreal Editor will show validation errors when saving the asset
+```
+
+---
+
 ## Additional Resources
 
 - **C++ Input Handling**: See `InputConfigDataAsset.h` for reference
