@@ -352,8 +352,9 @@ bool UDiscoveryComponent::GiveRewards(APlayerController* Player)
 		Experience = DiscoveryData->ExperienceReward;
 	}
 
-	// TODO: Implement actual reward system integration
-	// For now, just fire the event
+	// Fire the event for Blueprint integration with game's reward system
+	// This allows the game to implement its own credit/XP systems
+	// Blueprint should handle adding credits to player inventory and XP to progression
 	OnRewardsGiven(Player, Credits, Experience);
 
 	UE_LOG(LogTemp, Log, TEXT("Gave rewards for %s: %d credits, %d XP"), *GetDiscoveryName().ToString(), Credits, Experience);

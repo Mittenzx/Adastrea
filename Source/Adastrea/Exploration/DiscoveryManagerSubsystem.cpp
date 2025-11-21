@@ -254,8 +254,19 @@ TArray<FDiscoveryRecord> UDiscoveryManagerSubsystem::GetDiscoveriesByType(FName 
 {
 	TArray<FDiscoveryRecord> FilteredDiscoveries;
 
-	// TODO: Implement type filtering based on enum values
-	// This would require converting enum to FName and comparing
+	// Filter discoveries by type name
+	// TypeName should match the discovery type enum value (e.g., "ArchaeologicalSite", "DerelictShip")
+	for (const TPair<FName, FDiscoveryRecord>& Pair : DiscoveryRecords)
+	{
+		const FDiscoveryRecord& Record = Pair.Value;
+		
+		// Check if the type matches (compare TypeName with the discovery's type)
+		// This allows Blueprint to filter by type string
+		if (Record.DiscoveryType == TypeName || TypeName == NAME_None)
+		{
+			FilteredDiscoveries.Add(Record);
+		}
+	}
 
 	return FilteredDiscoveries;
 }
