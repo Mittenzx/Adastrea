@@ -9,10 +9,25 @@
 // File-scope constants for antagonist name generation
 namespace AntagonistNames
 {
-	static const TArray<FString> Prefixes = {
-		TEXT("Captain"), TEXT("Commander"), TEXT("Admiral"), TEXT("Lord"), TEXT("Lady"),
-		TEXT("Baron"), TEXT("Baroness"), TEXT("Director"), TEXT("Overseer"), TEXT("Warlord")
-	};
+	static const TArray<FString>& GetPrefixes()
+	{
+		static TArray<FString> Prefixes = []()
+		{
+			TArray<FString> Arr;
+			Arr.Add(TEXT("Captain"));
+			Arr.Add(TEXT("Commander"));
+			Arr.Add(TEXT("Admiral"));
+			Arr.Add(TEXT("Lord"));
+			Arr.Add(TEXT("Lady"));
+			Arr.Add(TEXT("Baron"));
+			Arr.Add(TEXT("Baroness"));
+			Arr.Add(TEXT("Director"));
+			Arr.Add(TEXT("Overseer"));
+			Arr.Add(TEXT("Warlord"));
+			return Arr;
+		}();
+		return Prefixes;
+	}
 }
 
 UAntagonistManager::UAntagonistManager()
@@ -229,40 +244,41 @@ FText UAntagonistManager::GenerateAntagonistName(UFeatDataAsset* SourceFeat, EAn
 	switch (Goal)
 	{
 		case EAntagonistGoal::Revenge:
-			Surnames = { TEXT("Vex"), TEXT("Rancor"), TEXT("Vendetta"), TEXT("Fury"), TEXT("Wraith") };
+			Surnames.Append({ TEXT("Vex"), TEXT("Rancor"), TEXT("Vendetta"), TEXT("Fury"), TEXT("Wraith") });
 			break;
 		case EAntagonistGoal::Competition:
-			Surnames = { TEXT("Challenger"), TEXT("Rival"), TEXT("Defiant"), TEXT("Victor"), TEXT("Ascendant") };
+			Surnames.Append({ TEXT("Challenger"), TEXT("Rival"), TEXT("Defiant"), TEXT("Victor"), TEXT("Ascendant") });
 			break;
 		case EAntagonistGoal::Obsession:
-			Surnames = { TEXT("Stalker"), TEXT("Hunter"), TEXT("Shadow"), TEXT("Watcher"), TEXT("Pursuer") };
+			Surnames.Append({ TEXT("Stalker"), TEXT("Hunter"), TEXT("Shadow"), TEXT("Watcher"), TEXT("Pursuer") });
 			break;
 		case EAntagonistGoal::Jealousy:
-			Surnames = { TEXT("Envious"), TEXT("Covetous"), TEXT("Desirous"), TEXT("Grudge"), TEXT("Spite") };
+			Surnames.Append({ TEXT("Envious"), TEXT("Covetous"), TEXT("Desirous"), TEXT("Grudge"), TEXT("Spite") });
 			break;
 		case EAntagonistGoal::Honor:
-			Surnames = { TEXT("Honorbound"), TEXT("Duelist"), TEXT("Oath"), TEXT("Vanguard"), TEXT("Sentinel") };
+			Surnames.Append({ TEXT("Honorbound"), TEXT("Duelist"), TEXT("Oath"), TEXT("Vanguard"), TEXT("Sentinel") });
 			break;
 		case EAntagonistGoal::Curiosity:
-			Surnames = { TEXT("Seeker"), TEXT("Scholar"), TEXT("Inquirer"), TEXT("Delver"), TEXT("Explorer") };
+			Surnames.Append({ TEXT("Seeker"), TEXT("Scholar"), TEXT("Inquirer"), TEXT("Delver"), TEXT("Explorer") });
 			break;
 		case EAntagonistGoal::Greed:
-			Surnames = { TEXT("Profiteer"), TEXT("Hoarder"), TEXT("Tycoon"), TEXT("Mogul"), TEXT("Raider") };
+			Surnames.Append({ TEXT("Profiteer"), TEXT("Hoarder"), TEXT("Tycoon"), TEXT("Mogul"), TEXT("Raider") });
 			break;
 		case EAntagonistGoal::Justice:
-			Surnames = { TEXT("Justicar"), TEXT("Lawbringer"), TEXT("Arbiter"), TEXT("Judge"), TEXT("Enforcer") };
+			Surnames.Append({ TEXT("Justicar"), TEXT("Lawbringer"), TEXT("Arbiter"), TEXT("Judge"), TEXT("Enforcer") });
 			break;
 		default:
-			Surnames = { TEXT("Nemesis"), TEXT("Adversary"), TEXT("Rival"), TEXT("Antagonist") };
+			Surnames.Append({ TEXT("Nemesis"), TEXT("Adversary"), TEXT("Rival"), TEXT("Antagonist") });
 			UE_LOG(LogAdastrea, Warning, TEXT("Unknown antagonist goal type (%d), using default names"), static_cast<int32>(Goal));
 			break;
 	}
 	
 	// Randomly select prefix and surname for variation
-	const int32 PrefixIndex = FMath::RandRange(0, AntagonistNames::Prefixes.Num() - 1);
+	const TArray<FString>& Prefixes = AntagonistNames::GetPrefixes();
+	const int32 PrefixIndex = FMath::RandRange(0, Prefixes.Num() - 1);
 	const int32 SurnameIndex = FMath::RandRange(0, Surnames.Num() - 1);
 	
-	const FString GeneratedName = FString::Printf(TEXT("%s %s"), *AntagonistNames::Prefixes[PrefixIndex], *Surnames[SurnameIndex]);
+	const FString GeneratedName = FString::Printf(TEXT("%s %s"), *Prefixes[PrefixIndex], *Surnames[SurnameIndex]);
 	return FText::FromString(GeneratedName);
 }
 
