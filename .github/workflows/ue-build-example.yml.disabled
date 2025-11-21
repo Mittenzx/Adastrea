@@ -220,13 +220,15 @@ jobs:
         uses: actions/checkout@v4
       
       - name: Build with UE5-Build-Project
-        uses: game-ci/unity-builder@v2  # Replace with actual UE5 action
+        # Note: Replace with actual UE5 build action from marketplace
         # See: https://github.com/marketplace/actions/ue5-build-project
-        with:
-          projectPath: ./
-          unityVersion: 5.6  # Configure for UE5.6
-          targetPlatform: Linux
-          buildName: Adastrea
+        # Example placeholder - customize for your needs
+        run: |
+          echo "Using UE5 build action or custom commands"
+          echo "Project: Adastrea"
+          echo "Engine: UE 5.6"
+          echo "Platform: Linux"
+          # Add actual UE5 build commands or action here
 
   # Report build status
   build-summary:

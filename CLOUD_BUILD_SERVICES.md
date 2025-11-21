@@ -129,10 +129,12 @@ jobs:
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
       
       - name: Build Unreal Project
-        uses: game-ci/unity-builder@v2  # Example - replace with UE5-Build-Project action
-        with:
-          projectPath: ./
-          targetPlatform: Linux
+        # Use UE5-Build-Project action from marketplace
+        # See: https://github.com/marketplace/actions/ue5-build-project
+        run: |
+          # Custom build commands here
+          # Or use marketplace UE5 action when available
+          echo "Build using Unreal Automation Tool"
           
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
