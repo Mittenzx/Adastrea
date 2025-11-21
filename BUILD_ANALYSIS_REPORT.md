@@ -132,7 +132,7 @@ All UCLASS-decorated classes include `GENERATED_BODY()`:
 - SaveGameSubsystem.h: Present (2 occurrences - class + struct)
 
 ### ✅ .generated.h Includes
-All headers include their generated header as the **absolute last include** (strict UE requirement for code generation):
+All **header files** include their generated header as the **absolute last include** (strict UE5 requirement for proper code generation):
 - `#include "Spaceship.generated.h"`
 - `#include "SpaceshipDataAsset.generated.h"`
 - `#include "SaveGameSubsystem.generated.h"`
@@ -146,12 +146,12 @@ All files have balanced braces:
 ### ✅ Forward Declarations
 Proper use of forward declarations in headers to minimize compile dependencies:
 ```cpp
-// Example from headers
-class USpaceshipDataAsset;  // Forward declaration reduces compile dependencies
+// Forward declaration at file scope
+class USpaceshipDataAsset;
 
 // Later in class body:
-UPROPERTY()
-USpaceshipDataAsset* ShipDataAsset;  // Property using forward-declared type
+UPROPERTY(BlueprintReadOnly, Category = "Ship Data")
+USpaceshipDataAsset* ShipDataAsset;
 ```
 
 ---
