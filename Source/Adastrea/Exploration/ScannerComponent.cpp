@@ -2,6 +2,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Actor.h"
 #include "Engine/World.h"
+#include "Engine/EngineTypes.h"
 #include "AdastreaLog.h"
 
 UScannerComponent::UScannerComponent()
