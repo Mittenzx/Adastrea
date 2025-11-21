@@ -14,16 +14,11 @@ namespace AntagonistNames
 		static TArray<FString> Prefixes = []()
 		{
 			TArray<FString> Arr;
-			Arr.Add(TEXT("Captain"));
-			Arr.Add(TEXT("Commander"));
-			Arr.Add(TEXT("Admiral"));
-			Arr.Add(TEXT("Lord"));
-			Arr.Add(TEXT("Lady"));
-			Arr.Add(TEXT("Baron"));
-			Arr.Add(TEXT("Baroness"));
-			Arr.Add(TEXT("Director"));
-			Arr.Add(TEXT("Overseer"));
-			Arr.Add(TEXT("Warlord"));
+			Arr.Reserve(10);
+			Arr.Append({
+				TEXT("Captain"), TEXT("Commander"), TEXT("Admiral"), TEXT("Lord"), TEXT("Lady"),
+				TEXT("Baron"), TEXT("Baroness"), TEXT("Director"), TEXT("Overseer"), TEXT("Warlord")
+			});
 			return Arr;
 		}();
 		return Prefixes;
