@@ -45,7 +45,7 @@ struct FActiveModEntry
  * 4. Query mod status via helper functions
  */
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class UPlayerModComponent : public UActorComponent
+class PLAYERMODS_API UPlayerModComponent : public UActorComponent
 {
     GENERATED_BODY()
 

@@ -1,5 +1,5 @@
 #include "TradeItemDataAsset.h"
-#include "../Materials/MaterialDataAsset.h"
+#include "Materials/MaterialDataAsset.h"
 #include "AdastreaLog.h"
 
 UTradeItemDataAsset::UTradeItemDataAsset()
