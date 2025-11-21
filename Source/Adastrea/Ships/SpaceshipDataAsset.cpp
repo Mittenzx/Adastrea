@@ -1,4 +1,4 @@
-#include "Public/Ships/SpaceshipDataAsset.h"
+#include "Ships/SpaceshipDataAsset.h"
 #include "AdastreaLog.h"
 
 USpaceshipDataAsset::USpaceshipDataAsset()
