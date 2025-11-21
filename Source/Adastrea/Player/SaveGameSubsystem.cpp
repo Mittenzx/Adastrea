@@ -452,7 +452,12 @@ void USaveGameSubsystem::ApplyGameState(UAdastreaSaveGame* SaveGameObject)
 		UPlayerReputationComponent* ReputationComp = PlayerPawn->FindComponentByClass<UPlayerReputationComponent>();
 		if (ReputationComp)
 		{
-			ReputationComp->FactionReputations = SaveGameObject->FactionReputations;
+			// Convert TArray to TMap
+			ReputationComp->FactionReputations.Empty();
+			for (const FPlayerFactionReputation& Rep : SaveGameObject->FactionReputations)
+			{
+				ReputationComp->FactionReputations.Add(Rep.FactionID, Rep);
+			}
 		}
 
 		// Restore unlocks
