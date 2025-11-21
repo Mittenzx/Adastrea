@@ -169,7 +169,7 @@
 | Ship Customization | ✅ Complete | 85% | ✅ Excellent | ⚠️ Moderate | More options |
 | Way System | ✅ Complete | 95% | ✅ Excellent | ✅ Good | Network expansion |
 | Rivals/Antagonists | ✅ Complete | 90% | ⚠️ Moderate | ⚠️ Moderate | Documentation expansion |
-| Exploration | 🔄 In Progress | 35% | ✅ Good | ⚠️ Moderate | Phase 2: Discovery System |
+| Exploration | 🔄 In Progress | 70% | ✅ Excellent | ✅ Good | Phase 2 ✅ Complete |
 | Multiplayer | ❌ Planned | 0% | ❌ None | ❌ None | Technical research |
 
 **Legend**:
@@ -396,7 +396,7 @@
 - ✅ Exploration System Phase 1: Scanner & Sensors - **COMPLETE Nov 20, 2025**
 - 🔄 Visual effects for combat
 - 🔄 Particle systems for weapons
-- ⏳ Exploration System Phase 2: Discovery & Anomalies
+- ✅ Exploration System Phase 2: Discovery & Anomalies - **COMPLETE Nov 21, 2025**
 - ⏳ Achievement content creation
 - ⏳ Performance optimization pass #1
 - ⏳ **Director Plugin: Proof of Concept (6 weeks)**
@@ -636,7 +636,7 @@
 
 ### Exploration System (Detailed)
 
-**Current Status**: 35% complete (Phase 1 Complete ✅)  
+**Current Status**: 70% complete (Phases 1 & 2 Complete ✅)  
 **Target Completion**: Q1-Q2 2026
 
 #### Phase 1: Scanner & Sensors (Q1 2026) ✅ Complete
@@ -651,12 +651,17 @@
 - [x] Documentation (ExplorationSystemGuide.md, 22KB)
 - [x] YAML templates (7 scanners, 9 object types)
 
-#### Phase 2: Discovery System (Q1 2026)
-- [ ] Anomaly system (spatial phenomena)
-- [ ] Discovery database and tracking
-- [ ] Rarity and reward systems
-- [ ] Archaeological sites
-- [ ] Derelict ships and stations
+#### Phase 2: Discovery System ✅ COMPLETE (November 21, 2025)
+- [x] Anomaly system (spatial phenomena)
+- [x] Discovery database and tracking
+- [x] Rarity and reward systems
+- [x] Archaeological sites
+- [x] Derelict ships and stations
+- [x] AnomalyDataAsset (10 types, 5 rarity tiers)
+- [x] DiscoveryDataAsset (10 location types)
+- [x] DiscoveryComponent (interaction system)
+- [x] DiscoveryManagerSubsystem (global tracking)
+- [x] YAML templates (10 anomalies, 10 locations)
 
 #### Phase 3: Resource Gathering (Q1-Q2 2026)
 - [ ] Mining mechanics
@@ -1002,10 +1007,18 @@ This roadmap is a living document and will be updated regularly to reflect:
 
 **How to Update**: Contributors should update this roadmap when their PRs affect project milestones, phases, or system status. See [ROADMAP_UPDATE_GUIDELINES.md](ROADMAP_UPDATE_GUIDELINES.md) for detailed guidance on when and how to update.
 
-**Last Updated**: November 20, 2025 (Exploration System Phase 1 Complete)  
+**Last Updated**: November 21, 2025 (Exploration System Phase 2 Complete)  
 **Next Review**: December 2025
 
 ### Recent Updates
+
+#### November 21, 2025
+- **Exploration System Phase 2 Complete**: Discovery & Anomalies system implemented (4 new classes, ~2,900 LOC)
+- **Phase 4 Progress**: Exploration milestone achieved
+- **System Maturity**: Exploration system now 70% complete (Phases 1 & 2 done)
+- **New Features**: AnomalyDataAsset (10 types), DiscoveryDataAsset (10 types), DiscoveryComponent, DiscoveryManagerSubsystem
+- **Documentation**: Updated ExplorationSystemGuide.md, added DiscoverySystemQuickStart.md
+- **YAML Templates**: 20 new templates (10 anomalies + 10 discoveries)
 
 #### November 20, 2025
 - **Exploration System Phase 1 Complete**: Scanner & Sensors system implemented (3 new classes, ~3,200 LOC)

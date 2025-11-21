@@ -3,8 +3,8 @@
 Complete guide for implementing exploration, scanning, and discovery in Adastrea.
 
 **Version**: 1.0.0  
-**Last Updated**: November 20, 2025  
-**Status**: Phase 1 Complete (Scanner & Sensors)
+**Last Updated**: November 21, 2025  
+**Status**: Phase 1 & 2 Complete (Scanner & Discovery Systems)
 
 ---
 
@@ -884,16 +884,178 @@ complete_scan_data:
 
 ---
 
+## Phase 2: Discovery & Anomalies ✅
+
+**Status**: ✅ Complete (November 21, 2025)
+
+Phase 2 extends the Exploration System with discovery tracking, anomalies, and rewards:
+
+### New Components
+
+#### 1. AnomalyDataAsset
+Data Asset defining spatial anomalies and phenomena.
+
+**Key Features:**
+- 10 anomaly types (Gravitational, Temporal, Energy, Wormhole, etc.)
+- Detection requirements (scanner type, deep scan)
+- Rarity tiers (Common to Legendary)
+- Reward structures (credits, XP, items, reputation)
+- Interaction mechanics (harvest, research)
+- Visual/audio presentation
+- Hostile vs. safe anomalies
+
+#### 2. DiscoveryDataAsset
+Data Asset defining discoverable locations and sites.
+
+**Key Features:**
+- 10 discovery types (Archaeological Sites, Derelict Ships, etc.)
+- Detection and exploration mechanics
+- Lore and historical records
+- Story item integration
+- Quest triggers and unlocks
+- Salvage and revisit mechanics
+- Hostile difficulty ratings
+
+#### 3. DiscoveryComponent
+ActorComponent making objects discoverable.
+
+**Key Features:**
+- Works with AnomalyData or DiscoveryData
+- Automatic scanner integration
+- Discovery state tracking (Undiscovered → Discovered → Explored → Depleted)
+- Interaction system (Scan, Harvest, Explore, Salvage, Research)
+- Reward distribution
+- Cooldown management
+- Blueprint events
+
+#### 4. DiscoveryManagerSubsystem
+GameInstanceSubsystem managing all discoveries.
+
+**Key Features:**
+- Global discovery registry
+- Query functions (by rarity, type, location)
+- Discovery statistics tracking
+- Milestone events (10, 25, 50, 100+ discoveries)
+- Persistent across sessions
+- Performance-optimized queries
+
+### Discovery Flow
+
+```
+1. Player approaches unknown object
+2. ScannerComponent detects ScannableObjectComponent
+3. Player performs scan at required detail level
+4. Scan completes → triggers DiscoveryComponent
+5. DiscoveryComponent.MarkAsDiscovered()
+6. Registers with DiscoveryManagerSubsystem
+7. Rewards distributed to player
+8. UI updated, events fired
+9. Player can interact (Harvest/Explore/Salvage)
+10. State tracked for future visits
+```
+
+### Rarity System
+
+Discoveries are classified by rarity:
+
+| Rarity | Multiplier | Color | Description |
+|--------|-----------|-------|-------------|
+| Common | 1.0x | Gray | Frequently found |
+| Uncommon | 1.5x | Green | Moderately rare |
+| Rare | 2.5x | Blue | Uncommon finds |
+| Very Rare | 4.0x | Purple | Exceptional discoveries |
+| Legendary | 5.0x | Orange | Once-in-a-lifetime |
+
+### Interaction Types
+
+**Scan**: Basic analysis (30s default)
+**Harvest**: Extract resources from anomalies (configurable time)
+**Explore**: Enter and investigate locations (configurable time)
+**Salvage**: Recover materials from derelicts (120s default)
+**Research**: Scientific analysis (60s default)
+
+### Integration Examples
+
+#### Create an Anomaly in Blueprint
+
+1. Create Blueprint based on `AnomalyDataAsset`
+2. Configure properties:
+   - Name: "Gravitational Singularity"
+   - Type: Gravitational Anomaly
+   - Rarity: Very Rare
+   - Rewards: 5000 credits, 1000 XP
+   - Can Be Harvested: true
+3. Place actor in world
+4. Add `ScannableObjectComponent` + `DiscoveryComponent`
+5. Assign AnomalyData to DiscoveryComponent
+
+#### Query Discoveries in Blueprint
+
+```cpp
+// Get Discovery Manager
+UDiscoveryManagerSubsystem* Manager = GetGameInstance()->GetSubsystem<UDiscoveryManagerSubsystem>();
+
+// Check if discovered
+bool bFound = Manager->IsDiscovered("Anomaly_Singularity_01");
+
+// Get all rare discoveries
+TArray<FDiscoveryRecord> RareFinds = Manager->GetDiscoveriesByRarity(ERarityTier::Rare);
+
+// Get statistics
+FDiscoveryStatistics Stats = Manager->GetStatistics();
+UE_LOG(LogTemp, Log, TEXT("Total Discoveries: %d"), Stats.TotalDiscoveries);
+```
+
+### YAML Templates
+
+See `Assets/ExplorationTemplates/` for:
+- `AnomalyTemplates.yaml` - 10 anomaly presets
+- `DiscoveryTemplates.yaml` - 10 location presets
+- `DiscoveryInteractionExamples.yaml` - Interaction configurations
+
+### Best Practices
+
+**Anomaly Design:**
+- Use hostile anomalies sparingly (high risk, high reward)
+- Balance harvest time with reward value
+- Set appropriate detection ranges (100m - 10km)
+- Match scanner requirements to rarity
+
+**Discovery Design:**
+- Tie rare discoveries to lore/quests
+- Use story items for narrative progression
+- Set realistic exploration times (1-10 minutes)
+- Consider hostile difficulty vs player level
+
+**Performance:**
+- Limit active discoveries per sector to 50-100
+- Use bPersistent wisely (only for unique finds)
+- Disable tick on DiscoveryComponent when not interacting
+- Cache DiscoveryManager queries in UI
+
+### Troubleshooting
+
+**Discovery not registering:**
+- ✓ Check DiscoveryID is set and unique
+- ✓ Verify DiscoveryManagerSubsystem is initialized
+- ✓ Ensure scan reached required detail level
+- ✓ Check bIsUnique setting vs global registry
+
+**Interaction not working:**
+- ✓ Verify bDiscovered is true
+- ✓ Check interaction type is allowed (bCanBeHarvested, etc.)
+- ✓ Ensure not on cooldown
+- ✓ Check DiscoveryState != Depleted
+
+**Rewards not given:**
+- ✓ Verify reward values > 0 in Data Asset
+- ✓ Check GiveRewards() is being called
+- ✓ Ensure player systems are available
+- ✓ Listen to OnRewardsGiven event
+
+---
+
 ## Next Steps
-
-### Phase 2: Discovery System (Q1 2026)
-
-Planned features:
-- Anomaly system with rewards
-- Discovery database and tracking
-- Rarity tiers and special discoveries
-- Archaeological sites
-- Derelict ships and stations
 
 ### Phase 3: Resource Gathering (Q1-Q2 2026)
 
