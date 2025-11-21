@@ -197,3 +197,4 @@ All `C2065` errors indicate a variable/identifier not declared in scope.
 
 ## Suppression State
 All errors currently **not suppressed**.
+
