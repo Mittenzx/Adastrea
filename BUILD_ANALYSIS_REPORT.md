@@ -132,7 +132,7 @@ All UCLASS-decorated classes include `GENERATED_BODY()`:
 - SaveGameSubsystem.h: Present (2 occurrences - class + struct)
 
 ### ✅ .generated.h Includes
-All headers include their generated header as the last include:
+All headers include their generated header as the **absolute last include** (strict UE requirement for code generation):
 - `#include "Spaceship.generated.h"`
 - `#include "SpaceshipDataAsset.generated.h"`
 - `#include "SaveGameSubsystem.generated.h"`
@@ -148,6 +148,8 @@ Proper use of forward declarations in headers to minimize compile dependencies:
 ```cpp
 // Example from headers
 class USpaceshipDataAsset;  // Forward declaration reduces compile dependencies
+
+// Later in class body:
 UPROPERTY()
 USpaceshipDataAsset* ShipDataAsset;  // Property using forward-declared type
 ```
