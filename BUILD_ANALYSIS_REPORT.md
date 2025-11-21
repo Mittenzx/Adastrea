@@ -134,7 +134,7 @@ All UCLASS-decorated classes include `GENERATED_BODY()`:
 ### ✅ .generated.h Includes
 All headers include their generated header as the last include:
 - `#include "Spaceship.generated.h"`
-- `#include "SpaceshipDataAsset.h"`
+- `#include "SpaceshipDataAsset.generated.h"`
 - `#include "SaveGameSubsystem.generated.h"`
 
 ### ✅ Brace Balancing
@@ -146,8 +146,10 @@ All files have balanced braces:
 ### ✅ Forward Declarations
 Proper use of forward declarations in headers to minimize compile dependencies:
 ```cpp
-// Spaceship.h
-class USpaceshipDataAsset* ShipDataAsset;  // Forward declared, no include needed
+// Example from headers
+class USpaceshipDataAsset;  // Forward declaration reduces compile dependencies
+UPROPERTY()
+USpaceshipDataAsset* ShipDataAsset;  // Property using forward-declared type
 ```
 
 ---
