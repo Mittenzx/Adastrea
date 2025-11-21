@@ -3,6 +3,7 @@
 #include "GameFramework/Actor.h"
 #include "Engine/World.h"
 #include "Engine/EngineTypes.h"
+#include "Engine/OverlapResult.h"
 #include "AdastreaLog.h"
 
 UScannerComponent::UScannerComponent()
