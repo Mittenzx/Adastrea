@@ -239,31 +239,31 @@ FText UAntagonistManager::GenerateAntagonistName(UFeatDataAsset* SourceFeat, EAn
 	switch (Goal)
 	{
 		case EAntagonistGoal::Revenge:
-			Surnames.Append({ TEXT("Vex"), TEXT("Rancor"), TEXT("Vendetta"), TEXT("Fury"), TEXT("Wraith") });
+			Surnames = { TEXT("Vex"), TEXT("Rancor"), TEXT("Vendetta"), TEXT("Fury"), TEXT("Wraith") };
 			break;
 		case EAntagonistGoal::Competition:
-			Surnames.Append({ TEXT("Challenger"), TEXT("Rival"), TEXT("Defiant"), TEXT("Victor"), TEXT("Ascendant") });
+			Surnames = { TEXT("Challenger"), TEXT("Rival"), TEXT("Defiant"), TEXT("Victor"), TEXT("Ascendant") };
 			break;
 		case EAntagonistGoal::Obsession:
-			Surnames.Append({ TEXT("Stalker"), TEXT("Hunter"), TEXT("Shadow"), TEXT("Watcher"), TEXT("Pursuer") });
+			Surnames = { TEXT("Stalker"), TEXT("Hunter"), TEXT("Shadow"), TEXT("Watcher"), TEXT("Pursuer") };
 			break;
 		case EAntagonistGoal::Jealousy:
-			Surnames.Append({ TEXT("Envious"), TEXT("Covetous"), TEXT("Desirous"), TEXT("Grudge"), TEXT("Spite") });
+			Surnames = { TEXT("Envious"), TEXT("Covetous"), TEXT("Desirous"), TEXT("Grudge"), TEXT("Spite") };
 			break;
 		case EAntagonistGoal::Honor:
-			Surnames.Append({ TEXT("Honorbound"), TEXT("Duelist"), TEXT("Oath"), TEXT("Vanguard"), TEXT("Sentinel") });
+			Surnames = { TEXT("Honorbound"), TEXT("Duelist"), TEXT("Oath"), TEXT("Vanguard"), TEXT("Sentinel") };
 			break;
 		case EAntagonistGoal::Curiosity:
-			Surnames.Append({ TEXT("Seeker"), TEXT("Scholar"), TEXT("Inquirer"), TEXT("Delver"), TEXT("Explorer") });
+			Surnames = { TEXT("Seeker"), TEXT("Scholar"), TEXT("Inquirer"), TEXT("Delver"), TEXT("Explorer") };
 			break;
 		case EAntagonistGoal::Greed:
-			Surnames.Append({ TEXT("Profiteer"), TEXT("Hoarder"), TEXT("Tycoon"), TEXT("Mogul"), TEXT("Raider") });
+			Surnames = { TEXT("Profiteer"), TEXT("Hoarder"), TEXT("Tycoon"), TEXT("Mogul"), TEXT("Raider") };
 			break;
 		case EAntagonistGoal::Justice:
-			Surnames.Append({ TEXT("Justicar"), TEXT("Lawbringer"), TEXT("Arbiter"), TEXT("Judge"), TEXT("Enforcer") });
+			Surnames = { TEXT("Justicar"), TEXT("Lawbringer"), TEXT("Arbiter"), TEXT("Judge"), TEXT("Enforcer") };
 			break;
 		default:
-			Surnames.Append({ TEXT("Nemesis"), TEXT("Adversary"), TEXT("Rival"), TEXT("Antagonist") });
+			Surnames = { TEXT("Nemesis"), TEXT("Adversary"), TEXT("Rival"), TEXT("Antagonist") };
 			UE_LOG(LogAdastrea, Warning, TEXT("Unknown antagonist goal type (%d), using default names"), static_cast<int32>(Goal));
 			break;
 	}
