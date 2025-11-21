@@ -1,0 +1,471 @@
+# Anomaly Templates for Adastrea
+# Copy and customize these templates for your anomalies
+#
+# Version: 1.0.0
+# Last Updated: November 21, 2025
+
+# ==========================================
+# Template 1: Gravitational Singularity
+# ==========================================
+anomaly_gravitational_singularity:
+  basic_info:
+    anomaly_name: "Gravitational Singularity"
+    description: "An intense gravitational distortion warping spacetime. Approach with extreme caution."
+    anomaly_type: GravitationalAnomaly
+    anomaly_id: "Anomaly_GravSingularity_001"
+  
+  detection:
+    signal_strength: 85  # Very strong signature
+    required_scanner_type: Scientific  # Needs specialized equipment
+    requires_deep_scan: true
+    minimum_scan_level: Complete
+    detection_range_multiplier: 1.5  # Easier to detect due to gravity effects
+  
+  rarity:
+    rarity_tier: VeryRare
+    discovery_value: 5000
+    scientific_significance: 95
+  
+  rewards:
+    credits_reward: 10000
+    experience_reward: 2000
+    reputation_reward: 50
+    item_rewards:
+      - item_id: "ExoticMatter_Gravitons"
+        quantity: 5
+        drop_chance: 80
+      - item_id: "ResearchData_Singularity"
+        quantity: 1
+        drop_chance: 100
+  
+  interaction:
+    can_be_harvested: false  # Too dangerous
+    is_hostile: true
+    damage_per_second: 100
+    interaction_radius: 50000  # 500m danger zone
+    interaction_energy_cost: 0
+    is_reusable: false
+  
+  lore:
+    scientific_data: "A collapsed stellar core creating a localized spacetime singularity. Gravitational forces exceed 10,000g within 100 meters of the event horizon."
+    lore_text: "Ancient spacers called these 'Void Teeth' - points where reality itself hungers. Few who venture too close return to tell the tale."
+    associated_quest_id: "Quest_SingularityResearch"
+
+# ==========================================
+# Template 2: Temporal Anomaly
+# ==========================================
+anomaly_temporal_distortion:
+  basic_info:
+    anomaly_name: "Temporal Distortion Field"
+    description: "A region where time flows differently. Sensors detect temporal inconsistencies."
+    anomaly_type: TemporalDistortion
+    anomaly_id: "Anomaly_Temporal_001"
+  
+  detection:
+    signal_strength: 60
+    required_scanner_type: Scientific
+    requires_deep_scan: true
+    minimum_scan_level: Detailed
+    detection_range_multiplier: 0.8  # Hard to detect
+  
+  rarity:
+    rarity_tier: Legendary
+    discovery_value: 10000
+    scientific_significance: 98
+  
+  rewards:
+    credits_reward: 25000
+    experience_reward: 5000
+    reputation_reward: 100
+    item_rewards:
+      - item_id: "TemporalCrystals"
+        quantity: 3
+        drop_chance: 60
+      - item_id: "ChronometricData"
+        quantity: 1
+        drop_chance: 100
+  
+  interaction:
+    can_be_harvested: true
+    harvest_time: 180.0  # 3 minutes
+    is_hostile: false
+    interaction_radius: 30000  # 300m
+    interaction_energy_cost: 200
+    is_reusable: true
+    interaction_cooldown: 3600.0  # 1 hour
+  
+  lore:
+    scientific_data: "Localized temporal field exhibiting chronometric dilation ratio of 1:1.5. Origins unknown, possibly artificial."
+    lore_text: "Time flows like water through these rifts. Minutes become hours, hours become minutes. The Ancients knew their secrets."
+
+# ==========================================
+# Template 3: Energy Vortex
+# ==========================================
+anomaly_energy_vortex:
+  basic_info:
+    anomaly_name: "Plasma Energy Vortex"
+    description: "A swirling maelstrom of high-energy plasma and exotic particles."
+    anomaly_type: EnergyField
+    anomaly_id: "Anomaly_EnergyVortex_001"
+  
+  detection:
+    signal_strength: 90  # Very bright energy signature
+    required_scanner_type: Advanced
+    requires_deep_scan: false
+    minimum_scan_level: Basic
+    detection_range_multiplier: 2.0  # Very easy to detect
+  
+  rarity:
+    rarity_tier: Uncommon
+    discovery_value: 500
+    scientific_significance: 60
+  
+  rewards:
+    credits_reward: 2000
+    experience_reward: 400
+    reputation_reward: 15
+    item_rewards:
+      - item_id: "PlasmaCell_Charged"
+        quantity: 10
+        drop_chance: 90
+      - item_id: "ExoticParticles"
+        quantity: 5
+        drop_chance: 70
+  
+  interaction:
+    can_be_harvested: true
+    harvest_time: 45.0
+    is_hostile: true
+    damage_per_second: 25  # Manageable with shields
+    interaction_radius: 20000  # 200m
+    interaction_energy_cost: 100
+    is_reusable: true
+    interaction_cooldown: 600.0  # 10 minutes
+  
+  lore:
+    scientific_data: "Self-sustaining plasma vortex powered by quantum vacuum fluctuations. Energy output: 10^15 watts."
+    lore_text: "Plasma storms like these fueled the first hyperdrives. Today they're harvested by daring captains for profit and glory."
+
+# ==========================================
+# Template 4: Stable Wormhole
+# ==========================================
+anomaly_stable_wormhole:
+  basic_info:
+    anomaly_name: "Stable Wormhole Aperture"
+    description: "A naturally occurring stable wormhole linking to an unknown destination."
+    anomaly_type: WormholeSignature
+    anomaly_id: "Anomaly_Wormhole_Stable_001"
+  
+  detection:
+    signal_strength: 75
+    required_scanner_type: Exploration
+    requires_deep_scan: true
+    minimum_scan_level: Complete
+    detection_range_multiplier: 1.2
+  
+  rarity:
+    rarity_tier: Rare
+    discovery_value: 8000
+    scientific_significance: 90
+  
+  rewards:
+    credits_reward: 15000
+    experience_reward: 3000
+    reputation_reward: 75
+    item_rewards:
+      - item_id: "WormholeData"
+        quantity: 1
+        drop_chance: 100
+      - item_id: "NavigationBeacon"
+        quantity: 1
+        drop_chance: 100
+  
+  interaction:
+    can_be_harvested: false
+    is_hostile: false
+    interaction_radius: 100000  # 1km
+    interaction_energy_cost: 0
+    is_reusable: true
+    interaction_cooldown: 0
+  
+  lore:
+    scientific_data: "Traversable Einstein-Rosen bridge with stability factor 0.98. Estimated throat length: 15 light-years."
+    lore_text: "The ancients built gates. Nature builds wormholes. Both offer passage to distant stars, but only one asks permission."
+    associated_quest_id: "Quest_WormholeExploration"
+
+# ==========================================
+# Template 5: Radiation Nebula
+# ==========================================
+anomaly_radiation_zone:
+  basic_info:
+    anomaly_name: "High-Radiation Nebula"
+    description: "Dense cloud of radioactive particles and ionized gas. Extremely hazardous."
+    anomaly_type: RadiationZone
+    anomaly_id: "Anomaly_RadZone_001"
+  
+  detection:
+    signal_strength: 95  # Very strong radiation signature
+    required_scanner_type: Basic  # Easy to detect
+    requires_deep_scan: false
+    minimum_scan_level: Basic
+    detection_range_multiplier: 2.5  # Hard to miss
+  
+  rarity:
+    rarity_tier: Common
+    discovery_value: 100
+    scientific_significance: 40
+  
+  rewards:
+    credits_reward: 500
+    experience_reward: 100
+    reputation_reward: 5
+    item_rewards:
+      - item_id: "RadioactiveIsotopes"
+        quantity: 20
+        drop_chance: 85
+  
+  interaction:
+    can_be_harvested: true
+    harvest_time: 30.0
+    is_hostile: true
+    damage_per_second: 50  # High radiation damage
+    interaction_radius: 15000  # 150m
+    interaction_energy_cost: 50
+    is_reusable: true
+    interaction_cooldown: 300.0  # 5 minutes
+  
+  lore:
+    scientific_data: "Radioactive decay products from supernova remnant. Gamma and X-ray emissions exceed safe limits by factor of 1000."
+    lore_text: "What remains when stars die violently. Beautiful from afar, deadly up close. Salvagers call it 'glowing gold'."
+
+# ==========================================
+# Template 6: Quantum Fluctuation
+# ==========================================
+anomaly_quantum_foam:
+  basic_info:
+    anomaly_name: "Quantum Foam Anomaly"
+    description: "A region where quantum uncertainty manifests at macroscopic scale."
+    anomaly_type: QuantumFluctuation
+    anomaly_id: "Anomaly_Quantum_001"
+  
+  detection:
+    signal_strength: 40  # Very subtle
+    required_scanner_type: Scientific
+    requires_deep_scan: true
+    minimum_scan_level: Complete
+    detection_range_multiplier: 0.5  # Very hard to detect
+  
+  rarity:
+    rarity_tier: Legendary
+    discovery_value: 12000
+    scientific_significance: 99
+  
+  rewards:
+    credits_reward: 30000
+    experience_reward: 6000
+    reputation_reward: 150
+    item_rewards:
+      - item_id: "QuantumProcessor"
+        quantity: 1
+        drop_chance: 40
+      - item_id: "ExoticMatter_Quantum"
+        quantity: 2
+        drop_chance: 70
+  
+  interaction:
+    can_be_harvested: true
+    harvest_time: 300.0  # 5 minutes
+    is_hostile: false
+    interaction_radius: 10000  # 100m
+    interaction_energy_cost: 500  # High energy cost
+    is_reusable: true
+    interaction_cooldown: 7200.0  # 2 hours
+  
+  lore:
+    scientific_data: "Macroscopic quantum superposition maintained by unknown mechanism. Heisenberg uncertainty principle visible to naked eye."
+    lore_text: "Reality itself is uncertain here. Particles exist and don't exist. Schrödinger's dream made manifest."
+
+# ==========================================
+# Template 7: Dark Matter Cloud
+# ==========================================
+anomaly_dark_matter:
+  basic_info:
+    anomaly_name: "Dark Matter Concentration"
+    description: "An unusually dense accumulation of dark matter, invisible but detectable through gravitational effects."
+    anomaly_type: DarkMatterConcentration
+    anomaly_id: "Anomaly_DarkMatter_001"
+  
+  detection:
+    signal_strength: 30  # Only detectable by gravitational effects
+    required_scanner_type: Scientific
+    requires_deep_scan: true
+    minimum_scan_level: Detailed
+    detection_range_multiplier: 0.7
+  
+  rarity:
+    rarity_tier: VeryRare
+    discovery_value: 7000
+    scientific_significance: 92
+  
+  rewards:
+    credits_reward: 12000
+    experience_reward: 2500
+    reputation_reward: 80
+    item_rewards:
+      - item_id: "DarkMatter_Sample"
+        quantity: 1
+        drop_chance: 50
+      - item_id: "GravitationalData"
+        quantity: 1
+        drop_chance: 100
+  
+  interaction:
+    can_be_harvested: true
+    harvest_time: 240.0  # 4 minutes
+    is_hostile: false
+    interaction_radius: 40000  # 400m
+    interaction_energy_cost: 300
+    is_reusable: false  # One-time harvest
+  
+  lore:
+    scientific_data: "Dark matter density 1000x background levels. Composition remains theoretical - possibly WIMPs or axions."
+    lore_text: "The universe's missing mass, concentrated. We can't see it, can't touch it, but we know it's there. The invisible foundation of reality."
+
+# ==========================================
+# Template 8: Plasma Storm
+# ==========================================
+anomaly_plasma_storm:
+  basic_info:
+    anomaly_name: "Ionized Plasma Storm"
+    description: "A violent storm of superheated plasma and electromagnetic chaos."
+    anomaly_type: PlasmaStorm
+    anomaly_id: "Anomaly_PlasmaStorm_001"
+  
+  detection:
+    signal_strength: 98  # Extremely bright
+    required_scanner_type: Basic
+    requires_deep_scan: false
+    minimum_scan_level: Basic
+    detection_range_multiplier: 3.0  # Visible from very far
+  
+  rarity:
+    rarity_tier: Common
+    discovery_value: 200
+    scientific_significance: 45
+  
+  rewards:
+    credits_reward: 800
+    experience_reward: 150
+    reputation_reward: 8
+    item_rewards:
+      - item_id: "IonizedPlasma"
+        quantity: 15
+        drop_chance: 95
+  
+  interaction:
+    can_be_harvested: true
+    harvest_time: 20.0
+    is_hostile: true
+    damage_per_second: 75  # Very dangerous
+    interaction_radius: 25000  # 250m
+    interaction_energy_cost: 75
+    is_reusable: true
+    interaction_cooldown: 180.0  # 3 minutes
+  
+  lore:
+    scientific_data: "Electromagnetic storm generating temperatures exceeding 100,000 Kelvin. Magnetic field strength: 10 Tesla."
+    lore_text: "Nature's fury in space. These storms have claimed more ships than pirates ever will."
+
+# ==========================================
+# Template 9: Subspace Rift
+# ==========================================
+anomaly_subspace_rift:
+  basic_info:
+    anomaly_name: "Subspace Tear"
+    description: "A rupture in the fabric of normal space leading to subspace."
+    anomaly_type: SubspaceRift
+    anomaly_id: "Anomaly_Subspace_001"
+  
+  detection:
+    signal_strength: 70
+    required_scanner_type: Advanced
+    requires_deep_scan: true
+    minimum_scan_level: Detailed
+    detection_range_multiplier: 1.0
+  
+  rarity:
+    rarity_tier: Rare
+    discovery_value: 6000
+    scientific_significance: 88
+  
+  rewards:
+    credits_reward: 8000
+    experience_reward: 1500
+    reputation_reward: 60
+    item_rewards:
+      - item_id: "SubspaceParticles"
+        quantity: 8
+        drop_chance: 75
+      - item_id: "HyperspaceData"
+        quantity: 1
+        drop_chance: 90
+  
+  interaction:
+    can_be_harvested: true
+    harvest_time: 90.0
+    is_hostile: false
+    interaction_radius: 35000  # 350m
+    interaction_energy_cost: 150
+    is_reusable: true
+    interaction_cooldown: 900.0  # 15 minutes
+  
+  lore:
+    scientific_data: "Stable tear in spacetime membrane allowing access to subspace dimension. Potential for faster-than-light travel."
+    lore_text: "Windows into the realm beneath reality. The hyperspace engineers study these to build better drives."
+
+# ==========================================
+# Template 10: Unknown Phenomenon
+# ==========================================
+anomaly_unknown:
+  basic_info:
+    anomaly_name: "Unidentified Spatial Anomaly"
+    description: "An anomaly defying classification. Properties unknown."
+    anomaly_type: UnknownPhenomenon
+    anomaly_id: "Anomaly_Unknown_001"
+  
+  detection:
+    signal_strength: 50
+    required_scanner_type: Any
+    requires_deep_scan: true
+    minimum_scan_level: Complete
+    detection_range_multiplier: 1.0
+  
+  rarity:
+    rarity_tier: Legendary
+    discovery_value: 15000
+    scientific_significance: 100
+  
+  rewards:
+    credits_reward: 50000
+    experience_reward: 10000
+    reputation_reward: 200
+    item_rewards:
+      - item_id: "UnknownArtifact"
+        quantity: 1
+        drop_chance: 100
+      - item_id: "AncientTechnology"
+        quantity: 1
+        drop_chance: 50
+  
+  interaction:
+    can_be_harvested: true
+    harvest_time: 600.0  # 10 minutes
+    is_hostile: false  # Unknown, so assume safe
+    interaction_radius: 50000  # 500m
+    interaction_energy_cost: 1000  # Very expensive
+    is_reusable: false
+  
+  lore:
+    scientific_data: "Defies all known physics models. Readings inconsistent with current understanding of reality."
+    lore_text: "Some mysteries are meant to be discovered. Others, perhaps, should remain hidden. This is both and neither."
+    associated_quest_id: "Quest_AncientMystery"

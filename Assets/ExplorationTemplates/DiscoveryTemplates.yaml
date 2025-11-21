@@ -1,0 +1,676 @@
+# Discovery Location Templates for Adastrea
+# Copy and customize these templates for discoverable locations
+#
+# Version: 1.0.0
+# Last Updated: November 21, 2025
+
+# ==========================================
+# Template 1: Ancient Archaeological Site
+# ==========================================
+discovery_ancient_ruins:
+  basic_info:
+    discovery_name: "Precursor Archaeological Site"
+    description: "Ruins of an ancient alien civilization, untouched for millennia."
+    discovery_type: ArchaeologicalSite
+    discovery_id: "Discovery_Ruins_Precursor_001"
+  
+  detection:
+    signal_strength: 45  # Partially buried/hidden
+    required_scanner_type: Exploration
+    requires_deep_scan: true
+    minimum_scan_level: Detailed
+    detection_range_multiplier: 0.8
+    is_hidden: true
+  
+  rarity:
+    rarity_tier: Rare
+    discovery_value: 10000
+    historical_significance: 95
+  
+  rewards:
+    credits_reward: 15000
+    experience_reward: 3000
+    reputation_reward: 100
+    item_rewards:
+      - item_id: "AncientArtifact"
+        quantity: 3
+        drop_chance: 90
+      - item_id: "PrecursorTechnology"
+        quantity: 1
+        drop_chance: 60
+    story_items:
+      - item_id: "PrecursorTablet"
+        item_name: "Precursor Data Tablet"
+        item_description: "An ancient data storage device containing star charts and cryptic messages."
+        is_key_item: true
+        associated_quest_id: "Quest_PrecursorMystery"
+  
+  content:
+    lore_text: "The Precursors left behind monuments to their greatness. These ruins speak of a civilization that mastered the stars when humanity was still learning to walk."
+    historical_records:
+      - "Estimated age: 50,000 years. Predates all known spacefaring civilizations."
+      - "Architecture suggests advanced understanding of quantum mechanics and spacetime manipulation."
+      - "No evidence of violent destruction. They simply... vanished."
+    associated_faction_id: "Faction_Precursors"
+    estimated_age: 50000
+    condition: 40  # Fair condition, weathered by time
+  
+  quest_integration:
+    triggered_quest_id: "Quest_AncientSecrets"
+    unlocks_quests: true
+    unlocked_quest_ids:
+      - "Quest_PrecursorMystery"
+      - "Quest_LostTechnology"
+    is_quest_objective: false
+  
+  interaction:
+    can_be_explored: true
+    exploration_time: 300.0  # 5 minutes
+    has_hostiles: false
+    interaction_radius: 50000  # 500m
+    can_be_salvaged: true
+    salvage_value: 5000
+    can_revisit: true
+
+# ==========================================
+# Template 2: Derelict Warship
+# ==========================================
+discovery_derelict_warship:
+  basic_info:
+    discovery_name: "Abandoned Battlecruiser 'Valiant'"
+    description: "A massive warship drifting dead in space, its crew long gone."
+    discovery_type: DerelictShip
+    discovery_id: "Discovery_Ship_Valiant_001"
+  
+  detection:
+    signal_strength: 70  # Large metal structure
+    required_scanner_type: Basic
+    requires_deep_scan: false
+    minimum_scan_level: Basic
+    detection_range_multiplier: 1.5  # Large ship easy to spot
+    is_hidden: false
+  
+  rarity:
+    rarity_tier: Uncommon
+    discovery_value: 3000
+    historical_significance: 70
+  
+  rewards:
+    credits_reward: 5000
+    experience_reward: 1000
+    reputation_reward: 40
+    item_rewards:
+      - item_id: "MilitaryGradePlating"
+        quantity: 50
+        drop_chance: 100
+      - item_id: "NavalWeaponSystems"
+        quantity: 2
+        drop_chance: 70
+      - item_id: "ShipLogData"
+        quantity: 1
+        drop_chance: 100
+    story_items:
+      - item_id: "CaptainsLog"
+        item_name: "Captain's Personal Log"
+        item_description: "The final entries of Captain Sarah Chen reveal the ship's tragic fate."
+        is_key_item: false
+  
+  content:
+    lore_text: "The UNS Valiant vanished during the Battle of Centauri Gate. Now you've found it - a tomb ship, silent and cold."
+    historical_records:
+      - "Ship registry: UNS Valiant, Dreadnought-class battlecruiser"
+      - "Last contact: 2387, Battle of Centauri Gate"
+      - "Crew complement: 2,400 souls. All missing."
+    associated_faction_id: "Faction_UnitedNavy"
+    estimated_age: 38
+    condition: 55  # Good structural condition
+  
+  quest_integration:
+    triggered_quest_id: "Quest_GhostShip"
+    unlocks_quests: false
+    is_quest_objective: true
+    quest_objective_id: "Quest_MilitaryInvestigation"
+  
+  interaction:
+    can_be_explored: true
+    exploration_time: 180.0  # 3 minutes
+    has_hostiles: true
+    hostile_difficulty: 6  # Automated defense systems still active
+    interaction_radius: 30000  # 300m
+    can_be_salvaged: true
+    salvage_value: 15000
+    can_revisit: true
+
+# ==========================================
+# Template 3: Abandoned Space Station
+# ==========================================
+discovery_abandoned_station:
+  basic_info:
+    discovery_name: "Frontier Station Echo"
+    description: "An abandoned mining station orbiting a dead asteroid field."
+    discovery_type: DerelictStation
+    discovery_id: "Discovery_Station_Echo_001"
+  
+  detection:
+    signal_strength: 80  # Still has some power
+    required_scanner_type: Basic
+    requires_deep_scan: false
+    minimum_scan_level: Basic
+    detection_range_multiplier: 2.0  # Easy to find
+    is_hidden: false
+  
+  rarity:
+    rarity_tier: Common
+    discovery_value: 1000
+    historical_significance: 40
+  
+  rewards:
+    credits_reward: 2000
+    experience_reward: 400
+    reputation_reward: 20
+    item_rewards:
+      - item_id: "RawOre"
+        quantity: 100
+        drop_chance: 95
+      - item_id: "StationComponents"
+        quantity: 25
+        drop_chance: 80
+      - item_id: "FuelCells"
+        quantity: 10
+        drop_chance: 60
+  
+  content:
+    lore_text: "Frontier mining stations like this were common during the resource boom. When the asteroids ran dry, so did the profits. The workers moved on."
+    historical_records:
+      - "Operated by Frontier Mining Corp, 2410-2418"
+      - "Closed due to resource depletion and economic downturn"
+      - "Crew evacuated safely, station mothballed"
+    associated_faction_id: "Faction_FrontierMining"
+    estimated_age: 7
+    condition: 65  # Well maintained before abandonment
+  
+  quest_integration:
+    unlocks_quests: false
+    is_quest_objective: false
+  
+  interaction:
+    can_be_explored: true
+    exploration_time: 120.0  # 2 minutes
+    has_hostiles: false
+    interaction_radius: 40000  # 400m
+    can_be_salvaged: true
+    salvage_value: 8000
+    can_revisit: true
+
+# ==========================================
+# Template 4: Remote Research Outpost
+# ==========================================
+discovery_research_outpost:
+  basic_info:
+    discovery_name: "Classified Research Facility Sigma-7"
+    description: "A secret research outpost conducting unknown experiments."
+    discovery_type: AbandonedOutpost
+    discovery_id: "Discovery_Outpost_Sigma7_001"
+  
+  detection:
+    signal_strength: 35  # Deliberately hidden
+    required_scanner_type: Military
+    requires_deep_scan: true
+    minimum_scan_level: Complete
+    detection_range_multiplier: 0.6
+    is_hidden: true
+  
+  rarity:
+    rarity_tier: VeryRare
+    discovery_value: 8000
+    historical_significance: 85
+  
+  rewards:
+    credits_reward: 20000
+    experience_reward: 4000
+    reputation_reward: 150
+    item_rewards:
+      - item_id: "ExperimentalTech"
+        quantity: 5
+        drop_chance: 80
+      - item_id: "ClassifiedData"
+        quantity: 1
+        drop_chance: 100
+      - item_id: "PrototypeWeapon"
+        quantity: 1
+        drop_chance: 40
+    story_items:
+      - item_id: "ResearchLogs"
+        item_name: "Project Blackout Research Logs"
+        item_description: "Highly classified research into exotic weapons technology."
+        is_key_item: true
+        associated_quest_id: "Quest_Blackout"
+  
+  content:
+    lore_text: "The government denies this facility ever existed. The scorched walls and empty labs tell a different story."
+    historical_records:
+      - "CLASSIFIED: Project Blackout, Authorization Level 10 Required"
+      - "Research focus: Exotic matter weaponization"
+      - "Facility status: Evacuated under emergency protocols"
+    associated_faction_id: "Faction_MilitaryResearch"
+    estimated_age: 2
+    condition: 70  # Recently abandoned
+  
+  quest_integration:
+    triggered_quest_id: "Quest_Blackout"
+    unlocks_quests: true
+    unlocked_quest_ids:
+      - "Quest_ConspiracyTheory"
+      - "Quest_MilitaryCoverup"
+    is_quest_objective: false
+  
+  interaction:
+    can_be_explored: true
+    exploration_time: 240.0  # 4 minutes
+    has_hostiles: true
+    hostile_difficulty: 8  # Security robots still active
+    interaction_radius: 25000  # 250m
+    can_be_salvaged: true
+    salvage_value: 25000
+    can_revisit: false  # One-time only
+
+# ==========================================
+# Template 5: Crashed Colony Ship
+# ==========================================
+discovery_crashed_colony_ship:
+  basic_info:
+    discovery_name: "Colony Ship 'New Horizon'"
+    description: "A massive colony transport that crashed on an uncharted moon centuries ago."
+    discovery_type: CrashedVessel
+    discovery_id: "Discovery_ColonyShip_NewHorizon_001"
+  
+  detection:
+    signal_strength: 60
+    required_scanner_type: Exploration
+    requires_deep_scan: false
+    minimum_scan_level: Detailed
+    detection_range_multiplier: 1.3
+    is_hidden: false
+  
+  rarity:
+    rarity_tier: Rare
+    discovery_value: 7000
+    historical_significance: 80
+  
+  rewards:
+    credits_reward: 10000
+    experience_reward: 2000
+    reputation_reward: 70
+    item_rewards:
+      - item_id: "ColonialSupplies"
+        quantity: 200
+        drop_chance: 100
+      - item_id: "CryoPods"
+        quantity: 10
+        drop_chance: 70
+      - item_id: "HistoricalArtifacts"
+        quantity: 5
+        drop_chance: 85
+    story_items:
+      - item_id: "PassengerManifest"
+        item_name: "Passenger Manifest & Personal Effects"
+        item_description: "Names and belongings of 50,000 colonists who never reached their destination."
+        is_key_item: false
+  
+  content:
+    lore_text: "They set out for a new world, full of hope. They found only death among the stars. Their dream lies broken on this forgotten moon."
+    historical_records:
+      - "Departed Earth, 2287. Destination: Epsilon Eridani b"
+      - "Passenger count: 50,000 colonists in cryosleep"
+      - "Crashed due to navigation error. No survivors."
+    associated_faction_id: "Faction_Colonists"
+    estimated_age: 138
+    condition: 30  # Poor, heavily damaged
+  
+  quest_integration:
+    triggered_quest_id: "Quest_LostColony"
+    unlocks_quests: false
+    is_quest_objective: true
+    quest_objective_id: "Quest_FindingNewHorizon"
+  
+  interaction:
+    can_be_explored: true
+    exploration_time: 360.0  # 6 minutes - large ship
+    has_hostiles: false
+    interaction_radius: 60000  # 600m - huge wreck
+    can_be_salvaged: true
+    salvage_value: 30000
+    can_revisit: true
+
+# ==========================================
+# Template 6: Hidden Smuggler Cache
+# ==========================================
+discovery_smuggler_cache:
+  basic_info:
+    discovery_name: "Unmarked Cargo Cache"
+    description: "A hidden stash of illegal goods, cleverly concealed in an asteroid."
+    discovery_type: HiddenCache
+    discovery_id: "Discovery_Cache_Smuggler_001"
+  
+  detection:
+    signal_strength: 20  # Very well hidden
+    required_scanner_type: Advanced
+    requires_deep_scan: true
+    minimum_scan_level: Complete
+    detection_range_multiplier: 0.4  # Extremely hard to find
+    is_hidden: true
+  
+  rarity:
+    rarity_tier: Uncommon
+    discovery_value: 2000
+    historical_significance: 20
+  
+  rewards:
+    credits_reward: 8000
+    experience_reward: 800
+    reputation_reward: -20  # Negative rep with law enforcement
+    item_rewards:
+      - item_id: "Contraband"
+        quantity: 50
+        drop_chance: 100
+      - item_id: "BlackMarketWeapons"
+        quantity: 5
+        drop_chance: 80
+      - item_id: "StolenArtifacts"
+        quantity: 2
+        drop_chance: 60
+  
+  content:
+    lore_text: "The Syndicate has drop points throughout the sector. Find one and you're rich. Get caught and you're dead."
+    historical_records:
+      - "Cache designation unknown - no official records"
+      - "Contents suggest Syndicate operations"
+    associated_faction_id: "Faction_Syndicate"
+    estimated_age: 1  # Recently used
+    condition: 90  # Excellent, actively maintained
+  
+  quest_integration:
+    triggered_quest_id: "Quest_SyndicateAttention"
+    unlocks_quests: true
+    unlocked_quest_ids:
+      - "Quest_BlackMarket"
+    is_quest_objective: false
+  
+  interaction:
+    can_be_explored: true
+    exploration_time: 60.0  # 1 minute - small cache
+    has_hostiles: true
+    hostile_difficulty: 7  # Syndicate guards
+    interaction_radius: 15000  # 150m
+    can_be_salvaged: true
+    salvage_value: 5000
+    can_revisit: false  # One time only
+
+# ==========================================
+# Template 7: Alien Monolith
+# ==========================================
+discovery_alien_monolith:
+  basic_info:
+    discovery_name: "Xenoarchaeological Monolith"
+    description: "An enormous alien structure of unknown purpose, humming with energy."
+    discovery_type: AlienArtifact
+    discovery_id: "Discovery_Monolith_Alien_001"
+  
+  detection:
+    signal_strength: 55
+    required_scanner_type: Scientific
+    requires_deep_scan: true
+    minimum_scan_level: Complete
+    detection_range_multiplier: 1.0
+    is_hidden: false
+  
+  rarity:
+    rarity_tier: Legendary
+    discovery_value: 20000
+    historical_significance: 100
+  
+  rewards:
+    credits_reward: 50000
+    experience_reward: 10000
+    reputation_reward: 200
+    item_rewards:
+      - item_id: "XenoTechnology"
+        quantity: 1
+        drop_chance: 100
+      - item_id: "AlienDataCore"
+        quantity: 1
+        drop_chance: 100
+    story_items:
+      - item_id: "MonolithKey"
+        item_name: "Alien Activation Key"
+        item_description: "A mysterious device that resonates with the monolith's energy field."
+        is_key_item: true
+        associated_quest_id: "Quest_AlienContact"
+  
+  content:
+    lore_text: "Not Precursor. Not human. Something else. Something older. The monolith waits, patient as the stars themselves."
+    historical_records:
+      - "Origin: Unknown. Composition: Unknown. Age: Unknown."
+      - "Emits harmonic frequencies not found in nature"
+      - "Purpose unclear - possibly beacon, weapon, or communication device"
+    associated_faction_id: "Faction_Xenoarcheologists"
+    estimated_age: 0  # Age cannot be determined
+    condition: 100  # Perfect, as if brand new
+  
+  quest_integration:
+    triggered_quest_id: "Quest_AlienContact"
+    unlocks_quests: true
+    unlocked_quest_ids:
+      - "Quest_FirstContact"
+      - "Quest_XenoMystery"
+    is_quest_objective: false
+  
+  interaction:
+    can_be_explored: true
+    exploration_time: 600.0  # 10 minutes - extremely complex
+    has_hostiles: false
+    interaction_radius: 100000  # 1km - massive structure
+    can_be_salvaged: false  # Cannot be salvaged
+    can_revisit: true
+
+# ==========================================
+# Template 8: Battlefield Graveyard
+# ==========================================
+discovery_battlefield:
+  basic_info:
+    discovery_name: "Battle of Helios Prime - Debris Field"
+    description: "The shattered remains of two fleets, frozen in eternal combat."
+    discovery_type: DerelictStation  # Closest match
+    discovery_id: "Discovery_Battlefield_Helios_001"
+  
+  detection:
+    signal_strength: 85
+    required_scanner_type: Basic
+    requires_deep_scan: false
+    minimum_scan_level: Basic
+    detection_range_multiplier: 2.5  # Many wrecks, easy to spot
+    is_hidden: false
+  
+  rarity:
+    rarity_tier: Uncommon
+    discovery_value: 4000
+    historical_significance: 75
+  
+  rewards:
+    credits_reward: 6000
+    experience_reward: 1200
+    reputation_reward: 50
+    item_rewards:
+      - item_id: "WreckageSalvage"
+        quantity: 500
+        drop_chance: 100
+      - item_id: "MilitaryEquipment"
+        quantity: 20
+        drop_chance: 90
+      - item_id: "BlackBox"
+        quantity: 5
+        drop_chance: 70
+  
+  content:
+    lore_text: "They fought for principles, for territory, for survival. In the end, the void claimed them all equally. War leaves only ghosts."
+    historical_records:
+      - "Battle of Helios Prime, 2402"
+      - "Coalition Fleet vs Separatist Armada"
+      - "Casualties: 127 ships, 45,000 souls"
+    associated_faction_id: "Faction_Coalition"
+    estimated_age: 23
+    condition: 20  # Heavily damaged wrecks
+  
+  quest_integration:
+    triggered_quest_id: "Quest_WarMemorial"
+    unlocks_quests: false
+    is_quest_objective: true
+    quest_objective_id: "Quest_RecoverBlackBoxes"
+  
+  interaction:
+    can_be_explored: true
+    exploration_time: 180.0  # 3 minutes
+    has_hostiles: true
+    hostile_difficulty: 5  # Automated defense systems
+    interaction_radius: 80000  # 800m - large debris field
+    can_be_salvaged: true
+    salvage_value: 40000
+    can_revisit: true
+
+# ==========================================
+# Template 9: Secret Military Facility
+# ==========================================
+discovery_secret_facility:
+  basic_info:
+    discovery_name: "Unregistered Military Installation"
+    description: "A clandestine military facility that officially doesn't exist."
+    discovery_type: SecretFacility
+    discovery_id: "Discovery_Facility_BlackOps_001"
+  
+  detection:
+    signal_strength: 25  # Heavy stealth countermeasures
+    required_scanner_type: Military
+    requires_deep_scan: true
+    minimum_scan_level: Complete
+    detection_range_multiplier: 0.5
+    is_hidden: true
+  
+  rarity:
+    rarity_tier: VeryRare
+    discovery_value: 12000
+    historical_significance: 90
+  
+  rewards:
+    credits_reward: 30000
+    experience_reward: 6000
+    reputation_reward: -100  # Very negative military rep
+    item_rewards:
+      - item_id: "ClassifiedMiltech"
+        quantity: 10
+        drop_chance: 90
+      - item_id: "BlackOpsEquipment"
+        quantity: 3
+        drop_chance: 70
+      - item_id: "TopSecretData"
+        quantity: 1
+        drop_chance: 100
+    story_items:
+      - item_id: "FacilityAccess"
+        item_name: "Command Override Codes"
+        item_description: "Access codes for classified military installations. Use with extreme caution."
+        is_key_item: true
+        associated_quest_id: "Quest_DeepState"
+  
+  content:
+    lore_text: "Black budgets build black sites. This is where the government does what it won't admit to doing."
+    historical_records:
+      - "REDACTED"
+      - "REDACTED"
+      - "Security clearance insufficient for historical data"
+    associated_faction_id: "Faction_BlackOps"
+    estimated_age: 5
+    condition: 95  # Extremely well maintained
+  
+  quest_integration:
+    triggered_quest_id: "Quest_DeepState"
+    unlocks_quests: true
+    unlocked_quest_ids:
+      - "Quest_GovernmentConspiracy"
+      - "Quest_WhistleBlower"
+    is_quest_objective: false
+  
+  interaction:
+    can_be_explored: true
+    exploration_time: 480.0  # 8 minutes - heavily secured
+    has_hostiles: true
+    hostile_difficulty: 10  # Maximum security
+    interaction_radius: 35000  # 350m
+    can_be_salvaged: true
+    salvage_value: 100000
+    can_revisit: false  # Heavily guarded after discovery
+
+# ==========================================
+# Template 10: Pristine Mystery Location
+# ==========================================
+discovery_mystery:
+  basic_info:
+    discovery_name: "The Silent Expanse"
+    description: "A region of space where all sensors fail and reality seems... wrong."
+    discovery_type: MysteryLocation
+    discovery_id: "Discovery_Mystery_Expanse_001"
+  
+  detection:
+    signal_strength: 0  # Paradoxically undetectable yet present
+    required_scanner_type: Scientific
+    requires_deep_scan: true
+    minimum_scan_level: Complete
+    detection_range_multiplier: 0.3
+    is_hidden: true
+  
+  rarity:
+    rarity_tier: Legendary
+    discovery_value: 25000
+    historical_significance: 100
+  
+  rewards:
+    credits_reward: 100000
+    experience_reward: 20000
+    reputation_reward: 500
+    item_rewards:
+      - item_id: "RealityFragment"
+        quantity: 1
+        drop_chance: 100
+      - item_id: "ImpossibleTech"
+        quantity: 1
+        drop_chance: 50
+    story_items:
+      - item_id: "TruthKey"
+        item_name: "Fragment of Truth"
+        item_description: "An object that should not exist, yet does. It whispers secrets of the universe."
+        is_key_item: true
+        associated_quest_id: "Quest_UltimateQuestion"
+  
+  content:
+    lore_text: "Some say it's a tear in reality. Others claim it's a window to another universe. All who enter are forever changed."
+    historical_records:
+      - "No records exist. No records can exist."
+      - "Witnesses describe impossible geometries and incomprehensible visions"
+      - "Return rate: 30%. Mental stability rate of returnees: 10%"
+    associated_faction_id: "Faction_None"
+    estimated_age: 0  # Outside time
+    condition: 0  # Condition undefined
+  
+  quest_integration:
+    triggered_quest_id: "Quest_UltimateQuestion"
+    unlocks_quests: true
+    unlocked_quest_ids:
+      - "Quest_EndgameRevelation"
+    is_quest_objective: false
+  
+  interaction:
+    can_be_explored: true
+    exploration_time: 1200.0  # 20 minutes - extremely dangerous
+    has_hostiles: false  # Something worse than hostiles
+    interaction_radius: 200000  # 2km - vast anomalous region
+    can_be_salvaged: false
+    can_revisit: false  # Can only be experienced once

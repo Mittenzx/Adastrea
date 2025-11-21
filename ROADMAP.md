@@ -169,7 +169,7 @@
 | Ship Customization | ✅ Complete | 85% | ✅ Excellent | ⚠️ Moderate | More options |
 | Way System | ✅ Complete | 95% | ✅ Excellent | ✅ Good | Network expansion |
 | Rivals/Antagonists | ✅ Complete | 90% | ⚠️ Moderate | ⚠️ Moderate | Documentation expansion |
-| Exploration | 🔄 In Progress | 35% | ✅ Good | ⚠️ Moderate | Phase 2: Discovery System |
+| Exploration | 🔄 In Progress | 70% | ✅ Excellent | ✅ Good | Phase 2 ✅ Complete |
 | Multiplayer | ❌ Planned | 0% | ❌ None | ❌ None | Technical research |
 
 **Legend**:
@@ -396,7 +396,7 @@
 - ✅ Exploration System Phase 1: Scanner & Sensors - **COMPLETE Nov 20, 2025**
 - 🔄 Visual effects for combat
 - 🔄 Particle systems for weapons
-- ⏳ Exploration System Phase 2: Discovery & Anomalies
+- ✅ Exploration System Phase 2: Discovery & Anomalies - **COMPLETE Nov 21, 2025**
 - ⏳ Achievement content creation
 - ⏳ Performance optimization pass #1
 - ⏳ **Director Plugin: Proof of Concept (6 weeks)**
@@ -651,12 +651,17 @@
 - [x] Documentation (ExplorationSystemGuide.md, 22KB)
 - [x] YAML templates (7 scanners, 9 object types)
 
-#### Phase 2: Discovery System (Q1 2026)
-- [ ] Anomaly system (spatial phenomena)
-- [ ] Discovery database and tracking
-- [ ] Rarity and reward systems
-- [ ] Archaeological sites
-- [ ] Derelict ships and stations
+#### Phase 2: Discovery System ✅ COMPLETE (November 21, 2025)
+- [x] Anomaly system (spatial phenomena)
+- [x] Discovery database and tracking
+- [x] Rarity and reward systems
+- [x] Archaeological sites
+- [x] Derelict ships and stations
+- [x] AnomalyDataAsset (10 types, 5 rarity tiers)
+- [x] DiscoveryDataAsset (10 location types)
+- [x] DiscoveryComponent (interaction system)
+- [x] DiscoveryManagerSubsystem (global tracking)
+- [x] YAML templates (10 anomalies, 10 locations)
 
 #### Phase 3: Resource Gathering (Q1-Q2 2026)
 - [ ] Mining mechanics
