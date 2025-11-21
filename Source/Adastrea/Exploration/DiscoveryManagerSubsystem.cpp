@@ -1,4 +1,5 @@
 #include "Exploration/DiscoveryManagerSubsystem.h"
+#include "AdastreaLog.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/PlayerState.h"
 
@@ -15,7 +16,7 @@ void UDiscoveryManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection
 	CachedStatistics = FDiscoveryStatistics();
 	bStatisticsDirty = true;
 
-	UE_LOG(LogTemp, Log, TEXT("DiscoveryManagerSubsystem initialized."));
+	UE_LOG(LogAdastreaExploration, Log, TEXT("DiscoveryManagerSubsystem initialized."));
 }
 
 void UDiscoveryManagerSubsystem::Deinitialize()
@@ -36,20 +37,20 @@ bool UDiscoveryManagerSubsystem::RegisterDiscovery(
 	// Validate input
 	if (DiscoveryID == NAME_None)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Cannot register discovery with invalid ID."));
+		UE_LOG(LogAdastreaExploration, Warning, TEXT("Cannot register discovery with invalid ID."));
 		return false;
 	}
 
 	if (!AnomalyData && !DiscoveryData)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Cannot register discovery without data."));
+		UE_LOG(LogAdastreaExploration, Warning, TEXT("Cannot register discovery without data."));
 		return false;
 	}
 
 	// Check if already registered
 	if (DiscoveryRecords.Contains(DiscoveryID))
 	{
-		UE_LOG(LogTemp, Log, TEXT("Discovery %s already registered."), *DiscoveryID.ToString());
+		UE_LOG(LogAdastreaExploration, Log, TEXT("Discovery %s already registered."), *DiscoveryID.ToString());
 		return false;
 	}
 
@@ -96,7 +97,7 @@ bool UDiscoveryManagerSubsystem::RegisterDiscovery(
 	int32 NewCount = DiscoveryRecords.Num();
 	CheckMilestones(OldCount, NewCount);
 
-	UE_LOG(LogTemp, Log, TEXT("Registered discovery: %s (%s)"), 
+	UE_LOG(LogAdastreaExploration, Log, TEXT("Registered discovery: %s (%s)"), 
 		*Record.DiscoveryName.ToString(),
 		*DiscoveryID.ToString());
 
@@ -163,7 +164,7 @@ bool UDiscoveryManagerSubsystem::MarkAsExplored(FName DiscoveryID)
 
 	OnDiscoveryExplored.Broadcast(DiscoveryID);
 
-	UE_LOG(LogTemp, Log, TEXT("Discovery marked as explored: %s"), *DiscoveryID.ToString());
+	UE_LOG(LogAdastreaExploration, Log, TEXT("Discovery marked as explored: %s"), *DiscoveryID.ToString());
 
 	return true;
 }
@@ -318,7 +319,7 @@ FDiscoveryStatistics UDiscoveryManagerSubsystem::GetStatistics() const
 {
 	if (bStatisticsDirty)
 	{
-		const_cast<UDiscoveryManagerSubsystem*>(this)->UpdateStatistics();
+		UpdateStatistics();
 	}
 
 	return CachedStatistics;
@@ -378,7 +379,7 @@ float UDiscoveryManagerSubsystem::GetCompletionPercentage(int32 TotalAvailable) 
 	return (static_cast<float>(DiscoveryRecords.Num()) / static_cast<float>(TotalAvailable)) * 100.0f;
 }
 
-void UDiscoveryManagerSubsystem::UpdateStatistics()
+void UDiscoveryManagerSubsystem::UpdateStatistics() const
 {
 	CachedStatistics = FDiscoveryStatistics();
 
@@ -448,7 +449,7 @@ void UDiscoveryManagerSubsystem::CheckMilestones(int32 OldCount, int32 NewCount)
 		if (OldCount < Milestone && NewCount >= Milestone)
 		{
 			OnDiscoveryMilestone.Broadcast(Milestone);
-			UE_LOG(LogTemp, Log, TEXT("Discovery milestone reached: %d discoveries!"), Milestone);
+			UE_LOG(LogAdastreaExploration, Log, TEXT("Discovery milestone reached: %d discoveries!"), Milestone);
 		}
 	}
 }

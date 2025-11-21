@@ -411,16 +411,16 @@ protected:
 
 	/** Cached statistics */
 	UPROPERTY()
-	FDiscoveryStatistics CachedStatistics;
+	mutable FDiscoveryStatistics CachedStatistics;
 
 	/** Should statistics be recalculated? */
-	bool bStatisticsDirty;
+	mutable bool bStatisticsDirty;
 
 private:
 	/**
 	 * Update cached statistics
 	 */
-	void UpdateStatistics();
+	void UpdateStatistics() const;
 
 	/**
 	 * Check and fire milestone events

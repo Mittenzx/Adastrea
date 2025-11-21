@@ -636,7 +636,7 @@
 
 ### Exploration System (Detailed)
 
-**Current Status**: 50% complete (Phases 1 & 2 Complete ✅)  
+**Current Status**: 70% complete (Phases 1 & 2 Complete ✅)  
 **Target Completion**: Q1-Q2 2026
 
 #### Phase 1: Scanner & Sensors (Q1 2026) ✅ Complete
