@@ -8,6 +8,7 @@
 class UFeatDataAsset;
 class UWayDataAsset;
 enum class EPrecept : uint8;
+enum class EFeatRarity : uint8;
 
 /**
  * Structure tracking when and where a Feat was earned.

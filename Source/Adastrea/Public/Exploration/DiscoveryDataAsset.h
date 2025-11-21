@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "Exploration/AnomalyDataAsset.h"
+#include "Exploration/ScannerDataAsset.h"
 #include "DiscoveryDataAsset.generated.h"
 
 /**
