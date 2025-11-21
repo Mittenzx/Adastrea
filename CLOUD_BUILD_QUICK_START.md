@@ -14,7 +14,7 @@ For Adastrea (open-source, GitHub-hosted), use **GitHub Actions with Docker**:
 # Visit Epic Games Developer portal
 
 # 3. Add GitHub Actions workflow to your repo
-# See: .github/workflows/unreal-build.yml
+# Copy .github/workflows/ue-build-example.yml.disabled to .github/workflows/ue-build-example.yml (remove .disabled)
 
 # 4. Push code and watch build run in Actions tab
 ```
@@ -58,6 +58,11 @@ For Adastrea (open-source, GitHub-hosted), use **GitHub Actions with Docker**:
 
 #### 2. Create Workflow File (10 minutes)
 
+> **Note:** There is an example workflow file in the repository: `.github/workflows/ue-build-example.yml.disabled`.  
+> You can either:
+> - Copy and rename `.github/workflows/ue-build-example.yml.disabled` to `.github/workflows/ue-build-example.yml` (removing the `.disabled` extension), **or**
+> - Create a new file `.github/workflows/ue-build.yml` and paste the following YAML.
+
 Create `.github/workflows/ue-build.yml`:
 
 ```yaml
@@ -95,7 +100,11 @@ jobs:
 
 #### 3. Test Workflow (5 minutes)
 ```bash
+# If you created a new file:
 git add .github/workflows/ue-build.yml
+# If you renamed the example:
+# git add .github/workflows/ue-build-example.yml
+
 git commit -m "Add UE5 build test workflow"
 git push
 
@@ -186,8 +195,9 @@ echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR_USERNAME --password-stdin
 **Solution:**
 ```yaml
 # Add to workflow:
+# Use 755 instead of 777 for better security. Prefer fixing user mapping in Docker.
 - name: Fix Permissions
-  run: sudo chmod -R 777 ${{ github.workspace }}
+  run: sudo chmod -R 755 ${{ github.workspace }}
 ```
 
 ## Resource Links
@@ -249,7 +259,8 @@ echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR_USERNAME --password-stdin
 Add to your README.md:
 
 ```markdown
-[![Build Status](https://github.com/Mittenzx/Adastrea/actions/workflows/ue-build.yml/badge.svg)](https://github.com/Mittenzx/Adastrea/actions)
+# Use the filename of your workflow (ue-build.yml or ue-build-example.yml)
+[![Build Status](https://github.com/Mittenzx/Adastrea/actions/workflows/ue-build-example.yml/badge.svg)](https://github.com/Mittenzx/Adastrea/actions)
 ```
 
 ## Getting Help

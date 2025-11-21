@@ -93,14 +93,16 @@ Building Unreal Engine projects requires significant computational resources and
 #### Prerequisites:
 - Docker installed
 - GitHub account with UE container access
-- GitHub Personal Access Token with `read:packages` scope
+- (For local Docker authentication only) GitHub Personal Access Token with `read:packages` scope  
+  *Note: For GitHub Actions workflows, the built-in `secrets.GITHUB_TOKEN` is used and a Personal Access Token is not required.*
 
 #### Docker Container Access:
 1. Link Epic Games account to GitHub account at [epicgames.com](https://www.epicgames.com/account/connections)
 2. Accept Epic EULA for container images
-3. Authenticate Docker to GitHub Container Registry:
+3. Authenticate Docker to GitHub Container Registry (for local development):
    ```bash
-   echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
+   # Replace YOUR_TOKEN with your actual GitHub Personal Access Token (PAT)
+   echo "YOUR_TOKEN" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
    ```
 
 #### Available Actions:
@@ -305,6 +307,8 @@ Based on the project characteristics:
 ## Implementation Guide for GitHub Actions
 
 ### Step 1: Prepare Repository
+
+> **Note:** An example workflow file is provided in the repository as `.github/workflows/ue-build-example.yml.disabled`. You can copy and rename this file to `.github/workflows/unreal-build.yml` to use it as a starting point for your workflow.
 
 Create `.github/workflows/unreal-build.yml`:
 

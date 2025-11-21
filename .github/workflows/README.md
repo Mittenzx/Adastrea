@@ -35,8 +35,9 @@ Example Unreal Engine build workflow (disabled by default):
 
 3. **Verify Docker Access**
    ```bash
-   # Test authentication
-   echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR_USERNAME --password-stdin
+   # Test authentication (for local development)
+   # Replace YOUR_GITHUB_TOKEN with your actual GitHub Personal Access Token
+   echo YOUR_GITHUB_TOKEN | docker login ghcr.io -u YOUR_USERNAME --password-stdin
    
    # Try pulling UE container
    docker pull ghcr.io/epicgames/unreal-engine:dev-slim-5.6
