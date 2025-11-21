@@ -194,7 +194,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Rewards")
 	TArray<FItemReward> ItemRewards;
 
-	/** Reputation gain with scientific ways/factions */
+	/** Reputation gain with scientific organizations/factions */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Rewards", meta=(ClampMin=0))
 	int32 ReputationReward;
 
