@@ -636,7 +636,7 @@
 
 ### Exploration System (Detailed)
 
-**Current Status**: 35% complete (Phase 1 Complete ✅)  
+**Current Status**: 50% complete (Phases 1 & 2 Complete ✅)  
 **Target Completion**: Q1-Q2 2026
 
 #### Phase 1: Scanner & Sensors (Q1 2026) ✅ Complete
@@ -1007,10 +1007,18 @@ This roadmap is a living document and will be updated regularly to reflect:
 
 **How to Update**: Contributors should update this roadmap when their PRs affect project milestones, phases, or system status. See [ROADMAP_UPDATE_GUIDELINES.md](ROADMAP_UPDATE_GUIDELINES.md) for detailed guidance on when and how to update.
 
-**Last Updated**: November 20, 2025 (Exploration System Phase 1 Complete)  
+**Last Updated**: November 21, 2025 (Exploration System Phase 2 Complete)  
 **Next Review**: December 2025
 
 ### Recent Updates
+
+#### November 21, 2025
+- **Exploration System Phase 2 Complete**: Discovery & Anomalies system implemented (4 new classes, ~2,900 LOC)
+- **Phase 4 Progress**: Exploration milestone achieved
+- **System Maturity**: Exploration system now 70% complete (Phases 1 & 2 done)
+- **New Features**: AnomalyDataAsset (10 types), DiscoveryDataAsset (10 types), DiscoveryComponent, DiscoveryManagerSubsystem
+- **Documentation**: Updated ExplorationSystemGuide.md, added DiscoverySystemQuickStart.md
+- **YAML Templates**: 20 new templates (10 anomalies + 10 discoveries)
 
 #### November 20, 2025
 - **Exploration System Phase 1 Complete**: Scanner & Sensors system implemented (3 new classes, ~3,200 LOC)
