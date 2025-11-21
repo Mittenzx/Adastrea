@@ -61,7 +61,7 @@ struct FPlayerModDefinition
  * Stores the definition of a player mod that can be installed and used
  */
 UCLASS(BlueprintType)
-class UPlayerModDataAsset : public UPrimaryDataAsset
+class PLAYERMODS_API UPlayerModDataAsset : public UPrimaryDataAsset
 {
     GENERATED_BODY()
 
