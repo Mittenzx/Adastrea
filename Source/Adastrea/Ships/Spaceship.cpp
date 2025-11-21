@@ -391,6 +391,8 @@ float ASpaceship::GetCurrentHullIntegrity() const
 float ASpaceship::GetMaxHullIntegrity() const
 {
     return MaxHullIntegrity;
+}
+
 // ==========================================
 // X4-STYLE FLIGHT CONTROL IMPLEMENTATION
 // ==========================================
