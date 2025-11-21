@@ -264,6 +264,8 @@ Concise reference documents:
 | **ARCHITECTURE.md** | System architecture and design patterns | Root |
 | **CODE_STYLE.md** | C++ and Blueprint coding standards | Root |
 | **CONTRIBUTING.md** | Contribution guidelines | Root |
+| **CLOUD_BUILD_SERVICES.md** | ⭐ **NEW!** External cloud build services guide | Root |
+| **CLOUD_BUILD_QUICK_START.md** | ⭐ **NEW!** Quick start for cloud CI/CD setup | Root |
 | **Assets/ADVANCED_DATA_MANAGEMENT.md** | Advanced data management techniques | Assets/ |
 | **Docs/IMPLEMENTATION_SUMMARY.md** | Implementation overview | Docs/ |
 | **Docs/BEST_PRACTICES_CLASS_SETUP.md** | Class setup best practices | Docs/ |

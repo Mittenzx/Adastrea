@@ -147,6 +147,18 @@ python AutomationRunner.py --all --schedule "23:00"
 
 See [TESTING_AUTOMATION_GUIDE.md](TESTING_AUTOMATION_GUIDE.md) for complete documentation.
 
+### Cloud Build Services
+
+For automated building and CI/CD in cloud environments, multiple services are available:
+
+- **GitHub Actions + Docker**: Free for public repos, integrated CI/CD (recommended for Adastrea)
+- **Epic Games Horde**: Native UE5 build platform with distributed compilation
+- **Unreal Cloud Build**: Managed cloud service without self-hosting
+- **TensorWorks Admiral**: Enterprise-grade managed UE5 CI/CD
+- **AWS Game Tech**: Comprehensive cloud infrastructure for UE5
+
+See [CLOUD_BUILD_SERVICES.md](CLOUD_BUILD_SERVICES.md) for detailed comparisons and [CLOUD_BUILD_QUICK_START.md](CLOUD_BUILD_QUICK_START.md) for quick setup instructions.
+
 ### Procedural Content Generation
 
 Generate randomized game content quickly with the procedural generation system:
