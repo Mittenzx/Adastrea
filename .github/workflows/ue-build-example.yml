@@ -41,6 +41,11 @@ on:
   # pull_request:
   #   branches: [ main, develop ]
 
+# Limit permissions for security - only grant what's needed
+permissions:
+  contents: read        # Read repository contents
+  packages: read        # Read packages for Docker container registry
+
 jobs:
   # Basic validation job (fast, always runs)
   validate-project:
