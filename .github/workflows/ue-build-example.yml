@@ -253,4 +253,4 @@ jobs:
           echo "### Job Status" >> $GITHUB_STEP_SUMMARY
           echo "- Validation: ${{ needs.validate-project.result }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "For full documentation, see [CLOUD_BUILD_SERVICES.md](../../CLOUD_BUILD_SERVICES.md)" >> $GITHUB_STEP_SUMMARY
+          echo "For full documentation, see [CLOUD_BUILD_SERVICES.md](./CLOUD_BUILD_SERVICES.md)" >> $GITHUB_STEP_SUMMARY
