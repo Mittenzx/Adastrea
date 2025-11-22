@@ -16,11 +16,10 @@ Requirements:
     - No external dependencies
 """
 
-import os
 import re
 import sys
 from pathlib import Path
-from typing import List, Tuple, Dict
+from typing import List
 
 class TestSettingsWidgetValidator:
     """Validator for TestSettingsWidget implementation"""
