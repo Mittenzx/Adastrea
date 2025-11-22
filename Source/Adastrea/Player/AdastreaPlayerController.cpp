@@ -18,7 +18,12 @@ void AAdastreaPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 	
-	// TODO: Setup input bindings for spaceship controls
+	// Note: Input bindings are configured via Enhanced Input system using InputConfigDataAsset
+	// See Source/Adastrea/Input/InputConfigDataAsset.h and Assets/EnhancedInputImplementation.md
+	// To use: Create a Data Asset based on InputConfigDataAsset (DA_InputConfig) and assign
+	// all Input Actions and Input Mapping Contexts in the Unreal Editor.
+	// Then reference the Data Asset in your Blueprint derived from this controller.
+	// For manual setup instructions, see ENHANCED_INPUT_GUIDE.md
 }
 
 void AAdastreaPlayerController::OnPossessSpaceship_Implementation(ASpaceship* NewSpaceship)
