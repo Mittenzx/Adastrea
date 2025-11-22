@@ -152,13 +152,13 @@ See [TESTING_AUTOMATION_GUIDE.md](TESTING_AUTOMATION_GUIDE.md) for complete docu
 
 For automated building and CI/CD in cloud environments, multiple services are available:
 
-- **GitHub Actions + Docker**: Free for public repos, integrated CI/CD (recommended for Adastrea)
+- **GitHub Actions + Docker**: Free for public repos, integrated CI/CD (recommended for Adastrea) ✅ **Active**
 - **Epic Games Horde**: Native UE5 build platform with distributed compilation
 - **Unreal Cloud Build**: Managed cloud service without self-hosting
 - **TensorWorks Admiral**: Enterprise-grade managed UE5 CI/CD
 - **AWS Game Tech**: Comprehensive cloud infrastructure for UE5
 
-See [CLOUD_BUILD_SERVICES.md](CLOUD_BUILD_SERVICES.md) for detailed comparisons and [CLOUD_BUILD_QUICK_START.md](CLOUD_BUILD_QUICK_START.md) for quick setup instructions.
+**Current Status**: GitHub Actions workflow is active with project validation. Docker builds can be enabled after linking Epic Games account. See [CLOUD_BUILD_SERVICES.md](CLOUD_BUILD_SERVICES.md) for detailed comparisons and [CLOUD_BUILD_QUICK_START.md](CLOUD_BUILD_QUICK_START.md) for setup instructions.
 
 ### Procedural Content Generation
 
