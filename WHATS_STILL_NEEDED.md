@@ -50,7 +50,7 @@ This document outlines what still needs to be set up to enable comprehensive tes
 
 **Documentation**: 
 - See `Assets/EnhancedInputImplementation.md` for C++ setup guide
-- See `Assets/../ENHANCED_INPUT_GUIDE.md` for manual Blueprint setup (or `ENHANCED_INPUT_GUIDE.md` in project root)
+- See `ENHANCED_INPUT_GUIDE.md` (in project root) for manual Blueprint setup
 
 ### 3. BP_TestModeGameMode Blueprint 🔷 OPTIONAL
 
@@ -276,6 +276,79 @@ Extensive collection in `Content/DataAssets/` including:
     - Save game creation
     - Multiple slots
     - Auto-save
+    - Status: Fully testable
+
+11. **Material System** ✅
+    - Resource types
+    - Station integration
+    - Material properties
+    - Status: Fully testable with example Data Assets
+
+12. **AI System** ✅
+    - Faction AI logic
+    - Personnel AI with 8 personality dispositions
+    - Decision-making systems
+    - Status: Fully testable
+
+13. **Homeworld System** ✅
+    - Player starting locations
+    - Faction relations
+    - Homeworld data assets
+    - Status: Fully testable
+
+14. **Tutorial System** ✅
+    - 6 tutorial step types
+    - Progress tracking
+    - Designer-friendly setup
+    - Status: Fully testable
+
+15. **Audio System** ✅
+    - Sound effects with 8 categories
+    - Dynamic music system with 8 moods
+    - Category management
+    - Status: Fully testable
+
+16. **Performance System** ✅
+    - LOD management
+    - Performance profiling tools
+    - Optimization tracking
+    - Status: Fully testable
+
+17. **Player Progression System** ✅
+    - Leveling system
+    - Reputation tracking
+    - Unlock system
+    - Status: Fully testable
+
+18. **HUD System** ✅
+    - Complete heads-up display
+    - Combat information
+    - Navigation display
+    - Quest tracking
+    - Status: Fully testable
+
+19. **Inventory System** ✅
+    - Item management
+    - Categories and filters
+    - Weight/volume limits
+    - Status: Fully testable
+
+20. **Ship Customization System** ✅
+    - Visual customization
+    - Loadout management
+    - Ship configuration
+    - Status: Fully testable
+
+21. **Way System** ✅
+    - Specialized guilds
+    - Network alliances
+    - Way data assets
+    - Status: Fully testable with example Data Assets
+
+22. **Rivals/Antagonist System** ✅
+    - Nemesis spawning
+    - Antagonist tracking
+    - Rival management
     - Status: Fully testable
 
 ### What Needs Setup for Testing ⚠️
