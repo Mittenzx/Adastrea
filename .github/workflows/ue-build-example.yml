@@ -1,13 +1,15 @@
-# Example Unreal Engine Build Workflow
+# Unreal Engine Build Workflow
 # 
-# This file is disabled by default (.yml.disabled extension)
-# To enable: Rename to .yml extension after completing prerequisites
+# This workflow validates project structure and optionally builds with Docker.
+# 
+# Current Status:
+# - Project validation: ACTIVE (runs automatically)
+# - Docker builds: OPTIONAL (disabled by default, change if: false to if: true to enable)
 #
-# Prerequisites:
+# Prerequisites for Docker builds:
 # 1. Link Epic Games account to GitHub at: https://www.epicgames.com/account/connections
 # 2. Accept Epic Games EULA for container images
 # 3. Configure GitHub secrets if needed (e.g., UE_LICENSE_KEY)
-# 4. Test workflow on a feature branch first
 #
 # See CLOUD_BUILD_SERVICES.md and CLOUD_BUILD_QUICK_START.md for detailed setup
 
@@ -35,7 +37,7 @@ on:
   #     - 'Content/**'
   #     - 'Config/**'
   #     - '*.uproject'
-  #     - '.github/workflows/ue-build.yml'
+  #     - '.github/workflows/ue-build-example.yml'
   # pull_request:
   #   branches: [ main, develop ]
 
