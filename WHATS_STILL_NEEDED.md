@@ -50,7 +50,7 @@ This document outlines what still needs to be set up to enable comprehensive tes
 
 **Documentation**: 
 - See `Assets/EnhancedInputImplementation.md` for C++ setup guide
-- See `ENHANCED_INPUT_GUIDE.md` for manual Blueprint setup
+- See `Assets/../ENHANCED_INPUT_GUIDE.md` for manual Blueprint setup (or `ENHANCED_INPUT_GUIDE.md` in project root)
 
 ### 3. BP_TestModeGameMode Blueprint 🔷 OPTIONAL
 
@@ -103,8 +103,7 @@ These TODOs represent integration points between systems that don't currently bl
 
 #### AITraderComponent - Distance Calculation
 **Locations**: 
-- `Source/Adastrea/Trading/AITraderComponent.cpp:158`
-- `Source/Adastrea/Trading/AITraderComponent.cpp:461`
+- `Source/Adastrea/Trading/AITraderComponent.cpp` (in `FindBestTrade` and `TravelToMarket` methods)
 
 ```cpp
 // TODO: Replace with actual market world positions when available
@@ -424,7 +423,7 @@ Extensive collection in `Content/DataAssets/` including:
 **Summary**: Most systems are ready for testing. The main gap is TestMode.umap creation (workaround: use TestLevel.umap). Code TODOs are mostly future integrations that don't block current testing. Placeholders are intentional markers for future content expansion.
 
 **Next Steps**: 
-1. Use existing test infrastructure
-2. Create TestMode.umap only if absolutely needed
-3. Focus testing on the 22 implemented systems
-4. Report specific blocking issues as GitHub issues
+1. **Use existing test infrastructure** - Start testing with TestLevel.umap
+2. **Create TestMode.umap** - Only if absolutely needed for specific tests
+3. **Focus testing** - Prioritize the 22 implemented systems
+4. **Report issues** - File specific blocking issues as GitHub issues
