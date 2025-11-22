@@ -183,9 +183,25 @@ void UTestSettingsWidget::LoadDefaultSettings_Implementation()
 		SelectedShipType = AvailableShipTypes[0];
 	}
 	
-	if (AvailableDifficulties.Num() > 2)
+	// Find "Normal" difficulty or use middle option as fallback
+	if (AvailableDifficulties.Num() > 0)
 	{
-		SelectedDifficulty = AvailableDifficulties[2]; // "Normal" is typically index 2
+		int32 NormalIndex = AvailableDifficulties.IndexOfByPredicate([](const FString& Difficulty) {
+			return Difficulty.Contains(TEXT("Normal"));
+		});
+		
+		if (NormalIndex != INDEX_NONE)
+		{
+			SelectedDifficulty = AvailableDifficulties[NormalIndex];
+		}
+		else if (AvailableDifficulties.Num() > 2)
+		{
+			SelectedDifficulty = AvailableDifficulties[2]; // Use middle option
+		}
+		else
+		{
+			SelectedDifficulty = AvailableDifficulties[0]; // Use first as fallback
+		}
 	}
 	
 	if (AvailableDebugModes.Num() > 0)
