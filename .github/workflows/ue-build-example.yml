@@ -3,7 +3,7 @@
 # This workflow validates project structure and optionally builds with Docker.
 # 
 # Current Status:
-# - Project validation: ACTIVE (runs automatically)
+# - Project validation: MANUAL ONLY (runs via workflow_dispatch; automatic triggers are disabled)
 # - Docker builds: OPTIONAL (disabled by default, change if: false to if: true to enable)
 #
 # Prerequisites for Docker builds:
@@ -45,6 +45,7 @@ on:
 permissions:
   contents: read        # Read repository contents
   packages: read        # Read packages for Docker container registry
+  actions: read         # Read workflow/job status
 
 jobs:
   # Basic validation job (fast, always runs)
@@ -153,18 +154,20 @@ jobs:
       - name: Build Unreal Project
         run: |
           echo "Building Adastrea with Unreal Engine..."
+          echo "Build type: ${{ github.event.inputs.build_type || 'Development' }}"
           docker run --rm \
             -v ${{ github.workspace }}:/workspace \
             -w /workspace \
             ghcr.io/epicgames/unreal-engine:dev-slim-5.6 \
             /bin/bash -c "
               echo 'Starting Unreal Build Tool...'
-              # Add your build commands here
+              # Uncomment and customize the build commands below for your project
+              # Replace 'Development' with '\${{ github.event.inputs.build_type }}' to use the workflow input
               # Example:
               # /UnrealEngine/Engine/Build/BatchFiles/RunUAT.sh BuildCookRun \
               #   -project=/workspace/Adastrea.uproject \
               #   -platform=Linux \
-              #   -configuration=Development \
+              #   -configuration=${{ github.event.inputs.build_type || 'Development' }} \
               #   -build -cook -stage -pak
             "
       
@@ -173,6 +176,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Linux-Build-${{ github.sha }}
+          # Path depends on your build configuration. Typical UE output paths:
+          # - Staged builds: Build/Linux/ or Saved/StagedBuilds/Linux/
+          # - Cooked content: Saved/Cooked/Linux/
           path: Build/Linux/
           retention-days: 7
           if-no-files-found: warn
@@ -197,13 +203,15 @@ jobs:
       - name: Build Project
         run: |
           echo "Building Adastrea for Windows..."
-          # Add Windows build commands here
+          echo "Build type: ${{ github.event.inputs.build_type || 'Development' }}"
+          # Uncomment and customize the build commands below for your project
+          # Replace 'Development' with '${{ github.event.inputs.build_type }}' to use the workflow input
           # Requires Unreal Engine installed on runner
           # Example:
           # & "C:\Program Files\Epic Games\UE_5.6\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun `
           #   -project="${{ github.workspace }}\Adastrea.uproject" `
           #   -platform=Win64 `
-          #   -configuration=Development `
+          #   -configuration=${{ github.event.inputs.build_type || 'Development' }} `
           #   -build -cook -stage -pak
       
       - name: Upload Build Artifacts
@@ -258,4 +266,4 @@ jobs:
           echo "### Job Status" >> $GITHUB_STEP_SUMMARY
           echo "- Validation: ${{ needs.validate-project.result }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "For full documentation, see [CLOUD_BUILD_SERVICES.md](./CLOUD_BUILD_SERVICES.md)" >> $GITHUB_STEP_SUMMARY
+          echo "For full documentation, see [CLOUD_BUILD_SERVICES.md](../../CLOUD_BUILD_SERVICES.md)" >> $GITHUB_STEP_SUMMARY
