@@ -68,21 +68,21 @@ public:
 
 	/**
 	 * Handle Difficulty dropdown selection changed
-	 * @param SelectedDifficulty The selected difficulty level
+	 * @param SelectedDiff The selected difficulty level
 	 * @param SelectionIndex The index of the selected option
 	 */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Test Settings")
-	void OnDifficultyChanged(const FString& SelectedDifficulty, int32 SelectionIndex);
-	virtual void OnDifficultyChanged_Implementation(const FString& SelectedDifficulty, int32 SelectionIndex);
+	void OnDifficultyChanged(const FString& SelectedDiff, int32 SelectionIndex);
+	virtual void OnDifficultyChanged_Implementation(const FString& SelectedDiff, int32 SelectionIndex);
 
 	/**
 	 * Handle Debug Mode dropdown selection changed
-	 * @param SelectedDebugMode The selected debug mode
+	 * @param SelectedMode The selected debug mode
 	 * @param SelectionIndex The index of the selected option
 	 */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Test Settings")
-	void OnDebugModeChanged(const FString& SelectedDebugMode, int32 SelectionIndex);
-	virtual void OnDebugModeChanged_Implementation(const FString& SelectedDebugMode, int32 SelectionIndex);
+	void OnDebugModeChanged(const FString& SelectedMode, int32 SelectionIndex);
+	virtual void OnDebugModeChanged_Implementation(const FString& SelectedMode, int32 SelectionIndex);
 
 	/**
 	 * Get the currently selected ship type
