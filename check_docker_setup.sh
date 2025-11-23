@@ -83,18 +83,20 @@ else
             print_status 1 "GitHub username cannot be empty"
             NEEDS_AUTH=1
             echo ""
-            continue
         fi
     fi
     
-    if echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GITHUB_USERNAME" --password-stdin &> /dev/null; then
-        print_status 0 "Successfully authenticated with GitHub Container Registry"
-    else
-        print_status 1 "Failed to authenticate with GitHub Container Registry"
-        echo -e "${YELLOW}    → Verify your token has 'read:packages' scope${NC}"
-        echo -e "${YELLOW}    → Check token hasn't expired${NC}"
-        echo -e "${YELLOW}    → Verify GitHub username is correct${NC}"
-        NEEDS_AUTH=1
+    # Only attempt login if we have a valid username
+    if [ -n "$GITHUB_USERNAME" ]; then
+        if echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GITHUB_USERNAME" --password-stdin &> /dev/null; then
+            print_status 0 "Successfully authenticated with GitHub Container Registry"
+        else
+            print_status 1 "Failed to authenticate with GitHub Container Registry"
+            echo -e "${YELLOW}    → Verify your token has 'read:packages' scope${NC}"
+            echo -e "${YELLOW}    → Check token hasn't expired${NC}"
+            echo -e "${YELLOW}    → Verify GitHub username is correct${NC}"
+            NEEDS_AUTH=1
+        fi
     fi
 fi
 echo ""
