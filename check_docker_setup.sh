@@ -63,7 +63,8 @@ echo ""
 
 # Check 3: GitHub Container Registry authentication
 echo -e "${BLUE}[3/6] Checking GitHub Container Registry authentication...${NC}"
-AUTH_SUCCESS=0
+AUTH_SUCCESS=0  # Initialize to false
+
 if [ -z "$GITHUB_TOKEN" ]; then
     print_status 1 "GITHUB_TOKEN environment variable not set"
     echo -e "${YELLOW}    → For local testing, create a token at: https://github.com/settings/tokens${NC}"
@@ -85,6 +86,8 @@ else
         if [ -z "$GITHUB_USERNAME" ]; then
             print_status 1 "GitHub username cannot be empty"
             echo ""
+            # Note: We continue instead of exiting to show Epic setup guidance
+            # which is still useful even without GitHub authentication
         fi
     fi
     

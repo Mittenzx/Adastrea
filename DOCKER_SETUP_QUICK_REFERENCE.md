@@ -89,5 +89,5 @@ docker pull ghcr.io/epicgames/unreal-engine:dev-slim-5.6
 
 ---
 
-**Last Updated:** 2025-11-23  
+**Last Updated:** 2024-11-23  
 **Version:** 1.0
