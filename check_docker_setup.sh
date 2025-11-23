@@ -4,6 +4,15 @@
 
 set -e
 
+# Cleanup function
+cleanup() {
+    # Clean up temporary files
+    rm -f /tmp/docker_pull_output.txt
+}
+
+# Set trap to call cleanup on exit
+trap cleanup EXIT
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -68,6 +77,14 @@ else
     if [ -z "$GITHUB_USERNAME" ]; then
         echo -e "${YELLOW}    → Enter your GitHub username: ${NC}"
         read -r GITHUB_USERNAME
+        
+        # Validate username is not empty
+        if [ -z "$GITHUB_USERNAME" ]; then
+            print_status 1 "GitHub username cannot be empty"
+            NEEDS_AUTH=1
+            echo ""
+            continue
+        fi
     fi
     
     if echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GITHUB_USERNAME" --password-stdin &> /dev/null; then
