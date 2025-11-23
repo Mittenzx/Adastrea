@@ -32,4 +32,10 @@ jobs:
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
         
       - name: Pull UE Container
-        run: docker pull ghcr.io/epicgames/unreal-engine:dev-slim-5.6 || echo "Container access not configured yet"
+        run: |
+          docker pull ghcr.io/epicgames/unreal-engine:dev-slim-5.6 || {
+            echo "❌ Container access not configured yet"
+            echo "📖 Setup Guide: ${{ github.server_url }}/${{ github.repository }}/blob/main/GITHUB_TOKEN_DOCKER_SETUP.md"
+            echo "Quick fix: Link Epic Games account to GitHub and accept EULA"
+            exit 1
+          }
