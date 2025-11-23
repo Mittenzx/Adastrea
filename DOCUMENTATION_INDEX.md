@@ -1,6 +1,6 @@
 # Adastrea Documentation Index
 
-**Last Updated**: November 20, 2025  
+**Last Updated**: November 23, 2025  
 **Version**: 1.0.0-alpha  
 **Purpose**: Comprehensive index of all documentation in the Adastrea project
 
@@ -353,6 +353,9 @@ Concise reference documents:
 
 | Document | Purpose | Location |
 |----------|---------|----------|
+| **YAML_TO_ASSETS_CONVERSION_LIST.md** | ⭐ **NEW!** Complete inventory of all 161 YAML files to convert | Root |
+| **YAML_TO_ASSETS_QUICK_REFERENCE.md** | ⭐ **NEW!** Quick reference table for YAML conversion status | Root |
+| **YAML_FILES_LIST.csv** | ⭐ **NEW!** CSV format list of all YAML files with metadata | Root |
 | **YAML_IMPORT_GUIDE.md** | YAML to Data Asset import | Root |
 | **SCHEMA_GUIDE.md** | YAML schema validation | Root |
 | **GOOGLE_SHEETS_GUIDE.md** | Google Sheets integration | Root |
