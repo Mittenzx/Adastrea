@@ -1,0 +1,191 @@
+﻿2025-11-23T09:49:30.0069616Z Current runner version: '2.329.0'
+2025-11-23T09:49:30.0106175Z ##[group]Runner Image Provisioner
+2025-11-23T09:49:30.0107486Z Hosted Compute Agent
+2025-11-23T09:49:30.0108331Z Version: 20251016.436
+2025-11-23T09:49:30.0109294Z Commit: 8ab8ac8bfd662a3739dab9fe09456aba92132568
+2025-11-23T09:49:30.0110675Z Build Date: 2025-10-15T20:44:12Z
+2025-11-23T09:49:30.0111781Z ##[endgroup]
+2025-11-23T09:49:30.0112579Z ##[group]Operating System
+2025-11-23T09:49:30.0113613Z Ubuntu
+2025-11-23T09:49:30.0114372Z 24.04.3
+2025-11-23T09:49:30.0115102Z LTS
+2025-11-23T09:49:30.0115887Z ##[endgroup]
+2025-11-23T09:49:30.0116785Z ##[group]Runner Image
+2025-11-23T09:49:30.0117693Z Image: ubuntu-24.04
+2025-11-23T09:49:30.0118430Z Version: 20251112.124.1
+2025-11-23T09:49:30.0120624Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20251112.124/images/ubuntu/Ubuntu2404-Readme.md
+2025-11-23T09:49:30.0123282Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20251112.124
+2025-11-23T09:49:30.0125092Z ##[endgroup]
+2025-11-23T09:49:30.0126996Z ##[group]GITHUB_TOKEN Permissions
+2025-11-23T09:49:30.0130005Z Actions: read
+2025-11-23T09:49:30.0130899Z Contents: read
+2025-11-23T09:49:30.0131727Z Metadata: read
+2025-11-23T09:49:30.0132584Z Packages: read
+2025-11-23T09:49:30.0133454Z ##[endgroup]
+2025-11-23T09:49:30.0136801Z Secret source: Actions
+2025-11-23T09:49:30.0138047Z Prepare workflow directory
+2025-11-23T09:49:30.0623899Z Prepare all required actions
+2025-11-23T09:49:30.0683119Z Getting action download info
+2025-11-23T09:49:30.3509012Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2025-11-23T09:49:30.6858433Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2025-11-23T09:49:30.8917888Z Complete job name: Build Linux (Docker)
+2025-11-23T09:49:30.9796434Z ##[group]Run actions/checkout@v4
+2025-11-23T09:49:30.9797841Z with:
+2025-11-23T09:49:30.9798574Z   lfs: true
+2025-11-23T09:49:30.9799209Z   submodules: recursive
+2025-11-23T09:49:30.9800327Z   repository: Mittenzx/Adastrea
+2025-11-23T09:49:30.9801453Z   token: ***
+2025-11-23T09:49:30.9802087Z   ssh-strict: true
+2025-11-23T09:49:30.9802742Z   ssh-user: git
+2025-11-23T09:49:30.9803413Z   persist-credentials: true
+2025-11-23T09:49:30.9804150Z   clean: true
+2025-11-23T09:49:30.9804809Z   sparse-checkout-cone-mode: true
+2025-11-23T09:49:30.9805680Z   fetch-depth: 1
+2025-11-23T09:49:30.9806377Z   fetch-tags: false
+2025-11-23T09:49:30.9807269Z   show-progress: true
+2025-11-23T09:49:30.9808043Z   set-safe-directory: true
+2025-11-23T09:49:30.9809114Z ##[endgroup]
+2025-11-23T09:49:31.1334583Z Syncing repository: Mittenzx/Adastrea
+2025-11-23T09:49:31.1336527Z ##[group]Getting Git version info
+2025-11-23T09:49:31.1337207Z Working directory is '/home/runner/work/Adastrea/Adastrea'
+2025-11-23T09:49:31.1338224Z [command]/usr/bin/git version
+2025-11-23T09:49:31.1489231Z git version 2.51.2
+2025-11-23T09:49:31.1553106Z [command]/usr/bin/git lfs version
+2025-11-23T09:49:31.6501134Z git-lfs/3.7.1 (GitHub; linux amd64; go 1.24.4)
+2025-11-23T09:49:31.6507425Z ##[endgroup]
+2025-11-23T09:49:31.6525380Z Temporarily overriding HOME='/home/runner/work/_temp/46245e72-67bb-416c-9a13-a1e8c81c3de2' before making global git config changes
+2025-11-23T09:49:31.6529951Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-23T09:49:31.6534899Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Adastrea/Adastrea
+2025-11-23T09:49:31.6579561Z Deleting the contents of '/home/runner/work/Adastrea/Adastrea'
+2025-11-23T09:49:31.6585055Z ##[group]Initializing the repository
+2025-11-23T09:49:31.6590577Z [command]/usr/bin/git init /home/runner/work/Adastrea/Adastrea
+2025-11-23T09:49:31.6743438Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-11-23T09:49:31.6747003Z hint: is subject to change. To configure the initial branch name to use in all
+2025-11-23T09:49:31.6749000Z hint: of your new repositories, which will suppress this warning, call:
+2025-11-23T09:49:31.6751114Z hint:
+2025-11-23T09:49:31.6752180Z hint: 	git config --global init.defaultBranch <name>
+2025-11-23T09:49:31.6753477Z hint:
+2025-11-23T09:49:31.6754630Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-11-23T09:49:31.6756463Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-11-23T09:49:31.6757910Z hint:
+2025-11-23T09:49:31.6758698Z hint: 	git branch -m <name>
+2025-11-23T09:49:31.6759516Z hint:
+2025-11-23T09:49:31.6761035Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-11-23T09:49:31.6763991Z Initialized empty Git repository in /home/runner/work/Adastrea/Adastrea/.git/
+2025-11-23T09:49:31.6768560Z [command]/usr/bin/git remote add origin https://github.com/Mittenzx/Adastrea
+2025-11-23T09:49:31.6812810Z ##[endgroup]
+2025-11-23T09:49:31.6816062Z ##[group]Disabling automatic garbage collection
+2025-11-23T09:49:31.6817813Z [command]/usr/bin/git config --local gc.auto 0
+2025-11-23T09:49:31.6851311Z ##[endgroup]
+2025-11-23T09:49:31.6854378Z ##[group]Setting up auth
+2025-11-23T09:49:31.6859253Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-23T09:49:31.6897843Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-23T09:49:31.7303011Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-23T09:49:31.7342006Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-23T09:49:31.7595836Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-11-23T09:49:31.7637223Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2025-11-23T09:49:31.7882576Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-11-23T09:49:31.7924173Z ##[endgroup]
+2025-11-23T09:49:31.7928759Z [command]/usr/bin/git lfs install --local
+2025-11-23T09:49:31.8308767Z Updated Git hooks.
+2025-11-23T09:49:31.8311213Z Git LFS initialized.
+2025-11-23T09:49:31.8323213Z ##[group]Fetching the repository
+2025-11-23T09:49:31.8334122Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +bce397507c92d8875da2e81cbe171febc2cec774:refs/remotes/origin/main
+2025-11-23T09:49:32.3037251Z From https://github.com/Mittenzx/Adastrea
+2025-11-23T09:49:32.3040748Z  * [new ref]         bce397507c92d8875da2e81cbe171febc2cec774 -> origin/main
+2025-11-23T09:49:32.3078956Z ##[endgroup]
+2025-11-23T09:49:32.3080814Z ##[group]Determining the checkout info
+2025-11-23T09:49:32.3082775Z ##[endgroup]
+2025-11-23T09:49:32.3084423Z ##[group]Fetching LFS objects
+2025-11-23T09:49:32.3088042Z [command]/usr/bin/git lfs fetch origin refs/remotes/origin/main
+2025-11-23T09:49:32.3347985Z Fetching reference refs/remotes/origin/main
+2025-11-23T09:49:32.3523233Z ##[endgroup]
+2025-11-23T09:49:32.3527702Z [command]/usr/bin/git sparse-checkout disable
+2025-11-23T09:49:32.3577802Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-11-23T09:49:32.3614639Z ##[group]Checking out the ref
+2025-11-23T09:49:32.3616998Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-11-23T09:49:32.4151493Z Switched to a new branch 'main'
+2025-11-23T09:49:32.4153112Z branch 'main' set up to track 'origin/main'.
+2025-11-23T09:49:32.4427652Z ##[endgroup]
+2025-11-23T09:49:32.4430060Z ##[group]Setting up auth for fetching submodules
+2025-11-23T09:49:32.4436136Z [command]/usr/bin/git config --global http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-11-23T09:49:32.4479351Z [command]/usr/bin/git config --global --unset-all url.https://github.com/.insteadOf
+2025-11-23T09:49:32.4513423Z [command]/usr/bin/git config --global --add url.https://github.com/.insteadOf git@github.com:
+2025-11-23T09:49:32.4548501Z [command]/usr/bin/git config --global --add url.https://github.com/.insteadOf org-103289826@github.com:
+2025-11-23T09:49:32.4585060Z ##[endgroup]
+2025-11-23T09:49:32.4587596Z ##[group]Fetching submodules
+2025-11-23T09:49:32.4589546Z [command]/usr/bin/git submodule sync --recursive
+2025-11-23T09:49:32.4826634Z [command]/usr/bin/git -c protocol.version=2 submodule update --init --force --depth=1 --recursive
+2025-11-23T09:49:32.5072208Z [command]/usr/bin/git submodule foreach --recursive git config --local gc.auto 0
+2025-11-23T09:49:32.5307818Z ##[endgroup]
+2025-11-23T09:49:32.5310852Z ##[group]Persisting credentials for submodules
+2025-11-23T09:49:32.5318663Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'url\.https\:\/\/github\.com\/\.insteadOf' && git config --local --unset-all 'url.https://github.com/.insteadOf' || :"
+2025-11-23T09:49:32.5576215Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local 'http.https://github.com/.extraheader' 'AUTHORIZATION: basic ***' && git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2025-11-23T09:49:32.5952483Z [command]/usr/bin/git submodule foreach --recursive git config --local --add 'url.https://github.com/.insteadOf' 'git@github.com:'
+2025-11-23T09:49:32.6333989Z [command]/usr/bin/git submodule foreach --recursive git config --local --add 'url.https://github.com/.insteadOf' 'org-103289826@github.com:'
+2025-11-23T09:49:32.6579486Z ##[endgroup]
+2025-11-23T09:49:32.6623193Z [command]/usr/bin/git log -1 --format=%H
+2025-11-23T09:49:32.6654988Z bce397507c92d8875da2e81cbe171febc2cec774
+2025-11-23T09:49:32.6835988Z ##[group]Run echo "Freeing disk space for UE build..."
+2025-11-23T09:49:32.6836482Z [36;1mecho "Freeing disk space for UE build..."[0m
+2025-11-23T09:49:32.6836868Z [36;1msudo rm -rf /usr/share/dotnet[0m
+2025-11-23T09:49:32.6837165Z [36;1msudo rm -rf /opt/ghc[0m
+2025-11-23T09:49:32.6837448Z [36;1msudo rm -rf /usr/local/share/boost[0m
+2025-11-23T09:49:32.6837735Z [36;1mdf -h[0m
+2025-11-23T09:49:32.6874977Z shell: /usr/bin/bash -e {0}
+2025-11-23T09:49:32.6875287Z ##[endgroup]
+2025-11-23T09:49:32.6956828Z Freeing disk space for UE build...
+2025-11-23T09:49:40.3617863Z Filesystem      Size  Used Avail Use% Mounted on
+2025-11-23T09:49:40.3619441Z /dev/root        72G   52G   20G  73% /
+2025-11-23T09:49:40.3620278Z tmpfs           3.9G   84K  3.9G   1% /dev/shm
+2025-11-23T09:49:40.3620697Z tmpfs           1.6G  1.1M  1.6G   1% /run
+2025-11-23T09:49:40.3621112Z tmpfs           5.0M     0  5.0M   0% /run/lock
+2025-11-23T09:49:40.3621641Z /dev/sda16      881M   62M  758M   8% /boot
+2025-11-23T09:49:40.3622050Z /dev/sda15      105M  6.2M   99M   6% /boot/efi
+2025-11-23T09:49:40.3622488Z tmpfs           795M   12K  795M   1% /run/user/1001
+2025-11-23T09:49:40.3686507Z ##[group]Run echo "***" | docker login ghcr.io -u Mittenzx --password-stdin
+2025-11-23T09:49:40.3687325Z [36;1mecho "***" | docker login ghcr.io -u Mittenzx --password-stdin[0m
+2025-11-23T09:49:40.3721651Z shell: /usr/bin/bash -e {0}
+2025-11-23T09:49:40.3721896Z ##[endgroup]
+2025-11-23T09:49:41.6731188Z 
+2025-11-23T09:49:41.6731642Z Login Succeeded
+2025-11-23T09:49:41.6732526Z WARNING! Your credentials are stored unencrypted in '/home/runner/.docker/config.json'.
+2025-11-23T09:49:41.6733970Z Configure a credential helper to remove this warning. See
+2025-11-23T09:49:41.6734552Z https://docs.docker.com/go/credential-store/
+2025-11-23T09:49:41.6734888Z 
+2025-11-23T09:49:41.6788682Z ##[group]Run echo "Pulling UE5.6 container image..."
+2025-11-23T09:49:41.6789064Z [36;1mecho "Pulling UE5.6 container image..."[0m
+2025-11-23T09:49:41.6789420Z [36;1m# Note: You must have Epic Games account linked and EULA accepted[0m
+2025-11-23T09:49:41.6790166Z [36;1mdocker pull ghcr.io/epicgames/unreal-engine:dev-slim-5.6 || {[0m
+2025-11-23T09:49:41.6790759Z [36;1m  echo "❌ Failed to pull UE container"[0m
+2025-11-23T09:49:41.6791028Z [36;1m  echo "Prerequisites:"[0m
+2025-11-23T09:49:41.6791383Z [36;1m  echo "1. Link Epic account at https://www.epicgames.com/account/connections"[0m
+2025-11-23T09:49:41.6791791Z [36;1m  echo "2. Accept EULA for container images"[0m
+2025-11-23T09:49:41.6792091Z [36;1m  echo "3. Ensure account has proper permissions"[0m
+2025-11-23T09:49:41.6792352Z [36;1m  exit 1[0m
+2025-11-23T09:49:41.6792510Z [36;1m}[0m
+2025-11-23T09:49:41.6825109Z shell: /usr/bin/bash -e {0}
+2025-11-23T09:49:41.6825339Z ##[endgroup]
+2025-11-23T09:49:41.6873541Z Pulling UE5.6 container image...
+2025-11-23T09:49:41.9321481Z Error response from daemon: denied
+2025-11-23T09:49:41.9334779Z ❌ Failed to pull UE container
+2025-11-23T09:49:41.9336396Z Prerequisites:
+2025-11-23T09:49:41.9340407Z 1. Link Epic account at https://www.epicgames.com/account/connections
+2025-11-23T09:49:41.9341022Z 2. Accept EULA for container images
+2025-11-23T09:49:41.9341639Z 3. Ensure account has proper permissions
+2025-11-23T09:49:41.9352218Z ##[error]Process completed with exit code 1.
+2025-11-23T09:49:41.9452451Z Post job cleanup.
+2025-11-23T09:49:42.0469936Z [command]/usr/bin/git version
+2025-11-23T09:49:42.0510031Z git version 2.51.2
+2025-11-23T09:49:42.0558325Z Temporarily overriding HOME='/home/runner/work/_temp/99ff5c8b-07db-4cf6-b1eb-9e727d00420f' before making global git config changes
+2025-11-23T09:49:42.0560492Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-23T09:49:42.0564802Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Adastrea/Adastrea
+2025-11-23T09:49:42.0607337Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-23T09:49:42.0641963Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-23T09:49:42.0879453Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-23T09:49:42.0903724Z http.https://github.com/.extraheader
+2025-11-23T09:49:42.0916462Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-11-23T09:49:42.0948716Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-23T09:49:42.1176549Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-11-23T09:49:42.1208700Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2025-11-23T09:49:42.1619434Z Cleaning up orphan processes
