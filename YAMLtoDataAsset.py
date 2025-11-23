@@ -353,7 +353,9 @@ class YAMLtoDataAssetImporter:
         
         To use interactively:
         1. Tools → Python → Open Python Console
-        2. Run: import YAMLtoDataAsset; YAMLtoDataAsset.show_menu()
+        2. Run:
+            import YAMLtoDataAsset
+            YAMLtoDataAsset.show_menu()
         """
         try:
             while True:
@@ -393,6 +395,8 @@ class YAMLtoDataAssetImporter:
                 else:
                     print("Option not yet implemented or invalid choice.")
         except (EOFError, OSError):
+            # EOFError: input() fails when stdin is not available (Execute Script mode)
+            # OSError: I/O operation fails on closed file descriptor in some UE Python environments
             self.log("\nInteractive menu requires Python Console. Use batch import functions instead.", "warning")
             self.log("Example: YAMLtoDataAsset.batch_import_spaceships()", "warning")
             return
