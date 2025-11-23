@@ -167,7 +167,14 @@ For automated building and CI/CD in cloud environments, multiple services are av
 - **TensorWorks Admiral**: Enterprise-grade managed UE5 CI/CD
 - **AWS Game Tech**: Comprehensive cloud infrastructure for UE5
 
-**Current Status**: GitHub Actions workflow is active with project validation. Docker builds can be enabled after linking Epic Games account. See [CLOUD_BUILD_SERVICES.md](CLOUD_BUILD_SERVICES.md) for detailed comparisons and [CLOUD_BUILD_QUICK_START.md](CLOUD_BUILD_QUICK_START.md) for setup instructions.
+**Current Status**: GitHub Actions workflow is active with project validation. Docker builds require Epic Games organization membership (see detailed setup below).
+
+**Important for Docker Builds**: To use Unreal Engine containers, you must:
+1. Link Epic account at [www.epicgames.com/account/connections](https://www.epicgames.com/account/connections)
+2. Accept Epic Games GitHub organization invitation
+3. Verify membership at [github.com/EpicGames](https://github.com/EpicGames)
+
+See [CLOUD_BUILD_SERVICES.md](CLOUD_BUILD_SERVICES.md) for detailed comparisons and [CLOUD_BUILD_QUICK_START.md](CLOUD_BUILD_QUICK_START.md) for complete setup instructions.
 
 ### Procedural Content Generation
 
