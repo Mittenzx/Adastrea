@@ -23,29 +23,39 @@ Example Unreal Engine build workflow (disabled by default):
 
 ### Prerequisites
 
+**📖 For complete setup instructions, see [GITHUB_TOKEN_DOCKER_SETUP.md](../../GITHUB_TOKEN_DOCKER_SETUP.md)**
+
+**Quick summary:**
+
 1. **Link Epic Games Account to GitHub**
    - Visit: [https://www.epicgames.com/account/connections](https://www.epicgames.com/account/connections)
    - Connect your GitHub account
    - This grants access to Epic's container images
 
-2. **Accept Epic EULA for Container Images**
-   - Visit Epic Games Developer portal
-   - Accept End User License Agreement for container usage
-   - Required to pull UE container images
+2. **Accept Epic Organization Invitation**
+   - Check your GitHub notifications for Epic Games invitation
+   - Visit: [https://github.com/EpicGames](https://github.com/EpicGames)
+   - Accept the organization membership (required!)
 
-3. **Verify Docker Access**
+3. **Accept Epic EULA for Container Images**
+   - Visit: [https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-container-images](https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-container-images)
+   - Accept End User License Agreement for container usage
+
+4. **Wait for Permissions** (may take a few hours)
+
+5. **Test Docker Access** (optional, for local development)
    ```bash
-   # Test authentication (for local development)
-   # Replace YOUR_GITHUB_TOKEN with your actual GitHub Personal Access Token
+   # Create a Personal Access Token at: https://github.com/settings/tokens
+   # Grant it 'read:packages' scope
+   
+   # Test authentication
    echo YOUR_GITHUB_TOKEN | docker login ghcr.io -u YOUR_USERNAME --password-stdin
    
    # Try pulling UE container
    docker pull ghcr.io/epicgames/unreal-engine:dev-slim-5.6
    ```
 
-4. **Configure GitHub Secrets** (if needed)
-   - Go to Repository Settings → Secrets and variables → Actions
-   - Add any required secrets (e.g., `UE_LICENSE_KEY`)
+**Note:** `GITHUB_TOKEN` is automatically provided by GitHub Actions - no manual configuration needed!
 
 ### Quick Start
 

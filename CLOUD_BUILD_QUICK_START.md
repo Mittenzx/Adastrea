@@ -51,6 +51,8 @@ For Adastrea (open-source, GitHub-hosted), use **GitHub Actions with Docker**:
 
 #### 1. Set Up Epic Container Access (15-30 minutes, may require waiting)
 
+**📖 Complete Setup Guide:** See [GITHUB_TOKEN_DOCKER_SETUP.md](./GITHUB_TOKEN_DOCKER_SETUP.md) for detailed instructions.
+
 **Critical:** Simply linking accounts is not sufficient. You must complete ALL steps:
 
 ```
@@ -73,6 +75,8 @@ Step 4: Wait for access to propagate (if needed)
   → Access may take a few hours to become active
   → Some accounts require manual Epic approval (24-48 hours)
 ```
+
+**Note:** `GITHUB_TOKEN` is automatically provided by GitHub Actions - you don't need to configure it!
 
 #### 2. Create Workflow File (10 minutes)
 

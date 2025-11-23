@@ -666,6 +666,12 @@ Comprehensive technical documentation for contributors and developers:
 - **[Performance Improvements](PERFORMANCE_IMPROVEMENTS.md)** - Optimization guidelines
 - **[Custom Agents](.github/agents/README.md)** - AI assistants with project expertise for GitHub Copilot
 
+### Build and CI/CD Documentation
+
+- **[GitHub Token & Docker Setup](GITHUB_TOKEN_DOCKER_SETUP.md)** - ⭐ Complete guide for setting up GitHub Actions with Docker for Unreal builds
+- **[Cloud Build Quick Start](CLOUD_BUILD_QUICK_START.md)** - Quick reference for cloud build setup
+- **[Cloud Build Services](CLOUD_BUILD_SERVICES.md)** - Comprehensive comparison of build services
+
 ### Quick Start Guides
 - [Designer Onboarding](Assets/DesignerOnboarding.md) - Start here if you're new to the project
 - [Quick Start](QUICKSTART.md) - Get up and running quickly

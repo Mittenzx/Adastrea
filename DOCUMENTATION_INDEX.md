@@ -308,6 +308,18 @@ Concise reference documents:
 
 ## Build & Setup
 
+### CI/CD and Docker Setup
+
+| Document | Purpose | Location |
+|----------|---------|----------|
+| **GITHUB_TOKEN_DOCKER_SETUP.md** | ⭐ **NEW!** Complete guide for GitHub Actions + Docker setup | Root |
+| **DOCKER_SETUP_QUICK_REFERENCE.md** | ⭐ **NEW!** One-page quick reference for Docker setup | Root |
+| **CLOUD_BUILD_QUICK_START.md** | Quick start for cloud build services | Root |
+| **CLOUD_BUILD_SERVICES.md** | Comprehensive cloud build comparison | Root |
+| **.github/workflows/README.md** | GitHub Actions workflow documentation | .github/workflows/ |
+
+### Environment Validation
+
 | Document | Purpose | Location |
 |----------|---------|----------|
 | **SetupCheck.py** | Environment validation script | Root |
