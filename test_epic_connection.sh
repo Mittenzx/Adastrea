@@ -3,8 +3,9 @@
 # 
 # This script helps diagnose why Unreal Engine container pulls are failing
 # by testing various connection points and authorization levels.
-
-set -e
+#
+# Note: This script is designed to test for both success and failure conditions,
+# so we don't use 'set -e' to allow graceful handling of expected failures.
 
 # Configuration
 EPIC_CONTAINER_REGISTRY="ghcr.io/epicgames/unreal-engine"
@@ -68,7 +69,8 @@ fi
 # Test 2: Check GitHub Container Registry connectivity
 echo -e "\n${BLUE}[Test 2/10] GitHub Container Registry Connectivity${NC}"
 echo "---------------------------------------"
-if timeout $TEST_TIMEOUT curl -s -o /dev/null -w "%{http_code}" https://ghcr.io | grep -q "200\|301\|302"; then
+# Use curl's built-in timeout for better portability
+if curl --connect-timeout 10 --max-time $TEST_TIMEOUT -s -o /dev/null -w "%{http_code}" https://ghcr.io | grep -q "200\|301\|302"; then
     print_status 0 "ghcr.io is reachable"
 else
     print_status 1 "Cannot connect to ghcr.io"
@@ -79,14 +81,14 @@ fi
 # Test 3: Check Epic Games website connectivity
 echo -e "\n${BLUE}[Test 3/10] Epic Games Services Connectivity${NC}"
 echo "---------------------------------------"
-if timeout $TEST_TIMEOUT curl -s -o /dev/null -w "%{http_code}" https://www.epicgames.com | grep -q "200\|301\|302"; then
+if curl --connect-timeout 10 --max-time $TEST_TIMEOUT -s -o /dev/null -w "%{http_code}" https://www.epicgames.com | grep -q "200\|301\|302"; then
     print_status 0 "epicgames.com is reachable"
 else
     print_status 1 "Cannot connect to epicgames.com"
     echo -e "${YELLOW}   → Check your internet connection${NC}"
 fi
 
-if timeout $TEST_TIMEOUT curl -s -o /dev/null -w "%{http_code}" https://dev.epicgames.com | grep -q "200\|301\|302"; then
+if curl --connect-timeout 10 --max-time $TEST_TIMEOUT -s -o /dev/null -w "%{http_code}" https://dev.epicgames.com | grep -q "200\|301\|302"; then
     print_status 0 "dev.epicgames.com is reachable"
 else
     print_status 1 "Cannot connect to dev.epicgames.com"
@@ -102,8 +104,10 @@ if [ -z "$GITHUB_TOKEN" ]; then
     echo -e "${YELLOW}   → Required scope: read:packages${NC}"
     echo ""
     echo -e "${BLUE}Would you like to enter a GitHub token now? (y/n)${NC}"
+    # Note: Using 'read -n 1' requires bash. For POSIX compatibility, could use 'read' without -n
     if [ -t 0 ]; then
-        read -r -n 1 USE_TOKEN
+        # Read single character (bash-specific)
+        read -r -n 1 USE_TOKEN 2>/dev/null || read -r USE_TOKEN
         echo ""
         if [ "$USE_TOKEN" = "y" ] || [ "$USE_TOKEN" = "Y" ]; then
             echo -e "${BLUE}Enter your GitHub Personal Access Token:${NC}"
@@ -186,8 +190,16 @@ fi
 echo -e "\n${BLUE}[Test 8/10] Container Pull Test${NC}"
 echo "---------------------------------------"
 if [ -n "$GITHUB_TOKEN" ] && [ -n "$GITHUB_USERNAME" ]; then
+    echo "⚠️  WARNING: This will download several GB of data (may take 10-20 minutes)"
+    echo "⚠️  To skip this test, press Ctrl+C now (you have 5 seconds)"
+    echo ""
+    
+    # Give user a chance to cancel
+    if [ -t 0 ]; then
+        sleep 5
+    fi
+    
     echo "Attempting to pull ${EPIC_CONTAINER_REGISTRY}:${CONTAINER_TAG}..."
-    echo "(This may take several minutes on first run)"
     
     PULL_OUTPUT=$(docker pull ${EPIC_CONTAINER_REGISTRY}:${CONTAINER_TAG} 2>&1 || true)
     

@@ -174,10 +174,21 @@ jobs:
         run: |
           echo "=== Testing Container Pull ==="
           echo "Since manifest access succeeded, attempting to pull container..."
-          echo "Note: This will download several GB and may take 10-20 minutes"
+          echo "⚠️  WARNING: This will download several GB (5-10 GB) and may take 10-20 minutes"
+          echo "⚠️  This step is optional - manifest access test above is usually sufficient"
           echo ""
           
-          # Only pull if we have space and time
+          # Check available disk space before pulling
+          AVAILABLE_GB=$(df -BG / | awk 'NR==2 {print $4}' | sed 's/G//')
+          echo "Available disk space: ${AVAILABLE_GB}GB"
+          
+          if [ "$AVAILABLE_GB" -lt 15 ]; then
+            echo "⚠️  WARNING: Less than 15GB available, skipping container pull"
+            echo "Manifest access test passed - setup is working correctly"
+            exit 0
+          fi
+          
+          # Only pull if we have space
           if docker pull ghcr.io/epicgames/unreal-engine:dev-slim-5.6 2>&1; then
             echo ""
             echo "✓ SUCCESS: Container pulled successfully!"

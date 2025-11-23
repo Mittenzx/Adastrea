@@ -173,7 +173,11 @@ if [ "$AUTH_SUCCESS" -eq 1 ]; then
             echo -e "${YELLOW}    → Permissions still propagating (wait a few hours)${NC}"
         fi
         echo ""
-        echo -e "${YELLOW}    For detailed diagnostics, run: ./test_epic_connection.sh${NC}"
+        if [ -f "./test_epic_connection.sh" ]; then
+            echo -e "${YELLOW}    For detailed diagnostics, run: ./test_epic_connection.sh${NC}"
+        else
+            echo -e "${YELLOW}    For detailed diagnostics, see: CONTAINER_DIAGNOSTICS.md${NC}"
+        fi
         echo -e "${YELLOW}    See GITHUB_TOKEN_DOCKER_SETUP.md for detailed troubleshooting${NC}"
     fi
 else
