@@ -32,6 +32,15 @@ Visit: <https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engin
 
 ## Test Your Setup
 
+### Automated Validation
+
+```bash
+# Run the validation script
+./check_docker_setup.sh
+```
+
+### Manual Testing
+
 ```bash
 # For local testing only (create token at https://github.com/settings/tokens)
 export GITHUB_TOKEN="your_token_here"

@@ -201,6 +201,26 @@ Each developer who wants to build locally needs to:
 
 ## Testing Your Setup
 
+### Quick Validation Script
+
+Run the automated validation script to check your setup:
+
+```bash
+# Make script executable (first time only)
+chmod +x check_docker_setup.sh
+
+# Run the validation
+./check_docker_setup.sh
+```
+
+The script will check:
+- ✅ Docker installation and daemon
+- ✅ GitHub Container Registry authentication
+- ✅ Epic Games container access
+- ✅ Provide specific guidance for any issues
+
+### Manual Testing Steps
+
 ### Test 1: Check Epic Account Connection
 
 ```bash

@@ -322,6 +322,7 @@ Concise reference documents:
 
 | Document | Purpose | Location |
 |----------|---------|----------|
+| **check_docker_setup.sh** | ⭐ **NEW!** Docker and Epic container access validation | Root |
 | **SetupCheck.py** | Environment validation script | Root |
 | **SetupCheck.sh** | Environment validation script (Unix) | Root |
 
