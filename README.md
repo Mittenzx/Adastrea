@@ -6,6 +6,15 @@
 
 > An open-world space flight game featuring exploration, combat, faction diplomacy, crew management, and dynamic trading economies.
 
+## 📖 [Visit the Wiki](wiki/Home.md) for Comprehensive Documentation
+
+**New to Adastrea?** The wiki provides organized, easy-to-navigate documentation:
+- 🚀 [Quick Start Guide](wiki/Getting-Started/Quick-Start.md) - Get running in 10 minutes
+- 🎨 [Designer Onboarding](wiki/Getting-Started/Designer-Onboarding.md) - For non-programmers
+- 🎮 [Core Systems Overview](wiki/Core-Systems/README.md) - All 22+ game systems
+- 💻 [Developer Guides](wiki/Developer-Guides/Architecture.md) - Architecture and contributing
+- 📚 [Complete Documentation Index](wiki/Reference/Documentation-Index.md) - Find any document
+
 ## Table of Contents
 
 - [About](#about)
