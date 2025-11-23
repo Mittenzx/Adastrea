@@ -446,6 +446,8 @@ Designer workflows and best practices:
 | **ROADMAP.md** | Development phases and milestones | Root |
 | **ROADMAP_UPDATE_GUIDELINES.md** | How to update roadmap | Root |
 | **CHANGELOG.md** | Version history | Root |
+| **STUB_AND_PLACEHOLDER_AUDIT.md** | ⭐ Complete audit of stubs, placeholders, and TODOs | Root |
+| **ZZ_WHATS_STILL_NEEDED.md** | Testing setup assessment and known gaps | Root |
 
 ---
 
@@ -578,9 +580,9 @@ This index should be updated when:
 
 ### Last Updated
 
-**Date**: November 18, 2025  
+**Date**: November 23, 2025  
 **Updated By**: GitHub Copilot (SWE Agent)  
-**Version**: 1.1 - Removed outdated temporary documents
+**Version**: 1.2 - Added STUB_AND_PLACEHOLDER_AUDIT.md to Project Management section
 
 ---
 
