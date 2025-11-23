@@ -173,8 +173,10 @@ if [ "$AUTH_SUCCESS" -eq 1 ]; then
             echo -e "${YELLOW}    → Permissions still propagating (wait a few hours)${NC}"
         fi
         echo ""
-        if [ -f "./test_epic_connection.sh" ]; then
-            echo -e "${YELLOW}    For detailed diagnostics, run: ./test_epic_connection.sh${NC}"
+        # Determine the directory where this script resides
+        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+        if [ -f "${SCRIPT_DIR}/test_epic_connection.sh" ]; then
+            echo -e "${YELLOW}    For detailed diagnostics, run: ${SCRIPT_DIR}/test_epic_connection.sh${NC}"
         else
             echo -e "${YELLOW}    For detailed diagnostics, see: CONTAINER_DIAGNOSTICS.md${NC}"
         fi

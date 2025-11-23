@@ -4,6 +4,11 @@
 # This script helps diagnose why Unreal Engine container pulls are failing
 # by testing various connection points and authorization levels.
 #
+# Requirements: This script requires bash (not POSIX sh) due to use of:
+#   - [[ ]] for regex matching
+#   - read -n for single-character input
+#   - read -s for silent password input
+#
 # Note: This script is designed to test for both success and failure conditions,
 # so we don't use 'set -e' to allow graceful handling of expected failures.
 
@@ -104,11 +109,18 @@ if [ -z "$GITHUB_TOKEN" ]; then
     echo -e "${YELLOW}   → Required scope: read:packages${NC}"
     echo ""
     echo -e "${BLUE}Would you like to enter a GitHub token now? (y/n)${NC}"
-    # Note: Using 'read -n 1' requires bash. For POSIX compatibility, could use 'read' without -n
+    # Note: Using 'read -n 1' requires bash. For POSIX compatibility, fallback to 'read' without -n.
+    # The fallback will require pressing Enter, which changes the user experience.
     if [ -t 0 ]; then
-        # Read single character (bash-specific)
-        read -r -n 1 USE_TOKEN 2>/dev/null || read -r USE_TOKEN
-        echo ""
+        if [ -n "$BASH_VERSION" ]; then
+            # Bash: Read single character
+            read -r -n 1 USE_TOKEN 2>/dev/null
+            echo ""
+        else
+            # Non-bash: Fallback to full line input
+            echo -e "${YELLOW}Note: Your shell does not support single-key input. Please type 'y' or 'n' and press Enter.${NC}"
+            read -r USE_TOKEN
+        fi
         if [ "$USE_TOKEN" = "y" ] || [ "$USE_TOKEN" = "Y" ]; then
             echo -e "${BLUE}Enter your GitHub Personal Access Token:${NC}"
             read -r -s GITHUB_TOKEN

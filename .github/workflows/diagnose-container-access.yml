@@ -62,6 +62,7 @@ jobs:
           fi
       
       - name: Test GITHUB_TOKEN Authentication
+        shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
