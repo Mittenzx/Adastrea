@@ -174,6 +174,11 @@ For automated building and CI/CD in cloud environments, multiple services are av
 2. Accept Epic Games GitHub organization invitation
 3. Verify membership at [github.com/EpicGames](https://github.com/EpicGames)
 
+**Troubleshooting Container Access**:
+- 🔍 **Run diagnostics**: `./test_epic_connection.sh` (local) or trigger "Diagnose Container Access" workflow (GitHub Actions)
+- 📖 **See [CONTAINER_DIAGNOSTICS.md](CONTAINER_DIAGNOSTICS.md)** for comprehensive troubleshooting guide
+- ⚙️ **Error: "denied"?** See [Container Diagnostics](CONTAINER_DIAGNOSTICS.md#symptom-error-response-from-daemon-denied) for specific solutions
+
 See [CLOUD_BUILD_SERVICES.md](CLOUD_BUILD_SERVICES.md) for detailed comparisons and [CLOUD_BUILD_QUICK_START.md](CLOUD_BUILD_QUICK_START.md) for complete setup instructions.
 
 ### Procedural Content Generation
@@ -669,6 +674,7 @@ Comprehensive technical documentation for contributors and developers:
 ### Build and CI/CD Documentation
 
 - **[GitHub Token & Docker Setup](GITHUB_TOKEN_DOCKER_SETUP.md)** - ⭐ Complete guide for setting up GitHub Actions with Docker for Unreal builds
+- **[Container Diagnostics](CONTAINER_DIAGNOSTICS.md)** - 🔍 **NEW** Troubleshooting guide for Epic Games container access issues
 - **[Cloud Build Quick Start](CLOUD_BUILD_QUICK_START.md)** - Quick reference for cloud build setup
 - **[Cloud Build Services](CLOUD_BUILD_SERVICES.md)** - Comprehensive comparison of build services
 
