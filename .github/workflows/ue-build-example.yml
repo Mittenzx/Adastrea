@@ -141,13 +141,32 @@ jobs:
       - name: Pull Unreal Engine Container
         run: |
           echo "Pulling UE5.6 container image..."
-          # Note: You must have Epic Games account linked and EULA accepted
+          # Note: Epic's container images require special access
           docker pull ghcr.io/epicgames/unreal-engine:dev-slim-5.6 || {
             echo "❌ Failed to pull UE container"
-            echo "Prerequisites:"
-            echo "1. Link Epic account at https://www.epicgames.com/account/connections"
-            echo "2. Accept EULA for container images"
-            echo "3. Ensure account has proper permissions"
+            echo ""
+            echo "Epic Games Unreal Engine containers require special authorization."
+            echo ""
+            echo "Prerequisites (all required):"
+            echo "1. Link Epic Games account to GitHub:"
+            echo "   → Visit: https://www.epicgames.com/account/connections"
+            echo "   → Connect your GitHub account"
+            echo ""
+            echo "2. Join Epic Games GitHub organization:"
+            echo "   → After linking, you should receive an invitation"
+            echo "   → Check: https://github.com/EpicGames"
+            echo "   → Accept the organization invitation in your GitHub email/notifications"
+            echo ""
+            echo "3. Accept Epic's EULA for container images:"
+            echo "   → Visit: https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-container-images"
+            echo "   → Review and accept the license agreement"
+            echo ""
+            echo "4. Verify container access:"
+            echo "   → Your GitHub account must be a member of the EpicGames organization"
+            echo "   → This gives you permission to pull their container images"
+            echo ""
+            echo "Note: It may take a few hours after linking for access to be granted."
+            echo "If you've completed all steps and still see this error, contact Epic support."
             exit 1
           }
       

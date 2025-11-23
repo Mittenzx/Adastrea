@@ -97,13 +97,39 @@ Building Unreal Engine projects requires significant computational resources and
   *Note: For GitHub Actions workflows, the built-in `secrets.GITHUB_TOKEN` is used and a Personal Access Token is not required.*
 
 #### Docker Container Access:
-1. Link Epic Games account to GitHub account at [epicgames.com](https://www.epicgames.com/account/connections)
-2. Accept Epic EULA for container images
-3. Authenticate Docker to GitHub Container Registry (for local development):
+
+**Important:** Epic's Unreal Engine container images are hosted in a private organization and require explicit access. Follow these steps carefully:
+
+1. **Link Epic Games account to GitHub:**
+   - Visit [epicgames.com/account/connections](https://www.epicgames.com/account/connections)
+   - Connect your GitHub account to your Epic Games account
+   - This is the first step but does NOT automatically grant container access
+
+2. **Join Epic Games GitHub Organization:**
+   - After linking accounts, Epic should send you an invitation to join their GitHub organization
+   - Check your GitHub notifications or email for the invitation
+   - Visit [github.com/EpicGames](https://github.com/EpicGames) and accept the invitation
+   - **This step is critical** - without organization membership, you cannot pull containers
+
+3. **Accept Epic EULA for container images:**
+   - Visit [Epic's Container Images Documentation](https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-container-images)
+   - Review and accept the license agreement for using container images
+
+4. **Verify your access:**
+   - Ensure you appear as a member at [github.com/orgs/EpicGames/people](https://github.com/orgs/EpicGames/people)
+   - Note: Access may take a few hours to propagate after accepting the invitation
+
+5. **Authenticate Docker** (for local development):
    ```bash
    # Replace YOUR_TOKEN with your actual GitHub Personal Access Token (PAT)
+   # The PAT must have 'read:packages' scope
    echo "YOUR_TOKEN" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
    ```
+
+**Troubleshooting Access Issues:**
+- If you don't receive an organization invitation after linking accounts, contact Epic Games support
+- If you get "denied" errors when pulling containers, verify organization membership
+- Some accounts may require manual approval by Epic - this can take 24-48 hours
 
 #### Available Actions:
 - [UE5-Build-Project](https://github.com/marketplace/actions/ue5-build-project) - Specialized action for UE builds
@@ -442,8 +468,14 @@ Before implementing a cloud build service:
 
 ### Common Issues:
 
-**Issue:** Docker container authentication fails
-**Solution:** Ensure Epic Games account is linked to GitHub and EULA accepted
+**Issue:** Docker pull fails with "denied" error (even though login succeeds)
+**Root Cause:** Not a member of Epic Games GitHub organization
+**Solution:** 
+  1. Link Epic account at https://www.epicgames.com/account/connections
+  2. Accept Epic Games organization invitation (check GitHub notifications/email)
+  3. Verify membership at https://github.com/orgs/EpicGames/people
+  4. Wait 1-2 hours for permissions to propagate
+  5. If no invitation received, contact Epic Games support
 
 **Issue:** Build times are too long
 **Solution:** Use build caching, distributed builds (UBA), or faster runners

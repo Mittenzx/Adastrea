@@ -49,11 +49,29 @@ For Adastrea (open-source, GitHub-hosted), use **GitHub Actions with Docker**:
 
 ### Step-by-Step Setup
 
-#### 1. Link Epic Account (5 minutes)
+#### 1. Set Up Epic Container Access (15-30 minutes, may require waiting)
+
+**Critical:** Simply linking accounts is not sufficient. You must complete ALL steps:
+
 ```
-1. Go to https://www.epicgames.com/account/connections
-2. Connect your GitHub account
-3. Accept EULA for container images at developer portal
+Step 1: Link Epic Games account to GitHub
+  → Visit: https://www.epicgames.com/account/connections
+  → Connect your GitHub account to Epic Games account
+  
+Step 2: Accept Epic Games GitHub organization invitation
+  → Check GitHub notifications and email for invitation
+  → Visit: https://github.com/EpicGames
+  → Accept the organization membership invitation
+  → Verify you appear in the members list
+  → NOTE: This step is REQUIRED to access containers
+  
+Step 3: Accept Epic's container EULA
+  → Visit: https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-container-images
+  → Review and accept the license agreement
+  
+Step 4: Wait for access to propagate (if needed)
+  → Access may take a few hours to become active
+  → Some accounts require manual Epic approval (24-48 hours)
 ```
 
 #### 2. Create Workflow File (10 minutes)
