@@ -1,6 +1,7 @@
 #include "UI/TestSettingsWidget.h"
 #include "AdastreaLog.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/GameModeBase.h"
 
 UTestSettingsWidget::UTestSettingsWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -95,7 +96,25 @@ void UTestSettingsWidget::OnContinueClicked_Implementation()
 	// Apply settings before continuing
 	ApplySettings();
 	
-	// Transition to main menu or directly to game
+	// Notify the game mode that test settings are complete
+	AGameModeBase* GameMode = UGameplayStatics::GetGameMode(this);
+	if (GameMode)
+	{
+		// Try to call OnTestSettingsContinue if available (for AdastreaGameMode)
+		UFunction* ContinueFunc = GameMode->FindFunction(FName(TEXT("OnTestSettingsContinue")));
+		if (ContinueFunc)
+		{
+			GameMode->ProcessEvent(ContinueFunc, nullptr);
+			UE_LOG(LogAdastrea, Log, TEXT("TestSettingsWidget: Notified GameMode to continue"));
+			return;
+		}
+		else
+		{
+			UE_LOG(LogAdastrea, Warning, TEXT("TestSettingsWidget: GameMode does not have OnTestSettingsContinue function"));
+		}
+	}
+	
+	// Fallback: Transition to main menu or directly to game
 	if (bShowMainMenuAfter)
 	{
 		TransitionToMainMenu();
