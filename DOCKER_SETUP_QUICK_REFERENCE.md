@@ -6,7 +6,7 @@
 
 **GITHUB_TOKEN is already configured!** The issue is Epic Games container access.
 
-## 3-Step Setup
+## 4-Step Setup
 
 ### Step 1: Link Accounts (5 minutes)
 

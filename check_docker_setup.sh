@@ -63,12 +63,20 @@ else
     
     # Try to login
     echo -e "${BLUE}    Attempting to login to ghcr.io...${NC}"
-    if echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$USER" --password-stdin &> /dev/null; then
+    
+    # Prompt for GitHub username if not set
+    if [ -z "$GITHUB_USERNAME" ]; then
+        echo -e "${YELLOW}    → Enter your GitHub username: ${NC}"
+        read -r GITHUB_USERNAME
+    fi
+    
+    if echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GITHUB_USERNAME" --password-stdin &> /dev/null; then
         print_status 0 "Successfully authenticated with GitHub Container Registry"
     else
         print_status 1 "Failed to authenticate with GitHub Container Registry"
         echo -e "${YELLOW}    → Verify your token has 'read:packages' scope${NC}"
         echo -e "${YELLOW}    → Check token hasn't expired${NC}"
+        echo -e "${YELLOW}    → Verify GitHub username is correct${NC}"
         NEEDS_AUTH=1
     fi
 fi

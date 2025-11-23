@@ -35,7 +35,7 @@ jobs:
         run: |
           docker pull ghcr.io/epicgames/unreal-engine:dev-slim-5.6 || {
             echo "❌ Container access not configured yet"
-            echo "📖 Setup Guide: https://github.com/Mittenzx/Adastrea/blob/main/GITHUB_TOKEN_DOCKER_SETUP.md"
+            echo "📖 Setup Guide: ${{ github.server_url }}/${{ github.repository }}/blob/main/GITHUB_TOKEN_DOCKER_SETUP.md"
             echo "Quick fix: Link Epic Games account to GitHub and accept EULA"
             exit 1
           }

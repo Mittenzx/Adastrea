@@ -156,7 +156,7 @@ jobs:
             echo ""
             echo "Epic Games Unreal Engine containers require special authorization."
             echo ""
-            echo "📖 Complete Setup Guide: https://github.com/Mittenzx/Adastrea/blob/main/GITHUB_TOKEN_DOCKER_SETUP.md"
+            echo "📖 Complete Setup Guide: ${{ github.server_url }}/${{ github.repository }}/blob/main/GITHUB_TOKEN_DOCKER_SETUP.md"
             echo ""
             echo "Quick Prerequisites (all required):"
             echo "1. Link Epic Games account to GitHub:"
