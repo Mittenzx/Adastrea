@@ -170,7 +170,7 @@ For automated building and CI/CD in cloud environments, multiple services are av
 **Current Status**: GitHub Actions workflow is active with project validation. Docker builds require Epic Games organization membership (see detailed setup below).
 
 **Important for Docker Builds**: To use Unreal Engine containers, you must:
-1. Link Epic account at [epicgames.com/account/connections](https://www.epicgames.com/account/connections)
+1. Link Epic account at [www.epicgames.com/account/connections](https://www.epicgames.com/account/connections)
 2. Accept Epic Games GitHub organization invitation
 3. Verify membership at [github.com/EpicGames](https://github.com/EpicGames)
 

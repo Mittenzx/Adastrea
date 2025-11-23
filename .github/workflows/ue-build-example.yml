@@ -136,10 +136,14 @@ jobs:
       
       - name: Login to GitHub Container Registry
         run: |
-          # Note: This uses secrets.GHCR_TOKEN which should be configured in repository secrets
-          # Alternatively, you can use the built-in secrets.GITHUB_TOKEN if it has sufficient permissions
-          # To use GITHUB_TOKEN instead, replace GHCR_TOKEN with GITHUB_TOKEN in the line below
-          echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          # Use GITHUB_TOKEN if GHCR_TOKEN is not configured
+          # GITHUB_TOKEN is automatically provided by GitHub Actions
+          TOKEN="${{ secrets.GHCR_TOKEN }}"
+          if [ -z "$TOKEN" ]; then
+            echo "GHCR_TOKEN not found, using GITHUB_TOKEN instead"
+            TOKEN="${{ secrets.GITHUB_TOKEN }}"
+          fi
+          echo "$TOKEN" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       
       - name: Pull Unreal Engine Container
         run: |

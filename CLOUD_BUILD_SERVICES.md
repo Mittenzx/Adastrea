@@ -101,7 +101,7 @@ Building Unreal Engine projects requires significant computational resources and
 **Important:** Epic's Unreal Engine container images are hosted in a private organization and require explicit access. Follow these steps carefully:
 
 1. **Link Epic Games account to GitHub:**
-   - Visit [epicgames.com/account/connections](https://www.epicgames.com/account/connections)
+   - Visit [www.epicgames.com/account/connections](https://www.epicgames.com/account/connections)
    - Connect your GitHub account to your Epic Games account
    - This is the first step but does NOT automatically grant container access
 
@@ -476,12 +476,20 @@ Before implementing a cloud build service:
 
 ### Common Issues:
 
+**Issue:** Docker login fails with "Cannot perform an interactive login from a non TTY device"
+**Root Cause:** GHCR_TOKEN secret is not configured or is empty
+**Solution:** 
+  1. Create a GitHub Personal Access Token (PAT) at https://github.com/settings/tokens
+  2. Token must have `read:packages` scope
+  3. Add the token as a secret named `GHCR_TOKEN` in repository settings
+  4. Or update workflow to use `secrets.GITHUB_TOKEN` instead (automatic fallback is now implemented)
+
 **Issue:** Docker pull fails with "denied" error (even though login succeeds)
 **Root Cause:** Not a member of Epic Games GitHub organization
 **Solution:** 
   1. Link Epic account at https://www.epicgames.com/account/connections
   2. Accept Epic Games organization invitation (check GitHub notifications/email)
-  3. Verify membership at https://github.com/orgs/EpicGames/people
+  3. Verify membership at https://github.com/EpicGames
   4. Wait 1-2 hours for permissions to propagate
   5. If no invitation received, contact Epic Games support
 
