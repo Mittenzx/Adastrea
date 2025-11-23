@@ -144,12 +144,42 @@ if [ "$AUTH_SUCCESS" -eq 1 ]; then
         echo -e "${YELLOW}    Error output:${NC}"
         tail -5 "$TEMP_OUTPUT" | sed 's/^/    /'
         echo ""
-        echo -e "${YELLOW}    Common causes:${NC}"
-        echo -e "${YELLOW}    → Epic account not linked (Step 1 above)${NC}"
-        echo -e "${YELLOW}    → Organization invitation not accepted (Step 2 above)${NC}"
-        echo -e "${YELLOW}    → EULA not accepted (Step 3 above)${NC}"
-        echo -e "${YELLOW}    → Permissions still propagating (wait a few hours)${NC}"
+        
+        # Detailed diagnostics based on error
+        if grep -q "denied" "$TEMP_OUTPUT"; then
+            echo -e "${RED}    ✗ Diagnosis: Access Denied${NC}"
+            echo -e "${YELLOW}    This means GitHub authentication works, but Epic permissions are not granted.${NC}"
+            echo ""
+            echo -e "${YELLOW}    Required setup steps:${NC}"
+            echo -e "${YELLOW}    → Epic account not linked (Step 1 above)${NC}"
+            echo -e "${YELLOW}    → Organization invitation not accepted (Step 2 above)${NC}"
+            echo -e "${YELLOW}    → EULA not accepted (Step 3 above)${NC}"
+            echo -e "${YELLOW}    → Permissions still propagating (wait 2-24 hours)${NC}"
+        elif grep -q "unauthorized" "$TEMP_OUTPUT"; then
+            echo -e "${RED}    ✗ Diagnosis: Authentication Failed${NC}"
+            echo -e "${YELLOW}    Docker login may have failed or token is invalid.${NC}"
+            echo -e "${YELLOW}    → Verify GITHUB_TOKEN has 'read:packages' scope${NC}"
+            echo -e "${YELLOW}    → Re-run: docker login ghcr.io${NC}"
+        elif grep -q "manifest unknown" "$TEMP_OUTPUT"; then
+            echo -e "${RED}    ✗ Diagnosis: Container Not Found${NC}"
+            echo -e "${YELLOW}    The container tag may be incorrect or you don't have access.${NC}"
+            echo -e "${YELLOW}    → Verify tag: ${UE_CONTAINER_TAG}${NC}"
+            echo -e "${YELLOW}    → Check available tags at: https://github.com/orgs/EpicGames/packages${NC}"
+        else
+            echo -e "${YELLOW}    Common causes:${NC}"
+            echo -e "${YELLOW}    → Epic account not linked (Step 1 above)${NC}"
+            echo -e "${YELLOW}    → Organization invitation not accepted (Step 2 above)${NC}"
+            echo -e "${YELLOW}    → EULA not accepted (Step 3 above)${NC}"
+            echo -e "${YELLOW}    → Permissions still propagating (wait a few hours)${NC}"
+        fi
         echo ""
+        # Determine the directory where this script resides
+        SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+        if [ -f "${SCRIPT_DIR}/test_epic_connection.sh" ]; then
+            echo -e "${YELLOW}    For detailed diagnostics, run: ${SCRIPT_DIR}/test_epic_connection.sh${NC}"
+        else
+            echo -e "${YELLOW}    For detailed diagnostics, see: CONTAINER_DIAGNOSTICS.md${NC}"
+        fi
         echo -e "${YELLOW}    See GITHUB_TOKEN_DOCKER_SETUP.md for detailed troubleshooting${NC}"
     fi
 else
