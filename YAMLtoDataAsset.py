@@ -75,7 +75,6 @@ class YAMLtoDataAssetImporter:
         # Asset registry for finding asset classes
         self.asset_registry = unreal.AssetRegistryHelpers.get_asset_registry()
         self.asset_tools = unreal.AssetToolsHelpers.get_asset_tools()
-        self.editor_util = unreal.EditorAssetLibrary()
     
     def log(self, message: str, level: str = "info"):
         """Log message to Unreal Editor"""
@@ -106,7 +105,7 @@ class YAMLtoDataAssetImporter:
         """Create a new Data Asset in Unreal"""
         try:
             # Check if asset already exists
-            if self.editor_util.does_asset_exist(asset_path):
+            if unreal.EditorAssetLibrary.does_asset_exist(asset_path):
                 self.log(f"Asset already exists: {asset_path}", "warning")
                 # Load existing asset
                 return unreal.load_asset(asset_path)
@@ -223,7 +222,7 @@ class YAMLtoDataAssetImporter:
         # (Add more as needed based on actual SpaceshipDataAsset properties)
         
         # Save the asset
-        self.editor_util.save_asset(asset_path)
+        unreal.EditorAssetLibrary.save_asset(asset_path)
         self.log(f"Successfully imported spaceship: {ship_name} → {asset_path}")
         
         return asset_path
@@ -298,7 +297,7 @@ class YAMLtoDataAssetImporter:
         self.set_property_safe(asset, 'personality_description', data.get('PersonnelDescription', ''))
         
         # Save the asset
-        self.editor_util.save_asset(asset_path)
+        unreal.EditorAssetLibrary.save_asset(asset_path)
         self.log(f"Successfully imported personnel: {personnel_id} → {asset_path}")
         
         return asset_path
@@ -346,43 +345,57 @@ class YAMLtoDataAssetImporter:
         return self.batch_import_directory("Assets/PersonnelTemplates", self.import_personnel_yaml)
     
     def show_menu(self):
-        """Interactive menu for importing YAML files"""
-        while True:
-            print("\n" + "=" * 60)
-            print("YAML to Data Asset Importer")
-            print("=" * 60)
-            print("\nSingle Import:")
-            print("  1. Import Spaceship YAML")
-            print("  2. Import Personnel YAML")
-            print("  3. Import Trade Item YAML")
-            print("  4. Import Market YAML")
-            print("  5. Import Contract YAML")
-            print("  6. Import Faction AI YAML")
-            print("\nBatch Import:")
-            print("  7. Import All Spaceships")
-            print("  8. Import All Personnel")
-            print("  9. Import All Trading Templates")
-            print("  10. Import All Faction AI Templates")
-            print("\n  0. Exit")
-            print("=" * 60)
-            
-            choice = input("\nSelect option (0-10): ").strip()
-            
-            if choice == "0":
-                print("Exiting...")
-                break
-            elif choice == "1":
-                path = input("Enter YAML file path: ").strip()
-                self.import_spaceship_yaml(path)
-            elif choice == "2":
-                path = input("Enter YAML file path: ").strip()
-                self.import_personnel_yaml(path)
-            elif choice == "7":
-                self.batch_import_spaceships()
-            elif choice == "8":
-                self.batch_import_personnel()
-            else:
-                print("Option not yet implemented or invalid choice.")
+        """
+        Interactive menu for importing YAML files
+        
+        NOTE: This interactive menu only works when called from the Unreal Editor Python Console.
+        It will not work when executed as a script via "Execute Python Script" menu.
+        
+        To use interactively:
+        1. Tools → Python → Open Python Console
+        2. Run: import YAMLtoDataAsset; YAMLtoDataAsset.show_menu()
+        """
+        try:
+            while True:
+                print("\n" + "=" * 60)
+                print("YAML to Data Asset Importer")
+                print("=" * 60)
+                print("\nSingle Import:")
+                print("  1. Import Spaceship YAML")
+                print("  2. Import Personnel YAML")
+                print("  3. Import Trade Item YAML")
+                print("  4. Import Market YAML")
+                print("  5. Import Contract YAML")
+                print("  6. Import Faction AI YAML")
+                print("\nBatch Import:")
+                print("  7. Import All Spaceships")
+                print("  8. Import All Personnel")
+                print("  9. Import All Trading Templates")
+                print("  10. Import All Faction AI Templates")
+                print("\n  0. Exit")
+                print("=" * 60)
+                
+                choice = input("\nSelect option (0-10): ").strip()
+                
+                if choice == "0":
+                    print("Exiting...")
+                    break
+                elif choice == "1":
+                    path = input("Enter YAML file path: ").strip()
+                    self.import_spaceship_yaml(path)
+                elif choice == "2":
+                    path = input("Enter YAML file path: ").strip()
+                    self.import_personnel_yaml(path)
+                elif choice == "7":
+                    self.batch_import_spaceships()
+                elif choice == "8":
+                    self.batch_import_personnel()
+                else:
+                    print("Option not yet implemented or invalid choice.")
+        except (EOFError, OSError) as e:
+            self.log("\nInteractive menu requires Python Console. Use batch import functions instead.", "warning")
+            self.log("Example: YAMLtoDataAsset.batch_import_spaceships()", "warning")
+            return
 
 
 # Global instance
@@ -423,7 +436,12 @@ def batch_import_personnel() -> List[str]:
 
 
 def main():
-    """Main entry point"""
+    """
+    Main entry point when script is executed directly
+    
+    When executed via "Execute Python Script", runs batch imports.
+    For interactive menu, use Python Console instead.
+    """
     if not UNREAL_AVAILABLE:
         print("ERROR: This script must be run inside Unreal Editor!")
         print("1. Enable 'Python Editor Script Plugin'")
@@ -431,8 +449,37 @@ def main():
         print("3. Select this script")
         return
     
+    if not YAML_AVAILABLE:
+        print("ERROR: PyYAML is required.")
+        print("To install PyYAML, run in Unreal Editor Python Console:")
+        print("  import subprocess, sys")
+        print("  subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'pyyaml'])")
+        return
+    
+    print("\n" + "=" * 60)
+    print("YAML to Data Asset Importer")
+    print("=" * 60)
+    print("\nExecuting batch import operations...")
+    print("\nNOTE: For interactive menu, use the Python Console:")
+    print("  Tools → Python → Open Python Console")
+    print("  import YAMLtoDataAsset")
+    print("  YAMLtoDataAsset.show_menu()")
+    print("\n" + "=" * 60)
+    
     importer = YAMLtoDataAssetImporter()
-    importer.show_menu()
+    
+    # Run batch imports automatically
+    print("\nBatch importing spaceships...")
+    spaceship_assets = importer.batch_import_spaceships()
+    print(f"Imported {len(spaceship_assets)} spaceship(s)")
+    
+    print("\nBatch importing personnel...")
+    personnel_assets = importer.batch_import_personnel()
+    print(f"Imported {len(personnel_assets)} personnel asset(s)")
+    
+    print("\n" + "=" * 60)
+    print("Batch import complete!")
+    print("=" * 60)
 
 
 if __name__ == '__main__':
