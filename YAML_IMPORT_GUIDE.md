@@ -20,18 +20,21 @@ Instead of manually creating Data Assets in Unreal Editor, you can:
 
 ### Step 2: Run the Script
 
-**Method A: Execute Script File**
+**Method A: Execute Script File (Batch Import)**
 1. Tools → Python → Execute Python Script
 2. Select `YAMLtoDataAsset.py`
-3. Interactive menu appears!
+3. Automatically imports all YAML files from template directories
 
-**Method B: Python Console**
+**Method B: Python Console (Interactive Menu)**
 1. Tools → Python → Open Python Console
 2. Run:
 ```python
 import YAMLtoDataAsset
 YAMLtoDataAsset.show_menu()
 ```
+3. Use the interactive menu to import individual files or run batch imports
+
+**Note:** The interactive menu only works in the Python Console. When executed as a script file, it runs batch imports automatically.
 
 ## Usage Examples
 
@@ -73,7 +76,7 @@ importer.batch_import_personnel()
 
 ## Interactive Menu
 
-When you run the script, you see:
+When you run `YAMLtoDataAsset.show_menu()` from the Python Console, you see:
 
 ```
 ============================================================
@@ -97,6 +100,8 @@ Batch Import:
   0. Exit
 ============================================================
 ```
+
+**Important:** This interactive menu only works when called from the Python Console. When the script is executed via "Execute Python Script", it automatically runs batch imports instead.
 
 ## How It Works
 
