@@ -16,10 +16,10 @@ This directory contains comprehensive documentation for converting YAML template
 | **Total YAML Files** | 161 |
 | **Manual Template Files** | 113 |
 | **ProceduralContent Files** | 48 |
-| **Main Categories** | 17 |
+| **Main Categories** | 18 |
 | **Fully Supported** | 2 categories (31 files) |
-| **Partially Supported** | 5 categories (30 files) |
-| **Not Yet Implemented** | 10 categories (52 files) |
+| **Partially Supported** | 5 categories (31 files) |
+| **Not Yet Implemented** | 10 categories (51 files) |
 
 ## ✅ Conversion Status by Category
 

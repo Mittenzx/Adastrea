@@ -5,7 +5,7 @@ This document provides a comprehensive inventory of all YAML template files in t
 ## Summary Statistics
 
 - **Total YAML Files**: 161
-- **Categories**: 17 main categories
+- **Categories**: 18 main categories
 - **ProceduralContent Files**: 48 (subdir with generated content)
 - **Manual Template Files**: 113
 
