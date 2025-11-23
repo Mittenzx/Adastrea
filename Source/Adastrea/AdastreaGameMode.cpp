@@ -143,8 +143,9 @@ void AAdastreaGameMode::ShowTestSettingsWidget()
 		return;
 	}
 
-	// Add to viewport
-	TestSettingsWidget->AddToViewport(100); // High Z-order to ensure it's on top
+	// Add to viewport with high Z-order to ensure it's on top
+	static constexpr int32 TestSettingsWidgetZOrder = 100;
+	TestSettingsWidget->AddToViewport(TestSettingsWidgetZOrder);
 	
 	UE_LOG(LogAdastrea, Log, TEXT("AdastreaGameMode: Test settings widget created and added to viewport"));
 }
