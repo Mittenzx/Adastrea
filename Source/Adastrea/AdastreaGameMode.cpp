@@ -124,6 +124,7 @@ void AAdastreaGameMode::ShowTestSettingsWidget()
 	if (!TestSettingsWidgetClass)
 	{
 		UE_LOG(LogAdastrea, Warning, TEXT("AdastreaGameMode: TestSettingsWidgetClass is not set"));
+		OnTestSettingsContinue(); // Proceed anyway
 		return;
 	}
 
@@ -131,6 +132,7 @@ void AAdastreaGameMode::ShowTestSettingsWidget()
 	if (!PC)
 	{
 		UE_LOG(LogAdastrea, Error, TEXT("AdastreaGameMode: No player controller found to show test settings widget"));
+		OnTestSettingsContinue(); // Proceed anyway
 		return;
 	}
 
@@ -140,6 +142,7 @@ void AAdastreaGameMode::ShowTestSettingsWidget()
 	if (!TestSettingsWidget)
 	{
 		UE_LOG(LogAdastrea, Error, TEXT("AdastreaGameMode: Failed to create test settings widget or cast to UTestSettingsWidget"));
+		OnTestSettingsContinue(); // Proceed anyway
 		return;
 	}
 
