@@ -116,15 +116,23 @@ Building Unreal Engine projects requires significant computational resources and
    - Review and accept the license agreement for using container images
 
 4. **Verify your access:**
-   - Ensure you appear as a member at [github.com/orgs/EpicGames/people](https://github.com/orgs/EpicGames/people)
+   - Visit [github.com/EpicGames](https://github.com/EpicGames) to confirm you're a member
+   - You should see "Member" badge if access is granted (visibility depends on organization settings)
    - Note: Access may take a few hours to propagate after accepting the invitation
 
-5. **Authenticate Docker** (for local development):
+5. **Authenticate Docker** (for local development only):
+   
+   **Important:** Replace the placeholder values below with your actual credentials:
+   - `YOUR_TOKEN` → Your personal GitHub Personal Access Token (create at github.com/settings/tokens)
+   - `YOUR_GITHUB_USERNAME` → Your GitHub username (e.g., "Mittenzx")
+   
    ```bash
-   # Replace YOUR_TOKEN with your actual GitHub Personal Access Token (PAT)
+   # Example command structure (replace placeholders with actual values):
    # The PAT must have 'read:packages' scope
    echo "YOUR_TOKEN" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
    ```
+   
+   For GitHub Actions workflows, use the built-in `secrets.GITHUB_TOKEN` or configure a custom `secrets.GHCR_TOKEN` secret instead.
 
 **Troubleshooting Access Issues:**
 - If you don't receive an organization invitation after linking accounts, contact Epic Games support
