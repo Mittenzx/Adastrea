@@ -136,7 +136,6 @@ jobs:
       
       - name: Login to GitHub Container Registry
         env:
-          GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Use GITHUB_TOKEN if GHCR_TOKEN is not configured
