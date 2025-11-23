@@ -392,7 +392,7 @@ class YAMLtoDataAssetImporter:
                     self.batch_import_personnel()
                 else:
                     print("Option not yet implemented or invalid choice.")
-        except (EOFError, OSError) as e:
+        except (EOFError, OSError):
             self.log("\nInteractive menu requires Python Console. Use batch import functions instead.", "warning")
             self.log("Example: YAMLtoDataAsset.batch_import_spaceships()", "warning")
             return
