@@ -4,6 +4,9 @@
 
 set -e
 
+# Configuration
+UE_CONTAINER_TAG="dev-slim-5.6"  # Unreal Engine container version
+
 # Cleanup function
 cleanup() {
     # Clean up temporary files
@@ -124,7 +127,7 @@ if [ "$AUTH_SUCCESS" -eq 1 ]; then
     echo -e "${BLUE}[5/6] Testing Epic Games container access...${NC}"
     echo -e "${YELLOW}This may take a few minutes on first run...${NC}"
     
-    if docker pull ghcr.io/epicgames/unreal-engine:dev-slim-5.6 &> /tmp/docker_pull_output.txt; then
+    if docker pull "ghcr.io/epicgames/unreal-engine:${UE_CONTAINER_TAG}" &> /tmp/docker_pull_output.txt; then
         print_status 0 "Successfully pulled Epic Games UE5.6 container"
         echo -e "${GREEN}    ✓ Your setup is complete and working!${NC}"
     else
@@ -149,7 +152,7 @@ echo ""
 # Check 6: Summary
 echo -e "${BLUE}[6/6] Summary${NC}"
 echo ""
-if [ "$AUTH_SUCCESS" -eq 1 ] && docker image inspect ghcr.io/epicgames/unreal-engine:dev-slim-5.6 &> /dev/null; then
+if [ "$AUTH_SUCCESS" -eq 1 ] && docker image inspect "ghcr.io/epicgames/unreal-engine:${UE_CONTAINER_TAG}" &> /dev/null; then
     echo -e "${GREEN}✓ Setup Complete!${NC}"
     echo -e "  Your Docker environment is ready for Unreal Engine builds."
     echo ""
