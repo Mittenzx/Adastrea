@@ -101,7 +101,8 @@ void UTestSettingsWidget::OnContinueClicked_Implementation()
 	if (GameMode)
 	{
 		// Try to call OnTestSettingsContinue if available (for AdastreaGameMode)
-		UFunction* ContinueFunc = GameMode->FindFunction(FName(TEXT("OnTestSettingsContinue")));
+		static const FName ContinueFunctionName(TEXT("OnTestSettingsContinue"));
+		UFunction* ContinueFunc = GameMode->FindFunction(ContinueFunctionName);
 		if (ContinueFunc)
 		{
 			GameMode->ProcessEvent(ContinueFunc, nullptr);

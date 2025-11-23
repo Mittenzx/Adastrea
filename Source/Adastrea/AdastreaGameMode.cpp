@@ -134,11 +134,12 @@ void AAdastreaGameMode::ShowTestSettingsWidget()
 		return;
 	}
 
-	// Create the test settings widget
-	TestSettingsWidget = CreateWidget<UTestSettingsWidget>(PC, TestSettingsWidgetClass);
+	// Create the test settings widget (use UUserWidget as template type to support derived classes)
+	UUserWidget* CreatedWidget = CreateWidget<UUserWidget>(PC, TestSettingsWidgetClass);
+	TestSettingsWidget = Cast<UTestSettingsWidget>(CreatedWidget);
 	if (!TestSettingsWidget)
 	{
-		UE_LOG(LogAdastrea, Error, TEXT("AdastreaGameMode: Failed to create test settings widget"));
+		UE_LOG(LogAdastrea, Error, TEXT("AdastreaGameMode: Failed to create test settings widget or cast to UTestSettingsWidget"));
 		return;
 	}
 
