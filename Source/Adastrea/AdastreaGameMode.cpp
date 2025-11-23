@@ -3,29 +3,44 @@
 #include "AdastreaGameMode.h"
 #include "SpaceSectorMap.h"
 #include "Ships/Spaceship.h"
+#include "UI/TestSettingsWidget.h"
 #include "AdastreaLog.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerController.h"
+#include "Blueprint/UserWidget.h"
 
 AAdastreaGameMode::AAdastreaGameMode()
 {
 	// Set default pawn class to our Blueprinted character
 	// This would typically be set to a blueprint class in the editor
 	
+	// Test settings configuration
+	TestSettingsWidgetClass = nullptr; // Must be set in Blueprint or editor to enable
+	bShowTestSettingsOnStartup = true; // Show if widget class is set
+	
 	// Default auto-spawn settings
 	bAutoSpawnPlayerShip = true;
 	bSpawnAtCenter = false; // Use random position by default for variety
 	DefaultSpaceshipClass = nullptr; // Must be set in Blueprint or editor
+	
+	// Initialize widget reference
+	TestSettingsWidget = nullptr;
 }
 
 void AAdastreaGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Automatically spawn player spaceship if enabled and configured
-	if (bAutoSpawnPlayerShip)
+	// Show test settings widget if configured
+	if (bShowTestSettingsOnStartup && TestSettingsWidgetClass)
 	{
-		SpawnPlayerSpaceship();
+		UE_LOG(LogAdastrea, Log, TEXT("AdastreaGameMode: Showing test settings widget on startup"));
+		ShowTestSettingsWidget();
+	}
+	else
+	{
+		// No test settings to show - proceed with normal initialization
+		OnTestSettingsContinue();
 	}
 }
 
@@ -101,5 +116,57 @@ void AAdastreaGameMode::SpawnPlayerSpaceship()
 	else
 	{
 		UE_LOG(LogAdastrea, Warning, TEXT("AdastreaGameMode: No player controller found to possess spaceship"));
+	}
+}
+
+void AAdastreaGameMode::ShowTestSettingsWidget()
+{
+	if (!TestSettingsWidgetClass)
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("AdastreaGameMode: TestSettingsWidgetClass is not set"));
+		OnTestSettingsContinue(); // Proceed anyway
+		return;
+	}
+
+	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (!PC)
+	{
+		UE_LOG(LogAdastrea, Error, TEXT("AdastreaGameMode: No player controller found to show test settings widget"));
+		OnTestSettingsContinue(); // Proceed anyway
+		return;
+	}
+
+	// Create the test settings widget (use UUserWidget as template type to support derived classes)
+	UUserWidget* CreatedWidget = CreateWidget<UUserWidget>(PC, TestSettingsWidgetClass);
+	TestSettingsWidget = Cast<UTestSettingsWidget>(CreatedWidget);
+	if (!TestSettingsWidget)
+	{
+		UE_LOG(LogAdastrea, Error, TEXT("AdastreaGameMode: Failed to create test settings widget or cast to UTestSettingsWidget"));
+		OnTestSettingsContinue(); // Proceed anyway
+		return;
+	}
+
+	// Add to viewport with high Z-order to ensure it's on top
+	static constexpr int32 TestSettingsWidgetZOrder = 100;
+	TestSettingsWidget->AddToViewport(TestSettingsWidgetZOrder);
+	
+	UE_LOG(LogAdastrea, Log, TEXT("AdastreaGameMode: Test settings widget created and added to viewport"));
+}
+
+void AAdastreaGameMode::OnTestSettingsContinue()
+{
+	UE_LOG(LogAdastrea, Log, TEXT("AdastreaGameMode: Test settings confirmed, continuing with game initialization"));
+
+	// Clean up test settings widget if it exists
+	if (TestSettingsWidget)
+	{
+		TestSettingsWidget->RemoveFromParent();
+		TestSettingsWidget = nullptr;
+	}
+
+	// Automatically spawn player spaceship if enabled and configured
+	if (bAutoSpawnPlayerShip)
+	{
+		SpawnPlayerSpaceship();
 	}
 }
