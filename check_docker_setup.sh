@@ -60,13 +60,13 @@ echo ""
 
 # Check 3: GitHub Container Registry authentication
 echo -e "${BLUE}[3/6] Checking GitHub Container Registry authentication...${NC}"
+AUTH_SUCCESS=0
 if [ -z "$GITHUB_TOKEN" ]; then
     print_status 1 "GITHUB_TOKEN environment variable not set"
     echo -e "${YELLOW}    → For local testing, create a token at: https://github.com/settings/tokens${NC}"
     echo -e "${YELLOW}    → Grant it 'read:packages' scope${NC}"
     echo -e "${YELLOW}    → Set it with: export GITHUB_TOKEN=\"your_token_here\"${NC}"
     echo -e "${YELLOW}    → For GitHub Actions, GITHUB_TOKEN is automatic (no action needed)${NC}"
-    NEEDS_AUTH=1
 else
     print_status 0 "GITHUB_TOKEN is set"
     
@@ -81,7 +81,6 @@ else
         # Validate username is not empty
         if [ -z "$GITHUB_USERNAME" ]; then
             print_status 1 "GitHub username cannot be empty"
-            NEEDS_AUTH=1
             echo ""
         fi
     fi
@@ -90,12 +89,12 @@ else
     if [ -n "$GITHUB_USERNAME" ]; then
         if echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GITHUB_USERNAME" --password-stdin &> /dev/null; then
             print_status 0 "Successfully authenticated with GitHub Container Registry"
+            AUTH_SUCCESS=1
         else
             print_status 1 "Failed to authenticate with GitHub Container Registry"
             echo -e "${YELLOW}    → Verify your token has 'read:packages' scope${NC}"
             echo -e "${YELLOW}    → Check token hasn't expired${NC}"
             echo -e "${YELLOW}    → Verify GitHub username is correct${NC}"
-            NEEDS_AUTH=1
         fi
     fi
 fi
@@ -121,7 +120,7 @@ echo -e "${YELLOW}Note: Without completing all 3 steps above, container pull wil
 echo ""
 
 # Check 5: Try to pull Epic container (if authenticated)
-if [ -z "$NEEDS_AUTH" ]; then
+if [ "$AUTH_SUCCESS" -eq 1 ]; then
     echo -e "${BLUE}[5/6] Testing Epic Games container access...${NC}"
     echo -e "${YELLOW}This may take a few minutes on first run...${NC}"
     
@@ -150,7 +149,7 @@ echo ""
 # Check 6: Summary
 echo -e "${BLUE}[6/6] Summary${NC}"
 echo ""
-if [ -z "$NEEDS_AUTH" ] && docker image inspect ghcr.io/epicgames/unreal-engine:dev-slim-5.6 &> /dev/null; then
+if [ "$AUTH_SUCCESS" -eq 1 ] && docker image inspect ghcr.io/epicgames/unreal-engine:dev-slim-5.6 &> /dev/null; then
     echo -e "${GREEN}✓ Setup Complete!${NC}"
     echo -e "  Your Docker environment is ready for Unreal Engine builds."
     echo ""
