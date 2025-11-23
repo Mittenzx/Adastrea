@@ -410,9 +410,9 @@ If you want unlimited build minutes and faster builds:
 3. Configure runner:
 
 ```bash
-# Download runner
+# Download latest runner (check version at: https://github.com/actions/runner/releases)
 curl -o actions-runner-linux.tar.gz -L \
-  https://github.com/actions/runner/releases/download/v2.311.0/actions-runner-linux-x64-2.311.0.tar.gz
+  https://github.com/actions/runner/releases/latest/download/actions-runner-linux-x64.tar.gz
 
 # Extract
 tar xzf actions-runner-linux.tar.gz

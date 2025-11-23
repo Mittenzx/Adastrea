@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Docker Setup Validation Script for Adastrea UE5 Builds
 # This script helps verify that your Docker and Epic Games setup is correct
 
-set -e
+# Note: Not using 'set -e' to allow script to continue and show helpful info after failures
 
 # Configuration
 UE_CONTAINER_TAG="dev-slim-5.6"  # Unreal Engine container version
@@ -10,7 +10,7 @@ UE_CONTAINER_TAG="dev-slim-5.6"  # Unreal Engine container version
 # Cleanup function
 cleanup() {
     # Clean up temporary files
-    rm -f /tmp/docker_pull_output.txt
+    [ -n "$TEMP_OUTPUT" ] && rm -f "$TEMP_OUTPUT"
 }
 
 # Set trap to call cleanup on exit
@@ -79,20 +79,25 @@ else
     
     # Prompt for GitHub username if not set
     if [ -z "$GITHUB_USERNAME" ]; then
-        echo -e "${YELLOW}    → Enter your GitHub username: ${NC}"
-        read -r GITHUB_USERNAME
-        
-        # Validate username is not empty
-        if [ -z "$GITHUB_USERNAME" ]; then
-            print_status 1 "GitHub username cannot be empty"
-            echo ""
-            # Note: We continue instead of exiting to show Epic setup guidance
-            # which is still useful even without GitHub authentication
+        if [ -t 0 ]; then
+            echo -e "${YELLOW}    → Enter your GitHub username: ${NC}"
+            read -r GITHUB_USERNAME
+            
+            # Validate username is not empty
+            if [ -z "$GITHUB_USERNAME" ]; then
+                print_status 1 "GitHub username cannot be empty"
+                echo ""
+                # Note: We continue instead of exiting to show Epic setup guidance
+                # which is still useful even without GitHub authentication
+            fi
+        else
+            print_status 1 "GITHUB_USERNAME not set and running in non-interactive mode"
         fi
     fi
     
     # Only attempt login if we have a valid username
     if [ -n "$GITHUB_USERNAME" ]; then
+        echo -e "${YELLOW}    → Note: Credentials will be stored in ~/.docker/config.json${NC}"
         if echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GITHUB_USERNAME" --password-stdin &> /dev/null; then
             print_status 0 "Successfully authenticated with GitHub Container Registry"
             AUTH_SUCCESS=1
@@ -130,13 +135,14 @@ if [ "$AUTH_SUCCESS" -eq 1 ]; then
     echo -e "${BLUE}[5/6] Testing Epic Games container access...${NC}"
     echo -e "${YELLOW}This may take a few minutes on first run...${NC}"
     
-    if docker pull "ghcr.io/epicgames/unreal-engine:${UE_CONTAINER_TAG}" &> /tmp/docker_pull_output.txt; then
+    TEMP_OUTPUT=$(mktemp)
+    if docker pull "ghcr.io/epicgames/unreal-engine:${UE_CONTAINER_TAG}" &> "$TEMP_OUTPUT"; then
         print_status 0 "Successfully pulled Epic Games UE5.6 container"
         echo -e "${GREEN}    ✓ Your setup is complete and working!${NC}"
     else
         print_status 1 "Failed to pull Epic Games container"
         echo -e "${YELLOW}    Error output:${NC}"
-        tail -5 /tmp/docker_pull_output.txt | sed 's/^/    /'
+        tail -5 "$TEMP_OUTPUT" | sed 's/^/    /'
         echo ""
         echo -e "${YELLOW}    Common causes:${NC}"
         echo -e "${YELLOW}    → Epic account not linked (Step 1 above)${NC}"
