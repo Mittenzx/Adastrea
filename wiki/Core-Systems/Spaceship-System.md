@@ -2,6 +2,8 @@
 
 The Spaceship System is the foundation of Adastrea's vehicle mechanics, providing a comprehensive framework for creating and managing spaceships with detailed statistics and customization.
 
+> **Note**: This page provides a quick overview. For complete technical documentation, see the `Assets/SpaceshipDataAssetGuide.md` file in the main repository.
+
 ## Overview
 
 **Location**: `Source/Adastrea/Ships/`
@@ -11,7 +13,7 @@ The Spaceship System is the foundation of Adastrea's vehicle mechanics, providin
 - `USpaceshipDataAsset` - Complete ship specification data asset
 - `USpaceshipComponent` - Component for ship functionality
 
-**Documentation**: See [Assets/SpaceshipDataAssetGuide.md](../../Assets/SpaceshipDataAssetGuide.md) for complete guide
+**Complete Documentation**: See `Assets/SpaceshipDataAssetGuide.md` in the repository for the full technical guide
 
 ## Quick Start
 
@@ -254,29 +256,37 @@ See [Assets/ShipCustomizationGuide.md](../../Assets/ShipCustomizationGuide.md)
 
 ## Documentation Resources
 
-**Complete Guides** (in repository):
-- [SpaceshipDataAssetGuide.md](../../Assets/SpaceshipDataAssetGuide.md) - Complete system guide
-- [SpaceshipDesignerWorkflow.md](../../Assets/SpaceshipDesignerWorkflow.md) - Step-by-step workflow
-- [SpaceshipTemplates.md](../../Assets/SpaceshipTemplates.md) - Template reference
-- [SpaceshipInteriorGuide.md](../../Assets/SpaceshipInteriorGuide.md) - Interior layouts
-- [ShipControlGuide.md](../../Assets/ShipControlGuide.md) - Control systems
+> **Repository Structure Note**: This wiki is located in the `wiki/` subdirectory of the main Adastrea repository. All references to repository files use relative paths from the wiki location. When published to GitHub Wiki, access the main repository to view these files.
 
-**YAML Templates**:
+**Complete Guides** (in main repository):
+- `Assets/SpaceshipDataAssetGuide.md` - Complete system guide
+- `Assets/SpaceshipDesignerWorkflow.md` - Step-by-step workflow
+- `Assets/SpaceshipTemplates.md` - Template reference
+- `Assets/SpaceshipInteriorGuide.md` - Interior layouts
+- `Assets/ShipControlGuide.md` - Control systems
+
+**YAML Templates** (in main repository):
 - `Assets/SpaceshipTemplates/*.yaml` - 6 ship configurations
 
-**Example Blueprints**:
+**Example Content** (in main repository):
 - `Content/Blueprints/Ships/BP_Spaceship` - Base ship Blueprint
 - `Content/DataAssets/Ships/DA_*` - Example ship Data Assets
 
+**Finding Documentation**:
+- Browse the [main repository](https://github.com/Mittenzx/Adastrea)
+- Check the `Assets/` folder for system guides
+- See [Documentation Index](../Reference/Documentation-Index.md) for complete file list
+
 ## Getting Help
 
-- **System Guide**: [Assets/SpaceshipDataAssetGuide.md](../../Assets/SpaceshipDataAssetGuide.md)
-- **Templates**: [Assets/SpaceshipTemplates.md](../../Assets/SpaceshipTemplates.md)
-- **Workflow**: [Assets/SpaceshipDesignerWorkflow.md](../../Assets/SpaceshipDesignerWorkflow.md)
+- **System Guide**: Check `Assets/SpaceshipDataAssetGuide.md` in the main repository
+- **Templates**: See `Assets/SpaceshipTemplates.md` in the main repository
+- **Workflow**: Review `Assets/SpaceshipDesignerWorkflow.md` in the main repository
 - **Questions**: [GitHub Discussions](https://github.com/Mittenzx/Adastrea/discussions)
+- **Bug Reports**: [GitHub Issues](https://github.com/Mittenzx/Adastrea/issues)
 
 ---
 
 **The Spaceship System is fully implemented and production-ready!**
 
-*For complete technical documentation, see Assets/SpaceshipDataAssetGuide.md*
+*This wiki page provides an overview. For complete technical documentation with implementation details, see the `Assets/` directory in the main repository.*

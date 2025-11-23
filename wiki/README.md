@@ -120,7 +120,9 @@ wiki/
 ### Wiki Conventions
 - **File names**: Use hyphens: `Quick-Start.md` not `Quick_Start.md`
 - **Headers**: Use sentence case: `Getting Started` not `GETTING STARTED`
-- **Links**: Use relative paths: `../Core-Systems/README.md`
+- **Internal Links** (within wiki): Use relative paths: `../Core-Systems/README.md`
+- **Repository Links** (to main repo): Use relative paths from wiki root: `../../Assets/SystemGuide.md`
+- **Note**: Repository links assume wiki is in `wiki/` subdirectory of main repo
 - **Images**: Store in `assets/` subdirectories
 - **Code blocks**: Always specify language for syntax highlighting
 

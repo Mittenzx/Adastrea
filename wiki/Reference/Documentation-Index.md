@@ -2,7 +2,7 @@
 
 Complete index of all documentation in the Adastrea project.
 
-> **Note**: This is a wiki-friendly version. For the complete technical index, see [DOCUMENTATION_INDEX.md](../../DOCUMENTATION_INDEX.md) in the repository root.
+> **Note**: This is a wiki-friendly version of the documentation index. For the complete technical index with all details, see `DOCUMENTATION_INDEX.md` in the repository root.
 
 ## Quick Navigation
 

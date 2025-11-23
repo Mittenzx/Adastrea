@@ -164,20 +164,23 @@ Documents can be deleted after:
 - Information is fully preserved elsewhere
 - No historical value remains
 
-## Alternative: Archive Directory
+## Alternative: Archive Directory (Future Consideration)
 
-Future consideration: Move ZZ_ files to `Docs/archive/` instead of using prefix.
+**Note**: The repository currently has a `Docs/` directory. As a future enhancement, obsolete files could be moved there instead of using the ZZ_ prefix.
+
+**Proposed Future Implementation**:
+```bash
+mkdir -p Docs/archive/obsolete-docs/
+mv ZZ_*.md Docs/archive/obsolete-docs/
+```
 
 **Benefits**:
 - Cleaner root directory
 - Clear separation
 - Easier to ignore in searches
+- Consistent with existing Docs/ structure
 
-**Implementation**:
-```bash
-mkdir -p Docs/archive/
-mv ZZ_*.md Docs/archive/
-```
+**Current Approach**: Using ZZ_ prefix allows easy identification while maintaining file discoverability and backward compatibility with any existing links.
 
 ## Current Active Documentation
 
