@@ -233,13 +233,13 @@ jobs:
         run: |
           echo "Building Adastrea for Windows..."
           echo "Build type: ${{ github.event.inputs.build_type || 'Development' }}"
-          echo "Engine Version: ${env:UE_VERSION}"
+          echo "Engine Version: $env:UE_VERSION"
           # Uncomment and customize the build commands below for your project
           # Replace 'Development' with '${{ github.event.inputs.build_type }}' to use the workflow input
           # Requires Unreal Engine installed on runner
-          # NOTE: Update the path to match your installed UE version (e.g., UE_${env:UE_VERSION})
+          # NOTE: Update the path to match your installed UE version (e.g., UE_$env:UE_VERSION)
           # Example:
-          # & "C:\Program Files\Epic Games\UE_${env:UE_VERSION}\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun `
+          # & "C:\Program Files\Epic Games\UE_$env:UE_VERSION\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun `
           #   -project="${{ github.workspace }}\Adastrea.uproject" `
           #   -platform=Win64 `
           #   -configuration=${{ github.event.inputs.build_type || 'Development' }} `
