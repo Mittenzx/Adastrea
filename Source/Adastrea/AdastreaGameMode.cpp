@@ -66,7 +66,8 @@ void AAdastreaGameMode::SpawnPlayerSpaceship()
 		// Use the first sector map found
 		if (FoundActors.Num() > 1)
 		{
-			UE_LOG(LogAdastrea, Warning, TEXT("AdastreaGameMode: Multiple SpaceSectorMap actors found (%d), using the first one"), FoundActors.Num());
+			UE_LOG(LogAdastrea, Warning, TEXT("AdastreaGameMode: Multiple SpaceSectorMap actors found (%d), using first one '%s'"), 
+				FoundActors.Num(), *FoundActors[0]->GetName());
 		}
 
 		ASpaceSectorMap* SectorMap = Cast<ASpaceSectorMap>(FoundActors[0]);
@@ -86,7 +87,8 @@ void AAdastreaGameMode::SpawnPlayerSpaceship()
 		}
 		else
 		{
-			UE_LOG(LogAdastrea, Warning, TEXT("AdastreaGameMode: Failed to cast actor to SpaceSectorMap, using fallback spawn location"));
+			UE_LOG(LogAdastrea, Warning, TEXT("AdastreaGameMode: Failed to cast actor '%s' (class %s) to SpaceSectorMap, using fallback spawn location"), 
+				*FoundActors[0]->GetName(), *FoundActors[0]->GetClass()->GetName());
 			SpawnLocation = FallbackSpawnLocation;
 		}
 	}

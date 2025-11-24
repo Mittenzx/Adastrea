@@ -75,8 +75,10 @@ public:
 	bool bSpawnAtCenter;
 
 	/**
-	 * Fallback spawn location when no SpaceSectorMap is found in the level
+	 * Fallback spawn location (world space) when no SpaceSectorMap is found in the level
 	 * Used to allow ship spawning in test levels or simple maps without sectors
+	 * Default is (0, 0, 0) - world origin. For test levels, consider using (0, 0, 100)
+	 * to spawn slightly above the ground plane
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player Spawn")
 	FVector FallbackSpawnLocation;
