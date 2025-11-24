@@ -23,6 +23,10 @@ jobs:
           
           # Extract UE version from .uproject file
           UE_VERSION=$(grep -oP '"EngineAssociation":\s*"\K[^"]+' Adastrea.uproject)
+          if [ -z "$UE_VERSION" ]; then
+            echo "❌ ERROR: Could not detect UE version from Adastrea.uproject"
+            exit 1
+          fi
           echo "UE Version: $UE_VERSION"
           echo "version=$UE_VERSION" >> $GITHUB_OUTPUT
           
