@@ -45,16 +45,19 @@ except ImportError:
     print("WARNING: This script must be run inside Unreal Editor with Python plugin enabled!")
     print("Some features will be limited or unavailable outside the editor.")
 
+# PyYAML error message constant (used in multiple places)
+PYYAML_ERROR_MESSAGE = """ERROR: PyYAML is required.
+To install PyYAML, run in Unreal Editor Python Console:
+  import subprocess, sys
+  subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'pyyaml'])"""
+
 # Try to import PyYAML (should be available in Unreal's Python)
 try:
     import yaml
     YAML_AVAILABLE = True
 except ImportError:
     YAML_AVAILABLE = False
-    print("ERROR: PyYAML not available.")
-    print("To install PyYAML, run in Unreal Editor Python Console:")
-    print("  import subprocess, sys")
-    print("  subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'pyyaml'])")
+    print(PYYAML_ERROR_MESSAGE)
 
 
 class YAMLtoDataAssetImporter:
@@ -396,7 +399,9 @@ class YAMLtoDataAssetImporter:
                     print("Option not yet implemented or invalid choice.")
         except (EOFError, OSError):
             # EOFError: input() fails when stdin is not available (Execute Script mode)
-            # OSError: I/O operation fails on closed file descriptor in some UE Python environments
+            # OSError: I/O operation fails on closed file descriptor, observed in Unreal Engine 5.2+ 
+            # Python environments on Windows when running scripts via "Execute Python Script" (stdin closed).
+            # If you encounter this, use the Python Console instead. Included for robustness.
             self.log("\nInteractive menu requires Python Console. Use batch import functions instead.", "warning")
             self.log("Example: YAMLtoDataAsset.batch_import_spaceships()", "warning")
             return
@@ -454,14 +459,11 @@ def main():
         return
     
     if not YAML_AVAILABLE:
-        print("ERROR: PyYAML is required.")
-        print("To install PyYAML, run in Unreal Editor Python Console:")
-        print("  import subprocess, sys")
-        print("  subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'pyyaml'])")
+        print(PYYAML_ERROR_MESSAGE)
         return
     
     print("\n" + "=" * 60)
-    print("YAML to Data Asset Importer")
+    print("YAML to Data Asset Importer - Batch Mode")
     print("=" * 60)
     print("\nExecuting batch import operations...")
     print("\nNOTE: For interactive menu, use the Python Console:")
