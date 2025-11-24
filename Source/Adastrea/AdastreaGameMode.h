@@ -17,16 +17,17 @@ class UTestSettingsWidget;
  * 
  * Features:
  * - Optional test settings pre-screen for development/QA testing
- * - Automatic player spaceship spawning when SpaceSectorMap is present
- * - Configurable spawn behavior (center vs random position)
+ * - Automatic player spaceship spawning with flexible location options
+ * - Configurable spawn behavior (sector-based or fallback location)
  * - Blueprint-friendly customization
  * 
  * Usage:
  * 1. Set as the GameMode Override in World Settings
  * 2. Configure DefaultSpaceshipClass to the desired spaceship Blueprint
  * 3. Toggle bAutoSpawnPlayerShip to enable/disable automatic spawning
- * 4. Choose spawn location type with bSpawnAtCenter
- * 5. Set TestSettingsWidgetClass to show test settings on startup (optional)
+ * 4. If using SpaceSectorMap, choose spawn location type with bSpawnAtCenter
+ * 5. If no SpaceSectorMap exists, set FallbackSpawnLocation for spawn position
+ * 6. Set TestSettingsWidgetClass to show test settings on startup (optional)
  */
 UCLASS(minimalapi)
 class AAdastreaGameMode : public AGameModeBase
@@ -60,16 +61,25 @@ public:
 
 	/**
 	 * Whether to automatically spawn a player spaceship on level start
-	 * Only works if a SpaceSectorMap actor exists in the level
+	 * If a SpaceSectorMap exists, uses sector-based spawn location
+	 * If no SpaceSectorMap exists, uses FallbackSpawnLocation
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player Spawn")
 	bool bAutoSpawnPlayerShip;
 
 	/**
 	 * If true, spawn at sector center. If false, spawn at random position in sector
+	 * Only applies when a SpaceSectorMap exists in the level
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player Spawn")
 	bool bSpawnAtCenter;
+
+	/**
+	 * Fallback spawn location when no SpaceSectorMap is found in the level
+	 * Used to allow ship spawning in test levels or simple maps without sectors
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player Spawn")
+	FVector FallbackSpawnLocation;
 
 protected:
 	virtual void BeginPlay() override;

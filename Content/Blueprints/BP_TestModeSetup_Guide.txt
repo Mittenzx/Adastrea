@@ -26,6 +26,7 @@ This Game Mode Blueprint handles spawning and initialization for the Test Mode l
      - **DefaultSpaceshipClass**: Select BP_PlayerShip (or your spaceship Blueprint)
      - **bAutoSpawnPlayerShip**: Check this box (true)
      - **bSpawnAtCenter**: Uncheck (false) - will use spawn point location
+     - **FallbackSpawnLocation**: Set to desired spawn position if no SpaceSectorMap is in the level (e.g., X=0, Y=0, Z=100 for testing)
 
 3. **Compile and Save**:
    - Click "Compile" button
@@ -273,8 +274,9 @@ A customized floor with grid material for better visual reference.
 - Check Output Log for errors
 - Verify BP_TestModeGameMode is set in World Settings
 - Ensure DefaultSpaceshipClass is set in BP_TestModeGameMode
-- Verify SpaceshipSpawnPoint tag is correctly set in level
+- If no SpaceSectorMap is in the level, verify FallbackSpawnLocation is set appropriately
 - Check that BP_PlayerShip Blueprint compiles without errors
+- Note: SpaceSectorMap is now optional - ship will spawn at FallbackSpawnLocation if no sector map exists
 
 #### Issue: Can't Control Spaceship
 
