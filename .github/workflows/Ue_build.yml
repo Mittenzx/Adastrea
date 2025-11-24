@@ -16,10 +16,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       
-      - name: Test Build Setup
+      - name: Detect UE Version and Validate
+        id: detect-version
         run: |
           echo "Project: Adastrea"
-          echo "UE Version: 5.6"
+          
+          # Extract UE version from .uproject file
+          UE_VERSION=$(grep -oP '"EngineAssociation":\s*"\K[^"]+' Adastrea.uproject)
+          if [ -z "$UE_VERSION" ]; then
+            echo "❌ ERROR: Could not detect UE version from Adastrea.uproject"
+            exit 1
+          fi
+          echo "UE Version: $UE_VERSION"
+          echo "version=$UE_VERSION" >> $GITHUB_OUTPUT
+          
           ls -la *.uproject
           
       - name: Validate Project Structure
@@ -28,12 +38,15 @@ jobs:
           test -d Source || exit 1
           test -d Content || exit 1
           echo "✓ Project structure valid"
+      
       - name: Login to GHCR
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
         
       - name: Pull UE Container
+        env:
+          UE_VERSION: ${{ steps.detect-version.outputs.version }}
         run: |
-          docker pull ghcr.io/epicgames/unreal-engine:dev-slim-5.6 || {
+          docker pull ghcr.io/epicgames/unreal-engine:dev-slim-${UE_VERSION} || {
             echo "❌ Container access not configured yet"
             echo ""
             echo "🔍 Run Diagnostics:"
