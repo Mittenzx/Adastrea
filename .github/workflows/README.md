@@ -37,9 +37,9 @@ Example Unreal Engine build workflow (disabled by default):
    - Visit: [https://github.com/EpicGames](https://github.com/EpicGames)
    - Accept the organization membership (required!)
 
-3. **Accept Epic EULA for Container Images**
-   - Visit: [https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-container-images](https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-container-images)
-   - Accept End User License Agreement for container usage
+3. **Review Epic Container Documentation**
+   - Review Quick Start: [https://dev.epicgames.com/documentation/en-us/unreal-engine/quick-start-guide-for-using-container-images-in-unreal-engine](https://dev.epicgames.com/documentation/en-us/unreal-engine/quick-start-guide-for-using-container-images-in-unreal-engine)
+   - Container usage is covered by the Unreal Engine EULA (no separate acceptance required)
 
 4. **Wait for Permissions** (may take a few hours)
 

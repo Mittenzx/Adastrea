@@ -215,7 +215,9 @@ To add new diagnostic tests:
 ### External Resources
 - [Epic Games Account](https://www.epicgames.com/account/connections)
 - [Epic Games Organization](https://github.com/EpicGames)
-- [Container Images Docs](https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-container-images)
+- [Container Quick Start Guide](https://dev.epicgames.com/documentation/en-us/unreal-engine/quick-start-guide-for-using-container-images-in-unreal-engine)
+- [Container Deployments](https://dev.epicgames.com/documentation/en-us/unreal-engine/container-deployments-and-images-for-unreal-editor-and-unreal-engine)
+- [Unreal Engine EULA](https://www.unrealengine.com/en-US/eula/unreal)
 - [Epic Games Support](https://www.epicgames.com/help/)
 
 ## Version History

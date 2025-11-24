@@ -111,9 +111,9 @@ Building Unreal Engine projects requires significant computational resources and
    - Visit [github.com/EpicGames](https://github.com/EpicGames) and accept the invitation
    - **This step is critical** - without organization membership, you cannot pull containers
 
-3. **Accept Epic EULA for container images:**
-   - Visit [Epic's Container Images Documentation](https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-container-images)
-   - Review and accept the license agreement for using container images
+3. **Review Epic container documentation:**
+   - Visit [Epic's Container Quick Start Guide](https://dev.epicgames.com/documentation/en-us/unreal-engine/quick-start-guide-for-using-container-images-in-unreal-engine)
+   - Understand that container usage is covered by the Unreal Engine EULA (no separate acceptance needed)
 
 4. **Verify your access:**
    - Visit [github.com/EpicGames](https://github.com/EpicGames) to confirm you're a member

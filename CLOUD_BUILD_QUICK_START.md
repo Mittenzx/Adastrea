@@ -67,9 +67,9 @@ Step 2: Accept Epic Games GitHub organization invitation
   → Verify you appear in the members list
   → NOTE: This step is REQUIRED to access containers
   
-Step 3: Accept Epic's container EULA
-  → Visit: https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-container-images
-  → Review and accept the license agreement
+Step 3: Review Epic's container documentation
+  → Visit: https://dev.epicgames.com/documentation/en-us/unreal-engine/quick-start-guide-for-using-container-images-in-unreal-engine
+  → Understand that container usage is covered by the Unreal Engine EULA (no separate acceptance needed)
   
 Step 4: Wait for access to propagate (if needed)
   → Access may take a few hours to become active

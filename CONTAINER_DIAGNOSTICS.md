@@ -137,11 +137,13 @@ After linking your accounts, you should receive an invitation to join the EpicGa
 
 **Verification:** Visit [https://github.com/orgs/EpicGames/people](https://github.com/orgs/EpicGames/people) and search for your username (if membership is public).
 
-### Step 3: Accept Epic Container EULA
+### Step 3: Review Epic Container Documentation
 
-1. Visit: [https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-container-images](https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-container-images)
-2. Read the End User License Agreement
-3. Accept the terms
+1. Visit the Epic Games Container Quick Start Guide: [https://dev.epicgames.com/documentation/en-us/unreal-engine/quick-start-guide-for-using-container-images-in-unreal-engine](https://dev.epicgames.com/documentation/en-us/unreal-engine/quick-start-guide-for-using-container-images-in-unreal-engine)
+2. Review the [Container Deployments and Images documentation](https://dev.epicgames.com/documentation/en-us/unreal-engine/container-deployments-and-images-for-unreal-editor-and-unreal-engine)
+3. Ensure you understand the [Unreal Engine EULA](https://www.unrealengine.com/en-US/eula/unreal) which covers container usage
+
+**Note:** There is no separate EULA acceptance step for containers. By linking your Epic Games account to GitHub and joining the EpicGames organization, you are granted access under the Unreal Engine EULA you accepted when creating your Epic account.
 
 ### Step 4: Wait for Permissions
 
@@ -167,7 +169,7 @@ After linking your accounts, you should receive an invitation to join the EpicGa
 
 1. Verify Epic account linked (Step 1)
 2. Check for organization invitation (Step 2)
-3. Accept EULA (Step 3)
+3. Review Epic container documentation (Step 3)
 4. Wait for permissions to propagate (up to 48 hours)
 
 **Test command:**
@@ -334,7 +336,9 @@ If you've completed all setup steps and diagnostics still fail:
 - [GITHUB_TOKEN_DOCKER_SETUP.md](./GITHUB_TOKEN_DOCKER_SETUP.md) - Comprehensive setup guide
 - [CLOUD_BUILD_QUICK_START.md](./CLOUD_BUILD_QUICK_START.md) - Quick start for cloud builds
 - [.github/workflows/README.md](./.github/workflows/README.md) - Workflow documentation
-- [Epic UE Container Images](https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-container-images) - Official documentation
+- [Epic Container Quick Start Guide](https://dev.epicgames.com/documentation/en-us/unreal-engine/quick-start-guide-for-using-container-images-in-unreal-engine) - Official quick start
+- [Epic Container Deployments](https://dev.epicgames.com/documentation/en-us/unreal-engine/container-deployments-and-images-for-unreal-editor-and-unreal-engine) - Detailed deployment guide
+- [Unreal Engine EULA](https://www.unrealengine.com/en-US/eula/unreal) - License agreement
 
 ## FAQ
 
@@ -368,6 +372,6 @@ If you've completed all setup steps and diagnostics still fail:
 
 ---
 
-**Last Updated:** 2025-11-23  
-**Version:** 1.0  
+**Last Updated:** 2025-11-24  
+**Version:** 1.1  
 **Maintained By:** Adastrea Development Team
