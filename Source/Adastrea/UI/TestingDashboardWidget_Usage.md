@@ -1,5 +1,7 @@
 # Testing Dashboard Widget Usage Guide
 
+> **💡 Want the shortest path to a working dashboard?** See [TestingDashboard_EasySetup.md](/Assets/TestingDashboard_EasySetup.md) - 6 simple steps in 10 minutes!
+
 ## Overview
 
 The `TestingDashboardWidget` is an **in-game testing overlay** that allows you to check off game features as you test them during gameplay. Unlike the pre-screen `TestSettingsWidget`, this dashboard stays accessible throughout your testing session and lets you configure tests on-the-fly.

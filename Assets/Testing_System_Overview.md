@@ -1,5 +1,7 @@
 # Adastrea Testing System - Complete Overview
 
+> **💡 Just want to get started quickly?** See [TestingDashboard_EasySetup.md](TestingDashboard_EasySetup.md) for a 6-step, 10-minute setup guide!
+
 ## What Was Implemented
 
 In response to the requirement: *"add a main menu pre screen where I can have drop down menus to configure testing settings, like spawn ship, etc"* and the follow-up *"We want to check off each part of the game as we test it so configuring each test as I play the game would be best for me"*, we've implemented a **dual-widget testing system**:
@@ -29,7 +31,8 @@ Adastrea/
 │   ├── TestSettingsWidget_REVIEW_SUMMARY.md
 │   ├── TestSettingsWidget_ValidationTest.py
 │   ├── TestingWidgets_Comparison.md             (428 lines) ⭐ NEW
-│   └── TestingDashboard_QuickStart.md           (456 lines) ⭐ NEW
+│   ├── TestingDashboard_QuickStart.md           (456 lines) ⭐ NEW
+│   └── TestingDashboard_EasySetup.md            (144 lines) ⭐ BEGINNER GUIDE
 │
 └── Content/UI/Menus/
     └── TestSettings_README.md

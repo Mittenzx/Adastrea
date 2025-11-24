@@ -1,5 +1,7 @@
 # Testing Dashboard - Quick Start Guide
 
+> **💡 Looking for the simplest setup?** See [TestingDashboard_EasySetup.md](TestingDashboard_EasySetup.md) - only 6 steps, 10 minutes to get started!
+
 ## What You Asked For ✓
 
 > "We want to check off each part of the game as we test it so configuring each test as I play the game would be best for me"
