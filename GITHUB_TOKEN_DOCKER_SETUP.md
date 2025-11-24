@@ -150,12 +150,12 @@ After linking, you should receive an invitation to join the Epic Games GitHub or
 
 ⚠️ **Important:** Without organization membership, you cannot access Epic's containers!
 
-#### Step 3: Accept Container Images EULA (5 minutes)
+#### Step 3: Review Container Images Documentation (5 minutes)
 
-1. Go to: <https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-container-images>
-2. Read the End User License Agreement
-3. Accept the terms
-4. ✅ Confirm acceptance
+1. Review the Quick Start Guide: <https://dev.epicgames.com/documentation/en-us/unreal-engine/quick-start-guide-for-using-container-images-in-unreal-engine>
+2. Review Container Deployments: <https://dev.epicgames.com/documentation/en-us/unreal-engine/container-deployments-and-images-for-unreal-editor-and-unreal-engine>
+3. Understand that container usage is covered by the Unreal Engine EULA: <https://www.unrealengine.com/en-US/eula/unreal>
+4. ✅ No separate EULA acceptance required - access is granted through your Epic account and GitHub organization membership
 
 #### Step 4: Wait for Permissions to Propagate (Variable Time)
 
@@ -178,7 +178,7 @@ Use this checklist to ensure you've completed all steps:
 - [ ] Epic account linked to GitHub at <https://www.epicgames.com/account/connections>
 - [ ] Epic Games organization invitation accepted on GitHub
 - [ ] Verified membership in Epic Games organization
-- [ ] Container EULA accepted
+- [ ] Reviewed Epic container documentation
 - [ ] Waited for permissions to propagate (test with local Docker)
 - [ ] Workflow file enabled (removed `.disabled` extension if present)
 
@@ -195,7 +195,7 @@ Each developer who wants to build locally needs to:
 
 - [ ] Link their Epic Games account to their GitHub account
 - [ ] Accept Epic Games organization invitation
-- [ ] Accept Epic container EULA
+- [ ] Review Epic container documentation
 - [ ] Create a Personal Access Token for local Docker use
 - [ ] Test local Docker access
 
@@ -286,7 +286,7 @@ Error response from daemon: denied
 **Solutions:**
 1. Verify Epic account is linked: <https://www.epicgames.com/account/connections>
 2. Check for Epic organization invitation on GitHub
-3. Accept Epic container EULA
+3. Review Epic container documentation to ensure you understand the requirements
 4. Wait a few hours for permissions to propagate
 5. Contact Epic support if still failing after 48 hours
 
@@ -497,7 +497,9 @@ permissions:
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
 - [GitHub Packages Documentation](https://docs.github.com/en/packages)
 - [Docker Login Action](https://github.com/docker/login-action)
-- [Epic UE Container Images](https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-container-images)
+- [Epic Container Quick Start](https://dev.epicgames.com/documentation/en-us/unreal-engine/quick-start-guide-for-using-container-images-in-unreal-engine)
+- [Epic Container Deployments](https://dev.epicgames.com/documentation/en-us/unreal-engine/container-deployments-and-images-for-unreal-editor-and-unreal-engine)
+- [Unreal Engine EULA](https://www.unrealengine.com/en-US/eula/unreal)
 
 ### Related Files
 
@@ -524,6 +526,6 @@ permissions:
 
 ---
 
-**Last Updated:** 2024-11-23  
-**Version:** 1.0  
+**Last Updated:** 2025-11-24  
+**Version:** 1.1  
 **Maintained By:** Adastrea Development Team

@@ -160,8 +160,10 @@ jobs:
             echo "Required setup steps:"
             echo "  1. Link Epic account → GitHub at: https://www.epicgames.com/account/connections"
             echo "  2. Join EpicGames organization at: https://github.com/EpicGames"
-            echo "  3. Accept EULA at: https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-container-images"
+            echo "  3. Review container documentation at: https://dev.epicgames.com/documentation/en-us/unreal-engine/quick-start-guide-for-using-container-images-in-unreal-engine"
             echo "  4. Wait 2-24 hours for permissions to propagate"
+            echo ""
+            echo "Note: Container usage is covered by the Unreal Engine EULA. No separate acceptance needed."
             exit 1
           elif echo "$MANIFEST_OUTPUT" | grep -q "unauthorized"; then
             echo "✗ FAILED: Unauthorized access"

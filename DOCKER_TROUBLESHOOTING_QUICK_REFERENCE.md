@@ -11,8 +11,8 @@ Error response from daemon: denied
 **Fix:**
 1. Link Epic account to GitHub: [epicgames.com/account/connections](https://www.epicgames.com/account/connections)
 2. Join EpicGames org: [github.com/EpicGames](https://github.com/EpicGames)
-3. Accept EULA: [Container Images Docs](https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-container-images)
-4. Wait 2-24 hours for permissions
+3. Review container docs: [Quick Start Guide](https://dev.epicgames.com/documentation/en-us/unreal-engine/quick-start-guide-for-using-container-images-in-unreal-engine)
+4. Wait 2-24 hours for permissions (no separate EULA acceptance needed)
 
 ---
 

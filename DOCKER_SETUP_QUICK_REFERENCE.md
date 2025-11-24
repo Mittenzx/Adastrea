@@ -20,11 +20,11 @@ Visit: <https://github.com/EpicGames>
 
 ✅ Accept the Epic Games organization invitation
 
-### Step 3: Accept EULA (5 minutes)
+### Step 3: Review Container Documentation (5 minutes)
 
-Visit: <https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-container-images>
+Visit: <https://dev.epicgames.com/documentation/en-us/unreal-engine/quick-start-guide-for-using-container-images-in-unreal-engine>
 
-✅ Accept the container images license agreement
+✅ Review the container quick start guide and understand the Unreal Engine EULA covers container usage (no separate acceptance needed)
 
 ### Step 4: Wait
 
