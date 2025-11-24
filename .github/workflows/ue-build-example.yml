@@ -13,7 +13,7 @@
 #
 # See CLOUD_BUILD_SERVICES.md and CLOUD_BUILD_QUICK_START.md for detailed setup
 
-name: Unreal Engine 5.6 Build
+name: Unreal Engine Build
 
 on:
   # Manual trigger for testing
@@ -52,6 +52,8 @@ jobs:
   validate-project:
     name: Validate Project Structure
     runs-on: ubuntu-latest
+    outputs:
+      ue-version: ${{ steps.detect-version.outputs.version }}
     
     steps:
       - name: Checkout Repository
@@ -60,6 +62,7 @@ jobs:
           lfs: false  # Set to true if using Git LFS
       
       - name: Validate Project Files
+        id: detect-version
         run: |
           echo "=== Validating Adastrea Project Structure ==="
           
@@ -91,13 +94,10 @@ jobs:
           fi
           echo "✓ Found Config directory"
           
-          # Verify UE version
+          # Verify UE version and export it for other jobs
           UE_VERSION=$(grep -oP '"EngineAssociation":\s*"\K[^"]+' Adastrea.uproject)
           echo "✓ Detected Unreal Engine version: $UE_VERSION"
-          
-          if [ "$UE_VERSION" != "5.6" ]; then
-            echo "⚠ WARNING: Expected UE 5.6, found $UE_VERSION"
-          fi
+          echo "version=$UE_VERSION" >> $GITHUB_OUTPUT
           
           # Check for modules
           echo "✓ Project structure validation complete"
@@ -148,10 +148,12 @@ jobs:
           fi
       
       - name: Pull Unreal Engine Container
+        env:
+          UE_VERSION: ${{ needs.validate-project.outputs.ue-version }}
         run: |
-          echo "Pulling UE5.6 container image..."
+          echo "Pulling UE${UE_VERSION} container image..."
           # Note: Epic's container images require special access
-          docker pull ghcr.io/epicgames/unreal-engine:dev-slim-5.6 || {
+          docker pull ghcr.io/epicgames/unreal-engine:dev-slim-${UE_VERSION} || {
             echo "❌ Failed to pull UE container"
             echo ""
             echo "Epic Games Unreal Engine containers require special authorization."
@@ -175,13 +177,15 @@ jobs:
           }
       
       - name: Build Unreal Project
+        env:
+          UE_VERSION: ${{ needs.validate-project.outputs.ue-version }}
         run: |
-          echo "Building Adastrea with Unreal Engine..."
+          echo "Building Adastrea with Unreal Engine ${UE_VERSION}..."
           echo "Build type: ${{ github.event.inputs.build_type || 'Development' }}"
           docker run --rm \
             -v ${{ github.workspace }}:/workspace \
             -w /workspace \
-            ghcr.io/epicgames/unreal-engine:dev-slim-5.6 \
+            ghcr.io/epicgames/unreal-engine:dev-slim-${UE_VERSION} \
             /bin/bash -c "
               echo 'Starting Unreal Build Tool...'
               # Uncomment and customize the build commands below for your project
@@ -224,14 +228,18 @@ jobs:
         uses: microsoft/setup-msbuild@v2
       
       - name: Build Project
+        env:
+          UE_VERSION: ${{ needs.validate-project.outputs.ue-version }}
         run: |
           echo "Building Adastrea for Windows..."
           echo "Build type: ${{ github.event.inputs.build_type || 'Development' }}"
+          echo "Engine Version: ${env:UE_VERSION}"
           # Uncomment and customize the build commands below for your project
           # Replace 'Development' with '${{ github.event.inputs.build_type }}' to use the workflow input
           # Requires Unreal Engine installed on runner
+          # NOTE: Update the path to match your installed UE version (e.g., UE_${env:UE_VERSION})
           # Example:
-          # & "C:\Program Files\Epic Games\UE_5.6\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun `
+          # & "C:\Program Files\Epic Games\UE_${env:UE_VERSION}\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun `
           #   -project="${{ github.workspace }}\Adastrea.uproject" `
           #   -platform=Win64 `
           #   -configuration=${{ github.event.inputs.build_type || 'Development' }} `
@@ -261,10 +269,12 @@ jobs:
         # Note: Replace with actual UE5 build action from marketplace
         # See: https://github.com/marketplace/actions/ue5-build-project
         # Example placeholder - customize for your needs
+        env:
+          UE_VERSION: ${{ needs.validate-project.outputs.ue-version }}
         run: |
           echo "Using UE5 build action or custom commands"
           echo "Project: Adastrea"
-          echo "Engine: UE 5.6"
+          echo "Engine: UE ${UE_VERSION}"
           echo "Platform: Linux"
           # Add actual UE5 build commands or action here
 
@@ -277,11 +287,13 @@ jobs:
     
     steps:
       - name: Generate Summary
+        env:
+          UE_VERSION: ${{ needs.validate-project.outputs.ue-version }}
         run: |
           echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **Project:** Adastrea" >> $GITHUB_STEP_SUMMARY
-          echo "- **Engine:** Unreal Engine 5.6" >> $GITHUB_STEP_SUMMARY
+          echo "- **Engine:** Unreal Engine ${UE_VERSION}" >> $GITHUB_STEP_SUMMARY
           echo "- **Workflow:** ${{ github.workflow }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Triggered by:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY

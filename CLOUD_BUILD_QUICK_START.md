@@ -85,6 +85,8 @@ Step 4: Wait for access to propagate (if needed)
 > - Copy and rename `.github/workflows/ue-build-example.yml.disabled` to `.github/workflows/ue-build-example.yml` (removing the `.disabled` extension), **or**
 > - Create a new file `.github/workflows/ue-build.yml` and paste the following YAML.
 
+> **Version Management:** The workflow automatically detects the Unreal Engine version from your `.uproject` file's `EngineAssociation` field. This means you don't need to hardcode version numbers in your CI/CD scripts - just update your `.uproject` file and the workflows will adapt automatically.
+
 Create `.github/workflows/ue-build.yml`:
 
 ```yaml
@@ -106,10 +108,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       
-      - name: Test Build Setup
+      - name: Detect UE Version and Validate
+        id: detect-version
         run: |
           echo "Project: Adastrea"
-          echo "UE Version: 5.6"
+          
+          # Extract UE version from .uproject file
+          UE_VERSION=$(grep -oP '"EngineAssociation":\s*"\K[^"]+' Adastrea.uproject)
+          echo "UE Version: $UE_VERSION"
+          echo "version=$UE_VERSION" >> $GITHUB_OUTPUT
+          
           ls -la *.uproject
           
       - name: Validate Project Structure
@@ -142,7 +150,9 @@ Expand workflow after test succeeds:
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
         
       - name: Pull UE Container
-        run: docker pull ghcr.io/epicgames/unreal-engine:dev-slim-5.6 || echo "Container access not configured yet"
+        env:
+          UE_VERSION: ${{ steps.detect-version.outputs.version }}
+        run: docker pull ghcr.io/epicgames/unreal-engine:dev-slim-${UE_VERSION} || echo "Container access not configured yet"
 ```
 
 ## Alternative: Unreal Cloud Build (15 Minutes)
@@ -165,7 +175,7 @@ Expand workflow after test succeeds:
 
 #### 3. Configure Build (5 minutes)
 ```
-1. Set UE version: 5.6
+1. Set UE version: Auto-detected from .uproject file (currently 5.6)
 2. Set target platforms: Windows, Linux, Mac
 3. Enable automatic builds on push
 4. Save configuration
@@ -295,6 +305,26 @@ If you encounter issues:
 4. **Community:** Unreal Engine Forums, GitHub Discussions
 5. **Epic Support:** For container access issues
 
+## Version Management Strategy
+
+The workflows automatically detect the Unreal Engine version from your `.uproject` file, eliminating the need to hardcode version numbers in multiple places.
+
+**Benefits:**
+- ✅ Single source of truth (`.uproject` file)
+- ✅ Easier upgrades - update version once in `.uproject`
+- ✅ No version mismatch between project and CI/CD
+- ✅ More maintainable codebase
+
+**How it works:**
+1. Workflow extracts version: `UE_VERSION=$(grep -oP '"EngineAssociation":\s*"\K[^"]+' Adastrea.uproject)`
+2. Uses dynamic version in Docker tags: `ghcr.io/epicgames/unreal-engine:dev-slim-${UE_VERSION}`
+3. Version is passed between workflow jobs as needed
+
+**Upgrading Unreal Engine:**
+1. Update `EngineAssociation` in `Adastrea.uproject` (e.g., from "5.6" to "5.7")
+2. Push to GitHub - workflows automatically use the new version
+3. No workflow file changes needed!
+
 ## Summary
 
 For **Adastrea**, the recommended path is:
@@ -308,6 +338,6 @@ This progressive approach minimizes upfront investment while enabling rapid iter
 
 ---
 
-**Quick Start Version:** 1.0  
-**Last Updated:** 2025-11-21  
+**Quick Start Version:** 1.1  
+**Last Updated:** 2025-11-24  
 **See Also:** [CLOUD_BUILD_SERVICES.md](./CLOUD_BUILD_SERVICES.md) for comprehensive documentation

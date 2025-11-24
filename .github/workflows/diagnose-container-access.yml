@@ -27,6 +27,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
       
+      - name: Detect UE Version
+        id: detect-version
+        run: |
+          # Extract UE version from .uproject file
+          UE_VERSION=$(grep -oP '"EngineAssociation":\s*"\K[^"]+' Adastrea.uproject)
+          echo "Detected UE Version: $UE_VERSION"
+          echo "version=$UE_VERSION" >> $GITHUB_OUTPUT
+      
       - name: System Information
         run: |
           echo "=== System Information ==="
@@ -121,13 +129,16 @@ jobs:
           fi
       
       - name: Test Epic Container Registry Access
+        env:
+          UE_VERSION: ${{ steps.detect-version.outputs.version }}
         run: |
           echo "=== Testing Epic Container Registry Access ==="
+          echo "Testing access to UE ${UE_VERSION} container..."
           echo "Attempting to inspect container manifest..."
           echo ""
           
           # Try to get container manifest
-          MANIFEST_OUTPUT=$(docker manifest inspect ghcr.io/epicgames/unreal-engine:dev-slim-5.6 2>&1 || true)
+          MANIFEST_OUTPUT=$(docker manifest inspect ghcr.io/epicgames/unreal-engine:dev-slim-${UE_VERSION} 2>&1 || true)
           
           if echo "$MANIFEST_OUTPUT" | grep -q "schemaVersion"; then
             echo "✓ SUCCESS: Can access Epic container metadata!"
@@ -172,6 +183,8 @@ jobs:
       
       - name: Test Container Pull (Conditional)
         if: success()
+        env:
+          UE_VERSION: ${{ steps.detect-version.outputs.version }}
         run: |
           echo "=== Testing Container Pull ==="
           echo "Since manifest access succeeded, attempting to pull container..."
@@ -190,13 +203,13 @@ jobs:
           fi
           
           # Only pull if we have space
-          if docker pull ghcr.io/epicgames/unreal-engine:dev-slim-5.6 2>&1; then
+          if docker pull ghcr.io/epicgames/unreal-engine:dev-slim-${UE_VERSION} 2>&1; then
             echo ""
             echo "✓ SUCCESS: Container pulled successfully!"
             echo "✓ Your setup is FULLY WORKING"
             
             # Show image info
-            docker images ghcr.io/epicgames/unreal-engine:dev-slim-5.6
+            docker images ghcr.io/epicgames/unreal-engine:dev-slim-${UE_VERSION}
           else
             echo ""
             echo "✗ Container pull failed"
