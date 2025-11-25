@@ -22,6 +22,7 @@ AAdastreaGameMode::AAdastreaGameMode()
 	bAutoSpawnPlayerShip = true;
 	bSpawnAtCenter = false; // Use random position by default for variety
 	DefaultSpaceshipClass = nullptr; // Must be set in Blueprint or editor
+	FallbackSpawnLocation = FVector::ZeroVector; // Default to world origin
 	
 	// Initialize widget reference
 	TestSettingsWidget = nullptr;
@@ -57,36 +58,43 @@ void AAdastreaGameMode::SpawnPlayerSpaceship()
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpaceSectorMap::StaticClass(), FoundActors);
 
-	if (FoundActors.Num() == 0)
+	// Get spawn location - use sector if available, otherwise use fallback
+	FVector SpawnLocation = FallbackSpawnLocation;
+	
+	if (FoundActors.Num() > 0)
 	{
-		UE_LOG(LogAdastrea, Warning, TEXT("AdastreaGameMode: No SpaceSectorMap found in level - cannot auto-spawn player spaceship"));
-		return;
-	}
+		// Use the first sector map found
+		if (FoundActors.Num() > 1)
+		{
+			UE_LOG(LogAdastrea, Warning, TEXT("AdastreaGameMode: Multiple SpaceSectorMap actors found (%d), using first one '%s'"), 
+				FoundActors.Num(), *FoundActors[0]->GetName());
+		}
 
-	// Use the first sector map found
-	if (FoundActors.Num() > 1)
-	{
-		UE_LOG(LogAdastrea, Warning, TEXT("AdastreaGameMode: Multiple SpaceSectorMap actors found (%d), using the first one"), FoundActors.Num());
-	}
-
-	ASpaceSectorMap* SectorMap = Cast<ASpaceSectorMap>(FoundActors[0]);
-	if (!SectorMap)
-	{
-		UE_LOG(LogAdastrea, Error, TEXT("AdastreaGameMode: Failed to cast actor to SpaceSectorMap"));
-		return;
-	}
-
-	// Get spawn location based on configuration
-	FVector SpawnLocation;
-	if (bSpawnAtCenter)
-	{
-		SpawnLocation = SectorMap->GetSectorCenter();
-		UE_LOG(LogAdastrea, Log, TEXT("AdastreaGameMode: Spawning player spaceship at sector center: %s"), *SpawnLocation.ToString());
+		ASpaceSectorMap* SectorMap = Cast<ASpaceSectorMap>(FoundActors[0]);
+		if (SectorMap)
+		{
+			// Get spawn location based on configuration
+			if (bSpawnAtCenter)
+			{
+				SpawnLocation = SectorMap->GetSectorCenter();
+				UE_LOG(LogAdastrea, Log, TEXT("AdastreaGameMode: Spawning player spaceship at sector center: %s"), *SpawnLocation.ToString());
+			}
+			else
+			{
+				SpawnLocation = SectorMap->GetRandomPositionInSector();
+				UE_LOG(LogAdastrea, Log, TEXT("AdastreaGameMode: Spawning player spaceship at random position: %s"), *SpawnLocation.ToString());
+			}
+		}
+		else
+		{
+			UE_LOG(LogAdastrea, Warning, TEXT("AdastreaGameMode: Failed to cast actor '%s' (class %s) to SpaceSectorMap, using fallback spawn location"), 
+				*FoundActors[0]->GetName(), *FoundActors[0]->GetClass()->GetName());
+		}
 	}
 	else
 	{
-		SpawnLocation = SectorMap->GetRandomPositionInSector();
-		UE_LOG(LogAdastrea, Log, TEXT("AdastreaGameMode: Spawning player spaceship at random position: %s"), *SpawnLocation.ToString());
+		// No SpaceSectorMap found - use fallback spawn location
+		UE_LOG(LogAdastrea, Log, TEXT("AdastreaGameMode: No SpaceSectorMap found in level, using fallback spawn location: %s"), *FallbackSpawnLocation.ToString());
 	}
 
 	// Set spawn parameters
