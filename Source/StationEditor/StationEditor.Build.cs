@@ -12,7 +12,8 @@ public class StationEditor : ModuleRules
 		PublicIncludePaths.AddRange(new string[] 
 		{
 			"StationEditor",
-			"StationEditor/Public"
+			"StationEditor/Public",
+			"Adastrea/Stations"  // For SpaceStationModule.h
 		});
 
 		PublicDependencyModuleNames.AddRange(new string[] 
