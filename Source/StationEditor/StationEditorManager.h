@@ -12,9 +12,6 @@
 class AStationBuildPreview;
 class UStationGridSystem;
 
-/** Default collision radius for module placement validation */
-static constexpr float DefaultCollisionRadius = 200.0f;
-
 /**
  * Result of a module placement validation check
  */
@@ -82,6 +79,9 @@ class STATIONEDITOR_API UStationEditorManager : public UObject
 
 public:
 	UStationEditorManager();
+
+	/** Default collision radius for module placement validation */
+	static constexpr float DefaultCollisionRadius = 200.0f;
 
 	// =====================
 	// Configuration

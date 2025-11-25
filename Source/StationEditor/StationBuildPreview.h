@@ -70,6 +70,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Preview|Materials", meta=(ClampMin=0.0f, ClampMax=1.0f))
 	float PreviewOpacity = 0.5f;
 
+	/** Default mesh to use for preview (can be set in Blueprint, loads cube if not set) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Preview|Mesh")
+	TSoftObjectPtr<UStaticMesh> DefaultPreviewMesh;
+
 	// =====================
 	// State
 	// =====================
@@ -204,8 +208,8 @@ private:
 	UMaterialInstanceDynamic* DynamicMaterial;
 
 	/** Parameter name for color in the material */
-	FName ColorParameterName = TEXT("BaseColor");
+	static const FName ColorParameterName;
 
 	/** Parameter name for opacity in the material */
-	FName OpacityParameterName = TEXT("Opacity");
+	static const FName OpacityParameterName;
 };

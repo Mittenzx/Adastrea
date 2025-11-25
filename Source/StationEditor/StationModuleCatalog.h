@@ -113,7 +113,7 @@ public:
 	 * @return Array of all module entries
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Module Catalog")
-	const TArray<FStationModuleEntry>& GetAllModules() const;
+	TArray<FStationModuleEntry> GetAllModules() const;
 
 	/**
 	 * Get module entries filtered by module group

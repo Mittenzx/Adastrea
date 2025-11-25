@@ -120,10 +120,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Grid|Operations")
 	FVector GridCoordinateToWorld(FIntVector GridCoordinate) const;
 
-	// =====================
-	// Configuration
-	// =====================
-
 	/**
 	 * Set the grid size
 	 * @param NewGridSize New grid cell size in world units

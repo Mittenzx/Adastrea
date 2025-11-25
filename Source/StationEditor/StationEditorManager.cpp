@@ -56,10 +56,24 @@ bool UStationEditorManager::BeginEditing_Implementation(ASpaceStation* Station)
 		GridSystem = NewObject<UStationGridSystem>(this);
 	}
 
-	// Create preview actor
+	// Create preview actor - clean up existing one first if invalid
 	UWorld* World = Station->GetWorld();
-	if (World && !PreviewActor)
+	if (World)
 	{
+		// Clean up any existing preview actor that may have become invalid
+		if (PreviewActor && !PreviewActor->IsValidLowLevel())
+		{
+			PreviewActor = nullptr;
+		}
+		
+		// Destroy existing preview actor before creating new one
+		if (PreviewActor)
+		{
+			PreviewActor->Destroy();
+			PreviewActor = nullptr;
+		}
+		
+		// Spawn new preview actor
 		FActorSpawnParameters SpawnParams;
 		PreviewActor = World->SpawnActor<AStationBuildPreview>(AStationBuildPreview::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
 		if (PreviewActor)
@@ -120,10 +134,12 @@ bool UStationEditorManager::Save_Implementation()
 
 void UStationEditorManager::EndEditing_Implementation()
 {
-	// Hide preview
-	if (PreviewActor)
+	// Clean up preview actor
+	if (PreviewActor && PreviewActor->IsValidLowLevel())
 	{
 		PreviewActor->Hide();
+		PreviewActor->Destroy();
+		PreviewActor = nullptr;
 	}
 
 	// Clear state
@@ -437,6 +453,9 @@ bool UStationEditorManager::CanAffordModule(TSubclassOf<ASpaceStationModule> Mod
 
 // =====================
 // Resource Tracking
+// Note: ModulePower convention:
+// - Positive values = power consumption (e.g., +50 means consuming 50 units)
+// - Negative values = power generation (e.g., -500 means generating 500 units)
 // =====================
 
 float UStationEditorManager::GetTotalPowerConsumption() const
@@ -450,6 +469,7 @@ float UStationEditorManager::GetTotalPowerConsumption() const
 
 	for (const ASpaceStationModule* Module : CurrentStation->Modules)
 	{
+		// Positive ModulePower = consumption
 		if (Module && Module->ModulePower > 0.0f)
 		{
 			TotalConsumption += Module->ModulePower;
@@ -470,6 +490,7 @@ float UStationEditorManager::GetTotalPowerGeneration() const
 
 	for (const ASpaceStationModule* Module : CurrentStation->Modules)
 	{
+		// Negative ModulePower = generation (use absolute value)
 		if (Module && Module->ModulePower < 0.0f)
 		{
 			TotalGeneration += FMath::Abs(Module->ModulePower);
@@ -505,7 +526,8 @@ bool UStationEditorManager::WouldCausePowerDeficit(TSubclassOf<ASpaceStationModu
 	float CurrentBalance = GetPowerBalance();
 	float ModulePower = DefaultModule->ModulePower;
 	
-	// Positive ModulePower means consumption, negative means generation
+	// Positive ModulePower = consumption (decreases balance)
+	// Negative ModulePower = generation (subtracting negative increases balance)
 	float NewBalance = CurrentBalance - ModulePower;
 
 	return NewBalance < 0.0f;
@@ -542,28 +564,10 @@ void UStationEditorManager::UpdatePreview(FVector Position, FRotator Rotation)
 
 	PreviewActor->UpdatePosition(FinalPosition, Rotation);
 
-	// Update validity visual
-	// We need to check if there's a selected module class to validate
-	// For now, just show based on basic collision check
-	if (CurrentStation && bCheckCollisions)
+	// Update validity visual using current module class from preview actor
+	if (CurrentStation && bCheckCollisions && PreviewActor->CurrentModuleClass)
 	{
-		bool bHasCollision = false;
-
-		for (ASpaceStationModule* ExistingModule : CurrentStation->Modules)
-		{
-			if (!ExistingModule)
-			{
-				continue;
-			}
-
-			float Distance = FVector::Dist(FinalPosition, ExistingModule->GetActorLocation());
-			if (Distance < CollisionRadius * 2.0f)
-			{
-				bHasCollision = true;
-				break;
-			}
-		}
-
+		bool bHasCollision = CheckCollision(PreviewActor->CurrentModuleClass, FinalPosition, Rotation);
 		PreviewActor->SetValid(!bHasCollision);
 	}
 }

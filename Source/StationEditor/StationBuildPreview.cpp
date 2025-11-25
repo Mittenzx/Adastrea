@@ -5,6 +5,10 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "UObject/ConstructorHelpers.h"
 
+// Static member definitions
+const FName AStationBuildPreview::ColorParameterName = TEXT("BaseColor");
+const FName AStationBuildPreview::OpacityParameterName = TEXT("Opacity");
+
 AStationBuildPreview::AStationBuildPreview()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -17,13 +21,6 @@ AStationBuildPreview::AStationBuildPreview()
 	PreviewMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	PreviewMesh->SetCastShadow(false);
 	PreviewMesh->SetVisibility(false);
-
-	// Load default cube mesh
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMeshAsset(TEXT("/Engine/BasicShapes/Cube.Cube"));
-	if (CubeMeshAsset.Succeeded())
-	{
-		PreviewMesh->SetStaticMesh(CubeMeshAsset.Object);
-	}
 
 	// Default colors
 	ValidColor = FLinearColor(0.0f, 1.0f, 0.0f, 0.5f);
@@ -42,6 +39,26 @@ AStationBuildPreview::AStationBuildPreview()
 void AStationBuildPreview::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Load default mesh if specified, otherwise load cube mesh
+	if (DefaultPreviewMesh.IsNull())
+	{
+		// Load default cube mesh at runtime
+		UStaticMesh* CubeMesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, TEXT("/Engine/BasicShapes/Cube.Cube")));
+		if (CubeMesh)
+		{
+			PreviewMesh->SetStaticMesh(CubeMesh);
+		}
+	}
+	else
+	{
+		// Load the configured default mesh
+		UStaticMesh* Mesh = DefaultPreviewMesh.LoadSynchronous();
+		if (Mesh)
+		{
+			PreviewMesh->SetStaticMesh(Mesh);
+		}
+	}
 
 	// Create dynamic material
 	CreateDynamicMaterial();

@@ -192,18 +192,12 @@ float UStationGridSystem::SnapValueToGrid(float Value, float Offset) const
 
 float UStationGridSystem::SnapAngle(float Angle) const
 {
-	// Normalize angle to 0-360 range
-	float NormalizedAngle = FMath::Fmod(Angle, 360.0f);
-	if (NormalizedAngle < 0.0f)
-	{
-		NormalizedAngle += 360.0f;
-	}
+	// Normalize angle to -180 to 180 range using Unreal's standard
+	float NormalizedAngle = FMath::UnwindDegrees(Angle);
 
 	// Snap to nearest increment
 	float SnappedAngle = FMath::RoundToFloat(NormalizedAngle / RotationSnapDegrees) * RotationSnapDegrees;
 
-	// Keep in 0-360 range
-	SnappedAngle = FMath::Fmod(SnappedAngle, 360.0f);
-
-	return SnappedAngle;
+	// Unwind again to ensure result is in -180 to 180 range
+	return FMath::UnwindDegrees(SnappedAngle);
 }

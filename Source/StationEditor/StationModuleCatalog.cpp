@@ -8,7 +8,7 @@ UStationModuleCatalog::UStationModuleCatalog()
 	// Default constructor - entries should be configured in derived Blueprints
 }
 
-const TArray<FStationModuleEntry>& UStationModuleCatalog::GetAllModules() const
+TArray<FStationModuleEntry> UStationModuleCatalog::GetAllModules() const
 {
 	return ModuleEntries;
 }
