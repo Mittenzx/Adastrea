@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/StaticMeshComponent.h"
 #include "SpaceStationModule.generated.h"
 
 // Forward declaration
@@ -83,4 +84,9 @@ public:
      */
     UFUNCTION(BlueprintCallable, Category="Module")
     void SetModuleFaction(UFactionDataAsset* NewFaction);
+
+protected:
+    /** Static mesh component for visual representation */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+    UStaticMeshComponent* MeshComponent;
 };
