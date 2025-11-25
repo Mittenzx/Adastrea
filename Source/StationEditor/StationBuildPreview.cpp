@@ -68,7 +68,7 @@ void AStationBuildPreview::SetPreviewModule(TSubclassOf<ASpaceStationModule> Mod
 	ASpaceStationModule* DefaultModule = ModuleClass->GetDefaultObject<ASpaceStationModule>();
 	if (!DefaultModule)
 	{
-		UE_LOG(LogAdastreaStations, Warning, TEXT("StationBuildPreview::SetPreviewModule - Failed to get default object"));
+		UE_LOG(LogAdastreaStations, Warning, TEXT("StationBuildPreview::SetPreviewModule - Failed to get default object for module class %s"), *ModuleClass->GetName());
 		return;
 	}
 
