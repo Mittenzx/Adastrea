@@ -336,6 +336,9 @@ Concise reference documents:
 |----------|---------|----------|
 | **TESTING_AUTOMATION_GUIDE.md** | Test automation comprehensive guide | Root |
 | **TESTING_QUICK_REFERENCE.md** | Testing quick reference | Root |
+| **Assets/TestingDashboard_EasySetup.md** | ⭐ Beginner guide: 6-step dashboard setup (10 min) | Assets/ |
+| **Assets/TestingDashboard_QuickStart.md** | Testing dashboard quick start | Assets/ |
+| **Assets/Testing_System_Overview.md** | Testing system complete overview | Assets/ |
 | **SmokeTest.py** | Smoke test script | Root |
 | **ScreenshotTester.py** | Screenshot test script | Root |
 | **AutomationRunner.py** | Test automation runner | Root |
