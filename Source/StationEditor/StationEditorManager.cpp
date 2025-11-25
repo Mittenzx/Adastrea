@@ -61,13 +61,13 @@ bool UStationEditorManager::BeginEditing_Implementation(ASpaceStation* Station)
 	if (World)
 	{
 		// Clean up any existing preview actor that may have become invalid
-		if (PreviewActor && !PreviewActor->IsValidLowLevel())
+		if (PreviewActor && !IsValid(PreviewActor))
 		{
 			PreviewActor = nullptr;
 		}
 		
 		// Destroy existing preview actor before creating new one
-		if (PreviewActor)
+		if (IsValid(PreviewActor))
 		{
 			PreviewActor->Destroy();
 			PreviewActor = nullptr;
@@ -135,7 +135,7 @@ bool UStationEditorManager::Save_Implementation()
 void UStationEditorManager::EndEditing_Implementation()
 {
 	// Clean up preview actor
-	if (PreviewActor && PreviewActor->IsValidLowLevel())
+	if (IsValid(PreviewActor))
 	{
 		PreviewActor->Hide();
 		PreviewActor->Destroy();

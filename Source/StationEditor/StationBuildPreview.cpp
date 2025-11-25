@@ -43,8 +43,8 @@ void AStationBuildPreview::BeginPlay()
 	// Load default mesh if specified, otherwise load cube mesh
 	if (DefaultPreviewMesh.IsNull())
 	{
-		// Load default cube mesh at runtime
-		UStaticMesh* CubeMesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, TEXT("/Engine/BasicShapes/Cube.Cube")));
+		// Load default cube mesh at runtime using LoadObject (safer than StaticLoadObject)
+		UStaticMesh* CubeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Cube.Cube"));
 		if (CubeMesh)
 		{
 			PreviewMesh->SetStaticMesh(CubeMesh);
