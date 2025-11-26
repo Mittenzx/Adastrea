@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adastrea - Station Editor Connections View Mockup</title>
+    <style>
+        :root {
+            --color-deep-space: #0A0E1A;
+            --color-ui-bg-primary: #1A2332;
+            --color-ui-bg-secondary: #0F1419;
+            --color-ui-bg-tertiary: #141B26;
+            --color-ui-accent: #4A9EFF;
+            --color-text-primary: #E8F0FF;
+            --color-text-secondary: #8C9AAF;
+            --color-success: #2ECC71;
+            --color-warning: #F39C12;
+            --color-danger: #E74C3C;
+            --color-power: #F39C12;
+            --color-data: #00FFFF;
+            --color-life-support: #2ECC71;
+            --color-border: #2A3548;
+            --color-border-active: #4A9EFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            background: var(--color-deep-space);
+            color: var(--color-text-primary);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .editor-container {
+            display: grid;
+            grid-template-rows: 60px 1fr;
+            height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(180deg, var(--color-ui-bg-primary) 0%, var(--color-ui-bg-secondary) 100%);
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            gap: 2rem;
+            border-bottom: 1px solid var(--color-border-active);
+        }
+
+        .header h1 {
+            font-size: 1.25rem;
+            color: var(--color-ui-accent);
+        }
+
+        .header-subtitle {
+            color: var(--color-text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: auto;
+        }
+
+        .view-btn {
+            background: var(--color-ui-bg-tertiary);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .view-btn:hover {
+            border-color: var(--color-ui-accent);
+            color: var(--color-text-primary);
+        }
+
+        .view-btn.active {
+            background: var(--color-ui-accent);
+            border-color: var(--color-ui-accent);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            background: var(--color-deep-space);
+        }
+
+        /* Viewport */
+        .viewport {
+            position: relative;
+            background: radial-gradient(ellipse at 50% 50%, #1A2332 0%, #0A0E1A 100%);
+            overflow: hidden;
+        }
+
+        .grid-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(74, 158, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(74, 158, 255, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* Station with Connections */
+        .station-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .station-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 80px);
+            grid-template-rows: repeat(6, 80px);
+            gap: 8px;
+            position: relative;
+        }
+
+        .module {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            z-index: 10;
+        }
+
+        .module.empty {
+            border: 1px dashed rgba(74, 158, 255, 0.3);
+            opacity: 0.3;
+        }
+
+        .module.occupied {
+            background: linear-gradient(135deg, #2E5EAA 0%, #4A9EFF 100%);
+            border: 2px solid var(--color-ui-accent);
+            box-shadow: 0 0 20px rgba(74, 158, 255, 0.4);
+        }
+
+        .module.occupied:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 30px rgba(74, 158, 255, 0.6);
+        }
+
+        .module.core {
+            background: linear-gradient(135deg, #9B59B6 0%, #E74C3C 100%);
+            border-color: #FF10F0;
+            box-shadow: 0 0 25px rgba(255, 16, 240, 0.5);
+        }
+
+        .module.power {
+            background: linear-gradient(135deg, #E67E22 0%, #F39C12 100%);
+            border-color: var(--color-power);
+            box-shadow: 0 0 20px rgba(243, 156, 18, 0.4);
+        }
+
+        .module-label {
+            font-size: 0.55rem;
+            color: white;
+            margin-top: 2px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            text-align: center;
+            max-width: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Connection Lines SVG Overlay */
+        .connections-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .connection-line {
+            stroke-width: 3;
+            fill: none;
+            stroke-linecap: round;
+        }
+
+        .connection-power {
+            stroke: var(--color-power);
+            filter: drop-shadow(0 0 4px var(--color-power));
+        }
+
+        .connection-data {
+            stroke: var(--color-data);
+            stroke-dasharray: 8 4;
+            filter: drop-shadow(0 0 4px var(--color-data));
+        }
+
+        .connection-life {
+            stroke: var(--color-life-support);
+            stroke-dasharray: 12 4;
+            filter: drop-shadow(0 0 4px var(--color-life-support));
+        }
+
+        @keyframes flow {
+            from { stroke-dashoffset: 0; }
+            to { stroke-dashoffset: -24; }
+        }
+
+        .animated {
+            animation: flow 1s linear infinite;
+        }
+
+        /* Connection Legend */
+        .legend {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(26, 35, 50, 0.95);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .legend h3 {
+            font-size: 0.8rem;
+            color: var(--color-ui-accent);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .legend-line {
+            width: 30px;
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        .legend-line.power {
+            background: var(--color-power);
+            box-shadow: 0 0 8px var(--color-power);
+        }
+
+        .legend-line.data {
+            background: repeating-linear-gradient(
+                90deg,
+                var(--color-data) 0px,
+                var(--color-data) 6px,
+                transparent 6px,
+                transparent 10px
+            );
+        }
+
+        .legend-line.life {
+            background: repeating-linear-gradient(
+                90deg,
+                var(--color-life-support) 0px,
+                var(--color-life-support) 10px,
+                transparent 10px,
+                transparent 14px
+            );
+        }
+
+        .legend-label {
+            color: var(--color-text-secondary);
+        }
+
+        .legend-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .toggle-checkbox {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--color-ui-accent);
+        }
+
+        /* Info Panel */
+        .info-panel {
+            background: var(--color-ui-bg-secondary);
+            border-left: 1px solid var(--color-border);
+            padding: 1.25rem;
+            overflow-y: auto;
+        }
+
+        .panel-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .panel-section h3 {
+            font-size: 0.8rem;
+            color: var(--color-ui-accent);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Connection Summary */
+        .connection-summary {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .conn-item {
+            background: var(--color-ui-bg-tertiary);
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            padding: 0.75rem;
+        }
+
+        .conn-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .conn-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .conn-icon.power {
+            background: rgba(243, 156, 18, 0.2);
+            color: var(--color-power);
+        }
+
+        .conn-icon.data {
+            background: rgba(0, 255, 255, 0.2);
+            color: var(--color-data);
+        }
+
+        .conn-icon.life {
+            background: rgba(46, 204, 113, 0.2);
+            color: var(--color-life-support);
+        }
+
+        .conn-title {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .conn-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--color-text-secondary);
+        }
+
+        .conn-bar {
+            height: 6px;
+            background: var(--color-ui-bg-primary);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .conn-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        .conn-fill.power {
+            background: linear-gradient(90deg, var(--color-power), #F1C40F);
+        }
+
+        .conn-fill.data {
+            background: linear-gradient(90deg, var(--color-data), #3498DB);
+        }
+
+        .conn-fill.life {
+            background: linear-gradient(90deg, var(--color-life-support), #1ABC9C);
+        }
+
+        /* Module List */
+        .module-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .module-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--color-ui-bg-tertiary);
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .module-row:hover {
+            border-color: var(--color-ui-accent);
+            background: rgba(74, 158, 255, 0.1);
+        }
+
+        .module-row-icon {
+            font-size: 1.25rem;
+        }
+
+        .module-row-info {
+            flex: 1;
+        }
+
+        .module-row-name {
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .module-row-status {
+            font-size: 0.7rem;
+            color: var(--color-text-secondary);
+        }
+
+        .module-row-indicators {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .indicator-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .indicator-dot.active {
+            box-shadow: 0 0 6px currentColor;
+        }
+
+        .indicator-dot.power {
+            background: var(--color-power);
+            color: var(--color-power);
+        }
+
+        .indicator-dot.data {
+            background: var(--color-data);
+            color: var(--color-data);
+        }
+
+        .indicator-dot.life {
+            background: var(--color-life-support);
+            color: var(--color-life-support);
+        }
+
+        /* Issues */
+        .issues-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .issue-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            padding: 0.5rem;
+            background: var(--color-ui-bg-tertiary);
+            border-radius: 4px;
+            border-left: 3px solid;
+        }
+
+        .issue-item.warning {
+            border-color: var(--color-warning);
+        }
+
+        .issue-item.error {
+            border-color: var(--color-danger);
+        }
+
+        .issue-item.info {
+            border-color: var(--color-ui-accent);
+        }
+
+        .issue-icon {
+            font-size: 0.9rem;
+        }
+
+        .issue-text {
+            flex: 1;
+            color: var(--color-text-secondary);
+            line-height: 1.4;
+        }
+
+        /* Flow Direction Arrows */
+        .flow-arrow {
+            position: absolute;
+            font-size: 0.8rem;
+            color: var(--color-power);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="editor-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🔗 Station Editor - Connections View</h1>
+            <span class="header-subtitle">Frontier Outpost Alpha • Visualizing Power, Data & Life Support Networks</span>
+            <div class="view-toggle">
+                <button class="view-btn" aria-label="Edit mode">✏️ Edit</button>
+                <button class="view-btn" aria-label="Preview mode">👁️ Preview</button>
+                <button class="view-btn active" aria-label="Connections mode">🔗 Connections</button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Viewport -->
+            <div class="viewport">
+                <div class="grid-bg"></div>
+
+                <!-- Legend -->
+                <div class="legend">
+                    <h3>Connection Types</h3>
+                    <div class="legend-item">
+                        <div class="legend-line power"></div>
+                        <span class="legend-label">Power (500 MW)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line data"></div>
+                        <span class="legend-label">Data Network</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line life"></div>
+                        <span class="legend-label">Life Support</span>
+                    </div>
+                    <div class="legend-toggle">
+                        <input type="checkbox" id="showPower" class="toggle-checkbox" checked aria-label="Show power connections">
+                        <label for="showPower">⚡ Power</label>
+                    </div>
+                    <div class="legend-toggle">
+                        <input type="checkbox" id="showData" class="toggle-checkbox" checked aria-label="Show data connections">
+                        <label for="showData">📡 Data</label>
+                    </div>
+                    <div class="legend-toggle">
+                        <input type="checkbox" id="showLife" class="toggle-checkbox" checked aria-label="Show life support">
+                        <label for="showLife">🌿 Life Support</label>
+                    </div>
+                </div>
+
+                <!-- Station with Connections -->
+                <div class="station-container">
+                    <!-- SVG Connections -->
+                    <svg class="connections-overlay" viewBox="-50 -50 700 600" width="700" height="600">
+                        <!-- Power Connections (from Reactors to Core, then distributed) -->
+                        <!-- Reactor 1 to Core -->
+                        <path class="connection-line connection-power" d="M132,44 L132,80 L308,80 L308,220" />
+                        <!-- Reactor 2 to Core -->
+                        <path class="connection-line connection-power" d="M396,44 L396,80 L308,80" />
+                        
+                        <!-- Core to other modules (power distribution) -->
+                        <path class="connection-line connection-power" d="M264,220 L176,220 L176,132" />
+                        <path class="connection-line connection-power" d="M352,220 L440,220 L440,132" />
+                        <path class="connection-line connection-power" d="M264,264 L176,264 L176,308" />
+                        <path class="connection-line connection-power" d="M352,264 L440,264 L440,308" />
+                        <path class="connection-line connection-power" d="M308,308 L308,396" />
+                        <path class="connection-line connection-power" d="M308,396 L220,396" />
+                        
+                        <!-- Data Connections -->
+                        <path class="connection-line connection-data animated" d="M308,176 L308,132" />
+                        <path class="connection-line connection-data animated" d="M264,220 L132,220 L132,132" />
+                        <path class="connection-line connection-data animated" d="M352,220 L484,220 L484,132" />
+                        <path class="connection-line connection-data animated" d="M264,264 L132,264 L132,352" />
+                        <path class="connection-line connection-data animated" d="M352,264 L484,264 L484,352" />
+                        
+                        <!-- Life Support Connections -->
+                        <path class="connection-line connection-life animated" d="M308,264 L308,352" />
+                        <path class="connection-line connection-life animated" d="M264,352 L176,352" />
+                        <path class="connection-line connection-life animated" d="M352,352 L440,352" />
+                        <path class="connection-line connection-life animated" d="M176,396 L176,440 L264,440" />
+                    </svg>
+
+                    <!-- Station Grid -->
+                    <div class="station-grid">
+                        <!-- Row 1 -->
+                        <div class="module empty"></div>
+                        <div class="module occupied power">
+                            ⚡
+                            <span class="module-label">Reactor 1</span>
+                        </div>
+                        <div class="module empty"></div>
+                        <div class="module empty"></div>
+                        <div class="module empty"></div>
+                        <div class="module occupied power">
+                            ⚡
+                            <span class="module-label">Reactor 2</span>
+                        </div>
+                        <div class="module empty"></div>
+
+                        <!-- Row 2 -->
+                        <div class="module empty"></div>
+                        <div class="module occupied">
+                            🔌
+                            <span class="module-label">Docking A</span>
+                        </div>
+                        <div class="module empty"></div>
+                        <div class="module occupied">
+                            📡
+                            <span class="module-label">Comms</span>
+                        </div>
+                        <div class="module empty"></div>
+                        <div class="module occupied">
+                            📦
+                            <span class="module-label">Cargo</span>
+                        </div>
+                        <div class="module empty"></div>
+
+                        <!-- Row 3 -->
+                        <div class="module empty"></div>
+                        <div class="module empty"></div>
+                        <div class="module empty"></div>
+                        <div class="module occupied core">
+                            🏛️
+                            <span class="module-label">Command</span>
+                        </div>
+                        <div class="module empty"></div>
+                        <div class="module empty"></div>
+                        <div class="module empty"></div>
+
+                        <!-- Row 4 -->
+                        <div class="module empty"></div>
+                        <div class="module occupied">
+                            🏠
+                            <span class="module-label">Habitat</span>
+                        </div>
+                        <div class="module empty"></div>
+                        <div class="module occupied">
+                            🌿
+                            <span class="module-label">Life Sup.</span>
+                        </div>
+                        <div class="module empty"></div>
+                        <div class="module occupied">
+                            🏪
+                            <span class="module-label">Trade Hub</span>
+                        </div>
+                        <div class="module empty"></div>
+
+                        <!-- Row 5 -->
+                        <div class="module empty"></div>
+                        <div class="module occupied">
+                            🛰️
+                            <span class="module-label">Shield</span>
+                        </div>
+                        <div class="module empty"></div>
+                        <div class="module occupied">
+                            💥
+                            <span class="module-label">Turrets</span>
+                        </div>
+                        <div class="module empty"></div>
+                        <div class="module occupied">
+                            🔬
+                            <span class="module-label">Lab</span>
+                        </div>
+                        <div class="module empty"></div>
+
+                        <!-- Row 6 -->
+                        <div class="module empty"></div>
+                        <div class="module empty"></div>
+                        <div class="module occupied">
+                            🔌
+                            <span class="module-label">Docking B</span>
+                        </div>
+                        <div class="module empty"></div>
+                        <div class="module empty"></div>
+                        <div class="module empty"></div>
+                        <div class="module empty"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Panel -->
+            <div class="info-panel">
+                <!-- Connection Summary -->
+                <div class="panel-section">
+                    <h3>⚡ Network Status</h3>
+                    <div class="connection-summary">
+                        <div class="conn-item">
+                            <div class="conn-header">
+                                <div class="conn-icon power">⚡</div>
+                                <span class="conn-title">Power Grid</span>
+                            </div>
+                            <div class="conn-stats">
+                                <span>Used: 380 MW</span>
+                                <span>Capacity: 500 MW</span>
+                            </div>
+                            <div class="conn-bar">
+                                <div class="conn-fill power" style="width: 76%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="conn-item">
+                            <div class="conn-header">
+                                <div class="conn-icon data">📡</div>
+                                <span class="conn-title">Data Network</span>
+                            </div>
+                            <div class="conn-stats">
+                                <span>Bandwidth: 85%</span>
+                                <span>Latency: 2ms</span>
+                            </div>
+                            <div class="conn-bar">
+                                <div class="conn-fill data" style="width: 85%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="conn-item">
+                            <div class="conn-header">
+                                <div class="conn-icon life">🌿</div>
+                                <span class="conn-title">Life Support</span>
+                            </div>
+                            <div class="conn-stats">
+                                <span>Coverage: 100%</span>
+                                <span>O2: Optimal</span>
+                            </div>
+                            <div class="conn-bar">
+                                <div class="conn-fill life" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Connected Modules -->
+                <div class="panel-section">
+                    <h3>📋 Connected Modules</h3>
+                    <div class="module-list">
+                        <div class="module-row">
+                            <span class="module-row-icon">🏛️</span>
+                            <div class="module-row-info">
+                                <div class="module-row-name">Command Center</div>
+                                <div class="module-row-status">Hub • All Systems Connected</div>
+                            </div>
+                            <div class="module-row-indicators">
+                                <div class="indicator-dot power active"></div>
+                                <div class="indicator-dot data active"></div>
+                                <div class="indicator-dot life active"></div>
+                            </div>
+                        </div>
+
+                        <div class="module-row">
+                            <span class="module-row-icon">⚡</span>
+                            <div class="module-row-info">
+                                <div class="module-row-name">Fusion Reactor 1</div>
+                                <div class="module-row-status">Generating 250 MW</div>
+                            </div>
+                            <div class="module-row-indicators">
+                                <div class="indicator-dot power active"></div>
+                                <div class="indicator-dot data active"></div>
+                            </div>
+                        </div>
+
+                        <div class="module-row">
+                            <span class="module-row-icon">⚡</span>
+                            <div class="module-row-info">
+                                <div class="module-row-name">Fusion Reactor 2</div>
+                                <div class="module-row-status">Generating 250 MW</div>
+                            </div>
+                            <div class="module-row-indicators">
+                                <div class="indicator-dot power active"></div>
+                                <div class="indicator-dot data active"></div>
+                            </div>
+                        </div>
+
+                        <div class="module-row">
+                            <span class="module-row-icon">🌿</span>
+                            <div class="module-row-info">
+                                <div class="module-row-name">Life Support</div>
+                                <div class="module-row-status">Capacity: 500 crew</div>
+                            </div>
+                            <div class="module-row-indicators">
+                                <div class="indicator-dot power active"></div>
+                                <div class="indicator-dot data active"></div>
+                                <div class="indicator-dot life active"></div>
+                            </div>
+                        </div>
+
+                        <div class="module-row">
+                            <span class="module-row-icon">🏠</span>
+                            <div class="module-row-info">
+                                <div class="module-row-name">Habitat Ring</div>
+                                <div class="module-row-status">Population: 100/100</div>
+                            </div>
+                            <div class="module-row-indicators">
+                                <div class="indicator-dot power active"></div>
+                                <div class="indicator-dot life active"></div>
+                            </div>
+                        </div>
+
+                        <div class="module-row">
+                            <span class="module-row-icon">🛰️</span>
+                            <div class="module-row-info">
+                                <div class="module-row-name">Shield Generator</div>
+                                <div class="module-row-status">Shield: 5,000 HP</div>
+                            </div>
+                            <div class="module-row-indicators">
+                                <div class="indicator-dot power active"></div>
+                                <div class="indicator-dot data active"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Issues -->
+                <div class="panel-section">
+                    <h3>⚠️ Connection Issues</h3>
+                    <div class="issues-list">
+                        <div class="issue-item warning">
+                            <span class="issue-icon">⚠️</span>
+                            <span class="issue-text">Power load at 76%. Consider adding backup reactor.</span>
+                        </div>
+                        <div class="issue-item info">
+                            <span class="issue-icon">ℹ️</span>
+                            <span class="issue-text">Science Lab has no direct life support connection. Using relay from Trade Hub.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle connection visibility
+        document.querySelectorAll('.toggle-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const type = this.id.replace('show', '').toLowerCase();
+                const connections = document.querySelectorAll(`.connection-${type}`);
+                connections.forEach(conn => {
+                    conn.style.opacity = this.checked ? '1' : '0.1';
+                });
+            });
+        });
+
+        // Module hover effects
+        document.querySelectorAll('.module.occupied').forEach(module => {
+            module.addEventListener('mouseenter', function() {
+                // Could highlight related connections here
+            });
+        });
+
+        // View toggle
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

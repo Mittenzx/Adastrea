@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adastrea - Station Editor Visual Mockup</title>
+    <style>
+        :root {
+            --color-deep-space: #0A0E1A;
+            --color-ui-bg-primary: #1A2332;
+            --color-ui-bg-secondary: #0F1419;
+            --color-ui-bg-tertiary: #141B26;
+            --color-ui-accent: #4A9EFF;
+            --color-ui-accent-hover: #6BB3FF;
+            --color-text-primary: #E8F0FF;
+            --color-text-secondary: #8C9AAF;
+            --color-text-muted: #5A6575;
+            --color-success: #2ECC71;
+            --color-warning: #F39C12;
+            --color-danger: #E74C3C;
+            --color-info: #3498DB;
+            --color-energy: #9B59B6;
+            --color-gold: #FFD700;
+            --color-border: #2A3548;
+            --color-border-active: #4A9EFF;
+            --color-grid: rgba(74, 158, 255, 0.15);
+            --color-grid-active: rgba(74, 158, 255, 0.4);
+            --color-valid: rgba(46, 204, 113, 0.3);
+            --color-invalid: rgba(231, 76, 60, 0.3);
+            --shadow-glow: 0 0 20px rgba(74, 158, 255, 0.3);
+            --transition-fast: 0.15s ease;
+            --transition-normal: 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            background: var(--color-deep-space);
+            color: var(--color-text-primary);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Main Layout */
+        .station-editor {
+            display: grid;
+            grid-template-rows: 60px 1fr 200px;
+            grid-template-columns: 280px 1fr 320px;
+            height: 100vh;
+            gap: 1px;
+            background: var(--color-border);
+        }
+
+        /* Header Bar */
+        .header-bar {
+            grid-column: 1 / -1;
+            background: linear-gradient(180deg, var(--color-ui-bg-primary) 0%, var(--color-ui-bg-secondary) 100%);
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            gap: 2rem;
+            border-bottom: 1px solid var(--color-border-active);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-ui-accent);
+        }
+
+        .header-title .subtitle {
+            color: var(--color-text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .station-info {
+            display: flex;
+            gap: 2rem;
+            flex: 1;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--color-text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .stat-value {
+            color: var(--color-text-primary);
+            font-weight: 600;
+        }
+
+        .stat-value.warning {
+            color: var(--color-warning);
+        }
+
+        .stat-value.success {
+            color: var(--color-success);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            background: var(--color-ui-bg-tertiary);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: var(--color-ui-bg-primary);
+            border-color: var(--color-ui-accent);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2E5EAA 0%, #4A9EFF 100%);
+            border-color: var(--color-ui-accent);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #3D6FBB 0%, #6BB3FF 100%);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn-danger {
+            border-color: var(--color-danger);
+            color: var(--color-danger);
+        }
+
+        .btn-danger:hover {
+            background: rgba(231, 76, 60, 0.2);
+        }
+
+        /* Module Palette */
+        .module-palette {
+            background: var(--color-ui-bg-secondary);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .palette-header {
+            padding: 1rem;
+            background: var(--color-ui-bg-primary);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .palette-header h2 {
+            font-size: 0.9rem;
+            color: var(--color-ui-accent);
+            margin-bottom: 0.75rem;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: var(--color-ui-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            padding: 0.5rem;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: var(--color-text-primary);
+            flex: 1;
+            outline: none;
+            font-size: 0.85rem;
+        }
+
+        .search-box input::placeholder {
+            color: var(--color-text-muted);
+        }
+
+        .search-icon {
+            color: var(--color-text-secondary);
+            margin-right: 0.5rem;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 0.25rem;
+            padding: 0.75rem 1rem;
+            background: var(--color-ui-bg-tertiary);
+            border-bottom: 1px solid var(--color-border);
+            overflow-x: auto;
+        }
+
+        .category-tab {
+            background: transparent;
+            border: none;
+            color: var(--color-text-secondary);
+            padding: 0.4rem 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            transition: all var(--transition-fast);
+        }
+
+        .category-tab:hover {
+            background: var(--color-ui-bg-primary);
+            color: var(--color-text-primary);
+        }
+
+        .category-tab.active {
+            background: var(--color-ui-accent);
+            color: white;
+        }
+
+        .module-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.75rem;
+        }
+
+        .module-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .module-list::-webkit-scrollbar-track {
+            background: var(--color-ui-bg-secondary);
+        }
+
+        .module-list::-webkit-scrollbar-thumb {
+            background: var(--color-border);
+            border-radius: 3px;
+        }
+
+        .module-item {
+            background: var(--color-ui-bg-tertiary);
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            cursor: grab;
+            transition: all var(--transition-fast);
+        }
+
+        .module-item:hover {
+            border-color: var(--color-ui-accent);
+            transform: translateX(3px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .module-item.selected {
+            border-color: var(--color-gold);
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .module-item.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .module-icon {
+            font-size: 1.25rem;
+            width: 28px;
+            text-align: center;
+        }
+
+        .module-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .module-tech {
+            font-size: 0.65rem;
+            background: var(--color-ui-accent);
+            color: white;
+            padding: 0.15rem 0.4rem;
+            border-radius: 10px;
+        }
+
+        .module-stats {
+            display: flex;
+            gap: 0.75rem;
+            font-size: 0.7rem;
+            color: var(--color-text-secondary);
+        }
+
+        .module-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .module-stat-icon {
+            font-size: 0.8rem;
+        }
+
+        /* 3D Viewport */
+        .viewport-container {
+            background: var(--color-deep-space);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .viewport-3d {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 50% 50%, #1A2332 0%, #0A0E1A 100%);
+            position: relative;
+        }
+
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(var(--color-grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.5;
+        }
+
+        .station-preview {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .station-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 70px);
+            grid-template-rows: repeat(7, 70px);
+            gap: 6px;
+        }
+
+        .grid-cell {
+            border: 1px dashed var(--color-grid-active);
+            border-radius: 6px;
+            transition: all var(--transition-fast);
+            position: relative;
+        }
+
+        .grid-cell:hover {
+            border-color: var(--color-ui-accent);
+            background: var(--color-grid-active);
+        }
+
+        .grid-cell.valid-placement {
+            background: var(--color-valid);
+            border-color: var(--color-success);
+        }
+
+        .grid-cell.invalid-placement {
+            background: var(--color-invalid);
+            border-color: var(--color-danger);
+        }
+
+        .grid-cell.occupied {
+            background: linear-gradient(135deg, #2E5EAA 0%, #4A9EFF 100%);
+            border: 2px solid var(--color-gold);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.75rem;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(74, 158, 255, 0.5);
+        }
+
+        .grid-cell.occupied:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        .grid-cell.occupied.selected-module {
+            border-color: #FF10F0;
+            box-shadow: 0 0 25px rgba(255, 16, 240, 0.7);
+        }
+
+        .grid-cell.core {
+            background: linear-gradient(135deg, #9B59B6 0%, #E74C3C 100%);
+        }
+
+        .connection-line {
+            position: absolute;
+            background: linear-gradient(90deg, var(--color-ui-accent), var(--color-success));
+            height: 3px;
+            opacity: 0.6;
+        }
+
+        /* Viewport Controls */
+        .viewport-controls {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(26, 35, 50, 0.9);
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+        }
+
+        .viewport-btn {
+            background: var(--color-ui-bg-tertiary);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-secondary);
+            width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all var(--transition-fast);
+        }
+
+        .viewport-btn:hover {
+            background: var(--color-ui-bg-primary);
+            color: var(--color-ui-accent);
+            border-color: var(--color-ui-accent);
+        }
+
+        .zoom-level {
+            color: var(--color-text-primary);
+            font-size: 0.8rem;
+            padding: 0 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Camera Controls */
+        .camera-controls {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .camera-preset {
+            background: rgba(26, 35, 50, 0.9);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-secondary);
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all var(--transition-fast);
+        }
+
+        .camera-preset:hover {
+            background: var(--color-ui-bg-primary);
+            color: var(--color-text-primary);
+            border-color: var(--color-ui-accent);
+        }
+
+        .camera-preset.active {
+            background: var(--color-ui-accent);
+            color: white;
+            border-color: var(--color-ui-accent);
+        }
+
+        /* Info Panel */
+        .info-panel {
+            background: var(--color-ui-bg-secondary);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .info-tabs {
+            display: flex;
+            background: var(--color-ui-bg-primary);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .info-tab {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--color-text-secondary);
+            padding: 0.75rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all var(--transition-fast);
+            border-bottom: 2px solid transparent;
+        }
+
+        .info-tab:hover {
+            color: var(--color-text-primary);
+            background: var(--color-ui-bg-tertiary);
+        }
+
+        .info-tab.active {
+            color: var(--color-ui-accent);
+            border-bottom-color: var(--color-ui-accent);
+        }
+
+        .info-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .info-section {
+            margin-bottom: 1.25rem;
+        }
+
+        .info-section h3 {
+            font-size: 0.8rem;
+            color: var(--color-ui-accent);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .selected-module-info {
+            background: var(--color-ui-bg-tertiary);
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            padding: 1rem;
+        }
+
+        .selected-module-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .selected-module-icon {
+            font-size: 2rem;
+            background: var(--color-ui-bg-primary);
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+        }
+
+        .selected-module-title h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .selected-module-title span {
+            font-size: 0.75rem;
+            color: var(--color-text-secondary);
+        }
+
+        .module-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+        }
+
+        .detail-label {
+            color: var(--color-text-secondary);
+        }
+
+        .detail-value {
+            font-weight: 500;
+        }
+
+        .detail-value.positive {
+            color: var(--color-success);
+        }
+
+        .detail-value.negative {
+            color: var(--color-danger);
+        }
+
+        .module-description {
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+            line-height: 1.5;
+            padding: 0.75rem;
+            background: var(--color-ui-bg-primary);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .module-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .module-actions .btn {
+            flex: 1;
+            justify-content: center;
+        }
+
+        /* Resource Panel */
+        .resource-list {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .resource-icon {
+            font-size: 1.25rem;
+            width: 32px;
+            text-align: center;
+        }
+
+        .resource-info {
+            flex: 1;
+        }
+
+        .resource-name {
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .resource-bar {
+            height: 6px;
+            background: var(--color-ui-bg-primary);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .resource-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-ui-accent), var(--color-success));
+            transition: width var(--transition-normal);
+        }
+
+        .resource-fill.warning {
+            background: linear-gradient(90deg, var(--color-warning), var(--color-danger));
+        }
+
+        .resource-value {
+            font-size: 0.75rem;
+            color: var(--color-text-secondary);
+        }
+
+        /* Bottom Panel */
+        .bottom-panel {
+            grid-column: 1 / -1;
+            background: var(--color-ui-bg-secondary);
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1px;
+            background: var(--color-border);
+        }
+
+        .bottom-section {
+            background: var(--color-ui-bg-secondary);
+            padding: 1rem;
+        }
+
+        .bottom-section h3 {
+            font-size: 0.8rem;
+            color: var(--color-ui-accent);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Power Balance */
+        .power-balance {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .power-meter {
+            flex: 1;
+            position: relative;
+        }
+
+        .power-bar {
+            height: 24px;
+            background: var(--color-ui-bg-primary);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .power-used {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-success) 0%, var(--color-warning) 100%);
+            transition: width var(--transition-normal);
+        }
+
+        .power-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: var(--color-text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .power-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .power-value.surplus {
+            color: var(--color-success);
+        }
+
+        .power-value.deficit {
+            color: var(--color-danger);
+        }
+
+        /* Construction Queue */
+        .queue-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .queue-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--color-ui-bg-tertiary);
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            padding: 0.5rem 0.75rem;
+        }
+
+        .queue-item.building {
+            border-color: var(--color-warning);
+            background: rgba(243, 156, 18, 0.1);
+        }
+
+        .queue-number {
+            font-size: 0.7rem;
+            color: var(--color-text-muted);
+            width: 20px;
+        }
+
+        .queue-icon {
+            font-size: 1rem;
+        }
+
+        .queue-info {
+            flex: 1;
+        }
+
+        .queue-name {
+            font-size: 0.8rem;
+        }
+
+        .queue-progress {
+            height: 4px;
+            background: var(--color-ui-bg-primary);
+            border-radius: 2px;
+            margin-top: 0.25rem;
+            overflow: hidden;
+        }
+
+        .queue-progress-fill {
+            height: 100%;
+            background: var(--color-warning);
+            transition: width var(--transition-normal);
+        }
+
+        .queue-time {
+            font-size: 0.7rem;
+            color: var(--color-text-secondary);
+        }
+
+        .queue-cancel {
+            background: transparent;
+            border: none;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            font-size: 0.9rem;
+            transition: color var(--transition-fast);
+        }
+
+        .queue-cancel:hover {
+            color: var(--color-danger);
+        }
+
+        /* Notifications */
+        .notifications {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .notification {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            padding: 0.5rem;
+            background: var(--color-ui-bg-tertiary);
+            border-radius: 4px;
+            border-left: 3px solid;
+        }
+
+        .notification.info {
+            border-color: var(--color-info);
+        }
+
+        .notification.warning {
+            border-color: var(--color-warning);
+        }
+
+        .notification.success {
+            border-color: var(--color-success);
+        }
+
+        .notification-icon {
+            font-size: 1rem;
+        }
+
+        .notification-text {
+            flex: 1;
+            color: var(--color-text-secondary);
+        }
+
+        .notification-time {
+            font-size: 0.7rem;
+            color: var(--color-text-muted);
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: fixed;
+            background: var(--color-ui-bg-primary);
+            border: 1px solid var(--color-ui-accent);
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            max-width: 250px;
+            z-index: 1000;
+            box-shadow: var(--shadow-glow);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+
+        .tooltip.visible {
+            opacity: 1;
+        }
+
+        .tooltip-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .tooltip-desc {
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+            line-height: 1.4;
+        }
+
+        /* View Mode Switcher */
+        .view-modes {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            display: flex;
+            gap: 0.25rem;
+            background: rgba(26, 35, 50, 0.9);
+            padding: 0.25rem;
+            border-radius: 6px;
+            border: 1px solid var(--color-border);
+        }
+
+        .view-mode-btn {
+            background: transparent;
+            border: none;
+            color: var(--color-text-secondary);
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all var(--transition-fast);
+        }
+
+        .view-mode-btn:hover {
+            color: var(--color-text-primary);
+        }
+
+        .view-mode-btn.active {
+            background: var(--color-ui-accent);
+            color: white;
+        }
+
+        /* Stats Display */
+        .station-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+
+        .station-stat {
+            background: var(--color-ui-bg-tertiary);
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            padding: 0.75rem;
+            text-align: center;
+        }
+
+        .station-stat-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-ui-accent);
+        }
+
+        .station-stat-label {
+            font-size: 0.7rem;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+        }
+
+        /* Animation */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .building {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(74, 158, 255, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(74, 158, 255, 0.8); }
+        }
+
+        .grid-cell.occupied:hover {
+            animation: glow 1s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="station-editor">
+        <!-- Header Bar -->
+        <div class="header-bar">
+            <div class="header-title">
+                <h1>⚙️ Station Editor</h1>
+                <span class="subtitle">Frontier Outpost Alpha</span>
+            </div>
+            <div class="station-info">
+                <div class="stat-item">
+                    <span class="stat-label">Modules:</span>
+                    <span class="stat-value">8 / 25</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Population:</span>
+                    <span class="stat-value">450 / 1,000</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Defense:</span>
+                    <span class="stat-value success">Strong</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Faction:</span>
+                    <span class="stat-value" style="color: #FFD700;">☀️ Solaris Union</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-danger" aria-label="Cancel changes">✕ Cancel</button>
+                <button class="btn" aria-label="Undo last action">↩ Undo</button>
+                <button class="btn" aria-label="Redo last action">↪ Redo</button>
+                <button class="btn btn-primary" aria-label="Save station">💾 Save Station</button>
+            </div>
+        </div>
+
+        <!-- Module Palette -->
+        <div class="module-palette">
+            <div class="palette-header">
+                <h2>📦 Module Catalog</h2>
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="Search modules..." aria-label="Search modules">
+                </div>
+            </div>
+            <div class="category-tabs">
+                <button class="category-tab active" aria-label="Show all modules">All</button>
+                <button class="category-tab" aria-label="Show core modules">🔧 Core</button>
+                <button class="category-tab" aria-label="Show docking modules">🔌 Docking</button>
+                <button class="category-tab" aria-label="Show power modules">⚡ Power</button>
+                <button class="category-tab" aria-label="Show habitation modules">🏠 Habitat</button>
+                <button class="category-tab" aria-label="Show defense modules">🛡️ Defense</button>
+                <button class="category-tab" aria-label="Show production modules">🏭 Production</button>
+            </div>
+            <div class="module-list">
+                <!-- Core Modules -->
+                <div class="module-item" draggable="true">
+                    <div class="module-header">
+                        <span class="module-icon">🏛️</span>
+                        <span class="module-name">Command Center</span>
+                        <span class="module-tech">Lvl 1</span>
+                    </div>
+                    <div class="module-stats">
+                        <span class="module-stat"><span class="module-stat-icon">⚡</span> -50 MW</span>
+                        <span class="module-stat"><span class="module-stat-icon">👥</span> 25 crew</span>
+                        <span class="module-stat"><span class="module-stat-icon">💰</span> 5,000 cr</span>
+                    </div>
+                </div>
+
+                <div class="module-item" draggable="true">
+                    <div class="module-header">
+                        <span class="module-icon">⚡</span>
+                        <span class="module-name">Fusion Reactor</span>
+                        <span class="module-tech">Lvl 2</span>
+                    </div>
+                    <div class="module-stats">
+                        <span class="module-stat"><span class="module-stat-icon">⚡</span> +500 MW</span>
+                        <span class="module-stat"><span class="module-stat-icon">👥</span> 10 crew</span>
+                        <span class="module-stat"><span class="module-stat-icon">💰</span> 15,000 cr</span>
+                    </div>
+                </div>
+
+                <div class="module-item selected" draggable="true">
+                    <div class="module-header">
+                        <span class="module-icon">🔌</span>
+                        <span class="module-name">Docking Bay</span>
+                        <span class="module-tech">Lvl 1</span>
+                    </div>
+                    <div class="module-stats">
+                        <span class="module-stat"><span class="module-stat-icon">⚡</span> -30 MW</span>
+                        <span class="module-stat"><span class="module-stat-icon">🚀</span> 4 ships</span>
+                        <span class="module-stat"><span class="module-stat-icon">💰</span> 8,000 cr</span>
+                    </div>
+                </div>
+
+                <div class="module-item" draggable="true">
+                    <div class="module-header">
+                        <span class="module-icon">📦</span>
+                        <span class="module-name">Cargo Hold</span>
+                        <span class="module-tech">Lvl 1</span>
+                    </div>
+                    <div class="module-stats">
+                        <span class="module-stat"><span class="module-stat-icon">⚡</span> -10 MW</span>
+                        <span class="module-stat"><span class="module-stat-icon">📦</span> 500 t</span>
+                        <span class="module-stat"><span class="module-stat-icon">💰</span> 3,000 cr</span>
+                    </div>
+                </div>
+
+                <div class="module-item" draggable="true">
+                    <div class="module-header">
+                        <span class="module-icon">🏪</span>
+                        <span class="module-name">Trade Hub</span>
+                        <span class="module-tech">Lvl 3</span>
+                    </div>
+                    <div class="module-stats">
+                        <span class="module-stat"><span class="module-stat-icon">⚡</span> -25 MW</span>
+                        <span class="module-stat"><span class="module-stat-icon">💰</span> +15% trade</span>
+                        <span class="module-stat"><span class="module-stat-icon">💰</span> 20,000 cr</span>
+                    </div>
+                </div>
+
+                <div class="module-item" draggable="true">
+                    <div class="module-header">
+                        <span class="module-icon">🏠</span>
+                        <span class="module-name">Habitat Ring</span>
+                        <span class="module-tech">Lvl 2</span>
+                    </div>
+                    <div class="module-stats">
+                        <span class="module-stat"><span class="module-stat-icon">⚡</span> -40 MW</span>
+                        <span class="module-stat"><span class="module-stat-icon">👥</span> +100 pop</span>
+                        <span class="module-stat"><span class="module-stat-icon">💰</span> 12,000 cr</span>
+                    </div>
+                </div>
+
+                <div class="module-item" draggable="true">
+                    <div class="module-header">
+                        <span class="module-icon">🛰️</span>
+                        <span class="module-name">Shield Generator</span>
+                        <span class="module-tech">Lvl 4</span>
+                    </div>
+                    <div class="module-stats">
+                        <span class="module-stat"><span class="module-stat-icon">⚡</span> -100 MW</span>
+                        <span class="module-stat"><span class="module-stat-icon">🛡️</span> 5,000 HP</span>
+                        <span class="module-stat"><span class="module-stat-icon">💰</span> 35,000 cr</span>
+                    </div>
+                </div>
+
+                <div class="module-item" draggable="true">
+                    <div class="module-header">
+                        <span class="module-icon">💥</span>
+                        <span class="module-name">Turret Array</span>
+                        <span class="module-tech">Lvl 3</span>
+                    </div>
+                    <div class="module-stats">
+                        <span class="module-stat"><span class="module-stat-icon">⚡</span> -60 MW</span>
+                        <span class="module-stat"><span class="module-stat-icon">💥</span> 150 DPS</span>
+                        <span class="module-stat"><span class="module-stat-icon">💰</span> 25,000 cr</span>
+                    </div>
+                </div>
+
+                <div class="module-item" draggable="true">
+                    <div class="module-header">
+                        <span class="module-icon">🔬</span>
+                        <span class="module-name">Science Lab</span>
+                        <span class="module-tech">Lvl 5</span>
+                    </div>
+                    <div class="module-stats">
+                        <span class="module-stat"><span class="module-stat-icon">⚡</span> -75 MW</span>
+                        <span class="module-stat"><span class="module-stat-icon">🔬</span> +20% research</span>
+                        <span class="module-stat"><span class="module-stat-icon">💰</span> 50,000 cr</span>
+                    </div>
+                </div>
+
+                <div class="module-item" draggable="true">
+                    <div class="module-header">
+                        <span class="module-icon">🏭</span>
+                        <span class="module-name">Manufacturing Bay</span>
+                        <span class="module-tech">Lvl 4</span>
+                    </div>
+                    <div class="module-stats">
+                        <span class="module-stat"><span class="module-stat-icon">⚡</span> -80 MW</span>
+                        <span class="module-stat"><span class="module-stat-icon">🏭</span> 50 units/hr</span>
+                        <span class="module-stat"><span class="module-stat-icon">💰</span> 40,000 cr</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3D Viewport -->
+        <div class="viewport-container">
+            <div class="viewport-3d">
+                <div class="grid-overlay"></div>
+                
+                <!-- View Mode Switcher -->
+                <div class="view-modes">
+                    <button class="view-mode-btn active" aria-label="Edit mode">✏️ Edit</button>
+                    <button class="view-mode-btn" aria-label="Preview mode">👁️ Preview</button>
+                    <button class="view-mode-btn" aria-label="Connections mode">🔗 Connections</button>
+                </div>
+                
+                <!-- Camera Controls -->
+                <div class="camera-controls">
+                    <button class="camera-preset active" aria-label="Top view">Top View</button>
+                    <button class="camera-preset" aria-label="Side view">Side View</button>
+                    <button class="camera-preset" aria-label="Front view">Front View</button>
+                    <button class="camera-preset" aria-label="Free camera">Free Cam</button>
+                </div>
+                
+                <!-- Station Grid Preview -->
+                <div class="station-preview">
+                    <div class="station-grid">
+                        <!-- Row 1 -->
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell occupied">⚡</div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell occupied">⚡</div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        
+                        <!-- Row 2 -->
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell occupied">🔌</div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell occupied">📦</div>
+                        <div class="grid-cell"></div>
+                        
+                        <!-- Row 3 -->
+                        <div class="grid-cell valid-placement"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell occupied core selected-module">🏛️</div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell valid-placement"></div>
+                        
+                        <!-- Row 4 -->
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell occupied">🏠</div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell occupied">🏪</div>
+                        <div class="grid-cell"></div>
+                        
+                        <!-- Row 5 -->
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell occupied">🛰️</div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell occupied">💥</div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        
+                        <!-- Row 6 -->
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        
+                        <!-- Row 7 -->
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                </div>
+                
+                <!-- Viewport Controls -->
+                <div class="viewport-controls">
+                    <button class="viewport-btn" aria-label="Zoom out">➖</button>
+                    <span class="zoom-level">100%</span>
+                    <button class="viewport-btn" aria-label="Zoom in">➕</button>
+                    <button class="viewport-btn" aria-label="Fit to view">⊞</button>
+                    <button class="viewport-btn" aria-label="Toggle grid">▦</button>
+                    <button class="viewport-btn" aria-label="Rotate left">↺</button>
+                    <button class="viewport-btn" aria-label="Rotate right">↻</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Panel -->
+        <div class="info-panel">
+            <div class="info-tabs">
+                <button class="info-tab active" aria-label="Selected module details">Selected</button>
+                <button class="info-tab" aria-label="Station statistics">Stats</button>
+                <button class="info-tab" aria-label="Station resources">Resources</button>
+            </div>
+            <div class="info-content">
+                <!-- Selected Module Info -->
+                <div class="info-section">
+                    <h3>Selected Module</h3>
+                    <div class="selected-module-info">
+                        <div class="selected-module-header">
+                            <div class="selected-module-icon">🏛️</div>
+                            <div class="selected-module-title">
+                                <h4>Command Center</h4>
+                                <span>Core Module • Tech Level 1</span>
+                            </div>
+                        </div>
+                        <div class="module-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Power:</span>
+                                <span class="detail-value negative">-50 MW</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Crew:</span>
+                                <span class="detail-value">25</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Health:</span>
+                                <span class="detail-value positive">100%</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Status:</span>
+                                <span class="detail-value positive">Active</span>
+                            </div>
+                        </div>
+                        <div class="module-description">
+                            The central command hub for station operations. Required for all stations. Controls life support, communications, and overall station management.
+                        </div>
+                        <div class="module-actions">
+                            <button class="btn" aria-label="Upgrade module">⬆️ Upgrade</button>
+                            <button class="btn" aria-label="Rotate module">↻ Rotate</button>
+                            <button class="btn btn-danger" aria-label="Remove module">🗑️ Remove</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Station Stats Summary -->
+                <div class="info-section">
+                    <h3>Station Overview</h3>
+                    <div class="station-stats">
+                        <div class="station-stat">
+                            <div class="station-stat-value">8</div>
+                            <div class="station-stat-label">Modules</div>
+                        </div>
+                        <div class="station-stat">
+                            <div class="station-stat-value">450</div>
+                            <div class="station-stat-label">Population</div>
+                        </div>
+                        <div class="station-stat">
+                            <div class="station-stat-value" style="color: #2ECC71;">+120</div>
+                            <div class="station-stat-label">Power Balance</div>
+                        </div>
+                        <div class="station-stat">
+                            <div class="station-stat-value" style="color: #FFD700;">A+</div>
+                            <div class="station-stat-label">Efficiency</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Panel -->
+        <div class="bottom-panel">
+            <!-- Power Balance -->
+            <div class="bottom-section">
+                <h3>⚡ Power Balance</h3>
+                <div class="power-balance">
+                    <div class="power-meter">
+                        <div class="power-bar">
+                            <div class="power-used" style="width: 76%;"></div>
+                        </div>
+                        <div class="power-labels">
+                            <span>Used: 380 MW</span>
+                            <span>Generated: 500 MW</span>
+                        </div>
+                    </div>
+                    <div class="power-value surplus">+120 MW</div>
+                </div>
+            </div>
+
+            <!-- Construction Queue -->
+            <div class="bottom-section">
+                <h3>🔨 Construction Queue</h3>
+                <div class="queue-list">
+                    <div class="queue-item building">
+                        <span class="queue-number">1</span>
+                        <span class="queue-icon">🏠</span>
+                        <div class="queue-info">
+                            <div class="queue-name">Habitat Ring</div>
+                            <div class="queue-progress">
+                                <div class="queue-progress-fill" style="width: 65%;"></div>
+                            </div>
+                        </div>
+                        <span class="queue-time">1h 24m</span>
+                        <button class="queue-cancel" aria-label="Cancel construction">✕</button>
+                    </div>
+                    <div class="queue-item">
+                        <span class="queue-number">2</span>
+                        <span class="queue-icon">🛰️</span>
+                        <div class="queue-info">
+                            <div class="queue-name">Shield Generator MK-II</div>
+                            <div class="queue-progress"></div>
+                        </div>
+                        <span class="queue-time">3h 00m</span>
+                        <button class="queue-cancel" aria-label="Cancel construction">✕</button>
+                    </div>
+                    <div class="queue-item">
+                        <span class="queue-number">3</span>
+                        <span class="queue-icon">💥</span>
+                        <div class="queue-info">
+                            <div class="queue-name">Turret Array</div>
+                            <div class="queue-progress"></div>
+                        </div>
+                        <span class="queue-time">2h 30m</span>
+                        <button class="queue-cancel" aria-label="Cancel construction">✕</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications -->
+            <div class="bottom-section">
+                <h3>📢 Notifications</h3>
+                <div class="notifications">
+                    <div class="notification success">
+                        <span class="notification-icon">✅</span>
+                        <span class="notification-text">Fusion Reactor online. Power output increased.</span>
+                        <span class="notification-time">2m ago</span>
+                    </div>
+                    <div class="notification warning">
+                        <span class="notification-icon">⚠️</span>
+                        <span class="notification-text">Population approaching capacity. Add more habitats.</span>
+                        <span class="notification-time">15m ago</span>
+                    </div>
+                    <div class="notification info">
+                        <span class="notification-icon">ℹ️</span>
+                        <span class="notification-text">Trade Hub unlocked new trade routes.</span>
+                        <span class="notification-time">1h ago</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tooltip -->
+    <div class="tooltip" id="tooltip">
+        <div class="tooltip-title">Module Name</div>
+        <div class="tooltip-desc">Description here</div>
+    </div>
+
+    <script>
+        // Interactive functionality for the mockup
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching
+            const tabs = document.querySelectorAll('.category-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            const infoTabs = document.querySelectorAll('.info-tab');
+            infoTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    infoTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            const viewModeBtns = document.querySelectorAll('.view-mode-btn');
+            viewModeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    viewModeBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            const cameraPresets = document.querySelectorAll('.camera-preset');
+            cameraPresets.forEach(preset => {
+                preset.addEventListener('click', function() {
+                    cameraPresets.forEach(p => p.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Module selection
+            const moduleItems = document.querySelectorAll('.module-item');
+            moduleItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    moduleItems.forEach(m => m.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+
+            // Grid cell selection
+            const gridCells = document.querySelectorAll('.grid-cell.occupied');
+            gridCells.forEach(cell => {
+                cell.addEventListener('click', function() {
+                    gridCells.forEach(c => c.classList.remove('selected-module'));
+                    this.classList.add('selected-module');
+                });
+            });
+
+            // Drag and drop visual feedback
+            const draggables = document.querySelectorAll('[draggable="true"]');
+            draggables.forEach(item => {
+                item.addEventListener('dragstart', function() {
+                    this.classList.add('dragging');
+                });
+                item.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                });
+            });
+
+            // Tooltip functionality
+            const tooltip = document.getElementById('tooltip');
+            const moduleData = {
+                '🏛️': { title: 'Command Center', desc: 'Core station control hub. Required for all stations.' },
+                '⚡': { title: 'Fusion Reactor', desc: 'Generates 500 MW of clean fusion power.' },
+                '🔌': { title: 'Docking Bay', desc: 'Allows 4 ships to dock simultaneously.' },
+                '📦': { title: 'Cargo Hold', desc: '500 tons of cargo storage capacity.' },
+                '🏪': { title: 'Trade Hub', desc: '+15% trade volume and better prices.' },
+                '🏠': { title: 'Habitat Ring', desc: 'Comfortable living space for 100 crew.' },
+                '🛰️': { title: 'Shield Generator', desc: '5,000 HP shield protection.' },
+                '💥': { title: 'Turret Array', desc: '150 DPS defensive firepower.' }
+            };
+
+            gridCells.forEach(cell => {
+                cell.addEventListener('mouseenter', function(e) {
+                    const icon = this.textContent.trim();
+                    const data = moduleData[icon];
+                    if (data) {
+                        tooltip.querySelector('.tooltip-title').textContent = data.title;
+                        tooltip.querySelector('.tooltip-desc').textContent = data.desc;
+                        tooltip.style.left = (e.pageX + 15) + 'px';
+                        tooltip.style.top = (e.pageY + 15) + 'px';
+                        tooltip.classList.add('visible');
+                    }
+                });
+                cell.addEventListener('mousemove', function(e) {
+                    tooltip.style.left = (e.pageX + 15) + 'px';
+                    tooltip.style.top = (e.pageY + 15) + 'px';
+                });
+                cell.addEventListener('mouseleave', function() {
+                    tooltip.classList.remove('visible');
+                });
+            });
+
+            // Zoom controls
+            let zoomLevel = 100;
+            const zoomDisplay = document.querySelector('.zoom-level');
+            document.querySelectorAll('.viewport-btn').forEach((btn, index) => {
+                if (index === 0) { // Zoom out
+                    btn.addEventListener('click', () => {
+                        zoomLevel = Math.max(50, zoomLevel - 10);
+                        zoomDisplay.textContent = zoomLevel + '%';
+                    });
+                }
+                if (index === 1) { // Zoom in
+                    btn.addEventListener('click', () => {
+                        zoomLevel = Math.min(200, zoomLevel + 10);
+                        zoomDisplay.textContent = zoomLevel + '%';
+                    });
+                }
+            });
+
+            // Animate power bar
+            function animatePowerBar() {
+                const powerBar = document.querySelector('.power-used');
+                const usage = 70 + Math.random() * 12;
+                powerBar.style.width = usage + '%';
+            }
+            setInterval(animatePowerBar, 3000);
+
+            // Animate construction progress
+            function animateConstruction() {
+                const progressFill = document.querySelector('.queue-progress-fill');
+                if (progressFill) {
+                    let width = parseFloat(progressFill.style.width) || 0;
+                    width = width + 0.5;
+                    // Reset smoothly when reaching 100%
+                    if (width >= 100) {
+                        width = 0;
+                    }
+                    progressFill.style.width = width + '%';
+                }
+            }
+            setInterval(animateConstruction, 1000);
+        });
+    </script>
+</body>
+</html>
