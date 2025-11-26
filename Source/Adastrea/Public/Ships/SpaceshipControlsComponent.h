@@ -27,6 +27,10 @@ class UWeaponComponent;
  * Combat:
  * - Left Mouse Button: Fire primary weapon
  * 
+ * Speed:
+ * - Mouse Wheel Up: Increase speed
+ * - Mouse Wheel Down: Decrease speed
+ * 
  * Usage:
  * - Add component to spaceship pawn Blueprint
  * - Configure MovementSpeed and LookSensitivity as needed
@@ -67,6 +71,26 @@ public:
 	int32 InputMappingPriority;
 
 	// ====================
+	// SPEED CONFIGURATION
+	// ====================
+
+	/** Current speed multiplier (adjusted by mouse wheel) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Speed", meta=(ClampMin="0.1", ClampMax="10.0"))
+	float CurrentSpeed;
+
+	/** Amount to change speed per mouse wheel tick */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Speed", meta=(ClampMin="0.1", ClampMax="2.0"))
+	float SpeedStep;
+
+	/** Minimum speed multiplier */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Speed", meta=(ClampMin="0.1", ClampMax="5.0"))
+	float MinSpeed;
+
+	/** Maximum speed multiplier */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Speed", meta=(ClampMin="1.0", ClampMax="10.0"))
+	float MaxSpeed;
+
+	// ====================
 	// INPUT ACTIONS
 	// ====================
 
@@ -81,6 +105,10 @@ public:
 	/** Input action for primary weapon fire (LMB) - digital */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Controls|Input")
 	UInputAction* FireAction;
+
+	/** Input action for speed adjustment (mouse wheel) - 1D axis */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Controls|Input")
+	UInputAction* SpeedAction;
 
 	/** Input mapping context for spaceship controls */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Controls|Input")
@@ -131,6 +159,32 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Controls|Look")
 	void ToggleInvertLookY();
 
+	/**
+	 * Get the current speed multiplier
+	 * @return Current speed value
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Controls|Speed")
+	float GetCurrentSpeed() const;
+
+	/**
+	 * Set the current speed multiplier
+	 * @param NewSpeed New speed value (clamped to min/max range)
+	 */
+	UFUNCTION(BlueprintCallable, Category="Controls|Speed")
+	void SetCurrentSpeed(float NewSpeed);
+
+	/**
+	 * Increase speed by SpeedStep amount
+	 */
+	UFUNCTION(BlueprintCallable, Category="Controls|Speed")
+	void IncreaseSpeed();
+
+	/**
+	 * Decrease speed by SpeedStep amount
+	 */
+	UFUNCTION(BlueprintCallable, Category="Controls|Speed")
+	void DecreaseSpeed();
+
 	// ====================
 	// BLUEPRINT NATIVE EVENTS
 	// ====================
@@ -165,6 +219,15 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category="Controls")
 	void OnFireReleased();
 
+	/**
+	 * Called when speed is changed via mouse wheel
+	 * Override in Blueprint to customize speed change behavior
+	 * @param NewSpeed The new speed value after adjustment
+	 * @param Delta The amount of speed change (positive = increase, negative = decrease)
+	 */
+	UFUNCTION(BlueprintNativeEvent, Category="Controls")
+	void OnSpeedChanged(float NewSpeed, float Delta);
+
 	// ====================
 	// EVENTS
 	// ====================
@@ -178,6 +241,11 @@ public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnControlsDisabled);
 	UPROPERTY(BlueprintAssignable, Category="Controls|Events")
 	FOnControlsDisabled OnControlsDisabled;
+
+	/** Event fired when speed changes */
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSpeedChangedEvent, float, NewSpeed, float, Delta);
+	UPROPERTY(BlueprintAssignable, Category="Controls|Events")
+	FOnSpeedChangedEvent OnSpeedChangedEvent;
 
 protected:
 	virtual void BeginPlay() override;
@@ -216,6 +284,7 @@ protected:
 	void HandleLook(const FInputActionValue& Value);
 	void HandleFirePressed(const FInputActionValue& Value);
 	void HandleFireReleased(const FInputActionValue& Value);
+	void HandleSpeed(const FInputActionValue& Value);
 
 private:
 	/** Whether controls are currently enabled */

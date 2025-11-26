@@ -14,9 +14,14 @@ USpaceshipControlsComponent::USpaceshipControlsComponent()
 	, LookSensitivity(1.0f)
 	, bInvertLookY(false)
 	, InputMappingPriority(0)
+	, CurrentSpeed(1.0f)
+	, SpeedStep(0.25f)
+	, MinSpeed(0.25f)
+	, MaxSpeed(3.0f)
 	, MoveAction(nullptr)
 	, LookAction(nullptr)
 	, FireAction(nullptr)
+	, SpeedAction(nullptr)
 	, SpaceshipMappingContext(nullptr)
 	, bControlsEnabled(false)
 	, CachedWeaponComponent(nullptr)
@@ -98,6 +103,13 @@ void USpaceshipControlsComponent::CreateInputActions()
 		FireAction->ValueType = EInputActionValueType::Boolean;
 	}
 
+	// Create Speed Action (1D Axis for Mouse Wheel)
+	SpeedAction = NewObject<UInputAction>(this, TEXT("IA_SpaceshipSpeed"));
+	if (SpeedAction)
+	{
+		SpeedAction->ValueType = EInputActionValueType::Axis1D;
+	}
+
 	UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent: Created input actions"));
 }
 
@@ -147,6 +159,12 @@ void USpaceshipControlsComponent::CreateInputMappingContext()
 		SpaceshipMappingContext->MapKey(FireAction, EKeys::LeftMouseButton);
 	}
 
+	// Map Mouse Wheel (Speed adjustment)
+	if (SpeedAction)
+	{
+		SpaceshipMappingContext->MapKey(SpeedAction, EKeys::MouseWheelAxis);
+	}
+
 	UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent: Created input mapping context with key bindings"));
 }
 
@@ -175,6 +193,12 @@ void USpaceshipControlsComponent::SetupInputBindings(UEnhancedInputComponent* Pl
 	{
 		PlayerInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &USpaceshipControlsComponent::HandleFirePressed);
 		PlayerInputComponent->BindAction(FireAction, ETriggerEvent::Completed, this, &USpaceshipControlsComponent::HandleFireReleased);
+	}
+
+	// Bind Speed action
+	if (SpeedAction)
+	{
+		PlayerInputComponent->BindAction(SpeedAction, ETriggerEvent::Triggered, this, &USpaceshipControlsComponent::HandleSpeed);
 	}
 
 	UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent: Input bindings set up"));
@@ -268,9 +292,38 @@ void USpaceshipControlsComponent::ToggleInvertLookY()
 	UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent: Look Y invert set to %s"), bInvertLookY ? TEXT("true") : TEXT("false"));
 }
 
+float USpaceshipControlsComponent::GetCurrentSpeed() const
+{
+	return CurrentSpeed;
+}
+
+void USpaceshipControlsComponent::SetCurrentSpeed(float NewSpeed)
+{
+	float OldSpeed = CurrentSpeed;
+	CurrentSpeed = FMath::Clamp(NewSpeed, MinSpeed, MaxSpeed);
+	
+	if (!FMath::IsNearlyEqual(OldSpeed, CurrentSpeed))
+	{
+		float Delta = CurrentSpeed - OldSpeed;
+		OnSpeedChanged(CurrentSpeed, Delta);
+		OnSpeedChangedEvent.Broadcast(CurrentSpeed, Delta);
+		UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent: Speed set to %.2f"), CurrentSpeed);
+	}
+}
+
+void USpaceshipControlsComponent::IncreaseSpeed()
+{
+	SetCurrentSpeed(CurrentSpeed + SpeedStep);
+}
+
+void USpaceshipControlsComponent::DecreaseSpeed()
+{
+	SetCurrentSpeed(CurrentSpeed - SpeedStep);
+}
+
 void USpaceshipControlsComponent::HandleMove(const FInputActionValue& Value)
 {
-	FVector2D MoveValue = Value.Get<FVector2D>() * MovementSpeed;
+	FVector2D MoveValue = Value.Get<FVector2D>() * MovementSpeed * CurrentSpeed;
 	OnMoveInput(MoveValue);
 }
 
@@ -295,6 +348,26 @@ void USpaceshipControlsComponent::HandleFirePressed(const FInputActionValue& Val
 void USpaceshipControlsComponent::HandleFireReleased(const FInputActionValue& Value)
 {
 	OnFireReleased();
+}
+
+void USpaceshipControlsComponent::HandleSpeed(const FInputActionValue& Value)
+{
+	float ScrollValue = Value.Get<float>();
+	
+	// Early return for zero values to avoid unnecessary processing
+	if (FMath::IsNearlyZero(ScrollValue))
+	{
+		return;
+	}
+
+	if (ScrollValue > 0.0f)
+	{
+		IncreaseSpeed();
+	}
+	else
+	{
+		DecreaseSpeed();
+	}
 }
 
 void USpaceshipControlsComponent::OnMoveInput_Implementation(FVector2D MoveValue)
@@ -352,4 +425,11 @@ void USpaceshipControlsComponent::OnFireReleased_Implementation()
 {
 	// Default implementation does nothing
 	// Override in Blueprint for continuous fire weapons that need release handling
+}
+
+void USpaceshipControlsComponent::OnSpeedChanged_Implementation(float NewSpeed, float Delta)
+{
+	// Default implementation logs the speed change
+	// Override in Blueprint for custom speed change effects (UI updates, engine sounds, etc.)
+	UE_LOG(LogAdastreaInput, Verbose, TEXT("SpaceshipControlsComponent: Speed changed to %.2f (delta: %.2f)"), NewSpeed, Delta);
 }
