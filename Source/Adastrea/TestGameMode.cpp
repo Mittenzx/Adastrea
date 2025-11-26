@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "TestGameMode.h"
-#include "Public/Ships/SpaceshipDataAsset.h"
-#include "Public/Input/InputConfigDataAsset.h"
+#include "Ships/SpaceshipDataAsset.h"
+#include "Input/InputConfigDataAsset.h"
 #include "Ships/Spaceship.h"
 #include "AdastreaLog.h"
 #include "Kismet/GameplayStatics.h"
@@ -60,7 +60,7 @@ void ATestGameMode::BeginPlay()
 void ATestGameMode::ApplyDefaults()
 {
 	// Apply default spaceship selection
-	if (AvailableSpaceships.Num() > 0 && DefaultSpaceshipIndex >= 0)
+	if (AvailableSpaceships.Num() > 0)
 	{
 		const int32 ClampedIndex = FMath::Clamp(DefaultSpaceshipIndex, 0, AvailableSpaceships.Num() - 1);
 		SelectedSpaceship = AvailableSpaceships[ClampedIndex];
@@ -73,7 +73,7 @@ void ATestGameMode::ApplyDefaults()
 	}
 	
 	// Apply default input config selection
-	if (AvailableInputConfigs.Num() > 0 && DefaultInputConfigIndex >= 0)
+	if (AvailableInputConfigs.Num() > 0)
 	{
 		const int32 ClampedIndex = FMath::Clamp(DefaultInputConfigIndex, 0, AvailableInputConfigs.Num() - 1);
 		SelectedInputConfig = AvailableInputConfigs[ClampedIndex];
@@ -197,10 +197,8 @@ TArray<FText> ATestGameMode::GetAvailableInputConfigNames() const
 		const UInputConfigDataAsset* Config = AvailableInputConfigs[i];
 		if (Config)
 		{
-			// Use a descriptive name - InputConfigDataAsset doesn't have a display name,
-			// so we generate one based on index or use the asset name
-			FString AssetName = Config->GetName();
-			Names.Add(FText::FromString(AssetName));
+			// Use formatted config name for user-friendly display
+			Names.Add(FText::Format(NSLOCTEXT("TestGameMode", "ConfigName", "Config {0}"), i + 1));
 		}
 		else
 		{
@@ -218,7 +216,13 @@ int32 ATestGameMode::GetSelectedSpaceshipIndex() const
 		return INDEX_NONE;
 	}
 	
-	return AvailableSpaceships.Find(SelectedSpaceship);
+	int32 Index = AvailableSpaceships.Find(SelectedSpaceship);
+	if (Index == INDEX_NONE)
+	{
+		UE_LOG(LogAdastreaShips, Warning, TEXT("Selected spaceship not found in available list: %s"),
+			SelectedSpaceship ? *SelectedSpaceship->GetName() : TEXT("<nullptr>"));
+	}
+	return Index;
 }
 
 int32 ATestGameMode::GetSelectedInputConfigIndex() const
@@ -228,7 +232,12 @@ int32 ATestGameMode::GetSelectedInputConfigIndex() const
 		return INDEX_NONE;
 	}
 	
-	return AvailableInputConfigs.Find(SelectedInputConfig);
+	const int32 Index = AvailableInputConfigs.Find(SelectedInputConfig);
+	if (Index == INDEX_NONE)
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("SelectedInputConfig '%s' is valid but not found in AvailableInputConfigs array."), *SelectedInputConfig->GetName());
+	}
+	return Index;
 }
 
 bool ATestGameMode::AreSelectionsValid() const
@@ -400,6 +409,13 @@ void ATestGameMode::SpawnSelectedSpaceship_Implementation()
 			// Update movement properties from data asset
 			PlayerShip->DefaultMaxSpeed = SelectedSpaceship->MaxSpeed;
 			PlayerShip->DefaultAcceleration = SelectedSpaceship->Acceleration;
+			
+			// Also apply movement properties to the movement component (runtime effect)
+			if (PlayerShip->MovementComponent)
+			{
+				PlayerShip->MovementComponent->MaxSpeed = SelectedSpaceship->MaxSpeed;
+				PlayerShip->MovementComponent->Acceleration = SelectedSpaceship->Acceleration;
+			}
 			
 			UE_LOG(LogAdastreaShips, Log, TEXT("TestGameMode: Applied data asset '%s' to spawned ship"), 
 				*SelectedSpaceship->ShipName.ToString());

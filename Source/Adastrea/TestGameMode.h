@@ -36,7 +36,7 @@ class UUserWidget;
  * - Works with InputConfigDataAsset for control configuration
  * - Inherits all functionality from AAdastreaGameMode
  */
-UCLASS(minimalapi)
+UCLASS(BlueprintType)
 class ATestGameMode : public AAdastreaGameMode
 {
 	GENERATED_BODY()
@@ -113,14 +113,14 @@ public:
 	 * Currently selected spaceship data asset
 	 * Updated by menu selection, used for spawning
 	 */
-	UPROPERTY(BlueprintReadOnly, Category="Test Game Mode|Selection")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Test Game Mode|Selection")
 	USpaceshipDataAsset* SelectedSpaceship;
 
 	/**
 	 * Currently selected input configuration data asset
 	 * Updated by menu selection, applied on confirmation
 	 */
-	UPROPERTY(BlueprintReadOnly, Category="Test Game Mode|Selection")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Test Game Mode|Selection")
 	UInputConfigDataAsset* SelectedInputConfig;
 
 	// ====================
@@ -169,35 +169,35 @@ public:
 	 * Get array of spaceship display names for UI population
 	 * @return Array of display names from available spaceships
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Test Game Mode|Query")
+	UFUNCTION(BlueprintPure, Category="Test Game Mode|Query")
 	TArray<FText> GetAvailableSpaceshipNames() const;
 
 	/**
 	 * Get array of input config display names for UI population
 	 * @return Array of display names from available input configs
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Test Game Mode|Query")
+	UFUNCTION(BlueprintPure, Category="Test Game Mode|Query")
 	TArray<FText> GetAvailableInputConfigNames() const;
 
 	/**
 	 * Get the currently selected spaceship index
 	 * @return Index in AvailableSpaceships array, or -1 if none selected
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Test Game Mode|Query")
+	UFUNCTION(BlueprintPure, Category="Test Game Mode|Query")
 	int32 GetSelectedSpaceshipIndex() const;
 
 	/**
 	 * Get the currently selected input config index
 	 * @return Index in AvailableInputConfigs array, or -1 if none selected
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Test Game Mode|Query")
+	UFUNCTION(BlueprintPure, Category="Test Game Mode|Query")
 	int32 GetSelectedInputConfigIndex() const;
 
 	/**
 	 * Check if selections are valid and ready to proceed
 	 * @return True if valid spaceship and input config are selected
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Test Game Mode|Query")
+	UFUNCTION(BlueprintPure, Category="Test Game Mode|Query")
 	bool AreSelectionsValid() const;
 
 protected:
