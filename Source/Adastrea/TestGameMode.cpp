@@ -218,7 +218,7 @@ int32 ATestGameMode::GetSelectedSpaceshipIndex() const
 		return INDEX_NONE;
 	}
 	
-	return AvailableSpaceships.IndexOfByKey(SelectedSpaceship);
+	return AvailableSpaceships.Find(SelectedSpaceship);
 }
 
 int32 ATestGameMode::GetSelectedInputConfigIndex() const
@@ -228,7 +228,7 @@ int32 ATestGameMode::GetSelectedInputConfigIndex() const
 		return INDEX_NONE;
 	}
 	
-	return AvailableInputConfigs.IndexOfByKey(SelectedInputConfig);
+	return AvailableInputConfigs.Find(SelectedInputConfig);
 }
 
 bool ATestGameMode::AreSelectionsValid() const
