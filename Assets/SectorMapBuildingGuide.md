@@ -20,14 +20,14 @@ A complete end-to-end tutorial for building a sector map from scratch in Adastre
 This guide walks you through building a complete, playable sector from nothing. By the end, you'll have:
 
 - A level map containing your sector
-- A `ASpaceSectorMap` actor marking the 200km x 200km boundaries
+- A `ASpaceSectorMap` actor marking the 200km × 200km × 200km boundaries
 - A `USectorCouncilDataAsset` defining governance, taxation, and policies
 - Populated content (stations, ships, resources)
 - A validated, tested sector ready for gameplay
 
 ### What is a Sector?
 
-A sector in Adastrea is a 200km x 200km x 200km region of space (20,000,000 Unreal units per side). Each sector has:
+A sector in Adastrea is a 200km × 200km × 200km region of space (20,000,000 Unreal units per side). Each sector has:
 
 | Component | Purpose |
 |-----------|---------|
@@ -562,9 +562,9 @@ int64 TaxOwed = SectorCouncil->CalculateTaxOwed(100000);
 bool bBalanced = SectorCouncil->IsBudgetBalanced();
 // Expected: true
 
-// Test voting
+// Test voting (votes_for, votes_against)
 bool bWouldPass = SectorCouncil->WouldVotePass(45, 22);
-// Expected: true (45 > 51% of 67 total)
+// Expected: true (45 votes for is > 51% of 67 total weight)
 ```
 
 ### 6.6 Integration Testing
