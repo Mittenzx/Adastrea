@@ -28,7 +28,7 @@ namespace AdastreaDirectorTestConstants
 	 * Note: This test expects connection failure regardless of port availability.
 	 * If something is running on this port, connection still validates error handling.
 	 */
-	constexpr int32 UnusedTestPort = 59999;
+	constexpr int32 InvalidConnectionTestPort = 59999;
 	/** Timeout for connection tests in seconds */
 	constexpr float ConnectionTestTimeout = 0.5f;
 }
@@ -82,9 +82,9 @@ bool FAdastreaDirectorModuleTypeTest::RunTest(const FString& Parameters)
 	// Use FModuleManager::GetModuleChecked for type-safe casting
 	FAdastreaDirectorModule& DirectorModule = FModuleManager::Get().GetModuleChecked<FAdastreaDirectorModule>("AdastreaDirector");
 	
-	// The module reference is valid if we got here (GetModuleChecked would assert otherwise)
-	// Verify we can access a method on it
-	TestTrue(TEXT("FAdastreaDirectorModule should be accessible"), true);
+	// Verify module functionality by checking GetPythonBridge returns a valid pointer
+	FPythonBridge* PythonBridge = DirectorModule.GetPythonBridge();
+	TestNotNull(TEXT("FAdastreaDirectorModule should return a valid PythonBridge"), PythonBridge);
 
 	return true;
 }
@@ -130,7 +130,7 @@ bool FIPCClientInvalidConnectionTest::RunTest(const FString& Parameters)
 	// Attempt to connect to a port where nothing is listening
 	const bool bConnected = Client->Connect(
 		TEXT("127.0.0.1"), 
-		AdastreaDirectorTestConstants::UnusedTestPort, 
+		AdastreaDirectorTestConstants::InvalidConnectionTestPort, 
 		AdastreaDirectorTestConstants::ConnectionTestTimeout
 	);
 	
@@ -162,6 +162,7 @@ bool FPythonProcessManagerInstantiationTest::RunTest(const FString& Parameters)
 
 	// Verify initial state
 	TestFalse(TEXT("FPythonProcessManager should not have running process initially"), Manager->IsProcessRunning());
+	// Note: 0 is the defined sentinel value for "not running" in FPythonProcessManager
 	TestEqual(TEXT("FPythonProcessManager ProcessId should be 0 initially"), Manager->GetProcessId(), 0u);
 
 	return true;
@@ -180,10 +181,22 @@ bool FPythonProcessManagerInvalidPathTest::RunTest(const FString& Parameters)
 {
 	TUniquePtr<FPythonProcessManager> Manager = MakeUnique<FPythonProcessManager>();
 	
+	// Use platform-agnostic invalid paths for testing
+	// These paths are intentionally invalid and should not exist on any supported platform.
+	FString InvalidPythonPath;
+	FString InvalidScriptPath;
+#if PLATFORM_WINDOWS
+	InvalidPythonPath = TEXT("Z:\\nonexistent\\python.exe");
+	InvalidScriptPath = TEXT("Z:\\nonexistent\\script.py");
+#else
+	InvalidPythonPath = TEXT("/nonexistent/python");
+	InvalidScriptPath = TEXT("/nonexistent/script.py");
+#endif
+
 	// Attempt to start with invalid paths
 	const bool bStarted = Manager->StartPythonProcess(
-		TEXT("/nonexistent/python"),
-		TEXT("/nonexistent/script.py"),
+		InvalidPythonPath,
+		InvalidScriptPath,
 		5555
 	);
 	
@@ -232,9 +245,13 @@ bool FPythonBridgeStatusTest::RunTest(const FString& Parameters)
 {
 	TUniquePtr<FPythonBridge> Bridge = MakeUnique<FPythonBridge>();
 	
-	// Get status - should return a non-empty string
+	// Get status - should return a non-empty string with meaningful content
 	const FString Status = Bridge->GetStatus();
 	TestFalse(TEXT("FPythonBridge status should not be empty"), Status.IsEmpty());
+	TestTrue(
+		TEXT("FPythonBridge status should indicate not running when uninitialized"),
+		Status.Contains(TEXT("not running")) || Status.Contains(TEXT("not connected"))
+	);
 
 	return true;
 }
@@ -248,7 +265,7 @@ bool FPythonBridgeStatusTest::RunTest(const FString& Parameters)
  */
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(
 	FAdastreaDirectorSmokeTest,
-	"Adastrea.Director.SmokeTest",
+	"Adastrea.Director.SmokeTests",
 	EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter
 )
 
@@ -267,9 +284,6 @@ bool FAdastreaDirectorSmokeTest::RunTest(const FString& Parameters)
 
 	TUniquePtr<FPythonBridge> Bridge = MakeUnique<FPythonBridge>();
 	TestNotNull(TEXT("FPythonBridge should be instantiable"), Bridge.Get());
-
-	// 3. Verify log category exists (by logging)
-	UE_LOG(LogAdastreaDirector, Log, TEXT("Smoke test completed successfully"));
 
 	return true;
 }
