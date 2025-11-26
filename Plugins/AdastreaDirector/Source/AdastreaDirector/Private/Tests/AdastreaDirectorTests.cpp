@@ -23,7 +23,11 @@
 
 namespace AdastreaDirectorTestConstants
 {
-	/** Port used for testing invalid connections - intentionally high and unlikely to be in use */
+	/** 
+	 * Port used for testing invalid connections.
+	 * Note: This test expects connection failure regardless of port availability.
+	 * If something is running on this port, connection still validates error handling.
+	 */
 	constexpr int32 UnusedTestPort = 59999;
 	/** Timeout for connection tests in seconds */
 	constexpr float ConnectionTestTimeout = 0.5f;
