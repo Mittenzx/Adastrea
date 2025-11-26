@@ -168,9 +168,10 @@ Concise reference documents:
 
 | Document | Type | Purpose | Location |
 |----------|------|---------|----------|
-| **SectorCreationGuide.md** | Guide | ⭐ **NEW!** Complete sector creation documentation | Assets/ |
-| **SectorMapPlacementGuide.md** | Guide | ⭐ **NEW!** Sector map actor placement guide | Assets/ |
-| **SectorTemplates/README.md** | Templates | ⭐ **NEW!** 7 sector council templates with usage guide | Assets/SectorTemplates/ |
+| **SectorMapBuildingGuide.md** | Tutorial | Complete end-to-end sector building tutorial | Assets/ |
+| **SectorCreationGuide.md** | Guide | Complete sector creation documentation | Assets/ |
+| **SectorMapPlacementGuide.md** | Guide | Sector map actor placement guide | Assets/ |
+| **SectorTemplates/README.md** | Templates | 7 sector council templates with usage guide | Assets/SectorTemplates/ |
 | **SectorTemplates/CoreSystemsSector.yaml** | Template | Safe, balanced governance template | Assets/SectorTemplates/ |
 | **SectorTemplates/FrontierMiningSector.yaml** | Template | Dangerous mining territory template | Assets/SectorTemplates/ |
 | **SectorTemplates/TradeHubSector.yaml** | Template | Commerce-focused governance template | Assets/SectorTemplates/ |
