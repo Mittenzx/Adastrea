@@ -16,7 +16,7 @@ AAdastreaGameMode::AAdastreaGameMode()
 	
 	// Test settings configuration
 	TestSettingsWidgetClass = nullptr; // Must be set in Blueprint or editor to enable
-	bShowTestSettingsOnStartup = true; // Show if widget class is set
+	bShowTestSettingsOnStartup = false; // Disabled by default - enable in editor for testing
 	
 	// Default auto-spawn settings
 	bAutoSpawnPlayerShip = true;
