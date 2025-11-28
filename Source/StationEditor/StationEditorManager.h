@@ -803,7 +803,7 @@ public:
 	 * @return True if module has power connection path to a reactor
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station Editor|Connections")
-	bool IsConnectedToPower(ASpaceStationModule* Module) const;
+	bool IsConnectedToPower(const ASpaceStationModule* Module) const;
 
 	/**
 	 * Check if a module has life support
@@ -811,7 +811,7 @@ public:
 	 * @return True if module has life support connection
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station Editor|Connections")
-	bool HasLifeSupport(ASpaceStationModule* Module) const;
+	bool HasLifeSupport(const ASpaceStationModule* Module) const;
 
 	// =====================
 	// Construction Queue
@@ -1050,6 +1050,11 @@ protected:
 	 */
 	void GenerateStatusNotifications();
 
+	/**
+	 * Internal helper to recalculate statistics (const-safe for mutable cache)
+	 */
+	void RecalculateStatisticsInternal() const;
+
 private:
 	/** Cached last power balance for change detection */
 	float LastPowerBalance = 0.0f;
@@ -1087,12 +1092,11 @@ private:
 	UPROPERTY()
 	EStationEditorViewMode CurrentViewMode = EStationEditorViewMode::Edit;
 
-	/** Cached station statistics */
-	UPROPERTY()
-	FStationStatistics CachedStatistics;
+	/** Cached station statistics (mutable for lazy recalculation in const getters) */
+	mutable FStationStatistics CachedStatistics;
 
-	/** Whether statistics need recalculation */
-	bool bStatisticsDirty = true;
+	/** Whether statistics need recalculation (mutable for lazy recalculation in const getters) */
+	mutable bool bStatisticsDirty = true;
 
 	/** Current time (for timestamps) */
 	float CurrentTime = 0.0f;

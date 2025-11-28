@@ -849,14 +849,55 @@ bool UStationEditorManager::ExecuteAction(const FEditorAction& Action)
 		case EEditorActionType::PlaceModule:
 			if (Action.ModuleClass && CurrentStation)
 			{
-				// Re-place the module
-				return PlaceModule(Action.ModuleClass, Action.NewPosition, Action.NewRotation) != nullptr;
+				// Re-place the module without recording action (we're executing from redo stack)
+				UWorld* World = CurrentStation->GetWorld();
+				if (World)
+				{
+					FVector FinalPosition = bSnapToGrid && GridSystem ? GridSystem->SnapToGrid(Action.NewPosition) : Action.NewPosition;
+					
+					FActorSpawnParameters SpawnParams;
+					SpawnParams.Owner = CurrentStation;
+					
+					ASpaceStationModule* NewModule = World->SpawnActor<ASpaceStationModule>(
+						Action.ModuleClass,
+						FinalPosition,
+						Action.NewRotation,
+						SpawnParams
+					);
+					
+					if (NewModule)
+					{
+						FVector RelativeLocation = FinalPosition - CurrentStation->GetActorLocation();
+						CurrentStation->AddModuleAtLocation(NewModule, RelativeLocation);
+						AutoGenerateConnections(NewModule);
+						bStatisticsDirty = true;
+						NotifyPowerBalanceChanged();
+						OnModulePlaced.Broadcast(NewModule);
+						return true;
+					}
+				}
 			}
 			break;
 			
 		case EEditorActionType::RemoveModule:
-			// For redo of remove, we need to remove again (but module reference is invalid after undo)
-			// This case needs special handling - skip for now
+			// For redo of remove, we need to find and remove the module we just recreated via undo
+			// Since we stored the position, we can find it
+			if (CurrentStation)
+			{
+				for (ASpaceStationModule* Module : CurrentStation->Modules)
+				{
+					if (Module && 
+						FVector::DistSquared(Module->GetActorLocation(), Action.PreviousPosition) < 100.0f &&
+						Module->GetClass() == Action.ModuleClass)
+					{
+						CurrentStation->RemoveModule(Module);
+						Module->Destroy();
+						bStatisticsDirty = true;
+						NotifyPowerBalanceChanged();
+						return true;
+					}
+				}
+			}
 			break;
 			
 		case EEditorActionType::MoveModule:
@@ -890,17 +931,54 @@ bool UStationEditorManager::ReverseAction(const FEditorAction& Action)
 			// Reverse of place = remove
 			if (Action.Module && IsValid(Action.Module) && CurrentStation)
 			{
+				// Remove connections for this module
+				for (int32 i = Connections.Num() - 1; i >= 0; --i)
+				{
+					if (Connections[i].ModuleA == Action.Module || Connections[i].ModuleB == Action.Module)
+					{
+						Connections.RemoveAt(i);
+					}
+				}
+				
 				CurrentStation->RemoveModule(Action.Module);
 				Action.Module->Destroy();
+				bStatisticsDirty = true;
+				NotifyPowerBalanceChanged();
 				return true;
 			}
 			break;
 			
 		case EEditorActionType::RemoveModule:
 			// Reverse of remove = place (needs stored data to recreate)
+			// Don't call PlaceModule as it records a new action
 			if (Action.ModuleClass && CurrentStation)
 			{
-				return PlaceModule(Action.ModuleClass, Action.PreviousPosition, Action.PreviousRotation) != nullptr;
+				UWorld* World = CurrentStation->GetWorld();
+				if (World)
+				{
+					FVector FinalPosition = bSnapToGrid && GridSystem ? GridSystem->SnapToGrid(Action.PreviousPosition) : Action.PreviousPosition;
+					
+					FActorSpawnParameters SpawnParams;
+					SpawnParams.Owner = CurrentStation;
+					
+					ASpaceStationModule* NewModule = World->SpawnActor<ASpaceStationModule>(
+						Action.ModuleClass,
+						FinalPosition,
+						Action.PreviousRotation,
+						SpawnParams
+					);
+					
+					if (NewModule)
+					{
+						FVector RelativeLocation = FinalPosition - CurrentStation->GetActorLocation();
+						CurrentStation->AddModuleAtLocation(NewModule, RelativeLocation);
+						AutoGenerateConnections(NewModule);
+						bStatisticsDirty = true;
+						NotifyPowerBalanceChanged();
+						OnModulePlaced.Broadcast(NewModule);
+						return true;
+					}
+				}
 			}
 			break;
 			
@@ -1074,7 +1152,7 @@ void UStationEditorManager::AutoGenerateConnections(ASpaceStationModule* Module)
 	}
 }
 
-bool UStationEditorManager::IsConnectedToPower(ASpaceStationModule* Module) const
+bool UStationEditorManager::IsConnectedToPower(const ASpaceStationModule* Module) const
 {
 	if (!Module || !CurrentStation)
 	{
@@ -1103,7 +1181,7 @@ bool UStationEditorManager::IsConnectedToPower(ASpaceStationModule* Module) cons
 	return false;
 }
 
-bool UStationEditorManager::HasLifeSupport(ASpaceStationModule* Module) const
+bool UStationEditorManager::HasLifeSupport(const ASpaceStationModule* Module) const
 {
 	if (!Module)
 	{
@@ -1324,12 +1402,17 @@ FStationStatistics UStationEditorManager::GetStationStatistics() const
 {
 	if (bStatisticsDirty)
 	{
-		const_cast<UStationEditorManager*>(this)->RecalculateStatistics();
+		RecalculateStatisticsInternal();
 	}
 	return CachedStatistics;
 }
 
 void UStationEditorManager::RecalculateStatistics()
+{
+	RecalculateStatisticsInternal();
+}
+
+void UStationEditorManager::RecalculateStatisticsInternal() const
 {
 	CachedStatistics = FStationStatistics();
 	
@@ -1374,7 +1457,6 @@ void UStationEditorManager::RecalculateStatistics()
 		FMath::Clamp(static_cast<float>(LifeSupportConnections) / static_cast<float>(HabitationModules), 0.0f, 1.0f) : 1.0f;
 	
 	bStatisticsDirty = false;
-	OnStatisticsUpdated.Broadcast(CachedStatistics);
 }
 
 int32 UStationEditorManager::GetPopulationCapacity() const
@@ -1441,7 +1523,7 @@ float UStationEditorManager::GetEfficiencyRating() const
 	int32 ConnectedModules = 0;
 	for (const ASpaceStationModule* Module : CurrentStation->Modules)
 	{
-		if (Module && IsConnectedToPower(const_cast<ASpaceStationModule*>(Module)))
+		if (Module && IsConnectedToPower(Module))
 		{
 			ConnectedModules++;
 		}
