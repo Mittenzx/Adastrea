@@ -7,6 +7,11 @@
 #include "AdastreaPlayerController.generated.h"
 
 /**
+ * Delegate for station editor toggle event
+ */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStationEditorToggle);
+
+/**
  * Player Controller for Adastrea
  * 
  * This class manages player input, interaction with the game world, and player-specific
@@ -40,6 +45,17 @@ class ADASTREA_API AAdastreaPlayerController : public APlayerController
 public:
 	AAdastreaPlayerController();
 
+	// ====================
+	// Events
+	// ====================
+
+	/**
+	 * Called when the station editor should be toggled (default: M key when in spaceship mode)
+	 * Bind to this event in Blueprint to open/close the station editor UI
+	 */
+	UPROPERTY(BlueprintAssignable, Category="Player|Events")
+	FOnStationEditorToggle OnStationEditorToggle;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -67,4 +83,12 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player")
 	bool IsControllingSpaceship() const;
+
+	/**
+	 * Toggle the station editor UI
+	 * Called when StationEditorAction input is triggered
+	 * Only works when controlling a spaceship
+	 */
+	UFUNCTION(BlueprintCallable, Category="Player|Station Editor")
+	void ToggleStationEditor();
 };

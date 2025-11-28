@@ -38,6 +38,7 @@ UInputConfigDataAsset::UInputConfigDataAsset()
     InventoryAction = nullptr;
     QuestLogAction = nullptr;
     ScreenshotAction = nullptr;
+    StationEditorAction = nullptr;
 
     CycleCameraAction = nullptr;
     ZoomInAction = nullptr;
@@ -106,6 +107,7 @@ TArray<FString> UInputConfigDataAsset::GetUnassignedActions() const
     if (!InventoryAction) UnassignedActions.Add(TEXT("InventoryAction"));
     if (!QuestLogAction) UnassignedActions.Add(TEXT("QuestLogAction"));
     if (!ScreenshotAction) UnassignedActions.Add(TEXT("ScreenshotAction"));
+    if (!StationEditorAction) UnassignedActions.Add(TEXT("StationEditorAction"));
 
     // Check camera actions
     if (!CycleCameraAction) UnassignedActions.Add(TEXT("CycleCameraAction"));

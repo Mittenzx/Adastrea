@@ -162,14 +162,16 @@ H Key → IA_ClearWaypoint
 N Key → IA_NextWaypoint
 ```
 
-**System:**
+**System (Suggested Defaults):**
 ```
 Escape Key → IA_Menu
-M Key → IA_Map
+M Key → IA_Map (default; StationEditor uses M only in spaceship mode)
+M Key → IA_StationEditor (spaceship mode only - context-sensitive)
 I Key → IA_Inventory
 J Key → IA_QuestLog
 F12 Key → IA_Screenshot
 ```
+Note: These are suggested default key bindings. The M key serves dual purpose: opens Map in general, but opens StationEditor when controlling a spaceship. Designers configure the actual bindings in the Input Mapping Context (IMC_Spaceship) within the Unreal Editor.
 
 **Camera:**
 ```
@@ -320,6 +322,27 @@ Branch on [Triggered]
   Branch on [IsAutopilotActive]
     True → [DeactivateAutopilot]
     False → [ActivateAutopilot] (to cursor location or waypoint)
+```
+
+**Station Editor (M Key):**
+```blueprint
+[IA_StationEditor (Enhanced Input Action)]
+  ↓
+[Triggered] → [Get PlayerController] → [Cast to AdastreaPlayerController]
+  ↓
+[ToggleStationEditor]
+  ↓
+(This broadcasts OnStationEditorToggle event - bind to this to show/hide UI)
+```
+
+Alternative using the event directly in Player Controller Blueprint:
+```blueprint
+Event BeginPlay
+  ↓
+[Bind Event to OnStationEditorToggle]
+  ↓
+  Event → [Toggle Station Editor Widget Visibility]
+           → [Create/Remove Widget] or [Set Visibility]
 ```
 
 ## C++ Input Action Binding
@@ -546,7 +569,8 @@ Add Print String nodes to input event handlers to verify they're being called.
 
 **System:**
 - `IA_Menu` - ESC/Start pause menu
-- `IA_Map` - M/Back open map
+- `IA_Map` - M/Back open map (default binding)
+- `IA_StationEditor` - M open station editor (spaceship mode only, context-sensitive)
 - `IA_Inventory` - I open inventory
 - `IA_QuestLog` - J open quests
 - `IA_Screenshot` - F12 take screenshot

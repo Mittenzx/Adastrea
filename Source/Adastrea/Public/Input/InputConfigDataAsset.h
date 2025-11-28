@@ -174,6 +174,10 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input Actions|System")
     UInputAction* ScreenshotAction;
 
+    /** Input action for opening station editor (default: M key when in spaceship mode) */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input Actions|System")
+    UInputAction* StationEditorAction;
+
     // ====================
     // CAMERA INPUT ACTIONS
     // ====================
