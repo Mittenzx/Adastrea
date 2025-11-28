@@ -13,6 +13,21 @@ Each entry includes:
 
 ---
 
+## [2025-11-28] - Added Unreal MCP Agent
+
+### Added
+- **Unreal MCP Expert** (`unreal-mcp.agent.md`)
+  - Unreal Engine MCP (Model Context Protocol) expertise
+  - AI-driven automation for Unreal Engine workflows
+  - Actor management and Blueprint development commands
+  - Python integration patterns
+  - Editor control and scene population
+  - Integration patterns for Adastrea development
+  - MCP command reference and examples
+  - Troubleshooting and best practices
+
+---
+
 ## [2025-11-07] - Initial Creation
 
 ### Added

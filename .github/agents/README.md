@@ -4,7 +4,7 @@ This directory contains custom agent definitions for GitHub Copilot. Custom agen
 
 ## Available Agents
 
-### 1. Adastrea Developer Expert (`adastrea-developer.md`)
+### 1. Adastrea Developer Expert (`adastrea-developer.agent.md`)
 
 A comprehensive development agent with expertise in:
 - All 9 core game systems (Spaceships, Stations, Factions, Personnel, AI, Trading, Player, Materials, Editor)
@@ -23,6 +23,26 @@ A comprehensive development agent with expertise in:
 - Troubleshooting build/compilation issues
 - Performance optimization
 - Code reviews and refactoring
+
+### 2. Unreal MCP Expert (`unreal-mcp.agent.md`)
+
+A specialized agent for Unreal Engine MCP (Model Context Protocol) integration:
+- AI-driven automation for Unreal Engine workflows
+- Natural language control of Unreal Editor
+- Actor management (create, modify, delete)
+- Blueprint development automation
+- Python script integration
+- Editor control and scene navigation
+
+**Use this agent for:**
+- Setting up MCP for Adastrea development
+- Automating actor creation and placement
+- Blueprint generation and configuration
+- Scene population using MCP commands
+- Python script integration with MCP
+- Debugging MCP connection issues
+- Batch processing content creation
+- Editor automation workflows
 
 ## How to Use Custom Agents
 
@@ -87,5 +107,5 @@ If you have ideas for new custom agents or improvements to existing ones, please
 
 ---
 
-**Last Updated**: 2025-11-07
+**Last Updated**: 2025-11-28
 **Maintained by**: Adastrea Development Team
