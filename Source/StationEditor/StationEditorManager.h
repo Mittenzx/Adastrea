@@ -402,6 +402,44 @@ public:
 	/** Default collision radius for module placement validation */
 	static constexpr float DefaultCollisionRadius = 200.0f;
 
+	/** Maximum size of the notification history */
+	static constexpr int32 MaxNotifications = 50;
+
+	/** Default build time when catalog entry is not found (seconds) */
+	static constexpr float DefaultBuildTime = 60.0f;
+
+	/** Default upgrade cost multiplier (0.5 = 50% of build cost) */
+	static constexpr float DefaultUpgradeCostMultiplier = 0.5f;
+
+	/** Efficiency penalty for power deficit */
+	static constexpr float PowerDeficitEfficiencyPenalty = 0.3f;
+
+	/** Efficiency penalty for power over-production */
+	static constexpr float PowerOverProductionEfficiencyPenalty = 0.1f;
+
+	/** Power load warning threshold (0.8 = 80% capacity) */
+	static constexpr float PowerLoadWarningThreshold = 0.8f;
+
+	/** Population capacity warning threshold (0.9 = 90% capacity) */
+	static constexpr float PopulationWarningThreshold = 0.9f;
+
+	/** Default cargo capacity per storage module (tons) */
+	static constexpr float DefaultCargoCapacityPerModule = 500.0f;
+
+	/** Default population capacity per habitation module */
+	static constexpr int32 DefaultPopulationCapacityPerModule = 100;
+
+	/** Default defense rating per defense module */
+	static constexpr float DefaultDefenseRatingPerModule = 15.0f;
+
+	/** Default connection capacity values by type */
+	static constexpr float DefaultPowerConnectionCapacity = 100.0f;   // MW
+	static constexpr float DefaultDataConnectionCapacity = 1000.0f;   // Mbps
+	static constexpr float DefaultLifeSupportConnectionCapacity = 50.0f;  // Crew capacity
+
+	/** Distance threshold for module matching during undo/redo (squared) */
+	static constexpr float ModuleMatchDistanceSquared = 100.0f;
+
 	// =====================
 	// Configuration
 	// =====================

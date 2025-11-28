@@ -30,6 +30,8 @@ class STATIONEDITOR_API UStationEditorWidget : public UUserWidget
     GENERATED_BODY()
 
 public:
+    UStationEditorWidget(const FObjectInitializer& ObjectInitializer);
+
     // Reference to the station being edited
     UPROPERTY(BlueprintReadWrite, Category="Station Editor")
     ASpaceStation* CurrentStation;

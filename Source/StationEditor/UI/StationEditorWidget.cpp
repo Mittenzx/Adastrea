@@ -2,6 +2,12 @@
 #include "Kismet/GameplayStatics.h"
 #include "Factions/FactionDataAsset.h"
 
+UStationEditorWidget::UStationEditorWidget(const FObjectInitializer& ObjectInitializer)
+    : Super(ObjectInitializer)
+{
+    // UUserWidget automatically ticks via NativeTick when visible
+}
+
 void UStationEditorWidget::NativeConstruct()
 {
     Super::NativeConstruct();
@@ -26,6 +32,7 @@ void UStationEditorWidget::EnsureEditorManager()
 {
     if (!EditorManager)
     {
+        // Use 'this' as outer for proper garbage collection
         EditorManager = NewObject<UStationEditorManager>(this);
     }
 }
@@ -39,9 +46,15 @@ ASpaceStationModule* UStationEditorWidget::AddModule(TSubclassOf<ASpaceStationMo
 
     EnsureEditorManager();
     
-    // Use the manager if available
-    if (EditorManager && EditorManager->bIsEditing)
+    // Use the manager if editing, otherwise auto-start editing
+    if (EditorManager)
     {
+        // Ensure we're in editing mode
+        if (!EditorManager->bIsEditing)
+        {
+            EditorManager->BeginEditing(CurrentStation);
+        }
+        
         FVector WorldPosition = CurrentStation->GetActorLocation() + RelativeLocation;
         return EditorManager->PlaceModule(ModuleClass, WorldPosition, CurrentStation->GetActorRotation());
     }
