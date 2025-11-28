@@ -337,6 +337,7 @@ Concise reference documents:
 |----------|---------|----------|
 | **TESTING_AUTOMATION_GUIDE.md** | Test automation comprehensive guide | Root |
 | **TESTING_QUICK_REFERENCE.md** | Testing quick reference | Root |
+| **Assets/PIE_TESTING_GUIDE.md** | ⭐ PIE (Play In Editor) testing setup and guide | Assets/ |
 | **Assets/TestingDashboard_EasySetup.md** | ⭐ Beginner guide: 6-step dashboard setup (10 min) | Assets/ |
 | **Assets/TestingDashboard_QuickStart.md** | Testing dashboard quick start | Assets/ |
 | **Assets/Testing_System_Overview.md** | Testing system complete overview | Assets/ |
