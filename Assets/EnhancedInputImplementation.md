@@ -162,15 +162,16 @@ H Key → IA_ClearWaypoint
 N Key → IA_NextWaypoint
 ```
 
-**System:**
+**System (Suggested Defaults):**
 ```
 Escape Key → IA_Menu
 M Key → IA_StationEditor (opens station editor when in spaceship mode)
-Tab Key → IA_Map
+N Key → IA_Map (moved from M to accommodate station editor)
 I Key → IA_Inventory
 J Key → IA_QuestLog
 F12 Key → IA_Screenshot
 ```
+Note: These are suggested default key bindings. Designers configure the actual bindings in the Input Mapping Context (IMC_Spaceship) within the Unreal Editor.
 
 **Camera:**
 ```
@@ -569,7 +570,7 @@ Add Print String nodes to input event handlers to verify they're being called.
 **System:**
 - `IA_Menu` - ESC/Start pause menu
 - `IA_StationEditor` - M open station editor (only when in spaceship mode)
-- `IA_Map` - Tab/Back open map
+- `IA_Map` - N/Back open map (suggested binding, moved from M)
 - `IA_Inventory` - I open inventory
 - `IA_QuestLog` - J open quests
 - `IA_Screenshot` - F12 take screenshot
