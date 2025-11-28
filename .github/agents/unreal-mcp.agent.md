@@ -54,7 +54,7 @@ Unreal MCP is an experimental, open-source framework that bridges AI systems (li
 
 ### Requirements
 - Unreal Engine 5.5 or higher (UE 5.6 recommended for Adastrea)
-- Python 3.12+ enabled in UE
+- Python 3.9+ enabled in UE
 - UnrealMCP plugin installed
 - Compatible AI client (Claude, Cursor, Windsurf, etc.)
 
@@ -65,8 +65,8 @@ When using MCP with the Adastrea project:
 ### Actor Creation Patterns
 ```python
 # Example: Creating a space station module
-create_actor("BP_SpaceStationModule", location=(0, 0, 0))
-set_property("ModuleType", "Docking")
+module = create_actor("BP_SpaceStationModule", location=(0, 0, 0))
+set_property(module, "ModuleType", "Docking")
 ```
 
 ### Blueprint Automation
@@ -82,11 +82,13 @@ compile_blueprint()
 ```python
 # Example: Spawning multiple faction NPCs
 for i in range(10):
-    create_actor("BP_FactionNPC", location=(i * 100, 0, 0))
-    set_property("FactionID", "SolarisUnion")
+    npc = create_actor("BP_FactionNPC", location=(i * 100, 0, 0))
+    set_property(npc, "FactionID", "SolarisUnion")
 ```
 
 ## MCP Commands Reference
+
+> **Note**: The following are simplified pseudo-code examples. For exact API syntax and JSON-RPC 2.0 format, consult the [official Unreal MCP documentation](https://github.com/chongdashu/unreal-mcp).
 
 ### Actor Commands
 - `create_actor(blueprint, location, rotation)` - Spawn an actor
@@ -100,7 +102,7 @@ for i in range(10):
 - `add_component(component_type)` - Add component to Blueprint
 - `compile_blueprint()` - Compile current Blueprint
 - `open_blueprint(name)` - Open Blueprint for editing
-- `validate_blueprint_properties()` - Check Blueprint validity before compile
+- `validate_blueprint_properties()` - Check Blueprint validity before compile *(Adastrea custom extension; not part of official MCP)*
 
 ### Asset Commands
 - `load_asset(asset_path)` - Load existing asset (Data Asset, Blueprint, etc.)
@@ -120,8 +122,9 @@ for i in range(10):
 # Load existing Data Asset
 data_asset = load_asset("DA_Ship_Pathfinder")
 
-# Create actor with Data Asset reference
+# Create actor and assign to variable
 ship = create_actor("BP_Spaceship")
+# Set property on the created actor
 set_property(ship, "SpaceshipData", data_asset)
 ```
 
@@ -245,6 +248,6 @@ When using MCP:
 
 ---
 
-**MCP Version Compatibility**: Designed for UE 5.5+, optimized for UE 5.6  
+**MCP Version Compatibility**: Unreal Engine 5.6 (primary target; UE 5.5+ may work, but 5.6 is required for Adastrea)  
 **Last Updated**: 2025-11-28  
 **Maintained by**: Adastrea Development Team
