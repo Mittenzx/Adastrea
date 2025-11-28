@@ -24,6 +24,8 @@ void AAdastreaPlayerController::SetupInputComponent()
 	// all Input Actions and Input Mapping Contexts in the Unreal Editor.
 	// Then reference the Data Asset in your Blueprint derived from this controller.
 	// For manual setup instructions, see ENHANCED_INPUT_GUIDE.md
+	//
+	// Station Editor: Bind StationEditorAction to ToggleStationEditor() in Blueprint
 }
 
 void AAdastreaPlayerController::OnPossessSpaceship_Implementation(ASpaceship* NewSpaceship)
@@ -44,4 +46,19 @@ ASpaceship* AAdastreaPlayerController::GetControlledSpaceship() const
 bool AAdastreaPlayerController::IsControllingSpaceship() const
 {
 	return GetControlledSpaceship() != nullptr;
+}
+
+void AAdastreaPlayerController::ToggleStationEditor()
+{
+	// Only allow station editor when controlling a spaceship
+	if (!IsControllingSpaceship())
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("ToggleStationEditor: Not controlling a spaceship - station editor not available"));
+		return;
+	}
+
+	UE_LOG(LogAdastrea, Log, TEXT("ToggleStationEditor: Broadcasting station editor toggle event"));
+	
+	// Broadcast the event for Blueprint handling
+	OnStationEditorToggle.Broadcast();
 }

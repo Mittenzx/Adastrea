@@ -165,7 +165,8 @@ N Key → IA_NextWaypoint
 **System:**
 ```
 Escape Key → IA_Menu
-M Key → IA_Map
+M Key → IA_StationEditor (opens station editor when in spaceship mode)
+Tab Key → IA_Map
 I Key → IA_Inventory
 J Key → IA_QuestLog
 F12 Key → IA_Screenshot
@@ -320,6 +321,27 @@ Branch on [Triggered]
   Branch on [IsAutopilotActive]
     True → [DeactivateAutopilot]
     False → [ActivateAutopilot] (to cursor location or waypoint)
+```
+
+**Station Editor (M Key):**
+```blueprint
+[IA_StationEditor (Enhanced Input Action)]
+  ↓
+[Triggered] → [Get PlayerController] → [Cast to AdastreaPlayerController]
+  ↓
+[ToggleStationEditor]
+  ↓
+(This broadcasts OnStationEditorToggle event - bind to this to show/hide UI)
+```
+
+Alternative using the event directly in Player Controller Blueprint:
+```blueprint
+Event BeginPlay
+  ↓
+[Bind Event to OnStationEditorToggle]
+  ↓
+  Event → [Toggle Station Editor Widget Visibility]
+           → [Create/Remove Widget] or [Set Visibility]
 ```
 
 ## C++ Input Action Binding
@@ -546,7 +568,8 @@ Add Print String nodes to input event handlers to verify they're being called.
 
 **System:**
 - `IA_Menu` - ESC/Start pause menu
-- `IA_Map` - M/Back open map
+- `IA_StationEditor` - M open station editor (only when in spaceship mode)
+- `IA_Map` - Tab/Back open map
 - `IA_Inventory` - I open inventory
 - `IA_QuestLog` - J open quests
 - `IA_Screenshot` - F12 take screenshot
