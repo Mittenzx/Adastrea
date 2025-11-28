@@ -47,8 +47,29 @@ bool UStationEditorManager::BeginEditing_Implementation(ASpaceStation* Station)
 	ModulesAddedThisSession.Empty();
 	OriginalModuleTransforms.Empty();
 	
+	// Clear undo/redo stacks for new session
+	ClearUndoHistory();
+	
+	// Clear connections and regenerate from existing modules
+	Connections.Empty();
+	
+	// Clear construction queue
+	ConstructionQueue.Empty();
+	
+	// Clear notifications
+	ClearNotifications();
+	
+	// Reset view mode
+	CurrentViewMode = EStationEditorViewMode::Edit;
+	
+	// Reset time
+	CurrentTime = 0.0f;
+	
 	// Cache initial power balance
 	LastPowerBalance = GetPowerBalance();
+	
+	// Mark statistics as dirty
+	bStatisticsDirty = true;
 
 	// Create grid system
 	if (!GridSystem)
@@ -81,6 +102,18 @@ bool UStationEditorManager::BeginEditing_Implementation(ASpaceStation* Station)
 			PreviewActor->Hide();
 		}
 	}
+
+	// Auto-generate connections for existing modules
+	for (ASpaceStationModule* Module : Station->Modules)
+	{
+		if (Module)
+		{
+			AutoGenerateConnections(Module);
+		}
+	}
+
+	// Calculate initial statistics
+	RecalculateStatistics();
 
 	UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::BeginEditing - Started editing station %s"), *Station->GetName());
 
@@ -206,6 +239,22 @@ ASpaceStationModule* UStationEditorManager::PlaceModule_Implementation(TSubclass
 	// Track for potential undo
 	ModulesAddedThisSession.Add(NewModule);
 
+	// Record action for undo/redo
+	FEditorAction Action;
+	Action.ActionType = EEditorActionType::PlaceModule;
+	Action.ModuleClass = ModuleClass;
+	Action.Module = NewModule;
+	Action.NewPosition = FinalPosition;
+	Action.NewRotation = Rotation;
+	Action.Timestamp = CurrentTime;
+	RecordAction(Action);
+
+	// Auto-generate connections to adjacent modules
+	AutoGenerateConnections(NewModule);
+
+	// Mark statistics as dirty
+	bStatisticsDirty = true;
+
 	// Update power balance
 	NotifyPowerBalanceChanged();
 
@@ -239,6 +288,24 @@ bool UStationEditorManager::RemoveModule_Implementation(ASpaceStationModule* Mod
 		return false;
 	}
 
+	// Store module info for undo before removal
+	FEditorAction Action;
+	Action.ActionType = EEditorActionType::RemoveModule;
+	Action.ModuleClass = Module->GetClass();
+	Action.Module = nullptr; // Will be invalid after destroy
+	Action.PreviousPosition = Module->GetActorLocation();
+	Action.PreviousRotation = Module->GetActorRotation();
+	Action.Timestamp = CurrentTime;
+
+	// Remove connections involving this module
+	for (int32 i = Connections.Num() - 1; i >= 0; --i)
+	{
+		if (Connections[i].ModuleA == Module || Connections[i].ModuleB == Module)
+		{
+			Connections.RemoveAt(i);
+		}
+	}
+
 	// Remove from station
 	if (!CurrentStation->RemoveModule(Module))
 	{
@@ -249,6 +316,12 @@ bool UStationEditorManager::RemoveModule_Implementation(ASpaceStationModule* Mod
 	// Remove from tracking
 	ModulesAddedThisSession.Remove(Module);
 	OriginalModuleTransforms.Remove(Module);
+
+	// Record action for undo
+	RecordAction(Action);
+
+	// Mark statistics as dirty
+	bStatisticsDirty = true;
 
 	UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::RemoveModule - Removed module %s"), *Module->GetName());
 
@@ -278,6 +351,9 @@ bool UStationEditorManager::MoveModule_Implementation(ASpaceStationModule* Modul
 		return false;
 	}
 
+	// Store previous position for undo
+	FVector PreviousPosition = Module->GetActorLocation();
+
 	// Store original transform if not already stored
 	if (!OriginalModuleTransforms.Contains(Module))
 	{
@@ -299,6 +375,15 @@ bool UStationEditorManager::MoveModule_Implementation(ASpaceStationModule* Modul
 
 	if (bSuccess)
 	{
+		// Record action for undo
+		FEditorAction Action;
+		Action.ActionType = EEditorActionType::MoveModule;
+		Action.Module = Module;
+		Action.PreviousPosition = PreviousPosition;
+		Action.NewPosition = FinalPosition;
+		Action.Timestamp = CurrentTime;
+		RecordAction(Action);
+
 		UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::MoveModule - Moved module to (%.2f, %.2f, %.2f)"),
 			FinalPosition.X, FinalPosition.Y, FinalPosition.Z);
 	}
@@ -320,6 +405,9 @@ bool UStationEditorManager::RotateModule_Implementation(ASpaceStationModule* Mod
 		return false;
 	}
 
+	// Store previous rotation for undo
+	FRotator PreviousRotation = Module->GetActorRotation();
+
 	// Store original transform if not already stored
 	if (!OriginalModuleTransforms.Contains(Module))
 	{
@@ -327,6 +415,15 @@ bool UStationEditorManager::RotateModule_Implementation(ASpaceStationModule* Mod
 	}
 
 	Module->SetActorRotation(NewRotation);
+
+	// Record action for undo
+	FEditorAction Action;
+	Action.ActionType = EEditorActionType::RotateModule;
+	Action.Module = Module;
+	Action.PreviousRotation = PreviousRotation;
+	Action.NewRotation = NewRotation;
+	Action.Timestamp = CurrentTime;
+	RecordAction(Action);
 
 	UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::RotateModule - Rotated module to (%.2f, %.2f, %.2f)"),
 		NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
@@ -653,4 +750,901 @@ void UStationEditorManager::NotifyPowerBalanceChanged()
 		LastPowerBalance = CurrentBalance;
 		OnPowerBalanceChanged.Broadcast(CurrentBalance);
 	}
+}
+
+// =====================
+// Undo/Redo System
+// =====================
+
+bool UStationEditorManager::Undo()
+{
+	if (!CanUndo())
+	{
+		return false;
+	}
+
+	FEditorAction Action = UndoStack.Pop();
+	
+	if (ReverseAction(Action))
+	{
+		RedoStack.Push(Action);
+		NotifyUndoRedoStateChanged();
+		RecalculateStatistics();
+		UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::Undo - Undid action type %d"), static_cast<int32>(Action.ActionType));
+		return true;
+	}
+
+	return false;
+}
+
+bool UStationEditorManager::Redo()
+{
+	if (!CanRedo())
+	{
+		return false;
+	}
+
+	FEditorAction Action = RedoStack.Pop();
+	
+	if (ExecuteAction(Action))
+	{
+		UndoStack.Push(Action);
+		NotifyUndoRedoStateChanged();
+		RecalculateStatistics();
+		UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::Redo - Redid action type %d"), static_cast<int32>(Action.ActionType));
+		return true;
+	}
+
+	return false;
+}
+
+bool UStationEditorManager::CanUndo() const
+{
+	return UndoStack.Num() > 0;
+}
+
+bool UStationEditorManager::CanRedo() const
+{
+	return RedoStack.Num() > 0;
+}
+
+void UStationEditorManager::ClearUndoHistory()
+{
+	UndoStack.Empty();
+	RedoStack.Empty();
+	NotifyUndoRedoStateChanged();
+}
+
+int32 UStationEditorManager::GetUndoCount() const
+{
+	return UndoStack.Num();
+}
+
+int32 UStationEditorManager::GetRedoCount() const
+{
+	return RedoStack.Num();
+}
+
+void UStationEditorManager::RecordAction(const FEditorAction& Action)
+{
+	// Add to undo stack
+	UndoStack.Push(Action);
+	
+	// Limit stack size
+	while (UndoStack.Num() > MaxUndoStackSize)
+	{
+		UndoStack.RemoveAt(0);
+	}
+	
+	// Clear redo stack when new action is recorded
+	RedoStack.Empty();
+	
+	NotifyUndoRedoStateChanged();
+}
+
+bool UStationEditorManager::ExecuteAction(const FEditorAction& Action)
+{
+	switch (Action.ActionType)
+	{
+		case EEditorActionType::PlaceModule:
+			if (Action.ModuleClass && CurrentStation)
+			{
+				// Re-place the module
+				return PlaceModule(Action.ModuleClass, Action.NewPosition, Action.NewRotation) != nullptr;
+			}
+			break;
+			
+		case EEditorActionType::RemoveModule:
+			// For redo of remove, we need to remove again (but module reference is invalid after undo)
+			// This case needs special handling - skip for now
+			break;
+			
+		case EEditorActionType::MoveModule:
+			if (Action.Module && IsValid(Action.Module))
+			{
+				Action.Module->SetActorLocation(Action.NewPosition);
+				return true;
+			}
+			break;
+			
+		case EEditorActionType::RotateModule:
+			if (Action.Module && IsValid(Action.Module))
+			{
+				Action.Module->SetActorRotation(Action.NewRotation);
+				return true;
+			}
+			break;
+			
+		default:
+			break;
+	}
+	
+	return false;
+}
+
+bool UStationEditorManager::ReverseAction(const FEditorAction& Action)
+{
+	switch (Action.ActionType)
+	{
+		case EEditorActionType::PlaceModule:
+			// Reverse of place = remove
+			if (Action.Module && IsValid(Action.Module) && CurrentStation)
+			{
+				CurrentStation->RemoveModule(Action.Module);
+				Action.Module->Destroy();
+				return true;
+			}
+			break;
+			
+		case EEditorActionType::RemoveModule:
+			// Reverse of remove = place (needs stored data to recreate)
+			if (Action.ModuleClass && CurrentStation)
+			{
+				return PlaceModule(Action.ModuleClass, Action.PreviousPosition, Action.PreviousRotation) != nullptr;
+			}
+			break;
+			
+		case EEditorActionType::MoveModule:
+			if (Action.Module && IsValid(Action.Module))
+			{
+				Action.Module->SetActorLocation(Action.PreviousPosition);
+				return true;
+			}
+			break;
+			
+		case EEditorActionType::RotateModule:
+			if (Action.Module && IsValid(Action.Module))
+			{
+				Action.Module->SetActorRotation(Action.PreviousRotation);
+				return true;
+			}
+			break;
+			
+		default:
+			break;
+	}
+	
+	return false;
+}
+
+void UStationEditorManager::NotifyUndoRedoStateChanged()
+{
+	OnUndoRedoStateChanged.Broadcast(CanUndo(), CanRedo());
+}
+
+// =====================
+// Module Connections
+// =====================
+
+bool UStationEditorManager::AddConnection(ASpaceStationModule* ModuleA, ASpaceStationModule* ModuleB, EModuleConnectionType ConnectionType)
+{
+	if (!ModuleA || !ModuleB || ModuleA == ModuleB)
+	{
+		return false;
+	}
+
+	// Check if connection already exists
+	for (const FModuleConnection& Existing : Connections)
+	{
+		if (Existing.ConnectionType == ConnectionType &&
+			((Existing.ModuleA == ModuleA && Existing.ModuleB == ModuleB) ||
+			 (Existing.ModuleA == ModuleB && Existing.ModuleB == ModuleA)))
+		{
+			return false; // Already exists
+		}
+	}
+
+	FModuleConnection NewConnection;
+	NewConnection.ModuleA = ModuleA;
+	NewConnection.ModuleB = ModuleB;
+	NewConnection.ConnectionType = ConnectionType;
+	NewConnection.bIsActive = true;
+	
+	// Set capacity based on connection type
+	switch (ConnectionType)
+	{
+		case EModuleConnectionType::Power:
+			NewConnection.Capacity = 100.0f; // MW
+			break;
+		case EModuleConnectionType::Data:
+			NewConnection.Capacity = 1000.0f; // Mbps
+			break;
+		case EModuleConnectionType::LifeSupport:
+			NewConnection.Capacity = 50.0f; // Crew capacity
+			break;
+	}
+
+	Connections.Add(NewConnection);
+	OnConnectionChanged.Broadcast(NewConnection);
+	bStatisticsDirty = true;
+
+	UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::AddConnection - Added %d connection between %s and %s"),
+		static_cast<int32>(ConnectionType), *ModuleA->GetName(), *ModuleB->GetName());
+
+	return true;
+}
+
+bool UStationEditorManager::RemoveConnection(ASpaceStationModule* ModuleA, ASpaceStationModule* ModuleB, EModuleConnectionType ConnectionType)
+{
+	for (int32 i = Connections.Num() - 1; i >= 0; --i)
+	{
+		const FModuleConnection& Conn = Connections[i];
+		if (Conn.ConnectionType == ConnectionType &&
+			((Conn.ModuleA == ModuleA && Conn.ModuleB == ModuleB) ||
+			 (Conn.ModuleA == ModuleB && Conn.ModuleB == ModuleA)))
+		{
+			FModuleConnection RemovedConnection = Connections[i];
+			Connections.RemoveAt(i);
+			OnConnectionChanged.Broadcast(RemovedConnection);
+			bStatisticsDirty = true;
+			return true;
+		}
+	}
+	return false;
+}
+
+TArray<FModuleConnection> UStationEditorManager::GetModuleConnections(ASpaceStationModule* Module) const
+{
+	TArray<FModuleConnection> Result;
+	
+	for (const FModuleConnection& Conn : Connections)
+	{
+		if (Conn.ModuleA == Module || Conn.ModuleB == Module)
+		{
+			Result.Add(Conn);
+		}
+	}
+	
+	return Result;
+}
+
+TArray<FModuleConnection> UStationEditorManager::GetConnectionsByType(EModuleConnectionType ConnectionType) const
+{
+	TArray<FModuleConnection> Result;
+	
+	for (const FModuleConnection& Conn : Connections)
+	{
+		if (Conn.ConnectionType == ConnectionType)
+		{
+			Result.Add(Conn);
+		}
+	}
+	
+	return Result;
+}
+
+TArray<FModuleConnection> UStationEditorManager::GetAllConnections() const
+{
+	return Connections;
+}
+
+void UStationEditorManager::AutoGenerateConnections(ASpaceStationModule* Module)
+{
+	if (!Module || !CurrentStation || !GridSystem)
+	{
+		return;
+	}
+
+	FVector ModulePosition = Module->GetActorLocation();
+	
+	// Check all existing modules for adjacency
+	for (ASpaceStationModule* OtherModule : CurrentStation->Modules)
+	{
+		if (!OtherModule || OtherModule == Module)
+		{
+			continue;
+		}
+		
+		// Check if modules are adjacent
+		if (GridSystem->ArePositionsAdjacent(ModulePosition, OtherModule->GetActorLocation()))
+		{
+			// Auto-add power connection
+			AddConnection(Module, OtherModule, EModuleConnectionType::Power);
+			
+			// Auto-add data connection
+			AddConnection(Module, OtherModule, EModuleConnectionType::Data);
+			
+			// Add life support if either module is habitation-related
+			if (Module->ModuleGroup == EStationModuleGroup::Habitation ||
+				OtherModule->ModuleGroup == EStationModuleGroup::Habitation)
+			{
+				AddConnection(Module, OtherModule, EModuleConnectionType::LifeSupport);
+			}
+		}
+	}
+}
+
+bool UStationEditorManager::IsConnectedToPower(ASpaceStationModule* Module) const
+{
+	if (!Module || !CurrentStation)
+	{
+		return false;
+	}
+
+	// Simple check: see if module has any power connections
+	// A full implementation would do graph traversal to find path to reactor
+	for (const FModuleConnection& Conn : Connections)
+	{
+		if (Conn.ConnectionType == EModuleConnectionType::Power && Conn.bIsActive)
+		{
+			if (Conn.ModuleA == Module || Conn.ModuleB == Module)
+			{
+				return true;
+			}
+		}
+	}
+	
+	// Power generators are always "connected"
+	if (Module->ModuleGroup == EStationModuleGroup::Power)
+	{
+		return true;
+	}
+	
+	return false;
+}
+
+bool UStationEditorManager::HasLifeSupport(ASpaceStationModule* Module) const
+{
+	if (!Module)
+	{
+		return false;
+	}
+
+	for (const FModuleConnection& Conn : Connections)
+	{
+		if (Conn.ConnectionType == EModuleConnectionType::LifeSupport && Conn.bIsActive)
+		{
+			if (Conn.ModuleA == Module || Conn.ModuleB == Module)
+			{
+				return true;
+			}
+		}
+	}
+	
+	return false;
+}
+
+// =====================
+// Construction Queue
+// =====================
+
+int32 UStationEditorManager::QueueConstruction(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position, FRotator Rotation)
+{
+	if (!ModuleClass)
+	{
+		return -1;
+	}
+
+	FConstructionQueueItem Item;
+	Item.QueueId = NextQueueId++;
+	Item.ModuleClass = ModuleClass;
+	Item.TargetPosition = Position;
+	Item.TargetRotation = Rotation;
+	
+	// Get build time from catalog
+	FStationBuildCost Cost;
+	if (GetModuleBuildCost(ModuleClass, Cost))
+	{
+		Item.TotalBuildTime = Cost.BuildTime;
+		Item.TimeRemaining = Cost.BuildTime;
+	}
+	else
+	{
+		Item.TotalBuildTime = 60.0f;
+		Item.TimeRemaining = 60.0f;
+	}
+	
+	// Start building if this is the first item
+	if (ConstructionQueue.Num() == 0)
+	{
+		Item.bIsBuilding = true;
+	}
+	
+	ConstructionQueue.Add(Item);
+	OnConstructionQueueChanged.Broadcast();
+	
+	// Add notification
+	ASpaceStationModule* DefaultModule = ModuleClass->GetDefaultObject<ASpaceStationModule>();
+	FString ModuleName = DefaultModule ? DefaultModule->ModuleType : TEXT("Module");
+	AddNotification(FText::FromString(FString::Printf(TEXT("Construction of %s queued"), *ModuleName)), 
+		ENotificationSeverity::Info, nullptr);
+	
+	UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::QueueConstruction - Queued %s (ID: %d)"),
+		*ModuleClass->GetName(), Item.QueueId);
+
+	return Item.QueueId;
+}
+
+bool UStationEditorManager::CancelConstruction(int32 QueueId)
+{
+	for (int32 i = 0; i < ConstructionQueue.Num(); ++i)
+	{
+		if (ConstructionQueue[i].QueueId == QueueId)
+		{
+			ConstructionQueue.RemoveAt(i);
+			
+			// Start next item if we removed the current one
+			if (i == 0 && ConstructionQueue.Num() > 0)
+			{
+				ConstructionQueue[0].bIsBuilding = true;
+			}
+			
+			OnConstructionQueueChanged.Broadcast();
+			return true;
+		}
+	}
+	return false;
+}
+
+bool UStationEditorManager::SetConstructionPaused(int32 QueueId, bool bPause)
+{
+	for (FConstructionQueueItem& Item : ConstructionQueue)
+	{
+		if (Item.QueueId == QueueId)
+		{
+			Item.bIsPaused = bPause;
+			OnConstructionQueueChanged.Broadcast();
+			return true;
+		}
+	}
+	return false;
+}
+
+bool UStationEditorManager::ReorderConstruction(int32 QueueId, bool MoveUp)
+{
+	for (int32 i = 0; i < ConstructionQueue.Num(); ++i)
+	{
+		if (ConstructionQueue[i].QueueId == QueueId)
+		{
+			int32 NewIndex = MoveUp ? i - 1 : i + 1;
+			
+			// Can't move first item up or last item down
+			if (NewIndex < 0 || NewIndex >= ConstructionQueue.Num())
+			{
+				return false;
+			}
+			
+			// Can't move if we're currently building (first item)
+			if (i == 0 && ConstructionQueue[i].bIsBuilding)
+			{
+				return false;
+			}
+			
+			// Swap items
+			FConstructionQueueItem Temp = ConstructionQueue[i];
+			ConstructionQueue[i] = ConstructionQueue[NewIndex];
+			ConstructionQueue[NewIndex] = Temp;
+			
+			OnConstructionQueueChanged.Broadcast();
+			return true;
+		}
+	}
+	return false;
+}
+
+TArray<FConstructionQueueItem> UStationEditorManager::GetConstructionQueue() const
+{
+	return ConstructionQueue;
+}
+
+bool UStationEditorManager::GetCurrentConstruction(FConstructionQueueItem& OutItem) const
+{
+	if (ConstructionQueue.Num() > 0 && ConstructionQueue[0].bIsBuilding)
+	{
+		OutItem = ConstructionQueue[0];
+		return true;
+	}
+	return false;
+}
+
+void UStationEditorManager::UpdateConstruction(float DeltaTime)
+{
+	CurrentTime += DeltaTime;
+	
+	if (ConstructionQueue.Num() == 0)
+	{
+		return;
+	}
+	
+	FConstructionQueueItem& CurrentItem = ConstructionQueue[0];
+	
+	if (!CurrentItem.bIsBuilding)
+	{
+		CurrentItem.bIsBuilding = true;
+	}
+	
+	if (CurrentItem.bIsPaused)
+	{
+		return;
+	}
+	
+	CurrentItem.TimeRemaining -= DeltaTime;
+	
+	if (CurrentItem.TimeRemaining <= 0.0f)
+	{
+		CompleteConstruction(CurrentItem);
+		ConstructionQueue.RemoveAt(0);
+		
+		// Start next item
+		if (ConstructionQueue.Num() > 0)
+		{
+			ConstructionQueue[0].bIsBuilding = true;
+		}
+		
+		OnConstructionQueueChanged.Broadcast();
+	}
+}
+
+void UStationEditorManager::CompleteConstruction(FConstructionQueueItem& Item)
+{
+	if (!Item.ModuleClass || !CurrentStation)
+	{
+		return;
+	}
+	
+	// Spawn the module
+	ASpaceStationModule* NewModule = PlaceModule(Item.ModuleClass, Item.TargetPosition, Item.TargetRotation);
+	
+	if (NewModule)
+	{
+		// Auto-generate connections
+		AutoGenerateConnections(NewModule);
+		
+		// Add completion notification
+		AddNotification(FText::FromString(FString::Printf(TEXT("%s construction complete"), *NewModule->ModuleType)),
+			ENotificationSeverity::Success, NewModule);
+	}
+}
+
+// =====================
+// Station Statistics
+// =====================
+
+FStationStatistics UStationEditorManager::GetStationStatistics() const
+{
+	if (bStatisticsDirty)
+	{
+		const_cast<UStationEditorManager*>(this)->RecalculateStatistics();
+	}
+	return CachedStatistics;
+}
+
+void UStationEditorManager::RecalculateStatistics()
+{
+	CachedStatistics = FStationStatistics();
+	
+	if (!CurrentStation)
+	{
+		bStatisticsDirty = false;
+		return;
+	}
+	
+	CachedStatistics.TotalModules = CurrentStation->Modules.Num();
+	CachedStatistics.PowerGenerated = GetTotalPowerGeneration();
+	CachedStatistics.PowerConsumed = GetTotalPowerConsumption();
+	CachedStatistics.MaxPopulation = GetPopulationCapacity();
+	CachedStatistics.DefenseRating = GetDefenseRating();
+	CachedStatistics.EfficiencyRating = GetEfficiencyRating();
+	
+	// Calculate cargo capacity
+	for (const ASpaceStationModule* Module : CurrentStation->Modules)
+	{
+		if (Module && Module->ModuleGroup == EStationModuleGroup::Storage)
+		{
+			CachedStatistics.CargoCapacity += 500.0f; // Base cargo per storage module
+		}
+	}
+	
+	// Calculate data network usage based on connections
+	int32 DataConnections = GetConnectionsByType(EModuleConnectionType::Data).Num();
+	int32 TotalPossibleConnections = FMath::Max(1, CurrentStation->Modules.Num() * (CurrentStation->Modules.Num() - 1) / 2);
+	CachedStatistics.DataNetworkUsage = static_cast<float>(DataConnections) / static_cast<float>(TotalPossibleConnections);
+	
+	// Calculate life support coverage
+	int32 LifeSupportConnections = GetConnectionsByType(EModuleConnectionType::LifeSupport).Num();
+	int32 HabitationModules = 0;
+	for (const ASpaceStationModule* Module : CurrentStation->Modules)
+	{
+		if (Module && Module->ModuleGroup == EStationModuleGroup::Habitation)
+		{
+			HabitationModules++;
+		}
+	}
+	CachedStatistics.LifeSupportCoverage = HabitationModules > 0 ? 
+		FMath::Clamp(static_cast<float>(LifeSupportConnections) / static_cast<float>(HabitationModules), 0.0f, 1.0f) : 1.0f;
+	
+	bStatisticsDirty = false;
+	OnStatisticsUpdated.Broadcast(CachedStatistics);
+}
+
+int32 UStationEditorManager::GetPopulationCapacity() const
+{
+	int32 Capacity = 0;
+	
+	if (!CurrentStation)
+	{
+		return Capacity;
+	}
+	
+	for (const ASpaceStationModule* Module : CurrentStation->Modules)
+	{
+		if (Module && Module->ModuleGroup == EStationModuleGroup::Habitation)
+		{
+			Capacity += 100; // Base capacity per habitation module
+		}
+	}
+	
+	return Capacity;
+}
+
+float UStationEditorManager::GetDefenseRating() const
+{
+	float Rating = 0.0f;
+	
+	if (!CurrentStation)
+	{
+		return Rating;
+	}
+	
+	for (const ASpaceStationModule* Module : CurrentStation->Modules)
+	{
+		if (Module && Module->ModuleGroup == EStationModuleGroup::Defence)
+		{
+			Rating += 15.0f; // Base defense per defense module
+		}
+	}
+	
+	return FMath::Clamp(Rating, 0.0f, 100.0f);
+}
+
+float UStationEditorManager::GetEfficiencyRating() const
+{
+	if (!CurrentStation || CurrentStation->Modules.Num() == 0)
+	{
+		return 1.0f;
+	}
+	
+	float Efficiency = 1.0f;
+	
+	// Power efficiency
+	float PowerBalance = GetPowerBalance();
+	if (PowerBalance < 0)
+	{
+		Efficiency -= 0.3f; // Penalty for power deficit
+	}
+	else if (PowerBalance > GetTotalPowerGeneration() * 0.5f)
+	{
+		Efficiency -= 0.1f; // Slight penalty for over-production (waste)
+	}
+	
+	// Connection efficiency
+	int32 ConnectedModules = 0;
+	for (const ASpaceStationModule* Module : CurrentStation->Modules)
+	{
+		if (Module && IsConnectedToPower(const_cast<ASpaceStationModule*>(Module)))
+		{
+			ConnectedModules++;
+		}
+	}
+	float ConnectionRatio = static_cast<float>(ConnectedModules) / static_cast<float>(CurrentStation->Modules.Num());
+	Efficiency *= ConnectionRatio;
+	
+	return FMath::Clamp(Efficiency, 0.0f, 1.0f);
+}
+
+// =====================
+// Notifications
+// =====================
+
+int32 UStationEditorManager::AddNotification(FText Message, ENotificationSeverity Severity, ASpaceStationModule* RelatedModule)
+{
+	FStationNotification Notification;
+	Notification.NotificationId = NextNotificationId++;
+	Notification.Message = Message;
+	Notification.Severity = Severity;
+	Notification.Timestamp = CurrentTime;
+	Notification.bIsRead = false;
+	Notification.RelatedModule = RelatedModule;
+	
+	Notifications.Add(Notification);
+	
+	// Keep notifications list manageable
+	while (Notifications.Num() > 50)
+	{
+		Notifications.RemoveAt(0);
+	}
+	
+	OnNotificationAdded.Broadcast(Notification);
+	
+	return Notification.NotificationId;
+}
+
+void UStationEditorManager::MarkNotificationRead(int32 NotificationId)
+{
+	for (FStationNotification& Notification : Notifications)
+	{
+		if (Notification.NotificationId == NotificationId)
+		{
+			Notification.bIsRead = true;
+			return;
+		}
+	}
+}
+
+void UStationEditorManager::ClearNotifications()
+{
+	Notifications.Empty();
+}
+
+TArray<FStationNotification> UStationEditorManager::GetNotifications() const
+{
+	return Notifications;
+}
+
+int32 UStationEditorManager::GetUnreadNotificationCount() const
+{
+	int32 Count = 0;
+	for (const FStationNotification& Notification : Notifications)
+	{
+		if (!Notification.bIsRead)
+		{
+			Count++;
+		}
+	}
+	return Count;
+}
+
+void UStationEditorManager::GenerateStatusNotifications()
+{
+	if (!CurrentStation)
+	{
+		return;
+	}
+	
+	// Check power status
+	float PowerBalance = GetPowerBalance();
+	if (PowerBalance < 0)
+	{
+		AddNotification(FText::FromString(FString::Printf(TEXT("Power deficit: %.0f MW"), FMath::Abs(PowerBalance))),
+			ENotificationSeverity::Warning, nullptr);
+	}
+	else if (PowerBalance > GetTotalPowerGeneration() * 0.8f)
+	{
+		AddNotification(FText::FromString(TEXT("Power load near maximum capacity")),
+			ENotificationSeverity::Warning, nullptr);
+	}
+	
+	// Check population
+	FStationStatistics Stats = GetStationStatistics();
+	if (Stats.CurrentPopulation > Stats.MaxPopulation * 0.9f)
+	{
+		AddNotification(FText::FromString(TEXT("Population approaching capacity. Consider adding habitation modules.")),
+			ENotificationSeverity::Warning, nullptr);
+	}
+}
+
+// =====================
+// View Mode
+// =====================
+
+void UStationEditorManager::SetViewMode(EStationEditorViewMode NewMode)
+{
+	if (CurrentViewMode != NewMode)
+	{
+		CurrentViewMode = NewMode;
+		OnViewModeChanged.Broadcast(NewMode);
+		
+		UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::SetViewMode - Changed to mode %d"), static_cast<int32>(NewMode));
+	}
+}
+
+EStationEditorViewMode UStationEditorManager::GetViewMode() const
+{
+	return CurrentViewMode;
+}
+
+// =====================
+// Module Upgrade
+// =====================
+
+bool UStationEditorManager::CanUpgradeModule(ASpaceStationModule* Module) const
+{
+	if (!Module || !ModuleCatalog)
+	{
+		return false;
+	}
+	
+	// Check if there's an upgrade entry in the catalog
+	// This is a simplified check - a full implementation would check for specific upgrade paths
+	FStationModuleEntry Entry;
+	if (ModuleCatalog->FindModuleByClass(Module->GetClass(), Entry))
+	{
+		// Check if there's a higher tech level version
+		return Entry.RequiredTechLevel < 10; // Simplified: upgradeable if not max level
+	}
+	
+	return false;
+}
+
+bool UStationEditorManager::GetUpgradeCost(ASpaceStationModule* Module, FStationBuildCost& OutCost) const
+{
+	if (!CanUpgradeModule(Module))
+	{
+		return false;
+	}
+	
+	FStationModuleEntry Entry;
+	if (ModuleCatalog && ModuleCatalog->FindModuleByClass(Module->GetClass(), Entry))
+	{
+		// Upgrade cost is typically 50% of build cost
+		OutCost = Entry.BuildCost;
+		OutCost.Credits = static_cast<int32>(OutCost.Credits * 0.5f);
+		OutCost.BuildTime *= 0.5f;
+		return true;
+	}
+	
+	return false;
+}
+
+bool UStationEditorManager::UpgradeModule(ASpaceStationModule* Module)
+{
+	if (!CanUpgradeModule(Module))
+	{
+		return false;
+	}
+	
+	FStationBuildCost Cost;
+	if (!GetUpgradeCost(Module, Cost))
+	{
+		return false;
+	}
+	
+	// Check if player can afford
+	if (PlayerCredits < Cost.Credits)
+	{
+		AddNotification(FText::FromString(TEXT("Insufficient credits for upgrade")), 
+			ENotificationSeverity::Warning, Module);
+		return false;
+	}
+	
+	// Deduct credits
+	PlayerCredits -= Cost.Credits;
+	
+	// Record action for undo
+	FEditorAction Action;
+	Action.ActionType = EEditorActionType::UpgradeModule;
+	Action.Module = Module;
+	Action.Timestamp = CurrentTime;
+	RecordAction(Action);
+	
+	// Add notification
+	AddNotification(FText::FromString(FString::Printf(TEXT("%s upgraded successfully"), *Module->ModuleType)),
+		ENotificationSeverity::Success, Module);
+	
+	bStatisticsDirty = true;
+	NotifyPowerBalanceChanged();
+	
+	UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::UpgradeModule - Upgraded %s"), *Module->GetName());
+	
+	return true;
 }

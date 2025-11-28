@@ -8,6 +8,26 @@ void UStationEditorWidget::NativeConstruct()
     
     // Widget initialization
     // Blueprint can override this to setup UI elements
+    EnsureEditorManager();
+}
+
+void UStationEditorWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+    Super::NativeTick(MyGeometry, InDeltaTime);
+    
+    // Update construction progress
+    if (EditorManager)
+    {
+        EditorManager->UpdateConstruction(InDeltaTime);
+    }
+}
+
+void UStationEditorWidget::EnsureEditorManager()
+{
+    if (!EditorManager)
+    {
+        EditorManager = NewObject<UStationEditorManager>(this);
+    }
 }
 
 ASpaceStationModule* UStationEditorWidget::AddModule(TSubclassOf<ASpaceStationModule> ModuleClass, FVector RelativeLocation)
@@ -17,7 +37,16 @@ ASpaceStationModule* UStationEditorWidget::AddModule(TSubclassOf<ASpaceStationMo
         return nullptr;
     }
 
-    // Spawn the module in the world
+    EnsureEditorManager();
+    
+    // Use the manager if available
+    if (EditorManager && EditorManager->bIsEditing)
+    {
+        FVector WorldPosition = CurrentStation->GetActorLocation() + RelativeLocation;
+        return EditorManager->PlaceModule(ModuleClass, WorldPosition, CurrentStation->GetActorRotation());
+    }
+
+    // Fallback to direct placement
     UWorld* World = GetWorld();
     if (!World)
     {
@@ -54,6 +83,14 @@ bool UStationEditorWidget::RemoveModule(ASpaceStationModule* Module)
         return false;
     }
 
+    EnsureEditorManager();
+    
+    // Use the manager if available
+    if (EditorManager && EditorManager->bIsEditing)
+    {
+        return EditorManager->RemoveModule(Module);
+    }
+
     bool bSuccess = CurrentStation->RemoveModule(Module);
     
     if (bSuccess)
@@ -72,6 +109,15 @@ bool UStationEditorWidget::MoveModule(ASpaceStationModule* Module, FVector NewRe
         return false;
     }
 
+    EnsureEditorManager();
+    
+    // Use the manager if available
+    if (EditorManager && EditorManager->bIsEditing)
+    {
+        FVector WorldPosition = CurrentStation->GetActorLocation() + NewRelativeLocation;
+        return EditorManager->MoveModule(Module, WorldPosition);
+    }
+
     return CurrentStation->MoveModule(Module, NewRelativeLocation);
 }
 
@@ -88,6 +134,13 @@ TArray<ASpaceStationModule*> UStationEditorWidget::GetAllModules()
 void UStationEditorWidget::SetStation(ASpaceStation* Station)
 {
     CurrentStation = Station;
+    
+    EnsureEditorManager();
+    
+    if (EditorManager && Station)
+    {
+        EditorManager->BeginEditing(Station);
+    }
 }
 
 bool UStationEditorWidget::IsValidPlacement(FVector Location)
@@ -196,4 +249,144 @@ bool UStationEditorWidget::CanAddModuleForFaction(TSubclassOf<ASpaceStationModul
     }
     
     return true;
+}
+
+// ====================
+// Undo/Redo
+// ====================
+
+bool UStationEditorWidget::Undo()
+{
+    EnsureEditorManager();
+    return EditorManager ? EditorManager->Undo() : false;
+}
+
+bool UStationEditorWidget::Redo()
+{
+    EnsureEditorManager();
+    return EditorManager ? EditorManager->Redo() : false;
+}
+
+bool UStationEditorWidget::CanUndo() const
+{
+    return EditorManager ? EditorManager->CanUndo() : false;
+}
+
+bool UStationEditorWidget::CanRedo() const
+{
+    return EditorManager ? EditorManager->CanRedo() : false;
+}
+
+// ====================
+// Construction Queue
+// ====================
+
+int32 UStationEditorWidget::QueueConstruction(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position)
+{
+    EnsureEditorManager();
+    if (EditorManager && CurrentStation)
+    {
+        FVector WorldPosition = CurrentStation->GetActorLocation() + Position;
+        return EditorManager->QueueConstruction(ModuleClass, WorldPosition, FRotator::ZeroRotator);
+    }
+    return -1;
+}
+
+bool UStationEditorWidget::CancelConstruction(int32 QueueId)
+{
+    EnsureEditorManager();
+    return EditorManager ? EditorManager->CancelConstruction(QueueId) : false;
+}
+
+TArray<FConstructionQueueItem> UStationEditorWidget::GetConstructionQueue() const
+{
+    return EditorManager ? EditorManager->GetConstructionQueue() : TArray<FConstructionQueueItem>();
+}
+
+// ====================
+// Statistics
+// ====================
+
+FStationStatistics UStationEditorWidget::GetStationStatistics() const
+{
+    return EditorManager ? EditorManager->GetStationStatistics() : FStationStatistics();
+}
+
+float UStationEditorWidget::GetPowerBalance() const
+{
+    return EditorManager ? EditorManager->GetPowerBalance() : 0.0f;
+}
+
+float UStationEditorWidget::GetDefenseRating() const
+{
+    return EditorManager ? EditorManager->GetDefenseRating() : 0.0f;
+}
+
+// ====================
+// Connections
+// ====================
+
+TArray<FModuleConnection> UStationEditorWidget::GetAllConnections() const
+{
+    return EditorManager ? EditorManager->GetAllConnections() : TArray<FModuleConnection>();
+}
+
+TArray<FModuleConnection> UStationEditorWidget::GetModuleConnections(ASpaceStationModule* Module) const
+{
+    return EditorManager ? EditorManager->GetModuleConnections(Module) : TArray<FModuleConnection>();
+}
+
+// ====================
+// Notifications
+// ====================
+
+TArray<FStationNotification> UStationEditorWidget::GetNotifications() const
+{
+    return EditorManager ? EditorManager->GetNotifications() : TArray<FStationNotification>();
+}
+
+int32 UStationEditorWidget::GetUnreadNotificationCount() const
+{
+    return EditorManager ? EditorManager->GetUnreadNotificationCount() : 0;
+}
+
+void UStationEditorWidget::MarkNotificationRead(int32 NotificationId)
+{
+    if (EditorManager)
+    {
+        EditorManager->MarkNotificationRead(NotificationId);
+    }
+}
+
+// ====================
+// View Mode
+// ====================
+
+void UStationEditorWidget::SetViewMode(EStationEditorViewMode NewMode)
+{
+    EnsureEditorManager();
+    if (EditorManager)
+    {
+        EditorManager->SetViewMode(NewMode);
+    }
+}
+
+EStationEditorViewMode UStationEditorWidget::GetViewMode() const
+{
+    return EditorManager ? EditorManager->GetViewMode() : EStationEditorViewMode::Edit;
+}
+
+// ====================
+// Module Upgrade
+// ====================
+
+bool UStationEditorWidget::CanUpgradeModule(ASpaceStationModule* Module) const
+{
+    return EditorManager ? EditorManager->CanUpgradeModule(Module) : false;
+}
+
+bool UStationEditorWidget::UpgradeModule(ASpaceStationModule* Module)
+{
+    EnsureEditorManager();
+    return EditorManager ? EditorManager->UpgradeModule(Module) : false;
 }
