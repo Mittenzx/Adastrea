@@ -2,6 +2,9 @@
 #include "Player/PlayerProgressionComponent.h"
 #include "Player/PlayerReputationComponent.h"
 #include "Player/AdastreaGameInstance.h"
+#include "Player/AchievementManagerSubsystem.h"
+#include "Quest/QuestManagerSubsystem.h"
+#include "UI/InventoryComponent.h"
 #include "AdastreaLog.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -267,17 +270,41 @@ bool UPlayerUnlockComponent::CheckRequirement(const FUnlockRequirement& Requirem
 
 		case EUnlockRequirementType::Achievement:
 		{
-			// TODO: Check achievement completion via AchievementManagerSubsystem
-			// For now, return false as achievement system isn't implemented yet
-			UE_LOG(LogAdastrea, Warning, TEXT("PlayerUnlockComponent: Achievement requirement check not yet implemented"));
+			// Check achievement completion via AchievementManagerSubsystem
+			UWorld* World = GetWorld();
+			if (World)
+			{
+				UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(World);
+				if (GameInstance)
+				{
+					UAchievementManagerSubsystem* AchievementManager = GameInstance->GetSubsystem<UAchievementManagerSubsystem>();
+					if (AchievementManager)
+					{
+						return AchievementManager->IsAchievementCompleted(Requirement.RequiredID);
+					}
+				}
+			}
+			UE_LOG(LogAdastrea, Warning, TEXT("PlayerUnlockComponent: Could not access AchievementManagerSubsystem"));
 			return false;
 		}
 
 		case EUnlockRequirementType::Quest:
 		{
-			// TODO: Check quest completion via QuestManagerSubsystem
-			// For now, return false as quest tracking integration isn't complete
-			UE_LOG(LogAdastrea, Warning, TEXT("PlayerUnlockComponent: Quest requirement check not yet implemented"));
+			// Check quest completion via QuestManagerSubsystem
+			UWorld* World = GetWorld();
+			if (World)
+			{
+				UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(World);
+				if (GameInstance)
+				{
+					UQuestManagerSubsystem* QuestManager = GameInstance->GetSubsystem<UQuestManagerSubsystem>();
+					if (QuestManager)
+					{
+						return QuestManager->HasCompletedQuest(Requirement.RequiredID);
+					}
+				}
+			}
+			UE_LOG(LogAdastrea, Warning, TEXT("PlayerUnlockComponent: Could not access QuestManagerSubsystem"));
 			return false;
 		}
 
@@ -305,9 +332,38 @@ bool UPlayerUnlockComponent::CheckRequirement(const FUnlockRequirement& Requirem
 
 		case EUnlockRequirementType::Item:
 		{
-			// TODO: Check inventory for required item
-			// For now, return false as inventory integration isn't complete
-			UE_LOG(LogAdastrea, Warning, TEXT("PlayerUnlockComponent: Item requirement check not yet implemented"));
+			// Check inventory for required item by name
+			AActor* Owner = GetOwner();
+			if (Owner)
+			{
+				UInventoryComponent* InventoryComp = Owner->FindComponentByClass<UInventoryComponent>();
+				if (InventoryComp)
+				{
+					// Get all inventory slots and check if any item matches the required name
+					TArray<FInventorySlot> AllSlots = InventoryComp->GetAllSlots();
+					int32 TotalQuantity = 0;
+					
+					// Cache the required ID string for comparison
+					const FString RequiredIDStr = Requirement.RequiredID.ToString();
+					
+					for (const FInventorySlot& Slot : AllSlots)
+					{
+						if (!Slot.IsEmpty() && Slot.Item)
+						{
+							// Match by item name using cached string comparison
+							if (Slot.Item->ItemName.ToString().Equals(RequiredIDStr, ESearchCase::IgnoreCase))
+							{
+								TotalQuantity += Slot.Quantity;
+							}
+						}
+					}
+					
+					// RequiredValue specifies minimum quantity needed (default to 1 if not set)
+					int32 RequiredQuantity = FMath::Max(1, Requirement.RequiredValue);
+					return TotalQuantity >= RequiredQuantity;
+				}
+			}
+			UE_LOG(LogAdastrea, Warning, TEXT("PlayerUnlockComponent: Could not find InventoryComponent on owner"));
 			return false;
 		}
 

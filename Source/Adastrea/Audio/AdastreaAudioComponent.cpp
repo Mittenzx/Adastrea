@@ -73,8 +73,8 @@ bool UAdastreaAudioComponent::PlaySoundEffect(USoundEffectDataAsset* SoundEffect
 	// Play the sound
 	AudioComp->Play();
 
-	// Track this component
-	ActiveAudioComponents.AddUnique(AudioComp);
+	// Track this component with its category
+	TrackAudioComponent(AudioComp, SoundEffect->Category);
 
 	return true;
 }
@@ -89,14 +89,25 @@ void UAdastreaAudioComponent::StopAllSounds()
 		}
 	}
 	ActiveAudioComponents.Empty();
+	AudioComponentsByCategory.Empty();
 }
 
 void UAdastreaAudioComponent::StopSoundsByCategory(ESoundEffectCategory Category)
 {
-	// Note: Category tracking would require storing the SoundEffectDataAsset reference
-	// For now, this is a placeholder. Full implementation would need a TMap to track categories
-	UE_LOG(LogTemp, Warning, TEXT("StopSoundsByCategory called, but category filtering is not implemented. All sounds will be stopped."));
-	StopAllSounds();
+	// Get audio components for the specified category
+	if (TArray<UAudioComponent*>* CategoryComponents = AudioComponentsByCategory.Find(Category))
+	{
+		for (UAudioComponent* AudioComp : *CategoryComponents)
+		{
+			if (AudioComp && AudioComp->IsPlaying())
+			{
+				AudioComp->Stop();
+			}
+			// Also remove from main tracking array
+			ActiveAudioComponents.Remove(AudioComp);
+		}
+		CategoryComponents->Empty();
+	}
 }
 
 float UAdastreaAudioComponent::GetCurrentAudioLoad() const
@@ -120,9 +131,18 @@ float UAdastreaAudioComponent::GetCurrentAudioLoad() const
 
 bool UAdastreaAudioComponent::IsCategoryPlaying(ESoundEffectCategory Category) const
 {
-	// Note: Would need category tracking implementation
-	UE_LOG(LogTemp, Warning, TEXT("IsCategoryPlaying called for category %d, but category tracking is not implemented. Returns true if any audio is playing, regardless of category."), static_cast<int32>(Category));
-	return ActiveAudioComponents.Num() > 0;
+	// Check if any audio component in this category is currently playing
+	if (const TArray<UAudioComponent*>* CategoryComponents = AudioComponentsByCategory.Find(Category))
+	{
+		for (UAudioComponent* AudioComp : *CategoryComponents)
+		{
+			if (AudioComp && AudioComp->IsPlaying())
+			{
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 void UAdastreaAudioComponent::CleanupFinishedAudioComponents()
@@ -132,11 +152,12 @@ void UAdastreaAudioComponent::CleanupFinishedAudioComponents()
 		UAudioComponent* AudioComp = ActiveAudioComponents[i];
 		if (!AudioComp || !AudioComp->IsPlaying())
 		{
-			ActiveAudioComponents.RemoveAt(i);
 			if (AudioComp)
 			{
+				UntrackAudioComponent(AudioComp);
 				AudioComp->DestroyComponent();
 			}
+			ActiveAudioComponents.RemoveAt(i);
 		}
 	}
 }
@@ -172,4 +193,33 @@ UAudioComponent* UAdastreaAudioComponent::GetAvailableAudioComponent()
 	}
 
 	return NewAudioComp;
+}
+
+void UAdastreaAudioComponent::TrackAudioComponent(UAudioComponent* AudioComp, ESoundEffectCategory Category)
+{
+	if (!AudioComp)
+	{
+		return;
+	}
+
+	// Add to main tracking array
+	ActiveAudioComponents.AddUnique(AudioComp);
+
+	// Add to category-specific tracking
+	TArray<UAudioComponent*>& CategoryComponents = AudioComponentsByCategory.FindOrAdd(Category);
+	CategoryComponents.AddUnique(AudioComp);
+}
+
+void UAdastreaAudioComponent::UntrackAudioComponent(UAudioComponent* AudioComp)
+{
+	if (!AudioComp)
+	{
+		return;
+	}
+
+	// Remove from all category arrays
+	for (auto& CategoryPair : AudioComponentsByCategory)
+	{
+		CategoryPair.Value.Remove(AudioComp);
+	}
 }

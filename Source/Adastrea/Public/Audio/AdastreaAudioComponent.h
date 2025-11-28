@@ -98,9 +98,19 @@ private:
 	UPROPERTY()
 	TArray<UAudioComponent*> ActiveAudioComponents;
 
+	/** Map of audio components by category for category-based operations */
+	UPROPERTY()
+	TMap<ESoundEffectCategory, TArray<UAudioComponent*>> AudioComponentsByCategory;
+
 	/** Cleanup finished audio components */
 	void CleanupFinishedAudioComponents();
 
 	/** Get or create an audio component for playback */
 	UAudioComponent* GetAvailableAudioComponent();
+
+	/** Track an audio component with its category */
+	void TrackAudioComponent(UAudioComponent* AudioComp, ESoundEffectCategory Category);
+
+	/** Remove an audio component from tracking */
+	void UntrackAudioComponent(UAudioComponent* AudioComp);
 };
