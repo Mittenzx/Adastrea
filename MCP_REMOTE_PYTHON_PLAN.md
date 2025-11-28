@@ -180,9 +180,12 @@ def generate_and_import_galaxy(num_systems=5):
     for yaml_path in system_files:
         import_yaml_to_data_asset(yaml_path, "/Game/DataAssets/Galaxy")
     
-    # Show notification
-    unreal.SystemLibrary.show_notification(
-        f"Generated and imported {num_systems} star systems"
+    # Show notification using UEPythonBridge wrapper
+    from ue_python_api import UEPythonBridge
+    bridge = UEPythonBridge()
+    bridge.show_notification(
+        f"Generated and imported {num_systems} star systems",
+        severity="Success"
     )
 ```
 
@@ -191,6 +194,10 @@ def generate_and_import_galaxy(num_systems=5):
 Extend `ScenePopulator.py` for MCP:
 
 ```python
+# Note: The following examples include pseudocode and helper functions 
+# (e.g., generate_strategic_positions) for illustration purposes.
+# Complete implementations would require additional support functions.
+
 # Populate a sector with ships and stations
 def populate_sector(sector_name, ship_count=10, station_count=3):
     """Populate a sector with procedural content."""
@@ -207,7 +214,7 @@ def populate_sector(sector_name, ship_count=10, station_count=3):
     )
     
     # Spawn stations at strategic points
-    station_positions = generate_strategic_positions(station_count)
+    station_positions = generate_strategic_positions(station_count)  # Helper function
     for i, pos in enumerate(station_positions):
         populator.spawn_actor(
             asset_path="/Game/Blueprints/Stations/BP_Station_TradeHub",
@@ -253,9 +260,9 @@ def setup_ship_interior(ship_actor_name, crew_count=5):
 def create_ship_blueprint(ship_name, base_data_asset):
     """Create a new ship Blueprint with proper setup."""
     
-    # Create Blueprint
+    # Create Blueprint - use full class path for custom C++ classes
     factory = unreal.BlueprintFactory()
-    factory.set_editor_property("ParentClass", unreal.Spaceship)
+    factory.set_editor_property("ParentClass", unreal.load_class(None, '/Script/Adastrea.Spaceship'))
     
     asset_tools = unreal.AssetToolsHelpers.get_asset_tools()
     blueprint = asset_tools.create_asset(
@@ -268,8 +275,8 @@ def create_ship_blueprint(ship_name, base_data_asset):
     # Set default properties
     set_blueprint_default(blueprint, "SpaceshipData", base_data_asset)
     
-    # Compile Blueprint
-    unreal.KismetSystemLibrary.compile_blueprint(blueprint)
+    # Save Blueprint (triggers compilation)
+    unreal.EditorAssetLibrary.save_loaded_asset(blueprint)
     
     return blueprint
 ```
@@ -300,7 +307,10 @@ def setup_test_level(level_path="/Game/Maps/TestLevel"):
     # Save level
     unreal.EditorLevelLibrary.save_current_level()
     
-    show_notification("Test level setup complete!")
+    # Show notification using UEPythonBridge wrapper
+    from ue_python_api import UEPythonBridge
+    bridge = UEPythonBridge()
+    bridge.show_notification("Test level setup complete!", severity="Success")
 ```
 
 #### 3.3 Automated Testing Workflows
@@ -627,8 +637,8 @@ def create_actor_blueprint(name, parent_class, components):
             comp_info.get("properties", {})
         )
     
-    # Compile
-    unreal.KismetSystemLibrary.compile_blueprint(blueprint)
+    # Save Blueprint (triggers compilation)
+    unreal.EditorAssetLibrary.save_loaded_asset(blueprint)
     
     return blueprint
 
@@ -665,9 +675,8 @@ def configure_ship_blueprint(blueprint_path, config):
         if hasattr(cdo, prop):
             setattr(cdo, prop, value)
     
-    # Save and compile
+    # Save Blueprint (triggers compilation)
     unreal.EditorAssetLibrary.save_asset(blueprint_path)
-    unreal.KismetSystemLibrary.compile_blueprint(blueprint)
     
     return True
 ```
@@ -867,15 +876,21 @@ class AdastreaTestRunner:
         
         for asset_info in assets:
             asset = unreal.load_asset(asset_info.asset_path)
+            if asset is None:
+                raise ValueError(f"Failed to load asset: {asset_info.asset_path}")
             
-            # Check stat validity
-            assert asset.HullStrength > 0, "Hull strength must be positive"
-            assert asset.MaxSpeed > 0, "Max speed must be positive"
-            assert asset.CrewRequired <= asset.MaxCrew, "Crew required <= max crew"
+            # Check stat validity with explicit if-checks for robust validation
+            if not asset.HullStrength > 0:
+                raise AssertionError("Hull strength must be positive")
+            if not asset.MaxSpeed > 0:
+                raise AssertionError("Max speed must be positive")
+            if not asset.CrewRequired <= asset.MaxCrew:
+                raise AssertionError("Crew required <= max crew")
             
             # Check rating calculations
             combat = asset.GetCombatRating()
-            assert 0 <= combat <= 100, "Combat rating out of range"
+            if not (0 <= combat <= 100):
+                raise AssertionError("Combat rating out of range")
         
         return True
 ```
