@@ -1508,8 +1508,8 @@ void UStationEditorManager::RecalculateStatisticsInternal() const
 	else
 	{
 		int32 TotalPossibleConnections = NumModules * (NumModules - 1) / 2;
-		CachedStatistics.DataNetworkUsage = TotalPossibleConnections > 0 ?
-			static_cast<float>(DataConnections) / static_cast<float>(TotalPossibleConnections) : 0.0f;
+		// TotalPossibleConnections is guaranteed > 0 when NumModules >= 2
+		CachedStatistics.DataNetworkUsage = static_cast<float>(DataConnections) / static_cast<float>(TotalPossibleConnections);
 	}
 	
 	// Calculate life support coverage
@@ -1726,12 +1726,13 @@ bool UStationEditorManager::CanUpgradeModule(ASpaceStationModule* Module) const
 		return false;
 	}
 	
-	// Check if there's an upgrade entry in the catalog
-	// A full implementation would check for specific upgrade paths in the catalog
+	// Simplified upgrade check: player can upgrade a module if their tech level
+	// exceeds the module's required tech level, implying access to better versions.
+	// A full implementation would query the catalog for specific upgrade paths.
 	FStationModuleEntry Entry;
 	if (ModuleCatalog->FindModuleByClass(Module->GetClass(), Entry))
 	{
-		// Check if player has a higher tech level that could unlock upgrades
+		// Module is upgradeable if player has surpassed its tech level
 		return Entry.RequiredTechLevel < PlayerTechLevel;
 	}
 	
