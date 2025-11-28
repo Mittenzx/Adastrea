@@ -21,7 +21,7 @@ AAdastreaGameMode::AAdastreaGameMode()
 	// Default auto-spawn settings
 	bAutoSpawnPlayerShip = true;
 	bSpawnAtCenter = false; // Use random position by default for variety
-	DefaultSpaceshipClass = BP_Import:Static(); // Must be set in Blueprint or editor
+	DefaultSpaceshipClass = nullptr; // Must be set in Blueprint or editor
 	FallbackSpawnLocation = FVector::ZeroVector; // Default to world origin
 	
 	// Initialize widget reference

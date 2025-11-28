@@ -238,15 +238,20 @@ Add Mapping Context (IMC_MenuOpen, Priority 1)
 
 ## Platform-Specific Input
 
-### PC Controls Summary:
-- WASD: Movement
-- Mouse: Camera/Aim
-- LMB: Fire Primary
-- RMB: Fire Secondary
-- Shift: Boost
-- E: Interact
-- Tab: Target Lock
-- Esc: Pause Menu
+### PC Controls Summary (X4-Style Flight):
+- **W/S**: Forward/Backward movement
+- **A/D**: Strafe left/right
+- **Space/Ctrl**: Strafe up/down (vertical)
+- **Mouse**: Camera/Aim (Pitch and Yaw)
+- **Mouse Wheel**: Throttle up/down (speed control)
+- **LMB**: Fire Primary
+- **RMB**: Fire Secondary
+- **Shift**: Boost (hold)
+- **V**: Toggle Flight Assist
+- **J**: Toggle Travel Mode
+- **E**: Interact
+- **Tab**: Target Lock
+- **Esc**: Pause Menu
 
 ### Gamepad Controls Summary:
 - Left Stick: Movement
