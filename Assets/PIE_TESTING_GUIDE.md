@@ -153,16 +153,15 @@ Press **`** (tilde/backtick) to open the console:
 log LogAdastrea Verbose
 log LogAdastreaShips Verbose
 log LogAdastreaInput Verbose
-
-// Ship testing
-adastrea.spawn_ship Fighter
-adastrea.spawn_ship Scout
-adastrea.set_speed 1000
-
-// Debug modes
-adastrea.debug_collision 1
-adastrea.debug_navigation 1
 ```
+
+> **Note:** The following custom Adastrea console commands are **planned for future releases** and are not yet implemented:
+> - `adastrea.spawn_ship` - Spawn ships of various types
+> - `adastrea.set_speed` - Set ship speed
+> - `adastrea.debug_collision` - Toggle collision debugging
+> - `adastrea.debug_navigation` - Toggle navigation debugging
+>
+> Use the TestingDashboardWidget (F12) for ship spawning and debug mode toggles in the meantime.
 
 ### Visual Debugging
 - **G**: Toggle game UI
@@ -308,7 +307,7 @@ See `ScreenshotTester.py` for visual regression testing.
 
 ## Version History
 
-- **1.0** (2024-11-28): Initial PIE configuration setup
+- **1.0** (2025-11-28): Initial PIE configuration setup
   - Added PIE settings to DefaultEditor.ini
   - Added world settings to DefaultEngine.ini
   - Created PIE testing documentation
@@ -316,4 +315,4 @@ See `ScreenshotTester.py` for visual regression testing.
 ---
 
 **Maintained by**: Adastrea Development Team  
-**Last Updated**: 2024-11-28
+**Last Updated**: 2025-11-28
