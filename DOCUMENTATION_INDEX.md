@@ -1,6 +1,6 @@
 # Adastrea Documentation Index
 
-**Last Updated**: November 23, 2025  
+**Last Updated**: November 28, 2025  
 **Version**: 1.0.0-alpha  
 **Purpose**: Comprehensive index of all documentation in the Adastrea project
 
@@ -44,6 +44,7 @@ Documentation for AI-powered development tools:
 | **DIRECTOR_KNOWLEDGE_BASE.md** | Primary knowledge base for Adastrea-Director AI tool | Root |
 | **UE_PLUGIN_FEASIBILITY_REPORT.md** | Technical feasibility study for native UE plugin conversion | Root |
 | **PLUGIN_DEVELOPMENT_GUIDE.md** | Implementation roadmap for Adastrea-Director plugin | Root |
+| **MCP_REMOTE_PYTHON_PLAN.md** | ⭐ **NEW!** MCP automation plan for UE Remote Python integration | Root |
 | **.github/copilot-instructions.md** | ⭐ GitHub Copilot custom instructions and coding standards | .github/ |
 | **.github/copilot-knowledge.md** | GitHub Copilot knowledge base with repository structure | .github/ |
 | **.github/instructions/*.instructions.md** | Path-scoped Copilot instructions for specific code areas | .github/instructions/ |
