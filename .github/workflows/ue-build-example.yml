@@ -145,14 +145,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Use GITHUB_TOKEN if GHCR_TOKEN is not configured
-          # GITHUB_TOKEN is automatically provided by GitHub Actions
-          if [ -n "$GHCR_TOKEN" ]; then
-            echo "$GHCR_TOKEN" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-          else
-            echo "GHCR_TOKEN not found, using GITHUB_TOKEN instead"
-            echo "$GH_TOKEN" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-          fi
+          # GITHUB_TOKEN is automatically provided by GitHub ActionS
+            echo "$GITHUB_TOKEN" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       
       - name: Pull Unreal Engine Container
         env:
