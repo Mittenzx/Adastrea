@@ -628,7 +628,7 @@ The game includes a comprehensive personnel/crew management system for creating 
 
 **Quest System** - Mission tracking with 10 quest types and 9 objective types. Supports quest chains, procedural generation, and difficulty-scaled rewards. See [Assets/QuestSystemGuide.md](Assets/QuestSystemGuide.md).
 
-**Enhanced Input System** - Centralized input configuration with 30+ actions organized into categories (Movement, Combat, Navigation, System, Camera). See [Assets/EnhancedInputImplementation.md](Assets/EnhancedInputImplementation.md).
+**Enhanced Input System** - Centralized input configuration with 30+ actions organized into categories (Movement, Combat, Navigation, System, Camera). See [Assets/EnhancedInputImplementation.md](Assets/EnhancedInputImplementation.md) and [Assets/MousewheelThrottleSetupGuide.md](Assets/MousewheelThrottleSetupGuide.md) for detailed mousewheel throttle control setup in UE 5.6.
 
 **Save System** - Complete save/load with multiple slots, auto-save, metadata tracking, and version control. See [Assets/SaveSystemGuide.md](Assets/SaveSystemGuide.md).
 
@@ -699,6 +699,9 @@ Comprehensive technical documentation for contributors and developers:
 
 #### Core Systems
 - [Spaceship System Guide](Assets/SpaceshipDataAssetGuide.md)
+  - [Mousewheel Throttle Setup Guide (UE 5.6)](Assets/MousewheelThrottleSetupGuide.md)
+  - [X4 Flight Controls Guide](Assets/X4FlightControlsGuide.md)
+  - [Ship Control Guide](Assets/ShipControlGuide.md)
 - [Space Station System](Content/Blueprints/STATION_EDITOR_README.md)
 - [Faction System Guide](Assets/BlueprintFactionAssetGuide.md)
 - [Way System Guide](Assets/WaySystemGuide.md)
