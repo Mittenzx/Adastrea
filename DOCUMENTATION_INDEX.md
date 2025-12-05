@@ -298,6 +298,8 @@ Concise reference documents:
 |----------|---------|----------|
 | **ENHANCED_INPUT_GUIDE.md** | Enhanced Input system setup | Root |
 | **Assets/EnhancedInputImplementation.md** | Implementation details | Assets/ |
+| **Docs/PLAYER_CONTROLS_WORKFLOW.md** | ⭐ **NEW!** Complete C++ workflow diagrams for player controls | Docs/ |
+| **Docs/PLAYER_CONTROLS_DIAGRAMS.md** | ⭐ **NEW!** Visual Mermaid diagrams for spaceship and character systems | Docs/ |
 
 ### Performance
 
