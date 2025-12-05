@@ -35,7 +35,9 @@
    - SpaceshipMappingContext → `IMC_Spaceship`
 3. Save if you made changes
 
-📖 **Need help?** See [DA_INPUTCONFIG_VISUAL_GUIDE.md](DA_INPUTCONFIG_VISUAL_GUIDE.md) for detailed UE5.6 configuration guide with visual layouts.
+📖 **Need help?** See visual guides for UE5.6:
+- [DA_INPUTCONFIG_VISUAL_GUIDE.md](DA_INPUTCONFIG_VISUAL_GUIDE.md) - Input Actions configuration
+- [IMC_SPACESHIP_VISUAL_GUIDE.md](IMC_SPACESHIP_VISUAL_GUIDE.md) - Key mapping setup
 
 ### ✅ Step 2: Configure Game Mode (1 min)
 
@@ -138,6 +140,7 @@ See **BLUEPRINT_PIE_CHECKLIST.md** for detailed next steps.
 For comprehensive information:
 - **BLUEPRINT_PIE_CHECKLIST.md** - Complete PIE setup guide
 - **DA_INPUTCONFIG_VISUAL_GUIDE.md** - Visual guide for DA_InputConfig in UE5.6
+- **IMC_SPACESHIP_VISUAL_GUIDE.md** - Visual guide for IMC_Spaceship key mapping in UE5.6
 - **BLUEPRINT_REQUIREMENTS_LIST.md** - All blueprints for full game
 - **BLUEPRINT_CREATION_GUIDE.md** - Step-by-step creation instructions
 - **CONTENT_CREATION_QUICKSTART.md** - 30-minute playable prototype

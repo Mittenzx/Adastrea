@@ -319,6 +319,7 @@ Once you can fly the ship:
 **System Documentation**:
 - **Assets/EnhancedInputImplementation.md** - Enhanced Input system details
 - **DA_INPUTCONFIG_VISUAL_GUIDE.md** - Visual guide for DA_InputConfig in UE5.6
+- **IMC_SPACESHIP_VISUAL_GUIDE.md** - Visual guide for IMC_Spaceship key mapping in UE5.6
 - **Assets/SpaceshipTemplates/** - Ship configuration templates
 - **Assets/BlueprintWorkflowTemplates.md** - Blueprint patterns
 

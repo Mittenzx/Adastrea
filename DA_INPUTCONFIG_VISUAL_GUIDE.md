@@ -486,6 +486,7 @@ void ASpaceshipController::BeginPlay()
 
 ## Additional Resources
 
+- **IMC_Spaceship Key Mapping Guide**: [IMC_SPACESHIP_VISUAL_GUIDE.md](IMC_SPACESHIP_VISUAL_GUIDE.md) - Visual guide for key bindings
 - **Input System Guide**: `Assets/EnhancedInputImplementation.md`
 - **Input Actions Reference**: `Content/Input/Actions/`
 - **Mapping Context**: `Content/Input/IMC_Spaceship.uasset`

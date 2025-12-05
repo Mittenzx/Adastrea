@@ -26,6 +26,8 @@ These files already exist in `Content/Input/Actions/`:
 **Location**: `Content/Input/Actions/`
 **Status**: ✅ DO NOT DELETE - Already configured and ready to use
 
+📖 **For UE5.6 Key Mapping Guide**: See [IMC_SPACESHIP_VISUAL_GUIDE.md](IMC_SPACESHIP_VISUAL_GUIDE.md) for detailed key binding configuration with visual examples.
+
 ### Input Mapping Context (Already Exists ✅)
 - ✅ **IMC_Spaceship** - Maps input actions to keyboard/mouse keys
 
@@ -49,7 +51,9 @@ These files already exist in `Content/Input/Actions/`:
   - MenuAction → IA_PauseMenu
   - SpaceshipMappingContext → IMC_Spaceship
 
-📖 **For UE5.6 Visual Setup Guide**: See [DA_INPUTCONFIG_VISUAL_GUIDE.md](DA_INPUTCONFIG_VISUAL_GUIDE.md) for detailed step-by-step configuration with visual layout diagrams.
+📖 **For UE5.6 Visual Setup Guides**:
+- [DA_INPUTCONFIG_VISUAL_GUIDE.md](DA_INPUTCONFIG_VISUAL_GUIDE.md) - DA_InputConfig configuration with visual layout diagrams
+- [IMC_SPACESHIP_VISUAL_GUIDE.md](IMC_SPACESHIP_VISUAL_GUIDE.md) - IMC_Spaceship key mapping configuration
 
 ---
 

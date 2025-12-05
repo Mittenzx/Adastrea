@@ -495,4 +495,5 @@ Priority 5: Economy
 - BLUEPRINT_PIE_CHECKLIST.md (complete checklist)
 - BLUEPRINT_QUICK_START_PIE.md (5-minute setup)
 - DA_INPUTCONFIG_VISUAL_GUIDE.md (UE5.6 input configuration guide)
+- IMC_SPACESHIP_VISUAL_GUIDE.md (UE5.6 key mapping guide)
 - BLUEPRINT_REQUIREMENTS_LIST.md (all blueprints)

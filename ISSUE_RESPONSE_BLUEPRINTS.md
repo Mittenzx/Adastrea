@@ -219,6 +219,7 @@ Existing blueprints need verification/configuration:
 - **BLUEPRINT_PIE_CHECKLIST.md** - Full checklist
 - **BLUEPRINT_PIE_DIAGRAM.md** - Visual diagrams
 - **DA_INPUTCONFIG_VISUAL_GUIDE.md** - DA_InputConfig setup for UE5.6
+- **IMC_SPACESHIP_VISUAL_GUIDE.md** - IMC_Spaceship key mapping for UE5.6
 
 ### Complete References
 - **BLUEPRINT_REQUIREMENTS_LIST.md** - All blueprints for full game (100+)
