@@ -17,6 +17,18 @@ This folder contains detailed technical documentation, implementation guides, an
 
 ### ⭐ NEW: Comprehensive Control System Workflows
 
+**[PLAYER_CONTROLS_QUICK_REFERENCE.md](PLAYER_CONTROLS_QUICK_REFERENCE.md)** - One-page reference
+- **Purpose**: Quick reference card for player controls
+- **Contents**:
+  - System overview and key classes
+  - Initialization order (10 steps)
+  - Input actions and key bindings
+  - Runtime flow examples
+  - Transition workflows
+  - Debugging checklist
+  - Testing procedures
+- **Use When**: You need quick answers or a printable reference
+
 **[PLAYER_CONTROLS_WORKFLOW.md](PLAYER_CONTROLS_WORKFLOW.md)** - 958 lines
 - **Purpose**: Detailed C++ flowcharts showing initialization and runtime call order
 - **Contents**:
@@ -40,8 +52,9 @@ This folder contains detailed technical documentation, implementation guides, an
   - Performance profiling metrics
 
 **When to Use Which Document**:
-- **PLAYER_CONTROLS_WORKFLOW.md**: When you need detailed textual descriptions of the flow
-- **PLAYER_CONTROLS_DIAGRAMS.md**: When you need visual diagrams to understand relationships
+- **PLAYER_CONTROLS_QUICK_REFERENCE.md**: Quick lookup, testing checklist, printable reference
+- **PLAYER_CONTROLS_WORKFLOW.md**: Detailed textual descriptions of the flow
+- **PLAYER_CONTROLS_DIAGRAMS.md**: Visual diagrams to understand relationships
 
 **Key Features Documented**:
 - ✅ Spaceship Enhanced Input system (fully implemented)
