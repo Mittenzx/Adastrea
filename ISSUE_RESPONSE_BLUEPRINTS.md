@@ -15,8 +15,8 @@
 4. ✅ **BP_SpaceshipController** - Player controller blueprint
 5. ✅ **BP_PlayerShip** - Player spaceship blueprint
 6. ✅ **DA_Ship_PlayerScout** - Ship stats data asset
-7. ✅ **WPB_SpaceShipHUD** - HUD widget (optional for basic PIE)
-8. ✅ **WPB_MainMenu** - Main menu widget (optional for basic PIE)
+7. ✅ **WBP_SpaceShipHUD** - HUD widget (optional for basic PIE)
+8. ✅ **WBP_MainMenu** - Main menu widget (optional for basic PIE)
 
 ### Need to Create (1 item):
 1. 🔨 **TestLevel.umap** - Test level/map with Player Start
@@ -181,8 +181,8 @@ Your repository already includes:
 - ✅ Game Mode Blueprint (BP_SpaceGameMode)
 - ✅ Game Instance Blueprint (BP_GameInstance)
 - ✅ Ship Data Asset (DA_Ship_PlayerScout)
-- ✅ HUD Widget Blueprint (WPB_SpaceShipHUD)
-- ✅ Main Menu Widget (WPB_MainMenu)
+- ✅ HUD Widget Blueprint (WBP_SpaceShipHUD)
+- ✅ Main Menu Widget (WBP_MainMenu)
 
 **This is ~95% of what you need!**
 
@@ -218,6 +218,7 @@ Existing blueprints need verification/configuration:
 ### Detailed Guides
 - **BLUEPRINT_PIE_CHECKLIST.md** - Full checklist
 - **BLUEPRINT_PIE_DIAGRAM.md** - Visual diagrams
+- **DA_INPUTCONFIG_VISUAL_GUIDE.md** - DA_InputConfig setup for UE5.6
 
 ### Complete References
 - **BLUEPRINT_REQUIREMENTS_LIST.md** - All blueprints for full game (100+)

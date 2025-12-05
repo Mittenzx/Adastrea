@@ -94,8 +94,8 @@ These blueprints are already in your repository at `Content/`:
 #### 4. UI (HIGH PRIORITY - Already Exist)
 | Blueprint | Location | Status | Action Needed |
 |-----------|----------|--------|---------------|
-| **WPB_SpaceShipHUD** | `UI/HUD/` | ✅ Exists | 🔧 May need UI elements |
-| **WPB_MainMenu** | `UI/Menus/` | ✅ Exists | 🔧 May need buttons |
+| **WBP_SpaceShipHUD** | `UI/HUD/` | ✅ Exists | 🔧 May need UI elements |
+| **WBP_MainMenu** | `UI/Menus/` | ✅ Exists | 🔧 May need buttons |
 
 **Note**: HUD and menu can be enhanced later. Basic PIE works without fully designed UI.
 
@@ -171,8 +171,8 @@ Setting:
 4. BP_SpaceshipController (Player controller)
 5. BP_PlayerShip (Player spaceship)
 6. DA_Ship_PlayerScout (Ship stats)
-7. WPB_SpaceShipHUD (HUD widget - optional for basic PIE)
-8. WPB_MainMenu (Main menu - optional for basic PIE)
+7. WBP_SpaceShipHUD (HUD widget - optional for basic PIE)
+8. WBP_MainMenu (Main menu - optional for basic PIE)
 
 **Blueprints to create: 1**
 1. TestLevel.umap (Level/map)
@@ -290,7 +290,7 @@ If PIE doesn't work:
 Once you can fly the ship:
 
 ### Immediate Next Steps:
-1. **Add HUD elements** - Open WPB_SpaceShipHUD and add health/shield bars
+1. **Add HUD elements** - Open WBP_SpaceShipHUD and add health/shield bars
 2. **Add combat** - Create projectile blueprint and weapon firing
 3. **Add environment** - Place asteroids and space stations
 4. **Add enemy ships** - Create NPC ship blueprints
@@ -318,6 +318,7 @@ Once you can fly the ship:
 
 **System Documentation**:
 - **Assets/EnhancedInputImplementation.md** - Enhanced Input system details
+- **DA_INPUTCONFIG_VISUAL_GUIDE.md** - Visual guide for DA_InputConfig in UE5.6
 - **Assets/SpaceshipTemplates/** - Ship configuration templates
 - **Assets/BlueprintWorkflowTemplates.md** - Blueprint patterns
 

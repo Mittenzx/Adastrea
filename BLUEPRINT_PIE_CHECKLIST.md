@@ -49,6 +49,8 @@ These files already exist in `Content/Input/Actions/`:
   - MenuAction → IA_PauseMenu
   - SpaceshipMappingContext → IMC_Spaceship
 
+📖 **For UE5.6 Visual Setup Guide**: See [DA_INPUTCONFIG_VISUAL_GUIDE.md](DA_INPUTCONFIG_VISUAL_GUIDE.md) for detailed step-by-step configuration with visual layout diagrams.
+
 ---
 
 ## Phase 2: Core Game Framework (CRITICAL)
@@ -130,9 +132,9 @@ These files already exist in `Content/Input/Actions/`:
 ## Phase 3: UI/HUD (HIGH PRIORITY)
 
 ### HUD Widget (Already Exists ✅)
-- ✅ **WPB_SpaceShipHUD** - Main heads-up display
+- ✅ **WBP_SpaceShipHUD** - Main heads-up display
 
-**Location**: `Content/UI/HUD/WPB_SpaceShipHUD.uasset`
+**Location**: `Content/UI/HUD/WBP_SpaceShipHUD.uasset`
 **Parent Class**: `UAdastreaHUDWidget` (C++)
 **Status**: ⚙️ **MAY NEED DESIGN** - Check if widget has visual elements
 
@@ -145,15 +147,15 @@ These files already exist in `Content/Input/Actions/`:
 6. Image - Crosshair (center)
 
 **Action Needed**:
-1. Open `WPB_SpaceShipHUD`
+1. Open `WBP_SpaceShipHUD`
 2. If empty, add basic Canvas Panel
 3. Add simple text element to verify it displays
 4. Can add full UI elements later
 
 ### Main Menu Widget (Already Exists ✅)
-- ✅ **WPB_MainMenu** - Main menu for game start
+- ✅ **WBP_MainMenu** - Main menu for game start
 
-**Location**: `Content/UI/Menus/WPB_MainMenu.uasset`
+**Location**: `Content/UI/Menus/WBP_MainMenu.uasset`
 **Parent Class**: `UUserWidget`
 **Status**: ⚙️ **MAY NEED BUTTONS** - Check if menu has functional buttons
 
@@ -163,7 +165,7 @@ These files already exist in `Content/Input/Actions/`:
 3. Button - Quit Game
 
 **Action Needed**:
-1. Open `WPB_MainMenu`
+1. Open `WBP_MainMenu`
 2. Add Start Game button with OnClicked event
 3. OnClicked → Open Level ("TestLevel")
 4. Can be enhanced later
@@ -385,7 +387,7 @@ Once you have basic movement working:
 4. Add damage system
 
 ### Phase B: Add HUD
-1. Enhance WPB_SpaceShipHUD with full UI elements
+1. Enhance WBP_SpaceShipHUD with full UI elements
 2. Bind health/shield bars to ship values
 3. Add speed indicator
 4. Add crosshair and target reticle

@@ -304,7 +304,7 @@ BP_SpaceshipController
       │
       ▼
 ┌────────────────────┐
-│ WPB_SpaceShipHUD   │  ◄── UUserWidget
+│ WBP_SpaceShipHUD   │  ◄── UUserWidget
 └────────┬───────────┘
          │
          │ Add to Viewport
@@ -424,7 +424,7 @@ Content/
 │
 └─ UI/
    └─ HUD/
-      └─ WPB_SpaceShipHUD.uasset
+      └─ WBP_SpaceShipHUD.uasset
 ```
 
 ---
@@ -466,7 +466,7 @@ Once basic PIE works, add these in order:
 
 ```
 Priority 1: HUD
-   └─ WPB_SpaceShipHUD with UI elements
+   └─ WBP_SpaceShipHUD with UI elements
 
 Priority 2: Combat
    ├─ BP_Projectile_Laser
@@ -494,4 +494,5 @@ Priority 5: Economy
 **📖 For detailed instructions, see:**
 - BLUEPRINT_PIE_CHECKLIST.md (complete checklist)
 - BLUEPRINT_QUICK_START_PIE.md (5-minute setup)
+- DA_INPUTCONFIG_VISUAL_GUIDE.md (UE5.6 input configuration guide)
 - BLUEPRINT_REQUIREMENTS_LIST.md (all blueprints)

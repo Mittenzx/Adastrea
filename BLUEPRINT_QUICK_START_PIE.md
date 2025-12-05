@@ -35,6 +35,8 @@
    - SpaceshipMappingContext → `IMC_Spaceship`
 3. Save if you made changes
 
+📖 **Need help?** See [DA_INPUTCONFIG_VISUAL_GUIDE.md](DA_INPUTCONFIG_VISUAL_GUIDE.md) for detailed UE5.6 configuration guide with visual layouts.
+
 ### ✅ Step 2: Configure Game Mode (1 min)
 
 1. Open `Content/Blueprints/GameModes/BP_SpaceGameMode`
@@ -121,7 +123,7 @@
 
 Once basic PIE works:
 
-1. **Add HUD**: Open `Content/UI/HUD/WPB_SpaceShipHUD` and add UI elements
+1. **Add HUD**: Open `Content/UI/HUD/WBP_SpaceShipHUD` and add UI elements
 2. **Add Combat**: Create projectile blueprint and weapon effects
 3. **Add Environment**: Place asteroids, space stations in level
 4. **Add AI Ships**: Create NPC ship blueprints with basic AI
@@ -135,6 +137,7 @@ See **BLUEPRINT_PIE_CHECKLIST.md** for detailed next steps.
 
 For comprehensive information:
 - **BLUEPRINT_PIE_CHECKLIST.md** - Complete PIE setup guide
+- **DA_INPUTCONFIG_VISUAL_GUIDE.md** - Visual guide for DA_InputConfig in UE5.6
 - **BLUEPRINT_REQUIREMENTS_LIST.md** - All blueprints for full game
 - **BLUEPRINT_CREATION_GUIDE.md** - Step-by-step creation instructions
 - **CONTENT_CREATION_QUICKSTART.md** - 30-minute playable prototype
