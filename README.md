@@ -215,11 +215,13 @@ All generated content is saved as YAML files compatible with the existing Data A
 1. **For Designers**: Read [Assets/DesignerOnboarding.md](Assets/DesignerOnboarding.md)
 2. **For Programmers (C++ Focused)**: Read [CPP_FOCUSED_SETUP.md](CPP_FOCUSED_SETUP.md) and [ESSENTIAL_BLUEPRINTS_ONLY.md](ESSENTIAL_BLUEPRINTS_ONLY.md)
 3. **For Programmers (General)**: Read [CONTRIBUTING.md](CONTRIBUTING.md) and [ARCHITECTURE.md](ARCHITECTURE.md)
-4. **For Blueprint Creation**: See [BLUEPRINT_REQUIREMENTS_LIST.md](BLUEPRINT_REQUIREMENTS_LIST.md) for complete list of required Blueprints
-5. **For Testing**: Create a Test Mode level - see [Docs/TestMode_INDEX.md](Docs/TestMode_INDEX.md) for complete guide
-6. **For Automation**: See [TESTING_AUTOMATION_GUIDE.md](TESTING_AUTOMATION_GUIDE.md) for automated testing
-7. **For Procedural Content**: See [PROCEDURAL_GENERATION_QUICKSTART.md](PROCEDURAL_GENERATION_QUICKSTART.md)
-8. **Quick Reference**: See individual system guides in the Assets/ folder
+4. **For Playing in PIE (Quick Start)**: See [BLUEPRINT_QUICK_START_PIE.md](BLUEPRINT_QUICK_START_PIE.md) - Get flying in 5 minutes!
+5. **For Blueprint Creation**: See [BLUEPRINT_REQUIREMENTS_LIST.md](BLUEPRINT_REQUIREMENTS_LIST.md) for complete list of required Blueprints
+6. **For PIE Setup Guide**: See [BLUEPRINT_LIST_FOR_PIE.md](BLUEPRINT_LIST_FOR_PIE.md) for detailed blueprint checklist
+7. **For Testing**: Create a Test Mode level - see [Docs/TestMode_INDEX.md](Docs/TestMode_INDEX.md) for complete guide
+8. **For Automation**: See [TESTING_AUTOMATION_GUIDE.md](TESTING_AUTOMATION_GUIDE.md) for automated testing
+9. **For Procedural Content**: See [PROCEDURAL_GENERATION_QUICKSTART.md](PROCEDURAL_GENERATION_QUICKSTART.md)
+10. **Quick Reference**: See individual system guides in the Assets/ folder
 
 ## Project Roadmap
 
