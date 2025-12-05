@@ -678,7 +678,7 @@ Switch between different input contexts based on game state:
 
 ```cpp
 // In Player Controller
-void ASwitchToCombatMode()
+void SwitchToCombatMode()
 {
     if (UEnhancedInputLocalPlayerSubsystem* Subsystem = 
         ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
