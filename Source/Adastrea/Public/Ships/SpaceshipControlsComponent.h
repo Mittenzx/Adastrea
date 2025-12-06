@@ -266,6 +266,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	/**
 	 * Setup input bindings on the Enhanced Input Component
@@ -312,7 +313,4 @@ private:
 
 	/** Current smoothed movement input values */
 	FVector2D SmoothedMoveInput;
-
-public:
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 };
