@@ -118,6 +118,7 @@ Concise reference documents:
 | **SpaceshipTemplates.md** | Templates | 6 pre-built ship YAML templates | Assets/ |
 | **ShipControlGuide.md** | Guide | Ship control implementation | Assets/ |
 | **ShipControlImplementationSummary.md** | Summary | Implementation overview | Assets/ |
+| **SpaceshipControlsSmoothingGuide.md** | ⭐ **NEW!** Guide | Smooth control configuration for mouse look and WASD | Assets/ |
 | **ShipCustomizationGuide.md** | Guide | Ship modification system | Assets/ |
 | **SpaceshipInteriorGuide.md** | Guide | Ship interior layouts | Assets/ |
 
