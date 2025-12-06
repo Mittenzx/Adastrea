@@ -90,7 +90,8 @@ void USpaceshipControlsComponent::TickComponent(float DeltaTime, ELevelTick Tick
 		return;
 	}
 
-	// Early exit if no smoothing is enabled
+	// Early exit if rotation smoothing is disabled
+	// Note: Movement smoothing doesn't use tick - it's handled in HandleMove event
 	if (!bEnableRotationSmoothing)
 	{
 		return;
@@ -376,8 +377,7 @@ void USpaceshipControlsComponent::HandleMove(const FInputActionValue& Value)
 	}
 	else
 	{
-		// No smoothing - apply input directly
-		SmoothedMoveInput = RawMoveValue;
+		// No smoothing - apply input directly (don't update SmoothedMoveInput)
 		OnMoveInput(RawMoveValue);
 	}
 }
