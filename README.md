@@ -358,21 +358,31 @@ A modular space station construction system that enables players to build, custo
 **Key Components:**
 - `ASpaceStation` - Core station actor with module management (add, remove, move modules) [Adastrea module]
 - `ASpaceStationModule` - Base class for station modules with type classification [Adastrea module]
+- `UStationEditorManager` - Core C++ manager handling placement, validation, undo/redo, construction queue [StationEditor module]
+- `UStationModuleCatalog` - Data Asset defining available modules, costs, and requirements [StationEditor module]
 - `UStationEditorWidget` - Player-facing UI widget for station editing [StationEditor module]
+- `AStationBuildPreview` - Visual preview actor showing placement validity [StationEditor module]
+- `UStationGridSystem` - Grid snapping and alignment system [StationEditor module]
 - `EStationModuleGroup` - Module categorization enum (Docking, Power, Storage, Defence, etc.) [Adastrea module]
 
 **Module Organization:**
-- **StationEditor module** (Runtime): In-game player-facing station editor UI
+- **StationEditor module** (Runtime): In-game player-facing station editor UI with full editing capabilities
 - **Adastrea module** (Runtime): Core station and module actors
 - **PlayerMods module** (Runtime): Player modification system
 
-**For detailed implementation guide, see:** [Content/Blueprints/STATION_EDITOR_README.md](Content/Blueprints/STATION_EDITOR_README.md)
+**Documentation:**
+- **PIE Testing Guide**: [Assets/StationEditorPIETestingGuide.md](Assets/StationEditorPIETestingGuide.md) - ⭐ **START HERE!** Complete implementation guide for testing in PIE with key binding setup
+- **System API Reference**: [Assets/StationEditorSystemGuide.md](Assets/StationEditorSystemGuide.md) - Complete C++ API documentation
+- **Management Guide**: [Assets/StationManagementGuide.md](Assets/StationManagementGuide.md) - Station management UI patterns
+- **Blueprint Integration**: [Content/Blueprints/STATION_EDITOR_README.md](Content/Blueprints/STATION_EDITOR_README.md) - Blueprint implementation details
 
 **Quick Usage:**
 1. Create Blueprint extending `ASpaceStation` for your custom station
 2. Create module Blueprints extending `ASpaceStationModule` (e.g., docking bays, trade hubs)
-3. Create Widget Blueprint extending `UStationEditorWidget` for the in-game editor UI
-4. Use Blueprint-callable functions to add, remove, and position modules
+3. Create `DA_StationModuleCatalog` Data Asset with available modules
+4. Create Widget Blueprint extending `UStationEditorWidget` for the in-game editor UI
+5. Bind a key (e.g., F9) to toggle the editor - see [PIE Testing Guide](Assets/StationEditorPIETestingGuide.md)
+6. Use Blueprint-callable functions to add, remove, and position modules
 
 ### Way System
 The Way System provides specialized guilds (Ways) and micro-alliances (Way Networks) based on shared values (Precepts). Ways are small focused organizations (50-1000 members) that handle specific industries and form networks where reputation with one member affects the entire alliance.

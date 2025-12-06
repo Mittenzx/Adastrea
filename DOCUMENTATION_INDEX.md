@@ -253,6 +253,10 @@ Concise reference documents:
 
 | Document | Type | Purpose | Location |
 |----------|------|---------|----------|
+| **StationEditorSystemGuide.md** | Guide | Complete C++ API reference for station editor | Assets/ |
+| **StationEditorPIETestingGuide.md** | Tutorial | ⭐ **NEW!** Complete PIE testing implementation guide with key binding setup | Assets/ |
+| **StationManagementGuide.md** | Guide | Station management UI patterns | Assets/ |
+| **MaterialStationIntegration.md** | Integration | Material system integration with stations | Assets/ |
 | **Content/Blueprints/STATION_EDITOR_README.md** | Guide | Station editor tools | Content/Blueprints/ |
 
 ---
