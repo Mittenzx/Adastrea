@@ -30,10 +30,9 @@ USpaceshipControlsComponent::USpaceshipControlsComponent()
 	, bControlsEnabled(false)
 	, CachedWeaponComponent(nullptr)
 	, SmoothedMoveInput(FVector2D::ZeroVector)
-	, SmoothedLookInput(FVector2D::ZeroVector)
-	, TargetRotation(FRotator::ZeroRotator)
-	, bNeedsTickForSmoothing(false)
 {
+	// Enable ticking for smoothing updates
+	// Tick is conditional - returns early if smoothing disabled or controls not enabled
 	PrimaryComponentTick.bCanEverTick = true;
 	PrimaryComponentTick.bStartWithTickEnabled = true;
 }
@@ -55,12 +54,6 @@ void USpaceshipControlsComponent::BeginPlay()
 	{
 		UE_LOG(LogAdastreaInput, Warning, TEXT("SpaceshipControlsComponent: Owner is not a Pawn, input will not be bound"));
 		return;
-	}
-
-	// Initialize target rotation to current pawn rotation
-	if (OwningPawn->GetController())
-	{
-		TargetRotation = OwningPawn->GetController()->GetControlRotation();
 	}
 
 	// Bind to pawn's input component setup
@@ -91,31 +84,34 @@ void USpaceshipControlsComponent::TickComponent(float DeltaTime, ELevelTick Tick
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// Only apply smoothing if controls are enabled
+	// Early exit if controls are disabled
 	if (!bControlsEnabled)
 	{
 		return;
 	}
 
+	// Early exit if no smoothing is enabled
+	if (!bEnableRotationSmoothing)
+	{
+		return;
+	}
+
 	APawn* OwningPawn = Cast<APawn>(GetOwner());
-	if (!OwningPawn)
+	if (!OwningPawn || !OwningPawn->GetController())
 	{
 		return;
 	}
 
 	// Apply rotation smoothing - ship follows camera with delay
-	if (bEnableRotationSmoothing && OwningPawn->GetController())
-	{
-		// Get the target rotation from the controller (camera)
-		FRotator CurrentControlRotation = OwningPawn->GetController()->GetControlRotation();
-		
-		// Smoothly interpolate ship rotation towards camera rotation
-		FRotator CurrentShipRotation = OwningPawn->GetActorRotation();
-		FRotator NewShipRotation = FMath::RInterpTo(CurrentShipRotation, CurrentControlRotation, DeltaTime, RotationSmoothingSpeed);
-		
-		// Apply the smoothed rotation to the ship
-		OwningPawn->SetActorRotation(NewShipRotation);
-	}
+	// Get the target rotation from the controller (camera)
+	FRotator CurrentControlRotation = OwningPawn->GetController()->GetControlRotation();
+	
+	// Smoothly interpolate ship rotation towards camera rotation
+	FRotator CurrentShipRotation = OwningPawn->GetActorRotation();
+	FRotator NewShipRotation = FMath::RInterpTo(CurrentShipRotation, CurrentControlRotation, DeltaTime, RotationSmoothingSpeed);
+	
+	// Apply the smoothed rotation to the ship
+	OwningPawn->SetActorRotation(NewShipRotation);
 }
 
 void USpaceshipControlsComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -396,19 +392,10 @@ void USpaceshipControlsComponent::HandleLook(const FInputActionValue& Value)
 		RawLookValue.Y = -RawLookValue.Y;
 	}
 
-	// When rotation smoothing is enabled, apply look directly to camera
-	// and let TickComponent smooth ship rotation to follow
-	if (bEnableRotationSmoothing)
-	{
-		// Apply input directly to camera (controller)
-		// Ship will follow with delay in TickComponent
-		OnLookInput(RawLookValue);
-	}
-	else
-	{
-		// No smoothing - ship rotates instantly with camera
-		OnLookInput(RawLookValue);
-	}
+	// Apply look input to camera
+	// When rotation smoothing is enabled, TickComponent smooths ship rotation to follow
+	// When disabled, OnLookInput_Implementation syncs ship rotation instantly
+	OnLookInput(RawLookValue);
 }
 
 void USpaceshipControlsComponent::HandleFirePressed(const FInputActionValue& Value)

@@ -313,15 +313,6 @@ private:
 	/** Current smoothed movement input values */
 	FVector2D SmoothedMoveInput;
 
-	/** Current smoothed look input values */
-	FVector2D SmoothedLookInput;
-
-	/** Target rotation (from camera/controller) */
-	FRotator TargetRotation;
-
-	/** Whether to enable tick for smoothing */
-	bool bNeedsTickForSmoothing;
-
 public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 };
