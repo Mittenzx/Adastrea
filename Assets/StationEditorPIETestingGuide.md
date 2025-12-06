@@ -907,17 +907,16 @@ Base C++ widget class with Blueprint integration points.
 - `NotEditing` - Not in edit mode
 
 #### EStationModuleGroup
-- `None` - Uncategorized
+- `All` - All modules (catch-all, used for filtering)
 - `Docking` - Docking bays
 - `Power` - Reactors and power
 - `Storage` - Cargo storage
+- `Processing` - Manufacturing and processing
 - `Defence` - Weapons and shields
-- `LivingQuarters` - Habitation
-- `Command` - Control centers
-- `Industrial` - Manufacturing
-- `Trade` - Trading posts
-- `Research` - Research labs
-- `Entertainment` - Recreation
+- `Habitation` - Living quarters and crew spaces
+- `Public` - Public/trade areas (markets, commerce)
+- `Connection` - Connectors, corridors, links
+- `Other` - Miscellaneous/uncategorized modules
 
 #### EStationEditorViewMode
 - `Edit` - Standard editing mode
