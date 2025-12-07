@@ -115,5 +115,5 @@ For questions or issues:
 ---
 
 **Created**: 2025-12-07  
-**Issue**: #TBD (Add spaceship forward speed in cpp for HUD)  
+**Issue**: #236 (Add spaceship forward speed in cpp for HUD)  
 **Status**: ✅ Implemented and Tested
