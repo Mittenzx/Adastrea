@@ -37,7 +37,7 @@ struct FUniverseSectorInfo
 	FUniverseSectorInfo()
 		: Sector(nullptr)
 		, GridCoordinates(FIntVector::ZeroValue)
-		, bIsDiscovered(true)
+		, bIsDiscovered(false)
 		, bIsSelected(false)
 	{
 	}

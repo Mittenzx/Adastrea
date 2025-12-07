@@ -5,7 +5,6 @@
 #include "AdastreaLog.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerController.h"
-#include "Ships/Spaceship.h"
 
 UUniverseMapWidget::UUniverseMapWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -41,9 +40,6 @@ void UUniverseMapWidget::NativeDestruct()
 
 void UUniverseMapWidget::InitializeUniverseMap_Implementation()
 {
-	// Set widget as visible
-	bIsUniverseMapVisible = true;
-	
 	// Find all sectors in the world
 	AllSectors = FindAllSectorsInWorld();
 	
@@ -300,7 +296,9 @@ FIntVector UUniverseMapWidget::CalculateGridCoordinates(ASpaceSectorMap* Sector)
 	
 	// Convert world position to grid coordinates
 	// Each grid cell is one sector size (20,000,000 units = 200km)
-	float SectorSize = ASpaceSectorMap::SectorSize;
+	// Use the sector's bounds to determine size rather than directly accessing static member
+	FBox SectorBounds = Sector->GetSectorBounds();
+	float SectorSize = SectorBounds.GetSize().X; // All dimensions are equal for cubic sectors
 	
 	int32 GridX = FMath::RoundToInt(SectorCenter.X / SectorSize);
 	int32 GridY = FMath::RoundToInt(SectorCenter.Y / SectorSize);

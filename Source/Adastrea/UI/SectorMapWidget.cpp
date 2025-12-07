@@ -184,7 +184,9 @@ FSectorDisplayInfo USectorMapWidget::BuildSectorDisplayInfo(ASpaceSectorMap* Sec
 		Info.SectorName = Sector->SectorName;
 		Info.Description = Sector->Description;
 		Info.SectorCenter = Sector->GetSectorCenter();
-		Info.SectorSize = ASpaceSectorMap::SectorSize;
+		// Use GetSectorBounds to get size rather than accessing static member
+		FBox SectorBounds = Sector->GetSectorBounds();
+		Info.SectorSize = SectorBounds.GetSize().X; // All dimensions are equal for cubic sectors
 		Info.ObjectCount = 0; // Can be updated by Blueprint or game logic
 	}
 	
@@ -221,9 +223,10 @@ TArray<ASpaceSectorMap*> USectorMapWidget::GetNeighboringSectors() const
 	// Get all sectors
 	TArray<ASpaceSectorMap*> AllSectors = GetAllSectors();
 	
-	// Current sector center
+	// Current sector center and size
 	FVector CurrentCenter = CurrentSector->GetSectorCenter();
-	float SectorSize = ASpaceSectorMap::SectorSize;
+	FBox CurrentBounds = CurrentSector->GetSectorBounds();
+	float SectorSize = CurrentBounds.GetSize().X; // All dimensions are equal for cubic sectors
 	
 	// Check each sector to see if it's adjacent (within 1.5 sector sizes)
 	float MaxDistance = SectorSize * 1.5f;
