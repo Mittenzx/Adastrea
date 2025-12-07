@@ -259,6 +259,13 @@ public:
     UFUNCTION(BlueprintCallable, BlueprintPure, Category="Flight Control")
     float GetEffectiveMaxSpeed() const;
 
+    /**
+     * Get current forward speed in the ship's forward direction
+     * @return Current forward speed in units per second
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Flight Control")
+    float GetForwardSpeed() const;
+
     // Movement input handlers - public so SpaceshipControlsComponent can call them
     void MoveForward(float Value);
     void MoveRight(float Value);

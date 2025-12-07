@@ -586,6 +586,24 @@ float ASpaceship::GetEffectiveMaxSpeed() const
     return EffectiveSpeed;
 }
 
+float ASpaceship::GetForwardSpeed() const
+{
+    // Return 0 if no movement component
+    if (!MovementComponent)
+    {
+        return 0.0f;
+    }
+
+    // Get the ship's forward vector
+    FVector ForwardVector = GetActorForwardVector();
+    
+    // Project the velocity onto the forward vector to get forward speed
+    // This gives us the speed in the direction the ship is facing
+    float ForwardSpeed = FVector::DotProduct(MovementComponent->Velocity, ForwardVector);
+    
+    return ForwardSpeed;
+}
+
 void ASpaceship::ApplyFlightAssist(float DeltaTime)
 {
     /**
