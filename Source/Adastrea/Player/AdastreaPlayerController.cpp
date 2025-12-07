@@ -168,6 +168,13 @@ UStationEditorWidget* AAdastreaPlayerController::CreateStationEditorWidget()
 		return nullptr;
 	}
 
+	// Initialize the editor manager once when widget is created
+	// This ensures consistent state across multiple open/close cycles
+	if (!StationEditorWidget->EditorManager)
+	{
+		StationEditorWidget->EditorManager = NewObject<UStationEditorManager>(StationEditorWidget);
+	}
+
 	UE_LOG(LogAdastrea, Log, TEXT("CreateStationEditorWidget: Successfully created station editor widget"));
 	
 	return StationEditorWidget;
@@ -181,16 +188,10 @@ void AAdastreaPlayerController::ShowStationEditor(ASpaceStation* Station)
 		return;
 	}
 
-	// Create widget if needed
+	// Create widget if needed (also creates editor manager)
 	if (!CreateStationEditorWidget())
 	{
 		return;
-	}
-
-	// Ensure the editor manager is initialized
-	if (!StationEditorWidget->EditorManager)
-	{
-		StationEditorWidget->EditorManager = NewObject<UStationEditorManager>(StationEditorWidget);
 	}
 
 	// Configure the editor manager
@@ -244,7 +245,15 @@ void AAdastreaPlayerController::HideStationEditor()
 	if (StationEditorWidget->EditorManager && StationEditorWidget->EditorManager->bIsEditing)
 	{
 		// Save changes when closing (or could call Cancel() to discard)
-		StationEditorWidget->EditorManager->Save();
+		if (!StationEditorWidget->EditorManager->Save())
+		{
+			UE_LOG(LogAdastrea, Error, TEXT("HideStationEditor: Failed to save changes to station. Changes may be lost!"));
+			// Note: Still proceed with closing the editor, but user is notified of the issue
+		}
+		else
+		{
+			UE_LOG(LogAdastrea, Log, TEXT("HideStationEditor: Successfully saved station changes"));
+		}
 	}
 
 	// Remove widget from viewport

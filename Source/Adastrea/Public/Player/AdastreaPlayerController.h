@@ -13,7 +13,8 @@ class ASpaceStation;
 
 /**
  * Delegate for station editor toggle event
- * @deprecated Use C++ ToggleStationEditor() implementation instead
+ * @deprecated Since December 2025 (v2.0), will be removed in v3.0 (mid-2026). 
+ * Use C++ ToggleStationEditor() implementation instead. See Assets/StationEditorMigrationGuide.md
  */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStationEditorToggle);
 
@@ -83,7 +84,9 @@ public:
 
 	/**
 	 * Called when the station editor should be toggled (default: M key when in spaceship mode)
-	 * @deprecated Use C++ ToggleStationEditor() implementation instead. This event is kept for backward compatibility.
+	 * @deprecated Since December 2025 (v2.0), will be removed in v3.0 (mid-2026). 
+	 * Use C++ ToggleStationEditor() implementation instead. This event is kept for backward compatibility.
+	 * See Assets/StationEditorMigrationGuide.md for migration details.
 	 */
 	UPROPERTY(BlueprintAssignable, Category="Player|Events")
 	FOnStationEditorToggle OnStationEditorToggle;
