@@ -190,3 +190,72 @@ FSectorDisplayInfo USectorMapWidget::BuildSectorDisplayInfo(ASpaceSectorMap* Sec
 	
 	return Info;
 }
+
+TArray<ASpaceSectorMap*> USectorMapWidget::GetAllSectors() const
+{
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(this, ASpaceSectorMap::StaticClass(), FoundActors);
+	
+	TArray<ASpaceSectorMap*> Sectors;
+	for (AActor* Actor : FoundActors)
+	{
+		ASpaceSectorMap* Sector = Cast<ASpaceSectorMap>(Actor);
+		if (Sector)
+		{
+			Sectors.Add(Sector);
+		}
+	}
+	
+	return Sectors;
+}
+
+TArray<ASpaceSectorMap*> USectorMapWidget::GetNeighboringSectors() const
+{
+	TArray<ASpaceSectorMap*> Neighbors;
+	
+	if (!CurrentSector)
+	{
+		return Neighbors;
+	}
+	
+	// Get all sectors
+	TArray<ASpaceSectorMap*> AllSectors = GetAllSectors();
+	
+	// Current sector center
+	FVector CurrentCenter = CurrentSector->GetSectorCenter();
+	float SectorSize = ASpaceSectorMap::SectorSize;
+	
+	// Check each sector to see if it's adjacent (within 1.5 sector sizes)
+	float MaxDistance = SectorSize * 1.5f;
+	
+	for (ASpaceSectorMap* Sector : AllSectors)
+	{
+		if (Sector == CurrentSector)
+		{
+			continue; // Skip self
+		}
+		
+		FVector OtherCenter = Sector->GetSectorCenter();
+		float Distance = FVector::Dist(CurrentCenter, OtherCenter);
+		
+		if (Distance <= MaxDistance)
+		{
+			Neighbors.Add(Sector);
+		}
+	}
+	
+	return Neighbors;
+}
+
+float USectorMapWidget::GetDistanceToSector(ASpaceSectorMap* OtherSector) const
+{
+	if (!CurrentSector || !OtherSector)
+	{
+		return -1.0f;
+	}
+	
+	FVector CurrentCenter = CurrentSector->GetSectorCenter();
+	FVector OtherCenter = OtherSector->GetSectorCenter();
+	
+	return FVector::Dist(CurrentCenter, OtherCenter);
+}
