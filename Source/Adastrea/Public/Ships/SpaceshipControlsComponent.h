@@ -58,6 +58,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Movement", meta=(ClampMin="0.1", ClampMax="10.0"))
 	float MovementSpeed;
 
+	/** Movement smoothing - controls how quickly ship responds to WASD input (0 = instant, higher = smoother) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Movement", meta=(ClampMin="0.0", ClampMax="20.0"))
+	float MovementSmoothingSpeed;
+
+	/** When true, movement input is smoothed over time. When false, movement is instant. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Movement")
+	bool bEnableMovementSmoothing;
+
 	/** Look sensitivity multiplier applied to mouse input */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Look", meta=(ClampMin="0.1", ClampMax="10.0"))
 	float LookSensitivity;
@@ -65,6 +73,14 @@ public:
 	/** When true, inverts the Y axis for look input */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Look")
 	bool bInvertLookY;
+
+	/** Rotation smoothing - controls how quickly ship rotation follows camera (0 = instant, higher = more delay) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Look", meta=(ClampMin="0.0", ClampMax="20.0"))
+	float RotationSmoothingSpeed;
+
+	/** When true, camera rotates freely and ship follows with delay. When false, ship rotates instantly with camera. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Look")
+	bool bEnableRotationSmoothing;
 
 	/** Priority for the spaceship input mapping context */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Input", meta=(ClampMin="0"))
@@ -250,6 +266,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	/**
 	 * Setup input bindings on the Enhanced Input Component
@@ -293,4 +310,7 @@ private:
 	/** Cached reference to weapon component */
 	UPROPERTY()
 	UWeaponComponent* CachedWeaponComponent;
+
+	/** Current smoothed movement input values */
+	FVector2D SmoothedMoveInput;
 };
