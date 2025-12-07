@@ -175,6 +175,29 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Sector Map")
 	bool IsPositionInCurrentSector(const FVector& WorldPosition) const;
 
+	/**
+	 * Get all sectors in the world
+	 * Useful for universe-level navigation
+	 * @return Array of all sector actors
+	 */
+	UFUNCTION(BlueprintCallable, Category="Sector Map")
+	TArray<ASpaceSectorMap*> GetAllSectors() const;
+
+	/**
+	 * Get neighboring sectors (adjacent grid positions)
+	 * @return Array of sectors adjacent to current sector
+	 */
+	UFUNCTION(BlueprintCallable, Category="Sector Map")
+	TArray<ASpaceSectorMap*> GetNeighboringSectors() const;
+
+	/**
+	 * Calculate the distance to another sector
+	 * @param OtherSector The sector to measure distance to
+	 * @return Distance in Unreal Units, or -1 if no current sector
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Sector Map")
+	float GetDistanceToSector(ASpaceSectorMap* OtherSector) const;
+
 protected:
 	/** Native construction */
 	virtual void NativeConstruct() override;
