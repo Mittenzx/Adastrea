@@ -1,8 +1,12 @@
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipInterior.h"
 #include "Ships/SpaceshipDataAsset.h"
+#include "AdastreaLog.h"
 #include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "InputAction.h"
 
 ASpaceship::ASpaceship()
 {
@@ -60,6 +64,8 @@ ASpaceship::ASpaceship()
 void ASpaceship::BeginPlay()
 {
     Super::BeginPlay();
+    
+    UE_LOG(LogAdastreaShips, Warning, TEXT("*** ASpaceship::BeginPlay on %s ***"), *GetName());
 
     // Initialize hull integrity from data asset if available
     if (ShipDataAsset)
@@ -82,7 +88,27 @@ void ASpaceship::BeginPlay()
     }
 }
 
-void ASpaceship::Tick(float DeltaTime)
+void ASpaceship::PossessedBy(AController* NewController)
+{
+    UE_LOG(LogAdastreaShips, Warning, TEXT("*** POSSESS CALLED: %s current controller=%s, new controller=%s ***"),
+        *GetName(),
+        GetController() ? *GetController()->GetName() : TEXT("nullptr"),
+        NewController ? *NewController->GetName() : TEXT("nullptr"));
+
+    // Check if this controller is already possessing this pawn
+    if (GetController() == NewController)
+    {
+        UE_LOG(LogAdastreaShips, Warning, TEXT("*** DUPLICATE POSSESS PREVENTED: %s is already possessed by controller %s ***"),
+            *GetName(),
+            NewController ? *NewController->GetName() : TEXT("nullptr"));
+        return;
+    }
+
+    Super::PossessedBy(NewController);
+    UE_LOG(LogAdastreaShips, Warning, TEXT("*** SHIP POSSESSED: %s by controller %s ***"),
+        *GetName(),
+        NewController ? *NewController->GetName() : TEXT("nullptr"));
+}void ASpaceship::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
@@ -136,27 +162,86 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-    if (PlayerInputComponent)
-    {
-        // Bind axis inputs for movement
-        PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ASpaceship::MoveForward);
-        PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &ASpaceship::MoveRight);
-        PlayerInputComponent->BindAxis(TEXT("MoveUp"), this, &ASpaceship::MoveUp);
-        PlayerInputComponent->BindAxis(TEXT("Turn"), this, &ASpaceship::Turn);
-        PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &ASpaceship::LookUp);
+    UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship::SetupPlayerInputComponent called on %s"), *GetName());
 
-        // Bind X4-style flight control actions
-        // Note: These use legacy input system for backward compatibility
-        // For Enhanced Input, these should be bound in Blueprint or via InputConfigDataAsset
-        PlayerInputComponent->BindAction(TEXT("ThrottleUp"), IE_Pressed, this, &ASpaceship::ThrottleUp);
-        PlayerInputComponent->BindAction(TEXT("ThrottleDown"), IE_Pressed, this, &ASpaceship::ThrottleDown);
-        PlayerInputComponent->BindAction(TEXT("ToggleFlightAssist"), IE_Pressed, this, &ASpaceship::ToggleFlightAssist);
-        PlayerInputComponent->BindAction(TEXT("ActivateBoost"), IE_Pressed, this, &ASpaceship::ActivateBoost);
-        PlayerInputComponent->BindAction(TEXT("DeactivateBoost"), IE_Released, this, &ASpaceship::DeactivateBoost);
-        PlayerInputComponent->BindAction(TEXT("ToggleTravelMode"), IE_Pressed, this, &ASpaceship::ToggleTravelMode);
+    // Setup Enhanced Input bindings for ASpaceship's input
+    // Always use direct binding to MoveAction and LookAction UPROPERTYs for simplicity
+    if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+    {
+        if (MoveAction)
+        {
+            EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASpaceship::Move);
+            UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound MoveAction"));
+        }
+        else
+        {
+            UE_LOG(LogAdastreaInput, Error, TEXT("ASpaceship: MoveAction is not assigned! Set it to IA_Move in the Blueprint"));
+        }
+
+        if (LookAction)
+        {
+            EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASpaceship::Look);
+            UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound LookAction"));
+        }
+        else
+        {
+            UE_LOG(LogAdastreaInput, Error, TEXT("ASpaceship: LookAction is not assigned! Set it to IA_Look in the Blueprint"));
+        }
+
+        if (ThrottleUpAction)
+        {
+            EnhancedInputComponent->BindAction(ThrottleUpAction, ETriggerEvent::Triggered, this, &ASpaceship::ThrottleUp);
+            UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound ThrottleUpAction"));
+        }
+        else
+        {
+            UE_LOG(LogAdastreaInput, Error, TEXT("ASpaceship: ThrottleUpAction is not assigned! Set it to IA_ThrottleUp in the Blueprint"));
+        }
+
+        if (ThrottleDownAction)
+        {
+            EnhancedInputComponent->BindAction(ThrottleDownAction, ETriggerEvent::Triggered, this, &ASpaceship::ThrottleDown);
+            UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound ThrottleDownAction"));
+        }
+        else
+        {
+            UE_LOG(LogAdastreaInput, Error, TEXT("ASpaceship: ThrottleDownAction is not assigned! Set it to IA_ThrottleDown in the Blueprint"));
+        }
+    }
+    else
+    {
+        UE_LOG(LogAdastreaInput, Error, TEXT("ASpaceship: PlayerInputComponent is not an EnhancedInputComponent!"));
     }
 }
 
+void ASpaceship::Move(const FInputActionValue& Value)
+{
+    // Get the 3D vector input (WASD + QE for vertical)
+    const FVector MovementVector = Value.Get<FVector>();
+
+    // Forward/Backward (W/S)
+    MoveForward(MovementVector.X);
+
+    // Left/Right (A/D)
+    MoveRight(MovementVector.Y);
+
+    // Up/Down (Q/E)
+    MoveUp(MovementVector.Z);
+}
+
+void ASpaceship::Look(const FInputActionValue& Value)
+{
+    // Get the 2D vector input (mouse X/Y)
+    const FVector2D LookAxisVector = Value.Get<FVector2D>();
+
+    // Yaw (mouse X)
+    Turn(LookAxisVector.X);
+
+    // Pitch (mouse Y)
+    LookUp(LookAxisVector.Y);
+}
+
+// Legacy input functions - called by Enhanced Input Move/Look functions
 void ASpaceship::MoveForward(float Value)
 {
     // Store input for smooth interpolation
@@ -166,34 +251,26 @@ void ASpaceship::MoveForward(float Value)
     // Without flight assist, it applies Newtonian acceleration to velocity
     if (bFlightAssistEnabled)
     {
-        // Flight assist mode: direct velocity control
-        AddMovementInput(GetActorForwardVector(), Value);
+        // Flight assist mode: direct velocity control, scaled by throttle
+        AddMovementInput(GetActorForwardVector(), Value * (ThrottlePercentage / 100.0f));
     }
     else
     {
-        // No flight assist: apply Newtonian acceleration
+        // No flight assist: apply Newtonian acceleration, scaled by throttle
         // Increment velocity in forward direction based on input
         if (GetWorld() && MovementComponent)
         {
-            FVector AccelerationVector = GetActorForwardVector() * Value * DefaultAcceleration * GetWorld()->GetDeltaSeconds();
+            FVector AccelerationVector = GetActorForwardVector() * Value * (ThrottlePercentage / 100.0f) * DefaultAcceleration * GetWorld()->GetDeltaSeconds();
             MovementComponent->Velocity += AccelerationVector;
         }
     }
-    
-    // Update particle throttle based on forward movement
-    if (ParticleComponent)
+
+    // Debug drawing for forward movement
+    if (Value != 0.0f)
     {
-        ParticleComponent->UpdateThrottle(FMath::Abs(Value));
-        
-        // Activate RCS thrusters based on direction
-        if (Value > 0.0f)
-        {
-            ParticleComponent->ActivateRCSThruster(ERCSThrusterAxis::Backward, Value);
-        }
-        else if (Value < 0.0f)
-        {
-            ParticleComponent->ActivateRCSThruster(ERCSThrusterAxis::Forward, FMath::Abs(Value));
-        }
+        FVector Start = GetActorLocation();
+        FVector End = Start + (GetActorForwardVector() * Value * 100.0f); // Scale for visualization
+        DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 0.1f, 0, 2.0f);
     }
 }
 
@@ -202,8 +279,8 @@ void ASpaceship::MoveRight(float Value)
     // Store input for smooth interpolation
     RightInput = Value;
 
-    // X4-style: strafe is independent from forward motion
-    // Apply strafe independence factor for realistic feel
+    // X4-style: strafe is independent from forward motion and throttle
+    // Apply strafe independence factor for realistic feel (no throttle scaling for thrusters)
     float StrafeValue = Value * StrafeIndependence;
     AddMovementInput(GetActorRightVector(), StrafeValue);
     
@@ -219,6 +296,14 @@ void ASpaceship::MoveRight(float Value)
             ParticleComponent->ActivateRCSThruster(ERCSThrusterAxis::Right, FMath::Abs(Value));
         }
     }
+
+    // Debug drawing for right movement
+    if (Value != 0.0f)
+    {
+        FVector Start = GetActorLocation();
+        FVector End = Start + (GetActorRightVector() * Value * 100.0f); // Scale for visualization
+        DrawDebugLine(GetWorld(), Start, End, FColor::Blue, false, 0.1f, 0, 2.0f);
+    }
 }
 
 void ASpaceship::MoveUp(float Value)
@@ -226,7 +311,7 @@ void ASpaceship::MoveUp(float Value)
     // Store input for smooth interpolation
     UpInput = Value;
 
-    // X4-style: vertical strafe is independent from forward motion
+    // X4-style: vertical strafe is independent from forward motion and throttle
     float StrafeValue = Value * StrafeIndependence;
     AddMovementInput(GetActorUpVector(), StrafeValue);
     
@@ -257,16 +342,20 @@ void ASpaceship::Turn(float Value)
         {
             // X4-style: smooth rotation with damping
             // Apply mouse flight sensitivity for better control
-            float RotationRate = Value * TurnRate * MouseFlightSensitivity * DeltaSeconds;
+            float RotationRate = Value * TurnRate * MouseFlightSensitivity;
             
             // Interpolate rotation velocity for smooth feel
             RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, RotationRate, DeltaSeconds, FlightAssistResponsiveness);
-            AddControllerYawInput(RotationVelocity.Yaw);
+            
+            // Apply rotation directly to actor
+            FRotator DeltaRotation = FRotator(0.0f, RotationVelocity.Yaw * DeltaSeconds, 0.0f);
+            AddActorWorldRotation(DeltaRotation);
         }
         else
         {
             // Without flight assist: direct rotation
-            AddControllerYawInput(Value * TurnRate * DeltaSeconds);
+            FRotator DeltaRotation = FRotator(0.0f, Value * TurnRate * DeltaSeconds, 0.0f);
+            AddActorWorldRotation(DeltaRotation);
         }
     }
 }
@@ -283,16 +372,20 @@ void ASpaceship::LookUp(float Value)
         if (bFlightAssistEnabled)
         {
             // X4-style: smooth rotation with damping
-            float RotationRate = Value * TurnRate * MouseFlightSensitivity * DeltaSeconds;
+            float RotationRate = Value * TurnRate * MouseFlightSensitivity;
             
             // Interpolate rotation velocity for smooth feel
             RotationVelocity.Pitch = FMath::FInterpTo(RotationVelocity.Pitch, RotationRate, DeltaSeconds, FlightAssistResponsiveness);
-            AddControllerPitchInput(RotationVelocity.Pitch);
+            
+            // Apply rotation directly to actor
+            FRotator DeltaRotation = FRotator(RotationVelocity.Pitch * DeltaSeconds, 0.0f, 0.0f);
+            AddActorWorldRotation(DeltaRotation);
         }
         else
         {
             // Without flight assist: direct rotation
-            AddControllerPitchInput(Value * TurnRate * DeltaSeconds);
+            FRotator DeltaRotation = FRotator(Value * TurnRate * DeltaSeconds, 0.0f, 0.0f);
+            AddActorWorldRotation(DeltaRotation);
         }
     }
 }
@@ -411,11 +504,13 @@ void ASpaceship::ToggleFlightAssist()
 void ASpaceship::ThrottleUp()
 {
     ThrottlePercentage = FMath::Clamp(ThrottlePercentage + ThrottleStep, 0.0f, 100.0f);
+    UE_LOG(LogAdastreaInput, Log, TEXT("Throttle UP: %f%%"), ThrottlePercentage);
 }
 
 void ASpaceship::ThrottleDown()
 {
     ThrottlePercentage = FMath::Clamp(ThrottlePercentage - ThrottleStep, 0.0f, 100.0f);
+    UE_LOG(LogAdastreaInput, Log, TEXT("Throttle DOWN: %f%%"), ThrottlePercentage);
 }
 
 void ASpaceship::SetThrottle(float Percentage)

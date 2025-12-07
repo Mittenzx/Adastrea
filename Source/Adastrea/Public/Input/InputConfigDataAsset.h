@@ -27,6 +27,14 @@ public:
     UInputConfigDataAsset();
 
     // ====================
+    // BASIC INFO
+    // ====================
+
+    /** Display name for this input configuration */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Basic Info")
+    FText DisplayName;
+
+    // ====================
     // INPUT MAPPING CONTEXT
     // ====================
 

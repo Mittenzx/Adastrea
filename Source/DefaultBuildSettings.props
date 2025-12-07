@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <!-- Disable C4459 warning globally (variable name hiding) -->
+    <DisableSpecificWarnings>$(DisableSpecificWarnings);4459</DisableSpecificWarnings>
+  </PropertyGroup>
+</Project>

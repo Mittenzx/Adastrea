@@ -7,6 +7,9 @@ public class Adastrea : ModuleRules
 	public Adastrea(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+		
+		// Disable warnings as errors for UE 5.6 compatibility
+		bWarningsAsErrors = false;
 
 		// Expose public headers for cross-module includes
 		// Add base "Adastrea" path to support folder-prefixed includes like "Stations/SpaceStationModule.h"

@@ -192,13 +192,19 @@ TArray<FText> ATestGameMode::GetAvailableInputConfigNames() const
 	TArray<FText> Names;
 	Names.Reserve(AvailableInputConfigs.Num());
 	
-	for (int32 i = 0; i < AvailableInputConfigs.Num(); ++i)
+	for (const UInputConfigDataAsset* Config : AvailableInputConfigs)
 	{
-		const UInputConfigDataAsset* Config = AvailableInputConfigs[i];
 		if (Config)
 		{
-			// Use formatted config name for user-friendly display
-			Names.Add(FText::Format(NSLOCTEXT("TestGameMode", "ConfigName", "Config {0}"), i + 1));
+			// Use the display name if available, otherwise use asset name
+			if (!Config->DisplayName.IsEmpty())
+			{
+				Names.Add(Config->DisplayName);
+			}
+			else
+			{
+				Names.Add(FText::FromString(Config->GetName()));
+			}
 		}
 		else
 		{
@@ -345,10 +351,8 @@ void ATestGameMode::ApplyInputConfiguration_Implementation()
 		return;
 	}
 	
-	// Clear existing mapping contexts first
-	InputSubsystem->ClearAllMappings();
-	
 	// Add spaceship mapping context if available
+	// This provides the WASD and mouse controls for spaceship movement
 	UInputMappingContext* SpaceshipContext = SelectedInputConfig->GetSpaceshipMappingContext();
 	if (SpaceshipContext)
 	{
@@ -374,7 +378,7 @@ void ATestGameMode::SpawnSelectedSpaceship_Implementation()
 	// Validate we have a selected spaceship
 	if (!SelectedSpaceship)
 	{
-		UE_LOG(LogAdastreaShips, Warning, TEXT("TestGameMode: No spaceship selected, cannot spawn"));
+		UE_LOG(LogAdastreaShips, Log, TEXT("TestGameMode: No spaceship selected, skipping custom spawn (will use DefaultPawnClass)"));
 		return;
 	}
 	

@@ -10,6 +10,14 @@ public class AdastreaEditorTarget : TargetRules
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V5;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
+		
+		// Disable warnings as errors for third-party plugins
+		bWarningsAsErrors = false;
+		bOverrideBuildEnvironment = true;
+		
+		// Disable specific warning C4459 (variable name hiding in UE 5.6 engine code)
+		AdditionalCompilerArguments = "/wd4459";
+		
 		ExtraModuleNames.Add("Adastrea");
 		ExtraModuleNames.Add("PlayerMods");
 		ExtraModuleNames.Add("StationEditor");

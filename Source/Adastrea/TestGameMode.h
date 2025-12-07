@@ -95,14 +95,14 @@ public:
 	 * List of available input configuration data assets for selection
 	 * Designers should populate this with InputConfigDataAsset references
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Test Game Mode|Input")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Test Game Mode")
 	TArray<UInputConfigDataAsset*> AvailableInputConfigs;
 
 	/**
 	 * Default input configuration selection index
 	 * Used when no selection is made or as initial selection
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Test Game Mode|Input", meta=(ClampMin="0"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Test Game Mode", meta=(ClampMin="0"))
 	int32 DefaultInputConfigIndex;
 
 	// ====================
