@@ -40,7 +40,8 @@ public class Adastrea : ModuleRules
 			"UMG",
 			"Slate",
 			"SlateCore",
-			"Niagara"
+			"Niagara",
+			"StationEditor"  // Required for station editor UI integration
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] 
