@@ -99,7 +99,6 @@ private:
 	TArray<UAudioComponent*> ActiveAudioComponents;
 
 	/** Map of audio components by category for category-based operations */
-	UPROPERTY()
 	TMap<ESoundEffectCategory, TArray<UAudioComponent*>> AudioComponentsByCategory;
 
 	/** Cleanup finished audio components */

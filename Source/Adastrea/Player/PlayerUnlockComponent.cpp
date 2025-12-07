@@ -333,14 +333,11 @@ bool UPlayerUnlockComponent::CheckRequirement(const FUnlockRequirement& Requirem
 		case EUnlockRequirementType::Item:
 		{
 			// Check inventory for required item by name
-			AActor* Owner = GetOwner();
-			if (Owner)
+			UInventoryComponent* InventoryComp = Owner->FindComponentByClass<UInventoryComponent>();
+			if (InventoryComp)
 			{
-				UInventoryComponent* InventoryComp = Owner->FindComponentByClass<UInventoryComponent>();
-				if (InventoryComp)
-				{
-					// Get all inventory slots and check if any item matches the required name
-					TArray<FInventorySlot> AllSlots = InventoryComp->GetAllSlots();
+				// Get all inventory slots and check if any item matches the required name
+				TArray<FInventorySlot> AllSlots = InventoryComp->GetAllSlots();
 					int32 TotalQuantity = 0;
 					
 					// Cache the required ID string for comparison
@@ -361,7 +358,6 @@ bool UPlayerUnlockComponent::CheckRequirement(const FUnlockRequirement& Requirem
 					// RequiredValue specifies minimum quantity needed (default to 1 if not set)
 					int32 RequiredQuantity = FMath::Max(1, Requirement.RequiredValue);
 					return TotalQuantity >= RequiredQuantity;
-				}
 			}
 			UE_LOG(LogAdastrea, Warning, TEXT("PlayerUnlockComponent: Could not find InventoryComponent on owner"));
 			return false;

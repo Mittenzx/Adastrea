@@ -11,6 +11,7 @@ class SEditableTextBox;
 class STextBlock;
 class SProgressBar;
 class SWidgetSwitcher;
+class SStatusIndicator;
 
 /**
  * Main Slate panel widget for Adastrea Director.
@@ -36,7 +37,7 @@ public:
 
 private:
 	// Tab management
-	/** Current active tab (0 = Query, 1 = Ingestion) */
+	/** Current active tab (0 = Query, 1 = Ingestion, 2 = Dashboard, 3 = Tests) */
 	int32 CurrentTabIndex;
 
 	/** Content switcher widget to hold tab contents */
@@ -152,10 +153,171 @@ private:
 	/** Helper to send ingestion request to Python backend */
 	void StartIngestion(const FString& DocsPath, const FString& DbPath);
 
+	// Dashboard tab widgets
+	/** Connection status text */
+	TSharedPtr<STextBlock> ConnectionStatusText;
+
+	/** Log display text box */
+	TSharedPtr<SMultiLineEditableTextBox> LogDisplay;
+
+	/** Current log content (stored as FString for efficient appending) */
+	FString CurrentLogContent;
+
+	/** Cached FText version of log content for display */
+	FText CachedLogContentText;
+
+	/** Time since last dashboard refresh */
+	double LastDashboardRefreshTime;
+
+	/** Cached connection status text */
+	FText CachedConnectionStatus;
+
+	/** Time since last connection status update */
+	double LastConnectionStatusUpdateTime;
+
+	/** Maximum log content size in characters */
+	static constexpr int32 MaxLogCharacters = 5000;
+
+	/** Dashboard refresh interval in seconds */
+	static constexpr double DashboardRefreshInterval = 2.0;
+
+	/** Connection status update interval in seconds */
+	static constexpr double ConnectionStatusUpdateInterval = 0.5;
+
+	/** Timer reset value to prevent immediate auto-refresh */
+	static constexpr double RefreshTimerReset = -10.0;
+
+	// Status indicator widgets
+	/** Python process status indicator */
+	TSharedPtr<SStatusIndicator> PythonProcessStatusLight;
+	
+	/** IPC connection status indicator */
+	TSharedPtr<SStatusIndicator> IPCConnectionStatusLight;
+	
+	/** Python bridge ready status indicator */
+	TSharedPtr<SStatusIndicator> BridgeReadyStatusLight;
+	
+	/** Query processing status indicator */
+	TSharedPtr<SStatusIndicator> QueryProcessingStatusLight;
+	
+	/** Ingestion status indicator */
+	TSharedPtr<SStatusIndicator> IngestionStatusLight;
+	
+	/** Backend health status indicator */
+	TSharedPtr<SStatusIndicator> BackendHealthStatusLight;
+
+	/** Status lights update interval in seconds */
+	static constexpr double StatusLightsUpdateInterval = 0.5;
+	
+	/** Time since last status lights update */
+	double LastStatusLightsUpdateTime;
+
+	// Dashboard tab methods
+	/** Called when Refresh Dashboard button is clicked */
+	FReply OnRefreshDashboardClicked();
+
+	/** Called when Reconnect button is clicked */
+	FReply OnReconnectClicked();
+
+	/** Called when Clear Logs button is clicked */
+	FReply OnClearLogsClicked();
+
+	/** Update dashboard logs */
+	void UpdateDashboardLogs();
+
+	/** Helper to append log entry with truncation */
+	void AppendLogEntry(const FString& Entry);
+
+	/** Update connection status cache */
+	void UpdateConnectionStatus();
+
+	/** Update all status indicator lights */
+	void UpdateStatusLights();
+
+	/** Helper to set all status lights to error state */
+	void SetAllStatusLightsToError(const FText& Reason);
+
 	// Utility methods
 	/** Create the Query tab content */
 	TSharedRef<SWidget> CreateQueryTab();
 
 	/** Create the Ingestion tab content */
 	TSharedRef<SWidget> CreateIngestionTab();
+
+	/** Create the Dashboard tab content */
+	TSharedRef<SWidget> CreateDashboardTab();
+
+	/** Create the Tests tab content */
+	TSharedRef<SWidget> CreateTestsTab();
+
+	// Tests tab widgets
+	/** Test output display text box */
+	TSharedPtr<SMultiLineEditableTextBox> TestOutputDisplay;
+
+	/** Test progress bar */
+	TSharedPtr<SProgressBar> TestProgressBar;
+
+	/** Test status text */
+	TSharedPtr<STextBlock> TestStatusText;
+
+	/** Current test output content */
+	FString CurrentTestOutput;
+
+	/** Cached FText version of test output for display */
+	FText CachedTestOutputText;
+
+	/** Is a test currently running */
+	bool bIsTestRunning;
+
+	/** Test progress (0-1) */
+	float TestProgress;
+
+	/** Test status message */
+	FText TestStatusMessage;
+
+	/** Time since last test output update */
+	double LastTestOutputUpdateTime;
+
+	/** Test output update interval in seconds */
+	static constexpr double TestOutputUpdateInterval = 0.1;
+
+	/** Maximum test output size in characters */
+	static constexpr int32 MaxTestOutputCharacters = 10000;
+
+	// Tests tab methods
+	/** Called when Run All Tests button is clicked */
+	FReply OnRunAllTestsClicked();
+
+	/** Called when Run IPC Tests button is clicked */
+	FReply OnRunIPCTestsClicked();
+
+	/** Called when Run Plugin Tests button is clicked */
+	FReply OnRunPluginTestsClicked();
+
+	/** Called when Run Self-Check button is clicked */
+	FReply OnRunSelfCheckClicked();
+
+	/** Called when Clear Test Output button is clicked */
+	FReply OnClearTestOutputClicked();
+
+	/** Called when Save Log button is clicked */
+	FReply OnSaveTestLogClicked();
+
+	/** Run a specific test type via Python backend */
+	void RunTests(const FString& TestType);
+
+	/** Update test output display */
+	void UpdateTestOutput();
+
+	/** Append test output entry */
+	void AppendTestOutput(const FString& Entry);
+
+	/** Check if tests can be run */
+	bool CanRunTests() const;
+
+	/** Perform self-check of plugin components */
+	void PerformSelfCheck();
+
+	/** Save test output to a log file */
+	bool SaveTestLogToFile(const FString& FilePath);
 };

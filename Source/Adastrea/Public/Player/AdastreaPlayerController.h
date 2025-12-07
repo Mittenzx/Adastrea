@@ -77,6 +77,23 @@ public:
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player|Station Editor", meta=(ClampMin=100.0f))
 	float StationSearchRadius = 5000.0f;
+	// HUD Configuration
+	// ====================
+
+	/**
+	 * Widget class to use for the main HUD
+	 * Set this in Blueprint or editor to display the HUD
+	 * Should be a class derived from UAdastreaHUDWidget
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="HUD")
+	TSubclassOf<class UAdastreaHUDWidget> HUDWidgetClass;
+
+	/**
+	 * Current HUD widget instance
+	 * Automatically created on BeginPlay if HUDWidgetClass is set
+	 */
+	UPROPERTY(BlueprintReadOnly, Category="HUD")
+	class UAdastreaHUDWidget* HUDWidget;
 
 	// ====================
 	// Events

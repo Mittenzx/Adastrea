@@ -9,6 +9,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
+#include "UI/AdastreaHUDWidget.h"
 
 AAdastreaPlayerController::AAdastreaPlayerController()
 {
@@ -18,23 +19,44 @@ AAdastreaPlayerController::AAdastreaPlayerController()
 	StationSearchRadius = 5000.0f;
 	StationEditorWidget = nullptr;
 	bIsStationEditorOpen = false;
+	HUDWidgetClass = nullptr;
+	HUDWidget = nullptr;
 }
 
 void AAdastreaPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Input mapping contexts are now configured by the GameMode through DA_InputConfig
+	// This ensures centralized input configuration and prevents conflicts
+
+	// Create HUD widget if class is set
+	if (HUDWidgetClass)
+	{
+		HUDWidget = CreateWidget<UAdastreaHUDWidget>(this, HUDWidgetClass);
+		if (HUDWidget)
+		{
+			HUDWidget->AddToViewport(0);
+			HUDWidget->InitializeHUD();
+			UE_LOG(LogAdastrea, Log, TEXT("AdastreaPlayerController: Created and initialized HUD widget"));
+		}
+		else
+		{
+			UE_LOG(LogAdastrea, Warning, TEXT("AdastreaPlayerController: Failed to create HUD widget"));
+		}
+	}
+	else
+	{
+		UE_LOG(LogAdastrea, Log, TEXT("AdastreaPlayerController: No HUD widget class set - HUD will not be displayed"));
+	}
 }
 
 void AAdastreaPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
-	
-	// Note: Input bindings are configured via Enhanced Input system using InputConfigDataAsset
-	// See Source/Adastrea/Input/InputConfigDataAsset.h and Assets/EnhancedInputImplementation.md
-	// To use: Create a Data Asset based on InputConfigDataAsset (DA_InputConfig) and assign
-	// all Input Actions and Input Mapping Contexts in the Unreal Editor.
-	// Then reference the Data Asset in your Blueprint derived from this controller.
-	// For manual setup instructions, see ENHANCED_INPUT_GUIDE.md
+
+	// Input mapping contexts and bindings are configured by the GameMode through DA_InputConfig
+	// This ensures centralized input configuration and prevents conflicts between systems
 	//
 	// Station Editor: Bind StationEditorAction to ToggleStationEditor() in Blueprint
 }

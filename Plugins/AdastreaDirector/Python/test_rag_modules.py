@@ -9,6 +9,9 @@ import ast
 import json
 import tempfile
 
+# Get the directory where this test file is located
+TEST_DIR = os.path.dirname(os.path.abspath(__file__))
+
 def test_python_syntax():
     """Test that Python files have valid syntax."""
     print("Testing Python file syntax...")
@@ -20,9 +23,10 @@ def test_python_syntax():
     ]
     
     for filename in files_to_test:
+        filepath = os.path.join(TEST_DIR, filename)
         print(f"  Checking {filename}...")
         try:
-            with open(filename, 'r') as f:
+            with open(filepath, 'r') as f:
                 code = f.read()
                 ast.parse(code)
             print(f"    ✓ {filename} has valid syntax")
@@ -38,7 +42,7 @@ def test_class_structure():
     
     # Test rag_ingestion.py
     print("  Checking rag_ingestion.py...")
-    with open('rag_ingestion.py', 'r') as f:
+    with open(os.path.join(TEST_DIR, 'rag_ingestion.py'), 'r') as f:
         content = f.read()
         required_items = [
             'class ProgressWriter',
@@ -53,7 +57,7 @@ def test_class_structure():
     
     # Test rag_query.py
     print("  Checking rag_query.py...")
-    with open('rag_query.py', 'r') as f:
+    with open(os.path.join(TEST_DIR, 'rag_query.py'), 'r') as f:
         content = f.read()
         required_items = [
             'class RAGQueryAgent',
@@ -68,7 +72,7 @@ def test_class_structure():
     
     # Test ipc_integration.py
     print("  Checking ipc_integration.py...")
-    with open('ipc_integration.py', 'r') as f:
+    with open(os.path.join(TEST_DIR, 'ipc_integration.py'), 'r') as f:
         content = f.read()
         required_items = [
             'class IntegratedIPCServer',
@@ -88,7 +92,7 @@ def test_progress_writer_logic():
     print("\nTesting ProgressWriter structure...")
     
     # Verify ProgressWriter class structure exists in rag_ingestion.py
-    with open('rag_ingestion.py', 'r') as f:
+    with open(os.path.join(TEST_DIR, 'rag_ingestion.py'), 'r') as f:
         content = f.read()
         required_items = [
             'class ProgressWriter',

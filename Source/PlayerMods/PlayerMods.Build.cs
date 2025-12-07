@@ -7,6 +7,9 @@ public class PlayerMods : ModuleRules
 	public PlayerMods(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+		
+		// Disable warnings as errors for UE 5.6 compatibility
+		bWarningsAsErrors = false;
 
 		// Include paths for this module
 		PublicIncludePaths.Add("PlayerMods/Public");

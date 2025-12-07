@@ -29,7 +29,7 @@ class UTestSettingsWidget;
  * 5. If no SpaceSectorMap exists, set FallbackSpawnLocation for spawn position
  * 6. Set TestSettingsWidgetClass to show test settings on startup (optional)
  */
-UCLASS(minimalapi)
+UCLASS()
 class AAdastreaGameMode : public AGameModeBase
 {
 	GENERATED_BODY()

@@ -137,6 +137,16 @@ class UEPythonBridge:
         except Exception as e:
             logger.error(f"Failed to initialize StaticMeshEditorSubsystem: {e}")
             raise RuntimeError("Could not initialize StaticMeshEditorSubsystem") from e
+        try:
+            self.unreal_editor_subsystem = unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem)
+        except Exception as e:
+            logger.error(f"Failed to initialize UnrealEditorSubsystem: {e}")
+            raise RuntimeError("Could not initialize UnrealEditorSubsystem") from e
+        try:
+            self.level_editor_subsystem = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
+        except Exception as e:
+            logger.error(f"Failed to initialize LevelEditorSubsystem: {e}")
+            raise RuntimeError("Could not initialize LevelEditorSubsystem") from e
         
         logger.info("UE Python Bridge initialized successfully")
     
@@ -350,8 +360,8 @@ class UEPythonBridge:
             For custom actor classes (e.g., defined in your game or plugins), provide the full class path.
         """
         try:
-            # Get the current world
-            world = unreal.EditorLevelLibrary.get_editor_world()
+            # Get the current world using UnrealEditorSubsystem (non-deprecated)
+            world = self.unreal_editor_subsystem.get_editor_world()
             
             # Determine class path
             if actor_class.startswith("/Script/") or "/" in actor_class or "." in actor_class:
@@ -398,7 +408,8 @@ class UEPythonBridge:
                 print(f"Selected: {actor.actor_name}")
         """
         try:
-            selected_actors = unreal.EditorLevelLibrary.get_selected_level_actors()
+            # Use EditorActorSubsystem (non-deprecated)
+            selected_actors = self.editor_actor_subsystem.get_selected_level_actors()
             actor_infos = []
             
             for actor in selected_actors:
@@ -498,7 +509,8 @@ class UEPythonBridge:
             success = bridge.delete_actor("MyActor_123")
         """
         try:
-            world = unreal.EditorLevelLibrary.get_editor_world()
+            # Use UnrealEditorSubsystem (non-deprecated)
+            world = self.unreal_editor_subsystem.get_editor_world()
             all_actors = unreal.GameplayStatics.get_all_actors_of_class(
                 world,
                 unreal.Actor
@@ -506,7 +518,8 @@ class UEPythonBridge:
             
             for actor in all_actors:
                 if actor.get_name() == actor_name:
-                    unreal.EditorLevelLibrary.destroy_actor(actor)
+                    # Use EditorActorSubsystem (non-deprecated)
+                    self.editor_actor_subsystem.destroy_actor(actor)
                     logger.info(f"Deleted actor: {actor_name}")
                     return True
             
@@ -533,7 +546,8 @@ class UEPythonBridge:
             print(f"Current level: {level}")
         """
         try:
-            world = unreal.EditorLevelLibrary.get_editor_world()
+            # Use UnrealEditorSubsystem (non-deprecated)
+            world = self.unreal_editor_subsystem.get_editor_world()
             level_name = world.get_name()
             logger.info(f"Current level: {level_name}")
             return level_name
@@ -555,7 +569,8 @@ class UEPythonBridge:
             success = bridge.load_level("/Game/Maps/TestLevel")
         """
         try:
-            result = unreal.EditorLevelLibrary.load_level(level_path)
+            # Use LevelEditorSubsystem (non-deprecated)
+            result = self.level_editor_subsystem.load_level(level_path)
             if result:
                 logger.info(f"Loaded level: {level_path}")
             return result
@@ -574,7 +589,8 @@ class UEPythonBridge:
             success = bridge.save_current_level()
         """
         try:
-            result = unreal.EditorLevelLibrary.save_current_level()
+            # Use LevelEditorSubsystem (non-deprecated)
+            result = self.level_editor_subsystem.save_current_level()
             if result:
                 logger.info("Saved current level")
             return result

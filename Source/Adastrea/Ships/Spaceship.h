@@ -3,9 +3,13 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/FloatingPawnMovement.h"
-#include "Ships/SpaceshipInterior.h"
 #include "Ships/SpaceshipParticleComponent.h"
+#include "InputActionValue.h"
 #include "Spaceship.generated.h"
+
+// Forward declarations
+class ASpaceshipInterior;
+class UInputAction;
 
 /**
  * Base spaceship actor class for player and NPC ships
@@ -182,9 +186,27 @@ public:
 
     /**
      * Setup input component for ship control
-     * Binds axis and action inputs for movement and rotation
+     * Binds Enhanced Input actions (MoveAction, LookAction) for movement and rotation
+     * Requires MoveAction and LookAction to be assigned in Blueprint
      */
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+    // Enhanced Input Actions
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
+    class UInputAction* MoveAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
+    class UInputAction* LookAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
+    class UInputAction* ThrottleUpAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
+    class UInputAction* ThrottleDownAction;
+
+    // Enhanced Input callbacks
+    void Move(const FInputActionValue& Value);
+    void Look(const FInputActionValue& Value);
 
     /**
      * Toggle flight assist on/off
@@ -237,20 +259,21 @@ public:
     UFUNCTION(BlueprintCallable, BlueprintPure, Category="Flight Control")
     float GetEffectiveMaxSpeed() const;
 
-protected:
-    virtual void BeginPlay() override;
-    virtual void Tick(float DeltaTime) override;
-
-    // Saved reference to the walking pawn when controlling the ship
-    UPROPERTY()
-    APawn* SavedExternalPawn;
-
-    // Movement input handlers
+    // Movement input handlers - public so SpaceshipControlsComponent can call them
     void MoveForward(float Value);
     void MoveRight(float Value);
     void MoveUp(float Value);
     void Turn(float Value);
     void LookUp(float Value);
+
+protected:
+    virtual void BeginPlay() override;
+    virtual void Tick(float DeltaTime) override;
+    virtual void PossessedBy(AController* NewController) override;
+
+    // Saved reference to the walking pawn when controlling the ship
+    UPROPERTY()
+    APawn* SavedExternalPawn;
 
     /**
      * Apply X4-style flight assist physics

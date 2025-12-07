@@ -35,6 +35,12 @@ class MockUnreal:
     class StaticMeshEditorSubsystem:
         pass
     
+    class UnrealEditorSubsystem:
+        pass
+    
+    class LevelEditorSubsystem:
+        pass
+    
     class SystemLibrary:
         @staticmethod
         def execute_console_command(context, command):
@@ -132,7 +138,16 @@ class MockUnreal:
     
     @staticmethod
     def get_editor_subsystem(subsystem_class):
-        return Mock()
+        mock_subsystem = Mock()
+        # Set up default return values for methods used in the code
+        mock_subsystem.get_editor_world.return_value = Mock()
+        mock_subsystem.get_selected_level_actors.return_value = []
+        mock_subsystem.load_level.return_value = True
+        mock_subsystem.save_current_level.return_value = True
+        mock_subsystem.destroy_actor.return_value = None
+        mock_subsystem.save_asset.return_value = True
+        mock_subsystem.spawn_actor_from_class.return_value = Mock()
+        return mock_subsystem
     
     @staticmethod
     def load_class(context, path):
