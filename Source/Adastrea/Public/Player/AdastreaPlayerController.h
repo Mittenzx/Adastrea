@@ -96,6 +96,25 @@ public:
 	class UAdastreaHUDWidget* HUDWidget;
 
 	// ====================
+	// Ship Status Configuration
+	// ====================
+
+	/**
+	 * Widget class to use for the ship status screen
+	 * Set this in Blueprint or editor to display ship information
+	 * Should be a class derived from UShipStatusWidget
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Status")
+	TSubclassOf<class UShipStatusWidget> ShipStatusWidgetClass;
+
+	/**
+	 * Current ship status widget instance
+	 * Created on demand when ToggleShipStatus is called
+	 */
+	UPROPERTY(BlueprintReadOnly, Category="Ship Status")
+	class UShipStatusWidget* ShipStatusWidget;
+
+	// ====================
 	// Events
 	// ====================
 
@@ -164,6 +183,28 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Station Editor")
 	UStationEditorWidget* GetStationEditorWidget() const;
 
+	/**
+	 * Toggle the ship status screen UI
+	 * Shows/hides a detailed view of the current spaceship and its stats
+	 * Only works when controlling a spaceship
+	 */
+	UFUNCTION(BlueprintCallable, Category="Player|Ship Status")
+	void ToggleShipStatus();
+
+	/**
+	 * Check if the ship status screen is currently open
+	 * @return True if the ship status widget is visible
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Ship Status")
+	bool IsShipStatusOpen() const;
+
+	/**
+	 * Get the currently active ship status widget
+	 * @return The ship status widget, or nullptr if not created
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Ship Status")
+	class UShipStatusWidget* GetShipStatusWidget() const;
+
 protected:
 	/**
 	 * Find the nearest space station within the search radius
@@ -189,6 +230,22 @@ protected:
 	 */
 	void HideStationEditor();
 
+	/**
+	 * Create the ship status widget if it doesn't exist
+	 * @return The created or existing widget instance
+	 */
+	class UShipStatusWidget* CreateShipStatusWidget();
+
+	/**
+	 * Show the ship status screen
+	 */
+	void ShowShipStatus();
+
+	/**
+	 * Hide and cleanup the ship status screen
+	 */
+	void HideShipStatus();
+
 private:
 	/** The currently active station editor widget instance */
 	UPROPERTY()
@@ -196,4 +253,7 @@ private:
 
 	/** Whether the station editor is currently open */
 	bool bIsStationEditorOpen;
+
+	/** Whether the ship status screen is currently open */
+	bool bIsShipStatusOpen;
 };

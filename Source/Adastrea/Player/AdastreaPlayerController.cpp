@@ -10,6 +10,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "UI/AdastreaHUDWidget.h"
+#include "UI/ShipStatusWidget.h"
 
 AAdastreaPlayerController::AAdastreaPlayerController()
 {
@@ -21,6 +22,9 @@ AAdastreaPlayerController::AAdastreaPlayerController()
 	bIsStationEditorOpen = false;
 	HUDWidgetClass = nullptr;
 	HUDWidget = nullptr;
+	ShipStatusWidgetClass = nullptr;
+	ShipStatusWidget = nullptr;
+	bIsShipStatusOpen = false;
 }
 
 void AAdastreaPlayerController::BeginPlay()
@@ -294,4 +298,124 @@ void AAdastreaPlayerController::HideStationEditor()
 	bIsStationEditorOpen = false;
 	
 	UE_LOG(LogAdastrea, Log, TEXT("HideStationEditor: Station editor hidden"));
+}
+
+void AAdastreaPlayerController::ToggleShipStatus()
+{
+	// Only allow ship status when controlling a spaceship
+	if (!IsControllingSpaceship())
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("ToggleShipStatus: Not controlling a spaceship - ship status not available"));
+		return;
+	}
+
+	// Toggle ship status state
+	if (bIsShipStatusOpen)
+	{
+		// Close the ship status screen
+		HideShipStatus();
+		UE_LOG(LogAdastrea, Log, TEXT("ToggleShipStatus: Closed ship status screen"));
+	}
+	else
+	{
+		// Open the ship status screen
+		ShowShipStatus();
+		UE_LOG(LogAdastrea, Log, TEXT("ToggleShipStatus: Opened ship status screen"));
+	}
+}
+
+bool AAdastreaPlayerController::IsShipStatusOpen() const
+{
+	return bIsShipStatusOpen && ShipStatusWidget && ShipStatusWidget->IsInViewport();
+}
+
+UShipStatusWidget* AAdastreaPlayerController::GetShipStatusWidget() const
+{
+	return ShipStatusWidget;
+}
+
+UShipStatusWidget* AAdastreaPlayerController::CreateShipStatusWidget()
+{
+	// Return existing widget if already created
+	if (ShipStatusWidget)
+	{
+		return ShipStatusWidget;
+	}
+
+	// Check if widget class is assigned
+	if (!ShipStatusWidgetClass)
+	{
+		UE_LOG(LogAdastrea, Error, TEXT("CreateShipStatusWidget: ShipStatusWidgetClass is not set! Assign it in Blueprint."));
+		return nullptr;
+	}
+
+	// Create the widget
+	ShipStatusWidget = CreateWidget<UShipStatusWidget>(this, ShipStatusWidgetClass);
+	
+	if (!ShipStatusWidget)
+	{
+		UE_LOG(LogAdastrea, Error, TEXT("CreateShipStatusWidget: Failed to create widget from class"));
+		return nullptr;
+	}
+
+	UE_LOG(LogAdastrea, Log, TEXT("CreateShipStatusWidget: Successfully created ship status widget"));
+	
+	return ShipStatusWidget;
+}
+
+void AAdastreaPlayerController::ShowShipStatus()
+{
+	// Create widget if needed
+	if (!CreateShipStatusWidget())
+	{
+		return;
+	}
+
+	// Get the current spaceship
+	ASpaceship* CurrentShip = GetControlledSpaceship();
+	if (!CurrentShip)
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("ShowShipStatus: No spaceship to display"));
+		return;
+	}
+
+	// Initialize with current spaceship
+	ShipStatusWidget->InitializeWithSpaceship(CurrentShip);
+
+	// Add widget to viewport
+	if (!ShipStatusWidget->IsInViewport())
+	{
+		ShipStatusWidget->AddToViewport();
+	}
+
+	// Switch to UI input mode
+	SetInputMode(FInputModeGameAndUI());
+	bShowMouseCursor = true;
+
+	bIsShipStatusOpen = true;
+	
+	UE_LOG(LogAdastrea, Log, TEXT("ShowShipStatus: Ship status screen now visible"));
+}
+
+void AAdastreaPlayerController::HideShipStatus()
+{
+	if (!ShipStatusWidget)
+	{
+		bIsShipStatusOpen = false;
+		return;
+	}
+
+	// Remove widget from viewport
+	if (ShipStatusWidget->IsInViewport())
+	{
+		ShipStatusWidget->RemoveFromParent();
+	}
+
+	// Restore game input mode
+	SetInputMode(FInputModeGameOnly());
+	bShowMouseCursor = false;
+
+	bIsShipStatusOpen = false;
+	
+	UE_LOG(LogAdastrea, Log, TEXT("HideShipStatus: Ship status screen hidden"));
 }
