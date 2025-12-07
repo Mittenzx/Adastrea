@@ -372,6 +372,7 @@ A modular space station construction system that enables players to build, custo
 
 **Documentation:**
 - **PIE Testing Guide**: [Assets/StationEditorPIETestingGuide.md](Assets/StationEditorPIETestingGuide.md) - ⭐ **START HERE!** Complete implementation guide for testing in PIE with key binding setup
+- **Migration Guide**: [Assets/StationEditorMigrationGuide.md](Assets/StationEditorMigrationGuide.md) - 🆕 **Blueprint to C++** Migration guide for new C++ implementation
 - **System API Reference**: [Assets/StationEditorSystemGuide.md](Assets/StationEditorSystemGuide.md) - Complete C++ API documentation
 - **Management Guide**: [Assets/StationManagementGuide.md](Assets/StationManagementGuide.md) - Station management UI patterns
 - **Blueprint Integration**: [Content/Blueprints/STATION_EDITOR_README.md](Content/Blueprints/STATION_EDITOR_README.md) - Blueprint implementation details
@@ -381,8 +382,11 @@ A modular space station construction system that enables players to build, custo
 2. Create module Blueprints extending `ASpaceStationModule` (e.g., docking bays, trade hubs)
 3. Create `DA_StationModuleCatalog` Data Asset with available modules
 4. Create Widget Blueprint extending `UStationEditorWidget` for the in-game editor UI
-5. Bind a key (e.g., F9) to toggle the editor - see [PIE Testing Guide](Assets/StationEditorPIETestingGuide.md)
-6. Use Blueprint-callable functions to add, remove, and position modules
+5. In your Player Controller Blueprint:
+   - Set `StationEditorWidgetClass` to your widget (e.g., `WBP_StationEditor`)
+   - Set `ModuleCatalog` to your catalog data asset
+6. Bind a key (e.g., M) to call `ToggleStationEditor()` - the C++ implementation handles everything automatically!
+7. **New in 2025**: All editor opening logic is now in C++ - see [Migration Guide](Assets/StationEditorMigrationGuide.md)
 
 ### Way System
 The Way System provides specialized guilds (Ways) and micro-alliances (Way Networks) based on shared values (Precepts). Ways are small focused organizations (50-1000 members) that handle specific industries and form networks where reputation with one member affects the entire alliance.

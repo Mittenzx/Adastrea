@@ -182,7 +182,12 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input Actions|System")
     UInputAction* ScreenshotAction;
 
-    /** Input action for opening station editor (default: M key when in spaceship mode) */
+    /** 
+     * Input action for opening station editor (default: M key when in spaceship mode)
+     * As of December 2025, this is fully handled in C++ in AAdastreaPlayerController::ToggleStationEditor()
+     * No Blueprint implementation required - just bind this action to call ToggleStationEditor()
+     * See Assets/StationEditorMigrationGuide.md for details
+     */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input Actions|System")
     UInputAction* StationEditorAction;
 
