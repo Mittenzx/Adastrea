@@ -652,7 +652,7 @@ The game includes a comprehensive personnel/crew management system for creating 
 
 **Player Progression** - Leveling, reputation tracking, ship upgrades, and unlock systems. See [Assets/PlayerProgressionGuide.md](Assets/PlayerProgressionGuide.md).
 
-**UI Systems** - Complete HUD (AdastreaHUDWidget), Inventory management (InventoryWidget), Ship Customization (ShipCustomizationWidget), Trading interface (TradingInterfaceWidget), and Station Management (StationManagementWidget). See system-specific guides in Assets/.
+**UI Systems** - Complete HUD (AdastreaHUDWidget), Ship Status Screen (ShipStatusWidget), Inventory management (InventoryWidget), Ship Customization (ShipCustomizationWidget), Trading interface (TradingInterfaceWidget), and Station Management (StationManagementWidget). See [Assets/ShipStatusScreenSetup.md](Assets/ShipStatusScreenSetup.md) for ship status screen setup and system-specific guides in Assets/.
 
 **Performance Tools** - LOD management (LODManagerComponent) and performance profiling (PerformanceProfiler). See [Assets/PerformanceOptimizationGuide.md](Assets/PerformanceOptimizationGuide.md).
 
