@@ -30,6 +30,7 @@
   - [AI System](#faction-and-personnel-ai-system)
   - [Trading System](#trading-system)
   - [Material System](#material-system)
+  - [Map System](#map-system)
 - [Scene and Asset Population](#scene-and-asset-population)
 - [Documentation](#documentation)
 - [Contributing](#contributing)
@@ -654,6 +655,33 @@ The game includes a comprehensive personnel/crew management system for creating 
 
 **UI Systems** - Complete HUD (AdastreaHUDWidget), Inventory management (InventoryWidget), Ship Customization (ShipCustomizationWidget), Trading interface (TradingInterfaceWidget), and Station Management (StationManagementWidget). See system-specific guides in Assets/.
 
+### Map System
+
+A comprehensive navigation system for displaying the universe and individual sectors with exploration tracking.
+
+**Key Components:**
+- **UniverseMapWidget** - Galaxy-level view showing all sectors organized in a 3D grid
+- **SectorMapWidget** - Detailed view of individual sectors with object listings
+- **Sector Discovery** - Track explored vs unexplored regions
+- **Player Tracking** - Automatically locate and display player's current sector
+- **Grid Organization** - Sectors organized based on world position (200km per cell)
+- **Exploration Progress** - Statistics showing percentage of universe discovered
+
+**Features:**
+- Full Blueprint exposure with BlueprintNativeEvent pattern
+- Automatic sector discovery as player explores
+- Neighboring sector finding and distance calculations
+- Random spawn position generation within sectors
+- Integration with quest markers and faction territories
+- Customizable visibility for undiscovered sectors
+
+**Usage:**
+Create Widget Blueprints based on `UniverseMapWidget` and `SectorMapWidget` classes, design the UI layout, and bind to player controller for map toggle (M key recommended).
+
+**Documentation:**
+- [Map System Guide](Assets/MapSystemGuide.md) - Complete documentation with API reference
+- [Map System Quick Start](Assets/MapSystemQuickStart.md) - 5-minute setup guide
+
 **Performance Tools** - LOD management (LODManagerComponent) and performance profiling (PerformanceProfiler). See [Assets/PerformanceOptimizationGuide.md](Assets/PerformanceOptimizationGuide.md).
 
 ## Documentation
@@ -735,6 +763,8 @@ Comprehensive technical documentation for contributors and developers:
   - [AI Designer Workflow](Assets/AIDesignerWorkflow.md)
 - [Trading System Guide](Assets/TradingSystemGuide.md)
 - [Material System Guide](Assets/MaterialSystemGuide.md)
+- [Map System Guide](Assets/MapSystemGuide.md)
+  - [Map System Quick Start](Assets/MapSystemQuickStart.md)
 - [Homeworld System Guide](Assets/HomeworldSystemGuide.md)
 
 #### Templates and References
