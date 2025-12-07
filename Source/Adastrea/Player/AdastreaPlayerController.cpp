@@ -96,6 +96,9 @@ void AAdastreaPlayerController::ToggleStationEditor()
 		// Close the editor
 		HideStationEditor();
 		UE_LOG(LogAdastrea, Log, TEXT("ToggleStationEditor: Closed station editor"));
+		
+		// Broadcast the event for backward compatibility with existing Blueprints
+		OnStationEditorToggle.Broadcast();
 	}
 	else
 	{
@@ -105,15 +108,16 @@ void AAdastreaPlayerController::ToggleStationEditor()
 		if (!NearestStation)
 		{
 			UE_LOG(LogAdastrea, Warning, TEXT("ToggleStationEditor: No station found within %.0f units"), StationSearchRadius);
+			// Don't broadcast event on failure - no state change occurred
 			return;
 		}
 
 		ShowStationEditor(NearestStation);
 		UE_LOG(LogAdastrea, Log, TEXT("ToggleStationEditor: Opened station editor for station: %s"), *NearestStation->GetName());
+		
+		// Broadcast the event for backward compatibility with existing Blueprints
+		OnStationEditorToggle.Broadcast();
 	}
-	
-	// Also broadcast the event for backward compatibility with existing Blueprints
-	OnStationEditorToggle.Broadcast();
 }
 
 bool AAdastreaPlayerController::IsStationEditorOpen() const
@@ -149,17 +153,15 @@ ASpaceStation* AAdastreaPlayerController::FindNearestStation()
 	ASpaceStation* NearestStation = nullptr;
 	float NearestDistance = StationSearchRadius;
 	
+	// GetAllActorsOfClass returns actors of the specified class, so no Cast needed
 	for (AActor* Actor : FoundStations)
 	{
-		ASpaceStation* Station = Cast<ASpaceStation>(Actor);
-		if (Station)
+		ASpaceStation* Station = static_cast<ASpaceStation*>(Actor);
+		float Distance = FVector::Dist(PlayerLocation, Station->GetActorLocation());
+		if (Distance < NearestDistance)
 		{
-			float Distance = FVector::Dist(PlayerLocation, Station->GetActorLocation());
-			if (Distance < NearestDistance)
-			{
-				NearestDistance = Distance;
-				NearestStation = Station;
-			}
+			NearestDistance = Distance;
+			NearestStation = Station;
 		}
 	}
 	
@@ -192,9 +194,10 @@ UStationEditorWidget* AAdastreaPlayerController::CreateStationEditorWidget()
 
 	// Initialize the editor manager once when widget is created
 	// This ensures consistent state across multiple open/close cycles
+	// Use PlayerController as outer for clearer ownership semantics
 	if (!StationEditorWidget->EditorManager)
 	{
-		StationEditorWidget->EditorManager = NewObject<UStationEditorManager>(StationEditorWidget);
+		StationEditorWidget->EditorManager = NewObject<UStationEditorManager>(this);
 	}
 
 	UE_LOG(LogAdastrea, Log, TEXT("CreateStationEditorWidget: Successfully created station editor widget"));

@@ -62,7 +62,7 @@ public:
 	 * Widget class to use for the station editor UI
 	 * Set this in Blueprint to specify your custom WBP_StationEditor widget
 	 */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Player|Station Editor")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Player|Station Editor")
 	TSubclassOf<UStationEditorWidget> StationEditorWidgetClass;
 
 	/**
