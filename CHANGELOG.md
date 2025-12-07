@@ -41,7 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Updated README.md to document new UI system
   
 - **Code Statistics**:
-  - 507 lines of C++ code (239 header + 268 implementation)
+  - 459 lines of C++ code (227 header + 232 implementation)
   - ~30KB of comprehensive documentation
   - Zero security vulnerabilities
   - Follows minimal changes philosophy

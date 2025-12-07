@@ -11,7 +11,7 @@ class USpaceshipDataAsset;
 /**
  * Widget for displaying comprehensive ship status and statistics
  * 
- * This widget provides a detailed view of the current spaceship including:
+ * This widget provides a detailed view of the current spaceship including all 9 stat categories:
  * - Basic ship information (name, class, description)
  * - Core stats (hull, cargo, crew, modular points)
  * - Combat stats (armor, shields, weapons, point defense)
@@ -20,6 +20,7 @@ class USpaceshipDataAsset;
  * - Operational stats (power, life support, maintenance, hangars, drones, AI)
  * - Advanced stats (diplomacy, boarding, customization, EW, mining)
  * - Lore information (manufacturer, year, rarity)
+ * - Calculated ratings (combat, mobility, utility 0-100)
  * 
  * Usage:
  * - Create a Widget Blueprint based on this class

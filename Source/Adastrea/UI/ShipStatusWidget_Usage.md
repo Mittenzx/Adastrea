@@ -7,7 +7,7 @@ The `UShipStatusWidget` class provides a comprehensive display of spaceship info
 ## Features
 
 - **Automatic Data Loading**: Automatically gets ship data from the player's controlled spaceship
-- **Comprehensive Stats Display**: Shows all 7 stat categories plus lore information
+- **Comprehensive Stats Display**: Shows all 9 stat categories (Basic Info, Core Stats, Combat Stats, Mobility Stats, Utility Stats, Operational Stats, Advanced Stats, Lore Info, and Ratings)
 - **Rating Calculations**: Displays computed combat, mobility, and utility ratings
 - **Blueprint Extensible**: All update functions are BlueprintNativeEvents for easy customization
 - **PlayerController Integration**: Managed by `AAdastreaPlayerController` for show/hide

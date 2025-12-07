@@ -213,8 +213,15 @@ void UShipStatusWidget::UpdateRatings_Implementation(float CombatRating, float M
 
 ASpaceship* UShipStatusWidget::GetPlayerSpaceship() const
 {
+	// Get the world context
+	UWorld* World = GetWorld();
+	if (!World)
+	{
+		return nullptr;
+	}
+
 	// Get the player controller
-	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	APlayerController* PC = UGameplayStatics::GetPlayerController(World, 0);
 	if (!PC)
 	{
 		return nullptr;
