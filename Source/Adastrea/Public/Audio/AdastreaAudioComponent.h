@@ -8,6 +8,19 @@
 #include "AdastreaAudioComponent.generated.h"
 
 /**
+ * Wrapper struct for TArray of audio components
+ * Required for using TArray as a value in TMap
+ */
+USTRUCT()
+struct FAudioComponentArray
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	TArray<UAudioComponent*> Components;
+};
+
+/**
  * Audio Component for managing sound effects on actors
  * 
  * This component handles playing sound effects from SoundEffectDataAssets
@@ -100,7 +113,7 @@ private:
 
 	/** Map of audio components by category for category-based operations */
 	UPROPERTY()
-	TMap<ESoundEffectCategory, TArray<UAudioComponent*>> AudioComponentsByCategory;
+	TMap<ESoundEffectCategory, FAudioComponentArray> AudioComponentsByCategory;
 
 	/** Cleanup finished audio components */
 	void CleanupFinishedAudioComponents();

@@ -95,9 +95,9 @@ void UAdastreaAudioComponent::StopAllSounds()
 void UAdastreaAudioComponent::StopSoundsByCategory(ESoundEffectCategory Category)
 {
 	// Get audio components for the specified category
-	if (TArray<UAudioComponent*>* CategoryComponents = AudioComponentsByCategory.Find(Category))
+	if (FAudioComponentArray* CategoryArray = AudioComponentsByCategory.Find(Category))
 	{
-		for (UAudioComponent* AudioComp : *CategoryComponents)
+		for (UAudioComponent* AudioComp : CategoryArray->Components)
 		{
 			if (AudioComp && AudioComp->IsPlaying())
 			{
@@ -106,7 +106,7 @@ void UAdastreaAudioComponent::StopSoundsByCategory(ESoundEffectCategory Category
 			// Also remove from main tracking array
 			ActiveAudioComponents.Remove(AudioComp);
 		}
-		CategoryComponents->Empty();
+		CategoryArray->Components.Empty();
 	}
 }
 
@@ -132,9 +132,9 @@ float UAdastreaAudioComponent::GetCurrentAudioLoad() const
 bool UAdastreaAudioComponent::IsCategoryPlaying(ESoundEffectCategory Category) const
 {
 	// Check if any audio component in this category is currently playing
-	if (const TArray<UAudioComponent*>* CategoryComponents = AudioComponentsByCategory.Find(Category))
+	if (const FAudioComponentArray* CategoryArray = AudioComponentsByCategory.Find(Category))
 	{
-		for (UAudioComponent* AudioComp : *CategoryComponents)
+		for (UAudioComponent* AudioComp : CategoryArray->Components)
 		{
 			if (AudioComp && AudioComp->IsPlaying())
 			{
@@ -206,8 +206,8 @@ void UAdastreaAudioComponent::TrackAudioComponent(UAudioComponent* AudioComp, ES
 	ActiveAudioComponents.AddUnique(AudioComp);
 
 	// Add to category-specific tracking
-	TArray<UAudioComponent*>& CategoryComponents = AudioComponentsByCategory.FindOrAdd(Category);
-	CategoryComponents.AddUnique(AudioComp);
+	FAudioComponentArray& CategoryArray = AudioComponentsByCategory.FindOrAdd(Category);
+	CategoryArray.Components.AddUnique(AudioComp);
 }
 
 void UAdastreaAudioComponent::UntrackAudioComponent(UAudioComponent* AudioComp)
@@ -220,6 +220,6 @@ void UAdastreaAudioComponent::UntrackAudioComponent(UAudioComponent* AudioComp)
 	// Remove from all category arrays
 	for (auto& CategoryPair : AudioComponentsByCategory)
 	{
-		CategoryPair.Value.Remove(AudioComp);
+		CategoryPair.Value.Components.Remove(AudioComp);
 	}
 }
