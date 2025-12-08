@@ -711,6 +711,7 @@ void UCombatVFXComponent::InitializeComponentPool()
 	ActiveNiagaraComponents.Reserve(ComponentPoolSize);
 
 	// Create pooled components
+	int32 SuccessfullyCreated = 0;
 	for (int32 i = 0; i < ComponentPoolSize; i++)
 	{
 		UNiagaraComponent* Component = NewObject<UNiagaraComponent>(Owner);
@@ -720,10 +721,15 @@ void UCombatVFXComponent::InitializeComponentPool()
 			Component->SetAutoActivate(false);
 			Component->SetVisibility(false);
 			NiagaraComponentPool.Add(Component);
+			SuccessfullyCreated++;
+		}
+		else
+		{
+			UE_LOG(LogAdastreaCombat, Warning, TEXT("CombatVFXComponent: Failed to create pooled component %d/%d"), i + 1, ComponentPoolSize);
 		}
 	}
 
-	UE_LOG(LogAdastreaCombat, Log, TEXT("CombatVFXComponent: Initialized Niagara pool with %d components"), ComponentPoolSize);
+	UE_LOG(LogAdastreaCombat, Log, TEXT("CombatVFXComponent: Initialized Niagara pool with %d/%d components"), SuccessfullyCreated, ComponentPoolSize);
 }
 
 UNiagaraComponent* UCombatVFXComponent::GetPooledNiagaraComponent()
@@ -754,6 +760,10 @@ UNiagaraComponent* UCombatVFXComponent::GetPooledNiagaraComponent()
 	{
 		Component->RegisterComponent();
 		ActiveNiagaraComponents.Add(Component);
+	}
+	else
+	{
+		UE_LOG(LogAdastreaCombat, Error, TEXT("CombatVFXComponent: Failed to create new Niagara component when pool exhausted"));
 	}
 	return Component;
 }

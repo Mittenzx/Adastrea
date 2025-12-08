@@ -382,13 +382,11 @@ void USpaceshipDataAsset::PostEditChangeProperty(FPropertyChangedEvent& Property
     // Invalidate cache when any property changes in editor
     if (PropertyChangedEvent.Property)
     {
+        // Invalidate cache for any property change to be safe
+        InvalidateRatingsCache();
         FName PropertyName = PropertyChangedEvent.Property->GetFName();
-        if (PropertyName != NAME_None)
-        {
-            InvalidateRatingsCache();
-            UE_LOG(LogAdastrea, Verbose, TEXT("SpaceshipDataAsset: Property %s changed, invalidating ratings cache for %s"),
-                *PropertyName.ToString(), *ShipName.ToString());
-        }
+        UE_LOG(LogAdastrea, Verbose, TEXT("SpaceshipDataAsset: Property %s changed, invalidating ratings cache for %s"),
+            *PropertyName.ToString(), *ShipName.ToString());
     }
 }
 #endif
