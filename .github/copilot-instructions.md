@@ -2,6 +2,8 @@
 
 This file provides GitHub Copilot with project-specific context, coding standards, and best practices for the Adastrea open-world space flight game built on Unreal Engine 5.x.
 
+> **NEW**: See `.github/instructions/unreal-directive-best-practices.md` for advanced Unreal Engine best practices from [UnrealDirective.com](https://unrealdirective.com/), and `UNREAL_DIRECTIVE_SUGGESTIONS.md` for comprehensive improvement suggestions specific to Adastrea.
+
 ## Project Overview
 
 Adastrea is an open-world space flight game featuring exploration, combat, faction diplomacy, crew management, and dynamic trading economies. The project emphasizes:
@@ -9,6 +11,7 @@ Adastrea is an open-world space flight game featuring exploration, combat, facti
 - **Designer-Friendly**: Minimal C++ knowledge required for content creation
 - **Modular Architecture**: Independent systems that integrate seamlessly
 - **Blueprint First**: Full Blueprint exposure for all systems
+- **Performance-Conscious**: Following Unreal Directive optimization patterns
 
 ## Technology Stack
 
@@ -291,10 +294,45 @@ Examples:
 ### Performance Considerations
 
 - Profile before optimizing
-- Cache expensive calculations
-- Use object pooling for frequently spawned objects
+- Cache expensive calculations with dirty flags
+- Use object pooling for frequently spawned objects (projectiles, effects)
 - Stagger updates across frames for AI and systems
 - Use LOD for distant stations/ships
+- Optimize Tick usage - prefer timers for non-critical updates
+- Implement GC-friendly patterns (see Unreal Directive guide)
+
+### Unreal Directive Key Principles (Quick Reference)
+
+**Memory Management**:
+- ✅ ALL `UObject*` pointers MUST have `UPROPERTY()` - even private ones (GC tracking)
+- ✅ Always check pointers with `IsValid()` for actors, null check for other UObjects
+- ✅ Initialize all pointers to `nullptr` in constructors
+
+**Performance**:
+- ✅ Use object pooling for projectiles, particles, frequently spawned actors
+- ✅ Cache expensive calculations (ratings, pathfinding) with dirty flags
+- ✅ Stagger AI updates - don't update all AIs same frame
+- ✅ Use timers instead of Tick for periodic updates
+- ✅ Optimize GC settings in DefaultEngine.ini
+
+**Data Assets**:
+- ✅ Use `UDataAsset` for most content (current Adastrea pattern)
+- ✅ Use `UPrimaryDataAsset` when need unique IDs and Asset Manager support
+- ✅ Add validation in `IsDataValid()` for editor-time checks
+
+**Blueprint/C++ Balance**:
+- ✅ Performance-critical code in C++
+- ✅ Expose via `BlueprintNativeEvent` for designer customization
+- ✅ Use `BlueprintPure` for getters with no side effects
+- ✅ Always specify `Category` for organization
+
+**Asset Naming**:
+- ✅ Use consistent prefixes: `BP_`, `DA_`, `M_`, `MI_`, `T_`, `SM_`, `WBP_`, etc.
+- ✅ PascalCase for all assets and folders
+- ✅ No spaces, use descriptive names
+- ✅ Texture suffixes: `_D`, `_N`, `_R`, `_M`, `_AO`, `_E`
+
+For comprehensive details, see `.github/instructions/unreal-directive-best-practices.md`
 
 ## System-Specific Guidelines
 
@@ -467,16 +505,22 @@ Blueprint uses results for gameplay
 
 For quick reference information, see:
 - `.github/copilot-knowledge.md` - Repository structure and key files index
+- `.github/instructions/unreal-directive-best-practices.md` - **NEW** Advanced Unreal Directive best practices
+- `UNREAL_DIRECTIVE_SUGGESTIONS.md` - **NEW** Comprehensive improvement suggestions based on Unreal Directive
 - `README.md` - Project overview and quick start
 - `ARCHITECTURE.md` - System architecture and design patterns
 - `CODE_STYLE.md` - Detailed C++ and Blueprint style guide
 - `CONTRIBUTING.md` - Contribution guidelines and workflows
 - `DOCUMENTATION_INDEX.md` - Complete documentation catalog
 
-For Unreal Engine reference, consult the official Unreal Engine documentation and coding standards (available online).
+For Unreal Engine reference, consult:
+- [Epic Games C++ Coding Standard](https://dev.epicgames.com/documentation/en-us/unreal-engine/epic-cplusplus-coding-standard-for-unreal-engine)
+- [Unreal Directive](https://unrealdirective.com/) - Community best practices and advanced techniques
+- [Blueprint Best Practices](https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-best-practices-in-unreal-engine)
+- [Allar's UE5 Style Guide](https://github.com/Allar/ue5-style-guide)
 
 ---
 
-**Last Updated**: 2025-11-14  
-**Version**: 1.1  
+**Last Updated**: 2025-12-08  
+**Version**: 1.2  
 **Maintained by**: Adastrea Development Team
