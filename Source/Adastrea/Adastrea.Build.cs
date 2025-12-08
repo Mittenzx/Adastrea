@@ -33,6 +33,10 @@ public class Adastrea : ModuleRules
 			"Adastrea/Rivals"
 		});
 
+		// Note: StationEditor dependency removed to fix circular dependency
+		// StationEditor depends on Adastrea, so Adastrea cannot depend on StationEditor
+		// AdastreaPlayerController uses forward declarations and only includes
+		// StationEditor headers in .cpp file, which works correctly
 		PublicDependencyModuleNames.AddRange(new string[] 
 		{ 
 			"Core", 
@@ -43,8 +47,7 @@ public class Adastrea : ModuleRules
 			"UMG",
 			"Slate",
 			"SlateCore",
-			"Niagara",
-			"StationEditor"  // Required for station editor UI integration
+			"Niagara"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] 
