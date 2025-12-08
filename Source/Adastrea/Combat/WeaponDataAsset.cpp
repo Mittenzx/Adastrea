@@ -220,6 +220,16 @@ EDataValidationResult UWeaponDataAsset::IsDataValid(TArray<FText>& ValidationErr
         // Just a warning, not invalid
     }
 
+    // Log validation result for debugging/editor workflows
+    if (Result == EDataValidationResult::Valid)
+    {
+        UE_LOG(LogAdastreaCombat, Log, TEXT("WeaponDataAsset %s passed validation"), *WeaponName.ToString());
+    }
+    else
+    {
+        UE_LOG(LogAdastreaCombat, Warning, TEXT("WeaponDataAsset %s failed validation with %d errors"), *WeaponName.ToString(), ValidationErrors.Num());
+    }
+
     return Result;
 }
 #endif

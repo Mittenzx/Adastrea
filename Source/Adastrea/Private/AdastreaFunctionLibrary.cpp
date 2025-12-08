@@ -157,11 +157,7 @@ UFactionDataAsset* UAdastreaFunctionLibrary::GetActorFaction(AActor* Actor)
     // Check if actor implements IFactionMember
     if (Actor->Implements<UFactionMember>())
     {
-        IFactionMember* FactionMember = Cast<IFactionMember>(Actor);
-        if (FactionMember)
-        {
-            return IFactionMember::Execute_GetFaction(Actor);
-        }
+        return IFactionMember::Execute_GetFaction(Actor);
     }
 
     return nullptr;
@@ -317,11 +313,14 @@ FString UAdastreaFunctionLibrary::FormatLargeNumber(int32 Number)
 
 FString UAdastreaFunctionLibrary::FormatLargeNumberFloat(float Number, int32 DecimalPlaces)
 {
+    bool bIsNegative = Number < 0.0f;
+    float AbsNumber = FMath::Abs(Number);
+    
     // Split into integer and decimal parts
-    int32 IntegerPart = FMath::FloorToInt(FMath::Abs(Number));
-    float DecimalPart = FMath::Abs(Number) - IntegerPart;
+    int32 IntegerPart = FMath::FloorToInt(AbsNumber);
+    float DecimalPart = AbsNumber - IntegerPart;
 
-    // Format integer part with commas
+    // Format integer part with commas (using positive value)
     FString IntegerStr = FormatLargeNumber(IntegerPart);
 
     // Format decimal part
@@ -334,7 +333,7 @@ FString UAdastreaFunctionLibrary::FormatLargeNumberFloat(float Number, int32 Dec
 
     FString Result = IntegerStr + DecimalStr;
 
-    if (Number < 0.0f)
+    if (bIsNegative)
     {
         Result.InsertAt(0, TEXT("-"));
     }

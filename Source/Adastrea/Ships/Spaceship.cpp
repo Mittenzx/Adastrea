@@ -888,11 +888,7 @@ bool ASpaceship::IsHostileToActor_Implementation(AActor* Observer) const
     // Check if observer implements IFactionMember
     if (Observer->Implements<UFactionMember>())
     {
-        IFactionMember* ObserverFaction = Cast<IFactionMember>(Observer);
-        if (ObserverFaction)
-        {
-            return IsHostileTo_Implementation(TScriptInterface<IFactionMember>(Observer));
-        }
+        return IsHostileTo_Implementation(TScriptInterface<IFactionMember>(Observer));
     }
 
     // Default to non-hostile if can't determine faction
