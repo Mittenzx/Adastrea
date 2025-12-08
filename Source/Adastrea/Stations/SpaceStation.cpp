@@ -177,11 +177,6 @@ void ASpaceStation::SetFaction(UFactionDataAsset* NewFaction)
     }
 }
 
-UFactionDataAsset* ASpaceStation::GetFaction() const
-{
-    return OwningFaction;
-}
-
 // ====================
 // IDamageable Interface Implementation
 // ====================

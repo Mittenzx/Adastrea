@@ -105,13 +105,6 @@ public:
     UFUNCTION(BlueprintCallable, Category="Station")
     void SetFaction(class UFactionDataAsset* NewFaction);
 
-    /**
-     * Get the faction that owns this station
-     * @return The faction data asset, or nullptr if no faction is assigned
-     */
-    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station")
-    class UFactionDataAsset* GetFaction() const;
-
     // ====================
     // INTERFACE IMPLEMENTATIONS
     // ====================
