@@ -1,0 +1,13 @@
+UPROPERTY Validation Results
+================================================================================
+
+Total files scanned: 109
+Files with potential issues: 4
+Total potential issues: 6
+
+/home/runner/work/Adastrea/Adastrea/Source/Adastrea/Way/SectorCouncil.h:388 - const TArray<UWayDataAsset*>& WaysInFavor,
+/home/runner/work/Adastrea/Adastrea/Source/Adastrea/Way/SectorCouncil.h:389 - const TArray<UWayDataAsset*>& WaysAgainst) const;
+/home/runner/work/Adastrea/Adastrea/Source/Adastrea/Public/Combat/PointDefenseComponent.h:123 - TMap<UWeaponComponent*, AActor*> WeaponAssignments;
+/home/runner/work/Adastrea/Adastrea/Source/Adastrea/Public/Combat/PointDefenseComponent.h:123 - TMap<UWeaponComponent*, AActor*> WeaponAssignments;
+/home/runner/work/Adastrea/Adastrea/Source/Adastrea/Public/Audio/AdastreaAudioComponent.h:102 - TMap<ESoundEffectCategory, TArray<UAudioComponent*>> AudioComponentsByCategory;
+/home/runner/work/Adastrea/Adastrea/Source/Adastrea/Public/Audio/MusicTrackDataAsset.h:129 - UMusicTrackDataAsset* BaseTrack;
