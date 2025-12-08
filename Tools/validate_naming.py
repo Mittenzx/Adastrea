@@ -13,10 +13,8 @@ Exit codes:
     1: Found naming violations
 """
 
-import os
 import sys
 from pathlib import Path
-import re
 
 # Expected prefixes for different asset types
 ASSET_PREFIXES = {

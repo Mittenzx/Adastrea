@@ -295,11 +295,11 @@ EDataValidationResult UTradeItemDataAsset::IsDataValid(TArray<FText>& Validation
 	// Log validation result
 	if (Result == EDataValidationResult::Valid)
 	{
-		UE_LOG(LogAdastrea, Log, TEXT("TradeItemDataAsset %s passed validation"), *ItemName.ToString());
+		UE_LOG(LogAdastreaTrading, Log, TEXT("TradeItemDataAsset %s passed validation"), *ItemName.ToString());
 	}
 	else
 	{
-		UE_LOG(LogAdastrea, Warning, TEXT("TradeItemDataAsset %s failed validation with %d errors"), 
+		UE_LOG(LogAdastreaTrading, Warning, TEXT("TradeItemDataAsset %s failed validation with %d errors"), 
 			*ItemName.ToString(), ValidationErrors.Num());
 	}
 
