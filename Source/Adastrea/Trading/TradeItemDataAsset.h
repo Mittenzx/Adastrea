@@ -315,4 +315,12 @@ public:
 	 */
 	UFUNCTION(BlueprintNativeEvent, Category="Trade Item|Events")
 	void OnItemTraded(int32 Quantity, float Price, FName BuyerFactionID, FName SellerFactionID);
+
+#if WITH_EDITOR
+	/**
+	 * Validate trade item data asset properties
+	 * Checks for required fields and logical constraints
+	 */
+	virtual EDataValidationResult IsDataValid(TArray<FText>& ValidationErrors) override;
+#endif
 };

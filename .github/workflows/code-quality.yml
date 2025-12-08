@@ -1,0 +1,60 @@
+name: Code Quality Checks
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+  push:
+    branches: [ main, develop ]
+
+jobs:
+  validation:
+    name: Run Code Quality Validation
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+          
+      - name: Check UPROPERTY usage
+        run: |
+          python Tools/check_uproperty.py
+        continue-on-error: true
+        
+      - name: Validate asset naming conventions
+        run: |
+          python Tools/validate_naming.py
+        continue-on-error: true
+        
+      - name: Check for hardcoded secrets
+        run: |
+          # Simple check for common patterns
+          echo "Checking for potential hardcoded secrets..."
+          ! grep -rn --include="*.cpp" --include="*.h" "password\s*=" . || true
+          ! grep -rn --include="*.cpp" --include="*.h" "apiKey\s*=" . || true
+          ! grep -rn --include="*.cpp" --include="*.h" "api_key\s*=" . || true
+        continue-on-error: true
+        
+      - name: Check for TODO/FIXME comments
+        run: |
+          echo "Checking for TODO and FIXME comments..."
+          grep -rn --include="*.cpp" --include="*.h" "TODO\|FIXME" Source/ || echo "No TODO/FIXME found"
+        continue-on-error: true
+        
+      - name: Summary
+        if: always()
+        run: |
+          echo "Code quality checks completed!"
+          echo "Review the logs above for any issues found."

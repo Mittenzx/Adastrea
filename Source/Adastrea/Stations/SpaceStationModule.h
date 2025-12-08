@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/StaticMeshComponent.h"
+#include "Interfaces/IDamageable.h"
+#include "Interfaces/ITargetable.h"
 #include "SpaceStationModule.generated.h"
 
 // Forward declaration
@@ -41,6 +43,10 @@ enum class EStationModuleGroup : uint8
  * - Group categorization for organization
  * - Faction assignment (modules can have different owners than the parent station)
  * 
+ * Implements:
+ * - IDamageable: Can receive damage (may cause module destruction)
+ * - ITargetable: Can be targeted individually by precise weapons
+ * 
  * Usage:
  * - Create Blueprint based on this class for specific module types
  * - Configure ModuleType, ModulePower, and ModuleGroup
@@ -48,7 +54,7 @@ enum class EStationModuleGroup : uint8
  * - Add to ASpaceStation using AddModule() or AddModuleAtLocation()
  */
 UCLASS()
-class ADASTREA_API ASpaceStationModule : public AActor
+class ADASTREA_API ASpaceStationModule : public AActor, public IDamageable, public ITargetable
 {
     GENERATED_BODY()
 
@@ -85,8 +91,42 @@ public:
     UFUNCTION(BlueprintCallable, Category="Module")
     void SetModuleFaction(UFactionDataAsset* NewFaction);
 
+    // ====================
+    // INTERFACE IMPLEMENTATIONS
+    // ====================
+
+    // IDamageable Interface
+    virtual float ApplyDamage_Implementation(float Damage, EDamageType DamageType, AActor* Instigator, AActor* DamageCauser) override;
+    virtual bool CanTakeDamage_Implementation() const override;
+    virtual float GetHealthPercentage_Implementation() const override;
+    virtual bool IsDestroyed_Implementation() const override;
+    virtual float GetMaxHealth_Implementation() const override;
+    virtual float GetCurrentHealth_Implementation() const override;
+
+    // ITargetable Interface
+    virtual bool CanBeTargeted_Implementation() const override;
+    virtual int32 GetTargetPriority_Implementation() const override;
+    virtual FText GetTargetDisplayName_Implementation() const override;
+    virtual UTexture2D* GetTargetIcon_Implementation() const override;
+    virtual FVector GetAimPoint_Implementation() const override;
+    virtual float GetTargetSignature_Implementation() const override;
+    virtual float GetDistanceFromLocation_Implementation(FVector FromLocation) const override;
+    virtual bool IsHostileToActor_Implementation(AActor* Observer) const override;
+
 protected:
     /** Static mesh component for visual representation */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
     UStaticMeshComponent* MeshComponent;
+
+    /** Current module integrity (health) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Module Status")
+    float CurrentModuleIntegrity;
+
+    /** Maximum module integrity */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Module Status")
+    float MaxModuleIntegrity;
+
+    /** Flag indicating if module is destroyed */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Module Status")
+    bool bIsDestroyed;
 };

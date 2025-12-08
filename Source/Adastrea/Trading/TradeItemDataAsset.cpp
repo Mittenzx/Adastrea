@@ -202,3 +202,107 @@ void UTradeItemDataAsset::OnItemTraded_Implementation(int32 Quantity, float Pric
 	// Default implementation does nothing
 	// Designers can override in Blueprint to trigger custom events
 }
+
+#if WITH_EDITOR
+EDataValidationResult UTradeItemDataAsset::IsDataValid(TArray<FText>& ValidationErrors)
+{
+	EDataValidationResult Result = EDataValidationResult::Valid;
+
+	// Validate basic info
+	if (ItemName.IsEmpty())
+	{
+		ValidationErrors.Add(FText::FromString(TEXT("Item Name is empty")));
+		Result = EDataValidationResult::Invalid;
+	}
+
+	if (ItemID.IsNone())
+	{
+		ValidationErrors.Add(FText::FromString(TEXT("Item ID is not set")));
+		Result = EDataValidationResult::Invalid;
+	}
+
+	// Validate pricing
+	if (BasePrice <= 0.0f)
+	{
+		ValidationErrors.Add(FText::FromString(TEXT("Base Price must be greater than 0")));
+		Result = EDataValidationResult::Invalid;
+	}
+
+	// Validate physical properties
+	if (VolumePerUnit <= 0.0f)
+	{
+		ValidationErrors.Add(FText::FromString(TEXT("Volume Per Unit must be greater than 0")));
+		Result = EDataValidationResult::Invalid;
+	}
+
+	if (MassPerUnit <= 0.0f)
+	{
+		ValidationErrors.Add(FText::FromString(TEXT("Mass Per Unit must be greater than 0")));
+		Result = EDataValidationResult::Invalid;
+	}
+
+	// Validate price volatility settings
+	if (PriceVolatility.MinPriceDeviation < 0.0f || PriceVolatility.MinPriceDeviation > 1.0f)
+	{
+		ValidationErrors.Add(FText::Format(
+			FText::FromString(TEXT("Min Price Deviation ({0}) must be between 0.0 and 1.0")),
+			FText::AsNumber(PriceVolatility.MinPriceDeviation)
+		));
+		Result = EDataValidationResult::Invalid;
+	}
+
+	if (PriceVolatility.MaxPriceDeviation < 1.0f || PriceVolatility.MaxPriceDeviation > 10.0f)
+	{
+		ValidationErrors.Add(FText::Format(
+			FText::FromString(TEXT("Max Price Deviation ({0}) must be between 1.0 and 10.0")),
+			FText::AsNumber(PriceVolatility.MaxPriceDeviation)
+		));
+		Result = EDataValidationResult::Invalid;
+	}
+
+	if (PriceVolatility.MinPriceDeviation >= PriceVolatility.MaxPriceDeviation)
+	{
+		ValidationErrors.Add(FText::FromString(TEXT("Min Price Deviation must be less than Max Price Deviation")));
+		Result = EDataValidationResult::Invalid;
+	}
+
+	// Validate trade restrictions
+	if (TradeRestrictions.MinReputationRequired < -100 || TradeRestrictions.MinReputationRequired > 100)
+	{
+		ValidationErrors.Add(FText::Format(
+			FText::FromString(TEXT("Min Reputation Required ({0}) must be between -100 and 100")),
+			FText::AsNumber(TradeRestrictions.MinReputationRequired)
+		));
+		Result = EDataValidationResult::Invalid;
+	}
+
+	// Warn about potential issues
+	if (LegalityStatus == ELegalityStatus::Illegal || LegalityStatus == ELegalityStatus::Contraband)
+	{
+		if (ContrabandRiskLevel <= 0.0f)
+		{
+			ValidationErrors.Add(FText::FromString(TEXT("Warning: Illegal/Contraband item should have positive risk level")));
+			// Just a warning
+		}
+	}
+
+	if (Category == ETradeItemCategory::Luxury && BasePrice < 500.0f)
+	{
+		ValidationErrors.Add(FText::FromString(TEXT("Warning: Luxury item has relatively low base price")));
+		// Just a warning
+	}
+
+	// Log validation result
+	if (Result == EDataValidationResult::Valid)
+	{
+		UE_LOG(LogAdastreaTrading, Log, TEXT("TradeItemDataAsset %s passed validation"), *ItemName.ToString());
+	}
+	else
+	{
+		UE_LOG(LogAdastreaTrading, Warning, TEXT("TradeItemDataAsset %s failed validation with %d errors"), 
+			*ItemName.ToString(), ValidationErrors.Num());
+	}
+
+	return Result;
+}
+#endif
