@@ -5,7 +5,7 @@
 #include "Stations/SpaceStation.h"
 #include "Stations/SpaceStationModule.h"
 #include "Factions/FactionDataAsset.h"
-#include "StationEditorManager.h"
+#include "../StationEditorManager.h"
 #include "StationEditorWidget.generated.h"
 
 /**
