@@ -275,4 +275,52 @@ public:
      */
     UFUNCTION(BlueprintCallable, Category="Spaceship Stats")
     float GetOperationalCost() const;
+
+protected:
+    // ====================
+    // CALCULATION CACHING (Phase 2 Optimization)
+    // ====================
+
+    /** 
+     * Cached rating values - marked Transient so they're not serialized
+     * 
+     * Thread Safety: Data Assets are typically accessed from the game thread only.
+     * If multi-threaded access is needed, external synchronization should be used.
+     * Cache updates are infrequent (only on property changes) so race conditions are unlikely.
+     */
+    UPROPERTY(Transient)
+    mutable float CachedCombatRating;
+
+    UPROPERTY(Transient)
+    mutable float CachedMobilityRating;
+
+    UPROPERTY(Transient)
+    mutable float CachedUtilityRating;
+
+    /** Dirty flag for cache invalidation */
+    UPROPERTY(Transient)
+    mutable bool bRatingsCacheDirty;
+
+    /**
+     * Invalidate cached ratings (called when properties change)
+     */
+    void InvalidateRatingsCache();
+
+    /**
+     * Calculate and cache all ratings at once
+     */
+    void UpdateRatingsCache() const;
+
+    /**
+     * Internal rating calculation methods (moved from public implementations)
+     */
+    float CalculateCombatRatingInternal() const;
+    float CalculateMobilityRatingInternal() const;
+    float CalculateUtilityRatingInternal() const;
+
+public:
+#if WITH_EDITOR
+    /** Invalidate cache when properties change in editor */
+    virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
 };

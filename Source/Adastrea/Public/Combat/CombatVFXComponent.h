@@ -202,6 +202,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Performance")
 	int32 CurrentActiveEffects;
 
+	/** Pool size for Niagara components (performance optimization) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Performance", meta=(ClampMin="10", ClampMax="100"))
+	int32 ComponentPoolSize;
+
 	/** Enable distance-based culling */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Performance")
 	bool bEnableDistanceCulling;
@@ -287,4 +291,34 @@ protected:
 	/** Map of weapon components to their previous heat percentage for cooling detection */
 	UPROPERTY()
 	TMap<UWeaponComponent*, float> PreviousHeatPercentages;
+
+	// ====================
+	// OBJECT POOLING (Phase 2 Optimization)
+	// ====================
+
+	/** Pool of reusable Niagara components for performance */
+	UPROPERTY()
+	TArray<UNiagaraComponent*> NiagaraComponentPool;
+
+	/** Active Niagara components currently in use */
+	UPROPERTY()
+	TArray<UNiagaraComponent*> ActiveNiagaraComponents;
+
+	/**
+	 * Initialize the Niagara component pool
+	 * Pre-allocates components to reduce runtime allocation overhead
+	 */
+	void InitializeComponentPool();
+
+	/**
+	 * Get a pooled Niagara component or create a new one if pool is exhausted
+	 * @return Pooled component ready for use
+	 */
+	UNiagaraComponent* GetPooledNiagaraComponent();
+
+	/**
+	 * Return a Niagara component to the pool for reuse
+	 * @param Component The component to return
+	 */
+	void ReturnNiagaraComponentToPool(UNiagaraComponent* Component);
 };

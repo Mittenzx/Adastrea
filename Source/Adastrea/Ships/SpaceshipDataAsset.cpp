@@ -3,6 +3,12 @@
 
 USpaceshipDataAsset::USpaceshipDataAsset()
 {
+    // Phase 2: Initialize cache variables
+    bRatingsCacheDirty = true;
+    CachedCombatRating = 0.0f;
+    CachedMobilityRating = 0.0f;
+    CachedUtilityRating = 0.0f;
+
     // Set default values for basic info
     ShipName = FText::FromString(TEXT("Unknown Vessel"));
     Description = FText::FromString(TEXT("A spaceship operating in the galaxy."));
@@ -66,6 +72,16 @@ USpaceshipDataAsset::USpaceshipDataAsset()
 
 float USpaceshipDataAsset::GetCombatRating() const
 {
+    // Phase 2: Use cached value if available
+    if (bRatingsCacheDirty)
+    {
+        UpdateRatingsCache();
+    }
+    return CachedCombatRating;
+}
+
+float USpaceshipDataAsset::CalculateCombatRatingInternal() const
+{
     // Define rating calculation constants for maintainability
     static constexpr float kArmorDivisor = 10.0f;
     static constexpr float kShieldDivisor = 1000.0f;
@@ -98,6 +114,16 @@ float USpaceshipDataAsset::GetCombatRating() const
 
 float USpaceshipDataAsset::GetMobilityRating() const
 {
+    // Phase 2: Use cached value if available
+    if (bRatingsCacheDirty)
+    {
+        UpdateRatingsCache();
+    }
+    return CachedMobilityRating;
+}
+
+float USpaceshipDataAsset::CalculateMobilityRatingInternal() const
+{
     // Define rating calculation constants
     static constexpr float kSpeedDivisor = 100.0f;
     static constexpr float kAccelDivisor = 10.0f;
@@ -129,6 +155,16 @@ float USpaceshipDataAsset::GetMobilityRating() const
 }
 
 float USpaceshipDataAsset::GetUtilityRating() const
+{
+    // Phase 2: Use cached value if available
+    if (bRatingsCacheDirty)
+    {
+        UpdateRatingsCache();
+    }
+    return CachedUtilityRating;
+}
+
+float USpaceshipDataAsset::CalculateUtilityRatingInternal() const
 {
     // Define rating calculation constants
     static constexpr float kSensorRangeDivisor = 1000.0f;
@@ -315,3 +351,42 @@ float USpaceshipDataAsset::GetOperationalCost() const
     
     return CrewCost + MaintenanceCost + PowerCost;
 }
+
+// ====================
+// Phase 2: Calculation Caching Implementation
+// ====================
+
+void USpaceshipDataAsset::InvalidateRatingsCache()
+{
+    bRatingsCacheDirty = true;
+}
+
+void USpaceshipDataAsset::UpdateRatingsCache() const
+{
+    // Calculate all ratings at once for efficiency
+    CachedCombatRating = CalculateCombatRatingInternal();
+    CachedMobilityRating = CalculateMobilityRatingInternal();
+    CachedUtilityRating = CalculateUtilityRatingInternal();
+    
+    bRatingsCacheDirty = false;
+    
+    UE_LOG(LogAdastrea, Verbose, TEXT("SpaceshipDataAsset: Updated ratings cache for %s (Combat: %.1f, Mobility: %.1f, Utility: %.1f)"),
+        *ShipName.ToString(), CachedCombatRating, CachedMobilityRating, CachedUtilityRating);
+}
+
+#if WITH_EDITOR
+void USpaceshipDataAsset::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+{
+    Super::PostEditChangeProperty(PropertyChangedEvent);
+    
+    // Invalidate cache when any property changes in editor
+    if (PropertyChangedEvent.Property)
+    {
+        // Invalidate cache for any property change to be safe
+        InvalidateRatingsCache();
+        FName PropertyName = PropertyChangedEvent.Property->GetFName();
+        UE_LOG(LogAdastrea, Verbose, TEXT("SpaceshipDataAsset: Property %s changed, invalidating ratings cache for %s"),
+            *PropertyName.ToString(), *ShipName.ToString());
+    }
+}
+#endif
