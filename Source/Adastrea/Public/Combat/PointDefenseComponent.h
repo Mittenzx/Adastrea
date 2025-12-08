@@ -120,6 +120,7 @@ protected:
     float TimeSinceLastScan;
 
     /** Weapon assignment map (weapon -> threat) */
+    UPROPERTY()
     TMap<UWeaponComponent*, AActor*> WeaponAssignments;
 
     virtual void BeginPlay() override;
