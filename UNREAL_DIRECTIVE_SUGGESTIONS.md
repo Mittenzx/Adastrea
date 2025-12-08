@@ -414,11 +414,12 @@ float GetCombatRating() const
 class USpaceshipDataAsset : public UDataAsset
 {
 private:
+    // mutable allows modification in const methods for caching
     UPROPERTY(Transient)
-    float CachedCombatRating;
+    mutable float CachedCombatRating;
     
     UPROPERTY(Transient)
-    bool bCombatRatingDirty;
+    mutable bool bCombatRatingDirty;
     
 public:
     UFUNCTION(BlueprintPure, Category="Ratings")

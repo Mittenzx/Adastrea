@@ -132,12 +132,13 @@ void Tick(float DeltaTime) override
 
 ```cpp
 // ✅ GOOD: Cache expensive calculations
-UPROPERTY()
-float CachedCombatRating;
+UPROPERTY(Transient)
+mutable float CachedCombatRating;
 
-bool bCombatRatingDirty;
+// mutable allows modification in const methods for caching
+mutable bool bCombatRatingDirty;
 
-float GetCombatRating()
+float GetCombatRating() const
 {
     if (bCombatRatingDirty)
     {
