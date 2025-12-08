@@ -281,7 +281,13 @@ protected:
     // CALCULATION CACHING (Phase 2 Optimization)
     // ====================
 
-    /** Cached rating values - marked Transient so they're not serialized */
+    /** 
+     * Cached rating values - marked Transient so they're not serialized
+     * 
+     * Thread Safety: Data Assets are typically accessed from the game thread only.
+     * If multi-threaded access is needed, external synchronization should be used.
+     * Cache updates are infrequent (only on property changes) so race conditions are unlikely.
+     */
     UPROPERTY(Transient)
     mutable float CachedCombatRating;
 

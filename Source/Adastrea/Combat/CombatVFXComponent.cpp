@@ -699,8 +699,10 @@ bool UCombatVFXComponent::IsWithinRenderDistance(FVector Location) const
 
 void UCombatVFXComponent::InitializeComponentPool()
 {
-	if (!GetOwner())
+	AActor* Owner = GetOwner();
+	if (!Owner)
 	{
+		UE_LOG(LogAdastreaCombat, Warning, TEXT("CombatVFXComponent: Cannot initialize pool - no owner"));
 		return;
 	}
 
@@ -711,7 +713,7 @@ void UCombatVFXComponent::InitializeComponentPool()
 	// Create pooled components
 	for (int32 i = 0; i < ComponentPoolSize; i++)
 	{
-		UNiagaraComponent* Component = NewObject<UNiagaraComponent>(GetOwner());
+		UNiagaraComponent* Component = NewObject<UNiagaraComponent>(Owner);
 		if (Component)
 		{
 			Component->RegisterComponent();
@@ -734,12 +736,20 @@ UNiagaraComponent* UCombatVFXComponent::GetPooledNiagaraComponent()
 		return Component;
 	}
 
-	// Pool exhausted - create new component (log for monitoring)
-	UE_LOG(LogAdastreaCombat, Warning, 
+	// Pool exhausted - create new component if owner is valid
+	AActor* Owner = GetOwner();
+	if (!Owner)
+	{
+		UE_LOG(LogAdastreaCombat, Error, TEXT("CombatVFXComponent: Cannot create component - no owner"));
+		return nullptr;
+	}
+
+	// Log pool exhaustion (use VeryVerbose to avoid spam)
+	UE_LOG(LogAdastreaCombat, VeryVerbose, 
 		TEXT("CombatVFXComponent: Niagara pool exhausted, creating new component (pool size: %d)"), 
 		ComponentPoolSize);
 
-	UNiagaraComponent* Component = NewObject<UNiagaraComponent>(GetOwner());
+	UNiagaraComponent* Component = NewObject<UNiagaraComponent>(Owner);
 	if (Component)
 	{
 		Component->RegisterComponent();
