@@ -53,8 +53,7 @@ public class Adastrea : ModuleRules
 		PrivateDependencyModuleNames.AddRange(new string[] 
 		{ 
 			"AIModule",
-			"NavigationSystem",
-			"StationEditor"  // For AdastreaPlayerController station editor integration
+			"NavigationSystem"
 		});
 
 		// Uncomment if you are using online features
