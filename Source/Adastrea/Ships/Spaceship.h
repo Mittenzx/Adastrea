@@ -5,11 +5,15 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Ships/SpaceshipParticleComponent.h"
 #include "InputActionValue.h"
+#include "Interfaces/IDamageable.h"
+#include "Interfaces/ITargetable.h"
+#include "Interfaces/IFactionMember.h"
 #include "Spaceship.generated.h"
 
 // Forward declarations
 class ASpaceshipInterior;
 class UInputAction;
+class UFactionDataAsset;
 
 /**
  * Base spaceship actor class for player and NPC ships
@@ -19,6 +23,11 @@ class UInputAction;
  * - Interior space management for boarding/exploration
  * - Integration point for SpaceshipDataAsset configuration
  * 
+ * Implements:
+ * - IDamageable: Can receive damage from weapons
+ * - ITargetable: Can be targeted by weapons and sensors
+ * - IFactionMember: Belongs to a faction for diplomacy and AI
+ * 
  * Usage:
  * - Create Blueprint based on this class
  * - Configure ship properties and appearance
@@ -26,7 +35,7 @@ class UInputAction;
  * - Add mesh components for visual representation
  */
 UCLASS()
-class ADASTREA_API ASpaceship : public APawn
+class ADASTREA_API ASpaceship : public APawn, public IDamageable, public ITargetable, public IFactionMember
 {
     GENERATED_BODY()
 
@@ -69,6 +78,10 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Data")
     class USpaceshipDataAsset* ShipDataAsset;
 
+    // Faction this ship belongs to (affects AI behavior and diplomacy)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Data")
+    UFactionDataAsset* ShipFaction;
+
     // Current hull integrity (health)
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Status", meta=(ClampMin="0.0"))
     float CurrentHullIntegrity;
@@ -76,6 +89,10 @@ public:
     // Maximum hull integrity
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Status", meta=(ClampMin="0.0"))
     float MaxHullIntegrity;
+
+    // Flag indicating if ship is destroyed
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Ship Status")
+    bool bIsDestroyed;
 
     /**
      * Get the ship's display name
@@ -272,6 +289,38 @@ public:
     void MoveUp(float Value);
     void Turn(float Value);
     void LookUp(float Value);
+
+    // ====================
+    // INTERFACE IMPLEMENTATIONS
+    // ====================
+
+    // IDamageable Interface
+    virtual float ApplyDamage_Implementation(float Damage, EDamageType DamageType, AActor* Instigator, AActor* DamageCauser) override;
+    virtual bool CanTakeDamage_Implementation() const override;
+    virtual float GetHealthPercentage_Implementation() const override;
+    virtual bool IsDestroyed_Implementation() const override;
+    virtual float GetMaxHealth_Implementation() const override;
+    virtual float GetCurrentHealth_Implementation() const override;
+
+    // ITargetable Interface
+    virtual bool CanBeTargeted_Implementation() const override;
+    virtual int32 GetTargetPriority_Implementation() const override;
+    virtual FText GetTargetDisplayName_Implementation() const override;
+    virtual UTexture2D* GetTargetIcon_Implementation() const override;
+    virtual FVector GetAimPoint_Implementation() const override;
+    virtual float GetTargetSignature_Implementation() const override;
+    virtual float GetDistanceFromLocation_Implementation(FVector FromLocation) const override;
+    virtual bool IsHostileToActor_Implementation(AActor* Observer) const override;
+
+    // IFactionMember Interface
+    virtual UFactionDataAsset* GetFaction_Implementation() const override;
+    virtual bool IsAlliedWith_Implementation(const TScriptInterface<IFactionMember>& Other) const override;
+    virtual bool IsHostileTo_Implementation(const TScriptInterface<IFactionMember>& Other) const override;
+    virtual int32 GetRelationshipWith_Implementation(const TScriptInterface<IFactionMember>& Other) const override;
+    virtual bool IsNeutral_Implementation() const override;
+    virtual FText GetFactionDisplayName_Implementation() const override;
+    virtual bool CanEngageInCombat_Implementation() const override;
+    virtual float GetTradePriceModifier_Implementation(UFactionDataAsset* TraderFaction) const override;
 
 protected:
     virtual void BeginPlay() override;

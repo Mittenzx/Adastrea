@@ -242,4 +242,12 @@ public:
      */
     UFUNCTION(BlueprintCallable, Category="Weapon Stats")
     bool IsSuitableForRole(const FString& Role) const;
+
+#if WITH_EDITOR
+    /**
+     * Validate weapon data asset properties
+     * Checks for required fields and logical constraints
+     */
+    virtual EDataValidationResult IsDataValid(TArray<FText>& ValidationErrors) override;
+#endif
 };

@@ -138,3 +138,99 @@ bool UWeaponDataAsset::IsSuitableForRole(const FString& Role) const
 
     return false;
 }
+
+#if WITH_EDITOR
+EDataValidationResult UWeaponDataAsset::IsDataValid(TArray<FText>& ValidationErrors)
+{
+    EDataValidationResult Result = EDataValidationResult::Valid;
+
+    // Validate basic info
+    if (WeaponName.IsEmpty())
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Weapon Name is empty")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    if (WeaponID.IsNone())
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Weapon ID is not set")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    // Validate damage stats
+    if (BaseDamage <= 0.0f)
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Base Damage must be greater than 0")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    // Validate range stats
+    if (MaxRange <= 0.0f)
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Max Range must be greater than 0")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    if (OptimalRange > MaxRange)
+    {
+        ValidationErrors.Add(FText::Format(
+            FText::FromString(TEXT("Optimal Range ({0}) cannot exceed Max Range ({1})")),
+            FText::AsNumber(OptimalRange), FText::AsNumber(MaxRange)
+        ));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    // Validate fire rate
+    if (FireRate <= 0.0f)
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Fire Rate must be greater than 0")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    // Validate power requirements
+    if (PowerCostPerShot < 0.0f)
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Power Cost Per Shot cannot be negative")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    // Validate projectile stats for projectile weapons
+    if (WeaponType == EWeaponType::Projectile || 
+        WeaponType == EWeaponType::Missile || 
+        WeaponType == EWeaponType::Torpedo)
+    {
+        if (ProjectileSpeed <= 0.0f)
+        {
+            ValidationErrors.Add(FText::FromString(TEXT("Projectile Speed must be greater than 0 for projectile-based weapons")));
+            Result = EDataValidationResult::Invalid;
+        }
+    }
+
+    // Validate ammo for ammunition-using weapons
+    if (UsesAmmo && MaxAmmo <= 0)
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Max Ammo must be greater than 0 if Uses Ammo is enabled")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    // Validate mount size compatibility
+    if (WeaponType == EWeaponType::Torpedo && MountSize != EWeaponMountSize::Capital)
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Warning: Torpedoes should typically use Capital mounts")));
+        // Just a warning, not invalid
+    }
+
+    // Log validation result for debugging/editor workflows
+    if (Result == EDataValidationResult::Valid)
+    {
+        UE_LOG(LogAdastreaCombat, Log, TEXT("WeaponDataAsset %s passed validation"), *WeaponName.ToString());
+    }
+    else
+    {
+        UE_LOG(LogAdastreaCombat, Warning, TEXT("WeaponDataAsset %s failed validation with %d errors"), *WeaponName.ToString(), ValidationErrors.Num());
+    }
+
+    return Result;
+}
+#endif
+
