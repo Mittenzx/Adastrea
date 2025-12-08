@@ -43,7 +43,7 @@ echo ""
 
 # Check 3: Check for secrets
 echo "3. Checking for potential hardcoded secrets..."
-if git diff --cached --name-only | grep -E '\.(cpp|h)$' | xargs grep -n "password\s*=\|apiKey\s*=\|api_key\s*=" 2>/dev/null; then
+if git diff --cached --name-only | grep -E '\.(cpp|h)$' | xargs -r grep -n "password\s*=\|apiKey\s*=\|api_key\s*=" 2>/dev/null; then
     echo "   ❌ Found potential hardcoded secrets!"
     echo "   Please remove sensitive data before committing."
     FAILED=1
@@ -54,7 +54,7 @@ echo ""
 
 # Check 4: Check for debug code
 echo "4. Checking for debug statements..."
-if git diff --cached --name-only | grep -E '\.(cpp|h)$' | xargs grep -n "std::cout\|printf(" 2>/dev/null; then
+if git diff --cached --name-only | grep -E '\.(cpp|h)$' | xargs -r grep -n "std::cout\|printf(" 2>/dev/null; then
     echo "   ⚠️  Found debug print statements (consider using UE_LOG instead)"
     # Don't fail commit on debug statements
 else

@@ -115,7 +115,7 @@ def check_asset_name(filepath, content_dir):
             if len(parts) > 1:
                 name_part = parts[1]
                 # Check if it starts with lowercase (bad)
-                if name_part and name_part[0].islower():
+                if len(name_part) > 0 and name_part[0].islower():
                     issues.append({
                         'file': rel_path,
                         'message': f'Asset name should use PascalCase after prefix (found: {name_part})',

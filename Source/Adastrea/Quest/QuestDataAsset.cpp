@@ -278,6 +278,18 @@ EDataValidationResult UQuestDataAsset::IsDataValid(TArray<FText>& ValidationErro
     }
 
     // Validate quest chain consistency
+    if (NextQuestInChain == this)
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Quest cannot reference itself as NextQuestInChain")));
+        Result = EDataValidationResult::Invalid;
+    }
+    
+    if (PreviousQuestInChain == this)
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Quest cannot reference itself as PreviousQuestInChain")));
+        Result = EDataValidationResult::Invalid;
+    }
+    
     if (NextQuestInChain && PreviousQuestInChain == NextQuestInChain)
     {
         ValidationErrors.Add(FText::FromString(TEXT("Next Quest and Previous Quest cannot be the same")));

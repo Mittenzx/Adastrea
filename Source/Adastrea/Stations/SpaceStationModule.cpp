@@ -214,7 +214,10 @@ bool ASpaceStationModule::IsHostileToActor_Implementation(AActor* Observer) cons
         if (Observer->Implements<UFactionMember>())
         {
             IFactionMember* ParentFaction = Cast<IFactionMember>(ParentActor);
-            return ParentFaction->Execute_IsHostileTo(ParentActor, TScriptInterface<IFactionMember>(Observer));
+            if (ParentFaction)
+            {
+                return ParentFaction->Execute_IsHostileTo(ParentActor, TScriptInterface<IFactionMember>(Observer));
+            }
         }
     }
 
