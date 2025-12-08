@@ -129,7 +129,7 @@ bool AAdastreaPlayerController::IsStationEditorOpen() const
 	return bIsStationEditorOpen && StationEditorWidget && StationEditorWidget->IsInViewport();
 }
 
-UStationEditorWidget* AAdastreaPlayerController::GetStationEditorWidget() const
+UUserWidget* AAdastreaPlayerController::GetStationEditorWidget() const
 {
 	return StationEditorWidget;
 }
@@ -172,7 +172,7 @@ ASpaceStation* AAdastreaPlayerController::FindNearestStation()
 	return NearestStation;
 }
 
-UStationEditorWidget* AAdastreaPlayerController::CreateStationEditorWidget()
+UUserWidget* AAdastreaPlayerController::CreateStationEditorWidget()
 {
 	// Return existing widget if already created
 	if (StationEditorWidget)
@@ -187,8 +187,8 @@ UStationEditorWidget* AAdastreaPlayerController::CreateStationEditorWidget()
 		return nullptr;
 	}
 
-	// Create the widget
-	StationEditorWidget = CreateWidget<UStationEditorWidget>(this, StationEditorWidgetClass);
+	// Create the widget (as base UUserWidget to avoid circular dependency)
+	StationEditorWidget = CreateWidget<UUserWidget>(this, StationEditorWidgetClass);
 	
 	if (!StationEditorWidget)
 	{
@@ -196,12 +196,18 @@ UStationEditorWidget* AAdastreaPlayerController::CreateStationEditorWidget()
 		return nullptr;
 	}
 
-	// Initialize the editor manager once when widget is created
-	// This ensures consistent state across multiple open/close cycles
-	// Use PlayerController as outer for clearer ownership semantics
-	if (!StationEditorWidget->EditorManager)
+	// Cast to UStationEditorWidget to initialize the editor manager
+	// This works because StationEditorWidgetClass should be a UStationEditorWidget subclass set in Blueprint
+	UStationEditorWidget* EditorWidget = Cast<UStationEditorWidget>(StationEditorWidget);
+	if (EditorWidget)
 	{
-		StationEditorWidget->EditorManager = NewObject<UStationEditorManager>(this);
+		// Initialize the editor manager once when widget is created
+		// This ensures consistent state across multiple open/close cycles
+		// Use PlayerController as outer for clearer ownership semantics
+		if (!EditorWidget->EditorManager)
+		{
+			EditorWidget->EditorManager = NewObject<UStationEditorManager>(this);
+		}
 	}
 
 	UE_LOG(LogAdastrea, Log, TEXT("CreateStationEditorWidget: Successfully created station editor widget"));
@@ -223,13 +229,24 @@ void AAdastreaPlayerController::ShowStationEditor(ASpaceStation* Station)
 		return;
 	}
 
+	// Cast to UStationEditorWidget to access StationEditor-specific functionality
+	UStationEditorWidget* EditorWidget = Cast<UStationEditorWidget>(StationEditorWidget);
+	if (!EditorWidget)
+	{
+		UE_LOG(LogAdastrea, Error, TEXT("ShowStationEditor: Widget is not a UStationEditorWidget. Check StationEditorWidgetClass in Blueprint."));
+		return;
+	}
+
+	// Cast ModuleCatalog to proper type
+	UStationModuleCatalog* Catalog = Cast<UStationModuleCatalog>(ModuleCatalog);
+
 	// Configure the editor manager
-	if (StationEditorWidget->EditorManager)
+	if (EditorWidget->EditorManager)
 	{
 		// Assign the module catalog
-		if (ModuleCatalog)
+		if (Catalog)
 		{
-			StationEditorWidget->EditorManager->ModuleCatalog = ModuleCatalog;
+			EditorWidget->EditorManager->ModuleCatalog = Catalog;
 		}
 		else
 		{
@@ -237,7 +254,7 @@ void AAdastreaPlayerController::ShowStationEditor(ASpaceStation* Station)
 		}
 
 		// Begin editing the station
-		if (!StationEditorWidget->EditorManager->BeginEditing(Station))
+		if (!EditorWidget->EditorManager->BeginEditing(Station))
 		{
 			UE_LOG(LogAdastrea, Error, TEXT("ShowStationEditor: Failed to begin editing station"));
 			return;
@@ -245,7 +262,7 @@ void AAdastreaPlayerController::ShowStationEditor(ASpaceStation* Station)
 	}
 
 	// Set the station reference
-	StationEditorWidget->SetStation(Station);
+	EditorWidget->SetStation(Station);
 
 	// Add widget to viewport
 	if (!StationEditorWidget->IsInViewport())
@@ -270,18 +287,23 @@ void AAdastreaPlayerController::HideStationEditor()
 		return;
 	}
 
-	// End editing session if active
-	if (StationEditorWidget->EditorManager && StationEditorWidget->EditorManager->bIsEditing)
+	// Cast to UStationEditorWidget to access StationEditor-specific functionality
+	UStationEditorWidget* EditorWidget = Cast<UStationEditorWidget>(StationEditorWidget);
+	if (EditorWidget)
 	{
-		// Save changes when closing (or could call Cancel() to discard)
-		if (!StationEditorWidget->EditorManager->Save())
+		// End editing session if active
+		if (EditorWidget->EditorManager && EditorWidget->EditorManager->bIsEditing)
 		{
-			UE_LOG(LogAdastrea, Error, TEXT("HideStationEditor: Failed to save changes to station. Changes may be lost!"));
-			// Note: Still proceed with closing the editor, but user is notified of the issue
-		}
-		else
-		{
-			UE_LOG(LogAdastrea, Log, TEXT("HideStationEditor: Successfully saved station changes"));
+			// Save changes when closing (or could call Cancel() to discard)
+			if (!EditorWidget->EditorManager->Save())
+			{
+				UE_LOG(LogAdastrea, Error, TEXT("HideStationEditor: Failed to save changes to station. Changes may be lost!"));
+				// Note: Still proceed with closing the editor, but user is notified of the issue
+			}
+			else
+			{
+				UE_LOG(LogAdastrea, Log, TEXT("HideStationEditor: Successfully saved station changes"));
+			}
 		}
 	}
 

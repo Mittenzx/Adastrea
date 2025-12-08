@@ -181,16 +181,16 @@ EDataValidationResult UWeaponDataAsset::IsDataValid(TArray<FText>& ValidationErr
     }
 
     // Validate fire rate
-    if (FireRate <= 0.0f)
+    if (RateOfFire <= 0.0f)
     {
-        ValidationErrors.Add(FText::FromString(TEXT("Fire Rate must be greater than 0")));
+        ValidationErrors.Add(FText::FromString(TEXT("Rate Of Fire must be greater than 0")));
         Result = EDataValidationResult::Invalid;
     }
 
     // Validate power requirements
-    if (PowerCostPerShot < 0.0f)
+    if (PowerPerShot < 0.0f)
     {
-        ValidationErrors.Add(FText::FromString(TEXT("Power Cost Per Shot cannot be negative")));
+        ValidationErrors.Add(FText::FromString(TEXT("Power Per Shot cannot be negative")));
         Result = EDataValidationResult::Invalid;
     }
 
@@ -206,11 +206,22 @@ EDataValidationResult UWeaponDataAsset::IsDataValid(TArray<FText>& ValidationErr
         }
     }
 
-    // Validate ammo for ammunition-using weapons
-    if (UsesAmmo && MaxAmmo <= 0)
+    // Validate reload time for ammunition-using weapons (AmmoCapacity > 0 means uses ammo)
+    if (AmmoCapacity > 0)
     {
-        ValidationErrors.Add(FText::FromString(TEXT("Max Ammo must be greater than 0 if Uses Ammo is enabled")));
-        Result = EDataValidationResult::Invalid;
+        if (ReloadTime <= 0.0f)
+        {
+            ValidationErrors.Add(FText::FromString(TEXT("Reload Time must be greater than 0 if weapon uses ammunition")));
+            Result = EDataValidationResult::Invalid;
+        }
+    }
+    // Validate that projectile weapons should typically use ammunition
+    else if (WeaponType == EWeaponType::Projectile || 
+             WeaponType == EWeaponType::Missile || 
+             WeaponType == EWeaponType::Torpedo)
+    {
+        // Warning only - some projectile weapons might be energy-based
+        ValidationErrors.Add(FText::FromString(TEXT("Warning: Projectile-based weapons typically use ammunition")));
     }
 
     // Validate mount size compatibility

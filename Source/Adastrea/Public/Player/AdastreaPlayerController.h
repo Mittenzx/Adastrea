@@ -7,8 +7,8 @@
 #include "AdastreaPlayerController.generated.h"
 
 // Forward declarations
-class UStationEditorWidget;
-class UStationModuleCatalog;
+class UUserWidget;
+class UDataAsset;
 class ASpaceStation;
 
 /**
@@ -61,16 +61,18 @@ public:
 	/**
 	 * Widget class to use for the station editor UI
 	 * Set this in Blueprint to specify your custom WBP_StationEditor widget
+	 * Note: Should be a UStationEditorWidget class from StationEditor module
 	 */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Player|Station Editor")
-	TSubclassOf<UStationEditorWidget> StationEditorWidgetClass;
+	TSubclassOf<UUserWidget> StationEditorWidgetClass;
 
 	/**
 	 * Module catalog data asset containing available modules
 	 * Set this in Blueprint to specify which modules are available
+	 * Note: Should be a UStationModuleCatalog from StationEditor module
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player|Station Editor")
-	UStationModuleCatalog* ModuleCatalog;
+	UDataAsset* ModuleCatalog;
 
 	/**
 	 * Maximum distance to search for nearby stations (in world units)
@@ -181,7 +183,7 @@ public:
 	 * @return The station editor widget, or nullptr if not created
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Station Editor")
-	UStationEditorWidget* GetStationEditorWidget() const;
+	UUserWidget* GetStationEditorWidget() const;
 
 	/**
 	 * Toggle the ship status screen UI
@@ -217,7 +219,7 @@ protected:
 	 * Create the station editor widget if it doesn't exist
 	 * @return The created or existing widget instance
 	 */
-	UStationEditorWidget* CreateStationEditorWidget();
+	UUserWidget* CreateStationEditorWidget();
 
 	/**
 	 * Show the station editor for a specific station
@@ -249,7 +251,7 @@ protected:
 private:
 	/** The currently active station editor widget instance */
 	UPROPERTY()
-	UStationEditorWidget* StationEditorWidget;
+	UUserWidget* StationEditorWidget;
 
 	/** Whether the station editor is currently open */
 	bool bIsStationEditorOpen;
