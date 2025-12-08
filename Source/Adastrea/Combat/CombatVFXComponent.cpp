@@ -225,7 +225,8 @@ UNiagaraComponent* UCombatVFXComponent::PlayMuzzleFlash(FVector MuzzleLocation, 
 		return nullptr;
 	}
 
-	// Configure pooled component
+	// Configure pooled component - reset first to ensure clean state
+	FlashEffect->ResetSystem();
 	FlashEffect->SetAsset(CombatVFXData->FireEffect.MuzzleFlashEffect);
 	FlashEffect->SetWorldLocation(MuzzleLocation);
 	FlashEffect->SetWorldRotation(MuzzleRotation);
@@ -233,6 +234,8 @@ UNiagaraComponent* UCombatVFXComponent::PlayMuzzleFlash(FVector MuzzleLocation, 
 	FlashEffect->Activate();
 	FlashEffect->SetVisibility(true);
 
+	// Note: Component is already tracked in ActiveNiagaraComponents via GetPooledNiagaraComponent()
+	// ActiveEffects is maintained for backward compatibility
 	ActiveEffects.Add(FlashEffect);
 	CurrentActiveEffects = ActiveEffects.Num();
 
@@ -258,7 +261,8 @@ UNiagaraComponent* UCombatVFXComponent::PlayBeamEffect(
 		return nullptr;
 	}
 
-	// Configure pooled component
+	// Configure pooled component - reset first to ensure clean state
+	BeamEffect->ResetSystem();
 	BeamEffect->SetAsset(CombatVFXData->FireEffect.BeamEffect);
 	BeamEffect->SetWorldLocation(StartLocation);
 	BeamEffect->SetWorldRotation((EndLocation - StartLocation).Rotation());
@@ -295,7 +299,8 @@ UNiagaraComponent* UCombatVFXComponent::PlayProjectileTrail(
 		return nullptr;
 	}
 
-	// Configure pooled component
+	// Configure pooled component - reset first to ensure clean state
+	TrailEffect->ResetSystem();
 	TrailEffect->SetAsset(CombatVFXData->FireEffect.ProjectileTrailEffect);
 	TrailEffect->SetWorldLocation(SpawnLocation);
 	TrailEffect->SetWorldRotation(SpawnRotation);
@@ -422,6 +427,7 @@ void UCombatVFXComponent::PlayShieldImpact(FVector ImpactLocation, FVector Impac
 		UNiagaraComponent* RippleEffect = GetPooledNiagaraComponent();
 		if (RippleEffect)
 		{
+			RippleEffect->ResetSystem();
 			RippleEffect->SetAsset(ImpactEffectData->ShieldImpact.RippleEffect);
 			RippleEffect->SetWorldLocation(ImpactLocation);
 			RippleEffect->SetWorldRotation(ImpactNormal.Rotation());
@@ -443,6 +449,7 @@ void UCombatVFXComponent::PlayShieldImpact(FVector ImpactLocation, FVector Impac
 		UNiagaraComponent* DissipationEffect = GetPooledNiagaraComponent();
 		if (DissipationEffect)
 		{
+			DissipationEffect->ResetSystem();
 			DissipationEffect->SetAsset(ImpactEffectData->ShieldImpact.DissipationEffect);
 			DissipationEffect->SetWorldLocation(ImpactLocation);
 			DissipationEffect->SetWorldRotation(ImpactNormal.Rotation());
@@ -479,6 +486,7 @@ void UCombatVFXComponent::PlayHullImpact(FVector ImpactLocation, FVector ImpactN
 		UNiagaraComponent* SparkEffect = GetPooledNiagaraComponent();
 		if (SparkEffect)
 		{
+			SparkEffect->ResetSystem();
 			SparkEffect->SetAsset(ImpactEffectData->HullImpact.SparkEffect);
 			SparkEffect->SetWorldLocation(ImpactLocation);
 			SparkEffect->SetWorldRotation(ImpactNormal.Rotation());
@@ -496,6 +504,7 @@ void UCombatVFXComponent::PlayHullImpact(FVector ImpactLocation, FVector ImpactN
 		UNiagaraComponent* DebrisEffect = GetPooledNiagaraComponent();
 		if (DebrisEffect)
 		{
+			DebrisEffect->ResetSystem();
 			DebrisEffect->SetAsset(ImpactEffectData->HullImpact.DebrisEffect);
 			DebrisEffect->SetWorldLocation(ImpactLocation);
 			DebrisEffect->SetWorldRotation(ImpactNormal.Rotation());
@@ -559,6 +568,7 @@ void UCombatVFXComponent::PlayExplosion(FVector ExplosionLocation, EExplosionSiz
 		UNiagaraComponent* Explosion = GetPooledNiagaraComponent();
 		if (Explosion)
 		{
+			Explosion->ResetSystem();
 			Explosion->SetAsset(ExplosionConfig.ExplosionEffect);
 			Explosion->SetWorldLocation(ExplosionLocation);
 			Explosion->SetFloatParameter(FName("ExplosionRadius"), ExplosionRadius);
@@ -576,6 +586,7 @@ void UCombatVFXComponent::PlayExplosion(FVector ExplosionLocation, EExplosionSiz
 		UNiagaraComponent* Shockwave = GetPooledNiagaraComponent();
 		if (Shockwave)
 		{
+			Shockwave->ResetSystem();
 			Shockwave->SetAsset(ExplosionConfig.ShockwaveEffect);
 			Shockwave->SetWorldLocation(ExplosionLocation);
 			Shockwave->SetFloatParameter(FName("ShockwaveSpeed"), ExplosionConfig.ShockwaveSpeed);
@@ -593,6 +604,7 @@ void UCombatVFXComponent::PlayExplosion(FVector ExplosionLocation, EExplosionSiz
 		UNiagaraComponent* Fireball = GetPooledNiagaraComponent();
 		if (Fireball)
 		{
+			Fireball->ResetSystem();
 			Fireball->SetAsset(ExplosionConfig.FireballEffect);
 			Fireball->SetWorldLocation(ExplosionLocation);
 			Fireball->SetFloatParameter(FName("FireballRadius"), ExplosionRadius * 0.8f);
@@ -657,14 +669,21 @@ void UCombatVFXComponent::GetPerformanceMetrics(int32& OutActiveEffects, int32& 
 void UCombatVFXComponent::CleanupFinishedEffects()
 {
 	// Phase 2: Return finished effects to pool instead of destroying
-	// Iterate backwards for safe removal
-	for (int32 i = ActiveNiagaraComponents.Num() - 1; i >= 0; i--)
+	// Collect inactive components first to avoid modifying array during iteration
+	TArray<UNiagaraComponent*> ComponentsToReturn;
+	for (int32 i = 0; i < ActiveNiagaraComponents.Num(); i++)
 	{
 		UNiagaraComponent* Component = ActiveNiagaraComponents[i];
 		if (Component && !Component->IsActive())
 		{
-			ReturnNiagaraComponentToPool(Component);
+			ComponentsToReturn.Add(Component);
 		}
+	}
+	
+	// Return collected components to pool
+	for (UNiagaraComponent* Component : ComponentsToReturn)
+	{
+		ReturnNiagaraComponentToPool(Component);
 	}
 
 	// Also cleanup legacy ActiveEffects array
@@ -710,11 +729,15 @@ void UCombatVFXComponent::InitializeComponentPool()
 	NiagaraComponentPool.Reserve(ComponentPoolSize);
 	ActiveNiagaraComponents.Reserve(ComponentPoolSize);
 
-	// Create pooled components
+	// Create pooled components with descriptive names for debugging
 	int32 SuccessfullyCreated = 0;
 	for (int32 i = 0; i < ComponentPoolSize; i++)
 	{
-		UNiagaraComponent* Component = NewObject<UNiagaraComponent>(Owner);
+		UNiagaraComponent* Component = NewObject<UNiagaraComponent>(
+			Owner,
+			FName(FString::Printf(TEXT("PooledVFX_%d"), i)),
+			RF_Transient
+		);
 		if (Component)
 		{
 			Component->RegisterComponent();
@@ -759,6 +782,8 @@ UNiagaraComponent* UCombatVFXComponent::GetPooledNiagaraComponent()
 	if (Component)
 	{
 		Component->RegisterComponent();
+		Component->SetAutoActivate(false);
+		Component->SetVisibility(false);
 		ActiveNiagaraComponents.Add(Component);
 	}
 	else
