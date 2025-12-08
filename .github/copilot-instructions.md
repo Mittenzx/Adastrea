@@ -2,7 +2,7 @@
 
 This file provides GitHub Copilot with project-specific context, coding standards, and best practices for the Adastrea open-world space flight game built on Unreal Engine 5.x.
 
-> **🆕 New**: See `.github/instructions/unreal-directive-best-practices.md` for advanced Unreal Engine best practices from [UnrealDirective.com](https://unrealdirective.com/), and `UNREAL_DIRECTIVE_SUGGESTIONS.md` for comprehensive improvement suggestions specific to Adastrea.
+> **NEW**: See `.github/instructions/unreal-directive-best-practices.md` for advanced Unreal Engine best practices from [UnrealDirective.com](https://unrealdirective.com/), and `UNREAL_DIRECTIVE_SUGGESTIONS.md` for comprehensive improvement suggestions specific to Adastrea.
 
 ## Project Overview
 

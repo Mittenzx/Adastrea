@@ -70,14 +70,23 @@ For frequently spawned/destroyed actors (projectiles, effects, ships):
 
 ```cpp
 // ✅ GOOD: Object pooling for projectiles
-UCLASS()
-class UProjectilePoolComponent : public UActorComponent
+UCLASS(BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+class ADASTREA_API UProjectilePoolComponent : public UActorComponent
 {
+    GENERATED_BODY()
+    
+public:
+    UProjectilePoolComponent();
+    
+    UFUNCTION(BlueprintCallable, Category="Object Pool")
+    AProjectile* AcquireProjectile();
+    
+    UFUNCTION(BlueprintCallable, Category="Object Pool")
+    void ReturnProjectile(AProjectile* Projectile);
+    
+private:
     UPROPERTY()
     TArray<AProjectile*> PooledProjectiles;
-    
-    AProjectile* AcquireProjectile();
-    void ReturnProjectile(AProjectile* Projectile);
 };
 
 // ❌ AVOID: Constant spawning/destroying

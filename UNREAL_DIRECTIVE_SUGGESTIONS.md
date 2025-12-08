@@ -54,10 +54,12 @@ The Adastrea project demonstrates **excellent** adherence to data-driven design 
 **Issue**: Some UObject pointers may not have `UPROPERTY()` macro, which prevents garbage collection tracking and can cause memory corruption.
 
 **Files to Review**:
-- `Source/Adastrea/Stations/SpaceStationModule.h` - Line 72: `UFactionDataAsset* ModuleFaction;`
-- `Source/Adastrea/Ships/Spaceship.h` - Line 70: `USpaceshipDataAsset* ShipDataAsset;`
+- `Source/Adastrea/Stations/SpaceStationModule.h` - Contains `UFactionDataAsset* ModuleFaction;`
+- `Source/Adastrea/Ships/Spaceship.h` - Contains `USpaceshipDataAsset* ShipDataAsset;`
 - All AI classes with Data Asset references
 - All component classes with actor references
+
+> **Note**: Line numbers are approximate and may change as code evolves. Use file search to locate specific declarations.
 
 **Current Code Example** (SpaceStationModule.h):
 ```cpp
@@ -68,11 +70,19 @@ UFactionDataAsset* ModuleFaction;
 
 **Recommendation**:
 ```bash
-# Run this audit to find any UObject pointers without UPROPERTY
+# IMPORTANT: This is a basic audit script. Manual verification is required
+# as it may produce false positives (UPROPERTY on previous line, forward declarations, etc.)
+# Use this as a starting point, then manually review each result.
+
+# Basic scan for UObject pointers
 grep -r "UObject\*\|AActor\*\|UDataAsset\*\|UActorComponent\*" Source/Adastrea --include="*.h" \
   | grep -v "UPROPERTY" \
   | grep -v "Forward declaration" \
-  | grep -v "class "
+  | grep -v "class " \
+  | grep -v "//"  # Exclude comments
+
+# Better approach: Create a Python script that parses C++ properly
+# See Tools/check_uproperty.py (to be created in Phase 3)
 ```
 
 **Action Items**:
