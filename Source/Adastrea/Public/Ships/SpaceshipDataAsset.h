@@ -320,6 +320,16 @@ protected:
 
 public:
 #if WITH_EDITOR
+    /**
+     * Validate Data Asset properties
+     * Called when asset is saved or validated in editor
+     * Checks for:
+     * - Required fields (name, class, ID)
+     * - Logical constraints (crew, capacity, etc.)
+     * - Stat ranges and consistency
+     */
+    virtual EDataValidationResult IsDataValid(TArray<FText>& ValidationErrors) override;
+
     /** Invalidate cache when properties change in editor */
     virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif

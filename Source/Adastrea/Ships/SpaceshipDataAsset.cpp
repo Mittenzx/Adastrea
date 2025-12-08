@@ -375,6 +375,109 @@ void USpaceshipDataAsset::UpdateRatingsCache() const
 }
 
 #if WITH_EDITOR
+EDataValidationResult USpaceshipDataAsset::IsDataValid(TArray<FText>& ValidationErrors)
+{
+    EDataValidationResult Result = EDataValidationResult::Valid;
+
+    // Validate basic info
+    if (ShipName.IsEmpty())
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Ship Name is empty")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    if (ShipClass.IsEmpty())
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Ship Class is empty")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    if (ShipID.IsNone())
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Ship ID is not set")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    // Validate core stats
+    if (HullStrength <= 0.0f)
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Hull Strength must be greater than 0")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    if (CrewRequired < 1)
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Crew Required must be at least 1")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    if (MaxCrew < CrewRequired)
+    {
+        ValidationErrors.Add(FText::Format(
+            FText::FromString(TEXT("Max Crew ({0}) must be greater than or equal to Crew Required ({1})")),
+            FText::AsNumber(MaxCrew), FText::AsNumber(CrewRequired)
+        ));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    // Validate mobility stats
+    if (MaxSpeed <= 0.0f)
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Max Speed must be greater than 0")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    if (Acceleration <= 0.0f)
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Acceleration must be greater than 0")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    // Validate fuel economy
+    if (FuelCapacity > 0.0f && FuelConsumptionRate <= 0.0f)
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Fuel Consumption Rate must be greater than 0 if Fuel Capacity is set")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    // Validate shield stats
+    if (ShieldStrength > 0.0f && ShieldRechargeRate < 0.0f)
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Shield Recharge Rate cannot be negative if Shield Strength is set")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    // Validate operational stats
+    if (PowerCapacity <= 0.0f)
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Power Capacity must be greater than 0")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    // Warn about potential balance issues
+    float CombatRating = GetCombatRating();
+    if (CombatRating > 100.0f)
+    {
+        ValidationErrors.Add(FText::Format(
+            FText::FromString(TEXT("Warning: Combat Rating is very high ({0}). Consider rebalancing stats.")),
+            FText::AsNumber(CombatRating)
+        ));
+        // Don't mark as invalid, just a warning
+    }
+
+    if (Result == EDataValidationResult::Valid)
+    {
+        UE_LOG(LogAdastrea, Log, TEXT("SpaceshipDataAsset %s passed validation"), *ShipName.ToString());
+    }
+    else
+    {
+        UE_LOG(LogAdastrea, Warning, TEXT("SpaceshipDataAsset %s failed validation with %d errors"), 
+            *ShipName.ToString(), ValidationErrors.Num());
+    }
+
+    return Result;
+}
+
 void USpaceshipDataAsset::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
     Super::PostEditChangeProperty(PropertyChangedEvent);
