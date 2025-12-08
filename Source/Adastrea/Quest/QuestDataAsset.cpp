@@ -182,3 +182,119 @@ FText UQuestDataAsset::GetObjectiveTypeDisplayName(EObjectiveType Type)
         return FText::FromString(TEXT("Unknown"));
     }
 }
+
+#if WITH_EDITOR
+EDataValidationResult UQuestDataAsset::IsDataValid(TArray<FText>& ValidationErrors)
+{
+    EDataValidationResult Result = EDataValidationResult::Valid;
+
+    // Validate basic info
+    if (QuestName.IsEmpty())
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Quest Name is empty")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    if (QuestID.IsNone())
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Quest ID is not set")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    if (QuestDescription.IsEmpty())
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Quest Description is empty")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    // Validate objectives
+    if (Objectives.Num() == 0)
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Quest has no objectives")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    // Validate each objective
+    for (int32 i = 0; i < Objectives.Num(); i++)
+    {
+        const FQuestObjective& Objective = Objectives[i];
+        
+        if (Objective.ObjectiveDescription.IsEmpty())
+        {
+            ValidationErrors.Add(FText::Format(
+                FText::FromString(TEXT("Objective {0} has empty description")),
+                FText::AsNumber(i + 1)
+            ));
+            Result = EDataValidationResult::Invalid;
+        }
+
+        if (Objective.RequiredProgress <= 0)
+        {
+            ValidationErrors.Add(FText::Format(
+                FText::FromString(TEXT("Objective {0} has invalid required progress (<= 0)")),
+                FText::AsNumber(i + 1)
+            ));
+            Result = EDataValidationResult::Invalid;
+        }
+    }
+
+    // Validate rewards
+    if (CreditReward < 0)
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Credit Reward cannot be negative")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    if (ExperienceReward < 0)
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Experience Reward cannot be negative")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    if (ReputationChange < -100 || ReputationChange > 100)
+    {
+        ValidationErrors.Add(FText::Format(
+            FText::FromString(TEXT("Reputation Change ({0}) must be between -100 and 100")),
+            FText::AsNumber(ReputationChange)
+        ));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    // Warn about potential issues
+    if (CreditReward == 0 && ExperienceReward == 0 && ItemRewards.Num() == 0)
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Warning: Quest has no rewards")));
+        // Just a warning
+    }
+
+    if (QuestType == EQuestType::MainStory && !bIsRepeatable)
+    {
+        // Good - main story quests should not be repeatable
+    }
+    else if (QuestType == EQuestType::DailyMission && !bIsRepeatable)
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Warning: Daily mission should probably be repeatable")));
+        // Just a warning
+    }
+
+    // Validate quest chain consistency
+    if (NextQuestInChain && PreviousQuestInChain == NextQuestInChain)
+    {
+        ValidationErrors.Add(FText::FromString(TEXT("Next Quest and Previous Quest cannot be the same")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    // Log validation result
+    if (Result == EDataValidationResult::Valid)
+    {
+        UE_LOG(LogAdastrea, Log, TEXT("QuestDataAsset %s passed validation"), *QuestName.ToString());
+    }
+    else
+    {
+        UE_LOG(LogAdastrea, Warning, TEXT("QuestDataAsset %s failed validation with %d errors"), 
+            *QuestName.ToString(), ValidationErrors.Num());
+    }
+
+    return Result;
+}
+#endif

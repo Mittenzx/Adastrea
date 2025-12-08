@@ -550,4 +550,12 @@ public:
      */
     UFUNCTION(BlueprintCallable, Category="Personnel|Role")
     int32 GetDirectReportCount() const;
+
+#if WITH_EDITOR
+    /**
+     * Validate personnel data asset properties
+     * Checks for required fields and logical constraints
+     */
+    virtual EDataValidationResult IsDataValid(TArray<FText>& ValidationErrors) override;
+#endif
 };

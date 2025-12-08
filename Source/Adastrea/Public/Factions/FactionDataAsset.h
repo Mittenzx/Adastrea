@@ -96,4 +96,12 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Faction")
 	bool IsHostileByDefault() const { return bIsHostileByDefault; }
+
+#if WITH_EDITOR
+	/**
+	 * Validate faction data asset properties
+	 * Checks for required fields and logical constraints
+	 */
+	virtual EDataValidationResult IsDataValid(TArray<FText>& ValidationErrors) override;
+#endif
 };

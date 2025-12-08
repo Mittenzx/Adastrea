@@ -378,4 +378,12 @@ public:
      */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category="Quest|Utility")
     static FText GetObjectiveTypeDisplayName(EObjectiveType Type);
+
+#if WITH_EDITOR
+    /**
+     * Validate quest data asset properties
+     * Checks for required fields and logical constraints
+     */
+    virtual EDataValidationResult IsDataValid(TArray<FText>& ValidationErrors) override;
+#endif
 };
