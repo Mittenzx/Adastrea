@@ -6,18 +6,16 @@ This script scans C++ header files to find UObject* pointers that may be missing
 the UPROPERTY() macro, which is critical for garbage collection tracking.
 
 Usage:
-    python Tools/check_uproperty.py [--fix] [--verbose]
+    python Tools/check_uproperty.py [--verbose]
 
 Options:
-    --fix: Attempt to automatically add missing UPROPERTY macros (requires manual review)
     --verbose: Show detailed analysis for each file
 """
 
-import os
 import re
 import sys
 from pathlib import Path
-from typing import List, Dict, Tuple
+from typing import List, Dict
 
 # Patterns to match UObject-derived pointers
 UOBJECT_PATTERNS = [
@@ -61,7 +59,6 @@ class UPropertyChecker:
         
         in_class = False
         in_comment_block = False
-        last_uproperty_line = -2
         
         for i, line in enumerate(lines, 1):
             # Track comment blocks
