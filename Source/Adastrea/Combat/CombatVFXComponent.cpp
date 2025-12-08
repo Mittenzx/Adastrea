@@ -14,6 +14,7 @@ UCombatVFXComponent::UCombatVFXComponent()
 	CurrentActiveEffects = 0;
 	bEnableDistanceCulling = true;
 	MaxEffectDistance = 10000.0f;
+	ComponentPoolSize = 20;  // Phase 2: Object pooling
 
 	// Set component defaults
 	CombatVFXData = nullptr;
@@ -23,6 +24,9 @@ UCombatVFXComponent::UCombatVFXComponent()
 void UCombatVFXComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Phase 2: Initialize component pool for performance
+	InitializeComponentPool();
 
 	// Auto-detect weapon components if not set
 	if (WeaponComponents.Num() == 0)
@@ -214,19 +218,23 @@ UNiagaraComponent* UCombatVFXComponent::PlayMuzzleFlash(FVector MuzzleLocation, 
 		return nullptr;
 	}
 
-	UNiagaraComponent* FlashEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-		GetWorld(),
-		CombatVFXData->FireEffect.MuzzleFlashEffect,
-		MuzzleLocation,
-		MuzzleRotation
-	);
-
-	if (FlashEffect)
+	// Phase 2: Use pooled component instead of spawning new
+	UNiagaraComponent* FlashEffect = GetPooledNiagaraComponent();
+	if (!FlashEffect)
 	{
-		FlashEffect->SetFloatParameter(FName("Intensity"), CombatVFXData->FireEffect.GlowIntensity);
-		ActiveEffects.Add(FlashEffect);
-		CurrentActiveEffects = ActiveEffects.Num();
+		return nullptr;
 	}
+
+	// Configure pooled component
+	FlashEffect->SetAsset(CombatVFXData->FireEffect.MuzzleFlashEffect);
+	FlashEffect->SetWorldLocation(MuzzleLocation);
+	FlashEffect->SetWorldRotation(MuzzleRotation);
+	FlashEffect->SetFloatParameter(FName("Intensity"), CombatVFXData->FireEffect.GlowIntensity);
+	FlashEffect->Activate();
+	FlashEffect->SetVisibility(true);
+
+	ActiveEffects.Add(FlashEffect);
+	CurrentActiveEffects = ActiveEffects.Num();
 
 	return FlashEffect;
 }
@@ -243,25 +251,28 @@ UNiagaraComponent* UCombatVFXComponent::PlayBeamEffect(
 		return nullptr;
 	}
 
-	UNiagaraComponent* BeamEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-		GetWorld(),
-		CombatVFXData->FireEffect.BeamEffect,
-		StartLocation,
-		(EndLocation - StartLocation).Rotation()
-	);
-
-	if (BeamEffect)
+	// Phase 2: Use pooled component instead of spawning new
+	UNiagaraComponent* BeamEffect = GetPooledNiagaraComponent();
+	if (!BeamEffect)
 	{
-		BeamEffect->SetVectorParameter(FName("BeamStart"), StartLocation);
-		BeamEffect->SetVectorParameter(FName("BeamEnd"), EndLocation);
-		BeamEffect->SetFloatParameter(FName("BeamWidth"), BeamWidth);
-		BeamEffect->SetColorParameter(FName("BeamColor"), BeamColor);
-		BeamEffect->SetFloatParameter(FName("Duration"), Duration);
-		BeamEffect->SetFloatParameter(FName("HeatDistortion"), CombatVFXData->FireEffect.HeatDistortionStrength);
-
-		ActiveEffects.Add(BeamEffect);
-		CurrentActiveEffects = ActiveEffects.Num();
+		return nullptr;
 	}
+
+	// Configure pooled component
+	BeamEffect->SetAsset(CombatVFXData->FireEffect.BeamEffect);
+	BeamEffect->SetWorldLocation(StartLocation);
+	BeamEffect->SetWorldRotation((EndLocation - StartLocation).Rotation());
+	BeamEffect->SetVectorParameter(FName("BeamStart"), StartLocation);
+	BeamEffect->SetVectorParameter(FName("BeamEnd"), EndLocation);
+	BeamEffect->SetFloatParameter(FName("BeamWidth"), BeamWidth);
+	BeamEffect->SetColorParameter(FName("BeamColor"), BeamColor);
+	BeamEffect->SetFloatParameter(FName("Duration"), Duration);
+	BeamEffect->SetFloatParameter(FName("HeatDistortion"), CombatVFXData->FireEffect.HeatDistortionStrength);
+	BeamEffect->Activate();
+	BeamEffect->SetVisibility(true);
+
+	ActiveEffects.Add(BeamEffect);
+	CurrentActiveEffects = ActiveEffects.Num();
 
 	return BeamEffect;
 }
@@ -277,41 +288,45 @@ UNiagaraComponent* UCombatVFXComponent::PlayProjectileTrail(
 		return nullptr;
 	}
 
-	UNiagaraComponent* TrailEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-		GetWorld(),
-		CombatVFXData->FireEffect.ProjectileTrailEffect,
-		SpawnLocation,
-		SpawnRotation
-	);
-
-	if (TrailEffect)
+	// Phase 2: Use pooled component instead of spawning new
+	UNiagaraComponent* TrailEffect = GetPooledNiagaraComponent();
+	if (!TrailEffect)
 	{
-		TrailEffect->SetVectorParameter(FName("Velocity"), ProjectileVelocity);
-		TrailEffect->SetColorParameter(FName("TrailColor"), CombatVFXData->FireEffect.BeamColor);
-		
-		// Weapon-specific trail properties
-		switch (WeaponType)
-		{
-		case EWeaponType::Missile:
-			TrailEffect->SetFloatParameter(FName("TrailWidth"), 20.0f);
-			TrailEffect->SetFloatParameter(FName("EngineGlow"), 2.0f);
-			break;
-		case EWeaponType::Torpedo:
-			TrailEffect->SetFloatParameter(FName("TrailWidth"), 30.0f);
-			TrailEffect->SetFloatParameter(FName("PlasmaIntensity"), 3.0f);
-			break;
-		case EWeaponType::Plasma:
-			TrailEffect->SetFloatParameter(FName("TrailWidth"), 15.0f);
-			TrailEffect->SetFloatParameter(FName("ArcingIntensity"), 1.5f);
-			break;
-		default:
-			TrailEffect->SetFloatParameter(FName("TrailWidth"), 5.0f);
-			break;
-		}
-
-		ActiveEffects.Add(TrailEffect);
-		CurrentActiveEffects = ActiveEffects.Num();
+		return nullptr;
 	}
+
+	// Configure pooled component
+	TrailEffect->SetAsset(CombatVFXData->FireEffect.ProjectileTrailEffect);
+	TrailEffect->SetWorldLocation(SpawnLocation);
+	TrailEffect->SetWorldRotation(SpawnRotation);
+	TrailEffect->SetVectorParameter(FName("Velocity"), ProjectileVelocity);
+	TrailEffect->SetColorParameter(FName("TrailColor"), CombatVFXData->FireEffect.BeamColor);
+
+	// Weapon-specific trail properties
+	switch (WeaponType)
+	{
+	case EWeaponType::Missile:
+		TrailEffect->SetFloatParameter(FName("TrailWidth"), 20.0f);
+		TrailEffect->SetFloatParameter(FName("EngineGlow"), 2.0f);
+		break;
+	case EWeaponType::Torpedo:
+		TrailEffect->SetFloatParameter(FName("TrailWidth"), 30.0f);
+		TrailEffect->SetFloatParameter(FName("PlasmaIntensity"), 3.0f);
+		break;
+	case EWeaponType::Plasma:
+		TrailEffect->SetFloatParameter(FName("TrailWidth"), 15.0f);
+		TrailEffect->SetFloatParameter(FName("ArcingIntensity"), 1.5f);
+		break;
+	default:
+		TrailEffect->SetFloatParameter(FName("TrailWidth"), 5.0f);
+		break;
+	}
+
+	TrailEffect->Activate();
+	TrailEffect->SetVisibility(true);
+
+	ActiveEffects.Add(TrailEffect);
+	CurrentActiveEffects = ActiveEffects.Num();
 
 	return TrailEffect;
 }
@@ -401,40 +416,40 @@ void UCombatVFXComponent::PlayShieldImpact(FVector ImpactLocation, FVector Impac
 		return;
 	}
 
-	// Play ripple effect
+	// Play ripple effect - Phase 2: Use pooling
 	if (ImpactEffectData->ShieldImpact.RippleEffect)
 	{
-		UNiagaraComponent* RippleEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-			GetWorld(),
-			ImpactEffectData->ShieldImpact.RippleEffect,
-			ImpactLocation,
-			ImpactNormal.Rotation()
-		);
-
+		UNiagaraComponent* RippleEffect = GetPooledNiagaraComponent();
 		if (RippleEffect)
 		{
+			RippleEffect->SetAsset(ImpactEffectData->ShieldImpact.RippleEffect);
+			RippleEffect->SetWorldLocation(ImpactLocation);
+			RippleEffect->SetWorldRotation(ImpactNormal.Rotation());
+			
 			FLinearColor ImpactColor = ImpactEffectData->CalculateShieldImpactColor(DamageAmount);
 			RippleEffect->SetColorParameter(FName("RippleColor"), ImpactColor);
 			RippleEffect->SetFloatParameter(FName("RippleSpeed"), ImpactEffectData->ShieldImpact.RippleSpeed);
 			RippleEffect->SetFloatParameter(FName("MaxRadius"), ImpactEffectData->ShieldImpact.MaxRippleRadius);
+			RippleEffect->Activate();
+			RippleEffect->SetVisibility(true);
 			
 			ActiveEffects.Add(RippleEffect);
 		}
 	}
 
-	// Play dissipation effect
+	// Play dissipation effect - Phase 2: Use pooling
 	if (ImpactEffectData->ShieldImpact.DissipationEffect)
 	{
-		UNiagaraComponent* DissipationEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-			GetWorld(),
-			ImpactEffectData->ShieldImpact.DissipationEffect,
-			ImpactLocation,
-			ImpactNormal.Rotation()
-		);
-
+		UNiagaraComponent* DissipationEffect = GetPooledNiagaraComponent();
 		if (DissipationEffect)
 		{
+			DissipationEffect->SetAsset(ImpactEffectData->ShieldImpact.DissipationEffect);
+			DissipationEffect->SetWorldLocation(ImpactLocation);
+			DissipationEffect->SetWorldRotation(ImpactNormal.Rotation());
 			DissipationEffect->SetFloatParameter(FName("Intensity"), ImpactEffectData->ShieldImpact.DissipationIntensity);
+			DissipationEffect->Activate();
+			DissipationEffect->SetVisibility(true);
+			
 			ActiveEffects.Add(DissipationEffect);
 		}
 	}
@@ -458,36 +473,36 @@ void UCombatVFXComponent::PlayHullImpact(FVector ImpactLocation, FVector ImpactN
 		return;
 	}
 
-	// Play spark effect
+	// Play spark effect - Phase 2: Use pooling
 	if (ImpactEffectData->HullImpact.SparkEffect)
 	{
-		UNiagaraComponent* SparkEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-			GetWorld(),
-			ImpactEffectData->HullImpact.SparkEffect,
-			ImpactLocation,
-			ImpactNormal.Rotation()
-		);
-
+		UNiagaraComponent* SparkEffect = GetPooledNiagaraComponent();
 		if (SparkEffect)
 		{
+			SparkEffect->SetAsset(ImpactEffectData->HullImpact.SparkEffect);
+			SparkEffect->SetWorldLocation(ImpactLocation);
+			SparkEffect->SetWorldRotation(ImpactNormal.Rotation());
 			SparkEffect->SetFloatParameter(FName("Intensity"), ImpactEffectData->HullImpact.SparkIntensity);
+			SparkEffect->Activate();
+			SparkEffect->SetVisibility(true);
+			
 			ActiveEffects.Add(SparkEffect);
 		}
 	}
 
-	// Play debris effect
+	// Play debris effect - Phase 2: Use pooling
 	if (ImpactEffectData->HullImpact.DebrisEffect)
 	{
-		UNiagaraComponent* DebrisEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-			GetWorld(),
-			ImpactEffectData->HullImpact.DebrisEffect,
-			ImpactLocation,
-			ImpactNormal.Rotation()
-		);
-
+		UNiagaraComponent* DebrisEffect = GetPooledNiagaraComponent();
 		if (DebrisEffect)
 		{
+			DebrisEffect->SetAsset(ImpactEffectData->HullImpact.DebrisEffect);
+			DebrisEffect->SetWorldLocation(ImpactLocation);
+			DebrisEffect->SetWorldRotation(ImpactNormal.Rotation());
 			DebrisEffect->SetFloatParameter(FName("Intensity"), ImpactEffectData->HullImpact.DebrisIntensity);
+			DebrisEffect->Activate();
+			DebrisEffect->SetVisibility(true);
+			
 			ActiveEffects.Add(DebrisEffect);
 		}
 	}
@@ -538,52 +553,52 @@ void UCombatVFXComponent::PlayExplosion(FVector ExplosionLocation, EExplosionSiz
 		ExplosionRadius = ExplosionConfig.ExplosionRadius;
 	}
 
-	// Play main explosion
+	// Play main explosion - Phase 2: Use pooling
 	if (ExplosionConfig.ExplosionEffect)
 	{
-		UNiagaraComponent* Explosion = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-			GetWorld(),
-			ExplosionConfig.ExplosionEffect,
-			ExplosionLocation
-		);
-
+		UNiagaraComponent* Explosion = GetPooledNiagaraComponent();
 		if (Explosion)
 		{
+			Explosion->SetAsset(ExplosionConfig.ExplosionEffect);
+			Explosion->SetWorldLocation(ExplosionLocation);
 			Explosion->SetFloatParameter(FName("ExplosionRadius"), ExplosionRadius);
 			Explosion->SetFloatParameter(FName("FlashIntensity"), ExplosionConfig.FlashIntensity);
+			Explosion->Activate();
+			Explosion->SetVisibility(true);
+			
 			ActiveEffects.Add(Explosion);
 		}
 	}
 
-	// Play shockwave
+	// Play shockwave - Phase 2: Use pooling
 	if (ExplosionConfig.ShockwaveEffect)
 	{
-		UNiagaraComponent* Shockwave = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-			GetWorld(),
-			ExplosionConfig.ShockwaveEffect,
-			ExplosionLocation
-		);
-
+		UNiagaraComponent* Shockwave = GetPooledNiagaraComponent();
 		if (Shockwave)
 		{
+			Shockwave->SetAsset(ExplosionConfig.ShockwaveEffect);
+			Shockwave->SetWorldLocation(ExplosionLocation);
 			Shockwave->SetFloatParameter(FName("ShockwaveSpeed"), ExplosionConfig.ShockwaveSpeed);
 			Shockwave->SetFloatParameter(FName("MaxRadius"), ExplosionRadius);
+			Shockwave->Activate();
+			Shockwave->SetVisibility(true);
+			
 			ActiveEffects.Add(Shockwave);
 		}
 	}
 
-	// Play fireball for large explosions
+	// Play fireball for large explosions - Phase 2: Use pooling
 	if (ExplosionSize == EExplosionSize::Large && ExplosionConfig.FireballEffect)
 	{
-		UNiagaraComponent* Fireball = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-			GetWorld(),
-			ExplosionConfig.FireballEffect,
-			ExplosionLocation
-		);
-
+		UNiagaraComponent* Fireball = GetPooledNiagaraComponent();
 		if (Fireball)
 		{
+			Fireball->SetAsset(ExplosionConfig.FireballEffect);
+			Fireball->SetWorldLocation(ExplosionLocation);
 			Fireball->SetFloatParameter(FName("FireballRadius"), ExplosionRadius * 0.8f);
+			Fireball->Activate();
+			Fireball->SetVisibility(true);
+			
 			ActiveEffects.Add(Fireball);
 		}
 	}
@@ -641,7 +656,18 @@ void UCombatVFXComponent::GetPerformanceMetrics(int32& OutActiveEffects, int32& 
 
 void UCombatVFXComponent::CleanupFinishedEffects()
 {
-	// Remove inactive effects from tracking
+	// Phase 2: Return finished effects to pool instead of destroying
+	// Iterate backwards for safe removal
+	for (int32 i = ActiveNiagaraComponents.Num() - 1; i >= 0; i--)
+	{
+		UNiagaraComponent* Component = ActiveNiagaraComponents[i];
+		if (Component && !Component->IsActive())
+		{
+			ReturnNiagaraComponentToPool(Component);
+		}
+	}
+
+	// Also cleanup legacy ActiveEffects array
 	ActiveEffects.RemoveAll([](UNiagaraComponent* Effect)
 	{
 		return Effect == nullptr || !Effect->IsActive();
@@ -666,6 +692,92 @@ bool UCombatVFXComponent::IsWithinRenderDistance(FVector Location) const
 	float Distance = FVector::Dist(PlayerPawn->GetActorLocation(), Location);
 	return Distance <= MaxEffectDistance;
 }
+
+// ====================
+// Object Pooling Implementation (Phase 2 Optimization)
+// ====================
+
+void UCombatVFXComponent::InitializeComponentPool()
+{
+	if (!GetOwner())
+	{
+		return;
+	}
+
+	// Pre-allocate pool for better memory management
+	NiagaraComponentPool.Reserve(ComponentPoolSize);
+	ActiveNiagaraComponents.Reserve(ComponentPoolSize);
+
+	// Create pooled components
+	for (int32 i = 0; i < ComponentPoolSize; i++)
+	{
+		UNiagaraComponent* Component = NewObject<UNiagaraComponent>(GetOwner());
+		if (Component)
+		{
+			Component->RegisterComponent();
+			Component->SetAutoActivate(false);
+			Component->SetVisibility(false);
+			NiagaraComponentPool.Add(Component);
+		}
+	}
+
+	UE_LOG(LogAdastreaCombat, Log, TEXT("CombatVFXComponent: Initialized Niagara pool with %d components"), ComponentPoolSize);
+}
+
+UNiagaraComponent* UCombatVFXComponent::GetPooledNiagaraComponent()
+{
+	// Try to get from pool
+	if (NiagaraComponentPool.Num() > 0)
+	{
+		UNiagaraComponent* Component = NiagaraComponentPool.Pop();
+		ActiveNiagaraComponents.Add(Component);
+		return Component;
+	}
+
+	// Pool exhausted - create new component (log for monitoring)
+	UE_LOG(LogAdastreaCombat, Warning, 
+		TEXT("CombatVFXComponent: Niagara pool exhausted, creating new component (pool size: %d)"), 
+		ComponentPoolSize);
+
+	UNiagaraComponent* Component = NewObject<UNiagaraComponent>(GetOwner());
+	if (Component)
+	{
+		Component->RegisterComponent();
+		ActiveNiagaraComponents.Add(Component);
+	}
+	return Component;
+}
+
+void UCombatVFXComponent::ReturnNiagaraComponentToPool(UNiagaraComponent* Component)
+{
+	if (!Component)
+	{
+		return;
+	}
+
+	// Deactivate and reset component
+	Component->Deactivate();
+	Component->SetVisibility(false);
+	Component->ResetSystem();
+
+	// Remove from active list
+	ActiveNiagaraComponents.Remove(Component);
+
+	// Return to pool if space available
+	if (NiagaraComponentPool.Num() < ComponentPoolSize)
+	{
+		NiagaraComponentPool.Add(Component);
+	}
+	else
+	{
+		// Pool full - destroy excess components
+		Component->DestroyComponent();
+	}
+}
+
+// ====================
+// Blueprint Event Implementations
+// ====================
 
 void UCombatVFXComponent::OnWeaponFired_Implementation(EWeaponType WeaponType, FVector MuzzleLocation)
 {
