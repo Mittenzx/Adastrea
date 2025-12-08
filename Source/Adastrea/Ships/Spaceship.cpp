@@ -1,6 +1,7 @@
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipInterior.h"
 #include "Ships/SpaceshipDataAsset.h"
+#include "Factions/FactionDataAsset.h"
 #include "AdastreaLog.h"
 #include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
@@ -15,6 +16,7 @@ ASpaceship::ASpaceship()
     InteriorInstance = nullptr;
     SavedExternalPawn = nullptr;
     ShipDataAsset = nullptr;
+    ShipFaction = nullptr;
 
     // Initialize default movement properties
     DefaultMaxSpeed = 3000.0f;
@@ -26,6 +28,7 @@ ASpaceship::ASpaceship()
     // Initialize ship status
     CurrentHullIntegrity = 1000.0f;
     MaxHullIntegrity = 1000.0f;
+    bIsDestroyed = false;
     // Initialize X4-style flight control parameters
     bFlightAssistEnabled = true;              // Flight assist on by default
     RotationDampingFactor = 0.85f;            // Smooth rotation with high damping
@@ -733,4 +736,285 @@ void ASpaceship::UpdateThrottleVelocity(float DeltaTime)
         // Note: This works in conjunction with AddMovementInput for strafe/vertical
         MovementComponent->Velocity = BlendedVelocity;
     }
+}
+
+// ====================
+// IDamageable Interface Implementation
+// ====================
+
+float ASpaceship::ApplyDamage_Implementation(float Damage, EDamageType DamageType, AActor* Instigator, AActor* DamageCauser)
+{
+    if (!CanTakeDamage_Implementation())
+    {
+        return 0.0f;
+    }
+
+    // TODO: Apply damage type modifiers based on ship armor/shields
+    // For now, apply damage directly to hull
+    float ActualDamage = FMath::Min(Damage, CurrentHullIntegrity);
+    CurrentHullIntegrity -= ActualDamage;
+
+    UE_LOG(LogAdastreaShips, Log, TEXT("%s took %.1f damage from %s. Health: %.1f/%.1f"),
+        *GetName(), ActualDamage,
+        Instigator ? *Instigator->GetName() : TEXT("Unknown"),
+        CurrentHullIntegrity, MaxHullIntegrity);
+
+    // Check if ship is destroyed
+    if (CurrentHullIntegrity <= 0.0f)
+    {
+        CurrentHullIntegrity = 0.0f;
+        bIsDestroyed = true;
+        UE_LOG(LogAdastreaShips, Warning, TEXT("%s has been destroyed!"), *GetName());
+        // TODO: Trigger destruction effects, loot spawning, etc.
+    }
+
+    return ActualDamage;
+}
+
+bool ASpaceship::CanTakeDamage_Implementation() const
+{
+    // Cannot take damage if already destroyed
+    if (bIsDestroyed)
+    {
+        return false;
+    }
+
+    // TODO: Add additional checks for:
+    // - Invulnerability (quest protection, safe zones)
+    // - Docked status (if docked at safe station)
+    
+    return true;
+}
+
+float ASpaceship::GetHealthPercentage_Implementation() const
+{
+    if (MaxHullIntegrity <= 0.0f)
+    {
+        return 0.0f;
+    }
+
+    return CurrentHullIntegrity / MaxHullIntegrity;
+}
+
+bool ASpaceship::IsDestroyed_Implementation() const
+{
+    return bIsDestroyed;
+}
+
+float ASpaceship::GetMaxHealth_Implementation() const
+{
+    return MaxHullIntegrity;
+}
+
+float ASpaceship::GetCurrentHealth_Implementation() const
+{
+    return CurrentHullIntegrity;
+}
+
+// ====================
+// ITargetable Interface Implementation
+// ====================
+
+bool ASpaceship::CanBeTargeted_Implementation() const
+{
+    // Cannot target destroyed ships
+    if (bIsDestroyed)
+    {
+        return false;
+    }
+
+    // TODO: Add checks for:
+    // - Stealth/cloaking
+    // - Sensor range
+    // - Safe zones
+
+    return true;
+}
+
+int32 ASpaceship::GetTargetPriority_Implementation() const
+{
+    // Base priority on ship class from DataAsset
+    // TODO: Implement more sophisticated priority based on threat level
+    if (ShipDataAsset)
+    {
+        // Use combat rating as priority indicator (0-100)
+        return FMath::RoundToInt(ShipDataAsset->GetCombatRating());
+    }
+
+    return 50; // Default medium priority
+}
+
+FText ASpaceship::GetTargetDisplayName_Implementation() const
+{
+    return GetShipName();
+}
+
+UTexture2D* ASpaceship::GetTargetIcon_Implementation() const
+{
+    // TODO: Return ship icon from DataAsset
+    // For now return nullptr, UI can use default icon
+    return nullptr;
+}
+
+FVector ASpaceship::GetAimPoint_Implementation() const
+{
+    // Return center of actor (aim for center mass)
+    return GetActorLocation();
+}
+
+float ASpaceship::GetTargetSignature_Implementation() const
+{
+    // TODO: Implement signature based on:
+    // - Ship size
+    // - Power output
+    // - Stealth systems
+    // - Transponder status
+    
+    return 1.0f; // Default normal signature
+}
+
+float ASpaceship::GetDistanceFromLocation_Implementation(FVector FromLocation) const
+{
+    return FVector::Dist(GetActorLocation(), FromLocation);
+}
+
+bool ASpaceship::IsHostileToActor_Implementation(AActor* Observer) const
+{
+    if (!Observer)
+    {
+        return false;
+    }
+
+    // Check if observer implements IFactionMember
+    if (Observer->Implements<UFactionMember>())
+    {
+        IFactionMember* ObserverFaction = Cast<IFactionMember>(Observer);
+        if (ObserverFaction)
+        {
+            return IsHostileTo_Implementation(TScriptInterface<IFactionMember>(Observer));
+        }
+    }
+
+    // Default to non-hostile if can't determine faction
+    return false;
+}
+
+// ====================
+// IFactionMember Interface Implementation
+// ====================
+
+UFactionDataAsset* ASpaceship::GetFaction_Implementation() const
+{
+    return ShipFaction;
+}
+
+bool ASpaceship::IsAlliedWith_Implementation(const TScriptInterface<IFactionMember>& Other) const
+{
+    if (!Other.GetObject())
+    {
+        return false;
+    }
+
+    // Same faction = always allied
+    UFactionDataAsset* OtherFaction = IFactionMember::Execute_GetFaction(Other.GetObject());
+    if (ShipFaction && OtherFaction && ShipFaction == OtherFaction)
+    {
+        return true;
+    }
+
+    // Check diplomatic relations
+    int32 Relationship = GetRelationshipWith_Implementation(Other);
+    return Relationship >= 26; // Friendly or allied
+}
+
+bool ASpaceship::IsHostileTo_Implementation(const TScriptInterface<IFactionMember>& Other) const
+{
+    if (!Other.GetObject())
+    {
+        return false;
+    }
+
+    // Same faction = never hostile
+    UFactionDataAsset* OtherFaction = IFactionMember::Execute_GetFaction(Other.GetObject());
+    if (ShipFaction && OtherFaction && ShipFaction == OtherFaction)
+    {
+        return false;
+    }
+
+    // Check diplomatic relations
+    int32 Relationship = GetRelationshipWith_Implementation(Other);
+    return Relationship <= -26; // Hostile or at war
+}
+
+int32 ASpaceship::GetRelationshipWith_Implementation(const TScriptInterface<IFactionMember>& Other) const
+{
+    if (!Other.GetObject() || !ShipFaction)
+    {
+        return 0; // Neutral if no faction
+    }
+
+    UFactionDataAsset* OtherFaction = IFactionMember::Execute_GetFaction(Other.GetObject());
+    if (!OtherFaction)
+    {
+        return 0; // Neutral if other has no faction
+    }
+
+    if (ShipFaction == OtherFaction)
+    {
+        return 100; // Same faction = maximum positive relationship
+    }
+
+    // TODO: Query faction relationship from FactionDiplomacyManager
+    // For now return neutral
+    return 0;
+}
+
+bool ASpaceship::IsNeutral_Implementation() const
+{
+    return ShipFaction == nullptr;
+}
+
+FText ASpaceship::GetFactionDisplayName_Implementation() const
+{
+    if (ShipFaction)
+    {
+        return ShipFaction->FactionName;
+    }
+
+    return FText::FromString(TEXT("Independent"));
+}
+
+bool ASpaceship::CanEngageInCombat_Implementation() const
+{
+    // Cannot engage if destroyed
+    if (bIsDestroyed)
+    {
+        return false;
+    }
+
+    // TODO: Add checks for:
+    // - Docked status
+    // - Safe zones
+    // - Quest protection
+
+    return true;
+}
+
+float ASpaceship::GetTradePriceModifier_Implementation(UFactionDataAsset* TraderFaction) const
+{
+    if (!ShipFaction || !TraderFaction)
+    {
+        return 1.0f; // Base price if no faction
+    }
+
+    if (ShipFaction == TraderFaction)
+    {
+        return 0.9f; // 10% discount for same faction
+    }
+
+    // TODO: Calculate modifier based on faction relationship
+    // Positive relationship = better prices
+    // Negative relationship = worse prices
+    
+    return 1.0f; // Base price for now
 }
