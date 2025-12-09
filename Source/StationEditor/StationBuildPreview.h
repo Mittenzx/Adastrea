@@ -5,8 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/StaticMeshComponent.h"
-#include "Stations/SpaceStationModule.h"
 #include "StationBuildPreview.generated.h"
+
+// Forward declarations
+class ASpaceStationModule;
 
 /**
  * Station Build Preview - Actor for showing module placement preview

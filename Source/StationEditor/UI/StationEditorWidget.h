@@ -3,10 +3,12 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Stations/SpaceStation.h"
-#include "Stations/SpaceStationModule.h"
 #include "Factions/FactionDataAsset.h"
-#include "../StationEditorManager.h"
+#include "StationEditorManager.h"
 #include "StationEditorWidget.generated.h"
+
+// Forward declarations
+class ASpaceStationModule;
 
 /**
  * Station Editor Widget - UI for managing space station modules
