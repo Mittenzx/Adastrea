@@ -20,6 +20,8 @@ jobs:
   check-dependencies:
     name: Check for Circular Dependencies
     runs-on: ubuntu-latest
+    permissions:
+      contents: read  # Need read access to checkout code
     
     steps:
       - name: Checkout repository
