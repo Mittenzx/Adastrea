@@ -3,14 +3,16 @@
 #include "Player/AdastreaPlayerController.h"
 #include "Ships/Spaceship.h"
 #include "Stations/SpaceStation.h"
-#include "StationEditor/UI/StationEditorWidget.h"
-#include "StationEditor/StationModuleCatalog.h"
 #include "AdastreaLog.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "UI/AdastreaHUDWidget.h"
 #include "UI/ShipStatusWidget.h"
+
+// Note: StationEditor includes removed to avoid circular dependency
+// StationEditor depends on Adastrea, so Adastrea cannot depend on StationEditor
+// Station editor functionality is accessed through Blueprint-configured UUserWidget
 
 AAdastreaPlayerController::AAdastreaPlayerController()
 {
@@ -187,27 +189,15 @@ UUserWidget* AAdastreaPlayerController::CreateStationEditorWidget()
 		return nullptr;
 	}
 
-	// Create the widget (as base UUserWidget to avoid circular dependency)
+	// Create the widget as base UUserWidget (avoiding circular dependency with StationEditor module)
+	// The actual widget class should be a Blueprint subclass of UStationEditorWidget
+	// All initialization is handled by the widget's NativeConstruct in Blueprint
 	StationEditorWidget = CreateWidget<UUserWidget>(this, StationEditorWidgetClass);
 	
 	if (!StationEditorWidget)
 	{
 		UE_LOG(LogAdastrea, Error, TEXT("CreateStationEditorWidget: Failed to create widget from class"));
 		return nullptr;
-	}
-
-	// Cast to UStationEditorWidget to initialize the editor manager
-	// This works because StationEditorWidgetClass should be a UStationEditorWidget subclass set in Blueprint
-	UStationEditorWidget* EditorWidget = Cast<UStationEditorWidget>(StationEditorWidget);
-	if (EditorWidget)
-	{
-		// Initialize the editor manager once when widget is created
-		// This ensures consistent state across multiple open/close cycles
-		// Use PlayerController as outer for clearer ownership semantics
-		if (!EditorWidget->EditorManager)
-		{
-			EditorWidget->EditorManager = NewObject<UStationEditorManager>(this);
-		}
 	}
 
 	UE_LOG(LogAdastrea, Log, TEXT("CreateStationEditorWidget: Successfully created station editor widget"));
@@ -223,46 +213,47 @@ void AAdastreaPlayerController::ShowStationEditor(ASpaceStation* Station)
 		return;
 	}
 
-	// Create widget if needed (also creates editor manager)
+	// Create widget if needed
 	if (!CreateStationEditorWidget())
 	{
 		return;
 	}
 
-	// Cast to UStationEditorWidget to access StationEditor-specific functionality
-	UStationEditorWidget* EditorWidget = Cast<UStationEditorWidget>(StationEditorWidget);
-	if (!EditorWidget)
+	// Initialize the widget using Blueprint-callable functions
+	// The widget must implement SetStation() as a Blueprint function
+	// This approach avoids circular dependency with StationEditor module
+	
+	// Use UFunction to call SetStation through reflection (Blueprint-safe)
+	UFunction* SetStationFunc = StationEditorWidget->FindFunction(FName("SetStation"));
+	if (SetStationFunc)
 	{
-		UE_LOG(LogAdastrea, Error, TEXT("ShowStationEditor: Widget is not a UStationEditorWidget. Check StationEditorWidgetClass in Blueprint."));
-		return;
+		struct FSetStationParams
+		{
+			ASpaceStation* Station;
+		};
+		
+		FSetStationParams Params;
+		Params.Station = Station;
+		
+		StationEditorWidget->ProcessEvent(SetStationFunc, &Params);
+		UE_LOG(LogAdastrea, Log, TEXT("ShowStationEditor: Called SetStation on widget"));
+	}
+	else
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("ShowStationEditor: Widget does not have SetStation function. Configure in Blueprint."));
 	}
 
-	// Cast ModuleCatalog to proper type
-	UStationModuleCatalog* Catalog = Cast<UStationModuleCatalog>(ModuleCatalog);
-
-	// Configure the editor manager
-	if (EditorWidget->EditorManager)
+	// Set ModuleCatalog through Blueprint property if available
+	if (ModuleCatalog)
 	{
-		// Assign the module catalog
-		if (Catalog)
+		// Find and set the ModuleCatalog property if it exists
+		if (FProperty* CatalogProp = StationEditorWidget->GetClass()->FindPropertyByName(FName("ModuleCatalog")))
 		{
-			EditorWidget->EditorManager->ModuleCatalog = Catalog;
-		}
-		else
-		{
-			UE_LOG(LogAdastrea, Warning, TEXT("ShowStationEditor: No ModuleCatalog assigned. Module placement may not work correctly."));
-		}
-
-		// Begin editing the station
-		if (!EditorWidget->EditorManager->BeginEditing(Station))
-		{
-			UE_LOG(LogAdastrea, Error, TEXT("ShowStationEditor: Failed to begin editing station"));
-			return;
+			void* PropertyAddress = CatalogProp->ContainerPtrToValuePtr<void>(StationEditorWidget);
+			CatalogProp->CopyCompleteValue(PropertyAddress, &ModuleCatalog);
+			UE_LOG(LogAdastrea, Log, TEXT("ShowStationEditor: Set ModuleCatalog on widget"));
 		}
 	}
-
-	// Set the station reference
-	EditorWidget->SetStation(Station);
 
 	// Add widget to viewport
 	if (!StationEditorWidget->IsInViewport())
@@ -287,24 +278,13 @@ void AAdastreaPlayerController::HideStationEditor()
 		return;
 	}
 
-	// Cast to UStationEditorWidget to access StationEditor-specific functionality
-	UStationEditorWidget* EditorWidget = Cast<UStationEditorWidget>(StationEditorWidget);
-	if (EditorWidget)
+	// Call OnClose function on the widget if it exists (Blueprint-implemented)
+	// This allows the widget to handle cleanup (save/cancel) internally
+	UFunction* OnCloseFunc = StationEditorWidget->FindFunction(FName("OnClose"));
+	if (OnCloseFunc)
 	{
-		// End editing session if active
-		if (EditorWidget->EditorManager && EditorWidget->EditorManager->bIsEditing)
-		{
-			// Save changes when closing (or could call Cancel() to discard)
-			if (!EditorWidget->EditorManager->Save())
-			{
-				UE_LOG(LogAdastrea, Error, TEXT("HideStationEditor: Failed to save changes to station. Changes may be lost!"));
-				// Note: Still proceed with closing the editor, but user is notified of the issue
-			}
-			else
-			{
-				UE_LOG(LogAdastrea, Log, TEXT("HideStationEditor: Successfully saved station changes"));
-			}
-		}
+		StationEditorWidget->ProcessEvent(OnCloseFunc, nullptr);
+		UE_LOG(LogAdastrea, Log, TEXT("HideStationEditor: Called OnClose on widget"));
 	}
 
 	// Remove widget from viewport
