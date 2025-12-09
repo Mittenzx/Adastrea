@@ -249,9 +249,18 @@ void AAdastreaPlayerController::ShowStationEditor(ASpaceStation* Station)
 		// Find and set the ModuleCatalog property if it exists
 		if (FProperty* CatalogProp = StationEditorWidget->GetClass()->FindPropertyByName(FName("ModuleCatalog")))
 		{
-			void* PropertyAddress = CatalogProp->ContainerPtrToValuePtr<void>(StationEditorWidget);
-			CatalogProp->CopyCompleteValue(PropertyAddress, &ModuleCatalog);
-			UE_LOG(LogAdastrea, Log, TEXT("ShowStationEditor: Set ModuleCatalog on widget"));
+			// Verify it's an object property before setting (type safety)
+			if (FObjectProperty* ObjProp = CastField<FObjectProperty>(CatalogProp))
+			{
+				// Use safe SetPropertyValue_InContainer instead of raw memory copy
+				void* PropertyAddress = ObjProp->ContainerPtrToValuePtr<void>(StationEditorWidget);
+				ObjProp->SetObjectPropertyValue(PropertyAddress, ModuleCatalog);
+				UE_LOG(LogAdastrea, Log, TEXT("ShowStationEditor: Set ModuleCatalog on widget"));
+			}
+			else
+			{
+				UE_LOG(LogAdastrea, Warning, TEXT("ShowStationEditor: ModuleCatalog property is not an object property"));
+			}
 		}
 	}
 
