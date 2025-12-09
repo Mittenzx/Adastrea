@@ -30,9 +30,10 @@ from typing import List, Tuple
 class TestRunner:
     """Unified test runner for all Adastrea tests."""
 
-    def __init__(self, verbose: bool = False, quick: bool = False):
+    def __init__(self, verbose: bool = False, quick: bool = False, timeout: int = 300):
         self.verbose = verbose
         self.quick = quick
+        self.timeout = timeout  # Default 5 minutes
         self.results = []
         self.project_root = Path(__file__).parent
 
@@ -48,7 +49,7 @@ class TestRunner:
                 capture_output=True,
                 text=True,
                 cwd=self.project_root,
-                timeout=300  # 5 minute timeout
+                timeout=self.timeout
             )
             
             success = result.returncode == 0
@@ -304,10 +305,16 @@ def main():
         action="store_true",
         help="Run only validation scripts"
     )
+    parser.add_argument(
+        "--timeout",
+        type=int,
+        default=300,
+        help="Timeout in seconds for individual test commands (default: 300)"
+    )
     
     args = parser.parse_args()
     
-    runner = TestRunner(verbose=args.verbose, quick=args.quick)
+    runner = TestRunner(verbose=args.verbose, quick=args.quick, timeout=args.timeout)
     exit_code = runner.run_all(
         python_only=args.python_only,
         validation_only=args.validation_only

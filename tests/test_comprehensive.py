@@ -301,13 +301,15 @@ class TestCodeQuality:
         for filepath in source_files:
             try:
                 content = filepath.read_text(encoding='utf-8', errors='ignore')
-                for pattern, desc in secret_patterns:
-                    if re.search(pattern, content, re.IGNORECASE):
-                        # Check it's not in a comment
-                        for line in content.split('\n'):
-                            if re.search(pattern, line, re.IGNORECASE):
-                                if not line.strip().startswith('//') and not line.strip().startswith('*'):
-                                    secrets_found.append((filepath, desc))
+                # Search line by line to avoid duplicate work
+                for line in content.split('\n'):
+                    # Skip comment lines
+                    if line.strip().startswith('//') or line.strip().startswith('*'):
+                        continue
+                    for pattern, desc in secret_patterns:
+                        if re.search(pattern, line, re.IGNORECASE):
+                            secrets_found.append((filepath, desc))
+                            break  # Only report once per file
             except Exception:
                 continue
         

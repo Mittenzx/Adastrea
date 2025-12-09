@@ -159,8 +159,9 @@ class BuildErrorChecker:
                 self.add_error(f"{build_file.name} doesn't inherit from ModuleRules")
             
             # Extract dependencies (only from PublicDependencyModuleNames and PrivateDependencyModuleNames)
+            # This pattern matches the standard Unreal Build Tool C# syntax:
+            # PublicDependencyModuleNames.AddRange(new string[] { "Core", "Engine" })
             deps = []
-            # Look for PublicDependencyModuleNames and PrivateDependencyModuleNames specifically
             for match in re.finditer(r'(Public|Private)DependencyModuleNames\.AddRange\s*\(\s*new\s+string\[\]\s*\{([^}]+)\}', content):
                 deps_str = match.group(2)
                 deps.extend([d.strip().strip('"').strip("'") for d in deps_str.split(',') if d.strip()])
