@@ -107,11 +107,11 @@ EditorWidget->EditorManager->ModuleCatalog = MyCatalog;
 
 **DO** this instead:
 ```cpp
-// GOOD: Use property reflection
-if (FProperty* Prop = MyWidget->GetClass()->FindPropertyByName(FName("ModuleCatalog")))
+// GOOD: Use property reflection with type safety
+if (FObjectProperty* ObjProp = CastField<FObjectProperty>(MyWidget->GetClass()->FindPropertyByName(FName("ModuleCatalog"))))
 {
-    void* Address = Prop->ContainerPtrToValuePtr<void>(MyWidget);
-    Prop->CopyCompleteValue(Address, &MyCatalog);
+    void* Address = ObjProp->ContainerPtrToValuePtr<void>(MyWidget);
+    ObjProp->SetObjectPropertyValue(Address, MyCatalog);
 }
 ```
 

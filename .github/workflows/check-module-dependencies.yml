@@ -35,14 +35,3 @@ jobs:
       - name: Run module dependency check
         run: |
           python3 .github/scripts/check_module_dependencies.py
-          
-      - name: Report status
-        if: always()
-        run: |
-          if [ $? -eq 0 ]; then
-            echo "✅ Module dependency check passed"
-          else
-            echo "❌ Module dependency check failed"
-            echo "See .github/MODULE_DEPENDENCY_FIX.md for resolution strategies"
-            exit 1
-          fi

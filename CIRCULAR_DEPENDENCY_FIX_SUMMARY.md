@@ -84,11 +84,10 @@ if (SetStationFunc)
 **Added**: Proper type checking for property reflection
 
 ```cpp
-// Before (unsafe)
-void* PropertyAddress = Prop->ContainerPtrToValuePtr<void>(Widget);
-Prop->CopyCompleteValue(PropertyAddress, &Catalog);
+// Before (direct member access - circular dependency)
+EditorWidget->EditorManager->ModuleCatalog = Catalog;
 
-// After (type-safe)
+// After (type-safe reflection)
 if (FObjectProperty* ObjProp = CastField<FObjectProperty>(Prop))
 {
     void* PropertyAddress = ObjProp->ContainerPtrToValuePtr<void>(Widget);

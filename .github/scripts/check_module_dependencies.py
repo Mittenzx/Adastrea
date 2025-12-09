@@ -10,6 +10,13 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Set, Tuple
 
+# Unreal Engine core modules to skip when checking for circular dependencies
+UNREAL_ENGINE_CORE_MODULES = {
+    'Core', 'CoreUObject', 'Engine', 'InputCore', 'EnhancedInput',
+    'UMG', 'Slate', 'SlateCore', 'AIModule', 'NavigationSystem',
+    'Niagara', 'PhysicsCore', 'OnlineSubsystem'
+}
+
 def find_build_cs_files(source_dir: Path) -> List[Path]:
     """Find all .Build.cs files in the source directory"""
     build_files = []
@@ -96,9 +103,7 @@ def find_circular_dependencies(graph: Dict[str, Set[str]]) -> List[List[str]]:
         
         for dep in dependencies:
             # Skip Unreal Engine core modules
-            if dep in ['Core', 'CoreUObject', 'Engine', 'InputCore', 'EnhancedInput',
-                       'UMG', 'Slate', 'SlateCore', 'AIModule', 'NavigationSystem',
-                       'Niagara', 'PhysicsCore', 'OnlineSubsystem']:
+            if dep in UNREAL_ENGINE_CORE_MODULES:
                 continue
             
             if dep not in graph:
@@ -111,14 +116,17 @@ def find_circular_dependencies(graph: Dict[str, Set[str]]) -> List[List[str]]:
                 cycle = path[cycle_start:] + [dep]
                 cycles.append(cycle)
             elif dep not in visited:
-                dfs(dep, path[:], visited, rec_stack)
+                dfs(dep, path, visited, rec_stack)
         
         rec_stack.remove(node)
+        path.pop()
     
     visited = set()
+    rec_stack = set()
+    path = []
     for module in graph.keys():
         if module not in visited:
-            dfs(module, [], visited, set())
+            dfs(module, path, visited, rec_stack)
     
     return cycles
 

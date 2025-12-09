@@ -189,10 +189,12 @@ Event Construct
     │
     └─ False: (EditorManager doesn't exist yet)
        └─> NewObject
-           ├─ Outer: Self
+           ├─ Outer: GetOwningPlayer() or suitable stable object
            ├─ Class: StationEditorManager
            └─> Set EditorManager [result]
 ```
+
+**Note**: Use `GetOwningPlayer()` or another stable object as the outer instead of `Self` to ensure proper lifetime management. The widget may be destroyed and recreated, but the EditorManager should persist.
 
 ### Step 5: Test Your Changes
 

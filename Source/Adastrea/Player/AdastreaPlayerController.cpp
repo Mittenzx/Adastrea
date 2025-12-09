@@ -227,10 +227,13 @@ void AAdastreaPlayerController::ShowStationEditor(ASpaceStation* Station)
 	UFunction* SetStationFunc = StationEditorWidget->FindFunction(FName("SetStation"));
 	if (SetStationFunc)
 	{
-		struct FSetStationParams
+		// Runtime validation: Ensure function signature matches struct
+		if (SetStationFunc->NumParms != 1 || SetStationFunc->ParmsSize != sizeof(FSetStationParams))
 		{
-			ASpaceStation* Station;
-		};
+			UE_LOG(LogAdastrea, Error, TEXT("ShowStationEditor: SetStation function signature mismatch (expected 1 param, size %d; got %d params, size %d)"),
+				sizeof(FSetStationParams), SetStationFunc->NumParms, SetStationFunc->ParmsSize);
+			return;
+		}
 		
 		FSetStationParams Params;
 		Params.Station = Station;
