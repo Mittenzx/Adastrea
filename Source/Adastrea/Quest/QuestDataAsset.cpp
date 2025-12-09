@@ -201,7 +201,7 @@ EDataValidationResult UQuestDataAsset::IsDataValid(TArray<FText>& ValidationErro
         Result = EDataValidationResult::Invalid;
     }
 
-    if (QuestDescription.IsEmpty())
+    if (Description.IsEmpty())
     {
         ValidationErrors.Add(FText::FromString(TEXT("Quest Description is empty")));
         Result = EDataValidationResult::Invalid;
@@ -219,7 +219,7 @@ EDataValidationResult UQuestDataAsset::IsDataValid(TArray<FText>& ValidationErro
     {
         const FQuestObjective& Objective = Objectives[i];
         
-        if (Objective.ObjectiveDescription.IsEmpty())
+        if (Objective.Description.IsEmpty())
         {
             ValidationErrors.Add(FText::Format(
                 FText::FromString(TEXT("Objective {0} has empty description")),
@@ -228,7 +228,7 @@ EDataValidationResult UQuestDataAsset::IsDataValid(TArray<FText>& ValidationErro
             Result = EDataValidationResult::Invalid;
         }
 
-        if (Objective.RequiredProgress <= 0)
+        if (Objective.RequiredQuantity <= 0)
         {
             ValidationErrors.Add(FText::Format(
                 FText::FromString(TEXT("Objective {0} has invalid required progress (<= 0)")),
@@ -239,41 +239,31 @@ EDataValidationResult UQuestDataAsset::IsDataValid(TArray<FText>& ValidationErro
     }
 
     // Validate rewards
-    if (CreditReward < 0)
+    if (Rewards.Credits < 0)
     {
         ValidationErrors.Add(FText::FromString(TEXT("Credit Reward cannot be negative")));
         Result = EDataValidationResult::Invalid;
     }
 
-    if (ExperienceReward < 0)
+    if (Rewards.ExperiencePoints < 0)
     {
         ValidationErrors.Add(FText::FromString(TEXT("Experience Reward cannot be negative")));
         Result = EDataValidationResult::Invalid;
     }
 
-    if (ReputationChange < -100 || ReputationChange > 100)
+    if (Rewards.ReputationGain < -100 || Rewards.ReputationGain > 100)
     {
         ValidationErrors.Add(FText::Format(
             FText::FromString(TEXT("Reputation Change ({0}) must be between -100 and 100")),
-            FText::AsNumber(ReputationChange)
+            FText::AsNumber(Rewards.ReputationGain)
         ));
         Result = EDataValidationResult::Invalid;
     }
 
     // Warn about potential issues
-    if (CreditReward == 0 && ExperienceReward == 0 && ItemRewards.Num() == 0)
+    if (Rewards.Credits == 0 && Rewards.ExperiencePoints == 0 && Rewards.ItemRewards.Num() == 0)
     {
         ValidationErrors.Add(FText::FromString(TEXT("Warning: Quest has no rewards")));
-        // Just a warning
-    }
-
-    if (QuestType == EQuestType::MainStory && !bIsRepeatable)
-    {
-        // Good - main story quests should not be repeatable
-    }
-    else if (QuestType == EQuestType::DailyMission && !bIsRepeatable)
-    {
-        ValidationErrors.Add(FText::FromString(TEXT("Warning: Daily mission should probably be repeatable")));
         // Just a warning
     }
 

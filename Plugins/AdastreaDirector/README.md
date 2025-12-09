@@ -588,6 +588,7 @@ This plugin is part of the Adastrea Director project. For contribution guideline
 
 - **Issues**: [GitHub Issues](https://github.com/Mittenzx/Adastrea-Director/issues)
 - **Documentation**: [Main README](../../README.md)
+- **📖 Remote Connection Types & Actions**: [Comprehensive Guide](../../wiki/Remote-Connection-Types-and-Actions.md) - All connection types, actions, and comparisons
 - **Feasibility Study**: [PLUGIN_DEVELOPMENT_FEASIBILITY.md](../../PLUGIN_DEVELOPMENT_FEASIBILITY.md)
 
 ## License

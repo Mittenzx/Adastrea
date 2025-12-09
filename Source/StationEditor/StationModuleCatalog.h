@@ -5,10 +5,11 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "Stations/StationModuleTypes.h"
+#include "Stations/SpaceStationModule.h"
 #include "StationModuleCatalog.generated.h"
 
 // Forward declarations
-class ASpaceStationModule;
+// class ASpaceStationModule; // Now included above
 
 /**
  * Build cost structure for station modules

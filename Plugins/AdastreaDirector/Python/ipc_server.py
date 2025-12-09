@@ -137,6 +137,10 @@ class IPCServer:
         self.register_handler('plan', self._handle_plan)
         self.register_handler('analyze', self._handle_analyze)
         self.register_handler('run_tests', self._handle_run_tests)
+        # Phase 2 handlers
+        self.register_handler('generate_code', self._handle_generate_code)
+        self.register_handler('apply_feedback', self._handle_apply_feedback)
+        self.register_handler('get_confidence', self._handle_get_confidence)
 
     def register_handler(self, request_type: str, handler_func):
         """
@@ -841,6 +845,187 @@ JSON Response:"""
                 'error': str(e),
                 'passed': 0,
                 'failed': 0
+            }
+
+    def _handle_generate_code(self, data: str) -> Dict[str, Any]:
+        """
+        Handle code generation request using the code generation agent.
+        
+        Args:
+            data: Goal/task description for code generation
+            
+        Returns:
+            Dict with generated code modifications and confidence scores
+        """
+        logger.info(f"Code generation request received: {data}")
+        
+        try:
+            from agents.code_generation_agent import CodeGenerationAgent
+            from agents.goal_analysis_agent import GoalAnalysisAgent
+            from agents.task_decomposition_agent import TaskDecompositionAgent
+            
+            # First analyze the goal
+            goal_agent = GoalAnalysisAgent()
+            goal_obj = goal_agent.parse_goal(data)
+            
+            # Decompose into tasks
+            task_agent = TaskDecompositionAgent()
+            task_tree = task_agent.decompose_goal(goal_obj)
+            
+            # Generate code for the first task (or all tasks)
+            code_agent = CodeGenerationAgent()
+            all_modifications = []
+            
+            # Get all tasks from the tree
+            tasks = task_tree.get_all_tasks()
+            
+            # Limit number of tasks to generate code for (configurable via environment variable)
+            MAX_CODE_GEN_TASKS = int(os.environ.get('MAX_CODE_GEN_TASKS', '3'))
+            
+            for task in tasks[:MAX_CODE_GEN_TASKS]:
+                try:
+                    implementation = code_agent.generate_implementation(task)
+                    
+                    # Extract file modifications with confidence scores
+                    for file_mod in implementation.file_modifications:
+                        all_modifications.append({
+                            'filePath': file_mod.file_path,
+                            'modificationType': file_mod.modification_type,
+                            'description': file_mod.description,
+                            'codeSnippet': file_mod.code_snippet,
+                            'lineStart': getattr(file_mod, 'line_start', None),
+                            'lineEnd': getattr(file_mod, 'line_end', None),
+                            # TODO: Replace with actual confidence calculation based on code quality metrics
+                            'confidence': float(os.environ.get('DEFAULT_CODE_MOD_CONFIDENCE', '0.75'))
+                        })
+                    
+                except Exception as e:
+                    logger.warning(f"Failed to generate code for task {task.id}: {e}")
+                    continue
+            
+            return {
+                'status': 'success',
+                'goal': data,
+                'file_modifications': all_modifications,
+                'total_modifications': len(all_modifications)
+            }
+            
+        except ImportError as e:
+            logger.warning(f"Code generation agents not available: {e}")
+        except Exception as e:
+            logger.error(f"Code generation error: {e}")
+        
+        # Fallback: Return error status when agents not available
+        return {
+            'status': 'error',
+            'error': 'Code generation agents not available. Please configure agents.',
+            'goal': data,
+            'file_modifications': [],
+            'total_modifications': 0
+        }
+
+    def _handle_apply_feedback(self, data: str) -> Dict[str, Any]:
+        """
+        Handle feedback application for continuous learning.
+        
+        Args:
+            data: JSON string containing feedback item
+            
+        Returns:
+            Dict with confirmation of feedback storage
+        """
+        logger.info(f"Feedback received")
+        
+        try:
+            feedback_data = json.loads(data)
+            
+            # Store feedback (could be saved to file, database, etc.)
+            # For now, just log it
+            logger.info(f"Feedback stored: {feedback_data.get('type')} - {feedback_data.get('id')}")
+            
+            # In the future, this could:
+            # - Update confidence scores based on approval patterns
+            # - Train models on user preferences
+            # - Adjust code generation strategies
+            
+            return {
+                'status': 'success',
+                'message': 'Feedback received and stored',
+                'feedback_id': feedback_data.get('id')
+            }
+            
+        except json.JSONDecodeError as e:
+            logger.error(f"Invalid feedback JSON: {e}")
+            return {
+                'status': 'error',
+                'error': 'Invalid feedback format'
+            }
+        except Exception as e:
+            logger.error(f"Feedback handling error: {e}")
+            return {
+                'status': 'error',
+                'error': str(e)
+            }
+
+    def _handle_get_confidence(self, data: str) -> Dict[str, Any]:
+        """
+        Handle confidence score request for a proposed change.
+        
+        Args:
+            data: JSON string with change details
+            
+        Returns:
+            Dict with confidence score (0-1)
+        """
+        logger.info(f"Confidence request received")
+        
+        try:
+            change_data = json.loads(data)
+            
+            # Calculate confidence based on various factors:
+            # - Past approval patterns
+            # - Complexity of the change
+            # - Similarity to previously approved changes
+            # - Code quality metrics
+            
+            # For now, return a default confidence score
+            # In the future, this would use ML models or heuristics
+            
+            file_path = change_data.get('filePath', '')
+            mod_type = change_data.get('modificationType', '')
+            
+            # Simple heuristic: higher confidence for modifications, lower for creates/deletes
+            confidence = 0.8 if mod_type == 'modify' else 0.6
+            
+            # Adjust based on file type
+            if file_path.endswith('.py'):
+                confidence += 0.1  # Higher confidence for Python files
+            elif file_path.endswith(('.cpp', '.h')):
+                confidence -= 0.1  # Lower confidence for C++ files (more complex)
+            
+            # Ensure within bounds
+            confidence = max(0.0, min(1.0, confidence))
+            
+            return {
+                'status': 'success',
+                'confidence': confidence,
+                'factors': {
+                    'modification_type': mod_type,
+                    'file_type': file_path.split('.')[-1] if '.' in file_path else 'unknown'
+                }
+            }
+            
+        except json.JSONDecodeError as e:
+            logger.error(f"Invalid confidence request JSON: {e}")
+            return {
+                'status': 'error',
+                'error': 'Invalid request format'
+            }
+        except Exception as e:
+            logger.error(f"Confidence calculation error: {e}")
+            return {
+                'status': 'error',
+                'error': str(e)
             }
 
 

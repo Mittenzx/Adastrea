@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "Stations/SpaceStation.h"
+#include "Stations/SpaceStationModule.h"
 #include "StationModuleCatalog.h"
 #include "StationEditorManager.generated.h"
 

@@ -1,7 +1,7 @@
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipInterior.h"
 #include "Ships/SpaceshipDataAsset.h"
-#include "Factions/FactionDataAsset.h"
+#include "Ships/SpaceshipControlsComponent.h"
 #include "AdastreaLog.h"
 #include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
@@ -16,7 +16,6 @@ ASpaceship::ASpaceship()
     InteriorInstance = nullptr;
     SavedExternalPawn = nullptr;
     ShipDataAsset = nullptr;
-    ShipFaction = nullptr;
 
     // Initialize default movement properties
     DefaultMaxSpeed = 3000.0f;
@@ -28,7 +27,6 @@ ASpaceship::ASpaceship()
     // Initialize ship status
     CurrentHullIntegrity = 1000.0f;
     MaxHullIntegrity = 1000.0f;
-    bIsDestroyed = false;
     // Initialize X4-style flight control parameters
     bFlightAssistEnabled = true;              // Flight assist on by default
     RotationDampingFactor = 0.85f;            // Smooth rotation with high damping
@@ -93,25 +91,13 @@ void ASpaceship::BeginPlay()
 
 void ASpaceship::PossessedBy(AController* NewController)
 {
-    UE_LOG(LogAdastreaShips, Warning, TEXT("*** POSSESS CALLED: %s current controller=%s, new controller=%s ***"),
-        *GetName(),
-        GetController() ? *GetController()->GetName() : TEXT("nullptr"),
-        NewController ? *NewController->GetName() : TEXT("nullptr"));
-
-    // Check if this controller is already possessing this pawn
-    if (GetController() == NewController)
-    {
-        UE_LOG(LogAdastreaShips, Warning, TEXT("*** DUPLICATE POSSESS PREVENTED: %s is already possessed by controller %s ***"),
-            *GetName(),
-            NewController ? *NewController->GetName() : TEXT("nullptr"));
-        return;
-    }
-
     Super::PossessedBy(NewController);
-    UE_LOG(LogAdastreaShips, Warning, TEXT("*** SHIP POSSESSED: %s by controller %s ***"),
-        *GetName(),
+    UE_LOG(LogAdastreaShips, Warning, TEXT("*** SHIP POSSESSED: %s by controller %s ***"), 
+        *GetName(), 
         NewController ? *NewController->GetName() : TEXT("nullptr"));
-}void ASpaceship::Tick(float DeltaTime)
+}
+
+void ASpaceship::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
@@ -167,8 +153,19 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
     UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship::SetupPlayerInputComponent called on %s"), *GetName());
 
-    // Setup Enhanced Input bindings for ASpaceship's input
-    // Always use direct binding to MoveAction and LookAction UPROPERTYs for simplicity
+    // Initialize SpaceshipControlsComponent if present
+    USpaceshipControlsComponent* ControlsComponent = FindComponentByClass<USpaceshipControlsComponent>();
+    if (ControlsComponent)
+    {
+        UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Found SpaceshipControlsComponent, initializing input bindings"));
+        ControlsComponent->InitializeInputBindings(PlayerInputComponent);
+    }
+    else
+    {
+        UE_LOG(LogAdastreaInput, Warning, TEXT("ASpaceship: SpaceshipControlsComponent NOT FOUND on %s"), *GetName());
+    }
+    
+    // Setup Enhanced Input bindings for ASpaceship's input (only if actions are defined)
     if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
     {
         if (MoveAction)
@@ -176,44 +173,12 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
             EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASpaceship::Move);
             UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound MoveAction"));
         }
-        else
-        {
-            UE_LOG(LogAdastreaInput, Error, TEXT("ASpaceship: MoveAction is not assigned! Set it to IA_Move in the Blueprint"));
-        }
 
         if (LookAction)
         {
             EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASpaceship::Look);
             UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound LookAction"));
         }
-        else
-        {
-            UE_LOG(LogAdastreaInput, Error, TEXT("ASpaceship: LookAction is not assigned! Set it to IA_Look in the Blueprint"));
-        }
-
-        if (ThrottleUpAction)
-        {
-            EnhancedInputComponent->BindAction(ThrottleUpAction, ETriggerEvent::Triggered, this, &ASpaceship::ThrottleUp);
-            UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound ThrottleUpAction"));
-        }
-        else
-        {
-            UE_LOG(LogAdastreaInput, Error, TEXT("ASpaceship: ThrottleUpAction is not assigned! Set it to IA_ThrottleUp in the Blueprint"));
-        }
-
-        if (ThrottleDownAction)
-        {
-            EnhancedInputComponent->BindAction(ThrottleDownAction, ETriggerEvent::Triggered, this, &ASpaceship::ThrottleDown);
-            UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound ThrottleDownAction"));
-        }
-        else
-        {
-            UE_LOG(LogAdastreaInput, Error, TEXT("ASpaceship: ThrottleDownAction is not assigned! Set it to IA_ThrottleDown in the Blueprint"));
-        }
-    }
-    else
-    {
-        UE_LOG(LogAdastreaInput, Error, TEXT("ASpaceship: PlayerInputComponent is not an EnhancedInputComponent!"));
     }
 }
 
@@ -254,26 +219,34 @@ void ASpaceship::MoveForward(float Value)
     // Without flight assist, it applies Newtonian acceleration to velocity
     if (bFlightAssistEnabled)
     {
-        // Flight assist mode: direct velocity control, scaled by throttle
-        AddMovementInput(GetActorForwardVector(), Value * (ThrottlePercentage / 100.0f));
+        // Flight assist mode: direct velocity control
+        AddMovementInput(GetActorForwardVector(), Value);
     }
     else
     {
-        // No flight assist: apply Newtonian acceleration, scaled by throttle
+        // No flight assist: apply Newtonian acceleration
         // Increment velocity in forward direction based on input
         if (GetWorld() && MovementComponent)
         {
-            FVector AccelerationVector = GetActorForwardVector() * Value * (ThrottlePercentage / 100.0f) * DefaultAcceleration * GetWorld()->GetDeltaSeconds();
+            FVector AccelerationVector = GetActorForwardVector() * Value * DefaultAcceleration * GetWorld()->GetDeltaSeconds();
             MovementComponent->Velocity += AccelerationVector;
         }
     }
-
-    // Debug drawing for forward movement
-    if (Value != 0.0f)
+    
+    // Update particle throttle based on forward movement
+    if (ParticleComponent)
     {
-        FVector Start = GetActorLocation();
-        FVector End = Start + (GetActorForwardVector() * Value * 100.0f); // Scale for visualization
-        DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 0.1f, 0, 2.0f);
+        ParticleComponent->UpdateThrottle(FMath::Abs(Value));
+        
+        // Activate RCS thrusters based on direction
+        if (Value > 0.0f)
+        {
+            ParticleComponent->ActivateRCSThruster(ERCSThrusterAxis::Backward, Value);
+        }
+        else if (Value < 0.0f)
+        {
+            ParticleComponent->ActivateRCSThruster(ERCSThrusterAxis::Forward, FMath::Abs(Value));
+        }
     }
 }
 
@@ -282,8 +255,8 @@ void ASpaceship::MoveRight(float Value)
     // Store input for smooth interpolation
     RightInput = Value;
 
-    // X4-style: strafe is independent from forward motion and throttle
-    // Apply strafe independence factor for realistic feel (no throttle scaling for thrusters)
+    // X4-style: strafe is independent from forward motion
+    // Apply strafe independence factor for realistic feel
     float StrafeValue = Value * StrafeIndependence;
     AddMovementInput(GetActorRightVector(), StrafeValue);
     
@@ -299,14 +272,6 @@ void ASpaceship::MoveRight(float Value)
             ParticleComponent->ActivateRCSThruster(ERCSThrusterAxis::Right, FMath::Abs(Value));
         }
     }
-
-    // Debug drawing for right movement
-    if (Value != 0.0f)
-    {
-        FVector Start = GetActorLocation();
-        FVector End = Start + (GetActorRightVector() * Value * 100.0f); // Scale for visualization
-        DrawDebugLine(GetWorld(), Start, End, FColor::Blue, false, 0.1f, 0, 2.0f);
-    }
 }
 
 void ASpaceship::MoveUp(float Value)
@@ -314,7 +279,7 @@ void ASpaceship::MoveUp(float Value)
     // Store input for smooth interpolation
     UpInput = Value;
 
-    // X4-style: vertical strafe is independent from forward motion and throttle
+    // X4-style: vertical strafe is independent from forward motion
     float StrafeValue = Value * StrafeIndependence;
     AddMovementInput(GetActorUpVector(), StrafeValue);
     
@@ -507,13 +472,11 @@ void ASpaceship::ToggleFlightAssist()
 void ASpaceship::ThrottleUp()
 {
     ThrottlePercentage = FMath::Clamp(ThrottlePercentage + ThrottleStep, 0.0f, 100.0f);
-    UE_LOG(LogAdastreaInput, Log, TEXT("Throttle UP: %f%%"), ThrottlePercentage);
 }
 
 void ASpaceship::ThrottleDown()
 {
     ThrottlePercentage = FMath::Clamp(ThrottlePercentage - ThrottleStep, 0.0f, 100.0f);
-    UE_LOG(LogAdastreaInput, Log, TEXT("Throttle DOWN: %f%%"), ThrottlePercentage);
 }
 
 void ASpaceship::SetThrottle(float Percentage)
@@ -587,24 +550,6 @@ float ASpaceship::GetEffectiveMaxSpeed() const
     }
 
     return EffectiveSpeed;
-}
-
-float ASpaceship::GetForwardSpeed() const
-{
-    // Return 0 if no movement component
-    if (!MovementComponent)
-    {
-        return 0.0f;
-    }
-
-    // Get the ship's forward vector
-    FVector ForwardVector = GetActorForwardVector();
-    
-    // Project the velocity onto the forward vector to get forward speed
-    // This gives us the speed in the direction the ship is facing
-    float ForwardSpeed = FVector::DotProduct(MovementComponent->Velocity, ForwardVector);
-    
-    return ForwardSpeed;
 }
 
 void ASpaceship::ApplyFlightAssist(float DeltaTime)
@@ -736,281 +681,4 @@ void ASpaceship::UpdateThrottleVelocity(float DeltaTime)
         // Note: This works in conjunction with AddMovementInput for strafe/vertical
         MovementComponent->Velocity = BlendedVelocity;
     }
-}
-
-// ====================
-// IDamageable Interface Implementation
-// ====================
-
-float ASpaceship::ApplyDamage_Implementation(float Damage, EDamageType DamageType, AActor* Instigator, AActor* DamageCauser)
-{
-    if (!CanTakeDamage_Implementation())
-    {
-        return 0.0f;
-    }
-
-    // TODO: Apply damage type modifiers based on ship armor/shields
-    // For now, apply damage directly to hull
-    float ActualDamage = FMath::Min(Damage, CurrentHullIntegrity);
-    CurrentHullIntegrity -= ActualDamage;
-
-    UE_LOG(LogAdastreaShips, Log, TEXT("%s took %.1f damage from %s. Health: %.1f/%.1f"),
-        *GetName(), ActualDamage,
-        Instigator ? *Instigator->GetName() : TEXT("Unknown"),
-        CurrentHullIntegrity, MaxHullIntegrity);
-
-    // Check if ship is destroyed
-    if (CurrentHullIntegrity <= 0.0f)
-    {
-        CurrentHullIntegrity = 0.0f;
-        bIsDestroyed = true;
-        UE_LOG(LogAdastreaShips, Warning, TEXT("%s has been destroyed!"), *GetName());
-        // TODO: Trigger destruction effects, loot spawning, etc.
-    }
-
-    return ActualDamage;
-}
-
-bool ASpaceship::CanTakeDamage_Implementation() const
-{
-    // Cannot take damage if already destroyed
-    if (bIsDestroyed)
-    {
-        return false;
-    }
-
-    // TODO: Add additional checks for:
-    // - Invulnerability (quest protection, safe zones)
-    // - Docked status (if docked at safe station)
-    
-    return true;
-}
-
-float ASpaceship::GetHealthPercentage_Implementation() const
-{
-    if (MaxHullIntegrity <= 0.0f)
-    {
-        return 0.0f;
-    }
-
-    return CurrentHullIntegrity / MaxHullIntegrity;
-}
-
-bool ASpaceship::IsDestroyed_Implementation() const
-{
-    return bIsDestroyed;
-}
-
-float ASpaceship::GetMaxHealth_Implementation() const
-{
-    return MaxHullIntegrity;
-}
-
-float ASpaceship::GetCurrentHealth_Implementation() const
-{
-    return CurrentHullIntegrity;
-}
-
-// ====================
-// ITargetable Interface Implementation
-// ====================
-
-bool ASpaceship::CanBeTargeted_Implementation() const
-{
-    // Cannot target destroyed ships
-    if (bIsDestroyed)
-    {
-        return false;
-    }
-
-    // TODO: Add checks for:
-    // - Stealth/cloaking
-    // - Sensor range
-    // - Safe zones
-
-    return true;
-}
-
-int32 ASpaceship::GetTargetPriority_Implementation() const
-{
-    // Base priority on ship class from DataAsset
-    // TODO: Implement more sophisticated priority based on threat level
-    if (ShipDataAsset)
-    {
-        // Use combat rating as priority indicator (0-100)
-        return FMath::RoundToInt(ShipDataAsset->GetCombatRating());
-    }
-
-    return 50; // Default medium priority
-}
-
-FText ASpaceship::GetTargetDisplayName_Implementation() const
-{
-    return GetShipName();
-}
-
-UTexture2D* ASpaceship::GetTargetIcon_Implementation() const
-{
-    // TODO: Return ship icon from DataAsset
-    // For now return nullptr, UI can use default icon
-    return nullptr;
-}
-
-FVector ASpaceship::GetAimPoint_Implementation() const
-{
-    // Return center of actor (aim for center mass)
-    return GetActorLocation();
-}
-
-float ASpaceship::GetTargetSignature_Implementation() const
-{
-    // TODO: Implement signature based on:
-    // - Ship size
-    // - Power output
-    // - Stealth systems
-    // - Transponder status
-    
-    return 1.0f; // Default normal signature
-}
-
-float ASpaceship::GetDistanceFromLocation_Implementation(FVector FromLocation) const
-{
-    return FVector::Dist(GetActorLocation(), FromLocation);
-}
-
-bool ASpaceship::IsHostileToActor_Implementation(AActor* Observer) const
-{
-    if (!Observer)
-    {
-        return false;
-    }
-
-    // Check if observer implements IFactionMember
-    if (Observer->Implements<UFactionMember>())
-    {
-        return IsHostileTo_Implementation(TScriptInterface<IFactionMember>(Observer));
-    }
-
-    // Default to non-hostile if can't determine faction
-    return false;
-}
-
-// ====================
-// IFactionMember Interface Implementation
-// ====================
-
-UFactionDataAsset* ASpaceship::GetFaction_Implementation() const
-{
-    return ShipFaction;
-}
-
-bool ASpaceship::IsAlliedWith_Implementation(const TScriptInterface<IFactionMember>& Other) const
-{
-    if (!Other.GetObject())
-    {
-        return false;
-    }
-
-    // Same faction = always allied
-    UFactionDataAsset* OtherFaction = IFactionMember::Execute_GetFaction(Other.GetObject());
-    if (ShipFaction && OtherFaction && ShipFaction == OtherFaction)
-    {
-        return true;
-    }
-
-    // Check diplomatic relations
-    int32 Relationship = GetRelationshipWith_Implementation(Other);
-    return Relationship >= 26; // Friendly or allied
-}
-
-bool ASpaceship::IsHostileTo_Implementation(const TScriptInterface<IFactionMember>& Other) const
-{
-    if (!Other.GetObject())
-    {
-        return false;
-    }
-
-    // Same faction = never hostile
-    UFactionDataAsset* OtherFaction = IFactionMember::Execute_GetFaction(Other.GetObject());
-    if (ShipFaction && OtherFaction && ShipFaction == OtherFaction)
-    {
-        return false;
-    }
-
-    // Check diplomatic relations
-    int32 Relationship = GetRelationshipWith_Implementation(Other);
-    return Relationship <= -26; // Hostile or at war
-}
-
-int32 ASpaceship::GetRelationshipWith_Implementation(const TScriptInterface<IFactionMember>& Other) const
-{
-    if (!Other.GetObject() || !ShipFaction)
-    {
-        return 0; // Neutral if no faction
-    }
-
-    UFactionDataAsset* OtherFaction = IFactionMember::Execute_GetFaction(Other.GetObject());
-    if (!OtherFaction)
-    {
-        return 0; // Neutral if other has no faction
-    }
-
-    if (ShipFaction == OtherFaction)
-    {
-        return 100; // Same faction = maximum positive relationship
-    }
-
-    // TODO: Query faction relationship from FactionDiplomacyManager
-    // For now return neutral
-    return 0;
-}
-
-bool ASpaceship::IsNeutral_Implementation() const
-{
-    return ShipFaction == nullptr;
-}
-
-FText ASpaceship::GetFactionDisplayName_Implementation() const
-{
-    if (ShipFaction)
-    {
-        return ShipFaction->FactionName;
-    }
-
-    return FText::FromString(TEXT("Independent"));
-}
-
-bool ASpaceship::CanEngageInCombat_Implementation() const
-{
-    // Cannot engage if destroyed
-    if (bIsDestroyed)
-    {
-        return false;
-    }
-
-    // TODO: Add checks for:
-    // - Docked status
-    // - Safe zones
-    // - Quest protection
-
-    return true;
-}
-
-float ASpaceship::GetTradePriceModifier_Implementation(UFactionDataAsset* TraderFaction) const
-{
-    if (!ShipFaction || !TraderFaction)
-    {
-        return 1.0f; // Base price if no faction
-    }
-
-    if (ShipFaction == TraderFaction)
-    {
-        return 0.9f; // 10% discount for same faction
-    }
-
-    // TODO: Calculate modifier based on faction relationship
-    // Positive relationship = better prices
-    // Negative relationship = worse prices
-    
-    return 1.0f; // Base price for now
 }

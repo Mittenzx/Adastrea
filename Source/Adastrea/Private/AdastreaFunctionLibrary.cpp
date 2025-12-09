@@ -84,7 +84,8 @@ TArray<AActor*> UAdastreaFunctionLibrary::GetActorsWithinSphere(
 
     // Get all actors of specified class (or all actors if null)
     TArray<AActor*> AllActors;
-    UGameplayStatics::GetAllActorsOfClass(World, ActorClass ? ActorClass : AActor::StaticClass(), AllActors);
+    TSubclassOf<AActor> ClassToFind = ActorClass.Get() ? ActorClass : TSubclassOf<AActor>(AActor::StaticClass());
+    UGameplayStatics::GetAllActorsOfClass(World, ClassToFind, AllActors);
 
     // Filter by distance
     for (AActor* Actor : AllActors)
@@ -352,7 +353,7 @@ FString UAdastreaFunctionLibrary::FormatPercentage(float Percentage, int32 Decim
     else
     {
         FString Format = FString::Printf(TEXT("%%.%df%%%%"), DecimalPlaces);
-        return FString::Printf(*Format, PercentValue);
+        return Format.Replace(TEXT("%f"), *FString::SanitizeFloat(PercentValue));
     }
 }
 

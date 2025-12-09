@@ -279,9 +279,9 @@ EDataValidationResult UTradeItemDataAsset::IsDataValid(TArray<FText>& Validation
 	// Warn about potential issues
 	if (LegalityStatus == ELegalityStatus::Illegal || LegalityStatus == ELegalityStatus::Contraband)
 	{
-		if (ContrabandRiskLevel <= 0.0f)
+		if (ContrabandFineMultiplier <= 0.0f)
 		{
-			ValidationErrors.Add(FText::FromString(TEXT("Warning: Illegal/Contraband item should have positive risk level")));
+			ValidationErrors.Add(FText::FromString(TEXT("Warning: Illegal/Contraband item should have positive fine multiplier")));
 			// Just a warning
 		}
 	}

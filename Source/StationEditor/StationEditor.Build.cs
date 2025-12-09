@@ -16,7 +16,7 @@ public class StationEditor : ModuleRules
 		{
 			"StationEditor",
 			"StationEditor/Public",
-			"Adastrea/Stations"  // For SpaceStationModule.h
+			"Adastrea"  // For Stations/ includes
 		});
 
 		PublicDependencyModuleNames.AddRange(new string[] 

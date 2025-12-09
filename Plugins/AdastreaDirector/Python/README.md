@@ -190,3 +190,7 @@ Standard Python library only:
 - argparse
 
 No external dependencies required for basic IPC functionality.
+
+## Additional Documentation
+
+📖 **[Remote Connection Types & Actions](../../../wiki/Remote-Connection-Types-and-Actions.md)** - Comprehensive guide covering all connection types including this IPC Server, with detailed action listings, comparisons, and best practices.

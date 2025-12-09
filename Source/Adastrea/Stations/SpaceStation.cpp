@@ -181,7 +181,7 @@ void ASpaceStation::SetFaction(UFactionDataAsset* NewFaction)
 // IDamageable Interface Implementation
 // ====================
 
-float ASpaceStation::ApplyDamage_Implementation(float Damage, EDamageType DamageType, AActor* Instigator, AActor* DamageCauser)
+float ASpaceStation::ApplyDamage_Implementation(float Damage, EDamageType DamageType, AActor* DamageInstigator, AActor* DamageCauser)
 {
     if (!CanTakeDamage_Implementation())
     {
@@ -195,7 +195,7 @@ float ASpaceStation::ApplyDamage_Implementation(float Damage, EDamageType Damage
 
     UE_LOG(LogAdastreaStations, Log, TEXT("%s took %.1f damage from %s. Integrity: %.1f/%.1f"),
         *GetName(), ActualDamage,
-        Instigator ? *Instigator->GetName() : TEXT("Unknown"),
+        DamageInstigator ? *DamageInstigator->GetName() : TEXT("Unknown"),
         CurrentStructuralIntegrity, MaxStructuralIntegrity);
 
     // Check if station is destroyed

@@ -58,25 +58,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Movement", meta=(ClampMin="0.1", ClampMax="10.0"))
 	float MovementSpeed;
 
-	/** Smoothing speed for movement interpolation (higher = more responsive) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Movement", meta=(ClampMin="0.0", ClampMax="20.0"))
-	float MovementSmoothingSpeed;
-
-	/** Enable movement input smoothing */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Movement")
-	bool bEnableMovementSmoothing;
-
 	/** Look sensitivity multiplier applied to mouse input */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Look", meta=(ClampMin="0.1", ClampMax="10.0"))
 	float LookSensitivity;
-
-	/** Smoothing speed for rotation interpolation (higher = more responsive) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Look", meta=(ClampMin="0.0", ClampMax="20.0"))
-	float RotationSmoothingSpeed;
-
-	/** Enable rotation input smoothing */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Look")
-	bool bEnableRotationSmoothing;
 
 	/** When true, inverts the Y axis for look input */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Look")
@@ -272,10 +256,8 @@ public:
 	FOnSpeedChangedEvent OnSpeedChangedEvent;
 
 protected:
-	virtual void InitializeComponent() override;
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	/**
 	 * Setup input bindings on the Enhanced Input Component
@@ -319,16 +301,4 @@ private:
 	/** Cached reference to weapon component */
 	UPROPERTY()
 	UWeaponComponent* CachedWeaponComponent;
-
-	/** Current interpolated ship rotation for smoothing */
-	FRotator CurrentShipRotation;
-
-	/** Target ship rotation from input */
-	FRotator TargetShipRotation;
-
-	/** Current interpolated movement input for smoothing */
-	FVector2D CurrentMovementInput;
-
-	/** Target movement input from raw input */
-	FVector2D TargetMovementInput;
 };

@@ -45,7 +45,7 @@ void ASpaceStationModule::SetModuleFaction(UFactionDataAsset* NewFaction)
 // IDamageable Interface Implementation
 // ====================
 
-float ASpaceStationModule::ApplyDamage_Implementation(float Damage, EDamageType DamageType, AActor* Instigator, AActor* DamageCauser)
+float ASpaceStationModule::ApplyDamage_Implementation(float Damage, EDamageType DamageType, AActor* DamageInstigator, AActor* DamageCauser)
 {
     if (!CanTakeDamage_Implementation())
     {
@@ -58,7 +58,7 @@ float ASpaceStationModule::ApplyDamage_Implementation(float Damage, EDamageType 
 
     UE_LOG(LogAdastreaStations, Log, TEXT("Module %s took %.1f damage from %s. Integrity: %.1f/%.1f"),
         *GetName(), ActualDamage,
-        Instigator ? *Instigator->GetName() : TEXT("Unknown"),
+        DamageInstigator ? *DamageInstigator->GetName() : TEXT("Unknown"),
         CurrentModuleIntegrity, MaxModuleIntegrity);
 
     // Check if module is destroyed

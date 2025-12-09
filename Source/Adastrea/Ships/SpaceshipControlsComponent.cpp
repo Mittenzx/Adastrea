@@ -1,5 +1,4 @@
 #include "Ships/SpaceshipControlsComponent.h"
-#include "Ships/Spaceship.h"
 #include "Combat/WeaponComponent.h"
 #include "AdastreaLog.h"
 #include "EnhancedInputComponent.h"
@@ -12,11 +11,7 @@
 
 USpaceshipControlsComponent::USpaceshipControlsComponent()
 	: MovementSpeed(1.0f)
-	, MovementSmoothingSpeed(10.0f)
-	, bEnableMovementSmoothing(true)
-	, LookSensitivity(50.0f)
-	, RotationSmoothingSpeed(5.0f)
-	, bEnableRotationSmoothing(true)
+	, LookSensitivity(1.0f)
 	, bInvertLookY(false)
 	, InputMappingPriority(0)
 	, CurrentSpeed(1.0f)
@@ -30,45 +25,17 @@ USpaceshipControlsComponent::USpaceshipControlsComponent()
 	, SpaceshipMappingContext(nullptr)
 	, bControlsEnabled(false)
 	, CachedWeaponComponent(nullptr)
-	, CurrentShipRotation(FRotator::ZeroRotator)
-	, TargetShipRotation(FRotator::ZeroRotator)
-	, CurrentMovementInput(FVector2D::ZeroVector)
-	, TargetMovementInput(FVector2D::ZeroVector)
 {
-	PrimaryComponentTick.bCanEverTick = true;  // Enable ticking for rotation smoothing
-	
-	// Ensure component is active and BeginPlay is called
-	bAutoActivate = true;
-	bWantsInitializeComponent = true;
-
-	// Load Input Action assets EARLY (in constructor) so they're available when SetupPlayerInputComponent is called
-	UE_LOG(LogAdastreaInput, Warning, TEXT("SpaceshipControlsComponent: Constructor - Loading input assets..."));
-	CreateInputActions();
-	CreateInputMappingContext();
-	UE_LOG(LogAdastreaInput, Warning, TEXT("SpaceshipControlsComponent: Constructor - Assets loaded. MoveAction=%s, SpaceshipMappingContext=%s"),
-		MoveAction ? TEXT("Valid") : TEXT("NULL"),
-		SpaceshipMappingContext ? TEXT("Valid") : TEXT("NULL"));
-}
-
-void USpaceshipControlsComponent::InitializeComponent()
-{
-	Super::InitializeComponent();
-	
-	UE_LOG(LogAdastreaInput, Warning, TEXT("SpaceshipControlsComponent::InitializeComponent() called on owner: %s"), 
-		GetOwner() ? *GetOwner()->GetName() : TEXT("NULL"));
-
-	// Assets are already loaded in constructor, just log status
-	UE_LOG(LogAdastreaInput, Warning, TEXT("SpaceshipControlsComponent: InitializeComponent - MoveAction=%s, SpaceshipMappingContext=%s"),
-		MoveAction ? TEXT("Valid") : TEXT("NULL"),
-		SpaceshipMappingContext ? TEXT("Valid") : TEXT("NULL"));
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 void USpaceshipControlsComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogAdastreaInput, Warning, TEXT("SpaceshipControlsComponent::BeginPlay() called on owner: %s"), 
-		*GetOwner()->GetName());
+	// Create input actions and mapping context
+	CreateInputActions();
+	CreateInputMappingContext();
 
 	// Cache weapon component reference
 	CachedWeaponComponent = GetWeaponComponent();
@@ -80,12 +47,6 @@ void USpaceshipControlsComponent::BeginPlay()
 		UE_LOG(LogAdastreaInput, Warning, TEXT("SpaceshipControlsComponent: Owner is not a Pawn, input will not be bound"));
 		return;
 	}
-
-	// Initialize smoothing variables to current pawn state
-	CurrentShipRotation = OwningPawn->GetActorRotation();
-	TargetShipRotation = CurrentShipRotation;
-	CurrentMovementInput = FVector2D::ZeroVector;
-	TargetMovementInput = FVector2D::ZeroVector;
 
 	// NOTE: InputComponent is set up AFTER BeginPlay in SetupPlayerInputComponent
 	// We'll bind input there instead. For now, just log that we're ready.
@@ -100,84 +61,48 @@ void USpaceshipControlsComponent::EndPlay(const EEndPlayReason::Type EndPlayReas
 	Super::EndPlay(EndPlayReason);
 }
 
-void USpaceshipControlsComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// Only tick if rotation smoothing is enabled
-	if (!bEnableRotationSmoothing)
-	{
-		return;
-	}
-
-	// Get the owning pawn
-	APawn* OwningPawn = Cast<APawn>(GetOwner());
-	if (!OwningPawn)
-	{
-		return;
-	}
-
-	// Interpolate ship rotation toward target rotation
-	CurrentShipRotation = FMath::RInterpTo(CurrentShipRotation, TargetShipRotation, DeltaTime, RotationSmoothingSpeed);
-
-	// Apply the interpolated rotation to the pawn
-	OwningPawn->SetActorRotation(CurrentShipRotation);
-}
-
 void USpaceshipControlsComponent::CreateInputActions()
 {
-	// Load existing Input Action assets from Content/Input/Actions/
-	// These are the Blueprint assets configured in the project
-	
-	// Load Move Action (IA_Move.uasset)
-	MoveAction = LoadObject<UInputAction>(nullptr, TEXT("/Game/Input/Actions/IA_Move.IA_Move"));
-	if (!MoveAction)
+	// Create Move Action (2D Axis for WASD)
+	MoveAction = NewObject<UInputAction>(this, TEXT("IA_SpaceshipMove"));
+	if (MoveAction)
 	{
-		UE_LOG(LogAdastreaInput, Error, TEXT("Failed to load IA_Move asset! Check Content/Input/Actions/IA_Move.uasset exists"));
+		MoveAction->ValueType = EInputActionValueType::Axis2D;
 	}
 
-	// Load Look Action (IA_Look.uasset)
-	LookAction = LoadObject<UInputAction>(nullptr, TEXT("/Game/Input/Actions/IA_Look.IA_Look"));
-	if (!LookAction)
+	// Create Look Action (2D Axis for Mouse)
+	LookAction = NewObject<UInputAction>(this, TEXT("IA_SpaceshipLook"));
+	if (LookAction)
 	{
-		UE_LOG(LogAdastreaInput, Error, TEXT("Failed to load IA_Look asset! Check Content/Input/Actions/IA_Look.uasset exists"));
+		LookAction->ValueType = EInputActionValueType::Axis2D;
 	}
 
-	// Load Fire Action (IA_Fire_Primary.uasset)
-	FireAction = LoadObject<UInputAction>(nullptr, TEXT("/Game/Input/Actions/IA_Fire_Primary.IA_Fire_Primary"));
-	if (!FireAction)
+	// Create Fire Action (Digital for LMB)
+	FireAction = NewObject<UInputAction>(this, TEXT("IA_SpaceshipFire"));
+	if (FireAction)
 	{
-		UE_LOG(LogAdastreaInput, Error, TEXT("Failed to load IA_Fire_Primary asset! Check Content/Input/Actions/IA_Fire_Primary.uasset exists"));
+		FireAction->ValueType = EInputActionValueType::Boolean;
 	}
 
-	// Load Boost Action (IA_Boost.uasset) - using this for speed control
-	SpeedAction = LoadObject<UInputAction>(nullptr, TEXT("/Game/Input/Actions/IA_Boost.IA_Boost"));
-	if (!SpeedAction)
+	// Create Speed Action (1D Axis for Mouse Wheel)
+	SpeedAction = NewObject<UInputAction>(this, TEXT("IA_SpaceshipSpeed"));
+	if (SpeedAction)
 	{
-		UE_LOG(LogAdastreaInput, Error, TEXT("Failed to load IA_Boost asset! Check Content/Input/Actions/IA_Boost.uasset exists"));
+		SpeedAction->ValueType = EInputActionValueType::Axis1D;
 	}
 
-	UE_LOG(LogAdastreaInput, Warning, TEXT("SpaceshipControlsComponent: Loaded Input Action assets - MoveAction=%s, LookAction=%s"),
-		MoveAction ? TEXT("Valid") : TEXT("NULL"),
-		LookAction ? TEXT("Valid") : TEXT("NULL"));
+	UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent: Created input actions"));
 }
 
 void USpaceshipControlsComponent::CreateInputMappingContext()
 {
-	// Load the existing Input Mapping Context asset from Content/Input/
-	SpaceshipMappingContext = LoadObject<UInputMappingContext>(nullptr, TEXT("/Game/Input/IMC_Spaceship.IMC_Spaceship"));
+	SpaceshipMappingContext = NewObject<UInputMappingContext>(this, TEXT("IMC_SpaceshipControls"));
 	if (!SpaceshipMappingContext)
 	{
-		UE_LOG(LogAdastreaInput, Error, TEXT("SpaceshipControlsComponent: Failed to load IMC_Spaceship asset! Check Content/Input/IMC_Spaceship.uasset exists"));
+		UE_LOG(LogAdastreaInput, Error, TEXT("SpaceshipControlsComponent: Failed to create Input Mapping Context"));
 		return;
 	}
-	UE_LOG(LogAdastreaInput, Warning, TEXT("SpaceshipControlsComponent: Loaded IMC_Spaceship mapping context"));
 
-	// NOTE: The IMC_Spaceship Blueprint asset should already have all key mappings configured.
-	// We no longer need to create them dynamically here. If WASD doesn't work, check the
-	// IMC_Spaceship asset in Unreal Editor to ensure it has proper WASD -> IA_Move mappings.
-	
-	/* REMOVED: Manual key mapping (now done in Blueprint asset)
 	// Map W key (Up strafe - positive Y)
 	if (MoveAction)
 	{
@@ -220,9 +145,8 @@ void USpaceshipControlsComponent::CreateInputMappingContext()
 	{
 		SpaceshipMappingContext->MapKey(SpeedAction, EKeys::MouseWheelAxis);
 	}
-	*/
 
-	UE_LOG(LogAdastreaInput, Warning, TEXT("SpaceshipControlsComponent: Using key mappings from IMC_Spaceship Blueprint asset"));
+	UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent: Created input mapping context with key bindings"));
 }
 
 void USpaceshipControlsComponent::SetupInputBindings(UEnhancedInputComponent* PlayerInputComponent)
@@ -237,22 +161,12 @@ void USpaceshipControlsComponent::SetupInputBindings(UEnhancedInputComponent* Pl
 	if (MoveAction)
 	{
 		PlayerInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &USpaceshipControlsComponent::HandleMove);
-		UE_LOG(LogAdastreaInput, Warning, TEXT("SpaceshipControlsComponent: BOUND HandleMove to MoveAction"));
-	}
-	else
-	{
-		UE_LOG(LogAdastreaInput, Error, TEXT("SpaceshipControlsComponent: MoveAction is NULL, cannot bind!"));
 	}
 
 	// Bind Look action
 	if (LookAction)
 	{
 		PlayerInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &USpaceshipControlsComponent::HandleLook);
-		UE_LOG(LogAdastreaInput, Warning, TEXT("SpaceshipControlsComponent: BOUND HandleLook to LookAction"));
-	}
-	else
-	{
-		UE_LOG(LogAdastreaInput, Error, TEXT("SpaceshipControlsComponent: LookAction is NULL, cannot bind!"));
 	}
 
 	// Bind Fire action
@@ -332,31 +246,17 @@ void USpaceshipControlsComponent::EnableControls()
 {
 	if (bControlsEnabled)
 	{
-		UE_LOG(LogAdastreaInput, Warning, TEXT("SpaceshipControlsComponent::EnableControls() - Controls already enabled, skipping"));
 		return;
 	}
 
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = GetEnhancedInputSubsystem();
-	if (!Subsystem)
+	if (Subsystem && SpaceshipMappingContext)
 	{
-		UE_LOG(LogAdastreaInput, Error, TEXT("SpaceshipControlsComponent::EnableControls() - Failed to get EnhancedInputSubsystem!"));
-		return;
+		Subsystem->AddMappingContext(SpaceshipMappingContext, InputMappingPriority);
+		bControlsEnabled = true;
+		OnControlsEnabled.Broadcast();
+		UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent: Controls enabled"));
 	}
-	
-	if (!SpaceshipMappingContext)
-	{
-		UE_LOG(LogAdastreaInput, Error, TEXT("SpaceshipControlsComponent::EnableControls() - SpaceshipMappingContext is null!"));
-		return;
-	}
-	
-	UE_LOG(LogAdastreaInput, Warning, TEXT("SpaceshipControlsComponent::EnableControls() - Adding mapping context '%s' with priority %d"), 
-		*SpaceshipMappingContext->GetName(), InputMappingPriority);
-	
-	Subsystem->AddMappingContext(SpaceshipMappingContext, InputMappingPriority);
-	bControlsEnabled = true;
-	OnControlsEnabled.Broadcast();
-	
-	UE_LOG(LogAdastreaInput, Warning, TEXT("SpaceshipControlsComponent: Controls enabled successfully"));
 }
 
 void USpaceshipControlsComponent::DisableControls()
@@ -428,67 +328,18 @@ void USpaceshipControlsComponent::DecreaseSpeed()
 
 void USpaceshipControlsComponent::HandleMove(const FInputActionValue& Value)
 {
-	FVector2D RawValue = Value.Get<FVector2D>();
-	UE_LOG(LogAdastreaInput, Warning, TEXT("HandleMove called! Raw=(%.2f, %.2f), MovementSpeed=%.2f, CurrentSpeed=%.2f"),
-		RawValue.X, RawValue.Y, MovementSpeed, CurrentSpeed);
-
-	// Update target movement input
-	// Only scale forward/backward (X) by throttle, strafing (Y,Z) acts as thrusters independent of speed
-	FVector2D ScaledValue = RawValue * MovementSpeed;
-	ScaledValue.X *= CurrentSpeed;  // Forward/backward scaled by throttle
-	// ScaledValue.Y remains unscaled (left/right strafe)
-	// Note: Z axis (up/down) is not in this 2D vector, handled separately in Spaceship.cpp
-	TargetMovementInput = ScaledValue;
-
-	// Apply movement smoothing if enabled
-	if (bEnableMovementSmoothing)
-	{
-		// Interpolate current movement toward target
-		CurrentMovementInput = FMath::Vector2DInterpTo(CurrentMovementInput, TargetMovementInput, GetWorld()->GetDeltaSeconds(), MovementSmoothingSpeed);
-	}
-	else
-	{
-		// No smoothing - use target directly
-		CurrentMovementInput = TargetMovementInput;
-	}
-
-	UE_LOG(LogAdastreaInput, Warning, TEXT("HandleMove: Final MoveValue=(%.2f, %.2f)"), CurrentMovementInput.X, CurrentMovementInput.Y);
-	OnMoveInput(CurrentMovementInput);
+	FVector2D MoveValue = Value.Get<FVector2D>() * MovementSpeed * CurrentSpeed;
+	OnMoveInput(MoveValue);
 }
 
 void USpaceshipControlsComponent::HandleLook(const FInputActionValue& Value)
 {
 	FVector2D LookValue = Value.Get<FVector2D>() * LookSensitivity;
-
+	
 	// Apply Y axis inversion if enabled
 	if (bInvertLookY)
 	{
 		LookValue.Y = -LookValue.Y;
-	}
-
-	// Get the owning pawn
-	APawn* OwningPawn = Cast<APawn>(GetOwner());
-	if (!OwningPawn)
-	{
-		return;
-	}
-
-	// Update target rotation based on input
-	FRotator CurrentRotation = OwningPawn->GetActorRotation();
-	TargetShipRotation = CurrentRotation;
-
-	// Apply yaw (left/right look)
-	TargetShipRotation.Yaw += LookValue.X;
-
-	// Apply pitch (up/down look) with clamping to prevent flipping
-	float NewPitch = FMath::Clamp(TargetShipRotation.Pitch + LookValue.Y, -89.0f, 89.0f);
-	TargetShipRotation.Pitch = NewPitch;
-
-	// If rotation smoothing is disabled, apply immediately
-	if (!bEnableRotationSmoothing)
-	{
-		OwningPawn->SetActorRotation(TargetShipRotation);
-		CurrentShipRotation = TargetShipRotation;
 	}
 
 	OnLookInput(LookValue);
@@ -526,32 +377,24 @@ void USpaceshipControlsComponent::HandleSpeed(const FInputActionValue& Value)
 
 void USpaceshipControlsComponent::OnMoveInput_Implementation(FVector2D MoveValue)
 {
-	ASpaceship* OwningShip = Cast<ASpaceship>(GetOwner());
-	if (!OwningShip)
+	APawn* OwningPawn = Cast<APawn>(GetOwner());
+	if (!OwningPawn)
 	{
 		return;
 	}
 
-	// Debug logging
-	UE_LOG(LogAdastreaInput, Warning, TEXT("OnMoveInput: X=%.2f, Y=%.2f"), MoveValue.X, MoveValue.Y);
+	// Get pawn's forward and right vectors for space flight
+	// X component = horizontal strafe (A/D), Y component = forward/backward (W/S)
+	const FVector ForwardVector = OwningPawn->GetActorForwardVector();
+	const FVector RightVector = OwningPawn->GetActorRightVector();
 
-	// Call the spaceship's movement functions directly
-	// MoveValue.X = horizontal strafe (A/D)
-	// MoveValue.Y = forward/backward (W/S)
-	
-	// Forward/backward movement (W/S)
-	if (!FMath::IsNearlyZero(MoveValue.Y, 0.01f))
-	{
-		OwningShip->MoveForward(MoveValue.Y);
-		UE_LOG(LogAdastreaInput, Warning, TEXT("OnMoveInput: Called MoveForward(%.2f)"), MoveValue.Y);
-	}
-	
-	// Left/right strafe (A/D)
-	if (!FMath::IsNearlyZero(MoveValue.X, 0.01f))
-	{
-		OwningShip->MoveRight(MoveValue.X);
-		UE_LOG(LogAdastreaInput, Warning, TEXT("OnMoveInput: Called MoveRight(%.2f)"), MoveValue.X);
-	}
+	// Calculate movement direction
+	// MoveValue.X = horizontal strafe (positive = right, negative = left)
+	// MoveValue.Y = forward/backward (positive = forward, negative = backward)
+	const FVector MoveDirection = (RightVector * MoveValue.X) + (ForwardVector * MoveValue.Y);
+
+	// Apply movement input
+	OwningPawn->AddMovementInput(MoveDirection, 1.0f);
 }
 
 void USpaceshipControlsComponent::OnLookInput_Implementation(FVector2D LookValue)
@@ -562,17 +405,16 @@ void USpaceshipControlsComponent::OnLookInput_Implementation(FVector2D LookValue
 		return;
 	}
 
-	// Debug logging
-	UE_LOG(LogAdastreaInput, Warning, TEXT("OnLookInput: X=%.2f, Y=%.2f"), LookValue.X, LookValue.Y);
+	UWorld* World = OwningPawn->GetWorld();
+	if (!World)
+	{
+		return;
+	}
 
 	// Apply rotation directly to the actor for spaceship controls
-	// Mouse X = horizontal movement = Yaw (left/right turning)
-	// Mouse Y = vertical movement = Pitch (up/down angling)
-	// Apply sensitivity and optional Y-axis inversion
-	float Yaw = LookValue.X * LookSensitivity;
-	float Pitch = LookValue.Y * LookSensitivity * (bInvertLookY ? -1.0f : 1.0f);
-	
-	FRotator DeltaRotation = FRotator(Pitch, Yaw, 0.0f);
+	// LookValue.X = yaw (left/right), LookValue.Y = pitch (up/down)
+	const float DeltaTime = World->GetDeltaSeconds();
+	FRotator DeltaRotation = FRotator(LookValue.Y * DeltaTime, LookValue.X * DeltaTime, 0.0f);
 	OwningPawn->AddActorWorldRotation(DeltaRotation);
 }
 
