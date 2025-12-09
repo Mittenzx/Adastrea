@@ -59,6 +59,7 @@ class UPropertyChecker:
         
         in_class = False
         in_comment_block = False
+        in_function_signature = False
         
         for i, line in enumerate(lines, 1):
             # Track comment blocks
@@ -76,12 +77,17 @@ class UPropertyChecker:
             if re.search(r'\b(?:UCLASS|USTRUCT|UINTERFACE)\b', line):
                 in_class = True
             
-            # Track UPROPERTY declarations
-            if re.search(UPROPERTY_PATTERN, line):
-                last_uproperty_line = i
+            # Track function signatures (UFUNCTION or regular functions)
+            if re.search(r'\b(?:UFUNCTION|virtual|static|inline)\b', line) or \
+               (i > 0 and re.search(r'\b(?:UFUNCTION|virtual|static|inline)\b', lines[i-2])):
+                in_function_signature = True
             
-            # Check for UObject pointers only inside classes
-            if in_class:
+            # Reset function signature tracking when we see a semicolon or opening brace
+            if ';' in line or '{' in line:
+                in_function_signature = False
+            
+            # Check for UObject pointers only inside classes and not in function signatures
+            if in_class and not in_function_signature:
                 # Check each UObject pattern
                 for pattern in UOBJECT_PATTERNS:
                     if re.search(pattern, line):
@@ -95,22 +101,63 @@ class UPropertyChecker:
                         if is_excluded:
                             continue
                         
+                        # Skip if line contains function-like syntax (parameters)
+                        if '(' in line and (')' in line or ',' in line):
+                            continue
+                        
+                        # Skip if it's a function return type
+                        if re.search(r'\w+\s*\(', line):
+                            continue
+                        
                         # Check if UPROPERTY is on the previous line(s)
+                        # Look back up to 5 lines to handle multiline UPROPERTY declarations
+                        # Note: i is 1-indexed, but lines array is 0-indexed
                         has_uproperty = False
-                        for check_line in range(max(0, i-3), i):
-                            if check_line < len(lines):
-                                if re.search(UPROPERTY_PATTERN, lines[check_line]):
-                                    has_uproperty = True
+                        
+                        # Search backwards for UPROPERTY
+                        for lookback in range(1, min(6, i)):
+                            # Convert to 0-indexed for array access
+                            check_idx = i - 1 - lookback
+                            if check_idx >= 0:
+                                check_content = lines[check_idx]
+                                
+                                # Found UPROPERTY, now verify it applies to current line
+                                if 'UPROPERTY' in check_content:
+                                    # Check if there's a variable declaration (ending with semicolon)
+                                    # between the UPROPERTY and current line
+                                    has_intervening_declaration = False
+                                    for between_idx in range(check_idx + 1, i - 1):
+                                        between_line = lines[between_idx].strip()
+                                        # If we find a line ending with semicolon, it's a variable declaration
+                                        if between_line.endswith(';'):
+                                            has_intervening_declaration = True
+                                            break
+                                    
+                                    # If no intervening declaration, this UPROPERTY applies to current line
+                                    if not has_intervening_declaration:
+                                        has_uproperty = True
+                                        break
+                                
+                                # If we hit a line with semicolon before finding UPROPERTY,
+                                # the search should stop
+                                if lines[check_idx].strip().endswith(';'):
                                     break
                         
                         # If no UPROPERTY found, this might be an issue
                         if not has_uproperty:
                             # Additional heuristics to reduce false positives
-                            # Skip if it's a function return type or parameter
-                            if '(' in line and ')' in line:
+                            # Skip if it looks like a typedef or using statement
+                            if re.search(r'\b(?:typedef|using)\b', line):
                                 continue
-                            # Skip if it's in a function signature
-                            if 'UFUNCTION' in lines[i-2] if i >= 2 else False:
+                            # Skip if preceded by UFUNCTION within last few lines
+                            skip_ufunction = False
+                            for check_line in range(max(0, i-5), i):
+                                if check_line < len(lines):
+                                    if 'UFUNCTION' in lines[check_line]:
+                                        skip_ufunction = True
+                                        break
+                            
+                            if skip_ufunction:
                                 continue
                             
                             issues.append({
