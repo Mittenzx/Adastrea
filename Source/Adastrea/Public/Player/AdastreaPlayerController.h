@@ -12,6 +12,19 @@ class UDataAsset;
 class ASpaceStation;
 
 /**
+ * Parameters for SetStation function call via reflection
+ * Used with ProcessEvent to safely pass station reference to Blueprint
+ */
+USTRUCT()
+struct FSetStationParams
+{
+	GENERATED_BODY()
+	
+	UPROPERTY()
+	ASpaceStation* Station = nullptr;
+};
+
+/**
  * Delegate for station editor toggle event
  * @deprecated Since December 2025 (v2.0), will be removed in v3.0 (mid-2026). 
  * Use C++ ToggleStationEditor() implementation instead. See Assets/StationEditorMigrationGuide.md
