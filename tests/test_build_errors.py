@@ -14,10 +14,8 @@ Or with pytest: pytest tests/test_build_errors.py -v
 """
 
 import sys
-import os
 import re
 from pathlib import Path
-from typing import List, Dict, Set, Tuple
 
 
 class BuildErrorChecker:

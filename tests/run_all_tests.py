@@ -20,7 +20,6 @@ Options:
 """
 
 import sys
-import os
 import subprocess
 import argparse
 from pathlib import Path
@@ -172,7 +171,7 @@ class TestRunner:
         print("=" * 70)
         
         # Check .uproject file
-        uproject = Path("Adastrea.uproject")
+        uproject = self.project_root / "Adastrea.uproject"
         if uproject.exists():
             print(f"✓ Project file found: {uproject}")
             try:
@@ -191,7 +190,7 @@ class TestRunner:
             self.results.append(("Project Configuration", False))
         
         # Check Build.cs files
-        build_files = list(Path("Source").rglob("*.Build.cs"))
+        build_files = list((self.project_root / "Source").rglob("*.Build.cs"))
         print(f"\n✓ Found {len(build_files)} Build.cs files:")
         for bf in build_files:
             print(f"  - {bf}")
@@ -216,7 +215,8 @@ class TestRunner:
         
         all_found = True
         for doc in required_docs:
-            if Path(doc).exists():
+            doc_path = self.project_root / doc
+            if doc_path.exists():
                 print(f"✓ {doc}")
             else:
                 print(f"✗ {doc} NOT FOUND")

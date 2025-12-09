@@ -10,15 +10,15 @@ Run with: pytest tests/test_comprehensive.py -v
 """
 
 import sys
-import os
 import re
-import json
 from pathlib import Path
-from typing import List, Dict, Set, Tuple
 import pytest
 
 # Add parent directory to path
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+# Project root for consistent path handling
+PROJECT_ROOT = Path(__file__).parent.parent
 
 
 class TestRepositoryStructure:
@@ -26,23 +26,23 @@ class TestRepositoryStructure:
 
     def test_uproject_exists(self):
         """Test that .uproject file exists."""
-        uproject = Path("Adastrea.uproject")
+        uproject = PROJECT_ROOT / "Adastrea.uproject"
         assert uproject.exists(), "Adastrea.uproject should exist"
 
     def test_source_directory_exists(self):
         """Test that Source directory exists."""
-        source_dir = Path("Source")
+        source_dir = PROJECT_ROOT / "Source"
         assert source_dir.exists(), "Source directory should exist"
         assert source_dir.is_dir(), "Source should be a directory"
 
     def test_content_directory_exists(self):
         """Test that Content directory exists."""
-        content_dir = Path("Content")
+        content_dir = PROJECT_ROOT / "Content"
         assert content_dir.exists(), "Content directory should exist"
 
     def test_build_cs_files_exist(self):
         """Test that all modules have Build.cs files."""
-        source_dir = Path("Source")
+        source_dir = PROJECT_ROOT / "Source"
         modules = [d for d in source_dir.iterdir() if d.is_dir() and not d.name.startswith('.')]
         
         for module in modules:
@@ -61,7 +61,7 @@ class TestBuildConfiguration:
 
     def test_all_build_cs_files_valid_syntax(self):
         """Test that all Build.cs files have valid C# syntax."""
-        source_dir = Path("Source")
+        source_dir = PROJECT_ROOT / "Source"
         build_files = list(source_dir.rglob("*.Build.cs"))
         
         assert len(build_files) > 0, "Should find at least one Build.cs file"
@@ -76,7 +76,7 @@ class TestBuildConfiguration:
 
     def test_no_circular_dependencies(self):
         """Test for circular module dependencies."""
-        source_dir = Path("Source")
+        source_dir = PROJECT_ROOT / "Source"
         build_files = list(source_dir.rglob("*.Build.cs"))
         
         dependencies = {}
@@ -86,8 +86,8 @@ class TestBuildConfiguration:
             
             # Extract dependency modules
             deps = []
-            for match in re.finditer(r'AddRange\s*\(\s*new\s+string\[\]\s*\{([^}]+)\}', content):
-                deps_str = match.group(1)
+            for match in re.finditer(r'(Public|Private)DependencyModuleNames\.AddRange\s*\(\s*new\s+string\[\]\s*\{([^}]+)\}', content):
+                deps_str = match.group(2)
                 deps.extend([d.strip().strip('"').strip("'") for d in deps_str.split(',') if d.strip()])
             
             dependencies[module_name] = deps
@@ -99,7 +99,7 @@ class TestBuildConfiguration:
 
     def test_core_modules_present(self):
         """Test that core Unreal Engine modules are included."""
-        source_dir = Path("Source")
+        source_dir = PROJECT_ROOT / "Source"
         adastrea_build = source_dir / "Adastrea" / "Adastrea.Build.cs"
         
         if adastrea_build.exists():
@@ -114,7 +114,7 @@ class TestDeprecatedCode:
 
     def test_scan_for_deprecated_apis(self):
         """Scan source files for deprecated API usage."""
-        source_dir = Path("Source")
+        source_dir = PROJECT_ROOT / "Source"
         deprecated_patterns = [
             (r'\bUE_DEPRECATED\b', 'UE_DEPRECATED macro usage'),
             (r'\bDEPRECATED_FORGAME\b', 'DEPRECATED_FORGAME macro'),
@@ -144,7 +144,7 @@ class TestDeprecatedCode:
 
     def test_check_for_old_unreal_apis(self):
         """Check for usage of old Unreal Engine APIs."""
-        source_dir = Path("Source")
+        source_dir = PROJECT_ROOT / "Source"
         old_apis = [
             (r'\bFStringAssetReference\b', 'Use FSoftObjectPath instead'),
             (r'\bFAssetData::GetAsset\(\)', 'Use FSoftObjectPath or direct loading'),
@@ -174,7 +174,7 @@ class TestFileNaming:
 
     def test_source_files_proper_extensions(self):
         """Test that source files have proper extensions."""
-        source_dir = Path("Source")
+        source_dir = PROJECT_ROOT / "Source"
         valid_extensions = {'.h', '.cpp', '.cs', '.ini', '.txt', '.md'}
         
         invalid_files = []
@@ -191,7 +191,7 @@ class TestFileNaming:
 
     def test_no_spaces_in_source_filenames(self):
         """Test that source filenames don't contain spaces."""
-        source_dir = Path("Source")
+        source_dir = PROJECT_ROOT / "Source"
         files_with_spaces = []
         
         for filepath in source_dir.rglob("*"):
@@ -203,12 +203,11 @@ class TestFileNaming:
 
     def test_header_cpp_pairs_exist(self):
         """Test that .cpp files have corresponding .h files and vice versa."""
-        source_dir = Path("Source")
+        source_dir = PROJECT_ROOT / "Source"
         cpp_files = set(source_dir.rglob("*.cpp"))
         h_files = set(source_dir.rglob("*.h"))
         
         missing_headers = []
-        missing_implementations = []
         
         for cpp_file in cpp_files:
             # Skip generated files
@@ -233,7 +232,7 @@ class TestIncludeDirectives:
 
     def test_generated_h_include_last(self):
         """Test that .generated.h includes are last in header files."""
-        source_dir = Path("Source")
+        source_dir = PROJECT_ROOT / "Source"
         h_files = list(source_dir.rglob("*.h"))
         
         violations = []
@@ -263,7 +262,7 @@ class TestIncludeDirectives:
 
     def test_no_absolute_includes(self):
         """Test that there are no absolute path includes."""
-        source_dir = Path("Source")
+        source_dir = PROJECT_ROOT / "Source"
         source_files = list(source_dir.rglob("*.cpp")) + list(source_dir.rglob("*.h"))
         
         absolute_includes = []
@@ -287,7 +286,7 @@ class TestCodeQuality:
 
     def test_no_hardcoded_secrets(self):
         """Test that there are no hardcoded passwords or API keys."""
-        source_dir = Path("Source")
+        source_dir = PROJECT_ROOT / "Source"
         source_files = list(source_dir.rglob("*.cpp")) + list(source_dir.rglob("*.h"))
         
         secret_patterns = [
@@ -304,7 +303,7 @@ class TestCodeQuality:
                 # Search line by line to avoid duplicate work
                 for line in content.split('\n'):
                     # Skip comment lines
-                    if line.strip().startswith('//') or line.strip().startswith('*'):
+                    if line.strip().startswith('//') or line.strip().startswith('/*'):
                         continue
                     for pattern, desc in secret_patterns:
                         if re.search(pattern, line, re.IGNORECASE):
@@ -319,7 +318,7 @@ class TestCodeQuality:
     def test_proper_uproperty_usage(self):
         """Test that UObject pointers have UPROPERTY macro (integration with existing tool)."""
         # This integrates with the existing check_uproperty.py tool
-        tools_dir = Path("Tools")
+        tools_dir = PROJECT_ROOT / "Tools"
         check_script = tools_dir / "check_uproperty.py"
         
         if check_script.exists():
@@ -329,7 +328,8 @@ class TestCodeQuality:
                 [sys.executable, str(check_script)],
                 capture_output=True,
                 text=True,
-                cwd=Path.cwd()
+                cwd=Path.cwd(),
+                timeout=60
             )
             
             # Check if there are critical issues (we allow warnings)
@@ -342,12 +342,12 @@ class TestAssetNaming:
 
     def test_blueprint_naming_conventions(self):
         """Test that Blueprint assets follow naming conventions."""
-        content_dir = Path("Content")
+        content_dir = PROJECT_ROOT / "Content"
         if not content_dir.exists():
             pytest.skip("Content directory not found")
         
         # This integrates with existing validate_naming.py tool
-        tools_dir = Path("Tools")
+        tools_dir = PROJECT_ROOT / "Tools"
         validate_script = tools_dir / "validate_naming.py"
         
         if validate_script.exists():
@@ -356,7 +356,8 @@ class TestAssetNaming:
                 [sys.executable, str(validate_script)],
                 capture_output=True,
                 text=True,
-                cwd=Path.cwd()
+                cwd=Path.cwd(),
+                timeout=60
             )
             
             # Report but don't fail on naming violations (they're not build-breaking)
@@ -369,7 +370,7 @@ class TestModuleStructure:
 
     def test_all_modules_have_public_private_dirs(self):
         """Test that modules follow Public/Private directory structure."""
-        source_dir = Path("Source")
+        source_dir = PROJECT_ROOT / "Source"
         modules = [d for d in source_dir.iterdir() 
                   if d.is_dir() and not d.name.startswith('.') and not d.name.endswith('Target')]
         
@@ -389,7 +390,7 @@ class TestModuleStructure:
 
     def test_headers_in_public_implementations_in_private(self):
         """Test that .h files are in Public and .cpp in Private (where applicable)."""
-        source_dir = Path("Source")
+        source_dir = PROJECT_ROOT / "Source"
         
         violations = []
         for cpp_file in source_dir.rglob("*.cpp"):
@@ -413,7 +414,7 @@ class TestDocumentation:
 
     def test_architecture_doc_exists(self):
         """Test that ARCHITECTURE.md exists."""
-        arch_doc = Path("ARCHITECTURE.md")
+        arch_doc = PROJECT_ROOT / "ARCHITECTURE.md"
         assert arch_doc.exists(), "ARCHITECTURE.md should exist"
 
     def test_all_systems_have_guides(self):
@@ -438,14 +439,15 @@ class TestExistingTests:
 
     def test_run_procedural_generator_tests(self):
         """Run existing procedural generator tests."""
-        test_file = Path("tests/test_procedural_generators.py")
+        test_file = PROJECT_ROOT / "tests/test_procedural_generators.py"
         if test_file.exists():
             import subprocess
             result = subprocess.run(
                 [sys.executable, "-m", "pytest", str(test_file), "-v"],
                 capture_output=True,
                 text=True,
-                cwd=Path.cwd()
+                cwd=Path.cwd(),
+                timeout=60
             )
             # Don't fail if tests don't pass - just report
             if result.returncode != 0:
@@ -453,14 +455,15 @@ class TestExistingTests:
 
     def test_run_schema_validator_tests(self):
         """Run existing schema validator tests."""
-        test_file = Path("tests/test_schema_validator.py")
+        test_file = PROJECT_ROOT / "tests/test_schema_validator.py"
         if test_file.exists():
             import subprocess
             result = subprocess.run(
                 [sys.executable, "-m", "pytest", str(test_file), "-v"],
                 capture_output=True,
                 text=True,
-                cwd=Path.cwd()
+                cwd=Path.cwd(),
+                timeout=60
             )
             # Don't fail if tests don't pass - just report
             if result.returncode != 0:
