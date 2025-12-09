@@ -11,6 +11,10 @@ python tests/run_all_tests.py
 # Run specific test suite
 python tests/test_build_errors.py
 pytest tests/test_comprehensive.py -v
+
+# NEW: Run comprehensive post-merge validation
+python tests/test_all_build_errors.py
+python tests/test_all_build_errors.py --verbose
 ```
 
 ## Test Files
@@ -23,6 +27,16 @@ pytest tests/test_comprehensive.py -v
   - Detects deprecated code usage
   - Verifies include directives
   - Checks header guards
+
+- **`test_all_build_errors.py`** - **NEW** Comprehensive post-merge validation
+  - Exhaustive include file checking with multiple search strategies
+  - Circular dependency detection
+  - UPROPERTY validation on UObject pointers
+  - Hardcoded secrets detection
+  - API export macro verification
+  - Relative path validation
+  - **Recommended for post-merge validation on main branch**
+  - See `POST_MERGE_VALIDATION.md` for detailed guide
 
 - **`test_comprehensive.py`** - Comprehensive test suite (requires pytest)
   - Repository structure validation
