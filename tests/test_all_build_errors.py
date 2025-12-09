@@ -28,7 +28,6 @@ Checks performed:
 import sys
 import re
 from pathlib import Path
-from typing import List, Tuple, Set, Dict
 import argparse
 
 
@@ -213,7 +212,7 @@ class ComprehensiveBuildChecker:
                 self.add_warning(f"Could not parse {build_file}: {e}")
         
         # Check for circular dependencies
-        def has_circular_dep(module: str, target: str, visited: Set[str]) -> bool:
+        def has_circular_dep(module: str, target: str, visited: set) -> bool:
             if module == target:
                 return True
             if module in visited:
@@ -221,18 +220,24 @@ class ComprehensiveBuildChecker:
             visited.add(module)
             
             if module not in dependencies:
+                visited.remove(module)
                 return False
             
             for dep in dependencies[module]:
-                if has_circular_dep(dep, target, visited.copy()):
+                if has_circular_dep(dep, target, visited):
+                    visited.remove(module)
                     return True
+            visited.remove(module)
             return False
         
         circular_deps = []
+        checked_pairs = set()
         for module, deps in dependencies.items():
             for dep in deps:
-                if dep in dependencies and has_circular_dep(dep, module, set()):
+                pair = tuple(sorted([module, dep]))
+                if pair not in checked_pairs and dep in dependencies and has_circular_dep(dep, module, set()):
                     circular_deps.append((module, dep))
+                    checked_pairs.add(pair)
         
         if circular_deps:
             self.add_error(f"Found {len(circular_deps)} circular dependencies")
@@ -254,22 +259,41 @@ class ComprehensiveBuildChecker:
                 content = h_file.read_text(encoding='utf-8', errors='ignore')
                 lines = content.split('\n')
                 
-                in_class = False
-                in_function = False
+                class_brace_depth = 0
+                function_brace_depth = 0
                 last_uproperty_line = -999
                 
                 for i, line in enumerate(lines):
                     stripped = line.strip()
                     
-                    # Track if we're in a class
-                    if re.match(r'(class|struct)\s+\w+.*{', stripped):
-                        in_class = True
+                    # Track if we're entering a class or struct
+                    if re.match(r'^\s*(class|struct)\s+\w+', stripped):
+                        # Look for opening brace on this or subsequent lines
+                        if '{' in stripped:
+                            class_brace_depth += 1
+                        else:
+                            # Multi-line class declaration, search ahead
+                            for j in range(i+1, min(i+5, len(lines))):
+                                if '{' in lines[j]:
+                                    class_brace_depth += 1
+                                    break
                     
-                    # Track if we're in a function
-                    if in_class and re.match(r'\w+.*\(.*\).*{', stripped):
-                        in_function = True
-                    if in_function and stripped == '}':
-                        in_function = False
+                    # Track class/struct scope by counting braces
+                    class_brace_depth += stripped.count('{')
+                    class_brace_depth -= stripped.count('}')
+                    in_class = class_brace_depth > 0
+
+                    # Track if we're entering a function (skip if not in class)
+                    if in_class:
+                        # Improved function detection: return type, name, params, opening brace
+                        # Avoid matching class/struct/enum declarations
+                        if re.match(r'^[\w:<>~]+\s+[\w:<>~]+\s*\([^;{)]*\)\s*(const)?\s*{', stripped):
+                            function_brace_depth += 1
+                    # Track function scope by counting braces (only if in class)
+                    if function_brace_depth > 0:
+                        function_brace_depth += stripped.count('{')
+                        function_brace_depth -= stripped.count('}')
+                    in_function = function_brace_depth > 0
                     
                     # Track UPROPERTY
                     if 'UPROPERTY' in stripped:
@@ -277,14 +301,11 @@ class ComprehensiveBuildChecker:
                     
                     # Check for UObject* declarations
                     if in_class and not in_function:
-                        # Match: Type* VariableName;
-                        match = re.match(r'(U\w+|A\w+|F\w+)\s*\*\s*\w+\s*;', stripped)
+                        # Match: Type* VariableName; (only UObject/AActor-derived types)
+                        match = re.match(r'(U\w+|A\w+)\s*\*\s*\w+\s*;', stripped)
                         if match and i - last_uproperty_line > 2:
-                            type_name = match.group(1)
-                            # Only check UObject-derived types
-                            if type_name.startswith('U') or type_name.startswith('A'):
-                                rel_path = str(h_file.relative_to(self.project_root))
-                                missing_uproperty.append((rel_path, i + 1, line.strip()))
+                            rel_path = str(h_file.relative_to(self.project_root))
+                            missing_uproperty.append((rel_path, i + 1, line.strip()))
                                 
             except Exception as e:
                 self.add_warning(f"Could not check {h_file}: {e}")
@@ -320,12 +341,13 @@ class ComprehensiveBuildChecker:
                     for pattern, secret_type in patterns:
                         if re.search(pattern, line, re.IGNORECASE):
                             # Skip comments
-                            if '//' in line and line.index('//') < line.index('='):
+                            if '//' in line and '=' in line and line.index('//') < line.index('='):
                                 continue
                             rel_path = str(filepath.relative_to(self.project_root))
                             secrets_found.append((rel_path, line_num, secret_type))
-            except Exception:
-                pass
+            except Exception as e:
+                # Skip files that cannot be read, but continue checking others
+                self.log(f"Could not read {filepath}: {e}")
         
         if secrets_found:
             self.add_error(f"Found {len(secrets_found)} potential hardcoded secrets")
@@ -347,14 +369,18 @@ class ComprehensiveBuildChecker:
                 content = cpp_file.read_text(encoding='utf-8', errors='ignore')
                 # Check first 10 lines for CoreMinimal.h
                 first_lines = content.split('\n')[:10]
-                has_core_minimal = any('CoreMinimal.h' in line for line in first_lines)
+                has_core_minimal = any(
+                    line.strip().startswith('#include') and 'CoreMinimal.h' in line
+                    for line in first_lines
+                )
                 
                 if not has_core_minimal:
                     rel_path = str(cpp_file.relative_to(self.project_root))
                     missing_core_minimal.append(rel_path)
                     
-            except Exception:
-                pass
+            except Exception as e:
+                # Skip files that cannot be read
+                self.log(f"Could not read {cpp_file}: {e}")
         
         if missing_core_minimal:
             self.add_warning(f"Found {len(missing_core_minimal)} .cpp files without CoreMinimal.h")
@@ -376,14 +402,15 @@ class ComprehensiveBuildChecker:
                 content = h_file.read_text(encoding='utf-8', errors='ignore')
                 
                 # Check for UCLASS/USTRUCT without API macro
-                uclass_matches = re.finditer(r'U(CLASS|STRUCT)\s*\([^)]*\)\s*\n\s*class\s+(?!.*_API)(\w+)', content)
+                uclass_matches = re.finditer(r'U(CLASS|STRUCT)\s*\([^)]*\)\s*class\s+(?![\w]+_API\s+)(\w+)', content, re.MULTILINE)
                 for match in uclass_matches:
                     rel_path = str(h_file.relative_to(self.project_root))
                     class_name = match.group(2)
                     missing_api.append((rel_path, class_name))
                     
-            except Exception:
-                pass
+            except Exception as e:
+                # Skip files that cannot be read
+                self.log(f"Could not read {h_file}: {e}")
         
         if missing_api:
             self.add_warning(f"Found {len(missing_api)} classes without API export macro")
@@ -416,8 +443,9 @@ class ComprehensiveBuildChecker:
                                     rel_path = str(filepath.relative_to(self.project_root))
                                     suspicious_paths.append((rel_path, line_num, include_path))
                                     
-            except Exception:
-                pass
+            except Exception as e:
+                # Skip files that cannot be read, but continue checking other files
+                self.log(f"Could not read {filepath}: {e}")
         
         if suspicious_paths:
             self.add_error(f"Found {len(suspicious_paths)} broken relative include paths")
