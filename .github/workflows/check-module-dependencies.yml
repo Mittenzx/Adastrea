@@ -1,0 +1,46 @@
+name: Check Module Dependencies
+
+on:
+  pull_request:
+    paths:
+      - 'Source/**/*.Build.cs'
+      - 'Source/**/*.h'
+      - 'Source/**/*.cpp'
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'Source/**/*.Build.cs'
+      - 'Source/**/*.h'
+      - 'Source/**/*.cpp'
+  workflow_dispatch:
+
+jobs:
+  check-dependencies:
+    name: Check for Circular Dependencies
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Run module dependency check
+        run: |
+          python3 .github/scripts/check_module_dependencies.py
+          
+      - name: Report status
+        if: always()
+        run: |
+          if [ $? -eq 0 ]; then
+            echo "✅ Module dependency check passed"
+          else
+            echo "❌ Module dependency check failed"
+            echo "See .github/MODULE_DEPENDENCY_FIX.md for resolution strategies"
+            exit 1
+          fi
