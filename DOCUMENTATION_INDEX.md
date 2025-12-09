@@ -599,15 +599,17 @@ Non-markdown configuration files for tools and automation:
 
 **After December 9, 2025 consolidation:**
 
-- **Total Markdown Files**: ~140 active + 21 archived = ~161 total
-- **Root Level**: ~40 files (2 new: MASTER_DOCUMENTATION.md, CURRENT_STATUS.md)
-- **Assets/ Directory**: 97 files
-- **Docs/ Directory**: ~20 active + 21 archived in Docs/archive/migrated/
-- **Docs/archive/migrated/**: 21 archived files
-- **.github/ Directory**: 7 files
-- **Blueprints/ Directory**: 5 files
-- **Content/ Directory**: 3 files
-- **Other Directories**: 30+ files (Plugins, wiki, etc.)
+- **Total Active Markdown Files**: Approximately 140 files across repository
+- **Root Level**: 87 markdown files (includes 2 new: MASTER_DOCUMENTATION.md, CURRENT_STATUS.md)
+- **Assets/ Directory**: 97 system guide and template files
+- **Docs/ Directory**: Active documentation + 21 files in archive/migrated/
+- **Docs/archive/migrated/**: 21 archived historical documents
+- **.github/ Directory**: 7 configuration and agent files
+- **Blueprints/ Directory**: 5 blueprint documentation files
+- **Content/ Directory**: 3 content organization files
+- **Other Directories**: Plugin documentation (30+ files in Plugins/), wiki files (12 files)
+
+**Note**: File counts may change as documentation evolves. For exact counts, run: `find . -name "*.md" -type f | wc -l`
 
 ---
 
