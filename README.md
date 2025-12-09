@@ -6,14 +6,24 @@
 
 > An open-world space flight game featuring exploration, combat, faction diplomacy, crew management, and dynamic trading economies.
 
+## 🆕 Important: Documentation Consolidation (December 2025)
+
+**NEW Documentation:**
+- 📚 **[MASTER_DOCUMENTATION.md](MASTER_DOCUMENTATION.md)** - Complete documentation in one file (1372 lines)
+- 📊 **[CURRENT_STATUS.md](CURRENT_STATUS.md)** - Realistic project status (code 85% complete, content 10% complete)
+- 📁 **[Docs/archive/migrated/](Docs/archive/migrated/)** - Historical documents archived (21 files)
+
+**⚠️ Reality Check**: The project is **code-complete but not content-complete**. C++ systems are implemented, but editor content (Blueprints, Data Assets, Maps, UI) needs to be created. See [CURRENT_STATUS.md](CURRENT_STATUS.md) for details.
+
 ## 📖 [Visit the Wiki](wiki/Home.md) for Comprehensive Documentation
 
-**New to Adastrea?** The wiki provides organized, easy-to-navigate documentation:
+**New to Adastrea?** Multiple documentation options:
+- 📚 **[MASTER_DOCUMENTATION.md](MASTER_DOCUMENTATION.md)** - Everything in one place ⭐ **NEW**
 - 🚀 [Quick Start Guide](wiki/Getting-Started/Quick-Start.md) - Get running in 10 minutes
 - 🎨 [Designer Onboarding](wiki/Getting-Started/Designer-Onboarding.md) - For non-programmers
 - 🎮 [Core Systems Overview](wiki/Core-Systems/README.md) - All 22+ game systems
 - 💻 [Developer Guides](wiki/Developer-Guides/Architecture.md) - Architecture and contributing
-- 📚 [Complete Documentation Index](wiki/Reference/Documentation-Index.md) - Find any document
+- 📚 [Complete Documentation Index](DOCUMENTATION_INDEX.md) - Find any document
 
 ## Table of Contents
 

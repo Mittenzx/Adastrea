@@ -1,11 +1,25 @@
-# Obsolete Documents - Marked with ZZ_ Prefix
+# Obsolete and Archived Documents
 
-**Last Updated**: November 23, 2025  
+**Last Updated**: December 9, 2025  
 **Purpose**: Track documents that are no longer actively used but retained for reference
+
+## 🆕 Major Update: Documentation Consolidation (December 9, 2025)
+
+**21 status and completion documents have been archived** to `Docs/archive/migrated/`. These files are superseded by:
+- **[MASTER_DOCUMENTATION.md](MASTER_DOCUMENTATION.md)** - Comprehensive consolidation
+- **[CURRENT_STATUS.md](CURRENT_STATUS.md)** - Realistic current status assessment
+
+See [Docs/archive/migrated/README.md](Docs/archive/migrated/README.md) for complete archived file list.
+
+---
 
 ## Overview
 
-Documents marked with `ZZ_` prefix are obsolete or superseded by other documentation. They are kept in the repository for historical reference but should not be used for new work.
+This document tracks two categories of obsolete documentation:
+1. **ZZ_* Prefixed Files** - Obsolete files marked with ZZ_ prefix (in root directory)
+2. **Archived Files** - Historical documents moved to `Docs/archive/migrated/` (NEW)
+
+These documents are kept for historical reference but should not be used for new work.
 
 ## Why Mark as Obsolete?
 
@@ -164,32 +178,64 @@ Documents can be deleted after:
 - Information is fully preserved elsewhere
 - No historical value remains
 
-## Alternative: Archive Directory (Future Consideration)
+## Archived Documentation (December 9, 2025)
 
-**Note**: The repository currently has a `Docs/` directory. As a future enhancement, obsolete files could be moved there instead of using the ZZ_ prefix.
+**Status**: ✅ IMPLEMENTED - 21 files archived to `Docs/archive/migrated/`
 
-**Proposed Future Implementation**:
-```bash
-mkdir -p Docs/archive/obsolete-docs/
-mv ZZ_*.md Docs/archive/obsolete-docs/
-```
+### What Was Archived
 
-**Benefits**:
-- Cleaner root directory
-- Clear separation
-- Easier to ignore in searches
-- Consistent with existing Docs/ structure
+**Status & Completion Documents** (14 files):
+- PROJECT_STATUS_AND_IMPROVEMENTS.md
+- TASK_COMPLETION_SUMMARY.md
+- IMPLEMENTATION_COMPLETE.md
+- WIKI_IMPLEMENTATION_SUMMARY.md
+- PHASE2_SUMMARY.md
+- PHASE3_COMPLETION_SUMMARY.md
+- INTEGRATION_SUMMARY.md
+- UNREAL_DIRECTIVE_COMPLETION_SUMMARY.md
+- IMPLEMENTATION_SUMMARY.md (from Docs/)
+- HUD_IMPLEMENTATION_SUMMARY.md (from Docs/)
+- MAP_IMPLEMENTATION_SUMMARY.md
+- UNREAL_DIRECTIVE_PHASE1_REPORT.md (from Docs/)
+- UNREAL_DIRECTIVE_PHASE2_COMPLETION.md (from Docs/)
+- UNREAL_DIRECTIVE_PHASE3_SUMMARY.md (from Docs/)
 
-**Current Approach**: Using ZZ_ prefix allows easy identification while maintaining file discoverability and backward compatibility with any existing links.
+**Fix Summaries** (4 files):
+- CIRCULAR_DEPENDENCY_FIX_SUMMARY.md
+- CONTAINER_ACCESS_UPDATE_SUMMARY.md
+- PIE_FIX_SUMMARY.md
+- SPACESHIP_CONTROLS_SMOOTHING_SUMMARY.md
+
+**Other** (3 files):
+- AUDIT_SUMMARY.md
+- RAG_SETUP_SUMMARY.md
+- YAML_CONVERSION_SUMMARY.txt
+
+### Why Archived
+
+All archived files are **superseded by**:
+- **[MASTER_DOCUMENTATION.md](MASTER_DOCUMENTATION.md)** - Comprehensive documentation consolidation
+- **[CURRENT_STATUS.md](CURRENT_STATUS.md)** - Realistic project status assessment
+- **Git commit history** - Detailed change tracking
+
+### Accessing Archived Files
+
+- **Location**: `Docs/archive/migrated/`
+- **Index**: See [Docs/archive/migrated/README.md](Docs/archive/migrated/README.md)
+- **Use Case**: Historical reference only, not for current project information
+
+---
 
 ## Current Active Documentation
 
 For current, maintained documentation, see:
 
+- **[MASTER_DOCUMENTATION.md](MASTER_DOCUMENTATION.md)** - ⭐ **NEW!** Complete documentation in one file
+- **[CURRENT_STATUS.md](CURRENT_STATUS.md)** - ⭐ **NEW!** Realistic project status
 - **[README.md](README.md)** - Project overview
 - **[DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)** - Complete documentation index
 - **[wiki/Home.md](wiki/Home.md)** - Wiki homepage
-- **[wiki/Reference/Documentation-Index.md](wiki/Reference/Documentation-Index.md)** - Wiki documentation index
+- **[Docs/archive/migrated/README.md](Docs/archive/migrated/README.md)** - Archived documentation index
 
 ## Questions?
 
