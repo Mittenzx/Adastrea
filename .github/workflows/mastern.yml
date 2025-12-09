@@ -1,1 +1,26 @@
+name: Comprehensive Build Error Detection
 
+on:
+  workflow_dispatch:
+
+jobs:
+  build-error-detection:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          # If you have a requirements.txt for your tests, uncomment below:
+          # pip install -r requirements.txt
+
+      - name: Run build error tests
+        run: |
+          python tests/test_all_build_errors.py --verbose
