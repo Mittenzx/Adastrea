@@ -55,7 +55,7 @@ jobs:
         
       - name: Run comprehensive test suite
         run: |
-          python run_all_tests.py --verbose
+          python tests/run_all_tests.py --verbose
         continue-on-error: false
         
       - name: Summary

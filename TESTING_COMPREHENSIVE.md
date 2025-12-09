@@ -17,16 +17,16 @@ The Adastrea project includes multiple testing layers:
 
 ```bash
 # Run all tests (requires pytest to be installed)
-python run_all_tests.py --verbose
+python tests/run_all_tests.py --verbose
 
 # Run only fast checks (skips slow validation)
-python run_all_tests.py --quick
+python tests/run_all_tests.py --quick
 
 # Run only Python tests
-python run_all_tests.py --python-only
+python tests/run_all_tests.py --python-only
 
 # Run only validation scripts
-python run_all_tests.py --validation-only
+python tests/run_all_tests.py --validation-only
 ```
 
 ### Run Individual Test Suites
@@ -347,7 +347,7 @@ pip install -r tests/requirements-test.txt
 
 **Solution**: Use `--quick` flag to skip slow checks
 ```bash
-python run_all_tests.py --quick
+python tests/run_all_tests.py --quick
 ```
 
 ### False positives in include checks
@@ -370,7 +370,7 @@ python run_all_tests.py --quick
 
 1. **Run tests before committing**
    ```bash
-   python run_all_tests.py
+   python tests/run_all_tests.py
    ```
 
 2. **Fix critical errors first**
@@ -380,7 +380,7 @@ python run_all_tests.py --quick
 
 3. **Use quick mode for rapid iteration**
    ```bash
-   python run_all_tests.py --quick
+   python tests/run_all_tests.py --quick
    ```
 
 4. **Run specific test suites for focused work**

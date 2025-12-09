@@ -35,7 +35,7 @@ class TestRunner:
         self.quick = quick
         self.timeout = timeout  # Default 5 minutes
         self.results = []
-        self.project_root = Path(__file__).parent
+        self.project_root = Path(__file__).parent.parent  # Go up one level from tests/ to project root
 
     def run_command(self, cmd: List[str], description: str) -> Tuple[bool, str]:
         """Run a command and capture output."""

@@ -6,7 +6,7 @@ This directory contains all automated tests for the Adastrea project.
 
 ```bash
 # Run all tests (from project root)
-python run_all_tests.py
+python tests/run_all_tests.py
 
 # Run specific test suite
 python tests/test_build_errors.py
@@ -68,7 +68,7 @@ pytest tests/test_comprehensive.py -v
 
 ```bash
 # From project root
-python run_all_tests.py [--verbose] [--quick]
+python tests/run_all_tests.py [--verbose] [--quick]
 ```
 
 Options:
@@ -188,7 +188,7 @@ pip install -r tests/requirements-test.txt
 
 ### Tests failing in CI
 - Check GitHub Actions log
-- Run locally: `python run_all_tests.py --verbose`
+- Run locally: `python tests/run_all_tests.py --verbose`
 - Fix errors before pushing
 
 ### UPROPERTY warnings

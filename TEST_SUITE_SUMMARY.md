@@ -119,17 +119,17 @@ The comprehensive test suite validates:
 
 ### Run All Tests
 ```bash
-python run_all_tests.py
+python tests/run_all_tests.py
 ```
 
 ### Quick Mode (Fast Checks Only)
 ```bash
-python run_all_tests.py --quick
+python tests/run_all_tests.py --quick
 ```
 
 ### With Custom Timeout
 ```bash
-python run_all_tests.py --timeout 120
+python tests/run_all_tests.py --timeout 120
 ```
 
 ### Standalone Build Error Detection

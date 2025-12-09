@@ -42,7 +42,7 @@ This document provides a visual overview of the comprehensive test suite archite
 **Purpose**: Central orchestrator for all tests
 
 ```
-run_all_tests.py
+tests/run_all_tests.py
 ├── Build Configuration Check
 │   ├── Validate .uproject file
 │   ├── Check Build.cs files
@@ -181,7 +181,7 @@ Tools/
 ```
 ┌─────────────────────┐
 │  User runs:         │
-│  run_all_tests.py   │
+│  tests/run_all_tests.py   │
 └──────────┬──────────┘
            │
            ▼
@@ -275,7 +275,7 @@ Tools/
             ┌───────────────────────┐
             │ Run Comprehensive     │
             │ Test Suite            │
-            │ python run_all_tests.py│
+            │ python tests/run_all_tests.py│
             └───────────┬───────────┘
                         │
                         ▼
@@ -311,9 +311,8 @@ Tools/
 ```
 Adastrea/
 │
-├── run_all_tests.py              # Main test runner
-│
 ├── tests/
+│   ├── run_all_tests.py          # Main test runner
 │   ├── README.md                 # Quick reference
 │   ├── requirements-test.txt     # Dependencies
 │   ├── test_build_errors.py      # Standalone tests
@@ -336,7 +335,7 @@ Adastrea/
 
 ### 1. Full Mode (Default)
 ```bash
-python run_all_tests.py
+python tests/run_all_tests.py
 ```
 - All checks enabled
 - All test suites
@@ -345,7 +344,7 @@ python run_all_tests.py
 
 ### 2. Quick Mode
 ```bash
-python run_all_tests.py --quick
+python tests/run_all_tests.py --quick
 ```
 - Fast checks only
 - Skips slow validation
@@ -354,7 +353,7 @@ python run_all_tests.py --quick
 
 ### 3. Python Only
 ```bash
-python run_all_tests.py --python-only
+python tests/run_all_tests.py --python-only
 ```
 - Only Python test suites
 - No validation scripts
@@ -362,7 +361,7 @@ python run_all_tests.py --python-only
 
 ### 4. Validation Only
 ```bash
-python run_all_tests.py --validation-only
+python tests/run_all_tests.py --validation-only
 ```
 - Only validation scripts
 - No pytest tests
