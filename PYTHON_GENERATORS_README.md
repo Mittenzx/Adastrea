@@ -2,7 +2,7 @@
 
 ## Overview
 
-This directory contains 7 powerful Python scripts that automate the creation of **260+ Unreal Engine assets** for the Adastrea project. These scripts solve the problem of manually creating hundreds of Blueprints, Data Assets, Input configurations, Maps, and UI Widgets.
+This directory contains 9 powerful Python scripts that automate the creation of **290+ Unreal Engine assets** for the Adastrea project. These scripts solve the problem of manually creating hundreds of Blueprints, Data Assets, Input configurations, Maps, UI Widgets, and Niagara particle systems.
 
 ## Problem Statement
 
@@ -19,7 +19,7 @@ The Adastrea project is:
 - **Total: 22+ hours of repetitive work**
 
 **With these scripts:**
-- ⚡ **10 minutes total** for all 260+ assets
+- ⚡ **~11 minutes total** for all 290+ assets
 - ✓ Consistent naming and structure
 - ✓ Zero human error
 - ✓ Fully automated
@@ -106,10 +106,11 @@ ContentValidator.validate_all()
 |----------|-------|--------|
 | Blueprints | ~50 | BlueprintGenerator.py |
 | Data Assets | ~161 | DataAssetBatchCreator.py |
-| Input Assets | ~35 | InputSystemGenerator.py |
+| Input Assets | ~38 | InputSystemGenerator.py |
 | Maps | ~4 | MapGenerator.py |
 | UI Widgets | ~12 | UIWidgetGenerator.py |
-| **TOTAL** | **~260** | MasterContentGenerator.py |
+| Niagara Systems | ~24 | NiagaraGenerator.py |
+| **TOTAL** | **~290** | MasterContentGenerator.py |
 
 ## Documentation
 

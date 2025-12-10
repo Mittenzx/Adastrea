@@ -17,10 +17,8 @@ Usage:
     UIWidgetGenerator.generate_all_widgets()
 """
 
-import os
 import sys
-from pathlib import Path
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Optional
 
 try:
     import unreal
@@ -115,21 +113,24 @@ class UIWidgetGenerator:
             # First try Adastrea module
             try:
                 parent_class = unreal.load_class(None, f"/Script/Adastrea.{parent_class_name}")
-            except:
+            except Exception:
+                # Expected: class may not exist in Adastrea module, try next option
                 pass
             
             # Then try UMG module
             if not parent_class:
                 try:
                     parent_class = unreal.load_class(None, f"/Script/UMG.{parent_class_name}")
-                except:
+                except Exception:
+                    # Expected: class may not exist in UMG module, try next option
                     pass
             
             # Finally try without module
             if not parent_class:
                 try:
                     parent_class = unreal.load_class(None, parent_class_name)
-                except:
+                except Exception:
+                    # Expected: class may not exist without module prefix
                     pass
             
             if not parent_class:

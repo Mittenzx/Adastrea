@@ -36,10 +36,9 @@ Usage:
     python MasterContentGenerator.py --blueprints --data-assets
 """
 
-import os
 import sys
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any
 from datetime import datetime
 
 # Try to import Unreal Engine modules
@@ -146,7 +145,7 @@ class MasterContentGenerator:
         # Phase 8: Validation
         if validate:
             self.log("")
-            self.log("PHASE 7: Validating Generated Content...")
+            self.log("PHASE 8: Validating Generated Content...")
             self.validate_content()
         
         # Print summary

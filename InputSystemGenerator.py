@@ -23,10 +23,8 @@ Usage:
     InputSystemGenerator.generate_input_config_data_asset()
 """
 
-import os
 import sys
-from pathlib import Path
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Optional
 
 try:
     import unreal
@@ -42,13 +40,20 @@ class InputSystemGenerator:
     
     # Input Actions to create
     INPUT_ACTIONS = [
-        # Movement
+        # Flight Movement (Space Flight)
         ("IA_Move", "Vector2D", "Movement input (A/D for strafe)"),
         ("IA_VerticalMove", "Float", "Vertical movement (W/S for up/down on Z axis)"),
         ("IA_Throttle", "Float", "Throttle control (Mouse wheel)"),
         ("IA_Look", "Vector2D", "Camera look input (Mouse/Right Stick)"),
         ("IA_Boost", "Boolean", "Speed boost"),
         ("IA_Brake", "Boolean", "Brake/Slow down"),
+        
+        # Third Person Movement (Station/Ship Interior)
+        ("IA_Walk", "Vector2D", "Standard third person movement (WASD)"),
+        ("IA_LookThirdPerson", "Vector2D", "Standard third person camera (Mouse)"),
+        ("IA_Jump", "Boolean", "Jump in third person mode"),
+        ("IA_Crouch", "Boolean", "Crouch in third person mode"),
+        ("IA_Sprint", "Boolean", "Sprint in third person mode"),
         
         # Combat
         ("IA_Fire_Primary", "Boolean", "Primary weapon"),

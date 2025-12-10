@@ -25,10 +25,8 @@ Usage:
     BlueprintGenerator.create_blueprint("BP_MyShip", "ASpaceship", "/Game/Blueprints/Ships")
 """
 
-import os
 import sys
-from pathlib import Path
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Dict, Any, Optional
 
 try:
     import unreal

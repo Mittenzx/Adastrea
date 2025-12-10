@@ -22,10 +22,8 @@ Usage:
     ContentValidator.validate_data_assets()
 """
 
-import os
 import sys
-from pathlib import Path
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Dict, Any
 
 try:
     import unreal
@@ -57,7 +55,7 @@ class ContentValidator:
         "/Game/Input/Actions/IA_Move",
         "/Game/Input/Actions/IA_Look",
         "/Game/Input/Actions/IA_Fire_Primary",
-        "/Game/Input/IMC_Spaceship",
+        "/Game/Input/IMC_SpaceshipFlight",
         "/Game/DataAssets/Input/DA_InputConfig",
     ]
     

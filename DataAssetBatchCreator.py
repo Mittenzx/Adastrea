@@ -26,10 +26,9 @@ Usage:
     DataAssetBatchCreator.batch_convert_trading()
 """
 
-import os
 import sys
 from pathlib import Path
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Dict, Any, Optional
 
 try:
     import unreal
@@ -236,13 +235,15 @@ class DataAssetBatchCreator:
                         prop_name = sub_key
                         try:
                             data_asset.set_editor_property(prop_name, sub_value)
-                        except:
-                            pass  # Property might not exist or be read-only
+                        except (AttributeError, TypeError, ValueError):
+                            # Property might not exist or be read-only
+                            pass
                 else:
                     # Handle simple properties
                     try:
                         data_asset.set_editor_property(key, value)
-                    except:
+                    except (AttributeError, TypeError, ValueError):
+                        # Property might not exist or be read-only
                         pass
         except Exception as e:
             self.log(f"Warning: Could not set some properties: {str(e)}", "warning")

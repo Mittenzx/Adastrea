@@ -11,7 +11,6 @@ Usage:
     CheckGeneratorEnvironment.check_all()
 """
 
-import os
 import sys
 from pathlib import Path
 
@@ -169,7 +168,7 @@ def check_all():
                 else:
                     missing_classes.append(class_name)
                     print(f"   ✗ {class_name} - Not found")
-            except:
+            except Exception:
                 missing_classes.append(class_name)
                 print(f"   ✗ {class_name} - Not found")
         
@@ -223,14 +222,14 @@ def quick_check():
     try:
         import unreal
         print("✓ Unreal Engine available")
-    except:
+    except ImportError:
         print("✗ Not in Unreal Editor")
         return False
     
     try:
         import yaml
         print("✓ PyYAML available")
-    except:
+    except ImportError:
         print("✗ PyYAML not installed")
         return False
     

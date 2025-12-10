@@ -18,10 +18,8 @@ Usage:
     MapGenerator.create_test_mode_map()
 """
 
-import os
 import sys
-from pathlib import Path
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Optional
 
 try:
     import unreal

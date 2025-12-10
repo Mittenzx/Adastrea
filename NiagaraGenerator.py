@@ -23,10 +23,8 @@ Usage:
     NiagaraGenerator.generate_explosion_effects()
 """
 
-import os
 import sys
-from pathlib import Path
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Dict, Any, Optional
 
 try:
     import unreal
