@@ -3,6 +3,9 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "DrawDebugHelpers.h"
 #include "AIController.h"
+#include "Adastrea.h"
+
+DEFINE_LOG_CATEGORY_STATIC(LogAdastreaAI, Log, All);
 
 USimpleAIMovementComponent::USimpleAIMovementComponent()
 {
@@ -112,6 +115,10 @@ void USimpleAIMovementComponent::GenerateNewTarget()
 
 	FVector CurrentLocation = Owner->GetActorLocation();
 
+	// Validate distance parameters
+	float ValidMinDistance = FMath::Max(MinDistance, 1000.0f);
+	float ValidMaxDistance = FMath::Max(MaxDistance, ValidMinDistance + 1000.0f);
+
 	// Generate random direction
 	FVector RandomDirection;
 	RandomDirection.X = FMath::RandRange(-1.0f, 1.0f);
@@ -120,12 +127,12 @@ void USimpleAIMovementComponent::GenerateNewTarget()
 	RandomDirection.Normalize();
 
 	// Generate random distance
-	float RandomDistance = FMath::RandRange(MinDistance, MaxDistance);
+	float RandomDistance = FMath::RandRange(ValidMinDistance, ValidMaxDistance);
 
 	// Calculate new target
 	TargetLocation = CurrentLocation + (RandomDirection * RandomDistance);
 
-	UE_LOG(LogTemp, Log, TEXT("%s: New target generated at %s (distance: %.0f)"), 
+	UE_LOG(LogAdastreaAI, Log, TEXT("%s: New target generated at %s (distance: %.0f)"), 
 		*Owner->GetName(), *TargetLocation.ToString(), RandomDistance);
 }
 
@@ -164,16 +171,13 @@ void USimpleAIMovementComponent::MoveTowardTarget(float DeltaTime)
 	FVector Direction = (TargetLocation - CurrentLocation).GetSafeNormal();
 
 	// AddMovementInput expects a normalized direction and scale factor (0-1)
-	// The actual speed is controlled by the FloatingPawnMovement component's MaxSpeed
-	// We use a scale factor of 1.0 for full speed movement
+	// We use full speed movement (1.0f)
 	PawnOwner->AddMovementInput(Direction, 1.0f);
 	
-	// Note: To adjust speed, modify the FloatingPawnMovement component's MaxSpeed property
-	// or use MoveSpeed to scale the ship's movement component speed dynamically
+	// Apply MoveSpeed to FloatingPawnMovement component if present
 	if (UFloatingPawnMovement* MovementComp = PawnOwner->FindComponentByClass<UFloatingPawnMovement>())
 	{
-		// Optionally override the movement component's max speed
-		// MovementComp->MaxSpeed = MoveSpeed; // Uncomment if you want MoveSpeed to control actual speed
+		MovementComp->MaxSpeed = MoveSpeed;
 	}
 }
 

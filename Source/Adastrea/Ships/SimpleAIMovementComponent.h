@@ -26,11 +26,11 @@ public:
 	USimpleAIMovementComponent();
 
 	// Minimum distance for random location generation
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Movement", meta=(ClampMin="1000.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Movement", meta=(ClampMin="1000.0", ClampMax="100000.0"))
 	float MinDistance;
 
-	// Maximum distance for random location generation
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Movement", meta=(ClampMin="1000.0"))
+	// Maximum distance for random location generation (must be greater than MinDistance)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Movement", meta=(ClampMin="1000.0", ClampMax="500000.0"))
 	float MaxDistance;
 
 	// Speed at which ship moves toward target

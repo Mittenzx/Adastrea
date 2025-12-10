@@ -85,7 +85,7 @@ Execute CreateAIShip.py in Unreal Engine
 6. Select the component and configure in **Details** panel:
    - **Min Distance**: 10000.0 (or adjust as needed)
    - **Max Distance**: 50000.0 (or adjust as needed)
-   - **Move Speed**: 2000.0 (or adjust as needed)
+   - **Move Speed**: 2000.0 (controls FloatingPawnMovement MaxSpeed)
    - **Arrival Threshold**: 500.0
    - **Turn Rate**: 90.0
    - **Show Debug**: ✓ Check for testing (uncheck for production)

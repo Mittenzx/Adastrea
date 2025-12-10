@@ -32,10 +32,18 @@ An AI ship (BP_ImportAI) that:
 1. Open **Window** → **Developer Tools** → **Output Log**
 2. At the bottom Python console, type:
    ```python
-   exec(open('CreateAIShip.py').read())
+   import sys
+   sys.path.append('.')
+   import CreateAIShip
+   CreateAIShip.create_ai_ship()
    ```
 3. Press Enter
 4. Watch for "✅ Blueprint base created successfully!" message
+
+**Alternative (Quick but less safe):**
+```python
+exec(open('CreateAIShip.py').read())
+```
 
 ### Step 3: Add AI Component
 
