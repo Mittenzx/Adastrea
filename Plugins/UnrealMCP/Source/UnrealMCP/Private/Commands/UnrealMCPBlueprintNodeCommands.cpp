@@ -319,8 +319,8 @@ TSharedPtr<FJsonObject> FUnrealMCPBlueprintNodeCommands::HandleAddBlueprintFunct
         // Try to find the target class
         UClass* TargetClass = nullptr;
         
-        // First try without a prefix
-        TargetClass = FindObject<UClass>(ANY_PACKAGE, *Target);
+        // First try without a prefix using FindFirstObject (UE 5.7+ compatible)
+        TargetClass = FindFirstObject<UClass>(*Target, EFindFirstObjectOptions::None, ELogVerbosity::Warning, TEXT("FindTargetClass"));
         UE_LOG(LogTemp, Display, TEXT("Tried to find class '%s': %s"), 
                *Target, TargetClass ? TEXT("Found") : TEXT("Not found"));
         
@@ -328,7 +328,7 @@ TSharedPtr<FJsonObject> FUnrealMCPBlueprintNodeCommands::HandleAddBlueprintFunct
         if (!TargetClass && !Target.StartsWith(TEXT("U")))
         {
             FString TargetWithPrefix = FString(TEXT("U")) + Target;
-            TargetClass = FindObject<UClass>(ANY_PACKAGE, *TargetWithPrefix);
+            TargetClass = FindFirstObject<UClass>(*TargetWithPrefix, EFindFirstObjectOptions::None, ELogVerbosity::Warning, TEXT("FindTargetClass"));
             UE_LOG(LogTemp, Display, TEXT("Tried to find class '%s': %s"), 
                    *TargetWithPrefix, TargetClass ? TEXT("Found") : TEXT("Not found"));
         }
@@ -343,7 +343,7 @@ TSharedPtr<FJsonObject> FUnrealMCPBlueprintNodeCommands::HandleAddBlueprintFunct
             
             for (const FString& ClassName : PossibleClassNames)
             {
-                TargetClass = FindObject<UClass>(ANY_PACKAGE, *ClassName);
+                TargetClass = FindFirstObject<UClass>(*ClassName, EFindFirstObjectOptions::None, ELogVerbosity::Warning, TEXT("FindTargetClass"));
                 if (TargetClass)
                 {
                     UE_LOG(LogTemp, Display, TEXT("Found class using alternative name '%s'"), *ClassName);
@@ -355,8 +355,8 @@ TSharedPtr<FJsonObject> FUnrealMCPBlueprintNodeCommands::HandleAddBlueprintFunct
         // Special case handling for common classes like UGameplayStatics
         if (!TargetClass && Target == TEXT("UGameplayStatics"))
         {
-            // For UGameplayStatics, use a direct reference to known class
-            TargetClass = FindObject<UClass>(ANY_PACKAGE, TEXT("UGameplayStatics"));
+            // For UGameplayStatics, use FindFirstObject or load it directly
+            TargetClass = FindFirstObject<UClass>(TEXT("UGameplayStatics"), EFindFirstObjectOptions::None, ELogVerbosity::Warning, TEXT("FindTargetClass"));
             if (!TargetClass)
             {
                 // Try loading it from its known package
@@ -412,7 +412,7 @@ TSharedPtr<FJsonObject> FUnrealMCPBlueprintNodeCommands::HandleAddBlueprintFunct
                     (FunctionName == TEXT("GetActorOfClass") || FunctionName.Equals(TEXT("GetActorOfClass"), ESearchCase::IgnoreCase)))
                 {
                     UE_LOG(LogTemp, Display, TEXT("Using special case handling for GameplayStatics::GetActorOfClass"));
-                    
+            
                     // Create the function node directly
                     FunctionNode = NewObject<UK2Node_CallFunction>(EventGraph);
                     if (FunctionNode)
@@ -502,27 +502,13 @@ TSharedPtr<FJsonObject> FUnrealMCPBlueprintNodeCommands::HandleAddBlueprintFunct
                             // - Non-actor classes must start with 'U' (e.g., UObject)
                             const FString& ClassName = StringVal;
                             
-                            // TODO: This likely won't work in UE5.5+, so don't rely on it.
-                            UClass* Class = FindObject<UClass>(ANY_PACKAGE, *ClassName);
+                            // Use FindFirstObject for UE 5.7+ compatibility
+                            UClass* Class = FindFirstObject<UClass>(*ClassName, EFindFirstObjectOptions::None, ELogVerbosity::Warning, TEXT("FindClass"));
 
                             if (!Class)
                             {
                                 Class = LoadObject<UClass>(nullptr, *ClassName);
-                                UE_LOG(LogUnrealMCP, Display, TEXT("FindObject<UClass> failed. Assuming soft path  path: %s"), *ClassName);
-                            }
-                            
-                            // If not found, try with Engine module path
-                            if (!Class)
-                            {
-                                FString EngineClassName = FString::Printf(TEXT("/Script/Engine.%s"), *ClassName);
-                                Class = LoadObject<UClass>(nullptr, *EngineClassName);
-                                UE_LOG(LogUnrealMCP, Display, TEXT("Trying Engine module path: %s"), *EngineClassName);
-                            }
-                            
-                            if (!Class)
-                            {
-                                UE_LOG(LogUnrealMCP, Error, TEXT("Failed to find class '%s'. Make sure to use the exact class name with proper prefix (A for actors, U for non-actors)"), *ClassName);
-                                return FUnrealMCPCommonUtils::CreateErrorResponse(FString::Printf(TEXT("Failed to find class '%s'"), *ClassName));
+                                UE_LOG(LogUnrealMCP, Display, TEXT("FindFirstObject<UClass> failed. Assuming soft path: %s"), *ClassName);
                             }
 
                             const UEdGraphSchema_K2* K2Schema = Cast<const UEdGraphSchema_K2>(EventGraph->GetSchema());
@@ -921,4 +907,4 @@ TSharedPtr<FJsonObject> FUnrealMCPBlueprintNodeCommands::HandleFindBlueprintNode
     ResultObj->SetArrayField(TEXT("node_guids"), NodeGuidArray);
     
     return ResultObj;
-} 
+}
