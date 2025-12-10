@@ -145,16 +145,22 @@ InputSystemGenerator.generate_input_config_data_asset()
 - ✓ 3 Input Mapping Contexts (IMC_Spaceship, IMC_Menu, IMC_Station)
 - ✓ DA_InputConfig Data Asset
 
-**Key Bindings** (Spaceship Controls):
+**Key Bindings**:
+
+*Space Flight Mode (in spaceship cockpit):*
 - **A/D**: Strafe Left/Right
 - **W/S**: Move Up/Down (Z axis)
-- **Mouse Wheel Up**: Increase Throttle
-- **Mouse Wheel Down**: Decrease Throttle
-- **Mouse Movement**: Look/Camera Control
+- **Mouse Wheel Up/Down**: Increase/Decrease Throttle
+- **Mouse**: Look/Camera Control
 - **Left Mouse Button**: Fire Primary Weapon
-- **Right Mouse Button**: Fire Secondary Weapon
-- **Shift**: Boost
-- **Ctrl**: Brake
+- **Shift**: Boost | **Ctrl**: Brake
+
+*Third Person Mode (stations/ship interiors):*
+- **W/A/S/D**: Standard movement (forward/left/back/right)
+- **Mouse**: Look/Camera Control
+- **Space**: Jump
+- **Shift**: Sprint | **Ctrl**: Crouch
+- **E**: Interact
 
 ### 5. MapGenerator.py
 

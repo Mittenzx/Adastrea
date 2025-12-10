@@ -2,7 +2,13 @@
 
 Quick reference for the default input controls in Adastrea.
 
-## Spaceship Flight Controls
+**Note**: Adastrea uses **two different control schemes** depending on context:
+- **Space Flight Controls**: Used when flying a spaceship in space
+- **Third Person Controls**: Used when walking in stations or ship interiors
+
+## Space Flight Controls (IMC_SpaceshipFlight)
+
+Active when piloting a spaceship in space.
 
 ### Movement
 | Key | Action | Description |
@@ -22,6 +28,36 @@ Quick reference for the default input controls in Adastrea.
 | **Mouse Movement** | Look/Rotate Camera | Control camera direction |
 | **Page Up** | Zoom In | Zoom camera closer |
 | **Page Down** | Zoom Out | Zoom camera further |
+
+---
+
+## Third Person Controls (IMC_ThirdPerson)
+
+Active when walking in **stations** or **spaceship interiors**.
+
+### Movement
+| Key | Action | Description |
+|-----|--------|-------------|
+| **W** | Move Forward | Walk forward |
+| **S** | Move Backward | Walk backward |
+| **A** | Move Left | Strafe left |
+| **D** | Move Right | Strafe right |
+| **Space** | Jump | Jump |
+| **Left Shift** | Sprint | Run faster |
+| **Left Ctrl** | Crouch | Crouch/duck |
+
+### Camera/Look
+| Key | Action | Description |
+|-----|--------|-------------|
+| **Mouse Movement** | Look/Rotate Camera | Control camera direction |
+
+### Interaction
+| Key | Action | Description |
+|-----|--------|-------------|
+| **E** | Interact | Interact with objects, terminals, NPCs |
+| **F** | Use | Use equipment or activate systems |
+
+---
 
 ## Combat Controls
 
@@ -110,13 +146,20 @@ Quick reference for the default input controls in Adastrea.
 
 These are the Enhanced Input Actions created by InputSystemGenerator.py:
 
-### Core Movement Actions
+### Flight Movement Actions (Space Flight)
 - `IA_Move` (Vector2D) - Strafe left/right
 - `IA_VerticalMove` (Float) - Move up/down on Z axis
 - `IA_Throttle` (Float) - Forward/backward throttle control
 - `IA_Look` (Vector2D) - Camera rotation
 - `IA_Boost` (Boolean) - Speed boost
 - `IA_Brake` (Boolean) - Brake/slow down
+
+### Third Person Movement Actions (Station/Interior)
+- `IA_Walk` (Vector2D) - Standard WASD movement
+- `IA_LookThirdPerson` (Vector2D) - Standard mouse look
+- `IA_Jump` (Boolean) - Jump
+- `IA_Crouch` (Boolean) - Crouch
+- `IA_Sprint` (Boolean) - Sprint
 
 ### Combat Actions
 - `IA_Fire_Primary` (Boolean) - Primary weapon
@@ -161,17 +204,21 @@ These are the Enhanced Input Actions created by InputSystemGenerator.py:
 
 Three mapping contexts are created:
 
-1. **IMC_Spaceship** - Active during spaceship flight
-   - Contains all movement, combat, and navigation controls
+1. **IMC_SpaceshipFlight** - Active during spaceship flight in space
+   - Contains space flight controls (throttle, vertical movement, etc.)
+   - Uses flight control scheme
    - Priority: 1 (highest)
 
-2. **IMC_Menu** - Active when menus are open
+2. **IMC_ThirdPerson** - Active when walking in stations or ship interiors
+   - Contains standard third person controls (WASD, jump, crouch, sprint)
+   - Uses traditional third person scheme
+   - Priority: 1 (highest)
+
+3. **IMC_Menu** - Active when menus are open
    - Contains UI navigation controls
    - Priority: 2
 
-3. **IMC_Station** - Active when docked at a station
-   - Contains station interaction controls
-   - Priority: 1
+**Note**: The game automatically switches between IMC_SpaceshipFlight and IMC_ThirdPerson based on player context (in space vs. on foot).
 
 ## Customization
 
@@ -186,15 +233,28 @@ Developers can modify key bindings by:
 
 ## Notes
 
+### Space Flight Context
 - **Mouse Wheel** is reserved for throttle control (not camera zoom)
 - **Camera Zoom** uses Page Up/Down keys
 - **W/S** control vertical movement (Z axis), NOT forward/backward
 - **Forward/Backward** is controlled by mouse wheel throttle
+
+### Third Person Context (Station/Interior)
+- **W/S** control forward/backward movement (standard third person)
+- **WASD** works like traditional games (forward, back, strafe left, strafe right)
+- **Space** to jump, **Shift** to sprint, **Ctrl** to crouch
+- No throttle control in this mode
+
+### Automatic Context Switching
+- Game automatically switches between control schemes
+- When in spaceship cockpit → Space Flight Controls
+- When walking in station/interior → Third Person Controls
 - All controls are fully rebindable through the Enhanced Input system
 
 ## Version History
 
-- **1.1** (December 10, 2025) - Fixed key bindings: Mouse wheel for throttle, W/S for Z axis
+- **1.2** (December 10, 2025) - Added third person controls for stations and ship interiors
+- **1.1** (December 10, 2025) - Fixed key bindings: Mouse wheel for throttle, W/S for Z axis in flight mode
 - **1.0** (December 10, 2025) - Initial controls reference
 
 ---

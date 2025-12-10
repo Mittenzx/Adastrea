@@ -91,6 +91,7 @@ class InputSystemGenerator:
     ]
     
     # Key bindings for each action
+    # Flight Controls (for space flight)
     KEY_BINDINGS = {
         "IA_Move": [("A", "Strafe Left"), ("D", "Strafe Right")],
         "IA_VerticalMove": [("W", "Up (Z+)"), ("S", "Down (Z-)")],
@@ -98,6 +99,13 @@ class InputSystemGenerator:
         "IA_Look": [("Mouse X", "Look X"), ("Mouse Y", "Look Y")],
         "IA_Boost": [("LeftShift", "Boost")],
         "IA_Brake": [("LeftControl", "Brake")],
+        
+        # Third Person Controls (for station/ship interior)
+        "IA_Walk": [("W", "Forward"), ("S", "Backward"), ("A", "Left"), ("D", "Right")],
+        "IA_LookThirdPerson": [("Mouse X", "Look X"), ("Mouse Y", "Look Y")],
+        "IA_Jump": [("Space", "Jump")],
+        "IA_Crouch": [("LeftControl", "Crouch")],
+        "IA_Sprint": [("LeftShift", "Sprint")],
         "IA_Fire_Primary": [("LeftMouseButton", "Fire Primary")],
         "IA_Fire_Secondary": [("RightMouseButton", "Fire Secondary")],
         "IA_TargetNext": [("T", "Target Next")],
@@ -114,9 +122,9 @@ class InputSystemGenerator:
     
     # Mapping Contexts
     MAPPING_CONTEXTS = [
-        ("IMC_Spaceship", "Spaceship control mapping context"),
+        ("IMC_SpaceshipFlight", "Spaceship flight control mapping context (space flight)"),
+        ("IMC_ThirdPerson", "Third person control mapping context (station/ship interior)"),
         ("IMC_Menu", "Menu navigation mapping context"),
-        ("IMC_Station", "Station interaction mapping context"),
     ]
     
     def __init__(self):
