@@ -1,11 +1,11 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
 #include "Ships/SimpleAIMovementComponent.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "DrawDebugHelpers.h"
 #include "AIController.h"
-#include "Adastrea.h"
-
-DEFINE_LOG_CATEGORY_STATIC(LogAdastreaAI, Log, All);
+#include "AdastreaLog.h"
 
 USimpleAIMovementComponent::USimpleAIMovementComponent()
 {
@@ -20,11 +20,23 @@ USimpleAIMovementComponent::USimpleAIMovementComponent()
 	bConstrainToHorizontalPlane = true;
 	bShowDebug = false;
 	TargetLocation = FVector::ZeroVector;
+	CachedMovementComponent = nullptr;
 }
 
 void USimpleAIMovementComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Cache FloatingPawnMovement component for performance
+	AActor* Owner = GetOwner();
+	if (Owner)
+	{
+		APawn* PawnOwner = Cast<APawn>(Owner);
+		if (PawnOwner)
+		{
+			CachedMovementComponent = PawnOwner->FindComponentByClass<UFloatingPawnMovement>();
+		}
+	}
 
 	// Generate initial target on start
 	GenerateNewTarget();
@@ -174,10 +186,10 @@ void USimpleAIMovementComponent::MoveTowardTarget(float DeltaTime)
 	// We use full speed movement (1.0f)
 	PawnOwner->AddMovementInput(Direction, 1.0f);
 	
-	// Apply MoveSpeed to FloatingPawnMovement component if present
-	if (UFloatingPawnMovement* MovementComp = PawnOwner->FindComponentByClass<UFloatingPawnMovement>())
+	// Apply MoveSpeed to cached FloatingPawnMovement component if present
+	if (CachedMovementComponent)
 	{
-		MovementComp->MaxSpeed = MoveSpeed;
+		CachedMovementComponent->MaxSpeed = MoveSpeed;
 	}
 }
 

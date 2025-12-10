@@ -1,8 +1,13 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "SimpleAIMovementComponent.generated.h"
+
+// Forward declarations
+class UFloatingPawnMovement;
 
 /**
  * Simple AI Movement Component for autonomous ship navigation
@@ -85,6 +90,10 @@ private:
 	// Current target location
 	UPROPERTY()
 	FVector TargetLocation;
+
+	// Cached reference to FloatingPawnMovement component for performance
+	UPROPERTY()
+	UFloatingPawnMovement* CachedMovementComponent;
 
 	/**
 	 * Move toward the current target

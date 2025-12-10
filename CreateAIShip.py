@@ -20,7 +20,6 @@ def create_ai_ship():
     unreal.log("=== Creating AI-Controlled Ship ===")
     
     editor_asset_lib = unreal.EditorAssetLibrary()
-    asset_tools = unreal.AssetToolsHelpers.get_asset_tools()
     
     try:
         # Step 1: Setup AI Controller
@@ -58,7 +57,6 @@ def create_ai_ship():
         # Check if BP_ImportAI already exists, delete it to recreate
         if editor_asset_lib.does_asset_exist(ship_full_path):
             unreal.log(f"⚠ BP_ImportAI already exists, will reconfigure it")
-            bp_import_ai = unreal.load_object(None, ship_full_path)
         else:
             # Duplicate BP_Import to create BP_ImportAI
             success = editor_asset_lib.duplicate_asset(import_blueprint_path, ship_full_path)
@@ -68,7 +66,6 @@ def create_ai_ship():
                 return False
             
             unreal.log(f"✓ Created BP_ImportAI by duplicating BP_Import")
-            bp_import_ai = unreal.load_object(None, ship_full_path)
         
         # Step 4: Configure BP_ImportAI
         unreal.log("\n--- Step 4: Configuring BP_ImportAI ---")
@@ -93,9 +90,10 @@ def create_ai_ship():
         # Step 5: Add SimpleAIMovementComponent
         unreal.log("\n--- Step 5: Adding SimpleAIMovementComponent ---")
         
-        # Note: Adding components to Blueprints via Python is complex
-        # The component needs to be added in the Blueprint editor
-        unreal.log("⚠ Component must be added manually in Blueprint Editor:")
+        # Note: While Unreal's Python API supports adding components programmatically,
+        # manual addition in the Blueprint editor is recommended for this workflow.
+        # This ensures proper setup, visibility, and configuration of the component by designers.
+        unreal.log("⚠ For this workflow, add the component manually in Blueprint Editor:")
         unreal.log("  1. Open BP_ImportAI")
         unreal.log("  2. Click 'Add Component' → Search 'SimpleAIMovement'")
         unreal.log("  3. Add 'SimpleAIMovementComponent'")
