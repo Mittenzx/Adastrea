@@ -2,7 +2,7 @@
 #include "GameFramework/Pawn.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "DrawDebugHelpers.h"
-#include "Kismet/KismetMathLibrary.h"
+#include "AIController.h"
 
 USimpleAIMovementComponent::USimpleAIMovementComponent()
 {
@@ -14,6 +14,7 @@ USimpleAIMovementComponent::USimpleAIMovementComponent()
 	MoveSpeed = 2000.0f;
 	ArrivalThreshold = 500.0f;
 	TurnRate = 90.0f;
+	bConstrainToHorizontalPlane = true;
 	bShowDebug = false;
 	TargetLocation = FVector::ZeroVector;
 }
@@ -162,8 +163,18 @@ void USimpleAIMovementComponent::MoveTowardTarget(float DeltaTime)
 	FVector CurrentLocation = Owner->GetActorLocation();
 	FVector Direction = (TargetLocation - CurrentLocation).GetSafeNormal();
 
-	// Use AddMovementInput if this is a Pawn
-	PawnOwner->AddMovementInput(Direction, MoveSpeed * DeltaTime);
+	// AddMovementInput expects a normalized direction and scale factor (0-1)
+	// The actual speed is controlled by the FloatingPawnMovement component's MaxSpeed
+	// We use a scale factor of 1.0 for full speed movement
+	PawnOwner->AddMovementInput(Direction, 1.0f);
+	
+	// Note: To adjust speed, modify the FloatingPawnMovement component's MaxSpeed property
+	// or use MoveSpeed to scale the ship's movement component speed dynamically
+	if (UFloatingPawnMovement* MovementComp = PawnOwner->FindComponentByClass<UFloatingPawnMovement>())
+	{
+		// Optionally override the movement component's max speed
+		// MovementComp->MaxSpeed = MoveSpeed; // Uncomment if you want MoveSpeed to control actual speed
+	}
 }
 
 void USimpleAIMovementComponent::RotateTowardTarget(float DeltaTime)
@@ -177,7 +188,12 @@ void USimpleAIMovementComponent::RotateTowardTarget(float DeltaTime)
 	// Get direction to target
 	FVector CurrentLocation = Owner->GetActorLocation();
 	FVector Direction = TargetLocation - CurrentLocation;
-	Direction.Z = 0; // Keep level for smoother rotation (optional)
+	
+	// Optionally constrain to horizontal plane (ignore Z-axis)
+	if (bConstrainToHorizontalPlane)
+	{
+		Direction.Z = 0;
+	}
 
 	if (Direction.SizeSquared() > SMALL_NUMBER)
 	{
@@ -185,12 +201,13 @@ void USimpleAIMovementComponent::RotateTowardTarget(float DeltaTime)
 		FRotator TargetRotation = Direction.Rotation();
 		FRotator CurrentRotation = Owner->GetActorRotation();
 
-		// Interpolate toward target rotation
+		// Interpolate toward target rotation using TurnRate as interp speed
+		// RInterpTo uses the TurnRate as degrees per second naturally
 		FRotator NewRotation = FMath::RInterpTo(
 			CurrentRotation,
 			TargetRotation,
 			DeltaTime,
-			TurnRate / 90.0f // Convert to interpolation alpha
+			TurnRate
 		);
 
 		Owner->SetActorRotation(NewRotation);

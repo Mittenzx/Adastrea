@@ -23,33 +23,30 @@ def create_ai_ship():
     asset_tools = unreal.AssetToolsHelpers.get_asset_tools()
     
     try:
-        # Step 1: Create AI Controller Blueprint
-        unreal.log("\n--- Step 1: Creating AI Controller ---")
+        # Step 1: Setup AI Controller
+        unreal.log("\n--- Step 1: Setting up AI Controller ---")
         
-        ai_controller_path = "/Game/Blueprints/AI"
-        ai_controller_name = "BP_SimpleShipAI"
-        ai_controller_full_path = f"{ai_controller_path}/{ai_controller_name}"
-        
-        # Create AI directory if it doesn't exist
-        if not editor_asset_lib.does_directory_exist(ai_controller_path):
-            editor_asset_lib.make_directory(ai_controller_path)
-            unreal.log(f"✓ Created directory: {ai_controller_path}")
-        
-        # Use default AIController - no need to create custom one for this simple case
+        # Use default AIController - sufficient for simple autonomous movement
         ai_controller_class = unreal.AIController
         unreal.log(f"✓ Using default AIController class")
+        
+        # Create AI directory for future AI-related assets
+        ai_controller_path = "/Game/Blueprints/AI"
+        if not editor_asset_lib.does_directory_exist(ai_controller_path):
+            editor_asset_lib.make_directory(ai_controller_path)
+            unreal.log(f"✓ Created directory: {ai_controller_path} for future AI assets")
         
         # Step 2: Load BP_Import as template
         unreal.log("\n--- Step 2: Loading BP_Import template ---")
         
         import_blueprint_path = "/Game/Blueprints/Ships/BP_Import"
-        import_blueprint = unreal.load_object(None, f"{import_blueprint_path}.BP_Import_C")
         
-        if not import_blueprint:
-            unreal.log_error(f"✗ Could not load BP_Import from {import_blueprint_path}")
+        # Check if BP_Import exists using EditorAssetLibrary
+        if not editor_asset_lib.does_asset_exist(import_blueprint_path):
+            unreal.log_error(f"✗ BP_Import not found at {import_blueprint_path}")
             return False
         
-        unreal.log(f"✓ Loaded BP_Import template")
+        unreal.log(f"✓ Found BP_Import template")
         
         # Step 3: Create BP_ImportAI Blueprint
         unreal.log("\n--- Step 3: Creating BP_ImportAI ---")

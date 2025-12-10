@@ -45,6 +45,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Movement", meta=(ClampMin="10.0"))
 	float TurnRate;
 
+	// Whether to constrain rotation to horizontal plane (ignore Z-axis when looking at target)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Movement")
+	bool bConstrainToHorizontalPlane;
+
 	// Whether to enable debug visualization
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Movement|Debug")
 	bool bShowDebug;
