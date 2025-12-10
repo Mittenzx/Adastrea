@@ -20,11 +20,12 @@ MasterContentGenerator.generate_all_content()
 This will create:
 - ✓ Essential and additional Blueprints (~50 assets)
 - ✓ Data Assets from YAML templates (~161 assets)
-- ✓ Enhanced Input system (~35 assets)
+- ✓ Enhanced Input system (~38 assets)
 - ✓ Test maps (~4 maps)
 - ✓ UI Widgets (~12 widgets)
+- ✓ Niagara Particle Systems (~24 effects)
 
-**Total: ~260+ assets created automatically!**
+**Total: ~290+ assets created automatically!**
 
 ## Available Scripts
 
@@ -46,6 +47,7 @@ MasterContentGenerator.generate_data_assets()
 MasterContentGenerator.generate_input_system()
 MasterContentGenerator.generate_maps()
 MasterContentGenerator.generate_ui_widgets()
+MasterContentGenerator.generate_niagara_systems()
 
 # Validate generated content
 MasterContentGenerator.validate_content()
@@ -219,7 +221,36 @@ UIWidgetGenerator.create_widget_blueprint("WBP_MyUI", "UserWidget", "/Game/UI/Cu
 - ✓ WBP_SectorMap
 - ✓ And more...
 
-### 7. ContentValidator.py
+### 7. NiagaraGenerator.py
+
+**Purpose**: Creates Niagara particle systems for visual effects.
+
+**Usage**:
+```python
+import NiagaraGenerator
+
+# Generate all Niagara effects
+NiagaraGenerator.generate_all_effects()
+
+# Generate specific categories
+NiagaraGenerator.generate_engine_effects()
+NiagaraGenerator.generate_weapon_effects()
+NiagaraGenerator.generate_explosion_effects()
+NiagaraGenerator.generate_shield_effects()
+NiagaraGenerator.generate_environmental_effects()
+NiagaraGenerator.generate_damage_effects()
+```
+
+**What it Creates**:
+- ✓ Engine effects (thrust, boost, idle, maneuvering thrusters)
+- ✓ Weapon effects (laser, plasma, missiles, cannons)
+- ✓ Explosion effects (small, medium, large, impacts)
+- ✓ Shield effects (active bubble, impacts, recharge, failure)
+- ✓ Environmental effects (nebula, asteroids, debris, warp, docking)
+- ✓ Damage effects (fire, sparks, smoke, atmosphere leaks)
+- **Total: ~24 Niagara systems**
+
+### 8. ContentValidator.py
 
 **Purpose**: Validates all generated content to ensure it works correctly.
 
@@ -418,10 +449,11 @@ Total time: ~10-15 minutes for complete content generation.
 |----------|-------|------|--------|
 | Blueprints | ~50 | 2 min | ✓ Automated |
 | Data Assets | ~161 | 5 min | ✓ Automated |
-| Input Assets | ~35 | 1 min | ✓ Automated |
+| Input Assets | ~38 | 1 min | ✓ Automated |
 | Maps | ~4 | 1 min | ✓ Automated |
 | UI Widgets | ~12 | 1 min | ✓ Automated |
-| **TOTAL** | **~260** | **~10 min** | ✓ Automated |
+| Niagara Systems | ~24 | 1 min | ✓ Automated |
+| **TOTAL** | **~290** | **~11 min** | ✓ Automated |
 
 ## Further Reading
 

@@ -72,6 +72,7 @@ class MasterContentGenerator:
             "input_actions_created": 0,
             "maps_created": 0,
             "ui_widgets_created": 0,
+            "niagara_systems_created": 0,
             "errors": []
         }
     
@@ -137,7 +138,12 @@ class MasterContentGenerator:
         self.log("PHASE 6: Generating Additional Blueprints...")
         self.generate_blueprints(essential_only=False)
         
-        # Phase 7: Validation
+        # Phase 7: Niagara Particle Systems
+        self.log("")
+        self.log("PHASE 7: Generating Niagara Particle Systems...")
+        self.generate_niagara_systems()
+        
+        # Phase 8: Validation
         if validate:
             self.log("")
             self.log("PHASE 7: Validating Generated Content...")
@@ -286,6 +292,31 @@ class MasterContentGenerator:
             self.stats["errors"].append(f"UI widget generation: {str(e)}")
             return 0
     
+    def generate_niagara_systems(self) -> int:
+        """
+        Generate Niagara particle systems
+        
+        Returns:
+            Number of systems created
+        """
+        try:
+            from NiagaraGenerator import NiagaraGenerator
+            
+            generator = NiagaraGenerator()
+            count = generator.generate_all_effects()
+            
+            self.stats["niagara_systems_created"] += count
+            self.log(f"✓ Created {count} Niagara systems", "info")
+            return count
+            
+        except ImportError:
+            self.log("NiagaraGenerator.py not found! Skipping Niagara generation.", "warning")
+            return 0
+        except Exception as e:
+            self.log(f"Error generating Niagara systems: {str(e)}", "error")
+            self.stats["errors"].append(f"Niagara generation: {str(e)}")
+            return 0
+    
     def validate_content(self) -> bool:
         """
         Validate all generated content
@@ -318,18 +349,20 @@ class MasterContentGenerator:
         """Print generation statistics summary"""
         self.log("")
         self.log("Generation Statistics:")
-        self.log(f"  Blueprints Created:     {self.stats['blueprints_created']}")
-        self.log(f"  Data Assets Created:    {self.stats['data_assets_created']}")
-        self.log(f"  Input Actions Created:  {self.stats['input_actions_created']}")
-        self.log(f"  Maps Created:           {self.stats['maps_created']}")
-        self.log(f"  UI Widgets Created:     {self.stats['ui_widgets_created']}")
+        self.log(f"  Blueprints Created:       {self.stats['blueprints_created']}")
+        self.log(f"  Data Assets Created:      {self.stats['data_assets_created']}")
+        self.log(f"  Input Actions Created:    {self.stats['input_actions_created']}")
+        self.log(f"  Maps Created:             {self.stats['maps_created']}")
+        self.log(f"  UI Widgets Created:       {self.stats['ui_widgets_created']}")
+        self.log(f"  Niagara Systems Created:  {self.stats['niagara_systems_created']}")
         self.log("")
         
         total = (self.stats['blueprints_created'] + 
                 self.stats['data_assets_created'] + 
                 self.stats['input_actions_created'] + 
                 self.stats['maps_created'] + 
-                self.stats['ui_widgets_created'])
+                self.stats['ui_widgets_created'] + 
+                self.stats['niagara_systems_created'])
         
         self.log(f"TOTAL ASSETS CREATED: {total}")
         
@@ -377,6 +410,12 @@ def generate_ui_widgets() -> int:
     return generator.generate_ui_widgets()
 
 
+def generate_niagara_systems() -> int:
+    """Generate Niagara systems - convenience function"""
+    generator = MasterContentGenerator()
+    return generator.generate_niagara_systems()
+
+
 def validate_content() -> bool:
     """Validate content - convenience function"""
     generator = MasterContentGenerator()
@@ -404,6 +443,8 @@ def main():
                        help="Generate maps only")
     parser.add_argument("--ui", action="store_true",
                        help="Generate UI widgets only")
+    parser.add_argument("--niagara", action="store_true",
+                       help="Generate Niagara systems only")
     parser.add_argument("--validate", action="store_true",
                        help="Validate content after generation")
     parser.add_argument("--interactive", action="store_true",
@@ -430,10 +471,11 @@ def main():
         print("4. Enhanced input system")
         print("5. Test maps")
         print("6. UI widgets")
-        print("7. Validate existing content")
+        print("7. Niagara particle systems")
+        print("8. Validate existing content")
         print("0. Exit")
         
-        choice = input("\nEnter your choice (0-7): ")
+        choice = input("\nEnter your choice (0-8): ")
         
         if choice == "1":
             generator.generate_all_content(validate=True)
@@ -448,6 +490,8 @@ def main():
         elif choice == "6":
             generator.generate_ui_widgets()
         elif choice == "7":
+            generator.generate_niagara_systems()
+        elif choice == "8":
             generator.validate_content()
         elif choice == "0":
             print("Exiting...")
@@ -471,12 +515,14 @@ def main():
             generator.generate_maps()
         if args.ui:
             generator.generate_ui_widgets()
+        if args.niagara:
+            generator.generate_niagara_systems()
         if args.validate:
             generator.validate_content()
         
         # If no specific options, show help
         if not any([args.blueprints, args.data_assets, args.input, 
-                   args.maps, args.ui, args.validate]):
+                   args.maps, args.ui, args.niagara, args.validate]):
             parser.print_help()
             print("\nTIP: Use --all to generate everything, or --interactive for guided mode")
     
