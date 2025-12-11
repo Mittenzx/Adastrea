@@ -16,6 +16,10 @@ UInputConfigDataAsset::UInputConfigDataAsset()
     BoostAction = nullptr;
     BrakeAction = nullptr;
     RollAction = nullptr;
+    ThrottleUpAction = nullptr;
+    ThrottleDownAction = nullptr;
+    ToggleFlightAssistAction = nullptr;
+    ToggleTravelModeAction = nullptr;
 
     FirePrimaryAction = nullptr;
     FireSecondaryAction = nullptr;
@@ -81,6 +85,10 @@ TArray<FString> UInputConfigDataAsset::GetUnassignedActions() const
     if (!BoostAction) UnassignedActions.Add(TEXT("BoostAction"));
     if (!BrakeAction) UnassignedActions.Add(TEXT("BrakeAction"));
     if (!RollAction) UnassignedActions.Add(TEXT("RollAction"));
+    if (!ThrottleUpAction) UnassignedActions.Add(TEXT("ThrottleUpAction"));
+    if (!ThrottleDownAction) UnassignedActions.Add(TEXT("ThrottleDownAction"));
+    if (!ToggleFlightAssistAction) UnassignedActions.Add(TEXT("ToggleFlightAssistAction"));
+    if (!ToggleTravelModeAction) UnassignedActions.Add(TEXT("ToggleTravelModeAction"));
 
     // Check combat actions
     if (!FirePrimaryAction) UnassignedActions.Add(TEXT("FirePrimaryAction"));
