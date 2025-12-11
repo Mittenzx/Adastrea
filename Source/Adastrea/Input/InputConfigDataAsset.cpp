@@ -47,6 +47,7 @@ UInputConfigDataAsset::UInputConfigDataAsset()
     CycleCameraAction = nullptr;
     ZoomInAction = nullptr;
     ZoomOutAction = nullptr;
+    FreeLookAction = nullptr;
 }
 
 UInputMappingContext* UInputConfigDataAsset::GetSpaceshipMappingContext() const
@@ -121,6 +122,7 @@ TArray<FString> UInputConfigDataAsset::GetUnassignedActions() const
     if (!CycleCameraAction) UnassignedActions.Add(TEXT("CycleCameraAction"));
     if (!ZoomInAction) UnassignedActions.Add(TEXT("ZoomInAction"));
     if (!ZoomOutAction) UnassignedActions.Add(TEXT("ZoomOutAction"));
+    if (!FreeLookAction) UnassignedActions.Add(TEXT("FreeLookAction"));
 
     // Check mapping contexts
     if (!SpaceshipMappingContext) UnassignedActions.Add(TEXT("SpaceshipMappingContext"));

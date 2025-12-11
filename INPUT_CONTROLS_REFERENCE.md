@@ -26,6 +26,8 @@ Active when piloting a spaceship in space.
 | Key | Action | Description |
 |-----|--------|-------------|
 | **Mouse Movement** | Look/Rotate Camera | Control camera direction |
+| **Right Mouse Button (Hold)** | Free Look | Look around independently from ship rotation |
+| **Right Mouse Button (Double-Click)** | Reset Camera | Immediately return camera to ship forward direction |
 | **Page Up** | Zoom In | Zoom camera closer |
 | **Page Down** | Zoom Out | Zoom camera further |
 
@@ -61,11 +63,13 @@ Active when walking in **stations** or **spaceship interiors**.
 
 ## Combat Controls
 
+**Note**: When using Free Look (Right Mouse Button held), weapon controls may be temporarily disabled to allow independent camera movement.
+
 ### Weapons
 | Key | Action | Description |
 |-----|--------|-------------|
 | **Left Mouse Button** | Fire Primary Weapon | Fire main weapon |
-| **Right Mouse Button** | Fire Secondary Weapon | Fire secondary weapon |
+| **Middle Mouse Button** | Fire Secondary Weapon | Fire secondary weapon (previously Right Mouse Button) |
 | **Tab** | Cycle Weapon | Switch between weapons |
 
 ### Targeting

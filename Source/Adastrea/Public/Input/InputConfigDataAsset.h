@@ -207,6 +207,10 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input Actions|Camera")
     UInputAction* ZoomOutAction;
 
+    /** Input action for free look camera (hold to look around independently from ship rotation) */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input Actions|Camera")
+    UInputAction* FreeLookAction;
+
     // ====================
     // QUERY FUNCTIONS
     // ====================

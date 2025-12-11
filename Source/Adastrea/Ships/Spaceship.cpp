@@ -4,6 +4,8 @@
 #include "Ships/SpaceshipControlsComponent.h"
 #include "AdastreaLog.h"
 #include "GameFramework/PlayerController.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -41,6 +43,13 @@ ASpaceship::ASpaceship()
     StrafeIndependence = 0.8f;                // High strafe independence
     MouseFlightSensitivity = 1.0f;            // 1:1 mouse sensitivity
 
+    // Initialize free look camera parameters
+    bFreeLookActive = false;
+    FreeLookSensitivity = 1.5f;               // Slightly higher sensitivity for free look
+    CameraDistance = 800.0f;                  // Default camera distance
+    CameraLagSpeed = 10.0f;                   // Smooth camera following
+    DoubleClickThreshold = 0.3f;              // 300ms for double-click detection
+
     // Initialize physics state
     CurrentVelocity = FVector::ZeroVector;
     TargetVelocity = FVector::ZeroVector;
@@ -50,6 +59,8 @@ ASpaceship::ASpaceship()
     UpInput = 0.0f;
     YawInput = 0.0f;
     PitchInput = 0.0f;
+    FreeLookRotation = FRotator::ZeroRotator;
+    LastFreeLookClickTime = 0.0f;
 
     // Create and configure the floating pawn movement component
     MovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("MovementComponent"));
@@ -60,6 +71,18 @@ ASpaceship::ASpaceship()
 
     // Create and configure the particle component
     ParticleComponent = CreateDefaultSubobject<USpaceshipParticleComponent>(TEXT("ParticleComponent"));
+
+    // Create and configure camera components
+    CameraSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraSpringArm"));
+    CameraSpringArm->SetupAttachment(RootComponent);
+    CameraSpringArm->TargetArmLength = CameraDistance;
+    CameraSpringArm->bUsePawnControlRotation = false; // We'll control this manually for free look
+    CameraSpringArm->bEnableCameraLag = true;
+    CameraSpringArm->CameraLagSpeed = CameraLagSpeed;
+    CameraSpringArm->bDoCollisionTest = false; // Disable collision in space
+
+    Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+    Camera->SetupAttachment(CameraSpringArm, USpringArmComponent::SocketName);
 }
 
 void ASpaceship::BeginPlay()
@@ -179,6 +202,15 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
             EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASpaceship::Look);
             UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound LookAction"));
         }
+
+        if (FreeLookAction)
+        {
+            // Bind free look action with Started, Triggered, and Completed events
+            EnhancedInputComponent->BindAction(FreeLookAction, ETriggerEvent::Started, this, &ASpaceship::FreeLookStarted);
+            EnhancedInputComponent->BindAction(FreeLookAction, ETriggerEvent::Triggered, this, &ASpaceship::FreeLookCamera);
+            EnhancedInputComponent->BindAction(FreeLookAction, ETriggerEvent::Completed, this, &ASpaceship::FreeLookCompleted);
+            UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound FreeLookAction"));
+        }
     }
 }
 
@@ -199,6 +231,12 @@ void ASpaceship::Move(const FInputActionValue& Value)
 
 void ASpaceship::Look(const FInputActionValue& Value)
 {
+    // Skip normal look behavior when free look is active
+    if (bFreeLookActive)
+    {
+        return;
+    }
+
     // Get the 2D vector input (mouse X/Y)
     const FVector2D LookAxisVector = Value.Get<FVector2D>();
 
@@ -681,4 +719,87 @@ void ASpaceship::UpdateThrottleVelocity(float DeltaTime)
         // Note: This works in conjunction with AddMovementInput for strafe/vertical
         MovementComponent->Velocity = BlendedVelocity;
     }
+}
+
+void ASpaceship::FreeLookStarted()
+{
+    // Check for double-click to reset camera
+    float CurrentTime = GetWorld() ? GetWorld()->GetTimeSeconds() : 0.0f;
+    float TimeSinceLastClick = CurrentTime - LastFreeLookClickTime;
+    
+    // If this is a double-click (within threshold), reset camera and exit free look
+    // Check if we're within the double-click window, regardless of free look state
+    if (TimeSinceLastClick > 0.0f && TimeSinceLastClick <= DoubleClickThreshold)
+    {
+        UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Free look double-click detected - resetting camera"));
+        
+        // Immediately reset camera to ship forward
+        if (CameraSpringArm)
+        {
+            CameraSpringArm->SetRelativeRotation(FRotator::ZeroRotator);
+        }
+        
+        // Exit free look mode if active, or prevent activation if not yet active
+        bFreeLookActive = false;
+        FreeLookRotation = FRotator::ZeroRotator;
+        LastFreeLookClickTime = 0.0f; // Reset to prevent triple-click issues
+        return;
+    }
+    
+    // Store the click time for double-click detection
+    LastFreeLookClickTime = CurrentTime;
+    
+    // Normal free look activation
+    bFreeLookActive = true;
+    
+    // Reset free look rotation for new activation
+    FreeLookRotation = FRotator::ZeroRotator;
+    
+    UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Free look started"));
+}
+
+void ASpaceship::FreeLookCompleted()
+{
+    bFreeLookActive = false;
+    
+    // Reset camera to follow ship rotation
+    if (CameraSpringArm)
+    {
+        // Smoothly return camera to ship's forward direction
+        CameraSpringArm->SetRelativeRotation(FRotator::ZeroRotator);
+    }
+    
+    UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Free look completed"));
+}
+
+void ASpaceship::FreeLookCamera(const FInputActionValue& Value)
+{
+    if (!bFreeLookActive || !CameraSpringArm)
+    {
+        return;
+    }
+
+    // Get the 2D vector input (mouse X/Y)
+    const FVector2D LookAxisVector = Value.Get<FVector2D>();
+
+    if (GetWorld())
+    {
+        const float DeltaSeconds = GetWorld()->GetDeltaSeconds();
+        
+        // Apply free look sensitivity to mouse input
+        float YawDelta = LookAxisVector.X * FreeLookSensitivity * TurnRate * DeltaSeconds;
+        float PitchDelta = LookAxisVector.Y * FreeLookSensitivity * TurnRate * DeltaSeconds;
+        
+        // Accumulate free look rotation
+        FreeLookRotation.Yaw += YawDelta;
+        FreeLookRotation.Pitch += PitchDelta;
+        
+        // Clamp pitch to prevent camera flipping
+        FreeLookRotation.Pitch = FMath::Clamp(FreeLookRotation.Pitch, -89.0f, 89.0f);
+        
+        // Apply free look rotation relative to ship's current rotation
+        FRotator NewCameraRotation = GetActorRotation() + FreeLookRotation;
+        CameraSpringArm->SetWorldRotation(NewCameraRotation);
+    }
+}
 }
