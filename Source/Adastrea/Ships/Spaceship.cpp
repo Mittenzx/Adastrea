@@ -48,6 +48,7 @@ ASpaceship::ASpaceship()
     FreeLookSensitivity = 1.5f;               // Slightly higher sensitivity for free look
     CameraDistance = 800.0f;                  // Default camera distance
     CameraLagSpeed = 10.0f;                   // Smooth camera following
+    DoubleClickThreshold = 0.3f;              // 300ms for double-click detection
 
     // Initialize physics state
     CurrentVelocity = FVector::ZeroVector;
@@ -60,6 +61,7 @@ ASpaceship::ASpaceship()
     PitchInput = 0.0f;
     FreeLookRotation = FRotator::ZeroRotator;
     CameraBaseRotation = FRotator::ZeroRotator;
+    LastFreeLookClickTime = 0.0f;
 
     // Create and configure the floating pawn movement component
     MovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("MovementComponent"));
@@ -722,6 +724,31 @@ void ASpaceship::UpdateThrottleVelocity(float DeltaTime)
 
 void ASpaceship::FreeLookStarted()
 {
+    // Check for double-click to reset camera
+    float CurrentTime = GetWorld() ? GetWorld()->GetTimeSeconds() : 0.0f;
+    float TimeSinceLastClick = CurrentTime - LastFreeLookClickTime;
+    
+    // If this is a double-click (within threshold), reset camera and exit free look
+    if (TimeSinceLastClick <= DoubleClickThreshold && bFreeLookActive)
+    {
+        UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Free look double-click detected - resetting camera"));
+        
+        // Immediately reset camera to ship forward
+        if (CameraSpringArm)
+        {
+            CameraSpringArm->SetRelativeRotation(FRotator::ZeroRotator);
+        }
+        
+        bFreeLookActive = false;
+        FreeLookRotation = FRotator::ZeroRotator;
+        LastFreeLookClickTime = 0.0f; // Reset to prevent triple-click issues
+        return;
+    }
+    
+    // Store the click time for double-click detection
+    LastFreeLookClickTime = CurrentTime;
+    
+    // Normal free look activation
     bFreeLookActive = true;
     
     // Store the current camera rotation as the base for free look

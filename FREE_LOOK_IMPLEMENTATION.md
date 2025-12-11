@@ -9,6 +9,7 @@ A free look camera system that allows players to look around independently from 
 ✅ **Hold Right Mouse Button**: Activates free look mode  
 ✅ **Independent Camera**: Camera rotates without affecting ship heading  
 ✅ **Smooth Return**: Camera smoothly returns to ship orientation when released  
+✅ **Quick Reset**: Double-click RMB to instantly snap camera back to forward  
 ✅ **Configurable Sensitivity**: Adjustable camera rotation speed  
 ✅ **Pitch Clamping**: Prevents camera from flipping (±89° limit)  
 ✅ **Integration**: Works seamlessly with existing flight controls  
@@ -60,7 +61,9 @@ A free look camera system that allows players to look around independently from 
 
 1. **Press and Hold RMB**: 
    - `FreeLookStarted()` is called
-   - `bFreeLookActive` is set to true
+   - Checks for double-click (if clicked within threshold)
+   - If double-click: immediately resets camera to forward
+   - If single click: `bFreeLookActive` is set to true
    - Current camera rotation is stored as base rotation
    - Ship's `Look()` input is suppressed
 
@@ -72,6 +75,15 @@ A free look camera system that allows players to look around independently from 
 
 3. **Release RMB**:
    - `FreeLookCompleted()` is called
+   - `bFreeLookActive` is set to false
+   - Camera spring arm rotation resets to (0,0,0) relative to ship
+   - Normal ship rotation control resumes
+
+4. **Double-Click RMB** (New):
+   - Detected by comparing time between clicks
+   - If within threshold (default 0.3s), instant camera reset
+   - Camera immediately snaps to ship forward direction
+   - Exits free look mode
    - `bFreeLookActive` is set to false
    - Camera spring arm rotation resets to (0,0,0) relative to ship
    - Normal ship rotation control resumes
@@ -96,6 +108,7 @@ Default values (can be adjusted in Blueprint or C++):
 - **FreeLookSensitivity**: 1.5
 - **CameraDistance**: 800.0 units
 - **CameraLagSpeed**: 10.0
+- **DoubleClickThreshold**: 0.3 seconds
 - **Pitch Clamp**: ±89 degrees
 
 ## Testing Checklist
@@ -106,6 +119,7 @@ Default values (can be adjusted in Blueprint or C++):
 - [ ] Test free look activation (hold RMB)
 - [ ] Test camera independent rotation
 - [ ] Test smooth camera return (release RMB)
+- [ ] Test double-click camera reset (quick RMB double-click)
 - [ ] Verify ship controls work normally during free look
 - [ ] Verify normal ship rotation works when free look is inactive
 - [ ] Test sensitivity settings adjustment

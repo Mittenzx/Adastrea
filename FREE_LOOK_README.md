@@ -20,10 +20,12 @@ Successfully implemented a free look camera system for the Adastrea space flight
 - Hold **Right Mouse Button** to activate free look
 - Move mouse to rotate camera independently from ship
 - Release **RMB** and camera smoothly returns to ship orientation
+- **Double-click RMB** to instantly snap camera back to forward direction
 - Ship maintains its heading and controls remain fully functional
 
 ### Why It Matters
 - **Better Situational Awareness**: Look around without changing ship direction
+- **Quick Camera Reset**: Double-click for instant return to forward view
 - **Immersive Experience**: Standard feature in modern space sims
 - **Tactical Advantage**: Survey environment while maintaining course
 - **Smooth UX**: Elegant camera transitions feel natural
@@ -87,6 +89,7 @@ ASpaceship (Pawn)
 | FreeLookSensitivity | 1.5 | 0.1 - 5.0 | Camera rotation speed |
 | CameraDistance | 800.0 | 100 - 5000 | Distance from ship |
 | CameraLagSpeed | 10.0 | 0.0 - 25.0 | Smooth following speed |
+| DoubleClickThreshold | 0.3 | 0.1 - 1.0 | Time window for double-click (seconds) |
 
 ## 📚 Documentation Structure
 
@@ -136,6 +139,7 @@ git checkout copilot/add-free-look-camera
 ### 3. Test (15 minutes)
 - Start Play-in-Editor
 - Test free look activation
+- Test double-click camera reset
 - Verify camera independence
 - Check smooth return
 - Test edge cases

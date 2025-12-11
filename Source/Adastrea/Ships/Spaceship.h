@@ -190,6 +190,10 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera|Settings", meta=(ClampMin="0.0", ClampMax="25.0"))
     float CameraLagSpeed;
 
+    /** Double-click time threshold for resetting camera (in seconds) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera|Free Look", meta=(ClampMin="0.1", ClampMax="1.0"))
+    float DoubleClickThreshold;
+
     /**
      * Transition player into the ship's interior space
      * @param PlayerController The controller to transition into the interior
@@ -345,4 +349,7 @@ private:
     // Free look camera state
     FRotator FreeLookRotation;
     FRotator CameraBaseRotation;
+    
+    // Double-click detection for camera reset
+    float LastFreeLookClickTime;
 };

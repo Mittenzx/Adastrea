@@ -4,7 +4,7 @@ This guide explains how to set up the free look camera feature in Unreal Engine 
 
 ## Overview
 
-The free look camera allows players to look around independently from ship rotation by holding down the right mouse button. This is useful for surveying the environment while maintaining the ship's current heading.
+The free look camera allows players to look around independently from ship rotation by holding down the right mouse button. This is useful for surveying the environment while maintaining the ship's current heading. Additionally, double-clicking the right mouse button instantly returns the camera to the normal forward-facing position.
 
 ## Prerequisites
 
@@ -70,7 +70,10 @@ If your spaceship Blueprint (`BP_PlayerShip` or similar) has a direct reference 
    - The ship should maintain its heading
 4. **Release Right Mouse Button**
    - The camera should smoothly return to following the ship's forward direction
-5. Test normal flight controls to ensure they still work correctly
+5. **Double-Click Right Mouse Button**
+   - The camera should immediately snap back to the ship's forward direction
+   - This provides a quick way to reset the camera view
+6. Test normal flight controls to ensure they still work correctly
 
 ## Configuration Options
 
@@ -80,6 +83,7 @@ You can adjust the free look behavior in the spaceship Blueprint or C++ class:
 1. Open your spaceship Blueprint
 2. Find these properties under **Camera | Free Look**:
    - **Free Look Sensitivity**: Controls how fast the camera rotates (default: 1.5)
+   - **Double Click Threshold**: Time window for double-click detection in seconds (default: 0.3)
    
 3. Find these properties under **Camera | Settings**:
    - **Camera Distance**: Distance of camera from ship (default: 800)

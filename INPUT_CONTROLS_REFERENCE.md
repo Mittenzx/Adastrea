@@ -27,6 +27,7 @@ Active when piloting a spaceship in space.
 |-----|--------|-------------|
 | **Mouse Movement** | Look/Rotate Camera | Control camera direction |
 | **Right Mouse Button (Hold)** | Free Look | Look around independently from ship rotation |
+| **Right Mouse Button (Double-Click)** | Reset Camera | Immediately return camera to ship forward direction |
 | **Page Up** | Zoom In | Zoom camera closer |
 | **Page Down** | Zoom Out | Zoom camera further |
 

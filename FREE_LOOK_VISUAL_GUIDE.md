@@ -32,9 +32,12 @@ ASpaceship (Pawn)
                   ▼                      ▼
     ┌───────────────────────┐  ┌──────────────────────┐
     │  FreeLookStarted()    │  │  FreeLookCompleted() │
-    │  - Set bFreeLook=true │  │  - Set bFreeLook=false│
-    │  - Store base rotation│  │  - Reset camera       │
-    └───────────────────────┘  └──────────────────────┘
+    │  - Check double-click │  │  - Set bFreeLook=false│
+    │  - If yes: reset cam  │  │  - Reset camera       │
+    │  - Else: activate     │  └──────────────────────┘
+    │  - Set bFreeLook=true │
+    │  - Store base rotation│
+    └───────────────────────┘
                   │
          Holding  │  + Mouse Movement
                   ▼
@@ -100,26 +103,35 @@ ASpaceship (Pawn)
                     RMB Pressed (Started Event)
                             │
                             ▼
-┌─────────────────────────────────────────────────────────┐
-│                     ACTIVE STATE                         │
-│  bFreeLookActive = true                                 │
-│  Camera rotation independent                            │
-│  Look() input ignored                                   │
-│  FreeLookCamera() updates camera                        │
-└─────────────────────────────────────────────────────────┘
-                            │
-                    RMB Released (Completed Event)
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────┐
-│                  RETURNING STATE                         │
-│  bFreeLookActive = false                                │
-│  Camera smoothly returns to ship forward               │
-│  SpringArm rotation lerps to (0,0,0)                    │
-└─────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-                    Back to INACTIVE STATE
+                  ┌──────────────────┐
+                  │ Double-Click?    │
+                  └──────────────────┘
+                    │              │
+                Yes │              │ No
+                    ▼              ▼
+        ┌──────────────────┐   ┌──────────────────┐
+        │  INSTANT RESET   │   │  ACTIVE STATE    │
+        │  - Reset camera  │   │  - Enable free   │
+        │  - Exit mode     │   │    look mode     │
+        └──────────────────┘   │  - Store base    │
+                │              │    rotation      │
+                │              └──────────────────┘
+                │                      │
+                │              Camera rotates independently
+                │              FreeLookCamera() active
+                │                      │
+                │              RMB Released (Completed)
+                │                      │
+                └──────────────────────┼─────────────┐
+                                       ▼             │
+                        ┌──────────────────────────┐ │
+                        │   RETURNING STATE        │ │
+                        │  - Smooth camera return  │ │
+                        │  - SpringArm lerp (0,0,0)│ │
+                        └──────────────────────────┘ │
+                                       │             │
+                                       ▼             │
+                               Back to INACTIVE ◄────┘
 ```
 
 ## Camera Rotation Calculation
