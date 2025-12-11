@@ -60,7 +60,6 @@ ASpaceship::ASpaceship()
     YawInput = 0.0f;
     PitchInput = 0.0f;
     FreeLookRotation = FRotator::ZeroRotator;
-    CameraBaseRotation = FRotator::ZeroRotator;
     LastFreeLookClickTime = 0.0f;
 
     // Create and configure the floating pawn movement component
@@ -729,7 +728,8 @@ void ASpaceship::FreeLookStarted()
     float TimeSinceLastClick = CurrentTime - LastFreeLookClickTime;
     
     // If this is a double-click (within threshold), reset camera and exit free look
-    if (TimeSinceLastClick <= DoubleClickThreshold && bFreeLookActive)
+    // Check if we're within the double-click window, regardless of free look state
+    if (TimeSinceLastClick > 0.0f && TimeSinceLastClick <= DoubleClickThreshold)
     {
         UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Free look double-click detected - resetting camera"));
         
@@ -739,6 +739,7 @@ void ASpaceship::FreeLookStarted()
             CameraSpringArm->SetRelativeRotation(FRotator::ZeroRotator);
         }
         
+        // Exit free look mode if active, or prevent activation if not yet active
         bFreeLookActive = false;
         FreeLookRotation = FRotator::ZeroRotator;
         LastFreeLookClickTime = 0.0f; // Reset to prevent triple-click issues
@@ -751,12 +752,8 @@ void ASpaceship::FreeLookStarted()
     // Normal free look activation
     bFreeLookActive = true;
     
-    // Store the current camera rotation as the base for free look
-    if (CameraSpringArm)
-    {
-        CameraBaseRotation = CameraSpringArm->GetComponentRotation();
-        FreeLookRotation = FRotator::ZeroRotator;
-    }
+    // Reset free look rotation for new activation
+    FreeLookRotation = FRotator::ZeroRotator;
     
     UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Free look started"));
 }

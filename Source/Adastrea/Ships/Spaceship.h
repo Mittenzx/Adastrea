@@ -347,9 +347,10 @@ private:
     float PitchInput;
 
     // Free look camera state
+    UPROPERTY()
     FRotator FreeLookRotation;
-    FRotator CameraBaseRotation;
     
     // Double-click detection for camera reset
+    UPROPERTY()
     float LastFreeLookClickTime;
 };
