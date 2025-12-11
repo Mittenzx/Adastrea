@@ -10,6 +10,8 @@
 // Forward declarations
 class ASpaceshipInterior;
 class UInputAction;
+class USpringArmComponent;
+class UCameraComponent;
 
 /**
  * Base spaceship actor class for player and NPC ships
@@ -40,6 +42,14 @@ public:
     // Particle system component for engine and thruster effects
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Effects")
     USpaceshipParticleComponent* ParticleComponent;
+
+    // Spring arm component for camera positioning
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
+    USpringArmComponent* CameraSpringArm;
+
+    // Camera component for player view
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
+    UCameraComponent* Camera;
 
     // Default maximum movement speed
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(ClampMin="0.0"))
@@ -160,6 +170,26 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flight Control|Advanced", meta=(ClampMin="0.1", ClampMax="5.0"))
     float MouseFlightSensitivity;
 
+    // ==========================================
+    // FREE LOOK CAMERA PARAMETERS
+    // ==========================================
+
+    /** Free look camera mode active - when true, camera rotation is independent from ship rotation */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera|Free Look")
+    bool bFreeLookActive;
+
+    /** Free look sensitivity - camera rotation speed during free look */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera|Free Look", meta=(ClampMin="0.1", ClampMax="5.0"))
+    float FreeLookSensitivity;
+
+    /** Camera spring arm target length */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera|Settings", meta=(ClampMin="100.0", ClampMax="5000.0"))
+    float CameraDistance;
+
+    /** Camera lag speed for smooth following */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera|Settings", meta=(ClampMin="0.0", ClampMax="25.0"))
+    float CameraLagSpeed;
+
     /**
      * Transition player into the ship's interior space
      * @param PlayerController The controller to transition into the interior
@@ -197,9 +227,15 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
     class UInputAction* LookAction;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
+    class UInputAction* FreeLookAction;
+
     // Enhanced Input callbacks
     void Move(const FInputActionValue& Value);
     void Look(const FInputActionValue& Value);
+    void FreeLookStarted();
+    void FreeLookCompleted();
+    void FreeLookCamera(const FInputActionValue& Value);
 
     /**
      * Toggle flight assist on/off
@@ -305,4 +341,8 @@ private:
     float UpInput;
     float YawInput;
     float PitchInput;
+
+    // Free look camera state
+    FRotator FreeLookRotation;
+    FRotator CameraBaseRotation;
 };
