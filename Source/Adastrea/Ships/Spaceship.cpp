@@ -176,7 +176,7 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
     UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship::SetupPlayerInputComponent called on %s"), *GetName());
 
-    // Initialize SpaceshipControlsComponent if present
+    // Initialize SpaceshipControlsComponent if present (handles basic movement/look/fire)
     USpaceshipControlsComponent* ControlsComponent = FindComponentByClass<USpaceshipControlsComponent>();
     if (ControlsComponent)
     {
@@ -188,7 +188,7 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
         UE_LOG(LogAdastreaInput, Warning, TEXT("ASpaceship: SpaceshipControlsComponent NOT FOUND on %s"), *GetName());
     }
     
-    // Setup Enhanced Input bindings for ASpaceship's input (only if actions are defined)
+    // Setup Enhanced Input bindings for ASpaceship's input (throttle, free look, etc.)
     if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
     {
         if (MoveAction)
@@ -210,6 +210,18 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
             EnhancedInputComponent->BindAction(FreeLookAction, ETriggerEvent::Triggered, this, &ASpaceship::FreeLookCamera);
             EnhancedInputComponent->BindAction(FreeLookAction, ETriggerEvent::Completed, this, &ASpaceship::FreeLookCompleted);
             UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound FreeLookAction"));
+        }
+
+        if (ThrottleUpAction)
+        {
+            EnhancedInputComponent->BindAction(ThrottleUpAction, ETriggerEvent::Started, this, &ASpaceship::ThrottleUp);
+            UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound ThrottleUpAction"));
+        }
+
+        if (ThrottleDownAction)
+        {
+            EnhancedInputComponent->BindAction(ThrottleDownAction, ETriggerEvent::Started, this, &ASpaceship::ThrottleDown);
+            UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound ThrottleDownAction"));
         }
     }
 }

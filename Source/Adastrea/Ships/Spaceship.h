@@ -234,6 +234,12 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
     class UInputAction* FreeLookAction;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
+    class UInputAction* ThrottleUpAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
+    class UInputAction* ThrottleDownAction;
+
     // Enhanced Input callbacks
     void Move(const FInputActionValue& Value);
     void Look(const FInputActionValue& Value);
