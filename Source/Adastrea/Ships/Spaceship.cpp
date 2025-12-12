@@ -36,6 +36,7 @@ ASpaceship::ASpaceship()
     FlightAssistResponsiveness = 2.0f;        // Responsive but not twitchy
     ThrottlePercentage = 0.0f;                // Start at zero throttle
     ThrottleStep = 10.0f;                     // 10% increments
+    ThrottleAdjustmentCooldown = 0.1f;        // 10 adjustments per second max
     bBoostActive = false;
     BoostMultiplier = 2.0f;                   // Double speed when boosting
     bTravelModeActive = false;
@@ -61,6 +62,7 @@ ASpaceship::ASpaceship()
     PitchInput = 0.0f;
     FreeLookRotation = FRotator::ZeroRotator;
     LastFreeLookClickTime = 0.0f;
+    LastThrottleAdjustmentTime = 0.0f;
 
     // Create and configure the floating pawn movement component
     MovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("MovementComponent"));
@@ -521,11 +523,33 @@ void ASpaceship::ToggleFlightAssist()
 
 void ASpaceship::ThrottleUp()
 {
+    // Rate limit throttle adjustments to prevent excessively fast changes when button is held
+    if (GetWorld())
+    {
+        float CurrentTime = GetWorld()->GetTimeSeconds();
+        if (CurrentTime - LastThrottleAdjustmentTime < ThrottleAdjustmentCooldown)
+        {
+            return; // Too soon, skip this adjustment
+        }
+        LastThrottleAdjustmentTime = CurrentTime;
+    }
+    
     ThrottlePercentage = FMath::Clamp(ThrottlePercentage + ThrottleStep, 0.0f, 100.0f);
 }
 
 void ASpaceship::ThrottleDown()
 {
+    // Rate limit throttle adjustments to prevent excessively fast changes when button is held
+    if (GetWorld())
+    {
+        float CurrentTime = GetWorld()->GetTimeSeconds();
+        if (CurrentTime - LastThrottleAdjustmentTime < ThrottleAdjustmentCooldown)
+        {
+            return; // Too soon, skip this adjustment
+        }
+        LastThrottleAdjustmentTime = CurrentTime;
+    }
+    
     ThrottlePercentage = FMath::Clamp(ThrottlePercentage - ThrottleStep, 0.0f, 100.0f);
 }
 

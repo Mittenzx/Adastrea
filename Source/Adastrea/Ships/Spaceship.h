@@ -145,6 +145,10 @@ public:
     /** Throttle increment/decrement amount per input (percentage) */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flight Control|Throttle", meta=(ClampMin="1.0", ClampMax="25.0"))
     float ThrottleStep;
+    
+    /** Throttle adjustment rate limit (seconds between adjustments when button held) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flight Control|Throttle", meta=(ClampMin="0.05", ClampMax="0.5"))
+    float ThrottleAdjustmentCooldown;
 
     /** Boost mode active - temporary speed increase */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Flight Control|Boost")
@@ -359,4 +363,7 @@ private:
     // Double-click detection for camera reset
     UPROPERTY()
     float LastFreeLookClickTime;
+    
+    // Throttle adjustment rate limiting
+    float LastThrottleAdjustmentTime;
 };
