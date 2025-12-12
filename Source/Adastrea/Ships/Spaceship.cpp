@@ -521,17 +521,29 @@ void ASpaceship::ToggleFlightAssist()
     }
 }
 
-void ASpaceship::ThrottleUp()
+bool ASpaceship::CanAdjustThrottle()
 {
     // Rate limit throttle adjustments to prevent excessively fast changes when button is held
-    if (GetWorld())
+    if (!GetWorld())
     {
-        float CurrentTime = GetWorld()->GetTimeSeconds();
-        if (CurrentTime - LastThrottleAdjustmentTime < ThrottleAdjustmentCooldown)
-        {
-            return; // Too soon, skip this adjustment
-        }
-        LastThrottleAdjustmentTime = CurrentTime;
+        return false;
+    }
+    
+    float CurrentTime = GetWorld()->GetTimeSeconds();
+    if (CurrentTime - LastThrottleAdjustmentTime < ThrottleAdjustmentCooldown)
+    {
+        return false; // Too soon, skip this adjustment
+    }
+    
+    LastThrottleAdjustmentTime = CurrentTime;
+    return true;
+}
+
+void ASpaceship::ThrottleUp()
+{
+    if (!CanAdjustThrottle())
+    {
+        return;
     }
     
     ThrottlePercentage = FMath::Clamp(ThrottlePercentage + ThrottleStep, 0.0f, 100.0f);
@@ -539,15 +551,9 @@ void ASpaceship::ThrottleUp()
 
 void ASpaceship::ThrottleDown()
 {
-    // Rate limit throttle adjustments to prevent excessively fast changes when button is held
-    if (GetWorld())
+    if (!CanAdjustThrottle())
     {
-        float CurrentTime = GetWorld()->GetTimeSeconds();
-        if (CurrentTime - LastThrottleAdjustmentTime < ThrottleAdjustmentCooldown)
-        {
-            return; // Too soon, skip this adjustment
-        }
-        LastThrottleAdjustmentTime = CurrentTime;
+        return;
     }
     
     ThrottlePercentage = FMath::Clamp(ThrottlePercentage - ThrottleStep, 0.0f, 100.0f);

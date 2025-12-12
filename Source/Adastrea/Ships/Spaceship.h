@@ -338,6 +338,12 @@ protected:
      * @param DeltaTime Time since last frame
      */
     void UpdateThrottleVelocity(float DeltaTime);
+    
+    /**
+     * Check if throttle can be adjusted based on cooldown
+     * @return True if enough time has passed since last adjustment
+     */
+    bool CanAdjustThrottle();
 
 private:
     // Current velocity for inertia-based movement
