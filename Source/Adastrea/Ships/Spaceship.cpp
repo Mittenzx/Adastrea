@@ -214,13 +214,13 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
         if (ThrottleUpAction)
         {
-            EnhancedInputComponent->BindAction(ThrottleUpAction, ETriggerEvent::Started, this, &ASpaceship::ThrottleUp);
+            EnhancedInputComponent->BindAction(ThrottleUpAction, ETriggerEvent::Triggered, this, &ASpaceship::ThrottleUp);
             UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound ThrottleUpAction"));
         }
 
         if (ThrottleDownAction)
         {
-            EnhancedInputComponent->BindAction(ThrottleDownAction, ETriggerEvent::Started, this, &ASpaceship::ThrottleDown);
+            EnhancedInputComponent->BindAction(ThrottleDownAction, ETriggerEvent::Triggered, this, &ASpaceship::ThrottleDown);
             UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound ThrottleDownAction"));
         }
     }
