@@ -524,12 +524,13 @@ void ASpaceship::ToggleFlightAssist()
 bool ASpaceship::CanAdjustThrottle()
 {
     // Rate limit throttle adjustments to prevent excessively fast changes when button is held
-    if (!GetWorld())
+    UWorld* World = GetWorld();
+    if (!World)
     {
         return false;
     }
     
-    float CurrentTime = GetWorld()->GetTimeSeconds();
+    float CurrentTime = World->GetTimeSeconds();
     if (CurrentTime - LastThrottleAdjustmentTime < ThrottleAdjustmentCooldown)
     {
         return false; // Too soon, skip this adjustment
