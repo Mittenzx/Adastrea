@@ -145,6 +145,10 @@ public:
     /** Throttle increment/decrement amount per input (percentage) */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flight Control|Throttle", meta=(ClampMin="1.0", ClampMax="25.0"))
     float ThrottleStep;
+    
+    /** Throttle adjustment rate limit (seconds between adjustments when button held) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flight Control|Throttle", meta=(ClampMin="0.05", ClampMax="0.5"))
+    float ThrottleAdjustmentCooldown;
 
     /** Boost mode active - temporary speed increase */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Flight Control|Boost")
@@ -233,6 +237,12 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
     class UInputAction* FreeLookAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
+    class UInputAction* ThrottleUpAction;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
+    class UInputAction* ThrottleDownAction;
 
     // Enhanced Input callbacks
     void Move(const FInputActionValue& Value);
@@ -328,6 +338,12 @@ protected:
      * @param DeltaTime Time since last frame
      */
     void UpdateThrottleVelocity(float DeltaTime);
+    
+    /**
+     * Check if throttle can be adjusted based on cooldown
+     * @return True if enough time has passed since last adjustment
+     */
+    bool CanAdjustThrottle();
 
 private:
     // Current velocity for inertia-based movement
@@ -353,4 +369,7 @@ private:
     // Double-click detection for camera reset
     UPROPERTY()
     float LastFreeLookClickTime;
+    
+    // Throttle adjustment rate limiting
+    float LastThrottleAdjustmentTime;
 };

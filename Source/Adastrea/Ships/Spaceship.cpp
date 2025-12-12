@@ -36,6 +36,7 @@ ASpaceship::ASpaceship()
     FlightAssistResponsiveness = 2.0f;        // Responsive but not twitchy
     ThrottlePercentage = 0.0f;                // Start at zero throttle
     ThrottleStep = 10.0f;                     // 10% increments
+    ThrottleAdjustmentCooldown = 0.1f;        // 10 adjustments per second max
     bBoostActive = false;
     BoostMultiplier = 2.0f;                   // Double speed when boosting
     bTravelModeActive = false;
@@ -61,6 +62,7 @@ ASpaceship::ASpaceship()
     PitchInput = 0.0f;
     FreeLookRotation = FRotator::ZeroRotator;
     LastFreeLookClickTime = 0.0f;
+    LastThrottleAdjustmentTime = 0.0f;
 
     // Create and configure the floating pawn movement component
     MovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("MovementComponent"));
@@ -176,7 +178,7 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
     UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship::SetupPlayerInputComponent called on %s"), *GetName());
 
-    // Initialize SpaceshipControlsComponent if present
+    // Initialize SpaceshipControlsComponent if present (handles basic movement/look/fire)
     USpaceshipControlsComponent* ControlsComponent = FindComponentByClass<USpaceshipControlsComponent>();
     if (ControlsComponent)
     {
@@ -188,7 +190,7 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
         UE_LOG(LogAdastreaInput, Warning, TEXT("ASpaceship: SpaceshipControlsComponent NOT FOUND on %s"), *GetName());
     }
     
-    // Setup Enhanced Input bindings for ASpaceship's input (only if actions are defined)
+    // Setup Enhanced Input bindings for ASpaceship's input (throttle, free look, etc.)
     if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
     {
         if (MoveAction)
@@ -210,6 +212,18 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
             EnhancedInputComponent->BindAction(FreeLookAction, ETriggerEvent::Triggered, this, &ASpaceship::FreeLookCamera);
             EnhancedInputComponent->BindAction(FreeLookAction, ETriggerEvent::Completed, this, &ASpaceship::FreeLookCompleted);
             UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound FreeLookAction"));
+        }
+
+        if (ThrottleUpAction)
+        {
+            EnhancedInputComponent->BindAction(ThrottleUpAction, ETriggerEvent::Triggered, this, &ASpaceship::ThrottleUp);
+            UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound ThrottleUpAction"));
+        }
+
+        if (ThrottleDownAction)
+        {
+            EnhancedInputComponent->BindAction(ThrottleDownAction, ETriggerEvent::Triggered, this, &ASpaceship::ThrottleDown);
+            UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound ThrottleDownAction"));
         }
     }
 }
@@ -507,13 +521,42 @@ void ASpaceship::ToggleFlightAssist()
     }
 }
 
+bool ASpaceship::CanAdjustThrottle()
+{
+    // Rate limit throttle adjustments to prevent excessively fast changes when button is held
+    UWorld* World = GetWorld();
+    if (!World)
+    {
+        return false;
+    }
+    
+    float CurrentTime = World->GetTimeSeconds();
+    if (CurrentTime - LastThrottleAdjustmentTime < ThrottleAdjustmentCooldown)
+    {
+        return false; // Too soon, skip this adjustment
+    }
+    
+    LastThrottleAdjustmentTime = CurrentTime;
+    return true;
+}
+
 void ASpaceship::ThrottleUp()
 {
+    if (!CanAdjustThrottle())
+    {
+        return;
+    }
+    
     ThrottlePercentage = FMath::Clamp(ThrottlePercentage + ThrottleStep, 0.0f, 100.0f);
 }
 
 void ASpaceship::ThrottleDown()
 {
+    if (!CanAdjustThrottle())
+    {
+        return;
+    }
+    
     ThrottlePercentage = FMath::Clamp(ThrottlePercentage - ThrottleStep, 0.0f, 100.0f);
 }
 
