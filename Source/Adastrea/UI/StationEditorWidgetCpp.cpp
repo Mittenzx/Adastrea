@@ -101,8 +101,8 @@ void UStationEditorWidgetCpp::InitializeEditor(ASpaceStation* Station, UStationM
 	if (EditorManager)
 	{
 		EditorManager->ModuleCatalog = Catalog;
-		EditorManager->PlayerTechLevel = 5; // Default tech level for testing
-		EditorManager->PlayerCredits = 100000; // Default credits for testing
+		EditorManager->PlayerTechLevel = DefaultPlayerTechLevel;
+		EditorManager->PlayerCredits = DefaultPlayerCredits;
 
 		// Begin editing the station
 		if (Station)
@@ -296,7 +296,7 @@ void UStationEditorWidgetCpp::PlaceModuleAtCursor(TSubclassOf<ASpaceStationModul
 	// Line trace to find placement location
 	FHitResult HitResult;
 	FVector TraceStart = WorldPosition;
-	FVector TraceEnd = WorldPosition + WorldDirection * 10000.0f; // 10000 units forward
+	FVector TraceEnd = WorldPosition + WorldDirection * MaxTraceDistance;
 
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(GetOwningPlayerPawn());
@@ -313,7 +313,7 @@ void UStationEditorWidgetCpp::PlaceModuleAtCursor(TSubclassOf<ASpaceStationModul
 	{
 		// Check if we hit near the station
 		float DistanceToStation = FVector::Dist(HitResult.Location, CurrentStation->GetActorLocation());
-		if (DistanceToStation < 5000.0f) // Within 5000 units of station
+		if (DistanceToStation < MaxPlacementDistance)
 		{
 			// Place the module
 			ASpaceStationModule* PlacedModule = EditorManager->PlaceModule(

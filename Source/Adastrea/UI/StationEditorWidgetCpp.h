@@ -95,6 +95,22 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor")
 	TSubclassOf<UConstructionQueueItemWidget> QueueItemClass;
 
+	/** Default player tech level used when initializing the editor manager */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor", meta=(ClampMin=1, ClampMax=10))
+	int32 DefaultPlayerTechLevel = 5;
+
+	/** Default player credits used when initializing the editor manager */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor", meta=(ClampMin=0))
+	int32 DefaultPlayerCredits = 100000;
+
+	/** Maximum distance from station for module placement */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor", meta=(ClampMin=100.0f))
+	float MaxPlacementDistance = 5000.0f;
+
+	/** Maximum line trace distance for module placement */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor", meta=(ClampMin=1000.0f))
+	float MaxTraceDistance = 10000.0f;
+
 	// =====================
 	// Public Functions
 	// =====================

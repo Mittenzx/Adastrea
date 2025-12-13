@@ -45,14 +45,13 @@ void UConstructionQueueItemWidget::SetQueueData(const FConstructionQueueItem& It
 	QueueId = Item.QueueId;
 
 	// Get module name from class default object
-	if (Item.ModuleClass)
+	if (ItemNameText && Item.ModuleClass)
 	{
 		ASpaceStationModule* CDO = Item.ModuleClass->GetDefaultObject<ASpaceStationModule>();
-		if (CDO && ItemNameText)
-		{
-			FText ModuleName = FText::FromString(CDO->ModuleType.IsEmpty() ? TEXT("Module") : CDO->ModuleType);
-			ItemNameText->SetText(ModuleName);
-		}
+		FText ModuleName = (CDO && !CDO->ModuleType.IsEmpty()) 
+			? FText::FromString(CDO->ModuleType) 
+			: FText::FromString(TEXT("Module"));
+		ItemNameText->SetText(ModuleName);
 	}
 
 	// Update progress
