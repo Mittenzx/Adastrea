@@ -60,7 +60,7 @@ Ensure your Enhanced Input Action is properly bound:
 
 2. **Verify the Station Editor key binding** exists:
    - Input Action: `IA_OpenStationEditor` (or similar)
-   - Key: M (or your preferred key)
+   - Key: N (default key binding, changed from F9 since F9 is used for screenshots)
    - Trigger: Press
 
 3. **The input action should call**: `ToggleStationEditor` function

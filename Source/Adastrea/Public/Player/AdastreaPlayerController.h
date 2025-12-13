@@ -153,7 +153,7 @@ public:
 	// ====================
 
 	/**
-	 * Called when the station editor should be toggled (default: M key when in spaceship mode)
+	 * Called when the station editor should be toggled (default: N key when in spaceship mode)
 	 * @deprecated Since December 2025 (v2.0), will be removed in v3.0 (mid-2026). 
 	 * Use C++ ToggleStationEditor() implementation instead. This event is kept for backward compatibility.
 	 * See Assets/StationEditorMigrationGuide.md for migration details.

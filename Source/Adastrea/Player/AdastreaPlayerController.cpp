@@ -10,10 +10,6 @@
 #include "UI/AdastreaHUDWidget.h"
 #include "UI/ShipStatusWidget.h"
 
-// Note: StationEditor includes removed to avoid circular dependency
-// StationEditor depends on Adastrea, so Adastrea cannot depend on StationEditor
-// Station editor functionality is accessed through Blueprint-configured UUserWidget
-
 AAdastreaPlayerController::AAdastreaPlayerController()
 {
 	// Set default values
@@ -192,9 +188,7 @@ UUserWidget* AAdastreaPlayerController::CreateStationEditorWidget()
 		return nullptr;
 	}
 
-	// Create the widget as base UUserWidget (avoiding circular dependency with StationEditor module)
-	// The actual widget class should be a Blueprint subclass of UStationEditorWidget
-	// All initialization is handled by the widget's NativeConstruct in Blueprint
+	// Create the widget as a generic UUserWidget to avoid StationEditor dependency
 	StationEditorWidget = CreateWidget<UUserWidget>(this, StationEditorWidgetClass);
 	
 	if (!StationEditorWidget)
@@ -216,7 +210,7 @@ void AAdastreaPlayerController::ShowStationEditor(ASpaceStation* Station)
 		return;
 	}
 
-	// Create widget if needed
+	// Create widget if needed (no StationEditor-specific logic)
 	if (!CreateStationEditorWidget())
 	{
 		return;
@@ -313,15 +307,6 @@ void AAdastreaPlayerController::HideStationEditor()
 	{
 		bIsStationEditorOpen = false;
 		return;
-	}
-
-	// Call OnClose function on the widget if it exists (Blueprint-implemented)
-	// This allows the widget to handle cleanup (save/cancel) internally
-	UFunction* OnCloseFunc = StationEditorWidget->FindFunction(FName("OnClose"));
-	if (OnCloseFunc)
-	{
-		StationEditorWidget->ProcessEvent(OnCloseFunc, nullptr);
-		UE_LOG(LogAdastrea, Log, TEXT("HideStationEditor: Called OnClose on widget"));
 	}
 
 	// Remove widget from viewport

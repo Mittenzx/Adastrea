@@ -182,8 +182,8 @@ bool FFreeLookCameraBasicTest::RunTest(const FString& Parameters)
 		FProperty* CameraSpringArmProperty = SpaceshipClass->FindPropertyByName(TEXT("CameraSpringArm"));
 		TestNotNull(TEXT("CameraSpringArm property should exist"), CameraSpringArmProperty);
 		
-		FProperty* CameraProperty = SpaceshipClass->FindPropertyByName(TEXT("Camera"));
-		TestNotNull(TEXT("Camera property should exist"), CameraProperty);
+		FProperty* CameraProperty = SpaceshipClass->FindPropertyByName(TEXT("CameraComponent"));
+		TestNotNull(TEXT("CameraComponent property should exist"), CameraProperty);
 	}
 	
 	return true;
