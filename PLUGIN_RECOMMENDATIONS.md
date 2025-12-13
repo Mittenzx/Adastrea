@@ -219,7 +219,7 @@ def create_ship_data_asset(yaml_path, output_path):
 
 **Why Enable:**
 - Enhanced C++ debugging in Visual Studio
-- Better Intellisense support
+- Better IntelliSense support
 - Build error navigation
 - Blueprint-to-C++ navigation
 - Source control integration

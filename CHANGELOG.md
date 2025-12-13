@@ -11,10 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive plugin recommendations document (PLUGIN_RECOMMENDATIONS.md)
 - Quick reference guide for plugin selection (PLUGIN_QUICK_REFERENCE.md)
 - Enabled 5 new built-in plugins to accelerate content creation:
-  - PythonScriptPlugin - Run Python automation scripts in editor
+  - Python - Run Python automation scripts in editor
   - EditorScriptingUtilities - Batch asset operations and automation
   - Niagara - Modern VFX system for space effects
-  - GeometryScripting - Procedural mesh generation
+  - GeometryScriptingEditor - Procedural mesh generation
   - Bridge - Quixel Megascans asset library access
 
 ### Changed

@@ -11,7 +11,7 @@
 |--------|----------|-----|--------|
 | **Python Script Plugin** | Automation | Run 20+ existing Python scripts in editor | 1 day |
 | **Editor Scripting Utilities** | Automation | Batch create 100+ Data Assets, 50+ Blueprints | 1 day |
-| **Visual Studio Integration** | Development | Better C++ debugging and Intellisense | 1 hour |
+| **Visual Studio Integration** | Development | Better C++ debugging and IntelliSense | 1 hour |
 
 **Enable these immediately** - They will accelerate content creation significantly.
 

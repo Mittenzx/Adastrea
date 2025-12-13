@@ -15,7 +15,7 @@ These 17 plugins are already configured in your project:
 ✅ **EnhancedInput** - Modern input system (Required for your input system)  
 ✅ **WidgetEditorToolPalette** - UI editing tools  
 ✅ **EditorScriptingUtilities** - Batch asset operations (Just enabled)  
-✅ **PythonScriptPlugin** - Python automation in editor (Just enabled)
+✅ **Python** - Python automation in editor (Just enabled)
 
 ### UI Framework
 ✅ **CommonUI** - Advanced UI framework (Highly recommended for your 30+ widgets)  
@@ -31,7 +31,7 @@ These 17 plugins are already configured in your project:
 
 ### Content Creation
 ✅ **Niagara** - Modern VFX system (Just enabled)  
-✅ **GeometryScripting** - Procedural meshes (Just enabled)  
+✅ **GeometryScriptingEditor** - Procedural meshes (Just enabled)  
 ✅ **Bridge** - Quixel Megascans access (Just enabled)
 
 ### Custom
@@ -47,7 +47,7 @@ These 17 plugins are already configured in your project:
 **Cost:** FREE  
 
 **Why:**
-- Better C++ debugging and Intellisense
+- Better C++ debugging and IntelliSense
 - Navigate between Blueprint and C++
 - Source control integration
 - Enhanced error navigation
@@ -199,7 +199,7 @@ These 17 plugins are already configured in your project:
 ---
 
 ### 9. Procedural Mesh Component 🔷
-**Status:** Should be enabled with GeometryScripting  
+**Status:** Should be enabled with GeometryScriptingEditor  
 **Category:** Procedural Generation  
 **Cost:** FREE  
 
@@ -236,10 +236,10 @@ These 17 plugins are already configured in your project:
 ### Enable Immediately (Week 1)
 ```
 Priority 1 - Already Done ✅
-[x] PythonScriptPlugin
+[x] Python
 [x] EditorScriptingUtilities
 [x] Niagara
-[x] GeometryScripting
+[x] GeometryScriptingEditor
 [x] Bridge
 
 Priority 2 - Enable This Week
@@ -421,7 +421,7 @@ All working, keep them all.
 }
 ```
 
-### Method 3: Python Script (with PythonScriptPlugin)
+### Method 3: Python Script (with Python)
 ```python
 import unreal
 

@@ -61,7 +61,7 @@ W   │               │                │
 ```
 Plugin                     Purpose              Status
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PythonScriptPlugin        Run scripts in UE     ✅ DONE
+Python                    Run scripts in UE     ✅ DONE
 EditorScriptingUtilities  Batch operations      ✅ DONE
 ```
 
@@ -75,7 +75,7 @@ EditorScriptingUtilities  Batch operations      ✅ DONE
 Plugin                     Purpose              Status
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Niagara                   Modern VFX system     ✅ DONE
-GeometryScripting         Procedural meshes     ✅ DONE
+GeometryScriptingEditor   Procedural meshes     ✅ DONE
 Bridge                    Quixel assets         ✅ DONE
 ```
 
@@ -240,10 +240,10 @@ NET ROI: $25,500+ (8.5x return on investment)
 ## ✅ Action Checklist
 
 ### ☑️ Done (Week 1)
-- [x] Enable PythonScriptPlugin
+- [x] Enable Python
 - [x] Enable EditorScriptingUtilities
 - [x] Enable Niagara
-- [x] Enable GeometryScripting
+- [x] Enable GeometryScriptingEditor
 - [x] Enable Bridge
 
 ### 🔜 Next (Week 2-3)

@@ -39,10 +39,10 @@ Created **[PLUGIN_QUICK_REFERENCE.md](PLUGIN_QUICK_REFERENCE.md)** - a 4.4KB qui
 
 Updated **Adastrea.uproject** to enable 5 new built-in plugins:
 
-1. ✅ **PythonScriptPlugin** - Run Python automation scripts in editor
+1. ✅ **Python** - Run Python automation scripts in editor
 2. ✅ **EditorScriptingUtilities** - Batch asset operations
 3. ✅ **Niagara** - Modern VFX system for space effects
-4. ✅ **GeometryScripting** - Procedural mesh generation
+4. ✅ **GeometryScriptingEditor** - Procedural mesh generation
 5. ✅ **Bridge** - Quixel Megascans asset library access
 
 ### 4. Documentation Updates
@@ -70,10 +70,10 @@ The 12 currently enabled plugins are well-chosen:
 ### Top Priority Additions
 
 **Immediate Enable (Already Done):**
-- PythonScriptPlugin - Project has 20+ Python scripts, can now run in editor
+- Python - Project has 20+ Python scripts, can now run in editor
 - EditorScriptingUtilities - Batch create 100+ Data Assets, 50+ Blueprints
 - Niagara - Essential for space game VFX
-- GeometryScripting - Procedural station modules
+- GeometryScriptingEditor - Procedural station modules
 - Bridge - Quick prototyping with Quixel assets
 
 ### Marketplace Recommendations
@@ -114,7 +114,7 @@ The 12 currently enabled plugins are well-chosen:
 - Marketplace: Ship HUD templates, weapon VFX
 
 **Space Station System (34 files):**
-- GeometryScripting for modules ✅ Enabled
+- GeometryScriptingEditor for modules ✅ Enabled
 - Marketplace: Sci-fi interior assets, modular kits
 
 **UI Systems (27 files):**
@@ -156,7 +156,7 @@ The 12 currently enabled plugins are well-chosen:
 **Focus:** Create example content with newly enabled plugins
 
 - [ ] Create example VFX with Niagara (engine trails, weapon effects)
-- [ ] Test procedural mesh generation with GeometryScripting (station modules)
+- [ ] Test procedural mesh generation with GeometryScriptingEditor (station modules)
 - [ ] Import and test Quixel assets with Bridge
 - [ ] Document workflows and best practices for each plugin
 
@@ -185,11 +185,11 @@ The 12 currently enabled plugins are well-chosen:
 ## Risk Mitigation
 
 ### Low Risk Plugins (Safe to Enable) ✅
-- PythonScriptPlugin ✅ Enabled
+- Python ✅ Enabled
 - EditorScriptingUtilities ✅ Enabled
 - Niagara ✅ Enabled
 - Bridge ✅ Enabled
-- GeometryScripting ✅ Enabled
+- GeometryScriptingEditor ✅ Enabled
 
 All are official Epic plugins, well-tested, widely used.
 
@@ -258,7 +258,7 @@ All recommendations are free with Unreal Engine.
 
 **Problem:** Need to create 100+ Data Assets, 50+ Blueprints
 
-**Solution:** PythonScriptPlugin + EditorScriptingUtilities
+**Solution:** Python + EditorScriptingUtilities
 
 **Why Critical:**
 - Project already has YAML templates for all systems
@@ -293,7 +293,7 @@ All recommendations are free with Unreal Engine.
 2. Marketplace UI = Instant professional interfaces
 3. Niagara + VFX = Professional visual polish
 4. Bridge = Fast asset prototyping
-5. GeometryScripting = Procedural variety
+5. GeometryScriptingEditor = Procedural variety
 
 **Result:** 2-6 months faster to playable demo
 
@@ -314,10 +314,10 @@ All recommendations are free with Unreal Engine.
 ## Recommendations Summary
 
 ### Enable Immediately ✅ **DONE**
-- [x] PythonScriptPlugin
+- [x] Python
 - [x] EditorScriptingUtilities
 - [x] Niagara
-- [x] GeometryScripting
+- [x] GeometryScriptingEditor
 - [x] Bridge
 
 ### Research and Purchase (Next 4 Weeks)

@@ -66,7 +66,7 @@
 			"Enabled": true
 		},
 		{
-			"Name": "PythonScriptPlugin",
+			"Name": "Python",
 			"Enabled": true
 		},
 		{
@@ -78,7 +78,7 @@
 			"Enabled": true
 		},
 		{
-			"Name": "GeometryScripting",
+			"Name": "GeometryScriptingEditor",
 			"Enabled": true
 		},
 		{
