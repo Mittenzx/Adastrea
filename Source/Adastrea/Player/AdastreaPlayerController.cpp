@@ -216,6 +216,76 @@ void AAdastreaPlayerController::ShowStationEditor(ASpaceStation* Station)
 		return;
 	}
 
+	// Try to initialize as C++ widget (UStationEditorWidgetCpp) with InitializeEditor function
+	UFunction* InitializeEditorFunc = StationEditorWidget->FindFunction(FName("InitializeEditor"));
+	if (InitializeEditorFunc)
+	{
+		// Use ProcessEvent to call InitializeEditor(Station, ModuleCatalog)
+		struct FInitializeEditorParams
+		{
+			ASpaceStation* Station;
+			UDataAsset* Catalog;
+		};
+		
+		FInitializeEditorParams Params;
+		Params.Station = Station;
+		Params.Catalog = ModuleCatalog;
+		
+		StationEditorWidget->ProcessEvent(InitializeEditorFunc, &Params);
+		UE_LOG(LogAdastrea, Log, TEXT("ShowStationEditor: Called InitializeEditor on C++ widget"));
+	}
+	else
+	{
+		// Fallback to legacy Blueprint widget initialization
+		// Initialize the widget using Blueprint-callable functions
+		// The widget must implement SetStation() as a Blueprint function
+		// This approach avoids circular dependency with StationEditor module
+		
+		// Use UFunction to call SetStation through reflection (Blueprint-safe)
+		UFunction* SetStationFunc = StationEditorWidget->FindFunction(FName("SetStation"));
+		if (SetStationFunc)
+		{
+			// Runtime validation: Ensure function signature matches struct
+			if (SetStationFunc->NumParms != 1 || SetStationFunc->ParmsSize != sizeof(FSetStationParams))
+			{
+				UE_LOG(LogAdastrea, Error, TEXT("ShowStationEditor: SetStation function signature mismatch (expected 1 param, size %d; got %d params, size %d)"),
+					sizeof(FSetStationParams), SetStationFunc->NumParms, SetStationFunc->ParmsSize);
+				return;
+			}
+			
+			FSetStationParams Params;
+			Params.Station = Station;
+			
+			StationEditorWidget->ProcessEvent(SetStationFunc, &Params);
+			UE_LOG(LogAdastrea, Log, TEXT("ShowStationEditor: Called SetStation on widget"));
+		}
+		else
+		{
+			UE_LOG(LogAdastrea, Warning, TEXT("ShowStationEditor: Widget does not have SetStation or InitializeEditor function. Configure in Blueprint."));
+		}
+
+		// Set ModuleCatalog through Blueprint property if available
+		if (ModuleCatalog)
+		{
+			// Find and set the ModuleCatalog property if it exists
+			if (FProperty* CatalogProp = StationEditorWidget->GetClass()->FindPropertyByName(FName("ModuleCatalog")))
+			{
+				// Verify it's an object property before setting (type safety)
+				if (FObjectProperty* ObjProp = CastField<FObjectProperty>(CatalogProp))
+				{
+					// Use safe SetPropertyValue_InContainer instead of raw memory copy
+					void* PropertyAddress = ObjProp->ContainerPtrToValuePtr<void>(StationEditorWidget);
+					ObjProp->SetObjectPropertyValue(PropertyAddress, ModuleCatalog);
+					UE_LOG(LogAdastrea, Log, TEXT("ShowStationEditor: Set ModuleCatalog on widget"));
+				}
+				else
+				{
+					UE_LOG(LogAdastrea, Warning, TEXT("ShowStationEditor: ModuleCatalog property is not an object property"));
+				}
+			}
+		}
+	}
+
 	// Add widget to viewport
 	if (!StationEditorWidget->IsInViewport())
 	{

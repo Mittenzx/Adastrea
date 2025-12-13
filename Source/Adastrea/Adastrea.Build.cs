@@ -35,8 +35,7 @@ public class Adastrea : ModuleRules
 
 		// Note: StationEditor dependency removed to fix circular dependency
 		// StationEditor depends on Adastrea, so Adastrea cannot depend on StationEditor
-		// AdastreaPlayerController uses forward declarations and only includes
-		// StationEditor headers in .cpp file, which works correctly
+		// Station Editor widget implementations moved to StationEditor module
 		PublicDependencyModuleNames.AddRange(new string[] 
 		{ 
 			"Core", 
