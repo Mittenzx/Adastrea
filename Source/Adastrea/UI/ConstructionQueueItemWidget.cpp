@@ -52,9 +52,13 @@ void UConstructionQueueItemWidget::SetQueueData(const FConstructionQueueItem& It
 		if (Item.ModuleClass)
 		{
 			ASpaceStationModule* CDO = Item.ModuleClass->GetDefaultObject<ASpaceStationModule>();
-			if (CDO && !CDO->ModuleType.IsEmpty())
+			// Null check CDO before accessing its properties
+			if (CDO)
 			{
-				ModuleName = FText::FromString(CDO->ModuleType);
+				if (!CDO->ModuleType.IsEmpty())
+				{
+					ModuleName = FText::FromString(CDO->ModuleType);
+				}
 			}
 		}
 		

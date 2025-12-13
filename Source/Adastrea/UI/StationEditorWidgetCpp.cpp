@@ -11,6 +11,7 @@
 #include "Components/ProgressBar.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerController.h"
+#include "AdastreaLog.h"
 
 // StationEditor module includes
 #include "StationEditor/StationEditorManager.h"
@@ -334,13 +335,13 @@ void UStationEditorWidgetCpp::PlaceModuleAtCursor(TSubclassOf<ASpaceStationModul
 			if (!PlacedModule)
 			{
 				// Placement failed - provide detailed error information
-				UE_LOG(LogTemp, Warning, TEXT("Module placement failed: Class=%s, Location=%s, Distance=%.2f"), 
+				UE_LOG(LogAdastreaStations, Warning, TEXT("Station Editor: Module placement failed: Class=%s, Location=%s, Distance=%.2f"), 
 					*ModuleClass->GetName(), *HitResult.Location.ToString(), DistanceToStation);
 			}
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Module placement failed: Too far from station (Distance=%.2f, Max=%.2f)"), 
+			UE_LOG(LogAdastreaStations, Warning, TEXT("Station Editor: Module placement failed: Too far from station (Distance=%.2f, Max=%.2f)"), 
 				DistanceToStation, MaxPlacementDistance);
 		}
 	}
