@@ -696,10 +696,8 @@ Create Widget Blueprints based on `UniverseMapWidget` and `SectorMapWidget` clas
 
 ## Documentation
 
-### Plugin & Tool Integration
+### AI Tool Integration
 
-- **[Plugin Recommendations](PLUGIN_RECOMMENDATIONS.md)** - ⭐ **NEW** Comprehensive analysis of UE built-in and Fab marketplace plugins
-- **[Plugin Quick Reference](PLUGIN_QUICK_REFERENCE.md)** - ⭐ **NEW** Quick lookup guide for plugin selection
 - **[Director Plugin Overview](DIRECTOR_PLUGIN_OVERVIEW.md)** - Executive overview of plugin development strategy
 - **[Director Knowledge Base](DIRECTOR_KNOWLEDGE_BASE.md)** - Comprehensive knowledge base for Adastrea-Director AI tool
 - **[UE Plugin Feasibility Report](UE_PLUGIN_FEASIBILITY_REPORT.md)** - Technical feasibility analysis for native plugin
