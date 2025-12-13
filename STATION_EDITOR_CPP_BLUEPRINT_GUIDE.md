@@ -193,6 +193,7 @@ Border (Root, Size: 300px width, 80px height)
 - Build Cost:
   - Credits: 3000
   - Build Time: 45.0
+- Preview Mesh: (Optional)
 
 #### Entry 2: Cargo Storage
 - Module Class: `BP_CargoStorage`
@@ -203,6 +204,7 @@ Border (Root, Size: 300px width, 80px height)
 - Build Cost:
   - Credits: 2000
   - Build Time: 30.0
+- Preview Mesh: (Optional)
 
 #### Entry 3: Living Quarters
 - Module Class: `BP_LivingQuarters`
@@ -213,16 +215,18 @@ Border (Root, Size: 300px width, 80px height)
 - Build Cost:
   - Credits: 4000
   - Build Time: 90.0
+- Preview Mesh: (Optional)
 
-#### Entry 4: Defense Turret
-- Module Class: `BP_DefenseTurret`
-- Display Name: "Defense Turret"
+#### Entry 4: Defence Turret
+- Module Class: `BP_DefenceTurret`
+- Display Name: "Defence Turret"
 - Description: "Defends the station from threats"
 - Required Tech Level: 2
 - Module Group: Defence
 - Build Cost:
   - Credits: 6000
   - Build Time: 120.0
+- Preview Mesh: (Optional)
 
 ---
 
