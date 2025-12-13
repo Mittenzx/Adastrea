@@ -28,7 +28,7 @@ This guide provides step-by-step instructions for implementing and testing the S
 ### What You'll Build
 
 - A runtime-accessible station editor UI
-- Key binding to toggle the editor (e.g., F9)
+- Key binding to toggle the editor (N key)
 - Full module placement, removal, and management
 - Undo/redo functionality
 - Construction queue system
@@ -38,7 +38,7 @@ This guide provides step-by-step instructions for implementing and testing the S
 
 ```
 ┌─────────────────────────────────────────────────┐
-│         Player Input (F9 Key Press)             │
+│         Player Input (N Key Press)              │
 └──────────────────┬──────────────────────────────┘
                    │
                    ▼
@@ -115,9 +115,9 @@ These classes are already in the project:
 1. Create `DA_StationModuleCatalog` Data Asset
 2. Create `WBP_StationEditor` Widget Blueprint
 3. Add input action `IA_OpenStationEditor`
-4. Bind key in `IMC_Spaceship` (e.g., F9)
+4. Bind key in `IMC_Spaceship` (N key)
 5. Add toggle logic to Player Controller
-6. Press Play, approach station, press F9
+6. Press Play, approach station, press N
 
 ---
 
@@ -337,7 +337,7 @@ Event: CloseButton Clicked
    Mappings:
    ├─ ... (existing mappings)
    └─ IA_OpenStationEditor
-      └─ Key: F9
+      └─ Key: N
       └─ Modifiers: (none)
       └─ Triggers: Pressed
    ```
@@ -469,7 +469,7 @@ Function: FindNearestStation → ASpaceStation
    - Get within 5000 units
 
 4. **Open Station Editor:**
-   - Press **F9**
+   - Press **N**
    - Expected: UI appears with module list and statistics
 
 5. **Test Module Placement:**
@@ -716,7 +716,7 @@ Implementation:
 
 ### Issue: Widget Not Appearing
 
-**Symptoms:** F9 pressed, nothing happens
+**Symptoms:** N key pressed, nothing happens
 
 **Solutions:**
 1. Check Output Log for errors
@@ -987,14 +987,14 @@ Content/DataAssets/Stations/DA_StationModuleCatalog
 ```
 Content/Input/IMC_Spaceship
 ├─ ... (existing mappings)
-└─ IA_OpenStationEditor → F9
+└─ IA_OpenStationEditor → N
 ```
 
 ### Testing Checklist
 
 Use this checklist for thorough PIE testing:
 
-- [ ] Widget appears when F9 pressed
+- [ ] Widget appears when N key pressed
 - [ ] Widget disappears when closed
 - [ ] Module list populates correctly
 - [ ] Modules can be selected
@@ -1081,7 +1081,7 @@ After completing PIE testing:
 ┌─────────────────────────────────────────────────────────┐
 │             STATION EDITOR QUICK REFERENCE              │
 ├─────────────────────────────────────────────────────────┤
-│ Key Binding:         F9 (toggle editor)                 │
+│ Key Binding:         N (toggle editor)                  │
 │ Close Editor:        ESC or Close button                │
 │ Place Module:        Click module, click in 3D space    │
 │ Remove Module:       Select module, Delete key          │
