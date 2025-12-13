@@ -97,11 +97,12 @@ Avoid these for now:
 
 ### Weeks 2-3
 ```
-[ ] Enable Niagara
-[ ] Enable Geometry Script
-[ ] Enable Bridge
-[ ] Create example VFX
-[ ] Test procedural generation
+[x] Niagara (Already enabled)
+[x] Geometry Script (Already enabled)
+[x] Bridge (Already enabled)
+[ ] Create example VFX with Niagara
+[ ] Test procedural mesh generation with Geometry Script
+[ ] Import test assets with Bridge
 ```
 
 ### Weeks 4-5

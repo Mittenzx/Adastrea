@@ -152,11 +152,13 @@ The 12 currently enabled plugins are well-chosen:
 - [ ] Verify no conflicts with existing systems
 - [ ] Document any issues
 
-### Weeks 2-3 (Content Creation)
-- [ ] Test Niagara VFX workflow
-- [ ] Test GeometryScripting for station modules
-- [ ] Test Bridge asset import
-- [ ] Create example assets with each plugin
+### Weeks 2-3 (Content Creation) - NEXT
+**Focus:** Create example content with newly enabled plugins
+
+- [ ] Create example VFX with Niagara (engine trails, weapon effects)
+- [ ] Test procedural mesh generation with GeometryScripting (station modules)
+- [ ] Import and test Quixel assets with Bridge
+- [ ] Document workflows and best practices for each plugin
 
 ### Weeks 4-5 (Marketplace Research)
 - [ ] Research UI template packs on Fab.com
