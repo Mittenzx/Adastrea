@@ -1,0 +1,361 @@
+// Copyright (c) 2025 Mittenzx. Licensed under MIT.
+
+#include "StationEditorWidgetCpp.h"
+#include "ModuleListItemWidget.h"
+#include "ConstructionQueueItemWidget.h"
+#include "Stations/SpaceStation.h"
+#include "Stations/SpaceStationModule.h"
+#include "Components/ScrollBox.h"
+#include "Components/TextBlock.h"
+#include "Components/Button.h"
+#include "Components/ProgressBar.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/PlayerController.h"
+
+// StationEditor module includes
+#include "StationEditor/StationEditorManager.h"
+#include "StationEditor/StationModuleCatalog.h"
+
+UStationEditorWidgetCpp::UStationEditorWidgetCpp(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+	, ModuleListScrollBox(nullptr)
+	, PowerDisplayText(nullptr)
+	, ModuleCountDisplay(nullptr)
+	, PowerBalanceBar(nullptr)
+	, CloseButton(nullptr)
+	, QueueScrollBox(nullptr)
+	, ModuleCatalog(nullptr)
+	, CurrentStation(nullptr)
+	, EditorManager(nullptr)
+	, SelectedModuleClass(nullptr)
+{
+}
+
+void UStationEditorWidgetCpp::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	// Ensure EditorManager exists
+	EnsureEditorManager();
+
+	// Bind close button
+	if (CloseButton)
+	{
+		CloseButton->OnClicked.AddDynamic(this, &UStationEditorWidgetCpp::OnCloseButtonClicked);
+	}
+
+	// Bind to EditorManager events
+	if (EditorManager)
+	{
+		EditorManager->OnModulePlaced.AddDynamic(this, &UStationEditorWidgetCpp::OnManagerModulePlaced);
+		EditorManager->OnModuleRemoved.AddDynamic(this, &UStationEditorWidgetCpp::OnManagerModuleRemoved);
+		EditorManager->OnStatisticsUpdated.AddDynamic(this, &UStationEditorWidgetCpp::OnManagerStatisticsUpdated);
+		EditorManager->OnConstructionQueueChanged.AddDynamic(this, &UStationEditorWidgetCpp::OnManagerQueueChanged);
+	}
+
+	// Initial refresh
+	RefreshModuleList();
+	RefreshStatistics();
+	UpdateConstructionQueue();
+}
+
+void UStationEditorWidgetCpp::NativeDestruct()
+{
+	// Unbind events
+	if (EditorManager)
+	{
+		EditorManager->OnModulePlaced.RemoveDynamic(this, &UStationEditorWidgetCpp::OnManagerModulePlaced);
+		EditorManager->OnModuleRemoved.RemoveDynamic(this, &UStationEditorWidgetCpp::OnManagerModuleRemoved);
+		EditorManager->OnStatisticsUpdated.RemoveDynamic(this, &UStationEditorWidgetCpp::OnManagerStatisticsUpdated);
+		EditorManager->OnConstructionQueueChanged.RemoveDynamic(this, &UStationEditorWidgetCpp::OnManagerQueueChanged);
+	}
+
+	if (CloseButton)
+	{
+		CloseButton->OnClicked.RemoveDynamic(this, &UStationEditorWidgetCpp::OnCloseButtonClicked);
+	}
+
+	Super::NativeDestruct();
+}
+
+void UStationEditorWidgetCpp::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	// Update construction progress
+	if (EditorManager)
+	{
+		EditorManager->UpdateConstruction(InDeltaTime);
+	}
+}
+
+void UStationEditorWidgetCpp::InitializeEditor(ASpaceStation* Station, UStationModuleCatalog* Catalog)
+{
+	CurrentStation = Station;
+	ModuleCatalog = Catalog;
+
+	// Ensure EditorManager exists
+	EnsureEditorManager();
+
+	// Configure EditorManager
+	if (EditorManager)
+	{
+		EditorManager->ModuleCatalog = Catalog;
+		EditorManager->PlayerTechLevel = 5; // Default tech level for testing
+		EditorManager->PlayerCredits = 100000; // Default credits for testing
+
+		// Begin editing the station
+		if (Station)
+		{
+			EditorManager->BeginEditing(Station);
+		}
+	}
+
+	// Refresh UI
+	RefreshModuleList();
+	RefreshStatistics();
+	UpdateConstructionQueue();
+}
+
+void UStationEditorWidgetCpp::RefreshModuleList()
+{
+	if (!ModuleListScrollBox || !EditorManager)
+	{
+		return;
+	}
+
+	// Clear existing items
+	ModuleListScrollBox->ClearChildren();
+
+	// Get available modules
+	TArray<FStationModuleEntry> AvailableModules = EditorManager->GetAvailableModules();
+
+	// Create widget for each module
+	for (const FStationModuleEntry& Entry : AvailableModules)
+	{
+		if (ModuleListItemClass)
+		{
+			UModuleListItemWidget* ItemWidget = CreateWidget<UModuleListItemWidget>(this, ModuleListItemClass);
+			if (ItemWidget)
+			{
+				ItemWidget->SetModuleData(Entry);
+				
+				// Bind click event
+				ItemWidget->OnModuleSelected.BindUObject(this, &UStationEditorWidgetCpp::OnModuleButtonClicked);
+				
+				ModuleListScrollBox->AddChild(ItemWidget);
+			}
+		}
+	}
+}
+
+void UStationEditorWidgetCpp::RefreshStatistics()
+{
+	if (!EditorManager)
+	{
+		return;
+	}
+
+	FStationStatistics Stats = EditorManager->GetStationStatistics();
+
+	// Update power display
+	if (PowerDisplayText)
+	{
+		FText PowerText = FText::FromString(FString::Printf(TEXT("Power: %.0f / %.0f MW"), 
+			Stats.PowerGenerated, Stats.PowerConsumed));
+		PowerDisplayText->SetText(PowerText);
+	}
+
+	// Update module count
+	if (ModuleCountDisplay)
+	{
+		FText CountText = FText::FromString(FString::Printf(TEXT("Modules: %d / %d"), 
+			Stats.TotalModules, Stats.MaxModules));
+		ModuleCountDisplay->SetText(CountText);
+	}
+
+	// Update power balance bar
+	if (PowerBalanceBar)
+	{
+		float TotalPower = Stats.PowerGenerated + Stats.PowerConsumed;
+		float BalancePercent = (TotalPower > 0.0f) ? (Stats.PowerGenerated / TotalPower) : 0.5f;
+		PowerBalanceBar->SetPercent(BalancePercent);
+		
+		// Color based on balance
+		if (Stats.PowerGenerated >= Stats.PowerConsumed)
+		{
+			PowerBalanceBar->SetFillColorAndOpacity(FLinearColor::Green);
+		}
+		else
+		{
+			PowerBalanceBar->SetFillColorAndOpacity(FLinearColor::Red);
+		}
+	}
+}
+
+void UStationEditorWidgetCpp::UpdateConstructionQueue()
+{
+	if (!QueueScrollBox || !EditorManager)
+	{
+		return;
+	}
+
+	// Clear existing items
+	QueueScrollBox->ClearChildren();
+
+	// Get construction queue
+	TArray<FConstructionQueueItem> Queue = EditorManager->GetConstructionQueue();
+
+	// Create widget for each queue item
+	for (const FConstructionQueueItem& Item : Queue)
+	{
+		if (QueueItemClass)
+		{
+			UConstructionQueueItemWidget* ItemWidget = CreateWidget<UConstructionQueueItemWidget>(this, QueueItemClass);
+			if (ItemWidget)
+			{
+				ItemWidget->SetQueueData(Item);
+				
+				// Bind cancel event
+				ItemWidget->OnCancelled.BindUObject(this, &UStationEditorWidgetCpp::OnQueueItemCancelled);
+				
+				QueueScrollBox->AddChild(ItemWidget);
+			}
+		}
+	}
+}
+
+void UStationEditorWidgetCpp::OnModuleButtonClicked(TSubclassOf<ASpaceStationModule> ModuleClass)
+{
+	SelectedModuleClass = ModuleClass;
+	PlaceModuleAtCursor(ModuleClass);
+}
+
+void UStationEditorWidgetCpp::OnCloseButtonClicked()
+{
+	// Save and end editing
+	if (EditorManager)
+	{
+		EditorManager->Save();
+	}
+
+	// Remove from parent and restore input
+	RemoveFromParent();
+	
+	APlayerController* PC = GetOwningPlayer();
+	if (PC)
+	{
+		FInputModeGameOnly InputMode;
+		PC->SetInputMode(InputMode);
+		PC->bShowMouseCursor = false;
+	}
+}
+
+void UStationEditorWidgetCpp::OnManagerModulePlaced(ASpaceStationModule* Module)
+{
+	RefreshStatistics();
+}
+
+void UStationEditorWidgetCpp::OnManagerModuleRemoved(ASpaceStationModule* Module)
+{
+	RefreshStatistics();
+}
+
+void UStationEditorWidgetCpp::OnManagerStatisticsUpdated(const FStationStatistics& Statistics)
+{
+	RefreshStatistics();
+}
+
+void UStationEditorWidgetCpp::OnManagerQueueChanged()
+{
+	UpdateConstructionQueue();
+}
+
+void UStationEditorWidgetCpp::OnQueueItemCancelled(int32 QueueId)
+{
+	if (EditorManager)
+	{
+		EditorManager->CancelConstruction(QueueId);
+	}
+}
+
+void UStationEditorWidgetCpp::PlaceModuleAtCursor(TSubclassOf<ASpaceStationModule> ModuleClass)
+{
+	if (!EditorManager || !ModuleClass || !CurrentStation)
+	{
+		return;
+	}
+
+	// Get cursor world position
+	FVector WorldPosition, WorldDirection;
+	if (!GetCursorWorldPosition(WorldPosition, WorldDirection))
+	{
+		return;
+	}
+
+	// Line trace to find placement location
+	FHitResult HitResult;
+	FVector TraceStart = WorldPosition;
+	FVector TraceEnd = WorldPosition + WorldDirection * 10000.0f; // 10000 units forward
+
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(GetOwningPlayerPawn());
+
+	bool bHit = GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		TraceStart,
+		TraceEnd,
+		ECC_Visibility,
+		QueryParams
+	);
+
+	if (bHit)
+	{
+		// Check if we hit near the station
+		float DistanceToStation = FVector::Dist(HitResult.Location, CurrentStation->GetActorLocation());
+		if (DistanceToStation < 5000.0f) // Within 5000 units of station
+		{
+			// Place the module
+			ASpaceStationModule* PlacedModule = EditorManager->PlaceModule(
+				ModuleClass,
+				HitResult.Location,
+				FRotator::ZeroRotator
+			);
+
+			if (!PlacedModule)
+			{
+				// Placement failed - could add notification here
+				UE_LOG(LogTemp, Warning, TEXT("Failed to place module"));
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Too far from station"));
+		}
+	}
+}
+
+bool UStationEditorWidgetCpp::GetCursorWorldPosition(FVector& OutWorldPosition, FVector& OutWorldDirection)
+{
+	APlayerController* PC = GetOwningPlayer();
+	if (!PC)
+	{
+		return false;
+	}
+
+	float MouseX, MouseY;
+	if (PC->GetMousePosition(MouseX, MouseY))
+	{
+		return PC->DeprojectScreenPositionToWorld(MouseX, MouseY, OutWorldPosition, OutWorldDirection);
+	}
+
+	return false;
+}
+
+void UStationEditorWidgetCpp::EnsureEditorManager()
+{
+	if (!EditorManager)
+	{
+		EditorManager = NewObject<UStationEditorManager>(this);
+	}
+}

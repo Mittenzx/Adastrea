@@ -53,7 +53,8 @@ public class Adastrea : ModuleRules
 		PrivateDependencyModuleNames.AddRange(new string[] 
 		{ 
 			"AIModule",
-			"NavigationSystem"
+			"NavigationSystem",
+			"StationEditor"  // For Station Editor widget implementations (private dependency to avoid circular reference)
 		});
 
 		// Uncomment if you are using online features
