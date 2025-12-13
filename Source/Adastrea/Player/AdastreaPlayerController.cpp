@@ -27,6 +27,9 @@ AAdastreaPlayerController::AAdastreaPlayerController()
 	ShipStatusWidgetClass = nullptr;
 	ShipStatusWidget = nullptr;
 	bIsShipStatusOpen = false;
+	MainMenuWidgetClass = nullptr;
+	MainMenuWidget = nullptr;
+	bIsMainMenuOpen = false;
 }
 
 void AAdastreaPlayerController::BeginPlay()
@@ -432,4 +435,106 @@ void AAdastreaPlayerController::HideShipStatus()
 	bIsShipStatusOpen = false;
 	
 	UE_LOG(LogAdastrea, Log, TEXT("HideShipStatus: Ship status screen hidden"));
+}
+
+void AAdastreaPlayerController::ToggleMainMenu()
+{
+	// Toggle main menu state
+	if (bIsMainMenuOpen)
+	{
+		// Close the main menu
+		HideMainMenu();
+		UE_LOG(LogAdastrea, Log, TEXT("ToggleMainMenu: Closed main menu"));
+	}
+	else
+	{
+		// Open the main menu
+		ShowMainMenu();
+		UE_LOG(LogAdastrea, Log, TEXT("ToggleMainMenu: Opened main menu"));
+	}
+}
+
+bool AAdastreaPlayerController::IsMainMenuOpen() const
+{
+	return bIsMainMenuOpen && MainMenuWidget && MainMenuWidget->IsInViewport();
+}
+
+UUserWidget* AAdastreaPlayerController::GetMainMenuWidget() const
+{
+	return MainMenuWidget;
+}
+
+UUserWidget* AAdastreaPlayerController::CreateMainMenuWidget()
+{
+	// Return existing widget if already created
+	if (MainMenuWidget)
+	{
+		return MainMenuWidget;
+	}
+
+	// Check if widget class is assigned
+	if (!MainMenuWidgetClass)
+	{
+		UE_LOG(LogAdastrea, Error, TEXT("CreateMainMenuWidget: MainMenuWidgetClass is not set! Assign it in Blueprint."));
+		return nullptr;
+	}
+
+	// Create the widget
+	MainMenuWidget = CreateWidget<UUserWidget>(this, MainMenuWidgetClass);
+	
+	if (!MainMenuWidget)
+	{
+		UE_LOG(LogAdastrea, Error, TEXT("CreateMainMenuWidget: Failed to create widget from class"));
+		return nullptr;
+	}
+
+	UE_LOG(LogAdastrea, Log, TEXT("CreateMainMenuWidget: Successfully created main menu widget"));
+	
+	return MainMenuWidget;
+}
+
+void AAdastreaPlayerController::ShowMainMenu()
+{
+	// Create widget if needed
+	if (!CreateMainMenuWidget())
+	{
+		return;
+	}
+
+	// Add widget to viewport
+	if (!MainMenuWidget->IsInViewport())
+	{
+		MainMenuWidget->AddToViewport();
+	}
+
+	// Switch to UI input mode
+	SetInputMode(FInputModeGameAndUI());
+	bShowMouseCursor = true;
+
+	bIsMainMenuOpen = true;
+	
+	UE_LOG(LogAdastrea, Log, TEXT("ShowMainMenu: Main menu now visible"));
+}
+
+void AAdastreaPlayerController::HideMainMenu()
+{
+	if (!MainMenuWidget)
+	{
+		bIsMainMenuOpen = false;
+		return;
+	}
+
+	// Remove widget from viewport
+	if (MainMenuWidget->IsInViewport())
+	{
+		MainMenuWidget->RemoveFromParent();
+	}
+
+	// Restore game input mode
+	SetInputMode(FInputModeGameOnly());
+	bShowMouseCursor = false;
+
+	bIsMainMenuOpen = false;
+	
+	UE_LOG(LogAdastrea, Log, TEXT("HideMainMenu: Main menu hidden"));
 }
