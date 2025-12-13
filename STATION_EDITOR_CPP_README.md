@@ -10,7 +10,7 @@ This is a **production-ready C++ implementation** of the Station Editor system f
 
 ### C++ Classes (Complete)
 
-1. **StationEditorWidgetCpp** (`Source/Adastrea/UI/StationEditorWidgetCpp.h/.cpp`)
+1. **StationEditorWidgetCpp** (`Source/StationEditor/UI/StationEditorWidgetCpp.h/.cpp`)
    - Main editor widget with full UI logic
    - Module list population from catalog
    - Real-time statistics display (power balance, module count)
@@ -18,13 +18,13 @@ This is a **production-ready C++ implementation** of the Station Editor system f
    - Module placement at cursor position with line tracing
    - Event-driven UI updates from EditorManager
 
-2. **ModuleListItemWidget** (`Source/Adastrea/UI/ModuleListItemWidget.h/.cpp`)
+2. **ModuleListItemWidget** (`Source/StationEditor/UI/ModuleListItemWidget.h/.cpp`)
    - Displays individual module entries from catalog
    - Shows module name, description, cost, build time
    - Build button with selection callback
    - Automatic data binding from FStationModuleEntry
 
-3. **ConstructionQueueItemWidget** (`Source/Adastrea/UI/ConstructionQueueItemWidget.h/.cpp`)
+3. **ConstructionQueueItemWidget** (`Source/StationEditor/UI/ConstructionQueueItemWidget.h/.cpp`)
    - Displays construction queue entries
    - Real-time progress bar updates
    - Time remaining display (MM:SS format)
@@ -36,9 +36,10 @@ This is a **production-ready C++ implementation** of the Station Editor system f
    - Backward compatible with legacy Blueprint widgets
    - Proper input mode management (UI vs Game)
 
-5. **Build Configuration** (`Source/Adastrea/Adastrea.Build.cs`)
-   - Added StationEditor as private dependency
-   - Avoids circular dependency issues
+5. **Build Configuration** 
+   - Widget implementations moved to StationEditor module
+   - Removed circular dependency (StationEditor depends on Adastrea, not vice versa)
+   - Clean module architecture
 
 ## 📚 Documentation
 

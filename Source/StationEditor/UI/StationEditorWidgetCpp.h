@@ -40,7 +40,7 @@ struct FConstructionQueueItem;
  * 4. Assign to SpaceshipPlayerController's StationEditorWidgetClass
  */
 UCLASS()
-class ADASTREA_API UStationEditorWidgetCpp : public UUserWidget
+class STATIONEDITOR_API UStationEditorWidgetCpp : public UUserWidget
 {
 	GENERATED_BODY()
 

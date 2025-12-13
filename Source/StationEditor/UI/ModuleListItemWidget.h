@@ -30,7 +30,7 @@ DECLARE_DELEGATE_OneParam(FOnModuleSelected, TSubclassOf<ASpaceStationModule>);
  * 4. Bind OnModuleSelected delegate to handle selection
  */
 UCLASS()
-class ADASTREA_API UModuleListItemWidget : public UUserWidget
+class STATIONEDITOR_API UModuleListItemWidget : public UUserWidget
 {
 	GENERATED_BODY()
 

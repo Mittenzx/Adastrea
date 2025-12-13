@@ -1,12 +1,12 @@
 // Copyright (c) 2025 Mittenzx. Licensed under MIT.
 
-#include "ModuleListItemWidget.h"
+#include "UI/ModuleListItemWidget.h"
 #include "Stations/SpaceStationModule.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
 
 // StationEditor module includes
-#include "StationEditor/StationModuleCatalog.h"
+#include "StationModuleCatalog.h"
 
 UModuleListItemWidget::UModuleListItemWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

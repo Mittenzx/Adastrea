@@ -30,7 +30,7 @@ DECLARE_DELEGATE_OneParam(FOnQueueItemCancelled, int32);
  * 4. Bind OnCancelled delegate to handle cancellation
  */
 UCLASS()
-class ADASTREA_API UConstructionQueueItemWidget : public UUserWidget
+class STATIONEDITOR_API UConstructionQueueItemWidget : public UUserWidget
 {
 	GENERATED_BODY()
 

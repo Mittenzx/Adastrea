@@ -97,13 +97,10 @@ All widget names must match C++ `BindWidget` properties **exactly** (case-sensit
 ### Build Configuration
 
 ```cpp
-// Adastrea.Build.cs
-PrivateDependencyModuleNames.AddRange(new string[] 
-{ 
-    "AIModule",
-    "NavigationSystem",
-    "StationEditor"  // Added for widget implementations
-});
+// No circular dependencies
+// StationEditor depends on Adastrea (for station/module classes)
+// Adastrea does NOT depend on StationEditor
+// Widget implementations are in StationEditor module
 ```
 
 ### Module Structure
@@ -112,13 +109,14 @@ PrivateDependencyModuleNames.AddRange(new string[]
 StationEditor (Module)
     ├─ StationEditorManager.h/.cpp (Core logic)
     ├─ StationModuleCatalog.h/.cpp (Data asset)
-    └─ StationEditorWidget.h/.cpp (Legacy base class)
-
-Adastrea (Module)
+    ├─ StationEditorWidget.h/.cpp (Legacy base class)
     └─ UI/
         ├─ StationEditorWidgetCpp.h/.cpp (NEW - Full C++ implementation)
         ├─ ModuleListItemWidget.h/.cpp (NEW - List item widget)
         └─ ConstructionQueueItemWidget.h/.cpp (NEW - Queue item widget)
+
+Adastrea (Module)
+    └─ No StationEditor dependency - clean architecture
 ```
 
 ## Input Configuration
@@ -307,7 +305,8 @@ Fix: Check widget name in Blueprint matches C++ exactly
 
 ```
 Error: Circular dependency between Adastrea and StationEditor
-Fix: StationEditor is PrivateDependency in Adastrea.Build.cs
+Fix: Widget implementations moved to StationEditor module (Source/StationEditor/UI/)
+     Adastrea no longer depends on StationEditor - clean one-way dependency
 ```
 
 ### Runtime Errors

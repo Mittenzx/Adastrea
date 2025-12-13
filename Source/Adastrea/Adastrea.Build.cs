@@ -33,9 +33,9 @@ public class Adastrea : ModuleRules
 			"Adastrea/Rivals"
 		});
 
-		// Note: StationEditor is added as a PRIVATE dependency only (see below)
-		// This allows .cpp files to include StationEditor headers without circular dependency
-		// Public headers use forward declarations to avoid circular dependency
+		// Note: StationEditor dependency removed to fix circular dependency
+		// StationEditor depends on Adastrea, so Adastrea cannot depend on StationEditor
+		// Station Editor widget implementations moved to StationEditor module
 		PublicDependencyModuleNames.AddRange(new string[] 
 		{ 
 			"Core", 
@@ -52,8 +52,7 @@ public class Adastrea : ModuleRules
 		PrivateDependencyModuleNames.AddRange(new string[] 
 		{ 
 			"AIModule",
-			"NavigationSystem",
-			"StationEditor"  // For Station Editor widget implementations (private dependency to avoid circular reference)
+			"NavigationSystem"
 		});
 
 		// Uncomment if you are using online features

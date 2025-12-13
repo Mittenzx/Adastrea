@@ -1,12 +1,12 @@
 // Copyright (c) 2025 Mittenzx. Licensed under MIT.
 
-#include "ConstructionQueueItemWidget.h"
+#include "UI/ConstructionQueueItemWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/ProgressBar.h"
 #include "Components/Button.h"
 
 // StationEditor module includes
-#include "StationEditor/StationEditorManager.h"
+#include "StationEditorManager.h"
 
 UConstructionQueueItemWidget::UConstructionQueueItemWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

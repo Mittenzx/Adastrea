@@ -1,8 +1,8 @@
 // Copyright (c) 2025 Mittenzx. Licensed under MIT.
 
-#include "StationEditorWidgetCpp.h"
-#include "ModuleListItemWidget.h"
-#include "ConstructionQueueItemWidget.h"
+#include "UI/StationEditorWidgetCpp.h"
+#include "UI/ModuleListItemWidget.h"
+#include "UI/ConstructionQueueItemWidget.h"
 #include "Stations/SpaceStation.h"
 #include "Stations/SpaceStationModule.h"
 #include "Components/ScrollBox.h"
@@ -11,11 +11,11 @@
 #include "Components/ProgressBar.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerController.h"
-#include "AdastreaLog.h"
+#include "Public/AdastreaLog.h"
 
 // StationEditor module includes
-#include "StationEditor/StationEditorManager.h"
-#include "StationEditor/StationModuleCatalog.h"
+#include "StationEditorManager.h"
+#include "StationModuleCatalog.h"
 
 UStationEditorWidgetCpp::UStationEditorWidgetCpp(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
