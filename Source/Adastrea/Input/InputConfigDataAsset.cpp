@@ -6,8 +6,10 @@
 UInputConfigDataAsset::UInputConfigDataAsset()
 {
     SpaceshipMappingContext = nullptr;
+    ThirdPersonMappingContext = nullptr;
     MenuMappingContext = nullptr;
     SpaceshipContextPriority = 0;
+    ThirdPersonContextPriority = 0;
     MenuContextPriority = 1;
 
     // All input actions default to nullptr
@@ -53,6 +55,11 @@ UInputConfigDataAsset::UInputConfigDataAsset()
 UInputMappingContext* UInputConfigDataAsset::GetSpaceshipMappingContext() const
 {
     return SpaceshipMappingContext;
+}
+
+UInputMappingContext* UInputConfigDataAsset::GetThirdPersonMappingContext() const
+{
+    return ThirdPersonMappingContext;
 }
 
 UInputMappingContext* UInputConfigDataAsset::GetMenuMappingContext() const

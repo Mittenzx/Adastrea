@@ -130,6 +130,25 @@ public:
 	class UShipStatusWidget* ShipStatusWidget;
 
 	// ====================
+	// Main Menu Configuration
+	// ====================
+
+	/**
+	 * Widget class to use for the main menu/pause menu
+	 * Set this in Blueprint or editor to display the in-game menu
+	 * Should be a class derived from UUserWidget (e.g., UMainMenuWidget)
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Main Menu")
+	TSubclassOf<UUserWidget> MainMenuWidgetClass;
+
+	/**
+	 * Current main menu widget instance
+	 * Created on demand when ToggleMainMenu is called
+	 */
+	UPROPERTY(BlueprintReadOnly, Category="Main Menu")
+	UUserWidget* MainMenuWidget;
+
+	// ====================
 	// Events
 	// ====================
 
@@ -220,6 +239,28 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Ship Status")
 	class UShipStatusWidget* GetShipStatusWidget() const;
 
+	/**
+	 * Toggle the main menu (pause menu) UI
+	 * Shows/hides the in-game menu for pausing, settings, and returning to main menu
+	 * Works in both spaceship mode and third-person mode
+	 */
+	UFUNCTION(BlueprintCallable, Category="Player|Main Menu")
+	void ToggleMainMenu();
+
+	/**
+	 * Check if the main menu is currently open
+	 * @return True if the main menu widget is visible
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Main Menu")
+	bool IsMainMenuOpen() const;
+
+	/**
+	 * Get the currently active main menu widget
+	 * @return The main menu widget, or nullptr if not created
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Main Menu")
+	UUserWidget* GetMainMenuWidget() const;
+
 protected:
 	/**
 	 * Find the nearest space station within the search radius
@@ -261,6 +302,22 @@ protected:
 	 */
 	void HideShipStatus();
 
+	/**
+	 * Create the main menu widget if it doesn't exist
+	 * @return The created or existing widget instance
+	 */
+	UUserWidget* CreateMainMenuWidget();
+
+	/**
+	 * Show the main menu
+	 */
+	void ShowMainMenu();
+
+	/**
+	 * Hide and cleanup the main menu
+	 */
+	void HideMainMenu();
+
 private:
 	/** The currently active station editor widget instance */
 	UPROPERTY()
@@ -271,4 +328,7 @@ private:
 
 	/** Whether the ship status screen is currently open */
 	bool bIsShipStatusOpen;
+
+	/** Whether the main menu is currently open */
+	bool bIsMainMenuOpen;
 };

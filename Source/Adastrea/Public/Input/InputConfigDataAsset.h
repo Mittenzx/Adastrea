@@ -42,6 +42,10 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input Mapping")
     UInputMappingContext* SpaceshipMappingContext;
 
+    /** Input mapping context for third-person walking (stations/interiors) */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input Mapping")
+    UInputMappingContext* ThirdPersonMappingContext;
+
     /** Input mapping context for UI/menu navigation */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input Mapping")
     UInputMappingContext* MenuMappingContext;
@@ -49,6 +53,10 @@ public:
     /** Default priority for spaceship context */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input Mapping", meta=(ClampMin="0"))
     int32 SpaceshipContextPriority;
+
+    /** Default priority for third-person context */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input Mapping", meta=(ClampMin="0"))
+    int32 ThirdPersonContextPriority;
 
     /** Default priority for menu context */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input Mapping", meta=(ClampMin="0"))
@@ -221,6 +229,13 @@ public:
      */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category="Input Config")
     UInputMappingContext* GetSpaceshipMappingContext() const;
+
+    /**
+     * Get third-person mapping context
+     * @return Third-person input mapping context
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Input Config")
+    UInputMappingContext* GetThirdPersonMappingContext() const;
 
     /**
      * Get menu mapping context
