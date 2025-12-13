@@ -32,8 +32,8 @@ if sys.platform == "win32":
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
 try:
-    from env_config import load_env_file
-    load_env_file()
+    from dotenv import load_dotenv
+    load_dotenv()
     
     from langchain_community.vectorstores import Chroma
     from langchain.chains import ConversationalRetrievalChain

@@ -10,10 +10,6 @@
 #include "UI/AdastreaHUDWidget.h"
 #include "UI/ShipStatusWidget.h"
 
-// Note: StationEditor includes removed to avoid circular dependency
-// StationEditor depends on Adastrea, so Adastrea cannot depend on StationEditor
-// Station editor functionality is accessed through Blueprint-configured UUserWidget
-
 AAdastreaPlayerController::AAdastreaPlayerController()
 {
 	// Set default values
@@ -192,9 +188,7 @@ UUserWidget* AAdastreaPlayerController::CreateStationEditorWidget()
 		return nullptr;
 	}
 
-	// Create the widget as base UUserWidget (avoiding circular dependency with StationEditor module)
-	// The actual widget class should be a Blueprint subclass of UStationEditorWidget
-	// All initialization is handled by the widget's NativeConstruct in Blueprint
+	// Create the widget as a generic UUserWidget to avoid StationEditor dependency
 	StationEditorWidget = CreateWidget<UUserWidget>(this, StationEditorWidgetClass);
 	
 	if (!StationEditorWidget)
@@ -216,58 +210,10 @@ void AAdastreaPlayerController::ShowStationEditor(ASpaceStation* Station)
 		return;
 	}
 
-	// Create widget if needed
+	// Create widget if needed (no StationEditor-specific logic)
 	if (!CreateStationEditorWidget())
 	{
 		return;
-	}
-
-	// Initialize the widget using Blueprint-callable functions
-	// The widget must implement SetStation() as a Blueprint function
-	// This approach avoids circular dependency with StationEditor module
-	
-	// Use UFunction to call SetStation through reflection (Blueprint-safe)
-	UFunction* SetStationFunc = StationEditorWidget->FindFunction(FName("SetStation"));
-	if (SetStationFunc)
-	{
-		// Runtime validation: Ensure function signature matches struct
-		if (SetStationFunc->NumParms != 1 || SetStationFunc->ParmsSize != sizeof(FSetStationParams))
-		{
-			UE_LOG(LogAdastrea, Error, TEXT("ShowStationEditor: SetStation function signature mismatch (expected 1 param, size %d; got %d params, size %d)"),
-				sizeof(FSetStationParams), SetStationFunc->NumParms, SetStationFunc->ParmsSize);
-			return;
-		}
-		
-		FSetStationParams Params;
-		Params.Station = Station;
-		
-		StationEditorWidget->ProcessEvent(SetStationFunc, &Params);
-		UE_LOG(LogAdastrea, Log, TEXT("ShowStationEditor: Called SetStation on widget"));
-	}
-	else
-	{
-		UE_LOG(LogAdastrea, Warning, TEXT("ShowStationEditor: Widget does not have SetStation function. Configure in Blueprint."));
-	}
-
-	// Set ModuleCatalog through Blueprint property if available
-	if (ModuleCatalog)
-	{
-		// Find and set the ModuleCatalog property if it exists
-		if (FProperty* CatalogProp = StationEditorWidget->GetClass()->FindPropertyByName(FName("ModuleCatalog")))
-		{
-			// Verify it's an object property before setting (type safety)
-			if (FObjectProperty* ObjProp = CastField<FObjectProperty>(CatalogProp))
-			{
-				// Use safe SetPropertyValue_InContainer instead of raw memory copy
-				void* PropertyAddress = ObjProp->ContainerPtrToValuePtr<void>(StationEditorWidget);
-				ObjProp->SetObjectPropertyValue(PropertyAddress, ModuleCatalog);
-				UE_LOG(LogAdastrea, Log, TEXT("ShowStationEditor: Set ModuleCatalog on widget"));
-			}
-			else
-			{
-				UE_LOG(LogAdastrea, Warning, TEXT("ShowStationEditor: ModuleCatalog property is not an object property"));
-			}
-		}
 	}
 
 	// Add widget to viewport
@@ -291,15 +237,6 @@ void AAdastreaPlayerController::HideStationEditor()
 	{
 		bIsStationEditorOpen = false;
 		return;
-	}
-
-	// Call OnClose function on the widget if it exists (Blueprint-implemented)
-	// This allows the widget to handle cleanup (save/cancel) internally
-	UFunction* OnCloseFunc = StationEditorWidget->FindFunction(FName("OnClose"));
-	if (OnCloseFunc)
-	{
-		StationEditorWidget->ProcessEvent(OnCloseFunc, nullptr);
-		UE_LOG(LogAdastrea, Log, TEXT("HideStationEditor: Called OnClose on widget"));
 	}
 
 	// Remove widget from viewport

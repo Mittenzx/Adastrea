@@ -48,11 +48,6 @@ Intermediate/
 *.su
 
 # Backup files
-
-# Environment files with secrets
-.env
-.env.*
-!.env.template
 *~
 *.bak
 *.tmp
