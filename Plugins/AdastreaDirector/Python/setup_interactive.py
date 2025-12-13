@@ -49,7 +49,13 @@ def setup_interactive():
     print("║  Step 2/3: Configure API Key" + " " * 29 + "║")
     print("╚" + "=" * 58 + "╝")
     
-    env_path = Path(__file__).parent / ".env"
+    from env_config import get_env_file_path, ensure_env_file_exists
+    env_path = get_env_file_path()
+    
+    # Ensure .env exists in secure location
+    ensure_env_file_exists()
+    
+    print(f"\n📁 Secure .env location: {env_path}")
     
     # Check if API key is configured
     has_key = False

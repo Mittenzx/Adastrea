@@ -845,4 +845,3 @@ void ASpaceship::FreeLookCamera(const FInputActionValue& Value)
         CameraSpringArm->SetWorldRotation(NewCameraRotation);
     }
 }
-}

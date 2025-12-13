@@ -8,7 +8,7 @@ public class AdastreaEditorTarget : TargetRules
 	public AdastreaEditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
-		DefaultBuildSettings = BuildSettingsVersion.V6;
+		DefaultBuildSettings = BuildSettingsVersion.V5;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
 		
 		// Disable warnings as errors for third-party plugins

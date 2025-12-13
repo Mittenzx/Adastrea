@@ -126,6 +126,9 @@ class IPCServer:
         self.handlers = {}
         self.metrics = PerformanceMetrics() if enable_metrics else None
         
+        # MCP server instance (lazy initialization)
+        self._mcp_server = None
+        
         # Register default handlers
         self._register_default_handlers()
 
@@ -141,6 +144,18 @@ class IPCServer:
         self.register_handler('generate_code', self._handle_generate_code)
         self.register_handler('apply_feedback', self._handle_apply_feedback)
         self.register_handler('get_confidence', self._handle_get_confidence)
+        # MCP/UE integration handlers
+        self.register_handler('mcp_connect', self._handle_mcp_connect)
+        self.register_handler('mcp_disconnect', self._handle_mcp_disconnect)
+        self.register_handler('mcp_status', self._handle_mcp_status)
+        self.register_handler('mcp_execute_python', self._handle_mcp_execute_python)
+        self.register_handler('mcp_console_command', self._handle_mcp_console_command)
+        self.register_handler('mcp_list_tools', self._handle_mcp_list_tools)
+        self.register_handler('mcp_call_tool', self._handle_mcp_call_tool)
+        # Log access handlers
+        self.register_handler('get_ue_logs', self._handle_get_ue_logs)
+        self.register_handler('list_ue_logs', self._handle_list_ue_logs)
+        self.register_handler('read_ue_log', self._handle_read_ue_log)
 
     def register_handler(self, request_type: str, handler_func):
         """
@@ -176,6 +191,17 @@ class IPCServer:
     def stop(self):
         """Stop the IPC server."""
         self.running = False
+        
+        # Clean up MCP server
+        if self._mcp_server:
+            try:
+                self._mcp_server.stop()
+                logger.info("MCP server stopped")
+            except Exception as e:
+                logger.error(f"Error stopping MCP server: {e}")
+            finally:
+                self._mcp_server = None
+        
         if self.socket:
             logger.info("Shutting down IPC server...")
             self.socket.close()
@@ -1023,6 +1049,475 @@ JSON Response:"""
             }
         except Exception as e:
             logger.error(f"Confidence calculation error: {e}")
+            return {
+                'status': 'error',
+                'error': str(e)
+            }
+    
+    # MCP/UE Integration Handlers
+    
+    def _get_mcp_server(self):
+        """Get or create the MCP server instance."""
+        if self._mcp_server is None:
+            try:
+                mcp_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
+                if mcp_path not in sys.path:
+                    sys.path.insert(0, mcp_path)
+                from mcp_server import UnrealMCPServer
+                self._mcp_server = UnrealMCPServer()
+                logger.info("MCP server instance created")
+            except ImportError as e:
+                logger.error(f"Failed to import MCP server: {e}")
+                return None
+        return self._mcp_server
+    
+    def _handle_mcp_connect(self, data: str) -> Dict[str, Any]:
+        """
+        Handle MCP connection request to Unreal Engine.
+        
+        Returns connection status and project information if successful.
+        """
+        logger.info("MCP connect request received")
+        
+        mcp = self._get_mcp_server()
+        if not mcp:
+            return {
+                'status': 'error',
+                'error': (
+                    "MCP server not available. To resolve:\n"
+                    "- Ensure the 'mcp_server' module is installed and accessible in your Python environment.\n"
+                    "- Check that your PYTHONPATH includes the directory containing 'mcp_server.py'.\n"
+                    "- You can install the module (if available via pip) with: pip install mcp_server\n"
+                    "- For manual installation, place 'mcp_server.py' in your project or site-packages directory.\n"
+                    "- See the documentation for more details or contact support if you need help."
+                )
+            }
+        
+        try:
+            success = mcp.start()
+            
+            if success:
+                # Get project info after successful connection
+                project_info = {}
+                try:
+                    result = mcp.handle_tool_call("editor_project_info", {})
+                    if not result.get("isError"):
+                        # Extract text from content
+                        content = result.get("content", [])
+                        if content and content[0].get("type") == "text":
+                            project_info = {"info": content[0].get("text", "")}
+                except Exception as e:
+                    logger.warning(f"Could not get project info: {e}")
+                
+                return {
+                    'status': 'success',
+                    'connected': True,
+                    'project_info': project_info
+                }
+            else:
+                return {
+                    'status': 'error',
+                    'error': 'Failed to connect to Unreal Engine. Ensure UE is running with Python Remote Execution enabled.',
+                    'connected': False
+                }
+        except Exception as e:
+            logger.error(f"MCP connection error: {e}")
+            return {
+                'status': 'error',
+                'error': str(e),
+                'connected': False
+            }
+    
+    def _handle_mcp_disconnect(self, data: str) -> Dict[str, Any]:
+        """Handle MCP disconnection request."""
+        logger.info("MCP disconnect request received")
+        
+        if self._mcp_server:
+            try:
+                self._mcp_server.stop()
+                self._mcp_server = None
+                return {
+                    'status': 'success',
+                    'message': 'Disconnected from Unreal Engine'
+                }
+            except Exception as e:
+                logger.error(f"MCP disconnection error: {e}")
+                return {
+                    'status': 'error',
+                    'error': str(e)
+                }
+        else:
+            return {
+                'status': 'success',
+                'message': 'Not connected'
+            }
+    
+    def _handle_mcp_status(self, data: str) -> Dict[str, Any]:
+        """Handle MCP status check request."""
+        logger.debug("MCP status check received")
+        
+        if self._mcp_server:
+            try:
+                connected = self._mcp_server.is_connected()
+                return {
+                    'status': 'success',
+                    'connected': connected,
+                    'server_info': self._mcp_server.get_server_info() if connected else {}
+                }
+            except Exception as e:
+                logger.error(f"MCP status check error: {e}")
+                return {
+                    'status': 'error',
+                    'error': str(e),
+                    'connected': False
+                }
+        else:
+            return {
+                'status': 'success',
+                'connected': False,
+                'message': 'MCP server not initialized'
+            }
+    
+    def _handle_mcp_execute_python(self, data: str) -> Dict[str, Any]:
+        """
+        Handle Python code execution in Unreal Engine via MCP.
+        
+        Args:
+            data: JSON string with 'code' field containing Python code to execute
+        """
+        logger.info("MCP Python execution request received")
+        
+        mcp = self._get_mcp_server()
+        if not mcp or not mcp.is_connected():
+            return {
+                'status': 'error',
+                'error': 'Not connected to Unreal Engine. Call mcp_connect first.'
+            }
+        
+        try:
+            request_data = json.loads(data) if isinstance(data, str) else data
+            code = request_data.get('code', '')
+            
+            if not code:
+                return {
+                    'status': 'error',
+                    'error': 'No code provided'
+                }
+            
+            result = mcp.handle_tool_call("editor_run_python", {"code": code})
+            
+            return {
+                'status': 'success' if not result.get('isError') else 'error',
+                'result': result
+            }
+        except json.JSONDecodeError as e:
+            logger.error(f"Invalid JSON in Python execution request: {e}")
+            return {
+                'status': 'error',
+                'error': 'Invalid request format. Expected JSON with "code" field.'
+            }
+        except Exception as e:
+            logger.error(f"Python execution error: {e}")
+            return {
+                'status': 'error',
+                'error': str(e)
+            }
+    
+    def _handle_mcp_console_command(self, data: str) -> Dict[str, Any]:
+        """
+        Handle console command execution in Unreal Engine via MCP.
+        
+        Args:
+            data: JSON string with 'command' field
+        """
+        logger.info("MCP console command request received")
+        
+        mcp = self._get_mcp_server()
+        if not mcp or not mcp.is_connected():
+            return {
+                'status': 'error',
+                'error': 'Not connected to Unreal Engine. Call mcp_connect first.'
+            }
+        
+        try:
+            request_data = json.loads(data) if isinstance(data, str) else data
+            command = request_data.get('command', '')
+            
+            if not command:
+                return {
+                    'status': 'error',
+                    'error': 'No command provided'
+                }
+            
+            result = mcp.handle_tool_call("editor_console_command", {"command": command})
+            
+            return {
+                'status': 'success' if not result.get('isError') else 'error',
+                'result': result
+            }
+        except json.JSONDecodeError as e:
+            logger.error(f"Invalid JSON in console command request: {e}")
+            return {
+                'status': 'error',
+                'error': 'Invalid request format. Expected JSON with "command" field.'
+            }
+        except Exception as e:
+            logger.error(f"Console command error: {e}")
+            return {
+                'status': 'error',
+                'error': str(e)
+            }
+    
+    def _handle_mcp_list_tools(self, data: str) -> Dict[str, Any]:
+        """Handle request to list all available MCP tools."""
+        logger.debug("MCP list tools request received")
+        
+        mcp = self._get_mcp_server()
+        if not mcp:
+            return {
+                'status': 'error',
+                'error': 'MCP server not available'
+            }
+        
+        try:
+            tools = mcp.list_tools()
+            return {
+                'status': 'success',
+                'tools': tools
+            }
+        except Exception as e:
+            logger.error(f"List tools error: {e}")
+            return {
+                'status': 'error',
+                'error': str(e)
+            }
+    
+    def _handle_mcp_call_tool(self, data: str) -> Dict[str, Any]:
+        """
+        Handle generic MCP tool call.
+        
+        Args:
+            data: JSON string with 'tool' and 'arguments' fields
+        """
+        logger.info("MCP tool call request received")
+        
+        mcp = self._get_mcp_server()
+        if not mcp or not mcp.is_connected():
+            return {
+                'status': 'error',
+                'error': 'Not connected to Unreal Engine. Call mcp_connect first.'
+            }
+        
+        try:
+            request_data = json.loads(data) if isinstance(data, str) else data
+            tool_name = request_data.get('tool', '')
+            arguments = request_data.get('arguments', {})
+            
+            if not tool_name:
+                return {
+                    'status': 'error',
+                    'error': 'No tool name provided'
+                }
+            
+            result = mcp.handle_tool_call(tool_name, arguments)
+            
+            return {
+                'status': 'success' if not result.get('isError') else 'error',
+                'result': result
+            }
+        except json.JSONDecodeError as e:
+            logger.error(f"Invalid JSON in tool call request: {e}")
+            return {
+                'status': 'error',
+                'error': 'Invalid request format. Expected JSON with "tool" and "arguments" fields.'
+            }
+        except Exception as e:
+            logger.error(f"Tool call error: {e}")
+            return {
+                'status': 'error',
+                'error': str(e)
+            }
+    
+    # Log Access Handlers
+    
+    def _handle_get_ue_logs(self, data: str) -> Dict[str, Any]:
+        """
+        Handle request to get recent UE logs.
+        
+        Args:
+            data: JSON string with optional 'limit' field (default: 10)
+        """
+        logger.debug("Get UE logs request received")
+        
+        try:
+            ue_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
+            if ue_path not in sys.path:
+                sys.path.insert(0, ue_path)
+            from ue_log_capture import UELogCapture
+            
+            # Parse request
+            try:
+                request_data = json.loads(data) if data and isinstance(data, str) else {}
+                limit = request_data.get('limit', 10)
+            except (json.JSONDecodeError, AttributeError):
+                limit = 10
+            
+            # Get log files
+            capture = UELogCapture()
+            log_files = capture.list_log_files(limit=limit)
+            
+            # Format response
+            logs = []
+            for log_path in log_files:
+                try:
+                    stat = log_path.stat()
+                    logs.append({
+                        'filename': log_path.name,
+                        'path': str(log_path),
+                        'size': stat.st_size,
+                        'modified': stat.st_mtime
+                    })
+                except Exception as e:
+                    logger.warning(f"Could not stat log file {log_path}: {e}")
+            
+            return {
+                'status': 'success',
+                'logs': logs,
+                'count': len(logs)
+            }
+        except ImportError as e:
+            logger.error(f"Could not import ue_log_capture: {e}")
+            return {
+                'status': 'error',
+                'error': 'UE log capture module not available'
+            }
+        except Exception as e:
+            logger.error(f"Get UE logs error: {e}")
+            return {
+                'status': 'error',
+                'error': str(e)
+            }
+    
+    def _handle_list_ue_logs(self, data: str) -> Dict[str, Any]:
+        """
+        Handle request to list UE log files (alias for get_ue_logs).
+        
+        Returns list of log files with metadata.
+        """
+        return self._handle_get_ue_logs(data)
+    
+    def _handle_read_ue_log(self, data: str) -> Dict[str, Any]:
+        """
+        Handle request to read a specific UE log file.
+        
+        Args:
+            data: JSON string with 'filename' or 'path' field
+        """
+        logger.info("Read UE log request received")
+        
+        try:
+            ue_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
+            if ue_path not in sys.path:
+                sys.path.insert(0, ue_path)
+            from ue_log_capture import UELogCapture
+            from pathlib import Path
+            
+            # Parse request
+            request_data = json.loads(data) if isinstance(data, str) else data
+            filename = request_data.get('filename', '')
+            file_path = request_data.get('path', '')
+            max_lines = request_data.get('max_lines', 1000)  # Limit to prevent huge responses
+            
+            if not filename and not file_path:
+                return {
+                    'status': 'error',
+                    'error': 'No filename or path provided'
+                }
+            
+            capture = UELogCapture()
+            
+            # Determine the file path
+            if file_path:
+                log_path = Path(file_path)
+            else:
+                log_path = capture.log_dir / filename
+            
+            # Security check: ensure the file is in the logs directory
+            # Use is_relative_to for safer path validation (Python 3.9+)
+            try:
+                log_path = log_path.resolve()
+                log_dir = capture.log_dir.resolve()
+                
+                # Check if log_path is within log_dir
+                try:
+                    # Python 3.9+ method (safer against symlinks)
+                    if not log_path.is_relative_to(log_dir):
+                        return {
+                            'status': 'error',
+                            'error': 'Access denied: File must be in logs directory'
+                        }
+                except AttributeError:
+                    # Fallback for Python < 3.9
+                    if not str(log_path).startswith(str(log_dir)):
+                        return {
+                            'status': 'error',
+                            'error': 'Access denied: File must be in logs directory'
+                        }
+            except Exception as e:
+                logger.error(f"Path resolution error: {e}")
+                return {
+                    'status': 'error',
+                    'error': 'Invalid file path'
+                }
+            
+            # Read the log file
+            if not log_path.exists():
+                return {
+                    'status': 'error',
+                    'error': f'Log file not found: {log_path.name}'
+                }
+            
+            try:
+                with open(log_path, 'r', encoding='utf-8') as f:
+                    lines = f.readlines()
+                    
+                    # Limit lines if necessary
+                    if len(lines) > max_lines:
+                        lines = lines[-max_lines:]  # Get last N lines
+                        truncated = True
+                    else:
+                        truncated = False
+                    
+                    content = ''.join(lines)
+                
+                return {
+                    'status': 'success',
+                    'filename': log_path.name,
+                    'content': content,
+                    'line_count': len(lines),
+                    'truncated': truncated,
+                    'max_lines': max_lines
+                }
+            except Exception as e:
+                logger.error(f"Error reading log file: {e}")
+                return {
+                    'status': 'error',
+                    'error': f'Error reading file: {str(e)}'
+                }
+        except json.JSONDecodeError as e:
+            logger.error(f"Invalid JSON in read log request: {e}")
+            return {
+                'status': 'error',
+                'error': 'Invalid request format. Expected JSON with "filename" or "path" field.'
+            }
+        except ImportError as e:
+            logger.error(f"Could not import ue_log_capture: {e}")
+            return {
+                'status': 'error',
+                'error': 'UE log capture module not available'
+            }
+        except Exception as e:
+            logger.error(f"Read log error: {e}")
             return {
                 'status': 'error',
                 'error': str(e)

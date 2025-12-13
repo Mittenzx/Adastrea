@@ -136,6 +136,28 @@ class MockUnreal:
         def set_actor_label(self, name):
             pass
     
+    class Pawn:
+        """Mock Pawn class."""
+        pass
+    
+    class Character:
+        """Mock Character class."""
+        pass
+    
+    class Blueprint:
+        """Mock Blueprint class."""
+        def get_name(self):
+            return "MockBlueprint"
+    
+    class BlueprintFactory:
+        """Mock BlueprintFactory class."""
+        def __init__(self):
+            self.parent_class = None
+        
+        def set_editor_property(self, name, value):
+            if name == "ParentClass":
+                self.parent_class = value
+    
     @staticmethod
     def get_editor_subsystem(subsystem_class):
         mock_subsystem = Mock()
@@ -432,6 +454,333 @@ class TestActorOperations:
                    return_value=[mock_actor]):
             result = bridge.delete_actor("MockActor")
             assert result is True
+
+
+class TestBlueprintOperations:
+    """Tests for blueprint operations."""
+    
+    @pytest.fixture
+    def bridge(self):
+        """Create a bridge instance."""
+        return UEPythonBridge()
+    
+    def test_create_blueprint_with_default_parent(self, bridge):
+        """Test creating a blueprint with default Actor parent."""
+        mock_blueprint = Mock()
+        mock_blueprint.get_name.return_value = "BP_MyActor"
+        
+        # Mock the factory and asset_tools
+        mock_factory = Mock()
+        with patch('ue_python_api.unreal.BlueprintFactory', return_value=mock_factory):
+            with patch.object(bridge.asset_tools, 'create_asset', return_value=mock_blueprint):
+                with patch.object(bridge.editor_asset_subsystem, 'save_asset', return_value=True):
+                    blueprint = bridge.create_blueprint(
+                        blueprint_name="BP_MyActor",
+                        parent_class=None,
+                        package_path="/Game/Blueprints"
+                    )
+                    assert blueprint is not None
+                    assert blueprint == mock_blueprint
+    
+    def test_create_blueprint_with_string_parent(self, bridge):
+        """Test creating a blueprint with string parent class."""
+        mock_blueprint = Mock()
+        mock_blueprint.get_name.return_value = "BP_MyPawn"
+        
+        mock_factory = Mock()
+        with patch('ue_python_api.unreal.BlueprintFactory', return_value=mock_factory):
+            with patch('ue_python_api.unreal.Pawn', Mock()):
+                with patch.object(bridge.asset_tools, 'create_asset', return_value=mock_blueprint):
+                    with patch.object(bridge.editor_asset_subsystem, 'save_asset', return_value=True):
+                        blueprint = bridge.create_blueprint(
+                            blueprint_name="BP_MyPawn",
+                            parent_class="Pawn",
+                            package_path="/Game/Blueprints"
+                        )
+                        assert blueprint is not None
+    
+    def test_create_blueprint_with_class_object(self, bridge):
+        """Test creating a blueprint with class object as parent."""
+        mock_blueprint = Mock()
+        mock_blueprint.get_name.return_value = "BP_MyCharacter"
+        mock_parent_class = Mock()
+        
+        mock_factory = Mock()
+        with patch('ue_python_api.unreal.BlueprintFactory', return_value=mock_factory):
+            with patch.object(bridge.asset_tools, 'create_asset', return_value=mock_blueprint):
+                with patch.object(bridge.editor_asset_subsystem, 'save_asset', return_value=True):
+                    blueprint = bridge.create_blueprint(
+                        blueprint_name="BP_MyCharacter",
+                        parent_class=mock_parent_class,
+                        package_path="/Game/Characters"
+                    )
+                    assert blueprint is not None
+    
+    def test_create_blueprint_with_full_class_path(self, bridge):
+        """Test creating a blueprint with full class path."""
+        mock_blueprint = Mock()
+        mock_blueprint.get_name.return_value = "BP_CustomActor"
+        mock_class = Mock()
+        
+        mock_factory = Mock()
+        with patch('ue_python_api.unreal.BlueprintFactory', return_value=mock_factory):
+            with patch('ue_python_api.unreal.load_class', return_value=mock_class):
+                with patch.object(bridge.asset_tools, 'create_asset', return_value=mock_blueprint):
+                    with patch.object(bridge.editor_asset_subsystem, 'save_asset', return_value=True):
+                        blueprint = bridge.create_blueprint(
+                            blueprint_name="BP_CustomActor",
+                            parent_class="/Script/Engine.Actor",
+                            package_path="/Game/Blueprints"
+                        )
+                        assert blueprint is not None
+    
+    def test_create_blueprint_failure(self, bridge):
+        """Test blueprint creation failure."""
+        mock_factory = Mock()
+        with patch('ue_python_api.unreal.BlueprintFactory', return_value=mock_factory):
+            with patch.object(bridge.asset_tools, 'create_asset', return_value=None):
+                blueprint = bridge.create_blueprint(
+                    blueprint_name="BP_FailedActor",
+                    parent_class=None,
+                    package_path="/Game/Blueprints"
+                )
+                assert blueprint is None
+    
+    def test_create_blueprint_package_path_normalization(self, bridge):
+        """Test that package path trailing slashes are removed."""
+        mock_blueprint = Mock()
+        mock_factory = Mock()
+        
+        with patch('ue_python_api.unreal.BlueprintFactory', return_value=mock_factory):
+            with patch.object(bridge.asset_tools, 'create_asset', return_value=mock_blueprint):
+                with patch.object(bridge.editor_asset_subsystem, 'save_asset', return_value=True):
+                    bridge.create_blueprint(
+                        blueprint_name="BP_TestActor",
+                        package_path="/Game/Blueprints/"  # Has trailing slash
+                    )
+                    # Verify create_asset was called with normalized path
+                    call_args = bridge.asset_tools.create_asset.call_args
+                    assert call_args[1]['package_path'] == "/Game/Blueprints"
+
+
+class TestBlueprintGraphOperations:
+    """Tests for blueprint graph manipulation (experimental)."""
+    
+    @pytest.fixture
+    def bridge(self):
+        """Create a bridge instance."""
+        return UEPythonBridge()
+    
+    def test_add_blueprint_node(self, bridge):
+        """Test adding a node to blueprint graph."""
+        mock_blueprint = Mock()
+        mock_blueprint.get_name.return_value = "BP_TestActor"
+        
+        with patch('ue_python_api.unreal.load_asset', return_value=mock_blueprint):
+            # Should raise NotImplementedError as this feature is not yet implemented
+            with pytest.raises(NotImplementedError) as exc_info:
+                bridge.add_blueprint_node(
+                    "/Game/Blueprints/BP_TestActor",
+                    "BeginPlay",
+                    position_x=100.0,
+                    position_y=100.0
+                )
+            assert "not yet implemented" in str(exc_info.value)
+    
+    def test_add_blueprint_node_not_found(self, bridge):
+        """Test adding node to non-existent blueprint."""
+        with patch('ue_python_api.unreal.load_asset', return_value=None):
+            result = bridge.add_blueprint_node(
+                "/Game/Blueprints/BP_NotFound",
+                "BeginPlay"
+            )
+            assert result is None
+    
+    def test_connect_blueprint_nodes(self, bridge):
+        """Test connecting two blueprint nodes."""
+        mock_node1 = Mock()
+        mock_node2 = Mock()
+        
+        result = bridge.connect_blueprint_nodes(
+            "/Game/Blueprints/BP_TestActor",
+            mock_node1,
+            "execute",
+            mock_node2,
+            "execute"
+        )
+        # Currently returns success flag
+        assert isinstance(result, bool)
+        assert result is True
+    
+    def test_compile_blueprint(self, bridge):
+        """Test compiling a blueprint."""
+        mock_blueprint = Mock()
+        
+        with patch('ue_python_api.unreal.load_asset', return_value=mock_blueprint):
+            with patch.object(bridge.editor_asset_subsystem, 'save_asset', return_value=True):
+                result = bridge.compile_blueprint("/Game/Blueprints/BP_TestActor")
+                assert result is True
+    
+    def test_compile_blueprint_not_found(self, bridge):
+        """Test compiling non-existent blueprint."""
+        with patch('ue_python_api.unreal.load_asset', return_value=None):
+            result = bridge.compile_blueprint("/Game/Blueprints/BP_NotFound")
+            assert result is False
+    
+    def test_add_blueprint_variable(self, bridge):
+        """Test adding a variable to blueprint."""
+        mock_blueprint = Mock()
+        
+        with patch('ue_python_api.unreal.load_asset', return_value=mock_blueprint):
+            with patch.object(bridge.editor_asset_subsystem, 'save_asset', return_value=True):
+                result = bridge.add_blueprint_variable(
+                    "/Game/Blueprints/BP_TestActor",
+                    "Health",
+                    "Float",
+                    default_value=100.0,
+                    is_exposed=True
+                )
+                assert result is True
+    
+    def test_add_blueprint_variable_not_found(self, bridge):
+        """Test adding variable to non-existent blueprint."""
+        with patch('ue_python_api.unreal.load_asset', return_value=None):
+            result = bridge.add_blueprint_variable(
+                "/Game/Blueprints/BP_NotFound",
+                "Health",
+                "Float"
+            )
+            assert result is False
+    
+    def test_add_blueprint_node_with_name(self, bridge):
+        """Test adding a named node to blueprint."""
+        mock_blueprint = Mock()
+        
+        with patch('ue_python_api.unreal.load_asset', return_value=mock_blueprint):
+            # Should raise NotImplementedError as this feature is not yet implemented
+            with pytest.raises(NotImplementedError):
+                bridge.add_blueprint_node(
+                    "/Game/Blueprints/BP_TestActor",
+                    "Print",
+                    position_x=200.0,
+                    position_y=150.0,
+                    node_name="PrintDebugInfo"
+                )
+
+
+class TestBlueprintCommentNodes:
+    """Tests for blueprint comment node operations."""
+    
+    @pytest.fixture
+    def bridge(self):
+        """Create a bridge instance."""
+        return UEPythonBridge()
+    
+    def test_add_blueprint_comment_basic(self, bridge):
+        """Test adding a basic comment to blueprint."""
+        mock_blueprint = Mock()
+        
+        with patch('ue_python_api.unreal.load_asset', return_value=mock_blueprint):
+            result = bridge.add_blueprint_comment(
+                "/Game/Blueprints/BP_TestActor",
+                "Test Comment",
+                position_x=100,
+                position_y=100
+            )
+            assert result is True
+    
+    def test_add_blueprint_comment_with_color(self, bridge):
+        """Test adding a colored comment."""
+        mock_blueprint = Mock()
+        
+        with patch('ue_python_api.unreal.load_asset', return_value=mock_blueprint):
+            result = bridge.add_blueprint_comment(
+                "/Game/Blueprints/BP_TestActor",
+                "Important Note",
+                color=(255, 0, 0)  # Red
+            )
+            assert result is True
+    
+    def test_add_blueprint_comment_adastrea_style(self, bridge):
+        """Test adding an Adastrea-branded comment."""
+        mock_blueprint = Mock()
+        
+        with patch('ue_python_api.unreal.load_asset', return_value=mock_blueprint):
+            result = bridge.add_blueprint_comment(
+                "/Game/Characters/BP_Player",
+                "═══ ADASTREA CHARACTER SYSTEM ═══",
+                position_y=-200,
+                width=800,
+                height=60,
+                color=(138, 43, 226),  # Adastrea brand color
+                font_size=20
+            )
+            assert result is True
+    
+    def test_add_blueprint_comment_multiline(self, bridge):
+        """Test adding a multi-line comment."""
+        mock_blueprint = Mock()
+        
+        with patch('ue_python_api.unreal.load_asset', return_value=mock_blueprint):
+            result = bridge.add_blueprint_comment(
+                "/Game/Combat/BP_WeaponSystem",
+                "Function: CalculateDamage\nInputs: BaseDamage, DamageType\nOutput: FinalDamage",
+                width=500,
+                height=120
+            )
+            assert result is True
+    
+    def test_add_blueprint_comment_not_found(self, bridge):
+        """Test adding comment to non-existent blueprint."""
+        with patch('ue_python_api.unreal.load_asset', return_value=None):
+            result = bridge.add_blueprint_comment(
+                "/Game/Blueprints/BP_NotFound",
+                "Test Comment"
+            )
+            assert result is False
+    
+    def test_add_blueprint_comment_custom_size(self, bridge):
+        """Test adding a comment with custom size."""
+        mock_blueprint = Mock()
+        
+        with patch('ue_python_api.unreal.load_asset', return_value=mock_blueprint):
+            result = bridge.add_blueprint_comment(
+                "/Game/UI/BP_MainMenu",
+                "TODO: Integrate Adastrea save system",
+                width=600,
+                height=150,
+                color=(255, 215, 0)  # Gold
+            )
+            assert result is True
+    
+    def test_generate_comment_script(self, bridge):
+        """Test that comment script is generated correctly."""
+        import ast
+        mock_blueprint = Mock()
+        
+        with patch('ue_python_api.unreal.load_asset', return_value=mock_blueprint):
+            script = bridge._generate_comment_script(
+                "/Game/BP_Test",
+                "Test Comment",
+                100.0,
+                200.0,
+                400.0,
+                100.0,
+                (255, 0, 0),
+                18
+            )
+            # Verify script contains key elements
+            assert "import unreal" in script
+            assert "EdGraphNode_Comment" in script
+            assert "Test Comment" in script
+            assert "100" in script or "100.0" in script
+            assert "200" in script or "200.0" in script
+            
+            # Verify the script is syntactically valid Python
+            try:
+                ast.parse(script)
+            except SyntaxError as e:
+                pytest.fail(f"Generated script has syntax errors: {e}")
 
 
 if __name__ == "__main__":

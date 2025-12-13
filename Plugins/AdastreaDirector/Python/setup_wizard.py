@@ -4,25 +4,22 @@ Setup wizard for AdastreaDirector RAG system
 import os
 import sys
 from pathlib import Path
+from env_config import get_env_file_path, ensure_env_file_exists
 
 def setup_wizard():
     print("=" * 60)
     print("Adastrea Director - RAG System Setup Wizard")
     print("=" * 60)
     
-    # Check if .env exists
-    env_path = Path(__file__).parent / ".env"
+    # Check if .env exists in secure location
+    env_path = get_env_file_path()
+    print(f"\n📁 Secure .env location: {env_path}")
     
     if not env_path.exists():
         print("\n❌ .env file not found!")
-        print("Creating from template...")
-        template_path = Path(__file__).parent / ".env.template"
-        if template_path.exists():
-            import shutil
-            shutil.copy(template_path, env_path)
-            print("✅ .env file created")
-        else:
-            print("❌ .env.template not found")
+        print("Creating in secure location...")
+        if not ensure_env_file_exists():
+            print("❌ Failed to create .env file")
             return False
     
     # Read current .env

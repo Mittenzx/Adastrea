@@ -97,6 +97,11 @@ token.pickle
 # *_validation_report.txt
 # validation_report.txt
 
+# Environment files with secrets
+.env
+.env.*
+!.env.template
+
 # Build package (for moving to another repo)
 # Track extraction tooling but ignore extracted build files
 build_package/*.bat
