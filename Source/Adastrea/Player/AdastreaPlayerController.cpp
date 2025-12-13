@@ -507,8 +507,11 @@ void AAdastreaPlayerController::ShowMainMenu()
 		MainMenuWidget->AddToViewport();
 	}
 
-	// Switch to UI input mode
-	SetInputMode(FInputModeGameAndUI());
+	// Switch to UI input mode with focus on the menu
+	FInputModeGameAndUI InputMode;
+	InputMode.SetWidgetToFocus(MainMenuWidget->TakeWidget());
+	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	SetInputMode(InputMode);
 	bShowMouseCursor = true;
 
 	bIsMainMenuOpen = true;
@@ -520,6 +523,11 @@ void AAdastreaPlayerController::HideMainMenu()
 {
 	if (!MainMenuWidget)
 	{
+		// No widget to hide, but ensure state is consistent
+		if (bIsMainMenuOpen)
+		{
+			UE_LOG(LogAdastrea, Warning, TEXT("HideMainMenu: Menu marked as open but widget is null - resetting state"));
+		}
 		bIsMainMenuOpen = false;
 		return;
 	}
