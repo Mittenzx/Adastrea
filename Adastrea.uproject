@@ -64,6 +64,26 @@
 		{
 			"Name": "ModelViewViewModel",
 			"Enabled": true
+		},
+		{
+			"Name": "Python",
+			"Enabled": true
+		},
+		{
+			"Name": "EditorScriptingUtilities",
+			"Enabled": true
+		},
+		{
+			"Name": "Niagara",
+			"Enabled": true
+		},
+		{
+			"Name": "GeometryScriptingEditor",
+			"Enabled": true
+		},
+		{
+			"Name": "Bridge",
+			"Enabled": true
 		}
 	],
 	"TargetPlatforms": [
