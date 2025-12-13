@@ -95,11 +95,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor")
 	TSubclassOf<UConstructionQueueItemWidget> QueueItemClass;
 
-	/** Default player tech level used when initializing the editor manager */
+	/** Default player tech level used when initializing the editor manager (5 = mid-tier, allows testing all module types) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor", meta=(ClampMin=1, ClampMax=10))
 	int32 DefaultPlayerTechLevel = 5;
 
-	/** Default player credits used when initializing the editor manager */
+	/** Default player credits used when initializing the editor manager (100000 = sufficient for testing all modules) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor", meta=(ClampMin=0))
 	int32 DefaultPlayerCredits = 100000;
 

@@ -177,8 +177,17 @@ void UStationEditorWidgetCpp::RefreshStatistics()
 	// Update power balance bar
 	if (PowerBalanceBar)
 	{
-		float TotalPower = Stats.PowerGenerated + Stats.PowerConsumed;
-		float BalancePercent = (TotalPower > 0.0f) ? (Stats.PowerGenerated / TotalPower) : 0.5f;
+		// Calculate power balance as a percentage: 1.0 = sufficient power, <1.0 = deficit
+		float BalancePercent = 0.5f; // Default to middle if no power consumption
+		if (Stats.PowerConsumed > 0.0f)
+		{
+			BalancePercent = FMath::Clamp(Stats.PowerGenerated / Stats.PowerConsumed, 0.0f, 1.0f);
+		}
+		else if (Stats.PowerGenerated > 0.0f)
+		{
+			BalancePercent = 1.0f; // Surplus power with no consumption
+		}
+		
 		PowerBalanceBar->SetPercent(BalancePercent);
 		
 		// Color based on balance
@@ -324,13 +333,15 @@ void UStationEditorWidgetCpp::PlaceModuleAtCursor(TSubclassOf<ASpaceStationModul
 
 			if (!PlacedModule)
 			{
-				// Placement failed - could add notification here
-				UE_LOG(LogTemp, Warning, TEXT("Failed to place module"));
+				// Placement failed - provide detailed error information
+				UE_LOG(LogTemp, Warning, TEXT("Module placement failed: Class=%s, Location=%s, Distance=%.2f"), 
+					*ModuleClass->GetName(), *HitResult.Location.ToString(), DistanceToStation);
 			}
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Too far from station"));
+			UE_LOG(LogTemp, Warning, TEXT("Module placement failed: Too far from station (Distance=%.2f, Max=%.2f)"), 
+				DistanceToStation, MaxPlacementDistance);
 		}
 	}
 }

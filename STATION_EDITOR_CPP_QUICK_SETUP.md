@@ -6,7 +6,7 @@
 ```bash
 # Build the project in Unreal Editor
 # File → Generate Visual Studio Project Files (if needed)
-# Build → Compile (Ctrl+Alt+F11)
+# Build → Compile (Ctrl+F7 or via Build button in toolbar)
 ```
 
 ### Step 2: Create Main Editor Widget
