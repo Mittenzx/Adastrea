@@ -335,8 +335,9 @@ void UStationEditorWidgetCpp::PlaceModuleAtCursor(TSubclassOf<ASpaceStationModul
 			if (!PlacedModule)
 			{
 				// Placement failed - provide detailed error information
+				FString ClassName = ModuleClass ? ModuleClass->GetName() : TEXT("Invalid");
 				UE_LOG(LogAdastreaStations, Warning, TEXT("Station Editor: Module placement failed: Class=%s, Location=%s, Distance=%.2f"), 
-					*ModuleClass->GetName(), *HitResult.Location.ToString(), DistanceToStation);
+					*ClassName, *HitResult.Location.ToString(), DistanceToStation);
 			}
 		}
 		else

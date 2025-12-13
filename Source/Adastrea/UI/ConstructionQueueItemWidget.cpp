@@ -52,7 +52,8 @@ void UConstructionQueueItemWidget::SetQueueData(const FConstructionQueueItem& It
 		if (Item.ModuleClass)
 		{
 			ASpaceStationModule* CDO = Item.ModuleClass->GetDefaultObject<ASpaceStationModule>();
-			// Null check CDO before accessing its properties
+			// GetDefaultObject can return null if the class is invalid or not fully loaded
+			// This can happen if module blueprints are missing or not compiled
 			if (CDO)
 			{
 				if (!CDO->ModuleType.IsEmpty())
