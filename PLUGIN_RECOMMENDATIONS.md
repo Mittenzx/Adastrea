@@ -164,16 +164,19 @@ def create_ship_data_asset(yaml_path, output_path):
     asset_tools = unreal.AssetToolsHelpers.get_asset_tools()
     factory = unreal.DataAssetFactory()
     
-    # Create Data Asset
+    # Note: USpaceshipDataAsset is a custom project class
+    # Replace with your project's Data Asset class type
+    # For generic usage, you can use unreal.DataAsset
     data_asset = asset_tools.create_asset(
         "DA_Ship_" + ship_name.replace(' ', ''),
         output_path,
-        unreal.SpaceshipDataAsset,
+        unreal.load_class(None, "/Script/Adastrea.SpaceshipDataAsset"),  # Project-specific class
         factory
     )
     
     # Configure from YAML
-    # ... load and apply YAML data to data_asset properties
+    # Set properties on data_asset based on ship_data
+    # Example: data_asset.set_editor_property('DisplayName', unreal.Text(ship_name))
     
     unreal.EditorAssetLibrary.save_loaded_asset(data_asset)
 ```
