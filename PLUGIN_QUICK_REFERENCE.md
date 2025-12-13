@@ -85,10 +85,13 @@ Avoid these for now:
 
 ### Week 1 (This Week)
 ```
-[ ] Enable Python Script Plugin
-[ ] Enable Editor Scripting Utilities  
-[ ] Enable Visual Studio Integration
-[ ] Test each plugin
+[x] Enable Python Script Plugin (DONE)
+[x] Enable Editor Scripting Utilities (DONE)
+[x] Enable Niagara (DONE)
+[x] Enable Geometry Script (DONE)
+[x] Enable Bridge (DONE)
+[ ] Test each plugin in editor
+[ ] Verify no conflicts
 [ ] Update team documentation
 ```
 
