@@ -150,21 +150,30 @@ These plugins address immediate content creation needs and should be enabled now
 ```python
 # Example: Create ship Data Assets from YAML templates
 import unreal
+import yaml
+import os
 
 def create_ship_data_asset(yaml_path, output_path):
+    # Load YAML file
+    with open(yaml_path, 'r') as file:
+        ship_data = yaml.safe_load(file)
+    
+    # Extract ship name from YAML
+    ship_name = ship_data.get('DisplayName', 'Unknown')
+    
     asset_tools = unreal.AssetToolsHelpers.get_asset_tools()
     factory = unreal.DataAssetFactory()
     
     # Create Data Asset
     data_asset = asset_tools.create_asset(
-        "DA_Ship_" + name,
+        "DA_Ship_" + ship_name.replace(' ', ''),
         output_path,
         unreal.SpaceshipDataAsset,
         factory
     )
     
     # Configure from YAML
-    # ... load and apply YAML data
+    # ... load and apply YAML data to data_asset properties
     
     unreal.EditorAssetLibrary.save_loaded_asset(data_asset)
 ```
@@ -283,9 +292,34 @@ These plugins are highly beneficial for specific content creation tasks.
 4. **Damage Modeling**: Procedural hull damage visualization
 5. **Interior Layouts**: Parametric room generation
 
-**Code Example (Blueprint):**
-```
-Create Dynamic Mesh -> Add Box -> Apply Transforms -> Update Mesh
+**Blueprint Example:**
+```blueprint
+// Example: Procedurally generate a station module mesh
+
+1. Create Dynamic Mesh Component
+   - Node: "Create Dynamic Mesh Component"
+   - Attach to: Root Component
+
+2. Add Basic Shape
+   - Node: "Append Box"
+   - Dimensions: X=500, Y=500, Z=300 (from module data)
+   - Material: Set to station module material
+
+3. Apply Transformations
+   - Node: "Apply Transform"
+   - Transform: Module offset and rotation
+   
+4. Add Details (Boolean Operations)
+   - Node: "Subtract Mesh" (for doorways)
+   - Node: "Append Mesh" (for docking connectors)
+
+5. Update Collision
+   - Node: "Set Collision Geometry"
+   - Type: Complex or Simple Box
+
+6. Finalize
+   - Node: "Update Mesh"
+   - Notify rendering system of changes
 ```
 
 **Integration Effort:** MEDIUM - Requires learning Geometry Script API
