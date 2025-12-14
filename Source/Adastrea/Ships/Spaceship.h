@@ -194,7 +194,7 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera|Settings", meta=(ClampMin="0.0", ClampMax="25.0"))
     float CameraLagSpeed;
 
-    /** Camera rotation lag speed for smooth rotation following - prevents camera snap */
+    /** Camera rotation lag speed for smooth rotation following - prevents snapping */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera|Settings", meta=(ClampMin="0.0", ClampMax="25.0"))
     float CameraRotationLagSpeed;
 

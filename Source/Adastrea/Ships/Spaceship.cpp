@@ -48,8 +48,8 @@ ASpaceship::ASpaceship()
     bFreeLookActive = false;
     FreeLookSensitivity = 1.5f;               // Slightly higher sensitivity for free look
     CameraDistance = 800.0f;                  // Default camera distance
-    CameraLagSpeed = 10.0f;                   // Smooth camera position following
-    CameraRotationLagSpeed = 10.0f;           // Smooth camera rotation following
+    CameraLagSpeed = 10.0f;                   // Smooth position following
+    CameraRotationLagSpeed = 10.0f;           // Smooth rotation following
     DoubleClickThreshold = 0.3f;              // 300ms for double-click detection
 
     // Initialize physics state
