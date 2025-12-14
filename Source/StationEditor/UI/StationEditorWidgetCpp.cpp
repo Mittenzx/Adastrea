@@ -401,10 +401,7 @@ void UStationEditorWidgetCpp::UpdatePreviewPosition()
 		EditorManager->UpdatePreview(HitResult.Location, FRotator::ZeroRotator);
 
 		// Mark that preview has been positioned at least once
-		if (!bPreviewPositioned)
-		{
-			bPreviewPositioned = true;
-		}
+		bPreviewPositioned = true;
 
 		// Ensure preview is visible after positioning
 		if (EditorManager->PreviewActor)
