@@ -113,7 +113,7 @@ The Spring Arm component can be further configured:
 
 ### Camera snaps instead of smoothly returning from free look
 - Increase `Camera Lag Speed` in the spaceship settings
-- Enable `Camera Rotation Lag` on the Spring Arm component
+- Ensure `bEnableCameraRotationLag` is enabled on the Spring Arm component
 
 ### Secondary weapon fires during free look
 - Rebind `IA_FireSecondary` to a different key (see Step 3 above)
