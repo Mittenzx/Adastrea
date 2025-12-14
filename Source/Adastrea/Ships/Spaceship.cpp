@@ -48,7 +48,8 @@ ASpaceship::ASpaceship()
     bFreeLookActive = false;
     FreeLookSensitivity = 1.5f;               // Slightly higher sensitivity for free look
     CameraDistance = 800.0f;                  // Default camera distance
-    CameraLagSpeed = 10.0f;                   // Smooth camera following
+    CameraLagSpeed = 10.0f;                   // Smooth camera position following
+    CameraRotationLagSpeed = 10.0f;           // Smooth camera rotation following
     DoubleClickThreshold = 0.3f;              // 300ms for double-click detection
 
     // Initialize physics state
@@ -81,6 +82,8 @@ ASpaceship::ASpaceship()
     CameraSpringArm->bUsePawnControlRotation = false; // We'll control this manually for free look
     CameraSpringArm->bEnableCameraLag = true;
     CameraSpringArm->CameraLagSpeed = CameraLagSpeed;
+    CameraSpringArm->bEnableCameraRotationLag = true; // Enable smooth rotation following
+    CameraSpringArm->CameraRotationLagSpeed = CameraRotationLagSpeed;
     CameraSpringArm->bDoCollisionTest = false; // Disable collision in space
 
     Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
