@@ -87,13 +87,14 @@ You can adjust the free look behavior in the spaceship Blueprint or C++ class:
    
 3. Find these properties under **Camera | Settings**:
    - **Camera Distance**: Distance of camera from ship (default: 800)
-   - **Camera Lag Speed**: How smoothly the camera follows (default: 10)
+   - **Camera Lag Speed**: How smoothly the camera follows position (default: 10)
+   - **Camera Rotation Lag Speed**: How smoothly the camera follows rotation - prevents snap (default: 10)
 
 ### Camera Spring Arm Settings
 The Spring Arm component can be further configured:
 - **Target Arm Length**: Zoom distance (controlled by `CameraDistance`)
-- **Camera Lag Speed**: Smoothness of camera movement
-- **Camera Rotation Lag**: Enable for smoother rotation (optional)
+- **Camera Lag Speed**: Smoothness of camera position movement
+- **Camera Rotation Lag Speed**: Smoothness of camera rotation - prevents camera snap when ship rotates
 
 ## Troubleshooting
 
@@ -106,7 +107,11 @@ The Spring Arm component can be further configured:
 - Ensure the `Look()` function properly checks `bFreeLookActive`
 - Verify the input action binding is correct in the mapping context
 
-### Camera snaps instead of smoothly returning
+### Camera snaps instead of smoothly following ship rotation
+- Increase `Camera Rotation Lag Speed` in the spaceship settings
+- Ensure `bEnableCameraRotationLag` is enabled on the Spring Arm component
+
+### Camera snaps instead of smoothly returning from free look
 - Increase `Camera Lag Speed` in the spaceship settings
 - Enable `Camera Rotation Lag` on the Spring Arm component
 
