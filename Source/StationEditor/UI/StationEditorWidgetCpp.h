@@ -222,7 +222,11 @@ protected:
 	void ExitPlacementMode();
 
 	/**
-	 * Update preview position to follow cursor in 3D space
+	 * Update preview position to follow cursor in 3D space.
+	 * 
+	 * Updates preview position to follow cursor via line trace.
+	 * Preview is updated only if trace hits geometry. If no hit is detected,
+	 * the preview is hidden to indicate placement is not possible.
 	 */
 	void UpdatePreviewPosition();
 
@@ -268,4 +272,8 @@ private:
 	/** Module class selected for placement */
 	UPROPERTY()
 	TSubclassOf<ASpaceStationModule> PendingPlacementModule;
+
+	/** Whether the preview has been positioned at least once (not at world origin) */
+	UPROPERTY()
+	bool bPreviewPositioned;
 };

@@ -30,6 +30,7 @@ UStationEditorWidgetCpp::UStationEditorWidgetCpp(const FObjectInitializer& Objec
 	, EditorManager(nullptr)
 	, bIsInPlacementMode(false)
 	, PendingPlacementModule(nullptr)
+	, bPreviewPositioned(false)
 {
 }
 
@@ -327,12 +328,18 @@ void UStationEditorWidgetCpp::EnterPlacementMode(TSubclassOf<ASpaceStationModule
 	// Store selected module
 	PendingPlacementModule = ModuleClass;
 	bIsInPlacementMode = true;
+	bPreviewPositioned = false;  // Reset positioning flag
 
 	// Show preview with this module
 	EditorManager->ShowPreview(ModuleClass);
 
+	// Log with user-friendly module name instead of internal class name
+	const ASpaceStationModule* ModuleCDO = ModuleClass->GetDefaultObject<ASpaceStationModule>();
+	const FString ModuleDisplayName = (ModuleCDO && !ModuleCDO->ModuleType.IsEmpty()) 
+		? ModuleCDO->ModuleType 
+		: ModuleClass->GetName();
 	UE_LOG(LogAdastreaStations, Log, TEXT("Station Editor: Entered placement mode for %s"), 
-		*ModuleClass->GetName());
+		*ModuleDisplayName);
 }
 
 void UStationEditorWidgetCpp::ExitPlacementMode()
@@ -344,6 +351,7 @@ void UStationEditorWidgetCpp::ExitPlacementMode()
 
 	bIsInPlacementMode = false;
 	PendingPlacementModule = nullptr;
+	bPreviewPositioned = false;
 
 	// Hide preview
 	EditorManager->HidePreview();
@@ -389,25 +397,45 @@ void UStationEditorWidgetCpp::UpdatePreviewPosition()
 
 	if (bHit)
 	{
-		// Update preview position (this handles collision checking internally)
+		// Update preview position
 		EditorManager->UpdatePreview(HitResult.Location, FRotator::ZeroRotator);
 
-		// Validate placement more thoroughly (tech level, funds, etc.)
-		// Note: UpdatePreview already handles collision, so we just check other requirements
+		// Mark that preview has been positioned at least once
+		if (!bPreviewPositioned)
+		{
+			bPreviewPositioned = true;
+		}
+
+		// Ensure preview is visible after positioning
+		if (EditorManager->PreviewActor)
+		{
+			EditorManager->PreviewActor->Show();
+		}
+
+		// Perform comprehensive validation (tech level, funds, distance, collision)
+		// This provides complete validation feedback to the user
 		EModulePlacementResult ValidationResult = EditorManager->CanPlaceModule(
 			PendingPlacementModule,
 			HitResult.Location,
 			FRotator::ZeroRotator
 		);
 
-		// Override validity color only if validation fails for reasons other than collision
-		// (collision is already handled by UpdatePreview)
-		if (ValidationResult != EModulePlacementResult::Success && 
-			ValidationResult != EModulePlacementResult::CollisionDetected &&
-			EditorManager->PreviewActor)
+		// Set preview validity based on comprehensive validation
+		// UpdatePreview only checks collision, so we override with full validation result
+		if (EditorManager->PreviewActor)
 		{
-			EditorManager->PreviewActor->SetValid(false);
+			bool bIsFullyValid = (ValidationResult == EModulePlacementResult::Success);
+			EditorManager->PreviewActor->SetValid(bIsFullyValid);
 		}
+	}
+	else
+	{
+		// No hit: hide the preview to indicate placement is not possible in this direction
+		if (EditorManager->PreviewActor)
+		{
+			EditorManager->PreviewActor->Hide();
+		}
+		bPreviewPositioned = false;
 	}
 }
 
@@ -418,10 +446,10 @@ void UStationEditorWidgetCpp::OnViewportClicked()
 		return;
 	}
 
-	// Check if preview actor exists and has valid position
-	if (!EditorManager->PreviewActor || !EditorManager->PreviewActor->IsVisible())
+	// Check if preview actor exists and has been positioned
+	if (!EditorManager->PreviewActor || !bPreviewPositioned)
 	{
-		UE_LOG(LogAdastreaStations, Warning, TEXT("Station Editor: Cannot place module - preview not visible"));
+		UE_LOG(LogAdastreaStations, Warning, TEXT("Station Editor: Cannot place module - preview not positioned"));
 		return;
 	}
 
@@ -495,7 +523,9 @@ FReply UStationEditorWidgetCpp::NativeOnMouseButtonDown(const FGeometry& InGeome
 {
 	FReply Reply = Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 
-	if (bIsInPlacementMode)
+	// Only handle placement clicks if in placement mode and not clicking on UI widgets
+	// Check if the reply was already handled by a child widget (button, list, etc.)
+	if (bIsInPlacementMode && !Reply.IsEventHandled())
 	{
 		if (InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 		{
