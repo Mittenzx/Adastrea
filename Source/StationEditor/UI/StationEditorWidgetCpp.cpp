@@ -28,7 +28,8 @@ UStationEditorWidgetCpp::UStationEditorWidgetCpp(const FObjectInitializer& Objec
 	, ModuleCatalog(nullptr)
 	, CurrentStation(nullptr)
 	, EditorManager(nullptr)
-	, SelectedModuleClass(nullptr)
+	, bIsInPlacementMode(false)
+	, PendingPlacementModule(nullptr)
 {
 }
 
@@ -87,6 +88,12 @@ void UStationEditorWidgetCpp::NativeTick(const FGeometry& MyGeometry, float InDe
 	if (EditorManager)
 	{
 		EditorManager->UpdateConstruction(InDeltaTime);
+	}
+
+	// Update preview position if in placement mode
+	if (bIsInPlacementMode)
+	{
+		UpdatePreviewPosition();
 	}
 }
 
@@ -237,12 +244,23 @@ void UStationEditorWidgetCpp::UpdateConstructionQueue()
 
 void UStationEditorWidgetCpp::OnModuleButtonClicked(TSubclassOf<ASpaceStationModule> ModuleClass)
 {
-	SelectedModuleClass = ModuleClass;
-	PlaceModuleAtCursor(ModuleClass);
+	if (!ModuleClass)
+	{
+		return;
+	}
+
+	// Enter placement mode instead of placing immediately
+	EnterPlacementMode(ModuleClass);
 }
 
 void UStationEditorWidgetCpp::OnCloseButtonClicked()
 {
+	// Exit placement mode if active
+	if (bIsInPlacementMode)
+	{
+		ExitPlacementMode();
+	}
+
 	// Save and end editing
 	if (EditorManager)
 	{
@@ -289,9 +307,53 @@ void UStationEditorWidgetCpp::OnQueueItemCancelled(int32 QueueId)
 	}
 }
 
-void UStationEditorWidgetCpp::PlaceModuleAtCursor(TSubclassOf<ASpaceStationModule> ModuleClass)
+// =====================
+// Placement Mode Functions
+// =====================
+
+void UStationEditorWidgetCpp::EnterPlacementMode(TSubclassOf<ASpaceStationModule> ModuleClass)
 {
-	if (!EditorManager || !ModuleClass || !CurrentStation)
+	if (!EditorManager || !ModuleClass)
+	{
+		return;
+	}
+
+	// Exit any existing placement mode
+	if (bIsInPlacementMode)
+	{
+		ExitPlacementMode();
+	}
+
+	// Store selected module
+	PendingPlacementModule = ModuleClass;
+	bIsInPlacementMode = true;
+
+	// Show preview with this module
+	EditorManager->ShowPreview(ModuleClass);
+
+	UE_LOG(LogAdastreaStations, Log, TEXT("Station Editor: Entered placement mode for %s"), 
+		*ModuleClass->GetName());
+}
+
+void UStationEditorWidgetCpp::ExitPlacementMode()
+{
+	if (!EditorManager)
+	{
+		return;
+	}
+
+	bIsInPlacementMode = false;
+	PendingPlacementModule = nullptr;
+
+	// Hide preview
+	EditorManager->HidePreview();
+
+	UE_LOG(LogAdastreaStations, Log, TEXT("Station Editor: Exited placement mode"));
+}
+
+void UStationEditorWidgetCpp::UpdatePreviewPosition()
+{
+	if (!EditorManager || !CurrentStation || !PendingPlacementModule)
 	{
 		return;
 	}
@@ -321,30 +383,79 @@ void UStationEditorWidgetCpp::PlaceModuleAtCursor(TSubclassOf<ASpaceStationModul
 
 	if (bHit)
 	{
-		// Check if we hit near the station
-		float DistanceToStation = FVector::Dist(HitResult.Location, CurrentStation->GetActorLocation());
-		if (DistanceToStation < MaxPlacementDistance)
-		{
-			// Place the module
-			ASpaceStationModule* PlacedModule = EditorManager->PlaceModule(
-				ModuleClass,
-				HitResult.Location,
-				FRotator::ZeroRotator
-			);
+		// Update preview position
+		EditorManager->UpdatePreview(HitResult.Location, FRotator::ZeroRotator);
 
-			if (!PlacedModule)
-			{
-				// Placement failed - provide detailed error information
-				FString ClassName = ModuleClass ? ModuleClass->GetName() : TEXT("Invalid");
-				UE_LOG(LogAdastreaStations, Warning, TEXT("Station Editor: Module placement failed: Class=%s, Location=%s, Distance=%.2f"), 
-					*ClassName, *HitResult.Location.ToString(), DistanceToStation);
-			}
-		}
-		else
+		// Check if placement is valid at this location
+		EModulePlacementResult ValidationResult = EditorManager->CanPlaceModule(
+			PendingPlacementModule,
+			HitResult.Location,
+			FRotator::ZeroRotator
+		);
+
+		// Update preview validity color
+		bool bIsValid = (ValidationResult == EModulePlacementResult::Success);
+		if (EditorManager->PreviewActor)
 		{
-			UE_LOG(LogAdastreaStations, Warning, TEXT("Station Editor: Module placement failed: Too far from station (Distance=%.2f, Max=%.2f)"), 
-				DistanceToStation, MaxPlacementDistance);
+			EditorManager->PreviewActor->SetValid(bIsValid);
 		}
+	}
+}
+
+void UStationEditorWidgetCpp::OnViewportClicked()
+{
+	if (!bIsInPlacementMode || !EditorManager || !PendingPlacementModule || !CurrentStation)
+	{
+		return;
+	}
+
+	// Get preview position
+	FVector PlacementPosition = FVector::ZeroVector;
+	FRotator PlacementRotation = FRotator::ZeroRotator;
+
+	if (EditorManager->PreviewActor)
+	{
+		PlacementPosition = EditorManager->PreviewActor->GetActorLocation();
+		PlacementRotation = EditorManager->PreviewActor->GetActorRotation();
+	}
+
+	// Validate one more time before placement
+	EModulePlacementResult ValidationResult = EditorManager->CanPlaceModule(
+		PendingPlacementModule,
+		PlacementPosition,
+		PlacementRotation
+	);
+
+	if (ValidationResult != EModulePlacementResult::Success)
+	{
+		UE_LOG(LogAdastreaStations, Warning, TEXT("Station Editor: Cannot place module: %d"), 
+			static_cast<int32>(ValidationResult));
+		return;
+	}
+
+	// Place the module
+	ASpaceStationModule* PlacedModule = EditorManager->PlaceModule(
+		PendingPlacementModule,
+		PlacementPosition,
+		PlacementRotation
+	);
+
+	if (PlacedModule)
+	{
+		UE_LOG(LogAdastreaStations, Log, TEXT("Station Editor: Placed module %s at %s"),
+			*PlacedModule->GetName(), *PlacementPosition.ToString());
+
+		// Exit placement mode
+		ExitPlacementMode();
+	}
+}
+
+void UStationEditorWidgetCpp::OnViewportRightClicked()
+{
+	// Cancel placement on right-click
+	if (bIsInPlacementMode)
+	{
+		ExitPlacementMode();
 	}
 }
 
@@ -363,6 +474,27 @@ bool UStationEditorWidgetCpp::GetCursorWorldPosition(FVector& OutWorldPosition, 
 	}
 
 	return false;
+}
+
+FReply UStationEditorWidgetCpp::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	FReply Reply = Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+
+	if (bIsInPlacementMode)
+	{
+		if (InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
+		{
+			OnViewportClicked();
+			return FReply::Handled();
+		}
+		else if (InMouseEvent.GetEffectingButton() == EKeys::RightMouseButton)
+		{
+			OnViewportRightClicked();
+			return FReply::Handled();
+		}
+	}
+
+	return Reply;
 }
 
 void UStationEditorWidgetCpp::EnsureEditorManager()

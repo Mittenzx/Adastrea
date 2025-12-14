@@ -211,10 +211,32 @@ protected:
 	// =====================
 
 	/**
-	 * Place a module at the current cursor position
-	 * @param ModuleClass The class of module to place
+	 * Enter placement mode with a module (shows preview)
+	 * @param ModuleClass The module to preview
 	 */
-	void PlaceModuleAtCursor(TSubclassOf<ASpaceStationModule> ModuleClass);
+	void EnterPlacementMode(TSubclassOf<ASpaceStationModule> ModuleClass);
+
+	/**
+	 * Exit placement mode (hides preview)
+	 */
+	void ExitPlacementMode();
+
+	/**
+	 * Update preview position to follow cursor in 3D space
+	 */
+	void UpdatePreviewPosition();
+
+	/**
+	 * Handle click in 3D viewport to confirm placement
+	 */
+	UFUNCTION()
+	void OnViewportClicked();
+
+	/**
+	 * Handle right-click to cancel placement
+	 */
+	UFUNCTION()
+	void OnViewportRightClicked();
 
 	/**
 	 * Get world position from screen cursor position
@@ -223,6 +245,11 @@ protected:
 	 * @return True if successful
 	 */
 	bool GetCursorWorldPosition(FVector& OutWorldPosition, FVector& OutWorldDirection);
+
+	/**
+	 * Override mouse button down to handle placement clicks
+	 */
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
 private:
 	/**
@@ -234,7 +261,11 @@ private:
 	UPROPERTY()
 	UStationEditorManager* EditorManager;
 
-	/** Currently selected module class for placement */
+	/** Whether we're currently in placement mode */
 	UPROPERTY()
-	TSubclassOf<ASpaceStationModule> SelectedModuleClass;
+	bool bIsInPlacementMode;
+
+	/** Module class selected for placement */
+	UPROPERTY()
+	TSubclassOf<ASpaceStationModule> PendingPlacementModule;
 };
