@@ -117,6 +117,32 @@ void ASpaceship::BeginPlay()
     }
 }
 
+#if WITH_EDITOR
+void ASpaceship::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+{
+    Super::PostEditChangeProperty(PropertyChangedEvent);
+    
+    // Synchronize camera spring arm settings when properties change in editor
+    if (PropertyChangedEvent.Property && CameraSpringArm)
+    {
+        FName PropertyName = PropertyChangedEvent.Property->GetFName();
+        
+        if (PropertyName == GET_MEMBER_NAME_CHECKED(ASpaceship, CameraDistance))
+        {
+            CameraSpringArm->TargetArmLength = CameraDistance;
+        }
+        else if (PropertyName == GET_MEMBER_NAME_CHECKED(ASpaceship, CameraLagSpeed))
+        {
+            CameraSpringArm->CameraLagSpeed = CameraLagSpeed;
+        }
+        else if (PropertyName == GET_MEMBER_NAME_CHECKED(ASpaceship, CameraRotationLagSpeed))
+        {
+            CameraSpringArm->CameraRotationLagSpeed = CameraRotationLagSpeed;
+        }
+    }
+}
+#endif
+
 void ASpaceship::PossessedBy(AController* NewController)
 {
     Super::PossessedBy(NewController);

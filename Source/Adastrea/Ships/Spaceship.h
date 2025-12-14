@@ -311,6 +311,10 @@ protected:
     virtual void Tick(float DeltaTime) override;
     virtual void PossessedBy(AController* NewController) override;
 
+#if WITH_EDITOR
+    virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
+
     // Saved reference to the walking pawn when controlling the ship
     UPROPERTY()
     APawn* SavedExternalPawn;
