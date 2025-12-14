@@ -371,7 +371,13 @@ void UStationEditorWidgetCpp::UpdatePreviewPosition()
 	FVector TraceEnd = WorldPosition + WorldDirection * MaxTraceDistance;
 
 	FCollisionQueryParams QueryParams;
-	QueryParams.AddIgnoredActor(GetOwningPlayerPawn());
+	
+	// Add player pawn to ignored actors if valid
+	AActor* PlayerPawn = GetOwningPlayerPawn();
+	if (PlayerPawn)
+	{
+		QueryParams.AddIgnoredActor(PlayerPawn);
+	}
 
 	bool bHit = GetWorld()->LineTraceSingleByChannel(
 		HitResult,
@@ -383,21 +389,24 @@ void UStationEditorWidgetCpp::UpdatePreviewPosition()
 
 	if (bHit)
 	{
-		// Update preview position
+		// Update preview position (this handles collision checking internally)
 		EditorManager->UpdatePreview(HitResult.Location, FRotator::ZeroRotator);
 
-		// Check if placement is valid at this location
+		// Validate placement more thoroughly (tech level, funds, etc.)
+		// Note: UpdatePreview already handles collision, so we just check other requirements
 		EModulePlacementResult ValidationResult = EditorManager->CanPlaceModule(
 			PendingPlacementModule,
 			HitResult.Location,
 			FRotator::ZeroRotator
 		);
 
-		// Update preview validity color
-		bool bIsValid = (ValidationResult == EModulePlacementResult::Success);
-		if (EditorManager->PreviewActor)
+		// Override validity color only if validation fails for reasons other than collision
+		// (collision is already handled by UpdatePreview)
+		if (ValidationResult != EModulePlacementResult::Success && 
+			ValidationResult != EModulePlacementResult::CollisionDetected &&
+			EditorManager->PreviewActor)
 		{
-			EditorManager->PreviewActor->SetValid(bIsValid);
+			EditorManager->PreviewActor->SetValid(false);
 		}
 	}
 }
@@ -409,15 +418,16 @@ void UStationEditorWidgetCpp::OnViewportClicked()
 		return;
 	}
 
-	// Get preview position
-	FVector PlacementPosition = FVector::ZeroVector;
-	FRotator PlacementRotation = FRotator::ZeroRotator;
-
-	if (EditorManager->PreviewActor)
+	// Check if preview actor exists and has valid position
+	if (!EditorManager->PreviewActor || !EditorManager->PreviewActor->IsVisible())
 	{
-		PlacementPosition = EditorManager->PreviewActor->GetActorLocation();
-		PlacementRotation = EditorManager->PreviewActor->GetActorRotation();
+		UE_LOG(LogAdastreaStations, Warning, TEXT("Station Editor: Cannot place module - preview not visible"));
+		return;
 	}
+
+	// Get preview position
+	FVector PlacementPosition = EditorManager->PreviewActor->GetActorLocation();
+	FRotator PlacementRotation = EditorManager->PreviewActor->GetActorRotation();
 
 	// Validate one more time before placement
 	EModulePlacementResult ValidationResult = EditorManager->CanPlaceModule(
@@ -447,6 +457,11 @@ void UStationEditorWidgetCpp::OnViewportClicked()
 
 		// Exit placement mode
 		ExitPlacementMode();
+	}
+	else
+	{
+		UE_LOG(LogAdastreaStations, Error, TEXT("Station Editor: Failed to spawn module at %s"), 
+			*PlacementPosition.ToString());
 	}
 }
 
