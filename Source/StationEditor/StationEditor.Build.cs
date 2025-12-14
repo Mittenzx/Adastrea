@@ -27,7 +27,8 @@ public class StationEditor : ModuleRules
 			"Adastrea",  // Dependency on main module for station and faction systems
 			"UMG",       // For widget functionality
 			"Slate",
-			"SlateCore"
+			"SlateCore",
+			"InputCore"   // Needed for EKeys and input handling in widgets
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] 

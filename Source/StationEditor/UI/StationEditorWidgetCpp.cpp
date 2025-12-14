@@ -12,6 +12,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerController.h"
 #include "Public/AdastreaLog.h"
+#include "StationEditor/StationBuildPreview.h"
+#include "InputCoreTypes.h"
 
 // StationEditor module includes
 #include "StationEditorManager.h"

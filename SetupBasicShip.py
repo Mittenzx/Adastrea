@@ -48,8 +48,8 @@ try:
     
     # Ensure settings are correct
     log_info("\\nEnsuring correct settings...")
-    import_default.set_editor_property('auto_possess_player', 1)  # PLAYER0
-    import_default.set_editor_property('auto_receive_input', 1)   # PLAYER0
+    import_default.set_editor_property('auto_possess_player', unreal.AutoPossessPlayer.PLAYER0)
+    import_default.set_editor_property('auto_receive_input', unreal.AutoReceiveInput.PLAYER0)
     
     # Save
     unreal.EditorAssetLibrary.save_loaded_asset(import_bp)

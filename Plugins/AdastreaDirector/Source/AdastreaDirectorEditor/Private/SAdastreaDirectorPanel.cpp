@@ -818,7 +818,8 @@ FReply SAdastreaDirectorPanel::OnClearHistoryClicked()
 	const FText Title = LOCTEXT("ClearHistoryTitle", "Clear Conversation History");
 	const FText Message = LOCTEXT("ClearHistoryMessage", "Are you sure you want to clear the conversation history?\n\nThis action cannot be undone.");
 	
-	EAppReturnType::Type UserResponse = FMessageDialog::Open(EAppMsgType::YesNo, Message, &Title);
+	// Updated to use the overload taking Title by value to conform to UE5.6 API
+	EAppReturnType::Type UserResponse = FMessageDialog::Open(EAppMsgType::YesNo, Message, Title);
 	
 	if (UserResponse != EAppReturnType::Yes)
 	{

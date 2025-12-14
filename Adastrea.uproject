@@ -80,10 +80,6 @@
 		{
 			"Name": "GeometryScripting",
 			"Enabled": true
-		},
-		{
-			"Name": "Bridge",
-			"Enabled": true
 		}
 	],
 	"TargetPlatforms": [
