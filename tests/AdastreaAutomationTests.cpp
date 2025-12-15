@@ -285,12 +285,14 @@ bool FFreeLookCameraConfigurationTest::RunTest(const FString& Parameters)
 	const float DefaultFreeLookSensitivity = 1.5f;
 	const float DefaultCameraDistance = 800.0f;
 	const float DefaultCameraLagSpeed = 10.0f;
+	const float DefaultCameraRotationLagSpeed = 10.0f;
 	const float DefaultDoubleClickThreshold = 0.3f;
 	
 	// Verify ranges are sensible
 	TestTrue(TEXT("FreeLookSensitivity should be positive"), DefaultFreeLookSensitivity > 0.0f);
 	TestTrue(TEXT("CameraDistance should be positive"), DefaultCameraDistance > 0.0f);
 	TestTrue(TEXT("CameraLagSpeed should be positive"), DefaultCameraLagSpeed > 0.0f);
+	TestTrue(TEXT("CameraRotationLagSpeed should be positive"), DefaultCameraRotationLagSpeed > 0.0f);
 	TestTrue(TEXT("DoubleClickThreshold should be positive"), DefaultDoubleClickThreshold > 0.0f);
 	
 	// Test that sensitivity is within reasonable range (0.1 - 5.0)
@@ -300,6 +302,38 @@ bool FFreeLookCameraConfigurationTest::RunTest(const FString& Parameters)
 	// Test that double-click threshold is within reasonable range (0.1 - 1.0)
 	TestTrue(TEXT("DoubleClickThreshold should be >= 0.1"), DefaultDoubleClickThreshold >= 0.1f);
 	TestTrue(TEXT("DoubleClickThreshold should be <= 1.0"), DefaultDoubleClickThreshold <= 1.0f);
+	
+	return true;
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FCameraRotationLagTest,
+	"Adastrea.Systems.Camera.RotationLagValidation",
+	EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter)
+
+bool FCameraRotationLagTest::RunTest(const FString& Parameters)
+{
+	// Test that camera rotation lag property exists and is properly configured
+	UClass* SpaceshipClass = FindObject<UClass>(nullptr, TEXT("/Script/Adastrea.Spaceship"));
+	if (!SpaceshipClass)
+	{
+		AddError(TEXT("Spaceship class not found"));
+		return false;
+	}
+	
+	// Verify CameraRotationLagSpeed property exists
+	FProperty* CameraRotationLagSpeedProperty = SpaceshipClass->FindPropertyByName(TEXT("CameraRotationLagSpeed"));
+	TestNotNull(TEXT("CameraRotationLagSpeed property should exist"), CameraRotationLagSpeedProperty);
+	
+	if (CameraRotationLagSpeedProperty)
+	{
+		// Verify it's a float property
+		FFloatProperty* FloatProp = CastField<FFloatProperty>(CameraRotationLagSpeedProperty);
+		TestNotNull(TEXT("CameraRotationLagSpeed should be a float property"), FloatProp);
+	}
+	
+	// Verify CameraSpringArm exists
+	FProperty* CameraSpringArmProperty = SpaceshipClass->FindPropertyByName(TEXT("CameraSpringArm"));
+	TestNotNull(TEXT("CameraSpringArm property should exist"), CameraSpringArmProperty);
 	
 	return true;
 }

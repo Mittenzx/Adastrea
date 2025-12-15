@@ -190,9 +190,13 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera|Settings", meta=(ClampMin="100.0", ClampMax="5000.0"))
     float CameraDistance;
 
-    /** Camera lag speed for smooth following */
+    /** Camera lag speed for smooth position following */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera|Settings", meta=(ClampMin="0.0", ClampMax="25.0"))
     float CameraLagSpeed;
+
+    /** Camera rotation lag speed for smooth rotation following - prevents snapping */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera|Settings", meta=(ClampMin="0.0", ClampMax="25.0"))
+    float CameraRotationLagSpeed;
 
     /** Double-click time threshold for resetting camera (in seconds) */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera|Free Look", meta=(ClampMin="0.1", ClampMax="1.0"))
@@ -306,6 +310,10 @@ protected:
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
     virtual void PossessedBy(AController* NewController) override;
+
+#if WITH_EDITOR
+    virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
 
     // Saved reference to the walking pawn when controlling the ship
     UPROPERTY()

@@ -88,7 +88,8 @@ ASpaceship (Pawn)
 |----------|---------|-------|-------------|
 | FreeLookSensitivity | 1.5 | 0.1 - 5.0 | Camera rotation speed |
 | CameraDistance | 800.0 | 100 - 5000 | Distance from ship |
-| CameraLagSpeed | 10.0 | 0.0 - 25.0 | Smooth following speed |
+| CameraLagSpeed | 10.0 | 0.0 - 25.0 | Smooth position following speed |
+| CameraRotationLagSpeed | 10.0 | 0.0 - 25.0 | Smooth rotation following speed - prevents camera snap |
 | DoubleClickThreshold | 0.3 | 0.1 - 1.0 | Time window for double-click (seconds) |
 
 ## 📚 Documentation Structure
