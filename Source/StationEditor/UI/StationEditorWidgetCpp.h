@@ -155,6 +155,9 @@ protected:
 	/** Called every frame */
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
+	/** Called when a mouse button is pressed */
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+
 	// =====================
 	// Event Handlers
 	// =====================
@@ -249,11 +252,6 @@ protected:
 	 * @return True if successful
 	 */
 	bool GetCursorWorldPosition(FVector& OutWorldPosition, FVector& OutWorldDirection);
-
-	/**
-	 * Override mouse button down to handle placement clicks
-	 */
-	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
 private:
 	/**
