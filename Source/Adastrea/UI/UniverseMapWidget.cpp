@@ -413,6 +413,11 @@ void UUniverseMapWidget::CreateDefaultUIWidgets()
 	if (!RootCanvas)
 	{
 		RootCanvas = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), TEXT("RootCanvas"));
+		if (!RootCanvas)
+		{
+			UE_LOG(LogAdastrea, Error, TEXT("UniverseMapWidget: Failed to create root canvas panel"));
+			return;
+		}
 		WidgetTree->RootWidget = RootCanvas;
 		UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Created root canvas panel"));
 	}
@@ -421,7 +426,7 @@ void UUniverseMapWidget::CreateDefaultUIWidgets()
 	if (!WidgetTree->FindWidget(TEXT("Background")))
 	{
 		UImage* Background = WidgetTree->ConstructWidget<UImage>(UImage::StaticClass(), TEXT("Background"));
-		if (Background)
+		if (Background && RootCanvas)
 		{
 			Background->SetColorAndOpacity(FLinearColor(0.0f, 0.0f, 0.05f, 0.9f));
 			RootCanvas->AddChild(Background);

@@ -183,7 +183,7 @@ BLUEPRINT_CPP_IMPROVEMENTS.md
 
 ## 📊 Statistics
 
-**Total Guides**: 15 active guides  
+**Total Guides**: 16 active guides  
 **Removed Obsolete**: 1 guide (BLUEPRINT_CREATION_DETAILED_GUIDE.md)  
 **New Guides (Dec 2025)**: 3 guides (Zero Setup, CPP Improvements, Update Plan)  
 **Guide Categories**: Getting Started (4), Reference (3), PIE-Specific (3), Visual (3), Technical (2)

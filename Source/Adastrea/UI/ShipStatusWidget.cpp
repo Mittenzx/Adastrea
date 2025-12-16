@@ -282,16 +282,6 @@ void UShipStatusWidget::UpdateRatings_Implementation(float CombatRating, float M
 	}
 }
 
-void UShipStatusWidget::UpdateRatings_Implementation(float CombatRating, float MobilityRating, float UtilityRating)
-{
-	// Store for Blueprint access
-	DisplayCombatRating = CombatRating;
-	DisplayMobilityRating = MobilityRating;
-	DisplayUtilityRating = UtilityRating;
-
-	// Blueprint can override to update UI elements
-}
-
 ASpaceship* UShipStatusWidget::GetPlayerSpaceship() const
 {
 	// Get the world context
@@ -332,6 +322,11 @@ void UShipStatusWidget::CreateDefaultUIWidgets()
 	if (!RootCanvas)
 	{
 		RootCanvas = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), TEXT("RootCanvas"));
+		if (!RootCanvas)
+		{
+			UE_LOG(LogAdastrea, Error, TEXT("ShipStatusWidget: Failed to create root canvas panel"));
+			return;
+		}
 		WidgetTree->RootWidget = RootCanvas;
 		UE_LOG(LogAdastrea, Log, TEXT("ShipStatusWidget: Created root canvas panel"));
 	}
@@ -341,7 +336,7 @@ void UShipStatusWidget::CreateDefaultUIWidgets()
 	if (!Background)
 	{
 		Background = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("Background"));
-		if (Background)
+		if (Background && RootCanvas)
 		{
 			Background->SetBrushColor(FLinearColor(0.05f, 0.05f, 0.08f, 0.95f));
 			RootCanvas->AddChild(Background);

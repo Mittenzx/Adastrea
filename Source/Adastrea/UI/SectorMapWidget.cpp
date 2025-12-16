@@ -314,6 +314,11 @@ void USectorMapWidget::CreateDefaultUIWidgets()
 	if (!RootCanvas)
 	{
 		RootCanvas = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), TEXT("RootCanvas"));
+		if (!RootCanvas)
+		{
+			UE_LOG(LogAdastrea, Error, TEXT("SectorMapWidget: Failed to create root canvas panel"));
+			return;
+		}
 		WidgetTree->RootWidget = RootCanvas;
 		UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Created root canvas panel"));
 	}
@@ -323,7 +328,7 @@ void USectorMapWidget::CreateDefaultUIWidgets()
 	if (!Background)
 	{
 		Background = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("Background"));
-		if (Background)
+		if (Background && RootCanvas)
 		{
 			Background->SetBrushColor(FLinearColor(0.05f, 0.05f, 0.1f, 0.9f));
 			RootCanvas->AddChild(Background);

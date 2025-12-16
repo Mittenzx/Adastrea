@@ -259,7 +259,7 @@ Now C++ won't create widgets automatically. You must create them all manually in
 
 ### Want More Control?
 - See **BLUEPRINT_CUSTOMIZATION_GUIDE.md** (coming soon)
-- See **BLUEPRINT_CREATION_DETAILED_GUIDE.md** for full manual setup
+- See **BLUEPRINT_CPP_IMPROVEMENTS.md** for technical details on C++ implementation
 
 ### Want to Learn More?
 - See **BLUEPRINT_CPP_IMPROVEMENTS.md** for technical details
