@@ -243,6 +243,34 @@ protected:
 	TArray<FUniverseSectorInfo> UniverseSectorInfo;
 
 	// ====================
+	// BOUND UI WIDGETS (Optional - will be created in C++ if not bound)
+	// ====================
+
+	/** Main container panel for the sector grid - created automatically if not bound */
+	UPROPERTY(BlueprintReadOnly, Category="Universe Map|UI", meta=(BindWidgetOptional))
+	class UCanvasPanel* SectorGridPanel;
+
+	/** Text display for selected sector name - created automatically if not bound */
+	UPROPERTY(BlueprintReadOnly, Category="Universe Map|UI", meta=(BindWidgetOptional))
+	class UTextBlock* Text_SectorName;
+
+	/** Text display for selected sector description - created automatically if not bound */
+	UPROPERTY(BlueprintReadOnly, Category="Universe Map|UI", meta=(BindWidgetOptional))
+	class UTextBlock* Text_SectorDescription;
+
+	/** Progress bar showing exploration completion - created automatically if not bound */
+	UPROPERTY(BlueprintReadOnly, Category="Universe Map|UI", meta=(BindWidgetOptional))
+	class UProgressBar* ProgressBar_Exploration;
+
+	/** Text display for exploration percentage - created automatically if not bound */
+	UPROPERTY(BlueprintReadOnly, Category="Universe Map|UI", meta=(BindWidgetOptional))
+	class UTextBlock* Text_ExplorationPercent;
+
+	/** Close button - created automatically if not bound */
+	UPROPERTY(BlueprintReadOnly, Category="Universe Map|UI", meta=(BindWidgetOptional))
+	class UButton* Button_Close;
+
+	// ====================
 	// CONFIGURATION
 	// ====================
 
@@ -253,6 +281,10 @@ protected:
 	/** Whether to show undiscovered sectors on the map (as blank/unknown) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Universe Map|Config")
 	bool bShowUndiscoveredSectors;
+
+	/** Whether to automatically create UI widgets in C++ if not bound in Blueprint */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Universe Map|Config")
+	bool bAutoCreateMissingWidgets;
 
 	// ====================
 	// HELPER FUNCTIONS
@@ -272,4 +304,17 @@ protected:
 	 */
 	UFUNCTION(BlueprintCallable, Category="Universe Map")
 	TArray<ASpaceSectorMap*> FindAllSectorsInWorld() const;
+
+	/**
+	 * Create default UI widgets programmatically if they weren't bound in Blueprint
+	 * This allows the widget to work with zero Blueprint setup
+	 */
+	UFUNCTION(BlueprintCallable, Category="Universe Map")
+	void CreateDefaultUIWidgets();
+
+	/**
+	 * Setup close button click handler
+	 */
+	UFUNCTION()
+	void OnCloseButtonClicked();
 };

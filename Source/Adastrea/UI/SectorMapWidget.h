@@ -226,6 +226,34 @@ protected:
 	bool bIsSectorMapVisible;
 
 	// ====================
+	// BOUND UI WIDGETS (Optional - will be created in C++ if not bound)
+	// ====================
+
+	/** Text display for sector name - created automatically if not bound */
+	UPROPERTY(BlueprintReadOnly, Category="Sector Map|UI", meta=(BindWidgetOptional))
+	class UTextBlock* Text_SectorName;
+
+	/** Text display for sector description - created automatically if not bound */
+	UPROPERTY(BlueprintReadOnly, Category="Sector Map|UI", meta=(BindWidgetOptional))
+	class UTextBlock* Text_SectorDescription;
+
+	/** Text display for object count - created automatically if not bound */
+	UPROPERTY(BlueprintReadOnly, Category="Sector Map|UI", meta=(BindWidgetOptional))
+	class UTextBlock* Text_ObjectCount;
+
+	/** List view for sector objects - created automatically if not bound */
+	UPROPERTY(BlueprintReadOnly, Category="Sector Map|UI", meta=(BindWidgetOptional))
+	class UScrollBox* ObjectListScrollBox;
+
+	// ====================
+	// CONFIGURATION
+	// ====================
+
+	/** Whether to automatically create UI widgets in C++ if not bound in Blueprint */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Sector Map|Config")
+	bool bAutoCreateMissingWidgets;
+
+	// ====================
 	// HELPER FUNCTIONS
 	// ====================
 
@@ -236,4 +264,11 @@ protected:
 	 */
 	UFUNCTION(BlueprintCallable, Category="Sector Map")
 	FSectorDisplayInfo BuildSectorDisplayInfo(ASpaceSectorMap* Sector) const;
+
+	/**
+	 * Create default UI widgets programmatically if they weren't bound in Blueprint
+	 * This allows the widget to work with zero Blueprint setup
+	 */
+	UFUNCTION(BlueprintCallable, Category="Sector Map")
+	void CreateDefaultUIWidgets();
 };
