@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blueprint Graphs - Colored Visual Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #252525;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            padding: 30px;
+        }
+        
+        h1 {
+            color: #4fc3f7;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #9e9e9e;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        h2 {
+            color: #81c784;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #424242;
+            font-size: 1.8em;
+        }
+        
+        h3 {
+            color: #ffb74d;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        
+        .legend {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #4fc3f7;
+        }
+        
+        .legend-item {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .legend-box {
+            display: inline-block;
+            width: 100px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-right: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .graph-container {
+            background: #1e1e1e;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+            border: 1px solid #424242;
+        }
+        
+        .node {
+            background: linear-gradient(135deg, #3949ab 0%, #1e88e5 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin: 10px;
+            display: inline-block;
+            min-width: 250px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            border: 2px solid #5c6bc0;
+            font-weight: 500;
+        }
+        
+        .node-event {
+            background: linear-gradient(135deg, #d32f2f 0%, #f44336 100%);
+            border-color: #e57373;
+        }
+        
+        .node-function {
+            background: linear-gradient(135deg, #0288d1 0%, #03a9f4 100%);
+            border-color: #4fc3f7;
+        }
+        
+        .node-pure {
+            background: linear-gradient(135deg, #388e3c 0%, #4caf50 100%);
+            border-color: #81c784;
+        }
+        
+        .node-variable {
+            background: linear-gradient(135deg, #7b1fa2 0%, #9c27b0 100%);
+            border-color: #ba68c8;
+        }
+        
+        .node-branch {
+            background: linear-gradient(135deg, #f57c00 0%, #ff9800 100%);
+            border-color: #ffb74d;
+        }
+        
+        .node-widget {
+            background: linear-gradient(135deg, #00796b 0%, #009688 100%);
+            border-color: #4db6ac;
+        }
+        
+        .node-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .node-detail {
+            font-size: 0.9em;
+            opacity: 0.9;
+            font-style: italic;
+        }
+        
+        .arrow {
+            text-align: center;
+            margin: 5px 0;
+            color: #fff;
+            font-size: 1.5em;
+        }
+        
+        .arrow-exec {
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        .arrow-data {
+            color: #4fc3f7;
+        }
+        
+        .data-type {
+            display: inline-block;
+            background: #424242;
+            color: #4fc3f7;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            margin: 5px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .branch-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 20px 0;
+        }
+        
+        .branch-path {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .branch-label {
+            color: #ffeb3b;
+            font-weight: bold;
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+        
+        .flow-group {
+            background: rgba(255,255,255,0.02);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 3px solid #4fc3f7;
+        }
+        
+        .description {
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 4px solid #ff9800;
+            color: #e0e0e0;
+        }
+        
+        .tips {
+            background: #1a3a1a;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .tips::before {
+            content: "💡 ";
+            font-size: 1.2em;
+        }
+        
+        .copy-button {
+            background: #4fc3f7;
+            color: #1e1e1e;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 0;
+            transition: all 0.3s;
+        }
+        
+        .copy-button:hover {
+            background: #81d4fa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(79, 195, 247, 0.4);
+        }
+        
+        .nav {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .nav a {
+            color: #4fc3f7;
+            text-decoration: none;
+            padding: 8px 16px;
+            margin: 0 5px;
+            border-radius: 4px;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        
+        .nav a:hover {
+            background: #424242;
+            color: #81d4fa;
+        }
+        
+        .parallel-container {
+            display: flex;
+            gap: 20px;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        
+        .parallel-item {
+            flex: 1;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .branch-container {
+                flex-direction: column;
+            }
+            
+            .parallel-container {
+                flex-direction: column;
+            }
+        }
+        
+        .code-inline {
+            background: #424242;
+            color: #4fc3f7;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Blueprint Graphs - Colored Visual Guide</h1>
+        <p class="subtitle">Interactive, color-coded Blueprint node diagrams for Adastrea Game</p>
+        
+        <div class="nav">
+            <a href="#legend">Legend</a>
+            <a href="#universe-map">Universe Map</a>
+            <a href="#sector-map">Sector Map</a>
+            <a href="#ship-status">Ship Status</a>
+            <a href="#patterns">Common Patterns</a>
+        </div>
+        
+        <div id="legend" class="legend">
+            <h3>Node Color Legend</h3>
+            <div class="legend-item">
+                <div class="legend-box node-event">Event</div>
+                <span>Red - Entry points (Event nodes)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box node-function">Function</div>
+                <span>Blue - Function calls (Actions)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box node-pure">Pure Function</div>
+                <span>Green - Pure functions (Getters, calculations)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box node-variable">Variable</div>
+                <span>Purple - Variable access (Get/Set)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box node-branch">Branch</div>
+                <span>Orange - Conditional logic (If/else)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box node-widget">Widget</div>
+                <span>Teal - Widget operations</span>
+            </div>
+        </div>
+        
+        <h2 id="universe-map">Universe Map Blueprints</h2>
+        
+        <h3>1. Initialize Universe Map</h3>
+        <div class="description">
+            This is called when the Universe Map widget is first opened. It finds all sectors in the world and prepares the display.
+        </div>
+        
+        <div class="graph-container">
+            <div class="flow-group">
+                <div class="node node-event">
+                    <div class="node-title">Event: Initialize Universe Map</div>
+                    <div class="node-detail">Called when map opens</div>
+                </div>
+                
+                <div class="arrow arrow-exec">↓</div>
+                <div class="data-type">[Execution]</div>
+                
+                <div class="node node-function">
+                    <div class="node-title">Find All Sectors In World</div>
+                    <div class="node-detail">Searches for ASpaceSectorMap actors</div>
+                </div>
+                
+                <div class="arrow arrow-data">↓</div>
+                <div class="data-type">[Array&lt;ASpaceSectorMap*&gt;]</div>
+                
+                <div class="node node-variable">
+                    <div class="node-title">Set: AllSectors</div>
+                    <div class="node-detail">Store sectors in variable</div>
+                </div>
+                
+                <div class="arrow arrow-exec">↓</div>
+                
+                <div class="node node-function">
+                    <div class="node-title">Build Universe Sector Grid</div>
+                    <div class="node-detail">Organizes sectors by position</div>
+                </div>
+                
+                <div class="arrow arrow-exec">↓</div>
+                
+                <div class="node node-function">
+                    <div class="node-title">Update Universe Grid</div>
+                    <div class="node-detail">Refreshes the visual display</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tips">
+            <strong>Blueprint Tip:</strong> Right-click in the Graph tab and search for each function name. Connect the white execution pins (arrows) in order.
+        </div>
+        
+        <h3>2. On Sector Selected</h3>
+        <div class="description">
+            This event fires when a player clicks on a sector in the map. It validates the selection and updates the info panel.
+        </div>
+        
+        <div class="graph-container">
+            <div class="flow-group">
+                <div class="node node-event">
+                    <div class="node-title">Event: On Sector Selected</div>
+                    <div class="node-detail">Input: Selected Sector</div>
+                </div>
+                
+                <div class="arrow arrow-exec">↓</div>
+                
+                <div class="node node-pure">
+                    <div class="node-title">Is Valid?</div>
+                    <div class="node-detail">Check if sector is not null</div>
+                </div>
+                
+                <div class="arrow arrow-exec">↓</div>
+                
+                <div class="node node-branch">
+                    <div class="node-title">Branch</div>
+                    <div class="node-detail">Conditional split</div>
+                </div>
+                
+                <div class="branch-container">
+                    <div class="branch-path">
+                        <div class="branch-label">✓ True Path</div>
+                        
+                        <div class="node node-pure">
+                            <div class="node-title">Get Sector Name</div>
+                            <div class="node-detail">Target: Selected Sector</div>
+                        </div>
+                        
+                        <div class="arrow arrow-data">↓</div>
+                        <div class="data-type">[FText]</div>
+                        
+                        <div class="node node-widget">
+                            <div class="node-title">Set Text</div>
+                            <div class="node-detail">Target: Text_SectorName</div>
+                        </div>
+                        
+                        <div class="arrow arrow-exec">↓</div>
+                        
+                        <div class="node node-pure">
+                            <div class="node-title">Get Description</div>
+                            <div class="node-detail">Target: Selected Sector</div>
+                        </div>
+                        
+                        <div class="arrow arrow-data">↓</div>
+                        
+                        <div class="node node-widget">
+                            <div class="node-title">Set Text</div>
+                            <div class="node-detail">Target: Text_SectorDescription</div>
+                        </div>
+                    </div>
+                    
+                    <div class="branch-path">
+                        <div class="branch-label">✗ False Path</div>
+                        
+                        <div class="node node-function">
+                            <div class="node-title">Print String</div>
+                            <div class="node-detail">Debug: "No sector selected"</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tips">
+            <strong>Blueprint Tip:</strong> Use <span class="code-inline">Is Valid</span> before accessing any object reference. Connect the True pin to continue, False pin to handle errors.
+        </div>
+        
+        <h3>3. Update Exploration Progress</h3>
+        
+        <div class="graph-container">
+            <div class="flow-group">
+                <div class="node node-function">
+                    <div class="node-title">Get Exploration Progress</div>
+                    <div class="node-detail">Returns 0.0 to 1.0</div>
+                </div>
+                
+                <div class="parallel-container">
+                    <div class="parallel-item">
+                        <div class="arrow arrow-data">↓</div>
+                        <div class="data-type">[Float]</div>
+                        
+                        <div class="node node-widget">
+                            <div class="node-title">Set Percent</div>
+                            <div class="node-detail">Target: ProgressBar_Exploration</div>
+                        </div>
+                    </div>
+                    
+                    <div class="parallel-item">
+                        <div class="arrow arrow-data">↓</div>
+                        
+                        <div class="node node-pure">
+                            <div class="node-title">Float × Float</div>
+                            <div class="node-detail">Multiply by 100.0</div>
+                        </div>
+                        
+                        <div class="arrow arrow-data">↓</div>
+                        
+                        <div class="node node-function">
+                            <div class="node-title">Format Text</div>
+                            <div class="node-detail">Format: "Exploration: {0}%"</div>
+                        </div>
+                        
+                        <div class="arrow arrow-data">↓</div>
+                        
+                        <div class="node node-widget">
+                            <div class="node-title">Set Text</div>
+                            <div class="node-detail">Target: Text_ExplorationPercent</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tips">
+            <strong>Blueprint Tip:</strong> You can connect one output to multiple inputs (parallel flow). The progress value updates both the bar and the text.
+        </div>
+        
+        <h3>4. Close Button Handler</h3>
+        
+        <div class="graph-container">
+            <div class="flow-group">
+                <div class="node node-event">
+                    <div class="node-title">Button_Close: On Clicked</div>
+                    <div class="node-detail">User clicks close button</div>
+                </div>
+                
+                <div class="arrow arrow-exec">↓</div>
+                
+                <div class="node node-function">
+                    <div class="node-title">Get Player Controller</div>
+                    <div class="node-detail">Gets current controller</div>
+                </div>
+                
+                <div class="arrow arrow-data">↓</div>
+                <div class="data-type">[APlayerController*]</div>
+                
+                <div class="node node-function">
+                    <div class="node-title">Toggle Universe Map Visibility</div>
+                    <div class="node-detail">b Visible: false</div>
+                </div>
+            </div>
+        </div>
+        
+        <h2 id="sector-map">Sector Map Blueprints</h2>
+        
+        <h3>1. Update Sector Info</h3>
+        <div class="description">
+            Displays detailed information about a single sector, breaking down the sector info struct into individual components.
+        </div>
+        
+        <div class="graph-container">
+            <div class="flow-group">
+                <div class="node node-event">
+                    <div class="node-title">Event: Update Sector Info</div>
+                    <div class="node-detail">Input: FSectorDisplayInfo SectorInfo</div>
+                </div>
+                
+                <div class="arrow arrow-exec">↓</div>
+                <div class="arrow arrow-data">↓</div>
+                
+                <div class="node node-function">
+                    <div class="node-title">Break FSectorDisplayInfo</div>
+                    <div class="node-detail">Splits struct into fields</div>
+                </div>
+                
+                <div class="description" style="margin: 20px auto; max-width: 500px;">
+                    <strong>Outputs:</strong><br>
+                    • Sector Name (FText)<br>
+                    • Description (FText)<br>
+                    • Sector Center (FVector)<br>
+                    • Sector Size (Float)<br>
+                    • Object Count (Int32)
+                </div>
+                
+                <div class="parallel-container">
+                    <div class="parallel-item">
+                        <div class="data-type">[FText] Name</div>
+                        <div class="arrow arrow-data">↓</div>
+                        <div class="node node-widget">
+                            <div class="node-title">Set Text</div>
+                            <div class="node-detail">Text_SectorName</div>
+                        </div>
+                    </div>
+                    
+                    <div class="parallel-item">
+                        <div class="data-type">[FText] Description</div>
+                        <div class="arrow arrow-data">↓</div>
+                        <div class="node node-widget">
+                            <div class="node-title">Set Text</div>
+                            <div class="node-detail">Text_SectorDescription</div>
+                        </div>
+                    </div>
+                    
+                    <div class="parallel-item">
+                        <div class="data-type">[Int32] Count</div>
+                        <div class="arrow arrow-data">↓</div>
+                        <div class="node node-function">
+                            <div class="node-title">Format Text</div>
+                            <div class="node-detail">"Objects: {0}"</div>
+                        </div>
+                        <div class="arrow arrow-data">↓</div>
+                        <div class="node node-widget">
+                            <div class="node-title">Set Text</div>
+                            <div class="node-detail">Text_ObjectCount</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tips">
+            <strong>Blueprint Tip:</strong> Use <span class="code-inline">Break</span> nodes to access struct fields. This splits one struct into multiple outputs you can use separately.
+        </div>
+        
+        <h3>2. Update Object List with Loop</h3>
+        
+        <div class="graph-container">
+            <div class="flow-group">
+                <div class="node node-variable">
+                    <div class="node-title">Get: ScrollBox_Objects</div>
+                    <div class="node-detail">Widget reference</div>
+                </div>
+                
+                <div class="arrow arrow-exec">↓</div>
+                
+                <div class="node node-widget">
+                    <div class="node-title">Clear Children</div>
+                    <div class="node-detail">Remove old entries</div>
+                </div>
+                
+                <div class="arrow arrow-exec">↓</div>
+                
+                <div class="node node-function">
+                    <div class="node-title">ForEach Loop</div>
+                    <div class="node-detail">Array: ObjectNames</div>
+                </div>
+                
+                <div style="border: 2px dashed #ffb74d; padding: 20px; margin: 15px auto; max-width: 600px; border-radius: 8px;">
+                    <div style="text-align: center; color: #ffb74d; margin-bottom: 10px; font-weight: bold;">
+                        LOOP BODY (Repeats for each item)
+                    </div>
+                    
+                    <div class="node node-function">
+                        <div class="node-title">Construct Object from Class</div>
+                        <div class="node-detail">Class: TextBlock</div>
+                    </div>
+                    
+                    <div class="arrow arrow-data">↓</div>
+                    <div class="data-type">[UTextBlock*]</div>
+                    
+                    <div class="node node-widget">
+                        <div class="node-title">Set Text</div>
+                        <div class="node-detail">Text: Current Object Name</div>
+                    </div>
+                    
+                    <div class="arrow arrow-exec">↓</div>
+                    
+                    <div class="node node-widget">
+                        <div class="node-title">Add Child to Scroll Box</div>
+                        <div class="node-detail">Parent: ScrollBox_Objects</div>
+                    </div>
+                </div>
+                
+                <div class="arrow arrow-exec">↓</div>
+                
+                <div class="node node-function">
+                    <div class="node-title">Loop Complete</div>
+                    <div class="node-detail">All items processed</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tips">
+            <strong>Blueprint Tip:</strong> <span class="code-inline">ForEach Loop</span> processes each array element one at a time. The Loop Body executes for every item in the array.
+        </div>
+        
+        <h2 id="ship-status">Ship Status Blueprints</h2>
+        
+        <h3>1. Update Core Stats with Color Coding</h3>
+        <div class="description">
+            Updates hull integrity bar and changes color based on health percentage (Green > 75%, Yellow > 50%, Red < 50%).
+        </div>
+        
+        <div class="graph-container">
+            <div class="flow-group">
+                <div class="node node-event">
+                    <div class="node-title">Event: Update Core Stats</div>
+                    <div class="node-detail">Input: CurrentHull, MaxHull, etc.</div>
+                </div>
+                
+                <div class="arrow arrow-exec">↓</div>
+                
+                <div class="node node-pure">
+                    <div class="node-title">Float ÷ Float</div>
+                    <div class="node-detail">CurrentHull / MaxHull</div>
+                </div>
+                
+                <div class="arrow arrow-data">↓</div>
+                <div class="data-type">[Float] Percent (0.0-1.0)</div>
+                
+                <div class="node node-widget">
+                    <div class="node-title">Set Percent</div>
+                    <div class="node-detail">Target: ProgressBar_Hull</div>
+                </div>
+                
+                <div class="arrow arrow-exec">↓</div>
+                
+                <div class="node node-branch">
+                    <div class="node-title">Branch</div>
+                    <div class="node-detail">Percent > 0.75?</div>
+                </div>
+                
+                <div class="branch-container">
+                    <div class="branch-path">
+                        <div class="branch-label">✓ True (Healthy)</div>
+                        
+                        <div class="node node-widget" style="background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);">
+                            <div class="node-title">Set Fill Color</div>
+                            <div class="node-detail">RGB(0, 1, 0) GREEN</div>
+                        </div>
+                    </div>
+                    
+                    <div class="branch-path">
+                        <div class="branch-label">✗ False (Damaged)</div>
+                        
+                        <div class="node node-branch">
+                            <div class="node-title">Branch</div>
+                            <div class="node-detail">Percent > 0.5?</div>
+                        </div>
+                        
+                        <div class="branch-container">
+                            <div class="branch-path">
+                                <div class="branch-label">✓ Moderate</div>
+                                
+                                <div class="node node-widget" style="background: linear-gradient(135deg, #f57f17 0%, #fbc02d 100%);">
+                                    <div class="node-title">Set Fill Color</div>
+                                    <div class="node-detail">RGB(1, 1, 0) YELLOW</div>
+                                </div>
+                            </div>
+                            
+                            <div class="branch-path">
+                                <div class="branch-label">✗ Critical</div>
+                                
+                                <div class="node node-widget" style="background: linear-gradient(135deg, #c62828 0%, #e53935 100%);">
+                                    <div class="node-title">Set Fill Color</div>
+                                    <div class="node-detail">RGB(1, 0, 0) RED</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tips">
+            <strong>Blueprint Tip:</strong> Use nested <span class="code-inline">Branch</span> nodes to create multiple conditions. First check > 0.75, if false then check > 0.5, if false show red.
+        </div>
+        
+        <h3>2. Update Ratings - Parallel Display</h3>
+        
+        <div class="graph-container">
+            <div class="flow-group">
+                <div class="node node-event">
+                    <div class="node-title">Event: Update Ratings</div>
+                    <div class="node-detail">Combat, Mobility, Utility (0-100)</div>
+                </div>
+                
+                <div class="parallel-container">
+                    <div class="parallel-item">
+                        <div style="color: #ef5350; font-weight: bold; margin: 10px 0;">COMBAT</div>
+                        <div class="data-type">[Float] CombatRating</div>
+                        <div class="arrow arrow-data">↓</div>
+                        
+                        <div class="node node-pure">
+                            <div class="node-title">÷ 100.0</div>
+                            <div class="node-detail">Convert to 0-1</div>
+                        </div>
+                        
+                        <div class="arrow arrow-data">↓</div>
+                        
+                        <div class="node node-widget" style="background: linear-gradient(135deg, #c62828 0%, #e53935 100%);">
+                            <div class="node-title">Set Percent</div>
+                            <div class="node-detail">ProgressBar_Combat</div>
+                        </div>
+                    </div>
+                    
+                    <div class="parallel-item">
+                        <div style="color: #ffee58; font-weight: bold; margin: 10px 0;">MOBILITY</div>
+                        <div class="data-type">[Float] MobilityRating</div>
+                        <div class="arrow arrow-data">↓</div>
+                        
+                        <div class="node node-pure">
+                            <div class="node-title">÷ 100.0</div>
+                            <div class="node-detail">Convert to 0-1</div>
+                        </div>
+                        
+                        <div class="arrow arrow-data">↓</div>
+                        
+                        <div class="node node-widget" style="background: linear-gradient(135deg, #f57f17 0%, #fbc02d 100%);">
+                            <div class="node-title">Set Percent</div>
+                            <div class="node-detail">ProgressBar_Mobility</div>
+                        </div>
+                    </div>
+                    
+                    <div class="parallel-item">
+                        <div style="color: #66bb6a; font-weight: bold; margin: 10px 0;">UTILITY</div>
+                        <div class="data-type">[Float] UtilityRating</div>
+                        <div class="arrow arrow-data">↓</div>
+                        
+                        <div class="node node-pure">
+                            <div class="node-title">÷ 100.0</div>
+                            <div class="node-detail">Convert to 0-1</div>
+                        </div>
+                        
+                        <div class="arrow arrow-data">↓</div>
+                        
+                        <div class="node node-widget" style="background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);">
+                            <div class="node-title">Set Percent</div>
+                            <div class="node-detail">ProgressBar_Utility</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h2 id="patterns">Common Blueprint Patterns</h2>
+        
+        <h3>Pattern 1: Simple Button Click</h3>
+        
+        <div class="graph-container">
+            <div class="flow-group" style="max-width: 400px; margin: 0 auto;">
+                <div class="node node-event">
+                    <div class="node-title">Button: On Clicked</div>
+                </div>
+                
+                <div class="arrow arrow-exec">↓</div>
+                
+                <div class="node node-function">
+                    <div class="node-title">Do Action</div>
+                    <div class="node-detail">Your custom logic</div>
+                </div>
+            </div>
+        </div>
+        
+        <h3>Pattern 2: Input Validation</h3>
+        
+        <div class="graph-container">
+            <div class="flow-group">
+                <div class="node node-variable">
+                    <div class="node-title">Get Variable</div>
+                </div>
+                
+                <div class="arrow arrow-data">↓</div>
+                
+                <div class="node node-pure">
+                    <div class="node-title">Is Valid?</div>
+                </div>
+                
+                <div class="arrow arrow-exec">↓</div>
+                
+                <div class="node node-branch">
+                    <div class="node-title">Branch</div>
+                </div>
+                
+                <div class="branch-container">
+                    <div class="branch-path">
+                        <div class="branch-label">✓ Valid</div>
+                        <div class="node node-function" style="background: linear-gradient(135deg, #388e3c 0%, #66bb6a 100%);">
+                            <div class="node-title">Continue</div>
+                            <div class="node-detail">Safe to use</div>
+                        </div>
+                    </div>
+                    
+                    <div class="branch-path">
+                        <div class="branch-label">✗ Invalid</div>
+                        <div class="node node-function" style="background: linear-gradient(135deg, #d32f2f 0%, #ef5350 100%);">
+                            <div class="node-title">Show Error</div>
+                            <div class="node-detail">Handle null case</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h3>Pattern 3: Format and Display</h3>
+        
+        <div class="graph-container">
+            <div class="flow-group" style="max-width: 500px; margin: 0 auto;">
+                <div class="node node-pure">
+                    <div class="node-title">Get Value</div>
+                    <div class="node-detail">e.g., 75.0</div>
+                </div>
+                
+                <div class="arrow arrow-data">↓</div>
+                <div class="data-type">[Float]</div>
+                
+                <div class="node node-function">
+                    <div class="node-title">Format Text</div>
+                    <div class="node-detail">Format: "HP: {0}"</div>
+                </div>
+                
+                <div class="arrow arrow-data">↓</div>
+                <div class="data-type">[FText]</div>
+                
+                <div class="node node-widget">
+                    <div class="node-title">Set Text</div>
+                    <div class="node-detail">Target: Text Block</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="description" style="margin-top: 40px; padding: 20px; background: #1a1a3a; border-left-color: #5c6bc0;">
+            <h3 style="color: #9fa8da; margin-bottom: 15px;">How to Use This Guide</h3>
+            <p style="margin-bottom: 10px;"><strong>1. Open this file in a web browser</strong> - Double-click the HTML file or drag it into your browser</p>
+            <p style="margin-bottom: 10px;"><strong>2. Reference while building</strong> - Keep this open alongside Unreal Engine</p>
+            <p style="margin-bottom: 10px;"><strong>3. Follow the colors</strong> - Match node colors in your Blueprints (Red=Event, Blue=Function, etc.)</p>
+            <p style="margin-bottom: 10px;"><strong>4. Check the arrows</strong> - White arrows = execution flow (must connect), Blue arrows = data (values)</p>
+            <p><strong>5. Use with detailed guide</strong> - See BLUEPRINT_CREATION_DETAILED_GUIDE.md for click-by-click instructions</p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px; padding: 20px; color: #9e9e9e;">
+            <p><strong>Related Documents:</strong></p>
+            <p>
+                <a href="BLUEPRINT_CREATION_DETAILED_GUIDE.md" style="color: #4fc3f7;">Detailed Creation Guide</a> | 
+                <a href="BLUEPRINT_GRAPH_VISUAL_GUIDE.md" style="color: #4fc3f7;">Text-Based Diagrams</a> | 
+                <a href="UPDATED_BLUEPRINT_LIST_2025.md" style="color: #4fc3f7;">Complete Blueprint List</a>
+            </p>
+            <p style="margin-top: 20px; font-size: 0.9em;">Last Updated: December 16, 2025</p>
+        </div>
+    </div>
+    
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Add copy functionality for code blocks
+        document.querySelectorAll('.graph-container').forEach(container => {
+            const button = document.createElement('button');
+            button.className = 'copy-button';
+            button.textContent = '📋 Copy Node Names';
+            button.onclick = () => {
+                const nodes = container.querySelectorAll('.node-title');
+                const text = Array.from(nodes).map(n => n.textContent).join('\n→ ');
+                navigator.clipboard.writeText(text).then(() => {
+                    button.textContent = '✓ Copied!';
+                    setTimeout(() => button.textContent = '📋 Copy Node Names', 2000);
+                });
+            };
+            container.insertBefore(button, container.firstChild);
+        });
+    </script>
+</body>
+</html>
