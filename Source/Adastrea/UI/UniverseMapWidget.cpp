@@ -5,19 +5,47 @@
 #include "AdastreaLog.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerController.h"
+#include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
+#include "Components/TextBlock.h"
+#include "Components/ProgressBar.h"
+#include "Components/Button.h"
+#include "Components/Border.h"
+#include "Components/Image.h"
+#include "Components/VerticalBox.h"
+#include "Blueprint/WidgetTree.h"
 
 UUniverseMapWidget::UUniverseMapWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
+	, SectorGridPanel(nullptr)
+	, Text_SectorName(nullptr)
+	, Text_SectorDescription(nullptr)
+	, ProgressBar_Exploration(nullptr)
+	, Text_ExplorationPercent(nullptr)
+	, Button_Close(nullptr)
 	, SelectedSector(nullptr)
 	, bIsUniverseMapVisible(false)
 	, bAutoDiscoverVisitedSectors(true)
 	, bShowUndiscoveredSectors(true)
+	, bAutoCreateMissingWidgets(true)
 {
 }
 
 void UUniverseMapWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+	
+	// Create default UI widgets if they don't exist and auto-create is enabled
+	if (bAutoCreateMissingWidgets)
+	{
+		CreateDefaultUIWidgets();
+	}
+	
+	// Setup close button if it exists
+	if (Button_Close)
+	{
+		Button_Close->OnClicked.AddDynamic(this, &UUniverseMapWidget::OnCloseButtonClicked);
+	}
 	
 	// Initialize the universe map when constructed
 	InitializeUniverseMap();
@@ -78,7 +106,54 @@ void UUniverseMapWidget::RefreshUniverseMap()
 
 void UUniverseMapWidget::UpdateUniverseGrid_Implementation()
 {
-	// Blueprint implementation handles visual display of the grid
+	// Update exploration progress display if widgets exist
+	if (ProgressBar_Exploration)
+	{
+		float Progress = GetExplorationProgress();
+		ProgressBar_Exploration->SetPercent(Progress);
+	}
+
+	if (Text_ExplorationPercent)
+	{
+		float Progress = GetExplorationProgress();
+		int32 ProgressPercent = FMath::RoundToInt(Progress * 100.0f);
+		FText ProgressText = FText::Format(
+			FText::FromString("Exploration: {0}% ({1}/{2})"),
+			ProgressPercent,
+			GetDiscoveredSectorCount(),
+			GetTotalSectorCount()
+		);
+		Text_ExplorationPercent->SetText(ProgressText);
+	}
+
+	// Update selected sector info if a sector is selected
+	if (SelectedSector)
+	{
+		if (Text_SectorName)
+		{
+			Text_SectorName->SetText(SelectedSector->SectorName);
+		}
+
+		if (Text_SectorDescription)
+		{
+			Text_SectorDescription->SetText(SelectedSector->Description);
+		}
+	}
+	else
+	{
+		// No sector selected - show default text
+		if (Text_SectorName)
+		{
+			Text_SectorName->SetText(FText::FromString("No Sector Selected"));
+		}
+
+		if (Text_SectorDescription)
+		{
+			Text_SectorDescription->SetText(FText::FromString("Select a sector to view details"));
+		}
+	}
+	
+	// Blueprint implementation can add additional visual display of the grid
 	// This can draw sector icons, connections, labels, etc.
 	
 	UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Grid updated - %d sectors, %d discovered"), 
@@ -323,4 +398,200 @@ TArray<ASpaceSectorMap*> UUniverseMapWidget::FindAllSectorsInWorld() const
 	}
 	
 	return Sectors;
+}
+
+void UUniverseMapWidget::CreateDefaultUIWidgets()
+{
+	if (!WidgetTree)
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("UniverseMapWidget: Cannot create default widgets - WidgetTree is null"));
+		return;
+	}
+
+	// Get or create root canvas panel
+	UCanvasPanel* RootCanvas = Cast<UCanvasPanel>(GetRootWidget());
+	if (!RootCanvas)
+	{
+		RootCanvas = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), TEXT("RootCanvas"));
+		if (!RootCanvas)
+		{
+			UE_LOG(LogAdastrea, Error, TEXT("UniverseMapWidget: Failed to create root canvas panel"));
+			return;
+		}
+		WidgetTree->RootWidget = RootCanvas;
+		UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Created root canvas panel"));
+	}
+
+	// Create background image if not exists
+	if (!WidgetTree->FindWidget(TEXT("Background")))
+	{
+		UImage* Background = WidgetTree->ConstructWidget<UImage>(UImage::StaticClass(), TEXT("Background"));
+		if (Background && RootCanvas)
+		{
+			Background->SetColorAndOpacity(FLinearColor(0.0f, 0.0f, 0.05f, 0.9f));
+			RootCanvas->AddChild(Background);
+			UCanvasPanelSlot* BgSlot = Cast<UCanvasPanelSlot>(Background->Slot);
+			if (BgSlot)
+			{
+				BgSlot->SetAnchors(FAnchors(0.0f, 0.0f, 1.0f, 1.0f));
+				BgSlot->SetOffsets(FMargin(0.0f));
+			}
+			UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Created background image"));
+		}
+	}
+
+	// Create map container border if not exists
+	UBorder* MapContainer = Cast<UBorder>(WidgetTree->FindWidget(TEXT("MapContainer")));
+	if (!MapContainer)
+	{
+		MapContainer = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("MapContainer"));
+		if (MapContainer)
+		{
+			MapContainer->SetBrushColor(FLinearColor(0.1f, 0.1f, 0.15f, 0.8f));
+			RootCanvas->AddChild(MapContainer);
+			UCanvasPanelSlot* ContainerSlot = Cast<UCanvasPanelSlot>(MapContainer->Slot);
+			if (ContainerSlot)
+			{
+				ContainerSlot->SetAnchors(FAnchors(0.5f, 0.5f));
+				ContainerSlot->SetAlignment(FVector2D(0.5f, 0.5f));
+				ContainerSlot->SetPosition(FVector2D(0.0f, 0.0f));
+				ContainerSlot->SetSize(FVector2D(1520.0f, 880.0f));
+			}
+			UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Created map container border"));
+		}
+	}
+
+	// Create or find sector grid panel
+	if (!SectorGridPanel)
+	{
+		SectorGridPanel = Cast<UCanvasPanel>(WidgetTree->FindWidget(TEXT("SectorGridPanel")));
+		if (!SectorGridPanel && MapContainer)
+		{
+			SectorGridPanel = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), TEXT("SectorGridPanel"));
+			if (SectorGridPanel)
+			{
+				MapContainer->AddChild(SectorGridPanel);
+				UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Created sector grid panel"));
+			}
+		}
+	}
+
+	// Create info panel if not exists
+	UVerticalBox* InfoPanel = Cast<UVerticalBox>(WidgetTree->FindWidget(TEXT("InfoPanel")));
+	if (!InfoPanel)
+	{
+		InfoPanel = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass(), TEXT("InfoPanel"));
+		if (InfoPanel)
+		{
+			RootCanvas->AddChild(InfoPanel);
+			UCanvasPanelSlot* InfoSlot = Cast<UCanvasPanelSlot>(InfoPanel->Slot);
+			if (InfoSlot)
+			{
+				InfoSlot->SetAnchors(FAnchors(1.0f, 0.5f));
+				InfoSlot->SetAlignment(FVector2D(1.0f, 0.5f));
+				InfoSlot->SetPosition(FVector2D(-20.0f, 0.0f));
+				InfoSlot->SetSize(FVector2D(300.0f, 880.0f));
+			}
+			UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Created info panel"));
+		}
+	}
+
+	// Create sector name text if not exists
+	if (!Text_SectorName && InfoPanel)
+	{
+		Text_SectorName = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("Text_SectorName"));
+		if (Text_SectorName)
+		{
+			Text_SectorName->SetText(FText::FromString("Sector Name"));
+			Text_SectorName->SetJustification(ETextJustify::Center);
+			FSlateFontInfo FontInfo = Text_SectorName->GetFont();
+			FontInfo.Size = 24;
+			Text_SectorName->SetFont(FontInfo);
+			InfoPanel->AddChild(Text_SectorName);
+			UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Created sector name text"));
+		}
+	}
+
+	// Create sector description text if not exists
+	if (!Text_SectorDescription && InfoPanel)
+	{
+		Text_SectorDescription = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("Text_SectorDescription"));
+		if (Text_SectorDescription)
+		{
+			Text_SectorDescription->SetText(FText::FromString("Sector description will appear here..."));
+			Text_SectorDescription->SetAutoWrapText(true);
+			FSlateFontInfo FontInfo = Text_SectorDescription->GetFont();
+			FontInfo.Size = 14;
+			Text_SectorDescription->SetFont(FontInfo);
+			InfoPanel->AddChild(Text_SectorDescription);
+			UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Created sector description text"));
+		}
+	}
+
+	// Create exploration progress bar if not exists
+	if (!ProgressBar_Exploration && InfoPanel)
+	{
+		ProgressBar_Exploration = WidgetTree->ConstructWidget<UProgressBar>(UProgressBar::StaticClass(), TEXT("ProgressBar_Exploration"));
+		if (ProgressBar_Exploration)
+		{
+			ProgressBar_Exploration->SetPercent(0.0f);
+			ProgressBar_Exploration->SetFillColorAndOpacity(FLinearColor(0.2f, 0.5f, 1.0f, 1.0f));
+			InfoPanel->AddChild(ProgressBar_Exploration);
+			UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Created exploration progress bar"));
+		}
+	}
+
+	// Create exploration percentage text if not exists
+	if (!Text_ExplorationPercent && InfoPanel)
+	{
+		Text_ExplorationPercent = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("Text_ExplorationPercent"));
+		if (Text_ExplorationPercent)
+		{
+			Text_ExplorationPercent->SetText(FText::FromString("Exploration: 0%"));
+			Text_ExplorationPercent->SetJustification(ETextJustify::Center);
+			FSlateFontInfo FontInfo = Text_ExplorationPercent->GetFont();
+			FontInfo.Size = 16;
+			Text_ExplorationPercent->SetFont(FontInfo);
+			InfoPanel->AddChild(Text_ExplorationPercent);
+			UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Created exploration percent text"));
+		}
+	}
+
+	// Create close button if not exists
+	if (!Button_Close)
+	{
+		Button_Close = WidgetTree->ConstructWidget<UButton>(UButton::StaticClass(), TEXT("Button_Close"));
+		if (Button_Close)
+		{
+			RootCanvas->AddChild(Button_Close);
+			UCanvasPanelSlot* ButtonSlot = Cast<UCanvasPanelSlot>(Button_Close->Slot);
+			if (ButtonSlot)
+			{
+				ButtonSlot->SetAnchors(FAnchors(1.0f, 0.0f));
+				ButtonSlot->SetAlignment(FVector2D(1.0f, 0.0f));
+				ButtonSlot->SetPosition(FVector2D(-70.0f, 50.0f));
+				ButtonSlot->SetSize(FVector2D(50.0f, 50.0f));
+			}
+
+			// Add "X" text to button
+			UTextBlock* ButtonText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("Button_Close_Text"));
+			if (ButtonText)
+			{
+				ButtonText->SetText(FText::FromString("X"));
+				ButtonText->SetJustification(ETextJustify::Center);
+				FSlateFontInfo FontInfo = ButtonText->GetFont();
+				FontInfo.Size = 28;
+				ButtonText->SetFont(FontInfo);
+				Button_Close->AddChild(ButtonText);
+			}
+
+			UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Created close button"));
+		}
+	}
+}
+
+void UUniverseMapWidget::OnCloseButtonClicked()
+{
+	ToggleUniverseMapVisibility(false);
+	UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Close button clicked"));
 }

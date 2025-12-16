@@ -4,11 +4,23 @@
 #include "SpaceSectorMap.h"
 #include "AdastreaLog.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/TextBlock.h"
+#include "Components/ScrollBox.h"
+#include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
+#include "Components/VerticalBox.h"
+#include "Components/Border.h"
+#include "Blueprint/WidgetTree.h"
 
 USectorMapWidget::USectorMapWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 	, CurrentSector(nullptr)
 	, bIsSectorMapVisible(false)
+	, Text_SectorName(nullptr)
+	, Text_SectorDescription(nullptr)
+	, Text_ObjectCount(nullptr)
+	, ObjectListScrollBox(nullptr)
+	, bAutoCreateMissingWidgets(true)
 {
 	// Initialize default sector info
 	CurrentSectorInfo = FSectorDisplayInfo();
@@ -17,6 +29,12 @@ USectorMapWidget::USectorMapWidget(const FObjectInitializer& ObjectInitializer)
 void USectorMapWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+	
+	// Create default UI widgets if they don't exist and auto-create is enabled
+	if (bAutoCreateMissingWidgets)
+	{
+		CreateDefaultUIWidgets();
+	}
 	
 	// Initialize the sector map when constructed
 	InitializeSectorMap();
@@ -67,6 +85,26 @@ void USectorMapWidget::InitializeSectorMap_Implementation()
 void USectorMapWidget::UpdateSectorInfo_Implementation(const FSectorDisplayInfo& SectorInfo)
 {
 	CurrentSectorInfo = SectorInfo;
+	
+	// Update UI widgets if they exist
+	if (Text_SectorName)
+	{
+		Text_SectorName->SetText(SectorInfo.SectorName);
+	}
+
+	if (Text_SectorDescription)
+	{
+		Text_SectorDescription->SetText(SectorInfo.Description);
+	}
+
+	if (Text_ObjectCount)
+	{
+		FText CountText = FText::Format(
+			FText::FromString("Objects: {0}"),
+			SectorInfo.ObjectCount
+		);
+		Text_ObjectCount->SetText(CountText);
+	}
 	
 	UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Updated sector info for '%s'"), *SectorInfo.SectorName.ToString());
 	
@@ -261,4 +299,118 @@ float USectorMapWidget::GetDistanceToSector(ASpaceSectorMap* OtherSector) const
 	FVector OtherCenter = OtherSector->GetSectorCenter();
 	
 	return FVector::Dist(CurrentCenter, OtherCenter);
+}
+
+void USectorMapWidget::CreateDefaultUIWidgets()
+{
+	if (!WidgetTree)
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("SectorMapWidget: Cannot create default widgets - WidgetTree is null"));
+		return;
+	}
+
+	// Get or create root canvas panel
+	UCanvasPanel* RootCanvas = Cast<UCanvasPanel>(GetRootWidget());
+	if (!RootCanvas)
+	{
+		RootCanvas = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), TEXT("RootCanvas"));
+		if (!RootCanvas)
+		{
+			UE_LOG(LogAdastrea, Error, TEXT("SectorMapWidget: Failed to create root canvas panel"));
+			return;
+		}
+		WidgetTree->RootWidget = RootCanvas;
+		UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Created root canvas panel"));
+	}
+
+	// Create background border if not exists
+	UBorder* Background = Cast<UBorder>(WidgetTree->FindWidget(TEXT("Background")));
+	if (!Background)
+	{
+		Background = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("Background"));
+		if (Background && RootCanvas)
+		{
+			Background->SetBrushColor(FLinearColor(0.05f, 0.05f, 0.1f, 0.9f));
+			RootCanvas->AddChild(Background);
+			UCanvasPanelSlot* BgSlot = Cast<UCanvasPanelSlot>(Background->Slot);
+			if (BgSlot)
+			{
+				BgSlot->SetAnchors(FAnchors(0.5f, 0.5f));
+				BgSlot->SetAlignment(FVector2D(0.5f, 0.5f));
+				BgSlot->SetPosition(FVector2D(0.0f, 0.0f));
+				BgSlot->SetSize(FVector2D(600.0f, 700.0f));
+			}
+			UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Created background border"));
+		}
+	}
+
+	// Create main content vertical box
+	UVerticalBox* MainContent = Cast<UVerticalBox>(WidgetTree->FindWidget(TEXT("MainContent")));
+	if (!MainContent && Background)
+	{
+		MainContent = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass(), TEXT("MainContent"));
+		if (MainContent)
+		{
+			Background->AddChild(MainContent);
+			UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Created main content vertical box"));
+		}
+	}
+
+	// Create sector name text if not exists
+	if (!Text_SectorName && MainContent)
+	{
+		Text_SectorName = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("Text_SectorName"));
+		if (Text_SectorName)
+		{
+			Text_SectorName->SetText(FText::FromString("Sector Name"));
+			Text_SectorName->SetJustification(ETextJustify::Center);
+			FSlateFontInfo FontInfo = Text_SectorName->GetFont();
+			FontInfo.Size = 28;
+			Text_SectorName->SetFont(FontInfo);
+			MainContent->AddChild(Text_SectorName);
+			UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Created sector name text"));
+		}
+	}
+
+	// Create sector description text if not exists
+	if (!Text_SectorDescription && MainContent)
+	{
+		Text_SectorDescription = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("Text_SectorDescription"));
+		if (Text_SectorDescription)
+		{
+			Text_SectorDescription->SetText(FText::FromString("Sector description will appear here"));
+			Text_SectorDescription->SetAutoWrapText(true);
+			FSlateFontInfo FontInfo = Text_SectorDescription->GetFont();
+			FontInfo.Size = 14;
+			Text_SectorDescription->SetFont(FontInfo);
+			MainContent->AddChild(Text_SectorDescription);
+			UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Created sector description text"));
+		}
+	}
+
+	// Create object count text if not exists
+	if (!Text_ObjectCount && MainContent)
+	{
+		Text_ObjectCount = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("Text_ObjectCount"));
+		if (Text_ObjectCount)
+		{
+			Text_ObjectCount->SetText(FText::FromString("Objects: 0"));
+			FSlateFontInfo FontInfo = Text_ObjectCount->GetFont();
+			FontInfo.Size = 16;
+			Text_ObjectCount->SetFont(FontInfo);
+			MainContent->AddChild(Text_ObjectCount);
+			UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Created object count text"));
+		}
+	}
+
+	// Create object list scroll box if not exists
+	if (!ObjectListScrollBox && MainContent)
+	{
+		ObjectListScrollBox = WidgetTree->ConstructWidget<UScrollBox>(UScrollBox::StaticClass(), TEXT("ObjectListScrollBox"));
+		if (ObjectListScrollBox)
+		{
+			MainContent->AddChild(ObjectListScrollBox);
+			UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Created object list scroll box"));
+		}
+	}
 }

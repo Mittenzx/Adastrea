@@ -200,6 +200,54 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category="Ship Status")
 	USpaceshipDataAsset* ShipDataAsset;
 
+	// ====================
+	// BOUND UI WIDGETS (Optional - will be created in C++ if not bound)
+	// ====================
+
+	/** Text widget for ship name display - created automatically if not bound */
+	UPROPERTY(BlueprintReadOnly, Category="Ship Status|UI", meta=(BindWidgetOptional))
+	class UTextBlock* Text_ShipName;
+
+	/** Text widget for ship class display - created automatically if not bound */
+	UPROPERTY(BlueprintReadOnly, Category="Ship Status|UI", meta=(BindWidgetOptional))
+	class UTextBlock* Text_ShipClass;
+
+	/** Text widget for description - created automatically if not bound */
+	UPROPERTY(BlueprintReadOnly, Category="Ship Status|UI", meta=(BindWidgetOptional))
+	class UTextBlock* Text_Description;
+
+	/** Text widget for combat rating - created automatically if not bound */
+	UPROPERTY(BlueprintReadOnly, Category="Ship Status|UI", meta=(BindWidgetOptional))
+	class UTextBlock* Text_CombatRating;
+
+	/** Text widget for mobility rating - created automatically if not bound */
+	UPROPERTY(BlueprintReadOnly, Category="Ship Status|UI", meta=(BindWidgetOptional))
+	class UTextBlock* Text_MobilityRating;
+
+	/** Text widget for utility rating - created automatically if not bound */
+	UPROPERTY(BlueprintReadOnly, Category="Ship Status|UI", meta=(BindWidgetOptional))
+	class UTextBlock* Text_UtilityRating;
+
+	/** Panel containing all stats - created automatically if not bound */
+	UPROPERTY(BlueprintReadOnly, Category="Ship Status|UI", meta=(BindWidgetOptional))
+	class UScrollBox* StatsScrollBox;
+
+	/** Close button - created automatically if not bound */
+	UPROPERTY(BlueprintReadOnly, Category="Ship Status|UI", meta=(BindWidgetOptional))
+	class UButton* Button_Close;
+
+	// ====================
+	// CONFIGURATION
+	// ====================
+
+	/** Whether to automatically create UI widgets in C++ if not bound in Blueprint */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Status|Config")
+	bool bAutoCreateMissingWidgets;
+
+	// ====================
+	// CACHED DISPLAY VALUES
+	// ====================
+
 	// Cached display values for Blueprint access
 	UPROPERTY(BlueprintReadOnly, Category="Ship Status|Display")
 	FText DisplayShipName;
@@ -225,4 +273,17 @@ protected:
 	 */
 	UFUNCTION(BlueprintCallable, Category="Ship Status")
 	ASpaceship* GetPlayerSpaceship() const;
+
+	/**
+	 * Create default UI widgets programmatically if they weren't bound in Blueprint
+	 * This allows the widget to work with zero Blueprint setup
+	 */
+	UFUNCTION(BlueprintCallable, Category="Ship Status")
+	void CreateDefaultUIWidgets();
+
+	/**
+	 * Setup close button click handler
+	 */
+	UFUNCTION()
+	void OnCloseButtonClicked();
 };

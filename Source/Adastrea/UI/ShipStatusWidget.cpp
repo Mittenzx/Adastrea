@@ -4,20 +4,49 @@
 #include "Player/AdastreaPlayerController.h"
 #include "AdastreaLog.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/TextBlock.h"
+#include "Components/ScrollBox.h"
+#include "Components/Button.h"
+#include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
+#include "Components/VerticalBox.h"
+#include "Components/Border.h"
+#include "Blueprint/WidgetTree.h"
 
 UShipStatusWidget::UShipStatusWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
+	, Text_ShipName(nullptr)
+	, Text_ShipClass(nullptr)
+	, Text_Description(nullptr)
+	, Text_CombatRating(nullptr)
+	, Text_MobilityRating(nullptr)
+	, Text_UtilityRating(nullptr)
+	, StatsScrollBox(nullptr)
+	, Button_Close(nullptr)
+	, bAutoCreateMissingWidgets(true)
+	, CurrentSpaceship(nullptr)
+	, ShipDataAsset(nullptr)
+	, DisplayCombatRating(0.0f)
+	, DisplayMobilityRating(0.0f)
+	, DisplayUtilityRating(0.0f)
 {
-	CurrentSpaceship = nullptr;
-	ShipDataAsset = nullptr;
-	DisplayCombatRating = 0.0f;
-	DisplayMobilityRating = 0.0f;
-	DisplayUtilityRating = 0.0f;
 }
 
 void UShipStatusWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	// Create default UI widgets if they don't exist and auto-create is enabled
+	if (bAutoCreateMissingWidgets)
+	{
+		CreateDefaultUIWidgets();
+	}
+
+	// Setup close button if it exists
+	if (Button_Close)
+	{
+		Button_Close->OnClicked.AddDynamic(this, &UShipStatusWidget::OnCloseButtonClicked);
+	}
 
 	// Auto-initialize with player's spaceship if not already set
 	if (!CurrentSpaceship)
@@ -163,6 +192,22 @@ void UShipStatusWidget::UpdateBasicInfo_Implementation(const FText& ShipName, co
 	DisplayShipClass = ShipClass;
 	DisplayDescription = Description;
 
+	// Update UI widgets if they exist
+	if (Text_ShipName)
+	{
+		Text_ShipName->SetText(ShipName);
+	}
+
+	if (Text_ShipClass)
+	{
+		Text_ShipClass->SetText(ShipClass);
+	}
+
+	if (Text_Description)
+	{
+		Text_Description->SetText(Description);
+	}
+
 	// Blueprint can override to update UI elements
 }
 
@@ -208,7 +253,33 @@ void UShipStatusWidget::UpdateRatings_Implementation(float CombatRating, float M
 	DisplayMobilityRating = MobilityRating;
 	DisplayUtilityRating = UtilityRating;
 
-	// Blueprint can override to update UI elements
+	// Update UI widgets if they exist
+	if (Text_CombatRating)
+	{
+		FText RatingText = FText::Format(
+			FText::FromString("Combat Rating: {0}"),
+			FMath::RoundToInt(CombatRating)
+		);
+		Text_CombatRating->SetText(RatingText);
+	}
+
+	if (Text_MobilityRating)
+	{
+		FText RatingText = FText::Format(
+			FText::FromString("Mobility Rating: {0}"),
+			FMath::RoundToInt(MobilityRating)
+		);
+		Text_MobilityRating->SetText(RatingText);
+	}
+
+	if (Text_UtilityRating)
+	{
+		FText RatingText = FText::Format(
+			FText::FromString("Utility Rating: {0}"),
+			FMath::RoundToInt(UtilityRating)
+		);
+		Text_UtilityRating->SetText(RatingText);
+	}
 }
 
 ASpaceship* UShipStatusWidget::GetPlayerSpaceship() const
@@ -236,4 +307,216 @@ ASpaceship* UShipStatusWidget::GetPlayerSpaceship() const
 
 	// Fallback: Try to cast pawn directly
 	return Cast<ASpaceship>(PC->GetPawn());
+}
+
+void UShipStatusWidget::CreateDefaultUIWidgets()
+{
+	if (!WidgetTree)
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("ShipStatusWidget: Cannot create default widgets - WidgetTree is null"));
+		return;
+	}
+
+	// Get or create root canvas panel
+	UCanvasPanel* RootCanvas = Cast<UCanvasPanel>(GetRootWidget());
+	if (!RootCanvas)
+	{
+		RootCanvas = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), TEXT("RootCanvas"));
+		if (!RootCanvas)
+		{
+			UE_LOG(LogAdastrea, Error, TEXT("ShipStatusWidget: Failed to create root canvas panel"));
+			return;
+		}
+		WidgetTree->RootWidget = RootCanvas;
+		UE_LOG(LogAdastrea, Log, TEXT("ShipStatusWidget: Created root canvas panel"));
+	}
+
+	// Create background border if not exists
+	UBorder* Background = Cast<UBorder>(WidgetTree->FindWidget(TEXT("Background")));
+	if (!Background)
+	{
+		Background = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("Background"));
+		if (Background && RootCanvas)
+		{
+			Background->SetBrushColor(FLinearColor(0.05f, 0.05f, 0.08f, 0.95f));
+			RootCanvas->AddChild(Background);
+			UCanvasPanelSlot* BgSlot = Cast<UCanvasPanelSlot>(Background->Slot);
+			if (BgSlot)
+			{
+				BgSlot->SetAnchors(FAnchors(0.5f, 0.5f));
+				BgSlot->SetAlignment(FVector2D(0.5f, 0.5f));
+				BgSlot->SetPosition(FVector2D(0.0f, 0.0f));
+				BgSlot->SetSize(FVector2D(800.0f, 900.0f));
+			}
+			UE_LOG(LogAdastrea, Log, TEXT("ShipStatusWidget: Created background border"));
+		}
+	}
+
+	// Create main vertical box for content layout
+	UVerticalBox* MainContent = Cast<UVerticalBox>(WidgetTree->FindWidget(TEXT("MainContent")));
+	if (!MainContent && Background)
+	{
+		MainContent = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass(), TEXT("MainContent"));
+		if (MainContent)
+		{
+			Background->AddChild(MainContent);
+			UE_LOG(LogAdastrea, Log, TEXT("ShipStatusWidget: Created main content vertical box"));
+		}
+	}
+
+	// Create ship name text if not exists
+	if (!Text_ShipName && MainContent)
+	{
+		Text_ShipName = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("Text_ShipName"));
+		if (Text_ShipName)
+		{
+			Text_ShipName->SetText(FText::FromString("Ship Name"));
+			Text_ShipName->SetJustification(ETextJustify::Center);
+			FSlateFontInfo FontInfo = Text_ShipName->GetFont();
+			FontInfo.Size = 32;
+			Text_ShipName->SetFont(FontInfo);
+			MainContent->AddChild(Text_ShipName);
+			UE_LOG(LogAdastrea, Log, TEXT("ShipStatusWidget: Created ship name text"));
+		}
+	}
+
+	// Create ship class text if not exists
+	if (!Text_ShipClass && MainContent)
+	{
+		Text_ShipClass = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("Text_ShipClass"));
+		if (Text_ShipClass)
+		{
+			Text_ShipClass->SetText(FText::FromString("Ship Class"));
+			Text_ShipClass->SetJustification(ETextJustify::Center);
+			FSlateFontInfo FontInfo = Text_ShipClass->GetFont();
+			FontInfo.Size = 18;
+			Text_ShipClass->SetFont(FontInfo);
+			Text_ShipClass->SetColorAndOpacity(FLinearColor(0.7f, 0.7f, 0.7f, 1.0f));
+			MainContent->AddChild(Text_ShipClass);
+			UE_LOG(LogAdastrea, Log, TEXT("ShipStatusWidget: Created ship class text"));
+		}
+	}
+
+	// Create description text if not exists
+	if (!Text_Description && MainContent)
+	{
+		Text_Description = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("Text_Description"));
+		if (Text_Description)
+		{
+			Text_Description->SetText(FText::FromString("Ship description will appear here"));
+			Text_Description->SetAutoWrapText(true);
+			FSlateFontInfo FontInfo = Text_Description->GetFont();
+			FontInfo.Size = 14;
+			Text_Description->SetFont(FontInfo);
+			MainContent->AddChild(Text_Description);
+			UE_LOG(LogAdastrea, Log, TEXT("ShipStatusWidget: Created description text"));
+		}
+	}
+
+	// Create ratings section
+	UVerticalBox* RatingsBox = Cast<UVerticalBox>(WidgetTree->FindWidget(TEXT("RatingsBox")));
+	if (!RatingsBox && MainContent)
+	{
+		RatingsBox = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass(), TEXT("RatingsBox"));
+		if (RatingsBox)
+		{
+			MainContent->AddChild(RatingsBox);
+			UE_LOG(LogAdastrea, Log, TEXT("ShipStatusWidget: Created ratings box"));
+		}
+	}
+
+	// Create combat rating text if not exists
+	if (!Text_CombatRating && RatingsBox)
+	{
+		Text_CombatRating = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("Text_CombatRating"));
+		if (Text_CombatRating)
+		{
+			Text_CombatRating->SetText(FText::FromString("Combat Rating: 0"));
+			FSlateFontInfo FontInfo = Text_CombatRating->GetFont();
+			FontInfo.Size = 16;
+			Text_CombatRating->SetFont(FontInfo);
+			RatingsBox->AddChild(Text_CombatRating);
+			UE_LOG(LogAdastrea, Log, TEXT("ShipStatusWidget: Created combat rating text"));
+		}
+	}
+
+	// Create mobility rating text if not exists
+	if (!Text_MobilityRating && RatingsBox)
+	{
+		Text_MobilityRating = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("Text_MobilityRating"));
+		if (Text_MobilityRating)
+		{
+			Text_MobilityRating->SetText(FText::FromString("Mobility Rating: 0"));
+			FSlateFontInfo FontInfo = Text_MobilityRating->GetFont();
+			FontInfo.Size = 16;
+			Text_MobilityRating->SetFont(FontInfo);
+			RatingsBox->AddChild(Text_MobilityRating);
+			UE_LOG(LogAdastrea, Log, TEXT("ShipStatusWidget: Created mobility rating text"));
+		}
+	}
+
+	// Create utility rating text if not exists
+	if (!Text_UtilityRating && RatingsBox)
+	{
+		Text_UtilityRating = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("Text_UtilityRating"));
+		if (Text_UtilityRating)
+		{
+			Text_UtilityRating->SetText(FText::FromString("Utility Rating: 0"));
+			FSlateFontInfo FontInfo = Text_UtilityRating->GetFont();
+			FontInfo.Size = 16;
+			Text_UtilityRating->SetFont(FontInfo);
+			RatingsBox->AddChild(Text_UtilityRating);
+			UE_LOG(LogAdastrea, Log, TEXT("ShipStatusWidget: Created utility rating text"));
+		}
+	}
+
+	// Create stats scroll box if not exists
+	if (!StatsScrollBox && MainContent)
+	{
+		StatsScrollBox = WidgetTree->ConstructWidget<UScrollBox>(UScrollBox::StaticClass(), TEXT("StatsScrollBox"));
+		if (StatsScrollBox)
+		{
+			MainContent->AddChild(StatsScrollBox);
+			UE_LOG(LogAdastrea, Log, TEXT("ShipStatusWidget: Created stats scroll box"));
+		}
+	}
+
+	// Create close button if not exists
+	if (!Button_Close)
+	{
+		Button_Close = WidgetTree->ConstructWidget<UButton>(UButton::StaticClass(), TEXT("Button_Close"));
+		if (Button_Close)
+		{
+			RootCanvas->AddChild(Button_Close);
+			UCanvasPanelSlot* ButtonSlot = Cast<UCanvasPanelSlot>(Button_Close->Slot);
+			if (ButtonSlot)
+			{
+				ButtonSlot->SetAnchors(FAnchors(1.0f, 0.0f));
+				ButtonSlot->SetAlignment(FVector2D(1.0f, 0.0f));
+				ButtonSlot->SetPosition(FVector2D(-50.0f, 10.0f));
+				ButtonSlot->SetSize(FVector2D(40.0f, 40.0f));
+			}
+
+			// Add "X" text to button
+			UTextBlock* ButtonText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("Button_Close_Text"));
+			if (ButtonText)
+			{
+				ButtonText->SetText(FText::FromString("X"));
+				ButtonText->SetJustification(ETextJustify::Center);
+				FSlateFontInfo FontInfo = ButtonText->GetFont();
+				FontInfo.Size = 24;
+				ButtonText->SetFont(FontInfo);
+				Button_Close->AddChild(ButtonText);
+			}
+
+			UE_LOG(LogAdastrea, Log, TEXT("ShipStatusWidget: Created close button"));
+		}
+	}
+}
+
+void UShipStatusWidget::OnCloseButtonClicked()
+{
+	// Hide the widget
+	SetVisibility(ESlateVisibility::Hidden);
+	UE_LOG(LogAdastrea, Log, TEXT("ShipStatusWidget: Close button clicked, hiding widget"));
 }
