@@ -11,6 +11,7 @@ UAdastreaHUDWidget::UAdastreaHUDWidget(const FObjectInitializer& ObjectInitializ
 	, CurrentSpeedValue(0.0f)
 	, bHasTarget(false)
 	, ControlledSpaceship(nullptr)
+	, CachedPlayerController(nullptr)
 	, CurrentPlayerName(FText::FromString("Player"))
 	, CurrentPlayerLevel(1)
 	, CurrentPlayerCredits(0)
@@ -19,7 +20,6 @@ UAdastreaHUDWidget::UAdastreaHUDWidget(const FObjectInitializer& ObjectInitializ
 	, ShipIntegrityPercent(1.0f)
 	, WeaponAimPosition(FVector2D(0.5f, 0.5f))
 	, bAimCrosshairVisible(true)
-	, CachedPlayerController(nullptr)
 {
 }
 

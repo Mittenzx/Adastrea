@@ -15,6 +15,8 @@
 
 UShipStatusWidget::UShipStatusWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
+	, CurrentSpaceship(nullptr)
+	, ShipDataAsset(nullptr)
 	, Text_ShipName(nullptr)
 	, Text_ShipClass(nullptr)
 	, Text_Description(nullptr)
@@ -24,8 +26,6 @@ UShipStatusWidget::UShipStatusWidget(const FObjectInitializer& ObjectInitializer
 	, StatsScrollBox(nullptr)
 	, Button_Close(nullptr)
 	, bAutoCreateMissingWidgets(true)
-	, CurrentSpaceship(nullptr)
-	, ShipDataAsset(nullptr)
 	, DisplayCombatRating(0.0f)
 	, DisplayMobilityRating(0.0f)
 	, DisplayUtilityRating(0.0f)

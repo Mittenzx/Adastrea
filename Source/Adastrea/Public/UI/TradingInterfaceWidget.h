@@ -100,6 +100,7 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Trading")
 	void OnCartUpdated();
 
+public:
 	// ========================================================================
 	// Blueprint Functions
 	// ========================================================================
