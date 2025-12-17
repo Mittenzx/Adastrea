@@ -265,4 +265,33 @@ protected:
 	/** Current ship integrity percentage for display */
 	UPROPERTY(BlueprintReadOnly, Category="HUD|State")
 	float ShipIntegrityPercent;
+
+	// ====================
+	// WEAPON AIM CROSSHAIR
+	// ====================
+
+	/**
+	 * Update weapon aim crosshair position based on mouse location
+	 * This provides visual feedback for where weapons will aim
+	 * @param ScreenPosition The screen position (0-1 range for X and Y)
+	 */
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="HUD|Crosshair")
+	void UpdateAimCrosshair(FVector2D ScreenPosition);
+	virtual void UpdateAimCrosshair_Implementation(FVector2D ScreenPosition);
+
+	/**
+	 * Show or hide the weapon aim crosshair
+	 * @param bVisible Whether the aim crosshair should be visible
+	 */
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="HUD|Crosshair")
+	void SetAimCrosshairVisible(bool bVisible);
+	virtual void SetAimCrosshairVisible_Implementation(bool bVisible);
+
+	/** Current weapon aim position in screen space (0-1 range) */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|Crosshair")
+	FVector2D WeaponAimPosition;
+
+	/** Whether the weapon aim crosshair is currently visible */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|Crosshair")
+	bool bAimCrosshairVisible;
 };
