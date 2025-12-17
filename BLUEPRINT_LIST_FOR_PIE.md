@@ -314,7 +314,7 @@ Once you can fly the ship:
 - **BLUEPRINT_REQUIREMENTS_LIST.md** - All blueprints for full game (100+)
 - **BLUEPRINT_CREATION_GUIDE.md** - Step-by-step creation instructions
 - **CONTENT_CREATION_QUICKSTART.md** - 30-minute playable prototype
-- **ZZ_ESSENTIAL_BLUEPRINTS_ONLY.md** - Minimal C++ approach
+- **CURRENT_STATUS.md** - Realistic project status assessment
 
 **System Documentation**:
 - **Assets/EnhancedInputImplementation.md** - Enhanced Input system details

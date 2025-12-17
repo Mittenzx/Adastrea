@@ -1,7 +1,7 @@
 # Adastrea Documentation Index
 
-**Last Updated**: December 9, 2025  
-**Version**: 1.1  
+**Last Updated**: December 17, 2025  
+**Version**: 1.2  
 **Purpose**: Comprehensive index of all documentation in the Adastrea project
 
 ---
@@ -483,12 +483,11 @@ Designer workflows and best practices:
 
 | Document | Purpose | Location |
 |----------|---------|----------|
-| **CURRENT_STATUS.md** | ⭐ **NEW!** Realistic project status assessment | Root |
+| **CURRENT_STATUS.md** | ⭐ Realistic project status assessment (code 85%, content 10%) | Root |
 | **ROADMAP.md** | Development phases and milestones | Root |
 | **ROADMAP_UPDATE_GUIDELINES.md** | How to update roadmap | Root |
 | **CHANGELOG.md** | Version history | Root |
 | **STUB_AND_PLACEHOLDER_AUDIT.md** | ⭐ Complete audit of stubs, placeholders, and TODOs | Root |
-| **ZZ_WHATS_STILL_NEEDED.md** | Testing setup assessment and known gaps | Root |
 
 ---
 
@@ -597,10 +596,10 @@ Non-markdown configuration files for tools and automation:
 
 ## Documentation Statistics
 
-**After December 9, 2025 consolidation:**
+**After December 17, 2025 cleanup:**
 
-- **Total Active Markdown Files**: Approximately 140 files across repository
-- **Root Level**: 87 markdown files (includes 2 new: MASTER_DOCUMENTATION.md, CURRENT_STATUS.md)
+- **Total Active Markdown Files**: Approximately 140+ files across repository
+- **Root Level**: 131 markdown files (cleaned up from 142 - removed 11 obsolete files)
 - **Assets/ Directory**: 97 system guide and template files
 - **Docs/ Directory**: Active documentation + 21 files in archive/migrated/
 - **Docs/archive/migrated/**: 21 archived historical documents
@@ -608,6 +607,11 @@ Non-markdown configuration files for tools and automation:
 - **Blueprints/ Directory**: 5 blueprint documentation files
 - **Content/ Directory**: 3 content organization files
 - **Other Directories**: Plugin documentation (30+ files in Plugins/), wiki files (12 files)
+
+**Recent Cleanup (December 17, 2025):**
+- ✅ Removed 11 obsolete files (ZZ_* files, temporary build/fix summaries)
+- ✅ Updated OBSOLETE_DOCUMENTS.md to reflect cleanup
+- ✅ All obsolete files from previous list have been deleted
 
 **Note**: File counts may change as documentation evolves. For exact counts, run: `find . -name "*.md" -type f | wc -l`
 
@@ -659,13 +663,13 @@ This index should be updated when:
 
 ### Last Updated
 
-**Date**: December 9, 2025  
+**Date**: December 17, 2025  
 **Updated By**: GitHub Copilot (SWE Agent)  
-**Version**: 1.3 - Documentation consolidation update
-  - Added MASTER_DOCUMENTATION.md (1372 lines)
-  - Added CURRENT_STATUS.md (realistic project assessment)
-  - Archived 21 status/completion documents to Docs/archive/migrated/
-  - Updated documentation statistics
+**Version**: 1.2 - Documentation cleanup update
+  - Removed 11 obsolete files (ZZ_* files, build/fix summaries)
+  - Updated file counts (131 root-level MD files)
+  - Updated OBSOLETE_DOCUMENTS.md status
+  - All previously marked obsolete files now deleted
 
 ---
 

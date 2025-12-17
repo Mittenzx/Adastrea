@@ -498,7 +498,7 @@ All 22 major game systems are implemented in C++ with full Blueprint exposure:
    - Follow specification in `Content/Maps/TestMode.umap.txt`
    - Alternatively, continue using TestLevel.umap
 
-3. **✅ UPDATE - Cross-reference with ZZ_WHATS_STILL_NEEDED.md**
+3. **✅ UPDATE - Cross-reference with CURRENT_STATUS.md**
    - This audit confirms and expands on that document
    - Both documents should be kept in sync
 
@@ -614,10 +614,9 @@ All 22 major game systems are implemented in C++ with full Blueprint exposure:
 
 This audit supplements the following existing documents:
 
-- **ZZ_WHATS_STILL_NEEDED.md** - Testing setup assessment (overlaps with this audit)
+- **CURRENT_STATUS.md** - Realistic project status assessment
 - **ROADMAP.md** - Development phases and feature status
 - **ARCHITECTURE.md** - System architecture and design
-- **BUILD_STATUS.md** - Current build state (no errors)
 - **DOCUMENTATION_INDEX.md** - Complete documentation catalog
 
 ---
@@ -638,7 +637,7 @@ This audit was conducted using the following methods:
 
 3. **Documentation Review**
    - ROADMAP.md for planned vs complete features
-   - ZZ_WHATS_STILL_NEEDED.md for known gaps
+   - CURRENT_STATUS.md for realistic project assessment
    - System guides for feature completeness
 
 4. **Asset Inventory**
