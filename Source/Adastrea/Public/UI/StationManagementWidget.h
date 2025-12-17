@@ -87,6 +87,7 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Station Management")
 	void OnModuleRemoved(ASpaceStationModule* RemovedModule);
 
+public:
 	// ========================================================================
 	// Blueprint Functions
 	// ========================================================================

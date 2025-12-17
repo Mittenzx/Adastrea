@@ -719,7 +719,7 @@ void AAdastreaPlayerController::OpenTrading(UFactionDataAsset* TradePartner)
 	// Show the widget
 	ShowTrading();
 	
-	UE_LOG(LogAdastrea, Log, TEXT("OpenTrading: Opened trading with faction: %s"), *TradePartner->DisplayName.ToString());
+	UE_LOG(LogAdastrea, Log, TEXT("OpenTrading: Opened trading with faction: %s"), *TradePartner->FactionName.ToString());
 }
 
 void AAdastreaPlayerController::CloseTrading()
