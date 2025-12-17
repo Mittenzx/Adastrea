@@ -61,6 +61,7 @@ ASpaceship::ASpaceship()
     UpInput = 0.0f;
     YawInput = 0.0f;
     PitchInput = 0.0f;
+    RollInput = 0.0f;
     FreeLookRotation = FRotator::ZeroRotator;
     LastFreeLookClickTime = 0.0f;
     LastThrottleAdjustmentTime = 0.0f;
@@ -439,6 +440,36 @@ void ASpaceship::LookUp(float Value)
     }
 }
 
+void ASpaceship::Roll(float Value)
+{
+    // Store input for smooth rotation
+    RollInput = Value;
+
+    if (GetWorld())
+    {
+        const float DeltaSeconds = GetWorld()->GetDeltaSeconds();
+        
+        if (bFlightAssistEnabled)
+        {
+            // X4-style: smooth rotation with damping
+            float RotationRate = Value * TurnRate * MouseFlightSensitivity;
+            
+            // Interpolate rotation velocity for smooth feel
+            RotationVelocity.Roll = FMath::FInterpTo(RotationVelocity.Roll, RotationRate, DeltaSeconds, FlightAssistResponsiveness);
+            
+            // Apply roll rotation to actor in local space to avoid gimbal lock
+            FRotator DeltaRotation = FRotator(0.0f, 0.0f, RotationVelocity.Roll * DeltaSeconds);
+            AddActorLocalRotation(DeltaRotation);
+        }
+        else
+        {
+            // Without flight assist: direct rotation
+            FRotator DeltaRotation = FRotator(0.0f, 0.0f, Value * TurnRate * DeltaSeconds);
+            AddActorLocalRotation(DeltaRotation);
+        }
+    }
+}
+
 void ASpaceship::BeginControl(APlayerController* PC, APawn* ExternalPawn)
 {
     if (!PC || !ExternalPawn)
@@ -691,6 +722,11 @@ void ASpaceship::ApplyFlightAssist(float DeltaTime)
     if (FMath::IsNearlyZero(PitchInput, 0.01f))
     {
         RotationVelocity.Pitch = FMath::FInterpTo(RotationVelocity.Pitch, 0.0f, DeltaTime, FlightAssistResponsiveness * RotationDampingFactor);
+    }
+
+    if (FMath::IsNearlyZero(RollInput, 0.01f))
+    {
+        RotationVelocity.Roll = FMath::FInterpTo(RotationVelocity.Roll, 0.0f, DeltaTime, FlightAssistResponsiveness * RotationDampingFactor);
     }
 
     // Preserve velocity when no movement input (inertia in space)

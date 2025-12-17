@@ -325,6 +325,7 @@ protected:
     void MoveUp(float Value);
     void Turn(float Value);
     void LookUp(float Value);
+    void Roll(float Value);
 
     /**
      * Apply X4-style flight assist physics
@@ -369,6 +370,7 @@ private:
     float UpInput;
     float YawInput;
     float PitchInput;
+    float RollInput;
 
     // Free look camera state
     UPROPERTY()
