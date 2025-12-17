@@ -710,7 +710,7 @@ Create Widget Blueprints based on `UniverseMapWidget` and `SectorMapWidget` clas
 - **[Project Roadmap](ROADMAP.md)** - Development phases, timelines, and future features
 - **[Roadmap Update Guidelines](ROADMAP_UPDATE_GUIDELINES.md)** - When and how to update the roadmap
 - **[Stub and Placeholder Audit](STUB_AND_PLACEHOLDER_AUDIT.md)** - ⭐ Complete audit of stubs, placeholders, and TODOs - realistic assessment of remaining work
-- **[What's Still Needed](ZZ_WHATS_STILL_NEEDED.md)** - Testing setup assessment and known gaps
+- **[Current Status](CURRENT_STATUS.md)** - Realistic project status assessment (code 85% complete, content 10% complete)
 
 ### Visual Design
 

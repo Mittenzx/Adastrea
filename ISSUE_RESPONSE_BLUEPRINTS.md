@@ -225,7 +225,7 @@ Existing blueprints need verification/configuration:
 - **BLUEPRINT_REQUIREMENTS_LIST.md** - All blueprints for full game (100+)
 - **BLUEPRINT_CREATION_GUIDE.md** - Step-by-step creation
 - **CONTENT_CREATION_QUICKSTART.md** - 30-minute playable prototype
-- **ZZ_ESSENTIAL_BLUEPRINTS_ONLY.md** - Minimal C++ approach
+- **CURRENT_STATUS.md** - Realistic project status assessment
 
 ### System Documentation
 - **Assets/EnhancedInputImplementation.md** - Input system details
@@ -280,7 +280,7 @@ These complement your existing documentation:
 - BLUEPRINT_REQUIREMENTS_LIST.md (all blueprints for full game)
 - BLUEPRINT_CREATION_GUIDE.md (step-by-step creation)
 - CONTENT_CREATION_QUICKSTART.md (30-minute prototype)
-- ZZ_ESSENTIAL_BLUEPRINTS_ONLY.md (minimal C++ approach)
+- CURRENT_STATUS.md (realistic project status assessment)
 
 ---
 

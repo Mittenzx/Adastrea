@@ -422,7 +422,7 @@ Once you have basic movement working:
 - **BLUEPRINT_REQUIREMENTS_LIST.md** - Complete blueprint list for full game
 - **BLUEPRINT_CREATION_GUIDE.md** - Step-by-step blueprint creation
 - **CONTENT_CREATION_QUICKSTART.md** - 30-minute playable guide
-- **ZZ_ESSENTIAL_BLUEPRINTS_ONLY.md** - Minimal C++ approach
+- **CURRENT_STATUS.md** - Realistic project status assessment
 - **Assets/EnhancedInputImplementation.md** - Input system details
 
 ### Templates
