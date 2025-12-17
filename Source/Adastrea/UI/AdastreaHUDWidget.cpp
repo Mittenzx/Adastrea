@@ -17,6 +17,9 @@ UAdastreaHUDWidget::UAdastreaHUDWidget(const FObjectInitializer& ObjectInitializ
 	, CurrentShipName(FText::FromString("Ship"))
 	, CurrentShipClass(FText::FromString("Unknown"))
 	, ShipIntegrityPercent(1.0f)
+	, WeaponAimPosition(FVector2D(0.5f, 0.5f))
+	, bAimCrosshairVisible(true)
+	, CachedPlayerController(nullptr)
 {
 }
 
@@ -98,6 +101,41 @@ void UAdastreaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 	
 	// Update HUD based on current game state
 	UpdateHUDFromGameState_Implementation(InDeltaTime);
+	
+	// Update weapon aim crosshair position based on mouse location
+	if (bAimCrosshairVisible)
+	{
+		// Cache player controller reference for performance
+		if (!CachedPlayerController)
+		{
+			CachedPlayerController = GetOwningPlayer();
+		}
+		
+		if (CachedPlayerController)
+		{
+			float MouseX, MouseY;
+			if (CachedPlayerController->GetMousePosition(MouseX, MouseY))
+			{
+				// Get viewport size
+				int32 ViewportSizeX, ViewportSizeY;
+				CachedPlayerController->GetViewportSize(ViewportSizeX, ViewportSizeY);
+				
+				if (ViewportSizeX > 0 && ViewportSizeY > 0)
+				{
+					// Convert mouse position to normalized screen coordinates (0-1)
+					FVector2D NormalizedPosition;
+					NormalizedPosition.X = MouseX / static_cast<float>(ViewportSizeX);
+					NormalizedPosition.Y = MouseY / static_cast<float>(ViewportSizeY);
+					
+					// Only update if position changed (avoid unnecessary function calls)
+					if (!NormalizedPosition.Equals(WeaponAimPosition, 0.001f))
+					{
+						UpdateAimCrosshair(NormalizedPosition);
+					}
+				}
+			}
+		}
+	}
 }
 
 void UAdastreaHUDWidget::UpdateHUDFromGameState_Implementation(float DeltaTime)
@@ -219,4 +257,24 @@ void UAdastreaHUDWidget::RefreshShipInfo()
 		// Update the displays
 		UpdateShipInfo(ShipName, ShipClass, CurrentIntegrity, MaxIntegrity);
 	}
+}
+
+// ====================
+// WEAPON AIM CROSSHAIR IMPLEMENTATIONS
+// ====================
+
+void UAdastreaHUDWidget::UpdateAimCrosshair_Implementation(FVector2D ScreenPosition)
+{
+	// Clamp screen position to valid range (0-1)
+	WeaponAimPosition.X = FMath::Clamp(ScreenPosition.X, 0.0f, 1.0f);
+	WeaponAimPosition.Y = FMath::Clamp(ScreenPosition.Y, 0.0f, 1.0f);
+	
+	// Blueprint implementation handles visual update
+}
+
+void UAdastreaHUDWidget::SetAimCrosshairVisible_Implementation(bool bVisible)
+{
+	bAimCrosshairVisible = bVisible;
+	
+	// Blueprint implementation handles visibility change
 }

@@ -22,6 +22,7 @@ USpaceshipControlsComponent::USpaceshipControlsComponent()
 	, LookAction(nullptr)
 	, FireAction(nullptr)
 	, SpeedAction(nullptr)
+	, RollAction(nullptr)
 	, SpaceshipMappingContext(nullptr)
 	, bControlsEnabled(false)
 	, CachedWeaponComponent(nullptr)
@@ -91,6 +92,13 @@ void USpaceshipControlsComponent::CreateInputActions()
 		SpeedAction->ValueType = EInputActionValueType::Axis1D;
 	}
 
+	// Create Roll Action (1D Axis for Q/E)
+	RollAction = NewObject<UInputAction>(this, TEXT("IA_SpaceshipRoll"));
+	if (RollAction)
+	{
+		RollAction->ValueType = EInputActionValueType::Axis1D;
+	}
+
 	UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent: Created input actions"));
 }
 
@@ -146,6 +154,18 @@ void USpaceshipControlsComponent::CreateInputMappingContext()
 		SpaceshipMappingContext->MapKey(SpeedAction, EKeys::MouseWheelAxis);
 	}
 
+	// Map Q and E keys (Roll control)
+	if (RollAction)
+	{
+		// Map E key (Roll right - positive)
+		SpaceshipMappingContext->MapKey(RollAction, EKeys::E);
+
+		// Map Q key (Roll left - negative)
+		FEnhancedActionKeyMapping& QMapping = SpaceshipMappingContext->MapKey(RollAction, EKeys::Q);
+		UInputModifierNegate* QNegate = NewObject<UInputModifierNegate>(SpaceshipMappingContext);
+		QMapping.Modifiers.Add(QNegate);
+	}
+
 	UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent: Created input mapping context with key bindings"));
 }
 
@@ -180,6 +200,12 @@ void USpaceshipControlsComponent::SetupInputBindings(UEnhancedInputComponent* Pl
 	if (SpeedAction)
 	{
 		PlayerInputComponent->BindAction(SpeedAction, ETriggerEvent::Triggered, this, &USpaceshipControlsComponent::HandleSpeed);
+	}
+
+	// Bind Roll action
+	if (RollAction)
+	{
+		PlayerInputComponent->BindAction(RollAction, ETriggerEvent::Triggered, this, &USpaceshipControlsComponent::HandleRoll);
 	}
 
 	UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent: Input bindings set up"));
@@ -375,6 +401,12 @@ void USpaceshipControlsComponent::HandleSpeed(const FInputActionValue& Value)
 	}
 }
 
+void USpaceshipControlsComponent::HandleRoll(const FInputActionValue& Value)
+{
+	float RollValue = Value.Get<float>() * LookSensitivity;
+	OnRollInput(RollValue);
+}
+
 void USpaceshipControlsComponent::OnMoveInput_Implementation(FVector2D MoveValue)
 {
 	APawn* OwningPawn = Cast<APawn>(GetOwner());
@@ -411,11 +443,32 @@ void USpaceshipControlsComponent::OnLookInput_Implementation(FVector2D LookValue
 		return;
 	}
 
-	// Apply rotation directly to the actor for spaceship controls
+	// Apply rotation in local space to prevent gimbal lock and unwanted roll
 	// LookValue.X = yaw (left/right), LookValue.Y = pitch (up/down)
 	const float DeltaTime = World->GetDeltaSeconds();
 	FRotator DeltaRotation = FRotator(LookValue.Y * DeltaTime, LookValue.X * DeltaTime, 0.0f);
-	OwningPawn->AddActorWorldRotation(DeltaRotation);
+	OwningPawn->AddActorLocalRotation(DeltaRotation);
+}
+
+void USpaceshipControlsComponent::OnRollInput_Implementation(float RollValue)
+{
+	APawn* OwningPawn = Cast<APawn>(GetOwner());
+	if (!OwningPawn)
+	{
+		return;
+	}
+
+	UWorld* World = OwningPawn->GetWorld();
+	if (!World)
+	{
+		return;
+	}
+
+	// Apply roll rotation in local space
+	// Positive value = roll right, negative value = roll left
+	const float DeltaTime = World->GetDeltaSeconds();
+	FRotator DeltaRotation = FRotator(0.0f, 0.0f, RollValue * DeltaTime);
+	OwningPawn->AddActorLocalRotation(DeltaRotation);
 }
 
 void USpaceshipControlsComponent::OnFirePressed_Implementation()

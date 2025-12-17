@@ -325,6 +325,7 @@ protected:
     void MoveUp(float Value);
     void Turn(float Value);
     void LookUp(float Value);
+    void Roll(float Value);
 
     /**
      * Apply X4-style flight assist physics
@@ -364,11 +365,18 @@ private:
     FRotator RotationVelocity;
 
     // Input values for smooth interpolation
+    UPROPERTY()
     float ForwardInput;
+    UPROPERTY()
     float RightInput;
+    UPROPERTY()
     float UpInput;
+    UPROPERTY()
     float YawInput;
+    UPROPERTY()
     float PitchInput;
+    UPROPERTY()
+    float RollInput;
 
     // Free look camera state
     UPROPERTY()

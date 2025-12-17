@@ -110,6 +110,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Controls|Input")
 	UInputAction* SpeedAction;
 
+	/** Input action for roll control (Q/E keys) - 1D axis */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Controls|Input")
+	UInputAction* RollAction;
+
 	/** Input mapping context for spaceship controls */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Controls|Input")
 	UInputMappingContext* SpaceshipMappingContext;
@@ -214,6 +218,14 @@ public:
 	void OnLookInput(FVector2D LookValue);
 
 	/**
+	 * Called when roll input is received
+	 * Override in Blueprint to customize roll behavior
+	 * @param RollValue Roll input (positive = roll right, negative = roll left)
+	 */
+	UFUNCTION(BlueprintNativeEvent, Category="Controls")
+	void OnRollInput(float RollValue);
+
+	/**
 	 * Called when fire input is pressed
 	 * Override in Blueprint to customize fire behavior
 	 */
@@ -290,6 +302,7 @@ protected:
 	// Input handlers
 	void HandleMove(const FInputActionValue& Value);
 	void HandleLook(const FInputActionValue& Value);
+	void HandleRoll(const FInputActionValue& Value);
 	void HandleFirePressed(const FInputActionValue& Value);
 	void HandleFireReleased(const FInputActionValue& Value);
 	void HandleSpeed(const FInputActionValue& Value);
