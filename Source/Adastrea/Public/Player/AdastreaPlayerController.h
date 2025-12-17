@@ -10,6 +10,10 @@
 class UUserWidget;
 class UDataAsset;
 class ASpaceStation;
+class UInventoryWidget;
+class UTradingInterfaceWidget;
+class UStationManagementWidget;
+class UFactionDataAsset;
 
 /**
  * Parameters for SetStation function call via reflection
@@ -149,6 +153,63 @@ public:
 	UUserWidget* MainMenuWidget;
 
 	// ====================
+	// Inventory Configuration
+	// ====================
+
+	/**
+	 * Widget class to use for the inventory interface
+	 * Set this in Blueprint or editor to display the inventory
+	 * Should be a class derived from UInventoryWidget
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Inventory")
+	TSubclassOf<class UInventoryWidget> InventoryWidgetClass;
+
+	/**
+	 * Current inventory widget instance
+	 * Created on demand when ToggleInventory is called
+	 */
+	UPROPERTY(BlueprintReadOnly, Category="Inventory")
+	class UInventoryWidget* InventoryWidget;
+
+	// ====================
+	// Trading Configuration
+	// ====================
+
+	/**
+	 * Widget class to use for the trading interface
+	 * Set this in Blueprint or editor to display trading
+	 * Should be a class derived from UTradingInterfaceWidget
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Trading")
+	TSubclassOf<class UTradingInterfaceWidget> TradingWidgetClass;
+
+	/**
+	 * Current trading widget instance
+	 * Created on demand when OpenTrading is called
+	 */
+	UPROPERTY(BlueprintReadOnly, Category="Trading")
+	class UTradingInterfaceWidget* TradingWidget;
+
+	// ====================
+	// Station Management Configuration
+	// ====================
+
+	/**
+	 * Widget class to use for station management interface
+	 * Set this in Blueprint or editor to display station management
+	 * Should be a class derived from UStationManagementWidget
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Management")
+	TSubclassOf<class UStationManagementWidget> StationManagementWidgetClass;
+
+	/**
+	 * Current station management widget instance
+	 * Created on demand when OpenStationManagement is called
+	 */
+	UPROPERTY(BlueprintReadOnly, Category="Station Management")
+	class UStationManagementWidget* StationManagementWidget;
+
+	// ====================
 	// Events
 	// ====================
 
@@ -261,6 +322,82 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Main Menu")
 	UUserWidget* GetMainMenuWidget() const;
 
+	/**
+	 * Toggle the inventory UI
+	 * Shows/hides the player's inventory interface
+	 * Works in both spaceship mode and third-person mode
+	 */
+	UFUNCTION(BlueprintCallable, Category="Player|Inventory")
+	void ToggleInventory();
+
+	/**
+	 * Check if the inventory is currently open
+	 * @return True if the inventory widget is visible
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Inventory")
+	bool IsInventoryOpen() const;
+
+	/**
+	 * Get the currently active inventory widget
+	 * @return The inventory widget, or nullptr if not created
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Inventory")
+	class UInventoryWidget* GetInventoryWidget() const;
+
+	/**
+	 * Open the trading interface with a specific faction
+	 * @param TradePartner The faction to trade with
+	 */
+	UFUNCTION(BlueprintCallable, Category="Player|Trading")
+	void OpenTrading(class UFactionDataAsset* TradePartner);
+
+	/**
+	 * Close the trading interface
+	 */
+	UFUNCTION(BlueprintCallable, Category="Player|Trading")
+	void CloseTrading();
+
+	/**
+	 * Check if the trading interface is currently open
+	 * @return True if the trading widget is visible
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Trading")
+	bool IsTradingOpen() const;
+
+	/**
+	 * Get the currently active trading widget
+	 * @return The trading widget, or nullptr if not created
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Trading")
+	class UTradingInterfaceWidget* GetTradingWidget() const;
+
+	/**
+	 * Open the station management interface for a specific station
+	 * @param Station The station to manage
+	 */
+	UFUNCTION(BlueprintCallable, Category="Player|Station Management")
+	void OpenStationManagement(ASpaceStation* Station);
+
+	/**
+	 * Close the station management interface
+	 */
+	UFUNCTION(BlueprintCallable, Category="Player|Station Management")
+	void CloseStationManagement();
+
+	/**
+	 * Check if the station management interface is currently open
+	 * @return True if the station management widget is visible
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Station Management")
+	bool IsStationManagementOpen() const;
+
+	/**
+	 * Get the currently active station management widget
+	 * @return The station management widget, or nullptr if not created
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Station Management")
+	class UStationManagementWidget* GetStationManagementWidget() const;
+
 protected:
 	/**
 	 * Find the nearest space station within the search radius
@@ -318,6 +455,54 @@ protected:
 	 */
 	void HideMainMenu();
 
+	/**
+	 * Create the inventory widget if it doesn't exist
+	 * @return The created or existing widget instance
+	 */
+	class UInventoryWidget* CreateInventoryWidget();
+
+	/**
+	 * Show the inventory interface
+	 */
+	void ShowInventory();
+
+	/**
+	 * Hide and cleanup the inventory interface
+	 */
+	void HideInventory();
+
+	/**
+	 * Create the trading widget if it doesn't exist
+	 * @return The created or existing widget instance
+	 */
+	class UTradingInterfaceWidget* CreateTradingWidget();
+
+	/**
+	 * Show the trading interface
+	 */
+	void ShowTrading();
+
+	/**
+	 * Hide and cleanup the trading interface
+	 */
+	void HideTrading();
+
+	/**
+	 * Create the station management widget if it doesn't exist
+	 * @return The created or existing widget instance
+	 */
+	class UStationManagementWidget* CreateStationManagementWidget();
+
+	/**
+	 * Show the station management interface
+	 */
+	void ShowStationManagement();
+
+	/**
+	 * Hide and cleanup the station management interface
+	 */
+	void HideStationManagement();
+
 private:
 	/** The currently active station editor widget instance */
 	UPROPERTY()
@@ -331,4 +516,13 @@ private:
 
 	/** Whether the main menu is currently open */
 	bool bIsMainMenuOpen;
+
+	/** Whether the inventory is currently open */
+	bool bIsInventoryOpen;
+
+	/** Whether the trading interface is currently open */
+	bool bIsTradingOpen;
+
+	/** Whether the station management interface is currently open */
+	bool bIsStationManagementOpen;
 };
