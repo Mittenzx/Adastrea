@@ -9,6 +9,11 @@
 #include "Engine/World.h"
 #include "UI/AdastreaHUDWidget.h"
 #include "UI/ShipStatusWidget.h"
+#include "UI/InventoryWidget.h"
+#include "UI/InventoryComponent.h"
+#include "Public/UI/TradingInterfaceWidget.h"
+#include "Public/UI/StationManagementWidget.h"
+#include "Factions/FactionDataAsset.h"
 
 AAdastreaPlayerController::AAdastreaPlayerController()
 {
@@ -26,6 +31,15 @@ AAdastreaPlayerController::AAdastreaPlayerController()
 	MainMenuWidgetClass = nullptr;
 	MainMenuWidget = nullptr;
 	bIsMainMenuOpen = false;
+	InventoryWidgetClass = nullptr;
+	InventoryWidget = nullptr;
+	bIsInventoryOpen = false;
+	TradingWidgetClass = nullptr;
+	TradingWidget = nullptr;
+	bIsTradingOpen = false;
+	StationManagementWidgetClass = nullptr;
+	StationManagementWidget = nullptr;
+	bIsStationManagementOpen = false;
 }
 
 void AAdastreaPlayerController::BeginPlay()
@@ -552,4 +566,365 @@ void AAdastreaPlayerController::HideMainMenu()
 	bIsMainMenuOpen = false;
 	
 	UE_LOG(LogAdastrea, Log, TEXT("HideMainMenu: Main menu hidden"));
+}
+
+// ====================
+// Inventory Widget Implementation
+// ====================
+
+void AAdastreaPlayerController::ToggleInventory()
+{
+	// Toggle inventory state
+	if (bIsInventoryOpen)
+	{
+		// Close the inventory
+		HideInventory();
+		UE_LOG(LogAdastrea, Log, TEXT("ToggleInventory: Closed inventory"));
+	}
+	else
+	{
+		// Open the inventory
+		ShowInventory();
+		UE_LOG(LogAdastrea, Log, TEXT("ToggleInventory: Opened inventory"));
+	}
+}
+
+bool AAdastreaPlayerController::IsInventoryOpen() const
+{
+	return bIsInventoryOpen && InventoryWidget && InventoryWidget->IsInViewport();
+}
+
+UInventoryWidget* AAdastreaPlayerController::GetInventoryWidget() const
+{
+	return InventoryWidget;
+}
+
+UInventoryWidget* AAdastreaPlayerController::CreateInventoryWidget()
+{
+	// Return existing widget if already created
+	if (InventoryWidget)
+	{
+		return InventoryWidget;
+	}
+
+	// Check if widget class is assigned
+	if (!InventoryWidgetClass)
+	{
+		UE_LOG(LogAdastrea, Error, TEXT("CreateInventoryWidget: InventoryWidgetClass is not set! Assign it in Blueprint."));
+		return nullptr;
+	}
+
+	// Create the widget
+	InventoryWidget = CreateWidget<UInventoryWidget>(this, InventoryWidgetClass);
+	
+	if (!InventoryWidget)
+	{
+		UE_LOG(LogAdastrea, Error, TEXT("CreateInventoryWidget: Failed to create widget from class"));
+		return nullptr;
+	}
+
+	UE_LOG(LogAdastrea, Log, TEXT("CreateInventoryWidget: Successfully created inventory widget"));
+	
+	return InventoryWidget;
+}
+
+void AAdastreaPlayerController::ShowInventory()
+{
+	// Create widget if needed
+	if (!CreateInventoryWidget())
+	{
+		return;
+	}
+
+	// Get the player's inventory component
+	APawn* ControlledPawn = GetPawn();
+	UInventoryComponent* PlayerInventory = nullptr;
+	
+	if (ControlledPawn)
+	{
+		PlayerInventory = ControlledPawn->FindComponentByClass<UInventoryComponent>();
+	}
+
+	if (!PlayerInventory)
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("ShowInventory: No inventory component found on controlled pawn"));
+		// Still show the widget, but it won't have data
+	}
+
+	// Initialize with inventory component
+	if (PlayerInventory)
+	{
+		InventoryWidget->InitializeInventory(PlayerInventory);
+	}
+
+	// Add widget to viewport
+	if (!InventoryWidget->IsInViewport())
+	{
+		InventoryWidget->AddToViewport();
+	}
+
+	// Switch to UI input mode
+	SetInputMode(FInputModeGameAndUI());
+	bShowMouseCursor = true;
+
+	bIsInventoryOpen = true;
+	
+	UE_LOG(LogAdastrea, Log, TEXT("ShowInventory: Inventory now visible"));
+}
+
+void AAdastreaPlayerController::HideInventory()
+{
+	if (!InventoryWidget)
+	{
+		bIsInventoryOpen = false;
+		return;
+	}
+
+	// Remove widget from viewport
+	if (InventoryWidget->IsInViewport())
+	{
+		InventoryWidget->RemoveFromParent();
+	}
+
+	// Restore game input mode
+	SetInputMode(FInputModeGameOnly());
+	bShowMouseCursor = false;
+
+	bIsInventoryOpen = false;
+	
+	UE_LOG(LogAdastrea, Log, TEXT("HideInventory: Inventory hidden"));
+}
+
+// ====================
+// Trading Widget Implementation
+// ====================
+
+void AAdastreaPlayerController::OpenTrading(UFactionDataAsset* TradePartner)
+{
+	if (!TradePartner)
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("OpenTrading: Invalid trade partner"));
+		return;
+	}
+
+	// Create widget if needed
+	if (!CreateTradingWidget())
+	{
+		return;
+	}
+
+	// Initialize with trade partner
+	TradingWidget->SetTradePartner(TradePartner);
+
+	// Show the widget
+	ShowTrading();
+	
+	UE_LOG(LogAdastrea, Log, TEXT("OpenTrading: Opened trading with faction: %s"), *TradePartner->DisplayName.ToString());
+}
+
+void AAdastreaPlayerController::CloseTrading()
+{
+	HideTrading();
+	UE_LOG(LogAdastrea, Log, TEXT("CloseTrading: Closed trading interface"));
+}
+
+bool AAdastreaPlayerController::IsTradingOpen() const
+{
+	return bIsTradingOpen && TradingWidget && TradingWidget->IsInViewport();
+}
+
+UTradingInterfaceWidget* AAdastreaPlayerController::GetTradingWidget() const
+{
+	return TradingWidget;
+}
+
+UTradingInterfaceWidget* AAdastreaPlayerController::CreateTradingWidget()
+{
+	// Return existing widget if already created
+	if (TradingWidget)
+	{
+		return TradingWidget;
+	}
+
+	// Check if widget class is assigned
+	if (!TradingWidgetClass)
+	{
+		UE_LOG(LogAdastrea, Error, TEXT("CreateTradingWidget: TradingWidgetClass is not set! Assign it in Blueprint."));
+		return nullptr;
+	}
+
+	// Create the widget
+	TradingWidget = CreateWidget<UTradingInterfaceWidget>(this, TradingWidgetClass);
+	
+	if (!TradingWidget)
+	{
+		UE_LOG(LogAdastrea, Error, TEXT("CreateTradingWidget: Failed to create widget from class"));
+		return nullptr;
+	}
+
+	UE_LOG(LogAdastrea, Log, TEXT("CreateTradingWidget: Successfully created trading widget"));
+	
+	return TradingWidget;
+}
+
+void AAdastreaPlayerController::ShowTrading()
+{
+	if (!TradingWidget)
+	{
+		return;
+	}
+
+	// Add widget to viewport
+	if (!TradingWidget->IsInViewport())
+	{
+		TradingWidget->AddToViewport();
+	}
+
+	// Switch to UI input mode
+	SetInputMode(FInputModeGameAndUI());
+	bShowMouseCursor = true;
+
+	bIsTradingOpen = true;
+	
+	UE_LOG(LogAdastrea, Log, TEXT("ShowTrading: Trading interface now visible"));
+}
+
+void AAdastreaPlayerController::HideTrading()
+{
+	if (!TradingWidget)
+	{
+		bIsTradingOpen = false;
+		return;
+	}
+
+	// Remove widget from viewport
+	if (TradingWidget->IsInViewport())
+	{
+		TradingWidget->RemoveFromParent();
+	}
+
+	// Restore game input mode
+	SetInputMode(FInputModeGameOnly());
+	bShowMouseCursor = false;
+
+	bIsTradingOpen = false;
+	
+	UE_LOG(LogAdastrea, Log, TEXT("HideTrading: Trading interface hidden"));
+}
+
+// ====================
+// Station Management Widget Implementation
+// ====================
+
+void AAdastreaPlayerController::OpenStationManagement(ASpaceStation* Station)
+{
+	if (!Station)
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("OpenStationManagement: Invalid station"));
+		return;
+	}
+
+	// Create widget if needed
+	if (!CreateStationManagementWidget())
+	{
+		return;
+	}
+
+	// Initialize with station
+	StationManagementWidget->SetManagedStation(Station);
+
+	// Show the widget
+	ShowStationManagement();
+	
+	UE_LOG(LogAdastrea, Log, TEXT("OpenStationManagement: Opened management for station: %s"), *Station->GetName());
+}
+
+void AAdastreaPlayerController::CloseStationManagement()
+{
+	HideStationManagement();
+	UE_LOG(LogAdastrea, Log, TEXT("CloseStationManagement: Closed station management interface"));
+}
+
+bool AAdastreaPlayerController::IsStationManagementOpen() const
+{
+	return bIsStationManagementOpen && StationManagementWidget && StationManagementWidget->IsInViewport();
+}
+
+UStationManagementWidget* AAdastreaPlayerController::GetStationManagementWidget() const
+{
+	return StationManagementWidget;
+}
+
+UStationManagementWidget* AAdastreaPlayerController::CreateStationManagementWidget()
+{
+	// Return existing widget if already created
+	if (StationManagementWidget)
+	{
+		return StationManagementWidget;
+	}
+
+	// Check if widget class is assigned
+	if (!StationManagementWidgetClass)
+	{
+		UE_LOG(LogAdastrea, Error, TEXT("CreateStationManagementWidget: StationManagementWidgetClass is not set! Assign it in Blueprint."));
+		return nullptr;
+	}
+
+	// Create the widget
+	StationManagementWidget = CreateWidget<UStationManagementWidget>(this, StationManagementWidgetClass);
+	
+	if (!StationManagementWidget)
+	{
+		UE_LOG(LogAdastrea, Error, TEXT("CreateStationManagementWidget: Failed to create widget from class"));
+		return nullptr;
+	}
+
+	UE_LOG(LogAdastrea, Log, TEXT("CreateStationManagementWidget: Successfully created station management widget"));
+	
+	return StationManagementWidget;
+}
+
+void AAdastreaPlayerController::ShowStationManagement()
+{
+	if (!StationManagementWidget)
+	{
+		return;
+	}
+
+	// Add widget to viewport
+	if (!StationManagementWidget->IsInViewport())
+	{
+		StationManagementWidget->AddToViewport();
+	}
+
+	// Switch to UI input mode
+	SetInputMode(FInputModeGameAndUI());
+	bShowMouseCursor = true;
+
+	bIsStationManagementOpen = true;
+	
+	UE_LOG(LogAdastrea, Log, TEXT("ShowStationManagement: Station management interface now visible"));
+}
+
+void AAdastreaPlayerController::HideStationManagement()
+{
+	if (!StationManagementWidget)
+	{
+		bIsStationManagementOpen = false;
+		return;
+	}
+
+	// Remove widget from viewport
+	if (StationManagementWidget->IsInViewport())
+	{
+		StationManagementWidget->RemoveFromParent();
+	}
+
+	// Restore game input mode
+	SetInputMode(FInputModeGameOnly());
+	bShowMouseCursor = false;
+
+	bIsStationManagementOpen = false;
+	
+	UE_LOG(LogAdastrea, Log, TEXT("HideStationManagement: Station management interface hidden"));
 }
