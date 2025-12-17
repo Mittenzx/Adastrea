@@ -307,4 +307,4 @@ You can copy this into a text file and import as Blueprint nodes (Unreal Engine 
 **Last Updated:** 2025-12-17  
 **Difficulty:** Beginner-Friendly  
 **Time to Implement:** 10-15 minutes  
-**Author:** GitHub Copilot
+**Maintained by:** Adastrea Development Team

@@ -121,8 +121,11 @@ void UAdastreaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 					NormalizedPosition.X = MouseX / static_cast<float>(ViewportSizeX);
 					NormalizedPosition.Y = MouseY / static_cast<float>(ViewportSizeY);
 					
-					// Update the crosshair position
-					UpdateAimCrosshair(NormalizedPosition);
+					// Only update if position changed (avoid unnecessary function calls)
+					if (!NormalizedPosition.Equals(WeaponAimPosition, 0.001f))
+					{
+						UpdateAimCrosshair(NormalizedPosition);
+					}
 				}
 			}
 		}

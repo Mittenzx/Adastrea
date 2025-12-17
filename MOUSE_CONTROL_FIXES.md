@@ -211,4 +211,4 @@ Implementation follows Adastrea's design patterns:
 
 **Last Updated:** 2025-12-17  
 **Version:** 1.0  
-**Author:** GitHub Copilot (with human oversight)
+**Maintained by:** Adastrea Development Team

@@ -443,12 +443,9 @@ void USpaceshipControlsComponent::OnLookInput_Implementation(FVector2D LookValue
 		return;
 	}
 
-	// Apply rotation in local space to prevent unwanted roll
+	// Apply rotation in local space to prevent gimbal lock and unwanted roll
 	// LookValue.X = yaw (left/right), LookValue.Y = pitch (up/down)
 	const float DeltaTime = World->GetDeltaSeconds();
-	
-	// Use AddActorLocalRotation to rotate in the ship's local coordinate system
-	// This prevents gimbal lock and unwanted roll when looking up/down
 	FRotator DeltaRotation = FRotator(LookValue.Y * DeltaTime, LookValue.X * DeltaTime, 0.0f);
 	OwningPawn->AddActorLocalRotation(DeltaRotation);
 }
