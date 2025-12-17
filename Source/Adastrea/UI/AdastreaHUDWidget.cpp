@@ -19,6 +19,7 @@ UAdastreaHUDWidget::UAdastreaHUDWidget(const FObjectInitializer& ObjectInitializ
 	, ShipIntegrityPercent(1.0f)
 	, WeaponAimPosition(FVector2D(0.5f, 0.5f))
 	, bAimCrosshairVisible(true)
+	, CachedPlayerController(nullptr)
 {
 }
 
@@ -104,15 +105,20 @@ void UAdastreaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 	// Update weapon aim crosshair position based on mouse location
 	if (bAimCrosshairVisible)
 	{
-		APlayerController* PC = GetOwningPlayer();
-		if (PC)
+		// Cache player controller reference for performance
+		if (!CachedPlayerController)
+		{
+			CachedPlayerController = GetOwningPlayer();
+		}
+		
+		if (CachedPlayerController)
 		{
 			float MouseX, MouseY;
-			if (PC->GetMousePosition(MouseX, MouseY))
+			if (CachedPlayerController->GetMousePosition(MouseX, MouseY))
 			{
 				// Get viewport size
 				int32 ViewportSizeX, ViewportSizeY;
-				PC->GetViewportSize(ViewportSizeX, ViewportSizeY);
+				CachedPlayerController->GetViewportSize(ViewportSizeX, ViewportSizeY);
 				
 				if (ViewportSizeX > 0 && ViewportSizeY > 0)
 				{

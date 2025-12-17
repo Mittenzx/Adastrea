@@ -46,7 +46,7 @@ The user reported:
 
 ### 1. Build & Test (5 minutes)
 1. Open `Adastrea.uproject` in Unreal Engine 5.6
-2. Let C++ compile automatically
+2. Let C++ code compile automatically
 3. Play in Editor (PIE)
 4. Test controls - should feel natural now!
 

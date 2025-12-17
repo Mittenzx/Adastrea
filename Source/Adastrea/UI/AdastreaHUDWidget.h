@@ -136,6 +136,10 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category="HUD|References")
 	class ASpaceship* ControlledSpaceship;
 
+	/** Cached reference to the player controller for crosshair tracking */
+	UPROPERTY()
+	class APlayerController* CachedPlayerController;
+
 	/**
 	 * Called each frame to update HUD based on current game state
 	 * Override in Blueprint to implement custom auto-update logic

@@ -31,13 +31,14 @@ This document summarizes the changes made to fix mouse control issues and add ro
 
 ### 3. Fixed Rotation Behavior
 **File:** `Source/Adastrea/Ships/SpaceshipControlsComponent.cpp`
+- Look input handled by `SpaceshipControlsComponent` now rotates the ship in its local coordinate system
 - Changed `OnLookInput_Implementation()` from using `AddActorWorldRotation()` to `AddActorLocalRotation()`
 - This prevents gimbal lock and unwanted roll when the ship is at an angle
-- Rotation now happens in the ship's local coordinate system
 
 **File:** `Source/Adastrea/Ships/Spaceship.cpp`
 - Updated `Roll()` function to use `AddActorLocalRotation()` for consistent behavior
 - Added roll velocity damping in `ApplyFlightAssist()` for smooth roll control
+- Note: Existing `Turn()` and `LookUp()` functions still use `AddActorWorldRotation()` for yaw and pitch; they are unchanged by these fixes
 
 ### 4. Added Weapon Aim Crosshair
 **Files Modified:**

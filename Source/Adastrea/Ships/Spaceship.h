@@ -365,11 +365,17 @@ private:
     FRotator RotationVelocity;
 
     // Input values for smooth interpolation
+    UPROPERTY()
     float ForwardInput;
+    UPROPERTY()
     float RightInput;
+    UPROPERTY()
     float UpInput;
+    UPROPERTY()
     float YawInput;
+    UPROPERTY()
     float PitchInput;
+    UPROPERTY()
     float RollInput;
 
     // Free look camera state
