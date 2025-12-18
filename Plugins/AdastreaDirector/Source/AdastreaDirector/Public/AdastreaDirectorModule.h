@@ -29,9 +29,27 @@ public:
 	 */
 	FPythonBridge* GetPythonBridge() const { return PythonBridge.Get(); }
 
+	/**
+	 * Checks if the module is fully initialized and ready to use.
+	 * @return true if all startup validation passed
+	 */
+	bool IsFullyInitialized() const { return bIsFullyInitialized; }
+
+	/**
+	 * Gets the initialization error message if initialization failed.
+	 * @return Error message, or empty string if no error
+	 */
+	FString GetInitializationError() const { return InitializationError; }
+
 private:
 	/** Python bridge for backend communication */
 	TUniquePtr<FPythonBridge> PythonBridge;
+
+	/** Whether the module passed all startup validation */
+	bool bIsFullyInitialized = false;
+
+	/** Initialization error message if validation failed */
+	FString InitializationError;
 
 	/** Helper to initialize the Python bridge */
 	bool InitializePythonBridge();

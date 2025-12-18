@@ -2,7 +2,10 @@
 
 #include "AdastreaDirectorModule.h"
 #include "PythonBridge.h"
+#include "AdastreaSettings.h"
+#include "AdastreaStartupValidator.h"
 #include "Misc/Paths.h"
+#include "Misc/MessageDialog.h"
 
 // Define custom log category for AdastreaDirector
 DEFINE_LOG_CATEGORY(LogAdastreaDirector);
@@ -21,10 +24,33 @@ void FAdastreaDirectorModule::StartupModule()
 	if (InitializePythonBridge())
 	{
 		UE_LOG(LogAdastreaDirector, Log, TEXT("Python Bridge initialized successfully"));
+		
+		// Perform startup validation
+		FStartupValidationResult ValidationResult = FAdastreaStartupValidator::ValidateStartup(PythonBridge.Get());
+		
+		if (ValidationResult.bSuccess)
+		{
+			UE_LOG(LogAdastreaDirector, Log, TEXT("Startup validation passed"));
+			bIsFullyInitialized = true;
+		}
+		else
+		{
+			UE_LOG(LogAdastreaDirector, Error, TEXT("Startup validation failed: %s"), *ValidationResult.ErrorMessage);
+			InitializationError = ValidationResult.ErrorMessage;
+			bIsFullyInitialized = false;
+			
+			// Log warnings if any
+			for (const FString& Warning : ValidationResult.Warnings)
+			{
+				UE_LOG(LogAdastreaDirector, Warning, TEXT("  Warning: %s"), *Warning);
+			}
+		}
 	}
 	else
 	{
 		UE_LOG(LogAdastreaDirector, Warning, TEXT("Python Bridge initialization failed. Python backend may not be available."));
+		InitializationError = TEXT("Python Bridge initialization failed. The Python backend could not be started.\n\nPlease ensure:\n1. Python is installed and accessible\n2. Required Python packages are installed\n3. Backend scripts are present in the plugin directory");
+		bIsFullyInitialized = false;
 	}
 }
 

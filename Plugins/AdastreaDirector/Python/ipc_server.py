@@ -24,7 +24,7 @@ import argparse
 import logging
 import threading
 import time
-from typing import Dict, Any
+from typing import Dict, Any, Optional, Tuple
 from collections import defaultdict
 from textwrap import dedent
 
@@ -37,6 +37,10 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger('AdastreaIPCServer')
+
+# Constants
+DEFAULT_CHROMA_DB_NAME = "chroma_db"
+DEFAULT_COLLECTION_NAME = "adastrea_docs"
 
 
 class PerformanceMetrics:
@@ -129,13 +133,23 @@ class IPCServer:
         # MCP server instance (lazy initialization)
         self._mcp_server = None
         
+        # Ingestion lock to prevent concurrent ingestion requests
+        self._ingestion_lock = threading.Lock()
+        self._is_ingesting = False
+        
         # Register default handlers
         self._register_default_handlers()
 
     def _register_default_handlers(self):
         """Register default request handlers."""
         self.register_handler('ping', self._handle_ping)
+        self.register_handler('validate_api_key', self._handle_validate_api_key)
         self.register_handler('metrics', self._handle_metrics)
+        # Connection testing handlers
+        self.register_handler('test_connection', self._handle_test_connection)
+        self.register_handler('test_llm_connection', self._handle_test_llm_connection)
+        self.register_handler('test_rag_system', self._handle_test_rag_system)
+        self.register_handler('test_python_backend', self._handle_test_python_backend)
         self.register_handler('query', self._handle_query)
         self.register_handler('plan', self._handle_plan)
         self.register_handler('analyze', self._handle_analyze)
@@ -156,6 +170,9 @@ class IPCServer:
         self.register_handler('get_ue_logs', self._handle_get_ue_logs)
         self.register_handler('list_ue_logs', self._handle_list_ue_logs)
         self.register_handler('read_ue_log', self._handle_read_ue_log)
+        # RAG ingestion handler
+        self.register_handler('ingest', self._handle_ingest)
+        self.register_handler('clear_history', self._handle_clear_history)
 
     def register_handler(self, request_type: str, handler_func):
         """
@@ -338,6 +355,70 @@ class IPCServer:
 
     # Helper methods
     
+    def _find_persist_directory(self) -> Optional[str]:
+        """
+        Find the ChromaDB persist directory.
+        
+        Checks for the CHROMA_PERSIST_DIRECTORY environment variable first,
+        then falls back to checking common locations.
+        
+        Returns:
+            Path to persist directory if found, None otherwise
+        """
+        # Check environment variable first
+        env_persist_dir = os.environ.get('CHROMA_PERSIST_DIRECTORY')
+        if env_persist_dir and os.path.exists(env_persist_dir):
+            return env_persist_dir
+        
+        # Check common persist directory locations
+        persist_dirs = [
+            './chroma_db',
+            '../../../chroma_db',
+            os.path.join(os.path.dirname(__file__), '..', '..', '..', 'chroma_db'),
+        ]
+        
+        for pd in persist_dirs:
+            if os.path.exists(pd):
+                return pd
+        
+        return None
+    
+    def _validate_path_safety(self, path: str, require_exists: bool = False) -> Tuple[bool, Optional[str]]:
+        """
+        Validate that a path is safe from path traversal attacks.
+        
+        Args:
+            path: Path to validate
+            require_exists: If True, path must exist
+            
+        Returns:
+            Tuple of (is_valid, error_message)
+        """
+        if not path:
+            return False, "Path cannot be empty"
+        
+        # Convert to absolute path and normalize (handles .., ., //, etc.)
+        try:
+            abs_path = os.path.abspath(os.path.normpath(path))
+        except Exception as e:
+            return False, f"Invalid path format: {str(e)}"
+        
+        # Additional security check: reject if path contains .. after normalization
+        # This catches edge cases that might slip through normalization
+        if ".." in path:
+            return False, "Path contains '..' which is not allowed for security reasons"
+        
+        # Check if path exists if required
+        if require_exists:
+            if not os.path.exists(abs_path):
+                return False, f"Path does not exist: {path}"
+            
+            # Check if it's a directory (os.path.isdir returns False for non-existent paths)
+            if not os.path.isdir(abs_path):
+                return False, f"Path is not a directory: {path}"
+        
+        return True, None
+    
     @staticmethod
     def _extract_code_block_content(text: str) -> str:
         """
@@ -383,6 +464,220 @@ class IPCServer:
             'timestamp': time.time()
         }
     
+    def _handle_validate_api_key(self, data: str) -> Dict[str, Any]:
+        """
+        Validate an API key by attempting a simple test request.
+        API keys are read from environment variables (.env file).
+        
+        Args:
+            data: JSON string with 'provider' field
+            
+        Returns:
+            Dict with validation result
+        """
+        logger.info("API key validation requested")
+        
+        try:
+            # Parse request data
+            request_data = json.loads(data) if data else {}
+            provider = request_data.get('provider', '').lower()
+            
+            if not provider:
+                return {
+                    'status': 'error',
+                    'error': 'Missing provider in request'
+                }
+            
+            # Get API key from environment variables
+            api_key = None
+            if provider == 'gemini':
+                # Check multiple env variable names for Gemini
+                api_key = os.environ.get('GEMINI_KEY') or os.environ.get('GOOGLE_API_KEY')
+                if not api_key:
+                    return {
+                        'status': 'success',
+                        'valid': False,
+                        'error': 'GEMINI_KEY not found in .env file. Please add GEMINI_KEY=your-api-key to your .env file.',
+                        'provider': 'gemini'
+                    }
+                return self._validate_gemini_key(api_key)
+            elif provider == 'openai':
+                api_key = os.environ.get('OPENAI_API_KEY')
+                if not api_key:
+                    return {
+                        'status': 'success',
+                        'valid': False,
+                        'error': 'OPENAI_API_KEY not found in .env file. Please add OPENAI_API_KEY=your-api-key to your .env file.',
+                        'provider': 'openai'
+                    }
+                return self._validate_openai_key(api_key)
+            else:
+                return {
+                    'status': 'error',
+                    'error': f'Unsupported provider: {provider}'
+                }
+                
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to parse validation request: {e}")
+            return {
+                'status': 'error',
+                'error': f'Invalid JSON: {str(e)}'
+            }
+        except Exception as e:
+            logger.error(f"Error validating API key: {e}")
+            return {
+                'status': 'error',
+                'error': f'Validation error: {str(e)}'
+            }
+    
+    def _validate_gemini_key(self, api_key: str) -> Dict[str, Any]:
+        """
+        Validate a Gemini API key by attempting a simple test request.
+        
+        Args:
+            api_key: The Gemini API key to validate
+            
+        Returns:
+            Dict with validation result
+        """
+        import google.generativeai as genai
+        
+        try:
+            # Configure with the provided key (note: this still sets global state)
+            # Unfortunately, genai doesn't provide instance-based API currently
+            genai.configure(api_key=api_key)
+            
+            # Try to list models as a simple validation check
+            models = genai.list_models()
+            
+            # If we can list models, the key is valid
+            model_count = sum(1 for _ in models)
+            
+            return {
+                'status': 'success',
+                'valid': True,
+                'message': f'Gemini API key is valid. Found {model_count} available models.',
+                'provider': 'gemini'
+            }
+            
+        except Exception as e:
+            error_msg = str(e)
+            
+            # Sanitize error message to avoid leaking sensitive information
+            # Check for common error patterns
+            if '401' in error_msg or 'API key not valid' in error_msg or 'INVALID_ARGUMENT' in error_msg:
+                return {
+                    'status': 'success',
+                    'valid': False,
+                    'error': 'API key is invalid or has been revoked',
+                    'provider': 'gemini'
+                }
+            elif 'quota' in error_msg.lower():
+                return {
+                    'status': 'success',
+                    'valid': True,
+                    'message': 'API key is valid but quota may be exceeded',
+                    'provider': 'gemini'
+                }
+            elif 'network' in error_msg.lower() or 'connection' in error_msg.lower():
+                return {
+                    'status': 'success',
+                    'valid': False,
+                    'error': 'Network error - cannot verify API key at this time',
+                    'provider': 'gemini'
+                }
+            else:
+                # Log full error for debugging but return sanitized message
+                logger.warning(f"Gemini validation error: {error_msg}")
+                return {
+                    'status': 'success',
+                    'valid': False,
+                    'error': 'Validation failed due to an unexpected error. Check server logs for details.',
+                    'provider': 'gemini'
+                }
+        # Note: genai library doesn't provide a way to restore previous state
+        # The global configuration remains set to the last validated key
+        # Multiple validations should be done sequentially to avoid issues
+    
+    def _validate_openai_key(self, api_key: str) -> Dict[str, Any]:
+        """
+        Validate an OpenAI API key by attempting a simple test request.
+        
+        Args:
+            api_key: The OpenAI API key to validate
+            
+        Returns:
+            Dict with validation result
+        """
+        model_count = 0  # Initialize to avoid undefined variable
+        
+        try:
+            # Import OpenAI client (supports both old and new API)
+            try:
+                # Try new API first (openai >= 1.0.0)
+                from openai import OpenAI
+                client = OpenAI(api_key=api_key)
+                models = client.models.list()
+                model_count = len(list(models))
+            except (ImportError, AttributeError):
+                # Fallback to old API (openai < 1.0.0)
+                # Use local state to avoid affecting global openai.api_key
+                import openai
+                # Save current global state
+                old_api_key = getattr(openai, 'api_key', None)
+                try:
+                    openai.api_key = api_key
+                    models = openai.Model.list()
+                    model_count = len(models.data)
+                finally:
+                    # Restore previous state
+                    if old_api_key is not None:
+                        openai.api_key = old_api_key
+                    else:
+                        # Clear if it wasn't set before
+                        openai.api_key = None
+            
+            return {
+                'status': 'success',
+                'valid': True,
+                'message': f'OpenAI API key is valid. Found {model_count} available models.',
+                'provider': 'openai'
+            }
+            
+        except Exception as e:
+            error_msg = str(e)
+            
+            # Check for common error patterns
+            if '401' in error_msg or 'Incorrect API key' in error_msg or 'invalid_api_key' in error_msg:
+                return {
+                    'status': 'success',
+                    'valid': False,
+                    'error': 'API key is invalid or has been revoked',
+                    'provider': 'openai'
+                }
+            elif 'quota' in error_msg.lower() or 'rate limit' in error_msg.lower():
+                return {
+                    'status': 'success',
+                    'valid': True,
+                    'message': 'API key is valid but rate limit/quota may be exceeded',
+                    'provider': 'openai'
+                }
+            elif 'network' in error_msg.lower() or 'connection' in error_msg.lower():
+                return {
+                    'status': 'success',
+                    'valid': False,
+                    'error': 'Network error - cannot verify API key at this time',
+                    'provider': 'openai'
+                }
+            else:
+                logger.warning(f"OpenAI validation error: {error_msg}")
+                return {
+                    'status': 'success',
+                    'valid': False,
+                    'error': 'Validation failed due to an unexpected error. Check server logs for details.',
+                    'provider': 'openai'
+                }
+    
     def _handle_metrics(self, data: str) -> Dict[str, Any]:
         """
         Handle metrics request to get performance statistics.
@@ -410,6 +705,306 @@ class IPCServer:
             'metrics': stats
         }
 
+    def _handle_test_llm_connection(self, data: str) -> Dict[str, Any]:
+        """
+        Test LLM connection and API key validity.
+        
+        Returns detailed status about:
+        - API key configuration
+        - API key validity
+        - Connection to LLM provider
+        """
+        logger.info("Testing LLM connection")
+        
+        result = {
+            'status': 'success',
+            'component': 'llm',
+            'tests': []
+        }
+        
+        # Test 1: Check if API key is configured
+        api_key_configured = False
+        api_key_source = None
+        provider = os.environ.get('LLM_PROVIDER', 'gemini').lower()
+        
+        if provider == 'gemini':
+            api_key = os.environ.get('GEMINI_KEY') or os.environ.get('GOOGLE_API_KEY')
+            api_key_var = 'GEMINI_KEY or GOOGLE_API_KEY'
+        else:
+            api_key = os.environ.get('OPENAI_API_KEY')
+            api_key_var = 'OPENAI_API_KEY'
+        
+        if api_key:
+            api_key_configured = True
+            api_key_source = api_key_var
+            result['tests'].append({
+                'name': 'API Key Configuration',
+                'status': 'pass',
+                'message': f'API key is configured ({api_key_var})'
+            })
+        else:
+            result['tests'].append({
+                'name': 'API Key Configuration',
+                'status': 'fail',
+                'message': f'No API key found. Please set {api_key_var} in your .env file',
+                'solution': f'Add {api_key_var}=your-api-key to .env file in project root'
+            })
+            result['overall_status'] = 'fail'
+            return result
+        
+        # Test 2: Validate API key with provider
+        try:
+            if provider == 'gemini':
+                validation_result = self._validate_gemini_key(api_key)
+            else:
+                validation_result = self._validate_openai_key(api_key)
+            
+            if validation_result.get('valid'):
+                result['tests'].append({
+                    'name': 'API Key Validity',
+                    'status': 'pass',
+                    'message': validation_result.get('message', 'API key is valid')
+                })
+                result['overall_status'] = 'pass'
+            else:
+                result['tests'].append({
+                    'name': 'API Key Validity',
+                    'status': 'fail',
+                    'message': validation_result.get('error', 'API key validation failed'),
+                    'solution': f'Check your API key is correct and has not been revoked. Get a new key from the provider.'
+                })
+                result['overall_status'] = 'fail'
+        except Exception as e:
+            result['tests'].append({
+                'name': 'API Key Validity',
+                'status': 'error',
+                'message': f'Error testing API key: {str(e)}',
+                'solution': 'Check your internet connection and try again'
+            })
+            result['overall_status'] = 'error'
+        
+        return result
+
+    def _handle_test_rag_system(self, data: str) -> Dict[str, Any]:
+        """
+        Test RAG system availability and document database.
+        
+        Returns detailed status about:
+        - Vector database existence
+        - Document count
+        - RAG system readiness
+        """
+        logger.info("Testing RAG system")
+        
+        result = {
+            'status': 'success',
+            'component': 'rag',
+            'tests': []
+        }
+        
+        # Test 1: Check if persist directory exists
+        persist_directory = os.environ.get('CHROMA_PERSIST_DIRECTORY')
+        if not persist_directory:
+            # Try default location
+            project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
+            persist_directory = os.path.join(project_root, DEFAULT_CHROMA_DB_NAME)
+        
+        if not os.path.exists(persist_directory):
+            result['tests'].append({
+                'name': 'Vector Database',
+                'status': 'fail',
+                'message': f'Vector database not found at {persist_directory}',
+                'solution': 'Run: python ingest.py --docs-dir <your_docs_folder>'
+            })
+            result['overall_status'] = 'fail'
+            return result
+        
+        result['tests'].append({
+            'name': 'Vector Database',
+            'status': 'pass',
+            'message': f'Vector database found at {persist_directory}'
+        })
+        
+        # Test 2: Check if documents are ingested
+        try:
+            import chromadb
+            
+            # Note: Telemetry is already disabled globally at startup in gui_director.py and ingest.py
+            
+            client = chromadb.PersistentClient(path=persist_directory)
+            collection = client.get_or_create_collection(name=DEFAULT_COLLECTION_NAME)
+            doc_count = collection.count()
+            
+            if doc_count > 0:
+                result['tests'].append({
+                    'name': 'Document Ingestion',
+                    'status': 'pass',
+                    'message': f'{doc_count} documents indexed and ready'
+                })
+                result['overall_status'] = 'pass'
+                result['document_count'] = doc_count
+            else:
+                result['tests'].append({
+                    'name': 'Document Ingestion',
+                    'status': 'fail',
+                    'message': 'No documents have been ingested',
+                    'solution': 'Run: python ingest.py --docs-dir <your_docs_folder>'
+                })
+                result['overall_status'] = 'fail'
+        except Exception as e:
+            result['tests'].append({
+                'name': 'Document Ingestion',
+                'status': 'error',
+                'message': f'Error checking documents: {str(e)}',
+                'solution': 'Try re-running ingestion: python ingest.py --docs-dir <your_docs_folder>'
+            })
+            result['overall_status'] = 'error'
+        
+        return result
+
+    def _handle_test_python_backend(self, data: str) -> Dict[str, Any]:
+        """
+        Test Python backend health and dependencies.
+        
+        Returns detailed status about:
+        - Python version
+        - Required dependencies
+        - Backend services
+        """
+        logger.info("Testing Python backend")
+        
+        result = {
+            'status': 'success',
+            'component': 'backend',
+            'tests': []
+        }
+        
+        # Test 1: Python version
+        import sys
+        python_version = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+        
+        if sys.version_info >= (3, 9):
+            result['tests'].append({
+                'name': 'Python Version',
+                'status': 'pass',
+                'message': f'Python {python_version} (compatible)'
+            })
+        else:
+            result['tests'].append({
+                'name': 'Python Version',
+                'status': 'fail',
+                'message': f'Python {python_version} (requires 3.9+)',
+                'solution': 'Upgrade to Python 3.9 or higher'
+            })
+            result['overall_status'] = 'fail'
+        
+        # Test 2: Critical dependencies
+        critical_deps = [
+            ('chromadb', 'Vector database'),
+            ('langchain', 'LLM framework'),
+            ('google.generativeai', 'Gemini SDK')
+        ]
+        
+        all_deps_ok = True
+        for module_name, description in critical_deps:
+            try:
+                __import__(module_name)
+                result['tests'].append({
+                    'name': f'{description}',
+                    'status': 'pass',
+                    'message': f'{module_name} is installed'
+                })
+            except ImportError:
+                all_deps_ok = False
+                result['tests'].append({
+                    'name': f'{description}',
+                    'status': 'fail',
+                    'message': f'{module_name} is not installed',
+                    'solution': f'Run: pip install {module_name}'
+                })
+        
+        if all_deps_ok and 'overall_status' not in result:
+            result['overall_status'] = 'pass'
+        elif not all_deps_ok:
+            result['overall_status'] = 'fail'
+        
+        # Test 3: IPC Server running (always passes if we're here)
+        result['tests'].append({
+            'name': 'IPC Server',
+            'status': 'pass',
+            'message': f'IPC server is running on port {self.port}'
+        })
+        
+        return result
+
+    def _handle_test_connection(self, data: str) -> Dict[str, Any]:
+        """
+        Test all components of the system.
+        
+        Runs comprehensive tests on:
+        - Python backend
+        - LLM connection
+        - RAG system
+        
+        Returns a consolidated report with actionable next steps.
+        """
+        logger.info("Running comprehensive connection test")
+        
+        # Run all tests
+        backend_result = self._handle_test_python_backend("")
+        llm_result = self._handle_test_llm_connection("")
+        rag_result = self._handle_test_rag_system("")
+        
+        # Consolidate results
+        result = {
+            'status': 'success',
+            'components': {
+                'backend': backend_result,
+                'llm': llm_result,
+                'rag': rag_result
+            }
+        }
+        
+        # Determine overall status
+        all_pass = (
+            backend_result.get('overall_status') == 'pass' and
+            llm_result.get('overall_status') == 'pass' and
+            rag_result.get('overall_status') == 'pass'
+        )
+        
+        if all_pass:
+            result['overall_status'] = 'pass'
+            result['message'] = '✅ All systems operational! Ready to answer questions.'
+        else:
+            result['overall_status'] = 'fail'
+            
+            # Build a specific failure message
+            failed_components = []
+            if backend_result.get('overall_status') != 'pass':
+                failed_components.append('Python Backend')
+            if llm_result.get('overall_status') != 'pass':
+                failed_components.append('LLM Connection')
+            if rag_result.get('overall_status') != 'pass':
+                failed_components.append('RAG System')
+            
+            result['message'] = f'❌ Issues detected: {", ".join(failed_components)}'
+            
+            # Provide next steps based on failures
+            next_steps = []
+            
+            if llm_result.get('overall_status') != 'pass':
+                next_steps.append('1. Configure your API key (see LLM Connection test details)')
+            
+            if rag_result.get('overall_status') != 'pass':
+                next_steps.append('2. Ingest documents: python ingest.py --docs-dir <your_docs_folder>')
+            
+            if backend_result.get('overall_status') != 'pass':
+                next_steps.append('3. Install missing dependencies: pip install -r requirements.txt')
+            
+            result['next_steps'] = next_steps
+        
+        return result
+
     def _handle_query(self, data: str) -> Dict[str, Any]:
         """
         Handle documentation query request using the RAG system.
@@ -426,30 +1021,13 @@ class IPCServer:
         try:
             from rag_query import RAGQueryAgent
             
-            # Initialize persist_directory before the conditional block for clarity
-            persist_directory = None
-            
-            # Check for persist directory - environment variable takes precedence
-            env_persist_dir = os.environ.get('CHROMA_PERSIST_DIRECTORY')
-            if env_persist_dir and os.path.exists(env_persist_dir):
-                persist_directory = env_persist_dir
-            else:
-                # Check for common persist directory locations
-                persist_dirs = [
-                    './chroma_db',
-                    '../../../chroma_db',
-                    os.path.join(os.path.dirname(__file__), '..', '..', '..', 'chroma_db'),
-                ]
-                
-                for pd in persist_dirs:
-                    if os.path.exists(pd):
-                        persist_directory = pd
-                        break
+            # Use helper method to find persist directory
+            persist_directory = self._find_persist_directory()
             
             if persist_directory:
                 logger.info(f"Using RAG database at: {persist_directory}")
                 query_agent = RAGQueryAgent(
-                    collection_name='adastrea_docs',
+                    collection_name=DEFAULT_COLLECTION_NAME,
                     persist_directory=persist_directory
                 )
                 
@@ -499,26 +1077,76 @@ Answer:"""
             
         except Exception as e:
             logger.error(f"LLM query error: {e}")
-            # Final fallback with helpful message
-            result_text = dedent(f"""
-                I received your query: "{data}"
+            # Run diagnostic tests to identify the specific issue
+            try:
+                test_results = self._handle_test_connection("")
+                
+                if test_results.get('overall_status') == 'fail':
+                    # Build a specific error message based on test results
+                    error_parts = [f'I received your query: "{data}"', 
+                                 '',
+                                 'However, I cannot provide a response due to the following issues:',
+                                 '']
+                    
+                    components = test_results.get('components', {})
+                    
+                    # Check each component and add specific messages
+                    if components.get('llm', {}).get('overall_status') != 'pass':
+                        error_parts.append('❌ LLM Connection: API key is not configured or invalid')
+                        llm_tests = components.get('llm', {}).get('tests', [])
+                        for test in llm_tests:
+                            if test.get('status') == 'fail' and test.get('solution'):
+                                error_parts.append(f"   💡 {test.get('solution')}")
+                        error_parts.append('')
+                    
+                    if components.get('rag', {}).get('overall_status') != 'pass':
+                        error_parts.append('❌ RAG System: Document database is not set up')
+                        error_parts.append('   💡 Run: python ingest.py --docs-dir <your_docs_folder>')
+                        error_parts.append('')
+                    
+                    if components.get('backend', {}).get('overall_status') != 'pass':
+                        error_parts.append('❌ Python Backend: Missing dependencies')
+                        error_parts.append('   💡 Run: pip install -r requirements.txt')
+                        error_parts.append('')
+                    
+                    # Add next steps from test results
+                    next_steps = test_results.get('next_steps', [])
+                    if next_steps:
+                        error_parts.append('📝 To fix these issues:')
+                        for step in next_steps:
+                            error_parts.append(f'   {step}')
+                    
+                    error_parts.append('')
+                    error_parts.append('💡 TIP: Use the "Test Connection" button in the GUI to see detailed diagnostics.')
+                    
+                    result_text = '\n'.join(error_parts)
+                else:
+                    # Fallback to generic message if tests pass but query still fails
+                    result_text = dedent(f"""
+                        I received your query: "{data}"
+                        
+                        An unexpected error occurred while processing your request: {str(e)}
+                        
+                        All system components appear to be working. This may be a temporary issue.
+                        Please try again, or check the server logs for more details.
+                    """).strip()
+            except Exception as test_error:
+                logger.error(f"Error running diagnostic tests: {test_error}")
+                # Ultimate fallback
+                result_text = dedent(f"""
+                    I received your query: "{data}"
 
-                However, I'm unable to provide a meaningful response at this time because:
-                
-                1. The RAG (Retrieval-Augmented Generation) system is not initialized. 
-                   Please run the ingestion process to load your project documents.
-                
-                2. No LLM API key is configured. Please set up your API key:
-                   - For Gemini (recommended): Set GEMINI_KEY environment variable
-                   - For OpenAI: Set OPENAI_API_KEY environment variable
-                
-                To set up the system:
-                1. Create a .env file with your API key
-                2. Run: python ingest.py --docs-dir <your_docs_folder>
-                3. Restart the IPC server
-                
-                For more information, see the README.md file.
-            """).strip()
+                    However, I'm unable to provide a meaningful response at this time.
+                    
+                    💡 To diagnose the issue:
+                    1. Use the "Test Connection" button in the GUI Status Dashboard
+                    2. This will show you exactly which component needs attention:
+                       - Python Backend (dependencies)
+                       - LLM Connection (API key)
+                       - RAG System (document database)
+                    
+                    For more information, see the README.md file.
+                """).strip()
             
             return {
                 'status': 'success',
@@ -1521,6 +2149,208 @@ JSON Response:"""
             return {
                 'status': 'error',
                 'error': str(e)
+            }
+    
+    # RAG System Handlers
+    
+    def _handle_ingest(self, data: str) -> Dict[str, Any]:
+        """
+        Handle document ingestion request.
+        
+        Args:
+            data: JSON string with ingestion parameters:
+                - docs_dir: Directory containing documents to ingest
+                - persist_dir: Directory to persist the vector database
+                - progress_file: Optional path to file for progress updates
+                - force_reingest: Whether to force re-ingestion of all files
+                - collection_name: ChromaDB collection name
+            
+        Returns:
+            Dict with ingestion statistics
+        """
+        logger.info("Ingest request received")
+        
+        # Check if ingestion is already in progress
+        with self._ingestion_lock:
+            if self._is_ingesting:
+                return {
+                    'status': 'error',
+                    'error': 'Ingestion is already in progress. Please wait for it to complete.'
+                }
+            self._is_ingesting = True
+        
+        try:
+            # Parse ingestion parameters
+            params = json.loads(data) if isinstance(data, str) else data
+            docs_dir = params.get('docs_dir', '')
+            progress_file = params.get('progress_file', None)
+            force_reingest = params.get('force_reingest', False)
+            collection_name = params.get('collection_name', 'adastrea_docs')
+            persist_dir = params.get('persist_dir', './chroma_db')
+            
+            # Validate required parameter
+            if not docs_dir:
+                return {
+                    'status': 'error',
+                    'error': 'docs_dir parameter is required and must be a valid directory path'
+                }
+            
+            # Validate path safety for docs_dir
+            is_valid, error_msg = self._validate_path_safety(docs_dir, require_exists=True)
+            if not is_valid:
+                return {
+                    'status': 'error',
+                    'error': f'Invalid docs_dir: {error_msg}'
+                }
+            
+            # Validate path safety for persist_dir (doesn't need to exist yet)
+            is_valid, error_msg = self._validate_path_safety(persist_dir, require_exists=False)
+            if not is_valid:
+                return {
+                    'status': 'error',
+                    'error': f'Invalid persist_dir: {error_msg}'
+                }
+            
+            # Validate path safety for progress_file if provided
+            if progress_file:
+                is_valid, error_msg = self._validate_path_safety(progress_file, require_exists=False)
+                if not is_valid:
+                    return {
+                        'status': 'error',
+                        'error': f'Invalid progress_file: {error_msg}'
+                    }
+            
+            # Import ingestion module
+            try:
+                from rag_ingestion import ingest_documents
+            except ImportError as e:
+                logger.error(f"Failed to import rag_ingestion module: {e}")
+                return {
+                    'status': 'error',
+                    'error': (
+                        f'Ingestion module not available: {str(e)}\n\n'
+                        'To resolve this issue:\n'
+                        '1. Ensure all Python dependencies are installed (see requirements.txt)\n'
+                        '2. Run: pip install -r requirements.txt\n'
+                        '3. Restart the Python backend'
+                    )
+                }
+            
+            # Log all parameters for debugging
+            logger.info(
+                f"Starting ingestion: docs_dir={docs_dir}, persist_dir={persist_dir}, "
+                f"collection_name={collection_name}, force_reingest={force_reingest}, "
+                f"progress_file={progress_file}"
+            )
+            
+            # Start ingestion
+            stats = ingest_documents(
+                docs_dir=docs_dir,
+                collection_name=collection_name,
+                persist_dir=persist_dir,
+                progress_file=progress_file,
+                force_reingest=force_reingest
+            )
+            
+            # Build message from stats
+            if isinstance(stats, dict) and all(k in stats for k in ('added', 'updated', 'skipped')):
+                # Validate that values are integers
+                try:
+                    added = int(stats['added'])
+                    updated = int(stats['updated'])
+                    skipped = int(stats['skipped'])
+                    message = (
+                        f"Ingestion completed: {added} added, "
+                        f"{updated} updated, {skipped} skipped"
+                    )
+                except (ValueError, TypeError):
+                    # Fallback if values aren't numeric
+                    message = f"Ingestion completed. Stats: {stats}"
+            else:
+                # Fallback for unexpected stats structure
+                message = f"Ingestion completed. Stats: {stats}"
+            
+            logger.info(f"Ingestion completed successfully: {stats}")
+            return {
+                'status': 'success',
+                'stats': stats,
+                'message': message
+            }
+            
+        except json.JSONDecodeError as e:
+            logger.error(f"Invalid JSON in ingest request: {e}")
+            return {
+                'status': 'error',
+                'error': f'Invalid request format: {str(e)}'
+            }
+        except Exception as e:
+            logger.error(f"Ingestion error: {e}", exc_info=True)
+            return {
+                'status': 'error',
+                'error': f'Ingestion failed: {str(e)}'
+            }
+        finally:
+            # Always release the lock
+            with self._ingestion_lock:
+                self._is_ingesting = False
+    
+    def _handle_clear_history(self, data: str) -> Dict[str, Any]:
+        """
+        Handle clear conversation history request.
+        
+        This clears the conversation history in the RAG query agent if available.
+        Returns error if RAG system is not available for more explicit feedback.
+        
+        Args:
+            data: Ignored
+            
+        Returns:
+            Success response or error if RAG system unavailable
+        """
+        logger.info("Clear history request received")
+        
+        try:
+            # Try to use RAG query agent if available
+            from rag_query import RAGQueryAgent
+            
+            # Use helper method to find persist directory
+            persist_directory = self._find_persist_directory()
+            
+            if not persist_directory:
+                logger.warning("No persist directory found for clear_history")
+                return {
+                    'status': 'error',
+                    'error': 'RAG database not found. Please ingest documents first.'
+                }
+            
+            # Use default collection name consistent with ingest handler
+            query_agent = RAGQueryAgent(
+                collection_name='adastrea_docs',
+                persist_directory=persist_directory
+            )
+            query_agent.clear_conversation_history()
+            
+            logger.info("Conversation history cleared successfully")
+            return {
+                'status': 'success',
+                'message': 'Conversation history cleared'
+            }
+            
+        except ImportError as e:
+            # RAG module not available
+            logger.warning(f"RAG query module not available for clear_history: {e}")
+            return {
+                'status': 'error',
+                'error': 'RAG system is not available. Ensure all dependencies are installed.',
+                'details': str(e)
+            }
+        except Exception as e:
+            # Other errors during clear history
+            logger.error(f"Failed to clear history via RAG agent: {e}", exc_info=True)
+            return {
+                'status': 'error',
+                'error': 'Failed to clear conversation history.',
+                'details': str(e)
             }
 
 

@@ -1,6 +1,7 @@
 // Copyright (c) 2025 Mittenzx. All Rights Reserved.
 
 #include "SSettingsDialog.h"
+#include "AdastreaDirectorEditorModule.h" // Ensure log category is declared
 #include "Widgets/Input/SEditableTextBox.h"
 #include "Widgets/Input/SButton.h"
 #include "Widgets/Input/SCheckBox.h"
@@ -16,7 +17,10 @@
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
 #include "Misc/SecureHash.h"
+#include "Misc/MessageDialog.h"
 #include "HAL/PlatformFileManager.h"
+#include "HAL/FileManager.h"
+#include "HAL/PlatformProcess.h"
 
 #define LOCTEXT_NAMESPACE "SettingsDialog"
 
@@ -101,6 +105,11 @@ void SSettingsDialog::OpenDialog()
 
 TSharedRef<SWidget> SSettingsDialog::CreateAPIKeysSection()
 {
+	// Get the .env file path
+	FString EnvFilePath = FPaths::Combine(FPaths::ProjectDir(), TEXT(".env"));
+	FString EnvExamplePath = FPaths::Combine(FPaths::ProjectDir(), TEXT(".env.example"));
+	bool bEnvFileExists = FPaths::FileExists(EnvFilePath);
+	
 	return SNew(SBorder)
 		.BorderImage(FAppStyle::GetBrush("ToolPanel.GroupBorder"))
 		.Padding(15.0f)
@@ -113,14 +122,55 @@ TSharedRef<SWidget> SSettingsDialog::CreateAPIKeysSection()
 			.Padding(0.0f, 0.0f, 0.0f, 10.0f)
 			[
 				SNew(STextBlock)
-				.Text(LOCTEXT("APIKeysSection", "API Keys"))
+				.Text(LOCTEXT("APIKeysSection", "API Configuration (.env)"))
 				.Font(FCoreStyle::GetDefaultFontStyle("Bold", 10))
+			]
+
+			// Instructions
+			+ SVerticalBox::Slot()
+			.AutoHeight()
+			.Padding(0.0f, 0.0f, 0.0f, 15.0f)
+			[
+				SNew(SBorder)
+				.BorderImage(FAppStyle::GetBrush("ToolPanel.DarkGroupBorder"))
+				.Padding(10.0f)
+				[
+					SNew(SVerticalBox)
+					
+					+ SVerticalBox::Slot()
+					.AutoHeight()
+					.Padding(0.0f, 0.0f, 0.0f, 5.0f)
+					[
+						SNew(STextBlock)
+						.Text(LOCTEXT("EnvInstructions", "📝 API keys are configured via .env file"))
+						.Font(FCoreStyle::GetDefaultFontStyle("Bold", 9))
+					]
+					
+					+ SVerticalBox::Slot()
+					.AutoHeight()
+					[
+						SNew(STextBlock)
+						.Text(FText::FromString(FString::Printf(
+							TEXT("1. Copy .env.example to .env in your project root\n")
+							TEXT("2. Edit .env and add your API key:\n")
+							TEXT("   GEMINI_KEY=your-api-key-here\n")
+							TEXT("   (or GOOGLE_API_KEY for compatibility)\n")
+							TEXT("   OPENAI_API_KEY=your-key (if using OpenAI)\n")
+							TEXT("3. Restart Unreal Engine\n\n")
+							TEXT(".env location: %s\n")
+							TEXT("Status: %s"),
+							*EnvFilePath,
+							bEnvFileExists ? TEXT("✓ File exists") : TEXT("⚠ File not found")
+						)))
+						.AutoWrapText(true)
+					]
+				]
 			]
 
 			// LLM Provider Selection
 			+ SVerticalBox::Slot()
 			.AutoHeight()
-			.Padding(0.0f, 5.0f, 0.0f, 10.0f)
+			.Padding(0.0f, 0.0f, 0.0f, 10.0f)
 			[
 				SNew(SHorizontalBox)
 
@@ -170,64 +220,10 @@ TSharedRef<SWidget> SSettingsDialog::CreateAPIKeysSection()
 				]
 			]
 
-			// Gemini API Key
-			+ SVerticalBox::Slot()
-			.AutoHeight()
-			.Padding(0.0f, 0.0f, 0.0f, 10.0f)
-			[
-				SNew(SVerticalBox)
-
-				+ SVerticalBox::Slot()
-				.AutoHeight()
-				.Padding(0.0f, 0.0f, 0.0f, 5.0f)
-				[
-					SNew(STextBlock)
-					.Text(LOCTEXT("GeminiAPIKey", "Gemini API Key:"))
-				]
-
-				+ SVerticalBox::Slot()
-				.AutoHeight()
-				[
-					SAssignNew(GeminiKeyBox, SEditableTextBox)
-					.IsPassword(true)
-					.Text(FText::FromString(GeminiAPIKey))
-					.OnTextChanged_Lambda([this](const FText& NewText) {
-						GeminiAPIKey = NewText.ToString().TrimStartAndEnd();
-					})
-				]
-			]
-
-			// OpenAI API Key
-			+ SVerticalBox::Slot()
-			.AutoHeight()
-			.Padding(0.0f, 0.0f, 0.0f, 10.0f)
-			[
-				SNew(SVerticalBox)
-
-				+ SVerticalBox::Slot()
-				.AutoHeight()
-				.Padding(0.0f, 0.0f, 0.0f, 5.0f)
-				[
-					SNew(STextBlock)
-					.Text(LOCTEXT("OpenAIAPIKey", "OpenAI API Key:"))
-				]
-
-				+ SVerticalBox::Slot()
-				.AutoHeight()
-				[
-					SAssignNew(OpenAIKeyBox, SEditableTextBox)
-					.IsPassword(true)
-					.Text(FText::FromString(OpenAIAPIKey))
-					.OnTextChanged_Lambda([this](const FText& NewText) {
-						OpenAIAPIKey = NewText.ToString().TrimStartAndEnd();
-					})
-				]
-			]
-
 			// Embedding Provider Selection
 			+ SVerticalBox::Slot()
 			.AutoHeight()
-			.Padding(0.0f, 5.0f, 0.0f, 0.0f)
+			.Padding(0.0f, 0.0f, 0.0f, 15.0f)
 			[
 				SNew(SHorizontalBox)
 
@@ -274,6 +270,77 @@ TSharedRef<SWidget> SSettingsDialog::CreateAPIKeysSection()
 						SNew(STextBlock)
 						.Text(LOCTEXT("OpenAIEmbedding", "OpenAI"))
 					]
+				]
+			]
+
+			// Helper Buttons
+			+ SVerticalBox::Slot()
+			.AutoHeight()
+			[
+				SNew(SHorizontalBox)
+
+				+ SHorizontalBox::Slot()
+				.AutoWidth()
+				.Padding(0.0f, 0.0f, 5.0f, 0.0f)
+				[
+					SNew(SButton)
+					.Text(LOCTEXT("OpenEnvFileButton", "Open .env File"))
+					.ToolTipText(LOCTEXT("OpenEnvFileTooltip", "Open the .env file in your default text editor"))
+					.OnClicked_Lambda([EnvFilePath]() -> FReply {
+						if (FPaths::FileExists(EnvFilePath))
+						{
+							FPlatformProcess::LaunchFileInDefaultExternalApplication(*EnvFilePath);
+						}
+						else
+						{
+							FMessageDialog::Open(EAppMsgType::Ok, 
+								FText::FromString(TEXT(".env file not found. Please copy .env.example to .env first.")));
+						}
+						return FReply::Handled();
+					})
+				]
+
+				+ SHorizontalBox::Slot()
+				.AutoWidth()
+				.Padding(0.0f, 0.0f, 5.0f, 0.0f)
+				[
+					SNew(SButton)
+					.Text(LOCTEXT("OpenProjectFolderButton", "Open Project Folder"))
+					.ToolTipText(LOCTEXT("OpenProjectFolderTooltip", "Open the project folder in file explorer"))
+					.OnClicked_Lambda([]() -> FReply {
+						FPlatformProcess::ExploreFolder(*FPaths::ProjectDir());
+						return FReply::Handled();
+					})
+				]
+
+				+ SHorizontalBox::Slot()
+				.AutoWidth()
+				[
+					SNew(SButton)
+					.Text(LOCTEXT("CreateEnvButton", "Create .env from Template"))
+					.ToolTipText(LOCTEXT("CreateEnvTooltip", "Copy .env.example to .env"))
+					.IsEnabled_Lambda([EnvFilePath]() { return !FPaths::FileExists(EnvFilePath); })
+					.OnClicked_Lambda([EnvFilePath, EnvExamplePath]() -> FReply {
+						if (FPaths::FileExists(EnvExamplePath))
+						{
+							if (IFileManager::Get().Copy(*EnvFilePath, *EnvExamplePath) == COPY_OK)
+							{
+								FMessageDialog::Open(EAppMsgType::Ok,
+									FText::FromString(TEXT(".env file created successfully! Please edit it to add your API key, then restart Unreal Engine.")));
+							}
+							else
+							{
+								FMessageDialog::Open(EAppMsgType::Ok,
+									FText::FromString(TEXT("Failed to create .env file. Please create it manually.")));
+							}
+						}
+						else
+						{
+							FMessageDialog::Open(EAppMsgType::Ok,
+								FText::FromString(TEXT(".env.example not found in project root.")));
+						}
+						return FReply::Handled();
+					})
 				]
 			]
 		];
@@ -443,11 +510,10 @@ void SSettingsDialog::OnShowTimestampsChanged(ECheckBoxState NewState)
 
 void SSettingsDialog::LoadSettings()
 {
-	// Load from config file (simplified version, no encryption for now)
+	// Load from config file
+	// Note: API keys are now configured via .env file, not stored in config.ini
 	LLMProvider = LoadConfigValue(TEXT("LLMProvider"), TEXT("gemini"));
 	EmbeddingProvider = LoadConfigValue(TEXT("EmbeddingProvider"), TEXT("huggingface"));
-	GeminiAPIKey = LoadConfigValue(TEXT("GeminiAPIKey"), TEXT(""));
-	OpenAIAPIKey = LoadConfigValue(TEXT("OpenAIAPIKey"), TEXT(""));
 	
 	FString FontSizeStr = LoadConfigValue(TEXT("DefaultFontSize"), TEXT("10"));
 	DefaultFontSize = FCString::Atoi(*FontSizeStr);
@@ -462,14 +528,18 @@ void SSettingsDialog::LoadSettings()
 	
 	FString ShowTimestampsStr = LoadConfigValue(TEXT("ShowTimestamps"), TEXT("true"));
 	bShowTimestamps = ShowTimestampsStr == TEXT("true");
+	
+	// Initialize API key strings as empty (they're read from .env by Python backend)
+	GeminiAPIKey = TEXT("");
+	OpenAIAPIKey = TEXT("");
 }
 
 void SSettingsDialog::SaveSettings()
 {
+	// Save provider preferences and display settings
+	// Note: API keys are configured via .env file and not saved here
 	SaveConfigValue(TEXT("LLMProvider"), LLMProvider);
 	SaveConfigValue(TEXT("EmbeddingProvider"), EmbeddingProvider);
-	SaveConfigValue(TEXT("GeminiAPIKey"), GeminiAPIKey);
-	SaveConfigValue(TEXT("OpenAIAPIKey"), OpenAIAPIKey);
 	SaveConfigValue(TEXT("DefaultFontSize"), FString::FromInt(DefaultFontSize));
 	SaveConfigValue(TEXT("AutoSaveSettings"), bAutoSaveSettings ? TEXT("true") : TEXT("false"));
 	SaveConfigValue(TEXT("ShowTimestamps"), bShowTimestamps ? TEXT("true") : TEXT("false"));
