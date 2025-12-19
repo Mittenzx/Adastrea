@@ -271,4 +271,47 @@ protected:
 	 */
 	UFUNCTION(BlueprintCallable, Category="Sector Map")
 	void CreateDefaultUIWidgets();
+
+	/**
+	 * Get detailed statistics about the current sector
+	 * @return String with sector statistics
+	 */
+	UFUNCTION(BlueprintCallable, Category="Sector Map")
+	FString GetSectorStatistics() const;
+
+	/**
+	 * Update object tracking within the sector
+	 * Refreshes the list of actors in the sector
+	 */
+	UFUNCTION(BlueprintCallable, Category="Sector Map")
+	void UpdateObjectTracking();
+
+	/**
+	 * Get the player's distance to sector center
+	 * @return Distance in Unreal Units, or -1 if no sector or no player
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Sector Map")
+	float GetPlayerDistanceToSectorCenter() const;
+
+	/**
+	 * Check if the player is currently in this sector
+	 * @return True if player is within sector bounds
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Sector Map")
+	bool IsPlayerInSector() const;
+
+	/**
+	 * Get navigation direction to sector center from player
+	 * @return Normalized direction vector, or zero if no sector/player
+	 */
+	UFUNCTION(BlueprintCallable, Category="Sector Map")
+	FVector GetNavigationDirectionToCenter() const;
+
+	/**
+	 * Calculate estimated travel time to sector from player position
+	 * @param TravelSpeed Speed in units per second
+	 * @return Estimated time in seconds, or -1 if cannot calculate
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Sector Map")
+	float CalculateTravelTimeToSector(float TravelSpeed) const;
 };

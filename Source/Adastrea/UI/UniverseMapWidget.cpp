@@ -595,3 +595,163 @@ void UUniverseMapWidget::OnCloseButtonClicked()
 	ToggleUniverseMapVisibility(false);
 	UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Close button clicked"));
 }
+
+TArray<ASpaceSectorMap*> UUniverseMapWidget::FindPathBetweenSectors(ASpaceSectorMap* StartSector, ASpaceSectorMap* EndSector)
+{
+	TArray<ASpaceSectorMap*> Path;
+	
+	if (!StartSector || !EndSector || StartSector == EndSector)
+	{
+		return Path;
+	}
+	
+	// Simple A* pathfinding through grid
+	TSet<ASpaceSectorMap*> ClosedSet;
+	TSet<ASpaceSectorMap*> OpenSet;
+	TMap<ASpaceSectorMap*, ASpaceSectorMap*> CameFrom;
+	TMap<ASpaceSectorMap*, int32> GScore;
+	TMap<ASpaceSectorMap*, int32> FScore;
+	
+	OpenSet.Add(StartSector);
+	GScore.Add(StartSector, 0);
+	FScore.Add(StartSector, GetGridDistanceBetweenSectors(StartSector, EndSector));
+	
+	while (OpenSet.Num() > 0)
+	{
+		// Find sector with lowest FScore in OpenSet
+		ASpaceSectorMap* Current = nullptr;
+		int32 LowestFScore = MAX_int32;
+		for (ASpaceSectorMap* Sector : OpenSet)
+		{
+			int32 Score = FScore.FindRef(Sector);
+			if (Score < LowestFScore)
+			{
+				LowestFScore = Score;
+				Current = Sector;
+			}
+		}
+		
+		if (Current == EndSector)
+		{
+			// Reconstruct path
+			while (Current != nullptr)
+			{
+				Path.Insert(Current, 0);
+				Current = CameFrom.FindRef(Current);
+			}
+			
+			UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Found path with %d sectors"), Path.Num());
+			return Path;
+		}
+		
+		OpenSet.Remove(Current);
+		ClosedSet.Add(Current);
+		
+		// Check neighbors
+		TArray<ASpaceSectorMap*> Neighbors = Current->GetNeighboringSectors();
+		for (ASpaceSectorMap* Neighbor : Neighbors)
+		{
+			if (ClosedSet.Contains(Neighbor))
+			{
+				continue;
+			}
+			
+			int32 TentativeGScore = GScore.FindRef(Current) + 1; // Cost of 1 per sector
+			
+			if (!OpenSet.Contains(Neighbor))
+			{
+				OpenSet.Add(Neighbor);
+			}
+			else if (TentativeGScore >= GScore.FindRef(Neighbor))
+			{
+				continue;
+			}
+			
+			CameFrom.Add(Neighbor, Current);
+			GScore.Add(Neighbor, TentativeGScore);
+			FScore.Add(Neighbor, TentativeGScore + GetGridDistanceBetweenSectors(Neighbor, EndSector));
+		}
+	}
+	
+	UE_LOG(LogAdastrea, Warning, TEXT("UniverseMapWidget: No path found between sectors"));
+	return Path;
+}
+
+int32 UUniverseMapWidget::GetGridDistanceBetweenSectors(ASpaceSectorMap* SectorA, ASpaceSectorMap* SectorB) const
+{
+	if (!SectorA || !SectorB)
+	{
+		return MAX_int32;
+	}
+	
+	FIntVector GridA = SectorA->GetGridCoordinates();
+	FIntVector GridB = SectorB->GetGridCoordinates();
+	
+	// Manhattan distance
+	return FMath::Abs(GridA.X - GridB.X) + FMath::Abs(GridA.Y - GridB.Y) + FMath::Abs(GridA.Z - GridB.Z);
+}
+
+void UUniverseMapWidget::AddSectorBookmark(ASpaceSectorMap* Sector, const FText& BookmarkName)
+{
+	if (!Sector)
+	{
+		return;
+	}
+	
+	BookmarkedSectors.Add(Sector, BookmarkName);
+	
+	UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Added bookmark '%s' for sector '%s'"),
+		*BookmarkName.ToString(), *Sector->SectorName.ToString());
+	
+	// Update grid display to show bookmark
+	UpdateUniverseGrid();
+}
+
+void UUniverseMapWidget::RemoveSectorBookmark(ASpaceSectorMap* Sector)
+{
+	if (!Sector)
+	{
+		return;
+	}
+	
+	if (BookmarkedSectors.Remove(Sector) > 0)
+	{
+		UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Removed bookmark from sector '%s'"),
+			*Sector->SectorName.ToString());
+		
+		// Update grid display
+		UpdateUniverseGrid();
+	}
+}
+
+bool UUniverseMapWidget::IsSectorBookmarked(ASpaceSectorMap* Sector) const
+{
+	return BookmarkedSectors.Contains(Sector);
+}
+
+TArray<ASpaceSectorMap*> UUniverseMapWidget::GetBookmarkedSectors() const
+{
+	TArray<ASpaceSectorMap*> Bookmarks;
+	BookmarkedSectors.GetKeys(Bookmarks);
+	return Bookmarks;
+}
+
+TArray<ASpaceSectorMap*> UUniverseMapWidget::FilterSectorsByName(const FString& SearchText) const
+{
+	TArray<ASpaceSectorMap*> FilteredSectors;
+	
+	if (SearchText.IsEmpty())
+	{
+		return AllSectors;
+	}
+	
+	for (ASpaceSectorMap* Sector : AllSectors)
+	{
+		if (Sector && Sector->SectorName.ToString().Contains(SearchText))
+		{
+			FilteredSectors.Add(Sector);
+		}
+	}
+	
+	return FilteredSectors;
+}

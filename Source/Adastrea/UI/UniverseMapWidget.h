@@ -198,6 +198,63 @@ public:
 	float GetExplorationProgress() const;
 
 	/**
+	 * Find path between two sectors
+	 * Simple A* pathfinding through sector grid
+	 * @param StartSector Starting sector
+	 * @param EndSector Destination sector
+	 * @return Array of sectors forming the path, empty if no path found
+	 */
+	UFUNCTION(BlueprintCallable, Category="Universe Map|Navigation")
+	TArray<ASpaceSectorMap*> FindPathBetweenSectors(ASpaceSectorMap* StartSector, ASpaceSectorMap* EndSector);
+
+	/**
+	 * Get distance between two sectors in grid units
+	 * @param SectorA First sector
+	 * @param SectorB Second sector
+	 * @return Grid distance (Manhattan distance)
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Universe Map|Navigation")
+	int32 GetGridDistanceBetweenSectors(ASpaceSectorMap* SectorA, ASpaceSectorMap* SectorB) const;
+
+	/**
+	 * Add a waypoint/bookmark to a sector
+	 * @param Sector Sector to bookmark
+	 * @param BookmarkName Name for the bookmark
+	 */
+	UFUNCTION(BlueprintCallable, Category="Universe Map|Bookmarks")
+	void AddSectorBookmark(ASpaceSectorMap* Sector, const FText& BookmarkName);
+
+	/**
+	 * Remove a bookmark from a sector
+	 * @param Sector Sector to remove bookmark from
+	 */
+	UFUNCTION(BlueprintCallable, Category="Universe Map|Bookmarks")
+	void RemoveSectorBookmark(ASpaceSectorMap* Sector);
+
+	/**
+	 * Check if a sector is bookmarked
+	 * @param Sector Sector to check
+	 * @return True if sector is bookmarked
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Universe Map|Bookmarks")
+	bool IsSectorBookmarked(ASpaceSectorMap* Sector) const;
+
+	/**
+	 * Get all bookmarked sectors
+	 * @return Array of bookmarked sectors
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Universe Map|Bookmarks")
+	TArray<ASpaceSectorMap*> GetBookmarkedSectors() const;
+
+	/**
+	 * Filter sectors by name
+	 * @param SearchText Text to search for in sector names
+	 * @return Array of sectors matching the search
+	 */
+	UFUNCTION(BlueprintCallable, Category="Universe Map|Search")
+	TArray<ASpaceSectorMap*> FilterSectorsByName(const FString& SearchText) const;
+
+	/**
 	 * Build universe sector info from all sectors in the world
 	 * Organizes sectors into a grid based on their world positions
 	 */
@@ -241,6 +298,10 @@ protected:
 	/** Universe sector information with grid coordinates */
 	UPROPERTY(BlueprintReadOnly, Category="Universe Map|State")
 	TArray<FUniverseSectorInfo> UniverseSectorInfo;
+
+	/** Map of bookmarked sectors with custom names */
+	UPROPERTY(BlueprintReadOnly, Category="Universe Map|State")
+	TMap<ASpaceSectorMap*, FText> BookmarkedSectors;
 
 	// ====================
 	// BOUND UI WIDGETS (Optional - will be created in C++ if not bound)
