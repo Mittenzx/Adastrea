@@ -284,8 +284,25 @@ The [x4-projects repository](https://github.com/iomatix/x4-projects) contains ex
 
 **Recommendation**: Create `UContextMenuComponent` for actors:
 ```cpp
-UCLASS()
-class UContextMenuComponent : public UActorComponent
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Components/ActorComponent.h"
+#include "ContextMenuComponent.generated.h"
+
+/**
+ * Component that provides context menu functionality for actors
+ * 
+ * Allows actors to define custom right-click menu actions that players
+ * can trigger in-game. Actions are dynamically populated based on game state.
+ * 
+ * Usage:
+ * 1. Add component to actor Blueprint
+ * 2. Call AddContextAction to register menu items
+ * 3. Implement OnContextActionTriggered to handle player selections
+ */
+UCLASS(BlueprintType, ClassGroup=(UI), meta=(BlueprintSpawnableComponent))
+class ADASTREA_API UContextMenuComponent : public UActorComponent
 {
     GENERATED_BODY()
 
@@ -456,15 +473,47 @@ While direct technical integration is not feasible, X4 provides excellent concep
 
 **Recommendation**: Add `UStationBlueprintManager` for import/export:
 ```cpp
-UCLASS()
-class UStationBlueprintManager : public UObject
+#pragma once
+
+#include "CoreMinimal.h"
+#include "UObject/NoExportTypes.h"
+#include "Stations/SpaceStation.h"
+#include "StationBlueprintManager.generated.h"
+
+/**
+ * Manages import and export of station blueprints as JSON files
+ * 
+ * Allows players to save their station designs and share them with the community.
+ * Station blueprints contain module layout, connections, and configuration data.
+ * 
+ * Usage:
+ * 1. Call ExportStationToJSON to save a station design
+ * 2. Call ImportStationFromJSON to load a station design
+ * 3. Share JSON files with other players
+ * 
+ * See Also: StationEditor module for in-game station construction
+ */
+UCLASS(BlueprintType)
+class ADASTREA_API UStationBlueprintManager : public UObject
 {
     GENERATED_BODY()
 
 public:
+    /**
+     * Export station design to JSON file
+     * @param Station The station to export
+     * @param FilePath Absolute path for the output JSON file
+     * @return True if export succeeded
+     */
     UFUNCTION(BlueprintCallable, Category="Station Blueprint")
     bool ExportStationToJSON(ASpaceStation* Station, const FString& FilePath);
 
+    /**
+     * Import station design from JSON file
+     * @param FilePath Absolute path to the JSON file
+     * @param World World context for spawning the station
+     * @return Spawned station actor, or nullptr on failure
+     */
     UFUNCTION(BlueprintCallable, Category="Station Blueprint")
     ASpaceStation* ImportStationFromJSON(const FString& FilePath, UWorld* World);
 };
@@ -793,4 +842,4 @@ For implementing X4-inspired features in Adastrea, reference:
 **Research Completed By**: GitHub Copilot  
 **Date**: December 19, 2025  
 **Status**: ✅ Complete  
-**Related Issues**: [Adastrea API Research](https://github.com/Mittenzx/Adastrea/issues/XXX)
+**Related Issues**: [Adastrea API Research](https://github.com/Mittenzx/Adastrea/issues/305)
