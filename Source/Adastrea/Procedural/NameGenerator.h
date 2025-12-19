@@ -69,22 +69,23 @@ public:
 	static FString GenerateUniqueSectorName(uint8 Theme, UObject* Context, int32 MaxAttempts = 100);
 
 private:
-	// Name component arrays for procedural generation
-	static const TArray<FString> MilitarySectorPrefixes;
-	static const TArray<FString> MilitarySectorSuffixes;
-	static const TArray<FString> MiningSectorPrefixes;
-	static const TArray<FString> MiningSectorSuffixes;
-	static const TArray<FString> TradeSectorPrefixes;
-	static const TArray<FString> TradeSectorSuffixes;
-	static const TArray<FString> ScientificSectorPrefixes;
-	static const TArray<FString> ScientificSectorSuffixes;
-	static const TArray<FString> FrontierSectorPrefixes;
-	static const TArray<FString> FrontierSectorSuffixes;
-	static const TArray<FString> GreekLetters;
-	static const TArray<FString> StationPrefixes;
-	static const TArray<FString> StationSuffixes;
-	static const TArray<FString> ShipPrefixes;
-	static const TArray<FString> ShipSuffixes;
+	// Name component array getters for procedural generation
+	// Using functions instead of static const TArray to avoid initialization order issues
+	static TArray<FString> GetMilitarySectorPrefixes();
+	static TArray<FString> GetMilitarySectorSuffixes();
+	static TArray<FString> GetMiningSectorPrefixes();
+	static TArray<FString> GetMiningSectorSuffixes();
+	static TArray<FString> GetTradeSectorPrefixes();
+	static TArray<FString> GetTradeSectorSuffixes();
+	static TArray<FString> GetScientificSectorPrefixes();
+	static TArray<FString> GetScientificSectorSuffixes();
+	static TArray<FString> GetFrontierSectorPrefixes();
+	static TArray<FString> GetFrontierSectorSuffixes();
+	static TArray<FString> GetGreekLetters();
+	static TArray<FString> GetStationPrefixes();
+	static TArray<FString> GetStationSuffixes();
+	static TArray<FString> GetShipPrefixes();
+	static TArray<FString> GetShipSuffixes();
 
 	/**
 	 * Initialize random stream with seed

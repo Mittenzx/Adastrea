@@ -205,10 +205,11 @@ Generator->TargetSector = MySector;
 Generator->GeneratorConfig = MyConfig;
 Generator->GenerateSector();
 
-// Generate name
+// Generate name with deterministic seed for reproducible results
+const int32 NameSeed = 1; // Use 0 for random or any positive value for reproducibility
 FString Name = UNameGenerator::GenerateSectorName(
     static_cast<uint8>(ESectorNamingTheme::Military),
-    12345  // seed
+    NameSeed
 );
 
 // Check uniqueness

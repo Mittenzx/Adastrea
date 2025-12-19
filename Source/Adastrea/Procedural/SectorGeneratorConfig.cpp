@@ -6,7 +6,7 @@ USectorGeneratorConfig::USectorGeneratorConfig()
 	: NamingTheme(ESectorNamingTheme::Greek)
 	, RandomSeed(0)
 	, DensityMultiplier(1.0f)
-	, MinObjectSpacing(50000.0f)  // 500 meters (50,000 cm in Unreal Units)
+	, MinObjectSpacing(50000.0f)  // Min spacing: 50,000 UU = 50,000 cm = 500 m (1 UU = 1 cm)
 	, MaxSpawnAttempts(100)
 	, bCreateCentralHub(false)
 	, CentralHubClass(nullptr)
@@ -27,7 +27,7 @@ int32 USectorGeneratorConfig::GetTotalObjectCount() const
 		TotalCount += FMath::RoundToInt(Definition.MaxCount * DensityMultiplier);
 	}
 	
-	return TotalCount;
+	return FMath::Max(0, TotalCount);
 }
 
 bool USectorGeneratorConfig::ValidateConfiguration(TArray<FText>& OutErrors) const

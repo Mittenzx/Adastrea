@@ -61,3 +61,6 @@ ADASTREA_API DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaInput, Log, All);
 
 // Exploration system
 ADASTREA_API DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaExploration, Log, All);
+
+// Procedural generation system
+ADASTREA_API DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaProceduralGen, Log, All);
