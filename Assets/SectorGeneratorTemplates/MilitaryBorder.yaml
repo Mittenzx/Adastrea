@@ -1,0 +1,128 @@
+# Military Border Zone Generator Configuration Template
+# Creates a heavily defended military sector
+
+ConfigName: "Military Border Zone Generator"
+Description: |
+  Generates a military border sector with:
+  - Military installations
+  - Heavy patrol presence
+  - Defensive platforms
+  - Scanner arrays
+
+# Sector Settings
+NamingTheme: Military
+CustomSectorName: ""
+RandomSeed: 0
+DensityMultiplier: 1.5  # Higher density for military presence
+
+# Generation Rules
+MinObjectSpacing: 75000.0  # 750 meters
+MaxSpawnAttempts: 150
+
+# Central Hub Configuration
+CreateCentralHub: true
+CentralHubClass: "BP_SpaceStation_MilitaryCommand"
+
+# Zone Configuration
+CreateZones: true
+NumZones: 3  # Defense zones
+
+# Object Definitions
+ObjectDefinitions:
+  
+  # Military Command Stations
+  - ObjectType: Station
+    ActorClass: "BP_SpaceStation_Military"
+    MinCount: 2
+    MaxCount: 3
+    DistributionPattern: Grid
+    ScaleVariation: 1.1
+    MinDistanceFromCenter: 4000000.0  # 40km
+    MaxDistanceFromCenter: 7000000.0  # 70km
+    OwnerFaction: "DA_Faction_Military"
+    RandomRotation: false
+
+  # Defensive Platforms
+  - ObjectType: Station
+    ActorClass: "BP_DefensePlatform"
+    MinCount: 8
+    MaxCount: 12
+    DistributionPattern: Orbital
+    ScaleVariation: 1.0
+    MinDistanceFromCenter: 5000000.0  # 50km
+    MaxDistanceFromCenter: 8000000.0  # 80km
+    OwnerFaction: "DA_Faction_Military"
+    RandomRotation: false
+
+  # Heavy Patrol Cruisers
+  - ObjectType: Ship
+    ActorClass: "BP_Spaceship_Cruiser"
+    ShipData: "DA_Ship_Cruiser_Heavy"
+    MinCount: 4
+    MaxCount: 6
+    DistributionPattern: Orbital
+    ScaleVariation: 1.0
+    MinDistanceFromCenter: 3000000.0  # 30km
+    MaxDistanceFromCenter: 6000000.0  # 60km
+    OwnerFaction: "DA_Faction_Military"
+    RandomRotation: false
+
+  # Fighter Squadrons
+  - ObjectType: Ship
+    ActorClass: "BP_Spaceship_Fighter"
+    ShipData: "DA_Ship_Fighter_Interceptor"
+    MinCount: 12
+    MaxCount: 20
+    DistributionPattern: Clustered
+    ScaleVariation: 1.0
+    MinDistanceFromCenter: 2000000.0  # 20km
+    MaxDistanceFromCenter: 7000000.0  # 70km
+    OwnerFaction: "DA_Faction_Military"
+    RandomRotation: false
+
+  # Corvette Patrols
+  - ObjectType: Ship
+    ActorClass: "BP_Spaceship_Corvette"
+    ShipData: "DA_Ship_Corvette_Patrol"
+    MinCount: 6
+    MaxCount: 10
+    DistributionPattern: Orbital
+    ScaleVariation: 1.0
+    MinDistanceFromCenter: 4000000.0  # 40km
+    MaxDistanceFromCenter: 8000000.0  # 80km
+    OwnerFaction: "DA_Faction_Military"
+    RandomRotation: false
+
+  # Scanner Buoys
+  - ObjectType: Waypoint
+    ActorClass: "BP_ScannerBuoy"
+    MinCount: 15
+    MaxCount: 25
+    DistributionPattern: Grid
+    ScaleVariation: 1.0
+    MinDistanceFromCenter: 3000000.0  # 30km
+    MaxDistanceFromCenter: 9500000.0  # 95km
+    RandomRotation: false
+
+  # Minefield Markers
+  - ObjectType: Waypoint
+    ActorClass: "BP_MinefieldMarker"
+    MinCount: 10
+    MaxCount: 15
+    DistributionPattern: Grid
+    ScaleVariation: 1.0
+    MinDistanceFromCenter: 8000000.0  # 80km
+    MaxDistanceFromCenter: 9500000.0  # 95km
+    RandomRotation: false
+
+  # Supply Depot
+  - ObjectType: Station
+    ActorClass: "BP_SpaceStation_SupplyDepot"
+    MinCount: 1
+    MaxCount: 2
+    DistributionPattern: Random
+    ScaleVariation: 1.0
+    MinDistanceFromCenter: 3000000.0  # 30km
+    MaxDistanceFromCenter: 6000000.0  # 60km
+    OwnerFaction: "DA_Faction_Military"
+    RandomRotation: false

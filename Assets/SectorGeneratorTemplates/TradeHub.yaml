@@ -1,0 +1,140 @@
+# Trade Hub Generator Configuration Template
+# Creates a busy commercial sector with trading stations and merchant traffic
+
+ConfigName: "Trade Hub Generator"
+Description: |
+  Generates a commerce-focused sector with:
+  - Trading stations and markets
+  - Heavy merchant traffic
+  - Security presence
+  - Support infrastructure
+
+# Sector Settings
+NamingTheme: Trade
+CustomSectorName: ""
+RandomSeed: 0
+DensityMultiplier: 1.3  # Busy sector
+
+# Generation Rules
+MinObjectSpacing: 60000.0  # 600 meters
+MaxSpawnAttempts: 100
+
+# Central Hub Configuration
+CreateCentralHub: true
+CentralHubClass: "BP_SpaceStation_TradeHub"
+
+# Zone Configuration
+CreateZones: false
+
+# Object Definitions
+ObjectDefinitions:
+  
+  # Main Trading Stations
+  - ObjectType: Station
+    ActorClass: "BP_SpaceStation_Trading"
+    MinCount: 3
+    MaxCount: 5
+    DistributionPattern: Random
+    ScaleVariation: 1.2
+    MinDistanceFromCenter: 2000000.0  # 20km
+    MaxDistanceFromCenter: 6000000.0  # 60km
+    OwnerFaction: "DA_Faction_TradingGuild"
+    RandomRotation: false
+
+  # Market Platforms
+  - ObjectType: Station
+    ActorClass: "BP_SpaceStation_Marketplace"
+    MinCount: 2
+    MaxCount: 4
+    DistributionPattern: Orbital
+    ScaleVariation: 1.0
+    MinDistanceFromCenter: 3000000.0  # 30km
+    MaxDistanceFromCenter: 7000000.0  # 70km
+    OwnerFaction: "DA_Faction_TradingGuild"
+    RandomRotation: false
+
+  # Warehouses
+  - ObjectType: Station
+    ActorClass: "BP_SpaceStation_Warehouse"
+    MinCount: 4
+    MaxCount: 8
+    DistributionPattern: Clustered
+    ScaleVariation: 1.1
+    MinDistanceFromCenter: 2500000.0  # 25km
+    MaxDistanceFromCenter: 8000000.0  # 80km
+    OwnerFaction: "DA_Faction_TradingGuild"
+    RandomRotation: false
+
+  # Large Freighters
+  - ObjectType: Ship
+    ActorClass: "BP_Spaceship_Freighter"
+    ShipData: "DA_Ship_Freighter_Large"
+    MinCount: 8
+    MaxCount: 15
+    DistributionPattern: Random
+    ScaleVariation: 1.3
+    MinDistanceFromCenter: 2000000.0  # 20km
+    MaxDistanceFromCenter: 7000000.0  # 70km
+    OwnerFaction: "DA_Faction_TradingGuild"
+    RandomRotation: false
+
+  # Courier Ships
+  - ObjectType: Ship
+    ActorClass: "BP_Spaceship_Courier"
+    ShipData: "DA_Ship_Courier_Fast"
+    MinCount: 10
+    MaxCount: 20
+    DistributionPattern: Scattered
+    ScaleVariation: 1.0
+    MinDistanceFromCenter: 1500000.0  # 15km
+    MaxDistanceFromCenter: 8000000.0  # 80km
+    RandomRotation: false
+
+  # Security Escorts
+  - ObjectType: Ship
+    ActorClass: "BP_Spaceship_Corvette"
+    ShipData: "DA_Ship_Corvette_Escort"
+    MinCount: 4
+    MaxCount: 8
+    DistributionPattern: Orbital
+    ScaleVariation: 1.0
+    MinDistanceFromCenter: 3000000.0  # 30km
+    MaxDistanceFromCenter: 6000000.0  # 60km
+    OwnerFaction: "DA_Faction_SectorPolice"
+    RandomRotation: false
+
+  # Independent Traders
+  - ObjectType: Ship
+    ActorClass: "BP_Spaceship_Trader"
+    ShipData: "DA_Ship_Trader_Independent"
+    MinCount: 5
+    MaxCount: 10
+    DistributionPattern: Random
+    ScaleVariation: 1.2
+    MinDistanceFromCenter: 2000000.0  # 20km
+    MaxDistanceFromCenter: 7000000.0  # 70km
+    OwnerFaction: "DA_Faction_Independent"
+    RandomRotation: false
+
+  # Docking Beacons
+  - ObjectType: Waypoint
+    ActorClass: "BP_DockingBeacon"
+    MinCount: 8
+    MaxCount: 12
+    DistributionPattern: Grid
+    ScaleVariation: 1.0
+    MinDistanceFromCenter: 1500000.0  # 15km
+    MaxDistanceFromCenter: 8000000.0  # 80km
+    RandomRotation: false
+
+  # Refueling Station
+  - ObjectType: Station
+    ActorClass: "BP_SpaceStation_RefuelingDepot"
+    MinCount: 2
+    MaxCount: 3
+    DistributionPattern: Random
+    ScaleVariation: 1.0
+    MinDistanceFromCenter: 4000000.0  # 40km
+    MaxDistanceFromCenter: 7000000.0  # 70km
+    OwnerFaction: "DA_Faction_TradingGuild"
+    RandomRotation: false

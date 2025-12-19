@@ -1,0 +1,100 @@
+# Frontier Outpost Generator Configuration Template
+# Creates a sparse frontier sector with minimal infrastructure
+
+ConfigName: "Frontier Outpost Generator"
+Description: |
+  Generates a remote frontier sector with:
+  - Small independent outpost
+  - Scattered asteroids and debris
+  - Occasional scout ships
+  - Minimal infrastructure
+
+# Sector Settings
+NamingTheme: Frontier
+CustomSectorName: ""
+RandomSeed: 0
+DensityMultiplier: 0.5  # Sparse sector
+
+# Generation Rules
+MinObjectSpacing: 100000.0  # 1km - more spread out
+MaxSpawnAttempts: 100
+
+# Central Hub Configuration
+CreateCentralHub: false  # No central hub in frontier
+
+# Zone Configuration
+CreateZones: false
+
+# Object Definitions
+ObjectDefinitions:
+  
+  # Small Outpost
+  - ObjectType: Station
+    ActorClass: "BP_SpaceStation_SmallOutpost"
+    MinCount: 1
+    MaxCount: 1
+    DistributionPattern: Random
+    ScaleVariation: 1.0
+    MinDistanceFromCenter: 3000000.0  # 30km
+    MaxDistanceFromCenter: 6000000.0  # 60km
+    OwnerFaction: "DA_Faction_Independent"
+    RandomRotation: false
+
+  # Scattered Asteroids
+  - ObjectType: Asteroid
+    ActorClass: "BP_Asteroid_Single"
+    MinCount: 5
+    MaxCount: 15
+    DistributionPattern: Scattered
+    ScaleVariation: 3.0
+    MinDistanceFromCenter: 1000000.0  # 10km
+    MaxDistanceFromCenter: 9500000.0  # 95km
+    RandomRotation: true
+
+  # Space Debris
+  - ObjectType: Debris
+    ActorClass: "BP_SpaceDebris"
+    MinCount: 10
+    MaxCount: 25
+    DistributionPattern: Scattered
+    ScaleVariation: 5.0
+    MinDistanceFromCenter: 500000.0  # 5km
+    MaxDistanceFromCenter: 9500000.0  # 95km
+    RandomRotation: true
+
+  # Scout Ships
+  - ObjectType: Ship
+    ActorClass: "BP_Spaceship_Scout"
+    ShipData: "DA_Ship_Scout_Light"
+    MinCount: 1
+    MaxCount: 3
+    DistributionPattern: Random
+    ScaleVariation: 1.0
+    MinDistanceFromCenter: 2000000.0  # 20km
+    MaxDistanceFromCenter: 8000000.0  # 80km
+    OwnerFaction: "DA_Faction_Independent"
+    RandomRotation: false
+
+  # Supply Ship
+  - ObjectType: Ship
+    ActorClass: "BP_Spaceship_Freighter"
+    ShipData: "DA_Ship_Freighter_Small"
+    MinCount: 0
+    MaxCount: 1
+    DistributionPattern: Random
+    ScaleVariation: 1.0
+    MinDistanceFromCenter: 3000000.0  # 30km
+    MaxDistanceFromCenter: 7000000.0  # 70km
+    OwnerFaction: "DA_Faction_TradingGuild"
+    RandomRotation: false
+
+  # Navigation Beacons
+  - ObjectType: Waypoint
+    ActorClass: "BP_NavigationBeacon"
+    MinCount: 2
+    MaxCount: 4
+    DistributionPattern: Grid
+    ScaleVariation: 1.0
+    MinDistanceFromCenter: 4000000.0  # 40km
+    MaxDistanceFromCenter: 9000000.0  # 90km
+    RandomRotation: false
