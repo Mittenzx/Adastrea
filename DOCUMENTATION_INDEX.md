@@ -491,6 +491,17 @@ Designer workflows and best practices:
 
 ---
 
+## Research and Analysis
+
+External research and competitive analysis:
+
+| Document | Purpose | Location |
+|----------|---------|----------|
+| **X4_FOUNDATIONS_RESEARCH.md** | 🆕 Comprehensive X4 Foundations analysis (architecture, modding, assets) | Root |
+| **X4_QUICK_REFERENCE.md** | 🆕 TL;DR summary with actionable recommendations | Root |
+
+---
+
 ## Archived Documentation
 
 **NEW:** Historical status and completion documents have been archived.

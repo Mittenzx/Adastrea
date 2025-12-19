@@ -776,6 +776,11 @@ Create Widget Blueprints based on `UniverseMapWidget` and `SectorMapWidget` clas
 - **[Stub and Placeholder Audit](STUB_AND_PLACEHOLDER_AUDIT.md)** - ⭐ Complete audit of stubs, placeholders, and TODOs - realistic assessment of remaining work
 - **[Current Status](CURRENT_STATUS.md)** - Realistic project status assessment (code 85% complete, content 10% complete)
 
+### Research and Analysis
+
+- **[X4 Foundations Research](X4_FOUNDATIONS_RESEARCH.md)** - 🆕 Comprehensive analysis of X4's architecture, modding, and design patterns
+- **[X4 Quick Reference](X4_QUICK_REFERENCE.md)** - 🆕 TL;DR summary with actionable recommendations
+
 ### Visual Design
 
 - **[Game Mockups](GAME_MOCKUPS.md)** - Comprehensive visual mockups showing current vs. desired UI/UX for all game screens
