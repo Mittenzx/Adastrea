@@ -107,10 +107,78 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Sector")
 	FVector GetSectorCenter() const;
 
+	/**
+	 * Get grid coordinates for this sector
+	 * Used for universe grid positioning
+	 * @return Grid coordinates based on sector size
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Sector")
+	FIntVector GetGridCoordinates() const;
+
+	/**
+	 * Get all actors within this sector
+	 * @param ActorClass Optional class filter (nullptr for all actors)
+	 * @return Array of actors within sector bounds
+	 */
+	UFUNCTION(BlueprintCallable, Category="Sector")
+	TArray<AActor*> GetActorsInSector(TSubclassOf<AActor> ActorClass = nullptr) const;
+
+	/**
+	 * Get count of actors in sector
+	 * Optimized version that doesn't return actor array
+	 * @param ActorClass Optional class filter
+	 * @return Number of actors in sector
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Sector")
+	int32 GetActorCountInSector(TSubclassOf<AActor> ActorClass = nullptr) const;
+
+	/**
+	 * Find neighboring sectors (adjacent grid positions)
+	 * @return Array of sectors adjacent to this one
+	 */
+	UFUNCTION(BlueprintCallable, Category="Sector")
+	TArray<ASpaceSectorMap*> GetNeighboringSectors() const;
+
+	/**
+	 * Calculate distance to another sector
+	 * @param OtherSector The sector to measure distance to
+	 * @return Distance in Unreal Units (centimeters)
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Sector")
+	float GetDistanceToSector(const ASpaceSectorMap* OtherSector) const;
+
+	/**
+	 * Validate sector positioning and configuration
+	 * Checks for overlapping sectors and invalid positions
+	 * @return True if sector configuration is valid
+	 */
+	UFUNCTION(BlueprintCallable, Category="Sector|Debug")
+	bool ValidateSectorConfiguration() const;
+
+	/**
+	 * Get debug information about this sector
+	 * @return Debug string with sector details
+	 */
+	UFUNCTION(BlueprintCallable, Category="Sector|Debug")
+	FString GetDebugInfo() const;
+
 protected:
 	virtual void BeginPlay() override;
 
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+	virtual void PostEditMove(bool bFinished) override;
 #endif
+
+private:
+	/** Cache for discovered neighboring sectors */
+	UPROPERTY()
+	TArray<ASpaceSectorMap*> CachedNeighboringSectors;
+
+	/** Whether neighbor cache is dirty and needs refresh */
+	UPROPERTY()
+	bool bNeighborCacheDirty;
+
+	/** Refresh the neighbor cache */
+	void RefreshNeighborCache();
 };

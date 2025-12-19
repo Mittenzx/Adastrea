@@ -4,6 +4,8 @@
 #include "SpaceSectorMap.h"
 #include "AdastreaLog.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/PlayerController.h"
+#include "GameFramework/Pawn.h"
 #include "Components/TextBlock.h"
 #include "Components/ScrollBox.h"
 #include "Components/CanvasPanel.h"
@@ -413,4 +415,117 @@ void USectorMapWidget::CreateDefaultUIWidgets()
 			UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Created object list scroll box"));
 		}
 	}
+}
+
+FString USectorMapWidget::GetSectorStatistics() const
+{
+	if (!CurrentSector)
+	{
+		return TEXT("No sector selected");
+	}
+	
+	return CurrentSector->GetDebugInfo();
+}
+
+void USectorMapWidget::UpdateObjectTracking()
+{
+	if (!CurrentSector)
+	{
+		return;
+	}
+	
+	// Get actors in sector
+	TArray<AActor*> ActorsInSector = CurrentSector->GetActorsInSector();
+	
+	// Update object list
+	TArray<FText> ObjectNames;
+	for (AActor* Actor : ActorsInSector)
+	{
+		if (Actor)
+		{
+			ObjectNames.Add(FText::FromString(Actor->GetName()));
+		}
+	}
+	
+	UpdateObjectList(ObjectNames, ObjectNames.Num());
+	
+	UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Updated object tracking - %d objects found"), ObjectNames.Num());
+}
+
+float USectorMapWidget::GetPlayerDistanceToSectorCenter() const
+{
+	if (!CurrentSector)
+	{
+		return -1.0f;
+	}
+	
+	APlayerController* PC = GetOwningPlayer();
+	if (!PC || !PC->GetPawn())
+	{
+		return -1.0f;
+	}
+	
+	FVector PlayerPosition = PC->GetPawn()->GetActorLocation();
+	FVector SectorCenter = CurrentSector->GetSectorCenter();
+	
+	return FVector::Dist(PlayerPosition, SectorCenter);
+}
+
+bool USectorMapWidget::IsPlayerInSector() const
+{
+	if (!CurrentSector)
+	{
+		return false;
+	}
+	
+	APlayerController* PC = GetOwningPlayer();
+	if (!PC || !PC->GetPawn())
+	{
+		return false;
+	}
+	
+	FVector PlayerPosition = PC->GetPawn()->GetActorLocation();
+	return CurrentSector->IsPositionInSector(PlayerPosition);
+}
+
+FVector USectorMapWidget::GetNavigationDirectionToCenter() const
+{
+	if (!CurrentSector)
+	{
+		return FVector::ZeroVector;
+	}
+	
+	APlayerController* PC = GetOwningPlayer();
+	if (!PC || !PC->GetPawn())
+	{
+		return FVector::ZeroVector;
+	}
+	
+	FVector PlayerPosition = PC->GetPawn()->GetActorLocation();
+	FVector SectorCenter = CurrentSector->GetSectorCenter();
+	
+	FVector Direction = (SectorCenter - PlayerPosition);
+	Direction.Normalize();
+	
+	return Direction;
+}
+
+float USectorMapWidget::CalculateTravelTimeToSector(float TravelSpeed) const
+{
+	// Return -1 if invalid speed (cannot calculate)
+	if (TravelSpeed <= 0.0f)
+	{
+		return -1.0f;
+	}
+	
+	// Get distance to sector center
+	const float Distance = GetPlayerDistanceToSectorCenter();
+	
+	// Return -1 if no sector or no player (cannot calculate)
+	if (Distance < 0.0f)
+	{
+		return -1.0f;
+	}
+	
+	return Distance / TravelSpeed;
 }
