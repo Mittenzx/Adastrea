@@ -41,13 +41,7 @@ void ASpaceSectorMap::BeginPlay()
 		GetActorLocation().Z);
 }
 
-void ASpaceSectorMap::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	
-	// Tick is disabled by default (bCanEverTick = false)
-	// Enable if dynamic updates are needed
-}
+
 
 #if WITH_EDITOR
 void ASpaceSectorMap::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
@@ -223,44 +217,15 @@ int32 ASpaceSectorMap::GetActorCountInSector(TSubclassOf<AActor> ActorClass) con
 
 TArray<ASpaceSectorMap*> ASpaceSectorMap::GetNeighboringSectors() const
 {
-	// Return cached neighbors if valid
-	if (!bNeighborCacheDirty && CachedNeighboringSectors.Num() > 0)
+	// Return cached neighbors if valid (cast away const for cache update)
+	ASpaceSectorMap* MutableThis = const_cast<ASpaceSectorMap*>(this);
+	
+	if (bNeighborCacheDirty || CachedNeighboringSectors.Num() == 0)
 	{
-		return CachedNeighboringSectors;
+		MutableThis->RefreshNeighborCache();
 	}
 	
-	// Need to refresh cache - but this is const, so we can't modify cache here
-	// Return freshly calculated neighbors
-	TArray<ASpaceSectorMap*> Neighbors;
-	
-	if (!GetWorld())
-	{
-		return Neighbors;
-	}
-	
-	// Get all sectors in the world
-	TArray<AActor*> AllSectorActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpaceSectorMap::StaticClass(), AllSectorActors);
-	
-	const FVector CurrentCenter = GetSectorCenter();
-	const float MaxDistance = SectorSize * 1.5f; // Within 1.5 sector sizes = adjacent
-	
-	for (AActor* Actor : AllSectorActors)
-	{
-		ASpaceSectorMap* OtherSector = Cast<ASpaceSectorMap>(Actor);
-		if (OtherSector && OtherSector != this)
-		{
-			FVector OtherCenter = OtherSector->GetSectorCenter();
-			float Distance = FVector::Dist(CurrentCenter, OtherCenter);
-			
-			if (Distance <= MaxDistance)
-			{
-				Neighbors.Add(OtherSector);
-			}
-		}
-	}
-	
-	return Neighbors;
+	return CachedNeighboringSectors;
 }
 
 float ASpaceSectorMap::GetDistanceToSector(const ASpaceSectorMap* OtherSector) const
@@ -338,6 +303,41 @@ FString ASpaceSectorMap::GetDebugInfo() const
 
 void ASpaceSectorMap::RefreshNeighborCache()
 {
-	CachedNeighboringSectors = GetNeighboringSectors();
+	// Rebuild the neighbor cache directly instead of going through GetNeighboringSectors()
+	// to avoid any potential recursive dependency between the cache refresher and the getter.
+	CachedNeighboringSectors.Reset();
+
+	UWorld* World = GetWorld();
+	if (!World)
+	{
+		bNeighborCacheDirty = false;
+		return;
+	}
+
+	// Collect all sector actors in the world
+	TArray<AActor*> AllSectorActors;
+	UGameplayStatics::GetAllActorsOfClass(World, ASpaceSectorMap::StaticClass(), AllSectorActors);
+
+	const FVector CurrentCenter = GetSectorCenter();
+
+	for (AActor* Actor : AllSectorActors)
+	{
+		ASpaceSectorMap* OtherSector = Cast<ASpaceSectorMap>(Actor);
+		if (!OtherSector || OtherSector == this)
+		{
+			continue;
+		}
+
+		const float Distance = GetDistanceToSector(OtherSector);
+
+		// Basic neighbor rule: any distinct sector within one sector size is considered a neighbor.
+		// This uses the same distance computation utilities as the rest of this class and avoids
+		// introducing new behavior outside of the existing spatial model.
+		if (Distance >= 0.0f && Distance <= SectorSize)
+		{
+			CachedNeighboringSectors.Add(OtherSector);
+		}
+	}
+
 	bNeighborCacheDirty = false;
 }

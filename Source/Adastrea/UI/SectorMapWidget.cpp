@@ -512,12 +512,16 @@ FVector USectorMapWidget::GetNavigationDirectionToCenter() const
 
 float USectorMapWidget::CalculateTravelTimeToSector(float TravelSpeed) const
 {
+	// Return -1 if invalid speed (cannot calculate)
 	if (TravelSpeed <= 0.0f)
 	{
 		return -1.0f;
 	}
 	
-	float Distance = GetPlayerDistanceToSectorCenter();
+	// Get distance to sector center
+	const float Distance = GetPlayerDistanceToSectorCenter();
+	
+	// Return -1 if no sector or no player (cannot calculate)
 	if (Distance < 0.0f)
 	{
 		return -1.0f;

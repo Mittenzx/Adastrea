@@ -777,7 +777,7 @@ void ASectorPopulator::ClearSectorObjects(ASpaceSectorMap* Sector)
 ### 9. Saving and Loading Map Data
 
 ```cpp
-// UMyS aveGame.h
+// UMySaveGame.h
 USTRUCT(BlueprintType)
 struct FSavedSectorData
 {

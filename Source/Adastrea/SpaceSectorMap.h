@@ -164,7 +164,6 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
 
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
@@ -177,6 +176,7 @@ private:
 	TArray<ASpaceSectorMap*> CachedNeighboringSectors;
 
 	/** Whether neighbor cache is dirty and needs refresh */
+	UPROPERTY()
 	bool bNeighborCacheDirty;
 
 	/** Refresh the neighbor cache */

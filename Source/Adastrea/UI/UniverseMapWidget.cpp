@@ -656,20 +656,31 @@ TArray<ASpaceSectorMap*> UUniverseMapWidget::FindPathBetweenSectors(ASpaceSector
 				continue;
 			}
 			
-			int32 TentativeGScore = GScore.FindRef(Current) + 1; // Cost of 1 per sector
+			const int32 TentativeGScore = GScore.FindRef(Current) + 1; // Cost of 1 per sector
 			
 			if (!OpenSet.Contains(Neighbor))
 			{
 				OpenSet.Add(Neighbor);
 			}
-			else if (TentativeGScore >= GScore.FindRef(Neighbor))
+			else
 			{
-				continue;
+				// If this path is not better than the existing one, skip updating this neighbor
+				const int32* ExistingNeighborGScore = GScore.Find(Neighbor);
+				if (ExistingNeighborGScore && TentativeGScore >= *ExistingNeighborGScore)
+				{
+					continue;
+				}
 			}
 			
-			CameFrom.Add(Neighbor, Current);
-			GScore.Add(Neighbor, TentativeGScore);
-			FScore.Add(Neighbor, TentativeGScore + GetGridDistanceBetweenSectors(Neighbor, EndSector));
+			// This is the best path to Neighbor found so far; update came-from and scores
+			CameFrom.FindOrAdd(Neighbor) = Current;
+			
+			int32& NeighborGScore = GScore.FindOrAdd(Neighbor);
+			NeighborGScore = TentativeGScore;
+			
+			const int32 Heuristic = GetGridDistanceBetweenSectors(Neighbor, EndSector);
+			int32& NeighborFScore = FScore.FindOrAdd(Neighbor);
+			NeighborFScore = TentativeGScore + Heuristic;
 		}
 	}
 	
