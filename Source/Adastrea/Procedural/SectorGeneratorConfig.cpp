@@ -6,7 +6,7 @@ USectorGeneratorConfig::USectorGeneratorConfig()
 	: NamingTheme(ESectorNamingTheme::Greek)
 	, RandomSeed(0)
 	, DensityMultiplier(1.0f)
-	, MinObjectSpacing(50000.0f)  // 500 meters default spacing
+	, MinObjectSpacing(50000.0f)  // 500 meters (50,000 cm in Unreal Units)
 	, MaxSpawnAttempts(100)
 	, bCreateCentralHub(false)
 	, CentralHubClass(nullptr)

@@ -156,7 +156,7 @@ void ASectorGenerator::ClearSector()
 		if (GeneratedActors[i].IsValid())
 		{
 			AActor* Actor = GeneratedActors[i].Get();
-			if (Actor && !Actor->IsPendingKillPending())
+			if (Actor && IsValid(Actor))
 			{
 				Actor->Destroy();
 			}
@@ -310,7 +310,7 @@ int32 ASectorGenerator::SpawnObjectsFromDefinition(const FSpaceObjectDefinition&
 			OccupiedPositions.Add(Location);
 
 			// Call spawn event
-			OnObjectSpawned(SpawnedActor);
+			OnObjectSpawned(SpawnedActor, Definition);
 
 			// Debug visualization
 			if (bShowDebugVisuals)
