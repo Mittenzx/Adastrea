@@ -6,11 +6,12 @@ STATISTICS:
 --------------------------------------------------------------------------------
   Material             :   60 files
   Null                 :    1 files
-  StaticMesh           :  160 files
+  StaticMesh           :  159 files
   Texture              :    6 files
+  Unrecognized         :    1 files
   Total                :  227 files
 
-PLANNED MOVES: 227
+PLANNED MOVES: 226
 --------------------------------------------------------------------------------
 
   → Materials/ (60 files)
@@ -20,9 +21,6 @@ PLANNED MOVES: 227
       • Material_026.uasset
       • Material_004.uasset
       ... and 55 more
-
-  → Meshes/Imported/ (1 files)
-      • mesh01.uasset
 
   → Meshes/Props/ (123 files)
       • Cube_007.uasset
@@ -50,6 +48,13 @@ PLANNED MOVES: 227
 
   → Uncategorized/ (1 files)
       • Null.uasset
+
+UNRECOGNIZED FILES: 1
+--------------------------------------------------------------------------------
+These files could not be automatically categorized:
+  ? mesh01.uasset
+
+Tip: Use --organize-unrecognized to move these to Uncategorized/ folder
 
 ================================================================================
 DRY RUN - No files were actually moved

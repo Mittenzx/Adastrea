@@ -45,7 +45,7 @@ class ContentOrganizer:
             'folder': 'Materials'
         },
         'StaticMesh': {
-            'prefixes': ['SM_', 'Cube', 'Cylinder', 'Sphere', 'Plane', 'Icosphere', 'mesh'],
+            'prefixes': ['SM_', 'Cube', 'Cylinder', 'Sphere', 'Plane', 'Icosphere', 'BezierCurve', 'mesh_'],
             'folder': 'Meshes'
         },
         'Texture': {
@@ -112,27 +112,26 @@ class ContentOrganizer:
         self.unrecognized_files: List[Path] = []
     
     def detect_asset_type(self, filename: str) -> Optional[str]:
-        """Detect asset type from filename"""
-        name_without_ext = Path(filename).stem
+        """Detect asset type from filename
+        
+        Note: Uses Path.stem which removes everything after the first dot.
+        For files like "Material.042.uasset", this returns "Material" not "Material.042".
+        """
+        name_stem = Path(filename).stem
         
         # Check each asset type
         for asset_type, patterns in self.ASSET_PATTERNS.items():
             # Check prefixes
             if 'prefixes' in patterns:
                 for prefix in patterns['prefixes']:
-                    if name_without_ext.startswith(prefix):
+                    if name_stem.startswith(prefix):
                         return asset_type
             
             # Check suffixes (mainly for textures)
             if 'suffixes' in patterns:
                 for suffix in patterns['suffixes']:
-                    if name_without_ext.endswith(suffix):
+                    if name_stem.endswith(suffix):
                         return asset_type
-        
-        # Default to StaticMesh for numbered variants (check against mesh categories)
-        mesh_prefixes = list(self.MESH_CATEGORIES.keys()) + ['Cube_', 'Cylinder_', 'Sphere_']
-        if any(name_without_ext.startswith(prefix) for prefix in mesh_prefixes):
-            return 'StaticMesh'
         
         return None
     
@@ -142,8 +141,9 @@ class ContentOrganizer:
         
         # Special handling for meshes - create subcategories
         if asset_type == 'StaticMesh':
+            name_stem = Path(filename).stem
             for mesh_prefix, category in self.MESH_CATEGORIES.items():
-                if filename.startswith(mesh_prefix):
+                if name_stem.startswith(mesh_prefix):
                     return f"{base_folder}/{category}"
         
         return base_folder
@@ -203,22 +203,48 @@ class ContentOrganizer:
             
             # Check if file already exists at target
             if target_path.exists():
+                # If the source is already at the target location, no move is needed
+                try:
+                    if source_path.samefile(target_path):
+                        continue
+                except OSError:
+                    # Fall back to treating it as a conflicting existing file
+                    pass
                 self.errors.append(f"Target already exists: {target_path}")
                 continue
             
-            # Record the move
-            self.moves.append((source_path, target_path))
-            
-            if not self.dry_run:
+            if self.dry_run:
+                # In dry-run mode, record planned moves without changing the filesystem
+                self.moves.append((source_path, target_path))
+            else:
                 try:
                     # Create directory
                     target_dir.mkdir(parents=True, exist_ok=True)
                     
                     # Move file
                     shutil.move(str(source_path), str(target_path))
+                    # Only record the move after it has successfully completed
+                    self.moves.append((source_path, target_path))
                     print(f"✓ Moved: {source_path.relative_to(self.content_path)} → {target_path.relative_to(self.content_path)}")
+                except PermissionError as e:
+                    self.errors.append(
+                        f"Permission error while moving {source_path} → {target_path}: {e}. "
+                        f"Try running this script with elevated privileges or ensure the destination is writable."
+                    )
+                except FileNotFoundError as e:
+                    self.errors.append(
+                        f"File not found while moving {source_path} → {target_path}: {e}. "
+                        f"Verify that the source file still exists and was not moved or deleted."
+                    )
+                except OSError as e:
+                    self.errors.append(
+                        f"OS error while moving {source_path} → {target_path}: {e}. "
+                        f"The file may be in use. Close Unreal Editor or any tools using this asset, then try again."
+                    )
                 except Exception as e:
-                    self.errors.append(f"Failed to move {source_path}: {str(e)}")
+                    self.errors.append(
+                        f"Unexpected error while moving {source_path} → {target_path}: {type(e).__name__}: {e}"
+                    )
     
     def generate_report(self) -> str:
         """Generate organization report"""
@@ -324,8 +350,10 @@ class ContentOrganizer:
         print("\n")
         print(report)
         
-        # Save report to file
-        report_path = self.content_path.parent / "content_organization_report.txt"
+        # Save report to file in project root (parent of Tools directory)
+        script_dir = Path(__file__).resolve().parent
+        project_root = script_dir.parent
+        report_path = project_root / "content_organization_report.txt"
         with open(report_path, 'w') as f:
             f.write(report)
         print(f"\nReport saved to: {report_path}")
