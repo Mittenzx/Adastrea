@@ -32,6 +32,9 @@ public:
 	/** Tick method for updating progress */
 	virtual void Tick(const FGeometry& AllottedGeometry, const double InCurrentTime, const float InDeltaTime) override;
 
+	/** Get the plugin version string */
+	static FString GetPluginVersion();
+
 	/** Handle keyboard shortcuts */
 	virtual FReply OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent) override;
 

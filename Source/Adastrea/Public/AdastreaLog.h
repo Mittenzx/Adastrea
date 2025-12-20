@@ -64,3 +64,38 @@ ADASTREA_API DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaExploration, Log, All);
 
 // Procedural generation system
 ADASTREA_API DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaProceduralGen, Log, All);
+
+/**
+ * Validation Macros for Null Pointer and Actor Checks
+ *
+ * These macros provide consistent null checking and logging throughout the codebase.
+ * They help prevent crashes and provide better debugging information.
+ *
+ * Usage:
+ *   ADASTREA_VALIDATE_PTR(MyPointer, return);
+ *   ADASTREA_VALIDATE_ACTOR(MyActor, return false);
+ */
+
+// Validates a pointer and logs warning if null
+#define ADASTREA_VALIDATE_PTR(Ptr, ReturnStatement) \
+    if (!(Ptr)) { \
+        UE_LOG(LogAdastrea, Warning, TEXT("%s: Null pointer at %s:%d"), \
+            TEXT(__FUNCTION__), TEXT(__FILE__), __LINE__); \
+        ReturnStatement; \
+    }
+
+// Validates an actor using IsValid() and logs warning if invalid
+#define ADASTREA_VALIDATE_ACTOR(Actor, ReturnStatement) \
+    if (!IsValid(Actor)) { \
+        UE_LOG(LogAdastrea, Warning, TEXT("%s: Invalid actor at %s:%d"), \
+            TEXT(__FUNCTION__), TEXT(__FILE__), __LINE__); \
+        ReturnStatement; \
+    }
+
+// Validates a UObject pointer and logs warning if null
+#define ADASTREA_VALIDATE_UOBJECT(UObjectPtr, ReturnStatement) \
+    if (!(UObjectPtr)) { \
+        UE_LOG(LogAdastrea, Warning, TEXT("%s: Null UObject at %s:%d"), \
+            TEXT(__FUNCTION__), TEXT(__FILE__), __LINE__); \
+        ReturnStatement; \
+    }

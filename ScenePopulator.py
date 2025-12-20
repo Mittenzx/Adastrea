@@ -734,5 +734,401 @@ Examples:
         sys.exit(1)
 
 
+def spawn_station_with_modules(station_asset: str, module_count: int = 8,
+                              module_spacing: float = 1000, center: Tuple[float, float, float] = (0, 0, 0)) -> List[Any]:
+    """
+    Spawn a station with attached modules in a circular pattern
+
+    Args:
+        station_asset: Path to station blueprint/asset
+        module_count: Number of modules to spawn
+        module_spacing: Distance from center for modules
+        center: Center position for the station
+
+    Returns:
+        List of spawned actors (station + modules)
+    """
+    if not UNREAL_AVAILABLE:
+        print(f"Would spawn station with {module_count} modules at {center}")
+        return []
+
+    populator = ScenePopulator()
+
+    # Spawn central station
+    station = populator.spawn_actor(station_asset, center, (0, 0, 0))
+    if not station:
+        return []
+
+    actors = [station]
+
+    # Spawn modules in circle around station
+    for i in range(module_count):
+        angle = (2 * math.pi * i) / module_count
+        x = center[0] + math.cos(angle) * module_spacing
+        y = center[1] + math.sin(angle) * module_spacing
+        z = center[2] + random.uniform(-100, 100)  # Slight vertical variation
+
+        # Rotate to face center
+        rotation = (0, math.degrees(angle) + 180, 0)
+
+        # Use different module types (would need actual module assets)
+        module_asset = f"/Game/Adastrea/Blueprints/Stations/Modules/StationModule_{random.randint(1, 5)}"
+
+        module = populator.spawn_actor(module_asset, (x, y, z), rotation)
+        if module:
+            actors.append(module)
+
+    print(f"Spawned station with {len(actors)-1} modules")
+    return actors
+
+
+def create_trading_route(start_station: Any, end_station: Any, waypoint_count: int = 5) -> List[Any]:
+    """
+    Create a trading route between two stations with waypoints
+
+    Args:
+        start_station: Starting station actor
+        end_station: Ending station actor
+        waypoint_count: Number of waypoints along the route
+
+    Returns:
+        List of waypoint actors
+    """
+    if not UNREAL_AVAILABLE:
+        print(f"Would create trading route with {waypoint_count} waypoints")
+        return []
+
+    waypoints = []
+
+    if not start_station or not end_station:
+        return waypoints
+
+    # Get positions
+    start_pos = start_station.get_actor_location()
+    end_pos = end_station.get_actor_location()
+
+    # Create waypoints along the line
+    for i in range(waypoint_count):
+        t = (i + 1) / (waypoint_count + 1)  # Position between 0 and 1
+
+        x = start_pos.x + t * (end_pos.x - start_pos.x)
+        y = start_pos.y + t * (end_pos.y - start_pos.y)
+        z = start_pos.z + t * (end_pos.z - start_pos.z)
+
+        # Add some randomness to make routes less straight
+        x += random.uniform(-500, 500)
+        y += random.uniform(-500, 500)
+        z += random.uniform(-200, 200)
+
+        # Spawn waypoint marker (would need actual waypoint asset)
+        waypoint_asset = "/Game/Adastrea/Blueprints/Navigation/WaypointMarker"
+        waypoint = ScenePopulator().spawn_actor(waypoint_asset, (x, y, z), (0, 0, 0))
+
+        if waypoint:
+            waypoints.append(waypoint)
+
+    print(f"Created trading route with {len(waypoints)} waypoints")
+    return waypoints
+
+
+def populate_faction_territory(faction_asset: str, center: Tuple[float, float, float],
+                              radius: float, station_count: int = 3, ship_count: int = 8) -> Dict[str, List[Any]]:
+    """
+    Populate a faction's territory with stations and ships
+
+    Args:
+        faction_asset: Path to faction data asset
+        center: Center of territory
+        radius: Territory radius
+        station_count: Number of stations to spawn
+        ship_count: Number of ships to patrol
+
+    Returns:
+        Dictionary with spawned actors by type
+    """
+    if not UNREAL_AVAILABLE:
+        print(f"Would populate faction territory: {station_count} stations, {ship_count} ships")
+        return {"stations": [], "ships": [], "waypoints": []}
+
+    result = {"stations": [], "ships": [], "waypoints": []}
+
+    # Spawn stations in territory
+    station_positions = PlacementPattern.cluster(station_count, station_count, 2000, radius * 0.7, center)
+    for pos in station_positions:
+        station_asset_path = f"/Game/Adastrea/Blueprints/Stations/{faction_asset.split('_')[-1]}_Station"
+        station = ScenePopulator().spawn_actor(station_asset_path, pos, (0, 0, 0))
+        if station:
+            result["stations"].append(station)
+
+    # Spawn patrol ships
+    ship_positions = PlacementPattern.orbit(ship_count, radius * 0.8, center)
+    for pos in ship_positions:
+        ship_asset_path = f"/Game/Adastrea/Blueprints/Ships/{faction_asset.split('_')[-1]}_Fighter"
+        ship = ScenePopulator().spawn_actor(ship_asset_path, pos, (0, 0, 0))
+        if ship:
+            result["ships"].append(ship)
+
+    # Create trading routes between stations
+    if len(result["stations"]) > 1:
+        for i in range(len(result["stations"]) - 1):
+            waypoints = create_trading_route(result["stations"][i], result["stations"][i + 1])
+            result["waypoints"].extend(waypoints)
+
+    print(f"Populated faction territory with {len(result['stations'])} stations, {len(result['ships'])} ships, {len(result['waypoints'])} waypoints")
+    return result
+
+
+def create_asteroid_belt(center: Tuple[float, float, float], inner_radius: float,
+                        outer_radius: float, asteroid_count: int = 200) -> List[Any]:
+    """
+    Create an asteroid belt between inner and outer radii
+
+    Args:
+        center: Center of the asteroid belt
+        inner_radius: Inner radius of belt
+        outer_radius: Outer radius of belt
+        asteroid_count: Number of asteroids to spawn
+
+    Returns:
+        List of spawned asteroid actors
+    """
+    if not UNREAL_AVAILABLE:
+        print(f"Would create asteroid belt with {asteroid_count} asteroids")
+        return []
+
+    asteroids = []
+
+    for _ in range(asteroid_count):
+        # Random radius between inner and outer
+        radius = random.uniform(inner_radius, outer_radius)
+
+        # Random angle
+        angle = random.uniform(0, 2 * math.pi)
+
+        # Position on circle
+        x = center[0] + math.cos(angle) * radius
+        y = center[1] + math.sin(angle) * radius
+        z = center[2] + random.uniform(-500, 500)  # Some vertical variation
+
+        # Random rotation
+        rotation = (random.uniform(-180, 180), random.uniform(-180, 180), random.uniform(-180, 180))
+
+        # Random scale
+        scale = random.uniform(0.2, 2.0)
+
+        # Spawn asteroid (using basic shapes as placeholders)
+        asteroid_types = ["/Engine/BasicShapes/Sphere", "/Engine/BasicShapes/Cube", "/Engine/BasicShapes/Cylinder"]
+        asteroid_asset = random.choice(asteroid_types)
+
+        asteroid = ScenePopulator().spawn_actor(asteroid_asset, (x, y, z), rotation)
+        if asteroid:
+            # Set random scale
+            asteroid.set_actor_scale3d((scale, scale, scale))
+            asteroids.append(asteroid)
+
+    print(f"Created asteroid belt with {len(asteroids)} asteroids")
+    return asteroids
+
+
+def create_jump_gate_network(gate_positions: List[Tuple[float, float, float]]) -> List[Any]:
+    """
+    Create a network of jump gates connected by routes
+
+    Args:
+        gate_positions: List of positions for jump gates
+
+    Returns:
+        List of spawned jump gate actors
+    """
+    if not UNREAL_AVAILABLE:
+        print(f"Would create jump gate network with {len(gate_positions)} gates")
+        return []
+
+    gates = []
+
+    for pos in gate_positions:
+        # Spawn jump gate (using torus as placeholder)
+        gate = ScenePopulator().spawn_actor("/Engine/BasicShapes/Torus", pos, (0, 0, 0))
+        if gate:
+            # Make it large and visible
+            gate.set_actor_scale3d((20.0, 20.0, 5.0))
+            gates.append(gate)
+
+    # Create navigation routes between gates
+    waypoints = []
+    for i in range(len(gates) - 1):
+        route_waypoints = create_trading_route(gates[i], gates[i + 1], 3)
+        waypoints.extend(route_waypoints)
+
+    print(f"Created jump gate network with {len(gates)} gates and {len(waypoints)} route waypoints")
+    return gates + waypoints
+
+
+def populate_combat_zone(center: Tuple[float, float, float], radius: float,
+                        faction_a_ships: int = 5, faction_b_ships: int = 5) -> Dict[str, List[Any]]:
+    """
+    Populate a combat zone with ships from two opposing factions
+
+    Args:
+        center: Center of combat zone
+        radius: Combat zone radius
+        faction_a_ships: Number of ships for faction A
+        faction_b_ships: Number of ships for faction B
+
+    Returns:
+        Dictionary with spawned actors by faction
+    """
+    if not UNREAL_AVAILABLE:
+        print(f"Would create combat zone with {faction_a_ships + faction_b_ships} ships")
+        return {"faction_a": [], "faction_b": []}
+
+    result = {"faction_a": [], "faction_b": []}
+
+    # Spawn faction A ships (one side of zone)
+    for i in range(faction_a_ships):
+        angle = random.uniform(-math.pi/4, math.pi/4)  # Front arc
+        distance = random.uniform(radius * 0.3, radius * 0.8)
+        x = center[0] + math.cos(angle) * distance
+        y = center[1] + math.sin(angle) * distance
+        z = center[2] + random.uniform(-200, 200)
+
+        ship = ScenePopulator().spawn_actor("/Game/Adastrea/Blueprints/Ships/Fighter_A", (x, y, z), (0, 0, 0))
+        if ship:
+            result["faction_a"].append(ship)
+
+    # Spawn faction B ships (opposite side)
+    for i in range(faction_b_ships):
+        angle = random.uniform(math.pi * 3/4, math.pi * 5/4)  # Back arc
+        distance = random.uniform(radius * 0.3, radius * 0.8)
+        x = center[0] + math.cos(angle) * distance
+        y = center[1] + math.sin(angle) * distance
+        z = center[2] + random.uniform(-200, 200)
+
+        ship = ScenePopulator().spawn_actor("/Game/Adastrea/Blueprints/Ships/Fighter_B", (x, y, z), (0, 0, 0))
+        if ship:
+            result["faction_b"].append(ship)
+
+    print(f"Created combat zone with {len(result['faction_a'])} vs {len(result['faction_b'])} ships")
+    return result
+
+
+def create_environment_effects(center: Tuple[float, float, float], effect_type: str = "nebula",
+                              radius: float = 5000, count: int = 20) -> List[Any]:
+    """
+    Create environmental effects like nebulae, dust clouds, etc.
+
+    Args:
+        center: Center of effect area
+        effect_type: Type of effect ("nebula", "dust", "energy")
+        radius: Effect radius
+        count: Number of effect actors
+
+    Returns:
+        List of spawned effect actors
+    """
+    if not UNREAL_AVAILABLE:
+        print(f"Would create {effect_type} effects: {count} actors")
+        return []
+
+    effects = []
+
+    for _ in range(count):
+        # Random position within radius
+        angle = random.uniform(0, 2 * math.pi)
+        distance = random.uniform(0, radius)
+        x = center[0] + math.cos(angle) * distance
+        y = center[1] + math.sin(angle) * distance
+        z = center[2] + random.uniform(-1000, 1000)
+
+        # Different effects based on type
+        if effect_type == "nebula":
+            effect_asset = "/Engine/BasicShapes/Sphere"  # Placeholder for nebula volume
+            scale = random.uniform(5.0, 15.0)
+        elif effect_type == "dust":
+            effect_asset = "/Engine/BasicShapes/Cube"  # Placeholder for dust cloud
+            scale = random.uniform(2.0, 8.0)
+        else:  # energy
+            effect_asset = "/Engine/BasicShapes/Cylinder"  # Placeholder for energy field
+            scale = random.uniform(1.0, 5.0)
+
+        effect = ScenePopulator().spawn_actor(effect_asset, (x, y, z),
+                                            (random.uniform(-180, 180), random.uniform(-180, 180), random.uniform(-180, 180)))
+        if effect:
+            effect.set_actor_scale3d((scale, scale, scale))
+            effects.append(effect)
+
+    print(f"Created {effect_type} effects: {len(effects)} actors")
+    return effects
+
+
+def populate_complete_sector() -> Dict[str, Any]:
+    """
+    Populate a complete sector with all content types
+
+    Returns:
+        Dictionary with all spawned content organized by type
+    """
+    if not UNREAL_AVAILABLE:
+        print("Would populate complete sector with all content types")
+        return {}
+
+    sector_content = {
+        "stations": [],
+        "ships": [],
+        "asteroids": [],
+        "jump_gates": [],
+        "effects": [],
+        "waypoints": []
+    }
+
+    # Create central hub station
+    hub_station = spawn_station_with_modules("/Game/Adastrea/Blueprints/Stations/TradingHub", 12, 1500, (0, 0, 0))
+    sector_content["stations"].extend(hub_station)
+
+    # Create faction territories
+    faction_centers = [(15000, 0, 0), (-15000, 0, 0), (0, 15000, 0), (0, -15000, 0)]
+    for i, center in enumerate(faction_centers):
+        faction_territory = populate_faction_territory(f"DA_Faction_{i+1}", center, 8000, 3, 6)
+        sector_content["stations"].extend(faction_territory["stations"])
+        sector_content["ships"].extend(faction_territory["ships"])
+        sector_content["waypoints"].extend(faction_territory["waypoints"])
+
+    # Create asteroid belts
+    asteroid_belts = [
+        ((5000, 5000, 0), 3000, 6000, 150),
+        ((-5000, -5000, 0), 4000, 7000, 120),
+        ((0, 8000, 0), 2000, 5000, 100)
+    ]
+    for center, inner, outer, count in asteroid_belts:
+        asteroids = create_asteroid_belt(center, inner, outer, count)
+        sector_content["asteroids"].extend(asteroids)
+
+    # Create jump gate network
+    gate_positions = [(20000, 0, 0), (-20000, 0, 0), (0, 20000, 0), (0, -20000, 0), (14142, 14142, 0), (-14142, -14142, 0)]
+    jump_network = create_jump_gate_network(gate_positions)
+    sector_content["jump_gates"].extend(jump_network)
+
+    # Create environmental effects
+    nebulae = create_environment_effects((10000, 10000, 0), "nebula", 8000, 15)
+    dust_clouds = create_environment_effects((-10000, -10000, 0), "dust", 6000, 25)
+    sector_content["effects"].extend(nebulae + dust_clouds)
+
+    # Create some combat zones
+    combat_zones = [
+        ((8000, 8000, 0), 3000, 4, 4),
+        ((-8000, -8000, 0), 2500, 3, 3)
+    ]
+    for center, radius, ships_a, ships_b in combat_zones:
+        combat = populate_combat_zone(center, radius, ships_a, ships_b)
+        sector_content["ships"].extend(combat["faction_a"] + combat["faction_b"])
+
+    total_actors = sum(len(actors) for actors in sector_content.values())
+    print(f"Populated complete sector with {total_actors} total actors:")
+    for content_type, actors in sector_content.items():
+        print(f"  {content_type}: {len(actors)}")
+
+    return sector_content
+
+
 if __name__ == "__main__":
     main()

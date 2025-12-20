@@ -155,7 +155,16 @@ class MasterContentGenerator:
         self.log("=" * 80)
         self.print_summary()
         
-        return self.stats
+        # Return success based on whether any assets were created
+        total_created = (self.stats['blueprints_created'] + 
+                        self.stats['data_assets_created'] + 
+                        self.stats['input_actions_created'] + 
+                        self.stats['maps_created'] + 
+                        self.stats['ui_widgets_created'] + 
+                        self.stats['niagara_systems_created'])
+        
+        success = total_created > 0 and len(self.stats['errors']) == 0
+        return success
     
     def generate_blueprints(self, essential_only: bool = False) -> int:
         """
@@ -302,7 +311,7 @@ class MasterContentGenerator:
             from NiagaraGenerator import NiagaraGenerator
             
             generator = NiagaraGenerator()
-            count = generator.generate_all_effects()
+            count = generator.generate_all_systems()
             
             self.stats["niagara_systems_created"] += count
             self.log(f"✓ Created {count} Niagara systems", "info")
@@ -327,7 +336,7 @@ class MasterContentGenerator:
             from ContentValidator import ContentValidator
             
             validator = ContentValidator()
-            is_valid = validator.validate_all()
+            is_valid = validator.validate_all_content()
             
             if is_valid:
                 self.log("✓ All content validated successfully!", "info")
@@ -373,7 +382,7 @@ class MasterContentGenerator:
 
 
 # Convenience functions for direct import usage
-def generate_all_content(validate: bool = True) -> Dict[str, Any]:
+def generate_all_content(validate: bool = True) -> bool:
     """Generate all content - convenience function"""
     generator = MasterContentGenerator()
     return generator.generate_all_content(validate=validate)

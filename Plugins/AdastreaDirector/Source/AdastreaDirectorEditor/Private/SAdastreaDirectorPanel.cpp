@@ -32,8 +32,12 @@
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
 #include "Misc/MessageDialog.h"
+#include "Interfaces/IPluginManager.h"
 
 #define LOCTEXT_NAMESPACE "AdastreaDirectorPanel"
+
+// Plugin name constant for consistency
+static const FString PluginName(TEXT("AdastreaDirector"));
 
 SAdastreaDirectorPanel::~SAdastreaDirectorPanel()
 {
@@ -42,6 +46,31 @@ SAdastreaDirectorPanel::~SAdastreaDirectorPanel()
 	{
 		IFileManager::Get().Delete(*ProgressFilePath);
 	}
+}
+
+FString SAdastreaDirectorPanel::GetPluginVersion()
+{
+	// Cache the version string to avoid repeated plugin manager lookups
+	static FString CachedVersion;
+	static bool bVersionCached = false;
+	
+	if (!bVersionCached)
+	{
+		// Get the plugin descriptor to read the version
+		TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin(PluginName);
+		if (Plugin.IsValid())
+		{
+			const FPluginDescriptor& Descriptor = Plugin->GetDescriptor();
+			CachedVersion = Descriptor.VersionName;
+		}
+		else
+		{
+			CachedVersion = TEXT("Unknown");
+		}
+		bVersionCached = true;
+	}
+	
+	return CachedVersion;
 }
 
 void SAdastreaDirectorPanel::Construct(const FArguments& InArgs)
@@ -87,9 +116,25 @@ void SAdastreaDirectorPanel::Construct(const FArguments& InArgs)
 			+ SHorizontalBox::Slot()
 			.FillWidth(1.0f)
 			[
-				SNew(STextBlock)
-				.Text(LOCTEXT("PanelTitle", "Adastrea Director - AI Assistant"))
-				.Font(FCoreStyle::GetDefaultFontStyle("Bold", 16))
+				SNew(SVerticalBox)
+				
+				+ SVerticalBox::Slot()
+				.AutoHeight()
+				[
+					SNew(STextBlock)
+					.Text(LOCTEXT("PanelTitle", "Adastrea Director - AI Assistant"))
+					.Font(FCoreStyle::GetDefaultFontStyle("Bold", 16))
+				]
+				
+				+ SVerticalBox::Slot()
+				.AutoHeight()
+				.Padding(0.0f, 2.0f, 0.0f, 0.0f)
+				[
+					SNew(STextBlock)
+					.Text(FText::FromString(FString::Printf(TEXT("Version %s"), *GetPluginVersion())))
+					.Font(FCoreStyle::GetDefaultFontStyle("Regular", 9))
+					.ColorAndOpacity(FSlateColor(FLinearColor(0.7f, 0.7f, 0.7f, 1.0f)))
+				]
 			]
 			
 			+ SHorizontalBox::Slot()
@@ -1757,10 +1802,11 @@ void SAdastreaDirectorPanel::RunTests(const FString& TestType)
 void SAdastreaDirectorPanel::PerformSelfCheck()
 {
 	FString Timestamp = FDateTime::Now().ToString(TEXT("%Y-%m-%d %H:%M:%S"));
+	FString PluginVersion = GetPluginVersion();
 	AppendTestOutput(FString::Printf(TEXT("═══════════════════════════════════════════════════════════════\n")));
 	AppendTestOutput(FString::Printf(TEXT("🔍 ADASTREA DIRECTOR SELF-CHECK\n")));
 	AppendTestOutput(FString::Printf(TEXT("Timestamp: %s\n"), *Timestamp));
-	AppendTestOutput(FString::Printf(TEXT("Plugin Version: 1.0.0 (UE5.6+)\n")));
+	AppendTestOutput(FString::Printf(TEXT("Plugin Version: %s (UE5.6+)\n"), *PluginVersion));
 	AppendTestOutput(FString::Printf(TEXT("═══════════════════════════════════════════════════════════════\n\n")));
 
 	int32 PassCount = 0;

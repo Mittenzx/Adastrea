@@ -31,6 +31,11 @@ public class AdastreaDirector : ModuleRules
 				"InputCore",
 				"Sockets",
 				"Networking",
+				"UnrealEd",          // For GEditor and editor functionality
+				"LevelEditor",       // For level editor access
+				"ImageWrapper",      // For PNG encoding
+				"RenderCore",        // For rendering thread operations
+				"RHI",               // For viewport pixel reading
 				// ... add other public dependencies that you statically link with here ...
 			}
 		);

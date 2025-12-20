@@ -1,7 +1,7 @@
 // Copyright (c) 2025 Mittenzx. All Rights Reserved.
 
 #include "SSettingsDialog.h"
-#include "AdastreaDirectorEditorModule.h" // Ensure log category is declared
+#include "AdastreaDirectorEditorModule.h" // LogAdastreaDirectorEditor declaration
 #include "Widgets/Input/SEditableTextBox.h"
 #include "Widgets/Input/SButton.h"
 #include "Widgets/Input/SCheckBox.h"

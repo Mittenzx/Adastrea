@@ -6,7 +6,7 @@ USectorGeneratorConfig::USectorGeneratorConfig()
 	: NamingTheme(ESectorNamingTheme::Greek)
 	, RandomSeed(0)
 	, DensityMultiplier(1.0f)
-	, MinObjectSpacing(50000.0f)  // Min spacing: 50,000 UU = 50,000 cm = 500 m (1 UU = 1 cm)
+	, MinObjectSpacing(50000.0f)
 	, MaxSpawnAttempts(100)
 	, bCreateCentralHub(false)
 	, CentralHubClass(nullptr)
@@ -23,7 +23,6 @@ int32 USectorGeneratorConfig::GetTotalObjectCount() const
 	
 	for (const FSpaceObjectDefinition& Definition : ObjectDefinitions)
 	{
-		// Use max count for estimation
 		TotalCount += FMath::RoundToInt(Definition.MaxCount * DensityMultiplier);
 	}
 	
@@ -140,9 +139,8 @@ TArray<FSpaceObjectDefinition> USectorGeneratorConfig::GetObjectDefinitionsByTyp
 #if WITH_EDITOR
 EDataValidationResult USectorGeneratorConfig::IsDataValid(TArray<FText>& ValidationErrors)
 {
-	EDataValidationResult Result = Super::IsDataValid(ValidationErrors);
+	EDataValidationResult Result = EDataValidationResult::Valid;
 
-	// Use our validation function
 	TArray<FText> ConfigErrors;
 	if (!ValidateConfiguration(ConfigErrors))
 	{
@@ -150,7 +148,6 @@ EDataValidationResult USectorGeneratorConfig::IsDataValid(TArray<FText>& Validat
 		Result = EDataValidationResult::Invalid;
 	}
 
-	// Validate basic info
 	if (ConfigName.IsEmpty())
 	{
 		ValidationErrors.Add(FText::FromString(TEXT("ConfigName is required.")));

@@ -97,7 +97,6 @@ class BlueprintGenerator:
     def __init__(self):
         """Initialize the blueprint generator"""
         self.asset_tools = unreal.AssetToolsHelpers.get_asset_tools()
-        self.editor_asset_lib = unreal.EditorAssetLibrary()
         
         self.created_count = 0
         self.skipped_count = 0
@@ -129,7 +128,7 @@ class BlueprintGenerator:
         asset_path = f"{folder_path}/{blueprint_name}"
         
         # Check if blueprint already exists
-        if self.editor_asset_lib.does_asset_exist(asset_path) and not force:
+        if unreal.EditorAssetLibrary.does_asset_exist(asset_path) and not force:
             self.log(f"Blueprint already exists: {asset_path}", "info")
             self.skipped_count += 1
             return asset_path
@@ -164,7 +163,7 @@ class BlueprintGenerator:
                 self.created_count += 1
                 
                 # Save the asset
-                self.editor_asset_lib.save_loaded_asset(blueprint)
+                unreal.EditorAssetLibrary.save_loaded_asset(blueprint)
                 
                 return asset_path
             else:
