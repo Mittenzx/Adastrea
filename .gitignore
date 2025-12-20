@@ -22,6 +22,9 @@
 .vscode/
 *.code-workspace
 
+# Cursor (VS Code fork)
+.cursor/
+
 # Rider
 .idea/
 *.sln.iml

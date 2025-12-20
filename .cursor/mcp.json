@@ -7,7 +7,7 @@
         "@chongdashu/unreal-mcp-server"
       ],
       "env": {
-        "UNREAL_PROJECT_PATH": "c:/Unreal Projects/Adastrea/Adastrea.uproject"
+        "UNREAL_PROJECT_PATH": "${workspaceFolder}/Adastrea.uproject"
       }
     }
   }
