@@ -56,28 +56,26 @@ float UShieldModuleDataAsset::GetModuleRating() const
 	return FMath::Clamp(StrengthScore + RechargeScore + ResistanceScore + CoverageScore + SpecialBonus, 0.0f, 100.0f);
 }
 
-float UShieldModuleDataAsset::CalculateEffectiveDamage(float IncomingDamage, uint8 DamageType) const
+float UShieldModuleDataAsset::CalculateEffectiveDamage(float IncomingDamage, EDamageType DamageType) const
 {
 	float Resistance = 0.0f;
 
 	// Map damage type to resistance
-	// Note: Assuming damage types are defined in an enum elsewhere
-	// For now, using simplified logic
 	switch (DamageType)
 	{
-		case 0: // Kinetic
+		case EDamageType::Kinetic:
 			Resistance = KineticResistance;
 			break;
-		case 1: // Energy
+		case EDamageType::Energy:
 			Resistance = EnergyResistance;
 			break;
-		case 2: // Explosive
+		case EDamageType::Explosive:
 			Resistance = ExplosiveResistance;
 			break;
-		case 3: // Thermal
+		case EDamageType::Thermal:
 			Resistance = ThermalResistance;
 			break;
-		case 4: // EMP
+		case EDamageType::EMP:
 			Resistance = EMPResistance;
 			break;
 		default:

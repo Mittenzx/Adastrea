@@ -33,15 +33,21 @@ bool UShipCustomizationComponent::InstallModule(UShipModuleComponent* Module, FN
 		return false;
 	}
 
+	// Validate module implements IShipModule interface
+	if (!Module->Implements<UShipModule>())
+	{
+		return false;
+	}
+
 	// Find the target slot
-	FShipModuleSlot* Slot = FindSlotByID(SlotID);
-	if (!Slot)
+	FShipModuleSlot Slot;
+	if (!FindSlotByID(SlotID, Slot))
 	{
 		return false;
 	}
 
 	// Check if slot is already occupied
-	if (Slot->bIsOccupied)
+	if (Slot.bIsOccupied)
 	{
 		return false;
 	}
@@ -54,7 +60,7 @@ bool UShipCustomizationComponent::InstallModule(UShipModuleComponent* Module, FN
 	}
 
 	// Install the module
-	IShipModule::Execute_OnModuleInstalled(Module, *Slot);
+	IShipModule::Execute_OnModuleInstalled(Module, Slot);
 
 	// Update slot state
 	UpdateSlotOccupancy(SlotID, true, Module);
@@ -63,7 +69,7 @@ bool UShipCustomizationComponent::InstallModule(UShipModuleComponent* Module, FN
 	InstalledModules.Add(Module);
 
 	// Notify
-	OnModuleInstalled(Module, *Slot);
+	OnModuleInstalled(Module, Slot);
 
 	return true;
 }
@@ -71,21 +77,21 @@ bool UShipCustomizationComponent::InstallModule(UShipModuleComponent* Module, FN
 UShipModuleComponent* UShipCustomizationComponent::RemoveModule(FName SlotID)
 {
 	// Find the slot
-	FShipModuleSlot* Slot = FindSlotByID(SlotID);
-	if (!Slot || !Slot->bIsOccupied)
+	FShipModuleSlot Slot;
+	if (!FindSlotByID(SlotID, Slot) || !Slot.bIsOccupied)
 	{
 		return nullptr;
 	}
 
 	// Get the module
-	UShipModuleComponent* Module = Cast<UShipModuleComponent>(Slot->InstalledModule.Get());
+	UShipModuleComponent* Module = Cast<UShipModuleComponent>(Slot.InstalledModule.Get());
 	if (!Module)
 	{
 		return nullptr;
 	}
 
 	// Remove the module
-	IShipModule::Execute_OnModuleRemoved(Module, *Slot);
+	IShipModule::Execute_OnModuleRemoved(Module, Slot);
 
 	// Update slot state
 	UpdateSlotOccupancy(SlotID, false, nullptr);
@@ -94,7 +100,7 @@ UShipModuleComponent* UShipCustomizationComponent::RemoveModule(FName SlotID)
 	InstalledModules.Remove(Module);
 
 	// Notify
-	OnModuleRemoved(Module, *Slot);
+	OnModuleRemoved(Module, Slot);
 
 	return Module;
 }
@@ -140,11 +146,11 @@ TArray<UShipModuleComponent*> UShipCustomizationComponent::GetModulesByCategory(
 {
 	TArray<UShipModuleComponent*> Result;
 	
-	for (UShipModuleComponent* Module : InstalledModules)
+	for (const UShipModuleComponent* Module : InstalledModules)
 	{
 		if (Module && IShipModule::Execute_GetModuleCategory(Module) == Category)
 		{
-			Result.Add(Module);
+			Result.Add(const_cast<UShipModuleComponent*>(Module));
 		}
 	}
 
@@ -167,16 +173,17 @@ bool UShipCustomizationComponent::IsSlotOccupied(FName SlotID) const
 // SLOT QUERIES
 // ====================
 
-FShipModuleSlot* UShipCustomizationComponent::FindSlotByID(FName SlotID)
+bool UShipCustomizationComponent::FindSlotByID(FName SlotID, FShipModuleSlot& OutSlot) const
 {
-	for (FShipModuleSlot& Slot : ModuleSlots)
+	for (const FShipModuleSlot& Slot : ModuleSlots)
 	{
 		if (Slot.SlotID == SlotID)
 		{
-			return &Slot;
+			OutSlot = Slot;
+			return true;
 		}
 	}
-	return nullptr;
+	return false;
 }
 
 TArray<FShipModuleSlot> UShipCustomizationComponent::GetSlotsByCategory(EShipModuleCategory Category) const
@@ -439,10 +446,13 @@ void UShipCustomizationComponent::OnMassCapacityExceeded_Implementation()
 
 void UShipCustomizationComponent::UpdateSlotOccupancy(FName SlotID, bool bOccupied, UShipModuleComponent* Module)
 {
-	FShipModuleSlot* Slot = FindSlotByID(SlotID);
-	if (Slot)
+	for (FShipModuleSlot& Slot : ModuleSlots)
 	{
-		Slot->bIsOccupied = bOccupied;
-		Slot->InstalledModule = Module;
+		if (Slot.SlotID == SlotID)
+		{
+			Slot.bIsOccupied = bOccupied;
+			Slot.InstalledModule = Module;
+			break;
+		}
 	}
 }

@@ -19,7 +19,9 @@ UEngineModuleDataAsset::UEngineModuleDataAsset()
 	Efficiency = 75.0f;
 
 	HeatGeneration = 20.0f;
+	BoostHeatMultiplier = 1.5f;
 	MaxHeat = 100.0f;
+	MaxHeatOverrunPercent = 20.0f;
 	CoolingRate = 10.0f;
 	Reliability = 5;
 
@@ -33,6 +35,12 @@ UEngineModuleDataAsset::UEngineModuleDataAsset()
 	EngineGlowMaterial = nullptr;
 	BoostEffect = nullptr;
 	EngineSound = nullptr;
+	
+	// Default sound parameters
+	EngineSoundMinPitch = 0.8f;
+	EngineSoundMaxPitch = 1.2f;
+	EngineSoundMinVolume = 0.5f;
+	EngineSoundMaxVolume = 1.0f;
 
 	// Default physical properties for engines
 	Mass = 500.0f;
@@ -106,8 +114,12 @@ float UEngineModuleDataAsset::GetCurrentFuelConsumption(float ThrottlePercent, b
 		Consumption *= BoostFuelMultiplier;
 	}
 
-	// Higher efficiency = lower consumption
-	Consumption *= (100.0f - Efficiency) / 100.0f + 0.5f;
+	// Apply efficiency: Lower efficiency means higher fuel consumption
+	// Formula: Scale consumption inversely with efficiency
+	// At 100% efficiency: consumption *= 0.5 (50% base consumption)
+	// At 0% efficiency: consumption *= 1.5 (150% base consumption)
+	float EfficiencyMultiplier = 1.5f - (Efficiency / 100.0f);
+	Consumption *= EfficiencyMultiplier;
 
 	return Consumption;
 }

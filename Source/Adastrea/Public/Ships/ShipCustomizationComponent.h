@@ -129,10 +129,11 @@ public:
 	/**
 	 * Find a slot by its ID
 	 * @param SlotID The ID to search for
-	 * @return Pointer to the slot, or nullptr if not found
+	 * @param OutSlot The found slot (only valid if function returns true)
+	 * @return True if a slot with the given ID was found
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization")
-	FShipModuleSlot* FindSlotByID(FName SlotID);
+	bool FindSlotByID(FName SlotID, FShipModuleSlot& OutSlot) const;
 
 	/**
 	 * Get all slots of a specific category

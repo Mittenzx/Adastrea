@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Ships/ShipModuleDataAsset.h"
+#include "Combat/WeaponDataAsset.h"
 #include "ShieldModuleDataAsset.generated.h"
 
 /**
@@ -144,7 +145,7 @@ public:
 	 * @return Damage after shield resistance applied
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Shield Stats")
-	float CalculateEffectiveDamage(float IncomingDamage, uint8 DamageType) const;
+	float CalculateEffectiveDamage(float IncomingDamage, EDamageType DamageType) const;
 
 	/**
 	 * Get average resistance across all damage types

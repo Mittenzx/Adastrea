@@ -30,10 +30,10 @@ void UModularShipCustomizationWidget::SelectSlot(FName SlotID)
 		return;
 	}
 
-	FShipModuleSlot* Slot = CustomizationComponent->FindSlotByID(SlotID);
-	if (Slot)
+	FShipModuleSlot Slot;
+	if (CustomizationComponent->FindSlotByID(SlotID, Slot))
 	{
-		SelectedSlot = *Slot;
+		SelectedSlot = Slot;
 		bHasSlotSelected = true;
 		OnSlotSelected(SelectedSlot);
 	}

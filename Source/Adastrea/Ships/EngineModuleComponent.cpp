@@ -241,14 +241,17 @@ void UEngineModuleComponent::UpdateHeat(float DeltaTime)
 	
 	if (bBoostActive)
 	{
-		HeatGenerated *= 1.5f; // Boost generates more heat
+		HeatGenerated *= EngineData->BoostHeatMultiplier;
 	}
 
 	CurrentHeat += HeatGenerated;
 
 	// Apply cooling
 	CurrentHeat -= EngineData->CoolingRate * DeltaTime;
-	CurrentHeat = FMath::Clamp(CurrentHeat, 0.0f, EngineData->MaxHeat * 1.2f); // Can exceed max by 20%
+	
+	// Clamp heat with configurable overrun
+	float MaxHeatWithOverrun = EngineData->MaxHeat * (1.0f + EngineData->MaxHeatOverrunPercent / 100.0f);
+	CurrentHeat = FMath::Clamp(CurrentHeat, 0.0f, MaxHeatWithOverrun);
 
 	// Check overheat status
 	bIsOverheated = CurrentHeat >= EngineData->MaxHeat;
@@ -287,10 +290,14 @@ void UEngineModuleComponent::UpdateEffects()
 	// Update engine sound pitch/volume based on throttle
 	if (EngineSoundComponent && EngineSoundComponent->IsPlaying())
 	{
-		float PitchMultiplier = 0.8f + (CurrentThrottle / 100.0f) * 0.4f;
+		float ThrottleNormalized = CurrentThrottle / 100.0f;
+		
+		// Interpolate pitch based on data asset settings
+		float PitchMultiplier = FMath::Lerp(EngineData->EngineSoundMinPitch, EngineData->EngineSoundMaxPitch, ThrottleNormalized);
 		EngineSoundComponent->SetPitchMultiplier(PitchMultiplier);
 		
-		float VolumeMultiplier = 0.5f + (CurrentThrottle / 100.0f) * 0.5f;
+		// Interpolate volume based on data asset settings
+		float VolumeMultiplier = FMath::Lerp(EngineData->EngineSoundMinVolume, EngineData->EngineSoundMaxVolume, ThrottleNormalized);
 		EngineSoundComponent->SetVolumeMultiplier(VolumeMultiplier);
 	}
 }
@@ -302,15 +309,18 @@ void UEngineModuleComponent::InitializeEffectComponents()
 		return;
 	}
 
+	AActor* Owner = GetOwner();
+
 	// Create engine trail effect
 	if (EngineData->EngineTrailEffect && !EngineTrailComponent)
 	{
-		EngineTrailComponent = NewObject<UNiagaraComponent>(GetOwner(), UNiagaraComponent::StaticClass());
+		EngineTrailComponent = NewObject<UNiagaraComponent>(Owner, UNiagaraComponent::StaticClass());
 		if (EngineTrailComponent)
 		{
 			EngineTrailComponent->RegisterComponent();
-			EngineTrailComponent->AttachToComponent(ModuleMeshComponent ? ModuleMeshComponent : GetOwner()->GetRootComponent(),
+			EngineTrailComponent->AttachToComponent(ModuleMeshComponent ? ModuleMeshComponent : Owner->GetRootComponent(),
 				FAttachmentTransformRules::KeepRelativeTransform);
+			Owner->AddInstanceComponent(EngineTrailComponent);
 			EngineTrailComponent->SetAsset(EngineData->EngineTrailEffect);
 			EngineTrailComponent->Activate();
 		}
@@ -319,12 +329,13 @@ void UEngineModuleComponent::InitializeEffectComponents()
 	// Create boost effect
 	if (EngineData->BoostEffect && !BoostEffectComponent)
 	{
-		BoostEffectComponent = NewObject<UNiagaraComponent>(GetOwner(), UNiagaraComponent::StaticClass());
+		BoostEffectComponent = NewObject<UNiagaraComponent>(Owner, UNiagaraComponent::StaticClass());
 		if (BoostEffectComponent)
 		{
 			BoostEffectComponent->RegisterComponent();
-			BoostEffectComponent->AttachToComponent(ModuleMeshComponent ? ModuleMeshComponent : GetOwner()->GetRootComponent(),
+			BoostEffectComponent->AttachToComponent(ModuleMeshComponent ? ModuleMeshComponent : Owner->GetRootComponent(),
 				FAttachmentTransformRules::KeepRelativeTransform);
+			Owner->AddInstanceComponent(BoostEffectComponent);
 			BoostEffectComponent->SetAsset(EngineData->BoostEffect);
 			BoostEffectComponent->Deactivate(); // Start inactive
 		}
@@ -333,12 +344,13 @@ void UEngineModuleComponent::InitializeEffectComponents()
 	// Create engine sound
 	if (EngineData->EngineSound && !EngineSoundComponent)
 	{
-		EngineSoundComponent = NewObject<UAudioComponent>(GetOwner(), UAudioComponent::StaticClass());
+		EngineSoundComponent = NewObject<UAudioComponent>(Owner, UAudioComponent::StaticClass());
 		if (EngineSoundComponent)
 		{
 			EngineSoundComponent->RegisterComponent();
-			EngineSoundComponent->AttachToComponent(ModuleMeshComponent ? ModuleMeshComponent : GetOwner()->GetRootComponent(),
+			EngineSoundComponent->AttachToComponent(ModuleMeshComponent ? ModuleMeshComponent : Owner->GetRootComponent(),
 				FAttachmentTransformRules::KeepRelativeTransform);
+			Owner->AddInstanceComponent(EngineSoundComponent);
 			EngineSoundComponent->SetSound(EngineData->EngineSound);
 			EngineSoundComponent->Play();
 		}

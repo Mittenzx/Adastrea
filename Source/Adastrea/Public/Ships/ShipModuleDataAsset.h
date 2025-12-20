@@ -27,7 +27,7 @@
  * 4. Assign to UShipModuleComponent instances
  */
 UCLASS(Abstract, BlueprintType)
-class ADASTREA_API UShipModuleDataAsset : public UPrimaryDataAsset
+class ADASTREA_API UShipModuleDataAsset : public UDataAsset
 {
 	GENERATED_BODY()
 

@@ -235,6 +235,7 @@ void UShipModuleComponent::UpdateModuleMesh()
 		{
 			ModuleMeshComponent->RegisterComponent();
 			ModuleMeshComponent->AttachToComponent(Owner->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+			Owner->AddInstanceComponent(ModuleMeshComponent);
 			ModuleMeshComponent->SetStaticMesh(ModuleData->ModuleMesh);
 			
 			// Apply material if specified

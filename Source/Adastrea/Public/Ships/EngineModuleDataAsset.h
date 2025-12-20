@@ -73,9 +73,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Heat", meta=(ClampMin="0", ClampMax="1000"))
 	float HeatGeneration;
 
+	/** Heat generation multiplier when boost is active */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Heat", meta=(ClampMin="1.0", ClampMax="5.0"))
+	float BoostHeatMultiplier;
+
 	/** Maximum heat before overheating */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Heat", meta=(ClampMin="0", ClampMax="1000"))
 	float MaxHeat;
+
+	/** Maximum heat overrun percentage (how much above max before clamping) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Heat", meta=(ClampMin="0", ClampMax="100"))
+	float MaxHeatOverrunPercent;
 
 	/** Cooling rate (heat units per second) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Heat", meta=(ClampMin="0", ClampMax="100"))
@@ -128,6 +136,22 @@ public:
 	/** Engine sound */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Visual Effects")
 	class USoundBase* EngineSound;
+
+	/** Minimum pitch multiplier for engine sound (at 0% throttle) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Visual Effects", meta=(ClampMin="0.1", ClampMax="2.0"))
+	float EngineSoundMinPitch;
+
+	/** Maximum pitch multiplier for engine sound (at 100% throttle) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Visual Effects", meta=(ClampMin="0.1", ClampMax="2.0"))
+	float EngineSoundMaxPitch;
+
+	/** Minimum volume multiplier for engine sound (at 0% throttle) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Visual Effects", meta=(ClampMin="0.0", ClampMax="1.0"))
+	float EngineSoundMinVolume;
+
+	/** Maximum volume multiplier for engine sound (at 100% throttle) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Visual Effects", meta=(ClampMin="0.0", ClampMax="1.0"))
+	float EngineSoundMaxVolume;
 
 	// ====================
 	// Constructor
