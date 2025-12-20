@@ -5,7 +5,7 @@
 
 > This roadmap outlines the development plan, milestones, and future vision for the Adastrea open-world space flight game.
 
-**Last Updated**: December 17, 2025  
+**Last Updated**: December 20, 2025  
 **Current Version**: 1.0.0-alpha  
 **Project Status**: Active Development - Alpha (Code 85% Complete, Content 10% Complete)
 
@@ -16,6 +16,7 @@
 - [Vision & Goals](#vision--goals)
 - [Development Philosophy](#development-philosophy)
 - [Current Status](#current-status)
+- [Detailed Roadmaps by Area](#detailed-roadmaps-by-area)
 - [Development Phases](#development-phases)
   - [Phase 1: Foundation (Completed)](#phase-1-foundation-completed)
   - [Phase 2: Core Systems (Completed)](#phase-2-core-systems-completed)
@@ -185,6 +186,46 @@
 - ⚠️ Partial/Moderate: Functional but needs work
 - ❌ None/Limited: Not started or minimal progress
 - 🔄 In Progress: Active development
+
+---
+
+## Detailed Roadmaps by Area
+
+As the project has grown, we've created focused roadmaps for different areas of development. Each roadmap provides detailed milestones, current status, and next steps for its domain:
+
+### 📋 Area-Specific Roadmaps
+
+- **[Core Systems Roadmap](ROADMAP_CORE_SYSTEMS.md)**
+  - AI, Combat, Navigation, Quest, and Exploration systems
+  - Detailed breakdown of gameplay mechanics implementation
+  - Current focus: Content creation for existing C++ systems
+  
+- **[Content Creation Roadmap](ROADMAP_CONTENT_CREATION.md)** ⚠️ **CRITICAL PRIORITY**
+  - Blueprint Data Assets, Actor Blueprints, Maps, and UI Widgets
+  - **Current bottleneck**: Only 10% complete despite 85% code completion
+  - Step-by-step plan to make the game playable
+  
+- **[Economy & Trading Roadmap](ROADMAP_ECONOMY_TRADING.md)**
+  - Trading System, Market System, Factions, and Way networks
+  - Economic simulation and guild mechanics
+  - Integration with all gameplay systems
+  
+- **[Station & Player Systems Roadmap](ROADMAP_STATION_PLAYER.md)**
+  - Space Station construction, Player Progression, Inventory, HUD
+  - Player-facing systems and UI/UX
+  - Ship customization and tutorial systems
+  
+- **[Technical Infrastructure Roadmap](ROADMAP_TECHNICAL.md)**
+  - Development tools, Testing, CI/CD, Documentation
+  - Automation scripts and performance profiling
+  - Plugin development (future)
+
+### 📖 How to Use These Roadmaps
+
+- **For Contributors**: Find your area of interest and see what needs to be done
+- **For Project Management**: Track progress in specific domains independently
+- **For Planning**: Understand dependencies between different areas
+- **For Updates**: Update the specific roadmap when working on that area (see [ROADMAP_UPDATE_GUIDELINES.md](ROADMAP_UPDATE_GUIDELINES.md))
 
 ---
 
@@ -1025,12 +1066,26 @@ This roadmap is a living document and will be updated regularly to reflect:
 - **Quarterly**: Major roadmap revisions and priority adjustments
 - **As Needed**: Critical changes or pivots
 
-**How to Update**: Contributors should update this roadmap when their PRs affect project milestones, phases, or system status. See [ROADMAP_UPDATE_GUIDELINES.md](ROADMAP_UPDATE_GUIDELINES.md) for detailed guidance on when and how to update.
+**How to Update**: Contributors should update the relevant roadmap when their PRs affect project milestones, phases, or system status:
+- Update **this main roadmap** for major milestones and phase completions
+- Update **specific area roadmaps** ([ROADMAP_CORE_SYSTEMS.md](ROADMAP_CORE_SYSTEMS.md), [ROADMAP_CONTENT_CREATION.md](ROADMAP_CONTENT_CREATION.md), etc.) for area-specific changes
+- See [ROADMAP_UPDATE_GUIDELINES.md](ROADMAP_UPDATE_GUIDELINES.md) for detailed guidance on when and how to update
 
-**Last Updated**: December 17, 2025 (Documentation Consolidation & Content Creation Phase)  
+**Last Updated**: December 20, 2025 (Detailed Roadmaps Created)  
 **Next Review**: January 2026
 
 ### Recent Updates
+
+#### December 20, 2025
+- **Detailed Roadmaps Created**: Split main roadmap into focused area-specific roadmaps
+- **New Roadmap Files**: Created 5 detailed roadmaps for different project areas
+  - Core Systems (AI, Combat, Navigation, Quest, Exploration)
+  - Content Creation (Blueprints, Data Assets, Maps, UI) - CRITICAL PRIORITY
+  - Economy & Trading (Trading, Markets, Factions, Ways)
+  - Station & Player Systems (Stations, Progression, Inventory, HUD)
+  - Technical Infrastructure (Tools, Testing, CI/CD, Documentation)
+- **Improved Organization**: Each roadmap provides detailed milestones and next steps
+- **Updated Guidelines**: ROADMAP_UPDATE_GUIDELINES.md updated with multi-roadmap instructions
 
 #### December 17, 2025
 - **ROADMAP Update**: Synchronized with current project state from CURRENT_STATUS.md
@@ -1062,12 +1117,21 @@ This roadmap is a living document and will be updated regularly to reflect:
 
 ## Related Documentation
 
+### Main Documentation
 - **[README.md](README.md)** - Project overview and quick start
 - **[ARCHITECTURE.md](ARCHITECTURE.md)** - Technical architecture and design patterns
 - **[CHANGELOG.md](CHANGELOG.md)** - Detailed version history
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute to the project
-- **[ROADMAP_UPDATE_GUIDELINES.md](ROADMAP_UPDATE_GUIDELINES.md)** - When and how to update this roadmap
+- **[CURRENT_STATUS.md](CURRENT_STATUS.md)** - Realistic project status assessment
 - **[QUICKSTART.md](QUICKSTART.md)** - Get started in 15 minutes
+
+### Detailed Roadmaps
+- **[ROADMAP_CORE_SYSTEMS.md](ROADMAP_CORE_SYSTEMS.md)** - AI, Combat, Navigation, Quest, Exploration
+- **[ROADMAP_CONTENT_CREATION.md](ROADMAP_CONTENT_CREATION.md)** - Blueprints, Data Assets, Maps, UI (CRITICAL)
+- **[ROADMAP_ECONOMY_TRADING.md](ROADMAP_ECONOMY_TRADING.md)** - Trading, Markets, Factions, Ways
+- **[ROADMAP_STATION_PLAYER.md](ROADMAP_STATION_PLAYER.md)** - Stations, Progression, Inventory, HUD
+- **[ROADMAP_TECHNICAL.md](ROADMAP_TECHNICAL.md)** - Tools, Testing, CI/CD, Documentation
+- **[ROADMAP_UPDATE_GUIDELINES.md](ROADMAP_UPDATE_GUIDELINES.md)** - When and how to update roadmaps
 
 ### System Guides
 - [Spaceship System Guide](Assets/SpaceshipDataAssetGuide.md)
