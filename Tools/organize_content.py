@@ -27,11 +27,9 @@ Usage:
     python Tools/organize_content.py --report-only
 """
 
-import os
 import sys
 import shutil
 import argparse
-import json
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional
 from collections import defaultdict
@@ -115,7 +113,7 @@ class ContentOrganizer:
     
     def detect_asset_type(self, filename: str) -> Optional[str]:
         """Detect asset type from filename"""
-        name_without_ext = filename.replace('.uasset', '').replace('.umap', '')
+        name_without_ext = Path(filename).stem
         
         # Check each asset type
         for asset_type, patterns in self.ASSET_PATTERNS.items():
@@ -131,8 +129,9 @@ class ContentOrganizer:
                     if name_without_ext.endswith(suffix):
                         return asset_type
         
-        # Default to StaticMesh for numbered variants and BezierCurves
-        if any(name_without_ext.startswith(prefix) for prefix in ['Cube_', 'Cylinder_', 'Sphere_', 'BezierCurve_']):
+        # Default to StaticMesh for numbered variants (check against mesh categories)
+        mesh_prefixes = list(self.MESH_CATEGORIES.keys()) + ['Cube_', 'Cylinder_', 'Sphere_']
+        if any(name_without_ext.startswith(prefix) for prefix in mesh_prefixes):
             return 'StaticMesh'
         
         return None
@@ -318,14 +317,17 @@ class ContentOrganizer:
         else:
             print("No files found to organize")
         
-        # Generate report
+        # Generate report once and reuse
+        report = self.generate_report()
+        
+        # Print report
         print("\n")
-        print(self.generate_report())
+        print(report)
         
         # Save report to file
         report_path = self.content_path.parent / "content_organization_report.txt"
         with open(report_path, 'w') as f:
-            f.write(self.generate_report())
+            f.write(report)
         print(f"\nReport saved to: {report_path}")
 
 

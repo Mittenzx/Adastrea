@@ -6,12 +6,11 @@ STATISTICS:
 --------------------------------------------------------------------------------
   Material             :   60 files
   Null                 :    1 files
-  StaticMesh           :  159 files
+  StaticMesh           :  160 files
   Texture              :    6 files
-  Unrecognized         :    1 files
   Total                :  227 files
 
-PLANNED MOVES: 226
+PLANNED MOVES: 227
 --------------------------------------------------------------------------------
 
   → Materials/ (60 files)
@@ -33,13 +32,13 @@ PLANNED MOVES: 226
       • Cube_016.uasset
       ... and 118 more
 
-  → Meshes/Splines/ (35 files)
+  → Meshes/Splines/ (36 files)
       • BezierCurve_001.uasset
       • BezierCurve_009.uasset
       • BezierCurve_028.uasset
       • BezierCurve_026.uasset
       • BezierCurve_002.uasset
-      ... and 30 more
+      ... and 31 more
 
   → Textures/ (6 files)
       • TEX_axq1.uasset
@@ -51,13 +50,6 @@ PLANNED MOVES: 226
 
   → Uncategorized/ (1 files)
       • Null.uasset
-
-UNRECOGNIZED FILES: 1
---------------------------------------------------------------------------------
-These files could not be automatically categorized:
-  ? BezierCurve.uasset
-
-Tip: Use --organize-unrecognized to move these to Uncategorized/ folder
 
 ================================================================================
 DRY RUN - No files were actually moved
