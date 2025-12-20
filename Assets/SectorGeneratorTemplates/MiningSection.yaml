@@ -1,0 +1,127 @@
+# Mining Sector Generator Configuration Template
+# Creates a typical mining sector with stations, asteroid fields, and patrol ships
+
+ConfigName: "Mining Sector Generator"
+Description: |
+  Generates a mining-focused sector with:
+  - Trading and mining stations
+  - Rich asteroid fields
+  - Security patrol ships
+  - Cargo transport vessels
+
+# Sector Settings
+NamingTheme: Mining  # Options: Military, Mining, Trade, Scientific, Frontier, Greek, Numeric, Descriptive
+CustomSectorName: ""  # Leave empty for auto-generation
+RandomSeed: 0  # 0 = random, or set specific value for reproducible generation
+DensityMultiplier: 1.0  # Adjust overall object count
+
+# Generation Rules
+MinObjectSpacing: 50000.0  # 500 meters minimum between objects
+MaxSpawnAttempts: 100
+
+# Central Hub Configuration
+CreateCentralHub: true
+CentralHubClass: "BP_SpaceStation_MainHub"  # Replace with actual Blueprint path
+
+# Zone Configuration
+CreateZones: false
+NumZones: 3
+
+# Object Definitions
+ObjectDefinitions:
+  
+  # Trading Station
+  - ObjectType: Station
+    ActorClass: "BP_SpaceStation_Trading"
+    MinCount: 1
+    MaxCount: 2
+    DistributionPattern: Random
+    ScaleVariation: 1.0
+    MinDistanceFromCenter: 2000000.0  # 20km
+    MaxDistanceFromCenter: 8000000.0  # 80km
+    OwnerFaction: "DA_Faction_TradingGuild"
+    RandomRotation: false
+
+  # Mining Stations
+  - ObjectType: Station
+    ActorClass: "BP_SpaceStation_Mining"
+    MinCount: 2
+    MaxCount: 4
+    DistributionPattern: Clustered
+    ScaleVariation: 1.2
+    MinDistanceFromCenter: 3000000.0  # 30km
+    MaxDistanceFromCenter: 9000000.0  # 90km
+    OwnerFaction: "DA_Faction_MiningCooperative"
+    RandomRotation: false
+
+  # Rich Asteroid Fields
+  - ObjectType: AsteroidField
+    ActorClass: "BP_AsteroidCluster_Rich"
+    MinCount: 10
+    MaxCount: 20
+    DistributionPattern: Clustered
+    ScaleVariation: 2.5
+    MinDistanceFromCenter: 1000000.0  # 10km
+    MaxDistanceFromCenter: 9500000.0  # 95km
+    RandomRotation: true
+
+  # Scattered Asteroids
+  - ObjectType: Asteroid
+    ActorClass: "BP_Asteroid_Single"
+    MinCount: 30
+    MaxCount: 60
+    DistributionPattern: Random
+    ScaleVariation: 3.0
+    MinDistanceFromCenter: 500000.0  # 5km
+    MaxDistanceFromCenter: 9500000.0  # 95km
+    RandomRotation: true
+
+  # Security Patrol Ships
+  - ObjectType: Ship
+    ActorClass: "BP_Spaceship_Corvette"
+    ShipData: "DA_Ship_Corvette_Patrol"
+    MinCount: 2
+    MaxCount: 4
+    DistributionPattern: Orbital
+    ScaleVariation: 1.0
+    MinDistanceFromCenter: 4000000.0  # 40km
+    MaxDistanceFromCenter: 7000000.0  # 70km
+    OwnerFaction: "DA_Faction_SectorPolice"
+    RandomRotation: false
+
+  # Mining Ships
+  - ObjectType: Ship
+    ActorClass: "BP_Spaceship_Miner"
+    ShipData: "DA_Ship_Miner_Industrial"
+    MinCount: 5
+    MaxCount: 10
+    DistributionPattern: Clustered
+    ScaleVariation: 1.1
+    MinDistanceFromCenter: 2000000.0  # 20km
+    MaxDistanceFromCenter: 9000000.0  # 90km
+    OwnerFaction: "DA_Faction_MiningCooperative"
+    RandomRotation: false
+
+  # Cargo Transports
+  - ObjectType: Ship
+    ActorClass: "BP_Spaceship_Freighter"
+    ShipData: "DA_Ship_Freighter_Medium"
+    MinCount: 3
+    MaxCount: 6
+    DistributionPattern: Random
+    ScaleVariation: 1.2
+    MinDistanceFromCenter: 2000000.0  # 20km
+    MaxDistanceFromCenter: 8000000.0  # 80km
+    OwnerFaction: "DA_Faction_TradingGuild"
+    RandomRotation: false
+
+  # Space Debris (from old mining operations)
+  - ObjectType: Debris
+    ActorClass: "BP_SpaceDebris"
+    MinCount: 10
+    MaxCount: 20
+    DistributionPattern: Scattered
+    ScaleVariation: 4.0
+    MinDistanceFromCenter: 1000000.0  # 10km
+    MaxDistanceFromCenter: 9500000.0  # 95km
+    RandomRotation: true
