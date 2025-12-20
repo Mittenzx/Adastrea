@@ -176,8 +176,7 @@ FString FToolExecutionGuard::GenerateSignature(const FString& ToolName, const FS
 	const FTCHARToUTF8 Utf8Combined(*Combined);
 	const FBlake3Hash Hash = FBlake3::HashBuffer(Utf8Combined.Get(), Utf8Combined.Length());
 	
-	// UE5.6: FBlake3Hash does not expose ToString; use LexToString
-	return LexToString(Hash);
+	return Hash.ToString();
 }
 
 bool FToolExecutionGuard::WouldCreatePythonLoop(const FString& ToolName) const
