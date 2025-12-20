@@ -1,0 +1,62 @@
+================================================================================
+CONTENT ORGANIZATION REPORT
+================================================================================
+
+STATISTICS:
+--------------------------------------------------------------------------------
+  Material             :   60 files
+  Null                 :    1 files
+  StaticMesh           :  159 files
+  Texture              :    6 files
+  Unrecognized         :    1 files
+  Total                :  227 files
+
+PLANNED MOVES: 226
+--------------------------------------------------------------------------------
+
+  → Materials/ (60 files)
+      • Material_042.uasset
+      • Material_012.uasset
+      • default_fire.uasset
+      • Material_026.uasset
+      • Material_004.uasset
+      ... and 55 more
+
+  → Meshes/Props/ (123 files)
+      • Cube_007.uasset
+      • Cylinder_079.uasset
+      • Cylinder_009.uasset
+      • Cylinder_017.uasset
+      • Cube_016.uasset
+      ... and 118 more
+
+  → Meshes/Splines/ (36 files)
+      • BezierCurve_001.uasset
+      • BezierCurve_009.uasset
+      • BezierCurve_028.uasset
+      • BezierCurve_026.uasset
+      • BezierCurve_002.uasset
+      ... and 31 more
+
+  → Textures/ (6 files)
+      • TEX_axq1.uasset
+      • TEX_mpo1.uasset
+      • TEX_cp2_03.uasset
+      • TEX_av2.uasset
+      • TEX_wa3.uasset
+      ... and 1 more
+
+  → Uncategorized/ (1 files)
+      • Null.uasset
+
+UNRECOGNIZED FILES: 1
+--------------------------------------------------------------------------------
+These files could not be automatically categorized:
+  ? mesh01.uasset
+
+Tip: Use --organize-unrecognized to move these to Uncategorized/ folder
+
+================================================================================
+DRY RUN - No files were actually moved
+Run without --dry-run to perform the organization
+================================================================================

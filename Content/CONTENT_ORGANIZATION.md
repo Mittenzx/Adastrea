@@ -280,6 +280,20 @@ Add README files in major folders:
 
 ## Cleanup Guidelines
 
+### Automated Organization Tool
+
+Adastrea includes an automated content organization tool that can help you clean up disorganized files:
+
+```bash
+# Preview what will be organized
+python Tools/organize_content.py --dry-run --path Imported
+
+# Organize files
+python Tools/organize_content.py --path Imported
+```
+
+For detailed usage instructions, see [Tools/README_ORGANIZE_CONTENT.md](../Tools/README_ORGANIZE_CONTENT.md).
+
 ### Regular Maintenance
 
 Monthly tasks:
