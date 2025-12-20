@@ -220,8 +220,8 @@ If any tool reports errors, the CI build fails and requires fixes before merging
 To run all validation tools at once:
 
 ```bash
-# Create a simple validation script
-cd /home/runner/work/Adastrea/Adastrea
+# Run from your project root directory
+cd <project_root>  # Change to your local Adastrea project root
 
 # Run all tools
 python Tools/check_uproperty.py --verbose && \

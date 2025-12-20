@@ -24,6 +24,7 @@
 
 # Cursor (VS Code fork)
 .cursor/
+!.cursor/mcp.json.template
 
 # Rider
 .idea/
