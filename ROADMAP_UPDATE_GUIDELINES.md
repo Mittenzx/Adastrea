@@ -1,10 +1,27 @@
-# ROADMAP.md Update Guidelines
+# ROADMAP Update Guidelines
 
-This document provides clear guidelines on when and how to update the project roadmap.
+This document provides clear guidelines on when and how to update the project roadmaps. **As of December 2025, we now have multiple focused roadmaps** in addition to the main roadmap.
+
+## Roadmap Structure
+
+The project now has **6 roadmap files**:
+
+1. **[ROADMAP.md](ROADMAP.md)** - Main project roadmap (high-level)
+2. **[ROADMAP_CORE_SYSTEMS.md](ROADMAP_CORE_SYSTEMS.md)** - AI, Combat, Navigation, Quest, Exploration
+3. **[ROADMAP_CONTENT_CREATION.md](ROADMAP_CONTENT_CREATION.md)** - Blueprints, Data Assets, Maps, UI
+4. **[ROADMAP_ECONOMY_TRADING.md](ROADMAP_ECONOMY_TRADING.md)** - Trading, Markets, Factions, Ways
+5. **[ROADMAP_STATION_PLAYER.md](ROADMAP_STATION_PLAYER.md)** - Stations, Progression, Inventory, HUD
+6. **[ROADMAP_TECHNICAL.md](ROADMAP_TECHNICAL.md)** - Tools, Testing, CI/CD, Documentation
+
+**When to update which roadmap**:
+- Update **ROADMAP.md** for major milestones and phase completions
+- Update **specific area roadmaps** for detailed progress in that domain
+- You may need to update **multiple roadmaps** if your work spans areas
 
 ## Table of Contents
 
-- [When to Update ROADMAP.md](#when-to-update-roadmapmd)
+- [When to Update Roadmaps](#when-to-update-roadmaps)
+- [Which Roadmap to Update](#which-roadmap-to-update)
 - [What to Update](#what-to-update)
 - [How to Update](#how-to-update)
 - [Update Checklist](#update-checklist)
@@ -12,9 +29,9 @@ This document provides clear guidelines on when and how to update the project ro
 
 ---
 
-## When to Update ROADMAP.md
+## When to Update Roadmaps
 
-Update ROADMAP.md when your pull request includes changes that affect:
+Update roadmaps when your pull request includes changes that affect:
 
 ### ✅ Update Required
 
@@ -65,66 +82,157 @@ Update ROADMAP.md when your pull request includes changes that affect:
    - CI/CD pipeline updates
    - Testing infrastructure changes
 
-**When in doubt**: Ask yourself, "Would someone looking at the roadmap care about this change?" If yes, update the roadmap.
+**When in doubt**: Ask yourself, "Would someone looking at the roadmaps care about this change?" If yes, update the relevant roadmap(s).
+
+---
+
+## Which Roadmap to Update
+
+Different changes require updates to different roadmaps:
+
+### Main Roadmap (ROADMAP.md)
+**Update when**:
+- Completing an entire development phase
+- Major milestone affecting the whole project
+- Changing project-level priorities or timelines
+- Adding a new major system not covered by existing roadmaps
+
+**Example changes**:
+- "Phase 3 Advanced Systems now complete"
+- "Added new Weather System as Phase 4 milestone"
+- "Shifted Phase 5 timeline by 1 quarter"
+
+### Core Systems Roadmap (ROADMAP_CORE_SYSTEMS.md)
+**Update when working on**:
+- AI System (NPCLogicBase, FactionLogic, PersonnelLogic)
+- Combat System (weapons, targeting, damage, boarding)
+- Navigation System (pathfinding, autopilot, waypoints)
+- Quest System (quest types, objectives, quest chains)
+- Exploration System (scanning, discoveries, anomalies)
+- Procedural generation systems
+
+**Example changes**:
+- Created 5 weapon Data Assets
+- Implemented advanced AI pathfinding
+- Completed Phase 2 of Exploration System
+
+### Content Creation Roadmap (ROADMAP_CONTENT_CREATION.md)
+**Update when working on**:
+- Blueprint Data Assets (ships, factions, personnel, etc.)
+- Actor Blueprints (BP_Ship, BP_Station, BP_Module, etc.)
+- Game Maps/Levels
+- UI Widgets (WBP_*)
+- Material Instances
+- Audio Assets
+- Input Configuration
+
+**Example changes**:
+- Created 10 ship Data Assets
+- Built TestLevel.umap with stations
+- Implemented WBP_HUD_Main widget
+- Completed Week 1 of critical foundation
+
+### Economy & Trading Roadmap (ROADMAP_ECONOMY_TRADING.md)
+**Update when working on**:
+- Trading System (TradingComponent, TradeItemDataAsset, markets)
+- Market System (supply/demand, price simulation)
+- Faction System (FactionDataAsset, diplomacy, reputation)
+- Way System (guilds, WayDataAsset, WayNetworks, Verse)
+- Economic simulation and AI traders
+
+**Example changes**:
+- Created 10 trade item Data Assets
+- Implemented faction reputation system
+- Added 5 guild/Way configurations
+
+### Station & Player Systems Roadmap (ROADMAP_STATION_PLAYER.md)
+**Update when working on**:
+- Space Station System (modules, ASpaceStation, building)
+- Player Progression (leveling, skills, unlocks)
+- Inventory System (InventoryComponent, InventoryWidget)
+- Ship Customization (loadouts, upgrades, visuals)
+- HUD System (AdastreaHUDWidget, ship status display)
+- Tutorial System (TutorialManagerSubsystem, tutorial steps)
+
+**Example changes**:
+- Created 5 station module Blueprints
+- Implemented skill tree system
+- Built WBP_Inventory widget
+
+### Technical Infrastructure Roadmap (ROADMAP_TECHNICAL.md)
+**Update when working on**:
+- Development tools (validation scripts, generators)
+- Testing framework (unit tests, integration tests)
+- CI/CD Pipeline (GitHub Actions workflows)
+- Documentation system (guides, templates, wikis)
+- Automation scripts (Python utilities)
+- Performance profiling tools
+
+**Example changes**:
+- Added new validation script
+- Set up automated test suite
+- Created CI workflow for builds
+
+### Multiple Roadmaps
+**Some changes affect multiple roadmaps**. For example:
+- **Combat + Content**: Creating weapon Data Assets affects both ROADMAP_CORE_SYSTEMS.md (Combat System) and ROADMAP_CONTENT_CREATION.md (Data Assets)
+- **Trading + Economy**: Implementing faction price modifiers affects both ROADMAP_CORE_SYSTEMS.md and ROADMAP_ECONOMY_TRADING.md
+- **Stations + Content**: Building station modules affects both ROADMAP_STATION_PLAYER.md and ROADMAP_CONTENT_CREATION.md
+
+**In these cases, update all relevant roadmaps** to keep them synchronized.
 
 ---
 
 ## What to Update
 
-Depending on your changes, update the relevant sections:
+Depending on your changes, update the relevant sections in the appropriate roadmap(s):
 
-### 1. Current Status Section
+### In Main Roadmap (ROADMAP.md)
 
-Update if completing or making significant progress on systems:
+Update if completing major milestones or phase transitions:
 
 ```markdown
 ### ✅ Completed Systems (1.0.0-alpha)
-- Add newly completed systems here
+- Add newly completed major systems here
 
-### 🔄 In Progress (1.0.0-alpha - 1.0.0)
-- Update progress on active development
-- Move completed items to "Completed Systems"
-
-### 📊 System Maturity Matrix
-- Update completeness percentages
-- Change status icons (✅, 🔄, ⏳, ❌)
-- Update "Next Steps" for systems
-```
-
-### 2. Development Phases
-
-Update phase completion status:
-
-```markdown
 ### Phase X: Name (Status)
 **Timeline**: ...
 **Status**: ✅ Complete / 🔄 In Progress (X% complete) / ⏳ Planned
 
-#### Completed Milestones
-- Add completed milestones with ✅ checkmarks
-
-#### Active Development
-- Update progress indicators (✅ complete, 🔄 in progress, ⏳ planned)
-```
-
-### 3. Detailed Feature Roadmap
-
-Update specific feature implementation progress:
-
-```markdown
-#### Phase X: Feature Name (Q4 2025)
-- [x] Completed tasks
-- [ ] Remaining tasks
-- Update timeline if needed
-```
-
-### 4. Last Updated Date
-
-**Always update** the "Last Updated" date at the top of ROADMAP.md:
-
-```markdown
+### Last Updated Date
 **Last Updated**: [Current Date]
-**Current Version**: [Current Version]
+```
+
+### In Area-Specific Roadmaps
+
+Each area roadmap has similar sections to update:
+
+```markdown
+## System Name
+
+**Status**: Update completion percentage
+**Priority**: Update if priority changed
+
+### Current State
+- Update ✅ Completed items
+- Update ❌ Missing items
+
+### Roadmap
+#### Phase X: Name (Week/Quarter) - Priority: LEVEL
+- [x] Mark completed tasks
+- [ ] Keep pending tasks
+
+### SUCCESS MILESTONE
+- Update when milestone achieved
+```
+
+### Last Updated Date
+
+**Always update** the "Last Updated" date in any roadmap you modify:
+
+```markdown
+**Last Updated**: December 20, 2025
+**Next Review**: [Month Year]
 ```
 
 ---
@@ -133,28 +241,32 @@ Update specific feature implementation progress:
 
 ### Step-by-Step Process
 
-1. **Review Your Changes**
-   - Identify which systems, phases, or features your PR affects
-   - Determine the magnitude of impact on the roadmap
+1. **Identify Affected Roadmaps**
+   - Which systems did your PR modify?
+   - Which content did you create?
+   - Which tools did you add?
+   - Determine which roadmap(s) need updates
 
 2. **Update Relevant Sections**
-   - Open `ROADMAP.md` in your editor
-   - Find the sections that need updates (see "What to Update" above)
+   - Open the appropriate roadmap file(s)
+   - Find the sections that need updates
    - Make precise, accurate updates
+   - Mark tasks as complete with [x]
+   - Update status percentages if applicable
 
 3. **Update the Date**
-   - Change the "Last Updated" date at the top of the file
-   - Use format: `Month DD, YYYY` (e.g., "November 11, 2025")
+   - Change the "Last Updated" date in each modified roadmap
+   - Use format: `December 20, 2025`
 
 4. **Verify Consistency**
    - Ensure all related sections are updated together
-   - Check that percentages and status icons are consistent
+   - Check that statuses are consistent across roadmaps
    - Verify timeline dates are accurate
 
 5. **Include in Your PR**
-   - Add ROADMAP.md to your commit
-   - Mention the roadmap update in your PR description
-   - Check the "ROADMAP.md updated" box in the PR template
+   - Add all modified roadmap files to your commit
+   - Mention the roadmap updates in your PR description
+   - Check the "Roadmap updated" box in the PR template
 
 ### Best Practices
 
@@ -163,150 +275,177 @@ Update specific feature implementation progress:
 - **Be Consistent**: Keep formatting and style matching existing content
 - **Be Concise**: Don't add unnecessary detail; maintain readability
 - **Be Honest**: Reflect actual progress, not aspirational goals
+- **Update Multiple Roadmaps**: If your work spans areas, update all relevant roadmaps
 
 ---
 
 ## Update Checklist
 
-Use this checklist when updating ROADMAP.md:
+Use this checklist when updating roadmaps:
 
-- [ ] Identified which sections need updates
-- [ ] Updated "Current Status" section if applicable
-- [ ] Updated "System Maturity Matrix" if system status changed
-- [ ] Updated relevant "Development Phase" section
-- [ ] Updated "Detailed Feature Roadmap" if specific features were implemented
-- [ ] Updated "Last Updated" date at the top of the file
+- [ ] Identified which roadmap(s) need updates
+- [ ] Updated all relevant roadmap files (may be multiple)
+- [ ] Marked completed tasks with [x]
+- [ ] Updated status percentages if applicable
+- [ ] Updated "Last Updated" date in each modified roadmap
 - [ ] Verified all changes are consistent and accurate
 - [ ] Checked formatting and markdown rendering
-- [ ] Included ROADMAP.md in PR commit
-- [ ] Mentioned roadmap update in PR description
+- [ ] Included all modified roadmap files in PR commit
+- [ ] Mentioned roadmap updates in PR description
 
 ---
 
 ## Examples
 
-### Example 1: Completing a Major Feature
+### Example 1: Completing Combat Weapon Content
 
-**Scenario**: You've completed the Combat Weapon System implementation.
-
-**Updates Needed**:
-
-1. **System Maturity Matrix**:
-   ```markdown
-   | Combat | ✅ Complete | 85% | ✅ Good | ⚠️ Moderate | Polish & optimization |
-   ```
-
-2. **Phase 3: Advanced Systems**:
-   ```markdown
-   **Combat System** (85% complete):
-   - ✅ Weapon types and mounting system
-   - ✅ Targeting and fire control
-   - 🔄 Damage system and ship destruction (next milestone)
-   ```
-
-3. **Detailed Feature Roadmap → Combat System**:
-   ```markdown
-   #### Phase 1: Weapons & Targeting (Q4 2025)
-   - [x] Weapon data asset framework
-   - [x] Energy weapons (lasers, plasma)
-   - [x] Projectile weapons (railguns, missiles)
-   - [x] Weapon mounting system
-   - [x] Targeting system (lock-on, lead indicators)
-   - [x] Fire control computer
-   ```
-
-4. **Last Updated Date**:
-   ```markdown
-   **Last Updated**: November 11, 2025
-   ```
-
-### Example 2: Completing a Development Phase
-
-**Scenario**: Phase 3 (Advanced Systems) is complete.
+**Scenario**: You've created 5 weapon Data Assets and 3 projectile Blueprints.
 
 **Updates Needed**:
 
-1. **Phase 3 Header**:
+1. **ROADMAP_CORE_SYSTEMS.md** (Combat System):
    ```markdown
-   ### Phase 3: Advanced Systems (Completed) ✅
-   **Timeline**: Q4 2025 - Q1 2026 (November 2025 - March 2026)
-   **Status**: ✅ Complete
+   #### Phase 1: Weapon Content (Q1 2026) - Priority: CRITICAL
+   - [x] Create Weapon Data Assets (5 of 12 complete)
+     - [x] DA_Weapon_LaserCannon_Basic
+     - [x] DA_Weapon_Railgun_Basic
+     - [x] DA_Weapon_Missile_Basic
+     - [x] DA_Weapon_Plasma_Basic
+     - [x] DA_Weapon_Torpedo_Heavy
+   - [x] Create projectile Blueprints (3 of 6 complete)
+     - [x] BP_Projectile_Laser
+     - [x] BP_Projectile_Railgun
+     - [x] BP_Projectile_Missile
    ```
 
-2. **Current Status**:
-   - Move systems from "In Progress" to "Completed Systems"
-   - Update version number if applicable
-
-3. **Last Updated Date**:
+2. **ROADMAP_CONTENT_CREATION.md** (Blueprint Data Assets):
    ```markdown
-   **Last Updated**: March 15, 2026
-   **Current Version**: 1.0.0
+   #### Weapon Data Assets (5 assets) ✅ COMPLETE
+   - [x] DA_Weapon_LaserCannon_Basic
+   - [x] DA_Weapon_Railgun_Basic
+   - [x] DA_Weapon_Missile_Basic
+   - [x] DA_Weapon_Plasma_Basic
+   - [x] DA_Weapon_Torpedo_Heavy
+   
+   #### Projectiles (3 Blueprints) ✅ COMPLETE (partial)
+   - [x] BP_Projectile_Laser
+   - [x] BP_Projectile_Railgun
+   - [x] BP_Projectile_Missile
+   - [ ] BP_Projectile_Plasma (pending)
+   - [ ] BP_Projectile_Torpedo (pending)
+   - [ ] BP_Projectile_Beam (pending)
    ```
 
-### Example 3: Starting a New System
+3. **Both files**:
+   ```markdown
+   **Last Updated**: December 20, 2025
+   ```
 
-**Scenario**: You've started implementing the Save System earlier than planned.
+---
+
+### Example 2: Implementing Station Module Blueprints
+
+**Scenario**: You've created 5 station module Blueprints and the station editor UI.
 
 **Updates Needed**:
 
-1. **Current Status**:
+1. **ROADMAP_STATION_PLAYER.md** (Space Station System):
    ```markdown
-   ### 🔄 In Progress (1.0.x)
-   - 🔄 **Save System** - Player and world state persistence
+   ### Space Station System
+   **Status**: ✅ 90% Complete (Code), ⚠️ 30% Complete (Content)
+   
+   #### Phase 1: Basic Modules (Week 1-2) - Priority: CRITICAL
+   **Essential Modules** (5 Blueprints) ✅ COMPLETE
+   - [x] BP_Module_Docking
+   - [x] BP_Module_Power
+   - [x] BP_Module_Storage
+   - [x] BP_Module_Defence
+   - [x] BP_Module_Trade
+   
+   **Station Editor UI** (1 Widget) ✅ COMPLETE
+   - [x] WBP_StationEditor
+   
+   **SUCCESS MILESTONE**: ✅ Can build basic station with docking, power, storage, and trade
    ```
 
-2. **System Maturity Matrix**:
+2. **ROADMAP_CONTENT_CREATION.md** (Actor Blueprints):
    ```markdown
-   | Save System | 🔄 In Progress | 20% | ⚠️ Partial | ❌ Limited | Architecture complete |
+   #### Station Modules (5 Blueprints) ✅ COMPLETE (Phase 1)
+   - [x] BP_Module_Docking
+   - [x] BP_Module_Power
+   - [x] BP_Module_Storage
+   - [x] BP_Module_Defence
+   - [x] BP_Module_Trade
    ```
 
-3. **Save System Detailed Section**:
+3. **ROADMAP.md** (if this is a major milestone):
    ```markdown
-   **Current Status**: 20% complete (Architecture phase started early)
-   **Target Completion**: Q2 2026 (ahead of schedule)
-
-   #### Phase 1: Architecture (Q1 2026)
-   - [x] Save system architecture design
-   - [x] Serialization strategy (JSON, binary)
-   - [ ] Save file versioning
+   **December 20, 2025**:
+   - ✅ Station construction system playable (Phase 1 modules complete)
    ```
 
-4. **Last Updated Date**:
+---
+
+### Example 3: Adding New Testing Framework
+
+**Scenario**: You've set up a comprehensive unit testing framework with 20 tests.
+
+**Updates Needed**:
+
+1. **ROADMAP_TECHNICAL.md** (Testing Framework):
    ```markdown
-   **Last Updated**: November 11, 2025
+   #### Phase 1: Core Testing (Q1 2026) - Priority: HIGH
+   
+   **Unit Tests** (Setup) ✅ COMPLETE
+   - [x] Create C++ unit test framework
+   - [x] Create test base classes
+   - [x] Set up test discovery
+   - [x] Write unit tests for core systems (20 tests complete)
+     - [x] Faction system tests (10 tests)
+     - [x] Trading system tests (10 tests)
    ```
 
-### Example 4: NO UPDATE NEEDED
+2. **Only update ROADMAP.md if this completes a major phase**, otherwise just update ROADMAP_TECHNICAL.md
+
+---
+
+### Example 4: NO UPDATE NEEDED (Multiple Roadmaps)
 
 **Scenario**: You've fixed a minor bug in faction relationship calculations.
 
-**Why No Update**:
+**Why No Updates**:
 - Bug fix doesn't change system completion status
-- Faction System is already marked as "Complete"
+- Faction System is already marked as "Complete" in all roadmaps
 - No new features or milestones achieved
 - Timeline and phases remain unchanged
 
-**Action**: Skip updating ROADMAP.md, but mention in CHANGELOG.md instead.
+**Action**: Skip updating roadmaps, but mention in CHANGELOG.md instead.
 
 ---
 
 ## Questions?
 
-If you're unsure whether your PR requires a roadmap update:
+If you're unsure whether your PR requires a roadmap update or which roadmap(s) to update:
 
-1. **Ask in Your PR**: Mention in the PR description that you're unsure if a roadmap update is needed
+1. **Ask in Your PR**: Mention in the PR description that you're unsure which roadmaps need updates
 2. **Ask Maintainers**: Maintainers can advise during PR review
 3. **Err on the Side of Updating**: If truly significant, it's better to update than skip
+4. **Use the Roadmap Index**: Refer to the section "Which Roadmap to Update" above for guidance
 
 ---
 
 ## Related Documentation
 
-- [ROADMAP.md](ROADMAP.md) - The project roadmap
+- [ROADMAP.md](ROADMAP.md) - Main project roadmap
+- [ROADMAP_CORE_SYSTEMS.md](ROADMAP_CORE_SYSTEMS.md) - Core gameplay systems
+- [ROADMAP_CONTENT_CREATION.md](ROADMAP_CONTENT_CREATION.md) - Blueprints, assets, maps
+- [ROADMAP_ECONOMY_TRADING.md](ROADMAP_ECONOMY_TRADING.md) - Economy and trading
+- [ROADMAP_STATION_PLAYER.md](ROADMAP_STATION_PLAYER.md) - Stations and player systems
+- [ROADMAP_TECHNICAL.md](ROADMAP_TECHNICAL.md) - Infrastructure and tools
 - [CHANGELOG.md](CHANGELOG.md) - Detailed version history (for all changes)
 - [CONTRIBUTING.md](CONTRIBUTING.md) - General contribution guidelines
 - [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md) - PR checklist
 
 ---
 
-**Remember**: The roadmap is a high-level view of project direction. Keep it accurate, but don't stress over minor changes. Focus on significant milestones and system status updates.
+**Remember**: The roadmaps are high-level views of project direction in specific areas. Keep them accurate, but don't stress over minor changes. Focus on significant milestones and system status updates. **When in doubt, update the specific area roadmap rather than the main roadmap.**
