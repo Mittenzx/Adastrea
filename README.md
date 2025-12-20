@@ -793,6 +793,7 @@ Comprehensive technical documentation for contributors and developers:
 - **[Architecture Overview](ARCHITECTURE.md)** - High-level system architecture with visual diagrams
 - **[Contributing Guidelines](CONTRIBUTING.md)** - How to contribute code, documentation, and assets
 - **[Code Style Guide](CODE_STYLE.md)** - C++ and Blueprint coding standards
+- **[Copilot Memory Review](COPILOT_MEMORY_REVIEW.md)** - 🆕 **NEW** Comprehensive review of 30+ stored patterns and conventions for GitHub Copilot
 - **[Unreal Directive Best Practices](.github/instructions/unreal-directive-best-practices.md)** - 🆕 Advanced Unreal Engine best practices
 - **[Unreal Directive Suggestions](UNREAL_DIRECTIVE_SUGGESTIONS.md)** - 🆕 Comprehensive improvement suggestions for Adastrea
 - **[Performance Improvements](PERFORMANCE_IMPROVEMENTS.md)** - Optimization guidelines
