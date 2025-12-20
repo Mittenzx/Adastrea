@@ -36,7 +36,7 @@
 | **Testing Framework** | ✅ Implemented | - | Smoke tests, screenshot tests, automation runner |
 | **CI/CD** | ⚠️ Partial | - | GitHub Actions active, Docker needs Epic membership |
 | **AI-Assisted Development** | ✅ Enabled | COPILOT_MEMORY_REVIEW.md | 30+ patterns for GitHub Copilot (Dec 2025) |
-| **Plugin Ecosystem** | ✅ Enhanced | 5 plugins enabled | PythonScript, EditorScripting, Niagara, Geometry, Bridge (Dec 2025) |
+| **Plugin Ecosystem** | ✅ Enhanced | 5 plugins enabled | PythonScriptPlugin, EditorScripting, Niagara, Geometry, Bridge (Dec 2025) |
 
 **Systems Fully Implemented in C++:**
 1. Spaceship System (24 files)

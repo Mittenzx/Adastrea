@@ -142,7 +142,7 @@
 - ✅ **Documentation Consolidation** - Removed 12 outdated documents, updated references, consolidated into MASTER_DOCUMENTATION.md - **Dec 9, 2025**
 - ✅ **Project Status Documentation** - Created comprehensive CURRENT_STATUS.md with realistic assessment - **Dec 9, 2025**
 - ✅ **GitHub Copilot Memory Review** - Comprehensive codebase review for AI-assisted development (30+ patterns stored) - **Dec 20, 2025**
-- ✅ **Plugin System Enhancements** - Enabled 5 built-in plugins (Python, EditorScripting, Niagara, Geometry, Bridge) for accelerated content creation - **Dec 20, 2025**
+- ✅ **Plugin System Enhancements** - Enabled 5 built-in plugins (PythonScriptPlugin, EditorScripting, Niagara, Geometry, Bridge) for accelerated content creation - **Dec 20, 2025**
 - ✅ **Detailed Roadmaps** - Split main roadmap into 5 focused area-specific roadmaps for better project tracking - **Dec 20, 2025**
 
 **Comprehensive Documentation** (30+ complete system guides):

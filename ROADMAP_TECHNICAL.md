@@ -48,7 +48,7 @@ This roadmap covers the technical infrastructure including development tools, te
 - **ContentValidator.py** - Content validation
 - **EditorUtilities.py** - Editor helper functions
 - **GitHub Copilot Memory System** - 30+ stored patterns for AI-assisted development (Dec 2025)
-- **Plugin Ecosystem** - 5 enabled built-in plugins (PythonScript, EditorScripting, Niagara, Geometry, Bridge) (Dec 2025)
+- **Plugin Ecosystem** - 5 enabled built-in plugins (PythonScriptPlugin, EditorScripting, Niagara, Geometry, Bridge) (Dec 2025)
 
 #### ⚠️ Partial Tools
 - **check_uproperty.py** - UPROPERTY validation (needs expansion)
