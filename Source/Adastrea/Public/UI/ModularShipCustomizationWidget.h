@@ -206,10 +206,10 @@ public:
 	/**
 	 * Called when a slot is selected
 	 * Override in Blueprint to highlight slot or show details
-	 * @param Slot The selected slot
+	 * @param ModuleSlot The selected slot
 	 */
 	UFUNCTION(BlueprintNativeEvent, Category="Ship Customization")
-	void OnSlotSelected(const FShipModuleSlot& Slot);
+	void OnSlotSelected(const FShipModuleSlot& ModuleSlot);
 
 	/**
 	 * Called when a module is selected
@@ -223,19 +223,19 @@ public:
 	 * Called when a module is installed
 	 * Override in Blueprint for success feedback
 	 * @param Module The installed module
-	 * @param Slot The slot it was installed into
+	 * @param ModuleSlot The slot it was installed into
 	 */
 	UFUNCTION(BlueprintNativeEvent, Category="Ship Customization")
-	void OnModuleInstalled(UShipModuleComponent* Module, const FShipModuleSlot& Slot);
+	void OnModuleInstalled(UShipModuleComponent* Module, const FShipModuleSlot& ModuleSlot);
 
 	/**
 	 * Called when a module is removed
 	 * Override in Blueprint for feedback
 	 * @param Module The removed module
-	 * @param Slot The slot it was removed from
+	 * @param ModuleSlot The slot it was removed from
 	 */
 	UFUNCTION(BlueprintNativeEvent, Category="Ship Customization")
-	void OnModuleRemoved(UShipModuleComponent* Module, const FShipModuleSlot& Slot);
+	void OnModuleRemoved(UShipModuleComponent* Module, const FShipModuleSlot& ModuleSlot);
 
 	/**
 	 * Called when installation fails
