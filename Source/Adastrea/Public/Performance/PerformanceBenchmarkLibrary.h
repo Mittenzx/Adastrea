@@ -237,9 +237,14 @@ public:
     UFUNCTION(BlueprintCallable, Category="Performance|Utilities")
     static bool ExportBenchmarkResults(const FString& Results, const FString& Filename);
 
-private:
-    /** Internal timing utility */
+    /**
+     * Measure execution time of a function
+     * @param Function Function to measure
+     * @return Execution time in seconds
+     */
     static double MeasureExecutionTime(TFunction<void()> Function);
+
+private:
 
     /** Format time duration for display */
     static FString FormatDuration(double Seconds);

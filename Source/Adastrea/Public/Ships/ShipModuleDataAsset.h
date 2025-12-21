@@ -150,6 +150,6 @@ public:
 	 * Validate Data Asset properties
 	 * Called when asset is saved or validated in editor
 	 */
-	virtual EDataValidationResult IsDataValid(TArray<FText>& ValidationErrors) override;
+	virtual EDataValidationResult IsDataValid(class FDataValidationContext& Context) const override;
 #endif
 };

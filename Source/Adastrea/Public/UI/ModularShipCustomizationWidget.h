@@ -76,7 +76,7 @@ public:
 	 * @param InCustomizationComponent The component to manage
 	 */
 	UFUNCTION(BlueprintCallable, Category="Ship Customization")
-	void Initialize(UShipCustomizationComponent* InCustomizationComponent);
+	void InitializeCustomization(UShipCustomizationComponent* InCustomizationComponent);
 
 	/**
 	 * Refresh the UI with current data

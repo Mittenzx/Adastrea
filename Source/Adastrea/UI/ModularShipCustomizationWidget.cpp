@@ -4,7 +4,7 @@
 #include "Ships/ShipCustomizationComponent.h"
 #include "Ships/ShipModuleComponent.h"
 
-void UModularShipCustomizationWidget::Initialize(UShipCustomizationComponent* InCustomizationComponent)
+void UModularShipCustomizationWidget::InitializeCustomization(UShipCustomizationComponent* InCustomizationComponent)
 {
 	CustomizationComponent = InCustomizationComponent;
 	bHasSlotSelected = false;
@@ -30,10 +30,10 @@ void UModularShipCustomizationWidget::SelectSlot(FName SlotID)
 		return;
 	}
 
-	FShipModuleSlot Slot;
-	if (CustomizationComponent->FindSlotByID(SlotID, Slot))
+	FShipModuleSlot FoundSlot;
+	if (CustomizationComponent->FindSlotByID(SlotID, FoundSlot))
 	{
-		SelectedSlot = Slot;
+		SelectedSlot = FoundSlot;
 		bHasSlotSelected = true;
 		OnSlotSelected(SelectedSlot);
 	}

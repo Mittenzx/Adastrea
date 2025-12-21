@@ -440,28 +440,28 @@ void UDataValidationLibrary::ValidateSpaceshipStats(
         OutWarnings.Add(FText::FromString("Ship has speed but zero acceleration"));
     }
 
-    if (SpaceshipAsset->MaxHealth > 0 && SpaceshipAsset->ArmorRating <= 0 && SpaceshipAsset->ShieldStrength <= 0)
+    if (SpaceshipAsset->HullStrength > 0 && SpaceshipAsset->ArmorRating <= 0 && SpaceshipAsset->ShieldStrength <= 0)
     {
-        OutWarnings.Add(FText::FromString("Ship has health but no armor or shields"));
+        OutWarnings.Add(FText::FromString("Ship has hull strength but no armor or shields"));
     }
 
     // Check balance ratios
     float CombatRatio = (SpaceshipAsset->ArmorRating + SpaceshipAsset->ShieldStrength) /
-                       FMath::Max(1.0f, SpaceshipAsset->MaxHealth);
+                       FMath::Max(1.0f, SpaceshipAsset->HullStrength);
 
     if (CombatRatio < 0.1f)
     {
-        OutWarnings.Add(FText::FromString("Ship may be under-armored for its health"));
+        OutWarnings.Add(FText::FromString("Ship may be under-armored for its hull strength"));
     }
     else if (CombatRatio > 5.0f)
     {
-        OutWarnings.Add(FText::FromString("Ship may be over-armored for its health"));
+        OutWarnings.Add(FText::FromString("Ship may be over-armored for its hull strength"));
     }
 
     // Crew efficiency check
     if (SpaceshipAsset->MaxCrew > 0)
     {
-        float CrewEfficiency = SpaceshipAsset->MaxCrew / FMath::Max(1, SpaceshipAsset->MinCrew);
+        float CrewEfficiency = SpaceshipAsset->MaxCrew / FMath::Max(1, SpaceshipAsset->CrewRequired);
         if (CrewEfficiency < 1.1f)
         {
             OutWarnings.Add(FText::FromString("Crew range is very narrow"));

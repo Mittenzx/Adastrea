@@ -36,6 +36,7 @@ public class AdastreaDirector : ModuleRules
 				"ImageWrapper",      // For PNG encoding
 				"RenderCore",        // For rendering thread operations
 				"RHI",               // For viewport pixel reading
+				"EditorScriptingUtilities",  // For editor scripting utilities
 				// ... add other public dependencies that you statically link with here ...
 			}
 		);

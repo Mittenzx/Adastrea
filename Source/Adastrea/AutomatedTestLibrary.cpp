@@ -143,7 +143,7 @@ bool UAutomatedTestLibrary::RunSingleTest(
 
 bool UAutomatedTestLibrary::TestSpaceshipCalculations(UObject* WorldContextObject, FTestResult& OutResult)
 {
-    return ExecuteTest([&](FTestResult& Result) -> bool {
+    OutResult = ExecuteTest([&](FTestResult& Result) -> bool {
         // Find a spaceship data asset to test
         USpaceshipDataAsset* TestShip = nullptr;
         for (TObjectIterator<USpaceshipDataAsset> It; It; ++It)
@@ -202,11 +202,13 @@ bool UAutomatedTestLibrary::TestSpaceshipCalculations(UObject* WorldContextObjec
 
         return true;
     }, TEXT("SpaceshipCalculations"));
+    
+    return OutResult.bPassed;
 }
 
 bool UAutomatedTestLibrary::TestFactionRelationships(UObject* WorldContextObject, FTestResult& OutResult)
 {
-    return ExecuteTest([&](FTestResult& Result) -> bool {
+    OutResult = ExecuteTest([&](FTestResult& Result) -> bool {
         // TODO: UAdastreaFunctionLibrary not yet implemented
         // This test requires faction relationship utility functions
         Result.Message = TEXT("TestFactionRelationships skipped - UAdastreaFunctionLibrary not implemented");
@@ -272,11 +274,13 @@ bool UAutomatedTestLibrary::TestFactionRelationships(UObject* WorldContextObject
         return true;
         */
     }, TEXT("FactionRelationships"));
+    
+    return OutResult.bPassed;
 }
 
 bool UAutomatedTestLibrary::TestWeaponDamage(UObject* WorldContextObject, FTestResult& OutResult)
 {
-    return ExecuteTest([&](FTestResult& Result) -> bool {
+    OutResult = ExecuteTest([&](FTestResult& Result) -> bool {
         // TODO: UAdastreaFunctionLibrary not yet implemented
         // This test requires weapon damage calculation utility functions
         Result.Message = TEXT("TestWeaponDamage skipped - UAdastreaFunctionLibrary not implemented");
@@ -343,11 +347,13 @@ bool UAutomatedTestLibrary::TestWeaponDamage(UObject* WorldContextObject, FTestR
         return true;
         */
     }, TEXT("WeaponDamage"));
+    
+    return OutResult.bPassed;
 }
 
 bool UAutomatedTestLibrary::TestDataValidation(UObject* WorldContextObject, FTestResult& OutResult)
 {
-    return ExecuteTest([&](FTestResult& Result) -> bool {
+    OutResult = ExecuteTest([&](FTestResult& Result) -> bool {
         // Test data validation on all assets
         TArray<FDataValidationResult> ValidationResults;
 
@@ -373,6 +379,8 @@ bool UAutomatedTestLibrary::TestDataValidation(UObject* WorldContextObject, FTes
         // Warnings are acceptable, but errors are not
         return TotalErrors == 0;
     }, TEXT("DataValidation"));
+    
+    return OutResult.bPassed;
 }
 
 //================================================================================
@@ -381,32 +389,38 @@ bool UAutomatedTestLibrary::TestDataValidation(UObject* WorldContextObject, FTes
 
 bool UAutomatedTestLibrary::TestSpaceshipWeaponIntegration(UObject* WorldContextObject, FTestResult& OutResult)
 {
-    return ExecuteTest([&](FTestResult& Result) -> bool {
+    OutResult = ExecuteTest([&](FTestResult& Result) -> bool {
         // This would test how spaceships and weapons work together
         // For now, return a placeholder success
         Result.Message = TEXT("Spaceship-weapon integration test placeholder - implement actual integration logic");
         return true;
     }, TEXT("SpaceshipWeaponIntegration"));
+    
+    return OutResult.bPassed;
 }
 
 bool UAutomatedTestLibrary::TestFactionStationIntegration(UObject* WorldContextObject, FTestResult& OutResult)
 {
-    return ExecuteTest([&](FTestResult& Result) -> bool {
+    OutResult = ExecuteTest([&](FTestResult& Result) -> bool {
         // This would test how factions and stations interact
         // For now, return a placeholder success
         Result.Message = TEXT("Faction-station integration test placeholder - implement actual integration logic");
         return true;
     }, TEXT("FactionStationIntegration"));
+    
+    return OutResult.bPassed;
 }
 
 bool UAutomatedTestLibrary::TestCombatSystemIntegration(UObject* WorldContextObject, FTestResult& OutResult)
 {
-    return ExecuteTest([&](FTestResult& Result) -> bool {
+    OutResult = ExecuteTest([&](FTestResult& Result) -> bool {
         // This would test the complete combat system
         // For now, return a placeholder success
         Result.Message = TEXT("Combat system integration test placeholder - implement actual integration logic");
         return true;
     }, TEXT("CombatSystemIntegration"));
+    
+    return OutResult.bPassed;
 }
 
 //================================================================================
@@ -415,7 +429,7 @@ bool UAutomatedTestLibrary::TestCombatSystemIntegration(UObject* WorldContextObj
 
 bool UAutomatedTestLibrary::TestSpaceshipSpawnPerformance(UObject* WorldContextObject, FTestResult& OutResult)
 {
-    return ExecuteTest([&](FTestResult& Result) -> bool {
+    OutResult = ExecuteTest([&](FTestResult& Result) -> bool {
         // Use the benchmark library
         FString BenchmarkResult = UPerformanceBenchmarkLibrary::BenchmarkShipSpawning(
             WorldContextObject, 10); // Smaller test for unit testing
@@ -427,11 +441,13 @@ bool UAutomatedTestLibrary::TestSpaceshipSpawnPerformance(UObject* WorldContextO
 
         return true;
     }, TEXT("SpaceshipSpawnPerformance"));
+    
+    return OutResult.bPassed;
 }
 
 bool UAutomatedTestLibrary::TestAISystemPerformance(UObject* WorldContextObject, FTestResult& OutResult)
 {
-    return ExecuteTest([&](FTestResult& Result) -> bool {
+    OutResult = ExecuteTest([&](FTestResult& Result) -> bool {
         // Use the benchmark library
         FString BenchmarkResult = UPerformanceBenchmarkLibrary::BenchmarkAISystem(
             WorldContextObject, 5, 1.0f); // Smaller test
@@ -441,6 +457,8 @@ bool UAutomatedTestLibrary::TestAISystemPerformance(UObject* WorldContextObject,
 
         return true;
     }, TEXT("AISystemPerformance"));
+    
+    return OutResult.bPassed;
 }
 
 bool UAutomatedTestLibrary::TestDataAssetLoadPerformance(UObject* WorldContextObject, FTestResult& OutResult)
