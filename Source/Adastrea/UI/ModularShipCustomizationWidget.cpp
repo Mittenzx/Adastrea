@@ -205,7 +205,7 @@ void UModularShipCustomizationWidget::OnUIRefresh_Implementation()
 	// Override in Blueprint to refresh visual elements
 }
 
-void UModularShipCustomizationWidget::OnSlotSelected_Implementation(const FShipModuleSlot& Slot)
+void UModularShipCustomizationWidget::OnSlotSelected_Implementation(const FShipModuleSlot& ModuleSlot)
 {
 	// Override in Blueprint to highlight slot
 }
@@ -215,12 +215,12 @@ void UModularShipCustomizationWidget::OnModuleSelected_Implementation(UShipModul
 	// Override in Blueprint to show module details
 }
 
-void UModularShipCustomizationWidget::OnModuleInstalled_Implementation(UShipModuleComponent* Module, const FShipModuleSlot& Slot)
+void UModularShipCustomizationWidget::OnModuleInstalled_Implementation(UShipModuleComponent* Module, const FShipModuleSlot& ModuleSlot)
 {
 	// Override in Blueprint for success feedback
 }
 
-void UModularShipCustomizationWidget::OnModuleRemoved_Implementation(UShipModuleComponent* Module, const FShipModuleSlot& Slot)
+void UModularShipCustomizationWidget::OnModuleRemoved_Implementation(UShipModuleComponent* Module, const FShipModuleSlot& ModuleSlot)
 {
 	// Override in Blueprint for removal feedback
 }
