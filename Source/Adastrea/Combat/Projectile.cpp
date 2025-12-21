@@ -52,6 +52,30 @@ void AProjectile::Initialize(const FVector& Direction, float Speed)
     }
 }
 
+void AProjectile::ResetToPoolState()
+{
+    // Clear the timer if it's still active
+    if (LifetimeTimerHandle.IsValid())
+    {
+        GetWorldTimerManager().ClearTimer(LifetimeTimerHandle);
+    }
+
+    // Reset movement
+    if (ProjectileMovement)
+    {
+        ProjectileMovement->StopMovementImmediately();
+        ProjectileMovement->Velocity = FVector::ZeroVector;
+    }
+
+    // Reset transform
+    SetActorRotation(FRotator::ZeroRotator);
+    SetActorScale3D(FVector::OneVector);
+
+    // Reset visibility and collision
+    SetActorHiddenInGame(true);
+    SetActorEnableCollision(false);
+}
+
 void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
     // Apply damage if we hit something damageable
@@ -66,19 +90,7 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 
 void AProjectile::DestroyProjectile()
 {
-    // Clear the timer if it's still active
-    if (LifetimeTimerHandle.IsValid())
-    {
-        GetWorldTimerManager().ClearTimer(LifetimeTimerHandle);
-    }
-
-    // Return to pool instead of destroying
+    // Reset to pool state instead of destroying
     // This will be handled by the ProjectilePoolComponent
-    SetActorHiddenInGame(true);
-    SetActorEnableCollision(false);
-
-    if (ProjectileMovement)
-    {
-        ProjectileMovement->StopMovementImmediately();
-    }
+    ResetToPoolState();
 }

@@ -431,9 +431,9 @@ bool UAutomatedTestLibrary::TestAISystemPerformance(UObject* WorldContextObject,
 
 bool UAutomatedTestLibrary::TestDataAssetLoadPerformance(UObject* WorldContextObject, FTestResult& OutResult)
 {
-    return ExecuteTest([&](FTestResult& Result) -> bool {
+    OutResult = ExecuteTest([&](FTestResult& Result) -> bool {
         // Test loading performance of data assets
-        double LoadTime = MeasureExecutionTime([]() {
+        double LoadTime = UPerformanceBenchmarkLibrary::MeasureExecutionTime([]() {
             int32 AssetCount = 0;
             for (TObjectIterator<UDataAsset> It; It; ++It)
             {
@@ -441,7 +441,6 @@ bool UAutomatedTestLibrary::TestDataAssetLoadPerformance(UObject* WorldContextOb
                 // Touch the asset to ensure it's loaded
                 volatile UDataAsset* Asset = *It;
             }
-            return AssetCount;
         });
 
         Result.Message = FString::Printf(TEXT("Data asset loading completed in %.3f seconds"), LoadTime);
@@ -450,6 +449,8 @@ bool UAutomatedTestLibrary::TestDataAssetLoadPerformance(UObject* WorldContextOb
         // Performance threshold: should load in under 1 second
         return LoadTime < 1.0f;
     }, TEXT("DataAssetLoadPerformance"));
+    
+    return OutResult.bPassed;
 }
 
 //================================================================================
@@ -570,12 +571,4 @@ FTestResult UAutomatedTestLibrary::ExecuteTest(TFunction<bool(FTestResult&)> Tes
     Result.ExecutionTime = EndTime - StartTime;
 
     return Result;
-}
-
-double UAutomatedTestLibrary::MeasureExecutionTime(TFunction<int32()> Function)
-{
-    double StartTime = FPlatformTime::Seconds();
-    Function();
-    double EndTime = FPlatformTime::Seconds();
-    return EndTime - StartTime;
 }

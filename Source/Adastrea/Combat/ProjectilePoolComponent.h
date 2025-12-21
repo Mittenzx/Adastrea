@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "ProjectilePoolComponent.generated.h"
 
 // Forward declarations
 class AProjectile;
@@ -104,5 +105,3 @@ private:
     /** Reset a projectile to its default state */
     void ResetProjectile(AProjectile* Projectile);
 };
-
-#include "ProjectilePoolComponent.generated.h"
