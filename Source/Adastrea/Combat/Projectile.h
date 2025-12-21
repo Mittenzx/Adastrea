@@ -17,6 +17,9 @@ public:
     /** Initialize the projectile with direction and speed */
     void Initialize(const FVector& Direction, float Speed);
 
+    /** Reset projectile to its initial pooled state */
+    void ResetToPoolState();
+
     /** Called when projectile hits something */
     UFUNCTION()
     void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

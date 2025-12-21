@@ -242,15 +242,15 @@ bool UDataValidationLibrary::ValidateWeaponData(
         bPassed = false;
 
     // Range validation
-    if (!ValidateNumericRange(WeaponAsset->Range, 100.0f, 100000.0f, "Range", OutErrors))
+    if (!ValidateNumericRange(WeaponAsset->MaxRange, 100.0f, 100000.0f, "MaxRange", OutErrors))
         bPassed = false;
 
     // Fire rate validation
-    if (!ValidateNumericRange(WeaponAsset->FireRate, 0.1f, 100.0f, "FireRate", OutErrors))
+    if (!ValidateNumericRange(WeaponAsset->RateOfFire, 0.1f, 100.0f, "RateOfFire", OutErrors))
         bPassed = false;
 
     // Energy validation
-    if (!ValidateNumericRange(WeaponAsset->EnergyConsumption, 0.0f, 1000.0f, "EnergyConsumption", OutErrors))
+    if (!ValidateNumericRange(WeaponAsset->PowerPerShot, 0.0f, 1000.0f, "PowerPerShot", OutErrors))
         bPassed = false;
 
     // Balance validation
@@ -499,12 +499,12 @@ void UDataValidationLibrary::ValidateWeaponBalance(
 )
 {
     // DPS calculation
-    float DPS = WeaponAsset->BaseDamage * WeaponAsset->FireRate;
+    float DPS = WeaponAsset->BaseDamage * WeaponAsset->RateOfFire;
 
     // Efficiency check (damage per energy)
-    if (WeaponAsset->EnergyConsumption > 0)
+    if (WeaponAsset->PowerPerShot > 0)
     {
-        float Efficiency = DPS / WeaponAsset->EnergyConsumption;
+        float Efficiency = DPS / WeaponAsset->PowerPerShot;
 
         if (Efficiency < 1.0f)
         {
@@ -517,7 +517,7 @@ void UDataValidationLibrary::ValidateWeaponBalance(
     }
 
     // Range vs fire rate balance
-    float RangeEfficiency = WeaponAsset->Range / FMath::Max(1.0f, WeaponAsset->FireRate * 100);
+    float RangeEfficiency = WeaponAsset->MaxRange / FMath::Max(1.0f, WeaponAsset->RateOfFire * 100);
 
     if (RangeEfficiency < 10.0f)
     {
@@ -525,7 +525,7 @@ void UDataValidationLibrary::ValidateWeaponBalance(
     }
 
     // Damage type balance
-    if (WeaponAsset->DamageType == EDamageType::Energy && WeaponAsset->EnergyConsumption <= 0)
+    if (WeaponAsset->DamageType == EDamageType::Energy && WeaponAsset->PowerPerShot <= 0)
     {
         OutWarnings.Add(FText::FromString("Energy weapon has no energy consumption"));
     }
