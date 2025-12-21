@@ -433,8 +433,8 @@ bool UAutomatedTestLibrary::TestDataAssetLoadPerformance(UObject* WorldContextOb
 {
     OutResult = ExecuteTest([&](FTestResult& Result) -> bool {
         // Test loading performance of data assets
-        double LoadTime = UPerformanceBenchmarkLibrary::MeasureExecutionTime([]() {
-            int32 AssetCount = 0;
+        int32 AssetCount = 0;
+        double LoadTime = UPerformanceBenchmarkLibrary::MeasureExecutionTime([&AssetCount]() {
             for (TObjectIterator<UDataAsset> It; It; ++It)
             {
                 AssetCount++;
@@ -443,8 +443,9 @@ bool UAutomatedTestLibrary::TestDataAssetLoadPerformance(UObject* WorldContextOb
             }
         });
 
-        Result.Message = FString::Printf(TEXT("Data asset loading completed in %.3f seconds"), LoadTime);
+        Result.Message = FString::Printf(TEXT("Data asset loading completed in %.3f seconds (%d assets)"), LoadTime, AssetCount);
         Result.Metrics.Add(TEXT("LoadTime"), LoadTime);
+        Result.Metrics.Add(TEXT("AssetCount"), AssetCount);
 
         // Performance threshold: should load in under 1 second
         return LoadTime < 1.0f;
