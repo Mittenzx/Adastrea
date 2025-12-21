@@ -353,6 +353,7 @@ Concise reference documents:
 
 | Document | Purpose | Location |
 |----------|---------|----------|
+| **PROJECT_GENERATION_QUICK_FIX.md** | ⭐ **NEW!** One-page quick fix for project generation errors | Root |
 | **VISUAL_STUDIO_PROJECT_GENERATION.md** | ⭐ **NEW!** Visual Studio project generation troubleshooting | Root |
 | **build_errors.md** | Known build errors and solutions | Root |
 | **MODULE_DEPENDENCY_GUIDE.md** | Module dependency management | Root |
