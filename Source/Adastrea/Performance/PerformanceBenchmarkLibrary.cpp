@@ -50,9 +50,9 @@ FString UPerformanceBenchmarkLibrary::BenchmarkShipSpawning(
 
         for (int32 i = 0; i < NumShips; ++i)
         {
-            FVector Location = FVector(FMath::FRandRange(-10000, 10000),
-                                     FMath::FRandRange(-10000, 10000),
-                                     FMath::FRandRange(-10000, 10000));
+            FVector Location = FVector(FMath::FRandRange(-10000.0f, 10000.0f),
+                                     FMath::FRandRange(-10000.0f, 10000.0f),
+                                     FMath::FRandRange(-10000.0f, 10000.0f));
 
             AActor* NewShip = World->SpawnActor<AActor>(ShipClass, Location, FRotator::ZeroRotator);
             if (NewShip)
@@ -130,8 +130,8 @@ FString UPerformanceBenchmarkLibrary::BenchmarkCombatSystem(
             for (int32 Ship = 0; Ship < NumShips; ++Ship)
             {
                 // Simulate damage calculations, targeting, etc.
-                float Damage = FMath::FRandRange(10, 100);
-                float Armor = FMath::FRandRange(0, 50);
+                float Damage = FMath::FRandRange(10.0f, 100.0f);
+                float Armor = FMath::FRandRange(0.0f, 50.0f);
                 float FinalDamage = FMath::Max(0.0f, Damage - Armor);
 
                 // Simulate AI decisions
@@ -140,9 +140,9 @@ FString UPerformanceBenchmarkLibrary::BenchmarkCombatSystem(
                 {
                     // Simulate projectile spawning
                     FVector Location = FVector::ZeroVector;
-                    FVector Velocity = FVector(FMath::FRandRange(-100, 100),
-                                             FMath::FRandRange(-100, 100),
-                                             FMath::FRandRange(-100, 100));
+                    FVector Velocity = FVector(FMath::FRandRange(-100.0f, 100.0f),
+                                             FMath::FRandRange(-100.0f, 100.0f),
+                                             FMath::FRandRange(-100.0f, 100.0f));
                 }
             }
         }
@@ -235,16 +235,16 @@ FString UPerformanceBenchmarkLibrary::BenchmarkAISystem(
             for (int32 AI = 0; AI < NumAIEntities; ++AI)
             {
                 // Simulate AI decision making
-                float DistanceToTarget = FMath::FRandRange(100, 10000);
+                float DistanceToTarget = FMath::FRandRange(100.0f, 10000.0f);
                 bool HasTarget = FMath::FRand() > 0.3f;
 
                 if (HasTarget)
                 {
                     // Simulate pathfinding calculations
                     FVector CurrentPos = FVector::ZeroVector;
-                    FVector TargetPos = FVector(FMath::FRandRange(-1000, 1000),
-                                              FMath::FRandRange(-1000, 1000),
-                                              FMath::FRandRange(-1000, 1000));
+                    FVector TargetPos = FVector(FMath::FRandRange(-1000.0f, 1000.0f),
+                                              FMath::FRandRange(-1000.0f, 1000.0f),
+                                              FMath::FRandRange(-1000.0f, 1000.0f));
 
                     float Distance = FVector::Distance(CurrentPos, TargetPos);
                     FVector Direction = (TargetPos - CurrentPos).GetSafeNormal();
@@ -297,11 +297,11 @@ FString UPerformanceBenchmarkLibrary::BenchmarkStationSystem(
                 for (int32 Module = 0; Module < ModulesPerStation; ++Module)
                 {
                     // Simulate module operations
-                    float ModulePower = FMath::FRandRange(10, 100);
+                    float ModulePower = FMath::FRandRange(10.0f, 100.0f);
                     PowerConsumption += ModulePower;
 
                     // Simulate crew operations
-                    CrewMorale += FMath::FRandRange(-5, 5);
+                    CrewMorale += FMath::FRandRange(-5.0f, 5.0f);
                     CrewMorale = FMath::Clamp(CrewMorale, 0.0f, 100.0f);
                 }
 
@@ -350,7 +350,7 @@ FString UPerformanceBenchmarkLibrary::BenchmarkLODSystem(
             for (int32 Entity = 0; Entity < NumLODEntities; ++Entity)
             {
                 // Simulate LOD distance calculations
-                float DistanceToCamera = FMath::FRandRange(100, 50000);
+                float DistanceToCamera = FMath::FRandRange(100.0f, 50000.0f);
 
                 // Simulate LOD level determination
                 ELODLevel CurrentLOD = ELODLevel::High;
