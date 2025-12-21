@@ -50,6 +50,10 @@ bool UDataValidationLibrary::ValidateDataAsset(
             bPassed = false;
         }
 
+        // TODO: Update to UE5 data validation system
+        // The UDataValidation interface has been replaced with FDataValidationContext in UE5
+        // This section is commented out until proper UE5 validation is implemented
+        /*
         // Check if asset implements IsDataValid
         if (DataAsset->Implements<UDataValidation>())
         {
@@ -62,6 +66,7 @@ bool UDataValidationLibrary::ValidateDataAsset(
                 bPassed = false;
             }
         }
+        */
     }
 
     return bPassed && OutErrors.Num() == 0;
@@ -143,7 +148,7 @@ bool UDataValidationLibrary::ValidateSpaceshipData(
     if (!ValidateNumericRange(SpaceshipAsset->MaxSpeed, 0.0f, 10000.0f, "MaxSpeed", OutErrors))
         bPassed = false;
 
-    if (!ValidateNumericRange(SpaceshipAsset->MaxHealth, 1.0f, 100000.0f, "MaxHealth", OutErrors))
+    if (!ValidateNumericRange(SpaceshipAsset->HullStrength, 1.0f, 100000.0f, "HullStrength", OutErrors))
         bPassed = false;
 
     if (!ValidateNumericRange(SpaceshipAsset->ArmorRating, 0.0f, 1000.0f, "ArmorRating", OutErrors))
@@ -153,12 +158,16 @@ bool UDataValidationLibrary::ValidateSpaceshipData(
         bPassed = false;
 
     // Crew validation
-    if (!ValidateNumericRange(SpaceshipAsset->MinCrew, 1, 1000, "MinCrew", OutErrors))
+    if (!ValidateNumericRange(SpaceshipAsset->CrewRequired, 1, 1000, "CrewRequired", OutErrors))
         bPassed = false;
 
-    if (!ValidateNumericRange(SpaceshipAsset->MaxCrew, SpaceshipAsset->MinCrew, 1000, "MaxCrew", OutErrors))
+    if (!ValidateNumericRange(SpaceshipAsset->MaxCrew, SpaceshipAsset->CrewRequired, 1000, "MaxCrew", OutErrors))
         bPassed = false;
 
+    // Note: ShipMesh and Hardpoints properties not present in current SpaceshipDataAsset
+    // These validations are commented out until the properties are added
+    // TODO: Add visual mesh and hardpoint configuration to SpaceshipDataAsset
+    /*
     // Object reference validation
     if (!ValidateObjectReference(SpaceshipAsset->ShipMesh, "ShipMesh", OutErrors))
         bPassed = false;
@@ -168,6 +177,7 @@ bool UDataValidationLibrary::ValidateSpaceshipData(
     {
         // Warning only - ships can have no hardpoints
     }
+    */
 
     // Detailed stat validation
     ValidateSpaceshipStats(SpaceshipAsset, OutErrors, OutWarnings);
