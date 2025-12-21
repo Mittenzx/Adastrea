@@ -136,6 +136,8 @@ The validation scripts check for:
 3. **Generate Project Files**:
    - Right-click on the `.uproject` file
    - Select "Generate Visual Studio project files"
+   - **Having issues?** See [PROJECT_GENERATION_QUICK_FIX.md](PROJECT_GENERATION_QUICK_FIX.md) for immediate solutions
+   - **Need details?** See [VISUAL_STUDIO_PROJECT_GENERATION.md](VISUAL_STUDIO_PROJECT_GENERATION.md) for comprehensive troubleshooting
 
 4. **Build the project**:
    - Open the generated `.sln` file in Visual Studio

@@ -9,6 +9,11 @@
 /Plugins/*/Binaries/
 /Plugins/*/Intermediate/
 
+# Plugin Build Artifacts (prevent nested plugin conflicts)
+*_Built/
+HostProject/
+/Intermediate/Build/BuildRules/*.dll
+
 # Visual Studio
 .vs/
 *.sln

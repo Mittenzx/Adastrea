@@ -4,6 +4,82 @@ This document lists the build errors and warnings encountered during compilation
 
 ---
 
+## Visual Studio Project Generation Errors
+
+### CS0101: Duplicate Namespace Error in AdastreaDirectorEditor.Build.cs
+
+**Error Message:**
+```
+Compiled assembly file 'C:\Unreal Projects\Adastrea\Intermediate\Build\BuildRules\AdastreaModuleRules.dll' appears to be for a newer CLR version or is otherwise invalid.
+Unreal Build Tool will try to recompile this assembly now.
+(Exception: Bad IL format. The format of the file 'C:\Unreal Projects\Adastrea\Intermediate\Build\BuildRules\AdastreaModuleRules.dll' is invalid.)
+
+C:\Unreal Projects\Adastrea\Plugins\AdastreaDirector_Built\HostProject\Plugins\AdastreaDirector\Source\AdastreaDirectorEditor\AdastreaDirectorEditor.Build.cs(5,14): error CS0101: The namespace...
+```
+
+**Root Cause:**
+This error occurs when there are duplicate or conflicting plugin structures in your project directory. The error message shows a path like `Plugins\AdastreaDirector_Built\HostProject\Plugins\AdastreaDirector`, which indicates a nested plugin structure where:
+1. A built/packaged version of the AdastreaDirector plugin exists (AdastreaDirector_Built)
+2. This conflicts with the source version of the plugin
+
+**Solutions:**
+
+1. **Clean Intermediate Build Files (Recommended First Step):**
+   ```batch
+   :: Windows
+   del /s /q Intermediate\Build\BuildRules\*.dll
+   del /s /q Binaries\Win64\*.dll
+   del /s /q Plugins\AdastreaDirector\Binaries\*.dll
+   del /s /q Plugins\AdastreaDirector\Intermediate\*.dll
+   ```
+
+2. **Remove Duplicate Plugin Folders:**
+   - Check for and remove any folders named `AdastreaDirector_Built` or similar
+   - Only keep the source plugin in `Plugins/AdastreaDirector/`
+   - Delete any `HostProject` folders inside plugin directories
+
+3. **Regenerate Project Files:**
+   ```batch
+   :: Right-click on Adastrea.uproject → "Generate Visual Studio project files"
+   :: Or use command line:
+   "C:\Program Files\Epic Games\UE_5.6\Engine\Build\BatchFiles\Build.bat" AdastreaEditor Win64 Development -project="C:\Path\To\Adastrea.uproject" -WaitMutex -FromMsBuild
+   ```
+
+4. **Clear Additional Build Artifacts:**
+   - Delete the entire `Intermediate` folder
+   - Delete the entire `Binaries` folder  
+   - Delete `.vs` folder (Visual Studio user settings)
+   - Regenerate project files
+
+5. **Verify Plugin Structure:**
+   Correct structure should be:
+   ```
+   Adastrea/
+   ├── Plugins/
+   │   ├── AdastreaDirector/          ← Source plugin (keep this)
+   │   │   ├── AdastreaDirector.uplugin
+   │   │   ├── Source/
+   │   │   └── Content/
+   │   ├── UnrealMCP/
+   │   └── vc-ue-extensions/
+   ```
+
+   **Remove** any of these if present:
+   - `Plugins/AdastreaDirector_Built/`
+   - `Plugins/*/HostProject/`
+   - Any duplicate plugin folders
+
+**Prevention:**
+- Add these entries to your `.gitignore`:
+  ```
+  # Plugin build artifacts
+  *_Built/
+  HostProject/
+  Intermediate/Build/BuildRules/
+  ```
+
+---
+
 ## Errors
 
 | Severity | Code   | Description                                                                                                                            | Project   | File                                                                                                                                  | Line | Details |
