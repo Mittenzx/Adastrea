@@ -137,6 +137,10 @@ public:
 	 */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Ship Module")
 	EShipModuleCategory GetModuleCategory() const;
+	virtual EShipModuleCategory GetModuleCategory_Implementation() const
+	{
+		return EShipModuleCategory::Utility;
+	}
 
 	/**
 	 * Get the size of this module
@@ -144,6 +148,10 @@ public:
 	 */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Ship Module")
 	EShipModuleSize GetModuleSize() const;
+	virtual EShipModuleSize GetModuleSize_Implementation() const
+	{
+		return EShipModuleSize::Medium;
+	}
 
 	/**
 	 * Get the display name of this module
@@ -151,6 +159,10 @@ public:
 	 */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Ship Module")
 	FText GetModuleName() const;
+	virtual FText GetModuleName_Implementation() const
+	{
+		return FText::FromString("Unknown Module");
+	}
 
 	/**
 	 * Get the description of this module
@@ -158,6 +170,10 @@ public:
 	 */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Ship Module")
 	FText GetModuleDescription() const;
+	virtual FText GetModuleDescription_Implementation() const
+	{
+		return FText::FromString("No description available");
+	}
 
 	/**
 	 * Get the power consumption of this module
@@ -165,6 +181,10 @@ public:
 	 */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Ship Module")
 	float GetPowerRequirement() const;
+	virtual float GetPowerRequirement_Implementation() const
+	{
+		return 0.0f;
+	}
 
 	/**
 	 * Get the mass of this module
@@ -172,6 +192,10 @@ public:
 	 */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Ship Module")
 	float GetModuleMass() const;
+	virtual float GetModuleMass_Implementation() const
+	{
+		return 100.0f;
+	}
 
 	/**
 	 * Check if this module can be installed in the given slot
@@ -180,6 +204,29 @@ public:
 	 */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Ship Module")
 	bool CanInstallInSlot(const FShipModuleSlot& Slot) const;
+	virtual bool CanInstallInSlot_Implementation(const FShipModuleSlot& Slot) const
+	{
+		// Check category compatibility
+		if (Slot.AcceptedCategory != Execute_GetModuleCategory(Cast<UObject>(this)))
+		{
+			return false;
+		}
+
+		// Check size compatibility (module must be same size or smaller)
+		EShipModuleSize ModuleSize = Execute_GetModuleSize(Cast<UObject>(this));
+		if (ModuleSize > Slot.MaxSize)
+		{
+			return false;
+		}
+
+		// Check if slot is not occupied
+		if (Slot.bIsOccupied)
+		{
+			return false;
+		}
+
+		return true;
+	}
 
 	/**
 	 * Called when module is installed in a slot
@@ -188,6 +235,10 @@ public:
 	 */
 	UFUNCTION(BlueprintNativeEvent, Category="Ship Module")
 	void OnModuleInstalled(const FShipModuleSlot& Slot);
+	virtual void OnModuleInstalled_Implementation(const FShipModuleSlot& Slot)
+	{
+		// Default implementation does nothing
+	}
 
 	/**
 	 * Called when module is removed from a slot
@@ -196,6 +247,10 @@ public:
 	 */
 	UFUNCTION(BlueprintNativeEvent, Category="Ship Module")
 	void OnModuleRemoved(const FShipModuleSlot& Slot);
+	virtual void OnModuleRemoved_Implementation(const FShipModuleSlot& Slot)
+	{
+		// Default implementation does nothing
+	}
 
 	/**
 	 * Get the visual mesh for this module (if any)
@@ -203,6 +258,10 @@ public:
 	 */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Ship Module")
 	UStaticMesh* GetModuleMesh() const;
+	virtual UStaticMesh* GetModuleMesh_Implementation() const
+	{
+		return nullptr;
+	}
 
 	/**
 	 * Check if this module is currently installed
@@ -210,6 +269,10 @@ public:
 	 */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Ship Module")
 	bool IsInstalled() const;
+	virtual bool IsInstalled_Implementation() const
+	{
+		return false;
+	}
 
 	/**
 	 * Get the slot this module is currently installed in
@@ -217,6 +280,10 @@ public:
 	 */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Ship Module")
 	FShipModuleSlot GetInstalledSlot() const;
+	virtual FShipModuleSlot GetInstalledSlot_Implementation() const
+	{
+		return FShipModuleSlot();
+	}
 
 	/**
 	 * Enable or disable the module
@@ -224,6 +291,10 @@ public:
 	 */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Ship Module")
 	void SetModuleEnabled(bool bEnabled);
+	virtual void SetModuleEnabled_Implementation(bool bEnabled)
+	{
+		// Default implementation does nothing
+	}
 
 	/**
 	 * Check if module is currently enabled
@@ -231,4 +302,8 @@ public:
 	 */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Ship Module")
 	bool IsModuleEnabled() const;
+	virtual bool IsModuleEnabled_Implementation() const
+	{
+		return true;
+	}
 };

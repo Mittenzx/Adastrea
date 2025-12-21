@@ -52,48 +52,44 @@ FText UShipModuleDataAsset::GetModuleSummary() const
 }
 
 #if WITH_EDITOR
-EDataValidationResult UShipModuleDataAsset::IsDataValid(TArray<FText>& ValidationErrors)
+EDataValidationResult UShipModuleDataAsset::IsDataValid(FDataValidationContext& Context) const
 {
-	EDataValidationResult Result = Super::IsDataValid(ValidationErrors);
+	EDataValidationResult Result = Super::IsDataValid(Context);
 
 	// Check for required fields
 	if (ModuleName.IsEmpty())
 	{
-		ValidationErrors.Add(FText::FromString("Module Name is required"));
+		Context.AddError(FText::FromString("Module Name is required"));
 		Result = EDataValidationResult::Invalid;
 	}
 
 	if (ModuleID == NAME_None)
 	{
-		ValidationErrors.Add(FText::FromString("Module ID is required"));
+		Context.AddError(FText::FromString("Module ID is required"));
 		Result = EDataValidationResult::Invalid;
 	}
 
 	if (Description.IsEmpty())
 	{
-		ValidationErrors.Add(FText::FromString("Description should be provided"));
-		if (Result == EDataValidationResult::Valid)
-		{
-			Result = EDataValidationResult::NotValidated;
-		}
+		Context.AddWarning(FText::FromString("Description should be provided"));
 	}
 
 	// Validate ranges
 	if (Mass < 0.0f)
 	{
-		ValidationErrors.Add(FText::FromString("Mass cannot be negative"));
+		Context.AddError(FText::FromString("Mass cannot be negative"));
 		Result = EDataValidationResult::Invalid;
 	}
 
 	if (RequiredTechLevel < 1 || RequiredTechLevel > 10)
 	{
-		ValidationErrors.Add(FText::FromString("Tech Level must be between 1 and 10"));
+		Context.AddError(FText::FromString("Tech Level must be between 1 and 10"));
 		Result = EDataValidationResult::Invalid;
 	}
 
 	if (PurchaseCost < 0)
 	{
-		ValidationErrors.Add(FText::FromString("Purchase Cost cannot be negative"));
+		Context.AddError(FText::FromString("Purchase Cost cannot be negative"));
 		Result = EDataValidationResult::Invalid;
 	}
 
