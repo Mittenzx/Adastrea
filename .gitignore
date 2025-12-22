@@ -5,6 +5,9 @@
 /Intermediate/
 /Saved/
 
+# Unreal Engine - Build Tools (downloaded for CI/local builds)
+/UnrealBuildTools/
+
 # Unreal Engine - Plugin Binaries
 /Plugins/*/Binaries/
 /Plugins/*/Intermediate/

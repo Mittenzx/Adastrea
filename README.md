@@ -68,6 +68,28 @@
 - **Visual Studio 2022** (Windows) or **Xcode** (Mac) for C++ development
 - **Git** for version control
 
+### 🆕 Build with UE Build Tools Only
+
+You can now build Adastrea using only the Unreal Engine build tools (~500MB) instead of the full engine (~50GB):
+
+```bash
+# Download build tools
+./setup_ue_build_tools.sh
+
+# Build the project
+./build_with_ue_tools.sh Development Linux
+```
+
+See **[BUILD_WITH_UE_TOOLS.md](BUILD_WITH_UE_TOOLS.md)** for complete instructions.
+
+**Perfect for:**
+- ✓ CI/CD pipelines
+- ✓ Automated testing
+- ✓ Build verification
+- ✓ Code compilation without full editor
+
+**Note:** To actually run and edit the project, you still need the full Unreal Engine 5.6 installation.
+
 ### Robust Setup Validation
 
 Before building the project, it's **highly recommended** to run our automated setup validation scripts to ensure your development environment is properly configured. These scripts check for all prerequisites, validate project structure, and can optionally perform static analysis.
@@ -803,6 +825,7 @@ Comprehensive technical documentation for contributors and developers:
 
 ### Build and CI/CD Documentation
 
+- **[Build with UE Tools](BUILD_WITH_UE_TOOLS.md)** - 🆕 Build using only UE build tools (~500MB) instead of full engine (~50GB)
 - **[GitHub Token & Docker Setup](GITHUB_TOKEN_DOCKER_SETUP.md)** - ⭐ Complete guide for setting up GitHub Actions with Docker for Unreal builds
 - **[Container Diagnostics](CONTAINER_DIAGNOSTICS.md)** - 🔍 **NEW** Troubleshooting guide for Epic Games container access issues
 - **[Cloud Build Quick Start](CLOUD_BUILD_QUICK_START.md)** - Quick reference for cloud build setup
