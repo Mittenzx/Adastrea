@@ -58,15 +58,13 @@ jobs:
           echo ".NET SDK:"
           dotnet --version || echo "Not installed yet"
       
-      - name: Install .NET SDK
+      - name: Verify .NET SDK
         run: |
-          echo "Installing .NET SDK 6.0 for UnrealBuildTool..."
-          sudo apt-get update
-          sudo apt-get install -y dotnet-sdk-6.0
+          echo "Checking .NET SDK for UnrealBuildTool..."
+          dotnet --version
           
           echo ""
-          echo "✓ .NET SDK installed:"
-          dotnet --version
+          echo "✓ .NET SDK available"
       
       - name: Install Build Dependencies
         run: |
