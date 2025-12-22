@@ -384,6 +384,6 @@ public:
      * Validate quest data asset properties
      * Checks for required fields and logical constraints
      */
-    virtual EDataValidationResult IsDataValid(TArray<FText>& ValidationErrors) override;
+    virtual EDataValidationResult IsDataValid(class FDataValidationContext& Context) const override;
 #endif
 };

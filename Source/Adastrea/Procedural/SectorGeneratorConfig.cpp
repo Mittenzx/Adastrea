@@ -137,9 +137,9 @@ TArray<FSpaceObjectDefinition> USectorGeneratorConfig::GetObjectDefinitionsByTyp
 }
 
 #if WITH_EDITOR
-EDataValidationResult USectorGeneratorConfig::IsDataValid(TArray<FText>& ValidationErrors)
+EDataValidationResult USectorGeneratorConfig::IsDataValid(FDataValidationContext& Context) const
 {
-	EDataValidationResult Result = EDataValidationResult::Valid;
+	EDataValidationResult Result = Super::IsDataValid(Context);
 
 	TArray<FText> ConfigErrors;
 	if (!ValidateConfiguration(ConfigErrors))
@@ -150,7 +150,7 @@ EDataValidationResult USectorGeneratorConfig::IsDataValid(TArray<FText>& Validat
 
 	if (ConfigName.IsEmpty())
 	{
-		ValidationErrors.Add(FText::FromString(TEXT("ConfigName is required.")));
+		Context.AddError(FText::FromString(TEXT("ConfigName is required.")));
 		Result = EDataValidationResult::Invalid;
 	}
 

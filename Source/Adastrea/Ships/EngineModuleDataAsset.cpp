@@ -125,51 +125,43 @@ float UEngineModuleDataAsset::GetCurrentFuelConsumption(float ThrottlePercent, b
 }
 
 #if WITH_EDITOR
-EDataValidationResult UEngineModuleDataAsset::IsDataValid(TArray<FText>& ValidationErrors)
+EDataValidationResult UEngineModuleDataAsset::IsDataValid(FDataValidationContext& Context) const
 {
-	EDataValidationResult Result = Super::IsDataValid(ValidationErrors);
+	EDataValidationResult Result = Super::IsDataValid(Context);
 
 	// Validate engine-specific properties
 	if (MaxThrust <= 0.0f)
 	{
-		ValidationErrors.Add(FText::FromString("Max Thrust must be greater than 0"));
+		Context.AddError(FText::FromString("Max Thrust must be greater than 0"));
 		Result = EDataValidationResult::Invalid;
 	}
 
 	if (MaxSpeed <= 0.0f)
 	{
-		ValidationErrors.Add(FText::FromString("Max Speed must be greater than 0"));
+		Context.AddError(FText::FromString("Max Speed must be greater than 0"));
 		Result = EDataValidationResult::Invalid;
 	}
 
 	if (Acceleration <= 0.0f)
 	{
-		ValidationErrors.Add(FText::FromString("Acceleration must be greater than 0"));
+		Context.AddError(FText::FromString("Acceleration must be greater than 0"));
 		Result = EDataValidationResult::Invalid;
 	}
 
 	if (Efficiency < 0.0f || Efficiency > 100.0f)
 	{
-		ValidationErrors.Add(FText::FromString("Efficiency must be between 0 and 100"));
+		Context.AddError(FText::FromString("Efficiency must be between 0 and 100"));
 		Result = EDataValidationResult::Invalid;
 	}
 
 	if (bSupportsJumpDrive && JumpRange <= 0.0f)
 	{
-		ValidationErrors.Add(FText::FromString("Jump-capable engines must have Jump Range > 0"));
-		if (Result == EDataValidationResult::Valid)
-		{
-			Result = EDataValidationResult::NotValidated;
-		}
+		Context.AddWarning(FText::FromString("Jump-capable engines must have Jump Range > 0"));
 	}
 
 	if (bSupportsTravelMode && TravelModeMultiplier <= 1.0f)
 	{
-		ValidationErrors.Add(FText::FromString("Travel Mode Multiplier should be > 1.0"));
-		if (Result == EDataValidationResult::Valid)
-		{
-			Result = EDataValidationResult::NotValidated;
-		}
+		Context.AddWarning(FText::FromString("Travel Mode Multiplier should be > 1.0"));
 	}
 
 	return Result;

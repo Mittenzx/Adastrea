@@ -328,7 +328,7 @@ public:
      * - Logical constraints (crew, capacity, etc.)
      * - Stat ranges and consistency
      */
-    virtual EDataValidationResult IsDataValid(TArray<FText>& ValidationErrors) override;
+    virtual EDataValidationResult IsDataValid(class FDataValidationContext& Context) const override;
 
     /** Invalidate cache when properties change in editor */
     virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
