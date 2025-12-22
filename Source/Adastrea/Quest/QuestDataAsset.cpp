@@ -65,6 +65,30 @@ bool UQuestDataAsset::AreAllRequiredObjectivesComplete() const
 
 bool UQuestDataAsset::CheckPrerequisites() const
 {
-        return Result;
+    // This would need access to player state to check properly
+    // For now, just check if prerequisites exist
+    // In actual implementation, this would query the game state
+    
+    for (const FQuestPrerequisite& Prereq : Prerequisites)
+    {
+        if (Prereq.RequiredQuest != nullptr)
+        {
+            // Would check if player has completed this quest
+            // return false if not completed
+        }
+        
+        if (Prereq.RequiredWayID != NAME_None)
+        {
+            // Would check player reputation with Way
+            // return false if below threshold
+        }
+        
+        if (Prereq.MinimumPlayerLevel > 1)
+        {
+            // Would check player level
+            // return false if below level
+        }
+    }
+    
+    return true;
 }
-#endif

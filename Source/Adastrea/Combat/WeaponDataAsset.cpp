@@ -221,13 +221,13 @@ EDataValidationResult UWeaponDataAsset::IsDataValid(FDataValidationContext& Cont
              WeaponType == EWeaponType::Torpedo)
     {
         // Warning only - some projectile weapons might be energy-based
-        Context.AddWarning(FText::FromString(TEXT(" Projectile-based weapons typically use ammunition")));
+        Context.AddWarning(FText::FromString(TEXT("Projectile-based weapons typically use ammunition")));
     }
 
     // Validate mount size compatibility
     if (WeaponType == EWeaponType::Torpedo && MountSize != EWeaponMountSize::Capital)
     {
-        Context.AddWarning(FText::FromString(TEXT(" Torpedoes should typically use Capital mounts")));
+        Context.AddWarning(FText::FromString(TEXT("Torpedoes should typically use Capital mounts")));
         // Just a warning, not invalid
     }
 
