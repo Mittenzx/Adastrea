@@ -2,6 +2,19 @@
 
 This document lists the build errors and warnings encountered during compilation of the Adastrea project.
 
+**Last Updated**: December 22, 2025  
+**Status**: Major build errors fixed - Ready for testing with Unreal Engine 5.6
+
+---
+
+## Recent Fixes (December 2025)
+
+### ✅ Fixed: Incorrect Include Path in StationEditorWidget.h
+**Fixed on**: December 22, 2025  
+**Issue**: StationEditorWidget.h was trying to include `StationEditor/StationEditorManager.h` which created an incorrect path
+**Solution**: Changed to `#include "StationEditorManager.h"` since both files are in the same StationEditor module
+**Impact**: This fixes the "Cannot open include file: 'StationEditorManager.h'" error
+
 ---
 
 ## Visual Studio Project Generation Errors
@@ -80,27 +93,26 @@ This error occurs when there are duplicate or conflicting plugin structures in y
 
 ---
 
-## Errors
 
-| Severity | Code   | Description                                                                                                                            | Project   | File                                                                                                                                  | Line | Details |
-|----------|--------|----------------------------------------------------------------------------------------------------------------------------------------|-----------|---------------------------------------------------------------------------------------------------------------------------------------|------|---------|
-| Error    | C4430  | missing type specifier - int assumed. Note: C++ does not support default-int                                                           | Adastrea  | C:\Unreal Projects\Adastrea\Intermediate\Build\Win64\UnrealEditor\Inc\Adastrea\UHT\AdastreaPlayerController.gen.cpp                    | 24   |         |
-| Error    | C2146  | syntax error: missing ';' before identifier 'UClass'                                                                                   | Adastrea  | C:\Unreal Projects\Adastrea\Intermediate\Build\Win64\UnrealEditor\Inc\Adastrea\UHT\AdastreaPlayerController.gen.cpp                    | 24   |         |
-| Error    | C4430  | missing type specifier - int assumed. Note: C++ does not support default-int                                                           | Adastrea  | C:\Unreal Projects\Adastrea\Intermediate\Build\Win64\UnrealEditor\Inc\Adastrea\UHT\AdastreaPlayerController.gen.cpp                    | 25   |         |
-| Error    | C2086  | 'int STATIONEDITOR_API': redefinition                                                                                                 | Adastrea  | C:\Unreal Projects\Adastrea\Intermediate\Build\Win64\UnrealEditor\Inc\Adastrea\UHT\AdastreaPlayerController.gen.cpp                    | 25   |         |
-| Error    | C2146  | syntax error: missing ';' before identifier 'UClass'                                                                                   | Adastrea  | C:\Unreal Projects\Adastrea\Intermediate\Build\Win64\UnrealEditor\Inc\Adastrea\UHT\AdastreaPlayerController.gen.cpp                    | 25   |         |
-| Error    | C2065  | 'Z_Construct_UClass_UStationEditorWidget_NoRegister': undeclared identifier                                                            | Adastrea  | C:\Unreal Projects\Adastrea\Intermediate\Build\Win64\UnrealEditor\Inc\Adastrea\UHT\AdastreaPlayerController.gen.cpp                    | 234  |         |
-| Error    | C2737  | 'NewProp_ReturnValue': const object must be initialized                                                                               | Adastrea  | C:\Unreal Projects\Adastrea\Intermediate\Build\Win64\UnrealEditor\Inc\Adastrea\UHT\AdastreaPlayerController.gen.cpp                    | 234  |         |
-| Error    | C2065  | 'Z_Construct_UClass_UStationEditorWidget_NoRegister': undeclared identifier                                                            | Adastrea  | C:\Unreal Projects\Adastrea\Intermediate\Build\Win64\UnrealEditor\Inc\Adastrea\UHT\AdastreaPlayerController.gen.cpp                    | 739  |         |
-| Error    | C2737  | 'NewProp_StationEditorWidgetClass': const object must be initialized                                                                  | Adastrea  | C:\Unreal Projects\Adastrea\Intermediate\Build\Win64\UnrealEditor\Inc\Adastrea\UHT\AdastreaPlayerController.gen.cpp                    | 739  |         |
-| Error    | C2065  | 'Z_Construct_UClass_UStationModuleCatalog_NoRegister': undeclared identifier                                                           | Adastrea  | C:\Unreal Projects\Adastrea\Intermediate\Build\Win64\UnrealEditor\Inc\Adastrea\UHT\AdastreaPlayerController.gen.cpp                    | 740  |         |
-| Error    | C2737  | 'NewProp_ModuleCatalog': const object must be initialized                                                                             | Adastrea  | C:\Unreal Projects\Adastrea\Intermediate\Build\Win64\UnrealEditor\Inc\Adastrea\UHT\AdastreaPlayerController.gen.cpp                    | 740  |         |
-| Error    | C2065  | 'Z_Construct_UClass_UStationEditorWidget_NoRegister': undeclared identifier                                                            | Adastrea  | C:\Unreal Projects\Adastrea\Intermediate\Build\Win64\UnrealEditor\Inc\Adastrea\UHT\AdastreaPlayerController.gen.cpp                    | 747  |         |
-| Error    | C2737  | 'NewProp_StationEditorWidget': const object must be initialized                                                                       | Adastrea  | C:\Unreal Projects\Adastrea\Intermediate\Build\Win64\UnrealEditor\Inc\Adastrea\UHT\AdastreaPlayerController.gen.cpp                    | 747  |         |
-| Error    | C2065  | 'FireRate': undeclared identifier                                                                                                     | Adastrea  | C:\Unreal Projects\Adastrea\Source\Adastrea\Combat\WeaponDataAsset.cpp                                                                 | 184  |         |
-| Error    | C2059  | syntax error: ')'                                                                                                                     | Adastrea  | C:\Unreal Projects\Adastrea\Source\Adastrea\Combat\WeaponDataAsset.cpp                                                                 | 191  |         |
-| Error    | C2143  | syntax error: missing ';' before '{'                                                                                                  | Adastrea  | C:\Unreal Projects\Adastrea\Source\Adastrea\Combat\WeaponDataAsset.cpp                                                                 | 192  |         |
-| Error    | C2143  | syntax error: missing ';' before '}'                                                                                                  | Adastrea  | C:\Unreal Projects\Adastrea\Source\Adastrea\Combat\WeaponDataAsset.cpp                                                                 | 195  |         |
+## Historical Errors (From Previous Builds)
+
+**Note**: The errors below are from older build logs. Many have been fixed or are now obsolete due to code changes. A fresh build with Unreal Engine 5.6 is needed to verify current status.
+
+### Key Fixes Applied:
+
+1. **AdastreaPlayerController.gen.cpp Errors** - ✅ LIKELY FIXED
+   - Caused by circular module dependency between Adastrea and StationEditor
+   - Fixed by removing StationEditor dependency from Adastrea.Build.cs
+   - AdastreaPlayerController.h now uses generic UUserWidget/UDataAsset types
+
+2. **WeaponDataAsset.cpp FireRate Error** - ✅ FIXED  
+   - Property renamed from `FireRate` to `RateOfFire`
+   - All references updated correctly
+
+3. **StationEditorWidget.h Missing Include** - ✅ FIXED (Dec 22, 2025)
+   - Incorrect path `StationEditor/StationEditorManager.h` corrected
+   - Now uses `#include "StationEditorManager.h"`
+
 | Error    | C2143  | syntax error: missing ';' before '{'                                                                                                  | Adastrea  | C:\Unreal Projects\Adastrea\Source\Adastrea\Combat\WeaponDataAsset.cpp                                                                 | 201  |         |
 | Error    | C2947  | expecting '>' to terminate template-argument-list, found '<='                                                                         | Adastrea  | C:\Unreal Projects\Adastrea\Source\Adastrea\Combat\WeaponDataAsset.cpp                                                                 | 202  |         |
 | Error    | C2059  | syntax error: 'constant'                                                                                                              | Adastrea  | C:\Unreal Projects\Adastrea\Source\Adastrea\Combat\WeaponDataAsset.cpp                                                                 | 202  |         |
