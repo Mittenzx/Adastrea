@@ -2,8 +2,6 @@
 # Script to download and setup only Unreal Engine build tools (not the full engine)
 # This includes UnrealBuildTool, UnrealHeaderTool, and necessary build scripts
 
-set -e
-
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 UE_TOOLS_DIR="${SCRIPT_DIR}/UnrealBuildTools"
 UE_VERSION="5.6"
@@ -29,14 +27,21 @@ clone_build_tools() {
     
     if [ -d "${UE_TOOLS_DIR}" ]; then
         echo "UnrealBuildTools directory already exists at: ${UE_TOOLS_DIR}"
-        read -p "Remove and re-download? (y/N): " -n 1 -r
-        echo
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            echo "Removing existing directory..."
+        
+        # Detect non-interactive environments (CI/CD) and avoid blocking
+        if [ -n "${CI:-}" ] || [ "${UE_TOOLS_NON_INTERACTIVE:-0}" -eq 1 ] || [ ! -t 0 ]; then
+            echo "Non-interactive mode detected; removing existing directory automatically..."
             rm -rf "${UE_TOOLS_DIR}"
         else
-            echo "Using existing UnrealBuildTools directory."
-            return 0
+            read -p "Remove and re-download? (y/N): " -n 1 -r
+            echo
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                echo "Removing existing directory..."
+                rm -rf "${UE_TOOLS_DIR}"
+            else
+                echo "Using existing UnrealBuildTools directory."
+                return 0
+            fi
         fi
     fi
     
@@ -55,25 +60,16 @@ clone_build_tools() {
     # Configure sparse checkout to get only build tools
     echo "Configuring sparse checkout (build tools only)..."
     cat > .git/info/sparse-checkout << EOF
-# Build tools and scripts
+# Build tools and scripts (includes BatchFiles, Build.version, README.md)
 Engine/Build/
 Engine/Binaries/DotNET/
 Engine/Binaries/ThirdParty/DotNet/
 Engine/Source/Programs/UnrealBuildTool/
 Engine/Source/Programs/Shared/
 
-# Build batch files
-Engine/Build/BatchFiles/
-
 # Minimal config files needed for build
 Engine/Config/BaseEngine.ini
 Engine/Config/BasePlatforms.ini
-
-# Build version info
-Engine/Build/Build.version
-
-# Documentation for build process
-Engine/Build/README.md
 EOF
     
     # Fetch only the specified paths

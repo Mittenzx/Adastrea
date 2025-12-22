@@ -2,8 +2,6 @@
 # Script to build Adastrea using Unreal Build Tools (UBT) only
 # This uses the minimal build tools instead of full engine source
 
-set -e
-
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 UE_TOOLS_DIR="${SCRIPT_DIR}/UnrealBuildTools"
 PROJECT_FILE="${SCRIPT_DIR}/Adastrea.uproject"

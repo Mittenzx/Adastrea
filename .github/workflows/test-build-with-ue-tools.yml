@@ -102,9 +102,15 @@ jobs:
           echo "Project modules:"
           ls -la Source/
       
+      - name: Cache Unreal Build Tools
+        uses: actions/cache@v3
+        with:
+          path: UnrealBuildTools
+          key: ue-buildtools-${{ env.UE_VERSION }}-${{ runner.os }}-${{ hashFiles('UnrealBuildTools/Engine/Build/Build.version') }}
+          restore-keys: |
+            ue-buildtools-${{ env.UE_VERSION }}-${{ runner.os }}-
+      
       - name: Setup Unreal Build Tools
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "=========================================="
           echo "Setting up Unreal Build Tools"
@@ -139,14 +145,6 @@ jobs:
           echo ""
           echo "Remaining disk space:"
           df -h
-      
-      - name: Cache Unreal Build Tools
-        uses: actions/cache@v3
-        with:
-          path: UnrealBuildTools
-          key: ue-buildtools-${{ env.UE_VERSION }}-${{ runner.os }}-${{ hashFiles('UnrealBuildTools/Engine/Build/Build.version') }}
-          restore-keys: |
-            ue-buildtools-${{ env.UE_VERSION }}-${{ runner.os }}-
       
       - name: Build UnrealBuildTool
         run: |

@@ -7,31 +7,6 @@ import os
 import subprocess
 import sys
 
-def run_command(cmd, description):
-    """Run a command and check if it succeeds"""
-    print(f"\n{'='*60}")
-    print(f"Testing: {description}")
-    print(f"Command: {cmd}")
-    print('='*60)
-    
-    result = subprocess.run(
-        cmd, 
-        shell=True, 
-        capture_output=True, 
-        text=True
-    )
-    
-    print(result.stdout)
-    if result.stderr:
-        print("STDERR:", result.stderr)
-    
-    if result.returncode == 0:
-        print(f"✓ {description} - PASSED")
-        return True
-    else:
-        print(f"✗ {description} - FAILED (exit code: {result.returncode})")
-        return False
-
 def test_scripts_exist():
     """Test that all necessary scripts exist"""
     scripts = [
@@ -73,6 +48,8 @@ def test_script_syntax():
     all_valid = True
     for script in scripts:
         if os.path.exists(script):
+            # Note: shell=True is used here for bash -n syntax validation.
+            # The script filename is hardcoded, not from user input, so this is safe.
             result = subprocess.run(
                 f"bash -n {script}",
                 shell=True,
