@@ -41,7 +41,6 @@ public class AdastreaDirectorEditor : ModuleRules
 				"Slate",
 				"SlateCore",
 				"UnrealEd",
-				"EditorStyle",
 				"ToolMenus",
 				"Projects",
 				"Json",

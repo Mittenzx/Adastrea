@@ -535,11 +535,7 @@ FText ASpaceship::GetShipName() const
     }
     
     // Otherwise, use the actor's label or name
-    FString ActorName = GetActorLabel();
-    if (ActorName.IsEmpty())
-    {
-        ActorName = GetName();
-    }
+    FString ActorName = GetName();
     
     return FText::FromString(ActorName);
 }

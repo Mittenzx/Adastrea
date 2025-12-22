@@ -1,4 +1,5 @@
 #include "Ships/SpaceshipDataAsset.h"
+#include "Misc/DataValidation.h"
 #include "AdastreaLog.h"
 
 USpaceshipDataAsset::USpaceshipDataAsset()

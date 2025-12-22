@@ -2,8 +2,10 @@
 
 #include "SceneContextCapture.h"
 #include "AdastreaDirectorModule.h"
+#if WITH_EDITOR
 #include "LevelEditor.h"
 #include "Editor.h"
+#endif
 #include "Engine/World.h"
 #include "Engine/Level.h"
 #include "GameFramework/Actor.h"
@@ -15,10 +17,13 @@
 #include "IImageWrapper.h"
 #include "IImageWrapperModule.h"
 #include "EngineUtils.h"
+#if WITH_EDITOR
 #include "Engine/Selection.h"
+#endif
 #include "RenderingThread.h"
 #include "RenderCommandFence.h"
 
+#if WITH_EDITOR
 FString USceneContextCapture::CaptureViewportScreenshot()
 {
 	TArray<uint8> ImageData;
@@ -252,7 +257,7 @@ FString USceneContextCapture::QueryScene(const FString& FiltersJson)
 
 		if (bMatches && !LabelContains.IsEmpty())
 		{
-			if (!Actor->GetActorLabel().Contains(LabelContains))
+			if (!Actor->GetName().Contains(LabelContains))
 			{
 				bMatches = false;
 			}
@@ -306,6 +311,32 @@ FString USceneContextCapture::GetSelectedActorsSummary()
 
 	return OutputString;
 }
+#else
+FString USceneContextCapture::CaptureViewportScreenshot()
+{
+	return TEXT("");
+}
+
+bool USceneContextCapture::CaptureViewportToImage(TArray<uint8>& OutImageData, int32& OutWidth, int32& OutHeight)
+{
+	return false;
+}
+
+FString USceneContextCapture::GetSceneSummary(int32 PageSize)
+{
+	return TEXT("{}");
+}
+
+FString USceneContextCapture::QueryScene(const FString& FiltersJson)
+{
+	return TEXT("[]");
+}
+
+FString USceneContextCapture::GetSelectedActorsSummary()
+{
+	return TEXT("[]");
+}
+#endif
 
 TSharedPtr<FJsonObject> USceneContextCapture::SerializeActor(AActor* Actor)
 {
@@ -317,7 +348,7 @@ TSharedPtr<FJsonObject> USceneContextCapture::SerializeActor(AActor* Actor)
 	TSharedPtr<FJsonObject> ActorObj = MakeShared<FJsonObject>();
 	
 	ActorObj->SetStringField(TEXT("name"), Actor->GetName());
-	ActorObj->SetStringField(TEXT("label"), Actor->GetActorLabel());
+	ActorObj->SetStringField(TEXT("label"), Actor->GetName());
 	ActorObj->SetStringField(TEXT("class"), Actor->GetClass()->GetName());
 
 	// Location

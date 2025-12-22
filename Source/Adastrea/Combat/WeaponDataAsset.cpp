@@ -1,6 +1,7 @@
 // Copyright (c) 2025 Mittenzx. Licensed under MIT.
 
 #include "Combat/WeaponDataAsset.h"
+#include "Misc/DataValidation.h"
 #include "AdastreaLog.h"
 
 UWeaponDataAsset::UWeaponDataAsset()
@@ -238,7 +239,7 @@ EDataValidationResult UWeaponDataAsset::IsDataValid(FDataValidationContext& Cont
     }
     else
     {
-        UE_LOG(LogAdastreaCombat, Warning, TEXT("WeaponDataAsset %s failed validation with %d errors"), *WeaponName.ToString(), ValidationErrors.Num());
+        UE_LOG(LogAdastreaCombat, Warning, TEXT("WeaponDataAsset %s failed validation"), *WeaponName.ToString());
     }
 
     return Result;

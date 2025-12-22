@@ -1,6 +1,7 @@
 // Copyright (c) 2025 Mittenzx. Licensed under MIT.
 
 #include "Factions/FactionDataAsset.h"
+#include "Misc/DataValidation.h"
 #include "AdastreaLog.h"
 
 UFactionDataAsset::UFactionDataAsset()

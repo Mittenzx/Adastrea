@@ -1,6 +1,7 @@
 // Copyright (c) 2025 Mittenzx. Licensed under MIT.
 
 #include "SectorGeneratorConfig.h"
+#include "Misc/DataValidation.h"
 
 USectorGeneratorConfig::USectorGeneratorConfig()
 	: NamingTheme(ESectorNamingTheme::Greek)
@@ -144,7 +145,7 @@ EDataValidationResult USectorGeneratorConfig::IsDataValid(FDataValidationContext
 	TArray<FText> ConfigErrors;
 	if (!ValidateConfiguration(ConfigErrors))
 	{
-		ValidationErrors.Append(ConfigErrors);
+		ConfigErrors.Append(ConfigErrors);
 		Result = EDataValidationResult::Invalid;
 	}
 

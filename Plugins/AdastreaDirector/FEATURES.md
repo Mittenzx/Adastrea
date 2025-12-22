@@ -242,7 +242,7 @@ Production-ready stability with extensive test coverage.
 
 **Unreal Engine Versions:**
 - ✅ UE 4.27
-- ✅ UE 5.0, 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7
+- ✅ UE 5.0, 5.1, 5.2, 5.3, 5.4, 5.5, 5.6
 
 ## 💼 Use Cases
 

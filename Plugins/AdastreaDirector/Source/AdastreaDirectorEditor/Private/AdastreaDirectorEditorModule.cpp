@@ -13,9 +13,10 @@
 #include "Widgets/Text/STextBlock.h"
 #include "Styling/AppStyle.h"
 #include "ToolMenus.h"
+
 #if WITH_EDITOR
-#include "Editor/WorkspaceMenuStructure/Public/WorkspaceMenuStructure.h"
-#include "Editor/WorkspaceMenuStructure/Public/WorkspaceMenuStructureModule.h"
+	#include "Editor/WorkspaceMenuStructure/Public/WorkspaceMenuStructure.h"
+	#include "Editor/WorkspaceMenuStructure/Public/WorkspaceMenuStructureModule.h"
 #endif
 
 // Define custom log category for AdastreaDirectorEditor

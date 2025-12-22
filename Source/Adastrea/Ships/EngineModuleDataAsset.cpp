@@ -1,6 +1,7 @@
 // Copyright (c) 2025 Mittenzx. Licensed under MIT.
 
 #include "Ships/EngineModuleDataAsset.h"
+#include "Misc/DataValidation.h"
 
 UEngineModuleDataAsset::UEngineModuleDataAsset()
 {

@@ -1,5 +1,6 @@
 #include "Quest/QuestDataAsset.h"
 #include "AdastreaLog.h"
+#include "Misc/DataValidation.h"
 
 UQuestDataAsset::UQuestDataAsset()
 {
@@ -92,3 +93,105 @@ bool UQuestDataAsset::CheckPrerequisites() const
     
     return true;
 }
+
+int32 UQuestDataAsset::GetTotalRewardValue() const
+{
+    int32 TotalValue = Rewards.Credits;
+    
+    // Add value of item rewards (simplified - would need item data asset lookup)
+    for (const auto& ItemReward : Rewards.ItemRewards)
+    {
+        // For now, assume each item is worth 100 credits
+        TotalValue += ItemReward.Value * 100;
+    }
+    
+    return TotalValue;
+}
+
+FText UQuestDataAsset::GetDifficultyText() const
+{
+    if (Difficulty <= 2)
+    {
+        return FText::FromString(TEXT("Easy"));
+    }
+    else if (Difficulty <= 5)
+    {
+        return FText::FromString(TEXT("Medium"));
+    }
+    else if (Difficulty <= 8)
+    {
+        return FText::FromString(TEXT("Hard"));
+    }
+    else
+    {
+        return FText::FromString(TEXT("Very Hard"));
+    }
+}
+
+FText UQuestDataAsset::GetQuestTypeDisplayName(EQuestType Type)
+{
+    switch (Type)
+    {
+        case EQuestType::Delivery: return FText::FromString(TEXT("Delivery"));
+        case EQuestType::Exploration: return FText::FromString(TEXT("Exploration"));
+        case EQuestType::Combat: return FText::FromString(TEXT("Combat"));
+        case EQuestType::Escort: return FText::FromString(TEXT("Escort"));
+        case EQuestType::Mining: return FText::FromString(TEXT("Mining"));
+        case EQuestType::Research: return FText::FromString(TEXT("Research"));
+        case EQuestType::Diplomatic: return FText::FromString(TEXT("Diplomatic"));
+        case EQuestType::Rescue: return FText::FromString(TEXT("Rescue"));
+        case EQuestType::Sabotage: return FText::FromString(TEXT("Sabotage"));
+        case EQuestType::Custom: return FText::FromString(TEXT("Custom"));
+        default: return FText::FromString(TEXT("Unknown"));
+    }
+}
+
+FText UQuestDataAsset::GetObjectiveTypeDisplayName(EObjectiveType Type)
+{
+    switch (Type)
+    {
+        case EObjectiveType::ReachLocation: return FText::FromString(TEXT("Reach Location"));
+        case EObjectiveType::DeliverItem: return FText::FromString(TEXT("Deliver Item"));
+        case EObjectiveType::DestroyTarget: return FText::FromString(TEXT("Destroy Target"));
+        case EObjectiveType::CollectItems: return FText::FromString(TEXT("Collect Items"));
+        case EObjectiveType::ScanObject: return FText::FromString(TEXT("Scan Object"));
+        case EObjectiveType::TalkToNPC: return FText::FromString(TEXT("Talk to NPC"));
+        case EObjectiveType::ProtectTarget: return FText::FromString(TEXT("Protect Target"));
+        case EObjectiveType::SurviveTime: return FText::FromString(TEXT("Survive Time"));
+        case EObjectiveType::Custom: return FText::FromString(TEXT("Custom"));
+        default: return FText::FromString(TEXT("Unknown"));
+    }
+}
+
+#if WITH_EDITOR
+EDataValidationResult UQuestDataAsset::IsDataValid(FDataValidationContext& Context) const
+{
+    EDataValidationResult Result = EDataValidationResult::Valid;
+
+    if (QuestName.IsEmpty())
+    {
+        Context.AddError(FText::FromString(TEXT("Quest name cannot be empty")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    if (QuestID.IsNone())
+    {
+        Context.AddError(FText::FromString(TEXT("Quest ID cannot be empty")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    if (Difficulty < 1 || Difficulty > 10)
+    {
+        Context.AddError(FText::FromString(TEXT("Difficulty must be between 1 and 10")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    if (Objectives.Num() == 0)
+    {
+        Context.AddError(FText::FromString(TEXT("Quest must have at least one objective")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    return Result;
+}
+#endif

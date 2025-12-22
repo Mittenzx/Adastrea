@@ -31,16 +31,23 @@ public class AdastreaDirector : ModuleRules
 				"InputCore",
 				"Sockets",
 				"Networking",
-				"UnrealEd",          // For GEditor and editor functionality
-				"LevelEditor",       // For level editor access
 				"ImageWrapper",      // For PNG encoding
 				"RenderCore",        // For rendering thread operations
 				"RHI",               // For viewport pixel reading
-				"EditorScriptingUtilities",  // For editor scripting utilities
 				// ... add other public dependencies that you statically link with here ...
 			}
 		);
 			
+		if (Target.Type == TargetType.Editor)
+		{
+			PublicDependencyModuleNames.AddRange(
+				new string[]
+				{
+					"UnrealEd",          // For GEditor and editor functionality
+					"LevelEditor",       // For level editor access
+				}
+			);
+		}
 		
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
@@ -51,6 +58,18 @@ public class AdastreaDirector : ModuleRules
 				// ... add private dependencies that you statically link with here ...	
 			}
 		);
+		
+		if (Target.Type == TargetType.Editor)
+		{
+			PrivateDependencyModuleNames.AddRange(
+				new string[]
+				{
+					"AssetTools",        // For asset import and creation
+					"AssetRegistry",     // For asset queries
+					"EditorScriptingUtilities", // For EditorAssetLibrary
+				}
+			);
+		}
 		
 		
 		DynamicallyLoadedModuleNames.AddRange(

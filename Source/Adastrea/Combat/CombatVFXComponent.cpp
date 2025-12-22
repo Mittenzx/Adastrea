@@ -1,8 +1,13 @@
-#include "Combat/CombatVFXComponent.h"
+// Copyright Epic Games, Inc. All Rights Reserved.
+
+#include "CombatVFXComponent.h"
+#include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
-#include "Kismet/GameplayStatics.h"
+#include "Components/PrimitiveComponent.h"
 #include "Components/DecalComponent.h"
+#include "GameFramework/Actor.h"
 
 UCombatVFXComponent::UCombatVFXComponent()
 {

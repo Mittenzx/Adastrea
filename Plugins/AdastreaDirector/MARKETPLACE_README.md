@@ -6,7 +6,7 @@
 
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../LICENSE)
-[![UE Version](https://img.shields.io/badge/Unreal%20Engine-4.27%20--%205.7-orange.svg)](#compatibility)
+[![UE Version](https://img.shields.io/badge/Unreal%20Engine-4.27%20--%205.6-orange.svg)](#compatibility)
 [![Tests](https://img.shields.io/badge/tests-230%2B%20passing-brightgreen.svg)](#quality-assurance)
 
 ---

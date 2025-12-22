@@ -8,6 +8,8 @@
 #include "NiagaraComponent.h"
 #include "CombatVFXComponent.generated.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaCombat, Log, All);
+
 /**
  * Combat VFX Component
  * 

@@ -1,6 +1,7 @@
 // Copyright (c) 2025 Mittenzx. Licensed under MIT.
 
 #include "Ships/ShieldModuleDataAsset.h"
+#include "Misc/DataValidation.h"
 
 UShieldModuleDataAsset::UShieldModuleDataAsset()
 {

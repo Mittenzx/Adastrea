@@ -16,7 +16,9 @@ public class AdastreaTarget : TargetRules
 		bWarningsAsErrors = false;
 		
 		// Disable specific warning C4459 (variable name hiding in UE 5.6 engine code)
-		AdditionalCompilerArguments = "/wd4459";
+		AdditionalCompilerArguments = "/wd4459 /EHsc";
+		
+		bOverrideBuildEnvironment = true;
 		
 		ExtraModuleNames.Add("Adastrea");
 		ExtraModuleNames.Add("PlayerMods");

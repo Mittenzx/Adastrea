@@ -1,6 +1,7 @@
 // Copyright (c) 2025 Mittenzx. Licensed under MIT.
 
 #include "Ships/ShipModuleDataAsset.h"
+#include "Misc/DataValidation.h"
 
 UShipModuleDataAsset::UShipModuleDataAsset()
 {
