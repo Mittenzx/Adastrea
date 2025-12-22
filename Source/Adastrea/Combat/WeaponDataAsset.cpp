@@ -140,40 +140,40 @@ bool UWeaponDataAsset::IsSuitableForRole(const FString& Role) const
 }
 
 #if WITH_EDITOR
-EDataValidationResult UWeaponDataAsset::IsDataValid(TArray<FText>& ValidationErrors)
+EDataValidationResult UWeaponDataAsset::IsDataValid(FDataValidationContext& Context) const
 {
-    EDataValidationResult Result = EDataValidationResult::Valid;
+    EDataValidationResult Result = Super::IsDataValid(Context);
 
     // Validate basic info
     if (WeaponName.IsEmpty())
     {
-        ValidationErrors.Add(FText::FromString(TEXT("Weapon Name is empty")));
+        Context.AddError(FText::FromString(TEXT("Weapon Name is empty")));
         Result = EDataValidationResult::Invalid;
     }
 
     if (WeaponID.IsNone())
     {
-        ValidationErrors.Add(FText::FromString(TEXT("Weapon ID is not set")));
+        Context.AddError(FText::FromString(TEXT("Weapon ID is not set")));
         Result = EDataValidationResult::Invalid;
     }
 
     // Validate damage stats
     if (BaseDamage <= 0.0f)
     {
-        ValidationErrors.Add(FText::FromString(TEXT("Base Damage must be greater than 0")));
+        Context.AddError(FText::FromString(TEXT("Base Damage must be greater than 0")));
         Result = EDataValidationResult::Invalid;
     }
 
     // Validate range stats
     if (MaxRange <= 0.0f)
     {
-        ValidationErrors.Add(FText::FromString(TEXT("Max Range must be greater than 0")));
+        Context.AddError(FText::FromString(TEXT("Max Range must be greater than 0")));
         Result = EDataValidationResult::Invalid;
     }
 
     if (OptimalRange > MaxRange)
     {
-        ValidationErrors.Add(FText::Format(
+        Context.AddError(FText::Format(
             FText::FromString(TEXT("Optimal Range ({0}) cannot exceed Max Range ({1})")),
             FText::AsNumber(OptimalRange), FText::AsNumber(MaxRange)
         ));
@@ -183,14 +183,14 @@ EDataValidationResult UWeaponDataAsset::IsDataValid(TArray<FText>& ValidationErr
     // Validate fire rate
     if (RateOfFire <= 0.0f)
     {
-        ValidationErrors.Add(FText::FromString(TEXT("Rate Of Fire must be greater than 0")));
+        Context.AddError(FText::FromString(TEXT("Rate Of Fire must be greater than 0")));
         Result = EDataValidationResult::Invalid;
     }
 
     // Validate power requirements
     if (PowerPerShot < 0.0f)
     {
-        ValidationErrors.Add(FText::FromString(TEXT("Power Per Shot cannot be negative")));
+        Context.AddError(FText::FromString(TEXT("Power Per Shot cannot be negative")));
         Result = EDataValidationResult::Invalid;
     }
 
@@ -201,7 +201,7 @@ EDataValidationResult UWeaponDataAsset::IsDataValid(TArray<FText>& ValidationErr
     {
         if (ProjectileSpeed <= 0.0f)
         {
-            ValidationErrors.Add(FText::FromString(TEXT("Projectile Speed must be greater than 0 for projectile-based weapons")));
+            Context.AddError(FText::FromString(TEXT("Projectile Speed must be greater than 0 for projectile-based weapons")));
             Result = EDataValidationResult::Invalid;
         }
     }
@@ -211,7 +211,7 @@ EDataValidationResult UWeaponDataAsset::IsDataValid(TArray<FText>& ValidationErr
     {
         if (ReloadTime <= 0.0f)
         {
-            ValidationErrors.Add(FText::FromString(TEXT("Reload Time must be greater than 0 if weapon uses ammunition")));
+            Context.AddError(FText::FromString(TEXT("Reload Time must be greater than 0 if weapon uses ammunition")));
             Result = EDataValidationResult::Invalid;
         }
     }
@@ -221,13 +221,13 @@ EDataValidationResult UWeaponDataAsset::IsDataValid(TArray<FText>& ValidationErr
              WeaponType == EWeaponType::Torpedo)
     {
         // Warning only - some projectile weapons might be energy-based
-        ValidationErrors.Add(FText::FromString(TEXT("Warning: Projectile-based weapons typically use ammunition")));
+        Context.AddWarning(FText::FromString(TEXT("Projectile-based weapons typically use ammunition")));
     }
 
     // Validate mount size compatibility
     if (WeaponType == EWeaponType::Torpedo && MountSize != EWeaponMountSize::Capital)
     {
-        ValidationErrors.Add(FText::FromString(TEXT("Warning: Torpedoes should typically use Capital mounts")));
+        Context.AddWarning(FText::FromString(TEXT("Torpedoes should typically use Capital mounts")));
         // Just a warning, not invalid
     }
 

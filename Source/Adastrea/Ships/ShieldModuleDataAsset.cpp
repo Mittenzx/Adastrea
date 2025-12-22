@@ -105,49 +105,45 @@ float UShieldModuleDataAsset::GetFullRechargeTime() const
 }
 
 #if WITH_EDITOR
-EDataValidationResult UShieldModuleDataAsset::IsDataValid(TArray<FText>& ValidationErrors)
+EDataValidationResult UShieldModuleDataAsset::IsDataValid(FDataValidationContext& Context) const
 {
-	EDataValidationResult Result = Super::IsDataValid(ValidationErrors);
+	EDataValidationResult Result = Super::IsDataValid(Context);
 
 	// Validate shield-specific properties
 	if (MaxShieldStrength <= 0.0f)
 	{
-		ValidationErrors.Add(FText::FromString("Max Shield Strength must be greater than 0"));
+		Context.AddError(FText::FromString("Max Shield Strength must be greater than 0"));
 		Result = EDataValidationResult::Invalid;
 	}
 
 	if (RechargeRate < 0.0f)
 	{
-		ValidationErrors.Add(FText::FromString("Recharge Rate cannot be negative"));
+		Context.AddError(FText::FromString("Recharge Rate cannot be negative"));
 		Result = EDataValidationResult::Invalid;
 	}
 
 	if (RegenerationEfficiency < 0.0f || RegenerationEfficiency > 100.0f)
 	{
-		ValidationErrors.Add(FText::FromString("Regeneration Efficiency must be between 0 and 100"));
+		Context.AddError(FText::FromString("Regeneration Efficiency must be between 0 and 100"));
 		Result = EDataValidationResult::Invalid;
 	}
 
 	// Validate resistances
 	if (KineticResistance < 0.0f || KineticResistance > 100.0f)
 	{
-		ValidationErrors.Add(FText::FromString("Kinetic Resistance must be between 0 and 100"));
+		Context.AddError(FText::FromString("Kinetic Resistance must be between 0 and 100"));
 		Result = EDataValidationResult::Invalid;
 	}
 
 	if (ShieldCoverage < 0.0f || ShieldCoverage > 100.0f)
 	{
-		ValidationErrors.Add(FText::FromString("Shield Coverage must be between 0 and 100"));
+		Context.AddError(FText::FromString("Shield Coverage must be between 0 and 100"));
 		Result = EDataValidationResult::Invalid;
 	}
 
 	if (bAdaptiveShields && AdaptationRate < 1)
 	{
-		ValidationErrors.Add(FText::FromString("Adaptation Rate must be at least 1 for adaptive shields"));
-		if (Result == EDataValidationResult::Valid)
-		{
-			Result = EDataValidationResult::NotValidated;
-		}
+		Context.AddWarning(FText::FromString("Adaptation Rate must be at least 1 for adaptive shields"));
 	}
 
 	return Result;

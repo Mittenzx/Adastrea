@@ -144,6 +144,6 @@ public:
 	/**
 	 * Validate Data Asset properties
 	 */
-	virtual EDataValidationResult IsDataValid(TArray<FText>& ValidationErrors) override;
+	virtual EDataValidationResult IsDataValid(class FDataValidationContext& Context) const override;
 #endif
 };
