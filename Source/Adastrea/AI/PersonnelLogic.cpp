@@ -214,15 +214,10 @@ int32 UPersonnelLogic::MakePersonalityDrivenDecision_Implementation(const FStrin
 
 void UPersonnelLogic::OnTaskCompleted_Implementation(EPersonnelTask CompletedTask, bool Success)
 {
-    if (GEngine)
-    {
-        FColor MessageColor = Success ? FColor::Green : FColor::Yellow;
-        GEngine->AddOnScreenDebugMessage(-1, 3.0f, MessageColor,
-            FString::Printf(TEXT("%s: Completed %s - %s"),
-                PersonnelData ? *PersonnelData->PersonnelName.ToString() : TEXT("Unknown"),
-                *UEnum::GetValueAsString(CompletedTask),
-                Success ? TEXT("Success") : TEXT("Partial Success")));
-    }
+    UE_LOG(LogAdastrea, Log, TEXT("Personnel %s: Completed task %s - %s"),
+        PersonnelData ? *PersonnelData->PersonnelName.ToString() : TEXT("Unknown"),
+        *UEnum::GetValueAsString(CompletedTask),
+        Success ? TEXT("Success") : TEXT("Partial Success"));
 
     // Reset task timer
     HoursUntilTaskComplete = 0.0f;
@@ -306,15 +301,10 @@ void UPersonnelLogic::HandleStressChange_Implementation(float StressAmount)
             break;
     }
 
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 3.0f, 
-            ModifiedStress > 0 ? FColor::Orange : FColor::Green,
-            FString::Printf(TEXT("%s: Stress %s by %.1f"),
-                *PersonnelData->PersonnelName.ToString(),
-                ModifiedStress > 0 ? TEXT("increased") : TEXT("decreased"),
-                FMath::Abs(ModifiedStress)));
-    }
+    UE_LOG(LogAdastrea, Verbose, TEXT("Personnel %s: Stress %s by %.1f"),
+        *PersonnelData->PersonnelName.ToString(),
+        ModifiedStress > 0 ? TEXT("increased") : TEXT("decreased"),
+        FMath::Abs(ModifiedStress));
 
     // In real implementation, this would update morale/fatigue
     // through a runtime state manager

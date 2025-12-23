@@ -85,12 +85,12 @@ public:
     void WarmupPool();
 
 private:
-    /** Pool of inactive projectiles ready for reuse */
-    UPROPERTY()
+    /** Pool of inactive projectiles ready for reuse (GC tracked) */
+    UPROPERTY(Transient)
     TArray<AProjectile*> PooledProjectiles;
 
-    /** Currently active projectiles */
-    UPROPERTY()
+    /** Currently active projectiles in the world (GC tracked) */
+    UPROPERTY(Transient)
     TArray<AProjectile*> ActiveProjectiles;
 
     /** Total projectiles created (for statistics) */

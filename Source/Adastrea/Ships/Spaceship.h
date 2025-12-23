@@ -315,8 +315,8 @@ protected:
     virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif
 
-    // Saved reference to the walking pawn when controlling the ship
-    UPROPERTY()
+    /** Saved reference to the walking pawn when controlling the ship (GC tracked) */
+    UPROPERTY(Transient)
     APawn* SavedExternalPawn;
 
     // Movement input handlers
@@ -364,26 +364,26 @@ private:
     // Current rotation velocity for smooth rotation
     FRotator RotationVelocity;
 
-    // Input values for smooth interpolation
-    UPROPERTY()
+    /** Input values for smooth interpolation (transient runtime state) */
+    UPROPERTY(Transient)
     float ForwardInput;
-    UPROPERTY()
+    UPROPERTY(Transient)
     float RightInput;
-    UPROPERTY()
+    UPROPERTY(Transient)
     float UpInput;
-    UPROPERTY()
+    UPROPERTY(Transient)
     float YawInput;
-    UPROPERTY()
+    UPROPERTY(Transient)
     float PitchInput;
-    UPROPERTY()
+    UPROPERTY(Transient)
     float RollInput;
 
-    // Free look camera state
-    UPROPERTY()
+    /** Free look camera state (transient runtime state) */
+    UPROPERTY(Transient)
     FRotator FreeLookRotation;
     
-    // Double-click detection for camera reset
-    UPROPERTY()
+    /** Double-click detection for camera reset (transient runtime state) */
+    UPROPERTY(Transient)
     float LastFreeLookClickTime;
     
     // Throttle adjustment rate limiting
