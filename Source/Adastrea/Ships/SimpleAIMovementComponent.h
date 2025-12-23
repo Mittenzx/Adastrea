@@ -87,12 +87,12 @@ protected:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
-	// Current target location
-	UPROPERTY()
+	/** Current target location for AI movement */
+	UPROPERTY(Transient)
 	FVector TargetLocation;
 
-	// Cached reference to FloatingPawnMovement component for performance
-	UPROPERTY()
+	/** Cached reference to FloatingPawnMovement component for performance (GC tracked) */
+	UPROPERTY(Transient)
 	UFloatingPawnMovement* CachedMovementComponent;
 
 	/**

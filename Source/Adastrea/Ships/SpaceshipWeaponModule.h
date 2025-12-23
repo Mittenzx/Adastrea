@@ -1,3 +1,4 @@
-// Contents of SpaceshipWeaponModule.h
+#pragma once
 
-// ... existing code ...
+// Placeholder for SpaceshipWeaponModule class
+// TODO: Implement weapon module system
