@@ -42,6 +42,10 @@
 			"Name": "PythonScriptPlugin",
 			"Enabled": true,
 			"Optional": true
+		},
+		{
+			"Name": "EditorScriptingUtilities",
+			"Enabled": true
 		}
 	]
 }

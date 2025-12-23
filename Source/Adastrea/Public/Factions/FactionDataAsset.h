@@ -6,6 +6,75 @@
 #include "Engine/DataAsset.h"
 #include "FactionDataAsset.generated.h"
 
+// Forward declarations
+class UFactionDataAsset;
+
+/**
+ * Faction Trait structure
+ * Represents special characteristics or modifiers for a faction
+ */
+USTRUCT(BlueprintType)
+struct FFactionTrait
+{
+	GENERATED_BODY()
+
+	/** Display name of the trait */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Trait")
+	FText TraitName;
+
+	/** Description of the trait's effects */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Trait", meta=(MultiLine=true))
+	FText TraitDescription;
+
+	/** Unique identifier for the trait */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Trait")
+	FName TraitID;
+
+	/** Modifier value for gameplay effects */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Trait")
+	float ModifierValue;
+
+	FFactionTrait()
+		: TraitName(FText::FromString(TEXT("Unknown Trait")))
+		, TraitDescription(FText::FromString(TEXT("No description available.")))
+		, TraitID(NAME_None)
+		, ModifierValue(0.0f)
+	{}
+};
+
+/**
+ * Faction Relationship structure
+ * Represents diplomatic relationship between factions
+ */
+USTRUCT(BlueprintType)
+struct FFactionRelationship
+{
+	GENERATED_BODY()
+
+	/** The faction this relationship is with */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Relationship")
+	UFactionDataAsset* TargetFaction;
+
+	/** Type of relationship (Alliance, Trade Partner, Enemy, etc.) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Relationship")
+	FString RelationshipType;
+
+	/** Relationship strength (-100 to 100) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Relationship", meta=(ClampMin="-100", ClampMax="100"))
+	int32 RelationshipStrength;
+
+	/** Additional notes about the relationship */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Relationship", meta=(MultiLine=true))
+	FText Notes;
+
+	FFactionRelationship()
+		: TargetFaction(nullptr)
+		, RelationshipType(TEXT("Neutral"))
+		, RelationshipStrength(0)
+		, Notes(FText::GetEmpty())
+	{}
+};
+
 /**
  * Faction Data Asset
  * Data-driven configuration for political factions in Adastrea
@@ -71,6 +140,18 @@ public:
 	/** Technology level of this faction (1-10, affects available modules and equipment) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Faction Config", meta=(ClampMin="1", ClampMax="10"))
 	int32 TechnologyLevel;
+
+	// ====================
+	// Faction Traits and Relationships
+	// ====================
+
+	/** Traits that modify faction behavior and gameplay */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Faction Traits")
+	TArray<FFactionTrait> Traits;
+
+	/** Relationships with other factions */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Faction Diplomacy")
+	TArray<FFactionRelationship> Relationships;
 
 	// ====================
 	// Blueprint Functions
