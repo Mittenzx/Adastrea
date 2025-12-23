@@ -36,13 +36,16 @@ void UFactionLogic::InitializeAI_Implementation()
     {
         for (const FFactionRelationship& Relationship : FactionData->Relationships)
         {
-            if (Relationship.RelationshipStrength >= 75)
+            if (Relationship.TargetFaction)
             {
-                AddAlly(Relationship.TargetFaction->FactionID);
-            }
-            else if (Relationship.RelationshipStrength <= -75)
-            {
-                AddEnemy(Relationship.TargetFaction->FactionID);
+                if (Relationship.RelationshipStrength >= 75)
+                {
+                    AddAlly(Relationship.TargetFaction->FactionID);
+                }
+                else if (Relationship.RelationshipStrength <= -75)
+                {
+                    AddEnemy(Relationship.TargetFaction->FactionID);
+                }
             }
         }
     }
