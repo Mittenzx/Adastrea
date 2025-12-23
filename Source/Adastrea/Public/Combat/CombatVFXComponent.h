@@ -6,7 +6,7 @@
 #include "Combat/ImpactEffectDataAsset.h"
 #include "Combat/WeaponComponent.h"
 #include "NiagaraComponent.h"
-#include "Public/AdastreaLog.h"
+#include "AdastreaLog.h"
 #include "CombatVFXComponent.generated.h"
 
 /**

@@ -733,7 +733,7 @@ void UFactionLogic::UpdateStrengthRatings()
 // Internal Helper Functions
 // ====================
 
-UFactionDataAsset* UFactionLogic::GetLoadedFaction(const TSoftObjectPtr<UFactionDataAsset>& SoftPtr)
+UFactionDataAsset* UFactionLogic::GetLoadedFaction(const TSoftObjectPtr<UFactionDataAsset>& SoftPtr) const
 {
     // Early exit if the soft pointer is null or empty
     if (SoftPtr.IsNull())

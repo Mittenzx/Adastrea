@@ -403,12 +403,13 @@ private:
      * @param SoftPtr The soft object pointer to load
      * @return The loaded faction asset, or nullptr if not valid
      */
-    UFactionDataAsset* GetLoadedFaction(const TSoftObjectPtr<UFactionDataAsset>& SoftPtr);
+    UFactionDataAsset* GetLoadedFaction(const TSoftObjectPtr<UFactionDataAsset>& SoftPtr) const;
 
     /**
      * Cache of loaded faction assets to avoid repeated LoadSynchronous calls
      * Maps soft object paths to loaded faction pointers
+     * Marked mutable to allow caching in const methods
      */
     UPROPERTY()
-    TMap<FSoftObjectPath, TObjectPtr<UFactionDataAsset>> LoadedFactionCache;
+    mutable TMap<FSoftObjectPath, TObjectPtr<UFactionDataAsset>> LoadedFactionCache;
 };
