@@ -735,7 +735,8 @@ void UFactionLogic::UpdateStrengthRatings()
 
 UFactionDataAsset* UFactionLogic::GetLoadedFaction(const TSoftObjectPtr<UFactionDataAsset>& SoftPtr)
 {
-    if (!SoftPtr.IsValid() && !SoftPtr.IsPending())
+    // Early exit if the soft pointer is null or empty
+    if (SoftPtr.IsNull())
     {
         return nullptr;
     }
