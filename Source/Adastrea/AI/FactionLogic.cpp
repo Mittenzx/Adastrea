@@ -36,8 +36,8 @@ void UFactionLogic::InitializeAI_Implementation()
     {
         for (const FFactionRelationship& Relationship : FactionData->Relationships)
         {
-            // Load the target faction if it's a valid soft reference
-            if (UFactionDataAsset* TargetFaction = Relationship.TargetFaction.LoadSynchronous())
+            // Load the target faction using cached helper
+            if (UFactionDataAsset* TargetFaction = GetLoadedFaction(Relationship.TargetFaction))
             {
                 if (Relationship.RelationshipStrength >= 75)
                 {
@@ -452,8 +452,8 @@ void UFactionLogic::SelectActionTargets_Implementation(EFactionStrategyType Acti
     
     for (const FFactionRelationship& Relationship : FactionData->Relationships)
     {
-        // Load the target faction if it's a valid soft reference
-        UFactionDataAsset* TargetFaction = Relationship.TargetFaction.LoadSynchronous();
+        // Load the target faction using cached helper
+        UFactionDataAsset* TargetFaction = GetLoadedFaction(Relationship.TargetFaction);
         if (!TargetFaction)
         {
             continue;
@@ -622,8 +622,8 @@ int32 UFactionLogic::GetRelationshipWith(FName OtherFactionID) const
     
     for (const FFactionRelationship& Relationship : FactionData->Relationships)
     {
-        // Load the target faction if it's a valid soft reference
-        UFactionDataAsset* TargetFaction = Relationship.TargetFaction.LoadSynchronous();
+        // Load the target faction using cached helper
+        UFactionDataAsset* TargetFaction = GetLoadedFaction(Relationship.TargetFaction);
         if (TargetFaction && TargetFaction->FactionID == OtherFactionID)
         {
             return Relationship.RelationshipStrength;
@@ -727,4 +727,38 @@ void UFactionLogic::UpdateStrengthRatings()
     {
         EconomicStrength = FMath::Max(0.0f, EconomicStrength - 1.0f);
     }
+}
+
+// ====================
+// Internal Helper Functions
+// ====================
+
+UFactionDataAsset* UFactionLogic::GetLoadedFaction(const TSoftObjectPtr<UFactionDataAsset>& SoftPtr)
+{
+    if (!SoftPtr.IsValid() && !SoftPtr.IsPending())
+    {
+        return nullptr;
+    }
+
+    FSoftObjectPath Path = SoftPtr.ToSoftObjectPath();
+    
+    // Check cache first
+    if (TObjectPtr<UFactionDataAsset>* CachedFaction = LoadedFactionCache.Find(Path))
+    {
+        if (CachedFaction->IsValid())
+        {
+            return CachedFaction->Get();
+        }
+        // Remove invalid cached entry
+        LoadedFactionCache.Remove(Path);
+    }
+
+    // Load and cache the faction
+    UFactionDataAsset* LoadedFaction = SoftPtr.LoadSynchronous();
+    if (LoadedFaction)
+    {
+        LoadedFactionCache.Add(Path, LoadedFaction);
+    }
+
+    return LoadedFaction;
 }

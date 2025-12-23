@@ -85,8 +85,7 @@ struct FFactionRelationship
 	FText Notes;
 
 	FFactionRelationship()
-		: TargetFaction(nullptr)
-		, RelationshipType(EFactionRelationshipType::Neutral)
+		: RelationshipType(EFactionRelationshipType::Neutral)
 		, RelationshipStrength(0)
 		, Notes(FText::GetEmpty())
 	{}
