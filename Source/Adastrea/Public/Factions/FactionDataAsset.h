@@ -6,8 +6,22 @@
 #include "Engine/DataAsset.h"
 #include "FactionDataAsset.generated.h"
 
-// Forward declarations
-class UFactionDataAsset;
+/**
+ * Faction relationship type enum
+ * Defines the type of diplomatic relationship between factions
+ */
+UENUM(BlueprintType)
+enum class EFactionRelationshipType : uint8
+{
+	Neutral UMETA(DisplayName = "Neutral"),
+	Alliance UMETA(DisplayName = "Alliance"),
+	TradePartner UMETA(DisplayName = "Trade Partner"),
+	Enemy UMETA(DisplayName = "Enemy"),
+	Rival UMETA(DisplayName = "Rival"),
+	Protectorate UMETA(DisplayName = "Protectorate"),
+	Vassal UMETA(DisplayName = "Vassal"),
+	NonAggressionPact UMETA(DisplayName = "Non-Aggression Pact")
+};
 
 /**
  * Faction Trait structure
@@ -42,6 +56,9 @@ struct FFactionTrait
 	{}
 };
 
+// Forward declaration for soft reference
+class UFactionDataAsset;
+
 /**
  * Faction Relationship structure
  * Represents diplomatic relationship between factions
@@ -51,13 +68,13 @@ struct FFactionRelationship
 {
 	GENERATED_BODY()
 
-	/** The faction this relationship is with */
+	/** The faction this relationship is with (soft reference for safety) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Relationship")
-	UFactionDataAsset* TargetFaction;
+	TSoftObjectPtr<UFactionDataAsset> TargetFaction;
 
-	/** Type of relationship (Alliance, Trade Partner, Enemy, etc.) */
+	/** Type of relationship */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Relationship")
-	FString RelationshipType;
+	EFactionRelationshipType RelationshipType;
 
 	/** Relationship strength (-100 to 100) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Relationship", meta=(ClampMin="-100", ClampMax="100"))
@@ -69,7 +86,7 @@ struct FFactionRelationship
 
 	FFactionRelationship()
 		: TargetFaction(nullptr)
-		, RelationshipType(TEXT("Neutral"))
+		, RelationshipType(EFactionRelationshipType::Neutral)
 		, RelationshipStrength(0)
 		, Notes(FText::GetEmpty())
 	{}

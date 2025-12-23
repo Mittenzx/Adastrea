@@ -36,15 +36,16 @@ void UFactionLogic::InitializeAI_Implementation()
     {
         for (const FFactionRelationship& Relationship : FactionData->Relationships)
         {
-            if (Relationship.TargetFaction)
+            // Load the target faction if it's a valid soft reference
+            if (UFactionDataAsset* TargetFaction = Relationship.TargetFaction.LoadSynchronous())
             {
                 if (Relationship.RelationshipStrength >= 75)
                 {
-                    AddAlly(Relationship.TargetFaction->FactionID);
+                    AddAlly(TargetFaction->FactionID);
                 }
                 else if (Relationship.RelationshipStrength <= -75)
                 {
-                    AddEnemy(Relationship.TargetFaction->FactionID);
+                    AddEnemy(TargetFaction->FactionID);
                 }
             }
         }
@@ -451,12 +452,14 @@ void UFactionLogic::SelectActionTargets_Implementation(EFactionStrategyType Acti
     
     for (const FFactionRelationship& Relationship : FactionData->Relationships)
     {
-        if (!Relationship.TargetFaction)
+        // Load the target faction if it's a valid soft reference
+        UFactionDataAsset* TargetFaction = Relationship.TargetFaction.LoadSynchronous();
+        if (!TargetFaction)
         {
             continue;
         }
         
-        FName TargetID = Relationship.TargetFaction->FactionID;
+        FName TargetID = TargetFaction->FactionID;
         int32 RelationshipValue = Relationship.RelationshipStrength;
         
         // Filter based on action type
@@ -619,7 +622,9 @@ int32 UFactionLogic::GetRelationshipWith(FName OtherFactionID) const
     
     for (const FFactionRelationship& Relationship : FactionData->Relationships)
     {
-        if (Relationship.TargetFaction && Relationship.TargetFaction->FactionID == OtherFactionID)
+        // Load the target faction if it's a valid soft reference
+        UFactionDataAsset* TargetFaction = Relationship.TargetFaction.LoadSynchronous();
+        if (TargetFaction && TargetFaction->FactionID == OtherFactionID)
         {
             return Relationship.RelationshipStrength;
         }
