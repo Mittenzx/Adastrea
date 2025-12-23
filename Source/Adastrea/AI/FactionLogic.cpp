@@ -36,15 +36,16 @@ void UFactionLogic::InitializeAI_Implementation()
     {
         for (const FFactionRelationship& Relationship : FactionData->Relationships)
         {
-            if (Relationship.TargetFaction)
+            // Load the target faction using cached helper
+            if (UFactionDataAsset* TargetFaction = GetLoadedFaction(Relationship.TargetFaction))
             {
                 if (Relationship.RelationshipStrength >= 75)
                 {
-                    AddAlly(Relationship.TargetFaction->FactionID);
+                    AddAlly(TargetFaction->FactionID);
                 }
                 else if (Relationship.RelationshipStrength <= -75)
                 {
-                    AddEnemy(Relationship.TargetFaction->FactionID);
+                    AddEnemy(TargetFaction->FactionID);
                 }
             }
         }
@@ -451,12 +452,14 @@ void UFactionLogic::SelectActionTargets_Implementation(EFactionStrategyType Acti
     
     for (const FFactionRelationship& Relationship : FactionData->Relationships)
     {
-        if (!Relationship.TargetFaction)
+        // Load the target faction using cached helper
+        UFactionDataAsset* TargetFaction = GetLoadedFaction(Relationship.TargetFaction);
+        if (!TargetFaction)
         {
             continue;
         }
         
-        FName TargetID = Relationship.TargetFaction->FactionID;
+        FName TargetID = TargetFaction->FactionID;
         int32 RelationshipValue = Relationship.RelationshipStrength;
         
         // Filter based on action type
@@ -619,7 +622,9 @@ int32 UFactionLogic::GetRelationshipWith(FName OtherFactionID) const
     
     for (const FFactionRelationship& Relationship : FactionData->Relationships)
     {
-        if (Relationship.TargetFaction && Relationship.TargetFaction->FactionID == OtherFactionID)
+        // Load the target faction using cached helper
+        UFactionDataAsset* TargetFaction = GetLoadedFaction(Relationship.TargetFaction);
+        if (TargetFaction && TargetFaction->FactionID == OtherFactionID)
         {
             return Relationship.RelationshipStrength;
         }
@@ -722,4 +727,39 @@ void UFactionLogic::UpdateStrengthRatings()
     {
         EconomicStrength = FMath::Max(0.0f, EconomicStrength - 1.0f);
     }
+}
+
+// ====================
+// Internal Helper Functions
+// ====================
+
+UFactionDataAsset* UFactionLogic::GetLoadedFaction(const TSoftObjectPtr<UFactionDataAsset>& SoftPtr) const
+{
+    // Early exit if the soft pointer is null or empty
+    if (SoftPtr.IsNull())
+    {
+        return nullptr;
+    }
+
+    FSoftObjectPath Path = SoftPtr.ToSoftObjectPath();
+    
+    // Check cache first
+    if (TObjectPtr<UFactionDataAsset>* CachedFaction = LoadedFactionCache.Find(Path))
+    {
+        if (CachedFaction->IsValid())
+        {
+            return CachedFaction->Get();
+        }
+        // Remove invalid cached entry
+        LoadedFactionCache.Remove(Path);
+    }
+
+    // Load and cache the faction
+    UFactionDataAsset* LoadedFaction = SoftPtr.LoadSynchronous();
+    if (LoadedFaction)
+    {
+        LoadedFactionCache.Add(Path, LoadedFaction);
+    }
+
+    return LoadedFaction;
 }

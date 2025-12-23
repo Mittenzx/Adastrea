@@ -6,9 +6,8 @@
 #include "Combat/ImpactEffectDataAsset.h"
 #include "Combat/WeaponComponent.h"
 #include "NiagaraComponent.h"
+#include "AdastreaLog.h"
 #include "CombatVFXComponent.generated.h"
-
-DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaCombat, Log, All);
 
 /**
  * Combat VFX Component

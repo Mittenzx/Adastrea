@@ -392,4 +392,24 @@ public:
     virtual void OnTickAI_Implementation(float DeltaTime) override;
     virtual EAIPriority EvaluateCurrentPriority_Implementation() override;
     virtual bool DecideNextAction_Implementation(EAIPriority CurrentPriority) override;
+
+private:
+    // ====================
+    // Internal Helper Functions
+    // ====================
+
+    /**
+     * Get a loaded faction asset from a soft reference, using cache to avoid repeated loads
+     * @param SoftPtr The soft object pointer to load
+     * @return The loaded faction asset, or nullptr if not valid
+     */
+    UFactionDataAsset* GetLoadedFaction(const TSoftObjectPtr<UFactionDataAsset>& SoftPtr) const;
+
+    /**
+     * Cache of loaded faction assets to avoid repeated LoadSynchronous calls
+     * Maps soft object paths to loaded faction pointers
+     * Marked mutable to allow caching in const methods
+     */
+    UPROPERTY()
+    mutable TMap<FSoftObjectPath, TObjectPtr<UFactionDataAsset>> LoadedFactionCache;
 };

@@ -15,7 +15,6 @@ public class StationEditor : ModuleRules
 		PublicIncludePaths.AddRange(new string[] 
 		{
 			"StationEditor",
-			"StationEditor/Public",
 			"Adastrea"  // For Stations/ includes
 		});
 
