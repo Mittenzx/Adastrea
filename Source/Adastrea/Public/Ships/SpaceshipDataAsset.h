@@ -332,5 +332,8 @@ public:
 
     /** Invalidate cache when properties change in editor */
     virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+    
+    /** Validate ship properties for configuration errors */
+    void ValidateShipProperties();
 #endif
 };

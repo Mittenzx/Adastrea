@@ -8,7 +8,9 @@ public class Adastrea : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 		
-		// Disable warnings as errors for UE 5.6 compatibility
+		// TODO [MVP]: Re-enable warnings as errors after addressing UE 5.6 compatibility warnings
+		// This is currently disabled which hides potential issues (Anti-Pattern #14)
+		// See: docs/development/SIMPLIFIED_BUILD_GUIDE.md for build configuration
 		bWarningsAsErrors = false;
 
 		// Expose public headers for cross-module includes

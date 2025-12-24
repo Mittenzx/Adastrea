@@ -482,5 +482,35 @@ void USpaceshipDataAsset::PostEditChangeProperty(FPropertyChangedEvent& Property
         UE_LOG(LogAdastrea, Verbose, TEXT("SpaceshipDataAsset: Property %s changed, invalidating ratings cache for %s"),
             *PropertyName.ToString(), *ShipName.ToString());
     }
+    
+    // Validate properties to catch configuration errors at edit-time
+    // This addresses Anti-Pattern #2 (Over-Engineering) and Technical Issue #4 (No validation)
+    ValidateShipProperties();
+}
+
+void USpaceshipDataAsset::ValidateShipProperties()
+{
+    // Basic validation - ensure required fields are set
+    // More comprehensive validation is handled by IsDataValid()
+    
+    // Validate hull strength is positive
+    if (HullStrength <= 0.0f)
+    {
+        UE_LOG(LogAdastrea, Warning, TEXT("SpaceshipDataAsset [%s]: HullStrength (%.2f) should be positive!"), 
+            *ShipName.ToString(), HullStrength);
+    }
+    
+    // Validate cargo capacity is non-negative
+    if (CargoCapacity < 0.0f)
+    {
+        UE_LOG(LogAdastrea, Warning, TEXT("SpaceshipDataAsset [%s]: CargoCapacity (%.2f) cannot be negative!"), 
+            *ShipName.ToString(), CargoCapacity);
+    }
+    
+    // Validate ship name is set
+    if (ShipName.IsEmpty())
+    {
+        UE_LOG(LogAdastrea, Warning, TEXT("SpaceshipDataAsset: ShipName is empty! Please provide a ship name."));
+    }
 }
 #endif
