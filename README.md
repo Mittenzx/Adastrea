@@ -98,32 +98,32 @@ Before building the project, it's **highly recommended** to run our automated se
 
 ```bash
 # Basic validation
-./SetupCheck.sh
+./Tools/SetupCheck.sh
 
 # Validation with build folder cleanup
-./SetupCheck.sh --clean
+./Tools/SetupCheck.sh --clean
 
 # Validation with static analysis (requires cppcheck)
-./SetupCheck.sh --analyze
+./Tools/SetupCheck.sh --analyze
 
 # Display help
-./SetupCheck.sh --help
+./Tools/SetupCheck.sh --help
 ```
 
 #### Option 2: Python Script (Cross-Platform)
 
 ```bash
 # Basic validation (works on Windows, Linux, Mac)
-python SetupCheck.py
+python Tools/SetupCheck.py
 
 # Validation with static analysis (requires cppcheck)
-python SetupCheck.py --analyze
+python Tools/SetupCheck.py --analyze
 
 # Verbose output with detailed information
-python SetupCheck.py --verbose
+python Tools/SetupCheck.py --verbose
 
 # Display help
-python SetupCheck.py --help
+python Tools/SetupCheck.py --help
 ```
 
 The validation scripts check for:
@@ -147,10 +147,10 @@ The validation scripts check for:
 2. **Run Setup Validation** (Recommended):
    ```bash
    # Linux/Mac/WSL
-   ./SetupCheck.sh
+   ./Tools/SetupCheck.sh
    
    # Or cross-platform Python
-   python SetupCheck.py
+   python Tools/SetupCheck.py
    ```
    
    This validates your environment and identifies any missing prerequisites before building.

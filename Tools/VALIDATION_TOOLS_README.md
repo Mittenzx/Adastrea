@@ -4,6 +4,36 @@
 
 The `/Tools/` directory contains validation scripts and development utilities for the Adastrea project. These tools help maintain code quality, catch common errors, and enforce project standards.
 
+## Tool Categories
+
+### Core Validation Tools
+- `check_uproperty.py` - UPROPERTY macro validation for GC tracking
+- `check_null_safety.py` - Null pointer safety checks
+- `validate_naming.py` - Naming convention enforcement
+- `SchemaValidator.py` - YAML/JSON schema validation
+- `AdastreaAssetValidator.py` - Unreal asset validation
+- `ContentValidator.py` - Content validation framework
+
+### Data Management Tools
+- `YAMLtoDataAsset.py` - YAML to Unreal Data Asset importer
+- `GoogleSheetsIntegration.py` - Export/import via Google Sheets
+- `CSVIntegration.py` - CSV export/import functionality
+
+### Testing & Analysis Tools
+- `SmokeTest.py` - Comprehensive smoke testing
+- `ScreenshotTester.py` - Visual regression testing
+- `AutomationRunner.py` - Test automation runner
+- `analyze_project.py` - Project structure analysis
+
+### Setup & Configuration Tools
+- `SetupCheck.py` / `SetupCheck.sh` - Development environment validation
+- `CheckGeneratorEnvironment.py` - Generator environment diagnostics
+- `check_input_config.py` - Input configuration checker
+- `check_station_editor.py` - Station editor validation
+
+### Content Organization Tools
+- `organize_content.py` - Automated content organization
+
 ## Validation Scripts
 
 ### check_uproperty.py
@@ -199,6 +229,291 @@ Content/
 - After importing new assets
 - Before committing Content changes
 - Periodically to maintain organization
+
+---
+
+### SchemaValidator.py
+**Purpose**: Validates YAML/JSON data files against schema definitions.
+
+**Why It's Important**:
+- Ensures data integrity before import
+- Catches configuration errors early
+- Validates game content structure
+
+**Usage**:
+```bash
+# Validate single file
+python Tools/SchemaValidator.py --schema spaceship --data Assets/SpaceshipTemplates/Scout_Pathfinder.yaml
+
+# Batch validation
+python Tools/SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
+
+# Generate report
+python Tools/SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates --report validation_report.txt
+```
+
+**When to Run**:
+- Before importing YAML templates
+- After editing data templates
+- As part of content validation pipeline
+
+---
+
+### YAMLtoDataAsset.py
+**Purpose**: Import YAML templates as Unreal Engine Data Assets.
+
+**Why It's Important**:
+- Enables data-driven content creation
+- Batch imports game content
+- Works within Unreal Editor Python environment
+
+**Usage** (in Unreal Editor):
+```python
+# Run in Unreal Editor Python Console
+import YAMLtoDataAsset
+YAMLtoDataAsset.import_spaceship("Assets/SpaceshipTemplates/Scout_Pathfinder.yaml")
+```
+
+**When to Run**:
+- After validating YAML files with SchemaValidator
+- When importing new game content
+- For batch content creation
+
+---
+
+### GoogleSheetsIntegration.py
+**Purpose**: Export/import game data via Google Sheets for collaborative editing.
+
+**Usage**:
+```bash
+# Export spaceships
+python Tools/GoogleSheetsIntegration.py export --type spaceship --sheet-id YOUR_SHEET_ID
+
+# Import from Google Sheets
+python Tools/GoogleSheetsIntegration.py import --type spaceship --sheet-id YOUR_SHEET_ID
+```
+
+**When to Run**:
+- When collaborating on game data with non-technical team members
+- For bulk editing of game content
+
+---
+
+### CSVIntegration.py
+**Purpose**: Export/import game data via CSV files.
+
+**Usage**:
+```bash
+# Export to CSV
+python Tools/CSVIntegration.py export --type spaceship --output spaceships.csv
+
+# Import from CSV
+python Tools/CSVIntegration.py import --type spaceship --input spaceships.csv
+```
+
+**When to Run**:
+- For data manipulation in spreadsheet tools
+- When bulk editing game content
+
+---
+
+### AdastreaAssetValidator.py
+**Purpose**: Comprehensive Unreal Editor asset validation.
+
+**Usage** (in Unreal Editor):
+```python
+# Run in Unreal Editor Python Console
+import AdastreaAssetValidator
+AdastreaAssetValidator.validate_all_assets()
+```
+
+**What It Checks**:
+- Asset naming conventions
+- Data Asset required fields
+- Blueprint complexity
+- Material and texture specifications
+
+**When to Run**:
+- Before committing Content changes
+- After creating new assets
+- During quality assurance
+
+---
+
+### ContentValidator.py
+**Purpose**: Validates generated game content for correctness.
+
+**Usage** (in Unreal Editor):
+```python
+import ContentValidator
+ContentValidator.validate_all()
+```
+
+**What It Checks**:
+- Blueprint existence and compilation
+- Data Asset properties
+- Input system configuration
+- UI widgets
+
+**When to Run**:
+- After content generation
+- Before playtesting
+- During QA passes
+
+---
+
+### SmokeTest.py
+**Purpose**: Comprehensive smoke testing for all maps and levels.
+
+**Usage** (in Unreal Editor):
+```python
+import SmokeTest
+tester = SmokeTest.SmokeTestRunner()
+tester.run_all_tests()
+```
+
+**What It Checks**:
+- Loads every map/level
+- Detects missing assets
+- Captures warnings and errors
+- Generates detailed reports
+
+**When to Run**:
+- Before major releases
+- After significant Content changes
+- During QA testing
+
+---
+
+### ScreenshotTester.py
+**Purpose**: Automated screenshot capture and visual regression testing.
+
+**Usage** (in Unreal Editor):
+```python
+import ScreenshotTester
+tester = ScreenshotTester.ScreenshotTestRunner()
+tester.capture_screenshots()
+```
+
+**What It Checks**:
+- Visual regressions
+- Screenshot comparison against golden masters
+- Pixel-based difference detection
+
+**When to Run**:
+- Before visual updates
+- During QA testing
+- To establish visual baselines
+
+---
+
+### AutomationRunner.py
+**Purpose**: Test automation orchestration.
+
+**Usage**:
+```bash
+python Tools/AutomationRunner.py --suite full
+```
+
+**When to Run**:
+- In CI/CD pipelines
+- For comprehensive testing
+- Before releases
+
+---
+
+### SetupCheck.py / SetupCheck.sh
+**Purpose**: Validates development environment setup.
+
+**Usage**:
+```bash
+# Python version (cross-platform)
+python Tools/SetupCheck.py
+
+# Shell version (Linux/Mac)
+./Tools/SetupCheck.sh
+
+# With analysis
+python Tools/SetupCheck.py --analyze
+```
+
+**What It Checks**:
+- Unreal Engine installation
+- C++ compiler availability
+- Project structure
+- Required dependencies
+
+**When to Run**:
+- Initial project setup
+- After environment changes
+- When troubleshooting build issues
+
+---
+
+### CheckGeneratorEnvironment.py
+**Purpose**: Verifies content generator environment readiness.
+
+**Usage**:
+```bash
+python Tools/CheckGeneratorEnvironment.py
+```
+
+**What It Checks**:
+- Python dependencies
+- Unreal Python plugin
+- Generator prerequisites
+
+**When to Run**:
+- Before running content generators
+- When debugging generator issues
+
+---
+
+### analyze_project.py
+**Purpose**: Comprehensive project structure and compilation analysis.
+
+**Usage**:
+```bash
+python Tools/analyze_project.py
+```
+
+**What It Provides**:
+- Project structure overview
+- Compilation status
+- Improvement recommendations
+
+**When to Run**:
+- Project health checks
+- Architecture reviews
+- Planning refactoring
+
+---
+
+### check_input_config.py
+**Purpose**: Validates Enhanced Input system configuration.
+
+**Usage**:
+```bash
+python Tools/check_input_config.py
+```
+
+**When to Run**:
+- After modifying input mappings
+- When debugging input issues
+
+---
+
+### check_station_editor.py
+**Purpose**: Validates Station Editor system.
+
+**Usage**:
+```bash
+python Tools/check_station_editor.py
+```
+
+**When to Run**:
+- After station system changes
+- When debugging station issues
 
 ---
 

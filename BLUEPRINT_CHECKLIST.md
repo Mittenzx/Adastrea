@@ -318,7 +318,7 @@ python SetupCheck.py
 python TemplateGenerator.py
 
 # Import YAML to Data Assets
-python YAMLtoDataAsset.py
+python Tools/YAMLtoDataAsset.py
 
 # Procedural content generation
 python ProceduralGenerators.py
