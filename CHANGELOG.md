@@ -8,6 +8,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Agent Instructions Renewal - Trade Simulator MVP Focus** (2025-12-24)
+  - Comprehensive renewal of all GitHub Copilot agent instructions based on critical review analysis
+  - Project pivot to 12-week Trade Simulator MVP to validate market interest and secure funding
+  - Created `.github/instructions/trade-simulator-mvp.instructions.md` (16KB) - Complete MVP specification
+    * 12-week roadmap: Weeks 1-4 hardcoded prototype, 5-8 structured version, 9-12 polished demo
+    * MVP scope: Trading loop only (buy/sell/upgrade, 1-3 ships, 5-10 stations, 10-20 goods)
+    * Out of scope: Combat, exploration, quests, crew management (deferred until post-MVP)
+    * Validation gates: 60% "fun" Week 4 or pivot, 75% "fun" + 50% "would buy" Week 12
+  - Created `.github/instructions/anti-patterns.instructions.md` (12KB) - Lessons learned from Oct-Dec 2025
+    * 18 documented anti-patterns: Architecture before gameplay, over-engineering, feature creep, working in isolation, documentation obsession, untested "complete" code
+    * Each with wrong/correct approach and prevention guidance
+    * Covers all technical issues from CRITICAL_REVIEW_TECHNICAL_ISSUES.md
+  - Updated `.github/agents/adastrea-developer.agent.md` (26KB)
+    * Reoriented from "build everything" to "validate trading is fun"
+    * Added decision framework: "Is this MVP-critical?" → defer if no
+    * Existing systems marked: Use (Trading, Ship cargo), Defer (Combat, Quest, Personnel), Simplify (Faction pricing only)
+  - Updated `.github/agents/unreal-mcp.agent.md` (13KB)
+    * Trade simulator automation workflows: station setup, item batch creation, economy test scenarios
+    * Emphasis on rapid prototyping for MVP validation
+  - Updated `.github/copilot-instructions.md`
+    * Added critical MVP focus section at top with mandatory reading list
+    * Explicit out-of-scope feature list prevents scope creep
+  - Updated `.github/instructions/README.md`
+    * Reorganized with "START HERE" priority guidance
+    * Clear reading order for new contributors
+  - Philosophy change: From "build all 22 systems" to "validate ONE gameplay loop with players"
+  - All future agent assistance filters through MVP scope to prevent architectural over-engineering without gameplay validation
+
 - **GitHub Copilot Memory Review** (2025-12-20)
   - Comprehensive review of entire codebase for Copilot memory features
   - Stored 30+ critical patterns, conventions, and best practices in Copilot memory

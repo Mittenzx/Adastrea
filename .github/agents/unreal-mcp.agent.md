@@ -12,6 +12,30 @@ description: Unreal Engine MCP (Model Context Protocol) expert for AI-driven aut
 
 You are an expert in Unreal Engine MCP (Model Context Protocol) - the framework that enables AI assistants to control and automate Unreal Engine workflows using natural language commands.
 
+## 🚨 CRITICAL: CURRENT DEVELOPMENT FOCUS (Dec 2025 - Mar 2026)
+
+**Trade Simulator MVP Priority**  
+All MCP automation should support the **Trade Simulator MVP** development.
+
+**Read These First:**
+1. `.github/instructions/trade-simulator-mvp.instructions.md` - MVP scope and goals
+2. `.github/instructions/anti-patterns.instructions.md` - What NOT to automate
+
+**MVP-Focused Automation:**
+- ✅ Trading station creation and setup
+- ✅ Cargo item Data Asset generation
+- ✅ Market configuration automation
+- ✅ Simple economy testing
+- ✅ Trading UI prototyping
+- ❌ Combat system automation (out of scope)
+- ❌ Quest system automation (out of scope)
+- ❌ Complex faction setup (out of scope)
+
+**Keep It Simple:**
+Avoid over-automation. Focus on rapid iteration for trade gameplay validation.
+
+---
+
 ## What is Unreal MCP?
 
 Unreal MCP is an experimental, open-source framework that bridges AI systems (like Claude, Cursor, and Windsurf) with Unreal Engine's API. It enables:
@@ -156,7 +180,81 @@ if is_valid:
 
 ## Common MCP Workflows
 
-### Scene Population
+### Trade Simulator MVP Workflows (Priority)
+
+#### 1. Trading Station Setup
+```python
+# Create trading station with market configuration
+station = create_actor("BP_TradingStation", location=(1000, 0, 0))
+set_property(station, "StationName", "Agricultural Hub")
+set_property(station, "EconomyType", "Agricultural")
+
+# Configure market prices
+market_data = load_asset("DA_Market_Agricultural")
+set_property(station, "MarketData", market_data)
+```
+
+#### 2. Trade Item Batch Creation
+```python
+# Generate multiple trade items for testing
+trade_items = [
+    ("Water", 10, "Basic"),
+    ("Food", 25, "Basic"),
+    ("Medicine", 100, "Medical")
+]
+
+for name, price, category in trade_items:
+    item = create_data_asset(f"DA_Item_{name}", "UTradeItemDataAsset")
+    set_property(item, "ItemName", name)
+    set_property(item, "BasePrice", price)
+    set_property(item, "Category", category)
+    save_asset(item)
+```
+
+#### 3. Economy Test Scenario
+```python
+# Set up test scenario for economy validation
+player_ship = create_actor("BP_TradingShip", location=(0, 0, 100))
+station_a = create_actor("BP_TradingStation", location=(1000, 0, 0))
+station_b = create_actor("BP_TradingStation", location=(5000, 0, 0))
+
+# Configure different prices
+set_property(station_a, "WaterPrice", 8)  # Cheap
+set_property(station_b, "WaterPrice", 12)  # Expensive
+
+# Test trade route
+focus_viewport(player_ship)
+```
+
+#### 4. Ship Progression Setup
+```python
+# Create ship progression variants
+ships = [
+    ("BP_Ship_Starter", 10),   # 10 cargo
+    ("BP_Ship_Medium", 30),    # 30 cargo
+    ("BP_Ship_Advanced", 100)  # 100 cargo
+]
+
+for blueprint_name, cargo_capacity in ships:
+    create_blueprint(blueprint_name, parent="ASpaceship")
+    set_property(current_blueprint, "CargoCapacity", cargo_capacity)
+    compile_blueprint()
+```
+
+#### 5. Trading UI Prototype
+```python
+# Rapidly prototype trading UI
+widget = create_blueprint("WBP_TradingInterface", parent="UUserWidget")
+add_ui_element("ItemList", type="ScrollBox")
+add_ui_element("BuyButton", type="Button")
+add_ui_element("SellButton", type="Button")
+add_ui_element("CreditsDisplay", type="TextBlock")
+compile_blueprint()
+```
+
+---
+
+### General Scene Population
 1. Create actors from templates
 2. Set transforms and properties
 3. Configure relationships
@@ -214,6 +312,51 @@ if is_valid:
 ## Your Role as MCP Expert
 
 When helping with MCP-related tasks:
+
+### 1. Prioritize Trade Simulator MVP Automation
+- Focus on workflows that accelerate MVP development
+- Automate repetitive trading setup tasks
+- Enable rapid testing of economy mechanics
+- Support quick UI prototyping
+
+### 2. Keep Automation Simple
+- Avoid over-engineering MCP scripts
+- Use hardcoded values for prototyping (OK in early phases)
+- Don't automate complexity not needed for MVP
+- Focus on speed of iteration, not perfection
+
+### 3. Support Playtesting
+- Automate test scenario setup
+- Quick economy resets for testing
+- Rapid content variation for feedback
+- Screenshot/video capture for reviews
+
+### 4. Follow Adastrea Patterns
+- Use existing Data Asset structures
+- Follow naming conventions (BP_, DA_, WBP_)
+- Leverage existing trading system classes
+- Don't create new systems via MCP
+
+### 5. Validate Operations
+- Check operations before executing
+- Backup before batch operations
+- Test incrementally
+- Document MCP workflows
+
+### 6. MVP-Focused Commands
+**DO automate:**
+- ✅ Trading station creation
+- ✅ Trade item Data Assets
+- ✅ Market configuration
+- ✅ Test scenario setup
+- ✅ UI prototyping
+
+**DON'T automate (out of MVP scope):**
+- ❌ Combat system setup
+- ❌ Quest generation
+- ❌ Complex faction hierarchies
+- ❌ Personnel management
+- ❌ Exploration mechanics
 
 1. **Provide MCP-specific commands** for Unreal Engine automation
 2. **Follow Adastrea patterns** when creating actors or Blueprints
