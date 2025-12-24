@@ -113,7 +113,7 @@ One-page executive summary with:
 
 **Why**:
 - No playable demo (dealbreaker)
-- No market validation (2 years, 0 players)
+- No market validation (3 months, 0 players)
 - Unrealistic scope (22 systems, 100+ blueprints)
 - Wrong priorities (architecture > gameplay)
 - No unique value proposition
@@ -162,7 +162,7 @@ Like building a car factory before designing the car.
 
 | Metric | Value | Assessment |
 |--------|-------|------------|
-| **Development Time** | 2 years | ⏰ Long |
+| **Development Time** | 3 months | ⏰ Short but intense |
 | **C++ Code** | 33,000+ lines | ✅ Substantial |
 | **Documentation** | 74,127 lines | 🔴 2x code! |
 | **Python Scripts** | 68 files | ⚠️ Too many |
@@ -185,7 +185,7 @@ Like building a car factory before designing the car.
 - Assume content will come "later"
 
 **Result**: 0% success probability  
-**Reason**: Pattern hasn't worked for 2 years, won't magically work now
+**Reason**: Pattern hasn't worked for 3 months, won't magically work now
 
 ### Path B: Execute Recovery Plan
 - Cut 80% of scope
@@ -300,7 +300,7 @@ Like building a car factory before designing the car.
 ## 🎬 FINAL WORDS
 
 ### The Harsh Truth
-This project spent 2 years building the wrong thing. That's okay - many projects do. What matters is what happens next.
+This project spent 3 months building the wrong thing. That's okay - many projects do. What matters is what happens next.
 
 ### The Good News
 - Strong technical foundation exists

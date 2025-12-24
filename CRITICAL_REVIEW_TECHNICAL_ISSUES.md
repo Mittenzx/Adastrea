@@ -535,7 +535,7 @@ bWarningsAsErrors = false; // Disabled for 5.6 compatibility
 
 **Current State**: Building blind, will profile "later"
 
-**Risk**: May discover fundamental performance issues after 2 years of work.
+**Risk**: May discover fundamental performance issues after 3 months of work.
 
 ---
 

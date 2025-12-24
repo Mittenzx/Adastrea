@@ -505,7 +505,7 @@ If you read nothing else, do this:
 
 ### The Hard Truth
 
-You've spent 2 years building infrastructure for a game that doesn't exist. That's a sunk cost. Don't throw good time after bad.
+You've spent 3 months building infrastructure for a game that doesn't exist. That's a sunk cost. Don't throw good time after bad.
 
 ### The Good News
 
