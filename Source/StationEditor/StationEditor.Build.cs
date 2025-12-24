@@ -8,8 +8,9 @@ public class StationEditor : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 		
-		// Disable warnings as errors for UE 5.6 compatibility
-		bWarningsAsErrors = false;
+		// Warnings as errors enabled to catch potential issues early
+		// Engine-level warnings (C4459) are suppressed at target level via /wd4459
+		bWarningsAsErrors = true;
 
 		// Include paths for this module
 		PublicIncludePaths.AddRange(new string[] 
