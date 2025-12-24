@@ -1,5 +1,70 @@
 # Adastrea Architecture Overview
 
+**Current Phase**: Trade Simulator MVP (Dec 2025 - Mar 2026)  
+**Last Updated**: 2025-12-24
+
+> **Important**: This document describes the full architecture vision. For current MVP development, see the [MVP Focus](#mvp-focus-trade-simulator) section below.
+
+---
+
+## 🎯 MVP Focus (Trade Simulator)
+
+### Current Development Priority
+
+Adastrea is currently focused on a **12-week Trade Simulator MVP** to validate core gameplay before expanding to the full vision described in this document.
+
+**MVP Scope** (Dec 2025 - Mar 2026):
+- ✅ **Active Systems**: Trading, Basic Flight, Stations (docking), Simple Economy, Save/Load
+- ⚠️ **Simplified**: Faction (pricing only), Navigation (waypoints), Inventory (cargo only)
+- 🚫 **Deferred**: Combat, Exploration, Quests, Personnel, AI (except economy), Full diplomacy
+
+**See**: [MVP Documentation](docs/mvp/README.md) for detailed scope and [System Classification](docs/mvp/SYSTEM_CLASSIFICATION.md) for per-system status.
+
+### MVP Architecture (Simplified)
+
+```mermaid
+graph TB
+    subgraph "MVP Core"
+        Player[Player<br/>Spaceship]
+        Station[Trading Station<br/>Docking + Market]
+        Economy[Economy Manager<br/>Price Updates]
+        UI[Trading UI<br/>Buy/Sell Interface]
+    end
+    
+    subgraph "MVP Data"
+        ShipData[Ship Data<br/>Cargo Capacity]
+        ItemData[Trade Item Data<br/>Prices]
+        MarketData[Market Data<br/>Supply/Demand]
+    end
+    
+    Player -->|Dock| Station
+    Station -->|Open| UI
+    UI -->|Buy/Sell| Economy
+    Economy -->|Update| MarketData
+    Player -->|Stats| ShipData
+    Station -->|Prices| ItemData
+    Economy -->|Read| ItemData
+```
+
+**MVP Data Flow**:
+1. Player flies to station (basic movement)
+2. Player docks (trigger overlap)
+3. Trading UI opens (market prices displayed)
+4. Player buys/sells cargo (inventory management)
+5. Economy updates prices (simple supply/demand)
+6. Player upgrades ship (unlock larger cargo)
+7. Repeat with better margins
+
+**Validation Gates**:
+- Week 4: 60% "had fun" rating OR PIVOT
+- Week 12: 75% "had fun", 50% "would buy" → FUNDING READY
+
+---
+
+## Full Architecture Vision
+
+The sections below describe the **complete vision** for Adastrea. These systems exist in code but are **deferred until post-MVP validation**.
+
 This document provides a high-level overview of the Adastrea project architecture, code organization, and design patterns.
 
 ## Table of Contents
