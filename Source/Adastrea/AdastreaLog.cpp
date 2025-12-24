@@ -19,3 +19,4 @@ DEFINE_LOG_CATEGORY(LogAdastreaWay);
 DEFINE_LOG_CATEGORY(LogAdastreaInput);
 DEFINE_LOG_CATEGORY(LogAdastreaExploration);
 DEFINE_LOG_CATEGORY(LogAdastreaProceduralGen);
+DEFINE_LOG_CATEGORY(LogAdastreaDataAssetValidation);

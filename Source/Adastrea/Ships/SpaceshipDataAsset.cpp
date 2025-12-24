@@ -482,5 +482,38 @@ void USpaceshipDataAsset::PostEditChangeProperty(FPropertyChangedEvent& Property
         UE_LOG(LogAdastrea, Verbose, TEXT("SpaceshipDataAsset: Property %s changed, invalidating ratings cache for %s"),
             *PropertyName.ToString(), *ShipName.ToString());
     }
+    
+    // Validate properties to catch configuration errors at edit-time
+    // Helps avoid invalid ship configurations and improves designer experience
+    ValidateShipProperties();
+}
+
+void USpaceshipDataAsset::ValidateShipProperties()
+{
+    // Use the DataAssetValidation utilities for consistent validation
+    // More comprehensive validation is handled by IsDataValid()
+    
+    // Validate and auto-correct hull strength to be positive
+    if (HullStrength <= 0.0f)
+    {
+        UE_LOG(LogAdastrea, Warning, TEXT("SpaceshipDataAsset [%s]: HullStrength (%.2f) should be positive! Auto-correcting to 1.0."), 
+            *ShipName.ToString(), HullStrength);
+        HullStrength = 1.0f;
+    }
+    
+    // Validate and auto-correct cargo capacity to be non-negative
+    if (CargoCapacity < 0.0f)
+    {
+        UE_LOG(LogAdastrea, Warning, TEXT("SpaceshipDataAsset [%s]: CargoCapacity (%.2f) cannot be negative! Auto-correcting to 0.0."), 
+            *ShipName.ToString(), CargoCapacity);
+        CargoCapacity = 0.0f;
+    }
+    
+    // Validate ship name is set and provide default if empty
+    if (ShipName.IsEmpty())
+    {
+        UE_LOG(LogAdastrea, Warning, TEXT("SpaceshipDataAsset: ShipName is empty! Auto-assigning default name 'Unnamed Ship'."));
+        ShipName = FText::FromString(TEXT("Unnamed Ship"));
+    }
 }
 #endif

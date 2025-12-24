@@ -4,7 +4,47 @@
 [![Unreal Engine](https://img.shields.io/badge/Unreal%20Engine-5.x-blue.svg)](https://www.unrealengine.com/)
 [![Build Status](https://github.com/Mittenzx/Adastrea/actions/workflows/ue-build-example.yml/badge.svg)](https://github.com/Mittenzx/Adastrea/actions/workflows/ue-build-example.yml)
 
-> An open-world space flight game featuring exploration, combat, faction diplomacy, crew management, and dynamic trading economies.
+> **Current Focus**: Trade Simulator MVP (Dec 2025 - Mar 2026) - Building playable trading game to validate market interest
+
+---
+
+## 🚨 CRITICAL PROJECT UPDATE (December 24, 2025)
+
+**Project Status**: **PIVOTING TO MVP FOCUS**
+
+After comprehensive critical review, Adastrea is refocusing on a **Trade Simulator MVP** to validate gameplay before expanding scope.
+
+### What Happened
+
+- ✅ **Code**: 85% complete (33K lines, 22 systems)
+- ❌ **Playable Content**: 0% (no gameplay to test)
+- 📊 **Assessment**: Architecture-first approach led to over-engineering without validation
+
+### What's Changing
+
+**NEW FOCUS**: Build playable trading game in 12 weeks  
+**Core Loop**: Buy low → Fly → Sell high → Upgrade ship → Repeat
+
+**Scope Discipline**:
+- ✅ **Building**: Trading system, basic flight, stations, economy
+- 🚫 **Deferred**: Combat, exploration, quests, crew management (until post-MVP)
+
+**Validation Gates**:
+- Week 4: 60% "had fun" rating or pivot
+- Week 12: 75% "had fun", 50% "would buy" → Ready for funding
+
+### Critical Documents
+
+**Must Read Before Contributing**:
+1. 📊 [Critical Review Summary](CRITICAL_REVIEW_SUMMARY.md) - Honest assessment, why we're pivoting
+2. 📋 [Action Plan](CRITICAL_REVIEW_ACTION_PLAN.md) - 12-week recovery roadmap
+3. 🎯 [MVP Instructions](.github/instructions/trade-simulator-mvp.instructions.md) - What to build
+4. 🚫 [Anti-Patterns](.github/instructions/anti-patterns.instructions.md) - Lessons learned (18 mistakes to avoid)
+5. 📁 [MVP Documentation](docs/mvp/README.md) - Current phase details
+
+**Key Principle**: One polished gameplay loop beats ten half-finished systems.
+
+---
 
 ## 🆕 Important: Documentation Reorganization (December 2025)
 
