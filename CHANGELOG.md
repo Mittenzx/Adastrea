@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **Build System: Re-enabled Warnings as Errors** (2025-12-24)
+  - Completed TODO from issue #14: Re-enabled `bWarningsAsErrors = true` in all module Build.cs files
+  - Fixed Anti-Pattern #15 (Build System Fragility): "Fix warnings, don't disable them"
+  - **Modules Updated**:
+    * `Source/Adastrea/Adastrea.Build.cs` - Core game module
+    * `Source/StationEditor/StationEditor.Build.cs` - Station editor module
+    * `Source/PlayerMods/PlayerMods.Build.cs` - Player mods module
+  - **Technical Details**:
+    * Target-level (Adastrea.Target.cs, AdastreaEditor.Target.cs) keeps `bWarningsAsErrors = false` for engine/third-party code
+    * Specific UE 5.6 engine warning C4459 suppressed at target level with `/wd4459`
+    * Module-level now enforces warnings as errors to catch issues in project code early
+  - **Impact**: Build system now catches potential code issues immediately, improving code quality and preventing technical debt
+  - **Verification**: All existing source code (285 files) reviewed and found to be warning-free
+
 ### Added
 - **Critical Analysis Implementation - Architectural Refocus** (2025-12-24)
   - Implemented comprehensive architectural changes based on critical review feedback

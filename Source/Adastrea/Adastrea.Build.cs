@@ -8,10 +8,10 @@ public class Adastrea : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 		
-		// TODO [MVP]: Re-enable warnings as errors after addressing UE 5.6 compatibility warnings
-		// This is currently disabled which hides potential issues (Anti-Pattern #14)
-		// See: docs/development/SIMPLIFIED_BUILD_GUIDE.md for build configuration
-		bWarningsAsErrors = false;
+		// Warnings as errors enabled to catch potential issues early
+		// Engine-level warnings (C4459) are suppressed at target level via /wd4459
+		// See: Anti-Pattern #15 (Build System Fragility) - fix warnings, don't disable them
+		bWarningsAsErrors = true;
 
 		// Expose public headers for cross-module includes
 		// Add base "Adastrea" path to support folder-prefixed includes like "Stations/SpaceStationModule.h"
