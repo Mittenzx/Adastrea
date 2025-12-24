@@ -2,16 +2,42 @@
 
 This file provides GitHub Copilot with project-specific context, coding standards, and best practices for the Adastrea open-world space flight game built on Unreal Engine 5.x.
 
-> **NEW**: See `.github/instructions/unreal-directive-best-practices.md` for advanced Unreal Engine best practices from [UnrealDirective.com](https://unrealdirective.com/), and `UNREAL_DIRECTIVE_SUGGESTIONS.md` for comprehensive improvement suggestions specific to Adastrea.
+## 🚨 CRITICAL: CURRENT DEVELOPMENT FOCUS (Dec 2025 - Mar 2026)
+
+**READ THIS FIRST**: Based on comprehensive critical review (Dec 2025), Adastrea is pivoting to a **Trade Simulator MVP**.
+
+**Mandatory Reading Before ANY Work:**
+1. `.github/instructions/trade-simulator-mvp.instructions.md` - **PRIMARY FOCUS** for all development
+2. `.github/instructions/anti-patterns.instructions.md` - **LESSONS LEARNED** - must avoid these mistakes
+3. `CRITICAL_REVIEW_SUMMARY.md` - Why we're pivoting
+4. `CRITICAL_REVIEW_ACTION_PLAN.md` - 12-week recovery plan
+
+**Current Mandate:**
+- ✅ **DO**: Build trade simulator MVP (buy/sell/upgrade loop)
+- ❌ **DON'T**: Add combat, exploration, quests, or other systems
+- 🎯 **GOAL**: Playable 30-minute demo by Week 12 with 75% "fun" rating
+
+**All development priorities flow from the trade simulator MVP. Other features are explicitly out of scope until MVP validates market interest.**
+
+---
 
 ## Project Overview
 
-Adastrea is an open-world space flight game featuring exploration, combat, faction diplomacy, crew management, and dynamic trading economies. The project emphasizes:
+Adastrea is an open-world space flight game in early development. Currently focused on building a **minimum viable product (MVP)** centered on trading gameplay to validate market interest and secure funding.
+
+**Current Phase**: Trade Simulator MVP (Dec 2025 - Mar 2026)
+
+**Original Vision** (long-term): Exploration, combat, faction diplomacy, crew management, and dynamic trading economies.
+
+**Development Philosophy:**
+- **Gameplay First**: Fun, validated gameplay before infrastructure
 - **Data-Driven Design**: All game content uses Blueprint Data Assets
 - **Designer-Friendly**: Minimal C++ knowledge required for content creation
 - **Modular Architecture**: Independent systems that integrate seamlessly
 - **Blueprint First**: Full Blueprint exposure for all systems
 - **Performance-Conscious**: Following Unreal Directive optimization patterns
+
+> **NEW**: See `.github/instructions/unreal-directive-best-practices.md` for advanced Unreal Engine best practices from [UnrealDirective.com](https://unrealdirective.com/), and `UNREAL_DIRECTIVE_SUGGESTIONS.md` for comprehensive improvement suggestions specific to Adastrea.
 
 ## Technology Stack
 
