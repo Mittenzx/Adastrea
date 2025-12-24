@@ -169,7 +169,7 @@ stat unit         // Show frame time
 stat memory       // Show memory usage
 ```
 
-See: [Performance Measurement](PERFORMANCE_MEASUREMENT.md)
+See: [Performance Measurement](../development/PERFORMANCE_MEASUREMENT.md)
 
 ---
 
@@ -263,13 +263,13 @@ See: [Anti-Patterns Guide](../../.github/instructions/anti-patterns.instructions
 ## 📞 Getting Help
 
 ### "Build is broken"
-1. Check [Simplified Build Guide](SIMPLIFIED_BUILD_GUIDE.md)
+1. Check [Simplified Build Guide](../development/SIMPLIFIED_BUILD_GUIDE.md)
 2. Try regenerating project files
 3. Try clean build
 4. If >1 hour stuck, ask team
 
 ### "Performance is bad"
-1. Check [Performance Measurement](PERFORMANCE_MEASUREMENT.md)
+1. Check [Performance Measurement](../development/PERFORMANCE_MEASUREMENT.md)
 2. Run profiling tools
 3. Identify bottleneck
 4. If can't fix in 1 hour, ask team

@@ -111,6 +111,7 @@ void AAdastreaPlayerController::UpdatePerformanceMetrics(float DeltaTime)
     AverageFrameTime /= FrameTimeSamples.Num();
 
     // Get memory usage (approximate)
+    // Note: Include "HAL/PlatformMemory.h" to use FPlatformMemory
     FPlatformMemoryStats MemStats = FPlatformMemory::GetStats();
     MemoryUsageMB = MemStats.UsedPhysical / (1024.0f * 1024.0f);
 }

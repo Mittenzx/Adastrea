@@ -484,33 +484,36 @@ void USpaceshipDataAsset::PostEditChangeProperty(FPropertyChangedEvent& Property
     }
     
     // Validate properties to catch configuration errors at edit-time
-    // This addresses Anti-Pattern #2 (Over-Engineering) and Technical Issue #4 (No validation)
+    // Helps avoid invalid ship configurations and improves designer experience
     ValidateShipProperties();
 }
 
 void USpaceshipDataAsset::ValidateShipProperties()
 {
-    // Basic validation - ensure required fields are set
+    // Use the DataAssetValidation utilities for consistent validation
     // More comprehensive validation is handled by IsDataValid()
     
-    // Validate hull strength is positive
+    // Validate and auto-correct hull strength to be positive
     if (HullStrength <= 0.0f)
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("SpaceshipDataAsset [%s]: HullStrength (%.2f) should be positive!"), 
+        UE_LOG(LogAdastrea, Warning, TEXT("SpaceshipDataAsset [%s]: HullStrength (%.2f) should be positive! Auto-correcting to 1.0."), 
             *ShipName.ToString(), HullStrength);
+        HullStrength = 1.0f;
     }
     
-    // Validate cargo capacity is non-negative
+    // Validate and auto-correct cargo capacity to be non-negative
     if (CargoCapacity < 0.0f)
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("SpaceshipDataAsset [%s]: CargoCapacity (%.2f) cannot be negative!"), 
+        UE_LOG(LogAdastrea, Warning, TEXT("SpaceshipDataAsset [%s]: CargoCapacity (%.2f) cannot be negative! Auto-correcting to 0.0."), 
             *ShipName.ToString(), CargoCapacity);
+        CargoCapacity = 0.0f;
     }
     
-    // Validate ship name is set
+    // Validate ship name is set and provide default if empty
     if (ShipName.IsEmpty())
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("SpaceshipDataAsset: ShipName is empty! Please provide a ship name."));
+        UE_LOG(LogAdastrea, Warning, TEXT("SpaceshipDataAsset: ShipName is empty! Auto-assigning default name 'Unnamed Ship'."));
+        ShipName = FText::FromString(TEXT("Unnamed Ship"));
     }
 }
 #endif

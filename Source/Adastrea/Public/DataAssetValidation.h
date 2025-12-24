@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AdastreaLog.h"
 
 /**
  * Data Asset Validation Helper
@@ -11,23 +12,18 @@
  * at edit-time rather than runtime.
  * 
  * Addresses:
- * - Anti-Pattern #2: Over-Engineering (Data Assets with 50+ properties, no validation)
- * - Technical Issue #4: Over-Reliance on Data Assets (no validation until runtime)
+ * - Ensures Data Assets have valid configurations when edited
+ * - Provides automatic correction of invalid values
+ * - Reduces runtime bugs from invalid data
  * 
  * Usage in Data Asset classes:
  * 
  * #if WITH_EDITOR
+ * #include "DataAssetValidation.h"
+ * 
  * virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override
  * {
  *     Super::PostEditChangeProperty(PropertyChangedEvent);
- *     
- *     // Validate specific property
- *     if (PropertyChangedEvent.GetPropertyName() == GET_MEMBER_NAME_CHECKED(UMyDataAsset, MyProperty))
- *     {
- *         FDataAssetValidation::ClampValue(MyProperty, 0.0f, 100.0f, TEXT("MyProperty"));
- *     }
- *     
- *     // Or validate all properties
  *     ValidateAllProperties();
  * }
  * 
@@ -41,8 +37,8 @@
  * 
  * Benefits:
  * - Catches configuration errors in editor
+ * - Automatically corrects invalid values
  * - Provides clear error messages
- * - Reduces runtime bugs from invalid data
  * - Improves designer experience
  */
 namespace FDataAssetValidation
@@ -61,15 +57,15 @@ namespace FDataAssetValidation
 	{
 		if (Value < Min)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Data Asset Validation: %s was %.2f (below minimum %.2f), clamped to %.2f"), 
-				PropertyName, (float)Value, (float)Min, (float)Min);
+			UE_LOG(LogAdastreaDataAssetValidation, Warning, TEXT("Data Asset Validation: %s was %s (below minimum %s), clamped to %s"), 
+				PropertyName, *LexToString(Value), *LexToString(Min), *LexToString(Min));
 			Value = Min;
 			return true;
 		}
 		else if (Value > Max)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Data Asset Validation: %s was %.2f (above maximum %.2f), clamped to %.2f"), 
-				PropertyName, (float)Value, (float)Max, (float)Max);
+			UE_LOG(LogAdastreaDataAssetValidation, Warning, TEXT("Data Asset Validation: %s was %s (above maximum %s), clamped to %s"), 
+				PropertyName, *LexToString(Value), *LexToString(Max), *LexToString(Max));
 			Value = Max;
 			return true;
 		}
@@ -87,7 +83,7 @@ namespace FDataAssetValidation
 	{
 		if (Text.IsEmpty())
 		{
-			UE_LOG(LogTemp, Error, TEXT("Data Asset Validation: %s is empty! Please provide a value."), PropertyName);
+			UE_LOG(LogAdastreaDataAssetValidation, Error, TEXT("Data Asset Validation: %s is empty! Please provide a value."), PropertyName);
 			return false;
 		}
 		return true;
@@ -104,7 +100,7 @@ namespace FDataAssetValidation
 	{
 		if (String.IsEmpty())
 		{
-			UE_LOG(LogTemp, Error, TEXT("Data Asset Validation: %s is empty! Please provide a value."), PropertyName);
+			UE_LOG(LogAdastreaDataAssetValidation, Error, TEXT("Data Asset Validation: %s is empty! Please provide a value."), PropertyName);
 			return false;
 		}
 		return true;
@@ -122,7 +118,7 @@ namespace FDataAssetValidation
 	{
 		if (Array.Num() == 0)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Data Asset Validation: %s array is empty! Consider adding elements."), PropertyName);
+			UE_LOG(LogAdastreaDataAssetValidation, Warning, TEXT("Data Asset Validation: %s array is empty! Consider adding elements."), PropertyName);
 			return false;
 		}
 		return true;
@@ -140,7 +136,7 @@ namespace FDataAssetValidation
 	{
 		if (Pointer == nullptr)
 		{
-			UE_LOG(LogTemp, Error, TEXT("Data Asset Validation: %s is null! Please assign a reference."), PropertyName);
+			UE_LOG(LogAdastreaDataAssetValidation, Error, TEXT("Data Asset Validation: %s is null! Please assign a reference."), PropertyName);
 			return false;
 		}
 		return true;
@@ -158,7 +154,7 @@ namespace FDataAssetValidation
 	{
 		if (!IsValid(Object))
 		{
-			UE_LOG(LogTemp, Error, TEXT("Data Asset Validation: %s is not valid! Please assign a valid reference."), PropertyName);
+			UE_LOG(LogAdastreaDataAssetValidation, Error, TEXT("Data Asset Validation: %s is not valid! Please assign a valid reference."), PropertyName);
 			return false;
 		}
 		return true;
@@ -176,8 +172,8 @@ namespace FDataAssetValidation
 	{
 		if (Value <= 0)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Data Asset Validation: %s is %.2f (not positive)! Consider using a positive value."), 
-				PropertyName, (float)Value);
+			UE_LOG(LogAdastreaDataAssetValidation, Warning, TEXT("Data Asset Validation: %s is %s (not positive)! Consider using a positive value."), 
+				PropertyName, *LexToString(Value));
 			return false;
 		}
 		return true;
@@ -197,8 +193,8 @@ namespace FDataAssetValidation
 	{
 		if (ValueA >= ValueB)
 		{
-			UE_LOG(LogTemp, Error, TEXT("Data Asset Validation: %s (%.2f) should be less than %s (%.2f)!"), 
-				PropertyNameA, (float)ValueA, PropertyNameB, (float)ValueB);
+			UE_LOG(LogAdastreaDataAssetValidation, Error, TEXT("Data Asset Validation: %s (%s) should be less than %s (%s)!"), 
+				PropertyNameA, *LexToString(ValueA), PropertyNameB, *LexToString(ValueB));
 			return false;
 		}
 		return true;
@@ -215,12 +211,12 @@ namespace FDataAssetValidation
 	{
 		if (ErrorCount > 0)
 		{
-			UE_LOG(LogTemp, Error, TEXT("Data Asset Validation: %s has %d validation error(s)! Check the log for details."), 
+			UE_LOG(LogAdastreaDataAssetValidation, Error, TEXT("Data Asset Validation: %s has %d validation error(s)! Check the log for details."), 
 				AssetName, ErrorCount);
 		}
 		else
 		{
-			UE_LOG(LogTemp, Display, TEXT("Data Asset Validation: %s passed all validation checks."), AssetName);
+			UE_LOG(LogAdastreaDataAssetValidation, Display, TEXT("Data Asset Validation: %s passed all validation checks."), AssetName);
 		}
 	}
 }

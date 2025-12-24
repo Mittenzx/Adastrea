@@ -65,6 +65,9 @@ ADASTREA_API DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaExploration, Log, All);
 // Procedural generation system
 ADASTREA_API DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaProceduralGen, Log, All);
 
+// Data Asset validation system
+ADASTREA_API DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaDataAssetValidation, Log, All);
+
 /**
  * Validation Macros for Null Pointer and Actor Checks
  *

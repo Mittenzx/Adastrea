@@ -280,14 +280,14 @@ This document summarizes the implementation of changes based on the comprehensiv
 ## 📖 Critical Documents Reference
 
 **For Developers**:
-- [MVP Quick Reference](docs/reference/MVP_QUICK_REFERENCE.md) - Fast answers
-- [System Classification](docs/mvp/SYSTEM_CLASSIFICATION.md) - What to use/defer
-- [Build Guide](docs/development/SIMPLIFIED_BUILD_GUIDE.md) - How to build
-- [Performance Guide](docs/development/PERFORMANCE_MEASUREMENT.md) - How to measure
+- [MVP Quick Reference](../reference/MVP_QUICK_REFERENCE.md) - Fast answers
+- [System Classification](SYSTEM_CLASSIFICATION.md) - What to use/defer
+- [Build Guide](../development/SIMPLIFIED_BUILD_GUIDE.md) - How to build
+- [Performance Guide](../development/PERFORMANCE_MEASUREMENT.md) - How to measure
 
 **For Understanding Why**:
-- [Critical Review Summary](CRITICAL_REVIEW_SUMMARY.md) - Why we're pivoting
-- [Action Plan](CRITICAL_REVIEW_ACTION_PLAN.md) - 12-week roadmap
+- [Critical Review Summary](../../CRITICAL_REVIEW_SUMMARY.md) - Why we're pivoting
+- [Action Plan](../../CRITICAL_REVIEW_ACTION_PLAN.md) - 12-week roadmap
 - [Anti-Patterns](../../.github/instructions/anti-patterns.instructions.md) - Lessons learned
 - [MVP Instructions](../../.github/instructions/trade-simulator-mvp.instructions.md) - What to build
 
