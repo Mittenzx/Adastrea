@@ -6,24 +6,34 @@
 
 > An open-world space flight game featuring exploration, combat, faction diplomacy, crew management, and dynamic trading economies.
 
-## 🆕 Important: Documentation Consolidation (December 2025)
+## 🆕 Important: Documentation Reorganization (December 2025)
 
-**NEW Documentation:**
+**Major Documentation Update:**
+- 📁 **[docs/](docs/)** - All documentation now organized in structured folders
 - 📚 **[MASTER_DOCUMENTATION.md](MASTER_DOCUMENTATION.md)** - Complete documentation in one comprehensive file
 - 📊 **[CURRENT_STATUS.md](CURRENT_STATUS.md)** - Realistic project status (code 85% complete, content 10% complete)
-- 📁 **[Docs/archive/migrated/](Docs/archive/migrated/)** - Historical documents archived (21 files)
+- 🗑️ **Removed 80+ obsolete files** - Cleaned up duplicate and outdated documentation
 
 **⚠️ Reality Check**: The project is **code-complete but not content-complete**. C++ systems are implemented, but editor content (Blueprints, Data Assets, Maps, UI) needs to be created. See [CURRENT_STATUS.md](CURRENT_STATUS.md) for details.
 
-## 📖 [Visit the Wiki](wiki/Home.md) for Comprehensive Documentation
+## 📖 Documentation Navigation
 
 **New to Adastrea?** Multiple documentation options:
-- 📚 **[MASTER_DOCUMENTATION.md](MASTER_DOCUMENTATION.md)** - Complete documentation in one place ⭐ **NEW**
+- 📁 **[docs/](docs/)** - Browse organized documentation by category ⭐ **NEW**
+- 📚 **[MASTER_DOCUMENTATION.md](MASTER_DOCUMENTATION.md)** - Complete documentation in one file
+- 📊 **[DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)** - Complete documentation index
 - 🚀 [Quick Start Guide](wiki/Getting-Started/Quick-Start.md) - Get running in 10 minutes
 - 🎨 [Designer Onboarding](wiki/Getting-Started/Designer-Onboarding.md) - For non-programmers
 - 🎮 [Core Systems Overview](wiki/Core-Systems/README.md) - All 22+ game systems
 - 💻 [Developer Guides](wiki/Developer-Guides/Architecture.md) - Architecture and contributing
-- 📚 [Complete Documentation Index](DOCUMENTATION_INDEX.md) - Find any document
+
+**Documentation Categories:**
+- 📂 [docs/systems/](docs/systems/) - Game system documentation
+- 📂 [docs/development/](docs/development/) - Developer guides
+- 📂 [docs/setup/](docs/setup/) - Installation and setup
+- 📂 [docs/testing/](docs/testing/) - Testing documentation
+- 📂 [docs/content-generation/](docs/content-generation/) - Content creation tools
+- 📂 [docs/reference/](docs/reference/) - Quick references and cheatsheets
 
 ## Table of Contents
 
@@ -80,7 +90,7 @@ You can now build Adastrea using only the Unreal Engine build tools (~500MB) ins
 ./build_with_ue_tools.sh Development Linux
 ```
 
-See **[BUILD_WITH_UE_TOOLS.md](BUILD_WITH_UE_TOOLS.md)** for complete instructions.
+See **[BUILD_WITH_UE_TOOLS.md](docs/setup/BUILD_WITH_UE_TOOLS.md)** for complete instructions.
 
 **Perfect for:**
 - ✓ CI/CD pipelines
