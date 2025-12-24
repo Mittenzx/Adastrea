@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - **Build System: Re-enabled Warnings as Errors** (2025-12-24)
-  - Completed TODO from issue #14: Re-enabled `bWarningsAsErrors = true` in all module Build.cs files
+  - Completed internal TODO: Re-enabled `bWarningsAsErrors = true` in all module Build.cs files
   - Fixed Anti-Pattern #15 (Build System Fragility): "Fix warnings, don't disable them"
   - **Modules Updated**:
     * `Source/Adastrea/Adastrea.Build.cs` - Core game module
