@@ -57,16 +57,19 @@ Over-engineering adds complexity without value. Keep it simple until proven othe
 - Multiple guides for the same task
 - Documenting before validating
 - 500+ files in root directory
+- Creating new summary/status files in root for every change
 
 **✅ CORRECT APPROACH:**
 - Document only after feature is tested
 - Documentation equals or less than code volume
 - One authoritative guide per topic
 - Validate instructions work before publishing
-- Organized file structure
+- Organized file structure (use `docs/` folder)
+- **Update CHANGELOG.md instead of creating new root files**
+- Put documentation in appropriate subdirectories
 
 **Why This Matters:**
-Outdated documentation is worse than no documentation. Focus on working code first.
+Outdated documentation is worse than no documentation. Focus on working code first. Root directory clutter makes the project harder to navigate.
 
 ---
 
@@ -296,6 +299,7 @@ Without tests, you're constantly breaking things and not knowing it.
 ├── README2.md
 ├── QUICKSTART_V1.md
 ├── QUICKSTART_V2.md
+├── NEW_SUMMARY.md (created for every change)
 └── ... chaos
 ```
 
@@ -303,14 +307,24 @@ Without tests, you're constantly breaking things and not knowing it.
 ```
 /ProjectRoot
 ├── README.md (one, authoritative)
+├── CHANGELOG.md (update this, don't create new files)
 ├── docs/
+│   ├── development/
+│   ├── reference/
+│   └── systems/
 ├── scripts/
 ├── Source/
 └── Content/
 ```
 
+**Project Standard:**
+- **Use CHANGELOG.md for documenting changes** - don't create summary files in root
+- New documentation goes in `docs/` subdirectories
+- One README per directory maximum
+- Keep root directory minimal and organized
+
 **Why:**
-Repository chaos = contributor confusion. Keep it organized from day one.
+Repository chaos = contributor confusion. Keep it organized from day one. The critical review identified "500+ files in root" as a major problem.
 
 ---
 

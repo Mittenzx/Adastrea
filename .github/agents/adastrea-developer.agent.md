@@ -346,13 +346,27 @@ Content/
 
 ### Documentation Structure
 ```
-Assets/                      # System documentation
+docs/                        # Main documentation folder (NEW STANDARD)
+├── development/             # Development guides and workflows
+├── reference/               # Quick references and cheat sheets
+├── systems/                 # System-specific documentation
+├── setup/                   # Setup and installation guides
+└── testing/                 # Testing documentation
+
+Assets/                      # Legacy system documentation (being migrated)
 ├── *Guide.md               # Comprehensive system guides
 ├── *Templates.md           # Reference documentation
 ├── *Workflow.md            # Designer workflows
 ├── *SUMMARY.md             # Technical summaries
 └── *Templates/             # YAML template directories
 ```
+
+**IMPORTANT: File and Document Standards**
+- **Use CHANGELOG.md for documenting changes** - don't create new summary files in root
+- New documentation goes in `docs/` subdirectories, not root
+- Avoid root directory clutter (addresses critical review issue: "500+ files in root")
+- One README per directory maximum
+- See anti-patterns.instructions.md #3 and #13 for details
 
 ## Python Automation Tools
 

@@ -519,6 +519,18 @@ Blueprint uses results for gameplay
 - Don't commit personal settings or cache files
 - Use `.editorconfig` for consistent code formatting
 
+### File and Document Organization
+
+**CRITICAL: Avoid Root Directory Clutter**
+- **Use CHANGELOG.md for documenting changes** - don't create new summary files in root
+- New documentation goes in `docs/` subdirectories:
+  - `docs/development/` - Development guides and workflows
+  - `docs/reference/` - Quick references and cheat sheets
+  - `docs/systems/` - System-specific documentation
+- Keep root directory minimal (core docs only: README.md, CHANGELOG.md, CONTRIBUTING.md, etc.)
+- One README per directory maximum
+- This addresses the "500+ files in root" issue from critical review (see anti-patterns.instructions.md #13)
+
 ## Questions and Support
 
 - **For Designers**: See `Assets/DesignerOnboarding.md`
