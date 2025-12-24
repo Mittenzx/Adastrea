@@ -32,7 +32,7 @@ pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-pyt
 
 2. **Authenticate**:
    ```bash
-   python GoogleSheetsIntegration.py export --type spaceship --sheet-id YOUR_SHEET_ID
+   python Tools/GoogleSheetsIntegration.py export --type spaceship --sheet-id YOUR_SHEET_ID
    # Browser window opens for authentication
    ```
 
@@ -40,15 +40,15 @@ pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-pyt
 
 ```bash
 # 1. Export existing data to Google Sheets
-python GoogleSheetsIntegration.py export --type spaceship --sheet-id YOUR_SHEET_ID
+python Tools/GoogleSheetsIntegration.py export --type spaceship --sheet-id YOUR_SHEET_ID
 
 # 2. Edit data in Google Sheets
 
 # 3. Import updated data
-python GoogleSheetsIntegration.py import --type spaceship --sheet-id YOUR_SHEET_ID
+python Tools/GoogleSheetsIntegration.py import --type spaceship --sheet-id YOUR_SHEET_ID
 
 # 4. Validate changes
-python SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
+python Tools/SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
 ```
 
 ## Tools Overview
@@ -60,13 +60,13 @@ Validates game data against JSON Schema definitions.
 **Command Line:**
 ```bash
 # Validate single file
-python SchemaValidator.py --schema spaceship --data Assets/SpaceshipTemplates/Scout_Pathfinder.yaml
+python Tools/SchemaValidator.py --schema spaceship --data Assets/SpaceshipTemplates/Scout_Pathfinder.yaml
 
 # Validate directory
-python SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
+python Tools/SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
 
 # Generate report
-python SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates --report validation.txt
+python Tools/SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates --report validation.txt
 ```
 
 **Features:**
@@ -83,13 +83,13 @@ Primary interface for team collaboration and bulk editing.
 **Command Line:**
 ```bash
 # Export to Google Sheets
-python GoogleSheetsIntegration.py export --type spaceship --sheet-id YOUR_SHEET_ID
+python Tools/GoogleSheetsIntegration.py export --type spaceship --sheet-id YOUR_SHEET_ID
 
 # Import from Google Sheets
-python GoogleSheetsIntegration.py import --type spaceship --sheet-id YOUR_SHEET_ID
+python Tools/GoogleSheetsIntegration.py import --type spaceship --sheet-id YOUR_SHEET_ID
 
 # Custom sheet name
-python GoogleSheetsIntegration.py export --type spaceship --sheet-id YOUR_SHEET_ID --sheet-name "My Ships"
+python Tools/GoogleSheetsIntegration.py export --type spaceship --sheet-id YOUR_SHEET_ID --sheet-name "My Ships"
 ```
 
 **Features:**
@@ -106,13 +106,13 @@ Alternative for Excel and offline editing.
 **Command Line:**
 ```bash
 # Export to CSV
-python CSVIntegration.py export --type spaceship --output spaceships.csv
+python Tools/CSVIntegration.py export --type spaceship --output spaceships.csv
 
 # Import from CSV
-python CSVIntegration.py import --type spaceship --input spaceships.csv
+python Tools/CSVIntegration.py import --type spaceship --input spaceships.csv
 
 # Use TSV format
-python CSVIntegration.py export --type spaceship --output ships.tsv --delimiter $'\t'
+python Tools/CSVIntegration.py export --type spaceship --output ships.tsv --delimiter $'\t'
 ```
 
 **Features:**
@@ -181,10 +181,10 @@ See [DATA_MANAGEMENT_QUICK_REFERENCE.md](DATA_MANAGEMENT_QUICK_REFERENCE.md) for
 4. Validate and commit
 
 ```bash
-python GoogleSheetsIntegration.py export --type spaceship --sheet-id YOUR_SHEET_ID
+python Tools/GoogleSheetsIntegration.py export --type spaceship --sheet-id YOUR_SHEET_ID
 # Edit in Google Sheets...
-python GoogleSheetsIntegration.py import --type spaceship --sheet-id YOUR_SHEET_ID
-python SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
+python Tools/GoogleSheetsIntegration.py import --type spaceship --sheet-id YOUR_SHEET_ID
+python Tools/SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
 git add Assets/SpaceshipTemplates/
 git commit -m "Add new ships"
 ```
@@ -199,10 +199,10 @@ git commit -m "Add new ships"
 
 ```bash
 # Team lead
-python GoogleSheetsIntegration.py export --type spaceship --sheet-id YOUR_SHEET_ID
+python Tools/GoogleSheetsIntegration.py export --type spaceship --sheet-id YOUR_SHEET_ID
 # Share spreadsheet...
-python GoogleSheetsIntegration.py import --type spaceship --sheet-id YOUR_SHEET_ID
-python SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
+python Tools/GoogleSheetsIntegration.py import --type spaceship --sheet-id YOUR_SHEET_ID
+python Tools/SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
 git commit -m "Update ships from team review"
 ```
 
@@ -214,10 +214,10 @@ git commit -m "Update ships from team review"
 4. Validate
 
 ```bash
-python CSVIntegration.py export --type spaceship --output ships.csv
+python Tools/CSVIntegration.py export --type spaceship --output ships.csv
 # Edit ships.csv...
-python CSVIntegration.py import --type spaceship --input ships.csv
-python SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
+python Tools/CSVIntegration.py import --type spaceship --input ships.csv
+python Tools/SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
 ```
 
 ## Validation
@@ -249,7 +249,7 @@ This tells you:
 Generate detailed reports:
 
 ```bash
-python SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates --report validation.txt
+python Tools/SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates --report validation.txt
 ```
 
 Report includes:
@@ -313,23 +313,23 @@ token.pickle
 ```bash
 # Delete token and re-authenticate
 rm token.pickle
-python GoogleSheetsIntegration.py export --type spaceship --sheet-id YOUR_SHEET_ID
+python Tools/GoogleSheetsIntegration.py export --type spaceship --sheet-id YOUR_SHEET_ID
 ```
 
 ### Validation Errors
 
 ```bash
 # View detailed errors
-python SchemaValidator.py --schema spaceship --data path/to/file.yaml --verbose
+python Tools/SchemaValidator.py --schema spaceship --data path/to/file.yaml --verbose
 ```
 
 ### Import Failures
 
 ```bash
 # Import without validation to see issues
-python CSVIntegration.py import --type spaceship --input ships.csv --no-validate
+python Tools/CSVIntegration.py import --type spaceship --input ships.csv --no-validate
 # Then validate manually
-python SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
+python Tools/SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
 ```
 
 ## Advanced Usage
@@ -352,7 +352,7 @@ Add validation to CI/CD pipeline:
 ```yaml
 # .github/workflows/validate-data.yml
 - name: Validate spaceships
-  run: python SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
+  run: python Tools/SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
 ```
 
 ## Support and Contribution

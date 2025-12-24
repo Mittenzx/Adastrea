@@ -74,30 +74,30 @@ python CSVIntegration.py import --type trade_item --input items.tsv --delimiter 
 
 ```bash
 # Validate spaceship
-python SchemaValidator.py --schema spaceship --data Assets/SpaceshipTemplates/Scout_Pathfinder.yaml
+python Tools/SchemaValidator.py --schema spaceship --data Assets/SpaceshipTemplates/Scout_Pathfinder.yaml
 
 # Validate trade item
-python SchemaValidator.py --schema trade_item --data Assets/TradingTemplates/TradeItem_Platinum.yaml
+python Tools/SchemaValidator.py --schema trade_item --data Assets/TradingTemplates/TradeItem_Platinum.yaml
 ```
 
 ### Batch Validation
 
 ```bash
 # Validate all spaceships
-python SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
+python Tools/SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
 
 # Validate all trade items
-python SchemaValidator.py --schema trade_item --directory Assets/TradingTemplates
+python Tools/SchemaValidator.py --schema trade_item --directory Assets/TradingTemplates
 
 # Validate with custom file pattern
-python SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates --pattern "*.yaml"
+python Tools/SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates --pattern "*.yaml"
 ```
 
 ### Generate Validation Report
 
 ```bash
 # Save report to file
-python SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates --report validation_report.txt
+python Tools/SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates --report validation_report.txt
 
 # View report
 cat validation_report.txt
@@ -132,15 +132,15 @@ python CSVIntegration.py export --type spaceship --output ships.csv
 python CSVIntegration.py import --type spaceship --input ships.csv
 
 # 4. Validate changes
-python SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
+python Tools/SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
 ```
 
 ### Workflow 3: Quality Assurance
 
 ```bash
 # 1. Validate all asset types
-python SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates --report spaceship_validation.txt
-python SchemaValidator.py --schema trade_item --directory Assets/TradingTemplates --report trade_item_validation.txt
+python Tools/SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates --report spaceship_validation.txt
+python Tools/SchemaValidator.py --schema trade_item --directory Assets/TradingTemplates --report trade_item_validation.txt
 
 # 2. Review reports
 cat spaceship_validation.txt
@@ -149,7 +149,7 @@ cat trade_item_validation.txt
 # 3. Fix errors in Google Sheets or YAML files
 # 4. Re-validate
 
-python SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
+python Tools/SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
 ```
 
 ### Workflow 4: Team Collaboration
@@ -168,8 +168,8 @@ python GoogleSheetsIntegration.py import --type spaceship --sheet-id YOUR_SHEET_
 python GoogleSheetsIntegration.py import --type trade_item --sheet-id YOUR_SHEET_ID
 
 # Validate before committing
-python SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
-python SchemaValidator.py --schema trade_item --directory Assets/TradingTemplates
+python Tools/SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
+python Tools/SchemaValidator.py --schema trade_item --directory Assets/TradingTemplates
 
 # Commit to git
 git add Assets/
@@ -191,7 +191,7 @@ python GoogleSheetsIntegration.py export --type spaceship --sheet-id YOUR_SHEET_
 
 ```bash
 # View detailed validation errors
-python SchemaValidator.py --schema spaceship --data path/to/file.yaml --verbose
+python Tools/SchemaValidator.py --schema spaceship --data path/to/file.yaml --verbose
 
 # Check schema definitions
 cat Schemas/spaceship_schema.json | python -m json.tool
@@ -204,7 +204,7 @@ cat Schemas/spaceship_schema.json | python -m json.tool
 python CSVIntegration.py import --type spaceship --input ships.csv --no-validate
 
 # Then validate manually
-python SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
+python Tools/SchemaValidator.py --schema spaceship --directory Assets/SpaceshipTemplates
 ```
 
 ## File Locations

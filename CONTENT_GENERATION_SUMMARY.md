@@ -426,7 +426,7 @@ MasterContentGenerator.generate_all_content()
 
 ### Check Environment
 ```python
-import CheckGeneratorEnvironment
+import sys; sys.path.append("Tools"); import CheckGeneratorEnvironment
 CheckGeneratorEnvironment.check_all()
 ```
 
