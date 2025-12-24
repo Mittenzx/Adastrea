@@ -142,7 +142,7 @@ Sector Councils are the practical governance bodies for 200km x 200km regions of
 
 ```bash
 # Will be implemented in future update
-python YAMLtoDataAsset.py --type SectorCouncil --input CoreSystemsSector.yaml
+python Tools/YAMLtoDataAsset.py --type SectorCouncil --input CoreSystemsSector.yaml
 ```
 
 ## Customization Tips
