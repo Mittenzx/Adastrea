@@ -1,8 +1,33 @@
-# Trade Simulator MVP Documentation
+# MVP Documentation - Trade Simulator
 
 **Current Phase**: Week 1-4 (Hardcoded Prototype)  
-**Status**: Planning  
-**Last Updated**: 2025-12-24
+**Status**: Ready to implement  
+**Last Updated**: 2025-12-25
+
+---
+
+## 🚀 **START HERE: Phase 1 Implementation**
+
+**If you're starting Phase 1 work, follow these documents in order:**
+
+1. **[PHASE_1_IMPLEMENTATION_STEPS.md](PHASE_1_IMPLEMENTATION_STEPS.md)** ⭐ **PRIMARY GUIDE**
+   - Complete step-by-step implementation guide
+   - 14 detailed steps for Weeks 1-4
+   - Blueprint creation instructions
+   - Testing and validation procedures
+   - Playtest preparation
+   - GO/NO-GO decision criteria
+
+2. **[PHASE_1_CHECKLIST.md](PHASE_1_CHECKLIST.md)** ✅ **PROGRESS TRACKER**
+   - Day-by-day task checklist
+   - Track progress through Phase 1
+   - Validation checkboxes
+   - Success metrics tracking
+
+3. **[TRADING_MVP_INSPIRATION.md](../reference/TRADING_MVP_INSPIRATION.md)** 💡 **DESIGN REFERENCE**
+   - Freelancer simple model inspiration
+   - What to build vs. what NOT to build
+   - Success criteria and metrics
 
 ---
 
