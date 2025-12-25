@@ -965,31 +965,31 @@ After 30 minutes:
 #### Demo Package Checklist
 
 **Content**:
-- [x] 10 stations with varied economies
-- [x] 20+ trade items across price ranges
-- [x] 3 ships (Small, Medium, Large)
-- [x] Tutorial (5 minutes)
-- [x] Demo time limit (30 minutes)
+- [ ] 10 stations with varied economies
+- [ ] 20+ trade items across price ranges
+- [ ] 3 ships (Small, Medium, Large)
+- [ ] Tutorial (5 minutes)
+- [ ] Demo time limit (30 minutes)
 
 **Polish**:
-- [x] VFX for key moments (docking, purchase, upgrade)
-- [x] Sound effects for all actions
-- [x] Background music
-- [x] Smooth UI animations
-- [x] Clear visual feedback
+- [ ] VFX for key moments (docking, purchase, upgrade)
+- [ ] Sound effects for all actions
+- [ ] Background music
+- [ ] Smooth UI animations
+- [ ] Clear visual feedback
 
 **Technical**:
-- [x] 60 FPS on mid-range PC
-- [x] 0 crashes in 30 minutes
-- [x] <30 second load time
-- [x] Save/load works
-- [x] No major bugs
+- [ ] 60 FPS on mid-range PC
+- [ ] 0 crashes in 30 minutes
+- [ ] <30 second load time
+- [ ] Save/load works
+- [ ] No major bugs
 
 **Balance**:
-- [x] Clear progression (Small → Medium in 30 min)
-- [x] Varied trade routes (not all same profit margin)
-- [x] No exploits (no instant-rich schemes)
-- [x] Fun curve (starts slow, ramps up)
+- [ ] Clear progression (Small → Medium in 30 min)
+- [ ] Varied trade routes (not all same profit margin)
+- [ ] No exploits (no instant-rich schemes)
+- [ ] Fun curve (starts slow, ramps up)
 
 ---
 
