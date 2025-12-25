@@ -7,6 +7,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Trading System Architecture Documentation** (2025-12-25)
+  - Created comprehensive trading system architecture documentation
+  - **Problem Statement**: Define trading architecture and plan implementation for MVP #1 priority
+  - **Solution**: Two-tier documentation approach (architecture + implementation guide)
+  
+  **Documents Created**:
+  1. `docs/systems/TRADING_ARCHITECTURE.md` (23KB)
+     - Complete trading system architecture overview
+     - Core components: Trade Items, Markets, Transactions, AI Traders, Contracts
+     - Data flow diagrams and sequence diagrams
+     - MVP implementation phases (hardcoded → data assets → polished demo)
+     - Economy simulation (simple supply/demand model)
+     - Integration points with other systems
+     - Extension points for post-MVP features
+     - Testing strategy and success metrics
+  
+  2. `docs/mvp/TRADING_MVP_GUIDE.md` (29KB)
+     - Step-by-step 12-week implementation roadmap
+     - Phase 1 (Weeks 1-4): Hardcoded prototype with GO/NO-GO validation
+     - Phase 2 (Weeks 5-8): Data Asset conversion and economy manager
+     - Phase 3 (Weeks 9-12): Polish, tutorial, and 30-minute demo
+     - Detailed Blueprint creation guides
+     - Code samples for C++ components
+     - Testing checklists for each phase
+     - Common issues and troubleshooting
+  
+  **Key Architecture Decisions**:
+  - Data-driven design using Data Assets (UTradeItemDataAsset, UMarketDataAsset)
+  - Blueprint-first approach for designer accessibility
+  - Simple economy simulation (supply/demand without complex AI)
+  - Modular components (EconomyManager subsystem, TransactionManager)
+  - Clear MVP vs. deferred feature split (contracts and AI traders deferred)
+  
+  **Existing Code Documented**:
+  - Analyzed existing Trading/ directory (10 files, well-architected)
+  - TradeItemDataAsset: 11 categories, dynamic pricing, faction restrictions
+  - MarketDataAsset: 8 market types, 5 sizes, inventory management
+  - AITraderComponent: Exists but deferred for MVP (economy simulation only)
+  - TradeContractDataAsset: Exists but fully deferred (no missions in MVP)
+  - TradeTransaction: History tracking and analytics ready
+  
+  **Success Criteria Defined**:
+  - Week 4: 60%+ "fun" rating → GO to Phase 2 or pivot
+  - Week 12: 75%+ "fun", 50%+ "would buy" → Ready for funding
+  - 30-minute demo: 0 crashes, 60 FPS, clear progression
+  
+  **Impact**: 
+  - Provides clear implementation roadmap for trading MVP (current #1 priority)
+  - Documents existing excellent architecture for future developers
+  - Defines validation gates to prevent feature creep
+  - Aligns with critical review recommendations (gameplay first, validate early)
+
 ### Fixed
 - **Build System: Re-enabled Warnings as Errors** (2025-12-24)
   - Completed internal TODO: Re-enabled `bWarningsAsErrors = true` in all module Build.cs files
