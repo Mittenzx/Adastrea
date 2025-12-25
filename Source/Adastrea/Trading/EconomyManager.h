@@ -9,8 +9,7 @@ class UMarketDataAsset;
 class UTradeItemDataAsset;
 
 /**
- * Economy Manager Subsystem
- * Manages market prices, supply/demand, and economic simulation
+ * Game instance subsystem that manages market prices, supply/demand, and economic simulation.
  * 
  * Usage:
  * 1. Get subsystem from GameInstance
@@ -41,6 +40,26 @@ public:
 	// All markets registered in the economy
 	UPROPERTY(BlueprintReadWrite, Category="Economy")
 	TArray<UMarketDataAsset*> ActiveMarkets;
+
+	// ====================
+	// ECONOMIC TUNING
+	// ====================
+
+	// Supply/demand adjustment rate per transaction (0.05 = 5% change)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Economy|Tuning", meta=(ClampMin="0.01", ClampMax="0.5"))
+	float SupplyDemandAdjustmentRate;
+
+	// Minimum supply/demand level (prevents extreme price swings)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Economy|Tuning", meta=(ClampMin="0.01", ClampMax="1.0"))
+	float MinSupplyDemandLevel;
+
+	// Maximum supply/demand level (prevents extreme price swings)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Economy|Tuning", meta=(ClampMin="1.0", ClampMax="10.0"))
+	float MaxSupplyDemandLevel;
+
+	// Economic recovery rate (fraction of deviation corrected per game hour)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Economy|Tuning", meta=(ClampMin="0.01", ClampMax="1.0"))
+	float EconomicRecoveryRate;
 
 	/**
 	 * Register a market for economy simulation
@@ -127,6 +146,9 @@ public:
 
 private:
 	// Timer handle for periodic updates
+	// Note: Timer-based updates iterate all markets/inventory. For large numbers of markets,
+	// consider staggering updates across frames or limiting max markets per update cycle.
+	UPROPERTY()
 	FTimerHandle UpdateTimerHandle;
 
 	// Update market prices based on supply/demand

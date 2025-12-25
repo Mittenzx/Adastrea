@@ -11,6 +11,9 @@ UPlayerTraderComponent::UPlayerTraderComponent()
 	Credits = 1000;  // Default starting credits
 	StartingCredits = 1000;
 	LastProfitMilestone = 0;
+	
+	// Initialize default profit milestones (designers can customize in editor)
+	ProfitMilestones = { 5000, 10000, 25000, 50000, 100000, 250000, 500000, 1000000 };
 }
 
 bool UPlayerTraderComponent::BuyItem(UMarketDataAsset* Market, UTradeItemDataAsset* Item, int32 Quantity, UCargoComponent* CargoComponent)
@@ -221,10 +224,8 @@ void UPlayerTraderComponent::CheckProfitMilestones()
 {
 	int32 CurrentProfit = GetProfit();
 
-	// Check for milestones at 5000, 10000, 25000, 50000, 100000, etc.
-	const TArray<int32> Milestones = { 5000, 10000, 25000, 50000, 100000, 250000, 500000, 1000000 };
-
-	for (int32 Milestone : Milestones)
+	// Check for configured profit milestones
+	for (int32 Milestone : ProfitMilestones)
 	{
 		if (CurrentProfit >= Milestone && LastProfitMilestone < Milestone)
 		{

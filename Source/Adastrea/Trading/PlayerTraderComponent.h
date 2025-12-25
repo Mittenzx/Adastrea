@@ -38,6 +38,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Trading|Finances", meta=(ClampMin="0"))
 	int32 StartingCredits;
 
+	// Profit milestones that trigger events (designer-configurable for progression tuning)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Trading|Finances")
+	TArray<int32> ProfitMilestones;
+
 	// ====================
 	// CONSTRUCTOR
 	// ====================
@@ -175,6 +179,7 @@ private:
 	UEconomyManager* GetEconomyManager() const;
 
 	// Last profit milestone reached (for events)
+	UPROPERTY()
 	int32 LastProfitMilestone;
 
 	// Check and broadcast profit milestones

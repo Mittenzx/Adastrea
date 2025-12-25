@@ -8,6 +8,10 @@ UEconomyManager::UEconomyManager()
 	: CurrentGameTime(0.0f)
 	, TimeScale(1.0f)
 	, UpdateInterval(5.0f)
+	, SupplyDemandAdjustmentRate(0.05f)  // 5% change per transaction
+	, MinSupplyDemandLevel(0.1f)
+	, MaxSupplyDemandLevel(3.0f)
+	, EconomicRecoveryRate(0.1f)  // 10% recovery per game hour
 {
 }
 
@@ -122,6 +126,11 @@ void UEconomyManager::RecordTransaction(UMarketDataAsset* Market, UTradeItemData
 		return;
 	}
 
+	// NOTE: This method modifies the MarketDataAsset's Inventory array at runtime.
+	// The Data Asset serves as a template, but runtime market state is mutable and won't persist
+	// between sessions unless explicitly saved. For persistent state, consider implementing
+	// a separate runtime market state structure that references the Data Asset template.
+
 	// Find inventory entry
 	for (FMarketInventoryEntry& Entry : Market->Inventory)
 	{
@@ -131,8 +140,8 @@ void UEconomyManager::RecordTransaction(UMarketDataAsset* Market, UTradeItemData
 			{
 				// Player bought from station
 				Entry.CurrentStock = FMath::Max(0, Entry.CurrentStock - Quantity);
-				Entry.SupplyLevel *= 0.95f;  // Supply decreased (5% reduction)
-				Entry.DemandLevel *= 1.05f;  // Demand increased (5% increase)
+				Entry.SupplyLevel *= (1.0f - SupplyDemandAdjustmentRate);  // Supply decreased
+				Entry.DemandLevel *= (1.0f + SupplyDemandAdjustmentRate);  // Demand increased
 
 				UE_LOG(LogTemp, Log, TEXT("EconomyManager: Player bought %d x %s from %s"), 
 					Quantity, *Item->ItemName.ToString(), *Market->MarketName.ToString());
@@ -141,16 +150,16 @@ void UEconomyManager::RecordTransaction(UMarketDataAsset* Market, UTradeItemData
 			{
 				// Player sold to station
 				Entry.CurrentStock += Quantity;
-				Entry.SupplyLevel *= 1.05f;  // Supply increased (5% increase)
-				Entry.DemandLevel *= 0.95f;  // Demand decreased (5% reduction)
+				Entry.SupplyLevel *= (1.0f + SupplyDemandAdjustmentRate);  // Supply increased
+				Entry.DemandLevel *= (1.0f - SupplyDemandAdjustmentRate);  // Demand decreased
 
 				UE_LOG(LogTemp, Log, TEXT("EconomyManager: Player sold %d x %s to %s"), 
 					Quantity, *Item->ItemName.ToString(), *Market->MarketName.ToString());
 			}
 
 			// Clamp supply/demand to reasonable ranges
-			Entry.SupplyLevel = FMath::Clamp(Entry.SupplyLevel, 0.1f, 3.0f);
-			Entry.DemandLevel = FMath::Clamp(Entry.DemandLevel, 0.1f, 3.0f);
+			Entry.SupplyLevel = FMath::Clamp(Entry.SupplyLevel, MinSupplyDemandLevel, MaxSupplyDemandLevel);
+			Entry.DemandLevel = FMath::Clamp(Entry.DemandLevel, MinSupplyDemandLevel, MaxSupplyDemandLevel);
 
 			// Update stock status
 			Entry.bInStock = Entry.CurrentStock > 0;
@@ -168,7 +177,7 @@ void UEconomyManager::UpdateMarketPrices(UMarketDataAsset* Market, float DeltaHo
 	}
 
 	// Gradually return supply/demand to baseline (recovery)
-	const float RecoveryRate = 0.1f * DeltaHours;  // 10% per game hour
+	const float RecoveryRate = EconomicRecoveryRate * DeltaHours;
 
 	for (FMarketInventoryEntry& Entry : Market->Inventory)
 	{
