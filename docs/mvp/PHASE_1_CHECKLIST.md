@@ -28,8 +28,8 @@
   - [ ] Add StaticMesh component (placeholder cube)
   - [ ] Add FloatingPawnMovement component
   - [ ] Add SpringArm and Camera components
-  - [ ] Add CargoComponent (from C++)
   - [ ] Add PlayerTraderComponent (from C++)
+  - [ ] Add simple Blueprint cargo tracking (Map<String, Integer>)
 
 - [ ] Configure ship movement
   - [ ] Set up WASD input (MoveForward, MoveRight)

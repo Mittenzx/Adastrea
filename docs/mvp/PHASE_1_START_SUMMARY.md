@@ -114,7 +114,7 @@ Use `PHASE_1_CHECKLIST.md` to:
 
 2. **BP_SimpleTradingShip**
    - Flyable pawn with WASD/EQ controls
-   - CargoComponent (C++)
+   - Simple Blueprint cargo tracking (Map<String, Integer>)
    - PlayerTraderComponent (C++)
    - Docking functions
 
@@ -359,11 +359,11 @@ A: 60% is the minimum bar. 75%+ is excellent.
 - `.github/instructions/anti-patterns.instructions.md` - Lessons
 
 **C++ Infrastructure** (Already exists):
-- `Source/Adastrea/Trading/EconomyManager.h/cpp`
-- `Source/Adastrea/Trading/CargoComponent.h/cpp`
-- `Source/Adastrea/Trading/PlayerTraderComponent.h/cpp`
-- `Source/Adastrea/Trading/TradeItemDataAsset.h/cpp`
-- `Source/Adastrea/Trading/MarketDataAsset.h/cpp`
+- `Source/Adastrea/Trading/EconomyManager.h/cpp` (for Phase 2+)
+- `Source/Adastrea/Trading/PlayerTraderComponent.h/cpp` (used in Phase 1)
+- `Source/Adastrea/Trading/CargoComponent.h/cpp` (for Phase 2+ with Data Assets)
+- `Source/Adastrea/Trading/TradeItemDataAsset.h/cpp` (for Phase 2+)
+- `Source/Adastrea/Trading/MarketDataAsset.h/cpp` (for Phase 2+)
 
 **Templates** (Already exist):
 - `Content/DataAssets/Trading/TradeItemTemplates.yaml`

@@ -112,21 +112,29 @@ Function: InitializePlayer(PlayerPawn)
 4. `Camera`
    - Attach to SpringArm
 
-5. `CargoComponent` (C++ component)
-   - Add from Components panel
-   - Find "Cargo Component"
-   - Cargo Capacity: 10.0
-
-6. `PlayerTraderComponent` (C++ component)
+5. **PlayerTraderComponent** (C++ component)
    - Add from Components panel
    - Find "Player Trader Component"
    - Credits: 1000
    - Starting Credits: 1000
 
+**Note on Cargo Management for Phase 1**:
+
+The C++ `CargoComponent` requires `UTradeItemDataAsset*` parameters, which conflicts with Phase 1's "no Data Assets" approach. For Phase 1, we'll use a **simple Blueprint-based cargo system** instead:
+
+- Use a `TMap<String, Integer>` variable to track cargo (ItemName → Quantity)
+- Track cargo space manually using simple integer arithmetic
+- Phase 2 will migrate to the proper C++ `CargoComponent` with Data Assets
+
 **Variables**:
 ```
 CurrentStation: Reference to BP_SimpleTradingStation (nullable)
 bIsDocked: Boolean = false
+
+// Simple cargo tracking (Phase 1 only - no Data Assets)
+CargoHold: Map<String, Integer>  // ItemName → Quantity
+MaxCargoSpace: Integer = 10
+CurrentCargoUsed: Integer = 0
 ```
 
 **Input Setup**:
@@ -191,20 +199,20 @@ InputAxis MoveUp
 StationName: String = "Agricultural Station Alpha"
 StationType: String = "Agricultural"
 
-// Item prices (what player PAYS when buying)
-Price_Water: Float = 8.0
-Price_Food: Float = 22.0
-Price_Fuel: Float = 45.0
+// Prices from PLAYER perspective (clearer naming)
+PlayerBuysAt_Water: Float = 8.0       // What player PAYS to buy from station
+PlayerBuysAt_Food: Float = 22.0
+PlayerBuysAt_Fuel: Float = 45.0
 
 // Stock levels (for display, infinite for prototype)
 Stock_Water: Integer = 1000
 Stock_Food: Integer = 500
 Stock_Fuel: Integer = 300
 
-// What this station buys from player (what player RECEIVES when selling)
-BuyPrice_Water: Float = 6.0     // Lower than sell price
-BuyPrice_Food: Float = 18.0
-BuyPrice_Fuel: Float = 40.0
+// Prices when player sells TO station
+PlayerSellsAt_Water: Float = 6.0     // What player RECEIVES when selling to station
+PlayerSellsAt_Food: Float = 18.0
+PlayerSellsAt_Fuel: Float = 40.0
 ```
 
 **Event Graph**:
@@ -226,27 +234,27 @@ Event OnComponentEndOverlap (DockingTrigger)
 │  └─ Call: CloseTradingUI
 ```
 
-**Function: GetSellPrice** (what player PAYS to buy):
+**Function: GetPlayerBuyPrice** (what player PAYS when buying from station):
 ```blueprint
 Input: ItemName (String)
 Output: Price (Float)
 
 Switch on ItemName:
-├─ "Water" → Return Price_Water (8.0)
-├─ "Food" → Return Price_Food (22.0)
-├─ "Fuel" → Return Price_Fuel (45.0)
+├─ "Water" → Return PlayerBuysAt_Water (8.0)
+├─ "Food" → Return PlayerBuysAt_Food (22.0)
+├─ "Fuel" → Return PlayerBuysAt_Fuel (45.0)
 └─ Default → Return 0.0
 ```
 
-**Function: GetBuyPrice** (what player RECEIVES when selling):
+**Function: GetPlayerSellPrice** (what player RECEIVES when selling to station):
 ```blueprint
 Input: ItemName (String)
 Output: Price (Float)
 
 Switch on ItemName:
-├─ "Water" → Return BuyPrice_Water (6.0)
-├─ "Food" → Return BuyPrice_Food (18.0)
-├─ "Fuel" → Return BuyPrice_Fuel (40.0)
+├─ "Water" → Return PlayerSellsAt_Water (6.0)
+├─ "Food" → Return PlayerSellsAt_Food (18.0)
+├─ "Fuel" → Return PlayerSellsAt_Fuel (40.0)
 └─ Default → Return 0.0
 ```
 
@@ -269,16 +277,16 @@ Switch on ItemName:
 StationName: String = "Industrial Station Beta"
 StationType: String = "Industrial"
 
-// Industrial Station PRICES (reverse economics)
+// Industrial Station PRICES (reverse economics from player perspective)
 // Water is EXPENSIVE here (they need it)
-Price_Water: Float = 12.0    // Higher than Agricultural
-Price_Food: Float = 35.0     // Higher
-Price_Fuel: Float = 60.0     // Higher
+PlayerBuysAt_Water: Float = 12.0    // What player PAYS - higher than Agricultural
+PlayerBuysAt_Food: Float = 35.0     // Higher
+PlayerBuysAt_Fuel: Float = 60.0     // Higher
 
-// What they pay when buying from player
-BuyPrice_Water: Float = 10.0   // Good profit!
-BuyPrice_Food: Float = 28.0
-BuyPrice_Fuel: Float = 55.0
+// What player receives when selling to this station
+PlayerSellsAt_Water: Float = 10.0   // What player RECEIVES - good profit!
+PlayerSellsAt_Food: Float = 28.0
+PlayerSellsAt_Fuel: Float = 55.0
 
 // Stock levels
 Stock_Water: Integer = 200    // Limited water
@@ -289,14 +297,14 @@ Stock_Fuel: Integer = 500     // Lots of fuel
 **Expected Profit Routes**:
 ```
 Route 1: Agricultural → Industrial (Water)
-- Buy Water @ 8 credits
-- Sell Water @ 10 credits
+- Buy Water @ 8 credits (PlayerBuysAt_Water at Agricultural)
+- Sell Water @ 10 credits (PlayerSellsAt_Water at Industrial)
 - Profit: 2 credits per unit (25%)
 - 10 cargo = 20 credits profit
 
 Route 2: Agricultural → Industrial (Food)
-- Buy Food @ 22 credits
-- Sell Food @ 28 credits
+- Buy Food @ 22 credits (PlayerBuysAt_Food at Agricultural)
+- Sell Food @ 28 credits (PlayerSellsAt_Food at Industrial)
 - Profit: 6 credits per unit (27%)
 - 10 cargo = 60 credits profit
 ```
@@ -351,8 +359,8 @@ Event Construct
 Event Tick
 ├─ Get PlayerTraderComponent from PlayerShip
 ├─ Update Text_Credits: Format("Credits: {0}", GetCredits)
-├─ Get CargoComponent from PlayerShip
-├─ Update Text_CargoSpace: Format("Cargo: {0}/{1}", CurrentCargo, MaxCargo)
+├─ Get PlayerShip.CurrentCargoUsed and MaxCargoSpace
+├─ Update Text_CargoSpace: Format("Cargo: {0}/{1}", CurrentCargoUsed, MaxCargoSpace)
 └─ Update Text_Profit: Format("Profit: {0}", GetProfit)
 ```
 
@@ -454,8 +462,8 @@ Horizontal Box
 **Variables**:
 ```
 ItemName: String = "Water"
-SellPrice: Float = 8.0      // What player PAYS to buy
-BuyPrice: Float = 6.0       // What player RECEIVES when selling
+PlayerBuyPrice: Float = 8.0       // What player PAYS when buying from station
+PlayerSellPrice: Float = 6.0      // What player RECEIVES when selling to station
 StockLevel: Integer = 1000
 CurrentStation: Reference to station
 PlayerShip: Reference to ship
@@ -464,16 +472,16 @@ PlayerShip: Reference to ship
 **Button_Buy OnClicked**:
 ```blueprint
 Get Quantity from SpinBox_Quantity
-Calculate TotalCost = Quantity * SellPrice
+Calculate TotalCost = Quantity * PlayerBuyPrice
 
 Get PlayerTraderComponent
 ├─ Check: GetCredits >= TotalCost?
 │  ├─ Yes:
-│  │  ├─ Get CargoComponent
-│  │  ├─ Check: Has space for Quantity?
+│  │  ├─ Check: PlayerShip.CurrentCargoUsed + Quantity <= PlayerShip.MaxCargoSpace?
 │  │  │  ├─ Yes:
 │  │  │  │  ├─ Remove Credits (TotalCost)
-│  │  │  │  ├─ Add to cargo (ItemName, Quantity)
+│  │  │  │  ├─ Add to PlayerShip.CargoHold Map (ItemName, Quantity)
+│  │  │  │  ├─ Update PlayerShip.CurrentCargoUsed += Quantity
 │  │  │  │  ├─ Play success sound
 │  │  │  │  ├─ Print: "Bought X Water for Y credits"
 │  │  │  │  └─ Update UI
@@ -487,11 +495,12 @@ Get PlayerTraderComponent
 ```blueprint
 Get Quantity from SpinBox_Quantity
 
-Get CargoComponent
-├─ Check: Has ItemName with Quantity?
+Check PlayerShip.CargoHold Map
+├─ Check: Contains ItemName with Quantity >= Quantity?
 │  ├─ Yes:
-│  │  ├─ Calculate TotalValue = Quantity * BuyPrice
-│  │  ├─ Remove from cargo (ItemName, Quantity)
+│  │  ├─ Calculate TotalValue = Quantity * PlayerSellPrice
+│  │  ├─ Remove from PlayerShip.CargoHold Map (ItemName, Quantity)
+│  │  ├─ Update PlayerShip.CurrentCargoUsed -= Quantity
 │  │  ├─ Add Credits (TotalValue)
 │  │  ├─ Play success sound
 │  │  ├─ Print: "Sold X Water for Y credits"
@@ -499,6 +508,8 @@ Get CargoComponent
 │  └─ No:
 │      └─ Print: "Don't have that item"
 ```
+
+**Note**: Phase 1 uses simple Blueprint Map for cargo tracking. Phase 2 will migrate to C++ CargoComponent with Data Assets.
 
 **Compile and save**
 

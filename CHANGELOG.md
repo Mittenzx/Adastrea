@@ -70,8 +70,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   
   **Related Documents**:
   - Phase 1 guide references `TRADING_MVP_INSPIRATION.md` for design
-  - Uses C++ components (EconomyManager, CargoComponent, PlayerTraderComponent)
-  - Leverages existing templates in `Content/DataAssets/Trading/`
+  - Uses C++ components (PlayerTraderComponent for credits/profit tracking)
+  - **Note**: C++ CargoComponent requires Data Assets, so Phase 1 uses Blueprint Map for cargo
+  - Templates in `Content/DataAssets/Trading/` will be used starting in Phase 2
   - Aligns with anti-patterns lessons (gameplay first, validate early)
 
 - **Trading Research Document Review** (2025-12-25)
