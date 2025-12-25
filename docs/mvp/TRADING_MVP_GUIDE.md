@@ -336,7 +336,7 @@ Questions:
 **Success Metrics**:
 - ✅ 60%+ say "fun" → **GO** to Phase 2
 - ✅ 40%+ say "would play more"
-- ✅ &lt;3 major confusion points
+- ✅ <3 major confusion points
 - ✅ 80%+ complete at least one trade loop
 
 **If Metrics NOT Met**:
@@ -540,7 +540,7 @@ public:
      * Called periodically via timer
      */
     UFUNCTION(BlueprintCallable, Category="Economy")
-    void UpdateEconomy(float DeltaTime);
+    void UpdateEconomy();
 
     /**
      * Get current price for item at market
@@ -590,19 +590,22 @@ void UEconomyManager::Initialize(FSubsystemCollectionBase& Collection)
     UpdateInterval = 5.0f;  // Update every 5 seconds
     
     // Start update timer
-    GetWorld()->GetTimerManager().SetTimer(
-        UpdateTimerHandle,
-        this,
-        &UEconomyManager::UpdateEconomy,
-        UpdateInterval,
-        true  // Loop
-    );
+    if (UGameInstance* GameInstance = GetGameInstance())
+    {
+        GameInstance->GetTimerManager().SetTimer(
+            UpdateTimerHandle,
+            this,
+            &UEconomyManager::UpdateEconomy,
+            UpdateInterval,
+            true  // Loop
+        );
+    }
 }
 
-void UEconomyManager::UpdateEconomy(float DeltaTime)
+void UEconomyManager::UpdateEconomy()
 {
-    // Convert real time to game time (1 real second = 1 game minute by default)
-    float DeltaHours = (DeltaTime * TimeScale) / 60.0f;
+    // Convert update interval to game time (1 real second = 1 game minute by default)
+    float DeltaHours = (UpdateInterval * TimeScale) / 60.0f;
     CurrentGameTime += DeltaHours;
     
     // Update all markets
@@ -978,7 +981,7 @@ After 30 minutes:
 **Technical**:
 - [x] 60 FPS on mid-range PC
 - [x] 0 crashes in 30 minutes
-- [x] &lt;30 second load time
+- [x] <30 second load time
 - [x] Save/load works
 - [x] No major bugs
 
@@ -1067,7 +1070,7 @@ After 30 minutes:
 
 **Performance Tests**:
 - [ ] 60 FPS in normal play
-- [ ] &lt;30 second load time
+- [ ] <30 second load time
 - [ ] No memory leaks
 - [ ] No stuttering during trades
 

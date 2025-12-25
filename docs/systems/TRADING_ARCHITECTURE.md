@@ -387,7 +387,7 @@ float AdjustedPrice = BasePrice * SupplyDemandFactor;
 if (TradeItemAsset->bAffectedBySupplyDemand) {
     float Volatility = TradeItemAsset->PriceVolatility.VolatilityMultiplier;
     AdjustedPrice *= FMath::Clamp(
-        SupplyDemandFactor * Volatility,
+        Volatility,
         TradeItemAsset->PriceVolatility.MinPriceDeviation,
         TradeItemAsset->PriceVolatility.MaxPriceDeviation
     );
@@ -447,7 +447,7 @@ int32 CargoCapacity = 10;
 6. Add profit counter
 
 **Success Criteria**:
-- ✅ Can fly between 2 stations in &lt;1 minute
+- ✅ Can fly between 2 stations in <1 minute
 - ✅ Can buy cargo at Station A
 - ✅ Can sell cargo at Station B
 - ✅ Profit counter increases
@@ -546,7 +546,7 @@ Minutes 25-30: Climax (ship upgrade, tease more content)
 - ✅ 75%+ "had fun"
 - ✅ 50%+ "would buy"
 - ✅ 0 crashes
-- ✅ &lt;5 known bugs
+- ✅ <5 known bugs
 - ✅ 60 FPS on mid-range PC
 
 ---
@@ -773,7 +773,7 @@ TEST(TradingSystem, ExecuteTradeInsufficientFunds) {
 
 **Week 4 Prototype**:
 - Fun rating: Target 60%+
-- Confusion points: &lt;3 major issues
+- Confusion points: <3 major issues
 - Completion rate: 80%+ complete one trade loop
 
 **Week 8 Structured**:
@@ -785,7 +785,7 @@ TEST(TradingSystem, ExecuteTradeInsufficientFunds) {
 - Fun rating: Target 75%+
 - Buy intent: Target 50%+
 - Completion rate: 90%+ complete 30 minutes
-- Technical: 0 crashes, 60 FPS, &lt;30s load time
+- Technical: 0 crashes, 60 FPS, <30s load time
 
 ---
 
