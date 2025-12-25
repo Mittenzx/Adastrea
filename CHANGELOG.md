@@ -34,6 +34,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
      - Testing checklists for each phase
      - Common issues and troubleshooting
   
+  3. `docs/reference/TRADING_QUICK_REFERENCE.md` (8KB)
+     - 5-minute quick start guide for developers
+     - Key file locations and what they do
+     - Important numbers (progression, profit margins, timing)
+     - Day-by-day Phase 1 breakdown
+     - Common issues and fixes
+     - MVP vs. deferred feature checklist
+  
   **Key Architecture Decisions**:
   - Data-driven design using Data Assets (UTradeItemDataAsset, UMarketDataAsset)
   - Blueprint-first approach for designer accessibility
