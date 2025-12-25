@@ -2,7 +2,50 @@
 
 **Date:** December 25, 2024  
 **Purpose:** Analyze trading systems from successful space games for design inspiration  
-**Target Application:** Adastrea Director / Adastrea Game Development
+**Target Application:** Adastrea Director / Adastrea Game Development  
+**Document Location**: Moved from root to `docs/reference/` (2025-12-25)
+
+---
+
+## ⚠️ CRITICAL WARNING FOR MVP DEVELOPERS
+
+**This document analyzes complex, mature trading systems from AAA/established games.**
+
+**FOR TRADE SIMULATOR MVP (Week 1-12 Development)**:
+
+### DO NOT Use This Document For:
+- ❌ **Week 1-4** (Hardcoded Prototype): Too complex - Build hardcoded prototype first
+- ❌ **Week 5-8** (Structured Version): Read only Section 2 (Freelancer) if GO decision made
+- ❌ **Week 9-12** (Polish & Demo): Focus on polish, not new features
+
+### DO Use This Document For:
+- ✅ **Post-MVP Planning** (After Week 12 and funding secured)
+- ✅ **Version 1.0 Roadmap** (12-24 months post-MVP)
+- ✅ **Advanced Feature Planning** (Production chains, automation, fleet management)
+
+### Instead, Read These For MVP:
+1. **Primary MVP Guide**: `docs/reference/TRADING_MVP_INSPIRATION.md` - Freelancer simple model extract
+2. **MVP Instructions**: `.github/instructions/trade-simulator-mvp.instructions.md` - Complete MVP scope
+3. **Anti-Patterns**: `.github/instructions/anti-patterns.instructions.md` - Mistakes to avoid
+
+### Why This Warning Exists:
+
+**Problem**: This document emphasizes X4 Foundations (5-star complexity) and EVE Online (5-star complexity) when the MVP needs Freelancer-level simplicity (3-star complexity).
+
+**Risk**: Reading this before building a playable prototype could inspire:
+- Production chains and resource flows
+- Station building and management
+- Fleet automation and AI traders
+- Multi-tiered manufacturing
+- Complex logistics networks
+
+**Reality for MVP**: All you need is "buy low, sell high" working in 2 weeks, validated as fun by playtesters.
+
+**Critical Review Finding**: "Good research, wrong timing. Use after validation, not before."
+
+See `docs/reference/TRADING_RESEARCH_REVIEW.md` for full critical assessment.
+
+---
 
 ## Executive Summary
 
