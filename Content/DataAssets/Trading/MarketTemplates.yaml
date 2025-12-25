@@ -1,0 +1,299 @@
+# Market Data Asset Template
+# Use this template to create markets/stations for the MVP
+
+# ===================
+# AGRICULTURAL STATION
+# ===================
+
+AgriculturalStationAlpha:
+  MarketName: "Agricultural Station Alpha"
+  Description: "Food production facility. Cheap food and water, expensive technology."
+  MarketID: "AgStation_01"
+  MarketType: OpenMarket
+  MarketSize: Medium
+  
+  # Market Config
+  TransactionTaxRate: 0.05  # 5% tax
+  SellPriceMarkup: 1.2      # Station sells at 20% markup
+  BuyPriceMarkdown: 0.8     # Station buys at 20% discount
+  bAllowPlayerBuying: true
+  bAllowPlayerSelling: true
+  bAllowAITraders: false    # MVP: defer AI traders
+  MinReputationRequired: -100  # Anyone can trade
+  
+  # Inventory (what this station produces/imports)
+  Inventory:
+    - Item: DA_TradeItem_Water
+      CurrentStock: 1000
+      MaxStock: 2000
+      SupplyLevel: 1.5      # Produces water (high supply)
+      DemandLevel: 0.5      # Doesn't need water (low demand)
+    
+    - Item: DA_TradeItem_ProteinPacks
+      CurrentStock: 500
+      MaxStock: 1000
+      SupplyLevel: 1.3
+      DemandLevel: 0.7
+    
+    - Item: DA_TradeItem_LuxuryFood
+      CurrentStock: 20
+      MaxStock: 50
+      SupplyLevel: 1.1
+      DemandLevel: 0.9
+    
+    - Item: DA_TradeItem_BasicComputer
+      CurrentStock: 10
+      MaxStock: 50
+      SupplyLevel: 0.3      # Doesn't produce tech (low supply)
+      DemandLevel: 1.8      # Needs tech (high demand)
+    
+    - Item: DA_TradeItem_BasicFuel
+      CurrentStock: 200
+      MaxStock: 500
+      SupplyLevel: 0.8
+      DemandLevel: 1.2
+  
+  StockRefreshRate: 24.0    # Refresh once per game day
+
+---
+
+# ===================
+# INDUSTRIAL STATION
+# ===================
+
+IndustrialStationBeta:
+  MarketName: "Industrial Station Beta"
+  Description: "Manufacturing hub. Produces technology, needs food and raw materials."
+  MarketID: "IndStation_01"
+  MarketType: IndustrialDepot
+  MarketSize: Large
+  
+  TransactionTaxRate: 0.03  # Lower tax (industrial incentive)
+  SellPriceMarkup: 1.15
+  BuyPriceMarkdown: 0.85
+  bAllowPlayerBuying: true
+  bAllowPlayerSelling: true
+  bAllowAITraders: false
+  MinReputationRequired: -100
+  
+  Inventory:
+    - Item: DA_TradeItem_Water
+      CurrentStock: 100
+      MaxStock: 500
+      SupplyLevel: 0.5      # Doesn't produce water
+      DemandLevel: 1.5      # Needs water
+    
+    - Item: DA_TradeItem_ProteinPacks
+      CurrentStock: 50
+      MaxStock: 200
+      SupplyLevel: 0.4
+      DemandLevel: 1.6
+    
+    - Item: DA_TradeItem_BasicComputer
+      CurrentStock: 200
+      MaxStock: 400
+      SupplyLevel: 1.8      # Produces computers
+      DemandLevel: 0.3      # Doesn't need them
+    
+    - Item: DA_TradeItem_AdvancedAICore
+      CurrentStock: 30
+      MaxStock: 100
+      SupplyLevel: 1.5
+      DemandLevel: 0.5
+    
+    - Item: DA_TradeItem_RawOre
+      CurrentStock: 50
+      MaxStock: 1000
+      SupplyLevel: 0.4      # Doesn't mine ore
+      DemandLevel: 2.0      # Needs ore for production
+  
+  StockRefreshRate: 12.0    # Faster refresh (active production)
+
+---
+
+# ===================
+# MINING STATION
+# ===================
+
+MiningOutpostGamma:
+  MarketName: "Mining Outpost Gamma"
+  Description: "Resource extraction facility. Cheap raw materials, expensive everything else."
+  MarketID: "MineStation_01"
+  MarketType: OpenMarket
+  MarketSize: Small
+  
+  TransactionTaxRate: 0.08  # Higher tax (remote location)
+  SellPriceMarkup: 1.3
+  BuyPriceMarkdown: 0.7
+  bAllowPlayerBuying: true
+  bAllowPlayerSelling: true
+  bAllowAITraders: false
+  MinReputationRequired: -100
+  
+  Inventory:
+    - Item: DA_TradeItem_RawOre
+      CurrentStock: 2000
+      MaxStock: 5000
+      SupplyLevel: 2.5      # Produces lots of ore
+      DemandLevel: 0.2      # Doesn't need ore
+    
+    - Item: DA_TradeItem_BasicFuel
+      CurrentStock: 300
+      MaxStock: 800
+      SupplyLevel: 1.2
+      DemandLevel: 0.8
+    
+    - Item: DA_TradeItem_Water
+      CurrentStock: 50
+      MaxStock: 200
+      SupplyLevel: 0.3      # Limited water
+      DemandLevel: 2.0      # High demand
+    
+    - Item: DA_TradeItem_ProteinPacks
+      CurrentStock: 30
+      MaxStock: 100
+      SupplyLevel: 0.2
+      DemandLevel: 2.2
+    
+    - Item: DA_TradeItem_MedicalSupplies
+      CurrentStock: 10
+      MaxStock: 50
+      SupplyLevel: 0.1      # Rare medical supplies
+      DemandLevel: 2.5      # Very high demand
+  
+  StockRefreshRate: 36.0    # Slower refresh (remote location)
+
+---
+
+# ===================
+# LUXURY BAZAAR
+# ===================
+
+LuxuryBazaar:
+  MarketName: "Luxury Bazaar"
+  Description: "High-end shopping destination. Expensive luxury goods."
+  MarketID: "LuxuryBazaar_01"
+  MarketType: LuxuryBazaar
+  MarketSize: Medium
+  
+  TransactionTaxRate: 0.10  # High tax on luxury
+  SellPriceMarkup: 1.5      # High markup
+  BuyPriceMarkdown: 0.6     # Low buyback
+  bAllowPlayerBuying: true
+  bAllowPlayerSelling: true
+  bAllowAITraders: false
+  MinReputationRequired: 0   # Requires neutral reputation
+  
+  Inventory:
+    - Item: DA_TradeItem_LuxuryFood
+      CurrentStock: 100
+      MaxStock: 200
+      SupplyLevel: 2.0      # Specializes in luxury
+      DemandLevel: 0.8
+    
+    - Item: DA_TradeItem_AlienArtifacts
+      CurrentStock: 5
+      MaxStock: 20
+      SupplyLevel: 1.2
+      DemandLevel: 0.5
+    
+    - Item: DA_TradeItem_AdvancedAICore
+      CurrentStock: 20
+      MaxStock: 50
+      SupplyLevel: 1.1
+      DemandLevel: 1.0
+    
+    - Item: DA_TradeItem_Water
+      CurrentStock: 500
+      MaxStock: 1000
+      SupplyLevel: 1.0
+      DemandLevel: 1.0
+  
+  StockRefreshRate: 48.0    # Slow refresh (rare items)
+
+---
+
+# ===================
+# TRADE HUB
+# ===================
+
+CentralTradeHub:
+  MarketName: "Central Trade Hub"
+  Description: "Major trading station. Balanced prices, high variety."
+  MarketID: "TradeHub_01"
+  MarketType: CommodityExchange
+  MarketSize: Megacity
+  
+  TransactionTaxRate: 0.02  # Low tax (trade-friendly)
+  SellPriceMarkup: 1.1      # Low markup
+  BuyPriceMarkdown: 0.9     # High buyback
+  bAllowPlayerBuying: true
+  bAllowPlayerSelling: true
+  bAllowAITraders: false
+  MinReputationRequired: -100
+  
+  Inventory:
+    # Trade hub has everything at moderate prices
+    - Item: DA_TradeItem_Water
+      CurrentStock: 500
+      MaxStock: 1000
+      SupplyLevel: 1.0      # Balanced
+      DemandLevel: 1.0
+    
+    - Item: DA_TradeItem_ProteinPacks
+      CurrentStock: 300
+      MaxStock: 600
+      SupplyLevel: 1.0
+      DemandLevel: 1.0
+    
+    - Item: DA_TradeItem_BasicComputer
+      CurrentStock: 100
+      MaxStock: 200
+      SupplyLevel: 1.0
+      DemandLevel: 1.0
+    
+    - Item: DA_TradeItem_RawOre
+      CurrentStock: 400
+      MaxStock: 800
+      SupplyLevel: 1.0
+      DemandLevel: 1.0
+    
+    - Item: DA_TradeItem_BasicFuel
+      CurrentStock: 600
+      MaxStock: 1200
+      SupplyLevel: 1.0
+      DemandLevel: 1.0
+  
+  StockRefreshRate: 6.0     # Very fast refresh (busy hub)
+
+---
+
+# ===================
+# USAGE INSTRUCTIONS
+# ===================
+
+# To create a Market Data Asset in Unreal:
+# 1. Right-click in Content Browser
+# 2. Create Blueprint Class -> Parent Class: MarketDataAsset
+# 3. Name it DA_Market_[StationName]
+# 4. Open and fill in properties from this template
+# 5. Save
+
+# Market Balance Guidelines:
+# 
+# Supply/Demand Levels:
+# - 0.1-0.5 = Low (station needs this item, high prices)
+# - 0.5-1.5 = Normal (balanced prices)
+# - 1.5-3.0 = High (station produces this, low prices)
+#
+# Price Calculation:
+# Price = BasePrice * (Demand/Supply) * Markup/Markdown
+#
+# Example:
+# Water at Agricultural Station (Supply: 1.5, Demand: 0.5)
+#   Player buys: 10 * (0.5/1.5) * 1.2 = 4.0 credits (cheap!)
+#
+# Water at Industrial Station (Supply: 0.5, Demand: 1.5)
+#   Player sells: 10 * (1.5/0.5) * 0.8 = 24.0 credits (good profit!)
+#
+# Profit margins should be 30-50% for typical routes
