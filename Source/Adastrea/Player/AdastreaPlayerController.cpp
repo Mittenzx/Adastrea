@@ -100,6 +100,17 @@ void AAdastreaPlayerController::SetupInputComponent()
 	// Station Editor: Bind StationEditorAction to ToggleStationEditor() in Blueprint
 }
 
+void AAdastreaPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	// Explicitly clear the station check timer to avoid dangling callbacks and keep timer usage maintainable
+	if (UWorld* World = GetWorld())
+	{
+		World->GetTimerManager().ClearTimer(StationCheckTimerHandle);
+	}
+
+	Super::EndPlay(EndPlayReason);
+}
+
 void AAdastreaPlayerController::OnPossessSpaceship_Implementation(ASpaceship* NewSpaceship)
 {
 	// Default implementation
@@ -992,7 +1003,12 @@ void AAdastreaPlayerController::CheckForNearbyTradableStations()
 	// Find the nearest station within trading interaction radius
 	for (AActor* Actor : FoundStations)
 	{
-		ASpaceStation* Station = static_cast<ASpaceStation*>(Actor);
+		ASpaceStation* Station = Cast<ASpaceStation>(Actor);
+		if (!Station)
+		{
+			continue;
+		}
+		
 		float Distance = FVector::Dist(PlayerLocation, Station->GetActorLocation());
 		
 		if (Distance < ClosestDistance)

@@ -247,6 +247,8 @@ protected:
 
 	virtual void SetupInputComponent() override;
 
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 public:
 	/**
 	 * Called when the player possesses a new spaceship
