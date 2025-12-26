@@ -12,10 +12,8 @@ public class StationEditor : ModuleRules
 		// Engine-level warnings (C4459) are suppressed at target level via /wd4459
 		bWarningsAsErrors = true;
 
-		// Note: StationEditor has a non-standard directory structure with UI/ subdirectory
-		// at the module root level. This needs an explicit include path.
-		// Using relative path (ModuleDirectory) to keep paths short and avoid SetEnv errors.
-		PublicIncludePaths.Add(System.IO.Path.Combine(ModuleDirectory, "UI"));
+		// Note: No explicit include paths needed - UE5 automatically includes Public/ and Private/ subdirectories
+		// The module now follows standard UE5 structure with all source files organized under Public/ and Private/
 
 		PublicDependencyModuleNames.AddRange(new string[] 
 		{ 
