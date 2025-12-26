@@ -243,6 +243,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Aligns with critical review recommendations (gameplay first, validate early)
 
 ### Fixed
+- **Build System: Removed Redundant PublicIncludePaths** (2025-12-26)
+  - Fixed Visual Studio project generation command line length limitation
+  - Removed excessive `PublicIncludePaths` entries from Build.cs files
+  - **Modules Updated**:
+    * `Source/Adastrea/Adastrea.Build.cs` - Removed 18 redundant include path entries
+    * `Source/StationEditor/StationEditor.Build.cs` - Removed 2 redundant include path entries
+    * `Source/PlayerMods/PlayerMods.Build.cs` - Removed 2 redundant include path entries
+  - **Technical Details**:
+    * UE5 automatically includes `Public/` and `Private/` folders for each module
+    * Explicit PublicIncludePaths were redundant and caused command line to become too long
+    * All existing include statements (e.g., `#include "Ships/SpaceshipDataAsset.h"`) continue to work
+    * Include resolution works via UE5's automatic path handling and module dependencies
+  - **Impact**: Visual Studio project generation now completes without command line length errors
+  - **References**: See `docs/setup/VISUAL_STUDIO_PROJECT_GENERATION.md` for troubleshooting
+
 - **Build System: Re-enabled Warnings as Errors** (2025-12-24)
   - Completed internal TODO: Re-enabled `bWarningsAsErrors = true` in all module Build.cs files
   - Fixed Anti-Pattern #15 (Build System Fragility): "Fix warnings, don't disable them"

@@ -12,9 +12,8 @@ public class PlayerMods : ModuleRules
 		// Engine-level warnings (C4459) are suppressed at target level via /wd4459
 		bWarningsAsErrors = true;
 
-		// Include paths for this module
-		PublicIncludePaths.Add("PlayerMods/Public");
-		PrivateIncludePaths.Add("PlayerMods/Private");
+		// Note: PublicIncludePaths removed to fix command line length issues during project generation
+		// UE5 automatically includes Public/ and Private/ folders, making explicit paths redundant
 
 		PublicDependencyModuleNames.AddRange(new string[] 
 		{ 
