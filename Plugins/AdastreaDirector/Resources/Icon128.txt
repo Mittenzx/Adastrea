@@ -1,5 +1,0 @@
-This is a placeholder for the plugin icon (Icon128.png).
-The icon should be a 128x128 PNG image.
-
-For now, this text file serves as a placeholder.
-A proper icon will be created in future iterations.

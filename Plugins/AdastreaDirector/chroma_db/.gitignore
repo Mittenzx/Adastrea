@@ -1,8 +1,0 @@
-# Ignore all files in chroma_db directory except the core database file
-*
-
-# But keep the SQLite database file which contains the collection metadata
-!chroma.sqlite3
-
-# Also keep this .gitignore file itself
-!.gitignore
