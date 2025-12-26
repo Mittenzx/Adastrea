@@ -16,81 +16,63 @@ System.ArgumentException: Environment variable name or value is too long.
 
 Windows has environment variable length limitations (~32KB for all environment variables combined). When Unreal Build Tool (UBT) generates Visual Studio project files, it creates INCLUDE paths that can exceed this limit.
 
-### Solution
+### Solution ✅ RESOLVED
 
-**Remove unnecessary include path declarations from `.Build.cs` files:**
+**The Adastrea project has been restructured to follow standard UE5 module layout.**
 
-❌ **WRONG** - Empty arrays still contribute to environment variable length:
-```csharp
-PublicIncludePaths.AddRange(
-    new string[] {
-        // ... add public include paths required here ...
-    }
-);
+As of December 2025, all modules use the standard Public/Private structure with no explicit include paths. This completely eliminates the SetEnv error.
 
-PrivateIncludePaths.AddRange(
-    new string[] {
-        // ... add other private include paths required here ...
-    }
-);
-```
+### How It Was Fixed
 
-✅ **CORRECT** - Remove these declarations entirely:
-```csharp
-// Note: PublicIncludePaths and PrivateIncludePaths removed to fix command line length issues
-// UE5 automatically includes Public/ and Private/ folders, making explicit paths redundant
-// This prevents MSBuild SetEnv task from failing with "Environment variable name or value is too long"
+1. **Moved all source files** to standard locations:
+   - All header files → `Public/` subdirectories
+   - All implementation files → `Private/` subdirectories
 
-PublicDependencyModuleNames.AddRange(
-    new string[] {
-        "Core",
-        // ... other modules
-    }
-);
-```
+2. **Removed explicit include paths** from all `.Build.cs` files:
+   ```csharp
+   // NO LONGER NEEDED - these lines have been removed:
+   // PublicIncludePaths.AddRange(new string[] { ... });
+   ```
 
-### Why This Works
+3. **UE5 automatic inclusion** now handles everything:
+   - UE5 automatically includes `Public/` and `Private/` directories
+   - No manual path configuration required
 
-- **Unreal Engine 5** automatically includes `Public/` and `Private/` subdirectories from:
-  - Your module's directory
-  - All dependency module directories
-- Explicit include path declarations are **redundant** and waste environment variable space
-- Removing them reduces command line length during project generation
+### If You Still Encounter This Error
 
-### Verification
+If you encounter this error in a different project or after adding new modules:
 
-Check all `.Build.cs` files in your project:
-```bash
-find . -name "*.Build.cs" -exec grep -l "PublicIncludePaths\|PrivateIncludePaths" {} \;
-```
+1. **Check for non-standard directory structures**
+   - Ensure all headers are in `Public/` subdirectories
+   - Ensure all implementations are in `Private/` subdirectories
 
-All modules should follow the same pattern:
-- `Source/Adastrea/Adastrea.Build.cs` ✅ Fixed
-- `Source/StationEditor/StationEditor.Build.cs` ✅ Fixed
-- `Source/PlayerMods/PlayerMods.Build.cs` ✅ Fixed
-- `Plugins/UnrealMCP/Source/UnrealMCP/UnrealMCP.Build.cs` ✅ Fixed
+2. **Remove explicit include paths** from `.Build.cs`:
+   ```csharp
+   // Remove these if present:
+   PublicIncludePaths.AddRange(new string[] { ... });
+   PrivateIncludePaths.AddRange(new string[] { ... });
+   ```
 
-### Prevention
-
-When creating new modules or plugins:
-1. **DO NOT** add `PublicIncludePaths` or `PrivateIncludePaths` declarations
-2. Rely on UE5's automatic include path resolution
-3. Use forward declarations in headers where possible
-4. Include full headers only in `.cpp` files
-
-### Related Issues
-
-If you still encounter SetEnv errors after this fix:
-1. **Check AdditionalCompilerArguments length** in `.Target.cs` files
-2. **Verify bOverrideBuildEnvironment** setting
 3. **Clean and regenerate project files**:
    ```bash
    # Windows
    Right-click .uproject → Generate Visual Studio project files
-   
-   # Linux/Mac
-   <UnrealEngine>/Engine/Build/BatchFiles/Mac/GenerateProjectFiles.sh <YourProject>.uproject
    ```
+
+### Verification
+
+Check all `.Build.cs` files should NOT have explicit include paths:
+```bash
+find . -name "*.Build.cs" -exec grep -l "PublicIncludePaths\|PrivateIncludePaths" {} \;
+```
+
+Expected result: No matches (or only comments mentioning why they're not needed)
+
+All modules in Adastrea now follow the standard pattern:
+- `Source/Adastrea/Adastrea.Build.cs` ✅ No explicit paths
+- `Source/StationEditor/StationEditor.Build.cs` ✅ No explicit paths
+- `Source/PlayerMods/PlayerMods.Build.cs` ✅ No explicit paths
+- `Plugins/UnrealMCP/Source/UnrealMCP/UnrealMCP.Build.cs` ✅ No explicit paths
 
 ## Missing Include Files
 

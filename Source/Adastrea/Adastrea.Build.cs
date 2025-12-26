@@ -13,33 +13,9 @@ public class Adastrea : ModuleRules
 		// See: Anti-Pattern #15 (Build System Fragility) - fix warnings, don't disable them
 		bWarningsAsErrors = true;
 
-		// Note: The Adastrea module has a non-standard directory structure with source files
-		// in subdirectories at the module root level (AI/, Combat/, etc.) rather than within
-		// Public/ and Private/ subdirectories. These need explicit include paths.
-		// Using relative paths (ModuleDirectory) to keep paths short and avoid SetEnv errors.
-		PublicIncludePaths.AddRange(new string[] {
-			System.IO.Path.Combine(ModuleDirectory, "AI"),
-			System.IO.Path.Combine(ModuleDirectory, "Audio"),
-			System.IO.Path.Combine(ModuleDirectory, "Characters"),
-			System.IO.Path.Combine(ModuleDirectory, "Combat"),
-			System.IO.Path.Combine(ModuleDirectory, "Exploration"),
-			System.IO.Path.Combine(ModuleDirectory, "Factions"),
-			System.IO.Path.Combine(ModuleDirectory, "Input"),
-			System.IO.Path.Combine(ModuleDirectory, "Materials"),
-			System.IO.Path.Combine(ModuleDirectory, "Navigation"),
-			System.IO.Path.Combine(ModuleDirectory, "Performance"),
-			System.IO.Path.Combine(ModuleDirectory, "Planets"),
-			System.IO.Path.Combine(ModuleDirectory, "Player"),
-			System.IO.Path.Combine(ModuleDirectory, "Procedural"),
-			System.IO.Path.Combine(ModuleDirectory, "Quest"),
-			System.IO.Path.Combine(ModuleDirectory, "Rivals"),
-			System.IO.Path.Combine(ModuleDirectory, "Ships"),
-			System.IO.Path.Combine(ModuleDirectory, "Stations"),
-			System.IO.Path.Combine(ModuleDirectory, "Trading"),
-			System.IO.Path.Combine(ModuleDirectory, "Tutorial"),
-			System.IO.Path.Combine(ModuleDirectory, "UI"),
-			System.IO.Path.Combine(ModuleDirectory, "Way")
-		});
+		// Note: No explicit include paths needed - UE5 automatically includes Public/ and Private/ subdirectories
+		// The module now follows standard UE5 structure with all source files organized under Public/ and Private/
+		// This eliminates the SetEnv environment variable length overflow issue
 
 		// Note: StationEditor dependency removed to fix circular dependency
 		// StationEditor depends on Adastrea, so Adastrea cannot depend on StationEditor

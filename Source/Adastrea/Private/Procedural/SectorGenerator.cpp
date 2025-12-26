@@ -6,7 +6,7 @@
 #include "SpaceSectorMap.h"
 #include "Factions/FactionDataAsset.h"
 #include "Ships/SpaceshipDataAsset.h"
-#include "Public/Interfaces/IFactionMember.h"
+#include "Interfaces/IFactionMember.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
 #include "Engine/World.h"

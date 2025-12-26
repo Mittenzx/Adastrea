@@ -2,11 +2,11 @@
 
 ## Overview
 
-This document explains the non-standard directory structure used in the Adastrea project and how it affects the build configuration.
+This document explains the directory structure used in the Adastrea project and how it follows Unreal Engine 5 best practices.
 
 ## Standard UE5 Module Structure
 
-A typical Unreal Engine 5 module follows this structure:
+Unreal Engine 5 modules follow this structure:
 
 ```
 Source/ModuleName/
@@ -22,45 +22,73 @@ In this standard structure:
 - UE5 automatically includes `ModuleName/Public/` in the include path
 - UE5 automatically includes `ModuleName/Private/` in the include path
 - No explicit `PublicIncludePaths` or `PrivateIncludePaths` needed
+- Better IDE support and navigation
+- Clearer separation of public APIs and private implementation
 
-## Adastrea's Non-Standard Structure
+## Adastrea's Current Structure (✅ Standard)
 
-The Adastrea project uses a different structure:
+**As of December 2025**, the Adastrea project now follows the standard UE5 structure:
 
 ```
 Source/Adastrea/
 ├── Adastrea.Build.cs
 ├── Public/
+│   ├── Adastrea.h
+│   ├── AdastreaGameMode.h
+│   ├── SpaceSectorMap.h
 │   ├── AI/
+│   │   ├── FactionLogic.h
+│   │   ├── NPCLogicBase.h
+│   │   └── PersonnelLogic.h
+│   ├── Audio/
+│   ├── Characters/
 │   ├── Combat/
-│   └── ... (headers organized by system)
-├── Private/
-│   └── AdastreaFunctionLibrary.cpp
-├── AI/                    # ⚠️ Non-standard location
-│   ├── FactionLogic.cpp
-│   ├── NPCLogicBase.cpp
-│   └── PersonnelLogic.cpp
-├── Combat/                # ⚠️ Non-standard location
-│   ├── WeaponComponent.cpp
-│   └── ...
-├── Ships/                 # ⚠️ Non-standard location
-├── Stations/              # ⚠️ Non-standard location
-└── ... (19 more subdirectories at root level)
+│   ├── Exploration/
+│   ├── Factions/
+│   ├── Input/
+│   ├── Interfaces/
+│   ├── Materials/
+│   ├── Navigation/
+│   ├── Performance/
+│   ├── Planets/
+│   ├── Player/
+│   ├── Procedural/
+│   ├── Quest/
+│   ├── Rivals/
+│   ├── Ships/
+│   ├── Stations/
+│   ├── Trading/
+│   ├── Tutorial/
+│   ├── UI/
+│   └── Way/
+└── Private/
+    ├── Adastrea.cpp
+    ├── AdastreaGameMode.cpp
+    ├── AdastreaLog.cpp
+    ├── SpaceSectorMap.cpp
+    ├── AI/
+    │   ├── FactionLogic.cpp
+    │   ├── NPCLogicBase.cpp
+    │   └── PersonnelLogic.cpp
+    ├── Audio/
+    ├── Characters/
+    └── ... (mirrors Public/ structure)
 ```
 
-### Why This is Problematic
+### Benefits of Standard Structure
 
-When subdirectories exist at the module root level (not inside Public/ or Private/):
-1. UE5 does NOT automatically include them in the include path
-2. The compiler cannot find headers or source files in these directories
-3. Build failures occur with "file not found" errors
-4. This requires explicit `PublicIncludePaths` declarations
+✅ **No explicit include paths needed** - Build.cs files are simpler  
+✅ **Fixes SetEnv error** - No environment variable length issues  
+✅ **Better IDE support** - IntelliSense and autocomplete work better  
+✅ **Clear organization** - Public APIs separated from private implementation  
+✅ **Future-proof** - Won't encounter similar issues as project grows
 
-## The SetEnv Error Issue
+## Historical Context: The SetEnv Error Issue
 
-### Original Problem (Dec 2025)
+### Original Problem (Oct-Dec 2025)
 
-The project had explicit include paths declared, which caused the MSBuild SetEnv task to fail:
+The project previously had a non-standard structure with subdirectories at the module root level (AI/, Combat/, Ships/, etc. outside of Public/Private/). This required 21 explicit `PublicIncludePaths` declarations, which caused the MSBuild SetEnv task to fail:
+
 ```
 System.ArgumentException: Environment variable name or value is too long
 ```
@@ -68,89 +96,47 @@ System.ArgumentException: Environment variable name or value is too long
 This happened because:
 1. Include paths were being added to environment variables
 2. Windows has a ~32KB limit on environment variable length
-3. Long absolute paths multiplied across many directories exceeded this limit
+3. Long paths multiplied across many directories exceeded this limit
 
-### First Fix Attempt (PR #357)
+### Resolution (December 2025)
 
-The first fix removed ALL `PublicIncludePaths` declarations:
-```csharp
-// Removed this:
-PublicIncludePaths.AddRange(new string[] {
-    "Source/Adastrea/AI",
-    "Source/Adastrea/Combat",
-    // ... etc (long absolute paths)
-});
-```
+**Complete restructuring** to standard UE5 layout:
+- Moved all 140 header files to `Public/` subdirectories
+- Moved all 128 implementation files to `Private/` subdirectories
+- Removed all 21 explicit `PublicIncludePaths` declarations
+- Updated StationEditor module similarly
 
-**Problem**: This fixed the SetEnv error but broke the build because:
-- The non-standard subdirectories were no longer in the include path
-- Compiler couldn't find headers in AI/, Combat/, Ships/, etc.
-
-### Complete Fix (This PR)
-
-The complete fix adds back the include paths but uses **relative paths** via `ModuleDirectory`:
-
-```csharp
-PublicIncludePaths.AddRange(new string[] {
-    System.IO.Path.Combine(ModuleDirectory, "AI"),
-    System.IO.Path.Combine(ModuleDirectory, "Combat"),
-    System.IO.Path.Combine(ModuleDirectory, "Ships"),
-    // ... etc (21 total)
-});
-```
-
-**Why this works**:
-1. `ModuleDirectory` is a relative path, not absolute
-2. Relative paths are much shorter than absolute paths
-3. Stays well under the environment variable length limit
-4. Compiler can find headers in non-standard directories
-5. Build system works correctly
+**Result**: Build system works correctly with no environment variable issues
 
 ## Affected Modules
 
-### Adastrea Module
+### Adastrea Module ✅
 
-Has 21 non-standard subdirectories:
-- AI
-- Audio
-- Characters
-- Combat
-- Exploration
-- Factions
-- Input
-- Materials
-- Navigation
-- Performance
-- Planets
-- Player
-- Procedural
-- Quest
-- Rivals
-- Ships
-- Stations
-- Trading
-- Tutorial
-- UI
-- Way
+**Status**: Now follows standard structure  
+**Structure**: Public/ and Private/ subdirectories with 23 system folders each  
+**Include Paths**: None needed (automatic)
 
-### StationEditor Module
+### StationEditor Module ✅
 
-Has 1 non-standard subdirectory:
-- UI
+**Status**: Now follows standard structure  
+**Structure**: Public/ and Private/ subdirectories  
+**Include Paths**: None needed (automatic)
 
-### PlayerMods Module
+### PlayerMods Module ✅
 
-✅ Uses standard structure (no explicit include paths needed)
+**Status**: Uses standard structure  
+**Include Paths**: None needed (automatic)
 
-### UnrealMCP Plugin
+### UnrealMCP Plugin ✅
 
-✅ Uses standard structure (no explicit include paths needed)
+**Status**: Uses standard structure  
+**Include Paths**: None needed (automatic)
 
-## Best Practice Going Forward
+## Best Practice for All Modules
 
-### For New Modules
+### Required Structure
 
-Use the standard UE5 structure:
+Always use the standard UE5 structure:
 ```
 Source/NewModule/
 ├── NewModule.Build.cs
@@ -160,47 +146,83 @@ Source/NewModule/
     └── [organize source files here]
 ```
 
-No explicit include paths needed!
+### Benefits
 
-### For Existing Non-Standard Modules
+- ✅ No explicit include paths needed
+- ✅ Simpler Build.cs files
+- ✅ No environment variable issues
+- ✅ Better IDE integration
+- ✅ Industry standard approach
 
-If you must add new subdirectories at the root level:
+### Organizing Large Modules
 
-1. Add the directory to the module
-2. Update the `.Build.cs` file:
-```csharp
-PublicIncludePaths.Add(System.IO.Path.Combine(ModuleDirectory, "NewDirectory"));
+For modules with many files, organize by system within Public/ and Private/:
+
 ```
-3. Always use `ModuleDirectory` for relative paths
-4. Never use absolute paths
+Public/
+├── Core/           # Core functionality
+├── Audio/          # Audio system
+├── Combat/         # Combat system
+├── UI/             # User interface
+└── ...
 
-## Testing Include Paths
+Private/
+├── Core/
+├── Audio/
+├── Combat/
+├── UI/
+└── ...
+```
 
-To verify include paths are working:
+Each system's headers go in `Public/[System]/` and implementations in `Private/[System]/`.
 
-1. Generate project files (right-click .uproject → Generate Visual Studio project files)
-2. Open in IDE and check for errors
-3. Build the project
-4. No "file not found" errors = success
+## Include Statements
+
+### Within Same Module
+
+```cpp
+// Include from Public/Combat/WeaponComponent.h
+#include "Combat/WeaponComponent.h"
+
+// Include from Public/Ships/Spaceship.h
+#include "Ships/Spaceship.h"
+```
+
+### From Other Modules
+
+```cpp
+// Include from Adastrea module (in StationEditor)
+#include "Stations/SpaceStationModule.h"
+#include "Factions/FactionDataAsset.h"
+```
+
+### Best Practices
+
+1. **Use forward declarations in headers** when possible
+2. **Include full headers in .cpp files** only
+3. **Use relative paths** from Public/ or Private/ directories
+4. **Keep include paths short** and readable
 
 ## Related Documentation
 
-- [Anti-Patterns Guide](.github/instructions/anti-patterns.instructions.md) - See #13 for file organization
-- [CHANGELOG.md](CHANGELOG.md) - Complete fix history
+- [Build Troubleshooting Guide](./BUILD_TROUBLESHOOTING.md) - Build issues and solutions
+- [Anti-Patterns Guide](../../.github/instructions/anti-patterns.instructions.md) - See #13 for file organization
+- [CHANGELOG.md](../../CHANGELOG.md) - Complete change history
 - [Unreal Engine Module Documentation](https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-modules)
 
 ## Summary
 
-| Structure Type | Include Paths Needed | Risk of SetEnv Error |
-|---------------|---------------------|---------------------|
-| Standard (Public/Private only) | ❌ No | ✅ None |
-| Non-standard (root subdirs) | ✅ Yes (relative) | ⚠️ Low (if using ModuleDirectory) |
-| Non-standard (root subdirs) | ✅ Yes (absolute) | ❌ High |
+| Module | Structure | Include Paths | Status |
+|--------|-----------|---------------|--------|
+| Adastrea | ✅ Standard (Public/Private) | ❌ None needed | ✅ Fixed |
+| StationEditor | ✅ Standard (Public/Private) | ❌ None needed | ✅ Fixed |
+| PlayerMods | ✅ Standard (Public/Private) | ❌ None needed | ✅ Compliant |
+| UnrealMCP | ✅ Standard (Public/Private) | ❌ None needed | ✅ Compliant |
 
-**Recommendation**: Gradually migrate to standard structure to simplify build configuration.
+**All modules now follow UE5 best practices with no explicit include paths required.**
 
 ---
 
 **Last Updated**: 2025-12-26  
-**Related Issues**: SetEnv environment variable length error  
-**Related PRs**: #357 (partial fix), this PR (complete fix)
+**Related Issues**: SetEnv environment variable length error (resolved)  
+**Related PRs**: Module restructuring to standard UE5 layout
