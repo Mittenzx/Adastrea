@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Module Restructuring to Standard UE5 Layout** (2025-12-26)
+  - Restructured Adastrea and StationEditor modules to follow standard UE5 directory layout
+  - **Moved 268 files** to proper Public/ and Private/ locations:
+    - 140 header files (.h) → `Public/` subdirectories
+    - 128 implementation files (.cpp) → `Private/` subdirectories
+  - **Removed explicit include paths** from Build.cs files:
+    - Removed 21 include path declarations from `Adastrea.Build.cs`
+    - Removed 1 include path declaration from `StationEditor.Build.cs`
+  - **Benefits**:
+    - ✅ Completely eliminates MSBuild SetEnv environment variable length overflow
+    - ✅ Follows UE5 best practices for module organization
+    - ✅ Better IDE support (IntelliSense, autocomplete)
+    - ✅ Clearer separation of public APIs and private implementation
+    - ✅ Simpler build configuration (no manual include paths)
+  - **Structure Changes**:
+    - `Source/Adastrea/AI/` → `Source/Adastrea/Public/AI/` (headers) and `Source/Adastrea/Private/AI/` (implementations)
+    - Similar moves for all 21 system subdirectories (Audio, Combat, Ships, Stations, Trading, UI, etc.)
+    - Root-level files moved to appropriate Public/ or Private/ directories
+  - **Modified Files**:
+    - `Source/Adastrea/Adastrea.Build.cs` - Removed all explicit include paths
+    - `Source/StationEditor/StationEditor.Build.cs` - Removed UI/ include path
+  - **Git History**: All moves recognized as renames, preserving file history
+
 ### Fixed
 
 - **MSBuild SetEnv Environment Variable Length Issue - Complete Fix** (2025-12-26)
@@ -26,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `Source/Adastrea/Adastrea.Build.cs`
     - `Source/StationEditor/StationEditor.Build.cs`
   - **Previous Attempt (PR #357)**: Removed include paths from UnrealMCP plugin only
+  - **NOTE**: This fix was a temporary workaround. The module restructuring above is the permanent solution.
 
 - **MSBuild SetEnv Environment Variable Length Issue - Initial Attempt** (2025-12-26)
   - Fixed `System.ArgumentException: Environment variable name or value is too long` error
