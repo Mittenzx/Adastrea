@@ -182,6 +182,41 @@ error: Circular dependency detected between modules
    - ❌ `Adastrea` depends on `StationEditor` AND `StationEditor` depends on `Adastrea`
    - ✅ Only `StationEditor` should depend on `Adastrea`
 
+### Issue 6: Command Line Too Long / getenv Errors
+
+**Symptoms:**
+```
+error: Command line is too long
+error: 'getenv' is not a valid Win32 application
+```
+
+**Cause:** Excessive `PublicIncludePaths` entries in `.Build.cs` files causing command line length to exceed Windows limits during project generation.
+
+**Solution:**
+
+**FIXED (2025-12-26):** This issue has been resolved in the codebase. All redundant `PublicIncludePaths` have been removed from module Build.cs files.
+
+1. **Understanding the Fix:**
+   - Unreal Engine 5 automatically includes `Public/` and `Private/` folders for each module
+   - Explicit `PublicIncludePaths` entries were redundant and caused excessively long command lines
+   - All existing includes (e.g., `#include "Ships/SpaceshipDataAsset.h"`) continue to work
+
+2. **If You're Still Experiencing This Issue:**
+   - Ensure your local branch is up to date with the latest changes
+   - Check that your Build.cs files don't have extra PublicIncludePaths entries
+   - Run: `git pull origin main` to get the latest fixes
+
+3. **Technical Details:**
+   - **Removed from `Adastrea.Build.cs`**: 18 redundant include path entries
+   - **Removed from `StationEditor.Build.cs`**: 2 redundant include path entries
+   - **Removed from `PlayerMods.Build.cs`**: 2 redundant include path entries
+   - UE5's automatic path resolution handles all includes correctly
+
+4. **Verification:**
+   - After updating, regenerate Visual Studio project files
+   - Project generation should complete without command line errors
+   - All includes should compile successfully
+
 ---
 
 ## Complete Clean Build Process
