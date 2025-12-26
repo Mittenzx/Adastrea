@@ -96,6 +96,26 @@ public:
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player|Station Editor", meta=(ClampMin=100.0f))
 	float StationSearchRadius = 5000.0f;
+
+	// ====================
+	// Trading Interaction
+	// ====================
+
+	/**
+	 * Maximum distance to interact with stations for trading (in world units)
+	 * When the player is within this range of a station, "Press F to Trade" prompt appears
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player|Trading", meta=(ClampMin=100.0f))
+	float TradingInteractionRadius = 2000.0f;
+
+	/**
+	 * How often to check for nearby stations (in seconds)
+	 * Lower values = more responsive but higher CPU cost
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player|Trading", meta=(ClampMin=0.1f, ClampMax=5.0f))
+	float StationCheckInterval = 0.5f;
+
+	// ====================
 	// HUD Configuration
 	// ====================
 
@@ -372,6 +392,37 @@ public:
 	class UTradingInterfaceWidget* GetTradingWidget() const;
 
 	/**
+	 * Attempt to initiate trading with the nearest station
+	 * Called when player presses the interaction key (F by default)
+	 * Only works if player is within TradingInteractionRadius of a station
+	 */
+	UFUNCTION(BlueprintCallable, Category="Player|Trading")
+	void AttemptTradeWithNearestStation();
+
+	/**
+	 * Check if the player is near a station that can be traded with
+	 * @return True if within trading range of a station
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Trading")
+	bool IsNearTradableStation() const;
+
+	/**
+	 * Get the nearest station that can be traded with (within interaction radius)
+	 * @return The nearest station, or nullptr if none within range
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Trading")
+	ASpaceStation* GetNearestTradableStation() const;
+
+	/**
+	 * Blueprint implementable event called when nearby tradable station state changes
+	 * Use this to show/hide "Press F to Trade" UI prompt
+	 * @param bIsNearStation True if now near a tradable station, false if left range
+	 * @param Station The station we're near, or nullptr if left range
+	 */
+	UFUNCTION(BlueprintImplementableEvent, Category="Player|Trading")
+	void OnNearbyTradableStationChanged(bool bIsNearStation, ASpaceStation* Station);
+
+	/**
 	 * Open the station management interface for a specific station
 	 * @param Station The station to manage
 	 */
@@ -503,6 +554,12 @@ protected:
 	 */
 	void HideStationManagement();
 
+	/**
+	 * Timer callback to check for nearby tradable stations
+	 * Called periodically based on StationCheckInterval
+	 */
+	void CheckForNearbyTradableStations();
+
 private:
 	/** The currently active station editor widget instance */
 	UPROPERTY()
@@ -525,4 +582,14 @@ private:
 
 	/** Whether the station management interface is currently open */
 	bool bIsStationManagementOpen;
+
+	/** The nearest station within trading interaction radius */
+	UPROPERTY()
+	ASpaceStation* NearbyTradableStation;
+
+	/** Whether we were near a tradable station on the last check */
+	bool bWasNearTradableStation;
+
+	/** Timer handle for periodic station proximity checks */
+	FTimerHandle StationCheckTimerHandle;
 };
