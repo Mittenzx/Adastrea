@@ -1,5 +1,5 @@
 #include "AI/FactionLogic.h"
-#include "Public/AdastreaLog.h"
+#include "AdastreaLog.h"
 
 UFactionLogic::UFactionLogic()
 {
