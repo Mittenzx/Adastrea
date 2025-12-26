@@ -13,27 +13,9 @@ public class Adastrea : ModuleRules
 		// See: Anti-Pattern #15 (Build System Fragility) - fix warnings, don't disable them
 		bWarningsAsErrors = true;
 
-		// Expose public headers for cross-module includes
-		// Add base "Adastrea" path to support folder-prefixed includes like "Stations/SpaceStationModule.h"
-		PublicIncludePaths.AddRange(new string[] 
-		{
-			"Adastrea",
-			"Adastrea/Public",
-			"Adastrea/Public/AI",
-			"Adastrea/Public/Ships",
-			"Adastrea/Public/Factions",
-			"Adastrea/Public/Combat",
-			"Adastrea/Public/Navigation",
-			"Adastrea/Public/Quest",
-			"Adastrea/Public/Input",
-			"Adastrea/Public/Audio",
-			"Adastrea/Public/Performance",
-			"Adastrea/Public/UI",
-			"Adastrea/Public/Tutorial",
-			"Adastrea/Public/Exploration",
-			"Adastrea/Way",
-			"Adastrea/Rivals"
-		});
+		// Note: PublicIncludePaths removed to fix command line length issues during project generation
+		// UE5 automatically includes Public/ and Private/ folders, making explicit paths redundant
+		// Existing includes like "Ships/SpaceshipDataAsset.h" continue to work via UE5's automatic include path resolution
 
 		// Note: StationEditor dependency removed to fix circular dependency
 		// StationEditor depends on Adastrea, so Adastrea cannot depend on StationEditor

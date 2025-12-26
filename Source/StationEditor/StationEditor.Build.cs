@@ -12,12 +12,9 @@ public class StationEditor : ModuleRules
 		// Engine-level warnings (C4459) are suppressed at target level via /wd4459
 		bWarningsAsErrors = true;
 
-		// Include paths for this module
-		PublicIncludePaths.AddRange(new string[] 
-		{
-			"StationEditor",
-			"Adastrea"  // For Stations/ includes
-		});
+		// Note: PublicIncludePaths removed to fix command line length issues during project generation
+		// UE5 automatically includes Public/ and Private/ folders, making explicit paths redundant
+		// Cross-module includes (e.g., "Factions/FactionDataAsset.h") work via dependency on Adastrea module
 
 		PublicDependencyModuleNames.AddRange(new string[] 
 		{ 
