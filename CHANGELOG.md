@@ -9,7 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- **MSBuild SetEnv Environment Variable Length Issue** (2025-12-26)
+- **MSBuild SetEnv Environment Variable Length Issue - Complete Fix** (2025-12-26)
+  - Fixed persistent `System.ArgumentException: Environment variable name or value is too long` error
+  - **Root Cause**: Non-standard directory structure in Adastrea and StationEditor modules
+    - Adastrea module has 21 subdirectories (AI/, Combat/, Ships/, etc.) at root level
+    - StationEditor module has UI/ subdirectory at root level
+    - These directories are NOT inside Public/ or Private/, so UE5 doesn't auto-include them
+    - Previous fix (PR #357) removed ALL include paths, breaking header discovery
+  - **Solution**: Added explicit include paths using `ModuleDirectory` for relative paths
+    - Added 21 subdirectory paths to `Adastrea.Build.cs`
+    - Added UI/ subdirectory path to `StationEditor.Build.cs`
+    - Using `System.IO.Path.Combine(ModuleDirectory, ...)` keeps paths short (relative, not absolute)
+    - This provides necessary include paths without hitting environment variable length limits
+  - **Impact**: Headers in non-standard directories can now be found during compilation
+  - **Modified Files**: 
+    - `Source/Adastrea/Adastrea.Build.cs`
+    - `Source/StationEditor/StationEditor.Build.cs`
+  - **Previous Attempt (PR #357)**: Removed include paths from UnrealMCP plugin only
+
+- **MSBuild SetEnv Environment Variable Length Issue - Initial Attempt** (2025-12-26)
   - Fixed `System.ArgumentException: Environment variable name or value is too long` error
   - **Root Cause**: Empty `PublicIncludePaths` and `PrivateIncludePaths` arrays in UnrealMCP plugin
   - **Solution**: Removed redundant include path declarations from `UnrealMCP.Build.cs`
@@ -17,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - This prevents Windows environment variable length limits (~32KB) from being exceeded during project generation
   - **Impact**: Project files can now be regenerated without SetEnv task failures
   - **Modified Files**: `Plugins/UnrealMCP/Source/UnrealMCP/UnrealMCP.Build.cs`
-  - **Consistency**: All modules (Adastrea, StationEditor, PlayerMods, UnrealMCP) now follow the same pattern
+  - **Limitation**: Did not account for non-standard directory structures
 
 ### Added
 
