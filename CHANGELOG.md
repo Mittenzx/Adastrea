@@ -9,6 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Press F to Trade Feature** (2025-12-26)
+  - Added proximity-based trading interaction system for space stations
+  - Players can now initiate trading when within range of a station by pressing F
+  - **New Properties**:
+    - `TradingInteractionRadius` (default: 2000 units) - Configurable trading range
+    - `StationCheckInterval` (default: 0.5s) - Frequency of proximity checks
+  - **New Functions**:
+    - `AttemptTradeWithNearestStation()` - Opens trading UI with nearest station
+    - `IsNearTradableStation()` - Check if near a tradable station
+    - `GetNearestTradableStation()` - Get reference to nearby station
+  - **Blueprint Event**:
+    - `OnNearbyTradableStationChanged(IsNearStation, Station)` - For UI integration
+  - **Implementation Details**:
+    - Timer-based proximity checking (efficient, no Tick overhead)
+    - Automatically retrieves station's faction for trading
+    - Only works when controlling a spaceship
+    - Configurable interaction distance and check interval in editor
+  - **Documentation**: See `docs/systems/PressF_ToTrade_Integration.md`
+  - **Modified Files**: 
+    - `Source/Adastrea/Public/Player/AdastreaPlayerController.h`
+    - `Source/Adastrea/Player/AdastreaPlayerController.cpp`
+
 - **Phase 1 Implementation Documentation** (2025-12-25)
   - **Context**: Starting Phase 1 of Trade Simulator MVP (Weeks 1-4)
   - **Goal**: Build hardcoded prototype to validate "buy low, sell high" is fun
