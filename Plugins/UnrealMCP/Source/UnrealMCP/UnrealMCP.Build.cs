@@ -10,17 +10,9 @@ public class UnrealMCP : ModuleRules
 		// Use IWYUSupport instead of the deprecated bEnforceIWYU in UE5.5
 		IWYUSupport = IWYUSupport.Full;
 
-		PublicIncludePaths.AddRange(
-			new string[] {
-				// ... add public include paths required here ...
-			}
-		);
-		
-		PrivateIncludePaths.AddRange(
-			new string[] {
-				// ... add other private include paths required here ...
-			}
-		);
+		// Note: PublicIncludePaths and PrivateIncludePaths removed to fix command line length issues
+		// UE5 automatically includes Public/ and Private/ folders, making explicit paths redundant
+		// This prevents MSBuild SetEnv task from failing with "Environment variable name or value is too long"
 		
 		PublicDependencyModuleNames.AddRange(
 			new string[]
