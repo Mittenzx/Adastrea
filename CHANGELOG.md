@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **MSBuild SetEnv Environment Variable Length Issue** (2025-12-26)
+  - Fixed `System.ArgumentException: Environment variable name or value is too long` error
+  - **Root Cause**: Empty `PublicIncludePaths` and `PrivateIncludePaths` arrays in UnrealMCP plugin
+  - **Solution**: Removed redundant include path declarations from `UnrealMCP.Build.cs`
+  - UE5 automatically includes Public/ and Private/ subdirectories, making explicit declarations unnecessary
+  - This prevents Windows environment variable length limits (~32KB) from being exceeded during project generation
+  - **Impact**: Project files can now be regenerated without SetEnv task failures
+  - **Modified Files**: `Plugins/UnrealMCP/Source/UnrealMCP/UnrealMCP.Build.cs`
+  - **Consistency**: All modules (Adastrea, StationEditor, PlayerMods, UnrealMCP) now follow the same pattern
+
 ### Added
 
 - **Press F to Trade Feature** (2025-12-26)
