@@ -289,4 +289,4 @@ If you encounter a build issue not covered here:
 
 **Last Updated**: 2025-12-26  
 **Applies To**: Unreal Engine 5.6+  
-**Related Fixes**: PR #[SetEnv Task Error Fix]
+**Related Fixes**: SetEnv task error handling improvements
