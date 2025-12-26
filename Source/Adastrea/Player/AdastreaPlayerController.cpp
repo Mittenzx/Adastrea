@@ -14,6 +14,8 @@
 #include "Public/UI/TradingInterfaceWidget.h"
 #include "Public/UI/StationManagementWidget.h"
 #include "Factions/FactionDataAsset.h"
+#include "Interfaces/IFactionMember.h"
+#include "TimerManager.h"
 
 AAdastreaPlayerController::AAdastreaPlayerController()
 {
@@ -21,6 +23,8 @@ AAdastreaPlayerController::AAdastreaPlayerController()
 	StationEditorWidgetClass = nullptr;
 	ModuleCatalog = nullptr;
 	StationSearchRadius = 5000.0f;
+	TradingInteractionRadius = 2000.0f;
+	StationCheckInterval = 0.5f;
 	StationEditorWidget = nullptr;
 	bIsStationEditorOpen = false;
 	HUDWidgetClass = nullptr;
@@ -40,6 +44,8 @@ AAdastreaPlayerController::AAdastreaPlayerController()
 	StationManagementWidgetClass = nullptr;
 	StationManagementWidget = nullptr;
 	bIsStationManagementOpen = false;
+	NearbyTradableStation = nullptr;
+	bWasNearTradableStation = false;
 }
 
 void AAdastreaPlayerController::BeginPlay()
@@ -68,6 +74,20 @@ void AAdastreaPlayerController::BeginPlay()
 	{
 		UE_LOG(LogAdastrea, Log, TEXT("AdastreaPlayerController: No HUD widget class set - HUD will not be displayed"));
 	}
+
+	// Start timer to check for nearby tradable stations
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		World->GetTimerManager().SetTimer(
+			StationCheckTimerHandle,
+			this,
+			&AAdastreaPlayerController::CheckForNearbyTradableStations,
+			StationCheckInterval,
+			true  // Loop
+		);
+		UE_LOG(LogAdastrea, Log, TEXT("AdastreaPlayerController: Started nearby station check timer"));
+	}
 }
 
 void AAdastreaPlayerController::SetupInputComponent()
@@ -78,6 +98,17 @@ void AAdastreaPlayerController::SetupInputComponent()
 	// This ensures centralized input configuration and prevents conflicts between systems
 	//
 	// Station Editor: Bind StationEditorAction to ToggleStationEditor() in Blueprint
+}
+
+void AAdastreaPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	// Explicitly clear the station check timer to avoid dangling callbacks and keep timer usage maintainable
+	if (UWorld* World = GetWorld())
+	{
+		World->GetTimerManager().ClearTimer(StationCheckTimerHandle);
+	}
+
+	Super::EndPlay(EndPlayReason);
 }
 
 void AAdastreaPlayerController::OnPossessSpaceship_Implementation(ASpaceship* NewSpaceship)
@@ -927,4 +958,138 @@ void AAdastreaPlayerController::HideStationManagement()
 	bIsStationManagementOpen = false;
 	
 	UE_LOG(LogAdastrea, Log, TEXT("HideStationManagement: Station management interface hidden"));
+}
+
+// ====================
+// Trading Interaction Implementation
+// ====================
+
+void AAdastreaPlayerController::CheckForNearbyTradableStations()
+{
+	// Only check if controlling a spaceship
+	if (!IsControllingSpaceship())
+	{
+		// Clear nearby station if we're not in a spaceship
+		if (NearbyTradableStation != nullptr)
+		{
+			NearbyTradableStation = nullptr;
+			bWasNearTradableStation = false;
+			OnNearbyTradableStationChanged(false, nullptr);
+		}
+		return;
+	}
+
+	UWorld* World = GetWorld();
+	if (!World)
+	{
+		return;
+	}
+
+	APawn* ControlledPawn = GetPawn();
+	if (!ControlledPawn)
+	{
+		return;
+	}
+
+	FVector PlayerLocation = ControlledPawn->GetActorLocation();
+	
+	// Find all space stations in the world
+	TArray<AActor*> FoundStations;
+	UGameplayStatics::GetAllActorsOfClass(World, ASpaceStation::StaticClass(), FoundStations);
+	
+	ASpaceStation* ClosestStation = nullptr;
+	float ClosestDistance = TradingInteractionRadius;
+	
+	// Find the nearest station within trading interaction radius
+	for (AActor* Actor : FoundStations)
+	{
+		ASpaceStation* Station = Cast<ASpaceStation>(Actor);
+		if (!Station)
+		{
+			continue;
+		}
+		
+		float Distance = FVector::Dist(PlayerLocation, Station->GetActorLocation());
+		
+		if (Distance < ClosestDistance)
+		{
+			ClosestDistance = Distance;
+			ClosestStation = Station;
+		}
+	}
+
+	// Check if the nearby station state changed
+	bool bIsCurrentlyNear = (ClosestStation != nullptr);
+	
+	if (bIsCurrentlyNear != bWasNearTradableStation || ClosestStation != NearbyTradableStation)
+	{
+		// State changed - update and notify
+		NearbyTradableStation = ClosestStation;
+		bWasNearTradableStation = bIsCurrentlyNear;
+		
+		OnNearbyTradableStationChanged(bIsCurrentlyNear, ClosestStation);
+		
+		if (bIsCurrentlyNear)
+		{
+			UE_LOG(LogAdastrea, Log, TEXT("CheckForNearbyTradableStations: Now near station '%s' at distance %.1f"), 
+				*ClosestStation->GetName(), ClosestDistance);
+		}
+		else
+		{
+			UE_LOG(LogAdastrea, Log, TEXT("CheckForNearbyTradableStations: Left station trading range"));
+		}
+	}
+}
+
+void AAdastreaPlayerController::AttemptTradeWithNearestStation()
+{
+	if (!IsControllingSpaceship())
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("AttemptTradeWithNearestStation: Not controlling a spaceship"));
+		return;
+	}
+
+	// Get the nearest tradable station
+	ASpaceStation* Station = GetNearestTradableStation();
+	
+	if (!Station)
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("AttemptTradeWithNearestStation: No station within trading range"));
+		return;
+	}
+
+	// Get the station's faction for trading
+	UFactionDataAsset* StationFaction = nullptr;
+	if (Station->GetClass()->ImplementsInterface(UIFactionMember::StaticClass()))
+	{
+		IFactionMember* FactionMember = Cast<IFactionMember>(Station);
+		if (FactionMember)
+		{
+			StationFaction = IFactionMember::Execute_GetFaction(Station);
+		}
+	}
+
+	if (!StationFaction)
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("AttemptTradeWithNearestStation: Station '%s' has no faction - cannot trade"), 
+			*Station->GetName());
+		return;
+	}
+
+	// Open trading interface with station's faction
+	OpenTrading(StationFaction);
+	
+	UE_LOG(LogAdastrea, Log, TEXT("AttemptTradeWithNearestStation: Opened trading with station '%s' (Faction: %s)"), 
+		*Station->GetName(), *StationFaction->FactionName.ToString());
+}
+
+bool AAdastreaPlayerController::IsNearTradableStation() const
+{
+	return NearbyTradableStation != nullptr;
+}
+
+ASpaceStation* AAdastreaPlayerController::GetNearestTradableStation() const
+{
+	// Return the cached nearby station (updated by timer)
+	return NearbyTradableStation;
 }
