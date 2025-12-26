@@ -203,4 +203,4 @@ To verify include paths are working:
 
 **Last Updated**: 2025-12-26  
 **Related Issues**: SetEnv environment variable length error  
-**Related PRs**: #357 (partial fix), #TBD (complete fix)
+**Related PRs**: #357 (partial fix), this PR (complete fix)
