@@ -219,75 +219,21 @@ private:
 	TArray<FTradeTransaction> GetTransactionsByItem(FName ItemID) const;
 
 	/**
-	 * Get all transactions at a specific market
-	 * @param Market The market to search for
-	 * @return Array of transactions at this market
-	 */
-	UFUNCTION(BlueprintCallable, Category="Transaction History")
-	TArray<FTradeTransaction> GetTransactionsByMarket(UMarketDataAsset* Market) const;
-
-	/**
-	 * Get all transactions by a specific trader
-	 * @param TraderID The trader to search for
-	 * @return Array of transactions involving this trader
-	 */
-	UFUNCTION(BlueprintCallable, Category="Transaction History")
-	TArray<FTradeTransaction> GetTransactionsByTrader(FName TraderID) const;
-
-	/**
-	 * Get transactions within a time range
-	 * @param StartTime Start of time range
-	 * @param EndTime End of time range
-	 * @return Array of transactions in range
-	 */
-	UFUNCTION(BlueprintCallable, Category="Transaction History")
-	TArray<FTradeTransaction> GetTransactionsByTimeRange(float StartTime, float EndTime) const;
-
-	/**
-	 * Calculate total trade volume for an item
-	 * @param ItemID The item to calculate for
-	 * @param StartTime Start of time range
-	 * @param EndTime End of time range
-	 * @return Total units traded
-	 */
-	UFUNCTION(BlueprintCallable, Category="Transaction History|Analytics")
-	int32 GetTotalTradeVolume(FName ItemID, float StartTime, float EndTime) const;
-
-	/**
 	 * Calculate average price for an item over time
 	 * @param ItemID The item to calculate for
 	 * @param StartTime Start of time range
 	 * @param EndTime End of time range
 	 * @return Average price per unit
 	 */
-	UFUNCTION(BlueprintCallable, Category="Transaction History|Analytics")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Transaction History|Analytics")
 	float GetAveragePrice(FName ItemID, float StartTime, float EndTime) const;
-
-	/**
-	 * Get price trend (increasing, decreasing, or stable)
-	 * @param ItemID The item to analyze
-	 * @param TimeWindow Time window in hours to analyze
-	 * @return Trend value (positive = increasing, negative = decreasing, ~0 = stable)
-	 */
-	UFUNCTION(BlueprintCallable, Category="Transaction History|Analytics")
-	float GetPriceTrend(FName ItemID, float TimeWindow) const;
-
-	/**
-	 * Get most traded items
-	 * @param Count Number of items to return
-	 * @param StartTime Start of time range
-	 * @param EndTime End of time range
-	 * @return Array of most traded item IDs
-	 */
-	UFUNCTION(BlueprintCallable, Category="Transaction History|Analytics")
-	TArray<FName> GetMostTradedItems(int32 Count, float StartTime, float EndTime) const;
 
 	/**
 	 * Get total player profit/loss
 	 * @param PlayerID The player to calculate for
 	 * @return Total profit (negative if loss)
 	 */
-	UFUNCTION(BlueprintCallable, Category="Transaction History|Analytics")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Transaction History|Analytics")
 	int32 GetPlayerProfitLoss(FName PlayerID) const;
 
 	/**
@@ -296,19 +242,53 @@ private:
 	UFUNCTION(BlueprintCallable, Category="Transaction History")
 	void ClearHistory();
 
+private:
+	/**
+	 * Get all transactions at a specific market
+	 * Internal query function
+	 */
+	TArray<FTradeTransaction> GetTransactionsByMarket(UMarketDataAsset* Market) const;
+
+	/**
+	 * Get all transactions by a specific trader
+	 * Internal query function
+	 */
+	TArray<FTradeTransaction> GetTransactionsByTrader(FName TraderID) const;
+
+	/**
+	 * Get transactions within a time range
+	 * Internal query function
+	 */
+	TArray<FTradeTransaction> GetTransactionsByTimeRange(float StartTime, float EndTime) const;
+
+	/**
+	 * Calculate total trade volume for an item
+	 * Internal analytics function
+	 */
+	int32 GetTotalTradeVolume(FName ItemID, float StartTime, float EndTime) const;
+
+	/**
+	 * Get price trend (increasing, decreasing, or stable)
+	 * Internal analytics function
+	 */
+	float GetPriceTrend(FName ItemID, float TimeWindow) const;
+
+	/**
+	 * Get most traded items
+	 * Internal analytics function
+	 */
+	TArray<FName> GetMostTradedItems(int32 Count, float StartTime, float EndTime) const;
+
 	/**
 	 * Export transaction history to string (for save/load)
-	 * @return JSON string of transactions
+	 * Internal serialization function
 	 */
-	UFUNCTION(BlueprintCallable, Category="Transaction History")
 	FString ExportToString() const;
 
 	/**
 	 * Import transaction history from string
-	 * @param Data JSON string of transactions
-	 * @return True if successfully imported
+	 * Internal serialization function
 	 */
-	UFUNCTION(BlueprintCallable, Category="Transaction History")
 	bool ImportFromString(const FString& Data);
 
 private:

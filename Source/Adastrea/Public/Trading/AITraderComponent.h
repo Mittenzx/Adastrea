@@ -255,22 +255,6 @@ public:
 	void UpdateTrader(float DeltaTime);
 
 	/**
-	 * Find best trade routes between known markets
-	 * @param MaxRoutes Maximum number of routes to return
-	 * @return Array of profitable trade routes
-	 */
-	UFUNCTION(BlueprintCallable, Category="AI Trader|Route Planning")
-	TArray<FTradeRoute> FindBestTradeRoutes(int32 MaxRoutes = 5);
-
-	/**
-	 * Calculate arbitrage opportunities
-	 * @param TradeItem Item to check for arbitrage
-	 * @return Best arbitrage route (or empty if none profitable)
-	 */
-	UFUNCTION(BlueprintCallable, Category="AI Trader|Arbitrage")
-	FTradeRoute CalculateArbitrageOpportunity(UTradeItemDataAsset* TradeItem);
-
-	/**
 	 * Execute a trade at current location
 	 * @param TradeItem Item to trade
 	 * @param Quantity Quantity to trade
@@ -279,50 +263,6 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category="AI Trader|Trading")
 	bool ExecuteTrade(UTradeItemDataAsset* TradeItem, int32 Quantity, bool bIsBuying);
-
-	/**
-	 * Evaluate whether to accept a contract
-	 * @param Contract The contract to evaluate
-	 * @return True if contract should be accepted
-	 */
-	UFUNCTION(BlueprintCallable, Category="AI Trader|Contracts")
-	bool EvaluateContract(UTradeContractDataAsset* Contract);
-
-	/**
-	 * Accept a contract
-	 * @param Contract The contract to accept
-	 * @return True if successfully accepted
-	 */
-	UFUNCTION(BlueprintCallable, Category="AI Trader|Contracts")
-	bool AcceptContract(UTradeContractDataAsset* Contract);
-
-	/**
-	 * Attempt market manipulation (buy/sell to influence prices)
-	 * @param TargetMarket Market to manipulate
-	 * @param TradeItem Item to manipulate
-	 * @param DesiredPriceChange Desired price change direction (positive = increase, negative = decrease)
-	 * @return True if manipulation was executed
-	 */
-	UFUNCTION(BlueprintCallable, Category="AI Trader|Manipulation")
-	bool AttemptMarketManipulation(UMarketDataAsset* TargetMarket, UTradeItemDataAsset* TradeItem, float DesiredPriceChange);
-
-	/**
-	 * React to market events
-	 * @param Market The market where event occurred
-	 * @param EventID The event identifier
-	 */
-	UFUNCTION(BlueprintCallable, Category="AI Trader|Events")
-	void ReactToMarketEvent(UMarketDataAsset* Market, FName EventID);
-
-	/**
-	 * React to player actions
-	 * @param Market The market where player traded
-	 * @param TradeItem Item the player traded
-	 * @param Quantity Quantity traded
-	 * @param bPlayerBought True if player bought (AI may want to sell)
-	 */
-	UFUNCTION(BlueprintCallable, Category="AI Trader|Events")
-	void ReactToPlayerAction(UMarketDataAsset* Market, UTradeItemDataAsset* TradeItem, int32 Quantity, bool bPlayerBought);
 
 	/**
 	 * Travel to another market
@@ -336,14 +276,14 @@ public:
 	 * Get current cargo space usage
 	 * @return Percentage of cargo space used (0.0 to 1.0)
 	 */
-	UFUNCTION(BlueprintCallable, Category="AI Trader|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="AI Trader|Inventory")
 	float GetCargoUsage() const;
 
 	/**
 	 * Get available cargo space
 	 * @return Available cargo space
 	 */
-	UFUNCTION(BlueprintCallable, Category="AI Trader|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="AI Trader|Inventory")
 	float GetAvailableCargoSpace() const;
 
 	/**
@@ -351,23 +291,67 @@ public:
 	 * @param Behavior The behavior to check
 	 * @return True if behavior is enabled
 	 */
-	UFUNCTION(BlueprintCallable, Category="AI Trader|Behavior")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="AI Trader|Behavior")
 	bool IsBehaviorEnabled(EAITradeBehavior Behavior) const;
-
-	/**
-	 * Add a market to known markets
-	 * @param Market Market to add
-	 */
-	UFUNCTION(BlueprintCallable, Category="AI Trader|Knowledge")
-	void DiscoverMarket(UMarketDataAsset* Market);
 
 	/**
 	 * Check if trader knows about a market
 	 * @param Market Market to check
 	 * @return True if market is known
 	 */
-	UFUNCTION(BlueprintCallable, Category="AI Trader|Knowledge")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="AI Trader|Knowledge")
 	bool IsMarketKnown(UMarketDataAsset* Market) const;
+
+private:
+	/**
+	 * Find best trade routes between known markets
+	 * Internal AI logic - not exposed to Blueprints
+	 */
+	TArray<FTradeRoute> FindBestTradeRoutes(int32 MaxRoutes = 5);
+
+	/**
+	 * Calculate arbitrage opportunities
+	 * Internal AI logic - not exposed to Blueprints
+	 */
+	FTradeRoute CalculateArbitrageOpportunity(UTradeItemDataAsset* TradeItem);
+
+	/**
+	 * Evaluate whether to accept a contract
+	 * Internal AI logic - not exposed to Blueprints
+	 */
+	bool EvaluateContract(UTradeContractDataAsset* Contract);
+
+	/**
+	 * Accept a contract
+	 * Internal AI logic - not exposed to Blueprints
+	 */
+	bool AcceptContract(UTradeContractDataAsset* Contract);
+
+	/**
+	 * Attempt market manipulation (buy/sell to influence prices)
+	 * Internal AI logic - not exposed to Blueprints
+	 */
+	bool AttemptMarketManipulation(UMarketDataAsset* TargetMarket, UTradeItemDataAsset* TradeItem, float DesiredPriceChange);
+
+	/**
+	 * React to market events
+	 * Internal AI logic - not exposed to Blueprints
+	 */
+	void ReactToMarketEvent(UMarketDataAsset* Market, FName EventID);
+
+	/**
+	 * React to player actions
+	 * Internal AI logic - not exposed to Blueprints
+	 */
+	void ReactToPlayerAction(UMarketDataAsset* Market, UTradeItemDataAsset* TradeItem, int32 Quantity, bool bPlayerBought);
+
+	/**
+	 * Add a market to known markets
+	 * Internal AI logic - not exposed to Blueprints
+	 */
+	void DiscoverMarket(UMarketDataAsset* Market);
+
+public:
 
 	/**
 	 * BlueprintNativeEvent: Custom trade decision logic
