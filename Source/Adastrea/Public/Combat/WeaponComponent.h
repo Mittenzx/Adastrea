@@ -30,23 +30,23 @@ public:
     // ====================
 
     /** Weapon data asset defining this weapon's properties */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon")
-    UWeaponDataAsset* WeaponData;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Weapon")
+    TObjectPtr<UWeaponDataAsset> WeaponData;
 
     /** Mount size for this hardpoint */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Weapon")
     EWeaponMountSize MountSize;
 
     /** Relative location of weapon mount on ship */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Weapon")
     FVector MountLocation;
 
     /** Relative rotation of weapon mount on ship */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Weapon")
     FRotator MountRotation;
 
     /** Whether this is a turret (can rotate) or fixed mount */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Weapon")
     bool bIsTurret;
 
     // ====================
@@ -71,7 +71,7 @@ public:
 
     /** Current target actor (if any) */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Weapon State")
-    AActor* CurrentTarget;
+    TWeakObjectPtr<AActor> CurrentTarget;
 
 protected:
     /** Time since last shot (for rate of fire management) */

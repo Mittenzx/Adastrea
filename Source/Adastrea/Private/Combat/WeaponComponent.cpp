@@ -104,13 +104,13 @@ bool UWeaponComponent::Fire(AActor* Target)
     }
 
     // Apply damage to target
-    if (CurrentTarget)
+    if (CurrentTarget.IsValid())
     {
-        ApplyDamageToTarget(CurrentTarget);
+        ApplyDamageToTarget(CurrentTarget.Get());
     }
 
     // Trigger fire event
-    OnWeaponFired(CurrentTarget);
+    OnWeaponFired(CurrentTarget.Get());
 
     return true;
 }
