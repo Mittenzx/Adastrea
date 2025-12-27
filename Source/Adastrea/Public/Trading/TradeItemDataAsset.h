@@ -50,15 +50,15 @@ struct FPriceVolatility
 	GENERATED_BODY()
 
 	// Base volatility multiplier (0.0 = stable, 1.0 = normal, 2.0+ = very volatile)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Pricing", meta=(ClampMin="0.0", ClampMax="5.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Pricing", meta=(ClampMin="0.0", ClampMax="5.0"))
 	float VolatilityMultiplier;
 
 	// Minimum price deviation as percentage (e.g., 0.5 = 50% below base)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Pricing", meta=(ClampMin="0.0", ClampMax="1.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Pricing", meta=(ClampMin="0.0", ClampMax="1.0"))
 	float MinPriceDeviation;
 
 	// Maximum price deviation as percentage (e.g., 2.0 = 200% above base)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Pricing", meta=(ClampMin="1.0", ClampMax="10.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Pricing", meta=(ClampMin="1.0", ClampMax="10.0"))
 	float MaxPriceDeviation;
 
 	FPriceVolatility()
@@ -77,15 +77,15 @@ struct FTradeRestrictions
 	GENERATED_BODY()
 
 	// Factions that ban this item completely
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Restrictions")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Restrictions")
 	TArray<FName> BannedFactions;
 
 	// Factions that require special permits
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Restrictions")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Restrictions")
 	TArray<FName> RequiresPermitFactions;
 
 	// Minimum faction reputation required to trade (-100 to 100)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Restrictions", meta=(ClampMin="-100", ClampMax="100"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Restrictions", meta=(ClampMin="-100", ClampMax="100"))
 	int32 MinReputationRequired;
 
 	FTradeRestrictions()

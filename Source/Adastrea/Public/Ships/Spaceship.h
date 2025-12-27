@@ -127,15 +127,15 @@ public:
     bool bFlightAssistEnabled;
 
     /** Rotation damping factor for smooth rotation interpolation (0-1, higher = more damping) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flight Control|Flight Assist", meta=(ClampMin="0.0", ClampMax="1.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flight Control|Flight Assist", meta=(ClampMin="0.0", ClampMax="1.0"))
     float RotationDampingFactor;
 
     /** Auto-level strength - how strongly ship levels to ecliptic plane (0-1) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flight Control|Flight Assist", meta=(ClampMin="0.0", ClampMax="1.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flight Control|Flight Assist", meta=(ClampMin="0.0", ClampMax="1.0"))
     float AutoLevelStrength;
 
     /** Flight assist responsiveness - how quickly ship responds to input changes (higher = more responsive) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flight Control|Flight Assist", meta=(ClampMin="0.1", ClampMax="10.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flight Control|Flight Assist", meta=(ClampMin="0.1", ClampMax="10.0"))
     float FlightAssistResponsiveness;
 
     /** Current throttle percentage (0-100) - controls target velocity */
@@ -143,11 +143,11 @@ public:
     float ThrottlePercentage;
 
     /** Throttle increment/decrement amount per input (percentage) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flight Control|Throttle", meta=(ClampMin="1.0", ClampMax="25.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flight Control|Throttle", meta=(ClampMin="1.0", ClampMax="25.0"))
     float ThrottleStep;
     
     /** Throttle adjustment rate limit (seconds between adjustments when button held) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flight Control|Throttle", meta=(ClampMin="0.05", ClampMax="0.5"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flight Control|Throttle", meta=(ClampMin="0.05", ClampMax="0.5"))
     float ThrottleAdjustmentCooldown;
 
     /** Boost mode active - temporary speed increase */
@@ -155,7 +155,7 @@ public:
     bool bBoostActive;
 
     /** Boost speed multiplier when active */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flight Control|Boost", meta=(ClampMin="1.0", ClampMax="5.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flight Control|Boost", meta=(ClampMin="1.0", ClampMax="5.0"))
     float BoostMultiplier;
 
     /** Travel mode active - high-speed cruise for long distances */
@@ -163,7 +163,7 @@ public:
     bool bTravelModeActive;
 
     /** Travel mode speed multiplier */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flight Control|Travel", meta=(ClampMin="2.0", ClampMax="20.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flight Control|Travel", meta=(ClampMin="2.0", ClampMax="20.0"))
     float TravelModeMultiplier;
 
     /** Strafe independence - lateral/vertical strafing independent from forward motion */

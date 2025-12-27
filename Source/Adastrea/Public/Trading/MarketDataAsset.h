@@ -48,35 +48,35 @@ struct FMarketEvent
 	GENERATED_BODY()
 
 	// Display name of the event
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Market Event")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Market Event")
 	FText EventName;
 
 	// Description of the event
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Market Event", meta=(MultiLine=true))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Market Event", meta=(MultiLine=true))
 	FText EventDescription;
 
 	// Unique identifier
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Market Event")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Market Event")
 	FName EventID;
 
 	// Items affected by this event (empty = all items)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Market Event")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Market Event")
 	TArray<FName> AffectedItemIDs;
 
 	// Price multiplier for affected items (1.0 = no change)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Market Event", meta=(ClampMin="0.1", ClampMax="10.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Market Event", meta=(ClampMin="0.1", ClampMax="10.0"))
 	float PriceMultiplier;
 
 	// Supply multiplier for affected items (1.0 = no change)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Market Event", meta=(ClampMin="0.0", ClampMax="5.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Market Event", meta=(ClampMin="0.0", ClampMax="5.0"))
 	float SupplyMultiplier;
 
 	// Demand multiplier for affected items (1.0 = no change)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Market Event", meta=(ClampMin="0.0", ClampMax="5.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Market Event", meta=(ClampMin="0.0", ClampMax="5.0"))
 	float DemandMultiplier;
 
 	// Duration of event in game hours (0 = infinite)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Market Event", meta=(ClampMin="0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Market Event", meta=(ClampMin="0"))
 	float DurationHours;
 
 	// When event started (game time)
@@ -109,7 +109,7 @@ struct FMarketInventoryEntry
 	GENERATED_BODY()
 
 	// The trade item
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Inventory")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Inventory")
 	UTradeItemDataAsset* TradeItem;
 
 	// Current stock level
@@ -117,7 +117,7 @@ struct FMarketInventoryEntry
 	int32 CurrentStock;
 
 	// Maximum stock level
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Inventory", meta=(ClampMin="0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Inventory", meta=(ClampMin="0"))
 	int32 MaxStock;
 
 	// Base supply level (1.0 = typical)
@@ -277,7 +277,7 @@ public:
 	 * @param bIsBuying True if player is buying, false if selling
 	 * @return Current price per unit
 	 */
-	UFUNCTION(BlueprintCallable, Category="Market|Pricing")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Market|Pricing")
 	float GetItemPrice(UTradeItemDataAsset* TradeItem, bool bIsBuying) const;
 
 	/**
@@ -286,7 +286,7 @@ public:
 	 * @param OutEntry The found inventory entry
 	 * @return True if item was found in inventory
 	 */
-	UFUNCTION(BlueprintCallable, Category="Market|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Market|Inventory")
 	bool GetInventoryEntry(FName ItemID, FMarketInventoryEntry& OutEntry) const;
 
 	/**
@@ -295,7 +295,7 @@ public:
 	 * @param Quantity The quantity needed
 	 * @return True if sufficient stock is available
 	 */
-	UFUNCTION(BlueprintCallable, Category="Market|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Market|Inventory")
 	bool IsItemInStock(FName ItemID, int32 Quantity) const;
 
 	/**
@@ -311,7 +311,7 @@ public:
 	 * @param PlayerReputation The player's reputation with controlling faction
 	 * @return True if player can access market
 	 */
-	UFUNCTION(BlueprintCallable, Category="Market|Access")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Market|Access")
 	bool CanPlayerAccess(int32 PlayerReputation) const;
 
 	/**
@@ -322,34 +322,36 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Market|Events")
 	TArray<FMarketEvent> GetActiveEventsForItem(FName ItemID) const;
 
-	/**
-	 * Calculate total price multiplier from all active events for an item
-	 * @param ItemID The item to check
-	 * @return Combined price multiplier from all events
-	 */
-	UFUNCTION(BlueprintCallable, Category="Market|Events")
-	float GetEventPriceMultiplier(FName ItemID) const;
-
+private:
 	/**
 	 * Update market inventory and prices based on elapsed time
-	 * @param DeltaHours Hours elapsed since last update
+	 * Internal system operation - called by EconomyManager
 	 */
-	UFUNCTION(BlueprintCallable, Category="Market|Update")
 	void UpdateMarket(float DeltaHours);
 
 	/**
 	 * Refresh stock levels for all items
+	 * Internal system operation - called by UpdateMarket
 	 */
-	UFUNCTION(BlueprintCallable, Category="Market|Update")
 	void RefreshStock();
 
 	/**
 	 * Process a market event update (check expiration, etc.)
-	 * @param CurrentGameTime Current game time in hours
+	 * Internal system operation - called by EconomyManager
 	 */
-	UFUNCTION(BlueprintCallable, Category="Market|Events")
 	void UpdateMarketEvents(float CurrentGameTime);
 
+	/**
+	 * Calculate total price multiplier from all active events for an item
+	 * Internal calculation - called by GetItemPrice
+	 */
+	float GetEventPriceMultiplier(FName ItemID) const;
+
+	// ====================
+	// BLUEPRINT NATIVE EVENTS
+	// ====================
+
+public:
 	/**
 	 * BlueprintNativeEvent: Custom price calculation override
 	 * Allows designers to implement custom pricing logic in Blueprint

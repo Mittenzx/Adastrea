@@ -14,11 +14,11 @@ struct FInstalledUpgrade
 	GENERATED_BODY()
 
 	/** The upgrade installed */
-	UPROPERTY(BlueprintReadWrite, Category="Upgrade")
+	UPROPERTY(BlueprintReadOnly, Category="Upgrade")
 	UShipUpgradeDataAsset* Upgrade;
 
 	/** Number of stacks (for non-unique upgrades) */
-	UPROPERTY(BlueprintReadWrite, Category="Upgrade", meta=(ClampMin="1"))
+	UPROPERTY(BlueprintReadOnly, Category="Upgrade", meta=(ClampMin="1"))
 	int32 StackCount;
 
 	/** When this upgrade was installed */
@@ -76,15 +76,15 @@ public:
 	// ====================
 
 	/** All installed upgrades */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Upgrades")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Upgrades")
 	TArray<FInstalledUpgrade> InstalledUpgrades;
 
 	/** Ship type ID for compatibility checking */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Upgrades")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Upgrades")
 	FName ShipTypeID;
 
 	/** Maximum number of upgrades that can be installed */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Upgrades", meta=(ClampMin="1", ClampMax="50"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Upgrades", meta=(ClampMin="1", ClampMax="50"))
 	int32 MaxUpgradeSlots;
 
 	// ====================

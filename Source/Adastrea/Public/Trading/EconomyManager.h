@@ -46,19 +46,19 @@ public:
 	// ====================
 
 	// Supply/demand adjustment rate per transaction (0.05 = 5% change)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Economy|Tuning", meta=(ClampMin="0.01", ClampMax="0.5"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Economy|Tuning", meta=(ClampMin="0.01", ClampMax="0.5"))
 	float SupplyDemandAdjustmentRate;
 
 	// Minimum supply/demand level (prevents extreme price swings)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Economy|Tuning", meta=(ClampMin="0.01", ClampMax="1.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Economy|Tuning", meta=(ClampMin="0.01", ClampMax="1.0"))
 	float MinSupplyDemandLevel;
 
 	// Maximum supply/demand level (prevents extreme price swings)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Economy|Tuning", meta=(ClampMin="1.0", ClampMax="10.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Economy|Tuning", meta=(ClampMin="1.0", ClampMax="10.0"))
 	float MaxSupplyDemandLevel;
 
 	// Economic recovery rate (fraction of deviation corrected per game hour)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Economy|Tuning", meta=(ClampMin="0.01", ClampMax="1.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Economy|Tuning", meta=(ClampMin="0.01", ClampMax="1.0"))
 	float EconomicRecoveryRate;
 
 	/**
@@ -88,7 +88,7 @@ public:
 	float TimeScale;
 
 	// Update interval in real seconds
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Economy|Time", meta=(ClampMin="1.0", ClampMax="60.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Economy|Time", meta=(ClampMin="1.0", ClampMax="60.0"))
 	float UpdateInterval;
 
 	// ====================
