@@ -70,7 +70,7 @@ public:
     bool bIsActive;
 
     /** AI update interval in seconds (performance optimization) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Performance", meta = (ClampMin = "0.1", ClampMax = "10.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI|Performance", meta = (ClampMin = "0.1", ClampMax = "10.0"))
     float UpdateInterval;
 
     /** Time accumulated since last AI tick */

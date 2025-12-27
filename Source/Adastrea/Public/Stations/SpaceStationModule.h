@@ -44,20 +44,20 @@ public:
     ASpaceStationModule();
 
     // Type identifier for this module (e.g., "Docking Bay", "Reactor Core")
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Module")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module")
     FString ModuleType;
 
     // Power consumption or generation (negative = generates, positive = consumes)
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Module")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module")
     float ModulePower;
 
     // Functional group for organization and filtering
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Module")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module")
     EStationModuleGroup ModuleGroup;
 
     // Faction this module belongs to (can differ from station faction for multi-faction stations)
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Module")
-    UFactionDataAsset* ModuleFaction;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module")
+    TObjectPtr<UFactionDataAsset> ModuleFaction;
 
     /**
      * Get the faction assigned to this module
@@ -98,14 +98,14 @@ public:
 protected:
     /** Static mesh component for visual representation */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
-    UStaticMeshComponent* MeshComponent;
+    TObjectPtr<UStaticMeshComponent> MeshComponent;
 
     /** Current module integrity (health) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Module Status")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module Status")
     float CurrentModuleIntegrity;
 
     /** Maximum module integrity */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Module Status")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module Status")
     float MaxModuleIntegrity;
 
     /** Flag indicating if module is destroyed */
