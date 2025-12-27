@@ -40,15 +40,15 @@ public:
 	// ====================
 
 	/** Available module slots on this ship */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Customization")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ship Customization")
 	TArray<FShipModuleSlot> ModuleSlots;
 
 	/** Maximum total power capacity of the ship */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Customization", meta=(ClampMin="0", ClampMax="100000"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ship Customization", meta=(ClampMin="0", ClampMax="100000"))
 	float MaxPowerCapacity;
 
 	/** Maximum total mass the ship can carry */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Customization", meta=(ClampMin="0", ClampMax="1000000"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ship Customization", meta=(ClampMin="0", ClampMax="1000000"))
 	float MaxMassCapacity;
 
 protected:

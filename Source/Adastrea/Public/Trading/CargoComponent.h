@@ -17,11 +17,11 @@ struct FCargoEntry
 	GENERATED_BODY()
 
 	// The trade item
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Cargo")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Cargo")
 	TObjectPtr<UTradeItemDataAsset> Item;
 
 	// Quantity in cargo
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Cargo")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Cargo")
 	int32 Quantity;
 
 	FCargoEntry()

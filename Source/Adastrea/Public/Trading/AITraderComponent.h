@@ -49,31 +49,31 @@ struct FTradeRoute
 	GENERATED_BODY()
 
 	// Origin market
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Trade Route")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Trade Route")
 	UMarketDataAsset* OriginMarket;
 
 	// Destination market
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Trade Route")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Trade Route")
 	UMarketDataAsset* DestinationMarket;
 
 	// Trade item
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Trade Route")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Trade Route")
 	UTradeItemDataAsset* TradeItem;
 
 	// Expected profit per unit
-	UPROPERTY(BlueprintReadWrite, Category="Trade Route")
+	UPROPERTY(BlueprintReadOnly, Category="Trade Route")
 	float ProfitPerUnit;
 
 	// Distance between markets
-	UPROPERTY(BlueprintReadWrite, Category="Trade Route")
+	UPROPERTY(BlueprintReadOnly, Category="Trade Route")
 	float Distance;
 
 	// Estimated travel time
-	UPROPERTY(BlueprintReadWrite, Category="Trade Route")
+	UPROPERTY(BlueprintReadOnly, Category="Trade Route")
 	float TravelTime;
 
 	// Route profitability score (higher = better)
-	UPROPERTY(BlueprintReadWrite, Category="Trade Route")
+	UPROPERTY(BlueprintReadOnly, Category="Trade Route")
 	float ProfitabilityScore;
 
 	FTradeRoute()
@@ -96,7 +96,7 @@ struct FAITraderInventory
 	GENERATED_BODY()
 
 	// Trade item
-	UPROPERTY(BlueprintReadWrite, Category="Inventory")
+	UPROPERTY(BlueprintReadOnly, Category="Inventory")
 	UTradeItemDataAsset* TradeItem;
 
 	// Quantity owned
