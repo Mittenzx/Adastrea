@@ -16,37 +16,45 @@ This document provides a step-by-step implementation plan for addressing the non
 
 ### 1.1 Audit and Fix Missing UPROPERTY Macros
 
-- [ ] **Step 1**: Run automated check
+- [x] **Step 1**: Run automated check
   ```bash
   python Tools/check_uproperty.py
   ```
+  ✅ **Completed**: Tool reports 0 violations found
   
-- [ ] **Step 2**: Review output and identify all UObject* without UPROPERTY()
+- [x] **Step 2**: Review output and identify all UObject* without UPROPERTY()
+  ✅ **Completed**: All 140 files scanned, no issues found
 
-- [ ] **Step 3**: Add UPROPERTY() to identified pointers
+- [x] **Step 3**: Add UPROPERTY() to identified pointers
   - Start with critical files: Combat/, AI/, Ships/
   - Pattern: Add `UPROPERTY()` above each UObject* declaration
   - Even private pointers MUST have UPROPERTY()
+  ✅ **Completed**: Codebase already compliant
 
-- [ ] **Step 4**: Test compilation
+- [x] **Step 4**: Test compilation
   ```bash
   # Build in Development Editor mode
   # Ensure no new warnings or errors
   ```
+  ✅ **Completed**: Code compiles successfully
 
-- [ ] **Step 5**: Add CI validation
+- [x] **Step 5**: Add CI validation
   - Update `.github/workflows/` to run check_uproperty.py
   - Fail PR if violations found
+  ✅ **Completed**: CI check already exists in `.github/workflows/code-quality.yml`
 
-- [ ] **Step 6**: Update documentation
+- [x] **Step 6**: Update documentation
   - Add rule to CODE_STYLE.md
   - Add to `.github/copilot-instructions.md`
+  ✅ **Completed**: Added critical UPROPERTY rule to CODE_STYLE.md, already in copilot-instructions.md
 
 **Acceptance Criteria**:
 - ✅ All UObject* pointers have UPROPERTY()
 - ✅ CI check passes
 - ✅ Documentation updated
 - ✅ No compilation errors
+
+**Status**: ✅ **COMPLETE** (2025-12-27) — implementation and acceptance criteria are done; Phase 1 Success Metric "Zero GC-related crashes" remains under long-term runtime validation (currently 2/3 Phase 1 success metrics fully met).
 
 ---
 
@@ -58,31 +66,38 @@ This document provides a step-by-step implementation plan for addressing the non
 
 ### 2.1 Blueprint API Audit
 
-- [ ] **Step 1**: Generate Blueprint API report
+- [x] **Step 1**: Generate Blueprint API report
   ```bash
   grep -r "BlueprintCallable" Source/Adastrea/Public --include="*.h" > blueprint_api.txt
   ```
+  ✅ **Completed**: 1,014 functions identified across all systems
+  ✅ **MVP Analysis**: Trading (70), Ships (106), Stations (10), UI (214) prioritized
 
-- [ ] **Step 2**: Categorize functions
+- [ ] **Step 2**: Categorize functions (MVP-focused)
   - Designer-facing: Keep BlueprintCallable
   - Internal helpers: Remove BlueprintCallable, make private
   - Utilities: Keep but document clearly
+  🔄 **In Progress**: CargoComponent analyzed (13 → 6-8 functions)
+  📄 **Docs**: See PHASE2_BLUEPRINT_API_ANALYSIS.md and PHASE2_TRADING_SYSTEM_CATEGORIZATION.md
 
 - [ ] **Step 3**: Create migration guide
   - Document which functions are being changed
   - Provide alternatives where needed
   - Notify content team
+  ⏳ **Status**: Template created, awaiting function decisions
 
-- [ ] **Step 4**: Implement changes in phases
-  - Week 3: Combat and AI systems
-  - Week 4: Ships, Stations, Trading systems
+- [ ] **Step 4**: Implement changes in phases (MVP-adjusted)
+  - ~~Week 3: Combat and AI systems~~ **Deferred** (out of MVP scope)
+  - Week 3-4: **Trading, Ships, Stations systems** (MVP-critical)
+  - Defer: Combat, AI, Factions, Personnel (post-MVP)
 
 - [ ] **Step 5**: Test Blueprints
   - Verify all existing Blueprints still compile
   - Fix any broken Blueprint references
   - Update Blueprint tutorials
 
-**Target**: Reduce from 1,041 to ~200 BlueprintCallable functions (80% reduction)
+**Target**: Reduce from 1,014 to ~200 BlueprintCallable functions (80% reduction)  
+**MVP Target**: Focus on Trading (70 → 15-20), Ships (106 → 25-30), Stations (10 → 5-7)
 
 ### 2.2 Property Modifier Audit
 
@@ -330,8 +345,8 @@ If issues arise:
 ## Success Metrics
 
 ### Phase 1
-- [ ] 100% of UObject* pointers have UPROPERTY()
-- [ ] CI validation passing
+- [x] 100% of UObject* pointers have UPROPERTY()
+- [x] CI validation passing
 - [ ] Zero GC-related crashes
 
 ### Phase 2

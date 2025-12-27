@@ -241,7 +241,23 @@ void UMyDataAsset::InternalHelperFunction()
 
 ### UPROPERTY Best Practices
 
+**Critical Rule**: ALL `UObject*` pointers MUST have `UPROPERTY()` macro, even private ones. This is required for Unreal Engine's garbage collection to track object references. Without UPROPERTY, objects may be prematurely destroyed, causing crashes.
+
 ```cpp
+// ❌ WRONG - Missing UPROPERTY (will cause GC issues)
+private:
+    UDataAsset* MyData;
+
+// ✅ CORRECT - All UObject* pointers must have UPROPERTY
+private:
+    UPROPERTY()
+    UDataAsset* MyData;
+
+// ✅ CORRECT - Even private pointers need UPROPERTY for GC tracking
+protected:
+    UPROPERTY()
+    AActor* CachedActor;
+
 // Editable in editor, read-only in Blueprints
 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Config")
 float MaxValue;
