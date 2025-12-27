@@ -1,11 +1,12 @@
 @echo off
-REM Script to build Adastrea using Unreal Engine Build Tools
-REM Modified to use installed Unreal Engine instead of UnrealBuildTools directory
-REM Windows version
+REM Script to build Adastrea using Unreal Build Tools (UBT) only
+REM This uses the minimal build tools instead of full engine source
+REM Windows version of build_with_ue_tools.sh
 
 setlocal enabledelayedexpansion
 
 set SCRIPT_DIR=%~dp0
+set UE_TOOLS_DIR=%SCRIPT_DIR%UnrealBuildTools
 set PROJECT_FILE=%SCRIPT_DIR%Adastrea.uproject
 set BUILD_CONFIG=%1
 set PLATFORM=%2
@@ -19,80 +20,54 @@ echo Adastrea - Build with UE Build Tools
 echo ========================================
 echo.
 
+REM Validate UnrealBuildTools directory exists
+if not exist "%UE_TOOLS_DIR%" (
+    echo ERROR: UnrealBuildTools directory not found at: %UE_TOOLS_DIR%
+    echo Please run setup_ue_build_tools.bat first to download the build tools.
+    exit /b 1
+)
+
 REM Validate project file exists
 if not exist "%PROJECT_FILE%" (
     echo ERROR: Project file not found at: %PROJECT_FILE%
     exit /b 1
 )
 
-REM Try to find Unreal Engine installation
-echo Searching for Unreal Engine 5.6 installation...
-set UE_ROOT=
-
-REM Check common installation locations
-if exist "C:\Program Files\Epic Games\UE_5.6\Engine\Build\BatchFiles\Build.bat" (
-    set UE_ROOT=C:\Program Files\Epic Games\UE_5.6
-    echo ✓ Found UE 5.6 at: !UE_ROOT!
-) else if exist "C:\Program Files\Epic Games\UE_5.5\Engine\Build\BatchFiles\Build.bat" (
-    set UE_ROOT=C:\Program Files\Epic Games\UE_5.5
-    echo ✓ Found UE 5.5 at: !UE_ROOT! (using compatible version)
-) else if exist "C:\Program Files (x86)\Epic Games\UE_5.6\Engine\Build\BatchFiles\Build.bat" (
-    set UE_ROOT=C:\Program Files (x86)\Epic Games\UE_5.6
-    echo ✓ Found UE 5.6 at: !UE_ROOT!
-) else (
-    REM Try to read from registry or engine association
-    echo WARNING: Could not auto-detect Unreal Engine installation
-    echo.
-    echo Please specify your Unreal Engine installation path.
-    echo Example: C:\Program Files\Epic Games\UE_5.6
-    echo.
-    set /p UE_ROOT="Enter UE path (or press Ctrl+C to cancel): "
-    
-    if "!UE_ROOT!"=="" (
-        echo ERROR: No Unreal Engine path provided
-        exit /b 1
-    )
-    
-    if not exist "!UE_ROOT!\Engine\Build\BatchFiles\Build.bat" (
-        echo ERROR: Invalid Unreal Engine path - Build.bat not found
-        exit /b 1
-    )
-)
-
-REM Set paths to UE tools
-set UBT_PATH=%UE_ROOT%\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe
-set BUILD_BAT=%UE_ROOT%\Engine\Build\BatchFiles\Build.bat
-set RUNGEN_BAT=%UE_ROOT%\Engine\Build\BatchFiles\RunUBT.bat
-
-REM Check for .NET SDK (needed for some operations)
+REM Check for .NET SDK
 echo Checking for .NET SDK...
 where dotnet >nul 2>&1
 if errorlevel 1 (
-    echo WARNING: .NET SDK not found (may be required for some operations)
-    echo Install from: https://dotnet.microsoft.com/download/dotnet/6.0
+    echo ERROR: .NET SDK not found
     echo.
-) else (
-    for /f "tokens=*" %%i in ('dotnet --version') do set DOTNET_VERSION=%%i
-    echo ✓ .NET SDK found: !DOTNET_VERSION!
-)
-
-REM Validate UnrealBuildTool exists
-if not exist "%UBT_PATH%" (
-    echo ERROR: UnrealBuildTool not found at: %UBT_PATH%
+    echo UnrealBuildTool requires .NET SDK to run.
+    echo Install it from: https://dotnet.microsoft.com/download/dotnet/6.0
     echo.
-    echo Your Unreal Engine installation may be incomplete.
-    echo Please verify your installation or reinstall Unreal Engine.
     exit /b 1
 )
 
-echo ✓ UnrealBuildTool found: %UBT_PATH%
-echo.
+for /f "tokens=*" %%i in ('dotnet --version') do set DOTNET_VERSION=%%i
+echo ✓ .NET SDK found: %DOTNET_VERSION%
+
+REM Function to find UnrealBuildTool
+set UBT_PATH=
+if exist "%UE_TOOLS_DIR%\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.dll" (
+    set UBT_PATH=%UE_TOOLS_DIR%\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.dll
+) else if exist "%UE_TOOLS_DIR%\Engine\Binaries\DotNET\UnrealBuildTool.dll" (
+    set UBT_PATH=%UE_TOOLS_DIR%\Engine\Binaries\DotNET\UnrealBuildTool.dll
+)
+
+if "%UBT_PATH%"=="" (
+    echo.
+    echo UnrealBuildTool not found, building from source...
+    call :build_ubt
+    if errorlevel 1 exit /b 1
+) else (
+    echo ✓ UnrealBuildTool already built: %UBT_PATH%
+)
 
 REM Generate project files
 call :generate_project_files
-if errorlevel 1 (
-    echo WARNING: Project file generation had issues
-)
+if errorlevel 1 echo WARNING: Project file generation had issues
 
 REM Build Adastrea project
 call :build_project
@@ -108,26 +83,76 @@ echo ========================================
 echo.
 echo Build output: %SCRIPT_DIR%Binaries\%PLATFORM%\
 echo.
-echo To run the editor:
-echo   - Open Adastrea.uproject directly, or
-echo   - Run: "%UE_ROOT%\Engine\Binaries\Win64\UnrealEditor.exe" "%PROJECT_FILE%"
+echo Note: To run the editor, you still need a full Unreal Engine 5.6 installation.
+echo These build tools are for compilation only.
 
 endlocal
+exit /b 0
+
+REM ============================================
+REM Function: Build UnrealBuildTool from source
+REM ============================================
+:build_ubt
+echo.
+echo Checking if UnrealBuildTool needs to be built...
+
+set UBT_SOURCE=%UE_TOOLS_DIR%\Engine\Source\Programs\UnrealBuildTool
+set UBT_CSPROJ=%UBT_SOURCE%\UnrealBuildTool.csproj
+
+if not exist "%UBT_CSPROJ%" (
+    echo ERROR: UnrealBuildTool.csproj not found at: %UBT_CSPROJ%
+    echo Build tools may not have been downloaded correctly.
+    exit /b 1
+)
+
+echo Building UnrealBuildTool...
+pushd "%UBT_SOURCE%"
+
+dotnet build UnrealBuildTool.csproj -c Development
+
+if errorlevel 1 (
+    echo ERROR: Failed to build UnrealBuildTool
+    popd
+    exit /b 1
+)
+
+popd
+echo ✓ UnrealBuildTool built successfully
+
+REM Find the built UBT
+if exist "%UE_TOOLS_DIR%\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.dll" (
+    set UBT_PATH=%UE_TOOLS_DIR%\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.dll
+) else if exist "%UE_TOOLS_DIR%\Engine\Binaries\DotNET\UnrealBuildTool.dll" (
+    set UBT_PATH=%UE_TOOLS_DIR%\Engine\Binaries\DotNET\UnrealBuildTool.dll
+)
+
+if "%UBT_PATH%"=="" (
+    echo ERROR: UnrealBuildTool not found after building
+    exit /b 1
+)
+
 exit /b 0
 
 REM ============================================
 REM Function: Generate project files
 REM ============================================
 :generate_project_files
+echo.
 echo Generating project files...
 
-"%UBT_PATH%" -projectfiles -project="%PROJECT_FILE%" -game -rocket -progress
+if "%UBT_PATH%"=="" (
+    echo ERROR: UnrealBuildTool not found
+    exit /b 1
+)
+
+echo Using UnrealBuildTool at: %UBT_PATH%
+
+dotnet "%UBT_PATH%" -projectfiles -project="%PROJECT_FILE%" -game -rocket -progress
 
 if not errorlevel 1 (
     echo ✓ Project files generated
 ) else (
     echo WARNING: Project file generation had issues
-    echo This may be okay if project files already exist
 )
 
 exit /b 0
@@ -142,21 +167,21 @@ echo Configuration: %BUILD_CONFIG%Editor
 echo Platform: %PLATFORM%
 echo.
 
-echo Using Build.bat: %BUILD_BAT%
+if "%UBT_PATH%"=="" (
+    echo ERROR: UnrealBuildTool not found
+    exit /b 1
+)
+
+echo Using UnrealBuildTool at: %UBT_PATH%
 echo Project: %PROJECT_FILE%
 echo.
 
-REM Build using the standard Unreal Build.bat
-call "%BUILD_BAT%" AdastreaEditor %PLATFORM% %BUILD_CONFIG% -Project="%PROJECT_FILE%" -WaitMutex -FromMsBuild
+REM Build the project
+dotnet "%UBT_PATH%" Adastrea %PLATFORM% %BUILD_CONFIG%Editor -Project="%PROJECT_FILE%" -Progress -NoHotReloadFromIDE
 
 if errorlevel 1 (
     echo.
     echo ✗ Build failed
-    echo.
-    echo Common issues:
-    echo   - Ensure Visual Studio 2022 is installed with C++ tools
-    echo   - Check that Windows SDK is installed
-    echo   - Verify .vsconfig requirements
     exit /b 1
 )
 
@@ -176,9 +201,10 @@ set SUCCESS=true
 REM Check if binaries were created
 if exist "%SCRIPT_DIR%Binaries" (
     echo ✓ Binaries directory created
-    if exist "%SCRIPT_DIR%Binaries\%PLATFORM%" (
-        echo   Contents:
-        dir /b "%SCRIPT_DIR%Binaries\%PLATFORM%" 2>nul
+    echo   Contents:
+    dir /b "%SCRIPT_DIR%Binaries\%PLATFORM%" 2>nul | findstr "." >nul
+    if errorlevel 1 (
+        echo   (No platform-specific binaries yet - may be in subdirectory)
     )
 ) else (
     echo ✗ WARNING: Binaries directory not found
@@ -196,10 +222,8 @@ if exist "%SCRIPT_DIR%Intermediate" (
 REM Check for specific module binaries
 if exist "%SCRIPT_DIR%Binaries\%PLATFORM%\UnrealEditor-Adastrea.dll" (
     echo ✓ Adastrea module binary found
-) else if exist "%SCRIPT_DIR%Binaries\%PLATFORM%\UnrealEditor-Adastrea-Win64-Development.dll" (
-    echo ✓ Adastrea module binary found (Development)
 ) else (
-    echo ⚠ Adastrea module binary not found at expected location
+    echo ⚠ Adastrea module binary not found (may be in subdirectory)
 )
 
 echo.
@@ -208,5 +232,5 @@ if "%SUCCESS%"=="true" (
     exit /b 0
 ) else (
     echo Build validation: PARTIAL (some warnings)
-    exit /b 0
+    exit /b 1
 )
