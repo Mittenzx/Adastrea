@@ -2,6 +2,8 @@
 
 This guide explains how to build Adastrea using only the Unreal Engine build tools, without requiring the full engine source code (~500MB vs ~50GB).
 
+> **🚨 IMPORTANT FOR WINDOWS USERS:** If you're experiencing MSBuild SetEnv task failures (49KB+ include paths), this is the **required workaround** for Unreal Engine 5.6 large projects. Use the Windows batch scripts provided to bypass Visual Studio's limitations.
+
 ## Overview
 
 Instead of cloning the entire UnrealEngine repository, we use **sparse checkout** to download only the essential build tools:
@@ -15,6 +17,9 @@ Instead of cloning the entire UnrealEngine repository, we use **sparse checkout*
 - Full UnrealEngine repo: ~50-60GB
 - Build tools only: ~500MB-1GB
 - Adastrea project: ~1GB
+
+**Windows Users: Primary Use Case**
+This approach is **required** for Windows users experiencing MSBuild SetEnv failures with UE 5.6 large projects. The Visual Studio project generator creates excessively long include paths that exceed Windows environment variable limits.
 
 ## Prerequisites
 
@@ -68,7 +73,27 @@ To access the UnrealEngine repository, you need to:
 
 ## Quick Start
 
-### Option 1: Automated Setup (Recommended)
+### Windows
+
+```batch
+REM 1. Setup build tools (downloads ~500MB)
+setup_ue_build_tools.bat
+
+REM 2. Build Adastrea
+build_with_ue_tools.bat Development Win64
+
+REM Alternative configurations
+build_with_ue_tools.bat DebugGame Win64
+build_with_ue_tools.bat Shipping Win64
+```
+
+**Why Use This on Windows?**
+- ✅ Bypasses MSBuild SetEnv task limitations (49KB+ include paths)
+- ✅ Works with UE 5.6 large projects
+- ✅ Faster than Visual Studio builds
+- ✅ Required workaround for known UE 5.6 issue
+
+### Linux/Mac
 
 ```bash
 # 1. Setup build tools (downloads ~500MB)
@@ -76,20 +101,8 @@ To access the UnrealEngine repository, you need to:
 
 # 2. Build Adastrea
 ./build_with_ue_tools.sh Development Linux
-```
-
-### Option 2: Manual Setup
-
-```bash
-# 1. Make scripts executable
-chmod +x setup_ue_build_tools.sh
-chmod +x build_with_ue_tools.sh
-
-# 2. Download build tools
-./setup_ue_build_tools.sh
-
-# 3. Build the project
-./build_with_ue_tools.sh Development Linux
+# or
+./build_with_ue_tools.sh Development Mac
 ```
 
 ## Build Configurations
@@ -110,9 +123,14 @@ Available build configurations:
 ## Platform Support
 
 Supported platforms:
+- **Windows** - Native batch scripts (recommended for UE 5.6 SetEnv workaround)
 - **Linux** - Primary platform for CI/CD
 - **Mac** - Supported with Xcode Command Line Tools
-- **Windows** - Use Git Bash or WSL
+
+```batch
+REM Windows (native batch scripts)
+build_with_ue_tools.bat Development Win64
+```
 
 ```bash
 # Linux
@@ -120,9 +138,6 @@ Supported platforms:
 
 # Mac
 ./build_with_ue_tools.sh Development Mac
-
-# Windows (requires Git Bash or WSL)
-bash build_with_ue_tools.sh Development Win64
 ```
 
 ## What Gets Downloaded?
@@ -197,6 +212,41 @@ The workflow runs automatically on:
 
 ## Troubleshooting
 
+### Windows-Specific Issues
+
+#### MSBuild SetEnv Task Failure (Primary Use Case)
+
+**Error:** `Error MSB4018: The "SetEnv" task failed unexpectedly`
+
+**This is the exact problem these scripts solve!**
+
+**Solution:**
+1. Use `build_with_ue_tools.bat` instead of Visual Studio
+2. Bypasses MSBuild entirely
+3. Works with UE 5.6 large projects (49KB+ include paths)
+
+**Note:** You can still use Visual Studio for code editing, just not for building.
+
+#### Git Not Found
+
+**Error:** `git is not installed or not in PATH`
+
+**Solution:**
+Install Git for Windows from: https://git-scm.com/download/win
+
+#### .NET SDK Not Found (Windows)
+
+**Error:** `.NET SDK not found`
+
+**Solution:**
+```batch
+REM Download and install .NET SDK 6.0 from:
+REM https://dotnet.microsoft.com/download/dotnet/6.0
+
+REM Verify installation
+dotnet --version
+```
+
 ### Authentication Failed
 
 **Error:** `Failed to fetch from UnrealEngine repository`
@@ -207,7 +257,7 @@ The workflow runs automatically on:
 3. Verify membership at https://github.com/EpicGames
 4. Try again after 5 minutes
 
-### .NET SDK Not Found
+### .NET SDK Not Found (Linux/Mac)
 
 **Error:** `.NET SDK not found`
 
@@ -231,7 +281,9 @@ dotnet --version
 **Solution:**
 1. Check .NET SDK version: `dotnet --version` (need 6.0+)
 2. Clear NuGet cache: `dotnet nuget locals all --clear`
-3. Retry: `./setup_ue_build_tools.sh`
+3. Retry: 
+   - Windows: `setup_ue_build_tools.bat`
+   - Linux/Mac: `./setup_ue_build_tools.sh`
 
 ### Insufficient Disk Space
 
@@ -240,7 +292,7 @@ dotnet --version
 **Solution:**
 - Build tools need: ~2GB total (500MB download + 1.5GB build)
 - Free up space or use different mount point
-- Check: `df -h`
+- Check: `df -h` (Linux/Mac) or `dir` (Windows)
 
 ### Build Compilation Errors
 
@@ -363,6 +415,7 @@ For issues with:
 
 ---
 
-**Last Updated:** December 2025  
+**Last Updated:** 2025-12-27  
 **Unreal Engine Version:** 5.6  
-**Build Tools Size:** ~500MB
+**Build Tools Size:** ~500MB  
+**Windows Support:** Native batch scripts for SetEnv workaround
