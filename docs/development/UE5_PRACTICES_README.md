@@ -53,7 +53,7 @@ Then: [`UE5_BEST_PRACTICES_QUICK_REF.md`](../reference/UE5_BEST_PRACTICES_QUICK_
 
 ### Core Analysis
 
-#### [`NON_STANDARD_UE5_PRACTICES.md`](NON_STANDARD_UE5_PRACTICES.md) (17KB)
+#### [`NON_STANDARD_UE5_PRACTICES.md`](NON_STANDARD_UE5_PRACTICES.md) (18KB)
 **Purpose**: Complete technical analysis  
 **Contents**:
 - 10 identified issues with severity ratings
@@ -68,7 +68,7 @@ Then: [`UE5_BEST_PRACTICES_QUICK_REF.md`](../reference/UE5_BEST_PRACTICES_QUICK_
 
 ### Planning & Decision Making
 
-#### [`UE5_PRACTICES_EXECUTIVE_SUMMARY.md`](UE5_PRACTICES_EXECUTIVE_SUMMARY.md) (7KB)
+#### [`UE5_PRACTICES_EXECUTIVE_SUMMARY.md`](UE5_PRACTICES_EXECUTIVE_SUMMARY.md) (7.3KB)
 **Purpose**: High-level overview for stakeholders  
 **Contents**:
 - Priority summary (Critical/High/Medium)
@@ -79,7 +79,7 @@ Then: [`UE5_BEST_PRACTICES_QUICK_REF.md`](../reference/UE5_BEST_PRACTICES_QUICK_
 
 **Use When**: Making decisions about implementation
 
-#### [`UE5_PRACTICES_VISUAL_SUMMARY.md`](UE5_PRACTICES_VISUAL_SUMMARY.md) (11KB)
+#### [`UE5_PRACTICES_VISUAL_SUMMARY.md`](UE5_PRACTICES_VISUAL_SUMMARY.md) (17KB)
 **Purpose**: Visual representation of issues and plans  
 **Contents**:
 - Current vs recommended state diagrams
@@ -149,7 +149,7 @@ Then: [`UE5_BEST_PRACTICES_QUICK_REF.md`](../reference/UE5_BEST_PRACTICES_QUICK_
 
 ```
 Week 1-2:  Phase 1 - Critical safety fixes
-Week 3-4:  Phase 2 - API cleanup
+Week 3-4:  Phase 2 - High priority refactoring
 Week 5-8:  Phase 3 - Modernization
 Ongoing:   Phase 4 - Standards enforcement
 ```
