@@ -38,9 +38,43 @@ As of December 2025, all modules use the standard Public/Private structure with 
    - UE5 automatically includes `Public/` and `Private/` directories
    - No manual path configuration required
 
-### If You Still Encounter This Error
+### If You Still Encounter This Error (Unreal Engine 5.6 Known Issue)
 
-If you encounter this error in a different project or after adding new modules:
+Even with correct Build.cs configuration, Unreal Engine 5.6's Visual Studio project generator can create extremely long include paths (49KB+) that exceed Windows environment variable limits.
+
+**This is a known UE 5.6 issue with large projects.**
+
+#### Workaround: Build with UnrealBuildTool Directly (Recommended)
+
+Instead of building through Visual Studio, use UnrealBuildTool (UBT) directly to bypass the SetEnv limitation:
+
+**Windows:**
+```batch
+# 1. Setup build tools (one-time, downloads ~500MB)
+setup_ue_build_tools.bat
+
+# 2. Build Adastrea directly with UBT (bypasses Visual Studio)
+build_with_ue_tools.bat Development Win64
+
+# Alternative: Use installed UE 5.6
+"C:\Program Files\Epic Games\UE_5.6\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe" ^
+  Adastrea Win64 DevelopmentEditor ^
+  -Project="%CD%\Adastrea.uproject" ^
+  -Progress -NoHotReloadFromIDE
+```
+
+**Benefits of UBT Direct Build:**
+- ✅ Bypasses MSBuild SetEnv limitations
+- ✅ Faster compilation (no Visual Studio overhead)
+- ✅ Works with extremely large projects
+- ✅ Same output as Visual Studio builds
+- ✅ Can still use Visual Studio for code editing
+
+**See Also:** [Build with UE Tools Guide](../setup/BUILD_WITH_UE_TOOLS.md) for detailed instructions.
+
+#### If Building Through Visual Studio is Required
+
+If you must use Visual Studio for building (not just editing):
 
 1. **Check for non-standard directory structures**
    - Ensure all headers are in `Public/` subdirectories
@@ -54,10 +88,12 @@ If you encounter this error in a different project or after adding new modules:
    ```
 
 3. **Clean and regenerate project files**:
-   ```bash
+   ```batch
    # Windows
    Right-click .uproject → Generate Visual Studio project files
    ```
+
+4. **If issue persists**, use UBT direct build (see above)
 
 ### Verification
 
@@ -269,6 +305,6 @@ If you encounter a build issue not covered here:
 
 ---
 
-**Last Updated**: 2025-12-26  
+**Last Updated**: 2025-12-27  
 **Applies To**: Unreal Engine 5.6+  
-**Related Fixes**: SetEnv task error handling improvements
+**Related Fixes**: SetEnv task error handling improvements, Windows UBT direct build workaround

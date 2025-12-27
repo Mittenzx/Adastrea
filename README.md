@@ -122,6 +122,16 @@ After comprehensive critical review, Adastrea is refocusing on a **Trade Simulat
 
 You can now build Adastrea using only the Unreal Engine build tools (~500MB) instead of the full engine (~50GB):
 
+**Windows (SetEnv workaround for UE 5.6):**
+```batch
+REM Download build tools
+setup_ue_build_tools.bat
+
+REM Build the project
+build_with_ue_tools.bat Development Win64
+```
+
+**Linux/Mac:**
 ```bash
 # Download build tools
 ./setup_ue_build_tools.sh
@@ -130,6 +140,8 @@ You can now build Adastrea using only the Unreal Engine build tools (~500MB) ins
 ./build_with_ue_tools.sh Development Linux
 ```
 
+> **🚨 Windows Users:** If experiencing MSBuild SetEnv task failures (49KB+ include paths), this is the **required workaround** for UE 5.6 large projects. See [Windows Build Scripts Reference](docs/reference/WINDOWS_BUILD_SCRIPTS.md).
+
 See **[BUILD_WITH_UE_TOOLS.md](docs/setup/BUILD_WITH_UE_TOOLS.md)** for complete instructions.
 
 **Perfect for:**
@@ -137,6 +149,7 @@ See **[BUILD_WITH_UE_TOOLS.md](docs/setup/BUILD_WITH_UE_TOOLS.md)** for complete
 - ✓ Automated testing
 - ✓ Build verification
 - ✓ Code compilation without full editor
+- ✓ **Windows: Bypassing MSBuild SetEnv limitations**
 
 **Note:** To actually run and edit the project, you still need the full Unreal Engine 5.6 installation.
 
@@ -875,7 +888,9 @@ Comprehensive technical documentation for contributors and developers:
 
 ### Build and CI/CD Documentation
 
-- **[Build with UE Tools](BUILD_WITH_UE_TOOLS.md)** - 🆕 Build using only UE build tools (~500MB) instead of full engine (~50GB)
+- **[Build with UE Tools](docs/setup/BUILD_WITH_UE_TOOLS.md)** - 🆕 Build using only UE build tools (~500MB) instead of full engine (~50GB)
+- **[Windows Build Scripts Reference](docs/reference/WINDOWS_BUILD_SCRIPTS.md)** - 🔧 **NEW** Windows batch scripts for MSBuild SetEnv workaround (UE 5.6)
+- **[Build Troubleshooting](docs/development/BUILD_TROUBLESHOOTING.md)** - Common build issues and solutions
 - **[GitHub Token & Docker Setup](GITHUB_TOKEN_DOCKER_SETUP.md)** - ⭐ Complete guide for setting up GitHub Actions with Docker for Unreal builds
 - **[Container Diagnostics](CONTAINER_DIAGNOSTICS.md)** - 🔍 **NEW** Troubleshooting guide for Epic Games container access issues
 - **[Cloud Build Quick Start](CLOUD_BUILD_QUICK_START.md)** - Quick reference for cloud build setup
