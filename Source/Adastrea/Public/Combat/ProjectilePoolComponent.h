@@ -38,17 +38,17 @@ public:
     //================================================================================
 
     /** Initial number of projectiles to create in the pool */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Pool Configuration",
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Pool Configuration",
         meta=(ClampMin="10", ClampMax="1000"))
     int32 InitialPoolSize = 50;
 
     /** Maximum number of projectiles allowed in the pool */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Pool Configuration",
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Pool Configuration",
         meta=(ClampMin="50", ClampMax="2000"))
     int32 MaxPoolSize = 200;
 
     /** Projectile class to instantiate */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Pool Configuration")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Pool Configuration")
     TSubclassOf<AProjectile> ProjectileClass;
 
     //================================================================================
@@ -87,11 +87,11 @@ public:
 private:
     /** Pool of inactive projectiles ready for reuse (GC tracked) */
     UPROPERTY(Transient)
-    TArray<AProjectile*> PooledProjectiles;
+    TArray<TObjectPtr<AProjectile>> PooledProjectiles;
 
     /** Currently active projectiles in the world (GC tracked) */
     UPROPERTY(Transient)
-    TArray<AProjectile*> ActiveProjectiles;
+    TArray<TObjectPtr<AProjectile>> ActiveProjectiles;
 
     /** Total projectiles created (for statistics) */
     int32 TotalCreatedProjectiles;

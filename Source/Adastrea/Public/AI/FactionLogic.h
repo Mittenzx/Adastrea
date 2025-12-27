@@ -110,8 +110,8 @@ public:
     // ====================
 
     /** Reference to the faction's data asset */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction|Data")
-    UFactionDataAsset* FactionData;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Faction|Data")
+    TObjectPtr<UFactionDataAsset> FactionData;
 
     /** Current strategic priority for the faction */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Faction|Strategy")

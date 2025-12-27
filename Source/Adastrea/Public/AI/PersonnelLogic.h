@@ -68,11 +68,11 @@ public:
     // ====================
 
     /** Reference to the personnel's data asset */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Personnel|Data")
-    UPersonnelDataAsset* PersonnelData;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Personnel|Data")
+    TObjectPtr<UPersonnelDataAsset> PersonnelData;
 
     /** Personality disposition affecting decision making */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Personnel|Personality")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Personnel|Personality")
     EPersonnelDisposition Disposition;
 
     /** Current task being performed */
