@@ -66,31 +66,38 @@ This document provides a step-by-step implementation plan for addressing the non
 
 ### 2.1 Blueprint API Audit
 
-- [ ] **Step 1**: Generate Blueprint API report
+- [x] **Step 1**: Generate Blueprint API report
   ```bash
   grep -r "BlueprintCallable" Source/Adastrea/Public --include="*.h" > blueprint_api.txt
   ```
+  ✅ **Completed**: 1,014 functions identified across all systems
+  ✅ **MVP Analysis**: Trading (70), Ships (106), Stations (10), UI (214) prioritized
 
-- [ ] **Step 2**: Categorize functions
+- [x] **Step 2**: Categorize functions (MVP-focused)
   - Designer-facing: Keep BlueprintCallable
   - Internal helpers: Remove BlueprintCallable, make private
   - Utilities: Keep but document clearly
+  ✅ **In Progress**: CargoComponent analyzed (14 → 6-8 functions)
+  📄 **Docs**: See PHASE2_BLUEPRINT_API_ANALYSIS.md and PHASE2_TRADING_SYSTEM_CATEGORIZATION.md
 
 - [ ] **Step 3**: Create migration guide
   - Document which functions are being changed
   - Provide alternatives where needed
   - Notify content team
+  ⏳ **Status**: Template created, awaiting function decisions
 
-- [ ] **Step 4**: Implement changes in phases
-  - Week 3: Combat and AI systems
-  - Week 4: Ships, Stations, Trading systems
+- [ ] **Step 4**: Implement changes in phases (MVP-adjusted)
+  - ~~Week 3: Combat and AI systems~~ **Deferred** (out of MVP scope)
+  - Week 3-4: **Trading, Ships, Stations systems** (MVP-critical)
+  - Defer: Combat, AI, Factions, Personnel (post-MVP)
 
 - [ ] **Step 5**: Test Blueprints
   - Verify all existing Blueprints still compile
   - Fix any broken Blueprint references
   - Update Blueprint tutorials
 
-**Target**: Reduce from 1,041 to ~200 BlueprintCallable functions (80% reduction)
+**Target**: Reduce from 1,014 to ~200 BlueprintCallable functions (80% reduction)  
+**MVP Target**: Focus on Trading (70 → 15-20), Ships (106 → 25-30), Stations (10 → 5-7)
 
 ### 2.2 Property Modifier Audit
 
