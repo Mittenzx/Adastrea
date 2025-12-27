@@ -114,8 +114,8 @@ void ASpaceship::BeginPlay()
         {
             SpawnedInterior->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
             SpawnedInterior->SetActorHiddenInGame(true); // Hide until entered
+            InteriorInstance = SpawnedInterior;
         }
-        InteriorInstance = SpawnedInterior;
     }
 }
 

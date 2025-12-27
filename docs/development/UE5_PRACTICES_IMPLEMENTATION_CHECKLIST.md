@@ -4,7 +4,7 @@
 **Priority**: High  
 **Estimated Timeline**: 8-12 weeks
 
-This document provides a step-by-step implementation plan for addressing the non-standard UE5 practices identified in [NON_STANDARD_UE5_PRACTICES.md](../development/NON_STANDARD_UE5_PRACTICES.md).
+This document provides a step-by-step implementation plan for addressing the non-standard UE5 practices identified in [NON_STANDARD_UE5_PRACTICES.md](NON_STANDARD_UE5_PRACTICES.md).
 
 ---
 
@@ -398,7 +398,7 @@ If issues arise:
 ## Resources
 
 ### Documentation
-- [NON_STANDARD_UE5_PRACTICES.md](../development/NON_STANDARD_UE5_PRACTICES.md) - Full analysis
+- [NON_STANDARD_UE5_PRACTICES.md](NON_STANDARD_UE5_PRACTICES.md) - Full analysis
 - [UE5_BEST_PRACTICES_QUICK_REF.md](../reference/UE5_BEST_PRACTICES_QUICK_REF.md) - Quick reference
 - [unreal-directive-best-practices.md](../../.github/instructions/unreal-directive-best-practices.md) - Advanced patterns
 

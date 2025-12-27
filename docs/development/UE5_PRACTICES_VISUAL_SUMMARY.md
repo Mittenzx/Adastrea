@@ -293,9 +293,9 @@ Can we skip it?                     Phase 1: NO (critical)
 
                     READY FOR IMPLEMENTATION
                           
-          Questions? See: docs/development/UE5_PRACTICES_EXECUTIVE_SUMMARY.md
-          Details? See: docs/development/NON_STANDARD_UE5_PRACTICES.md
-          Actions? See: docs/development/UE5_PRACTICES_IMPLEMENTATION_CHECKLIST.md
-          Daily Use? See: docs/reference/UE5_BEST_PRACTICES_QUICK_REF.md
+          Questions? See: UE5_PRACTICES_EXECUTIVE_SUMMARY.md
+          Details? See: NON_STANDARD_UE5_PRACTICES.md
+          Actions? See: UE5_PRACTICES_IMPLEMENTATION_CHECKLIST.md
+          Daily Use? See: ../reference/UE5_BEST_PRACTICES_QUICK_REF.md
 
 ═══════════════════════════════════════════════════════════════════

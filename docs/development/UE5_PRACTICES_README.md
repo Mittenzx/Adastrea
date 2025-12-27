@@ -12,19 +12,19 @@ This directory contains a comprehensive analysis of non-standard UE5 practices i
 ### For Different Audiences
 
 #### 👨‍💼 **Managers/Decision Makers**
-Start with: [`UE5_PRACTICES_EXECUTIVE_SUMMARY.md`](development/UE5_PRACTICES_EXECUTIVE_SUMMARY.md)
+Start with: [`UE5_PRACTICES_EXECUTIVE_SUMMARY.md`](UE5_PRACTICES_EXECUTIVE_SUMMARY.md)
 - High-level overview
 - Cost-benefit analysis
 - Risk assessment
 - Timeline and ROI
 
-Then review: [`UE5_PRACTICES_VISUAL_SUMMARY.md`](development/UE5_PRACTICES_VISUAL_SUMMARY.md)
+Then review: [`UE5_PRACTICES_VISUAL_SUMMARY.md`](UE5_PRACTICES_VISUAL_SUMMARY.md)
 - Visual diagrams
 - Impact charts
 - Quick decision guide
 
 #### 👨‍💻 **Developers (Implementing Changes)**
-Start with: [`UE5_PRACTICES_IMPLEMENTATION_CHECKLIST.md`](development/UE5_PRACTICES_IMPLEMENTATION_CHECKLIST.md)
+Start with: [`UE5_PRACTICES_IMPLEMENTATION_CHECKLIST.md`](UE5_PRACTICES_IMPLEMENTATION_CHECKLIST.md)
 - Step-by-step action items
 - Phase-by-phase breakdown
 - Testing strategy
@@ -33,13 +33,13 @@ Reference: [`UE5_BEST_PRACTICES_QUICK_REF.md`](../reference/UE5_BEST_PRACTICES_Q
 - Quick patterns for daily use
 - Common mistakes to avoid
 
-Deep dive: [`NON_STANDARD_UE5_PRACTICES.md`](development/NON_STANDARD_UE5_PRACTICES.md)
+Deep dive: [`NON_STANDARD_UE5_PRACTICES.md`](NON_STANDARD_UE5_PRACTICES.md)
 - Full technical analysis
 - Detailed explanations
 - Code examples
 
 #### 🆕 **New Team Members**
-Start with: [`UE5_PRACTICES_VISUAL_SUMMARY.md`](development/UE5_PRACTICES_VISUAL_SUMMARY.md)
+Start with: [`UE5_PRACTICES_VISUAL_SUMMARY.md`](UE5_PRACTICES_VISUAL_SUMMARY.md)
 - Visual overview of issues
 - Easy-to-understand diagrams
 
@@ -53,7 +53,7 @@ Then: [`UE5_BEST_PRACTICES_QUICK_REF.md`](../reference/UE5_BEST_PRACTICES_QUICK_
 
 ### Core Analysis
 
-#### [`NON_STANDARD_UE5_PRACTICES.md`](development/NON_STANDARD_UE5_PRACTICES.md) (17KB)
+#### [`NON_STANDARD_UE5_PRACTICES.md`](NON_STANDARD_UE5_PRACTICES.md) (17KB)
 **Purpose**: Complete technical analysis  
 **Contents**:
 - 10 identified issues with severity ratings
@@ -68,7 +68,7 @@ Then: [`UE5_BEST_PRACTICES_QUICK_REF.md`](../reference/UE5_BEST_PRACTICES_QUICK_
 
 ### Planning & Decision Making
 
-#### [`UE5_PRACTICES_EXECUTIVE_SUMMARY.md`](development/UE5_PRACTICES_EXECUTIVE_SUMMARY.md) (7KB)
+#### [`UE5_PRACTICES_EXECUTIVE_SUMMARY.md`](UE5_PRACTICES_EXECUTIVE_SUMMARY.md) (7KB)
 **Purpose**: High-level overview for stakeholders  
 **Contents**:
 - Priority summary (Critical/High/Medium)
@@ -79,7 +79,7 @@ Then: [`UE5_BEST_PRACTICES_QUICK_REF.md`](../reference/UE5_BEST_PRACTICES_QUICK_
 
 **Use When**: Making decisions about implementation
 
-#### [`UE5_PRACTICES_VISUAL_SUMMARY.md`](development/UE5_PRACTICES_VISUAL_SUMMARY.md) (11KB)
+#### [`UE5_PRACTICES_VISUAL_SUMMARY.md`](UE5_PRACTICES_VISUAL_SUMMARY.md) (11KB)
 **Purpose**: Visual representation of issues and plans  
 **Contents**:
 - Current vs recommended state diagrams
@@ -94,7 +94,7 @@ Then: [`UE5_BEST_PRACTICES_QUICK_REF.md`](../reference/UE5_BEST_PRACTICES_QUICK_
 
 ### Implementation
 
-#### [`UE5_PRACTICES_IMPLEMENTATION_CHECKLIST.md`](development/UE5_PRACTICES_IMPLEMENTATION_CHECKLIST.md) (10KB)
+#### [`UE5_PRACTICES_IMPLEMENTATION_CHECKLIST.md`](UE5_PRACTICES_IMPLEMENTATION_CHECKLIST.md) (10KB)
 **Purpose**: Step-by-step action plan  
 **Contents**:
 - Phase 1: Critical fixes (weeks 1-2)
