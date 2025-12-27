@@ -96,7 +96,7 @@ AActor* UTargetingComponent::SelectNextTarget()
     int32 CurrentIndex = -1;
 
     // Find current target in list
-    if (CurrentTarget)
+    if (CurrentTarget.IsValid())
     {
         for (int32 i = 0; i < DetectedTargets.Num(); i++)
         {
@@ -110,9 +110,9 @@ AActor* UTargetingComponent::SelectNextTarget()
 
     // Select next target
     const int32 NextIndex = (CurrentIndex + 1) % DetectedTargets.Num();
-    if (SelectTarget(DetectedTargets[NextIndex].Target))
+    if (DetectedTargets[NextIndex].Target.IsValid() && SelectTarget(DetectedTargets[NextIndex].Target.Get()))
     {
-        return DetectedTargets[NextIndex].Target;
+        return DetectedTargets[NextIndex].Target.Get();
     }
 
     return nullptr;

@@ -14,7 +14,7 @@ struct FTargetInfo
 
     /** Target actor */
     UPROPERTY(BlueprintReadOnly)
-    AActor* Target;
+    TWeakObjectPtr<AActor> Target;
 
     /** Distance to target */
     UPROPERTY(BlueprintReadOnly)
@@ -66,27 +66,27 @@ public:
     // ====================
 
     /** Maximum targeting range in meters */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Targeting", meta=(ClampMin="100", ClampMax="100000"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Targeting", meta=(ClampMin="100", ClampMax="100000"))
     float MaxTargetingRange;
 
     /** Maximum angle for auto-targeting (degrees from forward) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Targeting", meta=(ClampMin="0", ClampMax="180"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Targeting", meta=(ClampMin="0", ClampMax="180"))
     float MaxTargetingAngle;
 
     /** How often to scan for targets (seconds) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Targeting", meta=(ClampMin="0.1", ClampMax="5.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Targeting", meta=(ClampMin="0.1", ClampMax="5.0"))
     float ScanInterval;
 
     /** Auto-select nearest target when current target is lost */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Targeting")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Targeting")
     bool bAutoRetarget;
 
     /** Prioritize targets by threat level */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Targeting")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Targeting")
     bool bPrioritizeByThreat;
 
     /** Tags to identify valid targets (empty = all actors) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Targeting")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Targeting")
     TArray<FName> TargetTags;
 
     // ====================
@@ -95,7 +95,7 @@ public:
 
     /** Currently locked target */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Targeting State")
-    AActor* CurrentTarget;
+    TWeakObjectPtr<AActor> CurrentTarget;
 
     /** All detected targets within range */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Targeting State")
