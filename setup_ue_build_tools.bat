@@ -32,9 +32,16 @@ if exist "%UE_TOOLS_DIR%" (
     
     REM Non-interactive mode check
     if defined CI (
-        echo Non-interactive mode detected; removing existing directory automatically...
-        rmdir /s /q "%UE_TOOLS_DIR%"
-        goto :clone_tools
+        echo Non-interactive mode detected; validating existing UnrealBuildTools directory before removal...
+        if exist "%UE_TOOLS_DIR%\Engine\Build\BatchFiles" (
+            echo Verified Unreal Engine build tools directory structure. Removing existing directory...
+            rmdir /s /q "%UE_TOOLS_DIR%"
+            goto :clone_tools
+        ) else (
+            echo ERROR: Existing directory does not appear to be a valid Unreal Build Tools checkout.
+            echo ERROR: Skipping automatic deletion in CI mode for safety.
+            exit /b 1
+        )
     )
     
     set /p "REPLY=Remove and re-download? (y/N): "
@@ -63,18 +70,16 @@ git remote add origin "%UE_REPO%"
 
 REM Configure sparse checkout to get only build tools
 echo Configuring sparse checkout (build tools only)...
-(
-    echo # Build tools and scripts
-    echo Engine/Build/
-    echo Engine/Binaries/DotNET/
-    echo Engine/Binaries/ThirdParty/DotNet/
-    echo Engine/Source/Programs/UnrealBuildTool/
-    echo Engine/Source/Programs/Shared/
-    echo.
-    echo # Minimal config files needed for build
-    echo Engine/Config/BaseEngine.ini
-    echo Engine/Config/BasePlatforms.ini
-) > .git\info\sparse-checkout
+echo # Build tools and scripts> .git\info\sparse-checkout
+echo Engine/Build/>> .git\info\sparse-checkout
+echo Engine/Binaries/DotNET/>> .git\info\sparse-checkout
+echo Engine/Binaries/ThirdParty/DotNet/>> .git\info\sparse-checkout
+echo Engine/Source/Programs/UnrealBuildTool/>> .git\info\sparse-checkout
+echo Engine/Source/Programs/Shared/>> .git\info\sparse-checkout
+echo(>> .git\info\sparse-checkout
+echo # Minimal config files needed for build>> .git\info\sparse-checkout
+echo Engine/Config/BaseEngine.ini>> .git\info\sparse-checkout
+echo Engine/Config/BasePlatforms.ini>> .git\info\sparse-checkout
 
 REM Fetch only the specified paths
 echo.

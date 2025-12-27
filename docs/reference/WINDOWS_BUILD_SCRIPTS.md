@@ -136,13 +136,13 @@ If you have Unreal Engine 5.6 installed, you can use its UnrealBuildTool directl
 
 ## Full Documentation
 
-- [Build with UE Tools Guide](docs/setup/BUILD_WITH_UE_TOOLS.md) - Complete guide
-- [Build Troubleshooting](docs/development/BUILD_TROUBLESHOOTING.md) - Common issues
+- [Build with UE Tools Guide](../setup/BUILD_WITH_UE_TOOLS.md) - Complete guide
+- [Build Troubleshooting](../development/BUILD_TROUBLESHOOTING.md) - Common issues
 
 ## Support
 
 For issues or questions:
-- Check [BUILD_TROUBLESHOOTING.md](docs/development/BUILD_TROUBLESHOOTING.md)
+- Check [BUILD_TROUBLESHOOTING.md](../development/BUILD_TROUBLESHOOTING.md)
 - Open an issue on GitHub: https://github.com/Mittenzx/Adastrea/issues
 - Tag with `build-system` label
 

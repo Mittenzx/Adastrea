@@ -149,7 +149,7 @@ echo Using UnrealBuildTool at: %UBT_PATH%
 
 dotnet "%UBT_PATH%" -projectfiles -project="%PROJECT_FILE%" -game -rocket -progress
 
-if errorlevel 0 (
+if not errorlevel 1 (
     echo ✓ Project files generated
 ) else (
     echo WARNING: Project file generation had issues
@@ -202,7 +202,7 @@ REM Check if binaries were created
 if exist "%SCRIPT_DIR%Binaries" (
     echo ✓ Binaries directory created
     echo   Contents:
-    dir /b "%SCRIPT_DIR%Binaries\%PLATFORM%" 2>nul | findstr /r ".*" >nul
+    dir /b "%SCRIPT_DIR%Binaries\%PLATFORM%" 2>nul | findstr "." >nul
     if errorlevel 1 (
         echo   (No platform-specific binaries yet - may be in subdirectory)
     )
@@ -234,5 +234,3 @@ if "%SUCCESS%"=="true" (
     echo Build validation: PARTIAL (some warnings)
     exit /b 1
 )
-
-exit /b 0

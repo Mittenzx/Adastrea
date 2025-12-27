@@ -18,7 +18,8 @@ Instead of cloning the entire UnrealEngine repository, we use **sparse checkout*
 - Build tools only: ~500MB-1GB
 - Adastrea project: ~1GB
 
-**Windows Users: Primary Use Case**
+### Windows: MSBuild Workaround
+
 This approach is **required** for Windows users experiencing MSBuild SetEnv failures with UE 5.6 large projects. The Visual Studio project generator creates excessively long include paths that exceed Windows environment variable limits.
 
 ## Prerequisites
