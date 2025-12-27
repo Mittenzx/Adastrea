@@ -66,7 +66,7 @@ struct FBoardingAction
 
     /** Target ship being boarded */
     UPROPERTY(BlueprintReadOnly)
-    AActor* TargetShip;
+    TWeakObjectPtr<AActor> TargetShip;
 
     /** Current state of boarding action */
     UPROPERTY(BlueprintReadOnly)

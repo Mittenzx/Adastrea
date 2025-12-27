@@ -15,7 +15,7 @@ struct FIncomingThreat
 
     /** Threatening actor (missile, torpedo, fighter, etc.) */
     UPROPERTY(BlueprintReadOnly)
-    AActor* ThreatActor;
+    TWeakObjectPtr<AActor> ThreatActor;
 
     /** Distance to threat */
     UPROPERTY(BlueprintReadOnly)
@@ -72,31 +72,31 @@ public:
     // ====================
 
     /** Maximum range for threat detection */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Point Defense", meta=(ClampMin="100", ClampMax="50000"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Point Defense", meta=(ClampMin="100", ClampMax="50000"))
     float DetectionRange;
 
     /** How often to scan for threats (seconds) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Point Defense", meta=(ClampMin="0.1", ClampMax="2.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Point Defense", meta=(ClampMin="0.1", ClampMax="2.0"))
     float ScanInterval;
 
     /** Tags to identify missile/torpedo threats */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Point Defense")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Point Defense")
     TArray<FName> MissileTags;
 
     /** Tags to identify fighter/small craft threats */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Point Defense")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Point Defense")
     TArray<FName> FighterTags;
 
     /** Maximum number of simultaneous targets */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Point Defense", meta=(ClampMin="1", ClampMax="20"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Point Defense", meta=(ClampMin="1", ClampMax="20"))
     int32 MaxSimultaneousTargets;
 
     /** Automatically engage detected threats */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Point Defense")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Point Defense")
     bool bAutoEngage;
 
     /** Prioritize missiles over fighters */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Point Defense")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Point Defense")
     bool bPrioritizeMissiles;
 
     // ====================
@@ -104,8 +104,8 @@ public:
     // ====================
 
     /** Assigned point defense weapons */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Point Defense State")
-    TArray<UWeaponComponent*> PointDefenseWeapons;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Point Defense State")
+    TArray<TObjectPtr<UWeaponComponent>> PointDefenseWeapons;
 
     /** Currently tracked threats */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Point Defense State")

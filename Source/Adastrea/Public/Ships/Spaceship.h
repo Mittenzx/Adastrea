@@ -37,54 +37,54 @@ public:
 
     // Movement component for floating pawn movement in space
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Movement")
-    UFloatingPawnMovement* MovementComponent;
+    TObjectPtr<UFloatingPawnMovement> MovementComponent;
 
     // Particle system component for engine and thruster effects
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Effects")
-    USpaceshipParticleComponent* ParticleComponent;
+    TObjectPtr<USpaceshipParticleComponent> ParticleComponent;
 
     // Spring arm component for camera positioning
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
-    USpringArmComponent* CameraSpringArm;
+    TObjectPtr<USpringArmComponent> CameraSpringArm;
 
     // Camera component for player view
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
-    UCameraComponent* Camera;
+    TObjectPtr<UCameraComponent> Camera;
 
     // Default maximum movement speed
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(ClampMin="0.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement", meta=(ClampMin="0.0"))
     float DefaultMaxSpeed;
 
     // Default acceleration rate
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(ClampMin="0.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement", meta=(ClampMin="0.0"))
     float DefaultAcceleration;
 
     // Default deceleration rate
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(ClampMin="0.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement", meta=(ClampMin="0.0"))
     float DefaultDeceleration;
 
     // Default turning boost multiplier
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(ClampMin="0.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement", meta=(ClampMin="0.0"))
     float DefaultTurningBoost;
 
     // Reference to the walkable interior
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
-    ASpaceshipInterior* InteriorInstance;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interior")
+    TWeakObjectPtr<ASpaceshipInterior> InteriorInstance;
 
     // Turn rate for ship rotation (degrees per second)
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Control", meta=(ClampMin="0.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Control", meta=(ClampMin="0.0"))
     float TurnRate;
 
     // Reference to the ship's data asset with detailed stats
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Data")
-    class USpaceshipDataAsset* ShipDataAsset;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ship Data")
+    TObjectPtr<USpaceshipDataAsset> ShipDataAsset;
 
     // Current hull integrity (health)
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Status", meta=(ClampMin="0.0"))
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Ship Status")
     float CurrentHullIntegrity;
 
     // Maximum hull integrity
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Status", meta=(ClampMin="0.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ship Status", meta=(ClampMin="0.0"))
     float MaxHullIntegrity;
 
     /**
@@ -317,7 +317,7 @@ protected:
 
     /** Saved reference to the walking pawn when controlling the ship (GC tracked) */
     UPROPERTY(Transient)
-    APawn* SavedExternalPawn;
+    TObjectPtr<APawn> SavedExternalPawn;
 
     // Movement input handlers
     void MoveForward(float Value);

@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **UE5 Best Practices Documentation** (2025-12-27)
+  - Created comprehensive analysis of non-standard UE5 practices: `docs/development/NON_STANDARD_UE5_PRACTICES.md`
+  - Created quick reference guide: `docs/reference/UE5_BEST_PRACTICES_QUICK_REF.md`
+  - Identified 10 areas for improvement affecting scalability and future development
+  - **Critical Issues Identified**:
+    - Missing UPROPERTY() on some UObject pointers (GC tracking risk)
+    - Raw UObject* instead of modern TObjectPtr<> (UE5 compatibility)
+  - **High Priority Issues**:
+    - Over-exposure to Blueprints (1,041 BlueprintCallable functions)
+    - Excessive EditAnywhere+BlueprintReadWrite usage (537 properties)
+    - Insufficient TWeakObjectPtr usage for optional references
+    - Tick-heavy components (should use timers)
+  - **Medium Priority**:
+    - Missing const correctness on getter functions
+    - Inconsistent ClassGroup on components
+    - Underutilized object pooling
+  - **Implementation Phases**:
+    - Phase 1 (Weeks 1-2): Fix critical GC tracking issues (8.9% of property modifiers complete, ~2% of pointer migration)
+    - Phase 2 (Weeks 3-4): Reduce Blueprint exposure, fix property modifiers
+    - Phase 3 (Weeks 5-8): Migrate to TObjectPtr, optimize Tick usage
+    - Phase 4 (Ongoing): Continue refactoring and improvements
+  - **References**: Based on Epic Games coding standards, Unreal Directive best practices, and UE5.6 recommendations
+
 ### Changed
 
 - **Module Restructuring to Standard UE5 Layout** (2025-12-26)

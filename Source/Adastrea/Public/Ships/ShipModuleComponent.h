@@ -41,12 +41,12 @@ public:
 	// ====================
 
 	/** Data asset defining this module's properties */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Module")
-	UShipModuleDataAsset* ModuleData;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module")
+	TObjectPtr<UShipModuleDataAsset> ModuleData;
 
 	/** Static mesh component for visual representation */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Module")
-	UStaticMeshComponent* ModuleMeshComponent;
+	TObjectPtr<UStaticMeshComponent> ModuleMeshComponent;
 
 	// ====================
 	// STATE

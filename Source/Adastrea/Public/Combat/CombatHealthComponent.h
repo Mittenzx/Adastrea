@@ -70,40 +70,40 @@ public:
     // ====================
 
     /** Maximum hull strength (health) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health", meta=(ClampMin="1", ClampMax="100000"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Health", meta=(ClampMin="1", ClampMax="100000"))
     float MaxHullStrength;
 
     /** Maximum shield strength (total across all facings) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Shield", meta=(ClampMin="0", ClampMax="100000"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Shield", meta=(ClampMin="0", ClampMax="100000"))
     float MaxShieldStrength;
 
     /** Shield recharge rate per second */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Shield", meta=(ClampMin="0", ClampMax="1000"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Shield", meta=(ClampMin="0", ClampMax="1000"))
     float ShieldRechargeRate;
 
     /** Delay before shields start recharging after taking damage */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Shield", meta=(ClampMin="0", ClampMax="30"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Shield", meta=(ClampMin="0", ClampMax="30"))
     float ShieldRechargeDelay;
 
     /** Armor rating (reduces damage) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Armor", meta=(ClampMin="0", ClampMax="1000"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Armor", meta=(ClampMin="0", ClampMax="1000"))
     float ArmorRating;
 
     /** Use directional shields (4 facings) instead of omnidirectional */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Shield")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Shield")
     bool bUseDirectionalShields;
 
     /** Percentage of shield strength per facing (total should equal 100) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Shield", meta=(EditCondition="bUseDirectionalShields", ClampMin="0", ClampMax="100"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Shield", meta=(EditCondition="bUseDirectionalShields", ClampMin="0", ClampMax="100"))
     float ForwardShieldPercentage;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Shield", meta=(EditCondition="bUseDirectionalShields", ClampMin="0", ClampMax="100"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Shield", meta=(EditCondition="bUseDirectionalShields", ClampMin="0", ClampMax="100"))
     float AftShieldPercentage;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Shield", meta=(EditCondition="bUseDirectionalShields", ClampMin="0", ClampMax="100"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Shield", meta=(EditCondition="bUseDirectionalShields", ClampMin="0", ClampMax="100"))
     float PortShieldPercentage;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Shield", meta=(EditCondition="bUseDirectionalShields", ClampMin="0", ClampMax="100"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Shield", meta=(EditCondition="bUseDirectionalShields", ClampMin="0", ClampMax="100"))
     float StarboardShieldPercentage;
 
     // ====================

@@ -18,7 +18,7 @@ struct FCargoEntry
 
 	// The trade item
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Cargo")
-	UTradeItemDataAsset* Item;
+	TObjectPtr<UTradeItemDataAsset> Item;
 
 	// Quantity in cargo
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Cargo")
@@ -56,11 +56,11 @@ public:
 	// ====================
 
 	// Maximum cargo capacity (volume units)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Cargo", meta=(ClampMin="1"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Cargo", meta=(ClampMin="1"))
 	float CargoCapacity;
 
 	// Current cargo inventory
-	UPROPERTY(BlueprintReadWrite, Category="Cargo")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Cargo")
 	TArray<FCargoEntry> CargoInventory;
 
 	// ====================

@@ -105,15 +105,16 @@ void ASpaceship::BeginPlay()
     }
 
     // Spawn the interior actor if needed
-    if (!InteriorInstance)
+    if (!InteriorInstance.IsValid())
     {
         FActorSpawnParameters SpawnParams;
         SpawnParams.Owner = this;
-        InteriorInstance = GetWorld()->SpawnActor<ASpaceshipInterior>(ASpaceshipInterior::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
-        if (InteriorInstance)
+        ASpaceshipInterior* SpawnedInterior = GetWorld()->SpawnActor<ASpaceshipInterior>(ASpaceshipInterior::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+        if (SpawnedInterior)
         {
-            InteriorInstance->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
-            InteriorInstance->SetActorHiddenInGame(true); // Hide until entered
+            SpawnedInterior->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
+            SpawnedInterior->SetActorHiddenInGame(true); // Hide until entered
+            InteriorInstance = SpawnedInterior;
         }
     }
 }
@@ -186,7 +187,7 @@ void ASpaceship::Tick(float DeltaTime)
 
 void ASpaceship::EnterInterior(APlayerController* PlayerController)
 {
-    if (InteriorInstance && PlayerController)
+    if (InteriorInstance.IsValid() && PlayerController)
     {
         // Hide spaceship exterior, show interior
         InteriorInstance->SetActorHiddenInGame(false);
