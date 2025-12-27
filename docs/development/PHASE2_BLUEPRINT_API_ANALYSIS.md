@@ -54,12 +54,14 @@ Generated full Blueprint API report with 1,014 functions identified.
 **Files to Review**:
 - `EconomyManager.h` - 7 functions (pricing, markets, simulation)
 - `PlayerTraderComponent.h` - 11 functions (operations, finances, queries)
-- `CargoComponent.h` - 14 functions (cargo operations, queries)
+- `CargoComponent.h` - 13 functions (cargo operations, queries)
 - `TradeItemDataAsset.h` - 9 functions (pricing, legality, properties)
 - `TradeContractDataAsset.h` - 11 functions (contract management)
 - `MarketDataAsset.h` - 6 functions (pricing, inventory, access)
 - `AITraderComponent.h` - 8 functions (AI trading behavior)
 - `TradeTransaction.h` - 5 functions (transaction history)
+
+**Total**: 70 functions (7 + 11 + 13 + 9 + 11 + 6 + 8 + 5)
 
 **Initial Assessment**:
 - **Keep (Designer-facing)**: Buy/Sell operations, Get prices, Check cargo space

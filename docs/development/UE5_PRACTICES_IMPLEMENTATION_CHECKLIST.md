@@ -54,7 +54,7 @@ This document provides a step-by-step implementation plan for addressing the non
 - ✅ Documentation updated
 - ✅ No compilation errors
 
-**Status**: ✅ **COMPLETE** (2025-12-27)
+**Status**: ✅ **COMPLETE** (2025-12-27) — implementation and acceptance criteria are done; Phase 1 Success Metric "Zero GC-related crashes" remains under long-term runtime validation (currently 2/3 Phase 1 success metrics fully met).
 
 ---
 
@@ -73,11 +73,11 @@ This document provides a step-by-step implementation plan for addressing the non
   ✅ **Completed**: 1,014 functions identified across all systems
   ✅ **MVP Analysis**: Trading (70), Ships (106), Stations (10), UI (214) prioritized
 
-- [x] **Step 2**: Categorize functions (MVP-focused)
+- [ ] **Step 2**: Categorize functions (MVP-focused)
   - Designer-facing: Keep BlueprintCallable
   - Internal helpers: Remove BlueprintCallable, make private
   - Utilities: Keep but document clearly
-  ✅ **In Progress**: CargoComponent analyzed (14 → 6-8 functions)
+  🔄 **In Progress**: CargoComponent analyzed (13 → 6-8 functions)
   📄 **Docs**: See PHASE2_BLUEPRINT_API_ANALYSIS.md and PHASE2_TRADING_SYSTEM_CATEGORIZATION.md
 
 - [ ] **Step 3**: Create migration guide

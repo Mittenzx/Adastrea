@@ -7,7 +7,7 @@
 
 ---
 
-## CargoComponent.h (14 functions)
+## CargoComponent.h (13 functions)
 
 ### ✅ KEEP (Designer-facing - Essential for MVP)
 
@@ -25,7 +25,7 @@
 
 ### ⚠️ REVIEW (Possibly redundant or derivable)
 
-**Convenience Queries (8 functions)**:
+**Convenience Queries (7 functions)**:
 - `GetUsedCargoSpace()` - Derivable: Capacity - Available
 - `GetCargoUtilization()` - Derivable: Used / Capacity
 - `HasItem()` - Convenience wrapper around GetItemQuantity()
@@ -137,7 +137,7 @@ Expected breakdown:
 | IsEmpty | ❌ REMOVE | Trivial |
 | IsFull | ❌ REMOVE | Trivial |
 
-**Reduction**: 14 → 6-8 functions (43-57% reduction)
+**Reduction**: 13 → 6-8 functions (46-54% reduction)
 
 ### Next Steps
 
@@ -164,14 +164,32 @@ if (CargoComponent->IsEmpty())
 
 **After**:
 ```cpp
-if (CargoComponent->GetItemQuantity(nullptr) == 0 || 
-    CargoComponent->GetAvailableCargoSpace() >= CargoComponent->CargoCapacity)
+// Option 1: Check if any cargo entries exist (recommended approach)
+if (CargoComponent->GetCargoContents().Num() == 0)
 {
-    // Do something
+    // Cargo is empty
 }
 
-// OR use events:
-// Bind to OnCargoSpaceChanged and track state
+// Option 2: Check available space equals capacity
+if (CargoComponent->GetAvailableCargoSpace() >= CargoComponent->CargoCapacity)
+{
+    // Cargo is empty (no space used)
+}
+
+// Option 3: Iterate through cargo to verify (if GetCargoContents removed)
+const TArray<FCargoEntry>& Cargo = CargoComponent->CargoInventory;
+bool bIsEmpty = true;
+for (const FCargoEntry& Entry : Cargo)
+{
+    if (Entry.Quantity > 0)
+    {
+        bIsEmpty = false;
+        break;
+    }
+}
+
+// Option 4: Use events to track state (event-driven approach)
+// Bind to OnCargoSpaceChanged and maintain state flag
 ```
 
 ### For Changed Patterns
