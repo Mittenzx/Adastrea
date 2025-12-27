@@ -42,15 +42,15 @@ struct FShipUpgradeStatModifier
 	GENERATED_BODY()
 
 	/** Name of stat to modify (e.g., "MaxSpeed", "ShieldCapacity", "WeaponDamage") */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Modifier")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Modifier")
 	FName StatName;
 
 	/** Additive bonus value */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Modifier")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Modifier")
 	float AdditiveBonus;
 
 	/** Multiplicative bonus (1.0 = no change, 1.5 = 50% increase) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Modifier", meta=(ClampMin="0.1", ClampMax="10.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Modifier", meta=(ClampMin="0.1", ClampMax="10.0"))
 	float MultiplicativeBonus;
 
 	FShipUpgradeStatModifier()
@@ -69,27 +69,27 @@ struct FShipUpgradeRequirement
 	GENERATED_BODY()
 
 	/** Credit cost */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Requirement", meta=(ClampMin="0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Requirement", meta=(ClampMin="0"))
 	int32 CreditCost;
 
 	/** Required player level */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Requirement", meta=(ClampMin="1"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Requirement", meta=(ClampMin="1"))
 	int32 RequiredPlayerLevel;
 
 	/** Required reputation with faction */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Requirement")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Requirement")
 	FName RequiredFactionID;
 
 	/** Minimum reputation value */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Requirement", meta=(ClampMin="-100", ClampMax="100"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Requirement", meta=(ClampMin="-100", ClampMax="100"))
 	int32 MinimumReputation;
 
 	/** Required materials (MaterialID -> quantity) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Requirement")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Requirement")
 	TMap<FName, int32> RequiredMaterials;
 
 	/** Prerequisite upgrades that must be installed first */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Requirement")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Requirement")
 	TArray<class UShipUpgradeDataAsset*> PrerequisiteUpgrades;
 
 	FShipUpgradeRequirement()

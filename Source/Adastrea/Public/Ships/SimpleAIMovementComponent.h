@@ -31,27 +31,27 @@ public:
 	USimpleAIMovementComponent();
 
 	// Minimum distance for random location generation
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Movement", meta=(ClampMin="1000.0", ClampMax="100000.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI Movement", meta=(ClampMin="1000.0", ClampMax="100000.0"))
 	float MinDistance;
 
 	// Maximum distance for random location generation (must be greater than MinDistance)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Movement", meta=(ClampMin="1000.0", ClampMax="500000.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI Movement", meta=(ClampMin="1000.0", ClampMax="500000.0"))
 	float MaxDistance;
 
 	// Speed at which ship moves toward target
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Movement", meta=(ClampMin="100.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI Movement", meta=(ClampMin="100.0"))
 	float MoveSpeed;
 
 	// Distance at which we consider we've arrived at target
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Movement", meta=(ClampMin="100.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI Movement", meta=(ClampMin="100.0"))
 	float ArrivalThreshold;
 
 	// Turn rate for rotating toward target (degrees per second)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Movement", meta=(ClampMin="10.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI Movement", meta=(ClampMin="10.0"))
 	float TurnRate;
 
 	// Whether to constrain rotation to horizontal plane (ignore Z-axis when looking at target)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Movement")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI Movement")
 	bool bConstrainToHorizontalPlane;
 
 	// Whether to enable debug visualization

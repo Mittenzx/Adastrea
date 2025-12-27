@@ -136,31 +136,31 @@ public:
 	// ====================
 
 	// Trader's faction affiliation
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Trader|Config")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI Trader|Config")
 	UFactionDataAsset* TraderFaction;
 
 	// Trading strategy
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Trader|Config")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI Trader|Config")
 	EAITraderStrategy Strategy;
 
 	// Available trading capital
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Trader|Config", meta=(ClampMin="0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI Trader|Config", meta=(ClampMin="0"))
 	int32 TradingCapital;
 
 	// Maximum cargo capacity
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Trader|Config", meta=(ClampMin="0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI Trader|Config", meta=(ClampMin="0"))
 	float CargoCapacity;
 
 	// Average travel speed for route planning
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Trader|Config", meta=(ClampMin="0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI Trader|Config", meta=(ClampMin="0"))
 	float TravelSpeed;
 
 	// Trading skill level (1-10, affects decisions)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Trader|Config", meta=(ClampMin="1", ClampMax="10"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI Trader|Config", meta=(ClampMin="1", ClampMax="10"))
 	int32 TradingSkill;
 
 	// Risk tolerance (0.0 = very risk-averse, 1.0 = risk-seeking)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Trader|Config", meta=(ClampMin="0.0", ClampMax="1.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI Trader|Config", meta=(ClampMin="0.0", ClampMax="1.0"))
 	float RiskTolerance;
 
 	// ====================
@@ -168,27 +168,27 @@ public:
 	// ====================
 
 	// Enabled behaviors
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Trader|Behavior")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI Trader|Behavior")
 	TArray<EAITradeBehavior> EnabledBehaviors;
 
 	// Minimum profit margin to execute trade (percentage)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Trader|Behavior", meta=(ClampMin="0.0", ClampMax="10.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI Trader|Behavior", meta=(ClampMin="0.0", ClampMax="10.0"))
 	float MinProfitMargin;
 
 	// Whether this trader can manipulate market prices
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Trader|Behavior")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI Trader|Behavior")
 	bool bCanManipulatePrices;
 
 	// Whether this trader operates in black markets
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Trader|Behavior")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI Trader|Behavior")
 	bool bOperatesInBlackMarkets;
 
 	// Whether this trader accepts contracts
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Trader|Behavior")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI Trader|Behavior")
 	bool bAcceptsContracts;
 
 	// Frequency of trade operations per game day
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Trader|Behavior", meta=(ClampMin="1"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI Trader|Behavior", meta=(ClampMin="1"))
 	int32 TradeFrequency;
 
 	// ====================

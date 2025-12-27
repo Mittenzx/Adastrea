@@ -48,35 +48,35 @@ struct FMarketEvent
 	GENERATED_BODY()
 
 	// Display name of the event
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Market Event")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Market Event")
 	FText EventName;
 
 	// Description of the event
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Market Event", meta=(MultiLine=true))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Market Event", meta=(MultiLine=true))
 	FText EventDescription;
 
 	// Unique identifier
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Market Event")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Market Event")
 	FName EventID;
 
 	// Items affected by this event (empty = all items)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Market Event")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Market Event")
 	TArray<FName> AffectedItemIDs;
 
 	// Price multiplier for affected items (1.0 = no change)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Market Event", meta=(ClampMin="0.1", ClampMax="10.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Market Event", meta=(ClampMin="0.1", ClampMax="10.0"))
 	float PriceMultiplier;
 
 	// Supply multiplier for affected items (1.0 = no change)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Market Event", meta=(ClampMin="0.0", ClampMax="5.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Market Event", meta=(ClampMin="0.0", ClampMax="5.0"))
 	float SupplyMultiplier;
 
 	// Demand multiplier for affected items (1.0 = no change)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Market Event", meta=(ClampMin="0.0", ClampMax="5.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Market Event", meta=(ClampMin="0.0", ClampMax="5.0"))
 	float DemandMultiplier;
 
 	// Duration of event in game hours (0 = infinite)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Market Event", meta=(ClampMin="0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Market Event", meta=(ClampMin="0"))
 	float DurationHours;
 
 	// When event started (game time)
@@ -109,7 +109,7 @@ struct FMarketInventoryEntry
 	GENERATED_BODY()
 
 	// The trade item
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Inventory")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Inventory")
 	UTradeItemDataAsset* TradeItem;
 
 	// Current stock level
@@ -117,7 +117,7 @@ struct FMarketInventoryEntry
 	int32 CurrentStock;
 
 	// Maximum stock level
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Inventory", meta=(ClampMin="0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Inventory", meta=(ClampMin="0"))
 	int32 MaxStock;
 
 	// Base supply level (1.0 = typical)
