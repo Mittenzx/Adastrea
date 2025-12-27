@@ -291,7 +291,6 @@ private:
 	 */
 	bool ImportFromString(const FString& Data);
 
-private:
 	// Prune old transactions if history exceeds max size
 	void PruneOldTransactions();
 };

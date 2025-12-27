@@ -151,28 +151,6 @@ public:
 	TArray<FShipModuleSlot> GetEmptySlots() const;
 
 	/**
-	 * Get total power consumption of all installed modules
-	 * @return Current power draw (negative for net generation)
-	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization")
-	float GetTotalPowerConsumption() const;
-
-	/**
-	 * Get total mass of all installed modules
-	 * @return Current total mass in kilograms
-	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization")
-	float GetTotalModuleMass() const;
-
-	/**
-	 * Get all empty slots that can accept a specific module
-	 * @param Module The module to check compatibility for
-	 * @return Array of compatible empty slots
-	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization")
-	TArray<FShipModuleSlot> GetCompatibleEmptySlots(UShipModuleComponent* Module) const;
-
-	/**
 	 * Validate if a module can be installed (checks power, mass, slot compatibility)
 	 * @param Module The module to validate
 	 * @param SlotID The target slot
@@ -196,18 +174,6 @@ private:
 	// ====================
 	// INTERNAL RESOURCE CALCULATIONS
 	// ====================
-
-	/**
-	 * Get total power consumption of all installed modules
-	 * Internal calculation - used by CanInstallModule
-	 */
-	float GetTotalPowerConsumption() const;
-
-	/**
-	 * Get total mass of all installed modules
-	 * Internal calculation - used by CanInstallModule
-	 */
-	float GetTotalModuleMass() const;
 
 	/**
 	 * Get remaining power capacity
@@ -238,14 +204,6 @@ private:
 	 * Internal serialization function
 	 */
 	FString GetLoadoutString() const;
-
-	/**
-	 * Get all empty slots that can accept a specific module
-	 * Internal query - used by CanInstallModule
-	 */
-	TArray<FShipModuleSlot> GetCompatibleEmptySlots(UShipModuleComponent* Module) const;
-
-public:
 
 	// ====================
 	// BLUEPRINT NATIVE EVENTS

@@ -347,8 +347,11 @@ private:
 	 */
 	float GetEventPriceMultiplier(FName ItemID) const;
 
-public:
+	// ====================
+	// BLUEPRINT NATIVE EVENTS
+	// ====================
 
+public:
 	/**
 	 * BlueprintNativeEvent: Custom price calculation override
 	 * Allows designers to implement custom pricing logic in Blueprint

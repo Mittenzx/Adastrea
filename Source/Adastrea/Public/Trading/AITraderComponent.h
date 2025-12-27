@@ -351,8 +351,11 @@ private:
 	 */
 	void DiscoverMarket(UMarketDataAsset* Market);
 
-public:
+	// ====================
+	// BLUEPRINT NATIVE EVENTS
+	// ====================
 
+public:
 	/**
 	 * BlueprintNativeEvent: Custom trade decision logic
 	 * Allows designers to implement custom AI logic
