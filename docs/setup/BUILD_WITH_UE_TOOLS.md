@@ -1,8 +1,10 @@
 # Building Adastrea with Unreal Engine Build Tools
 
+> **⚠️ IMPORTANT UPDATE (Dec 2025):** The Windows `build_with_ue_tools.bat` script has been updated to use your **installed Unreal Engine** instead of downloading UnrealBuildTools. The setup step is no longer required for Windows users. Just run `build_with_ue_tools.bat` directly!
+
 This guide explains how to build Adastrea using only the Unreal Engine build tools, without requiring the full engine source code (~500MB vs ~50GB).
 
-> **🚨 IMPORTANT FOR WINDOWS USERS:** If you're experiencing MSBuild SetEnv task failures (49KB+ include paths), this is the **required workaround** for Unreal Engine 5.6 large projects. Use the Windows batch scripts provided to bypass Visual Studio's limitations.
+> **🚨 IMPORTANT FOR WINDOWS USERS:** If you're experiencing MSBuild SetEnv task failures (49KB+ include paths), the `build_with_ue_tools.bat` script provides a **required workaround** for Unreal Engine 5.6 large projects by using the standard UE Build.bat to bypass Visual Studio's limitations.
 
 ## Overview
 
@@ -76,17 +78,27 @@ To access the UnrealEngine repository, you need to:
 
 ### Windows
 
-```batch
-REM 1. Setup build tools (downloads ~500MB)
-setup_ue_build_tools.bat
+> **NEW:** Windows script now auto-detects your installed Unreal Engine. No setup required!
 
-REM 2. Build Adastrea
+```batch
+REM Build Adastrea (auto-detects UE 5.6 or 5.5 installation)
 build_with_ue_tools.bat Development Win64
 
 REM Alternative configurations
 build_with_ue_tools.bat DebugGame Win64
 build_with_ue_tools.bat Shipping Win64
 ```
+
+**Requirements:**
+- ✅ Unreal Engine 5.6 (or 5.5) installed via Epic Games Launcher
+- ✅ Visual Studio 2022 with C++ tools
+- ✅ Windows SDK
+
+**How it works:**
+- Script auto-detects UE in common installation paths
+- Uses standard UE `Build.bat` for reliable compilation
+- If UE is not auto-detected, you can specify the path manually
+- No more UnrealBuildTools download needed!
 
 **Why Use This on Windows?**
 - ✅ Bypasses MSBuild SetEnv task limitations (49KB+ include paths)

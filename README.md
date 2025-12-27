@@ -120,27 +120,26 @@ After comprehensive critical review, Adastrea is refocusing on a **Trade Simulat
 
 ### 🆕 Build with UE Build Tools Only
 
-You can now build Adastrea using only the Unreal Engine build tools (~500MB) instead of the full engine (~50GB):
+> **⚠️ UPDATE (Dec 2025):** Windows script now uses your installed UE - no setup required!
+
+You can build Adastrea using streamlined build scripts:
 
 **Windows (SetEnv workaround for UE 5.6):**
 ```batch
-REM Download build tools
-setup_ue_build_tools.bat
-
-REM Build the project
+REM Just build! (auto-detects installed UE 5.6/5.5)
 build_with_ue_tools.bat Development Win64
 ```
 
 **Linux/Mac:**
 ```bash
-# Download build tools
+# Download build tools (one-time setup)
 ./setup_ue_build_tools.sh
 
 # Build the project
 ./build_with_ue_tools.sh Development Linux
 ```
 
-> **🚨 Windows Users:** If experiencing MSBuild SetEnv task failures (49KB+ include paths), this is the **required workaround** for UE 5.6 large projects. See [Windows Build Scripts Reference](docs/reference/WINDOWS_BUILD_SCRIPTS.md).
+> **🚨 Windows Users:** If experiencing MSBuild SetEnv task failures (49KB+ include paths), the `build_with_ue_tools.bat` script provides the **required workaround** for UE 5.6 large projects by using standard UE Build.bat. See [Windows Build Scripts Reference](docs/reference/WINDOWS_BUILD_SCRIPTS.md).
 
 See **[BUILD_WITH_UE_TOOLS.md](docs/setup/BUILD_WITH_UE_TOOLS.md)** for complete instructions.
 
@@ -150,8 +149,11 @@ See **[BUILD_WITH_UE_TOOLS.md](docs/setup/BUILD_WITH_UE_TOOLS.md)** for complete
 - ✓ Build verification
 - ✓ Code compilation without full editor
 - ✓ **Windows: Bypassing MSBuild SetEnv limitations**
+- ✓ **Windows: No UnrealBuildTools download needed**
 
-**Note:** To actually run and edit the project, you still need the full Unreal Engine 5.6 installation.
+**Requirements:**
+- **Windows:** Unreal Engine 5.6 (or 5.5) installed via Epic Games Launcher
+- **Linux/Mac:** Will download minimal build tools (~500MB vs ~50GB full engine)
 
 ### Robust Setup Validation
 

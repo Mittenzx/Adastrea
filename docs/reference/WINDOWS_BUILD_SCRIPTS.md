@@ -1,5 +1,7 @@
 # Windows Build Scripts - Quick Reference
 
+> **⚠️ IMPORTANT UPDATE (Dec 2025):** The `build_with_ue_tools.bat` script has been updated to use your **installed Unreal Engine** instead of downloading UnrealBuildTools. The `setup_ue_build_tools.bat` step is **no longer required**!
+
 ## Purpose
 
 These scripts provide a workaround for the **Unreal Engine 5.6 MSBuild SetEnv task failure** on Windows, which occurs when Visual Studio project files have excessively long include paths (49KB+).
@@ -17,32 +19,15 @@ This is a **known UE 5.6 issue** where the project generator includes all engine
 
 ## Solution
 
-Build directly with UnrealBuildTool (UBT), bypassing Visual Studio's MSBuild entirely.
+Build using the standard Unreal Engine Build.bat from your installed UE, bypassing Visual Studio's MSBuild entirely.
 
 ## Scripts
 
-### `setup_ue_build_tools.bat`
+### `build_with_ue_tools.bat` (UPDATED)
 
-Downloads only the Unreal Engine build tools (~500MB) instead of the full engine source (~50GB).
+> **NEW:** Now uses your installed Unreal Engine. No setup required!
 
-**Usage:**
-```batch
-setup_ue_build_tools.bat
-```
-
-**What it does:**
-- Downloads UnrealBuildTool, UnrealHeaderTool, and build scripts
-- Uses git sparse checkout (only ~500MB download)
-- One-time setup
-
-**Requirements:**
-- Git for Windows
-- .NET SDK 6.0+
-- Epic Games GitHub account access
-
-### `build_with_ue_tools.bat`
-
-Builds Adastrea using UnrealBuildTool directly, bypassing Visual Studio.
+Builds Adastrea using standard UE Build.bat, bypassing Visual Studio.
 
 **Usage:**
 ```batch
@@ -56,25 +41,43 @@ build_with_ue_tools.bat Shipping Win64
 ```
 
 **What it does:**
-- Finds or builds UnrealBuildTool
+- Auto-detects installed Unreal Engine 5.6 or 5.5
 - Generates project files (if needed)
-- Compiles Adastrea modules
+- Compiles Adastrea modules using standard UE Build.bat
 - Validates build output
+
+**Requirements:**
+- Unreal Engine 5.6 (or 5.5) installed via Epic Games Launcher
+- Visual Studio 2022 with C++ tools
+- Windows SDK
+
+**Installation Paths Checked:**
+1. `C:\Program Files\Epic Games\UE_5.6`
+2. `C:\Program Files\Epic Games\UE_5.5` (fallback)
+3. `C:\Program Files (x86)\Epic Games\UE_5.6`
+4. Manual input if not found
+
+### `setup_ue_build_tools.bat` (DEPRECATED FOR WINDOWS)
+
+> **⚠️ DEPRECATED:** This script is no longer needed for Windows builds. The updated `build_with_ue_tools.bat` uses your installed UE instead.
+
+This script is still used for Linux/Mac builds. For Windows, just run `build_with_ue_tools.bat` directly.
 
 ## Quick Start
 
 ```batch
-REM 1. One-time setup (downloads ~500MB)
-setup_ue_build_tools.bat
-
-REM 2. Build Adastrea
+REM Just build! (no setup needed)
 build_with_ue_tools.bat Development Win64
 ```
 
+That's it! The script will auto-detect your UE installation and build the project.
+
 ## Benefits
 
+✅ **No setup required** - Just run the script with UE installed  
+✅ **Auto-detection** - Finds UE 5.6 or 5.5 automatically  
 ✅ **Bypasses MSBuild SetEnv limitations** - No 32KB environment variable limits  
-✅ **Faster compilation** - No Visual Studio overhead  
+✅ **Faster compilation** - Uses standard UE build tools  
 ✅ **Works with large projects** - Handles 49KB+ include paths  
 ✅ **Same output** - Produces identical binaries to Visual Studio builds  
 ✅ **Still use VS for editing** - You can still use Visual Studio for code editing, just not building
@@ -83,20 +86,24 @@ build_with_ue_tools.bat Development Win64
 
 ### Required Software
 
-1. **Git for Windows**
-   - Download: https://git-scm.com/download/win
-   - Verify: `git --version`
+1. **Unreal Engine 5.6 (or 5.5)**
+   - Download via Epic Games Launcher
+   - Install to default location (auto-detected)
+   - Verify: Check that UE is installed in `C:\Program Files\Epic Games\UE_5.6`
 
-2. **.NET SDK 6.0+**
-   - Download: https://dotnet.microsoft.com/download/dotnet/6.0
-   - Verify: `dotnet --version`
+2. **Visual Studio 2022**
+   - Download: https://visualstudio.microsoft.com/vs/
+   - Install C++ game development workload
+   - Required for compiler and build tools
 
-3. **Epic Games GitHub Access**
-   - Link GitHub at: https://www.epicgames.com/account/connections
-   - Accept Epic Games organization invitation
-   - Verify: https://github.com/EpicGames
+3. **Windows SDK**
+   - Usually installed with Visual Studio
+   - Verify in Visual Studio Installer
 
-### Optional (for development)
+### Optional (No Longer Required)
+- ❌ ~~Git for Windows~~ (not needed for this script)
+- ❌ ~~.NET SDK~~ (warning only if missing)
+- ❌ ~~Epic Games GitHub access~~ (not needed for this approach)
 
 - Visual Studio 2022 (for code editing only)
 - Unreal Engine 5.6 (for running editor and content creation)
