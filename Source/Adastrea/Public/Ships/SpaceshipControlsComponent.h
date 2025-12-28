@@ -140,35 +140,45 @@ public:
 	/**
 	 * Disable spaceship controls input
 	 * Removes the input mapping context from the local player
+	 * 
+	 * @note POST-MVP: Deferred - simple enable/disable sufficient for MVP
 	 */
-	UFUNCTION(BlueprintCallable, Category="Controls")
+	// UFUNCTION(BlueprintCallable, Category="Controls") // DEFERRED: Post-MVP control management
 	void DisableControls();
 
 	/**
 	 * Check if controls are currently enabled
 	 * @return True if input mapping context is active
+	 * 
+	 * @note POST-MVP: Deferred - not critical for MVP trading
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Controls")
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Controls") // DEFERRED: Post-MVP query
 	bool AreControlsEnabled() const;
 
 	/**
 	 * Set movement speed multiplier
 	 * @param NewSpeed New movement speed value (clamped to valid range)
+	 * 
+	 * @note POST-MVP: Deferred - runtime speed adjustment not critical for MVP
 	 */
-	UFUNCTION(BlueprintCallable, Category="Controls|Movement")
+	// UFUNCTION(BlueprintCallable, Category="Controls|Movement") // DEFERRED: Post-MVP customization
 	void SetMovementSpeed(float NewSpeed);
 
 	/**
 	 * Set look sensitivity multiplier
 	 * @param NewSensitivity New sensitivity value (clamped to valid range)
+	 * 
+	 * @note POST-MVP: Deferred - runtime sensitivity adjustment not critical for MVP
 	 */
-	UFUNCTION(BlueprintCallable, Category="Controls|Look")
+	// UFUNCTION(BlueprintCallable, Category="Controls|Look") // DEFERRED: Post-MVP customization
 	void SetLookSensitivity(float NewSensitivity);
 
 	/**
 	 * Toggle Y axis inversion for look input
+	 * 
+	 * @note POST-MVP: Deferred - control customization not critical for MVP
 	 */
-	UFUNCTION(BlueprintCallable, Category="Controls|Look")
+	// UFUNCTION(BlueprintCallable, Category="Controls|Look") // DEFERRED: Post-MVP customization
 	void ToggleInvertLookY();
 
 	/**
@@ -181,8 +191,10 @@ public:
 	/**
 	 * Set the current speed multiplier
 	 * @param NewSpeed New speed value (clamped to min/max range)
+	 * 
+	 * @note POST-MVP: Deferred - use IncreaseSpeed/DecreaseSpeed for MVP
 	 */
-	UFUNCTION(BlueprintCallable, Category="Controls|Speed")
+	// UFUNCTION(BlueprintCallable, Category="Controls|Speed") // DEFERRED: Post-MVP direct control
 	void SetCurrentSpeed(float NewSpeed);
 
 	/**

@@ -26,6 +26,18 @@ class UShipModuleDataAsset;
  * - Define module slots in editor
  * - Use Blueprint or C++ functions to install/remove modules
  * - Query current configuration for gameplay effects
+ * 
+ * ========================================
+ * POST-MVP STATUS: ALL FUNCTIONS DEFERRED
+ * ========================================
+ * This entire customization system has been deferred to post-MVP phase.
+ * Reason: Cosmetic/vanity system not required for trading MVP gameplay loop.
+ * 
+ * All 12 BlueprintCallable functions have been commented out to reduce
+ * Blueprint API surface area. Functions remain available for C++ internal
+ * use and can be easily reactivated post-MVP by uncommenting UFUNCTION macros.
+ * 
+ * See: PHASE2_SHIPS_SYSTEM_CATEGORIZATION.md for full analysis.
  */
 UCLASS(ClassGroup=(Ship), meta=(BlueprintSpawnableComponent))
 class ADASTREA_API UShipCustomizationComponent : public UActorComponent
@@ -70,16 +82,20 @@ public:
 	 * @param Module The module component to install
 	 * @param SlotID The ID of the slot to install into
 	 * @return True if installation succeeded
+	 * 
+	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
-	UFUNCTION(BlueprintCallable, Category="Ship Customization")
+	// UFUNCTION(BlueprintCallable, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
 	bool InstallModule(UShipModuleComponent* Module, FName SlotID);
 
 	/**
 	 * Remove a module from a slot
 	 * @param SlotID The ID of the slot to remove module from
 	 * @return The removed module component, or nullptr if slot was empty
+	 * 
+	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
-	UFUNCTION(BlueprintCallable, Category="Ship Customization")
+	// UFUNCTION(BlueprintCallable, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
 	UShipModuleComponent* RemoveModule(FName SlotID);
 
 	/**
@@ -87,39 +103,49 @@ public:
 	 * @param NewModule The new module to install
 	 * @param SlotID The slot to replace module in
 	 * @return The old module that was replaced, or nullptr if slot was empty
+	 * 
+	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
-	UFUNCTION(BlueprintCallable, Category="Ship Customization")
+	// UFUNCTION(BlueprintCallable, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
 	UShipModuleComponent* ReplaceModule(UShipModuleComponent* NewModule, FName SlotID);
 
 	/**
 	 * Get the module installed in a specific slot
 	 * @param SlotID The slot to query
 	 * @return The installed module, or nullptr if slot is empty
+	 * 
+	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization")
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
 	UShipModuleComponent* GetModuleInSlot(FName SlotID) const;
 
 	/**
 	 * Get all installed modules of a specific category
 	 * @param Category The category to filter by
 	 * @return Array of modules in that category
+	 * 
+	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization")
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
 	TArray<UShipModuleComponent*> GetModulesByCategory(EShipModuleCategory Category) const;
 
 	/**
 	 * Get all installed modules
 	 * @return Array of all installed modules
+	 * 
+	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization")
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
 	TArray<UShipModuleComponent*> GetAllInstalledModules() const { return InstalledModules; }
 
 	/**
 	 * Check if a specific slot is occupied
 	 * @param SlotID The slot to check
 	 * @return True if slot has a module installed
+	 * 
+	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization")
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
 	bool IsSlotOccupied(FName SlotID) const;
 
 	// ====================
@@ -131,23 +157,29 @@ public:
 	 * @param SlotID The ID to search for
 	 * @param OutSlot The found slot (only valid if function returns true)
 	 * @return True if a slot with the given ID was found
+	 * 
+	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization")
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
 	bool FindSlotByID(FName SlotID, FShipModuleSlot& OutSlot) const;
 
 	/**
 	 * Get all slots of a specific category
 	 * @param Category The category to filter by
 	 * @return Array of slots that accept this category
+	 * 
+	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization")
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
 	TArray<FShipModuleSlot> GetSlotsByCategory(EShipModuleCategory Category) const;
 
 	/**
 	 * Get all empty slots
 	 * @return Array of unoccupied slots
+	 * 
+	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization")
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
 	TArray<FShipModuleSlot> GetEmptySlots() const;
 
 	/**
@@ -156,8 +188,10 @@ public:
 	 * @param SlotID The target slot
 	 * @param OutReason Output parameter for failure reason
 	 * @return True if module can be installed
+	 * 
+	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
-	UFUNCTION(BlueprintCallable, Category="Ship Customization")
+	// UFUNCTION(BlueprintCallable, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
 	bool CanInstallModule(UShipModuleComponent* Module, FName SlotID, FText& OutReason) const;
 
 	// ====================
@@ -166,8 +200,10 @@ public:
 
 	/**
 	 * Clear all installed modules
+	 * 
+	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
-	UFUNCTION(BlueprintCallable, Category="Ship Customization")
+	// UFUNCTION(BlueprintCallable, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
 	void ClearAllModules();
 
 private:
