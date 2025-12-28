@@ -250,7 +250,7 @@ protected:
 	// ====================
 
 	/** Whether to automatically create UI widgets in C++ if not bound in Blueprint */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Sector Map|Config")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Sector Map|Config")
 	bool bAutoCreateMissingWidgets;
 
 	// ====================

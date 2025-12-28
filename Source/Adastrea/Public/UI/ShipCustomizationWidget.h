@@ -14,15 +14,15 @@ struct FInstalledModule
 	GENERATED_BODY()
 
 	/** The customization data asset */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Customization")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ship Customization")
 	UShipCustomizationDataAsset* Module;
 
 	/** Hardpoint slot index where this is installed */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Customization")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ship Customization")
 	int32 HardpointSlotIndex;
 
 	/** Whether this module is currently active */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Customization")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ship Customization")
 	bool bIsActive;
 
 	FInstalledModule()
@@ -49,15 +49,15 @@ struct FShipHardpoint
 	GENERATED_BODY()
 
 	/** Hardpoint type */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Customization")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ship Customization")
 	EShipHardpointType HardpointType;
 
 	/** Display name for this hardpoint */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Customization")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ship Customization")
 	FText HardpointName;
 
 	/** Currently installed module */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Customization")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ship Customization")
 	UShipCustomizationDataAsset* InstalledModule;
 
 	FShipHardpoint()

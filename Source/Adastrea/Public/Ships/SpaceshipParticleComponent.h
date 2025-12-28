@@ -62,15 +62,15 @@ public:
 	// ====================
 
 	/** Main engine particle system template (GPU particles) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Main Engine")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Main Engine")
 	UParticleSystem* MainEngineTemplate;
 
 	/** Engine glow material instance for dynamic parameters */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Main Engine")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Main Engine")
 	UMaterialInstanceDynamic* EngineMaterialInstance;
 
 	/** Afterburner effect template for boost mode */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Main Engine")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Main Engine")
 	UParticleSystem* AfterburnerTemplate;
 
 	/** Main engine particle component instance */
@@ -90,11 +90,11 @@ public:
 	bool bBoostActive;
 
 	/** Minimum particle spawn rate multiplier */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Main Engine", meta=(ClampMin="0.0", ClampMax="1.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Main Engine", meta=(ClampMin="0.0", ClampMax="1.0"))
 	float MinParticleRateMultiplier;
 
 	/** Maximum particle spawn rate multiplier */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Main Engine", meta=(ClampMin="1.0", ClampMax="5.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Main Engine", meta=(ClampMin="1.0", ClampMax="5.0"))
 	float MaxParticleRateMultiplier;
 
 	/**
@@ -116,7 +116,7 @@ public:
 	// ====================
 
 	/** RCS thruster particle system template (CPU particles) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="RCS Thrusters")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="RCS Thrusters")
 	UParticleSystem* RCSThrusterTemplate;
 
 	/** RCS particle components for each axis */
@@ -124,7 +124,7 @@ public:
 	TMap<ERCSThrusterAxis, UParticleSystemComponent*> RCSThrusterComponents;
 
 	/** RCS effect duration in seconds */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="RCS Thrusters", meta=(ClampMin="0.1", ClampMax="2.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="RCS Thrusters", meta=(ClampMin="0.1", ClampMax="2.0"))
 	float RCSThrusterDuration;
 
 	/**
@@ -140,19 +140,19 @@ public:
 	// ====================
 
 	/** Jump charge-up particle system */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Jump Drive")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jump Drive")
 	UParticleSystem* JumpChargeTemplate;
 
 	/** Jump activation flash particle system */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Jump Drive")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jump Drive")
 	UParticleSystem* JumpActivationTemplate;
 
 	/** Jump tunnel/wormhole effect particle system */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Jump Drive")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jump Drive")
 	UParticleSystem* JumpTunnelTemplate;
 
 	/** Jump exit flash particle system */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Jump Drive")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jump Drive")
 	UParticleSystem* JumpExitTemplate;
 
 	/** Jump effect component instances */
@@ -169,7 +169,7 @@ public:
 	UParticleSystemComponent* JumpExitComponent;
 
 	/** Jump charge duration in seconds */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Jump Drive", meta=(ClampMin="0.5", ClampMax="10.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Jump Drive", meta=(ClampMin="0.5", ClampMax="10.0"))
 	float JumpChargeDuration;
 
 	/** Is jump sequence currently active */
@@ -221,7 +221,7 @@ public:
 	// ====================
 
 	/** Maximum particles per ship (performance budget) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Performance", meta=(ClampMin="1000", ClampMax="20000"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Performance", meta=(ClampMin="1000", ClampMax="20000"))
 	int32 MaxParticlesPerShip;
 
 	/** Get current total particle count */

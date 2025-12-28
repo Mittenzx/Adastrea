@@ -55,19 +55,19 @@ public:
 	// ====================
 
 	/** Movement speed multiplier applied to strafe input */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Movement", meta=(ClampMin="0.1", ClampMax="10.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Controls|Movement", meta=(ClampMin="0.1", ClampMax="10.0"))
 	float MovementSpeed;
 
 	/** Look sensitivity multiplier applied to mouse input */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Look", meta=(ClampMin="0.1", ClampMax="10.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Controls|Look", meta=(ClampMin="0.1", ClampMax="10.0"))
 	float LookSensitivity;
 
 	/** When true, inverts the Y axis for look input */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Look")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Controls|Look")
 	bool bInvertLookY;
 
 	/** Priority for the spaceship input mapping context */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Input", meta=(ClampMin="0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Controls|Input", meta=(ClampMin="0"))
 	int32 InputMappingPriority;
 
 	// ====================
@@ -79,15 +79,15 @@ public:
 	float CurrentSpeed;
 
 	/** Amount to change speed per mouse wheel tick */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Speed", meta=(ClampMin="0.1", ClampMax="2.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Controls|Speed", meta=(ClampMin="0.1", ClampMax="2.0"))
 	float SpeedStep;
 
 	/** Minimum speed multiplier */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Speed", meta=(ClampMin="0.1", ClampMax="5.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Controls|Speed", meta=(ClampMin="0.1", ClampMax="5.0"))
 	float MinSpeed;
 
 	/** Maximum speed multiplier */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Controls|Speed", meta=(ClampMin="1.0", ClampMax="10.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Controls|Speed", meta=(ClampMin="1.0", ClampMax="10.0"))
 	float MaxSpeed;
 
 	// ====================

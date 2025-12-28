@@ -217,19 +217,19 @@ public:
     // ====================
 
     /** Credits reward multiplier per difficulty level */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest Generation", meta=(ClampMin="0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Quest Generation", meta=(ClampMin="0"))
     int32 CreditsPerDifficulty;
 
     /** Experience points multiplier per difficulty level */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest Generation", meta=(ClampMin="0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Quest Generation", meta=(ClampMin="0"))
     int32 ExperiencePerDifficulty;
 
     /** Reputation gain multiplier per difficulty level */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest Generation", meta=(ClampMin="0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Quest Generation", meta=(ClampMin="0"))
     int32 ReputationPerDifficulty;
 
     /** Default location threshold for generated quests (meters) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest Generation", meta=(ClampMin="0", ClampMax="10000"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Quest Generation", meta=(ClampMin="0", ClampMax="10000"))
     float DefaultLocationThreshold;
 
     /**

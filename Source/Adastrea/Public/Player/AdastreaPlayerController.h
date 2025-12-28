@@ -143,7 +143,7 @@ public:
 	 * Set this in Blueprint or editor to display ship information
 	 * Should be a class derived from UShipStatusWidget
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Status")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ship Status")
 	TSubclassOf<class UShipStatusWidget> ShipStatusWidgetClass;
 
 	/**
@@ -162,7 +162,7 @@ public:
 	 * Set this in Blueprint or editor to display the in-game menu
 	 * Should be a class derived from UUserWidget (e.g., UMainMenuWidget)
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Main Menu")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Main Menu")
 	TSubclassOf<UUserWidget> MainMenuWidgetClass;
 
 	/**
