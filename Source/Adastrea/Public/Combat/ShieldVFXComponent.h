@@ -97,15 +97,15 @@ public:
 	// ====================
 
 	/** Shield visual material (base material) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Shield Visuals")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Shield Visuals")
 	UMaterialInterface* ShieldBaseMaterial;
 
 	/** Niagara system for shield effects */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Shield Visuals")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Shield Visuals")
 	UNiagaraSystem* ShieldEffectTemplate;
 
 	/** Combat health component reference (auto-detected if null) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Shield Visuals")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Shield Visuals")
 	UCombatHealthComponent* CombatHealthComponent;
 
 	// ====================
@@ -113,27 +113,27 @@ public:
 	// ====================
 
 	/** Color for full shield (steady glow) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Shield Colors")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Shield Colors")
 	FLinearColor FullShieldColor;
 
 	/** Color for recharging shield (pulsing) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Shield Colors")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Shield Colors")
 	FLinearColor RechargingColor;
 
 	/** Color for shield down (warning) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Shield Colors")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Shield Colors")
 	FLinearColor ShieldDownColor;
 
 	/** Pulse speed for recharging animation (cycles per second) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Shield Colors", meta=(ClampMin="0.5", ClampMax="5.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Shield Colors", meta=(ClampMin="0.5", ClampMax="5.0"))
 	float RechargePulseSpeed;
 
 	/** Minimum intensity during pulse */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Shield Colors", meta=(ClampMin="0.1", ClampMax="1.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Shield Colors", meta=(ClampMin="0.1", ClampMax="1.0"))
 	float MinPulseIntensity;
 
 	/** Maximum intensity during pulse */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Shield Colors", meta=(ClampMin="1.0", ClampMax="3.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Shield Colors", meta=(ClampMin="1.0", ClampMax="3.0"))
 	float MaxPulseIntensity;
 
 	// ====================

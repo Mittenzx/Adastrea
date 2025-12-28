@@ -58,15 +58,15 @@ public:
 	// ====================
 
 	/** Combat VFX data asset defining weapon effects */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat VFX")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat VFX")
 	UCombatVFXDataAsset* CombatVFXData;
 
 	/** Impact effect data asset */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat VFX")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat VFX")
 	UImpactEffectDataAsset* ImpactEffectData;
 
 	/** Weapon components to monitor (auto-detected if empty) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat VFX")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat VFX")
 	TArray<UWeaponComponent*> WeaponComponents;
 
 	// ====================
@@ -196,7 +196,7 @@ public:
 	// ====================
 
 	/** Maximum active effects allowed */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Performance", meta=(ClampMin="10", ClampMax="100"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Performance", meta=(ClampMin="10", ClampMax="100"))
 	int32 MaxActiveEffects;
 
 	/** Current number of active effects */
@@ -204,15 +204,15 @@ public:
 	int32 CurrentActiveEffects;
 
 	/** Pool size for Niagara components (performance optimization) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Performance", meta=(ClampMin="10", ClampMax="100"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Performance", meta=(ClampMin="10", ClampMax="100"))
 	int32 ComponentPoolSize;
 
 	/** Enable distance-based culling */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Performance")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Performance")
 	bool bEnableDistanceCulling;
 
 	/** Maximum distance for effects (meters) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Performance", meta=(ClampMin="1000", ClampMax="50000"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Performance", meta=(ClampMin="1000", ClampMax="50000"))
 	float MaxEffectDistance;
 
 	/**

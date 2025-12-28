@@ -40,11 +40,11 @@ protected:
     class UStaticMeshComponent* MeshComponent;
 
     /** Damage to apply on hit */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
     float Damage = 10.0f;
 
     /** Lifetime of the projectile in seconds */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
     float Lifetime = 5.0f;
 
 private:

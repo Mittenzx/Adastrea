@@ -126,35 +126,35 @@ public:
     // ====================
 
     /** Maximum boarding crew capacity */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Boarding", meta=(ClampMin="0", ClampMax="100"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Boarding", meta=(ClampMin="0", ClampMax="100"))
     int32 MaxBoardingCrew;
 
     /** Base boarding skill level (0-100) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Boarding", meta=(ClampMin="0", ClampMax="100"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Boarding", meta=(ClampMin="0", ClampMax="100"))
     float BaseBoardingSkill;
 
     /** Defense rating against boarding (0-100) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Boarding", meta=(ClampMin="0", ClampMax="100"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Boarding", meta=(ClampMin="0", ClampMax="100"))
     float DefenseRating;
 
     /** Time required to breach hull (seconds) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Boarding", meta=(ClampMin="1", ClampMax="300"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Boarding", meta=(ClampMin="1", ClampMax="300"))
     float BreachTime;
 
     /** Base combat resolution interval (seconds) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Boarding", meta=(ClampMin="1", ClampMax="60"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Boarding", meta=(ClampMin="1", ClampMax="60"))
     float CombatInterval;
 
     /** Minimum crew required to maintain ship control */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Boarding", meta=(ClampMin="1", ClampMax="100"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Boarding", meta=(ClampMin="1", ClampMax="100"))
     int32 MinimumCrewForControl;
 
     /** Can this ship initiate boarding actions */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Boarding")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Boarding")
     bool bCanBoard;
 
     /** Can this ship be boarded by others */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Boarding")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Boarding")
     bool bCanBeBoarded;
 
     // ====================

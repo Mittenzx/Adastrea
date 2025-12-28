@@ -144,15 +144,15 @@ public:
 	// ====================
 
 	/** Scanner data asset defining capabilities */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Scanner")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Scanner")
 	UScannerDataAsset* ScannerData;
 
 	/** Is passive scanning enabled? */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Scanner")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Scanner")
 	bool bPassiveScanningEnabled;
 
 	/** Should we show detected objects in log? (debug) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Scanner|Debug")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Scanner|Debug")
 	bool bDebugShowDetections;
 
 	// ====================
