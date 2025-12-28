@@ -62,6 +62,20 @@ struct FInstalledUpgrade
  * - PlayerUnlockComponent gates upgrade availability
  * - Trading system provides upgrade purchases
  * - Material system provides upgrade materials
+ * 
+ * ========================================
+ * MVP STATUS: MINIMAL UPGRADE SYSTEM (3 functions kept)
+ * ========================================
+ * For MVP, only cargo capacity upgrades are critical for trading progression.
+ * Most upgrade functions deferred to post-MVP. Keeping minimal set:
+ * - InstallUpgrade() - Core upgrade installation
+ * - CanInstallUpgrade() - Purchase validation
+ * - GetStatModifier() - Apply stat bonuses (for CargoCapacity)
+ * 
+ * All other functions (11) deferred for post-MVP advanced upgrade systems.
+ * Functions remain available for C++ internal use.
+ * 
+ * See: PHASE2_SHIPS_SYSTEM_CATEGORIZATION.md for full analysis.
  */
 UCLASS(BlueprintType, ClassGroup=(Ships), meta=(BlueprintSpawnableComponent))
 class ADASTREA_API UShipUpgradeComponent : public UActorComponent
@@ -104,8 +118,10 @@ public:
 	 * Uninstall an upgrade from this ship
 	 * @param UpgradeID ID of upgrade to remove
 	 * @return True if uninstallation successful
+	 * 
+	 * @note POST-MVP: Deferred - MVP only needs install functionality
 	 */
-	UFUNCTION(BlueprintCallable, Category="Upgrades")
+	// UFUNCTION(BlueprintCallable, Category="Upgrades") // DEFERRED: Post-MVP advanced upgrade management
 	bool UninstallUpgrade(FName UpgradeID);
 
 	/**
@@ -121,22 +137,28 @@ public:
 	 * Check if upgrade is installed
 	 * @param UpgradeID Upgrade to check
 	 * @return True if installed
+	 * 
+	 * @note POST-MVP: Deferred - not critical for MVP trading loop
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades")
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades") // DEFERRED: Post-MVP query
 	bool IsUpgradeInstalled(FName UpgradeID) const;
 
 	/**
 	 * Get stack count for an upgrade
 	 * @param UpgradeID Upgrade to check
 	 * @return Stack count (0 if not installed)
+	 * 
+	 * @note POST-MVP: Deferred - stacking system not needed for MVP
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades")
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades") // DEFERRED: Post-MVP stacking system
 	int32 GetUpgradeStackCount(FName UpgradeID) const;
 
 	/**
 	 * Uninstall all upgrades
+	 * 
+	 * @note POST-MVP: Deferred - reset functionality not needed for MVP
 	 */
-	UFUNCTION(BlueprintCallable, Category="Upgrades")
+	// UFUNCTION(BlueprintCallable, Category="Upgrades") // DEFERRED: Post-MVP utility
 	void UninstallAllUpgrades();
 
 	// ====================
@@ -156,15 +178,19 @@ public:
 	 * Get total bonus percentage for a stat (as decimal, 0.25 = 25%)
 	 * @param StatName Name of stat
 	 * @return Total bonus percentage
+	 * 
+	 * @note POST-MVP: Deferred - GetStatModifier() is sufficient for MVP
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Stats")
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Stats") // DEFERRED: Post-MVP analytics
 	float GetStatBonusPercentage(FName StatName) const;
 
 	/**
 	 * Get all stat modifiers from upgrades
 	 * @return Map of stat name to total modifier value
+	 * 
+	 * @note POST-MVP: Deferred - bulk query not needed for MVP
 	 */
-	UFUNCTION(BlueprintCallable, Category="Upgrades|Stats")
+	// UFUNCTION(BlueprintCallable, Category="Upgrades|Stats") // DEFERRED: Post-MVP bulk operations
 	TMap<FName, float> GetAllStatModifiers() const;
 
 	// ====================
@@ -174,37 +200,47 @@ public:
 	/**
 	 * Get all installed upgrades
 	 * @return Array of installed upgrades
+	 * 
+	 * @note POST-MVP: Deferred - list query not needed for MVP
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Query")
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Query") // DEFERRED: Post-MVP query
 	TArray<FInstalledUpgrade> GetInstalledUpgrades() const { return InstalledUpgrades; }
 
 	/**
 	 * Get installed upgrades by category
 	 * @param Category Category to filter
 	 * @return Array of installed upgrades in category
+	 * 
+	 * @note POST-MVP: Deferred - category filtering not needed for MVP
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Query")
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Query") // DEFERRED: Post-MVP filtering
 	TArray<FInstalledUpgrade> GetUpgradesByCategory(EShipUpgradeCategory Category) const;
 
 	/**
 	 * Get number of installed upgrades
 	 * @return Upgrade count
+	 * 
+	 * @note POST-MVP: Deferred - count query not needed for MVP
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Query")
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Query") // DEFERRED: Post-MVP query
 	int32 GetInstalledUpgradeCount() const { return InstalledUpgrades.Num(); }
 
 	/**
 	 * Get remaining upgrade slots
 	 * @return Number of available slots
+	 * 
+	 * @note POST-MVP: Deferred - slot tracking not needed for simple MVP upgrades
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Query")
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Query") // DEFERRED: Post-MVP slot system
 	int32 GetRemainingUpgradeSlots() const;
 
 	/**
 	 * Get total value of all installed upgrades
 	 * @return Total credit value
+	 * 
+	 * @note POST-MVP: Deferred - value calculation not needed for MVP
 	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Query")
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Query") // DEFERRED: Post-MVP analytics
 	int32 GetTotalUpgradeValue() const;
 
 	// ====================
