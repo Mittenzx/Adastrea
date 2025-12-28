@@ -236,8 +236,10 @@ public:
     /**
      * Get the overall combat effectiveness rating (0-100)
      * Calculated from armor, shields, weapons, and point defense
+     * 
+     * @note POST-MVP: Deferred - combat rating not needed for MVP (no combat)
      */
-    UFUNCTION(BlueprintCallable, Category="Spaceship Stats")
+    // UFUNCTION(BlueprintCallable, Category="Spaceship Stats") // DEFERRED: Post-MVP combat system
     float GetCombatRating() const;
 
     /**
@@ -250,8 +252,10 @@ public:
     /**
      * Get the overall utility rating (0-100)
      * Calculated from sensors, repair, science, and medical systems
+     * 
+     * @note POST-MVP: Deferred - utility systems not needed for MVP trading
      */
-    UFUNCTION(BlueprintCallable, Category="Spaceship Stats")
+    // UFUNCTION(BlueprintCallable, Category="Spaceship Stats") // DEFERRED: Post-MVP utility systems
     float GetUtilityRating() const;
 
     /**
@@ -265,8 +269,10 @@ public:
     /**
      * Get ship size category based on hull strength and crew
      * @return Size category (Fighter, Corvette, Frigate, Cruiser, Battleship, Capital)
+     * 
+     * @note POST-MVP: Deferred - size categorization not critical for MVP
      */
-    UFUNCTION(BlueprintCallable, Category="Spaceship Stats")
+    // UFUNCTION(BlueprintCallable, Category="Spaceship Stats") // DEFERRED: Post-MVP classification
     FString GetSizeCategory() const;
 
     /**

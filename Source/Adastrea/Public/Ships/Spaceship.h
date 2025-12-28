@@ -97,22 +97,28 @@ public:
     /**
      * Get the ship's class/type
      * @return The ship's class from DataAsset or default
+     * 
+     * @note POST-MVP: Deferred - ship classification not critical for MVP trading
      */
-    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship")
+    // UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship") // DEFERRED: Post-MVP ship classification
     FText GetShipClass() const;
 
     /**
      * Get the current hull integrity
      * @return The current hull integrity value
+     * 
+     * @note POST-MVP: Deferred - damage/health system not in MVP (no combat)
      */
-    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship")
+    // UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship") // DEFERRED: Post-MVP damage system
     float GetCurrentHullIntegrity() const;
 
     /**
      * Get the maximum hull integrity
      * @return The maximum hull integrity value
+     * 
+     * @note POST-MVP: Deferred - damage/health system not in MVP (no combat)
      */
-    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship")
+    // UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship") // DEFERRED: Post-MVP damage system
     float GetMaxHullIntegrity() const;
     // ==========================================
     // X4-STYLE FLIGHT CONTROL PARAMETERS
@@ -205,8 +211,10 @@ public:
     /**
      * Transition player into the ship's interior space
      * @param PlayerController The controller to transition into the interior
+     * 
+     * @note POST-MVP: Deferred - interior exploration not needed for MVP trading
      */
-    UFUNCTION(BlueprintCallable, Category="Spaceship")
+    // UFUNCTION(BlueprintCallable, Category="Spaceship") // DEFERRED: Post-MVP ship interior system
     void EnterInterior(class APlayerController* PlayerController);
 
     /**
@@ -258,52 +266,68 @@ public:
     /**
      * Toggle flight assist on/off
      * Flight assist maintains ship orientation and velocity when no input is given
+     * 
+     * @note POST-MVP: Deferred - basic flight sufficient for MVP, advanced controls post-MVP
      */
-    UFUNCTION(BlueprintCallable, Category="Flight Control")
+    // UFUNCTION(BlueprintCallable, Category="Flight Control") // DEFERRED: Post-MVP advanced flight control
     void ToggleFlightAssist();
 
     /**
      * Increase throttle by ThrottleStep percentage
+     * 
+     * @note POST-MVP: Deferred - use SpaceshipControlsComponent instead for MVP
      */
-    UFUNCTION(BlueprintCallable, Category="Flight Control")
+    // UFUNCTION(BlueprintCallable, Category="Flight Control") // DEFERRED: Post-MVP - use Controls component
     void ThrottleUp();
 
     /**
      * Decrease throttle by ThrottleStep percentage
+     * 
+     * @note POST-MVP: Deferred - use SpaceshipControlsComponent instead for MVP
      */
-    UFUNCTION(BlueprintCallable, Category="Flight Control")
+    // UFUNCTION(BlueprintCallable, Category="Flight Control") // DEFERRED: Post-MVP - use Controls component
     void ThrottleDown();
 
     /**
      * Set throttle to specific percentage (0-100)
      * @param Percentage Target throttle percentage
+     * 
+     * @note POST-MVP: Deferred - use SpaceshipControlsComponent instead for MVP
      */
-    UFUNCTION(BlueprintCallable, Category="Flight Control")
+    // UFUNCTION(BlueprintCallable, Category="Flight Control") // DEFERRED: Post-MVP - use Controls component
     void SetThrottle(float Percentage);
 
     /**
      * Activate boost mode for temporary speed increase
+     * 
+     * @note POST-MVP: Deferred - boost mechanic not needed for basic MVP trading
      */
-    UFUNCTION(BlueprintCallable, Category="Flight Control")
+    // UFUNCTION(BlueprintCallable, Category="Flight Control") // DEFERRED: Post-MVP advanced flight
     void ActivateBoost();
 
     /**
      * Deactivate boost mode
+     * 
+     * @note POST-MVP: Deferred - boost mechanic not needed for basic MVP trading
      */
-    UFUNCTION(BlueprintCallable, Category="Flight Control")
+    // UFUNCTION(BlueprintCallable, Category="Flight Control") // DEFERRED: Post-MVP advanced flight
     void DeactivateBoost();
 
     /**
      * Toggle travel mode for high-speed cruise
+     * 
+     * @note POST-MVP: Deferred - travel mode not needed for basic MVP trading
      */
-    UFUNCTION(BlueprintCallable, Category="Flight Control")
+    // UFUNCTION(BlueprintCallable, Category="Flight Control") // DEFERRED: Post-MVP advanced flight
     void ToggleTravelMode();
 
     /**
      * Get current effective max speed with boost/travel mode multipliers
      * @return Current max speed considering all speed modifiers
+     * 
+     * @note POST-MVP: Deferred - advanced speed calculation not needed for MVP
      */
-    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Flight Control")
+    // UFUNCTION(BlueprintCallable, BlueprintPure, Category="Flight Control") // DEFERRED: Post-MVP advanced stats
     float GetEffectiveMaxSpeed() const;
 
 protected:
