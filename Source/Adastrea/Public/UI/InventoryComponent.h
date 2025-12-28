@@ -88,15 +88,15 @@ public:
 	UInventoryComponent();
 
 	/** Maximum number of inventory slots */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Inventory Settings", meta=(ClampMin="1", ClampMax="999"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Inventory Settings", meta=(ClampMin="1", ClampMax="999"))
 	int32 MaxSlots;
 
 	/** Maximum weight capacity (0 = unlimited) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Inventory Settings", meta=(ClampMin="0.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Inventory Settings", meta=(ClampMin="0.0"))
 	float MaxWeight;
 
 	/** Whether to auto-stack items when adding */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Inventory Settings")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Inventory Settings")
 	bool bAutoStack;
 
 	/**

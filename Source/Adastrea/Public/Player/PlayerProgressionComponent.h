@@ -93,15 +93,15 @@ public:
 	// ====================
 
 	/** Current player level (1-100) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Progression", meta=(ClampMin="1", ClampMax="100"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Progression", meta=(ClampMin="1", ClampMax="100"))
 	int32 PlayerLevel;
 
 	/** Current experience points */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Progression", meta=(ClampMin="0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Progression", meta=(ClampMin="0"))
 	int32 CurrentXP;
 
 	/** XP required for next level */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Progression", meta=(ClampMin="0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Progression", meta=(ClampMin="0"))
 	int32 XPToNextLevel;
 
 	/** Total XP earned lifetime */
@@ -109,11 +109,11 @@ public:
 	int32 TotalXPEarned;
 
 	/** Unspent skill points available */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Progression", meta=(ClampMin="0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Progression", meta=(ClampMin="0"))
 	int32 AvailableSkillPoints;
 
 	/** Player skills by category */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Progression")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Progression")
 	TArray<FPlayerSkill> Skills;
 
 	// ====================

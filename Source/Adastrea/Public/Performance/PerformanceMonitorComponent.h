@@ -44,25 +44,25 @@ public:
     //================================================================================
 
     /** Enable performance monitoring */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Monitor")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Performance Monitor")
     bool bEnabled;
 
     /** How often to update metrics (seconds) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Monitor",
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Performance Monitor",
         meta = (ClampMin = 0.1, ClampMax = 10.0))
     float UpdateFrequency;
 
     /** Enable detailed logging */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Monitor")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Performance Monitor")
     bool bDetailedLogging;
 
     /** Warning threshold for frame time (ms) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Monitor",
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Performance Monitor",
         meta = (ClampMin = 1.0, ClampMax = 100.0))
     float FrameTimeWarningThreshold;
 
     /** Enable performance alerts */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Performance Monitor")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Performance Monitor")
     bool bEnableAlerts;
 
     //================================================================================

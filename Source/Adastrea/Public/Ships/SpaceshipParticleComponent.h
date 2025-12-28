@@ -194,15 +194,15 @@ public:
 	// ====================
 
 	/** Current engine damage state */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage States")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Damage States")
 	EEngineDamageState DamageState;
 
 	/** Damaged engine particle system (sputtering) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage States")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Damage States")
 	UParticleSystem* DamagedEngineTemplate;
 
 	/** Critical damage particle system (smoke/fire) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage States")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Damage States")
 	UParticleSystem* CriticalDamageTemplate;
 
 	/** Damage effect component instances */
