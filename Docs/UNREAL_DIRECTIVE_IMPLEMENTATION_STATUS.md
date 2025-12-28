@@ -314,7 +314,7 @@ Phase 4 is exploratory and addresses long-term scalability. Implementation shoul
    - Performance optimization techniques
    - Memory management patterns
 
-5. **Unreal Directive Suggestions**: `UNREAL_DIRECTIVE_SUGGESTIONS.md`
+5. **Unreal Directive Suggestions**: `docs/development/UNREAL_DIRECTIVE_SUGGESTIONS.md`
    - Adastrea-specific improvement suggestions
    - 213 C++ files analyzed
    - 50+ code examples

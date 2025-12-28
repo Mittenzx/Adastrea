@@ -1,12 +1,10 @@
 @echo off
-REM Script to build Adastrea using Unreal Build Tools (UBT) only
-REM This uses the minimal build tools instead of full engine source
-REM Windows version of build_with_ue_tools.sh
+REM Script to build Adastrea using installed Unreal Engine 5.6
+REM Detects UE 5.6 installation and uses its build tools
 
 setlocal enabledelayedexpansion
 
 set SCRIPT_DIR=%~dp0
-set UE_TOOLS_DIR=%SCRIPT_DIR%UnrealBuildTools
 set PROJECT_FILE=%SCRIPT_DIR%Adastrea.uproject
 set BUILD_CONFIG=%1
 set PLATFORM=%2
@@ -16,22 +14,22 @@ if "%BUILD_CONFIG%"=="" set BUILD_CONFIG=Development
 if "%PLATFORM%"=="" set PLATFORM=Win64
 
 echo ========================================
-echo Adastrea - Build with UE Build Tools
+echo Adastrea - Build with Unreal Engine 5.6
 echo ========================================
 echo.
-
-REM Validate UnrealBuildTools directory exists
-if not exist "%UE_TOOLS_DIR%" (
-    echo ERROR: UnrealBuildTools directory not found at: %UE_TOOLS_DIR%
-    echo Please run setup_ue_build_tools.bat first to download the build tools.
-    exit /b 1
-)
 
 REM Validate project file exists
 if not exist "%PROJECT_FILE%" (
     echo ERROR: Project file not found at: %PROJECT_FILE%
     exit /b 1
 )
+
+REM Detect Unreal Engine 5.6 installation
+call :detect_ue_install
+if errorlevel 1 exit /b 1
+
+echo ✓ Using Unreal Engine at: %UE_ROOT%
+echo.
 
 REM Check for .NET SDK
 echo Checking for .NET SDK...
@@ -50,20 +48,19 @@ echo ✓ .NET SDK found: %DOTNET_VERSION%
 
 REM Function to find UnrealBuildTool
 set UBT_PATH=
-if exist "%UE_TOOLS_DIR%\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.dll" (
-    set UBT_PATH=%UE_TOOLS_DIR%\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.dll
-) else if exist "%UE_TOOLS_DIR%\Engine\Binaries\DotNET\UnrealBuildTool.dll" (
-    set UBT_PATH=%UE_TOOLS_DIR%\Engine\Binaries\DotNET\UnrealBuildTool.dll
+if exist "%UE_ROOT%\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.dll" (
+    set UBT_PATH=%UE_ROOT%\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.dll
+) else if exist "%UE_ROOT%\Engine\Binaries\DotNET\UnrealBuildTool.dll" (
+    set UBT_PATH=%UE_ROOT%\Engine\Binaries\DotNET\UnrealBuildTool.dll
 )
 
 if "%UBT_PATH%"=="" (
-    echo.
-    echo UnrealBuildTool not found, building from source...
-    call :build_ubt
-    if errorlevel 1 exit /b 1
-) else (
-    echo ✓ UnrealBuildTool already built: %UBT_PATH%
+    echo ERROR: UnrealBuildTool not found in UE installation
+    echo Expected at: %UE_ROOT%\Engine\Binaries\DotNET\
+    exit /b 1
 )
+
+echo ✓ UnrealBuildTool found: %UBT_PATH%
 
 REM Generate project files
 call :generate_project_files
@@ -83,55 +80,97 @@ echo ========================================
 echo.
 echo Build output: %SCRIPT_DIR%Binaries\%PLATFORM%\
 echo.
-echo Note: To run the editor, you still need a full Unreal Engine 5.6 installation.
-echo These build tools are for compilation only.
 
 endlocal
 exit /b 0
 
 REM ============================================
-REM Function: Build UnrealBuildTool from source
+REM Function: Detect Unreal Engine 5.6 installation
 REM ============================================
-:build_ubt
+:detect_ue_install
+echo Detecting Unreal Engine 5.6 installation...
+
+REM Check environment variable first
+if not "%UE5_ROOT%"=="" (
+    if exist "%UE5_ROOT%\Engine\Binaries\DotNET" (
+        set UE_ROOT=%UE5_ROOT%
+        echo ✓ Found UE via UE5_ROOT environment variable
+        exit /b 0
+    ) else (
+        echo WARNING: UE5_ROOT is set to "%UE5_ROOT%" but does not contain a valid UE installation
+        echo Expected to find: %UE5_ROOT%\Engine\Binaries\DotNET
+        echo Continuing search in other locations...
+        echo.
+    )
+)
+
+if not "%UE_ROOT%"=="" (
+    if exist "%UE_ROOT%\Engine\Binaries\DotNET" (
+        echo ✓ Found UE via UE_ROOT environment variable
+        exit /b 0
+    ) else (
+        echo WARNING: UE_ROOT is set to "%UE_ROOT%" but does not contain a valid UE installation
+        echo Expected to find: %UE_ROOT%\Engine\Binaries\DotNET
+        echo Continuing search in other locations...
+        echo.
+    )
+)
+
+REM Check standard Epic Games Launcher installation paths
+set EPIC_GAMES_DIR=C:\Program Files\Epic Games
+
+REM Try exact 5.6 version first
+if exist "%EPIC_GAMES_DIR%\UE_5.6\Engine\Binaries\DotNET" (
+    set UE_ROOT=%EPIC_GAMES_DIR%\UE_5.6
+    echo ✓ Found UE 5.6 at: %UE_ROOT%
+    exit /b 0
+)
+
+REM Try without underscore
+if exist "%EPIC_GAMES_DIR%\UE5.6\Engine\Binaries\DotNET" (
+    set UE_ROOT=%EPIC_GAMES_DIR%\UE5.6
+    echo ✓ Found UE 5.6 at: %UE_ROOT%
+    exit /b 0
+)
+
+REM Try 5.6.0
+if exist "%EPIC_GAMES_DIR%\UE_5.6.0\Engine\Binaries\DotNET" (
+    set UE_ROOT=%EPIC_GAMES_DIR%\UE_5.6.0
+    echo ✓ Found UE 5.6.0 at: %UE_ROOT%
+    exit /b 0
+)
+
+REM Check registry for custom installation path
+for /f "tokens=2*" %%a in ('reg query "HKEY_LOCAL_MACHINE\SOFTWARE\EpicGames\Unreal Engine\5.6" /v "InstalledDirectory" 2^>nul') do (
+    set UE_ROOT=%%b
+    if exist "!UE_ROOT!\Engine\Binaries\DotNET" (
+        echo ✓ Found UE 5.6 via registry at: !UE_ROOT!
+        exit /b 0
+    )
+)
+
+REM Also check HKEY_CURRENT_USER
+for /f "tokens=2*" %%a in ('reg query "HKEY_CURRENT_USER\SOFTWARE\EpicGames\Unreal Engine\5.6" /v "InstalledDirectory" 2^>nul') do (
+    set UE_ROOT=%%b
+    if exist "!UE_ROOT!\Engine\Binaries\DotNET" (
+        echo ✓ Found UE 5.6 via registry at: !UE_ROOT!
+        exit /b 0
+    )
+)
+
 echo.
-echo Checking if UnrealBuildTool needs to be built...
-
-set UBT_SOURCE=%UE_TOOLS_DIR%\Engine\Source\Programs\UnrealBuildTool
-set UBT_CSPROJ=%UBT_SOURCE%\UnrealBuildTool.csproj
-
-if not exist "%UBT_CSPROJ%" (
-    echo ERROR: UnrealBuildTool.csproj not found at: %UBT_CSPROJ%
-    echo Build tools may not have been downloaded correctly.
-    exit /b 1
-)
-
-echo Building UnrealBuildTool...
-pushd "%UBT_SOURCE%"
-
-dotnet build UnrealBuildTool.csproj -c Development
-
-if errorlevel 1 (
-    echo ERROR: Failed to build UnrealBuildTool
-    popd
-    exit /b 1
-)
-
-popd
-echo ✓ UnrealBuildTool built successfully
-
-REM Find the built UBT
-if exist "%UE_TOOLS_DIR%\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.dll" (
-    set UBT_PATH=%UE_TOOLS_DIR%\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.dll
-) else if exist "%UE_TOOLS_DIR%\Engine\Binaries\DotNET\UnrealBuildTool.dll" (
-    set UBT_PATH=%UE_TOOLS_DIR%\Engine\Binaries\DotNET\UnrealBuildTool.dll
-)
-
-if "%UBT_PATH%"=="" (
-    echo ERROR: UnrealBuildTool not found after building
-    exit /b 1
-)
-
-exit /b 0
+echo ERROR: Unreal Engine 5.6 installation not found
+echo.
+echo Searched locations:
+echo   - Environment variables: UE5_ROOT, UE_ROOT
+echo   - %EPIC_GAMES_DIR%\UE_5.6
+echo   - %EPIC_GAMES_DIR%\UE5.6
+echo   - %EPIC_GAMES_DIR%\UE_5.6.0
+echo   - Windows Registry (HKLM and HKCU)
+echo.
+echo Please install Unreal Engine 5.6 or set UE5_ROOT environment variable.
+echo.
+exit /b 1
 
 REM ============================================
 REM Function: Generate project files

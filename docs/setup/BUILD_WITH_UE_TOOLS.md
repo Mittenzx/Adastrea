@@ -1,32 +1,51 @@
-# Building Adastrea with Unreal Engine Build Tools
+# Building Adastrea with Unreal Engine 5.6
 
-This guide explains how to build Adastrea using only the Unreal Engine build tools, without requiring the full engine source code (~500MB vs ~50GB).
+This guide explains how to build Adastrea using your installed Unreal Engine 5.6.
 
-> **🚨 IMPORTANT FOR WINDOWS USERS:** If you're experiencing MSBuild SetEnv task failures (49KB+ include paths), this is the **required workaround** for Unreal Engine 5.6 large projects. Use the Windows batch scripts provided to bypass Visual Studio's limitations.
+> **🚨 IMPORTANT FOR WINDOWS USERS:** The `build_with_ue_tools.bat` script automatically detects your UE 5.6 installation and uses its build tools. This bypasses MSBuild SetEnv task failures with Visual Studio's environment variable limitations.
 
 ## Overview
 
-Instead of cloning the entire UnrealEngine repository, we use **sparse checkout** to download only the essential build tools:
+### Windows Build Approach
 
-- **UnrealBuildTool (UBT)** - Compiles C++ code and manages dependencies
-- **UnrealHeaderTool (UHT)** - Processes UE reflection macros
-- **Build scripts** - Platform-specific build automation
-- **Minimal dependencies** - Only what's needed for compilation
+The Windows build script (`build_with_ue_tools.bat`) automatically detects your Unreal Engine 5.6 installation by checking:
+
+1. **Environment Variables** - `UE5_ROOT` or `UE_ROOT`
+2. **Standard Installation Paths**:
+   - `C:\Program Files\Epic Games\UE_5.6`
+   - `C:\Program Files\Epic Games\UE5.6`
+   - `C:\Program Files\Epic Games\UE_5.6.0`
+3. **Windows Registry** - Custom installation paths registered by Epic Games Launcher
+
+Once detected, the script uses the installed engine's UnrealBuildTool to compile your project.
+
+### Linux/Mac Build Approach
+
+Linux and Mac platforms use the minimal build tools approach (downloading only essential build tools from the UnrealEngine repository).
 
 **Size Comparison:**
-- Full UnrealEngine repo: ~50-60GB
-- Build tools only: ~500MB-1GB
+- Full UE installation: ~50-60GB (required for Windows)
+- Build tools only: ~500MB-1GB (Linux/Mac)
 - Adastrea project: ~1GB
-
-### Windows: MSBuild Workaround
-
-This approach is **required** for Windows users experiencing MSBuild SetEnv failures with UE 5.6 large projects. The Visual Studio project generator creates excessively long include paths that exceed Windows environment variable limits.
 
 ## Prerequisites
 
-### Required Software
+### Windows Prerequisites
 
-1. **Git** - For cloning repositories
+1. **Unreal Engine 5.6** - Install via Epic Games Launcher
+   - Download from: https://www.unrealengine.com/download
+   - Install Unreal Engine 5.6
+   - The build script will auto-detect the installation
+
+2. **.NET SDK 6.0+** - Required for UnrealBuildTool
+   - Download from: https://dotnet.microsoft.com/download/dotnet/6.0
+   - Verify with: `dotnet --version`
+
+3. **Visual Studio 2022** - With C++ game development workload (optional, for IDE support)
+
+### Linux/Mac Prerequisites
+
+1. **Git** - For cloning build tools
    ```bash
    # Ubuntu/Debian
    sudo apt-get install git
@@ -56,9 +75,9 @@ This approach is **required** for Windows users experiencing MSBuild SetEnv fail
    xcode-select --install
    ```
 
-### Epic Games Account Setup
+### Epic Games Account Setup (Linux/Mac Only)
 
-To access the UnrealEngine repository, you need to:
+To access the UnrealEngine repository for build tools, you need to:
 
 1. **Link GitHub to Epic Games Account**
    - Visit: https://www.epicgames.com/account/connections
@@ -77,10 +96,7 @@ To access the UnrealEngine repository, you need to:
 ### Windows
 
 ```batch
-REM 1. Setup build tools (downloads ~500MB)
-setup_ue_build_tools.bat
-
-REM 2. Build Adastrea
+REM Build Adastrea (auto-detects UE 5.6 installation)
 build_with_ue_tools.bat Development Win64
 
 REM Alternative configurations
@@ -88,11 +104,19 @@ build_with_ue_tools.bat DebugGame Win64
 build_with_ue_tools.bat Shipping Win64
 ```
 
-**Why Use This on Windows?**
-- ✅ Bypasses MSBuild SetEnv task limitations (49KB+ include paths)
-- ✅ Works with UE 5.6 large projects
-- ✅ Faster than Visual Studio builds
-- ✅ Required workaround for known UE 5.6 issue
+**What the script does:**
+1. ✅ Auto-detects your UE 5.6 installation
+2. ✅ Uses the installed engine's UnrealBuildTool
+3. ✅ Generates project files
+4. ✅ Compiles the Adastrea project
+5. ✅ Bypasses MSBuild SetEnv task limitations
+
+**Setting a custom UE path (optional):**
+```batch
+REM Set UE5_ROOT environment variable
+set UE5_ROOT=C:\MyCustomPath\UE_5.6
+build_with_ue_tools.bat Development Win64
+```
 
 ### Linux/Mac
 
@@ -141,7 +165,9 @@ build_with_ue_tools.bat Development Win64
 ./build_with_ue_tools.sh Development Mac
 ```
 
-## What Gets Downloaded?
+## Build Details
+
+### What Gets Downloaded (Linux/Mac Only)
 
 The `setup_ue_build_tools.sh` script uses **git sparse-checkout** to download only:
 
@@ -163,6 +189,13 @@ UnrealBuildTools/
 ```
 
 **Total size: ~500MB** (instead of 50GB for full engine)
+
+### Windows Build Details
+
+The Windows script automatically uses your installed Unreal Engine 5.6:
+- **No download required** - Uses your existing UE installation
+- **Automatic detection** - Finds UE via environment variables, standard paths, or registry
+- **Full UE tools** - Uses the complete UE installation's build tools
 
 ## Build Output
 
@@ -342,6 +375,16 @@ To actually **run** and **edit** the project, you still need:
 
 ### Clean Build
 
+**Windows:**
+```batch
+REM Remove build artifacts
+rmdir /s /q Binaries Intermediate
+
+REM Rebuild
+build_with_ue_tools.bat Development Win64
+```
+
+**Linux/Mac:**
 ```bash
 # Remove build artifacts
 rm -rf Binaries/ Intermediate/ UnrealBuildTools/
@@ -384,9 +427,12 @@ Typical build times (GitHub Actions runners):
 ## FAQ
 
 **Q: Can I use this for game development?**  
-A: No, this is only for compilation. You need full UE 5.6 for development.
+A: Windows users have full UE installed. Linux/Mac users need full UE 5.6 for editor work; build tools are for compilation only.
 
-**Q: Do I need to download this every time?**  
+**Q: Do I need to download build tools on Windows?**  
+A: No, Windows script uses your installed UE 5.6. Linux/Mac download minimal build tools (~500MB).
+
+**Q: Do I need to download build tools every time (Linux/Mac)?**  
 A: No, `UnrealBuildTools/` is cached locally and in CI.
 
 **Q: How much disk space do I need?**  

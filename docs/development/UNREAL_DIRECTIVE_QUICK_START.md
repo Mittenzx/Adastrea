@@ -143,7 +143,7 @@ python Tools/check_null_safety.py --max-display 50
 
 ### Reference Documentation
 - `.github/instructions/unreal-directive-best-practices.md` - Best practices (26KB)
-- `UNREAL_DIRECTIVE_SUGGESTIONS.md` - Adastrea-specific suggestions (38KB)
+- `docs/development/UNREAL_DIRECTIVE_SUGGESTIONS.md` - Adastrea-specific suggestions (38KB)
 
 ### Tools
 - `Tools/check_uproperty.py` - UPROPERTY validation (9KB)
