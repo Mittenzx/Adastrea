@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - MVP-Critical (Keep): 34-38 functions (49-54%)
     - Post-MVP (Deferred): 20-22 functions (29-31%)
     - Redundant (Removed): 6 functions (9%)
-    - Convenience Bloat (Removed): 5 functions (7%)
+    - Convenience Bloat (Removed): 6 functions (9%)
   - **Achieved 46-51% function reduction** while preserving core trading loop
   - **Excellent Components** (No changes needed):
     - PlayerTraderComponent: 11/11 functions perfectly scoped for MVP
@@ -53,12 +53,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - **Trading System Architecture Improvements** (2025-12-27)
-  - **Removed CargoComponent convenience functions** (5 functions):
+  - **Removed CargoComponent convenience functions** (6 functions):
     - `GetUsedCargoSpace()` - Derivable from GetAvailableCargoSpace()
     - `GetCargoUtilization()` - Simple calculation
     - `HasItem()` - Redundant with GetItemQuantity()
     - `GetUniqueItemCount()` - Direct array access
-    - `IsEmpty()` and `IsFull()` - Trivial checks
+    - `IsEmpty()` - Trivial check
+    - `IsFull()` - Trivial check
   - **Removed TradeItemDataAsset logic functions** (6 functions):
     - `CalculatePrice()` - Moved to MarketDataAsset for centralized pricing
     - `GetFactionModifiedPrice()` - Post-MVP feature
@@ -78,7 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- **CargoComponent**: 5 convenience wrapper functions (see Changed section)
+- **CargoComponent**: 6 convenience wrapper functions (see Changed section)
 - **TradeItemDataAsset**: 6 over-engineered functions (see Changed section)
 
 - **Module Restructuring to Standard UE5 Layout** (2025-12-26)
