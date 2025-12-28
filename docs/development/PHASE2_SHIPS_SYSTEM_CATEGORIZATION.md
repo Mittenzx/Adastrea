@@ -480,7 +480,7 @@ SpaceshipDataAsset is already lean. Most functions are appropriate for Data Asse
 - [ ] Can buy cargo
 - [ ] Can fly to second station
 - [ ] Can sell cargo
-- Complete loop in &lt;5 minutes
+- Complete loop in <5 minutes
 
 ---
 

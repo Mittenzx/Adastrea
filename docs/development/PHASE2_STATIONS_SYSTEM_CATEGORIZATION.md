@@ -612,7 +612,7 @@ After station system changes:
 3. **Stations Cleanup is Easy**:
    - Remove 1-2 redundant functions
    - Defer 1-2 module functions
-   - Done in &lt;1 day
+   - Done in <1 day
 
 ### For Future Phases
 
