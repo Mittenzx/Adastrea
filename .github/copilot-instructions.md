@@ -37,7 +37,7 @@ Adastrea is an open-world space flight game in early development. Currently focu
 - **Blueprint First**: Full Blueprint exposure for all systems
 - **Performance-Conscious**: Following Unreal Directive optimization patterns
 
-> **NEW**: See `.github/instructions/unreal-directive-best-practices.md` for advanced Unreal Engine best practices from [UnrealDirective.com](https://unrealdirective.com/), and `UNREAL_DIRECTIVE_SUGGESTIONS.md` for comprehensive improvement suggestions specific to Adastrea.
+> **NEW**: See `.github/instructions/unreal-directive-best-practices.md` for advanced Unreal Engine best practices from [UnrealDirective.com](https://unrealdirective.com/), and `docs/development/UNREAL_DIRECTIVE_SUGGESTIONS.md` for comprehensive improvement suggestions specific to Adastrea.
 
 ## Technology Stack
 
@@ -544,7 +544,7 @@ Blueprint uses results for gameplay
 For quick reference information, see:
 - `.github/copilot-knowledge.md` - Repository structure and key files index
 - `.github/instructions/unreal-directive-best-practices.md` - **NEW** Advanced Unreal Directive best practices
-- `UNREAL_DIRECTIVE_SUGGESTIONS.md` - **NEW** Comprehensive improvement suggestions based on Unreal Directive
+- `docs/development/UNREAL_DIRECTIVE_SUGGESTIONS.md` - **NEW** Comprehensive improvement suggestions based on Unreal Directive
 - `README.md` - Project overview and quick start
 - `ARCHITECTURE.md` - System architecture and design patterns
 - `CODE_STYLE.md` - Detailed C++ and Blueprint style guide
