@@ -36,8 +36,8 @@ bool UCargoComponent::AddCargo(UTradeItemDataAsset* Item, int32 Quantity)
 		CargoInventory.Add(FCargoEntry(Item, Quantity));
 	}
 
-	UE_LOG(LogTemp, Log, TEXT("CargoComponent: Added %d x %s (total: %d, space: %.1f/%.1f)"), 
-		Quantity, *Item->ItemName.ToString(), GetItemQuantity(Item), GetUsedCargoSpace(), CargoCapacity);
+	UE_LOG(LogTemp, Log, TEXT("CargoComponent: Added %d x %s (total: %d, available space: %.1f)"), 
+		Quantity, *Item->ItemName.ToString(), GetItemQuantity(Item), GetAvailableCargoSpace());
 
 	// Broadcast events
 	OnCargoAdded.Broadcast(Item, Quantity);
@@ -55,9 +55,10 @@ bool UCargoComponent::RemoveCargo(UTradeItemDataAsset* Item, int32 Quantity)
 	}
 
 	// Check if we have the item
-	if (!HasItem(Item, Quantity))
+	int32 CurrentQuantity = GetItemQuantity(Item);
+	if (CurrentQuantity < Quantity)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("CargoComponent: Don't have %d x %s in cargo"), Quantity, *Item->ItemName.ToString());
+		UE_LOG(LogTemp, Warning, TEXT("CargoComponent: Don't have %d x %s in cargo (have %d)"), Quantity, *Item->ItemName.ToString(), CurrentQuantity);
 		return false;
 	}
 
@@ -74,8 +75,8 @@ bool UCargoComponent::RemoveCargo(UTradeItemDataAsset* Item, int32 Quantity)
 			CargoInventory.RemoveAt(EntryIndex);
 		}
 
-		UE_LOG(LogTemp, Log, TEXT("CargoComponent: Removed %d x %s (remaining: %d, space: %.1f/%.1f)"), 
-			Quantity, *Item->ItemName.ToString(), GetItemQuantity(Item), GetUsedCargoSpace(), CargoCapacity);
+		UE_LOG(LogTemp, Log, TEXT("CargoComponent: Removed %d x %s (remaining: %d, available space: %.1f)"), 
+			Quantity, *Item->ItemName.ToString(), GetItemQuantity(Item), GetAvailableCargoSpace());
 
 		// Broadcast events
 		OnCargoRemoved.Broadcast(Item, Quantity);
@@ -96,11 +97,6 @@ void UCargoComponent::ClearCargo()
 
 float UCargoComponent::GetAvailableCargoSpace() const
 {
-	return FMath::Max(0.0f, CargoCapacity - GetUsedCargoSpace());
-}
-
-float UCargoComponent::GetUsedCargoSpace() const
-{
 	float UsedSpace = 0.0f;
 
 	for (const FCargoEntry& Entry : CargoInventory)
@@ -111,17 +107,7 @@ float UCargoComponent::GetUsedCargoSpace() const
 		}
 	}
 
-	return UsedSpace;
-}
-
-float UCargoComponent::GetCargoUtilization() const
-{
-	if (CargoCapacity <= 0.0f)
-	{
-		return 0.0f;
-	}
-
-	return FMath::Clamp(GetUsedCargoSpace() / CargoCapacity, 0.0f, 1.0f);
+	return FMath::Max(0.0f, CargoCapacity - UsedSpace);
 }
 
 bool UCargoComponent::HasSpaceFor(UTradeItemDataAsset* Item, int32 Quantity) const
@@ -133,17 +119,6 @@ bool UCargoComponent::HasSpaceFor(UTradeItemDataAsset* Item, int32 Quantity) con
 
 	float RequiredSpace = Item->GetTotalVolume(Quantity);
 	return GetAvailableCargoSpace() >= RequiredSpace;
-}
-
-bool UCargoComponent::HasItem(UTradeItemDataAsset* Item, int32 Quantity) const
-{
-	if (!Item)
-	{
-		return false;
-	}
-
-	int32 CurrentQuantity = GetItemQuantity(Item);
-	return CurrentQuantity >= Quantity;
 }
 
 int32 UCargoComponent::GetItemQuantity(UTradeItemDataAsset* Item) const

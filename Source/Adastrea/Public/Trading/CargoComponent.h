@@ -109,20 +109,6 @@ public:
 	float GetAvailableCargoSpace() const;
 
 	/**
-	 * Get used cargo space
-	 * @return Used volume in cargo hold
-	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Cargo|Queries")
-	float GetUsedCargoSpace() const;
-
-	/**
-	 * Get cargo capacity utilization percentage
-	 * @return Percentage (0.0 to 1.0)
-	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Cargo|Queries")
-	float GetCargoUtilization() const;
-
-	/**
 	 * Check if cargo has space for item
 	 * @param Item The item to check
 	 * @param Quantity Number of units
@@ -130,15 +116,6 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Cargo|Queries")
 	bool HasSpaceFor(UTradeItemDataAsset* Item, int32 Quantity) const;
-
-	/**
-	 * Check if cargo contains item
-	 * @param Item The item to check
-	 * @param Quantity Minimum quantity needed (0 = any amount)
-	 * @return True if item is in cargo with sufficient quantity
-	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Cargo|Queries")
-	bool HasItem(UTradeItemDataAsset* Item, int32 Quantity = 0) const;
 
 	/**
 	 * Get quantity of specific item in cargo
@@ -154,27 +131,6 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Cargo|Queries")
 	TArray<FCargoEntry> GetCargoContents() const { return CargoInventory; }
-
-	/**
-	 * Get number of unique items in cargo
-	 * @return Count of unique items
-	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Cargo|Queries")
-	int32 GetUniqueItemCount() const { return CargoInventory.Num(); }
-
-	/**
-	 * Check if cargo is empty
-	 * @return True if no items in cargo
-	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Cargo|Queries")
-	bool IsEmpty() const { return CargoInventory.Num() == 0; }
-
-	/**
-	 * Check if cargo is full
-	 * @return True if no space available
-	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Cargo|Queries")
-	bool IsFull() const { return GetAvailableCargoSpace() <= 0.0f; }
 
 	// ====================
 	// EVENTS
