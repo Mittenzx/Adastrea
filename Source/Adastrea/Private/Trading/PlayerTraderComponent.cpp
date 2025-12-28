@@ -75,7 +75,7 @@ bool UPlayerTraderComponent::SellItem(UMarketDataAsset* Market, UTradeItemDataAs
 	}
 
 	// Check if has item in cargo
-	if (!CargoComponent->HasItem(Item, Quantity))
+	if (CargoComponent->GetItemQuantity(Item) < Quantity)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("PlayerTrader: Don't have %d x %s in cargo"), Quantity, *Item->ItemName.ToString());
 		return false;

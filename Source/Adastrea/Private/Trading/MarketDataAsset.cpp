@@ -42,8 +42,43 @@ float UMarketDataAsset::GetItemPrice(UTradeItemDataAsset* TradeItem, bool bIsBuy
 	// Get event multiplier
 	float EventMultiplier = GetEventPriceMultiplier(TradeItem->ItemID);
 
-	// Calculate base price using item's formula
-	float BasePrice = TradeItem->CalculatePrice(Supply, Demand, EventMultiplier);
+	// Calculate base price using supply/demand dynamics
+	// This logic moved from TradeItemDataAsset to centralize pricing in Market
+	float BasePrice = TradeItem->BasePrice;
+
+	// Apply supply/demand if enabled for this item
+	if (TradeItem->bAffectedBySupplyDemand)
+	{
+		// Supply reduces price (more supply = lower price)
+		const float kMinSupplyValue = 0.1f;
+		const float SupplyFactor = FMath::Clamp(
+			1.0f / FMath::Max(Supply, kMinSupplyValue), 
+			TradeItem->PriceVolatility.MinPriceDeviation, 
+			TradeItem->PriceVolatility.MaxPriceDeviation
+		);
+		
+		// Demand increases price (more demand = higher price)
+		const float DemandFactor = FMath::Clamp(
+			Demand, 
+			TradeItem->PriceVolatility.MinPriceDeviation, 
+			TradeItem->PriceVolatility.MaxPriceDeviation
+		);
+		
+		BasePrice *= SupplyFactor * DemandFactor * TradeItem->PriceVolatility.VolatilityMultiplier;
+	}
+
+	// Apply market events if enabled for this item
+	if (TradeItem->bAffectedByMarketEvents)
+	{
+		BasePrice *= EventMultiplier;
+	}
+
+	// Clamp to reasonable bounds
+	BasePrice = FMath::Clamp(
+		BasePrice, 
+		TradeItem->BasePrice * TradeItem->PriceVolatility.MinPriceDeviation,
+		TradeItem->BasePrice * TradeItem->PriceVolatility.MaxPriceDeviation
+	);
 
 	// Apply market markup/markdown
 	if (bIsBuying)
@@ -60,8 +95,9 @@ float UMarketDataAsset::GetItemPrice(UTradeItemDataAsset* TradeItem, bool bIsBuy
 	// Apply transaction tax
 	BasePrice *= (1.0f + TransactionTaxRate);
 
-	// Call Blueprint override
-	return OnCalculateCustomMarketPrice(TradeItem, bIsBuying, BasePrice);
+	// Allow TradeItem Blueprint override, then Market Blueprint override
+	float CustomPrice = TradeItem->OnCalculateCustomPrice(Supply, Demand, EventMultiplier, BasePrice);
+	return OnCalculateCustomMarketPrice(TradeItem, bIsBuying, CustomPrice);
 }
 
 bool UMarketDataAsset::GetInventoryEntry(FName ItemID, FMarketInventoryEntry& OutEntry) const

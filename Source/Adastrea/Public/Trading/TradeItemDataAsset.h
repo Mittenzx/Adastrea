@@ -218,51 +218,6 @@ public:
 	// ====================
 
 	/**
-	 * Calculate current price based on market conditions
-	 * @param Supply Current supply level (0.0 to 1.0+, where 1.0 is typical)
-	 * @param Demand Current demand level (0.0 to 1.0+, where 1.0 is typical)
-	 * @param MarketEventMultiplier Additional price multiplier from events (1.0 = no effect)
-	 * @return Calculated price in credits
-	 */
-	UFUNCTION(BlueprintCallable, Category="Trade Item|Pricing")
-	float CalculatePrice(float Supply, float Demand, float MarketEventMultiplier = 1.0f) const;
-
-	/**
-	 * Get price after applying faction relationships
-	 * @param BasePriceToModify The price to modify
-	 * @param BuyerFactionID Faction ID of the buyer
-	 * @param SellerFactionID Faction ID of the seller
-	 * @return Modified price
-	 */
-	UFUNCTION(BlueprintCallable, Category="Trade Item|Pricing")
-	float GetFactionModifiedPrice(float BasePriceToModify, FName BuyerFactionID, FName SellerFactionID) const;
-
-	/**
-	 * Check if item can be traded by a specific faction
-	 * @param FactionID The faction attempting to trade
-	 * @param Reputation Faction reputation with trading authority (-100 to 100)
-	 * @return True if trade is allowed
-	 */
-	UFUNCTION(BlueprintCallable, Category="Trade Item|Legality")
-	bool CanBeTradedByFaction(FName FactionID, int32 Reputation) const;
-
-	/**
-	 * Check if item requires a permit for trading
-	 * @param FactionID The faction to check
-	 * @return True if permit is required
-	 */
-	UFUNCTION(BlueprintCallable, Category="Trade Item|Legality")
-	bool RequiresPermit(FName FactionID) const;
-
-	/**
-	 * Calculate fine for illegal trade if caught
-	 * @param Quantity Number of units being traded
-	 * @return Fine amount in credits
-	 */
-	UFUNCTION(BlueprintCallable, Category="Trade Item|Legality")
-	float CalculateContrabandFine(int32 Quantity) const;
-
-	/**
 	 * Check if this item has a specific behavior tag
 	 * @param Tag The tag to check for
 	 * @return True if item has the tag
@@ -285,13 +240,6 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category="Trade Item|Properties")
 	float GetTotalMass(int32 Quantity) const;
-
-	/**
-	 * Check if this item is considered high-value
-	 * @return True if base price is above luxury threshold
-	 */
-	UFUNCTION(BlueprintCallable, Category="Trade Item|Properties")
-	bool IsHighValue() const;
 
 	/**
 	 * BlueprintNativeEvent: Custom price calculation override

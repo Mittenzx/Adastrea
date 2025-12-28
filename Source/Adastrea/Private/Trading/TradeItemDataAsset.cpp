@@ -25,92 +25,6 @@ UTradeItemDataAsset::UTradeItemDataAsset()
 {
 }
 
-float UTradeItemDataAsset::CalculatePrice(float Supply, float Demand, float MarketEventMultiplier) const
-{
-    // Define price calculation constants
-    static constexpr float kMinSupplyValue = 0.1f;
-    static constexpr float kNormalMultiplier = 1.0f;
-    
-    // Input validation
-    if (Supply < 0.0f || Demand < 0.0f || MarketEventMultiplier < 0.0f)
-    {
-        UE_LOG(LogAdastreaTrading, Warning, TEXT("TradeItemDataAsset::CalculatePrice - Invalid input parameters for %s"), *ItemID.ToString());
-        return BasePrice;
-    }
-
-    float CalculatedPrice = BasePrice;
-
-    // Apply supply/demand if enabled
-    if (bAffectedBySupplyDemand)
-    {
-        // Supply reduces price (more supply = lower price)
-        // Use FMath::Max to prevent division by very small numbers
-        const float SupplyFactor = FMath::Clamp(
-            kNormalMultiplier / FMath::Max(Supply, kMinSupplyValue), 
-            PriceVolatility.MinPriceDeviation, 
-            PriceVolatility.MaxPriceDeviation
-        );
-        
-        // Demand increases price (more demand = higher price)
-        const float DemandFactor = FMath::Clamp(
-            Demand, 
-            PriceVolatility.MinPriceDeviation, 
-            PriceVolatility.MaxPriceDeviation
-        );
-        
-        CalculatedPrice *= SupplyFactor * DemandFactor * PriceVolatility.VolatilityMultiplier;
-    }
-
-    // Apply market events if enabled
-    if (bAffectedByMarketEvents)
-    {
-        CalculatedPrice *= MarketEventMultiplier;
-    }
-
-    // Clamp final price to reasonable bounds
-    CalculatedPrice = FMath::Clamp(
-        CalculatedPrice, 
-        BasePrice * PriceVolatility.MinPriceDeviation,
-        BasePrice * PriceVolatility.MaxPriceDeviation
-    );
-
-    // Call Blueprint override if implemented
-    return OnCalculateCustomPrice(Supply, Demand, MarketEventMultiplier, CalculatedPrice);
-}
-
-float UTradeItemDataAsset::GetFactionModifiedPrice(float BasePriceToModify, FName BuyerFactionID, FName SellerFactionID) const
-{
-    // For now, return base price - faction modifiers can be implemented later
-    return BasePriceToModify;
-}
-
-bool UTradeItemDataAsset::CanBeTradedByFaction(FName FactionID, int32 Reputation) const
-{
-    // Check if faction is banned
-    if (TradeRestrictions.BannedFactions.Contains(FactionID))
-    {
-        return false;
-    }
-
-    // Check reputation requirement
-    if (Reputation < TradeRestrictions.MinReputationRequired)
-    {
-        return false;
-    }
-
-    return true;
-}
-
-bool UTradeItemDataAsset::RequiresPermit(FName FactionID) const
-{
-    return TradeRestrictions.RequiresPermitFactions.Contains(FactionID);
-}
-
-float UTradeItemDataAsset::CalculateContrabandFine(int32 Quantity) const
-{
-    return BasePrice * Quantity * ContrabandFineMultiplier;
-}
-
 bool UTradeItemDataAsset::HasBehaviorTag(FName Tag) const
 {
     return BehaviorTags.Contains(Tag);
@@ -124,12 +38,6 @@ float UTradeItemDataAsset::GetTotalVolume(int32 Quantity) const
 float UTradeItemDataAsset::GetTotalMass(int32 Quantity) const
 {
     return MassPerUnit * Quantity;
-}
-
-bool UTradeItemDataAsset::IsHighValue() const
-{
-    // Consider high value if base price is above 10000 credits
-    return BasePrice > 10000.0f;
 }
 
 float UTradeItemDataAsset::OnCalculateCustomPrice_Implementation(float Supply, float Demand, float EventMultiplier, float BaseCalculatedPrice) const
