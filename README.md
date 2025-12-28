@@ -882,7 +882,7 @@ Comprehensive technical documentation for contributors and developers:
 - **[Code Style Guide](CODE_STYLE.md)** - C++ and Blueprint coding standards
 - **[Copilot Memory Review](COPILOT_MEMORY_REVIEW.md)** - 🆕 **NEW** Comprehensive review of 30+ stored patterns and conventions for GitHub Copilot
 - **[Unreal Directive Best Practices](.github/instructions/unreal-directive-best-practices.md)** - 🆕 Advanced Unreal Engine best practices
-- **[Unreal Directive Suggestions](UNREAL_DIRECTIVE_SUGGESTIONS.md)** - 🆕 Comprehensive improvement suggestions for Adastrea
+- **[Unreal Directive Suggestions](docs/development/UNREAL_DIRECTIVE_SUGGESTIONS.md)** - 🆕 Comprehensive improvement suggestions for Adastrea
 - **[Performance Improvements](PERFORMANCE_IMPROVEMENTS.md)** - Optimization guidelines
 - **[Custom Agents](.github/agents/README.md)** - AI assistants with project expertise for GitHub Copilot
 

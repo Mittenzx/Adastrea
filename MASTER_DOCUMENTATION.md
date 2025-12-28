@@ -426,7 +426,7 @@ For any system, follow this pattern:
 | **CODE_STYLE.md** | C++ and Blueprint standards | 600+ | ⭐⭐⭐ |
 | **ROADMAP.md** | Development phases, milestones | 1070 | ⭐⭐ |
 | **PERFORMANCE_IMPROVEMENTS.md** | Optimization guidelines | 400+ | ⭐⭐ |
-| **UNREAL_DIRECTIVE_SUGGESTIONS.md** | UE5 best practices | 1397 | ⭐⭐ |
+| **docs/development/UNREAL_DIRECTIVE_SUGGESTIONS.md** | UE5 best practices | 1397 | ⭐⭐ |
 
 ### Advanced Topics
 
@@ -1102,7 +1102,7 @@ Available options:
 
 **Developer Resources**:
 - EDITOR_IMPLEMENTATION_GUIDE.md (2029 lines)
-- UNREAL_DIRECTIVE_SUGGESTIONS.md (1397 lines)
+- docs/development/UNREAL_DIRECTIVE_SUGGESTIONS.md (1397 lines)
 - PLUGIN_DEVELOPMENT_GUIDE.md (719 lines)
 - MCP_REMOTE_PYTHON_PLAN.md (1158 lines)
 
