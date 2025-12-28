@@ -73,23 +73,40 @@ This document provides a step-by-step implementation plan for addressing the non
   ✅ **Completed**: 1,014 functions identified across all systems
   ✅ **MVP Analysis**: Trading (70), Ships (106), Stations (10), UI (214) prioritized
 
-- [ ] **Step 2**: Categorize functions (MVP-focused)
+- [x] **Step 2**: Categorize functions (MVP-focused)
   - Designer-facing: Keep BlueprintCallable
   - Internal helpers: Remove BlueprintCallable, make private
   - Utilities: Keep but document clearly
-  🔄 **In Progress**: CargoComponent analyzed (13 → 6-8 functions)
-  📄 **Docs**: See PHASE2_BLUEPRINT_API_ANALYSIS.md and PHASE2_TRADING_SYSTEM_CATEGORIZATION.md
+  ✅ **Completed (2025-12-28)**: Trading System fully analyzed (70 → 34-38 functions)
+  📄 **Full Analysis**: See [PHASE2_TRADING_SYSTEM_CATEGORIZATION.md](PHASE2_TRADING_SYSTEM_CATEGORIZATION.md)
+  
+  **Trading System Results**:
+  - CargoComponent: 13 → 6-8 functions (46-54% reduction)
+  - PlayerTraderComponent: 11 → 11 functions (perfectly scoped, no changes)
+  - EconomyManager: 7 → 7 functions (well-scoped, no changes)
+  - TradeItemDataAsset: 9 → 2-3 functions (67-78% reduction)
+  - MarketDataAsset: 6 → 6 functions (clean design, no changes)
+  - TradeContractDataAsset: 11 → deferred (post-MVP)
+  - AITraderComponent: 8 → 1-2 functions (6-7 deferred post-MVP)
+  - TradeTransaction: 5 → 1-2 functions (3-4 deferred post-MVP)
 
 - [ ] **Step 3**: Create migration guide
   - Document which functions are being changed
   - Provide alternatives where needed
   - Notify content team
-  ⏳ **Status**: Template created, awaiting function decisions
+  🔄 **Status**: Ready to create - Trading System decisions complete
+  📋 **Next Action**: Create PHASE2_MIGRATION_GUIDE.md with Trading System changes
 
 - [ ] **Step 4**: Implement changes in phases (MVP-adjusted)
   - ~~Week 3: Combat and AI systems~~ **Deferred** (out of MVP scope)
   - Week 3-4: **Trading, Ships, Stations systems** (MVP-critical)
   - Defer: Combat, AI, Factions, Personnel (post-MVP)
+  
+  **Progress**:
+  - ✅ Trading System: Analysis complete (70 → 34-38 functions target)
+  - ⏳ Ships System: Needs analysis (106 functions → 25-30 target)
+  - ⏳ Stations System: Needs analysis (10 functions → 5-7 target)
+  - ⏳ Implementation: Pending migration guide completion
 
 - [ ] **Step 5**: Test Blueprints
   - Verify all existing Blueprints still compile
