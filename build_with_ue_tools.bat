@@ -96,6 +96,11 @@ if not "%UE5_ROOT%"=="" (
         set UE_ROOT=%UE5_ROOT%
         echo ✓ Found UE via UE5_ROOT environment variable
         exit /b 0
+    ) else (
+        echo WARNING: UE5_ROOT is set to "%UE5_ROOT%" but does not contain a valid UE installation
+        echo Expected to find: %UE5_ROOT%\Engine\Binaries\DotNET
+        echo Continuing search in other locations...
+        echo.
     )
 )
 
@@ -103,6 +108,11 @@ if not "%UE_ROOT%"=="" (
     if exist "%UE_ROOT%\Engine\Binaries\DotNET" (
         echo ✓ Found UE via UE_ROOT environment variable
         exit /b 0
+    ) else (
+        echo WARNING: UE_ROOT is set to "%UE_ROOT%" but does not contain a valid UE installation
+        echo Expected to find: %UE_ROOT%\Engine\Binaries\DotNET
+        echo Continuing search in other locations...
+        echo.
     )
 )
 
