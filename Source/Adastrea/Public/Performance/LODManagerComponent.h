@@ -54,31 +54,31 @@ public:
 	// ========================================================================
 
 	/** Distance threshold for switching from High to Medium LOD */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LOD Settings",
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LOD Settings",
 		meta = (ClampMin = 100.0, ClampMax = 100000.0))
 	float HighToMediumDistance;
 
 	/** Distance threshold for switching from Medium to Low LOD */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LOD Settings",
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LOD Settings",
 		meta = (ClampMin = 100.0, ClampMax = 100000.0))
 	float MediumToLowDistance;
 
 	/** Distance threshold for switching from Low to VeryLow LOD */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LOD Settings",
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LOD Settings",
 		meta = (ClampMin = 100.0, ClampMax = 100000.0))
 	float LowToVeryLowDistance;
 
 	/** How often to update LOD (seconds) - higher values improve performance */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LOD Settings",
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LOD Settings",
 		meta = (ClampMin = 0.1, ClampMax = 5.0, UIMin = 0.1, UIMax = 5.0))
 	float UpdateFrequency;
 
 	/** Whether to use performance-based LOD adjustment */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LOD Settings")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LOD Settings")
 	bool bUsePerformanceLOD;
 
 	/** Target frame rate for performance LOD (if enabled) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LOD Settings",
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LOD Settings",
 		meta = (EditCondition = "bUsePerformanceLOD", ClampMin = 30.0, ClampMax = 120.0))
 	float TargetFrameRate;
 

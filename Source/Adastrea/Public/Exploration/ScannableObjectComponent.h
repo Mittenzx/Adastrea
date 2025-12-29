@@ -99,35 +99,35 @@ public:
 	// ====================
 
 	/** Display name of this object */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Scannable Object")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Scannable Object")
 	FText DisplayName;
 
 	/** Type of signal this object emits */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Scannable Object")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Scannable Object")
 	ESignalType SignalType;
 
 	/** How strong this object's signature is (0-100, higher = easier to detect) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Scannable Object", meta=(ClampMin=0, ClampMax=100))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Scannable Object", meta=(ClampMin=0, ClampMax=100))
 	int32 SignatureStrength;
 
 	/** Size of the object in cm (used for detection range calculations) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Scannable Object", meta=(ClampMin=1, ClampMax=10000000))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Scannable Object", meta=(ClampMin=1, ClampMax=10000000))
 	float ObjectSize;
 
 	/** Can this object be detected by passive scanners? */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Scannable Object")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Scannable Object")
 	bool bPassivelyDetectable;
 
 	/** Is this object using stealth technology? */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Scannable Object")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Scannable Object")
 	bool bStealthEnabled;
 
 	/** Is this object masking its signature as a different type? */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Scannable Object")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Scannable Object")
 	bool bMaskedSignature;
 
 	/** Apparent signal type when masked */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Scannable Object", meta=(EditCondition="bMaskedSignature"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Scannable Object", meta=(EditCondition="bMaskedSignature"))
 	ESignalType MaskedSignalType;
 
 	// ====================
@@ -135,15 +135,15 @@ public:
 	// ====================
 
 	/** Data revealed at basic scan level */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Scan Data")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Scan Data")
 	FScanData BasicScanData;
 
 	/** Data revealed at detailed scan level */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Scan Data")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Scan Data")
 	FScanData DetailedScanData;
 
 	/** Data revealed at complete scan level */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Scan Data")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Scan Data")
 	FScanData CompleteScanData;
 
 	// ====================

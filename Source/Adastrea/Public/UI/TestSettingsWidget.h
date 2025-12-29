@@ -152,25 +152,25 @@ protected:
 	/**
 	 * Available ship types for selection
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Test Settings|Configuration")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Test Settings|Configuration")
 	TArray<FString> AvailableShipTypes;
 
 	/**
 	 * Available difficulty levels
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Test Settings|Configuration")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Test Settings|Configuration")
 	TArray<FString> AvailableDifficulties;
 
 	/**
 	 * Available debug modes
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Test Settings|Configuration")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Test Settings|Configuration")
 	TArray<FString> AvailableDebugModes;
 
 	/**
 	 * Whether to show the main menu after applying settings
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Test Settings|Configuration")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Test Settings|Configuration")
 	bool bShowMainMenuAfter;
 
 	// Current Selection State

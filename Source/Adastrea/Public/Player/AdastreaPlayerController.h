@@ -88,13 +88,13 @@ public:
 	 * Set this in Blueprint to specify which modules are available
 	 * Note: Should be a UStationModuleCatalog from StationEditor module
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player|Station Editor")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Player|Station Editor")
 	UDataAsset* ModuleCatalog;
 
 	/**
 	 * Maximum distance to search for nearby stations (in world units)
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player|Station Editor", meta=(ClampMin=100.0f))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Player|Station Editor", meta=(ClampMin=100.0f))
 	float StationSearchRadius = 5000.0f;
 
 	// ====================
@@ -143,7 +143,7 @@ public:
 	 * Set this in Blueprint or editor to display ship information
 	 * Should be a class derived from UShipStatusWidget
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ship Status")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ship Status")
 	TSubclassOf<class UShipStatusWidget> ShipStatusWidgetClass;
 
 	/**
@@ -162,7 +162,7 @@ public:
 	 * Set this in Blueprint or editor to display the in-game menu
 	 * Should be a class derived from UUserWidget (e.g., UMainMenuWidget)
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Main Menu")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Main Menu")
 	TSubclassOf<UUserWidget> MainMenuWidgetClass;
 
 	/**

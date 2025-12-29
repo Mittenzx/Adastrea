@@ -129,7 +129,7 @@ public:
      * When enabled, rotation smoothly damps to zero when no input is given, and the ship
      * automatically levels its roll. The throttle system controls forward velocity independently.
      */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flight Control|Flight Assist")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flight Control|Flight Assist")
     bool bFlightAssistEnabled;
 
     /** Rotation damping factor for smooth rotation interpolation (0-1, higher = more damping) */
@@ -173,11 +173,11 @@ public:
     float TravelModeMultiplier;
 
     /** Strafe independence - lateral/vertical strafing independent from forward motion */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flight Control|Advanced", meta=(ClampMin="0.0", ClampMax="1.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flight Control|Advanced", meta=(ClampMin="0.0", ClampMax="1.0"))
     float StrafeIndependence;
 
     /** Mouse flight sensitivity for rotation */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flight Control|Advanced", meta=(ClampMin="0.1", ClampMax="5.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flight Control|Advanced", meta=(ClampMin="0.1", ClampMax="5.0"))
     float MouseFlightSensitivity;
 
     // ==========================================
@@ -189,23 +189,23 @@ public:
     bool bFreeLookActive;
 
     /** Free look sensitivity - camera rotation speed during free look */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera|Free Look", meta=(ClampMin="0.1", ClampMax="5.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Camera|Free Look", meta=(ClampMin="0.1", ClampMax="5.0"))
     float FreeLookSensitivity;
 
     /** Camera spring arm target length */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera|Settings", meta=(ClampMin="100.0", ClampMax="5000.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Camera|Settings", meta=(ClampMin="100.0", ClampMax="5000.0"))
     float CameraDistance;
 
     /** Camera lag speed for smooth position following */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera|Settings", meta=(ClampMin="0.0", ClampMax="25.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Camera|Settings", meta=(ClampMin="0.0", ClampMax="25.0"))
     float CameraLagSpeed;
 
     /** Camera rotation lag speed for smooth rotation following - prevents snapping */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera|Settings", meta=(ClampMin="0.0", ClampMax="25.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Camera|Settings", meta=(ClampMin="0.0", ClampMax="25.0"))
     float CameraRotationLagSpeed;
 
     /** Double-click time threshold for resetting camera (in seconds) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera|Free Look", meta=(ClampMin="0.1", ClampMax="1.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Camera|Free Look", meta=(ClampMin="0.1", ClampMax="1.0"))
     float DoubleClickThreshold;
 
     /**

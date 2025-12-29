@@ -40,7 +40,7 @@ public:
     ASpaceStation();
 
     // Array of attached modules
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Station")
     TArray<ASpaceStationModule*> Modules;
 
     /**
@@ -157,6 +157,6 @@ protected:
     bool bIsDestroyed;
 
     /** Display name for this station */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Station")
     FText StationName;
 };

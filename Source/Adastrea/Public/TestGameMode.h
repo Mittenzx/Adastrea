@@ -52,21 +52,21 @@ public:
 	 * Widget class to display for spaceship and control selection
 	 * Must be a UUserWidget subclass that handles the menu UI
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Test Game Mode|Menu")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Test Game Mode|Menu")
 	TSubclassOf<UUserWidget> MenuWidgetClass;
 
 	/**
 	 * Z-order for the menu widget in viewport
 	 * Higher values render on top of other widgets
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Test Game Mode|Menu", meta=(ClampMin="0", ClampMax="1000"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Test Game Mode|Menu", meta=(ClampMin="0", ClampMax="1000"))
 	int32 MenuWidgetZOrder;
 
 	/**
 	 * Whether to display the configuration menu on game start
 	 * If false, will use default selections and proceed directly
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Test Game Mode|Menu")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Test Game Mode|Menu")
 	bool bShowMenuOnStartup;
 
 	// ====================
@@ -77,14 +77,14 @@ public:
 	 * List of available spaceship data assets for selection
 	 * Designers should populate this with SpaceshipDataAsset references
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Test Game Mode|Spaceships")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Test Game Mode|Spaceships")
 	TArray<USpaceshipDataAsset*> AvailableSpaceships;
 
 	/**
 	 * Default spaceship data asset selection index
 	 * Used when no selection is made or as initial selection
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Test Game Mode|Spaceships", meta=(ClampMin="0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Test Game Mode|Spaceships", meta=(ClampMin="0"))
 	int32 DefaultSpaceshipIndex;
 
 	// ====================
@@ -95,14 +95,14 @@ public:
 	 * List of available input configuration data assets for selection
 	 * Designers should populate this with InputConfigDataAsset references
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Test Game Mode")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Test Game Mode")
 	TArray<UInputConfigDataAsset*> AvailableInputConfigs;
 
 	/**
 	 * Default input configuration selection index
 	 * Used when no selection is made or as initial selection
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Test Game Mode", meta=(ClampMin="0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Test Game Mode", meta=(ClampMin="0"))
 	int32 DefaultInputConfigIndex;
 
 	// ====================

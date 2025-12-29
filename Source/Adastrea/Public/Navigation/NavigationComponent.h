@@ -73,43 +73,43 @@ public:
     // ====================
 
     /** Maximum navigation speed in m/s */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Navigation", meta=(ClampMin="0", ClampMax="10000"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Navigation", meta=(ClampMin="0", ClampMax="10000"))
     float MaxNavigationSpeed;
 
     /** Approach speed when near waypoint (m/s) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Navigation", meta=(ClampMin="0", ClampMax="1000"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Navigation", meta=(ClampMin="0", ClampMax="1000"))
     float ApproachSpeed;
 
     /** Distance to consider waypoint reached (meters) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Navigation", meta=(ClampMin="1", ClampMax="1000"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Navigation", meta=(ClampMin="1", ClampMax="1000"))
     float WaypointReachedDistance;
 
     /** How smoothly to turn (0-1, higher = smoother) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Navigation", meta=(ClampMin="0.1", ClampMax="1.0"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Navigation", meta=(ClampMin="0.1", ClampMax="1.0"))
     float TurnSmoothing;
 
     /** Whether to avoid obstacles automatically */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Navigation")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Navigation")
     bool bAvoidObstacles;
 
     /** Obstacle detection range (meters) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Navigation", meta=(EditCondition="bAvoidObstacles", ClampMin="100", ClampMax="10000"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Navigation", meta=(EditCondition="bAvoidObstacles", ClampMin="100", ClampMax="10000"))
     float ObstacleDetectionRange;
 
     /** Path segment distance for 3D pathfinding (meters) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Navigation|Pathfinding", meta=(ClampMin="100", ClampMax="5000"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Navigation|Pathfinding", meta=(ClampMin="100", ClampMax="5000"))
     float PathSegmentDistance;
 
     /** Obstacle avoidance offset distance (meters) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Navigation|Pathfinding", meta=(ClampMin="50", ClampMax="2000"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Navigation|Pathfinding", meta=(ClampMin="50", ClampMax="2000"))
     float ObstacleAvoidanceOffset;
 
     /** Distance at which to start slowing down when approaching waypoint (meters) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Navigation|Pathfinding", meta=(ClampMin="100", ClampMax="5000"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Navigation|Pathfinding", meta=(ClampMin="100", ClampMax="5000"))
     float ApproachDistance;
 
     /** Follow distance tolerance buffer (meters) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Navigation|Following", meta=(ClampMin="10", ClampMax="500"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Navigation|Following", meta=(ClampMin="10", ClampMax="500"))
     float FollowDistanceTolerance;
 
     // ====================
@@ -137,7 +137,7 @@ public:
     AActor* FollowTarget;
 
     /** Distance to maintain when following */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Navigation", meta=(ClampMin="50", ClampMax="5000"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Navigation", meta=(ClampMin="50", ClampMax="5000"))
     float FollowDistance;
 
 protected:

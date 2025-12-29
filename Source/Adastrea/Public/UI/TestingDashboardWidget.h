@@ -201,19 +201,19 @@ protected:
 	/**
 	 * List of all testable features/systems
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Testing Dashboard|Configuration")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Testing Dashboard|Configuration")
 	TArray<FTestableFeature> TestableFeatures;
 
 	/**
 	 * Available ship types for spawning during tests
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Testing Dashboard|Configuration")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Testing Dashboard|Configuration")
 	TArray<FString> AvailableShipTypes;
 
 	/**
 	 * Available debug visualization modes
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Testing Dashboard|Configuration")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Testing Dashboard|Configuration")
 	TArray<FString> AvailableDebugModes;
 
 	/**
@@ -225,13 +225,13 @@ protected:
 	/**
 	 * Whether to pause the game when dashboard is open
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Testing Dashboard|Configuration")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Testing Dashboard|Configuration")
 	bool bPauseGameWhenOpen;
 
 	/**
 	 * Whether to show only uncompleted features
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Testing Dashboard|Configuration")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Testing Dashboard|Configuration")
 	bool bShowOnlyUncompleted;
 
 	/**
@@ -243,7 +243,7 @@ protected:
 	/**
 	 * Path to save testing results
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Testing Dashboard|Configuration")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Testing Dashboard|Configuration")
 	FString TestResultsPath;
 
 	/**

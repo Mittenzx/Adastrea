@@ -52,11 +52,11 @@ public:
 	// ====================
 
 	/** Target sector to populate */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Generator")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Generator")
 	ASpaceSectorMap* TargetSector;
 
 	/** Configuration for generation */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Generator")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Generator")
 	USectorGeneratorConfig* GeneratorConfig;
 
 	/** Whether to show debug visualizations during generation */

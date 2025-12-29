@@ -336,15 +336,15 @@ protected:
 	// ====================
 
 	/** Whether to automatically discover sectors the player visits */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Universe Map|Config")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Universe Map|Config")
 	bool bAutoDiscoverVisitedSectors;
 
 	/** Whether to show undiscovered sectors on the map (as blank/unknown) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Universe Map|Config")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Universe Map|Config")
 	bool bShowUndiscoveredSectors;
 
 	/** Whether to automatically create UI widgets in C++ if not bound in Blueprint */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Universe Map|Config")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Universe Map|Config")
 	bool bAutoCreateMissingWidgets;
 
 	// ====================

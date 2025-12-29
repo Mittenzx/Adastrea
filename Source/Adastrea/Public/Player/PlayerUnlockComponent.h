@@ -151,7 +151,7 @@ public:
 	// ====================
 
 	/** All unlockable content entries */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Unlocks")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Unlocks")
 	TArray<FUnlockEntry> Unlocks;
 
 	/** Unlocked content IDs (for save/load) */

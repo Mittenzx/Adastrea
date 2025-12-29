@@ -88,23 +88,23 @@ public:
 	// ====================
 
 	/** Anomaly data (if this is an anomaly) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Discovery")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Discovery")
 	UAnomalyDataAsset* AnomalyData;
 
 	/** Discovery data (if this is a discoverable location) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Discovery")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Discovery")
 	UDiscoveryDataAsset* DiscoveryData;
 
 	/** Is this discovery unique (can only be found once)? */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Discovery")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Discovery")
 	bool bIsUnique;
 
 	/** Should this discovery persist across save/load? */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Discovery")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Discovery")
 	bool bPersistent;
 
 	/** Debug: Show discovery state in world */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Discovery|Debug")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Discovery|Debug")
 	bool bDebugShowState;
 
 	// ====================
