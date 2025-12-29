@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Documentation Update: BlueprintReadWrite vs BlueprintReadOnly Guidance** (2025-12-29)
+  - Updated documentation to reflect PR #370 changes (component configuration properties)
+  - **Key Change**: Clarified when to use `BlueprintReadWrite` vs `BlueprintReadOnly`
+  - **Configuration Properties** (set in editor, don't change at runtime):
+    - Use: `EditAnywhere, BlueprintReadOnly`
+    - Example: Component settings, default values (MaxHealth, WeaponRange, etc.)
+  - **Runtime State** (changes during gameplay):
+    - Use: `VisibleAnywhere, BlueprintReadOnly` for read-only runtime state
+    - Use: `BlueprintReadWrite` only when Blueprints need to modify at runtime (rare)
+  - **Files Updated**:
+    - `.github/copilot-instructions.md` - Updated UPROPERTY best practices section
+    - `docs/reference/CHEATSHEET.md` - Updated struct example with clarifying note
+    - `docs/reference/UE5_BEST_PRACTICES_QUICK_REF.md` - Added PR #370 context
+    - `docs/mvp/TRADING_MVP_GUIDE.md` - Updated EconomyManager code example
+  - **Rationale**: Aligns with UE5 best practices documented in `docs/development/NON_STANDARD_UE5_PRACTICES.md`
+  - **Impact**: Prevents unintended runtime modifications of configuration properties
+  - **Related**: PR #370, UE5 Best Practices Review (2025-12-27)
+
 ### Added
 
 - **Phase 2.1 Complete: MVP Systems Blueprint API Analysis** (2025-12-28)

@@ -173,10 +173,10 @@ struct FMyStruct
 {
     GENERATED_BODY()
     
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadOnly)
     FText Name;
     
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float Value;
     
     FMyStruct()
@@ -185,6 +185,8 @@ struct FMyStruct
     {}
 };
 ```
+
+> **Note**: Use `BlueprintReadOnly` for configuration properties. Only use `BlueprintReadWrite` when Blueprints need to modify values at runtime.
 
 ## Blueprint Patterns
 
