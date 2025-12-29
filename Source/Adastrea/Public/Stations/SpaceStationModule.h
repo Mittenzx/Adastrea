@@ -59,18 +59,31 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module")
     TObjectPtr<UFactionDataAsset> ModuleFaction;
 
+    // ====================
+    // POST-MVP: MODULE FACTION SYSTEM
+    // Deferred - Not needed for Trade Simulator MVP
+    // Can be re-enabled post-MVP for multi-faction station gameplay
+    // ====================
+
     /**
-     * Get the faction assigned to this module
+     * [POST-MVP] Get the faction assigned to this module
      * @return The faction data asset, or nullptr if none assigned
+     * 
+     * DEFERRED: Module-level faction system not needed for MVP trading.
+     * MVP uses station-level factions only (via ASpaceStation::SetFaction).
+     * Re-enable post-MVP for complex multi-faction station gameplay.
      */
-    UFUNCTION(BlueprintCallable, Category="Module")
+    // UFUNCTION(BlueprintCallable, Category="Module|Post-MVP")
     UFactionDataAsset* GetModuleFaction() const;
 
     /**
-     * Set the faction for this module
+     * [POST-MVP] Set the faction for this module
      * @param NewFaction The faction to assign to this module
+     * 
+     * DEFERRED: Module-level faction system not needed for MVP trading.
+     * Re-enable post-MVP for multi-faction station gameplay.
      */
-    UFUNCTION(BlueprintCallable, Category="Module")
+    // UFUNCTION(BlueprintCallable, Category="Module|Post-MVP")
     void SetModuleFaction(UFactionDataAsset* NewFaction);
 
     // ====================
