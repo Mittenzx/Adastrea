@@ -230,8 +230,9 @@
 |------|---------|
 | **[BLUEPRINT_QUICK_REFERENCE.md](docs/reference/BLUEPRINT_QUICK_REFERENCE.md)** | One-page Blueprint reference |
 | **[BLUEPRINT_REQUIREMENTS_LIST.md](docs/reference/BLUEPRINT_REQUIREMENTS_LIST.md)** | Complete list of required Blueprints |
-| **[BLUEPRINT_MOCKUP_GUIDE.md](docs/reference/BLUEPRINT_MOCKUP_GUIDE.md)** | ⭐ **NEW** Visual Blueprint documentation standards |
-| **[BLUEPRINT_DOCUMENTATION_EXAMPLES.md](docs/reference/BLUEPRINT_DOCUMENTATION_EXAMPLES.md)** | ⭐ **NEW** Visual vs text documentation examples |
+| **[BLUEPRINT_VISUAL_MOCKUP_GUIDE.md](docs/reference/BLUEPRINT_VISUAL_MOCKUP_GUIDE.md)** | ⭐ **ENHANCED** Color-coded Blueprint docs with node details |
+| **[BLUEPRINT_MOCKUP_GUIDE.md](docs/reference/BLUEPRINT_MOCKUP_GUIDE.md)** | Visual Blueprint documentation standards |
+| **[BLUEPRINT_DOCUMENTATION_EXAMPLES.md](docs/reference/BLUEPRINT_DOCUMENTATION_EXAMPLES.md)** | Visual vs text documentation examples |
 
 ### General References
 | File | Purpose |

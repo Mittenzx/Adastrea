@@ -8,6 +8,21 @@
 
 ---
 
+## 🆕 Enhanced Version Available!
+
+**For more realistic Blueprint documentation with colors and node details, see:**  
+👉 **[BLUEPRINT_VISUAL_MOCKUP_GUIDE.md](BLUEPRINT_VISUAL_MOCKUP_GUIDE.md)** - Enhanced version with color-coded nodes matching Unreal Editor appearance
+
+This guide provides the foundation and patterns. The enhanced version adds visual accuracy with:
+- 🎨 Color-coded node types (events, functions, branches, etc.)
+- 📌 Pin type colors (exec, boolean, int, float, object, etc.)
+- 📦 Detailed node boxes with borders
+- 🔄 Complete flow visualization with proper symbols
+
+---
+
+---
+
 ## Table of Contents
 
 1. [Overview](#overview)
