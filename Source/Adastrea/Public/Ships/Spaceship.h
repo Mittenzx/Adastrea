@@ -12,6 +12,7 @@ class ASpaceshipInterior;
 class UInputAction;
 class USpringArmComponent;
 class UCameraComponent;
+class USpaceshipDataAsset;
 
 /**
  * Base spaceship actor class for player and NPC ships

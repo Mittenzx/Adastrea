@@ -5,7 +5,7 @@
 #include "Factions/FactionDataAsset.h"
 #include "Combat/WeaponDataAsset.h"
 #include "DataValidationLibrary.h"
-#include "PerformanceBenchmarkLibrary.h"
+#include "Performance/PerformanceBenchmarkLibrary.h"
 #include "Engine/AssetManager.h"
 #include "UObject/UObjectIterator.h"
 
