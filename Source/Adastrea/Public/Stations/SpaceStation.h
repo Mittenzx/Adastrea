@@ -43,60 +43,95 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Station")
     TArray<ASpaceStationModule*> Modules;
 
+    // ====================
+    // POST-MVP: MODULE CONSTRUCTION & MANAGEMENT
+    // Deferred - Not needed for Trade Simulator MVP (stations are pre-built)
+    // Can be re-enabled post-MVP for station building gameplay
+    // ====================
+
     /**
-     * Add a module to the station (simple version without position)
+     * [POST-MVP] Add a module to the station (simple version without position)
      * @param Module The module to add
+     * 
+     * DEFERRED: Module construction not needed for MVP trading.
+     * MVP uses pre-built stations with fixed module layouts.
+     * Re-enable post-MVP for station building gameplay.
      */
-    UFUNCTION(BlueprintCallable, Category="Station")
+    // UFUNCTION(BlueprintCallable, Category="Station|Post-MVP")
     void AddModule(ASpaceStationModule* Module);
 
     /**
-     * Add a module to the station at a specific location
+     * [POST-MVP] Add a module to the station at a specific location
      * @param Module The module to add
      * @param RelativeLocation Position relative to the station
      * @return True if module was successfully added
+     * 
+     * DEFERRED: Module construction not needed for MVP trading.
+     * Re-enable post-MVP for station building gameplay.
      */
-    UFUNCTION(BlueprintCallable, Category="Station")
+    // UFUNCTION(BlueprintCallable, Category="Station|Post-MVP")
     bool AddModuleAtLocation(ASpaceStationModule* Module, FVector RelativeLocation);
 
     /**
-     * Remove a module from the station
+     * [POST-MVP] Remove a module from the station
      * @param Module The module to remove
      * @return True if module was found and removed
+     * 
+     * DEFERRED: Module management not needed for MVP trading.
+     * Re-enable post-MVP for station modification gameplay.
      */
-    UFUNCTION(BlueprintCallable, Category="Station")
+    // UFUNCTION(BlueprintCallable, Category="Station|Post-MVP")
     bool RemoveModule(ASpaceStationModule* Module);
 
     /**
-     * Move a module to a new location within the station
+     * [POST-MVP] Move a module to a new location within the station
      * @param Module The module to move
      * @param NewRelativeLocation New position relative to the station
      * @return True if module was found and moved
+     * 
+     * DEFERRED: Module management not needed for MVP trading.
+     * Re-enable post-MVP for station customization gameplay.
      */
-    UFUNCTION(BlueprintCallable, Category="Station")
+    // UFUNCTION(BlueprintCallable, Category="Station|Post-MVP")
     bool MoveModule(ASpaceStationModule* Module, FVector NewRelativeLocation);
+
+    /**
+     * [POST-MVP] Get all modules of a specific type
+     * @param ModuleType The type identifier to filter by
+     * @return Array of matching modules
+     * 
+     * DEFERRED: Advanced module queries not needed for MVP trading.
+     * Use GetModules() and filter in Blueprint if needed.
+     * Re-enable post-MVP for complex station management.
+     */
+    // UFUNCTION(BlueprintCallable, Category="Station|Post-MVP")
+    TArray<ASpaceStationModule*> GetModulesByType(const FString& ModuleType) const;
+
+    /**
+     * [POST-MVP] Get the number of attached modules
+     * @return Total count of modules
+     * 
+     * DEFERRED: Convenience wrapper not needed for MVP.
+     * Use GetModules().Num() in Blueprint instead.
+     * Re-enable post-MVP if frequently used.
+     */
+    // UFUNCTION(BlueprintCallable, Category="Station|Post-MVP")
+    int32 GetModuleCount() const;
+
+    // ====================
+    // MVP-CRITICAL: STATION CORE FUNCTIONS
+    // Essential for Trade Simulator MVP
+    // ====================
 
     /**
      * Get all attached modules
      * @return Array of all modules attached to this station
+     * 
+     * MVP USE: May be useful for station UI (showing available facilities)
+     * Kept for potential Blueprint UI needs.
      */
     UFUNCTION(BlueprintCallable, Category="Station")
     TArray<ASpaceStationModule*> GetModules() const;
-
-    /**
-     * Get all modules of a specific type
-     * @param ModuleType The type identifier to filter by
-     * @return Array of matching modules
-     */
-    UFUNCTION(BlueprintCallable, Category="Station")
-    TArray<ASpaceStationModule*> GetModulesByType(const FString& ModuleType) const;
-
-    /**
-     * Get the number of attached modules
-     * @return Total count of modules
-     */
-    UFUNCTION(BlueprintCallable, Category="Station")
-    int32 GetModuleCount() const;
 
     /**
      * Set the faction that owns this station
