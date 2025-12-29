@@ -70,6 +70,38 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	// ====================
+	// BLUEPRINT NATIVE EVENTS
+	// ====================
+
+	/**
+	 * Called when a module is installed
+	 * @param Module The module that was installed
+	 * @param Slot The slot it was installed into
+	 */
+	UFUNCTION(BlueprintNativeEvent, Category="Ship Customization")
+	void OnModuleInstalled(UShipModuleComponent* Module, const FShipModuleSlot& Slot);
+
+	/**
+	 * Called when a module is removed
+	 * @param Module The module that was removed
+	 * @param Slot The slot it was removed from
+	 */
+	UFUNCTION(BlueprintNativeEvent, Category="Ship Customization")
+	void OnModuleRemoved(UShipModuleComponent* Module, const FShipModuleSlot& Slot);
+
+	/**
+	 * Called when power capacity is exceeded
+	 */
+	UFUNCTION(BlueprintNativeEvent, Category="Ship Customization")
+	void OnPowerCapacityExceeded();
+
+	/**
+	 * Called when mass capacity is exceeded
+	 */
+	UFUNCTION(BlueprintNativeEvent, Category="Ship Customization")
+	void OnMassCapacityExceeded();
+
 public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -240,38 +272,6 @@ private:
 	 * Internal serialization function
 	 */
 	FString GetLoadoutString() const;
-
-	// ====================
-	// BLUEPRINT NATIVE EVENTS
-	// ====================
-
-	/**
-	 * Called when a module is installed
-	 * @param Module The module that was installed
-	 * @param Slot The slot it was installed into
-	 */
-	UFUNCTION(BlueprintNativeEvent, Category="Ship Customization")
-	void OnModuleInstalled(UShipModuleComponent* Module, const FShipModuleSlot& Slot);
-
-	/**
-	 * Called when a module is removed
-	 * @param Module The module that was removed
-	 * @param Slot The slot it was removed from
-	 */
-	UFUNCTION(BlueprintNativeEvent, Category="Ship Customization")
-	void OnModuleRemoved(UShipModuleComponent* Module, const FShipModuleSlot& Slot);
-
-	/**
-	 * Called when power capacity is exceeded
-	 */
-	UFUNCTION(BlueprintNativeEvent, Category="Ship Customization")
-	void OnPowerCapacityExceeded();
-
-	/**
-	 * Called when mass capacity is exceeded
-	 */
-	UFUNCTION(BlueprintNativeEvent, Category="Ship Customization")
-	void OnMassCapacityExceeded();
 
 private:
 	/**
