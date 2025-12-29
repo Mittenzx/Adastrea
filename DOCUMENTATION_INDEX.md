@@ -90,6 +90,8 @@
 | File | Purpose |
 |------|---------|
 | **[BLUEPRINT_GUIDE_FOR_BEGINNERS.md](docs/development/BLUEPRINT_GUIDE_FOR_BEGINNERS.md)** | Complete Blueprint development guide (1146 lines) |
+| **[BLUEPRINT_MOCKUP_GUIDE.md](docs/reference/BLUEPRINT_MOCKUP_GUIDE.md)** | ⭐ **NEW** Visual Blueprint documentation standards and patterns |
+| **[BLUEPRINT_DOCUMENTATION_EXAMPLES.md](docs/reference/BLUEPRINT_DOCUMENTATION_EXAMPLES.md)** | ⭐ **NEW** Before/after examples showing visual vs text documentation |
 | **[BP_IMPORTAI_README.md](docs/development/BP_IMPORTAI_README.md)** | AI import system for Blueprints |
 
 ### Plugin and Tool Development
@@ -228,6 +230,8 @@
 |------|---------|
 | **[BLUEPRINT_QUICK_REFERENCE.md](docs/reference/BLUEPRINT_QUICK_REFERENCE.md)** | One-page Blueprint reference |
 | **[BLUEPRINT_REQUIREMENTS_LIST.md](docs/reference/BLUEPRINT_REQUIREMENTS_LIST.md)** | Complete list of required Blueprints |
+| **[BLUEPRINT_MOCKUP_GUIDE.md](docs/reference/BLUEPRINT_MOCKUP_GUIDE.md)** | ⭐ **NEW** Visual Blueprint documentation standards |
+| **[BLUEPRINT_DOCUMENTATION_EXAMPLES.md](docs/reference/BLUEPRINT_DOCUMENTATION_EXAMPLES.md)** | ⭐ **NEW** Visual vs text documentation examples |
 
 ### General References
 | File | Purpose |

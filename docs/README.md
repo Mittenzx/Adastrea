@@ -62,6 +62,8 @@ Scripts and tools for generating game content:
 
 ### `/reference/` - Quick References and Cheatsheets
 Fast lookups and one-page guides:
+- **BLUEPRINT_MOCKUP_GUIDE.md** - ⭐ **NEW** Visual Blueprint documentation standards
+- **BLUEPRINT_DOCUMENTATION_EXAMPLES.md** - ⭐ **NEW** Before/after documentation examples
 - **BLUEPRINT_QUICK_REFERENCE.md** - Blueprint quick ref
 - **BLUEPRINT_REQUIREMENTS_LIST.md** - All required Blueprints
 - **CHEATSHEET.md** - Common commands and shortcuts
