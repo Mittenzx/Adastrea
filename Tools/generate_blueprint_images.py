@@ -50,7 +50,7 @@ def create_svg_base(width, height):
 def add_node_box(svg, x, y, width, height, color, title, border_radius='8'):
     """Add a Blueprint node box"""
     # Main node container with shadow
-    shadow = ET.SubElement(svg, 'rect', {
+    ET.SubElement(svg, 'rect', {
         'x': str(x + 3),
         'y': str(y + 3),
         'width': str(width),
@@ -61,7 +61,7 @@ def add_node_box(svg, x, y, width, height, color, title, border_radius='8'):
     })
     
     # Node border
-    border = ET.SubElement(svg, 'rect', {
+    ET.SubElement(svg, 'rect', {
         'x': str(x),
         'y': str(y),
         'width': str(width),
@@ -74,7 +74,7 @@ def add_node_box(svg, x, y, width, height, color, title, border_radius='8'):
     
     # Node header
     header_height = 32
-    header = ET.SubElement(svg, 'rect', {
+    ET.SubElement(svg, 'rect', {
         'x': str(x),
         'y': str(y),
         'width': str(width),
@@ -95,7 +95,7 @@ def add_node_box(svg, x, y, width, height, color, title, border_radius='8'):
     text.text = title
     
     # Node body
-    body = ET.SubElement(svg, 'rect', {
+    ET.SubElement(svg, 'rect', {
         'x': str(x),
         'y': str(y + header_height),
         'width': str(width),
@@ -116,7 +116,7 @@ def add_pin(svg, x, y, pin_type, label, is_input=True, is_exec=False):
     
     # Pin circle
     circle_x = x + 5 if is_input else x - 5
-    circle = ET.SubElement(svg, 'circle', {
+    ET.SubElement(svg, 'circle', {
         'cx': str(circle_x),
         'cy': str(y),
         'r': str(pin_size // 2),
@@ -149,7 +149,7 @@ def add_connection_wire(svg, x1, y1, x2, y2, color=None):
     mid_x = (x1 + x2) / 2
     path_d = f'M {x1} {y1} C {mid_x} {y1}, {mid_x} {y2}, {x2} {y2}'
     
-    path = ET.SubElement(svg, 'path', {
+    ET.SubElement(svg, 'path', {
         'd': path_d,
         'stroke': color,
         'stroke-width': '3',
@@ -177,16 +177,16 @@ def generate_function_node():
     # Input pins
     pin_y = body_y + 20
     pin_y = add_pin(svg, 20, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
-    pin_y = add_pin(svg, 20, pin_y, 'object', 'Target: TradingInterface', is_input=True)
+    add_pin(svg, 20, pin_y, 'object', 'Target: TradingInterface', is_input=True)
     
     # Output pins
     pin_y = body_y + 20
     pin_y = add_pin(svg, 380, pin_y, 'exec', 'Exec', is_input=False, is_exec=True)
-    pin_y = add_pin(svg, 380, pin_y, 'object', 'Return: Array<Entry>', is_input=False)
+    add_pin(svg, 380, pin_y, 'object', 'Return: Array<Entry>', is_input=False)
     
     # Description box
     desc_y = body_y + 80
-    desc_box = ET.SubElement(svg, 'rect', {
+    ET.SubElement(svg, 'rect', {
         'x': '35',
         'y': str(desc_y),
         'width': '330',
@@ -217,14 +217,14 @@ def generate_foreach_loop():
     # Input pins
     pin_y = body_y + 20
     pin_y = add_pin(svg, 20, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
-    pin_y = add_pin(svg, 20, pin_y, 'object', 'Array: Available Items', is_input=True)
+    add_pin(svg, 20, pin_y, 'object', 'Array: Available Items', is_input=True)
     
     # Output pins
     pin_y = body_y + 20
     pin_y = add_pin(svg, 380, pin_y, 'exec', 'Loop Body', is_input=False, is_exec=True)
     pin_y = add_pin(svg, 380, pin_y, 'exec', 'Completed', is_input=False, is_exec=True)
     pin_y = add_pin(svg, 380, pin_y, 'object', 'Array Element', is_input=False)
-    pin_y = add_pin(svg, 380, pin_y, 'int', 'Array Index', is_input=False)
+    add_pin(svg, 380, pin_y, 'int', 'Array Index', is_input=False)
     
     return svg
 
@@ -237,12 +237,12 @@ def generate_branch_node():
     # Input pins
     pin_y = body_y + 20
     pin_y = add_pin(svg, 20, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
-    pin_y = add_pin(svg, 20, pin_y, 'bool', 'Condition', is_input=True)
+    add_pin(svg, 20, pin_y, 'bool', 'Condition', is_input=True)
     
     # Output pins
     pin_y = body_y + 20
     pin_y = add_pin(svg, 380, pin_y, 'exec', 'True', is_input=False, is_exec=True)
-    pin_y = add_pin(svg, 380, pin_y, 'exec', 'False', is_input=False, is_exec=True)
+    add_pin(svg, 380, pin_y, 'exec', 'False', is_input=False, is_exec=True)
     
     # Add text in body
     text = ET.SubElement(svg, 'text', {
@@ -305,7 +305,10 @@ def save_svg(svg, filename):
 
 def main():
     """Generate all Blueprint node images"""
-    output_dir = '/home/runner/work/Adastrea/Adastrea/docs/reference/images/blueprints'
+    # Determine output directory relative to script location
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(script_dir)
+    output_dir = os.path.join(project_root, 'docs', 'reference', 'images', 'blueprints')
     os.makedirs(output_dir, exist_ok=True)
     
     # Generate individual node examples
