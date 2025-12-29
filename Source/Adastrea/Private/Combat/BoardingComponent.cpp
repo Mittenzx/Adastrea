@@ -491,7 +491,7 @@ void UBoardingComponent::CompleteBoardingSuccess()
     if (ActiveBoardingAction.bIsAttacker)
     {
         // We are the attacker and won
-        CapturedShip = ActiveBoardingAction.TargetShip;
+        CapturedShip = ActiveBoardingAction.TargetShip.Get();
         NewOwner = GetOwner() ? GetOwner()->GetInstigatorController() : nullptr;
 
         // Capture target ship
@@ -505,9 +505,10 @@ void UBoardingComponent::CompleteBoardingSuccess()
     {
         // We are the defender and lost
         CapturedShip = GetOwner();
-        UBoardingComponent* AttackerBoarding = Cast<UBoardingComponent>(
-            ActiveBoardingAction.TargetShip->GetComponentByClass(UBoardingComponent::StaticClass())
-        );
+        AActor* AttackerActor = ActiveBoardingAction.TargetShip.Get();
+        UBoardingComponent* AttackerBoarding = AttackerActor ? Cast<UBoardingComponent>(
+            AttackerActor->GetComponentByClass(UBoardingComponent::StaticClass())
+        ) : nullptr;
         if (AttackerBoarding)
         {
             NewOwner = AttackerBoarding->GetOwner() ? 
@@ -546,12 +547,13 @@ void UBoardingComponent::FailBoardingAction(const FString& Reason)
 
 UBoardingComponent* UBoardingComponent::GetTargetBoardingComponent() const
 {
-    if (!ActiveBoardingAction.TargetShip)
+    AActor* TargetActor = ActiveBoardingAction.TargetShip.Get();
+    if (!TargetActor)
     {
         return nullptr;
     }
 
     return Cast<UBoardingComponent>(
-        ActiveBoardingAction.TargetShip->GetComponentByClass(UBoardingComponent::StaticClass())
+        TargetActor->GetComponentByClass(UBoardingComponent::StaticClass())
     );
 }
