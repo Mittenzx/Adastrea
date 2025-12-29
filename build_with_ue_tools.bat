@@ -216,7 +216,8 @@ echo Project: %PROJECT_FILE%
 echo.
 
 REM Build the project
-dotnet "%UBT_PATH%" AdastreaEditor %PLATFORM% %BUILD_CONFIG% -Project="%PROJECT_FILE%" -Progress -NoHotReloadFromIDEif errorlevel 1 (
+dotnet "%UBT_PATH%" AdastreaEditor %PLATFORM% %BUILD_CONFIG% -Project="%PROJECT_FILE%" -Progress -NoHotReloadFromIDE
+if errorlevel 1 (
     echo.
     echo ✗ Build failed
     exit /b 1
