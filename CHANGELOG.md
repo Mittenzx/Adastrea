@@ -9,33 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Roadmap and Progress Documentation Update** (2025-12-29)
-  - Updated all roadmaps to reflect current project status (December 29, 2025)
-  - Aligned all documentation with Trade Simulator MVP focus (established Dec 24-25)
-  - Updated phase statuses:
-    - Phase 3 (Advanced Systems): Confirmed COMPLETE ✅
-    - Phase 4 (Gameplay & Polish): Updated to "Paused - MVP Focus"
-    - Trade Simulator MVP: Confirmed as PRIORITY #1
-  - **Main Roadmap (ROADMAP.md)**:
-    - Last updated date: December 29, 2025
-    - Current focus: Week 1 of Trade Simulator MVP Phase 1
-    - Clear 12-week MVP timeline with validation gates
-    - Non-MVP features marked as deferred
-  - **Current Status (CURRENT_STATUS.md)**:
-    - Updated assessment date to December 29, 2025
-    - Added recent progress (Phase 2.1 analysis, trading cleanup)
-    - Clarified MVP pivot and 12-week timeline
-  - **Critical Review Action Plan**:
-    - Confirmed 6-month recovery plan active
-    - Week 1 status: Planning and prototype phase
-  - **Area-Specific Roadmaps**:
-    - All 5 roadmaps updated with MVP priority notes
-    - Non-MVP items clearly marked as deferred
-    - Trading/Economy roadmap aligned with MVP scope
-  - **Documentation Alignment**:
-    - All "Last Updated" dates synchronized to Dec 29, 2025
-    - Removed outdated "Next Review" dates
-    - Added clear MVP milestone tracking
+- **Documentation Update: BlueprintReadWrite vs BlueprintReadOnly Guidance** (2025-12-29)
+  - Updated documentation to reflect PR #370 changes (component configuration properties)
+  - **Key Change**: Clarified when to use `BlueprintReadWrite` vs `BlueprintReadOnly`
+  - **Configuration Properties** (set in editor, don't change at runtime):
+    - Use: `EditAnywhere, BlueprintReadOnly`
+    - Example: Component settings, default values (MaxHealth, WeaponRange, etc.)
+  - **Runtime State** (changes during gameplay):
+    - Use: `VisibleAnywhere, BlueprintReadOnly` for read-only runtime state
+    - Use: `BlueprintReadWrite` only when Blueprints need to modify at runtime (rare)
+  - **Files Updated**:
+    - `.github/copilot-instructions.md` - Updated UPROPERTY best practices section
+    - `docs/reference/CHEATSHEET.md` - Updated struct example with clarifying note
+    - `docs/reference/UE5_BEST_PRACTICES_QUICK_REF.md` - Added PR #370 context
+    - `docs/mvp/TRADING_MVP_GUIDE.md` - Updated EconomyManager code example
+  - **Rationale**: Aligns with UE5 best practices documented in `docs/development/NON_STANDARD_UE5_PRACTICES.md`
+  - **Impact**: Prevents unintended runtime modifications of configuration properties
+  - **Related**: PR #370, UE5 Best Practices Review (2025-12-27)
 
 ### Added
 
