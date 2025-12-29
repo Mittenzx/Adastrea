@@ -9,8 +9,9 @@ This file provides GitHub Copilot with project-specific context, coding standard
 **Mandatory Reading Before ANY Work:**
 1. `.github/instructions/trade-simulator-mvp.instructions.md` - **PRIMARY FOCUS** for all development
 2. `.github/instructions/anti-patterns.instructions.md` - **LESSONS LEARNED** - must avoid these mistakes
-3. `CRITICAL_REVIEW_SUMMARY.md` - Why we're pivoting
-4. `CRITICAL_REVIEW_ACTION_PLAN.md` - 12-week recovery plan
+3. `.github/instructions/blueprint-documentation.instructions.md` - **OFFICIAL STANDARD** for Blueprint documentation
+4. `CRITICAL_REVIEW_SUMMARY.md` - Why we're pivoting
+5. `CRITICAL_REVIEW_ACTION_PLAN.md` - 12-week recovery plan
 
 **Current Mandate:**
 - ✅ **DO**: Build trade simulator MVP (buy/sell/upgrade loop)
@@ -163,6 +164,24 @@ private:
 **Organization:**
 - Keep Blueprint functions small (max 20-30 nodes)
 - Use comment boxes to group related nodes
+- Add tooltips to complex variables
+- Organize variables with categories
+- Follow left-to-right, top-to-bottom flow
+
+**Documentation Standard (MANDATORY):**
+> **CRITICAL**: All Blueprint documentation MUST follow the official image-based standard.
+> 
+> See `.github/instructions/blueprint-documentation.instructions.md` for complete guidelines.
+> 
+> **Quick Summary:**
+> - ✅ **DO**: Use SVG diagrams showing actual Blueprint nodes
+> - ✅ **DO**: Match exact Unreal Engine colors and appearance
+> - ✅ **DO**: Use `Tools/generate_blueprint_images.py` for consistency
+> - ❌ **DON'T**: Use plain text or ASCII art for primary documentation
+> 
+> **Tool**: Run `python3 Tools/generate_blueprint_images.py` to generate diagrams
+> **Guide**: See `docs/reference/BLUEPRINT_IMAGE_GUIDE.md` for examples
+> **Images**: Store in `docs/reference/images/blueprints/`
 - Use reroute nodes to keep wires organized
 - Add tooltips to complex variables
 - Organize variables with categories
