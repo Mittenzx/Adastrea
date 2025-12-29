@@ -5,9 +5,9 @@
 
 > This roadmap outlines the development plan, milestones, and future vision for the Adastrea open-world space flight game.
 
-**Last Updated**: December 20, 2025  
+**Last Updated**: December 29, 2025  
 **Current Version**: 1.0.0-alpha  
-**Project Status**: Active Development - Alpha (Code 85% Complete, Content 10% Complete)
+**Project Status**: Trade Simulator MVP Development - Phase 1 Week 1 (Dec 2025 - Mar 2026)
 
 ---
 
@@ -80,9 +80,59 @@
 
 ---
 
+## 🎯 CURRENT FOCUS: Trade Simulator MVP (Dec 2025 - Mar 2026)
+
+> **CRITICAL PRIORITY**: Following critical review (Dec 24, 2025), the project has pivoted to a focused 12-week Trade Simulator MVP to validate market interest and secure funding. All other development is deferred until MVP validation is complete.
+
+**Current Week**: Week 1 of 12 (Planning & Prototype Phase)  
+**Target**: Playable 30-minute demo by Week 12  
+**Success Metric**: 75% "fun" rating, 50% "would buy" interest
+
+See [Trade Simulator MVP Instructions](.github/instructions/trade-simulator-mvp.instructions.md) for complete 12-week plan.
+
+### Trade Simulator MVP Scope
+
+**What We're Building**:
+- Core loop: Buy low → Sell high → Upgrade ship → Repeat
+- 1-3 ships (starter, mid, advanced)
+- 5-10 stations with different economies
+- 10-20 trade goods
+- Basic economy simulation (supply/demand)
+- Ship upgrades (cargo capacity progression)
+
+**What's Deferred** (Post-MVP):
+- ❌ Combat system
+- ❌ Exploration mechanics
+- ❌ Crew management
+- ❌ Quest system
+- ❌ Faction diplomacy (beyond pricing)
+- ❌ Advanced AI
+
+### 12-Week Timeline
+
+**Phase 1 (Weeks 1-4)**: Hardcoded Prototype
+- Week 1: Core infrastructure (game mode, ship, stations) ← **WE ARE HERE**
+- Week 2: Trading UI (HUD, trading interface)
+- Week 3: Test level and gameplay loop
+- Week 4: External playtesting, GO/NO-GO decision (60% "fun" target)
+
+**Phase 2 (Weeks 5-8)**: Structured Version
+- Convert to Data Assets
+- Add variety (10-20 goods, 5-10 stations)
+- Economy simulation
+- Ship progression
+
+**Phase 3 (Weeks 9-12)**: Polish & Demo
+- Tutorial/instructions
+- Visual/audio polish
+- 30-minute demo package
+- Final validation (75% "fun", 50% "would buy")
+
+---
+
 ## Current Status
 
-### ✅ Completed Systems (1.0.0-alpha)
+### ✅ Completed Systems (1.0.0-alpha) - CODE COMPLETE, CONTENT DEFERRED
 
 **Foundation & Infrastructure**:
 - ✅ Project structure and module organization
@@ -384,7 +434,9 @@ As the project has grown, we've created focused roadmaps for different areas of 
 
 ### Phase 4: Gameplay & Polish (November 2025 - Q2 2026)
 **Timeline**: November 2025 - June 2026  
-**Status**: 🔄 In Progress (80% Complete - Code Ready, Content Creation Phase)
+**Status**: ⏸️ **PAUSED** - Focus on Trade Simulator MVP
+
+> **⚠️ MVP PRIORITY NOTE**: Phase 4 work is paused. All effort redirected to Trade Simulator MVP (Dec 2025 - Mar 2026). Phase 4 will resume post-MVP validation only if funding secured.
 
 > **📊 Project Status Note:** As of December 2025, C++ code is 85% complete with all major systems implemented. However, editor content (Blueprint Data Assets, Actor Blueprints, Maps, UI Widgets) is only 10% complete. The project has transitioned from **code development phase** to **content creation phase**. See [CURRENT_STATUS.md](CURRENT_STATUS.md) for detailed realistic assessment and content creation roadmap.
 
@@ -495,7 +547,7 @@ As the project has grown, we've created focused roadmaps for different areas of 
 
 ### Phase 5: Content & Beta (Q3-Q4 2026)
 **Timeline**: July - December 2026  
-**Status**: ⏳ Planned
+**Status**: ⏸️ **DEFERRED** - Pending MVP Validation
 
 > **🤖 AI Tools Integration:** Phase 5 will benefit from the completed [Adastrea-Director Plugin](PLUGIN_DEVELOPMENT_GUIDE.md), providing AI-assisted content generation, automated testing, and performance profiling during content creation.
 
@@ -597,7 +649,7 @@ As the project has grown, we've created focused roadmaps for different areas of 
 
 ### Phase 6: Release & Beyond (2027)
 **Timeline**: Q1 2027 and ongoing  
-**Status**: ⏳ Planned
+**Status**: ⏸️ **DEFERRED** - Pending MVP Validation & Funding
 
 #### Objectives
 - Launch public release
@@ -1078,10 +1130,35 @@ This roadmap is a living document and will be updated regularly to reflect:
 - Update **specific area roadmaps** ([ROADMAP_CORE_SYSTEMS.md](ROADMAP_CORE_SYSTEMS.md), [ROADMAP_CONTENT_CREATION.md](ROADMAP_CONTENT_CREATION.md), etc.) for area-specific changes
 - See [ROADMAP_UPDATE_GUIDELINES.md](ROADMAP_UPDATE_GUIDELINES.md) for detailed guidance on when and how to update
 
-**Last Updated**: December 20, 2025 (Detailed Roadmaps Created)  
-**Next Review**: January 2026
+**Last Updated**: December 29, 2025 (Trade Simulator MVP Pivot - Week 1 in Progress)  
+**Next Review**: Weekly during MVP development (next: January 5, 2026)
 
 ### Recent Updates
+
+#### December 29, 2025
+- **Roadmap Alignment**: All roadmaps updated to reflect Trade Simulator MVP priority
+- **Phase Status Updates**: Phases 4-6 marked as paused/deferred pending MVP validation
+- **Current Focus**: Week 1 of 12-week Trade Simulator MVP (hardcoded prototype phase)
+- **Documentation Sync**: All area-specific roadmaps aligned with MVP scope
+
+#### December 28, 2025
+- **Phase 2.1 Complete**: MVP Systems Blueprint API Analysis (186 → 64-75 functions)
+  - Trading system: 46% function reduction while preserving core loop
+  - Ships system: 72% function reduction, MVP-critical functions identified
+  - Stations system: 30% reduction, already lean design confirmed
+
+#### December 27, 2025
+- **Trading System Cleanup**: Removed 12 non-MVP functions
+  - CargoComponent: 6 convenience wrappers removed
+  - TradeItemDataAsset: 6 over-engineered functions removed
+  - Better separation of concerns (data vs. logic)
+
+#### December 24-25, 2025
+- **Critical Review Completed**: Comprehensive project assessment
+  - Identified code-complete but content-incomplete status
+  - Established 12-week Trade Simulator MVP plan
+  - Created anti-patterns documentation
+  - Pivoted from "build everything" to "validate one loop"
 
 #### December 20, 2025
 - **Detailed Roadmaps Created**: Split main roadmap into focused area-specific roadmaps

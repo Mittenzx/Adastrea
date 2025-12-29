@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Roadmap and Progress Documentation Update** (2025-12-29)
+  - Updated all roadmaps to reflect current project status (December 29, 2025)
+  - Aligned all documentation with Trade Simulator MVP focus (established Dec 24-25)
+  - Updated phase statuses:
+    - Phase 3 (Advanced Systems): Confirmed COMPLETE ✅
+    - Phase 4 (Gameplay & Polish): Updated to "Paused - MVP Focus"
+    - Trade Simulator MVP: Confirmed as PRIORITY #1
+  - **Main Roadmap (ROADMAP.md)**:
+    - Last updated date: December 29, 2025
+    - Current focus: Week 1 of Trade Simulator MVP Phase 1
+    - Clear 12-week MVP timeline with validation gates
+    - Non-MVP features marked as deferred
+  - **Current Status (CURRENT_STATUS.md)**:
+    - Updated assessment date to December 29, 2025
+    - Added recent progress (Phase 2.1 analysis, trading cleanup)
+    - Clarified MVP pivot and 12-week timeline
+  - **Critical Review Action Plan**:
+    - Confirmed 6-month recovery plan active
+    - Week 1 status: Planning and prototype phase
+  - **Area-Specific Roadmaps**:
+    - All 5 roadmaps updated with MVP priority notes
+    - Non-MVP items clearly marked as deferred
+    - Trading/Economy roadmap aligned with MVP scope
+  - **Documentation Alignment**:
+    - All "Last Updated" dates synchronized to Dec 29, 2025
+    - Removed outdated "Next Review" dates
+    - Added clear MVP milestone tracking
+
 ### Added
 
 - **Phase 2.1 Complete: MVP Systems Blueprint API Analysis** (2025-12-28)
