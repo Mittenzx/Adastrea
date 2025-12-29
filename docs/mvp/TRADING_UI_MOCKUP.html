@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adastrea - Trading UI Mockup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: rgba(26, 26, 26, 0.95);
+            border: 2px solid #333;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            padding: 20px;
+            border-bottom: 2px solid #00ff00;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            color: #00ff00;
+        }
+        
+        .close-btn {
+            background: #ff4444;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .close-btn:hover {
+            background: #ff6666;
+        }
+        
+        .main-content {
+            display: flex;
+            min-height: 700px;
+        }
+        
+        .left-panel {
+            flex: 1.5;
+            border-right: 2px solid #333;
+            padding: 20px;
+        }
+        
+        .right-panel {
+            flex: 1;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: 2px solid #555;
+            background: #2a2a2a;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .btn.active {
+            background: #00ff00;
+            color: #000;
+            border-color: #00ff00;
+        }
+        
+        .btn.sell.active {
+            background: #ff4444;
+            border-color: #ff4444;
+        }
+        
+        .btn:hover {
+            border-color: #00ff00;
+        }
+        
+        .item-list {
+            max-height: 550px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .item-row {
+            background: rgba(42, 42, 42, 0.5);
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+        }
+        
+        .item-row:hover {
+            background: rgba(0, 255, 0, 0.1);
+            border-color: #00ff00;
+        }
+        
+        .item-icon {
+            width: 64px;
+            height: 64px;
+            background: #1a1a1a;
+            border: 2px solid #555;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+        
+        .item-info {
+            flex: 1;
+        }
+        
+        .item-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #00ff00;
+            margin-bottom: 5px;
+        }
+        
+        .item-desc {
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 5px;
+        }
+        
+        .item-stock {
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .item-price {
+            text-align: right;
+            margin-right: 15px;
+        }
+        
+        .price-label {
+            font-size: 12px;
+            color: #aaa;
+        }
+        
+        .price-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #00ff00;
+        }
+        
+        .item-actions {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        
+        .qty-input {
+            width: 50px;
+            padding: 8px;
+            background: #1a1a1a;
+            border: 1px solid #555;
+            color: white;
+            text-align: center;
+            border-radius: 3px;
+        }
+        
+        .small-btn {
+            width: 30px;
+            height: 30px;
+            background: #2a2a2a;
+            border: 1px solid #555;
+            color: white;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .small-btn:hover {
+            background: #3a3a3a;
+            border-color: #00ff00;
+        }
+        
+        .add-btn {
+            padding: 8px 16px;
+            background: #00ff00;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .add-btn:hover {
+            background: #00dd00;
+        }
+        
+        .player-stats {
+            background: rgba(0, 255, 0, 0.05);
+            border: 2px solid #00ff00;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-row {
+            margin-bottom: 15px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00ff00;
+        }
+        
+        .cargo-bar {
+            width: 100%;
+            height: 30px;
+            background: #1a1a1a;
+            border: 2px solid #555;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        
+        .cargo-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00 0%, #00dd00 100%);
+            width: 45%;
+            transition: width 0.3s;
+        }
+        
+        .cart-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #555;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .cart-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #00ff00;
+        }
+        
+        .cart-items {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+        
+        .cart-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 3px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .cart-total {
+            border-top: 2px solid #555;
+            padding-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .transaction-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .primary-btn {
+            padding: 15px;
+            background: #00ff00;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .primary-btn:hover {
+            background: #00dd00;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 255, 0, 0.3);
+        }
+        
+        .primary-btn:disabled {
+            background: #555;
+            color: #888;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .secondary-btn {
+            padding: 12px;
+            background: #2a2a2a;
+            color: white;
+            border: 2px solid #555;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .secondary-btn:hover {
+            border-color: #ff4444;
+            color: #ff4444;
+        }
+        
+        .status-message {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .status-message.error {
+            background: rgba(255, 68, 68, 0.1);
+            border-color: #ff4444;
+            color: #ff4444;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #00ff00;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00dd00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛸 TRADING STATION ALPHA</h1>
+            <button class="close-btn">✕ CLOSE</button>
+        </div>
+        
+        <div class="main-content">
+            <!-- Left Panel: Market Inventory -->
+            <div class="left-panel">
+                <div class="controls">
+                    <button class="btn active">🛒 BUY</button>
+                    <button class="btn sell">💰 SELL</button>
+                    <select class="btn" style="margin-left: auto;">
+                        <option>All Categories</option>
+                        <option>Raw Materials</option>
+                        <option>Food & Consumables</option>
+                        <option>Technology</option>
+                        <option>Luxury Goods</option>
+                    </select>
+                </div>
+                
+                <div class="item-list">
+                    <div class="item-row">
+                        <div class="item-icon">💧</div>
+                        <div class="item-info">
+                            <div class="item-name">Water Ice</div>
+                            <div class="item-desc">Essential water supply in frozen form</div>
+                            <div class="item-stock">Stock: 1,245 units</div>
+                        </div>
+                        <div class="item-price">
+                            <div class="price-label">Price</div>
+                            <div class="price-value">8 CR</div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="small-btn">-</button>
+                            <input type="number" class="qty-input" value="1" min="1">
+                            <button class="small-btn">+</button>
+                            <button class="add-btn">Add</button>
+                        </div>
+                    </div>
+                    
+                    <div class="item-row">
+                        <div class="item-icon">🍞</div>
+                        <div class="item-info">
+                            <div class="item-name">Food Rations</div>
+                            <div class="item-desc">Standard nutrition packages</div>
+                            <div class="item-stock">Stock: 856 units</div>
+                        </div>
+                        <div class="item-price">
+                            <div class="price-label">Price</div>
+                            <div class="price-value">30 CR</div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="small-btn">-</button>
+                            <input type="number" class="qty-input" value="1" min="1">
+                            <button class="small-btn">+</button>
+                            <button class="add-btn">Add</button>
+                        </div>
+                    </div>
+                    
+                    <div class="item-row">
+                        <div class="item-icon">⚡</div>
+                        <div class="item-info">
+                            <div class="item-name">Power Cells</div>
+                            <div class="item-desc">High-capacity energy storage units</div>
+                            <div class="item-stock">Stock: 432 units</div>
+                        </div>
+                        <div class="item-price">
+                            <div class="price-label">Price</div>
+                            <div class="price-value">85 CR</div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="small-btn">-</button>
+                            <input type="number" class="qty-input" value="1" min="1">
+                            <button class="small-btn">+</button>
+                            <button class="add-btn">Add</button>
+                        </div>
+                    </div>
+                    
+                    <div class="item-row">
+                        <div class="item-icon">💎</div>
+                        <div class="item-info">
+                            <div class="item-name">Rare Earth Elements</div>
+                            <div class="item-desc">High-value refined minerals</div>
+                            <div class="item-stock">Stock: 127 units</div>
+                        </div>
+                        <div class="item-price">
+                            <div class="price-label">Price</div>
+                            <div class="price-value">450 CR</div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="small-btn">-</button>
+                            <input type="number" class="qty-input" value="1" min="1">
+                            <button class="small-btn">+</button>
+                            <button class="add-btn">Add</button>
+                        </div>
+                    </div>
+                    
+                    <div class="item-row">
+                        <div class="item-icon">🔧</div>
+                        <div class="item-info">
+                            <div class="item-name">Ship Components</div>
+                            <div class="item-desc">Various spacecraft parts and modules</div>
+                            <div class="item-stock">Stock: 234 units</div>
+                        </div>
+                        <div class="item-price">
+                            <div class="price-label">Price</div>
+                            <div class="price-value">220 CR</div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="small-btn">-</button>
+                            <input type="number" class="qty-input" value="1" min="1">
+                            <button class="small-btn">+</button>
+                            <button class="add-btn">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Panel: Player Info & Cart -->
+            <div class="right-panel">
+                <div class="player-stats">
+                    <div class="stat-row">
+                        <div class="stat-label">💰 Your Credits</div>
+                        <div class="stat-value">12,450 CR</div>
+                    </div>
+                    
+                    <div class="stat-row">
+                        <div class="stat-label">📦 Cargo Space</div>
+                        <div class="cargo-bar">
+                            <div class="cargo-fill"></div>
+                        </div>
+                        <div style="margin-top: 5px; font-size: 14px; color: #aaa;">
+                            45 / 100 units (55 available)
+                        </div>
+                    </div>
+                    
+                    <div class="stat-row">
+                        <div class="stat-label">📈 Session Profit</div>
+                        <div class="stat-value" style="color: #00ff00;">+2,450 CR</div>
+                    </div>
+                </div>
+                
+                <div class="cart-panel">
+                    <div class="cart-title">🛒 Shopping Cart</div>
+                    <div class="cart-items">
+                        <div class="cart-item">
+                            <span>10x Water Ice</span>
+                            <span style="color: #00ff00;">80 CR</span>
+                        </div>
+                        <div class="cart-item">
+                            <span>5x Food Rations</span>
+                            <span style="color: #00ff00;">150 CR</span>
+                        </div>
+                        <div class="cart-item">
+                            <span>2x Power Cells</span>
+                            <span style="color: #00ff00;">170 CR</span>
+                        </div>
+                    </div>
+                    <div class="cart-total">
+                        <span>TOTAL:</span>
+                        <span style="color: #00ff00;">400 CR</span>
+                    </div>
+                </div>
+                
+                <div class="transaction-buttons">
+                    <button class="primary-btn">✓ COMPLETE TRADE</button>
+                    <button class="secondary-btn">✕ Clear Cart</button>
+                </div>
+                
+                <div class="status-message" style="display: none;">
+                    Trade completed successfully! +150 CR profit
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Simple interactive demo
+        document.querySelectorAll('.add-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.textContent = '✓ Added';
+                this.style.background = '#00aa00';
+                setTimeout(() => {
+                    this.textContent = 'Add';
+                    this.style.background = '#00ff00';
+                }, 1000);
+            });
+        });
+        
+        document.querySelector('.primary-btn').addEventListener('click', function() {
+            const statusMsg = document.querySelector('.status-message');
+            statusMsg.style.display = 'block';
+            setTimeout(() => {
+                statusMsg.style.display = 'none';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
