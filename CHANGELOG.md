@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Roadmap Simplification to Single MVP-Focused Document** (2025-12-29)
+  - Consolidated all roadmaps into single ROADMAP.md focused on Trade Simulator MVP
+  - Removed area-specific roadmaps (non-MVP content):
+    - ❌ ROADMAP_CORE_SYSTEMS.md (AI, Combat, Navigation - all deferred)
+    - ❌ ROADMAP_CONTENT_CREATION.md (300+ assets plan - replaced with 6-50 MVP assets)
+    - ❌ ROADMAP_ECONOMY_TRADING.md (complex features - simplified to MVP trading)
+    - ❌ ROADMAP_STATION_PLAYER.md (full systems - reduced to minimal MVP)
+    - ❌ ROADMAP_TECHNICAL.md (extensive infrastructure - maintenance mode only)
+    - ❌ ROADMAP_UPDATE_GUIDELINES.md (no longer needed with single roadmap)
+  - **Rationale**: MVP requires laser focus. One roadmap, one goal: playable trading game in 12 weeks
+  - **Main ROADMAP.md Updates**:
+    - Removed "Detailed Roadmaps by Area" section
+    - Added "MVP-Specific Documentation" section with Phase 1 guides
+    - Simplified "How to Update" (single roadmap)
+    - Updated December 29 entry to reflect simplification
+    - Removed December 20 detailed roadmaps creation entry
+  - **Impact**: Single source of truth for MVP development, no confusion about priorities
+
 - **Documentation Update: BlueprintReadWrite vs BlueprintReadOnly Guidance** (2025-12-29)
   - Updated documentation to reflect PR #370 changes (component configuration properties)
   - **Key Change**: Clarified when to use `BlueprintReadWrite` vs `BlueprintReadOnly`
