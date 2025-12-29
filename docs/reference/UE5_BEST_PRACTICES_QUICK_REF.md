@@ -40,7 +40,7 @@ UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 float CurrentHealth;
 
 // Runtime modifiable (only if Blueprints truly need write access - rare)
-UPROPERTY(BlueprintReadWrite, Category="Runtime")
+UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Runtime")
 bool bShieldsActive;
 ```
 

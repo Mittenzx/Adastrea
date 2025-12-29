@@ -549,11 +549,11 @@ public:
     virtual void Deinitialize() override;
 
     // All markets in game (runtime state)
-    UPROPERTY(BlueprintReadOnly, Category="Economy")
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Economy")
     TArray<UMarketDataAsset*> ActiveMarkets;
 
     // Game time tracking (hours) (runtime state)
-    UPROPERTY(BlueprintReadOnly, Category="Economy")
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Economy")
     float CurrentGameTime;
 
     // Time speed multiplier (configuration)
