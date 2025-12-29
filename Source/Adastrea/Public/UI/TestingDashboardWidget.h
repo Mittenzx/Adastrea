@@ -13,23 +13,23 @@ struct FTestableFeature
 	GENERATED_BODY()
 
 	/** Display name of the feature */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Testing")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Testing")
 	FText FeatureName;
 
 	/** Detailed description of what to test */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Testing")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Testing")
 	FText Description;
 
 	/** Whether this feature has been tested */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Testing")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Testing")
 	bool bIsTested;
 
 	/** Category of the feature (e.g., "Combat", "Navigation", "UI") */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Testing")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Testing")
 	FString Category;
 
 	/** Optional notes from testing */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Testing")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Testing")
 	FString TestNotes;
 
 	FTestableFeature()
