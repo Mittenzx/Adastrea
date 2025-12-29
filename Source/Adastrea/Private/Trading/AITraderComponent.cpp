@@ -1,4 +1,4 @@
-#include "AITraderComponent.h"
+#include "Trading/AITraderComponent.h"
 #include "MarketDataAsset.h"
 #include "TradeItemDataAsset.h"
 #include "TradeContractDataAsset.h"

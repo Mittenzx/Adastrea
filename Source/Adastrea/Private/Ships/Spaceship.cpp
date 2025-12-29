@@ -518,7 +518,7 @@ void ASpaceship::EndControl(APlayerController* PC)
     SavedExternalPawn->EnableInput(PC);
 
     // Optionally teleport player to an exit point
-    if (InteriorInstance)
+    if (InteriorInstance.IsValid())
     {
         FVector ExitLocation = InteriorInstance->GetExitLocation();
         SavedExternalPawn->SetActorLocation(ExitLocation, false, nullptr, ETeleportType::TeleportPhysics);

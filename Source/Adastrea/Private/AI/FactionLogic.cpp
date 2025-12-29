@@ -746,7 +746,7 @@ UFactionDataAsset* UFactionLogic::GetLoadedFaction(const TSoftObjectPtr<UFaction
     // Check cache first
     if (TObjectPtr<UFactionDataAsset>* CachedFaction = LoadedFactionCache.Find(Path))
     {
-        if (CachedFaction->IsValid())
+        if (IsValid(*CachedFaction))
         {
             return CachedFaction->Get();
         }
