@@ -902,7 +902,7 @@ For optimal understanding, the Director should ingest documentation in this orde
 ### Change Management
 
 - **CHANGELOG.md** - Version history and changes
-- **ROADMAP_UPDATE_GUIDELINES.md** - How to update the roadmap
+- **ROADMAP.md** - Single MVP-focused roadmap (Trade Simulator)
 
 ---
 

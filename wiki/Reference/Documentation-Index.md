@@ -222,8 +222,7 @@ Documentation for AI-powered development:
 
 ## Project Management
 
-- `ROADMAP.md` - Development roadmap
-- `ROADMAP_UPDATE_GUIDELINES.md` - Roadmap updates
+- `ROADMAP.md` - Development roadmap (MVP-focused)
 - `CHANGELOG.md` - Version history
 - `LICENSE` - MIT License
 - `CONTRIBUTING.md` - How to contribute

@@ -5,9 +5,9 @@
 
 > This roadmap outlines the development plan, milestones, and future vision for the Adastrea open-world space flight game.
 
-**Last Updated**: December 20, 2025  
+**Last Updated**: December 29, 2025  
 **Current Version**: 1.0.0-alpha  
-**Project Status**: Active Development - Alpha (Code 85% Complete, Content 10% Complete)
+**Project Status**: Trade Simulator MVP Development - Phase 1 Week 1 (Dec 2025 - Mar 2026)
 
 ---
 
@@ -80,9 +80,59 @@
 
 ---
 
+## 🎯 CURRENT FOCUS: Trade Simulator MVP (Dec 2025 - Mar 2026)
+
+> **CRITICAL PRIORITY**: Following critical review (Dec 24, 2025), the project has pivoted to a focused 12-week Trade Simulator MVP to validate market interest and secure funding. All other development is deferred until MVP validation is complete.
+
+**Current Week**: Week 1 of 12 (Planning & Prototype Phase)  
+**Target**: Playable 30-minute demo by Week 12  
+**Success Metric**: 75% "fun" rating, 50% "would buy" interest
+
+See [Trade Simulator MVP Instructions](.github/instructions/trade-simulator-mvp.instructions.md) for complete 12-week plan.
+
+### Trade Simulator MVP Scope
+
+**What We're Building**:
+- Core loop: Buy low → Sell high → Upgrade ship → Repeat
+- 1-3 ships (starter, mid, advanced)
+- 5-10 stations with different economies
+- 10-20 trade goods
+- Basic economy simulation (supply/demand)
+- Ship upgrades (cargo capacity progression)
+
+**What's Deferred** (Post-MVP):
+- ❌ Combat system
+- ❌ Exploration mechanics
+- ❌ Crew management
+- ❌ Quest system
+- ❌ Faction diplomacy (beyond pricing)
+- ❌ Advanced AI
+
+### 12-Week Timeline
+
+**Phase 1 (Weeks 1-4)**: Hardcoded Prototype
+- Week 1: Core infrastructure (game mode, ship, stations) ← **WE ARE HERE**
+- Week 2: Trading UI (HUD, trading interface)
+- Week 3: Test level and gameplay loop
+- Week 4: External playtesting, GO/NO-GO decision (60% "fun" target)
+
+**Phase 2 (Weeks 5-8)**: Structured Version
+- Convert to Data Assets
+- Add variety (10-20 goods, 5-10 stations)
+- Economy simulation
+- Ship progression
+
+**Phase 3 (Weeks 9-12)**: Polish & Demo
+- Tutorial/instructions
+- Visual/audio polish
+- 30-minute demo package
+- Final validation (75% "fun", 50% "would buy")
+
+---
+
 ## Current Status
 
-### ✅ Completed Systems (1.0.0-alpha)
+### ✅ Completed Systems (1.0.0-alpha) - CODE COMPLETE, CONTENT DEFERRED
 
 **Foundation & Infrastructure**:
 - ✅ Project structure and module organization
@@ -156,7 +206,6 @@
 - ✅ MASTER_DOCUMENTATION.md (consolidated guide), CURRENT_STATUS.md (realistic assessment) - **Dec 9, 2025**
 - ✅ COPILOT_MEMORY_REVIEW.md (30+ stored patterns), PLUGIN_RECOMMENDATIONS.md, PLUGIN_QUICK_REFERENCE.md - **Dec 20, 2025**
 - ✅ All core system guides (Spaceship, Station, Faction, Personnel, Trading, Material, AI, Way)
-- ✅ 5 detailed area-specific roadmaps (Core Systems, Content Creation, Economy/Trading, Station/Player, Technical) - **Dec 20, 2025**
 
 ### 📊 System Maturity Matrix
 
@@ -193,46 +242,6 @@
 - ⚠️ Partial/Moderate: Functional but needs work
 - ❌ None/Limited: Not started or minimal progress
 - 🔄 In Progress: Active development
-
----
-
-## Detailed Roadmaps by Area
-
-As the project has grown, we've created focused roadmaps for different areas of development. Each roadmap provides detailed milestones, current status, and next steps for its domain:
-
-### 📋 Area-Specific Roadmaps
-
-- **[Core Systems Roadmap](ROADMAP_CORE_SYSTEMS.md)**
-  - AI, Combat, Navigation, Quest, and Exploration systems
-  - Detailed breakdown of gameplay mechanics implementation
-  - Current focus: Content creation for existing C++ systems
-  
-- **[Content Creation Roadmap](ROADMAP_CONTENT_CREATION.md)** ⚠️ **CRITICAL PRIORITY**
-  - Blueprint Data Assets, Actor Blueprints, Maps, and UI Widgets
-  - **Current bottleneck**: Only 10% complete despite 85% code completion
-  - Step-by-step plan to make the game playable
-  
-- **[Economy & Trading Roadmap](ROADMAP_ECONOMY_TRADING.md)**
-  - Trading System, Market System, Factions, and Way networks
-  - Economic simulation and guild mechanics
-  - Integration with all gameplay systems
-  
-- **[Station & Player Systems Roadmap](ROADMAP_STATION_PLAYER.md)**
-  - Space Station construction, Player Progression, Inventory, HUD
-  - Player-facing systems and UI/UX
-  - Ship customization and tutorial systems
-  
-- **[Technical Infrastructure Roadmap](ROADMAP_TECHNICAL.md)**
-  - Development tools, Testing, CI/CD, Documentation
-  - Automation scripts and performance profiling
-  - Plugin development (future)
-
-### 📖 How to Use These Roadmaps
-
-- **For Contributors**: Find your area of interest and see what needs to be done
-- **For Project Management**: Track progress in specific domains independently
-- **For Planning**: Understand dependencies between different areas
-- **For Updates**: Update the specific roadmap when working on that area (see [ROADMAP_UPDATE_GUIDELINES.md](ROADMAP_UPDATE_GUIDELINES.md))
 
 ---
 
@@ -384,7 +393,9 @@ As the project has grown, we've created focused roadmaps for different areas of 
 
 ### Phase 4: Gameplay & Polish (November 2025 - Q2 2026)
 **Timeline**: November 2025 - June 2026  
-**Status**: 🔄 In Progress (80% Complete - Code Ready, Content Creation Phase)
+**Status**: ⏸️ **PAUSED** - Focus on Trade Simulator MVP
+
+> **⚠️ MVP PRIORITY NOTE**: Phase 4 work is paused. All effort redirected to Trade Simulator MVP (Dec 2025 - Mar 2026). Phase 4 will resume post-MVP validation only if funding secured.
 
 > **📊 Project Status Note:** As of December 2025, C++ code is 85% complete with all major systems implemented. However, editor content (Blueprint Data Assets, Actor Blueprints, Maps, UI Widgets) is only 10% complete. The project has transitioned from **code development phase** to **content creation phase**. See [CURRENT_STATUS.md](CURRENT_STATUS.md) for detailed realistic assessment and content creation roadmap.
 
@@ -495,7 +506,7 @@ As the project has grown, we've created focused roadmaps for different areas of 
 
 ### Phase 5: Content & Beta (Q3-Q4 2026)
 **Timeline**: July - December 2026  
-**Status**: ⏳ Planned
+**Status**: ⏸️ **DEFERRED** - Pending MVP Validation
 
 > **🤖 AI Tools Integration:** Phase 5 will benefit from the completed [Adastrea-Director Plugin](PLUGIN_DEVELOPMENT_GUIDE.md), providing AI-assisted content generation, automated testing, and performance profiling during content creation.
 
@@ -597,7 +608,7 @@ As the project has grown, we've created focused roadmaps for different areas of 
 
 ### Phase 6: Release & Beyond (2027)
 **Timeline**: Q1 2027 and ongoing  
-**Status**: ⏳ Planned
+**Status**: ⏸️ **DEFERRED** - Pending MVP Validation & Funding
 
 #### Objectives
 - Launch public release
@@ -1073,26 +1084,39 @@ This roadmap is a living document and will be updated regularly to reflect:
 - **Quarterly**: Major roadmap revisions and priority adjustments
 - **As Needed**: Critical changes or pivots
 
-**How to Update**: Contributors should update the relevant roadmap when their PRs affect project milestones, phases, or system status:
-- Update **this main roadmap** for major milestones and phase completions
-- Update **specific area roadmaps** ([ROADMAP_CORE_SYSTEMS.md](ROADMAP_CORE_SYSTEMS.md), [ROADMAP_CONTENT_CREATION.md](ROADMAP_CONTENT_CREATION.md), etc.) for area-specific changes
-- See [ROADMAP_UPDATE_GUIDELINES.md](ROADMAP_UPDATE_GUIDELINES.md) for detailed guidance on when and how to update
+**How to Update**: Contributors should update this roadmap when their PRs affect project milestones, phases, or system status
 
-**Last Updated**: December 20, 2025 (Detailed Roadmaps Created)  
-**Next Review**: January 2026
+**Last Updated**: December 29, 2025 (Trade Simulator MVP Pivot - Week 1 in Progress)  
+**Next Review**: Weekly during MVP development (next: January 5, 2026)
 
 ### Recent Updates
 
+#### December 29, 2025
+- **Roadmap Simplification**: Consolidated to single MVP-focused roadmap
+- **Phase Status Updates**: Phases 4-6 marked as paused/deferred pending MVP validation
+- **Current Focus**: Week 1 of 12-week Trade Simulator MVP (hardcoded prototype phase)
+- **Non-MVP Content Removed**: Eliminated area-specific roadmaps, focusing solely on MVP
+
+#### December 28, 2025
+- **Phase 2.1 Complete**: MVP Systems Blueprint API Analysis (186 → 64-75 functions)
+  - Trading system: 46% function reduction while preserving core loop
+  - Ships system: 72% function reduction, MVP-critical functions identified
+  - Stations system: 30% reduction, already lean design confirmed
+
+#### December 27, 2025
+- **Trading System Cleanup**: Removed 12 non-MVP functions
+  - CargoComponent: 6 convenience wrappers removed
+  - TradeItemDataAsset: 6 over-engineered functions removed
+  - Better separation of concerns (data vs. logic)
+
+#### December 24-25, 2025
+- **Critical Review Completed**: Comprehensive project assessment
+  - Identified code-complete but content-incomplete status
+  - Established 12-week Trade Simulator MVP plan
+  - Created anti-patterns documentation
+  - Pivoted from "build everything" to "validate one loop"
+
 #### December 20, 2025
-- **Detailed Roadmaps Created**: Split main roadmap into focused area-specific roadmaps
-- **New Roadmap Files**: Created 5 detailed roadmaps for different project areas
-  - Core Systems (AI, Combat, Navigation, Quest, Exploration)
-  - Content Creation (Blueprints, Data Assets, Maps, UI) - CRITICAL PRIORITY
-  - Economy & Trading (Trading, Markets, Factions, Ways)
-  - Station & Player Systems (Stations, Progression, Inventory, HUD)
-  - Technical Infrastructure (Tools, Testing, CI/CD, Documentation)
-- **Improved Organization**: Each roadmap provides detailed milestones and next steps
-- **Updated Guidelines**: ROADMAP_UPDATE_GUIDELINES.md updated with multi-roadmap instructions
 - **GitHub Copilot Memory Review**: Comprehensive codebase review for AI-assisted development
   - Stored 30+ critical patterns, conventions, and best practices
   - Created COPILOT_MEMORY_REVIEW.md documenting all stored memories
@@ -1144,15 +1168,14 @@ This roadmap is a living document and will be updated regularly to reflect:
 - **[CURRENT_STATUS.md](CURRENT_STATUS.md)** - Realistic project status assessment
 - **[QUICKSTART.md](QUICKSTART.md)** - Get started in 15 minutes
 
-### Detailed Roadmaps
-- **[ROADMAP_CORE_SYSTEMS.md](ROADMAP_CORE_SYSTEMS.md)** - AI, Combat, Navigation, Quest, Exploration
-- **[ROADMAP_CONTENT_CREATION.md](ROADMAP_CONTENT_CREATION.md)** - Blueprints, Data Assets, Maps, UI (CRITICAL)
-- **[ROADMAP_ECONOMY_TRADING.md](ROADMAP_ECONOMY_TRADING.md)** - Trading, Markets, Factions, Ways
-- **[ROADMAP_STATION_PLAYER.md](ROADMAP_STATION_PLAYER.md)** - Stations, Progression, Inventory, HUD
-- **[ROADMAP_TECHNICAL.md](ROADMAP_TECHNICAL.md)** - Tools, Testing, CI/CD, Documentation
-- **[ROADMAP_UPDATE_GUIDELINES.md](ROADMAP_UPDATE_GUIDELINES.md)** - When and how to update roadmaps
+### MVP-Specific Documentation
+- **[Trade Simulator MVP Instructions](.github/instructions/trade-simulator-mvp.instructions.md)** - Complete 12-week MVP guide
+- **[Critical Review Action Plan](CRITICAL_REVIEW_ACTION_PLAN.md)** - 6-month recovery roadmap
+- **[Anti-Patterns Guide](.github/instructions/anti-patterns.instructions.md)** - Lessons learned
+- **[Phase 1 Implementation Steps](docs/mvp/PHASE_1_IMPLEMENTATION_STEPS.md)** - Week-by-week tasks
+- **[Trading MVP Guide](docs/mvp/TRADING_MVP_GUIDE.md)** - Trading system implementation
 
-### System Guides
+### System Guides (Post-MVP Reference)
 - [Spaceship System Guide](Assets/SpaceshipDataAssetGuide.md)
 - [Space Station Guide](Content/Blueprints/STATION_EDITOR_README.md)
 - [Faction System Guide](Assets/BlueprintFactionAssetGuide.md)

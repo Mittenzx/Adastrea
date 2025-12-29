@@ -218,7 +218,6 @@ public:
    - Add/update guides in `Assets/` folder
    - Include code comments and docstrings
    - **Update ROADMAP.md** if your changes affect project milestones, phases, or system status
-     - See [ROADMAP_UPDATE_GUIDELINES.md](ROADMAP_UPDATE_GUIDELINES.md) for detailed guidance
      - Update required for: system completion, phase transitions, new major features, timeline changes
      - Not required for: minor bug fixes, documentation-only changes, small incremental work
 

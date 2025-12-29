@@ -1,22 +1,29 @@
 # Adastrea - Current Project Status
 
-**Last Updated**: December 20, 2025  
+**Last Updated**: December 29, 2025  
 **Version**: 1.0.0-alpha  
-**Assessment Type**: Realistic Status Report
+**Assessment Type**: Trade Simulator MVP Status
 
-> **Recent Updates**: December 20, 2025 - Added GitHub Copilot Memory Review, Plugin System enhancements, and detailed roadmaps
+> **Recent Updates**: December 29, 2025 - Roadmap alignment, Week 1 of MVP development in progress
 
 ---
 
 ## ⚠️ Executive Summary
 
-**The Reality**: Adastrea is **code-complete but not content-complete**.
+**The Reality**: Adastrea pivoted to Trade Simulator MVP after critical review (Dec 24, 2025).
 
+**Previous State (Dec 20, 2025)**:
 - ✅ **C++ Implementation**: 85-90% complete
 - ❌ **Editor Content**: 10-15% complete
 - ⚠️ **Overall Playability**: ~20% complete
 
-**What this means**: You can compile the project and read the code to understand how everything works, but you cannot actually play the game yet without creating substantial editor content (Blueprints, Data Assets, Maps, UI, etc.).
+**Current State (Dec 29, 2025)**:
+- 🎯 **Trade Simulator MVP**: Week 1 of 12-week focused development
+- ✅ **Phase 2.1 Analysis**: MVP-critical systems identified (186 → 64-75 functions)
+- ✅ **Trading Cleanup**: Removed 12 non-MVP functions (Dec 27)
+- 🔄 **Hardcoded Prototype**: In planning/development (Week 1-4 goal)
+
+**What this means**: We've pivoted from "build everything" to "validate trading is fun." All non-MVP work paused. Success requires playable demo by Week 12 (March 2026) with 75% "fun" rating.
 
 ---
 
@@ -24,7 +31,19 @@
 
 ### ✅ What IS Complete
 
-#### C++ Codebase (85-90% Complete)
+#### Trade Simulator MVP Progress (Dec 24-29, 2025)
+
+| Component | Status | Progress | Notes |
+|-----------|--------|----------|-------|
+| **MVP Planning** | ✅ Complete | 100% | 12-week plan, success metrics, validation gates |
+| **Critical Review** | ✅ Complete | 100% | Identified issues, pivot strategy, recovery plan |
+| **Phase 2.1 Analysis** | ✅ Complete | 100% | 186 functions → 64-75 (MVP-critical identified) |
+| **Trading Cleanup** | ✅ Complete | 100% | Removed 12 non-MVP functions (Dec 27) |
+| **Anti-Patterns Docs** | ✅ Complete | 100% | Lessons learned documented |
+| **Agent Instructions** | ✅ Complete | 100% | All agents aligned with MVP scope |
+| **Hardcoded Prototype** | 🔄 Week 1 | 10% | Planning phase, development starting |
+
+#### C++ Codebase (85-90% Complete, MVP-Relevant Subset Identified)
 
 | Component | Status | Files | Notes |
 |-----------|--------|-------|-------|
@@ -196,6 +215,43 @@ The project was developed with **architecture-first strategy**:
 
 ## Development Timeline
 
+### Current Focus (December 2025 - March 2026)
+
+**Trade Simulator MVP - 12 Week Plan**
+
+**Week 1 (Dec 29 - Jan 4)**: Core Infrastructure ← **WE ARE HERE**
+- Planning and design documentation
+- Hardcoded prototype foundation
+- Basic ship flight mechanics
+- Station objects placement
+
+**Week 2 (Jan 5-11)**: Trading UI
+- HUD with credits/profit display
+- Trading interface widget
+- Buy/sell functionality
+- Item quantity selectors
+
+**Week 3 (Jan 12-18)**: Gameplay Loop
+- Test level with 2 stations
+- Complete trade cycle (buy → fly → sell → profit)
+- Ship upgrade demonstration
+- Basic economy hardcoded
+
+**Week 4 (Jan 19-25)**: External Playtesting & GO/NO-GO
+- 5-10 external playtesters
+- Measure "fun" factor (target: 60%+)
+- **CRITICAL DECISION POINT**: GO to Phase 2 or pivot
+
+**Weeks 5-8**: Structured Version (if GO)
+- Convert to Data Assets
+- Add variety (more goods, stations)
+- Economy simulation
+
+**Weeks 9-12**: Polish & Demo (if GO)
+- Tutorial, visual/audio polish
+- 30-minute demo package
+- Final validation (75% "fun", 50% "would buy")
+
 ### Past Progress (Completed)
 
 **2024-2025: Foundation Building**
@@ -209,52 +265,63 @@ The project was developed with **architecture-first strategy**:
 
 ### Current Status (December 2025)
 
-**Phase 4: Content Creation** (20% complete)
-- ⚠️ Minimal editor content created
-- ⚠️ TestLevel.umap exists but empty
-- ⚠️ No functional gameplay yet
-- ⚠️ Systems ready but need content
+**Trade Simulator MVP - Phase 1: Hardcoded Prototype** (Week 1 in progress)
+- ✅ Critical review analysis complete
+- ✅ MVP scope defined and documented
+- ✅ Phase 2.1 systems analysis complete
+- ✅ Trading system cleanup complete
+- 🔄 Week 1: Planning and core infrastructure
+- ⏳ Weeks 2-4: UI, gameplay loop, playtesting
 
 ### Future Timeline (Estimated)
 
-**Q1 2026: Core Content** (Weeks 1-12)
-- Create essential Data Assets (ships, factions, personnel)
-- Create core actor Blueprints
-- Build TestMode.umap and basic sector maps
-- Design essential UI widgets
-- Configure input system
+**Q1 2026: Trade Simulator MVP** (Weeks 1-12) ← **CURRENT FOCUS**
+- Weeks 1-4: Hardcoded prototype, external playtest, GO/NO-GO
+- Weeks 5-8: Structured version with Data Assets
+- Weeks 9-12: Polish and 30-minute demo
+- Success: 75% "fun" + 50% "would buy" = ready for funding
 
-**Q2 2026: Expanded Content** (Weeks 13-24)
-- Create remaining Data Assets
-- Build additional maps
-- Design all UI widgets
-- Import audio/visual assets
-- Create test scenarios
+**Q2-Q3 2026: Post-MVP Path** (If validated)
+- Funding pursuit with demo
+- Team expansion
+- Content scaling
+- Feature additions based on feedback
 
-**Q3 2026: Polish & Balance** (Weeks 25-36)
-- Balance gameplay
-- Polish UI/UX
-- Optimize performance
-- Fix bugs
-- Create tutorials
+**Q4 2026: Version 1.0** (If funded)
+- Full content creation
+- Beta testing
+- Release preparation
 
-**Q4 2026: Beta Testing** (Weeks 37-48)
-- Internal testing
-- Bug fixing
-- Content expansion
-- Community feedback
-
-**2027: Release Preparation**
-- Final polish
-- Marketing materials
-- Documentation updates
-- Community building
+**Alternative Path** (If not validated or funded)
+- Pivot to different core loop
+- Open source community development
+- Early access with limited scope
 
 ---
 
 ## How to Make Progress
 
-### For Designers (Highest Priority)
+### For Everyone (Current Focus)
+
+**Trade Simulator MVP - Week 1 Tasks**
+
+See `docs/mvp/PHASE_1_IMPLEMENTATION_STEPS.md` and `docs/mvp/PHASE_1_CHECKLIST.md` for complete guidance.
+
+**This Week (Dec 29 - Jan 4)**:
+1. ✅ Review all critical review documents
+2. ✅ Accept Trade Simulator MVP as primary goal
+3. 🔄 Set up development environment for rapid prototyping
+4. 🔄 Begin hardcoded ship flight mechanics
+5. 🔄 Create basic station objects (simple geometry)
+6. ⏳ Plan Week 2 trading UI implementation
+
+**Next Week (Jan 5-11)**:
+1. Build trading UI widgets
+2. Implement buy/sell functionality
+3. Add credits and profit tracking
+4. Test complete trade cycle
+
+### For Designers (After Week 4 GO Decision)
 
 **Week 1-2: Learn the Basics**
 1. Read `BLUEPRINT_GUIDE_FOR_BEGINNERS.md` (1124 lines)
@@ -315,27 +382,28 @@ The project was developed with **architecture-first strategy**:
 
 ## Realistic Assessment
 
-### What We Have
+### What We Have (December 29, 2025)
 
-✅ **Excellent C++ foundation** - Robust, well-documented, Blueprint-friendly  
-✅ **Complete system design** - All 22 systems implemented  
-✅ **Comprehensive documentation** - 150+ guides and references  
-✅ **Automation tools** - Scripts for content generation and testing  
-✅ **Clear roadmap** - Know exactly what needs to be done
+✅ **Clear MVP Focus** - Trade Simulator with 12-week plan and validation gates  
+✅ **Critical Analysis Complete** - Know exactly what went wrong and how to fix it  
+✅ **Systems Analysis Done** - MVP-critical functions identified (Phase 2.1)  
+✅ **Trading Cleanup Done** - Non-MVP functions removed, cleaner architecture  
+✅ **Documentation Aligned** - All docs reflect MVP priority  
+✅ **Anti-Patterns Documented** - Lessons learned to avoid repeating mistakes
 
 ### What We Need
 
-❌ **Time for content creation** - Estimated 6-12 months  
-❌ **Designer expertise** - Unreal Editor, Blueprints, UI design  
-❌ **Art assets** - Models, textures, sounds, VFX  
-❌ **Testing resources** - QA team or dedicated testers  
-❌ **Community building** - Attract contributors and testers
+🎯 **Execute 12-Week Plan** - Build hardcoded prototype, validate, iterate  
+🎯 **External Validation** - Week 4 playtesting with 60%+ "fun" metric  
+🎯 **Discipline** - No feature creep, stay focused on trading loop only  
+🎯 **Speed** - Hardcode first, structure later (Phase 1 Weeks 1-4)  
+🎯 **Honesty** - If Week 4 playtest fails (<60% fun), pivot immediately
 
 ### Honest Timeline
 
-**Optimistic** (with dedicated team): 6-9 months to playable beta  
-**Realistic** (current pace): 12-18 months to playable beta  
-**Pessimistic** (solo developer): 24+ months to playable beta
+**Optimistic** (external playtesters love it): 3 months to fundable demo  
+**Realistic** (iterations needed): 4-5 months to fundable demo  
+**Pessimistic** (Week 4 NO-GO): Pivot to different core loop, +2 months
 
 ---
 

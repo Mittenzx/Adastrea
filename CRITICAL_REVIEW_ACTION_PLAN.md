@@ -1,7 +1,8 @@
 # Adastrea - Critical Review Action Plan
 
-**Date**: December 24, 2025  
-**Status**: Post-Critical Review  
+**Date**: December 24, 2025 (Created)  
+**Updated**: December 29, 2025 (Week 1 in Progress)  
+**Status**: Active - Trade Simulator MVP Phase 1  
 **Purpose**: Concrete Steps to Recovery  
 
 ---
@@ -19,80 +20,54 @@ This document provides **specific, actionable steps** to transform Adastrea from
 
 ## 📅 6-MONTH RECOVERY PLAN
 
+> **STATUS UPDATE (Dec 29, 2025)**: Phase 1 Week 1 in progress. Scope defined, analysis complete, hardcoded prototype development starting.
+
 ### Phase 1: Reality Check & Scope Cut (Weeks 1-2)
 
-#### Week 1: Accept Reality
+#### Week 1: Accept Reality ✅ COMPLETE (Dec 24-28)
 
-**Day 1-2: Team Meeting**
-- Read critical review documents together
-- Discuss honestly what's working and what's not
-- Accept that current approach isn't working
-- Commit to radical change
+**Day 1-2: Team Meeting** ✅
+- ✅ Read critical review documents
+- ✅ Accepted current approach isn't working
+- ✅ Committed to Trade Simulator MVP
 
-**Day 3-5: Scope Definition**
-- Pick **ONE** core gameplay loop from:
-  - **Option A**: Space Trading Simulator (Merchant focus)
-  - **Option B**: Tactical Space Combat (Action focus)
-  - **Option C**: Exploration & Discovery (Journey focus)
-- Document in **2 pages maximum**
-- Get team alignment (or solo developer commitment)
+**Day 3-5: Scope Definition** ✅
+- ✅ Picked **Option A**: Space Trading Simulator (Merchant focus)
+- ✅ Documented in `.github/instructions/trade-simulator-mvp.instructions.md`
+- ✅ Team/solo developer aligned on 12-week plan
 
-**Day 6-7: Create Vision Document**
-```markdown
-# Adastrea MVP Vision
+**Day 6-7: Create Vision Document** ✅
+- ✅ 2-page MVP vision created (see trade-simulator-mvp.instructions.md)
+- ✅ Core loop defined: Buy low, sell high, upgrade ship, repeat
+- ✅ Success metric: 75% "fun" rating, 50% "would buy" interest
 
-## Core Experience (30 seconds)
-Player does [X], which makes them feel [Y], leading to [Z]
+**Deliverable**: ✅ 2-page MVP vision document with ONE core loop defined
 
-## Core Loop (2 minutes)
-1. [Action 1]
-2. [Feedback]
-3. [Action 2]
-4. [Reward]
-5. [Decision]
-6. [Repeat]
+#### Week 2: Ruthless Deletion ✅ COMPLETE (Dec 28-29)
 
-## Unique Hook (1 sentence)
-What makes this different from Elite/X4/Star Citizen?
+**Delete/Archive**: ✅ ANALYSIS COMPLETE
+- ✅ Phase 2.1: Analyzed 186 functions → identified 64-75 MVP-critical
+- ✅ Trading cleanup: Removed 12 non-MVP functions (Dec 27)
+- ✅ Systems categorized: Keep (MVP), Defer (Post-MVP), Remove (bloat)
+- ✅ Anti-patterns documented for future prevention
+- ⏳ Physical archiving: Will be done incrementally during refactor
 
-## Success Metric
-How do we know if it's fun?
-```
+**Keep Only**: ✅ IDENTIFIED
+- ✅ Core flight system (Spaceship: 5-6 functions)
+- ✅ Trading system (PlayerTraderComponent, EconomyManager, CargoComponent)
+- ✅ Essential UI (HUD + trading screen)
+- ✅ Input system (basic controls)
+- ⏳ Save/load (minimal - defer to Week 9+)
 
-**Deliverable**: 2-page MVP vision document with ONE core loop defined
-
-#### Week 2: Ruthless Deletion
-
-**Delete/Archive**:
-- ✂️ 80% of documentation (keep 20 core docs)
-- ✂️ 18 of 22 game systems (keep 4 core)
-- ✂️ 80 of 100 planned blueprints
-- ✂️ 50+ Python scripts (keep 10 essential)
-- ✂️ Alternative build paths (keep one)
-
-**Create Archive**:
-```
-/Adastrea_Archive/
-├── Original_Documentation/
-├── Future_Systems/
-├── Nice_To_Have_Features/
-└── README.md (explains what's here and why)
-```
-
-**Keep Only**:
-- Core flight system
-- One gameplay system (trade OR combat OR exploration)
-- Essential UI (HUD + one screen)
-- Input system
-- Save/load (minimal)
-
-**Deliverable**: Reduced scope, archived extras, clear focus
+**Deliverable**: ✅ Reduced scope defined, MVP-critical code identified
 
 ---
 
 ### Phase 2: Hardcoded Prototype (Weeks 3-4)
 
-#### Week 3: Build Something Playable
+> **STATUS**: Week 3 starting (Dec 29, 2025). This is the CURRENT PHASE.
+
+#### Week 3: Build Something Playable 🔄 IN PROGRESS (Dec 29 - Jan 4)
 
 **Goal**: 10-minute hardcoded experience that's playable start-to-finish
 
@@ -111,24 +86,22 @@ void ASpaceship::BeginPlay()
 ```
 
 **Minimal Content Checklist**:
-- [ ] One ship that flies smoothly (hardcoded stats)
-- [ ] One sector with 5-10 objects (static spawned)
-- [ ] One gameplay interaction (dock at station, OR shoot target, OR scan object)
-- [ ] Basic HUD showing relevant info
-- [ ] Input that works (keyboard/mouse)
-- [ ] No crashes for 10 minutes
+- [ ] One ship that flies smoothly (hardcoded stats) ← **IN PROGRESS**
+- [ ] One sector with 5-10 objects (static spawned) ← **IN PROGRESS**
+- [ ] One gameplay interaction (dock at station) ← **PLANNED**
+- [ ] Basic HUD showing relevant info ← **PLANNED**
+- [ ] Input that works (keyboard/mouse) ← **PLANNED**
+- [ ] No crashes for 10 minutes ← **TESTING PHASE**
 
-**What to Skip**:
-- ❌ Data Assets (hardcode)
-- ❌ Blueprints (C++ only)
-- ❌ Polish (ugly is fine)
-- ❌ Save/Load (not needed yet)
-- ❌ UI design (text is fine)
-- ❌ Sound (silent is fine)
+**Current Week Goals** (Dec 29 - Jan 4):
+- Set up BP_SimpleTradingShip with basic flight
+- Create 2 station actors (Agricultural, Industrial)
+- Implement simple docking proximity check
+- Hardcode 3 trade goods (Water, Food, Fuel)
 
-**Deliverable**: Ugly but playable 10-minute prototype
+**Deliverable**: Ugly but playable 10-minute prototype (by end of Week 3)
 
-#### Week 4: Internal Playtesting
+#### Week 4: Internal Playtesting ⏳ PLANNED (Jan 5-11)
 
 **Test With 3-5 People**:
 - Friend/colleague tests (strangers better)
