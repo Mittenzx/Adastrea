@@ -62,7 +62,8 @@ Scripts and tools for generating game content:
 
 ### `/reference/` - Quick References and Cheatsheets
 Fast lookups and one-page guides:
-- **BLUEPRINT_VISUAL_MOCKUP_GUIDE.md** - ⭐ **ENHANCED** Color-coded Blueprint docs with node details
+- **BLUEPRINT_IMAGE_GUIDE.md** - ⭐ **NEW** Image-based Blueprint documentation with SVG diagrams
+- **BLUEPRINT_VISUAL_MOCKUP_GUIDE.md** - Color-coded Blueprint docs with node details (ASCII)
 - **BLUEPRINT_MOCKUP_GUIDE.md** - Visual Blueprint documentation standards
 - **BLUEPRINT_DOCUMENTATION_EXAMPLES.md** - Before/after documentation examples
 - **BLUEPRINT_QUICK_REFERENCE.md** - Blueprint quick ref
