@@ -22,10 +22,11 @@
    - Name: `WBP_TradingUI`
 
 2. **Set Parent Class**:
-   - Open WBP_TradingUI
+   - Open `WBP_TradingUI`
    - Click "Class Settings" (top toolbar)
-   - Parent Class → Search "TradingInterface"
-   - Select: `TradingInterfaceWidget`
+   - In the **Details** panel, under **Class Options**, find **Parent Class**
+   - Open the dropdown, switch to **All Classes**, and search for `TradingInterfaceWidget`
+   - Select the C++ class `TradingInterfaceWidget` (from the C++ / native classes list, not another Blueprint)
    - Compile & Save
 
 3. **Quick Layout** (Minimum Viable):

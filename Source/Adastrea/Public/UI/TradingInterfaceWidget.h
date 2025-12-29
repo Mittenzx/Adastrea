@@ -77,7 +77,7 @@ protected:
 
 	/** Currently selected item category filter */
 	UPROPERTY(BlueprintReadWrite, Category = "Trading")
-	FString SelectedCategory;
+	ETradeItemCategory SelectedCategoryFilter;
 
 	/** Current sort mode (Name, Price, Stock) */
 	UPROPERTY(BlueprintReadWrite, Category = "Trading")
@@ -167,8 +167,9 @@ public:
 
 	/**
 	 * Get filtered items by category
-	 * @param Category Category to filter by (empty = all)
-	 * @return Array of filtered inventory entries
+	 * @param Category Category to filter by
+	 * @return Array of filtered inventory entries matching the specified category
+	 * @note To get all items without filtering, use GetAvailableItems() instead
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Trading")
 	TArray<FMarketInventoryEntry> GetFilteredItems(ETradeItemCategory Category) const;
@@ -347,6 +348,7 @@ private:
 	/** Timer handle for periodic updates */
 	FTimerHandle UpdateTimer;
 
+protected:
 	/** Callback for player credits changed */
 	UFUNCTION()
 	void OnPlayerCreditsChanged(int32 NewCredits, int32 ChangeAmount);

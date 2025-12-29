@@ -9,6 +9,7 @@
 #include "TimerManager.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/Pawn.h"
+#include "Engine/World.h"
 
 UTradingInterfaceWidget::UTradingInterfaceWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -16,7 +17,7 @@ UTradingInterfaceWidget::UTradingInterfaceWidget(const FObjectInitializer& Objec
 	, PlayerTrader(nullptr)
 	, PlayerCargo(nullptr)
 	, EconomyManager(nullptr)
-	, SelectedCategory("")
+	, SelectedCategoryFilter(ETradeItemCategory::RawMaterials)
 	, SortMode("Name")
 	, bShowBuyView(true)
 	, SelectedItem(nullptr)
@@ -123,12 +124,6 @@ TArray<FMarketInventoryEntry> UTradingInterfaceWidget::GetFilteredItems(ETradeIt
 		return TArray<FMarketInventoryEntry>();
 	}
 
-	// If no category filter, return all items
-	if (SelectedCategory.IsEmpty())
-	{
-		return CurrentMarket->Inventory;
-	}
-
 	// Filter by category
 	TArray<FMarketInventoryEntry> FilteredItems;
 	for (const FMarketInventoryEntry& Entry : CurrentMarket->Inventory)
@@ -212,6 +207,41 @@ bool UTradingInterfaceWidget::AddToCart(UTradeItemDataAsset* Item, int32 Quantit
 		if (!CurrentMarket || !CurrentMarket->IsItemInStock(Item->ItemID, Quantity))
 		{
 			return false;
+		}
+
+		// Check if player can afford this item when added to cart
+		if (PlayerTrader)
+		{
+			int32 ItemCost = GetItemPrice(Item, Quantity);
+			int32 CurrentCartTotal = GetCartTotal();
+			int32 NewTotal = CurrentCartTotal + ItemCost;
+			
+			if (NewTotal > PlayerTrader->GetCredits())
+			{
+				return false; // Cannot afford this addition to cart
+			}
+		}
+
+		// Check if player has cargo space for this item when added to cart
+		if (PlayerCargo)
+		{
+			float ItemVolume = Item->GetTotalVolume(Quantity);
+			float AvailableSpace = PlayerCargo->GetAvailableCargoSpace();
+			
+			// Calculate space already reserved by cart
+			float CartReservedSpace = 0.0f;
+			for (const auto& CartItem : ShoppingCart)
+			{
+				if (CartItem.Key)
+				{
+					CartReservedSpace += CartItem.Key->GetTotalVolume(CartItem.Value);
+				}
+			}
+			
+			if ((CartReservedSpace + ItemVolume) > AvailableSpace)
+			{
+				return false; // Not enough cargo space for this addition
+			}
 		}
 	}
 	else
@@ -418,6 +448,9 @@ bool UTradingInterfaceWidget::ExecuteTrade()
 		return false;
 	}
 
+	// Track successfully traded items to remove from cart
+	TArray<UTradeItemDataAsset*> SuccessfullyTradedItems;
+	
 	// Execute each item in cart
 	bool bAllSuccess = true;
 	for (const auto& CartItem : ShoppingCart)
@@ -435,16 +468,26 @@ bool UTradingInterfaceWidget::ExecuteTrade()
 			bSuccess = PlayerTrader->SellItem(CurrentMarket, CartItem.Key, CartItem.Value, PlayerCargo);
 		}
 
-		if (!bSuccess)
+		if (bSuccess)
+		{
+			SuccessfullyTradedItems.Add(CartItem.Key);
+		}
+		else
 		{
 			bAllSuccess = false;
 			break;
 		}
 	}
 
+	// Remove successfully traded items from cart, even on partial failure
+	for (UTradeItemDataAsset* TradedItem : SuccessfullyTradedItems)
+	{
+		ShoppingCart.Remove(TradedItem);
+	}
+
 	if (bAllSuccess)
 	{
-		// Clear cart on success
+		// Clear any remaining cart items (should be empty after successful trades)
 		ClearCart();
 
 		// Update displays
@@ -455,7 +498,21 @@ bool UTradingInterfaceWidget::ExecuteTrade()
 	}
 	else
 	{
-		OnTradeCompleted(false, FText::FromString(TEXT("Trade execution failed")));
+		// Partial failure - some items traded, some failed
+		if (SuccessfullyTradedItems.Num() > 0)
+		{
+			// Update displays for partial success
+			RefreshMarketDisplay();
+			UpdatePlayerState();
+			OnCartUpdated(); // Update cart to reflect removed items
+			
+			OnTradeCompleted(false, FText::FromString(TEXT("Trade partially completed - some items failed")));
+		}
+		else
+		{
+			// Complete failure - no items traded
+			OnTradeCompleted(false, FText::FromString(TEXT("Trade execution failed")));
+		}
 	}
 
 	return bAllSuccess;
@@ -467,7 +524,7 @@ bool UTradingInterfaceWidget::ExecuteTrade()
 
 void UTradingInterfaceWidget::SetCategoryFilter(ETradeItemCategory Category)
 {
-	SelectedCategory = UEnum::GetValueAsString(Category);
+	SelectedCategoryFilter = Category;
 	RefreshMarketDisplay();
 }
 

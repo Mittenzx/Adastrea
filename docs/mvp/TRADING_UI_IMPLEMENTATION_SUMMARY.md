@@ -133,7 +133,7 @@ OnTradeCompleted(bool, FText)      // Show result message
    // In your station/docking Blueprint or C++:
    
    // Create widget
-   UTrading InterfaceWidget* Widget = CreateWidget<UTradingInterfaceWidget>(
+   UTradingInterfaceWidget* Widget = CreateWidget<UTradingInterfaceWidget>(
        PlayerController, 
        WBP_TradingUI_Class
    );
