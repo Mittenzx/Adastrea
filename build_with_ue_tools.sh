@@ -144,7 +144,7 @@ build_project() {
     echo ""
     
     # Build the project
-    dotnet "${UBT_PATH}" Adastrea ${PLATFORM} ${BUILD_CONFIG}Editor -Project="${PROJECT_FILE}" -Progress -NoHotReloadFromIDE
+    dotnet "${UBT_PATH}" AdastreaEditor ${PLATFORM} ${BUILD_CONFIG} -Project="${PROJECT_FILE}" -Progress -NoHotReloadFromIDE
     
     if [ $? -eq 0 ]; then
         echo ""

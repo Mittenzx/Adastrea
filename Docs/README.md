@@ -1,207 +1,229 @@
-# Adastrea Documentation - Docs Folder
+# Adastrea Documentation
 
-This folder contains detailed technical documentation, implementation guides, and reference materials for Adastrea development.
+**Last Updated**: December 24, 2025  
+**Version**: 2.0 - Major Documentation Reorganization
 
-## Table of Contents
+This directory contains all technical documentation for the Adastrea project, organized by category for easy navigation.
 
-- [Player Controls Documentation](#player-controls-documentation) ⭐ **NEW!**
-- [HUD/UI Documentation](#hudui-documentation)
-- [Code Quality & Best Practices](#code-quality--best-practices)
-- [Test Mode Documentation](#test-mode-documentation)
-- [Implementation Summaries](#implementation-summaries)
-- [Visual Resources](#visual-resources)
+## 📁 Directory Structure
+
+### `/systems/` - Game System Documentation
+Comprehensive guides for game systems:
+- **STATION_EDITOR_COMPLETE_GUIDE.md** - Space station building system
+
+### `/development/` - Developer Documentation
+Guides for developers working on the codebase:
+- **BLUEPRINT_GUIDE_FOR_BEGINNERS.md** - Complete Blueprint development guide
+- **DIRECTOR_KNOWLEDGE_BASE.md** - AI tool integration
+- **DIRECTOR_PLUGIN_OVERVIEW.md** - Plugin architecture
+- **ENHANCED_INPUT_GUIDE.md** - Input system setup
+- **FREE_LOOK_README.md** - Free look camera system
+- **MODULE_DEPENDENCY_GUIDE.md** - Managing module dependencies
+- **PERFORMANCE_IMPROVEMENTS.md** - Optimization strategies
+- **PLUGIN_DEVELOPMENT_GUIDE.md** - Creating plugins
+- **QUALITY_ASSURANCE_SYSTEMS.md** - QA processes
+- **ROADMAP_*.md** - Detailed roadmaps for specific systems
+- **STUB_AND_PLACEHOLDER_AUDIT.md** - Code completeness tracking
+- **UE_COPILOT_MODIFICATIONS_GUIDE.md** - Copilot customization
+- **UNREAL_DIRECTIVE_*.md** - Unreal best practices
+- **WIDGET_*.md** - UI/UMG development
+
+### `/setup/` - Installation and Setup Guides
+Getting your development environment ready:
+- **BUILD_WITH_UE_TOOLS.md** - Building with UE tools only
+- **CLOUD_BUILD_*.md** - Cloud CI/CD setup
+- **DOCKER_*.md** - Docker and containerization
+- **GITHUB_TOKEN_DOCKER_SETUP.md** - GitHub Actions setup
+- **PROJECT_GENERATION_QUICK_FIX.md** - Fixing project generation errors
+- **SETUP_CHECKLIST.md** - Complete setup checklist
+- **VISUAL_STUDIO_PROJECT_GENERATION.md** - VS project setup
+- **WIKI_SETUP_INSTRUCTIONS.md** - Documentation wiki
+- **FREE_LOOK_SETUP_GUIDE.md** - Free look camera setup
+- **CROSSHAIR_BLUEPRINT_GUIDE.md** - Crosshair implementation
+
+### `/testing/` - Testing Documentation
+Quality assurance and testing:
+- **TESTING_AUTOMATION_GUIDE.md** - Automated testing setup
+- **TESTING_COMPREHENSIVE.md** - Complete testing guide
+- **TEST_ARCHITECTURE.md** - Test system architecture
+
+### `/content-generation/` - Content Creation Tools
+Scripts and tools for generating game content:
+- **MASSIVE_CONTENT_GENERATION_GUIDE.md** - Large-scale content generation
+- **PROCEDURAL_GENERATION_GUIDE.md** - Procedural content systems
+- **PROCEDURAL_GENERATION_QUICKSTART.md** - Quick start for procedural tools
+- **SCENE_POPULATION_GUIDE.md** - Populating levels
+- **CONTENT_CREATION_QUICKSTART.md** - Getting started with content
+- **EXAMPLE_DATA_ASSETS.md** - Data asset examples
+- **SCHEMA_GUIDE.md** - YAML schema validation
+- **YAML_*.md** - YAML import and conversion tools
+- **GOOGLE_SHEETS_*.md** - Google Sheets integration
+- **SCRIPTS_README.md** - Python scripts overview
+
+### `/reference/` - Quick References and Cheatsheets
+Fast lookups and one-page guides:
+- **BLUEPRINT_QUICK_REFERENCE.md** - Blueprint quick ref
+- **BLUEPRINT_REQUIREMENTS_LIST.md** - All required Blueprints
+- **CHEATSHEET.md** - Common commands and shortcuts
+- **DATA_MANAGEMENT_QUICK_REFERENCE.md** - Data asset workflows
+- **DEVELOPER_SETUP_QUICK_REF.md** - Dev environment quick ref
+- **INPUT_CONTROLS_REFERENCE.md** - Control schemes
+- **OPTIMIZATION_QUICK_REFERENCE.md** - Performance tips
+- **PLUGIN_QUICK_REFERENCE.md** - Plugin quick ref
+- **SCENE_POPULATION_QUICK_REFERENCE.md** - Level population
+- **STATION_EDITOR_VISUAL_GUIDE.md** - Visual station editor guide
+- **TESTING_QUICK_REFERENCE.md** - Testing workflows
+- **TROUBLESHOOTING_CASCADING_ERRORS.md** - Error resolution
+- **X4_QUICK_REFERENCE.md** - X4 Foundations inspiration
+- **YAML_TO_ASSETS_QUICK_REFERENCE.md** - YAML conversion
+- **FREE_PLUGINS_LIST.md** - Recommended plugins
+- **FREE_TOOLS_COMPARISON.md** - Tool comparisons
+- **PLUGIN_RECOMMENDATIONS.md** - Plugin suggestions
+- Visual guides: **DA_INPUTCONFIG_VISUAL_GUIDE.md**, **FREE_LOOK_VISUAL_GUIDE.md**, **IMC_SPACESHIP_VISUAL_GUIDE.md**
+
+### `/archive/` - Historical Documents
+Archived documentation for reference:
+- **CHANGES.md** - Historical changes log
+- **INPUT_ACTIONS_ANALYSIS.md** - Old input analysis
+- **INPUT_SYSTEM_CLARIFICATION.md** - Input system notes
+- **ISSUE_RESPONSE_BLUEPRINTS.md** - Old issue responses
+- **GAME_MOCKUPS.md** - Early mockups
+- **UPDATED_BLUEPRINT_LIST_2025.md** - Old Blueprint list
+
+## 📚 Essential Documentation (Root Directory)
+
+The following essential files remain in the project root for easy access:
+
+- **README.md** - Project overview and quick start
+- **ARCHITECTURE.md** - System architecture and design patterns
+- **CODE_STYLE.md** - C++ and Blueprint coding standards
+- **CONTRIBUTING.md** - Contribution guidelines
+- **CHANGELOG.md** - Version history and release notes
+- **ROADMAP.md** - Main development roadmap
+- **QUICKSTART.md** - Fast project setup
+- **CURRENT_STATUS.md** - Realistic project status assessment
+- **MASTER_DOCUMENTATION.md** - Complete documentation in one file
+- **DOCUMENTATION_INDEX.md** - Complete documentation index
+- **OBSOLETE_DOCUMENTS.md** - Obsolete files tracking
+
+## 🔍 Finding Documentation
+
+### By Task
+
+**Setting Up Development Environment:**
+1. `/setup/SETUP_CHECKLIST.md`
+2. `/setup/BUILD_WITH_UE_TOOLS.md`
+3. `/setup/VISUAL_STUDIO_PROJECT_GENERATION.md`
+
+**Creating Blueprints:**
+1. `/development/BLUEPRINT_GUIDE_FOR_BEGINNERS.md`
+2. `/reference/BLUEPRINT_QUICK_REFERENCE.md`
+3. `/reference/BLUEPRINT_REQUIREMENTS_LIST.md`
+
+**Generating Content:**
+1. `/content-generation/CONTENT_CREATION_QUICKSTART.md`
+2. `/content-generation/MASSIVE_CONTENT_GENERATION_GUIDE.md`
+3. `/content-generation/YAML_IMPORT_GUIDE.md`
+
+**Testing:**
+1. `/testing/TESTING_AUTOMATION_GUIDE.md`
+2. `/testing/TESTING_COMPREHENSIVE.md`
+3. `/reference/TESTING_QUICK_REFERENCE.md`
+
+**Need Quick Answer:**
+1. `/reference/CHEATSHEET.md`
+2. `/reference/*_QUICK_REFERENCE.md` files
+3. Root `MASTER_DOCUMENTATION.md`
+
+## 🗂️ Other Documentation Locations
+
+### Assets/ Directory
+System-specific guides and templates (102 files):
+- System guides for all 22+ game systems
+- YAML templates for spaceships, factions, personnel, etc.
+- Designer workflows and quickstart guides
+
+### Plugins/ Directory
+Plugin-specific documentation (40 files):
+- AdastreaDirector plugin documentation
+- Plugin integration guides
+
+### wiki/ Directory
+GitHub wiki pages (12 files):
+- Getting started guides
+- Core systems overviews
+- Developer guides
+
+### .github/ Directory
+CI/CD and GitHub configuration (17 files):
+- GitHub Actions workflows
+- Copilot instructions
+- Agent definitions
+
+## 📖 Documentation Conventions
+
+### Naming Patterns
+- `*_GUIDE.md` - Comprehensive guides
+- `*_QUICK_REFERENCE.md` - One-page quick references
+- `*_QUICKSTART.md` - Fast getting-started guides
+- `*_README.md` - Overview/index files
+- `*_VISUAL_GUIDE.md` - Visual/diagram-heavy guides
+
+### Documentation Quality
+- All guides include:
+  - Last updated date
+  - Clear purpose statement
+  - Step-by-step instructions
+  - Examples where applicable
+  - Links to related documentation
+
+## 🔄 Recent Changes (December 24, 2025)
+
+### Major Documentation Reorganization
+- **Removed**: 80+ obsolete files (reviews, summaries, duplicates)
+- **Consolidated**: Multiple overlapping guides into single comprehensive docs
+- **Organized**: Moved 80+ files from root into structured docs/ folders
+- **Result**: Root directory reduced from 172 to 11 essential files
+
+### What Was Removed
+- 10 code review documents (outdated)
+- 16 obsolete summary documents
+- 8 obsolete implementation guides
+- 14 duplicate Blueprint guides (kept best)
+- 5 obsolete PIE/testing checklists
+- 4 duplicate station editor docs
+- 9 duplicate content generation docs
+- X4 research (interesting but not needed)
+- Old build/error documentation
+- Temporary status documents
+
+### What Was Consolidated
+- Blueprint guides: 15 files → 3 files (kept comprehensive + references)
+- Testing docs: 9 files → 4 files (comprehensive guides + quick ref)
+- Station editor: 7 files → 2 files (complete guide + visual ref)
+- Content generation: 12 files → 9 files (organized by purpose)
+- Roadmaps: 5 files moved to development/
+
+## 🤝 Contributing to Documentation
+
+When adding new documentation:
+1. Choose the correct directory based on category
+2. Follow naming conventions
+3. Include metadata (last updated, purpose)
+4. Update this README if adding new categories
+5. Cross-reference related docs
+6. Update `DOCUMENTATION_INDEX.md` in root
+
+## 📝 Maintenance
+
+This documentation structure should be maintained to ensure:
+- Easy navigation for new developers
+- Reduced clutter in root directory
+- Clear separation of concerns
+- Historical preservation in archive/
+
+For questions or suggestions about documentation organization, please open an issue.
 
 ---
 
-## Player Controls Documentation
-
-### ⭐ NEW: Comprehensive Control System Workflows
-
-**[PLAYER_CONTROLS_QUICK_REFERENCE.md](PLAYER_CONTROLS_QUICK_REFERENCE.md)** - One-page reference
-- **Purpose**: Quick reference card for player controls
-- **Contents**:
-  - System overview and key classes
-  - Initialization order (10 steps)
-  - Input actions and key bindings
-  - Runtime flow examples
-  - Transition workflows
-  - Debugging checklist
-  - Testing procedures
-- **Use When**: You need quick answers or a printable reference
-
-**[PLAYER_CONTROLS_WORKFLOW.md](PLAYER_CONTROLS_WORKFLOW.md)** - 958 lines
-- **Purpose**: Detailed C++ flowcharts showing initialization and runtime call order
-- **Contents**:
-  - Complete game start sequence (Engine → GameMode → Controller → Spaceship)
-  - Spaceship control system initialization with step-by-step call order
-  - Runtime input processing flows (Move, Look, Fire, Speed)
-  - Third-person character system architecture (planned)
-  - System transition workflows (Spaceship ↔ Character)
-  - Component relationships and integration points
-  - Testing procedures and performance considerations
-
-**[PLAYER_CONTROLS_DIAGRAMS.md](PLAYER_CONTROLS_DIAGRAMS.md)** - 693 lines
-- **Purpose**: Visual diagrams using Mermaid syntax for easy understanding
-- **Contents**:
-  - Sequence diagrams: Game initialization to player input
-  - Flowcharts: Input processing pipelines
-  - Class diagrams: Component relationships and hierarchies
-  - State machines: Control mode transitions
-  - Architecture diagrams: Spaceship and character systems
-  - Transition workflows with decision trees
-  - Performance profiling metrics
-
-**When to Use Which Document**:
-- **PLAYER_CONTROLS_QUICK_REFERENCE.md**: Quick lookup, testing checklist, printable reference
-- **PLAYER_CONTROLS_WORKFLOW.md**: Detailed textual descriptions of the flow
-- **PLAYER_CONTROLS_DIAGRAMS.md**: Visual diagrams to understand relationships
-
-**Key Features Documented**:
-- ✅ Spaceship Enhanced Input system (fully implemented)
-- ✅ SpaceshipControlsComponent initialization and runtime
-- ✅ Flight physics (flight assist, throttle, auto-leveling)
-- ⚠️ Third-person character system (planned/design phase)
-- ⚠️ Transitions between spaceship and character modes
-
----
-
-## HUD/UI Documentation
-
-**[HUD_QUICK_REFERENCE.md](HUD_QUICK_REFERENCE.md)**
-- Quick reference for HUD system implementation
-- Widget setup and data binding
-- Common patterns and best practices
-
-**[HUD_USAGE_GUIDE.md](HUD_USAGE_GUIDE.md)**
-- Comprehensive guide to using the HUD system
-- Step-by-step tutorials
-- Integration with game systems
-
-**[HUD_IMPLEMENTATION_SUMMARY.md](HUD_IMPLEMENTATION_SUMMARY.md)**
-- Technical implementation details
-- Architecture overview
-- Component breakdown
-
----
-
-## Code Quality & Best Practices
-
-**[BEST_PRACTICES_CLASS_SETUP.md](BEST_PRACTICES_CLASS_SETUP.md)**
-- Best practices for C++ class setup
-- Header organization
-- Constructor patterns
-- Component creation
-
-**[CLASS_SETUP_AUDIT_SUMMARY.md](CLASS_SETUP_AUDIT_SUMMARY.md)**
-- Audit results of class setup across the project
-- Identified issues and fixes
-- Compliance with standards
-
-**[CPP_CODE_QUALITY_REPORT.md](CPP_CODE_QUALITY_REPORT.md)**
-- Code quality analysis
-- Metrics and statistics
-- Improvement recommendations
-
----
-
-## Test Mode Documentation
-
-**[TestMode_INDEX.md](TestMode_INDEX.md)**
-- Index of test mode features
-- Navigation guide for test documentation
-
-**[TestMode_QuickReference.md](TestMode_QuickReference.md)**
-- Quick reference for test mode usage
-- Common test scenarios
-- Debugging tips
-
-**[TestMode_Layout_Diagram.txt](TestMode_Layout_Diagram.txt)**
-- ASCII diagram of test mode layout
-- UI element positions
-- Interaction flow
-
----
-
-## Implementation Summaries
-
-**[IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md)**
-- Overall project implementation status
-- Completed systems
-- In-progress features
-- Future roadmap
-
-**[FACTION_REPUTATION_QUICK_START.md](FACTION_REPUTATION_QUICK_START.md)**
-- Quick start guide for faction reputation system
-- Setup instructions
-- Usage examples
-
-**[EmptyMapSetup.md](EmptyMapSetup.md)**
-- Guide for setting up empty test maps
-- Minimal level configuration
-- Testing workflows
-
----
-
-## Visual Resources
-
-**Images and Mockups**:
-- `station_editor_mockup_full.png` - Full mockup of station editor UI
-- `station_editor_connections_mockup.png` - Connection system mockup
-
----
-
-## Related Documentation
-
-### Root-Level Documentation
-- [ENHANCED_INPUT_GUIDE.md](../ENHANCED_INPUT_GUIDE.md) - Manual Enhanced Input setup
-- [ARCHITECTURE.md](../ARCHITECTURE.md) - Overall system architecture
-- [CODE_STYLE.md](../CODE_STYLE.md) - C++ and Blueprint coding standards
-
-### Assets Documentation
-- [Assets/EnhancedInputImplementation.md](../Assets/EnhancedInputImplementation.md) - C++ InputConfigDataAsset approach
-
-### Source Code
-- `Source/Adastrea/Public/Player/AdastreaPlayerController.h` - Player controller
-- `Source/Adastrea/Ships/Spaceship.h` - Spaceship pawn
-- `Source/Adastrea/Public/Ships/SpaceshipControlsComponent.h` - Input controls
-
----
-
-## Archive
-
-The `archive/` folder contains deprecated or superseded documentation that is kept for historical reference.
-
----
-
-## Contributing to Documentation
-
-When adding new documentation to this folder:
-
-1. **Follow naming conventions**:
-   - Use UPPERCASE for major guides (e.g., `PLAYER_CONTROLS_WORKFLOW.md`)
-   - Use PascalCase for specific features (e.g., `TestMode_INDEX.md`)
-   - Use lowercase for subdirectories (e.g., `archive/`)
-
-2. **Update this README**:
-   - Add your document to the appropriate section
-   - Include a brief description and line count
-   - Explain when and why someone would use it
-
-3. **Update DOCUMENTATION_INDEX.md**:
-   - Add reference in the root-level index
-   - Categorize appropriately
-
-4. **Include metadata**:
-   - Last updated date
-   - Version number
-   - Status (Complete, In Progress, Planned)
-
-5. **Cross-reference related docs**:
-   - Link to related documentation
-   - Mention prerequisite reading
-
----
-
-**Last Updated**: 2025-12-05  
-**Total Documents**: 17 (including archived)  
-**Total Lines**: ~2,500+ lines of technical documentation
+**Navigation**: [Back to Project Root](../README.md) | [Documentation Index](../DOCUMENTATION_INDEX.md) | [Master Documentation](../MASTER_DOCUMENTATION.md)
