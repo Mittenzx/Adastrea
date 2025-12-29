@@ -1,16 +1,26 @@
 // Copyright Mittenzx. All Rights Reserved.
 
 #include "UI/TradingInterfaceWidget.h"
-#include "Trading/TradeTransaction.h"
-#include "Factions/FactionDataAsset.h"
+#include "Trading/TradeItemDataAsset.h"
+#include "Trading/MarketDataAsset.h"
+#include "Trading/PlayerTraderComponent.h"
+#include "Trading/CargoComponent.h"
+#include "Trading/EconomyManager.h"
 #include "TimerManager.h"
+#include "GameFramework/PlayerController.h"
+#include "GameFramework/Pawn.h"
+#include "Engine/World.h"
 
 UTradingInterfaceWidget::UTradingInterfaceWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
-	, TradePartnerFaction(nullptr)
-	, SelectedCategory("")
+	, CurrentMarket(nullptr)
+	, PlayerTrader(nullptr)
+	, PlayerCargo(nullptr)
+	, EconomyManager(nullptr)
+	, SelectedCategoryFilter(ETradeItemCategory::RawMaterials)
 	, SortMode("Name")
 	, bShowBuyView(true)
+	, SelectedItem(nullptr)
 {
 }
 
@@ -18,251 +28,620 @@ void UTradingInterfaceWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	// Start periodic price update timer
+	// Initialize component references
+	InitializeComponents();
+
+	// Bind to component events
+	BindComponentEvents();
+
+	// Start periodic update timer for market prices
 	if (GetWorld())
 	{
-		GetWorld()->GetTimerManager().SetTimer(PriceUpdateTimer, this,
-			&UTradingInterfaceWidget::RefreshAvailableItems, 5.0f, true);
+		GetWorld()->GetTimerManager().SetTimer(UpdateTimer, this,
+			&UTradingInterfaceWidget::RefreshMarketDisplay, 5.0f, true);
 	}
 }
 
 void UTradingInterfaceWidget::NativeDestruct()
 {
+	// Unbind from component events
+	UnbindComponentEvents();
+
+	// Clear timer
 	if (GetWorld())
 	{
-		GetWorld()->GetTimerManager().ClearTimer(PriceUpdateTimer);
+		GetWorld()->GetTimerManager().ClearTimer(UpdateTimer);
 	}
 
 	Super::NativeDestruct();
 }
 
-void UTradingInterfaceWidget::SetTradePartner(UFactionDataAsset* Faction)
+// ========================================================================
+// Market Setup
+// ========================================================================
+
+bool UTradingInterfaceWidget::OpenMarket(UMarketDataAsset* Market)
 {
-	TradePartnerFaction = Faction;
-	RefreshAvailableItems();
+	if (!Market)
+	{
+		return false;
+	}
+
+	CurrentMarket = Market;
+
+	// Initialize components if not already done
+	if (!PlayerTrader || !PlayerCargo)
+	{
+		InitializeComponents();
+	}
+
+	// Validate we have required components
+	if (!PlayerTrader || !PlayerCargo || !EconomyManager)
+	{
+		return false;
+	}
+
+	// Clear shopping cart
+	ClearCart();
+
+	// Refresh display
+	RefreshMarketDisplay();
+	UpdatePlayerState();
+
+	return true;
 }
 
-TArray<UTradeItemDataAsset*> UTradingInterfaceWidget::GetFilteredItems(const FString& Category) const
+void UTradingInterfaceWidget::CloseMarket()
 {
-	TArray<UTradeItemDataAsset*> FilteredItems;
+	// Clear cart before closing
+	ClearCart();
 
-	for (UTradeItemDataAsset* Item : AvailableItems)
+	// Clear current market
+	CurrentMarket = nullptr;
+
+	// Remove widget from viewport
+	RemoveFromParent();
+}
+
+// ========================================================================
+// Market Information
+// ========================================================================
+
+TArray<FMarketInventoryEntry> UTradingInterfaceWidget::GetAvailableItems() const
+{
+	if (!CurrentMarket)
 	{
-		if (!Item)
-		{
-			continue;
-		}
+		return TArray<FMarketInventoryEntry>();
+	}
 
-		// Apply category filter if specified
-		if (Category.IsEmpty() || UEnum::GetValueAsString(Item->Category) == Category)
+	return CurrentMarket->Inventory;
+}
+
+TArray<FMarketInventoryEntry> UTradingInterfaceWidget::GetFilteredItems(ETradeItemCategory Category) const
+{
+	if (!CurrentMarket)
+	{
+		return TArray<FMarketInventoryEntry>();
+	}
+
+	// Filter by category
+	TArray<FMarketInventoryEntry> FilteredItems;
+	for (const FMarketInventoryEntry& Entry : CurrentMarket->Inventory)
+	{
+		if (Entry.TradeItem && Entry.TradeItem->Category == Category)
 		{
-			FilteredItems.Add(Item);
+			FilteredItems.Add(Entry);
 		}
 	}
 
 	return FilteredItems;
 }
 
-TArray<UTradeItemDataAsset*> UTradingInterfaceWidget::GetSortedItems() const
+int32 UTradingInterfaceWidget::GetItemPrice(UTradeItemDataAsset* Item, int32 Quantity) const
 {
-	TArray<UTradeItemDataAsset*> Items = GetFilteredItems(SelectedCategory);
-
-	// Sort based on current sort mode
-	if (SortMode == "Price")
-	{
-		Items.Sort([this](const UTradeItemDataAsset& A, const UTradeItemDataAsset& B) {
-			float PriceA = GetItemPrice(&A, 1, bShowBuyView);
-			float PriceB = GetItemPrice(&B, 1, bShowBuyView);
-			return PriceA < PriceB;
-		});
-	}
-	else if (SortMode == "Name")
-	{
-		Items.Sort([](const UTradeItemDataAsset& A, const UTradeItemDataAsset& B) {
-			return A.ItemName.CompareTo(B.ItemName) < 0;
-		});
-	}
-
-	return Items;
-}
-
-float UTradingInterfaceWidget::GetItemPrice(const UTradeItemDataAsset* Item, int32 Quantity, bool bBuying) const
-{
-	if (!Item)
-	{
-		return 0.0f;
-	}
-
-	float BasePrice = Item->BasePrice * Quantity;
-	float Modifier = GetFactionPriceModifier();
-
-	// Buying costs more, selling gets less
-	if (bBuying)
-	{
-		return BasePrice * (1.0f + (1.0f - Modifier) * 0.5f);
-	}
-	else
-	{
-		return BasePrice * Modifier * 0.8f; // Sell for less than buy
-	}
-}
-
-int32 UTradingInterfaceWidget::GetPriceTrend(UTradeItemDataAsset* Item) const
-{
-	if (!Item)
+	if (!Item || !PlayerTrader || !CurrentMarket || Quantity <= 0)
 	{
 		return 0;
 	}
 
-	// Placeholder for price trend calculation
-	// In full implementation, this would:
-	// 1. Check historical price data
-	// 2. Calculate trend based on supply/demand
-	// 3. Return -1 (falling), 0 (stable), or 1 (rising)
-
-	return 0; // Stable by default
+	if (bShowBuyView)
+	{
+		return PlayerTrader->GetBuyCost(CurrentMarket, Item, Quantity);
+	}
+	else
+	{
+		return PlayerTrader->GetSellValue(CurrentMarket, Item, Quantity);
+	}
 }
 
-void UTradingInterfaceWidget::AddToCart(UTradeItemDataAsset* Item, int32 Quantity)
+int32 UTradingInterfaceWidget::GetPlayerCredits() const
 {
-	if (!Item || Quantity <= 0)
+	if (!PlayerTrader)
 	{
+		return 0;
+	}
+
+	return PlayerTrader->GetCredits();
+}
+
+void UTradingInterfaceWidget::GetCargoSpaceInfo(float& OutUsedSpace, float& OutTotalSpace, float& OutAvailableSpace) const
+{
+	if (!PlayerCargo)
+	{
+		OutUsedSpace = 0.0f;
+		OutTotalSpace = 0.0f;
+		OutAvailableSpace = 0.0f;
 		return;
 	}
 
-	int32* ExistingQuantity = TransactionCart.Find(Item);
+	OutTotalSpace = PlayerCargo->CargoCapacity;
+	OutAvailableSpace = PlayerCargo->GetAvailableCargoSpace();
+	OutUsedSpace = OutTotalSpace - OutAvailableSpace;
+}
+
+int32 UTradingInterfaceWidget::GetPlayerProfit() const
+{
+	if (!PlayerTrader)
+	{
+		return 0;
+	}
+
+	return PlayerTrader->GetProfit();
+}
+
+// ========================================================================
+// Shopping Cart
+// ========================================================================
+
+bool UTradingInterfaceWidget::AddToCart(UTradeItemDataAsset* Item, int32 Quantity)
+{
+	if (!Item || Quantity <= 0)
+	{
+		return false;
+	}
+
+	// Check if we're buying or selling
+	if (bShowBuyView)
+	{
+		// Buying: Check market has stock
+		if (!CurrentMarket || !CurrentMarket->IsItemInStock(Item->ItemID, Quantity))
+		{
+			return false;
+		}
+
+		// Check if player can afford this item when added to cart
+		if (PlayerTrader)
+		{
+			int32 ItemCost = GetItemPrice(Item, Quantity);
+			int32 CurrentCartTotal = GetCartTotal();
+			int32 NewTotal = CurrentCartTotal + ItemCost;
+			
+			if (NewTotal > PlayerTrader->GetCredits())
+			{
+				return false; // Cannot afford this addition to cart
+			}
+		}
+
+		// Check if player has cargo space for this item when added to cart
+		if (PlayerCargo)
+		{
+			float ItemVolume = Item->GetTotalVolume(Quantity);
+			float AvailableSpace = PlayerCargo->GetAvailableCargoSpace();
+			
+			// Calculate space already reserved by cart
+			float CartReservedSpace = 0.0f;
+			for (const auto& CartItem : ShoppingCart)
+			{
+				if (CartItem.Key)
+				{
+					CartReservedSpace += CartItem.Key->GetTotalVolume(CartItem.Value);
+				}
+			}
+			
+			if ((CartReservedSpace + ItemVolume) > AvailableSpace)
+			{
+				return false; // Not enough cargo space for this addition
+			}
+		}
+	}
+	else
+	{
+		// Selling: Check player has item in cargo
+		if (!PlayerCargo)
+		{
+			return false;
+		}
+
+		int32 PlayerQuantity = PlayerCargo->GetItemQuantity(Item);
+		if (PlayerQuantity < Quantity)
+		{
+			return false;
+		}
+	}
+
+	// Add or update quantity in cart
+	int32* ExistingQuantity = ShoppingCart.Find(Item);
 	if (ExistingQuantity)
 	{
 		*ExistingQuantity += Quantity;
 	}
 	else
 	{
-		TransactionCart.Add(Item, Quantity);
+		ShoppingCart.Add(Item, Quantity);
 	}
 
+	// Fire update event
 	OnCartUpdated();
+
+	return true;
 }
 
 void UTradingInterfaceWidget::RemoveFromCart(UTradeItemDataAsset* Item)
 {
 	if (Item)
 	{
-		TransactionCart.Remove(Item);
+		ShoppingCart.Remove(Item);
 		OnCartUpdated();
 	}
 }
 
-void UTradingInterfaceWidget::ClearCart()
+void UTradingInterfaceWidget::UpdateCartQuantity(UTradeItemDataAsset* Item, int32 NewQuantity)
 {
-	TransactionCart.Empty();
+	if (!Item)
+	{
+		return;
+	}
+
+	if (NewQuantity <= 0)
+	{
+		RemoveFromCart(Item);
+		return;
+	}
+
+	ShoppingCart.Add(Item, NewQuantity);
 	OnCartUpdated();
 }
 
-float UTradingInterfaceWidget::GetCartTotal() const
+void UTradingInterfaceWidget::ClearCart()
 {
-	float Total = 0.0f;
+	ShoppingCart.Empty();
+	OnCartUpdated();
+}
 
-	for (const auto& CartItem : TransactionCart)
+int32 UTradingInterfaceWidget::GetCartTotal() const
+{
+	int32 Total = 0;
+
+	for (const auto& CartItem : ShoppingCart)
 	{
-		Total += GetItemPrice(CartItem.Key, CartItem.Value, bShowBuyView);
+		Total += GetItemPrice(CartItem.Key, CartItem.Value);
 	}
 
 	return Total;
 }
 
-bool UTradingInterfaceWidget::ExecuteTrade()
+int32 UTradingInterfaceWidget::GetCartItemCount() const
 {
-	if (TransactionCart.Num() == 0)
+	int32 Count = 0;
+	for (const auto& CartItem : ShoppingCart)
+	{
+		Count += CartItem.Value;
+	}
+	return Count;
+}
+
+// ========================================================================
+// Transaction Validation
+// ========================================================================
+
+bool UTradingInterfaceWidget::CanAffordCart() const
+{
+	if (!PlayerTrader)
 	{
 		return false;
 	}
 
-	// Placeholder for trade execution logic
-	// In full implementation:
-	// 1. Check player has enough credits/items
-	// 2. Validate transaction
-	// 3. Transfer items and credits
-	// 4. Update faction relations
-	// 5. Clear cart
-
-	bool bSuccess = true; // Placeholder
-	OnTradeCompleted(bSuccess);
-
-	if (bSuccess)
+	// If selling, player always "can afford"
+	if (!bShowBuyView)
 	{
-		ClearCart();
+		return true;
 	}
 
-	return bSuccess;
+	// If buying, check credits
+	int32 CartTotal = GetCartTotal();
+	return PlayerTrader->GetCredits() >= CartTotal;
 }
 
-void UTradingInterfaceWidget::SetCategoryFilter(const FString& Category)
+bool UTradingInterfaceWidget::HasCargoSpaceForCart() const
 {
-	SelectedCategory = Category;
-	OnTradeItemsUpdated();
+	if (!PlayerCargo)
+	{
+		return false;
+	}
+
+	// If selling, we're removing from cargo (always has "space")
+	if (!bShowBuyView)
+	{
+		return true;
+	}
+
+	// If buying, check cargo space
+	float RequiredSpace = 0.0f;
+	for (const auto& CartItem : ShoppingCart)
+	{
+		if (CartItem.Key)
+		{
+			RequiredSpace += CartItem.Key->GetTotalVolume(CartItem.Value);
+		}
+	}
+
+	return PlayerCargo->GetAvailableCargoSpace() >= RequiredSpace;
+}
+
+bool UTradingInterfaceWidget::ValidateTransaction(FText& OutErrorMessage) const
+{
+	if (ShoppingCart.Num() == 0)
+	{
+		OutErrorMessage = FText::FromString(TEXT("Shopping cart is empty"));
+		return false;
+	}
+
+	if (!CurrentMarket)
+	{
+		OutErrorMessage = FText::FromString(TEXT("No market selected"));
+		return false;
+	}
+
+	if (!PlayerTrader || !PlayerCargo)
+	{
+		OutErrorMessage = FText::FromString(TEXT("Player components not initialized"));
+		return false;
+	}
+
+	if (bShowBuyView)
+	{
+		// Buying validation
+		if (!CanAffordCart())
+		{
+			OutErrorMessage = FText::FromString(TEXT("Insufficient credits"));
+			return false;
+		}
+
+		if (!HasCargoSpaceForCart())
+		{
+			OutErrorMessage = FText::FromString(TEXT("Insufficient cargo space"));
+			return false;
+		}
+	}
+	else
+	{
+		// Selling validation - check player actually has items
+		for (const auto& CartItem : ShoppingCart)
+		{
+			int32 PlayerQuantity = PlayerCargo->GetItemQuantity(CartItem.Key);
+			if (PlayerQuantity < CartItem.Value)
+			{
+				OutErrorMessage = FText::Format(
+					FText::FromString(TEXT("Insufficient {0} in cargo")),
+					CartItem.Key->ItemName
+				);
+				return false;
+			}
+		}
+	}
+
+	OutErrorMessage = FText::GetEmpty();
+	return true;
+}
+
+// ========================================================================
+// Execute Trade
+// ========================================================================
+
+bool UTradingInterfaceWidget::ExecuteTrade()
+{
+	// Validate transaction
+	FText ErrorMessage;
+	if (!ValidateTransaction(ErrorMessage))
+	{
+		OnTradeCompleted(false, ErrorMessage);
+		return false;
+	}
+
+	// Track successfully traded items to remove from cart
+	TArray<UTradeItemDataAsset*> SuccessfullyTradedItems;
+	
+	// Execute each item in cart
+	bool bAllSuccess = true;
+	for (const auto& CartItem : ShoppingCart)
+	{
+		bool bSuccess = false;
+
+		if (bShowBuyView)
+		{
+			// Buy item
+			bSuccess = PlayerTrader->BuyItem(CurrentMarket, CartItem.Key, CartItem.Value, PlayerCargo);
+		}
+		else
+		{
+			// Sell item
+			bSuccess = PlayerTrader->SellItem(CurrentMarket, CartItem.Key, CartItem.Value, PlayerCargo);
+		}
+
+		if (bSuccess)
+		{
+			SuccessfullyTradedItems.Add(CartItem.Key);
+		}
+		else
+		{
+			bAllSuccess = false;
+			break;
+		}
+	}
+
+	// Remove successfully traded items from cart, even on partial failure
+	for (UTradeItemDataAsset* TradedItem : SuccessfullyTradedItems)
+	{
+		ShoppingCart.Remove(TradedItem);
+	}
+
+	if (bAllSuccess)
+	{
+		// Clear any remaining cart items (should be empty after successful trades)
+		ClearCart();
+
+		// Update displays
+		RefreshMarketDisplay();
+		UpdatePlayerState();
+
+		OnTradeCompleted(true, FText::GetEmpty());
+	}
+	else
+	{
+		// Partial failure - some items traded, some failed
+		if (SuccessfullyTradedItems.Num() > 0)
+		{
+			// Update displays for partial success
+			RefreshMarketDisplay();
+			UpdatePlayerState();
+			OnCartUpdated(); // Update cart to reflect removed items
+			
+			OnTradeCompleted(false, FText::FromString(TEXT("Trade partially completed - some items failed")));
+		}
+		else
+		{
+			// Complete failure - no items traded
+			OnTradeCompleted(false, FText::FromString(TEXT("Trade execution failed")));
+		}
+	}
+
+	return bAllSuccess;
+}
+
+// ========================================================================
+// UI Controls
+// ========================================================================
+
+void UTradingInterfaceWidget::SetCategoryFilter(ETradeItemCategory Category)
+{
+	SelectedCategoryFilter = Category;
+	RefreshMarketDisplay();
 }
 
 void UTradingInterfaceWidget::SetSortMode(const FString& Mode)
 {
 	SortMode = Mode;
-	OnTradeItemsUpdated();
+	RefreshMarketDisplay();
 }
 
 void UTradingInterfaceWidget::ToggleBuySellView()
 {
 	bShowBuyView = !bShowBuyView;
-	OnTradeItemsUpdated();
-}
-
-TArray<UFactionDataAsset*> UTradingInterfaceWidget::GetSuggestedTradeRoutes() const
-{
-	TArray<UFactionDataAsset*> SuggestedFactions;
-
-	// Placeholder for trade route suggestions
-	// In full implementation:
-	// 1. Analyze items in cart
-	// 2. Find factions with high demand for those items
-	// 3. Calculate profitability
-	// 4. Return sorted list of best trade destinations
-
-	return SuggestedFactions;
-}
-
-void UTradingInterfaceWidget::CloseInterface()
-{
 	ClearCart();
-	RemoveFromParent();
+	RefreshMarketDisplay();
 }
 
-void UTradingInterfaceWidget::RefreshAvailableItems()
+void UTradingInterfaceWidget::SetSelectedItem(UTradeItemDataAsset* Item)
 {
-	if (!TradePartnerFaction)
+	SelectedItem = Item;
+}
+
+// ========================================================================
+// Private Helper Functions
+// ========================================================================
+
+void UTradingInterfaceWidget::InitializeComponents()
+{
+	// Get player controller and pawn
+	APlayerController* PlayerController = GetOwningPlayer();
+	if (!PlayerController)
 	{
 		return;
 	}
 
-	// Placeholder for item refresh logic
-	// In full implementation:
-	// 1. Query faction's available trade items
-	// 2. Update quantities based on supply/demand
-	// 3. Recalculate prices
-	// 4. Fire update event
-
-	OnTradeItemsUpdated();
-}
-
-float UTradingInterfaceWidget::GetFactionPriceModifier() const
-{
-	if (!TradePartnerFaction)
+	APawn* PlayerPawn = PlayerController->GetPawn();
+	if (!PlayerPawn)
 	{
-		return 1.0f;
+		return;
 	}
 
-	// Placeholder for faction relationship price modifier
-	// In full implementation:
-	// 1. Get player's reputation with faction
-	// 2. Calculate modifier based on relationship
-	// 3. Return multiplier (0.5 to 1.5 range typical)
+	// Find player trader component
+	PlayerTrader = PlayerPawn->FindComponentByClass<UPlayerTraderComponent>();
 
-	return 1.0f; // Neutral by default
+	// Find cargo component
+	PlayerCargo = PlayerPawn->FindComponentByClass<UCargoComponent>();
+
+	// Get economy manager subsystem
+	if (GetWorld() && GetWorld()->GetGameInstance())
+	{
+		EconomyManager = GetWorld()->GetGameInstance()->GetSubsystem<UEconomyManager>();
+	}
+}
+
+void UTradingInterfaceWidget::RefreshMarketDisplay()
+{
+	if (!CurrentMarket)
+	{
+		return;
+	}
+
+	// Fire update event for Blueprint to rebuild UI
+	OnMarketInventoryUpdated();
+}
+
+void UTradingInterfaceWidget::UpdatePlayerState()
+{
+	if (!PlayerTrader || !PlayerCargo)
+	{
+		return;
+	}
+
+	// Update credits display
+	OnCreditsUpdated(PlayerTrader->GetCredits());
+
+	// Update cargo space display
+	float UsedSpace, TotalSpace, AvailableSpace;
+	GetCargoSpaceInfo(UsedSpace, TotalSpace, AvailableSpace);
+	OnCargoSpaceUpdated(UsedSpace, TotalSpace);
+}
+
+void UTradingInterfaceWidget::BindComponentEvents()
+{
+	if (!PlayerTrader || !PlayerCargo)
+	{
+		return;
+	}
+
+	// Bind to trader events
+	PlayerTrader->OnCreditsChanged.AddDynamic(this, &UTradingInterfaceWidget::OnPlayerCreditsChanged);
+
+	// Bind to cargo events
+	PlayerCargo->OnCargoAdded.AddDynamic(this, &UTradingInterfaceWidget::OnPlayerCargoChanged);
+	PlayerCargo->OnCargoRemoved.AddDynamic(this, &UTradingInterfaceWidget::OnPlayerCargoChanged);
+}
+
+void UTradingInterfaceWidget::UnbindComponentEvents()
+{
+	if (PlayerTrader)
+	{
+		PlayerTrader->OnCreditsChanged.RemoveDynamic(this, &UTradingInterfaceWidget::OnPlayerCreditsChanged);
+	}
+
+	if (PlayerCargo)
+	{
+		PlayerCargo->OnCargoAdded.RemoveDynamic(this, &UTradingInterfaceWidget::OnPlayerCargoChanged);
+		PlayerCargo->OnCargoRemoved.RemoveDynamic(this, &UTradingInterfaceWidget::OnPlayerCargoChanged);
+	}
+}
+
+void UTradingInterfaceWidget::OnPlayerCreditsChanged(int32 NewCredits, int32 ChangeAmount)
+{
+	OnCreditsUpdated(NewCredits);
+}
+
+void UTradingInterfaceWidget::OnPlayerCargoChanged(UTradeItemDataAsset* Item, int32 Quantity)
+{
+	float UsedSpace, TotalSpace, AvailableSpace;
+	GetCargoSpaceInfo(UsedSpace, TotalSpace, AvailableSpace);
+	OnCargoSpaceUpdated(UsedSpace, TotalSpace);
 }
