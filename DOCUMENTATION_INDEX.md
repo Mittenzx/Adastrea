@@ -133,14 +133,11 @@
 | **[FREE_LOOK_README.md](docs/development/FREE_LOOK_README.md)** | Free look camera system |
 
 ### Roadmaps
+**Note**: Consolidated to single ROADMAP.md focused on Trade Simulator MVP (Dec 29, 2025). Area-specific roadmaps removed.
+
 | File | Purpose |
 |------|---------|
-| **[ROADMAP_CONTENT_CREATION.md](docs/development/ROADMAP_CONTENT_CREATION.md)** | Content creation roadmap |
-| **[ROADMAP_CORE_SYSTEMS.md](docs/development/ROADMAP_CORE_SYSTEMS.md)** | Core systems roadmap |
-| **[ROADMAP_ECONOMY_TRADING.md](docs/development/ROADMAP_ECONOMY_TRADING.md)** | Economy and trading roadmap |
-| **[ROADMAP_STATION_PLAYER.md](docs/development/ROADMAP_STATION_PLAYER.md)** | Station and player systems roadmap |
-| **[ROADMAP_TECHNICAL.md](docs/development/ROADMAP_TECHNICAL.md)** | Technical infrastructure roadmap |
-| **[ROADMAP_UPDATE_GUIDELINES.md](docs/development/ROADMAP_UPDATE_GUIDELINES.md)** | How to update roadmaps |
+| **[ROADMAP.md](ROADMAP.md)** | Single MVP-focused roadmap (12-week Trade Simulator) |
 
 ---
 

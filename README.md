@@ -346,7 +346,7 @@ All generated content is saved as YAML files compatible with the existing Data A
 **Current Status**: Alpha 1.0.0-alpha - Phase 4 (Gameplay & Polish) in progress  
 **Next Milestone**: Phase 4 completion and Phase 5 (Content & Beta) - 2026
 
-**📝 Contributing to the Roadmap**: When submitting PRs that affect project milestones or system status, please update ROADMAP.md following the [Roadmap Update Guidelines](ROADMAP_UPDATE_GUIDELINES.md).
+**📝 Contributing to the Roadmap**: When submitting PRs that affect project milestones or system status, please update ROADMAP.md.
 
 ## Fast-Forward Content Creation
 
@@ -869,7 +869,6 @@ Create Widget Blueprints based on `UniverseMapWidget` and `SectorMapWidget` clas
 ### Project Planning
 
 - **[Project Roadmap](ROADMAP.md)** - Development phases, timelines, and future features
-- **[Roadmap Update Guidelines](ROADMAP_UPDATE_GUIDELINES.md)** - When and how to update the roadmap
 - **[Stub and Placeholder Audit](STUB_AND_PLACEHOLDER_AUDIT.md)** - ⭐ Complete audit of stubs, placeholders, and TODOs - realistic assessment of remaining work
 - **[Current Status](CURRENT_STATUS.md)** - Realistic project status assessment (code 85% complete, content 10% complete)
 
