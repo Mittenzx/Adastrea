@@ -11,7 +11,7 @@
 #include "Components/ProgressBar.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerController.h"
-#include "Public/AdastreaLog.h"
+#include "AdastreaLog.h"
 #include "StationEditor/StationBuildPreview.h"
 #include "InputCoreTypes.h"
 

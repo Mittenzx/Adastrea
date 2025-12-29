@@ -1,6 +1,6 @@
 // Copyright (c) 2025 Mittenzx. Licensed under MIT.
 
-#include "Projectile.h"
+#include "Combat/Projectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
