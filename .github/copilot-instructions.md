@@ -124,15 +124,25 @@ private:
 
 #### UPROPERTY Best Practices
 
-- Use `EditAnywhere, BlueprintReadWrite` for designer-editable runtime values
-- Use `EditAnywhere, BlueprintReadOnly` for designer-set configuration
-- Use `VisibleAnywhere, BlueprintReadOnly` for read-only display values
+**Configuration Properties** (set in editor, don't change at runtime):
+- Use `EditAnywhere, BlueprintReadOnly` for component settings and default values
+- Example: `UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Config")` for MaxHealth, WeaponRange, etc.
+
+**Runtime State** (changes during gameplay):
+- Use `VisibleAnywhere, BlueprintReadOnly` for read-only runtime state
+- Example: `UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="State")` for CurrentHealth, AmmoCount, etc.
+- Use `BlueprintReadWrite` **only** when Blueprints need to modify values at runtime (rare)
+- Example: `UPROPERTY(BlueprintReadWrite, Category="Runtime")` for player-controlled toggles
+
+**General Best Practices**:
 - Always specify a `Category` for organization
 - Use `meta=` tags for constraints:
   - `ClampMin`, `ClampMax` for numeric ranges
   - `UIMin`, `UIMax` for slider ranges
   - `MultiLine=true` for text areas
 - Document complex properties with tooltips
+
+> **Note**: PR #370 converted component configuration properties from `BlueprintReadWrite` to `BlueprintReadOnly` following UE5 best practices. Configuration set in editor should not be modifiable at runtime unless intentional.
 
 #### UFUNCTION Best Practices
 

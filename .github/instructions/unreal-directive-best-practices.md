@@ -182,10 +182,15 @@ UFactionDataAsset* InternalFactionData;  // ❌ DANGEROUS!
 UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Stats")
 float CurrentHealth;
 
-// Editable in editor, Blueprint read/write, with constraints
-UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", 
+// Editable in editor, Blueprint read access only (preferred for configuration)
+UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement", 
     meta=(ClampMin="0.0", ClampMax="1000.0", UIMin="0.0", UIMax="1000.0"))
 float MaxSpeed;
+
+// Blueprint read/write (only if runtime modification is required)
+// Note: After PR #370, prefer BlueprintReadOnly for configuration properties
+UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Runtime")
+bool bRuntimeToggle;
 
 // Instance editable only (not default), with tooltip
 UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="Runtime", 
@@ -255,12 +260,20 @@ public:
     }
 };
 
-// ❌ AVOID: Direct public access
+// ❌ AVOID: Direct public access with BlueprintReadWrite for configuration
 class UMyComponent : public UActorComponent
 {
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
-    float MaxValue;  // No validation, no encapsulation
+    float MaxValue;  // No validation, no encapsulation, mutable at runtime
+};
+
+// ✅ BETTER: Use BlueprintReadOnly for configuration (PR #370 pattern)
+class UMyComponent : public UActorComponent
+{
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Config")
+    float MaxValue;  // Set in editor, read-only at runtime
 };
 ```
 

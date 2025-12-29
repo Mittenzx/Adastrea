@@ -548,20 +548,20 @@ public:
     virtual void Initialize(FSubsystemCollectionBase& Collection) override;
     virtual void Deinitialize() override;
 
-    // All markets in game
-    UPROPERTY(BlueprintReadWrite, Category="Economy")
+    // All markets in game (runtime state)
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Economy")
     TArray<UMarketDataAsset*> ActiveMarkets;
 
-    // Game time tracking (hours)
-    UPROPERTY(BlueprintReadWrite, Category="Economy")
+    // Game time tracking (hours) (runtime state)
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Economy")
     float CurrentGameTime;
 
-    // Time speed multiplier
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Economy")
+    // Time speed multiplier (configuration)
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Economy")
     float TimeScale;
 
-    // Update interval (real seconds)
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Economy")
+    // Update interval (real seconds) (configuration)
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Economy")
     float UpdateInterval;
 
     /**

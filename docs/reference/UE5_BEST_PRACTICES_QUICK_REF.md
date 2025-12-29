@@ -31,18 +31,20 @@ TObjectPtr<UDataAsset> MyData;
 
 ### Configuration vs Runtime Properties
 ```cpp
-// Configuration (set in editor only)
+// Configuration (set in editor only - most common case)
 UPROPERTY(EditAnywhere, BlueprintReadOnly)
 float MaxHealth;
 
-// Runtime state (changes during gameplay)
+// Runtime state (read-only, changes during gameplay)
 UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 float CurrentHealth;
 
-// Runtime modifiable (only if truly needed)
-UPROPERTY(EditAnywhere, BlueprintReadWrite)
+// Runtime modifiable (only if Blueprints truly need write access - rare)
+UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Runtime")
 bool bShieldsActive;
 ```
+
+> **Best Practice (PR #370)**: Component configuration properties should use `BlueprintReadOnly`. Properties set in editor should not be modifiable at runtime unless there's a specific design need.
 
 ### Optional References
 ```cpp
