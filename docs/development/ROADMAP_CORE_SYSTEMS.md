@@ -1,16 +1,35 @@
 # Core Systems Roadmap
 
-**Part of**: [Main Project Roadmap](ROADMAP.md)  
-**Last Updated**: December 20, 2025  
-**Status**: Active Development
+**Part of**: [Main Project Roadmap](../../ROADMAP.md)  
+**Last Updated**: December 29, 2025  
+**Status**: ⏸️ **PAUSED** - Trade Simulator MVP Focus
+
+> **⚠️ MVP PIVOT (Dec 24, 2025)**: Core systems work is paused. Only Ship and Station systems are MVP-relevant. All other systems (AI, Combat, Navigation, Quest, Exploration) are deferred until post-MVP validation.
 
 ---
 
 ## Overview
 
-This roadmap covers the core gameplay systems including AI, Combat, Navigation, Quest, and Exploration systems. These systems form the foundation of gameplay mechanics and are mostly code-complete.
+**Current Status**: 
+- Code: 85% Complete (all systems implemented)
+- MVP Subset: Ships (5-6 functions) + Stations (5-6 functions) only
+- Non-MVP Systems: Paused until Week 13+
 
-**Overall Status**: 85% Complete (Code), 10% Complete (Content)
+### MVP-Relevant Systems (Active)
+
+**Ships System**:
+- Status: MVP-critical functions identified (Phase 2.1)
+- Keep: Basic flight, docking, cargo (5-6 functions)
+- Deferred: Customization, modules, particles (80+ functions)
+
+**Stations System**:
+- Status: Already lean, MVP-ready
+- Keep: Docking, market access (5-6 functions)
+- Deferred: Module construction (most functions)
+
+### Non-MVP Systems (Deferred)
+
+All systems below are **paused** until Trade Simulator MVP validation complete:
 
 ---
 
@@ -29,24 +48,20 @@ This roadmap covers the core gameplay systems including AI, Combat, Navigation, 
 ## AI System
 
 **Location**: `Source/Adastrea/AI/`  
-**Status**: ✅ 75% Complete  
-**Documentation**: [AI Quick Start](Assets/AI_QUICK_START.md), [AI Setup Guide](Assets/AISystemSetupGuide.md)
+**Status**: ⏸️ **DEFERRED** - Post-MVP Only  
+**Documentation**: [AI Quick Start](Assets/AI_QUICK_START.md)
 
-### Current State
+> **MVP Note**: No AI in Trade Simulator MVP. Economy simulation only (EconomyManager handles basic supply/demand). Full AI deferred to post-MVP.
 
-#### ✅ Completed (C++)
-- **NPCLogicBase**: Base class with BlueprintNativeEvent pattern
-- **FactionLogic**: Strategic AI for faction decisions
-- **PersonnelLogic**: Individual crew AI with 8 personality dispositions
-- Blueprint exposure for all decision functions
-- Social relationship simulation
-- Peaceful early-game AI priorities
+### Deferred Components
 
-#### ❌ Missing (Content)
-- Blueprint implementations of AI behaviors
-- Data Assets for AI configurations
-- Test scenarios for AI behaviors
-- Balance tuning for AI decision weights
+- ❌ NPCLogicBase (not needed for MVP)
+- ❌ FactionLogic (basic faction pricing only in MVP)
+- ❌ PersonnelLogic (no crew in MVP)
+- ❌ AI trader behaviors (deferred)
+- ❌ Social relationships (deferred)
+
+**Resume**: Post-MVP validation (Week 13+)
 
 ### Roadmap
 

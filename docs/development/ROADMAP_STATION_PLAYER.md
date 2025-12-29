@@ -1,16 +1,35 @@
 # Station & Player Systems Roadmap
 
-**Part of**: [Main Project Roadmap](ROADMAP.md)  
-**Last Updated**: December 20, 2025  
-**Status**: Active Development
+**Part of**: [Main Project Roadmap](../../ROADMAP.md)  
+**Last Updated**: December 29, 2025  
+**Status**: ⏸️ **MOSTLY DEFERRED** - Only Basic Stations in MVP
+
+> **⚠️ MVP PIVOT (Dec 24, 2025)**: Player progression, inventory complexity, and station construction are deferred. MVP uses minimal station functionality (docking + trading only).
 
 ---
 
 ## Overview
 
-This roadmap covers Space Stations (construction system), Player Systems (progression, inventory, customization), and UI/HUD systems. These systems provide the player-facing gameplay experience.
+**Current Status**: 
+- Code: 80% Complete
+- MVP Subset: Stations (5-6 functions for docking/markets only)
+- Deferred: Progression, inventory depth, customization, construction UI
 
-**Overall Status**: 80% Complete (Code), 5% Complete (Content)
+### MVP-Relevant Systems
+
+**Space Stations** (Minimal):
+- Keep: Docking access, market references (5-6 functions)
+- Deferred: Module construction, editor UI, customization
+
+**Player Progression** (Minimal):
+- Keep: Credits tracking, basic ship upgrades (cargo capacity)
+- Deferred: Levels, reputation, skill trees, achievements
+
+**HUD** (Minimal):
+- Keep: Credits, cargo space, profit display
+- Deferred: Combat HUD, quest tracker, crew management
+
+### Non-MVP Systems (Deferred)
 
 ---
 

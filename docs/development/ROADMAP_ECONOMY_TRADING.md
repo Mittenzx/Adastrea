@@ -1,16 +1,60 @@
 # Economy & Trading Roadmap
 
-**Part of**: [Main Project Roadmap](ROADMAP.md)  
-**Last Updated**: December 20, 2025  
-**Status**: Active Development
+**Part of**: [Main Project Roadmap](../../ROADMAP.md)  
+**Last Updated**: December 29, 2025  
+**Status**: 🎯 **PRIORITY #1** - Trade Simulator MVP Focus
+
+> **⚠️ MVP PIVOT (Dec 24, 2025)**: This roadmap now focuses exclusively on Trade Simulator MVP content. All non-MVP features are deferred until post-validation.
+
+---
+
+## 🎯 Trade Simulator MVP Focus (12 Weeks)
+
+**Current Week**: Week 1 of 12 (Dec 29 - Jan 4)  
+**Goal**: Playable 30-minute trading demo by Week 12  
+**Scope**: Buy low, sell high, upgrade ship, repeat
+
+### MVP Content Requirements
+
+**Phase 1 (Weeks 1-4)**: Hardcoded Prototype
+- 1 ship (hardcoded stats)
+- 2 stations (Agricultural, Industrial)
+- 3 trade goods (Water, Food, Fuel)
+- Basic trading UI
+- Hardcoded prices
+
+**Phase 2 (Weeks 5-8)**: Structured Version
+- 3 ships (small, medium, large)
+- 5-10 stations
+- 10-20 trade goods
+- Economy manager integration
+- Data Asset-based
+
+**Phase 3 (Weeks 9-12)**: Polished Demo
+- Tutorial/instructions
+- Visual polish
+- Sound effects (basic)
+- 30-minute experience
+
+### What's Deferred (Post-MVP)
+
+- ❌ Trade contracts (quest system)
+- ❌ AI traders (autonomous trading)
+- ❌ Faction diplomacy effects (beyond pricing)
+- ❌ Way system (guild networks)
+- ❌ Complex market simulation
+- ❌ Trade route optimization
 
 ---
 
 ## Overview
 
-This roadmap covers the economic systems including Trading, Markets, Factions, and Way networks (guilds). These systems create the dynamic economy that drives player interaction and emergent gameplay.
+This roadmap covers the economic systems including Trading, Markets, Factions, and Way networks (guilds). 
 
-**Overall Status**: 85% Complete (Code), 5% Complete (Content)
+**Current Status**: 
+- Code: 85% Complete (MVP subset identified via Phase 2.1 analysis)
+- MVP Content: 10% Complete (Week 1 in progress)
+- Post-MVP Content: 0% (Deferred)
 
 ---
 
@@ -28,30 +72,65 @@ This roadmap covers the economic systems including Trading, Markets, Factions, a
 ## Trading System
 
 **Location**: `Source/Adastrea/Trading/`  
-**Status**: ✅ 85% Complete (Code), ❌ 5% Complete (Content)  
-**Documentation**: [Trading System Guide](Assets/TradingSystemGuide.md)
+**Status**: 🎯 **MVP PRIORITY** - 46% Function Reduction Complete (Phase 2.1)  
+**Documentation**: 
+- `docs/systems/TRADING_ARCHITECTURE.md`
+- `docs/mvp/TRADING_MVP_GUIDE.md`
+- `docs/development/PHASE2_TRADING_SYSTEM_CATEGORIZATION.md`
 
-### Current State
+### MVP-Critical Components (Keep)
 
-#### ✅ Completed (C++)
-- TradingComponent for player ships
-- TradeItemDataAsset for all trade goods
-- MarketDataAsset for station markets
-- ContractDataAsset for trade contracts
-- Dynamic supply/demand simulation
-- Price fluctuation based on distance
-- Faction relationship pricing modifiers
-- AI autonomous trading
-- Trade route optimization
+#### ✅ PlayerTraderComponent (11 functions - Perfect Scope)
+- Buy/sell cargo
+- Credits and profit tracking
+- Transaction validation
+- **Status**: No changes needed, perfectly scoped for MVP
 
-#### ❌ Missing (Content)
-- Trade Item Data Assets (~20+ needed)
-- Market Data Assets for stations (~10+ needed)
-- Contract Data Assets (~20+ needed)
-- Trade route configurations
-- Commodity categories and balancing
-- Trade quest content
-- Trade UI widgets
+#### ✅ EconomyManager (7 functions - Clean Design)
+- Market registration
+- Supply/demand updates
+- Price calculations
+- **Status**: Clean subsystem design, no changes needed
+
+#### ✅ MarketDataAsset (6 functions - Well-Balanced)
+- Market configuration
+- Inventory management
+- Price queries
+- **Status**: Well-balanced, no changes needed
+
+#### ✅ CargoComponent (13 → 6-8 functions)
+- Add/remove cargo (MVP-critical)
+- Capacity checks (MVP-critical)
+- ~~5-7 convenience wrappers~~ (removed Dec 27)
+- **Status**: Cleanup complete
+
+#### ⚠️ TradeItemDataAsset (9 → 2-3 functions)
+- Item data (MVP-critical)
+- ~~Logic functions~~ (removed Dec 27, moved to Market)
+- **Status**: Cleanup complete, now data-focused
+
+### Post-MVP Components (Deferred)
+
+#### ⏸️ TradeContractDataAsset (11 functions)
+- Quest system integration
+- **Deferred**: No contracts in MVP
+
+#### ⏸️ AITraderComponent (6-7 functions)
+- Autonomous AI trading
+- **Deferred**: Economy simulation only in MVP
+
+#### ⏸️ TradeTransaction (3-4 functions)
+- Detailed analytics
+- **Deferred**: Basic tracking only in MVP
+
+### Current Week Focus (Week 1)
+
+**Hardcoded Prototype Goals**:
+- [ ] Create 3 hardcoded trade goods (Water, Food, Fuel)
+- [ ] Hardcode prices (Agricultural station cheap, Industrial expensive)
+- [ ] Test buy/sell with PlayerTraderComponent
+- [ ] Verify profit calculation
+- [ ] No Data Assets yet (Week 5+)
 
 ### Roadmap
 

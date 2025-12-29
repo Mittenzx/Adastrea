@@ -1,18 +1,73 @@
 # Content Creation Roadmap
 
-**Part of**: [Main Project Roadmap](ROADMAP.md)  
-**Last Updated**: December 20, 2025  
-**Status**: Critical Priority - Content Creation Phase
+**Part of**: [Main Project Roadmap](../../ROADMAP.md)  
+**Last Updated**: December 29, 2025  
+**Status**: 🎯 **PRIORITY #1** - Trade Simulator MVP Content Focus
 
-> **Recent Updates**: December 20, 2025 - Added plugin-assisted workflow capabilities
+> **⚠️ MVP PIVOT (Dec 24, 2025)**: Content creation now focused exclusively on Trade Simulator MVP. All non-MVP content is deferred.
+
+---
+
+## 🎯 Trade Simulator MVP Content (12 Weeks)
+
+**Current Week**: Week 1 of 12 (Dec 29 - Jan 4)  
+**Approach**: Hardcode first, structure later (Data Assets in Week 5+)
+
+### Phase 1: Hardcoded Prototype (Weeks 1-4)
+
+**Week 1 Goals** ← **WE ARE HERE**:
+- [ ] BP_SimpleTradingShip (hardcoded stats)
+- [ ] 2 station actors (simple geometry)
+- [ ] 3 trade goods (hardcoded in Blueprint Map)
+- [ ] Basic docking proximity check
+- [ ] Credits variable tracking
+
+**Weeks 2-3**: Trading UI + Gameplay Loop
+- [ ] WBP_SimpleHUD (credits, cargo, profit)
+- [ ] WBP_TradingInterface (buy/sell screen)
+- [ ] L_TradingTest (test level with 2 stations)
+- [ ] Complete buy → fly → sell loop
+
+**Week 4**: Playtesting & Validation
+- 5-10 external playtesters
+- 60%+ "fun" target
+- GO/NO-GO decision
+
+### Phase 2: Structured Version (Weeks 5-8)
+
+**Only if Week 4 GO Decision**:
+- [ ] Convert to Data Assets (3 ships, 10-20 goods)
+- [ ] Create BP_TradingStation (references MarketDataAsset)
+- [ ] Economy manager integration
+- [ ] Ship upgrade Data Assets
+
+### Phase 3: Polish (Weeks 9-12)
+
+**Only if Week 8 validation passed**:
+- [ ] Tutorial UI
+- [ ] Visual polish
+- [ ] Sound effects (basic)
+- [ ] 30-minute demo map
+
+### What's Deferred (Post-MVP)
+
+- ❌ Combat UI and maps
+- ❌ Faction/personnel Data Assets
+- ❌ Station construction UI
+- ❌ Quest/contract UI
+- ❌ Advanced customization
+- ❌ All 100+ planned Data Assets (except 3-20 trading items)
 
 ---
 
 ## Overview
 
-This roadmap focuses on creating the editor content needed to make Adastrea playable. While C++ code is 85% complete, editor content is only 10% complete. **This is the current bottleneck preventing playability.**
+**Critical Reality**: Trade Simulator MVP requires minimal content:
+- Phase 1: 6 assets (1 ship Blueprint, 2 stations, 3 widgets, 1 map)
+- Phase 2: 30-50 assets (Data Assets, expanded UI)
+- Phase 3: Polish only
 
-**Critical Reality**: The game cannot be played without substantial content creation in the Unreal Editor.
+**Post-MVP**: Full 300+ asset content creation resumes if validation successful.
 
 ---
 
