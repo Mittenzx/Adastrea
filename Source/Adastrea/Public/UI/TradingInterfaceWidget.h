@@ -10,28 +10,34 @@
 // Forward declarations
 class UTradeTransaction;
 class UFactionDataAsset;
+class UMarketDataAsset;
+class UPlayerTraderComponent;
+class UCargoComponent;
+class UEconomyManager;
 
 /**
- * Trading Interface Widget for improved trade UI
+ * Trading Interface Widget for MVP Trade Simulator
  * 
- * This enhanced trading widget provides:
- * - Price comparison and history tracking
- * - Bulk trading operations
- * - Quick filters and sorting
- * - Trade route suggestions
- * - Market trend indicators
+ * This trading widget provides essential features for the MVP:
+ * - View market inventory with prices
+ * - Buy/Sell toggle interface
+ * - Shopping cart/transaction system
+ * - Player credits and cargo space tracking
+ * - Profit calculation
+ * - Real-time price updates from EconomyManager
  * 
  * Usage:
- * 1. Create a Blueprint Widget based on this class
- * 2. Design the enhanced UI in UMG
- * 3. Call SetTradePartner to initiate trading
- * 4. Use filtering and sorting functions for better UX
+ * 1. Create a Blueprint Widget based on this class (WBP_TradingUI)
+ * 2. Design the UI in UMG with text blocks, buttons, and lists
+ * 3. Call OpenMarket to initiate trading at a station
+ * 4. Widget automatically connects to player's trader and cargo components
  * 
- * Example:
- * - Player initiates trade with station/NPC
- * - Widget displays available items with trends
- * - Player uses bulk operations for efficiency
- * - Automatic price updates based on faction relations
+ * MVP Requirements Met:
+ * - Buy low, sell high core loop
+ * - Clear price comparison
+ * - Cargo capacity visualization
+ * - Profit tracking
+ * - Simple, functional UI
  */
 UCLASS()
 class ADASTREA_API UTradingInterfaceWidget : public UUserWidget
@@ -46,16 +52,24 @@ protected:
 	virtual void NativeDestruct() override;
 
 	// ========================================================================
-	// Trade Partner
+	// Market & Components
 	// ========================================================================
 
-	/** The faction we're trading with */
+	/** The market we're trading with */
 	UPROPERTY(BlueprintReadOnly, Category = "Trading")
-	UFactionDataAsset* TradePartnerFaction;
+	TObjectPtr<UMarketDataAsset> CurrentMarket;
 
-	/** Trade partner's available items */
+	/** Player's trader component */
 	UPROPERTY(BlueprintReadOnly, Category = "Trading")
-	TArray<UTradeItemDataAsset*> AvailableItems;
+	TObjectPtr<UPlayerTraderComponent> PlayerTrader;
+
+	/** Player's cargo component */
+	UPROPERTY(BlueprintReadOnly, Category = "Trading")
+	TObjectPtr<UCargoComponent> PlayerCargo;
+
+	/** Economy manager subsystem */
+	UPROPERTY(BlueprintReadOnly, Category = "Trading")
+	TObjectPtr<UEconomyManager> EconomyManager;
 
 	// ========================================================================
 	// UI State
@@ -65,100 +79,159 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Trading")
 	FString SelectedCategory;
 
-	/** Current sort mode (Name, Price, Quantity, etc.) */
+	/** Current sort mode (Name, Price, Stock) */
 	UPROPERTY(BlueprintReadWrite, Category = "Trading")
 	FString SortMode;
 
-	/** Whether to show buy or sell view */
+	/** Whether showing buy or sell view */
 	UPROPERTY(BlueprintReadWrite, Category = "Trading")
 	bool bShowBuyView;
 
-	/** Items in the current transaction cart */
+	/** Items in the current shopping cart */
 	UPROPERTY(BlueprintReadWrite, Category = "Trading")
-	TMap<UTradeItemDataAsset*, int32> TransactionCart;
+	TMap<UTradeItemDataAsset*, int32> ShoppingCart;
+
+	/** Selected item for detail view (optional) */
+	UPROPERTY(BlueprintReadWrite, Category = "Trading")
+	TObjectPtr<UTradeItemDataAsset> SelectedItem;
 
 	// ========================================================================
 	// Blueprint Events
 	// ========================================================================
 
 	/**
-	 * Event fired when trade items are updated
+	 * Event fired when market inventory is updated
 	 */
 	UFUNCTION(BlueprintImplementableEvent, Category = "Trading")
-	void OnTradeItemsUpdated();
+	void OnMarketInventoryUpdated();
 
 	/**
-	 * Event fired when a trade is completed
-	 * @param bSuccess Whether the trade was successful
-	 */
-	UFUNCTION(BlueprintImplementableEvent, Category = "Trading")
-	void OnTradeCompleted(bool bSuccess);
-
-	/**
-	 * Event fired when cart contents change
+	 * Event fired when shopping cart contents change
 	 */
 	UFUNCTION(BlueprintImplementableEvent, Category = "Trading")
 	void OnCartUpdated();
 
+	/**
+	 * Event fired when a trade transaction completes
+	 * @param bSuccess Whether the trade was successful
+	 * @param ErrorMessage Error message if failed
+	 */
+	UFUNCTION(BlueprintImplementableEvent, Category = "Trading")
+	void OnTradeCompleted(bool bSuccess, const FText& ErrorMessage);
+
+	/**
+	 * Event fired when player credits change
+	 * @param NewCredits Updated credit amount
+	 */
+	UFUNCTION(BlueprintImplementableEvent, Category = "Trading")
+	void OnCreditsUpdated(int32 NewCredits);
+
+	/**
+	 * Event fired when cargo space changes
+	 * @param UsedSpace Current used space
+	 * @param TotalSpace Total cargo capacity
+	 */
+	UFUNCTION(BlueprintImplementableEvent, Category = "Trading")
+	void OnCargoSpaceUpdated(float UsedSpace, float TotalSpace);
+
 public:
 	// ========================================================================
-	// Blueprint Functions
+	// Blueprint Functions - Market Setup
 	// ========================================================================
 
 	/**
-	 * Set the trading partner faction
-	 * @param Faction The faction to trade with
+	 * Open trading interface for a specific market
+	 * Automatically finds player's trader and cargo components
+	 * @param Market The market to trade with
+	 * @return True if successfully opened
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Trading")
-	void SetTradePartner(UFactionDataAsset* Faction);
+	bool OpenMarket(UMarketDataAsset* Market);
 
 	/**
-	 * Get all available items filtered by category
+	 * Close the trading interface
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Trading")
+	void CloseMarket();
+
+	// ========================================================================
+	// Blueprint Functions - Market Information
+	// ========================================================================
+
+	/**
+	 * Get all available items in current market
+	 * @return Array of market inventory entries
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Trading")
+	TArray<FMarketInventoryEntry> GetAvailableItems() const;
+
+	/**
+	 * Get filtered items by category
 	 * @param Category Category to filter by (empty = all)
-	 * @return Array of trade items
+	 * @return Array of filtered inventory entries
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Trading")
-	TArray<UTradeItemDataAsset*> GetFilteredItems(const FString& Category) const;
+	TArray<FMarketInventoryEntry> GetFilteredItems(ETradeItemCategory Category) const;
 
 	/**
-	 * Get sorted items based on current sort mode
-	 * @return Sorted array of trade items
-	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Trading")
-	TArray<UTradeItemDataAsset*> GetSortedItems() const;
-
-	/**
-	 * Get the price for an item considering faction relations
+	 * Get price for an item at current market
 	 * @param Item The item to price
-	 * @param Quantity Number of items
-	 * @param bBuying Whether player is buying (true) or selling (false)
-	 * @return Final price
+	 * @param Quantity Number of units
+	 * @return Total price for quantity
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Trading")
-	float GetItemPrice(const UTradeItemDataAsset* Item, int32 Quantity, bool bBuying) const;
+	int32 GetItemPrice(UTradeItemDataAsset* Item, int32 Quantity) const;
 
 	/**
-	 * Get price trend indicator for an item (-1 = down, 0 = stable, 1 = up)
-	 * @param Item The item to check
-	 * @return Price trend indicator
+	 * Get player's current credits
+	 * @return Player credits
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Trading")
-	int32 GetPriceTrend(UTradeItemDataAsset* Item) const;
+	int32 GetPlayerCredits() const;
 
 	/**
-	 * Add item to transaction cart
+	 * Get player's cargo space info
+	 * @param OutUsedSpace Used cargo space
+	 * @param OutTotalSpace Total cargo capacity
+	 * @param OutAvailableSpace Available cargo space
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Trading")
+	void GetCargoSpaceInfo(float& OutUsedSpace, float& OutTotalSpace, float& OutAvailableSpace) const;
+
+	/**
+	 * Get player's current profit
+	 * @return Total profit (current credits - starting credits)
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Trading")
+	int32 GetPlayerProfit() const;
+
+	// ========================================================================
+	// Blueprint Functions - Shopping Cart
+	// ========================================================================
+
+	/**
+	 * Add item to shopping cart
 	 * @param Item The item to add
-	 * @param Quantity Number of items to add
+	 * @param Quantity Number of units to add
+	 * @return True if successfully added to cart
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Trading")
-	void AddToCart(UTradeItemDataAsset* Item, int32 Quantity);
+	bool AddToCart(UTradeItemDataAsset* Item, int32 Quantity);
 
 	/**
-	 * Remove item from transaction cart
+	 * Remove item from shopping cart
 	 * @param Item The item to remove
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Trading")
 	void RemoveFromCart(UTradeItemDataAsset* Item);
+
+	/**
+	 * Update quantity of item in cart
+	 * @param Item The item to update
+	 * @param NewQuantity New quantity (0 removes item)
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Trading")
+	void UpdateCartQuantity(UTradeItemDataAsset* Item, int32 NewQuantity);
 
 	/**
 	 * Clear all items from cart
@@ -167,29 +240,77 @@ public:
 	void ClearCart();
 
 	/**
-	 * Get total value of items in cart
-	 * @return Total cart value
+	 * Get total cost/value of items in cart
+	 * @return Total cart value in credits
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Trading")
-	float GetCartTotal() const;
+	int32 GetCartTotal() const;
 
 	/**
-	 * Execute the trade transaction
+	 * Get number of items in cart
+	 * @return Item count in cart
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Trading")
+	int32 GetCartItemCount() const;
+
+	/**
+	 * Check if cart is empty
+	 * @return True if cart has no items
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Trading")
+	bool IsCartEmpty() const { return ShoppingCart.Num() == 0; }
+
+	// ========================================================================
+	// Blueprint Functions - Transaction Validation
+	// ========================================================================
+
+	/**
+	 * Check if player can afford current cart
+	 * @return True if player has enough credits
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Trading")
+	bool CanAffordCart() const;
+
+	/**
+	 * Check if player has enough cargo space for cart
+	 * @return True if enough space available
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Trading")
+	bool HasCargoSpaceForCart() const;
+
+	/**
+	 * Validate transaction can complete
+	 * @param OutErrorMessage Error message if validation fails
+	 * @return True if transaction is valid
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Trading")
+	bool ValidateTransaction(FText& OutErrorMessage) const;
+
+	// ========================================================================
+	// Blueprint Functions - Execute Trade
+	// ========================================================================
+
+	/**
+	 * Execute the current shopping cart transaction
 	 * @return True if trade was successful
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Trading")
 	bool ExecuteTrade();
 
+	// ========================================================================
+	// Blueprint Functions - UI Controls
+	// ========================================================================
+
 	/**
 	 * Set category filter
-	 * @param Category Category name
+	 * @param Category Category to filter by
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Trading")
-	void SetCategoryFilter(const FString& Category);
+	void SetCategoryFilter(ETradeItemCategory Category);
 
 	/**
 	 * Set sort mode
-	 * @param Mode Sort mode string (Name, Price, Quantity)
+	 * @param Mode Sort mode string (Name, Price, Stock)
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Trading")
 	void SetSortMode(const FString& Mode);
@@ -201,25 +322,36 @@ public:
 	void ToggleBuySellView();
 
 	/**
-	 * Get suggested trade routes based on current items
-	 * @return Array of suggested destination factions
+	 * Set selected item for detail view
+	 * @param Item The item to select
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Trading")
-	TArray<UFactionDataAsset*> GetSuggestedTradeRoutes() const;
-
-	/**
-	 * Close the trading interface
-	 */
-	UFUNCTION(BlueprintCallable, Category = "Trading")
-	void CloseInterface();
+	void SetSelectedItem(UTradeItemDataAsset* Item);
 
 private:
-	/** Refresh available items from trade partner */
-	void RefreshAvailableItems();
+	/** Initialize component references */
+	void InitializeComponents();
 
-	/** Calculate price modifier based on faction relations */
-	float GetFactionPriceModifier() const;
+	/** Refresh market inventory display */
+	void RefreshMarketDisplay();
 
-	/** Timer handle for price updates */
-	FTimerHandle PriceUpdateTimer;
+	/** Update UI with current player state */
+	void UpdatePlayerState();
+
+	/** Bind to component events */
+	void BindComponentEvents();
+
+	/** Unbind from component events */
+	void UnbindComponentEvents();
+
+	/** Timer handle for periodic updates */
+	FTimerHandle UpdateTimer;
+
+	/** Callback for player credits changed */
+	UFUNCTION()
+	void OnPlayerCreditsChanged(int32 NewCredits, int32 ChangeAmount);
+
+	/** Callback for cargo changed */
+	UFUNCTION()
+	void OnPlayerCargoChanged(UTradeItemDataAsset* Item, int32 Quantity);
 };
