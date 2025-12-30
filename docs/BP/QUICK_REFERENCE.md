@@ -51,9 +51,20 @@ All diagrams are in `../reference/images/blueprints/` folder:
 | `gamemode_setup.svg` | Game initialization flow | BP_SpaceGameMode |
 | `player_ship_beginplay.svg` | Ship setup | BP_PlayerShip |
 | `trading_ui_open.svg` | Open market flow | WBP_TradingUI |
+| `market_item_display.svg` | Market inventory population | WBP_TradingUI |
+| `buy_sell_toggle.svg` | Buy/Sell mode toggle | WBP_TradingUI |
+| `add_to_cart_flow.svg` | Add to cart validation | WBP_TradingUI |
+| `execute_trade_flow.svg` | Execute trade transaction | WBP_TradingUI |
 | `buy_validation_flow.svg` | Purchase validation | WBP_TradingUI |
 | `station_module_attachment.svg` | Module attachment | BP_SpaceStation_Main |
 | `npc_ai_decision.svg` | AI state machine | BP_Ship_NPC_Trader |
+
+**Basic Node Examples:**
+- `event_node.svg` - Event node example
+- `function_node.svg` - Function node example
+- `branch_node.svg` - Branch (if/else) node example
+- `foreach_loop.svg` - ForEach loop node example
+- `complete_flow.svg` - Complete multi-node flow example
 
 ---
 
