@@ -46,6 +46,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Blueprint Documentation SVG Diagrams** (2025-12-30)
+  - **4 New Trading System Flow Diagrams**:
+    - `buy_sell_toggle.svg` - Buy/Sell mode toggle flow showing both buttons call `ToggleBuySellView()`
+    - `add_to_cart_flow.svg` - Complete add-to-cart validation with 3 branches (stock, credits, cargo)
+    - `execute_trade_flow.svg` - Transaction execution with validation and error handling
+    - `market_item_display.svg` - Market inventory population using ForEach loop
+  - **Extended Blueprint Image Generator**:
+    - Added 4 new diagram generation functions to `Tools/generate_blueprint_images.py`
+    - All diagrams use official Unreal Engine color scheme
+    - Consistent styling with existing diagrams
+  - **Total Blueprint SVG Diagrams**: Now 15 (10 Blueprint flows + 5 node examples)
+  - **Documentation Updates**:
+    - `docs/BP/WBP_TradingUI.md` - Added 4 new diagram sections with flow explanations
+    - `docs/BP/QUICK_REFERENCE.md` - Updated SVG diagram reference table
+
+### Fixed
+
+- **Blueprint Documentation Function Reference** (2025-12-30)
+  - Fixed incorrect function reference in `docs/BP/WBP_TradingUI.md`
+  - Changed `SetTradingMode(Buy)` to `ToggleBuySellView()` to match actual C++ implementation
+  - Added clarification note explaining how the toggle function works
+  - Verified all 23 BlueprintCallable functions in `UTradingInterfaceWidget` against documentation
+  - No other incorrect function references found in Blueprint documentation
+
 - **Trading UI System - Complete C++ Implementation & Documentation** (2025-12-29)
   - **C++ Trading Widget** - Full-featured `UTradingInterfaceWidget` implementation
     - Complete integration with EconomyManager, PlayerTraderComponent, CargoComponent

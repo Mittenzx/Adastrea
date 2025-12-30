@@ -39,6 +39,44 @@
 4. **Create Trade Item Widget** - Creates WBP_TradeItemRow for each item
 5. **Add Child to ScrollBox** - Displays item in the list
 
+### Market Item Display Flow
+
+![Market Item Display Flow](../reference/images/blueprints/market_item_display.svg)
+
+**Flow Explanation:**
+
+1. **EVENT: Open Market** - Market interface opened with market data
+2. **Get Available Items** - Retrieves market inventory array
+3. **ForEach Loop** - Iterates through each inventory entry
+4. **Create Widget** - Creates WBP_TradeItemRow for each item
+5. **Add to ScrollBox** - Populates the item list UI
+
+### Buy/Sell Toggle Flow
+
+![Buy/Sell Toggle Flow](../reference/images/blueprints/buy_sell_toggle.svg)
+
+**Flow Explanation:**
+
+1. **EVENT: Buy Button Clicked** - Player clicks "Buy" button
+2. **ToggleBuySellView** - Switches to buy mode (sets `bShowBuyView = true`)
+3. **EVENT: Sell Button Clicked** - Player clicks "Sell" button
+4. **ToggleBuySellView** - Switches to sell mode (sets `bShowBuyView = false`)
+
+**Note**: Both buttons call the same function which toggles the mode.
+
+### Add to Cart Validation Flow
+
+![Add to Cart Flow](../reference/images/blueprints/add_to_cart_flow.svg)
+
+**Flow Explanation:**
+
+1. **EVENT: Add to Cart** - Player adds item with quantity
+2. **BRANCH: Is Item In Stock?** - Validates market has sufficient stock
+3. **BRANCH: Can Afford?** - Checks player has enough credits
+4. **BRANCH: Has Cargo Space?** - Verifies ship has room for item
+5. **Add to Cart** (Success) - Item added to shopping cart
+6. **Show Error** (Failure) - Display appropriate error message
+
 ### Buy Item Validation Flow
 
 ![Buy Item Validation Flow](../reference/images/blueprints/buy_validation_flow.svg)
@@ -51,6 +89,18 @@
 4. **Branch: Has Cargo Space?** - Checks if ship has room
 5. **Execute Purchase** (Success) - Complete transaction
 6. **Show Error Message** (Failure) - Display reason for failure
+
+### Execute Trade Flow
+
+![Execute Trade Flow](../reference/images/blueprints/execute_trade_flow.svg)
+
+**Flow Explanation:**
+
+1. **EVENT: Complete Trade Clicked** - Player confirms transaction
+2. **Validate Transaction** - Checks cart validity, credits, cargo space
+3. **BRANCH: Transaction Valid?** - Determines if trade can proceed
+4. **Execute Trade** (Success) - Process all items in cart
+5. **On Trade Completed (Error)** (Failure) - Show error message with reason
 
 ---
 
@@ -168,12 +218,14 @@ Canvas Panel (Root)
    ```
    Horizontal Box
    ├── Button: "Buy"
-   │   OnClicked: SetTradingMode(Buy)
-   │   Style: Highlighted when active
+   │   OnClicked: ToggleBuySellView()
+   │   Style: Highlighted when bShowBuyView == true
    └── Button: "Sell"
-       OnClicked: SetTradingMode(Sell)
-       Style: Highlighted when active
+       OnClicked: ToggleBuySellView()
+       Style: Highlighted when bShowBuyView == false
    ```
+   
+   **Note**: `ToggleBuySellView()` switches between buy and sell modes. You can bind button states to the `bShowBuyView` property to highlight the active mode.
 
 3. Add Filters (Optional for MVP):
    - Combo Box for category filtering
