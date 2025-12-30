@@ -26,7 +26,7 @@
 
 ## 🎨 Visual Flow Diagram
 
-![Station Module Attachment Flow](images/station_module_attachment.svg)
+![Station Module Attachment Flow](../reference/images/blueprints/station_module_attachment.svg)
 
 **Flow Explanation:**
 

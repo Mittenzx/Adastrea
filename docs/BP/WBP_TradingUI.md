@@ -29,7 +29,7 @@
 
 ### Open Market Flow
 
-![WBP_TradingUI Open Market Flow](images/trading_ui_open.svg)
+![WBP_TradingUI Open Market Flow](../reference/images/blueprints/trading_ui_open.svg)
 
 **Flow Explanation:**
 
@@ -41,7 +41,7 @@
 
 ### Buy Item Validation Flow
 
-![Buy Item Validation Flow](images/buy_validation_flow.svg)
+![Buy Item Validation Flow](../reference/images/blueprints/buy_validation_flow.svg)
 
 **Flow Explanation:**
 

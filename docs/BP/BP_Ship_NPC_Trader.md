@@ -26,7 +26,7 @@
 
 ## 🎨 Visual Flow Diagram
 
-![NPC AI Decision Flow](images/npc_ai_decision.svg)
+![NPC AI Decision Flow](../reference/images/blueprints/npc_ai_decision.svg)
 
 **Flow Explanation:**
 

@@ -44,7 +44,7 @@ New to the project? Follow this order:
 
 ## 🖼️ SVG Diagrams
 
-All diagrams are in `images/` folder:
+All diagrams are in `../reference/images/blueprints/` folder:
 
 | Diagram | Shows | Used In |
 |---------|-------|---------|

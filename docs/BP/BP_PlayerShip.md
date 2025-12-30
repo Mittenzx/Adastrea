@@ -26,7 +26,7 @@
 
 ## 🎨 Visual Flow Diagram
 
-![BP_PlayerShip BeginPlay Setup](images/player_ship_beginplay.svg)
+![BP_PlayerShip BeginPlay Setup](../reference/images/blueprints/player_ship_beginplay.svg)
 
 **Flow Explanation:**
 

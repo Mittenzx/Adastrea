@@ -25,7 +25,7 @@
 
 ## 🎨 Visual Flow Diagram
 
-![BP_SpaceGameMode Setup Flow](images/gamemode_setup.svg)
+![BP_SpaceGameMode Setup Flow](../reference/images/blueprints/gamemode_setup.svg)
 
 **Flow Explanation:**
 

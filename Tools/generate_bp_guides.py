@@ -387,7 +387,8 @@ def main():
     """Generate all Blueprint guide diagrams"""
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(script_dir)
-    output_dir = os.path.join(project_root, 'docs', 'BP', 'images')
+    # Use official blueprint documentation standard location
+    output_dir = os.path.join(project_root, 'docs', 'reference', 'images', 'blueprints')
     os.makedirs(output_dir, exist_ok=True)
     
     print("Generating comprehensive Blueprint guides for Adastrea MVP...")

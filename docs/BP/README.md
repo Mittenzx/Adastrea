@@ -38,12 +38,12 @@ All guides follow the [official Blueprint documentation standard](../../.github/
    - Player ship spawning
    - Required for game to start
 
-2. **[BP_GameInstance](BP_GameInstance.md)** - Persistent game instance
+2. **BP_GameInstance** _(Coming Soon)_ - Persistent game instance
    - Save/load system
    - Global state management
    - Faction diplomacy tracking
 
-3. **[BP_SpaceshipController](BP_SpaceshipController.md)** - Player controller
+3. **BP_SpaceshipController** _(Coming Soon)_ - Player controller
    - Enhanced input setup
    - HUD management
    - Camera control
@@ -64,7 +64,7 @@ All guides follow the [official Blueprint documentation standard](../../.github/
    - Cart management
    - Validation and error handling
 
-6. **[WBP_TradeItemRow](WBP_TradeItemRow.md)** - Individual item widget
+6. **WBP_TradeItemRow** _(Coming Soon)_ - Individual item widget
    - Item display
    - Quantity selector
    - Add to cart button
@@ -76,7 +76,7 @@ All guides follow the [official Blueprint documentation standard](../../.github/
    - Station stats management
    - Faction integration
 
-8. **[BP_SpaceStationModule](BP_SpaceStationModule.md)** - Station module pattern
+8. **BP_SpaceStationModule** _(Coming Soon)_ - Station module pattern
    - Module types (Docking, Power, Storage, etc.)
    - Attachment validation
    - Modular construction
@@ -95,8 +95,8 @@ All guides follow the [official Blueprint documentation standard](../../.github/
 ```
 Game Framework
 ├── BP_SpaceGameMode (Entry point)
-├── BP_GameInstance (Persistent state)
-└── BP_SpaceshipController (Player input)
+├── BP_GameInstance (Coming Soon - Persistent state)
+└── BP_SpaceshipController (Coming Soon - Player input)
 
 Player Systems
 └── BP_PlayerShip (Main player pawn)
@@ -106,13 +106,13 @@ Player Systems
 
 UI Systems
 ├── WBP_TradingUI (Trading interface)
-│   └── WBP_TradeItemRow (Item widget)
+│   └── WBP_TradeItemRow (Coming Soon - Item widget)
 ├── WBP_SpaceshipHUD (Main HUD)
 └── WBP_StationDockingUI (Docking UI)
 
 World Actors
 ├── BP_SpaceStation_Main (Station core)
-│   └── BP_SpaceStationModule (Modules)
+│   └── BP_SpaceStationModule (Coming Soon - Modules)
 └── BP_Ship_NPC_* (AI ships)
     ├── BP_Ship_NPC_Trader
     ├── BP_Ship_NPC_Fighter
@@ -275,17 +275,17 @@ For the Trade Simulator MVP, implement in this order:
 
 ### Week 1-2: Core Framework
 1. BP_SpaceGameMode
-2. BP_GameInstance
-3. BP_SpaceshipController
+2. BP_GameInstance _(Coming Soon)_
+3. BP_SpaceshipController _(Coming Soon)_
 4. BP_PlayerShip (basic version)
 
 ### Week 3-4: Trading System
 5. WBP_TradingUI
-6. WBP_TradeItemRow
+6. WBP_TradeItemRow _(Coming Soon)_
 7. BP_SpaceStation_Main (docking only)
 
 ### Week 5-6: Content & Polish
-8. BP_SpaceStationModule (types needed)
+8. BP_SpaceStationModule _(Coming Soon - types needed)_
 9. BP_Ship_NPC_Trader (basic AI)
 10. Polish and testing
 
