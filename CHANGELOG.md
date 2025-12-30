@@ -7,6 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Archived Non-MVP Systems for Trade Simulator MVP Focus** (2025-12-30)
+  - Created `/Archive` directory structure with comprehensive README
+  - Archived 8 complete game systems not needed for Trade Simulator MVP:
+    - **Combat System** (24 files) - Weapons, targeting, shields, VFX
+    - **Exploration System** (14 files) - Scanning, discovery, anomalies
+    - **Quest System** (4 files) - Quest management and data
+    - **Rivals/Antagonist System** (4 files) - Enemy AI and management
+    - **Procedural System** (6 files) - Procedural generation tools
+    - **Way System** (8 files) - Advanced navigation networks
+    - **Tutorial System** (4 files) - Tutorial system (will return Week 9-12)
+    - **Audio System** (6 files) - Audio management (will return Week 7-9)
+  - Archived 23 non-MVP documentation files:
+    - Combat guides and workflows
+    - Exploration system documentation
+    - Personnel/AI setup guides (crew management deferred)
+    - Way system guides
+    - Material system guides
+    - Quest system documentation
+  - Archived 19 Python automation scripts:
+    - Content generators (Advanced, Master, Ultimate, Quick, Mass)
+    - Blueprint/UI/Niagara generators
+    - Procedural generators
+    - Scene/Interior populators
+    - Batch creation utilities
+  - Archived 6 non-MVP assets:
+    - HTML mockups for station editor
+    - Blueprint visualization files
+    - Director metadata YAML
+    - Test YAML files
+  - **Total archived**: 123 files across 4 categories
+  - **Reason**: Focus development on Trade Simulator MVP (12-week timeline)
+  - **Restoration**: Post-MVP validation if 75% fun rating achieved
+  - **Files preserved**: All work preserved for future reintegration
+  - **Reference**: See `Archive/README.md` for complete restoration guide
+
 ### Added
 
 - **Trading UI System - Complete C++ Implementation & Documentation** (2025-12-29)
