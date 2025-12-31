@@ -13,9 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Issue**: SVG files and guides referenced non-existent events and incorrect function names
   - **Root cause**: Documentation created before C++ implementation finalized
   - **Fixed SVG files**:
-    - `trading_ui_open.svg` - Corrected from "EVENT: On Market Opened" to proper workflow
-    - `add_to_cart_flow.svg` - Added "CUSTOM EVENT" distinction for UMG buttons
-    - `market_item_display.svg` - Updated to match corrected workflow
+    - `trading_ui_open.svg` - Corrected from "EVENT: On Market Opened" to proper workflow (commit 66e8616)
+    - `market_item_display.svg` - Updated to match corrected workflow (commit ab6d6fa)
+    - `add_to_cart_flow.svg` - Added "CUSTOM EVENT" distinction for UMG buttons (this commit)
   - **Updated documentation**:
     - `WBP_TradingUI.md` - Explained correct OpenMarket() → OnMarketInventoryUpdated workflow
     - Created `TRADING_SVG_CORRECTIONS.md` - Comprehensive analysis of all issues

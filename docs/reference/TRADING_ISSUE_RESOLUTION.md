@@ -40,9 +40,9 @@ The documentation was created before the C++ implementation was finalized, resul
 ### 1. Corrected All Critical SVG Files
 
 **Files Fixed:**
-- ✅ `trading_ui_open.svg` - Now shows correct workflow: `FUNCTION: OpenMarket()` → `EVENT: OnMarketInventoryUpdated`
-- ✅ `add_to_cart_flow.svg` - Properly labels UMG button as `CUSTOM EVENT`, then calls `FUNCTION: AddToCart()`
-- ✅ `market_item_display.svg` - Matches corrected trading_ui_open workflow
+- ✅ `trading_ui_open.svg` - Now shows correct workflow: `FUNCTION: OpenMarket()` → `EVENT: OnMarketInventoryUpdated` (commit 66e8616)
+- ✅ `market_item_display.svg` - Matches corrected trading_ui_open workflow (commit ab6d6fa)
+- ✅ `add_to_cart_flow.svg` - Properly labels UMG button as `CUSTOM EVENT`, then calls `FUNCTION: AddToCart()` (corrected in subsequent commit)
 
 **Backup Files Created:**
 - `trading_ui_open_OLD.svg`
@@ -138,9 +138,9 @@ void OnTradeCompleted(bool bSuccess, const FText& ErrorMessage);
 ## Files Changed
 
 ### SVG Images
-- `docs/reference/images/blueprints/trading_ui_open.svg` - ✅ CORRECTED
-- `docs/reference/images/blueprints/add_to_cart_flow.svg` - ✅ CORRECTED
-- `docs/reference/images/blueprints/market_item_display.svg` - ✅ CORRECTED
+- `docs/reference/images/blueprints/trading_ui_open.svg` - ✅ CORRECTED (commit 66e8616)
+- `docs/reference/images/blueprints/market_item_display.svg` - ✅ CORRECTED (commit ab6d6fa)
+- `docs/reference/images/blueprints/add_to_cart_flow.svg` - ✅ CORRECTED (subsequent commit)
 
 ### Documentation
 - `docs/BP/WBP_TradingUI.md` - ✅ UPDATED

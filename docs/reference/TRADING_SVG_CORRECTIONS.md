@@ -161,7 +161,7 @@ Same as #1 - Should use `FUNCTION: OpenMarket()` followed by `EVENT: OnMarketInv
 5. Update UI to show cart contents
 ```
 
-**Status**: ⚠️ NEEDS CORRECTION
+**Status**: ✅ CORRECTED (subsequent commit after initial PR)
 
 ---
 
@@ -277,9 +277,9 @@ Blueprint populates UI widgets
 
 ### High Priority
 
-- [x] ✅ Create corrected `trading_ui_open_CORRECTED.svg`
-- [ ] ⚠️ Update `market_item_display.svg` to match corrected workflow
-- [ ] ⚠️ Update `add_to_cart_flow.svg` to show function calls correctly
+- [x] ✅ Create corrected `trading_ui_open_CORRECTED.svg` (commit 66e8616)
+- [x] ⚠️ Update `market_item_display.svg` to match corrected workflow (commit ab6d6fa)
+- [x] ⚠️ Update `add_to_cart_flow.svg` to show function calls correctly (subsequent commit)
 - [ ] ⚠️ Add "Custom Event" labels to UMG button events in all SVGs
 
 ### Medium Priority
