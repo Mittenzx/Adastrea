@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Removed References to Archived Systems** (2025-12-31)
+  - Removed all #include statements referencing archived systems from active source code
+  - Commented out archived code with TODO markers for future MVP reimplementation
+  - Temporarily moved `EDamageType` enum to `IDamageable.h` (from archived `WeaponDataAsset.h`)
+  - Updated 11 source files: DataValidationLibrary, AutomatedTestLibrary, PerformanceBenchmarkLibrary, SpaceshipControlsComponent, ShieldModuleDataAsset, AdastreaFunctionLibrary, IDamageable, PlayerUnlockComponent, Verse
+  - Created comprehensive documentation: `docs/development/ARCHIVED_REFERENCES_REMOVAL.md`
+  - All changes marked for future reimplementation during MVP development
+  - Related issue: #headers
+
 - **Archived Non-MVP Systems for Trade Simulator MVP Focus** (2025-12-30)
   - Created `/Archive` directory structure with comprehensive README
   - Archived 8 complete game systems not needed for Trade Simulator MVP:
