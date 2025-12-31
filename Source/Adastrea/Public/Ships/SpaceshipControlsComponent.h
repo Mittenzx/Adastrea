@@ -26,7 +26,7 @@ class UEnhancedInputComponent;
  * - Mouse: Rotation (pitch for up/down, yaw for left/right)
  * 
  * Combat:
- * - Left Mouse Button: Fire primary weapon
+ * - Left Mouse Button: Fire primary weapon (TODO: Currently commented out - Combat system archived)
  * 
  * Speed:
  * - Mouse Wheel Up: Increase speed
@@ -36,12 +36,12 @@ class UEnhancedInputComponent;
  * - Add component to spaceship pawn Blueprint
  * - Configure MovementSpeed and LookSensitivity as needed
  * - Component will automatically create and register input bindings in BeginPlay
- * - For weapon firing, add a UWeaponComponent to the same actor
+ * - Weapon firing functionality temporarily disabled (Combat system archived for MVP focus)
  * 
  * Integration:
  * - Works with ASpaceship pawn class
- * - Calls UWeaponComponent::Fire() for weapon functionality
  * - Uses Unreal Engine 5 Enhanced Input System
+ * - TODO: Weapon firing will be reimplemented when Combat system returns in MVP
  */
 UCLASS(ClassGroup=(Ships), meta=(BlueprintSpawnableComponent))
 class ADASTREA_API USpaceshipControlsComponent : public UActorComponent
