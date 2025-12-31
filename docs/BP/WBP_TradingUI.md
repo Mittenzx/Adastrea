@@ -33,11 +33,12 @@
 
 **Flow Explanation:**
 
-1. **On Market Opened Event** - Triggered when player docks at station
-2. **Get Available Items** - Fetches current market inventory
-3. **ForEach Loop** - Iterates through each market item
-4. **Create Trade Item Widget** - Creates WBP_TradeItemRow for each item
-5. **Add Child to ScrollBox** - Displays item in the list
+1. **OpenMarket() Function** - BlueprintCallable function to open trading interface (called from docking logic)
+2. **OnMarketInventoryUpdated Event** - BlueprintImplementableEvent triggered by C++ after OpenMarket completes
+3. **Get Available Items** - Fetches current market inventory using GetAvailableItems()
+4. **ForEach Loop** - Iterates through each market item in the returned array
+5. **Create Trade Item Widget** - Creates WBP_TradeItemRow for each item
+6. **Add Child to ScrollBox** - Displays item in the list
 
 ### Market Item Display Flow
 
@@ -281,24 +282,43 @@ Canvas Panel (Root)
 
 ## 🔌 Blueprint Function Implementation
 
-### Event: On Market Opened
+### Opening the Trading Interface
+
+**Workflow:**
 
 ```
-EVENT: On Market Opened (Blueprint Implementable Event from C++)
-├─  Market Data (UMarketDataAsset)
-└─► Exec
-    └─► Call PopulateMarketItems(Market Data)
+1. Docking Logic calls FUNCTION: OpenMarket(Market Data)
+   ├─ Input: Market Data (UMarketDataAsset)
+   └─► Returns: Success (bool)
+
+2. C++ processes market open, then triggers:
+   EVENT: OnMarketInventoryUpdated
+   └─► Implement this in Blueprint to populate UI
+
+3. In OnMarketInventoryUpdated implementation:
+   ├─► Call PopulateMarketItems()
 ```
 
-**Implementation:**
-1. Clear existing item list
-2. Call C++ function `GetAvailableItems(MarketData)`
-3. Returns: `TArray<FMarketInventoryEntry>`
-4. ForEach loop through entries
-5. For each entry:
-   - Create Widget: `WBP_TradeItemRow`
-   - Set item data on widget
-   - Add to `ItemListScrollBox`
+**Implementation of OnMarketInventoryUpdated:**
+
+```cpp
+// BlueprintImplementableEvent - implement in WBP_TradingUI
+void OnMarketInventoryUpdated()
+{
+    1. Clear existing item list
+    2. Call GetAvailableItems() to fetch inventory
+    3. Returns: TArray<FMarketInventoryEntry>
+    4. ForEach loop through entries
+    5. For each entry:
+       - Create Widget: WBP_TradeItemRow
+       - Set item data on widget
+       - Add to ItemListScrollBox
+}
+```
+
+**Key Points:**
+- `OpenMarket()` is a **BlueprintCallable function** - call it from Blueprint
+- `OnMarketInventoryUpdated` is a **BlueprintImplementableEvent** - implement it in Blueprint to respond to market opening
 
 ### Function: Populate Market Items
 
