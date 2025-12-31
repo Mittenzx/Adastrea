@@ -164,17 +164,20 @@ public:
 
     /**
      * Validate weapon data asset
+     * TODO: Combat system archived - will be reimplemented in MVP
      * @param WeaponAsset Weapon asset to validate
      * @param OutErrors Validation errors
      * @param OutWarnings Validation warnings
      * @return True if valid
      */
+    /*
     UFUNCTION(BlueprintCallable, Category="Data Validation|Weapons")
     static bool ValidateWeaponData(
         UWeaponDataAsset* WeaponAsset,
         TArray<FText>& OutErrors,
         TArray<FText>& OutWarnings
     );
+    */
 
     //================================================================================
     // VALIDATION UTILITIES
@@ -295,9 +298,12 @@ private:
     );
 
     /** Internal validation helper for weapon data */
+    /** TODO: Combat system archived - will be reimplemented in MVP */
+    /*
     static void ValidateWeaponBalance(
         UWeaponDataAsset* WeaponAsset,
         TArray<FText>& OutErrors,
         TArray<FText>& OutWarnings
     );
+    */
 };

@@ -8,7 +8,8 @@
 #include "HAL/PlatformMemory.h"
 #include "Misc/App.h"
 #include "Performance/LODManagerComponent.h"
-#include "Combat/ProjectilePoolComponent.h"
+// TODO: Combat system archived - projectile pooling will be reimplemented in MVP
+// #include "Combat/ProjectilePoolComponent.h"
 #include "Ships/SpaceshipDataAsset.h"
 #include "Stations/SpaceStation.h"
 #include "AI/NPCLogicBase.h"
