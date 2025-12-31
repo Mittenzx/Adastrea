@@ -112,7 +112,7 @@ bool UTradingInterfaceWidget::SetTradePartner(UFactionDataAsset* TradePartner)
 		return false;
 	}
 
-	// TODO (MVP): For now, this is a stub that should be replaced with actual market lookup
+	// TODO(MVP): For now, this is a stub that should be replaced with actual market lookup
 	// In a full implementation, this would:
 	// 1. Query EconomyManager or station system for markets controlled by this faction
 	// 2. Select the nearest/best market
@@ -121,7 +121,7 @@ bool UTradingInterfaceWidget::SetTradePartner(UFactionDataAsset* TradePartner)
 	// For MVP purposes, we log this and return false to indicate the feature is not yet implemented
 	// The player controller should be updated to use OpenMarket directly with a market reference
 	
-	UE_LOG(LogAdastrea, Warning, TEXT("TradingInterfaceWidget::SetTradePartner - Stub method called. "
+	UE_LOG(LogAdastrea, Display, TEXT("TradingInterfaceWidget::SetTradePartner - Stub method called. "
 		"For MVP, use OpenMarket with a UMarketDataAsset directly. "
 		"Faction: %s"), *TradePartner->FactionName.ToString());
 	
