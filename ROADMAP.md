@@ -5,14 +5,15 @@
 
 > This roadmap outlines the development plan, milestones, and future vision for the Adastrea open-world space flight game.
 
-**Last Updated**: December 29, 2025  
+**Last Updated**: December 31, 2025  
 **Current Version**: 1.0.0-alpha  
-**Project Status**: Trade Simulator MVP Development - Phase 1 Week 1 (Dec 2025 - Mar 2026)
+**Project Status**: Trade Simulator MVP Development - Phase 1 Week 3 (Dec 2025 - Mar 2026)
 
 ---
 
 ## Table of Contents
 
+- [🚨 URGENT: Current Week Priorities (Week 3 of 12 - In Progress)](#-urgent-current-week-priorities-week-3-of-12---in-progress)
 - [Vision & Goals](#vision--goals)
 - [Development Philosophy](#development-philosophy)
 - [Current Status](#current-status)
@@ -29,6 +30,104 @@
 - [Community & Ecosystem](#community--ecosystem)
 - [Risk Management](#risk-management)
 - [How to Contribute](#how-to-contribute)
+
+---
+
+## 🚨 URGENT: Current Week Priorities (Week 3 of 12 - In Progress)
+
+> **Critical Phase**: Trade Simulator MVP - Hardcoded Prototype Development  
+> **Timeline**: December 29, 2025 - January 4, 2026 (Week 3 in progress)  
+> **Goal**: Build playable trading loop for Week 4 external playtest
+
+### This Week's Mission-Critical Tasks
+
+**Context**: We are building a hardcoded prototype to validate the core trading gameplay loop. No Data Assets, no fancy systems - just pure gameplay validation.
+
+#### 🎯 Primary Objectives (Must Complete This Week)
+
+1. **✈️ Flyable Ship Blueprint** (`BP_SimpleTradingShip`)
+   - [ ] Create Pawn with StaticMesh (placeholder cube)
+   - [ ] Add FloatingPawnMovement component
+   - [ ] Configure WASD/EQ input for 3D movement
+   - [ ] Add SpringArm and Camera for third-person view
+   - [ ] Test flight in empty level (~1 minute travel time)
+   - [ ] **Location**: `Content/Blueprints/MVP/Ships/`
+
+2. **🏢 Two Trading Stations** (Agricultural & Industrial)
+   - [ ] Create `BP_Station_Agricultural` with green placeholder mesh
+   - [ ] Create `BP_Station_Industrial` with blue/grey placeholder mesh
+   - [ ] Add BoxCollision for docking trigger (OverlapAllDynamic)
+   - [ ] Hardcode prices in Blueprint:
+     - Agricultural: Water=8cr, Food=22cr, Fuel=45cr (LOW prices)
+     - Industrial: Water=12cr, Food=35cr, Fuel=60cr (HIGH prices)
+   - [ ] Implement docking: OnBeginOverlap → Open Trading UI
+   - [ ] **Location**: `Content/Blueprints/MVP/Stations/`
+
+3. **📊 Simple Trading HUD** (`WBP_SimpleHUD`)
+   - [ ] Display player credits (starts at 1000)
+   - [ ] Display cargo space (X/10 used)
+   - [ ] Display session profit (green if positive)
+   - [ ] Display instructions: "Fly to station, dock to trade"
+   - [ ] Update in real-time (Event Tick)
+   - [ ] **Location**: `Content/Blueprints/MVP/UI/`
+
+4. **💰 Trading Interface** (`WBP_TradingInterface`)
+   - [ ] Show 3 trade items (Water, Food, Fuel)
+   - [ ] Each row: Item name, price, quantity spinner, Buy/Sell buttons
+   - [ ] Buy logic: Check credits → Check cargo space → Deduct credits → Add to cargo
+   - [ ] Sell logic: Check cargo → Add credits → Remove from cargo → Show profit
+   - [ ] Close button (Escape key)
+   - [ ] **Location**: `Content/Blueprints/MVP/UI/`
+
+5. **🗺️ Test Level Setup** (`L_TradingTest`)
+   - [ ] Create new map in `Content/Maps/MVP/`
+   - [ ] Place Agricultural Station at (0, 0, 0)
+   - [ ] Place Industrial Station at (10000, 0, 0) - ~1 minute travel time
+   - [ ] Add Player Start near Agricultural Station
+   - [ ] Set GameMode Override: `BP_TradingGameMode`
+   - [ ] Add lighting (Directional Light + Sky Atmosphere)
+
+#### 📝 Supporting Tasks (If Time Permits)
+
+- [ ] Add sound effects on buy/sell (optional polish)
+- [ ] Add visual feedback (green flash on profit)
+- [ ] Add station name labels (TextRender component)
+- [ ] Balance test: Complete 5 trade loops, verify profit feels good
+
+### Week 3 Success Criteria
+
+By end of week (January 4, 2026), must demonstrate:
+- ✅ Ship flies smoothly between stations in ~1 minute
+- ✅ Docking trigger opens trading UI correctly
+- ✅ Can buy 10 Water at Agricultural Station (cost: 80 credits)
+- ✅ Can fly to Industrial Station
+- ✅ Can sell 10 Water at Industrial Station (receive: 100 credits)
+- ✅ Profit shows +20 credits on HUD
+- ✅ No crashes during 10-minute play session
+
+### 🚧 What We're NOT Doing (Defer to Later Phases)
+
+- ❌ Data Assets - hardcode everything for now
+- ❌ Supply/demand simulation - static prices only
+- ❌ Save/load system - session only
+- ❌ Multiple ships - one ship only
+- ❌ Ship upgrades - defer to Phase 2
+- ❌ Visual polish - placeholder meshes are fine
+- ❌ Quest system, combat, exploration - completely out of scope
+
+### 📚 Essential Reading for This Week
+
+1. **[Phase 1 Checklist](docs/mvp/PHASE_1_CHECKLIST.md)** - Daily task breakdown
+2. **[Phase 1 Implementation Steps](docs/mvp/PHASE_1_IMPLEMENTATION_STEPS.md)** - Step-by-step Blueprint guide
+3. **[Trade Simulator MVP Instructions](.github/instructions/trade-simulator-mvp.instructions.md)** - Overall 12-week plan
+4. **[Trading UI Blueprint Guide](docs/mvp/TRADING_UI_BLUEPRINT_GUIDE.md)** - UI implementation details
+
+### ⏭️ Next Week Preview (Week 4)
+
+- Internal stability testing (30-minute sessions)
+- Package game build for external playtest
+- Recruit 5-10 external playtesters (NOT developers)
+- **GO/NO-GO Decision**: Need 60%+ "fun" rating to proceed to Phase 2
 
 ---
 
@@ -1086,10 +1185,16 @@ This roadmap is a living document and will be updated regularly to reflect:
 
 **How to Update**: Contributors should update this roadmap when their PRs affect project milestones, phases, or system status
 
-**Last Updated**: December 29, 2025 (Trade Simulator MVP Pivot - Week 1 in Progress)  
+**Last Updated**: December 31, 2025 (Added Urgent TODOs Section - Week 3 Priorities)  
 **Next Review**: Weekly during MVP development (next: January 5, 2026)
 
 ### Recent Updates
+
+#### December 31, 2025
+- **Added Urgent TODOs Section**: New prominent section at roadmap start with Week 3 mission-critical tasks
+- **Detailed Week 3 Priorities**: 5 primary objectives for hardcoded prototype (ship, stations, HUD, trading UI, test level)
+- **Success Criteria Clarified**: Clear checklist for Week 3 completion and Week 4 GO/NO-GO decision
+- **MVP Focus Reinforced**: Explicit list of what NOT to do (defer Data Assets, save/load, etc.)
 
 #### December 29, 2025
 - **Roadmap Simplification**: Consolidated to single MVP-focused roadmap
