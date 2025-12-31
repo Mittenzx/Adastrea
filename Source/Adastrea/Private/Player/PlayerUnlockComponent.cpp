@@ -291,6 +291,13 @@ bool UPlayerUnlockComponent::CheckRequirement(const FUnlockRequirement& Requirem
 
 		case EUnlockRequirementType::Quest:
 		{
+			// TODO (MVP): Quest system not implemented yet - archived for post-MVP
+			// Quest system is not needed for Trade Simulator MVP
+			// For now, return false to indicate quest requirements cannot be checked
+			UE_LOG(LogAdastrea, Warning, TEXT("PlayerUnlockComponent: Quest requirement type not supported in MVP - Quest system archived"));
+			return false;
+			
+			/* Original implementation - restore when quest system is re-implemented
 			// Check quest completion via QuestManagerSubsystem
 			UWorld* World = GetWorld();
 			if (World)
@@ -307,6 +314,7 @@ bool UPlayerUnlockComponent::CheckRequirement(const FUnlockRequirement& Requirem
 			}
 			UE_LOG(LogAdastrea, Warning, TEXT("PlayerUnlockComponent: Could not access QuestManagerSubsystem"));
 			return false;
+			*/
 		}
 
 		case EUnlockRequirementType::Reputation:
