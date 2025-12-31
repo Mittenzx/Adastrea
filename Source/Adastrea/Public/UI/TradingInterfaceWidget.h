@@ -154,6 +154,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Trading")
 	void CloseMarket();
 
+	/**
+	 * Set trade partner faction (compatibility method)
+	 * This is a wrapper that finds a market controlled by the given faction
+	 * @param TradePartner The faction to trade with
+	 * @return True if a market was found and opened
+	 * 
+	 * Note: For MVP, this is a stub that should be connected to actual market lookup
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Trading")
+	bool SetTradePartner(UFactionDataAsset* TradePartner);
+
 	// ========================================================================
 	// Blueprint Functions - Market Information
 	// ========================================================================
