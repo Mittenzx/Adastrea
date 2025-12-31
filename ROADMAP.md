@@ -13,7 +13,7 @@
 
 ## Table of Contents
 
-- [🚨 URGENT: Current Week Priorities (Week 3 of 12)](#-urgent-current-week-priorities-week-3-of-12)
+- [🚨 URGENT: Current Week Priorities (Week 3 of 12 - In Progress)](#-urgent-current-week-priorities-week-3-of-12---in-progress)
 - [Vision & Goals](#vision--goals)
 - [Development Philosophy](#development-philosophy)
 - [Current Status](#current-status)
@@ -33,10 +33,10 @@
 
 ---
 
-## 🚨 URGENT: Current Week Priorities (Week 3 of 12)
+## 🚨 URGENT: Current Week Priorities (Week 3 of 12 - In Progress)
 
 > **Critical Phase**: Trade Simulator MVP - Hardcoded Prototype Development  
-> **Timeline**: December 29, 2025 - January 4, 2026  
+> **Timeline**: December 29, 2025 - January 4, 2026 (Week 3 in progress)  
 > **Goal**: Build playable trading loop for Week 4 external playtest
 
 ### This Week's Mission-Critical Tasks
@@ -82,7 +82,7 @@
 5. **🗺️ Test Level Setup** (`L_TradingTest`)
    - [ ] Create new map in `Content/Maps/MVP/`
    - [ ] Place Agricultural Station at (0, 0, 0)
-   - [ ] Place Industrial Station at (10000, 0, 0) - ~60 second flight
+   - [ ] Place Industrial Station at (10000, 0, 0) - ~1 minute travel time
    - [ ] Add Player Start near Agricultural Station
    - [ ] Set GameMode Override: `BP_TradingGameMode`
    - [ ] Add lighting (Directional Light + Sky Atmosphere)
