@@ -1,77 +1,81 @@
 <?xml version='1.0' encoding='utf-8'?>
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="650" viewBox="0 0 900 650">
-  <rect width="900" height="650" fill="#2D2D2D" />
-  <text x="450" y="30" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle">WBP_TradingUI - Open Market Flow</text>
-  <rect x="53" y="63" width="320" height="100" rx="8" fill="#000000" opacity="0.3" />
-  <rect x="50" y="60" width="320" height="100" rx="8" fill="none" stroke="#000000" stroke-width="2" />
-  <rect x="50" y="60" width="320" height="32" rx="8" fill="#C80000" />
-  <text x="60" y="82" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="14" font-weight="bold">EVENT: On Market Opened</text>
-  <rect x="50" y="92" width="320" height="68" fill="#1E1E1E" />
-  <circle cx="365" cy="117" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
-  <text x="350" y="121" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end" />
-  <circle cx="365" cy="137" r="6" fill="#00FFFF" stroke="#000000" stroke-width="1.5" />
-  <text x="350" y="141" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end">Market Data</text>
-  <rect x="53" y="203" width="350" height="120" rx="8" fill="#000000" opacity="0.3" />
-  <rect x="50" y="200" width="350" height="120" rx="8" fill="none" stroke="#000000" stroke-width="2" />
-  <rect x="50" y="200" width="350" height="32" rx="8" fill="#1B4F72" />
-  <text x="60" y="222" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Get Available Items</text>
-  <rect x="50" y="232" width="350" height="88" fill="#1E1E1E" />
-  <circle cx="55" cy="252" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
-  <text x="70" y="256" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="start">Exec</text>
-  <circle cx="55" cy="272" r="6" fill="#00FFFF" stroke="#000000" stroke-width="1.5" />
-  <text x="70" y="276" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="start">Market Data</text>
-  <circle cx="395" cy="252" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
-  <text x="380" y="256" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end" />
-  <circle cx="395" cy="272" r="6" fill="#00FFFF" stroke="#000000" stroke-width="1.5" />
-  <text x="380" y="276" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end">Item Array</text>
-  <rect x="53" y="363" width="350" height="180" rx="8" fill="#000000" opacity="0.3" />
-  <rect x="50" y="360" width="350" height="180" rx="8" fill="none" stroke="#000000" stroke-width="2" />
-  <rect x="50" y="360" width="350" height="32" rx="8" fill="#FF8C00" />
-  <text x="60" y="382" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="14" font-weight="bold">ForEach Loop</text>
-  <rect x="50" y="392" width="350" height="148" fill="#1E1E1E" />
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="750" viewBox="0 0 900 750">
+  <rect width="900" height="750" fill="#2D2D2D" />
+  <text x="450" y="30" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle">WBP_TradingUI - Open Market Workflow (CORRECTED)</text>
+  
+  <!-- Step 1: Call OpenMarket Function -->
+  <rect x="53" y="63" width="400" height="120" rx="8" fill="#000000" opacity="0.3" />
+  <rect x="50" y="60" width="400" height="120" rx="8" fill="none" stroke="#000000" stroke-width="2" />
+  <rect x="50" y="60" width="400" height="32" rx="8" fill="#1B4F72" />
+  <text x="60" y="82" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="14" font-weight="bold">FUNCTION: OpenMarket</text>
+  <rect x="50" y="92" width="400" height="88" fill="#1E1E1E" />
+  <circle cx="55" cy="112" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
+  <text x="70" y="116" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="start">Exec</text>
+  <circle cx="55" cy="132" r="6" fill="#00FFFF" stroke="#000000" stroke-width="1.5" />
+  <text x="70" y="136" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="start">Market Data</text>
+  <circle cx="445" cy="112" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
+  <text x="430" y="116" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end">Exec</text>
+  <circle cx="445" cy="132" r="6" fill="#DC143C" stroke="#000000" stroke-width="1.5" />
+  <text x="430" y="136" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end">Success (bool)</text>
+  <text x="60" y="165" fill="#AAAAAA" font-family="Arial, sans-serif" font-size="11" font-style="italic">C++ Function - Opens market and triggers inventory update event</text>
+
+  <!-- Step 2: OnMarketInventoryUpdated Event -->
+  <rect x="53" y="223" width="400" height="100" rx="8" fill="#000000" opacity="0.3" />
+  <rect x="50" y="220" width="400" height="100" rx="8" fill="none" stroke="#000000" stroke-width="2" />
+  <rect x="50" y="220" width="400" height="32" rx="8" fill="#C80000" />
+  <text x="60" y="242" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="14" font-weight="bold">EVENT: OnMarketInventoryUpdated</text>
+  <rect x="50" y="252" width="400" height="68" fill="#1E1E1E" />
+  <circle cx="445" cy="277" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
+  <text x="430" y="281" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end">Exec</text>
+  <text x="60" y="305" fill="#AAAAAA" font-family="Arial, sans-serif" font-size="11" font-style="italic">BlueprintImplementableEvent - Triggered by OpenMarket C++ function</text>
+
+  <!-- Step 3: Get Available Items -->
+  <rect x="53" y="363" width="400" height="120" rx="8" fill="#000000" opacity="0.3" />
+  <rect x="50" y="360" width="400" height="120" rx="8" fill="none" stroke="#000000" stroke-width="2" />
+  <rect x="50" y="360" width="400" height="32" rx="8" fill="#1B4F72" />
+  <text x="60" y="382" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="14" font-weight="bold">FUNCTION: Get Available Items</text>
+  <rect x="50" y="392" width="400" height="88" fill="#1E1E1E" />
   <circle cx="55" cy="412" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
   <text x="70" y="416" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="start">Exec</text>
-  <circle cx="55" cy="432" r="6" fill="#00FFFF" stroke="#000000" stroke-width="1.5" />
-  <text x="70" y="436" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="start">Array</text>
-  <circle cx="395" cy="412" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
-  <text x="380" y="416" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end">Loop Body</text>
-  <circle cx="395" cy="432" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
-  <text x="380" y="436" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end">Completed</text>
-  <circle cx="395" cy="452" r="6" fill="#00FFFF" stroke="#000000" stroke-width="1.5" />
-  <text x="380" y="456" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end">Array Element</text>
-  <circle cx="395" cy="472" r="6" fill="#00FF00" stroke="#000000" stroke-width="1.5" />
-  <text x="380" y="476" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end">Array Index</text>
-  <rect x="483" y="203" width="370" height="140" rx="8" fill="#000000" opacity="0.3" />
-  <rect x="480" y="200" width="370" height="140" rx="8" fill="none" stroke="#000000" stroke-width="2" />
-  <rect x="480" y="200" width="370" height="32" rx="8" fill="#1B4F72" />
-  <text x="490" y="222" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Create Trade Item Widget</text>
-  <rect x="480" y="232" width="370" height="108" fill="#1E1E1E" />
-  <circle cx="485" cy="252" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
-  <text x="500" y="256" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="start">Exec</text>
-  <circle cx="485" cy="272" r="6" fill="#00FFFF" stroke="#000000" stroke-width="1.5" />
-  <text x="500" y="276" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="start">Widget Class</text>
-  <circle cx="485" cy="292" r="6" fill="#00FFFF" stroke="#000000" stroke-width="1.5" />
-  <text x="500" y="296" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="start">Item Data</text>
-  <circle cx="845" cy="252" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
-  <text x="830" y="256" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end" />
-  <circle cx="845" cy="272" r="6" fill="#00FFFF" stroke="#000000" stroke-width="1.5" />
-  <text x="830" y="276" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end">Widget</text>
-  <rect x="483" y="383" width="370" height="120" rx="8" fill="#000000" opacity="0.3" />
-  <rect x="480" y="380" width="370" height="120" rx="8" fill="none" stroke="#000000" stroke-width="2" />
-  <rect x="480" y="380" width="370" height="32" rx="8" fill="#1B4F72" />
-  <text x="490" y="402" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Add Child to ScrollBox</text>
-  <rect x="480" y="412" width="370" height="88" fill="#1E1E1E" />
-  <circle cx="485" cy="432" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
-  <text x="500" y="436" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="start">Exec</text>
-  <circle cx="485" cy="452" r="6" fill="#00FFFF" stroke="#000000" stroke-width="1.5" />
-  <text x="500" y="456" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="start">Parent ScrollBox</text>
-  <circle cx="485" cy="472" r="6" fill="#00FFFF" stroke="#000000" stroke-width="1.5" />
-  <text x="500" y="476" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="start">Child Widget</text>
+  <circle cx="445" cy="412" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
+  <text x="430" y="416" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end">Exec</text>
+  <circle cx="445" cy="432" r="6" fill="#00FFFF" stroke="#000000" stroke-width="1.5" />
+  <text x="430" y="436" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end">Item Array</text>
+  <text x="60" y="465" fill="#AAAAAA" font-family="Arial, sans-serif" font-size="11" font-style="italic">Returns TArray&lt;FMarketInventoryEntry&gt;</text>
+
+  <!-- Step 4: ForEach Loop -->
+  <rect x="503" y="363" width="350" height="180" rx="8" fill="#000000" opacity="0.3" />
+  <rect x="500" y="360" width="350" height="180" rx="8" fill="none" stroke="#000000" stroke-width="2" />
+  <rect x="500" y="360" width="350" height="32" rx="8" fill="#FF8C00" />
+  <text x="510" y="382" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="14" font-weight="bold">FLOW CONTROL: ForEach Loop</text>
+  <rect x="500" y="392" width="350" height="148" fill="#1E1E1E" />
+  <circle cx="505" cy="412" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
+  <text x="520" y="416" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="start">Exec</text>
+  <circle cx="505" cy="432" r="6" fill="#00FFFF" stroke="#000000" stroke-width="1.5" />
+  <text x="520" y="436" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="start">Array</text>
+  <circle cx="845" cy="412" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
+  <text x="830" y="416" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end">Loop Body</text>
   <circle cx="845" cy="432" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
-  <text x="830" y="436" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end" />
-  <path d="M 370 117 C 210.0 117, 210.0 252, 50 252" stroke="#FFFFFF" stroke-width="3" fill="none" opacity="0.8" />
-  <path d="M 400 252 C 225.0 252, 225.0 412, 50 412" stroke="#FFFFFF" stroke-width="3" fill="none" opacity="0.8" />
-  <path d="M 400 412 C 440.0 412, 440.0 252, 480 252" stroke="#FFFFFF" stroke-width="3" fill="none" opacity="0.8" />
-  <path d="M 850 252 C 665.0 252, 665.0 432, 480 432" stroke="#FFFFFF" stroke-width="3" fill="none" opacity="0.8" />
-  <path d="M 850 432 C 625.0 432, 625.0 412, 400 412" stroke="#FFFFFF" stroke-width="3" fill="none" opacity="0.8" />
+  <text x="830" y="436" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end">Completed</text>
+  <circle cx="845" cy="452" r="6" fill="#00FFFF" stroke="#000000" stroke-width="1.5" />
+  <text x="830" y="456" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end">Array Element</text>
+  <circle cx="845" cy="472" r="6" fill="#00FF00" stroke="#000000" stroke-width="1.5" />
+  <text x="830" y="476" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end">Array Index</text>
+  
+  <!-- Step 5: Create Widget and Add to ScrollBox (simplified) -->
+  <rect x="53" y="583" width="400" height="120" rx="8" fill="#000000" opacity="0.3" />
+  <rect x="50" y="580" width="400" height="120" rx="8" fill="none" stroke="#000000" stroke-width="2" />
+  <rect x="50" y="580" width="400" height="32" rx="8" fill="#1B4F72" />
+  <text x="60" y="602" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="14" font-weight="bold">FUNCTION: Create &amp; Add Item Widgets</text>
+  <rect x="50" y="612" width="400" height="88" fill="#1E1E1E" />
+  <circle cx="55" cy="632" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
+  <text x="70" y="636" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="start">Exec (Loop Body)</text>
+  <text x="60" y="675" fill="#AAAAAA" font-family="Arial, sans-serif" font-size="11" font-style="italic">Creates WBP_TradeItemRow and adds to ScrollBox</text>
+
+  <!-- Connection wires -->
+  <path d="M 450 112 C 250.0 112, 250.0 277, 445 277" stroke="#FFFFFF" stroke-width="3" fill="none" opacity="0.8" />
+  <path d="M 450 277 C 250.0 277, 250.0 412, 50 412" stroke="#FFFFFF" stroke-width="3" fill="none" opacity="0.8" />
+  <path d="M 450 412 C 475.0 412, 475.0 412, 500 412" stroke="#FFFFFF" stroke-width="3" fill="none" opacity="0.8" />
+  <path d="M 450 432 C 475.0 432, 475.0 432, 500 432" stroke="#00FFFF" stroke-width="3" fill="none" opacity="0.8" />
+  <path d="M 850 412 C 550.0 412, 550.0 632, 50 632" stroke="#FFFFFF" stroke-width="3" fill="none" opacity="0.8" />
 </svg>
