@@ -3,7 +3,8 @@
 #include "Player/PlayerReputationComponent.h"
 #include "Player/AdastreaGameInstance.h"
 #include "Player/AchievementManagerSubsystem.h"
-#include "Quest/QuestManagerSubsystem.h"
+// TODO: Quest system archived - will be reimplemented in MVP
+// #include "Quest/QuestManagerSubsystem.h"
 #include "UI/InventoryComponent.h"
 #include "AdastreaLog.h"
 #include "Kismet/GameplayStatics.h"

@@ -3,7 +3,8 @@
 #include "DataValidationLibrary.h"
 #include "Ships/SpaceshipDataAsset.h"
 #include "Factions/FactionDataAsset.h"
-#include "Combat/WeaponDataAsset.h"
+// TODO: Combat system archived - will be reimplemented in MVP
+// #include "Combat/WeaponDataAsset.h"
 #include "Engine/AssetManager.h"
 #include "UObject/UObjectIterator.h"
 
@@ -37,10 +38,11 @@ bool UDataValidationLibrary::ValidateDataAsset(
     {
         bPassed &= ValidateFactionData(FactionAsset, OutErrors, OutWarnings);
     }
-    else if (UWeaponDataAsset* WeaponAsset = Cast<UWeaponDataAsset>(DataAsset))
-    {
-        bPassed &= ValidateWeaponData(WeaponAsset, OutErrors, OutWarnings);
-    }
+    // TODO: Combat system archived - weapon validation will be reimplemented in MVP
+    // else if (UWeaponDataAsset* WeaponAsset = Cast<UWeaponDataAsset>(DataAsset))
+    // {
+    //     bPassed &= ValidateWeaponData(WeaponAsset, OutErrors, OutWarnings);
+    // }
     else
     {
         // Generic validation for unknown asset types
@@ -226,6 +228,8 @@ bool UDataValidationLibrary::ValidateFactionData(
     return bPassed;
 }
 
+// TODO: Combat system archived - weapon validation will be reimplemented in MVP
+/*
 bool UDataValidationLibrary::ValidateWeaponData(
     UWeaponDataAsset* WeaponAsset,
     TArray<FText>& OutErrors,
@@ -268,6 +272,7 @@ bool UDataValidationLibrary::ValidateWeaponData(
 
     return bPassed;
 }
+*/
 
 //================================================================================
 // VALIDATION UTILITIES
@@ -502,6 +507,8 @@ void UDataValidationLibrary::ValidateFactionRelationships(
     }
 }
 
+// TODO: Combat system archived - weapon balance validation will be reimplemented in MVP
+/*
 void UDataValidationLibrary::ValidateWeaponBalance(
     UWeaponDataAsset* WeaponAsset,
     TArray<FText>& OutErrors,
@@ -540,3 +547,4 @@ void UDataValidationLibrary::ValidateWeaponBalance(
         OutWarnings.Add(FText::FromString("Energy weapon has no energy consumption"));
     }
 }
+*/

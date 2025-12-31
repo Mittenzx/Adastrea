@@ -9,7 +9,8 @@ class UInputAction;
 class UInputMappingContext;
 class UEnhancedInputLocalPlayerSubsystem;
 class UEnhancedInputComponent;
-class UWeaponComponent;
+// TODO: Combat system archived - weapon component will be reimplemented in MVP
+// class UWeaponComponent;
 
 /**
  * Spaceship Controls Component
@@ -240,7 +241,9 @@ public:
 	/**
 	 * Called when fire input is pressed
 	 * Override in Blueprint to customize fire behavior
+	 * TODO: Combat system archived - will be reimplemented in MVP
 	 */
+	/*
 	UFUNCTION(BlueprintNativeEvent, Category="Controls")
 	void OnFirePressed();
 
@@ -248,8 +251,10 @@ public:
 	 * Called when fire input is released
 	 * Override in Blueprint to customize fire release behavior
 	 */
+	/*
 	UFUNCTION(BlueprintNativeEvent, Category="Controls")
 	void OnFireReleased();
+	*/
 
 	/**
 	 * Called when speed is changed via mouse wheel
@@ -308,15 +313,19 @@ protected:
 	/**
 	 * Get the weapon component on the owning actor
 	 * @return Weapon component or nullptr if not found
+	 * TODO: Combat system archived - will be reimplemented in MVP
 	 */
+	/*
 	UWeaponComponent* GetWeaponComponent() const;
+	*/
 
 	// Input handlers
 	void HandleMove(const FInputActionValue& Value);
 	void HandleLook(const FInputActionValue& Value);
 	void HandleRoll(const FInputActionValue& Value);
-	void HandleFirePressed(const FInputActionValue& Value);
-	void HandleFireReleased(const FInputActionValue& Value);
+	// TODO: Combat system archived - fire handlers will be reimplemented in MVP
+	// void HandleFirePressed(const FInputActionValue& Value);
+	// void HandleFireReleased(const FInputActionValue& Value);
 	void HandleSpeed(const FInputActionValue& Value);
 
 private:
@@ -324,6 +333,7 @@ private:
 	bool bControlsEnabled;
 
 	/** Cached reference to weapon component */
-	UPROPERTY()
-	UWeaponComponent* CachedWeaponComponent;
+	/** TODO: Combat system archived - will be reimplemented in MVP */
+	// UPROPERTY()
+	// UWeaponComponent* CachedWeaponComponent;
 };

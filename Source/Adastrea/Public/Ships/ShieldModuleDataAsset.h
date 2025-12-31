@@ -4,8 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Ships/ShipModuleDataAsset.h"
-#include "Combat/WeaponDataAsset.h"
+// TODO: Combat system archived - WeaponDataAsset (for damage types) will be reimplemented in MVP
+// For now, EDamageType is temporarily defined in IDamageable.h
+// #include "Combat/WeaponDataAsset.h"
 #include "ShieldModuleDataAsset.generated.h"
+
+// Forward declare damage type enum (defined in IDamageable.h)
+enum class EDamageType : uint8;
 
 /**
  * Data Asset for shield generator module configurations

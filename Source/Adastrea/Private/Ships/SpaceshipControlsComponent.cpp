@@ -1,5 +1,6 @@
 #include "Ships/SpaceshipControlsComponent.h"
-#include "Combat/WeaponComponent.h"
+// TODO: Combat system archived - weapon firing will be reimplemented in MVP
+// #include "Combat/WeaponComponent.h"
 #include "AdastreaLog.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -38,8 +39,9 @@ void USpaceshipControlsComponent::BeginPlay()
 	CreateInputActions();
 	CreateInputMappingContext();
 
+	// TODO: Combat system archived - weapon component caching will be reimplemented in MVP
 	// Cache weapon component reference
-	CachedWeaponComponent = GetWeaponComponent();
+	// CachedWeaponComponent = GetWeaponComponent();
 
 	// Get the owning pawn
 	APawn* OwningPawn = Cast<APawn>(GetOwner());
@@ -189,12 +191,13 @@ void USpaceshipControlsComponent::SetupInputBindings(UEnhancedInputComponent* Pl
 		PlayerInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &USpaceshipControlsComponent::HandleLook);
 	}
 
+	// TODO: Combat system archived - fire binding will be reimplemented in MVP
 	// Bind Fire action
-	if (FireAction)
-	{
-		PlayerInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &USpaceshipControlsComponent::HandleFirePressed);
-		PlayerInputComponent->BindAction(FireAction, ETriggerEvent::Completed, this, &USpaceshipControlsComponent::HandleFireReleased);
-	}
+	// if (FireAction)
+	// {
+	// 	PlayerInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &USpaceshipControlsComponent::HandleFirePressed);
+	// 	PlayerInputComponent->BindAction(FireAction, ETriggerEvent::Completed, this, &USpaceshipControlsComponent::HandleFireReleased);
+	// }
 
 	// Bind Speed action
 	if (SpeedAction)
@@ -258,6 +261,8 @@ UEnhancedInputLocalPlayerSubsystem* USpaceshipControlsComponent::GetEnhancedInpu
 	return LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
 }
 
+// TODO: Combat system archived - weapon component access will be reimplemented in MVP
+/*
 UWeaponComponent* USpaceshipControlsComponent::GetWeaponComponent() const
 {
 	if (!GetOwner())
@@ -267,6 +272,7 @@ UWeaponComponent* USpaceshipControlsComponent::GetWeaponComponent() const
 
 	return GetOwner()->FindComponentByClass<UWeaponComponent>();
 }
+*/
 
 void USpaceshipControlsComponent::EnableControls()
 {
@@ -371,6 +377,8 @@ void USpaceshipControlsComponent::HandleLook(const FInputActionValue& Value)
 	OnLookInput(LookValue);
 }
 
+// TODO: Combat system archived - fire input handlers will be reimplemented in MVP
+/*
 void USpaceshipControlsComponent::HandleFirePressed(const FInputActionValue& Value)
 {
 	OnFirePressed();
@@ -380,6 +388,7 @@ void USpaceshipControlsComponent::HandleFireReleased(const FInputActionValue& Va
 {
 	OnFireReleased();
 }
+*/
 
 void USpaceshipControlsComponent::HandleSpeed(const FInputActionValue& Value)
 {
@@ -471,6 +480,8 @@ void USpaceshipControlsComponent::OnRollInput_Implementation(float RollValue)
 	OwningPawn->AddActorLocalRotation(DeltaRotation);
 }
 
+// TODO: Combat system archived - fire implementation will be reimplemented in MVP
+/*
 void USpaceshipControlsComponent::OnFirePressed_Implementation()
 {
 	// Try to fire weapon component
@@ -491,6 +502,7 @@ void USpaceshipControlsComponent::OnFireReleased_Implementation()
 	// Default implementation does nothing
 	// Override in Blueprint for continuous fire weapons that need release handling
 }
+*/
 
 void USpaceshipControlsComponent::OnSpeedChanged_Implementation(float NewSpeed, float Delta)
 {

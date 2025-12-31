@@ -2,8 +2,21 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "Combat/WeaponDataAsset.h"
+// TODO: Combat system archived - EDamageType will be reimplemented in MVP
+// #include "Combat/WeaponDataAsset.h"
 #include "IDamageable.generated.h"
+
+// Forward declaration for damage type enum
+// TODO: This will be moved back to WeaponDataAsset when combat system is reimplemented
+UENUM(BlueprintType)
+enum class EDamageType : uint8
+{
+    Kinetic     UMETA(DisplayName = "Kinetic"),
+    Energy      UMETA(DisplayName = "Energy"),
+    Explosive   UMETA(DisplayName = "Explosive"),
+    Thermal     UMETA(DisplayName = "Thermal"),
+    EMP         UMETA(DisplayName = "EMP")
+};
 
 /**
  * UInterface class for IDamageable

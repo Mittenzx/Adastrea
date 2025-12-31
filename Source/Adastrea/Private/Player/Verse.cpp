@@ -1,6 +1,7 @@
 #include "Player/Verse.h"
-#include "Way/Feat.h"
-#include "Way/Way.h"
+// TODO: Way system archived - Feat and Way will be reimplemented in MVP
+// #include "Way/Feat.h"
+// #include "Way/Way.h"
 #include "AdastreaLog.h"
 
 UVerseComponent::UVerseComponent()
