@@ -2,13 +2,150 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Engine/DataAsset.h"
 #include "Verse.generated.h"
 
-// Forward declarations
-class UFeatDataAsset;
-class UWayDataAsset;
-enum class EPrecept : uint8;
-enum class EFeatRarity : uint8;
+// ====================
+// Stub Type Definitions
+// ====================
+// NOTE: These are minimal stub definitions to allow Verse component to compile.
+// The full Way system (Feats, Ways, Precepts) has been archived and will be
+// reimplemented in the MVP phase. These stubs provide just enough functionality
+// to support the existing Verse.cpp implementation without breaking the build.
+
+/**
+ * Precepts represent core values and philosophies.
+ * Stub enum for MVP - full implementation in Archive/Source/Way/Way.h
+ */
+UENUM(BlueprintType)
+enum class EPrecept : uint8
+{
+    Honor           UMETA(DisplayName = "Honor"),
+    Justice         UMETA(DisplayName = "Justice"),
+    Compassion      UMETA(DisplayName = "Compassion"),
+    Loyalty         UMETA(DisplayName = "Loyalty"),
+    Mastery         UMETA(DisplayName = "Mastery"),
+    Innovation      UMETA(DisplayName = "Innovation"),
+    Discovery       UMETA(DisplayName = "Discovery"),
+    Craftsmanship   UMETA(DisplayName = "Craftsmanship"),
+    Strength        UMETA(DisplayName = "Strength"),
+    Dominance       UMETA(DisplayName = "Dominance"),
+    Cunning         UMETA(DisplayName = "Cunning"),
+    Ambition        UMETA(DisplayName = "Ambition"),
+    Unity           UMETA(DisplayName = "Unity"),
+    Freedom         UMETA(DisplayName = "Freedom"),
+    Tradition       UMETA(DisplayName = "Tradition"),
+    Progress        UMETA(DisplayName = "Progress"),
+    Prosperity      UMETA(DisplayName = "Prosperity"),
+    Survival        UMETA(DisplayName = "Survival"),
+    Efficiency      UMETA(DisplayName = "Efficiency"),
+    Harmony         UMETA(DisplayName = "Harmony")
+};
+
+/**
+ * Rarity tier for Feats.
+ * Stub enum for MVP - full implementation in Archive/Source/Way/Feat.h
+ */
+UENUM(BlueprintType)
+enum class EFeatRarity : uint8
+{
+    Common      UMETA(DisplayName = "Common"),
+    Uncommon    UMETA(DisplayName = "Uncommon"),
+    Rare        UMETA(DisplayName = "Rare"),
+    Epic        UMETA(DisplayName = "Epic"),
+    Legendary   UMETA(DisplayName = "Legendary"),
+    Mythic      UMETA(DisplayName = "Mythic")
+};
+
+/**
+ * Structure defining how strongly a group values a Precept.
+ * Stub struct for MVP - full implementation in Archive/Source/Way/Way.h
+ */
+USTRUCT(BlueprintType)
+struct FPreceptValue
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Precept")
+    EPrecept Precept;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Precept", meta=(ClampMin="0", ClampMax="100"))
+    int32 ImportanceValue;
+
+    FPreceptValue()
+        : Precept(EPrecept::Honor)
+        , ImportanceValue(50)
+    {}
+};
+
+/**
+ * Data Asset representing a Feat - a major accomplishment.
+ * Stub class for MVP - full implementation in Archive/Source/Way/Feat.h
+ */
+UCLASS(BlueprintType)
+class ADASTREA_API UFeatDataAsset : public UDataAsset
+{
+    GENERATED_BODY()
+
+public:
+    /** The Title granted by this Feat */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Identity")
+    FText TitleName;
+
+    /** Unique identifier for this Feat */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Identity")
+    FName FeatID;
+
+    /** Whether this Feat can only be earned once per playthrough */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Requirements")
+    bool bUniquePerPlaythrough;
+
+    /** How rare and prestigious this accomplishment is */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Identity")
+    EFeatRarity Rarity;
+
+    /**
+     * Get alignment strength for a specific Precept
+     * @param Precept The Precept to query
+     * @return Alignment strength (stub returns 0)
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Feat")
+    int32 GetAlignmentStrength(EPrecept Precept) const { return 0; }
+
+    /**
+     * Check if this Feat aligns with a specific Precept
+     * @param Precept The Precept to check
+     * @return True if aligned (stub returns false)
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Feat")
+    bool AlignsWith(EPrecept Precept) const { return false; }
+
+    /**
+     * Calculate reputation gain with a group
+     * @param WayPrecepts The group's valued Precepts
+     * @return Reputation gain (stub returns 0)
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Feat")
+    int32 CalculateReputationGain(const TArray<FPreceptValue>& WayPrecepts) const { return 0; }
+};
+
+/**
+ * Data Asset representing a Way - a group's identity and philosophy.
+ * Stub class for MVP - full implementation in Archive/Source/Way/Way.h
+ */
+UCLASS(BlueprintType)
+class ADASTREA_API UWayDataAsset : public UDataAsset
+{
+    GENERATED_BODY()
+
+public:
+    /**
+     * Get all Precepts valued by this Way
+     * @return Array of Precept values (stub returns empty array)
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Way")
+    TArray<FPreceptValue> GetPrecepts() const { return TArray<FPreceptValue>(); }
+};
 
 /**
  * Structure tracking when and where a Feat was earned.
