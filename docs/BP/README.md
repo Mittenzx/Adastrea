@@ -64,10 +64,11 @@ All guides follow the [official Blueprint documentation standard](../../.github/
    - Cart management
    - Validation and error handling
 
-6. **WBP_TradeItemRow** _(Coming Soon)_ - Individual item widget
-   - Item display
-   - Quantity selector
-   - Add to cart button
+6. **[WBP_TradeItemRow](WBP_TradeItemRow.md)** - Individual item widget
+   - Item display with name, price, and stock
+   - Quantity selector with +/- buttons
+   - Buy and sell transaction buttons
+   - Price and stock validation
 
 ### Space Stations
 
@@ -106,7 +107,7 @@ Player Systems
 
 UI Systems
 ├── WBP_TradingUI (Trading interface)
-│   └── WBP_TradeItemRow (Coming Soon - Item widget)
+│   └── WBP_TradeItemRow (Item widget)
 ├── WBP_SpaceshipHUD (Main HUD)
 └── WBP_StationDockingUI (Docking UI)
 
@@ -281,7 +282,7 @@ For the Trade Simulator MVP, implement in this order:
 
 ### Week 3-4: Trading System
 5. WBP_TradingUI
-6. WBP_TradeItemRow _(Coming Soon)_
+6. WBP_TradeItemRow
 7. BP_SpaceStation_Main (docking only)
 
 ### Week 5-6: Content & Polish
@@ -297,6 +298,6 @@ Begin with [BP_SpaceGameMode](BP_SpaceGameMode.md) and follow the order above fo
 
 ---
 
-**Last Updated**: December 30, 2025  
+**Last Updated**: January 1, 2026  
 **Maintained by**: Adastrea Development Team  
 **Status**: Active Development - MVP Phase
