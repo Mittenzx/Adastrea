@@ -140,6 +140,112 @@ Both are real UMG widget types in Unreal Engine:
 
 ---
 
+## 🔧 Using TextBlock in Blueprint Graphs
+
+### How to Set Text on a TextBlock Widget
+
+To modify TextBlock content in Blueprint graphs, follow these steps:
+
+#### Step 1: Create/Reference the TextBlock
+
+1. **In Designer Tab**: Add a TextBlock widget (Palette → Common → **Text**)
+2. **Name it**: Give it a descriptive name (e.g., `Text_MarketName`, `Text_Credits`)
+3. **Make it a Variable**: Check "Is Variable" in Details panel
+
+#### Step 2: Access TextBlock in Graph
+
+In the **Graph** tab of your widget Blueprint:
+
+```
+Event (e.g., Event Construct)
+├─► Get Text_MarketName (variable)
+│   └─► TextBlock Reference
+└─► Connect to Set Text node
+```
+
+**Blueprint Nodes Needed:**
+1. **Get [TextBlockName]** - Drag your TextBlock variable into the graph
+2. **Set Text (Text)** - Right-click TextBlock reference → Text → Set Text (Text)
+3. **Connect** your text value to the "In Text" pin
+
+#### Step 3: Set the Text Value
+
+**Example: Setting Credits Display**
+```
+Custom Event: UpdateCredits
+├─► Get Player Credits (function)
+├─► Format Text
+│   ├─ Format: "Credits: {Amount} CR"
+│   └─ Amount: [Player Credits]
+├─► Get Text_Credits
+└─► Set Text (Text)
+    └─ In Text: [Formatted Text]
+```
+
+**Example: Setting Market Name**
+```
+Function: OpenMarket
+├─► Get Market Data (parameter)
+├─► Break Market Data → Market Name
+├─► Get Text_MarketName
+└─► Set Text (Text)
+    └─ In Text: [Market Name]
+```
+
+#### Common TextBlock Functions in Trading UI
+
+| Function | Purpose | Example Usage |
+|----------|---------|---------------|
+| **Set Text (Text)** | Update displayed text | Updating credits, prices, totals |
+| **Set Color and Opacity** | Change text color | Red for errors, green for success |
+| **Set Font** | Change size/style | Make important values larger |
+| **Set Visibility** | Show/hide text | Hide status message when not needed |
+
+#### Trading UI Specific Examples
+
+**Updating Player Credits:**
+```
+After Purchase:
+├─► Get Updated Credits
+├─► Format Text: "Credits: {Value} CR"
+├─► Get Text_Credits
+└─► Set Text (Text)
+```
+
+**Showing Error Messages:**
+```
+On Purchase Failed:
+├─► Get Error Message
+├─► Get Text_StatusMessage
+├─► Set Text (Text) → Error Message
+├─► Set Color and Opacity → Red
+└─► Set Visibility → Visible
+```
+
+**Updating Cart Total:**
+```
+On Item Added to Cart:
+├─► Calculate Cart Total
+├─► Format Text: "Total: {Amount} CR"
+├─► Get Text_CartTotal
+└─► Set Text (Text)
+```
+
+#### Quick Tips for Trading UI
+
+✅ **Do:**
+- Update TextBlocks only when values change (not every frame)
+- Use Format Text for combining multiple values
+- Color-code important information (green = profit, red = error)
+- Clear error messages after user action
+
+❌ **Don't:**
+- Update TextBlocks in Tick events (use custom events instead)
+- Forget to bind TextBlocks as variables
+- Hard-code text that should come from data assets
+
+---
+
 ## 🔧 Prerequisites
 
 ### Required C++ Classes

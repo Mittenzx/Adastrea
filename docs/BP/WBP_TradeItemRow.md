@@ -155,6 +155,101 @@ Both are real UMG widget types in Unreal Engine:
 
 ---
 
+## 🔧 Using TextBlock in Blueprint Graphs
+
+### How to Set Text on a TextBlock Widget
+
+To modify TextBlock content in Blueprint graphs, follow these steps:
+
+#### Step 1: Create/Reference the TextBlock
+
+1. **In Designer Tab**: Add a TextBlock widget (Palette → Common → **Text**)
+2. **Name it**: Give it a descriptive name (e.g., `ItemNameText`, `PriceText`)
+3. **Make it a Variable**: Check "Is Variable" in Details panel
+
+#### Step 2: Access TextBlock in Graph
+
+In the **Graph** tab of your widget Blueprint:
+
+```
+Event (e.g., Event Construct)
+├─► Get ItemNameText (variable)
+│   └─► TextBlock Reference
+└─► Connect to Set Text node
+```
+
+**Blueprint Nodes Needed:**
+1. **Get [TextBlockName]** - Drag your TextBlock variable into the graph (or right-click → Get)
+2. **Set Text (Text)** - Right-click TextBlock reference → Text → Set Text (Text)
+3. **Connect** your text value to the "In Text" pin
+
+#### Step 3: Set the Text Value
+
+**Example: Setting Static Text**
+```
+Event Construct
+├─► Get PriceText
+└─► Set Text (Text)
+    └─ In Text: "100 CR" (or Make Literal Text)
+```
+
+**Example: Setting Dynamic Text from Variable**
+```
+Event Construct
+├─► Get ItemData (variable)
+├─► Break ItemData (or → ItemName)
+├─► Get ItemNameText
+└─► Set Text (Text)
+    └─ In Text: [ItemData.ItemName]
+```
+
+**Example: Setting Formatted Text**
+```
+Event Construct
+├─► Format Text
+│   ├─ Format: "Buy: {Price} CR"
+│   └─ Price: [ItemPrice variable]
+├─► Get PriceText
+└─► Set Text (Text)
+    └─ In Text: [Format Text result]
+```
+
+#### Common TextBlock Functions
+
+| Function | Purpose | Usage in Graph |
+|----------|---------|----------------|
+| **Set Text (Text)** | Set the displayed text | Right-click TextBlock → Text → Set Text (Text) |
+| **Get Text** | Read current text | Right-click TextBlock → Text → Get Text |
+| **Set Color and Opacity** | Change text color | Right-click TextBlock → Appearance → Set Color and Opacity |
+| **Set Font** | Change font style/size | Right-click TextBlock → Appearance → Set Font |
+| **Set Justification** | Align text (Left/Center/Right) | Right-click TextBlock → Appearance → Set Justification |
+
+#### Quick Tips
+
+✅ **Do:**
+- Always check "Is Variable" for TextBlocks you want to modify in graphs
+- Use descriptive names: `Text_PlayerName`, `Text_ItemPrice`, `Text_StatusMessage`
+- Use Format Text node for combining multiple values
+- Cache TextBlock references if updating frequently
+
+❌ **Don't:**
+- Forget to make TextBlock a variable (can't access in graph otherwise)
+- Update text every frame (use events/timers instead)
+- Use SetText in Tick events (performance issue)
+
+#### Common Mistakes
+
+**Issue**: "I can't find my TextBlock in the graph"
+- **Solution**: Make sure "Is Variable" is checked in Designer
+
+**Issue**: "SetText node doesn't appear"
+- **Solution**: Drag TextBlock variable to graph, then right-click it → Text → Set Text (Text)
+
+**Issue**: "Text doesn't update"
+- **Solution**: Ensure execution wire connects from your event to SetText node
+
+---
+
 ## 🏗️ Widget Structure
 
 > **Note**: "TextBlock" refers to UMG's `UTextBlock` class. In Unreal Editor's widget picker, this appears as "Text" under Common widgets.
