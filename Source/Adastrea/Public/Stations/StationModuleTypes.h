@@ -24,7 +24,7 @@ UENUM(BlueprintType)
 enum class EStationModuleGroup : uint8
 {
     All         UMETA(DisplayName="All"),           // All modules (no filtering)
-    Docking     UMETA(DisplayName="Docking"),      // Ship docking bays and hangers (MVP)
+    Docking     UMETA(DisplayName="Docking"),      // Ship docking bays and hangars (MVP)
     Power       UMETA(DisplayName="Power"),        // Reactors and generators (POST-MVP)
     Storage     UMETA(DisplayName="Storage"),      // Cargo and material storage (MVP)
     Processing  UMETA(DisplayName="Processing"),   // Manufacturing and refinement (POST-MVP)
