@@ -120,7 +120,44 @@
 
 ---
 
+## 📖 UMG Widget Terminology
+
+> **Important Clarification**: This document uses official Unreal Engine UMG widget class names.
+
+### TextBlock vs RichTextBlock
+
+**"TextBlock" refers to Unreal Engine's `UTextBlock` widget class** (found in `Components/TextBlock.h`), not `RichTextBlock`.
+
+Both are real UMG widget types in Unreal Engine:
+
+| Widget Class | UE Class Name | When to Use | Features |
+|--------------|---------------|-------------|----------|
+| **TextBlock** | `UTextBlock` | Simple text display (✅ Used in this widget) | Single style, fast rendering, no markup |
+| **RichTextBlock** | `URichTextBlock` | Formatted text with markup | Inline styles, images, custom decorators, slower |
+
+**In Unreal Editor:**
+- TextBlock: Palette → Common → **Text** (displays as "Text" in the widget picker)
+- RichTextBlock: Palette → Common → **Rich Text Block**
+
+**Why TextBlock for Trading UI:**
+- ✅ **Performance**: Faster rendering for lists with many items
+- ✅ **Simplicity**: No need for inline formatting in prices/names
+- ✅ **Consistency**: Single font/color per element
+- ✅ **MVP Focus**: Keep it simple and fast
+
+**When to Consider RichTextBlock:**
+- Detailed item descriptions with formatting (bold, italic, colors)
+- Tutorial/help text with embedded images
+- Chat systems with player name colors
+- Lore/story text with styled paragraphs
+
+**For this MVP**: All text displays use standard `UTextBlock` widgets for optimal performance.
+
+---
+
 ## 🏗️ Widget Structure
+
+> **Note**: "TextBlock" refers to UMG's `UTextBlock` class. In Unreal Editor's widget picker, this appears as "Text" under Common widgets.
 
 ### UI Hierarchy
 

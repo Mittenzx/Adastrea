@@ -105,6 +105,41 @@
 
 ---
 
+## 📖 UMG Widget Terminology
+
+> **Important Clarification**: This document uses official Unreal Engine UMG widget class names.
+
+### TextBlock vs RichTextBlock
+
+**"TextBlock" refers to Unreal Engine's `UTextBlock` widget class** (found in `Components/TextBlock.h`), not `RichTextBlock`.
+
+Both are real UMG widget types in Unreal Engine:
+
+| Widget Class | UE Class Name | When to Use | Features |
+|--------------|---------------|-------------|----------|
+| **TextBlock** | `UTextBlock` | Simple text display (✅ Used in this widget) | Single style, fast rendering, no markup |
+| **RichTextBlock** | `URichTextBlock` | Formatted text with markup | Inline styles, images, custom decorators, slower |
+
+**In Unreal Editor:**
+- TextBlock: Palette → Common → **Text** (displays as "Text" in the widget picker)
+- RichTextBlock: Palette → Common → **Rich Text Block**
+
+**Why TextBlock for Trading UI:**
+- ✅ **Performance**: Fast rendering for dynamic price updates
+- ✅ **Simplicity**: No need for inline formatting
+- ✅ **Consistency**: Clean, unified styling across the interface
+- ✅ **MVP Focus**: Prioritize functionality over rich formatting
+
+**When to Consider RichTextBlock:**
+- Long-form descriptions with formatting (quest text, lore)
+- Tutorial messages with embedded images or icons
+- Chat/dialogue systems with colored player names
+- Complex tooltips with mixed styles
+
+**For Trading Interface**: All text displays (market name, prices, credits, cart total, status messages) use standard `UTextBlock` widgets for optimal performance and simplicity.
+
+---
+
 ## 🔧 Prerequisites
 
 ### Required C++ Classes
@@ -124,13 +159,15 @@
 
 ## 🎨 Widget Layout Structure
 
+> **Note**: "TextBlock" refers to UMG's `UTextBlock` class. In Unreal Editor's widget picker, this appears as "Text" under Common widgets.
+
 ```
 Canvas Panel (Root)
 ├── Background Overlay
 │   └── Background Image (semi-transparent)
 │
 ├── Header Panel (Horizontal Box)
-│   ├── Market Name (Text Block)
+│   ├── Market Name (TextBlock)
 │   ├── Spacer
 │   └── Close Button
 │
@@ -150,20 +187,20 @@ Canvas Panel (Root)
 │   └── Right Panel: Player Info (Vertical Box)
 │       │
 │       ├── Player Stats Panel
-│       │   ├── Credits Display (Text Block)
+│       │   ├── Credits Display (TextBlock)
 │       │   ├── Cargo Space Bar (Progress Bar)
-│       │   └── Profit Display (Text Block)
+│       │   └── Profit Display (TextBlock)
 │       │
 │       ├── Shopping Cart Panel
-│       │   ├── Cart Title (Text Block)
+│       │   ├── Cart Title (TextBlock)
 │       │   ├── Cart Items List (Scroll Box)
-│       │   └── Cart Total (Text Block)
+│       │   └── Cart Total (TextBlock)
 │       │
 │       └── Transaction Panel
 │           ├── Trade Button (Button)
 │           └── Clear Cart Button (Button)
 │
-└── Status Message (Text Block)
+└── Status Message (TextBlock)
     └── Shows errors/success messages
 ```
 
@@ -201,7 +238,8 @@ Canvas Panel (Root)
 1. Add Horizontal Box at top
 2. Padding: 20px all sides
 3. Add children:
-   - **Text Block**: "Market Name"
+   - **TextBlock**: "Market Name"
+     - Widget Type: Common → Text → Text (standard TextBlock)
      - Bind text to `GetMarketName()` function
      - Font Size: 32
      - Color: White
@@ -243,10 +281,10 @@ Canvas Panel (Root)
 2. Add Player Stats Panel:
    ```
    Vertical Box
-   ├── Text: "Credits:"
-   ├── Text: Bind to GetPlayerCredits()
+   ├── TextBlock: "Credits:"
+   ├── TextBlock: Bind to GetPlayerCredits()
    │   Font Size: 24, Color: Gold
-   ├── Text: "Cargo Space:"
+   ├── TextBlock: "Cargo Space:"
    └── Progress Bar: Bind to GetCargoSpacePercent()
        Fill Color: Green → Yellow → Red
    ```
@@ -254,10 +292,10 @@ Canvas Panel (Root)
 3. Add Shopping Cart Panel:
    ```
    Vertical Box
-   ├── Text: "Shopping Cart"
+   ├── TextBlock: "Shopping Cart"
    ├── Scroll Box: CartItemsScrollBox
    │   └── [Cart item entries]
-   └── Text: "Total: " + GetCartTotal() + " CR"
+   └── TextBlock: "Total: " + GetCartTotal() + " CR"
        Font Size: 20, Color: White
    ```
 
@@ -273,7 +311,8 @@ Canvas Panel (Root)
 
 #### Status Message
 
-1. Add Text Block at bottom
+1. Add TextBlock widget at bottom
+   - Widget Type: Common → Text → Text (standard TextBlock)
 2. Name: `StatusMessageText`
 3. Initially hidden (visibility: Collapsed)
 4. Used for error/success messages
