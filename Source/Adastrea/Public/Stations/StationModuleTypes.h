@@ -8,18 +8,29 @@
 /**
  * Module classification for space station organization
  * Groups modules by primary function for easy filtering and management
+ * 
+ * MVP SCOPE (Trade Simulator):
+ * - Docking: Required for trading interface
+ * - Storage: Cargo and goods management
+ * - Habitation: Basic station functionality
+ * - Public: Market and trading areas
+ * - Connection: Station navigation
+ * 
+ * POST-MVP SCOPE:
+ * - Defence: Weapons and shields (combat system)
+ * - Power/Processing: Advanced station mechanics
  */
 UENUM(BlueprintType)
 enum class EStationModuleGroup : uint8
 {
     All         UMETA(DisplayName="All"),           // All modules (no filtering)
-    Docking     UMETA(DisplayName="Docking"),      // Ship docking bays and hangers
-    Power       UMETA(DisplayName="Power"),        // Reactors and generators
-    Storage     UMETA(DisplayName="Storage"),      // Cargo and material storage
-    Processing  UMETA(DisplayName="Processing"),   // Manufacturing and refinement
-    Defence     UMETA(DisplayName="Defence"),      // Weapons and shields
-    Habitation  UMETA(DisplayName="Habitation"),   // Living quarters and crew facilities
-    Public      UMETA(DisplayName="Public"),       // Public spaces, markets, entertainment
-    Connection  UMETA(DisplayName="Connection"),   // Corridors and connectors
+    Docking     UMETA(DisplayName="Docking"),      // Ship docking bays and hangars (MVP)
+    Power       UMETA(DisplayName="Power"),        // Reactors and generators (POST-MVP)
+    Storage     UMETA(DisplayName="Storage"),      // Cargo and material storage (MVP)
+    Processing  UMETA(DisplayName="Processing"),   // Manufacturing and refinement (POST-MVP)
+    Defence     UMETA(DisplayName="Defence"),      // Weapons and shields (POST-MVP: Combat system)
+    Habitation  UMETA(DisplayName="Habitation"),   // Living quarters and crew facilities (MVP)
+    Public      UMETA(DisplayName="Public"),       // Public spaces, markets, entertainment (MVP)
+    Connection  UMETA(DisplayName="Connection"),   // Corridors and connectors (MVP)
     Other       UMETA(DisplayName="Other")         // Miscellaneous modules
 };

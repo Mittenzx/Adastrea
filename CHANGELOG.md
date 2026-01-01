@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Build order analysis documentation in `docs/development/BUILD_ORDER_ANALYSIS.md` - comprehensive report on include order, module dependencies, and MVP scope clarifications
+- MVP vs POST-MVP documentation comments in combat-related headers to clarify Trade Simulator scope
+
+### Changed
+- `SpaceshipDataAsset.h` - Added MVP clarification comments to Combat Stats section explaining which stats are used for environmental hazards vs future combat
+- `IDamageable.h` - Documented MVP scope (environmental damage only) vs POST-MVP scope (full combat system)
+- `FactionLogic.h` - Clarified MVP focus on economic/diplomacy vs POST-MVP military actions
+- `StationModuleTypes.h` - Labeled module groups as MVP (trading-focused) or POST-MVP (combat/advanced)
+
+### Verified
+- ✅ No circular module dependencies (CI check passes)
+- ✅ All `.generated.h` includes are properly ordered as last include
+- ✅ Combat system properly archived (not in build)
+- ✅ Forward declarations used appropriately for compilation performance
+
+### Documentation
+- Created comprehensive build order analysis report documenting include patterns, module dependencies, and non-MVP system status
+- Clarified that "combat stats" in SpaceshipDataAsset are used for MVP environmental hazards, not actual weapons
+
 ### Fixed
 
 - **Build Issues - Missing Implementations** (2025-12-31)

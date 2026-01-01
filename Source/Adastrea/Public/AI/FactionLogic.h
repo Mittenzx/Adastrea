@@ -91,11 +91,21 @@ enum class EMilitaryActionType : uint8
  * 4. Override Event functions to customize faction AI
  * 5. Add to faction management systems or game mode
  * 
+ * MVP SCOPE (Trade Simulator):
+ * - Economic decisions (trading, pricing, station management)
+ * - Basic diplomacy (trade relationships, pricing modifiers)
+ * - Territory management (station ownership)
+ * 
+ * POST-MVP SCOPE:
+ * - Military actions (fleet deployment, combat)
+ * - Advanced diplomacy (wars, alliances, espionage)
+ * - Research and intelligence systems
+ * 
  * Integration Points:
  * - Faction system: Uses FactionDataAsset for faction traits and relationships
  * - Trading system: Influences trade routes and economic decisions
  * - Station system: Decides station construction and expansion
- * - Combat system: Manages fleet deployment and military actions
+ * - POST-MVP Combat system: Manages fleet deployment and military actions
  */
 UCLASS(Blueprintable, BlueprintType)
 class ADASTREA_API UFactionLogic : public UNPCLogicBase

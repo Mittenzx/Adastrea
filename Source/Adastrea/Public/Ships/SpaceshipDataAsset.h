@@ -62,28 +62,39 @@ public:
     // ====================
     // COMBAT STATS
     // ====================
+    // NOTE: While combat is out of scope for Trade Simulator MVP, these stats are retained for:
+    // 1. Ship durability calculations (environmental hazards, docking accidents)
+    // 2. Future combat system implementation post-MVP
+    // 3. Data Asset backward compatibility
+    // MVP Focus: Only HullStrength and ShieldStrength are critical for trading hazards
 
     // Armor rating (damage reduction)
+    // MVP: Used for environmental hazard calculations only
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat Stats", meta=(ClampMin="0", ClampMax="1000"))
     float ArmorRating;
 
     // Shield strength (additional health layer)
+    // MVP: Protects ship during trading hazards (pirates, environmental)
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat Stats", meta=(ClampMin="0", ClampMax="100000"))
     float ShieldStrength;
 
     // Shield recharge rate per second
+    // MVP: Basic shield recovery between trading runs
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat Stats", meta=(ClampMin="0", ClampMax="1000"))
     float ShieldRechargeRate;
 
     // Number of weapon hardpoints
+    // POST-MVP: Not used in Trade Simulator MVP (no combat system)
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat Stats", meta=(ClampMin="0", ClampMax="50"))
     int32 WeaponSlots;
 
     // Total weapon power capacity
+    // POST-MVP: Not used in Trade Simulator MVP (no combat system)
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat Stats", meta=(ClampMin="0", ClampMax="10000"))
     float WeaponPowerCapacity;
 
     // Point defense rating (anti-missile/fighter)
+    // POST-MVP: Not used in Trade Simulator MVP (no combat system)
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat Stats", meta=(ClampMin="0", ClampMax="100"))
     float PointDefenseRating;
 

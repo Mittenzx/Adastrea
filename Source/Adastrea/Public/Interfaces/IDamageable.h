@@ -2,12 +2,17 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-// TODO: Combat system archived - EDamageType will be reimplemented in MVP
+// NOTE: Combat system archived - EDamageType will be reimplemented in MVP for hazards
+// Full combat system (weapons, projectiles) is POST-MVP
 // #include "Combat/WeaponDataAsset.h"
 #include "IDamageable.generated.h"
 
 // Forward declaration for damage type enum
-// TODO: This will be moved back to WeaponDataAsset when combat system is reimplemented
+// MVP USAGE: Environmental hazards only (no combat weapons)
+// - Kinetic: Docking accidents, collisions
+// - Energy: Solar radiation, station system failures
+// - Thermal: Engine overheating, star proximity
+// POST-MVP: Full weapon system implementation
 UENUM(BlueprintType)
 enum class EDamageType : uint8
 {
@@ -31,10 +36,20 @@ class UDamageable : public UInterface
 /**
  * Interface for actors that can receive damage
  * 
+ * MVP SCOPE (Trade Simulator):
+ * - Environmental hazards (docking accidents, radiation, collisions)
+ * - Basic ship durability for trading risks
+ * - No weapons or active combat
+ * 
+ * POST-MVP SCOPE:
+ * - Full combat system with weapons and projectiles
+ * - NPC pirate encounters
+ * - Station defense systems
+ * 
  * Implement this interface on:
- * - Spaceships (ASpaceship)
- * - Space stations (ASpaceStation)
- * - Station modules (ASpaceStationModule)
+ * - Spaceships (ASpaceship) - MVP: Environmental damage only
+ * - Space stations (ASpaceStation) - POST-MVP: Combat implementation
+ * - Station modules (ASpaceStationModule) - POST-MVP: Combat implementation
  * - Any destructible objects
  * 
  * Benefits:
@@ -45,11 +60,12 @@ class UDamageable : public UInterface
  * 
  * Usage Example (C++):
  * @code
+ * // MVP: Apply environmental damage
  * if (Target->Implements<UDamageable>())
  * {
  *     IDamageable* DamageableTarget = Cast<IDamageable>(Target);
  *     float DamageDealt = DamageableTarget->Execute_ApplyDamage(
- *         Target, Damage, DamageType, Instigator, DamageCauser
+ *         Target, 10.0f, EDamageType::Thermal, nullptr, nullptr
  *     );
  * }
  * @endcode
@@ -66,6 +82,16 @@ public:
     /**
      * Apply damage to this actor
      * 
+     * MVP USAGE (Trade Simulator):
+     * - Environmental hazards only (docking accidents, radiation, collisions)
+     * - Instigator/DamageCauser can be nullptr for environmental damage
+     * - Basic shield/hull damage calculation
+     * 
+     * POST-MVP USAGE:
+     * - Full weapon system implementation
+     * - Instigator = attacking ship, DamageCauser = projectile/weapon
+     * - Complex armor penetration calculations
+     * 
      * This is the primary method for dealing damage. Implementations should:
      * - Apply damage to shields first (if present)
      * - Apply remaining damage to hull
@@ -74,9 +100,9 @@ public:
      * - Broadcast damage events for AI/UI
      * 
      * @param Damage Amount of raw damage to apply
-     * @param DamageType Type of damage (Kinetic, Energy, Explosive, Thermal, EMP)
-     * @param Instigator Actor that initiated the damage (the ship firing the weapon)
-     * @param DamageCauser Direct cause of damage (projectile, explosion effect, etc.)
+     * @param DamageType Type of damage (MVP: Kinetic, Thermal, Energy for hazards)
+     * @param Instigator Actor that initiated the damage (MVP: Can be nullptr for environment)
+     * @param DamageCauser Direct cause of damage (MVP: Can be nullptr for environment)
      * @return Actual damage applied after armor/shields (for feedback/logging)
      */
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Damage")
