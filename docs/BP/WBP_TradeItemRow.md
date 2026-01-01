@@ -120,7 +120,139 @@
 
 ---
 
+## 📖 UMG Widget Terminology
+
+> **Important Clarification**: This document uses official Unreal Engine UMG widget class names.
+
+### TextBlock vs RichTextBlock
+
+**"TextBlock" refers to Unreal Engine's `UTextBlock` widget class** (found in `Components/TextBlock.h`), not `RichTextBlock`.
+
+Both are real UMG widget types in Unreal Engine:
+
+| Widget Class | UE Class Name | When to Use | Features |
+|--------------|---------------|-------------|----------|
+| **TextBlock** | `UTextBlock` | Simple text display (✅ Used in this widget) | Single style, fast rendering, no markup |
+| **RichTextBlock** | `URichTextBlock` | Formatted text with markup | Inline styles, images, custom decorators, slower |
+
+**In Unreal Editor:**
+- TextBlock: Palette → Common → **Text** (displays as "Text" in the widget picker)
+- RichTextBlock: Palette → Common → **Rich Text Block**
+
+**Why TextBlock for Trading UI:**
+- ✅ **Performance**: Faster rendering for lists with many items
+- ✅ **Simplicity**: No need for inline formatting in prices/names
+- ✅ **Consistency**: Single font/color per element
+- ✅ **MVP Focus**: Keep it simple and fast
+
+**When to Consider RichTextBlock:**
+- Detailed item descriptions with formatting (bold, italic, colors)
+- Tutorial/help text with embedded images
+- Chat systems with player name colors
+- Lore/story text with styled paragraphs
+
+**For this MVP**: All text displays use standard `UTextBlock` widgets for optimal performance.
+
+---
+
+## 🔧 Using TextBlock in Blueprint Graphs
+
+### How to Set Text on a TextBlock Widget
+
+To modify TextBlock content in Blueprint graphs, follow these steps:
+
+#### Step 1: Create/Reference the TextBlock
+
+1. **In Designer Tab**: Add a TextBlock widget (Palette → Common → **Text**)
+2. **Name it**: Give it a descriptive name (e.g., `ItemNameText`, `PriceText`)
+3. **Make it a Variable**: Check "Is Variable" in Details panel
+
+#### Step 2: Access TextBlock in Graph
+
+In the **Graph** tab of your widget Blueprint:
+
+> **Note**: SVG diagram to be added - see `Tools/generate_blueprint_images.py` for generation.
+
+**Blueprint Flow:**
+- **Event** (e.g., Event Construct)
+- **Get** ItemNameText variable → Returns TextBlock reference
+- **Set Text (Text)** function → Modifies the TextBlock's displayed text
+
+**Blueprint Nodes Needed:**
+1. **Get [TextBlockName]** - Drag your TextBlock variable into the graph (or right-click → Get)
+2. **Set Text (Text)** - Right-click TextBlock reference → Text → Set Text (Text)
+3. **Connect** your text value to the "In Text" pin
+
+#### Step 3: Set the Text Value
+
+**Example: Setting Static Text**
+
+![Set Static Text Flow](../reference/images/blueprints/textblock_set_static_text.svg)
+
+_Flow description:_
+- On **Event Construct**, get a reference to `PriceText` (TextBlock variable).
+- Call **Set Text (Text)** on `PriceText`.
+- Pass in `"100 CR"` as a literal text value (or use **Make Literal Text** node).
+
+**Example: Setting Dynamic Text from Variable**
+
+![Set Dynamic Text Flow](../reference/images/blueprints/textblock_set_dynamic_text.svg)
+
+_Flow description:_
+- On **Event Construct**, get the `ItemData` variable.
+- **Break** `ItemData` struct to access the `ItemName` field (or use a direct property access).
+- Get a reference to `ItemNameText` (TextBlock variable).
+- Call **Set Text (Text)** on `ItemNameText`, passing in `ItemData.ItemName`.
+
+**Example: Setting Formatted Text**
+
+![Set Formatted Text Flow](../reference/images/blueprints/textblock_set_formatted_text.svg)
+
+_Flow description:_
+- On **Event Construct**, use a **Format Text** node with format string `"Buy: {Price} CR"`.
+- Bind the `Price` pin to the `ItemPrice` variable.
+- Get a reference to `PriceText` (TextBlock variable).
+- Call **Set Text (Text)** on `PriceText`, using the output from **Format Text** as the new text value.
+
+#### Common TextBlock Functions
+
+| Function | Purpose | Usage in Graph |
+|----------|---------|----------------|
+| **Set Text (Text)** | Set the displayed text | Right-click TextBlock → Text → Set Text (Text) |
+| **Get Text** | Read current text | Right-click TextBlock → Text → Get Text |
+| **Set Color and Opacity** | Change text color | Right-click TextBlock → Appearance → Set Color and Opacity |
+| **Set Font** | Change font style/size | Right-click TextBlock → Appearance → Set Font |
+| **Set Justification** | Align text (Left/Center/Right) | Right-click TextBlock → Appearance → Set Justification |
+
+#### Quick Tips
+
+✅ **Do:**
+- Always check "Is Variable" for TextBlocks you want to modify in graphs
+- Use descriptive names: `Text_PlayerName`, `Text_ItemPrice`, `Text_StatusMessage`
+- Use Format Text node for combining multiple values
+- Cache TextBlock references if updating frequently
+
+❌ **Don't:**
+- Forget to make TextBlock a variable (can't access in graph otherwise)
+- Update text every frame (use events/timers instead)
+- Use SetText in Tick events (performance issue)
+
+#### Common Mistakes
+
+**Issue**: "I can't find my TextBlock in the graph"
+- **Solution**: Make sure "Is Variable" is checked in Designer
+
+**Issue**: "SetText node doesn't appear"
+- **Solution**: Drag TextBlock variable to graph, then right-click it → Text → Set Text (Text)
+
+**Issue**: "Text doesn't update"
+- **Solution**: Ensure execution wire connects from your event to SetText node
+
+---
+
 ## 🏗️ Widget Structure
+
+> **Note**: "TextBlock" refers to UMG's `UTextBlock` class. In Unreal Editor's widget picker, this appears as "Text" under Common widgets.
 
 ### UI Hierarchy
 

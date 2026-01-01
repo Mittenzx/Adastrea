@@ -105,6 +105,145 @@
 
 ---
 
+## 📖 UMG Widget Terminology
+
+> **Important Clarification**: This document uses official Unreal Engine UMG widget class names.
+
+### TextBlock vs RichTextBlock
+
+**"TextBlock" refers to Unreal Engine's `UTextBlock` widget class** (found in `Components/TextBlock.h`), not `RichTextBlock`.
+
+Both are real UMG widget types in Unreal Engine:
+
+| Widget Class | UE Class Name | When to Use | Features |
+|--------------|---------------|-------------|----------|
+| **TextBlock** | `UTextBlock` | Simple text display (✅ Used in this widget) | Single style, fast rendering, no markup |
+| **RichTextBlock** | `URichTextBlock` | Formatted text with markup | Inline styles, images, custom decorators, slower |
+
+**In Unreal Editor:**
+- TextBlock: Palette → Common → **Text** (displays as "Text" in the widget picker)
+- RichTextBlock: Palette → Common → **Rich Text Block**
+
+**Why TextBlock for Trading UI:**
+- ✅ **Performance**: Fast rendering for dynamic price updates
+- ✅ **Simplicity**: No need for inline formatting
+- ✅ **Consistency**: Clean, unified styling across the interface
+- ✅ **MVP Focus**: Prioritize functionality over rich formatting
+
+**When to Consider RichTextBlock:**
+- Long-form descriptions with formatting (quest text, lore)
+- Tutorial messages with embedded images or icons
+- Chat/dialogue systems with colored player names
+- Complex tooltips with mixed styles
+
+**For Trading Interface**: All text displays (market name, prices, credits, cart total, status messages) use standard `UTextBlock` widgets for optimal performance and simplicity.
+
+---
+
+## 🔧 Using TextBlock in Blueprint Graphs
+
+### How to Set Text on a TextBlock Widget
+
+To modify TextBlock content in Blueprint graphs, follow these steps:
+
+#### Step 1: Create/Reference the TextBlock
+
+1. **In Designer Tab**: Add a TextBlock widget (Palette → Common → **Text**)
+2. **Name it**: Give it a descriptive name (e.g., `Text_MarketName`, `Text_Credits`)
+3. **Make it a Variable**: Check "Is Variable" in Details panel
+
+#### Step 2: Access TextBlock in Graph
+
+In the **Graph** tab of your widget Blueprint:
+
+```
+Event (e.g., Event Construct)
+├─► Get Text_MarketName (variable)
+│   └─► TextBlock Reference
+└─► Connect to Set Text node
+```
+
+**Blueprint Nodes Needed:**
+1. **Get [TextBlockName]** - Drag your TextBlock variable into the graph
+2. **Set Text (Text)** - Right-click TextBlock reference → Text → Set Text (Text)
+3. **Connect** your text value to the "In Text" pin
+
+#### Step 3: Set the Text Value
+
+**Example: Setting Credits Display**
+
+![Update Credits Display](../reference/images/blueprints/tradingui_update_credits.svg)
+
+_Flow description:_
+- On **Custom Event: UpdateCredits**, call **Get Player Credits** function.
+- Use **Format Text** node with format string `"Credits: {Amount} CR"`.
+- Bind the `Amount` pin to the player credits value.
+- Get a reference to `Text_Credits` (TextBlock variable).
+- Call **Set Text (Text)** on `Text_Credits`, passing in the formatted text.
+
+**Example: Setting Market Name**
+
+![Set Market Name](../reference/images/blueprints/tradingui_set_market_name.svg)
+
+_Flow description:_
+- In **Function: OpenMarket**, receive `Market Data` as a parameter.
+- **Break** the `Market Data` struct to access the `Market Name` field.
+- Get a reference to `Text_MarketName` (TextBlock variable).
+- Call **Set Text (Text)** on `Text_MarketName`, passing in the `Market Name` value.
+
+#### Common TextBlock Functions in Trading UI
+
+| Function | Purpose | Example Usage |
+|----------|---------|---------------|
+| **Set Text (Text)** | Update displayed text | Updating credits, prices, totals |
+| **Set Color and Opacity** | Change text color | Red for errors, green for success |
+| **Set Font** | Change size/style | Make important values larger |
+| **Set Visibility** | Show/hide text | Hide status message when not needed |
+
+#### Trading UI Specific Examples
+
+**Updating Player Credits:**
+
+![Update Player Credits](../reference/images/blueprints/tradingui_update_player_credits.svg)
+
+_Flow description:_
+- After a successful purchase, retrieve the updated credits value.
+- Use **Format Text** with format `"Credits: {Value} CR"`.
+- Get `Text_Credits` widget reference and call **Set Text (Text)** with the formatted result.
+
+**Showing Error Messages:**
+
+![Show Error Message](../reference/images/blueprints/tradingui_show_error_message.svg)
+
+_Flow description:_
+- On **Purchase Failed**, retrieve the error message from the transaction result.
+- Get `Text_StatusMessage` widget reference.
+- Set **Text** to the error message, set **Color and Opacity** to red, and set **Visibility** to **Visible**.
+
+**Updating Cart Total:**
+
+![Update Cart Total](../reference/images/blueprints/tradingui_update_cart_total.svg)
+
+_Flow description:_
+- On **Item Added to Cart** (or removed), calculate the current cart total.
+- Format text as `"Total: {Amount} CR"`.
+- Get `Text_CartTotal` widget reference and set its **Text** to the formatted value.
+
+#### Quick Tips for Trading UI
+
+✅ **Do:**
+- Update TextBlocks only when values change (not every frame)
+- Use Format Text for combining multiple values
+- Color-code important information (green = profit, red = error)
+- Clear error messages after user action
+
+❌ **Don't:**
+- Update TextBlocks in Tick events (use custom events instead)
+- Forget to bind TextBlocks as variables
+- Hard-code text that should come from data assets
+
+---
+
 ## 🔧 Prerequisites
 
 ### Required C++ Classes
@@ -124,13 +263,15 @@
 
 ## 🎨 Widget Layout Structure
 
+> **Note**: "TextBlock" refers to UMG's `UTextBlock` class. In Unreal Editor's widget picker, this appears as "Text" under Common widgets.
+
 ```
 Canvas Panel (Root)
 ├── Background Overlay
 │   └── Background Image (semi-transparent)
 │
 ├── Header Panel (Horizontal Box)
-│   ├── Market Name (Text Block)
+│   ├── Market Name (TextBlock)
 │   ├── Spacer
 │   └── Close Button
 │
@@ -150,20 +291,20 @@ Canvas Panel (Root)
 │   └── Right Panel: Player Info (Vertical Box)
 │       │
 │       ├── Player Stats Panel
-│       │   ├── Credits Display (Text Block)
+│       │   ├── Credits Display (TextBlock)
 │       │   ├── Cargo Space Bar (Progress Bar)
-│       │   └── Profit Display (Text Block)
+│       │   └── Profit Display (TextBlock)
 │       │
 │       ├── Shopping Cart Panel
-│       │   ├── Cart Title (Text Block)
+│       │   ├── Cart Title (TextBlock)
 │       │   ├── Cart Items List (Scroll Box)
-│       │   └── Cart Total (Text Block)
+│       │   └── Cart Total (TextBlock)
 │       │
 │       └── Transaction Panel
 │           ├── Trade Button (Button)
 │           └── Clear Cart Button (Button)
 │
-└── Status Message (Text Block)
+└── Status Message (TextBlock)
     └── Shows errors/success messages
 ```
 
@@ -201,7 +342,8 @@ Canvas Panel (Root)
 1. Add Horizontal Box at top
 2. Padding: 20px all sides
 3. Add children:
-   - **Text Block**: "Market Name"
+   - **TextBlock**: "Market Name"
+     - Widget Type: Common → Text → Text (standard TextBlock)
      - Bind text to `GetMarketName()` function
      - Font Size: 32
      - Color: White
@@ -243,10 +385,10 @@ Canvas Panel (Root)
 2. Add Player Stats Panel:
    ```
    Vertical Box
-   ├── Text: "Credits:"
-   ├── Text: Bind to GetPlayerCredits()
+   ├── TextBlock: "Credits:"
+   ├── TextBlock: Bind to GetPlayerCredits()
    │   Font Size: 24, Color: Gold
-   ├── Text: "Cargo Space:"
+   ├── TextBlock: "Cargo Space:"
    └── Progress Bar: Bind to GetCargoSpacePercent()
        Fill Color: Green → Yellow → Red
    ```
@@ -254,10 +396,10 @@ Canvas Panel (Root)
 3. Add Shopping Cart Panel:
    ```
    Vertical Box
-   ├── Text: "Shopping Cart"
+   ├── TextBlock: "Shopping Cart"
    ├── Scroll Box: CartItemsScrollBox
    │   └── [Cart item entries]
-   └── Text: "Total: " + GetCartTotal() + " CR"
+   └── TextBlock: "Total: " + GetCartTotal() + " CR"
        Font Size: 20, Color: White
    ```
 
@@ -273,7 +415,8 @@ Canvas Panel (Root)
 
 #### Status Message
 
-1. Add Text Block at bottom
+1. Add TextBlock widget at bottom
+   - Widget Type: Common → Text → Text (standard TextBlock)
 2. Name: `StatusMessageText`
 3. Initially hidden (visibility: Collapsed)
 4. Used for error/success messages
