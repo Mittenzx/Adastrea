@@ -1,5 +1,5 @@
-#include "CargoComponent.h"
-#include "TradeItemDataAsset.h"
+#include "Trading/CargoComponent.h"
+#include "Trading/TradeItemDataAsset.h"
 
 UCargoComponent::UCargoComponent()
 {

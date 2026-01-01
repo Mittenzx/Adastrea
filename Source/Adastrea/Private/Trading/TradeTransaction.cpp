@@ -1,6 +1,6 @@
-#include "TradeTransaction.h"
-#include "TradeItemDataAsset.h"
-#include "MarketDataAsset.h"
+#include "Trading/TradeTransaction.h"
+#include "Trading/TradeItemDataAsset.h"
+#include "Trading/MarketDataAsset.h"
 #include "Misc/DateTime.h"
 
 UTradeTransactionManager::UTradeTransactionManager()
