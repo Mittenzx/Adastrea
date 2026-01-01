@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Build order analysis documentation in `docs/development/BUILD_ORDER_ANALYSIS.md` - comprehensive report on include order, module dependencies, and MVP scope clarifications
 - MVP vs POST-MVP documentation comments in combat-related headers to clarify Trade Simulator scope
+- UI file structure cleanup documentation:
+  - `docs/development/UI_FILE_STRUCTURE_CLEANUP.md` - Original analysis and cleanup plan
+  - `docs/development/UI_FILE_STRUCTURE_FINAL.md` - Final summary of changes
+  - `docs/reference/UI_WIDGET_REFERENCE.md` - Quick reference guide for all UI widgets
 
 ### Changed
 - `SpaceshipDataAsset.h` - Added MVP clarification comments to Combat Stats section explaining which stats are used for environmental hazards vs future combat
@@ -26,8 +30,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Documentation
 - Created comprehensive build order analysis report documenting include patterns, module dependencies, and non-MVP system status
 - Clarified that "combat stats" in SpaceshipDataAsset are used for MVP environmental hazards, not actual weapons
+- UI file structure cleanup and standardization (2026-01-01)
 
 ### Fixed
+
+- **UI File Structure Duplication** (2026-01-01)
+  - **Issue**: Multiple duplicate UI widget files with inconsistent naming; two parallel UI directories with different naming conventions
+  - **Root cause**: Accumulated technical debt from development iterations and naming standard changes
+  - **Files removed (11 total)**:
+    - 6 duplicate widgets with underscore variations (`WBP_Trading_Interface`, `WBP_Main_Menu`, `WBP_Pause_Menu`, `WBP_Settings_Menu`, `WBP_Quest_Log`, `Ships/WBP_ShipCustomization`)
+    - 5 legacy `BP_UI_*` files from `Content/Blueprints/UI/` (wrong naming convention and location)
+  - **Result**: Single organized UI structure in `Content/UI/` with 25 widgets following `WBP_*` naming convention
+  - **Documentation**: See `docs/development/UI_FILE_STRUCTURE_FINAL.md` and `docs/reference/UI_WIDGET_REFERENCE.md`
+  - **Related**: Updated `Content/CONTENT_ORGANIZATION.md` with cleanup notes
+  - **Verification**: No C++ references to removed files; all widgets follow official naming standards
 
 - **Build Issues - Missing Implementations** (2025-12-31)
   - **Issue**: Build failing due to missing method implementations and quest system references
