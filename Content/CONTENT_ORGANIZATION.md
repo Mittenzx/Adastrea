@@ -6,14 +6,13 @@ Best practices for organizing game content in the Unreal Engine Content Browser.
 
 ```
 Content/
-├── Blueprints/           # Blueprint classes
+├── Blueprints/           # Blueprint classes (Actor/Component Blueprints)
 │   ├── AI/              # AI-related Blueprints
 │   ├── Characters/      # Character Blueprints
 │   ├── Factions/        # Faction Blueprints
 │   ├── Ships/           # Ship Blueprints
 │   ├── Stations/        # Station and module Blueprints
-│   ├── Trading/         # Trading system Blueprints
-│   └── UI/              # UI Blueprint widgets
+│   └── Trading/         # Trading system Blueprints
 │
 ├── DataAssets/          # Data Asset instances
 │   ├── Factions/        # Faction configurations
@@ -59,8 +58,12 @@ Content/
 │   ├── Characters/      # Character animations
 │   └── Sequences/       # Level sequences
 │
-└── UI/                  # UI-specific assets
-    ├── Widgets/         # Widget Blueprints
+└── UI/                  # UI-specific assets (Widget Blueprints organized by system)
+    ├── HUD/             # HUD widgets
+    ├── Menus/           # Menu widgets
+    ├── Trading/         # Trading interface widgets
+    ├── Inventory/       # Inventory widgets
+    ├── [System]/        # Other system-specific UI widgets
     ├── Textures/        # UI textures
     └── Fonts/           # Font assets
 ```
@@ -74,8 +77,8 @@ Format: `BP_[System]_[Type]_[Variant]`
 Examples:
 - `BP_Ship_Fighter_Light`
 - `BP_Station_Military_Small`
-- `BP_UI_MainMenu`
 - `BP_Character_Player`
+- `BP_Trading_Merchant`
 
 ### Data Assets
 
