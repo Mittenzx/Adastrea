@@ -39,7 +39,8 @@ enum class EPrecept : uint8
     Prosperity      UMETA(DisplayName = "Prosperity"),
     Survival        UMETA(DisplayName = "Survival"),
     Efficiency      UMETA(DisplayName = "Efficiency"),
-    Harmony         UMETA(DisplayName = "Harmony")
+    Harmony         UMETA(DisplayName = "Harmony"),
+    MAX             UMETA(Hidden)
 };
 
 /**
@@ -66,10 +67,10 @@ struct FPreceptValue
 {
     GENERATED_BODY()
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Precept")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Precept")
     EPrecept Precept;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Precept", meta=(ClampMin="0", ClampMax="100"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Precept", meta=(ClampMin="0", ClampMax="100"))
     int32 ImportanceValue;
 
     FPreceptValue()
@@ -98,11 +99,11 @@ public:
 
     /** Whether this Feat can only be earned once per playthrough */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Requirements")
-    bool bUniquePerPlaythrough;
+    bool bUniquePerPlaythrough = false;
 
     /** How rare and prestigious this accomplishment is */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Identity")
-    EFeatRarity Rarity;
+    EFeatRarity Rarity = EFeatRarity::Common;
 
     /**
      * Get alignment strength for a specific Precept
