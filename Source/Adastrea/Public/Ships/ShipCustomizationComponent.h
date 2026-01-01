@@ -215,6 +215,16 @@ public:
 	TArray<FShipModuleSlot> GetEmptySlots() const;
 
 	/**
+	 * Get all empty slots compatible with a specific module
+	 * @param Module The module to check compatibility for
+	 * @return Array of compatible empty slots
+	 * 
+	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
+	 */
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
+	TArray<FShipModuleSlot> GetCompatibleEmptySlots(UShipModuleComponent* Module) const;
+
+	/**
 	 * Validate if a module can be installed (checks power, mass, slot compatibility)
 	 * @param Module The module to validate
 	 * @param SlotID The target slot
@@ -238,22 +248,50 @@ public:
 	// UFUNCTION(BlueprintCallable, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
 	void ClearAllModules();
 
+	// ====================
+	// RESOURCE CALCULATIONS
+	// ====================
+
+	/**
+	 * Get total power consumption of all installed modules
+	 * @return Total power consumption in watts
+	 * 
+	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
+	 */
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
+	float GetTotalPowerConsumption() const;
+
+	/**
+	 * Get remaining power capacity
+	 * @return Available power capacity in watts
+	 * 
+	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
+	 */
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
+	float GetRemainingPowerCapacity() const;
+
+	/**
+	 * Get total mass of all installed modules
+	 * @return Total module mass in kg
+	 * 
+	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
+	 */
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
+	float GetTotalModuleMass() const;
+
+	/**
+	 * Get remaining mass capacity
+	 * @return Available mass capacity in kg
+	 * 
+	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
+	 */
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
+	float GetRemainingMassCapacity() const;
+
 private:
 	// ====================
 	// INTERNAL RESOURCE CALCULATIONS
 	// ====================
-
-	/**
-	 * Get remaining power capacity
-	 * Internal calculation - used by CanInstallModule
-	 */
-	float GetRemainingPowerCapacity() const;
-
-	/**
-	 * Get remaining mass capacity
-	 * Internal calculation - used by CanInstallModule
-	 */
-	float GetRemainingMassCapacity() const;
 
 	/**
 	 * Check if there's enough power for a module

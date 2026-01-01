@@ -26,7 +26,7 @@ USpaceshipControlsComponent::USpaceshipControlsComponent()
 	, RollAction(nullptr)
 	, SpaceshipMappingContext(nullptr)
 	, bControlsEnabled(false)
-	, CachedWeaponComponent(nullptr)
+	// CachedWeaponComponent removed - combat system archived for MVP
 {
 	PrimaryComponentTick.bCanEverTick = false;
 }
