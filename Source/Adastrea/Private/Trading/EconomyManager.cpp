@@ -5,13 +5,13 @@
 #include "Engine/World.h"
 
 UEconomyManager::UEconomyManager()
-	: CurrentGameTime(0.0f)
-	, TimeScale(1.0f)
-	, UpdateInterval(5.0f)
-	, SupplyDemandAdjustmentRate(0.05f)  // 5% change per transaction
+	: SupplyDemandAdjustmentRate(0.05f)  // 5% change per transaction
 	, MinSupplyDemandLevel(0.1f)
 	, MaxSupplyDemandLevel(3.0f)
 	, EconomicRecoveryRate(0.1f)  // 10% recovery per game hour
+	, CurrentGameTime(0.0f)
+	, TimeScale(1.0f)
+	, UpdateInterval(5.0f)
 {
 }
 
