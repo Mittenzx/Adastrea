@@ -475,6 +475,178 @@ def generate_market_item_display():
     
     return svg
 
+def generate_trade_item_row_construct():
+    """Generate Trade Item Row Event Construct flow"""
+    svg = create_svg_base(900, 650)
+    
+    # Event: Construct
+    body_y1 = add_node_box(svg, 300, 20, 300, 80, COLORS['event'], 'EVENT: Construct')
+    add_pin(svg, 580, body_y1 + 25, 'exec', '', is_input=False, is_exec=True)
+    
+    # Branch: Is Valid ItemData?
+    body_y2 = add_node_box(svg, 250, 140, 400, 120, COLORS['branch'], 'BRANCH: Is Valid (ItemData)?')
+    add_pin(svg, 250, body_y2 + 20, 'exec', 'Exec', is_input=True, is_exec=True)
+    add_pin(svg, 250, body_y2 + 40, 'object', 'ItemData', is_input=True)
+    add_pin(svg, 650, body_y2 + 20, 'exec', 'True', is_input=False, is_exec=True)
+    add_pin(svg, 650, body_y2 + 40, 'exec', 'False', is_input=False, is_exec=True)
+    
+    # Function: Set Item Name
+    body_y3 = add_node_box(svg, 200, 300, 350, 100, COLORS['function'], 'Set Text (ItemNameText)')
+    add_pin(svg, 200, body_y3 + 20, 'exec', 'Exec', is_input=True, is_exec=True)
+    add_pin(svg, 200, body_y3 + 40, 'text', 'InText', is_input=True)
+    add_pin(svg, 550, body_y3 + 20, 'exec', '', is_input=False, is_exec=True)
+    
+    # Function: Get Item Price
+    body_y4 = add_node_box(svg, 200, 430, 400, 140, COLORS['function'], 'Get Item Price')
+    add_pin(svg, 200, body_y4 + 20, 'exec', 'Exec', is_input=True, is_exec=True)
+    add_pin(svg, 200, body_y4 + 40, 'object', 'Item', is_input=True)
+    add_pin(svg, 200, body_y4 + 60, 'bool', 'Is Buying', is_input=True)
+    add_pin(svg, 600, body_y4 + 20, 'exec', '', is_input=False, is_exec=True)
+    add_pin(svg, 600, body_y4 + 40, 'float', 'Price', is_input=False)
+    
+    # Function: Update Price Display
+    body_y5 = add_node_box(svg, 150, 580, 300, 60, COLORS['function'], 'Update Price Display')
+    add_pin(svg, 150, body_y5 + 20, 'exec', 'Exec', is_input=True, is_exec=True)
+    
+    # Function: Update Stock Display
+    body_y6 = add_node_box(svg, 500, 580, 300, 60, COLORS['function'], 'Update Stock Display')
+    add_pin(svg, 500, body_y6 + 20, 'exec', 'Exec', is_input=True, is_exec=True)
+    
+    # Connection wires
+    add_connection_wire(svg, 580, body_y1 + 25, 250, body_y2 + 20)
+    add_connection_wire(svg, 650, body_y2 + 20, 200, body_y3 + 20)
+    add_connection_wire(svg, 550, body_y3 + 20, 200, body_y4 + 20)
+    add_connection_wire(svg, 600, body_y4 + 20, 300, body_y5 + 20)
+    add_connection_wire(svg, 450, body_y5 + 20, 500, body_y6 + 20)
+    
+    return svg
+
+def generate_trade_item_row_buy_flow():
+    """Generate Trade Item Row Buy Button flow"""
+    svg = create_svg_base(900, 750)
+    
+    # Event: Buy Button Clicked
+    body_y1 = add_node_box(svg, 300, 20, 300, 80, COLORS['event'], 'EVENT: Buy Button Clicked')
+    add_pin(svg, 580, body_y1 + 25, 'exec', '', is_input=False, is_exec=True)
+    
+    # Function: Get Quantity
+    body_y2 = add_node_box(svg, 250, 140, 400, 100, COLORS['pure'], 'Get Value (QuantityBox)')
+    add_pin(svg, 650, body_y2 + 20, 'int', 'Return Value', is_input=False)
+    
+    # Function: Get Components
+    body_y3 = add_node_box(svg, 200, 270, 450, 120, COLORS['function'], 'Get Player Components')
+    add_pin(svg, 200, body_y3 + 20, 'exec', 'Exec', is_input=True, is_exec=True)
+    add_pin(svg, 650, body_y3 + 20, 'exec', '', is_input=False, is_exec=True)
+    add_pin(svg, 650, body_y3 + 40, 'object', 'Trader Component', is_input=False)
+    add_pin(svg, 650, body_y3 + 60, 'object', 'Cargo Component', is_input=False)
+    
+    # Function: Buy Item
+    body_y4 = add_node_box(svg, 150, 420, 600, 180, COLORS['function'], 'Buy Item')
+    add_pin(svg, 150, body_y4 + 20, 'exec', 'Exec', is_input=True, is_exec=True)
+    add_pin(svg, 150, body_y4 + 40, 'object', 'Market Data', is_input=True)
+    add_pin(svg, 150, body_y4 + 60, 'object', 'Item Data', is_input=True)
+    add_pin(svg, 150, body_y4 + 80, 'int', 'Quantity', is_input=True)
+    add_pin(svg, 150, body_y4 + 100, 'object', 'Cargo Component', is_input=True)
+    add_pin(svg, 750, body_y4 + 20, 'exec', '', is_input=False, is_exec=True)
+    add_pin(svg, 750, body_y4 + 40, 'bool', 'Success', is_input=False)
+    
+    # Branch: Success?
+    body_y5 = add_node_box(svg, 250, 630, 400, 100, COLORS['branch'], 'BRANCH: Purchase Success?')
+    add_pin(svg, 250, body_y5 + 20, 'exec', 'Exec', is_input=True, is_exec=True)
+    add_pin(svg, 250, body_y5 + 40, 'bool', 'Condition', is_input=True)
+    add_pin(svg, 650, body_y5 + 20, 'exec', 'True: Play Success Sound', is_input=False, is_exec=True)
+    add_pin(svg, 650, body_y5 + 40, 'exec', 'False: Play Error Sound', is_input=False, is_exec=True)
+    
+    # Connection wires
+    add_connection_wire(svg, 580, body_y1 + 25, 200, body_y3 + 20)
+    add_connection_wire(svg, 650, body_y3 + 20, 150, body_y4 + 20)
+    add_connection_wire(svg, 750, body_y4 + 20, 250, body_y5 + 20)
+    
+    return svg
+
+def generate_trade_item_row_sell_flow():
+    """Generate Trade Item Row Sell Button flow"""
+    svg = create_svg_base(900, 750)
+    
+    # Event: Sell Button Clicked
+    body_y1 = add_node_box(svg, 300, 20, 300, 80, COLORS['event'], 'EVENT: Sell Button Clicked')
+    add_pin(svg, 580, body_y1 + 25, 'exec', '', is_input=False, is_exec=True)
+    
+    # Function: Get Quantity
+    body_y2 = add_node_box(svg, 250, 140, 400, 100, COLORS['pure'], 'Get Value (QuantityBox)')
+    add_pin(svg, 650, body_y2 + 20, 'int', 'Return Value', is_input=False)
+    
+    # Function: Get Components
+    body_y3 = add_node_box(svg, 200, 270, 450, 120, COLORS['function'], 'Get Player Components')
+    add_pin(svg, 200, body_y3 + 20, 'exec', 'Exec', is_input=True, is_exec=True)
+    add_pin(svg, 650, body_y3 + 20, 'exec', '', is_input=False, is_exec=True)
+    add_pin(svg, 650, body_y3 + 40, 'object', 'Trader Component', is_input=False)
+    add_pin(svg, 650, body_y3 + 60, 'object', 'Cargo Component', is_input=False)
+    
+    # Function: Sell Item
+    body_y4 = add_node_box(svg, 150, 420, 600, 180, COLORS['function'], 'Sell Item')
+    add_pin(svg, 150, body_y4 + 20, 'exec', 'Exec', is_input=True, is_exec=True)
+    add_pin(svg, 150, body_y4 + 40, 'object', 'Market Data', is_input=True)
+    add_pin(svg, 150, body_y4 + 60, 'object', 'Item Data', is_input=True)
+    add_pin(svg, 150, body_y4 + 80, 'int', 'Quantity', is_input=True)
+    add_pin(svg, 150, body_y4 + 100, 'object', 'Cargo Component', is_input=True)
+    add_pin(svg, 750, body_y4 + 20, 'exec', '', is_input=False, is_exec=True)
+    add_pin(svg, 750, body_y4 + 40, 'bool', 'Success', is_input=False)
+    
+    # Branch: Success?
+    body_y5 = add_node_box(svg, 250, 630, 400, 100, COLORS['branch'], 'BRANCH: Sale Success?')
+    add_pin(svg, 250, body_y5 + 20, 'exec', 'Exec', is_input=True, is_exec=True)
+    add_pin(svg, 250, body_y5 + 40, 'bool', 'Condition', is_input=True)
+    add_pin(svg, 650, body_y5 + 20, 'exec', 'True: Play Success Sound', is_input=False, is_exec=True)
+    add_pin(svg, 650, body_y5 + 40, 'exec', 'False: Play Error Sound', is_input=False, is_exec=True)
+    
+    # Connection wires
+    add_connection_wire(svg, 580, body_y1 + 25, 200, body_y3 + 20)
+    add_connection_wire(svg, 650, body_y3 + 20, 150, body_y4 + 20)
+    add_connection_wire(svg, 750, body_y4 + 20, 250, body_y5 + 20)
+    
+    return svg
+
+def generate_trade_item_row_update_display():
+    """Generate Trade Item Row Update Display flow"""
+    svg = create_svg_base(900, 600)
+    
+    # Custom Event: Update Display
+    body_y1 = add_node_box(svg, 250, 20, 400, 120, COLORS['macro'], 'CUSTOM EVENT: Update Display')
+    add_pin(svg, 630, body_y1 + 25, 'exec', '', is_input=False, is_exec=True)
+    add_pin(svg, 630, body_y1 + 45, 'object', 'Market Data', is_input=False)
+    add_pin(svg, 630, body_y1 + 65, 'bool', 'Is Buy Mode', is_input=False)
+    
+    # Function: Get Item Price (Buy)
+    body_y2 = add_node_box(svg, 150, 180, 400, 140, COLORS['function'], 'Get Item Price (Buy)')
+    add_pin(svg, 150, body_y2 + 20, 'exec', 'Exec', is_input=True, is_exec=True)
+    add_pin(svg, 150, body_y2 + 40, 'object', 'Market', is_input=True)
+    add_pin(svg, 150, body_y2 + 60, 'object', 'Item', is_input=True)
+    add_pin(svg, 150, body_y2 + 80, 'bool', 'Is Buying = True', is_input=True)
+    add_pin(svg, 550, body_y2 + 20, 'exec', '', is_input=False, is_exec=True)
+    add_pin(svg, 550, body_y2 + 40, 'float', 'Buy Price', is_input=False)
+    
+    # Function: Get Item Price (Sell)
+    body_y3 = add_node_box(svg, 150, 350, 400, 140, COLORS['function'], 'Get Item Price (Sell)')
+    add_pin(svg, 150, body_y3 + 20, 'exec', 'Exec', is_input=True, is_exec=True)
+    add_pin(svg, 150, body_y3 + 40, 'object', 'Market', is_input=True)
+    add_pin(svg, 150, body_y3 + 60, 'object', 'Item', is_input=True)
+    add_pin(svg, 150, body_y3 + 80, 'bool', 'Is Buying = False', is_input=True)
+    add_pin(svg, 550, body_y3 + 20, 'exec', '', is_input=False, is_exec=True)
+    add_pin(svg, 550, body_y3 + 40, 'float', 'Sell Price', is_input=False)
+    
+    # Function: Update Text Display
+    body_y4 = add_node_box(svg, 600, 350, 250, 100, COLORS['function'], 'Set Price Text')
+    add_pin(svg, 600, body_y4 + 20, 'exec', 'Exec', is_input=True, is_exec=True)
+    add_pin(svg, 600, body_y4 + 40, 'text', 'Buy/Sell Prices', is_input=True)
+    
+    # Connection wires
+    add_connection_wire(svg, 630, body_y1 + 25, 150, body_y2 + 20)
+    add_connection_wire(svg, 550, body_y2 + 20, 150, body_y3 + 20)
+    add_connection_wire(svg, 550, body_y3 + 20, 600, body_y4 + 20)
+    
+    return svg
+
 def save_svg(svg, filename):
     """Save SVG to file"""
     tree = ET.ElementTree(svg)
@@ -503,12 +675,23 @@ def main():
     save_svg(generate_execute_trade_flow(), f'{output_dir}/execute_trade_flow.svg')
     save_svg(generate_market_item_display(), f'{output_dir}/market_item_display.svg')
     
-    print(f"\nGenerated 9 Blueprint node diagrams in {output_dir}/")
-    print("\nNew trading system diagrams:")
+    # Generate WBP_TradeItemRow flows
+    save_svg(generate_trade_item_row_construct(), f'{output_dir}/trade_item_row_construct.svg')
+    save_svg(generate_trade_item_row_buy_flow(), f'{output_dir}/trade_item_row_buy_flow.svg')
+    save_svg(generate_trade_item_row_sell_flow(), f'{output_dir}/trade_item_row_sell_flow.svg')
+    save_svg(generate_trade_item_row_update_display(), f'{output_dir}/trade_item_row_update_display.svg')
+    
+    print(f"\nGenerated 13 Blueprint node diagrams in {output_dir}/")
+    print("\nTrading system diagrams:")
     print("  - buy_sell_toggle.svg: Buy/Sell mode toggle flow")
     print("  - add_to_cart_flow.svg: Add item to cart validation")
     print("  - execute_trade_flow.svg: Complete trade transaction")
     print("  - market_item_display.svg: Market inventory display population")
+    print("\nWBP_TradeItemRow diagrams:")
+    print("  - trade_item_row_construct.svg: Event Construct initialization")
+    print("  - trade_item_row_buy_flow.svg: Buy button click handler")
+    print("  - trade_item_row_sell_flow.svg: Sell button click handler")
+    print("  - trade_item_row_update_display.svg: UI update logic")
 
 if __name__ == '__main__':
     main()

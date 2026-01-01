@@ -20,6 +20,7 @@ New to the project? Follow this order:
 | [BP_SpaceGameMode](BP_SpaceGameMode.md) | ⚠️ CRITICAL | Phase 1 | ⭐⭐ Intermediate |
 | [BP_PlayerShip](BP_PlayerShip.md) | ⚠️ CRITICAL | Phase 1 | ⭐⭐⭐ Advanced |
 | [WBP_TradingUI](WBP_TradingUI.md) | ⚠️ CRITICAL | Phase 1 | ⭐⭐⭐⭐ Advanced |
+| [WBP_TradeItemRow](WBP_TradeItemRow.md) | ⚠️ CRITICAL | Phase 1 | ⭐⭐ Intermediate |
 | [BP_SpaceStation_Main](BP_SpaceStation_Main.md) | 🔶 HIGH | Phase 1 | ⭐⭐⭐ Advanced |
 | [BP_Ship_NPC_Trader](BP_Ship_NPC_Trader.md) | 🔷 MEDIUM | Phase 2 | ⭐⭐⭐⭐ Advanced |
 
@@ -35,6 +36,7 @@ New to the project? Follow this order:
 
 ### Trading System (MVP Core)
 - [WBP_TradingUI](WBP_TradingUI.md) - Trading interface ⭐
+- [WBP_TradeItemRow](WBP_TradeItemRow.md) - Individual item widget ⭐
 - [BP_SpaceStation_Main](BP_SpaceStation_Main.md) - Docking and markets
 
 ### AI and Economy
@@ -48,6 +50,19 @@ All diagrams are in `../reference/images/blueprints/` folder:
 
 | Diagram | Shows | Used In |
 |---------|-------|---------|
+| `gamemode_setup.svg` | Game initialization flow | BP_SpaceGameMode |
+| `player_ship_beginplay.svg` | Player ship startup | BP_PlayerShip |
+| `trading_ui_open.svg` | Trading UI initialization | WBP_TradingUI |
+| `market_item_display.svg` | Market inventory display | WBP_TradingUI |
+| `buy_sell_toggle.svg` | Buy/sell mode toggle | WBP_TradingUI |
+| `add_to_cart_flow.svg` | Cart validation logic | WBP_TradingUI |
+| `execute_trade_flow.svg` | Transaction execution | WBP_TradingUI |
+| `trade_item_row_construct.svg` | Item row initialization | WBP_TradeItemRow |
+| `trade_item_row_buy_flow.svg` | Buy button handler | WBP_TradeItemRow |
+| `trade_item_row_sell_flow.svg` | Sell button handler | WBP_TradeItemRow |
+| `trade_item_row_update_display.svg` | Price/stock updates | WBP_TradeItemRow |
+| `station_module_attachment.svg` | Module attachment system | BP_SpaceStation_Main |
+| `npc_ai_decision.svg` | AI decision tree | BP_Ship_NPC_Trader |
 | `gamemode_setup.svg` | Game initialization flow | BP_SpaceGameMode |
 | `player_ship_beginplay.svg` | Ship setup | BP_PlayerShip |
 | `trading_ui_open.svg` | Open market flow | WBP_TradingUI |
