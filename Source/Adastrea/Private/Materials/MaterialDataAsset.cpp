@@ -1,6 +1,6 @@
 // Copyright (c) 2025 Mittenzx. Licensed under MIT.
 
-#include "MaterialDataAsset.h"
+#include "Materials/MaterialDataAsset.h"
 
 UMaterialDataAsset::UMaterialDataAsset()
     : MaterialName(FText::FromString(TEXT("Unknown Material")))
