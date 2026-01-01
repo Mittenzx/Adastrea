@@ -1,7 +1,7 @@
 # Inventory System Research: Fab.com Asset Evaluation
 
 **Date**: January 1, 2026  
-**Issue**: [Research Request](https://github.com/Mittenzx/Adastrea/issues/[number])  
+**Issue**: [Research Request](https://github.com/Mittenzx/Adastrea/issues/404)  
 **Asset**: https://fab.com/s/336b5557c062  
 **Purpose**: Evaluate Fab.com inventory system as base for short and long-term needs
 
@@ -13,7 +13,7 @@
 
 **Reasoning**:
 - MVP needs simpler cargo-focused system, not full RPG inventory
-- Current custom implementation already 80% complete and MVP-aligned
+- Current custom implementation is already largely complete and MVP-aligned
 - Third-party asset adds complexity counter to MVP "keep it simple" mandate
 - Asset may be valuable POST-MVP for full game features
 
@@ -477,7 +477,7 @@ Custom CargoComponent → Ship cargo (trade goods)
 7. ✅ **Does it fit aesthetic?** (can be styled for space game)
 
 **If 7/7 YES**: Proceed with integration  
-**If &lt;5 YES**: Build custom solution or find better asset
+**If <5 YES**: Build custom solution or find better asset
 
 ---
 
