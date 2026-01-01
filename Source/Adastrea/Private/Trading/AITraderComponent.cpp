@@ -1,7 +1,7 @@
 #include "Trading/AITraderComponent.h"
-#include "MarketDataAsset.h"
-#include "TradeItemDataAsset.h"
-#include "TradeContractDataAsset.h"
+#include "Trading/MarketDataAsset.h"
+#include "Trading/TradeItemDataAsset.h"
+#include "Trading/TradeContractDataAsset.h"
 #include "Factions/FactionDataAsset.h"
 
 UAITraderComponent::UAITraderComponent()

@@ -1,4 +1,4 @@
-#include "MittenzxMk1DataAsset.h"
+#include "Ships/MittenzxMk1DataAsset.h"
 #include "AdastreaLog.h"
 
 UMittenzxMk1DataAsset::UMittenzxMk1DataAsset()
