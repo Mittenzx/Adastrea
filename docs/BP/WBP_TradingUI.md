@@ -171,26 +171,25 @@ Event (e.g., Event Construct)
 #### Step 3: Set the Text Value
 
 **Example: Setting Credits Display**
-```
-Custom Event: UpdateCredits
-├─► Get Player Credits (function)
-├─► Format Text
-│   ├─ Format: "Credits: {Amount} CR"
-│   └─ Amount: [Player Credits]
-├─► Get Text_Credits
-└─► Set Text (Text)
-    └─ In Text: [Formatted Text]
-```
+
+![Update Credits Display](../reference/images/blueprints/tradingui_update_credits.svg)
+
+_Flow description:_
+- On **Custom Event: UpdateCredits**, call **Get Player Credits** function.
+- Use **Format Text** node with format string `"Credits: {Amount} CR"`.
+- Bind the `Amount` pin to the player credits value.
+- Get a reference to `Text_Credits` (TextBlock variable).
+- Call **Set Text (Text)** on `Text_Credits`, passing in the formatted text.
 
 **Example: Setting Market Name**
-```
-Function: OpenMarket
-├─► Get Market Data (parameter)
-├─► Break Market Data → Market Name
-├─► Get Text_MarketName
-└─► Set Text (Text)
-    └─ In Text: [Market Name]
-```
+
+![Set Market Name](../reference/images/blueprints/tradingui_set_market_name.svg)
+
+_Flow description:_
+- In **Function: OpenMarket**, receive `Market Data` as a parameter.
+- **Break** the `Market Data` struct to access the `Market Name` field.
+- Get a reference to `Text_MarketName` (TextBlock variable).
+- Call **Set Text (Text)** on `Text_MarketName`, passing in the `Market Name` value.
 
 #### Common TextBlock Functions in Trading UI
 
@@ -204,32 +203,31 @@ Function: OpenMarket
 #### Trading UI Specific Examples
 
 **Updating Player Credits:**
-```
-After Purchase:
-├─► Get Updated Credits
-├─► Format Text: "Credits: {Value} CR"
-├─► Get Text_Credits
-└─► Set Text (Text)
-```
+
+![Update Player Credits](../reference/images/blueprints/tradingui_update_player_credits.svg)
+
+_Flow description:_
+- After a successful purchase, retrieve the updated credits value.
+- Use **Format Text** with format `"Credits: {Value} CR"`.
+- Get `Text_Credits` widget reference and call **Set Text (Text)** with the formatted result.
 
 **Showing Error Messages:**
-```
-On Purchase Failed:
-├─► Get Error Message
-├─► Get Text_StatusMessage
-├─► Set Text (Text) → Error Message
-├─► Set Color and Opacity → Red
-└─► Set Visibility → Visible
-```
+
+![Show Error Message](../reference/images/blueprints/tradingui_show_error_message.svg)
+
+_Flow description:_
+- On **Purchase Failed**, retrieve the error message from the transaction result.
+- Get `Text_StatusMessage` widget reference.
+- Set **Text** to the error message, set **Color and Opacity** to red, and set **Visibility** to **Visible**.
 
 **Updating Cart Total:**
-```
-On Item Added to Cart:
-├─► Calculate Cart Total
-├─► Format Text: "Total: {Amount} CR"
-├─► Get Text_CartTotal
-└─► Set Text (Text)
-```
+
+![Update Cart Total](../reference/images/blueprints/tradingui_update_cart_total.svg)
+
+_Flow description:_
+- On **Item Added to Cart** (or removed), calculate the current cart total.
+- Format text as `"Total: {Amount} CR"`.
+- Get `Text_CartTotal` widget reference and set its **Text** to the formatted value.
 
 #### Quick Tips for Trading UI
 

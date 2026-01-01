@@ -171,12 +171,12 @@ To modify TextBlock content in Blueprint graphs, follow these steps:
 
 In the **Graph** tab of your widget Blueprint:
 
-```
-Event (e.g., Event Construct)
-├─► Get ItemNameText (variable)
-│   └─► TextBlock Reference
-└─► Connect to Set Text node
-```
+> **Note**: SVG diagram to be added - see `Tools/generate_blueprint_images.py` for generation.
+
+**Blueprint Flow:**
+- **Event** (e.g., Event Construct)
+- **Get** ItemNameText variable → Returns TextBlock reference
+- **Set Text (Text)** function → Modifies the TextBlock's displayed text
 
 **Blueprint Nodes Needed:**
 1. **Get [TextBlockName]** - Drag your TextBlock variable into the graph (or right-click → Get)
@@ -186,33 +186,33 @@ Event (e.g., Event Construct)
 #### Step 3: Set the Text Value
 
 **Example: Setting Static Text**
-```
-Event Construct
-├─► Get PriceText
-└─► Set Text (Text)
-    └─ In Text: "100 CR" (or Make Literal Text)
-```
+
+![Set Static Text Flow](../reference/images/blueprints/textblock_set_static_text.svg)
+
+_Flow description:_
+- On **Event Construct**, get a reference to `PriceText` (TextBlock variable).
+- Call **Set Text (Text)** on `PriceText`.
+- Pass in `"100 CR"` as a literal text value (or use **Make Literal Text** node).
 
 **Example: Setting Dynamic Text from Variable**
-```
-Event Construct
-├─► Get ItemData (variable)
-├─► Break ItemData (or → ItemName)
-├─► Get ItemNameText
-└─► Set Text (Text)
-    └─ In Text: [ItemData.ItemName]
-```
+
+![Set Dynamic Text Flow](../reference/images/blueprints/textblock_set_dynamic_text.svg)
+
+_Flow description:_
+- On **Event Construct**, get the `ItemData` variable.
+- **Break** `ItemData` struct to access the `ItemName` field (or use a direct property access).
+- Get a reference to `ItemNameText` (TextBlock variable).
+- Call **Set Text (Text)** on `ItemNameText`, passing in `ItemData.ItemName`.
 
 **Example: Setting Formatted Text**
-```
-Event Construct
-├─► Format Text
-│   ├─ Format: "Buy: {Price} CR"
-│   └─ Price: [ItemPrice variable]
-├─► Get PriceText
-└─► Set Text (Text)
-    └─ In Text: [Format Text result]
-```
+
+![Set Formatted Text Flow](../reference/images/blueprints/textblock_set_formatted_text.svg)
+
+_Flow description:_
+- On **Event Construct**, use a **Format Text** node with format string `"Buy: {Price} CR"`.
+- Bind the `Price` pin to the `ItemPrice` variable.
+- Get a reference to `PriceText` (TextBlock variable).
+- Call **Set Text (Text)** on `PriceText`, using the output from **Format Text** as the new text value.
 
 #### Common TextBlock Functions
 
