@@ -1,8 +1,8 @@
-#include "PlayerTraderComponent.h"
-#include "TradeItemDataAsset.h"
-#include "MarketDataAsset.h"
-#include "CargoComponent.h"
-#include "EconomyManager.h"
+#include "Trading/PlayerTraderComponent.h"
+#include "Trading/TradeItemDataAsset.h"
+#include "Trading/MarketDataAsset.h"
+#include "Trading/CargoComponent.h"
+#include "Trading/EconomyManager.h"
 #include "Engine/GameInstance.h"
 
 UPlayerTraderComponent::UPlayerTraderComponent()

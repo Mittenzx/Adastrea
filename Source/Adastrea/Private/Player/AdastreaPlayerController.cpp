@@ -1060,7 +1060,7 @@ void AAdastreaPlayerController::AttemptTradeWithNearestStation()
 
 	// Get the station's faction for trading
 	UFactionDataAsset* StationFaction = nullptr;
-	if (Station->GetClass()->ImplementsInterface(UIFactionMember::StaticClass()))
+	if (Station->GetClass()->ImplementsInterface(UFactionMember::StaticClass()))
 	{
 		IFactionMember* FactionMember = Cast<IFactionMember>(Station);
 		if (FactionMember)

@@ -1,4 +1,4 @@
-#include "MyFirstSpaceshipDataAsset.h"
+#include "Ships/MyFirstSpaceshipDataAsset.h"
 #include "AdastreaLog.h"
 
 UMyFirstSpaceshipDataAsset::UMyFirstSpaceshipDataAsset()

@@ -1,5 +1,5 @@
-#include "TradeContractDataAsset.h"
-#include "TradeItemDataAsset.h"
+#include "Trading/TradeContractDataAsset.h"
+#include "Trading/TradeItemDataAsset.h"
 #include "Factions/FactionDataAsset.h"
 
 UTradeContractDataAsset::UTradeContractDataAsset()

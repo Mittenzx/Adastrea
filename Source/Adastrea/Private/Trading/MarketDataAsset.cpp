@@ -1,5 +1,5 @@
-#include "MarketDataAsset.h"
-#include "TradeItemDataAsset.h"
+#include "Trading/MarketDataAsset.h"
+#include "Trading/TradeItemDataAsset.h"
 #include "Factions/FactionDataAsset.h"
 
 UMarketDataAsset::UMarketDataAsset()

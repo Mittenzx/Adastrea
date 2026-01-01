@@ -1,6 +1,6 @@
-#include "EconomyManager.h"
-#include "MarketDataAsset.h"
-#include "TradeItemDataAsset.h"
+#include "Trading/EconomyManager.h"
+#include "Trading/MarketDataAsset.h"
+#include "Trading/TradeItemDataAsset.h"
 #include "TimerManager.h"
 #include "Engine/World.h"
 
