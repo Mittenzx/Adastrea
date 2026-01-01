@@ -406,6 +406,24 @@ If conflicts occur:
 - `Size>10MB` - Large assets
 - `Modified>Today` - Today's changes
 
+## Recent Organization Updates
+
+### UI File Structure Cleanup (2026-01-01)
+
+**Status**: ✅ Completed
+
+The UI file structure has been cleaned up to follow these standards:
+- **All UI Widgets**: Located in `Content/UI/[System]/`
+- **Naming Convention**: `WBP_[System][Purpose]` format only
+- **Removed**: Legacy `BP_UI_*` files from `Content/Blueprints/UI/`
+- **Removed**: 11 duplicate widget files with inconsistent naming
+
+For complete details, see:
+- [UI_FILE_STRUCTURE_FINAL.md](../docs/development/UI_FILE_STRUCTURE_FINAL.md) - What was changed
+- [UI_FILE_STRUCTURE_CLEANUP.md](../docs/development/UI_FILE_STRUCTURE_CLEANUP.md) - Original analysis
+
+**Key Takeaway**: Always create UI widgets in `Content/UI/[System]/` with `WBP_*` prefix.
+
 ---
 
 **Keep your Content organized and your team will thank you!** 🎨✨
