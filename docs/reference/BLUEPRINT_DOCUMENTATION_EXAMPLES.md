@@ -321,7 +321,7 @@ Animate Change
 
 ```
 ═══════════════════════════════════════
-Widget: WBP_TradingInterface
+Widget: WBP_TradingUI
 Parent: UTradingInterfaceWidget
 ═══════════════════════════════════════
 

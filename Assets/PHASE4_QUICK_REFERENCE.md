@@ -84,7 +84,7 @@ Event OnModuleRemoved(Module) // Refresh list
 
 ### Display Widget
 ```cpp
-CreateWidget(WBP_TradingInterface)
+CreateWidget(WBP_TradingUI)
 TradingInterfaceWidget->SetTradePartner(Faction)
 ```
 

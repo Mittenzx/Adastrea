@@ -59,7 +59,7 @@ Content/
 - `WBP_SimpleHUD` - Simple HUD for MVP testing
 
 **❌ DEPRECATED NAMING:**
-- ~~`WBP_TradingInterface`~~ - Old name, replaced by WBP_TradingUI
+- ~~`WBP_TradingUI`~~ - Old name, replaced by WBP_TradingUI
 - ~~`WBP_Trading_Interface`~~ - Incorrect underscore
 - ~~`BP_UI_Trading`~~ - Legacy naming convention
 
@@ -143,7 +143,7 @@ Content/
 
 ### ❌ Don't Use These Naming Patterns
 
-- `WBP_TradingInterface` - Use `WBP_TradingUI`
+- `WBP_TradingUI` - Use `WBP_TradingUI`
 - `BP_UI_*` - Legacy pattern, use `WBP_*`
 - `BP_MVP_*` - No MVP prefix needed
 - Extra underscores: `WBP_Trading_Interface`
@@ -156,7 +156,7 @@ Content/
 
 **Old Location** → **New Location**:
 ```
-Content/Blueprints/MVP/UI/WBP_TradingInterface
+Content/Blueprints/MVP/UI/WBP_TradingUI
 → Content/UI/Trading/WBP_TradingUI
 
 Content/Blueprints/MVP/Stations/BP_Station_Agricultural
@@ -168,7 +168,7 @@ Content/Blueprints/MVP/Ships/BP_SimpleTradingShip
 
 **Old Name** → **New Name**:
 ```
-WBP_TradingInterface → WBP_TradingUI
+WBP_TradingUI → WBP_TradingUI
 WBP_Trading_Interface → WBP_TradingUI
 BP_UI_Trading → WBP_TradingUI
 ```
@@ -300,7 +300,7 @@ When you encounter conflicting information:
 
 **Common Conflicts to Ignore**:
 - Older guides referencing `Content/Blueprints/MVP/`
-- References to `WBP_TradingInterface` instead of `WBP_TradingUI`
+- References to `WBP_TradingUI` instead of `WBP_TradingUI`
 - UI widgets in `Content/Blueprints/UI/`
 
 **Correct Approach**: Use the standards defined here.

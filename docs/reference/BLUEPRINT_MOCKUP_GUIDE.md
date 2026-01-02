@@ -1097,7 +1097,7 @@ Is Valid?
 
 ```
 ════════════════════════════════════════════════
-WBP_TradingInterface - Complete Flow
+WBP_TradingUI - Complete Flow
 ════════════════════════════════════════════════
 
 Event Construct

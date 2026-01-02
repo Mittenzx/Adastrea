@@ -8,7 +8,7 @@
 ## 🎯 Quick Answers
 
 ### Q: Why do I have two trading interface WBP?
-**A**: You **had** two (now fixed). We kept `WBP_TradingInterface` and removed the duplicate `WBP_Trading_Interface`.
+**A**: You **had** two (now fixed). We kept `WBP_TradingUI` and removed the duplicate `WBP_Trading_Interface`.
 
 ### Q: Should I use blueprints in content/blueprints/ui/ or content/ui/?
 **A**: **Always use `Content/UI/`**. The `Content/Blueprints/UI/` directory has been removed.
@@ -43,9 +43,9 @@
 
 ### Trading (1 widget)
 
-**`WBP_TradingInterface`**
+**`WBP_TradingUI`**
 - **Parent Class**: `UTradingInterfaceWidget` (C++)
-- **Location**: `Content/UI/Trading/WBP_TradingInterface.uasset`
+- **Location**: `Content/UI/Trading/WBP_TradingUI.uasset`
 - **Purpose**: Main trading interface for buy/sell at stations
 - **Used in**: MVP Trade Simulator
 - **Documentation**: `docs/mvp/TRADING_UI_BLUEPRINT_GUIDE.md`
@@ -178,7 +178,7 @@
 
 ### Examples
 ✅ Good:
-- `WBP_TradingInterface` (no extra underscores)
+- `WBP_TradingUI` (no extra underscores)
 - `WBP_HUD_Main` (system_purpose)
 - `WBP_MainMenu` (compound word)
 - `WBP_Ship_Customization` (multi-word purpose)
@@ -192,7 +192,7 @@
 
 | Prefix | Type | Example |
 |--------|------|---------|
-| `WBP_` | Widget Blueprint | `WBP_TradingInterface` |
+| `WBP_` | Widget Blueprint | `WBP_TradingUI` |
 | `BP_` | Actor/Component Blueprint | `BP_Ship_Fighter` |
 | `DA_` | Data Asset | `DA_Ship_Pathfinder` |
 | `M_` | Material | `M_Metal_Base` |
@@ -224,7 +224,7 @@
 
 ```
 Location: Content/UI/Trading/
-Name: WBP_TradingInterface
+Name: WBP_TradingUI
 Parent: UTradingInterfaceWidget
 Purpose: Main trading interface
 ```
@@ -247,7 +247,7 @@ Purpose: Main trading interface
 These files were removed during UI cleanup:
 
 **Duplicates with underscore variations:**
-- ❌ `WBP_Trading_Interface` → use `WBP_TradingInterface`
+- ❌ `WBP_Trading_Interface` → use `WBP_TradingUI`
 - ❌ `WBP_Main_Menu` → use `WBP_MainMenu`
 - ❌ `WBP_Pause_Menu` → use `WBP_PauseMenu`
 - ❌ `WBP_Settings_Menu` → use `WBP_SettingsMenu`
@@ -255,7 +255,7 @@ These files were removed during UI cleanup:
 - ❌ `UI/Ships/WBP_ShipCustomization` → use `UI/Ship/WBP_Ship_Customization`
 
 **Legacy BP_UI_* files:**
-- ❌ `BP_UI_Trading` → use `WBP_TradingInterface`
+- ❌ `BP_UI_Trading` → use `WBP_TradingUI`
 - ❌ `BP_UI_HUD` → use `WBP_HUD_Main`
 - ❌ `BP_UI_Inventory` → use `WBP_Inventory`
 - ❌ `BP_UI_Quest_Log` → use `WBP_QuestLog`

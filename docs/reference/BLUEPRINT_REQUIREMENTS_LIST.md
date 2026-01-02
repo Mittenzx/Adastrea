@@ -329,8 +329,8 @@ Create Ways (guilds):
 
 ### Trading UI
 
-#### WBP_TradingInterface
-- **Location**: `Content/UI/Trading/WBP_TradingInterface.uasset`
+#### WBP_TradingUI
+- **Location**: `Content/UI/Trading/WBP_TradingUI.uasset`
 - **Parent Class**: `UTradingInterfaceWidget` (C++)
 - **Purpose**: Trading interface for buying/selling goods
 - **Priority**: 🔶 **HIGH** - Trading system
@@ -612,7 +612,7 @@ Create tutorial steps:
 Add to minimum required:
 - Station blueprints (BP_SpaceStation_Main + 3 module types)
 - Combat blueprints (3 weapon types, 2 projectile types)
-- Trading UI (WBP_TradingInterface)
+- Trading UI (WBP_TradingUI)
 - Inventory UI (WBP_InventoryWidget)
 - Additional ship data assets (2-3 variants)
 - Additional faction data assets (2-3 factions)
@@ -774,7 +774,7 @@ Content/
 │   │   ├── WBP_PauseMenu
 │   │   └── WBP_SettingsMenu
 │   ├── Trading/
-│   │   └── WBP_TradingInterface
+│   │   └── WBP_TradingUI
 │   ├── Stations/
 │   │   ├── WBP_StationManagement
 │   │   └── WBP_StationEditor
