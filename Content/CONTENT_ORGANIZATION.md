@@ -427,6 +427,19 @@ For complete details, see:
 
 **Key Takeaway**: Always create UI widgets in `Content/UI/[System]/` with `WBP_*` prefix.
 
+### File Structure Standard (2026-01-02)
+
+**Status**: ✅ Official Standard Established
+
+A comprehensive file structure standard has been established for the Trade Simulator MVP:
+- **Official Naming**: `WBP_TradingUI` (not `WBP_TradingInterface`)
+- **No MVP Folders**: Assets integrated into main structure (not `Content/Blueprints/MVP/`)
+- **System-Based Organization**: Group by game system, not development phase
+
+**AUTHORITATIVE REFERENCE**: [FILE_STRUCTURE_STANDARD.md](../docs/reference/FILE_STRUCTURE_STANDARD.md)
+
+When documentation conflicts, FILE_STRUCTURE_STANDARD.md is the source of truth.
+
 ---
 
 **Keep your Content organized and your team will thank you!** 🎨✨

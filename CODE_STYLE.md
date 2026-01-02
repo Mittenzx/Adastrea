@@ -407,6 +407,49 @@ Examples:
 T_Rock_Diffuse_01_D      (Texture, Diffuse)
 M_Metal_Shiny            (Material)
 MI_Metal_Shiny_Blue      (Material Instance)
+BP_Station_Agricultural  (Blueprint, Station)
+WBP_TradingUI           (Widget, Trading)
+DA_TradeItem_Water      (Data Asset, Trade Item)
+```
+
+**IMPORTANT**: For complete file structure and naming standards, see:
+📖 **[FILE_STRUCTURE_STANDARD.md](docs/reference/FILE_STRUCTURE_STANDARD.md)** - Official source of truth
+
+### Asset Prefixes
+
+| Prefix | Asset Type | Location | Example |
+|--------|------------|----------|---------|
+| `BP_` | Blueprint Class | `Content/Blueprints/[System]/` | `BP_TradingStation` |
+| `WBP_` | Widget Blueprint | `Content/UI/[System]/` | `WBP_TradingUI` |
+| `DA_` | Data Asset | `Content/DataAssets/[System]/` | `DA_TradeItem_Water` |
+| `M_` | Material (Master) | `Content/Materials/Master/` | `M_Metal_Base` |
+| `MI_` | Material Instance | `Content/Materials/Instances/` | `MI_Metal_Blue` |
+| `SM_` | Static Mesh | `Content/Meshes/[Type]/` | `SM_Ship_Fighter` |
+| `SK_` | Skeletal Mesh | `Content/Meshes/[Type]/` | `SK_Character_Human` |
+| `T_` | Texture | `Content/Textures/[Type]/` | `T_Ship_Hull_D` |
+| `A_` | Animation | `Content/Animations/` | `A_Walk_Forward` |
+| `S_` | Sound | `Content/Audio/SFX/` | `S_Explosion_Large` |
+| `P_` | Particle System | `Content/VFX/Particles/` | `P_Engine_Trail` |
+| `L_` | Level/Map | `Content/Maps/` | `L_TradingTest` |
+
+### Trade Simulator MVP Naming Standards
+
+**✅ OFFICIAL NAMES** (use these):
+- `WBP_TradingUI` - Main trading interface widget
+- `WBP_TradeItemRow` - Trade item row widget
+- `BP_TradingStation` - Base trading station
+- `BP_Station_Agricultural` - Agricultural station variant
+- `BP_Station_Industrial` - Industrial station variant
+- `BP_TradingShip` - Player trading ship
+- `BP_TradingGameMode` - Trading game mode
+- `DA_TradeItem_Water` - Water trade item
+- `DA_Market_Agricultural` - Agricultural market
+
+**❌ DEPRECATED NAMES** (do not use):
+- ~~`WBP_TradingInterface`~~ → Use `WBP_TradingUI`
+- ~~`WBP_Trading_Interface`~~ → Use `WBP_TradingUI`
+- ~~`BP_UI_Trading`~~ → Use `WBP_TradingUI`
+- ~~`BP_MVP_*`~~ → No MVP prefix needed
 SM_Crate_Large           (Static Mesh)
 SK_Character_Hero        (Skeletal Mesh)
 A_Hero_Idle              (Animation)

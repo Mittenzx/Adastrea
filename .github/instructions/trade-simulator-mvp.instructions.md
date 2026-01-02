@@ -77,10 +77,12 @@ int32 CargoSpace = 10;
 - Economy config (supply/demand simulation)
 
 **Add Blueprints:**
-- `BP_TradingStation` (docking + UI)
-- `BP_TradingShip` (cargo management)
-- `BP_TradingGameMode` (economy updates)
-- `WBP_TradingUI` (market interface)
+- `BP_TradingStation` (docking + UI) - Location: `Content/Blueprints/Trading/Stations/`
+- `BP_TradingShip` (cargo management) - Location: `Content/Blueprints/Trading/Ships/`
+- `BP_TradingGameMode` (economy updates) - Location: `Content/Blueprints/GameModes/`
+- `WBP_TradingUI` (market interface) - Location: `Content/UI/Trading/`
+
+**Note**: See `docs/reference/FILE_STRUCTURE_STANDARD.md` for complete file organization rules.
 
 **Add Features:**
 - Ship upgrades (cargo capacity)
