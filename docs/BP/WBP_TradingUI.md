@@ -130,7 +130,7 @@ Canvas Panel (Root)
 │   └── Background Image (semi-transparent)
 │
 ├── Header Panel (Horizontal Box)
-│   ├── Market Name (Text Block)
+│   ├── Market Name (TextBlock)
 │   ├── Spacer
 │   └── Close Button
 │
@@ -150,20 +150,20 @@ Canvas Panel (Root)
 │   └── Right Panel: Player Info (Vertical Box)
 │       │
 │       ├── Player Stats Panel
-│       │   ├── Credits Display (Text Block)
+│       │   ├── Credits Display (TextBlock)
 │       │   ├── Cargo Space Bar (Progress Bar)
-│       │   └── Profit Display (Text Block)
+│       │   └── Profit Display (TextBlock)
 │       │
 │       ├── Shopping Cart Panel
-│       │   ├── Cart Title (Text Block)
+│       │   ├── Cart Title (TextBlock)
 │       │   ├── Cart Items List (Scroll Box)
-│       │   └── Cart Total (Text Block)
+│       │   └── Cart Total (TextBlock)
 │       │
 │       └── Transaction Panel
 │           ├── Trade Button (Button)
 │           └── Clear Cart Button (Button)
 │
-└── Status Message (Text Block)
+└── Status Message (TextBlock)
     └── Shows errors/success messages
 ```
 
@@ -201,7 +201,7 @@ Canvas Panel (Root)
 1. Add Horizontal Box at top
 2. Padding: 20px all sides
 3. Add children:
-   - **Text Block**: "Market Name"
+   - **TextBlock**: "Market Name"
      - Bind text to `GetMarketName()` function
      - Font Size: 32
      - Color: White
@@ -273,7 +273,7 @@ Canvas Panel (Root)
 
 #### Status Message
 
-1. Add Text Block at bottom
+1. Add TextBlock at bottom
 2. Name: `StatusMessageText`
 3. Initially hidden (visibility: Collapsed)
 4. Used for error/success messages
