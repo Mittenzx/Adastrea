@@ -26,7 +26,7 @@ USpaceshipControlsComponent::USpaceshipControlsComponent()
 	, RollAction(nullptr)
 	, SpaceshipMappingContext(nullptr)
 	, bControlsEnabled(false)
-	, CachedWeaponComponent(nullptr)
+	// , CachedWeaponComponent(nullptr)
 {
 	PrimaryComponentTick.bCanEverTick = false;
 }

@@ -215,6 +215,16 @@ public:
 	TArray<FShipModuleSlot> GetEmptySlots() const;
 
 	/**
+	 * Get all empty slots compatible with a specific module
+	 * @param Module The module to check compatibility for
+	 * @return Array of compatible unoccupied slots
+	 * 
+	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
+	 */
+	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
+	TArray<FShipModuleSlot> GetCompatibleEmptySlots(UShipModuleComponent* Module) const;
+
+	/**
 	 * Validate if a module can be installed (checks power, mass, slot compatibility)
 	 * @param Module The module to validate
 	 * @param SlotID The target slot
@@ -225,6 +235,34 @@ public:
 	 */
 	// UFUNCTION(BlueprintCallable, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
 	bool CanInstallModule(UShipModuleComponent* Module, FName SlotID, FText& OutReason) const;
+
+	// ====================
+	// RESOURCE CALCULATIONS
+	// ====================
+
+	/**
+	 * Get total power consumption of all installed modules
+	 * @return Total power consumption
+	 */
+	float GetTotalPowerConsumption() const;
+
+	/**
+	 * Get total mass of all installed modules
+	 * @return Total module mass
+	 */
+	float GetTotalModuleMass() const;
+
+	/**
+	 * Get remaining power capacity
+	 * @return Remaining power capacity
+	 */
+	float GetRemainingPowerCapacity() const;
+
+	/**
+	 * Get remaining mass capacity
+	 * @return Remaining mass capacity
+	 */
+	float GetRemainingMassCapacity() const;
 
 	// ====================
 	// LOADOUT MANAGEMENT
@@ -242,18 +280,6 @@ private:
 	// ====================
 	// INTERNAL RESOURCE CALCULATIONS
 	// ====================
-
-	/**
-	 * Get remaining power capacity
-	 * Internal calculation - used by CanInstallModule
-	 */
-	float GetRemainingPowerCapacity() const;
-
-	/**
-	 * Get remaining mass capacity
-	 * Internal calculation - used by CanInstallModule
-	 */
-	float GetRemainingMassCapacity() const;
 
 	/**
 	 * Check if there's enough power for a module
