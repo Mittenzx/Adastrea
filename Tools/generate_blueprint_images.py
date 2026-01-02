@@ -47,6 +47,35 @@ def create_svg_base(width, height):
     })
     return svg
 
+def get_contrasting_text_color(background_color):
+    """
+    Calculate appropriate text color (black or white) based on background color.
+    Uses relative luminance formula to determine if background is light or dark.
+    """
+    # Remove '#' and convert hex to RGB
+    hex_color = background_color.lstrip('#')
+    r = int(hex_color[0:2], 16) / 255.0
+    g = int(hex_color[2:4], 16) / 255.0
+    b = int(hex_color[4:6], 16) / 255.0
+    
+    # Calculate relative luminance (sRGB)
+    # https://www.w3.org/TR/WCAG20/#relativeluminancedef
+    def luminance_component(c):
+        if c <= 0.03928:
+            return c / 12.92
+        else:
+            return ((c + 0.055) / 1.055) ** 2.4
+    
+    r_lum = luminance_component(r)
+    g_lum = luminance_component(g)
+    b_lum = luminance_component(b)
+    
+    luminance = 0.2126 * r_lum + 0.7152 * g_lum + 0.0722 * b_lum
+    
+    # If luminance > 0.5, background is light, use dark text
+    # Otherwise, background is dark, use light text
+    return '#000000' if luminance > 0.5 else '#FFFFFF'
+
 def add_node_box(svg, x, y, width, height, color, title, border_radius='8'):
     """Add a Blueprint node box"""
     # Main node container with shadow
@@ -83,11 +112,12 @@ def add_node_box(svg, x, y, width, height, color, title, border_radius='8'):
         'fill': color
     })
     
-    # Header text
+    # Header text - use contrasting color based on header background
+    text_color = get_contrasting_text_color(color)
     text = ET.SubElement(svg, 'text', {
         'x': str(x + 10),
         'y': str(y + 22),
-        'fill': COLORS['text'],
+        'fill': text_color,
         'font-family': 'Arial, sans-serif',
         'font-size': '14',
         'font-weight': 'bold'
