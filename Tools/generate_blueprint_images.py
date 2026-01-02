@@ -83,11 +83,16 @@ def add_node_box(svg, x, y, width, height, color, title, border_radius='8'):
         'fill': color
     })
     
+    # Determine text color based on header background color
+    # Use black text for light backgrounds (white, light orange, light blue, etc.)
+    light_colors = ['#FFFFFF', '#FFB6C1', '#90EE90', '#FFD700', '#00FFFF', '#5DADE2']
+    text_color = '#000000' if color.upper() in [c.upper() for c in light_colors] else COLORS['text']
+    
     # Header text
     text = ET.SubElement(svg, 'text', {
         'x': str(x + 10),
         'y': str(y + 22),
-        'fill': COLORS['text'],
+        'fill': text_color,
         'font-family': 'Arial, sans-serif',
         'font-size': '14',
         'font-weight': 'bold'
