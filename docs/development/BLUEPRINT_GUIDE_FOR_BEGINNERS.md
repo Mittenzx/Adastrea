@@ -334,7 +334,7 @@ The parent class gives your Blueprint built-in functionality. You just fill in t
 
 #### Trading System (5 Blueprints)
 
-29. **WBP_TradingInterface**
+29. **WBP_TradingUI**
     - **Type**: Widget Blueprint
     - **Parent**: `UTradingInterfaceWidget`
     - **Location**: `Content/UI/Trading/`

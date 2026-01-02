@@ -20,7 +20,7 @@
 ### 1. Removed Duplicates (11 files)
 
 **Duplicate widgets with underscore variations (6 files)**:
-- `WBP_Trading_Interface` → kept `WBP_TradingInterface`
+- `WBP_Trading_Interface` → kept `WBP_TradingUI`
 - `WBP_Main_Menu` → kept `WBP_MainMenu`
 - `WBP_Pause_Menu` → kept `WBP_PauseMenu`
 - `WBP_Settings_Menu` → kept `WBP_SettingsMenu`
@@ -100,7 +100,7 @@ Content/UI/
 `WBP_[System][Purpose]` or `WBP_[System]_[Purpose]`
 
 ### Examples from Repository
-✅ `WBP_TradingInterface` - Trading system  
+✅ `WBP_TradingUI` - Trading system  
 ✅ `WBP_HUD_Main` - HUD system  
 ✅ `WBP_MainMenu` - Menu system  
 ✅ `WBP_Ship_Customization` - Ship system  
@@ -112,12 +112,12 @@ Content/UI/
 ### 1. "Why do I have two trading interface WBP? One is parent user widget one is trading interface widget?"
 
 **Answer**: You had **duplicate files**, not parent/child relationship:
-- `WBP_TradingInterface.uasset` ✅ (kept)
+- `WBP_TradingUI.uasset` ✅ (kept)
 - `WBP_Trading_Interface.uasset` ❌ (removed)
 
 Both inherited from the same C++ class (`UTradingInterfaceWidget` → `UUserWidget`). The duplicate was created accidentally during development.
 
-**Now**: Only ONE trading interface widget exists: `WBP_TradingInterface`
+**Now**: Only ONE trading interface widget exists: `WBP_TradingUI`
 
 ---
 
@@ -298,7 +298,7 @@ Content/Blueprints/UI/ → deleted
 ## 🔗 Related Files
 
 ### Source Files (Affected)
-- `Source/Adastrea/Public/UI/TradingInterfaceWidget.h` - C++ parent class for WBP_TradingInterface
+- `Source/Adastrea/Public/UI/TradingInterfaceWidget.h` - C++ parent class for WBP_TradingUI
 - Various Blueprint references (to be verified in Unreal Editor)
 
 ### Documentation Files

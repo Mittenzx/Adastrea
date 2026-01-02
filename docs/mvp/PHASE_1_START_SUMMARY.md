@@ -86,7 +86,7 @@ Follow `PHASE_1_IMPLEMENTATION_STEPS.md` from **Step 1**:
 5. Create BP_Station_Industrial
 6. Create WBP_SimpleHUD
 7. Create WBP_TradeItemRow
-8. Create WBP_TradingInterface
+8. Create WBP_TradingUI
 9. Create L_TradingTest level
 10. Wire everything together
 11. Internal testing
@@ -142,7 +142,7 @@ Use `PHASE_1_CHECKLIST.md` to:
    - Sell button (orange)
    - Transaction validation
 
-7. **WBP_TradingInterface**
+7. **WBP_TradingUI**
    - Station name
    - Player info
    - 3x Trade Item Rows

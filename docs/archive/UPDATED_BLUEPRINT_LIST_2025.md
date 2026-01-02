@@ -582,7 +582,7 @@ Location: `Content/Blueprints/Stations/Modules/`
     - Parent: `UInventoryWidget` (C++)
     - Location: `Content/UI/Inventory/`
 
-13. **WBP_TradingInterface** - Trading UI
+13. **WBP_TradingUI** - Trading UI
     - Parent: `UTradingInterfaceWidget` (C++)
     - Location: `Content/UI/Trading/`
 
