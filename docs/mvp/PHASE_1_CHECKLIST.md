@@ -11,11 +11,11 @@
 ### Day 1-2: Project Setup
 
 - [ ] Create folder structure in Content Browser
-  - [ ] `Content/Blueprints/Trading/GameModes/`
+  - [ ] `Content/Blueprints/GameModes/`
   - [ ] `Content/Blueprints/Trading/Ships/`
   - [ ] `Content/Blueprints/Trading/Stations/`
-  - [ ] `Content/Blueprints/Trading/UI/`
-  - [ ] `Content/Maps/MVP/`
+  - [ ] `Content/UI/Trading/`
+  - [ ] `Content/Maps/Trading/`
 
 - [ ] Create BP_TradingGameMode
   - [ ] Set up basic game mode class

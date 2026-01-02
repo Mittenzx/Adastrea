@@ -446,7 +446,7 @@ DA_TradeItem_Water      (Data Asset, Trade Item)
 - `DA_Market_Agricultural` - Agricultural market
 
 **❌ DEPRECATED NAMES** (do not use):
-- ~~`WBP_TradingInterface`~~ → Use `WBP_TradingUI`
+- ~~`WBP_TradingInterface`~~ (legacy main trading widget name) → Use `WBP_TradingUI`
 - ~~`WBP_Trading_Interface`~~ → Use `WBP_TradingUI`
 - ~~`BP_UI_Trading`~~ → Use `WBP_TradingUI`
 - ~~`BP_MVP_*`~~ → No MVP prefix needed

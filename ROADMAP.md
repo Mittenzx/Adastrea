@@ -69,7 +69,7 @@
    - [ ] Display session profit (green if positive)
    - [ ] Display instructions: "Fly to station, dock to trade"
    - [ ] Update in real-time (Event Tick)
-   - [ ] **Location**: `Content/Blueprints/Trading/UI/`
+   - [ ] **Location**: `Content/UI/HUD/`
 
 4. **💰 Trading Interface** (`WBP_TradingUI`)
    - [ ] Show 3 trade items (Water, Food, Fuel)
@@ -77,7 +77,7 @@
    - [ ] Buy logic: Check credits → Check cargo space → Deduct credits → Add to cargo
    - [ ] Sell logic: Check cargo → Add credits → Remove from cargo → Show profit
    - [ ] Close button (Escape key)
-   - [ ] **Location**: `Content/Blueprints/Trading/UI/`
+   - [ ] **Location**: `Content/UI/Trading/`
 
 5. **🗺️ Test Level Setup** (`L_TradingTest`)
    - [ ] Create new map in `Content/Maps/MVP/`
