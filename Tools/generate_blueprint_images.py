@@ -51,30 +51,60 @@ def get_contrasting_text_color(background_color):
     """
     Calculate appropriate text color (black or white) based on background color.
     Uses relative luminance formula to determine if background is light or dark.
+    
+    Args:
+        background_color: Hex color string in format '#RRGGBB' or '#RGB'
+        
+    Returns:
+        '#000000' for black text or '#FFFFFF' for white text
+        Falls back to '#FFFFFF' (white) if color parsing fails
     """
-    # Remove '#' and convert hex to RGB
-    hex_color = background_color.lstrip('#')
-    r = int(hex_color[0:2], 16) / 255.0
-    g = int(hex_color[2:4], 16) / 255.0
-    b = int(hex_color[4:6], 16) / 255.0
-    
-    # Calculate relative luminance (sRGB)
-    # https://www.w3.org/TR/WCAG20/#relativeluminancedef
-    def luminance_component(c):
-        if c <= 0.03928:
-            return c / 12.92
-        else:
-            return ((c + 0.055) / 1.055) ** 2.4
-    
-    r_lum = luminance_component(r)
-    g_lum = luminance_component(g)
-    b_lum = luminance_component(b)
-    
-    luminance = 0.2126 * r_lum + 0.7152 * g_lum + 0.0722 * b_lum
-    
-    # If luminance > 0.5, background is light, use dark text
-    # Otherwise, background is dark, use light text
-    return '#000000' if luminance > 0.5 else '#FFFFFF'
+    try:
+        # Validate and normalize hex color format
+        if not isinstance(background_color, str):
+            raise ValueError(f"Color must be a string, got {type(background_color)}")
+        
+        # Remove '#' prefix if present
+        hex_color = background_color.lstrip('#')
+        
+        # Validate hex characters
+        if not all(c in '0123456789ABCDEFabcdef' for c in hex_color):
+            raise ValueError(f"Invalid hex color characters in '{background_color}'")
+        
+        # Handle short format (#RGB) by expanding to #RRGGBB
+        if len(hex_color) == 3:
+            hex_color = ''.join([c + c for c in hex_color])
+        elif len(hex_color) != 6:
+            raise ValueError(f"Hex color must be 3 or 6 characters, got {len(hex_color)}")
+        
+        # Convert hex to RGB
+        r = int(hex_color[0:2], 16) / 255.0
+        g = int(hex_color[2:4], 16) / 255.0
+        b = int(hex_color[4:6], 16) / 255.0
+        
+        # Calculate relative luminance (sRGB)
+        # https://www.w3.org/TR/WCAG20/#relativeluminancedef
+        def luminance_component(c):
+            if c <= 0.03928:
+                return c / 12.92
+            else:
+                return ((c + 0.055) / 1.055) ** 2.4
+        
+        r_lum = luminance_component(r)
+        g_lum = luminance_component(g)
+        b_lum = luminance_component(b)
+        
+        luminance = 0.2126 * r_lum + 0.7152 * g_lum + 0.0722 * b_lum
+        
+        # If luminance > 0.5, background is light, use dark text
+        # Otherwise, background is dark, use light text
+        return '#000000' if luminance > 0.5 else '#FFFFFF'
+        
+    except (ValueError, IndexError, TypeError) as e:
+        # Fall back to white text if parsing fails
+        print(f"Warning: Failed to parse color '{background_color}': {e}")
+        print("Falling back to white text (#FFFFFF)")
+        return '#FFFFFF'
 
 def add_node_box(svg, x, y, width, height, color, title, border_radius='8'):
     """Add a Blueprint node box"""
