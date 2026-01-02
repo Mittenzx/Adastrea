@@ -51,7 +51,7 @@
    - [ ] Configure WASD/EQ input for 3D movement
    - [ ] Add SpringArm and Camera for third-person view
    - [ ] Test flight in empty level (~1 minute travel time)
-   - [ ] **Location**: `Content/Blueprints/MVP/Ships/`
+   - [ ] **Location**: `Content/Blueprints/Trading/Ships/`
 
 2. **🏢 Two Trading Stations** (Agricultural & Industrial)
    - [ ] Create `BP_Station_Agricultural` with green placeholder mesh
@@ -61,7 +61,7 @@
      - Agricultural: Water=8cr, Food=22cr, Fuel=45cr (LOW prices)
      - Industrial: Water=12cr, Food=35cr, Fuel=60cr (HIGH prices)
    - [ ] Implement docking: OnBeginOverlap → Open Trading UI
-   - [ ] **Location**: `Content/Blueprints/MVP/Stations/`
+   - [ ] **Location**: `Content/Blueprints/Trading/Stations/`
 
 3. **📊 Simple Trading HUD** (`WBP_SimpleHUD`)
    - [ ] Display player credits (starts at 1000)
@@ -69,15 +69,15 @@
    - [ ] Display session profit (green if positive)
    - [ ] Display instructions: "Fly to station, dock to trade"
    - [ ] Update in real-time (Event Tick)
-   - [ ] **Location**: `Content/Blueprints/MVP/UI/`
+   - [ ] **Location**: `Content/Blueprints/Trading/UI/`
 
-4. **💰 Trading Interface** (`WBP_TradingInterface`)
+4. **💰 Trading Interface** (`WBP_TradingUI`)
    - [ ] Show 3 trade items (Water, Food, Fuel)
    - [ ] Each row: Item name, price, quantity spinner, Buy/Sell buttons
    - [ ] Buy logic: Check credits → Check cargo space → Deduct credits → Add to cargo
    - [ ] Sell logic: Check cargo → Add credits → Remove from cargo → Show profit
    - [ ] Close button (Escape key)
-   - [ ] **Location**: `Content/Blueprints/MVP/UI/`
+   - [ ] **Location**: `Content/Blueprints/Trading/UI/`
 
 5. **🗺️ Test Level Setup** (`L_TradingTest`)
    - [ ] Create new map in `Content/Maps/MVP/`

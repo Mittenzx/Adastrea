@@ -11,10 +11,10 @@
 ### Day 1-2: Project Setup
 
 - [ ] Create folder structure in Content Browser
-  - [ ] `Content/Blueprints/MVP/GameModes/`
-  - [ ] `Content/Blueprints/MVP/Ships/`
-  - [ ] `Content/Blueprints/MVP/Stations/`
-  - [ ] `Content/Blueprints/MVP/UI/`
+  - [ ] `Content/Blueprints/Trading/GameModes/`
+  - [ ] `Content/Blueprints/Trading/Ships/`
+  - [ ] `Content/Blueprints/Trading/Stations/`
+  - [ ] `Content/Blueprints/Trading/UI/`
   - [ ] `Content/Maps/MVP/`
 
 - [ ] Create BP_TradingGameMode
@@ -117,7 +117,7 @@
     - [ ] Remove from cargo
     - [ ] Show profit in green
 
-- [ ] Create WBP_TradingInterface
+- [ ] Create WBP_TradingUI
   - [ ] Add Canvas Panel (root)
   - [ ] Add semi-transparent background
   - [ ] Add Vertical Box layout
@@ -135,7 +135,7 @@
   - [ ] Set Input Mode: UI Only when shown
 
 - [ ] Wire to stations
-  - [ ] Station OnBeginOverlap creates WBP_TradingInterface
+  - [ ] Station OnBeginOverlap creates WBP_TradingUI
   - [ ] Pass station reference to widget
   - [ ] Test opening/closing UI
 
@@ -310,7 +310,7 @@
 - [ ] BP_Station_Agricultural (functional)
 - [ ] BP_Station_Industrial (functional)
 - [ ] WBP_SimpleHUD (displays info)
-- [ ] WBP_TradingInterface (trading works)
+- [ ] WBP_TradingUI (trading works)
 - [ ] WBP_TradeItemRow (buy/sell works)
 - [ ] L_TradingTest (playable level)
 

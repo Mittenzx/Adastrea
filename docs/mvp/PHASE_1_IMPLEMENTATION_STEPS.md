@@ -2,8 +2,11 @@
 
 **Purpose**: Step-by-step guide to implement Phase 1 (Weeks 1-4) hardcoded prototype  
 **Target**: Playable trading loop for Week 4 playtest (60%+ "fun" rating)  
-**Last Updated**: 2025-12-25  
+**Last Updated**: 2026-01-02  
 **Status**: Ready to implement
+
+**⚠️ IMPORTANT**: Follow official file structure:  
+📖 **[FILE_STRUCTURE_STANDARD.md](../reference/FILE_STRUCTURE_STANDARD.md)** - Required reading
 
 ---
 
@@ -34,18 +37,26 @@
 
 ### Week 1: Core Infrastructure
 
-#### Step 1: Create Folder Structure
+#### Step 1: Create Folder Structure (Updated for Official Standard)
 ```
 Content/
 ├── Blueprints/
-│   └── MVP/
-│       ├── GameModes/
-│       ├── Ships/
-│       ├── Stations/
-│       └── UI/
+│   ├── GameModes/        # BP_TradingGameMode
+│   └── Trading/
+│       ├── Stations/     # Station Blueprints
+│       └── Ships/        # Ship Blueprints
+├── UI/
+│   ├── HUD/             # WBP_SimpleHUD
+│   └── Trading/         # WBP_TradingUI, WBP_TradeItemRow
+├── DataAssets/
+│   └── Trading/
+│       ├── Items/       # Trade item data
+│       └── Markets/     # Market data
 └── Maps/
-    └── MVP/
+    └── Trading/         # L_TradingTest
 ```
+
+**Note**: No `Content/Blueprints/MVP/` folder. Assets integrated into main structure per official standard.
 
 **Actions**:
 1. Open Unreal Editor
@@ -57,7 +68,7 @@ Content/
 
 #### Step 2: Create Trading Game Mode
 
-**File**: `Content/Blueprints/MVP/GameModes/BP_TradingGameMode`
+**File**: `Content/Blueprints/GameModes/BP_TradingGameMode`
 
 **Parent Class**: `GameModeBase`
 
@@ -88,7 +99,7 @@ Function: InitializePlayer(PlayerPawn)
 
 #### Step 3: Create Simple Player Ship
 
-**File**: `Content/Blueprints/MVP/Ships/BP_SimpleTradingShip`
+**File**: `Content/Blueprints/Trading/Ships/BP_SimpleTradingShip`
 
 **Parent Class**: `Pawn`
 
@@ -172,7 +183,7 @@ InputAxis MoveUp
 
 #### Step 4: Create Agricultural Station (Station A)
 
-**File**: `Content/Blueprints/MVP/Stations/BP_Station_Agricultural`
+**File**: `Content/Blueprints/Trading/Stations/BP_Station_Agricultural`
 
 **Parent Class**: `Actor`
 
@@ -264,7 +275,7 @@ Switch on ItemName:
 
 #### Step 5: Create Industrial Station (Station B)
 
-**File**: `Content/Blueprints/MVP/Stations/BP_Station_Industrial`
+**File**: `Content/Blueprints/Trading/Stations/BP_Station_Industrial`
 
 **Duplicate from**: `BP_Station_Agricultural`
 
@@ -317,7 +328,7 @@ Route 2: Agricultural → Industrial (Food)
 
 #### Step 6: Create Simple HUD
 
-**File**: `Content/Blueprints/MVP/UI/WBP_SimpleHUD`
+**File**: `Content/UI/HUD/WBP_SimpleHUD`
 
 **Parent Class**: `UserWidget`
 
@@ -370,7 +381,7 @@ Event Tick
 
 #### Step 7: Create Trading Interface
 
-**File**: `Content/Blueprints/MVP/UI/WBP_TradingInterface`
+**File**: `Content/UI/Trading/WBP_TradingUI`
 
 **Parent Class**: `UserWidget`
 
@@ -427,7 +438,7 @@ Button_Close OnClicked
 
 #### Step 8: Create Trade Item Row
 
-**File**: `Content/Blueprints/MVP/UI/WBP_TradeItemRow`
+**File**: `Content/UI/Trading/WBP_TradeItemRow`
 
 **Parent Class**: `UserWidget`
 
@@ -571,7 +582,7 @@ Update Event Graph:
 
 ```blueprint
 Function: OpenTradingUI
-├─ Create Widget: WBP_TradingInterface
+├─ Create Widget: WBP_TradingUI
 ├─ Set CurrentStation reference
 ├─ Set PlayerShip reference
 ├─ Add to Viewport
@@ -579,7 +590,7 @@ Function: OpenTradingUI
 └─ Show Mouse Cursor: true
 
 Function: CloseTradingUI
-├─ Remove WBP_TradingInterface from viewport
+├─ Remove WBP_TradingUI from viewport
 ├─ Set Input Mode: Game Only
 └─ Show Mouse Cursor: false
 ```
