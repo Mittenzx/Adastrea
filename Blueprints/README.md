@@ -33,24 +33,28 @@ These guides are critical for the Trade Simulator MVP:
 | Guide | Complexity | Time | Status |
 |-------|------------|------|--------|
 | [Trading UI Widget](TradingSystemBlueprintGuide_SIMPLIFIED.md) | Intermediate | 45-60 min | ✅ Updated |
-| Trading Station Actor | Beginner | 30 min | ⏳ Coming soon |
-| Ship Cargo System | Beginner | 30 min | ⏳ Coming soon |
+| [Trading Station Actor](TradingStationActorGuide.md) | Beginner | 30-40 min | ✅ Updated |
+| [Ship Cargo System](ShipCargoSystemGuide.md) | Beginner | 25-35 min | ✅ Updated |
+| [Docking UI](DockingUIGuide.md) | Beginner | 20-30 min | ✅ Updated |
 
 ### 🎮 System-Specific Guides
 
 Organized by game system:
 
 #### Trading System
-- [Trading UI Widget](TradingSystemBlueprintGuide_SIMPLIFIED.md) - Main trading interface
+- [Trading UI Widget](TradingSystemBlueprintGuide_SIMPLIFIED.md) - Main trading interface ✅
+- [Trading Station Actor](TradingStationActorGuide.md) - Station with trading terminal ✅
 - [Trading System (Original)](TradingSystemBlueprintGuide.md) - ⚠️ Legacy, being replaced
 - [Trading Blueprint Examples](../Assets/TradingBlueprintExamples.md) - ⚠️ Advanced patterns
 
 #### Ship Systems
+- [Ship Cargo System](ShipCargoSystemGuide.md) - Cargo management for trading ✅
 - [Ship Status Screen](ShipStatusScreenBlueprintExample.md) - HUD display
 - [Ship Controls](../docs/setup/SPACESHIP_HUD_BLUEPRINT_GUIDE.md) - Flight controls UI
 
 #### Station Systems
 - [Space Station Editor](BlueprintWorkflowTemplates.md) - Station building UI (from Assets folder)
+- [Docking UI](DockingUIGuide.md) - Station interaction prompts ✅
 
 #### Way Network System
 - [Way Networks](WayNetworkBlueprintExamples.md) - Faction relationship system
