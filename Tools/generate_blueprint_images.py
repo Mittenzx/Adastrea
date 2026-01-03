@@ -31,6 +31,59 @@ COLORS = {
     'pin_border': '#000000'
 }
 
+def calculate_relative_luminance(hex_color):
+    """
+    Calculate relative luminance according to WCAG 2.0 standards.
+    Returns a value between 0 (darkest) and 1 (lightest).
+    
+    Formula: L = 0.2126 * R + 0.7152 * G + 0.0722 * B
+    where R, G, B are linearized color values
+    """
+    # Remove '#' if present
+    hex_color = hex_color.lstrip('#')
+    
+    # Convert hex to RGB
+    r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
+    
+    # Normalize to 0-1 range
+    r, g, b = r / 255.0, g / 255.0, b / 255.0
+    
+    # Linearize RGB values (sRGB to linear RGB)
+    def linearize(c):
+        if c <= 0.03928:
+            return c / 12.92
+        return ((c + 0.055) / 1.055) ** 2.4
+    
+    r_linear = linearize(r)
+    g_linear = linearize(g)
+    b_linear = linearize(b)
+    
+    # Calculate relative luminance
+    return 0.2126 * r_linear + 0.7152 * g_linear + 0.0722 * b_linear
+
+def should_use_black_text(background_color):
+    """
+    Determine if black text should be used on the given background color.
+    Uses WCAG contrast ratio calculation for accessibility.
+    
+    Returns True if black text provides better contrast, False otherwise.
+    """
+    # Calculate luminance of background
+    bg_luminance = calculate_relative_luminance(background_color)
+    
+    # Luminance of white (#FFFFFF) is 1.0
+    # Luminance of black (#000000) is 0.0
+    white_luminance = 1.0
+    black_luminance = 0.0
+    
+    # Calculate contrast ratios (WCAG formula)
+    # Contrast = (lighter + 0.05) / (darker + 0.05)
+    contrast_with_white = (max(bg_luminance, white_luminance) + 0.05) / (min(bg_luminance, white_luminance) + 0.05)
+    contrast_with_black = (max(bg_luminance, black_luminance) + 0.05) / (min(bg_luminance, black_luminance) + 0.05)
+    
+    # Return True if black text has better contrast
+    return contrast_with_black > contrast_with_white
+
 def create_svg_base(width, height):
     """Create base SVG element"""
     svg = ET.Element('svg', {
@@ -83,10 +136,8 @@ def add_node_box(svg, x, y, width, height, color, title, border_radius='8'):
         'fill': color
     })
     
-    # Determine text color based on header background color
-    # Use black text for light backgrounds (white, light orange, light blue, etc.)
-    light_colors = ['#FFFFFF', '#FFB6C1', '#90EE90', '#FFD700', '#00FFFF', '#5DADE2']
-    text_color = '#000000' if color.upper() in [c.upper() for c in light_colors] else COLORS['text']
+    # Determine text color based on background color using WCAG contrast calculation
+    text_color = '#000000' if should_use_black_text(color) else COLORS['text']
     
     # Header text
     text = ET.SubElement(svg, 'text', {
