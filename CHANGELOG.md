@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Spaceship HUD Blueprint Guide** (2026-01-03)
+  - `docs/setup/SPACESHIP_HUD_BLUEPRINT_GUIDE.md` - Comprehensive guide for creating WBP_Spaceship HUD Blueprint
+  - Complete step-by-step instructions for HUD layout and implementation
+  - Covers crosshair, speed/throttle, health/hull integrity, and targeting system
+  - Includes Blueprint logic examples, styling recommendations, and troubleshooting
+  - MVP-focused with clear separation of essential vs post-MVP features
+  - 28KB documentation with visual mockups and integration examples
+
 - **Lost PR Restoration** (2026-01-02)
   - Restored 6 critical PRs lost due to branch force-push
   - **PR #414**: File structure standard documentation (3 files, 32KB)

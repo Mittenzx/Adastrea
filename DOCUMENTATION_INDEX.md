@@ -145,7 +145,7 @@
 
 ## docs/setup/ - Installation and Setup
 
-**13 files** - Getting your development environment ready:
+**14 files** - Getting your development environment ready:
 
 ### Project Setup
 | File | Purpose |
@@ -164,13 +164,18 @@
 | **[DOCKER_TROUBLESHOOTING_QUICK_REFERENCE.md](docs/setup/DOCKER_TROUBLESHOOTING_QUICK_REFERENCE.md)** | Docker troubleshooting |
 | **[GITHUB_TOKEN_DOCKER_SETUP.md](docs/setup/GITHUB_TOKEN_DOCKER_SETUP.md)** | GitHub Actions + Docker setup |
 
+### UI and HUD Setup
+| File | Purpose |
+|------|---------|
+| **[SPACESHIP_HUD_BLUEPRINT_GUIDE.md](docs/setup/SPACESHIP_HUD_BLUEPRINT_GUIDE.md)** | ⭐ **NEW** Comprehensive spaceship HUD (WBP_Spaceship) Blueprint guide |
+| **[CROSSHAIR_BLUEPRINT_GUIDE.md](docs/setup/CROSSHAIR_BLUEPRINT_GUIDE.md)** | Crosshair Blueprint implementation |
+| **[FREE_LOOK_SETUP_GUIDE.md](docs/setup/FREE_LOOK_SETUP_GUIDE.md)** | Free look camera setup |
+
 ### Other Setup
 | File | Purpose |
 |------|---------|
 | **[WIKI_SETUP_INSTRUCTIONS.md](docs/setup/WIKI_SETUP_INSTRUCTIONS.md)** | Setting up documentation wiki |
 | **[UNREAL_MCP_SETUP_STEPS.md](docs/setup/UNREAL_MCP_SETUP_STEPS.md)** | Unreal MCP setup |
-| **[FREE_LOOK_SETUP_GUIDE.md](docs/setup/FREE_LOOK_SETUP_GUIDE.md)** | Free look camera setup |
-| **[CROSSHAIR_BLUEPRINT_GUIDE.md](docs/setup/CROSSHAIR_BLUEPRINT_GUIDE.md)** | Crosshair Blueprint implementation |
 
 ---
 
