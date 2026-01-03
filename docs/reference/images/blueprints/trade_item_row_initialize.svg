@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="350" viewBox="0 0 800 350">
+  <rect width="800" height="350" fill="#2D2D2D" />
+  <rect x="23" y="23" width="180" height="60" rx="8" fill="#000000" opacity="0.3" />
+  <rect x="20" y="20" width="180" height="60" rx="8" fill="none" stroke="#000000" stroke-width="2" />
+  <rect x="20" y="20" width="180" height="32" rx="8" fill="#C80000" />
+  <text x="30" y="42" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="14" font-weight="bold">EVENT: Construct</text>
+  <rect x="20" y="52" width="180" height="28" fill="#1E1E1E" />
+  <circle cx="195" cy="72" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
+  <text x="180" y="76" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end" />
+  <rect x="233" y="23" width="200" height="80" rx="8" fill="#000000" opacity="0.3" />
+  <rect x="230" y="20" width="200" height="80" rx="8" fill="none" stroke="#000000" stroke-width="2" />
+  <rect x="230" y="20" width="200" height="32" rx="8" fill="#1B4F72" />
+  <text x="240" y="42" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Set Item Data</text>
+  <rect x="230" y="52" width="200" height="48" fill="#1E1E1E" />
+  <circle cx="235" cy="67" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
+  <text x="250" y="71" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="start" />
+  <circle cx="235" cy="87" r="6" fill="#4682B4" stroke="#000000" stroke-width="1.5" />
+  <text x="250" y="91" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="start">Item Data</text>
+  <circle cx="425" cy="67" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
+  <text x="410" y="71" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end" />
+  <rect x="463" y="23" width="180" height="60" rx="8" fill="#000000" opacity="0.3" />
+  <rect x="460" y="20" width="180" height="60" rx="8" fill="none" stroke="#000000" stroke-width="2" />
+  <rect x="460" y="20" width="180" height="32" rx="8" fill="#1B4F72" />
+  <text x="470" y="42" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Update Display</text>
+  <rect x="460" y="52" width="180" height="28" fill="#1E1E1E" />
+  <circle cx="465" cy="72" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
+  <text x="480" y="76" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="start" />
+  <circle cx="635" cy="72" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
+  <text x="620" y="76" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end" />
+  <rect x="233" y="143" width="200" height="80" rx="8" fill="#000000" opacity="0.3" />
+  <rect x="230" y="140" width="200" height="80" rx="8" fill="none" stroke="#000000" stroke-width="2" />
+  <rect x="230" y="140" width="200" height="32" rx="8" fill="#1B4F72" />
+  <text x="240" y="162" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Set Quantity</text>
+  <rect x="230" y="172" width="200" height="48" fill="#1E1E1E" />
+  <circle cx="235" cy="187" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
+  <text x="250" y="191" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="start" />
+  <circle cx="235" cy="207" r="6" fill="#00FF00" stroke="#000000" stroke-width="1.5" />
+  <text x="250" y="211" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="start">Value: 1</text>
+  <circle cx="425" cy="187" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
+  <text x="410" y="191" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end" />
+  <rect x="463" y="143" width="180" height="60" rx="8" fill="#000000" opacity="0.3" />
+  <rect x="460" y="140" width="180" height="60" rx="8" fill="none" stroke="#000000" stroke-width="2" />
+  <rect x="460" y="140" width="180" height="32" rx="8" fill="#1B4F72" />
+  <text x="470" y="162" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Bind Events</text>
+  <rect x="460" y="172" width="180" height="28" fill="#1E1E1E" />
+  <circle cx="465" cy="192" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
+  <text x="480" y="196" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="start" />
+  <circle cx="635" cy="192" r="6" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
+  <text x="620" y="196" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12" text-anchor="end" />
+  <path d="M 200 72 C 215.0 72, 215.0 67, 230 67" stroke="#FFFFFF" stroke-width="3" fill="none" opacity="0.8" />
+  <path d="M 430 67 C 445.0 67, 445.0 72, 460 72" stroke="#FFFFFF" stroke-width="3" fill="none" opacity="0.8" />
+  <path d="M 640 72 C 435.0 72, 435.0 187, 230 187" stroke="#FFFFFF" stroke-width="3" fill="none" opacity="0.8" />
+  <path d="M 430 187 C 445.0 187, 445.0 192, 460 192" stroke="#FFFFFF" stroke-width="3" fill="none" opacity="0.8" />
+  <text x="110" y="60" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11" text-anchor="middle">1. Widget created</text>
+  <text x="340" y="60" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11" text-anchor="middle">2. Receive item data</text>
+  <text x="550" y="60" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11" text-anchor="middle">3. Populate UI</text>
+  <text x="340" y="180" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11" text-anchor="middle">4. Initialize qty</text>
+  <text x="550" y="180" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="11" text-anchor="middle">5. Connect handlers</text>
+</svg>

@@ -8,6 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+- **Lost PR Restoration** (2026-01-02)
+  - Restored 6 critical PRs lost due to branch force-push
+  - **PR #414**: File structure standard documentation (3 files, 32KB)
+    - `docs/reference/FILE_STRUCTURE_STANDARD.md` - Official file structure for entire project
+    - `docs/reference/FILE_STRUCTURE_MIGRATION_SUMMARY.md` - Migration tracking and status
+    - `docs/reference/ISSUE_RESOLUTION_FILE_STRUCTURE.md` - Common issues and solutions
+  - **PR #409**: WBP_TradeItemRow Blueprint documentation (5 files, 11.5KB + 4 SVG diagrams)
+    - Complete widget documentation with visual flow diagrams
+    - Added 4 new diagram generation functions to generate_blueprint_images.py
+  - **PR #405**: Comprehensive inventory system research (25KB, 858 lines)
+    - `docs/mvp/INVENTORY_SYSTEM_RESEARCH.md` - Analysis of Fab.com and 5 major games
+    - Data-driven UI/UX recommendations for Trade Simulator MVP
+  - Total restored: 7 documentation files (57KB), 4 SVG diagrams, 4 commits
+
 - Build order analysis documentation in `docs/development/BUILD_ORDER_ANALYSIS.md` - comprehensive report on include order, module dependencies, and MVP scope clarifications
 - MVP vs POST-MVP documentation comments in combat-related headers to clarify Trade Simulator scope
 - UI file structure cleanup documentation:
@@ -16,12 +31,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `docs/reference/UI_WIDGET_REFERENCE.md` - Quick reference guide for all UI widgets
 
 ### Changed
+
+- **PR #412**: Fixed white text on white background in SVG diagrams (2026-01-02)
+  - Updated `Tools/generate_blueprint_images.py` to automatically detect light backgrounds
+  - Branch nodes now use black text on white background (was invisible)
+  - All 13 Blueprint diagrams now render correctly
+
+- **PR #411**: Clarified TextBlock widget terminology (2026-01-02)  
+  - Updated `docs/BP/WBP_TradingUI.md` to use "TextBlock" instead of "Text Block"
+  - Consistent with Unreal Engine UMG naming conventions
+
 - `SpaceshipDataAsset.h` - Added MVP clarification comments to Combat Stats section explaining which stats are used for environmental hazards vs future combat
 - `IDamageable.h` - Documented MVP scope (environmental damage only) vs POST-MVP scope (full combat system)
 - `FactionLogic.h` - Clarified MVP focus on economic/diplomacy vs POST-MVP military actions
 - `StationModuleTypes.h` - Labeled module groups as MVP (trading-focused) or POST-MVP (combat/advanced)
 
 ### Verified
+- ✅ **PRs #408 & #407**: C++ compilation and include path fixes already applied in current codebase (2026-01-02)
+  - EconomyManager.cpp, ShipCustomizationComponent.h, SpaceshipControlsComponent.cpp all correct
+  - Trading/Ships module includes use proper subdirectory paths
 - ✅ No circular module dependencies (CI check passes)
 - ✅ All `.generated.h` includes are properly ordered as last include
 - ✅ Combat system properly archived (not in build)

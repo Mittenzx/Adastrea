@@ -31,6 +31,59 @@ COLORS = {
     'pin_border': '#000000'
 }
 
+def calculate_relative_luminance(hex_color):
+    """
+    Calculate relative luminance according to WCAG 2.0 standards.
+    Returns a value between 0 (darkest) and 1 (lightest).
+    
+    Formula: L = 0.2126 * R + 0.7152 * G + 0.0722 * B
+    where R, G, B are linearized color values
+    """
+    # Remove '#' if present
+    hex_color = hex_color.lstrip('#')
+    
+    # Convert hex to RGB
+    r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
+    
+    # Normalize to 0-1 range
+    r, g, b = r / 255.0, g / 255.0, b / 255.0
+    
+    # Linearize RGB values (sRGB to linear RGB)
+    def linearize(c):
+        if c <= 0.03928:
+            return c / 12.92
+        return ((c + 0.055) / 1.055) ** 2.4
+    
+    r_linear = linearize(r)
+    g_linear = linearize(g)
+    b_linear = linearize(b)
+    
+    # Calculate relative luminance
+    return 0.2126 * r_linear + 0.7152 * g_linear + 0.0722 * b_linear
+
+def should_use_black_text(background_color):
+    """
+    Determine if black text should be used on the given background color.
+    Uses WCAG contrast ratio calculation for accessibility.
+    
+    Returns True if black text provides better contrast, False otherwise.
+    """
+    # Calculate luminance of background
+    bg_luminance = calculate_relative_luminance(background_color)
+    
+    # Luminance of white (#FFFFFF) is 1.0
+    # Luminance of black (#000000) is 0.0
+    white_luminance = 1.0
+    black_luminance = 0.0
+    
+    # Calculate contrast ratios (WCAG formula)
+    # Contrast = (lighter + 0.05) / (darker + 0.05)
+    contrast_with_white = (max(bg_luminance, white_luminance) + 0.05) / (min(bg_luminance, white_luminance) + 0.05)
+    contrast_with_black = (max(bg_luminance, black_luminance) + 0.05) / (min(bg_luminance, black_luminance) + 0.05)
+    
+    # Return True if black text has better contrast
+    return contrast_with_black > contrast_with_white
+
 def create_svg_base(width, height):
     """Create base SVG element"""
     svg = ET.Element('svg', {
@@ -83,11 +136,14 @@ def add_node_box(svg, x, y, width, height, color, title, border_radius='8'):
         'fill': color
     })
     
+    # Determine text color based on background color using WCAG contrast calculation
+    text_color = '#000000' if should_use_black_text(color) else COLORS['text']
+    
     # Header text
     text = ET.SubElement(svg, 'text', {
         'x': str(x + 10),
         'y': str(y + 22),
-        'fill': COLORS['text'],
+        'fill': text_color,
         'font-family': 'Arial, sans-serif',
         'font-size': '14',
         'font-weight': 'bold'
@@ -475,6 +531,243 @@ def generate_market_item_display():
     
     return svg
 
+def generate_trade_item_row_initialize():
+    """Generate WBP_TradeItemRow Initialize flow"""
+    svg = create_svg_base(800, 350)
+    
+    # Event: Construct
+    body_y1 = add_node_box(svg, 20, 20, 180, 60, COLORS['event'], 'EVENT: Construct')
+    add_pin(svg, 200, body_y1 + 20, 'exec', '', is_input=False, is_exec=True)
+    
+    # Function: Set Item Data
+    body_y2 = add_node_box(svg, 230, 20, 200, 80, COLORS['function'], 'Set Item Data')
+    pin_y = body_y2 + 15
+    pin_y = add_pin(svg, 230, pin_y, 'exec', '', is_input=True, is_exec=True)
+    add_pin(svg, 230, pin_y, 'struct', 'Item Data', is_input=True)
+    add_pin(svg, 430, body_y2 + 15, 'exec', '', is_input=False, is_exec=True)
+    
+    # Function: Update Display
+    body_y3 = add_node_box(svg, 460, 20, 180, 60, COLORS['function'], 'Update Display')
+    add_pin(svg, 460, body_y3 + 20, 'exec', '', is_input=True, is_exec=True)
+    add_pin(svg, 640, body_y3 + 20, 'exec', '', is_input=False, is_exec=True)
+    
+    # Function: Set Quantity
+    body_y4 = add_node_box(svg, 230, 140, 200, 80, COLORS['function'], 'Set Quantity')
+    pin_y = body_y4 + 15
+    pin_y = add_pin(svg, 230, pin_y, 'exec', '', is_input=True, is_exec=True)
+    add_pin(svg, 230, pin_y, 'int', 'Value: 1', is_input=True)
+    add_pin(svg, 430, body_y4 + 15, 'exec', '', is_input=False, is_exec=True)
+    
+    # Function: Bind Events
+    body_y5 = add_node_box(svg, 460, 140, 180, 60, COLORS['function'], 'Bind Events')
+    add_pin(svg, 460, body_y5 + 20, 'exec', '', is_input=True, is_exec=True)
+    add_pin(svg, 640, body_y5 + 20, 'exec', '', is_input=False, is_exec=True)
+    
+    # Connection wires
+    add_connection_wire(svg, 200, body_y1 + 20, 230, body_y2 + 15)
+    add_connection_wire(svg, 430, body_y2 + 15, 460, body_y3 + 20)
+    add_connection_wire(svg, 640, body_y3 + 20, 230, body_y4 + 15)
+    add_connection_wire(svg, 430, body_y4 + 15, 460, body_y5 + 20)
+    
+    # Add labels
+    labels = [
+        (110, 60, "1. Widget created"),
+        (340, 60, "2. Receive item data"),
+        (550, 60, "3. Populate UI"),
+        (340, 180, "4. Initialize qty"),
+        (550, 180, "5. Connect handlers")
+    ]
+    for x, y, label in labels:
+        text = ET.SubElement(svg, 'text', {
+            'x': str(x), 'y': str(y),
+            'fill': '#CCCCCC', 'font-family': 'Arial, sans-serif',
+            'font-size': '11', 'text-anchor': 'middle'
+        })
+        text.text = label
+    
+    return svg
+
+def generate_trade_item_row_add_to_cart():
+    """Generate WBP_TradeItemRow Add to Cart flow"""
+    svg = create_svg_base(750, 480)
+    
+    # Event: OnAddToCartClicked
+    body_y1 = add_node_box(svg, 20, 20, 220, 60, COLORS['event'], 'EVENT: OnAddToCartClicked')
+    add_pin(svg, 240, body_y1 + 20, 'exec', '', is_input=False, is_exec=True)
+    
+    # Function: Get Quantity
+    body_y2 = add_node_box(svg, 270, 20, 180, 60, COLORS['function'], 'Get Quantity')
+    add_pin(svg, 270, body_y2 + 20, 'exec', '', is_input=True, is_exec=True)
+    add_pin(svg, 450, body_y2 + 20, 'int', 'Quantity', is_input=False)
+    
+    # Function: Validate Quantity
+    body_y3 = add_node_box(svg, 20, 120, 200, 80, COLORS['pure'], 'Validate Quantity')
+    pin_y = body_y3 + 15
+    pin_y = add_pin(svg, 20, pin_y, 'int', 'Quantity', is_input=True)
+    add_pin(svg, 20, pin_y, 'int', 'Stock', is_input=True)
+    add_pin(svg, 220, body_y3 + 35, 'bool', 'Is Valid', is_input=False)
+    
+    # Branch: Is Valid?
+    body_y4 = add_node_box(svg, 250, 120, 220, 100, COLORS['branch'], 'BRANCH: Is Valid?')
+    pin_y = body_y4 + 15
+    pin_y = add_pin(svg, 250, pin_y, 'exec', '', is_input=True, is_exec=True)
+    add_pin(svg, 250, pin_y, 'bool', 'Condition', is_input=True)
+    pin_y = body_y4 + 15
+    pin_y = add_pin(svg, 470, pin_y, 'exec', 'True', is_input=False, is_exec=True)
+    add_pin(svg, 470, pin_y, 'exec', 'False', is_input=False, is_exec=True)
+    
+    # Function: Add to Cart (True path)
+    body_y5 = add_node_box(svg, 500, 120, 220, 80, COLORS['function'], 'Add Item To Cart')
+    pin_y = body_y5 + 15
+    pin_y = add_pin(svg, 500, pin_y, 'exec', '', is_input=True, is_exec=True)
+    add_pin(svg, 500, pin_y, 'int', 'Quantity', is_input=True)
+    add_pin(svg, 720, body_y5 + 15, 'exec', '', is_input=False, is_exec=True)
+    
+    # Function: Show Error (False path)
+    body_y6 = add_node_box(svg, 500, 240, 180, 60, COLORS['function'], 'Show Error')
+    add_pin(svg, 500, body_y6 + 20, 'exec', '', is_input=True, is_exec=True)
+    
+    # Function: Update Visual State
+    body_y7 = add_node_box(svg, 270, 280, 200, 60, COLORS['function'], 'Update Visual State')
+    add_pin(svg, 270, body_y7 + 20, 'exec', '', is_input=True, is_exec=True)
+    add_pin(svg, 470, body_y7 + 20, 'exec', '', is_input=False, is_exec=True)
+    
+    # Function: Reset Quantity
+    body_y8 = add_node_box(svg, 20, 360, 180, 60, COLORS['function'], 'Reset Quantity')
+    add_pin(svg, 20, body_y8 + 20, 'exec', '', is_input=True, is_exec=True)
+    
+    # Connection wires
+    add_connection_wire(svg, 240, body_y1 + 20, 270, body_y2 + 20)
+    add_connection_wire(svg, 220, body_y3 + 35, 250, body_y4 + 35)
+    add_connection_wire(svg, 470, body_y4 + 15, 500, body_y5 + 15)  # True path
+    add_connection_wire(svg, 470, body_y4 + 35, 500, body_y6 + 20)  # False path
+    add_connection_wire(svg, 720, body_y5 + 15, 270, body_y7 + 20)
+    add_connection_wire(svg, 470, body_y7 + 20, 20, body_y8 + 20)
+    
+    return svg
+
+def generate_trade_item_row_quantity_increment():
+    """Generate WBP_TradeItemRow Quantity Increment flow"""
+    svg = create_svg_base(700, 380)
+    
+    # Event: OnIncrementClicked
+    body_y1 = add_node_box(svg, 20, 20, 220, 60, COLORS['event'], 'EVENT: OnIncrementClicked')
+    add_pin(svg, 240, body_y1 + 20, 'exec', '', is_input=False, is_exec=True)
+    
+    # Function: Get Current Quantity
+    body_y2 = add_node_box(svg, 270, 20, 220, 60, COLORS['function'], 'Get Current Quantity')
+    add_pin(svg, 270, body_y2 + 20, 'exec', '', is_input=True, is_exec=True)
+    add_pin(svg, 490, body_y2 + 20, 'int', 'Quantity', is_input=False)
+    
+    # Function: Increment (Math)
+    body_y3 = add_node_box(svg, 40, 120, 180, 80, COLORS['pure'], 'Add (+)')
+    pin_y = body_y3 + 15
+    pin_y = add_pin(svg, 40, pin_y, 'int', 'A', is_input=True)
+    add_pin(svg, 40, pin_y, 'int', 'B: 1', is_input=True)
+    add_pin(svg, 220, body_y3 + 35, 'int', 'Result', is_input=False)
+    
+    # Branch: Check Max Stock
+    body_y4 = add_node_box(svg, 250, 120, 240, 100, COLORS['branch'], 'BRANCH: Check Max Stock')
+    pin_y = body_y4 + 15
+    pin_y = add_pin(svg, 250, pin_y, 'exec', '', is_input=True, is_exec=True)
+    add_pin(svg, 250, pin_y, 'bool', 'Qty <= Stock', is_input=True)
+    pin_y = body_y4 + 15
+    pin_y = add_pin(svg, 490, pin_y, 'exec', 'True', is_input=False, is_exec=True)
+    add_pin(svg, 490, pin_y, 'exec', 'False', is_input=False, is_exec=True)
+    
+    # Function: Update Display (True path)
+    body_y5 = add_node_box(svg, 520, 100, 160, 60, COLORS['function'], 'Update Display')
+    add_pin(svg, 520, body_y5 + 20, 'exec', '', is_input=True, is_exec=True)
+    
+    # Function: Show Message (False path)
+    body_y6 = add_node_box(svg, 520, 180, 160, 60, COLORS['function'], 'Show Message')
+    add_pin(svg, 520, body_y6 + 20, 'exec', '', is_input=True, is_exec=True)
+    
+    # Connection wires
+    add_connection_wire(svg, 240, body_y1 + 20, 270, body_y2 + 20)
+    add_connection_wire(svg, 220, body_y3 + 35, 250, body_y4 + 35)
+    add_connection_wire(svg, 490, body_y4 + 15, 520, body_y5 + 20)  # True
+    add_connection_wire(svg, 490, body_y4 + 35, 520, body_y6 + 20)  # False
+    
+    # Add labels
+    labels = [
+        (370, 60, "1. Get current"),
+        (130, 160, "2. Add 1"),
+        (370, 160, "3. Check limit"),
+        (600, 140, "4. Update UI"),
+        (600, 220, "Max reached")
+    ]
+    for x, y, label in labels:
+        text = ET.SubElement(svg, 'text', {
+            'x': str(x), 'y': str(y),
+            'fill': '#CCCCCC', 'font-family': 'Arial, sans-serif',
+            'font-size': '11', 'text-anchor': 'middle'
+        })
+        text.text = label
+    
+    return svg
+
+def generate_trade_item_row_quantity_decrement():
+    """Generate WBP_TradeItemRow Quantity Decrement flow"""
+    svg = create_svg_base(700, 380)
+    
+    # Event: OnDecrementClicked
+    body_y1 = add_node_box(svg, 20, 20, 220, 60, COLORS['event'], 'EVENT: OnDecrementClicked')
+    add_pin(svg, 240, body_y1 + 20, 'exec', '', is_input=False, is_exec=True)
+    
+    # Function: Get Current Quantity
+    body_y2 = add_node_box(svg, 270, 20, 220, 60, COLORS['function'], 'Get Current Quantity')
+    add_pin(svg, 270, body_y2 + 20, 'exec', '', is_input=True, is_exec=True)
+    add_pin(svg, 490, body_y2 + 20, 'int', 'Quantity', is_input=False)
+    
+    # Function: Decrement (Math)
+    body_y3 = add_node_box(svg, 40, 120, 180, 80, COLORS['pure'], 'Subtract (-)')
+    pin_y = body_y3 + 15
+    pin_y = add_pin(svg, 40, pin_y, 'int', 'A', is_input=True)
+    add_pin(svg, 40, pin_y, 'int', 'B: 1', is_input=True)
+    add_pin(svg, 220, body_y3 + 35, 'int', 'Result', is_input=False)
+    
+    # Branch: Check Minimum
+    body_y4 = add_node_box(svg, 250, 120, 240, 100, COLORS['branch'], 'BRANCH: Check Minimum')
+    pin_y = body_y4 + 15
+    pin_y = add_pin(svg, 250, pin_y, 'exec', '', is_input=True, is_exec=True)
+    add_pin(svg, 250, pin_y, 'bool', 'Qty >= 1', is_input=True)
+    pin_y = body_y4 + 15
+    pin_y = add_pin(svg, 490, pin_y, 'exec', 'True', is_input=False, is_exec=True)
+    add_pin(svg, 490, pin_y, 'exec', 'False', is_input=False, is_exec=True)
+    
+    # Function: Update Display (True path)
+    body_y5 = add_node_box(svg, 520, 100, 160, 60, COLORS['function'], 'Update Display')
+    add_pin(svg, 520, body_y5 + 20, 'exec', '', is_input=True, is_exec=True)
+    
+    # Function: Keep at 1 (False path)
+    body_y6 = add_node_box(svg, 520, 180, 160, 60, COLORS['function'], 'Keep at 1')
+    add_pin(svg, 520, body_y6 + 20, 'exec', '', is_input=True, is_exec=True)
+    
+    # Connection wires
+    add_connection_wire(svg, 240, body_y1 + 20, 270, body_y2 + 20)
+    add_connection_wire(svg, 220, body_y3 + 35, 250, body_y4 + 35)
+    add_connection_wire(svg, 490, body_y4 + 15, 520, body_y5 + 20)  # True
+    add_connection_wire(svg, 490, body_y4 + 35, 520, body_y6 + 20)  # False
+    
+    # Add labels
+    labels = [
+        (370, 60, "1. Get current"),
+        (130, 160, "2. Subtract 1"),
+        (370, 160, "3. Check min"),
+        (600, 140, "4. Update UI"),
+        (600, 220, "Min is 1")
+    ]
+    for x, y, label in labels:
+        text = ET.SubElement(svg, 'text', {
+            'x': str(x), 'y': str(y),
+            'fill': '#CCCCCC', 'font-family': 'Arial, sans-serif',
+            'font-size': '11', 'text-anchor': 'middle'
+        })
+        text.text = label
+    
+    return svg
+
 def save_svg(svg, filename):
     """Save SVG to file"""
     tree = ET.ElementTree(svg)
@@ -503,12 +796,23 @@ def main():
     save_svg(generate_execute_trade_flow(), f'{output_dir}/execute_trade_flow.svg')
     save_svg(generate_market_item_display(), f'{output_dir}/market_item_display.svg')
     
-    print(f"\nGenerated 9 Blueprint node diagrams in {output_dir}/")
-    print("\nNew trading system diagrams:")
+    # Generate WBP_TradeItemRow flows (PR #409)
+    save_svg(generate_trade_item_row_initialize(), f'{output_dir}/trade_item_row_initialize.svg')
+    save_svg(generate_trade_item_row_add_to_cart(), f'{output_dir}/trade_item_row_add_to_cart.svg')
+    save_svg(generate_trade_item_row_quantity_increment(), f'{output_dir}/trade_item_row_quantity_increment.svg')
+    save_svg(generate_trade_item_row_quantity_decrement(), f'{output_dir}/trade_item_row_quantity_decrement.svg')
+    
+    print(f"\nGenerated 13 Blueprint node diagrams in {output_dir}/")
+    print("\nTrading UI diagrams:")
     print("  - buy_sell_toggle.svg: Buy/Sell mode toggle flow")
     print("  - add_to_cart_flow.svg: Add item to cart validation")
     print("  - execute_trade_flow.svg: Complete trade transaction")
     print("  - market_item_display.svg: Market inventory display population")
+    print("\nWBP_TradeItemRow diagrams (PR #409):")
+    print("  - trade_item_row_initialize.svg: Row initialization flow")
+    print("  - trade_item_row_add_to_cart.svg: Add to cart flow")
+    print("  - trade_item_row_quantity_increment.svg: Quantity increment flow")
+    print("  - trade_item_row_quantity_decrement.svg: Quantity decrement flow")
 
 if __name__ == '__main__':
     main()
