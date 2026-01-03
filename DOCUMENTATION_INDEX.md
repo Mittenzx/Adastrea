@@ -1,8 +1,27 @@
 # Adastrea Documentation Index
 
-**Last Updated**: December 24, 2025  
-**Version**: 2.0 - Major Documentation Reorganization  
+**Last Updated**: January 3, 2026  
+**Version**: 2.1 - Blueprint Guide Standardization  
 **Purpose**: Comprehensive index of all documentation in the Adastrea project
+
+---
+
+## 🆕 Latest Update: Blueprint Guide Standardization (January 3, 2026)
+
+**What's New:**
+- 📋 **Blueprint Guide Template** - Standard format for all Blueprint guides
+- 📝 **Blueprint Guide Standards** - How to write consistent, step-by-step guides
+- ✅ **Simplified Example** - Trading UI guide rewritten as reference implementation
+- 🗂️ **Blueprint README** - Central navigation for all Blueprint documentation
+
+**Key Features:**
+- Variables and functions listed UPFRONT (before implementation steps)
+- Consistent structure: Prerequisites → Dependencies → Setup → Implementation → Testing
+- Clear complexity levels and time estimates
+- Troubleshooting sections in every guide
+
+**For Guide Authors**: See [Blueprint Guide Standards](docs/reference/BLUEPRINT_GUIDE_STANDARDS.md)  
+**For Users**: See [Blueprints README](Blueprints/README.md)
 
 ---
 
@@ -34,7 +53,8 @@
 - **New Developer?** → [docs/setup/SETUP_CHECKLIST.md](docs/setup/SETUP_CHECKLIST.md)
 - **Content Designer?** → [Assets/DesignerOnboarding.md](Assets/DesignerOnboarding.md)
 - **Need Quick Answer?** → [docs/reference/CHEATSHEET.md](docs/reference/CHEATSHEET.md)
-- **Working on Blueprints?** → [docs/development/BLUEPRINT_GUIDE_FOR_BEGINNERS.md](docs/development/BLUEPRINT_GUIDE_FOR_BEGINNERS.md)
+- **Working on Blueprints?** → [Blueprints/README.md](Blueprints/README.md) ⭐ **NEW**
+- **Creating Blueprint Guide?** → [docs/reference/BLUEPRINT_GUIDE_TEMPLATE.md](docs/reference/BLUEPRINT_GUIDE_TEMPLATE.md) ⭐ **NEW**
 
 ### 📂 By Category
 - [Essential Files (Root)](#essential-files-root-directory)
@@ -90,8 +110,11 @@
 | File | Purpose |
 |------|---------|
 | **[BLUEPRINT_GUIDE_FOR_BEGINNERS.md](docs/development/BLUEPRINT_GUIDE_FOR_BEGINNERS.md)** | Complete Blueprint development guide (1146 lines) |
-| **[BLUEPRINT_MOCKUP_GUIDE.md](docs/reference/BLUEPRINT_MOCKUP_GUIDE.md)** | ⭐ **NEW** Visual Blueprint documentation standards and patterns |
-| **[BLUEPRINT_DOCUMENTATION_EXAMPLES.md](docs/reference/BLUEPRINT_DOCUMENTATION_EXAMPLES.md)** | ⭐ **NEW** Before/after examples showing visual vs text documentation |
+| **[BLUEPRINT_GUIDE_TEMPLATE.md](docs/reference/BLUEPRINT_GUIDE_TEMPLATE.md)** | ⭐ **NEW** Standard template for all Blueprint guides (Jan 2026) |
+| **[BLUEPRINT_GUIDE_STANDARDS.md](docs/reference/BLUEPRINT_GUIDE_STANDARDS.md)** | ⭐ **NEW** How to write consistent, step-by-step Blueprint guides |
+| **[Blueprints/README.md](Blueprints/README.md)** | ⭐ **NEW** Blueprint guide navigation and status tracker |
+| **[BLUEPRINT_MOCKUP_GUIDE.md](docs/reference/BLUEPRINT_MOCKUP_GUIDE.md)** | Visual Blueprint documentation standards and patterns |
+| **[BLUEPRINT_DOCUMENTATION_EXAMPLES.md](docs/reference/BLUEPRINT_DOCUMENTATION_EXAMPLES.md)** | Before/after examples showing visual vs text documentation |
 | **[BP_IMPORTAI_README.md](docs/development/BP_IMPORTAI_README.md)** | AI import system for Blueprints |
 
 ### Plugin and Tool Development
