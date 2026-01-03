@@ -44,12 +44,12 @@ Organized by game system:
 #### Trading System
 - [Trading UI Widget](TradingSystemBlueprintGuide_SIMPLIFIED.md) - Main trading interface ✅
 - [Trading Station Actor](TradingStationActorGuide.md) - Station with trading terminal ✅
-- [Trading System (Original)](TradingSystemBlueprintGuide.md) - ⚠️ Legacy, being replaced
+- [Trading System (Original)](DEPRECATED_TradingSystemBlueprintGuide.md) - 🗑️ Deprecated, use simplified version
 - [Trading Blueprint Examples](../Assets/TradingBlueprintExamples.md) - ⚠️ Advanced patterns
 
 #### Ship Systems
 - [Ship Cargo System](ShipCargoSystemGuide.md) - Cargo management for trading ✅
-- [Ship Status Screen](ShipStatusScreenBlueprintExample.md) - HUD display
+- [Ship Status Screen](ShipStatusScreenGuide.md) - HUD display ✅
 - [Ship Controls](../docs/setup/SPACESHIP_HUD_BLUEPRINT_GUIDE.md) - Flight controls UI
 
 #### Station Systems
