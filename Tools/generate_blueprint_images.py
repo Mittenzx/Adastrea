@@ -785,49 +785,49 @@ def generate_docking_range_overlap():
     pin_y = body_y1 + 15
     pin_y = add_pin(svg, 430, pin_y, 'exec', '', is_input=False, is_exec=True)
     pin_y = add_pin(svg, 430, pin_y, 'object', 'Overlapped Component', is_input=False)
-    pin_y = add_pin(svg, 430, pin_y, 'object', 'Other Actor', is_input=False)
+    add_pin(svg, 430, pin_y, 'object', 'Other Actor', is_input=False)
     
     # Function: Cast to ASpaceship
     body_y2 = add_node_box(svg, 480, 60, 400, 120, COLORS['function'], 'Cast to ASpaceship')
     pin_y = body_y2 + 15
     pin_y = add_pin(svg, 480, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
-    pin_y = add_pin(svg, 480, pin_y, 'object', 'Object', is_input=True)
+    add_pin(svg, 480, pin_y, 'object', 'Object', is_input=True)
     pin_y = body_y2 + 15
     pin_y = add_pin(svg, 880, pin_y, 'exec', '', is_input=False, is_exec=True)
-    pin_y = add_pin(svg, 880, pin_y, 'object', 'As Spaceship', is_input=False)
+    add_pin(svg, 880, pin_y, 'object', 'As Spaceship', is_input=False)
     
     # Branch: Is Valid Cast?
     body_y3 = add_node_box(svg, 150, 230, 280, 100, COLORS['branch'], 'BRANCH: Is Valid Ship?')
     pin_y = body_y3 + 15
     pin_y = add_pin(svg, 150, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
-    pin_y = add_pin(svg, 150, pin_y, 'bool', 'Is Valid', is_input=True)
+    add_pin(svg, 150, pin_y, 'bool', 'Is Valid', is_input=True)
     pin_y = body_y3 + 15
     pin_y = add_pin(svg, 430, pin_y, 'exec', 'True', is_input=False, is_exec=True)
-    pin_y = add_pin(svg, 430, pin_y, 'exec', 'False', is_input=False, is_exec=True)
+    add_pin(svg, 430, pin_y, 'exec', 'False', is_input=False, is_exec=True)
     
     # Function: Is Player Controlled?
     body_y4 = add_node_box(svg, 480, 230, 400, 100, COLORS['function'], 'Is Player Controlled?')
     pin_y = body_y4 + 15
     pin_y = add_pin(svg, 480, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
-    pin_y = add_pin(svg, 480, pin_y, 'object', 'Target: Spaceship', is_input=True)
+    add_pin(svg, 480, pin_y, 'object', 'Target: Spaceship', is_input=True)
     pin_y = body_y4 + 15
     pin_y = add_pin(svg, 880, pin_y, 'exec', '', is_input=False, is_exec=True)
-    pin_y = add_pin(svg, 880, pin_y, 'bool', 'Is Player', is_input=False)
+    add_pin(svg, 880, pin_y, 'bool', 'Is Player', is_input=False)
     
     # Branch: Is Player?
     body_y5 = add_node_box(svg, 150, 380, 280, 100, COLORS['branch'], 'BRANCH: Is Player?')
     pin_y = body_y5 + 15
     pin_y = add_pin(svg, 150, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
-    pin_y = add_pin(svg, 150, pin_y, 'bool', 'Condition', is_input=True)
+    add_pin(svg, 150, pin_y, 'bool', 'Condition', is_input=True)
     pin_y = body_y5 + 15
     pin_y = add_pin(svg, 430, pin_y, 'exec', 'True', is_input=False, is_exec=True)
-    pin_y = add_pin(svg, 430, pin_y, 'exec', 'False (Ignore)', is_input=False, is_exec=True)
+    add_pin(svg, 430, pin_y, 'exec', 'False (Ignore)', is_input=False, is_exec=True)
     
     # Function: Show Docking Prompt
     body_y6 = add_node_box(svg, 480, 380, 400, 100, COLORS['function'], 'Show Docking UI Prompt')
     pin_y = body_y6 + 15
     pin_y = add_pin(svg, 480, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
-    pin_y = add_pin(svg, 480, pin_y, 'text', 'Message: "Press F to Dock"', is_input=True)
+    add_pin(svg, 480, pin_y, 'text', 'Message: "Press F to Dock"', is_input=True)
     
     # Connection wires
     add_connection_wire(svg, 430, body_y1 + 15, 480, body_y2 + 15)
@@ -872,62 +872,62 @@ def generate_dock_ship_flow():
     pin_y = body_y1 + 15
     pin_y = add_pin(svg, 50, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
     pin_y = add_pin(svg, 50, pin_y, 'object', 'Ship: ASpaceship', is_input=True)
-    pin_y = add_pin(svg, 50, pin_y, 'int', 'Docking Point Index', is_input=True)
+    add_pin(svg, 50, pin_y, 'int', 'Docking Point Index', is_input=True)
     
     # Function: Validate Docking
     body_y2 = add_node_box(svg, 480, 60, 400, 140, COLORS['function'], 'Validate Docking')
     pin_y = body_y2 + 15
     pin_y = add_pin(svg, 480, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
     pin_y = add_pin(svg, 480, pin_y, 'object', 'Ship', is_input=True)
-    pin_y = add_pin(svg, 480, pin_y, 'int', 'Point Index', is_input=True)
+    add_pin(svg, 480, pin_y, 'int', 'Point Index', is_input=True)
     pin_y = body_y2 + 15
     pin_y = add_pin(svg, 880, pin_y, 'exec', '', is_input=False, is_exec=True)
-    pin_y = add_pin(svg, 880, pin_y, 'bool', 'Is Valid', is_input=False)
+    add_pin(svg, 880, pin_y, 'bool', 'Is Valid', is_input=False)
     
     # Branch: Is Valid?
     body_y3 = add_node_box(svg, 150, 250, 280, 100, COLORS['branch'], 'BRANCH: Is Valid?')
     pin_y = body_y3 + 15
     pin_y = add_pin(svg, 150, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
-    pin_y = add_pin(svg, 150, pin_y, 'bool', 'Condition', is_input=True)
+    add_pin(svg, 150, pin_y, 'bool', 'Condition', is_input=True)
     pin_y = body_y3 + 15
     pin_y = add_pin(svg, 430, pin_y, 'exec', 'True', is_input=False, is_exec=True)
-    pin_y = add_pin(svg, 430, pin_y, 'exec', 'False', is_input=False, is_exec=True)
+    add_pin(svg, 430, pin_y, 'exec', 'False', is_input=False, is_exec=True)
     
     # Function: Get Docking Point Transform
     body_y4 = add_node_box(svg, 480, 210, 400, 100, COLORS['pure'], 'Get Docking Point Transform')
     pin_y = body_y4 + 15
-    pin_y = add_pin(svg, 480, pin_y, 'int', 'Index', is_input=True)
-    pin_y = add_pin(svg, 880, body_y4 + 45, 'struct', 'Transform', is_input=False)
+    add_pin(svg, 480, pin_y, 'int', 'Index', is_input=True)
+    add_pin(svg, 880, body_y4 + 45, 'struct', 'Transform', is_input=False)
     
     # Function: Move Ship To Position
     body_y5 = add_node_box(svg, 480, 330, 400, 120, COLORS['function'], 'Move Ship To Position')
     pin_y = body_y5 + 15
     pin_y = add_pin(svg, 480, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
     pin_y = add_pin(svg, 480, pin_y, 'object', 'Ship', is_input=True)
-    pin_y = add_pin(svg, 480, pin_y, 'struct', 'Target Transform', is_input=True)
+    add_pin(svg, 480, pin_y, 'struct', 'Target Transform', is_input=True)
     pin_y = body_y5 + 15
-    pin_y = add_pin(svg, 880, pin_y, 'exec', '', is_input=False, is_exec=True)
+    add_pin(svg, 880, pin_y, 'exec', '', is_input=False, is_exec=True)
     
     # Function: Disable Ship Controls
     body_y6 = add_node_box(svg, 50, 490, 380, 100, COLORS['function'], 'Disable Ship Input')
     pin_y = body_y6 + 15
     pin_y = add_pin(svg, 50, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
-    pin_y = add_pin(svg, 50, pin_y, 'object', 'Ship', is_input=True)
+    add_pin(svg, 50, pin_y, 'object', 'Ship', is_input=True)
     pin_y = body_y6 + 15
-    pin_y = add_pin(svg, 430, pin_y, 'exec', '', is_input=False, is_exec=True)
+    add_pin(svg, 430, pin_y, 'exec', '', is_input=False, is_exec=True)
     
     # Function: Mark Docking Point Occupied
     body_y7 = add_node_box(svg, 480, 490, 400, 100, COLORS['function'], 'Mark Point Occupied')
     pin_y = body_y7 + 15
     pin_y = add_pin(svg, 480, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
-    pin_y = add_pin(svg, 480, pin_y, 'int', 'Point Index', is_input=True)
+    add_pin(svg, 480, pin_y, 'int', 'Point Index', is_input=True)
     pin_y = body_y7 + 15
-    pin_y = add_pin(svg, 880, pin_y, 'exec', '', is_input=False, is_exec=True)
+    add_pin(svg, 880, pin_y, 'exec', '', is_input=False, is_exec=True)
     
     # Function: Open Trading UI
     body_y8 = add_node_box(svg, 250, 620, 400, 60, COLORS['function'], 'Open Trading UI')
     pin_y = body_y8 + 15
-    pin_y = add_pin(svg, 250, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
+    add_pin(svg, 250, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
     
     # Connection wires
     add_connection_wire(svg, 430, body_y1 + 15, 480, body_y2 + 15)
@@ -972,47 +972,47 @@ def generate_undock_ship_flow():
     body_y1 = add_node_box(svg, 50, 60, 380, 100, COLORS['function'], 'FUNCTION: Undock Ship')
     pin_y = body_y1 + 15
     pin_y = add_pin(svg, 50, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
-    pin_y = add_pin(svg, 50, pin_y, 'object', 'Ship: ASpaceship', is_input=True)
+    add_pin(svg, 50, pin_y, 'object', 'Ship: ASpaceship', is_input=True)
     
     # Function: Find Docking Point
     body_y2 = add_node_box(svg, 480, 60, 400, 100, COLORS['function'], 'Find Ship Docking Point')
     pin_y = body_y2 + 15
     pin_y = add_pin(svg, 480, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
-    pin_y = add_pin(svg, 480, pin_y, 'object', 'Ship', is_input=True)
+    add_pin(svg, 480, pin_y, 'object', 'Ship', is_input=True)
     pin_y = body_y2 + 15
     pin_y = add_pin(svg, 880, pin_y, 'exec', '', is_input=False, is_exec=True)
-    pin_y = add_pin(svg, 880, pin_y, 'int', 'Point Index', is_input=False)
+    add_pin(svg, 880, pin_y, 'int', 'Point Index', is_input=False)
     
     # Function: Clear Docking Point
     body_y3 = add_node_box(svg, 50, 210, 380, 100, COLORS['function'], 'Clear Docking Point')
     pin_y = body_y3 + 15
     pin_y = add_pin(svg, 50, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
-    pin_y = add_pin(svg, 50, pin_y, 'int', 'Point Index', is_input=True)
+    add_pin(svg, 50, pin_y, 'int', 'Point Index', is_input=True)
     pin_y = body_y3 + 15
-    pin_y = add_pin(svg, 430, pin_y, 'exec', '', is_input=False, is_exec=True)
+    add_pin(svg, 430, pin_y, 'exec', '', is_input=False, is_exec=True)
     
     # Function: Move Ship Away
     body_y4 = add_node_box(svg, 480, 210, 400, 100, COLORS['function'], 'Move Ship Away From Station')
     pin_y = body_y4 + 15
     pin_y = add_pin(svg, 480, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
-    pin_y = add_pin(svg, 480, pin_y, 'object', 'Ship', is_input=True)
+    add_pin(svg, 480, pin_y, 'object', 'Ship', is_input=True)
     pin_y = body_y4 + 15
-    pin_y = add_pin(svg, 880, pin_y, 'exec', '', is_input=False, is_exec=True)
+    add_pin(svg, 880, pin_y, 'exec', '', is_input=False, is_exec=True)
     
     # Function: Re-enable Ship Controls
     body_y5 = add_node_box(svg, 50, 360, 380, 100, COLORS['function'], 'Enable Ship Input')
     pin_y = body_y5 + 15
     pin_y = add_pin(svg, 50, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
-    pin_y = add_pin(svg, 50, pin_y, 'object', 'Ship', is_input=True)
+    add_pin(svg, 50, pin_y, 'object', 'Ship', is_input=True)
     pin_y = body_y5 + 15
-    pin_y = add_pin(svg, 430, pin_y, 'exec', '', is_input=False, is_exec=True)
+    add_pin(svg, 430, pin_y, 'exec', '', is_input=False, is_exec=True)
     
     # Function: Close Trading UI
     body_y6 = add_node_box(svg, 480, 360, 400, 80, COLORS['function'], 'Close Trading UI')
     pin_y = body_y6 + 15
-    pin_y = add_pin(svg, 480, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
+    add_pin(svg, 480, pin_y, 'exec', 'Exec', is_input=True, is_exec=True)
     pin_y = body_y6 + 15
-    pin_y = add_pin(svg, 880, pin_y, 'exec', '', is_input=False, is_exec=True)
+    add_pin(svg, 880, pin_y, 'exec', '', is_input=False, is_exec=True)
     
     # Connection wires
     add_connection_wire(svg, 430, body_y1 + 15, 480, body_y2 + 15)
