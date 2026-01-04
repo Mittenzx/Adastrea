@@ -375,7 +375,7 @@ void USpaceshipControlsComponent::HandleLook(const FInputActionValue& Value)
 	FVector2D LookValue = Value.Get<FVector2D>();
 	
 	// Apply separate sensitivity for horizontal (yaw) and vertical (pitch)
-	// Use LookSensitivityVertical if set, otherwise fall back to LookSensitivity
+	// Use LookSensitivityVertical if greater than 0, otherwise fall back to LookSensitivity
 	float VerticalSensitivity = (LookSensitivityVertical > 0.0f) ? LookSensitivityVertical : LookSensitivity;
 	LookValue.X *= LookSensitivity;  // Horizontal (yaw)
 	LookValue.Y *= VerticalSensitivity;  // Vertical (pitch)
