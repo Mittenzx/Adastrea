@@ -68,28 +68,28 @@ public:
 	 * Rate at which supply/demand adjusts per transaction
 	 * Default: 0.05 (5% change per transaction)
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Economy|Config", meta=(ClampMin="0.01", ClampMax="0.5"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Economy|Config", meta=(ClampMin="0.01", ClampMax="0.5"))
 	float SupplyDemandAdjustmentRate;
 
 	/**
 	 * Minimum supply/demand level
 	 * Prevents prices from going too low
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Economy|Config", meta=(ClampMin="0.01", ClampMax="1.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Economy|Config", meta=(ClampMin="0.01", ClampMax="1.0"))
 	float MinSupplyDemandLevel;
 
 	/**
 	 * Maximum supply/demand level
 	 * Prevents prices from going too high
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Economy|Config", meta=(ClampMin="1.0", ClampMax="10.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Economy|Config", meta=(ClampMin="1.0", ClampMax="10.0"))
 	float MaxSupplyDemandLevel;
 
 	/**
 	 * Rate at which supply/demand returns to baseline
 	 * Default: 0.1 (10% recovery per game hour)
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Economy|Config", meta=(ClampMin="0.01", ClampMax="1.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Economy|Config", meta=(ClampMin="0.01", ClampMax="1.0"))
 	float EconomicRecoveryRate;
 
 	/**
@@ -103,14 +103,14 @@ public:
 	 * Time scale multiplier
 	 * 1.0 = real-time, 60.0 = 1 real second = 1 game minute
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Economy|Config", meta=(ClampMin="0.1", ClampMax="1000.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Economy|Config", meta=(ClampMin="0.1", ClampMax="1000.0"))
 	float TimeScale;
 
 	/**
 	 * Update interval in real seconds
 	 * How often the economy simulation runs
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Economy|Config", meta=(ClampMin="1.0", ClampMax="60.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Economy|Config", meta=(ClampMin="1.0", ClampMax="60.0"))
 	float UpdateInterval;
 
 	// ====================
@@ -144,14 +144,14 @@ public:
 	 * @return Array of all active markets
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Economy|Markets")
-	TArray<UMarketDataAsset*> GetActiveMarkets() const { return ActiveMarkets; }
+	TArray<UMarketDataAsset*> GetActiveMarkets() const;
 
 	/**
 	 * Get number of registered markets
 	 * @return Count of active markets
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Economy|Markets")
-	int32 GetMarketCount() const { return ActiveMarkets.Num(); }
+	int32 GetMarketCount() const;
 
 	// ====================
 	// TRADING OPERATIONS
@@ -187,21 +187,22 @@ public:
 	 * @return Game time in hours
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Economy|Time")
-	float GetGameTime() const { return CurrentGameTime; }
+	float GetGameTime() const;
 
 	/**
 	 * Set the time scale
+	 * Clamps to safe range (0.1-10.0) to prevent destabilizing economy simulation
 	 * @param NewTimeScale New time scale multiplier
 	 */
 	UFUNCTION(BlueprintCallable, Category="Economy|Time")
-	void SetTimeScale(float NewTimeScale) { TimeScale = FMath::Max(0.1f, NewTimeScale); }
+	void SetTimeScale(float NewTimeScale);
 
 	/**
 	 * Get the time scale
 	 * @return Current time scale multiplier
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Economy|Time")
-	float GetTimeScale() const { return TimeScale; }
+	float GetTimeScale() const;
 
 protected:
 	// ====================
