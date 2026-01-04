@@ -144,84 +144,242 @@ InitialModules:
 
 ### Step 4: Implement Docking Logic
 
-#### Event: On Begin Overlap (Docking Range)
+Docking involves three main flows: detecting ships in range, docking ships, and undocking them.
 
-```
-EVENT: On Component Begin Overlap (DockingRange)
-├─  Other Actor (AActor)
-└─► Exec
-    └─► Branch: Is Player Ship?
-        ├─► True: Show docking prompt
-        └─► False: Ignore
-```
+#### Flow 1: Docking Range Overlap Detection
 
-**Implementation:**
-```
-1. Cast to ASpaceship (Other Actor)
-2. If valid:
-   - Check if ship is player controlled
-   - Check if docking points available
-   - Show UI prompt: "Press F to Dock"
-3. Wait for player input
-4. Call DockShip function
-```
+**Purpose**: Detects when a player ship enters docking range and displays the docking prompt.
 
-#### Function: Dock Ship
+![Docking Range Overlap Flow](../reference/images/blueprints/docking_range_overlap.svg)
 
-```
-FUNCTION: Dock Ship
-├─► Exec (input)
-├─  Ship (ASpaceship)
-├─  Docking Point Index (int32)
-└─► Exec (output)
-    ├─  Success (bool)
-    └─  Docked Location (Transform)
-```
+**Node-by-Node Breakdown:**
 
-**Node Sequence:**
-```
-1. Validate Docking
-   - Check docking point is available
-   - Check ship has docking clearance
-   - Check faction relationship (if hostile, deny)
+1. **EVENT: OnComponentBeginOverlap (DockingRange)**
+   - **Trigger**: When any actor overlaps the station's docking range sphere
+   - **Output Pins**:
+     - `Exec` (white): Execution flow
+     - `Overlapped Component` (cyan): The component that was overlapped
+     - `Other Actor` (cyan): The actor that entered the docking range
 
-2. Move Ship to Docking Point
-   - Get docking point transform
-   - Smooth move ship to position (lerp or timeline)
-   - Disable ship physics
-   - Disable ship input
+2. **Cast to ASpaceship**
+   - **Purpose**: Verify the overlapping actor is a spaceship
+   - **Input Pins**:
+     - `Exec` (white): From previous node
+     - `Object` (cyan): Other Actor from event
+   - **Output Pins**:
+     - `Exec` (white): Continues if cast succeeds
+     - `As Spaceship` (cyan): The cast spaceship reference
 
-3. Mark Docking Point as Occupied
-   - Set array element to occupied
-   - Store ship reference
+3. **BRANCH: Is Valid Ship?**
+   - **Purpose**: Check if cast succeeded (valid spaceship)
+   - **Input Pins**:
+     - `Exec` (white): From cast node
+     - `Is Valid` (red boolean): Result of cast operation
+   - **Output Pins**:
+     - `True` (white): Valid spaceship - continue
+     - `False` (white): Not a ship - ignore
 
-4. Open Trading UI
-   - Create WBP_TradingUI widget
-   - Call OpenMarket(MarketDataAsset)
-   - Add to viewport
+4. **Is Player Controlled?**
+   - **Purpose**: Check if the ship is controlled by a player (not NPC)
+   - **Input Pins**:
+     - `Exec` (white): From True branch
+     - `Target: Spaceship` (cyan): The spaceship to check
+   - **Output Pins**:
+     - `Exec` (white): Continues execution
+     - `Is Player` (red boolean): True if player-controlled
 
-5. Return Success
-```
+5. **BRANCH: Is Player?**
+   - **Purpose**: Only show docking UI for player ships
+   - **Input Pins**:
+     - `Exec` (white): From previous function
+     - `Condition` (red boolean): Is Player result
+   - **Output Pins**:
+     - `True` (white): Player ship - show UI
+     - `False` (white): NPC ship - ignore
 
-#### Function: Undock Ship
+6. **Show Docking UI Prompt**
+   - **Purpose**: Display "Press F to Dock" message to player
+   - **Input Pins**:
+     - `Exec` (white): From True branch
+     - `Message` (pink text): The prompt text to display
+   - **Implementation**: Creates and displays UI widget with docking instructions
 
-```
-FUNCTION: Undock Ship
-├─► Exec (input)
-├─  Ship (ASpaceship)
-└─► Exec (output)
-    └─  Success (bool)
-```
+**Key Details:**
+- Only player-controlled ships get docking prompts
+- NPC ships are ignored at the branch nodes
+- The docking UI appears when player enters the sphere collision
+- Actual docking happens when player presses the docking key (handled elsewhere)
 
-**Implementation:**
-```
-1. Find ship's docking point
-2. Clear docking point (set to unoccupied)
-3. Move ship away from station (offset 500 units)
-4. Re-enable ship physics and input
-5. Close trading UI if open
-6. Charge docking fee (if any)
-```
+---
+
+#### Flow 2: Dock Ship Function
+
+**Purpose**: Moves ship to docking point, disables controls, and opens trading UI.
+
+![Dock Ship Flow](../reference/images/blueprints/dock_ship_flow.svg)
+
+**Node-by-Node Breakdown:**
+
+1. **FUNCTION: Dock Ship**
+   - **Purpose**: Entry point for docking a ship
+   - **Input Pins**:
+     - `Exec` (white): Function entry
+     - `Ship: ASpaceship` (cyan): Ship to dock
+     - `Docking Point Index` (green int): Which docking point to use
+   - **Called By**: Player input handler or automated docking system
+
+2. **Validate Docking**
+   - **Purpose**: Verify the ship can dock at this point
+   - **Input Pins**:
+     - `Exec` (white): From function entry
+     - `Ship` (cyan): Ship to validate
+     - `Point Index` (green int): Docking point to check
+   - **Output Pins**:
+     - `Exec` (white): Continues execution
+     - `Is Valid` (red boolean): True if docking allowed
+   - **Checks**:
+     - Docking point exists and is not occupied
+     - Ship has docking clearance
+     - Faction relationship allows docking (not hostile)
+
+3. **BRANCH: Is Valid?**
+   - **Purpose**: Proceed only if validation passed
+   - **Input Pins**:
+     - `Exec` (white): From validation
+     - `Condition` (red boolean): Validation result
+   - **Output Pins**:
+     - `True` (white): Validation passed - proceed
+     - `False` (white): Validation failed - abort docking
+
+4. **Get Docking Point Transform**
+   - **Purpose**: Retrieve the position and rotation for the docking point
+   - **Type**: Pure function (green) - no execution pins
+   - **Input Pins**:
+     - `Index` (green int): Docking point index
+   - **Output Pins**:
+     - `Transform` (blue struct): Location, rotation, scale for docking
+
+5. **Move Ship To Position**
+   - **Purpose**: Smoothly move ship from current position to docking point
+   - **Input Pins**:
+     - `Exec` (white): From True branch
+     - `Ship` (cyan): Ship to move
+     - `Target Transform` (blue struct): Docking point location
+   - **Output Pins**:
+     - `Exec` (white): After movement completes
+   - **Implementation**: Uses timeline or lerp for smooth movement (not instant teleport)
+
+6. **Disable Ship Input**
+   - **Purpose**: Prevent player from controlling ship while docked
+   - **Input Pins**:
+     - `Exec` (white): After ship positioned
+     - `Ship` (cyan): Ship to disable
+   - **Output Pins**:
+     - `Exec` (white): After disabling input
+   - **Actions**:
+     - Disable physics simulation
+     - Disable player input
+     - Lock ship in place
+
+7. **Mark Point Occupied**
+   - **Purpose**: Record that this docking point is now in use
+   - **Input Pins**:
+     - `Exec` (white): After input disabled
+     - `Point Index` (green int): Docking point to mark
+   - **Output Pins**:
+     - `Exec` (white): After marking
+   - **Actions**:
+     - Set docking point status to occupied
+     - Store ship reference for later undocking
+
+8. **Open Trading UI**
+   - **Purpose**: Show trading interface to player
+   - **Input Pins**:
+     - `Exec` (white): Final step of docking
+   - **Implementation**:
+     - Creates `WBP_TradingUI` widget
+     - Passes station's `MarketDataAsset` to widget
+     - Adds widget to player viewport
+
+**Key Details:**
+- Validation happens first to prevent invalid docking attempts
+- Ship movement is smooth, not instant
+- Input is disabled so player can't fly while docked
+- Trading UI opens automatically after successful docking
+
+---
+
+#### Flow 3: Undock Ship Function
+
+**Purpose**: Returns ship to flight mode and closes trading UI.
+
+![Undock Ship Flow](../reference/images/blueprints/undock_ship_flow.svg)
+
+**Node-by-Node Breakdown:**
+
+1. **FUNCTION: Undock Ship**
+   - **Purpose**: Entry point for undocking
+   - **Input Pins**:
+     - `Exec` (white): Function entry
+     - `Ship: ASpaceship` (cyan): Ship to undock
+   - **Called By**: Player closing trading UI or undock button press
+
+2. **Find Ship Docking Point**
+   - **Purpose**: Locate which docking point this ship is using
+   - **Input Pins**:
+     - `Exec` (white): From function entry
+     - `Ship` (cyan): Ship to search for
+   - **Output Pins**:
+     - `Exec` (white): After finding point
+     - `Point Index` (green int): Index of docking point ship is using
+   - **Implementation**: Searches docking points array for ship reference
+
+3. **Clear Docking Point**
+   - **Purpose**: Mark docking point as available again
+   - **Input Pins**:
+     - `Exec` (white): After finding point
+     - `Point Index` (green int): Point to clear
+   - **Output Pins**:
+     - `Exec` (white): After clearing
+   - **Actions**:
+     - Set docking point status to unoccupied
+     - Remove ship reference
+
+4. **Move Ship Away From Station**
+   - **Purpose**: Move ship to safe distance from station
+   - **Input Pins**:
+     - `Exec` (white): After clearing point
+     - `Ship` (cyan): Ship to move
+   - **Output Pins**:
+     - `Exec` (white): After movement completes
+   - **Implementation**: Moves ship ~500 units away from station using offset vector
+
+5. **Enable Ship Input**
+   - **Purpose**: Return control to player
+   - **Input Pins**:
+     - `Exec` (white): After ship moved away
+     - `Ship` (cyan): Ship to enable
+   - **Output Pins**:
+     - `Exec` (white): After enabling
+   - **Actions**:
+     - Re-enable physics simulation
+     - Re-enable player input
+     - Unlock ship movement
+
+6. **Close Trading UI**
+   - **Purpose**: Remove trading interface from screen
+   - **Input Pins**:
+     - `Exec` (white): Final step
+   - **Implementation**:
+     - Removes `WBP_TradingUI` from viewport
+     - Cleans up widget references
+
+**Key Details:**
+- Ship is moved to safe distance before re-enabling controls
+- Docking point is freed immediately for other ships
+- Trading UI is closed automatically
+- Ship regains full control after undocking
+- Optional: Charge docking fee during this process (check station settings)
 
 ### Step 5: Implement Module Attachment
 
