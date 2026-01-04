@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **EconomyManager Blueprint Exposure** (2026-01-04)
+  - Fixed critical issue where `EconomyManager.h` was a 1-line placeholder file
+  - Created complete header file (242 lines) with full Blueprint exposure
+  - Added 10 UFUNCTION declarations for Blueprint-accessible functions
+  - Added 8 UPROPERTY declarations with proper constraints (ClampMin/ClampMax)
+  - Exposed all critical trading functions used by PlayerTraderComponent
+  - Verified all 8 trading system components have proper Blueprint exposure
+  - Trading system is now fully functional from Blueprints
+  - **Impact**: Unblocks Trade Simulator MVP development
+
 ### Added
 
 - **Separate Vertical Mouse Sensitivity** (2026-01-04)

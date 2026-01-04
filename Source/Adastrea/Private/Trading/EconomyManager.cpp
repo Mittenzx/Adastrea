@@ -91,6 +91,41 @@ bool UEconomyManager::IsMarketRegistered(UMarketDataAsset* Market) const
 	return Market && ActiveMarkets.Contains(Market);
 }
 
+TArray<UMarketDataAsset*> UEconomyManager::GetActiveMarkets() const
+{
+	return ActiveMarkets;
+}
+
+int32 UEconomyManager::GetMarketCount() const
+{
+	return ActiveMarkets.Num();
+}
+
+float UEconomyManager::GetGameTime() const
+{
+	return CurrentGameTime;
+}
+
+void UEconomyManager::SetTimeScale(float NewTimeScale)
+{
+	// Clamp time scale to safe range to prevent destabilizing the economy simulation
+	const float ClampedTimeScale = FMath::Clamp(NewTimeScale, 0.1f, 10.0f);
+	
+	if (ClampedTimeScale != NewTimeScale)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("EconomyManager: Time scale %.2f clamped to safe range [0.1, 10.0] -> %.2f"), 
+			NewTimeScale, ClampedTimeScale);
+	}
+	
+	TimeScale = ClampedTimeScale;
+	UE_LOG(LogTemp, Log, TEXT("EconomyManager: Time scale set to %.2f"), TimeScale);
+}
+
+float UEconomyManager::GetTimeScale() const
+{
+	return TimeScale;
+}
+
 void UEconomyManager::UpdateEconomy()
 {
 	// Convert update interval to game time hours
