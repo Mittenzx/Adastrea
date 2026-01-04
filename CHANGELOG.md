@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Separate Vertical Mouse Sensitivity** (2026-01-04)
+  - Added `LookSensitivityVertical` property to `SpaceshipControlsComponent` for independent pitch sensitivity
+  - Default vertical sensitivity set to 2.0 (vs 1.0 horizontal) to improve vertical control feel
+  - Falls back to `LookSensitivity` if `LookSensitivityVertical` is 0
+  - Addresses issue with vertical mouse movement feeling too slow compared to horizontal
+  - Exposed in Blueprint editor for easy tuning per ship/preference
+
 - **Spaceship HUD Blueprint Guide** (2026-01-03)
   - `docs/setup/SPACESHIP_HUD_BLUEPRINT_GUIDE.md` - Comprehensive guide for creating WBP_Spaceship HUD Blueprint
   - Complete step-by-step instructions for HUD layout and implementation
