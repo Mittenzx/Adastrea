@@ -24,6 +24,7 @@ class UEnhancedInputComponent;
  * 
  * Look:
  * - Mouse: Rotation (pitch for up/down, yaw for left/right)
+ * - Separate sensitivity settings for horizontal and vertical mouse movement
  * 
  * Combat:
  * - Left Mouse Button: Fire primary weapon (TODO: Currently commented out - Combat system archived)
@@ -34,7 +35,7 @@ class UEnhancedInputComponent;
  * 
  * Usage:
  * - Add component to spaceship pawn Blueprint
- * - Configure MovementSpeed and LookSensitivity as needed
+ * - Configure MovementSpeed, LookSensitivity, and LookSensitivityVertical as needed
  * - Component will automatically create and register input bindings in BeginPlay
  * - Weapon firing functionality temporarily disabled (Combat system archived for MVP focus)
  * 
@@ -59,9 +60,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Controls|Movement", meta=(ClampMin="0.1", ClampMax="10.0"))
 	float MovementSpeed;
 
-	/** Look sensitivity multiplier applied to mouse input */
+	/** Look sensitivity multiplier applied to mouse input (horizontal/yaw) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Controls|Look", meta=(ClampMin="0.1", ClampMax="10.0"))
 	float LookSensitivity;
+
+	/** Look sensitivity multiplier for vertical mouse input (pitch). If 0, uses LookSensitivity value */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Controls|Look", meta=(ClampMin="0.0", ClampMax="10.0"))
+	float LookSensitivityVertical;
 
 	/** When true, inverts the Y axis for look input */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Controls|Look")
@@ -173,6 +178,15 @@ public:
 	 */
 	// UFUNCTION(BlueprintCallable, Category="Controls|Look") // DEFERRED: Post-MVP customization
 	void SetLookSensitivity(float NewSensitivity);
+
+	/**
+	 * Set vertical look sensitivity multiplier
+	 * @param NewSensitivity New vertical sensitivity value (clamped to valid range, 0 = use horizontal)
+	 * 
+	 * @note POST-MVP: Deferred - runtime sensitivity adjustment not critical for MVP
+	 */
+	// UFUNCTION(BlueprintCallable, Category="Controls|Look") // DEFERRED: Post-MVP customization
+	void SetLookSensitivityVertical(float NewSensitivity);
 
 	/**
 	 * Toggle Y axis inversion for look input

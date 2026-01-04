@@ -13,6 +13,7 @@
 USpaceshipControlsComponent::USpaceshipControlsComponent()
 	: MovementSpeed(1.0f)
 	, LookSensitivity(1.0f)
+	, LookSensitivityVertical(2.0f)
 	, bInvertLookY(false)
 	, InputMappingPriority(0)
 	, CurrentSpeed(1.0f)
@@ -323,6 +324,11 @@ void USpaceshipControlsComponent::SetLookSensitivity(float NewSensitivity)
 	LookSensitivity = FMath::Clamp(NewSensitivity, 0.1f, 10.0f);
 }
 
+void USpaceshipControlsComponent::SetLookSensitivityVertical(float NewSensitivity)
+{
+	LookSensitivityVertical = FMath::Clamp(NewSensitivity, 0.0f, 10.0f);
+}
+
 void USpaceshipControlsComponent::ToggleInvertLookY()
 {
 	bInvertLookY = !bInvertLookY;
@@ -366,7 +372,13 @@ void USpaceshipControlsComponent::HandleMove(const FInputActionValue& Value)
 
 void USpaceshipControlsComponent::HandleLook(const FInputActionValue& Value)
 {
-	FVector2D LookValue = Value.Get<FVector2D>() * LookSensitivity;
+	FVector2D LookValue = Value.Get<FVector2D>();
+	
+	// Apply separate sensitivity for horizontal (yaw) and vertical (pitch)
+	// Use LookSensitivityVertical if greater than 0, otherwise fall back to LookSensitivity
+	float VerticalSensitivity = (LookSensitivityVertical > 0.0f) ? LookSensitivityVertical : LookSensitivity;
+	LookValue.X *= LookSensitivity;  // Horizontal (yaw)
+	LookValue.Y *= VerticalSensitivity;  // Vertical (pitch)
 	
 	// Apply Y axis inversion if enabled
 	if (bInvertLookY)
