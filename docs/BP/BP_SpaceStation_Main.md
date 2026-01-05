@@ -73,11 +73,28 @@ StaticMeshComponent:
   Simulate Physics: false
 
 # Docking Points (Multiple)
+# HOW TO SET UP:
+# 1. In Components panel, click "+ Add" → Scene Component
+# 2. Rename each component: DockingPoint_01, DockingPoint_02, etc.
+# 3. Position each point around the station core (use 3D viewport)
+#    - Recommended spacing: 500-1000 units apart
+#    - Rotate to face outward from station center
+#    - Distribute evenly around station (90° apart for 4 points, 60° apart for 6 points)
+# 4. In Class Defaults, create variable array:
+#    - Variable Name: DockingPoints
+#    - Variable Type: Scene Component (Array)
+#    - Click "+" to add each DockingPoint_XX component reference
+# 5. Verify in Event Graph that docking logic references this array
+#
+# CONFIGURATION:
 SceneComponent (Array):
-  Name: DockingPoints
-  Count: 4-8 (depending on station size)
-  Location: Positioned around station
-  Purpose: Ship docking locations
+  Name: DockingPoints (Array Variable)
+  Element Names: DockingPoint_01, DockingPoint_02, DockingPoint_03, DockingPoint_04...
+  Count: 4-8 (4 for small stations, 6-8 for large stations)
+  Location: Positioned around station at regular intervals
+  Rotation: Point outward from station center (for ship alignment)
+  Purpose: Defines exact ship docking locations and orientations
+  Array Index: Used by Dock Ship function to assign ships to specific points
 
 # Module Attachment Points (Multiple)
 SceneComponent (Array):
@@ -137,10 +154,57 @@ InitialModules:
 
 ### Step 3: Add Docking Points
 
-1. Add Scene Components for docking points
-2. Position them around the station
-3. Name them: `DockingPoint_01`, `DockingPoint_02`, etc.
-4. Add to array variable: `DockingPoints`
+> **Note**: See detailed setup instructions in the [Components Setup](#-components-setup) section above (lines 76-97).
+
+**Quick Steps:**
+
+1. **Add Scene Components** (in Components panel):
+   - Click "+ Add" → Scene Component
+   - Create 4-8 components depending on station size
+   - For a medium station, create 4 components
+
+2. **Name Each Component**:
+   - `DockingPoint_01` (front of station)
+   - `DockingPoint_02` (right side)
+   - `DockingPoint_03` (rear)
+   - `DockingPoint_04` (left side)
+   - Continue for additional points (DockingPoint_05, 06, etc.)
+
+3. **Position and Rotate** (in 3D viewport):
+   - Select each DockingPoint component
+   - Move to location around station perimeter
+   - **Spacing**: 500-1000 units apart from each other
+   - **Rotation**: Rotate so the forward arrow points OUTWARD from station center
+   - **Distribution**: Evenly space around station (90° apart for 4 points, 60° for 6 points)
+   - Example positions for 4-point setup:
+     - Point_01: (1000, 0, 0) - Front
+     - Point_02: (0, 1000, 0) - Right
+     - Point_03: (-1000, 0, 0) - Back
+     - Point_04: (0, -1000, 0) - Left
+
+4. **Create Array Variable** (in Class Defaults):
+   - Click "+ Variable" button
+   - Name: `DockingPoints`
+   - Type: Scene Component Reference (click to change type)
+   - Click the grid icon to make it an **Array**
+   - Compile the Blueprint
+
+5. **Populate Array** (in Default Values):
+   - Find `DockingPoints` array in Details panel
+   - Click "+" to add elements
+   - For each element, select the corresponding DockingPoint component from dropdown:
+     - Element [0] = DockingPoint_01
+     - Element [1] = DockingPoint_02
+     - Element [2] = DockingPoint_03
+     - Element [3] = DockingPoint_04
+     - (Continue for all docking points)
+   - Compile and save
+
+6. **Verify Setup**:
+   - Check that array has correct number of elements (4-8)
+   - Verify each element references a valid Scene Component
+   - Ensure no null/None entries in array
+   - Test that GetDockingPointTransform function can access these points
 
 ### Step 4: Implement Docking Logic
 
