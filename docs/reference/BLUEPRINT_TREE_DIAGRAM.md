@@ -1,4 +1,4 @@
-# Blueprint Class Tree Diagram - Adastrea
+# Blueprint Class Tree Diagram - Adastrea (Mermaid)
 
 **Visual Reference**: Complete class hierarchy showing all blueprints and their relationships.
 
@@ -6,532 +6,484 @@
 
 ## Complete Blueprint Tree
 
-```
-Unreal Engine 5 Core Classes
-│
-├─ AActor
-│  │
-│  ├─ AGameModeBase
-│  │  └─ AdastreaGameMode (C++)
-│  │     ├─ BP_SpaceGameMode ✅
-│  │     └─ BP_TestGameMode ⏳
-│  │
-│  ├─ APlayerController
-│  │  └─ AdastreaPlayerController (C++)
-│  │     └─ BP_SpaceshipController ⏳
-│  │
-│  ├─ AAIController
-│  │  └─ BP_AIController ✅
-│  │
-│  ├─ AGameStateBase
-│  │  └─ AdastreaGameState (C++)
-│  │     └─ BP_GameState ⏳
-│  │
-│  ├─ APawn
-│  │  └─ ASpaceship (C++) [IDamageable, ITargetable, IFactionMember]
-│  │     ├─ BP_PlayerShip ✅
-│  │     ├─ BP_PlayerShip_Fighter ⏳
-│  │     ├─ BP_PlayerShip_Trader ⏳
-│  │     ├─ BP_Ship_Corvette ✅
-│  │     ├─ BP_Ship_Cruiser ✅
-│  │     ├─ BP_Ship_Destroyer ✅
-│  │     ├─ BP_Ship_Freighter ✅
-│  │     ├─ BP_Ship_Fighter ✅
-│  │     ├─ BP_Battleship ✅
-│  │     ├─ BP_Ship_NPC_Fighter ⏳
-│  │     ├─ BP_Ship_NPC_Trader ⏳
-│  │     └─ BP_Ship_NPC_Interceptor ⏳
-│  │
-│  ├─ ASpaceStation (C++) [IDamageable, ITargetable, IFactionMember]
-│  │  ├─ BP_SpaceStation ✅
-│  │  ├─ BP_SpaceStation_Trading ⏳ ⭐ MVP
-│  │  ├─ BP_SpaceStation_Military ⏳
-│  │  └─ BP_SpaceStation_Research ⏳
-│  │
-│  ├─ ASpaceStationModule (C++) [IDamageable, ITargetable]
-│  │  │
-│  │  ├─ ADockingBayModule (C++) [Power: -50]
-│  │  │  └─ BP_Module_DockingBay ⏳ ⭐ MVP
-│  │  │
-│  │  ├─ ADockingPortModule (C++) [Power: -10]
-│  │  │  └─ BP_Module_DockingPort ⏳ ⭐ MVP
-│  │  │
-│  │  ├─ AReactorModule (C++) [Power: +100]
-│  │  │  └─ BP_Module_Reactor ⏳
-│  │  │
-│  │  ├─ ASolarArrayModule (C++) [Power: +30]
-│  │  │  └─ BP_Module_SolarArray ⏳
-│  │  │
-│  │  ├─ ACargoBayModule (C++) [Power: -5]
-│  │  │  └─ BP_Module_CargoBay ✅
-│  │  │
-│  │  ├─ AFuelDepotModule (C++) [Power: -5]
-│  │  │  └─ BP_Module_FuelDepot ⏳
-│  │  │
-│  │  ├─ ATurretModule (C++) [Power: -30]
-│  │  │  └─ BP_Module_Turret ⏳
-│  │  │
-│  │  ├─ AShieldGeneratorModule (C++) [Power: -40]
-│  │  │  └─ BP_Module_ShieldGenerator ⏳
-│  │  │
-│  │  ├─ AHabitationModule (C++) [Power: -20]
-│  │  │  └─ BP_Module_Habitation ⏳
-│  │  │
-│  │  ├─ ABarracksModule (C++) [Power: -25]
-│  │  │  └─ BP_Module_Barracks ⏳
-│  │  │
-│  │  ├─ AFabricationModule (C++) [Power: -35]
-│  │  │  └─ BP_Module_Fabrication ⏳
-│  │  │
-│  │  ├─ AProcessingModule (C++) [Power: -40]
-│  │  │  └─ BP_Module_Processing ⏳
-│  │  │
-│  │  ├─ AMarketplaceModule (C++) [Power: -15]
-│  │  │  └─ BP_Module_Marketplace ⏳ ⭐ MVP
-│  │  │
-│  │  ├─ AScienceLabModule (C++) [Power: -25]
-│  │  │  └─ BP_Module_ScienceLab ⏳
-│  │  │
-│  │  ├─ ACorridorModule (C++) [Power: -2]
-│  │  │  └─ BP_Module_Corridor ⏳
-│  │  │
-│  │  └─ ASpaceStationModule (Generic)
-│  │     ├─ BP_Module_CommandCenter ⏳
-│  │     ├─ BP_Module_LifeSupport ⏳
-│  │     └─ BP_Module_Recreation ⏳
-│  │
-│  ├─ ASpaceshipInterior (C++)
-│  │  └─ BP_ShipInterior ⏳
-│  │
-│  ├─ AShipControlConsole (C++)
-│  │  └─ BP_ShipControlConsole ⏳
-│  │
-│  ├─ Weapon Blueprints (Simple Actors)
-│  │  ├─ BP_Weapon_Laser ✅
-│  │  ├─ BP_Weapon_Missile ✅
-│  │  ├─ BP_Weapon_Railgun ✅
-│  │  └─ BP_Weapon_Plasma ✅
-│  │
-│  └─ Projectile Blueprints (Simple Actors)
-│     ├─ BP_Projectile_Laser ⏳
-│     ├─ BP_Projectile_Cannon ⏳
-│     ├─ BP_Projectile_Missile ⏳
-│     └─ BP_Projectile_Torpedo ⏳
-│
-├─ UGameInstance
-│  └─ AdastreaGameInstance (C++)
-│     └─ BP_GameInstance ✅
-│
-└─ UObject
-   │
-   ├─ UDataAsset
-   │  │
-   │  ├─ USpaceshipDataAsset (C++)
-   │  │  ├─ DA_Ship_PlayerScout ⏳ ⭐ MVP
-   │  │  ├─ DA_Ship_PlayerFighter ⏳
-   │  │  ├─ DA_Ship_PlayerTrader ⏳ ⭐ MVP
-   │  │  ├─ DA_Ship_NPCFighter ⏳
-   │  │  ├─ DA_Ship_NPCTrader ⏳
-   │  │  └─ DA_Ship_* (10+ more) ⏳
-   │  │
-   │  ├─ UWeaponDataAsset (C++)
-   │  │  ├─ DA_Weapon_Laser ⏳
-   │  │  ├─ DA_Weapon_Cannon ⏳
-   │  │  ├─ DA_Weapon_Missile ⏳
-   │  │  ├─ DA_Weapon_Torpedo ⏳
-   │  │  ├─ DA_Weapon_Railgun ⏳
-   │  │  └─ DA_Weapon_* (10+ more) ⏳
-   │  │
-   │  ├─ UFactionDataAsset (C++)
-   │  │  ├─ DA_Faction_Player ⏳
-   │  │  ├─ DA_Faction_Alliance ⏳
-   │  │  ├─ DA_Faction_Merchants ⏳ ⭐ MVP
-   │  │  ├─ DA_Faction_Pirates ⏳
-   │  │  └─ DA_Faction_* (10+ more) ⏳
-   │  │
-   │  ├─ UTradeItemDataAsset (C++) ⭐ MVP CRITICAL
-   │  │  ├─ DA_TradeItem_Food ⏳ ⭐
-   │  │  ├─ DA_TradeItem_Water ⏳ ⭐
-   │  │  ├─ DA_TradeItem_Minerals ⏳ ⭐
-   │  │  ├─ DA_TradeItem_Metal ⏳ ⭐
-   │  │  ├─ DA_TradeItem_Technology ⏳ ⭐
-   │  │  ├─ DA_TradeItem_Fuel ⏳ ⭐
-   │  │  └─ DA_TradeItem_* (20+ total) ⏳ ⭐
-   │  │
-   │  ├─ UMarketDataAsset (C++) ⭐ MVP CRITICAL
-   │  │  ├─ DA_Market_Station1 ⏳ ⭐
-   │  │  ├─ DA_Market_Station2 ⏳ ⭐
-   │  │  ├─ DA_Market_Station3 ⏳ ⭐
-   │  │  └─ DA_Market_* (10+ total) ⏳
-   │  │
-   │  ├─ UPersonnelDataAsset (C++)
-   │  │  ├─ DA_Personnel_Captain ⏳
-   │  │  ├─ DA_Personnel_Pilot ⏳
-   │  │  ├─ DA_Personnel_Engineer ⏳
-   │  │  └─ DA_Personnel_* (15+ total) ⏳
-   │  │
-   │  ├─ UQuestDataAsset (C++)
-   │  │  ├─ DA_Quest_Tutorial ⏳
-   │  │  └─ DA_Quest_* (10+ total) ⏳
-   │  │
-   │  ├─ UWayDataAsset (C++)
-   │  │  └─ DA_Way_* (10+ total) ⏳
-   │  │
-   │  ├─ UHomeworldDataAsset (C++)
-   │  │  └─ DA_Homeworld_* (5+ total) ⏳
-   │  │
-   │  ├─ UMaterialDataAsset (C++)
-   │  │  └─ DA_Material_* (10+ total) ⏳
-   │  │
-   │  └─ UInputConfigDataAsset (C++)
-   │     └─ DA_InputConfig ⏳
-   │
-   ├─ UNPCLogicBase (C++) - AI Base Class
-   │  ├─ UFactionLogic (C++)
-   │  │  └─ BP_FactionLogic_Standard ⏳
-   │  │
-   │  └─ UPersonnelLogic (C++)
-   │     └─ BP_PersonnelLogic_Standard ⏳
-   │
-   ├─ UActorComponent
-   │  │
-   │  ├─ UFloatingPawnMovement (UE5) - Movement
-   │  ├─ USpringArmComponent (UE5) - Camera
-   │  ├─ UCameraComponent (UE5) - View
-   │  ├─ UStaticMeshComponent (UE5) - Visual
-   │  │
-   │  ├─ UNavigationComponent (C++) - Autopilot
-   │  ├─ UWeaponComponent (C++) - Weapons
-   │  ├─ UTargetingComponent (C++) - Targeting
-   │  ├─ UCombatHealthComponent (C++) - Health/Shields
-   │  ├─ UPointDefenseComponent (C++) - Point Defense
-   │  ├─ UBoardingComponent (C++) - Boarding
-   │  ├─ UCargoComponent (C++) - Cargo ⭐ MVP
-   │  ├─ UAITraderComponent (C++) - AI Trading
-   │  ├─ UPlayerTraderComponent (C++) - Player Trading
-   │  ├─ UPlayerReputationComponent (C++) - Reputation ⭐ MVP
-   │  ├─ UPlayerProgressionComponent (C++) - Progression
-   │  ├─ UPlayerUnlockComponent (C++) - Unlocks
-   │  ├─ USpaceshipControlsComponent (C++) - Flight Controls
-   │  ├─ UShipCustomizationComponent (C++) - Customization
-   │  ├─ UShipUpgradeComponent (C++) - Upgrades
-   │  ├─ UShipModuleComponent (C++) - Ship Modules
-   │  ├─ USpaceshipParticleComponent (C++) - VFX
-   │  ├─ USimpleAIMovementComponent (C++) - AI Movement
-   │  ├─ UInventoryComponent (C++) - Inventory
-   │  └─ UVerse (C++) - Guild Reputation
-   │
-   └─ UUserWidget
-      │
-      ├─ UAdastreaHUDWidget (C++)
-      │  ├─ WBP_SpaceshipHUD ⏳ ⭐ MVP
-      │  └─ WBP_CombatHUD ⏳
-      │
-      ├─ UTradingInterfaceWidget (C++) ⭐ MVP CRITICAL
-      │  └─ WBP_TradingInterface ⏳ ⭐ MVP
-      │
-      ├─ UStationEditorWidget (C++)
-      │  └─ WBP_StationEditor ⏳
-      │
-      ├─ UStationManagementWidget (C++)
-      │  └─ WBP_StationManagement ⏳
-      │
-      ├─ UInventoryWidget (C++)
-      │  └─ WBP_Inventory ⏳
-      │
-      ├─ UShipStatusWidget (C++)
-      │  └─ WBP_ShipStatus ⏳
-      │
-      ├─ UShipCustomizationWidget (C++)
-      │  └─ WBP_ShipCustomization ⏳
-      │
-      ├─ USectorMapWidget (C++)
-      │  └─ WBP_SectorMap ⏳
-      │
-      ├─ UUniverseMapWidget (C++)
-      │  └─ WBP_UniverseMap ⏳
-      │
-      └─ UUserWidget (Generic)
-         ├─ WBP_MainMenu ⏳
-         ├─ WBP_PauseMenu ⏳
-         ├─ WBP_SettingsMenu ⏳
-         ├─ WBP_QuestLog ⏳
-         ├─ WBP_CrewManagement ⏳
-         ├─ WBP_DockingInterface ⏳
-         ├─ WBP_TargetingInfo ⏳
-         └─ WBP_* (20+ more) ⏳
+```mermaid
+graph TD
+    UE5[Unreal Engine 5 Core Classes]
+    
+    subgraph GameFramework[Game Framework]
+        AActor[AActor]
+        AGameModeBase[AGameModeBase]
+        AdastreaGameMode[AdastreaGameMode C++]
+        BP_SpaceGameMode[BP_SpaceGameMode ✅]
+        BP_TestGameMode[BP_TestGameMode ⏳]
+        
+        APlayerController[APlayerController]
+        AdastreaPC[AdastreaPlayerController C++]
+        BP_ShipController[BP_SpaceshipController ⏳]
+        
+        AAIController[AAIController]
+        BP_AIController[BP_AIController ✅]
+        
+        AGameStateBase[AGameStateBase]
+        AdastreaGS[AdastreaGameState C++]
+        BP_GameState[BP_GameState ⏳]
+        
+        UGameInstance[UGameInstance]
+        AdastreaGI[AdastreaGameInstance C++]
+        BP_GameInstance[BP_GameInstance ✅]
+    end
+    
+    UE5 --> AActor
+    AActor --> AGameModeBase
+    AGameModeBase --> AdastreaGameMode
+    AdastreaGameMode --> BP_SpaceGameMode
+    AdastreaGameMode --> BP_TestGameMode
+    
+    AActor --> APlayerController
+    APlayerController --> AdastreaPC
+    AdastreaPC --> BP_ShipController
+    
+    AActor --> AAIController
+    AAIController --> BP_AIController
+    
+    AActor --> AGameStateBase
+    AGameStateBase --> AdastreaGS
+    AdastreaGS --> BP_GameState
+    
+    UE5 --> UGameInstance
+    UGameInstance --> AdastreaGI
+    AdastreaGI --> BP_GameInstance
+    
+    style UE5 fill:#666,stroke:#fff,color:#fff
+    style GameFramework fill:#1B4F72,stroke:#fff,color:#fff
 ```
 
-**Legend:**
-- ✅ = Exists in repository
-- ⏳ = Planned/needed
-- ⭐ MVP = Critical for Trade Simulator MVP
-- `(C++)` = C++ class (not Blueprint)
-- `[Interface]` = Implements interface
+---
+
+## Ship System Hierarchy
+
+```mermaid
+graph TD
+    APawn[APawn UE5]
+    ASpaceship["ASpaceship (C++)<br/>[IDamageable, ITargetable,<br/>IFactionMember]"]
+    
+    BP_PlayerShip[BP_PlayerShip ✅]
+    BP_PlayerShip_Fighter[BP_PlayerShip_Fighter ⏳]
+    BP_PlayerShip_Trader[BP_PlayerShip_Trader ⏳ ⭐MVP]
+    
+    BP_Ship_Corvette[BP_Ship_Corvette ✅]
+    BP_Ship_Cruiser[BP_Ship_Cruiser ✅]
+    BP_Ship_Destroyer[BP_Ship_Destroyer ✅]
+    BP_Ship_Freighter[BP_Ship_Freighter ✅]
+    BP_Ship_Fighter[BP_Ship_Fighter ✅]
+    BP_Battleship[BP_Battleship ✅]
+    
+    BP_Ship_NPC_Fighter[BP_Ship_NPC_Fighter ⏳]
+    BP_Ship_NPC_Trader[BP_Ship_NPC_Trader ⏳]
+    BP_Ship_NPC_Interceptor[BP_Ship_NPC_Interceptor ⏳]
+    
+    APawn --> ASpaceship
+    ASpaceship --> BP_PlayerShip
+    ASpaceship --> BP_PlayerShip_Fighter
+    ASpaceship --> BP_PlayerShip_Trader
+    ASpaceship --> BP_Ship_Corvette
+    ASpaceship --> BP_Ship_Cruiser
+    ASpaceship --> BP_Ship_Destroyer
+    ASpaceship --> BP_Ship_Freighter
+    ASpaceship --> BP_Ship_Fighter
+    ASpaceship --> BP_Battleship
+    ASpaceship --> BP_Ship_NPC_Fighter
+    ASpaceship --> BP_Ship_NPC_Trader
+    ASpaceship --> BP_Ship_NPC_Interceptor
+    
+    style ASpaceship fill:#1B4F72,stroke:#fff,color:#fff
+    style BP_PlayerShip fill:#2E7D32,stroke:#fff,color:#fff
+    style BP_PlayerShip_Trader fill:#FFD700,stroke:#000,color:#000
+```
+
+**Key Properties:**
+- `USpaceshipDataAsset* ShipDataAsset` - Ship configuration
+- `UFloatingPawnMovement* MovementComponent` - 3D space movement
+- `USpaceshipParticleComponent* ParticleComponent` - Engine VFX
+- `USpringArmComponent* CameraSpringArm` - Camera positioning
+
+---
+
+## Station System Hierarchy
+
+```mermaid
+graph TD
+    AActor[AActor UE5]
+    ASpaceStation["ASpaceStation (C++)<br/>[IDamageable, ITargetable,<br/>IFactionMember]"]
+    
+    BP_SpaceStation[BP_SpaceStation ✅]
+    BP_Station_Trading[BP_SpaceStation_Trading ⏳ ⭐MVP]
+    BP_Station_Military[BP_SpaceStation_Military ⏳]
+    BP_Station_Research[BP_SpaceStation_Research ⏳]
+    
+    AActor --> ASpaceStation
+    ASpaceStation --> BP_SpaceStation
+    ASpaceStation --> BP_Station_Trading
+    ASpaceStation --> BP_Station_Military
+    ASpaceStation --> BP_Station_Research
+    
+    style ASpaceStation fill:#1B4F72,stroke:#fff,color:#fff
+    style BP_Station_Trading fill:#FFD700,stroke:#000,color:#000
+```
+
+---
+
+## Station Module Hierarchy
+
+```mermaid
+graph TD
+    AActor[AActor UE5]
+    ASpaceStationModule["ASpaceStationModule (C++)<br/>[IDamageable, ITargetable]"]
+    
+    subgraph Docking[Docking Modules ⭐MVP]
+        DockingBay["ADockingBayModule<br/>Power: -50"]
+        BP_DockingBay[BP_Module_DockingBay ⏳ ⭐]
+        DockingPort["ADockingPortModule<br/>Power: -10"]
+        BP_DockingPort[BP_Module_DockingPort ⏳ ⭐]
+    end
+    
+    subgraph Power[Power Modules]
+        Reactor["AReactorModule<br/>Power: +100"]
+        BP_Reactor[BP_Module_Reactor ⏳]
+        SolarArray["ASolarArrayModule<br/>Power: +30"]
+        BP_SolarArray[BP_Module_SolarArray ⏳]
+    end
+    
+    subgraph Storage[Storage Modules]
+        CargoBay["ACargoBayModule<br/>Power: -5"]
+        BP_CargoBay[BP_Module_CargoBay ✅]
+        FuelDepot["AFuelDepotModule<br/>Power: -5"]
+        BP_FuelDepot[BP_Module_FuelDepot ⏳]
+    end
+    
+    subgraph Defense[Defense Modules]
+        Turret["ATurretModule<br/>Power: -30"]
+        BP_Turret[BP_Module_Turret ⏳]
+        Shield["AShieldGeneratorModule<br/>Power: -40"]
+        BP_Shield[BP_Module_ShieldGenerator ⏳]
+    end
+    
+    subgraph Living[Living Modules]
+        Habitation["AHabitationModule<br/>Power: -20"]
+        BP_Habitation[BP_Module_Habitation ⏳]
+        Barracks["ABarracksModule<br/>Power: -25"]
+        BP_Barracks[BP_Module_Barracks ⏳]
+    end
+    
+    subgraph Industrial[Industrial Modules]
+        Fabrication["AFabricationModule<br/>Power: -35"]
+        BP_Fabrication[BP_Module_Fabrication ⏳]
+        Processing["AProcessingModule<br/>Power: -40"]
+        BP_Processing[BP_Module_Processing ⏳]
+    end
+    
+    subgraph Trading[Trading Modules ⭐MVP]
+        Marketplace["AMarketplaceModule<br/>Power: -15"]
+        BP_Marketplace[BP_Module_Marketplace ⏳ ⭐]
+    end
+    
+    subgraph Research[Research Modules]
+        ScienceLab["AScienceLabModule<br/>Power: -25"]
+        BP_ScienceLab[BP_Module_ScienceLab ⏳]
+    end
+    
+    subgraph Utility[Utility Modules]
+        Corridor["ACorridorModule<br/>Power: -2"]
+        BP_Corridor[BP_Module_Corridor ⏳]
+    end
+    
+    AActor --> ASpaceStationModule
+    ASpaceStationModule --> DockingBay
+    DockingBay --> BP_DockingBay
+    ASpaceStationModule --> DockingPort
+    DockingPort --> BP_DockingPort
+    
+    ASpaceStationModule --> Reactor
+    Reactor --> BP_Reactor
+    ASpaceStationModule --> SolarArray
+    SolarArray --> BP_SolarArray
+    
+    ASpaceStationModule --> CargoBay
+    CargoBay --> BP_CargoBay
+    ASpaceStationModule --> FuelDepot
+    FuelDepot --> BP_FuelDepot
+    
+    ASpaceStationModule --> Turret
+    Turret --> BP_Turret
+    ASpaceStationModule --> Shield
+    Shield --> BP_Shield
+    
+    ASpaceStationModule --> Habitation
+    Habitation --> BP_Habitation
+    ASpaceStationModule --> Barracks
+    Barracks --> BP_Barracks
+    
+    ASpaceStationModule --> Fabrication
+    Fabrication --> BP_Fabrication
+    ASpaceStationModule --> Processing
+    Processing --> BP_Processing
+    
+    ASpaceStationModule --> Marketplace
+    Marketplace --> BP_Marketplace
+    
+    ASpaceStationModule --> ScienceLab
+    ScienceLab --> BP_ScienceLab
+    
+    ASpaceStationModule --> Corridor
+    Corridor --> BP_Corridor
+    
+    style ASpaceStationModule fill:#1B4F72,stroke:#fff,color:#fff
+    style Docking fill:#FFD700,stroke:#000,color:#000
+    style Trading fill:#FFD700,stroke:#000,color:#000
+```
+
+---
+
+## Component Architecture
+
+```mermaid
+graph TD
+    UActorComponent[UActorComponent UE5]
+    
+    subgraph Movement[Movement Components]
+        FloatingPawn[UFloatingPawnMovement UE5]
+        Navigation[UNavigationComponent]
+        SimpleAI[USimpleAIMovementComponent]
+    end
+    
+    subgraph Combat[Combat Components]
+        Weapon[UWeaponComponent]
+        Targeting[UTargetingComponent]
+        CombatHealth[UCombatHealthComponent]
+        PointDefense[UPointDefenseComponent]
+        Boarding[UBoardingComponent]
+    end
+    
+    subgraph Trading[Trading Components ⭐MVP]
+        Cargo[UCargoComponent ⭐]
+        AITrader[UAITraderComponent]
+        PlayerTrader[UPlayerTraderComponent]
+    end
+    
+    subgraph Player[Player Components]
+        Reputation[UPlayerReputationComponent ⭐MVP]
+        Progression[UPlayerProgressionComponent]
+        Unlock[UPlayerUnlockComponent]
+    end
+    
+    subgraph Customization[Customization Components]
+        ShipCustom[UShipCustomizationComponent]
+        ShipUpgrade[UShipUpgradeComponent]
+        ShipModule[UShipModuleComponent]
+    end
+    
+    subgraph Visual[Visual Components]
+        Particle[USpaceshipParticleComponent]
+        StaticMesh[UStaticMeshComponent UE5]
+    end
+    
+    UActorComponent --> FloatingPawn
+    UActorComponent --> Navigation
+    UActorComponent --> SimpleAI
+    
+    UActorComponent --> Weapon
+    UActorComponent --> Targeting
+    UActorComponent --> CombatHealth
+    UActorComponent --> PointDefense
+    UActorComponent --> Boarding
+    
+    UActorComponent --> Cargo
+    UActorComponent --> AITrader
+    UActorComponent --> PlayerTrader
+    
+    UActorComponent --> Reputation
+    UActorComponent --> Progression
+    UActorComponent --> Unlock
+    
+    UActorComponent --> ShipCustom
+    UActorComponent --> ShipUpgrade
+    UActorComponent --> ShipModule
+    
+    UActorComponent --> Particle
+    UActorComponent --> StaticMesh
+    
+    style UActorComponent fill:#1B4F72,stroke:#fff,color:#fff
+    style Trading fill:#FFD700,stroke:#000,color:#000
+    style Player fill:#FFD700,stroke:#000,color:#000
+```
 
 ---
 
 ## Interface Implementation Map
 
-```
-Interfaces:
-
-IDamageable
-├─ Implemented by:
-│  ├─ ASpaceship (C++)
-│  ├─ ASpaceStation (C++)
-│  └─ ASpaceStationModule (C++)
-└─ Functions:
-   ├─ ApplyDamage()
-   ├─ GetHealthPercentage()
-   ├─ IsDestroyed()
-   └─ CanTakeDamage()
-
-ITargetable
-├─ Implemented by:
-│  ├─ ASpaceship (C++)
-│  ├─ ASpaceStation (C++)
-│  └─ ASpaceStationModule (C++)
-└─ Functions:
-   ├─ CanBeTargeted()
-   ├─ GetTargetPriority()
-   ├─ GetTargetDisplayName()
-   ├─ GetAimPoint()
-   └─ IsHostileToActor()
-
-IFactionMember
-├─ Implemented by:
-│  ├─ ASpaceship (C++)
-│  └─ ASpaceStation (C++)
-└─ Functions:
-   ├─ GetFaction()
-   ├─ IsAlliedWith()
-   ├─ IsHostileTo()
-   ├─ GetRelationshipWith()
-   └─ GetTradePriceModifier() ⭐ MVP
-
-IShipModule (Future)
-└─ Implemented by:
-   └─ Ship module actors (when implemented)
-```
-
----
-
-## Component Attachment Map
-
-```
-ASpaceship (Actor)
-├─ CORE Components (Always Present):
-│  ├─ UFloatingPawnMovement (Movement)
-│  ├─ UStaticMeshComponent (Visual)
-│  ├─ USpaceshipParticleComponent (VFX)
-│  ├─ USpringArmComponent (Camera positioning)
-│  └─ UCameraComponent (Player view)
-│
-├─ COMBAT Components (Combat ships):
-│  ├─ UWeaponComponent (Weapons)
-│  ├─ UTargetingComponent (Targeting)
-│  ├─ UCombatHealthComponent (Health/Shields)
-│  └─ UPointDefenseComponent (Point defense)
-│
-├─ TRADING Components (Trader ships): ⭐ MVP
-│  ├─ UCargoComponent (Cargo inventory) ⭐
-│  └─ UAITraderComponent or UPlayerTraderComponent (Trading logic)
-│
-├─ NAVIGATION Components (All ships):
-│  └─ UNavigationComponent (Autopilot, pathfinding)
-│
-├─ PLAYER Components (Player ship only):
-│  ├─ UPlayerReputationComponent (Faction reputation) ⭐ MVP
-│  ├─ UPlayerProgressionComponent (Advancement)
-│  ├─ UPlayerUnlockComponent (Unlocks)
-│  ├─ UShipCustomizationComponent (Visual customization)
-│  └─ UShipUpgradeComponent (Upgrades)
-│
-└─ CONTROL Components (All ships):
-   └─ USpaceshipControlsComponent (Flight controls)
-
-ASpaceStation (Actor)
-├─ CORE:
-│  ├─ UStaticMeshComponent (Visual)
-│  └─ TArray<ASpaceStationModule*> (Modules)
-│
-└─ TRADING (Trading stations): ⭐ MVP
-   └─ References DA_Market_* (MarketDataAsset)
-
-ASpaceStationModule (Actor)
-├─ CORE:
-│  ├─ UStaticMeshComponent (Visual)
-│  ├─ FString ModuleType
-│  ├─ float ModulePower
-│  └─ EStationModuleGroup ModuleGroup
-│
-└─ DOCKING (Docking modules): ⭐ MVP
-   └─ TArray<USceneComponent*> DockingPoints
+```mermaid
+graph LR
+    subgraph Interfaces
+        IDamageable[IDamageable Interface]
+        ITargetable[ITargetable Interface]
+        IFactionMember[IFactionMember Interface]
+        IShipModule[IShipModule Interface]
+    end
+    
+    subgraph Implementations
+        ASpaceship[ASpaceship]
+        ASpaceStation[ASpaceStation]
+        ASpaceStationModule[ASpaceStationModule]
+    end
+    
+    IDamageable -.->|implements| ASpaceship
+    ITargetable -.->|implements| ASpaceship
+    IFactionMember -.->|implements| ASpaceship
+    
+    IDamageable -.->|implements| ASpaceStation
+    ITargetable -.->|implements| ASpaceStation
+    IFactionMember -.->|implements| ASpaceStation
+    
+    IDamageable -.->|implements| ASpaceStationModule
+    ITargetable -.->|implements| ASpaceStationModule
+    
+    style Interfaces fill:#8E44AD,stroke:#fff,color:#fff
+    style Implementations fill:#1B4F72,stroke:#fff,color:#fff
 ```
 
 ---
 
 ## Data Asset Dependency Map
 
-```
-BP_PlayerShip
-├─ Requires: DA_Ship_PlayerScout
-│  └─ Defines: Hull, speed, cargo capacity, stats
-│
-├─ Uses: DA_Weapon_* (if armed)
-│  └─ Configures: UWeaponComponent
-│
-├─ References: DA_Faction_Player
-│  └─ For: Faction membership, diplomacy
-│
-└─ Attached Components:
-   ├─ UCargoComponent ⭐ MVP
-   │  └─ Capacity from: DA_Ship_PlayerScout.CargoCapacity
-   │
-   ├─ UPlayerReputationComponent ⭐ MVP
-   │  └─ Uses: DA_Faction_* relationships
-   │
-   └─ UWeaponComponent
-      └─ Configured by: DA_Weapon_*
-
-BP_SpaceStation
-├─ Contains: TArray<ASpaceStationModule*>
-│  ├─ BP_Module_DockingBay ⭐ MVP
-│  ├─ BP_Module_Reactor
-│  ├─ BP_Module_CargoBay
-│  └─ BP_Module_Marketplace ⭐ MVP
-│
-├─ References: DA_Faction_*
-│  └─ Defines: Station owner faction
-│
-└─ Trading Stations Reference: DA_Market_* ⭐ MVP
-   └─ Defines: Item prices, supply/demand
-
-WBP_TradingInterface ⭐ MVP
-├─ Reads: DA_Market_* (prices)
-├─ Reads: DA_TradeItem_* (item properties)
-├─ Queries: UCargoComponent (player ship)
-├─ Queries: UPlayerReputationComponent (price modifiers)
-└─ Updates: Market supply/demand on transactions
+```mermaid
+graph TD
+    subgraph Blueprints
+        BP_PlayerShip[BP_PlayerShip]
+        BP_SpaceStation[BP_SpaceStation]
+        WBP_Trading[WBP_TradingInterface ⭐MVP]
+    end
+    
+    subgraph DataAssets
+        DA_Ship[DA_Ship_PlayerScout ⭐MVP]
+        DA_Weapon[DA_Weapon_Laser]
+        DA_Faction[DA_Faction_Player]
+        DA_Market[DA_Market_Station1 ⭐MVP]
+        DA_TradeItem[DA_TradeItem_Food ⭐MVP]
+    end
+    
+    subgraph Components
+        Cargo[UCargoComponent]
+        Reputation[UPlayerReputationComponent]
+        Weapon[UWeaponComponent]
+    end
+    
+    BP_PlayerShip -->|requires| DA_Ship
+    BP_PlayerShip -->|uses| DA_Weapon
+    BP_PlayerShip -->|references| DA_Faction
+    BP_PlayerShip -->|has| Cargo
+    BP_PlayerShip -->|has| Reputation
+    BP_PlayerShip -->|has| Weapon
+    
+    BP_SpaceStation -->|references| DA_Faction
+    BP_SpaceStation -->|references| DA_Market
+    
+    WBP_Trading -->|reads| DA_Market
+    WBP_Trading -->|reads| DA_TradeItem
+    WBP_Trading -->|queries| Cargo
+    WBP_Trading -->|queries| Reputation
+    
+    Cargo -->|capacity from| DA_Ship
+    Reputation -->|uses| DA_Faction
+    Weapon -->|configured by| DA_Weapon
+    
+    style Blueprints fill:#1B4F72,stroke:#fff,color:#fff
+    style DataAssets fill:#2E7D32,stroke:#fff,color:#fff
+    style Components fill:#5DADE2,stroke:#000,color:#000
 ```
 
 ---
 
 ## MVP Trade Simulator Critical Path
 
-```
-MINIMAL REQUIRED BLUEPRINTS FOR MVP:
-
-1. BP_PlayerShip (Player's trading vessel)
-   └─ Requires: DA_Ship_PlayerScout
-   └─ Must Have: UCargoComponent, UPlayerReputationComponent
-
-2. BP_SpaceStation_Trading (x2-3 stations)
-   └─ Must Have: BP_Module_DockingBay or BP_Module_DockingPort
-   └─ References: DA_Market_Station1, DA_Market_Station2, DA_Market_Station3
-
-3. WBP_TradingInterface (Trading UI)
-   └─ Core functionality: Buy, Sell, Show prices, Show inventory
-
-4. Data Assets:
-   ├─ DA_Ship_PlayerScout (Player ship stats)
-   ├─ DA_TradeItem_* (x10-20 trade goods)
-   ├─ DA_Market_* (x2-3 markets with different prices)
-   └─ DA_Faction_* (x2-3 for price modifiers)
-
-5. TestLevel.umap (Playable map with stations)
-
-TOTAL: ~30-40 items to create for MVP
+```mermaid
+graph LR
+    subgraph Required[MVP Required Blueprints]
+        Ship[BP_PlayerShip<br/>✅ Exists]
+        Station[BP_SpaceStation_Trading<br/>⏳ Needed]
+        Docking[BP_Module_DockingPort<br/>⏳ Needed ⭐]
+        UI[WBP_TradingInterface<br/>⏳ Needed ⭐]
+    end
+    
+    subgraph DataNeeded[MVP Required Data Assets]
+        ShipData[DA_Ship_PlayerScout<br/>⏳ Needed ⭐]
+        Items[DA_TradeItem_* x10-20<br/>⏳ Needed ⭐]
+        Markets[DA_Market_* x2-3<br/>⏳ Needed ⭐]
+        Factions[DA_Faction_* x2-3<br/>⏳ Needed]
+    end
+    
+    subgraph Map[MVP Map]
+        TestLevel[TestLevel.umap<br/>⏳ Needed ⭐]
+    end
+    
+    Ship -->|docks at| Station
+    Station -->|has| Docking
+    Ship -->|opens| UI
+    UI -->|reads| Markets
+    UI -->|displays| Items
+    Ship -->|configured by| ShipData
+    Station -->|owned by| Factions
+    Markets -->|prices for| Items
+    
+    Ship -.->|spawned in| TestLevel
+    Station -.->|placed in| TestLevel
+    
+    style Required fill:#FFD700,stroke:#000,color:#000
+    style DataNeeded fill:#FFD700,stroke:#000,color:#000
+    style Map fill:#FFD700,stroke:#000,color:#000
 ```
 
 ---
 
-## Future Expansion Paths
+## Legend
 
-### Post-MVP Phase 1: Combat
-```
-Add:
-├─ BP_Ship_NPC_Fighter (Enemy ships)
-├─ BP_Weapon_* Blueprints (Laser, Missile, etc.)
-├─ BP_Projectile_* (Visual projectiles)
-├─ DA_Weapon_* (x10 weapon configs)
-├─ WBP_CombatHUD (Combat UI)
-└─ Combat-focused modules (Turrets, Shields)
-```
+**Status Indicators:**
+- ✅ = Exists in repository
+- ⏳ = Planned/needed
+- ⭐ MVP = Critical for Trade Simulator MVP
+- [Interface] = Implements interface
 
-### Post-MVP Phase 2: Faction Diplomacy
-```
-Add:
-├─ DA_Faction_* (x10 factions)
-├─ BP_FactionLogic_* (Faction AI behaviors)
-├─ Diplomatic quest line
-├─ Faction-specific missions
-└─ Alliance/war mechanics
-```
-
-### Post-MVP Phase 3: Crew Management
-```
-Add:
-├─ DA_Personnel_* (x15 crew roles)
-├─ BP_PersonnelLogic_* (Crew AI)
-├─ WBP_CrewManagement (Crew UI)
-├─ Crew skills and progression
-└─ Crew relationships and morale
-```
-
-### Post-MVP Phase 4: Quest System
-```
-Add:
-├─ DA_Quest_* (x10+ quests)
-├─ WBP_QuestLog (Quest tracker)
-├─ Quest objectives and rewards
-├─ Procedural quest generation
-└─ Story campaign
-```
-
-### Post-MVP Phase 5: Station Building
-```
-Add:
-├─ All 25 station module blueprints
-├─ WBP_StationEditor (Construction UI)
-├─ Module placement and grid system
-├─ Resource cost and construction time
-└─ Multiplayer station sharing
-```
+**Relationships:**
+- Solid arrows = Inheritance
+- Dashed arrows = Implementation/Reference
+- Dotted arrows = Weak reference
 
 ---
 
 ## Quick Statistics
 
-### Current State (Jan 2026)
-- **C++ Classes**: 52
-- **Blueprints Exist**: ~30
-- **Blueprints Needed**: ~80
-- **Data Assets Needed**: ~100
-- **Total to Create**: ~180 items
+### Blueprint Count by System
 
-### MVP Requirements (Trade Simulator)
-- **Critical Blueprints**: 5-8
-- **Critical Data Assets**: 20-30
-- **Critical UI Widgets**: 2-3
-- **Estimated Creation Time**: 2-4 weeks
+| System | C++ Classes | Blueprints Exist | Blueprints Needed | Total |
+|--------|-------------|------------------|-------------------|-------|
+| **Game Framework** | 4 | 3 | 2 | 5 |
+| **Ships** | 2 | 7 | 10 | 17 |
+| **Stations** | 18 | 3 | 22 | 25 |
+| **Combat** | 5 | 4 | 10 | 14 |
+| **Trading** | 3 | 0 | 3 | 3 |
+| **AI** | 3 | 2 | 3 | 5 |
+| **UI** | 15 | 0 | 30 | 30 |
+| **Input** | 2 | 11 (actions) | 3 | 14 |
+| **Total** | **52** | **30** | **83** | **113** |
 
-### Full Project (Post-MVP)
-- **Total Blueprints**: 110+
-- **Total Data Assets**: 200+
-- **Total UI Widgets**: 30+
-- **Estimated Creation Time**: 12-16 weeks
+### MVP Requirements
 
----
-
-## Related Documentation
-
-- **Comprehensive Guide**: `BLUEPRINT_ARCHITECTURE_GUIDE.md` (main document)
-- **Blueprint List**: `docs/archive/UPDATED_BLUEPRINT_LIST_2025.md` (208 items)
-- **MVP Guide**: `docs/mvp/BLUEPRINT_IMPLEMENTATION_GUIDE.md`
-- **System Guides**: `Assets/*SystemGuide.md`
-
----
-
-**End of Blueprint Tree Diagram**
+**Critical for MVP (30-40 items):**
+- 1 Player ship blueprint
+- 2-3 Station blueprints
+- 1 Docking module blueprint
+- 1 Trading UI widget
+- 10-20 Trade item data assets
+- 2-3 Market data assets
+- 1 Ship data asset
+- 2-3 Faction data assets
+- 1 Test level map

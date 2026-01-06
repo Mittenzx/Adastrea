@@ -262,9 +262,11 @@
 ### Blueprint References
 | File | Purpose |
 |------|---------|
-| **[BLUEPRINT_ARCHITECTURE_GUIDE.md](docs/reference/BLUEPRINT_ARCHITECTURE_GUIDE.md)** | 🆕 **NEW** Complete blueprint architecture and dependencies |
-| **[BLUEPRINT_TREE_DIAGRAM.md](docs/reference/BLUEPRINT_TREE_DIAGRAM.md)** | 🆕 **NEW** Visual class hierarchy of all blueprints |
-| **[DOCKING_SYSTEM_QUICK_REFERENCE.md](docs/reference/DOCKING_SYSTEM_QUICK_REFERENCE.md)** | 🆕 **NEW** Docking system explained (Bay vs Port vs Points) |
+| **[BLUEPRINT_ARCHITECTURE_GUIDE.md](docs/reference/BLUEPRINT_ARCHITECTURE_GUIDE.md)** | 🆕 Complete blueprint architecture with **Mermaid diagrams** |
+| **[BLUEPRINT_TREE_DIAGRAM.md](docs/reference/BLUEPRINT_TREE_DIAGRAM.md)** | 🆕 Visual class hierarchy with **Mermaid diagrams** |
+| **[DOCKING_SYSTEM_QUICK_REFERENCE.md](docs/reference/DOCKING_SYSTEM_QUICK_REFERENCE.md)** | 🆕 Docking system explained (Bay vs Port vs Points) |
+| **[DOCKING_SYSTEM_VISUAL_DIAGRAM.md](docs/reference/DOCKING_SYSTEM_VISUAL_DIAGRAM.md)** | 🆕 Docking workflows with **Mermaid diagrams** |
+| **[BLUEPRINT_DOCUMENTATION_SUMMARY.md](docs/reference/BLUEPRINT_DOCUMENTATION_SUMMARY.md)** | 🆕 Quick navigation guide |
 | **[BLUEPRINT_QUICK_REFERENCE.md](docs/reference/BLUEPRINT_QUICK_REFERENCE.md)** | One-page Blueprint reference |
 | **[BLUEPRINT_REQUIREMENTS_LIST.md](docs/reference/BLUEPRINT_REQUIREMENTS_LIST.md)** | Complete list of required Blueprints |
 | **[BLUEPRINT_IMAGE_GUIDE.md](docs/reference/BLUEPRINT_IMAGE_GUIDE.md)** | ⭐ Image-based Blueprint documentation with SVG diagrams |

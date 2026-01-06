@@ -52,31 +52,39 @@ WBP_<Purpose>          (Widget Blueprints)
 
 ## Core Architecture Layers
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        LAYER 5: UI                              │
-│  WBP_SpaceshipHUD, WBP_TradingInterface, WBP_StationEditor     │
-└─────────────────────────────────────────────────────────────────┘
-                              ↓ Uses
-┌─────────────────────────────────────────────────────────────────┐
-│                   LAYER 4: Gameplay Actors                      │
-│  BP_PlayerShip, BP_SpaceStation, BP_Weapon_*, BP_Module_*      │
-└─────────────────────────────────────────────────────────────────┘
-                              ↓ Configured by
-┌─────────────────────────────────────────────────────────────────┐
-│                   LAYER 3: Data Assets                          │
-│  DA_Ship_*, DA_Weapon_*, DA_Faction_*, DA_TradeItem_*          │
-└─────────────────────────────────────────────────────────────────┘
-                              ↓ Attached to
-┌─────────────────────────────────────────────────────────────────┐
-│                   LAYER 2: Components                           │
-│  UWeaponComponent, UNavigationComponent, UCargoComponent       │
-└─────────────────────────────────────────────────────────────────┘
-                              ↓ Inherit from
-┌─────────────────────────────────────────────────────────────────┐
-│                   LAYER 1: C++ Base Classes                     │
-│  ASpaceship, ASpaceStation, ASpaceStationModule                │
-└─────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph Layer5[LAYER 5: UI]
+        UI[WBP_SpaceshipHUD<br/>WBP_TradingInterface<br/>WBP_StationEditor]
+    end
+    
+    subgraph Layer4[LAYER 4: Gameplay Actors]
+        Actors[BP_PlayerShip<br/>BP_SpaceStation<br/>BP_Weapon_*<br/>BP_Module_*]
+    end
+    
+    subgraph Layer3[LAYER 3: Data Assets]
+        DataAssets[DA_Ship_*<br/>DA_Weapon_*<br/>DA_Faction_*<br/>DA_TradeItem_*]
+    end
+    
+    subgraph Layer2[LAYER 2: Components]
+        Components[UWeaponComponent<br/>UNavigationComponent<br/>UCargoComponent]
+    end
+    
+    subgraph Layer1[LAYER 1: C++ Base Classes]
+        BaseClasses[ASpaceship<br/>ASpaceStation<br/>ASpaceStationModule]
+    end
+    
+    Layer5 -->|Uses| Layer4
+    Layer4 -->|Configured by| Layer3
+    Layer4 -->|Has| Layer2
+    Layer2 -->|Attached to| Layer4
+    Layer4 -->|Inherits from| Layer1
+    
+    style Layer5 fill:#8E44AD,stroke:#fff,color:#fff
+    style Layer4 fill:#1B4F72,stroke:#fff,color:#fff
+    style Layer3 fill:#2E7D32,stroke:#fff,color:#fff
+    style Layer2 fill:#5DADE2,stroke:#000,color:#000
+    style Layer1 fill:#C80000,stroke:#fff,color:#fff
 ```
 
 ---
