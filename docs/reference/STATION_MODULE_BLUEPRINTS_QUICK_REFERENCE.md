@@ -11,7 +11,7 @@
 | `BP_SpaceStationModule_DockingBay` | `ADockingBayModule` | 50 | Docking | Large ship docking |
 | `BP_SpaceStationModule_DockingPort` | `ADockingPortModule` | 10 | Docking | Small ship docking |
 | `BP_SpaceStationModule_Marketplace` | `AMarketplaceModule` | 40 | Public | Trading interface |
-| `BP_SpaceStationModule_CargoBay` | `ACargoBayModule` | 5 | Storage | Cargo storage (EXISTS) |
+| `BP_CargoBayModule` | `ACargoBayModule` | 5 | Storage | Cargo storage (EXISTS) |
 | `BP_SpaceStationModule_Habitation` | `AHabitationModule` | 30 | Habitation | Living quarters |
 | `BP_SpaceStationModule_Corridor` | `ACorridorModule` | 2 | Connection | Passageways |
 

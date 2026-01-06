@@ -86,7 +86,7 @@ These modules are essential for the Trade Simulator MVP:
 
 #### 4. Cargo Bay Module
 - **C++ Parent Class**: `ACargoBayModule`
-- **Blueprint Name**: `BP_SpaceStationModule_CargoBay` *(Already exists)*
+- **Blueprint Name**: `BP_CargoBayModule` *(Already exists)*
 - **Module Type**: "Cargo Bay"
 - **Power Consumption**: 5 units
 - **Module Group**: Storage
@@ -235,7 +235,7 @@ Follow these steps for each module type:
    - Examples:
      - `BP_SpaceStationModule_DockingBay`
      - `BP_SpaceStationModule_Marketplace`
-     - `BP_SpaceStationModule_CargoBay`
+   - Exception: `BP_CargoBayModule` (existing module, created before naming convention established)
 
 #### Step 4: Configure Blueprint
 
@@ -305,7 +305,7 @@ Use this checklist to create all MVP-critical modules:
 
 ### Verify Existing Module
 
-- [ ] **BP_SpaceStationModule_CargoBay** *(Already exists)*
+- [ ] **BP_CargoBayModule** *(Already exists)*
   - Verify parent is `ACargoBayModule`
   - Check mesh is set
   - Confirm power: 5 units
@@ -402,6 +402,9 @@ Use this checklist to create all MVP-critical modules:
 - ✅ `BP_SpaceStationModule_Marketplace`
 - ✅ `BP_SpaceStationModule_Habitation`
 
+**Exception**:
+- ⚠️ `BP_CargoBayModule` (existing module, created before naming convention was established)
+
 **Incorrect Examples**:
 - ❌ `DockingBayModule` (missing prefix)
 - ❌ `BP_DockingBay` (not specific enough)
@@ -424,7 +427,7 @@ Content/
             ├── BP_SpaceStationModule_DockingBay.uasset
             ├── BP_SpaceStationModule_DockingPort.uasset
             ├── BP_SpaceStationModule_Marketplace.uasset
-            ├── BP_SpaceStationModule_CargoBay.uasset
+            ├── BP_CargoBayModule.uasset (existing, pre-convention)
             ├── BP_SpaceStationModule_Habitation.uasset
             ├── BP_SpaceStationModule_Corridor.uasset
             ├── BP_SpaceStationModule_Reactor.uasset
