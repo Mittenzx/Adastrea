@@ -262,9 +262,14 @@
 ### Blueprint References
 | File | Purpose |
 |------|---------|
+| **[BLUEPRINT_ARCHITECTURE_GUIDE.md](docs/reference/BLUEPRINT_ARCHITECTURE_GUIDE.md)** | 🆕 Complete blueprint architecture with **Mermaid diagrams** |
+| **[BLUEPRINT_TREE_DIAGRAM.md](docs/reference/BLUEPRINT_TREE_DIAGRAM.md)** | 🆕 Visual class hierarchy with **Mermaid diagrams** |
+| **[DOCKING_SYSTEM_QUICK_REFERENCE.md](docs/reference/DOCKING_SYSTEM_QUICK_REFERENCE.md)** | 🆕 Docking system explained (Bay vs Port vs Points) |
+| **[DOCKING_SYSTEM_VISUAL_DIAGRAM.md](docs/reference/DOCKING_SYSTEM_VISUAL_DIAGRAM.md)** | 🆕 Docking workflows with **Mermaid diagrams** |
+| **[BLUEPRINT_DOCUMENTATION_SUMMARY.md](docs/reference/BLUEPRINT_DOCUMENTATION_SUMMARY.md)** | 🆕 Quick navigation guide |
 | **[BLUEPRINT_QUICK_REFERENCE.md](docs/reference/BLUEPRINT_QUICK_REFERENCE.md)** | One-page Blueprint reference |
 | **[BLUEPRINT_REQUIREMENTS_LIST.md](docs/reference/BLUEPRINT_REQUIREMENTS_LIST.md)** | Complete list of required Blueprints |
-| **[BLUEPRINT_IMAGE_GUIDE.md](docs/reference/BLUEPRINT_IMAGE_GUIDE.md)** | ⭐ **NEW** Image-based Blueprint documentation with SVG diagrams |
+| **[BLUEPRINT_IMAGE_GUIDE.md](docs/reference/BLUEPRINT_IMAGE_GUIDE.md)** | ⭐ Image-based Blueprint documentation with SVG diagrams |
 | **[BLUEPRINT_VISUAL_MOCKUP_GUIDE.md](docs/reference/BLUEPRINT_VISUAL_MOCKUP_GUIDE.md)** | Color-coded Blueprint docs with node details (ASCII) |
 | **[BLUEPRINT_MOCKUP_GUIDE.md](docs/reference/BLUEPRINT_MOCKUP_GUIDE.md)** | Visual Blueprint documentation standards |
 | **[BLUEPRINT_DOCUMENTATION_EXAMPLES.md](docs/reference/BLUEPRINT_DOCUMENTATION_EXAMPLES.md)** | Visual vs text documentation examples |
