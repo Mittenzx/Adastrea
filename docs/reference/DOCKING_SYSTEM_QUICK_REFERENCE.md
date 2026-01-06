@@ -16,7 +16,7 @@ UCLASS(BlueprintType, Blueprintable)
 class ADASTREA_API ADockingBayModule : public ASpaceStationModule
 {
     // Large docking facility
-    // Power: 50 units
+    // Power Consumption: 50 units
     // Capacity: 3-6 ships (large vessels)
 };
 ```

@@ -60,10 +60,10 @@
 
 LEGEND:
 ───────
-Module Classes (C++)  = Gameplay logic, power, capacity
-Scene Components      = Physical attachment points (transforms)
-Array                 = Slot management and iteration
-FREE/OCCUPIED         = Runtime slot tracking
+Module Classes (C++)          = Gameplay logic, power, capacity
+Scene Component Pointers      = USceneComponent* docking point instances (transforms)
+Array                         = Slot management and iteration
+FREE/OCCUPIED                 = Runtime slot tracking
 ```
 
 ## Ship Docking Workflow
@@ -108,7 +108,8 @@ Step 3: Guide Ship to Slot
        ↓
 Step 4: Complete Docking
 ┌──────────────────────────────────────┐
-│ Module: MarkSlotOccupied(Slot 3)    │
+│ Module: MarkSlotOccupied(Slot 3,    │
+│         DockedShip, true)            │
 │ Ship: Disable controls               │
 │ Station: Open trading interface      │
 │ VFX: Play docking effects           │
@@ -155,17 +156,30 @@ void ASpaceship::DockAtSlot(USceneComponent* Slot)
     OnDockingComplete(Slot);
 }
 
-// 4. Mark slot as occupied
-void ADockingBayModule::MarkSlotOccupied(USceneComponent* Slot, bool bOccupied)
+// 4. Mark slot as occupied / freed
+void ADockingBayModule::MarkSlotOccupied(USceneComponent* Slot, ASpaceship* DockedShip, bool bOccupied)
 {
-    // Store ship reference
-    OccupiedSlots.Add(Slot, DockedShip);
-    
-    // Disable ship controls
-    DockedShip->DisableInput();
-    
-    // Open UI
-    OpenTradingInterface();
+    if (!Slot || !DockedShip)
+    {
+        return;
+    }
+
+    if (bOccupied)
+    {
+        // Store ship reference
+        OccupiedSlots.Add(Slot, DockedShip);
+
+        // Disable ship controls while docked
+        DockedShip->DisableInput();
+
+        // Open trading UI
+        OpenTradingInterface();
+    }
+    else
+    {
+        // Slot is now free
+        OccupiedSlots.Remove(Slot);
+    }
 }
 ```
 
