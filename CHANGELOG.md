@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Station Module Blueprints Documentation** (2026-01-06)
+  - Created comprehensive guide for creating all BP_SpaceStationModule_* blueprints
+  - `docs/setup/STATION_MODULE_BLUEPRINTS_GUIDE.md` - Complete 17KB guide with step-by-step instructions
+  - `docs/reference/STATION_MODULE_BLUEPRINTS_QUICK_REFERENCE.md` - Quick reference card for all module types
+  - `Content/Blueprints/Stations/Modules/README.md` - Module folder documentation
+  - Documents all 15 module types (6 MVP-critical, 9 POST-MVP)
+  - Includes C++ parent classes, power consumption, module groups
+  - Step-by-step Blueprint creation process in Unreal Editor
+  - Visual mesh recommendations and troubleshooting guide
+  - Integration with trading system and docking mechanics
+  - **Impact**: Unblocks creation of BP_SpaceStationModule_DockingBay, Marketplace, and other MVP modules needed for Trade Simulator
+
 ### Fixed
 
 - **EconomyManager Blueprint Exposure** (2026-01-04)

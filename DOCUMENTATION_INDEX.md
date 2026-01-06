@@ -190,9 +190,15 @@
 ### UI and HUD Setup
 | File | Purpose |
 |------|---------|
-| **[SPACESHIP_HUD_BLUEPRINT_GUIDE.md](docs/setup/SPACESHIP_HUD_BLUEPRINT_GUIDE.md)** | ⭐ **NEW** Comprehensive spaceship HUD (WBP_Spaceship) Blueprint guide |
+| **[SPACESHIP_HUD_BLUEPRINT_GUIDE.md](docs/setup/SPACESHIP_HUD_BLUEPRINT_GUIDE.md)** | ⭐ Comprehensive spaceship HUD (WBP_Spaceship) Blueprint guide |
 | **[CROSSHAIR_BLUEPRINT_GUIDE.md](docs/setup/CROSSHAIR_BLUEPRINT_GUIDE.md)** | Crosshair Blueprint implementation |
 | **[FREE_LOOK_SETUP_GUIDE.md](docs/setup/FREE_LOOK_SETUP_GUIDE.md)** | Free look camera setup |
+
+### Station and Module Setup
+| File | Purpose |
+|------|---------|
+| **[STATION_MODULE_BLUEPRINTS_GUIDE.md](docs/setup/STATION_MODULE_BLUEPRINTS_GUIDE.md)** | ⭐ **NEW** Complete guide for creating BP_SpaceStationModule_* blueprints |
+| **[MOUSE_SENSITIVITY_GUIDE.md](docs/setup/MOUSE_SENSITIVITY_GUIDE.md)** | Mouse sensitivity configuration |
 
 ### Other Setup
 | File | Purpose |
@@ -279,6 +285,7 @@
 |------|---------|
 | **[SCENE_POPULATION_QUICK_REFERENCE.md](docs/reference/SCENE_POPULATION_QUICK_REFERENCE.md)** | Level population quick ref |
 | **[STATION_EDITOR_VISUAL_GUIDE.md](docs/reference/STATION_EDITOR_VISUAL_GUIDE.md)** | Visual station editor guide |
+| **[STATION_MODULE_BLUEPRINTS_QUICK_REFERENCE.md](docs/reference/STATION_MODULE_BLUEPRINTS_QUICK_REFERENCE.md)** | ⭐ **NEW** Quick reference for all station module blueprints |
 | **[YAML_TO_ASSETS_QUICK_REFERENCE.md](docs/reference/YAML_TO_ASSETS_QUICK_REFERENCE.md)** | YAML conversion quick ref |
 | **[X4_QUICK_REFERENCE.md](docs/reference/X4_QUICK_REFERENCE.md)** | X4 Foundations inspiration |
 

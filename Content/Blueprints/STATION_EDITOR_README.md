@@ -150,3 +150,13 @@ Refer to:
 - `BP_StationEditor_WorkflowNotes.txt` - Detailed Blueprint implementation guide
 - Unreal Engine documentation for UMG and Blueprint
 - Existing code examples in `Source/Adastrea/Ships/` for similar patterns
+
+## Additional Resources
+
+- **[STATION_MODULE_BLUEPRINTS_GUIDE.md](../../docs/setup/STATION_MODULE_BLUEPRINTS_GUIDE.md)** - ⭐ **NEW** Complete guide for creating all BP_SpaceStationModule_* blueprints
+- **[STATION_MODULE_BLUEPRINTS_QUICK_REFERENCE.md](../../docs/reference/STATION_MODULE_BLUEPRINTS_QUICK_REFERENCE.md)** - ⭐ **NEW** Quick reference for station module blueprints
+- **[Modules/README.md](Stations/Modules/README.md)** - ⭐ **NEW** Module blueprints folder documentation
+
+---
+
+**Last Updated**: 2026-01-06 (Added module blueprint creation guides)
