@@ -66,25 +66,60 @@ public:
     // ====================
 
     /**
-     * [POST-MVP] Get the faction assigned to this module
+     * Get the faction assigned to this module
      * @return The faction data asset, or nullptr if none assigned
      * 
-     * DEFERRED: Module-level faction system not needed for MVP trading.
-     * MVP uses station-level factions only (via ASpaceStation::SetFaction).
-     * Re-enable post-MVP for complex multi-faction station gameplay.
+     * Note: Module-level faction system is optional for MVP.
+     * MVP primarily uses station-level factions (via ASpaceStation::SetFaction).
+     * This can be used for multi-faction station gameplay.
      */
-    // UFUNCTION(BlueprintCallable, Category="Module|Post-MVP")
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Module")
     UFactionDataAsset* GetModuleFaction() const;
 
     /**
-     * [POST-MVP] Set the faction for this module
+     * Set the faction for this module
      * @param NewFaction The faction to assign to this module
      * 
-     * DEFERRED: Module-level faction system not needed for MVP trading.
-     * Re-enable post-MVP for multi-faction station gameplay.
+     * Note: Module-level faction system is optional for MVP.
+     * This allows individual modules to have different factions than their parent station.
      */
-    // UFUNCTION(BlueprintCallable, Category="Module|Post-MVP")
+    UFUNCTION(BlueprintCallable, Category="Module")
     void SetModuleFaction(UFactionDataAsset* NewFaction);
+
+    /**
+     * Get the type identifier for this module
+     * @return Module type string (e.g., "Docking Bay", "Reactor Core")
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Module")
+    FString GetModuleType() const { return ModuleType; }
+
+    /**
+     * Get the power consumption or generation of this module
+     * @return Power value (positive = consumes, negative = generates)
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Module")
+    float GetModulePower() const { return ModulePower; }
+
+    /**
+     * Get the functional group this module belongs to
+     * @return Module group enum value
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Module")
+    EStationModuleGroup GetModuleGroup() const { return ModuleGroup; }
+
+    /**
+     * Check if this module generates power (negative power value)
+     * @return True if module generates power, false if it consumes
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Module")
+    bool IsGeneratingPower() const { return ModulePower < 0.0f; }
+
+    /**
+     * Get the mesh component for this module
+     * @return The static mesh component used for visual representation
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Module")
+    UStaticMeshComponent* GetMeshComponent() const { return MeshComponent; }
 
     // ====================
     // INTERFACE IMPLEMENTATIONS
