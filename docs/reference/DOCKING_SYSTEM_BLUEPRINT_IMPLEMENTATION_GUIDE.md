@@ -39,16 +39,16 @@ This guide provides **complete step-by-step instructions** for implementing the 
 
 ```
 ASpaceStation (BP_SpaceStation_Main)
-├─ TArray<ASpaceStationModule*> Modules
+├─ Modules (Array of Space Station Module)
 │
 ├─ ADockingBayModule (BP_DockingBay)
-│  ├─ TArray<USceneComponent*> DockingPoints (4-6 slots)
-│  ├─ USphereComponent* InteractionTrigger
+│  ├─ DockingPoints (Array of Scene Component, 4-6 slots)
+│  ├─ InteractionTrigger (Sphere Component)
 │  └─ Functions: DockShip(), UndockShip(), GetAvailableDockingPoint()
 │
 ├─ ADockingPortModule (BP_DockingPort)
-│  ├─ TArray<USceneComponent*> DockingPoints (1 slot)
-│  ├─ USphereComponent* InteractionTrigger
+│  ├─ DockingPoints (Array of Scene Component, 1 slot)
+│  ├─ InteractionTrigger (Sphere Component)
 │  └─ Functions: DockShip(), UndockShip(), GetAvailableDockingPoint()
 │
 └─ Other Modules (Reactor, CargoBay, etc.)
@@ -218,7 +218,7 @@ Event: BeginPlay
 **Implementation:**
 ```
 Event: OnComponentBeginOverlap (InteractionTrigger)
-├─ Cast to ASpaceship (Other Actor)
+├─ Cast to Spaceship (Other Actor)
 │  └─ [Success] Branch
 │     ├─ Check: HasAvailableDocking (self)
 │     │  └─ [True] Set Nearby Station (on ship)
@@ -258,7 +258,7 @@ Event: OnComponentBeginOverlap
 
 ```
 Event: OnComponentEndOverlap (InteractionTrigger)
-├─ Cast to ASpaceship (Other Actor)
+├─ Cast to Spaceship (Other Actor)
 │  └─ [Success]
 │     ├─ Clear Nearby Station (on ship)
 │     │  └─ Target: Ship
@@ -277,11 +277,11 @@ Event: OnComponentEndOverlap (InteractionTrigger)
 
 | Variable Name | Type | Default | Description |
 |--------------|------|---------|-------------|
-| `NearbyStation` | `ADockingBayModule*` (Object Reference) | None | Station in docking range |
-| `CurrentDockingPoint` | `USceneComponent*` (Object Reference) | None | Assigned docking point |
+| `NearbyStation` | Docking Bay Module (Object Reference) | None | Station in docking range |
+| `CurrentDockingPoint` | Scene Component (Object Reference) | None | Assigned docking point |
 | `bIsDocked` | Boolean | False | Is ship currently docked |
 | `bIsDocking` | Boolean | False | Is ship in docking sequence |
-| `DockingPromptWidget` | `WBP_DockingPrompt*` (Object Reference) | None | UI widget instance |
+| `DockingPromptWidget` | WBP_DockingPrompt (Object Reference) | None | UI widget instance |
 
 2. **Add Functions:**
 
@@ -290,7 +290,7 @@ Event: OnComponentEndOverlap (InteractionTrigger)
 **Purpose:** Store reference to nearby station
 
 **Inputs:**
-- `Station` (ADockingBayModule reference)
+- `Station` (Docking Bay Module - Object Reference)
 
 **Graph:**
 ```
@@ -369,7 +369,7 @@ Function: RequestDocking
       
       [True]
       → Call: GetAvailableDockingPoint (NearbyStation)
-        Return: DockingPoint (USceneComponent*)
+        Return: DockingPoint (Scene Component - Object Reference)
       → Set: CurrentDockingPoint (self)
         Value: DockingPoint
       → Set: bIsDocking (self)
@@ -383,7 +383,7 @@ Function: RequestDocking
 **Purpose:** Move ship to assigned docking point
 
 **Inputs:**
-- `DockingPoint` (USceneComponent reference)
+- `DockingPoint` (Scene Component - Object Reference)
 
 **Graph:**
 ```
@@ -1049,8 +1049,8 @@ Function: ActivateTractorBeam
 ### Key Takeaways:
 
 ✅ **Docking modules need:**
-- DockingPoints array (USceneComponent pointers)
-- InteractionTrigger (USphereComponent)
+- DockingPoints array (Array of Scene Component)
+- InteractionTrigger (Sphere Component)
 - Overlap detection to show prompt
 
 ✅ **Player ship needs:**
