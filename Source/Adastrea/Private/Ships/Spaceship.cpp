@@ -973,6 +973,10 @@ void ASpaceship::ShowDockingPrompt(bool bShow)
                 }
             }
         }
+        else if (!DockingPromptWidgetClass)
+        {
+            UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::ShowDockingPrompt - DockingPromptWidgetClass is not set on '%s'. Docking prompt UI will not be shown."), *GetName());
+        }
         
         // Show existing widget
         if (DockingPromptWidget)
@@ -995,7 +999,8 @@ void ASpaceship::RequestDocking()
     // Validate nearby station exists
     if (!NearbyStation)
     {
-        UE_LOG(LogTemp, Warning, TEXT("ASpaceship::RequestDocking - No station in range"));
+        UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::RequestDocking - No station in range"));
+        // TODO: Show user feedback via HUD message
         return;
     }
     
@@ -1010,14 +1015,16 @@ void ASpaceship::RequestDocking()
     ADockingBayModule* DockingBay = Cast<ADockingBayModule>(NearbyStation);
     if (!DockingBay)
     {
-        UE_LOG(LogTemp, Warning, TEXT("ASpaceship::RequestDocking - Station is not a docking module"));
+        UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::RequestDocking - Station is not a docking module"));
+        // TODO: Show user feedback via HUD message
         return;
     }
     
     // Check if docking is available
     if (!DockingBay->HasAvailableDocking())
     {
-        UE_LOG(LogTemp, Warning, TEXT("ASpaceship::RequestDocking - No docking slots available"));
+        UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::RequestDocking - No docking slots available"));
+        // TODO: Show user feedback via HUD message
         return;
     }
     
@@ -1025,7 +1032,8 @@ void ASpaceship::RequestDocking()
     USceneComponent* DockingPoint = DockingBay->GetAvailableDockingPoint();
     if (!DockingPoint)
     {
-        UE_LOG(LogTemp, Warning, TEXT("ASpaceship::RequestDocking - Failed to get docking point"));
+        UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::RequestDocking - Failed to get docking point"));
+        // TODO: Show user feedback via HUD message
         return;
     }
     
@@ -1042,13 +1050,20 @@ void ASpaceship::NavigateToDockingPoint(USceneComponent* DockingPoint)
     // Validate docking point and timeline
     if (!DockingPoint)
     {
-        UE_LOG(LogTemp, Warning, TEXT("ASpaceship::NavigateToDockingPoint - Invalid docking point"));
+        UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::NavigateToDockingPoint - Invalid docking point"));
         return;
     }
     
     if (!DockingTimeline)
     {
-        UE_LOG(LogTemp, Warning, TEXT("ASpaceship::NavigateToDockingPoint - Docking timeline not initialized"));
+        UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::NavigateToDockingPoint - Docking timeline not initialized"));
+        return;
+    }
+    
+    // Validate docking curve is configured
+    if (!DockingCurve)
+    {
+        UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::NavigateToDockingPoint - DockingCurve is not set on '%s'. Smooth docking movement will not work."), *GetName());
         return;
     }
     
@@ -1066,11 +1081,14 @@ void ASpaceship::NavigateToDockingPoint(USceneComponent* DockingPoint)
 
 void ASpaceship::UpdateDockingMovement(float Alpha)
 {
-    // Interpolate position
+    // Interpolate position using timeline alpha
     FVector NewLocation = FMath::Lerp(DockingStartLocation, DockingTargetLocation, Alpha);
     
-    // Interpolate rotation
-    FRotator NewRotation = FMath::RInterpTo(GetActorRotation(), DockingTargetRotation, GetWorld()->GetDeltaSeconds(), 2.0f);
+    // Interpolate rotation using quaternion slerp for smooth rotation synchronized with timeline
+    const FQuat StartQuat = DockingStartRotation.Quaternion();
+    const FQuat TargetQuat = DockingTargetRotation.Quaternion();
+    const FQuat NewQuat = FQuat::Slerp(StartQuat, TargetQuat, Alpha);
+    const FRotator NewRotation = NewQuat.Rotator();
     
     // Apply new transform
     SetActorLocationAndRotation(NewLocation, NewRotation);
@@ -1120,6 +1138,10 @@ void ASpaceship::CompleteDocking()
             TradingWidget->AddToViewport();
         }
     }
+    else
+    {
+        UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::CompleteDocking - TradingInterfaceClass is not set on '%s'. Trading UI will not be created."), *GetName());
+    }
     
     // Set input mode to UI only
     PC->bShowMouseCursor = true;
@@ -1130,7 +1152,7 @@ void ASpaceship::CompleteDocking()
     }
     PC->SetInputMode(InputMode);
     
-    UE_LOG(LogTemp, Log, TEXT("ASpaceship::CompleteDocking - Docking complete"));
+    UE_LOG(LogAdastreaShips, Log, TEXT("ASpaceship::CompleteDocking - Docking complete for '%s'"), *GetName());
 }
 
 void ASpaceship::Undock()
@@ -1138,7 +1160,7 @@ void ASpaceship::Undock()
     // Check if actually docked
     if (!bIsDocked)
     {
-        UE_LOG(LogTemp, Warning, TEXT("ASpaceship::Undock - Not currently docked"));
+        UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::Undock - Not currently docked"));
         return;
     }
     
@@ -1182,7 +1204,11 @@ void ASpaceship::Undock()
     
     // Apply forward impulse to move away from station
     FVector ForwardVector = GetActorForwardVector();
-    AddMovementInput(ForwardVector, 1000.0f);
+    if (MovementComponent)
+    {
+        // Add velocity in forward direction for smooth movement away
+        MovementComponent->Velocity += ForwardVector * 500.0f;
+    }
     
-    UE_LOG(LogTemp, Log, TEXT("ASpaceship::Undock - Undocked successfully"));
+    UE_LOG(LogAdastreaShips, Log, TEXT("ASpaceship::Undock - Undocked successfully from '%s'"), NearbyStation ? *NearbyStation->GetName() : TEXT("Unknown Station"));
 }
