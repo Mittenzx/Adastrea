@@ -1,0 +1,184 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700">
+  <!-- Title -->
+  <text x="600" y="30" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle" fill="#333">Request Docking - Complete Flow</text>
+  
+  <!-- Function Entry -->
+  <g>
+    <rect x="50" y="60" width="200" height="80" fill="#006400" stroke="#004d00" stroke-width="2" rx="5"/>
+    <text x="150" y="90" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="white">Request Docking</text>
+    <text x="150" y="110" font-family="Arial" font-size="11" text-anchor="middle" fill="#90EE90">(Function)</text>
+    <!-- Exec Out -->
+    <circle cx="250" cy="100" r="6" fill="white" stroke="#666" stroke-width="1"/>
+  </g>
+  
+  <!-- Path 1 -->
+  <path d="M 256 100 L 290 100" stroke="white" stroke-width="3" fill="none"/>
+  
+  <!-- Branch: Is Valid NearbyStation -->
+  <g>
+    <rect x="290" y="60" width="200" height="80" fill="#FFFFFF" stroke="#666" stroke-width="2" rx="5"/>
+    <text x="390" y="85" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" fill="#333">Branch</text>
+    <text x="390" y="105" font-family="Arial" font-size="11" text-anchor="middle" fill="#666">Is Valid: NearbyStation</text>
+    <!-- Exec In -->
+    <circle cx="290" cy="100" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <!-- True -->
+    <circle cx="490" cy="90" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <text x="480" y="85" font-family="Arial" font-size="10" text-anchor="end" fill="#2E7D32">True</text>
+    <!-- False -->
+    <circle cx="490" cy="130" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <text x="480" y="135" font-family="Arial" font-size="10" text-anchor="end" fill="#D32F2F">False</text>
+  </g>
+  
+  <!-- False path - error -->
+  <path d="M 496 130 L 520 130 L 520 220" stroke="white" stroke-width="3" fill="none"/>
+  <g>
+    <rect x="420" y="220" width="200" height="60" fill="#1B4F72" stroke="#0D2A42" stroke-width="2" rx="5"/>
+    <text x="520" y="245" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="white">Print String</text>
+    <text x="520" y="260" font-family="Arial" font-size="10" text-anchor="middle" fill="#FFB6C1">"No station in range"</text>
+    <circle cx="520" cy="250" r="6" fill="white" stroke="#666" stroke-width="1"/>
+  </g>
+  
+  <!-- True path continues -->
+  <path d="M 496 90 L 530 90" stroke="white" stroke-width="3" fill="none"/>
+  
+  <!-- Branch: bIsDocked -->
+  <g>
+    <rect x="530" y="50" width="180" height="80" fill="#FFFFFF" stroke="#666" stroke-width="2" rx="5"/>
+    <text x="620" y="75" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" fill="#333">Branch</text>
+    <text x="620" y="95" font-family="Arial" font-size="11" text-anchor="middle" fill="#666">bIsDocked == True</text>
+    <!-- Exec In -->
+    <circle cx="530" cy="90" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <!-- True -->
+    <circle cx="710" cy="75" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <text x="700" y="70" font-family="Arial" font-size="10" text-anchor="end" fill="#2E7D32">True</text>
+    <!-- False -->
+    <circle cx="710" cy="110" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <text x="700" y="115" font-family="Arial" font-size="10" text-anchor="end" fill="#D32F2F">False</text>
+  </g>
+  
+  <!-- Already docked path - Undock -->
+  <path d="M 716 75 L 750 75 L 750 220" stroke="white" stroke-width="3" fill="none"/>
+  <g>
+    <rect x="650" y="220" width="200" height="60" fill="#1B4F72" stroke="#0D2A42" stroke-width="2" rx="5"/>
+    <text x="750" y="245" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="white">Undock</text>
+    <text x="750" y="260" font-family="Arial" font-size="10" text-anchor="middle" fill="#AED6F1">(Function Call)</text>
+    <circle cx="750" cy="250" r="6" fill="white" stroke="#666" stroke-width="1"/>
+  </g>
+  
+  <!-- Not docked path continues -->
+  <path d="M 716 110 L 750 110" stroke="white" stroke-width="3" fill="none"/>
+  
+  <!-- Function: HasAvailableDocking -->
+  <g>
+    <rect x="750" y="70" width="200" height="80" fill="#1B4F72" stroke="#0D2A42" stroke-width="2" rx="5"/>
+    <text x="850" y="95" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" fill="white">Has Available Docking</text>
+    <text x="850" y="115" font-family="Arial" font-size="11" text-anchor="middle" fill="#AED6F1">Target: NearbyStation</text>
+    <!-- Exec In -->
+    <circle cx="750" cy="110" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <!-- Return Bool -->
+    <circle cx="950" cy="110" r="6" fill="#DC143C" stroke="#666" stroke-width="1"/>
+    <text x="940" y="105" font-family="Arial" font-size="10" text-anchor="end" fill="#CD5C5C">Available</text>
+  </g>
+  
+  <path d="M 950 110 L 990 110" stroke="white" stroke-width="3" fill="none"/>
+  
+  <!-- Branch: Available? -->
+  <g>
+    <rect x="990" y="70" width="160" height="80" fill="#FFFFFF" stroke="#666" stroke-width="2" rx="5"/>
+    <text x="1070" y="95" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" fill="#333">Branch</text>
+    <text x="1070" y="115" font-family="Arial" font-size="11" text-anchor="middle" fill="#666">Available?</text>
+    <!-- Exec In -->
+    <circle cx="990" cy="110" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <!-- True -->
+    <circle cx="1150" cy="90" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <text x="1140" y="85" font-family="Arial" font-size="10" text-anchor="end" fill="#2E7D32">True</text>
+    <!-- False -->
+    <circle cx="1150" cy="130" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <text x="1140" y="135" font-family="Arial" font-size="10" text-anchor="end" fill="#D32F2F">False</text>
+  </g>
+  
+  <!-- No capacity path -->
+  <path d="M 1150 130 L 1070 130 L 1070 220" stroke="white" stroke-width="3" fill="none"/>
+  <g>
+    <rect x="970" y="220" width="200" height="60" fill="#1B4F72" stroke="#0D2A42" stroke-width="2" rx="5"/>
+    <text x="1070" y="245" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="white">Print String</text>
+    <text x="1070" y="260" font-family="Arial" font-size="10" text-anchor="middle" fill="#FFB6C1">"No docking slots"</text>
+    <circle cx="1070" cy="250" r="6" fill="white" stroke="#666" stroke-width="1"/>
+  </g>
+  
+  <!-- Success path continues down -->
+  <path d="M 1150 90 L 1070 90 L 1070 340 L 100 340 L 100 380" stroke="white" stroke-width="3" fill="none"/>
+  
+  <!-- GetAvailableDockingPoint -->
+  <g>
+    <rect x="50" y="380" width="250" height="80" fill="#1B4F72" stroke="#0D2A42" stroke-width="2" rx="5"/>
+    <text x="175" y="405" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" fill="white">Get Available Docking Point</text>
+    <text x="175" y="425" font-family="Arial" font-size="11" text-anchor="middle" fill="#AED6F1">Target: NearbyStation</text>
+    <!-- Exec In -->
+    <circle cx="100" cy="420" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <!-- Exec Out -->
+    <circle cx="300" cy="420" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <!-- Return -->
+    <circle cx="300" cy="445" r="6" fill="#00FFFF" stroke="#666" stroke-width="1"/>
+    <text x="250" y="450" font-family="Arial" font-size="10" text-anchor="end" fill="#B0E0E6">DockingPoint</text>
+  </g>
+  
+  <path d="M 306 420 L 340 420" stroke="white" stroke-width="3" fill="none"/>
+  
+  <!-- Set CurrentDockingPoint -->
+  <g>
+    <rect x="340" y="380" width="220" height="80" fill="#5DADE2" stroke="#2E86C1" stroke-width="2" rx="5"/>
+    <text x="450" y="405" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" fill="white">Set: CurrentDockingPoint</text>
+    <text x="450" y="425" font-family="Arial" font-size="11" text-anchor="middle" fill="white">Value: DockingPoint</text>
+    <!-- Exec In -->
+    <circle cx="340" cy="420" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <!-- Exec Out -->
+    <circle cx="560" cy="420" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <!-- Input -->
+    <circle cx="340" cy="445" r="6" fill="#00FFFF" stroke="#666" stroke-width="1"/>
+  </g>
+  
+  <!-- Wire connection -->
+  <path d="M 300 445 L 340 445" stroke="#00FFFF" stroke-width="2" fill="none"/>
+  
+  <path d="M 566 420 L 600 420" stroke="white" stroke-width="3" fill="none"/>
+  
+  <!-- Set bIsDocking -->
+  <g>
+    <rect x="600" y="380" width="180" height="80" fill="#5DADE2" stroke="#2E86C1" stroke-width="2" rx="5"/>
+    <text x="690" y="405" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" fill="white">Set: bIsDocking</text>
+    <text x="690" y="425" font-family="Arial" font-size="11" text-anchor="middle" fill="white">Value: True</text>
+    <!-- Exec In -->
+    <circle cx="600" cy="420" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <!-- Exec Out -->
+    <circle cx="780" cy="420" r="6" fill="white" stroke="#666" stroke-width="1"/>
+  </g>
+  
+  <path d="M 786 420 L 820 420" stroke="white" stroke-width="3" fill="none"/>
+  
+  <!-- NavigateToDockingPoint -->
+  <g>
+    <rect x="820" y="380" width="250" height="80" fill="#1B4F72" stroke="#0D2A42" stroke-width="2" rx="5"/>
+    <text x="945" y="405" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" fill="white">Navigate To Docking Point</text>
+    <text x="945" y="425" font-family="Arial" font-size="11" text-anchor="middle" fill="#AED6F1">Target: CurrentDockingPoint</text>
+    <!-- Exec In -->
+    <circle cx="820" cy="420" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <!-- Input -->
+    <circle cx="820" cy="445" r="6" fill="#00FFFF" stroke="#666" stroke-width="1"/>
+    <text x="830" y="450" font-family="Arial" font-size="10" fill="#B0E0E6">Target</text>
+  </g>
+  
+  <!-- Description Box -->
+  <g>
+    <rect x="50" y="530" width="1100" height="70" fill="#F8F9F9" stroke="#BDC3C7" stroke-width="1" rx="3"/>
+    <text x="60" y="550" font-family="Arial" font-size="12" fill="#333">
+      <tspan x="60" dy="0">Purpose: Handle docking request when player presses F. Validates station is in range, checks if already docked (then undock),</tspan>
+      <tspan x="60" dy="15">verifies docking capacity, gets available docking point, and initiates navigation sequence.</tspan>
+      <tspan x="60" dy="15">Flow: Validation → Get Docking Point → Set State → Start Navigation</tspan>
+    </text>
+  </g>
+  
+  <!-- Annotations -->
+  <text x="620" y="320" font-family="Arial" font-size="11" fill="#666" font-style="italic">Validation checks</text>
+  <text x="450" y="520" font-family="Arial" font-size="11" fill="#666" font-style="italic">Docking setup</text>
+</svg>

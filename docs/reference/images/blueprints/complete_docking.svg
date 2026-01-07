@@ -1,0 +1,166 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 650">
+  <!-- Title -->
+  <text x="550" y="30" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle" fill="#333">Complete Docking - Finalize and Open Trading UI</text>
+  
+  <!-- Function Entry -->
+  <g>
+    <rect x="50" y="60" width="200" height="80" fill="#006400" stroke="#004d00" stroke-width="2" rx="5"/>
+    <text x="150" y="90" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="white">Complete Docking</text>
+    <text x="150" y="110" font-family="Arial" font-size="11" text-anchor="middle" fill="#90EE90">(Function)</text>
+    <!-- Exec Out -->
+    <circle cx="250" cy="100" r="6" fill="white" stroke="#666" stroke-width="1"/>
+  </g>
+  
+  <path d="M 256 100 L 290 100" stroke="white" stroke-width="3" fill="none"/>
+  
+  <!-- Set bIsDocked = True -->
+  <g>
+    <rect x="290" y="60" width="180" height="80" fill="#5DADE2" stroke="#2E86C1" stroke-width="2" rx="5"/>
+    <text x="380" y="85" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" fill="white">Set: bIsDocked</text>
+    <text x="380" y="105" font-family="Arial" font-size="11" text-anchor="middle" fill="white">Value: True</text>
+    <circle cx="290" cy="100" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <circle cx="470" cy="100" r="6" fill="white" stroke="#666" stroke-width="1"/>
+  </g>
+  
+  <path d="M 476 100 L 510 100" stroke="white" stroke-width="3" fill="none"/>
+  
+  <!-- Set bIsDocking = False -->
+  <g>
+    <rect x="510" y="60" width="200" height="80" fill="#5DADE2" stroke="#2E86C1" stroke-width="2" rx="5"/>
+    <text x="610" y="85" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" fill="white">Set: bIsDocking</text>
+    <text x="610" y="105" font-family="Arial" font-size="11" text-anchor="middle" fill="white">Value: False</text>
+    <circle cx="510" cy="100" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <circle cx="710" cy="100" r="6" fill="white" stroke="#666" stroke-width="1"/>
+  </g>
+  
+  <path d="M 716 100 L 750 100" stroke="white" stroke-width="3" fill="none"/>
+  
+  <!-- DockShip call -->
+  <g>
+    <rect x="750" y="60" width="200" height="80" fill="#1B4F72" stroke="#0D2A42" stroke-width="2" rx="5"/>
+    <text x="850" y="85" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" fill="white">Dock Ship</text>
+    <text x="850" y="105" font-family="Arial" font-size="11" text-anchor="middle" fill="#AED6F1">Target: NearbyStation</text>
+    <circle cx="750" cy="100" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <circle cx="950" cy="100" r="6" fill="white" stroke="#666" stroke-width="1"/>
+  </g>
+  
+  <path d="M 956 100 L 1000 100 L 1000 140 L 100 140 L 100 180" stroke="white" stroke-width="3" fill="none"/>
+  
+  <!-- Disable Input -->
+  <g>
+    <rect x="50" y="180" width="200" height="80" fill="#1B4F72" stroke="#0D2A42" stroke-width="2" rx="5"/>
+    <text x="150" y="205" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" fill="white">Disable Input</text>
+    <text x="150" y="225" font-family="Arial" font-size="11" text-anchor="middle" fill="#AED6F1">Player Controller</text>
+    <circle cx="100" cy="220" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <circle cx="250" cy="220" r="6" fill="white" stroke="#666" stroke-width="1"/>
+  </g>
+  
+  <path d="M 256 220 L 290 220" stroke="white" stroke-width="3" fill="none"/>
+  
+  <!-- Set Actor Hidden -->
+  <g>
+    <rect x="290" y="180" width="200" height="80" fill="#1B4F72" stroke="#0D2A42" stroke-width="2" rx="5"/>
+    <text x="390" y="205" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" fill="white">Set Actor Hidden</text>
+    <text x="390" y="225" font-family="Arial" font-size="11" text-anchor="middle" fill="#AED6F1">New Hidden: True</text>
+    <circle cx="290" cy="220" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <circle cx="490" cy="220" r="6" fill="white" stroke="#666" stroke-width="1"/>
+  </g>
+  
+  <path d="M 496 220 L 530 220" stroke="white" stroke-width="3" fill="none"/>
+  
+  <!-- Print String: Docking Complete -->
+  <g>
+    <rect x="530" y="180" width="220" height="80" fill="#1B4F72" stroke="#0D2A42" stroke-width="2" rx="5"/>
+    <text x="640" y="205" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" fill="white">Print String</text>
+    <text x="640" y="225" font-family="Arial" font-size="11" text-anchor="middle" fill="#AED6F1">"Docking complete"</text>
+    <circle cx="530" cy="220" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <circle cx="750" cy="220" r="6" fill="white" stroke="#666" stroke-width="1"/>
+  </g>
+  
+  <path d="M 756 220 L 800 220 L 800 260 L 150 260 L 150 300" stroke="white" stroke-width="3" fill="none"/>
+  
+  <!-- Create Widget: Trading Interface -->
+  <g>
+    <rect x="50" y="300" width="250" height="100" fill="#1B4F72" stroke="#0D2A42" stroke-width="2" rx="5"/>
+    <text x="175" y="325" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" fill="white">Create Widget</text>
+    <text x="175" y="345" font-family="Arial" font-size="11" text-anchor="middle" fill="#AED6F1">Class: WBP_TradingInterface</text>
+    <text x="175" y="365" font-family="Arial" font-size="11" text-anchor="middle" fill="#AED6F1">Owning Player: Player Controller</text>
+    <circle cx="150" cy="350" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <circle cx="300" cy="350" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <circle cx="300" cy="375" r="6" fill="#00FFFF" stroke="#666" stroke-width="1"/>
+    <text x="240" y="380" font-family="Arial" font-size="10" text-anchor="end" fill="#B0E0E6">Return Widget</text>
+  </g>
+  
+  <path d="M 306 350 L 340 350" stroke="white" stroke-width="3" fill="none"/>
+  
+  <!-- Add to Viewport -->
+  <g>
+    <rect x="340" y="310" width="200" height="80" fill="#1B4F72" stroke="#0D2A42" stroke-width="2" rx="5"/>
+    <text x="440" y="335" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" fill="white">Add to Viewport</text>
+    <text x="440" y="355" font-family="Arial" font-size="11" text-anchor="middle" fill="#AED6F1">Target: Widget</text>
+    <circle cx="340" cy="350" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <circle cx="540" cy="350" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <circle cx="340" cy="375" r="6" fill="#00FFFF" stroke="#666" stroke-width="1"/>
+  </g>
+  
+  <!-- Widget wire -->
+  <path d="M 300 375 L 340 375" stroke="#00FFFF" stroke-width="2" fill="none"/>
+  
+  <path d="M 546 350 L 580 350" stroke="white" stroke-width="3" fill="none"/>
+  
+  <!-- Set Show Mouse Cursor -->
+  <g>
+    <rect x="580" y="310" width="220" height="80" fill="#1B4F72" stroke="#0D2A42" stroke-width="2" rx="5"/>
+    <text x="690" y="335" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" fill="white">Set Show Mouse Cursor</text>
+    <text x="690" y="355" font-family="Arial" font-size="11" text-anchor="middle" fill="#AED6F1">Show: True</text>
+    <circle cx="580" cy="350" r="6" fill="white" stroke="#666" stroke-width="1"/>
+    <circle cx="800" cy="350" r="6" fill="white" stroke="#666" stroke-width="1"/>
+  </g>
+  
+  <path d="M 806 350 L 840 350" stroke="white" stroke-width="3" fill="none"/>
+  
+  <!-- Set Input Mode UI Only -->
+  <g>
+    <rect x="840" y="310" width="220" height="80" fill="#1B4F72" stroke="#0D2A42" stroke-width="2" rx="5"/>
+    <text x="950" y="335" font-family="Arial" font-size="13" font-weight="bold" text-anchor="middle" fill="white">Set Input Mode UI Only</text>
+    <text x="950" y="355" font-family="Arial" font-size="11" text-anchor="middle" fill="#AED6F1">Widget to Focus: Widget</text>
+    <circle cx="840" cy="350" r="6" fill="white" stroke="#666" stroke-width="1"/>
+  </g>
+  
+  <!-- Annotations -->
+  <g>
+    <text x="50" y="50" font-family="Arial" font-size="11" fill="#666" font-style="italic">1. Update State</text>
+    <path d="M 150 50 L 150 55" stroke="#999" stroke-width="1" stroke-dasharray="2,2"/>
+  </g>
+  
+  <g>
+    <text x="50" y="170" font-family="Arial" font-size="11" fill="#666" font-style="italic">2. Disable Ship Controls</text>
+    <path d="M 150 170 L 150 175" stroke="#999" stroke-width="1" stroke-dasharray="2,2"/>
+  </g>
+  
+  <g>
+    <text x="50" y="290" font-family="Arial" font-size="11" fill="#666" font-style="italic">3. Show Trading UI</text>
+    <path d="M 150 290 L 150 295" stroke="#999" stroke-width="1" stroke-dasharray="2,2"/>
+  </g>
+  
+  <!-- Description Box -->
+  <g>
+    <rect x="50" y="450" width="1000" height="90" fill="#F8F9F9" stroke="#BDC3C7" stroke-width="1" rx="3"/>
+    <text x="60" y="470" font-family="Arial" font-size="12" fill="#333">
+      <tspan x="60" dy="0">Purpose: Finalize the docking sequence after ship reaches docking point. This function:</tspan>
+      <tspan x="60" dy="15">1. Updates docking state variables (bIsDocked, bIsDocking)</tspan>
+      <tspan x="60" dy="15">2. Notifies the station module (DockShip increments counter)</tspan>
+      <tspan x="60" dy="15">3. Disables ship control input and hides ship visually</tspan>
+      <tspan x="60" dy="15">4. Creates and displays trading interface UI with mouse cursor and UI input mode</tspan>
+    </text>
+  </g>
+  
+  <!-- Flow Summary Box -->
+  <g>
+    <rect x="50" y="560" width="1000" height="50" fill="#E8F5E9" stroke="#4CAF50" stroke-width="2" rx="3"/>
+    <text x="60" y="580" font-family="Arial" font-size="12" font-weight="bold" fill="#2E7D32">
+      <tspan x="60" dy="0">Result: Player is now "inside" the station with trading UI open. Ship control disabled until undocking.</tspan>
+      <tspan x="60" dy="15">Next Step: Player interacts with trading UI → Clicks "Undock" button → Undock() function called</tspan>
+    </text>
+  </g>
+</svg>
