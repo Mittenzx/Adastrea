@@ -55,6 +55,7 @@
 - **Need Quick Answer?** → [docs/reference/CHEATSHEET.md](docs/reference/CHEATSHEET.md)
 - **Working on Blueprints?** → [Blueprints/README.md](Blueprints/README.md) ⭐ **NEW**
 - **Creating Blueprint Guide?** → [docs/reference/BLUEPRINT_GUIDE_TEMPLATE.md](docs/reference/BLUEPRINT_GUIDE_TEMPLATE.md) ⭐ **NEW**
+- **Implementing Docking?** → [docs/reference/DOCKING_SYSTEM_BLUEPRINT_IMPLEMENTATION_GUIDE.md](docs/reference/DOCKING_SYSTEM_BLUEPRINT_IMPLEMENTATION_GUIDE.md) ⭐ **NEW (Jan 2026)**
 
 ### 📂 By Category
 - [Essential Files (Root)](#essential-files-root-directory)
@@ -257,13 +258,15 @@
 
 ## docs/reference/ - Quick References
 
-**19 files** - Fast lookups and one-page guides:
+**21 files** - Fast lookups and one-page guides:
 
 ### Blueprint References
 | File | Purpose |
 |------|---------|
 | **[BLUEPRINT_ARCHITECTURE_GUIDE.md](docs/reference/BLUEPRINT_ARCHITECTURE_GUIDE.md)** | 🆕 Complete blueprint architecture with **Mermaid diagrams** |
 | **[BLUEPRINT_TREE_DIAGRAM.md](docs/reference/BLUEPRINT_TREE_DIAGRAM.md)** | 🆕 Visual class hierarchy with **Mermaid diagrams** |
+| **[DOCKING_SYSTEM_BLUEPRINT_IMPLEMENTATION_GUIDE.md](docs/reference/DOCKING_SYSTEM_BLUEPRINT_IMPLEMENTATION_GUIDE.md)** | ⭐ **NEW** Complete docking system implementation - all Blueprints, graphs, "Press F" (Jan 2026) |
+| **[DOCKING_SYSTEM_IMPLEMENTATION_SUMMARY.md](docs/reference/DOCKING_SYSTEM_IMPLEMENTATION_SUMMARY.md)** | ⭐ **NEW** Quick start guide for docking implementation (Jan 2026) |
 | **[DOCKING_SYSTEM_QUICK_REFERENCE.md](docs/reference/DOCKING_SYSTEM_QUICK_REFERENCE.md)** | 🆕 Docking system explained (Bay vs Port vs Points) |
 | **[DOCKING_SYSTEM_VISUAL_DIAGRAM.md](docs/reference/DOCKING_SYSTEM_VISUAL_DIAGRAM.md)** | 🆕 Docking workflows with **Mermaid diagrams** |
 | **[BLUEPRINT_DOCUMENTATION_SUMMARY.md](docs/reference/BLUEPRINT_DOCUMENTATION_SUMMARY.md)** | 🆕 Quick navigation guide |
