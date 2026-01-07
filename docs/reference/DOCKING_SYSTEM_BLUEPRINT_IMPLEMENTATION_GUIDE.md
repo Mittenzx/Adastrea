@@ -10,10 +10,33 @@ This guide provides **complete step-by-step instructions** for implementing the 
 - Docking point setup on space stations
 - Complete workflow from approach to undocking
 
+**🔄 UPDATED (January 2026):** Core docking logic has been **refactored to C++** (`ASpaceship` class). Blueprint implementation is now **simplified** - only widget configuration and input binding required. All docking functions are automatically available via `BlueprintCallable` C++ functions.
+
 **Prerequisites:**
 - Unreal Engine 5.6 project open
 - Adastrea source code compiled
 - Basic Blueprint knowledge
+
+---
+
+## 🚀 Quick Start (C++ Implementation)
+
+If you're setting up docking for the first time with the C++ implementation:
+
+1. **Configure Widget Classes** in BP_PlayerShip Class Defaults:
+   - Set `DockingPromptWidgetClass` to `WBP_DockingPrompt`
+   - Set `TradingInterfaceClass` to `WBP_TradingInterface`
+   - Set `DockingCurve` to a float curve (0→1 over 3 seconds, cubic ease)
+
+2. **Bind Input Action** (Press F):
+   - Add Input Action `IA_Dock` to `IMC_Spaceship`
+   - Bind to F key
+   - In BP_PlayerShip Event Graph: Call `RequestDocking()` on F press
+
+3. **Add Undock Button** to `WBP_TradingInterface`:
+   - OnClicked → Get Owning Player Pawn → Cast to Spaceship → Call `Undock()`
+
+**That's it!** All docking logic is handled by C++.
 
 ---
 
@@ -273,239 +296,119 @@ Event: OnComponentEndOverlap (InteractionTrigger)
 
 ### Modify BP_PlayerShip
 
-1. **Add Variables:**
+**Note:** Core docking logic is now implemented in C++ (`ASpaceship` class). Blueprint setup is simplified to configuration only.
 
-| Variable Name | Type | Default | Description |
-|--------------|------|---------|-------------|
-| `NearbyStation` | Docking Bay Module (Object Reference) | None | Station in docking range |
-| `CurrentDockingPoint` | Scene Component (Object Reference) | None | Assigned docking point |
-| `bIsDocked` | Boolean | False | Is ship currently docked |
-| `bIsDocking` | Boolean | False | Is ship in docking sequence |
-| `DockingPromptWidget` | WBP_DockingPrompt (Object Reference) | None | UI widget instance |
+#### 1. Configure Widget Class References
 
-2. **Add Functions:**
+In **BP_PlayerShip** Class Defaults:
 
-### Function: SetNearbyStation
+| Property | Category | Type | Description |
+|----------|----------|------|-------------|
+| `DockingPromptWidgetClass` | Docking\|UI | Widget Class | Set to WBP_DockingPrompt |
+| `TradingInterfaceClass` | Docking\|UI | Widget Class | Set to WBP_TradingInterface |
+| `DockingCurve` | Docking | Curve Float | Curve asset for smooth docking (cubic ease) |
 
-**Purpose:** Store reference to nearby station
+**Steps:**
+1. Open **BP_PlayerShip** in Blueprint editor
+2. Select **Class Defaults** in toolbar
+3. Find **Docking > UI** category
+4. Set **Docking Prompt Widget Class** to `WBP_DockingPrompt`
+5. Set **Trading Interface Class** to `WBP_TradingInterface`
+6. Find **Docking** category
+7. Set **Docking Curve** to a float curve with cubic interpolation (0.0 to 1.0 over 3 seconds)
 
-**Inputs:**
-- `Station` (Docking Bay Module - Object Reference)
+#### 2. C++ Docking Variables (Read-Only in Blueprints)
 
-**Graph:**
+The following variables are managed by C++ and exposed as **BlueprintReadOnly** or **BlueprintReadWrite**:
+
+| Variable Name | Type | Access | Description |
+|--------------|------|--------|-------------|
+| `NearbyStation` | Space Station Module | ReadWrite | Station in docking range |
+| `CurrentDockingPoint` | Scene Component | ReadWrite | Assigned docking point |
+| `bIsDocked` | Boolean | ReadOnly | Is ship currently docked |
+| `bIsDocking` | Boolean | ReadOnly | Is ship in docking sequence |
+| `DockingPromptWidget` | User Widget | ReadOnly | UI widget instance |
+| `TradingWidget` | User Widget | ReadOnly | Trading UI instance |
+| `DockingTimeline` | Timeline Component | ReadOnly | Smooth movement timeline |
+
+**Note:** These variables are automatically available in Blueprint graphs. You don't need to create them manually.
+
+#### 3. C++ Docking Functions (BlueprintCallable)
+
+The following functions are implemented in C++ and available in Blueprints:
+
+**Core Functions:**
+- `SetNearbyStation(Station)` - Called by docking module on overlap
+- `ShowDockingPrompt(bShow)` - Show/hide docking UI prompt
+- `RequestDocking()` - Initiate docking sequence (call from input)
+- `Undock()` - Undock and restore control
+- `IsDocked()` - Check if currently docked (Pure function)
+- `IsDocking()` - Check if in docking sequence (Pure function)
+
+**Internal Functions** (called automatically by timeline):
+- `NavigateToDockingPoint(DockingPoint)` - Start smooth movement
+- `CompleteDocking()` - Finalize docking
+- `UpdateDockingMovement(Alpha)` - Timeline update callback
+- `OnDockingMovementComplete()` - Timeline finished callback
+
+**Usage in Blueprints:**
+These functions appear in the Blueprint context menu under **Docking** category. Right-click in Event Graph and search for function name.
+
+#### 4. Blueprint Implementation Requirements
+
+**Only two Blueprint implementations are needed:**
+
+##### A. Input Binding (Press F to Dock)
+
+See [Step 4: Docking Interaction System](#step-4-docking-interaction-system) for complete input setup.
+
+**Summary:**
 ```
-Function: SetNearbyStation
-  Input: Station (ADockingBayModule Reference)
-  
-→ Set NearbyStation (self)
-  Value: Station
-→ Return
-```
-
-### Function: ShowDockingPrompt
-
-**Purpose:** Show/hide "Press F to Dock" UI
-
-**Inputs:**
-- `bShow` (Boolean)
-
-**Graph:**
-```
-Function: ShowDockingPrompt
-  Input: bShow (Boolean)
-
-→ Branch
-  Condition: bShow
-  [True]
-  → Is Valid (DockingPromptWidget)
-    [False]
-    → Create Widget
-      Class: WBP_DockingPrompt
-      Owning Player: Get Player Controller
-    → Set DockingPromptWidget (self)
-      Value: Return Value
-    → Add to Viewport
-      Target: DockingPromptWidget
-  [Already Valid]
-  → Set Visibility
-    Target: DockingPromptWidget
-    Visibility: Visible
-    
-  [False]
-  → Is Valid (DockingPromptWidget)
-    [True]
-    → Set Visibility
-      Target: DockingPromptWidget
-      Visibility: Collapsed
-```
-
-### Function: RequestDocking
-
-**Purpose:** Initiate docking sequence when F pressed
-
-**Graph:**
-
-![Request Docking](images/blueprints/request_docking.svg)
-
-```
-Function: RequestDocking
-
-→ Branch: Is Valid (NearbyStation)
-  [False]
-  → Print String: "No station in range"
-  → Return
-  
-  [True]
-  → Branch: bIsDocked == True
-    [True]
-    → Call: Undock (self)
-    → Return
-    
-    [False]
-    → Call: HasAvailableDocking (NearbyStation)
-      [False]
-      → Print String: "No docking slots available"
-      → Return
-      
-      [True]
-      → Call: GetAvailableDockingPoint (NearbyStation)
-        Return: DockingPoint (Scene Component - Object Reference)
-      → Set: CurrentDockingPoint (self)
-        Value: DockingPoint
-      → Set: bIsDocking (self)
-        Value: True
-      → Call: NavigateToDockingPoint (self)
-        Target: CurrentDockingPoint
+Event: OnDockPressed (from Input Action IA_Dock)
+→ Branch: IsDocked (self)
+  [True]  → Call: Undock (self)
+  [False] → Call: RequestDocking (self)
 ```
 
-### Function: NavigateToDockingPoint
+##### B. Trading UI Undock Button
 
-**Purpose:** Move ship to assigned docking point
-
-**Inputs:**
-- `DockingPoint` (Scene Component - Object Reference)
-
-**Graph:**
+In **WBP_TradingInterface** widget:
 ```
-Function: NavigateToDockingPoint
-  Input: DockingPoint (Scene Component Reference)
-
-→ Get Component Location
-  Target: DockingPoint
-  Return: TargetLocation (Vector)
-
-→ Get Component Rotation
-  Target: DockingPoint
-  Return: TargetRotation (Rotator)
-
-→ Timeline: DockingMovement (0-1 over 3 seconds)
-  Update Pin:
-  → Lerp (Vector)
-    A: Get Actor Location (self)
-    B: TargetLocation
-    Alpha: Timeline Alpha (0-1)
-  → Set Actor Location
-    Target: self
-    New Location: Lerp Result
-    
-  → RInterpTo
-    Current: Get Actor Rotation (self)
-    Target: TargetRotation
-    Delta Time: Get World Delta Seconds
-    Interp Speed: 2.0
-  → Set Actor Rotation
-    Target: self
-    New Rotation: RInterpTo Result
-    
-  Finished Pin:
-  → Call: CompleteDocking (self)
+Event: OnClicked (UndockButton)
+→ Get Owning Player Pawn
+→ Cast to Spaceship
+  [Success]
+  → Call: Undock (Spaceship)
 ```
 
-### Function: CompleteDocking
+---
 
-**Purpose:** Finalize docking, disable controls, open trading UI
+### Deprecated Blueprint Functions
 
-**Graph:**
+The following functions are **no longer needed** in Blueprint:
 
-![Complete Docking](images/blueprints/complete_docking.svg)
+❌ `SetNearbyStation` - Now handled by C++  
+❌ `ShowDockingPrompt` - Now handled by C++  
+❌ `RequestDocking` - Now handled by C++  
+❌ `NavigateToDockingPoint` - Now handled by C++  
+❌ `CompleteDocking` - Now handled by C++  
+❌ `Undock` - Now handled by C++
 
-```
-Function: CompleteDocking
+**If you have existing Blueprint implementations of these functions, you can safely delete them.** The C++ versions will be called automatically.
 
-→ Set: bIsDocked (self)
-  Value: True
-→ Set: bIsDocking (self)
-  Value: False
+---
 
-→ Call: DockShip (NearbyStation)
-  [Returns True]
-  → Print String: "Docking complete"
-  
-→ Disable Input
-  Target: Get Player Controller
-  
-→ Set Actor Hidden In Game
-  Target: self
-  New Hidden: True
-  
-→ Create Widget
-  Class: WBP_TradingInterface
-  Owning Player: Get Player Controller
-  Return: TradingWidget
-  
-→ Add to Viewport
-  Target: TradingWidget
-  
-→ Set Show Mouse Cursor
-  Target: Get Player Controller
-  Show Mouse Cursor: True
-  
-→ Set Input Mode UI Only
-  Target: Get Player Controller
-  Widget to Focus: TradingWidget
-```
+### Migration from Blueprint Implementation
 
-### Function: Undock
+If you have an existing Blueprint implementation:
 
-**Purpose:** Undock ship and restore control
+1. **Backup your Blueprint** before making changes
+2. **Delete** custom Blueprint functions listed above
+3. **Keep** input binding and UI button implementations
+4. **Set** widget class references in Class Defaults
+5. **Test** docking still works (C++ will handle logic)
 
-**Graph:**
-```
-Function: Undock
-
-→ Branch: bIsDocked == True
-  [False]
-  → Print String: "Not docked"
-  → Return
-  
-  [True]
-  → Call: UndockShip (NearbyStation)
-  
-  → Set: bIsDocked (self)
-    Value: False
-    
-  → Remove Widget from Viewport (TradingWidget)
-  
-  → Enable Input
-    Target: Get Player Controller
-    
-  → Set Actor Hidden In Game
-    Target: self
-    New Hidden: False
-    
-  → Set Show Mouse Cursor
-    Target: Get Player Controller
-    Show Mouse Cursor: False
-    
-  → Set Input Mode Game Only
-    Target: Get Player Controller
-    
-  → Add Impulse to Actor
-    Target: self
-    Impulse: Forward Vector * 1000.0
-    
-  → Print String: "Undocked successfully"
-```
+The C++ implementation is **backward compatible** - existing Blueprints that call these functions will automatically use the C++ versions.
 
 ---
 
@@ -1073,7 +976,60 @@ Function: ActivateTractorBeam
 
 ---
 
+## C++ Implementation Reference
+
+### Core C++ Files
+
+**Header:** `Source/Adastrea/Public/Ships/Spaceship.h`
+- Docking member variables (NearbyStation, CurrentDockingPoint, bIsDocked, etc.)
+- Widget class references (DockingPromptWidgetClass, TradingInterfaceClass)
+- Timeline component for smooth movement
+- BlueprintCallable function declarations
+
+**Implementation:** `Source/Adastrea/Private/Ships/Spaceship.cpp`
+- Complete docking logic implementation
+- Timeline callback bindings
+- Widget creation and management
+- Input handling and state transitions
+
+### Key C++ Functions
+
+```cpp
+// Called by docking module on overlap
+void SetNearbyStation(USpaceStationModule* Station);
+
+// Show/hide docking prompt
+void ShowDockingPrompt(bool bShow);
+
+// Initiate docking sequence (call from input)
+void RequestDocking();
+
+// Navigate to docking point (internal)
+void NavigateToDockingPoint(USceneComponent* DockingPoint);
+
+// Complete docking (internal - timeline callback)
+void CompleteDocking();
+
+// Undock and restore control
+void Undock();
+
+// Query functions
+bool IsDocked() const;
+bool IsDocking() const;
+```
+
+### Blueprint Access
+
+All C++ functions are exposed to Blueprints via `UFUNCTION(BlueprintCallable)` macros. Search for function names in Blueprint context menu under **Docking** category.
+
+**Variables** are exposed with appropriate access levels:
+- `BlueprintReadOnly` - Read-only state variables (bIsDocked, bIsDocking)
+- `BlueprintReadWrite` - Modifiable references (NearbyStation, CurrentDockingPoint)
+- `EditDefaultsOnly` - Configuration in Class Defaults (Widget classes, curve)
+
+---
+
 **Last Updated:** January 7, 2026  
-**Version:** 1.0  
+**Version:** 2.0 (C++ Refactor)  
 **Author:** Adastrea Development Team  
 **For:** Trade Simulator MVP Phase
