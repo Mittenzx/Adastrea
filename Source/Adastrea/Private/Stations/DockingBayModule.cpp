@@ -11,10 +11,37 @@ ADockingBayModule::ADockingBayModule()
 
 USceneComponent* ADockingBayModule::GetAvailableDockingPoint() const
 {
-    // Return the first docking point if any exist and there's capacity
-    if (HasAvailableDocking() && DockingPoints.Num() > 0)
+    // Only provide a docking point if we have capacity and at least one point defined
+    if (!HasAvailableDocking() || DockingPoints.Num() <= 0)
     {
-        return DockingPoints[0];
+        return nullptr;
     }
-    return nullptr;
+
+    // Select the next available docking point based on how many ships are currently docked.
+    // This assumes docking points are filled in order and that HasAvailableDocking()
+    // already enforces that CurrentDockedShips is within a valid range.
+    const int32 NextDockingIndex = FMath::Clamp(CurrentDockedShips, 0, DockingPoints.Num() - 1);
+    return DockingPoints[NextDockingIndex];
+}
+
+bool ADockingBayModule::DockShip()
+{
+    if (!HasAvailableDocking())
+    {
+        return false;
+    }
+
+    CurrentDockedShips++;
+    return true;
+}
+
+bool ADockingBayModule::UndockShip()
+{
+    if (CurrentDockedShips <= 0)
+    {
+        return false;
+    }
+
+    CurrentDockedShips--;
+    return true;
 }

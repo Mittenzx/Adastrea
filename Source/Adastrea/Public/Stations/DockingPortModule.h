@@ -40,6 +40,10 @@ public:
 	 * Each point represents a location where a ship can dock
 	 * Add these in the Blueprint editor to define docking positions
 	 * Typically 1-2 points for docking ports
+	 * 
+	 * IMPORTANT: DockingPoints.Num() should be at least MaxDockedShips to ensure
+	 * all capacity can be used. GetAvailableDockingPoint() returns nullptr if
+	 * insufficient docking points are defined.
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Docking")
 	TArray<USceneComponent*> DockingPoints;
@@ -47,13 +51,15 @@ public:
 	/**
 	 * Maximum number of ships that can dock simultaneously
 	 * Default: 1 for compact docking ports
+	 * 
+	 * NOTE: Ensure DockingPoints array has at least this many elements defined
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Docking", meta=(ClampMin=1, ClampMax=4))
 	int32 MaxDockedShips = 1;
 
 	/**
 	 * Current number of docked ships
-	 * Updated when ships dock/undock
+	 * Updated when ships dock/undock using DockShip() and UndockShip()
 	 */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Docking")
 	int32 CurrentDockedShips = 0;
@@ -85,4 +91,20 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Docking")
 	TArray<USceneComponent*> GetDockingPoints() const { return DockingPoints; }
+
+	/**
+	 * Dock a ship at this module
+	 * Increments CurrentDockedShips if capacity available
+	 * @return True if ship was docked, false if no capacity
+	 */
+	UFUNCTION(BlueprintCallable, Category="Docking")
+	bool DockShip();
+
+	/**
+	 * Undock a ship from this module
+	 * Decrements CurrentDockedShips if any ships are docked
+	 * @return True if ship was undocked, false if no ships docked
+	 */
+	UFUNCTION(BlueprintCallable, Category="Docking")
+	bool UndockShip();
 };
