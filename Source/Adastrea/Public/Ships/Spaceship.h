@@ -13,6 +13,10 @@ class UInputAction;
 class USpringArmComponent;
 class UCameraComponent;
 class USpaceshipDataAsset;
+class USpaceStationModule;
+class UTimelineComponent;
+class UCurveFloat;
+class UUserWidget;
 
 /**
  * Base spaceship actor class for player and NPC ships
@@ -331,6 +335,65 @@ public:
     // UFUNCTION(BlueprintCallable, BlueprintPure, Category="Flight Control") // DEFERRED: Post-MVP advanced stats
     float GetEffectiveMaxSpeed() const;
 
+    // ===== DOCKING FUNCTIONS =====
+    
+    /**
+     * Called by docking module when ship enters interaction range
+     * @param Station The nearby docking module (DockingBay or DockingPort)
+     */
+    UFUNCTION(BlueprintCallable, Category="Docking")
+    void SetNearbyStation(USpaceStationModule* Station);
+    
+    /**
+     * Show or hide the docking prompt UI
+     * @param bShow True to show prompt, false to hide
+     */
+    UFUNCTION(BlueprintCallable, Category="Docking")
+    void ShowDockingPrompt(bool bShow);
+    
+    /**
+     * Request docking at nearby station (called by input)
+     * Validates station availability and initiates docking sequence
+     */
+    UFUNCTION(BlueprintCallable, Category="Docking")
+    void RequestDocking();
+    
+    /**
+     * Initiate movement to assigned docking point
+     * Uses timeline for smooth interpolation
+     * @param DockingPoint The target docking point scene component
+     */
+    UFUNCTION(BlueprintCallable, Category="Docking")
+    void NavigateToDockingPoint(USceneComponent* DockingPoint);
+    
+    /**
+     * Finalize docking: disable controls, open trading UI
+     * Called when docking timeline completes
+     */
+    UFUNCTION(BlueprintCallable, Category="Docking")
+    void CompleteDocking();
+    
+    /**
+     * Undock from station and restore control
+     * Closes trading UI and gives ship forward impulse
+     */
+    UFUNCTION(BlueprintCallable, Category="Docking")
+    void Undock();
+    
+    /**
+     * Check if ship is currently docked
+     * @return True if ship is docked at a station
+     */
+    UFUNCTION(BlueprintPure, Category="Docking")
+    bool IsDocked() const { return bIsDocked; }
+    
+    /**
+     * Check if ship is in docking sequence
+     * @return True if ship is actively moving to docking point
+     */
+    UFUNCTION(BlueprintPure, Category="Docking")
+    bool IsDocking() const { return bIsDocking; }
+
 protected:
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
@@ -378,6 +441,69 @@ protected:
      * @return True if enough time has passed since last adjustment
      */
     bool CanAdjustThrottle();
+
+    // ===== DOCKING SYSTEM =====
+    
+    /**
+     * Timeline update callback for smooth docking movement
+     * Interpolates ship position and rotation to docking point
+     * @param Alpha Timeline progress (0.0 to 1.0)
+     */
+    UFUNCTION()
+    void UpdateDockingMovement(float Alpha);
+    
+    /**
+     * Timeline finished callback
+     * Called when ship reaches docking point
+     */
+    UFUNCTION()
+    void OnDockingMovementComplete();
+    
+    /** Reference to nearby station module in docking range */
+    UPROPERTY(BlueprintReadWrite, Category="Docking")
+    TObjectPtr<USpaceStationModule> NearbyStation;
+    
+    /** Currently assigned docking point scene component */
+    UPROPERTY(BlueprintReadWrite, Category="Docking")
+    TObjectPtr<USceneComponent> CurrentDockingPoint;
+    
+    /** Is the ship currently docked at a station? */
+    UPROPERTY(BlueprintReadOnly, Category="Docking")
+    bool bIsDocked = false;
+    
+    /** Is the ship currently in a docking sequence? */
+    UPROPERTY(BlueprintReadOnly, Category="Docking")
+    bool bIsDocking = false;
+    
+    /** Reference to active docking prompt widget */
+    UPROPERTY(BlueprintReadOnly, Category="Docking|UI")
+    TObjectPtr<UUserWidget> DockingPromptWidget;
+    
+    /** Widget class for docking prompt UI */
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Docking|UI")
+    TSubclassOf<UUserWidget> DockingPromptWidgetClass;
+    
+    /** Widget class for trading interface UI */
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Docking|UI")
+    TSubclassOf<UUserWidget> TradingInterfaceClass;
+    
+    /** Active trading widget instance */
+    UPROPERTY(BlueprintReadOnly, Category="Docking|UI")
+    TObjectPtr<UUserWidget> TradingWidget;
+    
+    /** Timeline component for smooth docking movement */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Docking")
+    TObjectPtr<UTimelineComponent> DockingTimeline;
+    
+    /** Curve for docking movement timeline */
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Docking")
+    TObjectPtr<UCurveFloat> DockingCurve;
+    
+    // Store start/target transforms for timeline interpolation
+    FVector DockingStartLocation;
+    FRotator DockingStartRotation;
+    FVector DockingTargetLocation;
+    FRotator DockingTargetRotation;
 
 private:
     // Current velocity for inertia-based movement
