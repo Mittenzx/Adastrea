@@ -190,9 +190,15 @@
 ### UI and HUD Setup
 | File | Purpose |
 |------|---------|
-| **[SPACESHIP_HUD_BLUEPRINT_GUIDE.md](docs/setup/SPACESHIP_HUD_BLUEPRINT_GUIDE.md)** | ⭐ **NEW** Comprehensive spaceship HUD (WBP_Spaceship) Blueprint guide |
+| **[SPACESHIP_HUD_BLUEPRINT_GUIDE.md](docs/setup/SPACESHIP_HUD_BLUEPRINT_GUIDE.md)** | ⭐ Comprehensive spaceship HUD (WBP_Spaceship) Blueprint guide |
 | **[CROSSHAIR_BLUEPRINT_GUIDE.md](docs/setup/CROSSHAIR_BLUEPRINT_GUIDE.md)** | Crosshair Blueprint implementation |
 | **[FREE_LOOK_SETUP_GUIDE.md](docs/setup/FREE_LOOK_SETUP_GUIDE.md)** | Free look camera setup |
+
+### Station and Module Setup
+| File | Purpose |
+|------|---------|
+| **[STATION_MODULE_BLUEPRINTS_GUIDE.md](docs/setup/STATION_MODULE_BLUEPRINTS_GUIDE.md)** | ⭐ **NEW** Complete guide for creating BP_SpaceStationModule_* blueprints |
+| **[MOUSE_SENSITIVITY_GUIDE.md](docs/setup/MOUSE_SENSITIVITY_GUIDE.md)** | Mouse sensitivity configuration |
 
 ### Other Setup
 | File | Purpose |
@@ -256,9 +262,14 @@
 ### Blueprint References
 | File | Purpose |
 |------|---------|
+| **[BLUEPRINT_ARCHITECTURE_GUIDE.md](docs/reference/BLUEPRINT_ARCHITECTURE_GUIDE.md)** | 🆕 Complete blueprint architecture with **Mermaid diagrams** |
+| **[BLUEPRINT_TREE_DIAGRAM.md](docs/reference/BLUEPRINT_TREE_DIAGRAM.md)** | 🆕 Visual class hierarchy with **Mermaid diagrams** |
+| **[DOCKING_SYSTEM_QUICK_REFERENCE.md](docs/reference/DOCKING_SYSTEM_QUICK_REFERENCE.md)** | 🆕 Docking system explained (Bay vs Port vs Points) |
+| **[DOCKING_SYSTEM_VISUAL_DIAGRAM.md](docs/reference/DOCKING_SYSTEM_VISUAL_DIAGRAM.md)** | 🆕 Docking workflows with **Mermaid diagrams** |
+| **[BLUEPRINT_DOCUMENTATION_SUMMARY.md](docs/reference/BLUEPRINT_DOCUMENTATION_SUMMARY.md)** | 🆕 Quick navigation guide |
 | **[BLUEPRINT_QUICK_REFERENCE.md](docs/reference/BLUEPRINT_QUICK_REFERENCE.md)** | One-page Blueprint reference |
 | **[BLUEPRINT_REQUIREMENTS_LIST.md](docs/reference/BLUEPRINT_REQUIREMENTS_LIST.md)** | Complete list of required Blueprints |
-| **[BLUEPRINT_IMAGE_GUIDE.md](docs/reference/BLUEPRINT_IMAGE_GUIDE.md)** | ⭐ **NEW** Image-based Blueprint documentation with SVG diagrams |
+| **[BLUEPRINT_IMAGE_GUIDE.md](docs/reference/BLUEPRINT_IMAGE_GUIDE.md)** | ⭐ Image-based Blueprint documentation with SVG diagrams |
 | **[BLUEPRINT_VISUAL_MOCKUP_GUIDE.md](docs/reference/BLUEPRINT_VISUAL_MOCKUP_GUIDE.md)** | Color-coded Blueprint docs with node details (ASCII) |
 | **[BLUEPRINT_MOCKUP_GUIDE.md](docs/reference/BLUEPRINT_MOCKUP_GUIDE.md)** | Visual Blueprint documentation standards |
 | **[BLUEPRINT_DOCUMENTATION_EXAMPLES.md](docs/reference/BLUEPRINT_DOCUMENTATION_EXAMPLES.md)** | Visual vs text documentation examples |
@@ -279,6 +290,7 @@
 |------|---------|
 | **[SCENE_POPULATION_QUICK_REFERENCE.md](docs/reference/SCENE_POPULATION_QUICK_REFERENCE.md)** | Level population quick ref |
 | **[STATION_EDITOR_VISUAL_GUIDE.md](docs/reference/STATION_EDITOR_VISUAL_GUIDE.md)** | Visual station editor guide |
+| **[STATION_MODULE_BLUEPRINTS_QUICK_REFERENCE.md](docs/reference/STATION_MODULE_BLUEPRINTS_QUICK_REFERENCE.md)** | ⭐ **NEW** Quick reference for all station module blueprints |
 | **[YAML_TO_ASSETS_QUICK_REFERENCE.md](docs/reference/YAML_TO_ASSETS_QUICK_REFERENCE.md)** | YAML conversion quick ref |
 | **[X4_QUICK_REFERENCE.md](docs/reference/X4_QUICK_REFERENCE.md)** | X4 Foundations inspiration |
 
