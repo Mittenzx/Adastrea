@@ -14,8 +14,6 @@ class USpringArmComponent;
 class UCameraComponent;
 class USpaceshipDataAsset;
 class USpaceStationModule;
-class UTimelineComponent;
-class UCurveFloat;
 class UUserWidget;
 
 /**
@@ -261,6 +259,9 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
     class UInputAction* ThrottleDownAction;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
+    class UInputAction* DockAction;
+
     // Enhanced Input callbacks
     void Move(const FInputActionValue& Value);
     void Look(const FInputActionValue& Value);
@@ -359,8 +360,8 @@ public:
     void RequestDocking();
     
     /**
-     * Initiate movement to assigned docking point
-     * Uses timeline for smooth interpolation
+     * Instantly dock at assigned docking point
+     * Simple teleport for MVP - no fancy animation
      * @param DockingPoint The target docking point scene component
      */
     UFUNCTION(BlueprintCallable, Category="Docking")
@@ -444,21 +445,6 @@ protected:
 
     // ===== DOCKING SYSTEM =====
     
-    /**
-     * Timeline update callback for smooth docking movement
-     * Interpolates ship position and rotation to docking point
-     * @param Alpha Timeline progress (0.0 to 1.0)
-     */
-    UFUNCTION()
-    void UpdateDockingMovement(float Alpha);
-    
-    /**
-     * Timeline finished callback
-     * Called when ship reaches docking point
-     */
-    UFUNCTION()
-    void OnDockingMovementComplete();
-    
     /** Reference to nearby station module in docking range */
     UPROPERTY(BlueprintReadWrite, Category="Docking")
     TObjectPtr<USpaceStationModule> NearbyStation;
@@ -475,6 +461,10 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category="Docking")
     bool bIsDocking = false;
     
+    /** Maximum distance from docking point to allow docking */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Docking", meta=(ClampMin="100.0", ClampMax="10000.0"))
+    float DockingRange = 2000.0f;
+    
     /** Reference to active docking prompt widget */
     UPROPERTY(BlueprintReadOnly, Category="Docking|UI")
     TObjectPtr<UUserWidget> DockingPromptWidget;
@@ -490,20 +480,6 @@ protected:
     /** Active trading widget instance */
     UPROPERTY(BlueprintReadOnly, Category="Docking|UI")
     TObjectPtr<UUserWidget> TradingWidget;
-    
-    /** Timeline component for smooth docking movement */
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Docking")
-    TObjectPtr<UTimelineComponent> DockingTimeline;
-    
-    /** Curve for docking movement timeline */
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Docking")
-    TObjectPtr<UCurveFloat> DockingCurve;
-    
-    // Store start/target transforms for timeline interpolation
-    FVector DockingStartLocation;
-    FRotator DockingStartRotation;
-    FVector DockingTargetLocation;
-    FRotator DockingTargetRotation;
 
 private:
     // Current velocity for inertia-based movement

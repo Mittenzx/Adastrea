@@ -12,8 +12,6 @@
 #include "InputAction.h"
 #include "Stations/SpaceStationModule.h"
 #include "Stations/DockingBayModule.h"
-#include "Components/TimelineComponent.h"
-#include "Curves/CurveFloat.h"
 #include "Blueprint/UserWidget.h"
 
 ASpaceship::ASpaceship()
@@ -76,15 +74,11 @@ ASpaceship::ASpaceship()
     CurrentDockingPoint = nullptr;
     bIsDocked = false;
     bIsDocking = false;
+    DockingRange = 2000.0f;
     DockingPromptWidget = nullptr;
     DockingPromptWidgetClass = nullptr;
     TradingInterfaceClass = nullptr;
     TradingWidget = nullptr;
-    DockingCurve = nullptr;
-    DockingStartLocation = FVector::ZeroVector;
-    DockingStartRotation = FRotator::ZeroRotator;
-    DockingTargetLocation = FVector::ZeroVector;
-    DockingTargetRotation = FRotator::ZeroRotator;
 
     // Create and configure the floating pawn movement component
     MovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("MovementComponent"));
@@ -109,9 +103,6 @@ ASpaceship::ASpaceship()
 
     Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
     Camera->SetupAttachment(CameraSpringArm, USpringArmComponent::SocketName);
-
-    // Create timeline component for smooth docking movement
-    DockingTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("DockingTimeline"));
 }
 
 void ASpaceship::BeginPlay()
@@ -125,22 +116,6 @@ void ASpaceship::BeginPlay()
     {
         MaxHullIntegrity = ShipDataAsset->HullStrength;
         CurrentHullIntegrity = MaxHullIntegrity; // Start at full health
-    }
-
-    // Initialize docking timeline
-    if (DockingTimeline && DockingCurve)
-    {
-        FOnTimelineFloat TimelineProgress;
-        TimelineProgress.BindUFunction(this, FName("UpdateDockingMovement"));
-        
-        FOnTimelineEvent TimelineFinished;
-        TimelineFinished.BindUFunction(this, FName("OnDockingMovementComplete"));
-        
-        DockingTimeline->AddInterpFloat(DockingCurve, TimelineProgress);
-        DockingTimeline->SetTimelineFinishedFunc(TimelineFinished);
-        DockingTimeline->SetLooping(false);
-        DockingTimeline->SetTimelineLengthMode(TL_TimelineLength);
-        DockingTimeline->SetTimelineLength(3.0f);
     }
 
     // Spawn the interior actor if needed
@@ -294,6 +269,12 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
         {
             EnhancedInputComponent->BindAction(ThrottleDownAction, ETriggerEvent::Triggered, this, &ASpaceship::ThrottleDown);
             UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound ThrottleDownAction"));
+        }
+
+        if (DockAction)
+        {
+            EnhancedInputComponent->BindAction(DockAction, ETriggerEvent::Triggered, this, &ASpaceship::RequestDocking);
+            UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound DockAction to RequestDocking"));
         }
     }
 }
@@ -1011,6 +992,12 @@ void ASpaceship::RequestDocking()
         return;
     }
     
+    // Prevent rapid input during docking sequence
+    if (bIsDocking)
+    {
+        return;
+    }
+    
     // Cast to docking bay module to check availability
     ADockingBayModule* DockingBay = Cast<ADockingBayModule>(NearbyStation);
     if (!DockingBay)
@@ -1037,67 +1024,45 @@ void ASpaceship::RequestDocking()
         return;
     }
     
+    // Check if ship is within docking range
+    float DistanceToDockingPoint = FVector::Dist(GetActorLocation(), DockingPoint->GetComponentLocation());
+    if (DistanceToDockingPoint > DockingRange)
+    {
+        UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::RequestDocking - Too far from docking point (%.0f > %.0f)"), DistanceToDockingPoint, DockingRange);
+        // TODO: Show user feedback via HUD message
+        return;
+    }
+    
     // Store docking point and begin docking sequence
     CurrentDockingPoint = DockingPoint;
     bIsDocking = true;
     
-    // Navigate to docking point
+    // Navigate to docking point (instant in simplified version)
     NavigateToDockingPoint(CurrentDockingPoint);
 }
 
 void ASpaceship::NavigateToDockingPoint(USceneComponent* DockingPoint)
 {
-    // Validate docking point and timeline
+    // Validate docking point
     if (!DockingPoint)
     {
         UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::NavigateToDockingPoint - Invalid docking point"));
+        bIsDocking = false;
         return;
     }
     
-    if (!DockingTimeline)
-    {
-        UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::NavigateToDockingPoint - Docking timeline not initialized"));
-        return;
-    }
-    
-    // Validate docking curve is configured
-    if (!DockingCurve)
-    {
-        UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::NavigateToDockingPoint - DockingCurve is not set on '%s'. Smooth docking movement will not work."), *GetName());
-        return;
-    }
-    
-    // Store start transform
-    DockingStartLocation = GetActorLocation();
-    DockingStartRotation = GetActorRotation();
-    
+    // Simple MVP approach: instantly teleport to docking point
     // Get target transform from docking point
-    DockingTargetLocation = DockingPoint->GetComponentLocation();
-    DockingTargetRotation = DockingPoint->GetComponentRotation();
+    FVector TargetLocation = DockingPoint->GetComponentLocation();
+    FRotator TargetRotation = DockingPoint->GetComponentRotation();
     
-    // Start timeline
-    DockingTimeline->PlayFromStart();
-}
-
-void ASpaceship::UpdateDockingMovement(float Alpha)
-{
-    // Interpolate position using timeline alpha
-    FVector NewLocation = FMath::Lerp(DockingStartLocation, DockingTargetLocation, Alpha);
+    // Instantly move ship to docking point
+    SetActorLocationAndRotation(TargetLocation, TargetRotation);
     
-    // Interpolate rotation using quaternion slerp for smooth rotation synchronized with timeline
-    const FQuat StartQuat = DockingStartRotation.Quaternion();
-    const FQuat TargetQuat = DockingTargetRotation.Quaternion();
-    const FQuat NewQuat = FQuat::Slerp(StartQuat, TargetQuat, Alpha);
-    const FRotator NewRotation = NewQuat.Rotator();
-    
-    // Apply new transform
-    SetActorLocationAndRotation(NewLocation, NewRotation);
-}
-
-void ASpaceship::OnDockingMovementComplete()
-{
-    // Docking movement finished, complete the docking
+    // Immediately complete docking
     CompleteDocking();
+    
+    UE_LOG(LogAdastreaShips, Log, TEXT("ASpaceship::NavigateToDockingPoint - Instantly docked at point"));
 }
 
 void ASpaceship::CompleteDocking()
