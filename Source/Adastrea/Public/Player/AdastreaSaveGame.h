@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
 #include "Player/PlayerProgressionComponent.h"
-#include "Player/PlayerReputationComponent.h"
+// REMOVED: #include "Player/PlayerReputationComponent.h" - faction reputation system removed per Trade Simulator MVP
 #include "Player/PlayerUnlockComponent.h"
 #include "Player/AchievementDataAsset.h"
 #include "AdastreaSaveGame.generated.h"
@@ -114,9 +114,7 @@ struct FSavedWorldState
 {
 	GENERATED_BODY()
 
-	/** Faction relationship values (FactionA_FactionB -> relationship value) */
-	UPROPERTY(BlueprintReadWrite, Category="Save")
-	TMap<FString, int32> FactionRelationships;
+	// REMOVED: FactionRelationships - faction system removed per Trade Simulator MVP
 
 	/** Market prices (ItemID -> price) */
 	UPROPERTY(BlueprintReadWrite, Category="Save")
@@ -147,13 +145,16 @@ struct FSavedWorldState
  * 
  * Stored Data:
  * - Player progression (level, XP, skills)
- * - Reputation with all factions
  * - Unlocked content (ships, modules, equipment)
  * - Achievement progress
  * - Quest states
  * - Ship customizations
- * - World state (faction relations, markets, discoveries)
+ * - World state (markets, discoveries)
  * - Game settings and options
+ * 
+ * REMOVED (Trade Simulator MVP):
+ * - Faction reputation (removed per MVP scope)
+ * - Faction relations (removed per MVP scope)
  * 
  * Integration:
  * - SaveGameSubsystem handles save/load operations
@@ -220,13 +221,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category="Save|Player")
 	FName CurrentShipID;
 
-	// ====================
-	// Reputation Data
-	// ====================
-
-	/** All faction reputations */
-	UPROPERTY(BlueprintReadWrite, Category="Save|Reputation")
-	TArray<FPlayerFactionReputation> FactionReputations;
+	// REMOVED: Reputation Data - faction reputation system removed per Trade Simulator MVP
 
 	// ====================
 	// Unlocks & Achievements
