@@ -69,20 +69,24 @@ struct FPriceVolatility
 };
 
 /**
- * Trade restrictions (simplified for MVP)
- * REMOVED faction-based restrictions - not needed for Trade Simulator MVP
+ * Trade restrictions (placeholder for future use)
+ * Currently unused in MVP - all items accessible to all players
+ * 
+ * Note: Keeping minimal struct to maintain serialization compatibility
+ * REMOVED in MVP: BannedFactions, RequiresPermitFactions, MinReputationRequired
  */
 USTRUCT(BlueprintType)
 struct FTradeRestrictions
 {
 	GENERATED_BODY()
 
-	// REMOVED: BannedFactions - faction system removed per Trade Simulator MVP
-	// REMOVED: RequiresPermitFactions - faction system removed per Trade Simulator MVP
-	// REMOVED: MinReputationRequired - faction reputation system removed per Trade Simulator MVP
+	// Placeholder field to ensure struct validity for serialization
 	// MVP has no trade restrictions - all items accessible to all players
+	UPROPERTY()
+	bool bReservedForFutureUse = false;
 
 	FTradeRestrictions()
+		: bReservedForFutureUse(false)
 	{
 	}
 };

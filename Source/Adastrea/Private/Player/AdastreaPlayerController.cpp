@@ -1039,11 +1039,14 @@ void AAdastreaPlayerController::AttemptTradeWithNearestStation()
 	}
 
 	// REMOVED: Faction-based trading logic - faction system removed per Trade Simulator MVP
-	// TODO(MVP): Replace with direct market access
-	// Should call TradingWidget->OpenMarket(StationMarketDataAsset) instead
+	// This function is currently non-functional and should not be called
+	// Trading must be initiated through direct market access using TradingWidget->OpenMarket(UMarketDataAsset*)
 	
-	UE_LOG(LogAdastrea, Warning, TEXT("AttemptTradeWithNearestStation: Trading requires direct market reference. "
-		"Update this function to pass UMarketDataAsset* instead of using faction."));
+	UE_LOG(LogAdastrea, Error, TEXT("AttemptTradeWithNearestStation: This function is deprecated and non-functional. "
+		"Trading system has been refactored. Use direct market access via Blueprint or alternative input binding."));
+	
+	// Optionally: Could display a UI message to the player
+	// TODO(Post-MVP): Either remove this function entirely or implement market-based trading
 }
 
 bool AAdastreaPlayerController::IsNearTradableStation() const

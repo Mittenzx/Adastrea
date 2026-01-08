@@ -25,7 +25,6 @@ enum class EDamageType : uint8;
  * 
  * REMOVED (Trade Simulator MVP):
  * - Faction relationship queries (removed per MVP scope)
- */
  * 
  * All functions are static and BlueprintCallable for easy use in both C++ and Blueprints.
  * 
