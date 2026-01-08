@@ -2,7 +2,7 @@
 
 #include "AutomatedTestLibrary.h"
 #include "Ships/SpaceshipDataAsset.h"
-#include "Factions/FactionDataAsset.h"
+// REMOVED: #include "Factions/FactionDataAsset.h" - faction system removed per Trade Simulator MVP
 // TODO: Combat system archived - will be reimplemented in MVP
 // #include "Combat/WeaponDataAsset.h"
 #include "DataValidationLibrary.h"
@@ -212,12 +212,11 @@ bool UAutomatedTestLibrary::TestSpaceshipCalculations(UObject* WorldContextObjec
 bool UAutomatedTestLibrary::TestFactionRelationships(UObject* WorldContextObject, FTestResult& OutResult)
 {
     OutResult = ExecuteTest([&](FTestResult& Result) -> bool {
-        // TODO: UAdastreaFunctionLibrary not yet implemented
-        // This test requires faction relationship utility functions
-        Result.Message = TEXT("TestFactionRelationships skipped - UAdastreaFunctionLibrary not implemented");
+        // REMOVED: TestFactionRelationships - faction system removed per Trade Simulator MVP
+        Result.Message = TEXT("TestFactionRelationships skipped - faction system removed in MVP");
         return true;
         
-        /* COMMENTED OUT UNTIL UAdastreaFunctionLibrary IS IMPLEMENTED
+        /* COMMENTED OUT - FACTION SYSTEM REMOVED PER MVP
         // Find faction data assets
         TArray<UFactionDataAsset*> Factions;
         for (TObjectIterator<UFactionDataAsset> It; It; ++It)

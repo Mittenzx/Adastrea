@@ -1,6 +1,6 @@
 #include "Ships/ShipUpgradeComponent.h"
 #include "Player/PlayerProgressionComponent.h"
-#include "Player/PlayerReputationComponent.h"
+// REMOVED: #include "Player/PlayerReputationComponent.h" - faction reputation system removed per Trade Simulator MVP
 #include "Player/AdastreaGameInstance.h"
 #include "AdastreaLog.h"
 #include "Kismet/GameplayStatics.h"
@@ -356,23 +356,8 @@ bool UShipUpgradeComponent::CheckUpgradeRequirements(UShipUpgradeDataAsset* Upgr
 				}
 			}
 
-			// Check reputation
-			if (Req.RequiredFactionID != NAME_None)
-			{
-				UPlayerReputationComponent* ReputationComp = PlayerPawn->FindComponentByClass<UPlayerReputationComponent>();
-				if (ReputationComp)
-				{
-					if (!ReputationComp->IsReputationAtLeast(Req.RequiredFactionID, Req.MinimumReputation))
-					{
-						OutReason = FText::Format(
-							FText::FromString("Requires {0} reputation with {1}"),
-							FText::AsNumber(Req.MinimumReputation),
-							FText::FromName(Req.RequiredFactionID)
-						);
-						return false;
-					}
-				}
-			}
+			// REMOVED: Reputation check - faction reputation system removed per Trade Simulator MVP
+			// All upgrades accessible to all players in MVP
 		}
 	}
 
