@@ -1,6 +1,6 @@
 #include "AdastreaFunctionLibrary.h"
-#include "Factions/FactionDataAsset.h"
-#include "Interfaces/IFactionMember.h"
+// REMOVED: #include "Factions/FactionDataAsset.h" - faction system removed per Trade Simulator MVP
+// REMOVED: #include "Interfaces/IFactionMember.h" - faction system removed per Trade Simulator MVP
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 
@@ -118,51 +118,8 @@ FVector UAdastreaFunctionLibrary::GetDirectionToActor(AActor* From, AActor* To)
 // ====================
 // FACTION UTILITIES
 // ====================
-
-bool UAdastreaFunctionLibrary::AreFactionsAllied(UFactionDataAsset* FactionA, UFactionDataAsset* FactionB)
-{
-    int32 Relationship = GetFactionRelationship(FactionA, FactionB);
-    return Relationship >= 26; // Friendly or allied threshold
-}
-
-bool UAdastreaFunctionLibrary::AreFactionsHostile(UFactionDataAsset* FactionA, UFactionDataAsset* FactionB)
-{
-    int32 Relationship = GetFactionRelationship(FactionA, FactionB);
-    return Relationship <= -26; // Hostile or war threshold
-}
-
-int32 UAdastreaFunctionLibrary::GetFactionRelationship(UFactionDataAsset* FactionA, UFactionDataAsset* FactionB)
-{
-    if (!FactionA || !FactionB)
-    {
-        return 0; // Neutral if either faction is null
-    }
-
-    if (FactionA == FactionB)
-    {
-        return 100; // Same faction = maximum positive
-    }
-
-    // TODO: Query FactionDiplomacyManager for actual relationship value
-    // For now return neutral
-    return 0;
-}
-
-UFactionDataAsset* UAdastreaFunctionLibrary::GetActorFaction(AActor* Actor)
-{
-    if (!IsValid(Actor))
-    {
-        return nullptr;
-    }
-
-    // Check if actor implements IFactionMember
-    if (Actor->Implements<UFactionMember>())
-    {
-        return IFactionMember::Execute_GetFaction(Actor);
-    }
-
-    return nullptr;
-}
+// REMOVED: FACTION UTILITIES - faction system removed per Trade Simulator MVP
+// ====================
 
 // ====================
 // COMBAT UTILITIES

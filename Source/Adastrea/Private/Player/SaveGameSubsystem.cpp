@@ -1,6 +1,6 @@
 #include "Player/SaveGameSubsystem.h"
 #include "Player/PlayerProgressionComponent.h"
-#include "Player/PlayerReputationComponent.h"
+// REMOVED: #include "Player/PlayerReputationComponent.h" - faction reputation system removed per Trade Simulator MVP
 #include "Player/PlayerUnlockComponent.h"
 #include "Player/AchievementManagerSubsystem.h"
 #include "Player/AdastreaGameInstance.h"
@@ -360,12 +360,7 @@ void USaveGameSubsystem::CollectGameState(UAdastreaSaveGame* SaveGameObject)
 			SaveGameObject->PlayerProgression.Skills = ProgressionComp->Skills;
 		}
 
-		// Save reputation
-		UPlayerReputationComponent* ReputationComp = PlayerPawn->FindComponentByClass<UPlayerReputationComponent>();
-		if (ReputationComp)
-		{
-			SaveGameObject->FactionReputations = ReputationComp->GetAllReputations();
-		}
+		// REMOVED: Save reputation - faction reputation system removed per Trade Simulator MVP
 
 		// Save unlocks
 		UPlayerUnlockComponent* UnlockComp = PlayerPawn->FindComponentByClass<UPlayerUnlockComponent>();
@@ -448,17 +443,7 @@ void USaveGameSubsystem::ApplyGameState(UAdastreaSaveGame* SaveGameObject)
 			ProgressionComp->Skills = SaveGameObject->PlayerProgression.Skills;
 		}
 
-		// Restore reputation
-		UPlayerReputationComponent* ReputationComp = PlayerPawn->FindComponentByClass<UPlayerReputationComponent>();
-		if (ReputationComp)
-		{
-			// Convert TArray to TMap
-			ReputationComp->FactionReputations.Empty();
-			for (const FPlayerFactionReputation& Rep : SaveGameObject->FactionReputations)
-			{
-				ReputationComp->FactionReputations.Add(Rep.FactionID, Rep);
-			}
-		}
+		// REMOVED: Restore reputation - faction reputation system removed per Trade Simulator MVP
 
 		// Restore unlocks
 		UPlayerUnlockComponent* UnlockComp = PlayerPawn->FindComponentByClass<UPlayerUnlockComponent>();

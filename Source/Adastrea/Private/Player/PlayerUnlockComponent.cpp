@@ -1,6 +1,6 @@
 #include "Player/PlayerUnlockComponent.h"
 #include "Player/PlayerProgressionComponent.h"
-#include "Player/PlayerReputationComponent.h"
+// REMOVED: #include "Player/PlayerReputationComponent.h" - faction reputation system removed per Trade Simulator MVP
 #include "Player/AdastreaGameInstance.h"
 #include "Player/AchievementManagerSubsystem.h"
 // TODO: Quest system archived - will be reimplemented in MVP
@@ -320,12 +320,9 @@ bool UPlayerUnlockComponent::CheckRequirement(const FUnlockRequirement& Requirem
 
 		case EUnlockRequirementType::Reputation:
 		{
-			// Check faction reputation
-			UPlayerReputationComponent* ReputationComp = Owner->FindComponentByClass<UPlayerReputationComponent>();
-			if (ReputationComp)
-			{
-				return ReputationComp->IsReputationAtLeast(Requirement.RequiredID, Requirement.RequiredValue);
-			}
+			// REMOVED: Faction reputation check - faction reputation system removed per Trade Simulator MVP
+			// Reputation-based unlocks not supported in MVP
+			UE_LOG(LogAdastrea, Warning, TEXT("PlayerUnlockComponent: Reputation requirements not supported in MVP"));
 			return false;
 		}
 

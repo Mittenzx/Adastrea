@@ -8,7 +8,7 @@
 class UMarketDataAsset;
 class UTradeItemDataAsset;
 class UTradeContractDataAsset;
-class UFactionDataAsset;
+// REMOVED: UFactionDataAsset - faction system removed per Trade Simulator MVP
 
 /**
  * Enum for AI trader personality/strategy
@@ -135,9 +135,8 @@ public:
 	// TRADER CONFIGURATION
 	// ====================
 
-	// Trader's faction affiliation
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI Trader|Config")
-	UFactionDataAsset* TraderFaction;
+	// REMOVED: TraderFaction - faction system removed per Trade Simulator MVP
+	// AI traders are neutral in MVP
 
 	// Trading strategy
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI Trader|Config")

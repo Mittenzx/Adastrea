@@ -1,6 +1,6 @@
 #include "Trading/TradeContractDataAsset.h"
 #include "Trading/TradeItemDataAsset.h"
-#include "Factions/FactionDataAsset.h"
+// REMOVED: #include "Factions/FactionDataAsset.h" - faction system removed per Trade Simulator MVP
 
 UTradeContractDataAsset::UTradeContractDataAsset()
 	: ContractName(FText::FromString(TEXT("Trade Contract")))
@@ -8,10 +8,10 @@ UTradeContractDataAsset::UTradeContractDataAsset()
 	, ContractID(NAME_None)
 	, ContractType(ETradeContractType::Delivery)
 	, Difficulty(EContractDifficulty::Medium)
-	, ContractGiver(nullptr)
+	// REMOVED: ContractGiver - faction system removed per Trade Simulator MVP
 	, Distance(0.0f)
 	, TimeLimit(0.0f)
-	, MinReputationRequired(0)
+	// REMOVED: MinReputationRequired - faction reputation system removed per Trade Simulator MVP
 	, Status(EContractStatus::Available)
 	, AcceptedTime(0.0f)
 	, ExpirationTime(0.0f)
@@ -24,11 +24,8 @@ UTradeContractDataAsset::UTradeContractDataAsset()
 
 bool UTradeContractDataAsset::CanPlayerAccept(int32 PlayerReputation, float PlayerCargoCapacity) const
 {
-	// Check reputation requirement
-	if (PlayerReputation < MinReputationRequired)
-	{
-		return false;
-	}
+	// REMOVED: Reputation requirement - faction reputation system removed per Trade Simulator MVP
+	// All contracts accessible to all players in MVP
 
 	// Check cargo capacity
 	float RequiredVolume = GetTotalCargoVolume();

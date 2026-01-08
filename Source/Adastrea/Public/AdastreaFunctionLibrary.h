@@ -8,9 +8,9 @@
 #include "AdastreaFunctionLibrary.generated.h"
 
 // Forward declarations
-class UFactionDataAsset;
+// REMOVED: UFactionDataAsset - faction system removed per Trade Simulator MVP
 class UDataAsset;
-class IFactionMember;
+// REMOVED: IFactionMember - faction system removed per Trade Simulator MVP
 // Forward declare damage type enum (defined in IDamageable.h)
 enum class EDamageType : uint8;
 
@@ -19,10 +19,12 @@ enum class EDamageType : uint8;
  * 
  * Provides commonly used utility functions for:
  * - Distance and position calculations
- * - Faction relationship queries
  * - Combat calculations (damage, lead targeting)
  * - Data validation helpers
  * - String formatting utilities
+ * 
+ * REMOVED (Trade Simulator MVP):
+ * - Faction relationship queries (removed per MVP scope)
  * 
  * All functions are static and BlueprintCallable for easy use in both C++ and Blueprints.
  * 
@@ -113,46 +115,11 @@ public:
     // FACTION UTILITIES
     // ====================
 
-    /**
-     * Check if two factions are allied (relationship >= 26)
-     * 
-     * @param FactionA First faction
-     * @param FactionB Second faction
-     * @return True if factions are allied, false otherwise
-     */
-    UFUNCTION(BlueprintPure, Category="Adastrea|Utilities|Faction", meta=(Keywords="allied friendly faction"))
-    static bool AreFactionsAllied(UFactionDataAsset* FactionA, UFactionDataAsset* FactionB);
-
-    /**
-     * Check if two factions are hostile (relationship <= -26)
-     * 
-     * @param FactionA First faction
-     * @param FactionB Second faction
-     * @return True if factions are hostile, false otherwise
-     */
-    UFUNCTION(BlueprintPure, Category="Adastrea|Utilities|Faction", meta=(Keywords="hostile enemy faction"))
-    static bool AreFactionsHostile(UFactionDataAsset* FactionA, UFactionDataAsset* FactionB);
-
-    /**
-     * Get faction relationship value between two factions
-     * Scale: -100 (war) to +100 (allied)
-     * 
-     * @param FactionA First faction
-     * @param FactionB Second faction
-     * @return Relationship value from -100 to +100, or 0 if neutral/same faction
-     */
-    UFUNCTION(BlueprintPure, Category="Adastrea|Utilities|Faction", meta=(Keywords="relationship standing faction"))
-    static int32 GetFactionRelationship(UFactionDataAsset* FactionA, UFactionDataAsset* FactionB);
-
-    /**
-     * Get faction from an actor that implements IFactionMember
-     * Helper function to safely extract faction from any actor
-     * 
-     * @param Actor Actor to query (must implement IFactionMember)
-     * @return Faction data asset, or nullptr if actor doesn't have a faction
-     */
-    UFUNCTION(BlueprintPure, Category="Adastrea|Utilities|Faction", meta=(Keywords="get faction member"))
-    static UFactionDataAsset* GetActorFaction(AActor* Actor);
+    // REMOVED: Faction utility functions - faction system removed per Trade Simulator MVP
+    // - AreFactionsAllied()
+    // - AreFactionsHostile()
+    // - GetFactionRelationship()
+    // - GetActorFaction()
 
     // ====================
     // COMBAT UTILITIES

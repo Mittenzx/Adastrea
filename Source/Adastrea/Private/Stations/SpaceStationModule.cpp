@@ -1,5 +1,4 @@
 #include "Stations/SpaceStationModule.h"
-#include "Factions/FactionDataAsset.h"
 #include "Stations/SpaceStation.h"
 #include "AdastreaLog.h"
 #include "UObject/ConstructorHelpers.h"
@@ -23,22 +22,12 @@ ASpaceStationModule::ASpaceStationModule()
     ModuleType = TEXT("Generic");
     ModulePower = 0.0f;
     ModuleGroup = EStationModuleGroup::Other;
-    ModuleFaction = nullptr;
+    // REMOVED: ModuleFaction - faction system removed per Trade Simulator MVP
     
     // Initialize health/integrity values
     CurrentModuleIntegrity = 1000.0f;  // Modules are less durable than full stations
     MaxModuleIntegrity = 1000.0f;
     bIsDestroyed = false;
-}
-
-UFactionDataAsset* ASpaceStationModule::GetModuleFaction() const
-{
-    return ModuleFaction;
-}
-
-void ASpaceStationModule::SetModuleFaction(UFactionDataAsset* NewFaction)
-{
-    ModuleFaction = NewFaction;
 }
 
 // ====================
@@ -206,33 +195,10 @@ bool ASpaceStationModule::IsHostileToActor_Implementation(AActor* Observer) cons
         return false;
     }
 
-    // Check if module belongs to a station
-    AActor* ParentActor = GetAttachParentActor();
-    if (ParentActor && ParentActor->Implements<UFactionMember>())
-    {
-        // Use parent station's faction relationship
-        if (Observer->Implements<UFactionMember>())
-        {
-            IFactionMember* ParentFaction = Cast<IFactionMember>(ParentActor);
-            if (ParentFaction)
-            {
-                return ParentFaction->Execute_IsHostileTo(ParentActor, TScriptInterface<IFactionMember>(Observer));
-            }
-        }
-    }
-
-    // If module has its own faction, check that
-    if (ModuleFaction && Observer->Implements<UFactionMember>())
-    {
-        UFactionDataAsset* ObserverFaction = IFactionMember::Execute_GetFaction(Observer);
-        if (ObserverFaction)
-        {
-            // TODO: Query faction relationship
-            // For now, consider hostile if different factions
-            return ModuleFaction != ObserverFaction;
-        }
-    }
-
+    // REMOVED: Faction-based hostility checks
+    // MVP Trade Simulator doesn't have combat or faction relationships
+    // All entities are neutral for trading purposes
+    
     // Default to non-hostile
     return false;
 }

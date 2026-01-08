@@ -13,7 +13,7 @@ class ASpaceStation;
 class UInventoryWidget;
 class UTradingInterfaceWidget;
 class UStationManagementWidget;
-class UFactionDataAsset;
+// REMOVED: UFactionDataAsset - faction system removed per Trade Simulator MVP
 
 /**
  * Parameters for SetStation function call via reflection
@@ -47,8 +47,11 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStationEditorToggle);
  * - Managing camera and viewport settings
  * - Handling UI interactions and HUD updates
  * - Coordinating with AdastreaGameInstance for persistent player data
- * - Managing player reputation and faction relationships
  * - Managing station editor UI and state
+ * 
+ * REMOVED (Trade Simulator MVP):
+ * - Faction relationships (removed per MVP scope)
+ * - Reputation system (removed per MVP scope)
  * 
  * Usage:
  * - Set as the Player Controller Class in the Game Mode
@@ -58,7 +61,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStationEditorToggle);
  * 
  * Integration Points:
  * - Works with ASpaceship for vehicle control
- * - Communicates with UPlayerReputationComponent for faction standing
  * - Accesses UAdastreaGameInstance for save/load operations
  * - Updates UI widgets through the HUD system
  * - Manages station editor via UStationEditorWidget
@@ -366,12 +368,8 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Inventory")
 	class UInventoryWidget* GetInventoryWidget() const;
 
-	/**
-	 * Open the trading interface with a specific faction
-	 * @param TradePartner The faction to trade with
-	 */
-	UFUNCTION(BlueprintCallable, Category="Player|Trading")
-	void OpenTrading(class UFactionDataAsset* TradePartner);
+	// REMOVED: OpenTrading(UFactionDataAsset*) - faction system removed per Trade Simulator MVP
+	// Use OpenTradingAtMarket() or similar direct market access instead
 
 	/**
 	 * Close the trading interface

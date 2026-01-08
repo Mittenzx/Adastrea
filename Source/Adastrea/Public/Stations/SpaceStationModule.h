@@ -10,8 +10,7 @@
 #include "StationModuleTypes.h"
 #include "SpaceStationModule.generated.h"
 
-// Forward declaration
-class UFactionDataAsset;
+// Forward declarations removed - faction system removed per Trade Simulator MVP scope
 
 /**
  * Base class for all space station modules
@@ -55,36 +54,8 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module")
     EStationModuleGroup ModuleGroup;
 
-    // Faction this module belongs to (can differ from station faction for multi-faction stations)
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module")
-    TObjectPtr<UFactionDataAsset> ModuleFaction;
-
-    // ====================
-    // POST-MVP: MODULE FACTION SYSTEM
-    // Deferred - Not needed for Trade Simulator MVP
-    // Can be re-enabled post-MVP for multi-faction station gameplay
-    // ====================
-
-    /**
-     * Get the faction assigned to this module
-     * @return The faction data asset, or nullptr if none assigned
-     * 
-     * Note: Module-level faction system is optional for MVP.
-     * MVP primarily uses station-level factions (via ASpaceStation::SetFaction).
-     * This can be used for multi-faction station gameplay.
-     */
-    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Module")
-    UFactionDataAsset* GetModuleFaction() const;
-
-    /**
-     * Set the faction for this module
-     * @param NewFaction The faction to assign to this module
-     * 
-     * Note: Module-level faction system is optional for MVP.
-     * This allows individual modules to have different factions than their parent station.
-     */
-    UFUNCTION(BlueprintCallable, Category="Module")
-    void SetModuleFaction(UFactionDataAsset* NewFaction);
+    // REMOVED: Faction system not needed for Trade Simulator MVP
+    // Module ownership handled at station level if needed
 
     /**
      * Get the type identifier for this module

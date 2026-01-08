@@ -6,7 +6,7 @@
 #include "Trading/PlayerTraderComponent.h"
 #include "Trading/CargoComponent.h"
 #include "Trading/EconomyManager.h"
-#include "Factions/FactionDataAsset.h"
+// REMOVED: #include "Factions/FactionDataAsset.h" - faction system removed per Trade Simulator MVP
 #include "AdastreaLog.h"
 #include "TimerManager.h"
 #include "GameFramework/PlayerController.h"
@@ -105,28 +105,8 @@ void UTradingInterfaceWidget::CloseMarket()
 	RemoveFromParent();
 }
 
-bool UTradingInterfaceWidget::SetTradePartner(UFactionDataAsset* TradePartner)
-{
-	if (!TradePartner)
-	{
-		return false;
-	}
-
-	// TODO(MVP): For now, this is a stub that should be replaced with actual market lookup
-	// In a full implementation, this would:
-	// 1. Query EconomyManager or station system for markets controlled by this faction
-	// 2. Select the nearest/best market
-	// 3. Call OpenMarket with the found market
-	//
-	// For MVP purposes, we log this and return false to indicate the feature is not yet implemented
-	// The player controller should be updated to use OpenMarket directly with a market reference
-	
-	UE_LOG(LogAdastrea, Display, TEXT("TradingInterfaceWidget::SetTradePartner - Stub method called. "
-		"For MVP, use OpenMarket with a UMarketDataAsset directly. "
-		"Faction: %s"), *TradePartner->FactionName.ToString());
-	
-	return false;
-}
+// REMOVED: SetTradePartner() - faction system removed per Trade Simulator MVP
+// All trading done via direct market selection using OpenMarket()
 
 // ========================================================================
 // Market Information

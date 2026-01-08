@@ -1,13 +1,12 @@
 // Copyright (c) 2025 Mittenzx. Licensed under MIT.
 
 #include "Stations/SpaceStation.h"
-#include "Factions/FactionDataAsset.h"
 #include "AdastreaLog.h"
 
 ASpaceStation::ASpaceStation()
 {
     PrimaryActorTick.bCanEverTick = false;
-    OwningFaction = nullptr;
+    // REMOVED: OwningFaction - faction system removed per Trade Simulator MVP
     
     // Initialize health/integrity values
     CurrentStructuralIntegrity = 10000.0f;  // Stations are much tougher than ships
@@ -161,21 +160,7 @@ int32 ASpaceStation::GetModuleCount() const
     return Modules.Num();
 }
 
-void ASpaceStation::SetFaction(UFactionDataAsset* NewFaction)
-{
-    // Note: Null factions are allowed - stations can be neutral/unaffiliated
-    OwningFaction = NewFaction;
-    
-    if (NewFaction)
-    {
-        UE_LOG(LogAdastreaStations, Log, TEXT("SpaceStation::SetFaction - Set faction for station %s to %s"), 
-            *GetName(), *NewFaction->GetFactionName().ToString());
-    }
-    else
-    {
-        UE_LOG(LogAdastreaStations, Log, TEXT("SpaceStation::SetFaction - Cleared faction for station %s (now neutral)"), *GetName());
-    }
-}
+// REMOVED: SetFaction() - faction system removed per Trade Simulator MVP
 
 // ====================
 // IDamageable Interface Implementation
@@ -321,131 +306,12 @@ bool ASpaceStation::IsHostileToActor_Implementation(AActor* Observer) const
         return false;
     }
 
-    // Check if observer implements IFactionMember
-    if (Observer->Implements<UFactionMember>())
-    {
-        return IsHostileTo_Implementation(TScriptInterface<IFactionMember>(Observer));
-    }
-
-    // Default to non-hostile if can't determine faction
+    // REMOVED: Faction-based hostility checks
+    // MVP Trade Simulator doesn't have combat or faction relationships
+    // All stations are neutral for trading purposes
+    
+    // Default to non-hostile
     return false;
 }
 
-// ====================
-// IFactionMember Interface Implementation
-// ====================
-
-UFactionDataAsset* ASpaceStation::GetFaction_Implementation() const
-{
-    return OwningFaction;
-}
-
-bool ASpaceStation::IsAlliedWith_Implementation(const TScriptInterface<IFactionMember>& Other) const
-{
-    if (!Other.GetObject())
-    {
-        return false;
-    }
-
-    // Same faction = always allied
-    UFactionDataAsset* OtherFaction = IFactionMember::Execute_GetFaction(Other.GetObject());
-    if (OwningFaction && OtherFaction && OwningFaction == OtherFaction)
-    {
-        return true;
-    }
-
-    // Check diplomatic relations
-    int32 Relationship = GetRelationshipWith_Implementation(Other);
-    return Relationship >= 26;  // Friendly or allied
-}
-
-bool ASpaceStation::IsHostileTo_Implementation(const TScriptInterface<IFactionMember>& Other) const
-{
-    if (!Other.GetObject())
-    {
-        return false;
-    }
-
-    // Same faction = never hostile
-    UFactionDataAsset* OtherFaction = IFactionMember::Execute_GetFaction(Other.GetObject());
-    if (OwningFaction && OtherFaction && OwningFaction == OtherFaction)
-    {
-        return false;
-    }
-
-    // Check diplomatic relations
-    int32 Relationship = GetRelationshipWith_Implementation(Other);
-    return Relationship <= -26;  // Hostile or at war
-}
-
-int32 ASpaceStation::GetRelationshipWith_Implementation(const TScriptInterface<IFactionMember>& Other) const
-{
-    if (!Other.GetObject() || !OwningFaction)
-    {
-        return 0;  // Neutral if no faction
-    }
-
-    UFactionDataAsset* OtherFaction = IFactionMember::Execute_GetFaction(Other.GetObject());
-    if (!OtherFaction)
-    {
-        return 0;  // Neutral if other has no faction
-    }
-
-    if (OwningFaction == OtherFaction)
-    {
-        return 100;  // Same faction = maximum positive relationship
-    }
-
-    // TODO: Query faction relationship from FactionDiplomacyManager
-    // For now return neutral
-    return 0;
-}
-
-bool ASpaceStation::IsNeutral_Implementation() const
-{
-    return OwningFaction == nullptr;
-}
-
-FText ASpaceStation::GetFactionDisplayName_Implementation() const
-{
-    if (OwningFaction)
-    {
-        return OwningFaction->FactionName;
-    }
-
-    return FText::FromString(TEXT("Independent"));
-}
-
-bool ASpaceStation::CanEngageInCombat_Implementation() const
-{
-    // Cannot engage if destroyed
-    if (bIsDestroyed)
-    {
-        return false;
-    }
-
-    // TODO: Add checks for:
-    // - Armed modules (turrets, weapons)
-    // - Safe zone restrictions
-
-    return true;
-}
-
-float ASpaceStation::GetTradePriceModifier_Implementation(UFactionDataAsset* TraderFaction) const
-{
-    if (!OwningFaction || !TraderFaction)
-    {
-        return 1.0f;  // Base price if no faction
-    }
-
-    if (OwningFaction == TraderFaction)
-    {
-        return 0.85f;  // 15% discount for same faction (stations offer better prices than ships)
-    }
-
-    // TODO: Calculate modifier based on faction relationship
-    // Positive relationship = better prices
-    // Negative relationship = worse prices or refusal to trade
-    
-    return 1.0f;  // Base price for now
-}
+// REMOVED: IFactionMember interface implementation - faction system removed per Trade Simulator MVP

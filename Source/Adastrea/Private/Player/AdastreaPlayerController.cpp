@@ -13,8 +13,8 @@
 #include "UI/InventoryComponent.h"
 #include "UI/TradingInterfaceWidget.h"
 #include "UI/StationManagementWidget.h"
-#include "Factions/FactionDataAsset.h"
-#include "Interfaces/IFactionMember.h"
+// REMOVED: #include "Factions/FactionDataAsset.h" - faction system removed per Trade Simulator MVP
+// REMOVED: #include "Interfaces/IFactionMember.h" - faction system removed per Trade Simulator MVP
 #include "TimerManager.h"
 
 AAdastreaPlayerController::AAdastreaPlayerController()
@@ -730,28 +730,8 @@ void AAdastreaPlayerController::HideInventory()
 // Trading Widget Implementation
 // ====================
 
-void AAdastreaPlayerController::OpenTrading(UFactionDataAsset* TradePartner)
-{
-	if (!TradePartner)
-	{
-		UE_LOG(LogAdastrea, Warning, TEXT("OpenTrading: Invalid trade partner"));
-		return;
-	}
-
-	// Create widget if needed
-	if (!CreateTradingWidget())
-	{
-		return;
-	}
-
-	// Initialize with trade partner
-	TradingWidget->SetTradePartner(TradePartner);
-
-	// Show the widget
-	ShowTrading();
-	
-	UE_LOG(LogAdastrea, Log, TEXT("OpenTrading: Opened trading with faction: %s"), *TradePartner->FactionName.ToString());
-}
+// REMOVED: OpenTrading(UFactionDataAsset*) - faction system removed per Trade Simulator MVP
+// Use direct market access via trading widget OpenMarket() instead
 
 void AAdastreaPlayerController::CloseTrading()
 {
@@ -1058,29 +1038,15 @@ void AAdastreaPlayerController::AttemptTradeWithNearestStation()
 		return;
 	}
 
-	// Get the station's faction for trading
-	UFactionDataAsset* StationFaction = nullptr;
-	if (Station->GetClass()->ImplementsInterface(UFactionMember::StaticClass()))
-	{
-		IFactionMember* FactionMember = Cast<IFactionMember>(Station);
-		if (FactionMember)
-		{
-			StationFaction = IFactionMember::Execute_GetFaction(Station);
-		}
-	}
-
-	if (!StationFaction)
-	{
-		UE_LOG(LogAdastrea, Warning, TEXT("AttemptTradeWithNearestStation: Station '%s' has no faction - cannot trade"), 
-			*Station->GetName());
-		return;
-	}
-
-	// Open trading interface with station's faction
-	OpenTrading(StationFaction);
+	// REMOVED: Faction-based trading logic - faction system removed per Trade Simulator MVP
+	// This function is currently non-functional and should not be called
+	// Trading must be initiated through direct market access using TradingWidget->OpenMarket(UMarketDataAsset*)
 	
-	UE_LOG(LogAdastrea, Log, TEXT("AttemptTradeWithNearestStation: Opened trading with station '%s' (Faction: %s)"), 
-		*Station->GetName(), *StationFaction->FactionName.ToString());
+	UE_LOG(LogAdastrea, Error, TEXT("AttemptTradeWithNearestStation: This function is deprecated and non-functional. "
+		"Trading system has been refactored. Use direct market access via Blueprint or alternative input binding."));
+	
+	// Optionally: Could display a UI message to the player
+	// TODO(Post-MVP): Either remove this function entirely or implement market-based trading
 }
 
 bool AAdastreaPlayerController::IsNearTradableStation() const

@@ -69,28 +69,26 @@ struct FPriceVolatility
 };
 
 /**
- * Trade restrictions based on faction relationships
+ * Trade restrictions (placeholder for future use)
+ * Currently unused in MVP - all items accessible to all players
+ * 
+ * Note: Keeping minimal struct to maintain serialization compatibility
+ * REMOVED in MVP: BannedFactions, RequiresPermitFactions, MinReputationRequired
  */
 USTRUCT(BlueprintType)
 struct FTradeRestrictions
 {
 	GENERATED_BODY()
 
-	// Factions that ban this item completely
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Restrictions")
-	TArray<FName> BannedFactions;
-
-	// Factions that require special permits
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Restrictions")
-	TArray<FName> RequiresPermitFactions;
-
-	// Minimum faction reputation required to trade (-100 to 100)
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Restrictions", meta=(ClampMin="-100", ClampMax="100"))
-	int32 MinReputationRequired;
+	// Placeholder field to ensure struct validity for serialization
+	// MVP has no trade restrictions - all items accessible to all players
+	UPROPERTY()
+	bool bReservedForFutureUse = false;
 
 	FTradeRestrictions()
-		: MinReputationRequired(-100)
-	{}
+		: bReservedForFutureUse(false)
+	{
+	}
 };
 
 /**
@@ -155,9 +153,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Legality")
 	ELegalityStatus LegalityStatus;
 
-	// Trade restrictions based on factions
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Legality")
-	FTradeRestrictions TradeRestrictions;
+	// REMOVED: TradeRestrictions - simplified for MVP (struct now empty)
+	// All items accessible to all players in MVP
 
 	// Contraband fine multiplier if caught (1.0 = base price)
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Legality", meta=(ClampMin="0.0"))
@@ -261,8 +258,8 @@ public:
 	 * @param BuyerFactionID Buyer's faction
 	 * @param SellerFactionID Seller's faction
 	 */
-	UFUNCTION(BlueprintNativeEvent, Category="Trade Item|Events")
-	void OnItemTraded(int32 Quantity, float Price, FName BuyerFactionID, FName SellerFactionID);
+	// REMOVED: OnItemTraded event - faction tracking removed per Trade Simulator MVP
+	// Can be re-added post-MVP if needed for analytics
 
 #if WITH_EDITOR
 	/**
