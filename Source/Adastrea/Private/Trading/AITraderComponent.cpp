@@ -2,11 +2,11 @@
 #include "Trading/MarketDataAsset.h"
 #include "Trading/TradeItemDataAsset.h"
 #include "Trading/TradeContractDataAsset.h"
-#include "Factions/FactionDataAsset.h"
+// REMOVED: #include "Factions/FactionDataAsset.h" - faction system removed per Trade Simulator MVP
 
 UAITraderComponent::UAITraderComponent()
-	: TraderFaction(nullptr)
-	, Strategy(EAITraderStrategy::Balanced)
+	// REMOVED: TraderFaction - faction system removed per Trade Simulator MVP
+	: Strategy(EAITraderStrategy::Balanced)
 	, TradingCapital(10000)
 	, CargoCapacity(1000.0f)
 	, TravelSpeed(100.0f)

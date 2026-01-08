@@ -46,11 +46,7 @@ float UTradeItemDataAsset::OnCalculateCustomPrice_Implementation(float Supply, f
     return BaseCalculatedPrice;
 }
 
-void UTradeItemDataAsset::OnItemTraded_Implementation(int32 Quantity, float Price, FName BuyerFactionID, FName SellerFactionID)
-{
-    // Default implementation - do nothing
-    // Blueprint can override for custom behavior
-}
+// REMOVED: OnItemTraded_Implementation - faction tracking removed per Trade Simulator MVP
 
 #if WITH_EDITOR
 EDataValidationResult UTradeItemDataAsset::IsDataValid(FDataValidationContext& Context) const
