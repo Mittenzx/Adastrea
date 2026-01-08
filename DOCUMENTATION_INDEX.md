@@ -130,6 +130,7 @@
 ### Core Development
 | File | Purpose |
 |------|---------|
+| **[PLAYER_CHARACTER_ARCHITECTURE.md](docs/development/PLAYER_CHARACTER_ARCHITECTURE.md)** | ⭐ **NEW** Player character architecture (MVP + Post-MVP) (Jan 2026) |
 | **[ENHANCED_INPUT_GUIDE.md](docs/development/ENHANCED_INPUT_GUIDE.md)** | Enhanced Input system setup |
 | **[MODULE_DEPENDENCY_GUIDE.md](docs/development/MODULE_DEPENDENCY_GUIDE.md)** | Managing module dependencies |
 | **[PERFORMANCE_IMPROVEMENTS.md](docs/development/PERFORMANCE_IMPROVEMENTS.md)** | Performance optimization strategies |
@@ -363,6 +364,7 @@ All 22+ game systems have complete guides in this directory:
 - SectorSystemQuickReference.md
 - WaySystemQuickReference.md
 - HUD_QUICK_REFERENCE.md
+- **[PLAYER_QUICK_REFERENCE.md](docs/reference/PLAYER_QUICK_REFERENCE.md)** - ⭐ **NEW** Player system quick reference (Jan 2026)
 - And more...
 
 ### Designer Workflows

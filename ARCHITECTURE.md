@@ -69,6 +69,7 @@ This document provides a high-level overview of the Adastrea project architectur
 
 ## Table of Contents
 
+- [Player Character Architecture](#player-character-architecture)
 - [Architecture Overview](#architecture-overview)
 - [Project Structure](#project-structure)
 - [Module Organization](#module-organization)
@@ -76,6 +77,42 @@ This document provides a high-level overview of the Adastrea project architectur
 - [Data Flow](#data-flow)
 - [Blueprint Integration](#blueprint-integration)
 - [Extension Points](#extension-points)
+
+## Player Character Architecture
+
+**Question: "Where is the player?"**
+
+**MVP Answer**: Player IS the spaceship. No walking character needed.
+
+**Post-MVP Answer**: Player can be EITHER spaceship OR walking character.
+
+For comprehensive details on player architecture, see:
+- **[Player Character Architecture](docs/development/PLAYER_CHARACTER_ARCHITECTURE.md)** - Complete design document
+
+### MVP Player Flow (Current)
+
+```
+Player Controller → Possess Spaceship → Fly → Dock → Trading UI → Undock → Fly
+```
+
+**Key Points:**
+- Player never leaves ship pawn
+- All interactions via UI overlay
+- No walking character exists
+- Simplifies MVP scope
+
+### Post-MVP Player Flow (Future)
+
+```
+Player Controller → [Spaceship OR Character] → Seamless Transitions
+```
+
+**Planned Features:**
+- `AAdastreaCharacter` - Walking character class
+- Ship ↔ Character possession switching
+- Interior exploration
+- Station walking gameplay
+- NPC interactions
 
 ## Architecture Overview
 
