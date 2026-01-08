@@ -5,7 +5,6 @@
 #include "Stations/SpaceStationModule.h"
 #include "Interfaces/IDamageable.h"
 #include "Interfaces/ITargetable.h"
-#include "Interfaces/IFactionMember.h"
 #include "SpaceStation.generated.h"
 
 /**
@@ -22,7 +21,9 @@
  * Implements:
  * - IDamageable: Can receive damage from weapons
  * - ITargetable: Can be targeted by weapons and sensors
- * - IFactionMember: Belongs to a faction for diplomacy and AI
+ * 
+ * REMOVED (Trade Simulator MVP):
+ * - IFactionMember interface - faction system not needed for MVP
  * 
  * Usage:
  * 1. Create Blueprint based on this class
@@ -32,7 +33,7 @@
  * See Also: STATION_EDITOR_README.md for detailed implementation guide
  */
 UCLASS()
-class ADASTREA_API ASpaceStation : public AActor, public IDamageable, public ITargetable, public IFactionMember
+class ADASTREA_API ASpaceStation : public AActor, public IDamageable, public ITargetable
 {
     GENERATED_BODY()
 
@@ -133,12 +134,7 @@ public:
     UFUNCTION(BlueprintCallable, Category="Station")
     TArray<ASpaceStationModule*> GetModules() const;
 
-    /**
-     * Set the faction that owns this station
-     * @param NewFaction The faction to assign to this station
-     */
-    UFUNCTION(BlueprintCallable, Category="Station")
-    void SetFaction(class UFactionDataAsset* NewFaction);
+    // REMOVED: SetFaction() - faction system removed per Trade Simulator MVP scope
 
     // ====================
     // INTERFACE IMPLEMENTATIONS
@@ -162,22 +158,12 @@ public:
     virtual float GetDistanceFromLocation_Implementation(FVector FromLocation) const override;
     virtual bool IsHostileToActor_Implementation(AActor* Observer) const override;
 
-    // IFactionMember Interface
-    virtual UFactionDataAsset* GetFaction_Implementation() const override;
-    virtual bool IsAlliedWith_Implementation(const TScriptInterface<IFactionMember>& Other) const override;
-    virtual bool IsHostileTo_Implementation(const TScriptInterface<IFactionMember>& Other) const override;
-    virtual int32 GetRelationshipWith_Implementation(const TScriptInterface<IFactionMember>& Other) const override;
-    virtual bool IsNeutral_Implementation() const override;
-    virtual FText GetFactionDisplayName_Implementation() const override;
-    virtual bool CanEngageInCombat_Implementation() const override;
-    virtual float GetTradePriceModifier_Implementation(UFactionDataAsset* TraderFaction) const override;
+    // REMOVED: IFactionMember interface methods - faction system removed per Trade Simulator MVP
 
 protected:
     virtual void BeginPlay() override;
 
-    /** The faction that owns this station (can be null for neutral stations) */
-    UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category="Station")
-    class UFactionDataAsset* OwningFaction;
+    // REMOVED: OwningFaction - faction system removed per Trade Simulator MVP
 
     /** Current structural integrity (health) */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Status")
