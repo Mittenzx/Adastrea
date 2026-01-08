@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Simplified Docking System** (2026-01-08)
+  - Removed timeline-based animation complexity for beginner-friendly MVP approach
+  - Replaced 3-second interpolated docking with instant teleport to docking point
+  - Removed dependencies: `UTimelineComponent`, `UCurveFloat`, 6 transform storage variables
+  - Reduced docking implementation from 38 lines to 15 lines (60% simpler)
+  - Added `DockingRange` property (default: 2000 units, configurable 100-10000)
+  - Added distance validation check in `RequestDocking()` before allowing dock
+  - Added `DockAction` input binding for F key → `RequestDocking()`
+  - Added guard check for `bIsDocking` to prevent rapid input issues
+  - **Documentation**: Created comprehensive guides (22.8KB total):
+    - `docs/reference/SIMPLE_DOCKING_SETUP.md` - Complete beginner setup guide
+    - `docs/reference/DOCKING_VISUAL_REFERENCE.md` - ASCII diagrams and technical flow
+    - `docs/reference/DOCKING_QUICK_REFERENCE.md` - Quick lookup card
+  - **Impact**: Unblocks Trade Simulator MVP with simple dock → trade → undock → repeat loop
+
 ### Added
 
 - **Station Module Blueprints Documentation** (2026-01-06)

@@ -82,7 +82,7 @@ Player Input (F key)
        │
        ↓
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ RequestDocking()         ┃  Source/Adastrea/Private/Ships/Spaceship.cpp:997
+┃ RequestDocking()         ┃  Source/Adastrea/Private/Ships/Spaceship.cpp:978
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━┛
        │
        ├─→ Check: NearbyStation != nullptr
@@ -105,7 +105,7 @@ Player Input (F key)
        │
        ↓
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ NavigateToDockingPoint()        ┃  Line 1049
+┃ NavigateToDockingPoint()        ┃  Line 1038
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
        │
        ├─→ Get docking point location
@@ -114,7 +114,7 @@ Player Input (F key)
        │
        ↓
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ CompleteDocking()        ┃  Line 1070
+┃ CompleteDocking()        ┃  Line 1062
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━┛
        │
        ├─→ Set bIsDocked = true

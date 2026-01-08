@@ -65,8 +65,8 @@ DisplayAll DockingBayModule CurrentDockedShips
 
 | File | Purpose |
 |------|---------|
-| `Spaceship.h` (lines 338-396) | Docking system declarations |
-| `Spaceship.cpp` (lines 997-1214) | Docking implementation |
+| `Spaceship.h` (line 339+) | Docking system declarations |
+| `Spaceship.cpp` (line 978+) | Docking implementation |
 | `DockingBayModule.h` | Station docking component |
 | `DA_InputConfig` | Input action configuration |
 

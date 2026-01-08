@@ -992,6 +992,12 @@ void ASpaceship::RequestDocking()
         return;
     }
     
+    // Prevent rapid input during docking sequence
+    if (bIsDocking)
+    {
+        return;
+    }
+    
     // Cast to docking bay module to check availability
     ADockingBayModule* DockingBay = Cast<ADockingBayModule>(NearbyStation);
     if (!DockingBay)

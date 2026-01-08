@@ -91,11 +91,13 @@ No complex animations, no timeline curves, no complicated setup. Just gameplay.
 **In Your Spaceship Blueprint (BP_PlayerShip):**
 
 1. Open the Blueprint
-2. In **Details Panel** → **Docking** category:
+2. In **Details Panel** → **Input** category:
+   - Set **Dock Action** = `IA_Dock`
+3. In **Details Panel** → **Docking** category:
    - **Docking Range**: 2000.0 (how close player must be to dock)
    - **Docking Prompt Widget Class**: Assign your UI widget for "Press F to Dock" prompt
    - **Trading Interface Class**: Assign your trading UI widget
-3. Save
+4. Save
 
 ---
 
@@ -174,10 +176,11 @@ CompleteDocking()
 ### "Press F and nothing happens"
 
 **Check:**
-1. Is `DockAction` assigned in `DA_InputConfig`?
-2. Is F key mapped to `IA_Dock` in `IMC_Spaceship`?
-3. Are you within `DockingRange` (2000 units) of the station?
-4. Does the station have `DockingBayModule` with docking points?
+1. In `DA_InputConfig`, is `DockAction` set to `IA_Dock`?
+2. In your Spaceship Blueprint, under **Input → Dock Action**, is it set to `IA_Dock`?
+3. Is F key mapped to `IA_Dock` in `IMC_Spaceship`?
+4. Are you within `DockingRange` (2000 units) of the station?
+5. Does the station have `DockingBayModule` with docking points?
 
 **Debug Log:**
 - Open **Output Log** in Unreal Editor
@@ -284,8 +287,8 @@ After following this guide:
 ---
 
 **Questions?** Check the code comments in:
-- `Source/Adastrea/Public/Ships/Spaceship.h` (lines 338-396)
-- `Source/Adastrea/Private/Ships/Spaceship.cpp` (lines 997-1214)
+- `Source/Adastrea/Public/Ships/Spaceship.h` (docking functions start at line 339)
+- `Source/Adastrea/Private/Ships/Spaceship.cpp` (RequestDocking at line 978)
 
 **Need help?** Ask in Discord or open a GitHub issue with:
 - What you tried
