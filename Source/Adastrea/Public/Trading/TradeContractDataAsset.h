@@ -6,7 +6,7 @@
 
 // Forward declarations
 class UTradeItemDataAsset;
-class UFactionDataAsset;
+// REMOVED: UFactionDataAsset - faction system removed per Trade Simulator MVP
 
 /**
  * Enum for contract types
@@ -91,9 +91,8 @@ struct FContractRewards
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Rewards", meta=(ClampMin="0"))
 	int32 Credits;
 
-	// Reputation gain with contract giver faction
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Rewards", meta=(ClampMin="0"))
-	int32 ReputationGain;
+	// REMOVED: ReputationGain - faction reputation system removed per Trade Simulator MVP
+	// MVP rewards are credits only
 
 	// Bonus items given on completion
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Rewards")
@@ -105,7 +104,7 @@ struct FContractRewards
 
 	FContractRewards()
 		: Credits(0)
-		, ReputationGain(0)
+		// REMOVED: ReputationGain - faction reputation system removed per Trade Simulator MVP
 		, ExperiencePoints(0)
 	{}
 };
@@ -122,9 +121,7 @@ struct FContractPenalties
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Penalties", meta=(ClampMin="0"))
 	int32 CreditPenalty;
 
-	// Reputation lost on failure
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Penalties", meta=(ClampMin="0"))
-	int32 ReputationPenalty;
+	// REMOVED: ReputationPenalty - faction reputation system removed per Trade Simulator MVP
 
 	// Collateral deposit required (refunded on success)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Penalties", meta=(ClampMin="0"))
@@ -132,7 +129,7 @@ struct FContractPenalties
 
 	FContractPenalties()
 		: CreditPenalty(0)
-		, ReputationPenalty(0)
+		// REMOVED: ReputationPenalty - faction reputation system removed per Trade Simulator MVP
 		, CollateralDeposit(0)
 	{}
 };
@@ -157,15 +154,13 @@ struct FContractLocation
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Location")
 	FName MarketID;
 
-	// Faction controlling this location
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Location")
-	UFactionDataAsset* ControllingFaction;
+	// REMOVED: ControllingFaction - faction system removed per Trade Simulator MVP
 
 	FContractLocation()
 		: LocationName(FText::FromString(TEXT("Unknown Location")))
 		, Coordinates(FVector::ZeroVector)
 		, MarketID(NAME_None)
-		, ControllingFaction(nullptr)
+		// REMOVED: ControllingFaction - faction system removed per Trade Simulator MVP
 	{}
 };
 
@@ -203,9 +198,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Contract Info")
 	EContractDifficulty Difficulty;
 
-	// Faction offering the contract
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Contract Info")
-	UFactionDataAsset* ContractGiver;
+	// REMOVED: ContractGiver - faction system removed per Trade Simulator MVP
 
 	// ====================
 	// CONTRACT DETAILS
@@ -231,9 +224,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Contract Details", meta=(ClampMin="0"))
 	float TimeLimit;
 
-	// Minimum reputation required to accept (-100 to 100)
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Contract Details", meta=(ClampMin="-100", ClampMax="100"))
-	int32 MinReputationRequired;
+	// REMOVED: MinReputationRequired - faction reputation system removed per Trade Simulator MVP
+	// All contracts accessible to all players in MVP
 
 	// ====================
 	// REWARDS & PENALTIES
@@ -283,9 +275,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Special Conditions")
 	bool bCombatExpected;
 
-	// Hostile factions along route
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Special Conditions")
-	TArray<UFactionDataAsset*> HostileFactions;
+	// REMOVED: HostileFactions - faction system removed per Trade Simulator MVP
+	// Combat not in MVP scope
 
 	// Special tags for filtering and AI behavior
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Special Conditions")

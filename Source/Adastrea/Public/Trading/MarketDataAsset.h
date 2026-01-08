@@ -6,7 +6,7 @@
 
 // Forward declarations
 class UTradeItemDataAsset;
-class UFactionDataAsset;
+// REMOVED: UFactionDataAsset - faction system removed per Trade Simulator MVP
 
 /**
  * Enum for market types
@@ -181,9 +181,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Market Info")
 	EMarketSize MarketSize;
 
-	// Faction that controls this market
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Market Info")
-	UFactionDataAsset* ControllingFaction;
+	// REMOVED: ControllingFaction - faction system removed per Trade Simulator MVP
 
 	// ====================
 	// MARKET CONFIGURATION
@@ -213,9 +211,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Market Config")
 	bool bAllowAITraders;
 
-	// Reputation requirement to access market (-100 to 100)
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Market Config", meta=(ClampMin="-100", ClampMax="100"))
-	int32 MinReputationRequired;
+	// REMOVED: MinReputationRequired - faction reputation system removed per Trade Simulator MVP
+	// MVP Trading is accessible to all players without reputation checks
 
 	// ====================
 	// INVENTORY
@@ -306,13 +303,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Market|Inventory")
 	TArray<FMarketInventoryEntry> GetItemsByCategory(ETradeItemCategory Category) const;
 
-	/**
-	 * Check if player has sufficient reputation to access market
-	 * @param PlayerReputation The player's reputation with controlling faction
-	 * @return True if player can access market
-	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Market|Access")
-	bool CanPlayerAccess(int32 PlayerReputation) const;
+	// REMOVED: CanPlayerAccess() - faction reputation system removed per Trade Simulator MVP
+	// All players can access all markets in MVP Trading
 
 	/**
 	 * Get active market events affecting a specific item

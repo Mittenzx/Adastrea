@@ -1,6 +1,6 @@
 #include "Trading/MarketDataAsset.h"
 #include "Trading/TradeItemDataAsset.h"
-#include "Factions/FactionDataAsset.h"
+// REMOVED: #include "Factions/FactionDataAsset.h" - faction system removed per Trade Simulator MVP
 
 UMarketDataAsset::UMarketDataAsset()
 	: MarketName(FText::FromString(TEXT("Trade Market")))
@@ -8,14 +8,14 @@ UMarketDataAsset::UMarketDataAsset()
 	, MarketID(NAME_None)
 	, MarketType(EMarketType::OpenMarket)
 	, MarketSize(EMarketSize::Medium)
-	, ControllingFaction(nullptr)
+	// REMOVED: ControllingFaction - faction system removed per Trade Simulator MVP
 	, TransactionTaxRate(0.05f)
 	, SellPriceMarkup(1.2f)
 	, BuyPriceMarkdown(0.8f)
 	, bAllowPlayerBuying(true)
 	, bAllowPlayerSelling(true)
 	, bAllowAITraders(true)
-	, MinReputationRequired(-50)
+	// REMOVED: MinReputationRequired - faction reputation system removed per Trade Simulator MVP
 	, StockRefreshRate(24.0f)
 	, LastStockRefreshTime(0.0f)
 	, RandomEventChance(0.1f)
@@ -138,10 +138,8 @@ TArray<FMarketInventoryEntry> UMarketDataAsset::GetItemsByCategory(ETradeItemCat
 	return Result;
 }
 
-bool UMarketDataAsset::CanPlayerAccess(int32 PlayerReputation) const
-{
-	return PlayerReputation >= MinReputationRequired;
-}
+// REMOVED: CanPlayerAccess() - faction reputation system removed per Trade Simulator MVP
+// All players can access all markets in MVP Trading
 
 TArray<FMarketEvent> UMarketDataAsset::GetActiveEventsForItem(FName ItemID) const
 {
