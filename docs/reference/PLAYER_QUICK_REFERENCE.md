@@ -139,7 +139,7 @@
 ```
 1. Model ship interior mesh
 2. Add collision for walkable floors
-3. Place control console
+3. Place ship control console
 4. Set entry/exit points
 5. Add props and details
 ```
