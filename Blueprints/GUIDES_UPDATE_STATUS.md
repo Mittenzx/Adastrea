@@ -1,20 +1,23 @@
 # Blueprint Guides Update Status
 
-**Last Updated**: 2026-01-03  
+**Last Updated**: 2026-01-08  
 **Update Project**: Standardize all guides to new template format
 
 ---
 
 ## Completed Updates ✅
 
-### MVP-Critical Guides (Phase 2)
-1. ✅ **Trading UI Widget** (`TradingSystemBlueprintGuide_SIMPLIFIED.md`)
-2. ✅ **Trading Station Actor** (`TradingStationActorGuide.md`)
-3. ✅ **Ship Cargo System** (`ShipCargoSystemGuide.md`)
-4. ✅ **Docking UI** (`DockingUIGuide.md`)
+### MVP-Critical Guides (Phase 2) - COMPLETE
+1. ✅ **Trading Ship (Player)** (`BP_TradingShip_GUIDE.md`) - **NEW** 2026-01-08
+2. ✅ **Trading Game Mode** (`BP_TradingGameMode_GUIDE.md`) - **NEW** 2026-01-08
+3. ✅ **Market Display Widget** (`WBP_MarketDisplay_GUIDE.md`) - **NEW** 2026-01-08
+4. ✅ **Trading UI Widget** (`TradingSystemBlueprintGuide_SIMPLIFIED.md`)
+5. ✅ **Trading Station Actor** (`TradingStationActorGuide.md`)
+6. ✅ **Ship Cargo System** (`ShipCargoSystemGuide.md`)
+7. ✅ **Docking UI** (`DockingUIGuide.md`)
 
 ### System Guides (Phase 3)
-5. ✅ **Ship Status Screen** (`ShipStatusScreenGuide.md`) - Replaced old example
+8. ✅ **Ship Status Screen** (`ShipStatusScreenGuide.md`) - Replaced old example
 
 ---
 
@@ -53,15 +56,18 @@ These guides still use the old format but remain functional:
 
 ## Template Compliance
 
-**Guides following new template** (8 total):
-1. Trading UI Widget ✅
-2. Trading Station Actor ✅
-3. Ship Cargo System ✅
-4. Docking UI ✅
-5. Ship Status Screen ✅
-6. Template itself (BLUEPRINT_GUIDE_TEMPLATE.md) ✅
-7. Standards guide (BLUEPRINT_GUIDE_STANDARDS.md) ✅
-8. Quick Reference (BLUEPRINT_GUIDE_QUICK_REFERENCE.md) ✅
+**Guides following new template** (11 total):
+1. Trading Ship (Player) ✅ **NEW**
+2. Trading Game Mode ✅ **NEW**
+3. Market Display Widget ✅ **NEW**
+4. Trading UI Widget ✅
+5. Trading Station Actor ✅
+6. Ship Cargo System ✅
+7. Docking UI ✅
+8. Ship Status Screen ✅
+9. Template itself (BLUEPRINT_GUIDE_TEMPLATE.md) ✅
+10. Standards guide (BLUEPRINT_GUIDE_STANDARDS.md) ✅
+11. Quick Reference (BLUEPRINT_GUIDE_QUICK_REFERENCE.md) ✅
 
 **Guides in legacy format** (3 remaining):
 1. Homeworld System (887 lines)
@@ -121,6 +127,51 @@ These guides still use the old format but remain functional:
 
 ---
 
-**Status**: 5 of 8 guides updated (62.5% complete for Blueprints/ folder)  
-**MVP Coverage**: 100% (all trading system guides updated)  
-**Next milestone**: Update remaining 3 when systems are in active development
+**Status**: 8 of 11 guides updated (73% complete for Blueprints/ folder)  
+**MVP Coverage**: 100% (all MVP-critical guides complete) ✅  
+**Phase 2 Status**: COMPLETE - All MVP Blueprint guides created  
+**Next milestone**: Update remaining 3 legacy guides when systems are in active development
+
+---
+
+## Recent Additions (2026-01-08)
+
+### New MVP Blueprint Guides Created
+
+Three essential MVP guides added to complete Phase 2:
+
+1. **BP_TradingShip_GUIDE.md** (22.8KB)
+   - Player's flyable trading ship
+   - 3D flight controls with FloatingPawnMovement
+   - Docking/undocking mechanics
+   - Cargo space management
+   - Trading UI integration
+   - 7 test cases, 5 troubleshooting solutions
+
+2. **BP_TradingGameMode_GUIDE.md** (27.4KB)
+   - Dynamic economy simulation
+   - Supply/demand price calculation
+   - Periodic market updates
+   - Transaction handling (player buy/sell)
+   - Event dispatcher integration
+   - 4 test cases, 5 troubleshooting solutions
+
+3. **WBP_MarketDisplay_GUIDE.md** (29.7KB)
+   - Market price comparison widget
+   - Multi-market price display
+   - Profit opportunity highlighting
+   - Real-time economy updates
+   - Sub-widget creation (WBP_MarketPriceRow)
+   - 4 test cases, 5 troubleshooting solutions
+
+**Total Content Added**: 79.9KB of detailed Blueprint documentation
+
+### What These Guides Enable
+
+With these three guides complete, developers can now:
+- ✅ Create the player's trading ship with full flight controls
+- ✅ Implement the economy simulation system
+- ✅ Build a price comparison UI for strategic trading
+- ✅ Complete the entire MVP trading gameplay loop
+
+**MVP Phase 1 is now fully documented** - all essential Blueprints have comprehensive, step-by-step guides following the official template standard.

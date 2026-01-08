@@ -32,6 +32,9 @@ These guides are critical for the Trade Simulator MVP:
 
 | Guide | Complexity | Time | Status |
 |-------|------------|------|--------|
+| [Trading Ship (Player)](BP_TradingShip_GUIDE.md) | Intermediate | 40-50 min | ✅ New |
+| [Trading Game Mode](BP_TradingGameMode_GUIDE.md) | Intermediate | 35-45 min | ✅ New |
+| [Market Display Widget](WBP_MarketDisplay_GUIDE.md) | Beginner | 25-35 min | ✅ New |
 | [Trading UI Widget](TradingSystemBlueprintGuide_SIMPLIFIED.md) | Intermediate | 45-60 min | ✅ Updated |
 | [Trading Station Actor](TradingStationActorGuide.md) | Beginner | 30-40 min | ✅ Updated |
 | [Ship Cargo System](ShipCargoSystemGuide.md) | Beginner | 25-35 min | ✅ Updated |
@@ -40,6 +43,11 @@ These guides are critical for the Trade Simulator MVP:
 ### 🎮 System-Specific Guides
 
 Organized by game system:
+
+#### Core MVP Blueprints
+- [Trading Ship (Player)](BP_TradingShip_GUIDE.md) - Player's flyable trading ship ✅ **NEW**
+- [Trading Game Mode](BP_TradingGameMode_GUIDE.md) - Economy simulation and game rules ✅ **NEW**
+- [Market Display Widget](WBP_MarketDisplay_GUIDE.md) - Price comparison display ✅ **NEW**
 
 #### Trading System
 - [Trading UI Widget](TradingSystemBlueprintGuide_SIMPLIFIED.md) - Main trading interface ✅
