@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Player Character Architecture Documentation** (2026-01-08)
+  - Answered critical architectural question: "Where is the player?"
+  - Created comprehensive player architecture document:
+    - `docs/development/PLAYER_CHARACTER_ARCHITECTURE.md` - Full 15KB architecture design
+    - Addresses MVP (ship-only) and Post-MVP (dual-pawn) approaches
+    - Includes flow diagrams, technical specifications, and integration points
+  - Created quick reference guide:
+    - `docs/reference/PLAYER_QUICK_REFERENCE.md` - 5KB quick lookup
+    - Answers common questions about MVP vs Post-MVP player systems
+  - Updated `ARCHITECTURE.md` with player architecture section
+  - Updated `DOCUMENTATION_INDEX.md` with new documentation links
+  - **Key Insights**:
+    - MVP: Player = Spaceship pawn only (no walking character needed)
+    - Post-MVP: Player = Spaceship OR Character pawn with seamless transitions
+    - Existing `ASpaceshipInterior` and `AShipControlConsole` ready for future use
+  - **Impact**: 
+    - Clarifies MVP scope (ship-only trading, no character walking)
+    - Establishes clear architectural foundation for future character implementation
+    - Prevents premature implementation of character system before MVP validation
+    - Documents integration points for post-MVP character system
+
 ### Changed
 
 - **Simplified Docking System** (2026-01-08)
