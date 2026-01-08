@@ -2,7 +2,7 @@
 
 #include "DataValidationLibrary.h"
 #include "Ships/SpaceshipDataAsset.h"
-#include "Factions/FactionDataAsset.h"
+// REMOVED: #include "Factions/FactionDataAsset.h" - faction system removed per Trade Simulator MVP
 // TODO: Combat system archived - will be reimplemented in MVP
 // #include "Combat/WeaponDataAsset.h"
 #include "Engine/AssetManager.h"
@@ -34,10 +34,7 @@ bool UDataValidationLibrary::ValidateDataAsset(
     {
         bPassed &= ValidateSpaceshipData(SpaceshipAsset, OutErrors, OutWarnings);
     }
-    else if (UFactionDataAsset* FactionAsset = Cast<UFactionDataAsset>(DataAsset))
-    {
-        bPassed &= ValidateFactionData(FactionAsset, OutErrors, OutWarnings);
-    }
+    // REMOVED: Faction data validation - faction system removed per Trade Simulator MVP
     // TODO: Combat system archived - weapon validation will be reimplemented in MVP
     // else if (UWeaponDataAsset* WeaponAsset = Cast<UWeaponDataAsset>(DataAsset))
     // {
@@ -187,46 +184,8 @@ bool UDataValidationLibrary::ValidateSpaceshipData(
     return bPassed;
 }
 
-bool UDataValidationLibrary::ValidateFactionData(
-    UFactionDataAsset* FactionAsset,
-    TArray<FText>& OutErrors,
-    TArray<FText>& OutWarnings
-)
-{
-    if (!FactionAsset)
-    {
-        OutErrors.Add(FText::FromString("FactionAsset is null"));
-        return false;
-    }
-
-    bool bPassed = true;
-
-    // Basic field validation
-    if (!ValidateNotEmpty(FactionAsset->FactionName.ToString(), "FactionName", OutErrors))
-        bPassed = false;
-
-    if (!ValidateNotEmpty(FactionAsset->Description.ToString(), "Description", OutErrors))
-        bPassed = false;
-
-    if (FactionAsset->FactionID.IsNone())
-    {
-        OutErrors.Add(FText::FromString("FactionID is not set"));
-        bPassed = false;
-    }
-
-    // Reputation range validation
-    if (!ValidateNumericRange(FactionAsset->InitialReputation, -100.0f, 100.0f, "InitialReputation", OutErrors))
-        bPassed = false;
-
-    // Technology level validation
-    if (!ValidateNumericRange(FactionAsset->TechnologyLevel, 1, 10, "TechnologyLevel", OutErrors))
-        bPassed = false;
-
-    // Relationship validation
-    ValidateFactionRelationships(FactionAsset, OutErrors, OutWarnings);
-
-    return bPassed;
-}
+// REMOVED: ValidateFactionData() - faction system removed per Trade Simulator MVP
+// REMOVED: ValidateFactionRelationships() - faction system removed per Trade Simulator MVP
 
 // TODO: Combat system archived - weapon validation will be reimplemented in MVP
 /*
@@ -474,38 +433,7 @@ void UDataValidationLibrary::ValidateSpaceshipStats(
     }
 }
 
-void UDataValidationLibrary::ValidateFactionRelationships(
-    UFactionDataAsset* FactionAsset,
-    TArray<FText>& OutErrors,
-    TArray<FText>& OutWarnings
-)
-{
-    // Check for extreme reputation values
-    if (FactionAsset->InitialReputation <= -80)
-    {
-        OutWarnings.Add(FText::FromString("Faction starts with very low reputation - may be unplayable"));
-    }
-    else if (FactionAsset->InitialReputation >= 80)
-    {
-        OutWarnings.Add(FText::FromString("Faction starts with very high reputation - may break game balance"));
-    }
-
-    // Technology level warnings
-    if (FactionAsset->TechnologyLevel <= 2)
-    {
-        OutWarnings.Add(FText::FromString("Very low technology level - limited gameplay options"));
-    }
-    else if (FactionAsset->TechnologyLevel >= 9)
-    {
-        OutWarnings.Add(FText::FromString("Very high technology level - may overpower other factions"));
-    }
-
-    // Hostile faction warnings
-    if (FactionAsset->bIsHostileByDefault && !FactionAsset->bIsMajorFaction)
-    {
-        OutWarnings.Add(FText::FromString("Minor faction marked as hostile by default - consider making it major"));
-    }
-}
+// REMOVED: ValidateFactionRelationships() - faction system removed per Trade Simulator MVP
 
 // TODO: Combat system archived - weapon balance validation will be reimplemented in MVP
 /*

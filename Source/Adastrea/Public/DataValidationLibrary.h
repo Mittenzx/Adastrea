@@ -148,19 +148,7 @@ public:
         TArray<FText>& OutWarnings
     );
 
-    /**
-     * Validate faction data asset
-     * @param FactionAsset Faction asset to validate
-     * @param OutErrors Validation errors
-     * @param OutWarnings Validation warnings
-     * @return True if valid
-     */
-    UFUNCTION(BlueprintCallable, Category="Data Validation|Factions")
-    static bool ValidateFactionData(
-        UFactionDataAsset* FactionAsset,
-        TArray<FText>& OutErrors,
-        TArray<FText>& OutWarnings
-    );
+    // REMOVED: ValidateFactionData() - faction system removed per Trade Simulator MVP
 
     /**
      * Validate weapon data asset
@@ -290,12 +278,7 @@ private:
         TArray<FText>& OutWarnings
     );
 
-    /** Internal validation helper for faction data */
-    static void ValidateFactionRelationships(
-        UFactionDataAsset* FactionAsset,
-        TArray<FText>& OutErrors,
-        TArray<FText>& OutWarnings
-    );
+    // REMOVED: ValidateFactionRelationships() - faction system removed per Trade Simulator MVP
 
     /** Internal validation helper for weapon data */
     /** TODO: Combat system archived - will be reimplemented in MVP */
