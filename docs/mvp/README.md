@@ -155,7 +155,17 @@ Until MVP validates market interest:
 
 ## 📁 MVP Documentation Files
 
-This directory will contain:
+This directory contains:
+
+**Info Collector Analysis (2026-01-08)** - CRITICAL for validation gates:
+- [INFO_COLLECTOR_ANALYSIS.md](../development/INFO_COLLECTOR_ANALYSIS.md) - Full 18KB analysis
+- [INFO_COLLECTOR_SUMMARY.md](INFO_COLLECTOR_SUMMARY.md) - Executive summary
+- [INFO_COLLECTOR_VISUAL_SUMMARY.txt](INFO_COLLECTOR_VISUAL_SUMMARY.txt) - ASCII art reference
+- [MVP_TELEMETRY_QUICK_REFERENCE.md](../reference/MVP_TELEMETRY_QUICK_REFERENCE.md) - Developer guide
+
+**Key Finding**: Need gameplay telemetry system (track trades, fun ratings, economy) to validate Week 4/8/12 gates.
+
+**Implementation Plans**:
 - Weekly progress reports
 - Playtesting results
 - Iteration notes
