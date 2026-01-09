@@ -305,25 +305,28 @@ This document analyzes information collection capabilities for Unreal Engine pro
 - Cannot identify friction points
 
 **Recommended Solution**:
-Create `MVPTelemetrySystem.py` (Blueprint-callable C++ component):
+Create `UMVPTelemetryComponent` (C++ component with Blueprint-callable functions):
 ```cpp
 class UMVPTelemetryComponent : public UActorComponent
 {
+    GENERATED_BODY()
+    
+public:
     // Track events
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category="MVP Telemetry")
     void LogTradeStarted(FName StationID, FName ItemID, int32 Quantity);
     
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category="MVP Telemetry")
     void LogTradeCompleted(float Profit);
     
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category="MVP Telemetry")
     void LogStationVisit(FName StationID);
     
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category="MVP Telemetry")
     void LogQuitEvent(FString Reason);
     
     // Export data
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category="MVP Telemetry")
     void ExportSessionData();
 };
 ```
@@ -371,20 +374,23 @@ Create `WBP_PlaytestSurvey` widget:
 - Need to ensure progression feels good
 
 **Recommended Solution**:
-Create `EconomyMonitor.py` (Blueprint-callable):
+Create `UEconomyMonitorSubsystem` (C++ subsystem with Blueprint-callable functions):
 ```cpp
 class UEconomyMonitorSubsystem : public UGameInstanceSubsystem
 {
+    GENERATED_BODY()
+    
+public:
     // Track prices
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category="Economy Monitor")
     void RecordPrice(FName ItemID, FName StationID, float Price);
     
     // Analyze trade routes
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category="Economy Monitor")
     TArray<FTradeRoute> GetMostProfitableRoutes();
     
     // Export data
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category="Economy Monitor")
     void ExportEconomyData();
 };
 ```
