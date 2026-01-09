@@ -38,18 +38,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
       - Common problems with specific Blueprint property fixes
       - Screenshot guidelines for requesting help
       - Complete testing checklist
-    - `DOCKING_DEBUG_SUMMARY.md` (300+ lines)
+    - `docs/reference/DOCKING_DEBUG_VISUAL_FLOW.md` (320+ lines)
+      - ASCII art flow diagram showing complete message sequence
+      - Error flow examples with fixes
+      - Quick diagnosis table
+    - `docs/development/DOCKING_DEBUG_SUMMARY.md` (300+ lines)
       - Implementation summary for issue resolution
       - Example message output for normal and error cases
       - How-to-use guide for developers
       - Files modified reference
+    - `docs/development/DOCKING_DEBUG_README.md` (280+ lines)
+      - User-friendly quick start guide
+      - Complete instructions from compilation to testing
+      - Common problems with one-click fixes
+      - FAQ section
   - **Key Features**:
     - Checkpoint-style messages show exact docking progress
     - Identifies missing widget class assignments immediately
     - Shows validation failures with specific values (distances, slot counts)
     - Displays station and docking point information
-    - Success banners (═══) indicate completion of major phases
+    - Success banners (===) indicate completion of major phases (cross-platform compatible)
     - Messages stay on screen 3-8 seconds based on importance
+    - Compile-time flag (`DOCKING_DEBUG_ENABLED`) allows easy disabling for shipping builds
+    - Validation checks split for specific error reporting (with explanatory comments)
   - **Impact**: 
     - Eliminates guessing about where docking fails
     - Makes "Press F and nothing happens" issues immediately debuggable
