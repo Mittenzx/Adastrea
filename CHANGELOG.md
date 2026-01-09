@@ -71,6 +71,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `Source/Adastrea/Private/Ships/Spaceship.cpp` (200+ lines of debug code)
     - `Source/Adastrea/Private/Stations/DockingBayModule.cpp` (debug prints)
     - `Source/Adastrea/Private/Stations/DockingPortModule.cpp` (debug prints)
+- **Info Collector Analysis & MVP Telemetry Documentation** (2026-01-08)
+  - Created comprehensive info collector analysis document:
+    - `docs/development/INFO_COLLECTOR_ANALYSIS.md` - 18KB comprehensive analysis
+    - Compares standard UE info collectors with Trade Simulator MVP needs
+    - Identifies critical gaps: gameplay telemetry, playtester feedback, economy monitoring
+    - Provides implementation roadmap for Week 4/8/12 validation gates
+  - Created MVP telemetry quick reference:
+    - `docs/reference/MVP_TELEMETRY_QUICK_REFERENCE.md` - 6.5KB quick reference
+    - Blueprint integration examples for logging trades, visits, quits
+    - Validation gate checklists (60%/70%/75% fun ratings)
+    - Data export format specifications (JSON)
+    - 5-minute quick start guide for developers
+  - **Key Findings**:
+    - Standard info collectors focus on code quality, not gameplay validation
+    - Adastrea has good validation tools but lacks MVP-critical telemetry
+    - Need custom gameplay metrics: trade completion rate, time-to-trade, profit tracking
+    - Playtester surveys required for "fun rating" measurement (primary success metric)
+  - **Critical Gaps Identified** (Priority: CRITICAL):
+    - ❌ No runtime gameplay telemetry system
+    - ❌ No playtester feedback collection (surveys)
+    - ❌ No economy monitoring (price tracking, trade routes)
+    - ❌ No performance profiling (FPS, load times)
+  - **Recommended Solution**: Build `UMVPTelemetryComponent` for Blueprint integration
+  - **Impact**: 
+    - Enables data-driven GO/NO-GO decisions at validation gates
+    - Provides clear measurement for "is it fun?" question
+    - Supports publisher pitch with playtester metrics
+    - Aligns with Trade Simulator MVP validation requirements
 
 - **Player Character Architecture Documentation** (2026-01-08)
   - Answered critical architectural question: "Where is the player?"
