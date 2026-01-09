@@ -935,6 +935,21 @@ void ASpaceship::FreeLookCamera(const FInputActionValue& Value)
 void ASpaceship::SetNearbyStation(USpaceStationModule* Station)
 {
     NearbyStation = Station;
+    
+    // Debug print
+    if (GEngine)
+    {
+        if (Station)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+                FString::Printf(TEXT("[DOCKING] Ship entered docking range of station: %s"), *Station->GetName()));
+        }
+        else
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, 
+                TEXT("[DOCKING] Ship left docking range"));
+        }
+    }
 }
 
 void ASpaceship::ShowDockingPrompt(bool bShow)
@@ -951,18 +966,57 @@ void ASpaceship::ShowDockingPrompt(bool bShow)
                 if (DockingPromptWidget)
                 {
                     DockingPromptWidget->AddToViewport();
+                    
+                    // Debug print
+                    if (GEngine)
+                    {
+                        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+                            TEXT("[DOCKING] WBP_DockingPrompt created and added to viewport"));
+                    }
+                }
+                else
+                {
+                    // Debug print - widget creation failed
+                    if (GEngine)
+                    {
+                        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+                            TEXT("[DOCKING] ERROR: Failed to create WBP_DockingPrompt widget"));
+                    }
+                }
+            }
+            else
+            {
+                // Debug print - no player controller
+                if (GEngine)
+                {
+                    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+                        TEXT("[DOCKING] ERROR: No player controller found for widget creation"));
                 }
             }
         }
         else if (!DockingPromptWidgetClass)
         {
             UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::ShowDockingPrompt - DockingPromptWidgetClass is not set on '%s'. Docking prompt UI will not be shown."), *GetName());
+            
+            // Debug print - widget class not set
+            if (GEngine)
+            {
+                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+                    TEXT("[DOCKING] ERROR: DockingPromptWidgetClass not set in Blueprint"));
+            }
         }
         
         // Show existing widget
         if (DockingPromptWidget)
         {
             DockingPromptWidget->SetVisibility(ESlateVisibility::Visible);
+            
+            // Debug print
+            if (GEngine)
+            {
+                GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Cyan, 
+                    TEXT("[DOCKING] Docking prompt now visible"));
+            }
         }
     }
     else
@@ -971,23 +1025,59 @@ void ASpaceship::ShowDockingPrompt(bool bShow)
         if (DockingPromptWidget)
         {
             DockingPromptWidget->SetVisibility(ESlateVisibility::Collapsed);
+            
+            // Debug print
+            if (GEngine)
+            {
+                GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, 
+                    TEXT("[DOCKING] Docking prompt hidden"));
+            }
         }
     }
 }
 
 void ASpaceship::RequestDocking()
 {
+    // Debug print - function entry
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, 
+            TEXT("[DOCKING] RequestDocking() called - Player pressed docking key"));
+    }
+    
     // Validate nearby station exists
     if (!NearbyStation)
     {
         UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::RequestDocking - No station in range"));
+        
+        // Debug print
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+                TEXT("[DOCKING] ERROR: No station in range"));
+        }
+        
         // TODO: Show user feedback via HUD message
         return;
+    }
+    
+    // Debug print - station found
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+            FString::Printf(TEXT("[DOCKING] Station in range: %s"), *NearbyStation->GetName()));
     }
     
     // If already docked, undock instead
     if (bIsDocked)
     {
+        // Debug print
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, 
+                TEXT("[DOCKING] Already docked - calling Undock() instead"));
+        }
+        
         Undock();
         return;
     }
@@ -995,6 +1085,13 @@ void ASpaceship::RequestDocking()
     // Prevent rapid input during docking sequence
     if (bIsDocking)
     {
+        // Debug print
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, 
+                TEXT("[DOCKING] Already docking - ignoring input"));
+        }
+        
         return;
     }
     
@@ -1003,16 +1100,50 @@ void ASpaceship::RequestDocking()
     if (!DockingBay)
     {
         UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::RequestDocking - Station is not a docking module"));
+        
+        // Debug print
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+                TEXT("[DOCKING] ERROR: Station is not a docking module"));
+        }
+        
         // TODO: Show user feedback via HUD message
         return;
+    }
+    
+    // Debug print - docking module found
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+            TEXT("[DOCKING] Station is a valid docking module"));
     }
     
     // Check if docking is available
     if (!DockingBay->HasAvailableDocking())
     {
         UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::RequestDocking - No docking slots available"));
+        
+        // Debug print
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+                FString::Printf(TEXT("[DOCKING] ERROR: No docking slots available (%d/%d occupied)"), 
+                    DockingBay->GetMaxDockedShips() - DockingBay->GetAvailableDockingSpots(),
+                    DockingBay->GetMaxDockedShips()));
+        }
+        
         // TODO: Show user feedback via HUD message
         return;
+    }
+    
+    // Debug print - slots available
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+            FString::Printf(TEXT("[DOCKING] Docking slots available: %d/%d free"), 
+                DockingBay->GetAvailableDockingSpots(),
+                DockingBay->GetMaxDockedShips()));
     }
     
     // Get available docking point
@@ -1020,8 +1151,25 @@ void ASpaceship::RequestDocking()
     if (!DockingPoint)
     {
         UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::RequestDocking - Failed to get docking point"));
+        
+        // Debug print
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+                TEXT("[DOCKING] ERROR: Failed to get docking point (null pointer)"));
+        }
+        
         // TODO: Show user feedback via HUD message
         return;
+    }
+    
+    // Debug print - docking point found
+    if (GEngine)
+    {
+        FVector PointLocation = DockingPoint->GetComponentLocation();
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+            FString::Printf(TEXT("[DOCKING] Docking point found at location: X=%.0f Y=%.0f Z=%.0f"), 
+                PointLocation.X, PointLocation.Y, PointLocation.Z));
     }
     
     // Check if ship is within docking range
@@ -1029,13 +1177,37 @@ void ASpaceship::RequestDocking()
     if (DistanceToDockingPoint > DockingRange)
     {
         UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::RequestDocking - Too far from docking point (%.0f > %.0f)"), DistanceToDockingPoint, DockingRange);
+        
+        // Debug print
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+                FString::Printf(TEXT("[DOCKING] ERROR: Too far from docking point (%.0f units > %.0f max)"), 
+                    DistanceToDockingPoint, DockingRange));
+        }
+        
         // TODO: Show user feedback via HUD message
         return;
+    }
+    
+    // Debug print - distance check passed
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+            FString::Printf(TEXT("[DOCKING] Distance check passed: %.0f units (within %.0f max)"), 
+                DistanceToDockingPoint, DockingRange));
     }
     
     // Store docking point and begin docking sequence
     CurrentDockingPoint = DockingPoint;
     bIsDocking = true;
+    
+    // Debug print - starting docking
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, 
+            TEXT("[DOCKING] All checks passed - starting docking sequence"));
+    }
     
     // Navigate to docking point (instant in simplified version)
     NavigateToDockingPoint(CurrentDockingPoint);
@@ -1043,10 +1215,25 @@ void ASpaceship::RequestDocking()
 
 void ASpaceship::NavigateToDockingPoint(USceneComponent* DockingPoint)
 {
+    // Debug print - function entry
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, 
+            TEXT("[DOCKING] NavigateToDockingPoint() called - Moving ship to docking point"));
+    }
+    
     // Validate docking point
     if (!DockingPoint)
     {
         UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::NavigateToDockingPoint - Invalid docking point"));
+        
+        // Debug print
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+                TEXT("[DOCKING] ERROR: Invalid docking point (null pointer)"));
+        }
+        
         bIsDocking = false;
         return;
     }
@@ -1056,8 +1243,23 @@ void ASpaceship::NavigateToDockingPoint(USceneComponent* DockingPoint)
     FVector TargetLocation = DockingPoint->GetComponentLocation();
     FRotator TargetRotation = DockingPoint->GetComponentRotation();
     
+    // Debug print - target position
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, 
+            FString::Printf(TEXT("[DOCKING] Target docking position: X=%.0f Y=%.0f Z=%.0f"), 
+                TargetLocation.X, TargetLocation.Y, TargetLocation.Z));
+    }
+    
     // Instantly move ship to docking point
     SetActorLocationAndRotation(TargetLocation, TargetRotation);
+    
+    // Debug print - ship moved
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+            TEXT("[DOCKING] Ship teleported to docking point successfully"));
+    }
     
     // Immediately complete docking
     CompleteDocking();
@@ -1067,9 +1269,23 @@ void ASpaceship::NavigateToDockingPoint(USceneComponent* DockingPoint)
 
 void ASpaceship::CompleteDocking()
 {
+    // Debug print - function entry
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, 
+            TEXT("[DOCKING] CompleteDocking() called - Finalizing docking process"));
+    }
+    
     // Update docking state
     bIsDocked = true;
     bIsDocking = false;
+    
+    // Debug print - state updated
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+            TEXT("[DOCKING] Ship state updated: bIsDocked=true, bIsDocking=false"));
+    }
     
     // Notify station that ship has docked
     if (NearbyStation)
@@ -1078,6 +1294,13 @@ void ASpaceship::CompleteDocking()
         if (DockingBay)
         {
             DockingBay->DockShip();
+            
+            // Debug print - station notified
+            if (GEngine)
+            {
+                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+                    TEXT("[DOCKING] Station notified of successful docking"));
+            }
         }
     }
     
@@ -1085,27 +1308,84 @@ void ASpaceship::CompleteDocking()
     APlayerController* PC = Cast<APlayerController>(GetController());
     if (!PC)
     {
+        // Debug print - no player controller
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+                TEXT("[DOCKING] ERROR: No player controller found - cannot disable input or create UI"));
+        }
         return;
+    }
+    
+    // Debug print - player controller found
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+            TEXT("[DOCKING] Player controller found"));
     }
     
     // Disable input
     DisableInput(PC);
     
+    // Debug print - input disabled
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+            TEXT("[DOCKING] Ship input disabled"));
+    }
+    
     // Hide ship
     SetActorHiddenInGame(true);
+    
+    // Debug print - ship hidden
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+            TEXT("[DOCKING] Ship mesh hidden (player is 'inside' station)"));
+    }
     
     // Create and show trading widget
     if (TradingInterfaceClass)
     {
+        // Debug print - creating widget
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, 
+                TEXT("[DOCKING] Creating trading UI widget..."));
+        }
+        
         TradingWidget = CreateWidget<UUserWidget>(PC, TradingInterfaceClass);
         if (TradingWidget)
         {
             TradingWidget->AddToViewport();
+            
+            // Debug print - widget created successfully
+            if (GEngine)
+            {
+                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+                    TEXT("[DOCKING] Trading UI widget created and added to viewport"));
+            }
+        }
+        else
+        {
+            // Debug print - widget creation failed
+            if (GEngine)
+            {
+                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+                    TEXT("[DOCKING] ERROR: Failed to create trading UI widget"));
+            }
         }
     }
     else
     {
         UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::CompleteDocking - TradingInterfaceClass is not set on '%s'. Trading UI will not be created."), *GetName());
+        
+        // Debug print - widget class not set
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+                TEXT("[DOCKING] ERROR: TradingInterfaceClass not set in Blueprint"));
+        }
     }
     
     // Set input mode to UI only
@@ -1117,15 +1397,48 @@ void ASpaceship::CompleteDocking()
     }
     PC->SetInputMode(InputMode);
     
+    // Debug print - input mode changed
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+            TEXT("[DOCKING] Input mode set to UI only, mouse cursor shown"));
+    }
+    
+    // Debug print - complete success
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Green, 
+            TEXT("═══════════════════════════════════════════════════"));
+        GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Green, 
+            TEXT("[DOCKING] ✓ DOCKING COMPLETE - Trading UI should be visible"));
+        GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Green, 
+            TEXT("═══════════════════════════════════════════════════"));
+    }
+    
     UE_LOG(LogAdastreaShips, Log, TEXT("ASpaceship::CompleteDocking - Docking complete for '%s'"), *GetName());
 }
 
 void ASpaceship::Undock()
 {
+    // Debug print - function entry
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, 
+            TEXT("[UNDOCKING] Undock() called - Beginning undock sequence"));
+    }
+    
     // Check if actually docked
     if (!bIsDocked)
     {
         UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::Undock - Not currently docked"));
+        
+        // Debug print
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, 
+                TEXT("[UNDOCKING] WARNING: Not currently docked - aborting undock"));
+        }
+        
         return;
     }
     
@@ -1136,36 +1449,85 @@ void ASpaceship::Undock()
         if (DockingBay)
         {
             DockingBay->UndockShip();
+            
+            // Debug print - station notified
+            if (GEngine)
+            {
+                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+                    FString::Printf(TEXT("[UNDOCKING] Station notified: %s"), *NearbyStation->GetName()));
+            }
         }
     }
     
     // Update state
     bIsDocked = false;
     
+    // Debug print - state updated
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+            TEXT("[UNDOCKING] Ship state updated: bIsDocked=false"));
+    }
+    
     // Remove trading widget
     if (TradingWidget)
     {
         TradingWidget->RemoveFromParent();
         TradingWidget = nullptr;
+        
+        // Debug print - widget removed
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+                TEXT("[UNDOCKING] Trading UI widget removed from viewport"));
+        }
     }
     
     // Get player controller
     APlayerController* PC = Cast<APlayerController>(GetController());
     if (!PC)
     {
+        // Debug print - no player controller
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+                TEXT("[UNDOCKING] ERROR: No player controller found"));
+        }
+        
         return;
     }
     
     // Enable input
     EnableInput(PC);
     
+    // Debug print - input enabled
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+            TEXT("[UNDOCKING] Ship input re-enabled"));
+    }
+    
     // Show ship
     SetActorHiddenInGame(false);
+    
+    // Debug print - ship visible
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+            TEXT("[UNDOCKING] Ship mesh shown"));
+    }
     
     // Set input mode to game only
     PC->bShowMouseCursor = false;
     FInputModeGameOnly InputMode;
     PC->SetInputMode(InputMode);
+    
+    // Debug print - input mode changed
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+            TEXT("[UNDOCKING] Input mode set to game only, mouse cursor hidden"));
+    }
     
     // Apply forward impulse to move away from station
     FVector ForwardVector = GetActorForwardVector();
@@ -1173,6 +1535,24 @@ void ASpaceship::Undock()
     {
         // Add velocity in forward direction for smooth movement away
         MovementComponent->Velocity += ForwardVector * 500.0f;
+        
+        // Debug print - impulse applied
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+                TEXT("[UNDOCKING] Forward impulse applied (500 units)"));
+        }
+    }
+    
+    // Debug print - complete success
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Green, 
+            TEXT("═══════════════════════════════════════════════════"));
+        GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Green, 
+            TEXT("[UNDOCKING] ✓ UNDOCKING COMPLETE - Player has control"));
+        GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Green, 
+            TEXT("═══════════════════════════════════════════════════"));
     }
     
     UE_LOG(LogAdastreaShips, Log, TEXT("ASpaceship::Undock - Undocked successfully from '%s'"), NearbyStation ? *NearbyStation->GetName() : TEXT("Unknown Station"));
