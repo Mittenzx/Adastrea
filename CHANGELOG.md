@@ -9,6 +9,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Comprehensive Docking Debug System** (2026-01-09)
+  - Added 38 on-screen debug messages throughout entire docking and trading process
+  - Implemented color-coded checkpoint system for troubleshooting:
+    - Green: Success messages (operations completed)
+    - Cyan: Information messages (functions called)
+    - Yellow: Warning messages (unexpected states)
+    - Red: Error messages (operations failed)
+  - **C++ Debug Prints Added**:
+    - `ASpaceship::SetNearbyStation()` - Range detection (2 messages)
+    - `ASpaceship::ShowDockingPrompt()` - Widget creation and visibility (6 messages)
+    - `ASpaceship::RequestDocking()` - Complete validation flow (15 messages)
+    - `ASpaceship::NavigateToDockingPoint()` - Ship movement tracking (4 messages)
+    - `ASpaceship::CompleteDocking()` - Finalization and UI creation (11 messages)
+    - `ASpaceship::Undock()` - Undocking process tracking (10 messages)
+    - `ADockingBayModule::GetAvailableDockingPoint()` - Slot availability (3 messages)
+    - `ADockingBayModule::DockShip()` - Docking confirmation (2 messages)
+    - `ADockingBayModule::UndockShip()` - Undocking confirmation (2 messages)
+    - `ADockingPortModule` - All same functions as DockingBayModule (7 messages)
+  - **Documentation Created**:
+    - `docs/reference/DOCKING_DEBUG_MESSAGES.md` (630+ lines)
+      - Complete list of all 38 messages in flow sequence
+      - All error messages with causes and specific fixes
+      - Detailed troubleshooting guide with examples
+      - Message format reference
+    - `docs/reference/DOCKING_DEBUG_QUICK_REFERENCE.md` (160+ lines)
+      - Quick troubleshooting card with visual color guide
+      - Common problems with specific Blueprint property fixes
+      - Screenshot guidelines for requesting help
+      - Complete testing checklist
+    - `DOCKING_DEBUG_SUMMARY.md` (300+ lines)
+      - Implementation summary for issue resolution
+      - Example message output for normal and error cases
+      - How-to-use guide for developers
+      - Files modified reference
+  - **Key Features**:
+    - Checkpoint-style messages show exact docking progress
+    - Identifies missing widget class assignments immediately
+    - Shows validation failures with specific values (distances, slot counts)
+    - Displays station and docking point information
+    - Success banners (═══) indicate completion of major phases
+    - Messages stay on screen 3-8 seconds based on importance
+  - **Impact**: 
+    - Eliminates guessing about where docking fails
+    - Makes "Press F and nothing happens" issues immediately debuggable
+    - Shows exact configuration errors (widget classes, docking points)
+    - Provides self-documenting system flow for developers
+    - Enables users to identify and fix issues without developer support
+  - **Modified Files**:
+    - `Source/Adastrea/Private/Ships/Spaceship.cpp` (200+ lines of debug code)
+    - `Source/Adastrea/Private/Stations/DockingBayModule.cpp` (debug prints)
+    - `Source/Adastrea/Private/Stations/DockingPortModule.cpp` (debug prints)
+
 - **Player Character Architecture Documentation** (2026-01-08)
   - Answered critical architectural question: "Where is the player?"
   - Created comprehensive player architecture document:
