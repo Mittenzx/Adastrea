@@ -20,6 +20,52 @@ ASpaceStation::ASpaceStation()
 void ASpaceStation::BeginPlay()
 {
     Super::BeginPlay();
+    
+    // Spawn default modules configured in Class Defaults
+    if (DefaultModuleClasses.Num() > 0)
+    {
+        UWorld* World = GetWorld();
+        if (World)
+        {
+            FActorSpawnParameters SpawnParams;
+            SpawnParams.Owner = this;
+            SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+            
+            for (TSubclassOf<ASpaceStationModule> ModuleClass : DefaultModuleClasses)
+            {
+                if (ModuleClass)
+                {
+                    // Spawn module at station location
+                    ASpaceStationModule* NewModule = World->SpawnActor<ASpaceStationModule>(
+                        ModuleClass, 
+                        GetActorLocation(), 
+                        GetActorRotation(),
+                        SpawnParams
+                    );
+                    
+                    if (NewModule)
+                    {
+                        // Add module using existing AddModule function
+                        AddModule(NewModule);
+                        
+                        UE_LOG(LogAdastreaStations, Log, 
+                            TEXT("SpaceStation::BeginPlay - Spawned default module: %s for station %s"),
+                            *NewModule->GetName(), *GetName());
+                    }
+                    else
+                    {
+                        UE_LOG(LogAdastreaStations, Warning,
+                            TEXT("SpaceStation::BeginPlay - Failed to spawn module from class: %s"),
+                            *ModuleClass->GetName());
+                    }
+                }
+            }
+            
+            UE_LOG(LogAdastreaStations, Log,
+                TEXT("SpaceStation::BeginPlay - Station %s initialized with %d default modules"),
+                *GetName(), Modules.Num());
+        }
+    }
 }
 
 void ASpaceStation::AddModule(ASpaceStationModule* Module)
