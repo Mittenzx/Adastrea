@@ -40,8 +40,38 @@ class ADASTREA_API ASpaceStation : public AActor, public IDamageable, public ITa
 public:
     ASpaceStation();
 
-    // Array of attached modules
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Station")
+    /**
+     * Default module classes to spawn when station is created
+     * 
+     * Configure this array in Class Defaults to specify which module types
+     * should be automatically spawned and attached when the station begins play.
+     * 
+     * Example Usage:
+     * 1. Open SpaceStation Blueprint Class Defaults
+     * 2. Add entries to DefaultModuleClasses array
+     * 3. Select module classes (BP_DockingBayModule, BP_ReactorModule, etc.)
+     * 4. Modules will be spawned automatically in BeginPlay
+     * 
+     * Note: This is separate from the runtime Modules array which tracks
+     * all currently attached modules (including dynamically added ones).
+     */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Station|Configuration",
+        meta=(ToolTip="Module classes to automatically spawn when station is created"))
+    TArray<TSubclassOf<ASpaceStationModule>> DefaultModuleClasses;
+
+    /**
+     * Array of currently attached modules (runtime tracking)
+     * 
+     * This array is populated automatically:
+     * - BeginPlay spawns modules from DefaultModuleClasses
+     * - AddModule() adds dynamically created modules
+     * - RemoveModule() removes modules
+     * 
+     * Do not edit this in Class Defaults - it's for runtime use only.
+     * Use DefaultModuleClasses instead to configure initial modules.
+     */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Station",
+        meta=(ToolTip="Currently attached modules (runtime only, populated automatically)"))
     TArray<ASpaceStationModule*> Modules;
 
     // ====================

@@ -9,6 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **SpaceStation DefaultModuleClasses Configuration** (2026-01-10)
+  - Added `DefaultModuleClasses` array property to `ASpaceStation` for editor configuration
+  - Enables designers to select module types in Class Defaults dropdown
+  - Auto-spawns configured modules in BeginPlay
+  - Fixes issue where module dropdown was empty in editor
+  - **Technical Details**:
+    - New property: `TArray<TSubclassOf<ASpaceStationModule>> DefaultModuleClasses`
+    - Property type allows selecting Blueprint classes in editor
+    - Separated from runtime `Modules` array (actor pointer tracking)
+    - Updated BeginPlay to spawn and attach default modules automatically
+  - **Usage**:
+    1. Open SpaceStation Blueprint Class Defaults
+    2. Add entries to DefaultModuleClasses array
+    3. Select module classes (e.g., BP_DockingBayModule, BP_ReactorModule)
+    4. Modules spawn automatically when station begins play
+  - **Files Modified**:
+    - `Source/Adastrea/Public/Stations/SpaceStation.h` - Added DefaultModuleClasses property
+    - `Source/Adastrea/Private/Stations/SpaceStation.cpp` - Updated BeginPlay implementation
+
 - **Comprehensive Docking Debug System** (2026-01-09)
   - Added 38 on-screen debug messages throughout entire docking and trading process
   - Implemented color-coded checkpoint system for troubleshooting:
