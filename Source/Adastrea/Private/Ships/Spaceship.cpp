@@ -228,33 +228,49 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
     UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship::SetupPlayerInputComponent called on %s"), *GetName());
 
-    // Initialize SpaceshipControlsComponent if present (handles basic movement/look/fire)
-    USpaceshipControlsComponent* ControlsComponent = FindComponentByClass<USpaceshipControlsComponent>();
-    if (ControlsComponent)
-    {
-        UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Found SpaceshipControlsComponent, initializing input bindings"));
-        ControlsComponent->InitializeInputBindings(PlayerInputComponent);
-    }
-    else
-    {
-        UE_LOG(LogAdastreaInput, Warning, TEXT("ASpaceship: SpaceshipControlsComponent NOT FOUND on %s"), *GetName());
-    }
-    
     // Setup Enhanced Input bindings for ASpaceship's input (throttle, free look, etc.)
     if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
     {
-        if (MoveAction)
+        // Check if ASpaceship has its own configured input actions
+        bool bHasOwnActions = (MoveAction != nullptr || LookAction != nullptr);
+        
+        if (bHasOwnActions)
         {
-            EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASpaceship::Move);
-            UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound MoveAction"));
+            UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Using ASpaceship's own input actions (MoveAction=%s, LookAction=%s)"), 
+                MoveAction ? TEXT("Valid") : TEXT("NULL"),
+                LookAction ? TEXT("Valid") : TEXT("NULL"));
+            
+            // Use ASpaceship's sophisticated input handling
+            if (MoveAction)
+            {
+                EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASpaceship::Move);
+                UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound MoveAction"));
+            }
+
+            if (LookAction)
+            {
+                EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASpaceship::Look);
+                UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound LookAction"));
+            }
+        }
+        else
+        {
+            UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: No configured input actions, delegating to SpaceshipControlsComponent"));
+            
+            // Initialize SpaceshipControlsComponent if present (handles basic movement/look/fire)
+            USpaceshipControlsComponent* ControlsComponent = FindComponentByClass<USpaceshipControlsComponent>();
+            if (ControlsComponent)
+            {
+                UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Found SpaceshipControlsComponent, initializing input bindings"));
+                ControlsComponent->InitializeInputBindings(PlayerInputComponent);
+            }
+            else
+            {
+                UE_LOG(LogAdastreaInput, Warning, TEXT("ASpaceship: No input actions configured and SpaceshipControlsComponent NOT FOUND on %s"), *GetName());
+            }
         }
 
-        if (LookAction)
-        {
-            EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASpaceship::Look);
-            UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound LookAction"));
-        }
-
+        // Always bind free look, throttle, and dock actions (these are ASpaceship-specific)
         if (FreeLookAction)
         {
             // Bind free look action with Started, Triggered, and Completed events
@@ -288,6 +304,8 @@ void ASpaceship::Move(const FInputActionValue& Value)
 {
     // Get the 3D vector input (WASD + QE for vertical)
     const FVector MovementVector = Value.Get<FVector>();
+    UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship::Move - MovementVector: X=%.2f Y=%.2f Z=%.2f"), 
+        MovementVector.X, MovementVector.Y, MovementVector.Z);
 
     // Forward/Backward (W/S)
     MoveForward(MovementVector.X);
@@ -309,6 +327,8 @@ void ASpaceship::Look(const FInputActionValue& Value)
 
     // Get the 2D vector input (mouse X/Y)
     const FVector2D LookAxisVector = Value.Get<FVector2D>();
+    UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship::Look - LookAxisVector: X=%.2f Y=%.2f"), 
+        LookAxisVector.X, LookAxisVector.Y);
 
     // Yaw (mouse X)
     Turn(LookAxisVector.X);
@@ -420,6 +440,9 @@ void ASpaceship::Turn(float Value)
             // Apply mouse flight sensitivity for better control
             float RotationRate = Value * TurnRate * MouseFlightSensitivity;
             
+            UE_LOG(LogAdastreaInput, Verbose, TEXT("ASpaceship::Turn - YawInput=%.2f, RotationRate=%.2f"), 
+                Value, RotationRate);
+            
             // Interpolate rotation velocity for smooth feel
             RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, RotationRate, DeltaSeconds, FlightAssistResponsiveness);
             
@@ -449,6 +472,9 @@ void ASpaceship::LookUp(float Value)
         {
             // X4-style: smooth rotation with damping
             float RotationRate = Value * TurnRate * MouseFlightSensitivity;
+            
+            UE_LOG(LogAdastreaInput, Verbose, TEXT("ASpaceship::LookUp - PitchInput=%.2f, RotationRate=%.2f"), 
+                Value, RotationRate);
             
             // Interpolate rotation velocity for smooth feel
             RotationVelocity.Pitch = FMath::FInterpTo(RotationVelocity.Pitch, RotationRate, DeltaSeconds, FlightAssistResponsiveness);

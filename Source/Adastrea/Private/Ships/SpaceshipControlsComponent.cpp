@@ -230,13 +230,36 @@ void USpaceshipControlsComponent::InitializeInputBindings(UInputComponent* Playe
 		return;
 	}
 
-	// Bind input actions
-	SetupInputBindings(EnhancedInputComp);
+	// Check if there's already a mapping context registered (e.g., from Blueprint/TestGameMode)
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = GetEnhancedInputSubsystem();
+	bool bExternalMappingContextExists = false;
+	
+	if (Subsystem)
+	{
+		// Check if any mapping contexts are already registered
+		TArray<FEnhancedActionKeyMapping> Mappings = Subsystem->GetAllPlayerMappableActionKeyMappings();
+		if (Mappings.Num() > 0)
+		{
+			bExternalMappingContextExists = true;
+			UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent: Detected external mapping context (Blueprint IMC) - will NOT add programmatic mapping context"));
+		}
+	}
 
-	// Enable controls (add mapping context)
-	EnableControls();
-
-	UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent: Input bindings initialized and controls enabled"));
+	// Only bind input actions and enable programmatic controls if no external mapping context exists
+	// This prevents conflicts with Blueprint-configured IMC_Spaceship
+	if (!bExternalMappingContextExists)
+	{
+		// Bind input actions
+		SetupInputBindings(EnhancedInputComp);
+		
+		// Enable controls (add mapping context)
+		EnableControls();
+		UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent: Input bindings initialized and programmatic controls enabled"));
+	}
+	else
+	{
+		UE_LOG(LogAdastreaInput, Warning, TEXT("SpaceshipControlsComponent: External mapping context detected - NOT adding programmatic context to avoid conflicts. Check Blueprint IMC_Spaceship has correct Mouse2D -> LookAction mapping!"));
+	}
 }
 
 UEnhancedInputLocalPlayerSubsystem* USpaceshipControlsComponent::GetEnhancedInputSubsystem() const
@@ -367,12 +390,14 @@ void USpaceshipControlsComponent::DecreaseSpeed()
 void USpaceshipControlsComponent::HandleMove(const FInputActionValue& Value)
 {
 	FVector2D MoveValue = Value.Get<FVector2D>() * MovementSpeed * CurrentSpeed;
+	UE_LOG(LogAdastreaInput, Verbose, TEXT("SpaceshipControlsComponent::HandleMove - MoveValue: X=%.2f Y=%.2f"), MoveValue.X, MoveValue.Y);
 	OnMoveInput(MoveValue);
 }
 
 void USpaceshipControlsComponent::HandleLook(const FInputActionValue& Value)
 {
 	FVector2D LookValue = Value.Get<FVector2D>();
+	UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent::HandleLook - RAW LookValue: X=%.2f Y=%.2f"), LookValue.X, LookValue.Y);
 	
 	// Apply separate sensitivity for horizontal (yaw) and vertical (pitch)
 	// Use LookSensitivityVertical if greater than 0, otherwise fall back to LookSensitivity
@@ -386,6 +411,7 @@ void USpaceshipControlsComponent::HandleLook(const FInputActionValue& Value)
 		LookValue.Y = -LookValue.Y;
 	}
 
+	UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent::HandleLook - PROCESSED LookValue: X=%.2f (yaw) Y=%.2f (pitch)"), LookValue.X, LookValue.Y);
 	OnLookInput(LookValue);
 }
 
@@ -468,6 +494,8 @@ void USpaceshipControlsComponent::OnLookInput_Implementation(FVector2D LookValue
 	// LookValue.X = yaw (left/right), LookValue.Y = pitch (up/down)
 	const float DeltaTime = World->GetDeltaSeconds();
 	FRotator DeltaRotation = FRotator(LookValue.Y * DeltaTime, LookValue.X * DeltaTime, 0.0f);
+	UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent::OnLookInput - Applying rotation: Pitch=%.2f Yaw=%.2f"), 
+		DeltaRotation.Pitch, DeltaRotation.Yaw);
 	OwningPawn->AddActorLocalRotation(DeltaRotation);
 }
 
