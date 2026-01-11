@@ -230,13 +230,36 @@ void USpaceshipControlsComponent::InitializeInputBindings(UInputComponent* Playe
 		return;
 	}
 
+	// Check if there's already a mapping context registered (e.g., from Blueprint/TestGameMode)
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = GetEnhancedInputSubsystem();
+	bool bExternalMappingContextExists = false;
+	
+	if (Subsystem)
+	{
+		// Check if any mapping contexts are already registered
+		TArray<FEnhancedActionKeyMapping> Mappings = Subsystem->GetAllPlayerMappableActionKeyMappings();
+		if (Mappings.Num() > 0)
+		{
+			bExternalMappingContextExists = true;
+			UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent: Detected external mapping context (Blueprint IMC), using programmatic fallback"));
+		}
+	}
+
 	// Bind input actions
 	SetupInputBindings(EnhancedInputComp);
 
-	// Enable controls (add mapping context)
-	EnableControls();
-
-	UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent: Input bindings initialized and controls enabled"));
+	// Only enable our programmatic controls if no external mapping context exists
+	// This prevents conflicts with Blueprint-configured IMC_Spaceship
+	if (!bExternalMappingContextExists)
+	{
+		// Enable controls (add mapping context)
+		EnableControls();
+		UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent: Input bindings initialized and programmatic controls enabled"));
+	}
+	else
+	{
+		UE_LOG(LogAdastreaInput, Warning, TEXT("SpaceshipControlsComponent: External mapping context detected - NOT adding programmatic context to avoid conflicts. Check Blueprint IMC_Spaceship has correct Mouse2D → LookAction mapping!"));
+	}
 }
 
 UEnhancedInputLocalPlayerSubsystem* USpaceshipControlsComponent::GetEnhancedInputSubsystem() const
