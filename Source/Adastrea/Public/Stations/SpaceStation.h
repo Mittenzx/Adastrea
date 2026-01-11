@@ -7,6 +7,9 @@
 #include "Interfaces/ITargetable.h"
 #include "SpaceStation.generated.h"
 
+// Forward declarations
+class AMarketplaceModule;
+
 /**
  * Core space station actor with modular construction system
  * 
@@ -163,6 +166,25 @@ public:
      */
     UFUNCTION(BlueprintCallable, Category="Station")
     TArray<ASpaceStationModule*> GetModules() const;
+
+    /**
+     * Get the first marketplace module attached to this station
+     * Useful for opening trading UI
+     * @return First marketplace module found, or nullptr if none exist
+     * 
+     * MVP USE: Essential for Trade Simulator MVP - finds trading interface
+     */
+    UFUNCTION(BlueprintCallable, Category="Station|Trading")
+    AMarketplaceModule* GetMarketplaceModule() const;
+
+    /**
+     * Get all marketplace modules attached to this station
+     * @return Array of all marketplace modules
+     * 
+     * MVP USE: Supports stations with multiple markets (e.g., legal + black market)
+     */
+    UFUNCTION(BlueprintCallable, Category="Station|Trading")
+    TArray<AMarketplaceModule*> GetMarketplaceModules() const;
 
     // REMOVED: SetFaction() - faction system removed per Trade Simulator MVP scope
 

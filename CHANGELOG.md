@@ -9,6 +9,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **MarketplaceModule Market Configuration** (2026-01-11)
+  - Added market configuration properties to `AMarketplaceModule` for per-module market setup
+  - Enables each marketplace module to have its own market data asset
+  - **New Properties**:
+    - `UMarketDataAsset* MarketDataAsset` - Market configuration defining inventory, prices, and trading rules
+    - `bool bIsOpen` - Controls whether marketplace is currently open for trading (defaults to true)
+    - `FText MarketplaceName` - Display name for the marketplace (e.g., "Central Market", "Black Market")
+  - **New Functions**:
+    - `GetMarketData()` - Returns the market data asset or nullptr if not set
+    - `IsAvailableForTrading()` - Checks if marketplace is open and has valid configuration
+  - **SpaceStation Helper Functions**:
+    - `GetMarketplaceModule()` - Finds first available marketplace module for trading UI
+    - `GetMarketplaceModules()` - Returns all marketplace modules attached to station
+  - **Usage**:
+    1. Create a marketplace module Blueprint (e.g., `BP_SpaceStationModule_Marketplace`)
+    2. In Class Defaults, set the Market Data Asset property
+    3. Optionally configure marketplace name and open status
+    4. Add to station's DefaultModuleClasses array
+    5. Trading UI can call `Station->GetMarketplaceModule()` to find available market
+  - **Files Modified**:
+    - `Source/Adastrea/Public/Stations/MarketplaceModule.h` - Added properties and functions
+    - `Source/Adastrea/Private/Stations/MarketplaceModule.cpp` - Initialize defaults in constructor
+    - `Source/Adastrea/Public/Stations/SpaceStation.h` - Added helper functions
+    - `Source/Adastrea/Private/Stations/SpaceStation.cpp` - Implemented helper functions
+
 - **SpaceStation DefaultModuleClasses Configuration** (2026-01-10)
   - Added `DefaultModuleClasses` array property to `ASpaceStation` for editor configuration
   - Enables designers to select module types in Class Defaults dropdown
