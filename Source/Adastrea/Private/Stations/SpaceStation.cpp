@@ -1,6 +1,7 @@
 // Copyright (c) 2025 Mittenzx. Licensed under MIT.
 
 #include "Stations/SpaceStation.h"
+#include "Stations/MarketplaceModule.h"
 #include "AdastreaLog.h"
 
 ASpaceStation::ASpaceStation()
@@ -172,6 +173,36 @@ bool ASpaceStation::MoveModule(ASpaceStationModule* Module, FVector NewRelativeL
 TArray<ASpaceStationModule*> ASpaceStation::GetModules() const
 {
     return Modules;
+}
+
+AMarketplaceModule* ASpaceStation::GetMarketplaceModule() const
+{
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (AMarketplaceModule* Marketplace = Cast<AMarketplaceModule>(Module))
+        {
+            if (Marketplace->IsAvailableForTrading())
+            {
+                return Marketplace;
+            }
+        }
+    }
+    return nullptr;
+}
+
+TArray<AMarketplaceModule*> ASpaceStation::GetMarketplaceModules() const
+{
+    TArray<AMarketplaceModule*> MarketplaceModules;
+    
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (AMarketplaceModule* Marketplace = Cast<AMarketplaceModule>(Module))
+        {
+            MarketplaceModules.Add(Marketplace);
+        }
+    }
+    
+    return MarketplaceModules;
 }
 
 TArray<ASpaceStationModule*> ASpaceStation::GetModulesByType(const FString& ModuleType) const
