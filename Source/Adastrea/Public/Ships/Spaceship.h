@@ -183,6 +183,18 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flight Control|Advanced", meta=(ClampMin="0.1", ClampMax="5.0"))
     float MouseFlightSensitivity;
 
+    /** Enable X4-style mouse position flight (cursor distance from center controls rotation speed) */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flight Control|Advanced")
+    bool bUseMousePositionFlight;
+
+    /** Deadzone radius for mouse position flight (pixels from screen center where no rotation occurs) */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flight Control|Advanced", meta=(ClampMin="0.0", ClampMax="500.0"))
+    float MouseDeadzoneRadius;
+
+    /** Maximum effective radius for mouse position flight (pixels from center at which rotation speed is 100%) */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flight Control|Advanced", meta=(ClampMin="100.0", ClampMax="2000.0"))
+    float MouseMaxRadius;
+
     // ==========================================
     // FREE LOOK CAMERA PARAMETERS
     // ==========================================

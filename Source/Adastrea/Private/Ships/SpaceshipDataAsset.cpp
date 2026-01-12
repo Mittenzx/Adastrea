@@ -35,6 +35,7 @@ USpaceshipDataAsset::USpaceshipDataAsset()
     MaxSpeed = 500.0f;
     Acceleration = 50.0f;
     Maneuverability = 5;
+    RotationRateMultiplier = 0.5f;  // Medium agility by default
     JumpRange = 10.0f;
     FuelCapacity = 1000.0f;
     FuelConsumptionRate = 100.0f;

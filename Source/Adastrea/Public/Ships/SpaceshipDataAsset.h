@@ -114,6 +114,14 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Mobility Stats", meta=(ClampMin="1", ClampMax="10"))
     int32 Maneuverability;
 
+    // Rotation rate multiplier (0-1, affects how quickly ship can rotate)
+    // 0.1 = Very slow, heavy ships (capital ships, freighters)
+    // 0.5 = Medium agility (most ships)
+    // 1.0 = Maximum agility (fighters, scouts)
+    // This is multiplied with base turn rate for final rotation speed
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Mobility Stats", meta=(ClampMin="0.1", ClampMax="1.0"))
+    float RotationRateMultiplier;
+
     // Jump range in light years
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Mobility Stats", meta=(ClampMin="0", ClampMax="1000"))
     float JumpRange;
