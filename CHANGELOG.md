@@ -9,6 +9,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Space Station Module Aggregation System** (2026-01-12)
+  - Added comprehensive module aggregation functionality to `ASpaceStation` class
+  - Modules now contribute functionality to parent station via aggregate methods
+  - Station can query combined capabilities from all attached modules
+  - **New Power Management Functions**:
+    - `GetTotalPowerConsumption()` - Sum of all module power values (positive = consumption, negative = generation)
+    - `GetTotalPowerGeneration()` - Sum of power-generating modules only (absolute values)
+    - `GetPowerBalance()` - Net power balance (generation - consumption)
+  - **New Capability Query Functions**:
+    - `HasDockingCapability()` - Check if station has any docking modules
+    - `HasMarketplace()` - Check if station has marketplace for trading
+    - `HasCargoStorage()` - Check if station has cargo storage modules
+  - **New Module Filtering Functions**:
+    - `GetModuleCountByGroup(ModuleGroup)` - Count modules in specific category
+    - `GetModulesByGroup(ModuleGroup)` - Get all modules in specific category
+  - **Documentation Created**:
+    - `docs/reference/ADDING_MODULES_TO_STATIONS.md` - Comprehensive guide for adding modules in editor
+    - `docs/reference/STATION_MODULE_ARCHITECTURE.md` - System architecture and visual diagrams
+  - **Updated Documentation**:
+    - `Content/Blueprints/STATION_EDITOR_README.md` - Added aggregate function references
+  - **Benefits**:
+    - Station behavior adapts based on attached modules
+    - Easy Blueprint integration for UI (show power status, facilities count)
+    - Designer-friendly capability queries (e.g., check if station can trade before showing UI)
+  - **Usage Example**:
+    ```cpp
+    // Check if station supports trading
+    if (Station->HasMarketplace() && Station->HasDockingCapability())
+    {
+        OpenTradingUI();
+    }
+    
+    // Display power status
+    float PowerBalance = Station->GetPowerBalance();
+    if (PowerBalance > 0)
+        DisplayText("Power: Surplus");
+    else
+        DisplayText("Power: Deficit");
+    ```
+  - **Files Modified**:
+    - `Source/Adastrea/Public/Stations/SpaceStation.h` - Added aggregate function declarations
+    - `Source/Adastrea/Private/Stations/SpaceStation.cpp` - Implemented aggregate functions
+  - **MVP Alignment**: Critical for Trade Simulator MVP - enables checking station trading capabilities
+
 - **MarketplaceModule Market Configuration** (2026-01-11)
   - Added market configuration properties to `AMarketplaceModule` for per-module market setup
   - Enables each marketplace module to have its own market data asset
