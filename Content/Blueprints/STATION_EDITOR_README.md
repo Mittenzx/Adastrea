@@ -12,6 +12,7 @@ Main station actor that manages all attached modules.
 
 **Key Features:**
 - `TArray<ASpaceStationModule*> Modules` - Stores all attached modules
+- `DefaultModuleClasses` - Configure modules to spawn in Class Defaults ⭐ **NEW**
 - `AddModule(Module)` - Attaches a module to the station (simple version)
 - `AddModuleAtLocation(Module, Location)` - Attaches a module at a specific location
 - `RemoveModule(Module)` - Detaches a module from the station
@@ -19,6 +20,16 @@ Main station actor that manages all attached modules.
 - `GetModules()` - Returns all attached modules
 - `GetModulesByType(Type)` - Filters modules by their type string
 - `GetModuleCount()` - Returns the number of attached modules
+
+**Aggregate Functionality** ⭐ **NEW** (Modules add functionality to station):
+- `GetTotalPowerConsumption()` - Sum of all module power consumption
+- `GetTotalPowerGeneration()` - Sum of power-generating modules
+- `GetPowerBalance()` - Net power (generation - consumption)
+- `HasDockingCapability()` - Check if station can dock ships
+- `HasMarketplace()` - Check if station can trade goods
+- `HasCargoStorage()` - Check if station has cargo storage
+- `GetModuleCountByGroup(Group)` - Count modules by category
+- `GetModulesByGroup(Group)` - Get all modules in category
 
 #### 2. **ASpaceStationModule** (`Source/Adastrea/Stations/SpaceStationModule.h/cpp`)
 Base class for all station modules (docking bays, trade hubs, etc.).
@@ -147,6 +158,7 @@ This editor system can work alongside:
 ## Support
 
 Refer to:
+- **[ADDING_MODULES_TO_STATIONS.md](../../docs/reference/ADDING_MODULES_TO_STATIONS.md)** - ⭐ **NEW** Complete guide for adding modules in editor and using aggregate functionality
 - `BP_StationEditor_WorkflowNotes.txt` - Detailed Blueprint implementation guide
 - Unreal Engine documentation for UMG and Blueprint
 - Existing code examples in `Source/Adastrea/Ships/` for similar patterns

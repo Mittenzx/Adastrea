@@ -186,6 +186,87 @@ public:
     UFUNCTION(BlueprintCallable, Category="Station|Trading")
     TArray<AMarketplaceModule*> GetMarketplaceModules() const;
 
+    // ====================
+    // AGGREGATE MODULE FUNCTIONALITY
+    // Methods that combine functionality from all attached modules
+    // ====================
+
+    /**
+     * Get total power consumption/generation from all modules
+     * Positive = station consumes power, Negative = station generates power
+     * @return Net power consumption (sum of all module power values)
+     * 
+     * MVP USE: Can show station power status in UI
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Modules")
+    float GetTotalPowerConsumption() const;
+
+    /**
+     * Get total power generation from all power-generating modules
+     * @return Total power generation (absolute value of negative power modules)
+     * 
+     * MVP USE: Show power generation capacity
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Modules")
+    float GetTotalPowerGeneration() const;
+
+    /**
+     * Get net power balance (generation - consumption)
+     * Positive = surplus, Negative = deficit
+     * @return Net power balance
+     * 
+     * MVP USE: Indicate if station has enough power
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Modules")
+    float GetPowerBalance() const;
+
+    /**
+     * Check if station has at least one docking facility
+     * @return True if station can dock ships
+     * 
+     * MVP USE: Essential - stations need docking for player interaction
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Capabilities")
+    bool HasDockingCapability() const;
+
+    /**
+     * Check if station has at least one marketplace for trading
+     * @return True if station can trade goods
+     * 
+     * MVP USE: Critical - identifies which stations allow trading
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Capabilities")
+    bool HasMarketplace() const;
+
+    /**
+     * Check if station has cargo storage capability
+     * @return True if station has cargo bay modules
+     * 
+     * MVP USE: Useful for showing station storage capacity
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Capabilities")
+    bool HasCargoStorage() const;
+
+    /**
+     * Get count of modules in a specific group
+     * @param ModuleGroup The group to count (Docking, Storage, Public, etc.)
+     * @return Number of modules in that group
+     * 
+     * MVP USE: Show station facilities breakdown in UI
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Modules")
+    int32 GetModuleCountByGroup(EStationModuleGroup ModuleGroup) const;
+
+    /**
+     * Get all modules in a specific group
+     * @param ModuleGroup The group to filter by
+     * @return Array of modules in that group
+     * 
+     * MVP USE: Query specific facility types
+     */
+    UFUNCTION(BlueprintCallable, Category="Station|Modules")
+    TArray<ASpaceStationModule*> GetModulesByGroup(EStationModuleGroup ModuleGroup) const;
+
     // REMOVED: SetFaction() - faction system removed per Trade Simulator MVP scope
 
     // ====================
