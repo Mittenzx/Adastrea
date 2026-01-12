@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Build Compilation Errors** (2026-01-12)
+  - Fixed incorrect type prefix for `SpaceStationModule` - changed from `USpaceStationModule` to `ASpaceStationModule`
+    - Corrected in: `Spaceship.h` forward declaration, function parameter, and property declaration
+    - Corrected in: `Spaceship.cpp` function implementation
+    - **Reason**: `ASpaceStationModule` inherits from `AActor`, requiring `A` prefix not `U` prefix
+  - Added missing include for `EDamageType` enum in `ShieldModuleDataAsset.cpp`
+    - Added `#include "Interfaces/IDamageable.h"` to access full enum definition
+    - **Reason**: Forward declaration insufficient for using enum values like `EDamageType::Kinetic`
+  - Fixed incorrect method calls on `DockingBayModule` property
+    - Changed `DockingBay->GetMaxDockedShips()` to `DockingBay->MaxDockedShips` (direct property access)
+    - Fixed in: `Spaceship.cpp` docking debug logging (3 locations)
+    - **Reason**: `MaxDockedShips` is a public UPROPERTY, not a getter method
+  - **Impact**: Project now builds successfully without Unreal Header Tool (UHT) errors or compilation failures
+
 ### Added
 
 - **Space Station Module Aggregation System** (2026-01-12)
