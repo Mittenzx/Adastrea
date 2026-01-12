@@ -480,6 +480,18 @@ void ASpaceship::Turn(float Value)
                     // Calculate rotation speed based on distance from center (beyond deadzone)
                     float EffectiveDistance = DistanceFromCenter - MouseDeadzoneRadius;
                     float MaxEffectiveDistance = MouseMaxRadius - MouseDeadzoneRadius;
+                    
+                    // Protect against invalid configuration where MouseMaxRadius <= MouseDeadzoneRadius
+                    if (MaxEffectiveDistance <= KINDA_SMALL_NUMBER)
+                    {
+                        UE_LOG(LogAdastreaInput, Warning, 
+                            TEXT("ASpaceship::Turn - Invalid mouse radius configuration: MouseMaxRadius (%.2f) must be greater than MouseDeadzoneRadius (%.2f)."),
+                            MouseMaxRadius, MouseDeadzoneRadius);
+                        
+                        // Fall back to a small positive value to avoid division by zero / NaNs
+                        MaxEffectiveDistance = KINDA_SMALL_NUMBER;
+                    }
+                    
                     float DistanceRatio = FMath::Clamp(EffectiveDistance / MaxEffectiveDistance, 0.0f, 1.0f);
                     
                     // Calculate rotation rate: distance ratio * base turn rate * ship multiplier * sensitivity
@@ -580,6 +592,18 @@ void ASpaceship::LookUp(float Value)
                     // Calculate rotation speed based on distance from center (beyond deadzone)
                     float EffectiveDistance = DistanceFromCenter - MouseDeadzoneRadius;
                     float MaxEffectiveDistance = MouseMaxRadius - MouseDeadzoneRadius;
+                    
+                    // Protect against invalid configuration where MouseMaxRadius <= MouseDeadzoneRadius
+                    if (MaxEffectiveDistance <= KINDA_SMALL_NUMBER)
+                    {
+                        UE_LOG(LogAdastreaInput, Warning, 
+                            TEXT("ASpaceship::LookUp - Invalid mouse radius configuration: MouseMaxRadius (%.2f) must be greater than MouseDeadzoneRadius (%.2f)."),
+                            MouseMaxRadius, MouseDeadzoneRadius);
+                        
+                        // Fall back to a small positive value to avoid division by zero / NaNs
+                        MaxEffectiveDistance = KINDA_SMALL_NUMBER;
+                    }
+                    
                     float DistanceRatio = FMath::Clamp(EffectiveDistance / MaxEffectiveDistance, 0.0f, 1.0f);
                     
                     // Calculate rotation rate: distance ratio * base turn rate * ship multiplier * sensitivity
