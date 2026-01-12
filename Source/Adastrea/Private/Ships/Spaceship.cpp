@@ -51,6 +51,9 @@ ASpaceship::ASpaceship()
     TravelModeMultiplier = 5.0f;              // 5x speed in travel mode
     StrafeIndependence = 0.8f;                // High strafe independence
     MouseFlightSensitivity = 1.0f;            // 1:1 mouse sensitivity
+    bUseMousePositionFlight = true;           // X4-style mouse position flight by default
+    MouseDeadzoneRadius = 50.0f;              // 50 pixel deadzone from center
+    MouseMaxRadius = 400.0f;                  // 400 pixels for 100% rotation speed
 
     // Initialize free look camera parameters
     bFreeLookActive = false;
@@ -436,24 +439,102 @@ void ASpaceship::Turn(float Value)
         
         if (bFlightAssistEnabled)
         {
-            // X4-style: smooth rotation with damping
-            // Apply mouse flight sensitivity for better control
-            float RotationRate = Value * TurnRate * MouseFlightSensitivity;
+            // Get ship-specific rotation rate multiplier from data asset
+            float ShipRotationMultiplier = 1.0f;
+            if (ShipDataAsset)
+            {
+                ShipRotationMultiplier = ShipDataAsset->RotationRateMultiplier;
+            }
             
-            UE_LOG(LogAdastreaInput, Verbose, TEXT("ASpaceship::Turn - YawInput=%.2f, RotationRate=%.2f"), 
-                Value, RotationRate);
-            
-            // Interpolate rotation velocity for smooth feel
-            RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, RotationRate, DeltaSeconds, FlightAssistResponsiveness);
-            
-            // Apply rotation directly to actor
-            FRotator DeltaRotation = FRotator(0.0f, RotationVelocity.Yaw * DeltaSeconds, 0.0f);
-            AddActorWorldRotation(DeltaRotation);
+            // X4-style mouse position flight
+            if (bUseMousePositionFlight)
+            {
+                // Get mouse position relative to screen center
+                APlayerController* PC = Cast<APlayerController>(GetController());
+                if (PC)
+                {
+                    int32 ViewportSizeX, ViewportSizeY;
+                    float MouseX, MouseY;
+                    
+                    PC->GetViewportSize(ViewportSizeX, ViewportSizeY);
+                    PC->GetMousePosition(MouseX, MouseY);
+                    
+                    // Calculate center of screen
+                    float CenterX = ViewportSizeX * 0.5f;
+                    float CenterY = ViewportSizeY * 0.5f;
+                    
+                    // Calculate distance from center
+                    float DeltaX = MouseX - CenterX;
+                    float DeltaY = MouseY - CenterY;
+                    
+                    // Apply deadzone
+                    float DistanceFromCenter = FMath::Sqrt(DeltaX * DeltaX + DeltaY * DeltaY);
+                    if (DistanceFromCenter < MouseDeadzoneRadius)
+                    {
+                        // Within deadzone, no rotation
+                        YawInput = 0.0f;
+                        RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, 0.0f, DeltaSeconds, FlightAssistResponsiveness);
+                        return;
+                    }
+                    
+                    // Calculate rotation speed based on distance from center (beyond deadzone)
+                    float EffectiveDistance = DistanceFromCenter - MouseDeadzoneRadius;
+                    float MaxEffectiveDistance = MouseMaxRadius - MouseDeadzoneRadius;
+                    
+                    // Protect against invalid configuration where MouseMaxRadius <= MouseDeadzoneRadius
+                    if (MaxEffectiveDistance <= KINDA_SMALL_NUMBER)
+                    {
+                        UE_LOG(LogAdastreaInput, Warning, 
+                            TEXT("ASpaceship::Turn - Invalid mouse radius configuration: MouseMaxRadius (%.2f) must be greater than MouseDeadzoneRadius (%.2f)."),
+                            MouseMaxRadius, MouseDeadzoneRadius);
+                        
+                        // Fall back to a small positive value to avoid division by zero / NaNs
+                        MaxEffectiveDistance = KINDA_SMALL_NUMBER;
+                    }
+                    
+                    float DistanceRatio = FMath::Clamp(EffectiveDistance / MaxEffectiveDistance, 0.0f, 1.0f);
+                    
+                    // Calculate rotation rate: distance ratio * base turn rate * ship multiplier * sensitivity
+                    float RotationRate = DeltaX / DistanceFromCenter * DistanceRatio * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
+                    
+                    UE_LOG(LogAdastreaInput, Verbose, TEXT("ASpaceship::Turn - MousePos=(%.0f,%.0f), Center=(%.0f,%.0f), Distance=%.0f, DistanceRatio=%.2f, RotationRate=%.2f"), 
+                        MouseX, MouseY, CenterX, CenterY, DistanceFromCenter, DistanceRatio, RotationRate);
+                    
+                    // Interpolate rotation velocity for smooth feel
+                    RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, RotationRate, DeltaSeconds, FlightAssistResponsiveness);
+                    
+                    // Apply rotation directly to actor
+                    FRotator DeltaRotation = FRotator(0.0f, RotationVelocity.Yaw * DeltaSeconds, 0.0f);
+                    AddActorWorldRotation(DeltaRotation);
+                }
+            }
+            else
+            {
+                // Original X4-style smooth rotation with damping (mouse delta mode)
+                // Apply mouse flight sensitivity and ship rotation multiplier
+                float RotationRate = Value * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
+                
+                UE_LOG(LogAdastreaInput, Verbose, TEXT("ASpaceship::Turn - YawInput=%.2f, RotationRate=%.2f"), 
+                    Value, RotationRate);
+                
+                // Interpolate rotation velocity for smooth feel
+                RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, RotationRate, DeltaSeconds, FlightAssistResponsiveness);
+                
+                // Apply rotation directly to actor
+                FRotator DeltaRotation = FRotator(0.0f, RotationVelocity.Yaw * DeltaSeconds, 0.0f);
+                AddActorWorldRotation(DeltaRotation);
+            }
         }
         else
         {
             // Without flight assist: direct rotation
-            FRotator DeltaRotation = FRotator(0.0f, Value * TurnRate * DeltaSeconds, 0.0f);
+            float ShipRotationMultiplier = 1.0f;
+            if (ShipDataAsset)
+            {
+                ShipRotationMultiplier = ShipDataAsset->RotationRateMultiplier;
+            }
+            
+            FRotator DeltaRotation = FRotator(0.0f, Value * TurnRate * ShipRotationMultiplier * DeltaSeconds, 0.0f);
             AddActorWorldRotation(DeltaRotation);
         }
     }
@@ -470,23 +551,102 @@ void ASpaceship::LookUp(float Value)
         
         if (bFlightAssistEnabled)
         {
-            // X4-style: smooth rotation with damping
-            float RotationRate = Value * TurnRate * MouseFlightSensitivity;
+            // Get ship-specific rotation rate multiplier from data asset
+            float ShipRotationMultiplier = 1.0f;
+            if (ShipDataAsset)
+            {
+                ShipRotationMultiplier = ShipDataAsset->RotationRateMultiplier;
+            }
             
-            UE_LOG(LogAdastreaInput, Verbose, TEXT("ASpaceship::LookUp - PitchInput=%.2f, RotationRate=%.2f"), 
-                Value, RotationRate);
-            
-            // Interpolate rotation velocity for smooth feel
-            RotationVelocity.Pitch = FMath::FInterpTo(RotationVelocity.Pitch, RotationRate, DeltaSeconds, FlightAssistResponsiveness);
-            
-            // Apply rotation directly to actor
-            FRotator DeltaRotation = FRotator(RotationVelocity.Pitch * DeltaSeconds, 0.0f, 0.0f);
-            AddActorWorldRotation(DeltaRotation);
+            // X4-style mouse position flight
+            if (bUseMousePositionFlight)
+            {
+                // Get mouse position relative to screen center
+                APlayerController* PC = Cast<APlayerController>(GetController());
+                if (PC)
+                {
+                    int32 ViewportSizeX, ViewportSizeY;
+                    float MouseX, MouseY;
+                    
+                    PC->GetViewportSize(ViewportSizeX, ViewportSizeY);
+                    PC->GetMousePosition(MouseX, MouseY);
+                    
+                    // Calculate center of screen
+                    float CenterX = ViewportSizeX * 0.5f;
+                    float CenterY = ViewportSizeY * 0.5f;
+                    
+                    // Calculate distance from center
+                    float DeltaX = MouseX - CenterX;
+                    float DeltaY = MouseY - CenterY;
+                    
+                    // Apply deadzone
+                    float DistanceFromCenter = FMath::Sqrt(DeltaX * DeltaX + DeltaY * DeltaY);
+                    if (DistanceFromCenter < MouseDeadzoneRadius)
+                    {
+                        // Within deadzone, no rotation
+                        PitchInput = 0.0f;
+                        RotationVelocity.Pitch = FMath::FInterpTo(RotationVelocity.Pitch, 0.0f, DeltaSeconds, FlightAssistResponsiveness);
+                        return;
+                    }
+                    
+                    // Calculate rotation speed based on distance from center (beyond deadzone)
+                    float EffectiveDistance = DistanceFromCenter - MouseDeadzoneRadius;
+                    float MaxEffectiveDistance = MouseMaxRadius - MouseDeadzoneRadius;
+                    
+                    // Protect against invalid configuration where MouseMaxRadius <= MouseDeadzoneRadius
+                    if (MaxEffectiveDistance <= KINDA_SMALL_NUMBER)
+                    {
+                        UE_LOG(LogAdastreaInput, Warning, 
+                            TEXT("ASpaceship::LookUp - Invalid mouse radius configuration: MouseMaxRadius (%.2f) must be greater than MouseDeadzoneRadius (%.2f)."),
+                            MouseMaxRadius, MouseDeadzoneRadius);
+                        
+                        // Fall back to a small positive value to avoid division by zero / NaNs
+                        MaxEffectiveDistance = KINDA_SMALL_NUMBER;
+                    }
+                    
+                    float DistanceRatio = FMath::Clamp(EffectiveDistance / MaxEffectiveDistance, 0.0f, 1.0f);
+                    
+                    // Calculate rotation rate: distance ratio * base turn rate * ship multiplier * sensitivity
+                    // Note: DeltaY is inverted for pitch (moving mouse up = pitch down in screen space)
+                    float RotationRate = -DeltaY / DistanceFromCenter * DistanceRatio * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
+                    
+                    UE_LOG(LogAdastreaInput, Verbose, TEXT("ASpaceship::LookUp - MousePos=(%.0f,%.0f), Center=(%.0f,%.0f), Distance=%.0f, DistanceRatio=%.2f, RotationRate=%.2f"), 
+                        MouseX, MouseY, CenterX, CenterY, DistanceFromCenter, DistanceRatio, RotationRate);
+                    
+                    // Interpolate rotation velocity for smooth feel
+                    RotationVelocity.Pitch = FMath::FInterpTo(RotationVelocity.Pitch, RotationRate, DeltaSeconds, FlightAssistResponsiveness);
+                    
+                    // Apply rotation directly to actor
+                    FRotator DeltaRotation = FRotator(RotationVelocity.Pitch * DeltaSeconds, 0.0f, 0.0f);
+                    AddActorWorldRotation(DeltaRotation);
+                }
+            }
+            else
+            {
+                // Original X4-style smooth rotation with damping (mouse delta mode)
+                float RotationRate = Value * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
+                
+                UE_LOG(LogAdastreaInput, Verbose, TEXT("ASpaceship::LookUp - PitchInput=%.2f, RotationRate=%.2f"), 
+                    Value, RotationRate);
+                
+                // Interpolate rotation velocity for smooth feel
+                RotationVelocity.Pitch = FMath::FInterpTo(RotationVelocity.Pitch, RotationRate, DeltaSeconds, FlightAssistResponsiveness);
+                
+                // Apply rotation directly to actor
+                FRotator DeltaRotation = FRotator(RotationVelocity.Pitch * DeltaSeconds, 0.0f, 0.0f);
+                AddActorWorldRotation(DeltaRotation);
+            }
         }
         else
         {
             // Without flight assist: direct rotation
-            FRotator DeltaRotation = FRotator(Value * TurnRate * DeltaSeconds, 0.0f, 0.0f);
+            float ShipRotationMultiplier = 1.0f;
+            if (ShipDataAsset)
+            {
+                ShipRotationMultiplier = ShipDataAsset->RotationRateMultiplier;
+            }
+            
+            FRotator DeltaRotation = FRotator(Value * TurnRate * ShipRotationMultiplier * DeltaSeconds, 0.0f, 0.0f);
             AddActorWorldRotation(DeltaRotation);
         }
     }
@@ -501,10 +661,17 @@ void ASpaceship::Roll(float Value)
     {
         const float DeltaSeconds = GetWorld()->GetDeltaSeconds();
         
+        // Get ship-specific rotation rate multiplier from data asset
+        float ShipRotationMultiplier = 1.0f;
+        if (ShipDataAsset)
+        {
+            ShipRotationMultiplier = ShipDataAsset->RotationRateMultiplier;
+        }
+        
         if (bFlightAssistEnabled)
         {
             // X4-style: smooth rotation with damping
-            float RotationRate = Value * TurnRate * MouseFlightSensitivity;
+            float RotationRate = Value * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
             
             // Interpolate rotation velocity for smooth feel
             RotationVelocity.Roll = FMath::FInterpTo(RotationVelocity.Roll, RotationRate, DeltaSeconds, FlightAssistResponsiveness);
@@ -516,7 +683,7 @@ void ASpaceship::Roll(float Value)
         else
         {
             // Without flight assist: direct rotation
-            FRotator DeltaRotation = FRotator(0.0f, 0.0f, Value * TurnRate * DeltaSeconds);
+            FRotator DeltaRotation = FRotator(0.0f, 0.0f, Value * TurnRate * ShipRotationMultiplier * DeltaSeconds);
             AddActorLocalRotation(DeltaRotation);
         }
     }
