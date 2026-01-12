@@ -13,7 +13,7 @@ class UInputAction;
 class USpringArmComponent;
 class UCameraComponent;
 class USpaceshipDataAsset;
-class USpaceStationModule;
+class ASpaceStationModule;
 class UUserWidget;
 
 /**
@@ -355,7 +355,7 @@ public:
      * @param Station The nearby docking module (DockingBay or DockingPort)
      */
     UFUNCTION(BlueprintCallable, Category="Docking")
-    void SetNearbyStation(USpaceStationModule* Station);
+    void SetNearbyStation(ASpaceStationModule* Station);
     
     /**
      * Show or hide the docking prompt UI
@@ -459,7 +459,7 @@ protected:
     
     /** Reference to nearby station module in docking range */
     UPROPERTY(BlueprintReadWrite, Category="Docking")
-    TObjectPtr<USpaceStationModule> NearbyStation;
+    TObjectPtr<ASpaceStationModule> NearbyStation;
     
     /** Currently assigned docking point scene component */
     UPROPERTY(BlueprintReadWrite, Category="Docking")

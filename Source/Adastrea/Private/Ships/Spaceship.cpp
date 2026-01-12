@@ -1130,7 +1130,7 @@ void ASpaceship::FreeLookCamera(const FInputActionValue& Value)
 // DOCKING SYSTEM IMPLEMENTATION
 // ==========================================
 
-void ASpaceship::SetNearbyStation(USpaceStationModule* Station)
+void ASpaceship::SetNearbyStation(ASpaceStationModule* Station)
 {
     NearbyStation = Station;
     
@@ -1380,8 +1380,8 @@ void ASpaceship::RequestDocking()
         {
             GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
                 FString::Printf(TEXT("[DOCKING] ERROR: No docking slots available (%d/%d occupied)"), 
-                    DockingBay->GetMaxDockedShips() - DockingBay->GetAvailableDockingSpots(),
-                    DockingBay->GetMaxDockedShips()));
+                    DockingBay->MaxDockedShips - DockingBay->GetAvailableDockingSpots(),
+                    DockingBay->MaxDockedShips));
         }
 
         
@@ -1400,7 +1400,7 @@ void ASpaceship::RequestDocking()
         GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
             FString::Printf(TEXT("[DOCKING] Docking slots available: %d/%d free"), 
                 DockingBay->GetAvailableDockingSpots(),
-                DockingBay->GetMaxDockedShips()));
+                DockingBay->MaxDockedShips));
     }
 
     
