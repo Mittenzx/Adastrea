@@ -237,6 +237,134 @@ int32 ASpaceStation::GetModuleCount() const
     return Modules.Num();
 }
 
+// ====================
+// AGGREGATE MODULE FUNCTIONALITY
+// ====================
+
+float ASpaceStation::GetTotalPowerConsumption() const
+{
+    float TotalPower = 0.0f;
+    
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (Module)
+        {
+            TotalPower += Module->GetModulePower();
+        }
+    }
+    
+    return TotalPower;
+}
+
+float ASpaceStation::GetTotalPowerGeneration() const
+{
+    float TotalGeneration = 0.0f;
+    
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (Module && Module->IsGeneratingPower())
+        {
+            // Power generation is negative, convert to positive for display
+            TotalGeneration += FMath::Abs(Module->GetModulePower());
+        }
+    }
+    
+    return TotalGeneration;
+}
+
+float ASpaceStation::GetPowerBalance() const
+{
+    float Generation = GetTotalPowerGeneration();
+    float Consumption = 0.0f;
+    
+    // Count only consuming modules (positive power)
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (Module && !Module->IsGeneratingPower())
+        {
+            Consumption += Module->GetModulePower();
+        }
+    }
+    
+    return Generation - Consumption;
+}
+
+bool ASpaceStation::HasDockingCapability() const
+{
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (Module && Module->GetModuleGroup() == EStationModuleGroup::Docking)
+        {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+bool ASpaceStation::HasMarketplace() const
+{
+    return GetMarketplaceModule() != nullptr;
+}
+
+bool ASpaceStation::HasCargoStorage() const
+{
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (Module && Module->GetModuleGroup() == EStationModuleGroup::Storage)
+        {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+int32 ASpaceStation::GetModuleCountByGroup(EStationModuleGroup ModuleGroup) const
+{
+    // Special case: All group returns total count
+    if (ModuleGroup == EStationModuleGroup::All)
+    {
+        return Modules.Num();
+    }
+    
+    int32 Count = 0;
+    
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (Module && Module->GetModuleGroup() == ModuleGroup)
+        {
+            Count++;
+        }
+    }
+    
+    return Count;
+}
+
+TArray<ASpaceStationModule*> ASpaceStation::GetModulesByGroup(EStationModuleGroup ModuleGroup) const
+{
+    TArray<ASpaceStationModule*> MatchingModules;
+    
+    // Special case: All group returns all modules
+    if (ModuleGroup == EStationModuleGroup::All)
+    {
+        return Modules;
+    }
+    
+    // Reserve space for better performance
+    MatchingModules.Reserve(Modules.Num() / 4);
+    
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (Module && Module->GetModuleGroup() == ModuleGroup)
+        {
+            MatchingModules.Add(Module);
+        }
+    }
+    
+    return MatchingModules;
+}
+
 // REMOVED: SetFaction() - faction system removed per Trade Simulator MVP
 
 // ====================
