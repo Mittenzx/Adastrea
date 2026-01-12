@@ -66,15 +66,31 @@ This is intuitive speed control where you set a target speed and the flight comp
 **Why it matters:**
 Allows complex maneuvering like strafing while maintaining forward speed. Essential for combat and docking.
 
-### 6. Mouse Flight (Smooth Rotation)
+### 6. Mouse Flight (X4-Style Position-Based)
 
 **How it works:**
-- Mouse movement translates to ship rotation with smooth interpolation
-- Rotation velocity is damped for natural feel
-- Sensitivity controlled by `MouseFlightSensitivity` parameter
+- Mouse cursor position on screen determines rotation direction and speed
+- Distance from screen center determines rotation speed (farther = faster)
+- Deadzone in center (50 pixels default) prevents accidental rotation
+- Maximum effective radius (400 pixels default) for 100% rotation speed
+- Each ship has a rotation rate multiplier (0.1-1.0) affecting turn speed
+- Toggle between position-based and traditional mouse delta modes
+
+**Configuration:**
+- `bUseMousePositionFlight`: Enable X4-style position mode (default: true)
+- `MouseDeadzoneRadius`: Deadzone from center in pixels (default: 50)
+- `MouseMaxRadius`: Max effective distance for 100% rotation (default: 400)
+- `RotationRateMultiplier` (in ShipDataAsset): Per-ship agility (0.1-1.0)
+
+**Ship Rotation Rate Examples:**
+- 0.1 = Very slow, heavy ships (capital ships, large freighters)
+- 0.3 = Slow but stable (medium freighters, industrial ships)
+- 0.5 = Medium agility (default, balanced ships)
+- 0.7 = Agile (light combat ships, scouts)
+- 1.0 = Maximum agility (fighters, interceptors)
 
 **Design note:**
-No sudden jerky movements - the ship responds like a real spacecraft with mass and inertia.
+This is the true X4: Foundations flight model - cursor position determines where the ship rotates to, with rotation speed scaling smoothly based on distance from center. Each ship type can have unique handling characteristics through the rotation rate multiplier.
 
 ### 7. Boost Mode
 
@@ -147,6 +163,15 @@ All parameters can be tuned in the Unreal Editor or via Blueprint:
 |-----------|---------|-------|-------------|
 | `StrafeIndependence` | `0.8` | 0.0-1.0 | Strafe independence from forward motion |
 | `MouseFlightSensitivity` | `1.0` | 0.1-5.0 | Mouse rotation sensitivity |
+| `bUseMousePositionFlight` | `true` | bool | X4-style position mode vs. delta mode |
+| `MouseDeadzoneRadius` | `50.0` | 0.0-500.0 | Deadzone from center (pixels) |
+| `MouseMaxRadius` | `400.0` | 100.0-2000.0 | Max distance for 100% rotation (pixels) |
+
+### Ship-Specific Parameters (in SpaceshipDataAsset)
+
+| Parameter | Default | Range | Description |
+|-----------|---------|-------|-------------|
+| `RotationRateMultiplier` | `0.5` | 0.1-1.0 | Ship-specific rotation agility |
 
 ## Default Controls
 
@@ -178,7 +203,12 @@ RotationDampingFactor = 0.9;      // High damping for smooth rotation
 AutoLevelStrength = 0.8;          // Strong auto-leveling
 FlightAssistResponsiveness = 5.0; // Very responsive
 ThrottleStep = 20.0;              // Large throttle increments
+MouseDeadzoneRadius = 100.0;      // Larger deadzone for stability
+bUseMousePositionFlight = true;   // X4-style position mode
 ```
+
+**Ship Setup:**
+- Set `RotationRateMultiplier = 0.7-1.0` for agile feel
 
 ### For Simulation-Style Flight (Realistic, Challenging)
 
@@ -187,7 +217,12 @@ RotationDampingFactor = 0.5;      // Low damping for more inertia
 AutoLevelStrength = 0.2;          // Weak auto-leveling
 FlightAssistResponsiveness = 1.0; // Slower response
 ThrottleStep = 5.0;               // Fine throttle control
+MouseDeadzoneRadius = 30.0;       // Smaller deadzone for precision
+bUseMousePositionFlight = false;  // Traditional mouse delta mode
 ```
+
+**Ship Setup:**
+- Set `RotationRateMultiplier = 0.3-0.5` for heavier, realistic feel
 
 ### For Combat-Focused Flight (Agile, Precise)
 
@@ -196,7 +231,14 @@ RotationDampingFactor = 0.7;      // Moderate damping
 AutoLevelStrength = 0.3;          // Some auto-leveling
 FlightAssistResponsiveness = 3.0; // Quick response
 BoostMultiplier = 2.5;            // Strong boost for dodging
+MouseDeadzoneRadius = 50.0;       // Balanced deadzone
+bUseMousePositionFlight = true;   // X4-style for quick targeting
 ```
+
+**Ship Setup:**
+- Fighters: `RotationRateMultiplier = 0.9-1.0`
+- Medium combat: `RotationRateMultiplier = 0.6-0.8`
+- Heavy combat: `RotationRateMultiplier = 0.4-0.5`
 
 ## Blueprint Integration
 
@@ -283,19 +325,33 @@ The throttle system (mouse wheel) controls forward speed, while W/S/A/D handle v
 
 ## Troubleshooting
 
-### Ship Feels Too Sluggish
+### Mouse Position Not Affecting Rotation
 
 **Solution:**
-- Increase `FlightAssistResponsiveness` (try 3.0-5.0)
-- Decrease `RotationDampingFactor` (try 0.5-0.7)
-- Increase `DefaultAcceleration` and `DefaultDeceleration`
+- Check `bUseMousePositionFlight` is enabled (default: true)
+- Verify mouse is outside deadzone (`MouseDeadzoneRadius = 50` pixels)
+- Ensure flight assist is enabled (`bFlightAssistEnabled = true`)
+- Check ship has valid `RotationRateMultiplier` in DataAsset (default: 0.5)
 
-### Ship Feels Too Twitchy
+### Rotation Too Sensitive/Not Sensitive Enough
 
 **Solution:**
-- Decrease `FlightAssistResponsiveness` (try 1.0-1.5)
-- Increase `RotationDampingFactor` (try 0.9-1.0)
-- Decrease `MouseFlightSensitivity` (try 0.5-0.8)
+- Adjust `MouseFlightSensitivity` (default: 1.0)
+- Modify `MouseMaxRadius` (smaller = more sensitive, larger = less sensitive)
+- Adjust ship's `RotationRateMultiplier` (0.1 = slow, 1.0 = fast)
+
+### Ship Rotates Even When Mouse Near Center
+
+**Solution:**
+- Increase `MouseDeadzoneRadius` (try 75-100 pixels)
+- Check if mouse delta mode is active (`bUseMousePositionFlight = false`)
+
+### Different Ships Feel the Same
+
+**Solution:**
+- Set different `RotationRateMultiplier` values in each ship's DataAsset
+- Fighters: 0.8-1.0, Medium ships: 0.5-0.7, Heavy ships: 0.2-0.4
+- Ensure DataAsset is assigned to ship in Blueprint
 
 ### Auto-Leveling Too Strong/Weak
 

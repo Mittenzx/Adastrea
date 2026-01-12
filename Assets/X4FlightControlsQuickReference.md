@@ -55,6 +55,10 @@ AutoLevelStrength = 0.7
 | `BoostMultiplier` | 2.0 | Speed multiplier when boosting |
 | `TravelModeMultiplier` | 5.0 | Speed multiplier in travel mode |
 | `StrafeIndependence` | 0.8 | Strafe independence from forward motion |
+| `bUseMousePositionFlight` | true | X4-style position vs. delta mode |
+| `MouseDeadzoneRadius` | 50 | Deadzone from center (pixels) |
+| `MouseMaxRadius` | 400 | Max distance for 100% rotation (pixels) |
+| `RotationRateMultiplier` | 0.5 | Ship-specific agility (in DataAsset) |
 
 ## Blueprint Functions
 
@@ -81,11 +85,13 @@ GetEffectiveMaxSpeed()        // Get current max speed with modifiers
 
 | Problem | Solution |
 |---------|----------|
-| Ship too sluggish | Increase `FlightAssistResponsiveness` to 3-5 |
-| Ship too twitchy | Increase `RotationDampingFactor` to 0.9-1.0 |
+| Ship too sluggish | Set ship's `RotationRateMultiplier = 0.7-1.0` |
+| Ship too twitchy | Set ship's `RotationRateMultiplier = 0.3-0.5` |
 | Won't stop rolling | Increase `AutoLevelStrength` to 0.7-0.9 |
 | Throttle not working | Check flight assist is enabled |
 | Boost not working | Release and re-press Left Shift |
+| Mouse doesn't rotate ship | Move mouse outside 50px deadzone from center |
+| Rotation too sensitive | Increase `MouseMaxRadius` or decrease sensitivity |
 
 ---
 
