@@ -1,6 +1,21 @@
 # Trading UI - Quick Start Guide
 
-**Goal**: Get trading UI working in 30 minutes
+**Goal**: Get trading UI working in 30 minutes  
+**Last Updated**: 2026-01-13  
+**Difficulty**: Easy  
+**Prerequisites**: Unreal Editor open with Adastrea project
+
+---
+
+## 📋 What You'll Build
+
+By the end of this guide (30 minutes):
+- ✅ Basic trading UI widget
+- ✅ 2 test trade items (Water, Food)
+- ✅ Buy/sell functionality
+- ✅ Credits display
+
+**Note**: This is a quick-start version. For full implementation, see [TRADING_UI_BLUEPRINT_GUIDE.md](TRADING_UI_BLUEPRINT_GUIDE.md).
 
 ---
 
