@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed - 2026-01-13
+
+#### Repository Cleanup: Archived Obsolete Files
+- **Build Artifacts**: Added `BuildLog*.json`, `BuildLog*.txt`, `BuildLog*.uba` to .gitignore
+  - Removed 6 build log files from git tracking
+  - Build artifacts should never be committed to source control
+  
+- **Generated Reports**: Archived to `Archive/Reports/`
+  - `content_organization_report.txt` - One-time content organization analysis
+  - `YAML_FILES_LIST.csv` - Point-in-time snapshot of YAML templates
+  - Created `Archive/Reports/README.md` documenting each archived report
+  
+- **One-Time Scripts**: Archived to `Archive/Scripts/`
+  - `move-and-update-includes.sh` - Completed migration script
+  - `reingest_docs.bat` - Setup for removed AdastreaDirector plugin
+  - `setup_adastrea_director.bat` - Setup for removed plugin
+  - `regenerate_project.bat` - Script with hardcoded paths
+  - Created `Archive/Scripts/README.md` documenting each archived script
+  
+- **Documentation**: Archived to `Archive/Documentation/`
+  - `TOOLS_REORGANIZATION_SUMMARY.md` - December 2025 reorganization summary
+  
+- **Documentation Updates**:
+  - Updated `OBSOLETE_DOCUMENTS.md` with January 13, 2026 cleanup details
+  - Updated `Archive/README.md` to include newly archived files
+  - Added comprehensive documentation for all archived content
+
+**Impact**: Root directory further cleaned, build artifacts properly excluded, temporary files archived with clear documentation for future reference.
+
+---
+
 ### Documentation
 
 - **MVP Documentation Refinement** (2026-01-13)
