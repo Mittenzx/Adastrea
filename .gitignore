@@ -86,6 +86,11 @@ Desktop.ini
 *.log
 *.tlog
 
+# Build logs (Unreal Engine build artifacts)
+BuildLog*.json
+BuildLog*.txt
+BuildLog*.uba
+
 # Backup and temporary files
 *.bak
 *.tmp
