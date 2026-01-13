@@ -39,12 +39,15 @@ Guides and documentation for deferred systems:
 - Advanced workflow templates
 
 ### `/Scripts`
-Python automation scripts not needed for MVP:
+Python automation scripts and one-time migration scripts:
+- **Archived January 13, 2026**: One-time migration and setup scripts
 - Content generators (20+ files)
 - Blueprint generators
 - Procedural generation tools
 - Mass content creation utilities
 - Advanced automation scripts
+
+**See**: `Scripts/README.md` for details on archived scripts
 
 ### `/Assets`
 Non-MVP assets and templates:
@@ -52,6 +55,14 @@ Non-MVP assets and templates:
 - YAML templates for combat, exploration, quests
 - Blueprint templates for unused systems
 - Obsolete documentation
+
+### `/Reports`
+Generated reports from automated analysis:
+- **Archived January 13, 2026**: One-time generated reports
+- Content organization reports
+- YAML template inventories
+
+**See**: `Reports/README.md` for details on archived reports
 
 ### `/Content`
 Unreal Content Browser assets (if any):

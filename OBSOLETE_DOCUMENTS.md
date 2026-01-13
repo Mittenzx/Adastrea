@@ -1,25 +1,82 @@
 # Obsolete and Archived Documents
 
-**Last Updated**: December 24, 2025  
+**Last Updated**: January 13, 2026  
 **Purpose**: Track documents that are no longer actively used but retained for reference
 
-## 🆕 Major Update: Documentation Reorganization (December 24, 2025)
+## 🆕 Latest Update: Repository Cleanup (January 13, 2026)
 
-**80+ obsolete documents have been removed** and documentation has been reorganized into structured folders.
+**Build artifacts, generated reports, and one-time scripts archived**
 
 ### What Happened
-- **Removed**: 80+ obsolete files (reviews, summaries, duplicates, outdated guides)
-- **Consolidated**: Multiple overlapping guides into single comprehensive documents
-- **Organized**: Moved 80+ files from root into structured `docs/` folders
-- **Result**: Root directory reduced from 172 to 11 essential files
+- **Excluded**: Build logs added to .gitignore (BuildLog*.json, BuildLog*.txt, BuildLog*.uba)
+- **Archived**: Generated reports moved to `Archive/Reports/`
+- **Archived**: One-time scripts moved to `Archive/Scripts/`
+- **Result**: Root directory further cleaned, build artifacts properly ignored
 
-See [docs/README.md](docs/README.md) for the new documentation structure.
+See details below for complete list of archived files.
 
 ---
 
 ## Overview
 
-This document tracks obsolete documentation that has been removed or archived. The project underwent a major documentation cleanup on December 24, 2025.
+This document tracks obsolete documentation that has been removed or archived. Major cleanups occurred on December 24, 2025 and January 13, 2026.
+
+---
+
+## Archived Files (January 13, 2026)
+
+### Build Artifacts (Excluded from Git)
+**Reason**: Build logs should never be committed to source control
+- BuildLog.json, BuildLog2.json
+- BuildLog.txt, BuildLog2.txt
+- BuildLog.uba, BuildLog2.uba
+
+**Action**: Added `BuildLog*.json`, `BuildLog*.txt`, `BuildLog*.uba` to `.gitignore`
+
+### Generated Reports (Archived to Archive/Reports/)
+**Reason**: One-time generated reports, snapshots in time
+
+**content_organization_report.txt**
+- Generated report from automated content organization
+- Statistics: 227 files analyzed, 226 moves planned
+- Task completed, current organization is documented elsewhere
+
+**YAML_FILES_LIST.csv**
+- Point-in-time inventory of YAML templates
+- 30 files cataloged (spaceships, personnel)
+- Current templates are in `Assets/` subdirectories
+
+**Location**: `Archive/Reports/` with README explaining each file
+
+### One-Time Scripts (Archived to Archive/Scripts/)
+**Reason**: Scripts used once for specific migration tasks
+
+**move-and-update-includes.sh**
+- Migrated MyFirstSpaceshipDataAsset.h to Private/Ships
+- Task completed, no longer needed
+
+**reingest_docs.bat**
+- Setup script for AdastreaDirector plugin
+- Plugin no longer exists in repository
+
+**setup_adastrea_director.bat**
+- Interactive setup for AdastreaDirector plugin
+- Plugin no longer exists in repository
+
+**regenerate_project.bat**
+- Project file generation with hardcoded paths
+- Use Unreal Engine's native project generation instead
+
+**Location**: `Archive/Scripts/` with README explaining each file
+
+### Documentation Cleanup
+
+**TOOLS_REORGANIZATION_SUMMARY.md**
+- Summary document from December 24, 2025 tool reorganization
+- Task completed, information preserved in git history
+- **Location**: `Archive/Documentation/`
+
+---
 
 ## Why Mark as Obsolete?
 
@@ -199,17 +256,24 @@ See [docs/README.md](docs/README.md) for complete navigation guide.
 
 ## Summary Statistics
 
-### Before Cleanup (December 23, 2025)
+### Before First Cleanup (December 23, 2025)
 - **Root directory**: 172 markdown files
 - **Total**: 413 markdown files
 - **Status**: Cluttered, many duplicates and obsolete files
 
-### After Cleanup (December 24, 2025)
+### After First Cleanup (December 24, 2025)
 - **Root directory**: 11 essential files (reduced by 93%)
 - **Organized docs/**: 78 files in structured folders
 - **Removed**: 80+ obsolete files
 - **Total**: ~330 markdown files
 - **Status**: Clean, organized, easy to navigate
+
+### After Second Cleanup (January 13, 2026)
+- **Build logs**: Excluded from git tracking (added to .gitignore)
+- **Reports archived**: 2 generated reports → `Archive/Reports/`
+- **Scripts archived**: 4 one-time scripts → `Archive/Scripts/`
+- **Documentation archived**: 1 summary document → `Archive/Documentation/`
+- **Status**: Root directory further cleaned of temporary files
 
 ## Using This Document
 
@@ -238,8 +302,9 @@ Removed or archived
 Tracked in this file
 ```
 
-## Why This Cleanup Was Needed
+## Why These Cleanups Were Needed
 
+### December 24, 2025 Cleanup
 The project had accumulated:
 - Multiple overlapping guides for the same topics
 - Temporary status documents that were never removed
@@ -247,21 +312,36 @@ The project had accumulated:
 - Code review documents for completed PRs
 - Outdated implementation guides
 
-The cleanup achieved:
+**Achieved**:
 - ✅ 93% reduction in root directory files
 - ✅ Clear documentation hierarchy
 - ✅ Easy navigation for new developers
 - ✅ Eliminated duplicate information
 - ✅ Preserved all important content
 
+### January 13, 2026 Cleanup
+The repository still contained:
+- Build artifacts tracked in git (should be ignored)
+- Generated reports from one-time tasks
+- Migration scripts that had already been run
+- Plugin setup scripts for removed plugins
+
+**Achieved**:
+- ✅ Build logs properly excluded via .gitignore
+- ✅ Generated reports archived with documentation
+- ✅ One-time scripts archived for reference
+- ✅ Root directory contains only active development files
+
 ## Future Maintenance
 
 To keep documentation clean:
 1. Remove temporary documents (reviews, summaries) after their purpose is served
 2. Consolidate duplicate guides when discovered
-3. Use `docs/archive/` for historical documents with lasting value
-4. Keep root directory limited to essential project files
-5. Conduct annual documentation audits
+3. Use `Archive/` for historical scripts, reports, and code
+4. Use `docs/archive/` for historical documents with lasting value
+5. Keep root directory limited to essential project files
+6. Always add build artifacts to .gitignore
+7. Conduct annual documentation audits
 
 ---
 
@@ -278,6 +358,6 @@ For current, maintained documentation, see:
 
 ---
 
-**Status**: ✅ Major cleanup complete - Documentation is now organized and maintainable
+**Status**: ✅ Cleanups complete - Repository is organized and maintainable
 
-*This document was updated as part of the December 24, 2025 documentation reorganization.*
+*This document was updated as part of the January 13, 2026 repository cleanup.*
