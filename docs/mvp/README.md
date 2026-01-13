@@ -64,7 +64,11 @@
    - How to use it
    - Technical details
 
+---
+
 ## 📚 Reference Documentation
+
+**📑 Complete Index**: [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md) - Full document map
 
 ### Strategic Planning
 - **[TRADING_MVP_GUIDE.md](TRADING_MVP_GUIDE.md)** 📖 **12-WEEK ROADMAP**
