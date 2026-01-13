@@ -345,40 +345,31 @@ Calculate net power balance (generation - consumption):
 
 ### ASpaceStation Core Functions
 
-#### Module Management
+#### Module Management (POST-MVP)
+
+⚠️ **Note**: These functions exist in C++ for internal use (called by `BeginPlay()`) but are **NOT exposed to Blueprint** in the MVP. They are marked as POST-MVP features for future station building gameplay.
 
 ```cpp
-// Add a module to the station (automatically attaches)
+// [INTERNAL C++ ONLY - Not Blueprint-exposed]
+// Used internally by BeginPlay() to spawn DefaultModuleClasses
 void AddModule(ASpaceStationModule* Module);
 
-// Add a module at a specific relative location
+// [INTERNAL C++ ONLY - Not Blueprint-exposed]
 bool AddModuleAtLocation(ASpaceStationModule* Module, FVector RelativeLocation);
 
-// Remove a module from the station (automatically detaches)
+// [POST-MVP - Not currently available]
 bool RemoveModule(ASpaceStationModule* Module);
 
-// Move an attached module to a new relative position
+// [POST-MVP - Not currently available]
 bool MoveModule(ASpaceStationModule* Module, FVector NewRelativeLocation);
 ```
 
-**Example Usage:**
-```cpp
-// Spawn and add a new docking bay module
-ASpaceStationModule* NewDockingBay = GetWorld()->SpawnActor<ADockingBayModule>(
-    DockingBayClass, 
-    GetActorLocation(), 
-    GetActorRotation()
-);
-
-if (NewDockingBay)
-{
-    // Add module at specific location (100 units forward)
-    AddModuleAtLocation(NewDockingBay, FVector(100.0f, 0.0f, 0.0f));
-}
-```
+**Current MVP Approach:**
+For the MVP, stations use pre-configured module layouts via `DefaultModuleClasses` array. Runtime module addition/removal will be enabled post-MVP for station construction gameplay.
 
 #### Module Queries
 
+**Blueprint-Exposed Functions (Available Now):**
 ```cpp
 // Get all attached modules
 UFUNCTION(BlueprintCallable, Category="Station")
@@ -388,20 +379,25 @@ TArray<ASpaceStationModule*> GetModules() const;
 UFUNCTION(BlueprintCallable, Category="Station|Modules")
 TArray<ASpaceStationModule*> GetModulesByGroup(EStationModuleGroup ModuleGroup) const;
 
-// Get modules by type string (e.g., "Docking Bay")
-TArray<ASpaceStationModule*> GetModulesByType(const FString& ModuleType) const;
-
-// Get total module count
-int32 GetModuleCount() const;
-
 // Get count of modules in a specific group
 UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Modules")
 int32 GetModuleCountByGroup(EStationModuleGroup ModuleGroup) const;
 ```
 
+**Internal C++ Functions (Not Blueprint-Exposed):**
+```cpp
+// [INTERNAL C++ ONLY] Get modules by type string
+// Not exposed to Blueprint - use GetModulesByGroup() instead
+TArray<ASpaceStationModule*> GetModulesByType(const FString& ModuleType) const;
+
+// [INTERNAL C++ ONLY] Get total module count
+// Not exposed to Blueprint - use GetModules().Num() instead
+int32 GetModuleCount() const;
+```
+
 **Example Usage:**
 ```cpp
-// Find all docking modules
+// Find all docking modules (Blueprint-callable)
 TArray<ASpaceStationModule*> DockingModules = MyStation->GetModulesByGroup(
     EStationModuleGroup::Docking
 );
@@ -656,48 +652,7 @@ void UStationInfoWidget::UpdateStationInfo(ASpaceStation* Station)
 }
 ```
 
-### Example 4: Dynamic Module Addition (Runtime)
-
-**Scenario**: Player constructs new module during gameplay
-
-**C++ Code:**
-```cpp
-void AStationConstructionSystem::ConstructModule(
-    TSubclassOf<ASpaceStationModule> ModuleClass,
-    FVector RelativeLocation)
-{
-    if (!TargetStation || !ModuleClass) return;
-    
-    // Spawn module
-    FActorSpawnParameters SpawnParams;
-    SpawnParams.Owner = TargetStation;
-    SpawnParams.SpawnCollisionHandlingOverride = 
-        ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-    
-    ASpaceStationModule* NewModule = GetWorld()->SpawnActor<ASpaceStationModule>(
-        ModuleClass,
-        TargetStation->GetActorLocation() + RelativeLocation,
-        TargetStation->GetActorRotation(),
-        SpawnParams
-    );
-    
-    if (NewModule)
-    {
-        // Add module at specific location
-        if (TargetStation->AddModuleAtLocation(NewModule, RelativeLocation))
-        {
-            UE_LOG(LogAdastreaStations, Log, 
-                TEXT("Successfully constructed %s module at station %s"),
-                *NewModule->GetModuleType(), *TargetStation->GetName());
-            
-            // Update station UI
-            OnModuleConstructed.Broadcast(NewModule);
-        }
-    }
-}
-```
-
-### Example 5: Power Balance Monitoring
+### Example 4: Power Balance Monitoring
 
 **Scenario**: Monitor station power and alert if deficit
 
@@ -1097,7 +1052,16 @@ AMyCustomModule::AMyCustomModule()
    - Add mesh to `MeshComponent`
 
 4. **Add to Station**:
-   - Add `BP_MyCustomModule` to `DefaultModuleClasses` array
+   - Add `BP_MyCustomModule` to `DefaultModuleClasses` array in station Blueprint
+
+### Runtime Module Addition (POST-MVP)
+
+⚠️ **Note**: Runtime module addition is a POST-MVP feature not currently available in Blueprint.
+
+The functions `AddModule()`, `AddModuleAtLocation()`, `RemoveModule()`, and `MoveModule()` exist in C++ and are used internally during `BeginPlay()` but are **not exposed to Blueprint**. They will be re-enabled post-MVP for station construction gameplay.
+
+**Current Workaround for MVP:**
+Configure all station modules via `DefaultModuleClasses` array in Class Defaults. Modules spawn automatically when the station begins play.
 
 ### Module Events and Delegates
 
@@ -1192,7 +1156,7 @@ void ASpaceStation::AddModule(ASpaceStationModule* Module)
 ## FAQ
 
 **Q: Can I add modules at runtime?**  
-A: Yes, use `AddModule()` or `AddModuleAtLocation()` to add modules during gameplay.
+A: Not in the MVP. Runtime module addition is a POST-MVP feature. The `AddModule()` / `AddModuleAtLocation()` functions exist in C++ for internal use during `BeginPlay` but are not exposed to Blueprint. For now, configure station layouts via `DefaultModuleClasses` array in Class Defaults.
 
 **Q: How do I create a custom module type?**  
 A: Inherit from `ASpaceStationModule` in C++, set module properties in constructor, create Blueprint.
@@ -1207,13 +1171,13 @@ A: Yes, modules implement `IDamageable` interface and can be targeted separately
 A: No hard limit, but recommended max is 50-100 modules for performance.
 
 **Q: Can I save/load station configurations?**  
-A: Yes, `DefaultModuleClasses` is serialized. Runtime modules need custom save system.
+A: Yes, `DefaultModuleClasses` is serialized. Runtime-spawned modules (when POST-MVP features are enabled) will need custom save system.
 
 **Q: Do modules need unique names?**  
 A: No, multiple modules can have the same `ModuleType`. Use actor names if uniqueness needed.
 
 **Q: Can modules be moved after attachment?**  
-A: Yes, use `MoveModule()` or `SetActorRelativeLocation()` on the module.
+A: Yes, call `SetActorRelativeLocation()` (Blueprint: **Set Relative Location**) on the module actor.
 
 ---
 
