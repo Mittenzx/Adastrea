@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="300" viewBox="0 0 700 300">
+  <rect x="50" y="50" width="180" height="60" fill="#1C1C1C" stroke="#000" stroke-width="2" rx="4"/>
+  <rect x="50" y="50" width="180" height="24" fill="#006400" rx="4"/>
+  <text x="140" y="66" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">Get Station</text>
+  <text x="58" y="90" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10">Pure</text>
+  <circle cx="240" cy="80" r="6" fill="#00FFFF" stroke="#000" stroke-width="1.5"/>
+  <text x="228" y="84" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="end">Return Value</text>
+  <rect x="50" y="150" width="280" height="80" fill="#1C1C1C" stroke="#000" stroke-width="2" rx="4"/>
+  <rect x="50" y="150" width="280" height="24" fill="#006400" rx="4"/>
+  <text x="190" y="166" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">Get Module Count By Group</text>
+  <text x="58" y="190" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10">Pure</text>
+  <circle cx="50" cy="180" r="6" fill="#00FFFF" stroke="#000" stroke-width="1.5"/>
+  <text x="62" y="184" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="start">Target</text>
+  <circle cx="50" cy="208" r="6" fill="#00FFFF" stroke="#000" stroke-width="1.5"/>
+  <text x="62" y="212" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="start">Module Group</text>
+  <circle cx="340" cy="180" r="6" fill="#00FF00" stroke="#000" stroke-width="1.5"/>
+  <text x="328" y="184" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="end">Return Value</text>
+  <rect x="400" y="150" width="200" height="60" fill="#1C1C1C" stroke="#000" stroke-width="2" rx="4"/>
+  <rect x="400" y="150" width="200" height="24" fill="#1B4F72" rx="4"/>
+  <text x="500" y="166" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">Set Text</text>
+  <circle cx="400" cy="180" r="6" fill="#FFFFFF" stroke="#000" stroke-width="1.5"/>
+  <text x="412" y="184" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="start"/>
+  <circle cx="400" cy="200" r="6" fill="#00FF00" stroke="#000" stroke-width="1.5"/>
+  <text x="412" y="204" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="start">Value</text>
+  <circle cx="610" cy="180" r="6" fill="#FFFFFF" stroke="#000" stroke-width="1.5"/>
+  <text x="598" y="184" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="end"/>
+  <path d="M 230 80 C 140.0 80, 140.0 180, 50 180" stroke="#00FFFF" stroke-width="2" fill="none"/>
+  <path d="M 330 180 C 365.0 180, 365.0 200, 400 200" stroke="#00FF00" stroke-width="2" fill="none"/>
+</svg>

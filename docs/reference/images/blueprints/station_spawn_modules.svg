@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400">
+  <rect x="50" y="50" width="200" height="60" fill="#1C1C1C" stroke="#000" stroke-width="2" rx="4"/>
+  <rect x="50" y="50" width="200" height="24" fill="#C80000" rx="4"/>
+  <text x="150" y="66" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">Event BeginPlay</text>
+  <circle cx="260" cy="80" r="6" fill="#FFFFFF" stroke="#000" stroke-width="1.5"/>
+  <text x="248" y="84" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="end"/>
+  <rect x="50" y="150" width="200" height="100" fill="#1C1C1C" stroke="#000" stroke-width="2" rx="4"/>
+  <rect x="50" y="150" width="200" height="24" fill="#FF8C00" rx="4"/>
+  <text x="150" y="166" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">ForEach Loop</text>
+  <text x="58" y="190" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10">Array: DefaultModuleClasses</text>
+  <circle cx="50" cy="200" r="6" fill="#FFFFFF" stroke="#000" stroke-width="1.5"/>
+  <text x="62" y="204" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="start"/>
+  <circle cx="50" cy="218" r="6" fill="#00BFFF" stroke="#000" stroke-width="1.5"/>
+  <text x="62" y="222" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="start">Array</text>
+  <circle cx="260" cy="200" r="6" fill="#FFFFFF" stroke="#000" stroke-width="1.5"/>
+  <text x="248" y="204" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="end">Loop Body</text>
+  <circle cx="260" cy="230" r="6" fill="#FFFFFF" stroke="#000" stroke-width="1.5"/>
+  <text x="248" y="234" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="end">Completed</text>
+  <circle cx="260" cy="218" r="6" fill="#00FFFF" stroke="#000" stroke-width="1.5"/>
+  <text x="248" y="222" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="end">Array Element</text>
+  <rect x="320" y="150" width="220" height="80" fill="#1C1C1C" stroke="#000" stroke-width="2" rx="4"/>
+  <rect x="320" y="150" width="220" height="24" fill="#1B4F72" rx="4"/>
+  <text x="430" y="166" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">Spawn Actor</text>
+  <text x="328" y="190" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10">Class: ModuleClass</text>
+  <circle cx="320" cy="190" r="6" fill="#FFFFFF" stroke="#000" stroke-width="1.5"/>
+  <text x="332" y="194" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="start"/>
+  <circle cx="550" cy="190" r="6" fill="#FFFFFF" stroke="#000" stroke-width="1.5"/>
+  <text x="538" y="194" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="end"/>
+  <circle cx="550" cy="210" r="6" fill="#00FFFF" stroke="#000" stroke-width="1.5"/>
+  <text x="538" y="214" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="end">Return Value</text>
+  <rect x="320" y="270" width="220" height="60" fill="#1C1C1C" stroke="#000" stroke-width="2" rx="4"/>
+  <rect x="320" y="270" width="220" height="24" fill="#1B4F72" rx="4"/>
+  <text x="430" y="286" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">Add Module</text>
+  <circle cx="320" cy="300" r="6" fill="#FFFFFF" stroke="#000" stroke-width="1.5"/>
+  <text x="332" y="304" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="start"/>
+  <circle cx="320" cy="320" r="6" fill="#00FFFF" stroke="#000" stroke-width="1.5"/>
+  <text x="332" y="324" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="start">Module</text>
+  <circle cx="550" cy="300" r="6" fill="#FFFFFF" stroke="#000" stroke-width="1.5"/>
+  <text x="538" y="304" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="end"/>
+  <path d="M 250 80 C 150.0 80, 150.0 150, 50 150" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+  <path d="M 250 150 C 285.0 150, 285.0 190, 320 190" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+  <path d="M 540 190 C 430.0 190, 430.0 300, 320 300" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+  <path d="M 540 210 C 430.0 210, 430.0 320, 320 320" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+  <path d="M 540 300 C 395.0 300, 395.0 180, 250 180" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+</svg>
