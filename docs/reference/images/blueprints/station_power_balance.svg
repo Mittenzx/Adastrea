@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="400" viewBox="0 0 750 400">
+  <rect x="50" y="50" width="180" height="60" fill="#1C1C1C" stroke="#000" stroke-width="2" rx="4"/>
+  <rect x="50" y="50" width="180" height="24" fill="#006400" rx="4"/>
+  <text x="140" y="66" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">Get Station</text>
+  <text x="58" y="90" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10">Pure</text>
+  <circle cx="240" cy="80" r="6" fill="#00FFFF" stroke="#000" stroke-width="1.5"/>
+  <text x="228" y="84" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="end">Return Value</text>
+  <rect x="50" y="150" width="250" height="60" fill="#1C1C1C" stroke="#000" stroke-width="2" rx="4"/>
+  <rect x="50" y="150" width="250" height="24" fill="#006400" rx="4"/>
+  <text x="175" y="166" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">Get Total Power Generation</text>
+  <text x="58" y="190" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10">Pure</text>
+  <circle cx="50" cy="180" r="6" fill="#00FFFF" stroke="#000" stroke-width="1.5"/>
+  <text x="62" y="184" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="start">Target</text>
+  <circle cx="310" cy="180" r="6" fill="#90EE90" stroke="#000" stroke-width="1.5"/>
+  <text x="298" y="184" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="end">Return Value</text>
+  <rect x="50" y="250" width="250" height="60" fill="#1C1C1C" stroke="#000" stroke-width="2" rx="4"/>
+  <rect x="50" y="250" width="250" height="24" fill="#006400" rx="4"/>
+  <text x="175" y="266" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">Get Total Power Consumption</text>
+  <text x="58" y="290" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10">Pure</text>
+  <circle cx="50" cy="280" r="6" fill="#00FFFF" stroke="#000" stroke-width="1.5"/>
+  <text x="62" y="284" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="start">Target</text>
+  <circle cx="310" cy="280" r="6" fill="#90EE90" stroke="#000" stroke-width="1.5"/>
+  <text x="298" y="284" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="end">Return Value</text>
+  <rect x="370" y="200" width="100" height="60" fill="#1C1C1C" stroke="#000" stroke-width="2" rx="4"/>
+  <rect x="370" y="200" width="100" height="24" fill="#006400" rx="4"/>
+  <text x="420" y="216" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">-</text>
+  <text x="378" y="240" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10">Float - Float</text>
+  <circle cx="370" cy="220" r="6" fill="#90EE90" stroke="#000" stroke-width="1.5"/>
+  <text x="382" y="224" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="start">A</text>
+  <circle cx="370" cy="240" r="6" fill="#90EE90" stroke="#000" stroke-width="1.5"/>
+  <text x="382" y="244" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="start">B</text>
+  <circle cx="480" cy="230" r="6" fill="#90EE90" stroke="#000" stroke-width="1.5"/>
+  <text x="468" y="234" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="end">Return</text>
+  <rect x="530" y="200" width="150" height="60" fill="#1C1C1C" stroke="#000" stroke-width="2" rx="4"/>
+  <rect x="530" y="200" width="150" height="24" fill="#1B4F72" rx="4"/>
+  <text x="605" y="216" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">Format Text</text>
+  <circle cx="530" cy="230" r="6" fill="#90EE90" stroke="#000" stroke-width="1.5"/>
+  <text x="542" y="234" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="start">Value</text>
+  <circle cx="690" cy="230" r="6" fill="#00FFFF" stroke="#000" stroke-width="1.5"/>
+  <text x="678" y="234" fill="#CCCCCC" font-family="Arial, sans-serif" font-size="10" text-anchor="end">Text</text>
+  <path d="M 230 80 C 140.0 80, 140.0 180, 50 180" stroke="#00FFFF" stroke-width="2" fill="none"/>
+  <path d="M 230 80 C 140.0 80, 140.0 280, 50 280" stroke="#00FFFF" stroke-width="2" fill="none"/>
+  <path d="M 300 180 C 335.0 180, 335.0 220, 370 220" stroke="#90EE90" stroke-width="2" fill="none"/>
+  <path d="M 300 280 C 335.0 280, 335.0 240, 370 240" stroke="#90EE90" stroke-width="2" fill="none"/>
+  <path d="M 470 230 C 500.0 230, 500.0 230, 530 230" stroke="#90EE90" stroke-width="2" fill="none"/>
+</svg>
