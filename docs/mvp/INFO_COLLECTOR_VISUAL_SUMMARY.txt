@@ -1,3 +1,16 @@
+═══════════════════════════════════════════════════════════════════════════════
+ INFO COLLECTOR VISUAL SUMMARY
+ 
+ Purpose: ASCII art visualization of telemetry analysis
+ Date: January 8, 2026
+ Last Updated: January 13, 2026
+ Related: INFO_COLLECTOR_SUMMARY.md (executive summary)
+          ../development/INFO_COLLECTOR_ANALYSIS.md (full analysis)
+ 
+ Note: This is a reference document. For implementation guidance, see
+       PHASE_1_IMPLEMENTATION_STEPS.md
+═══════════════════════════════════════════════════════════════════════════════
+
 ╔════════════════════════════════════════════════════════════════════════════╗
 ║                  INFO COLLECTOR ANALYSIS - VISUAL SUMMARY                  ║
 ╚════════════════════════════════════════════════════════════════════════════╝

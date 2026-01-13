@@ -1,8 +1,20 @@
 # Info Collector Review - Executive Summary
 
 **Date**: January 8, 2026  
-**Issue**: Review UE_INFO_COLLECTOR_README.md and compare with game goals  
-**Status**: Analysis Complete, Implementation Needed  
+**Last Updated**: January 13, 2026  
+**Issue**: Identify telemetry needs for MVP validation  
+**Status**: Analysis Complete, Implementation Needed for Week 4  
+**Priority**: CRITICAL - Required for GO/NO-GO decision
+
+---
+
+## 🎯 Purpose of This Document
+
+This analysis identifies the **critical missing piece** for MVP validation: gameplay telemetry.
+
+**Key Finding**: We have code quality tools, but lack gameplay validation tools needed to measure if trading is fun.
+
+**Action Required**: Build telemetry system by Week 3 to measure Week 4 playtest metrics.
 
 ---
 

@@ -1,16 +1,19 @@
 # System Classification for Trade Simulator MVP
 
 **Purpose**: Define which existing systems are MVP-critical, simplified, or deferred  
-**Last Updated**: 2025-12-24  
-**Based on**: Critical Review Analysis and MVP Scope Definition
+**Last Updated**: 2026-01-13  
+**Based on**: Critical Review Analysis and MVP Scope Definition  
+**Current Phase**: Phase 1 - Hardcoded Prototype
 
 ---
 
 ## 🎯 MVP Classification Rules
 
-**MVP-Critical**: Required for core trading gameplay loop  
-**MVP-Simplified**: Use limited subset of features only  
-**Deferred**: Do not touch until post-MVP validation
+**MVP-Critical**: Required for core trading gameplay loop (use now)  
+**MVP-Simplified**: Use limited subset of features only (partial use)  
+**Deferred**: Do not touch until post-MVP validation (ignore for now)
+
+**Key Principle**: One polished system beats ten half-finished systems.
 
 ---
 

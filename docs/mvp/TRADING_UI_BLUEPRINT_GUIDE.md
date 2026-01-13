@@ -1,8 +1,11 @@
 # Trading UI Blueprint Implementation Guide
 
-**Goal**: Create a functional trading UI for the MVP using UMG and the enhanced TradingInterfaceWidget C++ class.
+**Goal**: Create a functional trading UI for the MVP using UMG and the TradingInterfaceWidget C++ class  
+**Time Estimate**: 4-6 hours for complete implementation  
+**Last Updated**: 2026-01-13  
+**Difficulty**: Intermediate
 
-**Time Estimate**: 4-6 hours for complete implementation
+**Quick Version**: For 30-minute setup, see [TRADING_UI_QUICKSTART.md](TRADING_UI_QUICKSTART.md)
 
 ---
 
