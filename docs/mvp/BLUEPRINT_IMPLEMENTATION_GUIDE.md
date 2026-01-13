@@ -2,7 +2,25 @@
 
 **Purpose**: Step-by-step instructions for implementing trading MVP in Blueprints  
 **Target**: Designers and Blueprint developers  
-**Last Updated**: 2025-12-25
+**Last Updated**: 2026-01-13  
+**Phase**: Phase 2 (Weeks 5-8) - Structured Version  
+**Note**: For Phase 1, see [PHASE_1_IMPLEMENTATION_STEPS.md](PHASE_1_IMPLEMENTATION_STEPS.md)
+
+---
+
+## 📌 When to Use This Guide
+
+**Use this guide if**:
+- ✅ You've completed Phase 1 (hardcoded prototype)
+- ✅ Week 4 playtest showed 60%+ "fun" rating (GO decision)
+- ✅ You're ready to convert to Data Assets (Phase 2)
+
+**Don't use this yet if**:
+- ❌ Still in Phase 1 (Week 1-4) - Use PHASE_1_IMPLEMENTATION_STEPS.md instead
+- ❌ Haven't validated core loop is fun
+- ❌ Week 4 playtest hasn't happened yet
+
+**Phase 2 Goal**: Add variety and progression with Data Assets (Weeks 5-8)
 
 ---
 
