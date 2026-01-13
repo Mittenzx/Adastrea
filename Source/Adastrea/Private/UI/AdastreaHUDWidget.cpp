@@ -20,6 +20,14 @@ UAdastreaHUDWidget::UAdastreaHUDWidget(const FObjectInitializer& ObjectInitializ
 	, ShipIntegrityPercent(1.0f)
 	, WeaponAimPosition(FVector2D(0.5f, 0.5f))
 	, bAimCrosshairVisible(true)
+	, FlightMousePosition(FVector2D(0.5f, 0.5f))
+	, ShipRotationIndicator(FVector2D(0.5f, 0.5f))
+	, CurrentRotationSpeed(0.0f)
+	, bMouseInDeadzone(true)
+	, bFlightCrosshairVisible(true)
+	, DeadzoneRadiusPercent(0.05f)
+	, MaxRadiusPercent(0.4f)
+	, bShowDeadzoneCircle(false)
 {
 }
 
@@ -102,35 +110,92 @@ void UAdastreaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 	// Update HUD based on current game state
 	UpdateHUDFromGameState_Implementation(InDeltaTime);
 	
-	// Update weapon aim crosshair position based on mouse location
-	if (bAimCrosshairVisible)
+	// Cache player controller reference for performance
+	if (!CachedPlayerController)
 	{
-		// Cache player controller reference for performance
-		if (!CachedPlayerController)
+		CachedPlayerController = GetOwningPlayer();
+	}
+	
+	if (CachedPlayerController)
+	{
+		float MouseX, MouseY;
+		if (CachedPlayerController->GetMousePosition(MouseX, MouseY))
 		{
-			CachedPlayerController = GetOwningPlayer();
-		}
-		
-		if (CachedPlayerController)
-		{
-			float MouseX, MouseY;
-			if (CachedPlayerController->GetMousePosition(MouseX, MouseY))
+			// Get viewport size
+			int32 ViewportSizeX, ViewportSizeY;
+			CachedPlayerController->GetViewportSize(ViewportSizeX, ViewportSizeY);
+			
+			if (ViewportSizeX > 0 && ViewportSizeY > 0)
 			{
-				// Get viewport size
-				int32 ViewportSizeX, ViewportSizeY;
-				CachedPlayerController->GetViewportSize(ViewportSizeX, ViewportSizeY);
+				// Convert mouse position to normalized screen coordinates (0-1)
+				FVector2D NormalizedPosition;
+				NormalizedPosition.X = MouseX / static_cast<float>(ViewportSizeX);
+				NormalizedPosition.Y = MouseY / static_cast<float>(ViewportSizeY);
 				
-				if (ViewportSizeX > 0 && ViewportSizeY > 0)
+				// Update weapon aim crosshair position
+				if (bAimCrosshairVisible)
 				{
-					// Convert mouse position to normalized screen coordinates (0-1)
-					FVector2D NormalizedPosition;
-					NormalizedPosition.X = MouseX / static_cast<float>(ViewportSizeX);
-					NormalizedPosition.Y = MouseY / static_cast<float>(ViewportSizeY);
-					
 					// Only update if position changed (avoid unnecessary function calls)
 					if (!NormalizedPosition.Equals(WeaponAimPosition, 0.001f))
 					{
 						UpdateAimCrosshair(NormalizedPosition);
+					}
+				}
+				
+				// Update X4-style flight crosshair system
+				if (bFlightCrosshairVisible)
+				{
+					// Get controlled spaceship to read flight control state
+					ASpaceship* Ship = GetControlledSpaceship();
+					if (Ship && Ship->bUseMousePositionFlight)
+					{
+						// Calculate center of screen
+						float CenterX = ViewportSizeX * 0.5f;
+						float CenterY = ViewportSizeY * 0.5f;
+						
+						// Calculate distance from center in pixels
+						float DeltaX = MouseX - CenterX;
+						float DeltaY = MouseY - CenterY;
+						float DistanceFromCenter = FMath::Sqrt(DeltaX * DeltaX + DeltaY * DeltaY);
+						
+						// Get deadzone and max radius from ship
+						float DeadzoneRadius = Ship->MouseDeadzoneRadius;
+						float MaxRadius = Ship->MouseMaxRadius;
+						
+						// Calculate deadzone state
+						bool bInDeadzone = (DistanceFromCenter < DeadzoneRadius);
+						
+						// Calculate rotation speed (0-1 normalized)
+						float RotationSpeed = 0.0f;
+						if (!bInDeadzone && MaxRadius > DeadzoneRadius)
+						{
+							float EffectiveDistance = DistanceFromCenter - DeadzoneRadius;
+							float MaxEffectiveDistance = MaxRadius - DeadzoneRadius;
+							RotationSpeed = FMath::Clamp(EffectiveDistance / MaxEffectiveDistance, 0.0f, 1.0f);
+						}
+						
+						// Calculate ship rotation direction indicator
+						// This shows where the ship is actually turning towards
+						// For now, we'll use the direction from center to mouse as a simple approximation
+						// In a more advanced implementation, this could show the ship's actual rotation vector
+						FVector2D RotationDirection = NormalizedPosition;
+						
+						// If in deadzone, center the rotation indicator
+						if (bInDeadzone)
+						{
+							RotationDirection = FVector2D(0.5f, 0.5f);
+						}
+						
+						// Update the flight crosshair
+						UpdateFlightCrosshair(NormalizedPosition, RotationDirection, RotationSpeed, bInDeadzone);
+						
+						// Update deadzone visualization with ship's parameters
+						if (ViewportSizeX > 0)
+						{
+							float DeadzonePercent = DeadzoneRadius / (ViewportSizeX * 0.5f);
+							float MaxRadiusPercent = MaxRadius / (ViewportSizeX * 0.5f);
+							UpdateDeadzoneVisualization(DeadzonePercent, MaxRadiusPercent);
+						}
 					}
 				}
 			}
@@ -277,4 +342,60 @@ void UAdastreaHUDWidget::SetAimCrosshairVisible_Implementation(bool bVisible)
 	bAimCrosshairVisible = bVisible;
 	
 	// Blueprint implementation handles visibility change
+}
+
+// ====================
+// X4-STYLE FLIGHT CROSSHAIR IMPLEMENTATIONS
+// ====================
+
+void UAdastreaHUDWidget::UpdateFlightCrosshair_Implementation(FVector2D MouseScreenPosition, FVector2D ShipRotationDirection, float RotationSpeed, bool bInDeadzone)
+{
+	// Update mouse position (clamped to 0-1 range)
+	FlightMousePosition.X = FMath::Clamp(MouseScreenPosition.X, 0.0f, 1.0f);
+	FlightMousePosition.Y = FMath::Clamp(MouseScreenPosition.Y, 0.0f, 1.0f);
+	
+	// Update ship rotation direction indicator (clamped to 0-1 range)
+	ShipRotationIndicator.X = FMath::Clamp(ShipRotationDirection.X, 0.0f, 1.0f);
+	ShipRotationIndicator.Y = FMath::Clamp(ShipRotationDirection.Y, 0.0f, 1.0f);
+	
+	// Update rotation speed (clamped to 0-1 range)
+	CurrentRotationSpeed = FMath::Clamp(RotationSpeed, 0.0f, 1.0f);
+	
+	// Update deadzone state
+	bMouseInDeadzone = bInDeadzone;
+	
+	// Blueprint implementation handles visual rendering:
+	// - Draw mouse cursor indicator (where player wants to turn)
+	// - Draw ship direction indicator (where ship is actually turning)
+	// - Draw line/arrow connecting them (showing rotation intent)
+	// - Color/size based on rotation speed
+	// - Different appearance when in deadzone
+}
+
+void UAdastreaHUDWidget::SetFlightCrosshairVisible_Implementation(bool bVisible)
+{
+	bFlightCrosshairVisible = bVisible;
+	
+	// Blueprint implementation handles visibility change
+}
+
+void UAdastreaHUDWidget::UpdateDeadzoneVisualization_Implementation(float DeadzoneRadiusPercentParam, float MaxRadiusPercentParam)
+{
+	// Update deadzone radius (clamped to valid range)
+	DeadzoneRadiusPercent = FMath::Clamp(DeadzoneRadiusPercentParam, 0.0f, 1.0f);
+	
+	// Update max effective radius (clamped to valid range)
+	MaxRadiusPercent = FMath::Clamp(MaxRadiusPercentParam, 0.0f, 1.0f);
+	
+	// Blueprint implementation handles visual rendering:
+	// - Draw inner circle at DeadzoneRadiusPercent (no rotation area)
+	// - Draw outer circle at MaxRadiusPercent (100% rotation speed)
+	// - Visual gradient between them showing rotation speed zones
+}
+
+void UAdastreaHUDWidget::ShowDeadzoneVisualization(bool bShow)
+{
+	bShowDeadzoneCircle = bShow;
+	
+	// Blueprint implementation handles visibility toggle
 }
