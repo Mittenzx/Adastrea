@@ -4,6 +4,12 @@
 
 The Adastrea spaceship system now implements X4: Foundations-style flight controls, providing a realistic and intuitive space flight experience. This guide explains the flight model, configuration options, and how to tune the controls.
 
+> **NEW**: X4-Style HUD Crosshair System is now available! See comprehensive documentation at:
+> - `docs/reference/X4_HUD_CROSSHAIR_SYSTEM.md` - Complete technical guide
+> - `docs/reference/X4_HUD_VISUAL_MOCKUP.md` - Visual mockups and implementation examples
+> 
+> The HUD system provides visual feedback showing where your mouse is, where the ship is turning, and the relationship between them.
+
 ## Flight Model Characteristics
 
 ### 1. Flight Assist Mode (Enabled by Default)

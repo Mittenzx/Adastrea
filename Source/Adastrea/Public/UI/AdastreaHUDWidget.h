@@ -298,4 +298,82 @@ protected:
 	/** Whether the weapon aim crosshair is currently visible */
 	UPROPERTY(BlueprintReadOnly, Category="HUD|Crosshair")
 	bool bAimCrosshairVisible;
+
+	// ====================
+	// X4-STYLE FLIGHT CROSSHAIR SYSTEM
+	// ====================
+
+	/**
+	 * Update X4-style flight crosshair showing ship rotation direction
+	 * 
+	 * X4 Flight System Visualization:
+	 * - Mouse cursor position = where player wants to turn
+	 * - Ship direction indicator = where ship is actually pointing/turning
+	 * - Visual connection shows the rotation intent
+	 * - Deadzone circle shows no-rotation area
+	 * 
+	 * @param MouseScreenPosition Mouse position in screen space (0-1 range)
+	 * @param ShipRotationDirection Ship's current rotation direction vector in screen space (0-1 range)
+	 * @param RotationSpeed Current rotation speed (0-1, where 1 = maximum rotation speed)
+	 * @param bInDeadzone Whether mouse is in the deadzone (no rotation)
+	 */
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="HUD|Flight Crosshair")
+	void UpdateFlightCrosshair(FVector2D MouseScreenPosition, FVector2D ShipRotationDirection, float RotationSpeed, bool bInDeadzone);
+	virtual void UpdateFlightCrosshair_Implementation(FVector2D MouseScreenPosition, FVector2D ShipRotationDirection, float RotationSpeed, bool bInDeadzone);
+
+	/**
+	 * Show or hide the X4-style flight crosshair system
+	 * @param bVisible Whether the flight crosshair should be visible
+	 */
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="HUD|Flight Crosshair")
+	void SetFlightCrosshairVisible(bool bVisible);
+	virtual void SetFlightCrosshairVisible_Implementation(bool bVisible);
+
+	/**
+	 * Update deadzone visualization on HUD
+	 * @param DeadzoneRadiusPercent Deadzone radius as percentage of screen (0-1)
+	 * @param MaxRadiusPercent Maximum effective radius as percentage of screen (0-1)
+	 */
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="HUD|Flight Crosshair")
+	void UpdateDeadzoneVisualization(float DeadzoneRadiusPercent, float MaxRadiusPercent);
+	virtual void UpdateDeadzoneVisualization_Implementation(float DeadzoneRadiusPercent, float MaxRadiusPercent);
+
+	/**
+	 * Enable or disable deadzone visualization
+	 * @param bShow Whether to show the deadzone circle
+	 */
+	UFUNCTION(BlueprintCallable, Category="HUD|Flight Crosshair")
+	void ShowDeadzoneVisualization(bool bShow);
+
+	/** Mouse cursor position in screen space (0-1 range) for flight control */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|Flight Crosshair")
+	FVector2D FlightMousePosition;
+
+	/** Ship rotation direction indicator position in screen space (0-1 range) */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|Flight Crosshair")
+	FVector2D ShipRotationIndicator;
+
+	/** Current rotation speed (0-1, normalized) */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|Flight Crosshair")
+	float CurrentRotationSpeed;
+
+	/** Whether mouse is in the deadzone (no rotation area) */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|Flight Crosshair")
+	bool bMouseInDeadzone;
+
+	/** Whether the flight crosshair system is visible */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|Flight Crosshair")
+	bool bFlightCrosshairVisible;
+
+	/** Deadzone radius as percentage of screen (0-1) */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|Flight Crosshair")
+	float DeadzoneRadiusPercent;
+
+	/** Maximum effective radius as percentage of screen (0-1) */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|Flight Crosshair")
+	float MaxRadiusPercent;
+
+	/** Whether to show the deadzone circle visualization */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|Flight Crosshair")
+	bool bShowDeadzoneCircle;
 };
