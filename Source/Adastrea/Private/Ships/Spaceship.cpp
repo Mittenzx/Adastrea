@@ -494,8 +494,11 @@ void ASpaceship::Turn(float Value)
                     
                     float DistanceRatio = FMath::Clamp(EffectiveDistance / MaxEffectiveDistance, 0.0f, 1.0f);
                     
-                    // Calculate rotation rate: distance ratio * base turn rate * ship multiplier * sensitivity
-                    float RotationRate = DeltaX / DistanceFromCenter * DistanceRatio * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
+                    // Calculate rotation rate: X4-style formula
+                    // Rotation speed scales with distance from center (DistanceRatio)
+                    // Direction determined by normalized delta (DeltaX/DistanceFromCenter gives us -1 to 1 direction)
+                    float DirectionX = DeltaX / FMath::Max(DistanceFromCenter, 0.1f); // Normalized direction (-1 to 1)
+                    float RotationRate = DirectionX * DistanceRatio * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
                     
                     UE_LOG(LogAdastreaInput, Verbose, TEXT("ASpaceship::Turn - MousePos=(%.0f,%.0f), Center=(%.0f,%.0f), Distance=%.0f, DistanceRatio=%.2f, RotationRate=%.2f"), 
                         MouseX, MouseY, CenterX, CenterY, DistanceFromCenter, DistanceRatio, RotationRate);
@@ -606,9 +609,12 @@ void ASpaceship::LookUp(float Value)
                     
                     float DistanceRatio = FMath::Clamp(EffectiveDistance / MaxEffectiveDistance, 0.0f, 1.0f);
                     
-                    // Calculate rotation rate: distance ratio * base turn rate * ship multiplier * sensitivity
+                    // Calculate rotation rate: X4-style formula (matching Turn/Yaw implementation)
+                    // Rotation speed scales with distance from center (DistanceRatio)
+                    // Direction determined by normalized delta (DeltaY/DistanceFromCenter gives us -1 to 1 direction)
                     // Note: DeltaY is inverted for pitch (moving mouse up = pitch down in screen space)
-                    float RotationRate = -DeltaY / DistanceFromCenter * DistanceRatio * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
+                    float DirectionY = -DeltaY / FMath::Max(DistanceFromCenter, 0.1f); // Normalized direction (-1 to 1)
+                    float RotationRate = DirectionY * DistanceRatio * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
                     
                     UE_LOG(LogAdastreaInput, Verbose, TEXT("ASpaceship::LookUp - MousePos=(%.0f,%.0f), Center=(%.0f,%.0f), Distance=%.0f, DistanceRatio=%.2f, RotationRate=%.2f"), 
                         MouseX, MouseY, CenterX, CenterY, DistanceFromCenter, DistanceRatio, RotationRate);
