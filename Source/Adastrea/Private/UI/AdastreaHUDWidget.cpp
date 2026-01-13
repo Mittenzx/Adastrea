@@ -145,8 +145,14 @@ void UAdastreaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 				// Update X4-style flight crosshair system
 				if (bFlightCrosshairVisible)
 				{
-					// Get controlled spaceship to read flight control state
-					ASpaceship* Ship = GetControlledSpaceship();
+					// Use cached controlled spaceship where possible to avoid repeated Cast operations
+					ASpaceship* Ship = ControlledSpaceship;
+					if (!IsValid(Ship))
+					{
+						Ship = GetControlledSpaceship();
+						ControlledSpaceship = Ship;
+					}
+					
 					if (Ship && Ship->bUseMousePositionFlight)
 					{
 						// Calculate center of screen
@@ -171,7 +177,10 @@ void UAdastreaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 						{
 							float EffectiveDistance = DistanceFromCenter - DeadzoneRadius;
 							float MaxEffectiveDistance = MaxRadius - DeadzoneRadius;
-							RotationSpeed = FMath::Clamp(EffectiveDistance / MaxEffectiveDistance, 0.0f, 1.0f);
+							
+							// Safety check to prevent division by zero or very small numbers
+							const float SafeMaxEffectiveDistance = FMath::Max(MaxEffectiveDistance, KINDA_SMALL_NUMBER);
+							RotationSpeed = FMath::Clamp(EffectiveDistance / SafeMaxEffectiveDistance, 0.0f, 1.0f);
 						}
 						
 						// Calculate ship rotation direction indicator
