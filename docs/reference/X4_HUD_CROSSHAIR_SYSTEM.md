@@ -499,7 +499,7 @@ Now we use those pixel coordinates to actually move the widget!
 2. **Set its position**:
    - Drag off the MouseCursorIndicator pin
    - Search for: `Set Render Translation`
-   - Connect the execution pin from Break Vector2D
+   - Connect the execution pin from `Get Viewport Size` (or your previous node with execution) — `Break Vector2D` is a pure node and has no execution pins
    
 3. **Connect coordinates**:
    - Drag the Mouse Pixel X to `Translation X` input
@@ -901,17 +901,20 @@ Instead of updating every frame (60 times per second):
 
 ### Optimization 2: Cache Widget References
 
-Don't search for widgets every frame:
+When you name widgets in the Designer (e.g., "MouseCursorIndicator"), Unreal automatically creates variables that are already cached references. These Designer-bound variables are efficient to use directly.
 
-1. In **Event Construct** (when widget is created):
-   - Get MouseCursorIndicator once
+However, if you're creating widgets dynamically in Blueprint code (not in the Designer), then you should cache those references:
+
+1. In **Event Construct** (when widget is dynamically created):
+   - Get the dynamically created widget once
    - Store in a variable
-   - Same for ShipDirectionIndicator and DeadzoneCircle
-
+   
 2. In UpdateFlightCrosshair:
-   - Use the stored variables instead of getting widgets each time
+   - Use the stored variable instead of searching each time
 
-**Benefit**: Faster execution, less searching
+**Note**: For widgets added in the Designer (like our MouseCursorIndicator), dragging from the Variables list already gives you the cached reference. This optimization is mainly for dynamically created widgets.
+
+**Benefit**: Avoids repeated widget searches for dynamic content
 
 ### Optimization 3: Conditional Updates
 
@@ -1237,6 +1240,8 @@ Please contribute! The goal is to make this as accessible as possible for beginn
 **Last Updated**: January 14, 2026  
 **Version**: 2.0 - Beginner-Friendly Edition  
 **Target Audience**: Unreal Engine beginners with basic Blueprint knowledge  
+**Skill Level**: Beginner  
+**Prerequisites**: [See prerequisites section](#before-you-start-what-you-need-to-know)  
 **Estimated Reading Time**: 45 minutes  
 **Estimated Implementation Time**: 2-3 hours for complete system  
 
