@@ -1,3 +1,34 @@
+# Adastrea
+
+**Open-World Space Flight Game** built on Unreal Engine 5.6
+
+**Current Focus**: Trade Simulator MVP (Week 3-4 of 12)  
+**Status**: Active Development  
+**License**: MIT
+
+---
+
+## 🚀 Quick Navigation
+
+**👉 New to Adastrea?** → **[GETTING_STARTED.md](GETTING_STARTED.md)** - Start here! ⭐
+
+**Essential Links:**
+| For... | Go to... |
+|--------|----------|
+| 🎮 **Want to understand the project** | [GETTING_STARTED.md](GETTING_STARTED.md) |
+| 💻 **Want to contribute code** | [CONTRIBUTING.md](CONTRIBUTING.md) → [CODE_STYLE.md](CODE_STYLE.md) |
+| 📚 **Looking for documentation** | [docs/README.md](docs/README.md) or [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md) |
+| 🎯 **Understanding the MVP** | [docs/mvp/README.md](docs/mvp/README.md) |
+| 🏗️ **Architecture questions** | [ARCHITECTURE.md](ARCHITECTURE.md) |
+| 📝 **Recent changes** | [CHANGELOG.md](CHANGELOG.md) |
+
+**Historical Context:**
+- **January 2026**: Repository modernization (documentation consolidation)
+- **December 2025**: [Critical review and MVP pivot](docs/archive/critical-review-2025/README.md)
+- **October-December 2025**: Initial development (infrastructure-first approach)
+
+---
+
 # Adastrea - Open World Space Flight Game
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
