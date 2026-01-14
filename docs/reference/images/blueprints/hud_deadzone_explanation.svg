@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="400" viewBox="0 0 700 400">
+<defs>
+    <style>
+        .node-box { fill: #2d2d2d; stroke: #444; stroke-width: 2; }
+        .node-header { fill: #1B4F72; stroke: none; }
+        .node-text { fill: white; font-family: Arial, sans-serif; font-size: 14px; }
+        .pin { fill: white; stroke: #222; stroke-width: 1; }
+        .wire { stroke: white; stroke-width: 3; fill: none; }
+        .description { fill: #666; font-family: Arial, sans-serif; font-size: 12px; }
+    </style>
+</defs>
+<rect x="0" y="0" width="700" height="400" fill="#1a1a1a"/>
+<text x="350" y="30" fill="#fff" font-size="18" font-family="Arial" text-anchor="middle" font-weight="bold">Understanding the Deadzone</text>
+<text x="175" y="70" fill="#fff" font-size="14" font-family="Arial" text-anchor="middle" font-weight="bold">Mouse Inside Deadzone</text>
+<text x="175" y="90" fill="#aaa" font-size="12" font-family="Arial" text-anchor="middle" font-weight="normal">= No Rotation</text>
+<circle cx="175" cy="220" r="60" fill="none" stroke="#666" stroke-width="2" opacity="0.3"/>
+<text x="175" y="225" fill="#888" font-size="20" font-family="Arial" text-anchor="middle" font-weight="normal">✕</text>
+<text x="180" y="225" fill="#888" font-size="16" font-family="Arial" text-anchor="middle" font-weight="normal">◉</text>
+<text x="175" y="310" fill="#888" font-size="12" font-family="Arial" text-anchor="middle" font-weight="normal">Mouse and ship</text>
+<text x="175" y="325" fill="#888" font-size="12" font-family="Arial" text-anchor="middle" font-weight="normal">both at center</text>
+<text x="175" y="340" fill="#888" font-size="12" font-family="Arial" text-anchor="middle" font-weight="normal">(Gray color)</text>
+<text x="525" y="70" fill="#fff" font-size="14" font-family="Arial" text-anchor="middle" font-weight="bold">Mouse Outside Deadzone</text>
+<text x="525" y="90" fill="#aaa" font-size="12" font-family="Arial" text-anchor="middle" font-weight="normal">= Ship Rotates</text>
+<circle cx="525" cy="220" r="60" fill="none" stroke="#666" stroke-width="2" opacity="0.3"/>
+<text x="525" y="225" fill="#00CED1" font-size="20" font-family="Arial" text-anchor="middle" font-weight="normal">✕</text>
+<circle cx="575" cy="270" r="8" fill="none" stroke="#fff" stroke-width="2" opacity="1.0"/>
+<line x1="525" y1="220" x2="575" y2="270" stroke="#FFD700" stroke-width="2" stroke-dasharray="5,5"/>
+<text x="525" y="310" fill="#fff" font-size="12" font-family="Arial" text-anchor="middle" font-weight="normal">Ship and mouse</text>
+<text x="525" y="325" fill="#fff" font-size="12" font-family="Arial" text-anchor="middle" font-weight="normal">separated</text>
+<text x="525" y="340" fill="#fff" font-size="12" font-family="Arial" text-anchor="middle" font-weight="normal">(Active colors)</text>
+</svg>
