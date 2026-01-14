@@ -7,6 +7,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed - 2026-01-14
+
+#### Repository Modernization: Directory Consolidation and Structure Cleanup
+
+**Objective**: Modernize repository structure to align with MVP priorities and eliminate confusion from dual documentation directories.
+
+##### Documentation Directory Consolidation
+- **Archived `Docs/` directory** (capital D, 49 files) → `docs/archive/legacy-Docs/`
+  - Eliminated confusion between `Docs/` and `docs/` directories
+  - Standardized on lowercase `docs/` as official documentation location
+  - Preserved all historical content with comprehensive README
+  - **Files**: Player Controls, HUD guides, Map System, Test Mode, Unreal Directive implementations
+  - **Created**: `docs/archive/legacy-Docs/README.md` documenting archived content
+  
+##### Critical Review Archive
+- **Archived critical review documents** (December 2025) → `docs/archive/critical-review-2025/`
+  - Moved 5 critical review documents from root to archive:
+    - `CRITICAL_REVIEW_SUMMARY.md` (9KB) - Executive summary
+    - `CRITICAL_REVIEW_PUBLISHER_ASSESSMENT.md` (27KB) - Publisher perspective
+    - `CRITICAL_REVIEW_TECHNICAL_ISSUES.md` (21KB) - Technical debt analysis
+    - `CRITICAL_REVIEW_ACTION_PLAN.md` (13KB) - 12-week recovery plan
+    - `CRITICAL_REVIEW_README.md` (9KB) - Navigation guide
+  - Moved `CURRENT_STATUS.md` (historical snapshot from Dec 2025)
+  - **Created**: `docs/archive/critical-review-2025/README.md` with comprehensive context
+  - **Reason**: Historical documents completed in Dec 2025, led to Trade Simulator MVP pivot
+  - **Impact**: Root directory cleaner, critical review preserved for reference
+
+##### Root Directory Improvements
+- **Created**: `GETTING_STARTED.md` - Modern MVP-focused entry point
+  - Quick start paths for players, developers, content creators, researchers
+  - Current focus: Trade Simulator MVP (Week 3-4 of 12)
+  - Clear repository structure overview
+  - Essential documentation index
+  - Development setup guide
+  - Project status and timeline
+- **Root markdown count**: Reduced from 16 to 11 files (31% reduction)
+  - Kept: Essential project docs (README, ARCHITECTURE, CODE_STYLE, CONTRIBUTING, CHANGELOG, ROADMAP, etc.)
+  - Archived: Historical review documents (Dec 2025)
+  - Added: GETTING_STARTED.md (replaces need for multiple entry points)
+
+##### Benefits
+- ✅ **Single documentation directory**: `docs/` is now the only doc location (no more Docs/ vs docs/)
+- ✅ **Cleaner root**: Historical documents archived, essential docs remain
+- ✅ **MVP focus**: New GETTING_STARTED.md emphasizes current Trade Simulator MVP work
+- ✅ **Historical preservation**: All content archived with explanatory READMEs
+- ✅ **Better navigation**: Clear entry points for different user types
+- ✅ **Anti-pattern compliance**: Following guidelines from `.github/instructions/anti-patterns.instructions.md`
+
+**Impact**: Repository structure now clearly prioritizes MVP development while preserving historical context for future reference.
+
+---
+
 ### Changed - 2026-01-13
 
 #### Repository Cleanup: Archived Obsolete Files

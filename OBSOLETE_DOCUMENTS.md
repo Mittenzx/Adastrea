@@ -1,17 +1,18 @@
 # Obsolete and Archived Documents
 
-**Last Updated**: January 13, 2026  
+**Last Updated**: January 14, 2026  
 **Purpose**: Track documents that are no longer actively used but retained for reference
 
-## 🆕 Latest Update: Repository Cleanup (January 13, 2026)
+## 🆕 Latest Update: Repository Modernization (January 14, 2026)
 
-**Build artifacts, generated reports, and one-time scripts archived**
+**Documentation directory consolidation and critical review archival**
 
 ### What Happened
-- **Excluded**: Build logs added to .gitignore (BuildLog*.json, BuildLog*.txt, BuildLog*.uba)
-- **Archived**: Generated reports moved to `Archive/Reports/`
-- **Archived**: One-time scripts moved to `Archive/Scripts/`
-- **Result**: Root directory further cleaned, build artifacts properly ignored
+- **Consolidated**: `Docs/` directory (capital D, 49 files) → `docs/archive/legacy-Docs/`
+- **Archived**: Critical review documents (5 files) → `docs/archive/critical-review-2025/`
+- **Archived**: `CURRENT_STATUS.md` (historical snapshot) → critical review archive
+- **Created**: `GETTING_STARTED.md` - Modern MVP-focused entry point
+- **Result**: Single documentation directory (`docs/`), cleaner root, MVP-focused navigation
 
 See details below for complete list of archived files.
 
@@ -19,7 +20,101 @@ See details below for complete list of archived files.
 
 ## Overview
 
-This document tracks obsolete documentation that has been removed or archived. Major cleanups occurred on December 24, 2025 and January 13, 2026.
+This document tracks obsolete documentation that has been removed or archived. Major cleanups occurred on December 24, 2025, January 13, 2026, and January 14, 2026.
+
+---
+
+## Archived Directories and Files (January 14, 2026)
+
+### Documentation Directory Consolidation
+
+**Reason**: Eliminate confusion between `Docs/` (capital D) and `docs/` (lowercase d) directories
+
+**Action**: Entire `Docs/` directory (49 files) moved to `docs/archive/legacy-Docs/`
+
+#### What Was Archived
+- **Player Controls & HUD** (6 files)
+  - `PLAYER_CONTROLS_*.md` (3 files) - Control schemes and workflows
+  - `HUD_*.md` (3 files) - HUD implementation guides
+  - `ForwardSpeed*.md` (3 files) - Forward speed indicator feature
+  
+- **Map System** (3 files)
+  - `MapSystem*.md` - Map system implementation and examples
+  
+- **Test Mode** (3 files)
+  - `TestMode_*.md` - Test mode setup and quick reference
+  
+- **Unreal Directive** (3 files)
+  - `UNREAL_DIRECTIVE_*.md` - Implementation guides for best practices
+  
+- **Other Documentation** (8 files)
+  - `AUTOMATION_SETUP.md`
+  - `BEST_PRACTICES_CLASS_SETUP.md`
+  - `CLASS_SETUP_AUDIT_SUMMARY.md`
+  - `CPP_CODE_QUALITY_REPORT.md`
+  - `EmptyMapSetup.md`
+  - `FACTION_REPUTATION_QUICK_START.md`
+  - `README.md` (Docs/ index)
+  
+- **Visual Assets** (2 files)
+  - `station_editor_*.png` - Station editor mockup images
+  
+- **Nested Archive** (23 files)
+  - `Docs/archive/migrated/` - Previously archived documents
+
+**New Location**: `docs/archive/legacy-Docs/`  
+**Documentation**: `docs/archive/legacy-Docs/README.md` explains content and context  
+**Status**: ✅ Archived - No longer maintained, preserved for reference
+
+### Critical Review Archive
+
+**Reason**: Historical documents from December 2025 review, completed and led to MVP pivot
+
+**Action**: Moved to `docs/archive/critical-review-2025/`
+
+#### What Was Archived
+1. **CRITICAL_REVIEW_SUMMARY.md** (9KB)
+   - One-page executive summary
+   - Verdict: DO NOT FUND (current state Dec 2025)
+   - Led to Trade Simulator MVP pivot
+
+2. **CRITICAL_REVIEW_PUBLISHER_ASSESSMENT.md** (27KB)
+   - Detailed publisher perspective
+   - Why publishers won't fund (0/10 criteria met)
+   - Competitive analysis vs Elite/X4/Star Citizen
+
+3. **CRITICAL_REVIEW_TECHNICAL_ISSUES.md** (21KB)
+   - Technical debt analysis
+   - 15 specific problems
+   - 890-1360 estimated hidden issues
+
+4. **CRITICAL_REVIEW_ACTION_PLAN.md** (13KB)
+   - 12-week recovery roadmap
+   - Trade Simulator MVP chosen
+   - Success metrics defined
+
+5. **CRITICAL_REVIEW_README.md** (9KB)
+   - Navigation guide for review documents
+
+6. **CURRENT_STATUS.md** (Historical)
+   - December 2025 status snapshot
+   - Honest project assessment
+   - Basis for critical review
+
+**New Location**: `docs/archive/critical-review-2025/`  
+**Documentation**: `docs/archive/critical-review-2025/README.md` with full context  
+**Status**: ✅ Completed - Historical turning point preserved
+
+### New Documentation Created
+
+**GETTING_STARTED.md** (Root)
+- Modern MVP-focused entry point
+- Replaces multiple outdated getting-started guides
+- Quick paths for different user types (players, developers, content creators)
+- Current Trade Simulator MVP status and timeline
+- Links to essential documentation
+
+**Impact**: Root directory now has 11 markdown files (down from 16)
 
 ---
 
@@ -275,6 +370,14 @@ See [docs/README.md](docs/README.md) for complete navigation guide.
 - **Documentation archived**: 1 summary document → `Archive/Documentation/`
 - **Status**: Root directory further cleaned of temporary files
 
+### After Third Cleanup (January 14, 2026)
+- **Docs/ directory**: Consolidated to `docs/archive/legacy-Docs/` (49 files)
+- **Critical review**: Archived to `docs/archive/critical-review-2025/` (6 files)
+- **Root markdown files**: Reduced from 16 to 11 (31% reduction)
+- **Documentation directories**: Unified - only `docs/` remains (no more Docs/ confusion)
+- **Created**: `GETTING_STARTED.md` - Modern MVP-focused entry point
+- **Status**: Single documentation location, MVP-focused navigation, historical context preserved
+
 ## Using This Document
 
 ### For Contributors
@@ -319,18 +422,19 @@ The project had accumulated:
 - ✅ Eliminated duplicate information
 - ✅ Preserved all important content
 
-### January 13, 2026 Cleanup
-The repository still contained:
-- Build artifacts tracked in git (should be ignored)
-- Generated reports from one-time tasks
-- Migration scripts that had already been run
-- Plugin setup scripts for removed plugins
+### January 14, 2026 Cleanup
+The repository still had:
+- Duplicate documentation directories (`Docs/` vs `docs/`)
+- Historical critical review documents in root (completed Dec 2025)
+- No modern MVP-focused entry point
+- Confusion about which documentation location to use
 
 **Achieved**:
-- ✅ Build logs properly excluded via .gitignore
-- ✅ Generated reports archived with documentation
-- ✅ One-time scripts archived for reference
-- ✅ Root directory contains only active development files
+- ✅ Single documentation directory (`docs/` only)
+- ✅ Critical review documents preserved with context
+- ✅ Modern `GETTING_STARTED.md` with MVP focus
+- ✅ Root directory reduced to 11 essential files
+- ✅ Historical turning point (Dec 2025 review) properly archived
 
 ## Future Maintenance
 
@@ -339,9 +443,11 @@ To keep documentation clean:
 2. Consolidate duplicate guides when discovered
 3. Use `Archive/` for historical scripts, reports, and code
 4. Use `docs/archive/` for historical documents with lasting value
-5. Keep root directory limited to essential project files
+5. Keep root directory limited to essential project files (target: 10-12 files)
 6. Always add build artifacts to .gitignore
-7. Conduct annual documentation audits
+7. Use lowercase `docs/` as the only documentation directory
+8. Update `GETTING_STARTED.md` to reflect current project state
+9. Conduct annual documentation audits
 
 ---
 
@@ -349,15 +455,19 @@ To keep documentation clean:
 
 For current, maintained documentation, see:
 
+- **[GETTING_STARTED.md](GETTING_STARTED.md)** - ⭐ Modern MVP-focused entry point
 - **[docs/README.md](docs/README.md)** - ⭐ Documentation navigation guide
 - **[MASTER_DOCUMENTATION.md](MASTER_DOCUMENTATION.md)** - Complete documentation in one file
-- **[CURRENT_STATUS.md](CURRENT_STATUS.md)** - Realistic project status
 - **[README.md](README.md)** - Project overview
 - **[DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)** - Complete documentation index
 - **[wiki/Home.md](wiki/Home.md)** - Wiki homepage
+
+### Critical Review (December 2025)
+Archived but important for understanding project evolution:
+- **[docs/archive/critical-review-2025/README.md](docs/archive/critical-review-2025/README.md)** - Review summary and context
 
 ---
 
 **Status**: ✅ Cleanups complete - Repository is organized and maintainable
 
-*This document was updated as part of the January 13, 2026 repository cleanup.*
+*This document was updated as part of the January 14, 2026 repository modernization.*
