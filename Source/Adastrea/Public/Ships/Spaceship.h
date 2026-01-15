@@ -450,6 +450,14 @@ protected:
     void UpdateThrottleVelocity(float DeltaTime);
     
     /**
+     * Update X4-style mouse position flight controls
+     * Continuously checks mouse cursor position and rotates ship accordingly
+     * Called every frame when bUseMousePositionFlight is true
+     * @param DeltaTime Time since last frame
+     */
+    void UpdateMousePositionFlight(float DeltaTime);
+    
+    /**
      * Check if throttle can be adjusted based on cooldown
      * @return True if enough time has passed since last adjustment
      */
