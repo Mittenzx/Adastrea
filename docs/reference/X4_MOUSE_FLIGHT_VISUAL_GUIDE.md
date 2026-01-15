@@ -4,6 +4,8 @@ This guide provides visual diagrams to understand the X4-style mouse position fl
 
 ## System Overview
 
+**Key Concept**: The ship rotates based on where the mouse cursor **is positioned** on screen, not based on mouse movement. The cursor acts like a "target direction" indicator.
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                     Screen Space                             │
@@ -28,6 +30,33 @@ This guide provides visual diagrams to understand the X4-style mouse position fl
 │  └──────────────────────────────────────────────┘           │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
+```
+
+## How It Works (Critical Understanding)
+
+**X4-Style**: The ship rotates continuously based on cursor **position**, not cursor **movement**.
+
+```
+Cursor Position → Continuous Rotation
+
+Example 1: Cursor held right of center
+┌────────────────┐
+│      +     →   │ Cursor stationary here
+└────────────────┘
+Result: Ship continuously yaws right until cursor moves back to center
+
+Example 2: Cursor held above center
+┌────────────────┐
+│        ↑       │ Cursor stationary here
+│      +         │
+└────────────────┘
+Result: Ship continuously pitches up until cursor moves back to center
+
+Example 3: Cursor in deadzone
+┌────────────────┐
+│      +→        │ Cursor near center (within 50px)
+└────────────────┘
+Result: Ship stops rotating (no rotation in deadzone)
 ```
 
 ## Mouse Position to Rotation Speed
@@ -181,28 +210,36 @@ Result: Stable, slow, deliberate turns
 ```
 Mouse Movement → Constant Rotation Rate
 ┌─────┐
-│ →   │ Small mouse movement  → Slow rotation
+│ →   │ Small mouse movement  → Slow rotation (while moving)
 └─────┘
+        Stop moving mouse → Stop rotating
 
 ┌─────┐
-│ →→→ │ Large mouse movement  → Fast rotation
+│ →→→ │ Large mouse movement  → Fast rotation (while moving)
 └─────┘
+        Stop moving mouse → Stop rotating
 
+Behavior: Rotation ONLY when mouse is moving
 Problem: No intuitive control, hard to predict
 ```
 
-### Mouse Position Mode (X4-Style)
+### Mouse Position Mode (X4-Style) ✓ CORRECT
 ```
-Mouse Position → Distance-Based Rotation
+Cursor Position → Distance-Based Rotation
 ┌────────────────┐
-│      +→        │ Near center → Slow rotation
+│      +→        │ Cursor near center → Slow continuous rotation
 └────────────────┘
+                   Mouse can stay still → Ship keeps rotating
 
 ┌────────────────┐
-│      +     →   │ Far from center → Fast rotation
+│      +     →   │ Cursor far from center → Fast continuous rotation
 └────────────────┘
+                   Mouse can stay still → Ship keeps rotating
 
-Benefit: Predictable, intuitive, natural feel
+Behavior: Rotation CONTINUOUS based on cursor position
+Benefit: Predictable, intuitive, natural feel - like X4: Foundations
+
+To stop rotating: Move cursor back to center (deadzone)
 ```
 
 ## Performance Characteristics
