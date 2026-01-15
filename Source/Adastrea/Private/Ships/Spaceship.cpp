@@ -987,6 +987,10 @@ void ASpaceship::UpdateMousePositionFlight(float DeltaTime)
         // Within deadzone, smoothly stop rotation
         RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, 0.0f, DeltaTime, FlightAssistResponsiveness);
         RotationVelocity.Pitch = FMath::FInterpTo(RotationVelocity.Pitch, 0.0f, DeltaTime, FlightAssistResponsiveness);
+        
+        // No rotational input intent while inside deadzone
+        YawInput = 0.0f;
+        PitchInput = 0.0f;
         return;
     }
     
@@ -1020,6 +1024,10 @@ void ASpaceship::UpdateMousePositionFlight(float DeltaTime)
     // Interpolate rotation velocity for smooth feel
     RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, YawRotationRate, DeltaTime, FlightAssistResponsiveness);
     RotationVelocity.Pitch = FMath::FInterpTo(RotationVelocity.Pitch, PitchRotationRate, DeltaTime, FlightAssistResponsiveness);
+    
+    // Signal active rotation intent to prevent auto-leveling and damping interference
+    YawInput = (FMath::Abs(YawRotationRate) > 0.01f) ? 1.0f : 0.0f;
+    PitchInput = (FMath::Abs(PitchRotationRate) > 0.01f) ? 1.0f : 0.0f;
     
     // Apply rotation to ship
     FRotator DeltaRotation = FRotator(RotationVelocity.Pitch * DeltaTime, RotationVelocity.Yaw * DeltaTime, 0.0f);
