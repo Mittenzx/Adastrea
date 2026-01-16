@@ -1,11 +1,17 @@
 # Trading Game Mode - Blueprint Guide
 
+> **⚠️ DEPRECATED**: This guide has been consolidated into the unified Trading and Docking Complete Guide.  
+> **See**: [Trading and Docking Complete Guide](../docs/mvp/TRADING_AND_DOCKING_COMPLETE_GUIDE.md)
+
+---
+
 > **Create the game mode that manages economy simulation and game rules**
 
 **Blueprint Type**: Game Mode  
 **Complexity**: Intermediate  
 **Time to Complete**: 35-45 minutes  
-**Last Updated**: 2026-01-08
+**Last Updated**: 2026-01-08  
+**Status**: **DEPRECATED** - Refer to unified guide above
 
 ---
 

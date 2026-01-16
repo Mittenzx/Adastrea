@@ -1,6 +1,13 @@
 # Trading System - Complete Designer & Programmer Guide
 
+> **⚠️ DEPRECATED**: This guide has been consolidated into the unified Trading and Docking Complete Guide.  
+> **See**: [Trading and Docking Complete Guide](../docs/mvp/TRADING_AND_DOCKING_COMPLETE_GUIDE.md)
+
+---
+
 ## Overview
+**Status**: **DEPRECATED** - Refer to unified guide above
+
 The Adastrea Trading System is a comprehensive, Blueprint-friendly economic simulation framework that provides:
 - **Dynamic pricing** based on supply/demand, rarity, and market events
 - **AI trading agents** with arbitrage, speculation, and market manipulation

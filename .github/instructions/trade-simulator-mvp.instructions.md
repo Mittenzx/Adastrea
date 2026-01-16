@@ -77,7 +77,8 @@ int32 CargoSpace = 10;
 - Economy config (supply/demand simulation)
 
 **Add Blueprints:**
-- `BP_TradingStation` (docking + UI)
+- `BP_SpaceStation` with marketplace modules (modular station system)
+- `BP_SpaceStationModule_Marketplace` (marketplace configuration)
 - `BP_TradingShip` (cargo management)
 - `BP_TradingGameMode` (economy updates)
 - `WBP_TradingUI` (market interface)
@@ -87,6 +88,7 @@ int32 CargoSpace = 10;
 - Supply/demand dynamics
 - Multiple trade routes
 - Basic economy simulation
+- Marketplace module integration
 
 **Success Criteria:**
 - 5-10 minutes of varied gameplay
@@ -164,17 +166,39 @@ Response: "Great idea! Let's add it AFTER we validate the trading loop is fun."
 
 **Core Classes:**
 ```cpp
-// Trading station actor
-class ATradingStation : public AActor
+// Space station with marketplace modules
+class ASpaceStation : public AActor
 {
-    UPROPERTY()
-    UMarketDataAsset* MarketData;
+    // Station automatically spawns modules from this array
+    UPROPERTY(EditAnywhere, Category="Station")
+    TArray<TSubclassOf<ASpaceStationModule>> DefaultModuleClasses;
     
     UFUNCTION(BlueprintCallable)
-    void OpenTradingUI();
+    AMarketplaceModule* GetMarketplaceModule() const;
     
     UFUNCTION(BlueprintCallable)
-    float GetItemPrice(FName ItemID) const;
+    bool HasMarketplace() const;
+};
+
+// Marketplace module (attached to stations)
+class AMarketplaceModule : public ASpaceStationModule
+{
+    // Market configuration (inventory, prices, rules)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UMarketDataAsset* MarketDataAsset;
+    
+    // Trading availability
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    bool bIsOpen;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FText MarketplaceName;
+    
+    UFUNCTION(BlueprintCallable)
+    UMarketDataAsset* GetMarketData() const;
+    
+    UFUNCTION(BlueprintCallable)
+    bool IsAvailableForTrading() const;
 };
 
 // Trading ship component
@@ -215,19 +239,131 @@ class UTradeItemDataAsset : public UDataAsset
     
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float Volatility; // Price fluctuation
-};
-
-// Market configuration
-UCLASS()
-class UMarketDataAsset : public UDataAsset
-{
-    UPROPERTY(EditAnywhere, BlueprintReadOnly)
-    FText StationName;
     
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
-    TMap<FName, float> ItemPriceMultipliers;
+    float VolumePerUnit; // Space per unit
+};
+
+// Market configuration (used by MarketplaceModule)
+UCLASS()
+class UMarketDataAsset : public UPrimaryDataAsset
+{
+    UPROPERTY(EditAnywhere, BlueprintReadOnly)
+    FText MarketName;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadOnly)
+    EMarketType MarketType; // Open, Black Market, etc.
+    
+    UPROPERTY(EditAnywhere, BlueprintReadOnly)
+    EMarketSize MarketSize; // Small, Medium, Large, etc.
+    
+    // Pricing modifiers
+    UPROPERTY(EditAnywhere, BlueprintReadOnly)
+    float SellPriceMarkup; // 1.2 = +20% when player buys
+    
+    UPROPERTY(EditAnywhere, BlueprintReadOnly)
+    float BuyPriceMarkdown; // 0.8 = -20% when player sells
+    
+    // Market inventory
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TArray<FMarketInventoryEntry> Inventory;
+    
+    UFUNCTION(BlueprintCallable)
+    float GetItemPrice(UTradeItemDataAsset* TradeItem, bool bIsBuying) const;
+    
+    UFUNCTION(BlueprintCallable)
+    bool IsItemInStock(FName ItemID, int32 Quantity) const;
 };
 ```
+
+---
+
+### Marketplace Module System
+
+**Architecture:**
+Trading in Adastrea uses a **modular station system**. Markets are implemented as `AMarketplaceModule` actors that attach to space stations.
+
+**Key Concepts:**
+
+1. **MarketplaceModule** = Physical trading facility on station
+   - Attached to `ASpaceStation` as child actor
+   - Contains reference to `UMarketDataAsset`
+   - Can be opened/closed for trading
+   - Multiple marketplaces per station supported
+
+2. **MarketDataAsset** = Market configuration (inventory, prices)
+   - Defines what items are sold/bought
+   - Sets pricing rules (markup/markdown)
+   - Manages stock levels and supply/demand
+   - Reusable across multiple stations
+
+**Station Configuration:**
+```cpp
+// In BP_SpaceStation Class Defaults:
+DefaultModuleClasses:
+  [0] BP_SpaceStationModule_DockingBay   // Required for docking
+  [1] BP_SpaceStationModule_Marketplace  // Required for trading
+  [2] BP_CargoBayModule                  // Optional storage
+```
+
+**Trading Flow:**
+```
+1. Player docks at station
+2. Check: Station->HasMarketplace()
+3. Get marketplace: Station->GetMarketplaceModule()
+4. Check: Marketplace->IsAvailableForTrading()
+5. Get market data: Marketplace->GetMarketData()
+6. Open trading UI with market data
+```
+
+**Blueprint Example:**
+```
+Event: Player Requests Trade
+    ↓
+Get Docked Station
+    ↓
+Has Marketplace? (bool)
+    ├─ True:
+    │   ↓
+    │   Get Marketplace Module
+    │   ↓
+    │   Is Available For Trading? (bool)
+    │   ├─ True: Open Trading UI
+    │   └─ False: Show "Market Closed"
+    │
+    └─ False: Show "No Marketplace Available"
+```
+
+**Creating a Market:**
+
+1. **Create Market Data Asset**:
+   - Right-click in Content Browser
+   - Data Asset → MarketDataAsset
+   - Configure inventory, prices, rules
+
+2. **Create Marketplace Module Blueprint**:
+   - Already exists: `BP_SpaceStationModule_Marketplace`
+   - In Class Defaults, assign your MarketDataAsset
+   - Set `bIsOpen = true`
+   - Set `MarketplaceName` (e.g., "Central Market")
+
+3. **Add to Station**:
+   - Open `BP_SpaceStation` Class Defaults
+   - Add to `DefaultModuleClasses` array
+   - Station spawns marketplace automatically on BeginPlay
+
+**Market Types:**
+- `OpenMarket` - General trading (MVP default)
+- `BlackMarket` - Illegal goods (post-MVP)
+- `CommodityExchange` - Bulk trading (post-MVP)
+- `LuxuryBazaar` - High-end goods (post-MVP)
+- `IndustrialDepot` - Manufacturing supplies (post-MVP)
+
+**MVP Focus:**
+For prototype, use `OpenMarket` type with simple inventory. Advanced market types and features (black markets, faction-exclusive markets, dynamic events) are post-MVP.
+
+**Performance Note:**
+Each marketplace module consumes 40 power units. Stations automatically calculate total power from all modules via `GetPowerBalance()`.
 
 ---
 
@@ -345,42 +481,103 @@ Additional polish or feature adjustments needed.
 
 **5-10 Stations with Different Economies:**
 
+**Station Architecture:**
+Each station is an `ASpaceStation` actor with attached modules. For trading, stations MUST have:
+- **DockingBayModule** - Required for ship docking
+- **MarketplaceModule** - Required for trading functionality
+- **CargoBayModule** - Optional (enhances station storage)
+
 **Agricultural Station:**
 - Produces: Food, water
 - Imports: Technology, machinery
 - Economy: Stable prices
+- **Marketplace Config**:
+  - Market Type: `OpenMarket`
+  - Market Size: `Medium`
+  - Sell Markup: 1.1x (cheap goods)
+  - Buy Markdown: 0.9x (pays less for imports)
 
 **Industrial Station:**
 - Produces: Metals, components
 - Imports: Food, medicine
 - Economy: High volatility
+- **Marketplace Config**:
+  - Market Type: `IndustrialDepot`
+  - Market Size: `Large`
+  - Sell Markup: 1.3x (expensive imports)
+  - Buy Markdown: 0.7x (cheap exports)
 
 **Luxury Station:**
 - Produces: Art, entertainment
 - Imports: Luxury food, rare goods
 - Economy: Expensive, low volatility
+- **Marketplace Config**:
+  - Market Type: `LuxuryBazaar`
+  - Market Size: `Small`
+  - Sell Markup: 2.0x (very expensive)
+  - Buy Markdown: 0.8x (reasonable prices for luxury goods)
 
 **Research Station:**
 - Produces: Technology, medicine
 - Imports: Industrial materials
 - Economy: High tech prices
+- **Marketplace Config**:
+  - Market Type: `ResearchHub`
+  - Market Size: `Medium`
+  - Sell Markup: 1.5x (tech is expensive)
+  - Buy Markdown: 0.75x (needs materials)
 
 **Trade Hub:**
 - Produces: Nothing (imports everything)
 - Imports: All categories
 - Economy: Medium prices, balanced
+- **Marketplace Config**:
+  - Market Type: `OpenMarket`
+  - Market Size: `Large`
+  - Sell Markup: 1.2x (fair markup)
+  - Buy Markdown: 0.85x (fair prices)
 
-**Station Properties:**
+**Station Module Setup (YAML):**
 ```yaml
 name: Industrial Station Alpha
 location: (1000, 5000, 0)
-produces:
-  - Metals: 0.8x base price
-  - Components: 0.9x base price
-imports:
-  - Food: 1.3x base price
-  - Medicine: 1.5x base price
-docking_bays: 4
+
+modules:
+  - type: DockingBay
+    count: 2
+  - type: Marketplace
+    market_data: DA_Market_Industrial
+    is_open: true
+    name: "Industrial Exchange"
+  - type: CargoBay
+    count: 3
+
+market_config:
+  produces:
+    - Metals: 0.8x base price (station produces, cheap here)
+    - Components: 0.9x base price
+  imports:
+    - Food: 1.3x base price (station needs, expensive here)
+    - Medicine: 1.5x base price
+  
+  sell_markup: 1.3  # Player pays 30% more when buying
+  buy_markdown: 0.7  # Player gets 30% less when selling
+```
+
+**Blueprint Setup:**
+```
+BP_SpaceStation_Industrial (Class Defaults):
+  DefaultModuleClasses:
+    [0] BP_SpaceStationModule_DockingBay
+    [1] BP_SpaceStationModule_Marketplace
+    [2] BP_CargoBayModule
+    [3] BP_CargoBayModule
+    [4] BP_CargoBayModule
+
+BP_SpaceStationModule_Marketplace (Class Defaults):
+  MarketDataAsset: DA_Market_Industrial
+  bIsOpen: true
+  MarketplaceName: "Industrial Exchange"
 ```
 
 ---
@@ -704,6 +901,219 @@ Low-stress, zen-like trading experience
 
 ---
 
+## 🏪 MARKETPLACE MODULE INTEGRATION
+
+### Implementation Checklist
+
+**Phase 1 (Prototype):**
+- [ ] Use existing `AMarketplaceModule` C++ class (already implemented)
+- [ ] Create 2-3 `UMarketDataAsset` instances for test stations
+- [ ] Verify station spawns marketplace module correctly
+- [ ] Test `HasMarketplace()` and `GetMarketplaceModule()` functions
+- [ ] Open trading UI when player docks and requests trade
+
+**Phase 2 (Structured):**
+- [ ] Create 10+ unique MarketDataAssets for different station types
+- [ ] Configure market inventory for each station economy
+- [ ] Set appropriate sell markup / buy markdown per market
+- [ ] Implement supply/demand tracking in MarketDataAsset
+- [ ] Add market events (price fluctuations, shortages)
+
+**Phase 3 (Polish):**
+- [ ] Visual indicators for marketplace modules on stations
+- [ ] Market status UI (open/closed, stock levels)
+- [ ] Market comparison tool (price differences between stations)
+- [ ] Trading history tracker
+- [ ] Achievement for first trade completion
+
+### Code Examples
+
+**Check Station Has Trading:**
+```cpp
+// C++ approach
+void APlayerShip::RequestTrade(ASpaceStation* DockedStation)
+{
+    if (!DockedStation || !DockedStation->HasMarketplace())
+    {
+        ShowMessage(TEXT("This station has no marketplace"));
+        return;
+    }
+    
+    AMarketplaceModule* Marketplace = DockedStation->GetMarketplaceModule();
+    if (!Marketplace->IsAvailableForTrading())
+    {
+        ShowMessage(TEXT("Marketplace is currently closed"));
+        return;
+    }
+    
+    UMarketDataAsset* MarketData = Marketplace->GetMarketData();
+    OpenTradingUI(MarketData);
+}
+```
+
+**Blueprint Trading Flow:**
+```
+Event: OnPlayerDocked (Station Reference)
+    ↓
+Branch: Station->HasMarketplace()
+    ├─ False → Show UI: "No Trading Available"
+    │
+    └─ True:
+        ↓
+        Get Marketplace Module
+        ↓
+        Branch: IsAvailableForTrading()
+        ├─ False → Show UI: "Market Closed"
+        │
+        └─ True:
+            ↓
+            Get Market Data
+            ↓
+            Open Widget: WBP_TradingUI
+            ↓
+            Set Market Data Reference
+```
+
+**Create Market Data Asset (Editor):**
+1. Content Browser → Right-Click
+2. Data Asset → MarketDataAsset
+3. Name: `DA_Market_Agricultural`
+4. Configure properties:
+   ```
+   Market Name: "Farming Collective Market"
+   Market Type: Open Market
+   Market Size: Medium
+   Sell Price Markup: 1.1 (player pays 10% more)
+   Buy Price Markdown: 0.9 (player receives 10% less)
+   
+   Inventory:
+     [0] Trade Item: DA_Item_Water
+         Current Stock: 10000
+         Max Stock: 50000
+         Supply Level: 2.0 (abundant)
+         Demand Level: 0.5 (low demand)
+     
+     [1] Trade Item: DA_Item_Food
+         Current Stock: 5000
+         Max Stock: 20000
+         Supply Level: 1.5 (good supply)
+         Demand Level: 0.8 (moderate demand)
+     
+     [2] Trade Item: DA_Item_Electronics
+         Current Stock: 100
+         Max Stock: 500
+         Supply Level: 0.2 (scarce)
+         Demand Level: 2.0 (high demand)
+   ```
+
+**Station Blueprint Configuration:**
+```
+1. Open BP_SpaceStation_Agricultural
+2. Class Defaults → Station → Configuration
+3. Default Module Classes:
+   - Add: BP_SpaceStationModule_DockingBay
+   - Add: BP_SpaceStationModule_Marketplace
+   - Add: BP_CargoBayModule
+4. Compile & Save
+
+5. Open BP_SpaceStationModule_Marketplace (if custom config needed)
+6. Class Defaults → Marketplace
+7. Set:
+   - Market Data Asset: DA_Market_Agricultural
+   - Is Open: true
+   - Marketplace Name: "Farming Collective Market"
+8. Compile & Save
+```
+
+### Marketplace Module Properties
+
+**Exposed to Blueprint:**
+```cpp
+// Read/Write (designer configurable)
+MarketDataAsset (UMarketDataAsset*) - Market configuration
+bIsOpen (bool) - Trading availability
+MarketplaceName (FText) - Display name for UI
+
+// Read-Only (calculated)
+ModuleType = "Marketplace"
+ModulePower = 40.0f (power consumption)
+ModuleGroup = Public
+```
+
+**Station Query Functions:**
+```cpp
+// Check capabilities
+bool HasMarketplace() const;
+bool HasDockingCapability() const;
+bool HasCargoStorage() const;
+
+// Get modules
+AMarketplaceModule* GetMarketplaceModule() const;
+TArray<AMarketplaceModule*> GetMarketplaceModules() const;
+TArray<ASpaceStationModule*> GetModulesByGroup(EStationModuleGroup) const;
+
+// Aggregate data
+float GetTotalPowerConsumption() const;
+float GetPowerBalance() const;
+int32 GetModuleCountByGroup(EStationModuleGroup) const;
+```
+
+### Common Issues
+
+**Issue: Trading UI Won't Open**
+- Verify: Station has marketplace module in DefaultModuleClasses
+- Verify: MarketDataAsset assigned to marketplace module
+- Verify: `bIsOpen = true` on marketplace
+- Check: Station->HasMarketplace() returns true
+
+**Issue: No Items in Market**
+- Check: MarketDataAsset has entries in Inventory array
+- Verify: Each inventory entry has valid TradeItem reference
+- Check: CurrentStock > 0 for items
+- Verify: TradeItemDataAsset exists and is valid
+
+**Issue: Prices Don't Match Expected Values**
+- Check: SellPriceMarkup and BuyPriceMarkdown settings
+- Formula: Buy Price = BasePrice × SellPriceMarkup
+- Formula: Sell Price = BasePrice × BuyPriceMarkdown
+- Verify: BasePrice set correctly in TradeItemDataAsset
+
+**Issue: Multiple Markets Interfere**
+- Solution: Each MarketplaceModule should have unique MarketDataAsset
+- Or: Use same MarketDataAsset if markets should share inventory
+- Note: Shared MarketDataAsset = shared stock levels
+
+### Testing Marketplace Modules
+
+**Manual Test Checklist:**
+- [ ] Station spawns with marketplace module visible
+- [ ] Player can dock at station
+- [ ] Trading UI opens when requested
+- [ ] Can see market inventory in UI
+- [ ] Can buy items (reduces credits, adds cargo)
+- [ ] Can sell items (adds credits, removes cargo)
+- [ ] Prices match expected calculations
+- [ ] Stock levels update after transactions
+- [ ] Market closes/opens based on `bIsOpen` flag
+
+**Debug Commands:**
+```
+// In-game console
+stat game          // Show game thread stats
+stat scenerendering // Show rendering stats
+
+// Print station info
+GetStationInfo <StationName>
+
+// Print market data
+GetMarketInfo <StationName>
+
+// Force market refresh
+RefreshMarket <StationName>
+```
+
+---
+
 ## 📞 NEXT ACTIONS
 
 ### Immediate (This Week)
@@ -751,3 +1161,9 @@ One polished gameplay loop beats ten half-finished systems.
 **Phase**: Trade Simulator MVP (Dec 2025 - Mar 2026)  
 **Status**: Active Development  
 **Priority**: #1 - All other features deprioritized
+
+**Technical Implementation:**
+- Uses modular station architecture with `AMarketplaceModule`
+- Market configuration via `UMarketDataAsset`
+- Blueprint-friendly C++ components for trading gameplay
+- Existing C++ infrastructure ready for MVP implementation
