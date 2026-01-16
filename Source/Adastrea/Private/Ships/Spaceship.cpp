@@ -186,6 +186,13 @@ void ASpaceship::Tick(float DeltaTime)
         return;
     }
 
+    // Update X4-style mouse position flight controls every frame (when enabled)
+    // This allows continuous rotation based on cursor position, not mouse movement
+    if (bUseMousePositionFlight && bFlightAssistEnabled)
+    {
+        UpdateMousePositionFlight(DeltaTime);
+    }
+
     // Apply X4-style flight physics when flight assist is enabled
     if (bFlightAssistEnabled)
     {
@@ -446,72 +453,9 @@ void ASpaceship::Turn(float Value)
                 ShipRotationMultiplier = ShipDataAsset->RotationRateMultiplier;
             }
             
-            // X4-style mouse position flight
-            if (bUseMousePositionFlight)
-            {
-                // Get mouse position relative to screen center
-                APlayerController* PC = Cast<APlayerController>(GetController());
-                if (PC)
-                {
-                    int32 ViewportSizeX, ViewportSizeY;
-                    float MouseX, MouseY;
-                    
-                    PC->GetViewportSize(ViewportSizeX, ViewportSizeY);
-                    PC->GetMousePosition(MouseX, MouseY);
-                    
-                    // Calculate center of screen
-                    float CenterX = ViewportSizeX * 0.5f;
-                    float CenterY = ViewportSizeY * 0.5f;
-                    
-                    // Calculate distance from center
-                    float DeltaX = MouseX - CenterX;
-                    float DeltaY = MouseY - CenterY;
-                    
-                    // Apply deadzone
-                    float DistanceFromCenter = FMath::Sqrt(DeltaX * DeltaX + DeltaY * DeltaY);
-                    if (DistanceFromCenter < MouseDeadzoneRadius)
-                    {
-                        // Within deadzone, no rotation
-                        YawInput = 0.0f;
-                        RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, 0.0f, DeltaSeconds, FlightAssistResponsiveness);
-                        return;
-                    }
-                    
-                    // Calculate rotation speed based on distance from center (beyond deadzone)
-                    float EffectiveDistance = DistanceFromCenter - MouseDeadzoneRadius;
-                    float MaxEffectiveDistance = MouseMaxRadius - MouseDeadzoneRadius;
-                    
-                    // Protect against invalid configuration where MouseMaxRadius <= MouseDeadzoneRadius
-                    if (MaxEffectiveDistance <= KINDA_SMALL_NUMBER)
-                    {
-                        UE_LOG(LogAdastreaInput, Warning, 
-                            TEXT("ASpaceship::Turn - Invalid mouse radius configuration: MouseMaxRadius (%.2f) must be greater than MouseDeadzoneRadius (%.2f)."),
-                            MouseMaxRadius, MouseDeadzoneRadius);
-                        
-                        // Fall back to a small positive value to avoid division by zero / NaNs
-                        MaxEffectiveDistance = KINDA_SMALL_NUMBER;
-                    }
-                    
-                    float DistanceRatio = FMath::Clamp(EffectiveDistance / MaxEffectiveDistance, 0.0f, 1.0f);
-                    
-                    // Calculate rotation rate: X4-style formula
-                    // Rotation speed scales with distance from center (DistanceRatio)
-                    // Direction determined by normalized delta (DeltaX/DistanceFromCenter gives us -1 to 1 direction)
-                    float DirectionX = DeltaX / FMath::Max(DistanceFromCenter, 0.1f); // Normalized direction (-1 to 1)
-                    float RotationRate = DirectionX * DistanceRatio * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
-                    
-                    UE_LOG(LogAdastreaInput, Verbose, TEXT("ASpaceship::Turn - MousePos=(%.0f,%.0f), Center=(%.0f,%.0f), Distance=%.0f, DistanceRatio=%.2f, RotationRate=%.2f"), 
-                        MouseX, MouseY, CenterX, CenterY, DistanceFromCenter, DistanceRatio, RotationRate);
-                    
-                    // Interpolate rotation velocity for smooth feel
-                    RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, RotationRate, DeltaSeconds, FlightAssistResponsiveness);
-                    
-                    // Apply rotation directly to actor
-                    FRotator DeltaRotation = FRotator(0.0f, RotationVelocity.Yaw * DeltaSeconds, 0.0f);
-                    AddActorWorldRotation(DeltaRotation);
-                }
-            }
-            else
+            // Mouse position flight is now handled in UpdateMousePositionFlight() called from Tick()
+            // This function only handles mouse delta mode (when bUseMousePositionFlight is false)
+            if (!bUseMousePositionFlight)
             {
                 // Original X4-style smooth rotation with damping (mouse delta mode)
                 // Apply mouse flight sensitivity and ship rotation multiplier
@@ -527,6 +471,7 @@ void ASpaceship::Turn(float Value)
                 FRotator DeltaRotation = FRotator(0.0f, RotationVelocity.Yaw * DeltaSeconds, 0.0f);
                 AddActorWorldRotation(DeltaRotation);
             }
+            // else: Mouse position mode - rotation handled in UpdateMousePositionFlight()
         }
         else
         {
@@ -561,73 +506,9 @@ void ASpaceship::LookUp(float Value)
                 ShipRotationMultiplier = ShipDataAsset->RotationRateMultiplier;
             }
             
-            // X4-style mouse position flight
-            if (bUseMousePositionFlight)
-            {
-                // Get mouse position relative to screen center
-                APlayerController* PC = Cast<APlayerController>(GetController());
-                if (PC)
-                {
-                    int32 ViewportSizeX, ViewportSizeY;
-                    float MouseX, MouseY;
-                    
-                    PC->GetViewportSize(ViewportSizeX, ViewportSizeY);
-                    PC->GetMousePosition(MouseX, MouseY);
-                    
-                    // Calculate center of screen
-                    float CenterX = ViewportSizeX * 0.5f;
-                    float CenterY = ViewportSizeY * 0.5f;
-                    
-                    // Calculate distance from center
-                    float DeltaX = MouseX - CenterX;
-                    float DeltaY = MouseY - CenterY;
-                    
-                    // Apply deadzone
-                    float DistanceFromCenter = FMath::Sqrt(DeltaX * DeltaX + DeltaY * DeltaY);
-                    if (DistanceFromCenter < MouseDeadzoneRadius)
-                    {
-                        // Within deadzone, no rotation
-                        PitchInput = 0.0f;
-                        RotationVelocity.Pitch = FMath::FInterpTo(RotationVelocity.Pitch, 0.0f, DeltaSeconds, FlightAssistResponsiveness);
-                        return;
-                    }
-                    
-                    // Calculate rotation speed based on distance from center (beyond deadzone)
-                    float EffectiveDistance = DistanceFromCenter - MouseDeadzoneRadius;
-                    float MaxEffectiveDistance = MouseMaxRadius - MouseDeadzoneRadius;
-                    
-                    // Protect against invalid configuration where MouseMaxRadius <= MouseDeadzoneRadius
-                    if (MaxEffectiveDistance <= KINDA_SMALL_NUMBER)
-                    {
-                        UE_LOG(LogAdastreaInput, Warning, 
-                            TEXT("ASpaceship::LookUp - Invalid mouse radius configuration: MouseMaxRadius (%.2f) must be greater than MouseDeadzoneRadius (%.2f)."),
-                            MouseMaxRadius, MouseDeadzoneRadius);
-                        
-                        // Fall back to a small positive value to avoid division by zero / NaNs
-                        MaxEffectiveDistance = KINDA_SMALL_NUMBER;
-                    }
-                    
-                    float DistanceRatio = FMath::Clamp(EffectiveDistance / MaxEffectiveDistance, 0.0f, 1.0f);
-                    
-                    // Calculate rotation rate: X4-style formula (matching Turn/Yaw implementation)
-                    // Rotation speed scales with distance from center (DistanceRatio)
-                    // Direction determined by normalized delta (DeltaY/DistanceFromCenter gives us -1 to 1 direction)
-                    // Note: DeltaY is inverted for pitch (moving mouse up = pitch down in screen space)
-                    float DirectionY = -DeltaY / FMath::Max(DistanceFromCenter, 0.1f); // Normalized direction (-1 to 1)
-                    float RotationRate = DirectionY * DistanceRatio * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
-                    
-                    UE_LOG(LogAdastreaInput, Verbose, TEXT("ASpaceship::LookUp - MousePos=(%.0f,%.0f), Center=(%.0f,%.0f), Distance=%.0f, DistanceRatio=%.2f, RotationRate=%.2f"), 
-                        MouseX, MouseY, CenterX, CenterY, DistanceFromCenter, DistanceRatio, RotationRate);
-                    
-                    // Interpolate rotation velocity for smooth feel
-                    RotationVelocity.Pitch = FMath::FInterpTo(RotationVelocity.Pitch, RotationRate, DeltaSeconds, FlightAssistResponsiveness);
-                    
-                    // Apply rotation directly to actor
-                    FRotator DeltaRotation = FRotator(RotationVelocity.Pitch * DeltaSeconds, 0.0f, 0.0f);
-                    AddActorWorldRotation(DeltaRotation);
-                }
-            }
-            else
+            // Mouse position flight is now handled in UpdateMousePositionFlight() called from Tick()
+            // This function only handles mouse delta mode (when bUseMousePositionFlight is false)
+            if (!bUseMousePositionFlight)
             {
                 // Original X4-style smooth rotation with damping (mouse delta mode)
                 float RotationRate = Value * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
@@ -642,6 +523,7 @@ void ASpaceship::LookUp(float Value)
                 FRotator DeltaRotation = FRotator(RotationVelocity.Pitch * DeltaSeconds, 0.0f, 0.0f);
                 AddActorWorldRotation(DeltaRotation);
             }
+            // else: Mouse position mode - rotation handled in UpdateMousePositionFlight()
         }
         else
         {
@@ -1048,6 +930,108 @@ void ASpaceship::UpdateThrottleVelocity(float DeltaTime)
         // Note: This works in conjunction with AddMovementInput for strafe/vertical
         MovementComponent->Velocity = BlendedVelocity;
     }
+}
+
+void ASpaceship::UpdateMousePositionFlight(float DeltaTime)
+{
+    /**
+     * X4-style Mouse Position Flight Implementation:
+     * 
+     * This method is called every frame when mouse position flight is enabled.
+     * Unlike mouse delta controls, this continuously checks the mouse cursor position
+     * and rotates the ship based on where the cursor is on screen, not how the mouse moves.
+     * 
+     * Key Behavior:
+     * - If mouse is right of center → Ship continuously yaws right
+     * - If mouse is left of center → Ship continuously yaws left
+     * - If mouse is above center → Ship continuously pitches up
+     * - If mouse is below center → Ship continuously pitches down
+     * - Distance from center controls rotation speed (0% at deadzone, 100% at max radius)
+     * - Mouse can remain stationary and ship will continue rotating
+     * 
+     * This creates the intuitive feel of X4: Foundations where you "point" with the cursor.
+     */
+
+    APlayerController* PC = Cast<APlayerController>(GetController());
+    if (!PC)
+    {
+        return;
+    }
+
+    // Get ship-specific rotation rate multiplier from data asset
+    float ShipRotationMultiplier = 1.0f;
+    if (ShipDataAsset)
+    {
+        ShipRotationMultiplier = ShipDataAsset->RotationRateMultiplier;
+    }
+
+    // Get mouse position and viewport size
+    int32 ViewportSizeX, ViewportSizeY;
+    float MouseX, MouseY;
+    
+    PC->GetViewportSize(ViewportSizeX, ViewportSizeY);
+    PC->GetMousePosition(MouseX, MouseY);
+    
+    // Calculate center of screen
+    float CenterX = ViewportSizeX * 0.5f;
+    float CenterY = ViewportSizeY * 0.5f;
+    
+    // Calculate distance from center
+    float DeltaX = MouseX - CenterX;
+    float DeltaY = MouseY - CenterY;
+    float DistanceFromCenter = FMath::Sqrt(DeltaX * DeltaX + DeltaY * DeltaY);
+    
+    // Check if within deadzone (no rotation)
+    if (DistanceFromCenter < MouseDeadzoneRadius)
+    {
+        // Within deadzone, smoothly stop rotation
+        RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, 0.0f, DeltaTime, FlightAssistResponsiveness);
+        RotationVelocity.Pitch = FMath::FInterpTo(RotationVelocity.Pitch, 0.0f, DeltaTime, FlightAssistResponsiveness);
+        
+        // No rotational input intent while inside deadzone
+        YawInput = 0.0f;
+        PitchInput = 0.0f;
+        return;
+    }
+    
+    // Calculate rotation speed based on distance from center (beyond deadzone)
+    float EffectiveDistance = DistanceFromCenter - MouseDeadzoneRadius;
+    float MaxEffectiveDistance = MouseMaxRadius - MouseDeadzoneRadius;
+    
+    // Protect against invalid configuration
+    if (MaxEffectiveDistance <= KINDA_SMALL_NUMBER)
+    {
+        UE_LOG(LogAdastreaInput, Warning, 
+            TEXT("ASpaceship::UpdateMousePositionFlight - Invalid mouse radius configuration: MouseMaxRadius (%.2f) must be greater than MouseDeadzoneRadius (%.2f)."),
+            MouseMaxRadius, MouseDeadzoneRadius);
+        MaxEffectiveDistance = KINDA_SMALL_NUMBER;
+    }
+    
+    float DistanceRatio = FMath::Clamp(EffectiveDistance / MaxEffectiveDistance, 0.0f, 1.0f);
+    
+    // Calculate rotation rates for yaw and pitch
+    // Direction is normalized (-1 to 1) and multiplied by distance ratio for speed
+    float DirectionX = DeltaX / FMath::Max(DistanceFromCenter, 0.1f);
+    float DirectionY = -DeltaY / FMath::Max(DistanceFromCenter, 0.1f); // Inverted for natural pitch
+    
+    float YawRotationRate = DirectionX * DistanceRatio * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
+    float PitchRotationRate = DirectionY * DistanceRatio * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
+    
+    UE_LOG(LogAdastreaInput, Verbose, 
+        TEXT("ASpaceship::UpdateMousePositionFlight - MousePos=(%.0f,%.0f), Center=(%.0f,%.0f), Distance=%.0f, DistanceRatio=%.2f, YawRate=%.2f, PitchRate=%.2f"), 
+        MouseX, MouseY, CenterX, CenterY, DistanceFromCenter, DistanceRatio, YawRotationRate, PitchRotationRate);
+    
+    // Interpolate rotation velocity for smooth feel
+    RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, YawRotationRate, DeltaTime, FlightAssistResponsiveness);
+    RotationVelocity.Pitch = FMath::FInterpTo(RotationVelocity.Pitch, PitchRotationRate, DeltaTime, FlightAssistResponsiveness);
+    
+    // Signal active rotation intent to prevent auto-leveling and damping interference
+    YawInput = (FMath::Abs(YawRotationRate) > 0.01f) ? 1.0f : 0.0f;
+    PitchInput = (FMath::Abs(PitchRotationRate) > 0.01f) ? 1.0f : 0.0f;
+    
+    // Apply rotation to ship
+    FRotator DeltaRotation = FRotator(RotationVelocity.Pitch * DeltaTime, RotationVelocity.Yaw * DeltaTime, 0.0f);
+    AddActorWorldRotation(DeltaRotation);
 }
 
 void ASpaceship::FreeLookStarted()

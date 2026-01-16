@@ -1,30 +1,39 @@
 # X4-Style Mouse Position Flight - Implementation Guide
 
-**Status**: ✅ Implemented  
-**Date**: 2026-01-12  
+**Status**: ✅ Implemented (Fixed 2026-01-15)  
+**Date**: 2026-01-12 (Initial), 2026-01-15 (Corrected)  
 **Issue**: #446 follow-up - Controls improvement  
-**Branch**: `copilot/fix-controls-issue`
+**Branch**: `copilot/fix-x4-mouse-flight-guide`
 
 ---
 
 ## Overview
 
-This document describes the implementation of X4: Foundations-style mouse position flight controls for Adastrea. The system allows the ship to rotate based on mouse cursor position on screen, with rotation speed scaling based on distance from center.
+This document describes the implementation of X4: Foundations-style mouse position flight controls for Adastrea. The system allows the ship to rotate **continuously** based on mouse cursor position on screen, with rotation speed scaling based on distance from center.
 
-## Problem Statement
+## Problem Statement (Original - 2026-01-12)
 
 **Issue #446 Feedback:**
 > "I don't know if flight assist is causing the problems. I think the difference between these controls and x4 is in x4 the ship turns and faces as per where the mouse is, faster the further from the center, but then adds something else that defines each ship. Like each ship has a variable between 0 and 1 that the rotation speed of the ship is multiplied by."
 
-**Previous System:**
-- Mouse movement (delta) → Fixed rotation rate (45°/s)
-- Rotation speed constant regardless of mouse position
-- No per-ship rotation customization
+## Problem Statement (Correction - 2026-01-15)
 
-**X4 System (Desired):**
-- Mouse position on screen → Rotation direction
-- Distance from center → Rotation speed multiplier
-- Per-ship rotation rate multiplier (0-1 range)
+**GitHub Issue Feedback:**
+> "X4 style controls actually work differently. if the mouse is not in the deadzone the ship rotates based on the location and distance from the centre. if i move the mouse the ship moves but the ship stops if i stop moving the mouse. If this was the same as x4 the ship rotates dependant on the position of the mouse cursor, not using the direction i move the mouse. so i can leave the mouse still not in the center and the ship will rotate in that direction constantly until i move the mouse back into the deadzone"
+
+**Root Cause**: The initial implementation (2026-01-12) checked mouse position only when `Turn()` or `LookUp()` was called (i.e., when mouse was moving). This meant the ship only rotated when the mouse was actively moving, not when the cursor was held in a position outside the deadzone.
+
+**Previous System (Wrong):**
+- Mouse position checked only in `Turn()`/`LookUp()` functions
+- These functions only called when mouse **moves**
+- Rotation stopped when mouse movement stopped
+- Behavior: "Mouse delta with distance scaling" (not true X4-style)
+
+**X4 System (Desired - Now Implemented):**
+- Mouse position checked **every frame** in `Tick()`
+- Cursor position determines rotation direction and speed
+- Rotation continues as long as cursor is outside deadzone
+- Behavior: "Cursor position → continuous rotation" (true X4-style)
 
 ## Implementation
 
@@ -76,75 +85,135 @@ float MouseMaxRadius;
 - `MouseDeadzoneRadius = 50.0f` (50 pixels from center)
 - `MouseMaxRadius = 400.0f` (400 pixels = 100% rotation speed)
 
-### 3. Rotation Logic Implementation
+### 3. Rotation Logic Implementation (Corrected - 2026-01-15)
 
 **File**: `Source/Adastrea/Private/Ships/Spaceship.cpp`
 
-#### Turn() Function (Yaw Rotation)
+#### Key Change: Moved to Tick() Function
+
+The critical fix was moving mouse position checking from `Turn()`/`LookUp()` (which only fire on mouse movement) to a new method `UpdateMousePositionFlight()` called every frame from `Tick()`.
+
+#### New Method: UpdateMousePositionFlight()
 
 ```cpp
-// Get ship-specific rotation rate multiplier from data asset
-float ShipRotationMultiplier = 1.0f;
-if (ShipDataAsset)
+void ASpaceship::UpdateMousePositionFlight(float DeltaTime)
 {
-    ShipRotationMultiplier = ShipDataAsset->RotationRateMultiplier;
-}
+    /**
+     * Called every frame when bUseMousePositionFlight is true.
+     * Continuously checks mouse cursor position and rotates ship accordingly.
+     * 
+     * Key Behavior:
+     * - If mouse is right of center → Ship continuously yaws right
+     * - If mouse is left of center → Ship continuously yaws left
+     * - Distance from center controls rotation speed
+     * - Mouse can remain stationary and ship will continue rotating
+     */
 
-// X4-style mouse position flight
-if (bUseMousePositionFlight)
-{
-    // Get mouse position relative to screen center
     APlayerController* PC = Cast<APlayerController>(GetController());
-    if (PC)
+    if (!PC) return;
+
+    // Get mouse position and screen dimensions
+    int32 ViewportSizeX, ViewportSizeY;
+    float MouseX, MouseY;
+    PC->GetViewportSize(ViewportSizeX, ViewportSizeY);
+    PC->GetMousePosition(MouseX, MouseY);
+    
+    // Calculate center and distance
+    float CenterX = ViewportSizeX * 0.5f;
+    float CenterY = ViewportSizeY * 0.5f;
+    float DeltaX = MouseX - CenterX;
+    float DeltaY = MouseY - CenterY;
+    float DistanceFromCenter = FMath::Sqrt(DeltaX * DeltaX + DeltaY * DeltaY);
+    
+    // Check deadzone
+    if (DistanceFromCenter < MouseDeadzoneRadius)
     {
-        int32 ViewportSizeX, ViewportSizeY;
-        float MouseX, MouseY;
-        
-        PC->GetViewportSize(ViewportSizeX, ViewportSizeY);
-        PC->GetMousePosition(MouseX, MouseY);
-        
-        // Calculate center of screen
-        float CenterX = ViewportSizeX * 0.5f;
-        float CenterY = ViewportSizeY * 0.5f;
-        
-        // Calculate distance from center
-        float DeltaX = MouseX - CenterX;
-        float DeltaY = MouseY - CenterY;
-        
-        // Apply deadzone
-        float DistanceFromCenter = FMath::Sqrt(DeltaX * DeltaX + DeltaY * DeltaY);
-        if (DistanceFromCenter < MouseDeadzoneRadius)
-        {
-            // Within deadzone, no rotation
-            YawInput = 0.0f;
-            RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, 0.0f, 
-                DeltaSeconds, FlightAssistResponsiveness);
-            return;
-        }
-        
-        // Calculate rotation speed based on distance from center (beyond deadzone)
-        float EffectiveDistance = DistanceFromCenter - MouseDeadzoneRadius;
-        float MaxEffectiveDistance = MouseMaxRadius - MouseDeadzoneRadius;
-        float DistanceRatio = FMath::Clamp(EffectiveDistance / MaxEffectiveDistance, 0.0f, 1.0f);
-        
-        // Calculate rotation rate: distance ratio * base turn rate * ship multiplier * sensitivity
-        float RotationRate = DeltaX / DistanceFromCenter * DistanceRatio * TurnRate * 
-            ShipRotationMultiplier * MouseFlightSensitivity;
-        
-        // Interpolate rotation velocity for smooth feel
-        RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, RotationRate, 
-            DeltaSeconds, FlightAssistResponsiveness);
-        
-        // Apply rotation directly to actor
-        FRotator DeltaRotation = FRotator(0.0f, RotationVelocity.Yaw * DeltaSeconds, 0.0f);
-        AddActorWorldRotation(DeltaRotation);
+        // Within deadzone, smoothly stop rotation
+        RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, 0.0f, 
+            DeltaTime, FlightAssistResponsiveness);
+        RotationVelocity.Pitch = FMath::FInterpTo(RotationVelocity.Pitch, 0.0f, 
+            DeltaTime, FlightAssistResponsiveness);
+        return;
     }
+    
+    // Calculate rotation rates for both yaw and pitch
+    float EffectiveDistance = DistanceFromCenter - MouseDeadzoneRadius;
+    float MaxEffectiveDistance = MouseMaxRadius - MouseDeadzoneRadius;
+    float DistanceRatio = FMath::Clamp(EffectiveDistance / MaxEffectiveDistance, 0.0f, 1.0f);
+    
+    float DirectionX = DeltaX / FMath::Max(DistanceFromCenter, 0.1f);
+    float DirectionY = -DeltaY / FMath::Max(DistanceFromCenter, 0.1f); // Inverted for natural pitch
+    
+    float ShipRotationMultiplier = ShipDataAsset ? ShipDataAsset->RotationRateMultiplier : 1.0f;
+    
+    float YawRotationRate = DirectionX * DistanceRatio * TurnRate * 
+        ShipRotationMultiplier * MouseFlightSensitivity;
+    float PitchRotationRate = DirectionY * DistanceRatio * TurnRate * 
+        ShipRotationMultiplier * MouseFlightSensitivity;
+    
+    // Smoothly interpolate rotation velocity
+    RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, YawRotationRate, 
+        DeltaTime, FlightAssistResponsiveness);
+    RotationVelocity.Pitch = FMath::FInterpTo(RotationVelocity.Pitch, PitchRotationRate, 
+        DeltaTime, FlightAssistResponsiveness);
+    
+    // Apply rotation to ship
+    FRotator DeltaRotation = FRotator(RotationVelocity.Pitch * DeltaTime, 
+        RotationVelocity.Yaw * DeltaTime, 0.0f);
+    AddActorWorldRotation(DeltaRotation);
 }
 ```
 
-**Similar changes applied to:**
-- `LookUp()` - Pitch rotation (inverted DeltaY)
-- `Roll()` - Ship rotation multiplier applied
+#### Updated Tick() Function
+
+```cpp
+void ASpaceship::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+    
+    if (!GetController()) return;
+    
+    // NEW: Update mouse position flight every frame
+    if (bUseMousePositionFlight && bFlightAssistEnabled)
+    {
+        UpdateMousePositionFlight(DeltaTime);
+    }
+    
+    // Rest of flight physics...
+    if (bFlightAssistEnabled)
+    {
+        ApplyFlightAssist(DeltaTime);
+        UpdateThrottleVelocity(DeltaTime);
+    }
+    
+    // Auto-leveling...
+}
+```
+
+#### Modified Turn() and LookUp() Functions
+
+These now **only** handle mouse delta mode (when `bUseMousePositionFlight = false`):
+
+```cpp
+void ASpaceship::Turn(float Value)
+{
+    YawInput = Value;
+    
+    if (bFlightAssistEnabled && !bUseMousePositionFlight)
+    {
+        // Mouse delta mode only
+        // Mouse position mode handled in UpdateMousePositionFlight()
+        float RotationRate = Value * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
+        RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, RotationRate, 
+            DeltaTime, FlightAssistResponsiveness);
+        FRotator DeltaRotation = FRotator(0.0f, RotationVelocity.Yaw * DeltaTime, 0.0f);
+        AddActorWorldRotation(DeltaRotation);
+    }
+    // ... (flight assist disabled code)
+}
+
+// LookUp() has similar changes
+```
 
 ## Mathematical Model
 
@@ -271,15 +340,29 @@ RotationDampingFactor: 0.7
 
 ## Testing Checklist
 
+### Core Functionality
 - [ ] Compile without errors
-- [ ] Mouse position affects rotation direction
-- [ ] Rotation speed scales with distance from center
-- [ ] Deadzone prevents rotation near center (50px)
-- [ ] Different ships have different rotation speeds
+- [ ] **CRITICAL**: Ship rotates continuously when mouse cursor is held outside deadzone (not moving)
+- [ ] **CRITICAL**: Ship stops rotating when cursor moves back into deadzone
+- [ ] Mouse position affects rotation direction (left→yaw left, right→yaw right, up→pitch up, down→pitch down)
+- [ ] Rotation speed scales with distance from center (0% at deadzone, 100% at max radius)
+- [ ] Deadzone prevents rotation near center (within 50px)
+
+### Ship-Specific Behavior
+- [ ] Different ships have different rotation speeds based on RotationRateMultiplier
+- [ ] Fighter (0.9 multiplier) rotates faster than freighter (0.3 multiplier)
+- [ ] Ship multiplier affects both yaw and pitch equally
+
+### Integration
 - [ ] Flight assist smoothing still works
-- [ ] Free look mode unaffected
-- [ ] Mouse delta mode toggle works
+- [ ] Free look mode unaffected (camera independent rotation)
+- [ ] Mouse delta mode toggle works (bUseMousePositionFlight = false)
+- [ ] Flight assist can be toggled without breaking mouse position mode
+
+### Performance
 - [ ] Performance acceptable (no FPS drops)
+- [ ] Mouse position checked every frame doesn't cause stuttering
+- [ ] Multiple ships with mouse position flight don't cause issues
 
 ## Known Limitations
 
