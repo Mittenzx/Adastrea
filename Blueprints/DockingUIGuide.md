@@ -1,11 +1,17 @@
 # Docking UI - Blueprint Guide
 
+> **⚠️ DEPRECATED**: This guide has been consolidated into the unified Trading and Docking Complete Guide.  
+> **See**: [Trading and Docking Complete Guide](../docs/mvp/TRADING_AND_DOCKING_COMPLETE_GUIDE.md)
+
+---
+
 > **Create interaction prompts and docking confirmation UI for station approach**
 
 **Blueprint Type**: Widget Blueprint  
 **Complexity**: Beginner  
 **Time to Complete**: 20-30 minutes  
-**Last Updated**: 2026-01-03
+**Last Updated**: 2026-01-03  
+**Status**: **DEPRECATED** - Refer to unified guide above
 
 ---
 

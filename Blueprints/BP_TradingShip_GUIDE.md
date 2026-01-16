@@ -1,11 +1,17 @@
 # Trading Ship (Player) - Blueprint Guide
 
+> **⚠️ DEPRECATED**: This guide has been consolidated into the unified Trading and Docking Complete Guide.  
+> **See**: [Trading and Docking Complete Guide](../docs/mvp/TRADING_AND_DOCKING_COMPLETE_GUIDE.md)
+
+---
+
 > **Create the player's trading ship with flight controls and cargo management**
 
 **Blueprint Type**: Pawn  
 **Complexity**: Intermediate  
 **Time to Complete**: 40-50 minutes  
-**Last Updated**: 2026-01-08
+**Last Updated**: 2026-01-08  
+**Status**: **DEPRECATED** - Refer to unified guide above
 
 ---
 

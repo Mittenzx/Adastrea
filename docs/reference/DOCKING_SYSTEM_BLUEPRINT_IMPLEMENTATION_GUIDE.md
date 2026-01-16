@@ -1,6 +1,13 @@
 # Docking System Blueprint Implementation Guide
 
+> **⚠️ DEPRECATED**: This guide has been consolidated into the unified Trading and Docking Complete Guide.  
+> **See**: [Trading and Docking Complete Guide](../mvp/TRADING_AND_DOCKING_COMPLETE_GUIDE.md)
+
+---
+
 ## Overview
+
+**Status**: **DEPRECATED** - Refer to unified guide above
 
 This guide provides **complete step-by-step instructions** for implementing the full docking system in Adastrea, including:
 
