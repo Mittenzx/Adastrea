@@ -1862,7 +1862,7 @@ UPROPERTY(EditAnywhere, BlueprintReadOnly)
 float BasePrice;
 
 UPROPERTY(EditAnywhere, BlueprintReadOnly)
-int32 CargoVolume;
+float VolumePerUnit;
 
 UPROPERTY(EditAnywhere, BlueprintReadOnly)
 float Volatility;
@@ -1969,7 +1969,7 @@ Rarity: Common
 LegalStatus: Legal
 
 BasePrice: 10.0
-CargoVolume: 1
+VolumePerUnit: 1.0
 Volatility: 0.3
 
 Icon: T_Icon_Water
@@ -2090,7 +2090,7 @@ Icon: T_Icon_Ship_CompactTrader
 **Item Setup:**
 1. Create TradeItemDataAsset
 2. Set BasePrice (10-5000 credits)
-3. Set CargoVolume (1-10 units)
+3. Set VolumePerUnit (1.0-10.0 units)
 4. Set Category and Rarity
 5. Add to market inventories
 

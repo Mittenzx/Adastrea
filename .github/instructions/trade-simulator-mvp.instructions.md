@@ -241,7 +241,7 @@ class UTradeItemDataAsset : public UDataAsset
     float Volatility; // Price fluctuation
     
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
-    int32 CargoVolume; // Space per unit
+    float VolumePerUnit; // Space per unit
 };
 
 // Market configuration (used by MarketplaceModule)
