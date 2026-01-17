@@ -1,0 +1,64 @@
+
+# DA_Item_HydrogenFuel
+# Trade Item Data Asset Configuration
+# Source: MVPTradeItems.yaml
+
+Class: /Script/Adastrea.TradeItemDataAsset
+Asset Name: DA_Item_HydrogenFuel
+
+# ============================================
+# BASIC INFO
+# ============================================
+ItemName: Hydrogen Fuel Cells
+Description: |
+  Standard fuel for ship propulsion systems.
+ItemID: hydrogen_fuel
+Category: RefinedGoods
+
+# ============================================
+# PRICING
+# ============================================
+BasePrice: 75
+
+PriceVolatility:
+  VolatilityMultiplier: 1.1
+  MinPriceDeviation: 0.6
+  MaxPriceDeviation: 2.2
+
+bAffectedBySupplyDemand: true
+bAffectedByMarketEvents: true
+
+# ============================================
+# LEGALITY & RESTRICTIONS
+# ============================================
+LegalityStatus: Legal
+ContrabandFineMultiplier: 1.0
+
+# ============================================
+# TRADE PROPERTIES
+# ============================================
+VolumePerUnit: 4.0
+MassPerUnit: 2.0
+StandardLotSize: 100
+TypicalMarketStock: 5000
+ReplenishmentRate: 400
+
+# ============================================
+# AI TRADER BEHAVIOR
+# ============================================
+AITradePriority: 9
+bAIHoardable: true
+bAIArbitrageEnabled: true
+BehaviorTags: []
+
+# ============================================
+# TRADING ECONOMICS
+# ============================================
+Price per Lot (@ base): 7500 credits
+Volume per Lot: 400.0 m³
+Mass per Lot: 200.0 kg
+
+Profit Potential:
+  Min Price: 45.0 credits/unit
+  Max Price: 165.0 credits/unit
+  Max Spread: 120.0 credits/unit

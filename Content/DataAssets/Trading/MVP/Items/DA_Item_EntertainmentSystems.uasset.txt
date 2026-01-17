@@ -1,0 +1,64 @@
+
+# DA_Item_EntertainmentSystems
+# Trade Item Data Asset Configuration
+# Source: MVPTradeItems.yaml
+
+Class: /Script/Adastrea.TradeItemDataAsset
+Asset Name: DA_Item_EntertainmentSystems
+
+# ============================================
+# BASIC INFO
+# ============================================
+ItemName: Entertainment Systems
+Description: |
+  Holovid systems, games, and recreational technology.
+ItemID: entertainment_systems
+Category: Luxury
+
+# ============================================
+# PRICING
+# ============================================
+BasePrice: 600
+
+PriceVolatility:
+  VolatilityMultiplier: 1.4
+  MinPriceDeviation: 0.5
+  MaxPriceDeviation: 2.5
+
+bAffectedBySupplyDemand: true
+bAffectedByMarketEvents: true
+
+# ============================================
+# LEGALITY & RESTRICTIONS
+# ============================================
+LegalityStatus: Legal
+ContrabandFineMultiplier: 1.0
+
+# ============================================
+# TRADE PROPERTIES
+# ============================================
+VolumePerUnit: 8.0
+MassPerUnit: 5.0
+StandardLotSize: 10
+TypicalMarketStock: 800
+ReplenishmentRate: 60
+
+# ============================================
+# AI TRADER BEHAVIOR
+# ============================================
+AITradePriority: 4
+bAIHoardable: false
+bAIArbitrageEnabled: true
+BehaviorTags: []
+
+# ============================================
+# TRADING ECONOMICS
+# ============================================
+Price per Lot (@ base): 6000 credits
+Volume per Lot: 80.0 m³
+Mass per Lot: 50.0 kg
+
+Profit Potential:
+  Min Price: 300.0 credits/unit
+  Max Price: 1500.0 credits/unit
+  Max Spread: 1200.0 credits/unit

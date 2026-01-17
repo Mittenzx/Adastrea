@@ -1,0 +1,103 @@
+
+# DA_Market_LuxuryBazaarMarket
+# Market Data Asset Configuration
+# Source: MVPMarkets.yaml
+
+Class: /Script/Adastrea.MarketDataAsset
+Asset Name: DA_Market_LuxuryBazaarMarket
+
+# ============================================
+# BASIC INFO
+# ============================================
+MarketName: Stellar Bazaar
+Description: |
+  Upscale trading post for rare and luxury goods. Wealthy clientele with expensive tastes.
+MarketID: luxury_bazaar_market
+MarketType: LuxuryBazaar
+MarketSize: Small
+
+# ============================================
+# MARKET CONFIGURATION
+# ============================================
+TransactionTaxRate: 0.15
+SellPriceMarkup: 2.0
+BuyPriceMarkdown: 0.8
+bAllowPlayerBuying: true
+bAllowPlayerSelling: true
+bAllowAITraders: true
+StockRefreshRate: 72.0
+RandomEventChance: 0.2
+
+# ============================================
+# AI TRADER SETTINGS
+# ============================================
+AITraderCount: 2
+AITradeFrequency: 3
+bAllowAIPriceManipulation: false
+
+# ============================================
+# INVENTORY (6 items)
+# ============================================
+
+# Item: luxury_food
+Inventory Entry:
+  TradeItem: DA_Item_LuxuryFood
+  CurrentStock: 500
+  MaxStock: 2000
+  SupplyLevel: 1.5  # Normal
+  DemandLevel: 1.2  # Normal
+  bInStock: true
+
+# Item: entertainment_systems
+Inventory Entry:
+  TradeItem: DA_Item_EntertainmentSystems
+  CurrentStock: 800
+  MaxStock: 3000
+  SupplyLevel: 1.3  # Normal
+  DemandLevel: 1.0  # Normal
+  bInStock: true
+
+# Item: rare_art
+Inventory Entry:
+  TradeItem: DA_Item_RareArt
+  CurrentStock: 50
+  MaxStock: 200
+  SupplyLevel: 1.0  # Normal
+  DemandLevel: 1.5  # Normal
+  bInStock: true
+
+# Item: advanced_electronics
+Inventory Entry:
+  TradeItem: DA_Item_AdvancedElectronics
+  CurrentStock: 300
+  MaxStock: 1000
+  SupplyLevel: 1.2  # Normal
+  DemandLevel: 1.0  # Normal
+  bInStock: true
+
+# Item: ai_cores
+Inventory Entry:
+  TradeItem: DA_Item_AiCores
+  CurrentStock: 50
+  MaxStock: 200
+  SupplyLevel: 0.8  # Low
+  DemandLevel: 1.3  # Normal
+  bInStock: true
+
+# Item: advanced_medicine
+Inventory Entry:
+  TradeItem: DA_Item_AdvancedMedicine
+  CurrentStock: 200
+  MaxStock: 1000
+  SupplyLevel: 1.0  # Normal
+  DemandLevel: 1.2  # Normal
+  bInStock: true
+
+
+# ============================================
+# TRADING STRATEGY GUIDE
+# ============================================
+
+Buy from this market (cheap):
+
+Sell to this market (expensive):

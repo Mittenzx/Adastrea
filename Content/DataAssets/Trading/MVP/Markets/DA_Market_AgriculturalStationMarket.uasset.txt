@@ -1,0 +1,108 @@
+
+# DA_Market_AgriculturalStationMarket
+# Market Data Asset Configuration
+# Source: MVPMarkets.yaml
+
+Class: /Script/Adastrea.MarketDataAsset
+Asset Name: DA_Market_AgriculturalStationMarket
+
+# ============================================
+# BASIC INFO
+# ============================================
+MarketName: Farming Collective Market
+Description: |
+  Large-scale agricultural production facility. Exports food, imports industrial goods and technology.
+MarketID: agricultural_station_market
+MarketType: OpenMarket
+MarketSize: Medium
+
+# ============================================
+# MARKET CONFIGURATION
+# ============================================
+TransactionTaxRate: 0.05
+SellPriceMarkup: 1.1
+BuyPriceMarkdown: 0.9
+bAllowPlayerBuying: true
+bAllowPlayerSelling: true
+bAllowAITraders: true
+StockRefreshRate: 24.0
+RandomEventChance: 0.1
+
+# ============================================
+# AI TRADER SETTINGS
+# ============================================
+AITraderCount: 5
+AITradeFrequency: 10
+bAllowAIPriceManipulation: false
+
+# ============================================
+# INVENTORY (6 items)
+# ============================================
+
+# Item: water_purified
+Inventory Entry:
+  TradeItem: DA_Item_WaterPurified
+  CurrentStock: 10000
+  MaxStock: 50000
+  SupplyLevel: 2.0  # Plentiful
+  DemandLevel: 0.5  # Low
+  bInStock: true
+
+# Item: protein_packs
+Inventory Entry:
+  TradeItem: DA_Item_ProteinPacks
+  CurrentStock: 5000
+  MaxStock: 20000
+  SupplyLevel: 1.8  # Plentiful
+  DemandLevel: 0.6  # Low
+  bInStock: true
+
+# Item: luxury_food
+Inventory Entry:
+  TradeItem: DA_Item_LuxuryFood
+  CurrentStock: 500
+  MaxStock: 2000
+  SupplyLevel: 1.5  # Normal
+  DemandLevel: 0.7  # Low
+  bInStock: true
+
+# Item: basic_alloys
+Inventory Entry:
+  TradeItem: DA_Item_BasicAlloys
+  CurrentStock: 200
+  MaxStock: 1000
+  SupplyLevel: 0.3  # Scarce
+  DemandLevel: 2.0  # High
+  bInStock: true
+
+# Item: ship_components
+Inventory Entry:
+  TradeItem: DA_Item_ShipComponents
+  CurrentStock: 50
+  MaxStock: 500
+  SupplyLevel: 0.2  # Scarce
+  DemandLevel: 2.5  # Very High
+  bInStock: true
+
+# Item: basic_computers
+Inventory Entry:
+  TradeItem: DA_Item_BasicComputers
+  CurrentStock: 100
+  MaxStock: 500
+  SupplyLevel: 0.4  # Scarce
+  DemandLevel: 1.8  # High
+  bInStock: true
+
+
+# ============================================
+# TRADING STRATEGY GUIDE
+# ============================================
+
+Buy from this market (cheap):
+  • water_purified (supply: 2.0, demand: 0.5)
+  • protein_packs (supply: 1.8, demand: 0.6)
+
+Sell to this market (expensive):
+  • basic_alloys (supply: 0.3, demand: 2.0)
+  • ship_components (supply: 0.2, demand: 2.5)
+  • basic_computers (supply: 0.4, demand: 1.8)

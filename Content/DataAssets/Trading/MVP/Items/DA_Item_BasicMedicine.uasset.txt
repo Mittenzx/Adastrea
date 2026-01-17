@@ -1,0 +1,64 @@
+
+# DA_Item_BasicMedicine
+# Trade Item Data Asset Configuration
+# Source: MVPTradeItems.yaml
+
+Class: /Script/Adastrea.TradeItemDataAsset
+Asset Name: DA_Item_BasicMedicine
+
+# ============================================
+# BASIC INFO
+# ============================================
+ItemName: Basic Medical Supplies
+Description: |
+  Standard pharmaceuticals and medical equipment.
+ItemID: basic_medicine
+Category: Medical
+
+# ============================================
+# PRICING
+# ============================================
+BasePrice: 200
+
+PriceVolatility:
+  VolatilityMultiplier: 1.0
+  MinPriceDeviation: 0.7
+  MaxPriceDeviation: 2.0
+
+bAffectedBySupplyDemand: true
+bAffectedByMarketEvents: true
+
+# ============================================
+# LEGALITY & RESTRICTIONS
+# ============================================
+LegalityStatus: Legal
+ContrabandFineMultiplier: 1.0
+
+# ============================================
+# TRADE PROPERTIES
+# ============================================
+VolumePerUnit: 2.0
+MassPerUnit: 1.0
+StandardLotSize: 25
+TypicalMarketStock: 2000
+ReplenishmentRate: 150
+
+# ============================================
+# AI TRADER BEHAVIOR
+# ============================================
+AITradePriority: 8
+bAIHoardable: true
+bAIArbitrageEnabled: true
+BehaviorTags: []
+
+# ============================================
+# TRADING ECONOMICS
+# ============================================
+Price per Lot (@ base): 5000 credits
+Volume per Lot: 50.0 m³
+Mass per Lot: 25.0 kg
+
+Profit Potential:
+  Min Price: 140.0 credits/unit
+  Max Price: 400.0 credits/unit
+  Max Spread: 260.0 credits/unit

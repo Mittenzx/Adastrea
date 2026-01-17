@@ -1,0 +1,64 @@
+
+# DA_Item_AiCores
+# Trade Item Data Asset Configuration
+# Source: MVPTradeItems.yaml
+
+Class: /Script/Adastrea.TradeItemDataAsset
+Asset Name: DA_Item_AiCores
+
+# ============================================
+# BASIC INFO
+# ============================================
+ItemName: AI Processing Cores
+Description: |
+  Advanced artificial intelligence computing modules.
+ItemID: ai_cores
+Category: Technology
+
+# ============================================
+# PRICING
+# ============================================
+BasePrice: 5000
+
+PriceVolatility:
+  VolatilityMultiplier: 2.5
+  MinPriceDeviation: 0.3
+  MaxPriceDeviation: 5.0
+
+bAffectedBySupplyDemand: true
+bAffectedByMarketEvents: true
+
+# ============================================
+# LEGALITY & RESTRICTIONS
+# ============================================
+LegalityStatus: Regulated
+ContrabandFineMultiplier: 1.0
+
+# ============================================
+# TRADE PROPERTIES
+# ============================================
+VolumePerUnit: 3.0
+MassPerUnit: 1.0
+StandardLotSize: 1
+TypicalMarketStock: 100
+ReplenishmentRate: 10
+
+# ============================================
+# AI TRADER BEHAVIOR
+# ============================================
+AITradePriority: 3
+bAIHoardable: false
+bAIArbitrageEnabled: true
+BehaviorTags: []
+
+# ============================================
+# TRADING ECONOMICS
+# ============================================
+Price per Lot (@ base): 5000 credits
+Volume per Lot: 3.0 m³
+Mass per Lot: 1.0 kg
+
+Profit Potential:
+  Min Price: 1500.0 credits/unit
+  Max Price: 25000.0 credits/unit
+  Max Spread: 23500.0 credits/unit

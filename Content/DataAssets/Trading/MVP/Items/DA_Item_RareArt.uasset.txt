@@ -1,0 +1,64 @@
+
+# DA_Item_RareArt
+# Trade Item Data Asset Configuration
+# Source: MVPTradeItems.yaml
+
+Class: /Script/Adastrea.TradeItemDataAsset
+Asset Name: DA_Item_RareArt
+
+# ============================================
+# BASIC INFO
+# ============================================
+ItemName: Rare Artwork
+Description: |
+  Unique art pieces and cultural artifacts from across the galaxy.
+ItemID: rare_art
+Category: Luxury
+
+# ============================================
+# PRICING
+# ============================================
+BasePrice: 3000
+
+PriceVolatility:
+  VolatilityMultiplier: 2.0
+  MinPriceDeviation: 0.3
+  MaxPriceDeviation: 5.0
+
+bAffectedBySupplyDemand: true
+bAffectedByMarketEvents: true
+
+# ============================================
+# LEGALITY & RESTRICTIONS
+# ============================================
+LegalityStatus: Legal
+ContrabandFineMultiplier: 1.0
+
+# ============================================
+# TRADE PROPERTIES
+# ============================================
+VolumePerUnit: 10.0
+MassPerUnit: 5.0
+StandardLotSize: 1
+TypicalMarketStock: 50
+ReplenishmentRate: 5
+
+# ============================================
+# AI TRADER BEHAVIOR
+# ============================================
+AITradePriority: 2
+bAIHoardable: false
+bAIArbitrageEnabled: false
+BehaviorTags: []
+
+# ============================================
+# TRADING ECONOMICS
+# ============================================
+Price per Lot (@ base): 3000 credits
+Volume per Lot: 10.0 m³
+Mass per Lot: 5.0 kg
+
+Profit Potential:
+  Min Price: 900.0 credits/unit
+  Max Price: 15000.0 credits/unit
+  Max Spread: 14100.0 credits/unit

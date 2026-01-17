@@ -1,0 +1,327 @@
+# MVP Trade Items - Basic Trading Goods
+# These 15 items provide variety for the trade simulator MVP prototype
+# Categories: Food, Industrial, Technology, Medical, Luxury
+
+# ============================================
+# FOOD & CONSUMABLES (Low-price, high-volume)
+# ============================================
+
+- item_id: water_purified
+  item_name: Purified Water
+  description: Essential potable water for life support systems. Produced by agricultural stations.
+  category: Food
+  base_price: 10
+  volume_per_unit: 1.0
+  mass_per_unit: 1.0
+  legality: Legal
+  volatility_multiplier: 0.5  # Very stable
+  min_price_deviation: 0.8
+  max_price_deviation: 1.2
+  typical_market_stock: 10000
+  replenishment_rate: 500
+  standard_lot_size: 100
+  affected_by_supply_demand: true
+  affected_by_market_events: true
+  ai_trade_priority: 8
+  ai_hoardable: true
+  ai_arbitrage_enabled: true
+
+- item_id: protein_packs
+  item_name: Protein Packs
+  description: Nutrient-dense food supplies. Standard rations for spacers.
+  category: Food
+  base_price: 25
+  volume_per_unit: 1.0
+  mass_per_unit: 0.5
+  legality: Legal
+  volatility_multiplier: 0.7
+  min_price_deviation: 0.7
+  max_price_deviation: 1.5
+  typical_market_stock: 5000
+  replenishment_rate: 300
+  standard_lot_size: 50
+  affected_by_supply_demand: true
+  affected_by_market_events: true
+  ai_trade_priority: 7
+  ai_hoardable: true
+  ai_arbitrage_enabled: true
+
+- item_id: luxury_food
+  item_name: Luxury Foodstuffs
+  description: Gourmet ingredients and delicacies from various worlds.
+  category: Luxury
+  base_price: 100
+  volume_per_unit: 2.0
+  mass_per_unit: 1.0
+  legality: Legal
+  volatility_multiplier: 1.5
+  min_price_deviation: 0.5
+  max_price_deviation: 3.0
+  typical_market_stock: 500
+  replenishment_rate: 50
+  standard_lot_size: 10
+  affected_by_supply_demand: true
+  affected_by_market_events: true
+  ai_trade_priority: 4
+  ai_hoardable: false
+  ai_arbitrage_enabled: true
+
+# ============================================
+# INDUSTRIAL (Medium-price, foundation of economy)
+# ============================================
+
+- item_id: basic_alloys
+  item_name: Basic Alloys
+  description: Standard construction materials. Essential for station and ship maintenance.
+  category: RawMaterials
+  base_price: 50
+  volume_per_unit: 5.0
+  mass_per_unit: 10.0
+  legality: Legal
+  volatility_multiplier: 1.0
+  min_price_deviation: 0.6
+  max_price_deviation: 2.0
+  typical_market_stock: 8000
+  replenishment_rate: 400
+  standard_lot_size: 100
+  affected_by_supply_demand: true
+  affected_by_market_events: true
+  ai_trade_priority: 9
+  ai_hoardable: true
+  ai_arbitrage_enabled: true
+
+- item_id: refined_metals
+  item_name: Refined Metals
+  description: High-grade processed metals for advanced manufacturing.
+  category: RefinedGoods
+  base_price: 150
+  volume_per_unit: 3.0
+  mass_per_unit: 8.0
+  legality: Legal
+  volatility_multiplier: 1.2
+  min_price_deviation: 0.5
+  max_price_deviation: 2.5
+  typical_market_stock: 3000
+  replenishment_rate: 200
+  standard_lot_size: 50
+  affected_by_supply_demand: true
+  affected_by_market_events: true
+  ai_trade_priority: 8
+  ai_hoardable: true
+  ai_arbitrage_enabled: true
+
+- item_id: ship_components
+  item_name: Ship Components
+  description: Standard replacement parts for vessel maintenance and repair.
+  category: Components
+  base_price: 300
+  volume_per_unit: 10.0
+  mass_per_unit: 15.0
+  legality: Legal
+  volatility_multiplier: 1.0
+  min_price_deviation: 0.7
+  max_price_deviation: 1.8
+  typical_market_stock: 2000
+  replenishment_rate: 150
+  standard_lot_size: 20
+  affected_by_supply_demand: true
+  affected_by_market_events: true
+  ai_trade_priority: 7
+  ai_hoardable: true
+  ai_arbitrage_enabled: true
+
+# ============================================
+# TECHNOLOGY (High-price, specialized)
+# ============================================
+
+- item_id: basic_computers
+  item_name: Basic Computer Systems
+  description: Standard computing hardware for ships and stations.
+  category: Technology
+  base_price: 500
+  volume_per_unit: 5.0
+  mass_per_unit: 3.0
+  legality: Legal
+  volatility_multiplier: 1.3
+  min_price_deviation: 0.6
+  max_price_deviation: 2.0
+  typical_market_stock: 1000
+  replenishment_rate: 80
+  standard_lot_size: 10
+  affected_by_supply_demand: true
+  affected_by_market_events: true
+  ai_trade_priority: 6
+  ai_hoardable: false
+  ai_arbitrage_enabled: true
+
+- item_id: advanced_electronics
+  item_name: Advanced Electronics
+  description: High-tech electronic components and systems.
+  category: Technology
+  base_price: 1200
+  volume_per_unit: 3.0
+  mass_per_unit: 2.0
+  legality: Legal
+  volatility_multiplier: 1.8
+  min_price_deviation: 0.4
+  max_price_deviation: 3.0
+  typical_market_stock: 500
+  replenishment_rate: 40
+  standard_lot_size: 5
+  affected_by_supply_demand: true
+  affected_by_market_events: true
+  ai_trade_priority: 5
+  ai_hoardable: false
+  ai_arbitrage_enabled: true
+
+- item_id: ai_cores
+  item_name: AI Processing Cores
+  description: Advanced artificial intelligence computing modules.
+  category: Technology
+  base_price: 5000
+  volume_per_unit: 3.0
+  mass_per_unit: 1.0
+  legality: Regulated
+  volatility_multiplier: 2.5
+  min_price_deviation: 0.3
+  max_price_deviation: 5.0
+  typical_market_stock: 100
+  replenishment_rate: 10
+  standard_lot_size: 1
+  affected_by_supply_demand: true
+  affected_by_market_events: true
+  ai_trade_priority: 3
+  ai_hoardable: false
+  ai_arbitrage_enabled: true
+
+# ============================================
+# MEDICAL (Medium-high price, essential service)
+# ============================================
+
+- item_id: basic_medicine
+  item_name: Basic Medical Supplies
+  description: Standard pharmaceuticals and medical equipment.
+  category: Medical
+  base_price: 200
+  volume_per_unit: 2.0
+  mass_per_unit: 1.0
+  legality: Legal
+  volatility_multiplier: 1.0
+  min_price_deviation: 0.7
+  max_price_deviation: 2.0
+  typical_market_stock: 2000
+  replenishment_rate: 150
+  standard_lot_size: 25
+  affected_by_supply_demand: true
+  affected_by_market_events: true
+  ai_trade_priority: 8
+  ai_hoardable: true
+  ai_arbitrage_enabled: true
+
+- item_id: advanced_medicine
+  item_name: Advanced Medical Equipment
+  description: Specialized medical technology and rare pharmaceuticals.
+  category: Medical
+  base_price: 800
+  volume_per_unit: 5.0
+  mass_per_unit: 3.0
+  legality: Regulated
+  volatility_multiplier: 1.5
+  min_price_deviation: 0.5
+  max_price_deviation: 3.0
+  typical_market_stock: 500
+  replenishment_rate: 50
+  standard_lot_size: 10
+  affected_by_supply_demand: true
+  affected_by_market_events: true
+  ai_trade_priority: 6
+  ai_hoardable: true
+  ai_arbitrage_enabled: true
+
+# ============================================
+# LUXURY (High-price, volatile)
+# ============================================
+
+- item_id: entertainment_systems
+  item_name: Entertainment Systems
+  description: Holovid systems, games, and recreational technology.
+  category: Luxury
+  base_price: 600
+  volume_per_unit: 8.0
+  mass_per_unit: 5.0
+  legality: Legal
+  volatility_multiplier: 1.4
+  min_price_deviation: 0.5
+  max_price_deviation: 2.5
+  typical_market_stock: 800
+  replenishment_rate: 60
+  standard_lot_size: 10
+  affected_by_supply_demand: true
+  affected_by_market_events: true
+  ai_trade_priority: 4
+  ai_hoardable: false
+  ai_arbitrage_enabled: true
+
+- item_id: rare_art
+  item_name: Rare Artwork
+  description: Unique art pieces and cultural artifacts from across the galaxy.
+  category: Luxury
+  base_price: 3000
+  volume_per_unit: 10.0
+  mass_per_unit: 5.0
+  legality: Legal
+  volatility_multiplier: 2.0
+  min_price_deviation: 0.3
+  max_price_deviation: 5.0
+  typical_market_stock: 50
+  replenishment_rate: 5
+  standard_lot_size: 1
+  affected_by_supply_demand: true
+  affected_by_market_events: true
+  ai_trade_priority: 2
+  ai_hoardable: false
+  ai_arbitrage_enabled: false
+
+# ============================================
+# FUEL (Essential, medium volatility)
+# ============================================
+
+- item_id: hydrogen_fuel
+  item_name: Hydrogen Fuel Cells
+  description: Standard fuel for ship propulsion systems.
+  category: RefinedGoods
+  base_price: 75
+  volume_per_unit: 4.0
+  mass_per_unit: 2.0
+  legality: Legal
+  volatility_multiplier: 1.1
+  min_price_deviation: 0.6
+  max_price_deviation: 2.2
+  typical_market_stock: 5000
+  replenishment_rate: 400
+  standard_lot_size: 100
+  affected_by_supply_demand: true
+  affected_by_market_events: true
+  ai_trade_priority: 9
+  ai_hoardable: true
+  ai_arbitrage_enabled: true
+
+- item_id: antimatter_cores
+  item_name: Antimatter Power Cores
+  description: Advanced high-energy power sources for capital ships.
+  category: Technology
+  base_price: 10000
+  volume_per_unit: 5.0
+  mass_per_unit: 10.0
+  legality: Restricted
+  volatility_multiplier: 2.0
+  min_price_deviation: 0.4
+  max_price_deviation: 4.0
+  typical_market_stock: 50
+  replenishment_rate: 5
+  standard_lot_size: 1
+  affected_by_supply_demand: true
+  affected_by_market_events: true
+  ai_trade_priority: 3
+  ai_hoardable: true
+  ai_arbitrage_enabled: false

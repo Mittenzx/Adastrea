@@ -1,0 +1,64 @@
+
+# DA_Item_AdvancedElectronics
+# Trade Item Data Asset Configuration
+# Source: MVPTradeItems.yaml
+
+Class: /Script/Adastrea.TradeItemDataAsset
+Asset Name: DA_Item_AdvancedElectronics
+
+# ============================================
+# BASIC INFO
+# ============================================
+ItemName: Advanced Electronics
+Description: |
+  High-tech electronic components and systems.
+ItemID: advanced_electronics
+Category: Technology
+
+# ============================================
+# PRICING
+# ============================================
+BasePrice: 1200
+
+PriceVolatility:
+  VolatilityMultiplier: 1.8
+  MinPriceDeviation: 0.4
+  MaxPriceDeviation: 3.0
+
+bAffectedBySupplyDemand: true
+bAffectedByMarketEvents: true
+
+# ============================================
+# LEGALITY & RESTRICTIONS
+# ============================================
+LegalityStatus: Legal
+ContrabandFineMultiplier: 1.0
+
+# ============================================
+# TRADE PROPERTIES
+# ============================================
+VolumePerUnit: 3.0
+MassPerUnit: 2.0
+StandardLotSize: 5
+TypicalMarketStock: 500
+ReplenishmentRate: 40
+
+# ============================================
+# AI TRADER BEHAVIOR
+# ============================================
+AITradePriority: 5
+bAIHoardable: false
+bAIArbitrageEnabled: true
+BehaviorTags: []
+
+# ============================================
+# TRADING ECONOMICS
+# ============================================
+Price per Lot (@ base): 6000 credits
+Volume per Lot: 15.0 m³
+Mass per Lot: 10.0 kg
+
+Profit Potential:
+  Min Price: 480.0 credits/unit
+  Max Price: 3600.0 credits/unit
+  Max Spread: 3120.0 credits/unit

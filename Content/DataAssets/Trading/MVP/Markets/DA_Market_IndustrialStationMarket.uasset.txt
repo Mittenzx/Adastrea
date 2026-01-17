@@ -1,0 +1,109 @@
+
+# DA_Market_IndustrialStationMarket
+# Market Data Asset Configuration
+# Source: MVPMarkets.yaml
+
+Class: /Script/Adastrea.MarketDataAsset
+Asset Name: DA_Market_IndustrialStationMarket
+
+# ============================================
+# BASIC INFO
+# ============================================
+MarketName: Industrial Exchange
+Description: |
+  Heavy manufacturing and refinement facility. Exports metals and components, imports raw materials and food.
+MarketID: industrial_station_market
+MarketType: IndustrialDepot
+MarketSize: Large
+
+# ============================================
+# MARKET CONFIGURATION
+# ============================================
+TransactionTaxRate: 0.03
+SellPriceMarkup: 1.3
+BuyPriceMarkdown: 0.7
+bAllowPlayerBuying: true
+bAllowPlayerSelling: true
+bAllowAITraders: true
+StockRefreshRate: 12.0
+RandomEventChance: 0.15
+
+# ============================================
+# AI TRADER SETTINGS
+# ============================================
+AITraderCount: 8
+AITradeFrequency: 15
+bAllowAIPriceManipulation: true
+
+# ============================================
+# INVENTORY (6 items)
+# ============================================
+
+# Item: basic_alloys
+Inventory Entry:
+  TradeItem: DA_Item_BasicAlloys
+  CurrentStock: 8000
+  MaxStock: 40000
+  SupplyLevel: 2.5  # Abundant
+  DemandLevel: 0.4  # Very Low
+  bInStock: true
+
+# Item: refined_metals
+Inventory Entry:
+  TradeItem: DA_Item_RefinedMetals
+  CurrentStock: 3000
+  MaxStock: 15000
+  SupplyLevel: 2.0  # Plentiful
+  DemandLevel: 0.5  # Low
+  bInStock: true
+
+# Item: ship_components
+Inventory Entry:
+  TradeItem: DA_Item_ShipComponents
+  CurrentStock: 2000
+  MaxStock: 10000
+  SupplyLevel: 1.8  # Plentiful
+  DemandLevel: 0.6  # Low
+  bInStock: true
+
+# Item: water_purified
+Inventory Entry:
+  TradeItem: DA_Item_WaterPurified
+  CurrentStock: 500
+  MaxStock: 3000
+  SupplyLevel: 0.3  # Scarce
+  DemandLevel: 2.0  # High
+  bInStock: true
+
+# Item: protein_packs
+Inventory Entry:
+  TradeItem: DA_Item_ProteinPacks
+  CurrentStock: 300
+  MaxStock: 2000
+  SupplyLevel: 0.2  # Scarce
+  DemandLevel: 2.5  # Very High
+  bInStock: true
+
+# Item: hydrogen_fuel
+Inventory Entry:
+  TradeItem: DA_Item_HydrogenFuel
+  CurrentStock: 1000
+  MaxStock: 5000
+  SupplyLevel: 0.5  # Low
+  DemandLevel: 1.8  # High
+  bInStock: true
+
+
+# ============================================
+# TRADING STRATEGY GUIDE
+# ============================================
+
+Buy from this market (cheap):
+  • basic_alloys (supply: 2.5, demand: 0.4)
+  • refined_metals (supply: 2.0, demand: 0.5)
+  • ship_components (supply: 1.8, demand: 0.6)
+
+Sell to this market (expensive):
+  • water_purified (supply: 0.3, demand: 2.0)
+  • protein_packs (supply: 0.2, demand: 2.5)
+  • hydrogen_fuel (supply: 0.5, demand: 1.8)

@@ -1,0 +1,64 @@
+
+# DA_Item_WaterPurified
+# Trade Item Data Asset Configuration
+# Source: MVPTradeItems.yaml
+
+Class: /Script/Adastrea.TradeItemDataAsset
+Asset Name: DA_Item_WaterPurified
+
+# ============================================
+# BASIC INFO
+# ============================================
+ItemName: Purified Water
+Description: |
+  Essential potable water for life support systems. Produced by agricultural stations.
+ItemID: water_purified
+Category: Food
+
+# ============================================
+# PRICING
+# ============================================
+BasePrice: 10
+
+PriceVolatility:
+  VolatilityMultiplier: 0.5
+  MinPriceDeviation: 0.8
+  MaxPriceDeviation: 1.2
+
+bAffectedBySupplyDemand: true
+bAffectedByMarketEvents: true
+
+# ============================================
+# LEGALITY & RESTRICTIONS
+# ============================================
+LegalityStatus: Legal
+ContrabandFineMultiplier: 1.0
+
+# ============================================
+# TRADE PROPERTIES
+# ============================================
+VolumePerUnit: 1.0
+MassPerUnit: 1.0
+StandardLotSize: 100
+TypicalMarketStock: 10000
+ReplenishmentRate: 500
+
+# ============================================
+# AI TRADER BEHAVIOR
+# ============================================
+AITradePriority: 8
+bAIHoardable: true
+bAIArbitrageEnabled: true
+BehaviorTags: []
+
+# ============================================
+# TRADING ECONOMICS
+# ============================================
+Price per Lot (@ base): 1000 credits
+Volume per Lot: 100.0 m³
+Mass per Lot: 100.0 kg
+
+Profit Potential:
+  Min Price: 8.0 credits/unit
+  Max Price: 12.0 credits/unit
+  Max Spread: 4.0 credits/unit

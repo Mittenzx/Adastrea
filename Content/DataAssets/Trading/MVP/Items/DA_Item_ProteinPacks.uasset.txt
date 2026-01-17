@@ -1,0 +1,64 @@
+
+# DA_Item_ProteinPacks
+# Trade Item Data Asset Configuration
+# Source: MVPTradeItems.yaml
+
+Class: /Script/Adastrea.TradeItemDataAsset
+Asset Name: DA_Item_ProteinPacks
+
+# ============================================
+# BASIC INFO
+# ============================================
+ItemName: Protein Packs
+Description: |
+  Nutrient-dense food supplies. Standard rations for spacers.
+ItemID: protein_packs
+Category: Food
+
+# ============================================
+# PRICING
+# ============================================
+BasePrice: 25
+
+PriceVolatility:
+  VolatilityMultiplier: 0.7
+  MinPriceDeviation: 0.7
+  MaxPriceDeviation: 1.5
+
+bAffectedBySupplyDemand: true
+bAffectedByMarketEvents: true
+
+# ============================================
+# LEGALITY & RESTRICTIONS
+# ============================================
+LegalityStatus: Legal
+ContrabandFineMultiplier: 1.0
+
+# ============================================
+# TRADE PROPERTIES
+# ============================================
+VolumePerUnit: 1.0
+MassPerUnit: 0.5
+StandardLotSize: 50
+TypicalMarketStock: 5000
+ReplenishmentRate: 300
+
+# ============================================
+# AI TRADER BEHAVIOR
+# ============================================
+AITradePriority: 7
+bAIHoardable: true
+bAIArbitrageEnabled: true
+BehaviorTags: []
+
+# ============================================
+# TRADING ECONOMICS
+# ============================================
+Price per Lot (@ base): 1250 credits
+Volume per Lot: 50.0 m³
+Mass per Lot: 25.0 kg
+
+Profit Potential:
+  Min Price: 17.5 credits/unit
+  Max Price: 37.5 credits/unit
+  Max Spread: 20.0 credits/unit

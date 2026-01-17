@@ -1,0 +1,64 @@
+
+# DA_Item_RefinedMetals
+# Trade Item Data Asset Configuration
+# Source: MVPTradeItems.yaml
+
+Class: /Script/Adastrea.TradeItemDataAsset
+Asset Name: DA_Item_RefinedMetals
+
+# ============================================
+# BASIC INFO
+# ============================================
+ItemName: Refined Metals
+Description: |
+  High-grade processed metals for advanced manufacturing.
+ItemID: refined_metals
+Category: RefinedGoods
+
+# ============================================
+# PRICING
+# ============================================
+BasePrice: 150
+
+PriceVolatility:
+  VolatilityMultiplier: 1.2
+  MinPriceDeviation: 0.5
+  MaxPriceDeviation: 2.5
+
+bAffectedBySupplyDemand: true
+bAffectedByMarketEvents: true
+
+# ============================================
+# LEGALITY & RESTRICTIONS
+# ============================================
+LegalityStatus: Legal
+ContrabandFineMultiplier: 1.0
+
+# ============================================
+# TRADE PROPERTIES
+# ============================================
+VolumePerUnit: 3.0
+MassPerUnit: 8.0
+StandardLotSize: 50
+TypicalMarketStock: 3000
+ReplenishmentRate: 200
+
+# ============================================
+# AI TRADER BEHAVIOR
+# ============================================
+AITradePriority: 8
+bAIHoardable: true
+bAIArbitrageEnabled: true
+BehaviorTags: []
+
+# ============================================
+# TRADING ECONOMICS
+# ============================================
+Price per Lot (@ base): 7500 credits
+Volume per Lot: 150.0 m³
+Mass per Lot: 400.0 kg
+
+Profit Potential:
+  Min Price: 75.0 credits/unit
+  Max Price: 375.0 credits/unit
+  Max Spread: 300.0 credits/unit
