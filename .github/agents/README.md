@@ -1,10 +1,10 @@
 # Adastrea Custom Agent
 
-This directory contains the custom agent definition for GitHub Copilot. The Adastrea Expert is a comprehensive AI assistant with deep knowledge of all aspects of the Adastrea project.
+This directory contains the custom agent definition for GitHub Copilot. Mittenz Prime is a comprehensive AI assistant with deep knowledge of all aspects of the Adastrea project.
 
 ## Available Agent
 
-### Adastrea Expert (`adastrea-expert.agent.md`)
+### Mittenz Prime (`mittenz-prime.agent.md`)
 
 A comprehensive development agent with expertise in:
 - **All 15+ Game Systems**: Spaceships, Stations, Factions, Personnel, AI, Trading, Combat, Navigation, Quest, and more
@@ -30,9 +30,9 @@ A comprehensive development agent with expertise in:
 When using GitHub Copilot Chat in your IDE, you can reference the custom agent to get specialized help:
 
 ```
-@workspace /agent adastrea-expert How do I create a new faction with traits?
-@workspace /agent adastrea-expert Help me set up a trading station for the MVP
-@workspace /agent adastrea-expert What should I defer until after MVP validation?
+@workspace /agent mittenz-prime How do I create a new faction with traits?
+@workspace /agent mittenz-prime Help me set up a trading station for the MVP
+@workspace /agent mittenz-prime What should I defer until after MVP validation?
 ```
 
 ### In Pull Requests
@@ -68,7 +68,7 @@ Custom agents can be automatically invoked during PR reviews to provide speciali
 
 When major changes are made to Adastrea's architecture or systems, remember to update the agent:
 
-1. Review `adastrea-expert.agent.md`
+1. Review `mittenz-prime.agent.md`
 2. Update system descriptions and file references
 3. Add new features or systems
 4. Remove or deprecate obsolete information
