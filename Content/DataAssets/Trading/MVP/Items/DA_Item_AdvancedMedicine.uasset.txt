@@ -1,0 +1,64 @@
+
+# DA_Item_AdvancedMedicine
+# Trade Item Data Asset Configuration
+# Source: MVPTradeItems.yaml
+
+Class: /Script/Adastrea.TradeItemDataAsset
+Asset Name: DA_Item_AdvancedMedicine
+
+# ============================================
+# BASIC INFO
+# ============================================
+ItemName: Advanced Medical Equipment
+Description: |
+  Specialized medical technology and rare pharmaceuticals.
+ItemID: advanced_medicine
+Category: Medical
+
+# ============================================
+# PRICING
+# ============================================
+BasePrice: 800
+
+PriceVolatility:
+  VolatilityMultiplier: 1.5
+  MinPriceDeviation: 0.5
+  MaxPriceDeviation: 3.0
+
+bAffectedBySupplyDemand: true
+bAffectedByMarketEvents: true
+
+# ============================================
+# LEGALITY & RESTRICTIONS
+# ============================================
+LegalityStatus: Regulated
+ContrabandFineMultiplier: 1.0
+
+# ============================================
+# TRADE PROPERTIES
+# ============================================
+VolumePerUnit: 5.0
+MassPerUnit: 3.0
+StandardLotSize: 10
+TypicalMarketStock: 500
+ReplenishmentRate: 50
+
+# ============================================
+# AI TRADER BEHAVIOR
+# ============================================
+AITradePriority: 6
+bAIHoardable: true
+bAIArbitrageEnabled: true
+BehaviorTags: []
+
+# ============================================
+# TRADING ECONOMICS
+# ============================================
+Price per Lot (@ base): 8000 credits
+Volume per Lot: 50.0 m³
+Mass per Lot: 30.0 kg
+
+Profit Potential:
+  Min Price: 400.0 credits/unit
+  Max Price: 2400.0 credits/unit
+  Max Spread: 2000.0 credits/unit

@@ -1,0 +1,64 @@
+
+# DA_Item_BasicAlloys
+# Trade Item Data Asset Configuration
+# Source: MVPTradeItems.yaml
+
+Class: /Script/Adastrea.TradeItemDataAsset
+Asset Name: DA_Item_BasicAlloys
+
+# ============================================
+# BASIC INFO
+# ============================================
+ItemName: Basic Alloys
+Description: |
+  Standard construction materials. Essential for station and ship maintenance.
+ItemID: basic_alloys
+Category: RawMaterials
+
+# ============================================
+# PRICING
+# ============================================
+BasePrice: 50
+
+PriceVolatility:
+  VolatilityMultiplier: 1.0
+  MinPriceDeviation: 0.6
+  MaxPriceDeviation: 2.0
+
+bAffectedBySupplyDemand: true
+bAffectedByMarketEvents: true
+
+# ============================================
+# LEGALITY & RESTRICTIONS
+# ============================================
+LegalityStatus: Legal
+ContrabandFineMultiplier: 1.0
+
+# ============================================
+# TRADE PROPERTIES
+# ============================================
+VolumePerUnit: 5.0
+MassPerUnit: 10.0
+StandardLotSize: 100
+TypicalMarketStock: 8000
+ReplenishmentRate: 400
+
+# ============================================
+# AI TRADER BEHAVIOR
+# ============================================
+AITradePriority: 9
+bAIHoardable: true
+bAIArbitrageEnabled: true
+BehaviorTags: []
+
+# ============================================
+# TRADING ECONOMICS
+# ============================================
+Price per Lot (@ base): 5000 credits
+Volume per Lot: 500.0 m³
+Mass per Lot: 1000.0 kg
+
+Profit Potential:
+  Min Price: 30.0 credits/unit
+  Max Price: 100.0 credits/unit
+  Max Spread: 70.0 credits/unit

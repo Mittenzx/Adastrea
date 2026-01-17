@@ -1,0 +1,64 @@
+
+# DA_Item_BasicComputers
+# Trade Item Data Asset Configuration
+# Source: MVPTradeItems.yaml
+
+Class: /Script/Adastrea.TradeItemDataAsset
+Asset Name: DA_Item_BasicComputers
+
+# ============================================
+# BASIC INFO
+# ============================================
+ItemName: Basic Computer Systems
+Description: |
+  Standard computing hardware for ships and stations.
+ItemID: basic_computers
+Category: Technology
+
+# ============================================
+# PRICING
+# ============================================
+BasePrice: 500
+
+PriceVolatility:
+  VolatilityMultiplier: 1.3
+  MinPriceDeviation: 0.6
+  MaxPriceDeviation: 2.0
+
+bAffectedBySupplyDemand: true
+bAffectedByMarketEvents: true
+
+# ============================================
+# LEGALITY & RESTRICTIONS
+# ============================================
+LegalityStatus: Legal
+ContrabandFineMultiplier: 1.0
+
+# ============================================
+# TRADE PROPERTIES
+# ============================================
+VolumePerUnit: 5.0
+MassPerUnit: 3.0
+StandardLotSize: 10
+TypicalMarketStock: 1000
+ReplenishmentRate: 80
+
+# ============================================
+# AI TRADER BEHAVIOR
+# ============================================
+AITradePriority: 6
+bAIHoardable: false
+bAIArbitrageEnabled: true
+BehaviorTags: []
+
+# ============================================
+# TRADING ECONOMICS
+# ============================================
+Price per Lot (@ base): 5000 credits
+Volume per Lot: 50.0 m³
+Mass per Lot: 30.0 kg
+
+Profit Potential:
+  Min Price: 300.0 credits/unit
+  Max Price: 1000.0 credits/unit
+  Max Spread: 700.0 credits/unit

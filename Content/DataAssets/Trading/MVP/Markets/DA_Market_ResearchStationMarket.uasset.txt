@@ -1,0 +1,107 @@
+
+# DA_Market_ResearchStationMarket
+# Market Data Asset Configuration
+# Source: MVPMarkets.yaml
+
+Class: /Script/Adastrea.MarketDataAsset
+Asset Name: DA_Market_ResearchStationMarket
+
+# ============================================
+# BASIC INFO
+# ============================================
+MarketName: Research Consortium
+Description: |
+  Advanced research and development facility. Exports technology, imports materials and supplies.
+MarketID: research_station_market
+MarketType: ResearchHub
+MarketSize: Medium
+
+# ============================================
+# MARKET CONFIGURATION
+# ============================================
+TransactionTaxRate: 0.08
+SellPriceMarkup: 1.5
+BuyPriceMarkdown: 0.75
+bAllowPlayerBuying: true
+bAllowPlayerSelling: true
+bAllowAITraders: true
+StockRefreshRate: 48.0
+RandomEventChance: 0.05
+
+# ============================================
+# AI TRADER SETTINGS
+# ============================================
+AITraderCount: 3
+AITradeFrequency: 5
+bAllowAIPriceManipulation: false
+
+# ============================================
+# INVENTORY (6 items)
+# ============================================
+
+# Item: basic_computers
+Inventory Entry:
+  TradeItem: DA_Item_BasicComputers
+  CurrentStock: 1000
+  MaxStock: 5000
+  SupplyLevel: 1.8  # Plentiful
+  DemandLevel: 0.6  # Low
+  bInStock: true
+
+# Item: advanced_electronics
+Inventory Entry:
+  TradeItem: DA_Item_AdvancedElectronics
+  CurrentStock: 500
+  MaxStock: 2000
+  SupplyLevel: 1.5  # Normal
+  DemandLevel: 0.7  # Low
+  bInStock: true
+
+# Item: ai_cores
+Inventory Entry:
+  TradeItem: DA_Item_AiCores
+  CurrentStock: 100
+  MaxStock: 500
+  SupplyLevel: 1.2  # Normal
+  DemandLevel: 0.8  # Low
+  bInStock: true
+
+# Item: basic_alloys
+Inventory Entry:
+  TradeItem: DA_Item_BasicAlloys
+  CurrentStock: 200
+  MaxStock: 1000
+  SupplyLevel: 0.4  # Scarce
+  DemandLevel: 1.8  # High
+  bInStock: true
+
+# Item: basic_medicine
+Inventory Entry:
+  TradeItem: DA_Item_BasicMedicine
+  CurrentStock: 150
+  MaxStock: 1000
+  SupplyLevel: 0.3  # Scarce
+  DemandLevel: 2.0  # High
+  bInStock: true
+
+# Item: protein_packs
+Inventory Entry:
+  TradeItem: DA_Item_ProteinPacks
+  CurrentStock: 200
+  MaxStock: 1500
+  SupplyLevel: 0.4  # Scarce
+  DemandLevel: 1.5  # Normal
+  bInStock: true
+
+
+# ============================================
+# TRADING STRATEGY GUIDE
+# ============================================
+
+Buy from this market (cheap):
+  • basic_computers (supply: 1.8, demand: 0.6)
+
+Sell to this market (expensive):
+  • basic_alloys (supply: 0.4, demand: 1.8)
+  • basic_medicine (supply: 0.3, demand: 2.0)
+  • protein_packs (supply: 0.4, demand: 1.5)

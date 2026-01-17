@@ -1,0 +1,64 @@
+
+# DA_Item_AntimatterCores
+# Trade Item Data Asset Configuration
+# Source: MVPTradeItems.yaml
+
+Class: /Script/Adastrea.TradeItemDataAsset
+Asset Name: DA_Item_AntimatterCores
+
+# ============================================
+# BASIC INFO
+# ============================================
+ItemName: Antimatter Power Cores
+Description: |
+  Advanced high-energy power sources for capital ships.
+ItemID: antimatter_cores
+Category: Technology
+
+# ============================================
+# PRICING
+# ============================================
+BasePrice: 10000
+
+PriceVolatility:
+  VolatilityMultiplier: 2.0
+  MinPriceDeviation: 0.4
+  MaxPriceDeviation: 4.0
+
+bAffectedBySupplyDemand: true
+bAffectedByMarketEvents: true
+
+# ============================================
+# LEGALITY & RESTRICTIONS
+# ============================================
+LegalityStatus: Restricted
+ContrabandFineMultiplier: 1.0
+
+# ============================================
+# TRADE PROPERTIES
+# ============================================
+VolumePerUnit: 5.0
+MassPerUnit: 10.0
+StandardLotSize: 1
+TypicalMarketStock: 50
+ReplenishmentRate: 5
+
+# ============================================
+# AI TRADER BEHAVIOR
+# ============================================
+AITradePriority: 3
+bAIHoardable: true
+bAIArbitrageEnabled: false
+BehaviorTags: []
+
+# ============================================
+# TRADING ECONOMICS
+# ============================================
+Price per Lot (@ base): 10000 credits
+Volume per Lot: 5.0 m³
+Mass per Lot: 10.0 kg
+
+Profit Potential:
+  Min Price: 4000.0 credits/unit
+  Max Price: 40000.0 credits/unit
+  Max Spread: 36000.0 credits/unit

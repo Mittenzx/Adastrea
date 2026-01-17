@@ -1,0 +1,64 @@
+
+# DA_Item_LuxuryFood
+# Trade Item Data Asset Configuration
+# Source: MVPTradeItems.yaml
+
+Class: /Script/Adastrea.TradeItemDataAsset
+Asset Name: DA_Item_LuxuryFood
+
+# ============================================
+# BASIC INFO
+# ============================================
+ItemName: Luxury Foodstuffs
+Description: |
+  Gourmet ingredients and delicacies from various worlds.
+ItemID: luxury_food
+Category: Luxury
+
+# ============================================
+# PRICING
+# ============================================
+BasePrice: 100
+
+PriceVolatility:
+  VolatilityMultiplier: 1.5
+  MinPriceDeviation: 0.5
+  MaxPriceDeviation: 3.0
+
+bAffectedBySupplyDemand: true
+bAffectedByMarketEvents: true
+
+# ============================================
+# LEGALITY & RESTRICTIONS
+# ============================================
+LegalityStatus: Legal
+ContrabandFineMultiplier: 1.0
+
+# ============================================
+# TRADE PROPERTIES
+# ============================================
+VolumePerUnit: 2.0
+MassPerUnit: 1.0
+StandardLotSize: 10
+TypicalMarketStock: 500
+ReplenishmentRate: 50
+
+# ============================================
+# AI TRADER BEHAVIOR
+# ============================================
+AITradePriority: 4
+bAIHoardable: false
+bAIArbitrageEnabled: true
+BehaviorTags: []
+
+# ============================================
+# TRADING ECONOMICS
+# ============================================
+Price per Lot (@ base): 1000 credits
+Volume per Lot: 20.0 m³
+Mass per Lot: 10.0 kg
+
+Profit Potential:
+  Min Price: 50.0 credits/unit
+  Max Price: 300.0 credits/unit
+  Max Spread: 250.0 credits/unit
