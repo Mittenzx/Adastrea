@@ -52,14 +52,18 @@
 - **[CURRENT_STATUS.md](CURRENT_STATUS.md)** - Realistic project status (code 85%, content 10%)
 
 ### 🎯 By Role
-- **Learning Blueprints?** → [docs/learning/README.md](docs/learning/README.md) ⭐ **NEW - START HERE!**
-- **Complete Beginner?** → [docs/learning/BLUEPRINT_FUNDAMENTALS.md](docs/learning/BLUEPRINT_FUNDAMENTALS.md) ⭐ **NEW**
+
+**Learning Blueprints:**
+- **Complete Beginner?** → [docs/learning/BLUEPRINT_FUNDAMENTALS.md](docs/learning/BLUEPRINT_FUNDAMENTALS.md) ⭐ **NEW - START HERE!**
+- **Learning Path** → [docs/learning/README.md](docs/learning/README.md) ⭐ **NEW**
+- **Blueprint Problem?** → [docs/learning/BLUEPRINT_TROUBLESHOOTING.md](docs/learning/BLUEPRINT_TROUBLESHOOTING.md) ⭐ **NEW**
+
+**Other Roles:**
 - **New Developer?** → [docs/setup/SETUP_CHECKLIST.md](docs/setup/SETUP_CHECKLIST.md)
 - **Content Designer?** → [Assets/DesignerOnboarding.md](Assets/DesignerOnboarding.md)
 - **Need Quick Answer?** → [docs/reference/CHEATSHEET.md](docs/reference/CHEATSHEET.md)
 - **Working on Blueprints?** → [Blueprints/README.md](Blueprints/README.md)
 - **Creating Blueprint Guide?** → [docs/reference/BLUEPRINT_GUIDE_TEMPLATE.md](docs/reference/BLUEPRINT_GUIDE_TEMPLATE.md)
-- **Blueprint Problem?** → [docs/learning/BLUEPRINT_TROUBLESHOOTING.md](docs/learning/BLUEPRINT_TROUBLESHOOTING.md) ⭐ **NEW**
 
 ### 📂 By Category
 - [Essential Files (Root)](#essential-files-root-directory)

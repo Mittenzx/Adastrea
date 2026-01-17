@@ -156,8 +156,9 @@ Created a complete, beginner-friendly Blueprint learning system for Adastrea wit
 ## 📊 Statistics
 
 ### Content Metrics
-- **Total Characters**: 76,000+
-- **Total Files**: 5 major guides
+- **Total Characters (Learning Guides Only)**: 76,000+
+- **Total Characters (Including This Summary)**: 88,000+
+- **Total Files**: 5 major guides + 1 summary
 - **Learning Levels**: 4 (Beginner to Mastery)
 - **Patterns Documented**: 15
 - **Problems Solved**: 15
