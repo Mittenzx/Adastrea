@@ -18,7 +18,6 @@ Usage:
 import argparse
 import time
 import yaml
-import os
 from pathlib import Path
 
 class TradingPerformanceProfiler:
@@ -110,7 +109,7 @@ class TradingPerformanceProfiler:
                     
             # Calculate final price
             price_modifier = (demand / supply) if supply > 0 else 1.0
-            final_price = base_price * markup * price_modifier
+            _ = base_price * markup * price_modifier  # Simulate calculation
             
         elapsed = time.time() - start
         avg_calc = (elapsed / iterations) * 1000  # Convert to ms
@@ -152,7 +151,7 @@ class TradingPerformanceProfiler:
                     
             # Simulate quantity check
             needed = 10
-            in_stock = found and current_stock >= needed
+            _ = found and current_stock >= needed  # Simulate check
             
         elapsed = time.time() - start
         avg_query = (elapsed / iterations) * 1000  # Convert to ms
@@ -211,8 +210,8 @@ class TradingPerformanceProfiler:
                                 sell_price = item['base_price'] * sell_markup * (demand / supply if supply > 0 else 1.0)
                                 break
                         
-                        # Calculate profit
-                        profit = sell_price - buy_price
+                        # Calculate profit (unused but simulates calculation)
+                        _ = sell_price - buy_price
                         routes_analyzed += 1
                         
         elapsed = time.time() - start
@@ -236,9 +235,6 @@ class TradingPerformanceProfiler:
         print("\n🔥 Running Stress Test (Scaled Content)...")
         
         # Simulate 10x content scale
-        original_items = len(self.items)
-        original_markets = len(self.markets)
-        
         # Duplicate items and markets 10x
         scaled_items = self.items * 10
         scaled_markets = []
