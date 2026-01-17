@@ -1,27 +1,29 @@
 # Adastrea Documentation Index
 
-**Last Updated**: January 3, 2026  
-**Version**: 2.1 - Blueprint Guide Standardization  
+**Last Updated**: January 17, 2026  
+**Version**: 2.2 - Comprehensive Blueprint Learning Materials  
 **Purpose**: Comprehensive index of all documentation in the Adastrea project
 
 ---
 
-## 🆕 Latest Update: Blueprint Guide Standardization (January 3, 2026)
+## 🆕 Latest Update: Blueprint Learning Materials (January 17, 2026)
 
 **What's New:**
-- 📋 **Blueprint Guide Template** - Standard format for all Blueprint guides
-- 📝 **Blueprint Guide Standards** - How to write consistent, step-by-step guides
-- ✅ **Simplified Example** - Trading UI guide rewritten as reference implementation
-- 🗂️ **Blueprint README** - Central navigation for all Blueprint documentation
+- 📚 **Complete Learning Path** - Structured progression from beginner to mastery
+- 📖 **Blueprint Fundamentals Guide** - Zero-to-hero Blueprint tutorial (20,000+ chars)
+- 🔧 **Node Reference Guide** - Every Blueprint node type explained (15,000+ chars)
+- 🎯 **Patterns Library** - 15 reusable Blueprint patterns (14,000+ chars)
+- 🔍 **Troubleshooting Guide** - Common problems and solutions (16,000+ chars)
 
 **Key Features:**
-- Variables and functions listed UPFRONT (before implementation steps)
-- Consistent structure: Prerequisites → Dependencies → Setup → Implementation → Testing
-- Clear complexity levels and time estimates
-- Troubleshooting sections in every guide
+- **4-Level Learning Path**: Beginner (0-2h) → MVP (2-6h) → Advanced (6-12h) → Mastery
+- **Hands-on Exercises**: 3 practice Blueprints with step-by-step instructions
+- **Real Examples**: All patterns from actual Adastrea project
+- **Visual Diagrams**: SVG images showing Blueprint node connections
+- **Progressive Learning**: Build skills incrementally with clear milestones
 
-**For Guide Authors**: See [Blueprint Guide Standards](docs/reference/BLUEPRINT_GUIDE_STANDARDS.md)  
-**For Users**: See [Blueprints README](Blueprints/README.md)
+**For Beginners**: Start with [Blueprint Fundamentals](docs/learning/BLUEPRINT_FUNDAMENTALS.md) ⭐ **NEW**  
+**For All Developers**: See [Learning Path](docs/learning/README.md) ⭐ **NEW**
 
 ---
 
@@ -50,15 +52,18 @@
 - **[CURRENT_STATUS.md](CURRENT_STATUS.md)** - Realistic project status (code 85%, content 10%)
 
 ### 🎯 By Role
+- **Learning Blueprints?** → [docs/learning/README.md](docs/learning/README.md) ⭐ **NEW - START HERE!**
+- **Complete Beginner?** → [docs/learning/BLUEPRINT_FUNDAMENTALS.md](docs/learning/BLUEPRINT_FUNDAMENTALS.md) ⭐ **NEW**
 - **New Developer?** → [docs/setup/SETUP_CHECKLIST.md](docs/setup/SETUP_CHECKLIST.md)
 - **Content Designer?** → [Assets/DesignerOnboarding.md](Assets/DesignerOnboarding.md)
 - **Need Quick Answer?** → [docs/reference/CHEATSHEET.md](docs/reference/CHEATSHEET.md)
-- **Working on Blueprints?** → [Blueprints/README.md](Blueprints/README.md) ⭐ **NEW**
-- **Creating Blueprint Guide?** → [docs/reference/BLUEPRINT_GUIDE_TEMPLATE.md](docs/reference/BLUEPRINT_GUIDE_TEMPLATE.md) ⭐ **NEW**
-- **Implementing Docking?** → [docs/reference/DOCKING_SYSTEM_BLUEPRINT_IMPLEMENTATION_GUIDE.md](docs/reference/DOCKING_SYSTEM_BLUEPRINT_IMPLEMENTATION_GUIDE.md) ⭐ **NEW (Jan 2026)**
+- **Working on Blueprints?** → [Blueprints/README.md](Blueprints/README.md)
+- **Creating Blueprint Guide?** → [docs/reference/BLUEPRINT_GUIDE_TEMPLATE.md](docs/reference/BLUEPRINT_GUIDE_TEMPLATE.md)
+- **Blueprint Problem?** → [docs/learning/BLUEPRINT_TROUBLESHOOTING.md](docs/learning/BLUEPRINT_TROUBLESHOOTING.md) ⭐ **NEW**
 
 ### 📂 By Category
 - [Essential Files (Root)](#essential-files-root-directory)
+- [docs/learning/](#docslearning---blueprint-learning-materials) ⭐ **NEW**
 - [docs/systems/](#docsystems---game-system-documentation)
 - [docs/development/](#docsdevelopment---developer-documentation)
 - [docs/setup/](#docssetup---installation-and-setup)
@@ -88,6 +93,57 @@
 | **[MASTER_DOCUMENTATION.md](MASTER_DOCUMENTATION.md)** | Complete documentation in one file | 1372 |
 | **[DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)** | This file - complete documentation index | - |
 | **[OBSOLETE_DOCUMENTS.md](OBSOLETE_DOCUMENTS.md)** | Tracking removed/obsolete files | - |
+
+---
+
+## docs/learning/ - Blueprint Learning Materials ⭐ NEW
+
+**5 comprehensive guides** - Complete Blueprint learning path for beginners:
+
+### Core Learning Guides
+
+| File | Purpose | Characters |
+|------|---------|------------|
+| **[README.md](docs/learning/README.md)** | ⭐ **START HERE** - Complete learning path with 4 progressive levels | 11,000+ |
+| **[BLUEPRINT_FUNDAMENTALS.md](docs/learning/BLUEPRINT_FUNDAMENTALS.md)** | Complete beginner's guide to Blueprints - your first steps | 20,000+ |
+| **[BLUEPRINT_NODE_REFERENCE.md](docs/learning/BLUEPRINT_NODE_REFERENCE.md)** | Every Blueprint node type explained with real examples | 15,000+ |
+| **[BLUEPRINT_PATTERNS.md](docs/learning/BLUEPRINT_PATTERNS.md)** | 15 reusable Blueprint patterns for common tasks | 14,000+ |
+| **[BLUEPRINT_TROUBLESHOOTING.md](docs/learning/BLUEPRINT_TROUBLESHOOTING.md)** | Common problems and solutions with step-by-step fixes | 16,000+ |
+
+**Total Content**: 76,000+ characters of beginner-friendly learning materials
+
+### What You'll Learn
+
+**Level 1 - Fundamentals (0-2 hours):**
+- What are Blueprints and why use them?
+- Understanding nodes, pins, and execution flow
+- Creating your first 3 Blueprints (Hello World, Counter, Health Checker)
+- Common patterns and debugging techniques
+
+**Level 2 - MVP Features (2-6 hours):**
+- Building trading UI widgets
+- Creating flyable spaceships
+- Implementing docking systems
+- Managing cargo and inventory
+
+**Level 3 - Advanced (6-12 hours):**
+- Complex system integration
+- AI behavior implementation
+- Performance optimization
+- Event-driven architecture
+
+**Level 4 - Mastery (Ongoing):**
+- C++/Blueprint integration
+- Custom system design
+- Contributing to Adastrea
+- Teaching and mentoring
+
+### Quick Links
+
+- **New to Blueprints?** → [Blueprint Fundamentals](docs/learning/BLUEPRINT_FUNDAMENTALS.md)
+- **Need Node Info?** → [Node Reference](docs/learning/BLUEPRINT_NODE_REFERENCE.md)
+- **Looking for Patterns?** → [Patterns Library](docs/learning/BLUEPRINT_PATTERNS.md)
+- **Having Problems?** → [Troubleshooting Guide](docs/learning/BLUEPRINT_TROUBLESHOOTING.md)
 
 ---
 
