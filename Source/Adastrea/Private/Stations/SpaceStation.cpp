@@ -22,7 +22,27 @@ void ASpaceStation::BeginPlay()
 {
     Super::BeginPlay();
     
-    // Spawn default modules configured in Class Defaults
+    // First, discover any modules that were added in the editor (via Child Actor Components or direct placement)
+    TArray<AActor*> AttachedActors;
+    GetAttachedActors(AttachedActors);
+    
+    int32 EditorPlacedModuleCount = 0;
+    for (AActor* AttachedActor : AttachedActors)
+    {
+        ASpaceStationModule* ExistingModule = Cast<ASpaceStationModule>(AttachedActor);
+        if (ExistingModule && !Modules.Contains(ExistingModule))
+        {
+            Modules.Add(ExistingModule);
+            EditorPlacedModuleCount++;
+            UE_LOG(LogAdastreaStations, Log, 
+                TEXT("SpaceStation::BeginPlay - Discovered editor-placed module: %s for station %s"),
+                *ExistingModule->GetName(), *GetName());
+        }
+    }
+    
+    // Then spawn default modules configured in Class Defaults (if any)
+    // This allows both editor-placed AND runtime-spawned modules to coexist
+    int32 RuntimeSpawnedModuleCount = 0;
     if (DefaultModuleClasses.Num() > 0)
     {
         UWorld* World = GetWorld();
@@ -48,6 +68,7 @@ void ASpaceStation::BeginPlay()
                     {
                         // Add module using existing AddModule function
                         AddModule(NewModule);
+                        RuntimeSpawnedModuleCount++;
                         
                         UE_LOG(LogAdastreaStations, Log, 
                             TEXT("SpaceStation::BeginPlay - Spawned default module: %s for station %s"),
@@ -61,12 +82,12 @@ void ASpaceStation::BeginPlay()
                     }
                 }
             }
-            
-            UE_LOG(LogAdastreaStations, Log,
-                TEXT("SpaceStation::BeginPlay - Station %s initialized with %d default modules"),
-                *GetName(), Modules.Num());
         }
     }
+    
+    UE_LOG(LogAdastreaStations, Log,
+        TEXT("SpaceStation::BeginPlay - Station %s initialized with %d total modules (%d editor-placed, %d runtime-spawned)"),
+        *GetName(), Modules.Num(), EditorPlacedModuleCount, RuntimeSpawnedModuleCount);
 }
 
 void ASpaceStation::AddModule(ASpaceStationModule* Module)

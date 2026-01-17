@@ -44,37 +44,50 @@ public:
     ASpaceStation();
 
     /**
-     * Default module classes to spawn when station is created
+     * Default module classes to spawn when station is created (OPTIONAL)
+     * 
+     * This is ONE way to add modules. You can also add modules directly in the editor
+     * using Child Actor Components or by placing module actors in the level.
      * 
      * Configure this array in Class Defaults to specify which module types
      * should be automatically spawned and attached when the station begins play.
      * 
-     * Example Usage:
+     * Example Usage (Runtime Spawning):
      * 1. Open SpaceStation Blueprint Class Defaults
      * 2. Add entries to DefaultModuleClasses array
      * 3. Select module classes (BP_DockingBayModule, BP_ReactorModule, etc.)
      * 4. Modules will be spawned automatically in BeginPlay
      * 
-     * Note: This is separate from the runtime Modules array which tracks
-     * all currently attached modules (including dynamically added ones).
+     * Alternative (Editor-Placed Modules):
+     * 1. Open SpaceStation Blueprint in editor
+     * 2. Add Child Actor Component in Components panel
+     * 3. Set Child Actor Class to your module Blueprint
+     * 4. Position module in viewport - visible at design-time!
+     * 5. Module automatically discovered in BeginPlay
+     * 
+     * Both methods can be used together. Editor-placed modules are discovered first,
+     * then DefaultModuleClasses are spawned.
      */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Station|Configuration",
-        meta=(ToolTip="Module classes to automatically spawn when station is created"))
+        meta=(ToolTip="(OPTIONAL) Module classes to automatically spawn at runtime. You can also add modules in the editor using Child Actor Components."))
     TArray<TSubclassOf<ASpaceStationModule>> DefaultModuleClasses;
 
     /**
      * Array of currently attached modules (runtime tracking)
      * 
-     * This array is populated automatically:
-     * - BeginPlay spawns modules from DefaultModuleClasses
-     * - AddModule() adds dynamically created modules
-     * - RemoveModule() removes modules
+     * This array is populated automatically in BeginPlay:
+     * 1. First, discovers any editor-placed modules (Child Actor Components, etc.)
+     * 2. Then, spawns modules from DefaultModuleClasses array
+     * 3. Finally, tracks any modules added via AddModule() at runtime
      * 
      * Do not edit this in Class Defaults - it's for runtime use only.
-     * Use DefaultModuleClasses instead to configure initial modules.
+     * 
+     * To add modules at design-time:
+     * - Use Child Actor Components in the Blueprint editor, OR
+     * - Use DefaultModuleClasses array for runtime spawning
      */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Station",
-        meta=(ToolTip="Currently attached modules (runtime only, populated automatically)"))
+        meta=(ToolTip="Currently attached modules (auto-populated: editor-placed + runtime-spawned)"))
     TArray<ASpaceStationModule*> Modules;
 
     // ====================
