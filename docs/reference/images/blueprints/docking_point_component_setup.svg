@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#2D2D2D" />
+  <text x="600" y="30" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle">Docking Bay Module - Scene Component Setup</text>
+  <text x="600" y="55" fill="#AAAAAA" font-family="Arial, sans-serif" font-size="14" text-anchor="middle">Add Scene Components for docking points in the Components panel</text>
+  <rect x="50" y="80" width="500" height="650" fill="#1A1A1A" stroke="#555555" stroke-width="2" rx="5" />
+  <rect x="50" y="80" width="500" height="40" fill="#2D2D2D" rx="5" />
+  <text x="60" y="106" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="16" font-weight="bold">📋 Components Panel</text>
+  <text x="70" y="140" fill="#5DADE2" font-family="Courier New, monospace" font-size="13">BP_DockingBay (Self)</text>
+  <text x="90" y="180" fill="#8E44AD" font-family="Courier New, monospace" font-size="13">├─ StaticMesh_DockingBay</text>
+  <text x="90" y="220" fill="#FF8C00" font-family="Courier New, monospace" font-size="13">├─ InteractionTrigger (Sphere)</text>
+  <text x="110" y="260" fill="#AAAAAA" font-family="Courier New, monospace" font-size="13">│   └─ Radius: 1500.0</text>
+  <text x="90" y="310" fill="#00FF00" font-family="Courier New, monospace" font-size="13">├─ DockingPoint_1 (Scene)</text>
+  <text x="110" y="350" fill="#AAAAAA" font-family="Courier New, monospace" font-size="13">│   ├─ Location: (200, 0, 100)</text>
+  <text x="110" y="390" fill="#AAAAAA" font-family="Courier New, monospace" font-size="13">│   └─ Rotation: (0, 0, 0)</text>
+  <text x="90" y="440" fill="#00FF00" font-family="Courier New, monospace" font-size="13">├─ DockingPoint_2 (Scene)</text>
+  <text x="110" y="480" fill="#AAAAAA" font-family="Courier New, monospace" font-size="13">│   ├─ Location: (200, 200, 100)</text>
+  <text x="110" y="520" fill="#AAAAAA" font-family="Courier New, monospace" font-size="13">│   └─ Rotation: (0, 0, 0)</text>
+  <text x="90" y="570" fill="#00FF00" font-family="Courier New, monospace" font-size="13">├─ DockingPoint_3 (Scene)</text>
+  <text x="110" y="610" fill="#AAAAAA" font-family="Courier New, monospace" font-size="13">│   ├─ Location: (200, -200, 100)</text>
+  <text x="110" y="650" fill="#AAAAAA" font-family="Courier New, monospace" font-size="13">│   └─ Rotation: (0, 0, 0)</text>
+  <text x="90" y="700" fill="#00FF00" font-family="Courier New, monospace" font-size="13">└─ DockingPoint_4 (Scene)</text>
+  <rect x="600" y="80" width="550" height="650" fill="#1A1A1A" stroke="#555555" stroke-width="2" rx="5" />
+  <rect x="600" y="80" width="550" height="40" fill="#2D2D2D" rx="5" />
+  <text x="610" y="106" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="16" font-weight="bold">⚙️ Details: DockingPoint_1 (SceneComponent)</text>
+  <text x="620" y="150" fill="#FFD700" font-family="Arial, sans-serif" font-size="14" font-weight="bold">▼ Transform</text>
+  <text x="640" y="180" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">Location X: 200.0</text>
+  <text x="640" y="210" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">Location Y: 0.0</text>
+  <text x="640" y="240" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">Location Z: 100.0</text>
+  <text x="640" y="280" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">Rotation X: 0.0</text>
+  <text x="640" y="310" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">Rotation Y: 0.0</text>
+  <text x="640" y="340" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">Rotation Z: 0.0</text>
+  <text x="620" y="390" fill="#FFD700" font-family="Arial, sans-serif" font-size="14" font-weight="bold">▼ Sockets</text>
+  <text x="640" y="420" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">Parent Socket: None</text>
+  <text x="620" y="470" fill="#FFD700" font-family="Arial, sans-serif" font-size="14" font-weight="bold">▼ Tags</text>
+  <text x="640" y="500" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">Component Tags: [DockingPoint]</text>
+  <text x="620" y="550" fill="#FFD700" font-family="Arial, sans-serif" font-size="14" font-weight="bold">▼ Activation</text>
+  <text x="640" y="580" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">Auto Activate: True</text>
+  <text x="640" y="610" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">Is Active: True</text>
+  <rect x="50" y="750" width="1100" height="35" fill="#2D4A2D" stroke="#4CAF50" stroke-width="2" rx="3" />
+  <text x="70" y="773" fill="#90EE90" font-family="Arial, sans-serif" font-size="13" font-weight="bold">💡 TIP: Add 4-6 Scene Components and space them 200-400 units apart for optimal docking</text>
+</svg>
