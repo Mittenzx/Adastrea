@@ -2,6 +2,7 @@
 
 #include "Stations/SpaceStation.h"
 #include "Stations/MarketplaceModule.h"
+#include "Stations/DockingBayModule.h"
 #include "AdastreaLog.h"
 
 ASpaceStation::ASpaceStation()
@@ -22,72 +23,25 @@ void ASpaceStation::BeginPlay()
 {
     Super::BeginPlay();
     
-    // First, discover any modules that were added in the editor (via Child Actor Components or direct placement)
+    // Discover any modules that were added in the editor (via Child Actor Components or direct placement)
     TArray<AActor*> AttachedActors;
     GetAttachedActors(AttachedActors);
     
-    int32 EditorPlacedModuleCount = 0;
     for (AActor* AttachedActor : AttachedActors)
     {
         ASpaceStationModule* ExistingModule = Cast<ASpaceStationModule>(AttachedActor);
         if (ExistingModule && !Modules.Contains(ExistingModule))
         {
             Modules.Add(ExistingModule);
-            EditorPlacedModuleCount++;
             UE_LOG(LogAdastreaStations, Log, 
                 TEXT("SpaceStation::BeginPlay - Discovered editor-placed module: %s for station %s"),
                 *ExistingModule->GetName(), *GetName());
         }
     }
     
-    // Then spawn default modules configured in Class Defaults (if any)
-    // This allows both editor-placed AND runtime-spawned modules to coexist
-    int32 RuntimeSpawnedModuleCount = 0;
-    if (DefaultModuleClasses.Num() > 0)
-    {
-        UWorld* World = GetWorld();
-        if (World)
-        {
-            FActorSpawnParameters SpawnParams;
-            SpawnParams.Owner = this;
-            SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-            
-            for (TSubclassOf<ASpaceStationModule> ModuleClass : DefaultModuleClasses)
-            {
-                if (ModuleClass)
-                {
-                    // Spawn module at station location
-                    ASpaceStationModule* NewModule = World->SpawnActor<ASpaceStationModule>(
-                        ModuleClass, 
-                        GetActorLocation(), 
-                        GetActorRotation(),
-                        SpawnParams
-                    );
-                    
-                    if (NewModule)
-                    {
-                        // Add module using existing AddModule function
-                        AddModule(NewModule);
-                        RuntimeSpawnedModuleCount++;
-                        
-                        UE_LOG(LogAdastreaStations, Log, 
-                            TEXT("SpaceStation::BeginPlay - Spawned default module: %s for station %s"),
-                            *NewModule->GetName(), *GetName());
-                    }
-                    else
-                    {
-                        UE_LOG(LogAdastreaStations, Warning,
-                            TEXT("SpaceStation::BeginPlay - Failed to spawn module from class: %s"),
-                            *ModuleClass->GetName());
-                    }
-                }
-            }
-        }
-    }
-    
     UE_LOG(LogAdastreaStations, Log,
-        TEXT("SpaceStation::BeginPlay - Station %s initialized with %d total modules (%d editor-placed, %d runtime-spawned)"),
-        *GetName(), Modules.Num(), EditorPlacedModuleCount, RuntimeSpawnedModuleCount);
+        TEXT("SpaceStation::BeginPlay - Station %s initialized with %d modules"),
+        *GetName(), Modules.Num());
 }
 
 void ASpaceStation::AddModule(ASpaceStationModule* Module)
@@ -224,6 +178,119 @@ TArray<AMarketplaceModule*> ASpaceStation::GetMarketplaceModules() const
     }
     
     return MarketplaceModules;
+}
+
+ADockingBayModule* ASpaceStation::GetDockingBayModule() const
+{
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (ADockingBayModule* DockingBay = Cast<ADockingBayModule>(Module))
+        {
+            return DockingBay;
+        }
+    }
+    return nullptr;
+}
+
+TArray<ADockingBayModule*> ASpaceStation::GetDockingBayModules() const
+{
+    TArray<ADockingBayModule*> DockingBayModules;
+    
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (ADockingBayModule* DockingBay = Cast<ADockingBayModule>(Module))
+        {
+            DockingBayModules.Add(DockingBay);
+        }
+    }
+    
+    return DockingBayModules;
+}
+
+int32 ASpaceStation::GetTotalDockingPoints() const
+{
+    int32 TotalPoints = 0;
+    
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (ADockingBayModule* DockingBay = Cast<ADockingBayModule>(Module))
+        {
+            TotalPoints += DockingBay->GetDockingPoints().Num();
+        }
+    }
+    
+    return TotalPoints;
+}
+
+int32 ASpaceStation::GetTotalDockingCapacity() const
+{
+    int32 TotalCapacity = 0;
+    
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (ADockingBayModule* DockingBay = Cast<ADockingBayModule>(Module))
+        {
+            TotalCapacity += DockingBay->MaxDockedShips;
+        }
+    }
+    
+    return TotalCapacity;
+}
+
+int32 ASpaceStation::GetOpenMarketplaceCount() const
+{
+    int32 OpenCount = 0;
+    
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (AMarketplaceModule* Marketplace = Cast<AMarketplaceModule>(Module))
+        {
+            if (Marketplace->IsAvailableForTrading())
+            {
+                OpenCount++;
+            }
+        }
+    }
+    
+    return OpenCount;
+}
+
+int32 ASpaceStation::GetTotalMarketplaceCount() const
+{
+    int32 TotalCount = 0;
+    
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (Cast<AMarketplaceModule>(Module))
+        {
+            TotalCount++;
+        }
+    }
+    
+    return TotalCount;
+}
+
+TArray<FText> ASpaceStation::GetMarketplaceNames() const
+{
+    TArray<FText> MarketplaceNames;
+    
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (AMarketplaceModule* Marketplace = Cast<AMarketplaceModule>(Module))
+        {
+            if (!Marketplace->MarketplaceName.IsEmpty())
+            {
+                MarketplaceNames.Add(Marketplace->MarketplaceName);
+            }
+            else
+            {
+                // Provide default name if none set
+                MarketplaceNames.Add(FText::FromString(TEXT("Unnamed Marketplace")));
+            }
+        }
+    }
+    
+    return MarketplaceNames;
 }
 
 TArray<ASpaceStationModule*> ASpaceStation::GetModulesByType(const FString& ModuleType) const

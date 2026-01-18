@@ -9,6 +9,7 @@
 
 // Forward declarations
 class AMarketplaceModule;
+class ADockingBayModule;
 
 /**
  * Core space station actor with modular construction system
@@ -44,50 +45,22 @@ public:
     ASpaceStation();
 
     /**
-     * Default module classes to spawn when station is created (OPTIONAL)
-     * 
-     * This is ONE way to add modules. You can also add modules directly in the editor
-     * using Child Actor Components or by placing module actors in the level.
-     * 
-     * Configure this array in Class Defaults to specify which module types
-     * should be automatically spawned and attached when the station begins play.
-     * 
-     * Example Usage (Runtime Spawning):
-     * 1. Open SpaceStation Blueprint Class Defaults
-     * 2. Add entries to DefaultModuleClasses array
-     * 3. Select module classes (BP_DockingBayModule, BP_ReactorModule, etc.)
-     * 4. Modules will be spawned automatically in BeginPlay
-     * 
-     * Alternative (Editor-Placed Modules):
-     * 1. Open SpaceStation Blueprint in editor
-     * 2. Add Child Actor Component in Components panel
-     * 3. Set Child Actor Class to your module Blueprint
-     * 4. Position module in viewport - visible at design-time!
-     * 5. Module automatically discovered in BeginPlay
-     * 
-     * Both methods can be used together. Editor-placed modules are discovered first,
-     * then DefaultModuleClasses are spawned.
-     */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Station|Configuration",
-        meta=(ToolTip="(OPTIONAL) Module classes to automatically spawn at runtime. You can also add modules in the editor using Child Actor Components."))
-    TArray<TSubclassOf<ASpaceStationModule>> DefaultModuleClasses;
-
-    /**
      * Array of currently attached modules (runtime tracking)
      * 
-     * This array is populated automatically in BeginPlay:
-     * 1. First, discovers any editor-placed modules (Child Actor Components, etc.)
-     * 2. Then, spawns modules from DefaultModuleClasses array
-     * 3. Finally, tracks any modules added via AddModule() at runtime
+     * This array is populated automatically in BeginPlay by discovering
+     * any editor-placed modules (Child Actor Components or directly placed module actors).
      * 
      * Do not edit this in Class Defaults - it's for runtime use only.
      * 
      * To add modules at design-time:
-     * - Use Child Actor Components in the Blueprint editor, OR
-     * - Use DefaultModuleClasses array for runtime spawning
+     * - Add Child Actor Components in the Blueprint editor's Components panel
+     * - Set Child Actor Class to your module Blueprint (e.g., BP_SpaceStationModule_DockingBay)
+     * - Position modules visually in the viewport
+     * 
+     * Modules are automatically discovered and registered when the station spawns.
      */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Station",
-        meta=(ToolTip="Currently attached modules (auto-populated: editor-placed + runtime-spawned)"))
+        meta=(ToolTip="Currently attached modules (auto-populated from editor-placed components)"))
     TArray<ASpaceStationModule*> Modules;
 
     // ====================
@@ -198,6 +171,71 @@ public:
      */
     UFUNCTION(BlueprintCallable, Category="Station|Trading")
     TArray<AMarketplaceModule*> GetMarketplaceModules() const;
+
+    /**
+     * Get the first docking bay module attached to this station
+     * @return First docking bay module found, or nullptr if none exist
+     * 
+     * MVP USE: Essential for accessing docking facilities
+     */
+    UFUNCTION(BlueprintCallable, Category="Station|Docking")
+    ADockingBayModule* GetDockingBayModule() const;
+
+    /**
+     * Get all docking bay modules attached to this station
+     * @return Array of all docking bay modules
+     * 
+     * MVP USE: Supports stations with multiple docking facilities
+     */
+    UFUNCTION(BlueprintCallable, Category="Station|Docking")
+    TArray<ADockingBayModule*> GetDockingBayModules() const;
+
+    /**
+     * Get total number of docking points across all docking bay modules
+     * @return Sum of all docking points from all docking bays
+     * 
+     * MVP USE: Display total station docking capacity in UI
+     * Shows at design-time in editor when modules are added
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Docking")
+    int32 GetTotalDockingPoints() const;
+
+    /**
+     * Get total maximum docking capacity across all docking bay modules
+     * @return Sum of MaxDockedShips from all docking bays
+     * 
+     * MVP USE: Display station's maximum simultaneous docking capacity
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Docking")
+    int32 GetTotalDockingCapacity() const;
+
+    /**
+     * Get number of open marketplaces on this station
+     * @return Count of marketplaces that are currently open for trading
+     * 
+     * MVP USE: Display number of active trading facilities
+     * Shows at design-time in editor when modules are added
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Trading")
+    int32 GetOpenMarketplaceCount() const;
+
+    /**
+     * Get total number of marketplace modules on this station
+     * @return Count of all marketplace modules (open or closed)
+     * 
+     * MVP USE: Display total trading facility count
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Trading")
+    int32 GetTotalMarketplaceCount() const;
+
+    /**
+     * Get names of all marketplaces on this station
+     * @return Array of marketplace display names
+     * 
+     * MVP USE: List available markets in UI
+     */
+    UFUNCTION(BlueprintCallable, Category="Station|Trading")
+    TArray<FText> GetMarketplaceNames() const;
 
     // ====================
     // AGGREGATE MODULE FUNCTIONALITY

@@ -1,463 +1,104 @@
 # SpaceStation Module Configuration Guide
 
 **Created**: January 10, 2026  
-**Issue Resolved**: Module dropdown empty in Class Defaults  
+**Updated**: January 18, 2026  
 **Related Classes**: `ASpaceStation`, `ASpaceStationModule`
 
----
-
-## Problem Overview
-
-When trying to add modules to a SpaceStation in Class Defaults, the dropdown shows no results. This happens because the original `Modules` array uses actor pointers (`TArray<ASpaceStationModule*>`), which require existing instances in the level.
-
-## Solution
-
-Added `DefaultModuleClasses` property to configure which module types should spawn automatically.
+> **⚠️ This guide is deprecated.** The `DefaultModuleClasses` array has been removed in favor of the **Child Actor Components** method, which provides visual, design-time editing of station modules.
+> 
+> **Please use the Child Actor Components method instead:**
+> - See [Module Documentation Index](../modules/README.md) for individual module setup guides
+> - See [TRADING_AND_DOCKING_COMPLETE_GUIDE.md](../mvp/TRADING_AND_DOCKING_COMPLETE_GUIDE.md#step-2-add-components) for complete station setup
 
 ---
 
-## How to Configure Modules
+## Recommended Approach: Child Actor Components
 
-### Step 1: Open SpaceStation Blueprint
+**Why Child Actor Components?**
+- ✅ Visual feedback at design-time (see modules in editor viewport)
+- ✅ Easy positioning and layout
+- ✅ No runtime spawning complexity
+- ✅ Station automatically discovers modules in BeginPlay
+- ✅ Full C++ support with aggregate query functions
 
-1. Navigate to your SpaceStation Blueprint (e.g., `BP_SpaceStation`)
-2. Open the Blueprint editor
-3. Click **Class Defaults** button in toolbar
+### Quick Start
 
-### Step 2: Add Module Classes
+1. **Open SpaceStation Blueprint**
+   - Navigate to `BP_SpaceStation` (or your custom station Blueprint)
+   - Open in Blueprint editor
 
-1. Find **Station | Configuration** category
-2. Locate **Default Module Classes** array property
-3. Click **+** button to add a new entry
-4. Click the dropdown and select a module class:
-   - `BP_DockingBayModule` - Large docking facilities
-   - `BP_DockingPortModule` - Small docking ports
-   - `BP_ReactorModule` - Power generation
-   - `BP_CargoBayModule` - Storage
-   - `BP_HabitationModule` - Living quarters
-   - `BP_ShieldGeneratorModule` - Defense
-   - *(and any other custom module Blueprint you've created)*
+2. **Add Modules in Components Panel**
+   - Click **+ Add** → **Child Actor Component**
+   - Rename to module type (e.g., "DockingBay", "Marketplace")
+   - Set **Child Actor Class** to your module Blueprint
+   - Position in viewport
 
-### Step 3: Configure Multiple Modules
+3. **Configure Module Properties**
+   - Open module Blueprint Class Defaults
+   - Configure module-specific properties
+   - Compile and save
 
-Repeat Step 2 to add as many modules as needed. For example:
-- Entry 0: `BP_DockingBayModule`
-- Entry 1: `BP_DockingPortModule`
-- Entry 2: `BP_ReactorModule`
-- Entry 3: `BP_CargoBayModule`
-
-### Step 4: Save and Test
-
-1. **Save** the Blueprint
-2. **Compile** the Blueprint
-3. Place station in level
-4. **Play** in editor
-5. Modules spawn automatically at BeginPlay
+4. **Test**
+   - Place station in level
+   - Press Play
+   - Modules are automatically discovered and registered
 
 ---
 
-## Understanding the Two Arrays
+## Complete Module Setup Guides
 
-### 1. DefaultModuleClasses (Editor Configuration)
+For detailed instructions on setting up each module type:
 
-**Type**: `TArray<TSubclassOf<ASpaceStationModule>>`  
-**Access**: `EditAnywhere` (configure in Class Defaults)  
-**Purpose**: Define which module types to spawn  
-**Location**: **Station | Configuration** category
-
-**When to Use**:
-- Setting up station module composition
-- Creating station variants
-- Defining default loadout
-
-### 2. Modules (Runtime Tracking)
-
-**Type**: `TArray<ASpaceStationModule*>`  
-**Access**: `VisibleAnywhere` (read-only)  
-**Purpose**: Track currently attached modules  
-**Location**: **Station** category
-
-**When to Use**:
-- Querying attached modules at runtime
-- Iterating through active modules
-- Checking module count
-- Finding modules by type
-
-**Important**: Do NOT edit `Modules` in Class Defaults. It's populated automatically.
+- [Docking Bay Module](../modules/DOCKING_BAY_MODULE.md) - Ship docking facilities
+- [Marketplace Module](../modules/MARKETPLACE_MODULE.md) - Trading and commerce
+- [Cargo Bay Module](../modules/CARGO_BAY_MODULE.md) - Storage facilities
+- [Module Index](../modules/README.md) - All module documentation
 
 ---
 
-## Module Spawning Behavior
+## Station-Level Module Query Functions
 
-### Automatic Spawning
+The station Blueprint provides functions to view aggregate module information:
 
-When station's `BeginPlay()` executes:
+**Docking Bay Functions:**
+- `GetTotalDockingPoints()` - Total docking points across all docking bays
+- `GetTotalDockingCapacity()` - Maximum simultaneous docking capacity
+- `GetDockingBayModule()` / `GetDockingBayModules()` - Access docking bay modules
 
-1. Checks if `DefaultModuleClasses` has entries
-2. For each module class in array:
-   - Spawns instance at station location
-   - Attaches to station actor
-   - Adds to `Modules` runtime array
-3. Logs spawn count to output log
+**Marketplace Functions:**
+- `GetOpenMarketplaceCount()` - Count of open marketplaces
+- `GetTotalMarketplaceCount()` - Total marketplace modules
+- `GetMarketplaceNames()` - Array of marketplace display names
 
-### Spawn Parameters
-
-- **Location**: Station's current location
-- **Rotation**: Station's current rotation
-- **Collision**: Always spawn (ignore collisions)
-- **Owner**: Station actor
-
-### Log Output Example
-
+**Usage Example:**
 ```
-LogAdastreaStations: SpaceStation::BeginPlay - Spawned default module: BP_DockingBayModule_C_0 for station BP_SpaceStation_C_0
-LogAdastreaStations: SpaceStation::BeginPlay - Spawned default module: BP_ReactorModule_C_0 for station BP_SpaceStation_C_0
-LogAdastreaStations: SpaceStation::BeginPlay - Station BP_SpaceStation_C_0 initialized with 2 default modules
+Event Construction Script
+  ↓
+Get Total Docking Points → Set TotalDockingPointsDisplay
+  ↓
+Get Open Marketplace Count → Set OpenMarketplaceCountDisplay
 ```
 
 ---
 
-## Common Use Cases
+## Migration from DefaultModuleClasses
 
-### Trading Station Setup
+If you have existing stations using `DefaultModuleClasses`:
 
-For MVP Trade Simulator, typical configuration:
-
-```
-DefaultModuleClasses:
-  [0] BP_DockingBayModule      (player docking)
-  [1] BP_DockingPortModule      (NPC ships)
-  [2] BP_CargoBayModule         (storage)
-  [3] BP_MarketplaceModule      (trading interface)
-  [4] BP_HabitationModule       (station population)
-```
-
-### Military Station Setup
-
-```
-DefaultModuleClasses:
-  [0] BP_DockingBayModule
-  [1] BP_ShieldGeneratorModule
-  [2] BP_TurretModule
-  [3] BP_BarracksModule
-  [4] BP_ReactorModule
-```
-
-### Mining Station Setup
-
-```
-DefaultModuleClasses:
-  [0] BP_DockingPortModule
-  [1] BP_ProcessingModule
-  [2] BP_CargoBayModule
-  [3] BP_FabricationModule
-```
+1. **Open your station Blueprint**
+2. **Note which modules are in DefaultModuleClasses array**
+3. **Clear the array** (it no longer exists in C++ but may still show in old Blueprints)
+4. **Add modules as Child Actor Components** (see Quick Start above)
+5. **Compile and save**
+6. **Test in Play mode** - modules should be discovered automatically
 
 ---
 
-## Dynamic Module Management
+**Version History:**
 
-### Adding Modules at Runtime
-
-While `DefaultModuleClasses` handles initialization, you can still add modules dynamically:
-
-**C++ Code**:
-```cpp
-// Spawn a new module
-ASpaceStationModule* NewModule = World->SpawnActor<ASpaceStationModule>(
-    ModuleClass, 
-    SpawnLocation, 
-    SpawnRotation
-);
-
-// Add to station
-Station->AddModule(NewModule);
-```
-
-**Blueprint**:
-```
-Event: Player Builds Module
-├─ Spawn Actor from Class (Module Class)
-├─ Get Station Reference
-└─ Call AddModule (Station, Spawned Module)
-```
-
-### Removing Modules
-
-**C++ Code**:
-```cpp
-Station->RemoveModule(ModuleToRemove);
-```
-
-**Blueprint**:
-```
-Event: Destroy Module
-├─ Get Station Reference
-└─ Call RemoveModule (Station, Module)
-```
+- **v2.0** (2026-01-18) - Deprecated DefaultModuleClasses, guide redirects to Child Actor Components method
+- **v1.0** (2026-01-10) - Initial guide for DefaultModuleClasses array
 
 ---
 
-## Troubleshooting
-
-### Problem: Dropdown Still Empty
-
-**Cause**: No module Blueprint classes exist in project
-
-**Solution**: Create module Blueprints first:
-1. Right-click in Content Browser
-2. **Blueprint Class** → Search for "SpaceStationModule"
-3. Select parent class (e.g., `DockingBayModule`)
-4. Name it (e.g., `BP_DockingBayModule`)
-5. Now it appears in dropdown
-
-### Problem: Modules Not Spawning
-
-**Check These**:
-- [ ] `DefaultModuleClasses` array has entries
-- [ ] Module classes are valid (not null)
-- [ ] Check Output Log for spawn errors
-- [ ] BeginPlay is executing (check log)
-
-**Output Log Search**:
-```
-Search for: "SpaceStation::BeginPlay"
-Look for: "Spawned default module" or "Failed to spawn"
-```
-
-### Problem: Modules Spawning at Wrong Location
-
-**Cause**: Default spawn location is station's location/rotation
-
-**Solution**: 
-- Adjust module positions in `AddModule()` implementation
-- Or use `AddModuleAtLocation()` with relative offsets
-- Consider adding module offset properties to module classes
-
-### Problem: Duplicate Modules
-
-**Cause**: Modules added both in `DefaultModuleClasses` AND manually placed in level
-
-**Solution**: Choose one method:
-- **Option A**: Use only `DefaultModuleClasses` (recommended)
-- **Option B**: Place modules in level manually, leave `DefaultModuleClasses` empty
-
----
-
-## Best Practices
-
-### 1. Use DefaultModuleClasses for Templates
-
-Configure `DefaultModuleClasses` in **Blueprint parent class** to create reusable station templates:
-- `BP_TradingStation` → Trading modules
-- `BP_MilitaryStation` → Defense modules
-- `BP_MiningStation` → Processing modules
-
-### 2. Module Order Matters
-
-Modules spawn in array order. Consider:
-- Critical modules first (docking, power)
-- Optional modules last
-- This helps with debugging (essential systems fail early)
-
-### 3. One Configuration Method
-
-Don't mix methods:
-- ✅ **Good**: Configure in `DefaultModuleClasses` only
-- ❌ **Bad**: Some in array, some manually placed, causes confusion
-
-### 4. Test Spawning Early
-
-After adding modules to array:
-1. Save Blueprint
-2. PIE (Play In Editor)
-3. Check Output Log immediately
-4. Verify spawn messages
-
-### 5. Use Meaningful Names
-
-When creating module Blueprints, use clear names:
-- ✅ `BP_DockingBay_Large` (descriptive)
-- ✅ `BP_Reactor_Nuclear` (specific)
-- ❌ `BP_Module1` (unclear)
-
----
-
-## Integration with Station Editor
-
-The `DefaultModuleClasses` system works alongside the Station Editor:
-
-1. **Initial Setup**: `DefaultModuleClasses` spawns base modules
-2. **Runtime Editing**: Station Editor allows adding/removing modules
-3. **Persistence**: Both systems update the same `Modules` array
-
-**Station Editor functions**:
-- `BeginEditing()` - Enters edit mode
-- `PlaceModule()` - Adds module to station
-- `RemoveModule()` - Removes module
-- `SaveChanges()` - Persists modifications
-
----
-
-## Migration Guide
-
-### From Old System (Manual Placement)
-
-**Before** (placing modules in level):
-```
-1. Place BP_SpaceStation in level
-2. Place BP_DockingBayModule in level
-3. Manually attach module to station
-4. Repeat for each module
-```
-
-**After** (using DefaultModuleClasses):
-```
-1. Open BP_SpaceStation Class Defaults
-2. Add module classes to DefaultModuleClasses array
-3. Place station in level
-4. Modules spawn automatically
-```
-
-**Benefits**:
-- ✅ Faster setup (configure once, use many times)
-- ✅ Consistent configuration across instances
-- ✅ Easy to create station variants
-- ✅ No manual attachment needed
-
----
-
-## Technical Implementation Details
-
-### Header Declaration
-
-```cpp
-// Source/Adastrea/Public/Stations/SpaceStation.h
-
-/**
- * Default module classes to spawn when station is created
- */
-UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Station|Configuration")
-TArray<TSubclassOf<ASpaceStationModule>> DefaultModuleClasses;
-
-/**
- * Array of currently attached modules (runtime tracking)
- */
-UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Station")
-TArray<ASpaceStationModule*> Modules;
-```
-
-### BeginPlay Implementation
-
-```cpp
-// Source/Adastrea/Private/Stations/SpaceStation.cpp
-
-void ASpaceStation::BeginPlay()
-{
-    Super::BeginPlay();
-    
-    // Spawn default modules configured in Class Defaults
-    if (DefaultModuleClasses.Num() > 0)
-    {
-        UWorld* World = GetWorld();
-        if (World)
-        {
-            FActorSpawnParameters SpawnParams;
-            SpawnParams.Owner = this;
-            SpawnParams.SpawnCollisionHandlingOverride = 
-                ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-            
-            for (TSubclassOf<ASpaceStationModule> ModuleClass : DefaultModuleClasses)
-            {
-                if (ModuleClass)
-                {
-                    ASpaceStationModule* NewModule = World->SpawnActor<ASpaceStationModule>(
-                        ModuleClass, 
-                        GetActorLocation(), 
-                        GetActorRotation(),
-                        SpawnParams
-                    );
-                    
-                    if (NewModule)
-                    {
-                        AddModule(NewModule);
-                    }
-                }
-            }
-        }
-    }
-}
-```
-
-### Key Design Decisions
-
-1. **TSubclassOf vs Actor Pointer**:
-   - `TSubclassOf` allows class selection in editor
-   - Actor pointers require existing instances
-   - Solution: Separate arrays for different purposes
-
-2. **BeginPlay vs Constructor**:
-   - BeginPlay chosen because World is guaranteed to exist
-   - Allows proper actor spawning
-   - Constructor has no World context
-
-3. **Automatic vs Manual**:
-   - Automatic spawning reduces setup time
-   - Manual placement still supported via AddModule()
-   - Both methods update same runtime array
-
----
-
-## Related Documentation
-
-- **Class Reference**: `Source/Adastrea/Public/Stations/SpaceStation.h`
-- **Module Base**: `Source/Adastrea/Public/Stations/SpaceStationModule.h`
-- **Station Editor**: `Assets/StationEditorSystemGuide.md`
-- **Module Types**: `Source/Adastrea/Public/Stations/StationModuleTypes.h`
-- **Blueprint Workflow**: `Assets/BlueprintWorkflowTemplates.md`
-
----
-
-## FAQ
-
-**Q: Can I mix DefaultModuleClasses with manual placement?**  
-A: Yes, but not recommended. Choose one method for consistency.
-
-**Q: How do I prevent spawning duplicate modules?**  
-A: Leave `DefaultModuleClasses` empty if placing modules manually.
-
-**Q: Can I change DefaultModuleClasses at runtime?**  
-A: Array is `BlueprintReadOnly`, so no. Use `AddModule()` for runtime changes.
-
-**Q: Do modules inherit station's transform?**  
-A: Yes, modules spawn at station location/rotation and are attached.
-
-**Q: How do I add custom positioning?**  
-A: Override BeginPlay in Blueprint and call `AddModuleAtLocation()` with offsets.
-
-**Q: Can I create module variants?**  
-A: Yes! Create multiple Blueprint classes based on same C++ parent:
-- `BP_DockingBay_Small`
-- `BP_DockingBay_Large`
-- `BP_DockingBay_Capital`
-
-**Q: Does this work with procedural generation?**  
-A: Yes. Procedural code can set `DefaultModuleClasses` before spawning station.
-
----
-
-## Support
-
-If you encounter issues:
-
-1. **Check Output Log** for spawn errors
-2. **Verify module classes** exist and are valid
-3. **Test with single module** first
-4. **Search log for**: `LogAdastreaStations: SpaceStation::BeginPlay`
-5. **Report issues** with log output and Blueprint configuration
-
----
-
-**Last Updated**: January 10, 2026  
-**Adastrea Version**: Alpha 1.0.0  
-**Author**: GitHub Copilot Agent
+**For Support**: See main project [README.md](../../README.md) or module-specific guides
