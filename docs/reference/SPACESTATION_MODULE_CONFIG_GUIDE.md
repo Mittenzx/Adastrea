@@ -4,6 +4,8 @@
 **Issue Resolved**: Module dropdown empty in Class Defaults  
 **Related Classes**: `ASpaceStation`, `ASpaceStationModule`
 
+> **💡 Alternative Method Available**: This guide covers the **DefaultModuleClasses** runtime spawning method. For a visual, design-time approach where modules are visible in the editor, see **Child Actor Components** method in [TRADING_AND_DOCKING_COMPLETE_GUIDE.md](../mvp/TRADING_AND_DOCKING_COMPLETE_GUIDE.md#step-2-add-components). Both methods are valid!
+
 ---
 
 ## Problem Overview
