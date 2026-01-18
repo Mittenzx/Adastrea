@@ -101,11 +101,14 @@ Calculate Profit → Upgrade Ship → Repeat
    - Configure inventory, prices, and markup/markdown
 
 2. **Configure Station with Marketplace**:
-   - Open `BP_SpaceStation` Class Defaults
-   - Add to `DefaultModuleClasses`:
-     - `BP_SpaceStationModule_DockingBay`
-     - `BP_SpaceStationModule_Marketplace`
-   - In marketplace module, assign your MarketDataAsset
+   - Open `BP_SpaceStation` in Blueprint editor
+   - In **Components** panel, click **+ Add**
+   - Add **Child Actor Component**, rename to "DockingBay"
+     - Set Child Actor Class: `BP_SpaceStationModule_DockingBay`
+   - Add another **Child Actor Component**, rename to "Marketplace"
+     - Set Child Actor Class: `BP_SpaceStationModule_Marketplace`
+   - Open `BP_SpaceStationModule_Marketplace` Class Defaults
+   - Assign your MarketDataAsset
 
 3. **Test**:
    - Drag station into level
@@ -147,7 +150,8 @@ ASpaceStation (Base Station Actor)
 **Key Components**:
 
 1. **ASpaceStation** - Main station actor
-   - Spawns modules from `DefaultModuleClasses` array
+   - Modules can be added via Child Actor Components (design-time) OR `DefaultModuleClasses` array (runtime)
+   - Automatically discovers editor-placed modules in BeginPlay
    - Provides query functions: `HasMarketplace()`, `GetMarketplaceModule()`
    - Manages power, integrity, and module lifecycle
 
@@ -484,38 +488,45 @@ class AMarketplaceModule : public ASpaceStationModule
 
 #### Adding Marketplace to Station
 
-**Method 1: Class Defaults (Recommended for MVP)**:
+**Method 1: Child Actor Components (Recommended)**:
 
 1. Open `BP_SpaceStation` (or your station Blueprint)
-2. Click "Class Defaults" button
-3. Find "Station → Configuration"
-4. Expand "Default Module Classes" array
-5. Add entries:
-   ```
-   [0] BP_SpaceStationModule_DockingBay
-   [1] BP_SpaceStationModule_Marketplace
-   [2] BP_CargoBayModule (optional)
-   ```
-6. Compile and save
+2. Switch to the **Components** panel
+3. Click **+ Add** button
+4. Search for and add **Child Actor Component**
+5. Rename it to "Marketplace"
+6. In Details panel, set:
+   - **Child Actor Class**: `BP_SpaceStationModule_Marketplace`
+7. Position the component in the viewport as needed
+8. Compile and save
 
-7. Open `BP_SpaceStationModule_Marketplace` Class Defaults
-8. Set properties:
-   ```
-   Market Data Asset: DA_Market_YourStation
-   Is Open: true
-   Marketplace Name: "Central Market"
-   ```
-9. Compile and save
+9. Open `BP_SpaceStationModule_Marketplace` Class Defaults
+10. Set properties:
+    ```
+    Market Data Asset: DA_Market_YourStation
+    Is Open: true
+    Marketplace Name: "Central Market"
+    ```
+11. Compile and save
 
 **What Happens**:
-- Station's `BeginPlay()` spawns all modules from array
-- Modules automatically attach to station
+- Module is visible in editor viewport at design-time
+- Station automatically discovers and registers module in `BeginPlay()`
 - Marketplace becomes accessible for trading
 
-**Method 2: Runtime (Post-MVP)**:
+**Method 2: DefaultModuleClasses Array (Alternative)**:
+
+1. Open `BP_SpaceStation` Class Defaults
+2. Find "Default Module Classes" array
+3. Add entry: `BP_SpaceStationModule_Marketplace`
+4. Configure marketplace properties (steps 9-11 above)
+
+This method spawns modules at runtime, so you won't see them in the editor viewport until you play.
+
+**Method 3: Runtime Spawning (Post-MVP, Advanced)**:
 
 ```cpp
-// Spawn marketplace module at runtime
+// Spawn marketplace module at runtime via C++
 AMarketplaceModule* NewMarketplace = GetWorld()->SpawnActor<AMarketplaceModule>(
     BP_SpaceStationModule_Marketplace,
     Station->GetActorLocation(),
@@ -807,9 +818,15 @@ This comprehensive guide walks you through setting up docking with **visual diag
 
 #### Part 1: Add Docking Bay to Space Station
 
-**Goal**: Configure your space station to spawn with docking capability.
+**Goal**: Configure your space station to have docking capability.
 
 ![Station Docking Module Configuration](../reference/images/blueprints/station_docking_module_config.svg)
+
+> **💡 Two Methods Available:**
+> 1. **Components Panel Method** (Recommended) - Add modules as Child Actor Components (see Part 4: "Creating a Trading Station" for detailed steps)
+> 2. **Runtime Spawning Method** (Below) - Configure modules in DefaultModuleClasses array
+
+**Method 2: Runtime Spawning (using DefaultModuleClasses)**
 
 **Step-by-Step Instructions**:
 
@@ -846,6 +863,8 @@ This comprehensive guide walks you through setting up docking with **visual diag
 6. **Compile and Save**
    - Click the "Compile" button in the toolbar
    - Click "Save" to persist your changes
+
+> **Note:** For more control over module positioning and visual editing, use Child Actor Components instead (see "Creating a Trading Station" in Part 4).
 
 ---
 
@@ -1083,7 +1102,7 @@ DockingPoint_6: (400, -300, 0)
 After following all steps, your station setup should have:
 
 **✅ Checklist**:
-- [ ] BP_SpaceStation has DockingBay in DefaultModuleClasses array
+- [ ] BP_SpaceStation has DockingBay module (via Child Actor Component OR DefaultModuleClasses array)
 - [ ] BP_DockingBay has 4-6 Scene Components as docking points
 - [ ] Each Scene Component is properly positioned (200-400 units apart)
 - [ ] DockingPoints array is populated with Scene Component references
@@ -1361,16 +1380,68 @@ Docking points are Scene Components that define where ships should dock.
 
 #### Step 2: Add Components
 
-In the **Components** panel:
+In the **Components** panel, add the following components to build your station:
 
+**Required Components:**
+
+1. **StaticMesh_StationCore** (Static Mesh Component)
+   - Click "+ Add" button in Components panel
+   - Search for "Static Mesh Component"
+   - Rename to "StaticMesh_StationCore"
+   - In Details panel, set:
+     - Static Mesh: (your station mesh asset)
+     - Material: M_Station_Metal
+
+2. **DockingBay** (Child Actor Component)
+   - Click "+ Add" button
+   - Search for "Child Actor Component"
+   - Rename to "DockingBay"
+   - In Details panel, set:
+     - Child Actor Class: `BP_SpaceStationModule_DockingBay`
+   - Position as needed in viewport (relative to station)
+
+3. **Marketplace** (Child Actor Component)
+   - Click "+ Add" button
+   - Search for "Child Actor Component"
+   - Rename to "Marketplace"
+   - In Details panel, set:
+     - Child Actor Class: `BP_SpaceStationModule_Marketplace`
+   - Position as needed in viewport (relative to station)
+
+**Optional Components:**
+
+4. **CargoBay** (Child Actor Component)
+   - Click "+ Add" button
+   - Search for "Child Actor Component"
+   - Rename to "CargoBay"
+   - In Details panel, set:
+     - Child Actor Class: `BP_CargoBayModule`
+   - Position as needed in viewport
+
+5. **DetectionRange** (Sphere Component)
+   - Click "+ Add" button
+   - Search for "Sphere Component"
+   - Rename to "DetectionRange"
+   - In Details panel, set:
+     - Sphere Radius: 5000.0
+     - Collision: NoCollision (or custom)
+
+**Final Component Hierarchy:**
 ```
 DefaultSceneRoot
 ├─ StaticMesh_StationCore (Static Mesh)
 │  └─ Material: M_Station_Metal
-├─ (Modules added automatically from DefaultModuleClasses)
-└─ SphereComponent (Detection Range)
+├─ DockingBay (Child Actor Component)
+│  └─ Child Actor Class: BP_SpaceStationModule_DockingBay
+├─ Marketplace (Child Actor Component)
+│  └─ Child Actor Class: BP_SpaceStationModule_Marketplace
+├─ CargoBay (Child Actor Component, optional)
+│  └─ Child Actor Class: BP_CargoBayModule
+└─ DetectionRange (Sphere Component)
    └─ Sphere Radius: 5000.0
 ```
+
+> **📝 Note:** Using Child Actor Components allows you to see and position modules visually in the editor viewport at design-time. The station will automatically discover these modules at runtime in BeginPlay.
 
 #### Step 3: Configure Class Defaults
 
@@ -1380,12 +1451,7 @@ DefaultSceneRoot
    - MaxStructuralIntegrity: 10000.0
    - CurrentStructuralIntegrity: 10000.0
 
-3. Set **DefaultModuleClasses** array:
-   ```
-   [0] BP_SpaceStationModule_DockingBay
-   [1] BP_SpaceStationModule_Marketplace
-   [2] BP_CargoBayModule (optional)
-   ```
+> **Alternative Method:** You can also add modules using the `DefaultModuleClasses` array, which spawns modules at runtime. However, using Child Actor Components (as shown in Step 2) is recommended because you can see and position modules visually in the editor.
 
 #### Step 4: Create Market Data Asset
 
