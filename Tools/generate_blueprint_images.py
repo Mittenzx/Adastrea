@@ -977,7 +977,7 @@ def generate_docking_point_component_setup():
     subtitle.text = 'Add Scene Components for docking points in the Components panel'
     
     # Component Hierarchy Box
-    hier_box = ET.SubElement(svg, 'rect', {
+    ET.SubElement(svg, 'rect', {
         'x': '50', 'y': '80',
         'width': '500', 'height': '650',
         'fill': '#1A1A1A',
@@ -1030,7 +1030,7 @@ def generate_docking_point_component_setup():
         comp_text.text = comp_name
     
     # Properties panel for Scene Component
-    props_box = ET.SubElement(svg, 'rect', {
+    ET.SubElement(svg, 'rect', {
         'x': '600', 'y': '80',
         'width': '550', 'height': '650',
         'fill': '#1A1A1A',
@@ -1100,7 +1100,7 @@ def generate_docking_point_component_setup():
             prop_elem.text = prop_text
     
     # Instructions box at bottom
-    instr_box = ET.SubElement(svg, 'rect', {
+    ET.SubElement(svg, 'rect', {
         'x': '50', 'y': '750',
         'width': '1100', 'height': '35',
         'fill': '#2D4A2D',
@@ -1135,7 +1135,7 @@ def generate_docking_bay_array_setup():
     
     # Step 1: Open Class Defaults
     step1_y = 80
-    step1_box = ET.SubElement(svg, 'rect', {
+    ET.SubElement(svg, 'rect', {
         'x': '50', 'y': str(step1_y),
         'width': '900', 'height': '120',
         'fill': '#1A1A1A',
@@ -1161,7 +1161,7 @@ def generate_docking_bay_array_setup():
     })
     step1_desc.text = 'In BP_DockingBay Blueprint editor, click "Class Defaults" button in toolbar'
     
-    step1_img = ET.SubElement(svg, 'rect', {
+    ET.SubElement(svg, 'rect', {
         'x': '70', 'y': str(step1_y + 75),
         'width': '200', 'height': '30',
         'fill': '#2D2D2D',
@@ -1181,7 +1181,7 @@ def generate_docking_bay_array_setup():
     
     # Step 2: Find DockingPoints Array
     step2_y = 230
-    step2_box = ET.SubElement(svg, 'rect', {
+    ET.SubElement(svg, 'rect', {
         'x': '50', 'y': str(step2_y),
         'width': '900', 'height': '370',
         'fill': '#1A1A1A',
@@ -1211,7 +1211,7 @@ def generate_docking_bay_array_setup():
     array_y = step2_y + 90
     
     # Array header
-    array_header = ET.SubElement(svg, 'rect', {
+    ET.SubElement(svg, 'rect', {
         'x': '100', 'y': str(array_y),
         'width': '800', 'height': '35',
         'fill': '#2D2D2D',
@@ -1238,7 +1238,7 @@ def generate_docking_bay_array_setup():
     ]
     
     for elem_text, elem_y, elem_color in array_elements:
-        elem_box = ET.SubElement(svg, 'rect', {
+        ET.SubElement(svg, 'rect', {
             'x': '150', 'y': str(elem_y),
             'width': '700', 'height': '30',
             'fill': '#1E1E1E',
@@ -1257,7 +1257,7 @@ def generate_docking_bay_array_setup():
     
     # Add Element button
     add_btn_y = array_y + 220
-    add_btn = ET.SubElement(svg, 'rect', {
+    ET.SubElement(svg, 'rect', {
         'x': '150', 'y': str(add_btn_y),
         'width': '150', 'height': '30',
         'fill': '#2D4A2D',
@@ -1301,7 +1301,7 @@ def generate_station_docking_module_config():
     desc.text = 'Configure DefaultModuleClasses to automatically spawn docking capability'
     
     # Main panel
-    panel_box = ET.SubElement(svg, 'rect', {
+    ET.SubElement(svg, 'rect', {
         'x': '50', 'y': '80',
         'width': '1000', 'height': '620',
         'fill': '#1A1A1A',
@@ -1358,7 +1358,7 @@ def generate_station_docking_module_config():
     
     # Section 2: DefaultModuleClasses Array
     section2_y = 300
-    section2_header = ET.SubElement(svg, 'rect', {
+    ET.SubElement(svg, 'rect', {
         'x': '80',
         'y': str(section2_y),
         'width': '900',
@@ -1388,7 +1388,7 @@ def generate_station_docking_module_config():
     
     for module_text, module_y, module_color, note_text in modules:
         # Module box
-        module_box = ET.SubElement(svg, 'rect', {
+        ET.SubElement(svg, 'rect', {
             'x': '120',
             'y': str(module_y),
             'width': '500',
@@ -1422,7 +1422,7 @@ def generate_station_docking_module_config():
     
     # Add Element button
     add_btn_y = section2_y + 190
-    add_btn = ET.SubElement(svg, 'rect', {
+    ET.SubElement(svg, 'rect', {
         'x': '120',
         'y': str(add_btn_y),
         'width': '150',
@@ -1446,7 +1446,7 @@ def generate_station_docking_module_config():
     
     # Information box
     info_y = 550
-    info_box = ET.SubElement(svg, 'rect', {
+    ET.SubElement(svg, 'rect', {
         'x': '80',
         'y': str(info_y),
         'width': '900',
