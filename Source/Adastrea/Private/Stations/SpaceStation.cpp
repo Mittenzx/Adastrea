@@ -2,6 +2,7 @@
 
 #include "Stations/SpaceStation.h"
 #include "Stations/MarketplaceModule.h"
+#include "Stations/DockingBayModule.h"
 #include "AdastreaLog.h"
 
 ASpaceStation::ASpaceStation()
@@ -224,6 +225,63 @@ TArray<AMarketplaceModule*> ASpaceStation::GetMarketplaceModules() const
     }
     
     return MarketplaceModules;
+}
+
+ADockingBayModule* ASpaceStation::GetDockingBayModule() const
+{
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (ADockingBayModule* DockingBay = Cast<ADockingBayModule>(Module))
+        {
+            return DockingBay;
+        }
+    }
+    return nullptr;
+}
+
+TArray<ADockingBayModule*> ASpaceStation::GetDockingBayModules() const
+{
+    TArray<ADockingBayModule*> DockingBayModules;
+    
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (ADockingBayModule* DockingBay = Cast<ADockingBayModule>(Module))
+        {
+            DockingBayModules.Add(DockingBay);
+        }
+    }
+    
+    return DockingBayModules;
+}
+
+int32 ASpaceStation::GetTotalDockingPoints() const
+{
+    int32 TotalPoints = 0;
+    
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (ADockingBayModule* DockingBay = Cast<ADockingBayModule>(Module))
+        {
+            TotalPoints += DockingBay->GetDockingPoints().Num();
+        }
+    }
+    
+    return TotalPoints;
+}
+
+int32 ASpaceStation::GetTotalDockingCapacity() const
+{
+    int32 TotalCapacity = 0;
+    
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (ADockingBayModule* DockingBay = Cast<ADockingBayModule>(Module))
+        {
+            TotalCapacity += DockingBay->MaxDockedShips;
+        }
+    }
+    
+    return TotalCapacity;
 }
 
 TArray<ASpaceStationModule*> ASpaceStation::GetModulesByType(const FString& ModuleType) const

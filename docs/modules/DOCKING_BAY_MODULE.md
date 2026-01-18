@@ -216,6 +216,116 @@ Undock a ship from this module. Decrements CurrentDockedShips if any ships are d
 
 ---
 
+## Viewing Module Information in Station Blueprint
+
+**NEW**: When you add a docking bay module to a station, you can see its information directly in the station Blueprint!
+
+### Station-Level Functions
+
+The station Blueprint provides functions to query docking bay information:
+
+#### GetTotalDockingPoints()
+
+**Type**: BlueprintCallable, BlueprintPure  
+**Category**: Station|Docking  
+**Returns**: `int32` - Total number of docking points across all docking bays
+
+Shows the sum of all docking points from all docking bay modules attached to the station.
+
+**Example Usage:**
+```
+In BP_SpaceStation Class Defaults or Event Graph:
+  Get Total Docking Points → Print String
+  
+Output: "This station has 8 docking points"
+```
+
+#### GetTotalDockingCapacity()
+
+**Type**: BlueprintCallable, BlueprintPure  
+**Category**: Station|Docking  
+**Returns**: `int32` - Total maximum simultaneous docking capacity
+
+Shows the sum of MaxDockedShips from all docking bay modules.
+
+**Example Usage:**
+```
+In BP_SpaceStation:
+  Get Total Docking Capacity → Print String
+  
+Output: "This station can dock 8 ships simultaneously"
+```
+
+#### GetDockingBayModule()
+
+**Type**: BlueprintCallable  
+**Category**: Station|Docking  
+**Returns**: `ADockingBayModule*` - First docking bay module or nullptr
+
+Gets the first docking bay module attached to the station.
+
+#### GetDockingBayModules()
+
+**Type**: BlueprintCallable  
+**Category**: Station|Docking  
+**Returns**: `TArray<ADockingBayModule*>` - All docking bay modules
+
+Gets all docking bay modules attached to the station.
+
+### How to View in Editor
+
+**Method 1: Event Graph (Design-Time Preview)**
+
+1. Open your station Blueprint (`BP_SpaceStation`)
+2. Go to **Event Graph**
+3. Add node: **Event Construction Script**
+4. Call **Get Total Docking Points**
+5. Connect to **Print String**
+6. When you add/remove docking bay modules in the Components panel, the print will update in viewport
+
+**Method 2: Class Defaults (Runtime Value)**
+
+The station's `Modules` array in Class Defaults will show all attached modules at runtime. You can iterate through them to see docking bays.
+
+**Method 3: Custom Display Variable**
+
+Create a display-only variable in your station Blueprint:
+
+```
+In BP_SpaceStation Class Defaults:
+
+1. Add variable: "TotalDockingPointsDisplay" (int32)
+2. Set to: VisibleAnywhere, BlueprintReadOnly
+3. Category: "Station Info"
+
+In Event Construction Script:
+  Get Total Docking Points → Set TotalDockingPointsDisplay
+
+Now you'll see the total in the Details panel!
+```
+
+### Example Blueprint Setup
+
+```
+Event Construction Script
+    ↓
+Get Total Docking Points (Self) → Set TotalDockingPointsDisplay
+    ↓
+Get Total Docking Capacity (Self) → Set TotalDockingCapacityDisplay
+    ↓
+Get Module Count By Group (Docking) → Set DockingBayCountDisplay
+```
+
+Result in Details panel:
+```
+Station Info:
+  Total Docking Points Display: 8
+  Total Docking Capacity Display: 8
+  Docking Bay Count Display: 2
+```
+
+---
+
 ## Docking Point Positioning Guide
 
 ### Small Station (2 points)

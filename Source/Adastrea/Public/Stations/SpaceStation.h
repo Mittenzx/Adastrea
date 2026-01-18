@@ -9,6 +9,7 @@
 
 // Forward declarations
 class AMarketplaceModule;
+class ADockingBayModule;
 
 /**
  * Core space station actor with modular construction system
@@ -198,6 +199,43 @@ public:
      */
     UFUNCTION(BlueprintCallable, Category="Station|Trading")
     TArray<AMarketplaceModule*> GetMarketplaceModules() const;
+
+    /**
+     * Get the first docking bay module attached to this station
+     * @return First docking bay module found, or nullptr if none exist
+     * 
+     * MVP USE: Essential for accessing docking facilities
+     */
+    UFUNCTION(BlueprintCallable, Category="Station|Docking")
+    ADockingBayModule* GetDockingBayModule() const;
+
+    /**
+     * Get all docking bay modules attached to this station
+     * @return Array of all docking bay modules
+     * 
+     * MVP USE: Supports stations with multiple docking facilities
+     */
+    UFUNCTION(BlueprintCallable, Category="Station|Docking")
+    TArray<ADockingBayModule*> GetDockingBayModules() const;
+
+    /**
+     * Get total number of docking points across all docking bay modules
+     * @return Sum of all docking points from all docking bays
+     * 
+     * MVP USE: Display total station docking capacity in UI
+     * Shows at design-time in editor when modules are added
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Docking")
+    int32 GetTotalDockingPoints() const;
+
+    /**
+     * Get total maximum docking capacity across all docking bay modules
+     * @return Sum of MaxDockedShips from all docking bays
+     * 
+     * MVP USE: Display station's maximum simultaneous docking capacity
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Docking")
+    int32 GetTotalDockingCapacity() const;
 
     // ====================
     // AGGREGATE MODULE FUNCTIONALITY
