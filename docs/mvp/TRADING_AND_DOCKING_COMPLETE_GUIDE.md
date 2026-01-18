@@ -488,7 +488,7 @@ class AMarketplaceModule : public ASpaceStationModule
 
 #### Adding Marketplace to Station
 
-**Method 1: Child Actor Components (Recommended)**:
+**Add as Child Actor Component:**
 
 1. Open `BP_SpaceStation` (or your station Blueprint)
 2. Switch to the **Components** panel
@@ -513,34 +513,7 @@ class AMarketplaceModule : public ASpaceStationModule
 - Module is visible in editor viewport at design-time
 - Station automatically discovers and registers module in `BeginPlay()`
 - Marketplace becomes accessible for trading
-
-**Method 2: DefaultModuleClasses Array (Alternative)**:
-
-1. Open `BP_SpaceStation` Class Defaults
-2. Find "Default Module Classes" array
-3. Add entry: `BP_SpaceStationModule_Marketplace`
-4. Configure marketplace properties (steps 9-11 above)
-
-This method spawns modules at runtime, so you won't see them in the editor viewport until you play.
-
-**Method 3: Runtime Spawning (Post-MVP, Advanced)**:
-
-```cpp
-// Spawn marketplace module at runtime via C++
-AMarketplaceModule* NewMarketplace = GetWorld()->SpawnActor<AMarketplaceModule>(
-    BP_SpaceStationModule_Marketplace,
-    Station->GetActorLocation(),
-    FRotator::ZeroRotator
-);
-
-// Configure
-NewMarketplace->MarketDataAsset = DA_Market_Something;
-NewMarketplace->bIsOpen = true;
-NewMarketplace->MarketplaceName = FText::FromString("New Market");
-
-// Add to station
-Station->AddModule(NewMarketplace);
-```
+- You can see marketplace information in the station Blueprint using `GetOpenMarketplaceCount()` and related functions
 
 #### Querying Marketplace
 
@@ -822,49 +795,39 @@ This comprehensive guide walks you through setting up docking with **visual diag
 
 ![Station Docking Module Configuration](../reference/images/blueprints/station_docking_module_config.svg)
 
-> **💡 Two Methods Available:**
-> 1. **Components Panel Method** (Recommended) - Add modules as Child Actor Components (see Part 4: "Creating a Trading Station" for detailed steps)
-> 2. **Runtime Spawning Method** (Below) - Configure modules in DefaultModuleClasses array
+> **💡 Recommended Method: Child Actor Components**
+> 
+> Add modules directly in the Components panel for visual, design-time editing.
+> See Part 4: "Creating a Trading Station" for detailed step-by-step instructions.
 
-**Method 2: Runtime Spawning (using DefaultModuleClasses)**
-
-**Step-by-Step Instructions**:
+**Quick Setup:**
 
 1. **Open Your Station Blueprint**
    - Navigate to `Content/Blueprints/Stations/`
    - Open `BP_SpaceStation` (or your custom station Blueprint)
 
-2. **Click "Class Defaults" Button**
-   - In the Blueprint editor toolbar, click the "Class Defaults" button
-   - This opens the Details panel with default values for all instances
+2. **Add Docking Bay as Child Actor Component**
+   - Go to **Components** panel
+   - Click **+ Add** → **Child Actor Component**
+   - Rename to "DockingBay"
+   - Set **Child Actor Class**: `BP_SpaceStationModule_DockingBay`
+   - Position in viewport
 
-3. **Find Station Configuration Section**
-   - In the Details panel, scroll to "Station → Configuration"
-   - Configure basic station properties:
+3. **Configure Basic Station Properties**
+   - Click **Class Defaults** button
+   - In Details panel, set:
      - **Station Name**: "Your Station Name"
      - **Max Structural Integrity**: 10000.0
      - **Current Structural Integrity**: 10000.0
 
-4. **Configure DefaultModuleClasses Array**
-   - Find the "Default Module Classes" array property
-   - Click the **+ Add Element** button to add new entries
-   - Add these module classes in order:
-     ```
-     [0] BP_SpaceStationModule_DockingBay   ✓ Required for docking
-     [1] BP_SpaceStationModule_Marketplace   ✓ Required for trading
-     [2] BP_CargoBayModule                   ○ Optional storage
-     ```
-
-5. **How It Works**
-   - When the station spawns, `BeginPlay()` automatically creates all modules from this array
-   - Each module attaches to the station as a child actor
-   - Modules provide their specific functionality (docking, trading, etc.)
-
-6. **Compile and Save**
+4. **Compile and Save**
    - Click the "Compile" button in the toolbar
    - Click "Save" to persist your changes
 
-> **Note:** For more control over module positioning and visual editing, use Child Actor Components instead (see "Creating a Trading Station" in Part 4).
+**What Happens**:
+- Docking bay module is visible in editor viewport
+- Station automatically discovers module in BeginPlay()
+- You can see docking information using `GetTotalDockingPoints()` function
 
 ---
 

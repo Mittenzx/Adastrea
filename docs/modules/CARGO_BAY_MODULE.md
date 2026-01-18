@@ -23,7 +23,7 @@ The Cargo Bay Module provides general-purpose storage facilities for goods and m
 
 ## Quick Start
 
-### Method 1: Add as Child Actor Component (Recommended)
+### Add as Child Actor Component
 
 1. Open your station Blueprint (`BP_SpaceStation`)
 2. Go to **Components** panel
@@ -34,13 +34,7 @@ The Cargo Bay Module provides general-purpose storage facilities for goods and m
 6. Position in viewport relative to your station
 7. Compile and save
 
-### Method 2: Add via DefaultModuleClasses Array
-
-1. Open your station Blueprint Class Defaults
-2. Find **Station → Configuration** section
-3. Add to **Default Module Classes** array:
-   - Entry: `BP_CargoBayModule`
-4. Save and compile
+> **Note:** This is the recommended method as it provides visual feedback at design-time. You can see and position your cargo bay module in the editor viewport.
 
 ---
 

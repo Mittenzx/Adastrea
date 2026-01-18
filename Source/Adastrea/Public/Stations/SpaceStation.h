@@ -237,6 +237,34 @@ public:
     UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Docking")
     int32 GetTotalDockingCapacity() const;
 
+    /**
+     * Get number of open marketplaces on this station
+     * @return Count of marketplaces that are currently open for trading
+     * 
+     * MVP USE: Display number of active trading facilities
+     * Shows at design-time in editor when modules are added
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Trading")
+    int32 GetOpenMarketplaceCount() const;
+
+    /**
+     * Get total number of marketplace modules on this station
+     * @return Count of all marketplace modules (open or closed)
+     * 
+     * MVP USE: Display total trading facility count
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Trading")
+    int32 GetTotalMarketplaceCount() const;
+
+    /**
+     * Get names of all marketplaces on this station
+     * @return Array of marketplace display names
+     * 
+     * MVP USE: List available markets in UI
+     */
+    UFUNCTION(BlueprintCallable, Category="Station|Trading")
+    TArray<FText> GetMarketplaceNames() const;
+
     // ====================
     // AGGREGATE MODULE FUNCTIONALITY
     // Methods that combine functionality from all attached modules

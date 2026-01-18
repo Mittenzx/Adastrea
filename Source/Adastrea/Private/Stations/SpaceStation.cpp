@@ -284,6 +284,62 @@ int32 ASpaceStation::GetTotalDockingCapacity() const
     return TotalCapacity;
 }
 
+int32 ASpaceStation::GetOpenMarketplaceCount() const
+{
+    int32 OpenCount = 0;
+    
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (AMarketplaceModule* Marketplace = Cast<AMarketplaceModule>(Module))
+        {
+            if (Marketplace->IsAvailableForTrading())
+            {
+                OpenCount++;
+            }
+        }
+    }
+    
+    return OpenCount;
+}
+
+int32 ASpaceStation::GetTotalMarketplaceCount() const
+{
+    int32 TotalCount = 0;
+    
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (Cast<AMarketplaceModule>(Module))
+        {
+            TotalCount++;
+        }
+    }
+    
+    return TotalCount;
+}
+
+TArray<FText> ASpaceStation::GetMarketplaceNames() const
+{
+    TArray<FText> MarketplaceNames;
+    
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (AMarketplaceModule* Marketplace = Cast<AMarketplaceModule>(Module))
+        {
+            if (!Marketplace->MarketplaceName.IsEmpty())
+            {
+                MarketplaceNames.Add(Marketplace->MarketplaceName);
+            }
+            else
+            {
+                // Provide default name if none set
+                MarketplaceNames.Add(FText::FromString(TEXT("Unnamed Marketplace")));
+            }
+        }
+    }
+    
+    return MarketplaceNames;
+}
+
 TArray<ASpaceStationModule*> ASpaceStation::GetModulesByType(const FString& ModuleType) const
 {
     TArray<ASpaceStationModule*> MatchingModules;

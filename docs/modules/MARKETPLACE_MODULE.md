@@ -23,7 +23,7 @@ The Marketplace Module provides commercial trading facilities for buying, sellin
 
 ## Quick Start
 
-### Method 1: Add as Child Actor Component (Recommended)
+### Add as Child Actor Component
 
 1. Open your station Blueprint (`BP_SpaceStation`)
 2. Go to **Components** panel
@@ -34,13 +34,7 @@ The Marketplace Module provides commercial trading facilities for buying, sellin
 6. Position in viewport relative to your station
 7. Compile and save
 
-### Method 2: Add via DefaultModuleClasses Array
-
-1. Open your station Blueprint Class Defaults
-2. Find **Station → Configuration** section
-3. Add to **Default Module Classes** array:
-   - Entry: `BP_SpaceStationModule_Marketplace`
-4. Save and compile
+> **Note:** This is the recommended method as it provides visual feedback at design-time. You can see and position your marketplace module in the editor viewport.
 
 ---
 
@@ -182,6 +176,137 @@ Check if this marketplace is open and has a valid market configuration.
 
 ```
 Available = bIsOpen && (MarketDataAsset != nullptr)
+```
+
+---
+
+## Viewing Module Information in Station Blueprint
+
+**NEW**: When you add marketplace modules to a station, you can see their information directly in the station Blueprint!
+
+### Station-Level Functions
+
+The station Blueprint provides functions to query marketplace information:
+
+#### GetOpenMarketplaceCount()
+
+**Type**: BlueprintCallable, BlueprintPure  
+**Category**: Station|Trading  
+**Returns**: `int32` - Number of marketplaces currently open for trading
+
+Shows the count of marketplaces that are open and available for trading.
+
+**Example Usage:**
+```
+In BP_SpaceStation Class Defaults or Event Graph:
+  Get Open Marketplace Count → Print String
+  
+Output: "This station has 2 open marketplaces"
+```
+
+#### GetTotalMarketplaceCount()
+
+**Type**: BlueprintCallable, BlueprintPure  
+**Category**: Station|Trading  
+**Returns**: `int32` - Total number of marketplace modules
+
+Shows the total count of all marketplace modules (open or closed).
+
+**Example Usage:**
+```
+In BP_SpaceStation:
+  Get Total Marketplace Count → Print String
+  
+Output: "This station has 3 total marketplaces"
+```
+
+#### GetMarketplaceNames()
+
+**Type**: BlueprintCallable  
+**Category**: Station|Trading  
+**Returns**: `TArray<FText>` - Array of marketplace display names
+
+Gets the names of all marketplaces on the station. Useful for displaying a list of available markets in UI.
+
+**Example Usage:**
+```
+In BP_SpaceStation:
+  Get Marketplace Names → For Each Loop
+    → Print String (Loop Body)
+  
+Output: "Central Market", "Industrial Exchange", "Luxury Bazaar"
+```
+
+#### GetMarketplaceModule() / GetMarketplaceModules()
+
+**Type**: BlueprintCallable  
+**Category**: Station|Trading  
+**Returns**: Single marketplace or array of all marketplaces
+
+Access marketplace modules directly to query their properties.
+
+### How to View in Editor
+
+**Method 1: Event Graph (Design-Time Preview)**
+
+1. Open your station Blueprint (`BP_SpaceStation`)
+2. Go to **Event Graph**
+3. Add node: **Event Construction Script**
+4. Call **Get Open Marketplace Count**
+5. Connect to **Print String**
+6. When you add/remove marketplace modules in the Components panel, the print will update
+
+**Method 2: Custom Display Variables**
+
+Create display-only variables in your station Blueprint:
+
+```
+In BP_SpaceStation Class Defaults:
+
+1. Add variable: "OpenMarketplaceCountDisplay" (int32)
+2. Set to: VisibleAnywhere, BlueprintReadOnly
+3. Category: "Station Info"
+
+In Event Construction Script:
+  Get Open Marketplace Count → Set OpenMarketplaceCountDisplay
+```
+
+Now you'll see the count in the Details panel!
+
+### Example Blueprint Setup
+
+```
+Event Construction Script
+    ↓
+Get Open Marketplace Count (Self) → Set OpenMarketplaceCountDisplay
+    ↓
+Get Total Marketplace Count (Self) → Set TotalMarketplaceCountDisplay
+    ↓
+Get Marketplace Names (Self) → Array Length → Set MarketplaceNamesCountDisplay
+```
+
+Result in Details panel:
+```
+Station Info:
+  Open Marketplace Count Display: 2
+  Total Marketplace Count Display: 3
+  Marketplace Names Count Display: 3
+```
+
+**Combined Station Information:**
+
+You can combine docking bay and marketplace information:
+
+```
+Event Construction Script
+    ↓
+Branch: Has Docking Capability?
+    ├─ True: Get Total Docking Points → Set display variable
+    └─ False: Set display to 0
+    ↓
+Branch: Has Marketplace?
+    ├─ True: Get Open Marketplace Count → Set display variable
+    └─ False: Set display to 0
 ```
 
 ---
