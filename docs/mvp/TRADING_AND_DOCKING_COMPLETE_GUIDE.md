@@ -1,8 +1,8 @@
 # Trading and Docking System - Complete Guide
 
-**Last Updated**: 2026-01-16  
-**Version**: 1.0  
-**Status**: Unified Reference Guide
+**Last Updated**: 2026-01-18  
+**Version**: 1.1  
+**Status**: Unified Reference Guide (Enhanced with Visual Docking Setup)
 
 > **⭐ This is the UNIFIED guide** for all trading and docking functionality in Adastrea. All previous separate guides have been consolidated here.
 
@@ -28,6 +28,11 @@
 ### Part 3: Docking System
 12. [Docking Core Concepts](#docking-core-concepts)
 13. [Docking Setup](#docking-setup)
+    - [Visual Docking Setup Guide](#-visual-docking-setup-guide) **NEW** 📸
+    - [Part 1: Add Docking Bay to Space Station](#part-1-add-docking-bay-to-space-station)
+    - [Part 2: Configure Docking Bay Components](#part-2-configure-docking-bay-components)
+    - [Part 3: Link Scene Components to DockingPoints Array](#part-3-link-scene-components-to-dockingpoints-array)
+    - [Part 4: Configure Docking Point Properties](#part-4-configure-docking-point-properties-scene-components)
 14. [Docking Interaction](#docking-interaction)
 15. [Docking UI](#docking-ui)
 16. [Docking Points](#docking-points)
@@ -2432,12 +2437,19 @@ Icon: T_Icon_Ship_CompactTrader
 
 ---
 
-**Last Updated:** January 16, 2026  
-**Version:** 1.0 (Unified Complete Guide)  
+**Last Updated:** January 18, 2026  
+**Version:** 1.1 (Enhanced with Visual Docking Setup Guide)  
 **Status:** Ready for MVP Phase 1  
 **Maintained by:** Adastrea Development Team
 
 ---
 
 This guide consolidates all trading and docking documentation into a single authoritative reference. For specific implementation details, refer to the individual Blueprint guides listed in Related Documentation.
+
+**What's New in v1.1:**
+- ✨ Added comprehensive Visual Docking Setup Guide with step-by-step diagrams
+- 📸 Three new SVG Blueprint diagrams for docking configuration
+- 🎯 Detailed "Components You Can Add in Scene" reference table
+- 🔧 Enhanced troubleshooting section for visual setup issues
+- ✅ Complete testing checklist for docking verification
 
