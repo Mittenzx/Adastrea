@@ -956,6 +956,535 @@ def generate_dock_ship_flow():
     
     return svg
 
+def generate_docking_point_component_setup():
+    """Generate visual guide for adding Scene Components as docking points"""
+    svg = create_svg_base(1200, 800)
+    
+    # Title
+    title = ET.SubElement(svg, 'text', {
+        'x': '600', 'y': '30',
+        'fill': COLORS['text'], 'font-family': 'Arial, sans-serif',
+        'font-size': '20', 'font-weight': 'bold', 'text-anchor': 'middle'
+    })
+    title.text = 'Docking Bay Module - Scene Component Setup'
+    
+    # Subtitle
+    subtitle = ET.SubElement(svg, 'text', {
+        'x': '600', 'y': '55',
+        'fill': '#AAAAAA', 'font-family': 'Arial, sans-serif',
+        'font-size': '14', 'text-anchor': 'middle'
+    })
+    subtitle.text = 'Add Scene Components for docking points in the Components panel'
+    
+    # Component Hierarchy Box
+    hier_box = ET.SubElement(svg, 'rect', {
+        'x': '50', 'y': '80',
+        'width': '500', 'height': '650',
+        'fill': '#1A1A1A',
+        'stroke': '#555555',
+        'stroke-width': '2',
+        'rx': '5'
+    })
+    
+    # Header: Components Panel
+    ET.SubElement(svg, 'rect', {
+        'x': '50', 'y': '80',
+        'width': '500', 'height': '40',
+        'fill': '#2D2D2D',
+        'rx': '5'
+    })
+    
+    panel_title = ET.SubElement(svg, 'text', {
+        'x': '60', 'y': '106',
+        'fill': COLORS['text'], 'font-family': 'Arial, sans-serif',
+        'font-size': '16', 'font-weight': 'bold'
+    })
+    panel_title.text = '📋 Components Panel'
+    
+    # Component tree structure
+    components = [
+        ('BP_DockingBay (Self)', 140, '#5DADE2', 0),
+        ('├─ StaticMesh_DockingBay', 180, '#8E44AD', 20),
+        ('├─ InteractionTrigger (Sphere)', 220, '#FF8C00', 20),
+        ('│   └─ Radius: 1500.0', 260, '#AAAAAA', 40),
+        ('├─ DockingPoint_1 (Scene)', 310, '#00FF00', 20),
+        ('│   ├─ Location: (200, 0, 100)', 350, '#AAAAAA', 40),
+        ('│   └─ Rotation: (0, 0, 0)', 390, '#AAAAAA', 40),
+        ('├─ DockingPoint_2 (Scene)', 440, '#00FF00', 20),
+        ('│   ├─ Location: (200, 200, 100)', 480, '#AAAAAA', 40),
+        ('│   └─ Rotation: (0, 0, 0)', 520, '#AAAAAA', 40),
+        ('├─ DockingPoint_3 (Scene)', 570, '#00FF00', 20),
+        ('│   ├─ Location: (200, -200, 100)', 610, '#AAAAAA', 40),
+        ('│   └─ Rotation: (0, 0, 0)', 650, '#AAAAAA', 40),
+        ('└─ DockingPoint_4 (Scene)', 700, '#00FF00', 20)
+    ]
+    
+    for comp_name, y_pos, color, indent in components:
+        comp_text = ET.SubElement(svg, 'text', {
+            'x': str(70 + indent),
+            'y': str(y_pos),
+            'fill': color,
+            'font-family': 'Courier New, monospace',
+            'font-size': '13'
+        })
+        comp_text.text = comp_name
+    
+    # Properties panel for Scene Component
+    props_box = ET.SubElement(svg, 'rect', {
+        'x': '600', 'y': '80',
+        'width': '550', 'height': '650',
+        'fill': '#1A1A1A',
+        'stroke': '#555555',
+        'stroke-width': '2',
+        'rx': '5'
+    })
+    
+    # Header: Details Panel
+    ET.SubElement(svg, 'rect', {
+        'x': '600', 'y': '80',
+        'width': '550', 'height': '40',
+        'fill': '#2D2D2D',
+        'rx': '5'
+    })
+    
+    details_title = ET.SubElement(svg, 'text', {
+        'x': '610', 'y': '106',
+        'fill': COLORS['text'], 'font-family': 'Arial, sans-serif',
+        'font-size': '16', 'font-weight': 'bold'
+    })
+    details_title.text = '⚙️ Details: DockingPoint_1 (SceneComponent)'
+    
+    # Property sections
+    sections = [
+        ('Transform', 150, [
+            ('Location X: 200.0', 180),
+            ('Location Y: 0.0', 210),
+            ('Location Z: 100.0', 240),
+            ('Rotation X: 0.0', 280),
+            ('Rotation Y: 0.0', 310),
+            ('Rotation Z: 0.0', 340)
+        ]),
+        ('Sockets', 390, [
+            ('Parent Socket: None', 420)
+        ]),
+        ('Tags', 470, [
+            ('Component Tags: [DockingPoint]', 500)
+        ]),
+        ('Activation', 550, [
+            ('Auto Activate: True', 580),
+            ('Is Active: True', 610)
+        ])
+    ]
+    
+    for section_name, header_y, properties in sections:
+        # Section header
+        section_header = ET.SubElement(svg, 'text', {
+            'x': '620',
+            'y': str(header_y),
+            'fill': '#FFD700',
+            'font-family': 'Arial, sans-serif',
+            'font-size': '14',
+            'font-weight': 'bold'
+        })
+        section_header.text = f'▼ {section_name}'
+        
+        # Properties
+        for prop_text, prop_y in properties:
+            prop_elem = ET.SubElement(svg, 'text', {
+                'x': '640',
+                'y': str(prop_y),
+                'fill': COLORS['text'],
+                'font-family': 'Arial, sans-serif',
+                'font-size': '12'
+            })
+            prop_elem.text = prop_text
+    
+    # Instructions box at bottom
+    instr_box = ET.SubElement(svg, 'rect', {
+        'x': '50', 'y': '750',
+        'width': '1100', 'height': '35',
+        'fill': '#2D4A2D',
+        'stroke': '#4CAF50',
+        'stroke-width': '2',
+        'rx': '3'
+    })
+    
+    instr_text = ET.SubElement(svg, 'text', {
+        'x': '70',
+        'y': '773',
+        'fill': '#90EE90',
+        'font-family': 'Arial, sans-serif',
+        'font-size': '13',
+        'font-weight': 'bold'
+    })
+    instr_text.text = '💡 TIP: Add 4-6 Scene Components and space them 200-400 units apart for optimal docking'
+    
+    return svg
+
+def generate_docking_bay_array_setup():
+    """Generate visual guide for configuring DockingPoints array"""
+    svg = create_svg_base(1000, 650)
+    
+    # Title
+    title = ET.SubElement(svg, 'text', {
+        'x': '500', 'y': '30',
+        'fill': COLORS['text'], 'font-family': 'Arial, sans-serif',
+        'font-size': '20', 'font-weight': 'bold', 'text-anchor': 'middle'
+    })
+    title.text = 'Docking Bay - DockingPoints Array Configuration'
+    
+    # Step 1: Open Class Defaults
+    step1_y = 80
+    step1_box = ET.SubElement(svg, 'rect', {
+        'x': '50', 'y': str(step1_y),
+        'width': '900', 'height': '120',
+        'fill': '#1A1A1A',
+        'stroke': '#1B4F72',
+        'stroke-width': '3',
+        'rx': '5'
+    })
+    
+    step1_title = ET.SubElement(svg, 'text', {
+        'x': '70', 'y': str(step1_y + 30),
+        'fill': '#5DADE2',
+        'font-family': 'Arial, sans-serif',
+        'font-size': '16',
+        'font-weight': 'bold'
+    })
+    step1_title.text = 'STEP 1: Open Class Defaults'
+    
+    step1_desc = ET.SubElement(svg, 'text', {
+        'x': '70', 'y': str(step1_y + 60),
+        'fill': COLORS['text'],
+        'font-family': 'Arial, sans-serif',
+        'font-size': '13'
+    })
+    step1_desc.text = 'In BP_DockingBay Blueprint editor, click "Class Defaults" button in toolbar'
+    
+    step1_img = ET.SubElement(svg, 'rect', {
+        'x': '70', 'y': str(step1_y + 75),
+        'width': '200', 'height': '30',
+        'fill': '#2D2D2D',
+        'stroke': '#555555',
+        'stroke-width': '1',
+        'rx': '3'
+    })
+    
+    step1_button = ET.SubElement(svg, 'text', {
+        'x': '170', 'y': str(step1_y + 95),
+        'fill': COLORS['text'],
+        'font-family': 'Arial, sans-serif',
+        'font-size': '12',
+        'text-anchor': 'middle'
+    })
+    step1_button.text = '📋 Class Defaults'
+    
+    # Step 2: Find DockingPoints Array
+    step2_y = 230
+    step2_box = ET.SubElement(svg, 'rect', {
+        'x': '50', 'y': str(step2_y),
+        'width': '900', 'height': '370',
+        'fill': '#1A1A1A',
+        'stroke': '#1B4F72',
+        'stroke-width': '3',
+        'rx': '5'
+    })
+    
+    step2_title = ET.SubElement(svg, 'text', {
+        'x': '70', 'y': str(step2_y + 30),
+        'fill': '#5DADE2',
+        'font-family': 'Arial, sans-serif',
+        'font-size': '16',
+        'font-weight': 'bold'
+    })
+    step2_title.text = 'STEP 2: Configure DockingPoints Array'
+    
+    step2_desc = ET.SubElement(svg, 'text', {
+        'x': '70', 'y': str(step2_y + 60),
+        'fill': COLORS['text'],
+        'font-family': 'Arial, sans-serif',
+        'font-size': '13'
+    })
+    step2_desc.text = 'Find "Docking Points" array in Details panel and add references to Scene Components'
+    
+    # Array visualization
+    array_y = step2_y + 90
+    
+    # Array header
+    array_header = ET.SubElement(svg, 'rect', {
+        'x': '100', 'y': str(array_y),
+        'width': '800', 'height': '35',
+        'fill': '#2D2D2D',
+        'stroke': '#FFD700',
+        'stroke-width': '2',
+        'rx': '3'
+    })
+    
+    array_title_text = ET.SubElement(svg, 'text', {
+        'x': '120', 'y': str(array_y + 23),
+        'fill': '#FFD700',
+        'font-family': 'Arial, sans-serif',
+        'font-size': '14',
+        'font-weight': 'bold'
+    })
+    array_title_text.text = '▼ Docking Points [4]'
+    
+    # Array elements
+    array_elements = [
+        ('[0] DockingPoint_1', array_y + 50, '#00FF00'),
+        ('[1] DockingPoint_2', array_y + 90, '#00FF00'),
+        ('[2] DockingPoint_3', array_y + 130, '#00FF00'),
+        ('[3] DockingPoint_4', array_y + 170, '#00FF00')
+    ]
+    
+    for elem_text, elem_y, elem_color in array_elements:
+        elem_box = ET.SubElement(svg, 'rect', {
+            'x': '150', 'y': str(elem_y),
+            'width': '700', 'height': '30',
+            'fill': '#1E1E1E',
+            'stroke': '#555555',
+            'stroke-width': '1',
+            'rx': '3'
+        })
+        
+        elem_label = ET.SubElement(svg, 'text', {
+            'x': '170', 'y': str(elem_y + 20),
+            'fill': elem_color,
+            'font-family': 'Courier New, monospace',
+            'font-size': '12'
+        })
+        elem_label.text = elem_text
+    
+    # Add Element button
+    add_btn_y = array_y + 220
+    add_btn = ET.SubElement(svg, 'rect', {
+        'x': '150', 'y': str(add_btn_y),
+        'width': '150', 'height': '30',
+        'fill': '#2D4A2D',
+        'stroke': '#4CAF50',
+        'stroke-width': '2',
+        'rx': '3'
+    })
+    
+    add_btn_text = ET.SubElement(svg, 'text', {
+        'x': '225', 'y': str(add_btn_y + 20),
+        'fill': '#90EE90',
+        'font-family': 'Arial, sans-serif',
+        'font-size': '12',
+        'text-anchor': 'middle',
+        'font-weight': 'bold'
+    })
+    add_btn_text.text = '+ Add Element'
+    
+    return svg
+
+def generate_station_docking_module_config():
+    """Generate visual guide for adding DockingBay to station"""
+    svg = create_svg_base(1100, 750)
+    
+    # Title
+    title = ET.SubElement(svg, 'text', {
+        'x': '550', 'y': '30',
+        'fill': COLORS['text'], 'font-family': 'Arial, sans-serif',
+        'font-size': '20', 'font-weight': 'bold', 'text-anchor': 'middle'
+    })
+    title.text = 'Space Station - Add Docking Bay Module'
+    
+    # Description
+    desc = ET.SubElement(svg, 'text', {
+        'x': '550', 'y': '55',
+        'fill': '#AAAAAA',
+        'font-family': 'Arial, sans-serif',
+        'font-size': '14',
+        'text-anchor': 'middle'
+    })
+    desc.text = 'Configure DefaultModuleClasses to automatically spawn docking capability'
+    
+    # Main panel
+    panel_box = ET.SubElement(svg, 'rect', {
+        'x': '50', 'y': '80',
+        'width': '1000', 'height': '620',
+        'fill': '#1A1A1A',
+        'stroke': '#555555',
+        'stroke-width': '2',
+        'rx': '5'
+    })
+    
+    # Panel header
+    ET.SubElement(svg, 'rect', {
+        'x': '50', 'y': '80',
+        'width': '1000', 'height': '40',
+        'fill': '#2D2D2D',
+        'rx': '5'
+    })
+    
+    panel_title = ET.SubElement(svg, 'text', {
+        'x': '70', 'y': '106',
+        'fill': COLORS['text'],
+        'font-family': 'Arial, sans-serif',
+        'font-size': '16',
+        'font-weight': 'bold'
+    })
+    panel_title.text = '⚙️ BP_SpaceStation - Class Defaults'
+    
+    # Section 1: Station Configuration
+    section1_y = 150
+    section1_header = ET.SubElement(svg, 'text', {
+        'x': '80',
+        'y': str(section1_y),
+        'fill': '#FFD700',
+        'font-family': 'Arial, sans-serif',
+        'font-size': '15',
+        'font-weight': 'bold'
+    })
+    section1_header.text = '▼ Station → Configuration'
+    
+    # Station properties
+    station_props = [
+        ('Station Name: "Trading Hub Alpha"', section1_y + 40),
+        ('Max Structural Integrity: 10000.0', section1_y + 70),
+        ('Current Structural Integrity: 10000.0', section1_y + 100)
+    ]
+    
+    for prop_text, prop_y in station_props:
+        prop_elem = ET.SubElement(svg, 'text', {
+            'x': '120',
+            'y': str(prop_y),
+            'fill': COLORS['text'],
+            'font-family': 'Arial, sans-serif',
+            'font-size': '13'
+        })
+        prop_elem.text = prop_text
+    
+    # Section 2: DefaultModuleClasses Array
+    section2_y = 300
+    section2_header = ET.SubElement(svg, 'rect', {
+        'x': '80',
+        'y': str(section2_y),
+        'width': '900',
+        'height': '35',
+        'fill': '#2D2D2D',
+        'stroke': '#FFD700',
+        'stroke-width': '2',
+        'rx': '3'
+    })
+    
+    section2_title = ET.SubElement(svg, 'text', {
+        'x': '100',
+        'y': str(section2_y + 23),
+        'fill': '#FFD700',
+        'font-family': 'Arial, sans-serif',
+        'font-size': '15',
+        'font-weight': 'bold'
+    })
+    section2_title.text = '▼ Default Module Classes [3]'
+    
+    # Array elements
+    modules = [
+        ('[0] BP_SpaceStationModule_DockingBay', section2_y + 60, '#00FF00', '✓ Required for docking'),
+        ('[1] BP_SpaceStationModule_Marketplace', section2_y + 100, '#00FF00', '✓ Required for trading'),
+        ('[2] BP_CargoBayModule', section2_y + 140, '#5DADE2', '○ Optional storage')
+    ]
+    
+    for module_text, module_y, module_color, note_text in modules:
+        # Module box
+        module_box = ET.SubElement(svg, 'rect', {
+            'x': '120',
+            'y': str(module_y),
+            'width': '500',
+            'height': '30',
+            'fill': '#1E1E1E',
+            'stroke': '#555555',
+            'stroke-width': '1',
+            'rx': '3'
+        })
+        
+        # Module text
+        module_label = ET.SubElement(svg, 'text', {
+            'x': '140',
+            'y': str(module_y + 20),
+            'fill': module_color,
+            'font-family': 'Courier New, monospace',
+            'font-size': '12'
+        })
+        module_label.text = module_text
+        
+        # Note text
+        note_label = ET.SubElement(svg, 'text', {
+            'x': '650',
+            'y': str(module_y + 20),
+            'fill': '#AAAAAA',
+            'font-family': 'Arial, sans-serif',
+            'font-size': '11',
+            'font-style': 'italic'
+        })
+        note_label.text = note_text
+    
+    # Add Element button
+    add_btn_y = section2_y + 190
+    add_btn = ET.SubElement(svg, 'rect', {
+        'x': '120',
+        'y': str(add_btn_y),
+        'width': '150',
+        'height': '30',
+        'fill': '#2D4A2D',
+        'stroke': '#4CAF50',
+        'stroke-width': '2',
+        'rx': '3'
+    })
+    
+    add_btn_text = ET.SubElement(svg, 'text', {
+        'x': '195',
+        'y': str(add_btn_y + 20),
+        'fill': '#90EE90',
+        'font-family': 'Arial, sans-serif',
+        'font-size': '12',
+        'text-anchor': 'middle',
+        'font-weight': 'bold'
+    })
+    add_btn_text.text = '+ Add Element'
+    
+    # Information box
+    info_y = 550
+    info_box = ET.SubElement(svg, 'rect', {
+        'x': '80',
+        'y': str(info_y),
+        'width': '900',
+        'height': '120',
+        'fill': '#1A2A4A',
+        'stroke': '#5DADE2',
+        'stroke-width': '2',
+        'rx': '5'
+    })
+    
+    info_icon = ET.SubElement(svg, 'text', {
+        'x': '100',
+        'y': str(info_y + 35),
+        'fill': '#5DADE2',
+        'font-family': 'Arial, sans-serif',
+        'font-size': '24'
+    })
+    info_icon.text = 'ℹ️'
+    
+    info_lines = [
+        'How it works:',
+        '  • Station\'s BeginPlay() spawns all modules from this array',
+        '  • Modules automatically attach to station as child actors',
+        '  • Each module type provides specific functionality (docking, trading, storage)'
+    ]
+    
+    for i, line in enumerate(info_lines):
+        info_text = ET.SubElement(svg, 'text', {
+            'x': '140',
+            'y': str(info_y + 30 + (i * 25)),
+            'fill': COLORS['text'],
+            'font-family': 'Arial, sans-serif',
+            'font-size': '12'
+        })
+        info_text.text = line
+    
+    return svg
+
 def generate_undock_ship_flow():
     """Generate Undock Ship function flow"""
     svg = create_svg_base(950, 550)
@@ -1078,7 +1607,12 @@ def main():
     save_svg(generate_dock_ship_flow(), f'{output_dir}/dock_ship_flow.svg')
     save_svg(generate_undock_ship_flow(), f'{output_dir}/undock_ship_flow.svg')
     
-    print(f"\nGenerated 16 Blueprint node diagrams in {output_dir}/")
+    # Generate docking setup visual guides (NEW)
+    save_svg(generate_docking_point_component_setup(), f'{output_dir}/docking_point_component_setup.svg')
+    save_svg(generate_docking_bay_array_setup(), f'{output_dir}/docking_bay_array_setup.svg')
+    save_svg(generate_station_docking_module_config(), f'{output_dir}/station_docking_module_config.svg')
+    
+    print(f"\nGenerated 19 Blueprint node diagrams in {output_dir}/")
     print("\nTrading UI diagrams:")
     print("  - buy_sell_toggle.svg: Buy/Sell mode toggle flow")
     print("  - add_to_cart_flow.svg: Add item to cart validation")
@@ -1093,6 +1627,10 @@ def main():
     print("  - docking_range_overlap.svg: Docking range overlap detection flow")
     print("  - dock_ship_flow.svg: Dock ship function flow")
     print("  - undock_ship_flow.svg: Undock ship function flow")
+    print("\nDocking setup visual guides (NEW):")
+    print("  - docking_point_component_setup.svg: Scene Component hierarchy and configuration")
+    print("  - docking_bay_array_setup.svg: DockingPoints array setup in Class Defaults")
+    print("  - station_docking_module_config.svg: Adding DockingBay to station modules")
 
 if __name__ == '__main__':
     main()

@@ -781,6 +781,8 @@ Function: CanExecuteTrade
 
 ### Docking Setup
 
+> **📸 This section includes visual diagrams** to make docking setup crystal clear. Follow the step-by-step visual guides below.
+
 #### Prerequisites
 
 **Required:**
@@ -790,33 +792,338 @@ Function: CanExecuteTrade
 - [ ] Station with `ADockingBayModule`
 - [ ] Docking curve asset (float curve 0→1, 3 seconds)
 
-#### Station Configuration
+---
 
-**Step 1: Add Docking Bay Module**
-1. Open `BP_SpaceStation` Class Defaults
-2. Find `DefaultModuleClasses` array
-3. Add `BP_SpaceStationModule_DockingBay`
-4. Configure docking points (4-6 Scene Components)
+### 🎯 Visual Docking Setup Guide
 
-**Step 2: Configure Docking Points**
+This comprehensive guide walks you through setting up docking with **visual diagrams** showing exactly what to configure.
+
+---
+
+#### Part 1: Add Docking Bay to Space Station
+
+**Goal**: Configure your space station to spawn with docking capability.
+
+![Station Docking Module Configuration](../reference/images/blueprints/station_docking_module_config.svg)
+
+**Step-by-Step Instructions**:
+
+1. **Open Your Station Blueprint**
+   - Navigate to `Content/Blueprints/Stations/`
+   - Open `BP_SpaceStation` (or your custom station Blueprint)
+
+2. **Click "Class Defaults" Button**
+   - In the Blueprint editor toolbar, click the "Class Defaults" button
+   - This opens the Details panel with default values for all instances
+
+3. **Find Station Configuration Section**
+   - In the Details panel, scroll to "Station → Configuration"
+   - Configure basic station properties:
+     - **Station Name**: "Your Station Name"
+     - **Max Structural Integrity**: 10000.0
+     - **Current Structural Integrity**: 10000.0
+
+4. **Configure DefaultModuleClasses Array**
+   - Find the "Default Module Classes" array property
+   - Click the **+ Add Element** button to add new entries
+   - Add these module classes in order:
+     ```
+     [0] BP_SpaceStationModule_DockingBay   ✓ Required for docking
+     [1] BP_SpaceStationModule_Marketplace   ✓ Required for trading
+     [2] BP_CargoBayModule                   ○ Optional storage
+     ```
+
+5. **How It Works**
+   - When the station spawns, `BeginPlay()` automatically creates all modules from this array
+   - Each module attaches to the station as a child actor
+   - Modules provide their specific functionality (docking, trading, etc.)
+
+6. **Compile and Save**
+   - Click the "Compile" button in the toolbar
+   - Click "Save" to persist your changes
+
+---
+
+#### Part 2: Configure Docking Bay Components
+
+**Goal**: Add Scene Components to define where ships can dock.
+
+![Docking Point Component Setup](../reference/images/blueprints/docking_point_component_setup.svg)
+
+**Step-by-Step Instructions**:
+
+1. **Open Docking Bay Blueprint**
+   - Navigate to `Content/Blueprints/Stations/Modules/`
+   - Open `BP_SpaceStationModule_DockingBay`
+
+2. **Switch to Components Panel**
+   - In the Blueprint editor, ensure the "Components" tab is visible (usually on the left)
+   - This shows the hierarchy of all components in the Blueprint
+
+3. **Add Scene Components for Docking Points**
+   
+   For each docking point (recommended: 4-6 points):
+   
+   a. **Add New Scene Component**:
+      - Click the "+ Add" button in Components panel
+      - Search for "Scene Component"
+      - Select it to add a new Scene Component
+   
+   b. **Rename the Component**:
+      - Right-click the new component
+      - Select "Rename"
+      - Name it: `DockingPoint_1` (then `_2`, `_3`, etc.)
+   
+   c. **Configure Transform** (in Details panel):
+      - **Location**: Position where ship should dock
+        - DockingPoint_1: X=200, Y=0, Z=100
+        - DockingPoint_2: X=200, Y=200, Z=100
+        - DockingPoint_3: X=200, Y=-200, Z=100
+        - DockingPoint_4: X=400, Y=0, Z=100
+      - **Rotation**: Usually (0, 0, 0) for standard orientation
+      - **Scale**: (1, 1, 1) - don't change this
+   
+   d. **Add Component Tag** (optional but recommended):
+      - In Details panel, find "Tags → Component Tags"
+      - Add tag: `DockingPoint`
+      - This helps identify docking points programmatically
+
+4. **Add Interaction Trigger (Sphere Component)**
+   
+   This sphere detects when ships enter docking range:
+   
+   a. **Add Sphere Component**:
+      - Click "+ Add" button
+      - Search for "Sphere Component"
+      - Add it to the hierarchy
+   
+   b. **Rename**: `InteractionTrigger`
+   
+   c. **Configure Collision**:
+      - **Sphere Radius**: 1500.0 (detection range in units)
+      - **Collision Preset**: "Overlap All Dynamic"
+      - **Generate Overlap Events**: ✓ Enabled
+   
+   d. **Visual Settings**:
+      - **Hidden in Game**: ✓ Enabled (invisible during gameplay)
+      - **Visible**: ✓ Enabled in editor for debugging
+
+5. **Visual Layout Tips**
+   - Space docking points **200-400 units apart**
+   - Ensure **clear approach paths** (no collision geometry blocking)
+   - Consider **visual symmetry** for aesthetic appeal
+   - Use editor viewport to verify positions look correct
+
+6. **Component Hierarchy Should Look Like**:
+   ```
+   BP_DockingBay (Self)
+   ├─ StaticMesh_DockingBay
+   ├─ InteractionTrigger (Sphere)
+   ├─ DockingPoint_1 (Scene)
+   ├─ DockingPoint_2 (Scene)
+   ├─ DockingPoint_3 (Scene)
+   └─ DockingPoint_4 (Scene)
+   ```
+
+7. **Compile and Save**
+
+---
+
+#### Part 3: Link Scene Components to DockingPoints Array
+
+**Goal**: Tell the docking system which Scene Components to use as docking points.
+
+![Docking Bay Array Setup](../reference/images/blueprints/docking_bay_array_setup.svg)
+
+**Step-by-Step Instructions**:
+
+1. **Stay in BP_DockingBay Blueprint**
+   - If you closed it, reopen `BP_SpaceStationModule_DockingBay`
+
+2. **Open Class Defaults**
+   - Click the "Class Defaults" button in the toolbar
+   - Details panel shows default property values
+
+3. **Find DockingPoints Array**
+   - In Details panel, search for "Docking Points"
+   - You should see: `▼ Docking Points [0]` (empty array)
+
+4. **Add Scene Component References**
+   
+   For each docking point Scene Component you created:
+   
+   a. **Click "+ Add Element" Button**
+      - This creates a new array slot
+   
+   b. **Select the Scene Component**:
+      - Click the dropdown for the new array element
+      - You'll see a list of all Scene Components in the Blueprint
+      - Select `DockingPoint_1` (or whichever you're adding)
+   
+   c. **Repeat for All Docking Points**:
+      - Add element → Select DockingPoint_2
+      - Add element → Select DockingPoint_3
+      - Add element → Select DockingPoint_4
+      - Continue for all your docking points
+
+5. **Final Array Should Look Like**:
+   ```
+   ▼ Docking Points [4]
+      [0] DockingPoint_1
+      [1] DockingPoint_2
+      [2] DockingPoint_3
+      [3] DockingPoint_4
+   ```
+
+6. **Configure Additional Properties**:
+   - **Max Docked Ships**: Should equal number of docking points (e.g., 4)
+   - **Module Power**: 50.0 (power consumption)
+   - **Module Type**: "Docking Bay" (should be set automatically)
+
+7. **Compile and Save**
+
+**⚠️ Common Mistake**: Forgetting to populate the DockingPoints array! The C++ code iterates this array to find available docking spots. If it's empty, ships can't dock.
+
+---
+
+#### Part 4: Configure Docking Point Properties (Scene Components)
+
+**What You Can Configure**: Each Scene Component in the Components panel has properties you can adjust.
+
+**Components You Can Add to the Scene**:
+
+| Component Type | Purpose | Key Properties |
+|----------------|---------|----------------|
+| **Scene Component** | Docking point marker (no visual) | Location, Rotation |
+| **Static Mesh Component** | Visual docking arm/marker | Mesh, Material, Location |
+| **Point Light Component** | Docking indicator light | Color, Intensity, Radius |
+| **Particle System Component** | Docking FX (sparks, etc.) | Template, Auto Activate |
+| **Audio Component** | Docking sound | Sound, Auto Activate |
+| **Arrow Component** | Direction indicator (editor only) | Arrow Color, Arrow Size |
+| **Billboard Component** | Icon in editor | Sprite, Scale |
+
+**Example: Adding Visual Feedback**
+
+1. **Add Static Mesh for Docking Arm**:
+   - Add Component → Static Mesh Component
+   - Name: `DockingArm_1`
+   - Attach to: `DockingPoint_1`
+   - Set Mesh: `SM_DockingArm` (your mesh)
+   - Set Material: `M_DockingArm_Inactive`
+
+2. **Add Light for Docking Indicator**:
+   - Add Component → Point Light Component
+   - Name: `DockingLight_1`
+   - Attach to: `DockingPoint_1`
+   - Light Color: Green (when available), Red (when occupied)
+   - Intensity: 5000.0
+   - Attenuation Radius: 200.0
+
+3. **Add Particle Effect for Magnetic Lock**:
+   - Add Component → Particle System Component
+   - Name: `DockingFX_1`
+   - Attach to: `DockingPoint_1`
+   - Template: `P_DockingMagneticLock`
+   - Auto Activate: False (activate in Blueprint when ship docks)
+
+**Scene Component Transform Properties**:
+
+| Property | Description | Example Values |
+|----------|-------------|----------------|
+| **Location** | World position of docking point | (200, 0, 100) |
+| **Rotation** | Ship orientation when docked | (0, 0, 0) = forward-facing |
+| **Scale** | Size multiplier | (1, 1, 1) = normal size |
+| **Mobility** | Can it move at runtime? | Static (no), Movable (yes) |
+| **Visible** | Show in game? | False for markers, True for visuals |
+| **Hidden in Game** | Hide during gameplay? | True for debug components |
+
+**Docking Point Positioning Guidelines**:
+
+- **Spacing**: 200-400 units apart minimum
+- **Height**: Usually same Z value for consistency
+- **Clearance**: Ensure 100+ unit radius around each point
+- **Symmetry**: Mirror points for visual appeal
+- **Access**: Face points toward station entrance
+
+**Example Configurations**:
+
+**Small Station (2 docking points)**:
 ```
-BP_DockingBay Components:
-├─ DockingPoint_1 (Scene Component)
-│  └─ Location: (200, 0, 100)
-├─ DockingPoint_2 (Scene Component)
-│  └─ Location: (200, 200, 100)
-├─ DockingPoint_3 (Scene Component)
-│  └─ Location: (200, -200, 100)
-├─ DockingPoint_4 (Scene Component)
-│  └─ Location: (400, 0, 100)
-└─ InteractionTrigger (Sphere Component)
-   └─ Sphere Radius: 1500.0 (15 meters)
+DockingPoint_1: (300, 0, 50)
+DockingPoint_2: (300, 0, -50)
 ```
 
-**Step 3: Configure DockingPoints Array**
-1. Open BP_DockingBay Class Defaults
-2. Find `DockingPoints` array
-3. Add references to all DockingPoint Scene Components
+**Medium Station (4 docking points)**:
+```
+DockingPoint_1: (200, 200, 100)
+DockingPoint_2: (200, -200, 100)
+DockingPoint_3: (400, 200, 100)
+DockingPoint_4: (400, -200, 100)
+```
+
+**Large Station (6 docking points)**:
+```
+DockingPoint_1: (200, 0, 150)
+DockingPoint_2: (200, 300, 0)
+DockingPoint_3: (200, -300, 0)
+DockingPoint_4: (400, 0, 150)
+DockingPoint_5: (400, 300, 0)
+DockingPoint_6: (400, -300, 0)
+```
+
+---
+
+#### Station Configuration Summary
+
+After following all steps, your station setup should have:
+
+**✅ Checklist**:
+- [ ] BP_SpaceStation has DockingBay in DefaultModuleClasses array
+- [ ] BP_DockingBay has 4-6 Scene Components as docking points
+- [ ] Each Scene Component is properly positioned (200-400 units apart)
+- [ ] DockingPoints array is populated with Scene Component references
+- [ ] InteractionTrigger sphere has radius of 1500.0
+- [ ] InteractionTrigger has collision set to "Overlap All Dynamic"
+- [ ] InteractionTrigger has "Generate Overlap Events" enabled
+- [ ] All Blueprints compiled and saved without errors
+
+**🎮 Testing Your Setup**:
+
+1. **Place Station in Level**:
+   - Drag BP_SpaceStation into your test level
+   - Position it away from player start location
+
+2. **Play in Editor (PIE)**:
+   - Press "Play" button
+   - Fly player ship toward station
+
+3. **Verify Docking Range Detection**:
+   - At ~1500 units from station, docking prompt should appear
+   - Prompt should show: "Press F to Dock at [Station Name]"
+
+4. **Test Docking**:
+   - Press F key
+   - Ship should smoothly move to nearest docking point (3 seconds)
+   - Trading UI should open automatically
+
+5. **Test Undocking**:
+   - Click "Undock" button in trading UI
+   - Ship should detach and move slightly away
+   - Flight controls should be restored
+
+**❌ Troubleshooting Visual Setup**:
+
+| Issue | Likely Cause | Solution |
+|-------|--------------|----------|
+| No docking prompt appears | InteractionTrigger not set up | Verify sphere collision settings |
+| Ship doesn't move to point | DockingPoints array empty | Populate array with Scene Component refs |
+| Ship docks at wrong location | Scene Component position wrong | Adjust transform in Details panel |
+| Multiple ships use same point | DockingPoints array has duplicates | Ensure each array entry is unique |
+| Ship falls through station | Docking point inside collision | Move docking point outside station mesh |
+
+---
+
+#### Original Text-Based Instructions (Reference)
 
 #### Player Ship Configuration
 
