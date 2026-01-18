@@ -165,19 +165,11 @@ Best for visual design and positioning control.
 - ✅ Visual positioning control
 - ✅ See module layout before playing
 
-### Method 2: DefaultModuleClasses Array
+### Module Configuration Workflow
 
-Best for runtime spawning and templates.
+Space station modules are configured using a single, component-based placement workflow in the station Blueprint.
 
-1. Open station Blueprint **Class Defaults**
-2. Find **Default Module Classes** array
-3. Add module Blueprint classes
-4. Modules spawn automatically at BeginPlay
-
-**Advantages:**
-- ✅ Easy template configuration
-- ✅ Modules spawn at runtime
-- ✅ Good for procedural stations
+Designers place and configure modules directly in the station Blueprint using Child Actor Components for visual, design-time editing.
 
 **See**: [Module Configuration Guide](../reference/SPACESTATION_MODULE_CONFIG_GUIDE.md)
 

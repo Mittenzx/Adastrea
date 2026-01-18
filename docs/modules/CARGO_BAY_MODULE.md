@@ -230,7 +230,7 @@ Get the functional group this module belongs to.
 - [ ] Cargo Bay Blueprint created or exists
 - [ ] Visual components added (mesh, lights, optional)
 - [ ] Module properties configured (type, power, group)
-- [ ] Added to station (Child Actor or DefaultModuleClasses)
+- [ ] Added to station (Child Actor Component)
 - [ ] All Blueprints compiled and saved
 
 ### In-Game Testing
@@ -279,7 +279,7 @@ Get the functional group this module belongs to.
 
 **Likely Cause**: Not added to station properly  
 **Solution**:
-- Verify added as Child Actor Component OR in DefaultModuleClasses
+- Verify added as Child Actor Component
 - Check station's Modules array in Details (runtime)
 - Ensure cargo bay Blueprint is valid
 - Recompile station Blueprint

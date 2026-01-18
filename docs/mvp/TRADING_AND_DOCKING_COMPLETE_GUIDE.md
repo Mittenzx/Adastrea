@@ -150,7 +150,7 @@ ASpaceStation (Base Station Actor)
 **Key Components**:
 
 1. **ASpaceStation** - Main station actor
-   - Modules can be added via Child Actor Components (design-time) OR `DefaultModuleClasses` array (runtime)
+   - Modules are added via Child Actor Components (design-time)
    - Automatically discovers editor-placed modules in BeginPlay
    - Provides query functions: `HasMarketplace()`, `GetMarketplaceModule()`
    - Manages power, integrity, and module lifecycle
@@ -1065,7 +1065,7 @@ DockingPoint_6: (400, -300, 0)
 After following all steps, your station setup should have:
 
 **✅ Checklist**:
-- [ ] BP_SpaceStation has DockingBay module (via Child Actor Component OR DefaultModuleClasses array)
+- [ ] BP_SpaceStation has DockingBay module (via Child Actor Component)
 - [ ] BP_DockingBay has 4-6 Scene Components as docking points
 - [ ] Each Scene Component is properly positioned (200-400 units apart)
 - [ ] DockingPoints array is populated with Scene Component references
@@ -1414,8 +1414,6 @@ DefaultSceneRoot
    - MaxStructuralIntegrity: 10000.0
    - CurrentStructuralIntegrity: 10000.0
 
-> **Alternative Method:** You can also add modules using the `DefaultModuleClasses` array, which spawns modules at runtime. However, using Child Actor Components (as shown in Step 2) is recommended because you can see and position modules visually in the editor.
-
 #### Step 4: Create Market Data Asset
 
 1. Content Browser → Data Asset → MarketDataAsset
@@ -1562,7 +1560,7 @@ The docking system is **C++-driven** with Blueprint configuration. The implement
 #### Implementation Checklist
 
 **Station Side:**
-- [ ] Station has DockingBayModule in DefaultModuleClasses
+- [ ] Station has DockingBayModule (via Child Actor Component)
 - [ ] Docking bay has 4-6 docking points configured
 - [ ] InteractionTrigger sphere collision set up (radius 1500)
 - [ ] Overlap events bound to SetNearbyStation/ClearNearbyStation
@@ -2408,7 +2406,7 @@ Icon: T_Icon_Ship_CompactTrader
 5. Implement OnDockPressed → RequestDocking/Undock
 
 **Station Setup:**
-1. Add BP_SpaceStationModule_DockingBay to DefaultModuleClasses
+1. Add BP_SpaceStationModule_DockingBay as Child Actor Component
 2. Configure 4-6 docking points (Scene Components)
 3. Add InteractionTrigger (Sphere, radius 1500)
 4. Bind overlap events

@@ -400,7 +400,7 @@ DockingPoint_6: (400, -300, 0)
 
 ### Pre-Test Setup
 
-- [ ] Docking Bay added to station (Child Actor Component or DefaultModuleClasses)
+- [ ] Docking Bay added to station (Child Actor Component)
 - [ ] 4-6 Scene Components created as docking points
 - [ ] Each Scene Component positioned (200-400 units apart)
 - [ ] DockingPoints array populated with Scene Component references
