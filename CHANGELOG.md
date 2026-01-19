@@ -7,6 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed - 2026-01-19
+
+#### Docking Point Array Population (Issue: "docking bay module")
+
+**Problem**: The `DockingPoints` array in `DockingBayModule` and `DockingPortModule` could not be populated in Class Defaults with existing Scene Components. Unreal Engine's editor only allows creating new components when using `TArray<USceneComponent*>` with `EditAnywhere`, not selecting existing ones - an engine-level limitation.
+
+**Solution**: Implemented automatic tag-based component discovery at runtime.
+
+**Changes**:
+- **C++ Implementation**:
+  - Added `BeginPlay()` override to `DockingBayModule` and `DockingPortModule`
+  - Added `PopulateDockingPointsFromTags()` function using `GetComponentsByTag()`
+  - Changed `DockingPoints` UPROPERTY from `EditAnywhere` to `VisibleAnywhere`
+  - Added debug messages for troubleshooting (via DOCKING_DEBUG_ENABLED)
+  - Added validation warnings for missing/insufficient tagged components
+
+- **New Workflow**:
+  1. Add Scene Component to Blueprint
+  2. Tag it with "DockingPoint" in component's Tags array
+  3. Position the component
+  4. Done! Array auto-populates at BeginPlay
+
+- **Documentation Updates**:
+  - Updated `docs/modules/DOCKING_BAY_MODULE.md` with new workflow
+  - Updated `docs/mvp/TRADING_AND_DOCKING_COMPLETE_GUIDE.md`
+  - Created `docs/reference/images/blueprints/docking_point_tag_workflow.svg` (visual comparison)
+  - Created `docs/reference/DOCKING_POINT_MIGRATION_GUIDE.md`
+
+**Benefits**:
+- Eliminates confusing UI limitation
+- Simpler designer workflow (no manual array population)
+- Automatic validation with clear error messages
+- Backward compatible (add tags to existing components)
+
+**Migration**: Existing users need to add "DockingPoint" tag to Scene Components. See `docs/reference/DOCKING_POINT_MIGRATION_GUIDE.md`.
+
+---
+
 ### Added - 2026-01-17
 
 #### Trade Simulator MVP: Complete Development Infrastructure (60-Minute Session)
