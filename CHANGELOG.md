@@ -9,6 +9,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed - 2026-01-19
 
+#### GetComponentsByTag API Compatibility (UE 5.6)
+
+**Problem**: Compilation fails with error `'AActor::GetComponentsByTag': function does not take 3 arguments` in DockingBayModule and DockingPortModule.
+
+**Root Cause**: Unreal Engine 5.6 changed `GetComponentsByTag()` signature from accepting 3 parameters (with out parameter) to returning a `TArray<UActorComponent*>` with only 2 parameters.
+
+**Solution**: Updated API usage to match UE 5.6 signature.
+
+**Changes**:
+- Updated `DockingBayModule.cpp` line 33 to use return value instead of out parameter
+- Updated `DockingPortModule.cpp` line 33 to use return value instead of out parameter
+- Updated documentation example in `DOCKING_POINT_MIGRATION_GUIDE.md`
+
+**Code Change**:
+```cpp
+// Old (UE 5.5 and earlier):
+TArray<UActorComponent*> TaggedComponents;
+GetComponentsByTag(USceneComponent::StaticClass(), FName("DockingPoint"), TaggedComponents);
+
+// New (UE 5.6+):
+TArray<UActorComponent*> TaggedComponents = GetComponentsByTag(USceneComponent::StaticClass(), FName("DockingPoint"));
+```
+
+**Impact**: No functional changes, only API compatibility fix for UE 5.6 compilation.
+
+---
+
 #### Docking Point Array Population (Issue: "docking bay module")
 
 **Problem**: The `DockingPoints` array in `DockingBayModule` and `DockingPortModule` could not be populated in Class Defaults with existing Scene Components. Unreal Engine's editor only allows creating new components when using `TArray<USceneComponent*>` with `EditAnywhere`, not selecting existing ones - an engine-level limitation.

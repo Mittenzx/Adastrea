@@ -164,10 +164,9 @@ void ADockingBayModule::PopulateDockingPointsFromTags()
     DockingPoints.Empty(); // Clear old entries
     
     // Find all components tagged with "DockingPoint"
-    TArray<UActorComponent*> TaggedComponents;
-    GetComponentsByTag(USceneComponent::StaticClass(), 
-                      FName("DockingPoint"), 
-                      TaggedComponents);
+    TArray<UActorComponent*> TaggedComponents = GetComponentsByTag(
+        USceneComponent::StaticClass(), 
+        FName("DockingPoint"));
     
     // Cast and add to array
     for (UActorComponent* Component : TaggedComponents)
