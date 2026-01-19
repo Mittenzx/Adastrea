@@ -25,6 +25,10 @@
 **Why the change?**
 Unreal Engine's editor doesn't support selecting existing components into a `TArray<USceneComponent*>` in Class Defaults - it only allows creating new components, which was confusing. The new tag-based system is more designer-friendly and eliminates this UI limitation.
 
+**Visual Comparison:**
+
+![Old vs New Workflow](../reference/images/blueprints/docking_point_tag_workflow.svg)
+
 ---
 
 ## Overview
