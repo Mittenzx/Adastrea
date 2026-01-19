@@ -30,8 +30,7 @@ void ADockingPortModule::PopulateDockingPointsFromTags()
     DockingPoints.Empty();
     
     // Get all components with the "DockingPoint" tag
-    TArray<UActorComponent*> TaggedComponents;
-    GetComponentsByTag(USceneComponent::StaticClass(), FName("DockingPoint"), TaggedComponents);
+    TArray<UActorComponent*> TaggedComponents = GetComponentsByTag(USceneComponent::StaticClass(), FName("DockingPoint"));
     
 #if DOCKING_DEBUG_ENABLED
     if (GEngine)
