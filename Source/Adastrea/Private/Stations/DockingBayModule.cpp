@@ -14,6 +14,83 @@ ADockingBayModule::ADockingBayModule()
     ModuleGroup = EStationModuleGroup::Docking;
 }
 
+void ADockingBayModule::BeginPlay()
+{
+    Super::BeginPlay();
+    
+    // Automatically populate DockingPoints array from components tagged with "DockingPoint"
+    // This solves the Unreal Engine limitation where TArray<USceneComponent*> with EditAnywhere
+    // only allows creating new components, not selecting existing ones in Class Defaults
+    PopulateDockingPointsFromTags();
+}
+
+void ADockingBayModule::PopulateDockingPointsFromTags()
+{
+    // Clear existing array (in case manually added in old workflow)
+    DockingPoints.Empty();
+    
+    // Get all components with the "DockingPoint" tag
+    TArray<UActorComponent*> TaggedComponents;
+    GetComponentsByTag(USceneComponent::StaticClass(), FName("DockingPoint"), TaggedComponents);
+    
+#if DOCKING_DEBUG_ENABLED
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,
+            FString::Printf(TEXT("[DOCKING] Found %d components tagged as 'DockingPoint'"), TaggedComponents.Num()));
+    }
+#endif
+    
+    // Cast and add to DockingPoints array
+    for (UActorComponent* Component : TaggedComponents)
+    {
+        if (USceneComponent* SceneComp = Cast<USceneComponent>(Component))
+        {
+            DockingPoints.Add(SceneComp);
+            
+#if DOCKING_DEBUG_ENABLED
+            if (GEngine)
+            {
+                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
+                    FString::Printf(TEXT("[DOCKING] Added docking point: %s at location %s"), 
+                        *SceneComp->GetName(), 
+                        *SceneComp->GetComponentLocation().ToString()));
+            }
+#endif
+        }
+    }
+    
+    // Warn if no docking points were found
+    if (DockingPoints.Num() == 0)
+    {
+#if DOCKING_DEBUG_ENABLED
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red,
+                FString::Printf(TEXT("[DOCKING] WARNING: No docking points found! Tag Scene Components with 'DockingPoint'")));
+        }
+#endif
+        
+        UE_LOG(LogTemp, Warning, TEXT("DockingBayModule '%s': No docking points found. Tag Scene Components with 'DockingPoint' to enable docking."), *GetName());
+    }
+    
+    // Warn if fewer docking points than capacity
+    if (DockingPoints.Num() < MaxDockedShips)
+    {
+#if DOCKING_DEBUG_ENABLED
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow,
+                FString::Printf(TEXT("[DOCKING] WARNING: Only %d docking points for capacity of %d ships"), 
+                    DockingPoints.Num(), MaxDockedShips));
+        }
+#endif
+        
+        UE_LOG(LogTemp, Warning, TEXT("DockingBayModule '%s': Only %d docking points defined for MaxDockedShips=%d"), 
+            *GetName(), DockingPoints.Num(), MaxDockedShips);
+    }
+}
+
 USceneComponent* ADockingBayModule::GetAvailableDockingPoint() const
 {
 #if DOCKING_DEBUG_ENABLED

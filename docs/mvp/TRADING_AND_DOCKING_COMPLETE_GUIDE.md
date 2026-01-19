@@ -31,7 +31,7 @@
     - [Visual Docking Setup Guide](#-visual-docking-setup-guide) **NEW** 📸
     - [Part 1: Add Docking Bay to Space Station](#part-1-add-docking-bay-to-space-station)
     - [Part 2: Configure Docking Bay Components](#part-2-configure-docking-bay-components)
-    - [Part 3: Link Scene Components to DockingPoints Array](#part-3-link-scene-components-to-dockingpoints-array)
+    - [Part 3: ~~Link Scene Components to DockingPoints Array~~ (NOW AUTOMATED!)](#part-3-link-scene-components-to-dockingpoints-array-now-automated)
     - [Part 4: Configure Docking Point Properties](#part-4-configure-docking-point-properties-scene-components)
 14. [Docking Interaction](#docking-interaction)
 15. [Docking UI](#docking-ui)
@@ -916,60 +916,58 @@ This comprehensive guide walks you through setting up docking with **visual diag
 
 ---
 
-#### Part 3: Link Scene Components to DockingPoints Array
+#### Part 3: ~~Link Scene Components to DockingPoints Array~~ (NOW AUTOMATED!)
 
-**Goal**: Tell the docking system which Scene Components to use as docking points.
+**⚡ UPDATE (2026-01-19)**: This step is now **automatic**! You no longer need to manually populate the array.
 
-![Docking Bay Array Setup](../reference/images/blueprints/docking_bay_array_setup.svg)
+**NEW SIMPLIFIED WORKFLOW:**
+
+**Goal**: Tag Scene Components so they're automatically discovered at runtime.
 
 **Step-by-Step Instructions**:
 
 1. **Stay in BP_DockingBay Blueprint**
    - If you closed it, reopen `BP_SpaceStationModule_DockingBay`
 
-2. **Open Class Defaults**
-   - Click the "Class Defaults" button in the toolbar
-   - Details panel shows default property values
-
-3. **Find DockingPoints Array**
-   - In Details panel, search for "Docking Points"
-   - You should see: `▼ Docking Points [0]` (empty array)
-
-4. **Add Scene Component References**
+2. **For EACH Scene Component (DockingPoint_1, DockingPoint_2, etc.)**:
    
-   For each docking point Scene Component you created:
+   a. **Select the Scene Component** in the Components panel
    
-   a. **Click "+ Add Element" Button**
-      - This creates a new array slot
+   b. **Find the "Tags" Section** in Details panel
+      - Look for "Tags" (usually near the bottom of Details)
+      - You should see: `▼ Component Tags [0]` (empty array)
    
-   b. **Select the Scene Component**:
-      - Click the dropdown for the new array element
-      - You'll see a list of all Scene Components in the Blueprint
-      - Select `DockingPoint_1` (or whichever you're adding)
+   c. **Add "DockingPoint" Tag**:
+      - Click "+ Add Element" button next to Component Tags
+      - In the text field that appears, type: `DockingPoint`
+      - Exact spelling, case-sensitive!
    
-   c. **Repeat for All Docking Points**:
-      - Add element → Select DockingPoint_2
-      - Add element → Select DockingPoint_3
-      - Add element → Select DockingPoint_4
-      - Continue for all your docking points
+   d. **Repeat for All Docking Points**:
+      - DockingPoint_1 → Add tag "DockingPoint"
+      - DockingPoint_2 → Add tag "DockingPoint"
+      - DockingPoint_3 → Add tag "DockingPoint"
+      - DockingPoint_4 → Add tag "DockingPoint"
 
-5. **Final Array Should Look Like**:
-   ```
-   ▼ Docking Points [4]
-      [0] DockingPoint_1
-      [1] DockingPoint_2
-      [2] DockingPoint_3
-      [3] DockingPoint_4
-   ```
-
-6. **Configure Additional Properties**:
+3. **Configure Additional Properties** (in Class Defaults):
    - **Max Docked Ships**: Should equal number of docking points (e.g., 4)
    - **Module Power**: 50.0 (power consumption)
    - **Module Type**: "Docking Bay" (should be set automatically)
 
-7. **Compile and Save**
+4. **Compile and Save**
 
-**⚠️ Common Mistake**: Forgetting to populate the DockingPoints array! The C++ code iterates this array to find available docking spots. If it's empty, ships can't dock.
+**How It Works:**
+- When the docking bay spawns in-game, `BeginPlay()` automatically searches for all components tagged "DockingPoint"
+- These components are automatically added to the `DockingPoints` array
+- Debug messages will confirm successful setup or warn about missing tags
+- The array is now `VisibleAnywhere` (read-only) - you don't need to touch it!
+
+**Why the Change?**
+Unreal Engine's Class Defaults UI doesn't support selecting existing Scene Components into `TArray<USceneComponent*>` - it only allowed creating new ones, which was confusing. The new tag-based system is simpler and more reliable.
+
+**Visual Guide:**
+![Old vs New Workflow](../reference/images/blueprints/docking_point_tag_workflow.svg)
+
+**⚠️ Migration Note**: If you have existing docking bays using the old manual array method, just add "DockingPoint" tags to your Scene Components. The old array entries will be ignored and replaced with the auto-discovered components.
 
 ---
 
@@ -1068,7 +1066,8 @@ After following all steps, your station setup should have:
 - [ ] BP_SpaceStation has DockingBay module (via Child Actor Component)
 - [ ] BP_DockingBay has 4-6 Scene Components as docking points
 - [ ] Each Scene Component is properly positioned (200-400 units apart)
-- [ ] DockingPoints array is populated with Scene Component references
+- [ ] **Each Scene Component has "DockingPoint" tag** (NEW - Required!)
+- [ ] ~~DockingPoints array is populated~~ (AUTOMATED - No longer needed!)
 - [ ] InteractionTrigger sphere has radius of 1500.0
 - [ ] InteractionTrigger has collision set to "Overlap All Dynamic"
 - [ ] InteractionTrigger has "Generate Overlap Events" enabled
@@ -1103,10 +1102,11 @@ After following all steps, your station setup should have:
 | Issue | Likely Cause | Solution |
 |-------|--------------|----------|
 | No docking prompt appears | InteractionTrigger not set up | Verify sphere collision settings |
-| Ship doesn't move to point | DockingPoints array empty | Populate array with Scene Component refs |
+| Ship doesn't move to point | Scene Components not tagged "DockingPoint" | Add "DockingPoint" tag to each Scene Component |
 | Ship docks at wrong location | Scene Component position wrong | Adjust transform in Details panel |
-| Multiple ships use same point | DockingPoints array has duplicates | Ensure each array entry is unique |
+| "No docking points found" error | Missing tags | Check all Scene Components have "DockingPoint" tag (exact spelling) |
 | Ship falls through station | Docking point inside collision | Move docking point outside station mesh |
+| Warning: fewer points than capacity | Insufficient tagged components | Add more Scene Components with "DockingPoint" tag |
 
 ---
 

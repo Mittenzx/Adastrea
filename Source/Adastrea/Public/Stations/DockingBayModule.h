@@ -35,16 +35,26 @@ class ADASTREA_API ADockingBayModule : public ASpaceStationModule
 public:
 	ADockingBayModule();
 
+	// BeginPlay override to auto-populate docking points from tagged components
+	virtual void BeginPlay() override;
+
 	/**
-	 * Array of docking point components
-	 * Each point represents a location where a ship can dock
-	 * Add these in the Blueprint editor to define docking positions
+	 * Array of docking point components - AUTOMATICALLY POPULATED
 	 * 
-	 * IMPORTANT: DockingPoints.Num() should be at least MaxDockedShips to ensure
-	 * all capacity can be used. GetAvailableDockingPoint() returns nullptr if
-	 * insufficient docking points are defined.
+	 * This array is automatically filled at BeginPlay by finding all Scene Components
+	 * tagged with "DockingPoint". You don't need to manually populate this array.
+	 * 
+	 * To add docking points:
+	 * 1. Add Scene Component to Blueprint
+	 * 2. Tag it with "DockingPoint" in the component's Tags array
+	 * 3. Position the component where ships should dock
+	 * 
+	 * IMPORTANT: Ensure you have at least MaxDockedShips components tagged with "DockingPoint"
+	 * 
+	 * NOTE: This array is read-only because it's populated automatically.
+	 * If you need to modify it at runtime, use PopulateDockingPointsFromTags() again.
 	 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Docking")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Docking")
 	TArray<USceneComponent*> DockingPoints;
 
 	/**
@@ -90,6 +100,18 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Docking")
 	TArray<USceneComponent*> GetDockingPoints() const { return DockingPoints; }
+
+	/**
+	 * Populate the DockingPoints array from components tagged with "DockingPoint"
+	 * 
+	 * This function is called automatically at BeginPlay, but can be called again
+	 * if you add docking points at runtime.
+	 * 
+	 * Searches for all USceneComponent children tagged with "DockingPoint" and
+	 * adds them to the DockingPoints array in the order they are found.
+	 */
+	UFUNCTION(BlueprintCallable, Category="Docking")
+	void PopulateDockingPointsFromTags();
 
 	/**
 	 * Dock a ship at this module

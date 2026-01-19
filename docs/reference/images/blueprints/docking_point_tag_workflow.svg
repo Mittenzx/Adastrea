@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <!-- Background -->
+  <rect width="1400" height="900" fill="#2D2D2D" />
+  
+  <!-- Title -->
+  <text x="700" y="40" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle">Docking Point Setup - OLD vs NEW Workflow</text>
+  <text x="700" y="70" fill="#AAAAAA" font-family="Arial, sans-serif" font-size="14" text-anchor="middle">Updated 2026-01-19: Automatic tag-based population eliminates manual array setup</text>
+  
+  <!-- OLD WORKFLOW (Left Side) -->
+  <rect x="50" y="100" width="650" height="750" fill="#1A1A1A" stroke="#FF5555" stroke-width="3" rx="10" />
+  <rect x="50" y="100" width="650" height="50" fill="#3D1F1F" rx="10" />
+  <text x="375" y="135" fill="#FF5555" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle">❌ OLD WORKFLOW (Broken)</text>
+  
+  <!-- Step 1 OLD -->
+  <text x="70" y="180" fill="#FFD700" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Step 1: Add Scene Components</text>
+  <text x="90" y="210" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">✓ Add Scene Component</text>
+  <text x="90" y="235" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">✓ Name: "DockingPoint_1"</text>
+  <text x="90" y="260" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">✓ Set Transform</text>
+  
+  <!-- Step 2 OLD -->
+  <text x="70" y="310" fill="#FFD700" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Step 2: Open Class Defaults</text>
+  <text x="90" y="340" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">Click "Class Defaults" button</text>
+  
+  <!-- Step 3 OLD (THE PROBLEM) -->
+  <text x="70" y="390" fill="#FFD700" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Step 3: Populate DockingPoints Array</text>
+  <rect x="90" y="410" width="590" height="200" fill="#3D1F1F" stroke="#FF5555" stroke-width="2" rx="5" />
+  <text x="100" y="435" fill="#FF8888" font-family="Arial, sans-serif" font-size="13" font-weight="bold">⚠️ THE PROBLEM:</text>
+  <text x="100" y="460" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">• Click "+ Add Element" for DockingPoints array</text>
+  <text x="100" y="485" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">• Try to select existing Scene Component...</text>
+  <text x="100" y="510" fill="#FF5555" font-family="Arial, sans-serif" font-size="12" font-weight="bold">• DROPDOWN ONLY SHOWS "CREATE NEW"!</text>
+  <text x="100" y="540" fill="#AAAAAA" font-family="Arial, sans-serif" font-size="11">Unreal Engine limitation: TArray&lt;USceneComponent*&gt;</text>
+  <text x="100" y="560" fill="#AAAAAA" font-family="Arial, sans-serif" font-size="11">with EditAnywhere only allows creating new</text>
+  <text x="100" y="580" fill="#AAAAAA" font-family="Arial, sans-serif" font-size="11">components, not selecting existing ones.</text>
+  
+  <!-- Step 4 OLD -->
+  <text x="70" y="640" fill="#FFD700" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Result:</text>
+  <rect x="90" y="655" width="590" height="160" fill="#3D1F1F" stroke="#FF5555" stroke-width="2" rx="5" />
+  <text x="100" y="680" fill="#FF5555" font-family="Arial, sans-serif" font-size="13" font-weight="bold">❌ Array remains empty</text>
+  <text x="100" y="705" fill="#FF5555" font-family="Arial, sans-serif" font-size="13" font-weight="bold">❌ Ships cannot dock</text>
+  <text x="100" y="730" fill="#FF5555" font-family="Arial, sans-serif" font-size="13" font-weight="bold">❌ Confusing user experience</text>
+  <text x="100" y="755" fill="#AAAAAA" font-family="Arial, sans-serif" font-size="11">Even though components exist, they can't be</text>
+  <text x="100" y="775" fill="#AAAAAA" font-family="Arial, sans-serif" font-size="11">referenced in the array via Class Defaults UI.</text>
+  <text x="100" y="795" fill="#AAAAAA" font-family="Arial, sans-serif" font-size="11">This is an engine-level limitation.</text>
+  
+  <!-- NEW WORKFLOW (Right Side) -->
+  <rect x="720" y="100" width="650" height="750" fill="#1A1A1A" stroke="#4CAF50" stroke-width="3" rx="10" />
+  <rect x="720" y="100" width="650" height="50" fill="#1F3D1F" rx="10" />
+  <text x="1045" y="135" fill="#4CAF50" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle">✅ NEW WORKFLOW (Automatic)</text>
+  
+  <!-- Step 1 NEW -->
+  <text x="740" y="180" fill="#FFD700" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Step 1: Add Scene Components</text>
+  <text x="760" y="210" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">✓ Add Scene Component</text>
+  <text x="760" y="235" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">✓ Name: "DockingPoint_1"</text>
+  <text x="760" y="260" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">✓ Set Transform</text>
+  
+  <!-- Step 2 NEW (THE SOLUTION) -->
+  <text x="740" y="310" fill="#FFD700" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Step 2: Add "DockingPoint" Tag</text>
+  <rect x="760" y="330" width="590" height="200" fill="#1F3D1F" stroke="#4CAF50" stroke-width="2" rx="5" />
+  <text x="770" y="355" fill="#90EE90" font-family="Arial, sans-serif" font-size="13" font-weight="bold">✅ THE SOLUTION:</text>
+  <text x="770" y="380" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">• Select the Scene Component</text>
+  <text x="770" y="405" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">• In Details panel, find "Tags" section</text>
+  <text x="770" y="430" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">• Click "+ Add Element"</text>
+  <text x="770" y="455" fill="#4CAF50" font-family="Arial, sans-serif" font-size="12" font-weight="bold">• Type: "DockingPoint" (exact spelling)</text>
+  <text x="770" y="485" fill="#AAAAAA" font-family="Arial, sans-serif" font-size="11">The component is now tagged and will be</text>
+  <text x="770" y="505" fill="#AAAAAA" font-family="Arial, sans-serif" font-size="11">automatically discovered at runtime by the</text>
+  <text x="770" y="525" fill="#AAAAAA" font-family="Arial, sans-serif" font-size="11">BeginPlay function.</text>
+  
+  <!-- Step 3 NEW -->
+  <text x="740" y="570" fill="#FFD700" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Step 3: Done! (Automatic)</text>
+  <rect x="760" y="590" width="590" height="225" fill="#1F3D1F" stroke="#4CAF50" stroke-width="2" rx="5" />
+  <text x="770" y="615" fill="#90EE90" font-family="Arial, sans-serif" font-size="13" font-weight="bold">✅ Array populated automatically at BeginPlay</text>
+  <text x="770" y="640" fill="#90EE90" font-family="Arial, sans-serif" font-size="13" font-weight="bold">✅ Ships can dock successfully</text>
+  <text x="770" y="665" fill="#90EE90" font-family="Arial, sans-serif" font-size="13" font-weight="bold">✅ Simple, designer-friendly workflow</text>
+  <text x="770" y="695" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="12">How it works:</text>
+  <text x="770" y="720" fill="#AAAAAA" font-family="Arial, sans-serif" font-size="11">1. BeginPlay() calls PopulateDockingPointsFromTags()</text>
+  <text x="770" y="740" fill="#AAAAAA" font-family="Arial, sans-serif" font-size="11">2. Function searches for all tagged components</text>
+  <text x="770" y="760" fill="#AAAAAA" font-family="Arial, sans-serif" font-size="11">3. Components added to DockingPoints array</text>
+  <text x="770" y="780" fill="#AAAAAA" font-family="Arial, sans-serif" font-size="11">4. Debug messages confirm successful setup</text>
+  <text x="770" y="800" fill="#AAAAAA" font-family="Arial, sans-serif" font-size="11">5. Warnings if tags missing or count insufficient</text>
+  
+  <!-- Bottom Banner -->
+  <rect x="50" y="860" width="1320" height="30" fill="#1F3D1F" stroke="#4CAF50" stroke-width="2" rx="5" />
+  <text x="710" y="882" fill="#90EE90" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle">💡 Migration: Just add "DockingPoint" tags to your existing Scene Components - the system handles the rest!</text>
+</svg>
