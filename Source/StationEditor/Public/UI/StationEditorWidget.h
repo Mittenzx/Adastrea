@@ -4,7 +4,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Stations/SpaceStationModule.h"
 #include "Stations/SpaceStation.h"
-#include "Factions/FactionDataAsset.h"
+// #include "Factions/FactionDataAsset.h" // REMOVED: Faction system removed per Trade Simulator MVP
 #include "StationEditorManager.h"
 #include "StationEditorWidget.generated.h"
 
@@ -78,28 +78,30 @@ public:
     // ====================
     // Faction Integration Hooks
     // ====================
+    // REMOVED: Faction system removed per Trade Simulator MVP
+    // ====================
 
     /**
      * Set the faction for the current station
      * @param NewFaction The faction to assign to the station
      */
-    UFUNCTION(BlueprintCallable, Category="Station Editor|Faction")
-    void SetStationFaction(UFactionDataAsset* NewFaction);
+    // UFUNCTION(BlueprintCallable, Category="Station Editor|Faction")
+    // void SetStationFaction(UFactionDataAsset* NewFaction);
 
     /**
      * Get available module types that match the station's faction technology level
      * @return Array of module types that can be built
      */
-    UFUNCTION(BlueprintCallable, Category="Station Editor|Faction")
-    TArray<FString> GetAvailableModuleTypes() const;
+    // UFUNCTION(BlueprintCallable, Category="Station Editor|Faction")
+    // TArray<FString> GetAvailableModuleTypes() const;
 
     /**
      * Check if a module can be added based on faction restrictions
      * @param ModuleClass The module class to check
      * @return True if the module can be added
      */
-    UFUNCTION(BlueprintCallable, Category="Station Editor|Faction")
-    bool CanAddModuleForFaction(TSubclassOf<ASpaceStationModule> ModuleClass) const;
+    // UFUNCTION(BlueprintCallable, Category="Station Editor|Faction")
+    // bool CanAddModuleForFaction(TSubclassOf<ASpaceStationModule> ModuleClass) const;
 
     // ====================
     // Undo/Redo

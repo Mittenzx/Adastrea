@@ -202,8 +202,8 @@ void UAdastreaHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 						if (ViewportSizeX > 0)
 						{
 							float DeadzonePercent = DeadzoneRadius / (ViewportSizeX * 0.5f);
-							float MaxRadiusPercent = MaxRadius / (ViewportSizeX * 0.5f);
-							UpdateDeadzoneVisualization(DeadzonePercent, MaxRadiusPercent);
+							float LocalMaxRadiusPercent = MaxRadius / (ViewportSizeX * 0.5f);
+							UpdateDeadzoneVisualization(DeadzonePercent, LocalMaxRadiusPercent);
 						}
 					}
 				}

@@ -1,0 +1,51 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0.0",
+	"FriendlyName": "Adastrea Director: AI Assistant",
+	"Description": "Transform your Unreal Engine development with AI-powered assistance. Get instant answers, intelligent task planning, automated code generation, and context-aware documentation search - all without leaving the editor. Features: RAG-based knowledge system, smart planning, real-time monitoring, UE Python API integration, and 230+ tests for production-ready stability.",
+	"Category": "Developer Tools",
+	"CreatedBy": "Mittenzx",
+	"CreatedByURL": "https://github.com/Mittenzx/Adastrea-Director",
+	"DocsURL": "https://github.com/Mittenzx/Adastrea-Director/wiki",
+	"MarketplaceURL": "",
+	"SupportURL": "https://github.com/Mittenzx/Adastrea-Director/issues",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"EngineVersion": "5.6.0",
+	"Modules": [
+		{
+			"Name": "AdastreaDirector",
+			"Type": "Editor",
+			"LoadingPhase": "Default",
+			"PlatformAllowList": [
+				"Win64",
+				"Mac",
+				"Linux"
+			]
+		},
+		{
+			"Name": "AdastreaDirectorEditor",
+			"Type": "Editor",
+			"LoadingPhase": "PostEngineInit",
+			"PlatformAllowList": [
+				"Win64",
+				"Mac",
+				"Linux"
+			]
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "PythonScriptPlugin",
+			"Enabled": true,
+			"Optional": true
+		},
+		{
+			"Name": "EditorScriptingUtilities",
+			"Enabled": true
+		}
+	]
+}

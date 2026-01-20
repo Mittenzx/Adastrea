@@ -335,8 +335,8 @@ protected:
 	 * @param MaxRadiusPercent Maximum effective radius as percentage of screen (0-1)
 	 */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="HUD|Flight Crosshair")
-	void UpdateDeadzoneVisualization(float DeadzoneRadiusPercent, float MaxRadiusPercent);
-	virtual void UpdateDeadzoneVisualization_Implementation(float DeadzoneRadiusPercent, float MaxRadiusPercent);
+	void UpdateDeadzoneVisualization(float InDeadzoneRadiusPercent, float InMaxRadiusPercent);
+	virtual void UpdateDeadzoneVisualization_Implementation(float InDeadzoneRadiusPercent, float InMaxRadiusPercent);
 
 	/**
 	 * Enable or disable deadzone visualization

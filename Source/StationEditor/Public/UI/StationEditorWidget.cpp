@@ -1,6 +1,6 @@
 #include "UI/StationEditorWidget.h"
 #include "Kismet/GameplayStatics.h"
-#include "Factions/FactionDataAsset.h"
+// #include "Factions/FactionDataAsset.h" // REMOVED: Faction system removed per Trade Simulator MVP
 
 UStationEditorWidget::UStationEditorWidget(const FObjectInitializer& ObjectInitializer)
     : Super(ObjectInitializer)
@@ -178,7 +178,10 @@ bool UStationEditorWidget::IsValidPlacement(FVector Location)
 // ====================
 // Faction Integration Hooks
 // ====================
+// REMOVED: Faction system removed per Trade Simulator MVP
+// ====================
 
+/*
 void UStationEditorWidget::SetStationFaction(UFactionDataAsset* NewFaction)
 {
     if (CurrentStation)
@@ -263,6 +266,7 @@ bool UStationEditorWidget::CanAddModuleForFaction(TSubclassOf<ASpaceStationModul
     
     return true;
 }
+*/
 
 // ====================
 // Undo/Redo
