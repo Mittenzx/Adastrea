@@ -7,6 +7,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed - 2026-01-21
+
+#### Documentation Review & Cleanup (Trade Simulator MVP Focus)
+
+**Problem**: Repository contained extensive documentation for 22 game systems, but current focus is Trade Simulator MVP (only 3-4 systems). Non-MVP documentation creates confusion about project scope and priorities.
+
+**Root Cause**: October-December 2025 infrastructure-first approach built documentation for all systems before MVP validation. December 2025 pivot to Trade Simulator MVP made most documentation out-of-scope.
+
+**Solution**: Archived all non-MVP system documentation to preserve for post-MVP use while focusing current documentation on Trade Simulator MVP only.
+
+**Changes**:
+- **Archived 44 files** from `Assets/` directory to `docs/archive/pre-mvp-systems/assets-guides/`:
+  - Exploration & Discovery systems (2 files)
+  - Sector & Map systems (12 files - including sector generation and map system)
+  - Progression & Player systems (5 files)
+  - Visual effects & particle systems (4 files)
+  - Advanced ship systems (3 files - modular construction, customization, interiors)
+  - Advanced UI systems (4 files - HUD, status screens)
+  - Guild & Network systems (4 files - Way system)
+  - Settings & Data management (9 files - advanced data, save system, settings UI)
+  - AI designer workflows (1 file)
+- **Archived 1 file** from root directory to `docs/archive/pre-mvp-systems/`:
+  - `MASTER_DOCUMENTATION.md` (pre-pivot comprehensive guide, December 9, 2025)
+- **Created** `docs/archive/pre-mvp-systems/README.md` - Complete archive context with:
+  - Explanation of why systems were archived (excellent designs, wrong timing)
+  - Post-MVP roadmap (conditional on MVP success)
+  - Clear guidance: Don't read archives during MVP phase
+  - Quality assessment: Code A-, Design B+, Documentation A, Timing F
+- **Updated** `OBSOLETE_DOCUMENTS.md` with January 21, 2026 archival details
+
+**Systems Kept in Assets/** (MVP-relevant only):
+- Trading system guides (4 files)
+- Station system guides (5 files)
+- Spaceship guides (5 files - controls, data assets, workflows)
+- X4 flight controls (3 files)
+- Designer onboarding (1 file)
+- Blueprint workflows (1 file)
+- Testing guides (4 files)
+- Iteration guide (1 file)
+- Mousewheel throttle (1 file)
+
+**Impact**: 
+- Root directory: 11 → 10 markdown files (9% reduction)
+- Assets/ directory: Now focused exclusively on MVP systems (trading, docking, stations, flight)
+- Clear separation between active MVP docs and deferred system docs
+- All documentation aligned with Trade Simulator MVP (Dec 2025 - Mar 2026)
+- Post-MVP systems preserved for future use if MVP succeeds
+
+**Philosophy**: "Great systems, wrong time. Build gameplay first, then infrastructure."
+
+**Next Steps**: Post-MVP (March 2026+), review archived docs if MVP achieves 75% "fun" rating and secures funding.
+
+---
+
 ### Fixed - 2026-01-19
 
 #### GetComponentsByTag API Compatibility (UE 5.6)
