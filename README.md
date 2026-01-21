@@ -10,17 +10,17 @@
 
 ## 🚀 Quick Navigation
 
-**👉 New to Adastrea?** → **[GETTING_STARTED.md](GETTING_STARTED.md)** - Start here! ⭐
+**👉 New to Adastrea?** → **[docs/GETTING_STARTED.md](docs/GETTING_STARTED.md)** - Start here! ⭐
 
 **Essential Links:**
 | For... | Go to... |
 |--------|----------|
-| 🎮 **Want to understand the project** | [GETTING_STARTED.md](GETTING_STARTED.md) |
-| 💻 **Want to contribute code** | [CONTRIBUTING.md](CONTRIBUTING.md) → [CODE_STYLE.md](CODE_STYLE.md) |
-| 📚 **Looking for documentation** | [docs/README.md](docs/README.md) or [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md) |
+| 🎮 **Want to understand the project** | [docs/GETTING_STARTED.md](docs/GETTING_STARTED.md) |
+| 💻 **Want to contribute code** | [docs/development/CONTRIBUTING.md](docs/development/CONTRIBUTING.md) → [docs/development/CODE_STYLE.md](docs/development/CODE_STYLE.md) |
+| 📚 **Looking for documentation** | [docs/README.md](docs/README.md) or [docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md) |
 | 🎯 **Understanding the MVP** | [docs/mvp/README.md](docs/mvp/README.md) |
 | 🏗️ **Architecture questions** | [ARCHITECTURE.md](ARCHITECTURE.md) |
-| 📝 **Recent changes** | [CHANGELOG.md](CHANGELOG.md) |
+| 📝 **Recent changes** | [docs/CHANGELOG.md](docs/CHANGELOG.md) |
 
 **Historical Context:**
 - **January 2026**: Repository modernization (documentation consolidation)
@@ -102,7 +102,7 @@ After comprehensive critical review (Dec 24, 2025), Adastrea is focused on a **T
 **New to Adastrea?** Multiple documentation options:
 - 📁 **[docs/](docs/)** - Browse organized documentation by category ⭐ **NEW**
 - 📚 **[MASTER_DOCUMENTATION.md](MASTER_DOCUMENTATION.md)** - Complete documentation in one file
-- 📊 **[DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)** - Complete documentation index
+- 📊 **[docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** - Complete documentation index
 - 🚀 [Quick Start Guide](wiki/Getting-Started/Quick-Start.md) - Get running in 10 minutes
 - 🎨 [Designer Onboarding](wiki/Getting-Started/Designer-Onboarding.md) - For non-programmers
 - 🎮 [Core Systems Overview](wiki/Core-Systems/README.md) - All 22+ game systems
@@ -347,7 +347,7 @@ python ProceduralGenerators.py
 
 All generated content is saved as YAML files compatible with the existing Data Asset system and can be imported directly into Unreal Engine.
 
-**Quick Start**: See [PROCEDURAL_GENERATION_QUICKSTART.md](PROCEDURAL_GENERATION_QUICKSTART.md)  
+**Quick Start**: See [PROCEDURAL_GENERATION_docs/QUICKSTART.md](PROCEDURAL_GENERATION_docs/QUICKSTART.md)  
 **Full Guide**: See [PROCEDURAL_GENERATION_GUIDE.md](PROCEDURAL_GENERATION_GUIDE.md)
 
 ### First Steps
@@ -355,13 +355,13 @@ All generated content is saved as YAML files compatible with the existing Data A
 1. **For Fast Content Creation** ⭐ **NEW**: See [FAST_FORWARD_QUICK_START.md](FAST_FORWARD_QUICK_START.md) - Generate ships, interiors, and stations in 30 minutes!
 2. **For Designers**: Read [Assets/DesignerOnboarding.md](Assets/DesignerOnboarding.md)
 3. **For Programmers (C++ Focused)**: Read [CPP_FOCUSED_SETUP.md](CPP_FOCUSED_SETUP.md) and [ESSENTIAL_BLUEPRINTS_ONLY.md](ESSENTIAL_BLUEPRINTS_ONLY.md)
-4. **For Programmers (General)**: Read [CONTRIBUTING.md](CONTRIBUTING.md) and [ARCHITECTURE.md](ARCHITECTURE.md)
+4. **For Programmers (General)**: Read [docs/development/CONTRIBUTING.md](docs/development/CONTRIBUTING.md) and [ARCHITECTURE.md](ARCHITECTURE.md)
 5. **For Playing in PIE (Quick Start)**: See [BLUEPRINT_QUICK_START_PIE.md](BLUEPRINT_QUICK_START_PIE.md) - Get flying in 5 minutes!
 6. **For Blueprint Creation**: See [BLUEPRINT_REQUIREMENTS_LIST.md](BLUEPRINT_REQUIREMENTS_LIST.md) for complete list of required Blueprints
 7. **For PIE Setup Guide**: See [BLUEPRINT_LIST_FOR_PIE.md](BLUEPRINT_LIST_FOR_PIE.md) for detailed blueprint checklist
 8. **For Testing**: Create a Test Mode level - see [Docs/TestMode_INDEX.md](Docs/TestMode_INDEX.md) for complete guide
 9. **For Automation**: See [TESTING_AUTOMATION_GUIDE.md](TESTING_AUTOMATION_GUIDE.md) for automated testing
-10. **For Procedural Content**: See [PROCEDURAL_GENERATION_QUICKSTART.md](PROCEDURAL_GENERATION_QUICKSTART.md)
+10. **For Procedural Content**: See [PROCEDURAL_GENERATION_docs/QUICKSTART.md](PROCEDURAL_GENERATION_docs/QUICKSTART.md)
 11. **Quick Reference**: See individual system guides in the Assets/ folder
 
 ## Project Roadmap
@@ -444,28 +444,22 @@ See [FREE_CONTENT_GENERATION_GUIDE.md](FREE_CONTENT_GENERATION_GUIDE.md) for com
 ## Project Structure
 ```
 Adastrea/
-├── .editorconfig           # Code formatting configuration
-├── .gitignore              # Git ignore patterns
-├── ARCHITECTURE.md         # Architecture and design documentation
-├── CHANGELOG.md            # Version history and changes
-├── CONTRIBUTING.md         # Contribution guidelines
-├── LICENSE                 # MIT License
-├── README.md               # This file
-├── TESTING_AUTOMATION_GUIDE.md  # Testing and automation documentation
+├── README.md                # Project overview
+├── ROADMAP.md              # Development roadmap
+├── ARCHITECTURE.md          # MVP architecture
+├── LICENSE                  # MIT License
 │
-├── Assets/                 # Documentation and YAML templates
-│   ├── *Guide.md          # Comprehensive system guides
-│   ├── *Templates.md      # Reference documentation
-│   ├── *Workflow.md       # Designer workflows
-│   ├── *SUMMARY.md        # Technical summaries
-│   ├── FactionAITemplates/    # YAML templates for faction AI
-│   ├── PersonnelAITemplates/  # YAML templates for personnel AI
-│   ├── PersonnelTemplates/    # YAML templates for crew roles
-│   ├── SpaceshipTemplates/    # YAML templates for ships
-│   └── TradingTemplates/      # YAML templates for trading
+├── docs/                    # All documentation
+│   ├── CHANGELOG.md         # Version history
+│   ├── GETTING_STARTED.md   # Setup guide
+│   ├── QUICKSTART.md        # Quick start
+│   ├── DOCUMENTATION_INDEX.md # Doc index
+│   ├── development/         # Development guides
+│   ├── mvp/                 # MVP documentation
+│   └── archive/             # Archived docs
 │
+├── Assets/                 # YAML templates (deferred systems)
 ├── Blueprints/             # Blueprint documentation
-│
 ├── Config/                 # Unreal Engine configuration
 │
 ├── Content/                # Game content (UE assets)
@@ -918,8 +912,8 @@ Create Widget Blueprints based on `UniverseMapWidget` and `SectorMapWidget` clas
 Comprehensive technical documentation for contributors and developers:
 
 - **[Architecture Overview](ARCHITECTURE.md)** - High-level system architecture with visual diagrams
-- **[Contributing Guidelines](CONTRIBUTING.md)** - How to contribute code, documentation, and assets
-- **[Code Style Guide](CODE_STYLE.md)** - C++ and Blueprint coding standards
+- **[Contributing Guidelines](docs/development/CONTRIBUTING.md)** - How to contribute code, documentation, and assets
+- **[Code Style Guide](docs/development/CODE_STYLE.md)** - C++ and Blueprint coding standards
 - **[Copilot Memory Review](COPILOT_MEMORY_REVIEW.md)** - 🆕 **NEW** Comprehensive review of 30+ stored patterns and conventions for GitHub Copilot
 - **[Unreal Directive Best Practices](.github/instructions/unreal-directive-best-practices.md)** - 🆕 Advanced Unreal Engine best practices
 - **[Unreal Directive Suggestions](docs/development/UNREAL_DIRECTIVE_SUGGESTIONS.md)** - 🆕 Comprehensive improvement suggestions for Adastrea
@@ -938,8 +932,8 @@ Comprehensive technical documentation for contributors and developers:
 
 ### Quick Start Guides
 - [Designer Onboarding](Assets/DesignerOnboarding.md) - Start here if you're new to the project
-- [Quick Start](QUICKSTART.md) - Get up and running quickly
-- [Content Creation Quick Start](CONTENT_CREATION_QUICKSTART.md) - For content creators
+- [Quick Start](docs/QUICKSTART.md) - Get up and running quickly
+- [Content Creation Quick Start](CONTENT_CREATION_docs/QUICKSTART.md) - For content creators
 - [Editor Implementation Guide](EDITOR_IMPLEMENTATION_GUIDE.md) - Complete guide to working in Unreal Engine editor
 
 ### Blueprint Documentation
@@ -1016,7 +1010,7 @@ All systems include ready-to-use YAML templates in their respective folders:
 
 We welcome contributions! Here's how to get started:
 
-1. **Read the Guidelines**: See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed instructions
+1. **Read the Guidelines**: See [docs/development/CONTRIBUTING.md](docs/development/CONTRIBUTING.md) for detailed instructions
 2. **Check Issues**: Look for issues labeled "good first issue" or "help wanted"
 3. **Fork & Clone**: Fork the repository and create a feature branch
 4. **Make Changes**: Follow our coding standards and best practices
@@ -1039,7 +1033,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Version History
 
-See [CHANGELOG.md](CHANGELOG.md) for detailed version history and release notes.
+See [docs/CHANGELOG.md](docs/CHANGELOG.md) for detailed version history and release notes.
 
 ## Support
 
