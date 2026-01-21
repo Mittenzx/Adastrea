@@ -1,12 +1,37 @@
 # Adastrea Documentation Index
 
-**Last Updated**: January 17, 2026  
-**Version**: 2.2 - Comprehensive Blueprint Learning Materials  
+**Last Updated**: January 21, 2026  
+**Version**: 2.3 - Pre-MVP Systems Archive  
 **Purpose**: Comprehensive index of all documentation in the Adastrea project
 
 ---
 
-## 🆕 Latest Update: Blueprint Learning Materials (January 17, 2026)
+## 🆕 Latest Update: Pre-MVP Systems Archive (January 21, 2026)
+
+**What's New:**
+- 🗃️ **45 files archived** - Non-MVP system documentation moved to preserve for post-MVP use
+- 📁 **Assets/ focused** - Now contains only Trade Simulator MVP-relevant guides (31 files)
+- 📚 **Root cleaned** - MASTER_DOCUMENTATION.md archived (pre-pivot state)
+- 🎯 **MVP alignment** - All active documentation focused on Trade Simulator MVP
+- 📖 **Archive README** - Complete context and post-MVP roadmap
+
+**Systems Archived:**
+- Exploration & Discovery (2 files)
+- Sector & Map Systems (12 files)
+- Progression & Player Systems (5 files)
+- Advanced Ship Systems (3 files)
+- Advanced UI Systems (4 files)
+- Guild/Way Network Systems (4 files)
+- Settings & Data Management (9 files)
+- Visual Effects & Polish (4 files)
+- AI Designer Workflows (1 file)
+- Pre-Pivot Master Documentation (1 file)
+
+**For Archive Details**: See [Pre-MVP Systems Archive](docs/archive/pre-mvp-systems/README.md) ⭐ **NEW**
+
+---
+
+## 🆕 Previous Update: Blueprint Learning Materials (January 17, 2026)
 
 **What's New:**
 - 📚 **Complete Learning Path** - Structured progression from beginner to mastery
@@ -22,8 +47,8 @@
 - **Visual Diagrams**: SVG images showing Blueprint node connections
 - **Progressive Learning**: Build skills incrementally with clear milestones
 
-**For Beginners**: Start with [Blueprint Fundamentals](docs/learning/BLUEPRINT_FUNDAMENTALS.md) ⭐ **NEW**  
-**For All Developers**: See [Learning Path](docs/learning/README.md) ⭐ **NEW**
+**For Beginners**: Start with [Blueprint Fundamentals](docs/learning/BLUEPRINT_FUNDAMENTALS.md) ⭐  
+**For All Developers**: See [Learning Path](docs/learning/README.md) ⭐
 
 ---
 
@@ -82,7 +107,7 @@
 
 ## Essential Files (Root Directory)
 
-**11 files** - Core project documentation that should remain easily accessible:
+**10 files** - Core project documentation that should remain easily accessible:
 
 | File | Purpose | Lines |
 |------|---------|-------|
@@ -90,13 +115,17 @@
 | **[ARCHITECTURE.md](ARCHITECTURE.md)** | System architecture and design patterns | 800+ |
 | **[CODE_STYLE.md](CODE_STYLE.md)** | C++ and Blueprint coding standards | 600+ |
 | **[CONTRIBUTING.md](CONTRIBUTING.md)** | Contribution guidelines and workflow | 500+ |
-| **[ROADMAP.md](ROADMAP.md)** | Main development roadmap and vision | 1070+ |
+| **[ROADMAP.md](ROADMAP.md)** | Main development roadmap and vision | 1304 |
 | **[CHANGELOG.md](CHANGELOG.md)** | Version history and release notes | - |
 | **[QUICKSTART.md](QUICKSTART.md)** | Fast project setup guide | - |
-| **[CURRENT_STATUS.md](CURRENT_STATUS.md)** | Realistic project status assessment | 380 |
-| **[MASTER_DOCUMENTATION.md](MASTER_DOCUMENTATION.md)** | Complete documentation in one file | 1372 |
-| **[DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)** | This file - complete documentation index | - |
+| **[GETTING_STARTED.md](GETTING_STARTED.md)** | ⭐ Modern MVP-focused entry point | - |
+| **[MIGRATION_GUIDE.md](MIGRATION_GUIDE.md)** | Repository migration guide (January 2026) | - |
+| **[DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)** | This file - complete documentation index | 722 |
 | **[OBSOLETE_DOCUMENTS.md](OBSOLETE_DOCUMENTS.md)** | Tracking removed/obsolete files | - |
+
+**Archived** (moved to `docs/archive/pre-mvp-systems/`):
+- ~~MASTER_DOCUMENTATION.md~~ - Pre-pivot comprehensive guide (December 9, 2025)
+- ~~CURRENT_STATUS.md~~ - Historical snapshot (moved to critical review archive)
 
 ---
 
@@ -686,12 +715,19 @@ When adding new documentation:
 
 ## Related Documents
 
+### Active Documentation
 - **[docs/README.md](docs/README.md)** - ⭐ Complete navigation guide
-- **[MASTER_DOCUMENTATION.md](MASTER_DOCUMENTATION.md)** - Complete documentation in one file
-- **[CURRENT_STATUS.md](CURRENT_STATUS.md)** - Realistic project status
+- **[GETTING_STARTED.md](GETTING_STARTED.md)** - ⭐ Modern MVP-focused entry point
 - **[README.md](README.md)** - Project overview
 - **[ARCHITECTURE.md](ARCHITECTURE.md)** - System architecture
-- **[OBSOLETE_DOCUMENTS.md](OBSOLETE_DOCUMENTS.md)** - Removed files tracking
+- **[ROADMAP.md](ROADMAP.md)** - MVP development roadmap
+- **[docs/mvp/README.md](docs/mvp/README.md)** - Trade Simulator MVP documentation
+
+### Historical Archives
+- **[docs/archive/pre-mvp-systems/README.md](docs/archive/pre-mvp-systems/README.md)** - ⭐ Pre-MVP systems (January 2026)
+- **[docs/archive/critical-review-2025/README.md](docs/archive/critical-review-2025/README.md)** - Critical review (December 2025)
+- **[docs/archive/legacy-Docs/README.md](docs/archive/legacy-Docs/README.md)** - Legacy documentation (January 2026)
+- **[OBSOLETE_DOCUMENTS.md](OBSOLETE_DOCUMENTS.md)** - Complete archive tracking
 
 ---
 
@@ -706,17 +742,23 @@ This index should be updated when:
 - Quarterly review cycles
 
 ### Last Updated
-**Date**: December 24, 2025  
-**Updated By**: GitHub Copilot (SWE Agent)  
-**Version**: 2.0 - Major Documentation Reorganization
-  - Removed 80+ obsolete files
-  - Organized into docs/ structure
-  - Root reduced from 172 to 11 files
-  - Created comprehensive navigation system
-  - Updated all cross-references
+**Date**: January 21, 2026  
+**Updated By**: Documentation Review & Cleanup Process  
+**Version**: 2.3 - Pre-MVP Systems Archive
+  - Archived 45 non-MVP system files
+  - Assets/ focused on MVP systems (31 files)
+  - Root reduced from 11 to 10 files
+  - Updated all references to archived files
+  - Added pre-MVP systems archive section
+  - Aligned all documentation with Trade Simulator MVP focus
+
+**Previous Updates:**
+- **v2.2** (January 17, 2026): Blueprint learning materials added
+- **v2.1** (January 14, 2026): Repository modernization cleanup
+- **v2.0** (December 24, 2025): Major documentation reorganization (80+ files removed)
 
 ---
 
-**Status**: ✅ Complete and Ready for Use
+**Status**: ✅ Complete and MVP-Focused
 
-This comprehensive index provides a complete overview of all documentation in the Adastrea project, now organized in a clean, maintainable structure.
+This comprehensive index provides a complete overview of all documentation in the Adastrea project, now organized with clear focus on the Trade Simulator MVP.

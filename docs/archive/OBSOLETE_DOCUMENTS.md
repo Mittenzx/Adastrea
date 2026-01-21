@@ -1,9 +1,38 @@
 # Obsolete and Archived Documents
 
-**Last Updated**: January 14, 2026  
+**Last Updated**: January 21, 2026  
 **Purpose**: Track documents that are no longer actively used but retained for reference
 
-## 🆕 Latest Update: Repository Modernization (January 14, 2026)
+## 🆕 Latest Update: Pre-MVP Systems Archive (January 21, 2026)
+
+**Non-MVP system documentation archived to focus on Trade Simulator MVP**
+
+### What Happened
+- **Archived**: 44 non-MVP system guides from `Assets/` → `docs/archive/pre-mvp-systems/assets-guides/`
+- **Archived**: `MASTER_DOCUMENTATION.md` (pre-pivot, Dec 9, 2025) → `docs/archive/pre-mvp-systems/`
+- **Focus**: All documentation now aligned with Trade Simulator MVP (Dec 2025 - Mar 2026)
+- **Result**: Clean separation between active MVP docs and deferred system docs
+
+**Systems Archived**:
+- Exploration & Discovery (2 files)
+- Sector & Map Systems (9 files)
+- Progression & Player Systems (5 files)
+- Visual Effects & Polish (4 files)
+- Advanced Ship Systems (3 files)
+- Advanced UI Systems (7 files)
+- Guild & Network Systems (4 files)
+- Settings & Data Management (9 files)
+- AI Designer Workflows (1 file)
+- Tutorial System (1 file)
+- Master Documentation (1 file)
+
+**Total**: 44 files from Assets/, 1 file from root = 45 files archived
+
+See [Pre-MVP Systems Archive README](docs/archive/pre-mvp-systems/README.md) for complete details.
+
+---
+
+## 🆕 Previous Update: Repository Modernization (January 14, 2026)
 
 **Documentation directory consolidation and critical review archival**
 
@@ -20,7 +49,81 @@ See details below for complete list of archived files.
 
 ## Overview
 
-This document tracks obsolete documentation that has been removed or archived. Major cleanups occurred on December 24, 2025, January 13, 2026, and January 14, 2026.
+This document tracks obsolete documentation that has been removed or archived. Major cleanups occurred on December 24, 2025, January 13, 2026, January 14, 2026, and January 21, 2026.
+
+---
+
+## Archived Directories and Files (January 21, 2026)
+
+### Pre-MVP Systems Archive
+
+**Reason**: Focus documentation on Trade Simulator MVP only, defer non-MVP systems
+
+**Action**: Archived 45 files (44 from Assets/, 1 from root) to `docs/archive/pre-mvp-systems/`
+
+#### What Was Archived from Assets/
+
+**Exploration & Discovery Systems (2 files):**
+- `DiscoverySystemQuickStart.md` - Discovery mechanics
+- `NavigationSystemGuide.md` - Advanced navigation UI
+
+**Sector & Map Systems (9 files):**
+- `HomeworldSystemGuide.md` - Player homeworld
+- `SECTOR_SYSTEM_SUMMARY.md` - Sector universe structure
+- `SectorCreationGuide.md` - Manual sector creation
+- `SectorGeneratorGuide.md` - Procedural generation
+- `SectorGeneratorQuickStart.md` - Generator quick start
+- `SectorMapBuildingGuide.md` - Map building
+- `SectorMapPlacementGuide.md` - Object placement
+- `SectorSystemQuickReference.md` - Sector reference
+- `MapSystemArchitecture.md`, `MapSystemGuide.md`, `MapSystemQuickStart.md` - Map system docs
+
+**Progression & Player Systems (5 files):**
+- `PHASE4_QUICK_REFERENCE.md` - Phase 4 features (post-MVP)
+- `PROGRESSION_SYSTEM_SUMMARY.md` - Player progression
+- `Phase4SystemsSummary.md` - Phase 4 overview
+- `PlayerProgressionGuide.md` - XP, levels, unlocks
+- `InventorySystemGuide.md` - Inventory beyond cargo
+
+**Visual & Polish (4 files):**
+- `SpaceshipParticleQuickReference.md` - Particle effects
+- `SpaceshipParticleSetupWorkflow.md` - Particle setup
+- `SpaceshipParticleSystemGuide.md` - Particle guide
+- `TutorialSystemGuide.md` - Tutorial framework
+
+**Advanced Ship Systems (3 files):**
+- `ModularShipSystemGuide.md` - Modular construction
+- `ShipCustomizationGuide.md` - Ship customization UI
+- `SpaceshipInteriorGuide.md` - Interior views
+
+**Advanced UI Systems (7 files):**
+- `HUDSystemGuide.md` - Advanced HUD
+- `HUD_QUICK_REFERENCE.md` - HUD reference
+- `ShipStatusScreenImplementation.md` - Status UI
+- `ShipStatusScreenSetup.md` - Status setup
+
+**Guild & Network Systems (4 files):**
+- `WayNetworkWorkflow.md`, `WaySystemAPIReference.md`, `WaySystemOverview.md`, `WaySystemQuickReference.md` - Way system docs
+
+**Settings & Data Management (9 files):**
+- `ADVANCED_DATA_MANAGEMENT.md` - Advanced data patterns
+- `SaveSystemGuide.md` - Save/load system
+- `TestSettings*.md` (5 files) - Settings UI system
+- `PerformanceOptimizationGuide.md` - Optimization guide
+
+**AI & Designer Workflows (1 file):**
+- `AIDesignerWorkflow.md` - AI content workflow
+
+#### What Was Archived from Root
+
+**Pre-Pivot Master Documentation (1 file):**
+- `MASTER_DOCUMENTATION.md` (December 9, 2025) - Comprehensive pre-pivot documentation covering all 22 systems
+
+**New Location**: `docs/archive/pre-mvp-systems/`  
+**Documentation**: Complete README with archive context and post-MVP roadmap  
+**Status**: ✅ Archived - Preserved for post-MVP development (if MVP succeeds)
+
+**Key Decision**: These are excellent systems but wrong timing. Focus on gameplay validation first, then expand if successful.
 
 ---
 
@@ -378,6 +481,13 @@ See [docs/README.md](docs/README.md) for complete navigation guide.
 - **Created**: `GETTING_STARTED.md` - Modern MVP-focused entry point
 - **Status**: Single documentation location, MVP-focused navigation, historical context preserved
 
+### After Fourth Cleanup (January 21, 2026)
+- **Assets/ directory**: Archived 44 non-MVP system guides → `docs/archive/pre-mvp-systems/assets-guides/`
+- **Root directory**: Archived `MASTER_DOCUMENTATION.md` → `docs/archive/pre-mvp-systems/`
+- **Root markdown files**: Reduced from 11 to 10 (9% further reduction)
+- **Assets/ focus**: Now contains only MVP-relevant guides (trading, docking, stations, flight)
+- **Status**: All documentation aligned with Trade Simulator MVP focus
+
 ## Using This Document
 
 ### For Contributors
@@ -436,6 +546,20 @@ The repository still had:
 - ✅ Root directory reduced to 11 essential files
 - ✅ Historical turning point (Dec 2025 review) properly archived
 
+### January 21, 2026 Cleanup
+The repository still had:
+- Non-MVP system documentation in Assets/ (44 guides for deferred systems)
+- Pre-pivot master documentation in root (MASTER_DOCUMENTATION.md)
+- No clear separation between MVP and post-MVP documentation
+- Potential confusion about which systems are in scope
+
+**Achieved**:
+- ✅ All non-MVP system docs archived to `docs/archive/pre-mvp-systems/`
+- ✅ Clear focus on Trade Simulator MVP only
+- ✅ Pre-pivot documentation preserved for future reference
+- ✅ Root directory reduced to 10 essential files
+- ✅ Assets/ directory focused on MVP systems only (trading, docking, stations, flight)
+
 ## Future Maintenance
 
 To keep documentation clean:
@@ -457,17 +581,25 @@ For current, maintained documentation, see:
 
 - **[GETTING_STARTED.md](GETTING_STARTED.md)** - ⭐ Modern MVP-focused entry point
 - **[docs/README.md](docs/README.md)** - ⭐ Documentation navigation guide
-- **[MASTER_DOCUMENTATION.md](MASTER_DOCUMENTATION.md)** - Complete documentation in one file
+- **[docs/mvp/README.md](docs/mvp/README.md)** - ⭐ Trade Simulator MVP documentation
 - **[README.md](README.md)** - Project overview
 - **[DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)** - Complete documentation index
 - **[wiki/Home.md](wiki/Home.md)** - Wiki homepage
 
-### Critical Review (December 2025)
+### Trade Simulator MVP (Current Focus)
+Active development documentation:
+- **[.github/instructions/trade-simulator-mvp.instructions.md](.github/instructions/trade-simulator-mvp.instructions.md)** - Complete MVP plan
+- **[.github/instructions/anti-patterns.instructions.md](.github/instructions/anti-patterns.instructions.md)** - Lessons learned
+- **[docs/mvp/](docs/mvp/)** - MVP implementation guides
+
+### Historical Archives
 Archived but important for understanding project evolution:
-- **[docs/archive/critical-review-2025/README.md](docs/archive/critical-review-2025/README.md)** - Review summary and context
+- **[docs/archive/critical-review-2025/README.md](docs/archive/critical-review-2025/README.md)** - Critical review (Dec 2025)
+- **[docs/archive/pre-mvp-systems/README.md](docs/archive/pre-mvp-systems/README.md)** - ⭐ NEW: Pre-MVP systems (Jan 2026)
+- **[docs/archive/legacy-Docs/README.md](docs/archive/legacy-Docs/README.md)** - Legacy documentation (Jan 2026)
 
 ---
 
-**Status**: ✅ Cleanups complete - Repository is organized and maintainable
+**Status**: ✅ Cleanups complete - Repository is organized and MVP-focused
 
-*This document was updated as part of the January 14, 2026 repository modernization.*
+*This document was updated as part of the January 21, 2026 documentation review and cleanup.*
