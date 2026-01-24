@@ -243,16 +243,20 @@ You'll see "0 to 1" values everywhere. This is called **normalization** and it's
 **We use**:
 - "Mouse is at X=0.5, Y=0.5" (means "50% across, 50% down" - works on ANY screen)
 
-**To convert normalized to pixels**:
+**To convert normalized to pixels for CENTER-ANCHORED widgets**:
 ```
-Pixel X = Normalized X × Screen Width
-Pixel Y = Normalized Y × Screen Height
+Centered Pixel X = (Normalized X - 0.5) × Screen Width
+Centered Pixel Y = (Normalized Y - 0.5) × Screen Height
 
 Example (1920x1080 screen):
-Mouse at (0.5, 0.5) = (0.5 × 1920, 0.5 × 1080) = (960, 540) pixels
+Mouse at (0.5, 0.5) [center] = ((0.5 - 0.5) × 1920, (0.5 - 0.5) × 1080) = (0, 0) pixels
+Mouse at (0, 0) [top-left] = ((0 - 0.5) × 1920, (0 - 0.5) × 1080) = (-960, -540) pixels
+Mouse at (1, 1) [bottom-right] = ((1 - 0.5) × 1920, (1 - 0.5) × 1080) = (960, 540) pixels
 ```
 
-This is important because we need pixel positions to actually draw things on screen.
+**Why subtract 0.5?** Because our widgets are anchored to screen CENTER, not top-left. The center becomes (0, 0) in render translation space, so we need to convert normalized coordinates (where 0.5, 0.5 is center) to center-based pixel coordinates (where 0, 0 is center).
+
+This is important because we need center-based pixel positions to move center-anchored widgets correctly.
 
 ---
 
@@ -454,43 +458,75 @@ We need to know how big the screen is to convert normalized coordinates to pixel
 
 **What it does**: Returns the screen resolution (e.g., 1920x1080 or 2560x1440)
 
-#### 4.3: Convert Mouse Position to Pixels
+#### 4.3: Convert Mouse Position to Pixels (Center-Anchored Coordinates)
 
 Now let's do math! Don't worry, we'll explain every step.
 
-**Formula**: Pixel Position = Normalized Position × Screen Size
+**IMPORTANT**: Since we anchored our widgets to CENTER, the center of the screen is at position (0, 0) in render translation space, NOT the top-left corner!
+
+**Formula**: Pixel Position = (Normalized Position - 0.5) × Screen Size
+
+This formula:
+- Centers the coordinate system (0.5, 0.5 normalized becomes 0, 0 pixels)
+- Makes left/top positions negative
+- Makes right/bottom positions positive
+
+**Step-by-step Blueprint nodes**:
 
 1. **Drag off** the `Mouse Screen Position` pin from the event
 
 2. **Search for**: `Break Vector2D`
    - This splits the Vector2D into separate X and Y values
 
-3. **Drag off** the `Viewport Size` output from Get Viewport Size
+3. **Subtract 0.5 from X**:
+   - Drag off `Mouse Screen Position X`
+   - Search for: `-` (subtract)
+   - Set the other input to `0.5`
+   - This centers the X coordinate
 
-4. **Search for**: `Break Vector2D` (again)
+4. **Subtract 0.5 from Y**:
+   - Drag off `Mouse Screen Position Y`
+   - Search for: `-` (subtract)
+   - Set the other input to `0.5`
+   - This centers the Y coordinate
+
+5. **Drag off** the `Viewport Size` output from Get Viewport Size
+
+6. **Search for**: `Break Vector2D` (again)
    - Now we have ViewportWidth (X) and ViewportHeight (Y)
 
-5. **Multiply X values**:
-   - Drag off `Mouse Screen Position X`
+7. **Multiply centered X**:
+   - Take the result from step 3 (Mouse X - 0.5)
    - Search for: `*` (multiply)
    - Connect `Viewport Size X` to the other input
-   - This gives us mouse pixel X
+   - This gives us the centered pixel X position
 
-6. **Multiply Y values**:
-   - Same process for Y coordinates
+8. **Multiply centered Y**:
+   - Take the result from step 4 (Mouse Y - 0.5)
+   - Search for: `*` (multiply)
+   - Connect `Viewport Size Y` to the other input
+   - This gives us the centered pixel Y position
 
-**What we just did**: Converted normalized mouse position (0-1) to actual pixel coordinates.
+**What we just did**: Converted normalized mouse position (0-1) to center-anchored pixel coordinates.
 
 **Example**:
 ```
-Mouse at (0.5, 0.5) on 1920x1080 screen:
-X = 0.5 × 1920 = 960 pixels
-Y = 0.5 × 1080 = 540 pixels
+Mouse at (0.5, 0.5) on 1920x1080 screen (CENTER of screen):
+X = (0.5 - 0.5) × 1920 = 0 pixels ✓ (centered)
+Y = (0.5 - 0.5) × 1080 = 0 pixels ✓ (centered)
+
+Mouse at (0, 0) on 1920x1080 screen (TOP-LEFT of screen):
+X = (0 - 0.5) × 1920 = -960 pixels ✓ (left of center)
+Y = (0 - 0.5) × 1080 = -540 pixels ✓ (above center)
+
+Mouse at (1, 1) on 1920x1080 screen (BOTTOM-RIGHT of screen):
+X = (1 - 0.5) × 1920 = 960 pixels ✓ (right of center)
+Y = (1 - 0.5) × 1080 = 540 pixels ✓ (below center)
 ```
 
 #### 4.4: Move the Mouse Cursor Indicator
 
-Now we use those pixel coordinates to actually move the widget!
+Now we use those center-anchored pixel coordinates to actually move the widget!
 
 1. **Get reference to our widget**:
    - Drag `MouseCursorIndicator` from the Variables list (left side)
@@ -499,26 +535,36 @@ Now we use those pixel coordinates to actually move the widget!
 2. **Set its position**:
    - Drag off the MouseCursorIndicator pin
    - Search for: `Set Render Translation`
-   - Connect the execution pin from `Get Viewport Size` (or your previous node with execution) — `Break Vector2D` is a pure node and has no execution pins
+   - Connect the execution pin from your last multiply node (or previous node with execution)
    
 3. **Connect coordinates**:
-   - Drag the Mouse Pixel X to `Translation X` input
-   - Drag the Mouse Pixel Y to `Translation Y` input
+   - Drag the Mouse Pixel X (result from step 7 above) to `Translation X` input
+   - Drag the Mouse Pixel Y (result from step 8 above) to `Translation Y` input
 
 **What we just did**: Moved the mouse cursor indicator to match the actual mouse position on screen!
 
-**Important note**: `Set Render Translation` moves a widget relative to its anchor point. Since we anchored to center and set alignment to 0.5, this will move it from screen center.
+**Why this works**: `Set Render Translation` moves a widget relative to its anchor point. Since we:
+1. Anchored to CENTER (middle of screen)
+2. Set alignment to 0.5, 0.5 (widget centered on its position)
+3. Converted to center-based coordinates (by subtracting 0.5 before multiplying)
+
+The widget now correctly displays at the mouse position:
+- Center of screen (0, 0 translation) = mouse at center
+- Negative X/Y = mouse left/above center
+- Positive X/Y = mouse right/below center
 
 #### 4.5: Repeat for Ship Direction Indicator
 
-Do the exact same thing for the ship direction:
+Do the exact same thing for the ship direction, using the correct center-anchored formula:
 
 1. Break `Ship Rotation Direction` into X and Y
-2. Multiply by Viewport Size X and Y
-3. Get `ShipDirectionIndicator` variable
-4. Call `Set Render Translation` with the calculated pixels
+2. **Subtract 0.5 from both X and Y** (to center the coordinates)
+3. Multiply the centered X by Viewport Size X
+4. Multiply the centered Y by Viewport Size Y
+5. Get `ShipDirectionIndicator` variable
+6. Call `Set Render Translation` with the calculated center-based pixel positions
 
-Now both indicators should be moving!
+Now both indicators should be moving correctly with proper center-based positioning!
 
 #### 4.6: Add Color Changes Based on Rotation Speed
 
@@ -662,10 +708,11 @@ Now let's see if it works!
 - Print debug messages to verify events are being called
 
 **If indicators don't move**:
-- Check that you're multiplying normalized coords by viewport size
+- Check that you're subtracting 0.5 from normalized coords BEFORE multiplying by viewport size
 - Check anchors are set to CENTER
 - Check alignment is 0.5, 0.5
 - Verify `Set Render Translation` is connected correctly
+- Verify the formula: (Normalized - 0.5) × Viewport Size
 
 **If colors don't change**:
 - Check that `Rotation Speed` is being used in Branch conditions
@@ -676,17 +723,22 @@ Now let's see if it works!
 
 ## Common Beginner Mistakes & How to Fix Them
 
-### Mistake 1: Forgetting to Convert Normalized to Pixels
+### Mistake 1: Forgetting to Center Coordinates for Center-Anchored Widgets
 
-**Symptom**: Indicators are stuck in top-left corner or barely move
+**Symptom**: Indicators are all shifted toward bottom-right, or only appear in one quadrant
 
-**Why it happens**: You're using normalized coordinates (0-1) directly instead of multiplying by screen size.
+**Why it happens**: You're multiplying normalized coordinates (0-1) by screen size without accounting for center anchoring. This treats top-left as (0, 0) but your widgets are anchored to center where (0, 0) should be at screen center.
 
 **Fix**:
 ```
-❌ WRONG: Set Render Translation(MouseScreenPosition.X, MouseScreenPosition.Y)
-✓ RIGHT: Set Render Translation(MouseScreenPosition.X × ViewportWidth, MouseScreenPosition.Y × ViewportHeight)
+❌ WRONG: Set Render Translation(MouseScreenPosition.X × ViewportWidth, MouseScreenPosition.Y × ViewportHeight)
+✓ RIGHT: Set Render Translation((MouseScreenPosition.X - 0.5) × ViewportWidth, (MouseScreenPosition.Y - 0.5) × ViewportHeight)
 ```
+
+**Why this works**: Subtracting 0.5 converts from top-left-based normalized coordinates to center-based coordinates:
+- Center (0.5, 0.5) becomes (0, 0) - correct for center anchor
+- Top-left (0, 0) becomes (-0.5, -0.5) × size = negative values - left and above center
+- Bottom-right (1, 1) becomes (0.5, 0.5) × size = positive values - right and below center
 
 ### Mistake 2: Wrong Anchor Points
 
