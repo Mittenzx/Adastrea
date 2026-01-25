@@ -43,10 +43,13 @@ Done!
    
    Docking | Parameters:
      - Docking Range: 2000.0
-     - Docking Duration: 1.0
-     - Undock Impulse Strength: 500.0
-     - Docking Curve: (Optional)
+   
+   Docking | Parameters (Future):
+     - Docking Duration: 1.0 (not yet implemented - safe to leave at default)
+     - Undock Impulse Strength: 500.0 (not yet implemented - safe to leave at default)
+     - Docking Curve: (Optional, not yet implemented)
    ```
+   **Note**: Parameters in the "Future" category are placeholders for upcoming features and do not affect current gameplay.
 6. Save
 
 ### Step 2: Update Ship Blueprints
@@ -79,22 +82,24 @@ For each ship (BP_PlayerShip, BP_NPCShip, etc.):
 
 Create different profiles for different ship types:
 
+**Note**: Duration and Impulse parameters are placeholders for future features and do not currently affect gameplay. Only DockingRange is actively used.
+
 **Small/Fast Ships:**
 - Asset: `DA_DockingSettings_Small`
-- Range: 1500.0 (tighter)
-- Duration: 0.5 (quick)
-- Impulse: 800.0 (fast exit)
+- Range: 1500.0 (tighter approach)
+- Duration: 0.5 (quick docking) [FUTURE FEATURE - not yet active]
+- Impulse: 800.0 (fast exit) [FUTURE FEATURE - not yet active]
 
 **Large/Slow Ships:**
 - Asset: `DA_DockingSettings_Large`
-- Range: 3000.0 (wider)
-- Duration: 2.0 (slow)
-- Impulse: 300.0 (slow exit)
+- Range: 3000.0 (wider approach)
+- Duration: 2.0 (slow, careful) [FUTURE FEATURE - not yet active]
+- Impulse: 300.0 (slow exit) [FUTURE FEATURE - not yet active]
 
 **VIP Ships:**
 - Asset: `DA_DockingSettings_VIP`
 - Custom trading UI: `WBP_VIPTradingUI`
-- Special effects and animations
+- Special effects and animations [FUTURE FEATURE - not yet active]
 
 ## Migration from Old System
 

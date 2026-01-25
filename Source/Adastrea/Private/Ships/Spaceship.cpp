@@ -2005,10 +2005,14 @@ void ASpaceship::Undock()
 
 float ASpaceship::GetEffectiveDockingRange() const
 {
-    // Use DockingSettings if set, otherwise fall back to DockingRange property
+    // Use DockingSettings if set and valid, otherwise fall back to DockingRange property
     if (DockingSettings)
     {
-        return DockingSettings->DockingRange;
+        const float SettingsRange = DockingSettings->DockingRange;
+        if (SettingsRange > 0.0f)
+        {
+            return SettingsRange;
+        }
     }
     return DockingRange;
 }

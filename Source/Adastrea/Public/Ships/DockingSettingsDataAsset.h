@@ -56,21 +56,33 @@ public:
         ToolTip="How close the ship needs to be to dock (default: 2000 cm)"))
     float DockingRange;
 
-    /** Animation curve for smooth docking movement (optional) */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Docking|Parameters",
-        meta=(ToolTip="Curve controlling docking animation speed (cubic ease recommended)"))
+    /** 
+     * Animation curve for smooth docking movement (optional)
+     * NOTE: Currently not implemented - docking uses instant teleportation.
+     * This property is reserved for future animation support.
+     */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Docking|Parameters (Future)",
+        meta=(ToolTip="[FUTURE FEATURE] Curve controlling docking animation speed. Not yet implemented."))
     TObjectPtr<UCurveFloat> DockingCurve;
 
-    /** Time to complete docking animation in seconds */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Docking|Parameters",
+    /** 
+     * Time to complete docking animation in seconds
+     * NOTE: Currently not implemented - docking uses instant teleportation.
+     * This property is reserved for future animation support.
+     */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Docking|Parameters (Future)",
         meta=(ClampMin="0.1", ClampMax="10.0", UIMin="0.5", UIMax="3.0",
-        ToolTip="How long the docking animation takes (default: 1.0 seconds)"))
+        ToolTip="[FUTURE FEATURE] How long the docking animation takes. Not yet implemented."))
     float DockingDuration;
 
-    /** Undock impulse strength (cm/s) - how fast ship moves away when undocking */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Docking|Parameters",
+    /** 
+     * Undock impulse strength (cm/s) - how fast ship moves away when undocking
+     * NOTE: Currently not implemented - undocking uses hardcoded 500.0f impulse (line 1968 in Spaceship.cpp).
+     * This property is reserved for future customization support.
+     */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Docking|Parameters (Future)",
         meta=(ClampMin="0.0", ClampMax="5000.0", UIMin="100.0", UIMax="1000.0",
-        ToolTip="Forward velocity applied when undocking (default: 500 cm/s)"))
+        ToolTip="[FUTURE FEATURE] Forward velocity applied when undocking. Not yet implemented - currently hardcoded to 500.0f."))
     float UndockImpulseStrength;
 
     // ====================

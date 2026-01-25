@@ -859,22 +859,26 @@ You can create different docking profiles for different ship types:
 
 **Configuration:**
 ```
+# NOTE: "Docking Duration" and "Undock Impulse" are PLANNED advanced settings.
+#       They are not yet wired into gameplay logic in the current MVP builds.
+#       You can configure them for future compatibility, but they will have no effect for now.
+
 # Small Ships (Fighter, Scout)
 DA_DockingSettings_Small:
   - Docking Range: 1500.0 (tighter approach)
-  - Docking Duration: 0.5 (quick docking)
-  - Undock Impulse: 800.0 (fast exit)
+  - Docking Duration: 0.5 (quick docking) [FUTURE FEATURE - not yet active]
+  - Undock Impulse: 800.0 (fast exit) [FUTURE FEATURE - not yet active]
 
 # Large Ships (Freighter, Capital)
 DA_DockingSettings_Large:
   - Docking Range: 3000.0 (wider approach)
-  - Docking Duration: 2.0 (slow, careful docking)
-  - Undock Impulse: 300.0 (slow exit)
+  - Docking Duration: 2.0 (slow, careful docking) [FUTURE FEATURE - not yet active]
+  - Undock Impulse: 300.0 (slow exit) [FUTURE FEATURE - not yet active]
 
 # VIP Ships (Luxury, Diplomat)
 DA_DockingSettings_VIP:
   - Docking Range: 2000.0 (standard)
-  - Docking Duration: 1.5 (ceremonial)
+  - Docking Duration: 1.5 (ceremonial) [FUTURE FEATURE - not yet active]
   - Trading Interface Class: WBP_VIPTradingUI (custom)
 ```
 
@@ -1682,10 +1686,13 @@ If `DA_DefaultDockingSettings` doesn't exist, create it once:
    
    Docking > Parameters:
      - Docking Range: 2000.0 (in cm, ~20 meters)
-     - Docking Duration: 1.0 (seconds)
-     - Undock Impulse Strength: 500.0 (cm/s)
-     - Docking Curve: (Optional, cubic ease curve)
+   
+   Docking > Parameters (Future):
+     - Docking Duration: 1.0 (seconds) [FUTURE FEATURE - not yet implemented, safe to leave at default]
+     - Undock Impulse Strength: 500.0 (cm/s) [FUTURE FEATURE - not yet implemented, safe to leave at default]
+     - Docking Curve: (Optional, cubic ease curve) [FUTURE FEATURE - not yet implemented]
    ```
+   **Note**: Parameters in the "Parameters (Future)" category are reserved for upcoming animation and customization features. They do not affect current docking behavior.
 4. Save the asset
 5. Reference this asset in all ship Blueprints
 

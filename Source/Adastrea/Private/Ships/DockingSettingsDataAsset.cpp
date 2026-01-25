@@ -23,14 +23,20 @@ EDataValidationResult UDockingSettingsDataAsset::IsDataValid(FDataValidationCont
     {
         Context.AddWarning(FText::FromString(
             "DockingPromptWidgetClass is not set. Ships using this configuration won't show docking prompts."));
-        Result = EDataValidationResult::Invalid;
+        if (Result != EDataValidationResult::Invalid)
+        {
+            Result = EDataValidationResult::NotValidated;
+        }
     }
 
     if (!TradingInterfaceClass)
     {
         Context.AddWarning(FText::FromString(
             "TradingInterfaceClass is not set. Ships using this configuration won't show trading UI when docked."));
-        Result = EDataValidationResult::Invalid;
+        if (Result != EDataValidationResult::Invalid)
+        {
+            Result = EDataValidationResult::NotValidated;
+        }
     }
 
     // Validate docking range is reasonable
@@ -45,7 +51,11 @@ EDataValidationResult UDockingSettingsDataAsset::IsDataValid(FDataValidationCont
     if (DockingDuration < 0.1f || DockingDuration > 10.0f)
     {
         Context.AddWarning(FText::FromString(
-            FString::Printf(TEXT("DockingDuration %.2f seconds is outside recommended range (0.1-10.0 seconds)."), DockingDuration)));
+            FString::Printf(TEXT("DockingDuration %.2f seconds is outside recommended range (0.1-10.0 seconds). Note: This parameter is not yet implemented in gameplay."), DockingDuration)));
+        if (Result != EDataValidationResult::Invalid)
+        {
+            Result = EDataValidationResult::NotValidated;
+        }
     }
 
     // Validate undock impulse is reasonable
@@ -53,6 +63,12 @@ EDataValidationResult UDockingSettingsDataAsset::IsDataValid(FDataValidationCont
     {
         Context.AddError(FText::FromString(
             TEXT("UndockImpulseStrength cannot be negative.")));
+        Result = EDataValidationResult::Invalid;
+    }
+
+    return Result;
+}
+#endif
         Result = EDataValidationResult::Invalid;
     }
 
