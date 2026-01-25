@@ -27,15 +27,16 @@
 
 ### Part 3: Docking System
 12. [Docking Core Concepts](#docking-core-concepts)
-13. [Docking Setup](#docking-setup)
+13. [Centralized Docking Configuration](#-centralized-docking-configuration-new) **NEW** 🎯
+14. [Docking Setup](#docking-setup)
     - [Visual Docking Setup Guide](#-visual-docking-setup-guide) **NEW** 📸
     - [Part 1: Add Docking Bay to Space Station](#part-1-add-docking-bay-to-space-station)
     - [Part 2: Configure Docking Bay Components](#part-2-configure-docking-bay-components)
     - [Part 3: ~~Link Scene Components to DockingPoints Array~~ (NOW AUTOMATED!)](#part-3-link-scene-components-to-dockingpoints-array-now-automated)
     - [Part 4: Configure Docking Point Properties](#part-4-configure-docking-point-properties-scene-components)
-14. [Docking Interaction](#docking-interaction)
-15. [Docking UI](#docking-ui)
-16. [Docking Points](#docking-points)
+15. [Docking Interaction](#docking-interaction)
+16. [Docking UI](#docking-ui)
+17. [Docking Points](#docking-points)
 
 ### Part 4: Implementation Guides
 17. [Creating a Trading Station](#creating-a-trading-station)
@@ -750,6 +751,7 @@ Function: CanExecuteTrade
 - **Player Ship (ASpaceship)** - C++ docking logic with smooth movement
 - **Docking Bay Module** - Provides docking points and manages slots
 - **Docking UI** - Shows "Press F to Dock" prompts
+- **Docking Settings Data Asset** - Centralized configuration for all ships (NEW!)
 
 **Docking Flow:**
 1. Player flies within 2000 units of station
@@ -764,7 +766,147 @@ Function: CanExecuteTrade
 **C++ vs Blueprint:**
 - ✅ Core docking logic in C++ (reliable, tested)
 - ✅ UI and input binding in Blueprint (flexible)
-- ✅ Configuration via Class Defaults (designer-friendly)
+- ✅ Configuration via Class Defaults or Data Asset (designer-friendly)
+
+---
+
+### 🎯 Centralized Docking Configuration (NEW!)
+
+**Problem Solved**: Previously, every ship Blueprint needed individual docking configuration (widget classes, range, etc.). This meant:
+- ❌ Repetitive configuration for each ship
+- ❌ Hard to update docking behavior globally
+- ❌ Inconsistent settings across ships
+- ❌ More chances for configuration errors
+
+**New Solution**: Use `DockingSettingsDataAsset` to configure all ships at once!
+
+**Benefits:**
+- ✅ **Configure once, apply everywhere** - Set docking parameters in one Data Asset
+- ✅ **Global updates** - Change docking behavior for all ships by editing one asset
+- ✅ **Consistency** - All ships use the same docking settings automatically
+- ✅ **Less work** - No need to configure every ship individually
+- ✅ **Backward compatible** - Existing ships still work with fallback properties
+
+#### How It Works
+
+**Architecture:**
+```
+DockingSettingsDataAsset (DA_DefaultDockingSettings)
+  ├─ Widget Classes (Prompt, Trading UI)
+  ├─ Docking Parameters (Range, Duration, Impulse)
+  └─ Optional Curve Asset
+         ↓
+    Referenced by Ships
+         ↓
+BP_PlayerShip, BP_NPCShip, BP_TraderShip, etc.
+  └─ All use shared settings automatically
+```
+
+**Fallback System:**
+- If `DockingSettings` is set → Use settings from Data Asset
+- If `DockingSettings` is NOT set → Use individual ship properties (backward compatible)
+
+#### Quick Setup Guide
+
+**Step 1: Create Shared Docking Settings (One Time)**
+
+1. Content Browser → Right-Click → Data Asset → **DockingSettingsDataAsset**
+2. Name: `DA_DefaultDockingSettings`
+3. Double-click to open and configure:
+
+```
+Docking | UI:
+  - Docking Prompt Widget Class: WBP_DockingPrompt
+  - Trading Interface Class: WBP_TradingInterface
+
+Docking | Parameters:
+  - Docking Range: 2000.0 (cm, ~20 meters)
+  - Docking Duration: 1.0 (seconds)
+  - Undock Impulse Strength: 500.0 (cm/s)
+  - Docking Curve: (Optional, float curve asset)
+```
+
+4. Save the asset
+
+**Step 2: Reference in All Ships**
+
+1. Open any ship Blueprint (e.g., `BP_PlayerShip`)
+2. Click **Class Defaults**
+3. Find **Docking** category
+4. Set **Docking Settings**: `DA_DefaultDockingSettings`
+5. Compile and Save
+
+**That's it!** The ship now uses centralized docking configuration.
+
+**Step 3: Update All Other Ships (Optional)**
+
+Repeat Step 2 for:
+- `BP_NPCShip`
+- `BP_TraderShip`
+- `BP_MiningShip`
+- Any custom ship Blueprints
+
+**Result**: All ships now share the same docking configuration. Change `DA_DefaultDockingSettings` and all ships update automatically!
+
+#### Advanced: Creating Multiple Docking Profiles
+
+You can create different docking profiles for different ship types:
+
+**Example Profiles:**
+- `DA_DockingSettings_Small` - For fighters and scouts (small range, quick docking)
+- `DA_DockingSettings_Large` - For freighters and capital ships (large range, slow docking)
+- `DA_DockingSettings_VIP` - For special ships (custom UI, special effects)
+
+**Configuration:**
+```
+# Small Ships (Fighter, Scout)
+DA_DockingSettings_Small:
+  - Docking Range: 1500.0 (tighter approach)
+  - Docking Duration: 0.5 (quick docking)
+  - Undock Impulse: 800.0 (fast exit)
+
+# Large Ships (Freighter, Capital)
+DA_DockingSettings_Large:
+  - Docking Range: 3000.0 (wider approach)
+  - Docking Duration: 2.0 (slow, careful docking)
+  - Undock Impulse: 300.0 (slow exit)
+
+# VIP Ships (Luxury, Diplomat)
+DA_DockingSettings_VIP:
+  - Docking Range: 2000.0 (standard)
+  - Docking Duration: 1.5 (ceremonial)
+  - Trading Interface Class: WBP_VIPTradingUI (custom)
+```
+
+#### Migration Guide: From Individual Properties to Shared Settings
+
+**If you have existing ships with individual docking configuration:**
+
+**Before (Old Way):**
+```
+BP_PlayerShip (Class Defaults):
+  Docking | Fallback:
+    - Docking Prompt Widget Class: WBP_DockingPrompt
+    - Trading Interface Class: WBP_TradingInterface
+    - Docking Range: 2000.0
+```
+
+**After (New Way):**
+```
+BP_PlayerShip (Class Defaults):
+  Docking:
+    - Docking Settings: DA_DefaultDockingSettings
+  
+  Docking | Fallback:
+    (Keep these for backward compatibility, but they won't be used)
+```
+
+**What Happens:**
+1. Ship checks if `DockingSettings` is set
+2. If yes → Use values from `DA_DefaultDockingSettings`
+3. If no → Fall back to individual properties (old behavior)
+
+**No Breaking Changes**: Existing ships continue to work without modification. You can migrate ships gradually.
 
 ---
 
@@ -1484,15 +1626,33 @@ If not already present:
 
 #### Step 3: Configure Class Defaults
 
-**Docking Configuration:**
+**Option A: Centralized Docking Configuration (Recommended)**
+
+Use a shared DockingSettings Data Asset to configure all ships at once:
+
 ```
-Docking > UI:
+Docking:
+  - Docking Settings: DA_DefaultDockingSettings
+```
+
+This is the recommended approach because:
+- Configure docking once, apply to all ships
+- Easy to change docking behavior globally
+- Consistent docking experience across all ships
+- No need to set widget classes on every ship
+
+**Option B: Per-Ship Configuration (Legacy/Fallback)**
+
+If you need ship-specific docking configuration:
+
+```
+Docking > Fallback:
   - Docking Prompt Widget Class: WBP_DockingPrompt
   - Trading Interface Class: WBP_TradingInterface
-
-Docking:
-  - Docking Curve: (Float curve asset, cubic ease)
+  - Docking Range: 2000.0
 ```
+
+**Note:** If DockingSettings is set, it overrides these fallback properties.
 
 **Ship Configuration:**
 ```
@@ -1507,6 +1667,32 @@ Ship Config:
 Trading:
   - Current Credits: 1000
 ```
+
+#### Step 3a: Create Shared Docking Settings (First Time Setup)
+
+If `DA_DefaultDockingSettings` doesn't exist, create it once:
+
+1. Content Browser → Right-Click → Data Asset → DockingSettingsDataAsset
+2. Name: `DA_DefaultDockingSettings`
+3. Configure:
+   ```
+   Docking > UI:
+     - Docking Prompt Widget Class: WBP_DockingPrompt
+     - Trading Interface Class: WBP_TradingInterface
+   
+   Docking > Parameters:
+     - Docking Range: 2000.0 (in cm, ~20 meters)
+     - Docking Duration: 1.0 (seconds)
+     - Undock Impulse Strength: 500.0 (cm/s)
+     - Docking Curve: (Optional, cubic ease curve)
+   ```
+4. Save the asset
+5. Reference this asset in all ship Blueprints
+
+**Benefits:**
+- Change docking range for all ships by editing one asset
+- Update UI widgets globally without touching ship Blueprints
+- Maintain consistency across all ships automatically
 
 #### Step 4: Implement Input Binding
 
