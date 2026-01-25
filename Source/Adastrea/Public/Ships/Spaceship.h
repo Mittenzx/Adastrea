@@ -13,6 +13,7 @@ class UInputAction;
 class USpringArmComponent;
 class UCameraComponent;
 class USpaceshipDataAsset;
+class UDockingSettingsDataAsset;
 class ASpaceStationModule;
 class UUserWidget;
 
@@ -406,6 +407,31 @@ public:
      */
     UFUNCTION(BlueprintPure, Category="Docking")
     bool IsDocking() const { return bIsDocking; }
+    
+    /**
+     * Get the effective docking range
+     * Returns value from DockingSettings if set, otherwise returns DockingRange
+     * @return Maximum distance for docking in cm
+     */
+    UFUNCTION(BlueprintPure, Category="Docking")
+    float GetEffectiveDockingRange() const;
+    
+    /**
+     * Get the effective docking prompt widget class
+     * Returns class from DockingSettings if set, otherwise returns DockingPromptWidgetClass
+     * @return Widget class for docking prompt UI
+     */
+    UFUNCTION(BlueprintPure, Category="Docking")
+    TSubclassOf<UUserWidget> GetEffectiveDockingPromptWidgetClass() const;
+    
+    /**
+     * Get the effective trading interface class
+     * Returns class from DockingSettings if set, otherwise returns TradingInterfaceClass
+     * @return Widget class for trading interface UI
+     */
+    UFUNCTION(BlueprintPure, Category="Docking")
+    TSubclassOf<UUserWidget> GetEffectiveTradingInterfaceClass() const;
+
 
 protected:
     virtual void BeginPlay() override;
@@ -465,6 +491,19 @@ protected:
 
     // ===== DOCKING SYSTEM =====
     
+    /**
+     * Centralized docking configuration settings
+     * 
+     * If set, this Data Asset provides all docking configuration (UI widgets, range, etc.)
+     * making it easy to share settings across multiple ships without configuring each one.
+     * 
+     * If not set, the ship will fall back to individual properties (DockingPromptWidgetClass,
+     * TradingInterfaceClass, DockingRange) for backward compatibility.
+     */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Docking",
+        meta=(ToolTip="Centralized docking settings. If set, overrides individual docking properties."))
+    TObjectPtr<UDockingSettingsDataAsset> DockingSettings;
+    
     /** Reference to nearby station module in docking range */
     UPROPERTY(BlueprintReadWrite, Category="Docking")
     TObjectPtr<ASpaceStationModule> NearbyStation;
@@ -481,20 +520,29 @@ protected:
     UPROPERTY(BlueprintReadOnly, Category="Docking")
     bool bIsDocking = false;
     
-    /** Maximum distance from docking point to allow docking */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Docking", meta=(ClampMin="100.0", ClampMax="10000.0"))
+    /** 
+     * Maximum distance from docking point to allow docking
+     * NOTE: If DockingSettings is set, this value is overridden by settings.
+     */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Docking|Fallback", meta=(ClampMin="100.0", ClampMax="10000.0"))
     float DockingRange = 2000.0f;
     
     /** Reference to active docking prompt widget */
     UPROPERTY(BlueprintReadOnly, Category="Docking|UI")
     TObjectPtr<UUserWidget> DockingPromptWidget;
     
-    /** Widget class for docking prompt UI */
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Docking|UI")
+    /** 
+     * Widget class for docking prompt UI
+     * NOTE: If DockingSettings is set, this value is overridden by settings.
+     */
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Docking|Fallback")
     TSubclassOf<UUserWidget> DockingPromptWidgetClass;
     
-    /** Widget class for trading interface UI */
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Docking|UI")
+    /** 
+     * Widget class for trading interface UI
+     * NOTE: If DockingSettings is set, this value is overridden by settings.
+     */
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Docking|Fallback")
     TSubclassOf<UUserWidget> TradingInterfaceClass;
     
     /** Active trading widget instance */

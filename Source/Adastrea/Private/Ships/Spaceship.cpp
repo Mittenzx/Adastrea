@@ -1,6 +1,7 @@
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipInterior.h"
 #include "Ships/SpaceshipDataAsset.h"
+#include "Ships/DockingSettingsDataAsset.h"
 #include "Ships/SpaceshipControlsComponent.h"
 #include "AdastreaLog.h"
 #include "GameFramework/PlayerController.h"
@@ -1146,13 +1147,16 @@ void ASpaceship::ShowDockingPrompt(bool bShow)
 {
     if (bShow)
     {
+        // Get effective widget class (from settings or fallback)
+        TSubclassOf<UUserWidget> EffectiveWidgetClass = GetEffectiveDockingPromptWidgetClass();
+        
         // Create widget if it doesn't exist
-        if (!DockingPromptWidget && DockingPromptWidgetClass)
+        if (!DockingPromptWidget && EffectiveWidgetClass)
         {
             APlayerController* PC = Cast<APlayerController>(GetController());
             if (PC)
             {
-                DockingPromptWidget = CreateWidget<UUserWidget>(PC, DockingPromptWidgetClass);
+                DockingPromptWidget = CreateWidget<UUserWidget>(PC, EffectiveWidgetClass);
                 if (DockingPromptWidget)
                 {
                     DockingPromptWidget->AddToViewport();
@@ -1190,16 +1194,16 @@ void ASpaceship::ShowDockingPrompt(bool bShow)
 #endif
             }
         }
-        else if (!DockingPromptWidgetClass)
+        else if (!EffectiveWidgetClass)
         {
-            UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::ShowDockingPrompt - DockingPromptWidgetClass is not set on '%s'. Docking prompt UI will not be shown."), *GetName());
+            UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::ShowDockingPrompt - No DockingPromptWidgetClass set (neither in DockingSettings nor direct property) on '%s'. Docking prompt UI will not be shown."), *GetName());
             
 #if DOCKING_DEBUG_ENABLED
             // Debug print - widget class not set
             if (GEngine)
             {
                 GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
-                    TEXT("[DOCKING] ERROR: DockingPromptWidgetClass not set in Blueprint"));
+                    TEXT("[DOCKING] ERROR: DockingPromptWidgetClass not set in Blueprint or Settings"));
             }
 #endif
         }
@@ -1436,9 +1440,11 @@ void ASpaceship::RequestDocking()
     
     // Check if ship is within docking range
     float DistanceToDockingPoint = FVector::Dist(GetActorLocation(), DockingPoint->GetComponentLocation());
-    if (DistanceToDockingPoint > DockingRange)
+    float EffectiveRange = GetEffectiveDockingRange();
+    
+    if (DistanceToDockingPoint > EffectiveRange)
     {
-        UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::RequestDocking - Too far from docking point (%.0f > %.0f)"), DistanceToDockingPoint, DockingRange);
+        UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::RequestDocking - Too far from docking point (%.0f > %.0f)"), DistanceToDockingPoint, EffectiveRange);
         
         #if DOCKING_DEBUG_ENABLED
 
@@ -1448,7 +1454,7 @@ void ASpaceship::RequestDocking()
         {
             GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
                 FString::Printf(TEXT("[DOCKING] ERROR: Too far from docking point (%.0f units > %.0f max)"), 
-                    DistanceToDockingPoint, DockingRange));
+                    DistanceToDockingPoint, EffectiveRange));
         }
 
         
@@ -1466,7 +1472,7 @@ void ASpaceship::RequestDocking()
     {
         GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
             FString::Printf(TEXT("[DOCKING] Distance check passed: %.0f units (within %.0f max)"), 
-                DistanceToDockingPoint, DockingRange));
+                DistanceToDockingPoint, EffectiveRange));
     }
 
     
@@ -1684,8 +1690,11 @@ void ASpaceship::CompleteDocking()
     
     #endif
     
+    // Get effective trading interface class (from settings or fallback)
+    TSubclassOf<UUserWidget> EffectiveTradingClass = GetEffectiveTradingInterfaceClass();
+    
     // Create and show trading widget
-    if (TradingInterfaceClass)
+    if (EffectiveTradingClass)
     {
         #if DOCKING_DEBUG_ENABLED
 
@@ -1698,7 +1707,7 @@ void ASpaceship::CompleteDocking()
 
         #endif
         
-        TradingWidget = CreateWidget<UUserWidget>(PC, TradingInterfaceClass);
+        TradingWidget = CreateWidget<UUserWidget>(PC, EffectiveTradingClass);
         if (TradingWidget)
         {
             TradingWidget->AddToViewport();
@@ -1732,7 +1741,7 @@ void ASpaceship::CompleteDocking()
     }
     else
     {
-        UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::CompleteDocking - TradingInterfaceClass is not set on '%s'. Trading UI will not be created."), *GetName());
+        UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::CompleteDocking - No TradingInterfaceClass set (neither in DockingSettings nor direct property) on '%s'. Trading UI will not be created."), *GetName());
         
         #if DOCKING_DEBUG_ENABLED
 
@@ -1741,7 +1750,7 @@ void ASpaceship::CompleteDocking()
         if (GEngine)
         {
             GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
-                TEXT("[DOCKING] ERROR: TradingInterfaceClass not set in Blueprint"));
+                TEXT("[DOCKING] ERROR: TradingInterfaceClass not set in Blueprint or Settings"));
         }
 
         
@@ -1990,4 +1999,40 @@ void ASpaceship::Undock()
     #endif
     
     UE_LOG(LogAdastreaShips, Log, TEXT("ASpaceship::Undock - Undocked successfully from '%s'"), NearbyStation ? *NearbyStation->GetName() : TEXT("Unknown Station"));
+}
+
+// ===== DOCKING CONFIGURATION HELPERS =====
+
+float ASpaceship::GetEffectiveDockingRange() const
+{
+    // Use DockingSettings if set and valid, otherwise fall back to DockingRange property
+    if (DockingSettings)
+    {
+        const float SettingsRange = DockingSettings->DockingRange;
+        if (SettingsRange > 0.0f)
+        {
+            return SettingsRange;
+        }
+    }
+    return DockingRange;
+}
+
+TSubclassOf<UUserWidget> ASpaceship::GetEffectiveDockingPromptWidgetClass() const
+{
+    // Use DockingSettings if set, otherwise fall back to DockingPromptWidgetClass property
+    if (DockingSettings && DockingSettings->DockingPromptWidgetClass)
+    {
+        return DockingSettings->DockingPromptWidgetClass;
+    }
+    return DockingPromptWidgetClass;
+}
+
+TSubclassOf<UUserWidget> ASpaceship::GetEffectiveTradingInterfaceClass() const
+{
+    // Use DockingSettings if set, otherwise fall back to TradingInterfaceClass property
+    if (DockingSettings && DockingSettings->TradingInterfaceClass)
+    {
+        return DockingSettings->TradingInterfaceClass;
+    }
+    return TradingInterfaceClass;
 }
