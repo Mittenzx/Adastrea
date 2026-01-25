@@ -1,0 +1,71 @@
+CENTRALIZED DOCKING CONFIGURATION ARCHITECTURE
+==============================================
+
+┌─────────────────────────────────────────────────────┐
+│  DA_DefaultDockingSettings (Data Asset)             │
+│  ─────────────────────────────────────────────────  │
+│  • DockingPromptWidgetClass: WBP_DockingPrompt     │
+│  • TradingInterfaceClass: WBP_TradingInterface     │
+│  • DockingRange: 2000.0                            │
+│  • DockingDuration: 1.0                            │
+│  • UndockImpulseStrength: 500.0                    │
+│  • DockingCurve: (Optional)                        │
+└─────────────────────────────────────────────────────┘
+                         │
+                         │ Referenced by
+                         ▼
+        ┌────────────────┴────────────────┐
+        │                                  │
+        ▼                                  ▼
+┌──────────────────┐              ┌──────────────────┐
+│  BP_PlayerShip   │              │  BP_NPCShip      │
+│  ──────────────  │              │  ──────────────  │
+│  DockingSettings │              │  DockingSettings │
+│  = DA_Default... │              │  = DA_Default... │
+└──────────────────┘              └──────────────────┘
+        │                                  │
+        │                                  │
+        ▼                                  ▼
+┌──────────────────┐              ┌──────────────────┐
+│  BP_TraderShip   │              │  BP_MiningShip   │
+│  ──────────────  │              │  ──────────────  │
+│  DockingSettings │              │  DockingSettings │
+│  = DA_Default... │              │  = DA_Default... │
+└──────────────────┘              └──────────────────┘
+
+RESULT: All ships share the same docking configuration!
+        Change DA_DefaultDockingSettings → All ships update
+
+
+BACKWARD COMPATIBILITY FALLBACK
+================================
+
+If DockingSettings is NOT set:
+┌──────────────────────────────────┐
+│  BP_PlayerShip (Old Configuration)│
+│  ────────────────────────────────│
+│  Docking | Fallback:              │
+│  • DockingPromptWidgetClass       │
+│  • TradingInterfaceClass          │
+│  • DockingRange                   │
+└──────────────────────────────────┘
+              │
+              ▼
+    Uses individual properties
+    (Old behavior preserved)
+
+
+MULTIPLE PROFILES EXAMPLE
+=========================
+
+┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
+│ DA_Docking_Small │    │ DA_Docking_Large │    │ DA_Docking_VIP   │
+│ Range: 1500      │    │ Range: 3000      │    │ Range: 2000      │
+│ Duration: 0.5    │    │ Duration: 2.0    │    │ Custom UI        │
+└─────────┬────────┘    └─────────┬────────┘    └─────────┬────────┘
+          │                       │                        │
+          ▼                       ▼                        ▼
+    ┌─────────┐           ┌──────────┐            ┌──────────┐
+    │ Fighter │           │ Freighter│            │ Diplomat │
+    │ Scout   │           │ Hauler   │            │ Luxury   │
+    └─────────┘           └──────────┘            └──────────┘
