@@ -12,8 +12,8 @@
 
 USpaceshipControlsComponent::USpaceshipControlsComponent()
 	: MovementSpeed(1.0f)
-	, LookSensitivity(1.0f)
-	, LookSensitivityVertical(2.0f)
+	, LookSensitivity(50.0f)  // Increased from 1.0 for more responsive mouse look
+	, LookSensitivityVertical(50.0f)  // Increased from 2.0 and matched to horizontal for consistent feel
 	, bInvertLookY(false)
 	, InputMappingPriority(0)
 	, CurrentSpeed(1.0f)
@@ -344,12 +344,12 @@ void USpaceshipControlsComponent::SetMovementSpeed(float NewSpeed)
 
 void USpaceshipControlsComponent::SetLookSensitivity(float NewSensitivity)
 {
-	LookSensitivity = FMath::Clamp(NewSensitivity, 0.1f, 10.0f);
+	LookSensitivity = FMath::Clamp(NewSensitivity, 0.1f, 100.0f);
 }
 
 void USpaceshipControlsComponent::SetLookSensitivityVertical(float NewSensitivity)
 {
-	LookSensitivityVertical = FMath::Clamp(NewSensitivity, 0.0f, 10.0f);
+	LookSensitivityVertical = FMath::Clamp(NewSensitivity, 0.0f, 100.0f);
 }
 
 void USpaceshipControlsComponent::ToggleInvertLookY()
@@ -492,6 +492,11 @@ void USpaceshipControlsComponent::OnLookInput_Implementation(FVector2D LookValue
 
 	// Apply rotation in local space to prevent gimbal lock and unwanted roll
 	// LookValue.X = yaw (left/right), LookValue.Y = pitch (up/down)
+	// 
+	// IMPORTANT: Rotation is applied around the actor's pivot (RootComponent location).
+	// If the ship mesh appears to rotate around an external point, ensure that:
+	// 1. The mesh component in the Blueprint is centered at (0,0,0) relative to the RootComponent
+	// 2. The mesh's pivot point in the 3D modeling software is at the center of the ship
 	const float DeltaTime = World->GetDeltaSeconds();
 	FRotator DeltaRotation = FRotator(LookValue.Y * DeltaTime, LookValue.X * DeltaTime, 0.0f);
 	UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent::OnLookInput - Applying rotation: Pitch=%.2f Yaw=%.2f"), 
