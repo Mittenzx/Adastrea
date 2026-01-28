@@ -61,11 +61,11 @@ public:
 	float MovementSpeed;
 
 	/** Look sensitivity multiplier applied to mouse input (horizontal/yaw) */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Controls|Look", meta=(ClampMin="0.1", ClampMax="10.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Controls|Look", meta=(ClampMin="0.1", ClampMax="100.0"))
 	float LookSensitivity;
 
 	/** Look sensitivity multiplier for vertical mouse input (pitch). If 0, uses LookSensitivity value */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Controls|Look", meta=(ClampMin="0.0", ClampMax="10.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Controls|Look", meta=(ClampMin="0.0", ClampMax="100.0"))
 	float LookSensitivityVertical;
 
 	/** When true, inverts the Y axis for look input */
