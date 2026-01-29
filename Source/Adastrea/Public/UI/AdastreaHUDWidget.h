@@ -69,6 +69,15 @@ public:
 	virtual void UpdateSpeed_Implementation(float CurrentSpeed, float MaxSpeed);
 
 	/**
+	 * Update navigation coordinates display
+	 * Shows the player's current position in 3D space (X, Y, Z coordinates)
+	 * @param Position The current position vector (X, Y, Z)
+	 */
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="HUD|Navigation")
+	void UpdateCoordinates(FVector Position);
+	virtual void UpdateCoordinates_Implementation(FVector Position);
+
+	/**
 	 * Update target information display
 	 * @param TargetName The name of the targeted object
 	 * @param TargetDistance Distance to target in units
@@ -127,6 +136,10 @@ protected:
 	/** Current speed value for display */
 	UPROPERTY(BlueprintReadOnly, Category="HUD|State")
 	float CurrentSpeedValue;
+
+	/** Current navigation coordinates (X, Y, Z position) for display */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|State")
+	FVector CurrentCoordinates;
 
 	/** Whether a target is currently selected */
 	UPROPERTY(BlueprintReadOnly, Category="HUD|State")

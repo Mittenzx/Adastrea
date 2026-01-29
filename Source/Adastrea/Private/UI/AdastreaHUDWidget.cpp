@@ -9,6 +9,7 @@ UAdastreaHUDWidget::UAdastreaHUDWidget(const FObjectInitializer& ObjectInitializ
 	, HealthPercent(1.0f)
 	, ShieldPercent(1.0f)
 	, CurrentSpeedValue(0.0f)
+	, CurrentCoordinates(FVector::ZeroVector)
 	, bHasTarget(false)
 	, ControlledSpaceship(nullptr)
 	, CachedPlayerController(nullptr)
@@ -67,6 +68,12 @@ void UAdastreaHUDWidget::UpdateShield_Implementation(float CurrentShield, float 
 void UAdastreaHUDWidget::UpdateSpeed_Implementation(float CurrentSpeed, float MaxSpeed)
 {
 	CurrentSpeedValue = CurrentSpeed;
+}
+
+void UAdastreaHUDWidget::UpdateCoordinates_Implementation(FVector Position)
+{
+	CurrentCoordinates = Position;
+	// Blueprint implementation handles display formatting (e.g., decimal places, units)
 }
 
 void UAdastreaHUDWidget::UpdateTargetInfo_Implementation(const FText& TargetName, float TargetDistance, bool bIsHostile)
@@ -216,6 +223,13 @@ void UAdastreaHUDWidget::UpdateHUDFromGameState_Implementation(float DeltaTime)
 {
 	// Get current spaceship
 	ControlledSpaceship = GetControlledSpaceship();
+	
+	// Update coordinates automatically if we have a spaceship
+	if (ControlledSpaceship)
+	{
+		FVector CurrentPosition = ControlledSpaceship->GetActorLocation();
+		UpdateCoordinates(CurrentPosition);
+	}
 	
 	// Blueprint can override this to implement custom auto-update logic
 }
