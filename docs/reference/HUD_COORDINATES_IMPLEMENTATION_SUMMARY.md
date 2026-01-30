@@ -228,6 +228,6 @@ See the detailed documentation files for:
 ---
 
 **Status:** C++ Implementation Complete ✅ | Blueprint UI Pending (Requires UE Editor)  
-**PR:** #[number]  
+**PR:** See associated pull request in repository history  
 **Issue:** Navigation coordinate display request  
 **Last Updated:** 2026-01-29

@@ -203,4 +203,4 @@ Vertical Box:
 - [AdastreaHUDWidget C++ Reference](../../Source/Adastrea/Public/UI/AdastreaHUDWidget.h)
 
 **Last Updated:** 2026-01-29  
-**Feature Added:** PR #[number]
+**Feature Added:** HUD coordinate display
