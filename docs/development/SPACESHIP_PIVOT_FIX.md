@@ -55,14 +55,21 @@ For existing Blueprint spaceships (e.g., `BP_PlayerShip`, `BP_Ship_Fighter`, etc
 
 ### Example Component Hierarchy
 
+**Scene Component Tree** (hierarchical attachment):
 ```
 └─ ShipRoot (SceneComponent) [ROOT]
    ├─ ShipMesh (StaticMeshComponent)
-   ├─ MovementComponent (FloatingPawnMovement)
-   ├─ ParticleComponent (SpaceshipParticleComponent)
    └─ CameraSpringArm (SpringArmComponent)
       └─ Camera (CameraComponent)
 ```
+
+**Owned Components** (not scene-attached):
+```
+- MovementComponent (FloatingPawnMovement)
+- ParticleComponent (SpaceshipParticleComponent)
+```
+
+**Important**: Only scene components (those derived from `USceneComponent`) can be attached to ShipRoot. MovementComponent and ParticleComponent are `UActorComponent`-derived and don't require or support scene attachment.
 
 ## Technical Details
 

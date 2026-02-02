@@ -2,15 +2,20 @@
 
 ## Before Fix (WRONG ❌)
 
+**Scene Component Tree**:
 ```
 ASpaceship
 └─ [Default Root Component from APawn] (at world 0,0,0)
-   ├─ MovementComponent (FloatingPawnMovement)
-   ├─ ParticleComponent (SpaceshipParticleComponent)
    └─ CameraSpringArm (SpringArmComponent)
       └─ Camera (CameraComponent)
 
    [Ship Mesh Added in Blueprint - not properly anchored]
+```
+
+**Owned Components** (not scene-attached):
+```
+- MovementComponent (FloatingPawnMovement)
+- ParticleComponent (SpaceshipParticleComponent)
 ```
 
 ### Problem
@@ -32,21 +37,29 @@ World Origin (0,0,0)
 
 ## After Fix (CORRECT ✅)
 
+### Scene Component Hierarchy
 ```
 ASpaceship
 └─ ShipRoot (USceneComponent) [ROOT] ← NEW!
    ├─ [Ship Mesh - attached in Blueprint]
-   ├─ MovementComponent (FloatingPawnMovement)
-   ├─ ParticleComponent (SpaceshipParticleComponent)
    └─ CameraSpringArm (SpringArmComponent)
       └─ Camera (CameraComponent)
 ```
 
+### Owned Components (not scene-attached)
+```
+- MovementComponent (FloatingPawnMovement) - UActorComponent, not scene-attached
+- ParticleComponent (SpaceshipParticleComponent) - UActorComponent, not scene-attached
+```
+
+**Note**: MovementComponent and ParticleComponent are owned by the actor but don't require scene attachment since they derive from `UActorComponent`, not `USceneComponent`. Only scene components (mesh, camera, etc.) need to be attached to the root.
+
 ### Solution
 - ShipRoot provides explicit, visible root component
-- Mesh components attach to ShipRoot in Blueprint
+- Scene components (mesh, camera) attach to ShipRoot in Blueprint
 - Ship rotates around ShipRoot's location (its center)
 - Camera properly follows ship center
+- Non-scene components are owned but operate independently
 
 ### Visual Representation
 ```
@@ -100,15 +113,22 @@ RootComponent = ShipRoot;
 
 Open your spaceship Blueprint and verify this hierarchy:
 
+**Scene Component Tree** (hierarchical attachment):
 ```
 📦 Components
 ├─ 🔷 ShipRoot (SceneComponent) [ROOT]
 │  ├─ 🎨 ShipMesh (StaticMeshComponent)
-│  ├─ ⚙️ MovementComponent (FloatingPawnMovement)
-│  ├─ ✨ ParticleComponent (SpaceshipParticleComponent)
 │  └─ 📷 CameraSpringArm (SpringArmComponent)
 │     └─ 📹 Camera (CameraComponent)
 ```
+
+**Owned Components** (not scene-attached):
+```
+├─ ⚙️ MovementComponent (FloatingPawnMovement)
+└─ ✨ ParticleComponent (SpaceshipParticleComponent)
+```
+
+**Note**: In the Blueprint editor, MovementComponent and ParticleComponent will appear in the Components panel but are not children of ShipRoot in the scene hierarchy - they're owned components that operate independently.
 
 ### Step 2: Mesh Attachment
 
