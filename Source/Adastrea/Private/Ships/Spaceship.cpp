@@ -89,6 +89,11 @@ ASpaceship::ASpaceship()
     TradingInterfaceClass = nullptr;
     TradingWidget = nullptr;
 
+    // Create root scene component for proper pivot point
+    // This ensures the ship rotates around its center, not the world origin
+    ShipRoot = CreateDefaultSubobject<USceneComponent>(TEXT("ShipRoot"));
+    RootComponent = ShipRoot;
+
     // Create and configure the floating pawn movement component
     MovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("MovementComponent"));
     MovementComponent->MaxSpeed = DefaultMaxSpeed;
@@ -101,7 +106,7 @@ ASpaceship::ASpaceship()
 
     // Create and configure camera components
     CameraSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraSpringArm"));
-    CameraSpringArm->SetupAttachment(RootComponent);
+    CameraSpringArm->SetupAttachment(ShipRoot);
     CameraSpringArm->TargetArmLength = CameraDistance;
     CameraSpringArm->bUsePawnControlRotation = false; // We'll control this manually for free look
     CameraSpringArm->bEnableCameraLag = true;

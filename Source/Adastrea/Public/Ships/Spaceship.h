@@ -39,6 +39,10 @@ class ADASTREA_API ASpaceship : public APawn
 public:
     ASpaceship();
 
+    // Root scene component - provides proper pivot point for ship rotation
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+    TObjectPtr<USceneComponent> ShipRoot;
+
     // Movement component for floating pawn movement in space
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Movement")
     TObjectPtr<UFloatingPawnMovement> MovementComponent;
