@@ -2,19 +2,15 @@
 
 ## Problem Statement
 
-Mouse input for spaceship look controls was producing inconsistent movement feel across different screen aspect ratios. On wider screens (e.g., 21:9 ultrawide), horizontal mouse movement felt significantly faster than vertical movement because the raw mouse delta values were higher for horizontal movement.
+Mouse input for spaceship look controls was producing inconsistent movement feel across different screen aspect ratios. On wider screens (e.g., 21:9 ultrawide), horizontal mouse movement felt significantly faster than vertical movement.
 
 ### Root Cause
 
-The Enhanced Input System provides raw mouse delta values in `LookAxisVector.X` (horizontal) and `LookAxisVector.Y` (vertical). These values represent pixel movement, which means:
+The Enhanced Input System provides raw mouse delta values in `LookAxisVector.X` (horizontal) and `LookAxisVector.Y` (vertical). In this project these are unscaled device-relative deltas (small float values per frame), not literal pixel coordinates. For example, our debug logs commonly show values like `X=0.50 Y=-0.30` for normal mouse movement.
 
-- On a 1920x1080 screen (16:9): Max X delta ≈ 1920, Max Y delta ≈ 1080
-- On a 2560x1080 screen (21:9): Max X delta ≈ 2560, Max Y delta ≈ 1080
-- On a 3840x2160 screen (16:9): Max X delta ≈ 3840, Max Y delta ≈ 2160
+Empirically, on wider aspect ratio displays, the magnitude of horizontal deltas tends to be larger than the vertical deltas for the same physical mouse motion. This makes yaw feel faster than pitch on ultrawide screens, even when using the same sensitivity settings.
 
-Without normalization, the same physical mouse movement produces different rotation speeds depending on:
-1. Screen aspect ratio (wider = faster horizontal)
-2. Screen resolution (higher = faster overall)
+Without normalization, the same physical mouse movement can therefore produce different perceived rotation speeds depending on screen aspect ratio (wider = faster horizontal).
 
 ## Solution
 
@@ -63,9 +59,9 @@ LookAxisVector.X /= AspectRatio;
 
 ## Benefits
 
-1. **Consistent Feel**: Same physical mouse movement produces same rotation regardless of monitor
-2. **Aspect Ratio Independent**: Works correctly on 16:9, 21:9, 32:9, 4:3, etc.
-3. **Resolution Independent**: Scales appropriately for 1080p, 1440p, 4K, etc.
+1. **Consistent Horizontal/Vertical Feel**: Same physical mouse movement produces similar yaw vs. pitch response across different aspect ratios.
+2. **Aspect Ratio Independent**: Works correctly on 16:9, 21:9, 32:9, 4:3, etc., by compensating for viewport width.
+3. **Explicit Resolution Behavior**: Does not change how different resolutions report mouse deltas; any remaining DPI/resolution differences are handled by OS and player sensitivity settings.
 4. **Maintains Sensitivity Settings**: Works alongside existing sensitivity multipliers
 5. **No Breaking Changes**: Existing sensitivity values continue to work
 
@@ -173,7 +169,7 @@ Potential improvements (not currently implemented):
 ## Related Issues
 
 - Original Issue: "controls - should lookaxisvector.x and lookaxisvector.y be relative to the viewport size"
-- Related to mouse input fix (PR #previous): Resolved input mapping conflicts
+- Related to prior mouse input fix: Resolved input mapping conflicts
 - Complements existing sensitivity system: Works alongside `LookSensitivity` properties
 
 ## References

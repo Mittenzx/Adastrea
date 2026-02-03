@@ -397,28 +397,32 @@ void USpaceshipControlsComponent::HandleMove(const FInputActionValue& Value)
 void USpaceshipControlsComponent::HandleLook(const FInputActionValue& Value)
 {
 	FVector2D LookValue = Value.Get<FVector2D>();
-	UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent::HandleLook - RAW LookValue: X=%.2f Y=%.2f"), LookValue.X, LookValue.Y);
 	
 	// Normalize input relative to viewport aspect ratio to compensate for
 	// larger horizontal deltas on wide screens, ensuring consistent feel
 	AActor* Owner = GetOwner();
 	if (Owner)
 	{
-		if (APlayerController* PC = Cast<APlayerController>(Owner->GetInstigatorController()))
+		// Use the owning pawn's controller rather than InstigatorController so that
+		// normalization works reliably for player-controlled ships (consistent with ASpaceship::Look())
+		if (APawn* PawnOwner = Cast<APawn>(Owner))
 		{
-			int32 ViewportSizeX, ViewportSizeY;
-			PC->GetViewportSize(ViewportSizeX, ViewportSizeY);
-			
-			if (ViewportSizeX > 0 && ViewportSizeY > 0)
+			if (APlayerController* PC = Cast<APlayerController>(PawnOwner->GetController()))
 			{
-				// Normalize X (horizontal) input by aspect ratio
-				// Wider screens produce larger horizontal deltas; dividing by aspect ratio
-				// compensates for this, making horizontal/vertical sensitivity feel balanced
-				float AspectRatio = static_cast<float>(ViewportSizeX) / static_cast<float>(ViewportSizeY);
-				LookValue.X /= AspectRatio;
+				int32 ViewportSizeX, ViewportSizeY;
+				PC->GetViewportSize(ViewportSizeX, ViewportSizeY);
 				
-				UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent::HandleLook - NORMALIZED LookValue: X=%.2f Y=%.2f (AspectRatio=%.2f)"), 
-					LookValue.X, LookValue.Y, AspectRatio);
+				if (ViewportSizeX > 0 && ViewportSizeY > 0)
+				{
+					// Normalize X (horizontal) input by aspect ratio
+					// Wider screens produce larger horizontal deltas; dividing by aspect ratio
+					// compensates for this, making horizontal/vertical sensitivity feel balanced
+					float AspectRatio = static_cast<float>(ViewportSizeX) / static_cast<float>(ViewportSizeY);
+					LookValue.X /= AspectRatio;
+					
+					UE_LOG(LogAdastreaInput, Verbose, TEXT("SpaceshipControlsComponent::HandleLook - NORMALIZED LookValue: X=%.2f Y=%.2f (AspectRatio=%.2f)"), 
+						LookValue.X, LookValue.Y, AspectRatio);
+				}
 			}
 		}
 	}
@@ -435,7 +439,7 @@ void USpaceshipControlsComponent::HandleLook(const FInputActionValue& Value)
 		LookValue.Y = -LookValue.Y;
 	}
 
-	UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent::HandleLook - PROCESSED LookValue: X=%.2f (yaw) Y=%.2f (pitch)"), LookValue.X, LookValue.Y);
+	UE_LOG(LogAdastreaInput, Verbose, TEXT("SpaceshipControlsComponent::HandleLook - PROCESSED LookValue: X=%.2f (yaw) Y=%.2f (pitch)"), LookValue.X, LookValue.Y);
 	OnLookInput(LookValue);
 }
 

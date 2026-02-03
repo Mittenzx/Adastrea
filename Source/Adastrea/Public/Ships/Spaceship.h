@@ -587,4 +587,12 @@ private:
     
     // Throttle adjustment rate limiting
     float LastThrottleAdjustmentTime;
+    
+    /**
+     * Normalizes look input by viewport aspect ratio
+     * @param LookInput The raw 2D look input vector
+     * @param PC The player controller to get viewport size from
+     * @return Normalized look input with X component adjusted for aspect ratio
+     */
+    static FVector2D NormalizeLookInputByAspectRatio(const FVector2D& LookInput, APlayerController* PC);
 };
