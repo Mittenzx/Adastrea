@@ -399,8 +399,8 @@ void USpaceshipControlsComponent::HandleLook(const FInputActionValue& Value)
 	FVector2D LookValue = Value.Get<FVector2D>();
 	UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent::HandleLook - RAW LookValue: X=%.2f Y=%.2f"), LookValue.X, LookValue.Y);
 	
-	// Normalize input relative to viewport size for consistent movement feel
-	// This prevents faster left/right movement on wide screens
+	// Normalize input relative to viewport aspect ratio to compensate for
+	// larger horizontal deltas on wide screens, ensuring consistent feel
 	AActor* Owner = GetOwner();
 	if (Owner)
 	{
@@ -411,7 +411,9 @@ void USpaceshipControlsComponent::HandleLook(const FInputActionValue& Value)
 			
 			if (ViewportSizeX > 0 && ViewportSizeY > 0)
 			{
-				// Scale X input by aspect ratio to compensate for wider screens
+				// Normalize X (horizontal) input by aspect ratio
+				// Wider screens produce larger horizontal deltas; dividing by aspect ratio
+				// compensates for this, making horizontal/vertical sensitivity feel balanced
 				float AspectRatio = static_cast<float>(ViewportSizeX) / static_cast<float>(ViewportSizeY);
 				LookValue.X /= AspectRatio;
 				

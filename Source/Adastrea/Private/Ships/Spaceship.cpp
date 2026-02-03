@@ -346,8 +346,8 @@ void ASpaceship::Look(const FInputActionValue& Value)
     UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship::Look - RAW LookAxisVector: X=%.2f Y=%.2f"), 
         LookAxisVector.X, LookAxisVector.Y);
 
-    // Normalize input relative to viewport size for consistent movement feel
-    // This prevents faster left/right movement on wide screens
+    // Normalize input relative to viewport aspect ratio to compensate for
+    // larger horizontal deltas on wide screens, ensuring consistent feel
     if (APlayerController* PC = Cast<APlayerController>(GetController()))
     {
         int32 ViewportSizeX, ViewportSizeY;
@@ -358,8 +358,9 @@ void ASpaceship::Look(const FInputActionValue& Value)
             // Calculate aspect ratio (width/height)
             float AspectRatio = static_cast<float>(ViewportSizeX) / static_cast<float>(ViewportSizeY);
             
-            // Normalize X (horizontal) input by aspect ratio to compensate for wider screens
-            // This prevents horizontal movement from feeling faster than vertical
+            // Normalize X (horizontal) input by aspect ratio
+            // Wider screens produce larger horizontal deltas; dividing by aspect ratio
+            // compensates for this, making horizontal/vertical sensitivity feel balanced
             // Y input remains unchanged as it's already proportional to screen height
             LookAxisVector.X /= AspectRatio;
             
@@ -1123,7 +1124,8 @@ void ASpaceship::FreeLookCamera(const FInputActionValue& Value)
     // Get the 2D vector input (mouse X/Y)
     FVector2D LookAxisVector = Value.Get<FVector2D>();
     
-    // Normalize input relative to viewport size for consistent movement feel
+    // Normalize input relative to viewport aspect ratio to compensate for
+    // larger horizontal deltas on wide screens, ensuring consistent feel
     if (APlayerController* PC = Cast<APlayerController>(GetController()))
     {
         int32 ViewportSizeX, ViewportSizeY;
@@ -1131,7 +1133,7 @@ void ASpaceship::FreeLookCamera(const FInputActionValue& Value)
         
         if (ViewportSizeX > 0 && ViewportSizeY > 0)
         {
-            // Scale X input by aspect ratio to compensate for wider screens
+            // Normalize X (horizontal) input by aspect ratio for balanced sensitivity
             float AspectRatio = static_cast<float>(ViewportSizeX) / static_cast<float>(ViewportSizeY);
             LookAxisVector.X /= AspectRatio;
         }
