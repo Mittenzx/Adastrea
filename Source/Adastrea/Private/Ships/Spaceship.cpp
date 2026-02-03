@@ -361,7 +361,7 @@ void ASpaceship::Look(const FInputActionValue& Value)
             // Normalize X (horizontal) input by aspect ratio
             // Wider screens produce larger horizontal deltas; dividing by aspect ratio
             // compensates for this, making horizontal/vertical sensitivity feel balanced
-            // Y input remains unchanged as it's already proportional to screen height
+            // Y input remains unchanged as vertical deltas are consistent across aspect ratios
             LookAxisVector.X /= AspectRatio;
             
             UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship::Look - NORMALIZED LookAxisVector: X=%.2f Y=%.2f (AspectRatio=%.2f)"), 
@@ -1133,7 +1133,10 @@ void ASpaceship::FreeLookCamera(const FInputActionValue& Value)
         
         if (ViewportSizeX > 0 && ViewportSizeY > 0)
         {
-            // Normalize X (horizontal) input by aspect ratio for balanced sensitivity
+            // Normalize X (horizontal) input by aspect ratio
+            // Wider screens produce larger horizontal deltas; dividing by aspect ratio
+            // compensates for this, making horizontal/vertical sensitivity feel balanced
+            // Y input remains unchanged as vertical deltas are consistent across aspect ratios
             float AspectRatio = static_cast<float>(ViewportSizeX) / static_cast<float>(ViewportSizeY);
             LookAxisVector.X /= AspectRatio;
         }
