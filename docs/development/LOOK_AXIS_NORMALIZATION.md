@@ -169,7 +169,6 @@ Potential improvements (not currently implemented):
 ## Related Issues
 
 - Original Issue: "controls - should lookaxisvector.x and lookaxisvector.y be relative to the viewport size"
-- Related to prior mouse input fix: Resolved input mapping conflicts
 - Complements existing sensitivity system: Works alongside `LookSensitivity` properties
 
 ## References
