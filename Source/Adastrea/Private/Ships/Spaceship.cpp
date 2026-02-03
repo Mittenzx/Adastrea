@@ -355,12 +355,12 @@ void ASpaceship::Look(const FInputActionValue& Value)
         
         if (ViewportSizeX > 0 && ViewportSizeY > 0)
         {
-            // Normalize X and Y by their respective viewport dimensions
-            // This makes the input scale consistently regardless of aspect ratio
+            // Calculate aspect ratio (width/height)
             float AspectRatio = static_cast<float>(ViewportSizeX) / static_cast<float>(ViewportSizeY);
             
-            // Scale X input by aspect ratio to compensate for wider screens
+            // Normalize X (horizontal) input by aspect ratio to compensate for wider screens
             // This prevents horizontal movement from feeling faster than vertical
+            // Y input remains unchanged as it's already proportional to screen height
             LookAxisVector.X /= AspectRatio;
             
             UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship::Look - NORMALIZED LookAxisVector: X=%.2f Y=%.2f (AspectRatio=%.2f)"), 
