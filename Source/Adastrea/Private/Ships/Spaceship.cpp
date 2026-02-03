@@ -342,9 +342,31 @@ void ASpaceship::Look(const FInputActionValue& Value)
     }
 
     // Get the 2D vector input (mouse X/Y)
-    const FVector2D LookAxisVector = Value.Get<FVector2D>();
-    UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship::Look - LookAxisVector: X=%.2f Y=%.2f"), 
+    FVector2D LookAxisVector = Value.Get<FVector2D>();
+    UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship::Look - RAW LookAxisVector: X=%.2f Y=%.2f"), 
         LookAxisVector.X, LookAxisVector.Y);
+
+    // Normalize input relative to viewport size for consistent movement feel
+    // This prevents faster left/right movement on wide screens
+    if (APlayerController* PC = Cast<APlayerController>(GetController()))
+    {
+        int32 ViewportSizeX, ViewportSizeY;
+        PC->GetViewportSize(ViewportSizeX, ViewportSizeY);
+        
+        if (ViewportSizeX > 0 && ViewportSizeY > 0)
+        {
+            // Normalize X and Y by their respective viewport dimensions
+            // This makes the input scale consistently regardless of aspect ratio
+            float AspectRatio = static_cast<float>(ViewportSizeX) / static_cast<float>(ViewportSizeY);
+            
+            // Scale X input by aspect ratio to compensate for wider screens
+            // This prevents horizontal movement from feeling faster than vertical
+            LookAxisVector.X /= AspectRatio;
+            
+            UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship::Look - NORMALIZED LookAxisVector: X=%.2f Y=%.2f (AspectRatio=%.2f)"), 
+                LookAxisVector.X, LookAxisVector.Y, AspectRatio);
+        }
+    }
 
     // Yaw (mouse X)
     Turn(LookAxisVector.X);
@@ -1099,7 +1121,21 @@ void ASpaceship::FreeLookCamera(const FInputActionValue& Value)
     }
 
     // Get the 2D vector input (mouse X/Y)
-    const FVector2D LookAxisVector = Value.Get<FVector2D>();
+    FVector2D LookAxisVector = Value.Get<FVector2D>();
+    
+    // Normalize input relative to viewport size for consistent movement feel
+    if (APlayerController* PC = Cast<APlayerController>(GetController()))
+    {
+        int32 ViewportSizeX, ViewportSizeY;
+        PC->GetViewportSize(ViewportSizeX, ViewportSizeY);
+        
+        if (ViewportSizeX > 0 && ViewportSizeY > 0)
+        {
+            // Scale X input by aspect ratio to compensate for wider screens
+            float AspectRatio = static_cast<float>(ViewportSizeX) / static_cast<float>(ViewportSizeY);
+            LookAxisVector.X /= AspectRatio;
+        }
+    }
 
     if (GetWorld())
     {
