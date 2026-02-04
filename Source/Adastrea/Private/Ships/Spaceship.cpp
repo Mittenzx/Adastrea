@@ -333,6 +333,37 @@ void ASpaceship::Move(const FInputActionValue& Value)
     MoveUp(MovementVector.Z);
 }
 
+FVector2D ASpaceship::NormalizeLookInputByAspectRatio(const FVector2D& LookInput, APlayerController* PC)
+{
+    if (!PC)
+    {
+        return LookInput;
+    }
+    
+    int32 ViewportSizeX, ViewportSizeY;
+    PC->GetViewportSize(ViewportSizeX, ViewportSizeY);
+    
+    if (ViewportSizeX <= 0 || ViewportSizeY <= 0)
+    {
+        return LookInput;
+    }
+    
+    // Calculate aspect ratio (width/height)
+    float AspectRatio = static_cast<float>(ViewportSizeX) / static_cast<float>(ViewportSizeY);
+    
+    // Normalize X (horizontal) input by aspect ratio
+    // Wider screens produce larger horizontal deltas; dividing by aspect ratio
+    // compensates for this, making horizontal/vertical sensitivity feel balanced
+    // Y input remains unchanged as vertical deltas are consistent across aspect ratios
+    FVector2D NormalizedInput = LookInput;
+    NormalizedInput.X /= AspectRatio;
+    
+    UE_LOG(LogAdastreaInput, Verbose, TEXT("NormalizeLookInput - RAW: X=%.2f Y=%.2f -> NORMALIZED: X=%.2f Y=%.2f (AspectRatio=%.2f)"), 
+        LookInput.X, LookInput.Y, NormalizedInput.X, NormalizedInput.Y, AspectRatio);
+    
+    return NormalizedInput;
+}
+
 void ASpaceship::Look(const FInputActionValue& Value)
 {
     // Skip normal look behavior when free look is active
@@ -342,9 +373,14 @@ void ASpaceship::Look(const FInputActionValue& Value)
     }
 
     // Get the 2D vector input (mouse X/Y)
-    const FVector2D LookAxisVector = Value.Get<FVector2D>();
-    UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship::Look - LookAxisVector: X=%.2f Y=%.2f"), 
-        LookAxisVector.X, LookAxisVector.Y);
+    FVector2D LookAxisVector = Value.Get<FVector2D>();
+    
+    // Normalize input relative to viewport aspect ratio to compensate for
+    // larger horizontal deltas on wide screens, ensuring consistent feel
+    if (APlayerController* PC = Cast<APlayerController>(GetController()))
+    {
+        LookAxisVector = NormalizeLookInputByAspectRatio(LookAxisVector, PC);
+    }
 
     // Yaw (mouse X)
     Turn(LookAxisVector.X);
@@ -1099,7 +1135,14 @@ void ASpaceship::FreeLookCamera(const FInputActionValue& Value)
     }
 
     // Get the 2D vector input (mouse X/Y)
-    const FVector2D LookAxisVector = Value.Get<FVector2D>();
+    FVector2D LookAxisVector = Value.Get<FVector2D>();
+    
+    // Normalize input relative to viewport aspect ratio to compensate for
+    // larger horizontal deltas on wide screens, ensuring consistent feel
+    if (APlayerController* PC = Cast<APlayerController>(GetController()))
+    {
+        LookAxisVector = NormalizeLookInputByAspectRatio(LookAxisVector, PC);
+    }
 
     if (GetWorld())
     {
