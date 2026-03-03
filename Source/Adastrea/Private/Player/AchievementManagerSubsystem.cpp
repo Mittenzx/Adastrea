@@ -399,7 +399,7 @@ void UAchievementManagerSubsystem::GrantAchievementRewards(UAchievementDataAsset
 		}
 	}
 
-	// TODO: Award items via inventory system
+	// Item rewards will be implemented with inventory system in post-MVP
 }
 
 void UAchievementManagerSubsystem::CheckStatBasedAchievements(FName StatName)
