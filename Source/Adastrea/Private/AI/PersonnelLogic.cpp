@@ -116,9 +116,9 @@ void UPersonnelLogic::HandleSocialInteraction_Implementation(FName OtherPersonne
             // Boost morale slightly (capped at 100)
             if (PersonnelData->Morale < 100.0f)
             {
-                // This is a const function, so we can't modify directly
-                // In a real implementation, this would trigger an event
-                // that the owner can respond to
+                // Note: PersonnelData is a data asset (read-only at runtime)
+                // In a full implementation, this would trigger an event
+                // that updates runtime morale state in a separate component
             }
         }
         else if (Relationship.RelationshipStrength < -50)
