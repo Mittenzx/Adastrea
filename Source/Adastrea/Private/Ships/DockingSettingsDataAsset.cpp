@@ -69,9 +69,3 @@ EDataValidationResult UDockingSettingsDataAsset::IsDataValid(FDataValidationCont
     return Result;
 }
 #endif
-        Result = EDataValidationResult::Invalid;
-    }
-
-    return Result;
-}
-#endif
