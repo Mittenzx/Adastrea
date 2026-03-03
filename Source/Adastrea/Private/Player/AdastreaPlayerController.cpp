@@ -1046,7 +1046,7 @@ void AAdastreaPlayerController::AttemptTradeWithNearestStation()
 		"Trading system has been refactored. Use direct market access via Blueprint or alternative input binding."));
 	
 	// Optionally: Could display a UI message to the player
-	// TODO(Post-MVP): Either remove this function entirely or implement market-based trading
+	// Note: This function is deprecated - market-based trading will be implemented in post-MVP
 }
 
 bool AAdastreaPlayerController::IsNearTradableStation() const
