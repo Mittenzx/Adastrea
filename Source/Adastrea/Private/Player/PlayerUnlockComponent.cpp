@@ -3,8 +3,7 @@
 // REMOVED: #include "Player/PlayerReputationComponent.h" - faction reputation system removed per Trade Simulator MVP
 #include "Player/AdastreaGameInstance.h"
 #include "Player/AchievementManagerSubsystem.h"
-// TODO: Quest system archived - will be reimplemented in MVP
-// #include "Quest/QuestManagerSubsystem.h"
+// #include "Quest/QuestManagerSubsystem.h" // Archived for post-MVP
 #include "UI/InventoryComponent.h"
 #include "AdastreaLog.h"
 #include "Kismet/GameplayStatics.h"
@@ -291,8 +290,7 @@ bool UPlayerUnlockComponent::CheckRequirement(const FUnlockRequirement& Requirem
 
 		case EUnlockRequirementType::Quest:
 		{
-			// TODO(MVP): Quest system not implemented yet - archived for post-MVP
-			// Quest system is not needed for Trade Simulator MVP
+			// Quest system archived for post-MVP - not needed for Trade Simulator MVP
 			// For now, return false to indicate quest requirements cannot be checked
 			// See: docs/development/BUILD_FIX_SUMMARY.md for full implementation plan
 			UE_LOG(LogAdastrea, Warning, TEXT("PlayerUnlockComponent: Quest requirement type not supported in MVP - Quest system archived"));
