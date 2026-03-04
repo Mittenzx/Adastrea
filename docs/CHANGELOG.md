@@ -49,6 +49,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Status**: 📝 **MVP-focused development** - Clarifying implementation requirements for Trade Simulator MVP.
 
+### Fixed - 2026-03-04 (Evening)
+
+#### Content Generation Script Path Fixes
+
+**Problem**: Content generation scripts referenced incorrect file paths after repository reorganization.
+
+**Root Cause**: Python scripts in root directory referenced files in Archive/Scripts without proper path configuration.
+
+**Solution**: Updated import paths and added sys.path.append for proper module loading.
+
+**Changes**:
+- **Fixed** import paths in `ContentGenerationQuickStart.py` to point to `Archive/Scripts/` directory
+- **Added** `sys.path.append('Archive/Scripts')` for proper module loading
+- **Added** Trade Simulator MVP focus note to script header
+- **Maintained** all existing functionality while fixing path issues
+
+**Commit**: `920860b` - fix: Update content generation script paths and add MVP focus note
+
+**Status**: 🔧 **Script maintenance** - Ensuring content generation tools work correctly with current project structure.
+
 ### Changed - 2026-01-21
 
 #### Documentation Review & Cleanup (Trade Simulator MVP Focus)
