@@ -52,9 +52,47 @@ void UAntagonistManager::OnFeatCompleted(UFeatDataAsset* CompletedFeat)
 		return;
 	}
 	
-	// TODO: Check if the Feat has an antagonist trigger
-	// For now, this is a placeholder implementation
-	UE_LOG(LogAdastrea, Log, TEXT("Feat completed: %s - checking for antagonist triggers"), *CompletedFeat->GetName());
+	// Check if the Feat has an antagonist trigger
+	const FAntagonistTrigger& Trigger = CompletedFeat->AntagonistTrigger;
+	
+	if (Trigger.bShouldSpawnAntagonist)
+	{
+		// Check spawn chance
+		const int32 RandomChance = FMath::RandRange(0, 100);
+		if (RandomChance <= Trigger.SpawnChance)
+		{
+			// Spawn the antagonist
+			FActiveAntagonist NewAntagonist = SpawnAntagonist(
+				CompletedFeat,
+				Trigger.RivalGoal,
+				Trigger.InitialHeat
+			);
+			
+			UE_LOG(LogAdastrea, Log, TEXT("Feat completed: %s - spawned antagonist: %s (Goal: %s, Heat: %d)"),
+				*CompletedFeat->GetName(),
+				*NewAntagonist.AntagonistName,
+				*UEnum::GetValueAsString(Trigger.RivalGoal),
+				Trigger.InitialHeat
+			);
+			
+			// Broadcast event for other systems
+			OnAntagonistSpawned.Broadcast(NewAntagonist);
+		}
+		else
+		{
+			UE_LOG(LogAdastrea, Verbose, TEXT("Feat completed: %s - antagonist trigger skipped (chance: %d/%d)"),
+				*CompletedFeat->GetName(),
+				RandomChance,
+				Trigger.SpawnChance
+			);
+		}
+	}
+	else
+	{
+		UE_LOG(LogAdastrea, Verbose, TEXT("Feat completed: %s - no antagonist trigger configured"),
+			*CompletedFeat->GetName()
+		);
+	}
 }
 
 FActiveAntagonist UAntagonistManager::SpawnAntagonist(UFeatDataAsset* SourceFeat, EAntagonistGoal Goal, int32 InitialHeat)

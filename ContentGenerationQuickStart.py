@@ -11,6 +11,8 @@ from pathlib import Path
 def main():
     print("🚀 Adastrea Content Generation Quick Start")
     print("=" * 50)
+    print("📝 NOTE: Focused on Trade Simulator MVP (March 2026)")
+    print("   Generated content optimized for trading gameplay")
 
     # Check if we're in the right directory
     if not Path("Adastrea.uproject").exists():
@@ -22,10 +24,10 @@ def main():
 
     # Check for required files
     required_files = [
-        "UltimateContentGenerator.py",
-        "MassContentGenerator.py",
-        "AdvancedContentGenerator.py",
-        "ScenePopulator.py",
+        "Archive/Scripts/UltimateContentGenerator.py",
+        "Archive/Scripts/MassContentGenerator.py",
+        "Archive/Scripts/AdvancedContentGenerator.py",
+        "Archive/Scripts/ScenePopulator.py",
         "Source/Adastrea/AutomatedTestLibrary.cpp",
         "Source/Adastrea/DataValidationLibrary.cpp",
         "Source/Adastrea/Performance/PerformanceBenchmarkLibrary.cpp"
@@ -99,6 +101,7 @@ def run_ultimate_generation():
 
     try:
         # Import and run ultimate generator
+        sys.path.append('Archive/Scripts')
         from UltimateContentGenerator import UltimateContentGenerator
         generator = UltimateContentGenerator()
         success = generator.run_full_generation()
@@ -118,6 +121,7 @@ def run_data_asset_generation():
     print("\n📊 Generating Data Assets...")
 
     try:
+        sys.path.append('Archive/Scripts')
         from MassContentGenerator import MassContentGenerator
         generator = MassContentGenerator()
 
@@ -140,6 +144,7 @@ def run_scene_population():
     print("\n🎭 Populating Scene...")
 
     try:
+        sys.path.append('Archive/Scripts')
         from ScenePopulator import populate_complete_sector
         content = populate_complete_sector()
         total_actors = sum(len(actors) for actors in content.values())
