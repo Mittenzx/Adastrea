@@ -1321,7 +1321,9 @@ void ASpaceship::RequestDocking()
         
         #endif
         
-        // TODO: Show user feedback via HUD message
+        // TODO: Show user feedback via HUD message for "No station in range" error
+        // MVP NOTE: Implement HUD feedback when UAdastreaHUDWidget::ShowAlert() is available
+        // Example: ShowAlert(FText::FromString("No station in range"), 3.0f, true);
         return;
     }
     

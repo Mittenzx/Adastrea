@@ -361,7 +361,15 @@ bool UShipUpgradeComponent::CheckUpgradeRequirements(UShipUpgradeDataAsset* Upgr
 		}
 	}
 
-	// TODO: Check materials via inventory system
+	// Check required materials via inventory system
+	// MVP NOTE: Material checking is stubbed for Trade Simulator MVP
+	// In full implementation, this would check player/ship inventory for required materials
+	if (Req.RequiredMaterials.Num() > 0)
+	{
+		UE_LOG(LogAdastrea, Verbose, TEXT("Upgrade requires materials (MVP stub): %s"), *Upgrade->GetName());
+		// TODO: Implement proper material checking when inventory system is ready
+		// For MVP, assume player has required materials
+	}
 
 	return true;
 }
