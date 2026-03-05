@@ -14,6 +14,8 @@
 #include "Stations/SpaceStationModule.h"
 #include "Stations/DockingBayModule.h"
 #include "Blueprint/UserWidget.h"
+#include "UI/AdastreaHUDWidget.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
 
 // Debug flag for docking system - can be disabled for shipping builds
 #ifndef DOCKING_DEBUG_ENABLED
@@ -675,6 +677,48 @@ void ASpaceship::EndControl(APlayerController* PC)
     SavedExternalPawn = nullptr;
 }
 
+void ASpaceship::ShowHUDAlert(const FText& Message, float Duration, bool bIsWarning)
+{
+    // Get the player controller
+    APlayerController* PC = Cast<APlayerController>(GetController());
+    if (!PC)
+    {
+        return;
+    }
+
+    // Try to find the HUD widget
+    UAdastreaHUDWidget* HUDWidget = nullptr;
+    
+    // First check if we have a cached reference to the HUD widget
+    // (This would need to be set up when the HUD is created)
+    
+    // For now, we'll search for it in the viewport
+    TArray<UUserWidget*> FoundWidgets;
+    UWidgetBlueprintLibrary::GetAllWidgetsOfClass(GetWorld(), FoundWidgets, UAdastreaHUDWidget::StaticClass(), false);
+    
+    if (FoundWidgets.Num() > 0)
+    {
+        HUDWidget = Cast<UAdastreaHUDWidget>(FoundWidgets[0]);
+    }
+    
+    if (HUDWidget)
+    {
+        // Call the HUD widget's ShowAlert function
+        HUDWidget->ShowAlert(Message, Duration, bIsWarning);
+    }
+    else
+    {
+        // Fallback: log to screen if HUD widget not found
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, Duration, bIsWarning ? FColor::Red : FColor::Yellow, Message.ToString());
+        }
+        
+        // Also log to output log
+        UE_LOG(LogAdastrea, Log, TEXT("HUD Alert: %s"), *Message.ToString());
+    }
+}
+
 FText ASpaceship::GetShipName() const
 {
     // If we have a data asset, use its name
@@ -1321,9 +1365,8 @@ void ASpaceship::RequestDocking()
         
         #endif
         
-        // TODO: Show user feedback via HUD message for "No station in range" error
-        // MVP NOTE: Implement HUD feedback when UAdastreaHUDWidget::ShowAlert() is available
-        // Example: ShowAlert(FText::FromString("No station in range"), 3.0f, true);
+        // Show user feedback via HUD message for "No station in range" error
+        ShowHUDAlert(FText::FromString("No station in range"), 3.0f, true);
         return;
     }
     
@@ -1394,7 +1437,8 @@ void ASpaceship::RequestDocking()
         
         #endif
         
-        // TODO: Show user feedback via HUD message
+        // Show user feedback via HUD message
+        ShowHUDAlert(FText::FromString("Station is not a docking module"), 3.0f, true);
         return;
     }
     
@@ -1431,7 +1475,8 @@ void ASpaceship::RequestDocking()
         
         #endif
         
-        // TODO: Show user feedback via HUD message
+        // Show user feedback via HUD message
+        ShowHUDAlert(FText::FromString("No docking slots available"), 3.0f, true);
         return;
     }
     
@@ -1469,7 +1514,8 @@ void ASpaceship::RequestDocking()
         
         #endif
         
-        // TODO: Show user feedback via HUD message
+        // Show user feedback via HUD message
+        ShowHUDAlert(FText::FromString("Failed to get docking point"), 3.0f, true);
         return;
     }
     
@@ -1510,7 +1556,8 @@ void ASpaceship::RequestDocking()
         
         #endif
         
-        // TODO: Show user feedback via HUD message
+        // Show user feedback via HUD message
+        ShowHUDAlert(FText::FromString("Too far from docking point"), 3.0f, true);
         return;
     }
     

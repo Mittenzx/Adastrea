@@ -255,6 +255,15 @@ public:
     void EndControl(class APlayerController* PC);
 
     /**
+     * Show a HUD alert message to the player
+     * @param Message The message to display
+     * @param Duration How long to show the message in seconds (default: 3.0)
+     * @param bIsWarning Whether this is a warning message (affects visual style)
+     */
+    UFUNCTION(BlueprintCallable, Category="HUD")
+    void ShowHUDAlert(const FText& Message, float Duration = 3.0f, bool bIsWarning = true);
+
+    /**
      * Setup input component for ship control
      * Binds axis and action inputs for movement and rotation
      */
