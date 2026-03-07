@@ -71,7 +71,7 @@ struct FPriceVolatility
 /**
  * Trade restrictions (placeholder for future use)
  * Currently unused in MVP - all items accessible to all players
- * 
+ *
  * Note: Keeping minimal struct to maintain serialization compatibility
  * REMOVED in MVP: BannedFactions, RequiresPermitFactions, MinReputationRequired
  */

@@ -73,10 +73,10 @@ build_with_ue_tools.bat Development Win64
 
 ## Benefits
 
-✅ **Bypasses MSBuild SetEnv limitations** - No 32KB environment variable limits  
-✅ **Faster compilation** - No Visual Studio overhead  
-✅ **Works with large projects** - Handles 49KB+ include paths  
-✅ **Same output** - Produces identical binaries to Visual Studio builds  
+✅ **Bypasses MSBuild SetEnv limitations** - No 32KB environment variable limits
+✅ **Faster compilation** - No Visual Studio overhead
+✅ **Works with large projects** - Handles 49KB+ include paths
+✅ **Same output** - Produces identical binaries to Visual Studio builds
 ✅ **Still use VS for editing** - You can still use Visual Studio for code editing, just not building
 
 ## Prerequisites
@@ -148,6 +148,6 @@ For issues or questions:
 
 ---
 
-**Last Updated:** 2025-12-27  
-**For:** Unreal Engine 5.6 SetEnv workaround  
+**Last Updated:** 2025-12-27
+**For:** Unreal Engine 5.6 SetEnv workaround
 **Platform:** Windows 10/11

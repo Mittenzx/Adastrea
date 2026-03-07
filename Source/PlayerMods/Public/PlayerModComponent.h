@@ -31,13 +31,13 @@ struct FActiveModEntry
 /**
  * Player modification component
  * Handles installation, activation, and management of player mods
- * 
+ *
  * Features:
  * - Server-authoritative mod installation
  * - Active and passive mod types
  * - Duration and cooldown tracking
  * - Network replication support
- * 
+ *
  * Usage:
  * 1. Attach to player actor
  * 2. Call InstallMod() to add a mod

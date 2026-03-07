@@ -198,10 +198,10 @@ ASpaceship::ASpaceship()
     // Create movement component
     MovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("MovementComponent"));
     MovementComponent->MaxSpeed = 3000.0f;
-    
+
     // Create particle component
     ParticleComponent = CreateDefaultSubobject<USpaceshipParticleComponent>(TEXT("ParticleComponent"));
-    
+
     // Initialize flight parameters
     bFlightAssistEnabled = true;
     ThrottlePercentage = 0.0f;
@@ -211,7 +211,7 @@ ASpaceship::ASpaceship()
 void ASpaceship::BeginPlay()
 {
     Super::BeginPlay();
-    
+
     // Spawn interior
     InteriorInstance = GetWorld()->SpawnActor<ASpaceshipInterior>(...);
 }
@@ -233,11 +233,11 @@ void USpaceshipControlsComponent::OnMoveInput_Implementation(FVector2D MoveValue
 {
     APawn* OwningPawn = Cast<APawn>(GetOwner());
     if (!OwningPawn) return;
-    
+
     const FVector RightVector = OwningPawn->GetActorRightVector();
     const FVector UpVector = OwningPawn->GetActorUpVector();
     const FVector MoveDirection = (RightVector * MoveValue.X) + (UpVector * MoveValue.Y);
-    
+
     OwningPawn->AddMovementInput(MoveDirection, 1.0f);
 }
 ```
@@ -258,7 +258,7 @@ if (bFlightAssistEnabled)
 {
     ApplyFlightAssist(DeltaTime);
     UpdateThrottleVelocity(DeltaTime);
-    
+
     if (no rotation input)
     {
         ApplyAutoLeveling(DeltaTime);
@@ -389,6 +389,6 @@ Assets/
 
 ---
 
-**Version**: 1.0  
-**Last Updated**: 2025-12-05  
+**Version**: 1.0
+**Last Updated**: 2025-12-05
 **Status**: Spaceship implemented, Character planned

@@ -6,7 +6,7 @@
 
 IAssetRegistry& FAdastreaAssetService::GetAssetRegistry()
 {
-	FAssetRegistryModule& AssetRegistryModule = 
+	FAssetRegistryModule& AssetRegistryModule =
 		FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
 	return AssetRegistryModule.Get();
 }
@@ -26,7 +26,7 @@ TArray<FAssetInfo> FAdastreaAssetService::SearchAssets(
 
 	// Build filter
 	FARFilter Filter;
-	
+
 	if (!ClassName.IsEmpty())
 	{
 		// Map common class names to proper FTopLevelAssetPath format
@@ -54,7 +54,7 @@ TArray<FAssetInfo> FAdastreaAssetService::SearchAssets(
 			// Assume Engine module for unknown classes
 			ClassPath = FString::Printf(TEXT("/Script/Engine.%s"), *ClassName);
 		}
-		
+
 		Filter.ClassPaths.Add(FTopLevelAssetPath(ClassPath));
 	}
 
@@ -70,11 +70,11 @@ TArray<FAssetInfo> FAdastreaAssetService::SearchAssets(
 	for (const FAssetData& AssetData : AssetDataList)
 	{
 		FString AssetName = AssetData.AssetName.ToString();
-		
+
 		if (SearchPattern == TEXT("*") || AssetName.Contains(SearchPattern))
 		{
 			Results.Add(ConvertAssetData(AssetData));
-			
+
 			if (Results.Num() >= MaxResults)
 			{
 				break;
@@ -91,7 +91,7 @@ TArray<FAssetInfo> FAdastreaAssetService::SearchAssets(
 TArray<FAssetInfo> FAdastreaAssetService::GetBlueprints(const FString& PathPrefix)
 {
 	IAssetRegistry& AssetRegistry = GetAssetRegistry();
-	
+
 	FARFilter Filter;
 	Filter.ClassPaths.Add(UBlueprint::StaticClass()->GetClassPathName());
 	Filter.PackagePaths.Add(PathPrefix.IsEmpty() ? FName("/Game") : FName(*PathPrefix));
@@ -112,7 +112,7 @@ TArray<FAssetInfo> FAdastreaAssetService::GetBlueprints(const FString& PathPrefi
 TArray<FAssetInfo> FAdastreaAssetService::GetMaterials(const FString& PathPrefix)
 {
 	IAssetRegistry& AssetRegistry = GetAssetRegistry();
-	
+
 	FARFilter Filter;
 	Filter.ClassPaths.Add(UMaterial::StaticClass()->GetClassPathName());
 	Filter.PackagePaths.Add(PathPrefix.IsEmpty() ? FName("/Game") : FName(*PathPrefix));
@@ -133,7 +133,7 @@ TArray<FAssetInfo> FAdastreaAssetService::GetMaterials(const FString& PathPrefix
 TArray<FAssetInfo> FAdastreaAssetService::GetWidgets(const FString& PathPrefix)
 {
 	IAssetRegistry& AssetRegistry = GetAssetRegistry();
-	
+
 	FARFilter Filter;
 	// Use FTopLevelAssetPath directly instead of UWidgetBlueprint::StaticClass() to avoid UMGEditor dependency
 	Filter.ClassPaths.Add(FTopLevelAssetPath(TEXT("/Script/UMGEditor.WidgetBlueprint")));
@@ -155,16 +155,16 @@ TArray<FAssetInfo> FAdastreaAssetService::GetWidgets(const FString& PathPrefix)
 TOptional<FAssetInfo> FAdastreaAssetService::GetAssetByPath(const FString& AssetPath)
 {
 	IAssetRegistry& AssetRegistry = GetAssetRegistry();
-	
+
 	// Use newer UE5 API with FTopLevelAssetPath for compatibility
 	FSoftObjectPath ObjectPath(AssetPath);
 	FAssetData AssetData = AssetRegistry.GetAssetByObjectPath(ObjectPath);
-	
+
 	if (AssetData.IsValid())
 	{
 		return ConvertAssetData(AssetData);
 	}
-	
+
 	return TOptional<FAssetInfo>();
 }
 
@@ -175,7 +175,7 @@ FAssetInfo FAdastreaAssetService::ConvertAssetData(const FAssetData& AssetData)
 	Info.Path = AssetData.GetObjectPathString();
 	Info.Class = AssetData.AssetClassPath.GetAssetName().ToString();
 	Info.DiskSize = 0; // Initialize to 0 in case package data is not available
-	
+
 	// Get disk size - UE 5.6+ uses GetAssetPackageDataCopy returning TOptional
 	IAssetRegistry& AssetRegistry = GetAssetRegistry();
 	TOptional<FAssetPackageData> PackageData = AssetRegistry.GetAssetPackageDataCopy(AssetData.PackageName);
@@ -183,7 +183,7 @@ FAssetInfo FAdastreaAssetService::ConvertAssetData(const FAssetData& AssetData)
 	{
 		Info.DiskSize = PackageData.GetValue().DiskSize;
 	}
-	
+
 	return Info;
 }
 

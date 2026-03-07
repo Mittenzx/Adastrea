@@ -29,7 +29,7 @@ NumZones: 3
 
 # Object Definitions
 ObjectDefinitions:
-  
+
   # Trading Station
   - ObjectType: Station
     ActorClass: "BP_SpaceStation_Trading"

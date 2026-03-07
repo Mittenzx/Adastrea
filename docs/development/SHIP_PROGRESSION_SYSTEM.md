@@ -38,9 +38,9 @@ Maximum profit per run
 
 ### Tier 1: Compact Trader (Starter Ship)
 
-**Display Name**: "Compact Trader"  
-**Internal ID**: `ship_starter_compact`  
-**Cost**: **0cr** (starting ship)  
+**Display Name**: "Compact Trader"
+**Internal ID**: `ship_starter_compact`
+**Cost**: **0cr** (starting ship)
 **Availability**: Given to player at game start
 
 **Stats**:
@@ -77,9 +77,9 @@ fuel_efficiency: 1.0 (standard)
 
 ### Tier 2: Merchant Hauler (Mid-Tier Ship)
 
-**Display Name**: "Merchant Hauler"  
-**Internal ID**: `ship_medium_hauler`  
-**Cost**: **50,000cr**  
+**Display Name**: "Merchant Hauler"
+**Internal ID**: `ship_medium_hauler`
+**Cost**: **50,000cr**
 **Availability**: Unlock after earning 50,000cr total
 
 **Stats**:
@@ -122,9 +122,9 @@ fuel_efficiency: 0.9 (10% better)
 
 ### Tier 3: Trade Liner (Advanced Ship)
 
-**Display Name**: "Trade Liner"  
-**Internal ID**: `ship_large_liner`  
-**Cost**: **250,000cr**  
+**Display Name**: "Trade Liner"
+**Internal ID**: `ship_large_liner`
+**Cost**: **250,000cr**
 **Availability**: Unlock after earning 250,000cr total (or owning Merchant Hauler)
 
 **Stats**:
@@ -177,7 +177,7 @@ shields: Basic deflector shields (new!)
 bool CanUpgradeToShip(FName ShipID)
 {
     int32 TotalEarnings = GetTotalLifetimeEarnings();
-    
+
     if (ShipID == "ship_medium_hauler")
     {
         return TotalEarnings >= 50000;
@@ -186,7 +186,7 @@ bool CanUpgradeToShip(FName ShipID)
     {
         return TotalEarnings >= 250000;
     }
-    
+
     return false;
 }
 ```
@@ -323,33 +323,33 @@ basic_info:
   ship_id: "ship_starter_compact"
   manufacturer: "StarTrader Inc."
   ship_class: "Light Freighter"
-  
+
 core_stats:
   hull_strength: 100.0
   shield_capacity: 0.0 (no shields)
   power_output: 500.0
   crew_capacity: 1
-  
+
 cargo_stats:
   cargo_capacity: 10 # UNITS
   cargo_volume: 10.0 # CUBIC METERS
   max_cargo_weight: 1000.0 # KG
-  
+
 mobility_stats:
   max_speed: 300.0 # M/S
   acceleration: 200.0 # M/S²
   turn_rate: 90.0 # DEG/S
-  
+
 utility_stats:
   fuel_capacity: 100.0
   fuel_consumption: 1.0 (standard)
   sensor_range: 5000.0
-  
+
 operational_stats:
   purchase_cost: 0 (starter ship)
   maintenance_cost: 10.0 # PER HOUR
   insurance_cost: 50.0 # PER DAY
-  
+
 unlock_requirements:
   required_level: 0
   required_credits: 0
@@ -367,33 +367,33 @@ basic_info:
   ship_id: "ship_medium_hauler"
   manufacturer: "Galactic Freight Co."
   ship_class: "Medium Freighter"
-  
+
 core_stats:
   hull_strength: 250.0
   shield_capacity: 0.0 (no shields)
   power_output: 800.0
   crew_capacity: 2
-  
+
 cargo_stats:
   cargo_capacity: 30 # UNITS
   cargo_volume: 30.0 # CUBIC METERS
   max_cargo_weight: 3000.0 # KG
-  
+
 mobility_stats:
   max_speed: 250.0 # M/S
   acceleration: 150.0 # M/S²
   turn_rate: 60.0 # DEG/S
-  
+
 utility_stats:
   fuel_capacity: 200.0
   fuel_consumption: 0.9 (10% better)
   sensor_range: 7000.0
-  
+
 operational_stats:
   purchase_cost: 50000 # CREDITS
   maintenance_cost: 30.0 # PER HOUR
   insurance_cost: 150.0 # PER DAY
-  
+
 unlock_requirements:
   required_level: 0
   required_credits: 50000 # TOTAL LIFETIME EARNINGS
@@ -411,33 +411,33 @@ basic_info:
   ship_id: "ship_large_liner"
   manufacturer: "Apex Logistics"
   ship_class: "Heavy Freighter"
-  
+
 core_stats:
   hull_strength: 500.0
   shield_capacity: 200.0 # HAS SHIELDS!
   power_output: 1500.0
   crew_capacity: 5
-  
+
 cargo_stats:
   cargo_capacity: 100 # UNITS
   cargo_volume: 100.0 # CUBIC METERS
   max_cargo_weight: 10000.0 # KG
-  
+
 mobility_stats:
   max_speed: 350.0 # M/S (FASTEST!)
   acceleration: 180.0 # M/S²
   turn_rate: 45.0 # DEG/S
-  
+
 utility_stats:
   fuel_capacity: 500.0
   fuel_consumption: 0.8 (20% better)
   sensor_range: 10000.0
-  
+
 operational_stats:
   purchase_cost: 250000 # CREDITS
   maintenance_cost: 100.0 # PER HOUR
   insurance_cost: 500.0 # PER DAY
-  
+
 unlock_requirements:
   required_level: 0
   required_credits: 250000 # TOTAL LIFETIME EARNINGS
@@ -544,8 +544,8 @@ python3 Tools/trade_profit_calculator.py --best --capital 250000 --cargo 100
 
 ### Additional Ships (Weeks 13+)
 
-**Tier 1.5**: "Scout Trader" (15 cargo, very fast)  
-**Tier 2.5**: "Bulk Hauler" (50 cargo, very slow, cheap)  
+**Tier 1.5**: "Scout Trader" (15 cargo, very fast)
+**Tier 2.5**: "Bulk Hauler" (50 cargo, very slow, cheap)
 **Tier 4**: "Mega Freighter" (200+ cargo, requires crew)
 
 ### Ship Specializations
@@ -595,6 +595,6 @@ python3 Tools/trade_profit_calculator.py --best --capital 250000 --cargo 100
 
 ---
 
-**Last Updated**: 2026-01-17  
-**Version**: 1.0  
+**Last Updated**: 2026-01-17
+**Version**: 1.0
 **Part of**: Trade Simulator MVP (Week 1-4 Prototype Phase)

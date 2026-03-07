@@ -1,7 +1,7 @@
 # Discovery System Quick Start Guide
 
-**Version**: 1.0.0  
-**Last Updated**: November 21, 2025  
+**Version**: 1.0.0
+**Last Updated**: November 21, 2025
 **Prerequisites**: Scanner System (Phase 1)
 
 ---

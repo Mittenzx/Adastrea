@@ -83,7 +83,7 @@ UCLASS(BlueprintType)
 class UMyModuleDataAsset : public UShipModuleDataAsset
 {
     GENERATED_BODY()
-    
+
     // Add module-specific properties
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="My Module")
     float SpecialValue;
@@ -96,7 +96,7 @@ UCLASS()
 class UMyModuleComponent : public UShipModuleComponent
 {
     GENERATED_BODY()
-    
+
     // Override IShipModule methods as needed
     virtual EShipModuleCategory GetModuleCategory_Implementation() const override
     {

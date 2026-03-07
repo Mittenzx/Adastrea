@@ -431,6 +431,6 @@ if (!result.bSuccess) {
 
 ---
 
-**Version:** 1.0.0  
-**Last Updated:** December 2025  
+**Version:** 1.0.0
+**Last Updated:** December 2025
 **Requires:** UE 5.6+

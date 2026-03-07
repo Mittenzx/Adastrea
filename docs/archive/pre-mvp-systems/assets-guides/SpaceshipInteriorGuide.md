@@ -229,7 +229,7 @@ Exit Points (Return to exterior)
    Block on Load: True (for loading screen)
        ↓
    Return: Level Instance
-   
+
    Function: UnloadInterior(LevelInstance)
        ↓
    Unload Stream Level (LevelInstance)
@@ -1211,7 +1211,7 @@ Remove Widget: WBP_InteriorHUD
 
 ## Conclusion
 
-You now have a complete understanding of how to implement spaceship interiors in Adastrea! 
+You now have a complete understanding of how to implement spaceship interiors in Adastrea!
 
 **Key Takeaways:**
 - Use **Separate Levels** for large, complex interiors
@@ -1233,6 +1233,6 @@ For questions or issues, refer to the troubleshooting section or check related d
 
 ---
 
-**Last Updated**: 2025-11-05  
-**Version**: 1.0  
+**Last Updated**: 2025-11-05
+**Version**: 1.0
 **Maintained by**: Adastrea Development Team

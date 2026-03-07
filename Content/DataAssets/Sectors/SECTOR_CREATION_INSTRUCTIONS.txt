@@ -41,14 +41,14 @@ STEPS TO CREATE A SECTOR COUNCIL:
 
 6. ADD REPRESENTATIVES
    For each Way that has a council seat:
-   
+
    - Click the "+" button on Representatives array
    - Representing Way: Select the Way Data Asset from dropdown
    - Representative Name: Enter the individual's name
    - Voting Weight: Set influence (10-25 typical)
    - Years of Service: Set experience (0-20)
    - Is Player Controlled: Check if this is a player seat
-   
+
    Repeat for each representative
 
 7. CONFIGURE TAXATION
@@ -58,17 +58,17 @@ STEPS TO CREATE A SECTOR COUNCIL:
 
 8. CONFIGURE BUDGET
    ⚠️ IMPORTANT: Must sum to 100%
-   
+
    - Security Budget Percent: Set 0-100
    - Infrastructure Budget Percent: Set 0-100
    - Emergency Reserve Percent: Set 0-100
    - Treasury Funds: Set starting funds (100,000 to 10,000,000)
-   
+
    Verify: Security% + Infrastructure% + Reserve% = 100%
 
 9. ADD ACTIVE POLICIES (Optional)
    For each policy you want active:
-   
+
    - Click the "+" button on Active Policies array
    - Policy Type: Select from dropdown (SecurityBudget, TradeRegulation, etc.)
    - Policy Name: Enter policy name
@@ -76,7 +76,7 @@ STEPS TO CREATE A SECTOR COUNCIL:
    - Policy Value: Set effectiveness (0-100)
    - Is Active: Check to activate
    - Enacted Date: Set when policy was enacted
-   
+
    Repeat for each policy
 
 10. SAVE THE DATA ASSET

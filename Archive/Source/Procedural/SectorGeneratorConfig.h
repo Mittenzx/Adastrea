@@ -25,11 +25,11 @@ enum class ESectorNamingTheme : uint8
 
 /**
  * Configuration Data Asset for Sector Generator
- * 
+ *
  * Defines all settings for procedurally generating sector content.
  * Designers can create multiple configs for different sector types
  * (e.g., safe zones, mining sectors, combat zones, etc.)
- * 
+ *
  * Usage:
  * 1. Create Blueprint based on this class
  * 2. Configure object definitions for what to spawn

@@ -220,28 +220,28 @@ private:
 	// Status indicator widgets
 	/** Python process status indicator */
 	TSharedPtr<SStatusIndicator> PythonProcessStatusLight;
-	
+
 	/** IPC connection status indicator */
 	TSharedPtr<SStatusIndicator> IPCConnectionStatusLight;
-	
+
 	/** Python bridge ready status indicator */
 	TSharedPtr<SStatusIndicator> BridgeReadyStatusLight;
-	
+
 	/** Query processing status indicator */
 	TSharedPtr<SStatusIndicator> QueryProcessingStatusLight;
-	
+
 	/** Ingestion status indicator */
 	TSharedPtr<SStatusIndicator> IngestionStatusLight;
-	
+
 	/** Backend health status indicator */
 	TSharedPtr<SStatusIndicator> BackendHealthStatusLight;
-	
+
 	/** API Key validation status indicator */
 	TSharedPtr<SStatusIndicator> APIKeyStatusLight;
 
 	/** Status lights update interval in seconds */
 	static constexpr double StatusLightsUpdateInterval = 0.5;
-	
+
 	/** Time since last status lights update */
 	double LastStatusLightsUpdateTime;
 

@@ -241,7 +241,7 @@ Test the query input functionality:
 Query: What is Unreal Engine?
 
 Response:
-Unreal Engine is a comprehensive suite of real-time 3D creation tools 
+Unreal Engine is a comprehensive suite of real-time 3D creation tools
 developed by Epic Games.
 
 Key Features:
@@ -594,7 +594,7 @@ OS: ___________
 
 Part 1: Python Backend
 [ ] Step 1: IPC Server Standalone
-[ ] Step 2: UI Integration Simulation  
+[ ] Step 2: UI Integration Simulation
 [ ] Step 3: Individual Components
 
 Part 2: UE Plugin

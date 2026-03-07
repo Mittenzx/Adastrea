@@ -20,7 +20,7 @@ Class: UCargoComponent
 
 **Purpose**: Manages cargo inventory and space calculation
 
-#### 2. PlayerTraderComponent  
+#### 2. PlayerTraderComponent
 ```
 Component Name: PlayerTraderComponent
 Class: UPlayerTraderComponent
@@ -115,7 +115,7 @@ Event: InputAction OpenTrade
         → Print String: "Not docked at any station"
 ```
 
-**Inputs**: None  
+**Inputs**: None
 **Outputs**: Opens trading UI or displays error message
 
 ### Function: OpenTradingUI
@@ -330,6 +330,6 @@ See generated diagram: `docs/reference/images/blueprints/bp_trading_ship_starter
 
 ---
 
-**Last Updated**: January 17, 2026  
-**For**: Trade Simulator MVP (Weeks 1-4)  
+**Last Updated**: January 17, 2026
+**For**: Trade Simulator MVP (Weeks 1-4)
 **Complexity**: Beginner-friendly (hardcoded prototype)

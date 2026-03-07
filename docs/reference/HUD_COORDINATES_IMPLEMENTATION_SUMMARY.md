@@ -82,7 +82,7 @@ The C++ backend is complete and ready, but the visual display needs to be create
    - **Option A (Simple):** Bind Text property to `CurrentCoordinates`
      - Break Vector to get X, Y, Z
      - Format as text: "X: {X}, Y: {Y}, Z: {Z}"
-   
+
    - **Option B (Advanced):** Override `UpdateCoordinates` event
      - Custom formatting logic
      - Unit conversion (cm → meters)
@@ -227,7 +227,7 @@ See the detailed documentation files for:
 
 ---
 
-**Status:** C++ Implementation Complete ✅ | Blueprint UI Pending (Requires UE Editor)  
-**PR:** See associated pull request in repository history  
-**Issue:** Navigation coordinate display request  
+**Status:** C++ Implementation Complete ✅ | Blueprint UI Pending (Requires UE Editor)
+**PR:** See associated pull request in repository history
+**Issue:** Navigation coordinate display request
 **Last Updated:** 2026-01-29

@@ -12,17 +12,17 @@ class UShipModuleDataAsset;
 
 /**
  * Base component class for all ship modules
- * 
+ *
  * This is the base implementation of the IShipModule interface, providing
  * common functionality for all ship modules. Specific module types (engines,
  * weapons, shields, etc.) should inherit from this class.
- * 
+ *
  * Features:
  * - Data Asset integration for designer-friendly configuration
  * - Automatic mesh management and attachment
  * - Power and mass tracking
  * - Installation state management
- * 
+ *
  * Usage:
  * - Create derived classes for specific module types (UEngineModuleComponent, etc.)
  * - Configure via Data Assets in Blueprint

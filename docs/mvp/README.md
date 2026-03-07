@@ -1,8 +1,8 @@
 # MVP Documentation - Trade Simulator
 
-**Current Phase**: Week 1-4 (Hardcoded Prototype)  
-**Status**: Active Development - March 2026  
-**Last Updated**: 2026-03-07  
+**Current Phase**: Week 1-4 (Hardcoded Prototype)
+**Status**: Active Development - March 2026
+**Last Updated**: 2026-03-07
 **Next Milestone**: Week 4 Playtest (GO/NO-GO Decision)
 
 ---
@@ -119,7 +119,7 @@
 
 **Core Loop**: Buy low → Fly → Sell high → Upgrade ship → Repeat with better margins
 
-**Success Metric**: 60% of playtesters say "this is fun" after 10 minutes (Week 4)  
+**Success Metric**: 60% of playtesters say "this is fun" after 10 minutes (Week 4)
 **Funding Metric**: 75% "fun" + 50% "would buy" (Week 12)
 
 ### Three Phases
@@ -154,12 +154,12 @@ See [SYSTEM_CLASSIFICATION.md](SYSTEM_CLASSIFICATION.md) for complete system bre
 
 ## 📊 Current Status
 
-**Week**: 1-2 (Planning & Setup)  
-**Phase**: Phase 1 - Hardcoded Prototype  
-**Focus**: Build playable trade loop for Week 4 validation  
+**Week**: 1-2 (Planning & Setup)
+**Phase**: Phase 1 - Hardcoded Prototype
+**Focus**: Build playable trade loop for Week 4 validation
 **Critical Deadline**: Week 4 playtest (60%+ "fun" rating required)
 
-**Next Steps**: 
+**Next Steps**:
 1. ✅ Review critical documents (completed)
 2. ⏳ Follow PHASE_1_IMPLEMENTATION_STEPS.md
 3. ⏳ Build basic trading UI (30-minute quickstart available)
@@ -224,14 +224,14 @@ Every week should include:
 
 ## 🆘 Need Help?
 
-**Getting Started**: Read [GETTING_STARTED.md](GETTING_STARTED.md) first  
-**Stuck on Implementation**: Check troubleshooting in [PHASE_1_IMPLEMENTATION_STEPS.md](PHASE_1_IMPLEMENTATION_STEPS.md)  
-**Questioning Scope**: Review [SYSTEM_CLASSIFICATION.md](SYSTEM_CLASSIFICATION.md)  
+**Getting Started**: Read [GETTING_STARTED.md](GETTING_STARTED.md) first
+**Stuck on Implementation**: Check troubleshooting in [PHASE_1_IMPLEMENTATION_STEPS.md](PHASE_1_IMPLEMENTATION_STEPS.md)
+**Questioning Scope**: Review [SYSTEM_CLASSIFICATION.md](SYSTEM_CLASSIFICATION.md)
 **Need Motivation**: Re-read [CRITICAL_REVIEW_SUMMARY.md](../../CRITICAL_REVIEW_SUMMARY.md)
 
 ---
 
-**Last Updated**: 2026-01-13  
-**Version**: 2.0  
-**Status**: Active Development (Phase 1)  
+**Last Updated**: 2026-01-13
+**Version**: 2.0
+**Status**: Active Development (Phase 1)
 **Next Milestone**: Week 4 Playtest & GO/NO-GO Decision

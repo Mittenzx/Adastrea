@@ -2,9 +2,9 @@
 
 > **A complete beginner's guide to understanding Blueprints in Unreal Engine**
 
-**Last Updated**: January 17, 2026  
-**Target Audience**: Complete beginners with no Blueprint experience  
-**Time to Complete**: 45-60 minutes  
+**Last Updated**: January 17, 2026
+**Target Audience**: Complete beginners with no Blueprint experience
+**Time to Complete**: 45-60 minutes
 **Engine**: Unreal Engine 5.6
 
 ---
@@ -480,13 +480,13 @@ Event OnInventoryChanged → Update UI
 
 ### What You Learned Today
 
-✅ **Blueprints** are visual programming  
-✅ **Nodes** are building blocks that do one thing  
-✅ **Pins** connect nodes (white = execution, colored = data)  
-✅ **Execution flows** left to right through white pins  
-✅ **Events** start logic execution  
-✅ **Functions** perform actions  
-✅ **Branches** make decisions  
+✅ **Blueprints** are visual programming
+✅ **Nodes** are building blocks that do one thing
+✅ **Pins** connect nodes (white = execution, colored = data)
+✅ **Execution flows** left to right through white pins
+✅ **Events** start logic execution
+✅ **Functions** perform actions
+✅ **Branches** make decisions
 
 ### Key Principles
 

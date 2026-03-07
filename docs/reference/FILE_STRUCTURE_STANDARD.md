@@ -1,7 +1,7 @@
 # Adastrea File Structure Standard
 
-**Version**: 1.0  
-**Last Updated**: 2026-01-02  
+**Version**: 1.0
+**Last Updated**: 2026-01-02
 **Status**: Official Standard
 
 ---
@@ -452,6 +452,6 @@ This standard is enforced through:
 
 ---
 
-**Last Updated**: 2026-01-02  
-**Version**: 1.0  
+**Last Updated**: 2026-01-02
+**Version**: 1.0
 **Status**: Official Standard - All Contributors Must Follow

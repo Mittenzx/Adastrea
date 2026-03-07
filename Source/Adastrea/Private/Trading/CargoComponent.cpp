@@ -36,7 +36,7 @@ bool UCargoComponent::AddCargo(UTradeItemDataAsset* Item, int32 Quantity)
 		CargoInventory.Add(FCargoEntry(Item, Quantity));
 	}
 
-	UE_LOG(LogTemp, Log, TEXT("CargoComponent: Added %d x %s (total: %d, available space: %.1f)"), 
+	UE_LOG(LogTemp, Log, TEXT("CargoComponent: Added %d x %s (total: %d, available space: %.1f)"),
 		Quantity, *Item->ItemName.ToString(), GetItemQuantity(Item), GetAvailableCargoSpace());
 
 	// Broadcast events
@@ -75,7 +75,7 @@ bool UCargoComponent::RemoveCargo(UTradeItemDataAsset* Item, int32 Quantity)
 			CargoInventory.RemoveAt(EntryIndex);
 		}
 
-		UE_LOG(LogTemp, Log, TEXT("CargoComponent: Removed %d x %s (remaining: %d, available space: %.1f)"), 
+		UE_LOG(LogTemp, Log, TEXT("CargoComponent: Removed %d x %s (remaining: %d, available space: %.1f)"),
 			Quantity, *Item->ItemName.ToString(), GetItemQuantity(Item), GetAvailableCargoSpace());
 
 		// Broadcast events
@@ -129,7 +129,7 @@ int32 UCargoComponent::GetItemQuantity(UTradeItemDataAsset* Item) const
 	}
 
 	int32 EntryIndex = FindCargoEntryIndex(Item);
-	
+
 	if (EntryIndex != INDEX_NONE)
 	{
 		return CargoInventory[EntryIndex].Quantity;

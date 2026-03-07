@@ -15,7 +15,7 @@ UShipUpgradeComponent::UShipUpgradeComponent()
 void UShipUpgradeComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("ShipUpgradeComponent: Initialized with %d upgrade slots"), MaxUpgradeSlots);
 }
 
@@ -176,7 +176,7 @@ float UShipUpgradeComponent::GetStatBonusPercentage(FName StatName) const
 	// Calculate percentage difference from base value of 100
 	float BaseValue = 100.0f;
 	float ModifiedValue = GetStatModifier(StatName, BaseValue);
-	
+
 	return (ModifiedValue - BaseValue) / BaseValue;
 }
 

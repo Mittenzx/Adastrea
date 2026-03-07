@@ -177,13 +177,13 @@ ship:
     display_name: "Pathfinder Scout"
     description: "Fast reconnaissance vessel"
     manufacturer: "Frontier Explorers"
-  
+
   core_stats:
     max_hull: 80
     max_cargo: 30
     crew_min: 1
     crew_max: 3
-  
+
   mobility_stats:
     max_speed: 1000
     acceleration: 500

@@ -319,7 +319,7 @@ bool UTargetingComponent::GetCurrentTargetInfo(FTargetInfo& OutTargetInfo) const
 TArray<FTargetInfo> UTargetingComponent::GetDetectedTargetsSortedByDistance() const
 {
     TArray<FTargetInfo> SortedTargets = DetectedTargets;
-    
+
     SortedTargets.Sort([](const FTargetInfo& A, const FTargetInfo& B)
     {
         return A.Distance < B.Distance;
@@ -331,7 +331,7 @@ TArray<FTargetInfo> UTargetingComponent::GetDetectedTargetsSortedByDistance() co
 TArray<FTargetInfo> UTargetingComponent::GetDetectedTargetsSortedByThreat() const
 {
     TArray<FTargetInfo> SortedTargets = DetectedTargets;
-    
+
     SortedTargets.Sort([](const FTargetInfo& A, const FTargetInfo& B)
     {
         return A.ThreatLevel > B.ThreatLevel;
@@ -436,7 +436,7 @@ void UTargetingComponent::ScanForTargets()
     for (const FOverlapResult& Overlap : Overlaps)
     {
         AActor* PotentialTarget = Overlap.GetActor();
-        
+
         if (!IsValidTarget(PotentialTarget))
         {
             continue;
@@ -486,7 +486,7 @@ void UTargetingComponent::UpdateCurrentTarget()
     {
         ClearTarget();
         OnTargetLost(TEXT("Destroyed"));
-        
+
         if (bAutoRetarget)
         {
             SelectNearestTarget();
@@ -500,7 +500,7 @@ void UTargetingComponent::UpdateCurrentTarget()
     {
         ClearTarget();
         OnTargetLost(TEXT("OutOfRange"));
-        
+
         if (bAutoRetarget)
         {
             SelectNearestTarget();
@@ -514,7 +514,7 @@ void UTargetingComponent::UpdateCurrentTarget()
     {
         ClearTarget();
         OnTargetLost(TEXT("OutOfArc"));
-        
+
         if (bAutoRetarget)
         {
             SelectNearestTarget();
@@ -548,7 +548,7 @@ bool UTargetingComponent::IsValidTarget(AActor* Target) const
                 break;
             }
         }
-        
+
         if (!bHasValidTag)
         {
             return false;
@@ -568,7 +568,7 @@ float UTargetingComponent::CalculateAngleToActor(AActor* Target) const
 
     const FVector Forward = Owner->GetActorForwardVector();
     const FVector ToTarget = (Target->GetActorLocation() - Owner->GetActorLocation()).GetSafeNormal();
-    
+
     const float DotProduct = FVector::DotProduct(Forward, ToTarget);
     const float AngleRadians = FMath::Acos(DotProduct);
     const float AngleDegrees = FMath::RadiansToDegrees(AngleRadians);

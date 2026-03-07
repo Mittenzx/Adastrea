@@ -35,7 +35,7 @@ if ! git cat-file -e "$COMMIT_SHA" 2>/dev/null; then
     echo "WARNING: Commit $COMMIT_SHA not found in local repository"
     echo ""
     echo "This might be a shallow clone. Attempting to fetch full history..."
-    
+
     # Try to fetch full history
     if git fetch --unshallow 2>/dev/null; then
         echo "✓ Successfully fetched full history"
@@ -89,13 +89,13 @@ FAILED=0
 
 for FILE in "${FILES[@]}"; do
     echo -n "  Extracting: $FILE ... "
-    
+
     TARGET_PATH="$SCRIPT_DIR/$FILE"
     TARGET_DIR="$(dirname "$TARGET_PATH")"
-    
+
     # Ensure target directory exists
     mkdir -p "$TARGET_DIR"
-    
+
     # Extract file using git show
     if git show "$COMMIT_SHA:$FILE" > "$TARGET_PATH" 2>/dev/null; then
         echo "✓"

@@ -8,10 +8,10 @@
 
 /**
  * Power reactor module for space stations
- * 
+ *
  * Main power generation facility using fusion reactor technology.
  * Generates substantial power output to support station operations.
- * 
+ *
  * Power Generation: -500 units (negative = generates power)
  * Module Group: Power
  */

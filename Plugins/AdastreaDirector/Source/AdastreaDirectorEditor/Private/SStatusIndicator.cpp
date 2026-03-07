@@ -15,7 +15,7 @@ void SStatusIndicator::Construct(const FArguments& InArgs)
 	ChildSlot
 	[
 		SNew(SHorizontalBox)
-		
+
 		// Status light (colored circle)
 		+ SHorizontalBox::Slot()
 		.AutoWidth()
@@ -32,7 +32,7 @@ void SStatusIndicator::Construct(const FArguments& InArgs)
 				.Font(FCoreStyle::GetDefaultFontStyle("Bold", 12))
 			]
 		]
-		
+
 		// Status text label
 		+ SHorizontalBox::Slot()
 		.FillWidth(1.0f)

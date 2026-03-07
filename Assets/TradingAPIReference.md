@@ -109,7 +109,7 @@ TArray<FName> BehaviorTags;
 UFUNCTION(BlueprintCallable, Category="Trade Item|Pricing")
 float CalculatePrice(float Supply, float Demand, float MarketEventMultiplier = 1.0f) const;
 ```
-**Description**: Calculate current price based on market conditions  
+**Description**: Calculate current price based on market conditions
 **Parameters**:
 - `Supply`: Current supply level (0.0 to 1.0+, where 1.0 is typical)
 - `Demand`: Current demand level (0.0 to 1.0+, where 1.0 is typical)
@@ -128,7 +128,7 @@ float CurrentPrice = TradeItem->CalculatePrice(0.5f, 1.5f, 1.2f);
 UFUNCTION(BlueprintCallable, Category="Trade Item|Pricing")
 float GetFactionModifiedPrice(float BasePriceToModify, FName BuyerFactionID, FName SellerFactionID) const;
 ```
-**Description**: Get price after applying faction relationships  
+**Description**: Get price after applying faction relationships
 **Returns**: Modified price based on faction relationships
 
 #### CanBeTradedByFaction
@@ -136,7 +136,7 @@ float GetFactionModifiedPrice(float BasePriceToModify, FName BuyerFactionID, FNa
 UFUNCTION(BlueprintCallable, Category="Trade Item|Legality")
 bool CanBeTradedByFaction(FName FactionID, int32 Reputation) const;
 ```
-**Description**: Check if item can be traded by a specific faction  
+**Description**: Check if item can be traded by a specific faction
 **Returns**: True if trade is allowed
 
 #### RequiresPermit
@@ -144,7 +144,7 @@ bool CanBeTradedByFaction(FName FactionID, int32 Reputation) const;
 UFUNCTION(BlueprintCallable, Category="Trade Item|Legality")
 bool RequiresPermit(FName FactionID) const;
 ```
-**Description**: Check if item requires a permit for trading  
+**Description**: Check if item requires a permit for trading
 **Returns**: True if permit is required
 
 #### CalculateContrabandFine
@@ -152,7 +152,7 @@ bool RequiresPermit(FName FactionID) const;
 UFUNCTION(BlueprintCallable, Category="Trade Item|Legality")
 float CalculateContrabandFine(int32 Quantity) const;
 ```
-**Description**: Calculate fine for illegal trade if caught  
+**Description**: Calculate fine for illegal trade if caught
 **Returns**: Fine amount in credits
 
 #### HasBehaviorTag
@@ -160,7 +160,7 @@ float CalculateContrabandFine(int32 Quantity) const;
 UFUNCTION(BlueprintCallable, Category="Trade Item|Tags")
 bool HasBehaviorTag(FName Tag) const;
 ```
-**Description**: Check if this item has a specific behavior tag  
+**Description**: Check if this item has a specific behavior tag
 **Returns**: True if item has the tag
 
 #### GetTotalVolume / GetTotalMass
@@ -171,7 +171,7 @@ float GetTotalVolume(int32 Quantity) const;
 UFUNCTION(BlueprintCallable, Category="Trade Item|Properties")
 float GetTotalMass(int32 Quantity) const;
 ```
-**Description**: Get total volume or mass for a quantity  
+**Description**: Get total volume or mass for a quantity
 **Returns**: Total volume in cubic meters or mass in kilograms
 
 #### IsHighValue
@@ -179,7 +179,7 @@ float GetTotalMass(int32 Quantity) const;
 UFUNCTION(BlueprintCallable, Category="Trade Item|Properties")
 bool IsHighValue() const;
 ```
-**Description**: Check if this item is considered high-value  
+**Description**: Check if this item is considered high-value
 **Returns**: True if base price is above luxury threshold
 
 ### Events
@@ -189,7 +189,7 @@ bool IsHighValue() const;
 UFUNCTION(BlueprintNativeEvent, Category="Trade Item|Events")
 float OnCalculateCustomPrice(float Supply, float Demand, float EventMultiplier, float BaseCalculatedPrice) const;
 ```
-**Description**: Custom price calculation override  
+**Description**: Custom price calculation override
 **Usage**: Implement in Blueprint to add custom pricing logic
 
 **Example**:
@@ -197,7 +197,7 @@ float OnCalculateCustomPrice(float Supply, float Demand, float EventMultiplier, 
 // In Blueprint
 Event OnCalculateCustomPrice
   Input: Supply, Demand, EventMultiplier, BaseCalculatedPrice
-  
+
   // Add 10% discount for bulk orders
   If Quantity > 100
     Return BaseCalculatedPrice * 0.9
@@ -210,7 +210,7 @@ Event OnCalculateCustomPrice
 UFUNCTION(BlueprintNativeEvent, Category="Trade Item|Events")
 void OnItemTraded(int32 Quantity, float Price, FName BuyerFactionID, FName SellerFactionID);
 ```
-**Description**: Called when this item is traded  
+**Description**: Called when this item is traded
 **Usage**: Trigger custom events on trade
 
 ---
@@ -305,7 +305,7 @@ bool bAllowAIPriceManipulation;
 UFUNCTION(BlueprintCallable, Category="Market|Pricing")
 float GetItemPrice(UTradeItemDataAsset* TradeItem, bool bIsBuying) const;
 ```
-**Description**: Get current price for an item (buy or sell)  
+**Description**: Get current price for an item (buy or sell)
 **Parameters**:
 - `TradeItem`: The item to get price for
 - `bIsBuying`: True if player is buying, false if selling
@@ -317,7 +317,7 @@ float GetItemPrice(UTradeItemDataAsset* TradeItem, bool bIsBuying) const;
 UFUNCTION(BlueprintCallable, Category="Market|Inventory")
 bool GetInventoryEntry(FName ItemID, FMarketInventoryEntry& OutEntry) const;
 ```
-**Description**: Get inventory entry for a specific item  
+**Description**: Get inventory entry for a specific item
 **Returns**: True if item was found in inventory
 
 #### IsItemInStock
@@ -325,7 +325,7 @@ bool GetInventoryEntry(FName ItemID, FMarketInventoryEntry& OutEntry) const;
 UFUNCTION(BlueprintCallable, Category="Market|Inventory")
 bool IsItemInStock(FName ItemID, int32 Quantity) const;
 ```
-**Description**: Check if an item is in stock  
+**Description**: Check if an item is in stock
 **Returns**: True if sufficient stock is available
 
 #### GetItemsByCategory
@@ -333,7 +333,7 @@ bool IsItemInStock(FName ItemID, int32 Quantity) const;
 UFUNCTION(BlueprintCallable, Category="Market|Inventory")
 TArray<FMarketInventoryEntry> GetItemsByCategory(ETradeItemCategory Category) const;
 ```
-**Description**: Get all items in a specific category  
+**Description**: Get all items in a specific category
 **Returns**: Array of inventory entries matching category
 
 #### CanPlayerAccess
@@ -341,7 +341,7 @@ TArray<FMarketInventoryEntry> GetItemsByCategory(ETradeItemCategory Category) co
 UFUNCTION(BlueprintCallable, Category="Market|Access")
 bool CanPlayerAccess(int32 PlayerReputation) const;
 ```
-**Description**: Check if player has sufficient reputation to access market  
+**Description**: Check if player has sufficient reputation to access market
 **Returns**: True if player can access market
 
 #### GetActiveEventsForItem
@@ -349,7 +349,7 @@ bool CanPlayerAccess(int32 PlayerReputation) const;
 UFUNCTION(BlueprintCallable, Category="Market|Events")
 TArray<FMarketEvent> GetActiveEventsForItem(FName ItemID) const;
 ```
-**Description**: Get active market events affecting a specific item  
+**Description**: Get active market events affecting a specific item
 **Returns**: Array of active events affecting this item
 
 #### GetEventPriceMultiplier
@@ -357,7 +357,7 @@ TArray<FMarketEvent> GetActiveEventsForItem(FName ItemID) const;
 UFUNCTION(BlueprintCallable, Category="Market|Events")
 float GetEventPriceMultiplier(FName ItemID) const;
 ```
-**Description**: Calculate total price multiplier from all active events for an item  
+**Description**: Calculate total price multiplier from all active events for an item
 **Returns**: Combined price multiplier from all events
 
 #### UpdateMarket
@@ -775,7 +775,7 @@ if (PlayerCredits >= TotalCost)
 {
     PlayerCredits -= TotalCost;
     AddToPlayerInventory(Item, Quantity);
-    
+
     // Record transaction
     FTradeTransaction Transaction;
     Transaction.TransactionType = ETransactionType::Buy;
@@ -787,7 +787,7 @@ if (PlayerCredits >= TotalCost)
     Transaction.SellerID = Market->MarketID;
     Transaction.Market = Market;
     Transaction.Timestamp = GetGameTime();
-    
+
     TransactionManager->RecordTransaction(Transaction);
 }
 ```

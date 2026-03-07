@@ -1,6 +1,6 @@
 # Trading System - Complete Designer & Programmer Guide
 
-> **⚠️ DEPRECATED**: This guide has been consolidated into the unified Trading and Docking Complete Guide.  
+> **⚠️ DEPRECATED**: This guide has been consolidated into the unified Trading and Docking Complete Guide.
 > **See**: [Trading and Docking Complete Guide](../docs/mvp/TRADING_AND_DOCKING_COMPLETE_GUIDE.md)
 
 ---
@@ -75,10 +75,10 @@ UCLASS()
 class UMyCustomTradeItem : public UTradeItemDataAsset
 {
     GENERATED_BODY()
-    
+
 protected:
     virtual float OnCalculateCustomPrice_Implementation(
-        float Supply, float Demand, 
+        float Supply, float Demand,
         float EventMultiplier, float BaseCalculatedPrice) const override
     {
         // Add custom pricing logic here
@@ -244,7 +244,7 @@ CalculatedPrice = BasePrice * SupplyFactor * DemandFactor * EventMultiplier * Vo
 Where:
   SupplyFactor = 1.0 / max(Supply, 0.1)
   DemandFactor = Demand
-  
+
 Final price is clamped to:
   [BasePrice * MinPriceDeviation, BasePrice * MaxPriceDeviation]
 ```
@@ -566,7 +566,7 @@ ContractTags:                  # Tags for filtering
 
 AI traders can execute multiple behaviors:
 
-**MarketMaking**: 
+**MarketMaking**:
 - Provide liquidity
 - Buy low, sell high
 - Stabilize prices
@@ -671,7 +671,7 @@ TransactionManager->RecordTransaction(Transaction);
 Query transaction history:
 ```cpp
 // Get all trades of an item
-TArray<FTradeTransaction> ItemTrades = 
+TArray<FTradeTransaction> ItemTrades =
     TransactionManager->GetTransactionsByItem(ItemID);
 
 // Get price history
@@ -686,7 +686,7 @@ float Trend = TransactionManager->GetPriceTrend(ItemID, 24.0f);
 int32 Profit = TransactionManager->GetPlayerProfitLoss(PlayerID);
 
 // Get most traded items
-TArray<FName> TopItems = 
+TArray<FName> TopItems =
     TransactionManager->GetMostTradedItems(10, StartTime, EndTime);
 ```
 
@@ -776,7 +776,7 @@ Event OnCalculateCustomPrice
     - Demand (float)
     - Event Multiplier (float)
     - Base Calculated Price (float)
-  
+
   Logic:
     1. Get base calculated price
     2. Apply your custom modifiers
@@ -828,18 +828,18 @@ Widget BP_TradingInterface:
   - Buy/Sell buttons
   - Transaction confirmation
   - Contract listing
-  
+
 Variables:
   - CurrentMarket (MarketDataAsset)
   - SelectedItem (TradeItemDataAsset)
   - TransactionManager (TradeTransactionManager)
-  
+
 Functions:
   - RefreshInventory()
   - BuyItem(TradeItem, Quantity)
   - SellItem(TradeItem, Quantity)
   - AcceptContract(Contract)
-  
+
 Events:
   - OnTransactionComplete
   - OnPriceUpdate

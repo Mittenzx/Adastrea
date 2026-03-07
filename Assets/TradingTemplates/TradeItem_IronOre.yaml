@@ -7,7 +7,7 @@ ItemID: "TradeItem_IronOre"
 Description: |
   Raw iron ore extracted from asteroids and planetary mines.
   Essential for metal production and construction.
-  
+
 Category: RawMaterials
 
 # Material Data Reference (optional)
@@ -21,7 +21,7 @@ PriceVolatility:
   VolatilityMultiplier: 1.2
   MinPriceDeviation: 0.6
   MaxPriceDeviation: 1.8
-  
+
 bAffectedBySupplyDemand: true
 bAffectedByMarketEvents: true
 
@@ -33,7 +33,7 @@ TradeRestrictions:
   BannedFactions: []
   RequiresPermitFactions: []
   MinReputationRequired: -100
-  
+
 ContrabandFineMultiplier: 0.0
 
 # ====================

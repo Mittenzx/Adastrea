@@ -313,7 +313,7 @@ void AMyPlayerController::OnTradeCompleted(int32 CreditChange)
     // Update game instance
     UAdastreaGameInstance* GameInstance = GetGameInstance<UAdastreaGameInstance>();
     GameInstance->ModifyPlayerCredits(CreditChange);
-    
+
     // Update HUD
     if (HUDWidget)
     {
@@ -329,7 +329,7 @@ void AMyPlayerController::OnTradeCompleted(int32 CreditChange)
 void ASpaceship::TakeDamage(float DamageAmount)
 {
     CurrentHullIntegrity = FMath::Max(0.0f, CurrentHullIntegrity - DamageAmount);
-    
+
     // HUD will auto-update on next RefreshShipInfo() call
     // Or manually update it:
     APlayerController* PC = Cast<APlayerController>(GetController());
@@ -543,6 +543,6 @@ For questions or issues, refer to the main project documentation or contact the 
 
 ---
 
-**Last Updated**: 2025-11-20  
-**Version**: 1.0  
+**Last Updated**: 2025-11-20
+**Version**: 1.0
 **Author**: Adastrea Development Team

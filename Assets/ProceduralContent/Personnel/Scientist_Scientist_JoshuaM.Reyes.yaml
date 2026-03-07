@@ -9,7 +9,7 @@ PersonnelName: "Joshua M. Reyes"
 # Basic Identity
 Biography: |
   This individual graduated from the academy with honors and has been rising steadily. They are noted for their strong moral compass and defended a civilian station against pirate raiders.
-  
+
 Age: 31
 Gender: "Male"
 Species: "Human"
@@ -61,7 +61,7 @@ ContractMonthsRemaining: 0
 PersonalityType: "Adventurous"
 PersonalityDescription: |
   Adventurous personality with focus on scientist duties.
-  
+
 Traits:
   - TraitName: "Lucky"
     TraitDescription: "Occasional bonuses"

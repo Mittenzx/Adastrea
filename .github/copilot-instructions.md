@@ -89,12 +89,12 @@ class AOtherActor;
 
 /**
  * Brief one-line description of the class
- * 
+ *
  * Detailed description explaining:
  * - What this class does
  * - When to use it
  * - How it integrates with other systems
- * 
+ *
  * Usage Example:
  * - Create a Blueprint based on this class
  * - Configure properties in editor
@@ -170,15 +170,15 @@ private:
 
 **Documentation Standard (MANDATORY):**
 > **CRITICAL**: All Blueprint documentation MUST follow the official image-based standard.
-> 
+>
 > See `.github/instructions/blueprint-documentation.instructions.md` for complete guidelines.
-> 
+>
 > **Quick Summary:**
 > - ✅ **DO**: Use SVG diagrams showing actual Blueprint nodes
 > - ✅ **DO**: Match exact Unreal Engine colors and appearance
 > - ✅ **DO**: Use `Tools/generate_blueprint_images.py` for consistency
 > - ❌ **DON'T**: Use plain text or ASCII art for primary documentation
-> 
+>
 > **Tool**: Run `python3 Tools/generate_blueprint_images.py` to generate diagrams
 > **Guide**: See `docs/reference/BLUEPRINT_IMAGE_GUIDE.md` for examples
 > **Images**: Store in `docs/reference/images/blueprints/`
@@ -588,6 +588,6 @@ For Unreal Engine reference, consult:
 
 ---
 
-**Last Updated**: 2025-12-08  
-**Version**: 1.2  
+**Last Updated**: 2025-12-08
+**Version**: 1.2
 **Maintained by**: Adastrea Development Team

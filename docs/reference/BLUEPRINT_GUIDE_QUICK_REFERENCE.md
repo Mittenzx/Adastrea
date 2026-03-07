@@ -321,10 +321,10 @@ A Blueprint guide is successful if:
 
 ---
 
-**Questions?**  
+**Questions?**
 See [Blueprint Guide Standards](BLUEPRINT_GUIDE_STANDARDS.md) for complete details.
 
 ---
 
-**Quick Reference Version**: 1.0  
+**Quick Reference Version**: 1.0
 **Created**: 2026-01-03

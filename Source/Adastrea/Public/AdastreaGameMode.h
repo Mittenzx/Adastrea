@@ -12,15 +12,15 @@ class UTestSettingsWidget;
 
 /**
  * Base game mode for Adastrea
- * 
+ *
  * This is the primary game mode that controls gameplay rules and state.
- * 
+ *
  * Features:
  * - Optional test settings pre-screen for development/QA testing
  * - Automatic player spaceship spawning with flexible location options
  * - Configurable spawn behavior (sector-based or fallback location)
  * - Blueprint-friendly customization
- * 
+ *
  * Usage:
  * 1. Set as the GameMode Override in World Settings
  * 2. Configure DefaultSpaceshipClass to the desired spaceship Blueprint

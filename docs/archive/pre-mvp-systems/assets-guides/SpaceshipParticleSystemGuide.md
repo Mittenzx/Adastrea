@@ -30,11 +30,11 @@ The `USpaceshipParticleComponent` provides a complete particle effect system for
 
 ### Key Features
 
-✅ **Throttle-responsive**: Main engine intensity scales with ship speed  
-✅ **Blueprint-friendly**: All functions exposed to Blueprints  
-✅ **Modular design**: Easy to customize per ship template  
-✅ **Performance-conscious**: GPU particles for main engines, CPU for RCS  
-✅ **Damage integration**: Visual feedback for engine health  
+✅ **Throttle-responsive**: Main engine intensity scales with ship speed
+✅ **Blueprint-friendly**: All functions exposed to Blueprints
+✅ **Modular design**: Easy to customize per ship template
+✅ **Performance-conscious**: GPU particles for main engines, CPU for RCS
+✅ **Damage integration**: Visual feedback for engine health
 
 ---
 
@@ -361,7 +361,7 @@ Event Graph:
   On Jump Pressed
   └── Get Particle Component
       └── Trigger Jump Sequence
-      
+
   On Jump Sequence Complete
   └── [Your jump logic]
       └── Teleport Ship
@@ -377,7 +377,7 @@ Event Graph:
   └── Branch (Health < 50%)
       ├── True: Set Damage State (Damaged)
       └── False: Set Damage State (Normal)
-  
+
   Branch (Health < 20%)
   └── True: Set Damage State (Critical)
 ```
@@ -473,7 +473,7 @@ Print String: "Particles: " + Count
   - [ ] Throttle changes update intensity smoothly
   - [ ] Boost activates afterburner
   - [ ] Engine glow scales with throttle
-  
+
 - [ ] **RCS Thrusters**
   - [ ] Forward movement activates backward thruster
   - [ ] Backward movement activates forward thruster
@@ -482,20 +482,20 @@ Print String: "Particles: " + Count
   - [ ] Up movement activates down thruster
   - [ ] Down movement activates up thruster
   - [ ] RCS auto-deactivates after duration
-  
+
 - [ ] **Jump Drive**
   - [ ] Charge stage displays correctly
   - [ ] Activation flash triggers
   - [ ] Tunnel effect plays during jump
   - [ ] Exit flash completes sequence
   - [ ] OnJumpSequenceComplete event fires
-  
+
 - [ ] **Damage States**
   - [ ] Normal state: no damage effects
   - [ ] Damaged state: sputtering particles
   - [ ] Critical state: heavy smoke/fire
   - [ ] Engine glow dims with damage
-  
+
 - [ ] **Performance**
   - [ ] Particle count <10k per ship
   - [ ] No frame drops with 10 ships
@@ -525,7 +525,7 @@ profileGPU           // GPU profiling
 # Test with 10 ships
 for i in range(10):
     spawn_ship_at_location(i * 1000, 0, 0)
-    
+
 # Monitor for 60 seconds
 wait(60)
 
@@ -687,6 +687,6 @@ Combine particles with material effects:
 
 ---
 
-**Last Updated**: 2025-11-17  
-**Version**: 1.0  
+**Last Updated**: 2025-11-17
+**Version**: 1.0
 **Author**: Adastrea Development Team

@@ -14,86 +14,86 @@ Identity:
 Council:
   TotalSeats: 14
   PassThreshold: 60  # Hard to reach consensus
-  
+
   Representatives:
     - RepresentingWay: Military_Industrial
       RepresentativeName: "Admiral Viktor Kozlov"
       VotingWeight: 20
       YearsOfService: 4
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Corporate_Syndicate
       RepresentativeName: "CEO Diana Ashford"
       VotingWeight: 19
       YearsOfService: 3
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Labor_Union
       RepresentativeName: "Union Boss Marcus Flynn"
       VotingWeight: 18
       YearsOfService: 6
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Religious_Order
       RepresentativeName: "High Priestess Amara"
       VotingWeight: 15
       YearsOfService: 8
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Mining_Collective
       RepresentativeName: "Foreman Boris Volkov"
       VotingWeight: 16
       YearsOfService: 5
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Merchant_Coalition
       RepresentativeName: "Trader Guild Master Chen"
       VotingWeight: 14
       YearsOfService: 2
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Independent_Bloc
       RepresentativeName: "Representative Sarah Black"
       VotingWeight: 12
       YearsOfService: 1
       IsPlayerControlled: true  # Player seat available!
-      
+
     - RepresentingWay: Frontier_Settlers
       RepresentativeName: "Governor Tom Bridger"
       VotingWeight: 10
       YearsOfService: 4
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Salvage_Guild
       RepresentativeName: "Rita 'Scrap' Chen"
       VotingWeight: 9
       YearsOfService: 2
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Research_Collective
       RepresentativeName: "Dr. Elena Volkov"
       VotingWeight: 8
       YearsOfService: 3
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Security_Contractors
       RepresentativeName: "Captain Jack Morrison"
       VotingWeight: 11
       YearsOfService: 5
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Medical_Coalition
       RepresentativeName: "Dr. Sarah Hassan"
       VotingWeight: 7
       YearsOfService: 2
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Transport_Alliance
       RepresentativeName: "Pilot Commander Lisa Tanaka"
       VotingWeight: 8
       YearsOfService: 3
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Agricultural_Cooperative
       RepresentativeName: "Farmer Carlos Verde"
       VotingWeight: 6
@@ -121,7 +121,7 @@ ActivePolicies:
       Effectiveness questionable.
     PolicyValue: 60
     IsActive: true
-    
+
   - PolicyType: TradeRegulation
     PolicyName: "Competing Trade Standards"
     Description: |
@@ -130,7 +130,7 @@ ActivePolicies:
       inconsistent based on local power dynamics.
     PolicyValue: 55
     IsActive: true
-    
+
   - PolicyType: ResourceAllocation
     PolicyName: "Contested Resource Claims"
     Description: |
@@ -139,7 +139,7 @@ ActivePolicies:
       flare up regularly over mining rights.
     PolicyValue: 45
     IsActive: true
-    
+
   - PolicyType: InfrastructureFund
     PolicyName: "Partisan Infrastructure"
     Description: |
@@ -154,11 +154,11 @@ Notes: |
   Shifting alliances mean player choices matter significantly. Support
   one Way and antagonize another. Perfect for diplomatic gameplay and
   players who want to play kingmaker or rise to power themselves.
-  
+
   Council dynamics: Extremely contentious with three major power blocs:
   1) Military-Industrial alliance (authoritarian approach)
-  2) Corporate-Merchant alliance (capitalist approach)  
+  2) Corporate-Merchant alliance (capitalist approach)
   3) Labor-Religious-Independent alliance (populist approach)
-  
+
   Votes often fail. When they pass, it's because two blocs temporarily
   aligned against the third. Player vote could be the deciding factor!

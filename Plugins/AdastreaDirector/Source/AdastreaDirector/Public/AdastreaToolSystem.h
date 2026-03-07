@@ -15,7 +15,7 @@ struct FToolExecutionResult
 	FString Output;
 	FString ErrorMessage;
 	TSharedPtr<FJsonObject> Data;
-	
+
 	TSharedPtr<FJsonObject> ToJson() const;
 };
 
@@ -45,32 +45,32 @@ class ADASTREADIRECTOR_API FAdastreaToolSystem
 {
 public:
 	static FAdastreaToolSystem& Get();
-	
+
 	/**
 	 * Register a new tool
 	 */
 	void RegisterTool(const FAdastreaToolInfo& ToolInfo);
-	
+
 	/**
 	 * Unregister a tool
 	 */
 	void UnregisterTool(const FString& ToolName);
-	
+
 	/**
 	 * Execute a tool by name
 	 */
 	FToolExecutionResult ExecuteTool(const FString& ToolName, const TSharedPtr<FJsonObject>& Arguments);
-	
+
 	/**
 	 * Get all registered tools (for LLM context)
 	 */
 	TArray<FToolDefinition> GetAllToolDefinitions() const;
-	
+
 	/**
 	 * Get tools by category
 	 */
 	TArray<FToolDefinition> GetToolsByCategory(const FString& Category) const;
-	
+
 	/**
 	 * Check if tool exists
 	 */
@@ -78,6 +78,6 @@ public:
 
 private:
 	FAdastreaToolSystem() = default;
-	
+
 	TMap<FString, FAdastreaToolInfo> RegisteredTools;
 };

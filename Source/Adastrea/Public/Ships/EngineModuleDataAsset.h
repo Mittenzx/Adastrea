@@ -8,11 +8,11 @@
 
 /**
  * Data Asset for engine module configurations
- * 
+ *
  * Defines engine specifications including thrust, speed, acceleration,
  * and fuel consumption. Allows designers to create various engine types
  * from small maneuvering thrusters to large capital ship drives.
- * 
+ *
  * Usage:
  * 1. Create Blueprint Data Asset based on this class
  * 2. Configure engine properties

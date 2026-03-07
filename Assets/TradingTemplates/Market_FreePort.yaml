@@ -9,7 +9,7 @@ Description: |
   A bustling trade hub in neutral space. All are welcome here,
   from legitimate merchants to shadowy smugglers. The station
   maintains strict neutrality and charges fair taxes.
-  
+
 MarketType: OpenMarket
 MarketSize: Large
 
@@ -40,19 +40,19 @@ InventoryEntries:
     MaxStock: 10000
     SupplyLevel: 1.0
     DemandLevel: 1.0
-    
+
   - TradeItem: "DA_TradeItem_FoodRations"
     CurrentStock: 2000
     MaxStock: 5000
     SupplyLevel: 1.2
     DemandLevel: 0.8
-    
+
   - TradeItem: "DA_TradeItem_FuelCells"
     CurrentStock: 1500
     MaxStock: 3000
     SupplyLevel: 0.9
     DemandLevel: 1.1
-    
+
   - TradeItem: "DA_TradeItem_QuantumProcessor"
     CurrentStock: 50
     MaxStock: 100
@@ -74,7 +74,7 @@ SampleEvents:
     SupplyMultiplier: 0.5
     DemandMultiplier: 1.5
     DurationHours: 48.0
-    
+
   - EventName: "Technology Expo"
     EventID: "Event_TechExpo"
     AffectedItemIDs:

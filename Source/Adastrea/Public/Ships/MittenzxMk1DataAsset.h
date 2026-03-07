@@ -8,7 +8,7 @@
  * Mittenzx Mk1 spaceship data asset.
  * A custom spaceship based on the MyFirstSpaceship template with unique characteristics.
  * This ship is designed to spawn on game start and be possessable by the player.
- * 
+ *
  * Usage:
  * - Create a Blueprint Data Asset based on this class in the editor
  * - Configure the DefaultSpaceshipClass in the Game Mode to spawn this ship

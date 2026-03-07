@@ -13,18 +13,18 @@ class UAudioComponent;
 
 /**
  * Component for engine modules on spaceships
- * 
+ *
  * Handles engine functionality including thrust, heat management, fuel consumption,
  * and visual/audio effects. Multiple engines can be installed on a single ship,
  * with their outputs combined for total ship performance.
- * 
+ *
  * Features:
  * - Thrust and speed contribution
  * - Heat and fuel management
  * - Boost and travel mode support
  * - Visual and audio effects
  * - Integration with ship movement
- * 
+ *
  * Usage:
  * 1. Create instance and add to ship
  * 2. Assign UEngineModuleDataAsset

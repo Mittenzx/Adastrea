@@ -2,9 +2,9 @@
 
 > **AI-controlled trading ship that autonomously travels between stations and trades goods**
 
-**Blueprint Type**: Pawn Actor  
-**Parent Class**: `ASpaceship` (C++)  
-**Location**: `Content/Blueprints/Ships/NPCs/BP_Ship_NPC_Trader.uasset`  
+**Blueprint Type**: Pawn Actor
+**Parent Class**: `ASpaceship` (C++)
+**Location**: `Content/Blueprints/Ships/NPCs/BP_Ship_NPC_Trader.uasset`
 **Priority**: 🔷 **MEDIUM** - Adds life to trading economy (MVP Phase 2)
 
 ---
@@ -82,7 +82,7 @@ AITraderComponent:
   Auto Activate: true
   Update Interval: 1.0 (seconds between decisions)
   Trade Aggressiveness: 0.5 (0-1 scale)
-  
+
 CargoComponent:
   Name: CargoComp
   Max Cargo Space: 50 (larger than player start)
@@ -348,7 +348,7 @@ FUNCTION: Execute Undocking Behavior
 ```cpp
 // Query best trading opportunities
 UEconomyManager* Economy = GetWorld()->GetSubsystem<UEconomyManager>();
-TArray<FTradingOpportunity> Opportunities = 
+TArray<FTradingOpportunity> Opportunities =
     Economy->GetTradingOpportunities(CurrentLocation, MaxDistance);
 ```
 
@@ -356,7 +356,7 @@ TArray<FTradingOpportunity> Opportunities =
 
 ```cpp
 // Find stations in range
-TArray<ASpaceStation*> NearbyStations = 
+TArray<ASpaceStation*> NearbyStations =
     StationManager->GetStationsInRange(GetActorLocation(), MaxDistance);
 ```
 
@@ -503,6 +503,6 @@ For Trade Simulator MVP:
 
 ---
 
-**Last Updated**: December 30, 2025  
-**Status**: Phase 2 Feature (not critical for MVP launch)  
+**Last Updated**: December 30, 2025
+**Status**: Phase 2 Feature (not critical for MVP launch)
 **Difficulty**: ⭐⭐⭐⭐ Advanced

@@ -274,7 +274,7 @@ if (TestSettings)
 {
     FString ShipType = TestSettings->GetSelectedShipType();
     bool bShouldSpawn = TestSettings->GetAutoSpawnEnabled();
-    
+
     if (bShouldSpawn)
     {
         SpawnShipOfType(ShipType);

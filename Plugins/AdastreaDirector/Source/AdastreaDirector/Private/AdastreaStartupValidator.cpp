@@ -16,7 +16,7 @@ FStartupValidationResult FAdastreaStartupValidator::ValidateStartup(void* Unused
 	// Step 1: Validate Settings
 	FStartupValidationResult SettingsResult = ValidateSettings();
 	Checks.Add(TPair<FString, bool>(TEXT("Settings Configuration"), SettingsResult.bSuccess));
-	
+
 	if (!SettingsResult.bSuccess)
 	{
 		FStartupValidationResult Result = FStartupValidationResult::Failure(SettingsResult.ErrorMessage);
@@ -40,7 +40,7 @@ FStartupValidationResult FAdastreaStartupValidator::ValidateStartup(void* Unused
 FStartupValidationResult FAdastreaStartupValidator::ValidateSettings()
 {
 	FAdastreaSettings& Settings = FAdastreaSettings::Get();
-	
+
 	FString ErrorMessage;
 	if (!Settings.ValidateSettings(ErrorMessage))
 	{
@@ -54,15 +54,15 @@ FString FAdastreaStartupValidator::BuildDetailedStatus(const TArray<TPair<FStrin
 {
 	FString Status = TEXT("Startup Validation Results:\n");
 	Status += TEXT("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
-	
+
 	for (const TPair<FString, bool>& Check : Checks)
 	{
-		Status += FString::Printf(TEXT("%s %s\n"), 
+		Status += FString::Printf(TEXT("%s %s\n"),
 			Check.Value ? TEXT("✓") : TEXT("✗"),
 			*Check.Key
 		);
 	}
-	
+
 	Status += TEXT("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
 	return Status;
 }

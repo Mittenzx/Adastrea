@@ -40,7 +40,7 @@ Simply mention the agent in your question:
 
 ### 1. Creating New Systems
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 I want to create a new quest system. Show me how to:
 1. Create the Data Asset class
 2. Expose it to Blueprints
@@ -49,31 +49,31 @@ I want to create a new quest system. Show me how to:
 
 ### 2. Understanding Existing Code
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 Explain how the faction relationship system works and which files I need to look at
 ```
 
 ### 3. Integrating Systems
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 How do I integrate the trading system with the faction reputation system?
 ```
 
 ### 4. Following Best Practices
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 I'm implementing a new personnel skill type. What's the correct way to do this following Adastrea patterns?
 ```
 
 ### 5. Troubleshooting
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 My Blueprint can't access my new C++ function. What am I missing?
 ```
 
 ### 6. Documentation
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 I added a new ship module type. What documentation files do I need to update?
 ```
 
@@ -100,13 +100,13 @@ How do I add a new faction trait category beyond the existing 5?
 
 **Better:**
 ```
-I want to add a "Technological" trait category to FFactionTrait. 
+I want to add a "Technological" trait category to FFactionTrait.
 What files do I modify and what's the pattern for adding trait categories?
 ```
 
 ### 2. Ask for Examples
 ```
-Show me an example of creating a PersonnelDataAsset with all the required fields, 
+Show me an example of creating a PersonnelDataAsset with all the required fields,
 similar to the Captain template in Assets/PersonnelTemplates/
 ```
 
@@ -171,28 +171,28 @@ See `.github/agents/README.md` for maintenance guidelines.
 
 ### Combine with Workspace Context
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 Looking at SpaceshipDataAsset.h and SpaceshipDataAsset.cpp,
 how would I add a new "Stealth" stat category?
 ```
 
 ### Ask for Complete Workflows
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 Walk me through the complete process of adding a new personnel role,
 from C++ class to documentation to YAML template
 ```
 
 ### Request Code Review
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 Review this implementation. Does it follow Adastrea's patterns?
 [paste your code]
 ```
 
 ### Get File Locations
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 Where are all the files I need to modify to add a new module type to space stations?
 ```
 

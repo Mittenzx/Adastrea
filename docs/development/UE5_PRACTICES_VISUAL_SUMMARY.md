@@ -15,7 +15,7 @@ Issue #1: Missing UPROPERTY
 private:                            private:
     AActor* Target;                     UPROPERTY()
     UDataAsset* Config;                 TObjectPtr<AActor> Target;
-                                        
+
                                         UPROPERTY()
                                         TObjectPtr<UDataAsset> Config;
 
@@ -83,7 +83,7 @@ void TickComponent(float DeltaTime) void BeginPlay()
     UpdateEveryFrame();                 GetWorld()->GetTimerManager()
 }                                           .SetTimer(..., 1.0f, true);
                                     }
-60 FPS × Many components            
+60 FPS × Many components
 = High CPU usage                    1 FPS × Many components
                                     = 60× less CPU
 
@@ -106,7 +106,7 @@ float GetMaxHealth()                float GetMaxHealth() const
                       ▲
                       │
            Critical   │   #1 Missing UPROPERTY
-                      │   
+                      │
                       │
            High       │   #3 Blueprint Over-Exposure
                       │   #4 Property Modifiers
@@ -292,7 +292,7 @@ Can we skip it?                     Phase 1: NO (critical)
 ═══════════════════════════════════════════════════════════════════
 
                     READY FOR IMPLEMENTATION
-                          
+
           Questions? See: UE5_PRACTICES_EXECUTIVE_SUMMARY.md
           Details? See: NON_STANDARD_UE5_PRACTICES.md
           Actions? See: UE5_PRACTICES_IMPLEMENTATION_CHECKLIST.md

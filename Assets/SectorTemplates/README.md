@@ -9,10 +9,10 @@ Sector Councils are the practical governance bodies for 200km x 200km regions of
 ## Available Templates
 
 ### 1. Core Systems Sector (`CoreSystemsSector.yaml`)
-**Theme:** Established, balanced governance  
-**Tax Rate:** 23% (balanced)  
-**Security:** 30% (moderate - safe area)  
-**Infrastructure:** 55% (high - well maintained)  
+**Theme:** Established, balanced governance
+**Tax Rate:** 23% (balanced)
+**Security:** 30% (moderate - safe area)
+**Infrastructure:** 55% (high - well maintained)
 **Best For:** New player starting areas, tutorial zones, stable economy
 
 **Key Features:**
@@ -25,10 +25,10 @@ Sector Councils are the practical governance bodies for 200km x 200km regions of
 ---
 
 ### 2. Frontier Mining Sector (`FrontierMiningSector.yaml`)
-**Theme:** Rough mining territory  
-**Tax Rate:** 23% (security-heavy)  
-**Security:** 70% (high - pirate threats)  
-**Infrastructure:** 15% (minimal)  
+**Theme:** Rough mining territory
+**Tax Rate:** 23% (security-heavy)
+**Security:** 70% (high - pirate threats)
+**Infrastructure:** 15% (minimal)
 **Best For:** Mining gameplay, risk/reward scenarios
 
 **Key Features:**
@@ -41,10 +41,10 @@ Sector Councils are the practical governance bodies for 200km x 200km regions of
 ---
 
 ### 3. Trade Hub Sector (`TradeHubSector.yaml`)
-**Theme:** Bustling commerce center  
-**Tax Rate:** 18% (lowest overall)  
-**Security:** 40% (moderate - protect trade)  
-**Infrastructure:** 45% (high - trade facilities)  
+**Theme:** Bustling commerce center
+**Tax Rate:** 18% (lowest overall)
+**Security:** 40% (moderate - protect trade)
+**Infrastructure:** 45% (high - trade facilities)
 **Best For:** Trading gameplay, economic focus
 
 **Key Features:**
@@ -57,10 +57,10 @@ Sector Councils are the practical governance bodies for 200km x 200km regions of
 ---
 
 ### 4. Research Sector (`ResearchSector.yaml`)
-**Theme:** Scientific research hub  
-**Tax Rate:** 23% (infrastructure-heavy)  
-**Security:** 20% (low - peaceful)  
-**Infrastructure:** 60% (highest - research facilities)  
+**Theme:** Scientific research hub
+**Tax Rate:** 23% (infrastructure-heavy)
+**Security:** 20% (low - peaceful)
+**Infrastructure:** 60% (highest - research facilities)
 **Best For:** Technology focus, innovation, experimental gameplay
 
 **Key Features:**
@@ -73,10 +73,10 @@ Sector Councils are the practical governance bodies for 200km x 200km regions of
 ---
 
 ### 5. Military Border Sector (`MilitaryBorderSector.yaml`)
-**Theme:** Fortified border zone  
-**Tax Rate:** 35% (highest)  
-**Security:** 80% (highest - military operations)  
-**Infrastructure:** 10% (military only)  
+**Theme:** Fortified border zone
+**Tax Rate:** 35% (highest)
+**Security:** 80% (highest - military operations)
+**Infrastructure:** 10% (military only)
 **Best For:** Combat focus, military missions, tension
 
 **Key Features:**
@@ -89,10 +89,10 @@ Sector Councils are the practical governance bodies for 200km x 200km regions of
 ---
 
 ### 6. Independent Colonies Sector (`IndependentColoniesSector.yaml`)
-**Theme:** Minimal governance  
-**Tax Rate:** 7% (ultra-low)  
-**Security:** 40% (volunteer militia)  
-**Infrastructure:** 35% (DIY)  
+**Theme:** Minimal governance
+**Tax Rate:** 7% (ultra-low)
+**Security:** 40% (volunteer militia)
+**Infrastructure:** 35% (DIY)
 **Best For:** Libertarian gameplay, self-reliance, frontier experience
 
 **Key Features:**
@@ -105,10 +105,10 @@ Sector Councils are the practical governance bodies for 200km x 200km regions of
 ---
 
 ### 7. Contested Territory Sector (`ContestedTerritorySector.yaml`)
-**Theme:** Political instability  
-**Tax Rate:** 30% (high)  
-**Security:** 55% (internal + external threats)  
-**Infrastructure:** 25% (neglected)  
+**Theme:** Political instability
+**Tax Rate:** 30% (high)
+**Security:** 55% (internal + external threats)
+**Infrastructure:** 25% (neglected)
 **Best For:** Political intrigue, faction gameplay, diplomacy
 
 **Key Features:**
@@ -152,11 +152,11 @@ python Tools/YAMLtoDataAsset.py --type SectorCouncil --input CoreSystemsSector.y
 ```yaml
 Taxation:
   SecurityTaxRate: 8        # 0-50% - Protection/policing
-  InfrastructureTaxRate: 10 # 0-50% - Maintenance/facilities  
+  InfrastructureTaxRate: 10 # 0-50% - Maintenance/facilities
   AdministrationTaxRate: 5  # 0-50% - Government operations
 ```
 
-**Total tax rate** = Sum of all three rates  
+**Total tax rate** = Sum of all three rates
 **Typical range**: 15-35%
 
 ### Budget Allocation
@@ -239,7 +239,7 @@ Representatives:
 Sector Councils work closely with the Way System:
 
 1. **Representation:** Ways with presence in a sector get council seats
-2. **Voting Weight:** Based on Way's influence in that sector  
+2. **Voting Weight:** Based on Way's influence in that sector
 3. **Trade Impact:** Council policies affect Way economies
 4. **Political Gameplay:** Ways compete for influence in contested sectors
 5. **Dynamic Control:** Sector governance can shift as Ways gain/lose power
@@ -293,6 +293,6 @@ When creating new sector templates:
 
 ---
 
-**Last Updated:** November 2024  
-**Version:** 1.0  
+**Last Updated:** November 2024
+**Version:** 1.0
 **Maintained by:** Adastrea Development Team

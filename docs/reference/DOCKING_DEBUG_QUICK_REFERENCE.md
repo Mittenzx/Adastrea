@@ -1,7 +1,7 @@
 # Quick Debug Reference Card - Docking System
 
-**Version**: 1.0  
-**Date**: January 9, 2026  
+**Version**: 1.0
+**Date**: January 9, 2026
 **Purpose**: Quick troubleshooting guide for docking issues
 
 ---
@@ -53,16 +53,16 @@
 ## ⚠️ Common Problems
 
 ### Problem 1: "I see nothing"
-**Last Message**: None  
-**Cause**: Not in docking range  
+**Last Message**: None
+**Cause**: Not in docking range
 **Fix**: Fly closer to station
 
 ---
 
 ### Problem 2: "No prompt appears"
-**Last Message**: `Ship entered docking range`  
-**Error**: `DockingPromptWidgetClass not set in Blueprint`  
-**Fix**: 
+**Last Message**: `Ship entered docking range`
+**Error**: `DockingPromptWidgetClass not set in Blueprint`
+**Fix**:
 1. Open `BP_PlayerShip` Blueprint
 2. Find `DockingPromptWidgetClass` property
 3. Set it to `WBP_DockingPrompt`
@@ -71,9 +71,9 @@
 ---
 
 ### Problem 3: "Prompt shows but F does nothing"
-**Last Message**: `WBP_DockingPrompt created`  
-**When I Press F**: `ERROR: No station in range`  
-**Fix**: 
+**Last Message**: `WBP_DockingPrompt created`
+**When I Press F**: `ERROR: No station in range`
+**Fix**:
 - Station is too far or collision not working
 - Check station has docking range collision sphere
 - Increase `DockingRange` in ship (try 3000 instead of 2000)
@@ -81,8 +81,8 @@
 ---
 
 ### Problem 4: "Not a docking module"
-**Last Message**: `RequestDocking() called`  
-**Error**: `Station is not a docking module`  
+**Last Message**: `RequestDocking() called`
+**Error**: `Station is not a docking module`
 **Fix**:
 1. Open station Blueprint
 2. Add `DockingBayModule` or `DockingPortModule` component
@@ -91,8 +91,8 @@
 ---
 
 ### Problem 5: "No docking points defined"
-**Last Message**: Several checks pass  
-**Error**: `No docking points defined in module`  
+**Last Message**: Several checks pass
+**Error**: `No docking points defined in module`
 **Fix**:
 1. Open station Blueprint
 2. Select docking module component
@@ -103,8 +103,8 @@
 ---
 
 ### Problem 6: "Too far from docking point"
-**Last Message**: `Docking point found`  
-**Error**: `Too far from docking point (3000 > 2000)`  
+**Last Message**: `Docking point found`
+**Error**: `Too far from docking point (3000 > 2000)`
 **Fix**:
 - Either fly closer to station
 - Or increase `DockingRange` in BP_PlayerShip to 3000+
@@ -112,8 +112,8 @@
 ---
 
 ### Problem 7: "Docking works but no trading UI"
-**Last Message**: `DOCKING COMPLETE`  
-**Error**: `TradingInterfaceClass not set in Blueprint`  
+**Last Message**: `DOCKING COMPLETE`
+**Error**: `TradingInterfaceClass not set in Blueprint`
 **Fix**:
 1. Open `BP_PlayerShip` Blueprint
 2. Find `TradingInterfaceClass` property
@@ -123,8 +123,8 @@
 ---
 
 ### Problem 8: "Trading UI widget creation failed"
-**Last Message**: `Creating trading UI widget...`  
-**Error**: `Failed to create trading UI widget`  
+**Last Message**: `Creating trading UI widget...`
+**Error**: `Failed to create trading UI widget`
 **Fix**:
 1. Check `WBP_TradingUI` Blueprint exists
 2. Open it and compile
@@ -145,10 +145,10 @@ If asking for help, take screenshots showing:
 
 ## 🔍 Finding Issues
 
-**Step 1**: Watch messages as you fly toward station  
-**Step 2**: Note the **last message** you see  
-**Step 3**: Look up that message in problems above  
-**Step 4**: Apply the fix  
+**Step 1**: Watch messages as you fly toward station
+**Step 2**: Note the **last message** you see
+**Step 3**: Look up that message in problems above
+**Step 4**: Apply the fix
 **Step 5**: Test again
 
 ---

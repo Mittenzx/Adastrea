@@ -221,15 +221,15 @@ ModuleTags: [ResearchLab, HazardStorage]
 ## Troubleshooting
 
 ### Material Doesn't Show in Module
-**Problem**: Created material but module won't accept it  
+**Problem**: Created material but module won't accept it
 **Solution**: Add the module's tag to your material's Module Tags array
 
 ### Incorrect Storage Volume
-**Problem**: Material takes up wrong amount of space  
+**Problem**: Material takes up wrong amount of space
 **Solution**: Adjust the Mass property (1kg ≈ 0.001 cubic meters for solids)
 
 ### Can't Find MaterialDataAsset in List
-**Problem**: MaterialDataAsset doesn't appear when creating Data Asset  
+**Problem**: MaterialDataAsset doesn't appear when creating Data Asset
 **Solution**: Make sure project is compiled. Build the C++ project first.
 
 ---

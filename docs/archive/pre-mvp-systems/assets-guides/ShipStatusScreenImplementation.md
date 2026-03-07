@@ -85,7 +85,7 @@ AAdastreaPlayerController::ToggleShipStatus()
     └─ Close: HideShipStatus()
         ├─ Remove from viewport
         └─ Restore game input mode
-    
+
 UShipStatusWidget::InitializeWithSpaceship()
     ↓
     ├─ Store spaceship reference

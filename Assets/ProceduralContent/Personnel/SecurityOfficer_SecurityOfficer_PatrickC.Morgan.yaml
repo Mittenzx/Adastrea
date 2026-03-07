@@ -9,7 +9,7 @@ PersonnelName: "Patrick C. Morgan"
 # Basic Identity
 Biography: |
   This individual was a trader on the frontier worlds before seeking more stable employment. They are admired for their unwavering loyalty and successfully completed 76 deep space missions.
-  
+
 Age: 33
 Gender: "Male"
 Species: "Human"
@@ -61,7 +61,7 @@ ContractMonthsRemaining: 0
 PersonalityType: "Adventurous"
 PersonalityDescription: |
   Adventurous personality with focus on securityofficer duties.
-  
+
 Traits:
   - TraitName: "Combat Veteran"
     TraitDescription: "Experienced in combat"

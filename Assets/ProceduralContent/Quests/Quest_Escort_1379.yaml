@@ -7,7 +7,7 @@ ContractName: "Safe Passage"
 ContractID: "Quest_Escort_1379"
 Description: |
   Protect convoy traveling from Celestia 708 to Beta Borealis.
-  
+
 ContractType: Escort
 Difficulty: VeryHard
 

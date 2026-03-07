@@ -7,7 +7,7 @@
 /**
  * Precepts represent the core values and philosophies that define a group's identity.
  * These values determine how a group reacts to player accomplishments (Feats).
- * 
+ *
  * Examples:
  * - A scientific school might value Discovery and Innovation
  * - A merchant syndicate might value Prosperity and Cunning
@@ -21,25 +21,25 @@ enum class EPrecept : uint8
     Justice         UMETA(DisplayName = "Justice"),         // Fairness and righteousness
     Compassion      UMETA(DisplayName = "Compassion"),      // Mercy and kindness to others
     Loyalty         UMETA(DisplayName = "Loyalty"),         // Dedication and steadfastness
-    
+
     // Achievement and Excellence
     Mastery         UMETA(DisplayName = "Mastery"),         // Pursuit of skill perfection
     Innovation      UMETA(DisplayName = "Innovation"),      // Creating new solutions
     Discovery       UMETA(DisplayName = "Discovery"),       // Uncovering hidden knowledge
     Craftsmanship   UMETA(DisplayName = "Craftsmanship"),   // Excellence in creation
-    
+
     // Power and Influence
     Strength        UMETA(DisplayName = "Strength"),        // Physical and military might
     Dominance       UMETA(DisplayName = "Dominance"),       // Control and supremacy
     Cunning         UMETA(DisplayName = "Cunning"),         // Strategic thinking and cleverness
     Ambition        UMETA(DisplayName = "Ambition"),        // Drive to rise and succeed
-    
+
     // Community and Relationships
     Unity           UMETA(DisplayName = "Unity"),           // Togetherness and cooperation
     Freedom         UMETA(DisplayName = "Freedom"),         // Liberty and independence
     Tradition       UMETA(DisplayName = "Tradition"),       // Preserving heritage and customs
     Progress        UMETA(DisplayName = "Progress"),        // Advancement and change
-    
+
     // Material and Practical
     Prosperity      UMETA(DisplayName = "Prosperity"),      // Wealth and abundance
     Survival        UMETA(DisplayName = "Survival"),        // Endurance and resilience
@@ -269,16 +269,16 @@ struct ADASTREA_API FWayRelationship
 /**
  * Data Asset representing a Way - the identity and philosophy of a group.
  * A Way defines who a group is (School or Syndicate) and what they value (Precepts).
- * 
+ *
  * Schools: Organizations focused on knowledge, skill, or craft (e.g., Engineers' Guild, Star-Navigators Academy)
  * Syndicates: Organizations focused on commerce, influence, or territory (e.g., Merchant Coalition, Mining Cartel)
- * 
+ *
  * Usage:
  * - Create a Blueprint Data Asset based on UWayDataAsset
  * - Configure the group's identity and core Precepts
  * - Use in gameplay to determine how the group reacts to player Feats
  * - Higher Precept values mean stronger reactions to related accomplishments
- * 
+ *
  * Example:
  * - "The Stellar Engineers" school values Craftsmanship (90), Innovation (80), Mastery (70)
  * - When player earns "Master Ship-Builder" title, this group responds positively
@@ -404,7 +404,7 @@ public:
     // Sector Governance Participation
     // ====================
 
-    /** 
+    /**
      * Whether this Way participates in sector council governance
      * Ways with presence in a sector automatically get representation
      */

@@ -366,7 +366,7 @@ void UCombatVFXComponent::UpdateWeaponHeatVisuals(UWeaponComponent* WeaponCompon
 		FLinearColor HeatColor = CombatVFXData->GetHeatColor(HeatPercentage);
 		HeatMaterial->SetVectorParameterValue(FName("HeatColor"), HeatColor);
 		HeatMaterial->SetScalarParameterValue(FName("HeatPercentage"), HeatPercentage);
-		
+
 		// Update shimmer intensity
 		float ShimmerIntensity = HeatPercentage * CombatVFXData->HeatVisuals.MaxShimmerIntensity;
 		HeatMaterial->SetScalarParameterValue(FName("ShimmerIntensity"), ShimmerIntensity);
@@ -379,7 +379,7 @@ void UCombatVFXComponent::UpdateWeaponHeatVisuals(UWeaponComponent* WeaponCompon
 		FVector VentLocation = WeaponComponent->GetWeaponWorldPosition();
 		PlayHeatVentEffect(VentLocation, HeatPercentage);
 	}
-	
+
 	// Store current heat for next frame comparison
 	PreviousHeatPercentages.Add(WeaponComponent, HeatPercentage);
 }
@@ -436,14 +436,14 @@ void UCombatVFXComponent::PlayShieldImpact(FVector ImpactLocation, FVector Impac
 			RippleEffect->SetAsset(ImpactEffectData->ShieldImpact.RippleEffect);
 			RippleEffect->SetWorldLocation(ImpactLocation);
 			RippleEffect->SetWorldRotation(ImpactNormal.Rotation());
-			
+
 			FLinearColor ImpactColor = ImpactEffectData->CalculateShieldImpactColor(DamageAmount);
 			RippleEffect->SetColorParameter(FName("RippleColor"), ImpactColor);
 			RippleEffect->SetFloatParameter(FName("RippleSpeed"), ImpactEffectData->ShieldImpact.RippleSpeed);
 			RippleEffect->SetFloatParameter(FName("MaxRadius"), ImpactEffectData->ShieldImpact.MaxRippleRadius);
 			RippleEffect->Activate();
 			RippleEffect->SetVisibility(true);
-			
+
 			ActiveEffects.Add(RippleEffect);
 		}
 	}
@@ -461,7 +461,7 @@ void UCombatVFXComponent::PlayShieldImpact(FVector ImpactLocation, FVector Impac
 			DissipationEffect->SetFloatParameter(FName("Intensity"), ImpactEffectData->ShieldImpact.DissipationIntensity);
 			DissipationEffect->Activate();
 			DissipationEffect->SetVisibility(true);
-			
+
 			ActiveEffects.Add(DissipationEffect);
 		}
 	}
@@ -498,7 +498,7 @@ void UCombatVFXComponent::PlayHullImpact(FVector ImpactLocation, FVector ImpactN
 			SparkEffect->SetFloatParameter(FName("Intensity"), ImpactEffectData->HullImpact.SparkIntensity);
 			SparkEffect->Activate();
 			SparkEffect->SetVisibility(true);
-			
+
 			ActiveEffects.Add(SparkEffect);
 		}
 	}
@@ -516,7 +516,7 @@ void UCombatVFXComponent::PlayHullImpact(FVector ImpactLocation, FVector ImpactN
 			DebrisEffect->SetFloatParameter(FName("Intensity"), ImpactEffectData->HullImpact.DebrisIntensity);
 			DebrisEffect->Activate();
 			DebrisEffect->SetVisibility(true);
-			
+
 			ActiveEffects.Add(DebrisEffect);
 		}
 	}
@@ -561,7 +561,7 @@ void UCombatVFXComponent::PlayExplosion(FVector ExplosionLocation, EExplosionSiz
 	}
 
 	FExplosionEffect ExplosionConfig = ImpactEffectData->GetExplosionBySize(ExplosionSize);
-	
+
 	if (ExplosionRadius <= 0.0f)
 	{
 		ExplosionRadius = ExplosionConfig.ExplosionRadius;
@@ -580,7 +580,7 @@ void UCombatVFXComponent::PlayExplosion(FVector ExplosionLocation, EExplosionSiz
 			Explosion->SetFloatParameter(FName("FlashIntensity"), ExplosionConfig.FlashIntensity);
 			Explosion->Activate();
 			Explosion->SetVisibility(true);
-			
+
 			ActiveEffects.Add(Explosion);
 		}
 	}
@@ -598,7 +598,7 @@ void UCombatVFXComponent::PlayExplosion(FVector ExplosionLocation, EExplosionSiz
 			Shockwave->SetFloatParameter(FName("MaxRadius"), ExplosionRadius);
 			Shockwave->Activate();
 			Shockwave->SetVisibility(true);
-			
+
 			ActiveEffects.Add(Shockwave);
 		}
 	}
@@ -615,7 +615,7 @@ void UCombatVFXComponent::PlayExplosion(FVector ExplosionLocation, EExplosionSiz
 			Fireball->SetFloatParameter(FName("FireballRadius"), ExplosionRadius * 0.8f);
 			Fireball->Activate();
 			Fireball->SetVisibility(true);
-			
+
 			ActiveEffects.Add(Fireball);
 		}
 	}
@@ -656,7 +656,7 @@ bool UCombatVFXComponent::CanSpawnEffect(int32 EffectPriority) const
 void UCombatVFXComponent::GetPerformanceMetrics(int32& OutActiveEffects, int32& OutTotalParticles, float& OutFrameTime) const
 {
 	OutActiveEffects = CurrentActiveEffects;
-	
+
 	// Approximate particle count
 	OutTotalParticles = 0;
 	for (UNiagaraComponent* Effect : ActiveEffects)
@@ -684,7 +684,7 @@ void UCombatVFXComponent::CleanupFinishedEffects()
 			ComponentsToReturn.Add(Component);
 		}
 	}
-	
+
 	// Return collected components to pool
 	for (UNiagaraComponent* Component : ComponentsToReturn)
 	{
@@ -779,8 +779,8 @@ UNiagaraComponent* UCombatVFXComponent::GetPooledNiagaraComponent()
 	}
 
 	// Log pool exhaustion (use VeryVerbose to avoid spam)
-	UE_LOG(LogAdastreaCombat, VeryVerbose, 
-		TEXT("CombatVFXComponent: Niagara pool exhausted, creating new component (pool size: %d)"), 
+	UE_LOG(LogAdastreaCombat, VeryVerbose,
+		TEXT("CombatVFXComponent: Niagara pool exhausted, creating new component (pool size: %d)"),
 		ComponentPoolSize);
 
 	UNiagaraComponent* Component = NewObject<UNiagaraComponent>(Owner);

@@ -1,8 +1,8 @@
 # Getting Started with Adastrea
 
-**Last Updated**: January 14, 2026  
-**Project Status**: Trade Simulator MVP Development (Week 3-4 of 12)  
-**Engine**: Unreal Engine 5.6  
+**Last Updated**: January 14, 2026
+**Project Status**: Trade Simulator MVP Development (Week 3-4 of 12)
+**Engine**: Unreal Engine 5.6
 **Language**: C++ with Blueprint integration
 
 ---
@@ -340,9 +340,9 @@ Adastrea underwent a **strategic pivot** in December 2025:
 **Why?** See `docs/archive/critical-review-2025/README.md` for full analysis.
 
 ### Development Philosophy
-**Gameplay First**: Fun, validated gameplay before infrastructure  
-**Keep It Simple**: Minimal viable features, iterate based on feedback  
-**Test Early**: Player feedback every 2 weeks  
+**Gameplay First**: Fun, validated gameplay before infrastructure
+**Keep It Simple**: Minimal viable features, iterate based on feedback
+**Test Early**: Player feedback every 2 weeks
 **Focus Wins**: One polished system beats ten half-finished systems
 
 See `.github/instructions/anti-patterns.instructions.md` for lessons learned.
@@ -363,8 +363,8 @@ See `LICENSE` file for details.
 
 ---
 
-**Ready to contribute?** Start with `CONTRIBUTING.md`  
-**Want to understand the project?** Read `ARCHITECTURE.md`  
+**Ready to contribute?** Start with `CONTRIBUTING.md`
+**Want to understand the project?** Read `ARCHITECTURE.md`
 **Looking for MVP docs?** See `docs/mvp/README.md`
 
 **Questions?** Open a GitHub Issue or Discussion.

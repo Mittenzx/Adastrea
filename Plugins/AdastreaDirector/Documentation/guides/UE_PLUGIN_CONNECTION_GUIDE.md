@@ -296,7 +296,7 @@ pip install -r requirements.txt
 
 # Update plugin to use venv Python
 # Edit: Plugins/AdastreaDirector/Source/.../PythonBridge.cpp
-# Change: PythonExecutable = "python" 
+# Change: PythonExecutable = "python"
 # To: PythonExecutable = "/absolute/path/to/venv/bin/python"
 ```
 
@@ -736,7 +736,7 @@ python test_ipc_performance.py 5555
 # ✓ Query request: 234ms
 # ✓ Batch processing: 450ms for 10 requests
 # ✓ Sustained load: 50 req/s, 0 errors
-# 
+#
 # Overall: EXCELLENT ✅
 ```
 
@@ -766,12 +766,12 @@ def send_request(port: int, request_num: int):
     """Send single request"""
     sock = socket.socket()
     sock.connect(('127.0.0.1', port))
-    
+
     request = {
         "type": "query",
         "query": f"Test query {request_num}"
     }
-    
+
     sock.send(json.dumps(request).encode() + b'\n')
     response = sock.recv(4096).decode()
     sock.close()
@@ -823,6 +823,6 @@ Following this guide ensures:
 
 ---
 
-**Last Updated:** December 2025  
-**Plugin Version:** Weeks 1-8 Complete  
+**Last Updated:** December 2025
+**Plugin Version:** Weeks 1-8 Complete
 **Compatibility:** UE 5.0+, Python 3.9+

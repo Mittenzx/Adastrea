@@ -117,7 +117,7 @@ Sector E: (0, 0, 20000000)        // 200km up
 FVector GetAdjacentSectorCenter(FVector CurrentCenter, EDirection Direction)
 {
     const float SectorSize = 20000000.0f;
-    
+
     switch(Direction)
     {
         case EDirection::East:  return CurrentCenter + FVector(SectorSize, 0, 0);
@@ -394,11 +394,11 @@ SECTOR_SIZE = 20_000_000  # 200km in cm
 def sector_position(grid_x, grid_y, grid_z, origin=(0,0,0)):
     """
     Calculate world position for a sector in grid coordinates.
-    
+
     Args:
         grid_x, grid_y, grid_z: Grid position (0,0,0 is origin)
         origin: World position of grid origin
-    
+
     Returns:
         (x, y, z) world coordinates
     """
@@ -605,6 +605,6 @@ Grid Position | World Coordinates      | Distance from Origin
 
 ---
 
-**Last Updated:** November 2024  
-**Version:** 1.0  
+**Last Updated:** November 2024
+**Version:** 1.0
 **Maintained by:** Adastrea Development Team

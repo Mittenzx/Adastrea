@@ -20,7 +20,7 @@ void USpaceshipControlsComponent::HandleLook(const FInputActionValue& Value)
 }
 ```
 
-**Problem**: 
+**Problem**:
 - Single `LookSensitivity` property applied equally to both horizontal (X/yaw) and vertical (Y/pitch) mouse input
 - No way to independently tune pitch sensitivity
 - Many space games require higher vertical sensitivity due to gameplay patterns
@@ -54,12 +54,12 @@ USpaceshipControlsComponent::USpaceshipControlsComponent()
 void USpaceshipControlsComponent::HandleLook(const FInputActionValue& Value)
 {
     FVector2D LookValue = Value.Get<FVector2D>();
-    
+
     // Apply separate sensitivity for horizontal (yaw) and vertical (pitch)
     float VerticalSensitivity = (LookSensitivityVertical > 0.0f) ? LookSensitivityVertical : LookSensitivity;
     LookValue.X *= LookSensitivity;       // Horizontal (yaw)
     LookValue.Y *= VerticalSensitivity;   // Vertical (pitch)
-    
+
     // Apply Y axis inversion if enabled
     if (bInvertLookY)
     {
@@ -236,8 +236,8 @@ If issues arise, revert is simple:
 
 ---
 
-**Implementation Date**: 2026-01-04  
-**Commit**: e5024db  
-**Branch**: copilot/fix-mouse-controls-sensitivity  
-**Status**: Ready for Testing  
+**Implementation Date**: 2026-01-04
+**Commit**: e5024db
+**Branch**: copilot/fix-mouse-controls-sensitivity
+**Status**: Ready for Testing
 **Reviewer**: @Mittenzx

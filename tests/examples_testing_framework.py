@@ -176,13 +176,13 @@ def main():
     print("║" + " " * 20 + "Adastrea Testing Framework Examples" + " " * 22 + "║")
     print("╚" + "=" * 78 + "╝")
     print()
-    
+
     example_smoke_test_usage()
     example_screenshot_test_usage()
     example_automation_runner_usage()
     example_custom_configuration()
     example_ci_cd_integration()
-    
+
     print("=" * 80)
     print("For complete documentation, see TESTING_AUTOMATION_GUIDE.md")
     print("=" * 80)

@@ -29,7 +29,7 @@ NumZones: 3  # Defense zones
 
 # Object Definitions
 ObjectDefinitions:
-  
+
   # Military Command Stations
   - ObjectType: Station
     ActorClass: "BP_SpaceStation_Military"

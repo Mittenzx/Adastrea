@@ -165,7 +165,7 @@ Transfer values from YAML to your Data Asset:
 Add to your Game Mode's BeginPlay:
 ```cpp
 // Blueprint:
-Get Game Instance → Get Subsystem (VerseSubsystem) 
+Get Game Instance → Get Subsystem (VerseSubsystem)
 → Register Network (Your Network Asset)
 ```
 

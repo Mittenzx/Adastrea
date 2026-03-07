@@ -37,23 +37,23 @@ struct FAchievementTracker
 
 /**
  * Achievement Manager Subsystem
- * 
+ *
  * Manages achievement tracking, progression, and rewards across the game.
  * Operates as a Game Instance Subsystem to persist across level transitions.
- * 
+ *
  * Usage:
  * - Access via UGameInstance::GetSubsystem<UAchievementManagerSubsystem>()
  * - Register achievements on startup via RegisterAchievement()
  * - Track progress via UpdateAchievementProgress()
  * - Award achievements via AwardAchievement()
  * - Query achievement status for UI and gameplay
- * 
+ *
  * Example:
  * - Register achievement: RegisterAchievement(AchievementDataAsset)
  * - Update progress: UpdateAchievementProgress("Ships_Destroyed", 1)
  * - Check if completed: IsAchievementCompleted("FirstBlood")
  * - Get all achievements: GetAchievementsByCategory(EAchievementCategory::Combat)
- * 
+ *
  * Integration:
  * - Combat system updates kill/damage stats
  * - Trading system updates trade stats

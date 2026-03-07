@@ -46,7 +46,7 @@ struct FStartupValidationResult
 /**
  * Validator for plugin startup checks (VibeUE architecture).
  * Performs validation of settings and VibeUE component availability.
- * 
+ *
  * Note: Legacy backend connectivity checks have been removed as part of Phase 3 migration.
  * The plugin now uses native C++ VibeUE components (AdastreaLLMClient, AdastreaScriptService, etc.)
  */

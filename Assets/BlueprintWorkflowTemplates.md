@@ -115,7 +115,7 @@ Can Add Module For Faction (inherited C++ function)
   │    ↓
   │  Get Technology Level
   │    ↓
-  │  Format Text: "Requires Tech Level {0}" 
+  │  Format Text: "Requires Tech Level {0}"
   │    ↓
   │  Show Error Dialog
   │

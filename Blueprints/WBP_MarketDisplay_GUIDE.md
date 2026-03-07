@@ -1,16 +1,16 @@
 # Market Display Widget - Blueprint Guide
 
-> **⚠️ DEPRECATED**: This guide has been consolidated into the unified Trading and Docking Complete Guide.  
+> **⚠️ DEPRECATED**: This guide has been consolidated into the unified Trading and Docking Complete Guide.
 > **See**: [Trading and Docking Complete Guide](../docs/mvp/TRADING_AND_DOCKING_COMPLETE_GUIDE.md)
 
 ---
 
 > **Create a widget that shows current market prices and profitable trade opportunities**
 
-**Blueprint Type**: Widget Blueprint  
-**Complexity**: Beginner  
-**Time to Complete**: 25-35 minutes  
-**Last Updated**: 2026-01-08  
+**Blueprint Type**: Widget Blueprint
+**Complexity**: Beginner
+**Time to Complete**: 25-35 minutes
+**Last Updated**: 2026-01-08
 **Status**: **DEPRECATED** - Refer to unified guide above
 
 ---
@@ -331,7 +331,7 @@ RefreshPrices
    - Store in `GameModeRef` variable
 7. Call `RefreshPrices` to populate initial display
 
-**Expected Result**: 
+**Expected Result**:
 - Widget knows which markets/items to show
 - GameModeRef set correctly
 - Ready to display prices
@@ -384,7 +384,7 @@ Print String: "Prices refreshed - [X] items displayed"
    - Set `LastUpdateText` widget text
 6. Add debug print
 
-**Expected Result**: 
+**Expected Result**:
 - All price rows display correctly
 - Profitable trades highlighted
 - Timestamp shows when updated
@@ -444,7 +444,7 @@ Return: Row Widget
    - Call `SetBestDeal` on row widget
 6. Return the created row widget
 
-**Expected Result**: 
+**Expected Result**:
 - Returns populated row widget
 - Shows item name and prices
 - Shows best trade opportunity
@@ -511,7 +511,7 @@ Return: Profit %, BuyMarket, SellMarket
    - BuyMarket
    - SellMarket
 
-**Expected Result**: 
+**Expected Result**:
 - Returns best trade route for item
 - Profit % shows potential earnings
 - Markets show where to buy/sell
@@ -568,7 +568,7 @@ ForEach Child Widget
      - Call `SetHighlighted(False)`
      - Normal appearance
 
-**Expected Result**: 
+**Expected Result**:
 - Good trade opportunities stand out visually
 - Easy to spot profitable items at a glance
 - Configurable threshold (20% default)
@@ -627,7 +627,7 @@ Branch (AutoRefresh?)
    - If true: Call `RefreshPrices`
    - If false: Just log (user must manually refresh)
 
-**Expected Result**: 
+**Expected Result**:
 - Widget updates automatically when prices change
 - Can disable auto-refresh for performance
 - Console confirms economy updates
@@ -666,7 +666,7 @@ When button clicked:
    - Call `RefreshPrices`
    - Optionally play UI sound for feedback
 
-**Expected Result**: 
+**Expected Result**:
 - Clicking refresh button updates prices immediately
 - Works even if AutoRefresh disabled
 - Provides instant feedback
@@ -721,7 +721,7 @@ When button clicked:
            └─ Set BestDealText Color: Default
    ```
 
-**Expected Result**: 
+**Expected Result**:
 - Row widget displays item data cleanly
 - Can be created/configured from parent widget
 - Visual highlighting works
@@ -742,7 +742,7 @@ When button clicked:
 3. Add widget to viewport (e.g., in PlayerController or HUD)
 4. Press Play
 
-**Success Criteria**: 
+**Success Criteria**:
 - Widget appears on screen
 - Shows item names
 - Shows prices for each market
@@ -763,7 +763,7 @@ When button clicked:
 4. Click Refresh button
 5. Check if prices changed
 
-**Success Criteria**: 
+**Success Criteria**:
 - Prices update when button clicked
 - Timestamp updates
 - New prices match game mode's economy
@@ -783,7 +783,7 @@ When button clicked:
 4. Wait for economy update or click refresh
 5. Check for green-highlighted rows
 
-**Success Criteria**: 
+**Success Criteria**:
 - Rows with 20%+ profit margin are green
 - Other rows remain normal color
 - "Best Deal" column shows profit %
@@ -803,7 +803,7 @@ When button clicked:
 4. Wait for 2-3 economy update cycles (60-90 seconds)
 5. Watch prices change automatically
 
-**Success Criteria**: 
+**Success Criteria**:
 - Prices update without manual refresh
 - Updates align with economy update intervals
 - Console shows economy update messages
@@ -1069,12 +1069,12 @@ After completing this guide, you now know:
 
 ---
 
-**Questions or Issues?** 
+**Questions or Issues?**
 - Check the [Blueprint Guide for Beginners](../docs/development/BLUEPRINT_GUIDE_FOR_BEGINNERS.md)
 - Review the [UMG UI Guide](https://docs.unrealengine.com/5.6/en-US/umg-ui-designer-for-unreal-engine/)
 - See [MVP Documentation](../docs/mvp/README.md)
 
 ---
 
-**Guide created for**: Trade Simulator MVP (Phase 1)  
+**Guide created for**: Trade Simulator MVP (Phase 1)
 **Maintained by**: Adastrea Development Team

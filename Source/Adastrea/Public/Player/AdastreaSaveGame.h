@@ -136,13 +136,13 @@ struct FSavedWorldState
 /**
  * Main save game class for Adastrea.
  * Stores all persistent player and world state data.
- * 
+ *
  * Usage:
  * - Create via UGameplayStatics::CreateSaveGameObject()
  * - Populate with current game state
  * - Save via UGameplayStatics::SaveGameToSlot()
  * - Load via UGameplayStatics::LoadGameFromSlot()
- * 
+ *
  * Stored Data:
  * - Player progression (level, XP, skills)
  * - Unlocked content (ships, modules, equipment)
@@ -151,11 +151,11 @@ struct FSavedWorldState
  * - Ship customizations
  * - World state (markets, discoveries)
  * - Game settings and options
- * 
+ *
  * REMOVED (Trade Simulator MVP):
  * - Faction reputation (removed per MVP scope)
  * - Faction relations (removed per MVP scope)
- * 
+ *
  * Integration:
  * - SaveGameSubsystem handles save/load operations
  * - AdastreaGameInstance coordinates system restoration

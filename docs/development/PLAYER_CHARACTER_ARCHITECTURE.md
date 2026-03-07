@@ -1,8 +1,8 @@
 # Player Character Architecture
 
-**Document Type**: Architectural Design  
-**Status**: MVP Phase (Ship-Only) + Future Design  
-**Last Updated**: 2026-01-08  
+**Document Type**: Architectural Design
+**Status**: MVP Phase (Ship-Only) + Future Design
+**Last Updated**: 2026-01-08
 **Applies To**: Adastrea v1.0+ (Trade Simulator MVP and beyond)
 
 ---
@@ -51,18 +51,18 @@ graph TD
     Start[Game Start] --> SpawnShip[Spawn Spaceship]
     SpawnShip --> PlayerController[AAdastreaPlayerController]
     PlayerController --> PossessShip[Possess ASpaceship]
-    
+
     PossessShip --> Flying[Flying Mode]
     Flying --> Dock{Dock at Station?}
-    
+
     Dock -->|Yes| TradingUI[Open Trading UI]
     TradingUI --> BuySell[Buy/Sell Cargo]
     BuySell --> CloseUI[Close UI]
     CloseUI --> Undock[Undock Ship]
     Undock --> Flying
-    
+
     Dock -->|No| Flying
-    
+
     Flying --> Upgrade{Upgrade Ship?}
     Upgrade -->|Yes| UpgradeMenu[Ship Upgrade UI]
     UpgradeMenu --> Flying
@@ -129,25 +129,25 @@ graph TD
     Start[Game Start] --> SpawnShip[Spawn Spaceship]
     SpawnShip --> PlayerController[AAdastreaPlayerController]
     PlayerController --> PossessShip[Possess ASpaceship]
-    
+
     PossessShip --> Flying[Flying Mode - Ship Possessed]
     Flying --> DockChoice{Dock at Station?}
-    
+
     DockChoice -->|Dock & Exit| ExitShip[Exit Ship]
     ExitShip --> SpawnCharacter[Spawn Character at Airlock]
     SpawnCharacter --> PossessChar[Possess AAdastreaCharacter]
-    
+
     PossessChar --> Walking[Walking Mode - Character Possessed]
     Walking --> StationExplore[Explore Station]
     StationExplore --> TradeNPC[Walk to Trader]
     TradeNPC --> TradingUI[Trading UI]
     TradingUI --> Walking
-    
+
     Walking --> BoardShip{Board Ship?}
     BoardShip -->|Yes| EnterShip[Enter Ship via Airlock]
     EnterShip --> DestroyChar[Destroy Character]
     DestroyChar --> PossessShip
-    
+
     DockChoice -->|Trade from Ship| ShipUI[Ship Trading UI]
     ShipUI --> Flying
 ```
@@ -159,11 +159,11 @@ graph TD
 ```cpp
 /**
  * Playable walking character for station and interior exploration
- * 
+ *
  * This character is spawned when the player exits their ship and destroyed
  * when they re-board. The player controller switches possession between
  * ship and character seamlessly.
- * 
+ *
  * @note POST-MVP: Not implemented in Trade Simulator MVP
  */
 UCLASS()

@@ -1,7 +1,7 @@
 # Docking System Debug Messages Reference
 
-**Last Updated**: January 9, 2026  
-**Purpose**: Debug messages for troubleshooting docking and trading issues  
+**Last Updated**: January 9, 2026
+**Purpose**: Debug messages for troubleshooting docking and trading issues
 **Applies To**: Trade Simulator MVP
 
 ---
@@ -573,7 +573,7 @@ Debug messages use color-coded categories:
 
 2. **Missing**: `[DOCKING] WBP_DockingPrompt created and added to viewport`
    - **Problem**: Docking prompt widget not showing
-   - **Solution**: 
+   - **Solution**:
      - Check for error: `DockingPromptWidgetClass not set in Blueprint`
      - Assign widget class in BP_PlayerShip
 
@@ -587,7 +587,7 @@ Debug messages use color-coded categories:
 
 5. **See**: `[DOCKING] ERROR: Too far from docking point`
    - **Problem**: Ship is detected but too far away
-   - **Solution**: 
+   - **Solution**:
      - Increase `DockingRange` in ship (default: 2000)
      - Or move closer to station
 
@@ -601,7 +601,7 @@ Debug messages use color-coded categories:
 
 8. **Missing**: `[DOCKING] Trading UI widget created and added to viewport`
    - **Problem**: Docking works but no trading UI
-   - **Solution**: 
+   - **Solution**:
      - Check for error: `TradingInterfaceClass not set in Blueprint`
      - Assign widget class in BP_PlayerShip
      - Verify `WBP_TradingUI` exists and compiles

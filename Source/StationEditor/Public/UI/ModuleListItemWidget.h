@@ -19,10 +19,10 @@ DECLARE_DELEGATE_OneParam(FOnModuleSelected, TSubclassOf<ASpaceStationModule>);
 
 /**
  * Module List Item Widget
- * 
+ *
  * Displays a single module entry in the catalog list.
  * Shows module name, description, cost, and build button.
- * 
+ *
  * Usage:
  * 1. Create Blueprint widget based on this class
  * 2. Layout UI with named widgets (must match BindWidget properties)

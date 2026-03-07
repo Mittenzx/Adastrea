@@ -1,8 +1,8 @@
 # Industrial Station Market Example Blueprint
 
-**Type**: Example Configuration  
-**Purpose**: Manufacturing/industrial economy marketplace  
-**Complexity**: Beginner  
+**Type**: Example Configuration
+**Purpose**: Manufacturing/industrial economy marketplace
+**Complexity**: Beginner
 **Time to Implement**: 5-10 minutes
 
 ---
@@ -237,7 +237,7 @@ Branch: Event.EventID == "industrial_strike"?
 - [ ] **Can Dock**: Ship successfully docks
 - [ ] **Trading UI**: Opens without errors
 - [ ] **Item Visibility**: All 8 items visible (4 exports + 4 imports)
-- [ ] **Price Accuracy**: 
+- [ ] **Price Accuracy**:
   - Alloys cheap (~35cr)
   - Water very expensive (~87cr)
   - Components moderate (~468cr)
@@ -301,13 +301,13 @@ Branch: Event.EventID == "industrial_strike"?
 ## Quick Setup Steps
 
 1. **Place Station**: Add BP_SpaceStation_Industrial to level
-2. **Add Modules**: 
+2. **Add Modules**:
    - 2x DockingBayModule
    - 1x MarketplaceModule
    - 3x CargoBayModule
 3. **Configure Market**: Assign DA_Market_Industrial
 4. **Set Name**: "Industrial Depot" or custom name
-5. **Test Trade**: 
+5. **Test Trade**:
    - Dock ship
    - Open trading UI
    - Buy alloys (~35cr each)
@@ -341,6 +341,6 @@ Branch: Event.EventID == "industrial_strike"?
 
 ---
 
-**Created**: 2026-01-17  
-**Updated**: 2026-01-17  
+**Created**: 2026-01-17
+**Updated**: 2026-01-17
 **Version**: 1.0 (Trade Simulator MVP)

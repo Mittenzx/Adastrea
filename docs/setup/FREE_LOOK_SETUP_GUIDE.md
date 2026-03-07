@@ -31,7 +31,7 @@ The free look camera allows players to look around independently from ship rotat
    - **Action**: `IA_FreeLook` (the action you just created)
    - **Key**: `Right Mouse Button`
    - **Trigger Type**: Use default (trigger on continuous input)
-   - **Modifiers**: 
+   - **Modifiers**:
      - Add `Negate` modifiers if needed for inverted Y axis
 
 ### 3. (Optional) Rebind Secondary Weapon Fire
@@ -84,7 +84,7 @@ You can adjust the free look behavior in the spaceship Blueprint or C++ class:
 2. Find these properties under **Camera | Free Look**:
    - **Free Look Sensitivity**: Controls how fast the camera rotates (default: 1.5)
    - **Double Click Threshold**: Time window for double-click detection in seconds (default: 0.3)
-   
+
 3. Find these properties under **Camera | Settings**:
    - **Camera Distance**: Distance of camera from ship (default: 800)
    - **Camera Lag Speed**: How smoothly the camera follows position (default: 10)
@@ -126,7 +126,7 @@ To add separate sensitivity for free look vs. normal flight:
 1. In the spaceship Blueprint or C++:
    - Use `Free Look Sensitivity` for free look camera movement
    - Use `Mouse Flight Sensitivity` for ship rotation
-   
+
 2. Default values:
    - `MouseFlightSensitivity`: 1.0 (for ship rotation)
    - `FreeLookSensitivity`: 1.5 (for free look camera)
@@ -142,7 +142,7 @@ The free look feature automatically integrates with:
 
 1. **Secondary Weapon**: Right mouse button can no longer be used for secondary weapon fire
    - **Solution**: Rebind to middle mouse button or another key
-   
+
 2. **UI Interaction**: Free look is disabled when in UI mode (station editor, menus, etc.)
 
 3. **Controller Support**: Free look currently uses mouse input only
@@ -156,9 +156,9 @@ The free look feature automatically integrates with:
 
 ---
 
-**Last Updated**: 2025-12-11  
-**Version**: 1.0  
-**Related Files**: 
+**Last Updated**: 2025-12-11
+**Version**: 1.0
+**Related Files**:
 - `Source/Adastrea/Ships/Spaceship.h`
 - `Source/Adastrea/Ships/Spaceship.cpp`
 - `Source/Adastrea/Public/Input/InputConfigDataAsset.h`

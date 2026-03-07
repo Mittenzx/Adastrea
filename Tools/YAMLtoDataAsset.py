@@ -22,11 +22,11 @@ Features:
 Usage in Unreal Editor Python Console:
     import YAMLtoDataAsset
     YAMLtoDataAsset.show_menu()
-    
+
     # Or import specific files
     YAMLtoDataAsset.import_spaceship_yaml("Assets/SpaceshipTemplates/Fighter_MyShip.yaml")
     YAMLtoDataAsset.import_personnel_yaml("Assets/PersonnelTemplates/Captain_Smith.yaml")
-    
+
     # Or batch import
     YAMLtoDataAsset.batch_import_spaceships()
 """
@@ -62,23 +62,23 @@ except ImportError:
 
 class YAMLtoDataAssetImporter:
     """Imports YAML template files and creates Unreal Engine Data Assets"""
-    
+
     def __init__(self):
         """Initialize the importer"""
         if not UNREAL_AVAILABLE:
             raise RuntimeError("This script must be run inside Unreal Editor!")
-        
+
         if not YAML_AVAILABLE:
             raise RuntimeError("PyYAML is required. See error messages above for installation instructions.")
-        
+
         self.project_dir = Path(unreal.SystemLibrary.get_project_directory())
         self.assets_dir = self.project_dir / "Assets"
         self.content_dir = Path("/Game")  # Unreal content root
-        
+
         # Asset registry for finding asset classes
         self.asset_registry = unreal.AssetRegistryHelpers.get_asset_registry()
         self.asset_tools = unreal.AssetToolsHelpers.get_asset_tools()
-    
+
     def log(self, message: str, level: str = "info"):
         """Log message to Unreal Editor"""
         if level == "error":
@@ -87,23 +87,23 @@ class YAMLtoDataAssetImporter:
             unreal.log_warning(f"[YAML Import] {message}")
         else:
             unreal.log(f"[YAML Import] {message}")
-    
+
     def load_yaml(self, yaml_path: Path) -> Optional[Dict[str, Any]]:
         """Load and parse YAML file"""
         try:
             if not yaml_path.exists():
                 self.log(f"YAML file not found: {yaml_path}", "error")
                 return None
-            
+
             with open(yaml_path, 'r', encoding='utf-8') as f:
                 data = yaml.safe_load(f)
-            
+
             self.log(f"Loaded YAML: {yaml_path.name}")
             return data
         except Exception as e:
             self.log(f"Failed to load YAML {yaml_path}: {e}", "error")
             return None
-    
+
     def create_data_asset(self, asset_path: str, asset_class: type) -> Optional[unreal.Object]:
         """Create a new Data Asset in Unreal"""
         try:
@@ -112,32 +112,32 @@ class YAMLtoDataAssetImporter:
                 self.log(f"Asset already exists: {asset_path}", "warning")
                 # Load existing asset
                 return unreal.load_asset(asset_path)
-            
+
             # Create new asset
             factory = unreal.DataAssetFactory()
             factory.set_editor_property('data_asset_class', asset_class)
-            
+
             package_path = os.path.dirname(asset_path)
             asset_name = os.path.basename(asset_path)
-            
+
             asset = self.asset_tools.create_asset(
                 asset_name,
                 package_path,
                 asset_class,
                 factory
             )
-            
+
             if asset:
                 self.log(f"Created Data Asset: {asset_path}")
                 return asset
             else:
                 self.log(f"Failed to create asset: {asset_path}", "error")
                 return None
-                
+
         except Exception as e:
             self.log(f"Error creating asset {asset_path}: {e}", "error")
             return None
-    
+
     def set_property_safe(self, asset: unreal.Object, property_name: str, value: Any) -> bool:
         """Safely set a property on an asset"""
         try:
@@ -146,43 +146,43 @@ class YAMLtoDataAssetImporter:
         except Exception as e:
             self.log(f"Warning: Could not set property '{property_name}': {e}", "warning")
             return False
-    
+
     def import_spaceship_yaml(self, yaml_path: str) -> Optional[str]:
         """
         Import a spaceship YAML file and create a SpaceshipDataAsset
-        
+
         Args:
             yaml_path: Path to YAML file (relative to project or absolute)
-            
+
         Returns:
             Content path to created asset or None if failed
         """
         yaml_file = Path(yaml_path)
         if not yaml_file.is_absolute():
             yaml_file = self.project_dir / yaml_file
-        
+
         data = self.load_yaml(yaml_file)
         if not data:
             return None
-        
+
         # Determine asset name from YAML data or filename
         ship_name = data.get('BasicInfo', {}).get('ShipID', yaml_file.stem)
         asset_path = f"/Game/Spaceships/DataAssets/DA_Ship_{ship_name}"
-        
+
         self.log(f"Importing spaceship: {ship_name}")
-        
+
         # Find SpaceshipDataAsset class
         try:
             spaceship_class = unreal.load_class(None, "/Script/Adastrea.SpaceshipDataAsset")
         except Exception as e:
             self.log(f"SpaceshipDataAsset class not found. Ensure the project is compiled. Error: {e}", "error")
             return None
-        
+
         # Create the Data Asset
         asset = self.create_data_asset(asset_path, spaceship_class)
         if not asset:
             return None
-        
+
         # Set properties from YAML data
         # Basic Info
         if 'BasicInfo' in data:
@@ -191,7 +191,7 @@ class YAMLtoDataAssetImporter:
             self.set_property_safe(asset, 'description', basic_info.get('Description', ''))
             self.set_property_safe(asset, 'ship_class', basic_info.get('ShipClass', ''))
             self.set_property_safe(asset, 'ship_id', basic_info.get('ShipID', ''))
-        
+
         # Core Stats
         if 'CoreStats' in data:
             core = data['CoreStats']
@@ -200,7 +200,7 @@ class YAMLtoDataAssetImporter:
             self.set_property_safe(asset, 'crew_required', int(core.get('CrewRequired', 2)))
             self.set_property_safe(asset, 'max_crew', int(core.get('MaxCrew', 6)))
             self.set_property_safe(asset, 'modular_points', int(core.get('ModularPoints', 8)))
-        
+
         # Combat Stats
         if 'CombatStats' in data:
             combat = data['CombatStats']
@@ -210,7 +210,7 @@ class YAMLtoDataAssetImporter:
             self.set_property_safe(asset, 'weapon_slots', int(combat.get('WeaponSlots', 2)))
             self.set_property_safe(asset, 'weapon_power_capacity', float(combat.get('WeaponPowerCapacity', 1000.0)))
             self.set_property_safe(asset, 'point_defense_rating', float(combat.get('PointDefenseRating', 5.0)))
-        
+
         # Mobility Stats
         if 'MobilityStats' in data:
             mobility = data['MobilityStats']
@@ -220,52 +220,52 @@ class YAMLtoDataAssetImporter:
             self.set_property_safe(asset, 'jump_range', float(mobility.get('JumpRange', 20.0)))
             self.set_property_safe(asset, 'fuel_capacity', float(mobility.get('FuelCapacity', 2000.0)))
             self.set_property_safe(asset, 'fuel_consumption_rate', float(mobility.get('FuelConsumptionRate', 75.0)))
-        
+
         # Continue with other stat categories...
         # (Add more as needed based on actual SpaceshipDataAsset properties)
-        
+
         # Save the asset
         unreal.EditorAssetLibrary.save_asset(asset_path)
         self.log(f"Successfully imported spaceship: {ship_name} → {asset_path}")
-        
+
         return asset_path
-    
+
     def import_personnel_yaml(self, yaml_path: str) -> Optional[str]:
         """
         Import a personnel YAML file and create a PersonnelDataAsset
-        
+
         Args:
             yaml_path: Path to YAML file (relative to project or absolute)
-            
+
         Returns:
             Content path to created asset or None if failed
         """
         yaml_file = Path(yaml_path)
         if not yaml_file.is_absolute():
             yaml_file = self.project_dir / yaml_file
-        
+
         data = self.load_yaml(yaml_file)
         if not data:
             return None
-        
+
         # Determine asset name
         personnel_id = data.get('PersonnelID', yaml_file.stem)
         asset_path = f"/Game/Personnel/DataAssets/DA_Personnel_{personnel_id}"
-        
+
         self.log(f"Importing personnel: {personnel_id}")
-        
+
         # Find PersonnelDataAsset class
         try:
             personnel_class = unreal.load_class(None, "/Script/Adastrea.PersonnelDataAsset")
         except Exception as e:
             self.log(f"PersonnelDataAsset class not found. Ensure the project is compiled. Error: {e}", "error")
             return None
-        
+
         # Create the Data Asset
         asset = self.create_data_asset(asset_path, personnel_class)
         if not asset:
             return None
-        
+
         # Set properties from YAML data
         self.set_property_safe(asset, 'personnel_id', data.get('PersonnelID', ''))
         self.set_property_safe(asset, 'personnel_name', data.get('PersonnelName', ''))
@@ -274,59 +274,59 @@ class YAMLtoDataAssetImporter:
         self.set_property_safe(asset, 'gender', data.get('Gender', 'Male'))
         self.set_property_safe(asset, 'species', data.get('Species', 'Human'))
         self.set_property_safe(asset, 'nationality', data.get('Nationality', ''))
-        
+
         # Role and Assignment
         self.set_property_safe(asset, 'primary_role', data.get('PrimaryRole', ''))
         self.set_property_safe(asset, 'current_assignment', data.get('CurrentAssignment', ''))
         self.set_property_safe(asset, 'department', data.get('Department', ''))
-        
+
         # Skills and Experience
         self.set_property_safe(asset, 'overall_skill_level', int(data.get('OverallSkillLevel', 5)))
         self.set_property_safe(asset, 'total_experience', int(data.get('TotalExperience', 5000)))
-        
+
         # Status
         self.set_property_safe(asset, 'morale', int(data.get('Morale', 70)))
         self.set_property_safe(asset, 'health', int(data.get('Health', 90)))
         self.set_property_safe(asset, 'fatigue', int(data.get('Fatigue', 30)))
         self.set_property_safe(asset, 'loyalty', int(data.get('Loyalty', 75)))
         self.set_property_safe(asset, 'reputation', int(data.get('Reputation', 50)))
-        
+
         # Employment
         self.set_property_safe(asset, 'salary', int(data.get('Salary', 5000)))
         self.set_property_safe(asset, 'contract_duration', int(data.get('ContractDuration', 12)))
-        
+
         # Personality
         self.set_property_safe(asset, 'personality_type', data.get('PersonalityType', ''))
         self.set_property_safe(asset, 'personality_description', data.get('PersonnelDescription', ''))
-        
+
         # Save the asset
         unreal.EditorAssetLibrary.save_asset(asset_path)
         self.log(f"Successfully imported personnel: {personnel_id} → {asset_path}")
-        
+
         return asset_path
-    
+
     def batch_import_directory(self, directory: str, import_func) -> List[str]:
         """
         Batch import all YAML files from a directory
-        
+
         Args:
             directory: Directory containing YAML files
             import_func: Function to use for importing (e.g., import_spaceship_yaml)
-            
+
         Returns:
             List of created asset paths
         """
         dir_path = Path(directory)
         if not dir_path.is_absolute():
             dir_path = self.project_dir / dir_path
-        
+
         if not dir_path.exists():
             self.log(f"Directory not found: {dir_path}", "error")
             return []
-        
+
         yaml_files = list(dir_path.glob("*.yaml")) + list(dir_path.glob("*.yml"))
         self.log(f"Found {len(yaml_files)} YAML files in {dir_path}")
-        
+
         created_assets = []
         for yaml_file in yaml_files:
             try:
@@ -335,25 +335,25 @@ class YAMLtoDataAssetImporter:
                     created_assets.append(asset_path)
             except Exception as e:
                 self.log(f"Error importing {yaml_file.name}: {e}", "error")
-        
+
         self.log(f"Batch import complete: {len(created_assets)}/{len(yaml_files)} assets created")
         return created_assets
-    
+
     def batch_import_spaceships(self) -> List[str]:
         """Batch import all spaceship YAML templates"""
         return self.batch_import_directory("Assets/SpaceshipTemplates", self.import_spaceship_yaml)
-    
+
     def batch_import_personnel(self) -> List[str]:
         """Batch import all personnel YAML templates"""
         return self.batch_import_directory("Assets/PersonnelTemplates", self.import_personnel_yaml)
-    
+
     def show_menu(self):
         """
         Interactive menu for importing YAML files
-        
+
         NOTE: This interactive menu only works when called from the Unreal Editor Python Console.
         It will not work when executed as a script via "Execute Python Script" menu.
-        
+
         To use interactively:
         1. Tools → Python → Open Python Console
         2. Run:
@@ -379,9 +379,9 @@ class YAMLtoDataAssetImporter:
                 print("  10. Import All Faction AI Templates")
                 print("\n  0. Exit")
                 print("=" * 60)
-                
+
                 choice = input("\nSelect option (0-10): ").strip()
-                
+
                 if choice == "0":
                     print("Exiting...")
                     break
@@ -399,7 +399,7 @@ class YAMLtoDataAssetImporter:
                     print("Option not yet implemented or invalid choice.")
         except (EOFError, OSError):
             # EOFError: input() fails when stdin is not available (Execute Script mode)
-            # OSError: I/O operation fails on closed file descriptor, observed in Unreal Engine 5.2+ 
+            # OSError: I/O operation fails on closed file descriptor, observed in Unreal Engine 5.2+
             # Python environments on Windows when running scripts via "Execute Python Script" (stdin closed).
             # If you encounter this, use the Python Console instead. Included for robustness.
             self.log("\nInteractive menu requires Python Console. Use batch import functions instead.", "warning")
@@ -447,7 +447,7 @@ def batch_import_personnel() -> List[str]:
 def main():
     """
     Main entry point when script is executed directly
-    
+
     When executed via "Execute Python Script", runs batch imports.
     For interactive menu, use Python Console instead.
     """
@@ -457,11 +457,11 @@ def main():
         print("2. Go to Tools → Python → Execute Python Script")
         print("3. Select this script")
         return
-    
+
     if not YAML_AVAILABLE:
         print(PYYAML_ERROR_MESSAGE)
         return
-    
+
     print("\n" + "=" * 60)
     print("YAML to Data Asset Importer - Batch Mode")
     print("=" * 60)
@@ -471,18 +471,18 @@ def main():
     print("  import YAMLtoDataAsset")
     print("  YAMLtoDataAsset.show_menu()")
     print("\n" + "=" * 60)
-    
+
     importer = YAMLtoDataAssetImporter()
-    
+
     # Run batch imports automatically
     print("\nBatch importing spaceships...")
     spaceship_assets = importer.batch_import_spaceships()
     print(f"Imported {len(spaceship_assets)} spaceship(s)")
-    
+
     print("\nBatch importing personnel...")
     personnel_assets = importer.batch_import_personnel()
     print(f"Imported {len(personnel_assets)} personnel asset(s)")
-    
+
     print("\n" + "=" * 60)
     print("Batch import complete!")
     print("=" * 60)

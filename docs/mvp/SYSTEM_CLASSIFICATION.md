@@ -1,16 +1,16 @@
 # System Classification for Trade Simulator MVP
 
-**Purpose**: Define which existing systems are MVP-critical, simplified, or deferred  
-**Last Updated**: 2026-01-13  
-**Based on**: Critical Review Analysis and MVP Scope Definition  
+**Purpose**: Define which existing systems are MVP-critical, simplified, or deferred
+**Last Updated**: 2026-01-13
+**Based on**: Critical Review Analysis and MVP Scope Definition
 **Current Phase**: Phase 1 - Hardcoded Prototype
 
 ---
 
 ## 🎯 MVP Classification Rules
 
-**MVP-Critical**: Required for core trading gameplay loop (use now)  
-**MVP-Simplified**: Use limited subset of features only (partial use)  
+**MVP-Critical**: Required for core trading gameplay loop (use now)
+**MVP-Simplified**: Use limited subset of features only (partial use)
 **Deferred**: Do not touch until post-MVP validation (ignore for now)
 
 **Key Principle**: One polished system beats ten half-finished systems.
@@ -20,7 +20,7 @@
 ## ✅ MVP-CRITICAL Systems (Use Full Functionality)
 
 ### 1. Spaceship System
-**Status**: ✅ Use (limited features)  
+**Status**: ✅ Use (limited features)
 **MVP Scope**:
 - Basic flight controls (movement, rotation)
 - Cargo capacity property
@@ -39,7 +39,7 @@
 ---
 
 ### 2. Trading System
-**Status**: ✅ Use (core system)  
+**Status**: ✅ Use (core system)
 **MVP Scope**:
 - Buy/sell cargo interface
 - Price display
@@ -54,7 +54,7 @@
 ---
 
 ### 3. Space Station System (Docking)
-**Status**: ✅ Use (simplified)  
+**Status**: ✅ Use (simplified)
 **MVP Scope**:
 - Station docking triggers
 - Trading UI access
@@ -73,7 +73,7 @@
 ---
 
 ### 4. HUD/UI System
-**Status**: ✅ Use (minimal)  
+**Status**: ✅ Use (minimal)
 **MVP Scope**:
 - Basic HUD (speed, cargo capacity, credits)
 - Trading interface widget
@@ -92,7 +92,7 @@
 ---
 
 ### 5. Save System
-**Status**: ✅ Use (basic)  
+**Status**: ✅ Use (basic)
 **MVP Scope**:
 - Save player credits
 - Save cargo inventory
@@ -112,7 +112,7 @@
 ## ⚠️ MVP-SIMPLIFIED Systems (Limited Use)
 
 ### 6. Faction System
-**Status**: ⚠️ Simplified  
+**Status**: ⚠️ Simplified
 **MVP Scope**:
 - Station ownership (which faction owns station)
 - Price modifiers (faction affects prices)
@@ -130,7 +130,7 @@
 ---
 
 ### 7. Navigation System
-**Status**: ⚠️ Simplified  
+**Status**: ⚠️ Simplified
 **MVP Scope**:
 - Station waypoint markers
 - Distance to station display
@@ -147,7 +147,7 @@
 ---
 
 ### 8. Inventory System
-**Status**: ⚠️ Simplified  
+**Status**: ⚠️ Simplified
 **MVP Scope**:
 - Cargo holds array
 - Item quantity tracking
@@ -167,102 +167,102 @@
 ## 🚫 DEFERRED Systems (Do Not Use)
 
 ### 9. Combat System
-**Status**: 🚫 Deferred  
-**Reason**: Not part of trade simulator MVP  
+**Status**: 🚫 Deferred
+**Reason**: Not part of trade simulator MVP
 **Files**: `Source/Adastrea/Combat/*.h/.cpp`
 
 ---
 
 ### 10. Exploration System
-**Status**: 🚫 Deferred  
-**Reason**: Not part of trade simulator MVP  
+**Status**: 🚫 Deferred
+**Reason**: Not part of trade simulator MVP
 **Files**: `Source/Adastrea/Exploration/*.h/.cpp`
 
 ---
 
 ### 11. Quest System
-**Status**: 🚫 Deferred  
-**Reason**: Trading IS the game, no quests needed  
+**Status**: 🚫 Deferred
+**Reason**: Trading IS the game, no quests needed
 **Files**: `Source/Adastrea/Quest/*.h/.cpp`
 
 ---
 
 ### 12. Personnel System
-**Status**: 🚫 Deferred  
-**Reason**: Solo pilot only for MVP  
+**Status**: 🚫 Deferred
+**Reason**: Solo pilot only for MVP
 **Files**: `Source/Adastrea/Characters/*.h/.cpp`
 
 ---
 
 ### 13. AI System
-**Status**: 🚫 Deferred (mostly)  
-**MVP Exception**: Basic economy AI for price updates  
-**Deferred**: NPC ships, faction AI, combat AI  
+**Status**: 🚫 Deferred (mostly)
+**MVP Exception**: Basic economy AI for price updates
+**Deferred**: NPC ships, faction AI, combat AI
 **Files**: `Source/Adastrea/AI/*.h/.cpp`
 
 ---
 
 ### 14. Way System
-**Status**: 🚫 Deferred  
-**Reason**: Not needed for simple station-to-station flight  
+**Status**: 🚫 Deferred
+**Reason**: Not needed for simple station-to-station flight
 **Files**: `Source/Adastrea/Ways/*.h/.cpp`
 
 ---
 
 ### 15. Sector System
-**Status**: 🚫 Deferred  
-**Reason**: Single sector sufficient for MVP  
+**Status**: 🚫 Deferred
+**Reason**: Single sector sufficient for MVP
 **Files**: `Source/Adastrea/Sectors/*.h/.cpp`
 
 ---
 
 ### 16. Map System
-**Status**: 🚫 Deferred  
-**Reason**: Simple waypoints sufficient  
+**Status**: 🚫 Deferred
+**Reason**: Simple waypoints sufficient
 **Files**: `Source/Adastrea/Maps/*.h/.cpp`
 
 ---
 
 ### 17. Player Progression
-**Status**: 🚫 Deferred (mostly)  
-**MVP Exception**: Credits tracking, ship upgrade unlocks  
-**Deferred**: XP, levels, skills, achievements  
+**Status**: 🚫 Deferred (mostly)
+**MVP Exception**: Credits tracking, ship upgrade unlocks
+**Deferred**: XP, levels, skills, achievements
 **Files**: `Source/Adastrea/Player/Progression*.h/.cpp`
 
 ---
 
 ### 18. Tutorial System
-**Status**: 🚫 Deferred (initially)  
-**When to Add**: Week 9-12 (polish phase)  
+**Status**: 🚫 Deferred (initially)
+**When to Add**: Week 9-12 (polish phase)
 **Files**: `Source/Adastrea/Tutorial/*.h/.cpp`
 
 ---
 
 ### 19. Audio System
-**Status**: 🚫 Deferred (initially)  
-**When to Add**: Week 7-9 (basic sound effects)  
+**Status**: 🚫 Deferred (initially)
+**When to Add**: Week 7-9 (basic sound effects)
 **Files**: `Source/Adastrea/Audio/*.h/.cpp`
 
 ---
 
 ### 20. Material System
-**Status**: 🚫 Deferred  
-**Reason**: Use simple materials for MVP  
+**Status**: 🚫 Deferred
+**Reason**: Use simple materials for MVP
 **Files**: `Source/Adastrea/Materials/*.h/.cpp`
 
 ---
 
 ### 21. Homeworld System
-**Status**: 🚫 Deferred  
-**Reason**: Not relevant to trading MVP  
+**Status**: 🚫 Deferred
+**Reason**: Not relevant to trading MVP
 **Files**: `Source/Adastrea/Homeworlds/*.h/.cpp`
 
 ---
 
 ### 22. Performance Tools
-**Status**: ⚠️ Use for metrics  
-**MVP Scope**: Add FPS counter, memory tracking  
-**Purpose**: Measure performance during development  
+**Status**: ⚠️ Use for metrics
+**MVP Scope**: Add FPS counter, memory tracking
+**Purpose**: Measure performance during development
 **Files**: Performance monitoring code
 
 ---
@@ -338,5 +338,5 @@ If someone asks to add:
 
 ---
 
-**Last Updated**: 2025-12-24  
+**Last Updated**: 2025-12-24
 **Next Review**: After Week 4 playtest results

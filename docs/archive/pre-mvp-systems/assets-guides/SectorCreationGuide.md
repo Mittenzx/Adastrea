@@ -357,10 +357,10 @@ class ASpaceSectorMap
     FText SectorName;        // Must match council SectorName
     FText Description;       // Same as council or level-specific
     UBillboardComponent* SectorMarker;  // Editor visualization
-    
+
     // Constants
     static constexpr float SectorSize = 20000000.0f;  // 200km
-    
+
     // Functions
     FBox GetSectorBounds();
     bool IsPositionInSector(const FVector& WorldPosition);
@@ -640,24 +640,24 @@ Sectors generate quests based on their state:
 ## Best Practices
 
 ### Do:
-✓ Create sectors with clear, distinct identities  
-✓ Match council composition to sector theme  
-✓ Balance taxes and budgets logically  
-✓ Test gameplay experience thoroughly  
-✓ Document unusual configurations  
-✓ Leave room for player influence  
-✓ Consider neighboring sectors  
-✓ Use templates as starting points  
+✓ Create sectors with clear, distinct identities
+✓ Match council composition to sector theme
+✓ Balance taxes and budgets logically
+✓ Test gameplay experience thoroughly
+✓ Document unusual configurations
+✓ Leave room for player influence
+✓ Consider neighboring sectors
+✓ Use templates as starting points
 
 ### Don't:
-✗ Make all sectors the same  
-✗ Create unwinnable governance (gridlock with no escape)  
-✗ Ignore budget balance (must sum to 100%)  
-✗ Forget to place SpaceSectorMap actor  
-✗ Use duplicate SectorIDs  
-✗ Make taxes absurdly high (>50% total is extreme)  
-✗ Neglect testing with actual gameplay  
-✗ Create sectors in isolation  
+✗ Make all sectors the same
+✗ Create unwinnable governance (gridlock with no escape)
+✗ Ignore budget balance (must sum to 100%)
+✗ Forget to place SpaceSectorMap actor
+✗ Use duplicate SectorIDs
+✗ Make taxes absurdly high (>50% total is extreme)
+✗ Neglect testing with actual gameplay
+✗ Create sectors in isolation
 
 ## Quick Reference
 
@@ -726,6 +726,6 @@ WouldVotePass(VotesFor, VotesAgainst) -> bool
 
 ---
 
-**Last Updated:** November 2024  
-**Version:** 1.0  
+**Last Updated:** November 2024
+**Version:** 1.0
 **Maintained by:** Adastrea Development Team

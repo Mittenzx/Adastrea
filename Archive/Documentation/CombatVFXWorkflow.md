@@ -118,7 +118,7 @@ Fire Effect:
   Beam Width: 15.0
   Beam Color: (0, 1, 0.4, 1)
   Glow Intensity: 2.5
-  
+
 Performance:
   Max Particles: 800
   Effect Priority: 6
@@ -456,7 +456,7 @@ Shield Visuals:
 
 Shield Colors:
   Full Shield Color: (0, 1, 0, 0.8)      # Green
-  Recharging Color: (0, 0.5, 1, 0.8)    # Blue  
+  Recharging Color: (0, 0.5, 1, 0.8)    # Blue
   Shield Down Color: (1, 0, 0, 0.8)     # Red
   Recharge Pulse Speed: 2.0
   Min Pulse Intensity: 0.3
@@ -906,6 +906,6 @@ Stop: Esc
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: November 18, 2025  
+**Document Version**: 1.0
+**Last Updated**: November 18, 2025
 **Author**: Adastrea Development Team

@@ -1,6 +1,6 @@
 # Epic Games Container Access Documentation Update Summary
 
-**Date:** 2025-11-24  
+**Date:** 2025-11-24
 **Issue:** Users experiencing broken EULA links and unclear container access requirements
 
 ## Problem Statement
@@ -97,7 +97,7 @@ Based on research from Epic's official documentation and community resources:
 
 - **Registry:** GitHub Container Registry (ghcr.io)
 - **Repository:** ghcr.io/epicgames/unreal-engine
-- **Available Tags:** 
+- **Available Tags:**
   - `dev-slim-5.6` (development environment, smaller size)
   - `dev-5.6` (full development environment)
   - `runtime-5.6` (runtime only, no editor)
@@ -237,5 +237,5 @@ Users should now be able to:
 
 ---
 
-**Status:** Documentation updates completed and committed  
+**Status:** Documentation updates completed and committed
 **Next Steps:** Users should test the updated documentation by following the setup steps and running the diagnostic workflow

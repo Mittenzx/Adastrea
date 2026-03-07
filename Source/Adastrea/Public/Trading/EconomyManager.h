@@ -10,10 +10,10 @@ class UTradeItemDataAsset;
 
 /**
  * Economy Manager Subsystem
- * 
+ *
  * Manages the dynamic trading economy system for Adastrea.
  * Operates as a Game Instance Subsystem to persist across level transitions.
- * 
+ *
  * Features:
  * - Dynamic supply/demand simulation
  * - Market registration and management
@@ -21,19 +21,19 @@ class UTradeItemDataAsset;
  * - Economic recovery over time
  * - Background market activity simulation
  * - Game time tracking
- * 
+ *
  * Usage:
  * - Access via UGameInstance::GetSubsystem<UEconomyManager>()
  * - Register markets with RegisterMarket()
  * - Record transactions with RecordTransaction()
  * - Query prices with GetItemPrice()
- * 
+ *
  * Integration:
  * - PlayerTraderComponent uses this for all trading operations
  * - AITraderComponent uses this for NPC trading
  * - MarketDataAsset provides market configuration
  * - TradeItemDataAsset defines tradeable items
- * 
+ *
  * Economy Simulation:
  * - Player purchases decrease supply, increase demand
  * - Player sales increase supply, decrease demand

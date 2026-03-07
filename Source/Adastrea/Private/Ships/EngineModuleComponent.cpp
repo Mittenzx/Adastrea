@@ -238,7 +238,7 @@ void UEngineModuleComponent::UpdateHeat(float DeltaTime)
 
 	// Generate heat based on throttle
 	float HeatGenerated = EngineData->HeatGeneration * (CurrentThrottle / 100.0f) * DeltaTime;
-	
+
 	if (bBoostActive)
 	{
 		HeatGenerated *= EngineData->BoostHeatMultiplier;
@@ -248,7 +248,7 @@ void UEngineModuleComponent::UpdateHeat(float DeltaTime)
 
 	// Apply cooling
 	CurrentHeat -= EngineData->CoolingRate * DeltaTime;
-	
+
 	// Clamp heat with configurable overrun
 	float MaxHeatWithOverrun = EngineData->MaxHeat * (1.0f + EngineData->MaxHeatOverrunPercent / 100.0f);
 	CurrentHeat = FMath::Clamp(CurrentHeat, 0.0f, MaxHeatWithOverrun);
@@ -260,7 +260,7 @@ void UEngineModuleComponent::UpdateHeat(float DeltaTime)
 	if (bIsOverheated && !bWasOverheated)
 	{
 		OnEngineOverheated();
-		
+
 		// Auto-deactivate boost if overheated
 		if (bBoostActive)
 		{
@@ -291,11 +291,11 @@ void UEngineModuleComponent::UpdateEffects()
 	if (EngineSoundComponent && EngineSoundComponent->IsPlaying())
 	{
 		float ThrottleNormalized = CurrentThrottle / 100.0f;
-		
+
 		// Interpolate pitch based on data asset settings
 		float PitchMultiplier = FMath::Lerp(EngineData->EngineSoundMinPitch, EngineData->EngineSoundMaxPitch, ThrottleNormalized);
 		EngineSoundComponent->SetPitchMultiplier(PitchMultiplier);
-		
+
 		// Interpolate volume based on data asset settings
 		float VolumeMultiplier = FMath::Lerp(EngineData->EngineSoundMinVolume, EngineData->EngineSoundMaxVolume, ThrottleNormalized);
 		EngineSoundComponent->SetVolumeMultiplier(VolumeMultiplier);

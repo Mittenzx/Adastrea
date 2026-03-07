@@ -189,25 +189,25 @@ struct FExplosionEffect
 
 /**
  * Data Asset for Impact and Explosion Effects
- * 
+ *
  * Defines visual effects for weapon impacts and explosions:
- * 
+ *
  * **Shield Impacts:**
  * - Hexagonal ripple pattern with energy dissipation
  * - Damage-type specific colors
  * - Dynamic shield flash materials
- * 
+ *
  * **Hull Impacts:**
  * - Spark and debris particles
  * - Damage decals (permanent or temporary)
  * - Impact flash effects
- * 
+ *
  * **Explosions:**
  * - Small/Medium/Large scale explosions
  * - Shockwave effects
  * - Camera shake integration
  * - Fireball for large explosions
- * 
+ *
  * Usage:
  * - Create a Blueprint based on this class
  * - Configure impact effects for different scenarios

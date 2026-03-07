@@ -9,7 +9,7 @@ PersonnelName: "Diane Lee"
 # Basic Identity
 Biography: |
   This individual served in the military for 3 years before retiring to private sector. They are celebrated for their innovative problem-solving and earned multiple commendations for bravery and service.
-  
+
 Age: 40
 Gender: "Female"
 Species: "Human"
@@ -61,7 +61,7 @@ ContractMonthsRemaining: 0
 PersonalityType: "Analytical"
 PersonalityDescription: |
   Analytical personality with focus on trader duties.
-  
+
 Traits:
   - TraitName: "Diplomat"
     TraitDescription: "Better negotiations"

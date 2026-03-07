@@ -176,7 +176,7 @@ if (TestSettingsWidget)
     FString ShipType = TestSettingsWidget->GetSelectedShipType();
     FString Difficulty = TestSettingsWidget->GetSelectedDifficulty();
     bool bAutoSpawn = TestSettingsWidget->GetAutoSpawnEnabled();
-    
+
     // Use these values for custom spawn logic
 }
 ```

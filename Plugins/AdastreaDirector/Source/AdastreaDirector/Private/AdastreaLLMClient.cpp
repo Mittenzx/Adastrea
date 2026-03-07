@@ -64,37 +64,37 @@ void FAdastreaLLMClient::SendGeminiRequest(
 {
 	// Create HTTP request
 	TSharedRef<IHttpRequest> Request = FHttpModule::Get().CreateRequest();
-	
+
 	// Gemini API endpoint (streaming)
 	FString Endpoint = FString::Printf(
 		TEXT("https://generativelanguage.googleapis.com/v1beta/models/%s:streamGenerateContent?key=%s"),
 		*ModelName,
 		*ApiKey
 	);
-	
+
 	Request->SetURL(Endpoint);
 	Request->SetVerb(TEXT("POST"));
 	Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
 
 	// Build JSON payload
 	TSharedPtr<FJsonObject> Payload = MakeShared<FJsonObject>();
-	
+
 	// Convert messages to Gemini format
 	TArray<TSharedPtr<FJsonValue>> ContentsArray;
 	for (const FChatMessage& Message : Messages)
 	{
 		TSharedPtr<FJsonObject> ContentObj = MakeShared<FJsonObject>();
-		
+
 		// Gemini uses "user" and "model" roles
 		FString Role = Message.Role == TEXT("assistant") ? TEXT("model") : TEXT("user");
 		ContentObj->SetStringField(TEXT("role"), Role);
-		
+
 		// Parts array with text
 		TArray<TSharedPtr<FJsonValue>> PartsArray;
 		TSharedPtr<FJsonObject> Part = MakeShared<FJsonObject>();
 		Part->SetStringField(TEXT("text"), Message.Content);
 		PartsArray.Add(MakeShared<FJsonValueObject>(Part));
-		
+
 		ContentObj->SetArrayField(TEXT("parts"), PartsArray);
 		ContentsArray.Add(MakeShared<FJsonValueObject>(ContentObj));
 	}
@@ -110,13 +110,13 @@ void FAdastreaLLMClient::SendGeminiRequest(
 	{
 		TArray<TSharedPtr<FJsonValue>> ToolsArray;
 		TSharedPtr<FJsonObject> ToolsWrapper = MakeShared<FJsonObject>();
-		
+
 		TArray<TSharedPtr<FJsonValue>> FunctionDeclarations;
 		for (const FToolDefinition& Tool : Tools)
 		{
 			FunctionDeclarations.Add(MakeShared<FJsonValueObject>(Tool.ToJson()));
 		}
-		
+
 		ToolsWrapper->SetArrayField(TEXT("functionDeclarations"), FunctionDeclarations);
 		ToolsArray.Add(MakeShared<FJsonValueObject>(ToolsWrapper));
 		Payload->SetArrayField(TEXT("tools"), ToolsArray);
@@ -126,12 +126,12 @@ void FAdastreaLLMClient::SendGeminiRequest(
 	FString JsonString;
 	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&JsonString);
 	FJsonSerializer::Serialize(Payload.ToSharedRef(), Writer);
-	
+
 	Request->SetContentAsString(JsonString);
 
 	// Setup callbacks with weak pointer to prevent dangling pointer if object is destroyed
 	TWeakPtr<FAdastreaLLMClient> WeakSelf = AsShared();
-	
+
 	if (OnStreamChunk.IsBound())
 	{
 		// Streaming mode - UE 5.6+ uses OnRequestProgress64 with uint64 parameters
@@ -143,7 +143,7 @@ void FAdastreaLLMClient::SendGeminiRequest(
 				{
 					return;
 				}
-				
+
 				Pinned->OnStreamDataReceived(Req, BytesSent, BytesReceived, OnStreamChunk);
 			}
 		);
@@ -157,7 +157,7 @@ void FAdastreaLLMClient::SendGeminiRequest(
 			{
 				return;
 			}
-			
+
 			Pinned->OnResponseReceived(Req, Response, bWasSuccessful, OnComplete);
 		}
 	);
@@ -177,7 +177,7 @@ void FAdastreaLLMClient::SendOpenAIRequest(
 {
 	// Create HTTP request
 	TSharedRef<IHttpRequest> Request = FHttpModule::Get().CreateRequest();
-	
+
 	// OpenAI API endpoint
 	Request->SetURL(TEXT("https://api.openai.com/v1/chat/completions"));
 	Request->SetVerb(TEXT("POST"));
@@ -187,7 +187,7 @@ void FAdastreaLLMClient::SendOpenAIRequest(
 	// Build JSON payload
 	TSharedPtr<FJsonObject> Payload = MakeShared<FJsonObject>();
 	Payload->SetStringField(TEXT("model"), ModelName);
-	
+
 	// Convert messages to OpenAI format
 	TArray<TSharedPtr<FJsonValue>> MessagesArray;
 	for (const FChatMessage& Message : Messages)
@@ -208,12 +208,12 @@ void FAdastreaLLMClient::SendOpenAIRequest(
 		{
 			TSharedPtr<FJsonObject> ToolObj = MakeShared<FJsonObject>();
 			ToolObj->SetStringField(TEXT("type"), TEXT("function"));
-			
+
 			TSharedPtr<FJsonObject> FunctionObj = MakeShared<FJsonObject>();
 			FunctionObj->SetStringField(TEXT("name"), Tool.Name);
 			FunctionObj->SetStringField(TEXT("description"), Tool.Description);
 			FunctionObj->SetObjectField(TEXT("parameters"), Tool.Parameters);
-			
+
 			ToolObj->SetObjectField(TEXT("function"), FunctionObj);
 			ToolsArray.Add(MakeShared<FJsonValueObject>(ToolObj));
 		}
@@ -225,12 +225,12 @@ void FAdastreaLLMClient::SendOpenAIRequest(
 	FString JsonString;
 	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&JsonString);
 	FJsonSerializer::Serialize(Payload.ToSharedRef(), Writer);
-	
+
 	Request->SetContentAsString(JsonString);
 
 	// Setup callbacks with weak pointer
 	TWeakPtr<FAdastreaLLMClient> WeakSelf = AsShared();
-	
+
 	if (OnStreamChunk.IsBound())
 	{
 		// Streaming mode - UE 5.6+ uses OnRequestProgress64 with uint64 parameters
@@ -242,7 +242,7 @@ void FAdastreaLLMClient::SendOpenAIRequest(
 				{
 					return;
 				}
-				
+
 				Pinned->OnStreamDataReceived(Req, BytesSent, BytesReceived, OnStreamChunk);
 			}
 		);
@@ -256,7 +256,7 @@ void FAdastreaLLMClient::SendOpenAIRequest(
 			{
 				return;
 			}
-			
+
 			Pinned->OnResponseReceived(Req, Response, bWasSuccessful, OnComplete);
 		}
 	);
@@ -286,13 +286,13 @@ void FAdastreaLLMClient::OnResponseReceived(
 	int32 StatusCode = Response->GetResponseCode();
 	FString ResponseBody = Response->GetContentAsString();
 
-	UE_LOG(LogAdastreaDirector, Log, TEXT("LLM response: %d, Body length: %d"), 
+	UE_LOG(LogAdastreaDirector, Log, TEXT("LLM response: %d, Body length: %d"),
 		StatusCode, ResponseBody.Len());
 
 	if (StatusCode != 200)
 	{
 		UE_LOG(LogAdastreaDirector, Error, TEXT("LLM API error: %s"), *ResponseBody);
-		OnComplete.ExecuteIfBound(false, FString::Printf(TEXT("API error: %d"), StatusCode), 
+		OnComplete.ExecuteIfBound(false, FString::Printf(TEXT("API error: %d"), StatusCode),
 			TArray<FToolCall>());
 		return;
 	}
@@ -300,7 +300,7 @@ void FAdastreaLLMClient::OnResponseReceived(
 	// Parse JSON response
 	TSharedPtr<FJsonObject> JsonResponse;
 	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(ResponseBody);
-	
+
 	if (!FJsonSerializer::Deserialize(Reader, JsonResponse) || !JsonResponse.IsValid())
 	{
 		UE_LOG(LogAdastreaDirector, Error, TEXT("Failed to parse JSON response"));
@@ -324,7 +324,7 @@ void FAdastreaLLMClient::OnResponseReceived(
 			OnComplete.ExecuteIfBound(false, TEXT("Invalid candidate format"), TArray<FToolCall>());
 			return;
 		}
-		
+
 		// UE 5.6+ TryGetObjectField signature changed to use const TSharedPtr<FJsonObject>*
 		const TSharedPtr<FJsonObject>* ContentObjPtr;
 		if (!Candidate->TryGetObjectField(TEXT("content"), ContentObjPtr) || !ContentObjPtr || !(*ContentObjPtr).IsValid())
@@ -333,9 +333,9 @@ void FAdastreaLLMClient::OnResponseReceived(
 			OnComplete.ExecuteIfBound(false, TEXT("No content in response"), TArray<FToolCall>());
 			return;
 		}
-		
+
 		const TSharedPtr<FJsonObject>& ContentObj = *ContentObjPtr;
-		
+
 		const TArray<TSharedPtr<FJsonValue>>* Parts;
 		if (ContentObj->TryGetArrayField(TEXT("parts"), Parts))
 		{
@@ -346,14 +346,14 @@ void FAdastreaLLMClient::OnResponseReceived(
 				{
 					continue;
 				}
-				
+
 				// Text part
 				FString Text;
 				if (Part->TryGetStringField(TEXT("text"), Text))
 				{
 					Content += Text;
 				}
-				
+
 				// Function call part
 				const TSharedPtr<FJsonObject>* FunctionCallPtr;
 				if (Part->TryGetObjectField(TEXT("functionCall"), FunctionCallPtr) && FunctionCallPtr && (*FunctionCallPtr).IsValid())
@@ -362,7 +362,7 @@ void FAdastreaLLMClient::OnResponseReceived(
 					FToolCall ToolCall;
 					ToolCall.Id = FGuid::NewGuid().ToString();
 					FunctionCall->TryGetStringField(TEXT("name"), ToolCall.ToolName);
-					
+
 					// Safely get args object
 					const TSharedPtr<FJsonObject>* ArgsObjectPtr;
 					if (FunctionCall->TryGetObjectField(TEXT("args"), ArgsObjectPtr) && ArgsObjectPtr && (*ArgsObjectPtr).IsValid())
@@ -373,7 +373,7 @@ void FAdastreaLLMClient::OnResponseReceived(
 					{
 						ToolCall.Arguments = nullptr;
 					}
-					
+
 					ToolCalls.Add(ToolCall);
 				}
 			}
@@ -393,7 +393,7 @@ void FAdastreaLLMClient::OnResponseReceived(
 				OnComplete.ExecuteIfBound(false, TEXT("Invalid choice format"), TArray<FToolCall>());
 				return;
 			}
-			
+
 			const TSharedPtr<FJsonObject>* MessagePtr;
 			if (Choice->TryGetObjectField(TEXT("message"), MessagePtr) && MessagePtr && (*MessagePtr).IsValid())
 			{
@@ -404,7 +404,7 @@ void FAdastreaLLMClient::OnResponseReceived(
 				{
 					Content = MessageContent;
 				}
-				
+
 				// Get tool calls
 				const TArray<TSharedPtr<FJsonValue>>* ToolCallsArray;
 				if (Message->TryGetArrayField(TEXT("tool_calls"), ToolCallsArray))
@@ -416,16 +416,16 @@ void FAdastreaLLMClient::OnResponseReceived(
 						{
 							continue;
 						}
-						
+
 						FToolCall ToolCall;
 						ToolCallObj->TryGetStringField(TEXT("id"), ToolCall.Id);
-						
+
 						const TSharedPtr<FJsonObject>* FunctionObjPtr;
 						if (ToolCallObj->TryGetObjectField(TEXT("function"), FunctionObjPtr) && FunctionObjPtr && (*FunctionObjPtr).IsValid())
 						{
 							const TSharedPtr<FJsonObject>& FunctionObj = *FunctionObjPtr;
 							FunctionObj->TryGetStringField(TEXT("name"), ToolCall.ToolName);
-							
+
 							// Parse arguments from JSON string
 							FString ArgsString;
 							if (FunctionObj->TryGetStringField(TEXT("arguments"), ArgsString))
@@ -434,7 +434,7 @@ void FAdastreaLLMClient::OnResponseReceived(
 								FJsonSerializer::Deserialize(ArgsReader, ToolCall.Arguments);
 							}
 						}
-						
+
 						ToolCalls.Add(ToolCall);
 					}
 				}
@@ -454,7 +454,7 @@ void FAdastreaLLMClient::OnResponseReceived(
 		}
 	}
 
-	UE_LOG(LogAdastreaDirector, Log, TEXT("Extracted content: %s, Tool calls: %d"), 
+	UE_LOG(LogAdastreaDirector, Log, TEXT("Extracted content: %s, Tool calls: %d"),
 		*Content, ToolCalls.Num());
 
 	OnComplete.ExecuteIfBound(true, Content, ToolCalls);
@@ -482,16 +482,16 @@ void FAdastreaLLMClient::OnStreamDataReceived(
 
 	// Get current response content
 	FString ResponseSoFar = Response->GetContentAsString();
-	
+
 	// Process only new data since last call (incremental parsing)
 	if (ResponseSoFar.Len() > StreamBuffer.Len())
 	{
 		// Extract only the new portion to avoid reprocessing
 		FString NewData = ResponseSoFar.Mid(StreamBuffer.Len());
-		
+
 		// Update buffer to current position
 		StreamBuffer = ResponseSoFar;
-		
+
 		// Parse only the new SSE chunks
 		ParseSSEChunk(NewData, OnStreamChunk);
 	}
@@ -501,26 +501,26 @@ void FAdastreaLLMClient::ParseSSEChunk(const FString& Chunk, FOnStreamChunk OnSt
 {
 	// SSE format: data: {...}\n\n
 	// Parse JSON from each data: line
-	
+
 	TArray<FString> Lines;
 	Chunk.ParseIntoArray(Lines, TEXT("\n"), true);
-	
+
 	for (const FString& Line : Lines)
 	{
 		if (Line.StartsWith(TEXT("data: ")))
 		{
 			FString JsonStr = Line.Mid(6).TrimStartAndEnd();
-			
+
 			// Skip [DONE] marker
 			if (JsonStr == TEXT("[DONE]"))
 			{
 				continue;
 			}
-			
+
 			// Parse JSON
 			TSharedPtr<FJsonObject> JsonObj;
 			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonStr);
-			
+
 			if (FJsonSerializer::Deserialize(Reader, JsonObj) && JsonObj.IsValid())
 			{
 				// Extract text content from chunk
@@ -561,12 +561,12 @@ TSharedPtr<FJsonObject> FChatMessage::ToJson() const
 	TSharedPtr<FJsonObject> Json = MakeShared<FJsonObject>();
 	Json->SetStringField(TEXT("role"), Role);
 	Json->SetStringField(TEXT("content"), Content);
-	
+
 	if (!ToolCallId.IsEmpty())
 	{
 		Json->SetStringField(TEXT("tool_call_id"), ToolCallId);
 	}
-	
+
 	return Json;
 }
 
@@ -583,13 +583,13 @@ FToolCall FToolCall::FromJson(const TSharedPtr<FJsonObject>& Json)
 {
 	FToolCall ToolCall;
 	Json->TryGetStringField(TEXT("id"), ToolCall.Id);
-	
+
 	const TSharedPtr<FJsonObject>* FunctionObjPtr;
 	if (Json->TryGetObjectField(TEXT("function"), FunctionObjPtr) && FunctionObjPtr && (*FunctionObjPtr).IsValid())
 	{
 		const TSharedPtr<FJsonObject>& FunctionObj = *FunctionObjPtr;
 		FunctionObj->TryGetStringField(TEXT("name"), ToolCall.ToolName);
-		
+
 		FString ArgsString;
 		if (FunctionObj->TryGetStringField(TEXT("arguments"), ArgsString))
 		{
@@ -598,6 +598,6 @@ FToolCall FToolCall::FromJson(const TSharedPtr<FJsonObject>& Json)
 			FJsonSerializer::Deserialize(Reader, ToolCall.Arguments);
 		}
 	}
-	
+
 	return ToolCall;
 }

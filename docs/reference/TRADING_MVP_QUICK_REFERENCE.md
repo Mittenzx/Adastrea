@@ -281,6 +281,6 @@ Start: 1000 credits, 10 cargo
 
 ---
 
-**Last Updated**: 2025-12-25  
-**Version**: 1.0  
+**Last Updated**: 2025-12-25
+**Version**: 1.0
 **Status**: Active Reference

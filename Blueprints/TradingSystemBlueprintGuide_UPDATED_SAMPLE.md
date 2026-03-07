@@ -35,7 +35,7 @@ graph TD
     C --> D[📝 Print String:<br/>Show price to console]
     D --> E[💡 TODO: Implement<br/>Purchase Logic]
     E --> F[✅ Complete]
-    
+
     style A fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
     style B fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
     style C fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
@@ -103,33 +103,33 @@ Horizontal Box
 ```mermaid
 graph TD
     A[📅 Event Construct] --> B[⚙️ Update Price Display]
-    
+
     B --> C[💰 Get Current Price]
     C --> D[⚙️ CurrentMarket→GetItemPrice]
     D --> E[📝 Set Price Text]
     E --> F[🎨 Set Price Color]
     F --> G{💲 Price vs Base?}
-    
+
     G -->|High| H[🔴 Color: Red]
     G -->|Low| I[🟢 Color: Green]
     G -->|Normal| J[⚪ Color: White]
-    
+
     H --> K[📊 Get Inventory Entry]
     I --> K
     J --> K
-    
+
     K --> L[⚙️ GetInventoryEntry]
     L --> M[📝 Set Supply/Demand Text]
     M --> N{📦 Supply Level?}
-    
+
     N -->|Low| O[⚠️ "Low Stock"]
     N -->|High Demand| P[📈 "High Demand"]
     N -->|Normal| Q[✅ "Normal"]
-    
+
     O --> R[✅ Complete]
     P --> R
     Q --> R
-    
+
     style A fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
     style G fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
     style N fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
@@ -233,27 +233,27 @@ graph TD
     C --> D{🔍 Is Buying?}
     D -->|Yes| E[📝 Type = Buy]
     D -->|No| F[📝 Type = Sell]
-    
+
     E --> G[💰 Calculate Total Cost]
     F --> G
-    
+
     G --> H[⚙️ TotalPrice = Price × Qty]
     H --> I[🎨 Update UI Display]
-    
+
     I --> J[📝 Set Item Name]
     J --> K[📝 Set Quantity Text]
     K --> L[📝 Set Price Per Unit]
     L --> M[📝 Set Total Price<br/>Bold, Large Font]
-    
+
     M --> N{🖱️ User Action?}
     N -->|Confirm| O[📢 Broadcast OnConfirm]
     N -->|Cancel| P[📢 Broadcast OnCancel]
-    
+
     O --> Q[🗑️ Remove from Parent]
     P --> Q
-    
+
     Q --> R[✅ Complete]
-    
+
     style A fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
     style D fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
     style N fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
@@ -280,7 +280,7 @@ graph TD
 ```
 Function: Setup Transaction
   Inputs: Item, Qty, Price, IsBuying
-  
+
   ├── Set TransactionType
   │   └── If IsBuying: "Buy" Else: "Sell"
   ├── Set TradeItem = Item
@@ -304,7 +304,7 @@ graph TD
     C --> D[🔢 Set Quantity]
     D --> E[💰 Calculate Total]
     E --> F[🎨 Update All UI Elements]
-    
+
     style A fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
     style E fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
     style F fill:#2196F3,stroke:#1565C0,stroke-width:2px,color:#fff
@@ -370,6 +370,6 @@ graph TD
 
 ---
 
-**Last Updated**: November 19, 2025  
-**Format Version**: 1.0.0 (New Standards)  
+**Last Updated**: November 19, 2025
+**Format Version**: 1.0.0 (New Standards)
 **Status**: Sample demonstration file

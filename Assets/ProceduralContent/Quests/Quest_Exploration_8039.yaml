@@ -7,7 +7,7 @@ ContractName: "Discovery"
 ContractID: "Quest_Exploration_8039"
 Description: |
   Survey the Eta Luminous system and report findings to Stellar 329.
-  
+
 ContractType: Exploration
 Difficulty: VeryHard
 

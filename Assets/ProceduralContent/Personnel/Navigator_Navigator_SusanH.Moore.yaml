@@ -9,7 +9,7 @@ PersonnelName: "Susan H. Moore"
 # Basic Identity
 Biography: |
   This individual started as a cargo hauler and worked their way up through the ranks. They are respected for their tactical brilliance and trained the next generation of Navigators at the academy.
-  
+
 Age: 32
 Gender: "Female"
 Species: "Human"
@@ -61,7 +61,7 @@ ContractMonthsRemaining: 0
 PersonalityType: "Analytical"
 PersonalityDescription: |
   Analytical personality with focus on navigator duties.
-  
+
 Traits:
   - TraitName: "Cautious"
     TraitDescription: "Reduced risk taking"

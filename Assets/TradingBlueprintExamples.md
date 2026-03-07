@@ -298,7 +298,7 @@ Function: CheckContractCompletion
 Function: FormatPrice
   Input: Price (Float)
   Output: Formatted Text
-  
+
   Logic:
     ├── Convert Float to Int
     ├── Add Comma Separators
@@ -306,11 +306,11 @@ Function: FormatPrice
     └── Return Text (e.g., "$ 1,234")
 
 Function: GetPriceColor
-  Input: 
+  Input:
     - Current Price (Float)
     - Base Price (Float)
   Output: Color
-  
+
   Logic:
     ├── Calculate Percentage Change
     ├── IF Price > Base Price * 1.2
@@ -329,7 +329,7 @@ Function: GetSupplyDemandIndicator
     - Supply Level (Float)
     - Demand Level (Float)
   Output: Text
-  
+
   Logic:
     ├── IF Supply < 0.5 && Demand > 1.5
     │   └── Return "⚠️ Critical Shortage"
@@ -349,10 +349,10 @@ Function: CalculateProfitMargin
     - Buy Price (Float)
     - Sell Price (Float)
     - Quantity (Int)
-  Output: 
+  Output:
     - Total Profit (Int)
     - Profit Percentage (Float)
-  
+
   Logic:
     ├── Total Cost = Buy Price * Quantity
     ├── Total Revenue = Sell Price * Quantity
@@ -363,7 +363,7 @@ Function: CalculateProfitMargin
 Function: GetPriceTrendArrow
   Input: Price Trend (Float from TransactionManager)
   Output: Text
-  
+
   Logic:
     ├── IF Trend > 0.1
     │   └── Return "⬆⬆ Rising Fast"
@@ -414,7 +414,7 @@ Variables:
 Functions:
   Function: SetTransactionData
     Input: Transaction (FTradeTransaction)
-    
+
     Logic:
       ├── Store Transaction Data
       ├── Display Item Name
@@ -499,7 +499,7 @@ Event Graph:
 
   Function: TravelToMarket
     Input: Destination Market (MarketDataAsset)
-    
+
     Logic:
       ├── Get Destination Location
       ├── Calculate Travel Time
@@ -547,10 +547,10 @@ Event Graph:
     │       └── Call TriggerMarketEvent
 
   Function: TriggerMarketEvent
-    Input: 
+    Input:
       - Market (MarketDataAsset)
       - Event (FMarketEvent)
-    
+
     Logic:
       ├── Copy Event Template
       ├── Set bIsActive = true
@@ -573,7 +573,7 @@ Event Graph:
     Input:
       - Market (MarketDataAsset)
       - Event (FMarketEvent)
-    
+
     Logic:
       ├── Set bIsActive = false
       ├── Call Market->OnMarketEventEnded(Event)
@@ -589,7 +589,7 @@ Event Graph:
       - Affected Items (TArray<FName>)
       - Duration (Float)
       - Multipliers (Float, Float, Float)
-    
+
     Logic:
       ├── Create New FMarketEvent
       ├── Set All Parameters
@@ -671,7 +671,7 @@ Functions:
 
   Function: DisplayRoute
     Input: Route (FTradeRoute)
-    
+
     Logic:
       ├── Draw Route Line on Map
       │   ├── Get Origin Position
@@ -692,7 +692,7 @@ Functions:
 
   Event: OnMarketClicked
     Input: Clicked Market (MarketDataAsset)
-    
+
     Logic:
       ├── IF No Origin Selected
       │   ├── Set as Origin
@@ -711,7 +711,7 @@ Functions:
 
   Function: SetActiveRoute
     Input: Route (FTradeRoute)
-    
+
     Logic:
       ├── Store Route in Player Data
       ├── Set Navigation Waypoint

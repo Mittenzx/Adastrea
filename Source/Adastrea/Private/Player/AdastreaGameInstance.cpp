@@ -12,7 +12,7 @@ UAdastreaGameInstance::UAdastreaGameInstance()
 void UAdastreaGameInstance::Init()
 {
 	Super::Init();
-	
+
 	InitializeGameSystems();
 }
 

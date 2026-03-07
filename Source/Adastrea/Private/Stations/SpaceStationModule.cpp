@@ -6,7 +6,7 @@
 ASpaceStationModule::ASpaceStationModule()
 {
     PrimaryActorTick.bCanEverTick = false;
-    
+
     // Create static mesh component as root
     MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ModuleMesh"));
     RootComponent = MeshComponent;
@@ -23,7 +23,7 @@ ASpaceStationModule::ASpaceStationModule()
     ModulePower = 0.0f;
     ModuleGroup = EStationModuleGroup::Other;
     // REMOVED: ModuleFaction - faction system removed per Trade Simulator MVP
-    
+
     // Initialize health/integrity values
     CurrentModuleIntegrity = 1000.0f;  // Modules are less durable than full stations
     MaxModuleIntegrity = 1000.0f;
@@ -56,7 +56,7 @@ float ASpaceStationModule::ApplyDamage_Implementation(float Damage, EDamageType 
         CurrentModuleIntegrity = 0.0f;
         bIsDestroyed = true;
         UE_LOG(LogAdastreaStations, Warning, TEXT("Module %s has been destroyed!"), *GetName());
-        
+
         // TODO: Trigger module destruction effects
         // - Disable module functionality
         // - Spawn debris
@@ -124,7 +124,7 @@ int32 ASpaceStationModule::GetTargetPriority_Implementation() const
     // Module priority depends on type
     // Strategic modules (power, shields) have higher priority
     int32 Priority = 30;  // Base priority for modules
-    
+
     switch (ModuleGroup)
     {
         case EStationModuleGroup::Power:
@@ -148,7 +148,7 @@ int32 ASpaceStationModule::GetTargetPriority_Implementation() const
             Priority = 30;
             break;
     }
-    
+
     return FMath::Clamp(Priority, 0, 100);
 }
 
@@ -198,7 +198,7 @@ bool ASpaceStationModule::IsHostileToActor_Implementation(AActor* Observer) cons
     // REMOVED: Faction-based hostility checks
     // MVP Trade Simulator doesn't have combat or faction relationships
     // All entities are neutral for trading purposes
-    
+
     // Default to non-hostile
     return false;
 }

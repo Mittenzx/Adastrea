@@ -165,13 +165,13 @@ if (AAdastreaPlayerController* PC = Cast<AAdastreaPlayerController>(GetControlle
 {
     // Toggle menu
     PC->ToggleMainMenu();
-    
+
     // Or check if menu is open
     if (PC->IsMainMenuOpen())
     {
         // Menu is currently displayed
     }
-    
+
     // Get the menu widget
     UUserWidget* MenuWidget = PC->GetMainMenuWidget();
 }

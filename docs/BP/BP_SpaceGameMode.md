@@ -2,9 +2,9 @@
 
 > **Main game mode that controls game rules, economy, faction systems, and player spawning**
 
-**Blueprint Type**: Game Mode  
-**Parent Class**: `AdastreaGameMode` (C++)  
-**Location**: `Content/Blueprints/GameModes/BP_SpaceGameMode.uasset`  
+**Blueprint Type**: Game Mode
+**Parent Class**: `AdastreaGameMode` (C++)
+**Location**: `Content/Blueprints/GameModes/BP_SpaceGameMode.uasset`
 **Priority**: ⚠️ **CRITICAL** - Game won't start without this
 
 ---
@@ -449,6 +449,6 @@ For Trade Simulator MVP, this Game Mode must:
 
 ---
 
-**Last Updated**: December 30, 2025  
-**Status**: Essential for MVP  
+**Last Updated**: December 30, 2025
+**Status**: Essential for MVP
 **Difficulty**: ⭐⭐ Intermediate

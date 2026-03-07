@@ -275,6 +275,6 @@ If you encounter issues:
 
 ---
 
-**Estimated Setup Time**: 5 minutes  
-**Difficulty**: Beginner  
+**Estimated Setup Time**: 5 minutes
+**Difficulty**: Beginner
 **Required Skills**: Basic Blueprint knowledge, UI design

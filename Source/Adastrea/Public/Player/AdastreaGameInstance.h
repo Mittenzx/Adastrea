@@ -8,27 +8,27 @@
 
 /**
  * Game Instance for Adastrea
- * 
+ *
  * This class maintains game-wide state that persists across level transitions
  * and manages core systems that need to exist throughout the game session.
- * 
+ *
  * Key Responsibilities:
  * - Managing save/load operations for player progress
  * - Storing persistent player data (credits, reputation, inventory)
  * - Managing global economy and market conditions
  * - Handling game settings and configuration
- * 
+ *
  * Game Instance Lifecycle:
  * - Created when the game starts, before any level loads
  * - Persists across all level transitions
  * - Destroyed only when the game closes
- * 
+ *
  * Usage:
  * - Access via UGameplayStatics::GetGameInstance()
  * - Store data that needs to survive level changes
  * - Initialize managers and subsystems in Init()
  * - Create Blueprints derived from this class for project-specific state
- * 
+ *
  * Integration Points:
  * - Trading system for market state and economy
  * - Save/load system for persistence

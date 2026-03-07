@@ -313,7 +313,7 @@ Test Mode is part of the Adastrea project and follows the same MIT License. See 
 
 ---
 
-**Document Maintainer**: Development Team  
-**Last Updated**: 2025-11-05  
-**Documentation Version**: 1.0  
+**Document Maintainer**: Development Team
+**Last Updated**: 2025-11-05
+**Documentation Version**: 1.0
 **For**: Adastrea - Open World Space Flight Game

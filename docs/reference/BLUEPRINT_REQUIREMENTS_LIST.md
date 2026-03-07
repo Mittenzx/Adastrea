@@ -2,8 +2,8 @@
 
 > **Comprehensive list of user-created Blueprints needed in the Unreal Engine Editor to make Adastrea functional and playable**
 
-**Last Updated**: November 16, 2025  
-**For Version**: 1.0.0-alpha  
+**Last Updated**: November 16, 2025
+**For Version**: 1.0.0-alpha
 **Target Engine**: Unreal Engine 5.6
 
 **⭐ New to Blueprints?** Start with [BLUEPRINT_GUIDE_FOR_BEGINNERS.md](BLUEPRINT_GUIDE_FOR_BEGINNERS.md) - it explains everything from scratch!

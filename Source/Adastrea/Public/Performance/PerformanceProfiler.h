@@ -8,7 +8,7 @@
 
 /**
  * Performance metrics structure
- * 
+ *
  * Note: Currently functional metrics are FPS, FrameTimeMS, MemoryUsedMB, and VisibleActors.
  * Metrics requiring engine stats APIs (GameThreadTimeMS, RenderThreadTimeMS, GPUTimeMS, DrawCalls)
  * are placeholders and will always be zero in this implementation.
@@ -65,15 +65,15 @@ struct FPerformanceMetrics
 
 /**
  * Performance Profiler Subsystem for tracking game performance
- * 
+ *
  * This subsystem provides real-time performance monitoring and metrics
  * for optimization purposes.
- * 
+ *
  * Usage:
  * 1. Access via UGameInstance::GetSubsystem<UPerformanceProfiler>()
  * 2. Call GetCurrentMetrics to get performance data
  * 3. Use for debugging and optimization
- * 
+ *
  * Example:
  * - Enable profiling during development
  * - Display FPS and frame time on HUD

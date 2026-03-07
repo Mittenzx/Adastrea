@@ -124,7 +124,7 @@ class IPCServer:
         # ... existing init code ...
         self.rag = DirectorRAG()
         self.planner = TaskPlanner()
-    
+
     def _handle_query(self, data: str) -> Dict[str, Any]:
         # Use actual RAG system
         result = self.rag.query(data)

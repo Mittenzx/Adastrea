@@ -12,24 +12,24 @@ class ASpaceStationModule;
 
 /**
  * Station Build Preview - Actor for showing module placement preview
- * 
+ *
  * This actor displays a preview of where a module will be placed in the
  * station editor. It shows the module's mesh with material overrides to
  * indicate valid (green) or invalid (red) placement positions.
- * 
+ *
  * Features:
  * - Dynamic mesh display based on selected module
  * - Material color coding for placement validity
  * - Position and rotation preview
  * - Show/hide functionality
- * 
+ *
  * Usage:
  * 1. Spawn this actor when entering station edit mode
  * 2. Call SetPreviewModule() to set the module being previewed
  * 3. Call UpdatePosition() as the player moves the cursor
  * 4. Call SetValid() to update the validity visual
  * 5. Call Hide() when not placing a module
- * 
+ *
  * @see UStationEditorManager
  */
 UCLASS(BlueprintType)

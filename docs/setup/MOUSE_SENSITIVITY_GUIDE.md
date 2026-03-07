@@ -163,6 +163,6 @@ If you have suggestions for default sensitivity values or additional control opt
 
 ---
 
-**Last Updated**: 2026-01-04  
-**Version**: 1.0  
+**Last Updated**: 2026-01-04
+**Version**: 1.0
 **Related Issue**: Mouse controls vertical sensitivity too low

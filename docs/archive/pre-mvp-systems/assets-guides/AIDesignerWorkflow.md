@@ -19,20 +19,20 @@ This guide walks you through the entire process of creating and implementing AI 
 
 ### What You Can Do (Without C++)
 
-✅ **Create Factions** - Design political/military organizations with unique traits and priorities  
-✅ **Create Personnel** - Design individual characters with personalities and skills  
-✅ **Create Ways** - Design economic guilds and trade networks (see [Way System Guide](WaySystemGuide.md))  
-✅ **Configure AI Behaviors** - Set priorities, relationships, and decision patterns  
-✅ **Customize Logic** - Override specific behaviors in Blueprint visual scripting  
-✅ **Test and Iterate** - See AI in action and refine behavior  
+✅ **Create Factions** - Design political/military organizations with unique traits and priorities
+✅ **Create Personnel** - Design individual characters with personalities and skills
+✅ **Create Ways** - Design economic guilds and trade networks (see [Way System Guide](WaySystemGuide.md))
+✅ **Configure AI Behaviors** - Set priorities, relationships, and decision patterns
+✅ **Customize Logic** - Override specific behaviors in Blueprint visual scripting
+✅ **Test and Iterate** - See AI in action and refine behavior
 
 ### What's Already Done (In C++)
 
-✅ Core AI systems and update loops  
-✅ Default behaviors for all AI types  
-✅ Data structures and properties  
-✅ Blueprint hooks and events  
-✅ Debug visualization  
+✅ Core AI systems and update loops
+✅ Default behaviors for all AI types
+✅ Data structures and properties
+✅ Blueprint hooks and events
+✅ Debug visualization
 
 ---
 

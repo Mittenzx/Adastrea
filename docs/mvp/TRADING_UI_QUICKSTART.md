@@ -1,8 +1,8 @@
 # Trading UI - Quick Start Guide
 
-**Goal**: Get trading UI working in 30 minutes  
-**Last Updated**: 2026-01-13  
-**Difficulty**: Easy  
+**Goal**: Get trading UI working in 30 minutes
+**Last Updated**: 2026-01-13
+**Difficulty**: Easy
 **Prerequisites**: Unreal Editor open with Adastrea project
 
 ---
@@ -125,7 +125,7 @@ By the end of this guide (30 minutes):
    - Max Stock: 1000
    - Supply Level: 1.0
    - Demand Level: 1.0
-   
+
    Entry 1:
    - Trade Item: DA_TradeItem_Food
    - Current Stock: 500
@@ -268,7 +268,7 @@ void ToggleBuySellView()
 
 ```cpp
 OnMarketInventoryUpdated()     // Update item list
-OnCartUpdated()                // Update cart display  
+OnCartUpdated()                // Update cart display
 OnCreditsUpdated(Credits)      // Update credits text
 OnTradeCompleted(Success, Msg) // Show result
 ```
@@ -290,6 +290,6 @@ Now follow the full guide for polish and features.
 
 ---
 
-**Time**: 30 minutes  
-**Difficulty**: Easy  
+**Time**: 30 minutes
+**Difficulty**: Easy
 **Next**: TRADING_UI_BLUEPRINT_GUIDE.md for full implementation

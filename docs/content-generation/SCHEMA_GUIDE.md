@@ -244,33 +244,33 @@ Beyond JSON Schema, you can add custom validation in `SchemaValidator.py`.
 Edit the `apply_custom_validation()` method:
 
 ```python
-def apply_custom_validation(self, schema_name: str, data: Dict[str, Any], 
+def apply_custom_validation(self, schema_name: str, data: Dict[str, Any],
                            source_name: str) -> List[str]:
     """Apply custom validation rules beyond JSON Schema"""
     errors = []
-    
+
     if schema_name == "spaceship":
         errors.extend(self._validate_spaceship_custom(data, source_name))
-    
+
     return errors
 
-def _validate_spaceship_custom(self, data: Dict[str, Any], 
+def _validate_spaceship_custom(self, data: Dict[str, Any],
                                source_name: str) -> List[str]:
     """Custom validation rules for spaceship data"""
     errors = []
-    
+
     # Example: Validate crew requirements
     if 'CoreStats' in data:
         core = data['CoreStats']
         crew_min = core.get('CrewRequired', 0)
         crew_max = core.get('MaxCrew', 0)
-        
+
         if crew_min > crew_max:
             errors.append(
                 f"{source_name}: CrewRequired ({crew_min}) "
                 f"cannot be greater than MaxCrew ({crew_max})"
             )
-    
+
     return errors
 ```
 

@@ -2,8 +2,8 @@
 
 > **Your structured journey to mastering Blueprint development in Adastrea**
 
-**Last Updated**: January 17, 2026  
-**Purpose**: Guided learning path for Blueprint development  
+**Last Updated**: January 17, 2026
+**Purpose**: Guided learning path for Blueprint development
 **Audience**: Beginners to intermediate developers
 
 ---
@@ -388,17 +388,17 @@ After completing sections, consider:
 
 ### Casual Pace (2-3 hours/week)
 
-**Week 1**: Blueprint Fundamentals (Level 1)  
-**Week 2-3**: Trading UI Widget  
-**Week 4-5**: Trading Ship Blueprint  
-**Week 6**: Docking & Cargo Systems  
+**Week 1**: Blueprint Fundamentals (Level 1)
+**Week 2-3**: Trading UI Widget
+**Week 4-5**: Trading Ship Blueprint
+**Week 6**: Docking & Cargo Systems
 **Week 7+**: Advanced topics
 
 ### Intensive Pace (10+ hours/week)
 
-**Week 1**: Complete Level 1 & Start Level 2  
-**Week 2**: Complete Level 2  
-**Week 3-4**: Level 3 Advanced Systems  
+**Week 1**: Complete Level 1 & Start Level 2
+**Week 2**: Complete Level 2
+**Week 3-4**: Level 3 Advanced Systems
 **Week 5+**: Level 4 Mastery & Contribution
 
 ---

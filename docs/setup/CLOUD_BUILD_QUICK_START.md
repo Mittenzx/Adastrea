@@ -59,18 +59,18 @@ For Adastrea (open-source, GitHub-hosted), use **GitHub Actions with Docker**:
 Step 1: Link Epic Games account to GitHub
   → Visit: https://www.epicgames.com/account/connections
   → Connect your GitHub account to Epic Games account
-  
+
 Step 2: Accept Epic Games GitHub organization invitation
   → Check GitHub notifications and email for invitation
   → Visit: https://github.com/EpicGames
   → Accept the organization membership invitation
   → Verify you appear in the members list
   → NOTE: This step is REQUIRED to access containers
-  
+
 Step 3: Review Epic's container documentation
   → Visit: https://dev.epicgames.com/documentation/en-us/unreal-engine/quick-start-guide-for-using-container-images-in-unreal-engine
   → Understand that container usage is covered by the Unreal Engine EULA (no separate acceptance needed)
-  
+
 Step 4: Wait for access to propagate (if needed)
   → Access may take a few hours to become active
   → Some accounts require manual Epic approval (24-48 hours)
@@ -80,7 +80,7 @@ Step 4: Wait for access to propagate (if needed)
 
 #### 2. Create Workflow File (10 minutes)
 
-> **Note:** There is an example workflow file in the repository: `.github/workflows/ue-build-example.yml.disabled`.  
+> **Note:** There is an example workflow file in the repository: `.github/workflows/ue-build-example.yml.disabled`.
 > You can either:
 > - Copy and rename `.github/workflows/ue-build-example.yml.disabled` to `.github/workflows/ue-build-example.yml` (removing the `.disabled` extension), **or**
 > - Create a new file `.github/workflows/ue-build.yml` and paste the following YAML.
@@ -103,23 +103,23 @@ on:
 jobs:
   build-test:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Detect UE Version and Validate
         id: detect-version
         run: |
           echo "Project: Adastrea"
-          
+
           # Extract UE version from .uproject file
           UE_VERSION=$(grep -oP '"EngineAssociation":\s*"\K[^"]+' Adastrea.uproject)
           echo "UE Version: $UE_VERSION"
           echo "version=$UE_VERSION" >> $GITHUB_OUTPUT
-          
+
           ls -la *.uproject
-          
+
       - name: Validate Project Structure
         run: |
           test -f Adastrea.uproject || exit 1
@@ -148,7 +148,7 @@ Expand workflow after test succeeds:
 ```yaml
       - name: Login to GHCR
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-        
+
       - name: Pull UE Container
         env:
           UE_VERSION: ${{ steps.detect-version.outputs.version }}
@@ -338,6 +338,6 @@ This progressive approach minimizes upfront investment while enabling rapid iter
 
 ---
 
-**Quick Start Version:** 1.1  
-**Last Updated:** 2025-11-24  
+**Quick Start Version:** 1.1
+**Last Updated:** 2025-11-24
 **See Also:** [CLOUD_BUILD_SERVICES.md](./CLOUD_BUILD_SERVICES.md) for comprehensive documentation

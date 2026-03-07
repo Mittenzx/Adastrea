@@ -8,7 +8,7 @@ Description: |
   Advanced quantum computing processor used in high-end
   ship systems, AI cores, and research facilities.
   Rare and valuable technology.
-  
+
 Category: Technology
 
 # ====================
@@ -19,7 +19,7 @@ PriceVolatility:
   VolatilityMultiplier: 2.5
   MinPriceDeviation: 0.4
   MaxPriceDeviation: 3.0
-  
+
 bAffectedBySupplyDemand: true
 bAffectedByMarketEvents: true
 
@@ -34,7 +34,7 @@ TradeRestrictions:
     - "SolarisUnion"
     - "IroncladConsortium"
   MinReputationRequired: 25
-  
+
 ContrabandFineMultiplier: 2.0
 
 # ====================

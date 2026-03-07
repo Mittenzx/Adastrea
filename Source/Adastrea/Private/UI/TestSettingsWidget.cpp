@@ -46,17 +46,17 @@ UTestSettingsWidget::UTestSettingsWidget(const FObjectInitializer& ObjectInitial
 void UTestSettingsWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	
+
 	// Initialize the settings when constructed
 	InitializeTestSettings();
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("TestSettingsWidget: Widget constructed"));
 }
 
 void UTestSettingsWidget::NativeDestruct()
 {
 	Super::NativeDestruct();
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("TestSettingsWidget: Widget destructed"));
 }
 
@@ -64,24 +64,24 @@ void UTestSettingsWidget::InitializeTestSettings_Implementation()
 {
 	// Set widget as visible
 	bIsSettingsVisible = true;
-	
+
 	// Show mouse cursor for menu interaction
 	if (APlayerController* PC = GetOwningPlayer())
 	{
 		PC->bShowMouseCursor = true;
 		PC->bEnableClickEvents = true;
 		PC->bEnableMouseOverEvents = true;
-		
+
 		// Set input mode to UI only
 		FInputModeUIOnly InputMode;
 		InputMode.SetWidgetToFocus(TakeWidget());
 		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 		PC->SetInputMode(InputMode);
 	}
-	
+
 	// Load default settings
 	LoadDefaultSettings();
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("TestSettingsWidget: Settings initialized"));
 	UE_LOG(LogAdastrea, Log, TEXT("  - Ship Type: %s"), *SelectedShipType);
 	UE_LOG(LogAdastrea, Log, TEXT("  - Difficulty: %s"), *SelectedDifficulty);
@@ -92,10 +92,10 @@ void UTestSettingsWidget::InitializeTestSettings_Implementation()
 void UTestSettingsWidget::OnContinueClicked_Implementation()
 {
 	UE_LOG(LogAdastrea, Log, TEXT("TestSettingsWidget: Continue clicked"));
-	
+
 	// Apply settings before continuing
 	ApplySettings();
-	
+
 	// Notify the game mode that test settings are complete
 	AGameModeBase* GameMode = UGameplayStatics::GetGameMode(this);
 	if (GameMode)
@@ -114,7 +114,7 @@ void UTestSettingsWidget::OnContinueClicked_Implementation()
 			UE_LOG(LogAdastrea, Warning, TEXT("TestSettingsWidget: GameMode does not have OnTestSettingsContinue function"));
 		}
 	}
-	
+
 	// Fallback: Transition to main menu or directly to game
 	if (bShowMainMenuAfter)
 	{
@@ -130,7 +130,7 @@ void UTestSettingsWidget::OnContinueClicked_Implementation()
 void UTestSettingsWidget::OnResetClicked_Implementation()
 {
 	UE_LOG(LogAdastrea, Log, TEXT("TestSettingsWidget: Reset clicked"));
-	
+
 	// Reset to default settings
 	LoadDefaultSettings();
 }
@@ -151,7 +151,7 @@ void UTestSettingsWidget::OnDebugModeChanged_Implementation(const FString& Selec
 {
 	SelectedDebugMode = SelectedMode;
 	UE_LOG(LogAdastrea, Log, TEXT("TestSettingsWidget: Debug mode changed to: %s (index: %d)"), *SelectedMode, SelectionIndex);
-	
+
 	// Apply debug mode changes immediately if needed
 	// This can be extended in Blueprint or by game instance
 }
@@ -165,51 +165,51 @@ void UTestSettingsWidget::SetAutoSpawnEnabled(bool bEnabled)
 void UTestSettingsWidget::TransitionToMainMenu_Implementation()
 {
 	UE_LOG(LogAdastrea, Log, TEXT("TestSettingsWidget: Transitioning to main menu"));
-	
+
 	// Remove this widget from viewport
 	RemoveFromParent();
-	
+
 	// Create and display main menu widget
 	// This can be overridden in Blueprint to use a specific main menu widget class
 	// For now, we just log the transition - Blueprint implementation will handle the actual widget creation
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("TestSettingsWidget: Override this function in Blueprint to create main menu widget"));
 }
 
 void UTestSettingsWidget::ApplySettings_Implementation()
 {
 	UE_LOG(LogAdastrea, Log, TEXT("TestSettingsWidget: Applying settings..."));
-	
+
 	// Store settings in a way that can be accessed by GameMode or PlayerController
 	// This can be extended to store in GameInstance, SaveGame, or custom settings object
-	
+
 	// For now, we just log the settings - they can be read by other systems via getter functions
 	UE_LOG(LogAdastrea, Log, TEXT("  Applied Settings:"));
 	UE_LOG(LogAdastrea, Log, TEXT("    - Ship Type: %s"), *SelectedShipType);
 	UE_LOG(LogAdastrea, Log, TEXT("    - Difficulty: %s"), *SelectedDifficulty);
 	UE_LOG(LogAdastrea, Log, TEXT("    - Debug Mode: %s"), *SelectedDebugMode);
 	UE_LOG(LogAdastrea, Log, TEXT("    - Auto Spawn: %s"), bAutoSpawnShip ? TEXT("Yes") : TEXT("No"));
-	
+
 	// Blueprint can override this to add custom application logic
 }
 
 void UTestSettingsWidget::LoadDefaultSettings_Implementation()
 {
 	UE_LOG(LogAdastrea, Log, TEXT("TestSettingsWidget: Loading default settings"));
-	
+
 	// Set to default values from available options
 	if (AvailableShipTypes.Num() > 0)
 	{
 		SelectedShipType = AvailableShipTypes[0];
 	}
-	
+
 	// Find "Normal" difficulty or use middle option as fallback
 	if (AvailableDifficulties.Num() > 0)
 	{
 		int32 NormalIndex = AvailableDifficulties.IndexOfByPredicate([](const FString& Difficulty) {
 			return Difficulty.Contains(TEXT("Normal"));
 		});
-		
+
 		if (NormalIndex != INDEX_NONE)
 		{
 			SelectedDifficulty = AvailableDifficulties[NormalIndex];
@@ -223,14 +223,14 @@ void UTestSettingsWidget::LoadDefaultSettings_Implementation()
 			SelectedDifficulty = AvailableDifficulties[0]; // Use first as fallback
 		}
 	}
-	
+
 	if (AvailableDebugModes.Num() > 0)
 	{
 		SelectedDebugMode = AvailableDebugModes[0]; // "None"
 	}
-	
+
 	bAutoSpawnShip = true;
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("  Default settings loaded:"));
 	UE_LOG(LogAdastrea, Log, TEXT("    - Ship Type: %s"), *SelectedShipType);
 	UE_LOG(LogAdastrea, Log, TEXT("    - Difficulty: %s"), *SelectedDifficulty);

@@ -11,7 +11,7 @@ UInventoryComponent::UInventoryComponent()
 void UInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	// Initialize slots
 	Slots.SetNum(MaxSlots);
 }
@@ -41,7 +41,7 @@ int32 UInventoryComponent::AddItem(UInventoryItemDataAsset* Item, int32 Quantity
 			{
 				int32 SpaceInSlot = Item->MaxStackSize - Slots[i].Quantity;
 				int32 AmountToAdd = FMath::Min(RemainingToAdd, SpaceInSlot);
-				
+
 				if (AmountToAdd > 0)
 				{
 					Slots[i].Quantity += AmountToAdd;
@@ -123,9 +123,9 @@ int32 UInventoryComponent::RemoveItemFromSlot(int32 SlotIndex, int32 Quantity)
 
 	int32 AmountToRemove = FMath::Min(Quantity, Slots[SlotIndex].Quantity);
 	UInventoryItemDataAsset* RemovedItem = Slots[SlotIndex].Item;
-	
+
 	Slots[SlotIndex].Quantity -= AmountToRemove;
-	
+
 	if (Slots[SlotIndex].Quantity <= 0)
 	{
 		Slots[SlotIndex].Item = nullptr;
@@ -267,7 +267,7 @@ bool UInventoryComponent::UseItem(int32 SlotIndex)
 	// Remove one item if it's consumable
 	// Blueprint implementations can override this behavior
 	RemoveItemFromSlot(SlotIndex, 1);
-	
+
 	return true;
 }
 

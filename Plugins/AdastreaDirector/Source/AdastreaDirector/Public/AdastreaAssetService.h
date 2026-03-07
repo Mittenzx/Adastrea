@@ -14,7 +14,7 @@ struct FAssetInfo
 	FString Path;
 	FString Class;
 	int64 DiskSize;
-	
+
 	TSharedPtr<FJsonObject> ToJson() const;
 };
 

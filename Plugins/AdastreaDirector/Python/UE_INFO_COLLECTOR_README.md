@@ -369,7 +369,7 @@ import json
 
 with open("info_before.json") as f:
     before = json.load(f)
-    
+
 with open("info_after.json") as f:
     after = json.load(f)
 

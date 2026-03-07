@@ -136,7 +136,7 @@ float UAdastreaFunctionLibrary::CalculateDamageAfterArmor(float RawDamage, float
     // Higher armor = more damage reduction
     // Different damage types could have different penetration in the future
     float ArmorReduction = ArmorValue / (ArmorValue + 100.0f);
-    
+
     // TODO: Apply damage type modifiers
     // - Kinetic: standard penetration
     // - Energy: bypasses some armor
@@ -273,7 +273,7 @@ FString UAdastreaFunctionLibrary::FormatLargeNumberFloat(float Number, int32 Dec
 {
     bool bIsNegative = Number < 0.0f;
     float AbsNumber = FMath::Abs(Number);
-    
+
     // Split into integer and decimal parts
     int32 IntegerPart = FMath::FloorToInt(AbsNumber);
     float DecimalPart = AbsNumber - IntegerPart;
@@ -302,7 +302,7 @@ FString UAdastreaFunctionLibrary::FormatLargeNumberFloat(float Number, int32 Dec
 FString UAdastreaFunctionLibrary::FormatPercentage(float Percentage, int32 DecimalPlaces)
 {
     float PercentValue = Percentage * 100.0f;
-    
+
     if (DecimalPlaces == 0)
     {
         return FString::Printf(TEXT("%d%%"), FMath::RoundToInt(PercentValue));
@@ -317,7 +317,7 @@ FString UAdastreaFunctionLibrary::FormatPercentage(float Percentage, int32 Decim
 FString UAdastreaFunctionLibrary::FormatDuration(float Seconds)
 {
     int32 TotalSeconds = FMath::RoundToInt(Seconds);
-    
+
     int32 Hours = TotalSeconds / 3600;
     int32 Minutes = (TotalSeconds % 3600) / 60;
     int32 Secs = TotalSeconds % 60;

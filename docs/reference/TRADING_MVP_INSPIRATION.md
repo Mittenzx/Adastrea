@@ -1,7 +1,7 @@
 # Trading MVP Inspiration - Freelancer Simple Model
 
-**Purpose**: Quick reference for Trade Simulator MVP developers (Week 1-12 ONLY)  
-**Last Updated**: 2025-12-25  
+**Purpose**: Quick reference for Trade Simulator MVP developers (Week 1-12 ONLY)
+**Last Updated**: 2025-12-25
 **Phase**: Trade Simulator MVP Development
 
 ---
@@ -42,12 +42,12 @@ Repeat with bigger margins
 
 Freelancer (2003) is the **perfect model** for the MVP because:
 
-✅ **Simple to understand**: Buy low, sell high  
-✅ **Quick feedback loop**: 3-5 minutes per trade run  
-✅ **Clear progression**: Bigger cargo = bigger profits  
-✅ **Regional variety**: Different areas have different prices  
-✅ **Risk/reward balance**: Safe routes vs. dangerous routes  
-✅ **Accessible**: Players understand in 30 seconds  
+✅ **Simple to understand**: Buy low, sell high
+✅ **Quick feedback loop**: 3-5 minutes per trade run
+✅ **Clear progression**: Bigger cargo = bigger profits
+✅ **Regional variety**: Different areas have different prices
+✅ **Risk/reward balance**: Safe routes vs. dangerous routes
+✅ **Accessible**: Players understand in 30 seconds
 
 **Complexity Rating**: ⭐⭐⭐ (3/5) - Perfect for MVP
 
@@ -59,7 +59,7 @@ Freelancer (2003) is the **perfect model** for the MVP because:
 
 **Minimum Viable Trade Loop**:
 
-1. **1 Ship**: 
+1. **1 Ship**:
    - 10 cargo space
    - Basic flight controls
    - Docking ability
@@ -142,7 +142,7 @@ Agricultural Station:
     Water: 0.8x  # They produce it, cheap here
     Food: 0.9x
     Technology: 1.3x  # They need it, expensive here
-    
+
 Industrial Station:
   produces: [Metals, Components, Machinery]
   imports: [Water, Food, Fuel]
@@ -151,14 +151,14 @@ Industrial Station:
     Components: 0.8x
     Water: 1.2x
     Food: 1.3x
-    
+
 Luxury Station:
   produces: [Art, Entertainment, Luxury_Goods]
   imports: [All_Basic_Goods]
   price_modifiers:
     Luxury_Goods: 0.9x
     All_Basic: 1.4x  # Everything expensive
-    
+
 Research Station:
   produces: [Technology, Medicine, Data]
   imports: [Components, Rare_Materials]
@@ -166,7 +166,7 @@ Research Station:
     Technology: 0.8x
     Medicine: 0.85x
     Components: 1.3x
-    
+
 Trade Hub:
   produces: Nothing
   imports: Everything
@@ -181,7 +181,7 @@ Trade Hub:
 float GetPrice(FName ItemID, FName StationID, bool bBuying) {
     float BasePrice = GetBasePrice(ItemID, StationID);
     float SupplyFactor = GetSimpleSupplyFactor(ItemID, StationID);
-    
+
     if (bBuying) {
         return BasePrice * SupplyFactor; // Higher when low stock
     } else {
@@ -192,7 +192,7 @@ float GetPrice(FName ItemID, FName StationID, bool bBuying) {
 float GetSimpleSupplyFactor(FName ItemID, FName StationID) {
     int32 CurrentStock = GetStockLevel(ItemID, StationID);
     int32 TargetStock = 100; // Balanced inventory
-    
+
     // Range: 0.5x to 1.5x
     return 0.5f + (TargetStock - CurrentStock) / 200.0f;
 }
@@ -318,7 +318,7 @@ Buy here, sell there, make 5 credits profit.
 
 **Bad**:
 ```
-Dynamic pricing based on supply factor, demand factor, 
+Dynamic pricing based on supply factor, demand factor,
 consumption rate, production rate, faction modifiers,
 event multipliers, and player reputation...
 ```
@@ -412,7 +412,7 @@ Day 5: "I'm a trading tycoon with the best ship"
 
 ### ❌ Don't Add These (Yet)
 
-1. **Complex Economy Simulation**: 
+1. **Complex Economy Simulation**:
    - "But what if we simulate consumption rates?"
    - NO. Simple price lookup table for Week 1-4.
 
@@ -532,13 +532,13 @@ ProfitCounter->AnimateIncrease();
 
 **One polished gameplay loop beats ten half-finished systems.**
 
-Focus on making "buy low, sell high" fun in 4 weeks.  
+Focus on making "buy low, sell high" fun in 4 weeks.
 Everything else comes after validation.
 
 Build it. Ship it. Validate it. Then iterate.
 
 ---
 
-**Last Updated**: 2025-12-25  
-**Phase**: Trade Simulator MVP (Week 1-12)  
+**Last Updated**: 2025-12-25
+**Phase**: Trade Simulator MVP (Week 1-12)
 **Status**: Ready for Week 1 implementation

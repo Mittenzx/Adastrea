@@ -1,6 +1,6 @@
 # Adastrea Plugin Quick Reference
 
-**Quick lookup guide for plugin recommendations**  
+**Quick lookup guide for plugin recommendations**
 **For detailed analysis, see: [PLUGIN_RECOMMENDATIONS.md](PLUGIN_RECOMMENDATIONS.md)**
 
 ---
@@ -161,5 +161,5 @@ Avoid these for now:
 
 ---
 
-**Last Updated:** December 13, 2025  
+**Last Updated:** December 13, 2025
 **Version:** 1.0

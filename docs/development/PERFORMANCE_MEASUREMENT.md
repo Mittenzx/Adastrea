@@ -1,7 +1,7 @@
 # Performance Measurement Infrastructure
 
-**Purpose**: Add performance tracking to address Anti-Pattern #11 (No Profiling/Metrics)  
-**Status**: Implementation Guide  
+**Purpose**: Add performance tracking to address Anti-Pattern #11 (No Profiling/Metrics)
+**Status**: Implementation Guide
 **Last Updated**: 2025-12-24
 
 ---
@@ -19,22 +19,22 @@
 ## 📊 Required Metrics (MVP)
 
 ### 1. Frame Rate (FPS)
-**Target**: 60 FPS on mid-range PC  
-**Minimum**: 30 FPS acceptable for prototype  
+**Target**: 60 FPS on mid-range PC
+**Minimum**: 30 FPS acceptable for prototype
 **Measure**: Every build, every playtest
 
 ### 2. Memory Usage
-**Target**: <2 GB RAM usage  
-**Maximum**: <4 GB RAM  
+**Target**: <2 GB RAM usage
+**Maximum**: <4 GB RAM
 **Measure**: At startup, during gameplay, peak usage
 
 ### 3. Load Times
-**Target**: <30 seconds startup  
-**Maximum**: <60 seconds  
+**Target**: <30 seconds startup
+**Maximum**: <60 seconds
 **Measure**: From launch to playable
 
 ### 4. Frame Time Budget
-**Target**: <16.6ms per frame (60 FPS)  
+**Target**: <16.6ms per frame (60 FPS)
 **Breakdown**:
 - Game logic: <5ms
 - Rendering: <10ms
@@ -71,7 +71,7 @@ protected:
 
 private:
     void UpdatePerformanceMetrics(float DeltaTime);
-    
+
     // Rolling average for smoother display
     TArray<float> FrameTimeSamples;
     int32 MaxSamples = 60;
@@ -165,7 +165,7 @@ void AAdastreaPlayerController::DumpPerformanceReport()
     UE_LOG(LogTemp, Display, TEXT("FPS: %.2f"), CurrentFPS);
     UE_LOG(LogTemp, Display, TEXT("Frame Time: %.2f ms"), AverageFrameTime);
     UE_LOG(LogTemp, Display, TEXT("Memory: %.2f MB"), MemoryUsageMB);
-    
+
     // Additional profiling
     ConsoleCommand("memreport");
 }
@@ -251,7 +251,7 @@ void UPerformanceTrackingSubsystem::Initialize(FSubsystemCollectionBase& Collect
     // Load performance budgets from config
     GConfig->GetFloat(TEXT("/Script/Adastrea.PerformanceTrackingSubsystem"),
                       TEXT("TargetFPS"), TargetFPS, GGameIni);
-    
+
     UE_LOG(LogTemp, Display, TEXT("Performance Tracking: Target FPS = %.0f"), TargetFPS);
 }
 ```
@@ -425,5 +425,5 @@ This addresses:
 
 ---
 
-**Last Updated**: 2025-12-24  
+**Last Updated**: 2025-12-24
 **Maintained By**: Adastrea MVP Team

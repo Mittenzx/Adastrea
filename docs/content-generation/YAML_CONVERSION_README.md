@@ -5,7 +5,7 @@ This directory contains comprehensive documentation for converting YAML template
 ## 📋 Quick Links
 
 - **[Complete Inventory](YAML_TO_ASSETS_CONVERSION_LIST.md)** - Detailed list of all 161 YAML files
-- **[Quick Reference](YAML_TO_ASSETS_QUICK_REFERENCE.md)** - Summary table and import commands  
+- **[Quick Reference](YAML_TO_ASSETS_QUICK_REFERENCE.md)** - Summary table and import commands
 - **[CSV List](YAML_FILES_LIST.csv)** - Machine-readable format for scripts
 - **[Import Guide](YAML_IMPORT_GUIDE.md)** - How to use the YAMLtoDataAsset.py script
 
@@ -61,7 +61,7 @@ import YAMLtoDataAsset
 # Import all spaceships (24 files)
 YAMLtoDataAsset.batch_import_spaceships()
 
-# Import all personnel (7 files)  
+# Import all personnel (7 files)
 YAMLtoDataAsset.batch_import_personnel()
 ```
 
@@ -189,9 +189,9 @@ While waiting for other systems to be implemented, you can:
 
 ## 📝 Document Information
 
-**Created**: 2025-11-23  
-**Version**: 1.0  
-**Maintained by**: Adastrea Development Team  
+**Created**: 2025-11-23
+**Version**: 1.0
+**Maintained by**: Adastrea Development Team
 **Related Scripts**: YAMLtoDataAsset.py
 
 ## 🤝 Contributing

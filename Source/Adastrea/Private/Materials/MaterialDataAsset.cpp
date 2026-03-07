@@ -38,7 +38,7 @@ float UMaterialDataAsset::GetStorageVolume() const
     // Calculate storage volume based on mass and material density assumptions
     // Base volume calculation: 1kg = 0.001 cubic meters for standard materials
     float BaseVolume = Mass * 0.001f;
-    
+
     // Apply multipliers based on storage type
     switch (StorageType)
     {
@@ -68,7 +68,7 @@ bool UMaterialDataAsset::IsCategory(EMaterialCategory CheckCategory) const
 
 bool UMaterialDataAsset::RequiresSpecialStorage() const
 {
-    return StorageType == EStorageType::Refrigerated 
-        || StorageType == EStorageType::Hazardous 
+    return StorageType == EStorageType::Refrigerated
+        || StorageType == EStorageType::Hazardous
         || StorageType == EStorageType::Gas;
 }

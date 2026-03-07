@@ -11,7 +11,7 @@
 
 /**
  * Blueprint Function Library for Adastrea Director C++ API
- * 
+ *
  * This library provides easy access to all Adastrea Director functionality
  * from Blueprints. It wraps the UEBridge and AssetHelpers classes with
  * more Blueprint-friendly interfaces.

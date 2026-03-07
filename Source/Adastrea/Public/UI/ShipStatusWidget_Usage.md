@@ -179,7 +179,7 @@ if (PC)
 {
     // Toggle the ship status screen
     PC->ToggleShipStatus();
-    
+
     // Check if it's open
     if (PC->IsShipStatusOpen())
     {

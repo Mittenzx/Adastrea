@@ -9,31 +9,31 @@
 
 /**
  * Space Sector Map marker for 200km x 200km open world sectors
- * 
+ *
  * This actor serves as a sector boundary marker for large-scale open world space maps,
  * following X4: Foundations sector sizing conventions. Each sector represents a
  * 200,000m x 200,000m area of space that can be populated with stations, ships,
  * asteroids, and other celestial objects.
- * 
+ *
  * Features:
  * - Editor visualization with billboard component
  * - Blueprint-friendly configuration
  * - Sector boundary helpers
  * - Support for procedural generation workflows
  * - Named sectors for organization
- * 
+ *
  * Usage:
  * 1. Place ASpaceSectorMap actor in your level
  * 2. Set the SectorName to identify this sector
  * 3. Use GetSectorBounds() to query the sector's boundaries
  * 4. Position objects within the sector using helper functions
  * 5. Create multiple sectors to build a connected universe
- * 
+ *
  * Sector Size: 200km x 200km (200,000 x 200,000 Unreal Units)
  * - This matches X4's sector scale for familiar open-world feel
  * - Large enough for diverse content placement
  * - Small enough to maintain reasonable object density
- * 
+ *
  * See Also: Docs/EmptyMapSetup.md for complete map creation workflow
  */
 UCLASS()

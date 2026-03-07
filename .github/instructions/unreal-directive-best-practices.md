@@ -74,16 +74,16 @@ UCLASS(BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class ADASTREA_API UProjectilePoolComponent : public UActorComponent
 {
     GENERATED_BODY()
-    
+
 public:
     UProjectilePoolComponent();
-    
+
     UFUNCTION(BlueprintCallable, Category="Object Pool")
     AProjectile* AcquireProjectile();
-    
+
     UFUNCTION(BlueprintCallable, Category="Object Pool")
     void ReturnProjectile(AProjectile* Projectile);
-    
+
 private:
     UPROPERTY()
     TArray<AProjectile*> PooledProjectiles;
@@ -106,9 +106,9 @@ void InitializeAI()
 {
     // Update at different intervals
     GetWorld()->GetTimerManager().SetTimer(
-        UpdateTimerHandle, 
-        this, 
-        &UMyAI::UpdateLogic, 
+        UpdateTimerHandle,
+        this,
+        &UMyAI::UpdateLogic,
         1.0f,  // Every second
         true   // Loop
     );
@@ -183,7 +183,7 @@ UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Stats")
 float CurrentHealth;
 
 // Editable in editor, Blueprint read access only (preferred for configuration)
-UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement", 
+UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement",
     meta=(ClampMin="0.0", ClampMax="1000.0", UIMin="0.0", UIMax="1000.0"))
 float MaxSpeed;
 
@@ -193,7 +193,7 @@ UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Runtime")
 bool bRuntimeToggle;
 
 // Instance editable only (not default), with tooltip
-UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="Runtime", 
+UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="Runtime",
     meta=(ToolTip="Set per-instance in level"))
 bool bIsActive;
 
@@ -215,7 +215,7 @@ UFUNCTION(BlueprintPure, Category="Stats")
 float GetHealthPercent() const;
 
 // Callable with custom display name
-UFUNCTION(BlueprintCallable, Category="Combat", 
+UFUNCTION(BlueprintCallable, Category="Combat",
     meta=(DisplayName="Apply Damage", CompactNodeTitle="DMG"))
 void DealDamage(float Amount);
 
@@ -247,15 +247,15 @@ class UMyComponent : public UActorComponent
 protected:
     UPROPERTY(EditAnywhere, Category="Config")
     float MaxValue;
-    
+
 public:
     // Blueprint-friendly accessor
     UFUNCTION(BlueprintPure, Category="Stats")
     float GetMaxValue() const { return MaxValue; }
-    
+
     UFUNCTION(BlueprintCallable, Category="Stats")
-    void SetMaxValue(float NewValue) 
-    { 
+    void SetMaxValue(float NewValue)
+    {
         MaxValue = FMath::Clamp(NewValue, 0.0f, 100.0f);
     }
 };
@@ -308,17 +308,17 @@ UCLASS()
 class UShipPrimaryDataAsset : public UPrimaryDataAsset
 {
     GENERATED_BODY()
-    
+
 public:
     // Override to provide unique ID
     virtual FPrimaryAssetId GetPrimaryAssetId() const override
     {
         return FPrimaryAssetId("Ship", GetFName());
     }
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ship")
     FText ShipName;
-    
+
     // ... other properties
 };
 ```
@@ -438,7 +438,7 @@ void DestroyObjectsGradually()
         ObjectsToDestroy[0]->Destroy();
         ObjectsToDestroy.RemoveAt(0);
     }
-    
+
     if (ObjectsToDestroy.Num() > 0)
     {
         // Schedule next batch
@@ -682,16 +682,16 @@ UCLASS(BlueprintType)
 class USpaceshipDataAsset : public UDataAsset
 {
     GENERATED_BODY()
-    
+
 public:
     // Data configured by designers in editor
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat")
     float MaxHealth;
-    
+
     // Complex calculation in C++ for performance
     UFUNCTION(BlueprintCallable, BlueprintPure, Category="Combat")
     float CalculateCombatRating() const;
-    
+
     // Extensible behavior via BlueprintNativeEvent
     UFUNCTION(BlueprintNativeEvent, Category="Combat")
     void OnDamageReceived(float Damage);
@@ -708,21 +708,21 @@ class ASpaceship : public APawn
     // Pure functions for queries (no side effects)
     UFUNCTION(BlueprintPure, Category="Ship Status")
     float GetHealthPercent() const;
-    
+
     UFUNCTION(BlueprintPure, Category="Ship Status")
     bool IsAlive() const;
-    
+
     // Callable functions for actions
     UFUNCTION(BlueprintCallable, Category="Ship Control")
     void SetThrottle(float Percent);
-    
+
     UFUNCTION(BlueprintCallable, Category="Combat")
     void FireWeapon(int32 WeaponIndex);
-    
+
     // Events for Blueprint to implement
     UFUNCTION(BlueprintImplementableEvent, Category="Events")
     void OnHealthChanged(float NewHealth, float OldHealth);
-    
+
     // Native events for hybrid implementation
     UFUNCTION(BlueprintNativeEvent, Category="AI")
     void OnTargetAcquired(AActor* Target);
@@ -785,7 +785,7 @@ void UseDataAsset()
         UE_LOG(LogAdastrea, Warning, TEXT("ShipDataAsset is null"));
         return;
     }
-    
+
     float Speed = ShipDataAsset->GetMaxSpeed();
 }
 
@@ -797,7 +797,7 @@ void UseActor()
         UE_LOG(LogAdastrea, Warning, TEXT("TargetActor is invalid"));
         return;
     }
-    
+
     TargetActor->TakeDamage(10.0f);
 }
 
@@ -819,10 +819,10 @@ void UMyComponent::BeginDestroy()
     {
         GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
     }
-    
+
     // Clear arrays
     CachedActors.Empty();
-    
+
     // Call parent
     Super::BeginDestroy();
 }
@@ -831,12 +831,12 @@ void UMyComponent::BeginDestroy()
 class UMySystem : public UObject
 {
     TUniquePtr<FExpensiveResource> Resource;
-    
+
     void Initialize()
     {
         Resource = MakeUnique<FExpensiveResource>();
     }
-    
+
     // Automatically cleaned up when object destroyed
 };
 ```
@@ -854,10 +854,10 @@ class ASpaceship : public APawn
 {
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
     USpaceshipControlsComponent* ControlsComponent;
-    
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
     UCombatHealthComponent* HealthComponent;
-    
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
     UWeaponComponent* WeaponComponent;
 };
@@ -882,11 +882,11 @@ class UDamageable : public UInterface
 class IDamageable
 {
     GENERATED_BODY()
-    
+
 public:
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Damage")
     void TakeDamage(float Amount, AActor* Instigator);
-    
+
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Damage")
     bool IsAlive() const;
 };
@@ -904,16 +904,16 @@ UCLASS()
 class UAdastreaFunctionLibrary : public UBlueprintFunctionLibrary
 {
     GENERATED_BODY()
-    
+
 public:
     /** Calculate distance between two actors */
     UFUNCTION(BlueprintPure, Category="Adastrea|Utilities")
     static float GetDistanceBetweenActors(AActor* A, AActor* B);
-    
+
     /** Check if actor is in view cone */
     UFUNCTION(BlueprintPure, Category="Adastrea|Utilities")
     static bool IsInViewCone(AActor* Observer, AActor* Target, float ConeAngle);
-    
+
     /** Get all actors of class within radius */
     UFUNCTION(BlueprintCallable, Category="Adastrea|Utilities")
     static TArray<AActor*> GetActorsInRadius(
@@ -1004,7 +1004,7 @@ Source/Adastrea/
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2025-12-08  
-**Based on**: UnrealDirective.com best practices and Epic Games official guidelines  
+**Document Version**: 1.0
+**Last Updated**: 2025-12-08
+**Based on**: UnrealDirective.com best practices and Epic Games official guidelines
 **Maintained by**: Adastrea Development Team

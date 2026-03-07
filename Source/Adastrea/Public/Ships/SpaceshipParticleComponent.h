@@ -32,13 +32,13 @@ enum class ERCSThrusterAxis : uint8
 
 /**
  * Spaceship Particle Component
- * 
+ *
  * Manages all particle effects for spaceship propulsion systems including:
  * - Main engine thrust plumes (throttle-responsive)
  * - RCS thruster puffs for attitude control
  * - Jump drive effects (charge, jump, exit)
  * - Engine damage state visuals
- * 
+ *
  * Usage:
  * - Add component to spaceship Blueprint
  * - Assign particle system templates in editor

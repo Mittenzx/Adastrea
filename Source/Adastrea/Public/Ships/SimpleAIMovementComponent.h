@@ -11,12 +11,12 @@ class UFloatingPawnMovement;
 
 /**
  * Simple AI Movement Component for autonomous ship navigation
- * 
+ *
  * This component provides basic AI movement behavior:
  * - Generates random target locations
  * - Moves ship toward target
  * - Generates new target when arrived
- * 
+ *
  * Usage:
  * - Add this component to any Pawn/Ship Blueprint
  * - Configure movement parameters in editor

@@ -180,16 +180,16 @@ In your game initialization (Blueprint or C++):
 void AMyGameMode::BeginPlay()
 {
     Super::BeginPlay();
-    
+
     // Get the VerseSubsystem
     UVerseSubsystem* VerseSystem = GetGameInstance()->GetSubsystem<UVerseSubsystem>();
-    
+
     // Load your network asset
     UWayNetworkDataAsset* CraftsmenNetwork = LoadObject<UWayNetworkDataAsset>(
-        nullptr, 
+        nullptr,
         TEXT("/Game/DataAssets/Networks/DA_Network_CraftsmenCompact")
     );
-    
+
     // Register it
     if (VerseSystem && CraftsmenNetwork)
     {

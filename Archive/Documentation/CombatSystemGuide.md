@@ -325,7 +325,7 @@ Combat components work with AI:
 if (TargetingComponent->GetDetectedTargetCount() > 0)
 {
     AActor* Target = TargetingComponent->SelectHighestThreatTarget();
-    
+
     for (UWeaponComponent* Weapon : Weapons)
     {
         if (Weapon->CanFire() && Weapon->IsTargetInRange(Target))
@@ -345,7 +345,7 @@ Example player fire control:
 void APlayerShip::FireWeapons()
 {
     AActor* Target = TargetingComponent->CurrentTarget;
-    
+
     for (UWeaponComponent* Weapon : Weapons)
     {
         Weapon->Fire(Target);
@@ -571,6 +571,6 @@ Extend damage system to support:
 
 ---
 
-**Version:** 1.0  
-**Last Updated:** 2025-11-11  
+**Version:** 1.0
+**Last Updated:** 2025-11-11
 **Maintained by:** Adastrea Development Team

@@ -7,7 +7,7 @@ ContractName: "Mining Operation"
 ContractID: "Quest_Mining_6342"
 Description: |
   Extract and deliver resources from asteroid field near Beta 465.
-  
+
 ContractType: Mining
 Difficulty: Hard
 

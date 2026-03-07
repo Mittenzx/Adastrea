@@ -8,23 +8,23 @@
 
 /**
  * Station Grid System - Component for grid-based module placement
- * 
+ *
  * This component provides grid snapping functionality for module placement
  * in the station editor. It ensures modules are placed on a consistent grid
  * for alignment and connection purposes.
- * 
+ *
  * Features:
  * - Configurable grid size
  * - 3D grid snapping
  * - Nearest grid point calculation
  * - Valid position validation
  * - Connection point support (future expansion)
- * 
+ *
  * Usage:
  * 1. Add this component to the station editor manager or editor actor
  * 2. Configure GridSize to match module dimensions
  * 3. Use SnapToGrid() to align positions to the grid
- * 
+ *
  * @see UStationEditorManager
  */
 UCLASS(BlueprintType, ClassGroup=(StationEditor), meta=(BlueprintSpawnableComponent))

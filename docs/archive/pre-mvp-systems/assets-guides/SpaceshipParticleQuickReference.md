@@ -178,12 +178,12 @@ UParticleSystemComponent* Afterburner = ParticleComponent->AfterburnerComponent;
 
 ## Automatic Features
 
-✅ **Main engine** activates on BeginPlay  
-✅ **RCS thrusters** activate from movement input  
-✅ **Engine glow** updates automatically  
-✅ **Throttle scaling** linear interpolation  
-✅ **Jump sequence** auto-progresses through stages  
-✅ **RCS auto-deactivate** after duration  
+✅ **Main engine** activates on BeginPlay
+✅ **RCS thrusters** activate from movement input
+✅ **Engine glow** updates automatically
+✅ **Throttle scaling** linear interpolation
+✅ **Jump sequence** auto-progresses through stages
+✅ **RCS auto-deactivate** after duration
 
 ---
 
@@ -237,9 +237,9 @@ Event On Boost Released
 
 ## File Locations
 
-**C++ Header**: `Source/Adastrea/Public/Ships/SpaceshipParticleComponent.h`  
-**C++ Implementation**: `Source/Adastrea/Ships/SpaceshipParticleComponent.cpp`  
-**Integration**: `Source/Adastrea/Ships/Spaceship.h/cpp`  
+**C++ Header**: `Source/Adastrea/Public/Ships/SpaceshipParticleComponent.h`
+**C++ Implementation**: `Source/Adastrea/Ships/SpaceshipParticleComponent.cpp`
+**Integration**: `Source/Adastrea/Ships/Spaceship.h/cpp`
 **Full Guide**: `Assets/SpaceshipParticleSystemGuide.md`
 
 ---
@@ -270,10 +270,10 @@ Event On Boost Released
 
 ---
 
-**Quick Start**: Assign particle templates → Test throttle → Test RCS → Test jump → Test damage  
+**Quick Start**: Assign particle templates → Test throttle → Test RCS → Test jump → Test damage
 **See**: [Full Guide](SpaceshipParticleSystemGuide.md) for detailed instructions
 
 ---
 
-**Version**: 1.0  
+**Version**: 1.0
 **Updated**: 2025-11-17

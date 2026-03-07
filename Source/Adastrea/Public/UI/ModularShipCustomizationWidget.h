@@ -14,18 +14,18 @@ class UShipModuleDataAsset;
 
 /**
  * Base widget class for ship customization UI
- * 
+ *
  * Provides the foundation for a ship customization interface where players
  * can view, install, and remove ship modules. Designed to be extended in
  * Blueprint for visual design and specific functionality.
- * 
+ *
  * Features:
  * - Module slot visualization
  * - Module inventory display
  * - Drag-and-drop module installation (extensible)
  * - Resource tracking (power, mass)
  * - Module information display
- * 
+ *
  * Usage:
  * 1. Create Blueprint based on this class
  * 2. Design UI layout in Blueprint editor

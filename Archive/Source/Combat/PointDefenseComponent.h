@@ -49,10 +49,10 @@ struct FIncomingThreat
 
 /**
  * Component for automated point defense against missiles, torpedoes, and small craft
- * 
+ *
  * Automatically detects and engages incoming threats using point defense weapons.
  * Prioritizes threats based on distance, velocity, and danger level.
- * 
+ *
  * Usage:
  * - Add component to ship Blueprint
  * - Assign point defense capable weapon components

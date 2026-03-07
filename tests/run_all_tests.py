@@ -41,7 +41,7 @@ class TestRunner:
         print(f"\n{'=' * 70}")
         print(f"Running: {description}")
         print(f"{'=' * 70}")
-        
+
         try:
             result = subprocess.run(
                 cmd,
@@ -50,16 +50,16 @@ class TestRunner:
                 cwd=self.project_root,
                 timeout=self.timeout
             )
-            
+
             success = result.returncode == 0
             output = result.stdout + result.stderr
-            
+
             if self.verbose or not success:
                 print(output)
-            
+
             status = "✓ PASS" if success else "✗ FAIL"
             print(f"\n{status}: {description}")
-            
+
             return success, output
         except subprocess.TimeoutExpired:
             print(f"✗ TIMEOUT: {description}")
@@ -73,12 +73,12 @@ class TestRunner:
         print("\n" + "=" * 70)
         print("PYTHON TESTS")
         print("=" * 70)
-        
+
         # First run standalone tests that don't require pytest
         standalone_tests = [
             ("tests/test_build_errors.py", "Build Error Detection"),
         ]
-        
+
         for test_file, description in standalone_tests:
             if Path(test_file).exists():
                 success, output = self.run_command(
@@ -86,7 +86,7 @@ class TestRunner:
                     description
                 )
                 self.results.append((description, success))
-        
+
         # Then try pytest tests if pytest is available
         try:
             import pytest
@@ -95,7 +95,7 @@ class TestRunner:
             pytest_available = False
             print("\n⚠️  pytest not available - skipping pytest-based tests")
             print("   Install with: pip install -r tests/requirements-test.txt")
-        
+
         if pytest_available:
             # Run comprehensive test suite
             success, output = self.run_command(
@@ -103,13 +103,13 @@ class TestRunner:
                 "Comprehensive Test Suite"
             )
             self.results.append(("Comprehensive Tests", success))
-            
+
             # Run other pytest tests
             test_files = [
                 "tests/test_procedural_generators.py",
                 "tests/test_schema_validator.py",
             ]
-            
+
             for test_file in test_files:
                 if Path(test_file).exists():
                     success, output = self.run_command(
@@ -123,17 +123,17 @@ class TestRunner:
         print("\n" + "=" * 70)
         print("CODE QUALITY VALIDATION")
         print("=" * 70)
-        
+
         validation_scripts = [
             ("Tools/check_uproperty.py", "UPROPERTY Usage Check"),
             ("Tools/validate_naming.py", "Asset Naming Convention Check"),
         ]
-        
+
         if not self.quick:
             validation_scripts.append(
                 ("Tools/check_null_safety.py", "Null Safety Check")
             )
-        
+
         for script_path, description in validation_scripts:
             if Path(script_path).exists():
                 success, output = self.run_command(
@@ -147,7 +147,7 @@ class TestRunner:
         print("\n" + "=" * 70)
         print("C++ AUTOMATION TESTS (Unreal Editor Required)")
         print("=" * 70)
-        
+
         automation_test = Path("tests/AdastreaAutomationTests.cpp")
         if automation_test.exists():
             print(f"✓ C++ automation test file found: {automation_test}")
@@ -158,7 +158,7 @@ class TestRunner:
             print("4. Filter for 'Adastrea' and run the tests")
             print("\nOr use command line:")
             print("UnrealEditor-Cmd.exe Adastrea.uproject -ExecCmds=\"Automation RunTests Adastrea\" -unattended")
-            
+
             self.results.append(("C++ Automation Tests", None))  # None = Info only
         else:
             print("✗ C++ automation test file not found")
@@ -169,7 +169,7 @@ class TestRunner:
         print("\n" + "=" * 70)
         print("BUILD CONFIGURATION CHECK")
         print("=" * 70)
-        
+
         # Check .uproject file
         uproject = self.project_root / "Adastrea.uproject"
         if uproject.exists():
@@ -188,13 +188,13 @@ class TestRunner:
         else:
             print("✗ Project file not found")
             self.results.append(("Project Configuration", False))
-        
+
         # Check Build.cs files
         build_files = list((self.project_root / "Source").rglob("*.Build.cs"))
         print(f"\n✓ Found {len(build_files)} Build.cs files:")
         for bf in build_files:
             print(f"  - {bf}")
-        
+
         if len(build_files) > 0:
             self.results.append(("Build.cs Files", True))
         else:
@@ -205,14 +205,14 @@ class TestRunner:
         print("\n" + "=" * 70)
         print("DOCUMENTATION CHECK")
         print("=" * 70)
-        
+
         required_docs = [
             "README.md",
             "ARCHITECTURE.md",
             "CODE_STYLE.md",
             "CONTRIBUTING.md",
         ]
-        
+
         all_found = True
         for doc in required_docs:
             doc_path = self.project_root / doc
@@ -221,7 +221,7 @@ class TestRunner:
             else:
                 print(f"✗ {doc} NOT FOUND")
                 all_found = False
-        
+
         self.results.append(("Documentation", all_found))
 
     def print_summary(self):
@@ -229,17 +229,17 @@ class TestRunner:
         print("\n" + "=" * 70)
         print("TEST RESULTS SUMMARY")
         print("=" * 70)
-        
+
         passed = sum(1 for _, result in self.results if result is True)
         failed = sum(1 for _, result in self.results if result is False)
         info = sum(1 for _, result in self.results if result is None)
         total = len(self.results)
-        
+
         print(f"\nTotal Test Suites: {total}")
         print(f"  ✓ Passed: {passed}")
         print(f"  ✗ Failed: {failed}")
         print(f"  ℹ Info Only: {info}")
-        
+
         print("\nDetailed Results:")
         for name, result in self.results:
             if result is True:
@@ -249,9 +249,9 @@ class TestRunner:
             else:
                 status = "ℹ INFO"
             print(f"  {status}: {name}")
-        
+
         print("\n" + "=" * 70)
-        
+
         # Return exit code
         return 0 if failed == 0 else 1
 
@@ -264,7 +264,7 @@ class TestRunner:
         print(f"Python Version: {sys.version}")
         print(f"Verbose: {self.verbose}")
         print(f"Quick Mode: {self.quick}")
-        
+
         if validation_only:
             self.run_validation_scripts()
         elif python_only:
@@ -276,7 +276,7 @@ class TestRunner:
             self.run_pytest_tests()
             self.run_validation_scripts()
             self.run_cpp_automation_tests_info()
-        
+
         return self.print_summary()
 
 
@@ -311,15 +311,15 @@ def main():
         default=300,
         help="Timeout in seconds for individual test commands (default: 300)"
     )
-    
+
     args = parser.parse_args()
-    
+
     runner = TestRunner(verbose=args.verbose, quick=args.quick, timeout=args.timeout)
     exit_code = runner.run_all(
         python_only=args.python_only,
         validation_only=args.validation_only
     )
-    
+
     sys.exit(exit_code)
 
 

@@ -2,9 +2,9 @@
 
 > **Main space station actor with modular attachment system for trading and docking**
 
-**Blueprint Type**: Actor  
-**Parent Class**: `ASpaceStation` (C++)  
-**Location**: `Content/Blueprints/Stations/BP_SpaceStation_Main.uasset`  
+**Blueprint Type**: Actor
+**Parent Class**: `ASpaceStation` (C++)
+**Location**: `Content/Blueprints/Stations/BP_SpaceStation_Main.uasset`
 **Priority**: 🔶 **HIGH** - Required for trading and docking in MVP
 
 ---
@@ -102,7 +102,7 @@ SceneComponent (Array):
   Count: 10-20 (depending on station design)
   Location: Positioned around core for modules
   Purpose: Module connection sockets
-  
+
 # Station Systems
 SphereComponent:
   Name: DockingRange
@@ -656,6 +656,6 @@ For Trade Simulator MVP, this station must:
 
 ---
 
-**Last Updated**: December 30, 2025  
-**Status**: Essential for MVP  
+**Last Updated**: December 30, 2025
+**Status**: Essential for MVP
 **Difficulty**: ⭐⭐⭐ Intermediate-Advanced

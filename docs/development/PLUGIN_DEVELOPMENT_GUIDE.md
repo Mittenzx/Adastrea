@@ -1,7 +1,7 @@
 # Adastrea-Director Plugin Development Guide
 
-**Last Updated:** November 14, 2025  
-**Status:** Planning Phase  
+**Last Updated:** November 14, 2025
+**Status:** Planning Phase
 **Target Release:** Q3 2026
 
 ---
@@ -357,9 +357,9 @@ public:
 class SDirectorMainPanel : public SDockTab {
     SLATE_BEGIN_ARGS(SDirectorMainPanel) {}
     SLATE_END_ARGS()
-    
+
     void Construct(const FArguments& InArgs);
-    
+
 private:
     TSharedPtr<SDirectorQueryWidget> QueryWidget;
     TSharedPtr<SDirectorPlanningView> PlanningView;
@@ -395,7 +395,7 @@ class SDirectorPlanningView : public SCompoundWidget {
 bool FPythonSubprocess::Start() {
     FString PythonExePath = GetPythonExecutablePath();
     FString ScriptPath = GetBackendScriptPath();
-    
+
     // Platform-specific process creation
     #if PLATFORM_WINDOWS
         // Use Windows CreateProcess
@@ -404,13 +404,13 @@ bool FPythonSubprocess::Start() {
     #elif PLATFORM_LINUX
         // Use Linux fork/exec
     #endif
-    
+
     // Verify process started
     if (!IsProcessRunning(ProcessHandle)) {
         UE_LOG(LogAdastreaDirector, Error, TEXT("Failed to start Python subprocess"));
         return false;
     }
-    
+
     // Wait for IPC server to be ready
     for (int32 i = 0; i < 30; ++i) {
         FPlatformProcess::Sleep(0.1f);
@@ -419,7 +419,7 @@ bool FPythonSubprocess::Start() {
             return true;
         }
     }
-    
+
     return false;
 }
 ```
@@ -476,7 +476,7 @@ void SDirectorMainPanel::Construct(const FArguments& InArgs) {
     ChildSlot
     [
         SNew(SVerticalBox)
-        
+
         // Header
         + SVerticalBox::Slot()
         .AutoHeight()
@@ -489,7 +489,7 @@ void SDirectorMainPanel::Construct(const FArguments& InArgs) {
                 .Font(FSlateFontInfo(FPaths::EngineContentDir() / TEXT("Slate/Fonts/Roboto-Bold.ttf"), 16))
             ]
         ]
-        
+
         // Tab switcher
         + SVerticalBox::Slot()
         .AutoHeight()
@@ -508,20 +508,20 @@ void SDirectorMainPanel::Construct(const FArguments& InArgs) {
                 .OnClicked(this, &SDirectorMainPanel::OnShowPlanning)
             ]
         ]
-        
+
         // Content area
         + SVerticalBox::Slot()
         .FillHeight(1.0f)
         [
             SNew(SWidgetSwitcher)
             .WidgetIndex(this, &SDirectorMainPanel::GetActiveTabIndex)
-            
+
             // Query tab
             + SWidgetSwitcher::Slot()
             [
                 SAssignNew(QueryWidget, SDirectorQueryWidget)
             ]
-            
+
             // Planning tab
             + SWidgetSwitcher::Slot()
             [
@@ -711,9 +711,9 @@ The Adastrea-Director plugin development represents a strategic evolution from e
 
 ---
 
-**Document Status:** ✅ Complete  
-**Approval Required:** Yes  
-**Target Start Date:** Q2 2026  
+**Document Status:** ✅ Complete
+**Approval Required:** Yes
+**Target Start Date:** Q2 2026
 **Estimated Completion:** Q3 2026
 
 For questions or feedback, please create an issue in the [Adastrea GitHub repository](https://github.com/Mittenzx/Adastrea).

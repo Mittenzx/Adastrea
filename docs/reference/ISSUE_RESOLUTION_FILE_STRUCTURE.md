@@ -1,6 +1,6 @@
 # File Structure Issue Resolution Guide
 
-**Related**: FILE_STRUCTURE_STANDARD.md, FILE_STRUCTURE_MIGRATION_SUMMARY.md  
+**Related**: FILE_STRUCTURE_STANDARD.md, FILE_STRUCTURE_MIGRATION_SUMMARY.md
 **Last Updated**: 2026-01-02
 
 ---
@@ -65,7 +65,7 @@ This guide helps resolve common issues related to the Adastrea file structure st
    ```bash
    # Search for old name in C++ code
    grep -r "TradingInterface" Source/
-   
+
    # Search for old name in Blueprint files (if text-based)
    grep -r "TradingInterface" Content/
    ```
@@ -150,7 +150,7 @@ Is it outdated but potentially useful?
    // Correct (relative to Public/)
    #include "Trading/EconomyManager.h"
    #include "Ships/SpaceshipDataAsset.h"
-   
+
    // Incorrect (absolute path)
    #include "Source/Adastrea/Public/Trading/EconomyManager.h"
    ```
@@ -163,7 +163,7 @@ Is it outdated but potentially useful?
    ```bash
    # Windows
    GenerateProjectFiles.bat
-   
+
    # Linux/Mac
    ./GenerateProjectFiles.sh
    ```
@@ -240,9 +240,9 @@ Is it outdated but potentially useful?
 3. **Add Deprecation Notice** (if needed):
    ```markdown
    # DEPRECATED
-   
+
    This file has been moved to: [correct/path/to/file.md](correct/path/to/file.md)
-   
+
    Please update your bookmarks.
    ```
 
@@ -289,7 +289,7 @@ Is it outdated but potentially useful?
    // Update LoadObject calls
    // Old:
    UClass* WidgetClass = LoadObject<UClass>(nullptr, TEXT("/Game/UI/WBP_TradingInterface.WBP_TradingInterface_C"));
-   
+
    // New:
    UClass* WidgetClass = LoadObject<UClass>(nullptr, TEXT("/Game/UI/Trading/WBP_TradingUI.WBP_TradingUI_C"));
    ```
@@ -314,7 +314,7 @@ Is it outdated but potentially useful?
    ```python
    # Old
    DOC_PATH = "Docs/guide.md"
-   
+
    # New
    DOC_PATH = "docs/reference/guide.md"
    ```
@@ -322,7 +322,7 @@ Is it outdated but potentially useful?
 2. **Use Path.exists() Checks**:
    ```python
    from pathlib import Path
-   
+
    doc_path = Path("docs/reference/guide.md")
    if not doc_path.exists():
        print(f"Error: File not found at {doc_path}")
@@ -441,7 +441,7 @@ Before committing file structure changes:
    ```bash
    # Windows
    GenerateProjectFiles.bat
-   
+
    # Linux/Mac
    ./GenerateProjectFiles.sh
    ```
@@ -479,5 +479,5 @@ If this guide doesn't solve your issue:
 
 ---
 
-**Last Updated**: 2026-01-02  
+**Last Updated**: 2026-01-02
 **Maintained by**: Adastrea Development Team

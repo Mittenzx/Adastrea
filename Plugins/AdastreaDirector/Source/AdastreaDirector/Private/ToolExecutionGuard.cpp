@@ -73,7 +73,7 @@ void FToolExecutionGuard::RecordExecution(const FString& ToolName, const FString
 		RecentResultHistory.RemoveAt(0);
 	}
 
-	UE_LOG(LogAdastreaDirector, Verbose, TEXT("Tool execution recorded: %s (iteration %d/%d)"), 
+	UE_LOG(LogAdastreaDirector, Verbose, TEXT("Tool execution recorded: %s (iteration %d/%d)"),
 		*ToolName, IterationCount, MaxIterations);
 }
 
@@ -105,10 +105,10 @@ FString FToolExecutionGuard::TruncateResult(const FString& Result) const
 	// Truncate and add indicator
 	FString Truncated = Result.Left(MaxResultSize - 50);
 	Truncated += TEXT("\n\n[Result truncated - exceeded ") + FString::FromInt(MaxResultSize) + TEXT(" character limit]");
-	
-	UE_LOG(LogAdastreaDirector, Warning, TEXT("Tool result truncated from %d to %d characters"), 
+
+	UE_LOG(LogAdastreaDirector, Warning, TEXT("Tool result truncated from %d to %d characters"),
 		Result.Len(), Truncated.Len());
-	
+
 	return Truncated;
 }
 
@@ -125,13 +125,13 @@ bool FToolExecutionGuard::DetectTaskCompletion(const TArray<FString>& RecentTool
 	{
 		FString LastTool = RecentToolNames.Last();
 		FString SecondLastTool = RecentToolNames[RecentToolNames.Num() - 2];
-		
-		if (SecondLastTool == TEXT("python_execute") && 
+
+		if (SecondLastTool == TEXT("python_execute") &&
 			(LastTool == TEXT("scene_query") || LastTool == TEXT("screenshot")))
 		{
 			// Check if last result indicates success
 			FString LastResult = RecentResults.Last();
-			if (LastResult.Contains(TEXT("\"status\":\"ok\"")) || 
+			if (LastResult.Contains(TEXT("\"status\":\"ok\"")) ||
 				LastResult.Contains(TEXT("\"status\": \"ok\"")))
 			{
 				UE_LOG(LogAdastreaDirector, Log, TEXT("Task completion detected: python_execute followed by successful verification"));
@@ -171,11 +171,11 @@ FString FToolExecutionGuard::GenerateSignature(const FString& ToolName, const FS
 {
 	// Create unique signature from tool name and arguments
 	FString Combined = ToolName + TEXT("::") + Arguments;
-	
+
 	// Use Blake3 hash for compact signature (MD5 is deprecated)
 	const FTCHARToUTF8 Utf8Combined(*Combined);
 	const FBlake3Hash Hash = FBlake3::HashBuffer(Utf8Combined.Get(), Utf8Combined.Length());
-	
+
 	// Convert hash bytes to hex string
 	const uint8* HashBytes = Hash.GetBytes();
 	FString HashString;
@@ -195,10 +195,10 @@ bool FToolExecutionGuard::WouldCreatePythonLoop(const FString& ToolName) const
 		if (RecentToolHistory.Num() >= 2)
 		{
 			FString LastTool = RecentToolHistory.Last();
-			bool bHadVerification = (LastTool == TEXT("scene_query") || 
-									LastTool == TEXT("screenshot") || 
+			bool bHadVerification = (LastTool == TEXT("scene_query") ||
+									LastTool == TEXT("screenshot") ||
 									LastTool == TEXT("selected_actors"));
-			
+
 			if (!bHadVerification)
 			{
 				return true;
@@ -222,7 +222,7 @@ bool FToolExecutionGuard::CheckSceneQueryCompletion(const FString& ToolName, con
 		// Try to parse JSON result
 		TSharedPtr<FJsonObject> JsonObject;
 		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Result);
-		
+
 		if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
 		{
 			// Check if results array exists and has items

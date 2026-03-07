@@ -190,7 +190,7 @@ Use GitHub wiki search to find specific content:
 Wiki improvements are welcome! To contribute:
 
 1. **Minor Edits**: Edit directly on GitHub wiki
-2. **Major Changes**: 
+2. **Major Changes**:
    - Clone repository
    - Edit files in `wiki/` directory
    - Submit pull request

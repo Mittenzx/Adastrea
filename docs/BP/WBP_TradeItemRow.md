@@ -2,9 +2,9 @@
 
 > **Individual item row in the trading interface list - MVP CORE FEATURE**
 
-**Blueprint Type**: UMG Widget  
-**Parent Class**: `UUserWidget`  
-**Location**: `Content/UI/Trading/WBP_TradeItemRow.uasset`  
+**Blueprint Type**: UMG Widget
+**Parent Class**: `UUserWidget`
+**Location**: `Content/UI/Trading/WBP_TradeItemRow.uasset`
 **Priority**: ⚠️ **CRITICAL** - Core component of Trade Simulator MVP
 
 ---
@@ -487,6 +487,6 @@ This widget interacts with:
 
 ---
 
-**Last Updated**: 2026-01-02  
-**Version**: 1.0  
+**Last Updated**: 2026-01-02
+**Version**: 1.0
 **Status**: MVP Critical Component

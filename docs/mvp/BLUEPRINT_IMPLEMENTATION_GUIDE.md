@@ -1,9 +1,9 @@
 # Trading MVP Blueprint Implementation Guide
 
-**Purpose**: Step-by-step instructions for implementing trading MVP in Blueprints  
-**Target**: Designers and Blueprint developers  
-**Last Updated**: 2026-01-13  
-**Phase**: Phase 2 (Weeks 5-8) - Structured Version  
+**Purpose**: Step-by-step instructions for implementing trading MVP in Blueprints
+**Target**: Designers and Blueprint developers
+**Last Updated**: 2026-01-13
+**Phase**: Phase 2 (Weeks 5-8) - Structured Version
 **Note**: For Phase 1, see [PHASE_1_IMPLEMENTATION_STEPS.md](PHASE_1_IMPLEMENTATION_STEPS.md)
 
 ---
@@ -128,28 +128,28 @@ Market Config:
 
 Inventory:
   [Add entries - click + button for each item]
-  
+
   Entry 0:
     Trade Item: DA_TradeItem_Water
     Current Stock: 1000
     Max Stock: 2000
     Supply Level: 1.5
     Demand Level: 0.5
-  
+
   Entry 1:
     Trade Item: DA_TradeItem_ProteinPacks
     Current Stock: 500
     Max Stock: 1000
     Supply Level: 1.3
     Demand Level: 0.7
-  
+
   Entry 2:
     Trade Item: DA_TradeItem_BasicComputer
     Current Stock: 10
     Max Stock: 50
     Supply Level: 0.3
     Demand Level: 1.8
-  
+
   Entry 3:
     Trade Item: DA_TradeItem_BasicFuel
     Current Stock: 200
@@ -193,11 +193,11 @@ Stock Refresh Rate: 24.0
    MarketData: Object Reference (MarketDataAsset)
      - Instance Editable: ✓
      - Category: "Trading"
-   
+
    StationName: Text
      - Instance Editable: ✓
      - Category: "Trading"
-   
+
    bPlayerDocked: Boolean
      - Default: false
    ```
@@ -263,11 +263,11 @@ Stock Refresh Rate: 24.0
    ```
    CargoComponent:
      - Cargo Capacity: 10.0 (starter ship)
-   
+
    PlayerTraderComponent:
      - Credits: 1000
      - Starting Credits: 1000
-   
+
    FloatingPawnMovement:
      - Max Speed: 1000.0
      - Acceleration: 500.0
@@ -284,11 +284,11 @@ Stock Refresh Rate: 24.0
    InputAxis MoveForward
    ├─ Get Forward Vector
    ├─ Add Movement Input (Direction, Scale Value)
-   
+
    InputAxis MoveRight
    ├─ Get Right Vector
    ├─ Add Movement Input (Direction, Scale Value)
-   
+
    InputAxis MoveUp
    ├─ Get Up Vector
    ├─ Add Movement Input (Direction, Scale Value)
@@ -326,14 +326,14 @@ Stock Refresh Rate: 24.0
    ```
    MarketData: Object Reference (MarketDataAsset)
      - Instance Editable: ☐
-   
+
    PlayerShipRef: Object Reference (Actor)
      - Instance Editable: ☐
-   
+
    CargoComponentRef: Object Reference (CargoComponent)
-   
+
    TraderComponentRef: Object Reference (PlayerTraderComponent)
-   
+
    ItemRowWidgetClass: Widget Class Reference (WBP_TradeItemRow)
      - Default: WBP_TradeItemRow
    ```
@@ -549,7 +549,7 @@ Stock Refresh Rate: 24.0
      - Actor: BP_TradingStation
      - MarketData: DA_Market_AgriculturalStationAlpha
      - StationName: "Ag Station Alpha"
-   
+
    Station 2 (Industrial):
      - Location: (10000, 0, 0)
      - Actor: BP_TradingStation
@@ -673,6 +673,6 @@ After MVP prototype works:
 
 ---
 
-**Last Updated**: 2025-12-25  
-**Status**: Implementation Guide for Phase 1  
+**Last Updated**: 2025-12-25
+**Status**: Implementation Guide for Phase 1
 **Next**: Blueprint creation and testing

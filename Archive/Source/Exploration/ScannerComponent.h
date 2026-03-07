@@ -91,37 +91,37 @@ struct FActiveScanInfo
 
 /**
  * Scanner Component
- * 
+ *
  * Ship-mounted scanner system providing:
  * - **Passive Scanning**: Continuous detection of nearby objects
  * - **Active Scanning**: Targeted analysis of specific objects
  * - **Deep Scanning**: Detailed analysis revealing all information
  * - **Signal Tracking**: Monitor multiple targets simultaneously
- * 
+ *
  * **Passive Scanning:**
  * - Runs continuously in background
  * - Limited range and detail
  * - No energy cost
  * - Updates at configured interval
- * 
+ *
  * **Active Scanning:**
  * - Targeted scan of specific object
  * - Longer range and more detail
  * - Energy cost and cooldown
  * - Takes time to complete
- * 
+ *
  * **Deep Scanning:**
  * - Reveals complete information
  * - Requires scanner capability
  * - Longer scan time
  * - Used for planets, anomalies
- * 
+ *
  * **Usage:**
  * 1. Add component to spaceship Blueprint
  * 2. Assign ScannerDataAsset
  * 3. Enable passive scanning
  * 4. Use Blueprint functions for active scans
- * 
+ *
  * **Integration:**
  * - Automatically detects ScannableObjectComponent
  * - Fires events for discoveries

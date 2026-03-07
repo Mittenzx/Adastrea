@@ -1,7 +1,7 @@
 # MVP Developer Quick Reference
 
-**Purpose**: Fast answers for common MVP development questions  
-**Target**: Developers working on Trade Simulator MVP  
+**Purpose**: Fast answers for common MVP development questions
+**Target**: Developers working on Trade Simulator MVP
 **Last Updated**: 2025-12-24
 
 ---
@@ -54,8 +54,8 @@ See: [Simplified Build Guide](SIMPLIFIED_BUILD_GUIDE.md)
 
 ### "What should I build this week?"
 
-**Week 1-4**: Hardcoded prototype (no Data Assets)  
-**Week 5-8**: Convert to Data Assets, add variety  
+**Week 1-4**: Hardcoded prototype (no Data Assets)
+**Week 5-8**: Convert to Data Assets, add variety
 **Week 9-12**: Polish and demo package
 
 See: [MVP README](../mvp/README.md)
@@ -184,11 +184,11 @@ class APrototypeStation : public AActor
     // Hardcoded prices
     float WaterPrice = 10.0f;
     float FuelPrice = 20.0f;
-    
+
     // Hardcoded inventory
     int32 WaterStock = 100;
     int32 FuelStock = 50;
-    
+
     // Simple buy function
     bool BuyItem(FString ItemName, int32 Quantity);
 };
@@ -204,7 +204,7 @@ class ATradingStation : public AActor
 {
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     UMarketDataAsset* MarketData;  // Reference to data
-    
+
     UFUNCTION(BlueprintCallable)
     float GetItemPrice(FName ItemID) const;
 };
@@ -215,23 +215,23 @@ class ATradingStation : public AActor
 ## 🚫 Anti-Patterns to Avoid
 
 ### 1. Architecture Before Gameplay
-❌ Don't build perfect systems before validating fun  
+❌ Don't build perfect systems before validating fun
 ✅ Build ugly but playable, validate, then structure
 
 ### 2. Over-Engineering
-❌ Don't expose all functions to Blueprints  
+❌ Don't expose all functions to Blueprints
 ✅ Expose 20% (what designers actually need)
 
 ### 3. Documentation Obsession
-❌ Don't write docs for features that don't exist  
+❌ Don't write docs for features that don't exist
 ✅ Code first, document after validation
 
 ### 4. Feature Creep
-❌ Don't add "just one more system"  
+❌ Don't add "just one more system"
 ✅ Stick to buy/sell/upgrade loop only
 
 ### 5. Working in Isolation
-❌ Don't develop for 3 months without playtesters  
+❌ Don't develop for 3 months without playtesters
 ✅ Get feedback at Week 4 or pivot
 
 See: [Anti-Patterns Guide](../../.github/instructions/anti-patterns.instructions.md)
@@ -345,5 +345,5 @@ Track in CHANGELOG.md:
 
 ---
 
-**Last Updated**: 2025-12-24  
+**Last Updated**: 2025-12-24
 **Maintained By**: Adastrea MVP Team

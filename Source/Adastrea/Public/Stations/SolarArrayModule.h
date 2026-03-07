@@ -8,11 +8,11 @@
 
 /**
  * Solar panel array module for space stations
- * 
+ *
  * Photovoltaic power generation using deployable solar panels.
  * Provides supplemental power with zero fuel consumption.
  * Efficiency depends on proximity to star and panel orientation.
- * 
+ *
  * Power Generation: -100 units (negative = generates power)
  * Module Group: Power
  */

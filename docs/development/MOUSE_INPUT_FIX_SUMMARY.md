@@ -218,7 +218,7 @@ LogAdastreaInput: SpaceshipControlsComponent::HandleMove - MoveValue: ...
 
 ## Performance Impact
 
-**Negligible**: 
+**Negligible**:
 - Logging is primarily at Log/Verbose level (disabled in shipping)
 - Single conditional check added (bHasOwnActions)
 - Single array query added (GetAllPlayerMappableActionKeyMappings)

@@ -132,7 +132,7 @@ void UScannerComponent::UpdatePassiveScanning(float DeltaTime)
 
 			if (bDebugShowDetections)
 			{
-				UE_LOG(LogAdastreaExploration, Log, TEXT("Scanner: Detected new object '%s' at distance %.0f cm"), 
+				UE_LOG(LogAdastreaExploration, Log, TEXT("Scanner: Detected new object '%s' at distance %.0f cm"),
 					*Scannable->DisplayName.ToString(), Distance);
 			}
 
@@ -150,7 +150,7 @@ void UScannerComponent::UpdatePassiveScanning(float DeltaTime)
 
 			if (bDebugShowDetections && LostObject.ScannableComponent)
 			{
-				UE_LOG(LogAdastreaExploration, Log, TEXT("Scanner: Lost object '%s'"), 
+				UE_LOG(LogAdastreaExploration, Log, TEXT("Scanner: Lost object '%s'"),
 					*LostObject.ScannableComponent->DisplayName.ToString());
 			}
 
@@ -318,7 +318,7 @@ bool UScannerComponent::StartActiveScan(AActor* Target, EScanMode ScanMode)
 
 	if (bDebugShowDetections)
 	{
-		UE_LOG(LogAdastreaExploration, Log, TEXT("Scanner: Started %s scan of '%s' (%.1f seconds)"), 
+		UE_LOG(LogAdastreaExploration, Log, TEXT("Scanner: Started %s scan of '%s' (%.1f seconds)"),
 			ScanMode == EScanMode::DeepScan ? TEXT("deep") : TEXT("active"),
 			*Target->GetName(), CurrentScan.Duration);
 	}
@@ -453,7 +453,7 @@ void UScannerComponent::CompleteActiveScan()
 
 	if (bDebugShowDetections)
 	{
-		UE_LOG(LogAdastreaExploration, Log, TEXT("Scanner: Scan complete for '%s' - Detail Level: %d"), 
+		UE_LOG(LogAdastreaExploration, Log, TEXT("Scanner: Scan complete for '%s' - Detail Level: %d"),
 			*ScanData.ObjectName.ToString(), (int32)DetailLevel);
 	}
 

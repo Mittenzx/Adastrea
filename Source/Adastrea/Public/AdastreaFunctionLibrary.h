@@ -16,23 +16,23 @@ enum class EDamageType : uint8;
 
 /**
  * Blueprint Function Library for Adastrea
- * 
+ *
  * Provides commonly used utility functions for:
  * - Distance and position calculations
  * - Combat calculations (damage, lead targeting)
  * - Data validation helpers
  * - String formatting utilities
- * 
+ *
  * REMOVED (Trade Simulator MVP):
  * - Faction relationship queries (removed per MVP scope)
- * 
+ *
  * All functions are static and BlueprintCallable for easy use in both C++ and Blueprints.
- * 
+ *
  * Usage Example (Blueprint):
  * - Drag from any actor node
  * - Search for "Adastrea" to see all utility functions
  * - Use categorized functions for specific tasks
- * 
+ *
  * Usage Example (C++):
  * @code
  * float Distance = UAdastreaFunctionLibrary::GetDistance2D(ActorA, ActorB);
@@ -55,7 +55,7 @@ public:
      * - Planar distance calculations
      * - Top-down distance checks
      * - Minimizing vertical distance influence
-     * 
+     *
      * @param ActorA First actor
      * @param ActorB Second actor
      * @return Distance in world units, or -1.0 if either actor is invalid
@@ -65,7 +65,7 @@ public:
 
     /**
      * Check if two actors are within specified range
-     * 
+     *
      * @param ActorA First actor
      * @param ActorB Second actor
      * @param Range Maximum distance threshold
@@ -76,7 +76,7 @@ public:
 
     /**
      * Get the closest actor to origin from an array of actors
-     * 
+     *
      * @param Origin Reference point to measure from
      * @param Actors Array of actors to search
      * @return Closest actor, or nullptr if array is empty
@@ -86,7 +86,7 @@ public:
 
     /**
      * Get all actors within a sphere radius
-     * 
+     *
      * @param WorldContextObject World context for the query
      * @param Center Center of the sphere
      * @param Radius Sphere radius
@@ -103,7 +103,7 @@ public:
 
     /**
      * Calculate direction vector from one actor to another
-     * 
+     *
      * @param From Source actor
      * @param To Target actor
      * @return Normalized direction vector, or zero vector if invalid
@@ -128,7 +128,7 @@ public:
     /**
      * Calculate damage after armor reduction
      * Formula considers armor penetration and damage type effectiveness
-     * 
+     *
      * @param RawDamage Base damage value
      * @param ArmorValue Target's armor rating
      * @param DamageType Type of damage being dealt
@@ -140,7 +140,7 @@ public:
     /**
      * Calculate optimal firing solution (lead target calculation)
      * Predicts where target will be and returns aim point
-     * 
+     *
      * @param ShooterLocation Current weapon/shooter location
      * @param TargetLocation Current target location
      * @param TargetVelocity Target's velocity vector
@@ -157,7 +157,7 @@ public:
 
     /**
      * Check if target is within weapon's firing arc
-     * 
+     *
      * @param ShooterLocation Weapon mount location
      * @param ShooterRotation Weapon mount rotation
      * @param TargetLocation Target location to check
@@ -174,7 +174,7 @@ public:
 
     /**
      * Calculate time to impact for a projectile
-     * 
+     *
      * @param Distance Distance to target
      * @param ProjectileSpeed Projectile speed
      * @return Time in seconds until impact
@@ -189,7 +189,7 @@ public:
     /**
      * Validate that a Data Asset has required properties set
      * Basic validation for null checks and empty values
-     * 
+     *
      * @param DataAsset Data Asset to validate
      * @param OutErrorMessage Detailed error message if validation fails
      * @return True if valid, false if validation errors found
@@ -199,7 +199,7 @@ public:
 
     /**
      * Clamp a value to specified range (min/max)
-     * 
+     *
      * @param Value Value to clamp
      * @param Min Minimum allowed value
      * @param Max Maximum allowed value
@@ -210,7 +210,7 @@ public:
 
     /**
      * Clamp an integer value to specified range
-     * 
+     *
      * @param Value Value to clamp
      * @param Min Minimum allowed value
      * @param Max Maximum allowed value
@@ -226,7 +226,7 @@ public:
     /**
      * Format large number with thousands separators
      * Example: 1000 -> "1,000", 1000000 -> "1,000,000"
-     * 
+     *
      * @param Number Number to format
      * @return Formatted string with commas
      */
@@ -236,7 +236,7 @@ public:
     /**
      * Format floating point number with thousands separators
      * Example: 1000.5 -> "1,000.5"
-     * 
+     *
      * @param Number Number to format
      * @param DecimalPlaces Number of decimal places to display
      * @return Formatted string with commas
@@ -247,7 +247,7 @@ public:
     /**
      * Format percentage value for display
      * Example: 0.75 -> "75%", 0.5 -> "50%"
-     * 
+     *
      * @param Percentage Percentage value (0.0 to 1.0)
      * @param DecimalPlaces Number of decimal places to show
      * @return Formatted percentage string
@@ -258,7 +258,7 @@ public:
     /**
      * Format time duration in seconds to readable format
      * Example: 90 -> "1m 30s", 3665 -> "1h 1m 5s"
-     * 
+     *
      * @param Seconds Time duration in seconds
      * @return Formatted time string
      */
@@ -272,7 +272,7 @@ public:
     /**
      * Remap a value from one range to another
      * Example: RemapValue(5, 0, 10, 0, 100) = 50
-     * 
+     *
      * @param Value Value to remap
      * @param InMin Input range minimum
      * @param InMax Input range maximum
@@ -286,7 +286,7 @@ public:
     /**
      * Calculate percentage of value within range
      * Example: GetPercentageInRange(5, 0, 10) = 0.5 (50%)
-     * 
+     *
      * @param Value Current value
      * @param Min Range minimum
      * @param Max Range maximum

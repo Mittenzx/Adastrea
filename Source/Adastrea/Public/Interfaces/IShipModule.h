@@ -101,16 +101,16 @@ class UShipModule : public UInterface
 
 /**
  * Interface for all ship modules
- * 
+ *
  * This interface defines the contract that all ship modules must implement,
  * allowing for a consistent way to manage, attach, and detach modules from ships.
- * 
+ *
  * Implements:
  * - Module identification and categorization
  * - Installation and removal logic
  * - Power and resource management
  * - Slot compatibility checking
- * 
+ *
  * Usage (C++):
  * ```cpp
  * class UMyModuleComponent : public UActorComponent, public IShipModule
@@ -120,7 +120,7 @@ class UShipModule : public UInterface
  *     // ... implement other interface methods
  * };
  * ```
- * 
+ *
  * Usage (Blueprint):
  * - Create a Blueprint based on a component class that implements IShipModule
  * - Override BlueprintNativeEvent functions as needed

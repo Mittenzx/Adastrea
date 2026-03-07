@@ -1,7 +1,7 @@
 # Blueprint Architecture Guide - Adastrea
 
-**Last Updated**: January 6, 2026  
-**For Version**: 1.0.0-alpha  
+**Last Updated**: January 6, 2026
+**For Version**: 1.0.0-alpha
 **Target Engine**: Unreal Engine 5.6
 
 > **Purpose**: This document provides a comprehensive overview of all Blueprints in Adastrea, their C++ parent classes, dependencies, and how they interact. This is **developer/designer documentation**, not in-game player information.
@@ -57,29 +57,29 @@ graph TB
     subgraph Layer5[LAYER 5: UI]
         UI[WBP_SpaceshipHUD<br/>WBP_TradingInterface<br/>WBP_StationEditor]
     end
-    
+
     subgraph Layer4[LAYER 4: Gameplay Actors]
         Actors[BP_PlayerShip<br/>BP_SpaceStation<br/>BP_Weapon_*<br/>BP_Module_*]
     end
-    
+
     subgraph Layer3[LAYER 3: Data Assets]
         DataAssets[DA_Ship_*<br/>DA_Weapon_*<br/>DA_Faction_*<br/>DA_TradeItem_*]
     end
-    
+
     subgraph Layer2[LAYER 2: Components]
         Components[UWeaponComponent<br/>UNavigationComponent<br/>UCargoComponent]
     end
-    
+
     subgraph Layer1[LAYER 1: C++ Base Classes]
         BaseClasses[ASpaceship<br/>ASpaceStation<br/>ASpaceStationModule]
     end
-    
+
     Layer5 -->|Uses| Layer4
     Layer4 -->|Configured by| Layer3
     Layer4 -->|Has| Layer2
     Layer2 -->|Attached to| Layer4
     Layer4 -->|Inherits from| Layer1
-    
+
     style Layer5 fill:#8E44AD,stroke:#fff,color:#fff
     style Layer4 fill:#1B4F72,stroke:#fff,color:#fff
     style Layer3 fill:#2E7D32,stroke:#fff,color:#fff
@@ -444,7 +444,7 @@ TArray<USceneComponent*> DockingPoints;
 - **C++ Class**: `AdastreaPlayerController`
 - **Blueprint**: `BP_SpaceshipController`
 - **Purpose**: Player input handling, UI management
-- **Components**: 
+- **Components**:
   - `UPlayerReputationComponent` - Reputation tracking
   - `UPlayerProgressionComponent` - Player advancement
   - `UPlayerUnlockComponent` - Unlockable content
@@ -454,7 +454,7 @@ TArray<USceneComponent*> DockingPoints;
 
 #### Player Ships
 - **Base C++ Class**: `ASpaceship`
-- **Blueprints**: 
+- **Blueprints**:
   - `BP_PlayerShip` - Default player ship
   - `BP_PlayerShip_Fighter` - Combat variant
   - `BP_PlayerShip_Trader` - Trading variant
@@ -765,13 +765,13 @@ void UWeaponComponent::AcquireTarget(AActor* PotentialTarget)
     if (PotentialTarget->Implements<UTargetable>())
     {
         ITargetable* Target = Cast<ITargetable>(PotentialTarget);
-        
+
         // Use interface functions
         if (Target->CanBeTargeted_Implementation())
         {
             FVector AimPoint = Target->GetAimPoint_Implementation();
             bool IsHostile = Target->IsHostileToActor_Implementation(OwnerShip);
-            
+
             if (IsHostile)
             {
                 CurrentTarget = PotentialTarget;
@@ -1153,7 +1153,7 @@ For the **Trade Simulator MVP** (Dec 2025 - Mar 2026), prioritize:
 - **A**: Data Assets separate **content** (ship stats, item prices) from **logic** (blueprint code). This allows designers to create variants without touching blueprints.
 
 **Q: What's the recommended creation order?**
-- **A**: 
+- **A**:
   1. Game framework (GameMode, GameInstance, Controller)
   2. Player ship (1 ship to fly)
   3. Input system (already mostly exists)

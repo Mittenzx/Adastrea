@@ -33,11 +33,11 @@ The Combat VFX System provides comprehensive visual effects for space combat, fe
 
 ### Key Features
 
-✅ **Data-Driven Design**: All effects configured via Data Assets  
-✅ **Blueprint-Friendly**: Full Blueprint exposure for customization  
-✅ **Modular Architecture**: Independent components for flexibility  
-✅ **Performance-Conscious**: Particle budgets and LOD support  
-✅ **Integration-Ready**: Works seamlessly with existing combat systems  
+✅ **Data-Driven Design**: All effects configured via Data Assets
+✅ **Blueprint-Friendly**: Full Blueprint exposure for customization
+✅ **Modular Architecture**: Independent components for flexibility
+✅ **Performance-Conscious**: Particle budgets and LOD support
+✅ **Integration-Ready**: Works seamlessly with existing combat systems
 
 ---
 
@@ -498,7 +498,7 @@ FLinearColor HeatColor = CombatVFXData->GetHeatColor(HeatPercentage);
 1. In CombatVFXComponent details:
    - Assign Combat VFX Data (DA_VFX_[WeaponType])
    - Assign Impact Effect Data (DA_Impact_Default)
-   
+
 2. In ShieldVFXComponent details:
    - Assign Shield Base Material
    - Assign Shield Effect Template
@@ -511,7 +511,7 @@ FLinearColor HeatColor = CombatVFXData->GetHeatColor(HeatPercentage);
 2. On weapon fired:
    - Get CombatVFXComponent
    - Call PlayWeaponFireEffect
-   
+
 3. On damage received:
    - Check if shields absorbed damage
    - Call PlayShieldImpact OR PlayHullImpact
@@ -640,8 +640,8 @@ int32 TotalParticles;
 float FrameTime;
 
 CombatVFXComponent->GetPerformanceMetrics(
-    ActiveEffects, 
-    TotalParticles, 
+    ActiveEffects,
+    TotalParticles,
     FrameTime
 );
 ```
@@ -672,12 +672,12 @@ Emitter Settings:
   - Lifetime: 0.1 seconds
   - Beam Start: User Parameter (Vector)
   - Beam End: User Parameter (Vector)
-  
+
 Beam Properties:
   - Width: User Parameter (Float, default 5.0)
   - Color: User Parameter (Color)
   - Glow Intensity: User Parameter (Float, default 2.0)
-  
+
 Material:
   - Additive blend mode
   - Emissive material
@@ -704,12 +704,12 @@ Emitter Settings:
   - Spawn Rate: 500
   - Lifetime: 0.5 seconds
   - Velocity: User Parameter (Vector)
-  
+
 Ribbon Properties:
   - Width: User Parameter (Float, default 5.0)
   - Color: User Parameter (Color)
   - Fade In/Out: 0.1 / 0.2 seconds
-  
+
 Physics:
   - Drag: 0.1 (slight deceleration)
 ```
@@ -726,11 +726,11 @@ Emitter Settings:
   - Spawn Burst: 1 particle
   - Lifetime: 1.0 seconds
   - Mesh: Hexagon mesh (low poly)
-  
+
 Scale:
   - Initial: 10 cm
   - Scale by Curve: 0 → Max Radius over lifetime
-  
+
 Material:
   - Translucent with ripple pattern
   - Color: User Parameter (Color)
@@ -759,7 +759,7 @@ Emitter Settings:
   - Spawn Burst: 1000 particles
   - Lifetime: 2.0 seconds
   - Initial Velocity: Radial (high speed)
-  
+
 Properties:
   - Size: 20-100 cm over lifetime
   - Color: White → Orange → Red → Black
@@ -919,7 +919,7 @@ Data Assets:
 
 Niagara Systems:
   NS_[Category]_[Effect]     (e.g., NS_Energy_LaserBeam)
-  
+
 Materials:
   M_[Type]_[Purpose]         (e.g., M_Shield_Ripple)
   MI_[Type]_[Variant]        (e.g., MI_Shield_Blue)
@@ -945,14 +945,14 @@ BP_Ship_Fighter:
         Combat VFX Data: DA_VFX_EnergyLaser
         Impact Effect Data: DA_Impact_Default
         Max Active Effects: 30
-    
+
     - ShieldVFXComponent:
         Shield Base Material: M_Shield_Base
         Shield Effect Template: NS_Shield_Glow
         Full Shield Color: (0, 1, 0, 0.8)
         Recharging Color: (0, 0.5, 1, 0.8)
         Shield Down Color: (1, 0, 0, 0.8)
-    
+
     - WeaponComponent:
         Weapon Data: DA_Weapon_PulseLaser
         Mount Location: (100, 0, 0)
@@ -981,8 +981,8 @@ Custom Weapon Fire Effect:
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: November 18, 2025  
+**Document Version**: 1.0
+**Last Updated**: November 18, 2025
 **Author**: Adastrea Development Team
 
 For questions or issues, refer to the main Combat System Guide or create an issue in the project repository.

@@ -30,7 +30,7 @@ BLUEPRINT IMPLEMENTATION GUIDE
    - Add module-specific components (mesh, lights, etc.)
    - Set ModuleType property (e.g., "Docking", "Commerce", "Defense")
    - Set ModulePower and other gameplay properties
-   
+
    Example Module Types:
    - BP_StationModule_DockingBay
    - BP_StationModule_TradeHub
@@ -46,7 +46,7 @@ BLUEPRINT IMPLEMENTATION GUIDE
      * Module properties panel
      * Placement grid/snap controls
      * Save/Load buttons
-   
+
    Key UI Elements:
    - Module selection buttons (call AddModule with different ModuleClass)
    - Delete button (call RemoveModule on selected module)

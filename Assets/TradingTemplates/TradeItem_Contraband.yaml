@@ -8,7 +8,7 @@ Description: |
   Illegal neural enhancement drugs that boost cognitive
   performance but carry serious health risks.
   Highly profitable but extremely dangerous to trade.
-  
+
 Category: Contraband
 
 # ====================
@@ -19,7 +19,7 @@ PriceVolatility:
   VolatilityMultiplier: 3.0
   MinPriceDeviation: 0.3
   MaxPriceDeviation: 5.0
-  
+
 bAffectedBySupplyDemand: true
 bAffectedByMarketEvents: true
 
@@ -34,7 +34,7 @@ TradeRestrictions:
     - "ZenithCoalition"
   RequiresPermitFactions: []
   MinReputationRequired: -100
-  
+
 ContrabandFineMultiplier: 10.0
 
 # ====================

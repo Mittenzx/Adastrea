@@ -163,19 +163,19 @@ usage: organize_content.py [-h] [--content-dir CONTENT_DIR] [--path PATH]
 
 options:
   -h, --help            Show this help message and exit
-  
+
   --content-dir CONTENT_DIR
                         Path to Content directory (default: Content)
-  
+
   --path PATH          Specific subfolder to organize (relative to Content)
                         Example: --path Imported
-  
+
   --dry-run            Preview changes without actually moving files
                         Always use this first!
-  
+
   --report-only        Generate report only, do not move files
                         Similar to --dry-run
-  
+
   --organize-unrecognized
                         Move unrecognized files to Uncategorized/ folder
                         By default, unrecognized files are left in place
@@ -286,7 +286,7 @@ After organizing files:
 
 **Problem**: Many files are marked as "Unrecognized"
 
-**Solution**: 
+**Solution**:
 1. Review the file names in the report
 2. If they follow a pattern, you can add detection rules in the script
 3. Or manually categorize them in Unreal Editor

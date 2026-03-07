@@ -32,7 +32,7 @@ UAntagonistManager::UAntagonistManager()
 void UAntagonistManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	
+
 	// Start the periodic update timer
 	StartUpdateTimer();
 }
@@ -41,7 +41,7 @@ void UAntagonistManager::Deinitialize()
 {
 	// Stop the update timer
 	StopUpdateTimer();
-	
+
 	Super::Deinitialize();
 }
 
@@ -51,10 +51,10 @@ void UAntagonistManager::OnFeatCompleted(UFeatDataAsset* CompletedFeat)
 	{
 		return;
 	}
-	
+
 	// Check if the Feat has an antagonist trigger
 	const FAntagonistTrigger& Trigger = CompletedFeat->AntagonistTrigger;
-	
+
 	if (Trigger.bShouldSpawnAntagonist)
 	{
 		// Check spawn chance
@@ -67,14 +67,14 @@ void UAntagonistManager::OnFeatCompleted(UFeatDataAsset* CompletedFeat)
 				Trigger.RivalGoal,
 				Trigger.InitialHeat
 			);
-			
+
 			UE_LOG(LogAdastrea, Log, TEXT("Feat completed: %s - spawned antagonist: %s (Goal: %s, Heat: %d)"),
 				*CompletedFeat->GetName(),
 				*NewAntagonist.AntagonistName,
 				*UEnum::GetValueAsString(Trigger.RivalGoal),
 				Trigger.InitialHeat
 			);
-			
+
 			// Broadcast event for other systems
 			OnAntagonistSpawned.Broadcast(NewAntagonist);
 		}
@@ -106,20 +106,20 @@ FActiveAntagonist UAntagonistManager::SpawnAntagonist(UFeatDataAsset* SourceFeat
 	NewAntagonist.CreationTime = FDateTime::Now();
 	NewAntagonist.EncounterCount = 0;
 	NewAntagonist.bIsActive = true;
-	
+
 	// Add to the list of antagonists
 	Antagonists.Add(NewAntagonist);
-	
-	UE_LOG(LogAdastrea, Log, TEXT("Spawned new antagonist: %s (Heat: %d)"), 
+
+	UE_LOG(LogAdastrea, Log, TEXT("Spawned new antagonist: %s (Heat: %d)"),
 		*NewAntagonist.AntagonistName.ToString(), NewAntagonist.HeatLevel);
-	
+
 	return NewAntagonist;
 }
 
 TArray<FActiveAntagonist> UAntagonistManager::GetActiveAntagonists() const
 {
 	TArray<FActiveAntagonist> ActiveList;
-	
+
 	for (const FActiveAntagonist& Antagonist : Antagonists)
 	{
 		if (Antagonist.bIsActive)
@@ -127,7 +127,7 @@ TArray<FActiveAntagonist> UAntagonistManager::GetActiveAntagonists() const
 			ActiveList.Add(Antagonist);
 		}
 	}
-	
+
 	return ActiveList;
 }
 
@@ -141,14 +141,14 @@ bool UAntagonistManager::GetAntagonistByID(const FGuid& AntagonistID, FActiveAnt
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 
 TArray<FActiveAntagonist> UAntagonistManager::GetAntagonistsByGoal(EAntagonistGoal Goal) const
 {
 	TArray<FActiveAntagonist> FilteredList;
-	
+
 	for (const FActiveAntagonist& Antagonist : Antagonists)
 	{
 		if (Antagonist.PrimaryGoal == Goal && Antagonist.bIsActive)
@@ -156,14 +156,14 @@ TArray<FActiveAntagonist> UAntagonistManager::GetAntagonistsByGoal(EAntagonistGo
 			FilteredList.Add(Antagonist);
 		}
 	}
-	
+
 	return FilteredList;
 }
 
 TArray<FActiveAntagonist> UAntagonistManager::GetHighHeatAntagonists(int32 MinHeat) const
 {
 	TArray<FActiveAntagonist> HighHeatList;
-	
+
 	for (const FActiveAntagonist& Antagonist : Antagonists)
 	{
 		if (Antagonist.HeatLevel >= MinHeat && Antagonist.bIsActive)
@@ -171,7 +171,7 @@ TArray<FActiveAntagonist> UAntagonistManager::GetHighHeatAntagonists(int32 MinHe
 			HighHeatList.Add(Antagonist);
 		}
 	}
-	
+
 	return HighHeatList;
 }
 
@@ -184,7 +184,7 @@ bool UAntagonistManager::HasActiveAntagonists() const
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 
@@ -195,12 +195,12 @@ bool UAntagonistManager::ModifyAntagonistHeat(const FGuid& AntagonistID, int32 H
 		if (Antagonist.AntagonistID == AntagonistID)
 		{
 			Antagonist.HeatLevel = FMath::Clamp(Antagonist.HeatLevel + HeatDelta, 0, 100);
-			UE_LOG(LogAdastrea, Log, TEXT("Modified antagonist %s heat by %d to %d"), 
+			UE_LOG(LogAdastrea, Log, TEXT("Modified antagonist %s heat by %d to %d"),
 				*Antagonist.AntagonistName.ToString(), HeatDelta, Antagonist.HeatLevel);
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 
@@ -213,12 +213,12 @@ bool UAntagonistManager::RecordEncounter(const FGuid& AntagonistID)
 			Antagonist.EncounterCount++;
 			// Increase heat slightly on encounter
 			Antagonist.HeatLevel = FMath::Clamp(Antagonist.HeatLevel + 5, 0, 100);
-			UE_LOG(LogAdastrea, Log, TEXT("Recorded encounter with antagonist %s (Total: %d)"), 
+			UE_LOG(LogAdastrea, Log, TEXT("Recorded encounter with antagonist %s (Total: %d)"),
 				*Antagonist.AntagonistName.ToString(), Antagonist.EncounterCount);
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 
@@ -229,12 +229,12 @@ bool UAntagonistManager::DeactivateAntagonist(const FGuid& AntagonistID)
 		if (Antagonist.AntagonistID == AntagonistID)
 		{
 			Antagonist.bIsActive = false;
-			UE_LOG(LogAdastrea, Log, TEXT("Deactivated antagonist: %s"), 
+			UE_LOG(LogAdastrea, Log, TEXT("Deactivated antagonist: %s"),
 				*Antagonist.AntagonistName.ToString());
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 
@@ -245,12 +245,12 @@ bool UAntagonistManager::ReactivateAntagonist(const FGuid& AntagonistID)
 		if (Antagonist.AntagonistID == AntagonistID)
 		{
 			Antagonist.bIsActive = true;
-			UE_LOG(LogAdastrea, Log, TEXT("Reactivated antagonist: %s"), 
+			UE_LOG(LogAdastrea, Log, TEXT("Reactivated antagonist: %s"),
 				*Antagonist.AntagonistName.ToString());
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 
@@ -305,12 +305,12 @@ FText UAntagonistManager::GenerateAntagonistName(UFeatDataAsset* SourceFeat, EAn
 			UE_LOG(LogAdastrea, Warning, TEXT("Unknown antagonist goal type (%d), using default names"), static_cast<int32>(Goal));
 			break;
 	}
-	
+
 	// Randomly select prefix and surname for variation
 	const TArray<FString>& Prefixes = AntagonistNames::GetPrefixes();
 	const int32 PrefixIndex = FMath::RandRange(0, Prefixes.Num() - 1);
 	const int32 SurnameIndex = FMath::RandRange(0, Surnames.Num() - 1);
-	
+
 	const FString GeneratedName = FString::Printf(TEXT("%s %s"), *Prefixes[PrefixIndex], *Surnames[SurnameIndex]);
 	return FText::FromString(GeneratedName);
 }
@@ -320,7 +320,7 @@ void UAntagonistManager::ApplyHeatDecay(float DeltaTime)
 	// Decay heat over time for all active antagonists
 	const float HeatDecayRate = 0.5f; // Heat points per second
 	const float HeatDecay = HeatDecayRate * DeltaTime;
-	
+
 	for (FActiveAntagonist& Antagonist : Antagonists)
 	{
 		if (Antagonist.bIsActive && Antagonist.HeatLevel > 0)

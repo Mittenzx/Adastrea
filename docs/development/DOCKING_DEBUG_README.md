@@ -1,7 +1,7 @@
 # 🎉 Docking Debug System - Complete!
 
-**Issue**: Debugging docking - "Can you add print string to each part of the docking and trading process"  
-**Status**: ✅ **COMPLETE** - Ready for testing  
+**Issue**: Debugging docking - "Can you add print string to each part of the docking and trading process"
+**Status**: ✅ **COMPLETE** - Ready for testing
 **Date**: January 9, 2026
 
 ---
@@ -109,7 +109,7 @@ Technical overview with:
 
 ### "No prompt appears"
 - **Look for**: 🔴 `[DOCKING] ERROR: DockingPromptWidgetClass not set in Blueprint`
-- **Fix**: 
+- **Fix**:
   1. Open `BP_PlayerShip` Blueprint
   2. Find `DockingPromptWidgetClass` property
   3. Set it to `WBP_DockingPrompt`
@@ -286,19 +286,19 @@ If you're stuck after trying the fixes:
 
 ## 💬 Quick FAQ
 
-**Q: Can I copy/paste the messages?**  
+**Q: Can I copy/paste the messages?**
 A: Not easily - they're on-screen debug text. Take screenshots instead.
 
-**Q: Will these messages appear in final game?**  
+**Q: Will these messages appear in final game?**
 A: They're compiled in but can be disabled later for production.
 
-**Q: Do I need to understand C++?**  
+**Q: Do I need to understand C++?**
 A: No! The messages tell you what's wrong in plain English.
 
-**Q: What if I want a scrollable widget?**  
+**Q: What if I want a scrollable widget?**
 A: That's possible but more complex. Start with these on-screen messages first.
 
-**Q: How long do messages stay on screen?**  
+**Q: How long do messages stay on screen?**
 A: 3-8 seconds depending on importance. Take screenshots to review.
 
 ---

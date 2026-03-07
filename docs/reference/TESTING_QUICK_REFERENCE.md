@@ -132,17 +132,17 @@ pip install Pillow
 
 ## Best Practices
 
-✓ Run smoke tests after adding/modifying maps  
-✓ Run screenshot tests after visual changes  
-✓ Review diff images before updating golden masters  
-✓ Commit golden masters to version control  
-✓ Schedule overnight runs for comprehensive validation  
-✓ Keep configuration files in version control  
+✓ Run smoke tests after adding/modifying maps
+✓ Run screenshot tests after visual changes
+✓ Review diff images before updating golden masters
+✓ Commit golden masters to version control
+✓ Schedule overnight runs for comprehensive validation
+✓ Keep configuration files in version control
 
 ## More Information
 
-📖 **Full Documentation**: [TESTING_AUTOMATION_GUIDE.md](TESTING_AUTOMATION_GUIDE.md)  
-📋 **Examples**: Run `python examples_testing_framework.py`  
+📖 **Full Documentation**: [TESTING_AUTOMATION_GUIDE.md](TESTING_AUTOMATION_GUIDE.md)
+📋 **Examples**: Run `python examples_testing_framework.py`
 🔍 **Script Source**: Check script files for detailed docstrings
 
 ---

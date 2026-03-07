@@ -506,18 +506,18 @@ Content/
    - 50% of Pathfinder stats
    - Rarity: Common
    - Cost: $150/day
-   
+
 2. **Mid:** Pathfinder Scout (use template)
    - 100% baseline
    - Rarity: Uncommon
    - Cost: $180/day
-   
+
 3. **Late:** Pathfinder Mk II
    - 130% of Pathfinder stats
    - +2 advanced systems
    - Rarity: Rare
    - Cost: $250/day
-   
+
 4. **Endgame:** Vanguard Scout
    - 150% of Pathfinder stats
    - Maximum sensors and stealth

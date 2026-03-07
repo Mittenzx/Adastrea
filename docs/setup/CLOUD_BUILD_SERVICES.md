@@ -93,7 +93,7 @@ Building Unreal Engine projects requires significant computational resources and
 #### Prerequisites:
 - Docker installed
 - GitHub account with UE container access
-- (For local Docker authentication only) GitHub Personal Access Token with `read:packages` scope  
+- (For local Docker authentication only) GitHub Personal Access Token with `read:packages` scope
   *Note: For GitHub Actions workflows, the built-in `secrets.GITHUB_TOKEN` is used and a Personal Access Token is not required.*
 
 #### Docker Container Access:
@@ -121,17 +121,17 @@ Building Unreal Engine projects requires significant computational resources and
    - Note: Access may take a few hours to propagate after accepting the invitation
 
 5. **Authenticate Docker** (for local development only):
-   
+
    **Important:** Replace the placeholder values below with your actual credentials:
    - `YOUR_TOKEN` → Your personal GitHub Personal Access Token (create at github.com/settings/tokens)
    - `YOUR_GITHUB_USERNAME` → Your GitHub username (e.g., "Mittenzx")
-   
+
    ```bash
    # Example command structure (replace placeholders with actual values):
    # The PAT must have 'read:packages' scope
    echo "YOUR_TOKEN" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
    ```
-   
+
    For GitHub Actions workflows, use the built-in `secrets.GITHUB_TOKEN` or configure a custom `secrets.GHCR_TOKEN` secret instead.
 
 **Troubleshooting Access Issues:**
@@ -156,14 +156,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-      
+
       - name: Login to GitHub Container Registry
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-      
+
       - name: Build Unreal Project
         # Use UE5-Build-Project action from marketplace
         # See: https://github.com/marketplace/actions/ue5-build-project
@@ -171,7 +171,7 @@ jobs:
           # Custom build commands here
           # Or use marketplace UE5 action when available
           echo "Build using Unreal Automation Tool"
-          
+
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -365,23 +365,23 @@ jobs:
   build-windows:
     name: Build Windows
     runs-on: windows-latest
-    
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           lfs: true
-      
+
       - name: Setup Build Environment
         run: |
           echo "Setting up Unreal Engine build environment"
           # Add UE build tool setup here
-      
+
       - name: Build Project
         run: |
           echo "Building Adastrea project"
           # Add build commands here
-      
+
       - name: Upload Artifacts
         if: success()
         uses: actions/upload-artifact@v4
@@ -393,21 +393,21 @@ jobs:
   build-linux:
     name: Build Linux
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           lfs: true
-      
+
       - name: Login to GitHub Container Registry
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-      
+
       - name: Build with UE Container
         run: |
           docker pull ghcr.io/epicgames/unreal-engine:dev-slim-5.6
           # Add container build commands here
-      
+
       - name: Upload Artifacts
         if: success()
         uses: actions/upload-artifact@v4
@@ -478,7 +478,7 @@ Before implementing a cloud build service:
 
 **Issue:** Docker login fails with "Cannot perform an interactive login from a non TTY device"
 **Root Cause:** GHCR_TOKEN secret is not configured or is empty
-**Solution:** 
+**Solution:**
   1. Create a GitHub Personal Access Token (PAT) at https://github.com/settings/tokens
   2. Token must have `read:packages` scope
   3. Add the token as a secret named `GHCR_TOKEN` in repository settings
@@ -486,7 +486,7 @@ Before implementing a cloud build service:
 
 **Issue:** Docker pull fails with "denied" error (even though login succeeds)
 **Root Cause:** Not a member of Epic Games GitHub organization
-**Solution:** 
+**Solution:**
   1. Link Epic account at https://www.epicgames.com/account/connections
   2. Accept Epic Games organization invitation (check GitHub notifications/email)
   3. Verify membership at https://github.com/EpicGames
@@ -524,6 +524,6 @@ For immediate implementation in a GitHub Actions environment, focus on:
 
 ---
 
-**Document Version:** 1.0  
-**Last Updated:** 2025-11-21  
+**Document Version:** 1.0
+**Last Updated:** 2025-11-21
 **Maintained By:** Adastrea Development Team

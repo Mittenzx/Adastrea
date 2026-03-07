@@ -29,7 +29,7 @@ The plugin uses a **hybrid architecture** that combines the best of both worlds:
    - Handles RAG system (LangChain, ChromaDB)
    - Processes LLM queries (OpenAI, Gemini)
    - Complex data processing and AI tasks
-   
+
 2. **UE Python Environment** (This Integration)
    - Runs inside Unreal Engine's Python interpreter
    - Direct access to UE APIs (`import unreal`)
@@ -40,11 +40,11 @@ The plugin uses a **hybrid architecture** that combines the best of both worlds:
 
 ### Benefits
 
-✅ **Direct Engine Access**: No IPC overhead for UE-specific operations  
-✅ **Rich API**: Access to all UE subsystems (actors, assets, blueprints, etc.)  
-✅ **Better Performance**: Native API calls vs. HTTP/socket communication  
-✅ **Editor Automation**: Powerful scripting for repetitive tasks  
-✅ **Real-time Operations**: Immediate feedback and results  
+✅ **Direct Engine Access**: No IPC overhead for UE-specific operations
+✅ **Rich API**: Access to all UE subsystems (actors, assets, blueprints, etc.)
+✅ **Better Performance**: Native API calls vs. HTTP/socket communication
+✅ **Editor Automation**: Powerful scripting for repetitive tasks
+✅ **Real-time Operations**: Immediate feedback and results
 ✅ **Official Support**: Maintained by Epic Games
 
 ### When to Use Each Approach
@@ -281,7 +281,7 @@ print(f"Found {len(actors)} static mesh actors")
 # Process actors in a specific region
 for actor in actors:
     x, y, z = actor.location
-    
+
     if x > 1000 and x < 2000:  # Filter by location
         print(f"Processing: {actor.actor_name} at ({x}, {y}, {z})")
         # Modify actor properties here...
@@ -303,13 +303,13 @@ grid_size = 5
 for i in range(grid_size):
     for j in range(grid_size):
         location = (i * spacing, j * spacing, 200.0)
-        
+
         light = bridge.spawn_actor(
             "PointLight",
             location=location,
             actor_name=f"GridLight_{i}_{j}"
         )
-        
+
         print(f"Spawned light at {location}")
 
 bridge.show_notification(
@@ -559,6 +559,6 @@ For issues or questions:
 
 ---
 
-**Last Updated**: November 15, 2025  
-**Version**: 1.0.0  
+**Last Updated**: November 15, 2025
+**Version**: 1.0.0
 **Status**: Production Ready ✅

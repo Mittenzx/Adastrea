@@ -149,26 +149,26 @@ struct FDiscoveryStatistics
 
 /**
  * Discovery Manager Subsystem
- * 
+ *
  * Game-wide manager for tracking all player discoveries including:
  * - Anomalies and spatial phenomena
  * - Archaeological sites and derelict vessels
  * - Discovery statistics and achievements
  * - Persistence across save/load
- * 
+ *
  * **Responsibilities:**
  * - Register new discoveries
  * - Track discovery state (discovered, explored, depleted)
  * - Provide discovery queries (by type, rarity, location)
  * - Calculate discovery statistics
  * - Fire events for UI updates and achievements
- * 
+ *
  * **Usage:**
  * - Access via UGameInstance::GetSubsystem<UDiscoveryManagerSubsystem>()
  * - DiscoveryComponent automatically registers discoveries
  * - Use Blueprint functions to query discovery state
  * - Subscribe to events for real-time updates
- * 
+ *
  * **Integration:**
  * - Works with DiscoveryComponent for registration
  * - Integrates with save system for persistence

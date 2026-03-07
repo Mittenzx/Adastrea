@@ -66,7 +66,7 @@ This guide will help you create the minimum content needed to make Adastrea play
 1. **Event Graph**:
    - Create `Enhanced Input Action` nodes
    - Connect to ship movement functions
-   
+
 2. **Simple movement setup**:
 ```
 Event Tick

@@ -2,8 +2,8 @@
 
 > **Comprehensive SVG-based Blueprint documentation for Adastrea MVP**
 
-**Last Updated**: December 30, 2025  
-**For Version**: Trade Simulator MVP  
+**Last Updated**: December 30, 2025
+**For Version**: Trade Simulator MVP
 **Target Engine**: Unreal Engine 5.6
 
 ---
@@ -186,10 +186,10 @@ Jump directly to the Blueprint you need:
 
 ### Common Pitfalls to Avoid
 
-❌ **Don't skip BeginPlay initialization** - Many systems require setup  
-❌ **Don't forget to set parent classes** - Use the specified C++ classes  
-❌ **Don't hardcode values** - Use Data Assets for configuration  
-❌ **Don't ignore validation** - Always check references before use  
+❌ **Don't skip BeginPlay initialization** - Many systems require setup
+❌ **Don't forget to set parent classes** - Use the specified C++ classes
+❌ **Don't hardcode values** - Use Data Assets for configuration
+❌ **Don't ignore validation** - Always check references before use
 ❌ **Don't mix Blueprint and C++ logic** - Keep roles clear
 
 ### Testing Checklist
@@ -297,6 +297,6 @@ Begin with [BP_SpaceGameMode](BP_SpaceGameMode.md) and follow the order above fo
 
 ---
 
-**Last Updated**: December 30, 2025  
-**Maintained by**: Adastrea Development Team  
+**Last Updated**: December 30, 2025
+**Maintained by**: Adastrea Development Team
 **Status**: Active Development - MVP Phase

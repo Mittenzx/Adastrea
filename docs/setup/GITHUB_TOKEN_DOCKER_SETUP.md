@@ -526,6 +526,6 @@ permissions:
 
 ---
 
-**Last Updated:** 2025-11-24  
-**Version:** 1.1  
+**Last Updated:** 2025-11-24
+**Version:** 1.1
 **Maintained By:** Adastrea Development Team

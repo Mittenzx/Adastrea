@@ -63,18 +63,18 @@ enum class EScanDetailLevel : uint8
 
 /**
  * Scanner Data Asset
- * 
+ *
  * Defines configuration for ship-mounted scanner systems including:
  * - Passive detection ranges and capabilities
  * - Active scanning power and resolution
  * - Signal identification accuracy
  * - Energy consumption and cooldown times
- * 
+ *
  * **Usage:**
  * 1. Create a Blueprint Data Asset based on this class
  * 2. Configure scanner properties for your ship type
  * 3. Assign to ScannerComponent in your spaceship Blueprint
- * 
+ *
  * **Scanner Types:**
  * - Basic: Short range, limited detail
  * - Advanced: Medium range, good detail

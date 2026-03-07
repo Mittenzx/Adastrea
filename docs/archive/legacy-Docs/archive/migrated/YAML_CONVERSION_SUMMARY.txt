@@ -161,10 +161,10 @@ FOR DESIGNERS - Import Now:
 4. Run import commands:
 
    import YAMLtoDataAsset
-   
+
    # Import all spaceships (24 files)
    YAMLtoDataAsset.batch_import_spaceships()
-   
+
    # Import all personnel (7 files)
    YAMLtoDataAsset.batch_import_personnel()
 

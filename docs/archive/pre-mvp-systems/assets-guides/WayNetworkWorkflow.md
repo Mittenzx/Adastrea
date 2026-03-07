@@ -273,13 +273,13 @@ Build a UI widget to display network info:
 On Construct:
   Get VerseSubsystem
   Get Network Asset (DA_Network_CraftsmenCompact)
-  
+
   Set Network Name Text
   Set Description Text
-  
+
   Network Verse Score → Update Progress Bar
   Qualifies For Network Bonuses → Enable Benefits Button
-  
+
   For Each Member in Get Members:
     Add List Item (Member Way Name, Influence Level)
 ```
@@ -295,11 +295,11 @@ Quest Giver = Engineers' Guild
 On Quest Accept:
   Get Networks For Way (Engineers' Guild)
   → Store Network References
-  
+
 On Quest Complete:
   Award Feat to Player
   Record Feat With Network Effects (auto spillover)
-  
+
   For Each Network:
     If Qualifies For Network Bonuses:
       Grant Network-Exclusive Reward
@@ -320,7 +320,7 @@ Apply network bonuses to trading:
 On Player Enter:
   Get Station Faction
   Get Networks For Way (Station Faction)
-  
+
   For Each Network:
     If Player Qualifies For Network Bonuses:
       Apply Discount (5-15%)
@@ -351,7 +351,7 @@ Award test Feats and verify:
 1. **Complete a Feat aligned with network Precepts**
    - Expected: Base reputation + network bonus
    - Check: Reputation with primary Way increases
-   
+
 2. **Check spillover to other members**
    - Expected: Other members gain spillover %
    - Verify: Reputation increases match calculation
@@ -398,11 +398,11 @@ Create networks that form based on player actions:
 Check Player Reputation with Multiple Ways:
   If Rep > 50 with Way A, Way B, Way C
   AND Ways share 2+ Precepts
-  
+
   Create New Network Asset (runtime)
   Add Ways as Members
   Register Network with VerseSubsystem
-  
+
   Show "New Alliance Formed" Event
 ```
 
@@ -420,7 +420,7 @@ Create opposing networks with conflicting values:
 On Player Supports Network A:
   Increase Rep with Network A members
   Decrease Rep with Network B members
-  
+
   Trigger Network Rivalry Event
 ```
 
@@ -440,7 +440,7 @@ Check Network Stability:
   For Each Member:
     If Commitment < Threshold
     OR Relationship with Other Members < 0
-    
+
     Set Network bIsActive = false
     Unregister Network
     Show "Network Dissolved" Event

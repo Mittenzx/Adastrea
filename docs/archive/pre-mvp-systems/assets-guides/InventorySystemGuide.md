@@ -324,14 +324,14 @@ bool UseItem(int32 SlotIndex);
 
 ```cpp
 // Called when item added
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnItemAdded, 
-    UInventoryItemDataAsset*, Item, 
-    int32, Quantity, 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnItemAdded,
+    UInventoryItemDataAsset*, Item,
+    int32, Quantity,
     int32, SlotIndex);
 
 // Called when item removed
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemRemoved, 
-    UInventoryItemDataAsset*, Item, 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemRemoved,
+    UInventoryItemDataAsset*, Item,
     int32, Quantity);
 
 // Called when inventory changes
@@ -530,7 +530,7 @@ Display Each Slot:
 ```
 Hotbar Slot 1-9:
   → Maps to Inventory Slots 0-8
-  
+
 On Hotkey Press (1-9):
   → Get Mapped Inventory Slot
   → Use Item in Slot
@@ -696,6 +696,6 @@ See `Assets/InventoryTemplates/` for complete YAML examples:
 
 ---
 
-**Last Updated**: November 11, 2025  
-**Version**: 1.0  
+**Last Updated**: November 11, 2025
+**Version**: 1.0
 **Maintained by**: Adastrea Development Team

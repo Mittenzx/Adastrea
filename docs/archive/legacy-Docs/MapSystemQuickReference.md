@@ -241,7 +241,7 @@ if (Path.Num() > 0)
     // Get first waypoint (next sector in path)
     ASpaceSectorMap* NextSector = Path[0];
     FVector WaypointPos = NextSector->GetSectorCenter();
-    
+
     // Set navigation target
     SetNavigationTarget(WaypointPos);
 }
@@ -254,11 +254,11 @@ if (Path.Num() > 0)
 void APlayerShip::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-    
+
     // Find current sector
     TArray<ASpaceSectorMap*> AllSectors = GetAllSectors();
     ASpaceSectorMap* CurrentSector = nullptr;
-    
+
     for (ASpaceSectorMap* Sector : AllSectors)
     {
         if (Sector->IsPositionInSector(GetActorLocation()))
@@ -267,7 +267,7 @@ void APlayerShip::Tick(float DeltaTime)
             break;
         }
     }
-    
+
     // Check for sector change
     if (CurrentSector != LastSector)
     {
@@ -292,7 +292,7 @@ void AMyHUD::DrawSectorInfo()
 {
     // Get player's current sector
     ASpaceSectorMap* Sector = FindPlayerSector();
-    
+
     if (Sector)
     {
         // Display sector name
@@ -301,7 +301,7 @@ void AMyHUD::DrawSectorInfo()
             *Sector->SectorName.ToString(),
             Sector->GetActorCountInSector()
         );
-        
+
         DrawText(SectorText, FColor::White, 50, 50);
     }
 }

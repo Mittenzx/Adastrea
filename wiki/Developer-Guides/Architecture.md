@@ -73,7 +73,7 @@ class USpaceshipDataAsset : public UDataAsset
 {
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     FText DisplayName;
-    
+
     UFUNCTION(BlueprintCallable, BlueprintPure)
     float GetCombatRating() const;
 };
@@ -96,7 +96,7 @@ USTRUCT(BlueprintType)
 struct FTrait {
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     FText TraitName;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float Modifier;
 };

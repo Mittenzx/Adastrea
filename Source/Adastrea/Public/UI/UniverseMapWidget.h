@@ -45,20 +45,20 @@ struct FUniverseSectorInfo
 
 /**
  * Universe Map Widget for displaying all sectors in the universe
- * 
+ *
  * This widget provides a comprehensive map interface showing:
  * - All sectors in the game world organized in a grid
  * - Player's current location
  * - Sector information and navigation
  * - Universe exploration progress
- * 
+ *
  * Usage:
  * - Create a Widget Blueprint based on this class (e.g., WBP_UniverseMap)
  * - Design the universe map layout in the Blueprint designer
  * - Override BlueprintNativeEvents to customize sector display
  * - Bind to selection events for sector navigation
  * - Toggle visibility with M key (default mapping)
- * 
+ *
  * Integration:
  * - Works with multiple ASpaceSectorMap actors
  * - Can integrate with SectorMapWidget for detailed sector view

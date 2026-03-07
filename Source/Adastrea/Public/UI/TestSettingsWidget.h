@@ -6,20 +6,20 @@
 
 /**
  * Test Settings Pre-Screen widget for configuring testing parameters
- * 
+ *
  * This widget provides a configuration screen displayed before the main menu:
  * - Dropdown menus for test settings (ship type, difficulty, debug modes)
  * - Apply/Continue button to proceed to main menu
  * - Reset to defaults button
  * - Settings are stored for use during gameplay testing
- * 
+ *
  * Usage:
  * - Create a Widget Blueprint based on this class (e.g., WBP_TestSettings)
  * - Add ComboBox widgets for each setting option
  * - Bind dropdown selections to the provided event functions
  * - Override BlueprintNativeEvents to customize behavior
  * - Display this before the main menu for testing purposes
- * 
+ *
  * Integration:
  * - Can be shown before MainMenuWidget
  * - Settings can be read by GameMode or PlayerController

@@ -210,7 +210,7 @@ class USpaceshipDataAsset : public UDataAsset
     // 10-15 core properties with validation
     UPROPERTY(EditAnywhere, meta=(ClampMin=1, ClampMax=100))
     float CoreStat1;
-    
+
     #if WITH_EDITOR
     virtual void PostEditChangeProperty(...) override
     {
@@ -542,7 +542,7 @@ Before making any significant architectural decisions, read:
 
 ---
 
-**Last Updated**: 2025-12-24  
-**Based on**: Critical Review Analysis (Oct-Dec 2025)  
-**Purpose**: Prevent repeating architectural and process mistakes  
+**Last Updated**: 2025-12-24
+**Based on**: Critical Review Analysis (Oct-Dec 2025)
+**Purpose**: Prevent repeating architectural and process mistakes
 **Mandate**: Focus on trade simulator MVP with player validation

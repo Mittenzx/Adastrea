@@ -9,7 +9,7 @@ PersonnelName: "William Jackson"
 # Basic Identity
 Biography: |
   This individual graduated from the academy with honors and has been rising steadily. They are valued for their diplomatic skills and defended a civilian station against pirate raiders.
-  
+
 Age: 50
 Gender: "Male"
 Species: "Human"
@@ -61,7 +61,7 @@ ContractMonthsRemaining: 0
 PersonalityType: "Adventurous"
 PersonalityDescription: |
   Adventurous personality with focus on sensoroperator duties.
-  
+
 Traits:
   - TraitName: "Lucky"
     TraitDescription: "Occasional bonuses"

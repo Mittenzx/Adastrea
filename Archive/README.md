@@ -2,8 +2,8 @@
 
 **Purpose**: Storage for non-MVP files that will be needed after Trade Simulator MVP validation
 
-**Date Archived**: December 30, 2025  
-**Reason**: Focus development on Trade Simulator MVP (12-week timeline)  
+**Date Archived**: December 30, 2025
+**Reason**: Focus development on Trade Simulator MVP (12-week timeline)
 **Based on**: Critical Review Analysis and Trade Simulator MVP Instructions
 
 ---
@@ -116,8 +116,8 @@ These systems remain in active development:
 
 ## 📊 Archive Statistics
 
-**Systems Archived**: 14 complete game systems  
-**Files Archived**: ~100+ C++ files, ~50+ documentation files, ~20+ Python scripts  
+**Systems Archived**: 14 complete game systems
+**Files Archived**: ~100+ C++ files, ~50+ documentation files, ~20+ Python scripts
 **Deferred Until**: Post-MVP validation (March 2026 or later)
 
 ---
@@ -158,5 +158,5 @@ See primary documentation:
 
 **Remember**: One polished system beats ten half-finished systems.
 
-**Last Updated**: December 30, 2025  
+**Last Updated**: December 30, 2025
 **Next Review**: After Week 4 playtest (late January 2026)

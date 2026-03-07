@@ -16,18 +16,18 @@ struct FAdastreaScriptResult
 
 /**
  * Service for executing Python code in Unreal Engine using IPythonScriptPlugin
- * 
+ *
  * ⚠️ SECURITY WARNING:
  * This service executes arbitrary Python code directly in the Unreal Editor process.
  * Never execute untrusted code, including LLM-generated code, without human review.
- * 
+ *
  * Recommended safety measures:
  * 1. Require explicit user confirmation before executing any LLM-generated Python
  * 2. Implement a whitelist of allowed operations/modules
  * 3. Display the code to the user for review before execution
  * 4. Consider sandboxing or running in a restricted environment
  * 5. Validate and sanitize all inputs
- * 
+ *
  * See "Security Considerations" section below for detailed mitigation strategies.
  */
 class ADASTREADIRECTOR_API FAdastreaScriptService

@@ -1,9 +1,9 @@
 # Marketplace Module - Complete Setup Guide
 
-**Module Type**: `AMarketplaceModule`  
-**Blueprint Class**: `BP_SpaceStationModule_Marketplace`  
-**Power Consumption**: 40 units  
-**Module Group**: Public  
+**Module Type**: `AMarketplaceModule`
+**Blueprint Class**: `BP_SpaceStationModule_Marketplace`
+**Power Consumption**: 40 units
+**Module Group**: Public
 **Last Updated**: 2026-01-18
 
 ---
@@ -130,8 +130,8 @@ BP_SpaceStationModule_Marketplace (Self)
 
 ### Market Data Asset
 
-**Type**: `UMarketDataAsset*`  
-**Access**: EditAnywhere, BlueprintReadWrite  
+**Type**: `UMarketDataAsset*`
+**Access**: EditAnywhere, BlueprintReadWrite
 **Category**: Marketplace
 
 Market configuration defining what this marketplace sells and buys. Contains inventory, pricing rules, and trading permissions.
@@ -140,18 +140,18 @@ Market configuration defining what this marketplace sells and buys. Contains inv
 
 ### Is Open
 
-**Type**: `bool`  
-**Default**: true  
-**Access**: EditAnywhere, BlueprintReadWrite  
+**Type**: `bool`
+**Default**: true
+**Access**: EditAnywhere, BlueprintReadWrite
 **Category**: Marketplace
 
 Whether this marketplace is currently open for trading. Can be toggled at runtime to open/close the market.
 
 ### Marketplace Name
 
-**Type**: `FText`  
-**Default**: (empty)  
-**Access**: EditAnywhere, BlueprintReadWrite  
+**Type**: `FText`
+**Default**: (empty)
+**Access**: EditAnywhere, BlueprintReadWrite
 **Category**: Marketplace
 
 Display name for this marketplace (e.g., "Central Market", "Black Market", "Trade Exchange").
@@ -162,14 +162,14 @@ Display name for this marketplace (e.g., "Central Market", "Black Market", "Trad
 
 ### GetMarketData()
 
-**Type**: BlueprintCallable, BlueprintPure  
+**Type**: BlueprintCallable, BlueprintPure
 **Returns**: `UMarketDataAsset*` - The market data asset or nullptr
 
 Get the market data asset for this marketplace.
 
 ### IsAvailableForTrading()
 
-**Type**: BlueprintCallable, BlueprintPure  
+**Type**: BlueprintCallable, BlueprintPure
 **Returns**: `bool` - True if marketplace can be used
 
 Check if this marketplace is open and has a valid market configuration.
@@ -190,8 +190,8 @@ The station Blueprint provides functions to query marketplace information:
 
 #### GetOpenMarketplaceCount()
 
-**Type**: BlueprintCallable, BlueprintPure  
-**Category**: Station|Trading  
+**Type**: BlueprintCallable, BlueprintPure
+**Category**: Station|Trading
 **Returns**: `int32` - Number of marketplaces currently open for trading
 
 Shows the count of marketplaces that are open and available for trading.
@@ -200,14 +200,14 @@ Shows the count of marketplaces that are open and available for trading.
 ```
 In BP_SpaceStation Class Defaults or Event Graph:
   Get Open Marketplace Count → Print String
-  
+
 Output: "This station has 2 open marketplaces"
 ```
 
 #### GetTotalMarketplaceCount()
 
-**Type**: BlueprintCallable, BlueprintPure  
-**Category**: Station|Trading  
+**Type**: BlueprintCallable, BlueprintPure
+**Category**: Station|Trading
 **Returns**: `int32` - Total number of marketplace modules
 
 Shows the total count of all marketplace modules (open or closed).
@@ -216,14 +216,14 @@ Shows the total count of all marketplace modules (open or closed).
 ```
 In BP_SpaceStation:
   Get Total Marketplace Count → Print String
-  
+
 Output: "This station has 3 total marketplaces"
 ```
 
 #### GetMarketplaceNames()
 
-**Type**: BlueprintCallable  
-**Category**: Station|Trading  
+**Type**: BlueprintCallable
+**Category**: Station|Trading
 **Returns**: `TArray<FText>` - Array of marketplace display names
 
 Gets the names of all marketplaces on the station. Useful for displaying a list of available markets in UI.
@@ -233,14 +233,14 @@ Gets the names of all marketplaces on the station. Useful for displaying a list 
 In BP_SpaceStation:
   Get Marketplace Names → For Each Loop
     → Print String (Loop Body)
-  
+
 Output: "Central Market", "Industrial Exchange", "Luxury Bazaar"
 ```
 
 #### GetMarketplaceModule() / GetMarketplaceModules()
 
-**Type**: BlueprintCallable  
-**Category**: Station|Trading  
+**Type**: BlueprintCallable
+**Category**: Station|Trading
 **Returns**: Single marketplace or array of all marketplaces
 
 Access marketplace modules directly to query their properties.
@@ -520,7 +520,7 @@ Icon: T_Icon_Water (texture)
 
 ### Issue: Trading UI Won't Open
 
-**Likely Cause**: MarketDataAsset not assigned  
+**Likely Cause**: MarketDataAsset not assigned
 **Solution**:
 - Open marketplace Blueprint Class Defaults
 - Verify Market Data Asset field is populated
@@ -529,7 +529,7 @@ Icon: T_Icon_Water (texture)
 
 ### Issue: No Items in Market
 
-**Likely Cause**: Market inventory empty  
+**Likely Cause**: Market inventory empty
 **Solution**:
 - Open Market Data Asset
 - Add entries to Inventory array
@@ -539,7 +539,7 @@ Icon: T_Icon_Water (texture)
 
 ### Issue: Prices Seem Wrong
 
-**Likely Cause**: Markup/markdown not configured  
+**Likely Cause**: Markup/markdown not configured
 **Solution**:
 - Check Sell Price Markup (1.1-1.5 typical)
 - Check Buy Price Markdown (0.7-0.9 typical)
@@ -560,7 +560,7 @@ Icon: T_Icon_Water (texture)
 
 ### Issue: Multiple Markets Interfere
 
-**Cause**: Same MarketDataAsset used on multiple marketplaces  
+**Cause**: Same MarketDataAsset used on multiple marketplaces
 **Solution**:
 - Create unique MarketDataAsset for each marketplace
 - Or: Intentionally share if markets should have shared inventory
@@ -731,5 +731,5 @@ Access via:
 
 ---
 
-**Maintained by**: Adastrea Development Team  
+**Maintained by**: Adastrea Development Team
 **For Support**: See main project README.md

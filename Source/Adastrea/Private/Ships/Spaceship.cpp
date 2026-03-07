@@ -124,7 +124,7 @@ ASpaceship::ASpaceship()
 void ASpaceship::BeginPlay()
 {
     Super::BeginPlay();
-    
+
     UE_LOG(LogAdastreaShips, Warning, TEXT("*** ASpaceship::BeginPlay on %s ***"), *GetName());
 
     // Initialize hull integrity from data asset if available
@@ -153,12 +153,12 @@ void ASpaceship::BeginPlay()
 void ASpaceship::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
     Super::PostEditChangeProperty(PropertyChangedEvent);
-    
+
     // Synchronize camera spring arm settings when properties change in editor
     if (PropertyChangedEvent.Property && CameraSpringArm)
     {
         FName PropertyName = PropertyChangedEvent.Property->GetFName();
-        
+
         if (PropertyName == GET_MEMBER_NAME_CHECKED(ASpaceship, CameraDistance))
         {
             CameraSpringArm->TargetArmLength = CameraDistance;
@@ -178,8 +178,8 @@ void ASpaceship::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEv
 void ASpaceship::PossessedBy(AController* NewController)
 {
     Super::PossessedBy(NewController);
-    UE_LOG(LogAdastreaShips, Warning, TEXT("*** SHIP POSSESSED: %s by controller %s ***"), 
-        *GetName(), 
+    UE_LOG(LogAdastreaShips, Warning, TEXT("*** SHIP POSSESSED: %s by controller %s ***"),
+        *GetName(),
         NewController ? *NewController->GetName() : TEXT("nullptr"));
 }
 
@@ -251,13 +251,13 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
     {
         // Check if ASpaceship has its own configured input actions
         bool bHasOwnActions = (MoveAction != nullptr || LookAction != nullptr);
-        
+
         if (bHasOwnActions)
         {
-            UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Using ASpaceship's own input actions (MoveAction=%s, LookAction=%s)"), 
+            UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Using ASpaceship's own input actions (MoveAction=%s, LookAction=%s)"),
                 MoveAction ? TEXT("Valid") : TEXT("NULL"),
                 LookAction ? TEXT("Valid") : TEXT("NULL"));
-            
+
             // Use ASpaceship's sophisticated input handling
             if (MoveAction)
             {
@@ -274,7 +274,7 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
         else
         {
             UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: No configured input actions, delegating to SpaceshipControlsComponent"));
-            
+
             // Initialize SpaceshipControlsComponent if present (handles basic movement/look/fire)
             USpaceshipControlsComponent* ControlsComponent = FindComponentByClass<USpaceshipControlsComponent>();
             if (ControlsComponent)
@@ -322,7 +322,7 @@ void ASpaceship::Move(const FInputActionValue& Value)
 {
     // Get the 3D vector input (WASD + QE for vertical)
     const FVector MovementVector = Value.Get<FVector>();
-    UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship::Move - MovementVector: X=%.2f Y=%.2f Z=%.2f"), 
+    UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship::Move - MovementVector: X=%.2f Y=%.2f Z=%.2f"),
         MovementVector.X, MovementVector.Y, MovementVector.Z);
 
     // Forward/Backward (W/S)
@@ -341,28 +341,28 @@ FVector2D ASpaceship::NormalizeLookInputByAspectRatio(const FVector2D& LookInput
     {
         return LookInput;
     }
-    
+
     int32 ViewportSizeX, ViewportSizeY;
     PC->GetViewportSize(ViewportSizeX, ViewportSizeY);
-    
+
     if (ViewportSizeX <= 0 || ViewportSizeY <= 0)
     {
         return LookInput;
     }
-    
+
     // Calculate aspect ratio (width/height)
     float AspectRatio = static_cast<float>(ViewportSizeX) / static_cast<float>(ViewportSizeY);
-    
+
     // Normalize X (horizontal) input by aspect ratio
     // Wider screens produce larger horizontal deltas; dividing by aspect ratio
     // compensates for this, making horizontal/vertical sensitivity feel balanced
     // Y input remains unchanged as vertical deltas are consistent across aspect ratios
     FVector2D NormalizedInput = LookInput;
     NormalizedInput.X /= AspectRatio;
-    
-    UE_LOG(LogAdastreaInput, Verbose, TEXT("NormalizeLookInput - RAW: X=%.2f Y=%.2f -> NORMALIZED: X=%.2f Y=%.2f (AspectRatio=%.2f)"), 
+
+    UE_LOG(LogAdastreaInput, Verbose, TEXT("NormalizeLookInput - RAW: X=%.2f Y=%.2f -> NORMALIZED: X=%.2f Y=%.2f (AspectRatio=%.2f)"),
         LookInput.X, LookInput.Y, NormalizedInput.X, NormalizedInput.Y, AspectRatio);
-    
+
     return NormalizedInput;
 }
 
@@ -376,7 +376,7 @@ void ASpaceship::Look(const FInputActionValue& Value)
 
     // Get the 2D vector input (mouse X/Y)
     FVector2D LookAxisVector = Value.Get<FVector2D>();
-    
+
     // Normalize input relative to viewport aspect ratio to compensate for
     // larger horizontal deltas on wide screens, ensuring consistent feel
     if (APlayerController* PC = Cast<APlayerController>(GetController()))
@@ -414,12 +414,12 @@ void ASpaceship::MoveForward(float Value)
             MovementComponent->Velocity += AccelerationVector;
         }
     }
-    
+
     // Update particle throttle based on forward movement
     if (ParticleComponent)
     {
         ParticleComponent->UpdateThrottle(FMath::Abs(Value));
-        
+
         // Activate RCS thrusters based on direction
         if (Value > 0.0f)
         {
@@ -441,7 +441,7 @@ void ASpaceship::MoveRight(float Value)
     // Apply strafe independence factor for realistic feel
     float StrafeValue = Value * StrafeIndependence;
     AddMovementInput(GetActorRightVector(), StrafeValue);
-    
+
     // Activate RCS thrusters for strafing
     if (ParticleComponent)
     {
@@ -464,7 +464,7 @@ void ASpaceship::MoveUp(float Value)
     // X4-style: vertical strafe is independent from forward motion
     float StrafeValue = Value * StrafeIndependence;
     AddMovementInput(GetActorUpVector(), StrafeValue);
-    
+
     // Activate RCS thrusters for vertical movement
     if (ParticleComponent)
     {
@@ -487,7 +487,7 @@ void ASpaceship::Turn(float Value)
     if (GetWorld())
     {
         const float DeltaSeconds = GetWorld()->GetDeltaSeconds();
-        
+
         if (bFlightAssistEnabled)
         {
             // Get ship-specific rotation rate multiplier from data asset
@@ -496,7 +496,7 @@ void ASpaceship::Turn(float Value)
             {
                 ShipRotationMultiplier = ShipDataAsset->RotationRateMultiplier;
             }
-            
+
             // Mouse position flight is now handled in UpdateMousePositionFlight() called from Tick()
             // This function only handles mouse delta mode (when bUseMousePositionFlight is false)
             if (!bUseMousePositionFlight)
@@ -504,13 +504,13 @@ void ASpaceship::Turn(float Value)
                 // Original X4-style smooth rotation with damping (mouse delta mode)
                 // Apply mouse flight sensitivity and ship rotation multiplier
                 float RotationRate = Value * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
-                
-                UE_LOG(LogAdastreaInput, Verbose, TEXT("ASpaceship::Turn - YawInput=%.2f, RotationRate=%.2f"), 
+
+                UE_LOG(LogAdastreaInput, Verbose, TEXT("ASpaceship::Turn - YawInput=%.2f, RotationRate=%.2f"),
                     Value, RotationRate);
-                
+
                 // Interpolate rotation velocity for smooth feel
                 RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, RotationRate, DeltaSeconds, FlightAssistResponsiveness);
-                
+
                 // Apply rotation directly to actor
                 FRotator DeltaRotation = FRotator(0.0f, RotationVelocity.Yaw * DeltaSeconds, 0.0f);
                 AddActorWorldRotation(DeltaRotation);
@@ -525,7 +525,7 @@ void ASpaceship::Turn(float Value)
             {
                 ShipRotationMultiplier = ShipDataAsset->RotationRateMultiplier;
             }
-            
+
             FRotator DeltaRotation = FRotator(0.0f, Value * TurnRate * ShipRotationMultiplier * DeltaSeconds, 0.0f);
             AddActorWorldRotation(DeltaRotation);
         }
@@ -540,7 +540,7 @@ void ASpaceship::LookUp(float Value)
     if (GetWorld())
     {
         const float DeltaSeconds = GetWorld()->GetDeltaSeconds();
-        
+
         if (bFlightAssistEnabled)
         {
             // Get ship-specific rotation rate multiplier from data asset
@@ -549,20 +549,20 @@ void ASpaceship::LookUp(float Value)
             {
                 ShipRotationMultiplier = ShipDataAsset->RotationRateMultiplier;
             }
-            
+
             // Mouse position flight is now handled in UpdateMousePositionFlight() called from Tick()
             // This function only handles mouse delta mode (when bUseMousePositionFlight is false)
             if (!bUseMousePositionFlight)
             {
                 // Original X4-style smooth rotation with damping (mouse delta mode)
                 float RotationRate = Value * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
-                
-                UE_LOG(LogAdastreaInput, Verbose, TEXT("ASpaceship::LookUp - PitchInput=%.2f, RotationRate=%.2f"), 
+
+                UE_LOG(LogAdastreaInput, Verbose, TEXT("ASpaceship::LookUp - PitchInput=%.2f, RotationRate=%.2f"),
                     Value, RotationRate);
-                
+
                 // Interpolate rotation velocity for smooth feel
                 RotationVelocity.Pitch = FMath::FInterpTo(RotationVelocity.Pitch, RotationRate, DeltaSeconds, FlightAssistResponsiveness);
-                
+
                 // Apply rotation directly to actor
                 FRotator DeltaRotation = FRotator(RotationVelocity.Pitch * DeltaSeconds, 0.0f, 0.0f);
                 AddActorWorldRotation(DeltaRotation);
@@ -577,7 +577,7 @@ void ASpaceship::LookUp(float Value)
             {
                 ShipRotationMultiplier = ShipDataAsset->RotationRateMultiplier;
             }
-            
+
             FRotator DeltaRotation = FRotator(Value * TurnRate * ShipRotationMultiplier * DeltaSeconds, 0.0f, 0.0f);
             AddActorWorldRotation(DeltaRotation);
         }
@@ -592,22 +592,22 @@ void ASpaceship::Roll(float Value)
     if (GetWorld())
     {
         const float DeltaSeconds = GetWorld()->GetDeltaSeconds();
-        
+
         // Get ship-specific rotation rate multiplier from data asset
         float ShipRotationMultiplier = 1.0f;
         if (ShipDataAsset)
         {
             ShipRotationMultiplier = ShipDataAsset->RotationRateMultiplier;
         }
-        
+
         if (bFlightAssistEnabled)
         {
             // X4-style: smooth rotation with damping
             float RotationRate = Value * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
-            
+
             // Interpolate rotation velocity for smooth feel
             RotationVelocity.Roll = FMath::FInterpTo(RotationVelocity.Roll, RotationRate, DeltaSeconds, FlightAssistResponsiveness);
-            
+
             // Apply roll rotation to actor in local space to avoid gimbal lock
             FRotator DeltaRotation = FRotator(0.0f, 0.0f, RotationVelocity.Roll * DeltaSeconds);
             AddActorLocalRotation(DeltaRotation);
@@ -688,19 +688,19 @@ void ASpaceship::ShowHUDAlert(const FText& Message, float Duration, bool bIsWarn
 
     // Try to find the HUD widget
     UAdastreaHUDWidget* HUDWidget = nullptr;
-    
+
     // First check if we have a cached reference to the HUD widget
     // (This would need to be set up when the HUD is created)
-    
+
     // For now, we'll search for it in the viewport
     TArray<UUserWidget*> FoundWidgets;
     UWidgetBlueprintLibrary::GetAllWidgetsOfClass(GetWorld(), FoundWidgets, UAdastreaHUDWidget::StaticClass(), false);
-    
+
     if (FoundWidgets.Num() > 0)
     {
         HUDWidget = Cast<UAdastreaHUDWidget>(FoundWidgets[0]);
     }
-    
+
     if (HUDWidget)
     {
         // Call the HUD widget's ShowAlert function
@@ -713,7 +713,7 @@ void ASpaceship::ShowHUDAlert(const FText& Message, float Duration, bool bIsWarn
         {
             GEngine->AddOnScreenDebugMessage(-1, Duration, bIsWarning ? FColor::Red : FColor::Yellow, Message.ToString());
         }
-        
+
         // Also log to output log
         UE_LOG(LogAdastrea, Log, TEXT("HUD Alert: %s"), *Message.ToString());
     }
@@ -726,10 +726,10 @@ FText ASpaceship::GetShipName() const
     {
         return ShipDataAsset->ShipName;
     }
-    
+
     // Otherwise, use the actor's label or name
     FString ActorName = GetName();
-    
+
     return FText::FromString(ActorName);
 }
 
@@ -740,7 +740,7 @@ FText ASpaceship::GetShipClass() const
     {
         return ShipDataAsset->ShipClass;
     }
-    
+
     // Default fallback
     return FText::FromString("Starship");
 }
@@ -778,13 +778,13 @@ bool ASpaceship::CanAdjustThrottle()
     {
         return false;
     }
-    
+
     float CurrentTime = World->GetTimeSeconds();
     if (CurrentTime - LastThrottleAdjustmentTime < ThrottleAdjustmentCooldown)
     {
         return false; // Too soon, skip this adjustment
     }
-    
+
     LastThrottleAdjustmentTime = CurrentTime;
     return true;
 }
@@ -795,7 +795,7 @@ void ASpaceship::ThrottleUp()
     {
         return;
     }
-    
+
     ThrottlePercentage = FMath::Clamp(ThrottlePercentage + ThrottleStep, 0.0f, 100.0f);
 }
 
@@ -805,7 +805,7 @@ void ASpaceship::ThrottleDown()
     {
         return;
     }
-    
+
     ThrottlePercentage = FMath::Clamp(ThrottlePercentage - ThrottleStep, 0.0f, 100.0f);
 }
 
@@ -820,7 +820,7 @@ void ASpaceship::ActivateBoost()
     if (!bTravelModeActive)
     {
         bBoostActive = true;
-        
+
         // Update movement component max speed
         if (MovementComponent)
         {
@@ -832,7 +832,7 @@ void ASpaceship::ActivateBoost()
 void ASpaceship::DeactivateBoost()
 {
     bBoostActive = false;
-    
+
     // Restore normal max speed
     if (MovementComponent)
     {
@@ -886,13 +886,13 @@ void ASpaceship::ApplyFlightAssist(float DeltaTime)
 {
     /**
      * X4-style Flight Assist Implementation:
-     * 
+     *
      * When flight assist is enabled:
      * - Ship maintains orientation when no rotation input is given
      * - Rotation is smoothly damped for natural feel
      * - Velocity is maintained when no movement input is given
      * - Ship responds to throttle setting rather than direct acceleration
-     * 
+     *
      * This creates the "fly-by-wire" feel of X4: Foundations where the ship
      * computer assists the pilot in maintaining stable flight.
      */
@@ -919,8 +919,8 @@ void ASpaceship::ApplyFlightAssist(float DeltaTime)
     }
 
     // Preserve velocity when no movement input (inertia in space)
-    if (FMath::IsNearlyZero(ForwardInput, 0.01f) && 
-        FMath::IsNearlyZero(RightInput, 0.01f) && 
+    if (FMath::IsNearlyZero(ForwardInput, 0.01f) &&
+        FMath::IsNearlyZero(RightInput, 0.01f) &&
         FMath::IsNearlyZero(UpInput, 0.01f))
     {
         // In X4, with flight assist, the ship maintains its velocity
@@ -942,11 +942,11 @@ void ASpaceship::ApplyAutoLeveling(float DeltaTime)
 {
     /**
      * X4-style Auto-Leveling:
-     * 
+     *
      * When no rotation input is given, the ship automatically levels its roll
      * to the ecliptic plane (assuming Z-up in Unreal). This makes it easier
      * to maintain orientation during exploration and combat.
-     * 
+     *
      * Note: Currently triggered by no yaw input as we don't have explicit roll input.
      * The strength can be tuned via AutoLevelStrength (0 = off, 1 = instant).
      */
@@ -972,15 +972,15 @@ void ASpaceship::UpdateThrottleVelocity(float DeltaTime)
 {
     /**
      * X4-style Throttle System:
-     * 
+     *
      * The throttle (0-100%) controls the target velocity, not acceleration directly.
      * The ship will automatically accelerate or decelerate to match the throttle setting.
-     * 
+     *
      * This creates intuitive speed control where:
      * - Throttle 0% = ship comes to a stop
      * - Throttle 50% = ship maintains half speed
      * - Throttle 100% = ship maintains max speed
-     * 
+     *
      * The flight computer handles the acceleration curve automatically.
      */
 
@@ -1002,7 +1002,7 @@ void ASpaceship::UpdateThrottleVelocity(float DeltaTime)
 
     // Smoothly interpolate current velocity towards target
     // Use different interpolation speed for acceleration vs deceleration
-    float InterpSpeed = (CurrentForwardSpeed < TargetSpeed) ? 
+    float InterpSpeed = (CurrentForwardSpeed < TargetSpeed) ?
         (DefaultAcceleration / EffectiveMaxSpeed) * FlightAssistResponsiveness :
         (DefaultDeceleration / EffectiveMaxSpeed) * FlightAssistResponsiveness;
 
@@ -1011,7 +1011,7 @@ void ASpaceship::UpdateThrottleVelocity(float DeltaTime)
     {
         // Blend current velocity with target throttle velocity
         FVector BlendedVelocity = FMath::VInterpTo(MovementComponent->Velocity, TargetVelocity, DeltaTime, InterpSpeed);
-        
+
         // Update movement component with new velocity
         // Note: This works in conjunction with AddMovementInput for strafe/vertical
         MovementComponent->Velocity = BlendedVelocity;
@@ -1022,11 +1022,11 @@ void ASpaceship::UpdateMousePositionFlight(float DeltaTime)
 {
     /**
      * X4-style Mouse Position Flight Implementation:
-     * 
+     *
      * This method is called every frame when mouse position flight is enabled.
      * Unlike mouse delta controls, this continuously checks the mouse cursor position
      * and rotates the ship based on where the cursor is on screen, not how the mouse moves.
-     * 
+     *
      * Key Behavior:
      * - If mouse is right of center → Ship continuously yaws right
      * - If mouse is left of center → Ship continuously yaws left
@@ -1034,7 +1034,7 @@ void ASpaceship::UpdateMousePositionFlight(float DeltaTime)
      * - If mouse is below center → Ship continuously pitches down
      * - Distance from center controls rotation speed (0% at deadzone, 100% at max radius)
      * - Mouse can remain stationary and ship will continue rotating
-     * 
+     *
      * This creates the intuitive feel of X4: Foundations where you "point" with the cursor.
      */
 
@@ -1054,67 +1054,67 @@ void ASpaceship::UpdateMousePositionFlight(float DeltaTime)
     // Get mouse position and viewport size
     int32 ViewportSizeX, ViewportSizeY;
     float MouseX, MouseY;
-    
+
     PC->GetViewportSize(ViewportSizeX, ViewportSizeY);
     PC->GetMousePosition(MouseX, MouseY);
-    
+
     // Calculate center of screen
     float CenterX = ViewportSizeX * 0.5f;
     float CenterY = ViewportSizeY * 0.5f;
-    
+
     // Calculate distance from center
     float DeltaX = MouseX - CenterX;
     float DeltaY = MouseY - CenterY;
     float DistanceFromCenter = FMath::Sqrt(DeltaX * DeltaX + DeltaY * DeltaY);
-    
+
     // Check if within deadzone (no rotation)
     if (DistanceFromCenter < MouseDeadzoneRadius)
     {
         // Within deadzone, smoothly stop rotation
         RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, 0.0f, DeltaTime, FlightAssistResponsiveness);
         RotationVelocity.Pitch = FMath::FInterpTo(RotationVelocity.Pitch, 0.0f, DeltaTime, FlightAssistResponsiveness);
-        
+
         // No rotational input intent while inside deadzone
         YawInput = 0.0f;
         PitchInput = 0.0f;
         return;
     }
-    
+
     // Calculate rotation speed based on distance from center (beyond deadzone)
     float EffectiveDistance = DistanceFromCenter - MouseDeadzoneRadius;
     float MaxEffectiveDistance = MouseMaxRadius - MouseDeadzoneRadius;
-    
+
     // Protect against invalid configuration
     if (MaxEffectiveDistance <= KINDA_SMALL_NUMBER)
     {
-        UE_LOG(LogAdastreaInput, Warning, 
+        UE_LOG(LogAdastreaInput, Warning,
             TEXT("ASpaceship::UpdateMousePositionFlight - Invalid mouse radius configuration: MouseMaxRadius (%.2f) must be greater than MouseDeadzoneRadius (%.2f)."),
             MouseMaxRadius, MouseDeadzoneRadius);
         MaxEffectiveDistance = KINDA_SMALL_NUMBER;
     }
-    
+
     float DistanceRatio = FMath::Clamp(EffectiveDistance / MaxEffectiveDistance, 0.0f, 1.0f);
-    
+
     // Calculate rotation rates for yaw and pitch
     // Direction is normalized (-1 to 1) and multiplied by distance ratio for speed
     float DirectionX = DeltaX / FMath::Max(DistanceFromCenter, 0.1f);
     float DirectionY = -DeltaY / FMath::Max(DistanceFromCenter, 0.1f); // Inverted for natural pitch
-    
+
     float YawRotationRate = DirectionX * DistanceRatio * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
     float PitchRotationRate = DirectionY * DistanceRatio * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
-    
-    UE_LOG(LogAdastreaInput, Verbose, 
-        TEXT("ASpaceship::UpdateMousePositionFlight - MousePos=(%.0f,%.0f), Center=(%.0f,%.0f), Distance=%.0f, DistanceRatio=%.2f, YawRate=%.2f, PitchRate=%.2f"), 
+
+    UE_LOG(LogAdastreaInput, Verbose,
+        TEXT("ASpaceship::UpdateMousePositionFlight - MousePos=(%.0f,%.0f), Center=(%.0f,%.0f), Distance=%.0f, DistanceRatio=%.2f, YawRate=%.2f, PitchRate=%.2f"),
         MouseX, MouseY, CenterX, CenterY, DistanceFromCenter, DistanceRatio, YawRotationRate, PitchRotationRate);
-    
+
     // Interpolate rotation velocity for smooth feel
     RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, YawRotationRate, DeltaTime, FlightAssistResponsiveness);
     RotationVelocity.Pitch = FMath::FInterpTo(RotationVelocity.Pitch, PitchRotationRate, DeltaTime, FlightAssistResponsiveness);
-    
+
     // Signal active rotation intent to prevent auto-leveling and damping interference
     YawInput = (FMath::Abs(YawRotationRate) > 0.01f) ? 1.0f : 0.0f;
     PitchInput = (FMath::Abs(PitchRotationRate) > 0.01f) ? 1.0f : 0.0f;
-    
+
     // Apply rotation to ship
     FRotator DeltaRotation = FRotator(RotationVelocity.Pitch * DeltaTime, RotationVelocity.Yaw * DeltaTime, 0.0f);
     AddActorWorldRotation(DeltaRotation);
@@ -1125,49 +1125,49 @@ void ASpaceship::FreeLookStarted()
     // Check for double-click to reset camera
     float CurrentTime = GetWorld() ? GetWorld()->GetTimeSeconds() : 0.0f;
     float TimeSinceLastClick = CurrentTime - LastFreeLookClickTime;
-    
+
     // If this is a double-click (within threshold), reset camera and exit free look
     // Check if we're within the double-click window, regardless of free look state
     if (TimeSinceLastClick > 0.0f && TimeSinceLastClick <= DoubleClickThreshold)
     {
         UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Free look double-click detected - resetting camera"));
-        
+
         // Immediately reset camera to ship forward
         if (CameraSpringArm)
         {
             CameraSpringArm->SetRelativeRotation(FRotator::ZeroRotator);
         }
-        
+
         // Exit free look mode if active, or prevent activation if not yet active
         bFreeLookActive = false;
         FreeLookRotation = FRotator::ZeroRotator;
         LastFreeLookClickTime = 0.0f; // Reset to prevent triple-click issues
         return;
     }
-    
+
     // Store the click time for double-click detection
     LastFreeLookClickTime = CurrentTime;
-    
+
     // Normal free look activation
     bFreeLookActive = true;
-    
+
     // Reset free look rotation for new activation
     FreeLookRotation = FRotator::ZeroRotator;
-    
+
     UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Free look started"));
 }
 
 void ASpaceship::FreeLookCompleted()
 {
     bFreeLookActive = false;
-    
+
     // Reset camera to follow ship rotation
     if (CameraSpringArm)
     {
         // Smoothly return camera to ship's forward direction
         CameraSpringArm->SetRelativeRotation(FRotator::ZeroRotator);
     }
-    
+
     UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Free look completed"));
 }
 
@@ -1180,7 +1180,7 @@ void ASpaceship::FreeLookCamera(const FInputActionValue& Value)
 
     // Get the 2D vector input (mouse X/Y)
     FVector2D LookAxisVector = Value.Get<FVector2D>();
-    
+
     // Normalize input relative to viewport aspect ratio to compensate for
     // larger horizontal deltas on wide screens, ensuring consistent feel
     if (APlayerController* PC = Cast<APlayerController>(GetController()))
@@ -1191,18 +1191,18 @@ void ASpaceship::FreeLookCamera(const FInputActionValue& Value)
     if (GetWorld())
     {
         const float DeltaSeconds = GetWorld()->GetDeltaSeconds();
-        
+
         // Apply free look sensitivity to mouse input
         float YawDelta = LookAxisVector.X * FreeLookSensitivity * TurnRate * DeltaSeconds;
         float PitchDelta = LookAxisVector.Y * FreeLookSensitivity * TurnRate * DeltaSeconds;
-        
+
         // Accumulate free look rotation
         FreeLookRotation.Yaw += YawDelta;
         FreeLookRotation.Pitch += PitchDelta;
-        
+
         // Clamp pitch to prevent camera flipping
         FreeLookRotation.Pitch = FMath::Clamp(FreeLookRotation.Pitch, -89.0f, 89.0f);
-        
+
         // Apply free look rotation relative to ship's current rotation
         FRotator NewCameraRotation = GetActorRotation() + FreeLookRotation;
         CameraSpringArm->SetWorldRotation(NewCameraRotation);
@@ -1216,19 +1216,19 @@ void ASpaceship::FreeLookCamera(const FInputActionValue& Value)
 void ASpaceship::SetNearbyStation(ASpaceStationModule* Station)
 {
     NearbyStation = Station;
-    
+
 #if DOCKING_DEBUG_ENABLED
     // Debug print
     if (GEngine)
     {
         if (Station)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
                 FString::Printf(TEXT("[DOCKING] Ship entered docking range of station: %s"), *Station->GetName()));
         }
         else
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, 
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
                 TEXT("[DOCKING] Ship left docking range"));
         }
     }
@@ -1241,7 +1241,7 @@ void ASpaceship::ShowDockingPrompt(bool bShow)
     {
         // Get effective widget class (from settings or fallback)
         TSubclassOf<UUserWidget> EffectiveWidgetClass = GetEffectiveDockingPromptWidgetClass();
-        
+
         // Create widget if it doesn't exist
         if (!DockingPromptWidget && EffectiveWidgetClass)
         {
@@ -1252,12 +1252,12 @@ void ASpaceship::ShowDockingPrompt(bool bShow)
                 if (DockingPromptWidget)
                 {
                     DockingPromptWidget->AddToViewport();
-                    
+
 #if DOCKING_DEBUG_ENABLED
                     // Debug print
                     if (GEngine)
                     {
-                        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+                        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
                             TEXT("[DOCKING] WBP_DockingPrompt created and added to viewport"));
                     }
 #endif
@@ -1268,7 +1268,7 @@ void ASpaceship::ShowDockingPrompt(bool bShow)
                     // Debug print - widget creation failed
                     if (GEngine)
                     {
-                        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+                        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
                             TEXT("[DOCKING] ERROR: Failed to create WBP_DockingPrompt widget"));
                     }
 #endif
@@ -1280,7 +1280,7 @@ void ASpaceship::ShowDockingPrompt(bool bShow)
                 // Debug print - no player controller
                 if (GEngine)
                 {
-                    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+                    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
                         TEXT("[DOCKING] ERROR: No player controller found for widget creation"));
                 }
 #endif
@@ -1289,27 +1289,27 @@ void ASpaceship::ShowDockingPrompt(bool bShow)
         else if (!EffectiveWidgetClass)
         {
             UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::ShowDockingPrompt - No DockingPromptWidgetClass set (neither in DockingSettings nor direct property) on '%s'. Docking prompt UI will not be shown."), *GetName());
-            
+
 #if DOCKING_DEBUG_ENABLED
             // Debug print - widget class not set
             if (GEngine)
             {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
                     TEXT("[DOCKING] ERROR: DockingPromptWidgetClass not set in Blueprint or Settings"));
             }
 #endif
         }
-        
+
         // Show existing widget
         if (DockingPromptWidget)
         {
             DockingPromptWidget->SetVisibility(ESlateVisibility::Visible);
-            
+
 #if DOCKING_DEBUG_ENABLED
             // Debug print
             if (GEngine)
             {
-                GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Cyan, 
+                GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Cyan,
                     TEXT("[DOCKING] Docking prompt now visible"));
             }
 #endif
@@ -1321,12 +1321,12 @@ void ASpaceship::ShowDockingPrompt(bool bShow)
         if (DockingPromptWidget)
         {
             DockingPromptWidget->SetVisibility(ESlateVisibility::Collapsed);
-            
+
 #if DOCKING_DEBUG_ENABLED
             // Debug print
             if (GEngine)
             {
-                GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, 
+                GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow,
                     TEXT("[DOCKING] Docking prompt hidden"));
             }
 #endif
@@ -1341,48 +1341,48 @@ void ASpaceship::RequestDocking()
     // Debug print - function entry
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,
             TEXT("[DOCKING] RequestDocking() called - Player pressed docking key"));
     }
 
     #endif
-    
+
     // Validate nearby station exists
     if (!NearbyStation)
     {
         UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::RequestDocking - No station in range"));
-        
+
         #if DOCKING_DEBUG_ENABLED
 
-        
+
         // Debug print
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
                 TEXT("[DOCKING] ERROR: No station in range"));
         }
 
-        
+
         #endif
-        
+
         // Show user feedback via HUD message for "No station in range" error
         ShowHUDAlert(FText::FromString("No station in range"), 3.0f, true);
         return;
     }
-    
+
     #if DOCKING_DEBUG_ENABLED
 
-    
+
     // Debug print - station found
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
             FString::Printf(TEXT("[DOCKING] Station in range: %s"), *NearbyStation->GetName()));
     }
 
-    
+
     #endif
-    
+
     // If already docked, undock instead
     if (bIsDocked)
     {
@@ -1391,16 +1391,16 @@ void ASpaceship::RequestDocking()
         // Debug print
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, 
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
                 TEXT("[DOCKING] Already docked - calling Undock() instead"));
         }
 
         #endif
-        
+
         Undock();
         return;
     }
-    
+
     // Prevent rapid input during docking sequence
     if (bIsDocking)
     {
@@ -1409,189 +1409,189 @@ void ASpaceship::RequestDocking()
         // Debug print
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, 
+            GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow,
                 TEXT("[DOCKING] Already docking - ignoring input"));
         }
 
         #endif
-        
+
         return;
     }
-    
+
     // Cast to docking bay module to check availability
     ADockingBayModule* DockingBay = Cast<ADockingBayModule>(NearbyStation);
     if (!DockingBay)
     {
         UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::RequestDocking - Station is not a docking module"));
-        
+
         #if DOCKING_DEBUG_ENABLED
 
-        
+
         // Debug print
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
                 TEXT("[DOCKING] ERROR: Station is not a docking module"));
         }
 
-        
+
         #endif
-        
+
         // Show user feedback via HUD message
         ShowHUDAlert(FText::FromString("Station is not a docking module"), 3.0f, true);
         return;
     }
-    
+
     #if DOCKING_DEBUG_ENABLED
 
-    
+
     // Debug print - docking module found
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
             TEXT("[DOCKING] Station is a valid docking module"));
     }
 
-    
+
     #endif
-    
+
     // Check if docking is available
     if (!DockingBay->HasAvailableDocking())
     {
         UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::RequestDocking - No docking slots available"));
-        
+
         #if DOCKING_DEBUG_ENABLED
 
-        
+
         // Debug print
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
-                FString::Printf(TEXT("[DOCKING] ERROR: No docking slots available (%d/%d occupied)"), 
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
+                FString::Printf(TEXT("[DOCKING] ERROR: No docking slots available (%d/%d occupied)"),
                     DockingBay->MaxDockedShips - DockingBay->GetAvailableDockingSpots(),
                     DockingBay->MaxDockedShips));
         }
 
-        
+
         #endif
-        
+
         // Show user feedback via HUD message
         ShowHUDAlert(FText::FromString("No docking slots available"), 3.0f, true);
         return;
     }
-    
+
     #if DOCKING_DEBUG_ENABLED
 
-    
+
     // Debug print - slots available
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
-            FString::Printf(TEXT("[DOCKING] Docking slots available: %d/%d free"), 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
+            FString::Printf(TEXT("[DOCKING] Docking slots available: %d/%d free"),
                 DockingBay->GetAvailableDockingSpots(),
                 DockingBay->MaxDockedShips));
     }
 
-    
+
     #endif
-    
+
     // Get available docking point
     USceneComponent* DockingPoint = DockingBay->GetAvailableDockingPoint();
     if (!DockingPoint)
     {
         UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::RequestDocking - Failed to get docking point"));
-        
+
         #if DOCKING_DEBUG_ENABLED
 
-        
+
         // Debug print
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
                 TEXT("[DOCKING] ERROR: Failed to get docking point (null pointer)"));
         }
 
-        
+
         #endif
-        
+
         // Show user feedback via HUD message
         ShowHUDAlert(FText::FromString("Failed to get docking point"), 3.0f, true);
         return;
     }
-    
+
     #if DOCKING_DEBUG_ENABLED
 
-    
+
     // Debug print - docking point found
     if (GEngine)
     {
         FVector PointLocation = DockingPoint->GetComponentLocation();
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
-            FString::Printf(TEXT("[DOCKING] Docking point found at location: X=%.0f Y=%.0f Z=%.0f"), 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
+            FString::Printf(TEXT("[DOCKING] Docking point found at location: X=%.0f Y=%.0f Z=%.0f"),
                 PointLocation.X, PointLocation.Y, PointLocation.Z));
     }
 
-    
+
     #endif
-    
+
     // Check if ship is within docking range
     float DistanceToDockingPoint = FVector::Dist(GetActorLocation(), DockingPoint->GetComponentLocation());
     float EffectiveRange = GetEffectiveDockingRange();
-    
+
     if (DistanceToDockingPoint > EffectiveRange)
     {
         UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::RequestDocking - Too far from docking point (%.0f > %.0f)"), DistanceToDockingPoint, EffectiveRange);
-        
+
         #if DOCKING_DEBUG_ENABLED
 
-        
+
         // Debug print
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
-                FString::Printf(TEXT("[DOCKING] ERROR: Too far from docking point (%.0f units > %.0f max)"), 
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
+                FString::Printf(TEXT("[DOCKING] ERROR: Too far from docking point (%.0f units > %.0f max)"),
                     DistanceToDockingPoint, EffectiveRange));
         }
 
-        
+
         #endif
-        
+
         // Show user feedback via HUD message
         ShowHUDAlert(FText::FromString("Too far from docking point"), 3.0f, true);
         return;
     }
-    
+
     #if DOCKING_DEBUG_ENABLED
 
-    
+
     // Debug print - distance check passed
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
-            FString::Printf(TEXT("[DOCKING] Distance check passed: %.0f units (within %.0f max)"), 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
+            FString::Printf(TEXT("[DOCKING] Distance check passed: %.0f units (within %.0f max)"),
                 DistanceToDockingPoint, EffectiveRange));
     }
 
-    
+
     #endif
-    
+
     // Store docking point and begin docking sequence
     CurrentDockingPoint = DockingPoint;
     bIsDocking = true;
-    
+
     #if DOCKING_DEBUG_ENABLED
 
-    
+
     // Debug print - starting docking
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,
             TEXT("[DOCKING] All checks passed - starting docking sequence"));
     }
 
-    
+
     #endif
-    
+
     // Navigate to docking point (instant in simplified version)
     NavigateToDockingPoint(CurrentDockingPoint);
 }
@@ -1603,72 +1603,72 @@ void ASpaceship::NavigateToDockingPoint(USceneComponent* DockingPoint)
     // Debug print - function entry
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,
             TEXT("[DOCKING] NavigateToDockingPoint() called - Moving ship to docking point"));
     }
 
     #endif
-    
+
     // Validate docking point
     if (!DockingPoint)
     {
         UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::NavigateToDockingPoint - Invalid docking point"));
-        
+
         #if DOCKING_DEBUG_ENABLED
 
-        
+
         // Debug print
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
                 TEXT("[DOCKING] ERROR: Invalid docking point (null pointer)"));
         }
 
-        
+
         #endif
-        
+
         bIsDocking = false;
         return;
     }
-    
+
     // Simple MVP approach: instantly teleport to docking point
     // Get target transform from docking point
     FVector TargetLocation = DockingPoint->GetComponentLocation();
     FRotator TargetRotation = DockingPoint->GetComponentRotation();
-    
+
     #if DOCKING_DEBUG_ENABLED
 
-    
+
     // Debug print - target position
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, 
-            FString::Printf(TEXT("[DOCKING] Target docking position: X=%.0f Y=%.0f Z=%.0f"), 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,
+            FString::Printf(TEXT("[DOCKING] Target docking position: X=%.0f Y=%.0f Z=%.0f"),
                 TargetLocation.X, TargetLocation.Y, TargetLocation.Z));
     }
 
-    
+
     #endif
-    
+
     // Instantly move ship to docking point
     SetActorLocationAndRotation(TargetLocation, TargetRotation);
-    
+
     #if DOCKING_DEBUG_ENABLED
 
-    
+
     // Debug print - ship moved
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
             TEXT("[DOCKING] Ship teleported to docking point successfully"));
     }
 
-    
+
     #endif
-    
+
     // Immediately complete docking
     CompleteDocking();
-    
+
     UE_LOG(LogAdastreaShips, Log, TEXT("ASpaceship::NavigateToDockingPoint - Instantly docked at point"));
 }
 
@@ -1679,29 +1679,29 @@ void ASpaceship::CompleteDocking()
     // Debug print - function entry
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,
             TEXT("[DOCKING] CompleteDocking() called - Finalizing docking process"));
     }
 
     #endif
-    
+
     // Update docking state
     bIsDocked = true;
     bIsDocking = false;
-    
+
     #if DOCKING_DEBUG_ENABLED
 
-    
+
     // Debug print - state updated
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
             TEXT("[DOCKING] Ship state updated: bIsDocked=true, bIsDocking=false"));
     }
 
-    
+
     #endif
-    
+
     // Notify station that ship has docked
     if (NearbyStation)
     {
@@ -1709,22 +1709,22 @@ void ASpaceship::CompleteDocking()
         if (DockingBay)
         {
             DockingBay->DockShip();
-            
+
             #if DOCKING_DEBUG_ENABLED
 
-            
+
             // Debug print - station notified
             if (GEngine)
             {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
                     TEXT("[DOCKING] Station notified of successful docking"));
             }
 
-            
+
             #endif
         }
     }
-    
+
     // Get player controller
     APlayerController* PC = Cast<APlayerController>(GetController());
     if (!PC)
@@ -1734,62 +1734,62 @@ void ASpaceship::CompleteDocking()
         // Debug print - no player controller
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
                 TEXT("[DOCKING] ERROR: No player controller found - cannot disable input or create UI"));
         }
 
         #endif
         return;
     }
-    
+
     #if DOCKING_DEBUG_ENABLED
 
-    
+
     // Debug print - player controller found
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
             TEXT("[DOCKING] Player controller found"));
     }
 
-    
+
     #endif
-    
+
     // Disable input
     DisableInput(PC);
-    
+
     #if DOCKING_DEBUG_ENABLED
 
-    
+
     // Debug print - input disabled
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
             TEXT("[DOCKING] Ship input disabled"));
     }
 
-    
+
     #endif
-    
+
     // Hide ship
     SetActorHiddenInGame(true);
-    
+
     #if DOCKING_DEBUG_ENABLED
 
-    
+
     // Debug print - ship hidden
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
             TEXT("[DOCKING] Ship mesh hidden (player is 'inside' station)"));
     }
 
-    
+
     #endif
-    
+
     // Get effective trading interface class (from settings or fallback)
     TSubclassOf<UUserWidget> EffectiveTradingClass = GetEffectiveTradingInterfaceClass();
-    
+
     // Create and show trading widget
     if (EffectiveTradingClass)
     {
@@ -1798,28 +1798,28 @@ void ASpaceship::CompleteDocking()
         // Debug print - creating widget
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, 
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,
                 TEXT("[DOCKING] Creating trading UI widget..."));
         }
 
         #endif
-        
+
         TradingWidget = CreateWidget<UUserWidget>(PC, EffectiveTradingClass);
         if (TradingWidget)
         {
             TradingWidget->AddToViewport();
-            
+
             #if DOCKING_DEBUG_ENABLED
 
-            
+
             // Debug print - widget created successfully
             if (GEngine)
             {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
                     TEXT("[DOCKING] Trading UI widget created and added to viewport"));
             }
 
-            
+
             #endif
         }
         else
@@ -1829,7 +1829,7 @@ void ASpaceship::CompleteDocking()
             // Debug print - widget creation failed
             if (GEngine)
             {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
                     TEXT("[DOCKING] ERROR: Failed to create trading UI widget"));
             }
 
@@ -1839,21 +1839,21 @@ void ASpaceship::CompleteDocking()
     else
     {
         UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::CompleteDocking - No TradingInterfaceClass set (neither in DockingSettings nor direct property) on '%s'. Trading UI will not be created."), *GetName());
-        
+
         #if DOCKING_DEBUG_ENABLED
 
-        
+
         // Debug print - widget class not set
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
                 TEXT("[DOCKING] ERROR: TradingInterfaceClass not set in Blueprint or Settings"));
         }
 
-        
+
         #endif
     }
-    
+
     // Set input mode to UI only
     PC->bShowMouseCursor = true;
     FInputModeUIOnly InputMode;
@@ -1862,37 +1862,37 @@ void ASpaceship::CompleteDocking()
         InputMode.SetWidgetToFocus(TradingWidget->TakeWidget());
     }
     PC->SetInputMode(InputMode);
-    
+
     #if DOCKING_DEBUG_ENABLED
 
-    
+
     // Debug print - input mode changed
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
             TEXT("[DOCKING] Input mode set to UI only, mouse cursor shown"));
     }
 
-    
+
     #endif
-    
+
     #if DOCKING_DEBUG_ENABLED
 
-    
+
     // Debug print - complete success
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Green, 
+        GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Green,
             TEXT("==================================================="));
-        GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Green, 
+        GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Green,
             TEXT("[DOCKING] DOCKING COMPLETE - Trading UI should be visible"));
-        GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Green, 
+        GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Green,
             TEXT("==================================================="));
     }
 
-    
+
     #endif
-    
+
     UE_LOG(LogAdastreaShips, Log, TEXT("ASpaceship::CompleteDocking - Docking complete for '%s'"), *GetName());
 }
 
@@ -1903,33 +1903,33 @@ void ASpaceship::Undock()
     // Debug print - function entry
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,
             TEXT("[UNDOCKING] Undock() called - Beginning undock sequence"));
     }
 
     #endif
-    
+
     // Check if actually docked
     if (!bIsDocked)
     {
         UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::Undock - Not currently docked"));
-        
+
         #if DOCKING_DEBUG_ENABLED
 
-        
+
         // Debug print
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, 
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
                 TEXT("[UNDOCKING] WARNING: Not currently docked - aborting undock"));
         }
 
-        
+
         #endif
-        
+
         return;
     }
-    
+
     // Notify station that ship is undocking
     if (NearbyStation)
     {
@@ -1937,58 +1937,58 @@ void ASpaceship::Undock()
         if (DockingBay)
         {
             DockingBay->UndockShip();
-            
+
             #if DOCKING_DEBUG_ENABLED
 
-            
+
             // Debug print - station notified
             if (GEngine)
             {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
                     FString::Printf(TEXT("[UNDOCKING] Station notified: %s"), *NearbyStation->GetName()));
             }
 
-            
+
             #endif
         }
     }
-    
+
     // Update state
     bIsDocked = false;
-    
+
     #if DOCKING_DEBUG_ENABLED
 
-    
+
     // Debug print - state updated
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
             TEXT("[UNDOCKING] Ship state updated: bIsDocked=false"));
     }
 
-    
+
     #endif
-    
+
     // Remove trading widget
     if (TradingWidget)
     {
         TradingWidget->RemoveFromParent();
         TradingWidget = nullptr;
-        
+
         #if DOCKING_DEBUG_ENABLED
 
-        
+
         // Debug print - widget removed
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
                 TEXT("[UNDOCKING] Trading UI widget removed from viewport"));
         }
 
-        
+
         #endif
     }
-    
+
     // Get player controller
     APlayerController* PC = Cast<APlayerController>(GetController());
     if (!PC)
@@ -1998,103 +1998,103 @@ void ASpaceship::Undock()
         // Debug print - no player controller
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, 
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
                 TEXT("[UNDOCKING] ERROR: No player controller found"));
         }
 
         #endif
-        
+
         return;
     }
-    
+
     // Enable input
     EnableInput(PC);
-    
+
     #if DOCKING_DEBUG_ENABLED
 
-    
+
     // Debug print - input enabled
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
             TEXT("[UNDOCKING] Ship input re-enabled"));
     }
 
-    
+
     #endif
-    
+
     // Show ship
     SetActorHiddenInGame(false);
-    
+
     #if DOCKING_DEBUG_ENABLED
 
-    
+
     // Debug print - ship visible
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
             TEXT("[UNDOCKING] Ship mesh shown"));
     }
 
-    
+
     #endif
-    
+
     // Set input mode to game only
     PC->bShowMouseCursor = false;
     FInputModeGameOnly InputMode;
     PC->SetInputMode(InputMode);
-    
+
     #if DOCKING_DEBUG_ENABLED
 
-    
+
     // Debug print - input mode changed
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
             TEXT("[UNDOCKING] Input mode set to game only, mouse cursor hidden"));
     }
 
-    
+
     #endif
-    
+
     // Apply forward impulse to move away from station
     FVector ForwardVector = GetActorForwardVector();
     if (MovementComponent)
     {
         // Add velocity in forward direction for smooth movement away
         MovementComponent->Velocity += ForwardVector * 500.0f;
-        
+
         #if DOCKING_DEBUG_ENABLED
 
-        
+
         // Debug print - impulse applied
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, 
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
                 TEXT("[UNDOCKING] Forward impulse applied (500 units)"));
         }
 
-        
+
         #endif
     }
-    
+
     #if DOCKING_DEBUG_ENABLED
 
-    
+
     // Debug print - complete success
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Green, 
+        GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Green,
             TEXT("==================================================="));
-        GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Green, 
+        GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Green,
             TEXT("[UNDOCKING] UNDOCKING COMPLETE - Player has control"));
-        GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Green, 
+        GEngine->AddOnScreenDebugMessage(-1, 8.0f, FColor::Green,
             TEXT("==================================================="));
     }
 
-    
+
     #endif
-    
+
     UE_LOG(LogAdastreaShips, Log, TEXT("ASpaceship::Undock - Undocked successfully from '%s'"), NearbyStation ? *NearbyStation->GetName() : TEXT("Unknown Station"));
 }
 

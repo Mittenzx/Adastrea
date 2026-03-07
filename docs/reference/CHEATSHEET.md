@@ -80,7 +80,7 @@ class ADASTREA_API UMyDataAsset : public UPrimaryDataAsset
 public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Config")
     FText DisplayName;
-    
+
     UFUNCTION(BlueprintCallable, Category="My Category")
     void MyFunction();
 };
@@ -172,13 +172,13 @@ USTRUCT(BlueprintType)
 struct FMyStruct
 {
     GENERATED_BODY()
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     FText Name;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float Value;
-    
+
     FMyStruct()
         : Name(FText::FromString(TEXT("Default")))
         , Value(0.0f)

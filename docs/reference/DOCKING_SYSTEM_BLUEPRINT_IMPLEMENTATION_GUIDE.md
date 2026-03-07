@@ -1,6 +1,6 @@
 # Docking System Blueprint Implementation Guide
 
-> **⚠️ DEPRECATED**: This guide has been consolidated into the unified Trading and Docking Complete Guide.  
+> **⚠️ DEPRECATED**: This guide has been consolidated into the unified Trading and Docking Complete Guide.
 > **See**: [Trading and Docking Complete Guide](../mvp/TRADING_AND_DOCKING_COMPLETE_GUIDE.md)
 
 ---
@@ -110,33 +110,33 @@ ASpaceship (BP_PlayerShip)
 ## Required Blueprint Classes
 
 ### 1. BP_SpaceStation_Main
-**Base Class:** `ASpaceStation` (C++)  
-**Purpose:** Main station actor with docking modules  
+**Base Class:** `ASpaceStation` (C++)
+**Purpose:** Main station actor with docking modules
 **Location:** `Content/Blueprints/Stations/`
 
 ### 2. BP_DockingBay
-**Base Class:** `ADockingBayModule` (C++)  
-**Purpose:** Large docking facility (4-6 ships)  
+**Base Class:** `ADockingBayModule` (C++)
+**Purpose:** Large docking facility (4-6 ships)
 **Location:** `Content/Blueprints/Stations/Modules/`
 
 ### 3. BP_DockingPort
-**Base Class:** `ADockingPortModule` (C++)  
-**Purpose:** Small docking port (1 ship)  
+**Base Class:** `ADockingPortModule` (C++)
+**Purpose:** Small docking port (1 ship)
 **Location:** `Content/Blueprints/Stations/Modules/`
 
 ### 4. BP_PlayerShip
-**Base Class:** `ASpaceship` (C++)  
-**Purpose:** Player-controlled ship with docking capability  
+**Base Class:** `ASpaceship` (C++)
+**Purpose:** Player-controlled ship with docking capability
 **Location:** `Content/Blueprints/Ships/`
 
 ### 5. WBP_DockingPrompt
-**Base Class:** `UUserWidget`  
-**Purpose:** UI widget showing "Press F to Dock"  
+**Base Class:** `UUserWidget`
+**Purpose:** UI widget showing "Press F to Dock"
 **Location:** `Content/UI/Widgets/`
 
 ### 6. WBP_TradingInterface
-**Base Class:** `UUserWidget`  
-**Purpose:** Trading interface when docked  
+**Base Class:** `UUserWidget`
+**Purpose:** Trading interface when docked
 **Location:** `Content/UI/Widgets/`
 
 ---
@@ -394,11 +394,11 @@ Event: OnClicked (UndockButton)
 
 The following functions are **no longer needed** in Blueprint:
 
-❌ `SetNearbyStation` - Now handled by C++  
-❌ `ShowDockingPrompt` - Now handled by C++  
-❌ `RequestDocking` - Now handled by C++  
-❌ `NavigateToDockingPoint` - Now handled by C++  
-❌ `CompleteDocking` - Now handled by C++  
+❌ `SetNearbyStation` - Now handled by C++
+❌ `ShowDockingPrompt` - Now handled by C++
+❌ `RequestDocking` - Now handled by C++
+❌ `NavigateToDockingPoint` - Now handled by C++
+❌ `CompleteDocking` - Now handled by C++
 ❌ `Undock` - Now handled by C++
 
 **If you have existing Blueprint implementations of these functions, you can safely delete them.** The C++ versions will be called automatically.
@@ -467,7 +467,7 @@ Event: OnDockPressed
 → Branch: bIsDocked
   [True]
   → Call: Undock (self)
-  
+
   [False]
   → Call: RequestDocking (self)
 ```
@@ -579,7 +579,7 @@ Function: NavigateToDockingPoint
 Timeline Update Event:
 → Get Alpha (DockingTimeline)
   Return: Alpha (Float 0-1)
-  
+
 → Lerp (Vector)
   A: DockingStartLocation
   B: DockingTargetLocation
@@ -636,11 +636,11 @@ Event: Construct
 Event: OnClicked (BuyButton)
 → Get Selected Item
   Return: ItemData
-  
+
 → Check Player Credits
   Player Credits: Get Credits (Player)
   Item Cost: ItemData.Price
-  
+
 → Branch: PlayerCredits >= ItemCost
   [True]
   → Subtract Credits
@@ -650,7 +650,7 @@ Event: OnClicked (BuyButton)
     Quantity: 1
   → Update UI Display
   → Play Sound: Purchase_Success
-  
+
   [False]
   → Show Message: "Insufficient Credits"
   → Play Sound: Purchase_Failed
@@ -675,22 +675,22 @@ sequenceDiagram
     BP_DockingBay->>BP_PlayerShip: SetNearbyStation(self)
     BP_DockingBay->>BP_PlayerShip: ShowDockingPrompt(true)
     BP_PlayerShip->>WBP_DockingPrompt: Create & Show Widget
-    
+
     Player->>BP_PlayerShip: Press F
     BP_PlayerShip->>BP_PlayerShip: OnDockPressed Event
     BP_PlayerShip->>BP_DockingBay: HasAvailableDocking?
     BP_DockingBay-->>BP_PlayerShip: True
     BP_PlayerShip->>BP_DockingBay: GetAvailableDockingPoint()
     BP_DockingBay-->>BP_PlayerShip: DockingPoint
-    
+
     BP_PlayerShip->>BP_PlayerShip: NavigateToDockingPoint()
     Note over BP_PlayerShip: Timeline: Smooth movement (3 sec)
-    
+
     BP_PlayerShip->>BP_PlayerShip: CompleteDocking()
     BP_PlayerShip->>BP_DockingBay: DockShip()
     BP_PlayerShip->>BP_PlayerShip: Disable Input
     BP_PlayerShip->>WBP_TradingInterface: Create & Show Widget
-    
+
     Player->>WBP_TradingInterface: Interacts with trading
     Player->>WBP_TradingInterface: Clicks Undock
     WBP_TradingInterface->>BP_PlayerShip: Undock()
@@ -889,7 +889,7 @@ Function: ProcessDockingFee
     Amount: FinalFee
   → Grant Docking
   → Show Message: "Docking fee: X credits"
-  
+
   [False]
   → Deny Docking
   → Show Message: "Insufficient funds for docking fee"
@@ -910,7 +910,7 @@ Function: ActivateTractorBeam
 
 → Set Beam Target
   Target: Ship Location
-  
+
 → Timeline: Beam Intensity (0-1 over 0.5 sec)
   Update:
   → Set Niagara Variable
@@ -1036,7 +1036,7 @@ All C++ functions are exposed to Blueprints via `UFUNCTION(BlueprintCallable)` m
 
 ---
 
-**Last Updated:** January 7, 2026  
-**Version:** 2.0 (C++ Refactor)  
-**Author:** Adastrea Development Team  
+**Last Updated:** January 7, 2026
+**Version:** 2.0 (C++ Refactor)
+**Author:** Adastrea Development Team
 **For:** Trade Simulator MVP Phase

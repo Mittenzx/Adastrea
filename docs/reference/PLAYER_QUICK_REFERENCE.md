@@ -1,7 +1,7 @@
 # Player System Quick Reference
 
-**For**: Designers, developers, and anyone asking "Where is the player?"  
-**Status**: MVP Phase (Ship-Only)  
+**For**: Designers, developers, and anyone asking "Where is the player?"
+**Status**: MVP Phase (Ship-Only)
 **Last Updated**: 2026-01-08
 
 ---
@@ -10,7 +10,7 @@
 
 ### "Where is the player?"
 
-**MVP (Now)**: Player = Spaceship pawn  
+**MVP (Now)**: Player = Spaceship pawn
 **Post-MVP (Later)**: Player = Spaceship OR Character pawn
 
 ---

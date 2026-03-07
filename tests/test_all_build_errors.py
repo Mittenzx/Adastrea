@@ -68,15 +68,15 @@ class ComprehensiveBuildChecker:
         """
         print("\n🔍 Checking include files (comprehensive)...")
         source_dir = self.project_root / "Source"
-        
+
         if not source_dir.exists():
             self.add_error("Source directory not found")
             return
-        
+
         # Get all module directories
         modules = [d for d in source_dir.iterdir() if d.is_dir() and not d.name.startswith('.')]
         module_include_paths = {}
-        
+
         # Build module include path mapping
         for module in modules:
             public_dir = module / "Public"
@@ -86,27 +86,27 @@ class ComprehensiveBuildChecker:
                 'public': public_dir if public_dir.exists() else None,
                 'private': private_dir if private_dir.exists() else None
             }
-        
+
         cpp_files = list(source_dir.rglob("*.cpp")) + list(source_dir.rglob("*.h"))
         missing_includes = []
-        
+
         for filepath in cpp_files:
             try:
                 content = filepath.read_text(encoding='utf-8', errors='ignore')
                 for line_num, line in enumerate(content.split('\n'), 1):
                     if not line.strip().startswith('#include'):
                         continue
-                    
+
                     # Extract include path
                     match = re.search(r'#include\s+[<"]([^>"]+)[>"]', line)
                     if not match:
                         continue
-                    
+
                     include_path = match.group(1)
-                    
+
                     # Skip system/engine includes
                     if any(include_path.startswith(prefix) for prefix in [
-                        'Core', 'Engine', 'UMG', 'Slate', 'AIModule', 
+                        'Core', 'Engine', 'UMG', 'Slate', 'AIModule',
                         'NavigationSystem', 'EnhancedInput', 'Niagara',
                         'Blueprint', 'GameFramework', 'Components', 'Materials',
                         'Particles', 'Sound', 'PhysicsEngine', 'InputCore',
@@ -116,25 +116,25 @@ class ComprehensiveBuildChecker:
                         'HAL/', 'Misc/', 'Subsystems/'
                     ]):
                         continue
-                    
+
                     # Skip generated files
                     if '.generated' in include_path:
                         continue
-                    
+
                     # Check if it's a local include
                     if not include_path.endswith('.h'):
                         continue
-                    
+
                     # Try multiple search strategies
                     found = False
                     search_results = []
-                    
+
                     # Strategy 1: Relative to current file
                     test_path = filepath.parent / include_path
                     if test_path.exists():
                         found = True
                         search_results.append(f"Found relative: {test_path}")
-                    
+
                     # Strategy 2: Module public directory
                     if not found:
                         for module_name, paths in module_include_paths.items():
@@ -144,7 +144,7 @@ class ComprehensiveBuildChecker:
                                     found = True
                                     search_results.append(f"Found in {module_name}/Public")
                                     break
-                    
+
                     # Strategy 3: Module root directory
                     if not found:
                         for module_name, paths in module_include_paths.items():
@@ -153,7 +153,7 @@ class ComprehensiveBuildChecker:
                                 found = True
                                 search_results.append(f"Found in {module_name} root")
                                 break
-                    
+
                     # Strategy 4: Just the filename (search all modules)
                     if not found:
                         filename = Path(include_path).name
@@ -162,17 +162,17 @@ class ComprehensiveBuildChecker:
                                 found = True
                                 search_results.append(f"Found by filename: {test_path}")
                                 break
-                    
+
                     if not found:
                         rel_filepath = str(filepath.relative_to(self.project_root))
                         missing_includes.append((rel_filepath, line_num, include_path))
                         self.log(f"Missing: {include_path} in {rel_filepath}:{line_num}")
                     elif self.verbose and search_results:
                         self.log(f"{include_path}: {search_results[0]}")
-                        
+
             except Exception as e:
                 self.add_warning(f"Could not read {filepath}: {e}")
-        
+
         if missing_includes:
             self.add_error(f"Found {len(missing_includes)} missing include files")
             for filepath, line_num, include_path in missing_includes[:10]:
@@ -186,31 +186,31 @@ class ComprehensiveBuildChecker:
         """Check for circular dependencies between modules."""
         print("\n🔄 Checking for circular dependencies...")
         source_dir = self.project_root / "Source"
-        
+
         build_files = list(source_dir.rglob("*.Build.cs"))
         dependencies = {}
-        
+
         for build_file in build_files:
             try:
                 content = build_file.read_text()
                 module_name = build_file.stem.replace('.Build', '')
-                
+
                 # Extract dependencies
                 public_deps = re.findall(r'PublicDependencyModuleNames\.(?:Add|AddRange)\([^)]+\)', content)
                 private_deps = re.findall(r'PrivateDependencyModuleNames\.(?:Add|AddRange)\([^)]+\)', content)
-                
+
                 all_deps = []
                 for dep_str in public_deps + private_deps:
                     # Extract module names from the string
                     module_names = re.findall(r'"(\w+)"', dep_str)
                     all_deps.extend(module_names)
-                
+
                 dependencies[module_name] = set(all_deps)
                 self.log(f"{module_name}: {all_deps}")
-                
+
             except Exception as e:
                 self.add_warning(f"Could not parse {build_file}: {e}")
-        
+
         # Check for circular dependencies
         def has_circular_dep(module: str, target: str, visited: set) -> bool:
             if module == target:
@@ -218,18 +218,18 @@ class ComprehensiveBuildChecker:
             if module in visited:
                 return False
             visited.add(module)
-            
+
             if module not in dependencies:
                 visited.remove(module)
                 return False
-            
+
             for dep in dependencies[module]:
                 if has_circular_dep(dep, target, visited):
                     visited.remove(module)
                     return True
             visited.remove(module)
             return False
-        
+
         circular_deps = []
         checked_pairs = set()
         for module, deps in dependencies.items():
@@ -238,7 +238,7 @@ class ComprehensiveBuildChecker:
                 if pair not in checked_pairs and dep in dependencies and has_circular_dep(dep, module, set()):
                     circular_deps.append((module, dep))
                     checked_pairs.add(pair)
-        
+
         if circular_deps:
             self.add_error(f"Found {len(circular_deps)} circular dependencies")
             for mod1, mod2 in circular_deps[:5]:
@@ -250,22 +250,22 @@ class ComprehensiveBuildChecker:
         """Check that UObject* pointers have UPROPERTY()."""
         print("\n📦 Checking UPROPERTY on UObject pointers...")
         source_dir = self.project_root / "Source"
-        
+
         h_files = list(source_dir.rglob("*.h"))
         missing_uproperty = []
-        
+
         for h_file in h_files:
             try:
                 content = h_file.read_text(encoding='utf-8', errors='ignore')
                 lines = content.split('\n')
-                
+
                 class_brace_depth = 0
                 function_brace_depth = 0
                 last_uproperty_line = -999
-                
+
                 for i, line in enumerate(lines):
                     stripped = line.strip()
-                    
+
                     # Track if we're entering a class or struct
                     if re.match(r'^\s*(class|struct)\s+\w+', stripped):
                         # Look for opening brace on this or subsequent lines
@@ -277,7 +277,7 @@ class ComprehensiveBuildChecker:
                                 if '{' in lines[j]:
                                     class_brace_depth += 1
                                     break
-                    
+
                     # Track class/struct scope by counting braces
                     class_brace_depth += stripped.count('{')
                     class_brace_depth -= stripped.count('}')
@@ -294,11 +294,11 @@ class ComprehensiveBuildChecker:
                         function_brace_depth += stripped.count('{')
                         function_brace_depth -= stripped.count('}')
                     in_function = function_brace_depth > 0
-                    
+
                     # Track UPROPERTY
                     if 'UPROPERTY' in stripped:
                         last_uproperty_line = i
-                    
+
                     # Check for UObject* declarations
                     if in_class and not in_function:
                         # Match: Type* VariableName; (only UObject/AActor-derived types)
@@ -306,10 +306,10 @@ class ComprehensiveBuildChecker:
                         if match and i - last_uproperty_line > 2:
                             rel_path = str(h_file.relative_to(self.project_root))
                             missing_uproperty.append((rel_path, i + 1, line.strip()))
-                                
+
             except Exception as e:
                 self.add_warning(f"Could not check {h_file}: {e}")
-        
+
         if missing_uproperty:
             self.add_warning(f"Found {len(missing_uproperty)} potential missing UPROPERTY declarations")
             for filepath, line_num, line_content in missing_uproperty[:5]:
@@ -321,7 +321,7 @@ class ComprehensiveBuildChecker:
         """Check for hardcoded secrets and sensitive data."""
         print("\n🔐 Checking for hardcoded secrets...")
         source_dir = self.project_root / "Source"
-        
+
         patterns = [
             (r'password\s*=\s*["\']', 'password'),
             (r'apikey\s*=\s*["\']', 'api key'),
@@ -330,10 +330,10 @@ class ComprehensiveBuildChecker:
             (r'token\s*=\s*["\']', 'token'),
             (r'private.*key\s*=\s*["\']', 'private key'),
         ]
-        
+
         cpp_files = list(source_dir.rglob("*.cpp")) + list(source_dir.rglob("*.h"))
         secrets_found = []
-        
+
         for filepath in cpp_files:
             try:
                 content = filepath.read_text(encoding='utf-8', errors='ignore')
@@ -348,7 +348,7 @@ class ComprehensiveBuildChecker:
             except Exception as e:
                 # Skip files that cannot be read, but continue checking others
                 self.log(f"Could not read {filepath}: {e}")
-        
+
         if secrets_found:
             self.add_error(f"Found {len(secrets_found)} potential hardcoded secrets")
             for filepath, line_num, secret_type in secrets_found:
@@ -360,10 +360,10 @@ class ComprehensiveBuildChecker:
         """Check that .cpp files include CoreMinimal.h."""
         print("\n📚 Checking CoreMinimal.h includes...")
         source_dir = self.project_root / "Source"
-        
+
         cpp_files = list(source_dir.rglob("*.cpp"))
         missing_core_minimal = []
-        
+
         for cpp_file in cpp_files:
             try:
                 content = cpp_file.read_text(encoding='utf-8', errors='ignore')
@@ -373,15 +373,15 @@ class ComprehensiveBuildChecker:
                     line.strip().startswith('#include') and 'CoreMinimal.h' in line
                     for line in first_lines
                 )
-                
+
                 if not has_core_minimal:
                     rel_path = str(cpp_file.relative_to(self.project_root))
                     missing_core_minimal.append(rel_path)
-                    
+
             except Exception as e:
                 # Skip files that cannot be read
                 self.log(f"Could not read {cpp_file}: {e}")
-        
+
         if missing_core_minimal:
             self.add_warning(f"Found {len(missing_core_minimal)} .cpp files without CoreMinimal.h")
             for filepath in missing_core_minimal[:5]:
@@ -393,25 +393,25 @@ class ComprehensiveBuildChecker:
         """Check for proper API export macros."""
         print("\n🔧 Checking API export macros...")
         source_dir = self.project_root / "Source"
-        
+
         h_files = list(source_dir.rglob("*.h"))
         missing_api = []
-        
+
         for h_file in h_files:
             try:
                 content = h_file.read_text(encoding='utf-8', errors='ignore')
-                
+
                 # Check for UCLASS/USTRUCT without API macro
                 uclass_matches = re.finditer(r'U(CLASS|STRUCT)\s*\([^)]*\)\s*class\s+(?![\w]+_API\s+)(\w+)', content, re.MULTILINE)
                 for match in uclass_matches:
                     rel_path = str(h_file.relative_to(self.project_root))
                     class_name = match.group(2)
                     missing_api.append((rel_path, class_name))
-                    
+
             except Exception as e:
                 # Skip files that cannot be read
                 self.log(f"Could not read {h_file}: {e}")
-        
+
         if missing_api:
             self.add_warning(f"Found {len(missing_api)} classes without API export macro")
             for filepath, class_name in missing_api[:5]:
@@ -423,10 +423,10 @@ class ComprehensiveBuildChecker:
         """Check for problematic relative paths in includes."""
         print("\n🔀 Checking relative include paths...")
         source_dir = self.project_root / "Source"
-        
+
         cpp_files = list(source_dir.rglob("*.cpp")) + list(source_dir.rglob("*.h"))
         suspicious_paths = []
-        
+
         for filepath in cpp_files:
             try:
                 content = filepath.read_text(encoding='utf-8', errors='ignore')
@@ -442,11 +442,11 @@ class ComprehensiveBuildChecker:
                                 if not test_path.exists():
                                     rel_path = str(filepath.relative_to(self.project_root))
                                     suspicious_paths.append((rel_path, line_num, include_path))
-                                    
+
             except Exception as e:
                 # Skip files that cannot be read, but continue checking other files
                 self.log(f"Could not read {filepath}: {e}")
-        
+
         if suspicious_paths:
             self.add_error(f"Found {len(suspicious_paths)} broken relative include paths")
             for filepath, line_num, include_path in suspicious_paths:
@@ -461,7 +461,7 @@ class ComprehensiveBuildChecker:
         print("=" * 70)
         print(f"Project Root: {self.project_root}")
         print(f"Verbose Mode: {self.verbose}")
-        
+
         # Run all checks
         self.check_missing_includes_comprehensive()
         self.check_circular_dependencies()
@@ -470,31 +470,31 @@ class ComprehensiveBuildChecker:
         self.check_core_minimal_include()
         self.check_api_export_macros()
         self.check_relative_include_paths()
-        
+
         # Display results
         print("\n" + "=" * 70)
         print("RESULTS")
         print("=" * 70)
-        
+
         if self.errors:
             print(f"\n❌ CRITICAL ERRORS ({len(self.errors)}):")
             for error in self.errors:
                 print(error)
-        
+
         if self.warnings:
             print(f"\n⚠️  WARNINGS ({len(self.warnings)}):")
             for warning in self.warnings:
                 print(warning)
-        
+
         if self.info:
             print(f"\n📋 Details ({len(self.info)}):")
             for info_msg in self.info[:30]:
                 print(info_msg)
             if len(self.info) > 30:
                 print(f"  ... and {len(self.info) - 30} more details")
-        
+
         print("\n" + "=" * 70)
-        
+
         if not self.errors:
             print("✅ All critical checks passed!")
             if self.warnings:
@@ -515,12 +515,12 @@ def main():
         action='store_true',
         help='Show verbose output including detailed search results'
     )
-    
+
     args = parser.parse_args()
-    
+
     checker = ComprehensiveBuildChecker(verbose=args.verbose)
     success = checker.run_all_checks()
-    
+
     print(f"\nTest completed: {'PASSED' if success else 'FAILED'}")
     sys.exit(0 if success else 1)
 

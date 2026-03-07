@@ -68,7 +68,7 @@ FAdastreaResult UAssetHelpers::CreateBlueprint(const FString& BlueprintName, con
 	}
 
 	UObject* NewAsset = AssetTools.CreateAsset(BlueprintName, PackagePath, UBlueprint::StaticClass(), Factory);
-	
+
 	if (!NewAsset)
 	{
 		return FAdastreaResult::MakeError(FString::Printf(TEXT("Failed to create blueprint: %s"), *BlueprintName));
@@ -112,7 +112,7 @@ FAdastreaResult UAssetHelpers::CreateMaterial(const FString& MaterialName, const
 	}
 
 	UObject* NewAsset = AssetTools.CreateAsset(MaterialName, PackagePath, UMaterial::StaticClass(), Factory);
-	
+
 	if (!NewAsset)
 	{
 		return FAdastreaResult::MakeError(FString::Printf(TEXT("Failed to create material: %s"), *MaterialName));
@@ -163,15 +163,15 @@ FAdastreaResult UAssetHelpers::ImportAssetGeneric(const FString& FilePath, const
 	FAssetToolsModule& AssetToolsModule = FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools");
 	TArray<FString> FilesToImport;
 	FilesToImport.Add(FilePath);
-	
+
 	TArray<UObject*> ImportedObjects = AssetToolsModule.Get().ImportAssets(FilesToImport, TargetFolder);
-	
+
 	FString ImportedAssetPath;
 	if (ImportedObjects.Num() > 0 && ImportedObjects[0])
 	{
 		ImportedAssetPath = ImportedObjects[0]->GetPathName();
 	}
-	
+
 	if (ImportedAssetPath.IsEmpty())
 	{
 		return FAdastreaResult::MakeError(FString::Printf(

@@ -70,21 +70,21 @@ struct FShipHardpoint
 
 /**
  * Base widget class for ship customization UI
- * 
+ *
  * This widget provides the interface for customizing ships:
  * - View and manage hardpoint slots
  * - Install and remove modules
  * - Preview stat changes
  * - Manage power and weight budgets
  * - Visual preview of customizations
- * 
+ *
  * Usage:
  * - Create a Widget Blueprint based on this class
  * - Design the customization interface
  * - Initialize with a spaceship reference
  * - Implement module selection and installation UI
  * - Override BlueprintNativeEvents for custom behavior
- * 
+ *
  * Integration:
  * - Works with ShipCustomizationDataAsset for modules
  * - Connects to Spaceship class for configuration

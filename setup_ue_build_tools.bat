@@ -29,7 +29,7 @@ if errorlevel 1 (
 REM Function to clone sparse checkout of UnrealEngine (build tools only)
 if exist "%UE_TOOLS_DIR%" (
     echo UnrealBuildTools directory already exists at: %UE_TOOLS_DIR%
-    
+
     REM Non-interactive mode check
     if defined CI (
         echo Non-interactive mode detected; validating existing UnrealBuildTools directory before removal...
@@ -43,7 +43,7 @@ if exist "%UE_TOOLS_DIR%" (
             exit /b 1
         )
     )
-    
+
     set /p "REPLY=Remove and re-download? (y/N): "
     if /i "!REPLY!"=="y" (
         echo Removing existing directory...

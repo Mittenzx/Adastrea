@@ -20,9 +20,9 @@ This package includes all files that were removed from the main repository:
 
 ## Package Information
 
-**Created from**: PR #120 (commit 7ffc4368a4b45088c187608da9a66029fbbcde57)  
-**Removal date**: 2025-11-14  
-**Total size**: ~86 KB (documentation and scripts)  
+**Created from**: PR #120 (commit 7ffc4368a4b45088c187608da9a66029fbbcde57)
+**Removal date**: 2025-11-14
+**Total size**: ~86 KB (documentation and scripts)
 **Purpose**: Migration to separate build tooling repository
 
 ## File Sizes
@@ -44,7 +44,7 @@ This package includes all files that were removed from the main repository:
    ```bash
    # Create or navigate to your build tools repository
    cd /path/to/adastrea-build-tools
-   
+
    # Copy all files from this package
    cp -r /path/to/build_package/* .
    ```
@@ -159,6 +159,6 @@ These scripts and documentation are part of the Adastrea project and follow the 
 
 ---
 
-**Package Created**: 2025-11-14  
-**Source**: Adastrea PR #120  
+**Package Created**: 2025-11-14
+**Source**: Adastrea PR #120
 **Maintained by**: Adastrea Development Team

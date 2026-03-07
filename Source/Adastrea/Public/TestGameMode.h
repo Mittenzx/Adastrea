@@ -13,24 +13,24 @@ class UUserWidget;
 
 /**
  * Test Game Mode for pre-game spaceship and control configuration
- * 
+ *
  * This game mode extends AAdastreaGameMode to provide a menu widget that allows
  * players to configure their spaceship selection and input controls before
  * starting gameplay.
- * 
+ *
  * Features:
  * - Pre-game menu widget display
  * - Spaceship selection from available data assets
  * - Input control configuration selection
  * - Blueprint-extensible confirmation and initialization flow
- * 
+ *
  * Usage:
  * 1. Create a Widget Blueprint for the menu (WBP_TestGameModeMenu)
  * 2. Set MenuWidgetClass to your widget Blueprint
  * 3. Populate AvailableSpaceships with SpaceshipDataAsset references
  * 4. Populate AvailableInputConfigs with InputConfigDataAsset references
  * 5. Override BlueprintNativeEvent functions for custom behavior
- * 
+ *
  * Integration:
  * - Works with existing SpaceshipDataAsset for ship configuration
  * - Works with InputConfigDataAsset for control configuration

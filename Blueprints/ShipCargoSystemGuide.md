@@ -1,16 +1,16 @@
 # Ship Cargo System - Blueprint Guide
 
-> **⚠️ DEPRECATED**: This guide has been consolidated into the unified Trading and Docking Complete Guide.  
+> **⚠️ DEPRECATED**: This guide has been consolidated into the unified Trading and Docking Complete Guide.
 > **See**: [Trading and Docking Complete Guide](../docs/mvp/TRADING_AND_DOCKING_COMPLETE_GUIDE.md)
 
 ---
 
 > **Add cargo management to player ship for storing traded items**
 
-**Blueprint Type**: Actor Component Blueprint  
-**Complexity**: Beginner  
-**Time to Complete**: 25-35 minutes  
-**Last Updated**: 2026-01-03  
+**Blueprint Type**: Actor Component Blueprint
+**Complexity**: Beginner
+**Time to Complete**: 25-35 minutes
+**Last Updated**: 2026-01-03
 **Status**: **DEPRECATED** - Refer to unified guide above
 
 ---
@@ -686,7 +686,7 @@ After completing this guide, you now know:
 
 ---
 
-**Questions or Issues?** 
+**Questions or Issues?**
 - Check the [Blueprint Guide for Beginners](../docs/development/BLUEPRINT_GUIDE_FOR_BEGINNERS.md)
 - Review C++ source: `Source/Adastrea/Public/Trading/CargoComponent.h`
 - See [Blueprints README](README.md) for more guides

@@ -38,7 +38,7 @@ This level should be created in Unreal Editor as `TestMode.umap` in the `Content
 ### 3. Environment Setup
 
 #### Lighting
-- **Directional Light**: 
+- **Directional Light**:
   - Position: Above the level
   - Rotation: Angled down (Pitch=-45)
   - Intensity: 5.0
@@ -133,12 +133,12 @@ If using AdastreaGameMode:
      - Place Actors panel → Lights → Directional Light
      - Set Rotation: Pitch=-45, Yaw=0, Roll=0
      - Intensity: 5.0
-   
+
    - Sky Light:
      - Place Actors panel → Lights → Sky Light
      - Keep at default position
      - Intensity: 1.0
-   
+
    - Sky Atmosphere:
      - Place Actors panel → Visual Effects → Sky Atmosphere
      - Use default settings
@@ -153,7 +153,7 @@ If using AdastreaGameMode:
    - Window → World Settings
    - Under Game Mode section:
      - GameMode Override: Select AdastreaGameMode or BP_TestModeGameMode
-   
+
 10. **Build Lighting** (Optional):
     - Build → Build Lighting Only
     - This bakes lighting for better performance

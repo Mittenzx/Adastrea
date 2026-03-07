@@ -1,7 +1,7 @@
 # MVP Telemetry System - Quick Reference
 
-**Purpose**: Quick lookup for implementing gameplay telemetry for Trade Simulator MVP  
-**Target**: Developers adding telemetry to Blueprints  
+**Purpose**: Quick lookup for implementing gameplay telemetry for Trade Simulator MVP
+**Target**: Developers adding telemetry to Blueprints
 **Created**: January 8, 2026
 
 ---
@@ -323,6 +323,6 @@ If NOT met: Additional polish needed
 
 ---
 
-**Last Updated**: January 8, 2026  
-**Next Review**: After Week 4 playtest  
+**Last Updated**: January 8, 2026
+**Next Review**: After Week 4 playtest
 **Status**: Planning/specification phase (implementation needed)

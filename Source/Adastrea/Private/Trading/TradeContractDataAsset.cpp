@@ -46,7 +46,7 @@ bool UTradeContractDataAsset::CanPlayerAccept(int32 PlayerReputation, float Play
 float UTradeContractDataAsset::GetTotalCargoVolume() const
 {
 	float TotalVolume = 0.0f;
-	
+
 	for (const FContractCargo& Cargo : RequiredCargo)
 	{
 		if (Cargo.TradeItem)
@@ -54,14 +54,14 @@ float UTradeContractDataAsset::GetTotalCargoVolume() const
 			TotalVolume += Cargo.TradeItem->GetTotalVolume(Cargo.Quantity);
 		}
 	}
-	
+
 	return TotalVolume;
 }
 
 float UTradeContractDataAsset::GetTotalCargoMass() const
 {
 	float TotalMass = 0.0f;
-	
+
 	for (const FContractCargo& Cargo : RequiredCargo)
 	{
 		if (Cargo.TradeItem)
@@ -69,7 +69,7 @@ float UTradeContractDataAsset::GetTotalCargoMass() const
 			TotalMass += Cargo.TradeItem->GetTotalMass(Cargo.Quantity);
 		}
 	}
-	
+
 	return TotalMass;
 }
 
@@ -79,7 +79,7 @@ float UTradeContractDataAsset::GetEstimatedCompletionTime(float AverageSpeed) co
 	{
 		return 0.0f;
 	}
-	
+
 	return Distance / AverageSpeed;
 }
 
@@ -87,7 +87,7 @@ int32 UTradeContractDataAsset::CalculateProfitMargin(int32 CargoAcquisitionCost,
 {
 	int32 TotalCosts = CargoAcquisitionCost + FuelCost + Penalties.CollateralDeposit;
 	int32 TotalRewards = Rewards.Credits;
-	
+
 	return TotalRewards - TotalCosts;
 }
 
@@ -97,7 +97,7 @@ float UTradeContractDataAsset::GetRemainingTime(float CurrentGameTime) const
 	{
 		return 0.0f;
 	}
-	
+
 	float ElapsedTime = CurrentGameTime - AcceptedTime;
 	return FMath::Max(0.0f, TimeLimit - ElapsedTime);
 }
@@ -108,12 +108,12 @@ bool UTradeContractDataAsset::IsExpired(float CurrentGameTime) const
 	{
 		return false; // No time limit
 	}
-	
+
 	if (Status != EContractStatus::Active)
 	{
 		return false;
 	}
-	
+
 	return GetRemainingTime(CurrentGameTime) <= 0.0f;
 }
 
@@ -123,16 +123,16 @@ bool UTradeContractDataAsset::AcceptContract(FName PlayerID, float CurrentGameTi
 	{
 		return false;
 	}
-	
+
 	Status = EContractStatus::Active;
 	AcceptedByPlayerID = PlayerID;
 	AcceptedTime = CurrentGameTime;
-	
+
 	if (TimeLimit > 0.0f)
 	{
 		ExpirationTime = CurrentGameTime + TimeLimit;
 	}
-	
+
 	OnContractAccepted(PlayerID);
 	return true;
 }
@@ -143,7 +143,7 @@ bool UTradeContractDataAsset::CompleteContract(float CurrentGameTime)
 	{
 		return false;
 	}
-	
+
 	// Check if expired
 	if (IsExpired(CurrentGameTime))
 	{
@@ -151,7 +151,7 @@ bool UTradeContractDataAsset::CompleteContract(float CurrentGameTime)
 		OnContractExpired();
 		return false;
 	}
-	
+
 	Status = EContractStatus::Completed;
 	OnContractCompleted(AcceptedByPlayerID);
 	return true;
@@ -163,7 +163,7 @@ bool UTradeContractDataAsset::FailContract(const FText& Reason)
 	{
 		return false;
 	}
-	
+
 	Status = EContractStatus::Failed;
 	OnContractFailed(AcceptedByPlayerID, Reason);
 	return true;

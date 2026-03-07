@@ -565,7 +565,7 @@ PolymerCompound:
 # ====================
 # USAGE NOTES
 # ====================
-# 
+#
 # To create a new material in Unreal Engine:
 # 1. Navigate to Content/Materials/ in Content Browser
 # 2. Right-click → Miscellaneous → Data Asset

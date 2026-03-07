@@ -53,22 +53,22 @@ populator.spawn_actors_pattern("/Game/Ships/BP_Fighter", 'line', 10,
 
 ```python
 # Single room
-InteriorLayoutPopulator.populate_room('bridge', center=(0, 0, 100), 
+InteriorLayoutPopulator.populate_room('bridge', center=(0, 0, 100),
     size=(3000, 3000, 400), theme='military')
 
 # Corridor
-InteriorLayoutPopulator.create_corridor(start=(0, 0, 100), end=(5000, 0, 100), 
+InteriorLayoutPopulator.create_corridor(start=(0, 0, 100), end=(5000, 0, 100),
     width=400, theme='military')
 
 # Complete station
-InteriorLayoutPopulator.populate_station_interior(station_type="hub", 
+InteriorLayoutPopulator.populate_station_interior(station_type="hub",
     theme="military")
 ```
 
 ### Room Types
 
 - `bridge` - Command center
-- `cargo_bay` - Storage area  
+- `cargo_bay` - Storage area
 - `living_quarters` - Crew quarters
 - `mess_hall` - Dining area
 - `engineering` - Engineering bay
@@ -184,7 +184,7 @@ pop = ScenePopulator()
 pop.spawn_actors_pattern("/Game/Ships/BP_Fighter", 'line', 10,
     {'spacing': 3000, 'start': (-15000, 0, 0), 'direction': (0, 1, 0)})
 
-# Enemy fleet  
+# Enemy fleet
 pop.spawn_actors_pattern("/Game/Ships/BP_Enemy", 'line', 10,
     {'spacing': 3000, 'start': (15000, 0, 0), 'direction': (0, 1, 0)})
 ```

@@ -9,19 +9,19 @@
 
 /**
  * Large docking bay module for space stations
- * 
+ *
  * Provides docking facilities for larger ships and freighters.
  * Consumes significant power to operate hangar doors, tractor beams,
  * and docking assistance systems.
- * 
+ *
  * Features:
  * - Multiple docking points for simultaneous ship docking
  * - Configurable docking capacity
  * - Blueprint-accessible docking state tracking
- * 
+ *
  * Power Consumption: 50 units
  * Module Group: Docking
- * 
+ *
  * Usage:
  * 1. Add docking points using the DockingPoints array in editor
  * 2. Each docking point is a scene component marking a ship attachment location
@@ -40,17 +40,17 @@ public:
 
 	/**
 	 * Array of docking point components - AUTOMATICALLY POPULATED
-	 * 
+	 *
 	 * This array is automatically filled at BeginPlay by finding all Scene Components
 	 * tagged with "DockingPoint". You don't need to manually populate this array.
-	 * 
+	 *
 	 * To add docking points:
 	 * 1. Add Scene Component to Blueprint
 	 * 2. Tag it with "DockingPoint" in the component's Tags array
 	 * 3. Position the component where ships should dock
-	 * 
+	 *
 	 * IMPORTANT: Ensure you have at least MaxDockedShips components tagged with "DockingPoint"
-	 * 
+	 *
 	 * NOTE: This array is read-only because it's populated automatically.
 	 * If you need to modify it at runtime, use PopulateDockingPointsFromTags() again.
 	 */
@@ -60,7 +60,7 @@ public:
 	/**
 	 * Maximum number of ships that can dock simultaneously
 	 * Default: 4 for large docking bays
-	 * 
+	 *
 	 * NOTE: Ensure DockingPoints array has at least this many elements defined
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Docking", meta=(ClampMin=1, ClampMax=20))
@@ -103,10 +103,10 @@ public:
 
 	/**
 	 * Populate the DockingPoints array from components tagged with "DockingPoint"
-	 * 
+	 *
 	 * This function is called automatically at BeginPlay, but can be called again
 	 * if you add docking points at runtime.
-	 * 
+	 *
 	 * Searches for all USceneComponent children tagged with "DockingPoint" and
 	 * adds them to the DockingPoints array in the order they are found.
 	 */

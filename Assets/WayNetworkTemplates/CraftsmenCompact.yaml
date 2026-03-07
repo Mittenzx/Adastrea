@@ -4,8 +4,8 @@
 NetworkName: "The Craftsmen's Compact"
 NetworkID: "CraftsmenCompact"
 Description: |
-  An alliance of master craftsmen, engineers, and ship-builders united by their 
-  dedication to excellence in construction and innovation. Members share techniques, 
+  An alliance of master craftsmen, engineers, and ship-builders united by their
+  dedication to excellence in construction and innovation. Members share techniques,
   resources, and apprentices to advance the art of spacecraft engineering.
 
 NetworkColor:
@@ -20,12 +20,12 @@ MemberWays:
     InfluenceLevel: 70
     CommitmentLevel: 90
     RoleDescription: "Masters of propulsion and power systems"
-    
+
   - MemberWay: "DA_Way_ShipBuildersUnion"
     InfluenceLevel: 80
     CommitmentLevel: 85
     RoleDescription: "Expert hull designers and construction specialists"
-    
+
   - MemberWay: "DA_Way_RefineryCollective"
     InfluenceLevel: 50
     CommitmentLevel: 70
@@ -36,11 +36,11 @@ SharedPrecepts:
   - Precept: Craftsmanship
     ImportanceValue: 90
     Description: "We believe in excellence in all things built"
-    
+
   - Precept: Mastery
     ImportanceValue: 85
     Description: "Continuous improvement and skill perfection"
-    
+
   - Precept: Innovation
     ImportanceValue: 70
     Description: "Push the boundaries of what's possible"

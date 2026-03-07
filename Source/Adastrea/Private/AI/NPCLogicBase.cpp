@@ -20,17 +20,17 @@ void UNPCLogicBase::InitializeAI_Implementation()
 {
     // Reset timing
     TimeSinceLastUpdate = 0.0f;
-    
+
     // Validate update interval
     if (UpdateInterval <= 0.0f)
     {
         UE_LOG(LogAdastreaAI, Warning, TEXT("AI %s: Invalid UpdateInterval %.2f, setting to 1.0"), *GetName(), UpdateInterval);
         UpdateInterval = 1.0f;
     }
-    
+
     // Log initialization for debugging
-    UE_LOG(LogAdastreaAI, Log, TEXT("AI Initialized: %s (Mode: %s, Interval: %.2f)"), 
-        *GetName(), 
+    UE_LOG(LogAdastreaAI, Log, TEXT("AI Initialized: %s (Mode: %s, Interval: %.2f)"),
+        *GetName(),
         *UEnum::GetValueAsString(CurrentBehaviorMode),
         UpdateInterval);
 }
@@ -39,13 +39,13 @@ void UNPCLogicBase::OnTickAI_Implementation(float DeltaTime)
 {
     // Default implementation - evaluate priorities and decide actions
     // This is meant to be overridden in Blueprint or derived classes
-    
+
     // Step 1: Evaluate current priority
     EAIPriority CurrentPriority = EvaluateCurrentPriority();
-    
+
     // Step 2: Decide on action based on priority
     DecideNextAction(CurrentPriority);
-    
+
     // Step 3: Check if we should change behavior mode
     EAIBehaviorMode NewMode = ShouldChangeBehaviorMode();
     if (NewMode != CurrentBehaviorMode)
@@ -58,7 +58,7 @@ void UNPCLogicBase::OnActivateAI_Implementation()
 {
     // Activate the AI
     bIsActive = true;
-    
+
     UE_LOG(LogAdastreaAI, Log, TEXT("AI Activated: %s"), *GetName());
 }
 
@@ -66,14 +66,14 @@ void UNPCLogicBase::OnDeactivateAI_Implementation()
 {
     // Deactivate the AI
     bIsActive = false;
-    
+
     UE_LOG(LogAdastreaAI, Log, TEXT("AI Deactivated: %s"), *GetName());
 }
 
 void UNPCLogicBase::OnBehaviorModeChanged_Implementation(EAIBehaviorMode OldMode, EAIBehaviorMode NewMode)
 {
     // Log the mode change
-    UE_LOG(LogAdastreaAI, Log, TEXT("AI Mode Changed for %s: %s -> %s"), 
+    UE_LOG(LogAdastreaAI, Log, TEXT("AI Mode Changed for %s: %s -> %s"),
         *GetName(),
         *UEnum::GetValueAsString(OldMode),
         *UEnum::GetValueAsString(NewMode));
@@ -161,7 +161,7 @@ FString UNPCLogicBase::GetAIStateDescription() const
 {
     FString ModeString = UEnum::GetValueAsString(CurrentBehaviorMode);
     FString ActiveString = bIsActive ? TEXT("Active") : TEXT("Inactive");
-    
+
     return FString::Printf(TEXT("%s - %s"), *ModeString, *ActiveString);
 }
 
@@ -179,9 +179,9 @@ void UNPCLogicBase::UpdateAI(float DeltaTime)
     {
         return;
     }
-    
+
     TimeSinceLastUpdate += DeltaTime;
-    
+
     // Only tick AI at the specified interval
     if (TimeSinceLastUpdate >= UpdateInterval)
     {

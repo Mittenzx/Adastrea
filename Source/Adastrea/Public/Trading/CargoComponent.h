@@ -38,7 +38,7 @@ struct FCargoEntry
 /**
  * Cargo Component
  * Manages ship's cargo hold and inventory
- * 
+ *
  * Usage:
  * 1. Add to ship actor
  * 2. Set CargoCapacity

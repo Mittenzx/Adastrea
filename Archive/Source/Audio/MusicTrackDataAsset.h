@@ -36,16 +36,16 @@ enum class EMusicIntensity : uint8
 
 /**
  * Data Asset for defining music tracks with dynamic mixing support
- * 
+ *
  * This class provides a designer-friendly way to configure music tracks
  * that can be dynamically mixed based on gameplay context.
- * 
+ *
  * Usage:
  * 1. Create a Blueprint based on this class
  * 2. Configure music properties and assign audio files
  * 3. Set mood and intensity for dynamic selection
  * 4. Reference from music manager to handle transitions
- * 
+ *
  * Example:
  * - Create DA_Music_CombatHigh for intense combat
  * - Set mood to Combat, intensity to High

@@ -6,20 +6,20 @@
 
 /**
  * Base HUD widget class for the main game HUD
- * 
+ *
  * This widget provides the main heads-up display for players during gameplay, showing:
  * - Ship health and shield status
  * - Speed and navigation information
  * - Target information and combat data
  * - Alert messages and notifications
  * - Minimap or sector information
- * 
+ *
  * Usage:
  * - Create a Widget Blueprint based on this class
  * - Design the HUD layout in the Blueprint designer
  * - Override BlueprintNativeEvents to customize behavior
  * - Use Blueprint functions to update display elements
- * 
+ *
  * Integration:
  * - Automatically managed by AAdastreaPlayerController
  * - Updates based on possessed spaceship state
@@ -318,13 +318,13 @@ protected:
 
 	/**
 	 * Update X4-style flight crosshair showing ship rotation direction
-	 * 
+	 *
 	 * X4 Flight System Visualization:
 	 * - Mouse cursor position = where player wants to turn
 	 * - Ship direction indicator = where ship is actually pointing/turning
 	 * - Visual connection shows the rotation intent
 	 * - Deadzone circle shows no-rotation area
-	 * 
+	 *
 	 * @param MouseScreenPosition Mouse position in screen space (0-1 range)
 	 * @param ShipRotationDirection Ship's current rotation direction vector in screen space (0-1 range)
 	 * @param RotationSpeed Current rotation speed (0-1, where 1 = maximum rotation speed)

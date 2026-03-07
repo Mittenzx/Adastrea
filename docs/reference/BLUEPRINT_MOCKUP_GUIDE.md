@@ -2,15 +2,15 @@
 
 > **Best practices and templates for documenting Blueprint logic in Adastrea**
 
-**Last Updated**: December 29, 2025  
-**For Version**: 1.0.0-alpha  
+**Last Updated**: December 29, 2025
+**For Version**: 1.0.0-alpha
 **Target Engine**: Unreal Engine 5.6
 
 ---
 
 ## 🆕 Enhanced Version Available!
 
-**For more realistic Blueprint documentation with colors and node details, see:**  
+**For more realistic Blueprint documentation with colors and node details, see:**
 👉 **[BLUEPRINT_VISUAL_MOCKUP_GUIDE.md](BLUEPRINT_VISUAL_MOCKUP_GUIDE.md)** - Enhanced version with color-coded nodes matching Unreal Editor appearance
 
 This guide provides the foundation and patterns. The enhanced version adds visual accuracy with:
@@ -970,7 +970,7 @@ Branch (Is Market Open?)
 5. **Don't Forget Return Values**
    ```
    ❌ Call Function
-   
+
    ✅ Call Function
         └─ Return: Result
    ```
@@ -1278,6 +1278,6 @@ Branch (User Confirmed?)
 
 ---
 
-**Last Updated**: December 29, 2025  
-**Maintained by**: Adastrea Development Team  
+**Last Updated**: December 29, 2025
+**Maintained by**: Adastrea Development Team
 **Feedback**: Please submit improvements via GitHub issues

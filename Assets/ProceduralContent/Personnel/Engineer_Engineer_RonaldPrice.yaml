@@ -9,7 +9,7 @@ PersonnelName: "Ronald Price"
 # Basic Identity
 Biography: |
   This individual spent years as a freelance pilot before joining organized service. They are considered a natural born leader and published research that advanced the field of astrogation.
-  
+
 Age: 58
 Gender: "Male"
 Species: "Human"
@@ -61,7 +61,7 @@ ContractMonthsRemaining: 0
 PersonalityType: "Cautious"
 PersonalityDescription: |
   Cautious personality with focus on engineer duties.
-  
+
 Traits:
   - TraitName: "Quick Learner"
     TraitDescription: "Gains XP faster"

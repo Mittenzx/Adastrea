@@ -17,13 +17,13 @@ FAdastreaScriptResult FAdastreaScriptService::ExecuteCode(
 	}
 
 	IPythonScriptPlugin* PythonPlugin = IPythonScriptPlugin::Get();
-	
+
 	// Setup command
 	FPythonCommandEx Command;
 	Command.Command = Code;
 	Command.ExecutionMode = EPythonCommandExecutionMode::ExecuteFile;
-	Command.FileExecutionScope = bPrivateScope 
-		? EPythonFileExecutionScope::Private 
+	Command.FileExecutionScope = bPrivateScope
+		? EPythonFileExecutionScope::Private
 		: EPythonFileExecutionScope::Public;
 
 	// Execute with timing
@@ -45,7 +45,7 @@ FAdastreaScriptResult FAdastreaScriptService::EvaluateExpression(const FString& 
 	}
 
 	IPythonScriptPlugin* PythonPlugin = IPythonScriptPlugin::Get();
-	
+
 	FPythonCommandEx Command;
 	Command.Command = Expression;
 	Command.ExecutionMode = EPythonCommandExecutionMode::EvaluateStatement;
@@ -70,19 +70,19 @@ FString FAdastreaScriptService::GetPythonInfo()
 	}
 
 	IPythonScriptPlugin* PythonPlugin = IPythonScriptPlugin::Get();
-	
+
 	// Execute version check
 	FPythonCommandEx Command;
 	Command.Command = TEXT("import sys; print(f'Python {sys.version}')");
 	Command.ExecutionMode = EPythonCommandExecutionMode::ExecuteFile;
-	
+
 	if (PythonPlugin->ExecPythonCommandEx(Command))
 	{
 		FString Output = Command.CommandResult;
 		Output.TrimStartAndEndInline();
 		return Output;
 	}
-	
+
 	return TEXT("Unable to get Python version");
 }
 

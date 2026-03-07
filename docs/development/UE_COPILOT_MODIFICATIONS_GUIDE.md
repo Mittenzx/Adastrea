@@ -1,7 +1,7 @@
 # Unreal Engine Copilot - Spaceship Controls Smoothing Modifications Guide
 
-**Purpose:** Guide for applying smoothing control modifications tested in Unreal Engine 5.6  
-**Date:** December 6, 2024  
+**Purpose:** Guide for applying smoothing control modifications tested in Unreal Engine 5.6
+**Date:** December 6, 2024
 **Context:** Based on testing feedback for spaceship controls smoothing implementation
 
 ---
@@ -198,7 +198,7 @@ if (OwningPawn)
 {
     float CurrentVelocity = OwningPawn->GetVelocity().Size();
     float MaxSpeed = 3000.0f;  // Adjust based on ship data
-    
+
     if (CurrentVelocity > MaxSpeed * 0.8f)  // 80% of max speed
     {
         // Reduce smoothing at high speeds
@@ -420,6 +420,6 @@ For questions about these modifications:
 - Check implementation details in source files
 - Reference presets in guide for different ship types
 
-**Version:** 1.0  
-**Last Updated:** December 6, 2024  
+**Version:** 1.0
+**Last Updated:** December 6, 2024
 **Status:** Ready for UE Copilot to apply modifications based on testing feedback

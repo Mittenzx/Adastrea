@@ -145,7 +145,7 @@ UShipModuleComponent* UShipCustomizationComponent::GetModuleInSlot(FName SlotID)
 TArray<UShipModuleComponent*> UShipCustomizationComponent::GetModulesByCategory(EShipModuleCategory Category) const
 {
 	TArray<UShipModuleComponent*> Result;
-	
+
 	for (const UShipModuleComponent* Module : InstalledModules)
 	{
 		if (Module && IShipModule::Execute_GetModuleCategory(Module) == Category)
@@ -189,7 +189,7 @@ bool UShipCustomizationComponent::FindSlotByID(FName SlotID, FShipModuleSlot& Ou
 TArray<FShipModuleSlot> UShipCustomizationComponent::GetSlotsByCategory(EShipModuleCategory Category) const
 {
 	TArray<FShipModuleSlot> Result;
-	
+
 	for (const FShipModuleSlot& Slot : ModuleSlots)
 	{
 		if (Slot.AcceptedCategory == Category)
@@ -204,7 +204,7 @@ TArray<FShipModuleSlot> UShipCustomizationComponent::GetSlotsByCategory(EShipMod
 TArray<FShipModuleSlot> UShipCustomizationComponent::GetEmptySlots() const
 {
 	TArray<FShipModuleSlot> Result;
-	
+
 	for (const FShipModuleSlot& Slot : ModuleSlots)
 	{
 		if (!Slot.bIsOccupied)
@@ -219,7 +219,7 @@ TArray<FShipModuleSlot> UShipCustomizationComponent::GetEmptySlots() const
 TArray<FShipModuleSlot> UShipCustomizationComponent::GetCompatibleEmptySlots(UShipModuleComponent* Module) const
 {
 	TArray<FShipModuleSlot> Result;
-	
+
 	if (!Module)
 	{
 		return Result;
@@ -369,7 +369,7 @@ FString UShipCustomizationComponent::GetLoadoutString() const
 	for (const FShipModuleSlot& Slot : ModuleSlots)
 	{
 		Loadout += FString::Printf(TEXT("  %s: "), *Slot.SlotName.ToString());
-		
+
 		if (Slot.bIsOccupied)
 		{
 			UShipModuleComponent* Module = Cast<UShipModuleComponent>(Slot.InstalledModule.Get());
@@ -386,7 +386,7 @@ FString UShipCustomizationComponent::GetLoadoutString() const
 		{
 			Loadout += TEXT("Empty");
 		}
-		
+
 		Loadout += TEXT("\n");
 	}
 

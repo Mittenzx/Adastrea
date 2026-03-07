@@ -82,5 +82,5 @@ python3 ingest_game_repo.py --force
 
 ---
 
-**Last Updated**: 2025-12-20  
+**Last Updated**: 2025-12-20
 **For**: Adastrea Director Plugin Testing

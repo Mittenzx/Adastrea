@@ -93,7 +93,7 @@ bool UPointDefenseComponent::AddPointDefenseWeapon(UWeaponComponent* Weapon)
     // Check if weapon is point defense capable
     if (!Weapon->WeaponData->bPointDefenseCapable)
     {
-        UE_LOG(LogAdastreaCombat, Warning, TEXT("Weapon %s is not point defense capable"), 
+        UE_LOG(LogAdastreaCombat, Warning, TEXT("Weapon %s is not point defense capable"),
             *Weapon->WeaponData->WeaponName.ToString());
         return false;
     }
@@ -155,7 +155,7 @@ bool UPointDefenseComponent::EngageThreat(AActor* Threat)
         // Assign weapon to threat
         WeaponAssignments.Add(Weapon, Threat);
         EngagedThreats.Add(Threat);
-        
+
         // Mark threat as engaged
         for (FIncomingThreat& ThreatInfo : TrackedThreats)
         {
@@ -343,7 +343,7 @@ void UPointDefenseComponent::OnThreatEngaged_Implementation(AActor* Threat, UWea
 
 void UPointDefenseComponent::OnThreatNeutralized_Implementation(AActor* Threat, bool bDestroyed)
 {
-    UE_LOG(LogAdastreaCombat, Log, TEXT("Threat neutralized: %s (destroyed: %s)"), 
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Threat neutralized: %s (destroyed: %s)"),
         *Threat->GetName(), bDestroyed ? TEXT("yes") : TEXT("no"));
 }
 
@@ -377,7 +377,7 @@ float UPointDefenseComponent::CalculateThreatPriority_Implementation(AActor* Thr
     if (bIsMissile)
     {
         Priority += 20.0f;
-        
+
         if (bPrioritizeMissiles)
         {
             Priority += 10.0f;
@@ -429,7 +429,7 @@ void UPointDefenseComponent::ScanForThreats()
     for (const FOverlapResult& Overlap : Overlaps)
     {
         AActor* PotentialThreat = Overlap.GetActor();
-        
+
         if (!IsValidThreat(PotentialThreat))
         {
             continue;

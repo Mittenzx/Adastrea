@@ -122,7 +122,7 @@ F12 → Close Dashboard
   ✓ Forward/backward works
   ✓ Strafe left/right works
   ✓ Rotation works
-  
+
 F12 → Open Dashboard
   [✓] Ship Movement
   Notes: "All movement modes work. Rotation feels smooth."
@@ -133,7 +133,7 @@ F12 → Close, continue testing
 --- Test collisions ---
   ✓ Hit asteroid - collision detected
   ✓ Hit station - collision detected
-  
+
 F12 → Open Dashboard
   [✓] Ship Collision
   Notes: "Collisions detected properly."
@@ -145,7 +145,7 @@ F12 → Open Dashboard
   Quick Actions:
     Ship Type: "Gunship" ← Select this
     [Spawn Ship] ← Click this
-  
+
 Ship spawns 1000m away!
 
 F12 → Close, test combat
@@ -154,7 +154,7 @@ F12 → Close, test combat
   ✓ Energy weapons fire
   ✓ Hit detection works
   ✓ Damage applied
-  
+
 F12 → Open Dashboard
   [✓] Weapon Firing
   Notes: "Energy weapons work perfectly"
@@ -164,8 +164,8 @@ F12 → Open Dashboard
 
 F12 → Open Dashboard
   [Export Results] ← Click at end of session
-  
-Results saved! 
+
+Results saved!
   File: Saved/TestResults/Session_2024_11_22.txt
 
 ┌─────────────────────────────────────────────────────────┐

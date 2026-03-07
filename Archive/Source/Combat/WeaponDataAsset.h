@@ -45,11 +45,11 @@ enum class EWeaponMountSize : uint8
 
 /**
  * Data Asset for weapon configurations
- * 
+ *
  * Defines all properties for a weapon type including damage, range, power requirements,
  * and firing characteristics. Allows designers to create weapon configurations as
  * Blueprint Data Assets without C++ knowledge.
- * 
+ *
  * Usage:
  * - Create a Blueprint based on this class
  * - Configure weapon properties in editor

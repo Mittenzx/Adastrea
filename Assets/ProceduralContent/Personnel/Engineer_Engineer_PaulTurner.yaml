@@ -9,7 +9,7 @@ PersonnelName: "Paul Turner"
 # Basic Identity
 Biography: |
   This individual trained as an engineer at the prestigious Stellar Institute. They are respected for their tactical brilliance and trained the next generation of Engineers at the academy.
-  
+
 Age: 41
 Gender: "Male"
 Species: "Human"
@@ -61,7 +61,7 @@ ContractMonthsRemaining: 0
 PersonalityType: "Aggressive"
 PersonalityDescription: |
   Aggressive personality with focus on engineer duties.
-  
+
 Traits:
   - TraitName: "Technical Genius"
     TraitDescription: "Engineering bonus"

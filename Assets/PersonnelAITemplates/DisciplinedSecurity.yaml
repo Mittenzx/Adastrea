@@ -13,9 +13,9 @@ Species: "Human"
 Nationality: "Mars Defense Force"
 
 Biography: |
-  Lt. Chen served 15 years in planetary defense before joining civilian service. 
-  Known for impeccable adherence to regulations and protocols. Maintains peak 
-  physical fitness and regularly reviews security procedures. Former military 
+  Lt. Chen served 15 years in planetary defense before joining civilian service.
+  Known for impeccable adherence to regulations and protocols. Maintains peak
+  physical fitness and regularly reviews security procedures. Former military
   training makes him a natural leader during crisis situations.
 
 Tags:
@@ -129,9 +129,9 @@ Relationships:
 # ====================
 PersonalityType: "ISTJ - The Inspector"
 PersonalityDescription: |
-  Methodical, reliable, and dedicated to duty. Lives by a strict code of conduct 
-  and expects the same from others. Prefers clear hierarchies and well-defined 
-  procedures. Can be inflexible but is invaluable in crisis situations where 
+  Methodical, reliable, and dedicated to duty. Lives by a strict code of conduct
+  and expects the same from others. Prefers clear hierarchies and well-defined
+  procedures. Can be inflexible but is invaluable in crisis situations where
   protocol saves lives.
 
 Traits:

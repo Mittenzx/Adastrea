@@ -1,6 +1,6 @@
 # Adastrea Architecture Overview
 
-**Current Phase**: Trade Simulator MVP (Dec 2025 - Mar 2026)  
+**Current Phase**: Trade Simulator MVP (Dec 2025 - Mar 2026)
 **Last Updated**: 2025-12-24
 
 > **Important**: This document describes the full architecture vision. For current MVP development, see the [MVP Focus](#mvp-focus-trade-simulator) section below.
@@ -30,13 +30,13 @@ graph TB
         Economy[Economy Manager<br/>Price Updates]
         UI[Trading UI<br/>Buy/Sell Interface]
     end
-    
+
     subgraph "MVP Data"
         ShipData[Ship Data<br/>Cargo Capacity]
         ItemData[Trade Item Data<br/>Prices]
         MarketData[Market Data<br/>Supply/Demand]
     end
-    
+
     Player -->|Dock| Station
     Station -->|Open| UI
     UI -->|Buy/Sell| Economy
@@ -475,7 +475,7 @@ UCLASS(BlueprintType)
 class ADASTREA_API UYourDataAsset : public UPrimaryDataAsset
 {
     GENERATED_BODY()
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Config")
     float SomeValue;
 };
@@ -518,7 +518,7 @@ struct FYourTrait
 {
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FName TraitID;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ModifierValue;
 };
@@ -539,7 +539,7 @@ struct FRelationship
 {
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FName TargetID;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin="-100", ClampMax="100"))
     int32 RelationshipValue;
 };

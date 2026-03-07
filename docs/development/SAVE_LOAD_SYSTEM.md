@@ -47,70 +47,70 @@ class UAdastreaTradeSimSaveGame : public USaveGame
 public:
     // Constructor
     UAdastreaTradeSimSaveGame();
-    
+
     // Save Slot Info
     UPROPERTY(VisibleAnywhere, Category="Save Info")
     FString SaveSlotName;
-    
+
     UPROPERTY(VisibleAnywhere, Category="Save Info")
     int32 SaveVersion; // For backwards compatibility
-    
+
     UPROPERTY(VisibleAnywhere, Category="Save Info")
     FDateTime SaveTimestamp;
-    
+
     // Player Progression
     UPROPERTY(VisibleAnywhere, Category="Player")
     int32 CurrentCredits;
-    
+
     UPROPERTY(VisibleAnywhere, Category="Player")
     int32 TotalLifetimeEarnings;
-    
+
     UPROPERTY(VisibleAnywhere, Category="Player")
     FName CurrentShipID; // "ship_starter_compact", "ship_medium_hauler", etc.
-    
+
     UPROPERTY(VisibleAnywhere, Category="Player")
     TArray<FName> UnlockedShipIDs; // All ships player can switch to
-    
+
     // Cargo State
     UPROPERTY(VisibleAnywhere, Category="Cargo")
     TMap<FName, int32> CargoInventory; // ItemID → Quantity
-    
+
     UPROPERTY(VisibleAnywhere, Category="Cargo")
     int32 UsedCargoSpace;
-    
+
     UPROPERTY(VisibleAnywhere, Category="Cargo")
     int32 MaxCargoSpace;
-    
+
     // Location
     UPROPERTY(VisibleAnywhere, Category="Location")
     FName CurrentStationID; // If docked, which station
-    
+
     UPROPERTY(VisibleAnywhere, Category="Location")
     FVector WorldPosition; // If flying, where
-    
+
     UPROPERTY(VisibleAnywhere, Category="Location")
     FRotator WorldRotation;
-    
+
     UPROPERTY(VisibleAnywhere, Category="Location")
     bool bIsDocked;
-    
+
     // Trading Statistics
     UPROPERTY(VisibleAnywhere, Category="Statistics")
     int32 TotalTradesCompleted;
-    
+
     UPROPERTY(VisibleAnywhere, Category="Statistics")
     int32 TotalProfitMade; // Can go negative
-    
+
     UPROPERTY(VisibleAnywhere, Category="Statistics")
     TArray<FName> VisitedStationIDs;
-    
+
     UPROPERTY(VisibleAnywhere, Category="Statistics")
     float TotalPlayTimeSeconds;
-    
+
     // Optional: Tutorial/Settings
     UPROPERTY(VisibleAnywhere, Category="Settings")
     bool bHasCompletedTutorial;
-    
+
     UPROPERTY(VisibleAnywhere, Category="Settings")
     TMap<FName, bool> TutorialStepsCompleted; // "first_dock", "first_trade", etc.
 };
@@ -126,22 +126,22 @@ bool USaveLoadManager::SaveGame(const FString& SlotName)
     UAdastreaTradeSimSaveGame* SaveGameInstance = Cast<UAdastreaTradeSimSaveGame>(
         UGameplayStatics::CreateSaveGameObject(UAdastreaTradeSimSaveGame::StaticClass())
     );
-    
+
     if (!SaveGameInstance)
     {
         UE_LOG(LogTrading, Error, TEXT("Failed to create save game object"));
         return false;
     }
-    
+
     // Populate save data
     SaveGameInstance->SaveSlotName = SlotName;
     SaveGameInstance->SaveVersion = 1; // MVP version
     SaveGameInstance->SaveTimestamp = FDateTime::Now();
-    
+
     // Get player trader component
     APlayerController* PC = GetWorld()->GetFirstPlayerController();
     UPlayerTraderComponent* TraderComp = PC->FindComponentByClass<UPlayerTraderComponent>();
-    
+
     if (TraderComp)
     {
         SaveGameInstance->CurrentCredits = TraderComp->GetCredits();
@@ -149,7 +149,7 @@ bool USaveLoadManager::SaveGame(const FString& SlotName)
         SaveGameInstance->CurrentShipID = TraderComp->GetCurrentShipID();
         SaveGameInstance->UnlockedShipIDs = TraderComp->GetUnlockedShipIDs();
     }
-    
+
     // Get cargo component
     UCargoComponent* CargoComp = PC->GetPawn()->FindComponentByClass<UCargoComponent>();
     if (CargoComp)
@@ -158,7 +158,7 @@ bool USaveLoadManager::SaveGame(const FString& SlotName)
         SaveGameInstance->UsedCargoSpace = CargoComp->GetUsedCargoSpace();
         SaveGameInstance->MaxCargoSpace = CargoComp->GetCargoCapacity();
     }
-    
+
     // Get location
     APawn* PlayerPawn = PC->GetPawn();
     if (PlayerPawn)
@@ -166,15 +166,15 @@ bool USaveLoadManager::SaveGame(const FString& SlotName)
         SaveGameInstance->WorldPosition = PlayerPawn->GetActorLocation();
         SaveGameInstance->WorldRotation = PlayerPawn->GetActorRotation();
     }
-    
+
     // Save statistics
     SaveGameInstance->TotalTradesCompleted = TraderComp->GetTotalTrades();
     SaveGameInstance->TotalProfitMade = TraderComp->GetTotalProfit();
     SaveGameInstance->VisitedStationIDs = TraderComp->GetVisitedStations();
-    
+
     // Perform save
     bool bSuccess = UGameplayStatics::SaveGameToSlot(SaveGameInstance, SlotName, 0);
-    
+
     if (bSuccess)
     {
         UE_LOG(LogTrading, Log, TEXT("Game saved successfully to slot: %s"), *SlotName);
@@ -183,7 +183,7 @@ bool USaveLoadManager::SaveGame(const FString& SlotName)
     {
         UE_LOG(LogTrading, Error, TEXT("Failed to save game to slot: %s"), *SlotName);
     }
-    
+
     return bSuccess;
 }
 
@@ -194,21 +194,21 @@ bool USaveLoadManager::LoadGame(const FString& SlotName)
         UE_LOG(LogTrading, Warning, TEXT("Save game does not exist: %s"), *SlotName);
         return false;
     }
-    
+
     UAdastreaTradeSimSaveGame* LoadedGame = Cast<UAdastreaTradeSimSaveGame>(
         UGameplayStatics::LoadGameFromSlot(SlotName, 0)
     );
-    
+
     if (!LoadedGame)
     {
         UE_LOG(LogTrading, Error, TEXT("Failed to load save game: %s"), *SlotName);
         return false;
     }
-    
+
     // Restore player state
     APlayerController* PC = GetWorld()->GetFirstPlayerController();
     UPlayerTraderComponent* TraderComp = PC->FindComponentByClass<UPlayerTraderComponent>();
-    
+
     if (TraderComp)
     {
         TraderComp->SetCredits(LoadedGame->CurrentCredits);
@@ -219,14 +219,14 @@ bool USaveLoadManager::LoadGame(const FString& SlotName)
         TraderComp->SetTotalProfit(LoadedGame->TotalProfitMade);
         TraderComp->SetVisitedStations(LoadedGame->VisitedStationIDs);
     }
-    
+
     // Restore cargo
     UCargoComponent* CargoComp = PC->GetPawn()->FindComponentByClass<UCargoComponent>();
     if (CargoComp)
     {
         CargoComp->SetCargoInventory(LoadedGame->CargoInventory);
     }
-    
+
     // Restore location
     APawn* PlayerPawn = PC->GetPawn();
     if (PlayerPawn)
@@ -252,7 +252,7 @@ bool USaveLoadManager::LoadGame(const FString& SlotName)
             );
         }
     }
-    
+
     UE_LOG(LogTrading, Log, TEXT("Game loaded successfully from slot: %s"), *SlotName);
     return true;
 }
@@ -287,10 +287,10 @@ bool USaveLoadManager::LoadGame(const FString& SlotName)
 void UPlayerTraderComponent::OnTradeCompleted()
 {
     // Trade logic...
-    
+
     // Auto-save
     USaveLoadManager::Get()->SaveGame("TradingSimSlot_01");
-    
+
     // Show small UI notification
     ShowNotification(TEXT("Progress Saved"), 2.0f);
 }
@@ -406,26 +406,26 @@ bool USaveLoadManager::LoadGame(const FString& SlotName)
     UAdastreaTradeSimSaveGame* LoadedGame = Cast<UAdastreaTradeSimSaveGame>(
         UGameplayStatics::LoadGameFromSlot(SlotName, 0)
     );
-    
+
     if (!LoadedGame)
         return false;
-    
+
     // Check version
     switch (LoadedGame->SaveVersion)
     {
         case 1: // MVP version
             LoadGameVersion1(LoadedGame);
             break;
-        
+
         case 2: // Future update
             LoadGameVersion2(LoadedGame);
             break;
-        
+
         default:
             UE_LOG(LogTrading, Error, TEXT("Unknown save version: %d"), LoadedGame->SaveVersion);
             return false;
     }
-    
+
     return true;
 }
 
@@ -457,17 +457,17 @@ bool USaveLoadManager::ValidateSaveData(UAdastreaTradeSimSaveGame* SaveData)
 {
     if (!SaveData)
         return false;
-    
+
     // Check critical fields
     if (SaveData->SaveVersion <= 0)
         return false;
-    
+
     if (SaveData->CurrentCredits < 0) // Negative credits = corrupted
         return false;
-    
+
     if (SaveData->MaxCargoSpace <= 0)
         return false;
-    
+
     // All checks passed
     return true;
 }
@@ -502,12 +502,12 @@ bool bSuccess = UGameplayStatics::SaveGameToSlot(SaveData, SlotName, 0);
 if (!bSuccess)
 {
     UE_LOG(LogTrading, Error, TEXT("Save failed - check disk space and permissions"));
-    
+
     ShowErrorDialog(
         TEXT("Save Failed"),
         TEXT("Unable to save game. Check disk space and folder permissions.")
     );
-    
+
     return false;
 }
 ```
@@ -673,6 +673,6 @@ if (SaveTimeMs > 100.0f)
 
 ---
 
-**Last Updated**: 2026-01-17  
-**Version**: 1.0  
+**Last Updated**: 2026-01-17
+**Version**: 1.0
 **Part of**: Trade Simulator MVP (Week 9-12 Polish & Demo)

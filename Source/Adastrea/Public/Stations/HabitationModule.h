@@ -8,10 +8,10 @@
 
 /**
  * Living quarters habitation module for space stations
- * 
+ *
  * Residential facility providing living spaces for station inhabitants.
  * Includes life support, private quarters, and communal areas.
- * 
+ *
  * Power Consumption: 30 units
  * Module Group: Habitation
  */

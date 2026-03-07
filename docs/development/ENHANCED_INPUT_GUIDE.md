@@ -139,7 +139,7 @@ Split Vector (X, Y)
   ↓
 [X] Multiply by Strafe Speed (300)
   ↓ Add Actor Local Offset (Right Vector * X)
-  
+
 [Y] Multiply by Forward Speed (500)
   ↓ Add Actor Local Offset (Forward Vector * Y)
 ```
@@ -152,9 +152,9 @@ Action Value (Get 2D Vector)
   ↓
 Split Vector (X for Yaw, Y for Pitch)
   ↓
-[X] Multiply by Yaw Rate (50) 
+[X] Multiply by Yaw Rate (50)
   ↓ Add Actor Local Rotation (Yaw)
-  
+
 [Y] Multiply by Pitch Rate (50)
   ↓ Add Actor Local Rotation (Pitch)
 ```

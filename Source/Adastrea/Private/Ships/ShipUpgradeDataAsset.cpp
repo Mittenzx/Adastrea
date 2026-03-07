@@ -23,7 +23,7 @@ float UShipUpgradeDataAsset::CalculateStatBonus(FName StatName, float BaseValue)
 		{
 			// Apply additive bonus first
 			FinalValue += Modifier.AdditiveBonus;
-			
+
 			// Then apply multiplicative bonus
 			FinalValue *= Modifier.MultiplicativeBonus;
 		}

@@ -2,8 +2,8 @@
 
 > **Common Blueprint problems and how to fix them**
 
-**Last Updated**: January 17, 2026  
-**Purpose**: Diagnose and fix common Blueprint issues  
+**Last Updated**: January 17, 2026
+**Purpose**: Diagnose and fix common Blueprint issues
 **Audience**: All Blueprint developers
 
 ---

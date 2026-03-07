@@ -7,7 +7,7 @@ ContractName: "Supply Run"
 ContractID: "Quest_Delivery_5318"
 Description: |
   Transport cargo from Theta Luminous to Theta Australis. Ensure timely delivery.
-  
+
 ContractType: Delivery
 Difficulty: VeryHard
 

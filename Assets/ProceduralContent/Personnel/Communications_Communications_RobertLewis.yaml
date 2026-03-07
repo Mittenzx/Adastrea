@@ -9,7 +9,7 @@ PersonnelName: "Robert Lewis"
 # Basic Identity
 Biography: |
   This individual started as a cargo hauler and worked their way up through the ranks. They are known for their calm demeanor under pressure and negotiated a peace treaty between two warring factions.
-  
+
 Age: 42
 Gender: "Male"
 Species: "Human"
@@ -61,7 +61,7 @@ ContractMonthsRemaining: 0
 PersonalityType: "Analytical"
 PersonalityDescription: |
   Analytical personality with focus on communications duties.
-  
+
 Traits:
   - TraitName: "Cautious"
     TraitDescription: "Reduced risk taking"

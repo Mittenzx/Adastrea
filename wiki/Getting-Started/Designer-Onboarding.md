@@ -219,13 +219,13 @@ All templates are in the `Assets/` directory:
 
 You can customize these without any C++ knowledge:
 
-✅ **Ship Stats** - All numeric values  
-✅ **Faction Traits** - Behaviors and modifiers  
-✅ **Crew Skills** - Skill levels and roles  
-✅ **Trade Items** - Prices and availability  
-✅ **Quest Objectives** - Goals and rewards  
-✅ **UI Text** - All displayed text  
-✅ **Visual Elements** - Colors, icons, meshes  
+✅ **Ship Stats** - All numeric values
+✅ **Faction Traits** - Behaviors and modifiers
+✅ **Crew Skills** - Skill levels and roles
+✅ **Trade Items** - Prices and availability
+✅ **Quest Objectives** - Goals and rewards
+✅ **UI Text** - All displayed text
+✅ **Visual Elements** - Colors, icons, meshes
 
 ## Getting Help
 
@@ -238,37 +238,37 @@ You can customize these without any C++ knowledge:
 
 ### Common Questions
 
-**Q: Do I need to know C++?**  
+**Q: Do I need to know C++?**
 A: No! Most content creation uses Data Assets and Blueprints.
 
-**Q: How do I test my changes?**  
+**Q: How do I test my changes?**
 A: Click the Play button in Unreal Editor (Alt+P).
 
-**Q: Can I break something?**  
+**Q: Can I break something?**
 A: It's hard to break things with Data Assets. Worst case, delete and recreate.
 
-**Q: Where do I find examples?**  
+**Q: Where do I find examples?**
 A: Check `Content/DataAssets/` for existing examples and `Assets/` for YAML templates.
 
-**Q: How do I share my content?**  
+**Q: How do I share my content?**
 A: Export Data Assets or commit to Git (see [Contributing Guide](../Developer-Guides/Contributing.md)).
 
 ## Pro Tips
 
-💡 **Always save before testing** (Ctrl+S)  
-💡 **Use descriptive names** like `DA_Ship_FastScout` not `DA_Ship1`  
-💡 **Copy existing Data Assets** as templates  
-💡 **Test early and often** with the Play button  
-💡 **Keep YAML files open** for reference while working  
-💡 **Use folders** to organize your Data Assets  
-💡 **Document your designs** in the Description field  
+💡 **Always save before testing** (Ctrl+S)
+💡 **Use descriptive names** like `DA_Ship_FastScout` not `DA_Ship1`
+💡 **Copy existing Data Assets** as templates
+💡 **Test early and often** with the Play button
+💡 **Keep YAML files open** for reference while working
+💡 **Use folders** to organize your Data Assets
+💡 **Document your designs** in the Description field
 
 ## Next Steps
 
-🎯 **Ready to create content?** → [Content Creation Guide](Content-Creation.md)  
-🎯 **Want to learn Blueprints?** → [Blueprint Beginners Guide](../Blueprint-Development/Blueprint-Beginners-Guide.md)  
-🎯 **Explore game systems?** → [Core Systems Overview](../Core-Systems/README.md)  
-🎯 **Try automation?** → [Procedural Generation](../Automation-Testing/Procedural-Generation.md)  
+🎯 **Ready to create content?** → [Content Creation Guide](Content-Creation.md)
+🎯 **Want to learn Blueprints?** → [Blueprint Beginners Guide](../Blueprint-Development/Blueprint-Beginners-Guide.md)
+🎯 **Explore game systems?** → [Core Systems Overview](../Core-Systems/README.md)
+🎯 **Try automation?** → [Procedural Generation](../Automation-Testing/Procedural-Generation.md)
 
 ## Community Resources
 

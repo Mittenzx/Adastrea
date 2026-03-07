@@ -27,7 +27,7 @@ CreateZones: false
 
 # Object Definitions
 ObjectDefinitions:
-  
+
   # Small Outpost
   - ObjectType: Station
     ActorClass: "BP_SpaceStation_SmallOutpost"

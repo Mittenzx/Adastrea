@@ -297,7 +297,7 @@ void USpaceshipParticleComponent::ActivateRCSThruster(ERCSThrusterAxis Axis, flo
 	if (ComponentPtr && *ComponentPtr)
 	{
 		UParticleSystemComponent* RCSComponent = *ComponentPtr;
-		
+
 		// Activate the thruster
 		RCSComponent->SetFloatParameter(FName("Intensity"), FMath::Clamp(Intensity, 0.0f, 1.0f));
 		RCSComponent->Activate(true);

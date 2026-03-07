@@ -15,10 +15,10 @@ Features:
 Usage:
     # Command line - Interactive mode
     python GuideGenerator.py
-    
+
     # Command line - Batch mode
     python GuideGenerator.py --type system --name "MySystem" --output Assets/
-    
+
     # In Unreal Editor Python console
     import GuideGenerator
     GuideGenerator.generate_system_guide("MySystem")
@@ -33,43 +33,43 @@ from datetime import datetime
 
 class GuideGenerator:
     """Generator for creating markdown documentation files for Adastrea game systems"""
-    
+
     def __init__(self, project_root: Optional[Path] = None):
         """
         Initialize the guide generator
-        
+
         Args:
             project_root: Path to project root. If None, uses current working directory
         """
         self.project_root = project_root or Path.cwd()
         self.docs_dir = self.project_root / "Assets"
-        
+
         # Ensure docs directory exists
         self.docs_dir.mkdir(parents=True, exist_ok=True)
-    
+
     def generate_system_guide(self, system_name: str, output_dir: Optional[Path] = None) -> Path:
         """
         Generate a comprehensive system guide
-        
+
         Args:
             system_name: Name of the system
             output_dir: Output directory (defaults to Assets/)
-            
+
         Returns:
             Path to the created guide file
         """
         if output_dir is None:
             output_dir = self.docs_dir
         output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         clean_name = system_name.replace(" ", "")
         filename = f"{clean_name}SystemGuide.md"
         filepath = output_dir / filename
-        
+
         template_content = f"""# {system_name} System - Complete Guide
 
-**Last Updated**: {datetime.now().strftime('%Y-%m-%d')}  
-**System Version**: 1.0  
+**Last Updated**: {datetime.now().strftime('%Y-%m-%d')}
+**System Version**: 1.0
 **Author**: Adastrea Development Team
 
 ---
@@ -233,7 +233,7 @@ Example:
 BasicInfo:
   Name: "Example"
   Description: "Example configuration"
-  
+
 Properties:
   Value1: 100
   Value2: "Setting"
@@ -308,7 +308,7 @@ public:
     // Initialize the data asset
     UFUNCTION(BlueprintCallable, Category="{system_name}")
     void Initialize();
-    
+
     // Get configuration value
     UFUNCTION(BlueprintPure, Category="{system_name}")
     float GetConfigValue() const;
@@ -326,7 +326,7 @@ class ADASTREA_API U{system_name}Component : public UActorComponent
 public:
     // Tick function
     virtual void TickComponent(float DeltaTime, ...) override;
-    
+
     UFUNCTION(BlueprintCallable, Category="{system_name}")
     void UpdateSystem(float DeltaTime);
 }};
@@ -570,36 +570,36 @@ Show detailed logs:
 
 *This guide is maintained by the Adastrea development team and updated regularly. Last update: {datetime.now().strftime('%Y-%m-%d')}*
 """
-        
+
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(template_content)
-        
+
         print(f"✓ Created system guide: {filepath}")
         return filepath
-    
+
     def generate_workflow_guide(self, system_name: str, output_dir: Optional[Path] = None) -> Path:
         """
         Generate a designer workflow guide
-        
+
         Args:
             system_name: Name of the system
             output_dir: Output directory (defaults to Assets/)
-            
+
         Returns:
             Path to the created guide file
         """
         if output_dir is None:
             output_dir = self.docs_dir
         output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         clean_name = system_name.replace(" ", "")
         filename = f"{clean_name}DesignerWorkflow.md"
         filepath = output_dir / filename
-        
+
         template_content = f"""# {system_name} - Designer Workflow Guide
 
-**Last Updated**: {datetime.now().strftime('%Y-%m-%d')}  
-**Target Audience**: Game Designers, Content Creators  
+**Last Updated**: {datetime.now().strftime('%Y-%m-%d')}
+**Target Audience**: Game Designers, Content Creators
 **Difficulty**: Beginner to Intermediate
 
 ---
@@ -713,7 +713,7 @@ Fill in all required fields:
 
 1. **Right-Click** in Content Browser
 2. **Select**: `Blueprint Class`
-3. **Choose Parent**: 
+3. **Choose Parent**:
    - Option A: `{system_name}Actor` (if standalone)
    - Option B: `Actor` with components (if custom)
 4. **Name**: `BP_{system_name}_YourName`
@@ -936,7 +936,7 @@ Content/
 
 ### Problem: Can't find Data Asset class
 
-**Solution**: 
+**Solution**:
 1. Ensure project is compiled
 2. Check class is properly defined in C++
 3. Restart Unreal Editor if needed
@@ -1001,32 +1001,32 @@ After mastering this workflow:
 
 *This workflow guide is maintained by the Adastrea design team. Last update: {datetime.now().strftime('%Y-%m-%d')}*
 """
-        
+
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(template_content)
-        
+
         print(f"✓ Created workflow guide: {filepath}")
         return filepath
-    
+
     def generate_quick_reference(self, system_name: str, output_dir: Optional[Path] = None) -> Path:
         """
         Generate a quick reference guide
-        
+
         Args:
             system_name: Name of the system
             output_dir: Output directory (defaults to Assets/)
-            
+
         Returns:
             Path to the created guide file
         """
         if output_dir is None:
             output_dir = self.docs_dir
         output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         clean_name = system_name.replace(" ", "")
         filename = f"{clean_name}QuickReference.md"
         filepath = output_dir / filename
-        
+
         template_content = f"""# {system_name} - Quick Reference
 
 **Version**: 1.0 | **Last Updated**: {datetime.now().strftime('%Y-%m-%d')}
@@ -1181,7 +1181,7 @@ if (MyDataAsset)
 
 ### Get Component
 ```cpp
-U{system_name}Component* Comp = 
+U{system_name}Component* Comp =
     GetOwner()->FindComponentByClass<U{system_name}Component>();
 ```
 
@@ -1319,36 +1319,36 @@ Content/{system_name}/Blueprints/Examples/
 
 *Quick reference maintained by Adastrea team • Updated {datetime.now().strftime('%Y-%m-%d')}*
 """
-        
+
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(template_content)
-        
+
         print(f"✓ Created quick reference: {filepath}")
         return filepath
-    
+
     def generate_api_reference(self, system_name: str, output_dir: Optional[Path] = None) -> Path:
         """
         Generate an API reference guide
-        
+
         Args:
             system_name: Name of the system
             output_dir: Output directory (defaults to Assets/)
-            
+
         Returns:
             Path to the created guide file
         """
         if output_dir is None:
             output_dir = self.docs_dir
         output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         clean_name = system_name.replace(" ", "")
         filename = f"{clean_name}APIReference.md"
         filepath = output_dir / filename
-        
+
         template_content = f"""# {system_name} - Complete API Reference
 
-**Version**: 1.0  
-**Last Updated**: {datetime.now().strftime('%Y-%m-%d')}  
+**Version**: 1.0
+**Last Updated**: {datetime.now().strftime('%Y-%m-%d')}
 **Engine**: Unreal Engine 5.6
 
 ---
@@ -1400,7 +1400,7 @@ class ADASTREA_API U{system_name}DataAsset : public UDataAsset
 
 public:
     U{system_name}DataAsset();
-    
+
     // Public interface...
 }};
 ```
@@ -1744,7 +1744,7 @@ static bool HelperFunction1(AActor* Actor);
 #### Declaration
 ```cpp
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
-    FOn{system_name}Changed, 
+    FOn{system_name}Changed,
     float, NewValue
 );
 ```
@@ -1752,7 +1752,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
 #### Usage in C++
 ```cpp
 {system_name}Component->On{system_name}Changed.AddDynamic(
-    this, 
+    this,
     &AMyActor::Handle{system_name}Changed
 );
 ```
@@ -1854,13 +1854,13 @@ Event BeginPlay
 
 *API Reference maintained by Adastrea development team • Last update: {datetime.now().strftime('%Y-%m-%d')}*
 """
-        
+
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(template_content)
-        
+
         print(f"✓ Created API reference: {filepath}")
         return filepath
-    
+
     def interactive_mode(self):
         """Run the guide generator in interactive mode"""
         print("=" * 60)
@@ -1874,10 +1874,10 @@ Event BeginPlay
         print("  4. API Reference (Complete API docs)")
         print("  0. Exit")
         print()
-        
+
         while True:
             choice = input("Select guide type (0-4): ").strip()
-            
+
             if choice == "0":
                 print("Exiting...")
                 break
@@ -1895,14 +1895,14 @@ Event BeginPlay
                 self.generate_api_reference(name)
             else:
                 print("Invalid choice. Please select 0-4.")
-            
+
             print()
 
 
 def main():
     """Main entry point for command line usage"""
     import argparse
-    
+
     parser = argparse.ArgumentParser(
         description='Generate markdown documentation guides for Adastrea game systems',
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -1910,39 +1910,39 @@ def main():
 Examples:
   # Interactive mode
   python GuideGenerator.py
-  
+
   # Generate specific guides
   python GuideGenerator.py --type system --name "MySystem"
   python GuideGenerator.py --type workflow --name "MySystem"
   python GuideGenerator.py --type quickref --name "MySystem"
   python GuideGenerator.py --type api --name "MySystem"
-  
+
   # Specify custom output directory
   python GuideGenerator.py --type system --name "MySystem" --output Docs/
         """
     )
-    
+
     parser.add_argument('--type', choices=['system', 'workflow', 'quickref', 'api'],
                        help='Type of guide to generate')
     parser.add_argument('--name', help='Name of the system')
     parser.add_argument('--output', help='Output directory (optional)')
-    
+
     args = parser.parse_args()
-    
+
     generator = GuideGenerator()
-    
+
     # If no arguments provided, run interactive mode
     if not args.type:
         generator.interactive_mode()
         return
-    
+
     # Validate that name is provided for batch mode
     if not args.name:
         print("Error: --name is required when using --type")
         sys.exit(1)
-    
+
     output_dir = Path(args.output) if args.output else None
-    
+
     # Generate based on type
     if args.type == 'system':
         generator.generate_system_guide(args.name, output_dir)

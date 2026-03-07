@@ -59,7 +59,7 @@ void UShipStatusWidget::InitializeShipStatus_Implementation()
 {
 	// Get the player's controlled spaceship
 	ASpaceship* PlayerShip = GetPlayerSpaceship();
-	
+
 	if (PlayerShip)
 	{
 		InitializeWithSpaceship(PlayerShip);
@@ -89,7 +89,7 @@ void UShipStatusWidget::InitializeWithSpaceship_Implementation(ASpaceship* InSpa
 
 	// Refresh all displayed data
 	RefreshShipStatus();
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("ShipStatusWidget: Initialized with spaceship %s"), *InSpaceship->GetName());
 }
 
@@ -179,7 +179,7 @@ void UShipStatusWidget::RefreshShipStatus_Implementation()
 	const float CombatRating = ShipDataAsset->GetCombatRating();
 	const float MobilityRating = ShipDataAsset->GetMobilityRating();
 	const float UtilityRating = ShipDataAsset->GetUtilityRating();
-	
+
 	UpdateRatings(CombatRating, MobilityRating, UtilityRating);
 
 	UE_LOG(LogAdastrea, Log, TEXT("ShipStatusWidget: Refreshed ship status for %s"), *ShipDataAsset->ShipName.ToString());

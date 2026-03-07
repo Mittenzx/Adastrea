@@ -77,10 +77,10 @@ Source/Adastrea/
 
 ### Benefits of Standard Structure
 
-✅ **No explicit include paths needed** - Build.cs files are simpler  
-✅ **Fixes SetEnv error** - No environment variable length issues  
-✅ **Better IDE support** - IntelliSense and autocomplete work better  
-✅ **Clear organization** - Public APIs separated from private implementation  
+✅ **No explicit include paths needed** - Build.cs files are simpler
+✅ **Fixes SetEnv error** - No environment variable length issues
+✅ **Better IDE support** - IntelliSense and autocomplete work better
+✅ **Clear organization** - Public APIs separated from private implementation
 ✅ **Future-proof** - Won't encounter similar issues as project grows
 
 ## Historical Context: The SetEnv Error Issue
@@ -112,24 +112,24 @@ This happened because:
 
 ### Adastrea Module ✅
 
-**Status**: Now follows standard structure  
-**Structure**: Public/ and Private/ subdirectories with 23 system folders each  
+**Status**: Now follows standard structure
+**Structure**: Public/ and Private/ subdirectories with 23 system folders each
 **Include Paths**: None needed (automatic)
 
 ### StationEditor Module ✅
 
-**Status**: Now follows standard structure  
-**Structure**: Public/ and Private/ subdirectories  
+**Status**: Now follows standard structure
+**Structure**: Public/ and Private/ subdirectories
 **Include Paths**: None needed (automatic)
 
 ### PlayerMods Module ✅
 
-**Status**: Uses standard structure  
+**Status**: Uses standard structure
 **Include Paths**: None needed (automatic)
 
 ### UnrealMCP Plugin ✅
 
-**Status**: Uses standard structure  
+**Status**: Uses standard structure
 **Include Paths**: None needed (automatic)
 
 ## Best Practice for All Modules
@@ -223,6 +223,6 @@ Each system's headers go in `Public/[System]/` and implementations in `Private/[
 
 ---
 
-**Last Updated**: 2025-12-26  
-**Related Issues**: SetEnv environment variable length error (resolved)  
+**Last Updated**: 2025-12-26
+**Related Issues**: SetEnv environment variable length error (resolved)
 **Related PRs**: Module restructuring to standard UE5 layout

@@ -16,10 +16,10 @@ Features:
 Usage:
     # Command line - Interactive mode
     python TemplateGenerator.py
-    
+
     # Command line - Batch mode
     python TemplateGenerator.py --type spaceship --name "MyShip" --output Assets/SpaceshipTemplates/
-    
+
     # In Unreal Editor Python console
     import TemplateGenerator
     TemplateGenerator.generate_spaceship_template("MyShip")
@@ -34,42 +34,42 @@ from datetime import datetime
 
 class TemplateGenerator:
     """Generator for creating YAML template files for Adastrea game systems"""
-    
+
     def __init__(self, project_root: Optional[Path] = None):
         """
         Initialize the template generator
-        
+
         Args:
             project_root: Path to project root. If None, uses current working directory
         """
         self.project_root = project_root or Path.cwd()
         self.templates_dir = self.project_root / "Assets"
-        
+
         # Ensure templates directory exists
         self.templates_dir.mkdir(parents=True, exist_ok=True)
-    
+
     def generate_spaceship_template(self, ship_name: str, ship_class: str = "Fighter",
                                    output_dir: Optional[Path] = None) -> Path:
         """
         Generate a spaceship template YAML file
-        
+
         Args:
             ship_name: Name of the ship
             ship_class: Class of ship (Scout, Fighter, Trader, etc.)
             output_dir: Output directory (defaults to Assets/SpaceshipTemplates/)
-            
+
         Returns:
             Path to the created template file
         """
         if output_dir is None:
             output_dir = self.templates_dir / "SpaceshipTemplates"
         output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Clean ship name for filename
         clean_name = ship_name.replace(" ", "")
         filename = f"{ship_class}_{clean_name}.yaml"
         filepath = output_dir / filename
-        
+
         template_content = f"""# {ship_name} - {ship_class} Class
 # Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 # Customize this template for your ship design
@@ -134,35 +134,35 @@ Lore:
   PrimaryColor: [0.5, 0.5, 0.5, 1.0]    # RGBA color values
   SecondaryColor: [0.8, 0.8, 0.8, 1.0]  # RGBA color values
 """
-        
+
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(template_content)
-        
+
         print(f"✓ Created spaceship template: {filepath}")
         return filepath
-    
+
     def generate_personnel_template(self, name: str, role: str = "CrewMember",
                                    output_dir: Optional[Path] = None) -> Path:
         """
         Generate a personnel template YAML file
-        
+
         Args:
             name: Personnel name or identifier
             role: Role type (Captain, Pilot, Engineer, etc.)
             output_dir: Output directory (defaults to Assets/PersonnelTemplates/)
-            
+
         Returns:
             Path to the created template file
         """
         if output_dir is None:
             output_dir = self.templates_dir / "PersonnelTemplates"
         output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Clean name for filename
         clean_name = name.replace(" ", "")
         filename = f"{role}_{clean_name}.yaml"
         filepath = output_dir / filename
-        
+
         template_content = f"""# {name} - {role}
 # Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 # Customize this template for your personnel
@@ -257,34 +257,34 @@ PastAssignments:
     PerformanceRating: 4    # 1-5 stars
     Notes: "Good performance in previous role"
 """
-        
+
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(template_content)
-        
+
         print(f"✓ Created personnel template: {filepath}")
         return filepath
-    
+
     def generate_trade_item_template(self, item_name: str, category: str = "RawMaterials",
                                     output_dir: Optional[Path] = None) -> Path:
         """
         Generate a trade item template YAML file
-        
+
         Args:
             item_name: Name of the trade item
             category: Item category (RawMaterials, Manufactured, Luxury, etc.)
             output_dir: Output directory (defaults to Assets/TradingTemplates/)
-            
+
         Returns:
             Path to the created template file
         """
         if output_dir is None:
             output_dir = self.templates_dir / "TradingTemplates"
         output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         clean_name = item_name.replace(" ", "")
         filename = f"TradeItem_{clean_name}.yaml"
         filepath = output_dir / filename
-        
+
         template_content = f"""# Trade Item: {item_name}
 # Category: {category}
 # Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
@@ -293,7 +293,7 @@ ItemName: "{item_name}"
 ItemID: "TradeItem_{clean_name}"
 Description: |
   [Describe the trade item, its uses, and importance in the economy]
-  
+
 Category: {category}
 
 # Material Data Reference (optional)
@@ -307,7 +307,7 @@ PriceVolatility:
   VolatilityMultiplier: 1.0
   MinPriceDeviation: 0.7
   MaxPriceDeviation: 1.5
-  
+
 bAffectedBySupplyDemand: true
 bAffectedByMarketEvents: true
 
@@ -319,7 +319,7 @@ TradeRestrictions:
   BannedFactions: []
   RequiresPermitFactions: []
   MinReputationRequired: -100
-  
+
 ContrabandFineMultiplier: 0.0
 
 # ====================
@@ -341,34 +341,34 @@ BehaviorTags:
   - "{category}"
   - "StandardItem"
 """
-        
+
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(template_content)
-        
+
         print(f"✓ Created trade item template: {filepath}")
         return filepath
-    
+
     def generate_market_template(self, market_name: str, market_type: str = "Standard",
                                 output_dir: Optional[Path] = None) -> Path:
         """
         Generate a market template YAML file
-        
+
         Args:
             market_name: Name of the market
             market_type: Market type (Standard, FreePort, BlackMarket, etc.)
             output_dir: Output directory (defaults to Assets/TradingTemplates/)
-            
+
         Returns:
             Path to the created template file
         """
         if output_dir is None:
             output_dir = self.templates_dir / "TradingTemplates"
         output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         clean_name = market_name.replace(" ", "")
         filename = f"Market_{clean_name}.yaml"
         filepath = output_dir / filename
-        
+
         template_content = f"""# Market: {market_name}
 # Type: {market_type}
 # Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
@@ -426,34 +426,34 @@ SecurityLevel: 5            # 1-10 scale
 bScansForContraband: true
 bEnforcesReputationLimits: true
 """
-        
+
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(template_content)
-        
+
         print(f"✓ Created market template: {filepath}")
         return filepath
-    
+
     def generate_contract_template(self, contract_name: str, contract_type: str = "Delivery",
                                   output_dir: Optional[Path] = None) -> Path:
         """
         Generate a contract template YAML file
-        
+
         Args:
             contract_name: Name/description of the contract
             contract_type: Contract type (Delivery, Combat, Exploration, etc.)
             output_dir: Output directory (defaults to Assets/TradingTemplates/)
-            
+
         Returns:
             Path to the created template file
         """
         if output_dir is None:
             output_dir = self.templates_dir / "TradingTemplates"
         output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         clean_name = contract_name.replace(" ", "")
         filename = f"Contract_{clean_name}.yaml"
         filepath = output_dir / filename
-        
+
         template_content = f"""# Contract: {contract_name}
 # Type: {contract_type}
 # Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
@@ -505,33 +505,33 @@ bIllegalActivity: false
 StartLocationID: "[StationID]"
 EndLocationID: "[DestinationStationID]"
 """
-        
+
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(template_content)
-        
+
         print(f"✓ Created contract template: {filepath}")
         return filepath
-    
+
     def generate_faction_ai_template(self, faction_name: str,
                                     output_dir: Optional[Path] = None) -> Path:
         """
         Generate a faction AI template YAML file
-        
+
         Args:
             faction_name: Name of the faction
             output_dir: Output directory (defaults to Assets/FactionAITemplates/)
-            
+
         Returns:
             Path to the created template file
         """
         if output_dir is None:
             output_dir = self.templates_dir / "FactionAITemplates"
         output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         clean_name = faction_name.replace(" ", "")
         filename = f"{clean_name}.yaml"
         filepath = output_dir / filename
-        
+
         template_content = f"""# Faction AI Configuration: {faction_name}
 # Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
@@ -617,35 +617,35 @@ ExpansionStrategy:
 SpecialBehaviors:
   - "PeacefulEarlyGame"     # Don't attack in first 10 game hours
   - "TradePreference"       # Prefer diplomatic solutions
-  
+
 bUseDynamicPriorities: true  # Adjust priorities based on game state
 """
-        
+
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(template_content)
-        
+
         print(f"✓ Created faction AI template: {filepath}")
         return filepath
-    
+
     def generate_material_template(self, material_name: str,
                                   output_dir: Optional[Path] = None) -> Path:
         """
         Generate a material template YAML file
-        
+
         Args:
             material_name: Name of the material
             output_dir: Output directory (defaults to Assets/)
-            
+
         Returns:
             Path to the created template file
         """
         if output_dir is None:
             output_dir = self.templates_dir
-        
+
         clean_name = material_name.replace(" ", "")
         filename = f"Material_{clean_name}.yaml"
         filepath = output_dir / filename
-        
+
         template_content = f"""# Material Definition: {material_name}
 # Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
@@ -694,39 +694,39 @@ bTradeable: true
 bRenewable: false
 bStrategicResource: false
 """
-        
+
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(template_content)
-        
+
         print(f"✓ Created material template: {filepath}")
         return filepath
-    
+
     def generate_station_module_template(self, module_name: str, module_group: str = "Connection",
                                         output_dir: Optional[Path] = None) -> Path:
         """
         Generate a station module template YAML file
-        
+
         Args:
             module_name: Name of the station module
             module_group: Module group (Core, Docking, Power, Storage, Processing, Defence, Habitation, Public, Connection, Utility, Other)
             output_dir: Output directory (defaults to Assets/StationModuleTemplates/)
-            
+
         Returns:
             Path to the created template file
         """
         if output_dir is None:
             output_dir = self.templates_dir / "StationModuleTemplates"
         output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         clean_name = module_name.replace(" ", "")
         filename = f"{module_group}_{clean_name}.yaml"
         filepath = output_dir / filename
-        
+
         # Determine default values based on module group
         power_default = 0.0
         capacity_default = 0
         defense_default = 0.0
-        
+
         if module_group == "Power":
             power_default = -1000.0  # Negative means generates power
         elif module_group == "Defence":
@@ -744,7 +744,7 @@ bStrategicResource: false
             power_default = 300.0  # Medical, communications, etc. consume moderate power
         elif module_group == "Core":
             power_default = 0.0  # Structural cores are typically neutral
-        
+
         template_content = f"""# Station Module: {module_name}
 # Module Group: {module_group}
 # Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
@@ -848,13 +848,13 @@ Tags:
   - "{module_group}"
   - "Standard"
 """
-        
+
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(template_content)
-        
+
         print(f"✓ Created station module template: {filepath}")
         return filepath
-    
+
     def interactive_mode(self):
         """Run the template generator in interactive mode"""
         print("=" * 60)
@@ -872,10 +872,10 @@ Tags:
         print("  8. Station Module")
         print("  0. Exit")
         print()
-        
+
         while True:
             choice = input("Select template type (0-8): ").strip()
-            
+
             if choice == "0":
                 print("Exiting...")
                 break
@@ -911,14 +911,14 @@ Tags:
                 self.generate_station_module_template(name, module_group)
             else:
                 print("Invalid choice. Please select 0-8.")
-            
+
             print()
 
 
 def main():
     """Main entry point for command line usage"""
     import argparse
-    
+
     parser = argparse.ArgumentParser(
         description='Generate YAML templates for Adastrea game systems',
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -926,7 +926,7 @@ def main():
 Examples:
   # Interactive mode
   python TemplateGenerator.py
-  
+
   # Generate specific templates
   python TemplateGenerator.py --type spaceship --name "Striker" --class Fighter
   python TemplateGenerator.py --type personnel --name "John Smith" --role Captain
@@ -938,8 +938,8 @@ Examples:
   python TemplateGenerator.py --type stationmodule --name "Docking Bay" --module-group Docking
         """
     )
-    
-    parser.add_argument('--type', choices=['spaceship', 'personnel', 'tradeitem', 'market', 
+
+    parser.add_argument('--type', choices=['spaceship', 'personnel', 'tradeitem', 'market',
                                           'contract', 'factionai', 'material', 'stationmodule'],
                        help='Type of template to generate')
     parser.add_argument('--name', help='Name for the template')
@@ -950,23 +950,23 @@ Examples:
     parser.add_argument('--contract-type', help='Contract type (for contract templates)')
     parser.add_argument('--module-group', help='Module group (for station module templates)')
     parser.add_argument('--output', help='Output directory (optional)')
-    
+
     args = parser.parse_args()
-    
+
     generator = TemplateGenerator()
-    
+
     # If no arguments provided, run interactive mode
     if not args.type:
         generator.interactive_mode()
         return
-    
+
     # Validate that name is provided for batch mode
     if not args.name:
         print("Error: --name is required when using --type")
         sys.exit(1)
-    
+
     output_dir = Path(args.output) if args.output else None
-    
+
     # Generate based on type
     if args.type == 'spaceship':
         ship_class = args.ship_class or "Fighter"

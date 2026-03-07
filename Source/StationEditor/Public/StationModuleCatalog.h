@@ -86,17 +86,17 @@ struct STATIONEDITOR_API FStationModuleEntry
 
 /**
  * Station Module Catalog - Data Asset containing all available module types
- * 
+ *
  * This Data Asset serves as a registry of all module types that can be placed
  * in the station editor. Designers can create multiple catalogs for different
  * scenarios (e.g., different tech levels, faction-specific modules).
- * 
+ *
  * Usage:
  * 1. Create a Blueprint Data Asset based on this class
  * 2. Add entries for each available module type
  * 3. Configure display names, descriptions, costs, and requirements
  * 4. Reference this catalog in the StationEditorManager
- * 
+ *
  * @see UStationEditorManager
  * @see FStationModuleEntry
  */

@@ -9,7 +9,7 @@ PersonnelName: "Tyler Wood"
 # Basic Identity
 Biography: |
   This individual comes from a long line of spacers dating back three generations. They are respected for their tactical brilliance and successfully completed 51 deep space missions.
-  
+
 Age: 65
 Gender: "Male"
 Species: "Human"
@@ -61,7 +61,7 @@ ContractMonthsRemaining: 0
 PersonalityType: "Aggressive"
 PersonalityDescription: |
   Aggressive personality with focus on captain duties.
-  
+
 Traits:
   - TraitName: "Cautious"
     TraitDescription: "Reduced risk taking"

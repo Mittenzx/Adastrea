@@ -9,7 +9,7 @@ ULivingShipOrganismComponent::ULivingShipOrganismComponent()
 {
     PrimaryComponentTick.bCanEverTick = false;
     SetIsReplicatedByDefault(true);
-    
+
     // Initialize default values
     Health = 100.0f;
     Mood = 0.0f;
@@ -19,7 +19,7 @@ ULivingShipOrganismComponent::ULivingShipOrganismComponent()
 void ULivingShipOrganismComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-    
+
     DOREPLIFETIME(ULivingShipOrganismComponent, Health);
     DOREPLIFETIME(ULivingShipOrganismComponent, Mood);
     DOREPLIFETIME(ULivingShipOrganismComponent, MutationLevel);
@@ -32,9 +32,9 @@ void ULivingShipOrganismComponent::Heal(float Amount)
         UE_LOG(LogAdastreaShips, Warning, TEXT("LivingShipOrganismComponent::Heal - Invalid negative amount: %f"), Amount);
         return;
     }
-    
+
     Health = FMath::Clamp(Health + Amount, 0.0f, 100.0f);
-    
+
     UE_LOG(LogAdastreaShips, Log, TEXT("LivingShipOrganismComponent::Heal - Healed by %f, new health: %f"), Amount, Health);
 }
 
@@ -45,9 +45,9 @@ void ULivingShipOrganismComponent::TakeDamage(float Amount)
         UE_LOG(LogAdastreaShips, Warning, TEXT("LivingShipOrganismComponent::TakeDamage - Invalid negative amount: %f"), Amount);
         return;
     }
-    
+
     Health = FMath::Clamp(Health - Amount, 0.0f, 100.0f);
-    
+
     UE_LOG(LogAdastreaShips, Log, TEXT("LivingShipOrganismComponent::TakeDamage - Took %f damage, new health: %f"), Amount, Health);
 }
 
@@ -55,7 +55,7 @@ void ULivingShipOrganismComponent::Mutate(float Amount)
 {
     // Note: Amount can be negative to reduce mutation level (de-mutation)
     MutationLevel = FMath::Clamp(MutationLevel + Amount, 0.0f, 100.0f);
-    
+
     UE_LOG(LogAdastreaShips, Log, TEXT("LivingShipOrganismComponent::Mutate - Mutated by %f, new mutation level: %f"), Amount, MutationLevel);
 }
 

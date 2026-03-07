@@ -98,8 +98,8 @@ ls -R build_package/
 
 # Expected output:
 # build_package/:
-# .github  BUILD_ERROR_DEBUGGING.md  BUILD_TROUBLESHOOTING.md  
-# EXTRACTION_INSTRUCTIONS.md  README.md  UNREAL_BUILD_GUIDE.md  
+# .github  BUILD_ERROR_DEBUGGING.md  BUILD_TROUBLESHOOTING.md
+# EXTRACTION_INSTRUCTIONS.md  README.md  UNREAL_BUILD_GUIDE.md
 # build_unix.sh  build_windows.bat
 #
 # build_package/.github:
@@ -181,6 +181,6 @@ If you encounter issues:
 
 ---
 
-**Created**: 2025-11-14  
-**For**: Adastrea Build Files Migration  
+**Created**: 2025-11-14
+**For**: Adastrea Build Files Migration
 **Source**: PR #120 (commit 7ffc4368a4b45088c187608da9a66029fbbcde57)

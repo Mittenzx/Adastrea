@@ -206,7 +206,7 @@ def validate_faction_data_assets(self):
     """Validate all FactionDataAsset instances"""
     asset_registry = unreal.AssetRegistryHelpers.get_asset_registry()
     faction_assets = asset_registry.get_assets_by_class('FactionDataAsset', True)
-    
+
     for asset_data in faction_assets:
         try:
             asset = unreal.load_asset(asset_data.package_name)
@@ -214,7 +214,7 @@ def validate_faction_data_assets(self):
                 # Validate Faction ID
                 if not asset.faction_id:
                     self.log_error(f"{asset.get_name()}: Faction ID is empty")
-                
+
                 # Validate Tech Level
                 if asset.tech_level < 1 or asset.tech_level > 10:
                     self.log_error(f"{asset.get_name()}: Tech level out of range")
@@ -379,5 +379,5 @@ When adding new features or systems to Adastrea:
 
 ---
 
-**Last Updated**: 2024-10-28  
+**Last Updated**: 2024-10-28
 **Maintained by**: Adastrea Development Team

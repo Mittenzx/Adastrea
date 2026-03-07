@@ -1,7 +1,7 @@
 # Simple Docking Setup Guide
 
-**Last Updated**: January 8, 2026  
-**Status**: MVP Simplified System (Trade Simulator)  
+**Last Updated**: January 8, 2026
+**Status**: MVP Simplified System (Trade Simulator)
 **For**: Beginners learning Unreal Engine and Blueprint
 
 ---
@@ -31,9 +31,9 @@ No complex animations, no timeline curves, no complicated setup. Just gameplay.
 
 ### In C++ (Already Implemented)
 
-✅ Simplified docking logic in `ASpaceship` class  
-✅ Instant teleport to docking point  
-✅ Distance check (default: 2000 units)  
+✅ Simplified docking logic in `ASpaceship` class
+✅ Instant teleport to docking point
+✅ Distance check (default: 2000 units)
 ✅ Input binding for `DockAction`
 
 ---

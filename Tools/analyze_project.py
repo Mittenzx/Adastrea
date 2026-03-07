@@ -13,13 +13,13 @@ def send_ue_request(request_type, data=None, timeout=30):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(timeout)
         sock.connect(('127.0.0.1', 5555))
-        
+
         request = {'type': request_type, 'data': data or {}}
         sock.sendall((json.dumps(request) + '\n').encode('utf-8'))
-        
+
         response = sock.recv(16384).decode('utf-8')
         result = json.loads(response)
-        
+
         sock.close()
         return result
     except Exception as e:
@@ -30,40 +30,40 @@ def analyze_project_structure():
     print("\n" + "=" * 70)
     print("PROJECT STRUCTURE ANALYSIS")
     print("=" * 70)
-    
+
     project_root = Path("c:/Unreal Projects/Adastrea")
-    
+
     # Source code analysis
     source_path = project_root / "Source" / "Adastrea"
     if source_path.exists():
         cpp_files = list(source_path.rglob("*.cpp"))
         h_files = list(source_path.rglob("*.h"))
-        
+
         print(f"\n📁 Source Code:")
         print(f"   C++ Files: {len(cpp_files)} .cpp, {len(h_files)} .h")
         print(f"   Total: {len(cpp_files) + len(h_files)} files")
-        
+
         # Count by system
         systems = {}
         for file in cpp_files + h_files:
             parent = file.parent.name
             if parent not in ["Adastrea", "Public"]:
                 systems[parent] = systems.get(parent, 0) + 1
-        
+
         print(f"\n   Systems detected: {len(systems)}")
         for system, count in sorted(systems.items(), key=lambda x: x[1], reverse=True)[:10]:
             print(f"     - {system}: {count} files")
-    
+
     # Content analysis
     content_path = project_root / "Content"
     if content_path.exists():
         blueprints = list(content_path.rglob("*.uasset"))
         maps = list(content_path.rglob("*.umap"))
-        
+
         print(f"\n📦 Content:")
         print(f"   Blueprints/Assets: {len(blueprints)}")
         print(f"   Maps: {len(maps)}")
-    
+
     # Plugin analysis
     plugins_path = project_root / "Plugins"
     if plugins_path.exists():
@@ -77,16 +77,16 @@ def check_compilation_errors():
     print("\n" + "=" * 70)
     print("COMPILATION STATUS CHECK")
     print("=" * 70)
-    
+
     project_root = Path("c:/Unreal Projects/Adastrea")
-    
+
     # Check for Intermediate folder (indicates successful build)
     intermediate = project_root / "Intermediate"
     if intermediate.exists():
         print("\n✅ Intermediate folder exists (project has been built)")
     else:
         print("\n⚠️  Intermediate folder missing (project may not have been built)")
-    
+
     # Check for Binaries
     binaries = project_root / "Binaries"
     if binaries.exists():
@@ -95,12 +95,12 @@ def check_compilation_errors():
         print(f"✅ Binaries folder exists: {len(dll_files)} DLLs, {len(exe_files)} EXEs")
     else:
         print("⚠️  Binaries folder missing (project needs to be built)")
-    
+
     # Check for common error-prone files
     source_path = project_root / "Source" / "Adastrea"
     if source_path.exists():
         issues = []
-        
+
         # Check for missing GENERATED_BODY macros
         for h_file in source_path.rglob("*.h"):
             try:
@@ -109,7 +109,7 @@ def check_compilation_errors():
                     issues.append(f"Missing GENERATED_BODY: {h_file.name}")
             except:
                 pass
-        
+
         if issues:
             print(f"\n⚠️  Potential issues found: {len(issues)}")
             for issue in issues[:5]:
@@ -122,20 +122,20 @@ def query_ue_systems():
     print("\n" + "=" * 70)
     print("UNREAL ENGINE SYSTEM QUERY")
     print("=" * 70)
-    
+
     # Try to get project info via RAG
     print("\n📊 Querying project systems...")
     result = send_ue_request('query', {
         'query': 'List all game systems in the Adastrea project and their current status'
     })
-    
+
     if result.get('status') == 'success':
         answer = result.get('result', 'No result')
         if 'RAG' not in answer and 'not initialized' not in answer:
             print(f"\n{answer[:500]}...")
         else:
             print("\n⏳ RAG system still initializing (restart Unreal Editor to activate)")
-    
+
     # Get metrics
     print("\n📈 Checking performance metrics...")
     result = send_ue_request('metrics')
@@ -149,16 +149,16 @@ def identify_improvements():
     print("\n" + "=" * 70)
     print("IMPROVEMENT RECOMMENDATIONS")
     print("=" * 70)
-    
+
     project_root = Path("c:/Unreal Projects/Adastrea")
     recommendations = []
-    
+
     # Check documentation coverage
     source_path = project_root / "Source" / "Adastrea"
     if source_path.exists():
         cpp_count = len(list(source_path.rglob("*.cpp")))
         md_in_source = len(list(source_path.rglob("*.md")))
-        
+
         if md_in_source < 5:
             recommendations.append({
                 'priority': 'Medium',
@@ -166,7 +166,7 @@ def identify_improvements():
                 'issue': f'Only {md_in_source} README files in Source/ for {cpp_count} C++ files',
                 'action': 'Add system-level README.md files to major subsystems'
             })
-    
+
     # Check for testing infrastructure
     test_files = list(project_root.rglob("*Test*.cpp")) + list(project_root.rglob("*Test*.h"))
     if len(test_files) < 5:
@@ -176,7 +176,7 @@ def identify_improvements():
             'issue': f'Only {len(test_files)} test files found',
             'action': 'Implement unit tests for core game systems'
         })
-    
+
     # Check for Blueprint integration
     content_path = project_root / "Content"
     if content_path.exists():
@@ -188,7 +188,7 @@ def identify_improvements():
                 'issue': f'Only {bp_count} Blueprint assets found',
                 'action': 'Create Blueprint wrappers for C++ game systems'
             })
-    
+
     # Check for performance profiling
     perf_path = project_root / "Performance"
     if not perf_path.exists():
@@ -198,11 +198,11 @@ def identify_improvements():
             'issue': 'No dedicated performance tracking directory',
             'action': 'Set up performance profiling and benchmarking system'
         })
-    
+
     # Output recommendations
     if recommendations:
         print(f"\n Found {len(recommendations)} improvement opportunities:\n")
-        
+
         for i, rec in enumerate(recommendations, 1):
             print(f"{i}. [{rec['priority']}] {rec['category']}")
             print(f"   Issue: {rec['issue']}")
@@ -215,7 +215,7 @@ def main():
     print("=" * 70)
     print("ADASTREA PROJECT ANALYSIS")
     print("=" * 70)
-    
+
     # Test connection first
     print("\n🔌 Testing Unreal Engine connection...")
     result = send_ue_request('ping')
@@ -224,13 +224,13 @@ def main():
     else:
         print("⚠️  Not connected to Unreal Engine (analysis will be limited)")
         print(f"   Error: {result.get('error', 'Unknown')}")
-    
+
     # Run analyses
     analyze_project_structure()
     check_compilation_errors()
     query_ue_systems()
     identify_improvements()
-    
+
     print("\n" + "=" * 70)
     print("ANALYSIS COMPLETE")
     print("=" * 70)

@@ -13,7 +13,7 @@ spawn_groups:
       z_variation: 500
     rotation_randomness: 15  # Random rotation variation in degrees
     scale_randomness: 0.1    # Random scale variation (0-1)
-  
+
   # Spawn stations in grid pattern
   - asset_path: "/Game/Stations/Blueprints/BP_Station_Small"
     pattern: grid
@@ -23,7 +23,7 @@ spawn_groups:
       center: [50000, 0, 0]
     rotation_randomness: 0
     scale_randomness: 0
-  
+
   # Spawn asteroids randomly in a sphere
   - asset_path: "/Game/Planets/Blueprints/BP_Asteroid"
     pattern: random
@@ -33,7 +33,7 @@ spawn_groups:
       center: [0, 0, 0]
     rotation_randomness: 180
     scale_randomness: 0.3
-  
+
   # Spawn cargo ships in cluster pattern
   - asset_path: "/Game/Ships/Blueprints/BP_Ship_Cargo"
     pattern: cluster
@@ -45,7 +45,7 @@ spawn_groups:
       center: [0, 50000, 0]
     rotation_randomness: 45
     scale_randomness: 0.15
-  
+
   # Spawn patrol ships in spiral pattern
   - asset_path: "/Game/Ships/Blueprints/BP_Ship_Scout"
     pattern: spiral
@@ -57,7 +57,7 @@ spawn_groups:
       turns: 2
     rotation_randomness: 30
     scale_randomness: 0.05
-  
+
   # Spawn defense satellites in line
   - asset_path: "/Game/Stations/Blueprints/BP_DefenseSatellite"
     pattern: line

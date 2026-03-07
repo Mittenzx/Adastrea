@@ -123,7 +123,7 @@ The Adastrea Director Unreal Engine plugin now includes full RAG (Retrieval-Augm
    # Use OpenAI embeddings (default is HuggingFace)
    export EMBEDDING_PROVIDER=openai
    export OPENAI_API_KEY=your-key
-   
+
    # Or use HuggingFace (no API key required)
    export EMBEDDING_PROVIDER=hf
    export HUGGINGFACE_MODEL_NAME=all-MiniLM-L6-v2
@@ -435,6 +435,6 @@ Contributions are welcome! Please:
 
 ---
 
-**Last Updated**: 2025-11-14  
-**Plugin Version**: Phase 1, Weeks 5-6  
+**Last Updated**: 2025-11-14
+**Plugin Version**: Phase 1, Weeks 5-6
 **Status**: Feature Complete, Testing Phase

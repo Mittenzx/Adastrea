@@ -228,8 +228,8 @@ PersonnelID: "Captain_JohnSmith"
 PersonnelName: "John Smith"
 
 Biography: |
-  This individual started as a cargo hauler and worked their way 
-  up through the ranks. They are known for their calm demeanor 
+  This individual started as a cargo hauler and worked their way
+  up through the ranks. They are known for their calm demeanor
   under pressure and successfully completed 45 deep space missions.
 
 Age: 45
@@ -427,7 +427,7 @@ CoreStats:
   HullStrength: 875.3
   CargoCapacity: 68.2
   MaxSpeed: 1045.8
-  
+
 CombatStats:
   WeaponSlots: 2
   ArmorRating: 35.4
@@ -542,7 +542,7 @@ Edit the `NameGenerator` class in ProceduralGenerators.py:
 class NameGenerator:
     # Add more first names
     FIRST_NAMES_MALE += ["Custom", "Names", "Here"]
-    
+
     # Add custom planet prefixes
     PLANET_PREFIXES += ["Mythos", "Legend", "Ancient"]
 ```
@@ -817,6 +817,6 @@ Submit improvements via pull requests!
 
 ---
 
-**Version**: 1.0  
-**Last Updated**: 2025-11-07  
+**Version**: 1.0
+**Last Updated**: 2025-11-07
 **Maintained by**: Adastrea Development Team

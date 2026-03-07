@@ -53,7 +53,7 @@ float UVerseSubsystem::GetVerseScore(const UWayDataAsset* TargetWay) const
 
         // Get the Precepts valued by the Way
         const TArray<FPreceptValue>& WayPrecepts = TargetWay->CorePrecepts;
-        
+
         // Get the Precept alignments of the Feat
         const TArray<FFeatPreceptAlignment>& FeatAlignments = CompletedFeat->PreceptAlignments;
 
@@ -115,7 +115,7 @@ void UVerseSubsystem::LoadVerseState()
     // --- FAKE IMPLEMENTATION FOR TESTING ---
     // In a real game, this function would load a UAdastreaSaveGame object
     // and populate the CompletedFeats set from its data.
-    
+
     // For now, we will clear any existing feats to ensure a clean state on start.
     CompletedFeats.Empty();
     RegisteredNetworks.Empty();
@@ -137,7 +137,7 @@ void UVerseSubsystem::RegisterNetwork(UWayNetworkDataAsset* Network)
     if (!RegisteredNetworks.Contains(Network))
     {
         RegisteredNetworks.Add(Network);
-        UE_LOG(LogAdastreaWay, Log, TEXT("Registered Way Network: %s with %d members"), 
+        UE_LOG(LogAdastreaWay, Log, TEXT("Registered Way Network: %s with %d members"),
             *Network->NetworkName.ToString(), Network->GetMemberCount());
     }
 }
@@ -159,7 +159,7 @@ void UVerseSubsystem::UnregisterNetwork(UWayNetworkDataAsset* Network)
 TArray<UWayNetworkDataAsset*> UVerseSubsystem::GetNetworksForWay(const UWayDataAsset* Way) const
 {
     TArray<UWayNetworkDataAsset*> Networks;
-    
+
     if (!Way)
     {
         return Networks;
@@ -192,7 +192,7 @@ float UVerseSubsystem::GetNetworkVerseScore(const UWayNetworkDataAsset* Network)
         if (Member.MemberWay)
         {
             float MemberScore = GetVerseScore(Member.MemberWay);
-            
+
             // Weight by member's influence in the network
             float WeightedScore = MemberScore * (Member.InfluenceLevel / 100.0f);
             TotalScore += WeightedScore;
@@ -262,19 +262,19 @@ void UVerseSubsystem::RecordFeatWithNetworkEffects(const UFeatDataAsset* FeatToR
 
         // Calculate alignment between Feat and Network
         float NetworkAlignment = Network->CalculateNetworkAlignment(FeatToRecord->PreceptAlignments);
-        
+
         if (NetworkAlignment > 0.0f)
         {
-            UE_LOG(LogAdastreaWay, Log, TEXT("Feat '%s' aligns with network '%s' (Alignment: %.2f)"), 
-                *FeatToRecord->TitleName.ToString(), 
-                *Network->NetworkName.ToString(), 
+            UE_LOG(LogAdastreaWay, Log, TEXT("Feat '%s' aligns with network '%s' (Alignment: %.2f)"),
+                *FeatToRecord->TitleName.ToString(),
+                *Network->NetworkName.ToString(),
                 NetworkAlignment);
 
             // Apply network alignment bonus
             float BonusAlignment = NetworkAlignment * Network->NetworkAlignmentBonus;
-            
-            UE_LOG(LogAdastreaWay, Log, TEXT("  Network bonus applied: %.2f (%.2fx multiplier)"), 
-                BonusAlignment, 
+
+            UE_LOG(LogAdastreaWay, Log, TEXT("  Network bonus applied: %.2f (%.2fx multiplier)"),
+                BonusAlignment,
                 Network->NetworkAlignmentBonus);
         }
 

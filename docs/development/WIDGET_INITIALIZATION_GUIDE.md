@@ -1045,6 +1045,6 @@ private:
 
 ---
 
-**Last Updated**: 2025-12-17  
-**Version**: 1.0  
+**Last Updated**: 2025-12-17
+**Version**: 1.0
 **Author**: Adastrea Development Team

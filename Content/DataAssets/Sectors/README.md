@@ -17,7 +17,7 @@ This directory contains Sector Council Data Assets for different regions of spac
 Copy values from YAML templates in `/Assets/SectorTemplates/`:
 
 - `CoreSystemsSector.yaml` - Safe, balanced governance
-- `FrontierMiningSector.yaml` - Dangerous mining territory  
+- `FrontierMiningSector.yaml` - Dangerous mining territory
 - `TradeHubSector.yaml` - Commerce focused
 - `ResearchSector.yaml` - Scientific hub
 - `MilitaryBorderSector.yaml` - Border defense zone

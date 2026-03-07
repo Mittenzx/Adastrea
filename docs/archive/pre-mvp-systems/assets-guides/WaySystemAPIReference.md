@@ -33,8 +33,8 @@ UActorComponent
 
 ## VerseSubsystem
 
-**File**: `Source/Adastrea/Way/VerseSubsystem.h`  
-**Base Class**: `UGameInstanceSubsystem`  
+**File**: `Source/Adastrea/Way/VerseSubsystem.h`
+**Base Class**: `UGameInstanceSubsystem`
 **Purpose**: Manages Way Networks and reputation calculations globally
 
 ### Public Functions
@@ -51,8 +51,8 @@ void RegisterNetwork(UWayNetworkDataAsset* Network);
 **Parameters**:
 - `Network` - The network Data Asset to register
 
-**Blueprint**: Yes  
-**Thread-Safe**: No  
+**Blueprint**: Yes
+**Thread-Safe**: No
 **Call Time**: Game initialization (BeginPlay)
 
 **Example (C++)**:
@@ -60,7 +60,7 @@ void RegisterNetwork(UWayNetworkDataAsset* Network);
 void AMyGameMode::BeginPlay()
 {
     Super::BeginPlay();
-    
+
     UVerseSubsystem* VerseSystem = GetGameInstance()->GetSubsystem<UVerseSubsystem>();
     if (VerseSystem && CraftsmenNetwork)
     {
@@ -91,7 +91,7 @@ void UnregisterNetwork(UWayNetworkDataAsset* Network);
 **Parameters**:
 - `Network` - The network to unregister
 
-**Blueprint**: Yes  
+**Blueprint**: Yes
 **Thread-Safe**: No
 
 ---
@@ -110,7 +110,7 @@ TArray<UWayNetworkDataAsset*> GetNetworksForWay(const UWayDataAsset* Way) const;
 
 **Returns**: Array of networks containing this Way
 
-**Blueprint**: Yes (Pure)  
+**Blueprint**: Yes (Pure)
 **Thread-Safe**: Yes (const)
 
 **Example (C++)**:
@@ -147,7 +147,7 @@ float GetNetworkVerseScore(const UWayNetworkDataAsset* Network) const;
 
 **Returns**: Float (0-100+) representing network reputation
 
-**Blueprint**: Yes  
+**Blueprint**: Yes
 **Thread-Safe**: No (queries player data)
 
 **Calculation**: Averages player reputation across all network members, weighted by member influence.
@@ -184,7 +184,7 @@ bool QualifiesForNetworkBonuses(const UWayNetworkDataAsset* Network) const;
 
 **Returns**: `true` if player qualifies, `false` otherwise
 
-**Blueprint**: Yes  
+**Blueprint**: Yes
 **Thread-Safe**: No
 
 **Requirements**:
@@ -225,7 +225,7 @@ bool RecordFeatWithNetworkEffects(UFeatDataAsset* Feat, bool bApplyNetworkEffect
 
 **Returns**: `true` if Feat was recorded successfully
 
-**Blueprint**: Yes  
+**Blueprint**: Yes
 **Thread-Safe**: No
 
 **Behavior**:
@@ -241,10 +241,10 @@ bool RecordFeatWithNetworkEffects(UFeatDataAsset* Feat, bool bApplyNetworkEffect
 void AQuestManager::OnQuestCompleted(UFeatDataAsset* QuestFeat)
 {
     UVerseSubsystem* VerseSystem = GetGameInstance()->GetSubsystem<UVerseSubsystem>();
-    
+
     // Award Feat with full network effects
     bool bSuccess = VerseSystem->RecordFeatWithNetworkEffects(QuestFeat, true);
-    
+
     if (bSuccess)
     {
         ShowFeatCompletionUI(QuestFeat);
@@ -276,7 +276,7 @@ TArray<UWayNetworkDataAsset*> GetAllRegisteredNetworks() const;
 
 **Returns**: Array of all registered networks
 
-**Blueprint**: Yes (Pure)  
+**Blueprint**: Yes (Pure)
 **Thread-Safe**: Yes (const)
 
 **Example (C++)**:
@@ -289,8 +289,8 @@ UE_LOG(LogTemp, Log, TEXT("Total networks: %d"), AllNetworks.Num());
 
 ## WayDataAsset
 
-**File**: `Source/Adastrea/Way/Way.h`  
-**Base Class**: `UPrimaryDataAsset`  
+**File**: `Source/Adastrea/Way/Way.h`
+**Base Class**: `UPrimaryDataAsset`
 **Purpose**: Defines a specialized guild with industry, quality, and Precepts
 
 ### Key Properties
@@ -422,8 +422,8 @@ bool HasSupplyRelationship(const UWayDataAsset* OtherWay) const;
 
 ## WayNetworkDataAsset
 
-**File**: `Source/Adastrea/Way/WayNetwork.h`  
-**Base Class**: `UPrimaryDataAsset`  
+**File**: `Source/Adastrea/Way/WayNetwork.h`
+**Base Class**: `UPrimaryDataAsset`
 **Purpose**: Defines a micro-alliance of 2-5 Ways with shared Precepts
 
 ### Key Properties
@@ -573,8 +573,8 @@ TArray<UWayDataAsset*> GetMembers() const;
 
 ## Verse Component
 
-**File**: `Source/Adastrea/Player/Verse.h`  
-**Base Class**: `UActorComponent`  
+**File**: `Source/Adastrea/Player/Verse.h`
+**Base Class**: `UActorComponent`
 **Purpose**: Tracks player reputation with Ways and calculates Verse scores
 
 ### Key Properties
@@ -834,7 +834,7 @@ Widget: On Construct
 void AMyGameMode::InitializeNetworks()
 {
     UVerseSubsystem* Verse = GetGameInstance()->GetSubsystem<UVerseSubsystem>();
-    
+
     TArray<FString> NetworkPaths = {
         TEXT("/Game/DataAssets/Networks/DA_Network_Craftsmen"),
         TEXT("/Game/DataAssets/Networks/DA_Network_Frontier"),
@@ -842,7 +842,7 @@ void AMyGameMode::InitializeNetworks()
         TEXT("/Game/DataAssets/Networks/DA_Network_Merchants"),
         TEXT("/Game/DataAssets/Networks/DA_Network_Scholars")
     };
-    
+
     for (const FString& Path : NetworkPaths)
     {
         UWayNetworkDataAsset* Network = LoadObject<UWayNetworkDataAsset>(nullptr, *Path);
@@ -863,9 +863,9 @@ float CalculateNetworkDiscount(UWayDataAsset* StationWay, APlayerController* Pla
 {
     UVerseSubsystem* Verse = Player->GetGameInstance()->GetSubsystem<UVerseSubsystem>();
     TArray<UWayNetworkDataAsset*> Networks = Verse->GetNetworksForWay(StationWay);
-    
+
     float BestDiscount = 0.0f;
-    
+
     for (UWayNetworkDataAsset* Network : Networks)
     {
         if (Verse->QualifiesForNetworkBonuses(Network))
@@ -875,7 +875,7 @@ float CalculateNetworkDiscount(UWayDataAsset* StationWay, APlayerController* Pla
             BestDiscount = FMath::Max(BestDiscount, Discount);
         }
     }
-    
+
     return FMath::Clamp(BestDiscount, 0.0f, 25.0f);
 }
 ```
@@ -889,9 +889,9 @@ FQuestData GenerateNetworkQuest(UWayDataAsset* QuestGiver)
 {
     UVerseSubsystem* Verse = GetGameInstance()->GetSubsystem<UVerseSubsystem>();
     TArray<UWayNetworkDataAsset*> Networks = Verse->GetNetworksForWay(QuestGiver);
-    
+
     FQuestData Quest;
-    
+
     if (Networks.Num() > 0)
     {
         // Quest affects entire network
@@ -909,7 +909,7 @@ FQuestData GenerateNetworkQuest(UWayDataAsset* QuestGiver)
         Quest.Title = FText::FromString("Solo Mission");
         Quest.bIsNetworkQuest = false;
     }
-    
+
     return Quest;
 }
 ```
@@ -927,7 +927,7 @@ void CheckForNetworkFormation(TArray<UWayDataAsset*> HighRepWays)
         for (int32 j = i + 1; j < HighRepWays.Num(); j++)
         {
             int32 SharedPrecepts = CountSharedPrecepts(HighRepWays[i], HighRepWays[j]);
-            
+
             if (SharedPrecepts >= 2)
             {
                 // Create new network
@@ -935,10 +935,10 @@ void CheckForNetworkFormation(TArray<UWayDataAsset*> HighRepWays)
                     HighRepWays[i],
                     HighRepWays[j]
                 );
-                
+
                 UVerseSubsystem* Verse = GetGameInstance()->GetSubsystem<UVerseSubsystem>();
                 Verse->RegisterNetwork(NewNetwork);
-                
+
                 ShowNetworkFormationEvent(NewNetwork);
             }
         }
@@ -963,7 +963,7 @@ TArray<UWayNetworkDataAsset*> GetCachedNetworks(UWayDataAsset* Way)
         UVerseSubsystem* Verse = GetGameInstance()->GetSubsystem<UVerseSubsystem>();
         CachedNetworks.Add(Way, Verse->GetNetworksForWay(Way));
     }
-    
+
     return CachedNetworks[Way];
 }
 ```
@@ -976,22 +976,22 @@ float GetCachedNetworkScore(UWayNetworkDataAsset* Network)
 {
     static TMap<UWayNetworkDataAsset*, float> ScoreCache;
     static float LastUpdateTime = 0.0f;
-    
+
     float CurrentTime = GetWorld()->GetTimeSeconds();
-    
+
     // Update cache every 5 seconds
     if (CurrentTime - LastUpdateTime > 5.0f)
     {
         ScoreCache.Empty();
         LastUpdateTime = CurrentTime;
     }
-    
+
     if (!ScoreCache.Contains(Network))
     {
         UVerseSubsystem* Verse = GetGameInstance()->GetSubsystem<UVerseSubsystem>();
         ScoreCache.Add(Network, Verse->GetNetworkVerseScore(Network));
     }
-    
+
     return ScoreCache[Network];
 }
 ```

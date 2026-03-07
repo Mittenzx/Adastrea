@@ -1,6 +1,6 @@
 # Archived Scripts
 
-**Date Archived**: January 13, 2026  
+**Date Archived**: January 13, 2026
 **Reason**: One-time use or obsolete scripts
 
 ## Overview

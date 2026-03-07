@@ -27,7 +27,7 @@ void AAdastreaGameState::AdvanceDay()
 		if (ActiveEvents[i].DaysRemaining > 0)
 		{
 			ActiveEvents[i].DaysRemaining--;
-			
+
 			// Remove events that have expired
 			if (ActiveEvents[i].DaysRemaining == 0)
 			{

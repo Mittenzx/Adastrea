@@ -122,7 +122,7 @@ or
 ## Troubleshooting
 
 ### "Cannot find module @chongdashu/unreal-mcp-server"
-**Solution:** 
+**Solution:**
 ```powershell
 npm install -g @chongdashu/unreal-mcp-server
 ```
@@ -196,5 +196,5 @@ Once connected:
 
 **Estimated Total Time:** 10-15 minutes
 
-**Last Updated:** 2025-11-29  
+**Last Updated:** 2025-11-29
 **Status:** Setup in Progress

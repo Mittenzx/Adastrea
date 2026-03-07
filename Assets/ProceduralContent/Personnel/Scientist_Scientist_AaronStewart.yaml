@@ -9,7 +9,7 @@ PersonnelName: "Aaron Stewart"
 # Basic Identity
 Biography: |
   This individual worked as a mining surveyor in the outer colonies. They are feared by enemies and respected by allies and earned multiple commendations for bravery and service.
-  
+
 Age: 36
 Gender: "Male"
 Species: "Human"
@@ -61,7 +61,7 @@ ContractMonthsRemaining: 0
 PersonalityType: "Leader"
 PersonalityDescription: |
   Leader personality with focus on scientist duties.
-  
+
 Traits:
   - TraitName: "Natural Leader"
     TraitDescription: "Inspires crew"

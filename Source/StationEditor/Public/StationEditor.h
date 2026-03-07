@@ -7,11 +7,11 @@
 
 /**
  * StationEditor Module
- * 
+ *
  * Runtime module providing in-game, player-facing space station editor features.
  * This module contains all UI and gameplay systems for the station construction editor
  * that players interact with during gameplay.
- * 
+ *
  * This is separate from AdastreaEditor which contains developer/designer tools
  * for the Unreal Editor.
  */

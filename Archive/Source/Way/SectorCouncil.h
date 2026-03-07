@@ -148,13 +148,13 @@ struct ADASTREA_API FCouncilVote
 
 /**
  * Data Asset representing a Sector Council.
- * 
+ *
  * Each sector has a council where representatives from Ways with presence
  * in the sector make administrative decisions about taxes, policing budget,
  * trade regulations, and other sector-wide concerns.
- * 
+ *
  * This is NOT politics - it's practical governance and administration.
- * 
+ *
  * Usage Example:
  * - Frontier Sector Council
  *   - Representatives: Scout's League, Mining Cooperative, Freight Haulers
@@ -384,8 +384,8 @@ public:
      * @return Vote result structure
      */
     UFUNCTION(BlueprintCallable, Category="Sector Council|Voting")
-    FCouncilVote SimulateVote(const FSectorPolicy& ProposedPolicy, 
-        const TArray<UWayDataAsset*>& WaysInFavor, 
+    FCouncilVote SimulateVote(const FSectorPolicy& ProposedPolicy,
+        const TArray<UWayDataAsset*>& WaysInFavor,
         const TArray<UWayDataAsset*>& WaysAgainst) const;
 
     /**

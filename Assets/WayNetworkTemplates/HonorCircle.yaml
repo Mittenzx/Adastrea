@@ -4,8 +4,8 @@
 NetworkName: "The Honor Circle"
 NetworkID: "HonorCircle"
 Description: |
-  An ancient alliance of warrior guilds and protector orders bound by codes of 
-  honor and martial excellence. They maintain combat standards, adjudicate disputes, 
+  An ancient alliance of warrior guilds and protector orders bound by codes of
+  honor and martial excellence. They maintain combat standards, adjudicate disputes,
   and offer their services to protect the innocent.
 
 NetworkColor:
@@ -20,17 +20,17 @@ MemberWays:
     InfluenceLevel: 85
     CommitmentLevel: 90
     RoleDescription: "Ancient order of honorable warriors"
-    
+
   - MemberWay: "DA_Way_DuelistAcademy"
     InfluenceLevel: 70
     CommitmentLevel: 85
     RoleDescription: "Masters of personal combat and ship dueling"
-    
+
   - MemberWay: "DA_Way_ProtectorsOrder"
     InfluenceLevel: 75
     CommitmentLevel: 80
     RoleDescription: "Defenders of trade routes and civilians"
-    
+
   - MemberWay: "DA_Way_BountyHunterCollective"
     InfluenceLevel: 60
     CommitmentLevel: 70
@@ -41,11 +41,11 @@ SharedPrecepts:
   - Precept: Honor
     ImportanceValue: 95
     Description: "Uphold principles even when costly"
-    
+
   - Precept: Strength
     ImportanceValue: 85
     Description: "Martial excellence and power"
-    
+
   - Precept: Justice
     ImportanceValue: 75
     Description: "Protect the innocent, punish the guilty"

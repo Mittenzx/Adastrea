@@ -10,7 +10,7 @@ class USpaceshipDataAsset;
 
 /**
  * Widget for displaying comprehensive ship status and statistics
- * 
+ *
  * This widget provides a detailed view of the current spaceship including all 9 stat categories:
  * - Basic ship information (name, class, description)
  * - Core stats (hull, cargo, crew, modular points)
@@ -21,14 +21,14 @@ class USpaceshipDataAsset;
  * - Advanced stats (diplomacy, boarding, customization, EW, mining)
  * - Lore information (manufacturer, year, rarity)
  * - Calculated ratings (combat, mobility, utility 0-100)
- * 
+ *
  * Usage:
  * - Create a Widget Blueprint based on this class
  * - Design the ship status screen layout
  * - Call InitializeShipStatus() to populate with current ship data
  * - Use RefreshShipStatus() to update displayed values
  * - Toggle visibility with Show/Hide or through PlayerController
- * 
+ *
  * Integration:
  * - Automatically gets ship data from controlled spaceship
  * - Updates display values from SpaceshipDataAsset

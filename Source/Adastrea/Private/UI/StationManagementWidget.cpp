@@ -39,7 +39,7 @@ void UStationManagementWidget::NativeDestruct()
 void UStationManagementWidget::SetManagedStation(ASpaceStation* Station)
 {
 	ManagedStation = Station;
-	
+
 	if (ManagedStation)
 	{
 		RefreshStationData();
@@ -130,7 +130,7 @@ bool UStationManagementWidget::CanBuildModule(TSubclassOf<ASpaceStationModule> M
 	// - Available attachment points
 	// - Module prerequisites
 	// - Player permissions
-	
+
 	return true; // Placeholder - implement full logic in Blueprint or here
 }
 

@@ -34,7 +34,7 @@ bool UMusicTrackDataAsset::MatchesContext(EMusicMood DesiredMood, EMusicIntensit
 float UMusicTrackDataAsset::GetEffectiveVolume(float MasterVolume) const
 {
 	float EffectiveVolume = Volume * MasterVolume;
-	
+
 	if (bIsLayer)
 	{
 		EffectiveVolume *= LayerVolume;

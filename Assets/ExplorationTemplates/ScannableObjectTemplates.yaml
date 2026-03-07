@@ -14,7 +14,7 @@ scannable_config:
   passively_detectable: true
   stealth_enabled: false
   masked_signature: false
-  
+
   basic_scan_data:
     object_name: "Unknown Ship"
     signal_type: Ship
@@ -22,7 +22,7 @@ scannable_config:
     mass: 50000
     composition: "Metallic hull"
     is_hostile: false
-  
+
   detailed_scan_data:
     object_name: "Cargo Freighter"
     signal_type: Ship
@@ -32,7 +32,7 @@ scannable_config:
     faction_id: "merchants_guild"
     additional_details: "Carrying trade goods. IFF: Friendly"
     is_hostile: false
-  
+
   complete_scan_data:
     object_name: "Cargo Freighter 'Star Merchant'"
     signal_type: Ship
@@ -55,7 +55,7 @@ scannable_config:
   object_size: 4000           # 40 meters
   passively_detectable: true
   stealth_enabled: false
-  
+
   basic_scan_data:
     object_name: "Armed Vessel"
     signal_type: Ship
@@ -63,7 +63,7 @@ scannable_config:
     mass: 35000
     composition: "Heavy armor plating"
     is_hostile: false  # Depends on faction relations
-  
+
   detailed_scan_data:
     object_name: "Military Corvette"
     signal_type: Ship
@@ -73,7 +73,7 @@ scannable_config:
     faction_id: "solar_navy"
     additional_details: "Armed: Energy weapons, missile pods. Shields: Active. Threat Level: Medium"
     is_hostile: false
-  
+
   complete_scan_data:
     object_name: "SNV Defender - Military Corvette"
     signal_type: Ship
@@ -98,7 +98,7 @@ scannable_config:
   stealth_enabled: true
   masked_signature: true
   masked_signal_type: Debris  # Masquerading as debris
-  
+
   basic_scan_data:
     object_name: "Debris Fragment"
     signal_type: Debris
@@ -106,7 +106,7 @@ scannable_config:
     mass: 5000
     composition: "Metallic debris"
     is_hostile: false
-  
+
   detailed_scan_data:
     object_name: "Unknown Vessel"
     signal_type: Ship
@@ -116,7 +116,7 @@ scannable_config:
     faction_id: "unknown"
     additional_details: "Stealth technology active. Unable to identify faction"
     is_hostile: true
-  
+
   complete_scan_data:
     object_name: "Stealth Infiltrator - Shadow Class"
     signal_type: Ship
@@ -139,7 +139,7 @@ scannable_config:
   object_size: 50000          # 500 meters
   passively_detectable: true
   stealth_enabled: false
-  
+
   basic_scan_data:
     object_name: "Space Station"
     signal_type: Station
@@ -147,7 +147,7 @@ scannable_config:
     mass: 5000000
     composition: "Large orbital structure"
     is_hostile: false
-  
+
   detailed_scan_data:
     object_name: "Trading Hub Station"
     signal_type: Station
@@ -157,7 +157,7 @@ scannable_config:
     faction_id: "merchants_guild"
     additional_details: "Active: 15 docking ports. Services: Trade, refuel, repair. Population: 2,000"
     is_hostile: false
-  
+
   complete_scan_data:
     object_name: "Merchants Guild Trade Hub 'Prosperity'"
     signal_type: Station
@@ -180,7 +180,7 @@ scannable_config:
   object_size: 1000000        # 10 km (small planet)
   passively_detectable: true
   stealth_enabled: false
-  
+
   basic_scan_data:
     object_name: "Planetary Body"
     signal_type: Planet
@@ -188,7 +188,7 @@ scannable_config:
     mass: 5972000000000000000000000  # Earth-like mass
     composition: "Rocky planet"
     is_hostile: false
-  
+
   detailed_scan_data:
     object_name: "Rocky Planet (M-Class)"
     signal_type: Planet
@@ -197,7 +197,7 @@ scannable_config:
     composition: "Iron core, silicate mantle. Thin atmosphere: CO2, Nitrogen"
     additional_details: "Surface temperature: -50°C to 20°C. No life detected. Mineral deposits: Iron, Copper, Uranium"
     is_hostile: false
-  
+
   complete_scan_data:
     object_name: "Planet Kepler-442b"
     signal_type: Planet
@@ -219,7 +219,7 @@ scannable_config:
   object_size: 10000          # 100 meters (large asteroid)
   passively_detectable: true
   stealth_enabled: false
-  
+
   basic_scan_data:
     object_name: "Asteroid Cluster"
     signal_type: Asteroid
@@ -227,7 +227,7 @@ scannable_config:
     mass: 1000000
     composition: "Rocky material"
     is_hostile: false
-  
+
   detailed_scan_data:
     object_name: "Metallic Asteroid Field"
     signal_type: Asteroid
@@ -236,7 +236,7 @@ scannable_config:
     composition: "High concentration of metallic ores. Iron, Nickel, Platinum traces"
     additional_details: "Approximate count: 50 asteroids. Size range: 10m - 100m. Mining potential: Good"
     is_hostile: false
-  
+
   complete_scan_data:
     object_name: "Asteroid Belt Sector 7-G"
     signal_type: Asteroid
@@ -258,7 +258,7 @@ scannable_config:
   object_size: 15000          # 150 meters
   passively_detectable: true
   stealth_enabled: false
-  
+
   basic_scan_data:
     object_name: "Unknown Energy Signature"
     signal_type: Anomaly
@@ -266,7 +266,7 @@ scannable_config:
     mass: 0  # Unknown or variable
     composition: "Exotic energy readings"
     is_hostile: false
-  
+
   detailed_scan_data:
     object_name: "Quantum Fluctuation"
     signal_type: Anomaly
@@ -275,7 +275,7 @@ scannable_config:
     composition: "Temporal distortion. High exotic particle emissions"
     additional_details: "Type: Wormhole candidate. Stability: Fluctuating. Radiation: Moderate. Caution advised"
     is_hostile: false
-  
+
   complete_scan_data:
     object_name: "Stable Wormhole - Rift Omega-7"
     signal_type: Anomaly
@@ -297,7 +297,7 @@ scannable_config:
   object_size: 3000           # 30 meters
   passively_detectable: true
   stealth_enabled: false
-  
+
   basic_scan_data:
     object_name: "Debris"
     signal_type: Debris
@@ -305,7 +305,7 @@ scannable_config:
     mass: 15000
     composition: "Metal fragments"
     is_hostile: false
-  
+
   detailed_scan_data:
     object_name: "Ship Wreckage"
     signal_type: Debris
@@ -314,7 +314,7 @@ scannable_config:
     composition: "Hull fragments from destroyed spacecraft. Signs of weapon damage"
     additional_details: "Origin: Unknown ship class. Condition: Salvageable components detected. Age: Recent (< 1 week)"
     is_hostile: false
-  
+
   complete_scan_data:
     object_name: "Wreckage of 'Starlight Runner'"
     signal_type: Debris
@@ -336,7 +336,7 @@ scannable_config:
   object_size: 500            # 5 meters
   passively_detectable: true
   stealth_enabled: false
-  
+
   basic_scan_data:
     object_name: "Beacon Signal"
     signal_type: Beacon
@@ -344,7 +344,7 @@ scannable_config:
     mass: 200
     composition: "Transmitting device"
     is_hostile: false
-  
+
   detailed_scan_data:
     object_name: "Navigation Beacon"
     signal_type: Beacon
@@ -354,7 +354,7 @@ scannable_config:
     faction_id: "space_authority"
     additional_details: "Function: Jump point marker. Status: Active. Range: 100km. Last maintenance: 2 months ago"
     is_hostile: false
-  
+
   complete_scan_data:
     object_name: "NavBeacon Alpha-7"
     signal_type: Beacon

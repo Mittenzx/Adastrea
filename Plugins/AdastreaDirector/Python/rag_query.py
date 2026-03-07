@@ -35,20 +35,20 @@ if sys.platform == "win32":
 try:
     from dotenv import load_dotenv
     load_dotenv()
-    
+
     from langchain_chroma import Chroma
     from langchain.chains import ConversationalRetrievalChain
     from langchain.memory import ConversationBufferMemory
     from langchain.prompts import PromptTemplate
     from llm_config import get_llm
-    
+
 except ImportError as e:
     raise ImportError(f"Missing required dependencies: {e}")
 
 
 class RAGQueryAgent:
     """Simplified query agent for plugin integration."""
-    
+
     def __init__(
         self,
         collection_name: str = "adastrea_game_docs",
@@ -61,7 +61,7 @@ class RAGQueryAgent:
     ):
         """
         Initialize the query agent.
-        
+
         Args:
             collection_name: Name of the collection in the vector database
             persist_directory: Directory where vector database is stored
@@ -78,22 +78,22 @@ class RAGQueryAgent:
         self.search_type = search_type
         self.retrieval_k = retrieval_k
         self.fetch_k = fetch_k
-        
+
         # Simple in-memory FIFO cache for query results
         self.query_cache: Dict[str, Dict[str, Any]] = {}
         self.cache_max_size = 50
-        
+
         # Conversation history
         self.conversation_history: List[Dict[str, str]] = []
-        
+
         # Initialize components
         self._initialize_components()
-    
+
     def _initialize_components(self):
         """Initialize LLM, embeddings, vector store, and conversation chain."""
         # Initialize embeddings
         embedding_provider = os.environ.get("EMBEDDING_PROVIDER", "hf").lower()
-        
+
         if embedding_provider == "openai":
             try:
                 from langchain_openai import OpenAIEmbeddings
@@ -108,33 +108,33 @@ class RAGQueryAgent:
                 from langchain_huggingface import HuggingFaceEmbeddings
             except ImportError:
                 from langchain_community.embeddings import HuggingFaceEmbeddings
-            
+
             self.embeddings = HuggingFaceEmbeddings(model_name=model_name)
-        
+
         # Load vector store
         self.vectorstore = Chroma(
             collection_name=self.collection_name,
             embedding_function=self.embeddings,
             persist_directory=self.persist_directory,
         )
-        
+
         # Check if database has documents
         if self.vectorstore._collection.count() == 0:
             raise ValueError(f"Database '{self.collection_name}' is empty. Please ingest documents first.")
-        
+
         # Initialize LLM
         self.llm = get_llm(
             model_name=self.model_name,
             temperature=self.temperature,
         )
-        
+
         # Initialize memory
         self.memory = ConversationBufferMemory(
             memory_key="chat_history",
             return_messages=True,
             output_key="answer",
         )
-        
+
         # Create custom prompt
         prompt_template = """You are the Adastrea Director, an AI assistant specialized in helping with game development in Unreal Engine. You have access to project documentation, code, and design documents.
 
@@ -152,17 +152,17 @@ Context: {context}
 Question: {question}
 
 Answer:"""
-        
+
         PROMPT = PromptTemplate(
             template=prompt_template,
             input_variables=["context", "question"],
         )
-        
+
         # Create conversational retrieval chain
         search_kwargs = {"k": self.retrieval_k}
         if self.search_type == "mmr":
             search_kwargs["fetch_k"] = self.fetch_k
-        
+
         self.qa_chain = ConversationalRetrievalChain.from_llm(
             llm=self.llm,
             retriever=self.vectorstore.as_retriever(
@@ -173,25 +173,25 @@ Answer:"""
             return_source_documents=True,
             combine_docs_chain_kwargs={"prompt": PROMPT},
         )
-    
+
     def _get_query_hash(self, query: str) -> str:
         """Generate a hash for query caching."""
         return str(hash(query.lower().strip()))
-    
+
     def process_query(self, query: str, use_cache: bool = True) -> Dict[str, Any]:
         """
         Process a user query and generate a response.
-        
+
         Args:
             query: User's question
             use_cache: Whether to use cached results
-            
+
         Returns:
             Dictionary containing answer, sources, and metadata
         """
         try:
             start_time = time.time()
-            
+
             # Check cache
             query_hash = self._get_query_hash(query)
             if use_cache and query_hash in self.query_cache:
@@ -199,11 +199,11 @@ Answer:"""
                 cached_result["cached"] = True
                 cached_result["processing_time"] = time.time() - start_time
                 return cached_result
-            
+
             # Process query
             result = self.qa_chain({"question": query})
             processing_time = time.time() - start_time
-            
+
             # Format response
             response = {
                 "answer": result.get("answer", ""),
@@ -211,22 +211,22 @@ Answer:"""
                 "processing_time": processing_time,
                 "cached": False,
             }
-            
+
             # Add to conversation history
             self.conversation_history.append({
                 "query": query,
                 "answer": response["answer"],
                 "timestamp": time.time(),
             })
-            
+
             # Cache result
             if use_cache:
                 if len(self.query_cache) >= self.cache_max_size:
                     self.query_cache.pop(next(iter(self.query_cache)))
                 self.query_cache[query_hash] = copy.deepcopy(response)
-            
+
             return response
-            
+
         except Exception as e:
             return {
                 "answer": f"Error processing query: {str(e)}",
@@ -235,7 +235,7 @@ Answer:"""
                 "cached": False,
                 "error": str(e),
             }
-    
+
     def _format_sources(self, source_documents: List[Any]) -> List[Dict[str, str]]:
         """Format source documents for display."""
         sources = []
@@ -246,16 +246,16 @@ Answer:"""
                 "filename": doc.metadata.get("filename", "Unknown"),
             })
         return sources
-    
+
     def get_conversation_history(self) -> List[Dict[str, str]]:
         """Get conversation history."""
         return self.conversation_history
-    
+
     def clear_conversation_history(self):
         """Clear conversation history."""
         self.conversation_history.clear()
         self.memory.clear()
-    
+
     def get_database_info(self) -> Dict[str, Any]:
         """Get information about the loaded database."""
         try:
@@ -278,12 +278,12 @@ def query_documents(
 ) -> Dict[str, Any]:
     """
     Query the document database.
-    
+
     Args:
         query: User's question
         collection_name: ChromaDB collection name
         persist_dir: Directory where database is stored
-        
+
     Returns:
         Dictionary with answer and metadata
     """

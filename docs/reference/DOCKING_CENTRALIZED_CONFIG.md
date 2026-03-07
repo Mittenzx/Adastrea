@@ -1,6 +1,6 @@
 # Centralized Docking Configuration - Quick Reference
 
-**Last Updated**: 2026-01-25  
+**Last Updated**: 2026-01-25
 **Status**: Implementation Complete (C++ + Documentation)
 
 ## Overview
@@ -40,10 +40,10 @@ Done!
    Docking | UI:
      - Docking Prompt Widget Class: WBP_DockingPrompt
      - Trading Interface Class: WBP_TradingInterface
-   
+
    Docking | Parameters:
      - Docking Range: 2000.0
-   
+
    Docking | Parameters (Future):
      - Docking Duration: 1.0 (not yet implemented - safe to leave at default)
      - Undock Impulse Strength: 500.0 (not yet implemented - safe to leave at default)
@@ -72,11 +72,11 @@ For each ship (BP_PlayerShip, BP_NPCShip, etc.):
 
 ## Benefits
 
-✅ **Single Source of Truth** - Change one asset, update all ships  
-✅ **Consistency** - All ships use same docking behavior  
-✅ **Less Work** - No need to configure every ship  
-✅ **Easy Updates** - Update docking range globally in seconds  
-✅ **Backward Compatible** - Old ships still work without changes  
+✅ **Single Source of Truth** - Change one asset, update all ships
+✅ **Consistency** - All ships use same docking behavior
+✅ **Less Work** - No need to configure every ship
+✅ **Easy Updates** - Update docking range globally in seconds
+✅ **Backward Compatible** - Old ships still work without changes
 
 ## Advanced: Multiple Docking Profiles
 

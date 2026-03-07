@@ -4,7 +4,7 @@
 
 This `build_package/` directory currently contains:
 - ✅ `README.md` - Complete documentation about the package
-- ✅ `EXTRACTION_INSTRUCTIONS.md` - Step-by-step extraction guide  
+- ✅ `EXTRACTION_INSTRUCTIONS.md` - Step-by-step extraction guide
 - ✅ `extract_files.sh` - Automated extraction script
 - ⚠️ **Build files NOT YET EXTRACTED** (see below)
 
@@ -95,7 +95,7 @@ After running the extraction script locally:
    ```bash
    # Make sure build_unix.sh is executable
    chmod +x build_package/build_unix.sh
-   
+
    # Check scripts have proper content
    head -5 build_package/build_windows.bat
    head -5 build_package/build_unix.sh
@@ -127,5 +127,5 @@ That's it! You'll have `adastrea_build_files.tar.gz` ready to go.
 
 **Note**: This file will remain in the package as documentation even after files are extracted. It explains why the package was structured this way.
 
-**Last Updated**: 2025-11-14  
+**Last Updated**: 2025-11-14
 **Related**: PR #120, BUILD_FILES_MOVED.md

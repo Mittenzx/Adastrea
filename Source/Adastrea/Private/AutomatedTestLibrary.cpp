@@ -205,7 +205,7 @@ bool UAutomatedTestLibrary::TestSpaceshipCalculations(UObject* WorldContextObjec
 
         return true;
     }, TEXT("SpaceshipCalculations"));
-    
+
     return OutResult.bPassed;
 }
 
@@ -215,7 +215,7 @@ bool UAutomatedTestLibrary::TestFactionRelationships(UObject* WorldContextObject
         // REMOVED: TestFactionRelationships - faction system removed per Trade Simulator MVP
         Result.Message = TEXT("TestFactionRelationships skipped - faction system removed in MVP");
         return true;
-        
+
         /* COMMENTED OUT - FACTION SYSTEM REMOVED PER MVP
         // Find faction data assets
         TArray<UFactionDataAsset*> Factions;
@@ -276,7 +276,7 @@ bool UAutomatedTestLibrary::TestFactionRelationships(UObject* WorldContextObject
         return true;
         */
     }, TEXT("FactionRelationships"));
-    
+
     return OutResult.bPassed;
 }
 
@@ -287,7 +287,7 @@ bool UAutomatedTestLibrary::TestWeaponDamage(UObject* WorldContextObject, FTestR
         Result.Message = TEXT("TestWeaponDamage skipped - Combat system archived");
         return true;
     }, TEXT("WeaponDamage"));
-    
+
     return OutResult.bPassed;
 }
 
@@ -319,7 +319,7 @@ bool UAutomatedTestLibrary::TestDataValidation(UObject* WorldContextObject, FTes
         // Warnings are acceptable, but errors are not
         return TotalErrors == 0;
     }, TEXT("DataValidation"));
-    
+
     return OutResult.bPassed;
 }
 
@@ -335,7 +335,7 @@ bool UAutomatedTestLibrary::TestSpaceshipWeaponIntegration(UObject* WorldContext
         Result.Message = TEXT("Spaceship-weapon integration test placeholder - implement actual integration logic");
         return true;
     }, TEXT("SpaceshipWeaponIntegration"));
-    
+
     return OutResult.bPassed;
 }
 
@@ -347,7 +347,7 @@ bool UAutomatedTestLibrary::TestFactionStationIntegration(UObject* WorldContextO
         Result.Message = TEXT("Faction-station integration test placeholder - implement actual integration logic");
         return true;
     }, TEXT("FactionStationIntegration"));
-    
+
     return OutResult.bPassed;
 }
 
@@ -359,7 +359,7 @@ bool UAutomatedTestLibrary::TestCombatSystemIntegration(UObject* WorldContextObj
         Result.Message = TEXT("Combat system integration test placeholder - implement actual integration logic");
         return true;
     }, TEXT("CombatSystemIntegration"));
-    
+
     return OutResult.bPassed;
 }
 
@@ -381,7 +381,7 @@ bool UAutomatedTestLibrary::TestSpaceshipSpawnPerformance(UObject* WorldContextO
 
         return true;
     }, TEXT("SpaceshipSpawnPerformance"));
-    
+
     return OutResult.bPassed;
 }
 
@@ -397,7 +397,7 @@ bool UAutomatedTestLibrary::TestAISystemPerformance(UObject* WorldContextObject,
 
         return true;
     }, TEXT("AISystemPerformance"));
-    
+
     return OutResult.bPassed;
 }
 
@@ -422,7 +422,7 @@ bool UAutomatedTestLibrary::TestDataAssetLoadPerformance(UObject* WorldContextOb
         // Performance threshold: should load in under 1 second
         return LoadTime < 1.0f;
     }, TEXT("DataAssetLoadPerformance"));
-    
+
     return OutResult.bPassed;
 }
 

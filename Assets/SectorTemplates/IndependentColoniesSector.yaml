@@ -14,44 +14,44 @@ Identity:
 Council:
   TotalSeats: 7
   PassThreshold: 70  # High threshold - hard to pass anything
-  
+
   Representatives:
     - RepresentingWay: Independent_Traders
       RepresentativeName: "Captain 'Free' Jake Morrison"
       VotingWeight: 16
       YearsOfService: 3
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Colonist_Cooperative
       RepresentativeName: "Governor Maria Vasquez"
       VotingWeight: 18
       YearsOfService: 5
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Freelancers_Guild
       RepresentativeName: "Vera 'Solo' Chen"
       VotingWeight: 14
       YearsOfService: 2
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Homesteaders_Alliance
       RepresentativeName: "Rancher Tom Bridger"
       VotingWeight: 15
       YearsOfService: 4
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Volunteer_Defense
       RepresentativeName: "Militia Commander Sarah Stone"
       VotingWeight: 13
       YearsOfService: 1
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Frontier_Medics
       RepresentativeName: "Dr. Hassan Khalid"
       VotingWeight: 12
       YearsOfService: 2
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Salvage_Cooperative
       RepresentativeName: "Rita 'Scrap' Morrison"
       VotingWeight: 11
@@ -79,7 +79,7 @@ ActivePolicies:
       Buyer beware philosophy.
     PolicyValue: 5
     IsActive: true
-    
+
   - PolicyType: SecurityBudget
     PolicyName: "Voluntary Defense Pact"
     Description: |
@@ -88,7 +88,7 @@ ActivePolicies:
       large-scale threats only.
     PolicyValue: 30
     IsActive: true
-    
+
   - PolicyType: ResourceAllocation
     PolicyName: "Station Autonomy Charter"
     Description: |
@@ -103,7 +103,7 @@ Notes: |
   players who want to be left alone and make their own way. Dangerous
   due to lack of organized security, but opportunities abound for the
   self-reliant.
-  
+
   Council dynamics: Representatives are fiercely independent and resist
   any expansion of central authority. Meetings are contentious. Emergency
   cooperation only when absolutely necessary. Player could gain significant

@@ -233,7 +233,7 @@ UFactionRuntimeState* GetFactionState(FName FactionID);
 Player completes a research mission for a faction:
   GetFactionState("NovaVanguard")
     → AddRuntimeTrait(Trait: "Research Bonus", Modifier: 0.15, Duration: 3600)
-  
+
 After 3600 seconds (1 hour):
   UpdateTimedTraits() → Removes expired trait
 ```
@@ -256,10 +256,10 @@ float CalculateTradePrice(FName FactionID, FName ItemID, float BasePrice)
 
     // Get economic modifier from traits
     float EconomicModifier = FactionState->GetTotalTraitModifier(TEXT("TradeBonus"));
-    
+
     // Apply modifier (0.2 = 20% discount)
     float ModifiedPrice = BasePrice * (1.0f - EconomicModifier);
-    
+
     return ModifiedPrice;
 }
 ```
@@ -277,10 +277,10 @@ float CalculateDamage(AActor* Attacker, AActor* Target, float BaseDamage)
 
     // Check for combat traits
     float CombatModifier = Faction->GetTraitModifier(TEXT("CombatEffectiveness"));
-    
+
     // Apply modifier
     float FinalDamage = BaseDamage * (1.0f + CombatModifier);
-    
+
     return FinalDamage;
 }
 ```
@@ -444,10 +444,10 @@ public:
 ```
 Player destroys a pirate ship:
   GetFaction(PirateShip) → "CelestialSyndicate"
-  
+
   PlayerReputation->ChangeReputation("CelestialSyndicate", -10)
   PlayerReputation->ChangeReputation("NovaVanguard", +5) // They like pirate hunters
-  
+
   Check new reputation level:
   If now Hostile → Faction stations attack player
   If now Allied → Unlock special missions
@@ -522,7 +522,7 @@ enum class EDiplomaticEventType : uint8
 ```
 Story event triggers:
   DiplomacyManager->DeclareWar("NovaVanguard", "ObsidianOrder")
-  
+
 Effect:
   - Both factions set bAtWar = true
   - Relationship values drop to -100
@@ -600,11 +600,11 @@ float CalculateTradePrice(FName FactionID, FName ItemID, float BasePrice)
 {
     // Get player reputation
     int32 Reputation = PlayerReputation->GetReputation(FactionID);
-    
+
     // Get faction relationship data
     UFactionDataAsset* Faction = GetFactionData(FactionID);
     float TradeModifier = Faction->GetTradeModifier(PlayerFactionID);
-    
+
     // Calculate price modifier based on reputation
     float ReputationModifier = 1.0f;
     if (Reputation >= 75)
@@ -615,10 +615,10 @@ float CalculateTradePrice(FName FactionID, FName ItemID, float BasePrice)
         ReputationModifier = 1.50f; // 50% markup for enemies
     else if (Reputation < 0)
         ReputationModifier = 1.15f; // 15% markup for unfriendly
-    
+
     // Combine modifiers
     float FinalPrice = BasePrice * ReputationModifier * TradeModifier;
-    
+
     return FinalPrice;
 }
 ```
@@ -629,10 +629,10 @@ float CalculateTradePrice(FName FactionID, FName ItemID, float BasePrice)
 bool IsItemAvailableForTrade(FName FactionID, FName ItemID)
 {
     int32 Reputation = PlayerReputation->GetReputation(FactionID);
-    
+
     // Get item required reputation level
     int32 RequiredReputation = GetItemReputationRequirement(ItemID);
-    
+
     // Check if player meets requirement
     return Reputation >= RequiredReputation;
 }
@@ -652,18 +652,18 @@ bool ShouldAttackPlayer()
     // Get NPC's faction
     UFactionDataAsset* Faction = GetFaction();
     if (!Faction) return false;
-    
+
     // Get player reputation
     int32 Reputation = PlayerReputation->GetReputation(Faction->FactionID);
-    
+
     // Hostile factions attack
     if (Reputation <= -50 || Faction->bHostileByDefault)
         return true;
-    
+
     // Check if faction is at war with player's allies
     if (IsAtWarWithPlayerAllies())
         return true;
-    
+
     return false;
 }
 ```
@@ -748,11 +748,11 @@ Player completes mission in sector:
   GetSectorControl("AlphaSector")
     → ControllingFaction = "NovaVanguard"
     → ControlStrength = 0.65
-  
+
 Player destroys enemy station:
   ModifySectorControl("AlphaSector", "NovaVanguard", -0.15)
   ModifySectorControl("AlphaSector", "CelestialSyndicate", +0.15)
-  
+
 If ControlStrength < 0.50:
   → Sector changes hands
   → Trigger visual update (new faction flags/colors)

@@ -316,6 +316,6 @@ Content/
 
 ---
 
-**Last Updated**: November 16, 2025  
-**For**: Adastrea 1.0.0-alpha  
+**Last Updated**: November 16, 2025
+**For**: Adastrea 1.0.0-alpha
 **Engine**: Unreal Engine 5.6

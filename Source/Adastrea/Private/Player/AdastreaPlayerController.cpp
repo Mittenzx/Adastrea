@@ -146,7 +146,7 @@ void AAdastreaPlayerController::ToggleStationEditor()
 		// Close the editor
 		HideStationEditor();
 		UE_LOG(LogAdastrea, Log, TEXT("ToggleStationEditor: Closed station editor"));
-		
+
 		// Broadcast the event for backward compatibility with existing Blueprints
 		OnStationEditorToggle.Broadcast();
 	}
@@ -154,7 +154,7 @@ void AAdastreaPlayerController::ToggleStationEditor()
 	{
 		// Open the editor - find nearest station
 		ASpaceStation* NearestStation = FindNearestStation();
-		
+
 		if (!NearestStation)
 		{
 			UE_LOG(LogAdastrea, Warning, TEXT("ToggleStationEditor: No station found within %.0f units"), StationSearchRadius);
@@ -164,7 +164,7 @@ void AAdastreaPlayerController::ToggleStationEditor()
 
 		ShowStationEditor(NearestStation);
 		UE_LOG(LogAdastrea, Log, TEXT("ToggleStationEditor: Opened station editor for station: %s"), *NearestStation->GetName());
-		
+
 		// Broadcast the event for backward compatibility with existing Blueprints
 		OnStationEditorToggle.Broadcast();
 	}
@@ -195,14 +195,14 @@ ASpaceStation* AAdastreaPlayerController::FindNearestStation()
 	}
 
 	FVector PlayerLocation = ControlledPawn->GetActorLocation();
-	
+
 	// Find all space stations in the world
 	TArray<AActor*> FoundStations;
 	UGameplayStatics::GetAllActorsOfClass(World, ASpaceStation::StaticClass(), FoundStations);
-	
+
 	ASpaceStation* NearestStation = nullptr;
 	float NearestDistance = StationSearchRadius;
-	
+
 	// GetAllActorsOfClass returns actors of the specified class, so no Cast needed
 	for (AActor* Actor : FoundStations)
 	{
@@ -214,7 +214,7 @@ ASpaceStation* AAdastreaPlayerController::FindNearestStation()
 			NearestStation = Station;
 		}
 	}
-	
+
 	return NearestStation;
 }
 
@@ -235,7 +235,7 @@ UUserWidget* AAdastreaPlayerController::CreateStationEditorWidget()
 
 	// Create the widget as a generic UUserWidget to avoid StationEditor dependency
 	StationEditorWidget = CreateWidget<UUserWidget>(this, StationEditorWidgetClass);
-	
+
 	if (!StationEditorWidget)
 	{
 		UE_LOG(LogAdastrea, Error, TEXT("CreateStationEditorWidget: Failed to create widget from class"));
@@ -243,7 +243,7 @@ UUserWidget* AAdastreaPlayerController::CreateStationEditorWidget()
 	}
 
 	UE_LOG(LogAdastrea, Log, TEXT("CreateStationEditorWidget: Successfully created station editor widget"));
-	
+
 	return StationEditorWidget;
 }
 
@@ -271,11 +271,11 @@ void AAdastreaPlayerController::ShowStationEditor(ASpaceStation* Station)
 			ASpaceStation* Station;
 			UDataAsset* Catalog;
 		};
-		
+
 		FInitializeEditorParams Params;
 		Params.Station = Station;
 		Params.Catalog = ModuleCatalog;
-		
+
 		StationEditorWidget->ProcessEvent(InitializeEditorFunc, &Params);
 		UE_LOG(LogAdastrea, Log, TEXT("ShowStationEditor: Called InitializeEditor on C++ widget"));
 	}
@@ -285,7 +285,7 @@ void AAdastreaPlayerController::ShowStationEditor(ASpaceStation* Station)
 		// Initialize the widget using Blueprint-callable functions
 		// The widget must implement SetStation() as a Blueprint function
 		// This approach avoids circular dependency with StationEditor module
-		
+
 		// Use UFunction to call SetStation through reflection (Blueprint-safe)
 		UFunction* SetStationFunc = StationEditorWidget->FindFunction(FName("SetStation"));
 		if (SetStationFunc)
@@ -297,10 +297,10 @@ void AAdastreaPlayerController::ShowStationEditor(ASpaceStation* Station)
 					sizeof(FSetStationParams), SetStationFunc->NumParms, SetStationFunc->ParmsSize);
 				return;
 			}
-			
+
 			FSetStationParams Params;
 			Params.Station = Station;
-			
+
 			StationEditorWidget->ProcessEvent(SetStationFunc, &Params);
 			UE_LOG(LogAdastrea, Log, TEXT("ShowStationEditor: Called SetStation on widget"));
 		}
@@ -342,7 +342,7 @@ void AAdastreaPlayerController::ShowStationEditor(ASpaceStation* Station)
 	bShowMouseCursor = true;
 
 	bIsStationEditorOpen = true;
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("ShowStationEditor: Station editor now visible"));
 }
 
@@ -365,7 +365,7 @@ void AAdastreaPlayerController::HideStationEditor()
 	bShowMouseCursor = false;
 
 	bIsStationEditorOpen = false;
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("HideStationEditor: Station editor hidden"));
 }
 
@@ -420,7 +420,7 @@ UShipStatusWidget* AAdastreaPlayerController::CreateShipStatusWidget()
 
 	// Create the widget
 	ShipStatusWidget = CreateWidget<UShipStatusWidget>(this, ShipStatusWidgetClass);
-	
+
 	if (!ShipStatusWidget)
 	{
 		UE_LOG(LogAdastrea, Error, TEXT("CreateShipStatusWidget: Failed to create widget from class"));
@@ -428,7 +428,7 @@ UShipStatusWidget* AAdastreaPlayerController::CreateShipStatusWidget()
 	}
 
 	UE_LOG(LogAdastrea, Log, TEXT("CreateShipStatusWidget: Successfully created ship status widget"));
-	
+
 	return ShipStatusWidget;
 }
 
@@ -462,7 +462,7 @@ void AAdastreaPlayerController::ShowShipStatus()
 	bShowMouseCursor = true;
 
 	bIsShipStatusOpen = true;
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("ShowShipStatus: Ship status screen now visible"));
 }
 
@@ -485,7 +485,7 @@ void AAdastreaPlayerController::HideShipStatus()
 	bShowMouseCursor = false;
 
 	bIsShipStatusOpen = false;
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("HideShipStatus: Ship status screen hidden"));
 }
 
@@ -533,7 +533,7 @@ UUserWidget* AAdastreaPlayerController::CreateMainMenuWidget()
 
 	// Create the widget
 	MainMenuWidget = CreateWidget<UUserWidget>(this, MainMenuWidgetClass);
-	
+
 	if (!MainMenuWidget)
 	{
 		UE_LOG(LogAdastrea, Error, TEXT("CreateMainMenuWidget: Failed to create widget from class"));
@@ -541,7 +541,7 @@ UUserWidget* AAdastreaPlayerController::CreateMainMenuWidget()
 	}
 
 	UE_LOG(LogAdastrea, Log, TEXT("CreateMainMenuWidget: Successfully created main menu widget"));
-	
+
 	return MainMenuWidget;
 }
 
@@ -567,7 +567,7 @@ void AAdastreaPlayerController::ShowMainMenu()
 	bShowMouseCursor = true;
 
 	bIsMainMenuOpen = true;
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("ShowMainMenu: Main menu now visible"));
 }
 
@@ -595,7 +595,7 @@ void AAdastreaPlayerController::HideMainMenu()
 	bShowMouseCursor = false;
 
 	bIsMainMenuOpen = false;
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("HideMainMenu: Main menu hidden"));
 }
 
@@ -647,7 +647,7 @@ UInventoryWidget* AAdastreaPlayerController::CreateInventoryWidget()
 
 	// Create the widget
 	InventoryWidget = CreateWidget<UInventoryWidget>(this, InventoryWidgetClass);
-	
+
 	if (!InventoryWidget)
 	{
 		UE_LOG(LogAdastrea, Error, TEXT("CreateInventoryWidget: Failed to create widget from class"));
@@ -655,7 +655,7 @@ UInventoryWidget* AAdastreaPlayerController::CreateInventoryWidget()
 	}
 
 	UE_LOG(LogAdastrea, Log, TEXT("CreateInventoryWidget: Successfully created inventory widget"));
-	
+
 	return InventoryWidget;
 }
 
@@ -670,7 +670,7 @@ void AAdastreaPlayerController::ShowInventory()
 	// Get the player's inventory component
 	APawn* ControlledPawn = GetPawn();
 	UInventoryComponent* PlayerInventory = nullptr;
-	
+
 	if (ControlledPawn)
 	{
 		PlayerInventory = ControlledPawn->FindComponentByClass<UInventoryComponent>();
@@ -699,7 +699,7 @@ void AAdastreaPlayerController::ShowInventory()
 	bShowMouseCursor = true;
 
 	bIsInventoryOpen = true;
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("ShowInventory: Inventory now visible"));
 }
 
@@ -722,7 +722,7 @@ void AAdastreaPlayerController::HideInventory()
 	bShowMouseCursor = false;
 
 	bIsInventoryOpen = false;
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("HideInventory: Inventory hidden"));
 }
 
@@ -766,7 +766,7 @@ UTradingInterfaceWidget* AAdastreaPlayerController::CreateTradingWidget()
 
 	// Create the widget
 	TradingWidget = CreateWidget<UTradingInterfaceWidget>(this, TradingWidgetClass);
-	
+
 	if (!TradingWidget)
 	{
 		UE_LOG(LogAdastrea, Error, TEXT("CreateTradingWidget: Failed to create widget from class"));
@@ -774,7 +774,7 @@ UTradingInterfaceWidget* AAdastreaPlayerController::CreateTradingWidget()
 	}
 
 	UE_LOG(LogAdastrea, Log, TEXT("CreateTradingWidget: Successfully created trading widget"));
-	
+
 	return TradingWidget;
 }
 
@@ -796,7 +796,7 @@ void AAdastreaPlayerController::ShowTrading()
 	bShowMouseCursor = true;
 
 	bIsTradingOpen = true;
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("ShowTrading: Trading interface now visible"));
 }
 
@@ -819,7 +819,7 @@ void AAdastreaPlayerController::HideTrading()
 	bShowMouseCursor = false;
 
 	bIsTradingOpen = false;
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("HideTrading: Trading interface hidden"));
 }
 
@@ -846,7 +846,7 @@ void AAdastreaPlayerController::OpenStationManagement(ASpaceStation* Station)
 
 	// Show the widget
 	ShowStationManagement();
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("OpenStationManagement: Opened management for station: %s"), *Station->GetName());
 }
 
@@ -883,7 +883,7 @@ UStationManagementWidget* AAdastreaPlayerController::CreateStationManagementWidg
 
 	// Create the widget
 	StationManagementWidget = CreateWidget<UStationManagementWidget>(this, StationManagementWidgetClass);
-	
+
 	if (!StationManagementWidget)
 	{
 		UE_LOG(LogAdastrea, Error, TEXT("CreateStationManagementWidget: Failed to create widget from class"));
@@ -891,7 +891,7 @@ UStationManagementWidget* AAdastreaPlayerController::CreateStationManagementWidg
 	}
 
 	UE_LOG(LogAdastrea, Log, TEXT("CreateStationManagementWidget: Successfully created station management widget"));
-	
+
 	return StationManagementWidget;
 }
 
@@ -913,7 +913,7 @@ void AAdastreaPlayerController::ShowStationManagement()
 	bShowMouseCursor = true;
 
 	bIsStationManagementOpen = true;
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("ShowStationManagement: Station management interface now visible"));
 }
 
@@ -936,7 +936,7 @@ void AAdastreaPlayerController::HideStationManagement()
 	bShowMouseCursor = false;
 
 	bIsStationManagementOpen = false;
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("HideStationManagement: Station management interface hidden"));
 }
 
@@ -972,14 +972,14 @@ void AAdastreaPlayerController::CheckForNearbyTradableStations()
 	}
 
 	FVector PlayerLocation = ControlledPawn->GetActorLocation();
-	
+
 	// Find all space stations in the world
 	TArray<AActor*> FoundStations;
 	UGameplayStatics::GetAllActorsOfClass(World, ASpaceStation::StaticClass(), FoundStations);
-	
+
 	ASpaceStation* ClosestStation = nullptr;
 	float ClosestDistance = TradingInteractionRadius;
-	
+
 	// Find the nearest station within trading interaction radius
 	for (AActor* Actor : FoundStations)
 	{
@@ -988,9 +988,9 @@ void AAdastreaPlayerController::CheckForNearbyTradableStations()
 		{
 			continue;
 		}
-		
+
 		float Distance = FVector::Dist(PlayerLocation, Station->GetActorLocation());
-		
+
 		if (Distance < ClosestDistance)
 		{
 			ClosestDistance = Distance;
@@ -1000,18 +1000,18 @@ void AAdastreaPlayerController::CheckForNearbyTradableStations()
 
 	// Check if the nearby station state changed
 	bool bIsCurrentlyNear = (ClosestStation != nullptr);
-	
+
 	if (bIsCurrentlyNear != bWasNearTradableStation || ClosestStation != NearbyTradableStation)
 	{
 		// State changed - update and notify
 		NearbyTradableStation = ClosestStation;
 		bWasNearTradableStation = bIsCurrentlyNear;
-		
+
 		OnNearbyTradableStationChanged(bIsCurrentlyNear, ClosestStation);
-		
+
 		if (bIsCurrentlyNear)
 		{
-			UE_LOG(LogAdastrea, Log, TEXT("CheckForNearbyTradableStations: Now near station '%s' at distance %.1f"), 
+			UE_LOG(LogAdastrea, Log, TEXT("CheckForNearbyTradableStations: Now near station '%s' at distance %.1f"),
 				*ClosestStation->GetName(), ClosestDistance);
 		}
 		else
@@ -1031,7 +1031,7 @@ void AAdastreaPlayerController::AttemptTradeWithNearestStation()
 
 	// Get the nearest tradable station
 	ASpaceStation* Station = GetNearestTradableStation();
-	
+
 	if (!Station)
 	{
 		UE_LOG(LogAdastrea, Warning, TEXT("AttemptTradeWithNearestStation: No station within trading range"));
@@ -1041,10 +1041,10 @@ void AAdastreaPlayerController::AttemptTradeWithNearestStation()
 	// REMOVED: Faction-based trading logic - faction system removed per Trade Simulator MVP
 	// This function is currently non-functional and should not be called
 	// Trading must be initiated through direct market access using TradingWidget->OpenMarket(UMarketDataAsset*)
-	
+
 	UE_LOG(LogAdastrea, Error, TEXT("AttemptTradeWithNearestStation: This function is deprecated and non-functional. "
 		"Trading system has been refactored. Use direct market access via Blueprint or alternative input binding."));
-	
+
 	// Optionally: Could display a UI message to the player
 	// Note: This function is deprecated - market-based trading will be implemented in post-MVP
 }

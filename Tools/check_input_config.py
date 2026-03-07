@@ -6,7 +6,7 @@ import unreal
 def check_input_actions():
     """Check the configuration of Input Actions"""
     print("=== Checking Enhanced Input Configuration ===\n")
-    
+
     # Check IA_Move
     ia_move = unreal.load_asset("/Game/Input/Actions/IA_Move")
     if ia_move:
@@ -15,9 +15,9 @@ def check_input_actions():
         print(f"  Expected: EInputActionValueType.AXIS3D for Vector3D")
     else:
         print("✗ IA_Move not found")
-    
+
     print()
-    
+
     # Check IA_Look
     ia_look = unreal.load_asset("/Game/Input/Actions/IA_Look")
     if ia_look:
@@ -26,9 +26,9 @@ def check_input_actions():
         print(f"  Expected: EInputActionValueType.AXIS2D for Vector2D")
     else:
         print("✗ IA_Look not found")
-    
+
     print()
-    
+
     # Check IMC_Spaceship
     imc = unreal.load_asset("/Game/Input/IMC_Spaceship")
     if imc:
@@ -39,9 +39,9 @@ def check_input_actions():
             print(f"  Mapping {i}: {mapping.action.get_name() if mapping.action else 'None'}")
     else:
         print("✗ IMC_Spaceship not found")
-    
+
     print()
-    
+
     # Check BP_Import
     bp_import = unreal.load_asset("/Game/Blueprints/Ships/BP_Import")
     if bp_import:

@@ -50,10 +50,10 @@ struct FNavigationWaypoint
 
 /**
  * Component for managing spaceship navigation and autopilot
- * 
+ *
  * Handles pathfinding, waypoint navigation, autopilot, and route planning.
  * Works with WayNetwork for long-distance routes and provides local navigation.
- * 
+ *
  * Usage:
  * - Add component to ship Blueprint
  * - Configure navigation parameters

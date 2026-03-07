@@ -22,18 +22,18 @@ USaveGameSubsystem::USaveGameSubsystem()
 void USaveGameSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	
+
 	PlaytimeStartTime = FDateTime::Now();
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("SaveGameSubsystem: Initialized"));
 }
 
 void USaveGameSubsystem::Deinitialize()
 {
 	DisableAutoSave();
-	
+
 	Super::Deinitialize();
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("SaveGameSubsystem: Deinitialized"));
 }
 
@@ -90,7 +90,7 @@ bool USaveGameSubsystem::SaveGame(const FString& SlotName, bool bUpdatePlaytime)
 
 	// Save to slot
 	bool bSuccess = UGameplayStatics::SaveGameToSlot(CurrentSaveGame, SlotName, 0);
-	
+
 	if (bSuccess)
 	{
 		CurrentSaveSlot = SlotName;
@@ -122,7 +122,7 @@ bool USaveGameSubsystem::LoadGame(const FString& SlotName)
 
 	// Load from slot
 	UAdastreaSaveGame* LoadedSave = Cast<UAdastreaSaveGame>(UGameplayStatics::LoadGameFromSlot(SlotName, 0));
-	
+
 	if (!LoadedSave)
 	{
 		UE_LOG(LogAdastrea, Error, TEXT("SaveGameSubsystem: Failed to load game from slot: %s"), *SlotName);
@@ -162,11 +162,11 @@ bool USaveGameSubsystem::DeleteSave(const FString& SlotName)
 	}
 
 	bool bSuccess = UGameplayStatics::DeleteGameInSlot(SlotName, 0);
-	
+
 	if (bSuccess)
 	{
 		UE_LOG(LogAdastrea, Log, TEXT("SaveGameSubsystem: Deleted save from slot: %s"), *SlotName);
-		
+
 		// Clear current save if it was the deleted one
 		if (CurrentSaveSlot == SlotName)
 		{
@@ -240,12 +240,12 @@ TArray<FSaveSlotInfo> USaveGameSubsystem::GetAllSaveSlots(int32 MaxSlots) const
 
 	// Check numbered slots
 	int32 SlotsToCheck = (MaxSlots > 0) ? MaxSlots : 100; // Check up to 100 slots if no limit
-	
+
 	for (int32 i = 0; i < SlotsToCheck; ++i)
 	{
 		FString SlotName = GetDefaultSlotName(i);
 		FSaveSlotInfo SlotInfo;
-		
+
 		if (GetSaveSlotInfo(SlotName, SlotInfo))
 		{
 			SlotInfos.Add(SlotInfo);
@@ -277,7 +277,7 @@ TArray<FSaveSlotInfo> USaveGameSubsystem::GetAllSaveSlots(int32 MaxSlots) const
 void USaveGameSubsystem::EnableAutoSave(float IntervalSeconds)
 {
 	DisableAutoSave();
-	
+
 	bAutoSaveEnabled = true;
 	AutoSaveIntervalSeconds = FMath::Max(60.0f, IntervalSeconds); // Minimum 1 minute
 
@@ -291,7 +291,7 @@ void USaveGameSubsystem::EnableAutoSave(float IntervalSeconds)
 			AutoSaveIntervalSeconds,
 			true
 		);
-		
+
 		UE_LOG(LogAdastrea, Log, TEXT("SaveGameSubsystem: Auto-save enabled (interval: %.0f seconds)"), AutoSaveIntervalSeconds);
 	}
 }
@@ -305,7 +305,7 @@ void USaveGameSubsystem::DisableAutoSave()
 	{
 		World->GetTimerManager().ClearTimer(AutoSaveTimerHandle);
 		AutoSaveTimerHandle.Invalidate();
-		
+
 		UE_LOG(LogAdastrea, Log, TEXT("SaveGameSubsystem: Auto-save disabled"));
 	}
 }
@@ -450,7 +450,7 @@ void USaveGameSubsystem::ApplyGameState(UAdastreaSaveGame* SaveGameObject)
 		if (UnlockComp)
 		{
 			UnlockComp->UnlockedIDs = SaveGameObject->UnlockedContentIDs;
-			
+
 			// Update unlock entries
 			for (FUnlockEntry& Entry : UnlockComp->Unlocks)
 			{
@@ -525,6 +525,6 @@ void USaveGameSubsystem::UpdatePlaytime(UAdastreaSaveGame* SaveGameObject)
 
 	FTimespan ElapsedTime = FDateTime::Now() - PlaytimeStartTime;
 	float SessionPlaytime = static_cast<float>(ElapsedTime.GetTotalSeconds());
-	
+
 	SaveGameObject->TotalPlaytimeSeconds = AccumulatedPlaytime + SessionPlaytime;
 }

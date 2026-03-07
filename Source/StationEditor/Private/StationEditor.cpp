@@ -16,5 +16,5 @@ void FStationEditorModule::ShutdownModule()
 }
 
 #undef LOCTEXT_NAMESPACE
-	
+
 IMPLEMENT_MODULE(FStationEditorModule, StationEditor)

@@ -185,16 +185,16 @@ python ProceduralGenerators.py --type ship --count 4 --ship-class Gunship
 
 ## Troubleshooting
 
-**Problem**: No output files  
+**Problem**: No output files
 **Solution**: Check that Assets/ProceduralContent/ folder exists (auto-created)
 
-**Problem**: Import fails  
+**Problem**: Import fails
 **Solution**: Verify YAML syntax, ensure YAMLtoDataAsset.py is available
 
-**Problem**: Duplicate names  
+**Problem**: Duplicate names
 **Solution**: Generator uses randomization - run again or edit names manually
 
-**Problem**: Stats seem wrong  
+**Problem**: Stats seem wrong
 **Solution**: Review generated files and adjust manually if needed
 
 ## Next Steps

@@ -34,13 +34,13 @@ Your project structure should look like:
 └── <YourProject>.uproject
 ```
 
-**Windows:** Use File Explorer to copy the folder  
+**Windows:** Use File Explorer to copy the folder
 **Mac/Linux:** Use Finder/file manager, or command line: `cp -r /path/to/Adastrea-Director/Plugins/AdastreaDirector /path/to/YourProject/Plugins/`
 
 ### 2. Regenerate Project Files
 
-**Windows:** Right-click `<YourProject>.uproject` → "Generate Visual Studio project files"  
-**Mac:** Right-click `<YourProject>.uproject` → "Generate Xcode project files"  
+**Windows:** Right-click `<YourProject>.uproject` → "Generate Visual Studio project files"
+**Mac:** Right-click `<YourProject>.uproject` → "Generate Xcode project files"
 **Linux:** Right-click `<YourProject>.uproject` → "Generate project files" (or use UnrealBuildTool)
 
 ### 3. Build and Launch
@@ -184,6 +184,6 @@ python ipc_server.py --port 5555
 
 ---
 
-**Last Updated:** November 2025  
-**Plugin Version:** 1.0.0  
+**Last Updated:** November 2025
+**Plugin Version:** 1.0.0
 **Status:** Production Ready (Weeks 1-6 Complete)

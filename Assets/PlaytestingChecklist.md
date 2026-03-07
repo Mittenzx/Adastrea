@@ -686,10 +686,10 @@ After any fixes or changes, re-test:
 
 ## Sign-Off
 
-**Tested By:** _________________  
-**Date:** _________________  
-**Version:** _________________  
-**Result:** Pass / Fail / Pass with Issues  
+**Tested By:** _________________
+**Date:** _________________
+**Version:** _________________
+**Result:** Pass / Fail / Pass with Issues
 
 **Notes:**
 ```

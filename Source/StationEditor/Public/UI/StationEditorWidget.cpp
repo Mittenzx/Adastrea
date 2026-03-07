@@ -11,7 +11,7 @@ UStationEditorWidget::UStationEditorWidget(const FObjectInitializer& ObjectIniti
 void UStationEditorWidget::NativeConstruct()
 {
     Super::NativeConstruct();
-    
+
     // Widget initialization
     // Blueprint can override this to setup UI elements
     EnsureEditorManager();
@@ -20,7 +20,7 @@ void UStationEditorWidget::NativeConstruct()
 void UStationEditorWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
     Super::NativeTick(MyGeometry, InDeltaTime);
-    
+
     // Update construction progress
     if (EditorManager)
     {
@@ -45,7 +45,7 @@ ASpaceStationModule* UStationEditorWidget::AddModule(TSubclassOf<ASpaceStationMo
     }
 
     EnsureEditorManager();
-    
+
     // Use the manager if editing, otherwise auto-start editing
     if (EditorManager)
     {
@@ -54,7 +54,7 @@ ASpaceStationModule* UStationEditorWidget::AddModule(TSubclassOf<ASpaceStationMo
         {
             EditorManager->BeginEditing(CurrentStation);
         }
-        
+
         FVector WorldPosition = CurrentStation->GetActorLocation() + RelativeLocation;
         return EditorManager->PlaceModule(ModuleClass, WorldPosition, CurrentStation->GetActorRotation());
     }
@@ -68,11 +68,11 @@ ASpaceStationModule* UStationEditorWidget::AddModule(TSubclassOf<ASpaceStationMo
 
     FActorSpawnParameters SpawnParams;
     SpawnParams.Owner = CurrentStation;
-    
+
     // Spawn at station location + relative offset
     FVector SpawnLocation = CurrentStation->GetActorLocation() + RelativeLocation;
     FRotator SpawnRotation = CurrentStation->GetActorRotation();
-    
+
     ASpaceStationModule* NewModule = World->SpawnActor<ASpaceStationModule>(
         ModuleClass,
         SpawnLocation,
@@ -97,7 +97,7 @@ bool UStationEditorWidget::RemoveModule(ASpaceStationModule* Module)
     }
 
     EnsureEditorManager();
-    
+
     // Use the manager if available
     if (EditorManager && EditorManager->bIsEditing)
     {
@@ -105,7 +105,7 @@ bool UStationEditorWidget::RemoveModule(ASpaceStationModule* Module)
     }
 
     bool bSuccess = CurrentStation->RemoveModule(Module);
-    
+
     if (bSuccess)
     {
         // Optionally destroy the module actor
@@ -123,7 +123,7 @@ bool UStationEditorWidget::MoveModule(ASpaceStationModule* Module, FVector NewRe
     }
 
     EnsureEditorManager();
-    
+
     // Use the manager if available
     if (EditorManager && EditorManager->bIsEditing)
     {
@@ -147,9 +147,9 @@ TArray<ASpaceStationModule*> UStationEditorWidget::GetAllModules()
 void UStationEditorWidget::SetStation(ASpaceStation* Station)
 {
     CurrentStation = Station;
-    
+
     EnsureEditorManager();
-    
+
     if (EditorManager && Station)
     {
         EditorManager->BeginEditing(Station);
@@ -161,7 +161,7 @@ bool UStationEditorWidget::IsValidPlacement(FVector Location)
     // Basic validation - can be extended in Blueprint
     // Check if location is within reasonable bounds
     float MaxDistance = 10000.0f; // Maximum distance from station center
-    
+
     if (Location.Size() > MaxDistance)
     {
         return false;
@@ -171,7 +171,7 @@ bool UStationEditorWidget::IsValidPlacement(FVector Location)
     // - Check for collisions with existing modules
     // - Check for minimum spacing between modules
     // - Validate against station grid/snap points
-    
+
     return true;
 }
 
@@ -193,31 +193,31 @@ void UStationEditorWidget::SetStationFaction(UFactionDataAsset* NewFaction)
 TArray<FString> UStationEditorWidget::GetAvailableModuleTypes() const
 {
     TArray<FString> AvailableTypes;
-    
+
     // Basic module types always available
     AvailableTypes.Add(TEXT("Docking"));
     AvailableTypes.Add(TEXT("Power"));
     AvailableTypes.Add(TEXT("Storage"));
     AvailableTypes.Add(TEXT("Habitation"));
     AvailableTypes.Add(TEXT("Connection"));
-    
+
     // Advanced types depend on faction technology level
     if (CurrentStation && CurrentStation->GetFaction())
     {
         int32 TechLevel = CurrentStation->GetFaction()->TechnologyLevel;
-        
+
         if (TechLevel >= 5)
         {
             AvailableTypes.Add(TEXT("Processing"));
         }
-        
+
         if (TechLevel >= 7)
         {
             AvailableTypes.Add(TEXT("Defence"));
             AvailableTypes.Add(TEXT("Public"));
         }
     }
-    
+
     return AvailableTypes;
 }
 
@@ -227,26 +227,26 @@ bool UStationEditorWidget::CanAddModuleForFaction(TSubclassOf<ASpaceStationModul
     {
         return false;
     }
-    
+
     UFactionDataAsset* Faction = CurrentStation->GetFaction();
     if (!Faction)
     {
         // If no faction is assigned, allow basic modules
         return true;
     }
-    
+
     // Get default object to check module properties
     ASpaceStationModule* DefaultModule = ModuleClass->GetDefaultObject<ASpaceStationModule>();
     if (!DefaultModule)
     {
         return false;
     }
-    
+
     // Check technology level requirements
     int32 TechLevel = Faction->TechnologyLevel;
-    
+
     // Defence and Public modules require tech level 7+
-    if (DefaultModule->ModuleGroup == EStationModuleGroup::Defence || 
+    if (DefaultModule->ModuleGroup == EStationModuleGroup::Defence ||
         DefaultModule->ModuleGroup == EStationModuleGroup::Public)
     {
         if (TechLevel < 7)
@@ -254,7 +254,7 @@ bool UStationEditorWidget::CanAddModuleForFaction(TSubclassOf<ASpaceStationModul
             return false;
         }
     }
-    
+
     // Processing modules require tech level 5+
     if (DefaultModule->ModuleGroup == EStationModuleGroup::Processing)
     {
@@ -263,7 +263,7 @@ bool UStationEditorWidget::CanAddModuleForFaction(TSubclassOf<ASpaceStationModul
             return false;
         }
     }
-    
+
     return true;
 }
 */

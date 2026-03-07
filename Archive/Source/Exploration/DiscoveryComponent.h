@@ -37,14 +37,14 @@ enum class EInteractionType : uint8
 
 /**
  * Discovery Component
- * 
+ *
  * Makes an object discoverable through the exploration system. Attach this component
  * to actors that represent:
  * - Anomalies and spatial phenomena
  * - Archaeological sites
  * - Derelict ships and stations
  * - Hidden caches and artifacts
- * 
+ *
  * **Discovery Flow:**
  * 1. Object detected by ScannerComponent (via ScannableObjectComponent)
  * 2. Player performs scan at required detail level
@@ -52,20 +52,20 @@ enum class EInteractionType : uint8
  * 4. Discovery registered with DiscoveryManagerSubsystem
  * 5. Rewards granted to player
  * 6. Events fired for UI updates, quests, etc.
- * 
+ *
  * **State Tracking:**
  * - Undiscovered: Not yet found
  * - Detected: Scanners see it but not analyzed
  * - Discovered: Fully scanned and catalogued
  * - Explored: Player has interacted/entered
  * - Depleted: Resources exhausted (if harvestable)
- * 
+ *
  * **Usage:**
  * 1. Add component to actor Blueprint
  * 2. Assign either AnomalyData or DiscoveryData
  * 3. Component automatically integrates with Scanner and Discovery Manager
  * 4. Override Blueprint events for custom behavior
- * 
+ *
  * **Integration:**
  * - Works alongside ScannableObjectComponent for detection
  * - Registers discoveries with DiscoveryManagerSubsystem

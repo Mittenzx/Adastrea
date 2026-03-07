@@ -1,8 +1,8 @@
 # Getting Started with Trade Simulator MVP
 
-**Last Updated**: 2026-01-13  
-**Phase**: 1 (Hardcoded Prototype)  
-**Timeline**: Weeks 1-4  
+**Last Updated**: 2026-01-13
+**Phase**: 1 (Hardcoded Prototype)
+**Timeline**: Weeks 1-4
 **Goal**: Playable trading demo by Week 4
 
 ---
@@ -10,19 +10,19 @@
 ## 🚀 Start Here (Choose Your Path)
 
 ### Path 1: I Want to Build Right Now (30 minutes)
-→ **[TRADING_UI_QUICKSTART.md](TRADING_UI_QUICKSTART.md)**  
+→ **[TRADING_UI_QUICKSTART.md](TRADING_UI_QUICKSTART.md)**
 Get basic trading UI working in 30 minutes. Perfect for quick start.
 
 ### Path 2: I Want the Complete Phase 1 Guide
-→ **[PHASE_1_IMPLEMENTATION_STEPS.md](PHASE_1_IMPLEMENTATION_STEPS.md)**  
+→ **[PHASE_1_IMPLEMENTATION_STEPS.md](PHASE_1_IMPLEMENTATION_STEPS.md)**
 Full 4-week implementation guide with detailed steps. This is your primary roadmap.
 
 ### Path 3: I Want to Track My Progress
-→ **[PHASE_1_CHECKLIST.md](PHASE_1_CHECKLIST.md)**  
+→ **[PHASE_1_CHECKLIST.md](PHASE_1_CHECKLIST.md)**
 Day-by-day checklist for Phase 1. Use this alongside the implementation guide.
 
 ### Path 4: I Need to Understand the Big Picture
-→ **[TRADING_MVP_GUIDE.md](TRADING_MVP_GUIDE.md)**  
+→ **[TRADING_MVP_GUIDE.md](TRADING_MVP_GUIDE.md)**
 Complete 12-week roadmap (all 3 phases). Reference material.
 
 ---
@@ -73,7 +73,7 @@ Complete 12-week roadmap (all 3 phases). Reference material.
 - ✅ Can complete trade in 3-5 minutes
 - ✅ No critical bugs
 
-**If criteria met**: → GO to Phase 2 (Weeks 5-8)  
+**If criteria met**: → GO to Phase 2 (Weeks 5-8)
 **If criteria NOT met**: → Iterate or pivot
 
 ---
@@ -109,37 +109,37 @@ Complete 12-week roadmap (all 3 phases). Reference material.
 ## 🔑 Key Success Factors
 
 ### Do These Things
-✅ Follow the guides step-by-step  
-✅ Test frequently (every hour if possible)  
-✅ Keep it simple (hardcode is OK)  
-✅ Focus on fun gameplay loop  
-✅ Get external feedback by Week 4  
+✅ Follow the guides step-by-step
+✅ Test frequently (every hour if possible)
+✅ Keep it simple (hardcode is OK)
+✅ Focus on fun gameplay loop
+✅ Get external feedback by Week 4
 
 ### Avoid These Mistakes
-❌ Over-engineering (just make it work)  
-❌ Skipping playtesting (critical!)  
-❌ Adding extra features (scope creep)  
-❌ Perfectionism (good enough > perfect)  
-❌ Working in isolation (get feedback)  
+❌ Over-engineering (just make it work)
+❌ Skipping playtesting (critical!)
+❌ Adding extra features (scope creep)
+❌ Perfectionism (good enough > perfect)
+❌ Working in isolation (get feedback)
 
 ---
 
 ## 🆘 If You Get Stuck
 
 ### Common Issues
-1. **"Where do I start?"**  
+1. **"Where do I start?"**
    → Follow [TRADING_UI_QUICKSTART.md](TRADING_UI_QUICKSTART.md) for quick win
 
-2. **"UI not working"**  
+2. **"UI not working"**
    → See Troubleshooting section in [PHASE_1_IMPLEMENTATION_STEPS.md](PHASE_1_IMPLEMENTATION_STEPS.md)
 
-3. **"What's the priority?"**  
+3. **"What's the priority?"**
    → Check [PHASE_1_CHECKLIST.md](PHASE_1_CHECKLIST.md) for current tasks
 
-4. **"Should I add feature X?"**  
+4. **"Should I add feature X?"**
    → Check [SYSTEM_CLASSIFICATION.md](SYSTEM_CLASSIFICATION.md) - probably deferred
 
-5. **"Week 4 approaching and not ready"**  
+5. **"Week 4 approaching and not ready"**
    → See "If NO-GO" section in [PHASE_1_CHECKLIST.md](PHASE_1_CHECKLIST.md)
 
 ### Getting Help
@@ -194,7 +194,7 @@ By the end of Phase 1, you'll know:
 
 **Week 4 Decision**: Let players tell you if it's worth continuing.
 
-**If GO**: Build Phase 2 (more content, variety, polish)  
+**If GO**: Build Phase 2 (more content, variety, polish)
 **If NO-GO**: Iterate based on feedback or pivot
 
 ---
@@ -203,6 +203,6 @@ By the end of Phase 1, you'll know:
 
 ---
 
-**Document Version**: 1.0  
-**Last Verified**: 2026-01-13  
+**Document Version**: 1.0
+**Last Verified**: 2026-01-13
 **Feedback**: Update this doc as you discover what works!

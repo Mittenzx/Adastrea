@@ -8,24 +8,24 @@ UWayDataAsset::UWayDataAsset()
     Description = FText::FromString(TEXT("A group with shared values and philosophy."));
     WayID = FName(TEXT("UnknownWay"));
     bIsSchool = true;
-    
+
     // Default UI colors
     PrimaryColor = FLinearColor(0.2f, 0.5f, 0.8f, 1.0f);
     SecondaryColor = FLinearColor(0.1f, 0.3f, 0.5f, 1.0f);
-    
+
     // Default organizational attributes
     TechnologyLevel = 5;
     MilitaryStrength = 5;
     EconomicPower = 5;
     InfluencePower = 5;
     HomeBaseID = NAME_None;
-    
+
     // Default specialization
     PrimaryIndustry = EWayIndustry::Trading;
     QualityReputation = EQualityTier::Standard;
     SpecializationDescription = FText::FromString(TEXT("This Way specializes in various trades and services."));
     MemberCount = 100;
-    
+
     // Default governance settings
     bParticipatesInCouncils = true;
     BaseVotingWeight = 10;
@@ -70,10 +70,10 @@ bool UWayDataAsset::GetPrimaryPrecept(EPrecept& OutPrecept) const
     {
         return false;
     }
-    
+
     int32 HighestValue = 0;
     EPrecept PrimaryPrecept = EPrecept::Honor;
-    
+
     for (const FPreceptValue& PreceptValue : CorePrecepts)
     {
         if (PreceptValue.ImportanceValue > HighestValue)
@@ -82,7 +82,7 @@ bool UWayDataAsset::GetPrimaryPrecept(EPrecept& OutPrecept) const
             PrimaryPrecept = PreceptValue.Precept;
         }
     }
-    
+
     OutPrecept = PrimaryPrecept;
     return true;
 }
@@ -90,7 +90,7 @@ bool UWayDataAsset::GetPrimaryPrecept(EPrecept& OutPrecept) const
 TArray<FPreceptValue> UWayDataAsset::GetPreceptsAboveThreshold(int32 Threshold) const
 {
     TArray<FPreceptValue> Result;
-    
+
     for (const FPreceptValue& PreceptValue : CorePrecepts)
     {
         if (PreceptValue.ImportanceValue >= Threshold)
@@ -98,7 +98,7 @@ TArray<FPreceptValue> UWayDataAsset::GetPreceptsAboveThreshold(int32 Threshold) 
             Result.Add(PreceptValue);
         }
     }
-    
+
     return Result;
 }
 
@@ -374,7 +374,7 @@ bool UWayDataAsset::HasSupplyRelationship(const UWayDataAsset* OtherWay) const
     {
         return false;
     }
-    
+
     for (const FSupplyChainLink& Link : SupplyChains)
     {
         if ((Link.SupplierWay == this && Link.ConsumerWay == OtherWay) ||

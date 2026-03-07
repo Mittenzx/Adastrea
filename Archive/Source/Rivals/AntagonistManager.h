@@ -10,7 +10,7 @@ class UFeatDataAsset;
 
 /**
  * World subsystem for managing antagonist spawning and lifecycle.
- * 
+ *
  * The Antagonist Manager is responsible for:
  * - Listening to OnFeatCompleted events from the player
  * - Evaluating Feat triggers to determine if a new antagonist should spawn
@@ -18,25 +18,25 @@ class UFeatDataAsset;
  * - Managing the lifecycle of active antagonists (heat decay, encounters)
  * - Persisting antagonist state across gameplay sessions
  * - Providing query functions for active antagonists
- * 
+ *
  * Design Philosophy:
  * - Reactive: Antagonists emerge naturally from player achievements
  * - Personal: Each antagonist has unique motivation tied to specific Feats
  * - Escalating: Heat levels create dynamic tension and pacing
  * - Persistent: Rivals remain consistent across saves and sessions
- * 
+ *
  * Integration Points:
  * - Verse System: Listens for OnFeatCompleted broadcasts
  * - AI System: Provides antagonist data for behavior systems
  * - Quest System: Triggers rival-specific encounters
  * - Save System: Persists antagonist roster
- * 
+ *
  * Usage:
  * - Automatically created as a world subsystem
  * - Access via UWorld::GetSubsystem<UAntagonistManager>()
  * - Feat system broadcasts completion events
  * - AI queries for active antagonists
- * 
+ *
  * Example Flow:
  * 1. Player completes Legendary Feat "Dragon-Slayer"
  * 2. Feat broadcasts OnFeatCompleted event

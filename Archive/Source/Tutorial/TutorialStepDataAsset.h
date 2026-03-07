@@ -22,16 +22,16 @@ enum class ETutorialStepType : uint8
 
 /**
  * Tutorial Step Data Asset for defining tutorial sequences
- * 
+ *
  * This class provides a designer-friendly way to create tutorial steps
  * that guide players through game mechanics.
- * 
+ *
  * Usage:
  * 1. Create a Blueprint based on this class
  * 2. Configure step properties and text
  * 3. Chain steps together in tutorial sequences
  * 4. Reference from tutorial manager
- * 
+ *
  * Example:
  * - Create DA_Tutorial_Movement_Step1
  * - Set type to Message with movement instructions

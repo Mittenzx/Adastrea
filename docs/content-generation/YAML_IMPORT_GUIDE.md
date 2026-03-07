@@ -139,7 +139,7 @@ Done! Your ship is now a Data Asset in `/Game/Spaceships/DataAssets/`!
 - ✅ **Spaceships** - All ship types (Fighter, Scout, Trader, etc.)
 - ✅ **Personnel** - All crew roles (Captain, Pilot, Engineer, etc.)
 - 🚧 **Trade Items** - Coming soon
-- 🚧 **Markets** - Coming soon  
+- 🚧 **Markets** - Coming soon
 - 🚧 **Contracts** - Coming soon
 - 🚧 **Faction AI** - Coming soon
 
@@ -152,7 +152,7 @@ The script automatically maps YAML fields to Unreal properties:
 BasicInfo:
   ShipName: "Viper"
   ShipClass: "Fighter"
-  
+
 # Becomes
 Data Asset Property: ship_name = "Viper"
 Data Asset Property: ship_class = "Fighter"
@@ -160,16 +160,16 @@ Data Asset Property: ship_class = "Fighter"
 
 ## Advantages Over Manual Creation
 
-✓ **Faster**: Import 20 ships in seconds vs. hours manually  
-✓ **Accurate**: No typos or forgotten fields  
-✓ **Version Control**: YAML files track in Git easily  
-✓ **Shareable**: Send YAML files to team, they import  
-✓ **Editable**: Use any text editor, not just Unreal  
+✓ **Faster**: Import 20 ships in seconds vs. hours manually
+✓ **Accurate**: No typos or forgotten fields
+✓ **Version Control**: YAML files track in Git easily
+✓ **Shareable**: Send YAML files to team, they import
+✓ **Editable**: Use any text editor, not just Unreal
 
 ## Updating Existing Assets
 
 If you run the importer on a YAML file that already has a Data Asset:
-- The script **loads the existing asset** 
+- The script **loads the existing asset**
 - **Updates the properties** from the YAML
 - No duplication!
 

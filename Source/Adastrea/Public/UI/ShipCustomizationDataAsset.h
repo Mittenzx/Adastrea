@@ -36,20 +36,20 @@ enum class EShipHardpointType : uint8
 
 /**
  * Data Asset defining a ship customization option
- * 
+ *
  * This data asset configures modules and components that can be installed on ships:
  * - Module type and hardpoint requirements
  * - Stat modifications and bonuses
  * - Power and resource requirements
  * - Visual appearance changes
  * - Installation requirements and restrictions
- * 
+ *
  * Usage:
  * - Create a Data Asset based on this class
  * - Configure module properties and effects
  * - Reference in ship customization systems
  * - Use in trading/crafting for module acquisition
- * 
+ *
  * Examples:
  * - Weapon modules (lasers, missiles, railguns)
  * - Engine upgrades (speed boost, efficiency)

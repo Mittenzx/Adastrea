@@ -86,7 +86,7 @@ void ShowFlightTutorial()
     // Spawn arrow indicator
     AActor* Arrow = SpawnActor(BP_TutorialArrow, PlayerLocation + Forward * 500);
     Arrow->SetTarget(AgriculturalStation);
-    
+
     // Show UI prompt
     WBP_TutorialPrompt->SetText("Fly to the green marker");
     WBP_TutorialPrompt->Show();
@@ -424,14 +424,14 @@ void CheckForHints()
 └────────────────────────────────┘
 ```
 
-**Position**: Top-center of screen  
-**Style**: Semi-transparent background, large readable text  
+**Position**: Top-center of screen
+**Style**: Semi-transparent background, large readable text
 **Animation**: Fade in/out
 
 ### WBP_TutorialArrow Actor
 
-**Visual**: Large 3D arrow pointing to target  
-**Behavior**: Follows target, pulses, rotates toward player  
+**Visual**: Large 3D arrow pointing to target
+**Behavior**: Follows target, pulses, rotates toward player
 **Cleanup**: Auto-destroy when tutorial step completes
 
 ---
@@ -556,10 +556,10 @@ Hint.MarketEvent.Title
 
 ## Summary
 
-**Tutorial Duration**: 5-7 minutes  
-**Steps**: 9 total  
-**Goal**: Complete first profitable trade  
-**Method**: Learn by doing  
+**Tutorial Duration**: 5-7 minutes
+**Steps**: 9 total
+**Goal**: Complete first profitable trade
+**Method**: Learn by doing
 **Result**: Player understands core loop
 
 **Contextual Hints**:
@@ -581,6 +581,6 @@ Hint.MarketEvent.Title
 
 ---
 
-**Last Updated**: 2026-01-17  
-**Version**: 1.0  
+**Last Updated**: 2026-01-17
+**Version**: 1.0
 **Part of**: Trade Simulator MVP (Week 1-4 Prototype Phase)

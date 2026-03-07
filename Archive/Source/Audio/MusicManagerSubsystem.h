@@ -9,15 +9,15 @@
 
 /**
  * Music Manager Subsystem for handling dynamic music transitions
- * 
+ *
  * This subsystem manages music playback with dynamic mixing based on
  * gameplay context (mood and intensity).
- * 
+ *
  * Usage:
  * 1. Access via UGameInstance::GetSubsystem<UMusicManagerSubsystem>()
  * 2. Call SetMusicContext to change mood/intensity
  * 3. System automatically handles transitions and crossfades
- * 
+ *
  * Example:
  * - During peaceful exploration: SetMusicContext(Peaceful, Low)
  * - When combat starts: SetMusicContext(Combat, High)

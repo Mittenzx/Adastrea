@@ -1,16 +1,16 @@
 # Trading Ship (Player) - Blueprint Guide
 
-> **⚠️ DEPRECATED**: This guide has been consolidated into the unified Trading and Docking Complete Guide.  
+> **⚠️ DEPRECATED**: This guide has been consolidated into the unified Trading and Docking Complete Guide.
 > **See**: [Trading and Docking Complete Guide](../docs/mvp/TRADING_AND_DOCKING_COMPLETE_GUIDE.md)
 
 ---
 
 > **Create the player's trading ship with flight controls and cargo management**
 
-**Blueprint Type**: Pawn  
-**Complexity**: Intermediate  
-**Time to Complete**: 40-50 minutes  
-**Last Updated**: 2026-01-08  
+**Blueprint Type**: Pawn
+**Complexity**: Intermediate
+**Time to Complete**: 40-50 minutes
+**Last Updated**: 2026-01-08
 **Status**: **DEPRECATED** - Refer to unified guide above
 
 ---
@@ -84,19 +84,19 @@ In the **Components** panel, add these components:
 1. **Static Mesh** (DefaultSceneRoot)
    - Rename to: `ShipMesh`
    - This will be your ship's 3D model
-   
+
 2. **Floating Pawn Movement**
    - Search: "Floating Pawn Movement"
    - Click "Add Component"
-   
+
 3. **Spring Arm**
    - Attach to: `ShipMesh`
    - This creates camera boom
-   
+
 4. **Camera**
    - Attach to: `SpringArm`
    - This is the player's view
-   
+
 5. **Cargo Component** (Custom)
    - Search: "Cargo Component"
    - This manages cargo inventory
@@ -284,7 +284,7 @@ Branch (Is Valid? ShipData)
 8. **Repeat for MaxSpeed** using `Get Max Speed` from ShipData
 9. **Add Print String** for debugging
 
-**Expected Result**: 
+**Expected Result**:
 - Console prints ship name on play
 - Cargo component has correct capacity
 - Movement component has correct max speed
@@ -341,7 +341,7 @@ Add Controller Pitch Input
    - Call `Add Controller Yaw Input` (for Turn)
    - Call `Add Controller Pitch Input` (for LookUp)
 
-**Expected Result**: 
+**Expected Result**:
 - WASD moves ship forward/back/strafe
 - Space/Ctrl moves ship up/down
 - Mouse moves camera
@@ -398,7 +398,7 @@ Branch (Is Valid? Station)
    - Print error
    - Return `False`
 
-**Expected Result**: 
+**Expected Result**:
 - Ship stops moving when docked
 - IsDocked flag set correctly
 - Console confirms docking
@@ -431,7 +431,7 @@ Print String: "Undocked - ready to fly"
 4. Get `FloatingPawnMovement` and call `Set Active (True)`
 5. Add debug print
 
-**Expected Result**: 
+**Expected Result**:
 - Ship can move again after undocking
 - Movement controls responsive
 
@@ -461,7 +461,7 @@ Return: Available Space
 4. **Subtract** from `CargoCapacity` variable
 5. **Return** the result
 
-**Expected Result**: 
+**Expected Result**:
 - Returns correct available space
 - Used by trading UI to prevent over-buying
 
@@ -514,7 +514,7 @@ Branch (IsDocked?)
    - Get Player Controller → `Set Show Mouse Cursor (True)`
 4. **If not docked**: Print error message
 
-**Expected Result**: 
+**Expected Result**:
 - Trading UI appears when docked
 - Mouse cursor visible for UI interaction
 - Can't open UI when flying
@@ -570,7 +570,7 @@ Branch (IsDocked?)
    - If yes: Call `DockAtStation`
    - If no: Print helpful message
 
-**Expected Result**: 
+**Expected Result**:
 - Press E near station to dock
 - Press E when docked to open trading UI
 - Helpful messages if player is confused
@@ -590,7 +590,7 @@ Branch (IsDocked?)
 4. Use mouse to look around
 5. Use Space/Ctrl to move up/down
 
-**Success Criteria**: 
+**Success Criteria**:
 - Ship moves smoothly in all directions
 - Camera follows ship
 - Console shows "Ship initialized" message
@@ -611,7 +611,7 @@ Branch (IsDocked?)
 5. Check ship stops moving
 6. Press E again to open trading UI
 
-**Success Criteria**: 
+**Success Criteria**:
 - Console shows "Docked at [Station]"
 - Ship becomes stationary
 - Trading UI opens
@@ -631,7 +631,7 @@ Branch (IsDocked?)
 4. Check console for initialization message
 5. Try to open trading UI and check cargo space
 
-**Success Criteria**: 
+**Success Criteria**:
 - Console shows "Ship initialized: Compact Trader"
 - Trading UI shows "Cargo: 0/10"
 - Can't buy more than 10 units
@@ -651,7 +651,7 @@ Branch (IsDocked?)
 4. Call `UndockFromStation` (or press U key if bound)
 5. Try to fly ship
 
-**Success Criteria**: 
+**Success Criteria**:
 - Ship can move again after undocking
 - Console shows "Undocked"
 - IsDocked = False
@@ -891,12 +891,12 @@ After completing this guide, you now know:
 
 ---
 
-**Questions or Issues?** 
+**Questions or Issues?**
 - Check the [Blueprint Guide for Beginners](../docs/development/BLUEPRINT_GUIDE_FOR_BEGINNERS.md)
 - Review the [Blueprint Image Guide](../docs/reference/BLUEPRINT_IMAGE_GUIDE.md) for node documentation
 - See [MVP Documentation](../docs/mvp/README.md)
 
 ---
 
-**Guide created for**: Trade Simulator MVP (Phase 1)  
+**Guide created for**: Trade Simulator MVP (Phase 1)
 **Maintained by**: Adastrea Development Team

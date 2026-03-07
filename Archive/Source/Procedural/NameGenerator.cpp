@@ -186,7 +186,7 @@ FString UNameGenerator::GenerateMiningSectorName(FRandomStream& RandomStream)
 	TArray<FString> Suffixes = GetMiningSectorSuffixes();
 	const FString& Prefix = Prefixes[RandomStream.RandRange(0, Prefixes.Num() - 1)];
 	const FString& Suffix = Suffixes[RandomStream.RandRange(0, Suffixes.Num() - 1)];
-	
+
 	// 50% chance to include a letter designation
 	if (RandomStream.FRand() > 0.5f)
 	{
@@ -216,7 +216,7 @@ FString UNameGenerator::GenerateScientificSectorName(FRandomStream& RandomStream
 	TArray<FString> Suffixes = GetScientificSectorSuffixes();
 	const FString& Prefix = Prefixes[RandomStream.RandRange(0, Prefixes.Num() - 1)];
 	const FString& Suffix = Suffixes[RandomStream.RandRange(0, Suffixes.Num() - 1)];
-	
+
 	// Scientific sectors often have designation codes
 	TCHAR Letter1 = 'A' + RandomStream.RandRange(0, 25);
 	TCHAR Letter2 = 'A' + RandomStream.RandRange(0, 25);
@@ -256,12 +256,12 @@ FString UNameGenerator::GenerateDescriptiveSectorName(FRandomStream& RandomStrea
 		TEXT("Silver"), TEXT("Dark"), TEXT("Bright"), TEXT("Distant"), TEXT("Near"),
 		TEXT("Hidden"), TEXT("Open"), TEXT("Dense"), TEXT("Sparse"), TEXT("Rich")
 	};
-	
+
 	TArray<FString> Objects = {
 		TEXT("Nebula"), TEXT("Cluster"), TEXT("Field"), TEXT("Expanse"), TEXT("Region"),
 		TEXT("Zone"), TEXT("Space"), TEXT("Void"), TEXT("Belt"), TEXT("Ring")
 	};
-	
+
 	const FString& Descriptor = Descriptors[RandomStream.RandRange(0, Descriptors.Num() - 1)];
 	const FString& Object = Objects[RandomStream.RandRange(0, Objects.Num() - 1)];
 	return FString::Printf(TEXT("%s %s"), *Descriptor, *Object);
@@ -274,7 +274,7 @@ FString UNameGenerator::GenerateStationName(const FString& StationType, int32 Se
 	TArray<FString> Suffixes = GetStationSuffixes();
 	const FString& Prefix = Prefixes[RandomStream.RandRange(0, Prefixes.Num() - 1)];
 	const FString& Suffix = Suffixes[RandomStream.RandRange(0, Suffixes.Num() - 1)];
-	
+
 	if (StationType.IsEmpty())
 	{
 		return FString::Printf(TEXT("%s %s"), *Prefix, *Suffix);
@@ -292,7 +292,7 @@ FString UNameGenerator::GenerateShipName(const FString& ShipClass, int32 Seed)
 	TArray<FString> Suffixes = GetShipSuffixes();
 	const FString& Prefix = Prefixes[RandomStream.RandRange(0, Prefixes.Num() - 1)];
 	const FString& Suffix = Suffixes[RandomStream.RandRange(0, Suffixes.Num() - 1)];
-	
+
 	if (ShipClass.IsEmpty())
 	{
 		return FString::Printf(TEXT("%s %s"), *Prefix, *Suffix);
@@ -319,7 +319,7 @@ bool UNameGenerator::IsNameUnique(const FString& Name, UObject* Context)
 	// Check all SpaceSectorMap actors for name collision
 	TArray<AActor*> SectorActors;
 	UGameplayStatics::GetAllActorsOfClass(World, ASpaceSectorMap::StaticClass(), SectorActors);
-	
+
 	for (AActor* Actor : SectorActors)
 	{
 		if (ASpaceSectorMap* Sector = Cast<ASpaceSectorMap>(Actor))
@@ -340,7 +340,7 @@ FString UNameGenerator::GenerateUniqueSectorName(uint8 Theme, UObject* Context, 
 	{
 		// Use attempt number as part of seed for variety
 		FString Name = GenerateSectorName(Theme, Attempt);
-		
+
 		if (IsNameUnique(Name, Context))
 		{
 			return Name;

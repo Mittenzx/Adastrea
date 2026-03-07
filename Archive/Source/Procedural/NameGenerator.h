@@ -8,10 +8,10 @@
 
 /**
  * Utility class for generating procedural names for sectors, stations, and other entities
- * 
+ *
  * Provides various naming patterns and themes for creating unique, lore-friendly names.
  * All functions are static and can be called from C++ or Blueprints.
- * 
+ *
  * Usage:
  * - C++: FString Name = UNameGenerator::GenerateSectorName(ESectorNamingTheme::Military);
  * - Blueprint: Call "Generate Sector Name" function

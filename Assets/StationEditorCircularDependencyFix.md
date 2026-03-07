@@ -1,7 +1,7 @@
 # Station Editor Circular Dependency Fix - Blueprint Update Guide
 
-**Version**: 2.0  
-**Last Updated**: December 9, 2025  
+**Version**: 2.0
+**Last Updated**: December 9, 2025
 **Purpose**: Guide for updating Blueprints after circular dependency fix
 
 ---
@@ -216,7 +216,7 @@ Event Construct
 
 ### "Widget does not have SetStation function"
 
-**Cause**: Blueprint doesn't have the SetStation custom event  
+**Cause**: Blueprint doesn't have the SetStation custom event
 **Solution**: Add the SetStation custom event as described in Step 2
 
 **How to verify**:
@@ -226,7 +226,7 @@ Event Construct
 
 ### "EditorManager is null"
 
-**Cause**: EditorManager not created in Event Construct  
+**Cause**: EditorManager not created in Event Construct
 **Solution**: Add NewObject call in Event Construct (see Step 4)
 
 **How to verify**:
@@ -236,15 +236,15 @@ Event Construct
 
 ### "Module placement doesn't work"
 
-**Cause**: ModuleCatalog not properly assigned  
-**Solution**: 
+**Cause**: ModuleCatalog not properly assigned
+**Solution**:
 1. Ensure ModuleCatalog property exists on your widget
 2. In SetStation event, assign ModuleCatalog to EditorManager
 3. Verify the catalog data asset has module entries
 
 ### "Changes don't save"
 
-**Cause**: OnClose event not implemented or not calling Save()  
+**Cause**: OnClose event not implemented or not calling Save()
 **Solution**: Implement OnClose event as described in Step 3
 
 ---
@@ -330,22 +330,22 @@ Just change `StationEditorWidgetClass` in your PlayerController Blueprint!
 
 ## FAQ
 
-**Q: Do I need to recompile C++?**  
+**Q: Do I need to recompile C++?**
 A: No, this is a pure code fix. Just update your Blueprints.
 
-**Q: Will my existing stations break?**  
+**Q: Will my existing stations break?**
 A: No, station data is unchanged. Only the editor interface changed.
 
-**Q: Can I still use the old approach?**  
+**Q: Can I still use the old approach?**
 A: No, the old approach had circular dependencies and wouldn't build. This new approach is required.
 
-**Q: Is this backward compatible?**  
+**Q: Is this backward compatible?**
 A: Yes, as long as you implement the required custom events in your Blueprint.
 
-**Q: What if I have multiple editor widgets?**  
+**Q: What if I have multiple editor widgets?**
 A: Each widget must implement SetStation and OnClose independently.
 
-**Q: Can I override the behavior in C++?**  
+**Q: Can I override the behavior in C++?**
 A: Yes, but avoid creating new circular dependencies. Use interfaces instead.
 
 ---
@@ -375,6 +375,6 @@ For technical questions:
 
 ---
 
-**Last Updated**: December 9, 2025  
-**Version**: 2.0  
+**Last Updated**: December 9, 2025
+**Version**: 2.0
 **Maintained by**: Adastrea Development Team

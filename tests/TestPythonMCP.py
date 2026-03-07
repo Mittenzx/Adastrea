@@ -20,25 +20,25 @@ def send_python_command(python_code):
             "code": python_code
         }
     }
-    
+
     command_json = json.dumps(command)
-    
+
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(10.0)
         sock.connect((MCP_HOST, MCP_PORT))
-        
+
         # Send
         sock.sendall(command_json.encode('utf-8'))
-        
+
         # Receive
         response_data = sock.recv(8192)
         response = response_data.decode('utf-8')
-        
+
         sock.close()
-        
+
         return json.loads(response)
-        
+
     except Exception as e:
         print(f"❌ Error: {e}")
         return None

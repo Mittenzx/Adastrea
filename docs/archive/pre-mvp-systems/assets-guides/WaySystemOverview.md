@@ -141,7 +141,7 @@ This system is about:
 
 This system is NOT about:
 - ❌ Diplomacy
-- ❌ Political maneuvering  
+- ❌ Political maneuvering
 - ❌ Alliances and wars
 - ❌ Power struggles
 

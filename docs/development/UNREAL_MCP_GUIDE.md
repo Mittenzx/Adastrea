@@ -23,7 +23,7 @@ Unreal MCP (Model Context Protocol) enables AI assistants to remotely control an
    ```bash
    # Clone the Unreal MCP repository
    git clone https://github.com/chongdashu/unreal-mcp.git
-   
+
    # Copy plugin to project
    cp -r unreal-mcp/UnrealMCP "c:/Unreal Projects/Adastrea/Plugins/"
    ```
@@ -35,9 +35,9 @@ Unreal MCP (Model Context Protocol) enables AI assistants to remotely control an
    - Restart Unreal Editor
 
 3. **Configure MCP Server**
-   
+
    Create/edit your MCP configuration file:
-   
+
    **For Claude Desktop** (`%APPDATA%\Claude\claude_desktop_config.json`):
    ```json
    {
@@ -52,7 +52,7 @@ Unreal MCP (Model Context Protocol) enables AI assistants to remotely control an
      }
    }
    ```
-   
+
    **For Cursor** (`.cursor/mcp.json` in project root):
    ```json
    {
@@ -374,7 +374,7 @@ unreal.EditorLevelLibrary.save_current_level()
 
 ---
 
-**Last Updated**: 2025-11-29  
-**Unreal MCP Version**: Compatible with UE 5.5+  
-**Adastrea Project Version**: 1.0  
+**Last Updated**: 2025-11-29
+**Unreal MCP Version**: Compatible with UE 5.5+
+**Adastrea Project Version**: 1.0
 **Status**: Production Ready

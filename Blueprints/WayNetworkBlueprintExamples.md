@@ -119,7 +119,7 @@ Event Construct
 - **Network Asset** (WayNetworkDataAsset Reference)
   - Instance Editable: True
   - Category: "Configuration"
-  
+
 - **Verse System** (VerseSubsystem Reference)
   - Local variable in function
 

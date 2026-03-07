@@ -237,7 +237,7 @@ void UShipModuleComponent::UpdateModuleMesh()
 			ModuleMeshComponent->AttachToComponent(Owner->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 			Owner->AddInstanceComponent(ModuleMeshComponent);
 			ModuleMeshComponent->SetStaticMesh(ModuleData->ModuleMesh);
-			
+
 			// Apply material if specified
 			if (ModuleData->ModuleMaterial)
 			{
@@ -252,7 +252,7 @@ void UShipModuleComponent::UpdateModuleMesh()
 	{
 		// Update existing mesh
 		ModuleMeshComponent->SetStaticMesh(ModuleData->ModuleMesh);
-		
+
 		if (ModuleData->ModuleMaterial)
 		{
 			ModuleMeshComponent->SetMaterial(0, ModuleData->ModuleMaterial);
@@ -266,7 +266,7 @@ FText UShipModuleComponent::GetModuleStatus() const
 	{
 		return FText::FromString("Not Installed");
 	}
-	
+
 	if (!bIsEnabled)
 	{
 		return FText::FromString("Disabled");

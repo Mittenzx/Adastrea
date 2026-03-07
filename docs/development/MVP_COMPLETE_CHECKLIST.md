@@ -2,7 +2,7 @@
 
 **Purpose**: Week-by-week checklist for building the Trade Simulator MVP from scratch to playable demo.
 
-**Timeline**: 12 weeks (Dec 2025 - Mar 2026)  
+**Timeline**: 12 weeks (Dec 2025 - Mar 2026)
 **Goal**: 30-minute playable demo with 75% "fun" rating
 
 ---
@@ -441,13 +441,13 @@ python3 Tools/trading_performance_profiler.py --analyze
 
 ## Checklist Progress Tracking
 
-**Week 1-2**: ☐ In Progress / ☑ Complete  
-**Week 3-4**: ☐ In Progress / ☑ Complete  
-**Week 5-6**: ☐ In Progress / ☑ Complete  
-**Week 7-8**: ☐ In Progress / ☑ Complete  
-**Week 9-10**: ☐ In Progress / ☑ Complete  
-**Week 11**: ☐ In Progress / ☑ Complete  
-**Week 12**: ☐ In Progress / ☑ Complete  
+**Week 1-2**: ☐ In Progress / ☑ Complete
+**Week 3-4**: ☐ In Progress / ☑ Complete
+**Week 5-6**: ☐ In Progress / ☑ Complete
+**Week 7-8**: ☐ In Progress / ☑ Complete
+**Week 9-10**: ☐ In Progress / ☑ Complete
+**Week 11**: ☐ In Progress / ☑ Complete
+**Week 12**: ☐ In Progress / ☑ Complete
 
 **Overall MVP Status**: ☐ Not Started / ☐ In Progress / ☑ Complete
 
@@ -455,18 +455,18 @@ python3 Tools/trading_performance_profiler.py --analyze
 
 ## Summary
 
-**Total Tasks**: 200+ checklist items  
-**Timeline**: 12 weeks (70 working days)  
-**Milestones**: 3 major (Week 4, 8, 12)  
-**Success Metrics**: 75% fun, 60% replay, 50% buy intent  
+**Total Tasks**: 200+ checklist items
+**Timeline**: 12 weeks (70 working days)
+**Milestones**: 3 major (Week 4, 8, 12)
+**Success Metrics**: 75% fun, 60% replay, 50% buy intent
 **Deliverable**: 30-minute playable demo
 
 **"One polished gameplay loop beats ten half-finished systems."**
 
 ---
 
-**Last Updated**: 2026-01-17  
-**Version**: 1.0  
+**Last Updated**: 2026-01-17
+**Version**: 1.0
 **Status**: Complete development roadmap for Trade Simulator MVP
 
 This checklist is your roadmap from zero to fundable demo. Follow it, test relentlessly, and ship a great trading game!

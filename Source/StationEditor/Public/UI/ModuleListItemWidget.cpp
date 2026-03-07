@@ -59,8 +59,8 @@ void UModuleListItemWidget::SetModuleData(const FStationModuleEntry& Entry)
 	// Set cost
 	if (CostText)
 	{
-		FText CostDisplayText = FText::FromString(FString::Printf(TEXT("%d Credits | %.0fs"), 
-			Entry.BuildCost.Credits, 
+		FText CostDisplayText = FText::FromString(FString::Printf(TEXT("%d Credits | %.0fs"),
+			Entry.BuildCost.Credits,
 			Entry.BuildCost.BuildTime));
 		CostText->SetText(CostDisplayText);
 	}

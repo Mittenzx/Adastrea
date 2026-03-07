@@ -246,7 +246,7 @@ Source/Adastrea/Public/Input/InputConfigDataAsset.h
 
 **You asked for:** A guide showing all blueprints, graphs, and how "Press F to Dock" works, including docking point logic.
 
-**You got:** 
+**You got:**
 - ✅ Complete 26KB implementation guide
 - ✅ 6 Blueprint classes documented
 - ✅ 4 custom visual SVG diagrams
@@ -260,7 +260,7 @@ Source/Adastrea/Public/Input/InputConfigDataAsset.h
 
 ---
 
-**Created:** January 7, 2026  
-**Location:** `docs/reference/DOCKING_SYSTEM_BLUEPRINT_IMPLEMENTATION_GUIDE.md`  
-**Visual Diagrams:** `docs/reference/images/blueprints/`  
+**Created:** January 7, 2026
+**Location:** `docs/reference/DOCKING_SYSTEM_BLUEPRINT_IMPLEMENTATION_GUIDE.md`
+**Visual Diagrams:** `docs/reference/images/blueprints/`
 **Status:** ✅ Complete and ready for implementation

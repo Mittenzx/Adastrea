@@ -5,8 +5,8 @@
 
 > Visual concept mockups showing the current baseline vs. desired future look for Adastrea's open-world space flight game.
 
-**Last Updated**: November 15, 2025  
-**Version**: 1.0.0-alpha  
+**Last Updated**: November 15, 2025
+**Version**: 1.0.0-alpha
 **Purpose**: Visual design reference for UI/UX, environment art, and gameplay presentation
 
 ---
@@ -44,32 +44,32 @@ graph TD
     A[Main Menu] --> B[New Game]
     A --> C[Continue Game]
     A --> D[Options]
-    
+
     B --> E[Character Creation]
     E --> F[Homeworld Selection]
     F --> G[Game World]
-    
+
     C --> G
-    
+
     G --> H[Space Flight View]
     G --> I[Station Interior]
     G --> J[Ship Interior]
-    
+
     H --> K[Trading Interface]
     H --> L[Sector Map]
     H --> M[Combat HUD]
-    
+
     I --> N[Station Construction]
     I --> O[Crew Management]
     I --> K
-    
+
     J --> P[Ship Control Console]
     J --> Q[Crew Quarters]
     J --> O
-    
+
     L --> R[System View]
     L --> S[Galaxy View]
-    
+
     style A fill:#4A9EFF
     style G fill:#2ECC71
     style H fill:#F39C12
@@ -82,20 +82,20 @@ graph TD
 ```mermaid
 graph TB
     subgraph "Space Flight HUD"
-        A[Top Left: Ship Status] 
+        A[Top Left: Ship Status]
         B[Top Right: Resources]
         C[Center: 3D Viewport]
         D[Bottom Left: Radar]
         E[Bottom Right: Communications]
         F[Center Overlay: Targeting]
     end
-    
+
     A --> |Health, Shields, Temp| A1[Bar Graphs]
     B --> |Power, Fuel, Cargo| B1[Gauges]
     D --> |360° View| D1[Mini Map]
     E --> |Alerts, Messages| E1[Scrolling Feed]
     F --> |Target Info| F1[Pop-up Widget]
-    
+
     style C fill:#0A0E1A
     style A fill:#1A2332
     style B fill:#1A2332
@@ -113,20 +113,20 @@ graph LR
         B[Power Generator]
         C[Life Support]
     end
-    
+
     subgraph "Operational Modules"
         D[Docking Bay 1]
         E[Docking Bay 2]
         F[Cargo Hold]
         G[Trade Hub]
     end
-    
+
     subgraph "Defense Modules"
         H[Shield Generator]
         I[Turret Array]
         J[Hangar Bay]
     end
-    
+
     B -->|Power| A
     B -->|Power| C
     B -->|Power| D
@@ -135,17 +135,17 @@ graph LR
     B -->|Power| G
     B -->|Power| H
     B -->|Power| I
-    
+
     C -->|Life Support| D
     C -->|Life Support| F
     C -->|Life Support| G
-    
+
     A -->|Data| D
     A -->|Data| E
     A -->|Data| H
     A -->|Data| I
     A -->|Data| J
-    
+
     style B fill:#F39C12
     style C fill:#3498DB
     style A fill:#9B59B6
@@ -156,33 +156,33 @@ graph LR
 ```mermaid
 graph TD
     Player[🚀 Player]
-    
+
     SU[☀️ Solaris Union<br/>Rep: +82]
     IC[⚙️ Ironclad Consortium<br/>Rep: +95]
     NC[💠 Neon Collective<br/>Rep: +30]
     VW[💀 Void Walkers<br/>Rep: -80]
     FT[🌿 Frontier Tribes<br/>Rep: +65]
-    
+
     Player -->|Allied| IC
     Player -->|Allied| SU
     Player -->|Tense| NC
     Player -->|Hostile| VW
     Player -->|Friendly| FT
-    
+
     SU <-->|Allied +85| IC
     SU <-->|Tense +30| NC
     SU <-->|War -80| VW
     SU <-->|Friendly +65| FT
-    
+
     IC <-->|Neutral +50| FT
     IC <-->|Tense +25| NC
     IC <-->|Hostile -60| VW
-    
+
     NC <-->|Hostile -70| VW
     NC <-->|Neutral +40| FT
-    
+
     FT <-->|Friendly +55| VW
-    
+
     style Player fill:#FFD700,stroke:#000,stroke-width:3px
     style SU fill:#87CEEB
     style IC fill:#708090
@@ -199,16 +199,16 @@ sequenceDiagram
     participant S as Station Market
     participant AI as AI Traders
     participant E as Economy System
-    
+
     P->>S: Request Market Data
     S->>E: Query Current Prices
     E-->>S: Supply/Demand/Prices
     S-->>P: Display Market UI
-    
+
     P->>S: Place Buy Order
     S->>E: Check Availability
     E-->>S: Confirm/Deny
-    
+
     alt Transaction Successful
         S->>P: Transfer Goods
         P->>S: Transfer Credits
@@ -216,11 +216,11 @@ sequenceDiagram
     else Insufficient Funds
         S-->>P: Error Message
     end
-    
+
     AI->>S: Background Trading
     S->>E: Update Supply/Demand
     E->>S: Adjust Prices
-    
+
     Note over E: Dynamic pricing based on<br/>supply, demand, faction relations
 ```
 
@@ -229,31 +229,31 @@ sequenceDiagram
 ```mermaid
 graph TD
     A[👨‍✈️ Captain Sarah Chen<br/>Leadership: 10, Tactics: 8]
-    
+
     B[👨‍💼 XO Marcus Webb<br/>Command: 8, Diplomacy: 7]
     C[👨‍🔧 Chief Engineer Lisa Wong<br/>Engineering: 9, Repair: 8]
     D[⚕️ Dr. Elena Park<br/>Medical: 9, Science: 7]
     E[🎖️ Security Chief James Torres<br/>Combat: 8, Security: 9]
-    
+
     A --> B
     A --> C
     A --> D
     A --> E
-    
+
     B --> F[Navigator]
     B --> G[Communications Officer]
-    
+
     C --> H[Engineer x3]
     C --> I[Technician x2]
-    
+
     D --> J[Nurse x2]
     D --> K[Scientist x2]
-    
+
     E --> L[Security Officer x4]
     E --> M[Gunner Chief]
-    
+
     M --> N[Gunner x4]
-    
+
     style A fill:#FFD700
     style B fill:#4A9EFF
     style C fill:#F39C12
@@ -1369,7 +1369,7 @@ For questions or feedback on these mockups, please open an issue or discussion i
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: November 15, 2025  
-**Authors**: Adastrea Development Team  
+**Document Version**: 1.0
+**Last Updated**: November 15, 2025
+**Authors**: Adastrea Development Team
 **License**: MIT (matching project license)

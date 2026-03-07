@@ -8,10 +8,10 @@
 
 /**
  * Connecting corridor module for space stations
- * 
+ *
  * Passageway connecting different station sections and modules.
  * Includes basic lighting and environmental systems.
- * 
+ *
  * Power Consumption: 2 units
  * Module Group: Connection
  */

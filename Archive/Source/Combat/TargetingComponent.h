@@ -43,10 +43,10 @@ struct FTargetInfo
 
 /**
  * Component for managing targeting and fire control on spaceships
- * 
+ *
  * Handles target detection, selection, lock-on, lead calculation, and
  * automatic target prioritization for combat systems.
- * 
+ *
  * Usage:
  * - Add component to ship Blueprint
  * - Configure sensor range and targeting parameters

@@ -36,7 +36,7 @@ UEngineModuleDataAsset::UEngineModuleDataAsset()
 	EngineGlowMaterial = nullptr;
 	BoostEffect = nullptr;
 	EngineSound = nullptr;
-	
+
 	// Default sound parameters
 	EngineSoundMinPitch = 0.8f;
 	EngineSoundMaxPitch = 1.2f;
@@ -55,7 +55,7 @@ float UEngineModuleDataAsset::GetModuleRating() const
 	float SpeedScore = FMath::Clamp(MaxSpeed / 1000.0f, 0.0f, 1.0f) * 25.0f;
 	float AccelScore = FMath::Clamp(Acceleration / 100.0f, 0.0f, 1.0f) * 20.0f;
 	float EfficiencyScore = (Efficiency / 100.0f) * 15.0f;
-	
+
 	float SpecialBonus = 0.0f;
 	if (bSupportsTravelMode) SpecialBonus += 5.0f;
 	if (bSupportsJumpDrive) SpecialBonus += 5.0f;
@@ -67,7 +67,7 @@ float UEngineModuleDataAsset::GetModuleRating() const
 float UEngineModuleDataAsset::GetEffectiveThrust(float ThrottlePercent, bool bBoostActive) const
 {
 	float BaseThrust = MaxThrust * (ThrottlePercent / 100.0f);
-	
+
 	if (bBoostActive)
 	{
 		BaseThrust *= BoostMultiplier;

@@ -46,7 +46,7 @@ Tick Event
 ## Return Value
 
 - **Positive**: Ship moving forward
-- **Negative**: Ship moving backward  
+- **Negative**: Ship moving backward
 - **Zero**: Ship stationary or moving only sideways
 
 Units: Unreal units per second (typically cm/s, multiply by 0.01 for m/s)
@@ -114,6 +114,6 @@ For questions or issues:
 
 ---
 
-**Created**: 2025-12-07  
-**Issue**: #236 (Add spaceship forward speed in cpp for HUD)  
+**Created**: 2025-12-07
+**Issue**: #236 (Add spaceship forward speed in cpp for HUD)
 **Status**: ✅ Implemented and Tested

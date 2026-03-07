@@ -31,7 +31,7 @@ private:
 	TWeakPtr<SWindow> ParentWindow;
 	TSharedPtr<SEditableTextBox> GeminiKeyBox;
 	TSharedPtr<SEditableTextBox> OpenAIKeyBox;
-	
+
 	// Settings state
 	FString LLMProvider;
 	FString EmbeddingProvider;

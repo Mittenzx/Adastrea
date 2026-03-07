@@ -11,7 +11,7 @@
 /**
  * MCP (Model Context Protocol) Server Implementation
  * Exposes Adastrea tools to external AI clients via HTTP
- * 
+ *
  * Standard endpoints:
  * - POST /mcp/tools/list - Get list of available tools
  * - POST /mcp/tools/call - Execute a tool

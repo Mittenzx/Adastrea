@@ -41,15 +41,15 @@ struct FTutorialProgress
 
 /**
  * Tutorial Manager Subsystem for managing tutorial sequences
- * 
+ *
  * This subsystem handles tutorial progression, tracking, and state management.
- * 
+ *
  * Usage:
  * 1. Access via UGameInstance::GetSubsystem<UTutorialManagerSubsystem>()
  * 2. Call StartTutorial with tutorial ID and steps
  * 3. System manages step progression automatically
  * 4. Listen for events to update UI
- * 
+ *
  * Example:
  * - New player starts game
  * - System starts "BasicControls" tutorial

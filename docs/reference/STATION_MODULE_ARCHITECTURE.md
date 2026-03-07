@@ -1,7 +1,7 @@
 # Space Station Module System - Architecture Guide
 
-**Version**: 1.0  
-**Last Updated**: January 13, 2026  
+**Version**: 1.0
+**Last Updated**: January 13, 2026
 **Status**: Production-ready for MVP Trade Simulator
 
 ---
@@ -24,10 +24,10 @@
 
 The Space Station Module System provides a **flexible, modular architecture** for constructing space stations from individual functional components. This system enables:
 
-✅ **Dynamic Composition** - Stations built from independent module actors  
-✅ **Designer-Friendly** - Configure modules in Blueprints without C++ code  
-✅ **Aggregate Functionality** - Station queries modules for combined capabilities  
-✅ **Blueprint Exposure** - All functionality accessible from Blueprint graphs  
+✅ **Dynamic Composition** - Stations built from independent module actors
+✅ **Designer-Friendly** - Configure modules in Blueprints without C++ code
+✅ **Aggregate Functionality** - Station queries modules for combined capabilities
+✅ **Blueprint Exposure** - All functionality accessible from Blueprint graphs
 ✅ **MVP-Ready** - Essential features for trading gameplay validated
 
 ### Key Design Principles
@@ -456,7 +456,7 @@ float GetPowerBalance() const;
 float PowerBalance = MyStation->GetPowerBalance();
 if (PowerBalance < 0.0f)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Station has power deficit: %.2f MW"), 
+    UE_LOG(LogTemp, Warning, TEXT("Station has power deficit: %.2f MW"),
         FMath::Abs(PowerBalance));
 }
 ```
@@ -622,31 +622,31 @@ Get Power Balance
 void UStationInfoWidget::UpdateStationInfo(ASpaceStation* Station)
 {
     if (!Station) return;
-    
+
     // Update facility counts
     int32 DockingCount = Station->GetModuleCountByGroup(EStationModuleGroup::Docking);
     int32 StorageCount = Station->GetModuleCountByGroup(EStationModuleGroup::Storage);
     int32 PublicCount = Station->GetModuleCountByGroup(EStationModuleGroup::Public);
-    
+
     DockingText->SetText(FText::Format(
-        LOCTEXT("DockingFormat", "Docking Bays: {0}"), 
+        LOCTEXT("DockingFormat", "Docking Bays: {0}"),
         DockingCount
     ));
-    
+
     StorageText->SetText(FText::Format(
-        LOCTEXT("StorageFormat", "Cargo Holds: {0}"), 
+        LOCTEXT("StorageFormat", "Cargo Holds: {0}"),
         StorageCount
     ));
-    
+
     // Update power status
     float PowerBalance = Station->GetPowerBalance();
     FLinearColor PowerColor = PowerBalance >= 0.0f ? FLinearColor::Green : FLinearColor::Red;
     FText PowerText = FText::Format(
-        LOCTEXT("PowerFormat", "{0}{1} MW"), 
+        LOCTEXT("PowerFormat", "{0}{1} MW"),
         PowerBalance >= 0.0f ? TEXT("+") : TEXT(""),
         FText::AsNumber(PowerBalance)
     );
-    
+
     PowerStatusText->SetText(PowerText);
     PowerStatusText->SetColorAndOpacity(PowerColor);
 }
@@ -663,18 +663,18 @@ void UStationPowerMonitor::CheckPowerStatus()
     for (ASpaceStation* Station : ManagedStations)
     {
         if (!Station) continue;
-        
+
         float PowerBalance = Station->GetPowerBalance();
         float Generation = Station->GetTotalPowerGeneration();
         float Consumption = Station->GetTotalPowerConsumption();
-        
+
         if (PowerBalance < 0.0f)
         {
             // Power deficit - log warning
             UE_LOG(LogAdastreaStations, Warning,
                 TEXT("Station %s has power deficit: %.2f MW (Gen: %.2f, Con: %.2f)"),
                 *Station->GetName(), PowerBalance, Generation, Consumption);
-            
+
             // Trigger low power alert
             OnPowerDeficit.Broadcast(Station, FMath::Abs(PowerBalance));
         }
@@ -717,13 +717,13 @@ void UStationPowerMonitor::CheckPowerStatus()
 void ASpaceStation::BeginPlay()
 {
     Super::BeginPlay();
-    
-    UE_LOG(LogAdastreaStations, Log, 
+
+    UE_LOG(LogAdastreaStations, Log,
         TEXT("Station %s: DefaultModuleClasses count = %d"),
         *GetName(), DefaultModuleClasses.Num());
-    
+
     // ... spawning logic ...
-    
+
     UE_LOG(LogAdastreaStations, Log,
         TEXT("Station %s: Spawned %d modules successfully"),
         *GetName(), Modules.Num());
@@ -753,11 +753,11 @@ void ASpaceStation::BeginPlay()
 bool ASpaceStation::HasMarketplace() const
 {
     bool bFound = GetMarketplaceModule() != nullptr;
-    
+
     UE_LOG(LogAdastreaStations, Log,
         TEXT("Station %s: HasMarketplace = %s (Total modules: %d)"),
         *GetName(), bFound ? TEXT("true") : TEXT("false"), Modules.Num());
-    
+
     return bFound;
 }
 ```
@@ -784,25 +784,25 @@ float ASpaceStation::GetPowerBalance() const
 {
     float Generation = GetTotalPowerGeneration();
     float Consumption = 0.0f;
-    
+
     for (ASpaceStationModule* Module : Modules)
     {
         if (Module && !Module->IsGeneratingPower())
         {
             Consumption += Module->GetModulePower();
-            
+
             UE_LOG(LogAdastreaStations, Verbose,
                 TEXT("  Module %s: Power = %.2f"),
                 *Module->GetModuleType(), Module->GetModulePower());
         }
     }
-    
+
     float Balance = Generation - Consumption;
-    
+
     UE_LOG(LogAdastreaStations, Log,
         TEXT("Station %s: Gen=%.2f, Con=%.2f, Balance=%.2f"),
         *GetName(), Generation, Consumption, Balance);
-    
+
     return Balance;
 }
 ```
@@ -827,24 +827,24 @@ float ASpaceStation::GetPowerBalance() const
 int32 ASpaceStation::GetModuleCountByGroup(EStationModuleGroup ModuleGroup) const
 {
     int32 Count = 0;
-    
+
     for (ASpaceStationModule* Module : Modules)
     {
         if (Module)
         {
             UE_LOG(LogAdastreaStations, Verbose,
                 TEXT("  Module %s: Group = %d (looking for %d)"),
-                *Module->GetModuleType(), 
+                *Module->GetModuleType(),
                 (int32)Module->GetModuleGroup(),
                 (int32)ModuleGroup);
-            
+
             if (Module->GetModuleGroup() == ModuleGroup)
             {
                 Count++;
             }
         }
     }
-    
+
     return Count;
 }
 ```
@@ -881,7 +881,7 @@ Before reporting a bug, verify:
 void ASpaceStation::BeginPlay()
 {
     Super::BeginPlay();
-    
+
     if (DefaultModuleClasses.Num() > 10)
     {
         // Spawn modules over multiple frames
@@ -915,10 +915,10 @@ class ADASTREA_API ASpaceStation : public AActor
     // Cache power balance, recalculate only when modules change
     UPROPERTY()
     float CachedPowerBalance = 0.0f;
-    
+
     UPROPERTY()
     bool bPowerBalanceDirty = true;
-    
+
 public:
     float GetPowerBalance() const
     {
@@ -929,7 +929,7 @@ public:
         }
         return CachedPowerBalance;
     }
-    
+
     void AddModule(ASpaceStationModule* Module)
     {
         // ... add module ...
@@ -964,7 +964,7 @@ public:
 void ACorridorModule::BeginPlay()
 {
     Super::BeginPlay();
-    
+
     // Corridors don't need complex collision
     if (MeshComponent)
     {
@@ -1016,14 +1016,14 @@ UCLASS(BlueprintType, Blueprintable)
 class ADASTREA_API AMyCustomModule : public ASpaceStationModule
 {
     GENERATED_BODY()
-    
+
 public:
     AMyCustomModule();
-    
+
     // Custom properties
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Custom")
     float CustomProperty;
-    
+
     // Custom functions
     UFUNCTION(BlueprintCallable, Category="Custom")
     void DoCustomThing();
@@ -1039,7 +1039,7 @@ AMyCustomModule::AMyCustomModule()
     ModuleType = TEXT("Custom Module");
     ModulePower = 25.0f;  // Consumes 25 power
     ModuleGroup = EStationModuleGroup::Other;
-    
+
     // Initialize custom properties
     CustomProperty = 100.0f;
 }
@@ -1070,8 +1070,8 @@ For module lifecycle events:
 ```cpp
 // In ASpaceStationModule
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
-    FOnModuleDamaged, 
-    float, 
+    FOnModuleDamaged,
+    float,
     DamageAmount
 );
 
@@ -1080,8 +1080,8 @@ FOnModuleDamaged OnModuleDamaged;
 
 // In ASpaceStation
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(
-    FOnModuleAdded, 
-    ASpaceStationModule*, 
+    FOnModuleAdded,
+    ASpaceStationModule*,
     Module
 );
 
@@ -1091,7 +1091,7 @@ FOnModuleAdded OnModuleAdded;
 void ASpaceStation::AddModule(ASpaceStationModule* Module)
 {
     // ... add module ...
-    
+
     // Broadcast event
     OnModuleAdded.Broadcast(Module);
 }
@@ -1155,33 +1155,33 @@ void ASpaceStation::AddModule(ASpaceStationModule* Module)
 
 ## FAQ
 
-**Q: Can I add modules at runtime?**  
+**Q: Can I add modules at runtime?**
 A: Not in the MVP. Runtime module addition is a POST-MVP feature. The `AddModule()` / `AddModuleAtLocation()` functions exist in C++ for internal use during `BeginPlay` but are not exposed to Blueprint. For now, configure station layouts via `DefaultModuleClasses` array in Class Defaults.
 
-**Q: How do I create a custom module type?**  
+**Q: How do I create a custom module type?**
 A: Inherit from `ASpaceStationModule` in C++, set module properties in constructor, create Blueprint.
 
-**Q: Why use actors instead of components?**  
+**Q: Why use actors instead of components?**
 A: Actors provide independent collision, health, and visual representation. Components would be tightly coupled to the station.
 
-**Q: Can modules be damaged individually?**  
+**Q: Can modules be damaged individually?**
 A: Yes, modules implement `IDamageable` interface and can be targeted separately.
 
-**Q: How many modules can a station have?**  
+**Q: How many modules can a station have?**
 A: No hard limit, but recommended max is 50-100 modules for performance.
 
-**Q: Can I save/load station configurations?**  
+**Q: Can I save/load station configurations?**
 A: Yes, `DefaultModuleClasses` is serialized. Runtime-spawned modules (when POST-MVP features are enabled) will need custom save system.
 
-**Q: Do modules need unique names?**  
+**Q: Do modules need unique names?**
 A: No, multiple modules can have the same `ModuleType`. Use actor names if uniqueness needed.
 
-**Q: Can modules be moved after attachment?**  
+**Q: Can modules be moved after attachment?**
 A: Yes, call `SetActorRelativeLocation()` (Blueprint: **Set Relative Location**) on the module actor.
 
 ---
 
-**Document Status**: ✅ Complete and production-ready  
-**Last Reviewed**: January 13, 2026  
-**Maintained By**: Adastrea Development Team  
+**Document Status**: ✅ Complete and production-ready
+**Last Reviewed**: January 13, 2026
+**Maintained By**: Adastrea Development Team
 **Feedback**: Open GitHub issue with tag `documentation`

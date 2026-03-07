@@ -13,74 +13,74 @@ Identity:
 Council:
   TotalSeats: 12
   PassThreshold: 60  # Requires 60% to pass (supermajority)
-  
+
   Representatives:
     - RepresentingWay: Engineers_Guild
       RepresentativeName: "Marcus Steel"
       VotingWeight: 18
       YearsOfService: 12
       IsPlayerControlled: false
-      
-    - RepresentingWay: Traders_Guild  
+
+    - RepresentingWay: Traders_Guild
       RepresentativeName: "Elena Rostova"
       VotingWeight: 15
       YearsOfService: 8
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Ship_Builders_Union
       RepresentativeName: "Thomas Kane"
       VotingWeight: 14
       YearsOfService: 10
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Medical_Services
       RepresentativeName: "Dr. Sarah Chen"
       VotingWeight: 12
       YearsOfService: 6
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Research_Academy
       RepresentativeName: "Professor Leon Hart"
       VotingWeight: 13
       YearsOfService: 15
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Security_Division
       RepresentativeName: "Captain James Rodriguez"
       VotingWeight: 11
       YearsOfService: 5
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Logistics_Consortium
       RepresentativeName: "Aisha Patel"
       VotingWeight: 10
       YearsOfService: 7
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Agricultural_Union
       RepresentativeName: "Samuel Green"
       VotingWeight: 9
       YearsOfService: 9
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Civic_Planning_Board
       RepresentativeName: "Maria Lopez"
       VotingWeight: 8
       YearsOfService: 6
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Cultural_Committee
       RepresentativeName: "Yuri Petrov"
       VotingWeight: 7
       YearsOfService: 4
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Environmental_Agency
       RepresentativeName: "Dr. Linh Tran"
       VotingWeight: 6
       YearsOfService: 8
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Education_Council
       RepresentativeName: "Helen Carter"
       VotingWeight: 5
@@ -107,7 +107,7 @@ ActivePolicies:
       the Core Systems remain the technological showcase of civilization.
     PolicyValue: 75
     IsActive: true
-    
+
   - PolicyType: TradeRegulation
     PolicyName: "Fair Trade Standards"
     Description: |
@@ -115,7 +115,7 @@ ActivePolicies:
       throughout the sector. Protects consumers while allowing competition.
     PolicyValue: 60
     IsActive: true
-    
+
   - PolicyType: PatrolFrequency
     PolicyName: "Standard Patrol Schedule"
     Description: |
@@ -128,6 +128,6 @@ Notes: |
   The Core Systems represent a mature, stable governance model. This sector
   should feel safe, prosperous, and well-maintained. Good for new players
   to start in, as it has balanced economics and minimal danger.
-  
+
   Council dynamics: Generally cooperative with occasional debates over
   infrastructure priorities vs. tax levels.

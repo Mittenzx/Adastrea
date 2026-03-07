@@ -151,12 +151,12 @@ class AOtherActor;
 
 /**
  * Brief one-line description of the class
- * 
+ *
  * Detailed description explaining:
  * - What this class does
  * - When to use it
  * - How it integrates with other systems
- * 
+ *
  * Usage Example:
  * - Create a Blueprint based on this class
  * - Configure properties in editor
@@ -171,7 +171,7 @@ public:
     // ====================
     // Properties
     // ====================
-    
+
     // Brief description of what this property does
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Basic Info")
     FText DisplayName;
@@ -179,7 +179,7 @@ public:
     // ====================
     // Public Functions
     // ====================
-    
+
     /**
      * Brief description of what this function does
      * @param ParamName Description of parameter
@@ -192,7 +192,7 @@ protected:
     // ====================
     // Protected Members
     // ====================
-    
+
     UPROPERTY()
     int32 InternalValue;
 
@@ -200,7 +200,7 @@ private:
     // ====================
     // Private Members
     // ====================
-    
+
     void InternalHelperFunction();
 };
 ```
@@ -229,7 +229,7 @@ int32 UMyDataAsset::CalculateValue(float Input) const
 
     // Calculate result
     int32 Result = FMath::RoundToInt(Input * InternalValue);
-    
+
     return Result;
 }
 
@@ -318,9 +318,9 @@ int32 Value; // Inline comment
 
 /**
  * Multi-line Doxygen-style comment for classes, functions, and properties
- * 
+ *
  * Detailed explanation of what this does, why it exists, and how to use it.
- * 
+ *
  * @param InputValue The value to process
  * @param bShouldValidate Whether to validate the input
  * @return The processed result, or 0 if validation fails
@@ -453,13 +453,13 @@ BP_Enemy_Boss            (Blueprint)
 ```cpp
 /**
  * Brief description (one line)
- * 
+ *
  * Detailed explanation:
  * - What it does
  * - Why it exists
  * - How to use it
  * - Important caveats or gotchas
- * 
+ *
  * @param ParamName Parameter description
  * @return Return value description
  * @see RelatedClass, RelatedFunction

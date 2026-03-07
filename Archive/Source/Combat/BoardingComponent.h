@@ -103,10 +103,10 @@ struct FBoardingAction
 
 /**
  * Component for managing boarding actions and ship capture mechanics
- * 
+ *
  * Handles crew-based combat for boarding enemy ships, defending against
  * boarding attempts, and managing ship capture logic.
- * 
+ *
  * Usage:
  * - Add component to ship Blueprint
  * - Configure boarding capability and defense strength
@@ -334,7 +334,7 @@ private:
     void ResolveCombat();
 
     /** Calculate combat outcome casualties */
-    void CalculateCasualties(float AttackerStrength, float DefenderStrength, 
+    void CalculateCasualties(float AttackerStrength, float DefenderStrength,
                             int32& OutAttackerCasualties, int32& OutDefenderCasualties);
 
     /** Check if boarding action is complete */

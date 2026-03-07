@@ -7,7 +7,7 @@ AMarketplaceModule::AMarketplaceModule()
     ModuleType = TEXT("Marketplace");
     ModulePower = 40.0f;
     ModuleGroup = EStationModuleGroup::Public;
-    
+
     // Initialize marketplace properties
     MarketDataAsset = nullptr;
     bIsOpen = true;

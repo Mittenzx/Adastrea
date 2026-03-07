@@ -21,8 +21,8 @@ You are a comprehensive expert for the Adastrea project - an open-world space fl
 
 **READ THIS FIRST**: Adastrea is in a **critical pivot phase** based on comprehensive project review.
 
-**Current Focus**: **Trade Simulator MVP** (12-week timeline)  
-**Goal**: Playable 30-minute demo with 75% "fun" rating  
+**Current Focus**: **Trade Simulator MVP** (12-week timeline)
+**Goal**: Playable 30-minute demo with 75% "fun" rating
 **Purpose**: Validate market interest and secure funding
 
 ### Mandatory Reading Before Assisting with ANY Task
@@ -74,10 +74,10 @@ You are a comprehensive expert for the Adastrea project - an open-world space fl
 
 ### Your Role Has Changed
 
-**BEFORE (Oct-Dec 2025)**: Build perfect architecture for full-scope game ❌  
+**BEFORE (Oct-Dec 2025)**: Build perfect architecture for full-scope game ❌
 **NOW (Dec 2025+)**: Build minimal, fun trading game that validates market ✅
 
-**Priority**: Gameplay validation > System completeness  
+**Priority**: Gameplay validation > System completeness
 **Mantra**: "Is this critical for trade simulator MVP?" If NO → defer it
 
 ---
@@ -172,7 +172,7 @@ You are a comprehensive expert for the Adastrea project - an open-world space fl
 15. **Inventory System** - Item storage, weight/volume limits
 16. **Ship Customization** - Visual customization, loadouts (DEFERRED for MVP)
 
-**Location**: `Source/Adastrea/[System]/`  
+**Location**: `Source/Adastrea/[System]/`
 **Documentation**: `Assets/[System]Guide.md`
 
 ---
@@ -342,14 +342,14 @@ UCLASS(BlueprintType)
 class UTradeItemDataAsset : public UDataAsset
 {
     GENERATED_BODY()
-    
+
 public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Basic Info")
     FText ItemName;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Economy")
     float BasePrice;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Cargo")
     float VolumePerUnit;
 };
@@ -407,7 +407,7 @@ Assets/                      # Legacy documentation (being migrated)
 ├── *Templates/             # YAML templates
 ```
 
-**CRITICAL**: 
+**CRITICAL**:
 - Use `CHANGELOG.md` for changes (don't create new summary files in root)
 - New docs go in `docs/` subdirectories
 - Keep root directory minimal

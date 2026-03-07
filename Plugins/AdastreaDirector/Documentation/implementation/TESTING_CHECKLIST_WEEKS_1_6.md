@@ -1,8 +1,8 @@
 # Plugin Testing Checklist: Weeks 1-6
 
-**Project:** Adastrea Director - Unreal Engine Plugin  
-**Phase:** 1 & 2 - Plugin Shell & RAG Integration  
-**Scope:** Weeks 1-6 Testing Procedures  
+**Project:** Adastrea Director - Unreal Engine Plugin
+**Phase:** 1 & 2 - Plugin Shell & RAG Integration
+**Scope:** Weeks 1-6 Testing Procedures
 **Date:** November 14, 2025
 
 ---
@@ -137,7 +137,7 @@ This document provides a comprehensive testing checklist for the Adastrea Direct
 - [ ] **Text Editor** (optional but helpful)
   - Visual Studio Code, Sublime Text, or any code editor
   - *Why*: To view configuration files and logs
-  
+
 - [ ] **Terminal/Command Line Access**
   - *Windows*: Command Prompt or PowerShell
   - *Mac/Linux*: Terminal application
@@ -271,7 +271,7 @@ TestProject/                     ← Your project folder (use your actual name)
 
 **Goal:** Verify plugin structure meets Unreal Engine standards and loads correctly.
 
-**What This Week Tests:** 
+**What This Week Tests:**
 Week 1 focuses on the basic foundation - making sure the plugin files are organized correctly and that Unreal Engine can find and load the plugin. Think of it like checking that all the pieces of a puzzle are present before trying to assemble it.
 
 **For New Testers:**
@@ -494,7 +494,7 @@ All IPC tests passed!
    // In any Blueprint or C++ class
    FAdastreaDirectorModule& Module = FModuleManager::LoadModuleChecked<FAdastreaDirectorModule>("AdastreaDirector");
    FPythonBridge* Bridge = Module.GetPythonBridge();
-   
+
    if (Bridge)
    {
        UE_LOG(LogTemp, Log, TEXT("Python bridge found"));
@@ -523,7 +523,7 @@ if (Bridge && Bridge->IsReady())
     // Test ping
     FString Response;
     bool Success = Bridge->SendRequest(TEXT("ping"), TEXT(""), Response);
-    
+
     UE_LOG(LogTemp, Log, TEXT("Ping Success: %s"), Success ? TEXT("Yes") : TEXT("No"));
     UE_LOG(LogTemp, Log, TEXT("Response: %s"), *Response);
 }
@@ -624,12 +624,12 @@ sock.connect(('localhost', 5555))
 latencies = []
 for i in range(100):
     start = time.perf_counter()
-    
+
     request = json.dumps({'type': 'ping', 'data': ''}) + '\n'
     sock.sendall(request.encode('utf-8'))
-    
+
     response = sock.recv(4096).decode('utf-8')
-    
+
     end = time.perf_counter()
     latencies.append((end - start) * 1000)
 
@@ -824,7 +824,7 @@ for req in malformed_requests:
     sock.sendall((req + '\n').encode('utf-8'))
     response = sock.recv(4096).decode('utf-8')
     sock.close()
-    
+
     result = json.loads(response)
     assert result['status'] == 'error', f'Expected error for: {req}'
     print(f'✅ Error handling correct for: {req[:30]}...')
@@ -2045,9 +2045,9 @@ This comprehensive testing checklist ensures all components of the Adastrea Dire
 
 ---
 
-**Document Version:** 1.0  
-**Last Updated:** November 14, 2025  
-**Status:** Ready for Testing  
+**Document Version:** 1.0
+**Last Updated:** November 14, 2025
+**Status:** Ready for Testing
 **Related Docs:**
 - [PLUGIN_DEVELOPMENT_FEASIBILITY.md](../../PLUGIN_DEVELOPMENT_FEASIBILITY.md)
 - [Week Completion Reports](.)

@@ -64,28 +64,28 @@ struct FStoryItem
 
 /**
  * Discovery Data Asset
- * 
+ *
  * Defines configuration for discoverable locations, derelicts, and archaeological sites including:
  * - Location type and characteristics
  * - Detection requirements
  * - Exploration and interaction mechanics
  * - Rewards and lore content
  * - Quest integration
- * 
+ *
  * **Usage:**
  * 1. Create a Blueprint Data Asset based on this class
  * 2. Configure discovery properties and content
  * 3. Set detection requirements and rarity
  * 4. Define lore text and story items
  * 5. Place in world or reference in procedural generation
- * 
+ *
  * **Discovery Types:**
  * - Archaeological Sites: Ancient civilizations, historical ruins
  * - Derelict Ships: Abandoned vessels, ghost ships
  * - Derelict Stations: Abandoned orbital facilities
  * - Abandoned Outposts: Remote settlements, mining camps
  * - Hidden Caches: Secret stashes, smuggler hideouts
- * 
+ *
  * **Integration:**
  * - Works with ScannerComponent for initial detection
  * - DiscoveryComponent handles discovery state

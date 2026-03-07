@@ -9,7 +9,7 @@ PersonnelName: "Susan Wright"
 # Basic Identity
 Biography: |
   This individual was a trader on the frontier worlds before seeking more stable employment. They are feared by enemies and respected by allies and defended a civilian station against pirate raiders.
-  
+
 Age: 53
 Gender: "Female"
 Species: "Human"
@@ -61,7 +61,7 @@ ContractMonthsRemaining: 0
 PersonalityType: "Analytical"
 PersonalityDescription: |
   Analytical personality with focus on gunner duties.
-  
+
 Traits:
   - TraitName: "Natural Leader"
     TraitDescription: "Inspires crew"

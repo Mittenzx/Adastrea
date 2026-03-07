@@ -12,19 +12,19 @@ class ASpaceStation;
 
 /**
  * Station Management Widget for managing space stations
- * 
+ *
  * This widget provides a comprehensive interface for:
  * - Viewing station status and modules
  * - Managing resources and inventory
  * - Configuring station settings
  * - Building and upgrading modules
- * 
+ *
  * Usage:
  * 1. Create a Blueprint Widget based on this class
  * 2. Design the UI layout in UMG
  * 3. Bind to station events for real-time updates
  * 4. Call SetManagedStation to link to a station
- * 
+ *
  * Example:
  * - Player docks at station
  * - Create and display this widget

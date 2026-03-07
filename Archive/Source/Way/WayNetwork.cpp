@@ -8,15 +8,15 @@ UWayNetworkDataAsset::UWayNetworkDataAsset()
     NetworkName = FText::FromString(TEXT("Unnamed Network"));
     Description = FText::FromString(TEXT("A network of guilds with shared values and goals."));
     NetworkID = FName(TEXT("UnknownNetwork"));
-    
+
     // Default UI color
     NetworkColor = FLinearColor(0.3f, 0.6f, 0.9f, 1.0f);
-    
+
     // Default mechanics
     ReputationSpilloverPercent = 30;
     NetworkAlignmentBonus = 1.5f;
     MinimumReputationThreshold = 25;
-    
+
     // Network active by default
     bIsActive = true;
     FormationDate = FDateTime::Now();
@@ -37,7 +37,7 @@ bool UWayNetworkDataAsset::IsMember(const UWayDataAsset* Way) const
     {
         return false;
     }
-    
+
     for (const FNetworkMember& Member : MemberWays)
     {
         if (Member.MemberWay == Way)
@@ -59,10 +59,10 @@ bool UWayNetworkDataAsset::GetMostInfluentialMember(FNetworkMember& OutMember) c
     {
         return false;
     }
-    
+
     int32 HighestInfluence = 0;
     int32 MostInfluentialIndex = 0;
-    
+
     for (int32 i = 0; i < MemberWays.Num(); ++i)
     {
         if (MemberWays[i].InfluenceLevel > HighestInfluence)
@@ -71,7 +71,7 @@ bool UWayNetworkDataAsset::GetMostInfluentialMember(FNetworkMember& OutMember) c
             MostInfluentialIndex = i;
         }
     }
-    
+
     OutMember = MemberWays[MostInfluentialIndex];
     return true;
 }
@@ -82,7 +82,7 @@ int32 UWayNetworkDataAsset::GetMemberInfluence(const UWayDataAsset* Way) const
     {
         return 0;
     }
-    
+
     for (const FNetworkMember& Member : MemberWays)
     {
         if (Member.MemberWay == Way)
@@ -117,7 +117,7 @@ bool UWayNetworkDataAsset::ValuesSharedPrecept(EPrecept Precept) const
 float UWayNetworkDataAsset::CalculateNetworkAlignment(const TArray<FFeatPreceptAlignment>& FeatAlignments) const
 {
     float TotalAlignment = 0.0f;
-    
+
     // Check each Feat alignment against network's shared Precepts
     for (const FFeatPreceptAlignment& FeatAlignment : FeatAlignments)
     {
@@ -133,7 +133,7 @@ float UWayNetworkDataAsset::CalculateNetworkAlignment(const TArray<FFeatPreceptA
             }
         }
     }
-    
+
     return TotalAlignment;
 }
 
@@ -147,10 +147,10 @@ int32 UWayNetworkDataAsset::CalculateSpilloverReputation(int32 BaseReputationGai
     {
         return 0;
     }
-    
+
     // Calculate spillover amount
     int32 SpilloverAmount = (BaseReputationGain * ReputationSpilloverPercent) / 100;
-    
+
     return SpilloverAmount;
 }
 
@@ -169,19 +169,19 @@ FText UWayNetworkDataAsset::GetPhilosophySummary() const
     {
         return FText::FromString(TEXT("No shared philosophy defined"));
     }
-    
+
     FString Summary = TEXT("This network values: ");
-    
+
     for (int32 i = 0; i < SharedPrecepts.Num(); ++i)
     {
         FText PreceptName = UWayDataAsset::GetPreceptDisplayName(SharedPrecepts[i].Precept);
         Summary += PreceptName.ToString();
-        
+
         if (i < SharedPrecepts.Num() - 1)
         {
             Summary += TEXT(", ");
         }
     }
-    
+
     return FText::FromString(Summary);
 }

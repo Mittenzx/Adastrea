@@ -1,7 +1,7 @@
 # Station Editor PIE Testing Implementation Guide
 
-**Version**: 1.0  
-**Last Updated**: December 6, 2025  
+**Version**: 1.0
+**Last Updated**: December 6, 2025
 **System Status**: Fully Implemented in C++, Ready for Blueprint Integration
 
 ---
@@ -82,11 +82,11 @@ This guide provides step-by-step instructions for implementing and testing the S
 
 Before starting, ensure you have:
 
-✅ **Unreal Engine 5.6** installed  
-✅ **Adastrea project** opened in the editor  
-✅ **C++ code compiled** successfully  
-✅ Basic familiarity with **UMG (Unreal Motion Graphics)**  
-✅ Understanding of **Enhanced Input System**  
+✅ **Unreal Engine 5.6** installed
+✅ **Adastrea project** opened in the editor
+✅ **C++ code compiled** successfully
+✅ Basic familiarity with **UMG (Unreal Motion Graphics)**
+✅ Understanding of **Enhanced Input System**
 
 ### Required C++ Classes (Already Implemented)
 
@@ -150,7 +150,7 @@ The catalog defines which modules can be built.
    │  ├─ BuildTime: 60.0
    │  └─ Materials: (optional)
    └─ PreviewMesh: SM_Reactor_Preview
-   
+
    Module Entry 1:
    ├─ ModuleClass: BP_DockingBay
    ├─ DisplayName: "Docking Bay"
@@ -1070,7 +1070,7 @@ After completing PIE testing:
 **Version History:**
 - **1.0** (2025-12-06): Initial comprehensive PIE testing guide
 
-**Maintained by**: Adastrea Development Team  
+**Maintained by**: Adastrea Development Team
 **Last Updated**: December 6, 2025
 
 ---

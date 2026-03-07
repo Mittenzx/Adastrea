@@ -13,14 +13,14 @@ UTradeTransactionManager::UTradeTransactionManager()
 void UTradeTransactionManager::RecordTransaction(const FTradeTransaction& Transaction)
 {
 	TransactionHistory.Add(Transaction);
-	
+
 	// Update cached latest timestamp for performance optimization
 	if (Transaction.Timestamp > CachedLatestTimestamp)
 	{
 		CachedLatestTimestamp = Transaction.Timestamp;
 		bCacheValid = true;
 	}
-	
+
 	// Prune if necessary
 	PruneOldTransactions();
 }
@@ -28,10 +28,10 @@ void UTradeTransactionManager::RecordTransaction(const FTradeTransaction& Transa
 TArray<FTradeTransaction> UTradeTransactionManager::GetTransactionsByItem(FName ItemID) const
 {
 	TArray<FTradeTransaction> Result;
-	
+
 	// Reserve space based on estimate (assume 10% might match)
 	Result.Reserve(TransactionHistory.Num() / 10);
-	
+
 	for (const FTradeTransaction& Transaction : TransactionHistory)
 	{
 		if (Transaction.TradeItem && Transaction.TradeItem->ItemID == ItemID)
@@ -39,17 +39,17 @@ TArray<FTradeTransaction> UTradeTransactionManager::GetTransactionsByItem(FName 
 			Result.Add(Transaction);
 		}
 	}
-	
+
 	return Result;
 }
 
 TArray<FTradeTransaction> UTradeTransactionManager::GetTransactionsByMarket(UMarketDataAsset* Market) const
 {
 	TArray<FTradeTransaction> Result;
-	
+
 	// Reserve space to avoid reallocation
 	Result.Reserve(TransactionHistory.Num() / 10);
-	
+
 	for (const FTradeTransaction& Transaction : TransactionHistory)
 	{
 		if (Transaction.Market == Market)
@@ -57,17 +57,17 @@ TArray<FTradeTransaction> UTradeTransactionManager::GetTransactionsByMarket(UMar
 			Result.Add(Transaction);
 		}
 	}
-	
+
 	return Result;
 }
 
 TArray<FTradeTransaction> UTradeTransactionManager::GetTransactionsByTrader(FName TraderID) const
 {
 	TArray<FTradeTransaction> Result;
-	
+
 	// Reserve space to avoid reallocation
 	Result.Reserve(TransactionHistory.Num() / 10);
-	
+
 	for (const FTradeTransaction& Transaction : TransactionHistory)
 	{
 		if (Transaction.BuyerID == TraderID || Transaction.SellerID == TraderID)
@@ -75,14 +75,14 @@ TArray<FTradeTransaction> UTradeTransactionManager::GetTransactionsByTrader(FNam
 			Result.Add(Transaction);
 		}
 	}
-	
+
 	return Result;
 }
 
 TArray<FTradeTransaction> UTradeTransactionManager::GetTransactionsByTimeRange(float StartTime, float EndTime) const
 {
 	TArray<FTradeTransaction> Result;
-	
+
 	for (const FTradeTransaction& Transaction : TransactionHistory)
 	{
 		if (Transaction.Timestamp >= StartTime && Transaction.Timestamp <= EndTime)
@@ -90,14 +90,14 @@ TArray<FTradeTransaction> UTradeTransactionManager::GetTransactionsByTimeRange(f
 			Result.Add(Transaction);
 		}
 	}
-	
+
 	return Result;
 }
 
 int32 UTradeTransactionManager::GetTotalTradeVolume(FName ItemID, float StartTime, float EndTime) const
 {
 	int32 TotalVolume = 0;
-	
+
 	for (const FTradeTransaction& Transaction : TransactionHistory)
 	{
 		if (Transaction.TradeItem && Transaction.TradeItem->ItemID == ItemID &&
@@ -106,7 +106,7 @@ int32 UTradeTransactionManager::GetTotalTradeVolume(FName ItemID, float StartTim
 			TotalVolume += Transaction.Quantity;
 		}
 	}
-	
+
 	return TotalVolume;
 }
 
@@ -114,7 +114,7 @@ float UTradeTransactionManager::GetAveragePrice(FName ItemID, float StartTime, f
 {
 	float TotalPrice = 0.0f;
 	int32 Count = 0;
-	
+
 	for (const FTradeTransaction& Transaction : TransactionHistory)
 	{
 		if (Transaction.TradeItem && Transaction.TradeItem->ItemID == ItemID &&
@@ -124,7 +124,7 @@ float UTradeTransactionManager::GetAveragePrice(FName ItemID, float StartTime, f
 			Count++;
 		}
 	}
-	
+
 	return Count > 0 ? TotalPrice / Count : 0.0f;
 }
 
@@ -149,18 +149,18 @@ float UTradeTransactionManager::GetPriceTrend(FName ItemID, float TimeWindow) co
 	}
 
 	float StartTime = LatestTime - TimeWindow;
-	
+
 	// Get first half average and second half average
 	float MidTime = StartTime + (TimeWindow / 2.0f);
-	
+
 	float FirstHalfAvg = GetAveragePrice(ItemID, StartTime, MidTime);
 	float SecondHalfAvg = GetAveragePrice(ItemID, MidTime, LatestTime);
-	
+
 	if (FirstHalfAvg <= 0.0f)
 	{
 		return 0.0f;
 	}
-	
+
 	// Return percentage change
 	return (SecondHalfAvg - FirstHalfAvg) / FirstHalfAvg;
 }
@@ -169,7 +169,7 @@ TArray<FName> UTradeTransactionManager::GetMostTradedItems(int32 Count, float St
 {
 	// Map item IDs to trade volumes
 	TMap<FName, int32> ItemVolumes;
-	
+
 	for (const FTradeTransaction& Transaction : TransactionHistory)
 	{
 		if (Transaction.TradeItem &&
@@ -183,12 +183,12 @@ TArray<FName> UTradeTransactionManager::GetMostTradedItems(int32 Count, float St
 			ItemVolumes[ItemID] += Transaction.Quantity;
 		}
 	}
-	
+
 	// Sort by volume
 	ItemVolumes.ValueSort([](int32 A, int32 B) {
 		return A > B;
 	});
-	
+
 	// Get top items
 	TArray<FName> Result;
 	for (const auto& Pair : ItemVolumes)
@@ -199,14 +199,14 @@ TArray<FName> UTradeTransactionManager::GetMostTradedItems(int32 Count, float St
 			break;
 		}
 	}
-	
+
 	return Result;
 }
 
 int32 UTradeTransactionManager::GetPlayerProfitLoss(FName PlayerID) const
 {
 	int32 TotalProfit = 0;
-	
+
 	for (const FTradeTransaction& Transaction : TransactionHistory)
 	{
 		if (Transaction.BuyerID == PlayerID)
@@ -220,7 +220,7 @@ int32 UTradeTransactionManager::GetPlayerProfitLoss(FName PlayerID) const
 			TotalProfit += Transaction.TotalValue;
 		}
 	}
-	
+
 	return TotalProfit;
 }
 
@@ -236,13 +236,13 @@ FString UTradeTransactionManager::ExportToString() const
 	// Performance optimization: Pre-allocate string capacity
 	// Estimate ~200 characters per transaction line
 	const int32 EstimatedSize = TransactionHistory.Num() * 200 + 100;
-	
+
 	TArray<FString> Lines;
 	Lines.Reserve(TransactionHistory.Num() + 1);
-	
+
 	// Add header
 	Lines.Add(TEXT("TransactionID,Type,ItemID,Quantity,PricePerUnit,TotalValue,BuyerID,SellerID,Timestamp"));
-	
+
 	// Build lines array first (more efficient than repeated string concatenation)
 	for (const FTradeTransaction& Transaction : TransactionHistory)
 	{
@@ -259,7 +259,7 @@ FString UTradeTransactionManager::ExportToString() const
 			Transaction.Timestamp
 		));
 	}
-	
+
 	// Join all lines efficiently with newline delimiter
 	return FString::Join(Lines, TEXT("\n"));
 }
@@ -270,27 +270,27 @@ bool UTradeTransactionManager::ImportFromString(const FString& Data)
 	// This is a basic implementation - production code would need more robust parsing
 	TArray<FString> Lines;
 	Data.ParseIntoArrayLines(Lines);
-	
+
 	if (Lines.Num() < 2)
 	{
 		return false;
 	}
-	
+
 	// Skip header line
 	for (int32 i = 1; i < Lines.Num(); i++)
 	{
 		TArray<FString> Fields;
 		Lines[i].ParseIntoArray(Fields, TEXT(","));
-		
+
 		if (Fields.Num() < 9)
 		{
 			continue;
 		}
-		
+
 		// Parse fields and create transaction
 		// This would need proper implementation with asset lookup
 	}
-	
+
 	return true;
 }
 
@@ -300,18 +300,18 @@ void UTradeTransactionManager::PruneOldTransactions()
 	{
 		return;
 	}
-	
+
 	// Remove oldest transactions
 	int32 NumToRemove = TransactionHistory.Num() - MaxHistorySize;
-	
+
 	// Sort by timestamp
 	TransactionHistory.Sort([](const FTradeTransaction& A, const FTradeTransaction& B) {
 		return A.Timestamp < B.Timestamp;
 	});
-	
+
 	// Remove oldest
 	TransactionHistory.RemoveAt(0, NumToRemove);
-	
+
 	// Invalidate cache after pruning since we might have removed the latest timestamp
 	bCacheValid = false;
 }

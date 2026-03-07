@@ -25,23 +25,23 @@ enum class EAntagonistGoal : uint8
 
 /**
  * Represents a live, active antagonist in the game world.
- * 
+ *
  * An antagonist is a unique NPC rival spawned in response to the player's
  * legendary accomplishments (Feats). They provide personalized opposition
  * and recurring confrontations throughout the player's journey.
- * 
+ *
  * Key Characteristics:
  * - Spawned by completing specific high-tier Feats
  * - Unique generated identity and motivation
  * - Persistent across gameplay sessions
  * - Heat level tracks their current activity/aggression
  * - Can appear in various gameplay contexts (combat, diplomacy, trading)
- * 
+ *
  * Design Inspiration:
  * - Manga-style recurring rivals (e.g., Shangri-La Frontier)
  * - Personal nemesis systems from games like Shadow of Mordor
  * - Dynamic reputation-based spawning
- * 
+ *
  * Usage:
  * - Created and managed by UAntagonistManager
  * - Stored in game save data for persistence
@@ -69,7 +69,7 @@ struct FActiveAntagonist
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Behavior")
 	EAntagonistGoal PrimaryGoal;
 
-	/** 
+	/**
 	 * Current Heat level (0-100)
 	 * Represents how actively this antagonist is pursuing the player
 	 * Higher heat = more frequent encounters and aggressive behavior

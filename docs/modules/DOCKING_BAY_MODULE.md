@@ -1,9 +1,9 @@
 # Docking Bay Module - Complete Setup Guide
 
-**Module Type**: `ADockingBayModule`  
-**Blueprint Class**: `BP_SpaceStationModule_DockingBay`  
-**Power Consumption**: 50 units  
-**Module Group**: Docking  
+**Module Type**: `ADockingBayModule`
+**Blueprint Class**: `BP_SpaceStationModule_DockingBay`
+**Power Consumption**: 50 units
+**Module Group**: Docking
 **Last Updated**: 2026-01-19
 
 ---
@@ -172,8 +172,8 @@ BP_SpaceStationModule_DockingBay (Self)
 
 ### Docking Points (Array)
 
-**Type**: `TArray<USceneComponent*>`  
-**Access**: EditAnywhere, BlueprintReadOnly  
+**Type**: `TArray<USceneComponent*>`
+**Access**: EditAnywhere, BlueprintReadOnly
 **Category**: Docking
 
 Array of Scene Components marking ship attachment locations. Each point represents where a ship can dock.
@@ -182,19 +182,19 @@ Array of Scene Components marking ship attachment locations. Each point represen
 
 ### Max Docked Ships
 
-**Type**: `int32`  
-**Default**: 4  
-**Range**: 1-20  
-**Access**: EditAnywhere, BlueprintReadOnly  
+**Type**: `int32`
+**Default**: 4
+**Range**: 1-20
+**Access**: EditAnywhere, BlueprintReadOnly
 **Category**: Docking
 
 Maximum number of ships that can dock simultaneously. Ensure DockingPoints array has at least this many elements.
 
 ### Current Docked Ships
 
-**Type**: `int32`  
-**Default**: 0  
-**Access**: VisibleAnywhere, BlueprintReadOnly  
+**Type**: `int32`
+**Default**: 0
+**Access**: VisibleAnywhere, BlueprintReadOnly
 **Category**: Docking
 
 Current number of docked ships. Updated automatically when ships dock/undock.
@@ -205,7 +205,7 @@ Current number of docked ships. Updated automatically when ships dock/undock.
 
 ### GetAvailableDockingSpots()
 
-**Type**: BlueprintCallable, BlueprintPure  
+**Type**: BlueprintCallable, BlueprintPure
 **Returns**: `int32` - Number of free docking points
 
 Get the number of available docking spots.
@@ -216,35 +216,35 @@ Available Spots = MaxDockedShips - CurrentDockedShips
 
 ### HasAvailableDocking()
 
-**Type**: BlueprintCallable, BlueprintPure  
+**Type**: BlueprintCallable, BlueprintPure
 **Returns**: `bool` - True if ships can dock
 
 Check if the docking bay has available capacity.
 
 ### GetAvailableDockingPoint()
 
-**Type**: BlueprintCallable  
+**Type**: BlueprintCallable
 **Returns**: `USceneComponent*` - Docking point or nullptr
 
 Get the first available docking point. Returns nullptr if all points are occupied.
 
 ### GetDockingPoints()
 
-**Type**: BlueprintCallable, BlueprintPure  
+**Type**: BlueprintCallable, BlueprintPure
 **Returns**: `TArray<USceneComponent*>` - All docking points
 
 Get all docking point components.
 
 ### DockShip()
 
-**Type**: BlueprintCallable  
+**Type**: BlueprintCallable
 **Returns**: `bool` - True if successful
 
 Dock a ship at this module. Increments CurrentDockedShips if capacity available.
 
 ### UndockShip()
 
-**Type**: BlueprintCallable  
+**Type**: BlueprintCallable
 **Returns**: `bool` - True if successful
 
 Undock a ship from this module. Decrements CurrentDockedShips if any ships are docked.
@@ -261,8 +261,8 @@ The station Blueprint provides functions to query docking bay information:
 
 #### GetTotalDockingPoints()
 
-**Type**: BlueprintCallable, BlueprintPure  
-**Category**: Station|Docking  
+**Type**: BlueprintCallable, BlueprintPure
+**Category**: Station|Docking
 **Returns**: `int32` - Total number of docking points across all docking bays
 
 Shows the sum of all docking points from all docking bay modules attached to the station.
@@ -271,14 +271,14 @@ Shows the sum of all docking points from all docking bay modules attached to the
 ```
 In BP_SpaceStation Class Defaults or Event Graph:
   Get Total Docking Points → Print String
-  
+
 Output: "This station has 8 docking points"
 ```
 
 #### GetTotalDockingCapacity()
 
-**Type**: BlueprintCallable, BlueprintPure  
-**Category**: Station|Docking  
+**Type**: BlueprintCallable, BlueprintPure
+**Category**: Station|Docking
 **Returns**: `int32` - Total maximum simultaneous docking capacity
 
 Shows the sum of MaxDockedShips from all docking bay modules.
@@ -287,22 +287,22 @@ Shows the sum of MaxDockedShips from all docking bay modules.
 ```
 In BP_SpaceStation:
   Get Total Docking Capacity → Print String
-  
+
 Output: "This station can dock 8 ships simultaneously"
 ```
 
 #### GetDockingBayModule()
 
-**Type**: BlueprintCallable  
-**Category**: Station|Docking  
+**Type**: BlueprintCallable
+**Category**: Station|Docking
 **Returns**: `ADockingBayModule*` - First docking bay module or nullptr
 
 Gets the first docking bay module attached to the station.
 
 #### GetDockingBayModules()
 
-**Type**: BlueprintCallable  
-**Category**: Station|Docking  
+**Type**: BlueprintCallable
+**Category**: Station|Docking
 **Returns**: `TArray<ADockingBayModule*>` - All docking bay modules
 
 Gets all docking bay modules attached to the station.
@@ -370,7 +370,7 @@ DockingPoint_1: (300, 0, 50)
 DockingPoint_2: (300, 0, -50)
 ```
 
-**Use Case**: Outpost, small trading post  
+**Use Case**: Outpost, small trading post
 **Max Docked Ships**: 2
 
 ### Medium Station (4 points)
@@ -382,7 +382,7 @@ DockingPoint_3: (400, 200, 100)
 DockingPoint_4: (400, -200, 100)
 ```
 
-**Use Case**: Standard trading station  
+**Use Case**: Standard trading station
 **Max Docked Ships**: 4
 
 ### Large Station (6 points)
@@ -396,7 +396,7 @@ DockingPoint_5: (400, 300, 0)
 DockingPoint_6: (400, -300, 0)
 ```
 
-**Use Case**: Major hub, capital station  
+**Use Case**: Major hub, capital station
 **Max Docked Ships**: 6
 
 ### Positioning Best Practices
@@ -484,7 +484,7 @@ DockingPoint_6: (400, -300, 0)
 
 ### Issue: No Docking Prompt Appears
 
-**Likely Cause**: InteractionTrigger not configured  
+**Likely Cause**: InteractionTrigger not configured
 **Solution**:
 - Verify sphere collision settings
 - Check "Generate Overlap Events" enabled
@@ -492,7 +492,7 @@ DockingPoint_6: (400, -300, 0)
 
 ### Issue: Ship Doesn't Move to Docking Point
 
-**Likely Cause**: No components tagged with "DockingPoint"  
+**Likely Cause**: No components tagged with "DockingPoint"
 **Solution**:
 - **NEW FIX**: Check each Scene Component has "DockingPoint" tag
 - Look for error message: "[DOCKING] WARNING: No docking points found!"
@@ -501,7 +501,7 @@ DockingPoint_6: (400, -300, 0)
 
 ### Issue: "No docking points found" Error in Log
 
-**Likely Cause**: Missing "DockingPoint" tags on Scene Components  
+**Likely Cause**: Missing "DockingPoint" tags on Scene Components
 **Solution**:
 1. Open the Docking Bay Module Blueprint
 2. Select each docking point Scene Component
@@ -512,7 +512,7 @@ DockingPoint_6: (400, -300, 0)
 
 ### Issue: Ship Docks at Wrong Location
 
-**Likely Cause**: Scene Component position incorrect  
+**Likely Cause**: Scene Component position incorrect
 **Solution**:
 - Select docking point component
 - Adjust Transform → Location in Details panel
@@ -520,7 +520,7 @@ DockingPoint_6: (400, -300, 0)
 
 ### Issue: Multiple Ships Use Same Point
 
-**Likely Cause**: DockingPoints array has duplicates  
+**Likely Cause**: DockingPoints array has duplicates
 **Solution**:
 - Open DockingPoints array
 - Ensure each entry is unique
@@ -528,7 +528,7 @@ DockingPoint_6: (400, -300, 0)
 
 ### Issue: Ship Falls Through Station
 
-**Likely Cause**: Docking point inside collision geometry  
+**Likely Cause**: Docking point inside collision geometry
 **Solution**:
 - Move docking point outside station mesh
 - Ensure clear space around docking point
@@ -648,5 +648,5 @@ Add/remove docking points at runtime:
 
 ---
 
-**Maintained by**: Adastrea Development Team  
+**Maintained by**: Adastrea Development Team
 **For Support**: See main project README.md

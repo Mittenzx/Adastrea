@@ -232,7 +232,7 @@ float UBoardingComponent::GetAttackerCombatStrength() const
         return 0.0f;
     }
 
-    const FBoardingParty& Party = ActiveBoardingAction.bIsAttacker ? 
+    const FBoardingParty& Party = ActiveBoardingAction.bIsAttacker ?
         ActiveBoardingAction.AttackingParty : ActiveBoardingAction.DefendingParty;
 
     const float CrewFactor = Party.CrewCount;
@@ -250,7 +250,7 @@ float UBoardingComponent::GetDefenderCombatStrength() const
         return 0.0f;
     }
 
-    const FBoardingParty& Party = ActiveBoardingAction.bIsAttacker ? 
+    const FBoardingParty& Party = ActiveBoardingAction.bIsAttacker ?
         ActiveBoardingAction.DefendingParty : ActiveBoardingAction.AttackingParty;
 
     const float CrewFactor = Party.CrewCount;
@@ -276,13 +276,13 @@ void UBoardingComponent::OnBreachComplete_Implementation()
 
 void UBoardingComponent::OnCombatResolved_Implementation(int32 AttackerCasualties, int32 DefenderCasualties)
 {
-    UE_LOG(LogAdastreaCombat, Log, TEXT("Combat resolved - Attacker casualties: %d, Defender casualties: %d"), 
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Combat resolved - Attacker casualties: %d, Defender casualties: %d"),
         AttackerCasualties, DefenderCasualties);
 }
 
 void UBoardingComponent::OnBoardingSuccessful_Implementation(AActor* CapturedShip, AController* NewOwner)
 {
-    UE_LOG(LogAdastreaCombat, Warning, TEXT("Boarding successful! Ship captured by %s"), 
+    UE_LOG(LogAdastreaCombat, Warning, TEXT("Boarding successful! Ship captured by %s"),
         NewOwner ? *NewOwner->GetName() : TEXT("Unknown"));
 }
 
@@ -352,7 +352,7 @@ void UBoardingComponent::UpdateBoardingAction(float DeltaTime)
         break;
     case EBoardingState::Combat:
         {
-            const float CombatProgress = 1.0f - (ActiveBoardingAction.DefendingParty.CrewCount / 
+            const float CombatProgress = 1.0f - (ActiveBoardingAction.DefendingParty.CrewCount /
                 static_cast<float>(FMath::Max(1, 10)));
             ActiveBoardingAction.Progress = 30.0f + CombatProgress * 60.0f;
         }
@@ -401,24 +401,24 @@ void UBoardingComponent::ResolveCombat()
     CalculateCasualties(AttackerStrength, DefenderStrength, AttackerCasualties, DefenderCasualties);
 
     // Apply casualties
-    ActiveBoardingAction.AttackingParty.CrewCount = FMath::Max(0, 
+    ActiveBoardingAction.AttackingParty.CrewCount = FMath::Max(0,
         ActiveBoardingAction.AttackingParty.CrewCount - AttackerCasualties);
     ActiveBoardingAction.AttackingParty.Casualties += AttackerCasualties;
 
-    ActiveBoardingAction.DefendingParty.CrewCount = FMath::Max(0, 
+    ActiveBoardingAction.DefendingParty.CrewCount = FMath::Max(0,
         ActiveBoardingAction.DefendingParty.CrewCount - DefenderCasualties);
     ActiveBoardingAction.DefendingParty.Casualties += DefenderCasualties;
 
     // Update morale based on casualties
     if (AttackerCasualties > 0)
     {
-        ActiveBoardingAction.AttackingParty.Morale = FMath::Max(0.0f, 
+        ActiveBoardingAction.AttackingParty.Morale = FMath::Max(0.0f,
             ActiveBoardingAction.AttackingParty.Morale - (AttackerCasualties * 5.0f));
     }
 
     if (DefenderCasualties > 0)
     {
-        ActiveBoardingAction.DefendingParty.Morale = FMath::Max(0.0f, 
+        ActiveBoardingAction.DefendingParty.Morale = FMath::Max(0.0f,
             ActiveBoardingAction.DefendingParty.Morale - (DefenderCasualties * 5.0f));
     }
 
@@ -436,7 +436,7 @@ void UBoardingComponent::ResolveCombat()
     }
 }
 
-void UBoardingComponent::CalculateCasualties(float AttackerStrength, float DefenderStrength, 
+void UBoardingComponent::CalculateCasualties(float AttackerStrength, float DefenderStrength,
     int32& OutAttackerCasualties, int32& OutDefenderCasualties)
 {
     // Base casualty rate
@@ -444,19 +444,19 @@ void UBoardingComponent::CalculateCasualties(float AttackerStrength, float Defen
 
     // Attacker casualties based on defender strength
     const float AttackerCasualtyRate = BaseCasualtyRate * (DefenderStrength / FMath::Max(AttackerStrength, 1.0f));
-    OutAttackerCasualties = FMath::RandRange(0, FMath::Max(1, 
+    OutAttackerCasualties = FMath::RandRange(0, FMath::Max(1,
         FMath::CeilToInt(ActiveBoardingAction.AttackingParty.CrewCount * AttackerCasualtyRate)));
 
     // Defender casualties based on attacker strength
     const float DefenderCasualtyRate = BaseCasualtyRate * (AttackerStrength / FMath::Max(DefenderStrength, 1.0f));
-    OutDefenderCasualties = FMath::RandRange(0, FMath::Max(1, 
+    OutDefenderCasualties = FMath::RandRange(0, FMath::Max(1,
         FMath::CeilToInt(ActiveBoardingAction.DefendingParty.CrewCount * DefenderCasualtyRate)));
 }
 
 void UBoardingComponent::CheckBoardingCompletion()
 {
     // Check if attackers eliminated
-    if (ActiveBoardingAction.AttackingParty.CrewCount <= 0 || 
+    if (ActiveBoardingAction.AttackingParty.CrewCount <= 0 ||
         ActiveBoardingAction.AttackingParty.Morale <= 10.0f)
     {
         FailBoardingAction(TEXT("Boarding party eliminated or routed"));
@@ -464,7 +464,7 @@ void UBoardingComponent::CheckBoardingCompletion()
     }
 
     // Check if defenders eliminated
-    if (ActiveBoardingAction.DefendingParty.CrewCount <= 0 || 
+    if (ActiveBoardingAction.DefendingParty.CrewCount <= 0 ||
         ActiveBoardingAction.DefendingParty.Morale <= 10.0f)
     {
         // Attackers won, move to securing phase
@@ -511,7 +511,7 @@ void UBoardingComponent::CompleteBoardingSuccess()
         ) : nullptr;
         if (AttackerBoarding)
         {
-            NewOwner = AttackerBoarding->GetOwner() ? 
+            NewOwner = AttackerBoarding->GetOwner() ?
                 AttackerBoarding->GetOwner()->GetInstigatorController() : nullptr;
         }
     }
@@ -529,7 +529,7 @@ void UBoardingComponent::FailBoardingAction(const FString& Reason)
     }
 
     ActiveBoardingAction.State = EBoardingState::Failed;
-    
+
     OnBoardingFailed(Reason);
 
     // Notify target

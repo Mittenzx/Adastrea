@@ -189,7 +189,7 @@ private:
 	// Performance optimization: cached latest timestamp
 	// Updated when transactions are recorded to avoid scanning entire history
 	float CachedLatestTimestamp;
-	
+
 	// Track if cache needs invalidation
 	bool bCacheValid;
 

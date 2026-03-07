@@ -93,7 +93,7 @@ All classes are ready to use. Simply include the headers in your code:
 
 ### Removing a Module:
 1. User selects a module from the list
-2. User clicks "Remove" button  
+2. User clicks "Remove" button
 3. Button event calls `RemoveModule` with selected module
 4. Module is detached from the station
 5. UI updates to reflect the change

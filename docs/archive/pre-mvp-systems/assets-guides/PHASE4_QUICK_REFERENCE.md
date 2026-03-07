@@ -1,6 +1,6 @@
 # Phase 4 Systems - Quick Reference
 
-**Version**: 1.0.0  
+**Version**: 1.0.0
 **Last Updated**: November 15, 2025
 
 ---
@@ -210,13 +210,13 @@ ELODLevel: High, Medium, Low, VeryLow
 
 ### Station
 ```cpp
-EStationModuleGroup: None, Docking, Power, Storage, Defence, LivingQuarters, 
+EStationModuleGroup: None, Docking, Power, Storage, Defence, LivingQuarters,
                      Command, Industrial, Trade, Research, Entertainment
 ```
 
 ### Tutorial
 ```cpp
-ETutorialStepType: Message, HighlightUI, WaitForAction, WaitForCondition, 
+ETutorialStepType: Message, HighlightUI, WaitForAction, WaitForCondition,
                    PlayAnimation, SpawnActor
 ```
 

@@ -101,7 +101,7 @@ TradeItem_Platinum | Platinum | A precious metal used in advanced electronics an
 
 Use any of these:
 - TRUE / FALSE
-- true / false  
+- true / false
 - YES / NO
 - 1 / 0
 

@@ -57,7 +57,7 @@ struct FScanData
 
 /**
  * Scannable Object Component
- * 
+ *
  * Makes an object detectable by scanner systems. Add this component to any actor
  * that should be discoverable through ship scanners including:
  * - Ships (friendly and hostile)
@@ -66,19 +66,19 @@ struct FScanData
  * - Anomalies and points of interest
  * - Debris fields
  * - Beacons
- * 
+ *
  * **Detection Mechanics:**
  * - Signature Strength: How easily the object is detected (0-100)
  * - Stealth: Can be hidden from basic scanners
  * - Size: Larger objects detected at greater ranges
  * - Detail Levels: Information revealed based on scan quality
- * 
+ *
  * **Usage:**
  * 1. Add component to actor Blueprint
  * 2. Set SignalType and SignatureStrength
  * 3. Configure scan data for each detail level
  * 4. Optionally enable stealth or masking
- * 
+ *
  * **Integration:**
  * - Automatically detected by ScannerComponent
  * - Responds to active scan requests

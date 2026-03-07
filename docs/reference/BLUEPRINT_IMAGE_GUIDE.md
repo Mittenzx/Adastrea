@@ -2,8 +2,8 @@
 
 > **Visual Blueprint documentation using high-quality SVG diagrams**
 
-**Last Updated**: December 29, 2025  
-**For Version**: 1.0.0-alpha  
+**Last Updated**: December 29, 2025
+**For Version**: 1.0.0-alpha
 **Target Engine**: Unreal Engine 5.6
 
 ---
@@ -188,7 +188,7 @@ Branch nodes create conditional logic (white header).
 3. **Branch: Has Cargo Space** - Check capacity (not shown)
 4. **Branch: Item In Stock** - Verify availability (not shown)
 
-If **all validations pass** → Execute Purchase  
+If **all validations pass** → Execute Purchase
 If **any validation fails** → Show specific error
 
 ---
@@ -469,7 +469,7 @@ Use these images in:
 
 ---
 
-**Last Updated**: December 29, 2025  
-**Maintained by**: Adastrea Development Team  
-**Image Generator**: `Tools/generate_blueprint_images.py`  
+**Last Updated**: December 29, 2025
+**Maintained by**: Adastrea Development Team
+**Image Generator**: `Tools/generate_blueprint_images.py`
 **Image Directory**: `docs/reference/images/blueprints/`

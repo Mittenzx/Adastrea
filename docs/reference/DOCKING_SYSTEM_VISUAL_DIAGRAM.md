@@ -5,21 +5,21 @@
 ```mermaid
 graph TD
     Station[ASpaceStation<br/>TArray&lt;ASpaceStationModule*&gt; Modules]
-    
+
     Station --> DockingBay[ADockingBayModule<br/>Large Facility<br/>Power: -50 units<br/>Capacity: 3-6 ships]
     Station --> DockingPort[ADockingPortModule<br/>Small Port<br/>Power: -10 units<br/>Capacity: 1 ship]
     Station --> Reactor[Other Modules<br/>Reactor, CargoBay, etc.]
-    
+
     DockingBay --> BaySlots[TArray&lt;USceneComponent*&gt;<br/>DockingPoints: 6 slots]
     DockingPort --> PortSlots[TArray&lt;USceneComponent*&gt;<br/>DockingPoints: 1 slot]
-    
+
     BaySlots --> Slot1[Slot 1: 100,0,0<br/>Status: FREE]
     BaySlots --> Slot2[Slot 2: 200,0,0<br/>Status: OCCUPIED<br/>Ship A]
     BaySlots --> Slot3[Slot 3: 300,0,0<br/>Status: FREE]
     BaySlots --> Slot4[Slot 4-6: ...<br/>Status: Various]
-    
+
     PortSlots --> PSlot1[Slot 1: 0,0,0<br/>Status: OCCUPIED<br/>Ship C]
-    
+
     style Station fill:#1B4F72,stroke:#fff,color:#fff
     style DockingBay fill:#2E7D32,stroke:#fff,color:#fff
     style DockingPort fill:#2E7D32,stroke:#fff,color:#fff
@@ -46,7 +46,7 @@ sequenceDiagram
     participant Station as Space Station<br/>(ASpaceStation)
     participant Module as Docking Module<br/>(ADockingBayModule)
     participant Slot as Docking Slot<br/>(USceneComponent*)
-    
+
     Ship->>Station: Request docking
     Note over Station: Find Available Module<br/>Iterate modules array<br/>Filter: DockingBay or DockingPort
     Station->>Module: FindFreeDockingSlot()
@@ -78,7 +78,7 @@ flowchart TD
     OpenUI[Station: Open trading interface]
     Complete([Docking Complete])
     Reject([Docking Rejected:<br/>All bays full])
-    
+
     Start --> FindModule
     FindModule --> CheckDistance
     CheckDistance -->|Yes| FindSlot
@@ -90,7 +90,7 @@ flowchart TD
     MarkOccupied --> DisableControls
     DisableControls --> OpenUI
     OpenUI --> Complete
-    
+
     style Start fill:#C80000,stroke:#fff,color:#fff
     style Complete fill:#2E7D32,stroke:#fff,color:#fff
     style Reject fill:#D32F2F,stroke:#fff,color:#fff
@@ -138,9 +138,9 @@ void ASpaceship::DockAtSlot(USceneComponent* Slot)
 {
     FVector TargetLoc = Slot->GetComponentLocation();
     FRotator TargetRot = Slot->GetComponentRotation();
-    
+
     NavigationComponent->MoveToLocation(TargetLoc, TargetRot);
-    
+
     // On arrival:
     OnDockingComplete(Slot);
 }
@@ -184,20 +184,20 @@ void ADockingBayModule::MarkSlotOccupied(USceneComponent* Slot, ASpaceship* Dock
 ```mermaid
 graph LR
     Question[Why DockingBay AND DockingPort?]
-    
+
     Question --> Variety[Gameplay Variety]
     Question --> Resource[Resource Management]
     Question --> Balance[Economic Balance]
-    
+
     Variety --> V1[Different ship sizes]
     Variety --> V2[Strategic choices]
-    
+
     Resource --> R1[Bay: 50 power, 6 slots]
     Resource --> R2[Port: 10 power, 1 slot]
-    
+
     Balance --> B1[Expensive vs budget]
     Balance --> B2[Versatile vs specialized]
-    
+
     style Question fill:#FF8C00,stroke:#fff,color:#fff
     style Variety fill:#2E7D32,stroke:#fff,color:#fff
     style Resource fill:#1B4F72,stroke:#fff,color:#fff
@@ -219,21 +219,21 @@ graph LR
 ```mermaid
 graph TD
     Choice{Why USceneComponent*?}
-    
+
     Choice -->|Option A| SceneComp[USceneComponent Pointers]
     Choice -->|Option B| RawVectors[Raw FVector]
-    
+
     SceneComp --> SC1[✅ Transform inheritance]
     SceneComp --> SC2[✅ Editor visualization]
     SceneComp --> SC3[✅ Collision/overlap support]
     SceneComp --> SC4[✅ Standard Unreal pattern]
-    
+
     RawVectors --> RV1[❌ No transform inheritance]
     RawVectors --> RV2[❌ No editor visualization]
     RawVectors --> RV3[❌ Manual calculations]
-    
+
     SceneComp --> Winner[VERDICT: Scene components]
-    
+
     style Choice fill:#FF8C00,stroke:#fff,color:#fff
     style SceneComp fill:#2E7D32,stroke:#fff,color:#fff
     style RawVectors fill:#D32F2F,stroke:#fff,color:#fff
@@ -245,21 +245,21 @@ graph TD
 ```mermaid
 graph TD
     Choice{Why TArray?}
-    
+
     Choice -->|Option A| Array[TArray&lt;USceneComponent*&gt;]
     Choice -->|Option B| Fixed[Slot1, Slot2, Slot3...]
-    
+
     Array --> A1[✅ Scalable 1 to N]
     Array --> A2[✅ Easy iteration]
     Array --> A3[✅ Flexible per module]
     Array --> A4[✅ Runtime additions]
-    
+
     Fixed --> F1[❌ Fixed slot count]
     Fixed --> F2[❌ Code duplication]
     Fixed --> F3[❌ Hard to iterate]
-    
+
     Array --> Winner[VERDICT: Array is better]
-    
+
     style Choice fill:#FF8C00,stroke:#fff,color:#fff
     style Array fill:#2E7D32,stroke:#fff,color:#fff
     style Fixed fill:#D32F2D,stroke:#fff,color:#fff
@@ -277,24 +277,24 @@ graph TB
     subgraph Layer4[4. Runtime Tracking]
         RT[Occupied/Free State<br/>Track which slots have ships]
     end
-    
+
     subgraph Layer3[3. Array - Slot Management]
         Array[TArray&lt;USceneComponent*&gt;<br/>Multiple slots per module<br/>Scalability & iteration]
     end
-    
+
     subgraph Layer2[2. Scene Component Pointers]
         SCP[USceneComponent* DockingPoint<br/>Physical attachment points<br/>Transform data]
     end
-    
+
     subgraph Layer1[1. Module Classes]
         Bay[ADockingBayModule<br/>Large, 50 power, 6 slots]
         Port[ADockingPortModule<br/>Small, 10 power, 1 slot]
     end
-    
+
     Layer1 --> Layer2
     Layer2 --> Layer3
     Layer3 --> Layer4
-    
+
     style Layer1 fill:#1B4F72,stroke:#fff,color:#fff
     style Layer2 fill:#2E7D32,stroke:#fff,color:#fff
     style Layer3 fill:#5DADE2,stroke:#000,color:#000

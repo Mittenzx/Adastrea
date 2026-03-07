@@ -34,35 +34,35 @@ UUniverseMapWidget::UUniverseMapWidget(const FObjectInitializer& ObjectInitializ
 void UUniverseMapWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	
+
 	// Create default UI widgets if they don't exist and auto-create is enabled
 	if (bAutoCreateMissingWidgets)
 	{
 		CreateDefaultUIWidgets();
 	}
-	
+
 	// Setup close button if it exists
 	if (Button_Close)
 	{
 		Button_Close->OnClicked.AddDynamic(this, &UUniverseMapWidget::OnCloseButtonClicked);
 	}
-	
+
 	// Initialize the universe map when constructed
 	InitializeUniverseMap();
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Widget constructed"));
 }
 
 void UUniverseMapWidget::NativeDestruct()
 {
 	Super::NativeDestruct();
-	
+
 	// Clear references
 	AllSectors.Empty();
 	SelectedSector = nullptr;
 	DiscoveredSectors.Empty();
 	UniverseSectorInfo.Empty();
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Widget destructed"));
 }
 
@@ -70,10 +70,10 @@ void UUniverseMapWidget::InitializeUniverseMap_Implementation()
 {
 	// Find all sectors in the world
 	AllSectors = FindAllSectorsInWorld();
-	
+
 	// Build the sector grid
 	BuildUniverseSectorGrid();
-	
+
 	// Auto-discover the player's current sector
 	if (bAutoDiscoverVisitedSectors)
 	{
@@ -83,10 +83,10 @@ void UUniverseMapWidget::InitializeUniverseMap_Implementation()
 			MarkSectorDiscovered(PlayerSector);
 		}
 	}
-	
+
 	// Update the grid display
 	UpdateUniverseGrid();
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Initialized with %d sectors"), AllSectors.Num());
 }
 
@@ -94,13 +94,13 @@ void UUniverseMapWidget::RefreshUniverseMap()
 {
 	// Re-find all sectors (in case new ones were spawned)
 	AllSectors = FindAllSectorsInWorld();
-	
+
 	// Rebuild the grid
 	BuildUniverseSectorGrid();
-	
+
 	// Update the display
 	UpdateUniverseGrid();
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Refreshed - now showing %d sectors"), AllSectors.Num());
 }
 
@@ -152,11 +152,11 @@ void UUniverseMapWidget::UpdateUniverseGrid_Implementation()
 			Text_SectorDescription->SetText(FText::FromString("Select a sector to view details"));
 		}
 	}
-	
+
 	// Blueprint implementation can add additional visual display of the grid
 	// This can draw sector icons, connections, labels, etc.
-	
-	UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Grid updated - %d sectors, %d discovered"), 
+
+	UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Grid updated - %d sectors, %d discovered"),
 		AllSectors.Num(), GetDiscoveredSectorCount());
 }
 
@@ -166,19 +166,19 @@ void UUniverseMapWidget::SetSelectedSector(ASpaceSectorMap* Sector)
 	{
 		return; // No change needed
 	}
-	
+
 	// Update selection in sector info
 	for (FUniverseSectorInfo& Info : UniverseSectorInfo)
 	{
 		Info.bIsSelected = (Info.Sector == Sector);
 	}
-	
+
 	SelectedSector = Sector;
-	
+
 	// Trigger selection event
 	OnSectorSelected(Sector);
-	
-	UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Selected sector '%s'"), 
+
+	UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Selected sector '%s'"),
 		Sector ? *Sector->SectorName.ToString() : TEXT("None"));
 }
 
@@ -202,17 +202,17 @@ ASpaceSectorMap* UUniverseMapWidget::GetPlayerCurrentSector() const
 	{
 		return nullptr;
 	}
-	
+
 	// Get player pawn (should be a spaceship)
 	APawn* PlayerPawn = PC->GetPawn();
 	if (!PlayerPawn)
 	{
 		return nullptr;
 	}
-	
+
 	// Get player position
 	FVector PlayerPosition = PlayerPawn->GetActorLocation();
-	
+
 	// Find which sector contains the player
 	for (ASpaceSectorMap* Sector : AllSectors)
 	{
@@ -221,7 +221,7 @@ ASpaceSectorMap* UUniverseMapWidget::GetPlayerCurrentSector() const
 			return Sector;
 		}
 	}
-	
+
 	return nullptr;
 }
 
@@ -236,10 +236,10 @@ void UUniverseMapWidget::MarkSectorDiscovered(ASpaceSectorMap* Sector)
 	{
 		return;
 	}
-	
+
 	bool bWasAlreadyDiscovered = DiscoveredSectors.Contains(Sector);
 	DiscoveredSectors.Add(Sector);
-	
+
 	// Update the sector info
 	for (FUniverseSectorInfo& Info : UniverseSectorInfo)
 	{
@@ -249,11 +249,11 @@ void UUniverseMapWidget::MarkSectorDiscovered(ASpaceSectorMap* Sector)
 			break;
 		}
 	}
-	
+
 	if (!bWasAlreadyDiscovered)
 	{
 		UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Discovered sector '%s'"), *Sector->SectorName.ToString());
-		
+
 		// Update the grid to show the newly discovered sector
 		UpdateUniverseGrid();
 	}
@@ -262,21 +262,21 @@ void UUniverseMapWidget::MarkSectorDiscovered(ASpaceSectorMap* Sector)
 void UUniverseMapWidget::ToggleUniverseMapVisibility(bool bVisible)
 {
 	bIsUniverseMapVisible = bVisible;
-	
+
 	if (bVisible)
 	{
 		SetVisibility(ESlateVisibility::Visible);
 		OnMapOpened();
-		
+
 		// Refresh data when opening
 		RefreshUniverseMap();
-		
+
 		// Auto-select player's current sector
 		ASpaceSectorMap* PlayerSector = GetPlayerCurrentSector();
 		if (PlayerSector)
 		{
 			SetSelectedSector(PlayerSector);
-			
+
 			// Auto-discover if configured
 			if (bAutoDiscoverVisitedSectors)
 			{
@@ -289,7 +289,7 @@ void UUniverseMapWidget::ToggleUniverseMapVisibility(bool bVisible)
 		SetVisibility(ESlateVisibility::Hidden);
 		OnMapClosed();
 	}
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Visibility set to %s"), bVisible ? TEXT("Visible") : TEXT("Hidden"));
 }
 
@@ -297,8 +297,8 @@ void UUniverseMapWidget::OnSectorSelected_Implementation(ASpaceSectorMap* Sector
 {
 	// Blueprint implementation can add custom selection behavior
 	// E.g., show sector details panel, allow navigation, etc.
-	
-	UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Sector selected event - '%s'"), 
+
+	UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Sector selected event - '%s'"),
 		Sector ? *Sector->SectorName.ToString() : TEXT("None"));
 }
 
@@ -306,7 +306,7 @@ void UUniverseMapWidget::OnMapOpened_Implementation()
 {
 	// Blueprint implementation can add custom behavior when map opens
 	// E.g., pause game, show tutorial, play sound effect, etc.
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Map opened"));
 }
 
@@ -314,7 +314,7 @@ void UUniverseMapWidget::OnMapClosed_Implementation()
 {
 	// Blueprint implementation can add custom behavior when map closes
 	// E.g., resume game, save settings, etc.
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Map closed"));
 }
 
@@ -330,7 +330,7 @@ float UUniverseMapWidget::GetExplorationProgress() const
 	{
 		return 0.0f;
 	}
-	
+
 	int32 DiscoveredCount = GetDiscoveredSectorCount();
 	return static_cast<float>(DiscoveredCount) / static_cast<float>(TotalSectors);
 }
@@ -338,7 +338,7 @@ float UUniverseMapWidget::GetExplorationProgress() const
 void UUniverseMapWidget::BuildUniverseSectorGrid()
 {
 	UniverseSectorInfo.Empty();
-	
+
 	// Calculate grid coordinates for each sector
 	for (ASpaceSectorMap* Sector : AllSectors)
 	{
@@ -346,16 +346,16 @@ void UUniverseMapWidget::BuildUniverseSectorGrid()
 		{
 			continue;
 		}
-		
+
 		FUniverseSectorInfo Info;
 		Info.Sector = Sector;
 		Info.GridCoordinates = CalculateGridCoordinates(Sector);
 		Info.bIsDiscovered = IsSectorDiscovered(Sector);
 		Info.bIsSelected = (Sector == SelectedSector);
-		
+
 		UniverseSectorInfo.Add(Info);
 	}
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Built sector grid with %d sectors"), UniverseSectorInfo.Num());
 }
 
@@ -365,20 +365,20 @@ FIntVector UUniverseMapWidget::CalculateGridCoordinates(ASpaceSectorMap* Sector)
 	{
 		return FIntVector::ZeroValue;
 	}
-	
+
 	// Get sector center position
 	FVector SectorCenter = Sector->GetSectorCenter();
-	
+
 	// Convert world position to grid coordinates
 	// Each grid cell is one sector size (20,000,000 units = 200km)
 	// Use the sector's bounds to determine size rather than directly accessing static member
 	FBox SectorBounds = Sector->GetSectorBounds();
 	float SectorSize = SectorBounds.GetSize().X; // All dimensions are equal for cubic sectors
-	
+
 	int32 GridX = FMath::RoundToInt(SectorCenter.X / SectorSize);
 	int32 GridY = FMath::RoundToInt(SectorCenter.Y / SectorSize);
 	int32 GridZ = FMath::RoundToInt(SectorCenter.Z / SectorSize);
-	
+
 	return FIntVector(GridX, GridY, GridZ);
 }
 
@@ -386,7 +386,7 @@ TArray<ASpaceSectorMap*> UUniverseMapWidget::FindAllSectorsInWorld() const
 {
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(this, ASpaceSectorMap::StaticClass(), FoundActors);
-	
+
 	TArray<ASpaceSectorMap*> Sectors;
 	for (AActor* Actor : FoundActors)
 	{
@@ -396,7 +396,7 @@ TArray<ASpaceSectorMap*> UUniverseMapWidget::FindAllSectorsInWorld() const
 			Sectors.Add(Sector);
 		}
 	}
-	
+
 	return Sectors;
 }
 
@@ -599,23 +599,23 @@ void UUniverseMapWidget::OnCloseButtonClicked()
 TArray<ASpaceSectorMap*> UUniverseMapWidget::FindPathBetweenSectors(ASpaceSectorMap* StartSector, ASpaceSectorMap* EndSector)
 {
 	TArray<ASpaceSectorMap*> Path;
-	
+
 	if (!StartSector || !EndSector || StartSector == EndSector)
 	{
 		return Path;
 	}
-	
+
 	// Simple A* pathfinding through grid
 	TSet<ASpaceSectorMap*> ClosedSet;
 	TSet<ASpaceSectorMap*> OpenSet;
 	TMap<ASpaceSectorMap*, ASpaceSectorMap*> CameFrom;
 	TMap<ASpaceSectorMap*, int32> GScore;
 	TMap<ASpaceSectorMap*, int32> FScore;
-	
+
 	OpenSet.Add(StartSector);
 	GScore.Add(StartSector, 0);
 	FScore.Add(StartSector, GetGridDistanceBetweenSectors(StartSector, EndSector));
-	
+
 	while (OpenSet.Num() > 0)
 	{
 		// Find sector with lowest FScore in OpenSet
@@ -630,7 +630,7 @@ TArray<ASpaceSectorMap*> UUniverseMapWidget::FindPathBetweenSectors(ASpaceSector
 				Current = Sector;
 			}
 		}
-		
+
 		if (Current == EndSector)
 		{
 			// Reconstruct path
@@ -639,14 +639,14 @@ TArray<ASpaceSectorMap*> UUniverseMapWidget::FindPathBetweenSectors(ASpaceSector
 				Path.Insert(Current, 0);
 				Current = CameFrom.FindRef(Current);
 			}
-			
+
 			UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Found path with %d sectors"), Path.Num());
 			return Path;
 		}
-		
+
 		OpenSet.Remove(Current);
 		ClosedSet.Add(Current);
-		
+
 		// Check neighbors
 		TArray<ASpaceSectorMap*> Neighbors = Current->GetNeighboringSectors();
 		for (ASpaceSectorMap* Neighbor : Neighbors)
@@ -655,9 +655,9 @@ TArray<ASpaceSectorMap*> UUniverseMapWidget::FindPathBetweenSectors(ASpaceSector
 			{
 				continue;
 			}
-			
+
 			const int32 TentativeGScore = GScore.FindRef(Current) + 1; // Cost of 1 per sector
-			
+
 			if (!OpenSet.Contains(Neighbor))
 			{
 				OpenSet.Add(Neighbor);
@@ -671,19 +671,19 @@ TArray<ASpaceSectorMap*> UUniverseMapWidget::FindPathBetweenSectors(ASpaceSector
 					continue;
 				}
 			}
-			
+
 			// This is the best path to Neighbor found so far; update came-from and scores
 			CameFrom.FindOrAdd(Neighbor) = Current;
-			
+
 			int32& NeighborGScore = GScore.FindOrAdd(Neighbor);
 			NeighborGScore = TentativeGScore;
-			
+
 			const int32 Heuristic = GetGridDistanceBetweenSectors(Neighbor, EndSector);
 			int32& NeighborFScore = FScore.FindOrAdd(Neighbor);
 			NeighborFScore = TentativeGScore + Heuristic;
 		}
 	}
-	
+
 	UE_LOG(LogAdastrea, Warning, TEXT("UniverseMapWidget: No path found between sectors"));
 	return Path;
 }
@@ -694,10 +694,10 @@ int32 UUniverseMapWidget::GetGridDistanceBetweenSectors(ASpaceSectorMap* SectorA
 	{
 		return MAX_int32;
 	}
-	
+
 	FIntVector GridA = SectorA->GetGridCoordinates();
 	FIntVector GridB = SectorB->GetGridCoordinates();
-	
+
 	// Manhattan distance
 	return FMath::Abs(GridA.X - GridB.X) + FMath::Abs(GridA.Y - GridB.Y) + FMath::Abs(GridA.Z - GridB.Z);
 }
@@ -708,12 +708,12 @@ void UUniverseMapWidget::AddSectorBookmark(ASpaceSectorMap* Sector, const FText&
 	{
 		return;
 	}
-	
+
 	BookmarkedSectors.Add(Sector, BookmarkName);
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Added bookmark '%s' for sector '%s'"),
 		*BookmarkName.ToString(), *Sector->SectorName.ToString());
-	
+
 	// Update grid display to show bookmark
 	UpdateUniverseGrid();
 }
@@ -724,12 +724,12 @@ void UUniverseMapWidget::RemoveSectorBookmark(ASpaceSectorMap* Sector)
 	{
 		return;
 	}
-	
+
 	if (BookmarkedSectors.Remove(Sector) > 0)
 	{
 		UE_LOG(LogAdastrea, Log, TEXT("UniverseMapWidget: Removed bookmark from sector '%s'"),
 			*Sector->SectorName.ToString());
-		
+
 		// Update grid display
 		UpdateUniverseGrid();
 	}
@@ -750,12 +750,12 @@ TArray<ASpaceSectorMap*> UUniverseMapWidget::GetBookmarkedSectors() const
 TArray<ASpaceSectorMap*> UUniverseMapWidget::FilterSectorsByName(const FString& SearchText) const
 {
 	TArray<ASpaceSectorMap*> FilteredSectors;
-	
+
 	if (SearchText.IsEmpty())
 	{
 		return AllSectors;
 	}
-	
+
 	for (ASpaceSectorMap* Sector : AllSectors)
 	{
 		if (Sector && Sector->SectorName.ToString().Contains(SearchText))
@@ -763,6 +763,6 @@ TArray<ASpaceSectorMap*> UUniverseMapWidget::FilterSectorsByName(const FString& 
 			FilteredSectors.Add(Sector);
 		}
 	}
-	
+
 	return FilteredSectors;
 }

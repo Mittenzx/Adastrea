@@ -61,19 +61,19 @@ struct FPlayerSkill
 /**
  * Player progression component managing experience, levels, and skills.
  * Tracks player advancement through gameplay and provides stat bonuses.
- * 
+ *
  * Usage:
  * - Attach to player pawn or controller
  * - Award XP through quest completion, combat, trading, exploration
  * - Level up provides skill points to invest in skill trees
  * - Skills provide gameplay bonuses
- * 
+ *
  * Example:
  * - Complete quest: AwardExperience(500)
  * - Player levels up: OnLevelUp event fires
  * - Spend skill points: InvestSkillPoints(ESkillCategory::Combat, 1)
  * - Get bonus: GetSkillBonus(ESkillCategory::Combat) returns 1.15 (15% bonus)
- * 
+ *
  * Integration:
  * - Quest system awards XP via quest rewards
  * - Combat system awards XP for kills

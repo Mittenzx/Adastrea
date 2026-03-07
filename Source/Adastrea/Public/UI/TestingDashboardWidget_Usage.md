@@ -537,16 +537,16 @@ LoadProgress()
 void FMyAutomationTest::RunTest()
 {
     UTestingDashboardWidget* Dashboard = GetTestingDashboard();
-    
+
     // Test ship movement
     TestShipMovement();
     Dashboard->SetFeatureTested(0, true);
-    
+
     // Test combat
     TestCombatSystem();
     Dashboard->SetFeatureTested(2, true);
     Dashboard->AddFeatureNotes(2, "Automated test passed");
-    
+
     // Export results
     Dashboard->ExportTestResults("AutoTest_Results.txt");
 }

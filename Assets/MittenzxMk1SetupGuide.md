@@ -100,7 +100,7 @@ UMyCustomMittenzx::UMyCustomMittenzx()
 {
     // Call parent constructor first
     UMittenzxMk1DataAsset::UMittenzxMk1DataAsset();
-    
+
     // Then customize
     ShipName = FText::FromString(TEXT("Mittenzx Mk1 Custom"));
     HullStrength = 1200.0f;  // Increased durability
@@ -215,7 +215,7 @@ For interior ship control:
 
 ### Ship Doesn't Spawn
 **Cause**: Game Mode not configured correctly
-**Solution**: 
+**Solution**:
 1. Check World Settings → Game Mode Override is set
 2. Verify `DefaultSpaceshipClass` is set to your BP_Ship_MittenzxMk1
 3. Ensure `bAutoSpawnPlayerShip` is enabled
@@ -282,6 +282,6 @@ For questions or issues:
 
 ---
 
-**Last Updated**: 2025-11-05  
-**Version**: 1.0  
+**Last Updated**: 2025-11-05
+**Version**: 1.0
 **Author**: Adastrea Development Team

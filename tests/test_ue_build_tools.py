@@ -13,11 +13,11 @@ def test_scripts_exist():
         'setup_ue_build_tools.sh',
         'build_with_ue_tools.sh'
     ]
-    
+
     print("\n" + "="*60)
     print("Checking Script Files")
     print("="*60)
-    
+
     all_exist = True
     for script in scripts:
         if os.path.exists(script):
@@ -31,7 +31,7 @@ def test_scripts_exist():
         else:
             print(f"✗ {script} NOT FOUND")
             all_exist = False
-    
+
     return all_exist
 
 def test_script_syntax():
@@ -40,11 +40,11 @@ def test_script_syntax():
         'setup_ue_build_tools.sh',
         'build_with_ue_tools.sh'
     ]
-    
+
     print("\n" + "="*60)
     print("Validating Script Syntax")
     print("="*60)
-    
+
     all_valid = True
     for script in scripts:
         if os.path.exists(script):
@@ -56,7 +56,7 @@ def test_script_syntax():
                 capture_output=True,
                 text=True
             )
-            
+
             if result.returncode == 0:
                 print(f"✓ {script} - Valid syntax")
             else:
@@ -66,23 +66,23 @@ def test_script_syntax():
         else:
             print(f"✗ {script} - Not found, skipping syntax check")
             all_valid = False
-    
+
     return all_valid
 
 def test_documentation_exists():
     """Test that documentation file exists"""
     doc_file = 'BUILD_WITH_UE_TOOLS.md'
-    
+
     print("\n" + "="*60)
     print("Checking Documentation")
     print("="*60)
-    
+
     if os.path.exists(doc_file):
         print(f"✓ {doc_file} exists")
         # Check file size
         size = os.path.getsize(doc_file)
         print(f"  └─ Size: {size} bytes")
-        
+
         # Check for key sections
         with open(doc_file, 'r') as f:
             content = f.read()
@@ -92,13 +92,13 @@ def test_documentation_exists():
                 'Troubleshooting',
                 'GitHub Actions'
             ]
-            
+
             for section in sections:
                 if section in content:
                     print(f"  └─ Section '{section}': Found")
                 else:
                     print(f"  └─ Section '{section}': Missing")
-        
+
         return True
     else:
         print(f"✗ {doc_file} NOT FOUND")
@@ -109,11 +109,11 @@ def test_gitignore():
     print("\n" + "="*60)
     print("Checking .gitignore")
     print("="*60)
-    
+
     if os.path.exists('.gitignore'):
         with open('.gitignore', 'r') as f:
             content = f.read()
-            
+
         if 'UnrealBuildTools' in content:
             print("✓ .gitignore includes UnrealBuildTools")
             return True
@@ -127,14 +127,14 @@ def test_gitignore():
 def test_workflow_exists():
     """Test that GitHub Actions workflow exists"""
     workflow_file = '.github/workflows/test-build-with-ue-tools.yml'
-    
+
     print("\n" + "="*60)
     print("Checking GitHub Actions Workflow")
     print("="*60)
-    
+
     if os.path.exists(workflow_file):
         print(f"✓ {workflow_file} exists")
-        
+
         # Check for key workflow elements
         with open(workflow_file, 'r') as f:
             content = f.read()
@@ -144,13 +144,13 @@ def test_workflow_exists():
                 'build_with_ue_tools.sh',
                 'UnrealBuildTool'
             ]
-            
+
             for element in elements:
                 if element in content:
                     print(f"  └─ Element '{element}': Found")
                 else:
                     print(f"  └─ Element '{element}': Missing")
-        
+
         return True
     else:
         print(f"✗ {workflow_file} NOT FOUND")
@@ -161,7 +161,7 @@ def main():
     print("\n" + "="*60)
     print("UE Build Tools - Test Suite")
     print("="*60)
-    
+
     tests = [
         ("Script Files Exist", test_scripts_exist),
         ("Script Syntax Valid", test_script_syntax),
@@ -169,7 +169,7 @@ def main():
         (".gitignore Updated", test_gitignore),
         ("GitHub Workflow Exists", test_workflow_exists),
     ]
-    
+
     results = []
     for name, test_func in tests:
         try:
@@ -178,23 +178,23 @@ def main():
         except Exception as e:
             print(f"\n✗ {name} - ERROR: {e}")
             results.append((name, False))
-    
+
     # Summary
     print("\n" + "="*60)
     print("Test Summary")
     print("="*60)
-    
+
     passed_count = sum(1 for _, passed in results if passed)
     total_count = len(results)
-    
+
     for name, passed in results:
         status = "✓ PASS" if passed else "✗ FAIL"
         print(f"{status}: {name}")
-    
+
     print("\n" + "-"*60)
     print(f"Total: {passed_count}/{total_count} tests passed")
     print("="*60)
-    
+
     if passed_count == total_count:
         print("\n✓ All tests passed!")
         return 0

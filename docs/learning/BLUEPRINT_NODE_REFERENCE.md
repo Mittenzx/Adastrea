@@ -2,8 +2,8 @@
 
 > **Comprehensive guide to every Blueprint node type you'll encounter in Adastrea**
 
-**Last Updated**: January 17, 2026  
-**For**: Unreal Engine 5.6  
+**Last Updated**: January 17, 2026
+**For**: Unreal Engine 5.6
 **Audience**: Beginners to intermediate Blueprint developers
 
 ---

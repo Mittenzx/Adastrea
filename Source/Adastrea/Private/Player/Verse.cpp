@@ -7,7 +7,7 @@
 UVerseComponent::UVerseComponent()
 {
     PrimaryComponentTick.bCanEverTick = false;
-    
+
     // Initialize component defaults
     DisplayedTitle = nullptr;
 }
@@ -23,28 +23,28 @@ bool UVerseComponent::AwardFeat(UFeatDataAsset* Feat, FText Location, FText Cont
         UE_LOG(LogAdastrea, Warning, TEXT("VerseComponent::AwardFeat - Attempted to award null Feat"));
         return false;
     }
-    
+
     // Check if Feat is unique and already earned
     if (Feat->bUniquePerPlaythrough && HasFeat(Feat))
     {
-        UE_LOG(LogAdastrea, Log, TEXT("VerseComponent::AwardFeat - Feat '%s' already earned and is unique"), 
+        UE_LOG(LogAdastrea, Log, TEXT("VerseComponent::AwardFeat - Feat '%s' already earned and is unique"),
             *Feat->TitleName.ToString());
         return false;
     }
-    
+
     // Create new earned Feat entry
     FEarnedFeat NewEarnedFeat;
     NewEarnedFeat.Feat = Feat;
     NewEarnedFeat.EarnedTimestamp = FDateTime::Now();
     NewEarnedFeat.LocationEarned = Location;
     NewEarnedFeat.EarnedContext = Context;
-    
+
     // Add to player's Verse
     EarnedFeats.Add(NewEarnedFeat);
-    
-    UE_LOG(LogAdastrea, Log, TEXT("VerseComponent::AwardFeat - Awarded Feat '%s' to player"), 
+
+    UE_LOG(LogAdastrea, Log, TEXT("VerseComponent::AwardFeat - Awarded Feat '%s' to player"),
         *Feat->TitleName.ToString());
-    
+
     return true;
 }
 
@@ -54,7 +54,7 @@ bool UVerseComponent::HasFeat(UFeatDataAsset* Feat) const
     {
         return false;
     }
-    
+
     return FindEarnedFeat(Feat) != nullptr;
 }
 
@@ -64,7 +64,7 @@ bool UVerseComponent::HasFeatByID(FName FeatID) const
     {
         return false;
     }
-    
+
     for (const FEarnedFeat& EarnedFeat : EarnedFeats)
     {
         if (EarnedFeat.Feat != nullptr && EarnedFeat.Feat->FeatID == FeatID)
@@ -72,7 +72,7 @@ bool UVerseComponent::HasFeatByID(FName FeatID) const
             return true;
         }
     }
-    
+
     return false;
 }
 
@@ -88,7 +88,7 @@ bool UVerseComponent::GetEarnedFeatByIndex(int32 Index, FEarnedFeat& OutFeat) co
         OutFeat = EarnedFeats[Index];
         return true;
     }
-    
+
     return false;
 }
 
@@ -107,19 +107,19 @@ bool UVerseComponent::SetDisplayedTitle(UFeatDataAsset* Feat)
     {
         return false;
     }
-    
+
     // Check if player has earned this Feat
     if (!HasFeat(Feat))
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("VerseComponent::SetDisplayedTitle - Cannot display unearned Feat '%s'"), 
+        UE_LOG(LogAdastrea, Warning, TEXT("VerseComponent::SetDisplayedTitle - Cannot display unearned Feat '%s'"),
             *Feat->TitleName.ToString());
         return false;
     }
-    
+
     DisplayedTitle = Feat;
-    UE_LOG(LogAdastrea, Log, TEXT("VerseComponent::SetDisplayedTitle - Now displaying '%s'"), 
+    UE_LOG(LogAdastrea, Log, TEXT("VerseComponent::SetDisplayedTitle - Now displaying '%s'"),
         *Feat->TitleName.ToString());
-    
+
     return true;
 }
 
@@ -141,7 +141,7 @@ bool UVerseComponent::ClearDisplayedTitle()
 int32 UVerseComponent::GetTotalPreceptAlignment(EPrecept Precept) const
 {
     int32 TotalAlignment = 0;
-    
+
     for (const FEarnedFeat& EarnedFeat : EarnedFeats)
     {
         if (EarnedFeat.Feat != nullptr)
@@ -149,17 +149,17 @@ int32 UVerseComponent::GetTotalPreceptAlignment(EPrecept Precept) const
             TotalAlignment += EarnedFeat.Feat->GetAlignmentStrength(Precept);
         }
     }
-    
+
     return TotalAlignment;
 }
 
 void UVerseComponent::GetTopAlignedPrecepts(TArray<EPrecept>& OutTopPrecepts) const
 {
     OutTopPrecepts.Empty();
-    
+
     // Calculate alignment for all Precepts
     TMap<EPrecept, int32> PreceptScores;
-    
+
     // Iterate through all possible Precepts
     const UEnum* EnumPtr = FindObject<UEnum>(nullptr, TEXT("/Script/Adastrea.EPrecept"), true);
     if (EnumPtr)
@@ -174,10 +174,10 @@ void UVerseComponent::GetTopAlignedPrecepts(TArray<EPrecept>& OutTopPrecepts) co
             }
         }
     }
-    
+
     // Sort by score and get top 3
     PreceptScores.ValueSort([](int32 A, int32 B) { return A > B; });
-    
+
     int32 Count = 0;
     for (const auto& Pair : PreceptScores)
     {
@@ -196,23 +196,23 @@ float UVerseComponent::CalculateWayCompatibility(const TArray<FPreceptValue>& Wa
     {
         return 0.0f;
     }
-    
+
     float TotalCompatibility = 0.0f;
-    
+
     for (const FPreceptValue& WayPrecept : WayPrecepts)
     {
         int32 PlayerAlignment = GetTotalPreceptAlignment(WayPrecept.Precept);
         // Compatibility increases based on player alignment and Way's importance of the Precept
         TotalCompatibility += (PlayerAlignment * WayPrecept.ImportanceValue) / 100.0f;
     }
-    
+
     return TotalCompatibility;
 }
 
 TArray<FEarnedFeat> UVerseComponent::GetFeatsAlignedWith(EPrecept Precept) const
 {
     TArray<FEarnedFeat> AlignedFeats;
-    
+
     for (const FEarnedFeat& EarnedFeat : EarnedFeats)
     {
         if (EarnedFeat.Feat != nullptr && EarnedFeat.Feat->AlignsWith(Precept))
@@ -220,7 +220,7 @@ TArray<FEarnedFeat> UVerseComponent::GetFeatsAlignedWith(EPrecept Precept) const
             AlignedFeats.Add(EarnedFeat);
         }
     }
-    
+
     return AlignedFeats;
 }
 
@@ -235,10 +235,10 @@ int32 UVerseComponent::CalculateVerseReputation(UWayDataAsset* GroupWay) const
         UE_LOG(LogAdastrea, Warning, TEXT("VerseComponent::CalculateVerseReputation - Null GroupWay provided"));
         return 0;
     }
-    
+
     int32 TotalReputation = 0;
     TArray<FPreceptValue> WayPrecepts = GroupWay->GetPrecepts();
-    
+
     // Calculate reputation from all earned Feats
     for (const FEarnedFeat& EarnedFeat : EarnedFeats)
     {
@@ -247,7 +247,7 @@ int32 UVerseComponent::CalculateVerseReputation(UWayDataAsset* GroupWay) const
             TotalReputation += EarnedFeat.Feat->CalculateReputationGain(WayPrecepts);
         }
     }
-    
+
     return TotalReputation;
 }
 
@@ -258,7 +258,7 @@ int32 UVerseComponent::CalculateVerseReputation(UWayDataAsset* GroupWay) const
 int32 UVerseComponent::GetFeatCountByRarity(EFeatRarity Rarity) const
 {
     int32 Count = 0;
-    
+
     for (const FEarnedFeat& EarnedFeat : EarnedFeats)
     {
         if (EarnedFeat.Feat != nullptr && EarnedFeat.Feat->Rarity == Rarity)
@@ -266,7 +266,7 @@ int32 UVerseComponent::GetFeatCountByRarity(EFeatRarity Rarity) const
             ++Count;
         }
     }
-    
+
     return Count;
 }
 
@@ -276,7 +276,7 @@ bool UVerseComponent::GetMostRecentFeat(FEarnedFeat& OutFeat) const
     {
         return false;
     }
-    
+
     // Most recent is the last one in chronological order
     OutFeat = EarnedFeats.Last();
     return true;
@@ -285,7 +285,7 @@ bool UVerseComponent::GetMostRecentFeat(FEarnedFeat& OutFeat) const
 TArray<FEarnedFeat> UVerseComponent::GetFeatsInTimeRange(FDateTime StartTime, FDateTime EndTime) const
 {
     TArray<FEarnedFeat> FeatsInRange;
-    
+
     for (const FEarnedFeat& EarnedFeat : EarnedFeats)
     {
         if (EarnedFeat.EarnedTimestamp >= StartTime && EarnedFeat.EarnedTimestamp <= EndTime)
@@ -293,7 +293,7 @@ TArray<FEarnedFeat> UVerseComponent::GetFeatsInTimeRange(FDateTime StartTime, FD
             FeatsInRange.Add(EarnedFeat);
         }
     }
-    
+
     return FeatsInRange;
 }
 
@@ -304,7 +304,7 @@ TArray<FEarnedFeat> UVerseComponent::GetFeatsInTimeRange(FDateTime StartTime, FD
 TArray<FName> UVerseComponent::ExportFeatIDs() const
 {
     TArray<FName> FeatIDs;
-    
+
     for (const FEarnedFeat& EarnedFeat : EarnedFeats)
     {
         if (EarnedFeat.Feat != nullptr)
@@ -312,7 +312,7 @@ TArray<FName> UVerseComponent::ExportFeatIDs() const
             FeatIDs.Add(EarnedFeat.Feat->FeatID);
         }
     }
-    
+
     return FeatIDs;
 }
 
@@ -323,10 +323,10 @@ bool UVerseComponent::ImportFeatIDs(const TArray<FName>& FeatIDs, const TArray<U
         UE_LOG(LogAdastrea, Warning, TEXT("VerseComponent::ImportFeatIDs - No Feats provided for import"));
         return false;
     }
-    
+
     // Clear existing Feats
     EarnedFeats.Empty();
-    
+
     // Resolve each FeatID to its DataAsset and add to Verse
     for (const FName& FeatID : FeatIDs)
     {
@@ -342,7 +342,7 @@ bool UVerseComponent::ImportFeatIDs(const TArray<FName>& FeatIDs, const TArray<U
             }
         }
     }
-    
+
     UE_LOG(LogAdastrea, Log, TEXT("VerseComponent::ImportFeatIDs - Imported %d Feats"), EarnedFeats.Num());
     return true;
 }
@@ -357,7 +357,7 @@ const FEarnedFeat* UVerseComponent::FindEarnedFeat(UFeatDataAsset* Feat) const
     {
         return nullptr;
     }
-    
+
     for (const FEarnedFeat& EarnedFeat : EarnedFeats)
     {
         if (EarnedFeat.Feat == Feat)
@@ -365,6 +365,6 @@ const FEarnedFeat* UVerseComponent::FindEarnedFeat(UFeatDataAsset* Feat) const
             return &EarnedFeat;
         }
     }
-    
+
     return nullptr;
 }

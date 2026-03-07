@@ -217,11 +217,11 @@ The preview changes color to show if placement is valid:
 ```
 1. Click "Build" on Reactor Module
    Status: Preview appears (green)
-   
+
 2. Move cursor over valid location
    Preview: 🟢 Green
    Message: Can place here
-   
+
 3. Left-click
    Result: ✅ Module placed!
    Sound: *placement sound*
@@ -233,11 +233,11 @@ The preview changes color to show if placement is valid:
 ```
 1. Click "Build" on Habitat Module
    Status: Preview appears
-   
+
 2. Move cursor too close to existing module
    Preview: 🔴 Red
    Message: Collision detected
-   
+
 3. Left-click
    Result: ⚠️ Nothing happens
    Log: "Cannot place module: CollisionDetected"
@@ -248,11 +248,11 @@ The preview changes color to show if placement is valid:
 ```
 1. Click "Build" on expensive module
    Status: Preview appears
-   
+
 2. Move cursor (player has 500 credits, module costs 1000)
    Preview: 🔴 Red
    Message: Insufficient funds
-   
+
 3. Left-click
    Result: ⚠️ Nothing happens
    Log: "Cannot place module: InsufficientFunds"
@@ -263,10 +263,10 @@ The preview changes color to show if placement is valid:
 ```
 1. Click "Build" on any module
    Status: Preview appears
-   
+
 2. Changed your mind
    Action: Right-click
-   
+
 3. Result
    Preview: Disappears
    Status: Back to normal mode
@@ -290,7 +290,7 @@ The preview changes color to show if placement is valid:
 ```
 🟢 Green = Good to go!
 🔴 Red = Find another spot
-   
+
 Don't waste time clicking on red positions.
 The validation is happening in real-time!
 ```
@@ -300,7 +300,7 @@ The validation is happening in real-time!
 1. Place power module first (reactor)
 2. Place essential modules next (habitats)
 3. Place optional modules last (storage)
-   
+
 Preview helps you see connections before placing!
 ```
 
@@ -311,7 +311,7 @@ After each placement:
 • Module count updates
 • Defense rating changes
 • Efficiency recalculated
-   
+
 Make sure your station is balanced!
 ```
 
@@ -439,15 +439,15 @@ Is the editor opening?
 
 You know it's working when:
 
-✅ **Preview appears** after clicking Build  
-✅ **Preview follows** your mouse smoothly  
-✅ **Color changes** based on location (green/red)  
-✅ **Module spawns** when you click (green only)  
-✅ **Statistics update** after placement  
-✅ **Preview disappears** after placement  
-✅ **Can place multiple** modules in sequence  
-✅ **Right-click cancels** cleanly  
-✅ **No crashes** or errors in log  
+✅ **Preview appears** after clicking Build
+✅ **Preview follows** your mouse smoothly
+✅ **Color changes** based on location (green/red)
+✅ **Module spawns** when you click (green only)
+✅ **Statistics update** after placement
+✅ **Preview disappears** after placement
+✅ **Can place multiple** modules in sequence
+✅ **Right-click cancels** cleanly
+✅ **No crashes** or errors in log
 
 If all these work, congratulations! 🎉
 
@@ -469,6 +469,6 @@ See `STATION_EDITOR_COMPLETE_GUIDE.md` for implementation details.
 
 ---
 
-**Visual Guide Version**: 1.0  
-**Last Updated**: 2025-12-14  
+**Visual Guide Version**: 1.0
+**Last Updated**: 2025-12-14
 **Status**: Complete and Working ✅

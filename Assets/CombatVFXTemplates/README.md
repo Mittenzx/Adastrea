@@ -57,17 +57,17 @@ weapon_vfx:
   vfx_name: ""              # Display name
   description: ""           # Brief description
   weapon_type: ""           # Energy/Projectile/Missile/etc
-  
+
   fire_effect:
     # Niagara systems
     # Beam/projectile properties
     # Visual settings
-    
+
   heat_visuals:
     # Heat gradient colors
     # Vent effects
     # Shimmer settings
-    
+
   performance:
     # Particle budget
     # Priority
@@ -79,22 +79,22 @@ weapon_vfx:
 impact_effects:
   effect_name: ""
   description: ""
-  
+
   shield_impact:
     # Ripple effect
     # Dissipation particles
     # Colors and timing
-    
+
   hull_impact:
     # Sparks and debris
     # Damage decals
     # Flash effects
-    
+
   explosions:
     small: {}
     medium: {}
     large: {}
-    
+
   performance:
     # Budgets and priorities
 ```
@@ -116,7 +116,7 @@ To create templates for other weapon types:
 weapon_vfx:
   vfx_name: "Heavy Torpedo Effects"
   weapon_type: Torpedo
-  
+
   fire_effect:
     beam_type: Projectile
     beam_width: 30.0  # Larger than missiles
@@ -124,7 +124,7 @@ weapon_vfx:
       r: 0.2
       g: 0.5
       b: 1.0  # Blue plasma
-    
+
   # ... rest of configuration
 ```
 
@@ -236,5 +236,5 @@ To add new templates:
 
 ---
 
-**Last Updated**: November 18, 2025  
+**Last Updated**: November 18, 2025
 **Template Version**: 1.0

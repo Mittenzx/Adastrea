@@ -2,9 +2,9 @@
 
 > **The player's controllable spaceship with combat, navigation, and cargo systems**
 
-**Blueprint Type**: Pawn Actor  
-**Parent Class**: `ASpaceship` (C++)  
-**Location**: `Content/Blueprints/Ships/BP_PlayerShip.uasset`  
+**Blueprint Type**: Pawn Actor
+**Parent Class**: `ASpaceship` (C++)
+**Location**: `Content/Blueprints/Ships/BP_PlayerShip.uasset`
 **Priority**: ⚠️ **CRITICAL** - This is the player's main avatar
 
 ---
@@ -75,7 +75,7 @@ SpringArmComponent:
   Target Arm Length: 1500
   Use Pawn Control Rotation: true
   Inherit Pitch/Yaw/Roll: false, true, false
-  
+
 CameraComponent:
   Name: FollowCamera
   Parent: CameraBoom
@@ -91,11 +91,11 @@ ArrowComponent:
 WeaponComponent:
   Name: WeaponComp
   Auto-Activate: true
-  
+
 TargetingComponent:
   Name: TargetingComp
   Max Target Distance: 5000
-  
+
 CombatHealthComponent:
   Name: HealthComp
   Max Health: 100 (overridden by Data Asset)
@@ -234,7 +234,7 @@ FUNCTION: Setup Enhanced Input
 
 2. Get Enhanced Input Component:
    - Node: `Get Enhanced Input Subsystem`
-   
+
 3. Add Input Mapping Context:
    - Node: `Add Mapping Context`
    - Context: IMC_Spaceship (from variable)
@@ -512,6 +512,6 @@ For Trade Simulator MVP, this ship must:
 
 ---
 
-**Last Updated**: December 30, 2025  
-**Status**: Essential for MVP  
+**Last Updated**: December 30, 2025
+**Status**: Essential for MVP
 **Difficulty**: ⭐⭐⭐ Intermediate-Advanced

@@ -16,7 +16,7 @@ UPersonnelLogic::UPersonnelLogic()
 
     // Personnel update more frequently than factions
     UpdateInterval = 1.0f;
-    
+
     // Default to peaceful behavior
     CurrentBehaviorMode = EAIBehaviorMode::Peaceful;
 }
@@ -240,7 +240,7 @@ void UPersonnelLogic::UpdateDailyRoutine_Implementation()
     {
         bOnDuty = true;
         HoursUntilNextShift = 8.0f; // 8 hour shift
-        
+
         UE_LOG(LogAdastreaAI, Log, TEXT("%s: Starting duty shift"),
                     *PersonnelData->PersonnelName.ToString());
     }
@@ -249,7 +249,7 @@ void UPersonnelLogic::UpdateDailyRoutine_Implementation()
         // End of shift
         bOnDuty = false;
         HoursUntilNextShift = 16.0f; // 16 hours until next shift
-        
+
         UE_LOG(LogAdastreaAI, Log, TEXT("%s: Ending duty shift"),
                     *PersonnelData->PersonnelName.ToString());
     }
@@ -359,7 +359,7 @@ void UPersonnelLogic::MakeFriend(FName OtherPersonnelID)
     if (!FriendsList.Contains(OtherPersonnelID))
     {
         FriendsList.Add(OtherPersonnelID);
-        
+
         UE_LOG(LogAdastreaAI, Log, TEXT("%s: Made friends with %s"),
                     *PersonnelData->PersonnelName.ToString(),
                     *OtherPersonnelID.ToString());
@@ -376,7 +376,7 @@ void UPersonnelLogic::AddConflict(FName OtherPersonnelID)
     if (!ConflictList.Contains(OtherPersonnelID))
     {
         ConflictList.Add(OtherPersonnelID);
-        
+
         UE_LOG(LogAdastreaAI, Log, TEXT("%s: Conflict with %s"),
                     *PersonnelData->PersonnelName.ToString(),
                     *OtherPersonnelID.ToString());
@@ -410,7 +410,7 @@ bool UPersonnelLogic::IsFitForDuty() const
         return false;
     }
 
-    return PersonnelData->Health > 50.0f && 
+    return PersonnelData->Health > 50.0f &&
            PersonnelData->Morale > 40.0f &&
            PersonnelData->Fatigue < 80.0f;
 }
@@ -459,7 +459,7 @@ FString UPersonnelLogic::GetPersonnelStateDescription() const
     FString BaseState = GetAIStateDescription();
     FString TaskStr = UEnum::GetValueAsString(CurrentTask);
     FString DutyStatus = bOnDuty ? TEXT("On Duty") : TEXT("Off Duty");
-    
+
     return FString::Printf(TEXT("%s | %s | %s | %s"),
         *GetPersonnelName().ToString(),
         *BaseState,
@@ -474,28 +474,28 @@ float UPersonnelLogic::ApplyPersonalityModifier(float BaseModifier) const
     {
         case EPersonnelDisposition::Cautious:
             return BaseModifier * 0.9f; // More conservative
-        
+
         case EPersonnelDisposition::Bold:
             return BaseModifier * 1.2f; // More aggressive
-        
+
         case EPersonnelDisposition::Analytical:
             return BaseModifier * 1.0f; // Balanced
-        
+
         case EPersonnelDisposition::Empathetic:
             return BaseModifier * 0.95f; // Slightly cautious with others
-        
+
         case EPersonnelDisposition::Pragmatic:
             return BaseModifier * 1.1f; // Efficient boost
-        
+
         case EPersonnelDisposition::Curious:
             return BaseModifier * 1.15f; // Exploration bonus
-        
+
         case EPersonnelDisposition::Disciplined:
             return BaseModifier * 1.05f; // Consistent performance
-        
+
         case EPersonnelDisposition::Creative:
             return BaseModifier * 1.1f; // Innovation bonus
-        
+
         default:
             return BaseModifier;
     }
@@ -527,7 +527,7 @@ void UPersonnelLogic::OnTickAI_Implementation(float DeltaTime)
     if (NewTask != CurrentTask)
     {
         CurrentTask = NewTask;
-        
+
         UE_LOG(LogAdastreaAI, Log, TEXT("%s: Switching to %s"),
                     *PersonnelData->PersonnelName.ToString(),
                     *UEnum::GetValueAsString(CurrentTask));
@@ -544,18 +544,18 @@ EAIPriority UPersonnelLogic::EvaluateCurrentPriority_Implementation()
     {
         case EPersonnelTask::Emergency:
             return EAIPriority::Critical;
-        
+
         case EPersonnelTask::DutyStation:
             return EAIPriority::High;
-        
+
         case EPersonnelTask::Maintenance:
         case EPersonnelTask::Training:
             return EAIPriority::Medium;
-        
+
         case EPersonnelTask::Social:
         case EPersonnelTask::Exploration:
             return EAIPriority::Low;
-        
+
         case EPersonnelTask::Personal:
         default:
             return EAIPriority::Idle;

@@ -2,8 +2,8 @@
 
 **Quick reference for programming MVP trading features**
 
-**Target Audience**: C++ programmers implementing trading gameplay  
-**Version**: 1.0 (Trade Simulator MVP)  
+**Target Audience**: C++ programmers implementing trading gameplay
+**Version**: 1.0 (Trade Simulator MVP)
 **Last Updated**: 2026-01-17
 
 ---
@@ -59,9 +59,9 @@ float GetTotalMass(int32 Quantity) const;
 
 // Custom pricing override (BlueprintNativeEvent)
 float OnCalculateCustomPrice_Implementation(
-    float Supply, 
-    float Demand, 
-    float EventMultiplier, 
+    float Supply,
+    float Demand,
+    float EventMultiplier,
     float BaseCalculatedPrice
 ) const;
 ```
@@ -74,7 +74,7 @@ UTradeItemDataAsset* FindTradeItem(FName ItemID)
 {
     // Use Asset Manager or direct reference
     UTradeItemDataAsset* Item = LoadObject<UTradeItemDataAsset>(
-        nullptr, 
+        nullptr,
         TEXT("/Game/DataAssets/Trading/MVP/Items/DA_Item_Water")
     );
     return Item;
@@ -85,7 +85,7 @@ void CalculateCargoRequirements(UTradeItemDataAsset* Item, int32 Quantity)
 {
     float TotalVolume = Item->GetTotalVolume(Quantity);
     float TotalMass = Item->GetTotalMass(Quantity);
-    
+
     UE_LOG(LogTemp, Log, TEXT("Need %f m³ and %f kg for %d units"),
         TotalVolume, TotalMass, Quantity);
 }
@@ -173,31 +173,31 @@ float GetBuyPrice(UMarketDataAsset* Market, UTradeItemDataAsset* Item)
 }
 
 // Check if player can afford purchase
-bool CanAfford(UMarketDataAsset* Market, UTradeItemDataAsset* Item, 
+bool CanAfford(UMarketDataAsset* Market, UTradeItemDataAsset* Item,
                int32 Quantity, float PlayerCredits)
 {
     float PricePerUnit = Market->GetItemPrice(Item, true);
     float TotalCost = PricePerUnit * Quantity;
-    
+
     // Add transaction tax
     float Tax = TotalCost * Market->TransactionTaxRate;
     TotalCost += Tax;
-    
+
     return PlayerCredits >= TotalCost;
 }
 
 // Find cheapest market for an item
-UMarketDataAsset* FindCheapestMarket(UTradeItemDataAsset* Item, 
+UMarketDataAsset* FindCheapestMarket(UTradeItemDataAsset* Item,
                                       TArray<UMarketDataAsset*> Markets)
 {
     UMarketDataAsset* CheapestMarket = nullptr;
     float LowestPrice = MAX_flt;
-    
+
     for (UMarketDataAsset* Market : Markets)
     {
         if (!Market->IsItemInStock(Item->ItemID, 1))
             continue;
-            
+
         float Price = Market->GetItemPrice(Item, true);
         if (Price < LowestPrice)
         {
@@ -205,7 +205,7 @@ UMarketDataAsset* FindCheapestMarket(UTradeItemDataAsset* Item,
             CheapestMarket = Market;
         }
     }
-    
+
     return CheapestMarket;
 }
 ```
@@ -221,31 +221,31 @@ USTRUCT(BlueprintType)
 struct FMarketInventoryEntry
 {
     GENERATED_BODY()
-    
+
     // The trade item
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     UTradeItemDataAsset* TradeItem;
-    
+
     // Current stock level
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 CurrentStock;
-    
+
     // Maximum stock level
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     int32 MaxStock;
-    
+
     // Supply level (1.0 = typical)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float SupplyLevel;
-    
+
     // Demand level (1.0 = typical)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float DemandLevel;
-    
+
     // Last trade price
     UPROPERTY(BlueprintReadWrite)
     float LastTradePrice;
-    
+
     // In stock flag
     UPROPERTY(BlueprintReadWrite)
     bool bInStock;
@@ -264,18 +264,18 @@ void ProcessPurchase(UMarketDataAsset* Market, FName ItemID, int32 Quantity)
         {
             // Reduce stock
             Entry.CurrentStock -= Quantity;
-            
+
             // Update supply/demand
             Entry.SupplyLevel -= (Quantity / 1000.0f); // Reduce supply
             Entry.DemandLevel += (Quantity / 2000.0f); // Increase demand
-            
+
             // Clamp values
             Entry.SupplyLevel = FMath::Max(0.1f, Entry.SupplyLevel);
             Entry.DemandLevel = FMath::Min(5.0f, Entry.DemandLevel);
-            
+
             // Update in-stock flag
             Entry.bInStock = Entry.CurrentStock > 0;
-            
+
             break;
         }
     }
@@ -343,15 +343,15 @@ bool BuyAndLoadCargo(UCargoComponent* Cargo, UTradeItemDataAsset* Item, int32 Qu
         UE_LOG(LogTemp, Warning, TEXT("Not enough cargo space!"));
         return false;
     }
-    
+
     // Add to cargo
     if (Cargo->AddCargo(Item->ItemID, Quantity))
     {
-        UE_LOG(LogTemp, Log, TEXT("Loaded %d units of %s"), 
+        UE_LOG(LogTemp, Log, TEXT("Loaded %d units of %s"),
             Quantity, *Item->ItemName.ToString());
         return true;
     }
-    
+
     return false;
 }
 
@@ -368,33 +368,33 @@ int32 SellAllCargoOfType(UCargoComponent* Cargo, FName ItemID)
 }
 
 // Calculate profit potential
-float CalculateProfitPotential(UCargoComponent* Cargo, 
+float CalculateProfitPotential(UCargoComponent* Cargo,
                                 UMarketDataAsset* SellMarket,
                                 TMap<FName, float> PurchasePrices)
 {
     float TotalProfit = 0.0f;
-    
+
     for (auto& Entry : Cargo->CargoInventory)
     {
         FName ItemID = Entry.Key;
         int32 Quantity = Entry.Value;
-        
+
         // Get item data
         UTradeItemDataAsset* Item = FindTradeItemByID(ItemID);
         if (!Item) continue;
-        
+
         // Get sell price at market
         float SellPrice = SellMarket->GetItemPrice(Item, false); // false = selling
-        
+
         // Get original purchase price
         float* PurchasePricePtr = PurchasePrices.Find(ItemID);
         float PurchasePrice = PurchasePricePtr ? *PurchasePricePtr : Item->BasePrice;
-        
+
         // Calculate profit for this item
         float ItemProfit = (SellPrice - PurchasePrice) * Quantity;
         TotalProfit += ItemProfit;
     }
-    
+
     return TotalProfit;
 }
 ```
@@ -453,7 +453,7 @@ void InitiateTrade(ASpaceStation* Station, ASpaceship* PlayerShip)
         UE_LOG(LogTemp, Warning, TEXT("Station has no marketplace!"));
         return;
     }
-    
+
     // Get marketplace module
     AMarketplaceModule* Marketplace = Station->GetMarketplaceModule();
     if (!Marketplace)
@@ -461,14 +461,14 @@ void InitiateTrade(ASpaceStation* Station, ASpaceship* PlayerShip)
         UE_LOG(LogTemp, Error, TEXT("Marketplace module null!"));
         return;
     }
-    
+
     // Check if open for trading
     if (!Marketplace->IsAvailableForTrading())
     {
         UE_LOG(LogTemp, Warning, TEXT("Market is closed!"));
         return;
     }
-    
+
     // Get market data
     UMarketDataAsset* MarketData = Marketplace->GetMarketData();
     if (!MarketData)
@@ -476,7 +476,7 @@ void InitiateTrade(ASpaceStation* Station, ASpaceship* PlayerShip)
         UE_LOG(LogTemp, Error, TEXT("No market data assigned!"));
         return;
     }
-    
+
     // Open trading UI
     OpenTradingUI(PlayerShip, MarketData);
 }
@@ -509,21 +509,21 @@ FTradeRoute CalculateTradeRoute(UMarketDataAsset* BuyMarket,
     Route.SellMarket = SellMarket;
     Route.Item = Item;
     Route.Quantity = Quantity;
-    
+
     // Calculate buy cost
     float BuyPrice = BuyMarket->GetItemPrice(Item, true);
     float BuyTax = BuyPrice * Quantity * BuyMarket->TransactionTaxRate;
     float TotalCost = (BuyPrice * Quantity) + BuyTax;
-    
+
     // Calculate sell revenue
     float SellPrice = SellMarket->GetItemPrice(Item, false);
     float SellTax = SellPrice * Quantity * SellMarket->TransactionTaxRate;
     float TotalRevenue = (SellPrice * Quantity) - SellTax;
-    
+
     // Calculate profit and ROI
     Route.Profit = TotalRevenue - TotalCost;
     Route.ROI = (Route.Profit / TotalCost) * 100.0f;
-    
+
     return Route;
 }
 ```
@@ -538,30 +538,30 @@ FTradeRoute FindBestRoute(TArray<UMarketDataAsset*> Markets,
 {
     FTradeRoute BestRoute;
     float MaxProfit = 0.0f;
-    
+
     for (UMarketDataAsset* BuyMarket : Markets)
     {
         for (UMarketDataAsset* SellMarket : Markets)
         {
             if (BuyMarket == SellMarket) continue;
-            
+
             for (UTradeItemDataAsset* Item : Items)
             {
                 // Check if item available in both markets
                 if (!BuyMarket->IsItemInStock(Item->ItemID, 1)) continue;
                 if (!SellMarket->IsItemInStock(Item->ItemID, 1)) continue;
-                
+
                 // Calculate max quantity player can afford/carry
                 float BuyPrice = BuyMarket->GetItemPrice(Item, true);
                 int32 MaxAfford = FMath::FloorToInt(PlayerCapital / BuyPrice);
                 int32 MaxCarry = FMath::FloorToInt(PlayerCargoSpace / Item->VolumePerUnit);
                 int32 MaxQuantity = FMath::Min(MaxAfford, MaxCarry);
-                
+
                 if (MaxQuantity <= 0) continue;
-                
+
                 // Calculate route profitability
                 FTradeRoute Route = CalculateTradeRoute(BuyMarket, SellMarket, Item, MaxQuantity);
-                
+
                 if (Route.Profit > MaxProfit)
                 {
                     MaxProfit = Route.Profit;
@@ -570,7 +570,7 @@ FTradeRoute FindBestRoute(TArray<UMarketDataAsset*> Markets,
             }
         }
     }
-    
+
     return BestRoute;
 }
 ```
@@ -589,29 +589,29 @@ bool ExecuteTrade(UPlayerTraderComponent* Trader,
     {
         return false;
     }
-    
+
     // Get player credits and cargo
     float PlayerCredits = Trader->GetCurrentCredits();
     UCargoComponent* Cargo = Trader->GetCargoComponent();
-    
+
     if (!Cargo) return false;
-    
+
     // Calculate price
     float PricePerUnit = Market->GetItemPrice(Item, bBuying);
     float Tax = (PricePerUnit * Quantity) * Market->TransactionTaxRate;
     float TotalCost = (PricePerUnit * Quantity) + Tax;
-    
+
     if (bBuying)
     {
         // Player buying from market
-        
+
         // Check affordability
         if (PlayerCredits < TotalCost)
         {
             UE_LOG(LogTemp, Warning, TEXT("Not enough credits!"));
             return false;
         }
-        
+
         // Check cargo space
         float VolumeNeeded = Item->GetTotalVolume(Quantity);
         if (!Cargo->HasCargoSpace(VolumeNeeded))
@@ -619,30 +619,30 @@ bool ExecuteTrade(UPlayerTraderComponent* Trader,
             UE_LOG(LogTemp, Warning, TEXT("Not enough cargo space!"));
             return false;
         }
-        
+
         // Check stock
         if (!Market->IsItemInStock(Item->ItemID, Quantity))
         {
             UE_LOG(LogTemp, Warning, TEXT("Not enough stock!"));
             return false;
         }
-        
+
         // Execute transaction
         Trader->DeductCredits(TotalCost);
         Cargo->AddCargo(Item->ItemID, Quantity);
-        
+
         // Update market (would be done by EconomyManager in real implementation)
         // ProcessMarketPurchase(Market, Item, Quantity);
-        
-        UE_LOG(LogTemp, Log, TEXT("Bought %d %s for %f credits"), 
+
+        UE_LOG(LogTemp, Log, TEXT("Bought %d %s for %f credits"),
             Quantity, *Item->ItemName.ToString(), TotalCost);
-        
+
         return true;
     }
     else
     {
         // Player selling to market
-        
+
         // Check if player has items
         int32 PlayerQuantity = Cargo->GetCargoQuantity(Item->ItemID);
         if (PlayerQuantity < Quantity)
@@ -650,20 +650,20 @@ bool ExecuteTrade(UPlayerTraderComponent* Trader,
             UE_LOG(LogTemp, Warning, TEXT("Don't have enough items!"));
             return false;
         }
-        
+
         // Calculate revenue (note: selling uses different price)
         float Revenue = TotalCost; // Already calculated above
-        
+
         // Execute transaction
         Cargo->RemoveCargo(Item->ItemID, Quantity);
         Trader->AddCredits(Revenue);
-        
+
         // Update market
         // ProcessMarketSale(Market, Item, Quantity);
-        
-        UE_LOG(LogTemp, Log, TEXT("Sold %d %s for %f credits"), 
+
+        UE_LOG(LogTemp, Log, TEXT("Sold %d %s for %f credits"),
             Quantity, *Item->ItemName.ToString(), Revenue);
-        
+
         return true;
     }
 }
@@ -694,7 +694,7 @@ class UEconomyManager
 {
     UPROPERTY()
     TMap<FName, UMarketDataAsset*> MarketLookup;
-    
+
     void BuildMarketIndex()
     {
         MarketLookup.Empty();
@@ -706,7 +706,7 @@ class UEconomyManager
             }
         }
     }
-    
+
     UMarketDataAsset* FindMarketFast(FName MarketID)
     {
         UMarketDataAsset** Found = MarketLookup.Find(MarketID);
@@ -724,7 +724,7 @@ class UMarketDataAsset
     mutable TMap<FName, float> CachedBuyPrices;
     mutable TMap<FName, float> CachedSellPrices;
     mutable bool bPricesCacheDirty = true;
-    
+
     float GetItemPrice(UTradeItemDataAsset* Item, bool bIsBuying) const
     {
         if (bPricesCacheDirty)
@@ -732,13 +732,13 @@ class UMarketDataAsset
             RecalculateAllPrices();
             bPricesCacheDirty = false;
         }
-        
+
         TMap<FName, float>& Cache = bIsBuying ? CachedBuyPrices : CachedSellPrices;
         float* CachedPrice = Cache.Find(Item->ItemID);
-        
+
         return CachedPrice ? *CachedPrice : CalculatePriceUncached(Item, bIsBuying);
     }
-    
+
     void MarkPricesDirty()
     {
         bPricesCacheDirty = true;
@@ -783,7 +783,7 @@ void CompleteTradeTransaction(FName ItemID, int32 Quantity, float Cost)
     // C++ logic
     UpdateCredits(-Cost);
     UpdateInventory(ItemID, Quantity);
-    
+
     // Notify Blueprint
     OnTradeCompleted(ItemID, Quantity, Cost);
 }
@@ -793,7 +793,7 @@ float GetFinalPrice(float BasePrice)
 {
     // Try Blueprint implementation
     float Discount = CalculateCustomDiscount();
-    
+
     // Apply discount
     return BasePrice * (1.0f - Discount);
 }
@@ -816,7 +816,7 @@ float UPlayerTraderComponent::CalculateCustomDiscount_Implementation()
 #define LOG_TRADING(Format, ...) \
     UE_LOG(LogTemp, Log, TEXT("[TRADING] " Format), ##__VA_ARGS__)
 
-void LogTradeDetails(UMarketDataAsset* Market, UTradeItemDataAsset* Item, 
+void LogTradeDetails(UMarketDataAsset* Market, UTradeItemDataAsset* Item,
                      int32 Quantity, float Price)
 {
     LOG_TRADING("Market: %s", *Market->MarketName.ToString());
@@ -834,20 +834,20 @@ void LogTradeDetails(UMarketDataAsset* Market, UTradeItemDataAsset* Item,
 EDataValidationResult UMarketDataAsset::IsDataValid(FDataValidationContext& Context) const
 {
     EDataValidationResult Result = Super::IsDataValid(Context);
-    
+
     // Validate markup/markdown
     if (SellPriceMarkup < 1.0f)
     {
         Context.AddError(FText::FromString("SellPriceMarkup must be >= 1.0"));
         Result = EDataValidationResult::Invalid;
     }
-    
+
     if (BuyPriceMarkdown > 1.0f)
     {
         Context.AddError(FText::FromString("BuyPriceMarkdown must be <= 1.0"));
         Result = EDataValidationResult::Invalid;
     }
-    
+
     // Validate inventory
     for (const FMarketInventoryEntry& Entry : Inventory)
     {
@@ -857,7 +857,7 @@ EDataValidationResult UMarketDataAsset::IsDataValid(FDataValidationContext& Cont
             Result = EDataValidationResult::Invalid;
         }
     }
-    
+
     return Result;
 }
 #endif
@@ -889,6 +889,6 @@ EDataValidationResult UMarketDataAsset::IsDataValid(FDataValidationContext& Cont
 
 ---
 
-**Version**: 1.0  
-**Created**: 2026-01-17  
+**Version**: 1.0
+**Created**: 2026-01-17
 **For**: Trade Simulator MVP

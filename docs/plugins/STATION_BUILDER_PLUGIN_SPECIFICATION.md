@@ -1,8 +1,8 @@
 # Station Builder Plugin - Development Specification
 
-**Document Version**: 1.0  
-**Created**: 2026-01-17  
-**Target**: Agent-driven development in separate repository  
+**Document Version**: 1.0
+**Created**: 2026-01-17
+**Target**: Agent-driven development in separate repository
 **Project**: Modular Station Designer Plugin for Adastrea
 
 ---
@@ -11,13 +11,13 @@
 
 This document provides complete specifications for an agent to develop a **visual station builder plugin** for Unreal Engine that enables drag-and-drop modular station construction with connection points, snapping, and direct export to Adastrea's editor.
 
-**Plugin Purpose**: 
+**Plugin Purpose**:
 - Visual tool for designing space stations by dragging modules into connection points
 - Automatic snapping and validation of module connections
 - Export finished stations directly to Adastrea project as Blueprint actors
 - Streamline station creation workflow for designers
 
-**Target Audience**: 
+**Target Audience**:
 - AI development agent (autonomous implementation)
 - Level designers building space stations
 - Content creators designing station layouts
@@ -323,7 +323,7 @@ public:
     // Functional group (Docking, Storage, Public, etc.)
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module")
     EStationModuleGroup ModuleGroup;
-    
+
     // ... additional functionality
 };
 ```
@@ -398,30 +398,30 @@ public:
     // Connection type (for compatibility checking)
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Connection")
     EConnectionType ConnectionType;
-    
+
     // Size class (modules of compatible size can connect)
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Connection")
     EConnectionSize ConnectionSize;
-    
+
     // Whether this point is currently occupied
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Connection")
     bool bIsOccupied;
-    
+
     // The module currently connected (if any)
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Connection")
     AActor* ConnectedModule;
-    
+
     // Visual indicators
     UPROPERTY(EditAnywhere, Category="Visuals")
     UStaticMeshComponent* SocketMesh;
-    
+
     // Connection validation
     UFUNCTION(BlueprintCallable, Category="Connection")
     bool CanConnectTo(UConnectionPointComponent* OtherPoint) const;
-    
+
     UFUNCTION(BlueprintCallable, Category="Connection")
     bool ConnectTo(UConnectionPointComponent* OtherPoint);
-    
+
     UFUNCTION(BlueprintCallable, Category="Connection")
     void Disconnect();
 };
@@ -527,19 +527,19 @@ private:
         const FString& AssetPath,
         const FString& AssetName
     );
-    
+
     // Add Child Actor Components for each module
     static void AddModuleComponents(
         UBlueprint* Blueprint,
         const TArray<FModulePlacement>& Modules
     );
-    
+
     // Set component transforms
     static void SetComponentTransforms(
         UActorComponent* Component,
         const FTransform& Transform
     );
-    
+
     // Validate exported Blueprint
     static bool ValidateExport(UBlueprint* Blueprint);
 };
@@ -610,14 +610,14 @@ The plugin needs to read Adastrea's module Blueprints to populate the palette.
 void FModulePalette::DiscoverAdastreaModules()
 {
     // Get asset registry
-    FAssetRegistryModule& AssetRegistryModule = 
+    FAssetRegistryModule& AssetRegistryModule =
         FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
     IAssetRegistry& AssetRegistry = AssetRegistryModule.Get();
-    
+
     // Find all Blueprint assets
     TArray<FAssetData> BlueprintAssets;
     AssetRegistry.GetAssetsByClass(UBlueprint::StaticClass()->GetFName(), BlueprintAssets);
-    
+
     // Filter for SpaceStationModule descendants
     for (const FAssetData& AssetData : BlueprintAssets)
     {
@@ -693,28 +693,28 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Connection")
     EConnectionType ConnectionType;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Connection")
     EConnectionSize ConnectionSize;
-    
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Connection")
     bool bIsOccupied;
-    
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Connection")
     AActor* ConnectedModule;
-    
+
     UFUNCTION(BlueprintCallable, Category="Connection")
     bool CanConnectTo(UConnectionPointComponent* OtherPoint) const;
-    
+
     UFUNCTION(BlueprintCallable, Category="Connection")
     bool ConnectTo(UConnectionPointComponent* OtherPoint);
-    
+
     UFUNCTION(BlueprintCallable, Category="Connection")
     void Disconnect();
 
 protected:
     virtual void BeginPlay() override;
-    
+
     UPROPERTY(EditAnywhere, Category="Visuals")
     UStaticMeshComponent* SocketMesh;
 };
@@ -736,16 +736,16 @@ struct FModulePlacement
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ModuleID;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FSoftClassPath ModuleBlueprintPath;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FTransform Transform;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ComponentName;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FString> ConnectedModuleIDs;
 };
@@ -757,10 +757,10 @@ struct FStationDesign
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString StationName;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FModulePlacement> Modules;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString DesignVersion;
 };
@@ -791,18 +791,18 @@ private:
     TSharedPtr<class SModulePalette> ModulePalette;
     TSharedPtr<class SStationViewport> Viewport;
     TSharedPtr<class SPropertiesPanel> Properties;
-    
+
     // Layout structure
     TSharedRef<SWidget> CreateToolbar();
     TSharedRef<SWidget> CreateMainContent();
-    
+
     // Button handlers
     FReply OnNewStation();
     FReply OnLoadStation();
     FReply OnSaveStation();
     FReply OnExportStation();
     FReply OnValidateStation();
-    
+
     // Current design
     FStationDesign CurrentDesign;
 };
@@ -834,10 +834,10 @@ public:
     SLATE_END_ARGS()
 
     void Construct(const FArguments& InArgs);
-    
+
     // Discover modules from Adastrea project
     void DiscoverModules();
-    
+
     // Filter modules
     void SetGroupFilter(EStationModuleGroup Group);
     void SetSearchFilter(const FString& SearchText);
@@ -845,12 +845,12 @@ public:
 private:
     TArray<FModuleInfo> AllModules;
     TArray<FModuleInfo> FilteredModules;
-    
+
     TSharedRef<ITableRow> OnGenerateModuleRow(
         TSharedPtr<FModuleInfo> Item,
         const TSharedRef<STableViewBase>& OwnerTable
     );
-    
+
     void OnModuleSelected(TSharedPtr<FModuleInfo> SelectedModule);
     void OnModuleDragStart(TSharedPtr<FModuleInfo> DraggedModule);
 };
@@ -883,7 +883,7 @@ class FStationValidator
 public:
     // Validate entire station design
     static TArray<FValidationMessage> ValidateStation(const FStationDesign& Design);
-    
+
 private:
     // Individual validation checks
     static void CheckRequiredModules(const FStationDesign& Design, TArray<FValidationMessage>& OutMessages);
@@ -911,13 +911,13 @@ public:
         const FString& AssetName,
         FString& OutErrorMessage
     );
-    
+
     // Save design to JSON file
     static bool SaveDesignToFile(
         const FStationDesign& Design,
         const FString& FilePath
     );
-    
+
     // Load design from JSON file
     static bool LoadDesignFromFile(
         const FString& FilePath,
@@ -1136,8 +1136,8 @@ public class ModularStationDesignerEditor : ModuleRules
 **Test Connection Logic:**
 ```cpp
 // Test connection compatibility
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FConnectionCompatibilityTest, 
-    "StationBuilder.Connection.Compatibility", 
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FConnectionCompatibilityTest,
+    "StationBuilder.Connection.Compatibility",
     EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 
 bool FConnectionCompatibilityTest::RunTest(const FString& Parameters)
@@ -1145,20 +1145,20 @@ bool FConnectionCompatibilityTest::RunTest(const FString& Parameters)
     // Test Standard + Standard = Valid
     UConnectionPointComponent* PointA = NewObject<UConnectionPointComponent>();
     PointA->ConnectionType = EConnectionType::Standard;
-    
+
     UConnectionPointComponent* PointB = NewObject<UConnectionPointComponent>();
     PointB->ConnectionType = EConnectionType::Standard;
-    
-    TestTrue("Standard-Standard connection should be valid", 
+
+    TestTrue("Standard-Standard connection should be valid",
         PointA->CanConnectTo(PointB));
-    
+
     // Test Docking + Docking = Invalid
     PointA->ConnectionType = EConnectionType::Docking;
     PointB->ConnectionType = EConnectionType::Docking;
-    
-    TestFalse("Docking-Docking connection should be invalid", 
+
+    TestFalse("Docking-Docking connection should be invalid",
         PointA->CanConnectTo(PointB));
-    
+
     return true;
 }
 ```
@@ -1166,26 +1166,26 @@ bool FConnectionCompatibilityTest::RunTest(const FString& Parameters)
 **Test Validation Logic:**
 ```cpp
 // Test station validation
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FStationValidationTest, 
-    "StationBuilder.Validation.RequiredModules", 
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FStationValidationTest,
+    "StationBuilder.Validation.RequiredModules",
     EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 
 bool FStationValidationTest::RunTest(const FString& Parameters)
 {
     FStationDesign Design;
     Design.StationName = "Test Station";
-    
+
     // Station with no modules should fail validation
     TArray<FValidationMessage> Messages = FStationValidator::ValidateStation(Design);
-    
-    TestTrue("Empty station should have validation errors", 
+
+    TestTrue("Empty station should have validation errors",
         Messages.Num() > 0);
-    
+
     TestTrue("Should warn about missing docking bay",
         Messages.ContainsByPredicate([](const FValidationMessage& Msg) {
             return Msg.Message.Contains("docking");
         }));
-    
+
     return true;
 }
 ```
@@ -1559,7 +1559,7 @@ This specification provides everything an AI agent needs to develop the Modular 
 
 ---
 
-**Document Status**: COMPLETE - Ready for Agent Implementation  
-**Last Updated**: 2026-01-17  
-**Version**: 1.0  
+**Document Status**: COMPLETE - Ready for Agent Implementation
+**Last Updated**: 2026-01-17
+**Version**: 1.0
 **Author**: Adastrea Development Team

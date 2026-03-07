@@ -8,8 +8,8 @@
 
 The `IMC_Spaceship` (Input Mapping Context) is the central mapping system that connects physical keyboard/mouse/gamepad inputs to Input Actions in Adastrea. It defines which keys trigger which actions and how they're processed.
 
-**Type**: Input Mapping Context  
-**Location**: `Content/Input/IMC_Spaceship.uasset`  
+**Type**: Input Mapping Context
+**Location**: `Content/Input/IMC_Spaceship.uasset`
 **Purpose**: Maps hardware inputs (keys, mouse, gamepad) to logical Input Actions
 
 ---
@@ -375,7 +375,7 @@ IMC_Spaceship (Complete)
 ### Common Modifiers
 
 #### 1. Swizzle Input Axis Values
-**Purpose**: Rearranges input axes (X, Y, Z order)  
+**Purpose**: Rearranges input axes (X, Y, Z order)
 **Use Case**: Convert horizontal key press to forward movement
 
 ```
@@ -386,7 +386,7 @@ Example: W Key for forward movement
 ```
 
 #### 2. Negate
-**Purpose**: Reverses the sign of input value  
+**Purpose**: Reverses the sign of input value
 **Use Case**: Make S go backward, A go left
 
 ```
@@ -398,7 +398,7 @@ Example: S Key for backward
 ```
 
 #### 3. Scalar
-**Purpose**: Multiplies input value  
+**Purpose**: Multiplies input value
 **Use Case**: Adjust sensitivity, scale movement
 
 ```
@@ -409,7 +409,7 @@ Example: Mouse sensitivity
 ```
 
 #### 4. Deadzone
-**Purpose**: Ignores small input values  
+**Purpose**: Ignores small input values
 **Use Case**: Gamepad stick drift prevention
 
 ```

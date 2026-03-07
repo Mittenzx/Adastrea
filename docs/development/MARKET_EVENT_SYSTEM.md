@@ -29,8 +29,8 @@
 
 #### Drought (Agricultural Stations)
 
-**Trigger**: 10% chance every 30 minutes  
-**Duration**: 5-10 minutes  
+**Trigger**: 10% chance every 30 minutes
+**Duration**: 5-10 minutes
 **Effect**: Food/water prices increase 50-100%
 
 **Gameplay**:
@@ -56,23 +56,23 @@ event:
   trigger_chance: 0.1
   check_interval: 1800 seconds
   duration: 300-600 seconds
-  
+
   effects:
     - item: water_purified
       price_multiplier: 2.0
       supply_multiplier: 0.3
       demand_multiplier: 3.0
-    
+
     - item: protein_packs
       price_multiplier: 1.5
       supply_multiplier: 0.5
       demand_multiplier: 2.0
-    
+
     - item: luxury_food
       price_multiplier: 1.8
       supply_multiplier: 0.4
       demand_multiplier: 2.5
-  
+
   notification:
     title: "MARKET ALERT: Drought"
     message: "Severe drought at {station_name}. Food prices soaring!"
@@ -91,8 +91,8 @@ event:
 
 #### Equipment Breakdown (Industrial Stations)
 
-**Trigger**: 15% chance every 30 minutes  
-**Duration**: 10-15 minutes  
+**Trigger**: 15% chance every 30 minutes
+**Duration**: 10-15 minutes
 **Effect**: Manufacturing output drops, prices rise
 
 **Gameplay**:
@@ -118,23 +118,23 @@ event:
   trigger_chance: 0.15
   check_interval: 1800 seconds
   duration: 600-900 seconds
-  
+
   effects:
     - item: ship_components
       price_multiplier: 2.0
       supply_multiplier: 0.2
       demand_multiplier: 4.0
-    
+
     - item: basic_alloys
       price_multiplier: 1.3
       supply_multiplier: 0.6
       demand_multiplier: 1.5
-    
+
     - item: refined_metals
       price_multiplier: 1.4
       supply_multiplier: 0.5
       demand_multiplier: 1.8
-  
+
   notification:
     title: "ALERT: Equipment Failure"
     message: "Manufacturing halted at {station_name}. Component shortage expected!"
@@ -146,8 +146,8 @@ event:
 
 #### Research Delay (Research Stations)
 
-**Trigger**: 8% chance every 40 minutes  
-**Duration**: 15-20 minutes  
+**Trigger**: 8% chance every 40 minutes
+**Duration**: 15-20 minutes
 **Effect**: Tech production slows, high-value items scarce
 
 **Gameplay**:
@@ -173,23 +173,23 @@ event:
   trigger_chance: 0.08
   check_interval: 2400 seconds
   duration: 900-1200 seconds
-  
+
   effects:
     - item: ai_cores
       price_multiplier: 2.0
       supply_multiplier: 0.1
       demand_multiplier: 5.0
-    
+
     - item: antimatter_cores
       price_multiplier: 1.8
       supply_multiplier: 0.15
       demand_multiplier: 4.0
-    
+
     - item: advanced_electronics
       price_multiplier: 1.6
       supply_multiplier: 0.3
       demand_multiplier: 3.0
-  
+
   notification:
     title: "RESEARCH ALERT"
     message: "Major setback at {station_name}. Advanced tech in short supply!"
@@ -203,8 +203,8 @@ event:
 
 #### Bumper Crop (Agricultural Stations)
 
-**Trigger**: 12% chance every 30 minutes  
-**Duration**: 10-15 minutes  
+**Trigger**: 12% chance every 30 minutes
+**Duration**: 10-15 minutes
 **Effect**: Food/water prices DROP 40-60% (buying opportunity)
 
 **Gameplay**:
@@ -230,23 +230,23 @@ event:
   trigger_chance: 0.12
   check_interval: 1800 seconds
   duration: 600-900 seconds
-  
+
   effects:
     - item: water_purified
       price_multiplier: 0.5
       supply_multiplier: 3.0
       demand_multiplier: 0.4
-    
+
     - item: protein_packs
       price_multiplier: 0.6
       supply_multiplier: 2.5
       demand_multiplier: 0.5
-    
+
     - item: luxury_food
       price_multiplier: 0.7
       supply_multiplier: 2.0
       demand_multiplier: 0.6
-  
+
   notification:
     title: "MARKET OPPORTUNITY"
     message: "Record harvest at {station_name}! Food prices at all-time low!"
@@ -258,8 +258,8 @@ event:
 
 #### Supply Convoy Arrival (Industrial Stations)
 
-**Trigger**: 10% chance every 40 minutes  
-**Duration**: 8-12 minutes  
+**Trigger**: 10% chance every 40 minutes
+**Duration**: 8-12 minutes
 **Effect**: Materials abundant, prices drop
 
 **Gameplay**:
@@ -285,23 +285,23 @@ event:
   trigger_chance: 0.1
   check_interval: 2400 seconds
   duration: 480-720 seconds
-  
+
   effects:
     - item: basic_alloys
       price_multiplier: 0.7
       supply_multiplier: 2.0
       demand_multiplier: 0.5
-    
+
     - item: refined_metals
       price_multiplier: 0.6
       supply_multiplier: 2.5
       demand_multiplier: 0.4
-    
+
     - item: ship_components
       price_multiplier: 0.8
       supply_multiplier: 1.5
       demand_multiplier: 0.6
-  
+
   notification:
     title: "SUPPLY ALERT"
     message: "Massive convoy arrived at {station_name}! Material prices dropped!"
@@ -315,8 +315,8 @@ event:
 
 #### Labor Strike (Industrial Stations)
 
-**Trigger**: 5% chance every 45 minutes  
-**Duration**: 10-20 minutes  
+**Trigger**: 5% chance every 45 minutes
+**Duration**: 10-20 minutes
 **Effect**: Workers demand better conditions, import needs spike
 
 **Gameplay**:
@@ -342,23 +342,23 @@ event:
   trigger_chance: 0.05
   check_interval: 2700 seconds
   duration: 600-1200 seconds
-  
+
   effects:
     - item: protein_packs
       price_multiplier: 7.0 # Huge demand!
       supply_multiplier: 1.0
       demand_multiplier: 10.0
-    
+
     - item: basic_medicine
       price_multiplier: 4.0
       supply_multiplier: 1.0
       demand_multiplier: 6.0
-    
+
     - item: water_purified
       price_multiplier: 10.0 # Desperate need!
       supply_multiplier: 1.0
       demand_multiplier: 15.0
-  
+
   notification:
     title: "CRISIS: Labor Strike"
     message: "{station_name} workers demanding supplies! Food and medicine prices skyrocket!"
@@ -373,8 +373,8 @@ event:
 
 #### Celebrity Visit (Luxury Stations)
 
-**Trigger**: 6% chance every 50 minutes  
-**Duration**: 5-10 minutes  
+**Trigger**: 6% chance every 50 minutes
+**Duration**: 5-10 minutes
 **Effect**: Luxury goods in high demand
 
 **Gameplay**:
@@ -400,23 +400,23 @@ event:
   trigger_chance: 0.06
   check_interval: 3000 seconds
   duration: 300-600 seconds
-  
+
   effects:
     - item: rare_art
       price_multiplier: 3.0
       supply_multiplier: 1.0
       demand_multiplier: 5.0
-    
+
     - item: luxury_food
       price_multiplier: 2.5
       supply_multiplier: 1.0
       demand_multiplier: 4.0
-    
+
     - item: entertainment_systems
       price_multiplier: 2.0
       supply_multiplier: 1.0
       demand_multiplier: 3.0
-  
+
   notification:
     title: "VIP ARRIVAL"
     message: "Celebrity entourage at {station_name}! Luxury goods in high demand!"
@@ -435,22 +435,22 @@ USTRUCT(BlueprintType)
 struct FMarketEvent
 {
     GENERATED_BODY()
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FName EventID;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FText EventName;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FText EventDescription;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMarketEventEffect> Effects;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float DurationSeconds;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FMarketEventNotification Notification;
 };
@@ -459,16 +459,16 @@ USTRUCT(BlueprintType)
 struct FMarketEventEffect
 {
     GENERATED_BODY()
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     UTradeItemDataAsset* AffectedItem;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float PriceMultiplier; // 2.0 = double price, 0.5 = half price
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float SupplyMultiplier;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float DemandMultiplier;
 };
@@ -482,30 +482,30 @@ public:
     // Event Triggering
     UFUNCTION(BlueprintCallable, Category="Market Events")
     void CheckForEvents(float DeltaTime);
-    
+
     UFUNCTION(BlueprintCallable, Category="Market Events")
     void TriggerEvent(FMarketEvent Event, ASpaceStation* Station);
-    
+
     UFUNCTION(BlueprintCallable, Category="Market Events")
     void EndEvent(FMarketEvent Event);
-    
+
     // Event Queries
     UFUNCTION(BlueprintCallable, BlueprintPure, Category="Market Events")
     TArray<FMarketEvent> GetActiveEvents() const;
-    
+
     UFUNCTION(BlueprintCallable, BlueprintPure, Category="Market Events")
     bool IsEventActive(FName EventID) const;
-    
+
     UFUNCTION(BlueprintCallable, BlueprintPure, Category="Market Events")
     FMarketEvent GetEventByID(FName EventID) const;
 
 private:
     UPROPERTY()
     TArray<FMarketEvent> ActiveEvents;
-    
+
     UPROPERTY()
     TMap<FName, float> EventTimers;
-    
+
     void ApplyEventEffects(const FMarketEvent& Event, ASpaceStation* Station);
     void RemoveEventEffects(const FMarketEvent& Event, ASpaceStation* Station);
 };
@@ -649,7 +649,7 @@ Canvas Panel
 - Prices normalize
 - Crisis resolved
 
-**Total Duration**: 25-30 minutes  
+**Total Duration**: 25-30 minutes
 **Player Experience**: Multi-phase opportunity with escalating profits
 
 ---
@@ -744,6 +744,6 @@ python3 Tools/mvp_scenario_builder.py --scenario economic_crash --output test_ev
 
 ---
 
-**Last Updated**: 2026-01-17  
-**Version**: 1.0  
+**Last Updated**: 2026-01-17
+**Version**: 1.0
 **Part of**: Trade Simulator MVP (Week 5-8 Structured Version)

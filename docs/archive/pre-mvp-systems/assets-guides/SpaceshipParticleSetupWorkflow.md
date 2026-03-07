@@ -6,9 +6,9 @@ Step-by-step guide for setting up particle effects on your spaceship in Unreal E
 
 ## Prerequisites
 
-✅ Adastrea project opened in Unreal Engine 5.6  
-✅ Latest code compiled (includes `USpaceshipParticleComponent`)  
-✅ Ship Blueprint created (based on `ASpaceship`)  
+✅ Adastrea project opened in Unreal Engine 5.6
+✅ Latest code compiled (includes `USpaceshipParticleComponent`)
+✅ Ship Blueprint created (based on `ASpaceship`)
 
 ---
 
@@ -121,7 +121,7 @@ Create 4 particle systems:
    │
    ├→ Multiply with Base Color (blue/white)
    └→ Connect to Emissive Color
-   
+
    Material Domain: Surface
    Blend Mode: Opaque or Translucent
    Shading Model: Unlit or Default Lit
@@ -492,5 +492,5 @@ Event Tick
 
 **Estimated Setup Time**: 2-4 hours for first ship, 30 minutes per additional ship
 
-**Version**: 1.0  
+**Version**: 1.0
 **Updated**: 2025-11-17

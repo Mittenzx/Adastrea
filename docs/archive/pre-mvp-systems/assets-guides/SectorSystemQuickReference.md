@@ -4,8 +4,8 @@ One-page reference for the sector governance system.
 
 ## What is a Sector?
 
-**Physical:** 200km x 200km x 200km region of space  
-**Governance:** Managed by a Sector Council (practical administration, not politics)  
+**Physical:** 200km x 200km x 200km region of space
+**Governance:** Managed by a Sector Council (practical administration, not politics)
 **Purpose:** Taxes, budget allocation, security, infrastructure, policies
 
 ## Core Components
@@ -103,7 +103,7 @@ Budget (sum to 100%):
   Security: 20-80%
   Infrastructure: 10-60%
   Reserve: 10-30%
-  
+
 Treasury: 100K - 10M credits
 ```
 
@@ -271,16 +271,16 @@ Tax: 5-10%, Security: 40%, Infrastructure: 35%, High pass threshold
 
 ## Integration Points
 
-**Way System:** Ways get council seats based on sector presence  
-**Trading System:** Sector policies affect prices and trade  
-**Combat System:** Security budget affects patrol presence  
-**Quest System:** Sector issues generate missions  
+**Way System:** Ways get council seats based on sector presence
+**Trading System:** Sector policies affect prices and trade
+**Combat System:** Security budget affects patrol presence
+**Quest System:** Sector issues generate missions
 **Faction System:** Factions may control sectors
 
 ## File Locations
 
-**Templates:** `Assets/SectorTemplates/`  
-**Data Assets:** `Content/DataAssets/Sectors/`  
+**Templates:** `Assets/SectorTemplates/`
+**Data Assets:** `Content/DataAssets/Sectors/`
 **Documentation:**
 - `Assets/SectorCreationGuide.md` - Complete guide
 - `Assets/SectorMapPlacementGuide.md` - Placement guide
@@ -329,19 +329,19 @@ Budget:
 
 ## Tips
 
-✓ Start with templates  
-✓ Plan layout before placing  
-✓ Use grid spacing (20M units)  
-✓ Test budget sums to 100%  
-✓ Match names exactly  
-✓ Consider travel times  
-✓ Document your layout  
+✓ Start with templates
+✓ Plan layout before placing
+✓ Use grid spacing (20M units)
+✓ Test budget sums to 100%
+✓ Match names exactly
+✓ Consider travel times
+✓ Document your layout
 
-✗ Don't overlap sectors  
-✗ Don't use random positions  
-✗ Don't forget Z axis  
-✗ Don't change actor scale  
-✗ Don't use duplicate IDs  
+✗ Don't overlap sectors
+✗ Don't use random positions
+✗ Don't forget Z axis
+✗ Don't change actor scale
+✗ Don't use duplicate IDs
 
 ---
 

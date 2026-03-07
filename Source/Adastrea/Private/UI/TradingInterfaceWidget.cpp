@@ -220,7 +220,7 @@ bool UTradingInterfaceWidget::AddToCart(UTradeItemDataAsset* Item, int32 Quantit
 			int32 ItemCost = GetItemPrice(Item, Quantity);
 			int32 CurrentCartTotal = GetCartTotal();
 			int32 NewTotal = CurrentCartTotal + ItemCost;
-			
+
 			if (NewTotal > PlayerTrader->GetCredits())
 			{
 				return false; // Cannot afford this addition to cart
@@ -232,7 +232,7 @@ bool UTradingInterfaceWidget::AddToCart(UTradeItemDataAsset* Item, int32 Quantit
 		{
 			float ItemVolume = Item->GetTotalVolume(Quantity);
 			float AvailableSpace = PlayerCargo->GetAvailableCargoSpace();
-			
+
 			// Calculate space already reserved by cart
 			float CartReservedSpace = 0.0f;
 			for (const auto& CartItem : ShoppingCart)
@@ -242,7 +242,7 @@ bool UTradingInterfaceWidget::AddToCart(UTradeItemDataAsset* Item, int32 Quantit
 					CartReservedSpace += CartItem.Key->GetTotalVolume(CartItem.Value);
 				}
 			}
-			
+
 			if ((CartReservedSpace + ItemVolume) > AvailableSpace)
 			{
 				return false; // Not enough cargo space for this addition
@@ -455,7 +455,7 @@ bool UTradingInterfaceWidget::ExecuteTrade()
 
 	// Track successfully traded items to remove from cart
 	TArray<UTradeItemDataAsset*> SuccessfullyTradedItems;
-	
+
 	// Execute each item in cart
 	bool bAllSuccess = true;
 	for (const auto& CartItem : ShoppingCart)
@@ -510,7 +510,7 @@ bool UTradingInterfaceWidget::ExecuteTrade()
 			RefreshMarketDisplay();
 			UpdatePlayerState();
 			OnCartUpdated(); // Update cart to reflect removed items
-			
+
 			OnTradeCompleted(false, FText::FromString(TEXT("Trade partially completed - some items failed")));
 		}
 		else

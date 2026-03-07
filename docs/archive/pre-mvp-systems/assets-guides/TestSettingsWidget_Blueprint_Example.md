@@ -17,7 +17,7 @@ Canvas Panel
 │   • Anchor: Center
 │   • Alignment: Middle Center
 │   • Padding: 50px all sides
-│   
+│
 │   ├── Text Block (TitleText)
 │   │   • Text: "Test Configuration"
 │   │   • Size: 48pt, Bold

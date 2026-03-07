@@ -574,7 +574,7 @@ Blueprint Flow:
 4. Detail view shows full stats
 
 **Assignment UI:**
-1. Create Widget Blueprint  
+1. Create Widget Blueprint
 2. List available personnel
 3. Filter by:
    - Role
@@ -588,22 +588,22 @@ Blueprint Flow:
 ## Best Practices Summary
 
 ### DO:
-✓ Use consistent naming conventions  
-✓ Reference templates for typical values  
-✓ Create command hierarchies bottom-up  
-✓ Tag personnel for easy filtering  
-✓ Balance relationships (not all friends)  
-✓ Update performance metrics regularly  
-✓ Document personality in biography  
+✓ Use consistent naming conventions
+✓ Reference templates for typical values
+✓ Create command hierarchies bottom-up
+✓ Tag personnel for easy filtering
+✓ Balance relationships (not all friends)
+✓ Update performance metrics regularly
+✓ Document personality in biography
 
 ### DON'T:
-✗ Create overpowered personnel (too many high stats)  
-✗ Forget to set reciprocal relationships  
-✗ Use spaces in Personnel IDs  
-✗ Leave Manager ID/Direct Reports inconsistent  
-✗ Overuse high-level traits on everyone  
-✗ Create crews without support roles  
-✗ Neglect to update career history  
+✗ Create overpowered personnel (too many high stats)
+✗ Forget to set reciprocal relationships
+✗ Use spaces in Personnel IDs
+✗ Leave Manager ID/Direct Reports inconsistent
+✗ Overuse high-level traits on everyone
+✗ Create crews without support roles
+✗ Neglect to update career history
 
 ---
 
@@ -625,24 +625,24 @@ Blueprint Flow:
 ## Troubleshooting
 
 ### Issue: Relationship not working
-**Check:** Personnel IDs match exactly (case-sensitive)  
-**Check:** Both parties have reciprocal entries  
-**Check:** Relationship strength is set  
+**Check:** Personnel IDs match exactly (case-sensitive)
+**Check:** Both parties have reciprocal entries
+**Check:** Relationship strength is set
 
 ### Issue: Hierarchy broken
-**Check:** Manager ID set on subordinates  
-**Check:** Direct Reports list includes subordinates  
-**Check:** IDs are correct with no typos  
+**Check:** Manager ID set on subordinates
+**Check:** Direct Reports list includes subordinates
+**Check:** IDs are correct with no typos
 
 ### Issue: Skills not appearing
-**Check:** Skill Name spelled correctly  
-**Check:** Skill Level is 1-10  
-**Check:** Skills array has entries  
+**Check:** Skill Name spelled correctly
+**Check:** Skill Level is 1-10
+**Check:** Skills array has entries
 
 ### Issue: Can't find personnel in Blueprint
-**Check:** Asset is saved  
-**Check:** Loading from correct directory  
-**Check:** Personnel ID is not NAME_None  
+**Check:** Asset is saved
+**Check:** Loading from correct directory
+**Check:** Personnel ID is not NAME_None
 
 ---
 

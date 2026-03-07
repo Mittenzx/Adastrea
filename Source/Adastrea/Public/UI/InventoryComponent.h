@@ -60,20 +60,20 @@ struct FInventorySlot
 
 /**
  * Component for managing inventory
- * 
+ *
  * This component provides inventory management for players and ships:
  * - Adding and removing items
  * - Stacking and splitting items
  * - Weight and capacity management
  * - Item usage and consumption
  * - Sorting and filtering
- * 
+ *
  * Usage:
  * - Add to PlayerController or Spaceship actor
  * - Configure slot count and weight capacity
  * - Use Blueprint functions to manipulate inventory
  * - Listen to delegates for inventory changes
- * 
+ *
  * Integration:
  * - Works with InventoryItemDataAsset for item definitions
  * - Connects to InventoryWidget for UI display

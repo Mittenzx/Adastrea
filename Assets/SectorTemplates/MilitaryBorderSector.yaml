@@ -14,56 +14,56 @@ Identity:
 Council:
   TotalSeats: 9
   PassThreshold: 51  # Simple majority for quick decisions
-  
+
   Representatives:
     - RepresentingWay: Defense_Coalition
       RepresentativeName: "General Marcus Steele"
       VotingWeight: 28
       YearsOfService: 8
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Security_Division
       RepresentativeName: "Colonel Sarah Reeves"
       VotingWeight: 24
       YearsOfService: 6
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Ship_Builders_Union
       RepresentativeName: "Defense Contractor Jack Morrison"
       VotingWeight: 18
       YearsOfService: 5
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Medical_Services
       RepresentativeName: "Major Dr. Chen Li"
       VotingWeight: 12
       YearsOfService: 4
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Supply_Logistics
       RepresentativeName: "Quartermaster Elena Volkov"
       VotingWeight: 15
       YearsOfService: 7
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Intelligence_Office
       RepresentativeName: "Captain Nadia Petrov"
       VotingWeight: 10
       YearsOfService: 5
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Engineering_Corps
       RepresentativeName: "Chief Engineer Tomasz Nowak"
       VotingWeight: 8
       YearsOfService: 6
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Civilian_Liaison
       RepresentativeName: "Advisor Miriam Okafor"
       VotingWeight: 6
       YearsOfService: 3
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Communications_Command
       RepresentativeName: "Lieutenant Raul Ortega"
       VotingWeight: 5
@@ -91,7 +91,7 @@ ActivePolicies:
       maintain IFF transponders.
     PolicyValue: 95
     IsActive: true
-    
+
   - PolicyType: PatrolFrequency
     PolicyName: "Constant Vigilance Doctrine"
     Description: |
@@ -99,7 +99,7 @@ ActivePolicies:
       challenged immediately. Military escorts available for civilian traffic.
     PolicyValue: 95
     IsActive: true
-    
+
   - PolicyType: TradeRegulation
     PolicyName: "Wartime Trade Restrictions"
     Description: |
@@ -107,7 +107,7 @@ ActivePolicies:
       Priority given to military supplies. Some luxuries restricted.
     PolicyValue: 85
     IsActive: true
-    
+
   - PolicyType: EmergencyReserve
     PolicyName: "Mobilization Readiness Fund"
     Description: |
@@ -121,7 +121,7 @@ Notes: |
   are real and present. Players here will encounter military operations,
   strict security checks, and potential combat scenarios. Good for
   combat-focused players and those interested in military missions.
-  
+
   Council dynamics: Highly unified due to external threat. Military
   representatives have de facto authority during emergencies. Civilian
   Ways accept restrictions as necessary for survival.

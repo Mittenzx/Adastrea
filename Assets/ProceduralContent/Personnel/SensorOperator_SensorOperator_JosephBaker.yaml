@@ -9,7 +9,7 @@ PersonnelName: "Joseph Baker"
 # Basic Identity
 Biography: |
   This individual was a trader on the frontier worlds before seeking more stable employment. They are celebrated for their innovative problem-solving and defended a civilian station against pirate raiders.
-  
+
 Age: 52
 Gender: "Male"
 Species: "Human"
@@ -61,7 +61,7 @@ ContractMonthsRemaining: 0
 PersonalityType: "Adventurous"
 PersonalityDescription: |
   Adventurous personality with focus on sensoroperator duties.
-  
+
 Traits:
   - TraitName: "Combat Veteran"
     TraitDescription: "Experienced in combat"

@@ -218,7 +218,7 @@ pip install -r tests/requirements-test.txt
 
 ### Symbols
 - ✅ `✓ PASS` - Test passed
-- ❌ `✗ FAIL` - Test failed  
+- ❌ `✗ FAIL` - Test failed
 - ⚠️ `⚠ WARNING` - Non-critical issue
 - ℹ️ `ℹ INFO` - Informational message
 

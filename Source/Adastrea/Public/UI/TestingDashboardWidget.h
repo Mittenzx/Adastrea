@@ -44,7 +44,7 @@ struct FTestableFeature
 
 /**
  * Testing Dashboard Widget - Interactive testing checklist accessible during gameplay
- * 
+ *
  * This widget provides an in-game testing dashboard that allows QA and developers to:
  * - Check off game systems as they test them
  * - Configure test scenarios on-the-fly
@@ -52,13 +52,13 @@ struct FTestableFeature
  * - Track testing progress with checkboxes
  * - Add notes for each tested feature
  * - Toggle visibility with a hotkey (e.g., F12)
- * 
+ *
  * Usage:
  * - Create a Widget Blueprint based on this class (e.g., WBP_TestingDashboard)
  * - Add to viewport during gameplay
  * - Toggle visibility with a dedicated input action
  * - Configure testable features in Blueprint or C++
- * 
+ *
  * Integration:
  * - Can be toggled on/off during gameplay
  * - Persists across level transitions

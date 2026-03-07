@@ -14,62 +14,62 @@ Identity:
 Council:
   TotalSeats: 10
   PassThreshold: 66  # High threshold - careful consideration required
-  
+
   Representatives:
     - RepresentingWay: Scholars_Syndicate
       RepresentativeName: "Dr. Evelyn Blackwood"
       VotingWeight: 25
       YearsOfService: 15
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Research_Academy
       RepresentativeName: "Professor Kenji Tanaka"
       VotingWeight: 22
       YearsOfService: 18
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Engineers_Guild
       RepresentativeName: "Master Engineer Ivan Petrov"
       VotingWeight: 18
       YearsOfService: 10
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Medical_Research
       RepresentativeName: "Dr. Amira Hassan"
       VotingWeight: 16
       YearsOfService: 8
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Technology_Consortium
       RepresentativeName: "Director Yuki Sato"
       VotingWeight: 20
       YearsOfService: 12
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Bioinformatics_Alliance
       RepresentativeName: "Dr. Priya Raman"
       VotingWeight: 14
       YearsOfService: 7
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Quantum_Research_Group
       RepresentativeName: "Professor Markus Lindholm"
       VotingWeight: 13
       YearsOfService: 6
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Experimental_Physics_Forum
       RepresentativeName: "Dr. Sofia Alvarez"
       VotingWeight: 12
       YearsOfService: 5
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Applied_Mathematics_Union
       RepresentativeName: "Professor Wei Zhang"
       VotingWeight: 11
       YearsOfService: 4
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Robotics_Innovation_Circle
       RepresentativeName: "Chief Roboticist Samuel Okoye"
       VotingWeight: 9
@@ -97,7 +97,7 @@ ActivePolicies:
       premier research destination.
     PolicyValue: 85
     IsActive: true
-    
+
   - PolicyType: ResourceAllocation
     PolicyName: "Research Grant Program"
     Description: |
@@ -105,7 +105,7 @@ ActivePolicies:
       grant system ensures funding goes to the most innovative work.
     PolicyValue: 75
     IsActive: true
-    
+
   - PolicyType: TradeRegulation
     PolicyName: "Technology Export Controls"
     Description: |
@@ -113,7 +113,7 @@ ActivePolicies:
       dangerous innovations from falling into wrong hands.
     PolicyValue: 70
     IsActive: true
-    
+
   - PolicyType: SecurityBudget
     PolicyName: "Intellectual Property Protection"
     Description: |
@@ -126,7 +126,7 @@ Notes: |
   The Nexus Research Zone is where innovation happens. Peaceful, intellectual
   atmosphere with focus on advancement. Great for players interested in
   technology upgrades, ship modifications, and discovering new systems.
-  
+
   Council dynamics: Highly collaborative with spirited academic debates.
   Generally unified on infrastructure and research funding. Occasional
   ethical discussions about experimental technologies.

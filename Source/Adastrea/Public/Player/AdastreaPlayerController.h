@@ -23,42 +23,42 @@ USTRUCT()
 struct FSetStationParams
 {
 	GENERATED_BODY()
-	
+
 	UPROPERTY()
 	ASpaceStation* Station = nullptr;
 };
 
 /**
  * Delegate for station editor toggle event
- * @deprecated Since December 2025 (v2.0), will be removed in v3.0 (mid-2026). 
+ * @deprecated Since December 2025 (v2.0), will be removed in v3.0 (mid-2026).
  * Use C++ ToggleStationEditor() implementation instead. See Assets/StationEditorMigrationGuide.md
  */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStationEditorToggle);
 
 /**
  * Player Controller for Adastrea
- * 
+ *
  * This class manages player input, interaction with the game world, and player-specific
  * state within the Adastrea game. It serves as the primary interface between the player
  * and their controlled entities (spaceships, characters, etc.).
- * 
+ *
  * Key Responsibilities:
  * - Processing player input for spaceship flight controls
  * - Managing camera and viewport settings
  * - Handling UI interactions and HUD updates
  * - Coordinating with AdastreaGameInstance for persistent player data
  * - Managing station editor UI and state
- * 
+ *
  * REMOVED (Trade Simulator MVP):
  * - Faction relationships (removed per MVP scope)
  * - Reputation system (removed per MVP scope)
- * 
+ *
  * Usage:
  * - Set as the Player Controller Class in the Game Mode
  * - Create Blueprints derived from this class for project-specific functionality
  * - Override input handling functions to customize controls
  * - Use Blueprint events to extend behavior without C++ changes
- * 
+ *
  * Integration Points:
  * - Works with ASpaceship for vehicle control
  * - Accesses UAdastreaGameInstance for save/load operations
@@ -237,7 +237,7 @@ public:
 
 	/**
 	 * Called when the station editor should be toggled (default: N key when in spaceship mode)
-	 * @deprecated Since December 2025 (v2.0), will be removed in v3.0 (mid-2026). 
+	 * @deprecated Since December 2025 (v2.0), will be removed in v3.0 (mid-2026).
 	 * Use C++ ToggleStationEditor() implementation instead. This event is kept for backward compatibility.
 	 * See Assets/StationEditorMigrationGuide.md for migration details.
 	 */
@@ -278,7 +278,7 @@ public:
 	 * Toggle the station editor UI
 	 * Called when StationEditorAction input is triggered
 	 * Only works when controlling a spaceship
-	 * 
+	 *
 	 * This function now handles all logic in C++:
 	 * - Finds nearest station within search radius
 	 * - Creates and shows/hides the editor widget

@@ -151,8 +151,8 @@ Event: OnDockPressed
 │     │     │     └─ Call NavigateToDockingPoint
 ```
 
-**Node Count:** ~30 nodes  
-**Debug:** Visual inspection, print nodes  
+**Node Count:** ~30 nodes
+**Debug:** Visual inspection, print nodes
 **Type Safety:** Runtime checking only
 
 ### After: C++ RequestDocking
@@ -166,14 +166,14 @@ void ASpaceship::RequestDocking()
         UE_LOG(LogTemp, Warning, TEXT("No station in range"));
         return;
     }
-    
+
     // If already docked, undock instead
     if (bIsDocked)
     {
         Undock();
         return;
     }
-    
+
     // Cast to docking bay module
     ADockingBayModule* DockingBay = Cast<ADockingBayModule>(NearbyStation);
     if (!DockingBay)
@@ -181,14 +181,14 @@ void ASpaceship::RequestDocking()
         UE_LOG(LogTemp, Warning, TEXT("Not a docking module"));
         return;
     }
-    
+
     // Check availability
     if (!DockingBay->HasAvailableDocking())
     {
         UE_LOG(LogTemp, Warning, TEXT("No slots available"));
         return;
     }
-    
+
     // Get docking point
     USceneComponent* DockingPoint = DockingBay->GetAvailableDockingPoint();
     if (!DockingPoint)
@@ -196,7 +196,7 @@ void ASpaceship::RequestDocking()
         UE_LOG(LogTemp, Warning, TEXT("Failed to get docking point"));
         return;
     }
-    
+
     // Begin docking
     CurrentDockingPoint = DockingPoint;
     bIsDocking = true;
@@ -204,8 +204,8 @@ void ASpaceship::RequestDocking()
 }
 ```
 
-**Line Count:** ~35 lines  
-**Debug:** Breakpoints, variable inspection, call stack  
+**Line Count:** ~35 lines
+**Debug:** Breakpoints, variable inspection, call stack
 **Type Safety:** Compile-time checking, IntelliSense
 
 ---
@@ -223,7 +223,7 @@ void ASpaceship::RequestDocking()
 7. Implement Undock function (20 nodes)
 8. Setup input binding
 
-**Total Time:** ~2-3 hours for experienced Blueprint developer  
+**Total Time:** ~2-3 hours for experienced Blueprint developer
 **Skill Required:** Advanced Blueprint knowledge
 
 ### After: C++ Setup (3 Steps)
@@ -239,7 +239,7 @@ void ASpaceship::RequestDocking()
 3. **Setup Undock Button:**
    - OnClicked → Call Undock()
 
-**Total Time:** ~10-15 minutes  
+**Total Time:** ~10-15 minutes
 **Skill Required:** Basic Blueprint configuration
 
 ---
@@ -371,6 +371,6 @@ This follows Unreal Engine best practices:
 
 ---
 
-**Date:** January 7, 2026  
-**Author:** GitHub Copilot Agent  
+**Date:** January 7, 2026
+**Author:** GitHub Copilot Agent
 **Related:** DOCKING_REFACTOR_SUMMARY.md

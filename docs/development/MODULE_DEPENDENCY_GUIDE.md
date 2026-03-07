@@ -28,7 +28,7 @@ This creates: `A → B → A` which is invalid and causes build errors.
 
 1. **Editor modules can depend on runtime modules** ✓
    - `StationEditor → Adastrea` (correct)
-   
+
 2. **Runtime modules should NOT depend on editor modules** ✗
    - `Adastrea → StationEditor` (incorrect - causes circular dependency)
 
@@ -57,8 +57,8 @@ Adastrea (core runtime module)
 
 Previously, `Adastrea.Build.cs` had:
 ```csharp
-PublicDependencyModuleNames.AddRange(new string[] 
-{ 
+PublicDependencyModuleNames.AddRange(new string[]
+{
     // ...
     "StationEditor"  // ❌ Incorrect - creates circular dependency
 });
@@ -70,11 +70,11 @@ This created: `Adastrea → StationEditor → Adastrea` circular dependency.
 
 Removed `StationEditor` from `Adastrea.Build.cs`:
 ```csharp
-PublicDependencyModuleNames.AddRange(new string[] 
-{ 
-    "Core", 
-    "CoreUObject", 
-    "Engine", 
+PublicDependencyModuleNames.AddRange(new string[]
+{
+    "Core",
+    "CoreUObject",
+    "Engine",
     // ... other dependencies
     "Niagara"
     // Note: StationEditor dependency removed to fix circular dependency
@@ -187,8 +187,8 @@ ExtraModuleNames.Add("StationEditor");  // ✓ OK - Links module into editor exe
 
 ```csharp
 // Adastrea.Build.cs
-PublicDependencyModuleNames.AddRange(new string[] 
-{ 
+PublicDependencyModuleNames.AddRange(new string[]
+{
     "Core",
     "Engine"
     // NOT "StationEditor" - would create circular dependency
@@ -267,6 +267,6 @@ If you encounter a circular dependency error:
 
 ---
 
-**Last Updated**: December 8, 2025  
-**Applies to**: Unreal Engine 5.6, Adastrea v2.0+  
+**Last Updated**: December 8, 2025
+**Applies to**: Unreal Engine 5.6, Adastrea v2.0+
 **Maintained by**: Adastrea Development Team

@@ -6,13 +6,13 @@
 
 /**
  * Adastrea Logging Categories
- * 
+ *
  * This file defines all custom log categories used in the Adastrea project.
  * Using dedicated log categories allows for better filtering and debugging.
- * 
+ *
  * Usage:
  *   UE_LOG(LogAdastreaShips, Warning, TEXT("Ship %s has invalid data"), *ShipName);
- * 
+ *
  * To enable verbose logging for a category:
  *   Log LogAdastreaShips Verbose
  */

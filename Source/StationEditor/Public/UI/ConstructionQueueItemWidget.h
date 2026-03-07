@@ -19,10 +19,10 @@ DECLARE_DELEGATE_OneParam(FOnQueueItemCancelled, int32);
 
 /**
  * Construction Queue Item Widget
- * 
+ *
  * Displays a single item in the construction queue.
  * Shows module name, build progress, time remaining, and cancel button.
- * 
+ *
  * Usage:
  * 1. Create Blueprint widget based on this class
  * 2. Layout UI with named widgets (must match BindWidget properties)

@@ -2,7 +2,7 @@
               ADASTREA DIRECTOR - DASHBOARD STATUS INDICATORS
 ================================================================================
 
-This is a text-based mockup of what the status indicator lights look like in 
+This is a text-based mockup of what the status indicator lights look like in
 the Unreal Engine Dashboard tab.
 
 ┌──────────────────────────────────────────────────────────────────────────────┐

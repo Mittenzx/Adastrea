@@ -314,5 +314,5 @@ See `ScreenshotTester.py` for visual regression testing.
 
 ---
 
-**Maintained by**: Adastrea Development Team  
+**Maintained by**: Adastrea Development Team
 **Last Updated**: 2025-11-28

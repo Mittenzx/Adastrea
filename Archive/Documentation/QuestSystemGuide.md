@@ -280,19 +280,19 @@ TArray<FActiveQuest> GuildQuests = QuestManager->GetQuestsFromGiver("way_trade_g
 void UMyQuestUI::BindQuestEvents()
 {
     UQuestManagerSubsystem* QuestManager = GetGameInstance()->GetSubsystem<UQuestManagerSubsystem>();
-    
+
     // Quest accepted
     QuestManager->OnQuestAccepted.AddDynamic(this, &UMyQuestUI::HandleQuestAccepted);
-    
+
     // Objective updated
     QuestManager->OnObjectiveUpdated.AddDynamic(this, &UMyQuestUI::HandleObjectiveUpdated);
-    
+
     // Objective completed
     QuestManager->OnObjectiveCompleted.AddDynamic(this, &UMyQuestUI::HandleObjectiveCompleted);
-    
+
     // Quest completed
     QuestManager->OnQuestCompleted.AddDynamic(this, &UMyQuestUI::HandleQuestCompleted);
-    
+
     // Quest failed
     QuestManager->OnQuestFailed.AddDynamic(this, &UMyQuestUI::HandleQuestFailed);
 }
@@ -532,7 +532,7 @@ void GiveQuestRewards(const FQuestReward& Rewards)
             FName(Rewards.WayID),
             Rewards.ReputationGain
         );
-        
+
         // Record as a Feat if significant achievement
         if (Rewards.ReputationGain >= 50)
         {
@@ -560,9 +560,9 @@ void UQuestLogWidget::RefreshQuestList()
 {
     UQuestManagerSubsystem* QuestManager = GetGameInstance()->GetSubsystem<UQuestManagerSubsystem>();
     TArray<FActiveQuest> ActiveQuests = QuestManager->GetActiveQuests();
-    
+
     QuestListView->ClearItems();
-    
+
     for (const FActiveQuest& Quest : ActiveQuests)
     {
         UQuestEntryWidget* Entry = CreateWidget<UQuestEntryWidget>(this, QuestEntryClass);
@@ -582,22 +582,22 @@ void UQuestDetailsWidget::DisplayQuest(FName QuestID)
     {
         QuestTitle->SetText(QuestData.Quest->QuestName);
         QuestDescription->SetText(QuestData.Quest->Description);
-        
+
         // Show objectives
         for (int32 i = 0; i < QuestData.ObjectiveStates.Num(); ++i)
         {
             const FQuestObjective& Obj = QuestData.ObjectiveStates[i];
-            
+
             FString ProgressText = FString::Printf(
                 TEXT("%s [%d/%d]"),
                 *Obj.Description.ToString(),
                 Obj.CurrentProgress,
                 Obj.RequiredQuantity
             );
-            
+
             AddObjectiveEntry(ProgressText, Obj.bIsCompleted);
         }
-        
+
         // Show completion percentage
         float Completion = QuestData.Quest->GetCompletionPercentage();
         ProgressBar->SetPercent(Completion / 100.0f);
@@ -627,12 +627,12 @@ Extend generation with custom logic:
 UQuestDataAsset* GenerateCustomQuest(EQuestType Type, int32 Difficulty)
 {
     UQuestDataAsset* Quest = NewObject<UQuestDataAsset>();
-    
+
     // Set base properties
     Quest->QuestType = Type;
     Quest->Difficulty = Difficulty;
     Quest->bIsRepeatable = true;
-    
+
     // Generate based on type
     switch (Type)
     {
@@ -644,11 +644,11 @@ UQuestDataAsset* GenerateCustomQuest(EQuestType Type, int32 Difficulty)
         break;
     // ... more types
     }
-    
+
     // Scale rewards by difficulty
     Quest->Rewards.Credits = Difficulty * 1000;
     Quest->Rewards.ExperiencePoints = Difficulty * 100;
-    
+
     return Quest;
 }
 ```
@@ -751,8 +751,8 @@ Potential additions:
 
 ---
 
-**Last Updated**: 2025-11-11  
-**Version**: 1.0  
-**Status**: Production Ready  
-**Components**: QuestDataAsset, QuestManagerSubsystem  
+**Last Updated**: 2025-11-11
+**Version**: 1.0
+**Status**: Production Ready
+**Components**: QuestDataAsset, QuestManagerSubsystem
 **Lines of Code**: ~1,100 lines (headers + implementations)

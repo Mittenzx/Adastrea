@@ -9,18 +9,18 @@
 
 /**
  * Trade marketplace module for space stations
- * 
+ *
  * Commercial facility for buying, selling, and trading goods.
  * Includes vendor stalls, trading terminals, and auction systems.
- * 
+ *
  * Features:
  * - Configurable market data asset for inventory and pricing
  * - Can be opened/closed for trading
  * - Supports multiple marketplace types per station
- * 
+ *
  * Power Consumption: 40 units
  * Module Group: Public
- * 
+ *
  * Usage:
  * 1. Create a Blueprint based on this class (e.g., BP_SpaceStationModule_Marketplace)
  * 2. In Class Defaults, set the Market Data Asset property

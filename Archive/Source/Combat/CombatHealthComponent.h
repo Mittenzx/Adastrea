@@ -47,10 +47,10 @@ struct FShieldFacingData
 
 /**
  * Component for managing health, shields, armor, and damage for spaceships
- * 
+ *
  * Handles hull integrity, shield facings, damage calculation, armor penetration,
  * and destruction logic. Integrates with SpaceshipDataAsset for configuration.
- * 
+ *
  * Usage:
  * - Add component to ship Blueprint
  * - Configure max health and shield values
@@ -152,7 +152,7 @@ public:
      * @param DamageCauser Actor that caused damage
      */
     UFUNCTION()
-    void HandleTakeAnyDamage(AActor* DamagedActor, float DamageAmount, const class UDamageType* DamageType, 
+    void HandleTakeAnyDamage(AActor* DamagedActor, float DamageAmount, const class UDamageType* DamageType,
                              class AController* InstigatedBy, AActor* DamageCauser);
 
     /**
@@ -166,7 +166,7 @@ public:
      * @return Actual damage dealt
      */
     UFUNCTION(BlueprintCallable, Category="Combat Health")
-    float ApplyTypedDamage(float BaseDamage, EDamageType DamageType, float ArmorPenetration, 
+    float ApplyTypedDamage(float BaseDamage, EDamageType DamageType, float ArmorPenetration,
                           float ShieldPenetration, FVector HitDirection, AActor* DamageCauser);
 
     /**

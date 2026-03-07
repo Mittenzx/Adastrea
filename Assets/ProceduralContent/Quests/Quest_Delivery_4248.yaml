@@ -7,7 +7,7 @@ ContractName: "Express Cargo"
 ContractID: "Quest_Delivery_4248"
 Description: |
   Transport cargo from Zeta 34 to Cosmo 291. Ensure timely delivery.
-  
+
 ContractType: Delivery
 Difficulty: Medium
 

@@ -102,23 +102,23 @@ struct FShipUpgradeRequirement
 
 /**
  * Ship Upgrade Data Asset
- * 
+ *
  * Defines an upgrade that can be installed on ships to improve their performance.
  * Uses Data Asset pattern for designer-friendly configuration.
- * 
+ *
  * Usage:
  * - Create Blueprint Data Asset based on UShipUpgradeDataAsset
  * - Configure upgrade category, tier, and stat modifiers
  * - Set requirements (cost, level, materials)
  * - Define prerequisite upgrade chains
  * - Apply to ships via ShipUpgradeComponent
- * 
+ *
  * Example Upgrades:
  * - "Enhanced Thrusters Mk2": +20% speed, Tier 2, 5000 credits
  * - "Reinforced Hull Plating": +500 armor, Tier 1, 2000 credits
  * - "Advanced Shield Generator": +50% shield capacity, Tier 3, 10000 credits
  * - "Overcharged Weapons": +25% weapon damage, Tier 4, 15000 credits
- * 
+ *
  * Integration:
  * - ShipUpgradeComponent tracks installed upgrades
  * - Spaceship system applies stat modifiers

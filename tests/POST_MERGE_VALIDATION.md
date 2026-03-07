@@ -322,6 +322,6 @@ If you encounter issues:
 
 ---
 
-**Last Updated:** 2025-12-09  
-**Test Version:** 1.0  
+**Last Updated:** 2025-12-09
+**Test Version:** 1.0
 **Maintained by:** Adastrea Development Team

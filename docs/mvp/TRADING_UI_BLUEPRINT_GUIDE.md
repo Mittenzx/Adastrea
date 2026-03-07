@@ -1,14 +1,14 @@
 # Trading UI Blueprint Implementation Guide
 
-> **⚠️ DEPRECATED**: This guide has been consolidated into the unified Trading and Docking Complete Guide.  
+> **⚠️ DEPRECATED**: This guide has been consolidated into the unified Trading and Docking Complete Guide.
 > **See**: [Trading and Docking Complete Guide](TRADING_AND_DOCKING_COMPLETE_GUIDE.md)
 
 ---
 
-**Goal**: Create a functional trading UI for the MVP using UMG and the TradingInterfaceWidget C++ class  
-**Time Estimate**: 4-6 hours for complete implementation  
-**Last Updated**: 2026-01-13  
-**Difficulty**: Intermediate  
+**Goal**: Create a functional trading UI for the MVP using UMG and the TradingInterfaceWidget C++ class
+**Time Estimate**: 4-6 hours for complete implementation
+**Last Updated**: 2026-01-13
+**Difficulty**: Intermediate
 **Status**: **DEPRECATED** - Refer to unified guide above
 
 **Quick Version**: For 30-minute setup, see [TRADING_UI_QUICKSTART.md](TRADING_UI_QUICKSTART.md)
@@ -530,6 +530,6 @@ OnTradeCompleted(bool, FText)      // Show result
 
 ---
 
-**Last Updated**: 2025-12-29  
-**For**: Trade Simulator MVP  
+**Last Updated**: 2025-12-29
+**For**: Trade Simulator MVP
 **Status**: Ready for Implementation

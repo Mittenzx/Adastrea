@@ -29,7 +29,7 @@ bool FAdastreaMCPServer::Start(int32 Port)
 
 	// Get HTTP server module
 	FHttpServerModule& HttpServerModule = FHttpServerModule::Get();
-	
+
 	// Create router
 	HttpRouter = HttpServerModule.GetHttpRouter(Port);
 	if (!HttpRouter.IsValid())
@@ -127,7 +127,7 @@ bool FAdastreaMCPServer::HandleListTools(const FHttpServerRequest& Request, cons
 		TSharedPtr<FJsonObject> ToolObj = MakeShared<FJsonObject>();
 		ToolObj->SetStringField(TEXT("name"), Tool.Name);
 		ToolObj->SetStringField(TEXT("description"), Tool.Description);
-		
+
 		if (Tool.Parameters.IsValid())
 		{
 			ToolObj->SetObjectField(TEXT("inputSchema"), Tool.Parameters);
@@ -163,7 +163,7 @@ bool FAdastreaMCPServer::HandleExecuteTool(const FHttpServerRequest& Request, co
 		OnComplete(CreateErrorResponse(TEXT("Missing 'params' field"), 400));
 		return true;
 	}
-	
+
 	const TSharedPtr<FJsonObject>& Params = *ParamsPtr;
 
 	// Get tool name
@@ -193,7 +193,7 @@ bool FAdastreaMCPServer::HandleExecuteTool(const FHttpServerRequest& Request, co
 	// Build MCP response
 	TSharedPtr<FJsonObject> Response = MakeShared<FJsonObject>();
 	Response->SetStringField(TEXT("jsonrpc"), TEXT("2.0"));
-	
+
 	// Get request ID
 	int32 RequestId = 0;
 	RequestBody->TryGetNumberField(TEXT("id"), RequestId);
@@ -202,16 +202,16 @@ bool FAdastreaMCPServer::HandleExecuteTool(const FHttpServerRequest& Request, co
 	if (Result.bSuccess)
 	{
 		TSharedPtr<FJsonObject> ResultObj = MakeShared<FJsonObject>();
-		
+
 		// MCP format expects content array
 		TArray<TSharedPtr<FJsonValue>> ContentArray;
 		TSharedPtr<FJsonObject> ContentItem = MakeShared<FJsonObject>();
 		ContentItem->SetStringField(TEXT("type"), TEXT("text"));
 		ContentItem->SetStringField(TEXT("text"), Result.Output);
 		ContentArray.Add(MakeShared<FJsonValueObject>(ContentItem));
-		
+
 		ResultObj->SetArrayField(TEXT("content"), ContentArray);
-		
+
 		// Include data if present
 		if (Result.Data.IsValid())
 		{
@@ -219,15 +219,15 @@ bool FAdastreaMCPServer::HandleExecuteTool(const FHttpServerRequest& Request, co
 			FString DataStr;
 			TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&DataStr);
 			FJsonSerializer::Serialize(Result.Data.ToSharedRef(), Writer);
-			
+
 			TSharedPtr<FJsonObject> DataContent = MakeShared<FJsonObject>();
 			DataContent->SetStringField(TEXT("type"), TEXT("text"));
 			DataContent->SetStringField(TEXT("text"), DataStr);
 			ContentArray.Add(MakeShared<FJsonValueObject>(DataContent));
-			
+
 			ResultObj->SetArrayField(TEXT("content"), ContentArray);
 		}
-		
+
 		Response->SetObjectField(TEXT("result"), ResultObj);
 	}
 	else
@@ -275,14 +275,14 @@ TSharedPtr<FJsonObject> FAdastreaMCPServer::ParseRequestBody(const FHttpServerRe
 {
 	const TArray<uint8>& BodyData = Request.Body;
 	FString BodyString;
-	
+
 	// Convert bytes to string
 	BodyString = FString(UTF8_TO_TCHAR(reinterpret_cast<const char*>(BodyData.GetData())));
 
 	// Parse JSON
 	TSharedPtr<FJsonObject> JsonObject;
 	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(BodyString);
-	
+
 	if (FJsonSerializer::Deserialize(Reader, JsonObject))
 	{
 		return JsonObject;
@@ -301,7 +301,7 @@ TUniquePtr<FHttpServerResponse> FAdastreaMCPServer::CreateJsonResponse(const TSh
 	// Create response
 	TUniquePtr<FHttpServerResponse> Response = FHttpServerResponse::Create(JsonString, TEXT("application/json"));
 	Response->Code = static_cast<EHttpServerResponseCodes>(StatusCode);
-	
+
 	return Response;
 }
 
@@ -310,11 +310,11 @@ TUniquePtr<FHttpServerResponse> FAdastreaMCPServer::CreateErrorResponse(const FS
 	TSharedPtr<FJsonObject> ErrorObj = MakeShared<FJsonObject>();
 	ErrorObj->SetStringField(TEXT("jsonrpc"), TEXT("2.0"));
 	ErrorObj->SetNumberField(TEXT("id"), 0);
-	
+
 	TSharedPtr<FJsonObject> ErrorDetail = MakeShared<FJsonObject>();
 	ErrorDetail->SetNumberField(TEXT("code"), -32000);
 	ErrorDetail->SetStringField(TEXT("message"), Error);
-	
+
 	ErrorObj->SetObjectField(TEXT("error"), ErrorDetail);
 
 	return CreateJsonResponse(ErrorObj, StatusCode);

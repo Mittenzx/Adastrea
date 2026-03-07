@@ -953,6 +953,6 @@ Player controller possesses different pawns:
 
 ---
 
-**Last Updated**: 2025-12-05  
-**Version**: 1.0  
+**Last Updated**: 2025-12-05
+**Version**: 1.0
 **Status**: Spaceship system implemented, Character system planned

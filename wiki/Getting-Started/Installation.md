@@ -149,7 +149,7 @@ python SetupCheck.py --analyze
 
 This validates:
 - Unreal Engine installation
-- Compiler availability  
+- Compiler availability
 - Project structure
 - Required files
 - Optional: Code quality checks

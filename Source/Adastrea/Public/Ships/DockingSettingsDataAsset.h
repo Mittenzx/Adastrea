@@ -9,15 +9,15 @@ class UCurveFloat;
 
 /**
  * Centralized docking configuration settings
- * 
+ *
  * This Data Asset allows configuring docking parameters once and sharing them
  * across all ships, eliminating the need to configure docking on every ship.
- * 
+ *
  * Usage:
  * 1. Create a Blueprint based on this class (e.g., DA_DefaultDockingSettings)
  * 2. Configure docking parameters (UI widgets, range, curve)
  * 3. Reference this asset in ship Blueprints instead of configuring individually
- * 
+ *
  * Benefits:
  * - Single source of truth for docking configuration
  * - Easy to update all ships at once
@@ -56,7 +56,7 @@ public:
         ToolTip="How close the ship needs to be to dock (default: 2000 cm)"))
     float DockingRange;
 
-    /** 
+    /**
      * Animation curve for smooth docking movement (optional)
      * NOTE: Currently not implemented - docking uses instant teleportation.
      * This property is reserved for future animation support.
@@ -65,7 +65,7 @@ public:
         meta=(ToolTip="[FUTURE FEATURE] Curve controlling docking animation speed. Not yet implemented."))
     TObjectPtr<UCurveFloat> DockingCurve;
 
-    /** 
+    /**
      * Time to complete docking animation in seconds
      * NOTE: Currently not implemented - docking uses instant teleportation.
      * This property is reserved for future animation support.
@@ -75,7 +75,7 @@ public:
         ToolTip="[FUTURE FEATURE] How long the docking animation takes. Not yet implemented."))
     float DockingDuration;
 
-    /** 
+    /**
      * Undock impulse strength (cm/s) - how fast ship moves away when undocking
      * NOTE: Currently not implemented - undocking uses hardcoded 500.0f impulse (line 1968 in Spaceship.cpp).
      * This property is reserved for future customization support.

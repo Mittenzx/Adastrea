@@ -1,7 +1,7 @@
 # Blueprint Documentation Standards
 
-**Established**: December 29, 2025  
-**Status**: OFFICIAL STANDARD for Adastrea repository  
+**Established**: December 29, 2025
+**Status**: OFFICIAL STANDARD for Adastrea repository
 **Applies to**: All agents, developers, and documentation writers
 
 ---
@@ -18,16 +18,16 @@ This document establishes the **official standard** for documenting Blueprint lo
 
 **All Blueprint documentation MUST use image-based diagrams** showing visual representations of node graphs.
 
-**Format**: SVG (Scalable Vector Graphics)  
-**Location**: `docs/reference/images/blueprints/`  
+**Format**: SVG (Scalable Vector Graphics)
+**Location**: `docs/reference/images/blueprints/`
 **Generator Tool**: `Tools/generate_blueprint_images.py`
 
 ### Why Images?
 
-✅ **Crystal clear** - No ambiguity in node representation  
-✅ **Matches Unreal Engine** - Exact colors and appearance  
-✅ **Scalable** - SVG works at any resolution  
-✅ **Professional** - Suitable for all documentation  
+✅ **Crystal clear** - No ambiguity in node representation
+✅ **Matches Unreal Engine** - Exact colors and appearance
+✅ **Scalable** - SVG works at any resolution
+✅ **Professional** - Suitable for all documentation
 ✅ **Proven effectiveness** - 95% vs 60% implementation accuracy
 
 ---
@@ -165,16 +165,16 @@ Add new patterns by editing the Python script:
 def generate_your_pattern():
     """Generate a custom Blueprint pattern"""
     svg = create_svg_base(width, height)
-    
+
     # Add nodes
     body_y = add_node_box(svg, x, y, width, height, color, title)
-    
+
     # Add pins
     add_pin(svg, x, y, pin_type, label, is_input=True)
-    
+
     # Add connections
     add_connection_wire(svg, x1, y1, x2, y2)
-    
+
     return svg
 ```
 
@@ -418,6 +418,6 @@ All agents, developers, and documentation writers MUST follow these guidelines.
 
 ---
 
-**Last Updated**: December 29, 2025  
-**Established by**: @Mittenzx  
+**Last Updated**: December 29, 2025
+**Established by**: @Mittenzx
 **Status**: **MANDATORY** for all Blueprint documentation

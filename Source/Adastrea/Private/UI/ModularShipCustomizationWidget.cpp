@@ -10,7 +10,7 @@ void UModularShipCustomizationWidget::InitializeCustomization(UShipCustomization
 	bHasSlotSelected = false;
 	bHasModuleSelected = false;
 	SelectedModule = nullptr;
-	
+
 	RefreshUI();
 }
 
@@ -121,7 +121,7 @@ UShipModuleComponent* UModularShipCustomizationWidget::RemoveSelectedSlotModule(
 	}
 
 	UShipModuleComponent* RemovedModule = CustomizationComponent->RemoveModule(SelectedSlot.SlotID);
-	
+
 	if (RemovedModule)
 	{
 		OnModuleRemoved(RemovedModule, SelectedSlot);

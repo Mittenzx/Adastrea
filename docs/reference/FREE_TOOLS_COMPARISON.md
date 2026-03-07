@@ -16,10 +16,10 @@
 
 ### Recommendation by Use Case
 
-**Need 10 ships TODAY:** Spaceship Generator  
-**Need 5 hero ships (high quality):** Kitbashing or Manual  
-**Need realistic ships:** NASA 3D Models  
-**Need inspiration:** AI Generation  
+**Need 10 ships TODAY:** Spaceship Generator
+**Need 5 hero ships (high quality):** Kitbashing or Manual
+**Need realistic ships:** NASA 3D Models
+**Need inspiration:** AI Generation
 
 ---
 
@@ -35,9 +35,9 @@
 
 ### Recommendation
 
-**Best ROI:** Modular System (build once, use forever)  
-**Fastest Materials:** Quixel Megascans (already enabled!)  
-**Best Quality:** Quixel + Manual Modeling combo  
+**Best ROI:** Modular System (build once, use forever)
+**Fastest Materials:** Quixel Megascans (already enabled!)
+**Best Quality:** Quixel + Manual Modeling combo
 
 ---
 
@@ -52,9 +52,9 @@
 
 ### Recommendation
 
-**Fastest:** Use NiagaraGenerator.py (already exists!)  
-**Best Quality:** Modify UE Content Examples  
-**Custom Needs:** Build from scratch in Niagara  
+**Fastest:** Use NiagaraGenerator.py (already exists!)
+**Best Quality:** Modify UE Content Examples
+**Custom Needs:** Build from scratch in Niagara
 
 ---
 
@@ -72,9 +72,9 @@
 
 ### Recommendation
 
-**Primary Source:** Quixel Megascans (no brainer, already have it)  
-**Supplemental:** CC0 Textures and Poly Haven  
-**Specific Needs:** Textures.com free credits  
+**Primary Source:** Quixel Megascans (no brainer, already have it)
+**Supplemental:** CC0 Textures and Poly Haven
+**Specific Needs:** Textures.com free credits
 
 ---
 
@@ -175,9 +175,9 @@ Legend:
 
 ### Recommended Mix
 
-**Week 1:** Pure Procedural (build content library fast)  
-**Week 2:** Kitbashing (improve quality)  
-**Week 3:** Modular System (create reusable components)  
+**Week 1:** Pure Procedural (build content library fast)
+**Week 2:** Kitbashing (improve quality)
+**Week 3:** Modular System (create reusable components)
 **Week 4+:** Manual Creation (polish hero assets)
 
 ---
@@ -244,9 +244,9 @@ Legend:
 
 ### Recommendation
 
-**For Concepting:** Bing Image Creator (unlimited, fast)  
-**For Quality:** Leonardo.ai (free tier)  
-**For 3D Attempts:** Luma AI (experimental)  
+**For Concepting:** Bing Image Creator (unlimited, fast)
+**For Quality:** Leonardo.ai (free tier)
+**For 3D Attempts:** Luma AI (experimental)
 **Best Practice:** Use AI for inspiration, not final assets (yet)
 
 ---
@@ -439,20 +439,20 @@ Need to learn?
 
 ## Quick Reference Card
 
-**For Ships:** Spaceship Generator → Kitbashing → Manual  
-**For Interiors:** Modular System + Quixel Props  
-**For Stations:** Manual Modules + Quixel Materials  
-**For VFX:** NiagaraGenerator.py → Modify  
-**For Materials:** Quixel Megascans (always)  
-**For Learning:** Blender Guru + Epic Docs  
+**For Ships:** Spaceship Generator → Kitbashing → Manual
+**For Interiors:** Modular System + Quixel Props
+**For Stations:** Manual Modules + Quixel Materials
+**For VFX:** NiagaraGenerator.py → Modify
+**For Materials:** Quixel Megascans (always)
+**For Learning:** Blender Guru + Epic Docs
 
-**Time to First Asset:** 15-30 minutes  
-**Time to 10 Assets:** 4-6 hours  
-**Time to Production Ready:** 2-3 weeks  
+**Time to First Asset:** 15-30 minutes
+**Time to 10 Assets:** 4-6 hours
+**Time to Production Ready:** 2-3 weeks
 
-**Total Cost:** $0  
+**Total Cost:** $0
 
 ---
 
-**Last Updated:** December 18, 2025  
+**Last Updated:** December 18, 2025
 **Version:** 1.0

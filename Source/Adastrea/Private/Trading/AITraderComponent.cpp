@@ -36,7 +36,7 @@ void UAITraderComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	UpdateTimer += DeltaTime;
-	
+
 	// Update trader logic every few seconds based on trade frequency
 	float UpdateInterval = 3600.0f / FMath::Max(1, TradeFrequency); // Convert frequency to seconds
 	if (UpdateTimer >= UpdateInterval)
@@ -50,7 +50,7 @@ void UAITraderComponent::Initialize(int32 StartingCapital, UMarketDataAsset* Sta
 {
 	TradingCapital = StartingCapital;
 	CurrentLocation = StartingMarket;
-	
+
 	if (StartingMarket)
 	{
 		DiscoverMarket(StartingMarket);
@@ -73,18 +73,18 @@ void UAITraderComponent::UpdateTrader(float DeltaTime)
 TArray<FTradeRoute> UAITraderComponent::FindBestTradeRoutes(int32 MaxRoutes)
 {
 	TArray<FTradeRoute> BestRoutes;
-	
+
 	// Early exit if no markets known
 	if (KnownMarkets.Num() == 0)
 	{
 		return BestRoutes;
 	}
-	
+
 	// Reserve space to avoid reallocations
 	// Estimate: each market might have profitable routes to 25% of other markets
 	const int32 EstimatedRoutes = FMath::Max(1, (KnownMarkets.Num() * KnownMarkets.Num()) / 4);
 	BestRoutes.Reserve(EstimatedRoutes);
-	
+
 	// Cache current location to optimize the most common case
 	if (CurrentLocation)
 	{
@@ -103,7 +103,7 @@ TArray<FTradeRoute> UAITraderComponent::FindBestTradeRoutes(int32 MaxRoutes)
 			}
 		}
 	}
-	
+
 	// For each known market combination (excluding current location already processed)
 	for (UMarketDataAsset* Origin : KnownMarkets)
 	{
@@ -130,30 +130,30 @@ TArray<FTradeRoute> UAITraderComponent::FindBestTradeRoutes(int32 MaxRoutes)
 			// Calculate best destination for this item from this origin
 			float BestProfitability = 0.0f;
 			UMarketDataAsset* BestDestination = nullptr;
-			
+
 			for (UMarketDataAsset* Destination : KnownMarkets)
 			{
 				if (!Destination || Destination == Origin)
 				{
 					continue;
 				}
-				
+
 				float SellPrice = Destination->GetItemPrice(Entry.TradeItem, false);
 				float ProfitPerUnit = SellPrice - BuyPrice;
-				
+
 				// Skip if not profitable
 				if (ProfitPerUnit <= 0.0f)
 				{
 					continue;
 				}
-				
+
 				// Check profit margin threshold
 				float ProfitMargin = BuyPrice > 0.0f ? (ProfitPerUnit / BuyPrice) : 0.0f;
 				if (ProfitMargin < MinProfitMargin)
 				{
 					continue;
 				}
-				
+
 				// Simplified distance calculation using name hash as placeholder
 				// TODO: Replace with actual market world positions when available
 				// For now, this provides consistent relative distances for route prioritization
@@ -163,7 +163,7 @@ TArray<FTradeRoute> UAITraderComponent::FindBestTradeRoutes(int32 MaxRoutes)
 				);
 				float TravelTime = TravelSpeed > 0.0f ? Distance / TravelSpeed : 0.0f;
 				float ProfitabilityScore = TravelTime > 0.0f ? ProfitPerUnit / TravelTime : ProfitPerUnit;
-				
+
 				// Track best destination for this item-origin pair
 				if (ProfitabilityScore > BestProfitability)
 				{
@@ -171,7 +171,7 @@ TArray<FTradeRoute> UAITraderComponent::FindBestTradeRoutes(int32 MaxRoutes)
 					BestDestination = Destination;
 				}
 			}
-			
+
 			// Add only the best route for this item-origin combination
 			if (BestDestination && BestProfitability > 0.0f)
 			{
@@ -179,18 +179,18 @@ TArray<FTradeRoute> UAITraderComponent::FindBestTradeRoutes(int32 MaxRoutes)
 				Route.OriginMarket = Origin;
 				Route.DestinationMarket = BestDestination;
 				Route.TradeItem = Entry.TradeItem;
-				
+
 				float RouteBuyPrice = Origin->GetItemPrice(Entry.TradeItem, true);
 				float RouteSellPrice = BestDestination->GetItemPrice(Entry.TradeItem, false);
 				Route.ProfitPerUnit = RouteSellPrice - RouteBuyPrice;
-				
+
 				Route.Distance = FVector::Dist(
 					FVector(static_cast<float>(Origin->GetFName().GetNumber()), 0, 0),
 					FVector(static_cast<float>(BestDestination->GetFName().GetNumber()), 0, 0)
 				);
 				Route.TravelTime = TravelSpeed > 0.0f ? Route.Distance / TravelSpeed : 0.0f;
 				Route.ProfitabilityScore = BestProfitability;
-				
+
 				BestRoutes.Add(Route);
 			}
 		}
@@ -211,14 +211,14 @@ TArray<FTradeRoute> UAITraderComponent::FindBestTradeRoutes(int32 MaxRoutes)
 FTradeRoute UAITraderComponent::CalculateArbitrageOpportunity(UTradeItemDataAsset* TradeItem)
 {
 	FTradeRoute BestRoute;
-	
+
 	if (!TradeItem || !CurrentLocation)
 	{
 		return BestRoute;
 	}
 
 	float BestProfit = 0.0f;
-	
+
 	// Check each destination market
 	for (UMarketDataAsset* DestMarket : KnownMarkets)
 	{
@@ -229,16 +229,16 @@ FTradeRoute UAITraderComponent::CalculateArbitrageOpportunity(UTradeItemDataAsse
 
 		// Get buy price at current location
 		float BuyPrice = CurrentLocation->GetItemPrice(TradeItem, true);
-		
+
 		// Get sell price at destination
 		float SellPrice = DestMarket->GetItemPrice(TradeItem, false);
-		
+
 		// Calculate profit per unit
 		float ProfitPerUnit = SellPrice - BuyPrice;
-		
+
 		// Calculate profit margin
 		float ProfitMargin = BuyPrice > 0.0f ? (ProfitPerUnit / BuyPrice) : 0.0f;
-		
+
 		// Check if meets minimum profit margin
 		if (ProfitMargin >= MinProfitMargin)
 		{
@@ -248,10 +248,10 @@ FTradeRoute UAITraderComponent::CalculateArbitrageOpportunity(UTradeItemDataAsse
 				FVector(DestMarket->GetFName().GetNumber(), 0, 0)
 			);
 			float TravelTime = TravelSpeed > 0.0f ? Distance / TravelSpeed : 0.0f;
-			
+
 			// Calculate profitability score (profit per unit / travel time)
 			float ProfitabilityScore = TravelTime > 0.0f ? ProfitPerUnit / TravelTime : ProfitPerUnit;
-			
+
 			if (ProfitabilityScore > BestProfit)
 			{
 				BestProfit = ProfitabilityScore;
@@ -265,7 +265,7 @@ FTradeRoute UAITraderComponent::CalculateArbitrageOpportunity(UTradeItemDataAsse
 			}
 		}
 	}
-	
+
 	return BestRoute;
 }
 
@@ -302,7 +302,7 @@ bool UAITraderComponent::ExecuteTrade(UTradeItemDataAsset* TradeItem, int32 Quan
 
 		// Execute buy
 		TradingCapital -= TotalCost;
-		
+
 		// Add to inventory
 		FAITraderInventory NewInventory;
 		NewInventory.TradeItem = TradeItem;
@@ -331,12 +331,12 @@ bool UAITraderComponent::ExecuteTrade(UTradeItemDataAsset* TradeItem, int32 Quan
 
 		// Execute sell
 		TradingCapital += TotalCost;
-		
+
 		// Calculate profit
 		int32 PurchaseCost = FMath::RoundToInt(Inventory[FoundIndex].PurchasePrice * Quantity);
 		int32 Profit = TotalCost - PurchaseCost;
 		TotalProfit += Profit;
-		
+
 		// Remove from inventory
 		Inventory[FoundIndex].Quantity -= Quantity;
 		if (Inventory[FoundIndex].Quantity <= 0)
@@ -373,13 +373,13 @@ bool UAITraderComponent::EvaluateContract(UTradeContractDataAsset* Contract)
 
 	// Check capital for cargo acquisition
 	// (Simplified - would need to calculate actual cargo costs)
-	
+
 	// Evaluate profitability
 	int32 EstimatedProfit = Contract->CalculateProfitMargin(0, 0);
-	
+
 	// Risk-adjusted profit threshold
 	float ProfitThreshold = 1000.0f * (1.0f - RiskTolerance);
-	
+
 	return EstimatedProfit >= ProfitThreshold;
 }
 
@@ -463,18 +463,18 @@ float UAITraderComponent::TravelToMarket(UMarketDataAsset* DestinationMarket)
 		FVector(static_cast<float>(CurrentLocation->GetFName().GetNumber()), 0, 0),
 		FVector(static_cast<float>(DestinationMarket->GetFName().GetNumber()), 0, 0)
 	);
-	
+
 	float TravelTime = TravelSpeed > 0.0f ? Distance / TravelSpeed : 0.0f;
-	
+
 	CurrentLocation = DestinationMarket;
-	
+
 	return TravelTime;
 }
 
 float UAITraderComponent::GetCargoUsage() const
 {
 	float UsedSpace = 0.0f;
-	
+
 	for (const FAITraderInventory& Item : Inventory)
 	{
 		if (Item.TradeItem)
@@ -482,14 +482,14 @@ float UAITraderComponent::GetCargoUsage() const
 			UsedSpace += Item.TradeItem->GetTotalVolume(Item.Quantity);
 		}
 	}
-	
+
 	return CargoCapacity > 0.0f ? UsedSpace / CargoCapacity : 0.0f;
 }
 
 float UAITraderComponent::GetAvailableCargoSpace() const
 {
 	float UsedSpace = 0.0f;
-	
+
 	for (const FAITraderInventory& Item : Inventory)
 	{
 		if (Item.TradeItem)
@@ -497,7 +497,7 @@ float UAITraderComponent::GetAvailableCargoSpace() const
 			UsedSpace += Item.TradeItem->GetTotalVolume(Item.Quantity);
 		}
 	}
-	
+
 	return FMath::Max(0.0f, CargoCapacity - UsedSpace);
 }
 

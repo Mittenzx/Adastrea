@@ -1,7 +1,7 @@
 # Spaceship Pivot Point Fix
 
-**Date**: 2026-02-01  
-**Issue**: Spaceships pivoting around world origin (0,0,0) instead of ship center  
+**Date**: 2026-02-01
+**Issue**: Spaceships pivoting around world origin (0,0,0) instead of ship center
 **Status**: Fixed in commit bda29ab
 
 ## Problem Description
@@ -120,7 +120,7 @@ After updating Blueprints:
 
 **Problem**: After the fix, ship still rotates incorrectly.
 
-**Solution**: 
+**Solution**:
 1. Check that your ship's mesh component is attached to `ShipRoot`
 2. Verify the mesh's relative location centers the ship's geometry at (0,0,0)
 3. Use the Blueprint editor to visualize the pivot point (blue/red/green arrows)
@@ -152,6 +152,6 @@ If you encounter issues with this fix, please:
 
 ---
 
-**Last Updated**: 2026-02-01  
-**Author**: GitHub Copilot  
+**Last Updated**: 2026-02-01
+**Author**: GitHub Copilot
 **Reviewer**: Pending

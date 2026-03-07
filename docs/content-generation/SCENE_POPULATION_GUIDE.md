@@ -226,7 +226,7 @@ spawn_groups:
       z_variation: 500
     rotation_randomness: 15
     scale_randomness: 0.1
-  
+
   - asset_path: "/Game/Stations/Blueprints/BP_Station_Small"
     pattern: grid
     count: 4
@@ -250,7 +250,7 @@ rooms:
     size: [3000, 3000, 400]
     theme: military
     prop_density: 1.5
-  
+
   - type: cargo_bay
     center: [8000, 0, 100]
     size: [5000, 5000, 600]
@@ -484,7 +484,7 @@ spawn_groups:
     pattern_params:
       radius: 20000
       center: [0, 0, 0]
-  
+
   - asset_path: "/Game/Stations/BP_TradeStation"
     pattern: grid
     count: 3
@@ -615,6 +615,6 @@ When creating new patterns or room types:
 
 ---
 
-**Last Updated**: 2025-11-07  
-**Version**: 1.0  
+**Last Updated**: 2025-11-07
+**Version**: 1.0
 **Maintained by**: Adastrea Development Team

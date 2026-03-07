@@ -8,7 +8,7 @@ This guide covers the installation and setup of the Adastrea Director plugin for
 - **Unreal Engine 5.0 or higher**
   - Recommended: UE 5.6+ (latest)
   - Also compatible: UE 5.3, 5.4, 5.5 (LTS), 5.1, 5.2
-  
+
 - **Platform Support**
   - Windows 10/11 (x64)
   - macOS 10.15+ (Intel or Apple Silicon)
@@ -387,6 +387,6 @@ For installation help:
 
 ---
 
-**Last Updated:** November 14, 2025  
-**Plugin Version:** 1.0.0 (Phase 1, Week 1)  
+**Last Updated:** November 14, 2025
+**Plugin Version:** 1.0.0 (Phase 1, Week 1)
 **Status:** Foundation Complete - Python Bridge Coming Soon

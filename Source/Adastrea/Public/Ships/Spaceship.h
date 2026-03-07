@@ -19,12 +19,12 @@ class UUserWidget;
 
 /**
  * Base spaceship actor class for player and NPC ships
- * 
+ *
  * This is the primary actor class for all spaceships in the game. It provides:
  * - Basic ship functionality and controls
  * - Interior space management for boarding/exploration
  * - Integration point for SpaceshipDataAsset configuration
- * 
+ *
  * Usage:
  * - Create Blueprint based on this class
  * - Configure ship properties and appearance
@@ -105,7 +105,7 @@ public:
     /**
      * Get the ship's class/type
      * @return The ship's class from DataAsset or default
-     * 
+     *
      * @note POST-MVP: Deferred - ship classification not critical for MVP trading
      */
     // UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship") // DEFERRED: Post-MVP ship classification
@@ -114,7 +114,7 @@ public:
     /**
      * Get the current hull integrity
      * @return The current hull integrity value
-     * 
+     *
      * @note POST-MVP: Deferred - damage/health system not in MVP (no combat)
      */
     // UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship") // DEFERRED: Post-MVP damage system
@@ -123,7 +123,7 @@ public:
     /**
      * Get the maximum hull integrity
      * @return The maximum hull integrity value
-     * 
+     *
      * @note POST-MVP: Deferred - damage/health system not in MVP (no combat)
      */
     // UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship") // DEFERRED: Post-MVP damage system
@@ -159,7 +159,7 @@ public:
     /** Throttle increment/decrement amount per input (percentage) */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flight Control|Throttle", meta=(ClampMin="1.0", ClampMax="25.0"))
     float ThrottleStep;
-    
+
     /** Throttle adjustment rate limit (seconds between adjustments when button held) */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flight Control|Throttle", meta=(ClampMin="0.05", ClampMax="0.5"))
     float ThrottleAdjustmentCooldown;
@@ -231,7 +231,7 @@ public:
     /**
      * Transition player into the ship's interior space
      * @param PlayerController The controller to transition into the interior
-     * 
+     *
      * @note POST-MVP: Deferred - interior exploration not needed for MVP trading
      */
     // UFUNCTION(BlueprintCallable, Category="Spaceship") // DEFERRED: Post-MVP ship interior system
@@ -298,7 +298,7 @@ public:
     /**
      * Toggle flight assist on/off
      * Flight assist maintains ship orientation and velocity when no input is given
-     * 
+     *
      * @note POST-MVP: Deferred - basic flight sufficient for MVP, advanced controls post-MVP
      */
     // UFUNCTION(BlueprintCallable, Category="Flight Control") // DEFERRED: Post-MVP advanced flight control
@@ -306,7 +306,7 @@ public:
 
     /**
      * Increase throttle by ThrottleStep percentage
-     * 
+     *
      * @note POST-MVP: Deferred - use SpaceshipControlsComponent instead for MVP
      */
     // UFUNCTION(BlueprintCallable, Category="Flight Control") // DEFERRED: Post-MVP - use Controls component
@@ -314,7 +314,7 @@ public:
 
     /**
      * Decrease throttle by ThrottleStep percentage
-     * 
+     *
      * @note POST-MVP: Deferred - use SpaceshipControlsComponent instead for MVP
      */
     // UFUNCTION(BlueprintCallable, Category="Flight Control") // DEFERRED: Post-MVP - use Controls component
@@ -323,7 +323,7 @@ public:
     /**
      * Set throttle to specific percentage (0-100)
      * @param Percentage Target throttle percentage
-     * 
+     *
      * @note POST-MVP: Deferred - use SpaceshipControlsComponent instead for MVP
      */
     // UFUNCTION(BlueprintCallable, Category="Flight Control") // DEFERRED: Post-MVP - use Controls component
@@ -331,7 +331,7 @@ public:
 
     /**
      * Activate boost mode for temporary speed increase
-     * 
+     *
      * @note POST-MVP: Deferred - boost mechanic not needed for basic MVP trading
      */
     // UFUNCTION(BlueprintCallable, Category="Flight Control") // DEFERRED: Post-MVP advanced flight
@@ -339,7 +339,7 @@ public:
 
     /**
      * Deactivate boost mode
-     * 
+     *
      * @note POST-MVP: Deferred - boost mechanic not needed for basic MVP trading
      */
     // UFUNCTION(BlueprintCallable, Category="Flight Control") // DEFERRED: Post-MVP advanced flight
@@ -347,7 +347,7 @@ public:
 
     /**
      * Toggle travel mode for high-speed cruise
-     * 
+     *
      * @note POST-MVP: Deferred - travel mode not needed for basic MVP trading
      */
     // UFUNCTION(BlueprintCallable, Category="Flight Control") // DEFERRED: Post-MVP advanced flight
@@ -356,35 +356,35 @@ public:
     /**
      * Get current effective max speed with boost/travel mode multipliers
      * @return Current max speed considering all speed modifiers
-     * 
+     *
      * @note POST-MVP: Deferred - advanced speed calculation not needed for MVP
      */
     // UFUNCTION(BlueprintCallable, BlueprintPure, Category="Flight Control") // DEFERRED: Post-MVP advanced stats
     float GetEffectiveMaxSpeed() const;
 
     // ===== DOCKING FUNCTIONS =====
-    
+
     /**
      * Called by docking module when ship enters interaction range
      * @param Station The nearby docking module (DockingBay or DockingPort)
      */
     UFUNCTION(BlueprintCallable, Category="Docking")
     void SetNearbyStation(ASpaceStationModule* Station);
-    
+
     /**
      * Show or hide the docking prompt UI
      * @param bShow True to show prompt, false to hide
      */
     UFUNCTION(BlueprintCallable, Category="Docking")
     void ShowDockingPrompt(bool bShow);
-    
+
     /**
      * Request docking at nearby station (called by input)
      * Validates station availability and initiates docking sequence
      */
     UFUNCTION(BlueprintCallable, Category="Docking")
     void RequestDocking();
-    
+
     /**
      * Instantly dock at assigned docking point
      * Simple teleport for MVP - no fancy animation
@@ -392,35 +392,35 @@ public:
      */
     UFUNCTION(BlueprintCallable, Category="Docking")
     void NavigateToDockingPoint(USceneComponent* DockingPoint);
-    
+
     /**
      * Finalize docking: disable controls, open trading UI
      * Called when docking timeline completes
      */
     UFUNCTION(BlueprintCallable, Category="Docking")
     void CompleteDocking();
-    
+
     /**
      * Undock from station and restore control
      * Closes trading UI and gives ship forward impulse
      */
     UFUNCTION(BlueprintCallable, Category="Docking")
     void Undock();
-    
+
     /**
      * Check if ship is currently docked
      * @return True if ship is docked at a station
      */
     UFUNCTION(BlueprintPure, Category="Docking")
     bool IsDocked() const { return bIsDocked; }
-    
+
     /**
      * Check if ship is in docking sequence
      * @return True if ship is actively moving to docking point
      */
     UFUNCTION(BlueprintPure, Category="Docking")
     bool IsDocking() const { return bIsDocking; }
-    
+
     /**
      * Get the effective docking range
      * Returns value from DockingSettings if set, otherwise returns DockingRange
@@ -428,7 +428,7 @@ public:
      */
     UFUNCTION(BlueprintPure, Category="Docking")
     float GetEffectiveDockingRange() const;
-    
+
     /**
      * Get the effective docking prompt widget class
      * Returns class from DockingSettings if set, otherwise returns DockingPromptWidgetClass
@@ -436,7 +436,7 @@ public:
      */
     UFUNCTION(BlueprintPure, Category="Docking")
     TSubclassOf<UUserWidget> GetEffectiveDockingPromptWidgetClass() const;
-    
+
     /**
      * Get the effective trading interface class
      * Returns class from DockingSettings if set, otherwise returns TradingInterfaceClass
@@ -487,7 +487,7 @@ protected:
      * @param DeltaTime Time since last frame
      */
     void UpdateThrottleVelocity(float DeltaTime);
-    
+
     /**
      * Update X4-style mouse position flight controls
      * Continuously checks mouse cursor position and rotates ship accordingly
@@ -495,7 +495,7 @@ protected:
      * @param DeltaTime Time since last frame
      */
     void UpdateMousePositionFlight(float DeltaTime);
-    
+
     /**
      * Check if throttle can be adjusted based on cooldown
      * @return True if enough time has passed since last adjustment
@@ -503,61 +503,61 @@ protected:
     bool CanAdjustThrottle();
 
     // ===== DOCKING SYSTEM =====
-    
+
     /**
      * Centralized docking configuration settings
-     * 
+     *
      * If set, this Data Asset provides all docking configuration (UI widgets, range, etc.)
      * making it easy to share settings across multiple ships without configuring each one.
-     * 
+     *
      * If not set, the ship will fall back to individual properties (DockingPromptWidgetClass,
      * TradingInterfaceClass, DockingRange) for backward compatibility.
      */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Docking",
         meta=(ToolTip="Centralized docking settings. If set, overrides individual docking properties."))
     TObjectPtr<UDockingSettingsDataAsset> DockingSettings;
-    
+
     /** Reference to nearby station module in docking range */
     UPROPERTY(BlueprintReadWrite, Category="Docking")
     TObjectPtr<ASpaceStationModule> NearbyStation;
-    
+
     /** Currently assigned docking point scene component */
     UPROPERTY(BlueprintReadWrite, Category="Docking")
     TObjectPtr<USceneComponent> CurrentDockingPoint;
-    
+
     /** Is the ship currently docked at a station? */
     UPROPERTY(BlueprintReadOnly, Category="Docking")
     bool bIsDocked = false;
-    
+
     /** Is the ship currently in a docking sequence? */
     UPROPERTY(BlueprintReadOnly, Category="Docking")
     bool bIsDocking = false;
-    
-    /** 
+
+    /**
      * Maximum distance from docking point to allow docking
      * NOTE: If DockingSettings is set, this value is overridden by settings.
      */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Docking|Fallback", meta=(ClampMin="100.0", ClampMax="10000.0"))
     float DockingRange = 2000.0f;
-    
+
     /** Reference to active docking prompt widget */
     UPROPERTY(BlueprintReadOnly, Category="Docking|UI")
     TObjectPtr<UUserWidget> DockingPromptWidget;
-    
-    /** 
+
+    /**
      * Widget class for docking prompt UI
      * NOTE: If DockingSettings is set, this value is overridden by settings.
      */
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Docking|Fallback")
     TSubclassOf<UUserWidget> DockingPromptWidgetClass;
-    
-    /** 
+
+    /**
      * Widget class for trading interface UI
      * NOTE: If DockingSettings is set, this value is overridden by settings.
      */
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Docking|Fallback")
     TSubclassOf<UUserWidget> TradingInterfaceClass;
-    
+
     /** Active trading widget instance */
     UPROPERTY(BlueprintReadOnly, Category="Docking|UI")
     TObjectPtr<UUserWidget> TradingWidget;
@@ -589,14 +589,14 @@ private:
     /** Free look camera state (transient runtime state) */
     UPROPERTY(Transient)
     FRotator FreeLookRotation;
-    
+
     /** Double-click detection for camera reset (transient runtime state) */
     UPROPERTY(Transient)
     float LastFreeLookClickTime;
-    
+
     // Throttle adjustment rate limiting
     float LastThrottleAdjustmentTime;
-    
+
     /**
      * Normalizes look input by viewport aspect ratio
      * @param LookInput The raw 2D look input vector

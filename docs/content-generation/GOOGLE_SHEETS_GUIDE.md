@@ -16,11 +16,11 @@ Complete guide for using Google Sheets to manage Adastrea game data.
 
 The Google Sheets integration allows you to:
 
-✅ **Export** existing game data to Google Sheets for easy editing  
-✅ **Import** data from Google Sheets back into the project  
-✅ **Validate** all data against schema definitions  
-✅ **Collaborate** with team members in real-time  
-✅ **Version control** your spreadsheets using Google Sheets history  
+✅ **Export** existing game data to Google Sheets for easy editing
+✅ **Import** data from Google Sheets back into the project
+✅ **Validate** all data against schema definitions
+✅ **Collaborate** with team members in real-time
+✅ **Version control** your spreadsheets using Google Sheets history
 
 ### Supported Asset Types
 
@@ -169,11 +169,11 @@ Leave cells **empty** (not "0" or "N/A") for optional fields you don't want to s
 
 Data is automatically validated during import:
 
-✅ Required fields present  
-✅ Data types correct  
-✅ Values within valid ranges  
-✅ IDs are unique  
-✅ Cross-field consistency (e.g., CrewRequired ≤ MaxCrew)  
+✅ Required fields present
+✅ Data types correct
+✅ Values within valid ranges
+✅ IDs are unique
+✅ Cross-field consistency (e.g., CrewRequired ≤ MaxCrew)
 
 Validation errors are reported with specific row numbers and issues.
 

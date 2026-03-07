@@ -28,7 +28,7 @@ ASpaceship
 ```
 World Origin (0,0,0)
     •━━━━━━━━━━━━━━━━━━━━━━━🚀 Ship Mesh (far away)
-    ↑                          
+    ↑
   Pivot Point               Rotation arc is huge!
   (wrong location)          Ship spins around distant point
 ```
@@ -70,7 +70,7 @@ ASpaceship
             ↑
          Pivot Point
       (correct location)
-         
+
 Rotation arc is tight and centered!
 Ship spins around its own center
 ```
@@ -269,5 +269,5 @@ Your ship mesh should be centered on these arrows.
 
 ---
 
-**Last Updated**: 2026-02-01  
+**Last Updated**: 2026-02-01
 **Diagram Version**: 1.0

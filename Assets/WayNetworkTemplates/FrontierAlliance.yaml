@@ -4,8 +4,8 @@
 NetworkName: "The Frontier Alliance"
 NetworkID: "FrontierAlliance"
 Description: |
-  A coalition of scouts, cartographers, and frontier traders who venture into 
-  uncharted space. United by their love of discovery and independence, they 
+  A coalition of scouts, cartographers, and frontier traders who venture into
+  uncharted space. United by their love of discovery and independence, they
   share maps, survival techniques, and safe haven locations.
 
 NetworkColor:
@@ -20,12 +20,12 @@ MemberWays:
     InfluenceLevel: 75
     CommitmentLevel: 95
     RoleDescription: "First to chart dangerous territories"
-    
+
   - MemberWay: "DA_Way_CartographersSociety"
     InfluenceLevel: 60
     CommitmentLevel: 80
     RoleDescription: "Mapmakers and spatial analysts"
-    
+
   - MemberWay: "DA_Way_PioneerTraders"
     InfluenceLevel: 65
     CommitmentLevel: 75
@@ -36,11 +36,11 @@ SharedPrecepts:
   - Precept: Discovery
     ImportanceValue: 95
     Description: "The thrill of being first to see the unknown"
-    
+
   - Precept: Freedom
     ImportanceValue: 80
     Description: "Independence from established powers"
-    
+
   - Precept: Survival
     ImportanceValue: 70
     Description: "Endurance in hostile environments"

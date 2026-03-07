@@ -8,10 +8,10 @@
 
 /**
  * Manufacturing fabrication module for space stations
- * 
+ *
  * Advanced manufacturing facility for producing equipment and components.
  * Includes 3D printing, assembly lines, and quality control systems.
- * 
+ *
  * Power Consumption: 150 units
  * Module Group: Processing
  */

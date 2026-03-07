@@ -118,19 +118,19 @@ struct FUnlockEntry
 /**
  * Player unlock component managing unlockable content.
  * Tracks ships, modules, weapons, equipment, and features unlocked by the player.
- * 
+ *
  * Usage:
  * - Attach to player pawn or controller
  * - Configure unlockables via Data Assets or Blueprint
  * - Check requirements and unlock content as player progresses
  * - Query unlock status for UI and gameplay restrictions
- * 
+ *
  * Example:
  * - Check if ship is unlocked: IsUnlocked("Ship_Warhammer")
  * - Try to unlock: TryUnlock("Ship_Warhammer")
  * - Get unlock progress: GetUnlockProgress("Ship_Warhammer")
  * - Query all unlocked ships: GetUnlockedByType(EUnlockType::Ship)
- * 
+ *
  * Integration:
  * - PlayerProgressionComponent provides level requirements
  * - AchievementManagerSubsystem provides achievement requirements

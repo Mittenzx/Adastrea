@@ -6,7 +6,7 @@ This file contains example interactions with the Adastrea Developer Expert custo
 
 **Query:**
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 What are the main game systems in Adastrea and how are they organized?
 ```
 
@@ -22,7 +22,7 @@ What are the main game systems in Adastrea and how are they organized?
 
 **Query:**
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 I want to create a new weapon system. What's the correct approach following Adastrea patterns?
 ```
 
@@ -41,7 +41,7 @@ I want to create a new weapon system. What's the correct approach following Adas
 
 **Query:**
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 How do I make my C++ function callable from Blueprints?
 ```
 
@@ -59,7 +59,7 @@ How do I make my C++ function callable from Blueprints?
 
 **Query:**
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 How does the faction reputation system integrate with trading?
 ```
 
@@ -77,7 +77,7 @@ How does the faction reputation system integrate with trading?
 
 **Query:**
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 What naming convention should I use for a new faction trait enum?
 ```
 
@@ -95,7 +95,7 @@ What naming convention should I use for a new faction trait enum?
 
 **Query:**
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 Where should I put new AI behavior classes?
 ```
 
@@ -112,7 +112,7 @@ Where should I put new AI behavior classes?
 
 **Query:**
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 I implemented a new planetary system. What documentation do I need to create?
 ```
 
@@ -131,7 +131,7 @@ I implemented a new planetary system. What documentation do I need to create?
 
 **Query:**
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 Explain the Data Asset pattern used in Adastrea
 ```
 
@@ -150,7 +150,7 @@ Explain the Data Asset pattern used in Adastrea
 
 **Query:**
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 How do I add a new faction trait?
 ```
 
@@ -168,7 +168,7 @@ How do I add a new faction trait?
 
 **Query:**
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 What is the BlueprintNativeEvent pattern and when should I use it?
 ```
 
@@ -187,7 +187,7 @@ What is the BlueprintNativeEvent pattern and when should I use it?
 
 **Query:**
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 Where is the player reputation component implemented?
 ```
 
@@ -204,7 +204,7 @@ Where is the player reputation component implemented?
 
 **Query:**
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 My C++ class won't compile. What are common issues?
 ```
 
@@ -222,7 +222,7 @@ My C++ class won't compile. What are common issues?
 
 **Query:**
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 How do I test my new Data Asset system?
 ```
 
@@ -241,7 +241,7 @@ How do I test my new Data Asset system?
 
 **Query:**
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 What Python scripts are available for content generation?
 ```
 
@@ -260,7 +260,7 @@ What Python scripts are available for content generation?
 
 **Query:**
 ```
-@workspace /agent adastrea-developer 
+@workspace /agent adastrea-developer
 What are the current development priorities for Adastrea?
 ```
 

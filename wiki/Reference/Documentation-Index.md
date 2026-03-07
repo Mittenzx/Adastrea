@@ -53,7 +53,7 @@ Complete index of all documentation in the Adastrea project.
 - `Assets/SpaceshipTemplates.md` - Templates reference
 - `Assets/SpaceshipTemplates/*.yaml` - YAML configs
 
-### Faction System  
+### Faction System
 - `Assets/BlueprintFactionAssetGuide.md` - Blueprint guide
 - `Assets/FactionSetupGuide.md` - Setup guide
 - `Assets/FactionSystemQuickReference.md` - Quick reference

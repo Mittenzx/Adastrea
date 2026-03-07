@@ -49,7 +49,7 @@ Linux and Mac platforms use the minimal build tools approach (downloading only e
    ```bash
    # Ubuntu/Debian
    sudo apt-get install git
-   
+
    # Mac
    brew install git
    ```
@@ -58,10 +58,10 @@ Linux and Mac platforms use the minimal build tools approach (downloading only e
    ```bash
    # Ubuntu/Debian
    sudo apt-get install dotnet-sdk-6.0
-   
+
    # Mac
    brew install dotnet-sdk
-   
+
    # Verify installation
    dotnet --version
    ```
@@ -70,7 +70,7 @@ Linux and Mac platforms use the minimal build tools approach (downloading only e
    ```bash
    # Ubuntu/Debian
    sudo apt-get install build-essential clang mono-complete
-   
+
    # Mac (Xcode Command Line Tools)
    xcode-select --install
    ```
@@ -315,7 +315,7 @@ dotnet --version
 **Solution:**
 1. Check .NET SDK version: `dotnet --version` (need 6.0+)
 2. Clear NuGet cache: `dotnet nuget locals all --clear`
-3. Retry: 
+3. Retry:
    - Windows: `setup_ue_build_tools.bat`
    - Linux/Mac: `./setup_ue_build_tools.sh`
 
@@ -345,18 +345,18 @@ dotnet --version
 
 ### What This Includes
 
-✓ UnrealBuildTool (UBT) for compilation  
-✓ Build scripts and automation  
-✓ Minimal engine configuration  
-✓ Ability to compile C++ modules  
+✓ UnrealBuildTool (UBT) for compilation
+✓ Build scripts and automation
+✓ Minimal engine configuration
+✓ Ability to compile C++ modules
 
 ### What This Does NOT Include
 
-✗ Unreal Editor executable  
-✗ Content creation tools  
-✗ Asset cooking capabilities  
-✗ Runtime engine binaries  
-✗ Blueprint editing  
+✗ Unreal Editor executable
+✗ Content creation tools
+✗ Asset cooking capabilities
+✗ Runtime engine binaries
+✗ Blueprint editing
 
 ### For Development/Editing
 
@@ -418,7 +418,7 @@ dotnet "${UBT_PATH}" Adastrea Linux DevelopmentEditor \
 Typical build times (GitHub Actions runners):
 
 - **Setup build tools:** 3-5 minutes
-- **Build UnrealBuildTool:** 2-3 minutes  
+- **Build UnrealBuildTool:** 2-3 minutes
 - **Compile Adastrea (clean):** 10-15 minutes
 - **Compile Adastrea (incremental):** 2-5 minutes
 
@@ -426,25 +426,25 @@ Typical build times (GitHub Actions runners):
 
 ## FAQ
 
-**Q: Can I use this for game development?**  
+**Q: Can I use this for game development?**
 A: Windows users have full UE installed. Linux/Mac users need full UE 5.6 for editor work; build tools are for compilation only.
 
-**Q: Do I need to download build tools on Windows?**  
+**Q: Do I need to download build tools on Windows?**
 A: No, Windows script uses your installed UE 5.6. Linux/Mac download minimal build tools (~500MB).
 
-**Q: Do I need to download build tools every time (Linux/Mac)?**  
+**Q: Do I need to download build tools every time (Linux/Mac)?**
 A: No, `UnrealBuildTools/` is cached locally and in CI.
 
-**Q: How much disk space do I need?**  
+**Q: How much disk space do I need?**
 A: ~5GB total (500MB build tools + build artifacts + cache)
 
-**Q: Can I build for multiple platforms?**  
+**Q: Can I build for multiple platforms?**
 A: Yes, but you need the respective platform SDKs installed.
 
-**Q: Does this work with custom engine modifications?**  
+**Q: Does this work with custom engine modifications?**
 A: No, this uses Epic's official UE 5.6 build tools.
 
-**Q: Can I contribute code changes using this?**  
+**Q: Can I contribute code changes using this?**
 A: Yes! This is perfect for CI validation of code changes.
 
 ## Related Documentation
@@ -462,7 +462,7 @@ For issues with:
 
 ---
 
-**Last Updated:** 2025-12-27  
-**Unreal Engine Version:** 5.6  
-**Build Tools Size:** ~500MB  
+**Last Updated:** 2025-12-27
+**Unreal Engine Version:** 5.6
+**Build Tools Size:** ~500MB
 **Windows Support:** Native batch scripts for SetEnv workaround

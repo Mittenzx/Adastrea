@@ -238,7 +238,7 @@ A: Adjust in Blueprint editor (per-ship) or code (project-wide).
 
 Your controls are working correctly when:
 - ✅ Mouse moves left → Ship yaws left visibly
-- ✅ Mouse moves right → Ship yaws right visibly  
+- ✅ Mouse moves right → Ship yaws right visibly
 - ✅ Mouse moves up → Ship pitches up visibly
 - ✅ Mouse moves down → Ship pitches down visibly
 - ✅ Rotation feels smooth and responsive
@@ -249,7 +249,7 @@ Your controls are working correctly when:
 
 ---
 
-**Version**: 1.0  
-**Created**: 2026-01-28  
-**For**: Adastrea BP_Battleship Mouse Look Fix  
+**Version**: 1.0
+**Created**: 2026-01-28
+**For**: Adastrea BP_Battleship Mouse Look Fix
 **Author**: GitHub Copilot Agent (with mittenz-prime)

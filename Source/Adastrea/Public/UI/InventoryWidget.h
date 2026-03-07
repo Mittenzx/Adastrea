@@ -7,21 +7,21 @@
 
 /**
  * Base widget class for inventory UI
- * 
+ *
  * This widget displays and manages the player's inventory interface:
  * - Grid or list view of inventory items
  * - Item details and tooltips
  * - Drag and drop for item management
  * - Sorting and filtering options
  * - Item usage and actions
- * 
+ *
  * Usage:
  * - Create a Widget Blueprint based on this class
  * - Design the inventory layout in the Blueprint designer
  * - Bind to an InventoryComponent for data
  * - Implement item slot widgets for display
  * - Override BlueprintNativeEvents for custom behavior
- * 
+ *
  * Integration:
  * - Connects to UInventoryComponent for data
  * - Displays items from InventoryItemDataAsset

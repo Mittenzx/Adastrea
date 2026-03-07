@@ -7,7 +7,7 @@ ContractName: "Convoy Escort"
 ContractID: "Quest_Escort_9552"
 Description: |
   Protect convoy traveling from Beta Borealis to Epsilon Centauri.
-  
+
 ContractType: Escort
 Difficulty: Easy
 

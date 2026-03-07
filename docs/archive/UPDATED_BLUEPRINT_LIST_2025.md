@@ -1,7 +1,7 @@
 # Updated Blueprint List for Adastrea Game - December 2025
 
-**Last Updated**: December 15, 2025  
-**For Version**: 1.0.0-alpha  
+**Last Updated**: December 15, 2025
+**For Version**: 1.0.0-alpha
 **Target Engine**: Unreal Engine 5.6
 
 > **Project Status**: The C++ codebase is 85-90% complete with 22 major systems implemented. This document lists all the Blueprints and Data Assets you need to create in the Unreal Editor to make the game playable.
@@ -91,7 +91,7 @@ These are the absolute minimum blueprints needed to fly a ship and test basic ga
     - Parent: `UFactionDataAsset` (C++)
     - Location: `Content/DataAssets/Factions/`
 
-**Time to Create**: 30-60 minutes  
+**Time to Create**: 30-60 minutes
 **Result**: Flyable spaceship in 3D space
 
 ---
@@ -188,7 +188,7 @@ These are the absolute minimum blueprints needed to fly a ship and test basic ga
 
 ### Station Modules (20+ modules)
 
-All inherit from `ASpaceStationModule` (C++)  
+All inherit from `ASpaceStationModule` (C++)
 Location: `Content/Blueprints/Stations/Modules/`
 
 #### Docking Group

@@ -2,9 +2,9 @@
 
 > **Create a HUD widget showing ship information and stats**
 
-**Blueprint Type**: Widget Blueprint  
-**Complexity**: Intermediate  
-**Time to Complete**: 40-50 minutes  
+**Blueprint Type**: Widget Blueprint
+**Complexity**: Intermediate
+**Time to Complete**: 40-50 minutes
 **Last Updated**: 2026-01-03
 
 ---
@@ -755,7 +755,7 @@ After completing this guide, you now know:
 
 ---
 
-**Questions or Issues?** 
+**Questions or Issues?**
 - Check the [Blueprint Guide for Beginners](../docs/development/BLUEPRINT_GUIDE_FOR_BEGINNERS.md)
 - Review C++ source: `Source/Adastrea/Public/UI/ShipStatusWidget.h`
 - See [Blueprints README](README.md) for more guides

@@ -8,7 +8,7 @@
 
 The `DA_InputConfig` Data Asset is the central hub for the Enhanced Input system in Adastrea. It references all Input Actions and Input Mapping Contexts, making it easy to manage input configuration in one place.
 
-**Parent Class**: `UInputConfigDataAsset` (C++)  
+**Parent Class**: `UInputConfigDataAsset` (C++)
 **Location**: `Content/DataAssets/Input/DA_InputConfig.uasset`
 
 ---
@@ -441,17 +441,17 @@ Add Mapping Context
 void ASpaceshipController::BeginPlay()
 {
     Super::BeginPlay();
-    
+
     // Load DA_InputConfig
     UInputConfigDataAsset* InputConfig = LoadObject<UInputConfigDataAsset>(
         nullptr,
         TEXT("/Game/DataAssets/Input/DA_InputConfig.DA_InputConfig")
     );
-    
+
     if (InputConfig && InputConfig->GetSpaceshipMappingContext())
     {
         // Get Enhanced Input subsystem
-        if (UEnhancedInputLocalPlayerSubsystem* Subsystem = 
+        if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
             ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
         {
             // Add mapping context

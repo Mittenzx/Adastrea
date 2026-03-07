@@ -19,7 +19,7 @@ This file demonstrates how to configure a Homeworld Data Asset in the Unreal Eng
 **Homeworld Info:**
 - Homeworld Name: "Terra Prime"
 - Homeworld ID: TerraPrime
-- Description: "A prosperous core world colony loyal to advanced civilizations. 
+- Description: "A prosperous core world colony loyal to advanced civilizations.
   Citizens enjoy high technology and strong military protection."
 
 **Faction Relations:**
@@ -46,7 +46,7 @@ This file demonstrates how to configure a Homeworld Data Asset in the Unreal Eng
 **Homeworld Info:**
 - Homeworld Name: "Last Light Station"
 - Homeworld ID: LastLightStation
-- Description: "A hardscrabble frontier outpost on the edge of civilized space. 
+- Description: "A hardscrabble frontier outpost on the edge of civilized space.
   Residents are independent and suspicious of core world authority."
 
 **Faction Relations:**
@@ -73,7 +73,7 @@ This file demonstrates how to configure a Homeworld Data Asset in the Unreal Eng
 **Homeworld Info:**
 - Homeworld Name: "Port Haven"
 - Homeworld ID: PortHaven
-- Description: "A neutral trading station that maintains careful balance between 
+- Description: "A neutral trading station that maintains careful balance between
   all major powers, prioritizing profit over politics."
 
 **Faction Relations:**

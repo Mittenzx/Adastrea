@@ -110,13 +110,13 @@ void UEconomyManager::SetTimeScale(float NewTimeScale)
 {
 	// Clamp time scale to safe range to prevent destabilizing the economy simulation
 	const float ClampedTimeScale = FMath::Clamp(NewTimeScale, 0.1f, 10.0f);
-	
+
 	if (ClampedTimeScale != NewTimeScale)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("EconomyManager: Time scale %.2f clamped to safe range [0.1, 10.0] -> %.2f"), 
+		UE_LOG(LogTemp, Warning, TEXT("EconomyManager: Time scale %.2f clamped to safe range [0.1, 10.0] -> %.2f"),
 			NewTimeScale, ClampedTimeScale);
 	}
-	
+
 	TimeScale = ClampedTimeScale;
 	UE_LOG(LogTemp, Log, TEXT("EconomyManager: Time scale set to %.2f"), TimeScale);
 }
@@ -178,7 +178,7 @@ void UEconomyManager::RecordTransaction(UMarketDataAsset* Market, UTradeItemData
 				Entry.SupplyLevel *= (1.0f - SupplyDemandAdjustmentRate);  // Supply decreased
 				Entry.DemandLevel *= (1.0f + SupplyDemandAdjustmentRate);  // Demand increased
 
-				UE_LOG(LogTemp, Log, TEXT("EconomyManager: Player bought %d x %s from %s"), 
+				UE_LOG(LogTemp, Log, TEXT("EconomyManager: Player bought %d x %s from %s"),
 					Quantity, *Item->ItemName.ToString(), *Market->MarketName.ToString());
 			}
 			else
@@ -188,7 +188,7 @@ void UEconomyManager::RecordTransaction(UMarketDataAsset* Market, UTradeItemData
 				Entry.SupplyLevel *= (1.0f + SupplyDemandAdjustmentRate);  // Supply increased
 				Entry.DemandLevel *= (1.0f - SupplyDemandAdjustmentRate);  // Demand decreased
 
-				UE_LOG(LogTemp, Log, TEXT("EconomyManager: Player sold %d x %s to %s"), 
+				UE_LOG(LogTemp, Log, TEXT("EconomyManager: Player sold %d x %s to %s"),
 					Quantity, *Item->ItemName.ToString(), *Market->MarketName.ToString());
 			}
 
@@ -236,7 +236,7 @@ void UEconomyManager::SimulateBackgroundActivity(UMarketDataAsset* Market, float
 		{
 			// Replenish stock based on item's replenishment rate
 			int32 ReplenishAmount = FMath::RoundToInt(Entry.TradeItem->ReplenishmentRate * DeltaHours);
-			
+
 			if (ReplenishAmount > 0)
 			{
 				Entry.CurrentStock = FMath::Min(Entry.CurrentStock + ReplenishAmount, Entry.MaxStock);

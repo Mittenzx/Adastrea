@@ -72,7 +72,7 @@ Rotation Speed
       0% └────┴────┴────┴────┴────┴────┴────┴────┴───
          0   50  100 150 200 250 300 350 400+
               Distance from Center (pixels)
-              
+
          │◄──►│           Deadzone (no rotation)
               │◄───────────►│ Scaling zone (0-100%)
                             │◄─────────►│ Max speed zone
@@ -112,7 +112,7 @@ Mouse Position → Rotation:
   • Mouse left of center → Ship yaws left
   • Mouse above center → Ship pitches up
   • Mouse below center → Ship pitches down
-  
+
 Combined movements create diagonal rotation.
 ```
 
@@ -123,12 +123,12 @@ Combined movements create diagonal rotation.
 ```
 Ship DataAsset:
   RotationRateMultiplier: 0.9 (very agile)
-  
+
 Spaceship Settings:
   bUseMousePositionFlight: true
   MouseDeadzoneRadius: 40.0 (smaller deadzone)
   MouseMaxRadius: 350.0 (reaches max speed sooner)
-  
+
 Result: Very responsive, quick turns
 ```
 
@@ -137,12 +137,12 @@ Result: Very responsive, quick turns
 ```
 Ship DataAsset:
   RotationRateMultiplier: 0.3 (slow)
-  
+
 Spaceship Settings:
   bUseMousePositionFlight: true
   MouseDeadzoneRadius: 75.0 (larger deadzone for stability)
   MouseMaxRadius: 500.0 (reaches max speed later)
-  
+
 Result: Stable, slow, deliberate turns
 ```
 
@@ -297,7 +297,7 @@ Problem: Need fine control near docking port
 Solution:
   MouseDeadzoneRadius: 75-100px (larger)
   MouseMaxRadius: 500px (slower scaling)
-  
+
 Result: Very stable, precise movements near center
 ```
 
@@ -310,7 +310,7 @@ Solution:
   MouseDeadzoneRadius: 30-40px (smaller)
   MouseMaxRadius: 300px (faster scaling)
   RotationRateMultiplier: 0.8-1.0
-  
+
 Result: Highly responsive, agile combat
 ```
 
@@ -323,7 +323,7 @@ Solution:
   MouseDeadzoneRadius: 50px (default)
   MouseMaxRadius: 400px (default)
   RotationRateMultiplier: 0.5
-  
+
 Result: Balanced, comfortable for extended play
 ```
 

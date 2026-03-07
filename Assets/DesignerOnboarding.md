@@ -83,7 +83,7 @@ Module Properties:
 
 7. **Compile and Save**
 
-8. **Test it:** 
+8. **Test it:**
    - Place a Space Station in a test level
    - In the station's details, click "+' to add a module
    - Select your module Blueprint
@@ -373,7 +373,7 @@ Content/
     DA_Faction_SolarisUnion
     DA_Faction_CelestialSyndicate
     [etc.]
-  
+
   Blueprints/
     Stations/
       BP_SpaceStation_Military
@@ -386,7 +386,7 @@ Content/
         BP_Module_SolarPanel
         BP_Module_Reactor
       [etc.]
-  
+
   UI/
     Faction/
       WBP_FactionSelector
@@ -601,14 +601,14 @@ Player completes peace mission:
 bool UStationEditorWidget::CanAddModuleForFaction(TSubclassOf<ASpaceStationModule> ModuleClass) const
 {
     // ... existing tech level check ...
-    
+
     // Check faction traits
     if (ModuleType == "CloakingDevice")
     {
         if (!CurrentStation->HasFactionTrait("StealthTechnology"))
             return false;
     }
-    
+
     return true;
 }
 ```
@@ -841,9 +841,9 @@ Use this checklist for new team members:
 
 ---
 
-**Questions? Suggestions for this guide?**  
+**Questions? Suggestions for this guide?**
 Contact the lead designer or submit a documentation improvement request.
 
-**Version:** 1.0  
-**Last Updated:** [Your Date]  
+**Version:** 1.0
+**Last Updated:** [Your Date]
 **Maintained By:** [Your Team]

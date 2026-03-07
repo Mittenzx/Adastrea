@@ -1,7 +1,7 @@
 # Trade Simulator MVP - Quick Start Guide
 
-**Last Updated**: January 17, 2026  
-**Status**: Active Development - Week 1-4 Prototype Phase  
+**Last Updated**: January 17, 2026
+**Status**: Active Development - Week 1-4 Prototype Phase
 **Goal**: Playable trading demo in 4 weeks
 
 ---
@@ -75,7 +75,7 @@ python3 Tools/generate_mvp_trading_content.py --items    # Trade items only
 python3 Tools/generate_mvp_trading_content.py --markets  # Markets only
 ```
 
-**Output**: 
+**Output**:
 - 15 trade item configurations in `Content/DataAssets/Trading/MVP/Items/`
 - 5 market configurations in `Content/DataAssets/Trading/MVP/Markets/`
 
@@ -326,7 +326,7 @@ float Price = MarketData->GetItemPrice(WaterItem, true);
 - 90%+ complete full 30 minutes
 - 60%+ "would play again"
 
-**If metrics met**: Ready for publisher pitch  
+**If metrics met**: Ready for publisher pitch
 **If not met**: Additional polish iteration needed
 
 ---
@@ -386,7 +386,7 @@ if (bHasSpace && bHasCredits)
 
 **Key Question**:
 > "Is this critical for validating the core trading loop is fun?"
-> 
+>
 > If NO → defer it until after validation
 
 ---

@@ -7,7 +7,7 @@ ContractName: "Acquisition Request"
 ContractID: "Quest_Procurement_6382"
 Description: |
   Acquire specified goods and deliver to Theta 38.
-  
+
 ContractType: Procurement
 Difficulty: VeryHard
 

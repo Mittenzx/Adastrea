@@ -13,17 +13,17 @@ AAdastreaGameMode::AAdastreaGameMode()
 {
 	// Set default pawn class to our Blueprinted character
 	// This would typically be set to a blueprint class in the editor
-	
+
 	// Test settings configuration
 	TestSettingsWidgetClass = nullptr; // Must be set in Blueprint or editor to enable
 	bShowTestSettingsOnStartup = false; // Disabled by default - enable in editor for testing
-	
+
 	// Default auto-spawn settings
 	bAutoSpawnPlayerShip = true;
 	bSpawnAtCenter = false; // Use random position by default for variety
 	DefaultSpaceshipClass = nullptr; // Must be set in Blueprint or editor
 	FallbackSpawnLocation = FVector::ZeroVector; // Default to world origin
-	
+
 	// Initialize widget reference
 	TestSettingsWidget = nullptr;
 }
@@ -60,13 +60,13 @@ void AAdastreaGameMode::SpawnPlayerSpaceship()
 
 	// Get spawn location - use sector if available, otherwise use fallback
 	FVector SpawnLocation = FallbackSpawnLocation;
-	
+
 	if (FoundActors.Num() > 0)
 	{
 		// Use the first sector map found
 		if (FoundActors.Num() > 1)
 		{
-			UE_LOG(LogAdastrea, Warning, TEXT("AdastreaGameMode: Multiple SpaceSectorMap actors found (%d), using first one '%s'"), 
+			UE_LOG(LogAdastrea, Warning, TEXT("AdastreaGameMode: Multiple SpaceSectorMap actors found (%d), using first one '%s'"),
 				FoundActors.Num(), *FoundActors[0]->GetName());
 		}
 
@@ -87,7 +87,7 @@ void AAdastreaGameMode::SpawnPlayerSpaceship()
 		}
 		else
 		{
-			UE_LOG(LogAdastrea, Warning, TEXT("AdastreaGameMode: Failed to cast actor '%s' (class %s) to SpaceSectorMap, using fallback spawn location"), 
+			UE_LOG(LogAdastrea, Warning, TEXT("AdastreaGameMode: Failed to cast actor '%s' (class %s) to SpaceSectorMap, using fallback spawn location"),
 				*FoundActors[0]->GetName(), *FoundActors[0]->GetClass()->GetName());
 		}
 	}
@@ -157,7 +157,7 @@ void AAdastreaGameMode::ShowTestSettingsWidget()
 	// Add to viewport with high Z-order to ensure it's on top
 	static constexpr int32 TestSettingsWidgetZOrder = 100;
 	TestSettingsWidget->AddToViewport(TestSettingsWidgetZOrder);
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("AdastreaGameMode: Test settings widget created and added to viewport"));
 }
 

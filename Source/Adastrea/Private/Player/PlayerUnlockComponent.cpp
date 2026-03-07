@@ -16,7 +16,7 @@ UPlayerUnlockComponent::UPlayerUnlockComponent()
 void UPlayerUnlockComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	InitializeUnlocks();
 }
 
@@ -29,7 +29,7 @@ void UPlayerUnlockComponent::InitializeUnlocks()
 		{
 			Unlock.bIsUnlocked = true;
 			UnlockedIDs.AddUnique(Unlock.UnlockID);
-			
+
 			UE_LOG(LogAdastrea, Log, TEXT("PlayerUnlockComponent: Default unlock: %s"), *Unlock.UnlockID.ToString());
 		}
 	}
@@ -295,7 +295,7 @@ bool UPlayerUnlockComponent::CheckRequirement(const FUnlockRequirement& Requirem
 			// See: docs/development/BUILD_FIX_SUMMARY.md for full implementation plan
 			UE_LOG(LogAdastrea, Warning, TEXT("PlayerUnlockComponent: Quest requirement type not supported in MVP - Quest system archived"));
 			return false;
-			
+
 			/* Original implementation - restore when quest system is re-implemented
 			// Check quest completion via QuestManagerSubsystem
 			UWorld* World = GetWorld();
@@ -344,10 +344,10 @@ bool UPlayerUnlockComponent::CheckRequirement(const FUnlockRequirement& Requirem
 				// Get all inventory slots and check if any item matches the required name
 				TArray<FInventorySlot> AllSlots = InventoryComp->GetAllSlots();
 					int32 TotalQuantity = 0;
-					
+
 					// Cache the required ID string for comparison
 					const FString RequiredIDStr = Requirement.RequiredID.ToString();
-					
+
 					for (const FInventorySlot& Slot : AllSlots)
 					{
 						if (!Slot.IsEmpty() && Slot.Item)
@@ -359,7 +359,7 @@ bool UPlayerUnlockComponent::CheckRequirement(const FUnlockRequirement& Requirem
 							}
 						}
 					}
-					
+
 					// RequiredValue specifies minimum quantity needed (default to 1 if not set)
 					int32 RequiredQuantity = FMath::Max(1, Requirement.RequiredValue);
 					return TotalQuantity >= RequiredQuantity;

@@ -38,16 +38,16 @@ enum class EPersonnelDisposition : uint8
 
 /**
  * Personnel Logic - Handles micro-level AI for individual personnel/crew
- * 
+ *
  * This class manages individual personnel behavior, including:
  * - Daily task prioritization
  * - Personality-driven decision making
  * - Social interactions with other crew
  * - Skill development and training
  * - Morale and well-being management
- * 
+ *
  * Designed to work with PersonnelDataAsset for data-driven character AI
- * 
+ *
  * Blueprint Usage:
  * 1. Create a Blueprint based on UPersonnelLogic
  * 2. Assign a PersonnelDataAsset reference
@@ -114,9 +114,9 @@ public:
     /**
      * Evaluate what task the personnel should prioritize
      * Override to implement custom task selection logic
-     * 
+     *
      * @return The task type to focus on
-     * 
+     *
      * Example Blueprint usage:
      * - Check health/fatigue for Personal needs
      * - Check duty status for DutyStation
@@ -130,10 +130,10 @@ public:
     /**
      * Handle interaction with another crew member
      * Override to customize social behavior
-     * 
+     *
      * @param OtherPersonnelID The person to interact with
      * @param InteractionType Type of interaction (chat, collaborate, etc.)
-     * 
+     *
      * Example Blueprint usage:
      * - Check relationship with other person
      * - Consider disposition (Empathetic = more social)
@@ -147,11 +147,11 @@ public:
     /**
      * Called when personnel needs to make a decision
      * Override to implement personality-driven decision making
-     * 
+     *
      * @param DecisionContext Description of the decision to make
      * @param Options Array of possible choices
      * @return Index of chosen option (-1 if none)
-     * 
+     *
      * Example Blueprint usage:
      * - Consider disposition (Cautious = safe option)
      * - Check morale/loyalty for risk-taking
@@ -165,10 +165,10 @@ public:
     /**
      * Called when personnel completes a task
      * Override to handle task completion and skill gains
-     * 
+     *
      * @param CompletedTask The task that was completed
      * @param Success Whether the task was successful
-     * 
+     *
      * Example Blueprint usage:
      * - Grant experience points
      * - Update morale based on success
@@ -182,7 +182,7 @@ public:
     /**
      * Update personnel daily routine
      * Override to customize daily behavior patterns
-     * 
+     *
      * Example Blueprint usage:
      * - Check time of day for sleep schedule
      * - Manage duty shift transitions
@@ -196,9 +196,9 @@ public:
     /**
      * Handle personnel stress and morale changes
      * Override to customize stress response
-     * 
+     *
      * @param StressAmount Amount of stress to add/remove (-100 to 100)
-     * 
+     *
      * Example Blueprint usage:
      * - Update morale based on stress
      * - Check for burnout conditions
@@ -212,9 +212,9 @@ public:
     /**
      * Evaluate if personnel should pursue personal development
      * Override to customize skill training behavior
-     * 
+     *
      * @return True if should pursue training/development
-     * 
+     *
      * Example Blueprint usage:
      * - Check if skills below role requirements
      * - Consider Curious/Analytical disposition (more likely)

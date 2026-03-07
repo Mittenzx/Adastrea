@@ -28,7 +28,7 @@ void FAdastreaDirectorModule::StartupModule()
 
 	// Perform startup validation (VibeUE components)
 	FStartupValidationResult ValidationResult = FAdastreaStartupValidator::ValidateStartup(nullptr);
-	
+
 	if (ValidationResult.bSuccess)
 	{
 		UE_LOG(LogAdastreaDirector, Log, TEXT("Startup validation passed - VibeUE components ready"));
@@ -39,14 +39,14 @@ void FAdastreaDirectorModule::StartupModule()
 		UE_LOG(LogAdastreaDirector, Warning, TEXT("Startup validation completed with warnings: %s"), *ValidationResult.ErrorMessage);
 		InitializationError = ValidationResult.ErrorMessage;
 		bIsFullyInitialized = true; // Still mark as initialized since VibeUE components work without backend
-		
+
 		// Log warnings if any
 		for (const FString& Warning : ValidationResult.Warnings)
 		{
 			UE_LOG(LogAdastreaDirector, Warning, TEXT("  Warning: %s"), *Warning);
 		}
 	}
-	
+
 	UE_LOG(LogAdastreaDirector, Log, TEXT("AdastreaDirector module startup complete. VibeUE architecture active."));
 }
 
@@ -64,57 +64,57 @@ void FAdastreaDirectorModule::RegisterAssetTools()
 	SearchAssetsTool.Name = TEXT("search_assets");
 	SearchAssetsTool.Description = TEXT("Search for assets in the project by name pattern and/or class type");
 	SearchAssetsTool.Category = TEXT("Asset");
-	
+
 	// Parameter schema
 	TSharedPtr<FJsonObject> Schema = MakeShared<FJsonObject>();
 	Schema->SetStringField(TEXT("type"), TEXT("object"));
-	
+
 	TSharedPtr<FJsonObject> Properties = MakeShared<FJsonObject>();
-	
+
 	TSharedPtr<FJsonObject> PatternProp = MakeShared<FJsonObject>();
 	PatternProp->SetStringField(TEXT("type"), TEXT("string"));
 	PatternProp->SetStringField(TEXT("description"), TEXT("Name pattern to search for (supports wildcards)"));
 	Properties->SetObjectField(TEXT("pattern"), PatternProp);
-	
+
 	TSharedPtr<FJsonObject> ClassProp = MakeShared<FJsonObject>();
 	ClassProp->SetStringField(TEXT("type"), TEXT("string"));
 	ClassProp->SetStringField(TEXT("description"), TEXT("Asset class filter (e.g., Blueprint, Material)"));
 	Properties->SetObjectField(TEXT("class"), ClassProp);
-	
+
 	Schema->SetObjectField(TEXT("properties"), Properties);
 	SearchAssetsTool.ParameterSchema = Schema;
-	
+
 	// Executor
 	SearchAssetsTool.Executor.BindLambda([](const TSharedPtr<FJsonObject>& Args) -> FToolExecutionResult
 	{
 		FToolExecutionResult Result;
-		
+
 		FString Pattern = TEXT("*");
 		Args->TryGetStringField(TEXT("pattern"), Pattern);
-		
+
 		FString ClassName;
 		Args->TryGetStringField(TEXT("class"), ClassName);
-		
+
 		TArray<FAssetInfo> Assets = FAdastreaAssetService::SearchAssets(Pattern, ClassName, 100);
-		
+
 		// Build JSON response
 		TSharedPtr<FJsonObject> Data = MakeShared<FJsonObject>();
 		Data->SetNumberField(TEXT("count"), Assets.Num());
-		
+
 		TArray<TSharedPtr<FJsonValue>> AssetsArray;
 		for (const FAssetInfo& Asset : Assets)
 		{
 			AssetsArray.Add(MakeShared<FJsonValueObject>(Asset.ToJson()));
 		}
 		Data->SetArrayField(TEXT("assets"), AssetsArray);
-		
+
 		Result.bSuccess = true;
 		Result.Output = FString::Printf(TEXT("Found %d assets"), Assets.Num());
 		Result.Data = Data;
-		
+
 		return Result;
 	});
-	
+
 	FAdastreaToolSystem::Get().RegisterTool(SearchAssetsTool);
 }
 
@@ -125,30 +125,30 @@ void FAdastreaDirectorModule::RegisterPythonTools()
 	ExecutePythonTool.Name = TEXT("execute_python");
 	ExecutePythonTool.Description = TEXT("Execute Python code in the Unreal Editor. SECURITY: Only execute trusted, reviewed code.");
 	ExecutePythonTool.Category = TEXT("Python");
-	
+
 	TSharedPtr<FJsonObject> Schema = MakeShared<FJsonObject>();
 	Schema->SetStringField(TEXT("type"), TEXT("object"));
-	
+
 	TSharedPtr<FJsonObject> Properties = MakeShared<FJsonObject>();
-	
+
 	TSharedPtr<FJsonObject> CodeProp = MakeShared<FJsonObject>();
 	CodeProp->SetStringField(TEXT("type"), TEXT("string"));
 	CodeProp->SetStringField(TEXT("description"), TEXT("Python code to execute"));
 	Properties->SetObjectField(TEXT("code"), CodeProp);
-	
+
 	Schema->SetObjectField(TEXT("properties"), Properties);
-	
+
 	TArray<TSharedPtr<FJsonValue>> Required;
 	Required.Add(MakeShared<FJsonValueString>(TEXT("code")));
 	Schema->SetArrayField(TEXT("required"), Required);
-	
+
 	ExecutePythonTool.ParameterSchema = Schema;
-	
+
 	// ⚠️ CRITICAL SECURITY WARNING:
 	// This tool is DISABLED by default because it executes arbitrary Python code.
 	// An attacker controlling tool inputs (e.g., via MCP or compromised client) can run
 	// arbitrary Python in the Unreal Editor process, leading to full project compromise.
-	// 
+	//
 	// DO NOT ENABLE unless you implement:
 	// 1. Strict allowlist of permitted operations/modules
 	// 2. Interactive user confirmation in the editor
@@ -157,7 +157,7 @@ void FAdastreaDirectorModule::RegisterPythonTools()
 	// 5. Sandboxing or restricted execution environment
 	//
 	// See Section 1, Step 5 "Security Considerations" for detailed mitigation strategies.
-	
+
 	// Executor is DISABLED for security - do not execute arbitrary Python from untrusted inputs
 	ExecutePythonTool.Executor.BindLambda([](const TSharedPtr<FJsonObject>& Args) -> FToolExecutionResult
 	{
@@ -176,13 +176,13 @@ void FAdastreaDirectorModule::RegisterPythonTools()
 			"If you understand the risks and have implemented proper controls, "
 			"replace this lambda with a hardened execution wrapper."
 		);
-		
+
 		return Result;
 	});
-	
+
 	FAdastreaToolSystem::Get().RegisterTool(ExecutePythonTool);
 }
 
 #undef LOCTEXT_NAMESPACE
-	
+
 IMPLEMENT_MODULE(FAdastreaDirectorModule, AdastreaDirector)

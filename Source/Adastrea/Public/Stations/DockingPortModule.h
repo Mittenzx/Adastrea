@@ -9,19 +9,19 @@
 
 /**
  * Small docking port module for space stations
- * 
+ *
  * Provides a compact docking point for smaller vessels and shuttles.
  * Lower power requirements compared to full docking bays.
  * Typically supports a single docking point.
- * 
+ *
  * Features:
  * - Single or dual docking points for small ships
  * - Lower power consumption than docking bays
  * - Blueprint-accessible docking state tracking
- * 
+ *
  * Power Consumption: 10 units
  * Module Group: Docking
- * 
+ *
  * Usage:
  * 1. Add docking points using the DockingPoints array in editor
  * 2. Each docking point is a scene component marking a ship attachment location
@@ -40,19 +40,19 @@ public:
 
 	/**
 	 * Array of docking point components - AUTOMATICALLY POPULATED
-	 * 
+	 *
 	 * This array is automatically filled at BeginPlay by finding all Scene Components
 	 * tagged with "DockingPoint". You don't need to manually populate this array.
-	 * 
+	 *
 	 * To add docking points:
 	 * 1. Add Scene Component to Blueprint
 	 * 2. Tag it with "DockingPoint" in the component's Tags array
 	 * 3. Position the component where ships should dock
-	 * 
+	 *
 	 * Typically 1-2 points for docking ports
-	 * 
+	 *
 	 * IMPORTANT: Ensure you have at least MaxDockedShips components tagged with "DockingPoint"
-	 * 
+	 *
 	 * NOTE: This array is read-only because it's populated automatically.
 	 * If you need to modify it at runtime, use PopulateDockingPointsFromTags() again.
 	 */
@@ -62,7 +62,7 @@ public:
 	/**
 	 * Maximum number of ships that can dock simultaneously
 	 * Default: 1 for compact docking ports
-	 * 
+	 *
 	 * NOTE: Ensure DockingPoints array has at least this many elements defined
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Docking", meta=(ClampMin=1, ClampMax=4))
@@ -105,10 +105,10 @@ public:
 
 	/**
 	 * Populate the DockingPoints array from components tagged with "DockingPoint"
-	 * 
+	 *
 	 * This function is called automatically at BeginPlay, but can be called again
 	 * if you add docking points at runtime.
-	 * 
+	 *
 	 * Searches for all USceneComponent children tagged with "DockingPoint" and
 	 * adds them to the DockingPoints array in the order they are found.
 	 */

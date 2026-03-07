@@ -76,7 +76,7 @@ void USimpleAIMovementComponent::TickComponent(float DeltaTime, ELevelTick TickT
 	if (bShowDebug)
 	{
 		FVector CurrentLocation = Owner->GetActorLocation();
-		
+
 		// Draw line to target
 		DrawDebugLine(
 			GetWorld(),
@@ -144,7 +144,7 @@ void USimpleAIMovementComponent::GenerateNewTarget()
 	// Calculate new target
 	TargetLocation = CurrentLocation + (RandomDirection * RandomDistance);
 
-	UE_LOG(LogAdastreaAI, Log, TEXT("%s: New target generated at %s (distance: %.0f)"), 
+	UE_LOG(LogAdastreaAI, Log, TEXT("%s: New target generated at %s (distance: %.0f)"),
 		*Owner->GetName(), *TargetLocation.ToString(), RandomDistance);
 }
 
@@ -185,7 +185,7 @@ void USimpleAIMovementComponent::MoveTowardTarget(float DeltaTime)
 	// AddMovementInput expects a normalized direction and scale factor (0-1)
 	// We use full speed movement (1.0f)
 	PawnOwner->AddMovementInput(Direction, 1.0f);
-	
+
 	// Apply MoveSpeed to cached FloatingPawnMovement component if present
 	if (CachedMovementComponent)
 	{
@@ -204,7 +204,7 @@ void USimpleAIMovementComponent::RotateTowardTarget(float DeltaTime)
 	// Get direction to target
 	FVector CurrentLocation = Owner->GetActorLocation();
 	FVector Direction = TargetLocation - CurrentLocation;
-	
+
 	// Optionally constrain to horizontal plane (ignore Z-axis)
 	if (bConstrainToHorizontalPlane)
 	{

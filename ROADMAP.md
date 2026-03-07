@@ -5,9 +5,9 @@
 
 > This roadmap outlines the current MVP development plan and long-term vision for the Adastrea space trading game.
 
-**Last Updated**: January 21, 2026  
-**Current Version**: 1.0.0-alpha  
-**Project Status**: Trade Simulator MVP - Week 3-4 of 12 (Hardcoded Prototype Phase)  
+**Last Updated**: January 21, 2026
+**Current Version**: 1.0.0-alpha
+**Project Status**: Trade Simulator MVP - Week 3-4 of 12 (Hardcoded Prototype Phase)
 **Timeline**: December 2025 - March 2026
 
 ---
@@ -30,9 +30,9 @@
 
 ## 🚨 CURRENT STATUS: Week 3-4 of 12 (In Progress)
 
-> **Phase**: Trade Simulator MVP - Hardcoded Prototype Development  
-> **Dates**: January 19 - January 25, 2026 (Week 3-4 transition)  
-> **Goal**: Complete playable trading loop for Week 4 external playtest  
+> **Phase**: Trade Simulator MVP - Hardcoded Prototype Development
+> **Dates**: January 19 - January 25, 2026 (Week 3-4 transition)
+> **Goal**: Complete playable trading loop for Week 4 external playtest
 > **Critical Deadline**: Week 4 GO/NO-GO decision (January 26, 2026)
 
 ### Week 3-4 Mission-Critical Tasks (NOW)
@@ -77,7 +77,7 @@ By end of Week 4 (January 26, 2026), must demonstrate:
 ### 🚧 What We're NOT Doing (Defer to Later Phases)
 
 - ❌ Data Assets - hardcode everything for now
-- ❌ Supply/demand simulation - static prices only  
+- ❌ Supply/demand simulation - static prices only
 - ❌ Save/load system - session only
 - ❌ Multiple ships - one ship only
 - ❌ Ship upgrades - defer to Phase 2
@@ -503,8 +503,8 @@ cd Adastrea
 
 ---
 
-**Last Updated**: January 21, 2026  
-**Current Phase**: Trade Simulator MVP - Week 3-4 of 12  
+**Last Updated**: January 21, 2026
+**Current Phase**: Trade Simulator MVP - Week 3-4 of 12
 **Next Milestone**: Week 4 GO/NO-GO Decision (January 26, 2026)
 
 **Built with ❤️ by the Adastrea community**

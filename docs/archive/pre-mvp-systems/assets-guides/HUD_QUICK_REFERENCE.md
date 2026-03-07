@@ -208,7 +208,7 @@ On Take Damage:
   → Update Health on HUD
   → If Health Low:
     → Show Alert
-  
+
 On Shield Hit:
   → Update Shield on HUD
   → Flash Shield Effect

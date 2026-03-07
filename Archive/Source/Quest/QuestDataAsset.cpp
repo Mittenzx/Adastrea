@@ -69,7 +69,7 @@ bool UQuestDataAsset::CheckPrerequisites() const
     // This would need access to player state to check properly
     // For now, just check if prerequisites exist
     // In actual implementation, this would query the game state
-    
+
     for (const FQuestPrerequisite& Prereq : Prerequisites)
     {
         if (Prereq.RequiredQuest != nullptr)
@@ -77,34 +77,34 @@ bool UQuestDataAsset::CheckPrerequisites() const
             // Would check if player has completed this quest
             // return false if not completed
         }
-        
+
         if (Prereq.RequiredWayID != NAME_None)
         {
             // Would check player reputation with Way
             // return false if below threshold
         }
-        
+
         if (Prereq.MinimumPlayerLevel > 1)
         {
             // Would check player level
             // return false if below level
         }
     }
-    
+
     return true;
 }
 
 int32 UQuestDataAsset::GetTotalRewardValue() const
 {
     int32 TotalValue = Rewards.Credits;
-    
+
     // Add value of item rewards (simplified - would need item data asset lookup)
     for (const auto& ItemReward : Rewards.ItemRewards)
     {
         // For now, assume each item is worth 100 credits
         TotalValue += ItemReward.Value * 100;
     }
-    
+
     return TotalValue;
 }
 

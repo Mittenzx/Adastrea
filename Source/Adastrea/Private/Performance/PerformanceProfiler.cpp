@@ -23,7 +23,7 @@ void UPerformanceProfiler::Initialize(FSubsystemCollectionBase& Collection)
 	if (bProfilingEnabled)
 	{
 		// Start periodic metric updates
-		GetWorld()->GetTimerManager().SetTimer(MetricsUpdateTimer, this, 
+		GetWorld()->GetTimerManager().SetTimer(MetricsUpdateTimer, this,
 			&UPerformanceProfiler::UpdateMetrics, UpdateFrequency, true);
 	}
 }

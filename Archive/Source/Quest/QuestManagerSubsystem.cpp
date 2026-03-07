@@ -15,14 +15,14 @@ UQuestManagerSubsystem::UQuestManagerSubsystem()
 void UQuestManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
-    
+
     UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Initialized"));
 }
 
 void UQuestManagerSubsystem::Deinitialize()
 {
     Super::Deinitialize();
-    
+
     UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Deinitialized"));
 }
 
@@ -175,7 +175,7 @@ bool UQuestManagerSubsystem::UpdateObjectiveProgress(FName QuestID, int32 Object
     {
         Objective.bIsCompleted = true;
         OnObjectiveCompleted.Broadcast(QuestID, ObjectiveIndex);
-        
+
         UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Completed objective %d for quest %s"), ObjectiveIndex, *QuestID.ToString());
 
         // Check if quest is now complete
@@ -218,7 +218,7 @@ void UQuestManagerSubsystem::NotifyLocationReached(FVector Location)
         for (int32 i = 0; i < Quest.ObjectiveStates.Num(); ++i)
         {
             FQuestObjective& Objective = Quest.ObjectiveStates[i];
-            
+
             if (Objective.Type == EObjectiveType::ReachLocation && !Objective.bIsCompleted)
             {
                 float Distance = FVector::Dist(Location, Objective.TargetLocation);
@@ -239,8 +239,8 @@ void UQuestManagerSubsystem::NotifyItemCollected(FName ItemID, int32 Quantity)
         for (int32 i = 0; i < Quest.ObjectiveStates.Num(); ++i)
         {
             FQuestObjective& Objective = Quest.ObjectiveStates[i];
-            
-            if ((Objective.Type == EObjectiveType::CollectItems || Objective.Type == EObjectiveType::DeliverItem) 
+
+            if ((Objective.Type == EObjectiveType::CollectItems || Objective.Type == EObjectiveType::DeliverItem)
                 && Objective.ItemID == ItemID && !Objective.bIsCompleted)
             {
                 UpdateObjectiveProgress(Quest.Quest->QuestID, i, Objective.CurrentProgress + Quantity);
@@ -256,8 +256,8 @@ void UQuestManagerSubsystem::NotifyTargetDestroyed(TSubclassOf<AActor> TargetCla
         for (int32 i = 0; i < Quest.ObjectiveStates.Num(); ++i)
         {
             FQuestObjective& Objective = Quest.ObjectiveStates[i];
-            
-            if (Objective.Type == EObjectiveType::DestroyTarget 
+
+            if (Objective.Type == EObjectiveType::DestroyTarget
                 && Objective.TargetActorClass == TargetClass && !Objective.bIsCompleted)
             {
                 UpdateObjectiveProgress(Quest.Quest->QuestID, i, Objective.CurrentProgress + 1);
@@ -318,7 +318,7 @@ int32 UQuestManagerSubsystem::GetCompletedQuestCount() const
 TArray<FActiveQuest> UQuestManagerSubsystem::GetQuestsByType(EQuestType Type) const
 {
     TArray<FActiveQuest> FilteredQuests;
-    
+
     for (const FActiveQuest& Quest : ActiveQuests)
     {
         if (Quest.Quest && Quest.Quest->QuestType == Type)
@@ -326,14 +326,14 @@ TArray<FActiveQuest> UQuestManagerSubsystem::GetQuestsByType(EQuestType Type) co
             FilteredQuests.Add(Quest);
         }
     }
-    
+
     return FilteredQuests;
 }
 
 TArray<FActiveQuest> UQuestManagerSubsystem::GetQuestsFromGiver(FName WayID) const
 {
     TArray<FActiveQuest> FilteredQuests;
-    
+
     for (const FActiveQuest& Quest : ActiveQuests)
     {
         if (Quest.Quest && Quest.Quest->QuestGiverWayID == WayID)
@@ -341,7 +341,7 @@ TArray<FActiveQuest> UQuestManagerSubsystem::GetQuestsFromGiver(FName WayID) con
             FilteredQuests.Add(Quest);
         }
     }
-    
+
     return FilteredQuests;
 }
 
@@ -353,7 +353,7 @@ UQuestDataAsset* UQuestManagerSubsystem::GenerateRandomQuest(EQuestType Type, in
 {
     // This is a basic implementation - would be expanded for proper procedural generation
     UQuestDataAsset* GeneratedQuest = NewObject<UQuestDataAsset>(this);
-    
+
     if (GeneratedQuest)
     {
         GeneratedQuest->QuestID = FName(*FString::Printf(TEXT("Quest_%d"), FMath::Rand()));
@@ -407,7 +407,7 @@ void UQuestManagerSubsystem::UpdateQuestTimers()
         if (Quest.TimeRemaining > 0.0f)
         {
             Quest.TimeRemaining -= 1.0f; // Decrement by 1 second
-            
+
             if (Quest.TimeRemaining <= 0.0f)
             {
                 FailQuest(Quest.Quest->QuestID, TEXT("Time limit expired"));
@@ -420,18 +420,18 @@ void UQuestManagerSubsystem::GiveQuestRewards(const FQuestReward& Rewards)
 {
     // This would integrate with player inventory/reputation systems
     // For now, just log the rewards
-    
+
     if (Rewards.Credits > 0)
     {
         UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Rewarding %d credits"), Rewards.Credits);
     }
-    
+
     if (Rewards.ReputationGain != 0)
     {
-        UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Rewarding %d reputation with %s"), 
+        UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Rewarding %d reputation with %s"),
                Rewards.ReputationGain, *Rewards.WayID.ToString());
     }
-    
+
     if (Rewards.ExperiencePoints > 0)
     {
         UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Rewarding %d XP"), Rewards.ExperiencePoints);
@@ -442,7 +442,7 @@ bool UQuestManagerSubsystem::CheckQuestCompletion(FActiveQuest& Quest)
 {
     if (Quest.Quest && Quest.Quest->AreAllRequiredObjectivesComplete())
     {
-        UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Quest %s ready for completion"), 
+        UE_LOG(LogAdastreaQuest, Log, TEXT("QuestManagerSubsystem: Quest %s ready for completion"),
                *Quest.Quest->QuestName.ToString());
         return true;
     }

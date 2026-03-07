@@ -31,26 +31,26 @@ USectorMapWidget::USectorMapWidget(const FObjectInitializer& ObjectInitializer)
 void USectorMapWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	
+
 	// Create default UI widgets if they don't exist and auto-create is enabled
 	if (bAutoCreateMissingWidgets)
 	{
 		CreateDefaultUIWidgets();
 	}
-	
+
 	// Initialize the sector map when constructed
 	InitializeSectorMap();
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Widget constructed"));
 }
 
 void USectorMapWidget::NativeDestruct()
 {
 	Super::NativeDestruct();
-	
+
 	// Clear references
 	CurrentSector = nullptr;
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Widget destructed"));
 }
 
@@ -58,14 +58,14 @@ void USectorMapWidget::InitializeSectorMap_Implementation()
 {
 	// Set widget as visible
 	bIsSectorMapVisible = true;
-	
+
 	// Clear any existing sector info
 	ClearSectorInfo();
-	
+
 	// Try to find a sector in the current level
 	TArray<AActor*> SectorActors;
 	UGameplayStatics::GetAllActorsOfClass(this, ASpaceSectorMap::StaticClass(), SectorActors);
-	
+
 	if (SectorActors.Num() > 0)
 	{
 		// Use the first sector found
@@ -80,14 +80,14 @@ void USectorMapWidget::InitializeSectorMap_Implementation()
 	{
 		UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: No sectors found in level"));
 	}
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Initialized"));
 }
 
 void USectorMapWidget::UpdateSectorInfo_Implementation(const FSectorDisplayInfo& SectorInfo)
 {
 	CurrentSectorInfo = SectorInfo;
-	
+
 	// Update UI widgets if they exist
 	if (Text_SectorName)
 	{
@@ -107,9 +107,9 @@ void USectorMapWidget::UpdateSectorInfo_Implementation(const FSectorDisplayInfo&
 		);
 		Text_ObjectCount->SetText(CountText);
 	}
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Updated sector info for '%s'"), *SectorInfo.SectorName.ToString());
-	
+
 	// Blueprint implementation handles visual display
 }
 
@@ -117,9 +117,9 @@ void USectorMapWidget::UpdateObjectList_Implementation(const TArray<FText>& Obje
 {
 	SectorObjectNames = ObjectNames;
 	CurrentSectorInfo.ObjectCount = ObjectCount;
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Updated object list with %d objects"), ObjectCount);
-	
+
 	// Blueprint implementation handles visual display
 }
 
@@ -129,15 +129,15 @@ void USectorMapWidget::SetTargetSector(ASpaceSectorMap* Sector)
 	{
 		return; // No change needed
 	}
-	
+
 	CurrentSector = Sector;
-	
+
 	if (Sector)
 	{
 		// Build and update sector info
 		FSectorDisplayInfo Info = BuildSectorDisplayInfo(Sector);
 		UpdateSectorInfo(Info);
-		
+
 		UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Set target sector to '%s'"), *Sector->SectorName.ToString());
 	}
 	else
@@ -153,7 +153,7 @@ void USectorMapWidget::RefreshSectorData()
 	{
 		FSectorDisplayInfo Info = BuildSectorDisplayInfo(CurrentSector);
 		UpdateSectorInfo(Info);
-		
+
 		UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Refreshed sector data for '%s'"), *CurrentSector->SectorName.ToString());
 	}
 }
@@ -161,10 +161,10 @@ void USectorMapWidget::RefreshSectorData()
 void USectorMapWidget::OnSectorSelected_Implementation(ASpaceSectorMap* SelectedSector)
 {
 	SetTargetSector(SelectedSector);
-	
-	UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Sector selected - '%s'"), 
+
+	UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Sector selected - '%s'"),
 		SelectedSector ? *SelectedSector->SectorName.ToString() : TEXT("None"));
-	
+
 	// Blueprint implementation can add custom selection behavior
 }
 
@@ -172,16 +172,16 @@ void USectorMapWidget::ClearSectorInfo_Implementation()
 {
 	CurrentSectorInfo = FSectorDisplayInfo();
 	SectorObjectNames.Empty();
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Cleared sector info"));
-	
+
 	// Blueprint implementation handles clearing visual display
 }
 
 void USectorMapWidget::ToggleSectorMapVisibility(bool bVisible)
 {
 	bIsSectorMapVisible = bVisible;
-	
+
 	if (bVisible)
 	{
 		SetVisibility(ESlateVisibility::Visible);
@@ -190,7 +190,7 @@ void USectorMapWidget::ToggleSectorMapVisibility(bool bVisible)
 	{
 		SetVisibility(ESlateVisibility::Hidden);
 	}
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Visibility set to %s"), bVisible ? TEXT("Visible") : TEXT("Hidden"));
 }
 
@@ -200,7 +200,7 @@ FVector USectorMapWidget::GetRandomSpawnPosition() const
 	{
 		return CurrentSector->GetRandomPositionInSector();
 	}
-	
+
 	UE_LOG(LogAdastrea, Warning, TEXT("SectorMapWidget: GetRandomSpawnPosition called with no current sector"));
 	return FVector::ZeroVector;
 }
@@ -211,14 +211,14 @@ bool USectorMapWidget::IsPositionInCurrentSector(const FVector& WorldPosition) c
 	{
 		return CurrentSector->IsPositionInSector(WorldPosition);
 	}
-	
+
 	return false;
 }
 
 FSectorDisplayInfo USectorMapWidget::BuildSectorDisplayInfo(ASpaceSectorMap* Sector) const
 {
 	FSectorDisplayInfo Info;
-	
+
 	if (Sector)
 	{
 		Info.SectorName = Sector->SectorName;
@@ -229,7 +229,7 @@ FSectorDisplayInfo USectorMapWidget::BuildSectorDisplayInfo(ASpaceSectorMap* Sec
 		Info.SectorSize = SectorBounds.GetSize().X; // All dimensions are equal for cubic sectors
 		Info.ObjectCount = 0; // Can be updated by Blueprint or game logic
 	}
-	
+
 	return Info;
 }
 
@@ -237,7 +237,7 @@ TArray<ASpaceSectorMap*> USectorMapWidget::GetAllSectors() const
 {
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(this, ASpaceSectorMap::StaticClass(), FoundActors);
-	
+
 	TArray<ASpaceSectorMap*> Sectors;
 	for (AActor* Actor : FoundActors)
 	{
@@ -247,46 +247,46 @@ TArray<ASpaceSectorMap*> USectorMapWidget::GetAllSectors() const
 			Sectors.Add(Sector);
 		}
 	}
-	
+
 	return Sectors;
 }
 
 TArray<ASpaceSectorMap*> USectorMapWidget::GetNeighboringSectors() const
 {
 	TArray<ASpaceSectorMap*> Neighbors;
-	
+
 	if (!CurrentSector)
 	{
 		return Neighbors;
 	}
-	
+
 	// Get all sectors
 	TArray<ASpaceSectorMap*> AllSectors = GetAllSectors();
-	
+
 	// Current sector center and size
 	FVector CurrentCenter = CurrentSector->GetSectorCenter();
 	FBox CurrentBounds = CurrentSector->GetSectorBounds();
 	float SectorSize = CurrentBounds.GetSize().X; // All dimensions are equal for cubic sectors
-	
+
 	// Check each sector to see if it's adjacent (within 1.5 sector sizes)
 	float MaxDistance = SectorSize * 1.5f;
-	
+
 	for (ASpaceSectorMap* Sector : AllSectors)
 	{
 		if (Sector == CurrentSector)
 		{
 			continue; // Skip self
 		}
-		
+
 		FVector OtherCenter = Sector->GetSectorCenter();
 		float Distance = FVector::Dist(CurrentCenter, OtherCenter);
-		
+
 		if (Distance <= MaxDistance)
 		{
 			Neighbors.Add(Sector);
 		}
 	}
-	
+
 	return Neighbors;
 }
 
@@ -296,10 +296,10 @@ float USectorMapWidget::GetDistanceToSector(ASpaceSectorMap* OtherSector) const
 	{
 		return -1.0f;
 	}
-	
+
 	FVector CurrentCenter = CurrentSector->GetSectorCenter();
 	FVector OtherCenter = OtherSector->GetSectorCenter();
-	
+
 	return FVector::Dist(CurrentCenter, OtherCenter);
 }
 
@@ -423,7 +423,7 @@ FString USectorMapWidget::GetSectorStatistics() const
 	{
 		return TEXT("No sector selected");
 	}
-	
+
 	return CurrentSector->GetDebugInfo();
 }
 
@@ -433,10 +433,10 @@ void USectorMapWidget::UpdateObjectTracking()
 	{
 		return;
 	}
-	
+
 	// Get actors in sector
 	TArray<AActor*> ActorsInSector = CurrentSector->GetActorsInSector();
-	
+
 	// Update object list
 	TArray<FText> ObjectNames;
 	for (AActor* Actor : ActorsInSector)
@@ -446,9 +446,9 @@ void USectorMapWidget::UpdateObjectTracking()
 			ObjectNames.Add(FText::FromString(Actor->GetName()));
 		}
 	}
-	
+
 	UpdateObjectList(ObjectNames, ObjectNames.Num());
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("SectorMapWidget: Updated object tracking - %d objects found"), ObjectNames.Num());
 }
 
@@ -458,16 +458,16 @@ float USectorMapWidget::GetPlayerDistanceToSectorCenter() const
 	{
 		return -1.0f;
 	}
-	
+
 	APlayerController* PC = GetOwningPlayer();
 	if (!PC || !PC->GetPawn())
 	{
 		return -1.0f;
 	}
-	
+
 	FVector PlayerPosition = PC->GetPawn()->GetActorLocation();
 	FVector SectorCenter = CurrentSector->GetSectorCenter();
-	
+
 	return FVector::Dist(PlayerPosition, SectorCenter);
 }
 
@@ -477,13 +477,13 @@ bool USectorMapWidget::IsPlayerInSector() const
 	{
 		return false;
 	}
-	
+
 	APlayerController* PC = GetOwningPlayer();
 	if (!PC || !PC->GetPawn())
 	{
 		return false;
 	}
-	
+
 	FVector PlayerPosition = PC->GetPawn()->GetActorLocation();
 	return CurrentSector->IsPositionInSector(PlayerPosition);
 }
@@ -494,19 +494,19 @@ FVector USectorMapWidget::GetNavigationDirectionToCenter() const
 	{
 		return FVector::ZeroVector;
 	}
-	
+
 	APlayerController* PC = GetOwningPlayer();
 	if (!PC || !PC->GetPawn())
 	{
 		return FVector::ZeroVector;
 	}
-	
+
 	FVector PlayerPosition = PC->GetPawn()->GetActorLocation();
 	FVector SectorCenter = CurrentSector->GetSectorCenter();
-	
+
 	FVector Direction = (SectorCenter - PlayerPosition);
 	Direction.Normalize();
-	
+
 	return Direction;
 }
 
@@ -517,15 +517,15 @@ float USectorMapWidget::CalculateTravelTimeToSector(float TravelSpeed) const
 	{
 		return -1.0f;
 	}
-	
+
 	// Get distance to sector center
 	const float Distance = GetPlayerDistanceToSectorCenter();
-	
+
 	// Return -1 if no sector or no player (cannot calculate)
 	if (Distance < 0.0f)
 	{
 		return -1.0f;
 	}
-	
+
 	return Distance / TravelSpeed;
 }

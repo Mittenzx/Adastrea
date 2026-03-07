@@ -57,7 +57,7 @@ void UShieldVFXComponent::InitializeShieldVisuals()
 	// Initialize material instances and effect components for each facing
 	// This would be expanded with actual component creation in a full implementation
 	// For now, we set up the data structures
-	
+
 	ForwardFacing.State = EShieldVisualState::Full;
 	AftFacing.State = EShieldVisualState::Full;
 	PortFacing.State = EShieldVisualState::Full;
@@ -73,7 +73,7 @@ void UShieldVFXComponent::UpdateShieldVisuals()
 	}
 
 	bool bUseDirectional = CombatHealthComponent->bUseDirectionalShields;
-	
+
 	if (bUseDirectional)
 	{
 		// Update each facing independently
@@ -84,13 +84,13 @@ void UShieldVFXComponent::UpdateShieldVisuals()
 
 		float DeltaTime = GetWorld()->GetDeltaSeconds();
 
-		UpdateFacingVisual(ForwardFacing, EShieldFacing::Forward, ForwardData.CurrentStrength / FMath::Max(ForwardData.MaxStrength, 1.0f), 
+		UpdateFacingVisual(ForwardFacing, EShieldFacing::Forward, ForwardData.CurrentStrength / FMath::Max(ForwardData.MaxStrength, 1.0f),
 			ForwardData.RechargeDelay > 0.0f, DeltaTime);
-		UpdateFacingVisual(AftFacing, EShieldFacing::Aft, AftData.CurrentStrength / FMath::Max(AftData.MaxStrength, 1.0f), 
+		UpdateFacingVisual(AftFacing, EShieldFacing::Aft, AftData.CurrentStrength / FMath::Max(AftData.MaxStrength, 1.0f),
 			AftData.RechargeDelay > 0.0f, DeltaTime);
-		UpdateFacingVisual(PortFacing, EShieldFacing::Port, PortData.CurrentStrength / FMath::Max(PortData.MaxStrength, 1.0f), 
+		UpdateFacingVisual(PortFacing, EShieldFacing::Port, PortData.CurrentStrength / FMath::Max(PortData.MaxStrength, 1.0f),
 			PortData.RechargeDelay > 0.0f, DeltaTime);
-		UpdateFacingVisual(StarboardFacing, EShieldFacing::Starboard, StarboardData.CurrentStrength / FMath::Max(StarboardData.MaxStrength, 1.0f), 
+		UpdateFacingVisual(StarboardFacing, EShieldFacing::Starboard, StarboardData.CurrentStrength / FMath::Max(StarboardData.MaxStrength, 1.0f),
 			StarboardData.RechargeDelay > 0.0f, DeltaTime);
 	}
 	else
@@ -214,7 +214,7 @@ void UShieldVFXComponent::SetFacingState(EShieldFacing Facing, EShieldVisualStat
 {
 	FShieldFacingVisual& FacingVisual = GetFacingVisual(Facing);
 	EShieldVisualState OldState = FacingVisual.State;
-	
+
 	if (OldState != NewState)
 	{
 		FacingVisual.State = NewState;

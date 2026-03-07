@@ -1,9 +1,9 @@
 # Adastrea - Critical Review Action Plan
 
-**Date**: December 24, 2025 (Created)  
-**Updated**: December 29, 2025 (Week 1 in Progress)  
-**Status**: Active - Trade Simulator MVP Phase 1  
-**Purpose**: Concrete Steps to Recovery  
+**Date**: December 24, 2025 (Created)
+**Updated**: December 29, 2025 (Week 1 in Progress)
+**Status**: Active - Trade Simulator MVP Phase 1
+**Purpose**: Concrete Steps to Recovery
 
 ---
 
@@ -11,9 +11,9 @@
 
 This document provides **specific, actionable steps** to transform Adastrea from an over-engineered code project into a fundable, shippable game.
 
-**Current State**: 85% code, 10% playable content, 0% market validation  
-**Target State**: 40% focused code, 80% polished content, validated gameplay  
-**Timeline**: 6 months to fundable demo  
+**Current State**: 85% code, 10% playable content, 0% market validation
+**Target State**: 40% focused code, 80% polished content, validated gameplay
+**Timeline**: 6 months to fundable demo
 **Investment Required**: $50,000
 
 ---
@@ -80,7 +80,7 @@ void ASpaceship::BeginPlay()
     MaxSpeed = 1000.0f;
     Acceleration = 500.0f;
     TurnRate = 90.0f;
-    
+
     // This is TEMPORARY and that's OK
 }
 ```
@@ -125,7 +125,7 @@ void ASpaceship::BeginPlay()
 
 **Deliverable**: Validated prototype, feedback documented
 
-**GO/NO-GO DECISION**: 
+**GO/NO-GO DECISION**:
 - ✅ If people have fun: Continue to Phase 3
 - ❌ If people don't have fun: Pivot or kill project
 
@@ -241,7 +241,7 @@ void ASpaceship::BeginPlay()
 
 #### Weeks 17-24: Negotiation or Pivot
 
-**If Funded**: 
+**If Funded**:
 - Hire team
 - Expand content
 - Build toward 1.0
@@ -274,7 +274,7 @@ void ASpaceship::BeginPlay()
 - Basic economy simulation
 - Trading UI
 
-**Timeline**: 2-3 months  
+**Timeline**: 2-3 months
 **Comparable**: Space Rangers trading loop
 
 ---
@@ -298,7 +298,7 @@ void ASpaceship::BeginPlay()
 - Weapon systems
 - Upgrade system
 
-**Timeline**: 2-3 months  
+**Timeline**: 2-3 months
 **Comparable**: House of the Dying Sun
 
 ---
@@ -322,7 +322,7 @@ void ASpaceship::BeginPlay()
 - Lore/story system
 - Progress tracking
 
-**Timeline**: 3-4 months  
+**Timeline**: 3-4 months
 **Comparable**: Outer Wilds (simplified)
 
 ---

@@ -26,9 +26,9 @@ Space stations in Adastrea use a **modular architecture** where individual modul
 
 ### Why This Approach?
 
-✅ **Flexible**: Add/remove modules dynamically  
-✅ **Modular**: Each module is self-contained  
-✅ **Visual**: Modules are physically placed in 3D space  
+✅ **Flexible**: Add/remove modules dynamically
+✅ **Modular**: Each module is self-contained
+✅ **Visual**: Modules are physically placed in 3D space
 ✅ **Designer-Friendly**: Configure modules in Blueprints, no C++ needed
 
 ---
@@ -120,8 +120,8 @@ Event: Add New Module
 ```cpp
 // Spawn a new module
 ASpaceStationModule* NewModule = GetWorld()->SpawnActor<ASpaceStationModule>(
-    ModuleClass, 
-    GetActorLocation(), 
+    ModuleClass,
+    GetActorLocation(),
     GetActorRotation()
 );
 
@@ -209,7 +209,7 @@ Station Facilities:
 
 ```cpp
 // Get all modules of a specific type
-TArray<ASpaceStationModule*> DockingModules = 
+TArray<ASpaceStationModule*> DockingModules =
     Station->GetModulesByGroup(EStationModuleGroup::Docking);
 
 // Iterate and use them
@@ -250,7 +250,7 @@ Event: Update Station Info
   STATION STATUS: Trade Hub Alpha
 ═══════════════════════════════════
   Power: +410 MW ✓ (Surplus)
-  
+
   Facilities:
     🚀 Docking: 2 bays
     📦 Storage: 3 cargo holds
@@ -417,6 +417,6 @@ For the **Trade Simulator MVP**, focus on these modules:
 
 ---
 
-**Last Updated**: 2026-01-12  
-**Status**: Complete - Ready for MVP Trade Simulator  
+**Last Updated**: 2026-01-12
+**Status**: Complete - Ready for MVP Trade Simulator
 **Author**: Adastrea Development Team

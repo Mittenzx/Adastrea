@@ -71,18 +71,18 @@ Create ONE Data Asset to reference all Input Actions:
 void AMySpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
-    
+
     UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
     if (!EnhancedInput) return;
-    
+
     // Load input config
     UInputConfigDataAsset* InputConfig = LoadObject<UInputConfigDataAsset>(
         nullptr,
         TEXT("/Game/DataAssets/Input/DA_InputConfig.DA_InputConfig")
     );
-    
+
     if (!InputConfig) return;
-    
+
     // Bind actions
     EnhancedInput->BindAction(InputConfig->MoveAction, ETriggerEvent::Triggered, this, &AMySpaceship::Move);
     EnhancedInput->BindAction(InputConfig->LookAction, ETriggerEvent::Triggered, this, &AMySpaceship::Look);
@@ -129,12 +129,12 @@ You can create Input Actions programmatically in C++, but it's not recommended. 
 
 ## Benefits of C++ Approach
 
-✅ **Centralized** - One Data Asset references everything  
-✅ **Type-safe** - C++ compiler catches errors  
-✅ **Validated** - Built-in validation functions  
-✅ **Maintainable** - Easy to add/remove actions  
-✅ **Debuggable** - Clear error messages  
-✅ **Data-driven** - Consistent with Adastrea philosophy  
+✅ **Centralized** - One Data Asset references everything
+✅ **Type-safe** - C++ compiler catches errors
+✅ **Validated** - Built-in validation functions
+✅ **Maintainable** - Easy to add/remove actions
+✅ **Debuggable** - Clear error messages
+✅ **Data-driven** - Consistent with Adastrea philosophy
 
 ## What Guides to Follow
 
@@ -169,7 +169,7 @@ You can create Input Actions programmatically in C++, but it's not recommended. 
 
 **You asked**: "Can I stick with the C++ and delete all the graphs that I don't need?"
 
-**Answer**: 
+**Answer**:
 - ✅ YES - Stick with C++ (it's the recommended approach)
 - ❌ NO - Don't delete Input Actions (IA_*) - they're not graphs, they're required assets
 - ✅ YES - You can work in C++ with minimal Blueprint usage

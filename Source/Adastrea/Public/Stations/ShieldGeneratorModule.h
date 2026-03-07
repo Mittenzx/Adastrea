@@ -8,11 +8,11 @@
 
 /**
  * Shield generator module for space stations
- * 
+ *
  * Defensive shield projection system for station protection.
  * Generates energy barriers to absorb incoming damage from weapons and debris.
  * High power consumption due to continuous field generation.
- * 
+ *
  * Power Consumption: 200 units
  * Module Group: Defence
  */

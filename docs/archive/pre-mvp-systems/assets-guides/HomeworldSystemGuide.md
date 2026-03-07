@@ -74,9 +74,9 @@ In the **Homeworld Info** category:
      - Why it matters to the story
    - Example:
      ```
-     A thriving human colony on the edge of known space. Terra Colony was founded by 
-     refugees from the Core Worlds seeking independence and prosperity. The colony 
-     maintains cautious diplomatic relations with most factions, balancing trade 
+     A thriving human colony on the edge of known space. Terra Colony was founded by
+     refugees from the Core Worlds seeking independence and prosperity. The colony
+     maintains cautious diplomatic relations with most factions, balancing trade
      opportunities with security concerns.
      ```
 
@@ -129,19 +129,19 @@ Faction Relations:
   [0]
     Faction: DA_Faction_SolarisUnion
     Starting Reputation: 50 (Very Friendly - close allies)
-  
+
   [1]
     Faction: DA_Faction_IroncladConsortium
     Starting Reputation: 10 (Friendly - established trade relations)
-  
+
   [2]
     Faction: DA_Faction_CrimsonArmada
     Starting Reputation: -60 (Hostile - recent border conflicts)
-  
+
   [3]
     Faction: DA_Faction_VoidCult
     Starting Reputation: -30 (Unfriendly - ideological differences)
-  
+
   [4]
     Faction: DA_Faction_FreeTradersGuild
     Starting Reputation: 40 (Friendly - strong economic ties)
@@ -229,7 +229,7 @@ Implementation:
 Node: Get Faction Relations
   Input: Homeworld Data Asset reference
   Output: Array<FFactionRelationEntry>
-  
+
 This is a Blueprint-callable function on UHomeworldDataAsset
 ```
 
@@ -238,7 +238,7 @@ This is a Blueprint-callable function on UHomeworldDataAsset
 Node: Make Map
   Key Type: UFactionDataAsset (Object Reference)
   Value Type: Integer
-  
+
 This creates an empty TMap to store faction reputations
 ```
 
@@ -250,12 +250,12 @@ ForEachLoop:
     1. Break FFactionRelationEntry struct
        - Get Faction (UFactionDataAsset*)
        - Get StartingReputation (int32)
-    
+
     2. Add to Map
        - Map: FactionReputationMap
        - Key: Faction
        - Value: StartingReputation
-       
+
     3. Optional: Log for debugging
        - Format String: "Initialized {0} reputation: {1}"
        - Param 0: Faction->FactionName
@@ -267,7 +267,7 @@ ForEachLoop:
 Node: Set FactionReputationMap
   Target: Player Character (or Player State)
   Map: The populated FactionReputationMap
-  
+
 Store this map as a member variable on your player character
 or player state for persistent access during gameplay
 ```
@@ -338,7 +338,7 @@ Variables:
     Default: Empty Map
     Category: "Faction System"
     Tooltip: "Stores current reputation values with all factions"
-  
+
   - CurrentHomeworld
     Type: Object Reference (HomeworldDataAsset)
     Category: "Faction System"
@@ -414,8 +414,8 @@ Variables:
 
 ```
 Homeworld Name: "New Terra Prime"
-Description: "A prosperous core world colony loyal to the Solaris Union. 
-Citizens enjoy high technology and strong military protection, but face 
+Description: "A prosperous core world colony loyal to the Solaris Union.
+Citizens enjoy high technology and strong military protection, but face
 scrutiny from independence-minded frontier factions."
 
 Homeworld ID: NewTerraPrime
@@ -436,8 +436,8 @@ Faction Relations:
 
 ```
 Homeworld Name: "Port Haven"
-Description: "A neutral trading station that declared independence decades ago. 
-Port Haven maintains careful balance between all major powers, prioritizing 
+Description: "A neutral trading station that declared independence decades ago.
+Port Haven maintains careful balance between all major powers, prioritizing
 profit over politics. An ideal start for aspiring merchants."
 
 Homeworld ID: PortHaven
@@ -458,8 +458,8 @@ Faction Relations:
 
 ```
 Homeworld Name: "Last Light Station"
-Description: "A hardscrabble frontier outpost on the edge of civilized space. 
-Residents are tough, independent, and deeply suspicious of core world authority. 
+Description: "A hardscrabble frontier outpost on the edge of civilized space.
+Residents are tough, independent, and deeply suspicious of core world authority.
 Pirates are a constant threat, but the station's resilience is legendary."
 
 Homeworld ID: LastLightStation
@@ -480,8 +480,8 @@ Faction Relations:
 
 ```
 Homeworld Name: "Archimedes Research Station"
-Description: "A cutting-edge research facility operated by the Academic Collective. 
-The station maintains strict neutrality to facilitate scientific cooperation 
+Description: "A cutting-edge research facility operated by the Academic Collective.
+The station maintains strict neutrality to facilitate scientific cooperation
 across factional boundaries, though this stance has earned both respect and scorn."
 
 Homeworld ID: ArchimedesStation

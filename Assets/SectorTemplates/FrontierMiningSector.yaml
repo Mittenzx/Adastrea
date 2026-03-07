@@ -7,56 +7,56 @@ Identity:
   Description: |
     A rough-and-tumble mining sector on the edge of civilized space. The council
     is pragmatic and focused on survival. High security spending keeps pirates
-    at bay, while low taxes attract independent miners and prospectors. 
+    at bay, while low taxes attract independent miners and prospectors.
     Infrastructure is basic but functional.
 
 Council:
   TotalSeats: 8
   PassThreshold: 51  # Simple majority - quick decisions needed
-  
+
   Representatives:
     - RepresentingWay: Dwarven_Mining_Way
       RepresentativeName: "Thorin Ironforge"
       VotingWeight: 25
       YearsOfService: 4
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Salvage_Collective
       RepresentativeName: "Rita Scrap"
       VotingWeight: 18
       YearsOfService: 3
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Freight_Haulers
       RepresentativeName: "Jake 'Hauler' Morrison"
       VotingWeight: 15
       YearsOfService: 2
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Bounty_Hunters_Guild
       RepresentativeName: "Vera Lynch"
       VotingWeight: 20
       YearsOfService: 5
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Independent_Refiners
       RepresentativeName: "Chen Wei"
       VotingWeight: 12
       YearsOfService: 1
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Prospectors_Union
       RepresentativeName: "Lars Feldman"
       VotingWeight: 8
       YearsOfService: 2
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Mining_Equipment_Suppliers
       RepresentativeName: "Sasha Volkov"
       VotingWeight: 10
       YearsOfService: 3
       IsPlayerControlled: false
-      
+
     - RepresentingWay: Local_Settlers_Coalition
       RepresentativeName: "Maria Lopez"
       VotingWeight: 7
@@ -83,7 +83,7 @@ ActivePolicies:
       Pirates are a constant threat and must be dealt with aggressively.
     PolicyValue: 90
     IsActive: true
-    
+
   - PolicyType: TradeRegulation
     PolicyName: "Free Market Policy"
     Description: |
@@ -91,7 +91,7 @@ ActivePolicies:
       operators. "Don't ask, don't tell" approach to cargo contents.
     PolicyValue: 15
     IsActive: true
-    
+
   - PolicyType: PatrolFrequency
     PolicyName: "Heavy Patrol Coverage"
     Description: |
@@ -104,6 +104,6 @@ Notes: |
   The Frontier Mining Sector is a dangerous but opportunity-rich area.
   High risk, high reward. Good for experienced players who want to mine
   valuable resources while dealing with pirate threats.
-  
+
   Council dynamics: Unified on security needs, debates over whether to
   spend on better infrastructure or keep taxes ultra-low.

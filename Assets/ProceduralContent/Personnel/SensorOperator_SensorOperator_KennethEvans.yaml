@@ -9,7 +9,7 @@ PersonnelName: "Kenneth Evans"
 # Basic Identity
 Biography: |
   This individual trained as an engineer at the prestigious Stellar Institute. They are feared by enemies and respected by allies and published research that advanced the field of trade economics.
-  
+
 Age: 56
 Gender: "Male"
 Species: "Human"
@@ -61,7 +61,7 @@ ContractMonthsRemaining: 0
 PersonalityType: "Leader"
 PersonalityDescription: |
   Leader personality with focus on sensoroperator duties.
-  
+
 Traits:
   - TraitName: "Quick Learner"
     TraitDescription: "Gains XP faster"

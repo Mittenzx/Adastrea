@@ -20,10 +20,10 @@ ASectorGenerator::ASectorGenerator()
 	, bIsGenerating(false)
 {
 	PrimaryActorTick.bCanEverTick = false;
-	
+
 	// Make this actor hidden in game but visible in editor
 	SetActorHiddenInGame(true);
-	
+
 #if WITH_EDITORONLY_DATA
 	bListedInSceneOutliner = true;
 #endif
@@ -135,7 +135,7 @@ bool ASectorGenerator::GenerateSector()
 		int32 Count = SpawnObjectsFromDefinition(Definition, SpawnedActors);
 		TotalSpawned += Count;
 
-		UE_LOG(LogAdastreaProceduralGen, Log, TEXT("SectorGenerator: Spawned %d objects of type %d"), 
+		UE_LOG(LogAdastreaProceduralGen, Log, TEXT("SectorGenerator: Spawned %d objects of type %d"),
 			Count, static_cast<int32>(Definition.ObjectType));
 	}
 
@@ -237,7 +237,7 @@ void ASectorGenerator::OnPreGeneration_Implementation()
 void ASectorGenerator::OnPostGeneration_Implementation(bool bSuccess)
 {
 	// Default implementation - can be overridden in Blueprint
-	UE_LOG(LogAdastreaProceduralGen, Log, TEXT("SectorGenerator: Post-generation event (Success: %s)"), 
+	UE_LOG(LogAdastreaProceduralGen, Log, TEXT("SectorGenerator: Post-generation event (Success: %s)"),
 		bSuccess ? TEXT("true") : TEXT("false"));
 }
 
@@ -272,7 +272,7 @@ int32 ASectorGenerator::SpawnObjectsFromDefinition(const FSpaceObjectDefinition&
 		// Find valid spawn location
 		if (!FindValidSpawnLocation(Definition, Location, Rotation))
 		{
-			UE_LOG(LogAdastreaProceduralGen, Warning, TEXT("SectorGenerator: Failed to find valid location for object %d of %d"), 
+			UE_LOG(LogAdastreaProceduralGen, Warning, TEXT("SectorGenerator: Failed to find valid location for object %d of %d"),
 				i + 1, Count);
 			continue;
 		}
@@ -293,7 +293,7 @@ int32 ASectorGenerator::SpawnObjectsFromDefinition(const FSpaceObjectDefinition&
 
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		
+
 		AActor* SpawnedActor = World->SpawnActor<AActor>(
 			Definition.ActorClass,
 			Location,
@@ -330,7 +330,7 @@ int32 ASectorGenerator::SpawnObjectsFromDefinition(const FSpaceObjectDefinition&
 		}
 		else
 		{
-			UE_LOG(LogAdastreaProceduralGen, Warning, TEXT("SectorGenerator: Failed to spawn actor at location %s"), 
+			UE_LOG(LogAdastreaProceduralGen, Warning, TEXT("SectorGenerator: Failed to spawn actor at location %s"),
 				*Location.ToString());
 		}
 	}
@@ -427,7 +427,7 @@ bool ASectorGenerator::FindValidSpawnLocation(const FSpaceObjectDefinition& Defi
 		if (IsLocationValid(Position, GeneratorConfig->MinObjectSpacing))
 		{
 			OutLocation = Position;
-			
+
 			// Generate rotation
 			if (Definition.bRandomRotation)
 			{
@@ -479,14 +479,14 @@ TArray<FVector> ASectorGenerator::GeneratePositionsByPattern(EDistributionPatter
 	{
 		FVector Position;
 		FRotator DummyRotation;
-		
+
 		FSpaceObjectDefinition TempDefinition{};
 		TempDefinition.DistributionPattern = Pattern;
 		TempDefinition.MinDistanceFromCenter = MinDistance;
 		TempDefinition.MaxDistanceFromCenter = MaxDistance;
 		TempDefinition.ActorClass = nullptr;
 		TempDefinition.bRandomRotation = false;
-		
+
 		if (FindValidSpawnLocation(TempDefinition, Position, DummyRotation))
 		{
 			Positions.Add(Position);
@@ -524,7 +524,7 @@ void ASectorGenerator::GenerateSectorName()
 	if (!GeneratorConfig->CustomSectorName.IsEmpty())
 	{
 		TargetSector->SectorName = GeneratorConfig->CustomSectorName;
-		UE_LOG(LogAdastreaProceduralGen, Log, TEXT("SectorGenerator: Using custom sector name: %s"), 
+		UE_LOG(LogAdastreaProceduralGen, Log, TEXT("SectorGenerator: Using custom sector name: %s"),
 			*GeneratorConfig->CustomSectorName.ToString());
 		return;
 	}
@@ -533,6 +533,6 @@ void ASectorGenerator::GenerateSectorName()
 	uint8 Theme = static_cast<uint8>(GeneratorConfig->NamingTheme);
 	FString GeneratedName = UNameGenerator::GenerateUniqueSectorName(Theme, this);
 	TargetSector->SectorName = FText::FromString(GeneratedName);
-	
+
 	UE_LOG(LogAdastreaProceduralGen, Log, TEXT("SectorGenerator: Generated sector name: %s"), *GeneratedName);
 }

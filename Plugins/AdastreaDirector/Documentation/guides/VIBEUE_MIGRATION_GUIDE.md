@@ -108,7 +108,7 @@ TArray<FAssetInfo> Blueprints = FAdastreaAssetService::GetBlueprints();
 
 for (const FAssetInfo& Asset : Blueprints)
 {
-    UE_LOG(LogAdastreaDirector, Log, TEXT("Blueprint: %s at %s"), 
+    UE_LOG(LogAdastreaDirector, Log, TEXT("Blueprint: %s at %s"),
         *Asset.Name, *Asset.Path);
 }
 

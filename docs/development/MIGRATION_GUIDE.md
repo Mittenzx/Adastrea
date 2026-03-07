@@ -1,7 +1,7 @@
 # Migration Guide - Repository Modernization (January 2026)
 
-**Date**: January 14, 2026  
-**Version**: 1.0  
+**Date**: January 14, 2026
+**Version**: 1.0
 **Impact**: Documentation paths, navigation, and structure
 
 ---
@@ -301,7 +301,7 @@ If your workflows reference documentation paths:
 - name: Check docs
   run: test -f Docs/README.md
 
-# After  
+# After
 - name: Check docs
   run: test -f docs/README.md
 ```

@@ -57,25 +57,25 @@ struct FShieldFacingVisual
 
 /**
  * Component for Shield Visual Effects
- * 
+ *
  * Manages visual feedback for shield states:
- * 
+ *
  * **Shield States:**
  * - Full: Green steady glow indicating full protection
  * - Recharging: Blue pulse animation showing recharge progress
  * - Down: Red glow on damaged facing indicating vulnerability
  * - Disabled: No visual effect
- * 
+ *
  * **Directional Feedback:**
  * - Supports 4-facing directional shields (Forward, Aft, Port, Starboard)
  * - Each facing shows independent state
  * - Omnidirectional shields show single unified state
- * 
+ *
  * **Integration:**
  * - Automatically monitors CombatHealthComponent for shield state changes
  * - Updates visual feedback based on shield strength and recharge state
  * - Provides Blueprint events for custom reactions
- * 
+ *
  * Usage:
  * - Add component to spaceship Blueprint
  * - Configure shield visual materials and effects

@@ -2,9 +2,9 @@
 
 > **Main trading interface for buying and selling items at stations - MVP CORE FEATURE**
 
-**Blueprint Type**: UMG Widget  
-**Parent Class**: `UTradingInterfaceWidget` (C++)  
-**Location**: `Content/UI/Trading/WBP_TradingUI.uasset`  
+**Blueprint Type**: UMG Widget
+**Parent Class**: `UTradingInterfaceWidget` (C++)
+**Location**: `Content/UI/Trading/WBP_TradingUI.uasset`
 **Priority**: ⚠️ **CRITICAL** - Core feature of Trade Simulator MVP
 
 ---
@@ -205,9 +205,9 @@ Canvas Panel (Root)
      - Bind text to `GetMarketName()` function
      - Font Size: 32
      - Color: White
-   
+
    - **Spacer**: Fill remaining space
-   
+
    - **Button**: "Close"
      - Content: Text "X"
      - OnClicked: Close widget and undock
@@ -225,7 +225,7 @@ Canvas Panel (Root)
        OnClicked: ToggleBuySellView()
        Style: Highlighted when bShowBuyView == false
    ```
-   
+
    **Note**: `ToggleBuySellView()` switches between buy and sell modes. You can bind button states to the `bShowBuyView` property to highlight the active mode.
 
 3. Add Filters (Optional for MVP):
@@ -437,7 +437,7 @@ FUNCTION: Get Cargo Space Percent (BlueprintPure)
 └─► Returns: float (0.0 to 1.0)
 ```
 
-Calculate: `Used Cargo / Max Cargo`  
+Calculate: `Used Cargo / Max Cargo`
 Bind to Progress Bar percent.
 
 ### Get Cart Total
@@ -447,7 +447,7 @@ FUNCTION: Get Cart Total (BlueprintPure)
 └─► Returns: int32 (total cart value)
 ```
 
-Sum all items in cart.  
+Sum all items in cart.
 Bind to Cart Total text.
 
 ### Can Execute Trade
@@ -659,6 +659,6 @@ For Trade Simulator MVP, this widget must:
 
 ---
 
-**Last Updated**: December 30, 2025  
-**Status**: CRITICAL for MVP  
+**Last Updated**: December 30, 2025
+**Status**: CRITICAL for MVP
 **Difficulty**: ⭐⭐⭐⭐ Advanced

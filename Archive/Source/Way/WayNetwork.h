@@ -18,14 +18,14 @@ struct FNetworkMember
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Network Member")
     UWayDataAsset* MemberWay;
 
-    /** 
+    /**
      * Influence level within the network (0-100)
      * Represents how much weight this Way has in network decisions
      */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Network Member", meta=(ClampMin="0", ClampMax="100"))
     int32 InfluenceLevel;
 
-    /** 
+    /**
      * Commitment to network goals (0-100)
      * Affects how strongly this Way responds to network-wide events
      */
@@ -46,28 +46,28 @@ struct FNetworkMember
 
 /**
  * Data Asset representing a WayNetwork - a micro-alliance of Ways with aligned goals.
- * 
+ *
  * Networks form when multiple small guilds/schools/syndicates share common Precepts
  * and decide to work together. This creates emergent political structures where
  * players who earn reputation with one member gain partial reputation with the network.
- * 
+ *
  * Design Philosophy:
  * - Small, focused networks (2-5 Ways typical)
  * - Based on Precept alignment (not just convenience)
  * - Dynamic reputation spillover effects
  * - Networks can have their own collective goals
  * - Player actions affect entire network when significant
- * 
+ *
  * Usage Examples:
  * - "The Craftsmen's Compact" - Engineers' Guild, Ship-Builders Union, Refinery Collective
  *   Shared Precepts: Craftsmanship, Mastery, Innovation
- * 
+ *
  * - "The Frontier Alliance" - Scout's League, Cartographer's Society, Pioneer Traders
  *   Shared Precepts: Discovery, Freedom, Survival
- * 
+ *
  * - "The Honor Circle" - Warrior's Guild, Duelist Academy, Protector's Order
  *   Shared Precepts: Honor, Strength, Justice
- * 
+ *
  * Usage:
  * - Create a Blueprint Data Asset based on UWayNetworkDataAsset
  * - Add 2-5 member Ways with shared Precepts
@@ -114,7 +114,7 @@ public:
     // Shared Philosophy
     // ====================
 
-    /** 
+    /**
      * Core Precepts that unite this network
      * These should be shared by most/all member Ways
      */
@@ -151,7 +151,7 @@ public:
     // Network Status
     // ====================
 
-    /** 
+    /**
      * Whether this network is currently active
      * Networks can form and dissolve based on political changes
      */

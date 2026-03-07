@@ -8,10 +8,10 @@
 
 /**
  * Fuel storage depot module for space stations
- * 
+ *
  * Specialized storage facility for ship fuel and propellants.
  * Includes safety systems, pumping equipment, and spill containment.
- * 
+ *
  * Power Consumption: 15 units
  * Module Group: Storage
  */

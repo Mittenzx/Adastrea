@@ -1,7 +1,7 @@
 # TestSettingsWidget Enhancement Suggestions
 
-**Status**: Optional improvements for future iterations  
-**Priority**: Low to Medium  
+**Status**: Optional improvements for future iterations
+**Priority**: Low to Medium
 **Current Implementation**: Production-ready as-is
 
 These enhancements would make the TestSettingsWidget even more robust, but are **not required** for merging.
@@ -41,7 +41,7 @@ bool bTestAutoSpawn;
 void UTestSettingsWidget::ApplySettings_Implementation()
 {
     UE_LOG(LogAdastrea, Log, TEXT("TestSettingsWidget: Applying settings..."));
-    
+
     // Store in Game Instance for persistence
     if (UAdastreaGameInstance* GameInstance = Cast<UAdastreaGameInstance>(GetGameInstance()))
     {
@@ -49,10 +49,10 @@ void UTestSettingsWidget::ApplySettings_Implementation()
         GameInstance->TestDifficulty = SelectedDifficulty;
         GameInstance->TestDebugMode = SelectedDebugMode;
         GameInstance->bTestAutoSpawn = bAutoSpawnShip;
-        
+
         UE_LOG(LogAdastrea, Log, TEXT("  Settings stored in Game Instance"));
     }
-    
+
     UE_LOG(LogAdastrea, Log, TEXT("  Applied Settings:"));
     UE_LOG(LogAdastrea, Log, TEXT("    - Ship Type: %s"), *SelectedShipType);
     UE_LOG(LogAdastrea, Log, TEXT("    - Difficulty: %s"), *SelectedDifficulty);
@@ -67,7 +67,7 @@ void UTestSettingsWidget::ApplySettings_Implementation()
 void UTestSettingsWidget::LoadDefaultSettings_Implementation()
 {
     UE_LOG(LogAdastrea, Log, TEXT("TestSettingsWidget: Loading default settings"));
-    
+
     // Try to load from Game Instance first
     if (UAdastreaGameInstance* GameInstance = Cast<UAdastreaGameInstance>(GetGameInstance()))
     {
@@ -77,30 +77,30 @@ void UTestSettingsWidget::LoadDefaultSettings_Implementation()
             SelectedDifficulty = GameInstance->TestDifficulty;
             SelectedDebugMode = GameInstance->TestDebugMode;
             bAutoSpawnShip = GameInstance->bTestAutoSpawn;
-            
+
             UE_LOG(LogAdastrea, Log, TEXT("  Settings loaded from Game Instance"));
             return;
         }
     }
-    
+
     // Fall back to defaults
     if (AvailableShipTypes.Num() > 0)
     {
         SelectedShipType = AvailableShipTypes[0];
     }
-    
+
     if (AvailableDifficulties.Num() > 2)
     {
         SelectedDifficulty = AvailableDifficulties[2];
     }
-    
+
     if (AvailableDebugModes.Num() > 0)
     {
         SelectedDebugMode = AvailableDebugModes[0];
     }
-    
+
     bAutoSpawnShip = true;
-    
+
     UE_LOG(LogAdastrea, Log, TEXT("  Default settings loaded"));
 }
 ```
@@ -173,7 +173,7 @@ Add editor-time validation to catch issues early.
      */
     UFUNCTION(BlueprintCallable, Category="Test Settings|Validation")
     bool ValidateConfiguration(TArray<FString>& ValidationErrors);
-    
+
     /** Editor-only: PostEditChangeProperty override */
     virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif
@@ -185,14 +185,14 @@ Add editor-time validation to catch issues early.
 bool UTestSettingsWidget::ValidateConfiguration(TArray<FString>& ValidationErrors)
 {
     bool bIsValid = true;
-    
+
     // Validate ship types
     if (AvailableShipTypes.Num() == 0)
     {
         ValidationErrors.Add(TEXT("No ship types configured. Add at least one ship type."));
         bIsValid = false;
     }
-    
+
     // Check for duplicate ship types
     TSet<FString> UniqueShips;
     for (const FString& Ship : AvailableShipTypes)
@@ -209,55 +209,55 @@ bool UTestSettingsWidget::ValidateConfiguration(TArray<FString>& ValidationError
         }
         UniqueShips.Add(Ship);
     }
-    
+
     // Validate difficulties
     if (AvailableDifficulties.Num() == 0)
     {
         ValidationErrors.Add(TEXT("No difficulty levels configured. Add at least one difficulty."));
         bIsValid = false;
     }
-    
+
     // Validate debug modes
     if (AvailableDebugModes.Num() == 0)
     {
         ValidationErrors.Add(TEXT("No debug modes configured. Add at least one debug mode."));
         bIsValid = false;
     }
-    
+
     // Validate default selections
     if (!SelectedShipType.IsEmpty() && !AvailableShipTypes.Contains(SelectedShipType))
     {
         ValidationErrors.Add(FString::Printf(
-            TEXT("Default ship type '%s' not in AvailableShipTypes array."), 
+            TEXT("Default ship type '%s' not in AvailableShipTypes array."),
             *SelectedShipType));
         bIsValid = false;
     }
-    
+
     if (!SelectedDifficulty.IsEmpty() && !AvailableDifficulties.Contains(SelectedDifficulty))
     {
         ValidationErrors.Add(FString::Printf(
-            TEXT("Default difficulty '%s' not in AvailableDifficulties array."), 
+            TEXT("Default difficulty '%s' not in AvailableDifficulties array."),
             *SelectedDifficulty));
         bIsValid = false;
     }
-    
+
     if (bIsValid)
     {
         UE_LOG(LogAdastrea, Log, TEXT("TestSettingsWidget: Configuration validation passed"));
     }
     else
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("TestSettingsWidget: Configuration validation failed with %d errors"), 
+        UE_LOG(LogAdastrea, Warning, TEXT("TestSettingsWidget: Configuration validation failed with %d errors"),
                ValidationErrors.Num());
     }
-    
+
     return bIsValid;
 }
 
 void UTestSettingsWidget::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
     Super::PostEditChangeProperty(PropertyChangedEvent);
-    
+
     // Auto-validate when properties change in editor
     TArray<FString> ValidationErrors;
     if (!ValidateConfiguration(ValidationErrors))
@@ -298,24 +298,24 @@ void UTestSettingsWidget::OnShipTypeChanged_Implementation(const FString& Select
         UE_LOG(LogAdastrea, Warning, TEXT("TestSettingsWidget: Empty ship type selected, ignoring"));
         return;
     }
-    
+
     if (SelectionIndex < 0 || SelectionIndex >= AvailableShipTypes.Num())
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("TestSettingsWidget: Invalid selection index %d, clamping"), 
+        UE_LOG(LogAdastrea, Warning, TEXT("TestSettingsWidget: Invalid selection index %d, clamping"),
                SelectionIndex);
         return;
     }
-    
+
     if (!AvailableShipTypes.Contains(SelectedShip))
     {
-        UE_LOG(LogAdastrea, Warning, 
-               TEXT("TestSettingsWidget: Ship type '%s' not in available list, ignoring"), 
+        UE_LOG(LogAdastrea, Warning,
+               TEXT("TestSettingsWidget: Ship type '%s' not in available list, ignoring"),
                *SelectedShip);
         return;
     }
-    
+
     SelectedShipType = SelectedShip;
-    UE_LOG(LogAdastrea, Log, TEXT("TestSettingsWidget: Ship type changed to: %s (index: %d)"), 
+    UE_LOG(LogAdastrea, Log, TEXT("TestSettingsWidget: Ship type changed to: %s (index: %d)"),
            *SelectedShip, SelectionIndex);
 }
 
@@ -355,10 +355,10 @@ TSubclassOf<UUserWidget> MainMenuWidgetClass;
 void UTestSettingsWidget::TransitionToMainMenu_Implementation()
 {
     UE_LOG(LogAdastrea, Log, TEXT("TestSettingsWidget: Transitioning to main menu"));
-    
+
     // Remove this widget from viewport
     RemoveFromParent();
-    
+
     // Create main menu if class is specified
     if (MainMenuWidgetClass)
     {
@@ -405,19 +405,19 @@ USTRUCT(BlueprintType)
 struct FTestSettingsProfile
 {
     GENERATED_BODY()
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ProfileName;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString ShipType;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString Difficulty;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FString DebugMode;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bAutoSpawn;
 };
@@ -458,9 +458,9 @@ Implement debug mode application logic.
 void UTestSettingsWidget::OnDebugModeChanged_Implementation(const FString& SelectedMode, int32 SelectionIndex)
 {
     SelectedDebugMode = SelectedMode;
-    UE_LOG(LogAdastrea, Log, TEXT("TestSettingsWidget: Debug mode changed to: %s (index: %d)"), 
+    UE_LOG(LogAdastrea, Log, TEXT("TestSettingsWidget: Debug mode changed to: %s (index: %d)"),
            *SelectedMode, SelectionIndex);
-    
+
     // Apply debug mode immediately
     ApplyDebugMode(SelectedMode);
 }
@@ -536,8 +536,8 @@ Add test fixtures and automation-friendly functions.
 #include "Misc/AutomationTest.h"
 #include "UI/TestSettingsWidget.h"
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FTestSettingsWidgetBasicTest, 
-    "Adastrea.UI.TestSettingsWidget.Basic", 
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FTestSettingsWidgetBasicTest,
+    "Adastrea.UI.TestSettingsWidget.Basic",
     EAutomationTestFlags::ApplicationContextMask | EAutomationTestFlags::ProductFilter)
 
 bool FTestSettingsWidgetBasicTest::RunTest(const FString& Parameters)
@@ -545,21 +545,21 @@ bool FTestSettingsWidgetBasicTest::RunTest(const FString& Parameters)
     // Create widget
     UTestSettingsWidget* Widget = NewObject<UTestSettingsWidget>();
     TestNotNull(TEXT("Widget created"), Widget);
-    
+
     // Test default values
     TestEqual(TEXT("Default ship type"), Widget->GetSelectedShipType(), FString(TEXT("Default Fighter")));
     TestEqual(TEXT("Default difficulty"), Widget->GetSelectedDifficulty(), FString(TEXT("Normal")));
     TestEqual(TEXT("Default debug mode"), Widget->GetSelectedDebugMode(), FString(TEXT("None")));
     TestTrue(TEXT("Auto spawn enabled by default"), Widget->GetAutoSpawnEnabled());
-    
+
     // Test ship type change
     Widget->OnShipTypeChanged(TEXT("Gunship"), 3);
     TestEqual(TEXT("Ship type changed"), Widget->GetSelectedShipType(), FString(TEXT("Gunship")));
-    
+
     // Test reset
     Widget->OnResetClicked();
     TestEqual(TEXT("Reset to default ship"), Widget->GetSelectedShipType(), FString(TEXT("Default Fighter")));
-    
+
     return true;
 }
 ```

@@ -37,20 +37,20 @@ enum class EInventoryItemRarity : uint8
 
 /**
  * Data Asset defining an inventory item
- * 
+ *
  * This data asset configures an item that can be stored in player or ship inventories:
  * - Basic information (name, description, icon)
  * - Category and rarity classification
  * - Stack size and weight
  * - Value for trading
  * - Gameplay effects and usage
- * 
+ *
  * Usage:
  * - Create a Data Asset based on this class in the Content Browser
  * - Configure all item properties
  * - Reference this asset in inventory systems and trading
  * - Use in Blueprint logic for item effects
- * 
+ *
  * Examples:
  * - Weapons for ship combat
  * - Ship modules for customization

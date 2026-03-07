@@ -1,7 +1,7 @@
 # Adastrea Director Knowledge Base
 
-**Last Updated**: November 14, 2025  
-**Version**: 1.1  
+**Last Updated**: November 14, 2025
+**Version**: 1.1
 **Purpose**: Comprehensive knowledge base optimized for Adastrea-Director AI tool ingestion
 
 ---
@@ -636,11 +636,11 @@ python YAMLtoDataAsset.py --input my_fighter.yaml --output DA_Ship_MyFighter
 
 ### "How do I create a new [X]?"
 
-**Spaceship**: See `Assets/SpaceshipDesignerWorkflow.md`  
-**Faction**: See `Assets/FactionSetupGuide.md`  
-**Personnel**: See `Assets/PersonnelDesignerWorkflow.md`  
-**Trading Setup**: See `Assets/TradingDesignerWorkflow.md`  
-**AI Behavior**: See `Assets/AIDesignerWorkflow.md`  
+**Spaceship**: See `Assets/SpaceshipDesignerWorkflow.md`
+**Faction**: See `Assets/FactionSetupGuide.md`
+**Personnel**: See `Assets/PersonnelDesignerWorkflow.md`
+**Trading Setup**: See `Assets/TradingDesignerWorkflow.md`
+**AI Behavior**: See `Assets/AIDesignerWorkflow.md`
 **Way/Guild**: See `Assets/WayNetworkQuickStart.md`
 
 ### "Where is the documentation for [System]?"
@@ -866,22 +866,22 @@ For optimal understanding, the Director should ingest documentation in this orde
 
 ### Common Director Queries
 
-**"How is the project structured?"**  
+**"How is the project structured?"**
 → See [Documentation Structure](#documentation-structure) and [Code Organization](#code-organization)
 
-**"What systems are available?"**  
+**"What systems are available?"**
 → See [Core Game Systems](#core-game-systems)
 
-**"How do I create [content type]?"**  
+**"How do I create [content type]?"**
 → See [Development Workflows](#development-workflows) and specific system guides
 
-**"Where is documentation for [feature]?"**  
+**"Where is documentation for [feature]?"**
 → See [File Locations Reference](#file-locations-reference)
 
-**"What are the coding standards?"**  
+**"What are the coding standards?"**
 → See CODE_STYLE.md and .github/copilot-instructions.md
 
-**"How do I validate/test my changes?"**  
+**"How do I validate/test my changes?"**
 → See [Automation & Tooling](#automation--tooling) and TESTING_AUTOMATION_GUIDE.md
 
 ---
@@ -910,8 +910,8 @@ For optimal understanding, the Director should ingest documentation in this orde
 
 ### Last Updated
 
-**Date**: November 13, 2025  
-**Updated By**: GitHub Copilot (SWE Agent)  
+**Date**: November 13, 2025
+**Updated By**: GitHub Copilot (SWE Agent)
 **Version**: 1.0
 
 ### Update Guidelines

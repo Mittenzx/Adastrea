@@ -8,10 +8,10 @@
 
 /**
  * Point defense turret module for space stations
- * 
+ *
  * Defensive weapon emplacement for station protection.
  * Provides automated targeting and fire control against hostile vessels.
- * 
+ *
  * Power Consumption: 25 units
  * Module Group: Defence
  */

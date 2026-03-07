@@ -6,20 +6,20 @@
 
 /**
  * Main Menu widget class for the game start screen
- * 
+ *
  * This widget provides the main menu interface displayed when the game starts:
  * - Start Game button to begin gameplay
  * - Settings button to configure game options
  * - Quit button to exit the game
  * - Title display and version information
- * 
+ *
  * Usage:
  * - Create a Widget Blueprint based on this class (e.g., WBP_MainMenu)
  * - Design the menu layout in the Blueprint designer
  * - Bind buttons to the provided event functions
  * - Override BlueprintNativeEvents to customize behavior
  * - Display on the MainMenu level
- * 
+ *
  * Integration:
  * - Set MainMenu as the Game Default Map in Project Settings
  * - Use level blueprints or GameMode to display this widget on level start

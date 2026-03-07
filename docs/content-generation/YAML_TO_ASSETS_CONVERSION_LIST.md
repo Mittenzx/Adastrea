@@ -38,8 +38,8 @@ This document provides a comprehensive inventory of all YAML template files in t
 ---
 
 ## 1. Spaceship Templates (24 files)
-**Target Data Asset**: `USpaceshipDataAsset`  
-**Output Path**: `/Game/Spaceships/DataAssets/`  
+**Target Data Asset**: `USpaceshipDataAsset`
+**Output Path**: `/Game/Spaceships/DataAssets/`
 **Status**: ✅ Fully Supported
 
 ### Files:
@@ -71,8 +71,8 @@ This document provides a comprehensive inventory of all YAML template files in t
 ---
 
 ## 2. Personnel Templates (7 files)
-**Target Data Asset**: `UPersonnelDataAsset`  
-**Output Path**: `/Game/Personnel/DataAssets/`  
+**Target Data Asset**: `UPersonnelDataAsset`
+**Output Path**: `/Game/Personnel/DataAssets/`
 **Status**: ✅ Fully Supported
 
 ### Files:
@@ -87,8 +87,8 @@ This document provides a comprehensive inventory of all YAML template files in t
 ---
 
 ## 3. Trading System Templates (27 files)
-**Target Data Asset**: `UTradeItemDataAsset`, `UMarketDataAsset`, `UContractDataAsset`  
-**Output Path**: `/Game/Trading/DataAssets/`  
+**Target Data Asset**: `UTradeItemDataAsset`, `UMarketDataAsset`, `UContractDataAsset`
+**Output Path**: `/Game/Trading/DataAssets/`
 **Status**: ⚠️ Partially Supported
 
 ### Trade Items (23 files):
@@ -127,8 +127,8 @@ This document provides a comprehensive inventory of all YAML template files in t
 ---
 
 ## 4. Station Module Templates (20 files)
-**Target Data Asset**: `UStationModuleDataAsset` (needs implementation)  
-**Output Path**: `/Game/Stations/Modules/DataAssets/`  
+**Target Data Asset**: `UStationModuleDataAsset` (needs implementation)
+**Output Path**: `/Game/Stations/Modules/DataAssets/`
 **Status**: ❌ Not Yet Implemented
 
 ### Core Modules (2 files):
@@ -174,8 +174,8 @@ This document provides a comprehensive inventory of all YAML template files in t
 ---
 
 ## 5. Sector Templates (7 files)
-**Target Data Asset**: `USectorDataAsset` (needs implementation)  
-**Output Path**: `/Game/Sectors/DataAssets/`  
+**Target Data Asset**: `USectorDataAsset` (needs implementation)
+**Output Path**: `/Game/Sectors/DataAssets/`
 **Status**: ❌ Not Yet Implemented
 
 ### Files:
@@ -190,8 +190,8 @@ This document provides a comprehensive inventory of all YAML template files in t
 ---
 
 ## 6. Way Network Templates (5 files)
-**Target Data Asset**: `UWayDataAsset` or `UFactionDataAsset` (needs clarification)  
-**Output Path**: `/Game/Factions/Ways/DataAssets/`  
+**Target Data Asset**: `UWayDataAsset` or `UFactionDataAsset` (needs clarification)
+**Output Path**: `/Game/Factions/Ways/DataAssets/`
 **Status**: ❌ Not Yet Implemented
 
 ### Files:
@@ -204,8 +204,8 @@ This document provides a comprehensive inventory of all YAML template files in t
 ---
 
 ## 7. Combat System Templates (1 file)
-**Target Data Asset**: `UWeaponDataAsset` (needs implementation)  
-**Output Path**: `/Game/Combat/Weapons/DataAssets/`  
+**Target Data Asset**: `UWeaponDataAsset` (needs implementation)
+**Output Path**: `/Game/Combat/Weapons/DataAssets/`
 **Status**: ❌ Not Yet Implemented
 
 ### Files:
@@ -214,8 +214,8 @@ This document provides a comprehensive inventory of all YAML template files in t
 ---
 
 ## 8. Combat VFX Templates (4 files)
-**Target Data Asset**: `UCombatVFXDataAsset` (needs implementation)  
-**Output Path**: `/Game/VFX/Combat/DataAssets/`  
+**Target Data Asset**: `UCombatVFXDataAsset` (needs implementation)
+**Output Path**: `/Game/VFX/Combat/DataAssets/`
 **Status**: ❌ Not Yet Implemented
 
 ### Files:
@@ -227,8 +227,8 @@ This document provides a comprehensive inventory of all YAML template files in t
 ---
 
 ## 9. Exploration System Templates (4 files)
-**Target Data Asset**: Multiple types needed  
-**Output Path**: `/Game/Exploration/DataAssets/`  
+**Target Data Asset**: Multiple types needed
+**Output Path**: `/Game/Exploration/DataAssets/`
 **Status**: ❌ Not Yet Implemented
 
 ### Files:
@@ -240,8 +240,8 @@ This document provides a comprehensive inventory of all YAML template files in t
 ---
 
 ## 10. Inventory Templates (3 files)
-**Target Data Asset**: `UInventoryItemDataAsset` (needs implementation)  
-**Output Path**: `/Game/Inventory/DataAssets/`  
+**Target Data Asset**: `UInventoryItemDataAsset` (needs implementation)
+**Output Path**: `/Game/Inventory/DataAssets/`
 **Status**: ❌ Not Yet Implemented
 
 ### Files:
@@ -252,8 +252,8 @@ This document provides a comprehensive inventory of all YAML template files in t
 ---
 
 ## 11. Personnel AI Templates (3 files)
-**Target Data Asset**: `UPersonnelLogic` or `UPersonnelAIDataAsset` (needs clarification)  
-**Output Path**: `/Game/AI/Personnel/DataAssets/`  
+**Target Data Asset**: `UPersonnelLogic` or `UPersonnelAIDataAsset` (needs clarification)
+**Output Path**: `/Game/AI/Personnel/DataAssets/`
 **Status**: ⚠️ Partially Supported (mentioned but unclear)
 
 ### Files:
@@ -264,8 +264,8 @@ This document provides a comprehensive inventory of all YAML template files in t
 ---
 
 ## 12. Ship Customization Templates (3 files)
-**Target Data Asset**: `UShipModuleDataAsset` (needs implementation)  
-**Output Path**: `/Game/Ships/Customization/DataAssets/`  
+**Target Data Asset**: `UShipModuleDataAsset` (needs implementation)
+**Output Path**: `/Game/Ships/Customization/DataAssets/`
 **Status**: ❌ Not Yet Implemented
 
 ### Files:
@@ -276,8 +276,8 @@ This document provides a comprehensive inventory of all YAML template files in t
 ---
 
 ## 13. Audio Templates (2 files)
-**Target Data Asset**: `UAudioDataAsset` (needs implementation)  
-**Output Path**: `/Game/Audio/DataAssets/`  
+**Target Data Asset**: `UAudioDataAsset` (needs implementation)
+**Output Path**: `/Game/Audio/DataAssets/`
 **Status**: ❌ Not Yet Implemented
 
 ### Files:
@@ -287,8 +287,8 @@ This document provides a comprehensive inventory of all YAML template files in t
 ---
 
 ## 14. Tutorial Templates (1 file)
-**Target Data Asset**: `UTutorialDataAsset` (needs implementation)  
-**Output Path**: `/Game/Tutorials/DataAssets/`  
+**Target Data Asset**: `UTutorialDataAsset` (needs implementation)
+**Output Path**: `/Game/Tutorials/DataAssets/`
 **Status**: ❌ Not Yet Implemented
 
 ### Files:
@@ -297,8 +297,8 @@ This document provides a comprehensive inventory of all YAML template files in t
 ---
 
 ## 15. Spaceship Particle Templates (1 file)
-**Target Data Asset**: `USpaceshipParticleDataAsset` (needs implementation)  
-**Output Path**: `/Game/VFX/Ships/DataAssets/`  
+**Target Data Asset**: `USpaceshipParticleDataAsset` (needs implementation)
+**Output Path**: `/Game/VFX/Ships/DataAssets/`
 **Status**: ❌ Not Yet Implemented
 
 ### Files:
@@ -307,8 +307,8 @@ This document provides a comprehensive inventory of all YAML template files in t
 ---
 
 ## 16. Material Templates (1 file)
-**Target Data Asset**: `UMaterialDataAsset`  
-**Output Path**: `/Game/Materials/DataAssets/`  
+**Target Data Asset**: `UMaterialDataAsset`
+**Output Path**: `/Game/Materials/DataAssets/`
 **Status**: ⚠️ Partially Supported (mentioned in YAMLtoDataAsset.py)
 
 ### Files:
@@ -485,8 +485,8 @@ YAMLtoDataAsset.import_spaceship_yaml("Assets/SpaceshipTemplates/Scout_Pathfinde
 
 ## Document Maintenance
 
-**Last Updated**: 2025-11-23  
-**Total Files Inventoried**: 161  
+**Last Updated**: 2025-11-23
+**Total Files Inventoried**: 161
 **Version**: 1.0
 
 ### Update Instructions

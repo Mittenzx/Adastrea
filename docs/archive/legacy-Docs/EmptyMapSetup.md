@@ -583,7 +583,7 @@ UE_LOG(LogAdastrea, Log, TEXT("Random position: %s"), *RandomPos.ToString());
 
 ---
 
-**Last Updated**: 2025-10-28  
-**Version**: 1.0  
-**Unreal Engine**: 5.6+  
+**Last Updated**: 2025-10-28
+**Version**: 1.0
+**Unreal Engine**: 5.6+
 **Maintained by**: Adastrea Development Team

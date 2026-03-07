@@ -10,18 +10,18 @@ class ASpaceship;
 
 /**
  * Interactable control console inside a spaceship interior
- * 
+ *
  * This actor represents the pilot's control console that allows a player
  * to take control of the spaceship from within the interior. When the player
  * interacts with the console, their walking pawn is saved and they possess
  * the spaceship to control it directly.
- * 
+ *
  * Usage:
  * - Place this actor inside a spaceship interior Blueprint
  * - Set the OwningShip reference to the parent spaceship
  * - Configure InteractionRange for the proximity detection
  * - Call Interact() when player presses interact key
- * 
+ *
  * Integration:
  * - Works with ASpaceship's BeginControl/EndControl methods
  * - Player's Interact implementation should detect this actor

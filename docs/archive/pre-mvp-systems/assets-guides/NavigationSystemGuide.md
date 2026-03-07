@@ -450,7 +450,7 @@ void AMySpaceship::SetupNavigation()
 {
     // Create component
     NavComponent = CreateDefaultSubobject<UNavigationComponent>(TEXT("Navigation"));
-    
+
     // Configure
     NavComponent->MaxNavigationSpeed = 1000.0f;
     NavComponent->bAvoidObstacles = true;
@@ -467,7 +467,7 @@ void AMySpaceship::NavigateToLocation(FVector Destination)
         {
             // Activate autopilot with path
             NavComponent->ActivateAutopilotPath(Path);
-            
+
             // Show ETA
             float ETA = NavComponent->GetEstimatedTimeToComplete();
             UE_LOG(LogTemp, Log, TEXT("Autopilot engaged. ETA: %.1f seconds"), ETA);
@@ -482,7 +482,7 @@ void AMySpaceship::NavigateToLocation(FVector Destination)
 void AMySpaceship::OnAutopilotDeactivated_Implementation()
 {
     Super::OnAutopilotDeactivated_Implementation();
-    
+
     // Custom behavior when autopilot stops
     UE_LOG(LogTemp, Log, TEXT("Destination reached!"));
     // Play arrival sound, show notification, etc.
@@ -498,8 +498,8 @@ void AMySpaceship::OnAutopilotDeactivated_Implementation()
 
 ---
 
-**Last Updated**: 2025-11-11  
-**Version**: 1.0  
-**Status**: Production Ready  
-**Component**: NavigationComponent  
+**Last Updated**: 2025-11-11
+**Version**: 1.0
+**Status**: Production Ready
+**Component**: NavigationComponent
 **Lines of Code**: ~865 lines (header + implementation)

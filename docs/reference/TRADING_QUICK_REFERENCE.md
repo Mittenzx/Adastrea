@@ -217,8 +217,8 @@ void RegisterMarket(MarketDataAsset*);
 **Price Calculation**:
 ```cpp
 // Simple formula
-float Price = Item->BasePrice 
-            * (Demand / Supply) 
+float Price = Item->BasePrice
+            * (Demand / Supply)
             * Market->SellPriceMarkup;
 ```
 
@@ -248,7 +248,7 @@ Decision: GO to Phase 2 OR pivot/iterate
 ```
 Target: 70%+ say "fun"
 Test: 10-20 playtesters
-Metrics: 
+Metrics:
   - Average 10+ trades per session
   - 80%+ explore all stations
   - Clear progression path
@@ -342,6 +342,6 @@ Example: OnDocked → If TutorialStep==1 → AdvanceTutorial()
 
 ---
 
-**Last Updated**: 2025-12-25  
-**For**: Quick developer onboarding  
+**Last Updated**: 2025-12-25
+**For**: Quick developer onboarding
 **See**: Full architecture docs for complete details

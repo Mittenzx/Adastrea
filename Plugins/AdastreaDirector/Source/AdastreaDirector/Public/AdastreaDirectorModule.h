@@ -11,7 +11,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogAdastreaDirector, Log, All);
 /**
  * Runtime module for Adastrea Director plugin.
  * Provides core functionality for AI-powered development assistance using VibeUE architecture.
- * 
+ *
  * The module uses native C++ components:
  * - AdastreaLLMClient: Direct LLM API calls (Gemini, OpenAI)
  * - AdastreaScriptService: In-process Python execution via IPythonScriptPlugin

@@ -29,7 +29,7 @@ The spaceship class now supports direct player control with possession swapping.
   - Disables and hides the walking pawn
   - Possesses the ship
   - Activates ship movement
-  
+
 - `EndControl(PC)` - Stop controlling the ship
   - Returns possession to walking pawn
   - Restores walking pawn visibility and collision
@@ -107,7 +107,7 @@ void APlayerCharacter::OnInteract()
     FHitResult HitResult;
     FVector Start = GetActorLocation();
     FVector End = Start + GetActorForwardVector() * 200.0f;
-    
+
     if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility))
     {
         AShipControlConsole* Console = Cast<AShipControlConsole>(HitResult.GetActor());

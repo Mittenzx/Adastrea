@@ -63,7 +63,7 @@ This ensures that plugin source code and content are version controlled while ex
 
 ### Adastrea-Director Plugin (Q1-Q3 2026)
 
-**Status:** Planning Phase  
+**Status:** Planning Phase
 **Documentation:** [Plugin Development Guide](../PLUGIN_DEVELOPMENT_GUIDE.md) | [Feasibility Report](../UE_PLUGIN_FEASIBILITY_REPORT.md)
 
 An AI-powered development assistant that provides:

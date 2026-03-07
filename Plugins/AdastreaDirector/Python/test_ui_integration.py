@@ -6,7 +6,7 @@ This simulates what the Unreal Engine UI panel does.
 Usage:
     # In one terminal, start the IPC server:
     python3 ipc_server.py
-    
+
     # In another terminal, run this test:
     python3 test_ui_integration.py
 """
@@ -19,12 +19,12 @@ import time
 def send_request(sock: socket.socket, request_type: str, data: str) -> dict:
     """
     Send a request to the IPC server and get response.
-    
+
     Args:
         sock: Connected socket
         request_type: Type of request (e.g., 'query', 'status', 'ping')
         data: Request data string
-        
+
     Returns:
         Response dictionary
     """
@@ -33,11 +33,11 @@ def send_request(sock: socket.socket, request_type: str, data: str) -> dict:
         'type': request_type,
         'data': data
     }
-    
+
     # Send request
     request_json = json.dumps(request) + '\n'
     sock.sendall(request_json.encode('utf-8'))
-    
+
     # Receive response - loop until we get complete message with newline
     response_data = b''
     while True:
@@ -47,20 +47,20 @@ def send_request(sock: socket.socket, request_type: str, data: str) -> dict:
         response_data += chunk
         if b'\n' in chunk:
             break
-    
+
     response = json.loads(response_data.decode('utf-8').strip())
-    
+
     return response
 
 
 def send_query(sock: socket.socket, query: str) -> dict:
     """
     Send a query to the IPC server and get response.
-    
+
     Args:
         sock: Connected socket
         query: Query string to send
-        
+
     Returns:
         Response dictionary
     """
@@ -70,7 +70,7 @@ def send_query(sock: socket.socket, query: str) -> dict:
 def check_status_indicators(sock: socket.socket):
     """
     Test status checking functionality - simulates what the UI status lights do.
-    
+
     Args:
         sock: Connected socket
     """
@@ -81,7 +81,7 @@ def check_status_indicators(sock: socket.socket):
     print("This test simulates the status checks performed by the UE Dashboard")
     print("status indicator lights to verify backend health.")
     print()
-    
+
     # Track status results for dynamic summary
     status_results = {
         'python_process': 'GREEN',
@@ -91,12 +91,12 @@ def check_status_indicators(sock: socket.socket):
         'query_processing': 'GREEN',
         'document_ingestion': 'GREEN'
     }
-    
+
     # Test 1: Connection test (IPC is already connected)
     print("✓ IPC Connection Status: CONNECTED")
     print("  (Socket connection to port 5555 is active)")
     print()
-    
+
     # Test 2: Ping/health check
     print("Checking backend health...")
     backend_health_ok = False
@@ -116,7 +116,7 @@ def check_status_indicators(sock: socket.socket):
         print(f"  (Error: {e})")
         status_results['backend_health'] = 'RED'
     print()
-    
+
     # Test 3: Query processing capability
     print("Testing query processing capability...")
     query_processing_ok = False
@@ -124,7 +124,7 @@ def check_status_indicators(sock: socket.socket):
         start_time = time.time()
         response = send_query(sock, "What is Unreal Engine?")
         elapsed = (time.time() - start_time) * 1000
-        
+
         if response.get('status') == 'success':
             print("✓ Query Processing Status: READY")
             print(f"  (Successfully processed query in {elapsed:.2f} ms)")
@@ -138,21 +138,21 @@ def check_status_indicators(sock: socket.socket):
         print(f"  (Error: {e})")
         status_results['query_processing'] = 'RED'
     print()
-    
+
     # Update derived statuses based on test results
     if not backend_health_ok:
         status_results['python_bridge'] = 'RED' if status_results['backend_health'] == 'RED' else 'YELLOW'
-    
+
     # Summary of status indicators - dynamically built from test results
     print("-" * 70)
     print("Status Indicator Summary (as would appear in UE Dashboard):")
     print("-" * 70)
-    
+
     # Build status messages based on test results
     bridge_msg = "All systems operational" if backend_health_ok else "Issues detected"
     health_msg = "Responding to requests" if backend_health_ok else "Not responding properly"
     query_msg = "Ready to process queries" if query_processing_ok else "Errors detected"
-    
+
     print(f"● Python Process:        {status_results['python_process']:<6} (Process running)")
     print(f"● IPC Connection:        {status_results['ipc_connection']:<6} (Connected to port 5555)")
     print(f"● Python Bridge Ready:   {status_results['python_bridge']:<6} ({bridge_msg})")
@@ -171,7 +171,7 @@ def main():
     print()
     print("This test simulates the UE Slate UI sending queries to Python backend")
     print()
-    
+
     # Connect to IPC server
     print("Connecting to IPC server on localhost:5555...")
     try:
@@ -184,10 +184,10 @@ def main():
         print("  Make sure the IPC server is running:")
         print("  python3 ipc_server.py")
         return
-    
+
     # Test Status Indicators
     check_status_indicators(sock)
-    
+
     # Test 1: Main test query
     print("-" * 70)
     print("Test 1: Primary Success Criterion Query")
@@ -195,11 +195,11 @@ def main():
     query = "What is Unreal Engine?"
     print(f"Query: {query}")
     print()
-    
+
     start_time = time.time()
     response = send_query(sock, query)
     elapsed = (time.time() - start_time) * 1000  # Convert to ms
-    
+
     print(f"Status: {response['status']}")
     print(f"Processing Time: {response.get('processing_time_ms', 'N/A')} ms")
     print(f"Round-trip Time: {elapsed:.2f} ms")
@@ -209,7 +209,7 @@ def main():
     print(response['result'])
     print("-" * 70)
     print()
-    
+
     # Test 2: Generic query
     print("-" * 70)
     print("Test 2: Generic Query")
@@ -217,11 +217,11 @@ def main():
     query = "How do I create a Blueprint?"
     print(f"Query: {query}")
     print()
-    
+
     start_time = time.time()
     response = send_query(sock, query)
     elapsed = (time.time() - start_time) * 1000
-    
+
     print(f"Status: {response['status']}")
     print(f"Processing Time: {response.get('processing_time_ms', 'N/A')} ms")
     print(f"Round-trip Time: {elapsed:.2f} ms")
@@ -231,12 +231,12 @@ def main():
     print(response['result'][:200] + "...")
     print("-" * 70)
     print()
-    
+
     # Test 3: Multiple rapid queries
     print("-" * 70)
     print("Test 3: Rapid Sequential Queries (simulating UI usage)")
     print("-" * 70)
-    
+
     queries = [
         "What is Blueprint?",
         "How do I optimize performance?",
@@ -244,26 +244,26 @@ def main():
         "How do I use materials?",
         "What is the level editor?"
     ]
-    
+
     total_time = 0
     for i, query in enumerate(queries, 1):
         start_time = time.time()
         response = send_query(sock, query)
         elapsed = (time.time() - start_time) * 1000
         total_time += elapsed
-        
+
         print(f"  {i}. Query: {query[:40]}...")
         print(f"     Status: {response['status']}, Time: {elapsed:.2f} ms")
-    
+
     avg_time = total_time / len(queries)
     print()
     print(f"Average query time: {avg_time:.2f} ms")
     print(f"Total time: {total_time:.2f} ms")
     print()
-    
+
     # Clean up
     sock.close()
-    
+
     # Summary
     print("=" * 70)
     print("Test Summary")

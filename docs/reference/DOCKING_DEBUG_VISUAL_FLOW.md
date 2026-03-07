@@ -20,7 +20,7 @@
     🔵 [DOCKING] Docking prompt now visible
               ↓
     "Press F to Dock" UI appears on screen
-    
+
 
 ┌─────────────────────────────────────────────────────────────┐
 │              PHASE 2: PRESSING F (VALIDATION)               │
@@ -165,7 +165,7 @@
     ❌ STOP - No docking prompt appears
 ```
 
-**Fix**: 
+**Fix**:
 1. Open BP_PlayerShip
 2. Set DockingPromptWidgetClass = WBP_DockingPrompt
 3. Save and test again

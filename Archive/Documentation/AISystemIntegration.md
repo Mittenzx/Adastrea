@@ -593,7 +593,7 @@ Custom Events:
   → If faction claims it:
     - Establish outpost
     - Send notification
-    
+
 - OnMeetAnotherShip:
   → Get other ship's faction
   → Trigger FactionAI.HandleDiplomaticInteraction

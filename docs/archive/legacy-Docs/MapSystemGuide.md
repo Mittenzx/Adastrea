@@ -139,13 +139,13 @@ void AGameMode::PopulateSectorWithAI(ASpaceSectorMap* Sector, int32 ShipCount)
     {
         return;
     }
-    
+
     for (int32 i = 0; i < ShipCount; ++i)
     {
         // Get random position in sector
         FVector SpawnPosition = Sector->GetRandomPositionInSector();
         FRotator SpawnRotation = FRotator::ZeroRotator;
-        
+
         // Spawn AI ship
         AActor* AIShip = GetWorld()->SpawnActor<ASpaceship>(
             AIShipClass,
@@ -153,8 +153,8 @@ void AGameMode::PopulateSectorWithAI(ASpaceSectorMap* Sector, int32 ShipCount)
             SpawnRotation
         );
     }
-    
-    UE_LOG(LogGame, Log, TEXT("Spawned %d ships in sector '%s'"), 
+
+    UE_LOG(LogGame, Log, TEXT("Spawned %d ships in sector '%s'"),
         ShipCount, *Sector->SectorName.ToString());
 }
 ```
@@ -209,19 +209,19 @@ void AMyPlayerController::OpenUniverseMap()
     {
         // Create widget
         UniverseMapWidget = CreateWidget<UUniverseMapWidget>(
-            this, 
+            this,
             UniverseMapWidgetClass
         );
     }
-    
+
     if (UniverseMapWidget)
     {
         UniverseMapWidget->AddToViewport();
         UniverseMapWidget->ToggleUniverseMapVisibility(true);
-        
+
         // Optionally pause game
         SetPause(true);
-        
+
         // Show mouse cursor
         bShowMouseCursor = true;
         SetInputMode(FInputModeGameAndUI());
@@ -281,7 +281,7 @@ TArray<ASpaceSectorMap*> Path = UniverseMapWidget->FindPathBetweenSectors(
 if (Path.Num() > 0)
 {
     UE_LOG(LogTemp, Log, TEXT("Path found with %d sectors"), Path.Num());
-    
+
     // Display path on map or guide player
     for (ASpaceSectorMap* SectorInPath : Path)
     {
@@ -472,7 +472,7 @@ float DistanceToOther = SectorMapWidget->GetDistanceToSector(OtherSector);
    ```cpp
    // Prefer actor count when you don't need the array
    int32 Count = Sector->GetActorCountInSector(); // Fast
-   
+
    // Only get array when needed
    TArray<AActor*> Actors = Sector->GetActorsInSector(); // Slower
    ```
@@ -495,7 +495,7 @@ void AMyGameInstance::SaveUniverseMapData()
 {
     TArray<FString> DiscoveredSectorNames;
     TArray<ASpaceSectorMap*> DiscoveredSectors = UniverseMapWidget->GetDiscoveredSectors();
-    
+
     for (ASpaceSectorMap* Sector : DiscoveredSectors)
     {
         if (Sector)
@@ -503,7 +503,7 @@ void AMyGameInstance::SaveUniverseMapData()
             DiscoveredSectorNames.Add(Sector->SectorName.ToString());
         }
     }
-    
+
     // Save to save game object
     MySaveGame->DiscoveredSectors = DiscoveredSectorNames;
 }
@@ -512,7 +512,7 @@ void AMyGameInstance::SaveUniverseMapData()
 void AMyGameInstance::LoadUniverseMapData()
 {
     TArray<ASpaceSectorMap*> AllSectors = UniverseMapWidget->GetAllSectors();
-    
+
     for (const FString& SectorName : MySaveGame->DiscoveredSectors)
     {
         for (ASpaceSectorMap* Sector : AllSectors)
@@ -542,13 +542,13 @@ for (int32 X = -1; X <= 1; ++X)
             Y * 20000000.0f,
             0.0f
         );
-        
+
         ASpaceSectorMap* Sector = World->SpawnActor<ASpaceSectorMap>(
             ASpaceSectorMap::StaticClass(),
             Position,
             FRotator::ZeroRotator
         );
-        
+
         if (Sector)
         {
             Sector->SectorName = FText::FromString(
@@ -570,13 +570,13 @@ void AMyHUD::CreateUniverseMap()
         GetOwningPlayerController(),
         UniverseMapWidgetClass
     );
-    
+
     if (UniverseMapWidget)
     {
         // Configure
         UniverseMapWidget->bAutoDiscoverVisitedSectors = true;
         UniverseMapWidget->bShowUndiscoveredSectors = false;
-        
+
         // Add to viewport but hidden
         UniverseMapWidget->AddToViewport();
         UniverseMapWidget->ToggleUniverseMapVisibility(false);
@@ -591,7 +591,7 @@ void AMyHUD::CreateUniverseMap()
 void AMyPlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();
-    
+
     // Bind 'M' key to toggle universe map
     InputComponent->BindAction(
         "ToggleUniverseMap",
@@ -607,14 +607,14 @@ void AMyPlayerController::ToggleUniverseMap()
     {
         return;
     }
-    
+
     bool bCurrentlyVisible = UniverseMapWidget->bIsUniverseMapVisible;
     UniverseMapWidget->ToggleUniverseMapVisibility(!bCurrentlyVisible);
-    
+
     // Toggle pause and cursor
     SetPause(!bCurrentlyVisible);
     bShowMouseCursor = !bCurrentlyVisible;
-    
+
     if (!bCurrentlyVisible)
     {
         SetInputMode(FInputModeUIOnly());
@@ -633,10 +633,10 @@ void AMyPlayerController::ToggleUniverseMap()
 void AMySpaceship::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-    
+
     // Check if we've entered a new sector
     ASpaceSectorMap* CurrentSector = FindCurrentSector();
-    
+
     if (CurrentSector && CurrentSector != LastSector)
     {
         // Mark sector as discovered
@@ -644,10 +644,10 @@ void AMySpaceship::Tick(float DeltaTime)
         {
             UniverseMapWidget->MarkSectorDiscovered(CurrentSector);
         }
-        
+
         // Show notification
         ShowSectorEntryNotification(CurrentSector);
-        
+
         LastSector = CurrentSector;
     }
 }
@@ -660,9 +660,9 @@ ASpaceSectorMap* AMySpaceship::FindCurrentSector()
         ASpaceSectorMap::StaticClass(),
         FoundSectors
     );
-    
+
     FVector MyPosition = GetActorLocation();
-    
+
     for (AActor* Actor : FoundSectors)
     {
         ASpaceSectorMap* Sector = Cast<ASpaceSectorMap>(Actor);
@@ -671,7 +671,7 @@ ASpaceSectorMap* AMySpaceship::FindCurrentSector()
             return Sector;
         }
     }
-    
+
     return nullptr;
 }
 ```
@@ -681,7 +681,7 @@ ASpaceSectorMap* AMySpaceship::FindCurrentSector()
 ### Sectors Overlapping
 
 **Problem**: Warning about overlapping sectors in log
-**Solution**: 
+**Solution**:
 - Sectors should be spaced at least SectorSize/2 apart (10,000,000 units)
 - Use grid alignment: multiples of 20,000,000 units
 - Run ValidateSectorConfiguration() to check

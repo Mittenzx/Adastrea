@@ -43,7 +43,7 @@ FAdastreaResult UUEBridge::ExecuteConsoleCommand(const FString& Command)
 	}
 
 	GEngine->Exec(World, *Command);
-	
+
 	FAdastreaResult Result = FAdastreaResult::MakeSuccess(FString::Printf(TEXT("Executed console command: %s"), *Command));
 	Result.AddDetail(TEXT("command"), Command);
 	return Result;
@@ -170,7 +170,7 @@ FAdastreaResult UUEBridge::SaveAsset(const FString& AssetPath)
 		Result.AddDetail(TEXT("asset_path"), AssetPath);
 		return Result;
 	}
-	
+
 	return FAdastreaResult::MakeError(FString::Printf(TEXT("Failed to save asset: %s"), *AssetPath));
 #else
 	return FAdastreaResult::MakeError(TEXT("Editor-only functionality"));
@@ -235,7 +235,7 @@ FAdastreaResult UUEBridge::GetSelectedActors(TArray<FUEActorInfo>& OutActors)
 	}
 
 	TArray<AActor*> SelectedActors = EditorActorSubsystem->GetSelectedLevelActors();
-	
+
 	for (AActor* Actor : SelectedActors)
 	{
 		if (Actor)
@@ -292,12 +292,12 @@ FAdastreaResult UUEBridge::SpawnActor(const FString& ActorClass, FVector Locatio
 		SpawnedActor->SetActorLabel(ActorName);
 	}
 
-	FAdastreaResult Result = FAdastreaResult::MakeSuccess(FString::Printf(TEXT("Spawned actor: %s at location (%s)"), 
+	FAdastreaResult Result = FAdastreaResult::MakeSuccess(FString::Printf(TEXT("Spawned actor: %s at location (%s)"),
 		*SpawnedActor->GetActorLabel(), *Location.ToString()));
 	Result.AddDetail(TEXT("actor_name"), SpawnedActor->GetName());
 	Result.AddDetail(TEXT("actor_label"), SpawnedActor->GetActorLabel());
 	Result.AddDetail(TEXT("actor_class"), ActorClass);
-	
+
 	// Note: actor_name is the internal name (GetName()), actor_label is the display name (GetActorLabel())
 	// DeleteActor() accepts either name for lookup flexibility
 	return Result;
@@ -365,7 +365,7 @@ FAdastreaResult UUEBridge::GetCurrentLevelName()
 	}
 
 	FString LevelName = World->GetName();
-	
+
 	FAdastreaResult Result = FAdastreaResult::MakeSuccess(FString::Printf(TEXT("Current level: %s"), *LevelName));
 	Result.AddDetail(TEXT("level_name"), LevelName);
 	return Result;
@@ -424,7 +424,7 @@ FAdastreaResult UUEBridge::SaveCurrentLevel()
 FAdastreaResult UUEBridge::GetProjectDirectory()
 {
 	FString ProjectDir = FPaths::ProjectDir();
-	
+
 	FAdastreaResult Result = FAdastreaResult::MakeSuccess(FString::Printf(TEXT("Project directory: %s"), *ProjectDir));
 	Result.AddDetail(TEXT("project_dir"), ProjectDir);
 	return Result;
@@ -433,7 +433,7 @@ FAdastreaResult UUEBridge::GetProjectDirectory()
 FAdastreaResult UUEBridge::GetEngineVersion()
 {
 	FString EngineVersion = FEngineVersion::Current().ToString();
-	
+
 	FAdastreaResult Result = FAdastreaResult::MakeSuccess(FString::Printf(TEXT("Engine version: %s"), *EngineVersion));
 	Result.AddDetail(TEXT("engine_version"), EngineVersion);
 	return Result;

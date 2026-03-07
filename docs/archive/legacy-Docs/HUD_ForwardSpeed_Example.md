@@ -17,7 +17,7 @@ In your HUD Widget Blueprint's Designer view:
 1. Add a **Text Block** for displaying speed
    - Name: `SpeedText`
    - Default Text: "Speed: 0"
-   
+
 2. Add a **Progress Bar** for visual speed indicator (optional)
    - Name: `SpeedProgressBar`
    - Fill Color: Green to Red gradient based on speed
@@ -173,7 +173,7 @@ Get Forward Speed → [Speed in cm/s]
    - Play in editor
    - Possess a spaceship
    - Verify the speed display appears
-   
+
 2. **Test Scenarios**:
    - Increase throttle - speed should increase
    - Decrease throttle - speed should decrease

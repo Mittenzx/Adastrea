@@ -9,12 +9,12 @@ ASpaceStation::ASpaceStation()
 {
     PrimaryActorTick.bCanEverTick = false;
     // REMOVED: OwningFaction - faction system removed per Trade Simulator MVP
-    
+
     // Initialize health/integrity values
     CurrentStructuralIntegrity = 10000.0f;  // Stations are much tougher than ships
     MaxStructuralIntegrity = 10000.0f;
     bIsDestroyed = false;
-    
+
     // Default station name
     StationName = FText::FromString(TEXT("Space Station"));
 }
@@ -22,23 +22,23 @@ ASpaceStation::ASpaceStation()
 void ASpaceStation::BeginPlay()
 {
     Super::BeginPlay();
-    
+
     // Discover any modules that were added in the editor (via Child Actor Components or direct placement)
     TArray<AActor*> AttachedActors;
     GetAttachedActors(AttachedActors);
-    
+
     for (AActor* AttachedActor : AttachedActors)
     {
         ASpaceStationModule* ExistingModule = Cast<ASpaceStationModule>(AttachedActor);
         if (ExistingModule && !Modules.Contains(ExistingModule))
         {
             Modules.Add(ExistingModule);
-            UE_LOG(LogAdastreaStations, Log, 
+            UE_LOG(LogAdastreaStations, Log,
                 TEXT("SpaceStation::BeginPlay - Discovered editor-placed module: %s for station %s"),
                 *ExistingModule->GetName(), *GetName());
         }
     }
-    
+
     UE_LOG(LogAdastreaStations, Log,
         TEXT("SpaceStation::BeginPlay - Station %s initialized with %d modules"),
         *GetName(), Modules.Num());
@@ -62,10 +62,10 @@ void ASpaceStation::AddModule(ASpaceStationModule* Module)
 
     // Add module to array
     Modules.Add(Module);
-    
+
     // Attach the module to this station
     Module->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
-    
+
     UE_LOG(LogAdastreaStations, Log, TEXT("SpaceStation::AddModule - Successfully added module to station %s"), *GetName());
 }
 
@@ -88,9 +88,9 @@ bool ASpaceStation::AddModuleAtLocation(ASpaceStationModule* Module, FVector Rel
         Modules.Add(Module);
     }
 
-    UE_LOG(LogAdastreaStations, Log, TEXT("SpaceStation::AddModuleAtLocation - Added module at location (%.2f, %.2f, %.2f)"), 
+    UE_LOG(LogAdastreaStations, Log, TEXT("SpaceStation::AddModuleAtLocation - Added module at location (%.2f, %.2f, %.2f)"),
         RelativeLocation.X, RelativeLocation.Y, RelativeLocation.Z);
-    
+
     return true;
 }
 
@@ -112,7 +112,7 @@ bool ASpaceStation::RemoveModule(ASpaceStationModule* Module)
 
     // Remove from modules array
     Modules.Remove(Module);
-    
+
     // Detach the module from this station
     Module->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 
@@ -139,9 +139,9 @@ bool ASpaceStation::MoveModule(ASpaceStationModule* Module, FVector NewRelativeL
     // Update the module's relative location
     Module->SetActorRelativeLocation(NewRelativeLocation);
 
-    UE_LOG(LogAdastreaStations, Log, TEXT("SpaceStation::MoveModule - Moved module to (%.2f, %.2f, %.2f)"), 
+    UE_LOG(LogAdastreaStations, Log, TEXT("SpaceStation::MoveModule - Moved module to (%.2f, %.2f, %.2f)"),
         NewRelativeLocation.X, NewRelativeLocation.Y, NewRelativeLocation.Z);
-    
+
     return true;
 }
 
@@ -168,7 +168,7 @@ AMarketplaceModule* ASpaceStation::GetMarketplaceModule() const
 TArray<AMarketplaceModule*> ASpaceStation::GetMarketplaceModules() const
 {
     TArray<AMarketplaceModule*> MarketplaceModules;
-    
+
     for (ASpaceStationModule* Module : Modules)
     {
         if (AMarketplaceModule* Marketplace = Cast<AMarketplaceModule>(Module))
@@ -176,7 +176,7 @@ TArray<AMarketplaceModule*> ASpaceStation::GetMarketplaceModules() const
             MarketplaceModules.Add(Marketplace);
         }
     }
-    
+
     return MarketplaceModules;
 }
 
@@ -195,7 +195,7 @@ ADockingBayModule* ASpaceStation::GetDockingBayModule() const
 TArray<ADockingBayModule*> ASpaceStation::GetDockingBayModules() const
 {
     TArray<ADockingBayModule*> DockingBayModules;
-    
+
     for (ASpaceStationModule* Module : Modules)
     {
         if (ADockingBayModule* DockingBay = Cast<ADockingBayModule>(Module))
@@ -203,14 +203,14 @@ TArray<ADockingBayModule*> ASpaceStation::GetDockingBayModules() const
             DockingBayModules.Add(DockingBay);
         }
     }
-    
+
     return DockingBayModules;
 }
 
 int32 ASpaceStation::GetTotalDockingPoints() const
 {
     int32 TotalPoints = 0;
-    
+
     for (ASpaceStationModule* Module : Modules)
     {
         if (ADockingBayModule* DockingBay = Cast<ADockingBayModule>(Module))
@@ -218,14 +218,14 @@ int32 ASpaceStation::GetTotalDockingPoints() const
             TotalPoints += DockingBay->GetDockingPoints().Num();
         }
     }
-    
+
     return TotalPoints;
 }
 
 int32 ASpaceStation::GetTotalDockingCapacity() const
 {
     int32 TotalCapacity = 0;
-    
+
     for (ASpaceStationModule* Module : Modules)
     {
         if (ADockingBayModule* DockingBay = Cast<ADockingBayModule>(Module))
@@ -233,14 +233,14 @@ int32 ASpaceStation::GetTotalDockingCapacity() const
             TotalCapacity += DockingBay->MaxDockedShips;
         }
     }
-    
+
     return TotalCapacity;
 }
 
 int32 ASpaceStation::GetOpenMarketplaceCount() const
 {
     int32 OpenCount = 0;
-    
+
     for (ASpaceStationModule* Module : Modules)
     {
         if (AMarketplaceModule* Marketplace = Cast<AMarketplaceModule>(Module))
@@ -251,14 +251,14 @@ int32 ASpaceStation::GetOpenMarketplaceCount() const
             }
         }
     }
-    
+
     return OpenCount;
 }
 
 int32 ASpaceStation::GetTotalMarketplaceCount() const
 {
     int32 TotalCount = 0;
-    
+
     for (ASpaceStationModule* Module : Modules)
     {
         if (Cast<AMarketplaceModule>(Module))
@@ -266,14 +266,14 @@ int32 ASpaceStation::GetTotalMarketplaceCount() const
             TotalCount++;
         }
     }
-    
+
     return TotalCount;
 }
 
 TArray<FText> ASpaceStation::GetMarketplaceNames() const
 {
     TArray<FText> MarketplaceNames;
-    
+
     for (ASpaceStationModule* Module : Modules)
     {
         if (AMarketplaceModule* Marketplace = Cast<AMarketplaceModule>(Module))
@@ -289,7 +289,7 @@ TArray<FText> ASpaceStation::GetMarketplaceNames() const
             }
         }
     }
-    
+
     return MarketplaceNames;
 }
 
@@ -332,7 +332,7 @@ int32 ASpaceStation::GetModuleCount() const
 float ASpaceStation::GetTotalPowerConsumption() const
 {
     float TotalPower = 0.0f;
-    
+
     for (ASpaceStationModule* Module : Modules)
     {
         if (Module)
@@ -340,14 +340,14 @@ float ASpaceStation::GetTotalPowerConsumption() const
             TotalPower += Module->GetModulePower();
         }
     }
-    
+
     return TotalPower;
 }
 
 float ASpaceStation::GetTotalPowerGeneration() const
 {
     float TotalGeneration = 0.0f;
-    
+
     for (ASpaceStationModule* Module : Modules)
     {
         if (Module && Module->IsGeneratingPower())
@@ -356,7 +356,7 @@ float ASpaceStation::GetTotalPowerGeneration() const
             TotalGeneration += FMath::Abs(Module->GetModulePower());
         }
     }
-    
+
     return TotalGeneration;
 }
 
@@ -364,7 +364,7 @@ float ASpaceStation::GetPowerBalance() const
 {
     float Generation = GetTotalPowerGeneration();
     float Consumption = 0.0f;
-    
+
     // Count only consuming modules (positive power)
     for (ASpaceStationModule* Module : Modules)
     {
@@ -373,7 +373,7 @@ float ASpaceStation::GetPowerBalance() const
             Consumption += Module->GetModulePower();
         }
     }
-    
+
     return Generation - Consumption;
 }
 
@@ -386,7 +386,7 @@ bool ASpaceStation::HasDockingCapability() const
             return true;
         }
     }
-    
+
     return false;
 }
 
@@ -404,7 +404,7 @@ bool ASpaceStation::HasCargoStorage() const
             return true;
         }
     }
-    
+
     return false;
 }
 
@@ -415,9 +415,9 @@ int32 ASpaceStation::GetModuleCountByGroup(EStationModuleGroup ModuleGroup) cons
     {
         return Modules.Num();
     }
-    
+
     int32 Count = 0;
-    
+
     for (ASpaceStationModule* Module : Modules)
     {
         if (Module && Module->GetModuleGroup() == ModuleGroup)
@@ -425,23 +425,23 @@ int32 ASpaceStation::GetModuleCountByGroup(EStationModuleGroup ModuleGroup) cons
             Count++;
         }
     }
-    
+
     return Count;
 }
 
 TArray<ASpaceStationModule*> ASpaceStation::GetModulesByGroup(EStationModuleGroup ModuleGroup) const
 {
     TArray<ASpaceStationModule*> MatchingModules;
-    
+
     // Special case: All group returns all modules
     if (ModuleGroup == EStationModuleGroup::All)
     {
         return Modules;
     }
-    
+
     // Reserve space for better performance
     MatchingModules.Reserve(Modules.Num() / 4);
-    
+
     for (ASpaceStationModule* Module : Modules)
     {
         if (Module && Module->GetModuleGroup() == ModuleGroup)
@@ -449,7 +449,7 @@ TArray<ASpaceStationModule*> ASpaceStation::GetModulesByGroup(EStationModuleGrou
             MatchingModules.Add(Module);
         }
     }
-    
+
     return MatchingModules;
 }
 
@@ -501,7 +501,7 @@ bool ASpaceStation::CanTakeDamage_Implementation() const
     // TODO: Add additional checks for:
     // - Invulnerability (quest protection, safe zones)
     // - Shield coverage
-    
+
     return true;
 }
 
@@ -555,12 +555,12 @@ int32 ASpaceStation::GetTargetPriority_Implementation() const
     // - Size (stations are important)
     // - Module count (more modules = higher value)
     // - Faction relationship
-    
+
     int32 BasePriority = 75;  // High priority by default
-    
+
     // Increase priority based on module count
     int32 ModulePriority = FMath::Min(Modules.Num() / 2, 20);  // Up to +20 for large stations
-    
+
     return FMath::Clamp(BasePriority + ModulePriority, 0, 100);
 }
 
@@ -604,7 +604,7 @@ bool ASpaceStation::IsHostileToActor_Implementation(AActor* Observer) const
     // REMOVED: Faction-based hostility checks
     // MVP Trade Simulator doesn't have combat or faction relationships
     // All stations are neutral for trading purposes
-    
+
     // Default to non-hostile
     return false;
 }

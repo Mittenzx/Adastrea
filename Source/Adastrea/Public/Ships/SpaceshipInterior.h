@@ -6,10 +6,10 @@
 
 /**
  * Represents the walkable interior space of a spaceship
- * 
+ *
  * This actor defines the physical interior that players can explore when boarding
  * a ship. It manages entry points and interior layout.
- * 
+ *
  * Usage:
  * - Place this actor in your level or spawn it at runtime
  * - Configure entry location and rotation

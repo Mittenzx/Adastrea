@@ -323,10 +323,10 @@ Before marking a guide as "Updated", verify:
 
 ---
 
-**Questions about Blueprint documentation?**  
+**Questions about Blueprint documentation?**
 See the [Blueprint Guide Standards](../reference/BLUEPRINT_GUIDE_STANDARDS.md) or open an issue.
 
 ---
 
-**Last Updated**: 2026-01-03  
+**Last Updated**: 2026-01-03
 **Maintained by**: Adastrea Development Team

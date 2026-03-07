@@ -1,8 +1,8 @@
 # Agricultural Market Example Blueprint
 
-**Type**: Example Configuration  
-**Purpose**: Ready-to-use agricultural marketplace setup  
-**Complexity**: Beginner  
+**Type**: Example Configuration
+**Purpose**: Ready-to-use agricultural marketplace setup
+**Complexity**: Beginner
 **Time to Implement**: 5-10 minutes
 
 ---
@@ -228,7 +228,7 @@ Branch: Event.EventID == "agricultural_drought"?
 ## Common Issues & Fixes
 
 ### Issue: "No items showing in marketplace"
-**Fix**: 
+**Fix**:
 1. Check MarketDataAsset is assigned to MarketplaceModule
 2. Verify Inventory array has items
 3. Ensure `bInStock = true` for inventory entries
@@ -270,6 +270,6 @@ Branch: Event.EventID == "agricultural_drought"?
 
 ---
 
-**Created**: 2026-01-17  
-**Updated**: 2026-01-17  
+**Created**: 2026-01-17
+**Updated**: 2026-01-17
 **Version**: 1.0 (Trade Simulator MVP)

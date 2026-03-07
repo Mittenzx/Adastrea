@@ -17,7 +17,7 @@ class UEconomyManager;
 
 /**
  * Trading Interface Widget for MVP Trade Simulator
- * 
+ *
  * This trading widget provides essential features for the MVP:
  * - View market inventory with prices
  * - Buy/Sell toggle interface
@@ -25,13 +25,13 @@ class UEconomyManager;
  * - Player credits and cargo space tracking
  * - Profit calculation
  * - Real-time price updates from EconomyManager
- * 
+ *
  * Usage:
  * 1. Create a Blueprint Widget based on this class (WBP_TradingUI)
  * 2. Design the UI in UMG with text blocks, buttons, and lists
  * 3. Call OpenMarket to initiate trading at a station
  * 4. Widget automatically connects to player's trader and cargo components
- * 
+ *
  * MVP Requirements Met:
  * - Buy low, sell high core loop
  * - Clear price comparison

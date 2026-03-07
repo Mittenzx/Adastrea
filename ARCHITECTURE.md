@@ -1,7 +1,7 @@
 # Adastrea Architecture - Trade Simulator MVP
 
-**Current Phase**: Trade Simulator MVP (Week 3 of 12)  
-**Last Updated**: January 21, 2026  
+**Current Phase**: Trade Simulator MVP (Week 3 of 12)
+**Last Updated**: January 21, 2026
 **Status**: Hardcoded Prototype Development
 
 ---
@@ -118,37 +118,37 @@ Adastrea is currently building a **space trading game MVP** to validate core gam
 ```
 1. Player flies to Station A
    └─▶ Ship movement component
-   
+
 2. Player approaches station
    └─▶ Docking trigger fires
    └─▶ "Press F to dock" prompt appears
-   
+
 3. Player presses F
    └─▶ Ship movement disabled
    └─▶ Trading UI opens
    └─▶ Market inventory loaded
-   
+
 4. Player buys cargo
    └─▶ Credits deducted
    └─▶ Cargo added to ship
    └─▶ Station supply decreased
    └─▶ Price increases slightly
-   
+
 5. Player closes UI (undocks)
    └─▶ Ship movement enabled
    └─▶ Player flies to Station B
-   
+
 6. Player docks at Station B
    └─▶ Trading UI opens
    └─▶ Different prices displayed
-   
+
 7. Player sells cargo
    └─▶ Credits added
    └─▶ Cargo removed from ship
    └─▶ Station supply increased
    └─▶ Price decreases slightly
    └─▶ Profit calculated and displayed
-   
+
 8. Repeat with better margins
 ```
 
@@ -179,7 +179,7 @@ Store New Price
 **Items** (hardcoded):
 ```
 Water:    Station A: 10 credits  |  Station B: 15 credits
-Food:     Station A: 25 credits  |  Station B: 35 credits  
+Food:     Station A: 25 credits  |  Station B: 35 credits
 Fuel:     Station A: 50 credits  |  Station B: 65 credits
 ```
 
@@ -356,6 +356,6 @@ If MVP succeeds (75%+ fun rating, funding secured), expand to:
 
 ---
 
-**Last Updated**: January 21, 2026  
-**Version**: MVP 1.0  
+**Last Updated**: January 21, 2026
+**Version**: MVP 1.0
 **Phase**: Week 3 of 12 - Trade Simulator MVP

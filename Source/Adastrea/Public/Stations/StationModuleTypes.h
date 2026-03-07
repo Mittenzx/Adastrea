@@ -8,14 +8,14 @@
 /**
  * Module classification for space station organization
  * Groups modules by primary function for easy filtering and management
- * 
+ *
  * MVP SCOPE (Trade Simulator):
  * - Docking: Required for trading interface
  * - Storage: Cargo and goods management
  * - Habitation: Basic station functionality
  * - Public: Market and trading areas
  * - Connection: Station navigation
- * 
+ *
  * POST-MVP SCOPE:
  * - Defence: Weapons and shields (combat system)
  * - Power/Processing: Advanced station mechanics

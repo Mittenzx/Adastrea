@@ -182,7 +182,7 @@ enum class EModulePlacementResult : uint8
    ```cpp
    // To save changes:
    EditorManager->Save();
-   
+
    // To cancel and revert:
    EditorManager->Cancel();
    ```

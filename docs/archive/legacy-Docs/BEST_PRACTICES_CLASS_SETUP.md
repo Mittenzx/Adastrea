@@ -309,17 +309,17 @@ Every class should have a comprehensive header comment:
 ```cpp
 /**
  * Brief one-line description of the class
- * 
+ *
  * Detailed description explaining:
  * - What this class does
  * - When to use it
  * - How it integrates with other systems
- * 
+ *
  * Usage Example:
  * - Create a Blueprint based on this class
  * - Configure properties in editor
  * - Use Blueprint functions to interact
- * 
+ *
  * See Also: RelatedClass, RelatedSystem
  */
 UCLASS(BlueprintType)
@@ -337,12 +337,12 @@ Document all public and protected functions:
 ```cpp
 /**
  * Calculate the overall combat effectiveness rating
- * 
+ *
  * This function combines armor, shields, weapons, and point defense
  * into a single 0-100 rating value.
- * 
+ *
  * @return Combat effectiveness rating (0-100)
- * 
+ *
  * @see GetMobilityRating, GetUtilityRating
  */
 UFUNCTION(BlueprintCallable, Category="Stats")
@@ -350,7 +350,7 @@ float GetCombatRating() const;
 
 /**
  * Check if ship is suitable for a specific role
- * 
+ *
  * @param Role The role to check (e.g., "Combat", "Trade", "Exploration")
  * @return True if ship is well-suited for this role
  */
@@ -484,12 +484,12 @@ public:
     /**
      * Called when something happens
      * Override in Blueprint to customize behavior
-     * 
+     *
      * @param Amount The amount of change
      */
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Events")
     void OnSomethingHappened(float Amount);
-    
+
     // C++ implementation (can be called from Blueprint override)
     virtual void OnSomethingHappened_Implementation(float Amount);
 };
@@ -522,5 +522,5 @@ When creating a new class, verify:
 
 ---
 
-**Last Updated**: 2025-01-05  
+**Last Updated**: 2025-01-05
 **Maintained by**: Adastrea Development Team

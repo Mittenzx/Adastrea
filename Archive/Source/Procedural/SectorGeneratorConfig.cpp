@@ -21,12 +21,12 @@ USectorGeneratorConfig::USectorGeneratorConfig()
 int32 USectorGeneratorConfig::GetTotalObjectCount() const
 {
 	int32 TotalCount = 0;
-	
+
 	for (const FSpaceObjectDefinition& Definition : ObjectDefinitions)
 	{
 		TotalCount += FMath::RoundToInt(Definition.MaxCount * DensityMultiplier);
 	}
-	
+
 	return FMath::Max(0, TotalCount);
 }
 
@@ -54,7 +54,7 @@ bool USectorGeneratorConfig::ValidateConfiguration(TArray<FText>& OutErrors) con
 
 		if (Definition.MinCount > Definition.MaxCount)
 		{
-			OutErrors.Add(FText::FromString(FString::Printf(TEXT("Object definition %d: MinCount (%d) is greater than MaxCount (%d)."), 
+			OutErrors.Add(FText::FromString(FString::Printf(TEXT("Object definition %d: MinCount (%d) is greater than MaxCount (%d)."),
 				i, Definition.MinCount, Definition.MaxCount)));
 			bIsValid = false;
 		}
@@ -125,7 +125,7 @@ bool USectorGeneratorConfig::ValidateConfiguration(TArray<FText>& OutErrors) con
 TArray<FSpaceObjectDefinition> USectorGeneratorConfig::GetObjectDefinitionsByType(ESpaceObjectType ObjectType) const
 {
 	TArray<FSpaceObjectDefinition> FilteredDefinitions;
-	
+
 	for (const FSpaceObjectDefinition& Definition : ObjectDefinitions)
 	{
 		if (Definition.ObjectType == ObjectType)
@@ -133,7 +133,7 @@ TArray<FSpaceObjectDefinition> USectorGeneratorConfig::GetObjectDefinitionsByTyp
 			FilteredDefinitions.Add(Definition);
 		}
 	}
-	
+
 	return FilteredDefinitions;
 }
 

@@ -1,11 +1,11 @@
 # SpaceStation Module Configuration Guide
 
-**Created**: January 10, 2026  
-**Updated**: January 18, 2026  
+**Created**: January 10, 2026
+**Updated**: January 18, 2026
 **Related Classes**: `ASpaceStation`, `ASpaceStationModule`
 
 > **⚠️ This guide is deprecated.** The `DefaultModuleClasses` array has been removed in favor of the **Child Actor Components** method, which provides visual, design-time editing of station modules.
-> 
+>
 > **Please use the Child Actor Components method instead:**
 > - See [Module Documentation Index](../modules/README.md) for individual module setup guides
 > - See [TRADING_AND_DOCKING_COMPLETE_GUIDE.md](../mvp/TRADING_AND_DOCKING_COMPLETE_GUIDE.md#step-2-add-components) for complete station setup

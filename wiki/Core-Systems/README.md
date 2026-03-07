@@ -50,31 +50,31 @@ Adastrea features 22+ major game systems, all implemented with Blueprint-friendl
 
 ### "I want to create..."
 
-**...a new ship type**  
-→ [Spaceship System Guide](Spaceship-System.md)  
+**...a new ship type**
+→ [Spaceship System Guide](Spaceship-System.md)
 → Templates: `Assets/SpaceshipTemplates/`
 
-**...a new faction**  
-→ [Faction System Guide](Faction-System.md)  
+**...a new faction**
+→ [Faction System Guide](Faction-System.md)
 → Templates: `Assets/FactionAITemplates/`
 
-**...crew members**  
-→ [Personnel System Guide](Personnel-System.md)  
+**...crew members**
+→ [Personnel System Guide](Personnel-System.md)
 → Templates: `Assets/PersonnelTemplates/`
 
-**...trade goods**  
-→ [Trading System Guide](Trading-System.md)  
+**...trade goods**
+→ [Trading System Guide](Trading-System.md)
 → Templates: `Assets/TradingTemplates/`
 
-**...a guild/alliance**  
-→ [Way System Guide](Way-System.md)  
+**...a guild/alliance**
+→ [Way System Guide](Way-System.md)
 → Templates: `Assets/WayNetworkTemplates/`
 
-**...weapons/combat**  
-→ [Combat System Guide](Combat-System.md)  
+**...weapons/combat**
+→ [Combat System Guide](Combat-System.md)
 → Templates: `Assets/CombatTemplates/`
 
-**...quests/missions**  
+**...quests/missions**
 → Quest System Guide (see repository `Assets/QuestSystemGuide.md`)
 
 ## System Documentation Structure
@@ -140,11 +140,11 @@ All systems use **Data Assets** for configuration:
 
 All core systems are **fully implemented** and **production-ready**:
 
-✅ **Implemented** (22 systems)  
-✅ **Blueprint Exposed** (all systems)  
-✅ **Data Asset Support** (all systems)  
-✅ **Documented** (all systems)  
-✅ **Template Files** (all major systems)  
+✅ **Implemented** (22 systems)
+✅ **Blueprint Exposed** (all systems)
+✅ **Data Asset Support** (all systems)
+✅ **Documented** (all systems)
+✅ **Template Files** (all major systems)
 
 See [Project Roadmap](../Developer-Guides/Roadmap.md) for planned features.
 
@@ -217,10 +217,10 @@ Some systems depend on others:
 
 ## Next Steps
 
-📖 **Learn a System**: Pick one from the list above  
-🎯 **Create Content**: Follow the system's workflow guide  
-🔧 **Extend Systems**: Add custom features via Blueprint  
-🤝 **Contribute**: Share your improvements  
+📖 **Learn a System**: Pick one from the list above
+🎯 **Create Content**: Follow the system's workflow guide
+🔧 **Extend Systems**: Add custom features via Blueprint
+🤝 **Contribute**: Share your improvements
 
 ## Getting Help
 

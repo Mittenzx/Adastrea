@@ -13,9 +13,9 @@ Species: "Human"
 Nationality: "Solar Federation"
 
 Biography: |
-  Dr. Alex Rivera joined the exploration corps right out of academy, driven by an 
-  insatiable curiosity about the unknown. They've made several notable discoveries 
-  in xenobiology and always volunteer for away missions. Known for asking "what if?" 
+  Dr. Alex Rivera joined the exploration corps right out of academy, driven by an
+  insatiable curiosity about the unknown. They've made several notable discoveries
+  in xenobiology and always volunteer for away missions. Known for asking "what if?"
   at every opportunity.
 
 Tags:
@@ -129,8 +129,8 @@ Relationships:
 # ====================
 PersonalityType: "INTP - The Thinker"
 PersonalityDescription: |
-  Intensely curious and always seeking to understand the 'why' behind everything. 
-  Can get lost in research for hours. Sometimes forgets to eat when engrossed in 
+  Intensely curious and always seeking to understand the 'why' behind everything.
+  Can get lost in research for hours. Sometimes forgets to eat when engrossed in
   a fascinating discovery. Excellent at connecting disparate pieces of information.
 
 Traits:

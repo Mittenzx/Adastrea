@@ -96,7 +96,7 @@ bool UTutorialManagerSubsystem::PreviousStep()
 	CurrentProgress.CurrentStepIndex--;
 	CurrentProgress.TimeOnCurrentStep = 0.0f;
 
-	OnStepChanged(CurrentProgress.CurrentStepIndex, 
+	OnStepChanged(CurrentProgress.CurrentStepIndex,
 		ActiveTutorialSteps[CurrentProgress.CurrentStepIndex]);
 	return true;
 }
@@ -144,7 +144,7 @@ float UTutorialManagerSubsystem::GetTutorialProgress() const
 		return 0.0f;
 	}
 
-	return (static_cast<float>(CurrentProgress.CurrentStepIndex) / 
+	return (static_cast<float>(CurrentProgress.CurrentStepIndex) /
 		static_cast<float>(ActiveTutorialSteps.Num())) * 100.0f;
 }
 

@@ -27,7 +27,7 @@
 void SSettingsDialog::Construct(const FArguments& InArgs, TSharedPtr<SWindow> InParentWindow)
 {
 	ParentWindow = InParentWindow;
-	
+
 	// Load existing settings
 	LoadSettings();
 
@@ -109,7 +109,7 @@ TSharedRef<SWidget> SSettingsDialog::CreateAPIKeysSection()
 	FString EnvFilePath = FPaths::Combine(FPaths::ProjectDir(), TEXT(".env"));
 	FString EnvExamplePath = FPaths::Combine(FPaths::ProjectDir(), TEXT(".env.example"));
 	bool bEnvFileExists = FPaths::FileExists(EnvFilePath);
-	
+
 	return SNew(SBorder)
 		.BorderImage(FAppStyle::GetBrush("ToolPanel.GroupBorder"))
 		.Padding(15.0f)
@@ -136,7 +136,7 @@ TSharedRef<SWidget> SSettingsDialog::CreateAPIKeysSection()
 				.Padding(10.0f)
 				[
 					SNew(SVerticalBox)
-					
+
 					+ SVerticalBox::Slot()
 					.AutoHeight()
 					.Padding(0.0f, 0.0f, 0.0f, 5.0f)
@@ -145,7 +145,7 @@ TSharedRef<SWidget> SSettingsDialog::CreateAPIKeysSection()
 						.Text(LOCTEXT("EnvInstructions", "📝 API keys are configured via .env file"))
 						.Font(FCoreStyle::GetDefaultFontStyle("Bold", 9))
 					]
-					
+
 					+ SVerticalBox::Slot()
 					.AutoHeight()
 					[
@@ -293,7 +293,7 @@ TSharedRef<SWidget> SSettingsDialog::CreateAPIKeysSection()
 						}
 						else
 						{
-							FMessageDialog::Open(EAppMsgType::Ok, 
+							FMessageDialog::Open(EAppMsgType::Ok,
 								FText::FromString(TEXT(".env file not found. Please copy .env.example to .env first.")));
 						}
 						return FReply::Handled();
@@ -464,12 +464,12 @@ TSharedRef<SWidget> SSettingsDialog::CreateButtonSection()
 FReply SSettingsDialog::OnSaveClicked()
 {
 	SaveSettings();
-	
+
 	if (TSharedPtr<SWindow> Window = ParentWindow.Pin())
 	{
 		Window->RequestDestroyWindow();
 	}
-	
+
 	return FReply::Handled();
 }
 
@@ -479,7 +479,7 @@ FReply SSettingsDialog::OnCancelClicked()
 	{
 		Window->RequestDestroyWindow();
 	}
-	
+
 	return FReply::Handled();
 }
 
@@ -514,7 +514,7 @@ void SSettingsDialog::LoadSettings()
 	// Note: API keys are now configured via .env file, not stored in config.ini
 	LLMProvider = LoadConfigValue(TEXT("LLMProvider"), TEXT("gemini"));
 	EmbeddingProvider = LoadConfigValue(TEXT("EmbeddingProvider"), TEXT("huggingface"));
-	
+
 	FString FontSizeStr = LoadConfigValue(TEXT("DefaultFontSize"), TEXT("10"));
 	DefaultFontSize = FCString::Atoi(*FontSizeStr);
 	// Validate font size is within allowed range
@@ -522,13 +522,13 @@ void SSettingsDialog::LoadSettings()
 	{
 		DefaultFontSize = 10; // Reset to default if out of bounds or invalid
 	}
-	
+
 	FString AutoSaveStr = LoadConfigValue(TEXT("AutoSaveSettings"), TEXT("true"));
 	bAutoSaveSettings = AutoSaveStr == TEXT("true");
-	
+
 	FString ShowTimestampsStr = LoadConfigValue(TEXT("ShowTimestamps"), TEXT("true"));
 	bShowTimestamps = ShowTimestampsStr == TEXT("true");
-	
+
 	// Initialize API key strings as empty (they're read from .env by Python backend)
 	GeminiAPIKey = TEXT("");
 	OpenAIAPIKey = TEXT("");
@@ -548,21 +548,21 @@ void SSettingsDialog::SaveSettings()
 TMap<FString, FString> SSettingsDialog::LoadConfigMap(const FString& ConfigPath)
 {
 	TMap<FString, FString> ConfigMap;
-	
+
 	if (!FPaths::FileExists(ConfigPath))
 	{
 		return ConfigMap;
 	}
-	
+
 	FString FileContent;
 	if (!FFileHelper::LoadFileToString(FileContent, *ConfigPath))
 	{
 		return ConfigMap;
 	}
-	
+
 	TArray<FString> Lines;
 	FileContent.ParseIntoArrayLines(Lines);
-	
+
 	for (const FString& Line : Lines)
 	{
 		FString TrimmedLine = Line.TrimStartAndEnd();
@@ -570,14 +570,14 @@ TMap<FString, FString> SSettingsDialog::LoadConfigMap(const FString& ConfigPath)
 		{
 			continue;
 		}
-		
+
 		FString LineKey, LineValue;
 		if (TrimmedLine.Split(TEXT("="), &LineKey, &LineValue))
 		{
 			ConfigMap.Add(LineKey.TrimStartAndEnd(), LineValue.TrimStartAndEnd());
 		}
 	}
-	
+
 	return ConfigMap;
 }
 
@@ -585,7 +585,7 @@ FString SSettingsDialog::LoadConfigValue(const FString& Key, const FString& Defa
 {
 	FString ConfigPath = FPaths::ProjectSavedDir() / TEXT("AdastreaDirector") / TEXT("config.ini");
 	TMap<FString, FString> ConfigMap = LoadConfigMap(ConfigPath);
-	
+
 	const FString* Value = ConfigMap.Find(Key);
 	return Value ? *Value : DefaultValue;
 }
@@ -595,26 +595,26 @@ void SSettingsDialog::SaveConfigValue(const FString& Key, const FString& Value)
 	// Get config file path
 	FString ConfigPath = FPaths::ProjectSavedDir() / TEXT("AdastreaDirector") / TEXT("config.ini");
 	FString ConfigDir = FPaths::GetPath(ConfigPath);
-	
+
 	// Create directory if it doesn't exist
 	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
 	if (!PlatformFile.DirectoryExists(*ConfigDir))
 	{
 		PlatformFile.CreateDirectoryTree(*ConfigDir);
 	}
-	
+
 	// Load existing content using helper
 	TMap<FString, FString> ConfigMap = LoadConfigMap(ConfigPath);
-	
+
 	// Update or add the key
 	ConfigMap.FindOrAdd(Key) = Value;
-	
+
 	// Write back to file
 	FString NewContent;
 	NewContent += TEXT("# Adastrea Director Configuration\n");
 	NewContent += TEXT("# Auto-generated file\n");
 	NewContent += TEXT("# Note: Manual edits to this file may be overwritten when saving from the UI\n\n");
-	
+
 	// Sort keys for deterministic output
 	TArray<FString> SortedKeys;
 	ConfigMap.GetKeys(SortedKeys);
@@ -623,7 +623,7 @@ void SSettingsDialog::SaveConfigValue(const FString& Key, const FString& Value)
 	{
 		NewContent += FString::Printf(TEXT("%s=%s\n"), *SortedKey, *ConfigMap[SortedKey]);
 	}
-	
+
 	if (!FFileHelper::SaveStringToFile(NewContent, *ConfigPath))
 	{
 		UE_LOG(LogAdastreaDirectorEditor, Error, TEXT("Failed to save settings to: %s"), *ConfigPath);

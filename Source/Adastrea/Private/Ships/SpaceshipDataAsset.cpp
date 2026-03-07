@@ -89,13 +89,13 @@ float USpaceshipDataAsset::CalculateCombatRatingInternal() const
     static constexpr float kShieldDivisor = 1000.0f;
     static constexpr float kWeaponDivisor = 500.0f;
     static constexpr float kPDMultiplier = 10.0f;
-    
+
     // Weight factors (must sum to 1.0)
     static constexpr float kArmorWeight = 0.2f;
     static constexpr float kShieldWeight = 0.3f;
     static constexpr float kWeaponWeight = 0.4f;
     static constexpr float kPDWeight = 0.1f;
-    
+
     static constexpr float kMinRating = 0.0f;
     static constexpr float kMaxRating = 100.0f;
 
@@ -106,11 +106,11 @@ float USpaceshipDataAsset::CalculateCombatRatingInternal() const
     const float PDScore = FMath::Clamp(PointDefenseRating * kPDMultiplier, kMinRating, kMaxRating);
 
     // Calculate weighted average
-    const float CombatRating = (ArmorScore * kArmorWeight) + 
-                               (ShieldScore * kShieldWeight) + 
-                               (WeaponScore * kWeaponWeight) + 
+    const float CombatRating = (ArmorScore * kArmorWeight) +
+                               (ShieldScore * kShieldWeight) +
+                               (WeaponScore * kWeaponWeight) +
                                (PDScore * kPDWeight);
-    
+
     return FMath::Clamp(CombatRating, kMinRating, kMaxRating);
 }
 
@@ -131,13 +131,13 @@ float USpaceshipDataAsset::CalculateMobilityRatingInternal() const
     static constexpr float kAccelDivisor = 10.0f;
     static constexpr float kManeuverMultiplier = 10.0f;
     static constexpr float kJumpMultiplier = 10.0f;
-    
+
     // Weight factors (must sum to 1.0)
     static constexpr float kSpeedWeight = 0.3f;
     static constexpr float kAccelWeight = 0.2f;
     static constexpr float kManeuverWeight = 0.3f;
     static constexpr float kJumpWeight = 0.2f;
-    
+
     static constexpr float kMinRating = 0.0f;
     static constexpr float kMaxRating = 100.0f;
 
@@ -148,11 +148,11 @@ float USpaceshipDataAsset::CalculateMobilityRatingInternal() const
     const float JumpScore = FMath::Clamp(JumpRange * kJumpMultiplier, kMinRating, kMaxRating);
 
     // Calculate weighted average
-    const float MobilityRating = (SpeedScore * kSpeedWeight) + 
-                                 (AccelScore * kAccelWeight) + 
-                                 (ManeuverScore * kManeuverWeight) + 
+    const float MobilityRating = (SpeedScore * kSpeedWeight) +
+                                 (AccelScore * kAccelWeight) +
+                                 (ManeuverScore * kManeuverWeight) +
                                  (JumpScore * kJumpWeight);
-    
+
     return FMath::Clamp(MobilityRating, kMinRating, kMaxRating);
 }
 
@@ -172,30 +172,30 @@ float USpaceshipDataAsset::CalculateUtilityRatingInternal() const
     static constexpr float kSensorRangeDivisor = 1000.0f;
     static constexpr float kSensorResolutionMultiplier = 5.0f;
     static constexpr float kSystemRatingMultiplier = 10.0f;
-    
+
     // Weight factors (must sum to 1.0)
     static constexpr float kSensorWeight = 0.4f;
     static constexpr float kRepairWeight = 0.2f;
     static constexpr float kScienceWeight = 0.2f;
     static constexpr float kMedicalWeight = 0.2f;
-    
+
     static constexpr float kMinRating = 0.0f;
     static constexpr float kMaxRating = 100.0f;
 
     // Calculate utility based on sensors, repair, science, and medical systems
-    const float SensorScore = FMath::Clamp((SensorRange / kSensorRangeDivisor) + 
-                                          (SensorResolution * kSensorResolutionMultiplier), 
+    const float SensorScore = FMath::Clamp((SensorRange / kSensorRangeDivisor) +
+                                          (SensorResolution * kSensorResolutionMultiplier),
                                           kMinRating, kMaxRating);
     const float RepairScore = FMath::Clamp(RepairSystemRating * kSystemRatingMultiplier, kMinRating, kMaxRating);
     const float ScienceScore = FMath::Clamp(ScienceRating * kSystemRatingMultiplier, kMinRating, kMaxRating);
     const float MedicalScore = FMath::Clamp(MedicalRating * kSystemRatingMultiplier, kMinRating, kMaxRating);
 
     // Calculate weighted average
-    const float UtilityRating = (SensorScore * kSensorWeight) + 
-                                (RepairScore * kRepairWeight) + 
-                                (ScienceScore * kScienceWeight) + 
+    const float UtilityRating = (SensorScore * kSensorWeight) +
+                                (RepairScore * kRepairWeight) +
+                                (ScienceScore * kScienceWeight) +
                                 (MedicalScore * kMedicalWeight);
-    
+
     return FMath::Clamp(UtilityRating, kMinRating, kMaxRating);
 }
 
@@ -258,13 +258,13 @@ bool USpaceshipDataAsset::IsSuitableForRole(const FString& Role) const
     // Exploration/Scout roles
     else if (RoleName == ExplorationRole || RoleName == ScoutRole)
     {
-        return (SensorRange >= kSensorRangeExplorationThreshold && 
+        return (SensorRange >= kSensorRangeExplorationThreshold &&
                 JumpRange >= kJumpRangeExplorationThreshold);
     }
     // Mining role
     else if (RoleName == MiningRole)
     {
-        return (MiningRating >= kMiningRatingThreshold && 
+        return (MiningRating >= kMiningRatingThreshold &&
                 CargoCapacity >= kCargoCapacityMiningThreshold);
     }
     // Medical/Hospital roles
@@ -290,8 +290,8 @@ bool USpaceshipDataAsset::IsSuitableForRole(const FString& Role) const
     // Command/Flagship roles
     else if (RoleName == CommandRole || RoleName == FlagshipRole)
     {
-        return (DiplomacyRating >= kDiplomacyRatingThreshold && 
-                MaxCrew >= kMaxCrewCommandThreshold && 
+        return (DiplomacyRating >= kDiplomacyRatingThreshold &&
+                MaxCrew >= kMaxCrewCommandThreshold &&
                 GetCombatRating() >= kCombatRatingCommandThreshold);
     }
 
@@ -350,7 +350,7 @@ float USpaceshipDataAsset::GetOperationalCost() const
     const float CrewCost = CrewRequired * kCreditsPerCrewPerDay;
     const float MaintenanceCost = HullStrength * kHullMaintenanceMultiplier * MaintenanceLevel;
     const float PowerCost = PowerCapacity * kPowerUpkeepMultiplier;
-    
+
     return CrewCost + MaintenanceCost + PowerCost;
 }
 
@@ -369,9 +369,9 @@ void USpaceshipDataAsset::UpdateRatingsCache() const
     CachedCombatRating = CalculateCombatRatingInternal();
     CachedMobilityRating = CalculateMobilityRatingInternal();
     CachedUtilityRating = CalculateUtilityRatingInternal();
-    
+
     bRatingsCacheDirty = false;
-    
+
     UE_LOG(LogAdastrea, Verbose, TEXT("SpaceshipDataAsset: Updated ratings cache for %s (Combat: %.1f, Mobility: %.1f, Utility: %.1f)"),
         *ShipName.ToString(), CachedCombatRating, CachedMobilityRating, CachedUtilityRating);
 }
@@ -473,7 +473,7 @@ EDataValidationResult USpaceshipDataAsset::IsDataValid(FDataValidationContext& C
 void USpaceshipDataAsset::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
     Super::PostEditChangeProperty(PropertyChangedEvent);
-    
+
     // Invalidate cache when any property changes in editor
     if (PropertyChangedEvent.Property)
     {
@@ -483,7 +483,7 @@ void USpaceshipDataAsset::PostEditChangeProperty(FPropertyChangedEvent& Property
         UE_LOG(LogAdastrea, Verbose, TEXT("SpaceshipDataAsset: Property %s changed, invalidating ratings cache for %s"),
             *PropertyName.ToString(), *ShipName.ToString());
     }
-    
+
     // Validate properties to catch configuration errors at edit-time
     // Helps avoid invalid ship configurations and improves designer experience
     ValidateShipProperties();
@@ -493,23 +493,23 @@ void USpaceshipDataAsset::ValidateShipProperties()
 {
     // Use the DataAssetValidation utilities for consistent validation
     // More comprehensive validation is handled by IsDataValid()
-    
+
     // Validate and auto-correct hull strength to be positive
     if (HullStrength <= 0.0f)
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("SpaceshipDataAsset [%s]: HullStrength (%.2f) should be positive! Auto-correcting to 1.0."), 
+        UE_LOG(LogAdastrea, Warning, TEXT("SpaceshipDataAsset [%s]: HullStrength (%.2f) should be positive! Auto-correcting to 1.0."),
             *ShipName.ToString(), HullStrength);
         HullStrength = 1.0f;
     }
-    
+
     // Validate and auto-correct cargo capacity to be non-negative
     if (CargoCapacity < 0.0f)
     {
-        UE_LOG(LogAdastrea, Warning, TEXT("SpaceshipDataAsset [%s]: CargoCapacity (%.2f) cannot be negative! Auto-correcting to 0.0."), 
+        UE_LOG(LogAdastrea, Warning, TEXT("SpaceshipDataAsset [%s]: CargoCapacity (%.2f) cannot be negative! Auto-correcting to 0.0."),
             *ShipName.ToString(), CargoCapacity);
         CargoCapacity = 0.0f;
     }
-    
+
     // Validate ship name is set and provide default if empty
     if (ShipName.IsEmpty())
     {

@@ -64,7 +64,7 @@ Modifiers: None
 Value Type: Axis2D (Vector 2D)
 Consume Input: Yes
 Triggers: None (continuous)
-Modifiers: 
+Modifiers:
   - Swizzle Input Axis Values (if Y-axis invert needed)
   - Scalar (for mouse sensitivity)
 ```
@@ -73,7 +73,7 @@ Modifiers:
 ```
 Value Type: Digital (Bool)
 Consume Input: Yes
-Triggers: 
+Triggers:
   - Pressed
   - Released
 Modifiers: None
@@ -135,7 +135,7 @@ Gamepad Left Thumbstick:
 ```
 Mouse XY 2D-Axis:
   - Action: IA_Look
-  - Modifiers: 
+  - Modifiers:
     * Scalar (X: 0.5, Y: 0.5) [Sensitivity]
   - Scale: 1.0
 
@@ -239,17 +239,17 @@ Event BeginPlay
 void AMyPlayerController::BeginPlay()
 {
     Super::BeginPlay();
-    
+
     // Load input config
     UInputConfigDataAsset* InputConfig = LoadObject<UInputConfigDataAsset>(
         nullptr,
         TEXT("/Game/Input/DA_InputConfig_Default")
     );
-    
+
     if (InputConfig)
     {
         // Add spaceship mapping context
-        if (UEnhancedInputLocalPlayerSubsystem* Subsystem = 
+        if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
             ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
         {
             Subsystem->AddMappingContext(
@@ -353,13 +353,13 @@ Event BeginPlay
 void AMySpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
-    
+
     // Cast to Enhanced Input Component
     if (UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent))
     {
         // Load input config
         UInputConfigDataAsset* InputConfig = LoadInputConfig();
-        
+
         if (InputConfig)
         {
             // Bind movement
@@ -369,7 +369,7 @@ void AMySpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
                 this,
                 &AMySpaceship::Move
             );
-            
+
             // Bind look
             EnhancedInput->BindAction(
                 InputConfig->LookAction,
@@ -377,7 +377,7 @@ void AMySpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
                 this,
                 &AMySpaceship::Look
             );
-            
+
             // Bind fire
             EnhancedInput->BindAction(
                 InputConfig->FirePrimaryAction,
@@ -385,7 +385,7 @@ void AMySpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
                 this,
                 &AMySpaceship::FirePrimary
             );
-            
+
             // Bind boost
             EnhancedInput->BindAction(
                 InputConfig->BoostAction,
@@ -393,14 +393,14 @@ void AMySpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
                 this,
                 &AMySpaceship::BoostStart
             );
-            
+
             EnhancedInput->BindAction(
                 InputConfig->BoostAction,
                 ETriggerEvent::Completed,
                 this,
                 &AMySpaceship::BoostEnd
             );
-            
+
             // ... bind more actions ...
         }
     }
@@ -410,7 +410,7 @@ void AMySpaceship::Move(const FInputActionValue& Value)
 {
     // Get 2D axis value
     FVector2D MovementVector = Value.Get<FVector2D>();
-    
+
     // Add movement
     AddMovementInput(GetActorRightVector(), MovementVector.X);
     AddMovementInput(GetActorForwardVector(), MovementVector.Y);
@@ -419,7 +419,7 @@ void AMySpaceship::Move(const FInputActionValue& Value)
 void AMySpaceship::Look(const FInputActionValue& Value)
 {
     FVector2D LookVector = Value.Get<FVector2D>();
-    
+
     AddControllerYawInput(LookVector.X);
     AddControllerPitchInput(LookVector.Y);
 }
@@ -440,12 +440,12 @@ void AMySpaceship::FirePrimary(const FInputActionValue& Value)
 ```cpp
 void AMyPlayerController::OpenMenu()
 {
-    if (UEnhancedInputLocalPlayerSubsystem* Subsystem = 
+    if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
         ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
     {
         // Remove spaceship context
         Subsystem->RemoveMappingContext(InputConfig->GetSpaceshipMappingContext());
-        
+
         // Add menu context
         Subsystem->AddMappingContext(
             InputConfig->GetMenuMappingContext(),
@@ -456,12 +456,12 @@ void AMyPlayerController::OpenMenu()
 
 void AMyPlayerController::CloseMenu()
 {
-    if (UEnhancedInputLocalPlayerSubsystem* Subsystem = 
+    if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
         ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
     {
         // Remove menu context
         Subsystem->RemoveMappingContext(InputConfig->GetMenuMappingContext());
-        
+
         // Re-add spaceship context
         Subsystem->AddMappingContext(
             InputConfig->GetSpaceshipMappingContext(),
@@ -504,7 +504,7 @@ bViewAccelerationEnabled=False
 void ValidateInputConfig()
 {
     UInputConfigDataAsset* InputConfig = LoadInputConfig();
-    
+
     if (InputConfig && InputConfig->IsValid())
     {
         UE_LOG(LogTemp, Log, TEXT("Input config is valid"));
@@ -512,7 +512,7 @@ void ValidateInputConfig()
     else
     {
         UE_LOG(LogTemp, Error, TEXT("Input config validation failed!"));
-        
+
         if (InputConfig)
         {
             TArray<FString> Unassigned = InputConfig->GetUnassignedActions();
@@ -589,7 +589,7 @@ Create a settings menu to allow players to rebind keys:
 ```cpp
 void UInputSettingsWidget::RebindAction(UInputAction* Action, FKey NewKey)
 {
-    if (UEnhancedInputLocalPlayerSubsystem* Subsystem = 
+    if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
         ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
     {
         // Get player mappable key settings
@@ -670,8 +670,8 @@ void UGameSettingsWidget::SetMouseSensitivity(float Sensitivity)
 
 ---
 
-**Last Updated**: 2025-11-11  
-**Version**: 1.0  
-**Status**: C++ Foundation Complete  
-**Component**: InputConfigDataAsset  
+**Last Updated**: 2025-11-11
+**Version**: 1.0
+**Status**: C++ Foundation Complete
+**Component**: InputConfigDataAsset
 **Lines of Code**: ~240 lines (header + implementation)

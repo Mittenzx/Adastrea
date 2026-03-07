@@ -1,16 +1,16 @@
 # Trading Station Actor - Blueprint Guide
 
-> **⚠️ DEPRECATED**: This guide has been consolidated into the unified Trading and Docking Complete Guide.  
+> **⚠️ DEPRECATED**: This guide has been consolidated into the unified Trading and Docking Complete Guide.
 > **See**: [Trading and Docking Complete Guide](../docs/mvp/TRADING_AND_DOCKING_COMPLETE_GUIDE.md)
 
 ---
 
 > **Create a space station that hosts a trading terminal for buying and selling**
 
-**Blueprint Type**: Actor Blueprint  
-**Complexity**: Beginner  
-**Time to Complete**: 30-40 minutes  
-**Last Updated**: 2026-01-03  
+**Blueprint Type**: Actor Blueprint
+**Complexity**: Beginner
+**Time to Complete**: 30-40 minutes
+**Last Updated**: 2026-01-03
 **Status**: **DEPRECATED** - Refer to unified guide above
 
 ---
@@ -693,7 +693,7 @@ After completing this guide, you now know:
 
 ---
 
-**Questions or Issues?** 
+**Questions or Issues?**
 - Check the [Blueprint Guide for Beginners](../docs/development/BLUEPRINT_GUIDE_FOR_BEGINNERS.md)
 - Review the [Blueprint Image Guide](../docs/reference/BLUEPRINT_IMAGE_GUIDE.md) for node diagrams
 - See [Blueprints README](README.md) for more guides

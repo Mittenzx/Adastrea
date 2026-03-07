@@ -410,7 +410,7 @@ void ResetCustomizations();    // Remove all modules
 
 ```
 In Space Station Blueprint:
-  
+
   On Player Interact (Customization Terminal)
     → Get Player Spaceship
     → Create Customization Widget
@@ -424,7 +424,7 @@ In Space Station Blueprint:
 
 ```
 In Customization Widget:
-  
+
   On Module Button Clicked (Module)
     → Set Selected Module = Module
     → Get Hovered Hardpoint
@@ -526,14 +526,14 @@ Bottom: Stats Bar
 **Implementation**:
 ```
 Comparison Panel:
-  
+
   Current Module     vs     New Module
   ----------------         ---------------
   Name: Laser Mk.I         Name: Laser Mk.II
   DPS: 100                 DPS: 150 (+50)
   Range: 2000              Range: 1800 (-200)
   Power: 50                Power: 75 (+25)
-  
+
   Overall: +30% DPS, -10% Range, +50% Power
 ```
 
@@ -547,18 +547,18 @@ Comparison Panel:
 **Implementation**:
 ```
 Preset Management:
-  
+
   Create Preset:
     → Get All Installed Modules
     → Save to Preset Data Asset
     → Name Preset
-  
+
   Load Preset:
     → Check Has All Modules
     → Remove Current Modules
     → Install Preset Modules
     → Apply Changes
-  
+
   Share Preset:
     → Export Preset to JSON
     → Generate Share Code
@@ -575,13 +575,13 @@ Preset Management:
 **Implementation**:
 ```
 Visual Customization:
-  
+
   Color Picker:
     → Select Primary Color
     → Select Secondary Color
     → Select Accent Color
     → Preview on Ship Model
-  
+
   Decal System:
     → Select Decal Type
     → Position on Ship
@@ -736,6 +736,6 @@ See `Assets/ShipCustomizationTemplates/` for examples:
 
 ---
 
-**Last Updated**: November 11, 2025  
-**Version**: 1.0  
+**Last Updated**: November 11, 2025
+**Version**: 1.0
 **Maintained by**: Adastrea Development Team

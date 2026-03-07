@@ -1,8 +1,8 @@
 # Phase 1 Implementation Checklist
 
-**Purpose**: Track Phase 1 (Weeks 1-4) implementation progress  
-**Last Updated**: 2026-01-13  
-**Target**: Playable prototype by Week 4  
+**Purpose**: Track Phase 1 (Weeks 1-4) implementation progress
+**Last Updated**: 2026-01-13
+**Target**: Playable prototype by Week 4
 **Critical Gate**: 60%+ playtesters say "fun" → GO to Phase 2
 
 ---
@@ -65,12 +65,12 @@
   - [ ] Add BoxCollision (docking trigger)
   - [ ] Add TextRender (station name)
   - [ ] Configure collision (OverlapAllDynamic)
-  
+
 - [ ] Add hardcoded prices (Station A)
   - [ ] Water: 8.0 (sell to player) / 6.0 (buy from player)
   - [ ] Food: 22.0 / 18.0
   - [ ] Fuel: 45.0 / 40.0
-  
+
 - [ ] Implement docking logic
   - [ ] OnBeginOverlap → Call ship's OpenTradingUI
   - [ ] OnEndOverlap → Call ship's CloseTradingUI
@@ -393,7 +393,7 @@
 
 ---
 
-**Last Updated**: 2025-12-25  
-**Phase**: 1 of 3  
-**Status**: Ready to start  
+**Last Updated**: 2025-12-25
+**Phase**: 1 of 3
+**Status**: Ready to start
 **Next**: Begin Week 1, Day 1

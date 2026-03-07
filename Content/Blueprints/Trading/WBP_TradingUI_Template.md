@@ -137,18 +137,18 @@ Function: UpdateDisplay
 Flow:
   1. Set Text (PlayerCreditsDisplay):
      Format: "{PlayerCreditsRef} cr"
-  
+
   2. Get Cargo Space:
      - Available = CargoComponent->GetAvailableCargoSpace()
      - Capacity = CargoComponent->CargoCapacity
      - Used = Capacity - Available
-  
+
   3. Set Text (CargoSpaceDisplay):
      Format: "{Used} / {Capacity} m³"
-  
+
   4. Set Progress Bar (CargoBar):
      Percent = Used / Capacity
-  
+
   5. For Each: Item in ItemList
      → Call UpdateItemRow()
 ```
@@ -403,6 +403,6 @@ See generated diagram: `docs/reference/images/blueprints/wbp_trading_ui_layout.s
 
 ---
 
-**Last Updated**: January 17, 2026  
-**For**: Trade Simulator MVP (Weeks 1-4)  
+**Last Updated**: January 17, 2026
+**For**: Trade Simulator MVP (Weeks 1-4)
 **Complexity**: Intermediate (requires UMG knowledge)

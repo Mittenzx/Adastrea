@@ -22,17 +22,17 @@ struct FConstructionQueueItem;
 
 /**
  * Station Editor Widget - C++ Implementation
- * 
+ *
  * This class provides full C++ implementation of the Station Editor UI.
  * All logic is in C++, Blueprint is only used for visual layout.
- * 
+ *
  * Features:
  * - Module list population from catalog
  * - Station statistics display (power, module count)
  * - Construction queue management
  * - Module placement at cursor position
  * - Event-driven UI updates
- * 
+ *
  * Usage:
  * 1. Create Blueprint widget based on this class
  * 2. Layout UI with named widgets (must match BindWidget properties)
@@ -226,7 +226,7 @@ protected:
 
 	/**
 	 * Update preview position to follow cursor in 3D space.
-	 * 
+	 *
 	 * Updates preview position to follow cursor via line trace.
 	 * Preview is updated only if trace hits geometry. If no hit is detected,
 	 * the preview is hidden to indicate placement is not possible.

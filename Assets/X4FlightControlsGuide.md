@@ -7,7 +7,7 @@ The Adastrea spaceship system now implements X4: Foundations-style flight contro
 > **NEW**: X4-Style HUD Crosshair System is now available! See comprehensive documentation at:
 > - `docs/reference/X4_HUD_CROSSHAIR_SYSTEM.md` - Complete technical guide
 > - `docs/reference/X4_HUD_VISUAL_MOCKUP.md` - Visual mockups and implementation examples
-> 
+>
 > The HUD system provides visual feedback showing where your mouse is, where the ship is turning, and the relationship between them.
 
 ## Flight Model Characteristics
@@ -254,7 +254,7 @@ All flight control functions are `BlueprintCallable` and can be used in Blueprin
 
 ```blueprint
 [Event Graph]
-  
+
   [Key Press: Numpad 0]
     ↓
   [Set Throttle] → 0% (Full Stop)
@@ -393,7 +393,7 @@ Example optimization:
 void ASpaceship::BeginPlay()
 {
     Super::BeginPlay();
-    
+
     // Disable tick initially, enable when possessed
     PrimaryActorTick.bCanEverTick = false;
 }
@@ -401,7 +401,7 @@ void ASpaceship::BeginPlay()
 void ASpaceship::BeginControl(APlayerController* PC, APawn* ExternalPawn)
 {
     Super::BeginControl(PC, ExternalPawn);
-    
+
     // Enable tick when player takes control
     PrimaryActorTick.bCanEverTick = true;
 }
@@ -409,7 +409,7 @@ void ASpaceship::BeginControl(APlayerController* PC, APawn* ExternalPawn)
 void ASpaceship::EndControl(APlayerController* PC)
 {
     Super::EndControl(PC);
-    
+
     // Disable tick when player leaves
     PrimaryActorTick.bCanEverTick = false;
 }
@@ -437,7 +437,7 @@ Potential improvements to the flight system:
 
 ---
 
-**Last Updated:** 2025-11-20  
-**Version:** 1.0  
-**Status:** Complete  
+**Last Updated:** 2025-11-20
+**Version:** 1.0
+**Status:** Complete
 **Implemented By:** X4-style flight control system

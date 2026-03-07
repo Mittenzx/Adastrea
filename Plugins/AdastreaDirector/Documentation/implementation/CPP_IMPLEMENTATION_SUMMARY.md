@@ -176,7 +176,7 @@ FAdastreaResult Result = UUEBridge::SpawnActor(
 
 if (Result.IsSuccess())
 {
-    UE_LOG(LogTemp, Log, TEXT("Spawned: %s"), 
+    UE_LOG(LogTemp, Log, TEXT("Spawned: %s"),
         *Result.Details["actor_name"]);
 }
 ```

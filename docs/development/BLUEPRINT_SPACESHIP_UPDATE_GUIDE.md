@@ -62,8 +62,8 @@ Ship mesh far from pivot point:
          Pivot (0,0,0)
             ↓
             •
-            
-            
+
+
      🚀 Ship Model
      (rotates around distant point)
 ```
@@ -82,7 +82,7 @@ Ship mesh centered on pivot:
 
 ### "I don't see ShipRoot in my Blueprint"
 
-**Solution**: 
+**Solution**:
 1. Compile the Blueprint (click Compile button)
 2. Close and reopen
 3. Make sure your Blueprint parent class is `ASpaceship` (check Class Settings)
@@ -118,6 +118,6 @@ See the full documentation: `docs/development/SPACESHIP_PIVOT_FIX.md`
 
 ---
 
-**Time Required**: 5 minutes per Blueprint  
-**Difficulty**: Easy  
+**Time Required**: 5 minutes per Blueprint
+**Difficulty**: Easy
 **When**: Do this next time you edit each Blueprint (not urgent, but recommended)

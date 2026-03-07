@@ -97,7 +97,7 @@ bool UDiscoveryManagerSubsystem::RegisterDiscovery(
 	int32 NewCount = DiscoveryRecords.Num();
 	CheckMilestones(OldCount, NewCount);
 
-	UE_LOG(LogAdastreaExploration, Log, TEXT("Registered discovery: %s (%s)"), 
+	UE_LOG(LogAdastreaExploration, Log, TEXT("Registered discovery: %s (%s)"),
 		*Record.DiscoveryName.ToString(),
 		*DiscoveryID.ToString());
 
@@ -260,14 +260,14 @@ TArray<FDiscoveryRecord> UDiscoveryManagerSubsystem::GetDiscoveriesByType(FName 
 	for (const TPair<FName, FDiscoveryRecord>& Pair : DiscoveryRecords)
 	{
 		const FDiscoveryRecord& Record = Pair.Value;
-		
+
 		// If TypeName is NAME_None, return all
 		if (TypeName == NAME_None)
 		{
 			FilteredDiscoveries.Add(Record);
 			continue;
 		}
-		
+
 		// Check if filtering for anomalies
 		if (TypeName == FName(TEXT("Anomaly")) && Record.bIsAnomaly)
 		{

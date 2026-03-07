@@ -84,28 +84,28 @@ struct FItemReward
 
 /**
  * Anomaly Data Asset
- * 
+ *
  * Defines configuration for spatial anomalies and phenomena including:
  * - Detection requirements and signal characteristics
  * - Visual and audio presentation
  * - Interaction mechanics (harvest, avoid, etc.)
  * - Reward structures (credits, experience, items)
  * - Rarity and discovery value
- * 
+ *
  * **Usage:**
  * 1. Create a Blueprint Data Asset based on this class
  * 2. Configure anomaly properties and behavior
  * 3. Set detection requirements and rarity
  * 4. Define rewards for discovery/interaction
  * 5. Place in world or spawn procedurally
- * 
+ *
  * **Anomaly Types:**
  * - Gravitational: Mass concentrations, singularities
  * - Temporal: Time dilation zones, temporal echoes
  * - Energy: High-energy plasma, exotic radiation
  * - Wormhole: Stable/unstable wormhole signatures
  * - Quantum: Quantum foam, uncertainty fields
- * 
+ *
  * **Integration:**
  * - Works with ScannerComponent for detection
  * - DiscoveryComponent handles discovery tracking

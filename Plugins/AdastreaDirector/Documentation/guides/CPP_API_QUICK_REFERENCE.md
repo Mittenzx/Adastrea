@@ -170,11 +170,11 @@ else
 {
     // Error path
     UE_LOG(LogTemp, Error, TEXT("Failed: %s"), *Result.Message);
-    
+
     // Log all error details
     for (const auto& Detail : Result.Details)
     {
-        UE_LOG(LogTemp, Error, TEXT("%s: %s"), 
+        UE_LOG(LogTemp, Error, TEXT("%s: %s"),
             *Detail.Key, *Detail.Value);
     }
 }
@@ -199,14 +199,14 @@ for (int32 i = 0; i < SpawnLocations.Num(); i++)
         FRotator::ZeroRotator,
         Name
     );
-    
+
     if (Result.IsSuccess())
     {
         SuccessCount++;
     }
 }
 
-UE_LOG(LogTemp, Log, TEXT("Spawned %d/%d actors"), 
+UE_LOG(LogTemp, Log, TEXT("Spawned %d/%d actors"),
     SuccessCount, SpawnLocations.Num());
 ```
 
@@ -219,7 +219,7 @@ struct FAdastreaResult
     EAdastreaResultStatus Status;  // Success or Error
     FString Message;               // Human-readable message
     TMap<FString, FString> Details; // Additional data
-    
+
     // Helpers
     bool IsSuccess() const;
     bool IsError() const;
@@ -305,7 +305,7 @@ if (FileManager.FileExists(*FilePath))
         "/Game/Textures",
         "ImportedTexture"
     );
-    
+
     if (Result.IsSuccess())
     {
         FString AssetPath = Result.Details["asset_path"];

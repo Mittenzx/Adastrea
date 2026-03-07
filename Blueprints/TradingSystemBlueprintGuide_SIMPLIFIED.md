@@ -2,9 +2,9 @@
 
 > **Create a functional trading interface for buying and selling items at stations**
 
-**Blueprint Type**: Widget Blueprint  
-**Complexity**: Intermediate  
-**Time to Complete**: 45-60 minutes  
+**Blueprint Type**: Widget Blueprint
+**Complexity**: Intermediate
+**Time to Complete**: 45-60 minutes
 **Last Updated**: 2026-01-03
 
 ---
@@ -522,7 +522,7 @@ Set Show Mouse Cursor = False
 4. Play in editor (PIE)
 5. Trigger the UI
 
-**Success Criteria**: 
+**Success Criteria**:
 - UI opens without errors
 - Market items are visible
 - Player credits display
@@ -699,7 +699,7 @@ After completing this guide, you now know:
 
 ---
 
-**Questions or Issues?** 
+**Questions or Issues?**
 - Check the [Blueprint Guide for Beginners](../docs/development/BLUEPRINT_GUIDE_FOR_BEGINNERS.md)
 - Review the [Blueprint Image Guide](../docs/reference/BLUEPRINT_IMAGE_GUIDE.md) for node diagrams
 - See the [Trading System Troubleshooting](../Assets/TradingSystemGuide.md#troubleshooting)

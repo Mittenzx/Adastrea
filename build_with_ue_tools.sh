@@ -34,21 +34,21 @@ find_ubt() {
         "${UE_TOOLS_DIR}/Engine/Binaries/DotNET/UnrealBuildTool/UnrealBuildTool"
         "${UE_TOOLS_DIR}/Engine/Binaries/DotNET/UnrealBuildTool"
     )
-    
+
     for path in "${UBT_PATHS[@]}"; do
         if [ -f "${path}" ]; then
             echo "${path}"
             return 0
         fi
     done
-    
+
     return 1
 }
 
 # Function to check .NET SDK
 check_dotnet() {
     echo "Checking for .NET SDK..."
-    
+
     if ! command -v dotnet &> /dev/null; then
         echo "ERROR: .NET SDK not found"
         echo ""
@@ -59,7 +59,7 @@ check_dotnet() {
         echo ""
         exit 1
     fi
-    
+
     local dotnet_version=$(dotnet --version)
     echo "✓ .NET SDK found: ${dotnet_version}"
 }
@@ -68,35 +68,35 @@ check_dotnet() {
 build_ubt() {
     echo ""
     echo "Checking if UnrealBuildTool needs to be built..."
-    
+
     local UBT_SOURCE="${UE_TOOLS_DIR}/Engine/Source/Programs/UnrealBuildTool"
     local UBT_CSPROJ="${UBT_SOURCE}/UnrealBuildTool.csproj"
-    
+
     if [ ! -f "${UBT_CSPROJ}" ]; then
         echo "ERROR: UnrealBuildTool.csproj not found at: ${UBT_CSPROJ}"
         echo "Build tools may not have been downloaded correctly."
         exit 1
     fi
-    
+
     # Check if UBT binary already exists
     local UBT_PATH=$(find_ubt) || true
-    
+
     if [ -n "${UBT_PATH}" ] && [ -f "${UBT_PATH}" ]; then
         echo "✓ UnrealBuildTool already built: ${UBT_PATH}"
         return 0
     fi
-    
+
     echo "Building UnrealBuildTool..."
     cd "${UBT_SOURCE}"
-    
+
     # Build UBT
     dotnet build UnrealBuildTool.csproj -c Development
-    
+
     if [ $? -ne 0 ]; then
         echo "ERROR: Failed to build UnrealBuildTool"
         exit 1
     fi
-    
+
     cd "${SCRIPT_DIR}"
     echo "✓ UnrealBuildTool built successfully"
 }
@@ -105,18 +105,18 @@ build_ubt() {
 generate_project_files() {
     echo ""
     echo "Generating project files..."
-    
+
     local UBT_PATH=$(find_ubt)
-    
+
     if [ -z "${UBT_PATH}" ]; then
         echo "ERROR: UnrealBuildTool not found"
         exit 1
     fi
-    
+
     echo "Using UnrealBuildTool at: ${UBT_PATH}"
-    
+
     dotnet "${UBT_PATH}" -projectfiles -project="${PROJECT_FILE}" -game -rocket -progress
-    
+
     if [ $? -eq 0 ]; then
         echo "✓ Project files generated"
     else
@@ -131,21 +131,21 @@ build_project() {
     echo "Configuration: ${BUILD_CONFIG}Editor"
     echo "Platform: ${PLATFORM}"
     echo ""
-    
+
     local UBT_PATH=$(find_ubt)
-    
+
     if [ -z "${UBT_PATH}" ]; then
         echo "ERROR: UnrealBuildTool not found"
         exit 1
     fi
-    
+
     echo "Using UnrealBuildTool at: ${UBT_PATH}"
     echo "Project: ${PROJECT_FILE}"
     echo ""
-    
+
     # Build the project
     dotnet "${UBT_PATH}" AdastreaEditor ${PLATFORM} ${BUILD_CONFIG} -Project="${PROJECT_FILE}" -Progress -NoHotReloadFromIDE
-    
+
     if [ $? -eq 0 ]; then
         echo ""
         echo "✓ Adastrea built successfully!"
@@ -160,9 +160,9 @@ build_project() {
 validate_build() {
     echo ""
     echo "Validating build output..."
-    
+
     local success=true
-    
+
     # Check if binaries were created
     if [ -d "${SCRIPT_DIR}/Binaries" ]; then
         echo "✓ Binaries directory created"
@@ -172,7 +172,7 @@ validate_build() {
         echo "✗ WARNING: Binaries directory not found"
         success=false
     fi
-    
+
     # Check if intermediate files were created
     if [ -d "${SCRIPT_DIR}/Intermediate" ]; then
         echo "✓ Intermediate directory created"
@@ -180,7 +180,7 @@ validate_build() {
         echo "✗ WARNING: Intermediate directory not found"
         success=false
     fi
-    
+
     # Check for specific module binaries
     if [ -f "${SCRIPT_DIR}/Binaries/${PLATFORM}/libUnrealEditor-Adastrea.so" ] || \
        [ -f "${SCRIPT_DIR}/Binaries/${PLATFORM}/UnrealEditor-Adastrea.dylib" ]; then
@@ -188,7 +188,7 @@ validate_build() {
     else
         echo "⚠ Adastrea module binary not found (may be in subdirectory)"
     fi
-    
+
     echo ""
     if [ "$success" = true ]; then
         echo "Build validation: SUCCESS"
@@ -206,22 +206,22 @@ main() {
     echo "Build tools path: ${UE_TOOLS_DIR}"
     echo "Project file: ${PROJECT_FILE}"
     echo ""
-    
+
     # Check prerequisites
     check_dotnet
-    
+
     # Build UnrealBuildTool if needed
     build_ubt
-    
+
     # Generate project files
     generate_project_files
-    
+
     # Build Adastrea project
     build_project
-    
+
     # Validate build
     validate_build
-    
+
     echo ""
     echo "========================================"
     echo "Build Complete!"

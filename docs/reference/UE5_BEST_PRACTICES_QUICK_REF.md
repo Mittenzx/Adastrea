@@ -209,5 +209,5 @@ When creating new components/actors:
 
 ---
 
-**Last Updated**: 2025-12-27  
+**Last Updated**: 2025-12-27
 **Version**: 1.0

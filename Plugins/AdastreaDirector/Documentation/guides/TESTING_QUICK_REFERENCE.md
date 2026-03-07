@@ -214,7 +214,7 @@ python -m json.tool AdastreaDirector.uplugin
 # Expected: Should display formatted JSON without errors
 # If you see an error, the file format is invalid
 
-# What this file does: Tells Unreal Engine about the plugin 
+# What this file does: Tells Unreal Engine about the plugin
 # (name, version, what modules it has, etc.)
 ```
 
@@ -246,7 +246,7 @@ python -m json.tool AdastreaDirector.uplugin
 
 **Why this matters:** The plugin's AI capabilities run in Python, so the C++ and Python parts must be able to talk to each other reliably.
 
-**Key concept - IPC (Inter-Process Communication):** 
+**Key concept - IPC (Inter-Process Communication):**
 Think of it like a phone call between two programs. The C++ plugin (in Unreal Engine) needs to "call" the Python backend to request AI processing, and Python needs to "answer" with results.
 
 **Skill level:** Basic - running test scripts
@@ -769,8 +769,8 @@ python ipc_server.py --port 5555
 
 # Common errors:
 # "Address already in use" → Port 5555 is busy, try port 5556 instead
-#   ⚠️ If you change the port here, you may also need to update the port number 
-#   in other places (e.g., plugin config, test scripts, client code) where 5555 
+#   ⚠️ If you change the port here, you may also need to update the port number
+#   in other places (e.g., plugin config, test scripts, client code) where 5555
 #   is hardcoded, or connections may fail.
 # "Module not found" → Install dependencies (Fix B above)
 ```
@@ -810,7 +810,7 @@ python -c "import langchain; print('LangChain OK')"
 ls -la /path/to/docs/folder
 # Should see files listed
 
-# Make sure you can write to DB folder  
+# Make sure you can write to DB folder
 # Try creating a test file
 touch /path/to/db/folder/test.txt
 # If error, you don't have write permission - choose different folder
@@ -1089,8 +1089,8 @@ After completing testing for weeks 1-6:
 
 ---
 
-**Document Version:** 1.0  
-**Last Updated:** November 14, 2025  
+**Document Version:** 1.0
+**Last Updated:** November 14, 2025
 **Status:** Ready for Use
 
 *For detailed testing procedures, see [TESTING_CHECKLIST_WEEKS_1_6.md](TESTING_CHECKLIST_WEEKS_1_6.md)*

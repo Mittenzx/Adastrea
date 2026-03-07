@@ -1,8 +1,8 @@
 # Unreal Directive Implementation - Phase 2 Implementation Guide
 
-**Phase**: 2 - Performance Optimizations (High Priority)  
-**Status**: 📋 Planning / Ready to Implement  
-**Estimated Time**: 18-24 hours  
+**Phase**: 2 - Performance Optimizations (High Priority)
+**Status**: 📋 Planning / Ready to Implement
+**Estimated Time**: 18-24 hours
 **Prerequisites**: Phase 1 Complete ✅
 
 ---
@@ -40,21 +40,21 @@ protected:
     /** Pool of reusable Niagara components */
     UPROPERTY()
     TArray<UNiagaraComponent*> NiagaraComponentPool;
-    
+
     /** Active Niagara components currently in use */
     UPROPERTY()
     TArray<UNiagaraComponent*> ActiveNiagaraComponents;
-    
+
     /** Pool size for each effect type */
     UPROPERTY(EditAnywhere, Category="Performance")
     int32 ComponentPoolSize = 20;
-    
+
     /** Get or create a pooled component */
     UNiagaraComponent* GetPooledNiagaraComponent();
-    
+
     /** Return component to pool */
     void ReturnNiagaraComponentToPool(UNiagaraComponent* Component);
-    
+
     /** Initialize component pool */
     void InitializeComponentPool();
 ```
@@ -75,11 +75,11 @@ void UCombatVFXComponent::InitializeComponentPool()
     {
         return;
     }
-    
+
     // Pre-allocate pool
     NiagaraComponentPool.Reserve(ComponentPoolSize);
     ActiveNiagaraComponents.Reserve(ComponentPoolSize);
-    
+
     for (int32 i = 0; i < ComponentPoolSize; i++)
     {
         UNiagaraComponent* Component = NewObject<UNiagaraComponent>(GetOwner());
@@ -102,11 +102,11 @@ UNiagaraComponent* UCombatVFXComponent::GetPooledNiagaraComponent()
         ActiveNiagaraComponents.Add(Component);
         return Component;
     }
-    
+
     // Pool exhausted - create new (logged for monitoring)
-    UE_LOG(LogAdastreaCombat, Warning, 
+    UE_LOG(LogAdastreaCombat, Warning,
         TEXT("Niagara component pool exhausted, creating new component"));
-    
+
     UNiagaraComponent* Component = NewObject<UNiagaraComponent>(GetOwner());
     if (Component)
     {
@@ -122,15 +122,15 @@ void UCombatVFXComponent::ReturnNiagaraComponentToPool(UNiagaraComponent* Compon
     {
         return;
     }
-    
+
     // Deactivate and hide
     Component->Deactivate();
     Component->SetVisibility(false);
     Component->ResetSystem();
-    
+
     // Remove from active list
     ActiveNiagaraComponents.Remove(Component);
-    
+
     // Return to pool if space available
     if (NiagaraComponentPool.Num() < ComponentPoolSize)
     {
@@ -154,21 +154,21 @@ UNiagaraComponent* UCombatVFXComponent::PlayWeaponFireEffect(
     FVector TargetLocation)
 {
     // ... existing checks ...
-    
+
     // Get pooled component instead of spawning new
     UNiagaraComponent* SpawnedEffect = GetPooledNiagaraComponent();
     if (!SpawnedEffect)
     {
         return nullptr;
     }
-    
+
     // Configure and activate
     SpawnedEffect->SetWorldLocation(MuzzleLocation);
     SpawnedEffect->SetWorldRotation(MuzzleRotation);
     SpawnedEffect->SetAsset(/* appropriate system */);
     SpawnedEffect->Activate();
     SpawnedEffect->SetVisibility(true);
-    
+
     return SpawnedEffect;
 }
 ```
@@ -242,7 +242,7 @@ grep -r "void.*TickComponent" Source/Adastrea --include="*.cpp" -l
 void UPersonnelLogic::TickComponent(float DeltaTime, ...)
 {
     Super::TickComponent(DeltaTime, ...);
-    
+
     // Decision making logic
     EvaluateSituation();
     MakeDecisions();
@@ -254,7 +254,7 @@ void UPersonnelLogic::TickComponent(float DeltaTime, ...)
 void UPersonnelLogic::BeginPlay()
 {
     Super::BeginPlay();
-    
+
     // Update decisions once per second
     GetWorld()->GetTimerManager().SetTimer(
         DecisionTimerHandle,
@@ -263,7 +263,7 @@ void UPersonnelLogic::BeginPlay()
         1.0f,  // Update interval
         true   // Loop
     );
-    
+
     // Disable tick
     SetComponentTickEnabled(false);
 }
@@ -286,13 +286,13 @@ void UPersonnelLogic::UpdateDecisions()
 void UAdastreaGameInstance::BeginPlay()
 {
     Super::BeginPlay();
-    
+
     // Stagger AI updates
     TArray<UNPCLogicBase*> AllAIs = GetAllAIs();
-    
+
     float StaggerInterval = 1.0f / AllAIs.Num();
     float CurrentDelay = 0.0f;
-    
+
     for (UNPCLogicBase* AI : AllAIs)
     {
         if (AI)
@@ -306,7 +306,7 @@ void UAdastreaGameInstance::BeginPlay()
                 true,          // Loop
                 CurrentDelay   // Initial delay for staggering
             );
-            
+
             CurrentDelay += StaggerInterval;
         }
     }
@@ -364,23 +364,23 @@ protected:
     /** Cached rating values */
     UPROPERTY(Transient)
     mutable float CachedCombatRating;
-    
+
     UPROPERTY(Transient)
     mutable float CachedMobilityRating;
-    
+
     UPROPERTY(Transient)
     mutable float CachedUtilityRating;
-    
+
     UPROPERTY(Transient)
     mutable float CachedOverallRating;
-    
+
     /** Dirty flag for cache invalidation */
     UPROPERTY(Transient)
     mutable bool bRatingsCacheDirty;
-    
+
     /** Invalidate cached ratings */
     void InvalidateRatingsCache();
-    
+
     /** Calculate and cache all ratings */
     void UpdateRatingsCache() const;
 
@@ -419,7 +419,7 @@ void USpaceshipDataAsset::UpdateRatingsCache() const
     CachedMobilityRating = CalculateMobilityRatingInternal();
     CachedUtilityRating = CalculateUtilityRatingInternal();
     CachedOverallRating = CalculateOverallRatingInternal();
-    
+
     bRatingsCacheDirty = false;
 }
 
@@ -432,7 +432,7 @@ void USpaceshipDataAsset::InvalidateRatingsCache()
 void USpaceshipDataAsset::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
     Super::PostEditChangeProperty(PropertyChangedEvent);
-    
+
     // Invalidate cache when any stat changes
     if (PropertyChangedEvent.Property)
     {
@@ -471,15 +471,15 @@ Create performance benchmarks:
 
 ```cpp
 // Test: Object Pooling Performance
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FNiagaraPoolingBenchmark, 
-    "Adastrea.Performance.NiagaraPooling", 
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FNiagaraPoolingBenchmark,
+    "Adastrea.Performance.NiagaraPooling",
     EAutomationTestFlags::ApplicationContextMask | EAutomationTestFlags::PerfFilter);
 
 bool FNiagaraPoolingBenchmark::RunTest(const FString& Parameters)
 {
     // Benchmark spawn time
     const int32 SpawnCount = 100;
-    
+
     // Without pooling
     double StartTime = FPlatformTime::Seconds();
     for (int32 i = 0; i < SpawnCount; i++)
@@ -488,7 +488,7 @@ bool FNiagaraPoolingBenchmark::RunTest(const FString& Parameters)
         // ... spawn and destroy
     }
     double WithoutPoolingTime = FPlatformTime::Seconds() - StartTime;
-    
+
     // With pooling
     StartTime = FPlatformTime::Seconds();
     for (int32 i = 0; i < SpawnCount; i++)
@@ -497,10 +497,10 @@ bool FNiagaraPoolingBenchmark::RunTest(const FString& Parameters)
         ReturnToPool(Comp);
     }
     double WithPoolingTime = FPlatformTime::Seconds() - StartTime;
-    
+
     float Improvement = ((WithoutPoolingTime - WithPoolingTime) / WithoutPoolingTime) * 100.0f;
     TestTrue(TEXT("Pooling should be faster"), WithPoolingTime < WithoutPoolingTime);
-    
+
     return true;
 }
 ```
@@ -541,15 +541,15 @@ stat memory
 
 ### Quantitative Metrics
 
-✅ **GC Pressure Reduction**: 50-70% reduction in GC allocations during combat  
-✅ **Tick Count Reduction**: 30-40% fewer Tick calls per frame  
-✅ **Frame Rate**: Maintain 60 FPS with 100+ ships  
+✅ **GC Pressure Reduction**: 50-70% reduction in GC allocations during combat
+✅ **Tick Count Reduction**: 30-40% fewer Tick calls per frame
+✅ **Frame Rate**: Maintain 60 FPS with 100+ ships
 ✅ **Cached Calculations**: 10x speedup for rating calculations
 
 ### Qualitative Metrics
 
-✅ **Smooth Gameplay**: No noticeable hitches during intense combat  
-✅ **Scalability**: Performance scales well with more actors  
+✅ **Smooth Gameplay**: No noticeable hitches during intense combat
+✅ **Scalability**: Performance scales well with more actors
 ✅ **Maintainability**: Pooling code is reusable and well-documented
 
 ---
@@ -616,8 +616,8 @@ stat memory
 
 ---
 
-**Document Status**: ✅ Ready for Implementation  
-**Prerequisites**: Phase 1 Complete ✅  
+**Document Status**: ✅ Ready for Implementation
+**Prerequisites**: Phase 1 Complete ✅
 **Start Date**: TBD (after team review)
 
 For questions or implementation assistance, refer to:

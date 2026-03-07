@@ -334,7 +334,7 @@ The plugin uses a hybrid architecture as specified in `PLUGIN_DEVELOPMENT_FEASIB
   - ✅ Python subprocess management (`FPythonProcessManager`)
   - ✅ IPC communication layer (`FIPCClient`)
   - ✅ High-level bridge (`FPythonBridge`)
-  
+
 - **AdastreaDirectorEditor** (Editor Module)
   - Editor-only functionality
   - ✅ Slate UI panel (`SAdastreaDirectorPanel`)

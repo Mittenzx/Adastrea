@@ -30,7 +30,7 @@ void FAdastreaDirectorEditorModule::StartupModule()
 {
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
 	UE_LOG(LogAdastreaDirectorEditor, Log, TEXT("AdastreaDirector Editor Module: StartupModule"));
-	
+
 	RegisterTabSpawner();
 	RegisterMenuExtensions();
 }
@@ -40,7 +40,7 @@ void FAdastreaDirectorEditorModule::ShutdownModule()
 	// This function may be called during shutdown to clean up your module. For modules that support dynamic reloading,
 	// we call this function before unloading the module.
 	UE_LOG(LogAdastreaDirectorEditor, Log, TEXT("AdastreaDirector Editor Module: ShutdownModule"));
-	
+
 	UnregisterMenuExtensions();
 	UnregisterTabSpawner();
 }
@@ -73,13 +73,13 @@ TSharedRef<SDockTab> FAdastreaDirectorEditorModule::SpawnAdastreaDirectorTab(con
 
 	// Check if runtime module is fully initialized
 	FAdastreaDirectorModule* RuntimeModule = FModuleManager::GetModulePtr<FAdastreaDirectorModule>("AdastreaDirector");
-	
+
 	if (!RuntimeModule || !RuntimeModule->IsFullyInitialized())
 	{
 		FString ErrorMessage = RuntimeModule ? RuntimeModule->GetInitializationError() : TEXT("Runtime module not loaded");
-		
+
 		UE_LOG(LogAdastreaDirectorEditor, Error, TEXT("Cannot spawn Adastrea Director tab - initialization failed: %s"), *ErrorMessage);
-		
+
 		// Create error display tab instead of main panel
 		return SNew(SDockTab)
 			.TabRole(ETabRole::NomadTab)
@@ -89,7 +89,7 @@ TSharedRef<SDockTab> FAdastreaDirectorEditorModule::SpawnAdastreaDirectorTab(con
 				.Padding(20.0f)
 				[
 					SNew(SVerticalBox)
-					
+
 					// Error Icon and Title
 					+ SVerticalBox::Slot()
 					.AutoHeight()
@@ -100,7 +100,7 @@ TSharedRef<SDockTab> FAdastreaDirectorEditorModule::SpawnAdastreaDirectorTab(con
 						.Font(FCoreStyle::GetDefaultFontStyle("Bold", 16))
 						.ColorAndOpacity(FLinearColor(1.0f, 0.4f, 0.0f))
 					]
-					
+
 					// Error Message
 					+ SVerticalBox::Slot()
 					.AutoHeight()
@@ -110,7 +110,7 @@ TSharedRef<SDockTab> FAdastreaDirectorEditorModule::SpawnAdastreaDirectorTab(con
 						.Text(FText::FromString(ErrorMessage))
 						.AutoWrapText(true)
 					]
-					
+
 					// Help Text
 					+ SVerticalBox::Slot()
 					.AutoHeight()
@@ -127,7 +127,7 @@ TSharedRef<SDockTab> FAdastreaDirectorEditorModule::SpawnAdastreaDirectorTab(con
 						))
 						.AutoWrapText(true)
 					]
-					
+
 					// Settings Button
 					+ SVerticalBox::Slot()
 					.AutoHeight()
@@ -164,5 +164,5 @@ void FAdastreaDirectorEditorModule::UnregisterMenuExtensions()
 }
 
 #undef LOCTEXT_NAMESPACE
-	
+
 IMPLEMENT_MODULE(FAdastreaDirectorEditorModule, AdastreaDirectorEditor)

@@ -362,7 +362,7 @@ sys.path.insert(0, str(project_root))
 
 **Problem**: Smoke tests report "No maps found to test"
 
-**Solution**: 
+**Solution**:
 1. Check that maps exist in Content/Maps/
 2. Verify search paths in `smoke_test_config.json`
 3. Ensure maps are saved as `.umap` files (not placeholder `.txt` files)
@@ -408,7 +408,7 @@ python AutomationRunner.py --all --verbose
 
 ### When to Run Tests
 
-- **Smoke Tests**: 
+- **Smoke Tests**:
   - After adding or modifying maps
   - Before committing major changes
   - During overnight CI runs
@@ -526,5 +526,5 @@ python3 AutomationRunner.py --all > nightly_test_output.log 2>&1
 
 ---
 
-**Maintained by**: Adastrea Development Team  
+**Maintained by**: Adastrea Development Team
 **Last Updated**: 2024-11-07

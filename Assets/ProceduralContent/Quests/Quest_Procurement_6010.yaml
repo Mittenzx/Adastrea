@@ -7,7 +7,7 @@ ContractName: "Resource Gathering"
 ContractID: "Quest_Procurement_6010"
 Description: |
   Acquire specified goods and deliver to Zeta 712.
-  
+
 ContractType: Procurement
 Difficulty: Easy
 

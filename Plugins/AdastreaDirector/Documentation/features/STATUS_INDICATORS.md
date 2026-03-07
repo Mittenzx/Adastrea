@@ -95,7 +95,7 @@ Each status indicator uses a color-coded system:
 ### Normal Operation
 In normal operation, you should see:
 - Python Process: ● Green
-- IPC Connection: ● Green  
+- IPC Connection: ● Green
 - Python Bridge Ready: ● Green
 - Backend Health: ● Green
 - Query Processing: ● Green (Ready)

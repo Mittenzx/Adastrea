@@ -52,18 +52,18 @@ float UMarketDataAsset::GetItemPrice(UTradeItemDataAsset* TradeItem, bool bIsBuy
 		// Supply reduces price (more supply = lower price)
 		const float kMinSupplyValue = 0.1f;
 		const float SupplyFactor = FMath::Clamp(
-			1.0f / FMath::Max(Supply, kMinSupplyValue), 
-			TradeItem->PriceVolatility.MinPriceDeviation, 
+			1.0f / FMath::Max(Supply, kMinSupplyValue),
+			TradeItem->PriceVolatility.MinPriceDeviation,
 			TradeItem->PriceVolatility.MaxPriceDeviation
 		);
-		
+
 		// Demand increases price (more demand = higher price)
 		const float DemandFactor = FMath::Clamp(
-			Demand, 
-			TradeItem->PriceVolatility.MinPriceDeviation, 
+			Demand,
+			TradeItem->PriceVolatility.MinPriceDeviation,
 			TradeItem->PriceVolatility.MaxPriceDeviation
 		);
-		
+
 		BasePrice *= SupplyFactor * DemandFactor * TradeItem->PriceVolatility.VolatilityMultiplier;
 	}
 
@@ -75,7 +75,7 @@ float UMarketDataAsset::GetItemPrice(UTradeItemDataAsset* TradeItem, bool bIsBuy
 
 	// Clamp to reasonable bounds
 	BasePrice = FMath::Clamp(
-		BasePrice, 
+		BasePrice,
 		TradeItem->BasePrice * TradeItem->PriceVolatility.MinPriceDeviation,
 		TradeItem->BasePrice * TradeItem->PriceVolatility.MaxPriceDeviation
 	);
@@ -126,7 +126,7 @@ bool UMarketDataAsset::IsItemInStock(FName ItemID, int32 Quantity) const
 TArray<FMarketInventoryEntry> UMarketDataAsset::GetItemsByCategory(ETradeItemCategory Category) const
 {
 	TArray<FMarketInventoryEntry> Result;
-	
+
 	for (const FMarketInventoryEntry& Entry : Inventory)
 	{
 		if (Entry.TradeItem && Entry.TradeItem->Category == Category)
@@ -134,7 +134,7 @@ TArray<FMarketInventoryEntry> UMarketDataAsset::GetItemsByCategory(ETradeItemCat
 			Result.Add(Entry);
 		}
 	}
-	
+
 	return Result;
 }
 
@@ -144,7 +144,7 @@ TArray<FMarketInventoryEntry> UMarketDataAsset::GetItemsByCategory(ETradeItemCat
 TArray<FMarketEvent> UMarketDataAsset::GetActiveEventsForItem(FName ItemID) const
 {
 	TArray<FMarketEvent> Result;
-	
+
 	for (const FMarketEvent& Event : ActiveEvents)
 	{
 		if (!Event.bIsActive)
@@ -158,20 +158,20 @@ TArray<FMarketEvent> UMarketDataAsset::GetActiveEventsForItem(FName ItemID) cons
 			Result.Add(Event);
 		}
 	}
-	
+
 	return Result;
 }
 
 float UMarketDataAsset::GetEventPriceMultiplier(FName ItemID) const
 {
 	float TotalMultiplier = 1.0f;
-	
+
 	TArray<FMarketEvent> Events = GetActiveEventsForItem(ItemID);
 	for (const FMarketEvent& Event : Events)
 	{
 		TotalMultiplier *= Event.PriceMultiplier;
 	}
-	
+
 	return TotalMultiplier;
 }
 

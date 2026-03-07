@@ -36,29 +36,29 @@ struct FActiveEvent
 
 /**
  * Game State for Adastrea
- * 
+ *
  * This class stores replicated game state information that should be synchronized
  * across all clients in multiplayer scenarios. It tracks the current state of the
  * game session, active events, and dynamic world conditions.
- * 
+ *
  * Key Responsibilities:
  * - Tracking current mission/quest state
  * - Managing active galactic events (wars, trade embargoes, etc.)
  * - Storing dynamic market conditions and prices
  * - Coordinating time progression and day/night cycles
  * - Managing active NPCs and AI factions in the current session
- * 
+ *
  * Replication:
  * - All properties marked for replication are synchronized to clients
  * - Use this for state that all players need to see
  * - Non-replicated local state should go in PlayerController or GameInstance
- * 
+ *
  * Usage:
  * - Access via UGameplayStatics::GetGameState()
  * - Store multiplayer-synchronized state here
  * - Use replicated properties for client visibility
  * - Create Blueprints derived from this class for project-specific state
- * 
+ *
  * Integration Points:
  * - Trading system for market state updates
  * - Faction system for galactic events

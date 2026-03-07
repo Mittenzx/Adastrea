@@ -6,7 +6,7 @@ ItemName: "Platinum"
 ItemID: "TradeItem_Platinum"
 Description: |
   [Describe the trade item, its uses, and importance in the economy]
-  
+
 Category: RawMaterials
 
 # Material Data Reference (optional)
@@ -20,7 +20,7 @@ PriceVolatility:
   VolatilityMultiplier: 1.0
   MinPriceDeviation: 0.7
   MaxPriceDeviation: 1.5
-  
+
 bAffectedBySupplyDemand: true
 bAffectedByMarketEvents: true
 
@@ -32,7 +32,7 @@ TradeRestrictions:
   BannedFactions: []
   RequiresPermitFactions: []
   MinReputationRequired: -100
-  
+
 ContrabandFineMultiplier: 0.0
 
 # ====================

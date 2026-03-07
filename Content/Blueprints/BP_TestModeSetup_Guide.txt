@@ -103,7 +103,7 @@ This is the basic player spaceship for testing.
    - In Details panel:
      - Target Arm Length: 800
      - Enable "Use Pawn Control Rotation"
-   
+
    - With SpringArm selected, click "Add Component" → Camera
    - Rename to "FollowCamera"
    - This attaches camera to spring arm
@@ -131,18 +131,18 @@ If you want to test movement immediately:
    Add Movement Input
       World Direction: Get Actor Forward Vector
       Scale Value: Axis Value
-   
+
    Input Axis MoveRight (A/D keys)
    ↓
    Add Movement Input
       World Direction: Get Actor Right Vector
       Scale Value: Axis Value
-   
+
    Input Axis Turn (Mouse X)
    ↓
    Add Controller Yaw Input
       Val: Axis Value
-   
+
    Input Axis LookUp (Mouse Y)
    ↓
    Add Controller Pitch Input

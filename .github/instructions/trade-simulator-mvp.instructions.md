@@ -12,8 +12,8 @@ Build a **playable, fun trading game in 12 weeks** that validates market interes
 
 ## 📅 CURRENT PHASE
 
-**Status**: Trade Simulator MVP Development (Dec 2025 - Mar 2026)  
-**Priority**: #1 - All other features are deprioritized  
+**Status**: Trade Simulator MVP Development (Dec 2025 - Mar 2026)
+**Priority**: #1 - All other features are deprioritized
 **Goal**: Playable 30-minute demo by Week 12
 
 ---
@@ -34,7 +34,7 @@ Build a **playable, fun trading game in 12 weeks** that validates market interes
 9. Repeat with better efficiency
 ```
 
-**Time to Complete Loop**: 3-5 minutes  
+**Time to Complete Loop**: 3-5 minutes
 **Player Progression**: Larger cargo hold → more profit per run → better ship
 
 ---
@@ -172,10 +172,10 @@ class ASpaceStation : public AActor
     // Station automatically spawns modules from this array
     UPROPERTY(EditAnywhere, Category="Station")
     TArray<TSubclassOf<ASpaceStationModule>> DefaultModuleClasses;
-    
+
     UFUNCTION(BlueprintCallable)
     AMarketplaceModule* GetMarketplaceModule() const;
-    
+
     UFUNCTION(BlueprintCallable)
     bool HasMarketplace() const;
 };
@@ -186,17 +186,17 @@ class AMarketplaceModule : public ASpaceStationModule
     // Market configuration (inventory, prices, rules)
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     UMarketDataAsset* MarketDataAsset;
-    
+
     // Trading availability
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsOpen;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FText MarketplaceName;
-    
+
     UFUNCTION(BlueprintCallable)
     UMarketDataAsset* GetMarketData() const;
-    
+
     UFUNCTION(BlueprintCallable)
     bool IsAvailableForTrading() const;
 };
@@ -206,10 +206,10 @@ class UCargoComponent : public UActorComponent
 {
     UPROPERTY()
     TMap<FName, int32> CargoInventory;
-    
+
     UFUNCTION(BlueprintCallable)
     bool AddCargo(FName ItemID, int32 Quantity);
-    
+
     UFUNCTION(BlueprintCallable)
     int32 GetCargoSpace() const;
 };
@@ -219,7 +219,7 @@ class UEconomyManager : public UGameInstanceSubsystem
 {
     UFUNCTION()
     void UpdatePrices(float DeltaTime);
-    
+
     UFUNCTION(BlueprintCallable)
     float CalculatePrice(FName ItemID, FName StationID) const;
 };
@@ -233,13 +233,13 @@ class UTradeItemDataAsset : public UDataAsset
 {
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     FText ItemName;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float BasePrice;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float Volatility; // Price fluctuation
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float VolumePerUnit; // Space per unit
 };
@@ -250,27 +250,27 @@ class UMarketDataAsset : public UPrimaryDataAsset
 {
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     FText MarketName;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     EMarketType MarketType; // Open, Black Market, etc.
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     EMarketSize MarketSize; // Small, Medium, Large, etc.
-    
+
     // Pricing modifiers
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float SellPriceMarkup; // 1.2 = +20% when player buys
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float BuyPriceMarkdown; // 0.8 = -20% when player sells
-    
+
     // Market inventory
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     TArray<FMarketInventoryEntry> Inventory;
-    
+
     UFUNCTION(BlueprintCallable)
     float GetItemPrice(UTradeItemDataAsset* TradeItem, bool bIsBuying) const;
-    
+
     UFUNCTION(BlueprintCallable)
     bool IsItemInStock(FName ItemID, int32 Quantity) const;
 };
@@ -470,7 +470,7 @@ Additional polish or feature adjustments needed.
 - Protein Packs: 25 credits, 1 unit, medium volatility, common
 - Luxury Food: 100 credits, 2 units, high volatility, rare
 
-# Technology category  
+# Technology category
 - Basic Computer: 500 credits, 5 units, low volatility, common
 - Advanced AI Core: 5000 credits, 3 units, high volatility, rare
 ```
@@ -559,7 +559,7 @@ market_config:
   imports:
     - Food: 1.3x base price (station needs, expensive here)
     - Medicine: 1.5x base price
-  
+
   sell_markup: 1.3  # Player pays 30% more when buying
   buy_markdown: 0.7  # Player gets 30% less when selling
 ```
@@ -734,12 +734,12 @@ Total demo length: 30 minutes (ends at Level 2)
 - [ ] <30 second load time
 
 **If All Metrics Met:**
-→ Ready for publisher pitch  
+→ Ready for publisher pitch
 → Proceed with funding pursuit
 
 **If Metrics NOT Met:**
-→ Additional polish iteration  
-→ Adjust and retest  
+→ Additional polish iteration
+→ Adjust and retest
 → Don't pitch until fixed
 
 ---
@@ -938,14 +938,14 @@ void APlayerShip::RequestTrade(ASpaceStation* DockedStation)
         ShowMessage(TEXT("This station has no marketplace"));
         return;
     }
-    
+
     AMarketplaceModule* Marketplace = DockedStation->GetMarketplaceModule();
     if (!Marketplace->IsAvailableForTrading())
     {
         ShowMessage(TEXT("Marketplace is currently closed"));
         return;
     }
-    
+
     UMarketDataAsset* MarketData = Marketplace->GetMarketData();
     OpenTradingUI(MarketData);
 }
@@ -985,20 +985,20 @@ Branch: Station->HasMarketplace()
    Market Size: Medium
    Sell Price Markup: 1.1 (player pays 10% more)
    Buy Price Markdown: 0.9 (player receives 10% less)
-   
+
    Inventory:
      [0] Trade Item: DA_Item_Water
          Current Stock: 10000
          Max Stock: 50000
          Supply Level: 2.0 (abundant)
          Demand Level: 0.5 (low demand)
-     
+
      [1] Trade Item: DA_Item_Food
          Current Stock: 5000
          Max Stock: 20000
          Supply Level: 1.5 (good supply)
          Demand Level: 0.8 (moderate demand)
-     
+
      [2] Trade Item: DA_Item_Electronics
          Current Stock: 100
          Max Stock: 500
@@ -1157,9 +1157,9 @@ One polished gameplay loop beats ten half-finished systems.
 
 ---
 
-**Last Updated**: 2025-12-24  
-**Phase**: Trade Simulator MVP (Dec 2025 - Mar 2026)  
-**Status**: Active Development  
+**Last Updated**: 2025-12-24
+**Phase**: Trade Simulator MVP (Dec 2025 - Mar 2026)
+**Status**: Active Development
 **Priority**: #1 - All other features deprioritized
 
 **Technical Implementation:**

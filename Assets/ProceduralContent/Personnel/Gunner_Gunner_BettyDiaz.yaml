@@ -9,7 +9,7 @@ PersonnelName: "Betty Diaz"
 # Basic Identity
 Biography: |
   This individual served in the military for 4 years before retiring to private sector. They are feared by enemies and respected by allies and saved their crew from certain disaster during a reactor failure.
-  
+
 Age: 62
 Gender: "Female"
 Species: "Human"
@@ -61,7 +61,7 @@ ContractMonthsRemaining: 0
 PersonalityType: "Diplomatic"
 PersonalityDescription: |
   Diplomatic personality with focus on gunner duties.
-  
+
 Traits:
   - TraitName: "Diplomat"
     TraitDescription: "Better negotiations"

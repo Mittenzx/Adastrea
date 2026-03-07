@@ -371,24 +371,24 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConnectionChanged, const FModuleC
 
 /**
  * Station Editor Manager - Core manager class for station editing sessions
- * 
+ *
  * This class manages the entire station editing workflow including:
  * - Starting and ending edit sessions
  * - Module placement, removal, and manipulation
  * - Validation of placements (collisions, power, tech level)
  * - Resource and power tracking
  * - Preview system integration
- * 
+ *
  * Usage:
  * 1. Create an instance of this manager
  * 2. Assign a ModuleCatalog with available modules
  * 3. Call BeginEditing() with a station to edit
  * 4. Use PlaceModule(), RemoveModule(), etc. to modify the station
  * 5. Call Save() or Cancel() to end the editing session
- * 
+ *
  * All major functions are exposed as BlueprintNativeEvents to allow
  * Blueprint customization of behavior.
- * 
+ *
  * @see UStationModuleCatalog
  * @see AStationBuildPreview
  */

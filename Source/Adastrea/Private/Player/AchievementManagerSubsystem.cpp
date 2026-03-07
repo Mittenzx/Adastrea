@@ -12,14 +12,14 @@ UAchievementManagerSubsystem::UAchievementManagerSubsystem()
 void UAchievementManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("AchievementManagerSubsystem: Initialized"));
 }
 
 void UAchievementManagerSubsystem::Deinitialize()
 {
 	Super::Deinitialize();
-	
+
 	UE_LOG(LogAdastrea, Log, TEXT("AchievementManagerSubsystem: Deinitialized"));
 }
 

@@ -13,13 +13,13 @@ TEST_DIR = os.path.dirname(os.path.abspath(__file__))
 def test_python_syntax():
     """Test that Python files have valid syntax."""
     print("Testing Python file syntax...")
-    
+
     files_to_test = [
         'rag_ingestion.py',
         'rag_query.py',
         'ipc_integration.py'
     ]
-    
+
     for filename in files_to_test:
         filepath = os.path.join(TEST_DIR, filename)
         print(f"  Checking {filename}...")
@@ -32,7 +32,7 @@ def test_python_syntax():
 def test_class_structure():
     """Test that required classes and methods exist."""
     print("\nTesting class structure...")
-    
+
     # Test rag_ingestion.py
     print("  Checking rag_ingestion.py...")
     with open(os.path.join(TEST_DIR, 'rag_ingestion.py'), 'r') as f:
@@ -47,7 +47,7 @@ def test_class_structure():
         for item in required_items:
             assert item in content, f"Missing: {item}"
         print("    ✓ RAGIngestionAgent class structure verified")
-    
+
     # Test rag_query.py
     print("  Checking rag_query.py...")
     with open(os.path.join(TEST_DIR, 'rag_query.py'), 'r') as f:
@@ -62,7 +62,7 @@ def test_class_structure():
         for item in required_items:
             assert item in content, f"Missing: {item}"
         print("    ✓ RAGQueryAgent class structure verified")
-    
+
     # Test ipc_integration.py
     print("  Checking ipc_integration.py...")
     with open(os.path.join(TEST_DIR, 'ipc_integration.py'), 'r') as f:
@@ -81,7 +81,7 @@ def test_class_structure():
 def test_progress_writer_logic():
     """Test ProgressWriter logic (structure validation only to avoid langchain dependency)."""
     print("\nTesting ProgressWriter structure...")
-    
+
     # Verify ProgressWriter class structure exists in rag_ingestion.py
     with open(os.path.join(TEST_DIR, 'rag_ingestion.py'), 'r') as f:
         content = f.read()
@@ -94,9 +94,9 @@ def test_progress_writer_logic():
         ]
         for item in required_items:
             assert item in content, f"Missing: {item}"
-    
+
     print("    ✓ ProgressWriter structure verified")
-    
+
     # Note: Full functional testing requires langchain dependencies.
     # The ProgressWriter writes JSON progress updates with format:
     # {'percent': 0-100, 'label': str, 'details': str, 'status': str, 'timestamp': float}
@@ -105,18 +105,18 @@ def main():
     """Run all tests."""
     print("RAG Modules Structure Tests")
     print("=" * 50)
-    
+
     try:
         test_python_syntax()
         test_class_structure()
         test_progress_writer_logic()
-        
+
         print("\n" + "=" * 50)
         print("✓ All structure tests passed!")
         print("\nNote: Full runtime testing requires dependencies:")
         print("  pip install -r requirements.txt")
         return True
-        
+
     except Exception as e:
         print(f"\n✗ Test failed: {e}")
         import traceback

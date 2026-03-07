@@ -65,7 +65,7 @@ A Material Data Asset represents any physical item, resource, or commodity in th
 
 #### Material Name (Text)
 - **Purpose**: Display name shown to players
-- **Guidelines**: 
+- **Guidelines**:
   - Keep it clear and concise (2-3 words max)
   - Use proper capitalization
   - Make it descriptive
@@ -77,9 +77,9 @@ A Material Data Asset represents any physical item, resource, or commodity in th
   - 1-3 sentences
   - Explain what it is and why it matters
   - Include flavor text if desired
-- **Example**: 
+- **Example**:
   ```
-  Advanced fusion reactor core. Primary power source for capital 
+  Advanced fusion reactor core. Primary power source for capital
   ships and large stations. Handle with extreme caution.
   ```
 
@@ -131,7 +131,7 @@ A Material Data Asset represents any physical item, resource, or commodity in th
   - Rare: 200-1000 credits
   - VeryRare: 1000-5000 credits
   - Legendary: 5000+ credits
-- **Notes**: 
+- **Notes**:
   - Consider balance with acquisition difficulty
   - Account for material utility in crafting
   - Can be modified by market conditions
@@ -241,7 +241,7 @@ Before creating the asset, decide:
 
 ```
 Material Name: Steel Cable
-Description: Reinforced steel cable for load-bearing applications and 
+Description: Reinforced steel cable for load-bearing applications and
              power transmission. Essential in station construction.
 Category: ConstructionPart
 Storage Type: Solid
@@ -315,7 +315,7 @@ struct FInventorySlot
 {
     UPROPERTY()
     UMaterialDataAsset* Material;
-    
+
     UPROPERTY()
     int32 Quantity;
 };
@@ -415,7 +415,7 @@ Modified Price = Material.Value * (Faction Trade Modifier) * (Supply/Demand)
 - Create a progression: Common → Rare → Legendary
 
 ### Organization Tips
-- **Folder Structure**: 
+- **Folder Structure**:
   ```
   Content/Materials/
     ├── Minerals/

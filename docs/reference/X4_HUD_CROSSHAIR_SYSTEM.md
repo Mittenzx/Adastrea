@@ -73,7 +73,7 @@ By showing both indicators, you can see:
 
 **Why it's important**: This shows your INPUT - where you're telling the ship to go. When you move your mouse right, this indicator moves right.
 
-**Visual appearance**: 
+**Visual appearance**:
 - Shape: Crosshair or plus sign (+)
 - Color: White (changes to yellow/orange at high speeds)
 - Size: Small and precise (28-32 pixels)
@@ -119,7 +119,7 @@ A deadzone is a circular area in the center of your screen where mouse movement 
 
 Without a deadzone, tiny accidental mouse movements would constantly make your ship wobble. The deadzone lets you fly straight when you want to, and only turn when you move the mouse away from center.
 
-**Think of it like this**: 
+**Think of it like this**:
 - Inside deadzone = "Fly straight ahead"
 - Outside deadzone = "Turn toward mouse"
 
@@ -133,7 +133,7 @@ Without a deadzone, tiny accidental mouse movements would constantly make your s
    │  ╚════╝  │
    │          │
    └──────────┘
-   
+
    Mouse inside circle = No turning
    Mouse outside circle = Turn toward mouse
 ```
@@ -178,7 +178,7 @@ Understanding when rotation happens and when it doesn't:
 
 ![Deadzone Explanation](images/blueprints/hud_deadzone_explanation.svg)
 
-**Left side**: Mouse inside the deadzone circle = ship flies straight (no rotation)  
+**Left side**: Mouse inside the deadzone circle = ship flies straight (no rotation)
 **Right side**: Mouse outside the deadzone = ship turns toward mouse position
 
 ### Rotation Speed Color Changes
@@ -225,10 +225,10 @@ Here's the journey that happens every frame (60 times per second):
 
 The game already calculates and provides you with:
 
-✅ `MouseScreenPosition` - Where the mouse is (as a number 0 to 1)  
-✅ `ShipRotationDirection` - Where the ship is turning (as a number 0 to 1)  
-✅ `RotationSpeed` - How fast it's turning (0 = stopped, 1 = maximum)  
-✅ `bInDeadzone` - True/False: Is mouse in deadzone?  
+✅ `MouseScreenPosition` - Where the mouse is (as a number 0 to 1)
+✅ `ShipRotationDirection` - Where the ship is turning (as a number 0 to 1)
+✅ `RotationSpeed` - How fast it's turning (0 = stopped, 1 = maximum)
+✅ `bInDeadzone` - True/False: Is mouse in deadzone?
 ✅ `DeadzoneRadiusPercent` - How big the deadzone is (0 to 1)
 
 **Your job**: Use these numbers to draw pretty pictures on screen!
@@ -285,7 +285,7 @@ Now let's build this system! We'll go slowly and explain everything.
    - Click "All Classes" to expand the list
    - Search for: `AdastreaHUDWidget`
    - Select it and click "Select"
-   
+
    **Why this parent class?** It already has all the C++ code that calculates positions and speeds. We just need to add the visuals.
 
 6. **Name it**: `WBP_FlightHUD`
@@ -326,7 +326,7 @@ Your widget should already have a **Canvas Panel** as the root. If not:
    - Naming is important so we can find it in Blueprint code later!
 
 4. **Configure its properties** (in Details panel on right):
-   
+
    **Slot (Canvas Panel Slot) section**:
    - **Anchors**: Click the anchor dropdown
      - **Select the CENTER anchor** (middle button in the grid)
@@ -336,13 +336,13 @@ Your widget should already have a **Canvas Panel** as the root. If not:
    - **Size X**: 32
    - **Size Y**: 32
    - **Alignment**: 0.5, 0.5 (centers the widget on its anchor point)
-   
+
    **Appearance section**:
    - **Color and Opacity**: Pure white (R=1, G=1, B=1, A=1)
    - **Brush → Image**: We need a crosshair texture here
      - For now, you can use any texture as a placeholder
      - Later, you'll want to create a proper crosshair image
-   
+
    **Behavior section**:
    - **Visibility**: Visible
 
@@ -536,7 +536,7 @@ Now we use those center-anchored pixel coordinates to actually move the widget!
    - Drag off the MouseCursorIndicator pin
    - Search for: `Set Render Translation`
    - Connect the execution pin from your last multiply node (or previous node with execution)
-   
+
 3. **Connect coordinates**:
    - Drag the Mouse Pixel X (result from step 7 above) to `Translation X` input
    - Drag the Mouse Pixel Y (result from step 8 above) to `Translation Y` input
@@ -856,7 +856,7 @@ The connection line is optional but adds a nice visual touch. Here are three way
 2. Use `Draw Line` node to draw a line from ship position to mouse position
 3. Set line thickness and color dynamically
 
-**Pros**: Can create gradients and effects  
+**Pros**: Can create gradients and effects
 **Cons**: More complex, requires understanding of painting system
 
 ### Method 3: Multiple Small Images (Visual Effects)
@@ -865,7 +865,7 @@ The connection line is optional but adds a nice visual touch. Here are three way
 2. Place them in a line from ship to mouse
 3. Animate their opacity to create a "traveling" effect
 
-**Pros**: Can add cool animations  
+**Pros**: Can add cool animations
 **Cons**: More performance-intensive
 
 **Recommendation for beginners**: Start with Method 1 (simple line image). Add fancy effects later!
@@ -960,7 +960,7 @@ However, if you're creating widgets dynamically in Blueprint code (not in the De
 1. In **Event Construct** (when widget is dynamically created):
    - Get the dynamically created widget once
    - Store in a variable
-   
+
 2. In UpdateFlightCrosshair:
    - Use the stored variable instead of searching each time
 
@@ -1149,17 +1149,17 @@ These are read-only from Blueprint (set by C++ based on ship configuration).
 
 Congratulations! If you've followed this guide, you now understand:
 
-✅ What the X4-style HUD crosshair system is and why it's useful  
-✅ The difference between mouse input and ship response  
-✅ How normalized coordinates work  
-✅ How to create a Widget Blueprint with proper parent class  
-✅ How to add and configure UI elements in the Designer  
-✅ How to override Blueprint events  
-✅ How to convert normalized coordinates to pixels  
-✅ How to move widgets dynamically based on game state  
-✅ How to change colors based on rotation speed  
-✅ How to handle deadzone behavior  
-✅ Common mistakes and how to fix them  
+✅ What the X4-style HUD crosshair system is and why it's useful
+✅ The difference between mouse input and ship response
+✅ How normalized coordinates work
+✅ How to create a Widget Blueprint with proper parent class
+✅ How to add and configure UI elements in the Designer
+✅ How to override Blueprint events
+✅ How to convert normalized coordinates to pixels
+✅ How to move widgets dynamically based on game state
+✅ How to change colors based on rotation speed
+✅ How to handle deadzone behavior
+✅ Common mistakes and how to fix them
 ✅ How to customize and enhance the system
 
 ### Key Takeaways
@@ -1289,13 +1289,13 @@ Please contribute! The goal is to make this as accessible as possible for beginn
 
 ---
 
-**Last Updated**: January 14, 2026  
-**Version**: 2.0 - Beginner-Friendly Edition  
-**Target Audience**: Unreal Engine beginners with basic Blueprint knowledge  
-**Skill Level**: Beginner  
-**Prerequisites**: [See prerequisites section](#before-you-start-what-you-need-to-know)  
-**Estimated Reading Time**: 45 minutes  
-**Estimated Implementation Time**: 2-3 hours for complete system  
+**Last Updated**: January 14, 2026
+**Version**: 2.0 - Beginner-Friendly Edition
+**Target Audience**: Unreal Engine beginners with basic Blueprint knowledge
+**Skill Level**: Beginner
+**Prerequisites**: [See prerequisites section](#before-you-start-what-you-need-to-know)
+**Estimated Reading Time**: 45 minutes
+**Estimated Implementation Time**: 2-3 hours for complete system
 
 ---
 

@@ -18,7 +18,7 @@ UPlayerProgressionComponent::UPlayerProgressionComponent()
 void UPlayerProgressionComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	// Initialize skills if not already set
 	if (Skills.Num() == 0)
 	{
@@ -207,7 +207,7 @@ void UPlayerProgressionComponent::ResetSkills(bool bRefundPoints)
 		// Calculate total invested points
 		int32 TotalInvested = GetTotalSkillPoints();
 		AvailableSkillPoints += TotalInvested;
-		
+
 		UE_LOG(LogAdastrea, Log, TEXT("PlayerProgressionComponent: Skills reset, refunded %d points"), TotalInvested);
 	}
 

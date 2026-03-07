@@ -37,12 +37,12 @@ enum class EAIBehaviorMode : uint8
 /**
  * Base class for all NPC AI logic
  * Provides common functionality and Blueprint extension points for AI behaviors
- * 
+ *
  * This class uses BlueprintNativeEvents extensively to allow designers to:
  * 1. Override behavior in Blueprints without C++ knowledge
  * 2. Call parent implementation when needed
  * 3. Mix C++ performance with Blueprint flexibility
- * 
+ *
  * Usage in Blueprints:
  * - Create a Blueprint class based on this (or FactionLogic/PersonnelLogic)
  * - Override any "Event" functions (e.g., "Event On Tick AI")
@@ -85,7 +85,7 @@ public:
     /**
      * Called to initialize the AI logic
      * Override in Blueprint to set up initial state, priorities, etc.
-     * 
+     *
      * Example Blueprint usage:
      * - Set initial behavior mode
      * - Configure update intervals
@@ -98,9 +98,9 @@ public:
     /**
      * Main AI tick function - called at UpdateInterval rate
      * Override in Blueprint to implement custom AI decision making
-     * 
+     *
      * @param DeltaTime Time since last tick in seconds
-     * 
+     *
      * Example Blueprint usage:
      * - Evaluate current priorities
      * - Make decisions based on state
@@ -114,7 +114,7 @@ public:
     /**
      * Called when AI is activated
      * Override in Blueprint for custom activation logic
-     * 
+     *
      * Example Blueprint usage:
      * - Resume paused behaviors
      * - Re-evaluate priorities
@@ -127,7 +127,7 @@ public:
     /**
      * Called when AI is deactivated
      * Override in Blueprint for custom deactivation logic
-     * 
+     *
      * Example Blueprint usage:
      * - Store current state
      * - Cancel ongoing actions
@@ -140,10 +140,10 @@ public:
     /**
      * Called when behavior mode changes
      * Override in Blueprint to react to mode changes
-     * 
+     *
      * @param OldMode The previous behavior mode
      * @param NewMode The new behavior mode
-     * 
+     *
      * Example Blueprint usage:
      * - Adjust priorities for new mode
      * - Cancel incompatible actions
@@ -160,9 +160,9 @@ public:
     /**
      * Evaluate and return the current priority task
      * Override in Blueprint to implement custom priority logic
-     * 
+     *
      * @return The priority level of the most important current task
-     * 
+     *
      * Example Blueprint usage:
      * - Check for threats (Critical)
      * - Check resource needs (High/Medium)
@@ -176,10 +176,10 @@ public:
     /**
      * Decide on the next action to take
      * Override in Blueprint to implement custom decision logic
-     * 
+     *
      * @param CurrentPriority The current priority level
      * @return True if an action was decided upon
-     * 
+     *
      * Example Blueprint usage:
      * - Switch on CurrentPriority
      * - Check available options for that priority
@@ -193,9 +193,9 @@ public:
     /**
      * Check if the AI should change its behavior mode
      * Override in Blueprint for custom mode switching logic
-     * 
+     *
      * @return The new behavior mode, or current mode if no change
-     * 
+     *
      * Example Blueprint usage:
      * - Check if under attack -> Defensive
      * - Check if trade opportunity -> Trading

@@ -70,14 +70,14 @@ UInputMappingContext* UInputConfigDataAsset::GetMenuMappingContext() const
 bool UInputConfigDataAsset::IsValid() const
 {
     // Check essential input actions
-    bool bHasEssentialActions = 
+    bool bHasEssentialActions =
         MoveAction != nullptr &&
         LookAction != nullptr &&
         FirePrimaryAction != nullptr &&
         InteractAction != nullptr &&
         MenuAction != nullptr;
 
-    bool bHasMappingContexts = 
+    bool bHasMappingContexts =
         SpaceshipMappingContext != nullptr;
 
     return bHasEssentialActions && bHasMappingContexts;

@@ -94,21 +94,21 @@ When a player earns reputation with one network member, they gain **partial repu
 ### Example Networks
 
 #### The Craftsmen's Compact (Engineering)
-**Purpose**: Excellence in ship construction and engineering  
-**Members**: Engineers' Guild, Ship-Builders Union, Refinery Collective  
-**Shared Precepts**: Craftsmanship (90), Mastery (85), Innovation (70)  
+**Purpose**: Excellence in ship construction and engineering
+**Members**: Engineers' Guild, Ship-Builders Union, Refinery Collective
+**Shared Precepts**: Craftsmanship (90), Mastery (85), Innovation (70)
 **Mechanics**: 40% spillover, 1.8x alignment bonus, 30 reputation threshold
 
 #### The Frontier Alliance (Exploration)
-**Purpose**: Exploration and discovery of uncharted space  
-**Members**: Scout's League, Cartographer's Society, Pioneer Traders  
-**Shared Precepts**: Discovery (95), Freedom (80), Survival (70)  
+**Purpose**: Exploration and discovery of uncharted space
+**Members**: Scout's League, Cartographer's Society, Pioneer Traders
+**Shared Precepts**: Discovery (95), Freedom (80), Survival (70)
 **Mechanics**: 35% spillover, 2.0x alignment bonus, 25 reputation threshold
 
 #### The Honor Circle (Combat)
-**Purpose**: Upholding warrior traditions and protective services  
-**Members**: Warrior's Guild, Duelist Academy, Protector's Order, Bounty Hunters  
-**Shared Precepts**: Honor (95), Strength (85), Justice (75)  
+**Purpose**: Upholding warrior traditions and protective services
+**Members**: Warrior's Guild, Duelist Academy, Protector's Order, Bounty Hunters
+**Shared Precepts**: Honor (95), Strength (85), Justice (75)
 **Mechanics**: 30% spillover, 1.7x alignment bonus, 35 reputation threshold
 
 ## Core Concepts
@@ -138,7 +138,7 @@ Feats are legendary deeds that players accomplish. When you complete a Feat, you
 ```
 Example: "Master Ship Builder" Feat
   Aligned Precepts: Craftsmanship (90), Mastery (85)
-  
+
   Player completes this Feat:
   → Gain 100 reputation with Engineers' Guild (aligned)
   → Gain 40 reputation with other Craftsmen's Compact members (spillover)
@@ -354,6 +354,6 @@ Start with [WaySystemOverview.md](WaySystemOverview.md) for introduction, then f
 
 ---
 
-**Version**: 1.0  
-**Last Updated**: 2025-11-10  
+**Version**: 1.0
+**Last Updated**: 2025-11-10
 **Maintained by**: Adastrea Development Team

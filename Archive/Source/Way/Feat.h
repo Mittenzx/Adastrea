@@ -51,23 +51,23 @@ enum class EFeatRarity : uint8
 
 /**
  * Structure defining if and how a Feat can spawn an antagonist (rival).
- * 
+ *
  * When a player completes a legendary Feat, it may attract the attention of a rival
  * who will become a recurring antagonist throughout the player's journey.
  * This creates personal, emergent narrative moments similar to manga rivals.
- * 
+ *
  * Design Philosophy:
  * - Not all Feats spawn antagonists (only significant ones)
  * - Antagonist motivation is tied to the nature of the Feat
  * - Initial heat level determines how aggressively they pursue the player
  * - Optional faction affiliation ties antagonist to game world
- * 
+ *
  * Usage:
  * - Add to high-tier Feats (Epic, Legendary, Mythic) where appropriate
  * - Choose Goal that makes narrative sense (e.g., "Dragon-Slayer" → Revenge)
  * - Set SpawnChance < 100% for variety across playthroughs
  * - Leave bShouldSpawnAntagonist = false for Feats that shouldn't spawn rivals
- * 
+ *
  * Example:
  * - Feat: "Star-Charter" (first to map unknown sector)
  * - Goal: Competition (another explorer wants to outdo you)
@@ -120,19 +120,19 @@ struct FAntagonistTrigger
 /**
  * Data Asset representing a Feat - a major, logged accomplishment.
  * Feats grant the player Titles that become part of their legend (Verse).
- * 
+ *
  * When a player completes a Feat:
  * 1. They earn the associated Title
  * 2. The accomplishment is recorded in their Verse (UVerseComponent)
  * 3. Groups (Ways) react based on alignment with their Precepts
  * 4. The player's reputation with groups is affected
- * 
+ *
  * Usage:
  * - Create a Blueprint Data Asset based on UFeatDataAsset
  * - Configure what the Feat represents (Title, Precepts, Requirements)
  * - Reference in gameplay systems (quests, achievements, boss defeats)
  * - Award to player when they complete the requirements
- * 
+ *
  * Example Feats:
  * - "Star-Charter": First to fully map an uncharted sector (Discovery + Innovation)
  * - "Dragon-Slayer": Defeated a capital ship single-handedly (Strength + Honor)
@@ -211,7 +211,7 @@ public:
     // Antagonist Spawning
     // ====================
 
-    /** 
+    /**
      * Antagonist trigger configuration for this Feat.
      * Defines if and how this Feat can spawn a rival NPC.
      * Typically used for high-tier Feats (Epic, Legendary, Mythic).

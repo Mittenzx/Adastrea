@@ -48,13 +48,13 @@ This project and everyone participating in it is governed by our commitment to f
    # or
    python SetupCheck.py         # Cross-platform
    ```
-   
+
    These scripts verify:
    - Unreal Engine version compatibility
    - C++ compiler availability
    - Required project folders and files
    - Optional: Static code analysis with cppcheck
-   
+
    See [README.md](README.md#robust-setup-validation) for detailed usage.
 
 3. **Generate Project Files**
@@ -123,7 +123,7 @@ See [.github/agents/README.md](.github/agents/README.md) for more information ab
    git add .
    git commit -m "feat: Add detailed description of your changes"
    ```
-   
+
    Use conventional commit messages:
    - `feat:` - New feature
    - `fix:` - Bug fix

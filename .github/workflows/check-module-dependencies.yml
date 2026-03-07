@@ -22,16 +22,16 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read  # Need read access to checkout code
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          
+
       - name: Run module dependency check
         run: |
           python3 .github/scripts/check_module_dependencies.py

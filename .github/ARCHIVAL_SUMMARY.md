@@ -1,8 +1,8 @@
 # Archival Summary - Trade Simulator MVP Focus
 
-**Date**: December 30, 2025  
-**Purpose**: Document the archival of non-MVP systems and files  
-**Related Issue**: Archive all non-MVP files in archive folder until needed  
+**Date**: December 30, 2025
+**Purpose**: Document the archival of non-MVP systems and files
+**Related Issue**: Archive all non-MVP files in archive folder until needed
 **Based on**: `.github/instructions/trade-simulator-mvp.instructions.md` and `docs/mvp/SYSTEM_CLASSIFICATION.md`
 
 ---
@@ -407,6 +407,6 @@ When ready to restore a system:
 
 ---
 
-**Last Updated**: December 30, 2025  
-**Status**: Archival Complete  
+**Last Updated**: December 30, 2025
+**Status**: Archival Complete
 **Next Review**: After Week 4 playtest (late January 2026)

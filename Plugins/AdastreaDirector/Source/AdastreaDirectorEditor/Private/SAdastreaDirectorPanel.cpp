@@ -54,7 +54,7 @@ FString SAdastreaDirectorPanel::GetPluginVersion()
 	// Cache the version string to avoid repeated plugin manager lookups
 	static FString CachedVersion;
 	static bool bVersionCached = false;
-	
+
 	if (!bVersionCached)
 	{
 		// Get the plugin descriptor to read the version
@@ -70,7 +70,7 @@ FString SAdastreaDirectorPanel::GetPluginVersion()
 		}
 		bVersionCached = true;
 	}
-	
+
 	return CachedVersion;
 }
 
@@ -92,11 +92,11 @@ void SAdastreaDirectorPanel::Construct(const FArguments& InArgs)
 	CachedLogContentText = FText::FromString(CurrentLogContent);
 	CachedConnectionStatus = FText::FromString(TEXT("⚠️ Not connected - Python backend not ready"));
 	LastStatusLightsUpdateTime = 0.0;
-	
+
 	// Initialize ingestion debug log
 	CurrentIngestionDebugLog = TEXT("📋 Ingestion Debug Log\n\nDebug messages will appear here when you start ingestion.\nThis shows exactly what's happening during the ingestion process.\n");
 	CachedIngestionDebugLogText = FText::FromString(CurrentIngestionDebugLog);
-	
+
 	// Initialize Tests tab state
 	bIsTestRunning = false;
 	TestProgress = 0.0f;
@@ -104,26 +104,26 @@ void SAdastreaDirectorPanel::Construct(const FArguments& InArgs)
 	CurrentTestOutput = TEXT("🧪 Plugin Self-Test Suite\n\nClick a test button above to run tests.\nResults will appear here.\n");
 	CachedTestOutputText = FText::FromString(CurrentTestOutput);
 	LastTestOutputUpdateTime = 0.0;
-	
+
 	// Setup progress file path
 	ProgressFilePath = FPaths::ProjectIntermediateDir() / TEXT("AdastreaDirector") / TEXT("ingestion_progress.json");
 
 	ChildSlot
 	[
 		SNew(SVerticalBox)
-		
+
 		// Header
 		+ SVerticalBox::Slot()
 		.AutoHeight()
 		.Padding(10.0f, 10.0f, 10.0f, 5.0f)
 		[
 			SNew(SHorizontalBox)
-			
+
 			+ SHorizontalBox::Slot()
 			.FillWidth(1.0f)
 			[
 				SNew(SVerticalBox)
-				
+
 				+ SVerticalBox::Slot()
 				.AutoHeight()
 				[
@@ -131,7 +131,7 @@ void SAdastreaDirectorPanel::Construct(const FArguments& InArgs)
 					.Text(LOCTEXT("PanelTitle", "Adastrea Director - AI Assistant"))
 					.Font(FCoreStyle::GetDefaultFontStyle("Bold", 16))
 				]
-				
+
 				+ SVerticalBox::Slot()
 				.AutoHeight()
 				.Padding(0.0f, 2.0f, 0.0f, 0.0f)
@@ -142,7 +142,7 @@ void SAdastreaDirectorPanel::Construct(const FArguments& InArgs)
 					.ColorAndOpacity(FSlateColor(FLinearColor(0.7f, 0.7f, 0.7f, 1.0f)))
 				]
 			]
-			
+
 			+ SHorizontalBox::Slot()
 			.AutoWidth()
 			[
@@ -167,7 +167,7 @@ void SAdastreaDirectorPanel::Construct(const FArguments& InArgs)
 		.Padding(10.0f, 5.0f, 10.0f, 5.0f)
 		[
 			SNew(SHorizontalBox)
-			
+
 			// Query Tab Button
 			+ SHorizontalBox::Slot()
 			.AutoWidth()
@@ -267,25 +267,25 @@ void SAdastreaDirectorPanel::Construct(const FArguments& InArgs)
 		[
 			SAssignNew(TabContentSwitcher, SWidgetSwitcher)
 			.WidgetIndex_Lambda([this]() { return CurrentTabIndex; })
-			
+
 			// Query Tab (index 0)
 			+ SWidgetSwitcher::Slot()
 			[
 				CreateQueryTab()
 			]
-			
+
 			// Ingestion Tab (index 1)
 			+ SWidgetSwitcher::Slot()
 			[
 				CreateIngestionTab()
 			]
-			
+
 			// Dashboard Tab (index 2)
 			+ SWidgetSwitcher::Slot()
 			[
 				CreateDashboardTab()
 			]
-			
+
 			// Tests Tab (index 3)
 			+ SWidgetSwitcher::Slot()
 			[
@@ -298,7 +298,7 @@ void SAdastreaDirectorPanel::Construct(const FArguments& InArgs)
 TSharedRef<SWidget> SAdastreaDirectorPanel::CreateQueryTab()
 {
 	return SNew(SVerticalBox)
-		
+
 		// Query Input Section
 		+ SVerticalBox::Slot()
 		.AutoHeight()
@@ -314,7 +314,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateQueryTab()
 		.Padding(10.0f, 0.0f, 10.0f, 5.0f)
 		[
 			SNew(SHorizontalBox)
-			
+
 			// Query Input Box
 			+ SHorizontalBox::Slot()
 			.FillWidth(1.0f)
@@ -376,7 +376,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateQueryTab()
 			[
 				SNew(SScrollBox)
 				.Orientation(Orient_Vertical)
-				
+
 				+ SScrollBox::Slot()
 				[
 					SAssignNew(ResultsDisplay, SMultiLineEditableTextBox)
@@ -391,7 +391,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateQueryTab()
 TSharedRef<SWidget> SAdastreaDirectorPanel::CreateIngestionTab()
 {
 	return SNew(SVerticalBox)
-		
+
 		// Docs Path Section
 		+ SVerticalBox::Slot()
 		.AutoHeight()
@@ -407,7 +407,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateIngestionTab()
 		.Padding(10.0f, 0.0f, 10.0f, 10.0f)
 		[
 			SNew(SHorizontalBox)
-			
+
 			+ SHorizontalBox::Slot()
 			.FillWidth(1.0f)
 			.Padding(0.0f, 0.0f, 5.0f, 0.0f)
@@ -441,7 +441,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateIngestionTab()
 		.Padding(10.0f, 0.0f, 10.0f, 10.0f)
 		[
 			SNew(SHorizontalBox)
-			
+
 			+ SHorizontalBox::Slot()
 			.FillWidth(1.0f)
 			.Padding(0.0f, 0.0f, 5.0f, 0.0f)
@@ -475,7 +475,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateIngestionTab()
 		.Padding(10.0f, 0.0f, 10.0f, 10.0f)
 		[
 			SNew(SHorizontalBox)
-			
+
 			+ SHorizontalBox::Slot()
 			.FillWidth(1.0f)
 			[
@@ -501,7 +501,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateIngestionTab()
 		.Padding(10.0f, 10.0f, 10.0f, 10.0f)
 		[
 			SNew(SHorizontalBox)
-			
+
 			+ SHorizontalBox::Slot()
 			.AutoWidth()
 			.Padding(0.0f, 0.0f, 5.0f, 0.0f)
@@ -584,7 +584,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateIngestionTab()
 			[
 				SNew(SScrollBox)
 				.Orientation(Orient_Vertical)
-				
+
 				+ SScrollBox::Slot()
 				[
 					SAssignNew(IngestionDebugLogDisplay, SMultiLineEditableTextBox)
@@ -599,7 +599,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateIngestionTab()
 TSharedRef<SWidget> SAdastreaDirectorPanel::CreateDashboardTab()
 {
 	return SNew(SVerticalBox)
-		
+
 		// Status Indicators Section
 		+ SVerticalBox::Slot()
 		.AutoHeight()
@@ -622,7 +622,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateDashboardTab()
 				.FillColumn(0, 1.0f)
 				.FillColumn(1, 1.0f)
 				.FillColumn(2, 1.0f)
-				
+
 				// Row 0: Python Process, IPC Connection, & API Key Status
 				+ SGridPanel::Slot(0, 0)
 				.Padding(5.0f)
@@ -631,7 +631,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateDashboardTab()
 					.StatusText(LOCTEXT("PythonProcessStatus", "Python Process"))
 					.InitialStatus(SStatusIndicator::EStatus::Unknown)
 				]
-				
+
 				+ SGridPanel::Slot(1, 0)
 				.Padding(5.0f)
 				[
@@ -639,7 +639,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateDashboardTab()
 					.StatusText(LOCTEXT("IPCConnectionStatus", "IPC Connection"))
 					.InitialStatus(SStatusIndicator::EStatus::Unknown)
 				]
-				
+
 				+ SGridPanel::Slot(2, 0)
 				.Padding(5.0f)
 				[
@@ -647,7 +647,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateDashboardTab()
 					.StatusText(LOCTEXT("APIKeyStatus", "API Key Validation"))
 					.InitialStatus(SStatusIndicator::EStatus::Unknown)
 				]
-				
+
 				// Row 1: Python Bridge & Backend Health
 				+ SGridPanel::Slot(0, 1)
 				.Padding(5.0f)
@@ -656,7 +656,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateDashboardTab()
 					.StatusText(LOCTEXT("BridgeReadyStatus", "Python Bridge Ready"))
 					.InitialStatus(SStatusIndicator::EStatus::Unknown)
 				]
-				
+
 				+ SGridPanel::Slot(1, 1)
 				.Padding(5.0f)
 				[
@@ -664,7 +664,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateDashboardTab()
 					.StatusText(LOCTEXT("BackendHealthStatus", "Backend Health"))
 					.InitialStatus(SStatusIndicator::EStatus::Unknown)
 				]
-				
+
 				// Row 2: Query Processing & Ingestion
 				+ SGridPanel::Slot(0, 2)
 				.Padding(5.0f)
@@ -673,7 +673,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateDashboardTab()
 					.StatusText(LOCTEXT("QueryProcessingStatus", "Query Processing"))
 					.InitialStatus(SStatusIndicator::EStatus::Unknown)
 				]
-				
+
 				+ SGridPanel::Slot(1, 2)
 				.Padding(5.0f)
 				[
@@ -711,7 +711,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateDashboardTab()
 			.Padding(10.0f)
 			[
 				SNew(SVerticalBox)
-				
+
 				+ SVerticalBox::Slot()
 				.AutoHeight()
 				.Padding(0.0f, 0.0f, 0.0f, 10.0f)
@@ -725,7 +725,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateDashboardTab()
 				.AutoHeight()
 				[
 					SNew(SHorizontalBox)
-					
+
 					+ SHorizontalBox::Slot()
 					.AutoWidth()
 					.Padding(0.0f, 0.0f, 5.0f, 0.0f)
@@ -762,7 +762,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateDashboardTab()
 		.Padding(10.0f, 5.0f, 10.0f, 5.0f)
 		[
 			SNew(SHorizontalBox)
-			
+
 			+ SHorizontalBox::Slot()
 			.FillWidth(1.0f)
 			[
@@ -790,7 +790,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateDashboardTab()
 			[
 				SNew(SScrollBox)
 				.Orientation(Orient_Vertical)
-				
+
 				+ SScrollBox::Slot()
 				[
 					SAssignNew(LogDisplay, SMultiLineEditableTextBox)
@@ -825,7 +825,7 @@ FReply SAdastreaDirectorPanel::OnSendQueryClicked()
 	}
 
 	FString QueryString = CurrentQuery.ToString().TrimStartAndEnd();
-	
+
 	if (QueryString.IsEmpty())
 	{
 		UpdateResults(TEXT("Error: Query cannot be empty."));
@@ -839,7 +839,7 @@ FReply SAdastreaDirectorPanel::OnSendQueryClicked()
 		FProcessingGuard(bool& InFlag) : Flag(InFlag) { Flag = true; }
 		~FProcessingGuard() { Flag = false; }
 	} ProcessingGuard(bIsProcessing);
-	
+
 	UpdateResults(TEXT("Processing query..."));
 
 	// Send query to Python backend
@@ -883,9 +883,9 @@ FReply SAdastreaDirectorPanel::OnClearHistoryClicked()
 	// Show confirmation dialog
 	const FText Title = LOCTEXT("ClearHistoryTitle", "Clear Conversation History");
 	const FText Message = LOCTEXT("ClearHistoryMessage", "Are you sure you want to clear the conversation history?\n\nThis action cannot be undone.");
-	
+
 	EAppReturnType::Type UserResponse = FMessageDialog::Open(EAppMsgType::YesNo, Message, Title);
-	
+
 	if (UserResponse != EAppReturnType::Yes)
 	{
 		return FReply::Handled();
@@ -912,7 +912,7 @@ FReply SAdastreaDirectorPanel::OnBrowseDocsPathClicked()
 	{
 		FString FolderPath;
 		const void* ParentWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
-		
+
 		if (DesktopPlatform->OpenDirectoryDialog(
 			ParentWindowHandle,
 			TEXT("Select Documentation Folder"),
@@ -933,7 +933,7 @@ FReply SAdastreaDirectorPanel::OnBrowseDbPathClicked()
 	{
 		FString FolderPath;
 		const void* ParentWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
-		
+
 		if (DesktopPlatform->OpenDirectoryDialog(
 			ParentWindowHandle,
 			TEXT("Select Database Path"),
@@ -1022,7 +1022,7 @@ FReply SAdastreaDirectorPanel::OnStopIngestionClicked()
 	//       The ingestion will continue in Python but UI will stop monitoring progress.
 	bIsIngesting = false;
 	IngestionStatusMessage = LOCTEXT("IngestionStopped", "Ingestion stopped by user");
-	
+
 	return FReply::Handled();
 }
 
@@ -1096,7 +1096,7 @@ void SAdastreaDirectorPanel::UpdateIngestionProgress()
 	// Parse JSON
 	TSharedPtr<FJsonObject> JsonObject;
 	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonString);
-	
+
 	if (!FJsonSerializer::Deserialize(Reader, JsonObject) || !JsonObject.IsValid())
 	{
 		AppendIngestionDebugLog(TEXT("⚠️ Warning: Could not parse progress JSON\n"));
@@ -1109,7 +1109,7 @@ void SAdastreaDirectorPanel::UpdateIngestionProgress()
 	{
 		float OldProgress = IngestionProgress;
 		IngestionProgress = static_cast<float>(Percent / 100.0);
-		
+
 		// Only log significant progress changes (every 5% - calculated as 100/20 = 5)
 		// This prevents flooding the debug log with excessive updates
 		if (FMath::FloorToInt(OldProgress * 20.0f) != FMath::FloorToInt(IngestionProgress * 20.0f))
@@ -1148,7 +1148,7 @@ void SAdastreaDirectorPanel::UpdateIngestionProgress()
 			bIsIngesting = false;
 			IngestionProgress = 1.0f;
 			AppendIngestionDebugLog(TEXT("✅ Ingestion completed successfully!\n"));
-			
+
 			// Log final stats if available
 			FString FinalDetails = IngestionDetailsMessage.ToString();
 			if (!FinalDetails.IsEmpty())
@@ -1181,7 +1181,7 @@ FReply SAdastreaDirectorPanel::OnReconnectClicked()
 {
 	// Legacy IPC reconnection feature has been removed in Phase 3 migration
 	FAdastreaDirectorModule* RuntimeModule = FModuleManager::GetModulePtr<FAdastreaDirectorModule>("AdastreaDirector");
-	
+
 	if (!RuntimeModule)
 	{
 		AppendLogEntry(TEXT("Error: Runtime module not available\n"));
@@ -1191,11 +1191,11 @@ FReply SAdastreaDirectorPanel::OnReconnectClicked()
 	FString LogEntry = TEXT("Legacy IPC reconnection feature is no longer available.\n");
 	LogEntry += TEXT("The VibeUE architecture does not use IPC connections.\n");
 	LogEntry += TEXT("See MIGRATION_GUIDE.md for updated architecture.\n");
-	
+
 	AppendLogEntry(LogEntry);
 	UpdateConnectionStatus();
 	UpdateStatusLights();
-	
+
 	// Removed legacy code - previously reconnected to Python IPC server via FPythonBridge
 	return FReply::Handled();
 }
@@ -1211,13 +1211,13 @@ void SAdastreaDirectorPanel::AppendLogEntry(const FString& Entry)
 {
 	// Prepend new entry to existing logs (newest first)
 	CurrentLogContent = Entry + CurrentLogContent;
-	
+
 	// Keep only last MaxLogCharacters characters to prevent unbounded growth
 	if (CurrentLogContent.Len() > MaxLogCharacters)
 	{
 		CurrentLogContent = CurrentLogContent.Left(MaxLogCharacters);
 	}
-	
+
 	// Update cached FText version
 	CachedLogContentText = FText::FromString(CurrentLogContent);
 }
@@ -1227,7 +1227,7 @@ void SAdastreaDirectorPanel::AppendIngestionDebugLog(const FString& Entry)
 	// Prepend new entry with timestamp
 	FString Timestamp = FDateTime::Now().ToString(TEXT("[%H:%M:%S] "));
 	FString NewEntry = Timestamp + Entry;
-	
+
 	// Keep only last MaxIngestionDebugLogCharacters characters to prevent unbounded growth
 	if (CurrentIngestionDebugLog.Len() + NewEntry.Len() > MaxIngestionDebugLogCharacters)
 	{
@@ -1257,11 +1257,11 @@ void SAdastreaDirectorPanel::AppendIngestionDebugLog(const FString& Entry)
 			CurrentIngestionDebugLog = TEXT("");
 		}
 	}
-	
+
 	// Prepend new entry to existing logs (newest first, like a console log viewer)
 	// This allows users to see the most recent updates without scrolling down
 	CurrentIngestionDebugLog = NewEntry + CurrentIngestionDebugLog;
-	
+
 	// Update cached FText version
 	CachedIngestionDebugLogText = FText::FromString(CurrentIngestionDebugLog);
 }
@@ -1285,7 +1285,7 @@ void SAdastreaDirectorPanel::UpdateDashboardLogs()
 		TEXT("===============================\n\n"),
 		*FDateTime::Now().ToString(TEXT("%Y-%m-%d %H:%M:%S"))
 	);
-	
+
 	AppendLogEntry(NewLogEntry);
 	// Removed legacy code - previously fetched Python process logs via FPythonBridge IPC
 }
@@ -1313,9 +1313,9 @@ void SAdastreaDirectorPanel::UpdateStatusLights()
 {
 	// Legacy IPC status lights have been removed in Phase 3 migration
 	// Set all lights to indicate the migration to VibeUE architecture
-	
+
 	FAdastreaDirectorModule* RuntimeModule = FModuleManager::GetModulePtr<FAdastreaDirectorModule>("AdastreaDirector");
-	
+
 	if (!RuntimeModule)
 	{
 		// Runtime module not available - all systems down
@@ -1332,7 +1332,7 @@ void SAdastreaDirectorPanel::UpdateStatusLights()
 		BridgeReadyStatusLight->SetStatus(SStatusIndicator::EStatus::Unknown, LOCTEXT("BridgeRemoved", "Python Bridge: Removed (Phase 3)"));
 	if (BackendHealthStatusLight.IsValid())
 		BackendHealthStatusLight->SetStatus(SStatusIndicator::EStatus::Good, LOCTEXT("BackendVibeUE", "Backend: VibeUE (Native C++)"));
-	
+
 	// Check API key configuration (VibeUE Phase 3 - settings only, no backend validation)
 	if (APIKeyStatusLight.IsValid())
 	{
@@ -1341,7 +1341,7 @@ void SAdastreaDirectorPanel::UpdateStatusLights()
 		{
 			FAdastreaSettings& Settings = FAdastreaSettings::Get();
 			FString Provider = Settings.GetLLMProvider();
-			
+
 			APIKeyStatusLight->SetStatus(
 				SStatusIndicator::EStatus::Good,
 				FText::Format(LOCTEXT("APIKeyConfigured", "API Key: {0} configured"), FText::FromString(Provider))
@@ -1370,7 +1370,7 @@ void SAdastreaDirectorPanel::UpdateStatusLights()
 	// Legacy ingestion is no longer available
 	if (IngestionStatusLight.IsValid())
 		IngestionStatusLight->SetStatus(SStatusIndicator::EStatus::Unknown, LOCTEXT("IngestionRemoved", "Document Ingestion: N/A (use Asset Registry)"));
-		
+
 	// Removed legacy code - previously checked FPythonBridge and IPC connection status
 }
 
@@ -1400,7 +1400,7 @@ void SAdastreaDirectorPanel::Tick(const FGeometry& AllottedGeometry, const doubl
 			UpdateConnectionStatus();
 			LastDashboardRefreshTime = InCurrentTime;
 		}
-		
+
 		// Update connection status more frequently
 		const double TimeSinceLastStatusUpdate = InCurrentTime - LastConnectionStatusUpdateTime;
 		if (TimeSinceLastStatusUpdate >= ConnectionStatusUpdateInterval)
@@ -1436,7 +1436,7 @@ FReply SAdastreaDirectorPanel::OnTabButtonClicked(int32 TabIndex)
 	if (TabIndex >= 0 && TabIndex <= 3)
 	{
 		CurrentTabIndex = TabIndex;
-		
+
 		// If switching to dashboard, refresh it immediately
 		if (TabIndex == 2)
 		{
@@ -1462,7 +1462,7 @@ ECheckBoxState SAdastreaDirectorPanel::GetTabButtonCheckedState(int32 TabIndex) 
 TSharedRef<SWidget> SAdastreaDirectorPanel::CreateTestsTab()
 {
 	return SNew(SVerticalBox)
-		
+
 		// Tests Section Header
 		+ SVerticalBox::Slot()
 		.AutoHeight()
@@ -1479,7 +1479,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateTestsTab()
 		.Padding(10.0f, 5.0f, 10.0f, 5.0f)
 		[
 			SNew(SHorizontalBox)
-			
+
 			+ SHorizontalBox::Slot()
 			.AutoWidth()
 			.Padding(0.0f, 0.0f, 5.0f, 0.0f)
@@ -1590,7 +1590,7 @@ TSharedRef<SWidget> SAdastreaDirectorPanel::CreateTestsTab()
 			[
 				SNew(SScrollBox)
 				.Orientation(Orient_Vertical)
-				
+
 				+ SScrollBox::Slot()
 				[
 					SAssignNew(TestOutputDisplay, SMultiLineEditableTextBox)
@@ -1662,7 +1662,7 @@ void SAdastreaDirectorPanel::RunTests(const FString& TestType)
 
 	// Get the Python bridge
 	FAdastreaDirectorModule* RuntimeModule = FModuleManager::GetModulePtr<FAdastreaDirectorModule>("AdastreaDirector");
-	
+
 	if (!RuntimeModule)
 	{
 		AppendTestOutput(TEXT("❌ Error: Runtime module not available\n"));
@@ -1706,7 +1706,7 @@ void SAdastreaDirectorPanel::PerformSelfCheck()
 	{
 		AppendTestOutput(TEXT("✅ [1/8] Runtime Module: Loaded successfully\n"));
 		PassCount++;
-		
+
 		// Check if fully initialized
 		if (RuntimeModule->IsFullyInitialized())
 		{
@@ -1818,7 +1818,7 @@ void SAdastreaDirectorPanel::PerformSelfCheck()
 		AppendTestOutput(FString::Printf(TEXT("⚠️  Warnings: %d\n"), WarningCount));
 	}
 	AppendTestOutput(TEXT("───────────────────────────────────────────────────────────────\n"));
-	
+
 	// Determine overall status
 	if (FailCount == 0 && SkippedCount == 0 && WarningCount == 0)
 	{
@@ -1845,7 +1845,7 @@ void SAdastreaDirectorPanel::PerformSelfCheck()
 		AppendTestOutput(TEXT("\n⚠️  CHECKS INCOMPLETE WITH WARNINGS\n"));
 		AppendTestOutput(TEXT("Some checks were skipped and warnings were raised.\n"));
 		AppendTestOutput(TEXT("Plugin may have limited functionality.\n"));
-		TestStatusMessage = FText::Format(LOCTEXT("SelfCheckSkippedWarnings", "⚠️ {0} passed, {1} skipped, {2} warnings"), 
+		TestStatusMessage = FText::Format(LOCTEXT("SelfCheckSkippedWarnings", "⚠️ {0} passed, {1} skipped, {2} warnings"),
 			FText::AsNumber(PassCount), FText::AsNumber(SkippedCount), FText::AsNumber(WarningCount));
 	}
 	else if (FailCount > 0)
@@ -1877,17 +1877,17 @@ void SAdastreaDirectorPanel::UpdateTestOutput()
 void SAdastreaDirectorPanel::AppendTestOutput(const FString& Entry)
 {
 	CurrentTestOutput += Entry;
-	
+
 	// Keep only last MaxTestOutputCharacters characters, preserving line boundaries
 	if (CurrentTestOutput.Len() > MaxTestOutputCharacters)
 	{
 		// Find a newline near the truncation point to avoid cutting mid-line
 		int32 TruncateIndex = CurrentTestOutput.Len() - MaxTestOutputCharacters;
-		
+
 		// Search for a newline within the next 100 characters after TruncateIndex
 		int32 WindowLength = FMath::Min(100, CurrentTestOutput.Len() - TruncateIndex);
 		int32 RelativeNewlineIndex = CurrentTestOutput.Mid(TruncateIndex, WindowLength).Find(TEXT("\n"));
-		
+
 		if (RelativeNewlineIndex != INDEX_NONE)
 		{
 			// Found a newline close to truncation point
@@ -1899,7 +1899,7 @@ void SAdastreaDirectorPanel::AppendTestOutput(const FString& Entry)
 			CurrentTestOutput = TEXT("[...truncated...]\n") + CurrentTestOutput.Right(MaxTestOutputCharacters);
 		}
 	}
-	
+
 	// Update cached FText version
 	CachedTestOutputText = FText::FromString(CurrentTestOutput);
 }
@@ -1914,7 +1914,7 @@ FReply SAdastreaDirectorPanel::OnSaveTestLogClicked()
 	// Create timestamp for filename
 	FString Timestamp = FDateTime::Now().ToString(TEXT("%Y%m%d_%H%M%S"));
 	FString DefaultFilename = FString::Printf(TEXT("adastrea_test_log_%s.txt"), *Timestamp);
-	
+
 	// Open save file dialog
 	IDesktopPlatform* DesktopPlatform = FDesktopPlatformModule::Get();
 	if (!DesktopPlatform)
@@ -1922,10 +1922,10 @@ FReply SAdastreaDirectorPanel::OnSaveTestLogClicked()
 		AppendTestOutput(TEXT("\n❌ Failed to open save dialog - desktop platform not available.\n"));
 		return FReply::Handled();
 	}
-	
+
 	TArray<FString> OutFiles;
 	const void* ParentWindowHandle = FSlateApplication::Get().FindBestParentWindowHandleForDialogs(nullptr);
-	
+
 	bool bOpened = DesktopPlatform->SaveFileDialog(
 		ParentWindowHandle,
 		TEXT("Save Test Log"),
@@ -1935,7 +1935,7 @@ FReply SAdastreaDirectorPanel::OnSaveTestLogClicked()
 		EFileDialogFlags::None,
 		OutFiles
 	);
-	
+
 	if (bOpened && OutFiles.Num() > 0)
 	{
 		if (SaveTestLogToFile(OutFiles[0]))
@@ -1947,7 +1947,7 @@ FReply SAdastreaDirectorPanel::OnSaveTestLogClicked()
 			AppendTestOutput(TEXT("\n❌ Failed to save log file.\n"));
 		}
 	}
-	
+
 	return FReply::Handled();
 }
 
@@ -1960,10 +1960,10 @@ bool SAdastreaDirectorPanel::SaveTestLogToFile(const FString& FilePath)
 	LogContent += FString::Printf(TEXT("Generated: %s\n"), *FDateTime::Now().ToString(TEXT("%Y-%m-%d %H:%M:%S")));
 	LogContent += FString::Printf(TEXT("Project: %s\n"), *FPaths::GetProjectFilePath());
 	LogContent += TEXT("═══════════════════════════════════════════════════════════════\n\n");
-	
+
 	// Add the test output content
 	LogContent += CurrentTestOutput;
-	
+
 	// Write to file
 	return FFileHelper::SaveStringToFile(LogContent, *FilePath, FFileHelper::EEncodingOptions::ForceUTF8WithoutBOM);
 }

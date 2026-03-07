@@ -147,12 +147,12 @@
 2025-11-23T09:49:40.3687325Z [36;1mecho "***" | docker login ghcr.io -u Mittenzx --password-stdin[0m
 2025-11-23T09:49:40.3721651Z shell: /usr/bin/bash -e {0}
 2025-11-23T09:49:40.3721896Z ##[endgroup]
-2025-11-23T09:49:41.6731188Z 
+2025-11-23T09:49:41.6731188Z
 2025-11-23T09:49:41.6731642Z Login Succeeded
 2025-11-23T09:49:41.6732526Z WARNING! Your credentials are stored unencrypted in '/home/runner/.docker/config.json'.
 2025-11-23T09:49:41.6733970Z Configure a credential helper to remove this warning. See
 2025-11-23T09:49:41.6734552Z https://docs.docker.com/go/credential-store/
-2025-11-23T09:49:41.6734888Z 
+2025-11-23T09:49:41.6734888Z
 2025-11-23T09:49:41.6788682Z ##[group]Run echo "Pulling UE5.6 container image..."
 2025-11-23T09:49:41.6789064Z [36;1mecho "Pulling UE5.6 container image..."[0m
 2025-11-23T09:49:41.6789420Z [36;1m# Note: You must have Epic Games account linked and EULA accepted[0m

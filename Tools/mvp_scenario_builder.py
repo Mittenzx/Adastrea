@@ -18,7 +18,7 @@ from datetime import datetime
 
 class ScenarioBuilder:
     """Builds test scenarios for MVP trading"""
-    
+
     def __init__(self):
         self.scenarios = {
             'first_trade': self.scenario_first_trade,
@@ -29,7 +29,7 @@ class ScenarioBuilder:
             'economic_crash': self.scenario_economic_crash,
             'trading_tutorial': self.scenario_trading_tutorial,
         }
-    
+
     def scenario_first_trade(self) -> dict:
         """Scenario: Player's first trade"""
         return {
@@ -37,7 +37,7 @@ class ScenarioBuilder:
             'description': 'Tutorial scenario for first-time player',
             'difficulty': 'Beginner',
             'estimated_time': '5 minutes',
-            
+
             'player_state': {
                 'credits': 1000,
                 'cargo_capacity': 10,
@@ -45,7 +45,7 @@ class ScenarioBuilder:
                 'location': 'Agricultural Station',
                 'ship_type': 'starter'
             },
-            
+
             'stations': [
                 {
                     'name': 'Agricultural Station Alpha',
@@ -64,7 +64,7 @@ class ScenarioBuilder:
                     'highlight': True,
                 }
             ],
-            
+
             'objectives': [
                 {
                     'id': 'buy_water',
@@ -90,7 +90,7 @@ class ScenarioBuilder:
                     'reward_credits': 100
                 }
             ],
-            
+
             'tutorial_hints': [
                 {
                     'trigger': 'game_start',
@@ -108,13 +108,13 @@ class ScenarioBuilder:
                     'duration': 5.0
                 }
             ],
-            
+
             'success_criteria': {
                 'profit_made': 100,
                 'trades_completed': 2
             }
         }
-    
+
     def scenario_profitable_loop(self) -> dict:
         """Scenario: Test profitable trade loop"""
         return {
@@ -122,7 +122,7 @@ class ScenarioBuilder:
             'description': 'Optimized route for maximum profit testing',
             'difficulty': 'Intermediate',
             'estimated_time': '10 minutes',
-            
+
             'player_state': {
                 'credits': 5000,
                 'cargo_capacity': 30,
@@ -130,7 +130,7 @@ class ScenarioBuilder:
                 'location': 'Research Station',
                 'ship_type': 'medium'
             },
-            
+
             'stations': [
                 {
                     'name': 'Research Station Gamma',
@@ -154,7 +154,7 @@ class ScenarioBuilder:
                     'enabled': True
                 }
             ],
-            
+
             'objectives': [
                 {
                     'id': 'profit_target',
@@ -171,13 +171,13 @@ class ScenarioBuilder:
                     'reward_credits': 300
                 }
             ],
-            
+
             'success_criteria': {
                 'profit_made': 3000,
                 'time_limit_seconds': 600
             }
         }
-    
+
     def scenario_cargo_management(self) -> dict:
         """Scenario: Test cargo space optimization"""
         return {
@@ -185,7 +185,7 @@ class ScenarioBuilder:
             'description': 'Learn to optimize cargo space usage',
             'difficulty': 'Intermediate',
             'estimated_time': '8 minutes',
-            
+
             'player_state': {
                 'credits': 2000,
                 'cargo_capacity': 10,
@@ -195,7 +195,7 @@ class ScenarioBuilder:
                 'location': 'Trade Hub',
                 'ship_type': 'starter'
             },
-            
+
             'stations': [
                 {
                     'name': 'Central Trade Hub',
@@ -212,7 +212,7 @@ class ScenarioBuilder:
                     'enabled': True
                 }
             ],
-            
+
             'objectives': [
                 {
                     'id': 'cargo_efficiency',
@@ -229,7 +229,7 @@ class ScenarioBuilder:
                     'reward_credits': 300
                 }
             ],
-            
+
             'tutorial_hints': [
                 {
                     'trigger': 'open_trading_ui',
@@ -237,13 +237,13 @@ class ScenarioBuilder:
                     'duration': 4.0
                 }
             ],
-            
+
             'success_criteria': {
                 'profit_made': 1000,
                 'cargo_efficiency_min': 50
             }
         }
-    
+
     def scenario_price_comparison(self) -> dict:
         """Scenario: Learn price comparison across markets"""
         return {
@@ -251,7 +251,7 @@ class ScenarioBuilder:
             'description': 'Compare prices across 4 stations',
             'difficulty': 'Beginner',
             'estimated_time': '12 minutes',
-            
+
             'player_state': {
                 'credits': 1500,
                 'cargo_capacity': 10,
@@ -259,7 +259,7 @@ class ScenarioBuilder:
                 'location': 'Trade Hub',
                 'ship_type': 'starter'
             },
-            
+
             'stations': [
                 {
                     'name': 'Central Trade Hub',
@@ -294,7 +294,7 @@ class ScenarioBuilder:
                     'highlight': True
                 }
             ],
-            
+
             'objectives': [
                 {
                     'id': 'visit_all',
@@ -311,7 +311,7 @@ class ScenarioBuilder:
                     'reward_credits': 200
                 }
             ],
-            
+
             'tutorial_hints': [
                 {
                     'trigger': 'game_start',
@@ -319,13 +319,13 @@ class ScenarioBuilder:
                     'duration': 6.0
                 }
             ],
-            
+
             'success_criteria': {
                 'stations_visited': 4,
                 'best_route_found': True
             }
         }
-    
+
     def scenario_upgrade_path(self) -> dict:
         """Scenario: Work toward ship upgrade"""
         return {
@@ -333,7 +333,7 @@ class ScenarioBuilder:
             'description': 'Earn enough for medium ship upgrade',
             'difficulty': 'Advanced',
             'estimated_time': '30 minutes',
-            
+
             'player_state': {
                 'credits': 10000,  # Partway to upgrade
                 'cargo_capacity': 10,
@@ -347,7 +347,7 @@ class ScenarioBuilder:
                     'speed_multiplier': 0.9
                 }
             },
-            
+
             'stations': [
                 {
                     'name': 'Central Trade Hub',
@@ -385,7 +385,7 @@ class ScenarioBuilder:
                     'enabled': True
                 }
             ],
-            
+
             'objectives': [
                 {
                     'id': 'earn_40k',
@@ -402,13 +402,13 @@ class ScenarioBuilder:
                     'reward_credits': 5000  # Bonus on completion
                 }
             ],
-            
+
             'success_criteria': {
                 'total_credits': 50000,
                 'upgrade_purchased': True
             }
         }
-    
+
     def scenario_economic_crash(self) -> dict:
         """Scenario: Test recovery from bad trades"""
         return {
@@ -416,7 +416,7 @@ class ScenarioBuilder:
             'description': 'Recover from poor trading decisions',
             'difficulty': 'Hard',
             'estimated_time': '15 minutes',
-            
+
             'player_state': {
                 'credits': 200,  # Nearly broke
                 'cargo_capacity': 10,
@@ -426,7 +426,7 @@ class ScenarioBuilder:
                 'location': 'Industrial Station',
                 'ship_type': 'starter'
             },
-            
+
             'stations': [
                 {
                     'name': 'Industrial Station',
@@ -450,7 +450,7 @@ class ScenarioBuilder:
                     'enabled': True
                 }
             ],
-            
+
             'objectives': [
                 {
                     'id': 'sell_art',
@@ -468,7 +468,7 @@ class ScenarioBuilder:
                     'reward_credits': 500
                 }
             ],
-            
+
             'tutorial_hints': [
                 {
                     'trigger': 'game_start',
@@ -476,13 +476,13 @@ class ScenarioBuilder:
                     'duration': 5.0
                 }
             ],
-            
+
             'success_criteria': {
                 'total_credits': 2000,
                 'item_sold': 'rare_art'
             }
         }
-    
+
     def scenario_trading_tutorial(self) -> dict:
         """Scenario: Complete tutorial sequence"""
         return {
@@ -490,7 +490,7 @@ class ScenarioBuilder:
             'description': 'Full tutorial covering all trading mechanics',
             'difficulty': 'Beginner',
             'estimated_time': '20 minutes',
-            
+
             'player_state': {
                 'credits': 1000,
                 'cargo_capacity': 10,
@@ -499,7 +499,7 @@ class ScenarioBuilder:
                 'ship_type': 'starter',
                 'tutorial_progress': 0
             },
-            
+
             'stations': [
                 {
                     'name': 'Central Trade Hub',
@@ -526,7 +526,7 @@ class ScenarioBuilder:
                     'tutorial_station': True
                 }
             ],
-            
+
             'tutorial_steps': [
                 {
                     'id': 'step1_navigation',
@@ -564,35 +564,35 @@ class ScenarioBuilder:
                     'hints': ['Watch cargo bar in trading UI']
                 }
             ],
-            
+
             'success_criteria': {
                 'tutorial_completed': True,
                 'all_steps_passed': True
             }
         }
-    
+
     def build_scenario(self, scenario_name: str) -> dict:
         """Build a specific scenario"""
         if scenario_name not in self.scenarios:
             raise ValueError(f"Unknown scenario: {scenario_name}")
-        
+
         scenario_func = self.scenarios[scenario_name]
         scenario_data = scenario_func()
-        
+
         # Add metadata
         scenario_data['generated_at'] = datetime.now().isoformat()
         scenario_data['version'] = '1.0'
         scenario_data['scenario_id'] = scenario_name
-        
+
         return scenario_data
-    
+
     def list_scenarios(self):
         """List all available scenarios"""
         print("=" * 60)
         print("AVAILABLE SCENARIOS")
         print("=" * 60)
         print()
-        
+
         for scenario_id in self.scenarios:
             scenario = self.build_scenario(scenario_id)
             print(f"📦 {scenario['name']}")
@@ -601,16 +601,16 @@ class ScenarioBuilder:
             print(f"   Time: {scenario['estimated_time']}")
             print(f"   Description: {scenario['description']}")
             print()
-    
+
     def export_scenario(self, scenario_name: str, output_path: Path):
         """Export scenario to JSON file"""
         scenario = self.build_scenario(scenario_name)
-        
+
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        
+
         with open(output_path, 'w') as f:
             json.dump(scenario, f, indent=2)
-        
+
         print(f"✅ Exported scenario to: {output_path}")
         print(f"   Scenario: {scenario['name']}")
         print(f"   Difficulty: {scenario['difficulty']}")
@@ -620,23 +620,23 @@ class ScenarioBuilder:
 def main():
     """Main entry point"""
     import argparse
-    
+
     parser = argparse.ArgumentParser(description="MVP Trading Scenario Builder")
     parser.add_argument('--list', '-l', action='store_true', help='List all available scenarios')
     parser.add_argument('--scenario', '-s', type=str, help='Scenario to build')
     parser.add_argument('--output', '-o', type=str, help='Output file path (JSON)')
-    
+
     args = parser.parse_args()
-    
+
     builder = ScenarioBuilder()
-    
+
     if args.list:
         builder.list_scenarios()
         return 0
-    
+
     if args.scenario:
         output_path = Path(args.output) if args.output else Path(f"scenarios/{args.scenario}.json")
-        
+
         try:
             builder.export_scenario(args.scenario, output_path)
             return 0
@@ -644,7 +644,7 @@ def main():
             print(f"❌ Error: {e}")
             print("\nUse --list to see available scenarios")
             return 1
-    
+
     # Default: show help
     parser.print_help()
     return 0

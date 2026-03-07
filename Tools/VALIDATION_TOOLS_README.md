@@ -652,9 +652,9 @@ Each tool provides:
 
 ---
 
-**Location**: `/Tools/`  
-**Maintained By**: Adastrea Development Team  
-**Last Updated**: 2025-12-20  
+**Location**: `/Tools/`
+**Maintained By**: Adastrea Development Team
+**Last Updated**: 2025-12-20
 **Status**: Active - All tools ready for use
 
 ## Migration Note

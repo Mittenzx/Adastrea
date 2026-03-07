@@ -27,7 +27,7 @@ Quick reference guide for converting YAML template files to Unreal Engine Data A
 | 19 | ProceduralContent | 48 | N/A | Various | Optional |
 | 20 | Population Templates | 2 | N/A | Config files | N/A |
 
-**Total Manual Templates**: 113 files  
+**Total Manual Templates**: 113 files
 **Total with Generated**: 161 files
 
 ## Quick Import Commands
@@ -153,5 +153,5 @@ Assets/ProceduralContent/Ships/     → 8 YAML files
 
 ---
 
-**Last Updated**: 2025-11-23  
+**Last Updated**: 2025-11-23
 **Version**: 1.0

@@ -9,7 +9,7 @@ PersonnelName: "Scott Bell"
 # Basic Identity
 Biography: |
   This individual started as a cargo hauler and worked their way up through the ranks. They are admired for their unwavering loyalty and published research that advanced the field of ship systems.
-  
+
 Age: 64
 Gender: "Male"
 Species: "Human"
@@ -61,7 +61,7 @@ ContractMonthsRemaining: 0
 PersonalityType: "Aggressive"
 PersonalityDescription: |
   Aggressive personality with focus on securityofficer duties.
-  
+
 Traits:
   - TraitName: "Brave"
     TraitDescription: "Performs well under pressure"

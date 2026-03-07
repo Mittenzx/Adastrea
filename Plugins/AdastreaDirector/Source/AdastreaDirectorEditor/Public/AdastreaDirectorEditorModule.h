@@ -23,7 +23,7 @@ public:
 private:
 	/** Registers menu extensions and toolbar buttons */
 	void RegisterMenuExtensions();
-	
+
 	/** Unregisters menu extensions */
 	void UnregisterMenuExtensions();
 

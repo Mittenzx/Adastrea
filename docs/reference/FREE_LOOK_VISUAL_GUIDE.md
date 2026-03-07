@@ -149,7 +149,7 @@ CameraRotation = ShipRotation + FreeLookRotation(Pitch, Yaw, 0)
                  └─────────┘    └─────────────────────────────┘
                  Ship stays     Camera rotates independently
                  constant
-                 
+
 FreeLookRotation.Pitch = Clamped to [-89°, +89°]
 FreeLookRotation.Yaw = Unlimited rotation
 FreeLookRotation.Roll = Always 0 (no roll in free look)
@@ -187,7 +187,7 @@ FreeLookRotation.Roll = Always 0 (no roll in free look)
 
 ## Key Advantages of This Implementation
 
-1. **Non-Intrusive**: 
+1. **Non-Intrusive**:
    - Doesn't modify core ship movement code
    - Only affects camera behavior when active
    - Gracefully degrades if not configured

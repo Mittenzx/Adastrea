@@ -1,9 +1,9 @@
 # Cargo Bay Module - Complete Setup Guide
 
-**Module Type**: `ACargoBayModule`  
-**Blueprint Class**: `BP_CargoBayModule`  
-**Power Consumption**: 5 units  
-**Module Group**: Storage  
+**Module Type**: `ACargoBayModule`
+**Blueprint Class**: `BP_CargoBayModule`
+**Power Consumption**: 5 units
+**Module Group**: Storage
 **Last Updated**: 2026-01-18
 
 ---
@@ -101,27 +101,27 @@ BP_CargoBayModule (Self)
 
 ### Module Type
 
-**Type**: `FString`  
-**Default**: "Cargo Bay"  
-**Access**: EditAnywhere, BlueprintReadOnly  
+**Type**: `FString`
+**Default**: "Cargo Bay"
+**Access**: EditAnywhere, BlueprintReadOnly
 **Category**: Module
 
 Identifier for this module type. Automatically set by the C++ constructor.
 
 ### Module Power
 
-**Type**: `float`  
-**Default**: 5.0  
-**Access**: EditAnywhere, BlueprintReadOnly  
+**Type**: `float`
+**Default**: 5.0
+**Access**: EditAnywhere, BlueprintReadOnly
 **Category**: Module
 
 Power consumption in units. Cargo bays are low-power modules (5 units).
 
 ### Module Group
 
-**Type**: `EStationModuleGroup`  
-**Default**: Storage  
-**Access**: EditAnywhere, BlueprintReadOnly  
+**Type**: `EStationModuleGroup`
+**Default**: Storage
+**Access**: EditAnywhere, BlueprintReadOnly
 **Category**: Module
 
 Functional group for organization and filtering. Cargo bays belong to the Storage group.
@@ -132,7 +132,7 @@ Functional group for organization and filtering. Cargo bays belong to the Storag
 
 ### Single Cargo Bay
 
-**Use Case**: Small outpost, minimal storage needs  
+**Use Case**: Small outpost, minimal storage needs
 **Configuration**: One cargo bay module
 
 ```
@@ -144,7 +144,7 @@ BP_SmallStation
 
 ### Multiple Cargo Bays
 
-**Use Case**: Major trading hub, high volume storage  
+**Use Case**: Major trading hub, high volume storage
 **Configuration**: Multiple cargo bay modules
 
 ```
@@ -158,7 +158,7 @@ BP_TradingHub
 
 ### Specialized Storage
 
-**Use Case**: Differentiated storage areas  
+**Use Case**: Differentiated storage areas
 **Configuration**: Multiple cargo bays with different purposes
 
 ```
@@ -202,21 +202,21 @@ Cargo Bay modules inherit standard module functions:
 
 ### GetModuleType()
 
-**Type**: BlueprintCallable, BlueprintPure  
+**Type**: BlueprintCallable, BlueprintPure
 **Returns**: `FString` - Module type ("Cargo Bay")
 
 Get the type identifier for this module.
 
 ### GetModulePower()
 
-**Type**: BlueprintCallable, BlueprintPure  
+**Type**: BlueprintCallable, BlueprintPure
 **Returns**: `float` - Power consumption (5.0)
 
 Get the power consumption of this module.
 
 ### GetModuleGroup()
 
-**Type**: BlueprintCallable, BlueprintPure  
+**Type**: BlueprintCallable, BlueprintPure
 **Returns**: `EStationModuleGroup` - Module group (Storage)
 
 Get the functional group this module belongs to.
@@ -259,7 +259,7 @@ Get the functional group this module belongs to.
 
 ### Issue: Cargo Bay Not Visible
 
-**Likely Cause**: Static mesh not assigned  
+**Likely Cause**: Static mesh not assigned
 **Solution**:
 - Open cargo bay Blueprint
 - Select StaticMesh component
@@ -268,7 +268,7 @@ Get the functional group this module belongs to.
 
 ### Issue: High Power Consumption
 
-**Likely Cause**: Multiple cargo bays or wrong power value  
+**Likely Cause**: Multiple cargo bays or wrong power value
 **Solution**:
 - Count cargo bay modules on station
 - Each consumes 5 units (correct)
@@ -277,7 +277,7 @@ Get the functional group this module belongs to.
 
 ### Issue: Module Not Found by Station
 
-**Likely Cause**: Not added to station properly  
+**Likely Cause**: Not added to station properly
 **Solution**:
 - Verify added as Child Actor Component
 - Check station's Modules array in Details (runtime)
@@ -488,5 +488,5 @@ TArray<FCargoItem> StoredItems;
 
 ---
 
-**Maintained by**: Adastrea Development Team  
+**Maintained by**: Adastrea Development Team
 **For Support**: See main project README.md

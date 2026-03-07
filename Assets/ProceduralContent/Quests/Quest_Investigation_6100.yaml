@@ -7,7 +7,7 @@ ContractName: "Investigate Anomaly"
 ContractID: "Quest_Investigation_6100"
 Description: |
   Investigate unusual activity near Celestia 608 on behalf of Zeta 745.
-  
+
 ContractType: Investigation
 Difficulty: VeryHard
 

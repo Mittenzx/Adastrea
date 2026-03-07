@@ -5,8 +5,8 @@ This directory contains YAML templates for configuring the Sector Generator syst
 ## Available Templates
 
 ### MiningSection.yaml
-**Theme**: Resource extraction and industrial operations  
-**Best For**: Mining gameplay, resource gathering, industrial zones  
+**Theme**: Resource extraction and industrial operations
+**Best For**: Mining gameplay, resource gathering, industrial zones
 **Contents**:
 - Trading and mining stations
 - Rich asteroid fields
@@ -14,14 +14,14 @@ This directory contains YAML templates for configuring the Sector Generator syst
 - Cargo transports
 - Mining ships
 
-**Density**: Normal (1.0)  
+**Density**: Normal (1.0)
 **Faction Focus**: Trading Guild, Mining Cooperative
 
 ---
 
 ### FrontierOutpost.yaml
-**Theme**: Remote, sparsely populated frontier  
-**Best For**: Exploration, survival gameplay, early-game areas  
+**Theme**: Remote, sparsely populated frontier
+**Best For**: Exploration, survival gameplay, early-game areas
 **Contents**:
 - Small independent outpost
 - Scattered asteroids
@@ -29,14 +29,14 @@ This directory contains YAML templates for configuring the Sector Generator syst
 - Scout ships
 - Navigation beacons
 
-**Density**: Sparse (0.5)  
+**Density**: Sparse (0.5)
 **Faction Focus**: Independent settlers
 
 ---
 
 ### MilitaryBorder.yaml
-**Theme**: Heavily defended military zone  
-**Best For**: Combat gameplay, high-security areas, faction borders  
+**Theme**: Heavily defended military zone
+**Best For**: Combat gameplay, high-security areas, faction borders
 **Contents**:
 - Military command stations
 - Defensive platforms
@@ -45,14 +45,14 @@ This directory contains YAML templates for configuring the Sector Generator syst
 - Scanner arrays
 - Minefield markers
 
-**Density**: High (1.5)  
+**Density**: High (1.5)
 **Faction Focus**: Military faction
 
 ---
 
 ### TradeHub.yaml
-**Theme**: Busy commercial sector  
-**Best For**: Trading gameplay, economic hubs, mission variety  
+**Theme**: Busy commercial sector
+**Best For**: Trading gameplay, economic hubs, mission variety
 **Contents**:
 - Trading stations and marketplaces
 - Warehouses
@@ -61,7 +61,7 @@ This directory contains YAML templates for configuring the Sector Generator syst
 - Refueling depots
 - Docking beacons
 
-**Density**: Above Normal (1.3)  
+**Density**: Above Normal (1.3)
 **Faction Focus**: Trading Guild
 
 ---
@@ -268,6 +268,6 @@ Update these to match your project's ship Data Assets.
 
 ---
 
-**Last Updated**: 2025-12-19  
-**Version**: 1.0  
+**Last Updated**: 2025-12-19
+**Version**: 1.0
 **Maintained by**: Adastrea Development Team

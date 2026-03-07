@@ -354,7 +354,7 @@ This guide provides step-by-step workflows for game designers to create and conf
        Trade Item: DA_TradeItem_FoodRations
        Quantity: 500
        Requires Pristine Condition: ☐
-     
+
      Entry 2:
        Trade Item: DA_TradeItem_MedicalSupplies
        Quantity: 100
@@ -367,7 +367,7 @@ This guide provides step-by-step workflows for game designers to create and conf
      Location Name: "Free Port Station"
      Coordinates: X=1000, Y=2000, Z=500
      Market ID: "Market_FreePort"
-   
+
    Destination Location:
      Location Name: "Mining Colony Alpha"
      Coordinates: X=5000, Y=3000, Z=1000
@@ -794,7 +794,7 @@ trading.logtransactions 1
 
 Create item chains with increasing value:
 ```
-Iron Ore (50) → Steel Ingot (150) → Ship Hull Plate (500) → 
+Iron Ore (50) → Steel Ingot (150) → Ship Hull Plate (500) →
 Complete Hull (2000)
 ```
 
@@ -814,7 +814,7 @@ Creates natural trade routes.
 
 Events trigger follow-up events:
 ```
-Mining Accident → Ore Shortage → Metal Price Spike → 
+Mining Accident → Ore Shortage → Metal Price Spike →
 Component Shortage → Ship Price Increase
 ```
 
@@ -877,7 +877,7 @@ Quests affect economy:
 
 ---
 
-**Next Steps**: 
+**Next Steps**:
 - Review [TradingSystemGuide.md](TradingSystemGuide.md) for complete reference
 - Check [TradingBlueprintExamples.md](TradingBlueprintExamples.md) for Blueprint examples
 - See [TradingTemplates/](TradingTemplates/) for YAML configuration templates

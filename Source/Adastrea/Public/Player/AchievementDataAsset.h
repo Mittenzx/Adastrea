@@ -105,19 +105,19 @@ struct FAchievementProgress
 /**
  * Data Asset representing an achievement.
  * Defines achievement criteria, rewards, and progression tracking.
- * 
+ *
  * Usage:
  * - Create Blueprint Data Asset based on UAchievementDataAsset
  * - Configure achievement details, category, rarity
  * - Set target progress and rewards
  * - Track via AchievementManagerSubsystem
- * 
+ *
  * Example Achievements:
  * - "First Blood": Destroy your first enemy ship (Combat, Common)
  * - "Trade Baron": Complete 100 trade contracts (Trading, Rare)
  * - "Explorer": Discover 50 star systems (Exploration, Uncommon)
  * - "Diplomatic Genius": Reach Revered with all factions (Diplomacy, Legendary)
- * 
+ *
  * Integration:
  * - AchievementManagerSubsystem tracks progress
  * - Quest system can track achievement-related objectives

@@ -2,7 +2,7 @@
 
 > **How to update existing Blueprint guides to the new standard**
 
-**Last Updated**: 2026-01-03  
+**Last Updated**: 2026-01-03
 **For**: Blueprint guide authors and maintainers
 
 ---
@@ -117,8 +117,8 @@ Last Updated: 2026-01-03
 
 **From original** (too long):
 ```markdown
-This comprehensive guide walks you through the process of creating 
-a sophisticated trading interface that includes dynamic price updates, 
+This comprehensive guide walks you through the process of creating
+a sophisticated trading interface that includes dynamic price updates,
 real-time inventory management, advanced filtering capabilities...
 [continues for 5+ sentences]
 ```
@@ -127,8 +127,8 @@ real-time inventory management, advanced filtering capabilities...
 ```markdown
 ### What You'll Build
 
-A trading UI that allows players to buy items from a space station's 
-market and sell items from their cargo hold. The interface shows 
+A trading UI that allows players to buy items from a space station's
+market and sell items from their cargo hold. The interface shows
 available items, prices, player credits, and cargo space.
 ```
 
@@ -291,7 +291,7 @@ Add some nodes to handle the transaction. Connect them properly.
    - Call `RefreshItemList`
    - Play success sound
 
-**Expected Result**: Clicking trade button executes the transaction 
+**Expected Result**: Clicking trade button executes the transaction
 and updates the UI.
 ```
 
@@ -323,7 +323,7 @@ and updates the UI.
 4. Play in editor
 5. Trigger UI
 
-**Success Criteria**: 
+**Success Criteria**:
 - UI opens without errors
 - Items are visible
 - Credits display
@@ -577,6 +577,6 @@ A migration is successful when:
 
 ---
 
-**Migration Guide Version**: 1.0  
-**Created**: 2026-01-03  
+**Migration Guide Version**: 1.0
+**Created**: 2026-01-03
 **Maintained by**: Adastrea Documentation Team

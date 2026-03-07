@@ -6,7 +6,7 @@ This document summarizes the performance optimizations applied to the Adastrea c
 
 Multiple performance issues were identified and resolved, including:
 - Nested loop optimizations
-- Algorithm improvements  
+- Algorithm improvements
 - Caching strategies
 - Proper logging instead of debug messages
 - String operation optimizations
@@ -18,7 +18,7 @@ Multiple performance issues were identified and resolved, including:
 **File**: `Source/Adastrea/Trading/AITraderComponent.cpp`
 **Function**: `FindBestTradeRoutes()`
 
-**Problem**: 
+**Problem**:
 - O(n³) complexity with nested loops: Markets × Markets × Items
 - Redundant calculations in `CalculateArbitrageOpportunity()`
 - No early exits or capital checks
@@ -31,7 +31,7 @@ Multiple performance issues were identified and resolved, including:
 - Reserve array capacity to avoid reallocations
 - Sort only when needed (when results exceed MaxRoutes)
 
-**Impact**: 
+**Impact**:
 - Reduced from O(M³ × I) to O(M² × I) where M = markets, I = items
 - Added early exits reduce actual iterations significantly
 - Eliminated redundant sorting when result set is small
@@ -70,7 +70,7 @@ Multiple performance issues were identified and resolved, including:
 
 **Solutions**:
 - Added cached latest timestamp (`CachedLatestTimestamp`)
-- Added cache validity flag (`bCacheValid`)  
+- Added cache validity flag (`bCacheValid`)
 - Update cache when recording transactions
 - Invalidate cache when pruning
 - Reserve array capacity in query methods (estimate 10% match rate)
@@ -107,7 +107,7 @@ Multiple performance issues were identified and resolved, including:
 
 ### 5. Debug Message Optimization
 
-**Files**: 
+**Files**:
 - `Source/Adastrea/AI/FactionLogic.cpp`
 - `Source/Adastrea/AI/PersonnelLogic.cpp`
 

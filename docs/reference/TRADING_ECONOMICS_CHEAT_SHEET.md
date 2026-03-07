@@ -284,9 +284,9 @@ ls Content/DataAssets/Trading/MVP/Markets/
 
 ---
 
-**Last Updated**: January 17, 2026  
-**For**: Trade Simulator MVP (Weeks 1-12)  
-**See Also**: 
+**Last Updated**: January 17, 2026
+**For**: Trade Simulator MVP (Weeks 1-12)
+**See Also**:
 - `docs/development/MVP_QUICK_START_GUIDE.md`
 - `Assets/TradingTemplates/README.md`
 - `.github/instructions/trade-simulator-mvp.instructions.md`

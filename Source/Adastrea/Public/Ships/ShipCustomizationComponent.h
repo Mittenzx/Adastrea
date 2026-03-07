@@ -13,30 +13,30 @@ class UShipModuleDataAsset;
 
 /**
  * Component for managing ship module installation and customization
- * 
+ *
  * This component handles the complete ship customization system, including:
  * - Module slot management
  * - Module installation/removal
  * - Power and mass calculations
  * - Slot compatibility checking
  * - Loadout saving/loading
- * 
+ *
  * Usage:
  * - Add to ship actor (ASpaceship)
  * - Define module slots in editor
  * - Use Blueprint or C++ functions to install/remove modules
  * - Query current configuration for gameplay effects
- * 
+ *
  * ========================================
  * POST-MVP STATUS: ALL FUNCTIONS DEFERRED
  * ========================================
  * This entire customization system has been deferred to post-MVP phase.
  * Reason: Cosmetic/vanity system not required for trading MVP gameplay loop.
- * 
+ *
  * All 12 BlueprintCallable functions have been commented out to reduce
  * Blueprint API surface area. Functions remain available for C++ internal
  * use and can be easily reactivated post-MVP by uncommenting UFUNCTION macros.
- * 
+ *
  * See: PHASE2_SHIPS_SYSTEM_CATEGORIZATION.md for full analysis.
  */
 UCLASS(ClassGroup=(Ship), meta=(BlueprintSpawnableComponent))
@@ -114,7 +114,7 @@ public:
 	 * @param Module The module component to install
 	 * @param SlotID The ID of the slot to install into
 	 * @return True if installation succeeded
-	 * 
+	 *
 	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
 	// UFUNCTION(BlueprintCallable, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
@@ -124,7 +124,7 @@ public:
 	 * Remove a module from a slot
 	 * @param SlotID The ID of the slot to remove module from
 	 * @return The removed module component, or nullptr if slot was empty
-	 * 
+	 *
 	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
 	// UFUNCTION(BlueprintCallable, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
@@ -135,7 +135,7 @@ public:
 	 * @param NewModule The new module to install
 	 * @param SlotID The slot to replace module in
 	 * @return The old module that was replaced, or nullptr if slot was empty
-	 * 
+	 *
 	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
 	// UFUNCTION(BlueprintCallable, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
@@ -145,7 +145,7 @@ public:
 	 * Get the module installed in a specific slot
 	 * @param SlotID The slot to query
 	 * @return The installed module, or nullptr if slot is empty
-	 * 
+	 *
 	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
 	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
@@ -155,7 +155,7 @@ public:
 	 * Get all installed modules of a specific category
 	 * @param Category The category to filter by
 	 * @return Array of modules in that category
-	 * 
+	 *
 	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
 	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
@@ -164,7 +164,7 @@ public:
 	/**
 	 * Get all installed modules
 	 * @return Array of all installed modules
-	 * 
+	 *
 	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
 	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
@@ -174,7 +174,7 @@ public:
 	 * Check if a specific slot is occupied
 	 * @param SlotID The slot to check
 	 * @return True if slot has a module installed
-	 * 
+	 *
 	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
 	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
@@ -189,7 +189,7 @@ public:
 	 * @param SlotID The ID to search for
 	 * @param OutSlot The found slot (only valid if function returns true)
 	 * @return True if a slot with the given ID was found
-	 * 
+	 *
 	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
 	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
@@ -199,7 +199,7 @@ public:
 	 * Get all slots of a specific category
 	 * @param Category The category to filter by
 	 * @return Array of slots that accept this category
-	 * 
+	 *
 	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
 	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
@@ -208,7 +208,7 @@ public:
 	/**
 	 * Get all empty slots
 	 * @return Array of unoccupied slots
-	 * 
+	 *
 	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
 	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
@@ -218,7 +218,7 @@ public:
 	 * Get all empty slots compatible with a specific module
 	 * @param Module The module to check compatibility for
 	 * @return Array of compatible unoccupied slots
-	 * 
+	 *
 	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
 	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
@@ -230,7 +230,7 @@ public:
 	 * @param SlotID The target slot
 	 * @param OutReason Output parameter for failure reason
 	 * @return True if module can be installed
-	 * 
+	 *
 	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
 	// UFUNCTION(BlueprintCallable, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system
@@ -270,7 +270,7 @@ public:
 
 	/**
 	 * Clear all installed modules
-	 * 
+	 *
 	 * @note POST-MVP: Deferred to post-MVP phase (cosmetic system not needed for trading MVP)
 	 */
 	// UFUNCTION(BlueprintCallable, Category="Ship Customization") // DEFERRED: Post-MVP cosmetic system

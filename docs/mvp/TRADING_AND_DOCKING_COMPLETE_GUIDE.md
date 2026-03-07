@@ -1,7 +1,7 @@
 # Trading and Docking System - Complete Guide
 
-**Last Updated**: 2026-01-18  
-**Version**: 1.1  
+**Last Updated**: 2026-01-18
+**Version**: 1.1
 **Status**: Unified Reference Guide (Enhanced with Visual Docking Setup)
 
 > **⭐ This is the UNIFIED guide** for all trading and docking functionality in Adastrea. All previous separate guides have been consolidated here.
@@ -336,13 +336,13 @@ Inventory:
       Max Stock: 50000
       Supply Level: 2.0 (abundant - station produces)
       Demand Level: 0.5 (low need)
-      
+
   [1] Trade Item: DA_Item_Food
       Current Stock: 5000
       Max Stock: 20000
       Supply Level: 1.5 (good supply)
       Demand Level: 0.8 (moderate demand)
-      
+
   [2] Trade Item: DA_Item_Electronics
       Current Stock: 100
       Max Stock: 500
@@ -471,15 +471,15 @@ class AMarketplaceModule : public ASpaceStationModule
     // Market configuration
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     UMarketDataAsset* MarketDataAsset;
-    
+
     // Trading availability
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     bool bIsOpen;
-    
+
     // Display name
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     FText MarketplaceName;
-    
+
     // Module properties (inherited)
     // ModuleType = "Marketplace"
     // ModulePower = 40.0f (consumption)
@@ -900,7 +900,7 @@ BP_PlayerShip (Class Defaults):
 BP_PlayerShip (Class Defaults):
   Docking:
     - Docking Settings: DA_DefaultDockingSettings
-  
+
   Docking | Fallback:
     (Keep these for backward compatibility, but they won't be used)
 ```
@@ -942,7 +942,7 @@ This comprehensive guide walks you through setting up docking with **visual diag
 ![Station Docking Module Configuration](../reference/images/blueprints/station_docking_module_config.svg)
 
 > **💡 Recommended Method: Child Actor Components**
-> 
+>
 > Add modules directly in the Components panel for visual, design-time editing.
 > See Part 4: "Creating a Trading Station" for detailed step-by-step instructions.
 
@@ -994,19 +994,19 @@ This comprehensive guide walks you through setting up docking with **visual diag
    - This shows the hierarchy of all components in the Blueprint
 
 3. **Add Scene Components for Docking Points**
-   
+
    For each docking point (recommended: 4-6 points):
-   
+
    a. **Add New Scene Component**:
       - Click the "+ Add" button in Components panel
       - Search for "Scene Component"
       - Select it to add a new Scene Component
-   
+
    b. **Rename the Component**:
       - Right-click the new component
       - Select "Rename"
       - Name it: `DockingPoint_1` (then `_2`, `_3`, etc.)
-   
+
    c. **Configure Transform** (in Details panel):
       - **Location**: Position where ship should dock
         - DockingPoint_1: X=200, Y=0, Z=100
@@ -1015,28 +1015,28 @@ This comprehensive guide walks you through setting up docking with **visual diag
         - DockingPoint_4: X=400, Y=0, Z=100
       - **Rotation**: Usually (0, 0, 0) for standard orientation
       - **Scale**: (1, 1, 1) - don't change this
-   
+
    d. **Add Component Tag** (optional but recommended):
       - In Details panel, find "Tags → Component Tags"
       - Add tag: `DockingPoint`
       - This helps identify docking points programmatically
 
 4. **Add Interaction Trigger (Sphere Component)**
-   
+
    This sphere detects when ships enter docking range:
-   
+
    a. **Add Sphere Component**:
       - Click "+ Add" button
       - Search for "Sphere Component"
       - Add it to the hierarchy
-   
+
    b. **Rename**: `InteractionTrigger`
-   
+
    c. **Configure Collision**:
       - **Sphere Radius**: 1500.0 (detection range in units)
       - **Collision Preset**: "Overlap All Dynamic"
       - **Generate Overlap Events**: ✓ Enabled
-   
+
    d. **Visual Settings**:
       - **Hidden in Game**: ✓ Enabled (invisible during gameplay)
       - **Visible**: ✓ Enabled in editor for debugging
@@ -1076,18 +1076,18 @@ This comprehensive guide walks you through setting up docking with **visual diag
    - If you closed it, reopen `BP_SpaceStationModule_DockingBay`
 
 2. **For EACH Scene Component (DockingPoint_1, DockingPoint_2, etc.)**:
-   
+
    a. **Select the Scene Component** in the Components panel
-   
+
    b. **Find the "Tags" Section** in Details panel
       - Look for "Tags" (usually near the bottom of Details)
       - You should see: `▼ Component Tags [0]` (empty array)
-   
+
    c. **Add "DockingPoint" Tag**:
       - Click "+ Add Element" button next to Component Tags
       - In the text field that appears, type: `DockingPoint`
       - Exact spelling, case-sensitive!
-   
+
    d. **Repeat for All Docking Points**:
       - DockingPoint_1 → Add tag "DockingPoint"
       - DockingPoint_2 → Add tag "DockingPoint"
@@ -1571,20 +1571,20 @@ DefaultSceneRoot
    Market Size: Medium
    Sell Price Markup: 1.1 (player pays 10% more)
    Buy Price Markdown: 0.9 (player receives 10% less)
-   
+
    Inventory:
      [0] Trade Item: DA_Item_Water
          Current Stock: 10000
          Max Stock: 50000
          Supply Level: 2.0 (abundant)
          Demand Level: 0.5 (low demand)
-     
+
      [1] Trade Item: DA_Item_Food
          Current Stock: 5000
          Max Stock: 20000
          Supply Level: 1.5
          Demand Level: 0.8
-     
+
      [2] Trade Item: DA_Item_Electronics
          Current Stock: 100
          Max Stock: 500
@@ -1683,10 +1683,10 @@ If `DA_DefaultDockingSettings` doesn't exist, create it once:
    Docking > UI:
      - Docking Prompt Widget Class: WBP_DockingPrompt
      - Trading Interface Class: WBP_TradingInterface
-   
+
    Docking > Parameters:
      - Docking Range: 2000.0 (in cm, ~20 meters)
-   
+
    Docking > Parameters (Future):
      - Docking Duration: 1.0 (seconds) [FUTURE FEATURE - not yet implemented, safe to leave at default]
      - Undock Impulse Strength: 500.0 (cm/s) [FUTURE FEATURE - not yet implemented, safe to leave at default]
@@ -2530,7 +2530,7 @@ Inventory:
     MaxStock: 50000
     SupplyLevel: 2.0
     DemandLevel: 0.5
-  
+
   - TradeItem: DA_Item_Food
     CurrentStock: 5000
     MaxStock: 20000
@@ -2657,9 +2657,9 @@ Icon: T_Icon_Ship_CompactTrader
 
 ---
 
-**Last Updated:** January 18, 2026  
-**Version:** 1.1 (Enhanced with Visual Docking Setup Guide)  
-**Status:** Ready for MVP Phase 1  
+**Last Updated:** January 18, 2026
+**Version:** 1.1 (Enhanced with Visual Docking Setup Guide)
+**Status:** Ready for MVP Phase 1
 **Maintained by:** Adastrea Development Team
 
 ---

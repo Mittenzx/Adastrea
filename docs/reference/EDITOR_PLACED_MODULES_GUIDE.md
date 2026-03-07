@@ -1,6 +1,6 @@
 # Editor-Placed Modules Guide
 
-**Last Updated**: 2026-01-17  
+**Last Updated**: 2026-01-17
 **Status**: NEW FEATURE - Editor-time module placement now supported
 
 ---
@@ -153,7 +153,7 @@ void ASpaceStation::BeginPlay()
     // Phase 1: Discover editor-placed modules
     TArray<AActor*> AttachedActors;
     GetAttachedActors(AttachedActors);
-    
+
     for (AActor* AttachedActor : AttachedActors)
     {
         ASpaceStationModule* ExistingModule = Cast<ASpaceStationModule>(AttachedActor);
@@ -163,7 +163,7 @@ void ASpaceStation::BeginPlay()
             // Module discovered!
         }
     }
-    
+
     // Phase 2: Spawn runtime modules (if any)
     if (DefaultModuleClasses.Num() > 0)
     {
@@ -477,6 +477,6 @@ Components:
 
 ---
 
-**Last Updated**: 2026-01-17  
-**Feature Added**: PR #XXX - Support editor-placed modules via Child Actor Components  
+**Last Updated**: 2026-01-17
+**Feature Added**: PR #XXX - Support editor-placed modules via Child Actor Components
 **Status**: ✅ Ready to Use

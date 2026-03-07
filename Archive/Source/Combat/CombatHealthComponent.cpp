@@ -69,7 +69,7 @@ void UCombatHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType,
     UpdateShieldRecharge(DeltaTime);
 }
 
-void UCombatHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float DamageAmount, 
+void UCombatHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float DamageAmount,
     const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
     if (bIsDestroyed || DamageAmount <= 0.0f)
@@ -78,14 +78,14 @@ void UCombatHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Dam
     }
 
     // Default damage handling - use default penetration values
-    const FVector HitDirection = DamageCauser ? 
-        (DamagedActor->GetActorLocation() - DamageCauser->GetActorLocation()).GetSafeNormal() : 
+    const FVector HitDirection = DamageCauser ?
+        (DamagedActor->GetActorLocation() - DamageCauser->GetActorLocation()).GetSafeNormal() :
         FVector::ForwardVector;
 
     ApplyTypedDamage(DamageAmount, EDamageType::Kinetic, 50.0f, 50.0f, HitDirection, DamageCauser);
 }
 
-float UCombatHealthComponent::ApplyTypedDamage(float BaseDamage, EDamageType DamageType, 
+float UCombatHealthComponent::ApplyTypedDamage(float BaseDamage, EDamageType DamageType,
     float ArmorPenetration, float ShieldPenetration, FVector HitDirection, AActor* DamageCauser)
 {
     if (bIsDestroyed || BaseDamage <= 0.0f)
@@ -105,7 +105,7 @@ float UCombatHealthComponent::ApplyTypedDamage(float BaseDamage, EDamageType Dam
             const EShieldFacing HitFacing = GetHitFacing(HitDirection);
             const float ShieldDamage = ApplyDamageToShieldFacing(HitFacing, RemainingDamage, ShieldPenetration);
             RemainingDamage -= ShieldDamage;
-            
+
             if (ShieldDamage > 0.0f)
             {
                 OnShieldDamaged(ShieldDamage, HitFacing, DamageCauser);
@@ -153,7 +153,7 @@ float UCombatHealthComponent::ApplyTypedDamage(float BaseDamage, EDamageType Dam
         {
             CurrentHullStrength = 0.0f;
             DestroyShip();
-            
+
             AController* Killer = DamageCauser ? DamageCauser->GetInstigatorController() : nullptr;
             OnShipDestroyed(Killer);
         }
@@ -328,7 +328,7 @@ FShieldFacingData UCombatHealthComponent::GetShieldFacingData(EShieldFacing Faci
         Data.RechargeDelay = FMath::Max(0.0f, ShieldRechargeDelay - TimeSinceLastDamage);
         return Data;
     }
-    
+
     // Return empty data if not using directional shields or facing not found
     FShieldFacingData EmptyData;
     EmptyData.CurrentStrength = 0.0f;
@@ -348,12 +348,12 @@ bool UCombatHealthComponent::IsRecharging() const
     {
         return false;
     }
-    
+
     if (TimeSinceLastDamage < ShieldRechargeDelay)
     {
         return false;
     }
-    
+
     if (bUseDirectionalShields)
     {
         // Check if any facing is recharging
@@ -374,13 +374,13 @@ bool UCombatHealthComponent::IsRecharging() const
 
 void UCombatHealthComponent::OnHullDamaged_Implementation(float DamageAmount, AActor* DamageCauser)
 {
-    UE_LOG(LogAdastreaCombat, Log, TEXT("Hull damaged: %.1f (%.1f%% remaining)"), 
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Hull damaged: %.1f (%.1f%% remaining)"),
         DamageAmount, GetHullPercentage() * 100.0f);
 }
 
 void UCombatHealthComponent::OnShieldDamaged_Implementation(float DamageAmount, EShieldFacing Facing, AActor* DamageCauser)
 {
-    UE_LOG(LogAdastreaCombat, Log, TEXT("Shield damaged: %.1f to %s facing (%.1f%% remaining)"), 
+    UE_LOG(LogAdastreaCombat, Log, TEXT("Shield damaged: %.1f to %s facing (%.1f%% remaining)"),
         DamageAmount, *UEnum::GetValueAsString(Facing), GetShieldFacingPercentage(Facing) * 100.0f);
 }
 
@@ -401,7 +401,7 @@ void UCombatHealthComponent::OnCriticalDamage_Implementation()
 
 void UCombatHealthComponent::OnShipDestroyed_Implementation(AController* Killer)
 {
-    UE_LOG(LogAdastreaCombat, Error, TEXT("Ship destroyed by %s"), 
+    UE_LOG(LogAdastreaCombat, Error, TEXT("Ship destroyed by %s"),
         Killer ? *Killer->GetName() : TEXT("Unknown"));
 }
 
@@ -426,12 +426,12 @@ void UCombatHealthComponent::UpdateShieldRecharge(float DeltaTime)
         for (auto& Pair : ShieldFacings)
         {
             FShieldFacingData& FacingData = Pair.Value;
-            
+
             if (FacingData.CurrentStrength < FacingData.MaxStrength)
             {
                 const float OldStrength = FacingData.CurrentStrength;
                 FacingData.CurrentStrength = FMath::Min(FacingData.CurrentStrength + RechargeAmount, FacingData.MaxStrength);
-                
+
                 // Fire event when facing fully recharged
                 if (OldStrength < FacingData.MaxStrength && FacingData.CurrentStrength >= FacingData.MaxStrength)
                 {
@@ -454,7 +454,7 @@ void UCombatHealthComponent::UpdateShieldRecharge(float DeltaTime)
         {
             const float OldStrength = CurrentShieldStrength;
             CurrentShieldStrength = FMath::Min(CurrentShieldStrength + RechargeAmount, MaxShieldStrength);
-            
+
             // Fire event when fully recharged
             if (OldStrength < MaxShieldStrength && CurrentShieldStrength >= MaxShieldStrength)
             {
@@ -514,7 +514,7 @@ float UCombatHealthComponent::ApplyDamageToShieldFacing(EShieldFacing Facing, fl
     }
 
     FShieldFacingData& FacingData = ShieldFacings[Facing];
-    
+
     if (FacingData.CurrentStrength <= 0.0f)
     {
         return 0.0f;

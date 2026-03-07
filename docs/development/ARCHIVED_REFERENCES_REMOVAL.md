@@ -63,14 +63,14 @@ The following systems have been moved to `Archive/Source/` and are out of scope 
 - **Reason**: Header must match implementation file
 
 #### 3. `Source/Adastrea/Public/Interfaces/IDamageable.h`
-- **Changes**: 
+- **Changes**:
   - Removed `#include "Combat/WeaponDataAsset.h"`
   - Added temporary `EDamageType` enum definition
 - **Reason**: IDamageable interface needs EDamageType but WeaponDataAsset is archived
 - **Note**: EDamageType will move back to WeaponDataAsset when combat system is reimplemented
 
 #### 4. `Source/Adastrea/Private/AutomatedTestLibrary.cpp`
-- **Changes**: 
+- **Changes**:
   - Commented out `#include "Combat/WeaponDataAsset.h"`
   - Commented out weapon damage test execution
   - Modified `TestWeaponDamage()` to return skipped message
@@ -81,7 +81,7 @@ The following systems have been moved to `Archive/Source/` and are out of scope 
 - **Reason**: Projectile pooling benchmark requires archived component
 
 #### 6. `Source/Adastrea/Private/Ships/SpaceshipControlsComponent.cpp`
-- **Changes**: 
+- **Changes**:
   - Commented out `#include "Combat/WeaponComponent.h"`
   - Commented out weapon component caching in `BeginPlay()`
   - Commented out `GetWeaponComponent()`, `HandleFirePressed()`, `HandleFireReleased()`
@@ -119,7 +119,7 @@ The following systems have been moved to `Archive/Source/` and are out of scope 
 ### Way System References (1 file)
 
 #### 11. `Source/Adastrea/Private/Player/Verse.cpp`
-- **Changes**: 
+- **Changes**:
   - Commented out `#include "Way/Feat.h"`
   - Commented out `#include "Way/Way.h"`
 - **Reason**: Way/Feat system is archived, out of MVP scope
@@ -150,7 +150,7 @@ These changes should allow the project to compile without references to archived
 
 When reimplementing archived systems:
 
-1. **Combat System**: 
+1. **Combat System**:
    - Move EDamageType back to WeaponDataAsset.h
    - Uncomment all weapon-related code
    - Restore fire input handling in SpaceshipControlsComponent
@@ -191,6 +191,6 @@ All active source files now compile without references to archived directories:
 
 ---
 
-**Last Updated**: 2025-12-31  
-**Completed By**: GitHub Copilot Agent  
+**Last Updated**: 2025-12-31
+**Completed By**: GitHub Copilot Agent
 **Issue**: #headers - Remove references to archived files

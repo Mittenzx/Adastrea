@@ -295,5 +295,5 @@ To add new quality checks:
 
 ---
 
-**Last Updated**: 2025-12-08  
+**Last Updated**: 2025-12-08
 **Maintained By**: Adastrea Development Team

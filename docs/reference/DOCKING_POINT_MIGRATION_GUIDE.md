@@ -1,7 +1,7 @@
 # Docking Point Migration Guide
 
-**Date**: 2026-01-19  
-**Affects**: DockingBayModule and DockingPortModule  
+**Date**: 2026-01-19
+**Affects**: DockingBayModule and DockingPortModule
 **Breaking Change**: No (backward compatible)
 
 ---
@@ -110,7 +110,7 @@ After migration, verify:
 
 ### Issue: "No docking points found" Error
 
-**Symptoms**: 
+**Symptoms**:
 - Log message: `[DOCKING] WARNING: No docking points found!`
 - Ships can't dock
 
@@ -162,12 +162,12 @@ void ADockingBayModule::BeginPlay()
 void ADockingBayModule::PopulateDockingPointsFromTags()
 {
     DockingPoints.Empty(); // Clear old entries
-    
+
     // Find all components tagged with "DockingPoint"
     TArray<UActorComponent*> TaggedComponents = GetComponentsByTag(
-        USceneComponent::StaticClass(), 
+        USceneComponent::StaticClass(),
         FName("DockingPoint"));
-    
+
     // Cast and add to array
     for (UActorComponent* Component : TaggedComponents)
     {
@@ -176,7 +176,7 @@ void ADockingBayModule::PopulateDockingPointsFromTags()
             DockingPoints.Add(SceneComp);
         }
     }
-    
+
     // Warn if issues detected
     // ... (validation code)
 }
@@ -229,10 +229,10 @@ If you encounter issues during migration:
 
 ---
 
-**Migration Difficulty**: Easy (5-10 minutes per module)  
+**Migration Difficulty**: Easy (5-10 minutes per module)
 **Recommended**: Update all docking modules at once for consistency
 
 ---
 
-**Last Updated**: 2026-01-19  
+**Last Updated**: 2026-01-19
 **Maintained by**: Adastrea Development Team

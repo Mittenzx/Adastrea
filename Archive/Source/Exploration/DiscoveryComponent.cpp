@@ -33,7 +33,7 @@ UDiscoveryComponent::UDiscoveryComponent()
 void UDiscoveryComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	InitializeDiscovery();
 }
 
@@ -384,7 +384,7 @@ void UDiscoveryComponent::UpdateInteraction(float DeltaTime)
 
 	float Duration = GetInteractionDuration(CurrentInteraction);
 	float Elapsed = GetWorld()->GetTimeSeconds() - InteractionStartTime;
-	
+
 	InteractionProgress = FMath::Clamp(Elapsed / Duration, 0.0f, 1.0f);
 
 	// Check if complete

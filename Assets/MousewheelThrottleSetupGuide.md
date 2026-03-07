@@ -49,10 +49,10 @@ The flight computer automatically handles acceleration and deceleration to match
 
 ### Key Features
 
-✅ Smooth acceleration/deceleration to target speed  
-✅ Independent from strafe and vertical movement  
-✅ Works with Flight Assist mode  
-✅ Visual feedback via HUD display  
+✅ Smooth acceleration/deceleration to target speed
+✅ Independent from strafe and vertical movement
+✅ Works with Flight Assist mode
+✅ Visual feedback via HUD display
 ✅ Configurable increment size
 
 ---
@@ -143,7 +143,7 @@ Now we need to make the spaceship respond to these Input Actions.
    **For Throttle Up:**
    ```
    Event Graph:
-   
+
    [IA_ThrottleUp (Enhanced Input Action)]
      ↓
    [Started]
@@ -399,7 +399,7 @@ void ASpaceship::HandleThrottleUp(const FInputActionValue& Value)
 {
     // Call the existing ThrottleUp function
     ThrottleUp();
-    
+
     // Optional: Log for debugging
     UE_LOG(LogTemp, Log, TEXT("Throttle Up: %f%%"), ThrottlePercentage);
 }
@@ -408,7 +408,7 @@ void ASpaceship::HandleThrottleDown(const FInputActionValue& Value)
 {
     // Call the existing ThrottleDown function
     ThrottleDown();
-    
+
     // Optional: Log for debugging
     UE_LOG(LogTemp, Log, TEXT("Throttle Down: %f%%"), ThrottlePercentage);
 }
@@ -680,12 +680,12 @@ Switch between different input contexts based on game state:
 // In Player Controller
 void SwitchToCombatMode()
 {
-    if (UEnhancedInputLocalPlayerSubsystem* Subsystem = 
+    if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
         ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
     {
         // Remove exploration context
         Subsystem->RemoveMappingContext(ExplorationContext);
-        
+
         // Add combat context (might have different throttle sensitivity)
         Subsystem->AddMappingContext(CombatContext, 1);
     }
@@ -763,17 +763,17 @@ When active, throttle inputs are ignored and throttle is locked.
 
 You've learned how to configure mousewheel scroll for throttle control in Unreal Engine 5.6. Key takeaways:
 
-✅ **Enhanced Input System** is the recommended approach for UE 5.6  
-✅ **Mouse Wheel Up/Down** increases/decreases throttle percentage  
-✅ **ThrottleStep** controls how much throttle changes per scroll  
-✅ **Blueprint or C++** implementation both work seamlessly  
-✅ **InputConfigDataAsset** centralizes all input configuration  
+✅ **Enhanced Input System** is the recommended approach for UE 5.6
+✅ **Mouse Wheel Up/Down** increases/decreases throttle percentage
+✅ **ThrottleStep** controls how much throttle changes per scroll
+✅ **Blueprint or C++** implementation both work seamlessly
+✅ **InputConfigDataAsset** centralizes all input configuration
 
 The throttle system integrates with the X4-style flight controls, providing smooth and intuitive speed management for space flight gameplay.
 
 ---
 
-**Last Updated**: 2025-12-05  
-**Unreal Engine Version**: 5.6  
-**Status**: Complete  
+**Last Updated**: 2025-12-05
+**Unreal Engine Version**: 5.6
+**Status**: Complete
 **Author**: Adastrea Development Team

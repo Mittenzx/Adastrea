@@ -1,6 +1,6 @@
 # Trading System SVG Corrections
 
-**Date**: December 31, 2025  
+**Date**: December 31, 2025
 **Issue**: Incorrect event/function names in Blueprint SVG files and documentation
 
 ---
@@ -75,16 +75,16 @@ void OnCargoSpaceUpdated(float UsedSpace, float TotalSpace);
 ```
 1. FUNCTION: OpenMarket(Market Data)
    → Call this from Blueprint to open the trading UI
-   
+
 2. EVENT: OnMarketInventoryUpdated
    → BlueprintImplementableEvent triggered by OpenMarket C++ function
-   
+
 3. FUNCTION: GetAvailableItems()
    → Returns TArray<FMarketInventoryEntry>
-   
+
 4. FLOW CONTROL: ForEach Loop
    → Iterate through inventory entries
-   
+
 5. Create WBP_TradeItemRow widgets and add to ScrollBox
 ```
 
@@ -209,7 +209,7 @@ Same as #1 - Should use `FUNCTION: OpenMarket()` followed by `EVENT: OnMarketInv
 ```
 1. Custom EVENT: On Buy Button Clicked (UMG)
    → FUNCTION: ToggleBuySellView()
-   
+
 2. Custom EVENT: On Sell Button Clicked (UMG)
    → FUNCTION: ToggleBuySellView()
 ```
@@ -340,6 +340,6 @@ After corrections are made:
 
 ---
 
-**Last Updated**: 2025-12-31  
-**Status**: In Progress  
+**Last Updated**: 2025-12-31
+**Status**: In Progress
 **Reviewed By**: Copilot Agent

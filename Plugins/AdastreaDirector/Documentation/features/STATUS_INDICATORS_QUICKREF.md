@@ -24,8 +24,8 @@ Open the Dashboard tab and look at the status indicator grid. For a healthy syst
 ## Common Problems
 
 ### Problem: All lights are RED or GRAY
-**Cause:** Python backend not running  
-**Fix:** 
+**Cause:** Python backend not running
+**Fix:**
 1. Open Settings (Ctrl+,)
 2. Check Python executable path
 3. Check backend script path
@@ -33,21 +33,21 @@ Open the Dashboard tab and look at the status indicator grid. For a healthy syst
 5. Restart Unreal Engine
 
 ### Problem: Python Process GREEN but others RED
-**Cause:** IPC connection failed  
+**Cause:** IPC connection failed
 **Fix:**
 1. Click "Reconnect" button
 2. If that fails, check port 5555 is not in use
 3. Check firewall allows localhost connections
 
 ### Problem: Document Ingestion stuck at YELLOW
-**Cause:** Ingestion in progress or hung  
+**Cause:** Ingestion in progress or hung
 **Fix:**
 1. Switch to Ingestion tab
 2. Click "Stop" button
 3. Wait for status to change to GREEN (Ready)
 
 ### Problem: Query Processing RED but Backend Health GREEN
-**Cause:** Unlikely - indicates inconsistent state  
+**Cause:** Unlikely - indicates inconsistent state
 **Fix:**
 1. Click "Refresh Status"
 2. Try sending a test query
@@ -80,7 +80,7 @@ TSharedPtr<SStatusIndicator> MyNewStatusLight;
 if (MyNewStatusLight.IsValid())
 {
     if (MyCondition)
-        MyNewStatusLight->SetStatus(SStatusIndicator::EStatus::Good, 
+        MyNewStatusLight->SetStatus(SStatusIndicator::EStatus::Good,
             LOCTEXT("MyNewGood", "My New Feature: Operational"));
     else
         MyNewStatusLight->SetStatus(SStatusIndicator::EStatus::Error,

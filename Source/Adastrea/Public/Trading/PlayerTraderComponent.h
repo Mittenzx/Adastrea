@@ -13,7 +13,7 @@ class UEconomyManager;
 /**
  * Player Trader Component
  * Manages player's trading operations, credits, and profit tracking
- * 
+ *
  * Usage:
  * 1. Add to player pawn
  * 2. Set initial credits

@@ -1,6 +1,6 @@
 # Docking Quick Reference Card
 
-**Last Updated**: January 8, 2026  
+**Last Updated**: January 8, 2026
 **System**: Simplified Instant Docking (MVP)
 
 ---
@@ -146,8 +146,8 @@ Ship → Undock
 
 ## 🎯 MVP Philosophy
 
-**Current Focus**: Simple, instant docking for gameplay testing  
-**Not Current Focus**: Cinematic animations, manual flight  
+**Current Focus**: Simple, instant docking for gameplay testing
+**Not Current Focus**: Cinematic animations, manual flight
 **After MVP**: Polish, effects, realistic physics
 
 ---

@@ -7,7 +7,7 @@ ContractName: "Rescue Operation"
 ContractID: "Quest_Rescue_9619"
 Description: |
   Respond to distress call from Stellar 226. Lives are at stake.
-  
+
 ContractType: Rescue
 Difficulty: Medium
 

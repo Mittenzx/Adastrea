@@ -7,7 +7,7 @@ ContractName: "Investigate Anomaly"
 ContractID: "Quest_Investigation_4605"
 Description: |
   Investigate unusual activity near Zeta Australis on behalf of Delta Major.
-  
+
 ContractType: Investigation
 Difficulty: VeryHard
 

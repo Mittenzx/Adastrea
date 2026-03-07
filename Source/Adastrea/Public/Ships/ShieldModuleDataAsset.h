@@ -14,11 +14,11 @@ enum class EDamageType : uint8;
 
 /**
  * Data Asset for shield generator module configurations
- * 
+ *
  * Defines shield specifications including strength, recharge rate,
  * resistance types, and coverage. Allows designers to create various
  * shield types from basic deflectors to advanced energy barriers.
- * 
+ *
  * Usage:
  * 1. Create Blueprint Data Asset based on this class
  * 2. Configure shield properties

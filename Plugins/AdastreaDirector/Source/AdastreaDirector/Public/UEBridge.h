@@ -55,7 +55,7 @@ struct FUEActorInfo
 /**
  * C++ Bridge class for interacting with Unreal Engine.
  * This is the C++ equivalent of the Python UEPythonBridge class.
- * 
+ *
  * Provides high-level methods for common UE operations:
  * - Asset management and queries
  * - Actor spawning and manipulation

@@ -2,8 +2,8 @@
 
 Complete guide for implementing exploration, scanning, and discovery in Adastrea.
 
-**Version**: 1.0.0  
-**Last Updated**: November 21, 2025  
+**Version**: 1.0.0
+**Last Updated**: November 21, 2025
 **Status**: Phase 1 & 2 Complete (Scanner & Discovery Systems)
 
 ---
@@ -37,11 +37,11 @@ The Exploration System provides comprehensive scanning and discovery mechanics f
 
 ### Key Features
 
-✅ **Data-Driven Design**: All scanner configs via Data Assets  
-✅ **Component-Based**: Modular scanner/scannable architecture  
-✅ **Blueprint-First**: Full Blueprint exposure  
-✅ **Performance-Conscious**: LOD-based scanning, efficient updates  
-✅ **Flexible Detection**: Stealth, masking, signature strength  
+✅ **Data-Driven Design**: All scanner configs via Data Assets
+✅ **Component-Based**: Modular scanner/scannable architecture
+✅ **Blueprint-First**: Full Blueprint exposure
+✅ **Performance-Conscious**: LOD-based scanning, efficient updates
+✅ **Flexible Detection**: Stealth, masking, signature strength
 
 ### Core Gameplay Pillars
 

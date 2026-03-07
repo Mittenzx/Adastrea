@@ -23,25 +23,25 @@ def write_progress_file(
 ) -> None:
     """
     Write a progress update to a JSON file.
-    
+
     Creates parent directories if they don't exist. This function uses only
     standard library modules to ensure it can be imported even when other
     dependencies are missing.
-    
+
     Args:
         progress_file_path: Path to the progress file
         percent: Progress percentage (0-100)
         label: Main progress label
         details: Detailed progress information
         status: Status string (processing, complete, error)
-        
+
     Raises:
         Exception: If file cannot be written (caller should handle)
     """
     # Ensure parent directory exists
     progress_path = Path(progress_file_path)
     progress_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     # Build progress data
     progress_data = {
         'percent': min(100, max(0, percent)),
@@ -50,7 +50,7 @@ def write_progress_file(
         'status': status,
         'timestamp': time.time()
     }
-    
+
     # Write to file
     with open(progress_file_path, 'w') as f:
         json.dump(progress_data, f)

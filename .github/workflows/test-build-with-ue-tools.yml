@@ -33,13 +33,13 @@ jobs:
     name: Setup UE Build Tools and Build Adastrea
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
-      
+
       - name: Check System Resources
         run: |
           echo "=========================================="
@@ -57,15 +57,15 @@ jobs:
           echo ""
           echo ".NET SDK:"
           dotnet --version || echo "Not installed yet"
-      
+
       - name: Verify .NET SDK
         run: |
           echo "Checking .NET SDK for UnrealBuildTool..."
           dotnet --version
-          
+
           echo ""
           echo "✓ .NET SDK available"
-      
+
       - name: Install Build Dependencies
         run: |
           echo "Installing additional build dependencies..."
@@ -73,33 +73,33 @@ jobs:
             build-essential \
             clang \
             mono-complete
-          
+
           echo ""
           echo "✓ Build dependencies installed"
-      
+
       - name: Validate Project Structure
         run: |
           echo "Validating Adastrea project structure..."
-          
+
           # Check essential files
           if [ ! -f "Adastrea.uproject" ]; then
             echo "ERROR: Adastrea.uproject not found"
             exit 1
           fi
           echo "✓ Project file found"
-          
+
           # Check Source directory
           if [ ! -d "Source" ]; then
             echo "ERROR: Source directory not found"
             exit 1
           fi
           echo "✓ Source directory found"
-          
+
           # List modules
           echo ""
           echo "Project modules:"
           ls -la Source/
-      
+
       - name: Cache Unreal Build Tools
         uses: actions/cache@v3
         with:
@@ -107,20 +107,20 @@ jobs:
           key: ue-buildtools-${{ env.UE_VERSION }}-${{ runner.os }}-${{ hashFiles('UnrealBuildTools/Engine/Build/Build.version') }}
           restore-keys: |
             ue-buildtools-${{ env.UE_VERSION }}-${{ runner.os }}-
-      
+
       - name: Setup Unreal Build Tools
         run: |
           echo "=========================================="
           echo "Setting up Unreal Build Tools"
           echo "=========================================="
           echo ""
-          
+
           # Make script executable
           chmod +x setup_ue_build_tools.sh
-          
+
           # Run setup script
           ./setup_ue_build_tools.sh
-          
+
           if [ $? -ne 0 ]; then
             echo ""
             echo "ERROR: Failed to setup build tools"
@@ -132,10 +132,10 @@ jobs:
             echo "3. Verify membership at: https://github.com/EpicGames"
             exit 1
           fi
-          
+
           echo ""
           echo "✓ Build tools setup complete"
-      
+
       - name: Check Build Tools Size
         run: |
           echo "Build tools size:"
@@ -143,61 +143,61 @@ jobs:
           echo ""
           echo "Remaining disk space:"
           df -h
-      
+
       - name: Build UnrealBuildTool
         run: |
           echo "=========================================="
           echo "Building UnrealBuildTool"
           echo "=========================================="
           echo ""
-          
+
           UBT_SOURCE="UnrealBuildTools/Engine/Source/Programs/UnrealBuildTool"
-          
+
           if [ ! -d "${UBT_SOURCE}" ]; then
             echo "ERROR: UnrealBuildTool source not found"
             exit 1
           fi
-          
+
           cd "${UBT_SOURCE}"
           dotnet build UnrealBuildTool.csproj -c Development
-          
+
           if [ $? -ne 0 ]; then
             echo "ERROR: Failed to build UnrealBuildTool"
             exit 1
           fi
-          
+
           echo ""
           echo "✓ UnrealBuildTool built successfully"
-      
+
       - name: Build Adastrea Project
         run: |
           echo "=========================================="
           echo "Building Adastrea"
           echo "=========================================="
           echo ""
-          
+
           # Make build script executable
           chmod +x build_with_ue_tools.sh
-          
+
           # Run build
           ./build_with_ue_tools.sh ${{ env.BUILD_CONFIG }} Linux
-          
+
           if [ $? -ne 0 ]; then
             echo ""
             echo "ERROR: Build failed"
             exit 1
           fi
-          
+
           echo ""
           echo "✓ Build completed successfully"
-      
+
       - name: Verify Build Output
         run: |
           echo "=========================================="
           echo "Build Verification"
           echo "=========================================="
           echo ""
-          
+
           # Check Binaries
           if [ -d "Binaries" ]; then
             echo "✓ Binaries directory exists"
@@ -208,21 +208,21 @@ jobs:
             echo "✗ Binaries directory not found"
             exit 1
           fi
-          
+
           echo ""
-          
+
           # Check Intermediate
           if [ -d "Intermediate" ]; then
             echo "✓ Intermediate directory exists"
           else
             echo "⚠ Intermediate directory not found"
           fi
-          
+
           echo ""
           echo "Build output size:"
           du -sh Binaries/ 2>/dev/null || echo "No binaries"
           du -sh Intermediate/ 2>/dev/null || echo "No intermediate files"
-      
+
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         if: success()
@@ -234,7 +234,7 @@ jobs:
             !Binaries/**/*.pdb
             !Binaries/**/*.debug
           retention-days: 7
-      
+
       - name: Build Summary
         if: always()
         run: |
@@ -247,7 +247,7 @@ jobs:
           echo "Platform: Linux"
           echo "Unreal Engine: ${{ env.UE_VERSION }}"
           echo ""
-          
+
           if [ -d "Binaries" ]; then
             echo "Status: ✓ SUCCESS"
             echo ""
@@ -255,7 +255,7 @@ jobs:
           else
             echo "Status: ✗ FAILED"
           fi
-          
+
           echo ""
           echo "Note: These are build tools only."
           echo "To run the editor, install full UE 5.6."

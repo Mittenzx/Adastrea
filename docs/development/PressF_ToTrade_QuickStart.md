@@ -92,7 +92,7 @@ In **Event Graph**:
 ```
 Event OnNearbyTradableStationChanged (IsNearStation, Station)
 ├─ Branch (Is Near Station?)
-│  
+│
 ├─ TRUE BRANCH (Player is near station):
 │  ├─ Is Valid? (TradingPromptWidget)
 │  │  ├─ FALSE: Create Widget (WBP_TradingPrompt class)
@@ -103,7 +103,7 @@ Event OnNearbyTradableStationChanged (IsNearStation, Station)
 │  ├─ Is In Viewport?
 │  │  └─ FALSE: Add to Viewport
 │  └─ Show Prompt
-│  
+│
 └─ FALSE BRANCH (Player left station range):
    ├─ Is Valid? (TradingPromptWidget)
    │  └─ TRUE:
@@ -121,13 +121,13 @@ Event OnNearbyTradableStationChanged (IsNearStation, Station)
       ├─ Is Not Valid → Create Widget (Class: WBP_TradingPrompt)
       │                 └─ Set TradingPromptWidget
       └─ Is Valid → (continue)
-   
+
    └─ Call Function: SetStation (on TradingPromptWidget)
       ├─ Input: Station (from event)
-   
+
    └─ IsInViewport? (on TradingPromptWidget)
       └─ FALSE → Add to Viewport (on TradingPromptWidget)
-   
+
    └─ Call Function: ShowPrompt (on TradingPromptWidget)
 
 3. FALSE Pin:

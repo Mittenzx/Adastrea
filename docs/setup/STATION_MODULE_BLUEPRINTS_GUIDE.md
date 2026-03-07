@@ -2,7 +2,7 @@
 
 **Purpose**: Step-by-step guide for creating all BP_SpaceStationModule_* blueprints in Unreal Editor
 
-**Last Updated**: 2026-01-06  
+**Last Updated**: 2026-01-06
 **MVP Status**: Critical for Trade Simulator MVP (Docking, Marketplace, Cargo)
 
 ---
@@ -587,6 +587,6 @@ If you encounter issues:
 
 ---
 
-**Last Updated**: 2026-01-06  
-**Created by**: GitHub Copilot Agent  
+**Last Updated**: 2026-01-06
+**Created by**: GitHub Copilot Agent
 **Status**: Ready for implementation

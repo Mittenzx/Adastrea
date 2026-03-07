@@ -1,8 +1,8 @@
 # Trading System Research: X4 Foundations, Freelancer, and Comparative Analysis
 
-**Date:** December 25, 2024  
-**Purpose:** Analyze trading systems from successful space games for design inspiration  
-**Target Application:** Adastrea Director / Adastrea Game Development  
+**Date:** December 25, 2024
+**Purpose:** Analyze trading systems from successful space games for design inspiration
+**Target Application:** Adastrea Director / Adastrea Game Development
 **Document Location**: Moved from root to `docs/reference/` (2025-12-25)
 
 ---
@@ -151,12 +151,12 @@ X4: Foundations implements a living, simulated economy where every transaction, 
 
 ### 1.4 Key Design Principles
 
-✅ **Real-Time Simulation:** Economy runs continuously, whether observed or not  
-✅ **Meaningful Player Impact:** Actions have lasting economic consequences  
-✅ **Scalable Automation:** From single ship to massive fleets  
-✅ **Visible Production Chains:** Players can see and understand the flow  
-✅ **Strategic Depth:** Multiple layers of optimization and strategy  
-✅ **Local vs. Global:** Both micro (station-level) and macro (galaxy-wide) economics  
+✅ **Real-Time Simulation:** Economy runs continuously, whether observed or not
+✅ **Meaningful Player Impact:** Actions have lasting economic consequences
+✅ **Scalable Automation:** From single ship to massive fleets
+✅ **Visible Production Chains:** Players can see and understand the flow
+✅ **Strategic Depth:** Multiple layers of optimization and strategy
+✅ **Local vs. Global:** Both micro (station-level) and macro (galaxy-wide) economics
 
 ### 1.5 Strengths & Weaknesses
 
@@ -251,12 +251,12 @@ Freelancer offers a more streamlined, accessible trading system focused on regio
 
 ### 2.4 Key Design Principles
 
-✅ **Simplicity & Clarity:** Easy to understand core loop  
-✅ **Exploration Incentive:** Discovery drives engagement  
-✅ **Risk/Reward Balance:** Higher profits come with higher danger  
-✅ **Regional Identity:** Each area has distinct economic character  
-✅ **Player Choice:** Multiple viable trading strategies  
-✅ **Progression Integration:** Trading as path to advancement  
+✅ **Simplicity & Clarity:** Easy to understand core loop
+✅ **Exploration Incentive:** Discovery drives engagement
+✅ **Risk/Reward Balance:** Higher profits come with higher danger
+✅ **Regional Identity:** Each area has distinct economic character
+✅ **Player Choice:** Multiple viable trading strategies
+✅ **Progression Integration:** Trading as path to advancement
 
 ### 2.5 Strengths & Weaknesses
 

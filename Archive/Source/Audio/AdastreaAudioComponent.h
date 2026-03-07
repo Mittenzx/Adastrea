@@ -22,15 +22,15 @@ struct FAudioComponentArray
 
 /**
  * Audio Component for managing sound effects on actors
- * 
+ *
  * This component handles playing sound effects from SoundEffectDataAssets
  * with automatic resource management and priority-based playback.
- * 
+ *
  * Usage:
  * 1. Add this component to any actor that needs to play sounds
  * 2. Call PlaySoundEffect with a SoundEffectDataAsset
  * 3. Component handles spatial audio, attenuation, and priority
- * 
+ *
  * Example:
  * - Add to spaceship actor
  * - Call PlaySoundEffect with DA_SFX_LaserFire when weapon fires

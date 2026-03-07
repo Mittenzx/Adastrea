@@ -1,6 +1,6 @@
 # GitHub Copilot Indexing Summary
 
-**Date**: 2025-11-14  
+**Date**: 2025-11-14
 **Purpose**: Document the repository indexing setup for GitHub Copilot
 
 ## Overview

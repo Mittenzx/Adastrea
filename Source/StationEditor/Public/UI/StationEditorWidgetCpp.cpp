@@ -150,10 +150,10 @@ void UStationEditorWidgetCpp::RefreshModuleList()
 			if (ItemWidget)
 			{
 				ItemWidget->SetModuleData(Entry);
-				
+
 				// Bind click event
 				ItemWidget->OnModuleSelected.BindUObject(this, &UStationEditorWidgetCpp::OnModuleButtonClicked);
-				
+
 				ModuleListScrollBox->AddChild(ItemWidget);
 			}
 		}
@@ -172,7 +172,7 @@ void UStationEditorWidgetCpp::RefreshStatistics()
 	// Update power display
 	if (PowerDisplayText)
 	{
-		FText PowerText = FText::FromString(FString::Printf(TEXT("Power: %.0f / %.0f MW"), 
+		FText PowerText = FText::FromString(FString::Printf(TEXT("Power: %.0f / %.0f MW"),
 			Stats.PowerGenerated, Stats.PowerConsumed));
 		PowerDisplayText->SetText(PowerText);
 	}
@@ -180,7 +180,7 @@ void UStationEditorWidgetCpp::RefreshStatistics()
 	// Update module count
 	if (ModuleCountDisplay)
 	{
-		FText CountText = FText::FromString(FString::Printf(TEXT("Modules: %d / %d"), 
+		FText CountText = FText::FromString(FString::Printf(TEXT("Modules: %d / %d"),
 			Stats.TotalModules, Stats.MaxModules));
 		ModuleCountDisplay->SetText(CountText);
 	}
@@ -198,9 +198,9 @@ void UStationEditorWidgetCpp::RefreshStatistics()
 		{
 			BalancePercent = 1.0f; // Surplus power with no consumption
 		}
-		
+
 		PowerBalanceBar->SetPercent(BalancePercent);
-		
+
 		// Color based on balance
 		if (Stats.PowerGenerated >= Stats.PowerConsumed)
 		{
@@ -235,10 +235,10 @@ void UStationEditorWidgetCpp::UpdateConstructionQueue()
 			if (ItemWidget)
 			{
 				ItemWidget->SetQueueData(Item);
-				
+
 				// Bind cancel event
 				ItemWidget->OnCancelled.BindUObject(this, &UStationEditorWidgetCpp::OnQueueItemCancelled);
-				
+
 				QueueScrollBox->AddChild(ItemWidget);
 			}
 		}
@@ -272,7 +272,7 @@ void UStationEditorWidgetCpp::OnCloseButtonClicked()
 
 	// Remove from parent and restore input
 	RemoveFromParent();
-	
+
 	APlayerController* PC = GetOwningPlayer();
 	if (PC)
 	{
@@ -337,10 +337,10 @@ void UStationEditorWidgetCpp::EnterPlacementMode(TSubclassOf<ASpaceStationModule
 
 	// Log with user-friendly module name instead of internal class name
 	const ASpaceStationModule* ModuleCDO = ModuleClass->GetDefaultObject<ASpaceStationModule>();
-	const FString ModuleDisplayName = (ModuleCDO && !ModuleCDO->ModuleType.IsEmpty()) 
-		? ModuleCDO->ModuleType 
+	const FString ModuleDisplayName = (ModuleCDO && !ModuleCDO->ModuleType.IsEmpty())
+		? ModuleCDO->ModuleType
 		: ModuleClass->GetName();
-	UE_LOG(LogAdastreaStations, Log, TEXT("Station Editor: Entered placement mode for %s"), 
+	UE_LOG(LogAdastreaStations, Log, TEXT("Station Editor: Entered placement mode for %s"),
 		*ModuleDisplayName);
 }
 
@@ -381,7 +381,7 @@ void UStationEditorWidgetCpp::UpdatePreviewPosition()
 	FVector TraceEnd = WorldPosition + WorldDirection * MaxTraceDistance;
 
 	FCollisionQueryParams QueryParams;
-	
+
 	// Add player pawn to ignored actors if valid
 	AActor* PlayerPawn = GetOwningPlayerPawn();
 	if (PlayerPawn)
@@ -465,7 +465,7 @@ void UStationEditorWidgetCpp::OnViewportClicked()
 
 	if (ValidationResult != EModulePlacementResult::Success)
 	{
-		UE_LOG(LogAdastreaStations, Warning, TEXT("Station Editor: Cannot place module: %d"), 
+		UE_LOG(LogAdastreaStations, Warning, TEXT("Station Editor: Cannot place module: %d"),
 			static_cast<int32>(ValidationResult));
 		return;
 	}
@@ -487,7 +487,7 @@ void UStationEditorWidgetCpp::OnViewportClicked()
 	}
 	else
 	{
-		UE_LOG(LogAdastreaStations, Error, TEXT("Station Editor: Failed to spawn module at %s"), 
+		UE_LOG(LogAdastreaStations, Error, TEXT("Station Editor: Failed to spawn module at %s"),
 			*PlacementPosition.ToString());
 	}
 }

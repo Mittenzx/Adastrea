@@ -1,8 +1,8 @@
 # Spaceship Controls Smoothing Guide
 
-**Version:** 1.0  
-**Last Updated:** December 6, 2024  
-**System:** Spaceship Controls Component  
+**Version:** 1.0
+**Last Updated:** December 6, 2024
+**System:** Spaceship Controls Component
 **For:** Game Designers and Developers
 
 ---
@@ -154,10 +154,10 @@ if (ControlsComp)
     // Enable smoothing
     ControlsComp->bEnableRotationSmoothing = true;
     ControlsComp->RotationSmoothingSpeed = 5.0f;
-    
+
     ControlsComp->bEnableMovementSmoothing = true;
     ControlsComp->MovementSmoothingSpeed = 10.0f;
-    
+
     // Adjust sensitivity
     ControlsComp->SetLookSensitivity(1.5f);
     ControlsComp->SetMovementSpeed(2.0f);
@@ -383,19 +383,19 @@ Component: SpaceshipControlsComponent
 
 ## FAQ
 
-**Q: Should I always enable smoothing?**  
+**Q: Should I always enable smoothing?**
 A: For most players, yes. It provides a more realistic feel. Consider adding a toggle in settings for arcade mode fans.
 
-**Q: What's the difference between rotation smoothing and flight assist?**  
+**Q: What's the difference between rotation smoothing and flight assist?**
 A: Rotation smoothing controls how ship follows camera. Flight assist controls velocity/rotation damping in space physics.
 
-**Q: Can I animate the transition between smoothing modes?**  
+**Q: Can I animate the transition between smoothing modes?**
 A: Yes! You can interpolate the smoothing speed values themselves for dynamic effects.
 
-**Q: Does this work with gamepad/controller input?**  
+**Q: Does this work with gamepad/controller input?**
 A: Yes, smoothing applies to all input sources (mouse, gamepad, keyboard).
 
-**Q: Will this affect AI-controlled ships?**  
+**Q: Will this affect AI-controlled ships?**
 A: No, smoothing only applies when `SpaceshipControlsComponent` is active with player input.
 
 ---

@@ -166,7 +166,7 @@ error: circular dependency detected between modules: ModuleA depends on ModuleB,
    // WRONG - creates circular dependency
    PublicDependencyModuleNames.Add("ModuleB");  // in ModuleA
    PublicDependencyModuleNames.Add("ModuleA");  // in ModuleB
-   
+
    // CORRECT - one-way dependency
    PublicDependencyModuleNames.Add("ModuleA");  // in ModuleB only
    ```
@@ -183,10 +183,10 @@ error LNK2019: unresolved external symbol "function" referenced in...
 
 1. **Missing function implementation**
    - Declared in header but not implemented in `.cpp`
-   
+
 2. **Missing module dependency**
    - Using classes from a module not listed in `PublicDependencyModuleNames`
-   
+
 3. **Inline/Template issues**
    - Template/inline functions must be in header, not `.cpp`
 
@@ -305,6 +305,6 @@ If you encounter a build issue not covered here:
 
 ---
 
-**Last Updated**: 2025-12-27  
-**Applies To**: Unreal Engine 5.6+  
+**Last Updated**: 2025-12-27
+**Applies To**: Unreal Engine 5.6+
 **Related Fixes**: SetEnv task error handling improvements, Windows UBT direct build workaround

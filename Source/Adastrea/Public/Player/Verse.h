@@ -183,26 +183,26 @@ struct FEarnedFeat
 
 /**
  * The Verse Component - Player's legendary record of earned Titles.
- * 
+ *
  * This component is attached to the player to track all Feats they have accomplished
  * throughout their journey. The "Verse" is the player's living legend - a chronological
  * record of their greatest achievements that defines who they are becoming.
- * 
+ *
  * The Verse influences:
  * - How groups (Ways) react to the player based on shared values
  * - Reputation gains with Schools and Syndicates
  * - Available dialogue options and quest paths
  * - NPC attitudes and behaviors toward the player
- * 
+ *
  * Unlike traditional faction reputation, the Verse is permanent and grows over time.
  * Each earned Title adds to the player's legend and shapes their identity in the world.
- * 
+ *
  * Usage:
  * - Attach to player pawn or player controller
  * - Award Feats when player completes major accomplishments
  * - Query Verse to check player's Titles and values
  * - Use in dialogue, quest, and AI systems to create dynamic reactions
- * 
+ *
  * Example:
  * - Player defeats legendary pirate captain → Earns "Pirate-Hunter" Title
  * - Military Schools (value Strength + Justice) react positively

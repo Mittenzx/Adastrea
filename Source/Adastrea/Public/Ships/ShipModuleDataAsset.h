@@ -9,17 +9,17 @@
 
 /**
  * Base Data Asset for ship module configurations
- * 
+ *
  * This Data Asset stores all configuration for a ship module, allowing designers
  * to create module variants without C++ knowledge. Specific module types should
  * inherit from this class to add type-specific properties.
- * 
+ *
  * Features:
  * - Designer-friendly configuration
  * - Common properties for all modules
  * - Support for visual meshes
  * - Power and mass specifications
- * 
+ *
  * Usage:
  * 1. Create derived class for specific module type (UEngineModuleDataAsset, etc.)
  * 2. Create Blueprint Data Asset based on derived class

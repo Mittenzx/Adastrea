@@ -146,7 +146,7 @@ Now we'll create the Unreal Engine level that will contain your sector.
 World Settings:
   Game Mode Override: None (uses project default)
   Kill Z: -100000000 (far below sector floor)
-  
+
 World Partition (if using):
   Enable Streaming: true (for large sectors)
   Runtime Grid: (2000000, 2000000, 2000000)
@@ -172,14 +172,14 @@ Add a **Post Process Volume** for space ambiance:
 ```
 Post Process Volume Settings:
   Infinite Extent: true
-  
+
   Bloom:
     Intensity: 0.5
-    
+
   Exposure:
     Auto Exposure: Manual
     Exposure Compensation: 0
-    
+
   Color Grading:
     Saturation: (1.0, 1.0, 1.0, 1.0)
     (Adjust for sector mood)
@@ -224,8 +224,8 @@ Transform:
 ```
 Sector Info:
   Sector Name: "Epsilon Mining Reach"
-  Description: "A dangerous frontier sector rich in rare ores. 
-                Mining operations thrive here despite frequent 
+  Description: "A dangerous frontier sector rich in rare ores.
+                Mining operations thrive here despite frequent
                 pirate raids. High risk, high reward."
 ```
 
@@ -334,7 +334,7 @@ Taxation:
   Security Tax Rate: 15      // High - pirate protection
   Infrastructure Tax Rate: 5 // Low - bare minimum
   Administration Tax Rate: 3 // Low - minimal bureaucracy
-  
+
   // Total: 23%
 ```
 
@@ -347,7 +347,7 @@ Budget:
   Security Budget Percent: 70       // High - active patrols needed
   Infrastructure Budget Percent: 15 // Low - basic maintenance only
   Emergency Reserve Percent: 15     // Standard reserve
-  
+
   Treasury Funds: 500000            // Modest starting funds
 ```
 
@@ -433,11 +433,11 @@ if (SectorMapActor->IsPositionInSector(SpawnLocation))
 Main Mining Hub:
   Location: (40500000, -20000000, 0)    // Slightly off-center
   Faction: Mining Cooperative
-  
+
 Refueling Depot:
   Location: (42000000, -22000000, 500000)  // Upper quadrant
   Faction: Freight Haulers
-  
+
 Security Outpost:
   Location: (38000000, -18000000, -200000)  // Patrol position
   Faction: Security Contractors
@@ -737,22 +737,22 @@ Here's the entire process in brief:
 ```
 1. PLAN
    └── Define theme, purpose, coordinates, and governance
-   
+
 2. CREATE LEVEL
    └── New empty level → Save as L_Sector_Name
-   
+
 3. PLACE ACTOR
    └── Add SpaceSectorMap → Position at sector center → Configure name
-   
+
 4. CREATE DATA ASSET
    └── New SectorCouncilDataAsset → Configure identity, council, taxes, budget
-   
+
 5. POPULATE
    └── Add stations, ships, asteroids → All within sector bounds
-   
+
 6. TEST
    └── Verify initialization → Test boundaries → Gameplay test → Integration test
-   
+
 7. ITERATE
    └── Fix issues → Balance gameplay → Polish content → Ship it!
 ```
@@ -769,6 +769,6 @@ If you encounter issues not covered here:
 
 ---
 
-**Last Updated:** November 2025  
-**Version:** 1.0  
+**Last Updated:** November 2025
+**Version:** 1.0
 **Maintained by:** Adastrea Development Team

@@ -324,7 +324,7 @@ Right-click in Event Graph → **Add Event** → **Event [Function Name]**
 
 #### 1. Event Evaluate Task Priority
 
-**When:** Called to decide what task to do next  
+**When:** Called to decide what task to do next
 **Use:** Customize task selection logic
 
 ```
@@ -338,7 +338,7 @@ Example: Force Exploration When Discovery Available
 
 #### 2. Event Handle Social Interaction
 
-**When:** Interacting with another crew member  
+**When:** Interacting with another crew member
 **Use:** Custom social behavior
 
 ```
@@ -354,7 +354,7 @@ Example: Empathetic Check-In
 
 #### 3. Event Make Personality Driven Decision
 
-**When:** Need to choose between options  
+**When:** Need to choose between options
 **Use:** Override default decision logic
 
 ```
@@ -367,7 +367,7 @@ Example: Bold Always Chooses Action
 
 #### 4. Event On Task Completed
 
-**When:** Finishes a task  
+**When:** Finishes a task
 **Use:** Handle completion, grant rewards
 
 ```
@@ -383,7 +383,7 @@ Example: Gain Experience on Training
 
 #### 5. Event Update Daily Routine
 
-**When:** Called regularly to manage schedule  
+**When:** Called regularly to manage schedule
 **Use:** Custom schedule logic
 
 ```
@@ -398,7 +398,7 @@ Example: Night Owl Schedule
 
 #### 6. Event Handle Stress Change
 
-**When:** Stress level changes  
+**When:** Stress level changes
 **Use:** Custom stress response
 
 ```

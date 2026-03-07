@@ -24,10 +24,10 @@ fi
 # Function to clone sparse checkout of UnrealEngine (build tools only)
 clone_build_tools() {
     echo "Setting up sparse checkout for build tools only..."
-    
+
     if [ -d "${UE_TOOLS_DIR}" ]; then
         echo "UnrealBuildTools directory already exists at: ${UE_TOOLS_DIR}"
-        
+
         # Detect non-interactive environments (CI/CD) and avoid blocking
         if [ -n "${CI:-}" ] || [ "${UE_TOOLS_NON_INTERACTIVE:-0}" -eq 1 ] || [ ! -t 0 ]; then
             echo "Non-interactive mode detected; removing existing directory automatically..."
@@ -44,19 +44,19 @@ clone_build_tools() {
             fi
         fi
     fi
-    
+
     echo "Creating sparse checkout directory..."
     mkdir -p "${UE_TOOLS_DIR}"
     cd "${UE_TOOLS_DIR}"
-    
+
     # Initialize git repository with sparse checkout
     git init
     git config core.sparseCheckout true
-    
+
     # Add remote
     echo "Adding UnrealEngine remote..."
     git remote add origin "${UE_REPO}"
-    
+
     # Configure sparse checkout to get only build tools
     echo "Configuring sparse checkout (build tools only)..."
     cat > .git/info/sparse-checkout << EOF
@@ -71,15 +71,15 @@ Engine/Source/Programs/Shared/
 Engine/Config/BaseEngine.ini
 Engine/Config/BasePlatforms.ini
 EOF
-    
+
     # Fetch only the specified paths
     echo ""
     echo "Downloading build tools (this may take a few minutes)..."
     echo "Size: ~500MB instead of ~50GB"
     echo ""
-    
+
     git fetch --depth 1 origin "${UE_VERSION}"
-    
+
     if [ $? -ne 0 ]; then
         echo ""
         echo "ERROR: Failed to fetch from UnrealEngine repository."
@@ -98,11 +98,11 @@ EOF
         rm -rf "${UE_TOOLS_DIR}"
         exit 1
     fi
-    
+
     git checkout FETCH_HEAD
-    
+
     cd "${SCRIPT_DIR}"
-    
+
     echo ""
     echo "✓ Build tools downloaded successfully!"
     echo ""
@@ -114,27 +114,27 @@ EOF
 setup_build_tools() {
     echo ""
     echo "Setting up build tools..."
-    
+
     cd "${UE_TOOLS_DIR}"
-    
+
     # Check for Setup script
     if [ -f "Engine/Build/BatchFiles/Linux/Setup.sh" ]; then
         echo "Found Setup.sh for build tools"
         chmod +x Engine/Build/BatchFiles/Linux/Setup.sh
         # Note: We might not need to run this for just build tools
     fi
-    
+
     # Make build scripts executable
     if [ -d "Engine/Build/BatchFiles/Linux" ]; then
         echo "Making Linux build scripts executable..."
         chmod +x Engine/Build/BatchFiles/Linux/*.sh 2>/dev/null || true
     fi
-    
+
     if [ -d "Engine/Build/BatchFiles/Mac" ]; then
         echo "Making Mac build scripts executable..."
         chmod +x Engine/Build/BatchFiles/Mac/*.sh 2>/dev/null || true
     fi
-    
+
     cd "${SCRIPT_DIR}"
 }
 
@@ -142,9 +142,9 @@ setup_build_tools() {
 verify_build_tools() {
     echo ""
     echo "Verifying build tools installation..."
-    
+
     local errors=0
-    
+
     # Check for UnrealBuildTool
     if [ -d "${UE_TOOLS_DIR}/Engine/Source/Programs/UnrealBuildTool" ]; then
         echo "✓ UnrealBuildTool source found"
@@ -152,7 +152,7 @@ verify_build_tools() {
         echo "✗ UnrealBuildTool source not found"
         errors=$((errors + 1))
     fi
-    
+
     # Check for DotNET binaries
     if [ -d "${UE_TOOLS_DIR}/Engine/Binaries/DotNET" ]; then
         echo "✓ DotNET binaries directory found"
@@ -160,7 +160,7 @@ verify_build_tools() {
         echo "✗ DotNET binaries directory not found"
         errors=$((errors + 1))
     fi
-    
+
     # Check for build batch files
     if [ -d "${UE_TOOLS_DIR}/Engine/Build/BatchFiles" ]; then
         echo "✓ Build batch files found"
@@ -168,13 +168,13 @@ verify_build_tools() {
         echo "✗ Build batch files not found"
         errors=$((errors + 1))
     fi
-    
+
     if [ $errors -gt 0 ]; then
         echo ""
         echo "WARNING: Some build tools are missing. Build may fail."
         return 1
     fi
-    
+
     echo ""
     echo "✓ All essential build tools verified!"
     return 0
@@ -184,16 +184,16 @@ verify_build_tools() {
 main() {
     echo "Starting build tools setup..."
     echo ""
-    
+
     # Clone build tools with sparse checkout
     clone_build_tools
-    
+
     # Setup build tools
     setup_build_tools
-    
+
     # Verify installation
     verify_build_tools
-    
+
     echo ""
     echo "========================================"
     echo "Setup Complete!"

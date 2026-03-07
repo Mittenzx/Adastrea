@@ -20,11 +20,11 @@ Just drag it into your level, press Play, and watch it fly! No scripting or inpu
 
 ## Features
 
-✅ **Fully Autonomous** - No player input needed  
-✅ **Random Targets** - Generates random coordinates to fly to  
-✅ **Configurable** - Adjust speed, distance, turn rate  
-✅ **Debug Mode** - Visual debugging with lines and spheres  
-✅ **Multiple Ships** - Add as many as you want  
+✅ **Fully Autonomous** - No player input needed
+✅ **Random Targets** - Generates random coordinates to fly to
+✅ **Configurable** - Adjust speed, distance, turn rate
+✅ **Debug Mode** - Visual debugging with lines and spheres
+✅ **Multiple Ships** - Add as many as you want
 ✅ **Performance Friendly** - Efficient C++ implementation
 
 ## What's Included
@@ -261,8 +261,8 @@ Same as Adastrea project - see [LICENSE](LICENSE)
 
 ## Credits
 
-**Created by**: Adastrea Development Team  
-**Date**: 2025-12-10  
+**Created by**: Adastrea Development Team
+**Date**: 2025-12-10
 **Version**: 1.0
 
 ## Related Documentation

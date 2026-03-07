@@ -39,8 +39,8 @@ In the **Basic Info** category:
 - Include its strengths and intended role
 - Example:
   ```
-  A lightweight reconnaissance vessel designed for deep space exploration 
-  and intelligence gathering. The Pathfinder trades armor and firepower 
+  A lightweight reconnaissance vessel designed for deep space exploration
+  and intelligence gathering. The Pathfinder trades armor and firepower
   for speed, sensors, and fuel efficiency.
   ```
 

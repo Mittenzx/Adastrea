@@ -49,20 +49,20 @@ struct FSectorDisplayInfo
 
 /**
  * Sector Map Widget for displaying sector information
- * 
+ *
  * This widget provides a user interface for viewing space sector information:
  * - Sector name and description
  * - Sector boundaries and size (200km x 200km = 20,000,000 x 20,000,000 Unreal Units)
  * - Objects within the sector (stations, ships, asteroids)
  * - Navigation and selection functionality
- * 
+ *
  * Usage:
  * - Create a Widget Blueprint based on this class (e.g., WBP_SectorMap)
  * - Design the sector map layout in the Blueprint designer
  * - Override BlueprintNativeEvents to customize behavior
  * - Use Blueprint functions to update sector display
  * - Bind to the sector selection delegate for navigation
- * 
+ *
  * Integration:
  * - Works with ASpaceSectorMap actors for sector data
  * - Can be integrated into the main HUD or opened as a separate screen

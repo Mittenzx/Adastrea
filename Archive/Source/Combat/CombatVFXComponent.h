@@ -11,13 +11,13 @@
 
 /**
  * Combat VFX Component
- * 
+ *
  * Manages all combat visual effects for spaceships including:
  * - Weapon fire effects (6 weapon types)
  * - Weapon heat management visuals
  * - Impact effects (shield and hull)
  * - Explosion effects (small/medium/large)
- * 
+ *
  * **Weapon Fire Effects:**
  * - Energy weapons: Laser beam with glow and heat distortion
  * - Projectile weapons: Tracer rounds with muzzle flash
@@ -25,17 +25,17 @@
  * - Torpedo weapons: Plasma trail effect
  * - Beam weapons: Sustained beam with start/end points
  * - Plasma weapons: Ball lightning with arcing
- * 
+ *
  * **Integration:**
  * - Automatically monitors WeaponComponent for fire events
  * - Spawns appropriate effects based on weapon type
  * - Manages effect lifecycle and performance
- * 
+ *
  * **Performance:**
  * - Particle budget management (<5ms per effect target)
  * - Distance-based LOD and culling
  * - Effect pooling for frequently used effects
- * 
+ *
  * Usage:
  * - Add component to spaceship Blueprint
  * - Assign CombatVFXDataAsset for weapon effects

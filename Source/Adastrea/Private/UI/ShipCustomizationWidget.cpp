@@ -103,7 +103,7 @@ TArray<FShipHardpoint> UShipCustomizationWidget::GetHardpoints() const
 TArray<FInstalledModule> UShipCustomizationWidget::GetInstalledModules() const
 {
 	TArray<FInstalledModule> InstalledModules;
-	
+
 	for (int32 i = 0; i < Hardpoints.Num(); i++)
 	{
 		if (Hardpoints[i].InstalledModule)
@@ -115,14 +115,14 @@ TArray<FInstalledModule> UShipCustomizationWidget::GetInstalledModules() const
 			InstalledModules.Add(Installed);
 		}
 	}
-	
+
 	return InstalledModules;
 }
 
 float UShipCustomizationWidget::GetTotalPowerConsumption() const
 {
 	float TotalPower = 0.0f;
-	
+
 	for (const FShipHardpoint& Hardpoint : Hardpoints)
 	{
 		if (Hardpoint.InstalledModule)
@@ -130,14 +130,14 @@ float UShipCustomizationWidget::GetTotalPowerConsumption() const
 			TotalPower += Hardpoint.InstalledModule->PowerConsumption;
 		}
 	}
-	
+
 	return TotalPower;
 }
 
 float UShipCustomizationWidget::GetTotalModuleMass() const
 {
 	float TotalMass = 0.0f;
-	
+
 	for (const FShipHardpoint& Hardpoint : Hardpoints)
 	{
 		if (Hardpoint.InstalledModule)
@@ -145,7 +145,7 @@ float UShipCustomizationWidget::GetTotalModuleMass() const
 			TotalMass += Hardpoint.InstalledModule->Mass;
 		}
 	}
-	
+
 	return TotalMass;
 }
 
@@ -195,7 +195,7 @@ void UShipCustomizationWidget::ResetCustomizations()
 	{
 		Hardpoint.InstalledModule = nullptr;
 	}
-	
+
 	RefreshCustomization_Implementation();
 }
 
@@ -205,7 +205,7 @@ void UShipCustomizationWidget::InitializeHardpoints_Implementation()
 
 	// Create default hardpoints
 	// In a real implementation, this would query the spaceship for its hardpoint configuration
-	
+
 	// Example: Add some default hardpoints
 	FShipHardpoint SmallWeapon1;
 	SmallWeapon1.HardpointType = EShipHardpointType::Small;

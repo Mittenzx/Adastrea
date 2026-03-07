@@ -139,5 +139,5 @@ When modifying scripts:
 
 ---
 
-**Maintained by**: Adastrea Development Team  
+**Maintained by**: Adastrea Development Team
 **Last updated**: 2025-12-09

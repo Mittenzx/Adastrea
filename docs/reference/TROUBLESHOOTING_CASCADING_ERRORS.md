@@ -347,7 +347,7 @@ find Source -name "I*.cpp"
 grep -r "IShipModule::" Source/Adastrea --include="*.cpp"
 
 # Find missing generated.h
-for f in $(find Source/Adastrea -name "*.h"); do 
+for f in $(find Source/Adastrea -name "*.h"); do
     tail -1 "$f" | grep -q "generated.h" || echo "$f"
 done
 
@@ -375,8 +375,8 @@ After following this guide, you should have:
 
 ---
 
-**Last Updated**: 2025-12-22  
-**Version**: 1.0  
+**Last Updated**: 2025-12-22
+**Version**: 1.0
 **Maintained by**: Adastrea Development Team
 
 **TL;DR**: 90% of cascading errors are fixed by clean rebuild. Do that first. ⚡

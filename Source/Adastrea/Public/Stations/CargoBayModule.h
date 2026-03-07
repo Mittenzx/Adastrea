@@ -8,10 +8,10 @@
 
 /**
  * Cargo storage bay module for space stations
- * 
+ *
  * General purpose storage facility for goods and materials.
  * Features automated inventory management and climate control.
- * 
+ *
  * Power Consumption: 5 units
  * Module Group: Storage
  */

@@ -43,10 +43,10 @@ USTRUCT(BlueprintType)
 struct FStoredMaterial
 {
     GENERATED_BODY()
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     UMaterialDataAsset* Material;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 Quantity;
 };
@@ -55,32 +55,32 @@ UCLASS()
 class AStorageModule : public ASpaceStationModule
 {
     GENERATED_BODY()
-    
+
 public:
     // Total storage capacity in cubic meters
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Storage")
     float StorageCapacity;
-    
+
     // Currently stored materials
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Storage")
     TArray<FStoredMaterial> StoredMaterials;
-    
+
     // Module tag for filtering compatible materials
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Storage")
     FName ModuleStorageTag;
-    
+
     // Add material to storage
     UFUNCTION(BlueprintCallable, Category="Storage")
     bool AddMaterial(UMaterialDataAsset* Material, int32 Quantity);
-    
+
     // Remove material from storage
     UFUNCTION(BlueprintCallable, Category="Storage")
     bool RemoveMaterial(UMaterialDataAsset* Material, int32 Quantity);
-    
+
     // Get current storage usage
     UFUNCTION(BlueprintCallable, Category="Storage")
     float GetCurrentStorageUsed() const;
-    
+
     // Check if material can be stored
     UFUNCTION(BlueprintCallable, Category="Storage")
     bool CanStoreMaterial(UMaterialDataAsset* Material, int32 Quantity) const;
@@ -93,15 +93,15 @@ public:
 bool AStorageModule::CanStoreMaterial(UMaterialDataAsset* Material, int32 Quantity) const
 {
     if (!Material) return false;
-    
+
     // Check if module can handle this material
     if (!Material->CanBeProcessedByModule(ModuleStorageTag))
         return false;
-    
+
     // Calculate volume needed
     float VolumeNeeded = Material->GetStorageVolume() * Quantity;
     float CurrentUsed = GetCurrentStorageUsed();
-    
+
     // Check capacity
     return (CurrentUsed + VolumeNeeded) <= StorageCapacity;
 }
@@ -110,7 +110,7 @@ bool AStorageModule::AddMaterial(UMaterialDataAsset* Material, int32 Quantity)
 {
     if (!CanStoreMaterial(Material, Quantity))
         return false;
-    
+
     // Find existing entry or add new one
     for (FStoredMaterial& Stored : StoredMaterials)
     {
@@ -120,20 +120,20 @@ bool AStorageModule::AddMaterial(UMaterialDataAsset* Material, int32 Quantity)
             return true;
         }
     }
-    
+
     // Add new entry
     FStoredMaterial NewEntry;
     NewEntry.Material = Material;
     NewEntry.Quantity = Quantity;
     StoredMaterials.Add(NewEntry);
-    
+
     return true;
 }
 
 float AStorageModule::GetCurrentStorageUsed() const
 {
     float TotalUsed = 0.0f;
-    
+
     for (const FStoredMaterial& Stored : StoredMaterials)
     {
         if (Stored.Material)
@@ -141,7 +141,7 @@ float AStorageModule::GetCurrentStorageUsed() const
             TotalUsed += Stored.Material->GetStorageVolume() * Stored.Quantity;
         }
     }
-    
+
     return TotalUsed;
 }
 ```
@@ -157,21 +157,21 @@ USTRUCT(BlueprintType)
 struct FRefineryRecipe
 {
     GENERATED_BODY()
-    
+
     // Input material
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     UMaterialDataAsset* InputMaterial;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 InputQuantity;
-    
+
     // Output material
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     UMaterialDataAsset* OutputMaterial;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 OutputQuantity;
-    
+
     // Processing time in seconds
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float ProcessingTime;
@@ -181,16 +181,16 @@ UCLASS()
 class ARefineryModule : public ASpaceStationModule
 {
     GENERATED_BODY()
-    
+
 public:
     // Available recipes
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Refinery")
     TArray<FRefineryRecipe> Recipes;
-    
+
     // Check if recipe is valid
     UFUNCTION(BlueprintCallable, Category="Refinery")
     bool CanProcessRecipe(FRefineryRecipe Recipe) const;
-    
+
     // Start processing
     UFUNCTION(BlueprintCallable, Category="Refinery")
     bool StartProcessing(FRefineryRecipe Recipe);
@@ -213,13 +213,13 @@ bool CanFactionUseMaterial(UFactionDataAsset* Faction, UMaterialDataAsset* Mater
     {
         return Faction->TechnologyLevel >= 7;
     }
-    
+
     // Example: Faction-specific materials
     if (Material->HasTag(FName("MilitaryGrade")))
     {
         return Faction->HasTrait(FName("MilitaryIndustrial"));
     }
-    
+
     return true;
 }
 ```
@@ -383,13 +383,13 @@ Mining Module (Produces Raw Ore)
     ↓ ModuleTag: MiningProcessor
     Output: Iron Ore (Category: Mineral)
     ↓ Store in Cargo
-    
+
 Refinery Module (Processes Ore)
     ↓ ModuleTag: Refinery
     Input: Iron Ore
     Output: Iron Ingot (Category: RefinedMineral)
     ↓ Store in Cargo
-    
+
 Manufacturing Module (Creates Parts)
     ↓ ModuleTag: ManufacturingPlant
     Input: Iron Ingot
@@ -403,7 +403,7 @@ Hydroponics Module
     ↓ ModuleTag: Hydroponics
     Output: Fresh Vegetables (StorageType: Refrigerated)
     ↓ Must go to RefrigeratedStorage
-    
+
 Food Storage Module
     ↓ ModuleTag: RefrigeratedStorage
     Stores: Fresh food items
@@ -416,13 +416,13 @@ Exploration/Discovery
     ↓ Acquire research samples
     Bio Sample (Category: Organic, StorageType: Refrigerated)
     ↓ Store in RefrigeratedStorage
-    
+
 Research Lab Module
     ↓ ModuleTag: ResearchLab
     Input: Bio Sample
     Output: Research Data (Category: Research, Mass: 0.1kg)
     ↓ Store in DataStorage
-    
+
 Technology Unlock
     ↓ Consume Research Data
     Unlock: New blueprints, technologies

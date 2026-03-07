@@ -11,7 +11,7 @@ UPlayerTraderComponent::UPlayerTraderComponent()
 	Credits = 1000;  // Default starting credits
 	StartingCredits = 1000;
 	LastProfitMilestone = 0;
-	
+
 	// Initialize default profit milestones (designers can customize in editor)
 	ProfitMilestones = { 5000, 10000, 25000, 50000, 100000, 250000, 500000, 1000000 };
 }
@@ -35,7 +35,7 @@ bool UPlayerTraderComponent::BuyItem(UMarketDataAsset* Market, UTradeItemDataAss
 	int32 TotalCost = GetBuyCost(Market, Item, Quantity);
 	if (!CanAfford(Market, Item, Quantity))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayerTrader: Can't afford %d x %s (need %d, have %d)"), 
+		UE_LOG(LogTemp, Warning, TEXT("PlayerTrader: Can't afford %d x %s (need %d, have %d)"),
 			Quantity, *Item->ItemName.ToString(), TotalCost, Credits);
 		return false;
 	}
@@ -57,7 +57,7 @@ bool UPlayerTraderComponent::BuyItem(UMarketDataAsset* Market, UTradeItemDataAss
 		EconomyMgr->RecordTransaction(Market, Item, Quantity, true);
 	}
 
-	UE_LOG(LogTemp, Log, TEXT("PlayerTrader: Bought %d x %s for %d credits (remaining: %d)"), 
+	UE_LOG(LogTemp, Log, TEXT("PlayerTrader: Bought %d x %s for %d credits (remaining: %d)"),
 		Quantity, *Item->ItemName.ToString(), TotalCost, Credits);
 
 	// Broadcast event
@@ -94,7 +94,7 @@ bool UPlayerTraderComponent::SellItem(UMarketDataAsset* Market, UTradeItemDataAs
 		EconomyMgr->RecordTransaction(Market, Item, Quantity, false);
 	}
 
-	UE_LOG(LogTemp, Log, TEXT("PlayerTrader: Sold %d x %s for %d credits (total: %d)"), 
+	UE_LOG(LogTemp, Log, TEXT("PlayerTrader: Sold %d x %s for %d credits (total: %d)"),
 		Quantity, *Item->ItemName.ToString(), TotalValue, Credits);
 
 	// Broadcast event
@@ -198,9 +198,9 @@ void UPlayerTraderComponent::ResetFinances()
 {
 	Credits = StartingCredits;
 	LastProfitMilestone = 0;
-	
+
 	UE_LOG(LogTemp, Log, TEXT("PlayerTrader: Reset finances to %d credits"), StartingCredits);
-	
+
 	OnCreditsChanged.Broadcast(Credits, 0);
 }
 
@@ -231,7 +231,7 @@ void UPlayerTraderComponent::CheckProfitMilestones()
 		{
 			LastProfitMilestone = Milestone;
 			OnProfitMilestone.Broadcast(Milestone);
-			
+
 			UE_LOG(LogTemp, Log, TEXT("PlayerTrader: Reached profit milestone: %d credits!"), Milestone);
 		}
 	}

@@ -25,16 +25,16 @@ enum class ESoundEffectCategory : uint8
 
 /**
  * Data Asset for defining sound effects in Adastrea
- * 
+ *
  * This class provides a designer-friendly way to configure sound effects
  * with volume, pitch variation, attenuation, and categorization.
- * 
+ *
  * Usage:
  * 1. Create a Blueprint based on this class in the Content Browser
  * 2. Configure sound properties and assign audio files
  * 3. Reference this Data Asset from audio components or Blueprint logic
  * 4. Use Blueprint functions to play sounds with variations
- * 
+ *
  * Example:
  * - Create DA_SFX_LaserFire for weapon sounds
  * - Set category to Combat, volume to 0.8, pitch variation to 0.1
@@ -73,7 +73,7 @@ public:
 	USoundBase* Sound;
 
 	/** Base volume multiplier (0.0 to 1.0) */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio Settings", 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio Settings",
 		meta = (ClampMin = 0.0, ClampMax = 1.0, UIMin = 0.0, UIMax = 1.0))
 	float Volume;
 

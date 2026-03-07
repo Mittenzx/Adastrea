@@ -147,6 +147,6 @@ After this fix:
 
 ---
 
-**Date**: 2025-12-09  
-**Version**: 1.0  
+**Date**: 2025-12-09
+**Version**: 1.0
 **Status**: Implemented

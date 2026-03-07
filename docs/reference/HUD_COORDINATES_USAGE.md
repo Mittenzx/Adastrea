@@ -19,7 +19,7 @@ The coordinates are automatically updated in the HUD's `UpdateHUDFromGameState_I
 void UAdastreaHUDWidget::UpdateHUDFromGameState_Implementation(float DeltaTime)
 {
     ControlledSpaceship = GetControlledSpaceship();
-    
+
     if (ControlledSpaceship)
     {
         FVector CurrentPosition = ControlledSpaceship->GetActorLocation();
@@ -95,8 +95,8 @@ Format Text ("Distance: {0:0.1}m", Distance)
 ## Blueprint Functions
 
 ### UpdateCoordinates (BlueprintNativeEvent)
-**Category:** HUD|Navigation  
-**Parameters:** Position (FVector)  
+**Category:** HUD|Navigation
+**Parameters:** Position (FVector)
 **Description:** Called automatically when player coordinates change
 
 Override this in Blueprint to customize coordinate display formatting.
@@ -202,5 +202,5 @@ Vertical Box:
 - [HUD Quick Reference](../archive/pre-mvp-systems/assets-guides/HUD_QUICK_REFERENCE.md)
 - [AdastreaHUDWidget C++ Reference](../../Source/Adastrea/Public/UI/AdastreaHUDWidget.h)
 
-**Last Updated:** 2026-01-29  
+**Last Updated:** 2026-01-29
 **Feature Added:** HUD coordinate display

@@ -32,6 +32,6 @@ If you need to create Trade Item or Market Data Assets, see:
 
 ---
 
-**Original file preserved as**: `TradingSystemBlueprintGuide.md.old`  
-**Date deprecated**: 2026-01-03  
+**Original file preserved as**: `TradingSystemBlueprintGuide.md.old`
+**Date deprecated**: 2026-01-03
 **Reason**: Replaced by more comprehensive, template-compliant guides

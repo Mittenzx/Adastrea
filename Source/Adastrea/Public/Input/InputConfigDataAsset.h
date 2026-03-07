@@ -8,10 +8,10 @@
 
 /**
  * Data Asset for configuring Enhanced Input system
- * 
+ *
  * Stores references to Input Actions and Input Mapping Contexts
  * for easy access and organization.
- * 
+ *
  * Usage:
  * - Create a Blueprint Data Asset based on UInputConfigDataAsset
  * - Assign Input Actions created in editor
@@ -190,7 +190,7 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input Actions|System")
     UInputAction* ScreenshotAction;
 
-    /** 
+    /**
      * Input action for opening station editor (default: N key when in spaceship mode)
      * As of December 2025, this is fully handled in C++ in AAdastreaPlayerController::ToggleStationEditor()
      * No Blueprint implementation required - just bind this action to call ToggleStationEditor()

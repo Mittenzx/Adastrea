@@ -276,5 +276,5 @@ Qualification requires:
 
 **Quick Tip**: Start with the Craftsmen's Compact template—it's the easiest to understand and test!
 
-**Version**: 1.0  
+**Version**: 1.0
 **Last Updated**: 2025-11-10

@@ -230,5 +230,5 @@ To add new diagnostic tests:
 
 ---
 
-**Last Updated:** 2025-11-23  
+**Last Updated:** 2025-11-23
 **Maintained By:** Adastrea Development Team

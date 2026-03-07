@@ -1,7 +1,7 @@
 # Trading System Architecture
 
-**Status**: MVP-Critical System (#1 Priority)  
-**Phase**: Trade Simulator MVP (Dec 2025 - Mar 2026)  
+**Status**: MVP-Critical System (#1 Priority)
+**Phase**: Trade Simulator MVP (Dec 2025 - Mar 2026)
 **Last Updated**: 2025-12-25
 
 ---
@@ -38,23 +38,23 @@ graph TB
         Player[Player Ship<br/>Cargo Hold]
         UI[Trading UI Widget<br/>Buy/Sell Interface]
     end
-    
+
     subgraph "Station Layer"
         Station[Trading Station<br/>Docking + Market Access]
         Market[Market Component<br/>Inventory Management]
     end
-    
+
     subgraph "Data Layer"
         ItemData[Trade Item Data Asset<br/>Prices, Properties]
         MarketData[Market Data Asset<br/>Supply/Demand Config]
         ShipData[Ship Data Asset<br/>Cargo Capacity]
     end
-    
+
     subgraph "Economy Layer"
         EconomyMgr[Economy Manager<br/>Price Updates]
         TransactionMgr[Transaction Manager<br/>History Tracking]
     end
-    
+
     Player -->|Dock| Station
     Station -->|Open UI| UI
     UI -->|Request Trade| Market
@@ -345,7 +345,7 @@ sequenceDiagram
     participant Market
     participant Economy
     participant DataAsset
-    
+
     Player->>Station: Dock at Station
     Station->>Player: Open Trading UI
     Player->>Market: Request Item Price
@@ -354,18 +354,18 @@ sequenceDiagram
     Market->>Economy: Get Supply/Demand
     Economy->>Market: Supply=0.8, Demand=1.2
     Market->>Player: Display Price (modified)
-    
+
     Player->>Market: Buy Item (Quantity)
     Market->>Player: Deduct Credits
     Market->>Player: Add to Cargo
     Market->>Economy: Update Supply (decrease)
     Market->>Economy: Record Transaction
-    
+
     Player->>Station: Undock
     Player->>Station: Fly to Next Station
     Player->>Station: Dock at Station B
     Station->>Player: Open Trading UI
-    
+
     Player->>Market: Sell Item (Quantity)
     Market->>Player: Add Credits (Profit!)
     Market->>Player: Remove from Cargo
@@ -494,13 +494,13 @@ class UEconomyManager : public UGameInstanceSubsystem
 {
     // Update prices based on player trades
     void UpdatePrices(float DeltaTime);
-    
+
     // Simulate background economy activity
     void SimulateEconomy(float DeltaTime);
-    
+
     // Get current price for item at market
     float CalculatePrice(FName ItemID, FName MarketID, bool bIsBuying);
-    
+
     // Record player transaction
     void RecordTransaction(FTradeTransaction Transaction);
 };
@@ -583,10 +583,10 @@ Industrial Station (needs water):
 Player Action:
 1. Buy 100 water at Ag station: 800 credits
    - Supply reduced, price rises to 8.5 credits
-   
+
 2. Sell 100 water at Industrial: 1150 credits
    - Supply increased, price drops to 11.5 credits
-   
+
 3. Profit: 1150 - 800 = 350 credits (43% margin!)
 ```
 
@@ -640,10 +640,10 @@ struct FMarketEvent {
 class ASpaceship {
     UPROPERTY()
     int32 CargoCapacity;  // From USpaceshipDataAsset
-    
+
     UPROPERTY()
     TArray<FCargoItem> CargoHold;
-    
+
     bool AddCargo(UTradeItemDataAsset* Item, int32 Quantity);
     bool RemoveCargo(UTradeItemDataAsset* Item, int32 Quantity);
     int32 GetAvailableCargoSpace() const;
@@ -657,7 +657,7 @@ class ASpaceship {
 class ASpaceStation {
     UPROPERTY()
     UMarketDataAsset* MarketData;
-    
+
     void OnPlayerDocked(ASpaceship* PlayerShip);
     void OpenTradingInterface(APlayerController* Player);
 };
@@ -697,16 +697,16 @@ struct FSaveGameTrading {
 **Custom Pricing**:
 ```cpp
 UFUNCTION(BlueprintNativeEvent)
-float OnCalculateCustomPrice(float Supply, float Demand, 
-                            float EventMultiplier, 
+float OnCalculateCustomPrice(float Supply, float Demand,
+                            float EventMultiplier,
                             float BaseCalculatedPrice) const;
 ```
 
 **Trade Events**:
 ```cpp
 UFUNCTION(BlueprintNativeEvent)
-void OnItemTraded(int32 Quantity, float Price, 
-                 FName BuyerFactionID, 
+void OnItemTraded(int32 Quantity, float Price,
+                 FName BuyerFactionID,
                  FName SellerFactionID);
 ```
 
@@ -755,7 +755,7 @@ TEST(TradingSystem, CalculatePriceSupplyDemand) {
 TEST(TradingSystem, ExecuteTradeSuccess) {
     ASpaceship* Ship = CreateTestShip(1000 credits, 10 cargo);
     UMarketDataAsset* Market = CreateTestMarket();
-    
+
     bool Success = ExecuteTrade(Ship, Market, "Water", 5, true);
     EXPECT_TRUE(Success);
     EXPECT_EQ(Ship->Credits, 950);  // Spent 50 credits
@@ -808,9 +808,9 @@ bool bPricesCacheDirty = true;
 
 void UpdateCachedPrices() {
     if (!bPricesCacheDirty) return;
-    
+
     for (auto& Entry : Inventory) {
-        CachedPrices.Add(Entry.TradeItem->ItemID, 
+        CachedPrices.Add(Entry.TradeItem->ItemID,
                         CalculatePrice(Entry));
     }
     bPricesCacheDirty = false;
@@ -893,6 +893,6 @@ void Tick(float DeltaTime) {
 
 ---
 
-**Last Updated**: 2025-12-25  
-**Author**: Trading System Architecture Team  
+**Last Updated**: 2025-12-25
+**Author**: Trading System Architecture Team
 **Status**: Active Development (MVP Phase)

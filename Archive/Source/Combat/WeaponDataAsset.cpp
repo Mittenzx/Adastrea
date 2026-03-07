@@ -77,7 +77,7 @@ float UWeaponDataAsset::GetEffectiveDamage(float ArmorRating, float ShieldStreng
 float UWeaponDataAsset::GetTimeToKill(float TargetHealth) const
 {
     const float DPS = GetDPS();
-    
+
     if (DPS <= 0.0f)
     {
         return -1.0f;  // Invalid: cannot kill target
@@ -101,7 +101,7 @@ bool UWeaponDataAsset::IsSuitableForRole(const FString& Role) const
         return BaseDamage >= 200.0f && MaxRange >= 5000.0f;
     }
     // Anti-missile/Point defense: High rate of fire, point defense capable
-    else if (LowerRole.Contains(TEXT("antimissile")) || LowerRole.Contains(TEXT("anti-missile")) || 
+    else if (LowerRole.Contains(TEXT("antimissile")) || LowerRole.Contains(TEXT("anti-missile")) ||
              LowerRole.Contains(TEXT("pointdefense")) || LowerRole.Contains(TEXT("point-defense")))
     {
         return bPointDefenseCapable && RateOfFire >= 5.0f;
@@ -196,8 +196,8 @@ EDataValidationResult UWeaponDataAsset::IsDataValid(FDataValidationContext& Cont
     }
 
     // Validate projectile stats for projectile weapons
-    if (WeaponType == EWeaponType::Projectile || 
-        WeaponType == EWeaponType::Missile || 
+    if (WeaponType == EWeaponType::Projectile ||
+        WeaponType == EWeaponType::Missile ||
         WeaponType == EWeaponType::Torpedo)
     {
         if (ProjectileSpeed <= 0.0f)
@@ -217,8 +217,8 @@ EDataValidationResult UWeaponDataAsset::IsDataValid(FDataValidationContext& Cont
         }
     }
     // Validate that projectile weapons should typically use ammunition
-    else if (WeaponType == EWeaponType::Projectile || 
-             WeaponType == EWeaponType::Missile || 
+    else if (WeaponType == EWeaponType::Projectile ||
+             WeaponType == EWeaponType::Missile ||
              WeaponType == EWeaponType::Torpedo)
     {
         // Warning only - some projectile weapons might be energy-based

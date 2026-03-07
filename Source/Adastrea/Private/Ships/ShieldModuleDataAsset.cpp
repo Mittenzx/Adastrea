@@ -49,7 +49,7 @@ float UShieldModuleDataAsset::GetModuleRating() const
 	float RechargeScore = FMath::Clamp(RechargeRate / 1000.0f, 0.0f, 1.0f) * 20.0f;
 	float ResistanceScore = GetAverageResistance() * 0.3f;
 	float CoverageScore = (ShieldCoverage / 100.0f) * 10.0f;
-	
+
 	float SpecialBonus = 0.0f;
 	if (bAdaptiveShields) SpecialBonus += 5.0f;
 	if (bSupportsShieldBoost) SpecialBonus += 3.0f;

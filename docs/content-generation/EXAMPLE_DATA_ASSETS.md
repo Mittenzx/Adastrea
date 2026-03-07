@@ -12,8 +12,8 @@ This file provides ready-to-use configurations for creating Data Assets in Unrea
 
 ## Example 1: Player Scout Ship
 
-**Asset Type**: SpaceshipDataAsset  
-**Name**: DA_Ship_PlayerScout  
+**Asset Type**: SpaceshipDataAsset
+**Name**: DA_Ship_PlayerScout
 **Location**: Content/DataAssets/Ships/
 
 ### Basic Info
@@ -96,8 +96,8 @@ SecondaryColor: RGB(0.9, 0.9, 0.9) - Silver
 
 ## Example 2: Player Alliance Faction
 
-**Asset Type**: FactionDataAsset  
-**Name**: DA_Faction_PlayerAlliance  
+**Asset Type**: FactionDataAsset
+**Name**: DA_Faction_PlayerAlliance
 **Location**: Content/DataAssets/Factions/
 
 ### Basic Info
@@ -166,8 +166,8 @@ TradeModifier: 1.3
 
 ## Example 3: Player Character Personnel
 
-**Asset Type**: PersonnelDataAsset  
-**Name**: DA_Personnel_PlayerCaptain  
+**Asset Type**: PersonnelDataAsset
+**Name**: DA_Personnel_PlayerCaptain
 **Location**: Content/DataAssets/Personnel/
 
 ### Basic Info
@@ -234,8 +234,8 @@ ModifierValue: 1.15
 
 ## Example 4: Trading Item - Iron Ore
 
-**Asset Type**: TradeItemDataAsset  
-**Name**: DA_TradeItem_IronOre  
+**Asset Type**: TradeItemDataAsset
+**Name**: DA_TradeItem_IronOre
 **Location**: Content/DataAssets/Trading/Items/
 
 ### Basic Info
@@ -272,8 +272,8 @@ MaxPriceMultiplier: 2.0
 
 ## Example 5: Trade Market - Station Hub
 
-**Asset Type**: MarketDataAsset  
-**Name**: DA_Market_CentralHub  
+**Asset Type**: MarketDataAsset
+**Name**: DA_Market_CentralHub
 **Location**: Content/DataAssets/Trading/Markets/
 
 ### Basic Info
@@ -293,7 +293,7 @@ RefreshRate: 24.0
 
 ### Available Goods (Add to array)
 ```
-Items: 
+Items:
   - DA_TradeItem_IronOre
   - DA_TradeItem_FoodSupplies
   - DA_TradeItem_FuelCells
@@ -310,8 +310,8 @@ SellPriceModifier: 1.1
 
 ## Example 6: Simple Homeworld
 
-**Asset Type**: HomeworldDataAsset  
-**Name**: DA_Homeworld_Earth  
+**Asset Type**: HomeworldDataAsset
+**Name**: DA_Homeworld_Earth
 **Location**: Content/DataAssets/Homeworlds/
 
 ### Basic Info
@@ -359,8 +359,8 @@ When creating Data Assets, always:
 
 ## Example 9: Faction with Categorized Traits (NEW)
 
-**Asset Type**: FactionDataAsset  
-**Name**: DA_Faction_SolarisUnion  
+**Asset Type**: FactionDataAsset
+**Name**: DA_Faction_SolarisUnion
 **Location**: Content/DataAssets/Factions/
 
 ### Faction Info

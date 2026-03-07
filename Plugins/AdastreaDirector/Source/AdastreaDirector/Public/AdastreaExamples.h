@@ -11,14 +11,14 @@
 
 /**
  * Example Usage for VibeUE-style Adastrea Director features
- * 
+ *
  * This file demonstrates how to use the new C++ APIs for:
  * - Python script execution
  * - Direct LLM API calls (Gemini & OpenAI)
  * - Runtime asset discovery
  * - Tool system
  * - MCP server
- * 
+ *
  * See VIBEUE_IMPLEMENTATION_GUIDE.md for full documentation
  */
 namespace AdastreaExamples
@@ -44,7 +44,7 @@ print(f'Selected {len(assets)} assets')
 for asset in assets:
     print(f'  - {asset.get_name()}')
 		)");
-		
+
 		FAdastreaScriptResult Result2 = FAdastreaScriptService::ExecuteCode(Code);
 		if (Result2.bSuccess)
 		{
@@ -70,7 +70,7 @@ for asset in assets:
 	{
 		// Create LLM client (must be TSharedPtr for async callbacks)
 		TSharedPtr<FAdastreaLLMClient> Client = MakeShared<FAdastreaLLMClient>();
-		
+
 		// Configure for Gemini
 		Client->SetProvider(ELLMProvider::Gemini, TEXT("YOUR_GEMINI_API_KEY"));
 		Client->SetModel(TEXT("gemini-1.5-flash"));
@@ -82,12 +82,12 @@ for asset in assets:
 
 		// Build conversation
 		TArray<FChatMessage> Messages;
-		
+
 		FChatMessage SystemMsg;
 		SystemMsg.Role = TEXT("system");
 		SystemMsg.Content = TEXT("You are a helpful Unreal Engine assistant.");
 		Messages.Add(SystemMsg);
-		
+
 		FChatMessage UserMsg;
 		UserMsg.Role = TEXT("user");
 		UserMsg.Content = TEXT("What is a Blueprint in Unreal Engine?");
@@ -134,7 +134,7 @@ for asset in assets:
 		UE_LOG(LogAdastreaDirector, Log, TEXT("Found %d assets matching 'Character'"), Results.Num());
 		for (const FAssetInfo& Asset : Results)
 		{
-			UE_LOG(LogAdastreaDirector, Log, TEXT("  - %s (%s) at %s"), 
+			UE_LOG(LogAdastreaDirector, Log, TEXT("  - %s (%s) at %s"),
 				*Asset.Name, *Asset.Class, *Asset.Path);
 		}
 
@@ -175,11 +175,11 @@ for asset in assets:
 		Args->SetStringField(TEXT("class"), TEXT("Material"));
 
 		FToolExecutionResult Result = FAdastreaToolSystem::Get().ExecuteTool(TEXT("search_assets"), Args);
-		
+
 		if (Result.bSuccess)
 		{
 			UE_LOG(LogAdastreaDirector, Log, TEXT("Tool executed: %s"), *Result.Output);
-			
+
 			// Access structured data
 			if (Result.Data.IsValid())
 			{
@@ -260,13 +260,13 @@ for asset in assets:
 						FChatMessage ToolResultMsg;
 						ToolResultMsg.Role = TEXT("tool");
 						ToolResultMsg.ToolCallId = ToolCall.Id;
-						
+
 						// Serialize result to JSON string
 						FString JsonString;
 						TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&JsonString);
 						FJsonSerializer::Serialize(Result.ToJson().ToSharedRef(), Writer);
 						ToolResultMsg.Content = JsonString;
-						
+
 						Messages.Add(ToolResultMsg);
 
 						UE_LOG(LogAdastreaDirector, Log, TEXT("Tool result: %s"), *Result.Output);
@@ -322,26 +322,26 @@ for asset in assets:
 	inline void RunAllExamples()
 	{
 		UE_LOG(LogAdastreaDirector, Log, TEXT("=== Running Adastrea Examples ==="));
-		
+
 		UE_LOG(LogAdastreaDirector, Log, TEXT("\n--- Example 1: Python Execution ---"));
 		ExamplePythonExecution();
-		
+
 		UE_LOG(LogAdastreaDirector, Log, TEXT("\n--- Example 3: Asset Discovery ---"));
 		ExampleAssetDiscovery();
-		
+
 		UE_LOG(LogAdastreaDirector, Log, TEXT("\n--- Example 4: Tool System ---"));
 		ExampleToolSystem();
-		
+
 		// Note: LLM examples require API keys, so they're commented out
 		// UE_LOG(LogAdastreaDirector, Log, TEXT("\n--- Example 2: LLM Call ---"));
 		// ExampleLLMCall();
-		
+
 		// UE_LOG(LogAdastreaDirector, Log, TEXT("\n--- Example 5: LLM with Tools ---"));
 		// ExampleLLMWithTools();
-		
+
 		// UE_LOG(LogAdastreaDirector, Log, TEXT("\n--- Example 6: MCP Server ---"));
 		// ExampleMCPServer();
-		
+
 		UE_LOG(LogAdastreaDirector, Log, TEXT("\n=== Examples Complete ==="));
 	}
 }

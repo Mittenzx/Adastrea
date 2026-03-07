@@ -7,7 +7,7 @@ ContractName: "Pirate Hunt"
 ContractID: "Quest_Combat_8121"
 Description: |
   Eliminate hostile forces in the Delta 147 sector. High danger expected.
-  
+
 ContractType: Combat
 Difficulty: Hard
 

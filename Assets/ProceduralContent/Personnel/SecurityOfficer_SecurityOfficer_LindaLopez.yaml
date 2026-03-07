@@ -9,7 +9,7 @@ PersonnelName: "Linda Lopez"
 # Basic Identity
 Biography: |
   This individual graduated from the academy with honors and has been rising steadily. They are feared by enemies and respected by allies and led a successful rescue operation in hostile territory.
-  
+
 Age: 29
 Gender: "Female"
 Species: "Human"
@@ -61,7 +61,7 @@ ContractMonthsRemaining: 0
 PersonalityType: "Adventurous"
 PersonalityDescription: |
   Adventurous personality with focus on securityofficer duties.
-  
+
 Traits:
   - TraitName: "Quick Learner"
     TraitDescription: "Gains XP faster"

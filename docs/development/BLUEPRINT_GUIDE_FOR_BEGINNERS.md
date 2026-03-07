@@ -2,9 +2,9 @@
 
 > **A comprehensive, beginner-friendly guide to creating every Blueprint you need in Adastrea**
 
-**Last Updated**: November 18, 2025  
-**For**: Adastrea 1.0.0-alpha  
-**Engine**: Unreal Engine 5.6  
+**Last Updated**: November 18, 2025
+**For**: Adastrea 1.0.0-alpha
+**Engine**: Unreal Engine 5.6
 **Difficulty**: Complete Beginner (No Blueprint experience required)
 
 ---
@@ -95,7 +95,7 @@ The parent class gives your Blueprint built-in functionality. You just fill in t
 
 ### 🚨 PHASE 1: Critical - Game Won't Run Without These (15 Blueprints)
 
-**Time Required**: ~2 hours  
+**Time Required**: ~2 hours
 **Goal**: Get a basic playable game with a flying ship
 
 #### Game Framework (5 Blueprints)
@@ -220,7 +220,7 @@ The parent class gives your Blueprint built-in functionality. You just fill in t
 
 ### 🔶 PHASE 2: High Priority - Core Gameplay (25 Additional Blueprints)
 
-**Time Required**: ~4 hours  
+**Time Required**: ~4 hours
 **Goal**: Add combat, trading, stations, and NPCs
 
 #### Space Stations (5 Blueprints)
@@ -429,7 +429,7 @@ The parent class gives your Blueprint built-in functionality. You just fill in t
 
 ### 🔷 PHASE 3: Complete Systems (60+ Additional Blueprints)
 
-**Time Required**: ~8-10 hours  
+**Time Required**: ~8-10 hours
 **Goal**: Polish and complete all game systems
 
 #### All Station Modules (6 more - total 10)
@@ -529,7 +529,7 @@ The parent class gives your Blueprint built-in functionality. You just fill in t
      - `Static Mesh Component`
      - `Spring Arm Component`
      - `Camera Component`
-   
+
 7. **Configure Components**:
    - Click each component in list
    - Look at right panel: "Details"
@@ -581,7 +581,7 @@ The parent class gives your Blueprint built-in functionality. You just fill in t
      - Vertical Box (drag onto canvas)
      - Text blocks (for titles)
      - Buttons (for menu options)
-   
+
 4. **Configure Button**:
    - Click button in hierarchy
    - Details panel on right:
@@ -857,11 +857,11 @@ Left Mouse Button → No modifiers
    - Open BP_SpaceshipController
    - Event Graph → Event BeginPlay
    - Must have nodes to add IMC_Spaceship to player
-   
+
 2. **Input actions not mapped?**
    - Open IMC_Spaceship
    - Verify all actions have key mappings
-   
+
 3. **Project Settings not configured?**
    - Edit → Project Settings → Input
    - Verify Enhanced Input is enabled
@@ -878,15 +878,15 @@ Left Mouse Button → No modifiers
 1. **Game Mode not set?**
    - Edit → Project Settings → Maps & Modes
    - Set Default GameMode: BP_SpaceGameMode
-   
+
 2. **Default Pawn not set?**
    - Open BP_SpaceGameMode
    - Class Defaults → Default Pawn Class: BP_PlayerShip
-   
+
 3. **No Player Start in level?**
    - Add Player Start actor to level
    - Position it where you want to spawn
-   
+
 4. **Spawn collision issue?**
    - Move Player Start to open space
    - Check ship collision settings
@@ -901,16 +901,16 @@ Left Mouse Button → No modifiers
    - Event BeginPlay should have:
      - Create Widget → WBP_SpaceshipHUD
      - Add to Viewport
-   
+
 2. **Widget has no content?**
    - Open WBP_SpaceshipHUD
    - Check Designer tab
    - Add UI elements if empty
-   
+
 3. **Widget visibility off?**
    - Select widget root
    - Details → Visibility: Visible
-   
+
 4. **Z-order issue?**
    - Add to Viewport → Z-Order: 0
 
@@ -923,11 +923,11 @@ Left Mouse Button → No modifiers
    - Open BP_PlayerShip
    - Look for ShipDataAsset variable
    - Assign DA_Ship_PlayerScout
-   
+
 2. **Using default values?**
    - C++ code might use defaults if no Data Asset
    - Always assign a Data Asset reference
-   
+
 3. **Wrong Data Asset?**
    - Check you assigned the right one
    - Open Data Asset to verify values
@@ -940,15 +940,15 @@ Left Mouse Button → No modifiers
 1. **Check Output Log** before crash
    - Scroll up to see last error
    - Usually tells you what's wrong
-   
+
 2. **Missing references?**
    - Blueprint references a deleted asset
    - Fix: Remove the reference or recreate asset
-   
+
 3. **Infinite loop?**
    - Event Graph has a loop with no exit
    - Fix: Add delay or break condition
-   
+
 4. **Memory issue?**
    - Too many objects spawning
    - Fix: Limit spawn rates, add object pooling
@@ -961,11 +961,11 @@ Left Mouse Button → No modifiers
 1. **Event Tick overuse?**
    - Don't do heavy calculations every frame
    - Use timers instead: Set Timer by Event
-   
+
 2. **Too many nodes?**
    - Move complex logic to functions
    - Or consider C++ for that system
-   
+
 3. **No caching?**
    - Don't call GetAllActorsOfClass every frame
    - Cache references in BeginPlay
@@ -1120,5 +1120,5 @@ You now have a complete guide to every Blueprint you need to create in Adastrea!
 - `BLUEPRINT_QUICK_REFERENCE.md` - One-page visual reference
 - `CONTENT_CREATION_QUICKSTART.md` - 30-minute quick start
 
-**Last Updated**: November 18, 2025  
+**Last Updated**: November 18, 2025
 **Maintainer**: Adastrea Development Team

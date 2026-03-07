@@ -1,6 +1,6 @@
 # Visual Studio Project Generation - Quick Fix Card
 
-**Problem:** Cannot generate Visual Studio project files?  
+**Problem:** Cannot generate Visual Studio project files?
 **Error:** CS0101, "duplicate namespace", or "Bad IL format"?
 
 ---
@@ -124,5 +124,5 @@ HostProject/
 
 ---
 
-**Quick Start:** [README.md](README.md) | **Full Guide:** [VISUAL_STUDIO_PROJECT_GENERATION.md](VISUAL_STUDIO_PROJECT_GENERATION.md)  
+**Quick Start:** [README.md](README.md) | **Full Guide:** [VISUAL_STUDIO_PROJECT_GENERATION.md](VISUAL_STUDIO_PROJECT_GENERATION.md)
 **Build Errors:** [build_errors.md](build_errors.md) | **Module Guide:** [MODULE_DEPENDENCY_GUIDE.md](MODULE_DEPENDENCY_GUIDE.md)

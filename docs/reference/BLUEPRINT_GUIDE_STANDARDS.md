@@ -2,8 +2,8 @@
 
 > **How to write clear, consistent Blueprint guides for Adastrea**
 
-**Last Updated**: 2026-01-03  
-**Status**: Official Standard  
+**Last Updated**: 2026-01-03
+**Status**: Official Standard
 **Applies to**: All Blueprint documentation
 
 ---
@@ -107,8 +107,8 @@ Fill in:
 ```markdown
 ### What You'll Build
 
-A trading UI that allows players to buy items from a space station's market 
-and sell items from their cargo hold. The interface shows available items, 
+A trading UI that allows players to buy items from a space station's market
+and sell items from their cargo hold. The interface shows available items,
 prices, player credits, and cargo space.
 ```
 
@@ -116,9 +116,9 @@ prices, player credits, and cargo space.
 ```markdown
 ### What You'll Build
 
-In this comprehensive guide, we will walk through the process of creating 
-a sophisticated trading interface that includes multiple features such as 
-dynamic price updates, real-time inventory management, advanced filtering 
+In this comprehensive guide, we will walk through the process of creating
+a sophisticated trading interface that includes multiple features such as
+dynamic price updates, real-time inventory management, advanced filtering
 capabilities, and much more...
 ```
 
@@ -254,7 +254,7 @@ Get Player Credits
 3. Play in editor
 4. [Specific actions]
 
-**Success Criteria**: 
+**Success Criteria**:
 - UI opens without errors
 - Items are visible
 - Credits display correctly
@@ -486,8 +486,8 @@ Canvas Panel (Root)
 - **Tooltip**: "Player's current money available for trading"
 - **Default Value**: `0` (set at runtime from player controller)
 
-**Usage**: This variable stores the player's credits and is updated 
-after each transaction. It's displayed in the UI and used to validate 
+**Usage**: This variable stores the player's credits and is updated
+after each transaction. It's displayed in the UI and used to validate
 purchases.
 ```
 
@@ -531,11 +531,11 @@ Int variable for credits. Make it.
    - Call `Add Child` on `ItemListScrollBox`
    - Content: The widget created in step 5
 
-**Expected Result**: When called, this function clears the list and 
-repopulates it with all market items. You should see item names and 
+**Expected Result**: When called, this function clears the list and
+repopulates it with all market items. You should see item names and
 prices displayed in the UI.
 
-**To Test**: Call this function from Event Construct and check the list 
+**To Test**: Call this function from Event Construct and check the list
 populates in PIE (Play in Editor).
 ```
 
@@ -629,6 +629,6 @@ If you find issues with a guide:
 
 ---
 
-**Last Updated**: 2026-01-03  
-**Version**: 1.0  
+**Last Updated**: 2026-01-03
+**Version**: 1.0
 **Maintained by**: Adastrea Development Team

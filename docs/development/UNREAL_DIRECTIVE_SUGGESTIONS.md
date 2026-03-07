@@ -1,8 +1,8 @@
 # Unreal Directive Best Practices: Adastrea Improvement Suggestions
 
-**Document Version**: 1.0  
-**Date**: 2025-12-08  
-**Analysis Scope**: Complete C++ codebase (213 files) and project structure  
+**Document Version**: 1.0
+**Date**: 2025-12-08
+**Analysis Scope**: Complete C++ codebase (213 files) and project structure
 **Based on**: [UnrealDirective.com](https://unrealdirective.com/) best practices and Epic Games official guidelines
 
 ---
@@ -148,7 +148,7 @@ void UseDataAsset()
         UE_LOG(LogAdastrea, Error, TEXT("ShipDataAsset is null on %s"), *GetName());
         return;
     }
-    
+
     float Speed = ShipDataAsset->GetMaxSpeed();
 }
 ```
@@ -236,29 +236,29 @@ UCLASS()
 class UProjectilePoolComponent : public UActorComponent
 {
     GENERATED_BODY()
-    
+
 private:
     UPROPERTY()
     TArray<AProjectile*> PooledProjectiles;
-    
+
     UPROPERTY()
     TArray<AProjectile*> ActiveProjectiles;
-    
+
     UPROPERTY(EditAnywhere, Category="Pool")
     int32 InitialPoolSize;
-    
+
     UPROPERTY(EditAnywhere, Category="Pool")
     TSubclassOf<AProjectile> ProjectileClass;
-    
+
 public:
     /** Get a projectile from the pool or create new if needed */
     UFUNCTION(BlueprintCallable, Category="Object Pool")
     AProjectile* AcquireProjectile();
-    
+
     /** Return projectile to pool for reuse */
     UFUNCTION(BlueprintCallable, Category="Object Pool")
     void ReturnProjectile(AProjectile* Projectile);
-    
+
 private:
     void InitializePool();
 };
@@ -267,7 +267,7 @@ private:
 AProjectile* UProjectilePoolComponent::AcquireProjectile()
 {
     AProjectile* Projectile = nullptr;
-    
+
     if (PooledProjectiles.Num() > 0)
     {
         // Reuse from pool
@@ -278,26 +278,26 @@ AProjectile* UProjectilePoolComponent::AcquireProjectile()
         // Create new if pool exhausted
         Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass);
     }
-    
+
     if (Projectile)
     {
         Projectile->SetActorHiddenInGame(false);
         Projectile->SetActorEnableCollision(true);
         ActiveProjectiles.Add(Projectile);
     }
-    
+
     return Projectile;
 }
 
 void UProjectilePoolComponent::ReturnProjectile(AProjectile* Projectile)
 {
     if (!Projectile) return;
-    
+
     // Reset projectile
     Projectile->SetActorHiddenInGame(true);
     Projectile->SetActorEnableCollision(false);
     Projectile->SetActorLocation(FVector(0, 0, -10000)); // Below world
-    
+
     // Return to pool
     ActiveProjectiles.Remove(Projectile);
     PooledProjectiles.Add(Projectile);
@@ -329,9 +329,9 @@ void UNPCLogicBase::UpdateAI(float DeltaTime)
     {
         return;
     }
-    
+
     TimeSinceLastUpdate += DeltaTime;
-    
+
     // Only tick AI at the specified interval
     if (TimeSinceLastUpdate >= UpdateInterval)
     {
@@ -352,8 +352,8 @@ void UNPCLogicBase::InitializeAI_Implementation()
 {
     // Stagger initial update time to spread load
     TimeSinceLastUpdate = FMath::FRandRange(0.0f, UpdateInterval);
-    
-    UE_LOG(LogAdastreaAI, Log, TEXT("AI Initialized: %s (Stagger: %.2f)"), 
+
+    UE_LOG(LogAdastreaAI, Log, TEXT("AI Initialized: %s (Stagger: %.2f)"),
         *GetName(), TimeSinceLastUpdate);
 }
 ```
@@ -370,11 +370,11 @@ void UNPCLogicBase::InitializeAI_Implementation()
 void UMyComponent::TickComponent(float DeltaTime, ...)
 {
     Super::TickComponent(DeltaTime, ...);
-    
+
     // ❌ Expensive pathfinding every frame
     RecalculatePath();
-    
-    // ❌ Database queries every frame  
+
+    // ❌ Database queries every frame
     UpdateFromDatabase();
 }
 
@@ -382,7 +382,7 @@ void UMyComponent::TickComponent(float DeltaTime, ...)
 void UMyComponent::BeginPlay()
 {
     Super::BeginPlay();
-    
+
     // Update pathfinding every 0.5 seconds
     GetWorld()->GetTimerManager().SetTimer(
         PathfindingTimerHandle,
@@ -417,10 +417,10 @@ private:
     // mutable allows modification in const methods for caching
     UPROPERTY(Transient)
     mutable float CachedCombatRating;
-    
+
     UPROPERTY(Transient)
     mutable bool bCombatRatingDirty;
-    
+
 public:
     UFUNCTION(BlueprintPure, Category="Ratings")
     float GetCombatRating() const
@@ -432,7 +432,7 @@ public:
         }
         return CachedCombatRating;
     }
-    
+
     // Mark cache dirty when properties change
     #if WITH_EDITOR
     virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override
@@ -441,7 +441,7 @@ public:
         InvalidateCache();
     }
     #endif
-    
+
     void InvalidateCache()
     {
         bCombatRatingDirty = true;
@@ -469,10 +469,10 @@ class ASpaceship : public APawn
 private:
     UPROPERTY()
     float LODUpdateInterval;
-    
+
     UPROPERTY()
     float TimeSinceLastLODCheck;
-    
+
     enum class EShipLOD : uint8
     {
         High,      // < 5000 units - full detail
@@ -480,28 +480,28 @@ private:
         Low,       // 15000-30000 - minimal effects
         VeryLow    // > 30000 - static, no updates
     };
-    
+
     EShipLOD CurrentLOD;
-    
+
 public:
     void UpdateLOD(float DistanceToPlayer)
     {
         EShipLOD NewLOD = EShipLOD::High;
-        
+
         if (DistanceToPlayer > 30000.0f)
             NewLOD = EShipLOD::VeryLow;
         else if (DistanceToPlayer > 15000.0f)
             NewLOD = EShipLOD::Low;
         else if (DistanceToPlayer > 5000.0f)
             NewLOD = EShipLOD::Medium;
-            
+
         if (NewLOD != CurrentLOD)
         {
             CurrentLOD = NewLOD;
             ApplyLODSettings();
         }
     }
-    
+
     void ApplyLODSettings()
     {
         switch (CurrentLOD)
@@ -588,8 +588,8 @@ gc.MaxObjectsNotConsideredByGC=0
 void UPerformanceProfiler::LogGCStats()
 {
     const FGCStats& GCStats = GGCStats;
-    UE_LOG(LogAdastrea, Log, TEXT("GC Stats - Time: %.2fms, Objects: %d"), 
-        GCStats.LastGCTime * 1000.0, 
+    UE_LOG(LogAdastrea, Log, TEXT("GC Stats - Time: %.2fms, Objects: %d"),
+        GCStats.LastGCTime * 1000.0,
         GCStats.LastNumObjectsCollected);
 }
 #endif
@@ -608,7 +608,7 @@ UCLASS()
 class AAdastreaGameMode : public AGameModeBase
 {
     GENERATED_BODY()
-    
+
 public:
     /** Called before level transition - cleanup */
     UFUNCTION(BlueprintCallable, Category="Game Mode")
@@ -616,29 +616,29 @@ public:
     {
         // Clear all cached data
         ClearCachedData();
-        
+
         // Destroy temporary actors in batches
         DestroyTemporaryActorsGradually();
-        
+
         // Clear subsystem caches
         NotifySubsystemsOfTransition();
     }
-    
+
 private:
     void DestroyTemporaryActorsGradually()
     {
         // Get all temporary actors
         TArray<AActor*> TempActors;
         UGameplayStatics::GetAllActorsWithTag(GetWorld(), "Temporary", TempActors);
-        
+
         // Destroy in batches over multiple frames
         const int32 BatchSize = 50;
         int32 Index = 0;
-        
+
         while (Index < TempActors.Num())
         {
             int32 BatchEnd = FMath::Min(Index + BatchSize, TempActors.Num());
-            
+
             for (int32 i = Index; i < BatchEnd; ++i)
             {
                 if (TempActors[i] && IsValid(TempActors[i]))
@@ -646,9 +646,9 @@ private:
                     TempActors[i]->Destroy();
                 }
             }
-            
+
             Index = BatchEnd;
-            
+
             // Yield to next frame
             if (Index < TempActors.Num())
             {
@@ -727,25 +727,25 @@ class UDamageable : public UInterface
 class IDamageable
 {
     GENERATED_BODY()
-    
+
 public:
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Combat")
     void TakeDamage(float Amount, AActor* Instigator, EDamageType DamageType);
-    
+
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Combat")
     float GetCurrentHealth() const;
-    
+
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Combat")
     bool IsAlive() const;
 };
 
 // Implement in multiple classes
-class ASpaceship : public APawn, public IDamageable 
+class ASpaceship : public APawn, public IDamageable
 {
     // Implement interface...
 };
 
-class ASpaceStation : public AActor, public IDamageable 
+class ASpaceStation : public AActor, public IDamageable
 {
     // Implement interface...
 };
@@ -780,57 +780,57 @@ UCLASS()
 class ADASTREA_API UAdastreaFunctionLibrary : public UBlueprintFunctionLibrary
 {
     GENERATED_BODY()
-    
+
 public:
     //================================================================================
     // Distance and Position Utilities
     //================================================================================
-    
+
     /** Get distance between two actors */
-    UFUNCTION(BlueprintPure, Category="Adastrea|Utilities|Distance", 
+    UFUNCTION(BlueprintPure, Category="Adastrea|Utilities|Distance",
         meta=(Keywords="distance between actors"))
     static float GetDistanceBetweenActors(AActor* A, AActor* B);
-    
+
     /** Check if actor is within sphere */
     UFUNCTION(BlueprintPure, Category="Adastrea|Utilities|Distance")
     static bool IsActorInRadius(AActor* Actor, FVector Center, float Radius);
-    
+
     /** Get closest actor from array */
     UFUNCTION(BlueprintPure, Category="Adastrea|Utilities|Distance")
     static AActor* GetClosestActor(const TArray<AActor*>& Actors, FVector Location);
-    
+
     //================================================================================
     // Faction Utilities
     //================================================================================
-    
+
     /** Check if two actors are hostile */
     UFUNCTION(BlueprintPure, Category="Adastrea|Utilities|Faction")
     static bool AreActorsHostile(AActor* A, AActor* B);
-    
+
     /** Get faction reputation between two actors */
     UFUNCTION(BlueprintPure, Category="Adastrea|Utilities|Faction")
     static int32 GetReputation(AActor* Source, AActor* Target);
-    
+
     //================================================================================
     // Combat Utilities
     //================================================================================
-    
+
     /** Check if target is in view cone */
     UFUNCTION(BlueprintPure, Category="Adastrea|Utilities|Combat")
     static bool IsInViewCone(AActor* Observer, AActor* Target, float ConeAngleDegrees);
-    
+
     /** Calculate damage with falloff */
     UFUNCTION(BlueprintPure, Category="Adastrea|Utilities|Combat")
     static float CalculateDamageWithFalloff(float BaseDamage, float Distance, float MaxRange);
-    
+
     //================================================================================
     // Space Utilities
     //================================================================================
-    
+
     /** Convert universe coordinates to sector coordinates */
     UFUNCTION(BlueprintPure, Category="Adastrea|Utilities|Space")
     static FVector WorldToSector(FVector WorldPosition, float SectorSize = 200000.0f);
-    
+
     /** Get random position in sphere */
     UFUNCTION(BlueprintPure, Category="Adastrea|Utilities|Space")
     static FVector GetRandomPositionInSphere(FVector Center, float Radius);
@@ -869,11 +869,11 @@ ASSET_PREFIXES = {
 def validate_asset_name(filepath):
     """Check if asset follows naming conventions"""
     basename = os.path.basename(filepath)
-    
+
     # Check for proper prefix
     # Check for PascalCase
     # Check for descriptive names
-    
+
     # Return validation results
     pass
 
@@ -960,17 +960,17 @@ BP_Ship_Fighter/
     - ControlsComponent
     - WeaponComponent
     - HealthComponent
-  
+
   Event Graph:
     - [Input] Comment Box (Red)
     - [Main Logic] Comment Box (Blue)
     - [Output/Events] Comment Box (Green)
-  
+
   Functions:
     - CalculateDamage (10 nodes)
     - UpdateThrottle (15 nodes)
     - CheckTargetValidity (8 nodes)
-  
+
   Variables (Categories):
     - Movement
       * MaxSpeed
@@ -1005,14 +1005,14 @@ UCLASS(BlueprintType)
 class ADASTREA_API UWeaponDataAsset : public UPrimaryDataAsset  // ✅ Already using!
 {
     GENERATED_BODY()
-    
+
 public:
     // ✅ Override for unique ID
     virtual FPrimaryAssetId GetPrimaryAssetId() const override
     {
         return FPrimaryAssetId("Weapon", GetFName());
     }
-    
+
     // ... existing properties
 };
 ```
@@ -1036,34 +1036,34 @@ UCLASS()
 class USpaceshipDataAsset : public UDataAsset
 {
     GENERATED_BODY()
-    
+
 public:
     // Validation function
     #if WITH_EDITOR
     virtual EDataValidationResult IsDataValid(TArray<FText>& ValidationErrors) override
     {
         EDataValidationResult Result = EDataValidationResult::Valid;
-        
+
         // Validate numeric ranges
         if (MaxSpeed <= 0.0f)
         {
             ValidationErrors.Add(FText::FromString("MaxSpeed must be greater than 0"));
             Result = EDataValidationResult::Invalid;
         }
-        
+
         if (MaxHealth <= 0.0f)
         {
             ValidationErrors.Add(FText::FromString("MaxHealth must be greater than 0"));
             Result = EDataValidationResult::Invalid;
         }
-        
+
         // Validate required references
         if (!ShipMesh)
         {
             ValidationErrors.Add(FText::FromString("ShipMesh is required"));
             Result = EDataValidationResult::Invalid;
         }
-        
+
         return Result;
     }
     #endif
@@ -1132,17 +1132,17 @@ Plugins/GameFeatures/
 ```cpp
 /**
  * Calculate the overall combat effectiveness rating for this ship
- * 
+ *
  * The combat rating is calculated based on:
  * - Weapon damage output (40% weight)
  * - Shield strength (30% weight)
  * - Armor rating (20% weight)
  * - Maneuverability (10% weight)
- * 
+ *
  * @return Combat rating from 0-100, where 100 is maximum effectiveness
  * @note This is a cached calculation - use InvalidateCache() if properties change
  * @see GetMobilityRating(), GetUtilityRating()
- * 
+ *
  * Example:
  * @code
  * float Rating = ShipDataAsset->GetCombatRating();
@@ -1190,11 +1190,11 @@ UCLASS(BlueprintType)
 class UMyDataAsset : public UDataAsset
 {
     GENERATED_BODY()
-    
+
 public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Basic")
     FText DisplayName;
-    
+
     // ... implementation
 };
 \```
@@ -1205,7 +1205,7 @@ UCLASS(BlueprintType)
 class UMyPrimaryDataAsset : public UPrimaryDataAsset
 {
     GENERATED_BODY()
-    
+
 public:
     virtual FPrimaryAssetId GetPrimaryAssetId() const override
     {
@@ -1236,22 +1236,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Check UPROPERTY usage
         run: |
           # Find UObject pointers without UPROPERTY
           python Tools/check_uproperty.py
-      
+
       - name: Check naming conventions
         run: |
           # Validate asset naming
           python Tools/validate_naming.py
-      
+
       - name: Check header includes
         run: |
           # Ensure generated.h is last include
           python Tools/check_includes.py
-      
+
       - name: Run static analysis
         run: |
           # Optional: cppcheck, clang-tidy
@@ -1277,20 +1277,20 @@ UCLASS()
 class UPerformanceBenchmarks : public UBlueprintFunctionLibrary
 {
     GENERATED_BODY()
-    
+
 public:
     /** Benchmark ship spawning performance */
     UFUNCTION(BlueprintCallable, Category="Performance|Benchmarks")
     static FString BenchmarkShipSpawning(UObject* WorldContext, int32 NumShips);
-    
+
     /** Benchmark combat system performance */
     UFUNCTION(BlueprintCallable, Category="Performance|Benchmarks")
     static FString BenchmarkCombat(UObject* WorldContext, int32 NumShips);
-    
+
     /** Benchmark AI system performance */
     UFUNCTION(BlueprintCallable, Category="Performance|Benchmarks")
     static FString BenchmarkAI(UObject* WorldContext, int32 NumAIs);
-    
+
 private:
     static double MeasureTime(TFunction<void()> Function);
 };
@@ -1300,19 +1300,19 @@ FString UPerformanceBenchmarks::BenchmarkShipSpawning(UObject* WorldContext, int
 {
     UWorld* World = GEngine->GetWorldFromContextObject(WorldContext, EGetWorldErrorMode::LogAndReturnNull);
     if (!World) return TEXT("Invalid world context");
-    
+
     double StartTime = FPlatformTime::Seconds();
-    
+
     for (int32 i = 0; i < NumShips; ++i)
     {
         FVector Location = FVector(i * 1000.0f, 0, 0);
         World->SpawnActor<ASpaceship>(ASpaceship::StaticClass(), Location, FRotator::ZeroRotator);
     }
-    
+
     double EndTime = FPlatformTime::Seconds();
     double Duration = (EndTime - StartTime) * 1000.0; // ms
-    
-    return FString::Printf(TEXT("Spawned %d ships in %.2f ms (%.2f ms per ship)"), 
+
+    return FString::Printf(TEXT("Spawned %d ships in %.2f ms (%.2f ms per ship)"),
         NumShips, Duration, Duration / NumShips);
 }
 ```
@@ -1389,9 +1389,9 @@ These improvements will make Adastrea even more performant, maintainable, and sc
 
 ---
 
-**Document Author**: AI Assistant (GitHub Copilot)  
-**Review Status**: Pending team review  
-**Implementation Target**: Alpha Phase (Phase 4) and beyond  
+**Document Author**: AI Assistant (GitHub Copilot)
+**Review Status**: Pending team review
+**Implementation Target**: Alpha Phase (Phase 4) and beyond
 **Estimated Impact**: High - Significant performance and quality improvements
 
 For questions or clarifications, please open a GitHub Discussion or create an issue with the `unreal-directive` label.

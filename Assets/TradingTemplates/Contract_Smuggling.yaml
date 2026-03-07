@@ -9,7 +9,7 @@ Description: |
   Transport contraband neural enhancement drugs through
   heavily patrolled space. Avoid detection at all costs.
   High reward, extreme risk. For experienced smugglers only.
-  
+
 ContractType: Smuggling
 Difficulty: VeryHard
 
@@ -30,7 +30,7 @@ OriginLocation:
   Coordinates: [-5000, -8000, -2000]
   MarketID: "Market_ShadowHaven"
   ControllingFaction: "DA_Faction_PirateAlliance"
-  
+
 DestinationLocation:
   LocationName: "Corporate Megalopolis"
   Coordinates: [10000, 5000, 3000]
@@ -68,7 +68,7 @@ HostileFactions:
   - "DA_Faction_SolarisUnion"
   - "DA_Faction_TerranFederation"
   - "DA_Faction_AuthorityPatrol"
-  
+
 ContractTags:
   - "Smuggling"
   - "HighRisk"

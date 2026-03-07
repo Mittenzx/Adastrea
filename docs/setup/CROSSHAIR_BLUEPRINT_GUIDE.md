@@ -84,7 +84,7 @@ Event Graph:
 ```
 [Get bAimCrosshairVisible]
     |
-    └─> [Select] 
+    └─> [Select]
            ├─ True: ESlateVisibility::Visible
            └─ False: ESlateVisibility::Collapsed
                 |
@@ -129,20 +129,20 @@ Event Tick (DeltaTime)
     // Get parent class properties
     FVector2D AimPos = GetWeaponAimPosition();
     bool bVisible = GetbAimCrosshairVisible();
-    
+
     // Get viewport dimensions
     APlayerController* PC = GetOwningPlayer();
     int32 ViewportX, ViewportY;
     PC->GetViewportSize(ViewportX, ViewportY);
-    
+
     // Convert normalized position (0-1) to screen pixels
     float ScreenX = AimPos.X * ViewportX;
     float ScreenY = AimPos.Y * ViewportY;
-    
+
     // Update crosshair position (canvas slot)
     FVector2D ScreenPosition = MakeVector2D(ScreenX, ScreenY);
     WeaponAimCrosshair.SetCanvasPosition(ScreenPosition);
-    
+
     // Update visibility
     WeaponAimCrosshair.SetVisibility(bVisible ? Visible : Collapsed);
 }
@@ -152,7 +152,7 @@ Event UpdateAimCrosshair (ScreenPosition: FVector2D)
 {
     // Call parent implementation first
     Parent::UpdateAimCrosshair(ScreenPosition);
-    
+
     // Your custom crosshair effects here
     // Example: Change color based on what's under the crosshair
     if (IsTargetingEnemy())
@@ -188,7 +188,7 @@ Function: UpdateCrosshairStyle
     Crosshair_Locked.SetVisibility(Collapsed);
     Crosshair_Hostile.SetVisibility(Collapsed);
     Crosshair_OutOfRange.SetVisibility(Collapsed);
-    
+
     // Show appropriate one
     Switch(CurrentTargetState)
     {
@@ -197,7 +197,7 @@ Function: UpdateCrosshairStyle
         case Hostile: Crosshair_Hostile.SetVisibility(Visible);
         case OutOfRange: Crosshair_OutOfRange.SetVisibility(Visible);
     }
-    
+
     // Position ALL of them (they're overlaid)
     FVector2D Position = GetScreenPosition();
     WeaponCrosshairOverlay.SetCanvasPosition(Position);
@@ -304,7 +304,7 @@ You can copy this into a text file and import as Blueprint nodes (Unreal Engine 
 
 ---
 
-**Last Updated:** 2025-12-17  
-**Difficulty:** Beginner-Friendly  
-**Time to Implement:** 10-15 minutes  
+**Last Updated:** 2025-12-17
+**Difficulty:** Beginner-Friendly
+**Time to Implement:** 10-15 minutes
 **Maintained by:** Adastrea Development Team

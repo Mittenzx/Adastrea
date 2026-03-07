@@ -169,7 +169,7 @@ WBP_  - Widget Blueprint
 ```cpp
 /**
  * Calculate the combat effectiveness rating
- * 
+ *
  * @param Modifier Optional modifier to apply (default 1.0)
  * @return Combat rating from 0.0 to 100.0
  */

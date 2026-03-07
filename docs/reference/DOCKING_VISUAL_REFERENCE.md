@@ -331,25 +331,25 @@ CompleteDocking() ← IMMEDIATELY
 └─────────────────────────────────────────────────────────────┘
 
 Issue: "Press F and nothing happens"
-  
+
   ☐ Check Output Log (Window → Developer Tools → Output Log)
       Look for: LogAdastreaShips warnings
-  
+
   ☐ Check input binding in editor
       Edit → Project Settings → Input
       Look for "Dock" action mapped to F
-  
+
   ☐ Check DA_InputConfig
       Open asset, verify DockAction = IA_Dock
-  
+
   ☐ Check distance to station
       Use "DisplayAll ASpaceship DockingRange" in console
       Use "DisplayAll DockingBayModule Location" to see where points are
-  
+
   ☐ Verify station has DockingBayModule
       Select station actor in world
       Check Components panel for DockingBayModule
-  
+
   ☐ Verify docking points exist
       Select DockingBayModule
       Check Details → Docking → DockingPoints array

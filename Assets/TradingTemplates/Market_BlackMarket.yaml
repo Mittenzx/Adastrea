@@ -9,7 +9,7 @@ Description: |
   A hidden station in the outer reaches where the law
   doesn't reach. Here, anything can be bought or sold
   for the right price. Discretion is paramount.
-  
+
 MarketType: BlackMarket
 MarketSize: Small
 
@@ -40,19 +40,19 @@ InventoryEntries:
     MaxStock: 100
     SupplyLevel: 1.5
     DemandLevel: 2.0
-    
+
   - TradeItem: "DA_TradeItem_StolenGoods"
     CurrentStock: 200
     MaxStock: 500
     SupplyLevel: 1.8
     DemandLevel: 1.2
-    
+
   - TradeItem: "DA_TradeItem_MilitaryWeapons"
     CurrentStock: 30
     MaxStock: 50
     SupplyLevel: 0.8
     DemandLevel: 2.5
-    
+
   - TradeItem: "DA_TradeItem_CounterfeitCredits"
     CurrentStock: 100
     MaxStock: 200
@@ -73,7 +73,7 @@ SampleEvents:
     SupplyMultiplier: 0.3
     DemandMultiplier: 0.5
     DurationHours: 6.0
-    
+
   - EventName: "Smuggling Run Success"
     EventID: "Event_SmugglingSuccess"
     AffectedItemIDs:

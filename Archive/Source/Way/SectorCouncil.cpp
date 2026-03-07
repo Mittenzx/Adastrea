@@ -7,21 +7,21 @@ USectorCouncilDataAsset::USectorCouncilDataAsset()
     SectorName = FText::FromString(TEXT("Unnamed Sector"));
     SectorID = FName(TEXT("UnknownSector"));
     Description = FText::FromString(TEXT("A sector governed by council representatives from local Ways."));
-    
+
     // Default council settings
     TotalSeats = 10;
     PassThreshold = 51; // 51% needed to pass
-    
+
     // Default tax rates (moderate taxation)
     SecurityTaxRate = 10;
     InfrastructureTaxRate = 5;
     AdministrationTaxRate = 3;
-    
+
     // Default budget allocation
     SecurityBudgetPercent = 50;       // 50% to security
     InfrastructureBudgetPercent = 35; // 35% to infrastructure
     EmergencyReservePercent = 15;     // 15% emergency reserve
-    
+
     TreasuryFunds = 100000; // Starting funds
 }
 
@@ -40,7 +40,7 @@ bool USectorCouncilDataAsset::GetRepresentativeForWay(const UWayDataAsset* Way, 
     {
         return false;
     }
-    
+
     for (const FCouncilRepresentative& Rep : Representatives)
     {
         if (Rep.RepresentingWay == Way)
@@ -58,7 +58,7 @@ bool USectorCouncilDataAsset::HasRepresentative(const UWayDataAsset* Way) const
     {
         return false;
     }
-    
+
     for (const FCouncilRepresentative& Rep : Representatives)
     {
         if (Rep.RepresentingWay == Way)
@@ -94,7 +94,7 @@ int64 USectorCouncilDataAsset::CalculateTaxOwed(int64 TransactionValue) const
     {
         return 0;
     }
-    
+
     // Calculate tax as percentage of transaction
     float TaxRate = static_cast<float>(GetTotalTaxRate()) / 100.0f;
     return FMath::RoundToInt64(static_cast<float>(TransactionValue) * TaxRate);
@@ -106,7 +106,7 @@ int64 USectorCouncilDataAsset::CalculateSecurityTax(int64 TransactionValue) cons
     {
         return 0;
     }
-    
+
     float TaxRate = static_cast<float>(SecurityTaxRate) / 100.0f;
     return FMath::RoundToInt64(static_cast<float>(TransactionValue) * TaxRate);
 }
@@ -185,8 +185,8 @@ bool USectorCouncilDataAsset::HasActivePolicy(ESectorPolicyType PolicyType) cons
 // Voting Functions
 // ====================
 
-FCouncilVote USectorCouncilDataAsset::SimulateVote(const FSectorPolicy& ProposedPolicy, 
-    const TArray<UWayDataAsset*>& WaysInFavor, 
+FCouncilVote USectorCouncilDataAsset::SimulateVote(const FSectorPolicy& ProposedPolicy,
+    const TArray<UWayDataAsset*>& WaysInFavor,
     const TArray<UWayDataAsset*>& WaysAgainst) const
 {
     FCouncilVote Vote;
@@ -196,7 +196,7 @@ FCouncilVote USectorCouncilDataAsset::SimulateVote(const FSectorPolicy& Proposed
     );
     Vote.ProposedPolicy = ProposedPolicy;
     Vote.VoteDate = FDateTime::Now();
-    
+
     // Count weighted votes for each side
     for (const UWayDataAsset* Way : WaysInFavor)
     {
@@ -209,7 +209,7 @@ FCouncilVote USectorCouncilDataAsset::SimulateVote(const FSectorPolicy& Proposed
             }
         }
     }
-    
+
     for (const UWayDataAsset* Way : WaysAgainst)
     {
         if (Way)
@@ -221,14 +221,14 @@ FCouncilVote USectorCouncilDataAsset::SimulateVote(const FSectorPolicy& Proposed
             }
         }
     }
-    
+
     // Calculate abstentions
     int32 TotalWeight = GetTotalVotingWeight();
     Vote.VotesAbstain = TotalWeight - Vote.VotesFor - Vote.VotesAgainst;
-    
+
     // Determine if vote passed
     Vote.bPassed = WouldVotePass(Vote.VotesFor, Vote.VotesAgainst);
-    
+
     return Vote;
 }
 
@@ -239,9 +239,9 @@ bool USectorCouncilDataAsset::WouldVotePass(int32 VotesFor, int32 VotesAgainst) 
     {
         return false; // No votes cast
     }
-    
+
     // Calculate percentage of votes in favor
     float PercentFor = (static_cast<float>(VotesFor) / static_cast<float>(TotalVotes)) * 100.0f;
-    
+
     return PercentFor >= static_cast<float>(PassThreshold);
 }

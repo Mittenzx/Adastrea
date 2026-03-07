@@ -9,11 +9,11 @@ UFeatDataAsset::UFeatDataAsset()
     FeatID = FName(TEXT("UnknownFeat"));
     Rarity = EFeatRarity::Common;
     LegendaryDescription = FText::GetEmpty();
-    
+
     // Requirements defaults
     bUniquePerPlaythrough = true;
     bHiddenUntilEarned = false;
-    
+
     // Reputation defaults
     BaseReputationGain = 10;
     ReputationMultiplier = 1.0f;
@@ -58,10 +58,10 @@ bool UFeatDataAsset::GetPrimaryAlignment(EPrecept& OutPrecept) const
     {
         return false;
     }
-    
+
     int32 HighestStrength = 0;
     EPrecept PrimaryPrecept = EPrecept::Honor;
-    
+
     for (const FFeatPreceptAlignment& Alignment : PreceptAlignments)
     {
         if (Alignment.AlignmentStrength > HighestStrength)
@@ -70,7 +70,7 @@ bool UFeatDataAsset::GetPrimaryAlignment(EPrecept& OutPrecept) const
             PrimaryPrecept = Alignment.Precept;
         }
     }
-    
+
     OutPrecept = PrimaryPrecept;
     return true;
 }
@@ -81,9 +81,9 @@ int32 UFeatDataAsset::CalculateReputationGain(const TArray<FPreceptValue>& WayPr
     {
         return 0;
     }
-    
+
     float TotalReputation = 0.0f;
-    
+
     // For each Precept alignment in this Feat
     for (const FFeatPreceptAlignment& FeatAlignment : PreceptAlignments)
     {
@@ -100,7 +100,7 @@ int32 UFeatDataAsset::CalculateReputationGain(const TArray<FPreceptValue>& WayPr
             }
         }
     }
-    
+
     return FMath::RoundToInt(TotalReputation);
 }
 
@@ -117,7 +117,7 @@ bool UFeatDataAsset::CanBeEarned(const TArray<UFeatDataAsset*>& EarnedFeats) con
         {
             continue;
         }
-        
+
         bool bHasPrereq = false;
         for (UFeatDataAsset* EarnedFeat : EarnedFeats)
         {
@@ -127,13 +127,13 @@ bool UFeatDataAsset::CanBeEarned(const TArray<UFeatDataAsset*>& EarnedFeats) con
                 break;
             }
         }
-        
+
         if (!bHasPrereq)
         {
             return false;
         }
     }
-    
+
     return true;
 }
 

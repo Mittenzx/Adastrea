@@ -13,10 +13,10 @@ class USectorGeneratorConfig;
 
 /**
  * Sector Generator Actor
- * 
+ *
  * Procedurally populates a sector with stations, ships, asteroids, clouds, and other space objects.
  * Uses Data Asset configuration for designer-friendly content generation.
- * 
+ *
  * Features:
  * - Data-driven configuration via USectorGeneratorConfig
  * - Multiple distribution patterns (random, clustered, grid, orbital)
@@ -25,14 +25,14 @@ class USectorGeneratorConfig;
  * - Collision avoidance and spacing rules
  * - Preview mode for testing
  * - Blueprint-friendly API
- * 
+ *
  * Usage:
  * 1. Place ASectorGenerator in your level
  * 2. Assign target ASpaceSectorMap
  * 3. Set GeneratorConfig Data Asset
  * 4. Call GenerateSector() in editor or at runtime
  * 5. Use ClearSector() to remove generated content
- * 
+ *
  * Editor Workflow:
  * - Use "Generate" button in Details panel
  * - Preview generation before committing

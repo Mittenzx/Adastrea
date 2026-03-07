@@ -8,10 +8,10 @@
 
 /**
  * Material processing module for space stations
- * 
+ *
  * Industrial facility for processing raw materials into refined goods.
  * Handles ore refining, chemical processing, and material conversion.
- * 
+ *
  * Power Consumption: 100 units
  * Module Group: Processing
  */

@@ -4,8 +4,8 @@
 NetworkName: "The Merchant Coalition"
 NetworkID: "MerchantCoalition"
 Description: |
-  A pragmatic alliance of trading guilds, merchant houses, and logistics coordinators. 
-  United by the pursuit of profit and efficient commerce, they maintain standardized 
+  A pragmatic alliance of trading guilds, merchant houses, and logistics coordinators.
+  United by the pursuit of profit and efficient commerce, they maintain standardized
   trade agreements and share market intelligence.
 
 NetworkColor:
@@ -20,12 +20,12 @@ MemberWays:
     InfluenceLevel: 80
     CommitmentLevel: 85
     RoleDescription: "Independent merchants with extensive trade routes"
-    
+
   - MemberWay: "DA_Way_LogisticsSyndicate"
     InfluenceLevel: 70
     CommitmentLevel: 90
     RoleDescription: "Specialists in cargo management and routing"
-    
+
   - MemberWay: "DA_Way_MarketAnalysts"
     InfluenceLevel: 65
     CommitmentLevel: 75
@@ -36,11 +36,11 @@ SharedPrecepts:
   - Precept: Prosperity
     ImportanceValue: 90
     Description: "Wealth creation benefits all"
-    
+
   - Precept: Efficiency
     ImportanceValue: 85
     Description: "Optimize resource usage and trade routes"
-    
+
   - Precept: Cunning
     ImportanceValue: 70
     Description: "Strategic thinking in negotiations"

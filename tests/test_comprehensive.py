@@ -44,7 +44,7 @@ class TestRepositoryStructure:
         """Test that all modules have Build.cs files."""
         source_dir = PROJECT_ROOT / "Source"
         modules = [d for d in source_dir.iterdir() if d.is_dir() and not d.name.startswith('.')]
-        
+
         for module in modules:
             if module.name.endswith('.Target'):
                 continue  # Skip .Target.cs files
@@ -63,9 +63,9 @@ class TestBuildConfiguration:
         """Test that all Build.cs files have valid C# syntax."""
         source_dir = PROJECT_ROOT / "Source"
         build_files = list(source_dir.rglob("*.Build.cs"))
-        
+
         assert len(build_files) > 0, "Should find at least one Build.cs file"
-        
+
         for build_file in build_files:
             content = build_file.read_text(encoding='utf-8')
             # Basic syntax checks
@@ -78,20 +78,20 @@ class TestBuildConfiguration:
         """Test for circular module dependencies."""
         source_dir = PROJECT_ROOT / "Source"
         build_files = list(source_dir.rglob("*.Build.cs"))
-        
+
         dependencies = {}
         for build_file in build_files:
             module_name = build_file.stem.replace('.Build', '')
             content = build_file.read_text(encoding='utf-8')
-            
+
             # Extract dependency modules
             deps = []
             for match in re.finditer(r'(Public|Private)DependencyModuleNames\.AddRange\s*\(\s*new\s+string\[\]\s*\{([^}]+)\}', content):
                 deps_str = match.group(2)
                 deps.extend([d.strip().strip('"').strip("'") for d in deps_str.split(',') if d.strip()])
-            
+
             dependencies[module_name] = deps
-        
+
         # Check for circular dependencies (simplified check)
         for module, deps in dependencies.items():
             if module in deps:
@@ -101,7 +101,7 @@ class TestBuildConfiguration:
         """Test that core Unreal Engine modules are included."""
         source_dir = PROJECT_ROOT / "Source"
         adastrea_build = source_dir / "Adastrea" / "Adastrea.Build.cs"
-        
+
         if adastrea_build.exists():
             content = adastrea_build.read_text(encoding='utf-8')
             assert '"Core"' in content, "Should include Core module"
@@ -119,10 +119,10 @@ class TestDeprecatedCode:
             (r'\bUE_DEPRECATED\b', 'UE_DEPRECATED macro usage'),
             (r'\bDEPRECATED_FORGAME\b', 'DEPRECATED_FORGAME macro'),
         ]
-        
+
         cpp_files = list(source_dir.rglob("*.cpp")) + list(source_dir.rglob("*.h"))
         deprecated_found = []
-        
+
         for filepath in cpp_files:
             try:
                 content = filepath.read_text(encoding='utf-8', errors='ignore')
@@ -135,7 +135,7 @@ class TestDeprecatedCode:
                                 deprecated_found.append((filepath, line_num, desc))
             except Exception:
                 continue
-        
+
         # Report but don't fail - this is informational
         if deprecated_found:
             print(f"\nFound {len(deprecated_found)} deprecated API usages:")
@@ -149,10 +149,10 @@ class TestDeprecatedCode:
             (r'\bFStringAssetReference\b', 'Use FSoftObjectPath instead'),
             (r'\bFAssetData::GetAsset\(\)', 'Use FSoftObjectPath or direct loading'),
         ]
-        
+
         cpp_files = list(source_dir.rglob("*.cpp")) + list(source_dir.rglob("*.h"))
         old_api_usage = []
-        
+
         for filepath in cpp_files:
             try:
                 content = filepath.read_text(encoding='utf-8', errors='ignore')
@@ -161,7 +161,7 @@ class TestDeprecatedCode:
                         old_api_usage.append((filepath, suggestion))
             except Exception:
                 continue
-        
+
         # Report findings
         if old_api_usage:
             print(f"\nFound {len(old_api_usage)} old API usages:")
@@ -176,14 +176,14 @@ class TestFileNaming:
         """Test that source files have proper extensions."""
         source_dir = PROJECT_ROOT / "Source"
         valid_extensions = {'.h', '.cpp', '.cs', '.ini', '.txt', '.md'}
-        
+
         invalid_files = []
         for filepath in source_dir.rglob("*"):
             if filepath.is_file():
                 if filepath.suffix and filepath.suffix not in valid_extensions:
                     if filepath.suffix not in {'.generated', '.uasset', '.umap'}:
                         invalid_files.append(filepath)
-        
+
         if invalid_files:
             print(f"\nFound {len(invalid_files)} files with unexpected extensions:")
             for f in invalid_files[:10]:
@@ -193,11 +193,11 @@ class TestFileNaming:
         """Test that source filenames don't contain spaces."""
         source_dir = PROJECT_ROOT / "Source"
         files_with_spaces = []
-        
+
         for filepath in source_dir.rglob("*"):
             if filepath.is_file() and ' ' in filepath.name:
                 files_with_spaces.append(filepath)
-        
+
         assert len(files_with_spaces) == 0, \
             f"Found {len(files_with_spaces)} files with spaces in names: {files_with_spaces[:5]}"
 
@@ -206,21 +206,21 @@ class TestFileNaming:
         source_dir = PROJECT_ROOT / "Source"
         cpp_files = set(source_dir.rglob("*.cpp"))
         h_files = set(source_dir.rglob("*.h"))
-        
+
         missing_headers = []
-        
+
         for cpp_file in cpp_files:
             # Skip generated files
             if '.generated' in cpp_file.name:
                 continue
-            
+
             expected_header = cpp_file.with_suffix('.h')
             if expected_header not in h_files:
                 # Check in Public directory
                 public_path = cpp_file.parent.parent / "Public" / cpp_file.name.replace('.cpp', '.h')
                 if not public_path.exists():
                     missing_headers.append(cpp_file)
-        
+
         # Some headers are interface-only (no .cpp), so we don't enforce this strictly
         # Just report if there are many missing implementations
         if len(missing_headers) > 0:
@@ -234,27 +234,27 @@ class TestIncludeDirectives:
         """Test that .generated.h includes are last in header files."""
         source_dir = PROJECT_ROOT / "Source"
         h_files = list(source_dir.rglob("*.h"))
-        
+
         violations = []
         for h_file in h_files:
             try:
                 content = h_file.read_text(encoding='utf-8', errors='ignore')
                 lines = content.split('\n')
-                
+
                 generated_include_line = -1
                 last_include_line = -1
-                
+
                 for i, line in enumerate(lines):
                     if line.strip().startswith('#include'):
                         last_include_line = i
                         if '.generated.h' in line:
                             generated_include_line = i
-                
+
                 if generated_include_line != -1 and generated_include_line != last_include_line:
                     violations.append(h_file)
             except Exception:
                 continue
-        
+
         if violations:
             print(f"\nFound {len(violations)} files with .generated.h not as last include:")
             for v in violations[:5]:
@@ -264,7 +264,7 @@ class TestIncludeDirectives:
         """Test that there are no absolute path includes."""
         source_dir = PROJECT_ROOT / "Source"
         source_files = list(source_dir.rglob("*.cpp")) + list(source_dir.rglob("*.h"))
-        
+
         absolute_includes = []
         for filepath in source_files:
             try:
@@ -276,7 +276,7 @@ class TestIncludeDirectives:
                             absolute_includes.append((filepath, line.strip()))
             except Exception:
                 continue
-        
+
         assert len(absolute_includes) == 0, \
             f"Found {len(absolute_includes)} absolute path includes: {absolute_includes[:3]}"
 
@@ -288,14 +288,14 @@ class TestCodeQuality:
         """Test that there are no hardcoded passwords or API keys."""
         source_dir = PROJECT_ROOT / "Source"
         source_files = list(source_dir.rglob("*.cpp")) + list(source_dir.rglob("*.h"))
-        
+
         secret_patterns = [
             (r'password\s*=\s*["\']', 'hardcoded password'),
             (r'apiKey\s*=\s*["\']', 'hardcoded API key'),
             (r'api_key\s*=\s*["\']', 'hardcoded API key'),
             (r'secret\s*=\s*["\']', 'hardcoded secret'),
         ]
-        
+
         secrets_found = []
         for filepath in source_files:
             try:
@@ -311,7 +311,7 @@ class TestCodeQuality:
                             break  # Only report once per file
             except Exception:
                 continue
-        
+
         assert len(secrets_found) == 0, \
             f"Found {len(secrets_found)} potential hardcoded secrets: {secrets_found}"
 
@@ -320,7 +320,7 @@ class TestCodeQuality:
         # This integrates with the existing check_uproperty.py tool
         tools_dir = PROJECT_ROOT / "Tools"
         check_script = tools_dir / "check_uproperty.py"
-        
+
         if check_script.exists():
             # Import and run the checker
             import subprocess
@@ -331,7 +331,7 @@ class TestCodeQuality:
                 cwd=Path.cwd(),
                 timeout=60
             )
-            
+
             # Check if there are critical issues (we allow warnings)
             if "CRITICAL" in result.stdout or result.returncode > 1:
                 pytest.fail(f"UPROPERTY checker found critical issues:\n{result.stdout}")
@@ -345,11 +345,11 @@ class TestAssetNaming:
         content_dir = PROJECT_ROOT / "Content"
         if not content_dir.exists():
             pytest.skip("Content directory not found")
-        
+
         # This integrates with existing validate_naming.py tool
         tools_dir = PROJECT_ROOT / "Tools"
         validate_script = tools_dir / "validate_naming.py"
-        
+
         if validate_script.exists():
             import subprocess
             result = subprocess.run(
@@ -359,7 +359,7 @@ class TestAssetNaming:
                 cwd=Path.cwd(),
                 timeout=60
             )
-            
+
             # Report but don't fail on naming violations (they're not build-breaking)
             if result.returncode != 0:
                 print(f"\nNaming convention violations found:\n{result.stdout}")
@@ -371,19 +371,19 @@ class TestModuleStructure:
     def test_all_modules_have_public_private_dirs(self):
         """Test that modules follow Public/Private directory structure."""
         source_dir = PROJECT_ROOT / "Source"
-        modules = [d for d in source_dir.iterdir() 
+        modules = [d for d in source_dir.iterdir()
                   if d.is_dir() and not d.name.startswith('.') and not d.name.endswith('Target')]
-        
+
         for module in modules:
             # Check if module has a Build.cs file
             build_cs = list(module.glob("*.Build.cs"))
             if not build_cs:
                 continue  # Not a proper module
-            
+
             # Check for Public or Private directory (at least one should exist)
             public_dir = module / "Public"
             private_dir = module / "Private"
-            
+
             # Some modules may not need this structure, so we just report
             if not public_dir.exists() and not private_dir.exists():
                 print(f"\nModule {module.name} doesn't use Public/Private structure")
@@ -391,12 +391,12 @@ class TestModuleStructure:
     def test_headers_in_public_implementations_in_private(self):
         """Test that .h files are in Public and .cpp in Private (where applicable)."""
         source_dir = PROJECT_ROOT / "Source"
-        
+
         violations = []
         for cpp_file in source_dir.rglob("*.cpp"):
             if 'Public' in str(cpp_file):
                 violations.append(f"Implementation file in Public: {cpp_file}")
-        
+
         # This is a warning, not a hard failure
         if violations:
             print(f"\nFound {len(violations)} implementation files in Public directories:")
@@ -424,12 +424,12 @@ class TestDocumentation:
             "Assets/FactionSetupGuide.md",
             "Assets/PersonnelSetupGuide.md",
         ]
-        
+
         missing_docs = []
         for doc in required_docs:
             if not Path(doc).exists():
                 missing_docs.append(doc)
-        
+
         if missing_docs:
             print(f"\nMissing documentation files: {missing_docs}")
 

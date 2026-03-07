@@ -36,7 +36,7 @@ bool UPlayerModComponent::InstallMod(UPlayerModDataAsset* ModAsset)
 
     // Server-side installation logic
     const FPlayerModDefinition& Def = ModAsset->ModDefinition;
-    
+
     // Check if already installed
     if (FindActiveEntry(Def.ModID))
     {
@@ -85,13 +85,13 @@ bool UPlayerModComponent::UninstallMod(FName ModID)
             RemoveStatModifiers(Asset->ModDefinition);
         }
     }
-    
+
     // Remove entry from active mods
     ActiveMods.RemoveAll([ModID](const FActiveModEntry& E)
-    { 
-        return E.ModAsset.IsValid() && E.ModAsset->ModDefinition.ModID == ModID; 
+    {
+        return E.ModAsset.IsValid() && E.ModAsset->ModDefinition.ModID == ModID;
     });
-    
+
     UE_LOG(LogAdastreaPlayerMods, Log, TEXT("PlayerModComponent::UninstallMod - Successfully uninstalled %s"), *ModID.ToString());
     return true;
 }
@@ -180,7 +180,7 @@ void UPlayerModComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
     if (GetOwnerRole() == ROLE_Authority)
     {
         bool bChanged = false;
-        
+
         // Update active mod timers (iterate in reverse to safely remove)
         for (int32 i = ActiveMods.Num() - 1; i >= 0; --i)
         {
@@ -188,7 +188,7 @@ void UPlayerModComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
             if (Entry.TimeRemaining > 0.f)
             {
                 Entry.TimeRemaining -= DeltaTime;
-                
+
                 // Handle expiration
                 if (Entry.TimeRemaining <= 0.f)
                 {
@@ -198,11 +198,11 @@ void UPlayerModComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
                         if (Asset)
                         {
                             RemoveStatModifiers(Asset->ModDefinition);
-                            UE_LOG(LogAdastreaPlayerMods, Log, TEXT("PlayerModComponent::Tick - Mod %s expired"), 
+                            UE_LOG(LogAdastreaPlayerMods, Log, TEXT("PlayerModComponent::Tick - Mod %s expired"),
                                 *Asset->ModDefinition.ModID.ToString());
                         }
                     }
-                    
+
                     // Remove single-use active mods
                     ActiveMods.RemoveAt(i);
                     bChanged = true;
@@ -227,7 +227,7 @@ void UPlayerModComponent::ApplyStatModifiers(const FPlayerModDefinition& Def, in
         const float ModifierValue = StatPair.Value * Stacks;
 
         // Log the stat modification
-        UE_LOG(LogAdastreaPlayerMods, Log, TEXT("PlayerModComponent::ApplyStatModifiers - %s: Applying %s modifier of %f (Stacks: %d)"), 
+        UE_LOG(LogAdastreaPlayerMods, Log, TEXT("PlayerModComponent::ApplyStatModifiers - %s: Applying %s modifier of %f (Stacks: %d)"),
             *Def.ModID.ToString(), *StatName.ToString(), ModifierValue, Stacks);
 
         // TODO: When UPlayerStatsComponent is implemented, integrate here:
@@ -236,12 +236,12 @@ void UPlayerModComponent::ApplyStatModifiers(const FPlayerModDefinition& Def, in
         // {
         //     StatsComp->AddStatModifier(StatName, ModifierValue, Def.ModID);
         // }
-        
+
         // For now, we store the intention and log it for future integration
         // The stat modification system will need to be hooked up when PlayerStatsComponent exists
     }
-    
-    UE_LOG(LogAdastreaPlayerMods, Verbose, TEXT("PlayerModComponent::ApplyStatModifiers - Applied %d stat modifiers for %s"), 
+
+    UE_LOG(LogAdastreaPlayerMods, Verbose, TEXT("PlayerModComponent::ApplyStatModifiers - Applied %d stat modifiers for %s"),
         Def.StatModifiers.Num(), *Def.ModID.ToString());
 }
 
@@ -253,7 +253,7 @@ void UPlayerModComponent::RemoveStatModifiers(const FPlayerModDefinition& Def)
         const FName& StatName = StatPair.Key;
 
         // Log the stat removal
-        UE_LOG(LogAdastreaPlayerMods, Log, TEXT("PlayerModComponent::RemoveStatModifiers - %s: Removing %s modifier"), 
+        UE_LOG(LogAdastreaPlayerMods, Log, TEXT("PlayerModComponent::RemoveStatModifiers - %s: Removing %s modifier"),
             *Def.ModID.ToString(), *StatName.ToString());
 
         // TODO: When UPlayerStatsComponent is implemented, integrate here:
@@ -262,11 +262,11 @@ void UPlayerModComponent::RemoveStatModifiers(const FPlayerModDefinition& Def)
         // {
         //     StatsComp->RemoveStatModifier(StatName, Def.ModID);
         // }
-        
+
         // The stat modification system will reverse the effects when PlayerStatsComponent exists
     }
-    
-    UE_LOG(LogAdastreaPlayerMods, Verbose, TEXT("PlayerModComponent::RemoveStatModifiers - Removed %d stat modifiers for %s"), 
+
+    UE_LOG(LogAdastreaPlayerMods, Verbose, TEXT("PlayerModComponent::RemoveStatModifiers - Removed %d stat modifiers for %s"),
         Def.StatModifiers.Num(), *Def.ModID.ToString());
 }
 
@@ -310,7 +310,7 @@ float UPlayerModComponent::GetModCooldownPercent(FName ModID) const
             break;
         }
     }
-    
+
     if (!Entry || !Entry->ModAsset.IsValid())
     {
         return 0.f;
@@ -330,7 +330,7 @@ float UPlayerModComponent::GetModCooldownPercent(FName ModID) const
 
     const float Remaining = FMath::Max(0.f, Entry->TimeRemaining);
     const float Progress = FMath::Clamp((Total - Remaining) / Total, 0.f, 1.f);
-    
+
     return Progress;
 }
 

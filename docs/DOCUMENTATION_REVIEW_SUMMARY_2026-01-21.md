@@ -145,16 +145,16 @@ All active documentation now supports Trade Simulator MVP:
 ## Key Decisions Made
 
 ### 1. Archive vs Delete
-**Decision**: Archive, don't delete  
+**Decision**: Archive, don't delete
 **Reason**: Systems are well-designed, may be implemented post-MVP if successful
 
 ### 2. Timing Philosophy
-**Quote**: "Great systems, wrong time. Build gameplay first, then infrastructure."  
+**Quote**: "Great systems, wrong time. Build gameplay first, then infrastructure."
 **Impact**: Focus all effort on validating Trade Simulator MVP
 
 ### 3. Post-MVP Conditional
-**Condition**: 75%+ "fun" rating + 50%+ "would buy" interest  
-**Action**: If achieved, review archives for Phase 2+ implementation  
+**Condition**: 75%+ "fun" rating + 50%+ "would buy" interest
+**Action**: If achieved, review archives for Phase 2+ implementation
 **If Failed**: Pivot or abandon, archives remain as historical record
 
 ---
@@ -281,7 +281,7 @@ The Adastrea documentation repository is now:
 
 ---
 
-**Completed**: January 21, 2026  
-**Total Time**: ~2 hours of review, archival, and documentation  
-**Files Moved**: 45 (44 Assets/, 1 root)  
+**Completed**: January 21, 2026
+**Total Time**: ~2 hours of review, archival, and documentation
+**Files Moved**: 45 (44 Assets/, 1 root)
 **Impact**: Clear MVP focus, preserved historical work, clean repository structure

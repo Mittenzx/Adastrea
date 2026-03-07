@@ -19,12 +19,12 @@ Adastrea Director brings AI-powered development assistance directly into your Un
 
 ### Key Benefits
 
-✅ **Save 10+ hours per week** on documentation searches  
-✅ **Reduce task planning time by 60%** with AI decomposition  
-✅ **Generate working code in seconds** instead of hours  
-✅ **Context-aware assistance** that understands YOUR project  
-✅ **Production-ready stability** with 230+ passing tests  
-✅ **100% Free & Open Source** under MIT License  
+✅ **Save 10+ hours per week** on documentation searches
+✅ **Reduce task planning time by 60%** with AI decomposition
+✅ **Generate working code in seconds** instead of hours
+✅ **Context-aware assistance** that understands YOUR project
+✅ **Production-ready stability** with 230+ passing tests
+✅ **100% Free & Open Source** under MIT License
 
 ---
 
@@ -40,9 +40,9 @@ Ask questions in plain English and get instant, accurate answers powered by Goog
 - "What's causing this crash: [paste error log]"
 - "Generate a health component with regeneration"
 
-**Response Time:** 1-3 seconds  
-**Accuracy:** Context-aware using your project docs  
-**Code Generation:** Multiple implementation approaches  
+**Response Time:** 1-3 seconds
+**Accuracy:** Context-aware using your project docs
+**Code Generation:** Multiple implementation approaches
 
 ### 📚 Intelligent Document Search (RAG)
 
@@ -313,8 +313,8 @@ AI: To get all actors of a specific class in C++:
 ```cpp
 TArray<AActor*> FoundActors;
 UGameplayStatics::GetAllActorsOfClass(
-    GetWorld(), 
-    AYourActorClass::StaticClass(), 
+    GetWorld(),
+    AYourActorClass::StaticClass(),
     FoundActors
 );
 
@@ -335,7 +335,7 @@ for (AActor* Actor : FoundActors)
 - Use TArray<AActor*> for the results
 - StaticClass() gets the class type
 
-**Alternative Blueprint approach:** Use "Get All Actors 
+**Alternative Blueprint approach:** Use "Get All Actors
 of Class" node in Blueprint...
 ```
 
@@ -615,9 +615,9 @@ AdastreaDirector/
 
 ## 📞 Contact & Links
 
-**Project Website:** https://github.com/Mittenzx/Adastrea-Director  
-**Documentation:** https://github.com/Mittenzx/Adastrea-Director/wiki  
-**Issues & Support:** https://github.com/Mittenzx/Adastrea-Director/issues  
+**Project Website:** https://github.com/Mittenzx/Adastrea-Director
+**Documentation:** https://github.com/Mittenzx/Adastrea-Director/wiki
+**Issues & Support:** https://github.com/Mittenzx/Adastrea-Director/issues
 **Author:** Mittenzx (https://github.com/Mittenzx)
 
 **Social Media:**

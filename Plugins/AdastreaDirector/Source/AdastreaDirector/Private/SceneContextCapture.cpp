@@ -33,10 +33,10 @@ FString USceneContextCapture::CaptureViewportScreenshot()
 
 	// Encode to base64
 	FString Base64String = FBase64::Encode(ImageData);
-	
-	UE_LOG(LogAdastreaDirector, Log, TEXT("Captured screenshot (%dx%d, %d bytes)"), 
+
+	UE_LOG(LogAdastreaDirector, Log, TEXT("Captured screenshot (%dx%d, %d bytes)"),
 		Width, Height, ImageData.Num());
-	
+
 	return Base64String;
 }
 
@@ -67,7 +67,7 @@ bool USceneContextCapture::CaptureViewportToImage(TArray<uint8>& OutImageData, i
 	FIntPoint ViewportSize = Viewport->GetSizeXY();
 	if (ViewportSize.X <= 0 || ViewportSize.Y <= 0)
 	{
-		UE_LOG(LogAdastreaDirector, Error, TEXT("Invalid viewport size: %dx%d"), 
+		UE_LOG(LogAdastreaDirector, Error, TEXT("Invalid viewport size: %dx%d"),
 			ViewportSize.X, ViewportSize.Y);
 		return false;
 	}
@@ -104,7 +104,7 @@ bool USceneContextCapture::CaptureViewportToImage(TArray<uint8>& OutImageData, i
 	const int32 ExpectedPixelCount = OutWidth * OutHeight;
 	if (Bitmap.Num() != ExpectedPixelCount)
 	{
-		UE_LOG(LogAdastreaDirector, Warning, TEXT("Invalid bitmap size: %d (expected %d)"), 
+		UE_LOG(LogAdastreaDirector, Warning, TEXT("Invalid bitmap size: %d (expected %d)"),
 			Bitmap.Num(), ExpectedPixelCount);
 		return false;
 	}
@@ -185,10 +185,10 @@ FString USceneContextCapture::QueryScene(const FString& FiltersJson)
 {
 	// Default max results for scene queries
 	static constexpr int32 DefaultMaxResults = 20;
-	
+
 	TSharedPtr<FJsonObject> Filters;
 	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(FiltersJson);
-	
+
 	if (!FJsonSerializer::Deserialize(Reader, Filters) || !Filters.IsValid())
 	{
 		UE_LOG(LogAdastreaDirector, Warning, TEXT("Invalid filter JSON"));
@@ -211,12 +211,12 @@ FString USceneContextCapture::QueryScene(const FString& FiltersJson)
 	FString NameContains;
 	FString LabelContains;
 	int32 MaxResults = DefaultMaxResults;
-	
+
 	Filters->TryGetStringField(TEXT("class_contains"), ClassContains);
 	Filters->TryGetStringField(TEXT("name_contains"), NameContains);
 	Filters->TryGetStringField(TEXT("label_contains"), LabelContains);
 	Filters->TryGetNumberField(TEXT("max_results"), MaxResults);
-	
+
 	if (MaxResults <= 0) MaxResults = DefaultMaxResults;
 
 	TArray<TSharedPtr<FJsonValue>> Results;
@@ -315,7 +315,7 @@ TSharedPtr<FJsonObject> USceneContextCapture::SerializeActor(AActor* Actor)
 	}
 
 	TSharedPtr<FJsonObject> ActorObj = MakeShared<FJsonObject>();
-	
+
 	ActorObj->SetStringField(TEXT("name"), Actor->GetName());
 	ActorObj->SetStringField(TEXT("label"), Actor->GetActorLabel());
 	ActorObj->SetStringField(TEXT("class"), Actor->GetClass()->GetName());
@@ -338,7 +338,7 @@ TSharedPtr<FJsonObject> USceneContextCapture::SerializeActor(AActor* Actor)
 
 	// Components (limited to avoid large JSON payloads)
 	static constexpr int32 MaxComponentsToSerialize = 5;
-	
+
 	TArray<TSharedPtr<FJsonValue>> Components;
 	int32 ComponentCount = 0;
 	for (UActorComponent* Comp : Actor->GetComponents())

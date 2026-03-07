@@ -258,7 +258,7 @@ Newbie Trader:     240s + Random(0, 120s) = 240-360s (4-6 min)
 station_ai:
   station_id: agricultural_station
   total_traders: 6
-  
+
   traders:
     - type: local_shuttle
       count: 3
@@ -266,7 +266,7 @@ station_ai:
       destinations:
         - industrial_station
         - trade_hub
-    
+
     - type: merchant_trader
       count: 2
       trade_mix:
@@ -275,7 +275,7 @@ station_ai:
       destinations:
         - luxury_station
         - trade_hub
-    
+
     - type: newbie_trader
       count: 1
       behavior: random
@@ -304,7 +304,7 @@ station_ai:
 station_ai:
   station_id: industrial_station
   total_traders: 8
-  
+
   traders:
     - type: local_shuttle
       count: 2
@@ -312,7 +312,7 @@ station_ai:
       destinations:
         - trade_hub
         - research_station
-    
+
     - type: merchant_trader
       count: 4
       trade_mix:
@@ -323,7 +323,7 @@ station_ai:
         - research_station
         - trade_hub
         - luxury_station
-    
+
     - type: specialist_hauler
       count: 2
       trade_mix:
@@ -357,7 +357,7 @@ station_ai:
 station_ai:
   station_id: research_station
   total_traders: 5
-  
+
   traders:
     - type: local_shuttle
       count: 1
@@ -365,7 +365,7 @@ station_ai:
       primary_export: basic_medicine
       destinations:
         - trade_hub
-    
+
     - type: merchant_trader
       count: 2
       trade_mix:
@@ -376,7 +376,7 @@ station_ai:
         - industrial_station
         - luxury_station
         - trade_hub
-    
+
     - type: specialist_hauler
       count: 2
       trade_mix:
@@ -411,7 +411,7 @@ station_ai:
 station_ai:
   station_id: luxury_station
   total_traders: 4
-  
+
   traders:
     - type: merchant_trader
       count: 2
@@ -422,7 +422,7 @@ station_ai:
       destinations:
         - agricultural_station
         - trade_hub
-    
+
     - type: specialist_hauler
       count: 2
       trade_mix:
@@ -458,7 +458,7 @@ station_ai:
 station_ai:
   station_id: trade_hub
   total_traders: 10
-  
+
   traders:
     - type: local_shuttle
       count: 4
@@ -467,21 +467,21 @@ station_ai:
         - agricultural_station
         - industrial_station
       hub_and_spoke: true
-    
+
     - type: merchant_trader
       count: 4
       trade_mix: any_medium_value
       destinations:
         - all_stations
       arbitrage: true
-    
+
     - type: specialist_hauler
       count: 1
       trade_mix: any_high_value
       destinations:
         - luxury_station
         - research_station
-    
+
     - type: newbie_trader
       count: 1
       behavior: tourist
@@ -504,45 +504,45 @@ public:
     // Configuration
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Trader")
     EAITraderType TraderType;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Trader")
     int32 CargoCapacity;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Trader")
     TArray<UTradeItemDataAsset*> PreferredItems;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Trader")
     EAIIntelligence IntelligenceLevel;
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Trader")
     float TradeFrequencySeconds;
-    
+
     // Runtime State
     UPROPERTY(BlueprintReadOnly, Category="AI Trader")
     ASpaceStation* CurrentStation;
-    
+
     UPROPERTY(BlueprintReadOnly, Category="AI Trader")
     ASpaceStation* TargetStation;
-    
+
     UPROPERTY(BlueprintReadOnly, Category="AI Trader")
     TMap<FName, int32> CurrentCargo;
-    
+
     UPROPERTY(BlueprintReadOnly, Category="AI Trader")
     int32 Credits;
-    
+
     // AI Logic
     UFUNCTION(BlueprintCallable, Category="AI Trader")
     void DecideNextTrade();
-    
+
     UFUNCTION(BlueprintCallable, Category="AI Trader")
     bool EvaluateTradeOpportunity(UTradeItemDataAsset* Item, ASpaceStation* BuyStation, ASpaceStation* SellStation);
-    
+
     UFUNCTION(BlueprintCallable, Category="AI Trader")
     void ExecuteTrade();
-    
+
 private:
     FTimerHandle TradeTimer;
-    
+
     void ScheduleNextTrade();
     float CalculateProfitPotential(UTradeItemDataAsset* Item, float BuyPrice, float SellPrice, int32 Quantity);
 };
@@ -661,6 +661,6 @@ NewPrice = FMath::Clamp(NewPrice, BasePrice * 0.7, BasePrice * 1.5);
 
 ---
 
-**Last Updated**: 2026-01-17  
-**Version**: 1.0  
+**Last Updated**: 2026-01-17
+**Version**: 1.0
 **Part of**: Trade Simulator MVP (Week 5-8 Structured Version)

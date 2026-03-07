@@ -229,14 +229,14 @@ void AStationBuildPreview::CreateDynamicMaterial()
 {
 	// Try to create dynamic material from existing material
 	UMaterialInterface* BaseMaterial = PreviewMesh->GetMaterial(0);
-	
+
 	if (BaseMaterial)
 	{
 		DynamicMaterial = UMaterialInstanceDynamic::Create(BaseMaterial, this);
 		if (DynamicMaterial)
 		{
 			PreviewMesh->SetMaterial(0, DynamicMaterial);
-			
+
 			// Set initial color
 			FLinearColor Color = bIsValidPlacement ? ValidColor : InvalidColor;
 			DynamicMaterial->SetVectorParameterValue(ColorParameterName, Color);

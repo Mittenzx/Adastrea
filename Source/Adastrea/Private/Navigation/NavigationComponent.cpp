@@ -19,7 +19,7 @@ UNavigationComponent::UNavigationComponent()
     bAvoidObstacles = true;
     ObstacleDetectionRange = 2000.0f;
     FollowDistance = 500.0f;
-    
+
     // Pathfinding configuration
     PathSegmentDistance = 1000.0f;
     ObstacleAvoidanceOffset = 500.0f;
@@ -73,13 +73,13 @@ bool UNavigationComponent::ActivateAutopilot(FVector TargetLocation)
     }
 
     ClearWaypoints();
-    
+
     FNavigationWaypoint Waypoint;
     Waypoint.Location = TargetLocation;
     Waypoint.WaypointName = FText::FromString(TEXT("Destination"));
     Waypoint.DesiredSpeed = MaxNavigationSpeed;
     Waypoint.bStopAtWaypoint = true;
-    
+
     WaypointPath.Add(Waypoint);
     CurrentWaypointIndex = 0;
     CurrentMode = ENavigationMode::Autopilot;
@@ -117,9 +117,9 @@ void UNavigationComponent::DeactivateAutopilot()
         bAutopilotActive = false;
         CurrentMode = ENavigationMode::Manual;
         CurrentVelocity = FVector::ZeroVector;
-        
+
         OnAutopilotDeactivated();
-        
+
         UE_LOG(LogAdastreaNavigation, Log, TEXT("NavigationComponent: Autopilot deactivated"));
     }
 }
@@ -147,7 +147,7 @@ void UNavigationComponent::StopFollowing()
     {
         FollowTarget = nullptr;
         DeactivateAutopilot();
-        
+
         UE_LOG(LogAdastreaNavigation, Log, TEXT("NavigationComponent: Stopped following"));
     }
 }
@@ -155,7 +155,7 @@ void UNavigationComponent::StopFollowing()
 void UNavigationComponent::AddWaypoint(FNavigationWaypoint Waypoint)
 {
     WaypointPath.Add(Waypoint);
-    
+
     UE_LOG(LogAdastreaNavigation, Verbose, TEXT("NavigationComponent: Waypoint added at %s"), *Waypoint.Location.ToString());
 }
 
@@ -163,7 +163,7 @@ void UNavigationComponent::ClearWaypoints()
 {
     WaypointPath.Empty();
     CurrentWaypointIndex = 0;
-    
+
     UE_LOG(LogAdastreaNavigation, Verbose, TEXT("NavigationComponent: Waypoints cleared"));
 }
 
@@ -175,7 +175,7 @@ bool UNavigationComponent::SkipToNextWaypoint()
         UE_LOG(LogAdastreaNavigation, Log, TEXT("NavigationComponent: Skipped to waypoint %d"), CurrentWaypointIndex);
         return true;
     }
-    
+
     return false;
 }
 
@@ -254,7 +254,7 @@ float UNavigationComponent::CalculateTravelTime(FVector Destination) const
 
     float Distance = FVector::Dist(GetOwner()->GetActorLocation(), Destination);
     float AverageSpeed = (MaxNavigationSpeed + ApproachSpeed) * 0.5f;
-    
+
     return AverageSpeed > 0.0f ? Distance / AverageSpeed : 0.0f;
 }
 
@@ -311,7 +311,7 @@ float UNavigationComponent::GetEstimatedTimeToComplete() const
 {
     float RemainingDist = GetRemainingDistance();
     float AverageSpeed = (MaxNavigationSpeed + ApproachSpeed) * 0.5f;
-    
+
     return AverageSpeed > 0.0f ? RemainingDist / AverageSpeed : 0.0f;
 }
 
@@ -400,7 +400,7 @@ void UNavigationComponent::UpdateAutopilot(float DeltaTime)
     }
 
     CurrentVelocity = FMath::VInterpTo(CurrentVelocity, DesiredVelocity, DeltaTime, TurnSmoothing * 5.0f);
-    
+
     ApplyVelocity(DeltaTime);
 }
 
@@ -421,7 +421,7 @@ void UNavigationComponent::UpdateFollowing(float DeltaTime)
     {
         FVector DesiredLocation = TargetLocation - ToTarget.GetSafeNormal() * FollowDistance;
         FVector DesiredVelocity = CalculateSteeringToTarget(DesiredLocation, DeltaTime);
-        
+
         CurrentVelocity = FMath::VInterpTo(CurrentVelocity, DesiredVelocity, DeltaTime, TurnSmoothing * 3.0f);
         ApplyVelocity(DeltaTime);
     }
@@ -449,9 +449,9 @@ void UNavigationComponent::AdvanceToNextWaypoint()
     if (CurrentWaypointIndex < WaypointPath.Num())
     {
         OnWaypointReached(WaypointPath[CurrentWaypointIndex], CurrentWaypointIndex);
-        
+
         CurrentWaypointIndex++;
-        
+
         if (CurrentWaypointIndex >= WaypointPath.Num())
         {
             // Reached final destination
@@ -470,7 +470,7 @@ FVector UNavigationComponent::CalculateSteeringToTarget(FVector TargetLocation, 
 
     FVector CurrentLocation = GetOwner()->GetActorLocation();
     FVector Direction = (TargetLocation - CurrentLocation).GetSafeNormal();
-    
+
     float Distance = FVector::Dist(CurrentLocation, TargetLocation);
     float DesiredSpeed = MaxNavigationSpeed;
 
@@ -505,7 +505,7 @@ FVector UNavigationComponent::DetectAndAvoidObstacles(FVector DesiredVelocity)
         // Calculate avoidance vector (perpendicular to current direction)
         FVector Normal = HitResult.ImpactNormal;
         FVector Avoidance = FVector::CrossProduct(Normal, FVector::UpVector) * MaxNavigationSpeed * 0.5f;
-        
+
         return DesiredVelocity + Avoidance;
     }
 

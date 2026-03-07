@@ -9,7 +9,7 @@ PersonnelName: "Karen Evans"
 # Basic Identity
 Biography: |
   This individual spent years as a freelance pilot before joining organized service. They are recognized for their technical expertise and led a successful rescue operation in hostile territory.
-  
+
 Age: 33
 Gender: "Female"
 Species: "Human"
@@ -61,7 +61,7 @@ ContractMonthsRemaining: 0
 PersonalityType: "Cautious"
 PersonalityDescription: |
   Cautious personality with focus on navigator duties.
-  
+
 Traits:
   - TraitName: "Brave"
     TraitDescription: "Performs well under pressure"

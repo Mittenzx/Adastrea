@@ -274,11 +274,11 @@ import pytest
 
 class TestMyFeature:
     """Tests for MyFeature class."""
-    
+
     def test_basic_functionality(self):
         """Test that basic feature works."""
         assert True
-    
+
     def test_edge_case(self):
         """Test edge case handling."""
         # Test implementation
@@ -303,7 +303,7 @@ bool FMyFeatureTest::RunTest(const FString& Parameters)
     // Test implementation
     UClass* MyClass = FindObject<UClass>(nullptr, TEXT("/Script/Adastrea.MyFeature"));
     TestNotNull(TEXT("MyFeature class should exist"), MyClass);
-    
+
     return true;
 }
 ```
@@ -320,10 +320,10 @@ def check_my_quality_metric(self):
     """Check for my quality metric."""
     print("\nChecking my quality metric...")
     source_dir = self.project_root / "Source"
-    
+
     # Implementation
     issues_found = []
-    
+
     if issues_found:
         self.add_warning(f"Found {len(issues_found)} issues")
     else:
@@ -460,6 +460,6 @@ For issues with the test suite:
 
 ---
 
-**Last Updated**: 2025-12-09  
-**Version**: 1.0  
+**Last Updated**: 2025-12-09
+**Version**: 1.0
 **Maintained by**: Adastrea Development Team

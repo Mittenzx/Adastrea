@@ -47,10 +47,10 @@ struct FSaveSlotInfo
 
 /**
  * Save Game Subsystem
- * 
+ *
  * Manages all save/load operations for the game.
  * Operates as a Game Instance Subsystem to persist across level transitions.
- * 
+ *
  * Features:
  * - Multiple save slots
  * - Auto-save functionality
@@ -58,21 +58,21 @@ struct FSaveSlotInfo
  * - Save file validation
  * - Async save/load operations
  * - Cloud save support (optional)
- * 
+ *
  * Usage:
  * - Access via UGameInstance::GetSubsystem<USaveGameSubsystem>()
  * - Call SaveGame() to save current state
  * - Call LoadGame() to restore from save
  * - Enable auto-save via EnableAutoSave()
  * - Query save slots via GetSaveSlotInfo()
- * 
+ *
  * Example:
  * - Quick save: QuickSave()
  * - Quick load: QuickLoad()
  * - Save to slot: SaveGame("Slot1")
  * - Load from slot: LoadGame("Slot1")
  * - List saves: GetAllSaveSlots()
- * 
+ *
  * Integration:
  * - AdastreaGameInstance coordinates save/load
  * - PlayerProgressionComponent serializes progression

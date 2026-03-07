@@ -1,11 +1,11 @@
 # [Blueprint Name] - Blueprint Guide
 
-> **Standard Blueprint Guide Template for Adastrea**  
+> **Standard Blueprint Guide Template for Adastrea**
 > Copy this template to create new Blueprint guides with consistent structure.
 
-**Blueprint Type**: [Actor / Widget / Component / Data Asset]  
-**Complexity**: [Beginner / Intermediate / Advanced]  
-**Time to Complete**: [Estimated time in minutes]  
+**Blueprint Type**: [Actor / Widget / Component / Data Asset]
+**Complexity**: [Beginner / Intermediate / Advanced]
+**Time to Complete**: [Estimated time in minutes]
 **Last Updated**: [Date]
 
 ---
@@ -333,13 +333,13 @@ After completing this guide, you now know:
 
 ---
 
-**Questions or Issues?** 
+**Questions or Issues?**
 - Check the [Blueprint Guide for Beginners](../development/BLUEPRINT_GUIDE_FOR_BEGINNERS.md)
 - Review the [Blueprint Image Guide](BLUEPRINT_IMAGE_GUIDE.md) for node documentation
 - See [Troubleshooting Guide](../development/TROUBLESHOOTING.md)
 
 ---
 
-**Template Version**: 1.0  
-**Created**: 2026-01-03  
+**Template Version**: 1.0
+**Created**: 2026-01-03
 **Maintained by**: Adastrea Development Team

@@ -28,7 +28,7 @@ CreateZones: false
 
 # Object Definitions
 ObjectDefinitions:
-  
+
   # Main Trading Stations
   - ObjectType: Station
     ActorClass: "BP_SpaceStation_Trading"

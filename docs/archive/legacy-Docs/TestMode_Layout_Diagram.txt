@@ -21,18 +21,18 @@
                  ☁️☁️☁️
                    ⭐
             Sky Light (diffuse ambient)
-            
+
             ☀️ Directional Light
                (angled down -45°)
                    ↘️
-                   
+
      Z=200  ✈️ Spaceship Spawn Point
               (500, 0, 200)
               [Tagged: "SpaceshipSpawnPoint"]
-              
+
      Z=100  🧍 Player Start
               (0, 0, 100)
-              
+
      Z=0    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
             Floor Plane (scaled 100x100x1)
             Located at world origin (0,0,0)
@@ -180,15 +180,15 @@ Recommended Test Area:
            Intensity: 5.0
            Color: White (255,255,255)
               ↓ ↓ ↓ (parallel rays)
-           
+
         ☁️ Sky Atmosphere
            (atmospheric scattering)
-           
+
         💡 Sky Light
            (ambient fill light)
            Intensity: 1.0
            Color: Light Blue (200,220,255)
-           
+
         [Post Process Volume]
            Exposure: Manual 0.5
            Bloom: Enabled
@@ -201,7 +201,7 @@ Recommended Test Area:
 
 ```
   Grid Pattern (top view):
-  
+
   +-----+-----+-----+-----+
   |     |     |     |     |
   +-----+-----+-----+-----+
@@ -211,7 +211,7 @@ Recommended Test Area:
   +-----+-----+-----+-----+
   |     |     |     |     |
   +-----+-----+-----+-----+
-  
+
   Each grid square = 100 Unreal Units
   Color: Dark Gray (50,50,50)
   Grid Lines: Light Gray (150,150,150)
@@ -247,7 +247,7 @@ Step-by-Step Visual Guide:
 ## Related Documentation
 
 - Main Specification: Content/Maps/TestMode.umap.txt
-- Blueprint Setup: Content/Blueprints/BP_TestModeSetup_Guide.txt  
+- Blueprint Setup: Content/Blueprints/BP_TestModeSetup_Guide.txt
 - Quick Reference: Docs/TestMode_QuickReference.md
 
 ---

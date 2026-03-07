@@ -58,19 +58,19 @@ See `EXTRACTION_INSTRUCTIONS.md` for manual git commands.
 
 ## ❓ Common Questions
 
-**Q: Why aren't the files already here?**  
+**Q: Why aren't the files already here?**
 A: They were removed in PR #120 and only exist in git history. The CI environment can't access git history, but your local clone can.
 
-**Q: Will the script work on my machine?**  
+**Q: Will the script work on my machine?**
 A: Yes! It works on Windows (Git Bash/WSL), Mac, and Linux. It automatically handles:
 - Shallow clones (fetches full history if needed)
 - Missing commits (provides clear instructions)
 - File permissions (makes scripts executable)
 
-**Q: What if it fails?**  
+**Q: What if it fails?**
 A: See `EXTRACTION_INSTRUCTIONS.md` for 2 alternative manual methods.
 
-**Q: How long does this take?**  
+**Q: How long does this take?**
 A: Usually 10-30 seconds depending on internet speed (if fetching history).
 
 ## 🔍 What's Next?
@@ -95,7 +95,7 @@ After you have `adastrea_build_files.tar.gz`:
 # Extract files only
 bash build_package/extract_files.sh
 
-# Create archive only  
+# Create archive only
 tar -czf adastrea_build_files.tar.gz build_package/
 
 # Extract archive in new repo
@@ -119,8 +119,8 @@ ls -lh build_package/*.{bat,sh,md} build_package/.github/workflows/*.yml
 
 ---
 
-**Need more details?** → Read `QUICKSTART.md`  
-**Having issues?** → Read `IMPORTANT_NOTE.md`  
+**Need more details?** → Read `QUICKSTART.md`
+**Having issues?** → Read `IMPORTANT_NOTE.md`
 **Want manual control?** → Read `EXTRACTION_INSTRUCTIONS.md`
 
 **Created**: 2025-11-14 | **Purpose**: Quick access to PR #120 build files

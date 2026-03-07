@@ -52,15 +52,15 @@ FILES MODIFIED
 Code Changes (4 files):
   1. Source/Adastrea/Public/Ships/SpaceshipDataAsset.h
      - Added RotationRateMultiplier property
-     
+
   2. Source/Adastrea/Private/Ships/SpaceshipDataAsset.cpp
      - Initialized RotationRateMultiplier = 0.5
-     
+
   3. Source/Adastrea/Public/Ships/Spaceship.h
      - Added bUseMousePositionFlight
      - Added MouseDeadzoneRadius (50px)
      - Added MouseMaxRadius (400px)
-     
+
   4. Source/Adastrea/Private/Ships/Spaceship.cpp
      - Implemented mouse position flight in Turn()
      - Implemented mouse position flight in LookUp()
@@ -81,7 +81,7 @@ HOW IT WORKS
 
 Mathematical Model:
 
-  RotationSpeed = (Direction / Distance) × DistanceRatio 
+  RotationSpeed = (Direction / Distance) × DistanceRatio
                   × TurnRate × ShipMultiplier × Sensitivity
 
   Where:
@@ -197,7 +197,7 @@ Setting Up a New Ship:
 1. Open/Create ship's DataAsset in Unreal Editor
 2. Navigate to "Mobility Stats" section
 3. Set RotationRateMultiplier based on ship role:
-   
+
    Ship Role         Recommended Value
    ----------------------------------------
    Fighter          0.8 - 1.0
@@ -331,7 +331,7 @@ Estimated Time:
   - Build: 5-10 minutes
   - Test: 15-30 minutes
   - Review: 30-60 minutes
-  
+
 Total: ~1-2 hours to full validation
 
 ================================================================================

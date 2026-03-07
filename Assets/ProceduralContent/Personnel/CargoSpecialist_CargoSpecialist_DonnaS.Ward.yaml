@@ -9,7 +9,7 @@ PersonnelName: "Donna S. Ward"
 # Basic Identity
 Biography: |
   This individual comes from a long line of spacers dating back three generations. They are feared by enemies and respected by allies and discovered a new jump route saving weeks of travel time.
-  
+
 Age: 27
 Gender: "Female"
 Species: "Human"
@@ -61,7 +61,7 @@ ContractMonthsRemaining: 0
 PersonalityType: "Leader"
 PersonalityDescription: |
   Leader personality with focus on cargospecialist duties.
-  
+
 Traits:
   - TraitName: "Combat Veteran"
     TraitDescription: "Experienced in combat"

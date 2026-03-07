@@ -245,20 +245,20 @@ USceneComponent* ADockingBayModule::FindFreeDockingSlot()
 void ASpaceship::DockAtSlot(USceneComponent* DockingSlot)
 {
     if (!DockingSlot) return;
-    
+
     // Get target transform
     FVector TargetLocation = DockingSlot->GetComponentLocation();
     FRotator TargetRotation = DockingSlot->GetComponentRotation();
-    
+
     // Move ship to docking point
     SetActorLocationAndRotation(TargetLocation, TargetRotation);
-    
+
     // Mark slot as occupied
     MarkSlotOccupied(DockingSlot, true);
-    
+
     // Disable ship controls
     DisableInput(GetController());
-    
+
     // Open UI
     OpenTradingInterface();
 }

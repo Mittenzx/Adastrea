@@ -1,7 +1,7 @@
 # X4 Mouse Flight Control Fix - Summary
 
-**Date**: 2026-01-15  
-**Issue**: Mouse position flight didn't work like actual X4: Foundations  
+**Date**: 2026-01-15
+**Issue**: Mouse position flight didn't work like actual X4: Foundations
 **Status**: ✅ Fixed
 
 ---
@@ -210,6 +210,6 @@ Player moves cursor back to center →
 
 ---
 
-**Last Updated**: 2026-01-15  
-**Status**: Code complete, needs in-engine testing  
+**Last Updated**: 2026-01-15
+**Status**: Code complete, needs in-engine testing
 **Author**: GitHub Copilot Agent

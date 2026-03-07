@@ -36,10 +36,10 @@ if (Guard.CanExecuteTool(ToolName, Arguments))
 {
     // Execute tool
     FString Result = ExecuteTool(ToolName, Arguments);
-    
+
     // Truncate large results
     Result = Guard.TruncateResult(Result);
-    
+
     // Record execution
     Guard.RecordExecution(ToolName, Arguments, Result);
 }
@@ -274,23 +274,23 @@ while (/* agent is working */)
     // Get next tool to execute
     FString ToolName, Arguments;
     GetNextToolCall(ToolName, Arguments);
-    
+
     // Check if execution is allowed
     if (!Guard.CanExecuteTool(ToolName, Arguments))
     {
         // Stop execution, iteration limit or loop detected
         break;
     }
-    
+
     // Execute tool
     FString Result = ExecuteTool(ToolName, Arguments);
-    
+
     // Truncate large results
     Result = Guard.TruncateResult(Result);
-    
+
     // Record execution
     Guard.RecordExecution(ToolName, Arguments, Result);
-    
+
     // Check for task completion
     if (Guard.DetectTaskCompletion(RecentToolNames, RecentResults))
     {
@@ -401,20 +401,20 @@ Unit tests should be added to verify the functionality. Example test structure:
 
 ```cpp
 // ToolExecutionGuardTests.cpp
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FToolExecutionGuardTest, 
-    "Adastrea.ToolExecutionGuard.BasicTest", 
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FToolExecutionGuardTest,
+    "Adastrea.ToolExecutionGuard.BasicTest",
     EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 
 bool FToolExecutionGuardTest::RunTest(const FString& Parameters)
 {
     FToolExecutionGuard Guard;
-    
+
     // Test iteration limit
     for (int32 i = 0; i < 30; i++)
     {
         FString ToolName = FString::Printf(TEXT("tool_%d"), i);
         bool bCanExecute = Guard.CanExecuteTool(ToolName, TEXT("{}"));
-        
+
         if (i < 25)
         {
             TestTrue(TEXT("Should allow execution before limit"), bCanExecute);
@@ -428,7 +428,7 @@ bool FToolExecutionGuardTest::RunTest(const FString& Parameters)
             TestFalse(TEXT("Should block execution after limit"), bCanExecute);
         }
     }
-    
+
     return true;
 }
 ```
@@ -499,7 +499,7 @@ All features are implemented, documented, and ready for integration with the exi
 
 ---
 
-**Implementation Date**: December 19, 2024  
-**Status**: ✅ Complete  
-**Phase**: 1-3 (Safety, Scene Capture, Python Helpers)  
+**Implementation Date**: December 19, 2024
+**Status**: ✅ Complete
+**Phase**: 1-3 (Safety, Scene Capture, Python Helpers)
 **Next**: Integration with agent system

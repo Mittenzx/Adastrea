@@ -2,8 +2,8 @@
 
 **Purpose**: Step-by-step guide to integrate all MVP trading tools and content into Unreal Engine for the Trade Simulator prototype.
 
-**Target Audience**: Programmers and technical designers setting up the trading prototype  
-**Time to Complete**: 2-4 hours (first-time setup)  
+**Target Audience**: Programmers and technical designers setting up the trading prototype
+**Time to Complete**: 2-4 hours (first-time setup)
 **Prerequisites**: Unreal Engine 5.6, Python 3.9+, Adastrea trading system C++ code compiled
 
 ---
@@ -119,10 +119,10 @@ python3 Tools/trading_performance_profiler.py --analyze
 2. Navigate to `Content/DataAssets/Trading/MVP/Items/`
 3. For **each** of the 15 items:
 
-   a. **Right-click** → Blueprint → Data Asset  
-   b. **Select**: `TradeItemDataAsset` (C++ class)  
-   c. **Name**: `DA_Item_[ItemName]` (e.g., `DA_Item_WaterPurified`)  
-   d. **Open** the Data Asset  
+   a. **Right-click** → Blueprint → Data Asset
+   b. **Select**: `TradeItemDataAsset` (C++ class)
+   c. **Name**: `DA_Item_[ItemName]` (e.g., `DA_Item_WaterPurified`)
+   d. **Open** the Data Asset
    e. **Copy-paste** values from corresponding `.txt` file:
 
    **Example for Water:**
@@ -149,7 +149,7 @@ python3 Tools/trading_performance_profiler.py --analyze
    - Priority: 1.0
    ```
 
-   f. **Set each property** in the Data Asset  
+   f. **Set each property** in the Data Asset
    g. **Save** the Data Asset
 
 4. **Repeat** for all 15 items
@@ -163,10 +163,10 @@ python3 Tools/trading_performance_profiler.py --analyze
 1. Navigate to `Content/DataAssets/Trading/MVP/Markets/`
 2. For **each** of the 5 markets:
 
-   a. **Right-click** → Blueprint → Data Asset  
-   b. **Select**: `MarketDataAsset` (C++ class)  
-   c. **Name**: `DA_Market_[StationName]` (e.g., `DA_Market_AgriculturalStationMarket`)  
-   d. **Open** the Data Asset  
+   a. **Right-click** → Blueprint → Data Asset
+   b. **Select**: `MarketDataAsset` (C++ class)
+   c. **Name**: `DA_Market_[StationName]` (e.g., `DA_Market_AgriculturalStationMarket`)
+   d. **Open** the Data Asset
    e. **Copy-paste** values from corresponding `.txt` file:
 
    **Example for Agricultural Market:**
@@ -181,42 +181,42 @@ python3 Tools/trading_performance_profiler.py --analyze
    - Buy Price Markdown: 0.9 (player gets 10% less)
 
    Inventory (6 items):
-   
+
    [0] Water Purified:
        - Trade Item: DA_Item_WaterPurified (reference)
        - Current Stock: 10000
        - Max Stock: 50000
        - Supply Level: 2.0 (abundant)
        - Demand Level: 0.5 (low demand)
-   
+
    [1] Protein Packs:
        - Trade Item: DA_Item_ProteinPacks
        - Current Stock: 5000
        - Max Stock: 20000
        - Supply Level: 1.5
        - Demand Level: 0.8
-   
+
    [2] Luxury Food:
        - Trade Item: DA_Item_LuxuryFood
        - Current Stock: 500
        - Max Stock: 2000
        - Supply Level: 0.8
        - Demand Level: 1.2
-   
+
    [3] Basic Computers:
        - Trade Item: DA_Item_BasicComputers
        - Current Stock: 50
        - Max Stock: 200
        - Supply Level: 0.3 (scarce)
        - Demand Level: 2.0 (high demand - import)
-   
+
    [4] Ship Components:
        - Trade Item: DA_Item_ShipComponents
        - Current Stock: 30
        - Max Stock: 150
        - Supply Level: 0.2
        - Demand Level: 2.5
-   
+
    [5] Advanced Medicine:
        - Trade Item: DA_Item_AdvancedMedicine
        - Current Stock: 20
@@ -225,10 +225,10 @@ python3 Tools/trading_performance_profiler.py --analyze
        - Demand Level: 3.0
    ```
 
-   f. **Set Market Configuration** properties  
-   g. **Add Inventory array entries** (6-8 per market)  
-   h. **Reference corresponding TradeItem Data Assets**  
-   i. **Set supply/demand levels** per item  
+   f. **Set Market Configuration** properties
+   g. **Add Inventory array entries** (6-8 per market)
+   h. **Reference corresponding TradeItem Data Assets**
+   i. **Set supply/demand levels** per item
    j. **Save** the Data Asset
 
 3. **Repeat** for all 5 markets
@@ -736,6 +736,6 @@ After completing integration:
 
 ---
 
-**Last Updated**: 2026-01-17  
-**Version**: 1.0  
+**Last Updated**: 2026-01-17
+**Version**: 1.0
 **Part of**: Trade Simulator MVP (Week 1-4 Prototype Phase)

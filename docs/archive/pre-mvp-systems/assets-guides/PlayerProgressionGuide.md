@@ -1,7 +1,7 @@
 # Player Progression System - Complete Guide
 
-> **Version**: 1.0.0  
-> **Last Updated**: November 2025  
+> **Version**: 1.0.0
+> **Last Updated**: November 2025
 > **System**: Player Progression & Advancement
 
 ## Table of Contents
@@ -328,7 +328,7 @@ IsHidden: false
 
 ProgressData:
   TargetProgress: 1
-  
+
 TrackingStatName: Ships_Destroyed
 AutoTrackedByStat: true
 
@@ -529,13 +529,13 @@ if (ProgressionComp)
 {
     float CombatSkillBonus = ProgressionComp->GetSkillBonus(ESkillCategory::Combat);
     float FinalDamage = BaseDamage * CombatSkillBonus;
-    
+
     // Apply damage with bonus
     Target->TakeDamage(FinalDamage);
-    
+
     // Award XP for kill
     ProgressionComp->AwardExperience(50);
-    
+
     // Track stat for achievements
     UAchievementManagerSubsystem* AchievementMgr = GetGameInstance()->GetSubsystem<UAchievementManagerSubsystem>();
     if (AchievementMgr)
@@ -703,6 +703,6 @@ Function Update Skill Tree UI
 
 ---
 
-**Last Updated**: November 2025  
-**Version**: 1.0.0  
+**Last Updated**: November 2025
+**Version**: 1.0.0
 **Maintained by**: Adastrea Development Team

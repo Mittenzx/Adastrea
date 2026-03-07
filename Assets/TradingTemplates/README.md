@@ -297,6 +297,6 @@ credits_per_hour = (profit_per_trip / trip_time_minutes) * 60
 
 ---
 
-**Last Updated**: January 17, 2026  
-**Version**: 1.0 (MVP Initial Release)  
+**Last Updated**: January 17, 2026
+**Version**: 1.0 (MVP Initial Release)
 **Maintainer**: Adastrea Development Team

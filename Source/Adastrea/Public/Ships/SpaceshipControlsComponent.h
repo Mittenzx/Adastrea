@@ -14,31 +14,31 @@ class UEnhancedInputComponent;
 
 /**
  * Spaceship Controls Component
- * 
+ *
  * Implements Enhanced Input spaceship controls for player-controlled ships.
  * Creates and manages its own Input Mapping Context with the following controls:
- * 
+ *
  * Movement:
  * - W/S: Vertical strafe (up/down)
  * - A/D: Horizontal strafe (left/right)
- * 
+ *
  * Look:
  * - Mouse: Rotation (pitch for up/down, yaw for left/right)
  * - Separate sensitivity settings for horizontal and vertical mouse movement
- * 
+ *
  * Combat:
  * - Left Mouse Button: Fire primary weapon (TODO: Currently commented out - Combat system archived)
- * 
+ *
  * Speed:
  * - Mouse Wheel Up: Increase speed
  * - Mouse Wheel Down: Decrease speed
- * 
+ *
  * Usage:
  * - Add component to spaceship pawn Blueprint
  * - Configure MovementSpeed, LookSensitivity, and LookSensitivityVertical as needed
  * - Component will automatically create and register input bindings in BeginPlay
  * - Weapon firing functionality temporarily disabled (Combat system archived for MVP focus)
- * 
+ *
  * Integration:
  * - Works with ASpaceship pawn class
  * - Uses Unreal Engine 5 Enhanced Input System
@@ -146,7 +146,7 @@ public:
 	/**
 	 * Disable spaceship controls input
 	 * Removes the input mapping context from the local player
-	 * 
+	 *
 	 * @note POST-MVP: Deferred - simple enable/disable sufficient for MVP
 	 */
 	// UFUNCTION(BlueprintCallable, Category="Controls") // DEFERRED: Post-MVP control management
@@ -155,7 +155,7 @@ public:
 	/**
 	 * Check if controls are currently enabled
 	 * @return True if input mapping context is active
-	 * 
+	 *
 	 * @note POST-MVP: Deferred - not critical for MVP trading
 	 */
 	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Controls") // DEFERRED: Post-MVP query
@@ -164,7 +164,7 @@ public:
 	/**
 	 * Set movement speed multiplier
 	 * @param NewSpeed New movement speed value (clamped to valid range)
-	 * 
+	 *
 	 * @note POST-MVP: Deferred - runtime speed adjustment not critical for MVP
 	 */
 	// UFUNCTION(BlueprintCallable, Category="Controls|Movement") // DEFERRED: Post-MVP customization
@@ -173,7 +173,7 @@ public:
 	/**
 	 * Set look sensitivity multiplier
 	 * @param NewSensitivity New sensitivity value (clamped to valid range)
-	 * 
+	 *
 	 * @note POST-MVP: Deferred - runtime sensitivity adjustment not critical for MVP
 	 */
 	// UFUNCTION(BlueprintCallable, Category="Controls|Look") // DEFERRED: Post-MVP customization
@@ -182,7 +182,7 @@ public:
 	/**
 	 * Set vertical look sensitivity multiplier
 	 * @param NewSensitivity New vertical sensitivity value (clamped to valid range, 0 = use horizontal)
-	 * 
+	 *
 	 * @note POST-MVP: Deferred - runtime sensitivity adjustment not critical for MVP
 	 */
 	// UFUNCTION(BlueprintCallable, Category="Controls|Look") // DEFERRED: Post-MVP customization
@@ -190,7 +190,7 @@ public:
 
 	/**
 	 * Toggle Y axis inversion for look input
-	 * 
+	 *
 	 * @note POST-MVP: Deferred - control customization not critical for MVP
 	 */
 	// UFUNCTION(BlueprintCallable, Category="Controls|Look") // DEFERRED: Post-MVP customization
@@ -206,7 +206,7 @@ public:
 	/**
 	 * Set the current speed multiplier
 	 * @param NewSpeed New speed value (clamped to min/max range)
-	 * 
+	 *
 	 * @note POST-MVP: Deferred - use IncreaseSpeed/DecreaseSpeed for MVP
 	 */
 	// UFUNCTION(BlueprintCallable, Category="Controls|Speed") // DEFERRED: Post-MVP direct control

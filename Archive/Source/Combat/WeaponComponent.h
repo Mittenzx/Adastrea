@@ -7,10 +7,10 @@
 
 /**
  * Component for managing weapon mounting and firing on spaceships
- * 
+ *
  * Handles weapon state, ammunition, heat management, and firing logic.
  * Designed to be attached to ship actors and configured via WeaponDataAsset.
- * 
+ *
  * Usage:
  * - Add component to ship Blueprint
  * - Assign WeaponDataAsset

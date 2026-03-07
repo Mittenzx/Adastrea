@@ -51,7 +51,7 @@ The error screen will show specific failure reasons. Common causes:
    ```
    Error: Gemini API key is not configured
    ```
-   
+
    **Solution:**
    - Click "Open Settings" button in the error screen
    - Enter your Gemini API key (get one from https://makersuite.google.com/app/apikey)
@@ -62,7 +62,7 @@ The error screen will show specific failure reasons. Common causes:
    ```
    Error: Python Bridge initialization failed
    ```
-   
+
    **Solution:**
    - Verify Python is installed: Open terminal/command prompt and run `python --version` or `python3 --version`
    - Install required Python packages:
@@ -76,7 +76,7 @@ The error screen will show specific failure reasons. Common causes:
    ```
    Error: Python backend is not ready
    ```
-   
+
    **Solution:**
    - Check if another application is using port 5555
    - Check firewall settings (allow local connections on port 5555)
@@ -103,14 +103,14 @@ The error screen will show specific failure reasons. Common causes:
    - Check usage limits/quotas
 
 3. **Test Key Manually**
-   
+
    For Gemini:
    ```python
    import google.generativeai as genai
    genai.configure(api_key="YOUR_KEY")
    list(genai.list_models())  # Should not raise error
    ```
-   
+
    For OpenAI:
    ```python
    from openai import OpenAI
@@ -159,7 +159,7 @@ The error screen will show specific failure reasons. Common causes:
    ```bash
    pip list | grep -E "google-generativeai|chromadb|langchain"
    ```
-   
+
    If missing, install:
    ```bash
    pip install google-generativeai chromadb langchain
@@ -217,7 +217,7 @@ The error screen will show specific failure reasons. Common causes:
      ```bash
      # Windows
      netstat -ano | findstr :5555
-     
+
      # Mac/Linux
      lsof -i :5555
      ```
@@ -355,7 +355,7 @@ Test backend communication manually:
    ```bash
    echo '{"type":"ping","data":""}' | nc localhost 5555
    ```
-   
+
    Should return:
    ```json
    {"status":"success","message":"pong","timestamp":1234567890.0}
@@ -406,6 +406,6 @@ If you're still experiencing issues:
 
 ---
 
-**Last Updated:** December 2025  
-**Plugin Version:** 1.0.0  
+**Last Updated:** December 2025
+**Plugin Version:** 1.0.0
 **UE Version:** 5.6+

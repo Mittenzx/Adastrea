@@ -48,7 +48,7 @@ error CS0101: The namespace '<global namespace>' already contains a definition f
    rmdir /s /q Intermediate
    rmdir /s /q Binaries
    rmdir /s /q .vs
-   
+
    :: Clean plugin artifacts
    rmdir /s /q Plugins\AdastreaDirector\Binaries
    rmdir /s /q Plugins\AdastreaDirector\Intermediate
@@ -116,7 +116,7 @@ error: Could not find module rules file for 'AdastreaDirector'
        public AdastreaDirector(ReadOnlyTargetRules Target) : base(Target)
        {
            PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
-           
+
            PublicDependencyModuleNames.AddRange(new string[] {
                "Core",
                "CoreUObject",
@@ -340,6 +340,6 @@ If you continue to experience issues:
 
 ---
 
-**Last Updated:** 2025-12-21  
-**Unreal Engine Version:** 5.6  
+**Last Updated:** 2025-12-21
+**Unreal Engine Version:** 5.6
 **Visual Studio Version:** 2022

@@ -141,7 +141,7 @@ Player Ship Position:
 
                     TradingInteractionRadius
                     ◄─────── 2000 units ────────►
-                    
+
     [Ship] ───────────────────────────────── [Station]
       │                                           │
       └─────────────────────────────────────────┘
@@ -155,7 +155,7 @@ Player Ship Position:
 ```
                 2000 units              2000 units
                ◄──────────►            ◄──────────►
-               
+
     [Station A] ─────── [Ship] ─────────── [Station B]
          │                 │                    │
          X                 ✓                    X
@@ -264,7 +264,7 @@ Position:  [Station A] ─── 4000 units ─── [Player] ─── 1500 un
 
 Result: Player is near Station B (1500 < 2000)
         Player is NOT near Station A (4000 > 2000)
-        
+
 UI Shows: "Press F to Trade - Station B"
 
 If player presses F: Opens trading with Station B's faction
@@ -302,6 +302,6 @@ Time: 2.0s  - Player presses F
 
 ---
 
-**Last Updated**: 2025-12-26  
-**Version**: 1.0  
+**Last Updated**: 2025-12-26
+**Version**: 1.0
 **Status**: Production Ready

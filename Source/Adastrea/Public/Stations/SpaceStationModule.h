@@ -14,20 +14,20 @@
 
 /**
  * Base class for all space station modules
- * 
+ *
  * Modules are the building blocks of space stations. Each module represents a
  * functional component that can be attached to a station.
- * 
+ *
  * Features:
  * - Type classification for module identification
  * - Power requirement tracking
  * - Group categorization for organization
  * - Faction assignment (modules can have different owners than the parent station)
- * 
+ *
  * Implements:
  * - IDamageable: Can receive damage (may cause module destruction)
  * - ITargetable: Can be targeted individually by precise weapons
- * 
+ *
  * Usage:
  * - Create Blueprint based on this class for specific module types
  * - Configure ModuleType, ModulePower, and ModuleGroup

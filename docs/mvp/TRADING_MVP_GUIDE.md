@@ -1,8 +1,8 @@
 # Trading MVP Implementation Guide
 
-**Target**: 12-Week Trade Simulator MVP  
-**Phase**: Complete Roadmap (All 3 Phases)  
-**Last Updated**: 2026-01-13  
+**Target**: 12-Week Trade Simulator MVP
+**Phase**: Complete Roadmap (All 3 Phases)
+**Last Updated**: 2026-01-13
 **Status**: Reference Guide - See PHASE_1_IMPLEMENTATION_STEPS.md for current work
 
 ---
@@ -114,12 +114,12 @@ Content/
 4. **Add Blueprint Variables**:
    ```blueprint
    StationName: String = "Trading Station Alpha"
-   
+
    // Hardcoded item prices (Station A)
    WaterPrice: Float = 8.0
    FoodPrice: Float = 30.0
    ElectronicsPrice: Float = 120.0
-   
+
    // Hardcoded stock levels
    WaterStock: Integer = 1000
    FoodStock: Integer = 500
@@ -172,10 +172,10 @@ Content/
    ```blueprint
    InputAxis MoveForward
    ├─ Add Movement Input (World Direction)
-   
+
    InputAxis MoveRight
    ├─ Add Movement Input (World Direction)
-   
+
    InputAxis MoveUp
    ├─ Add Movement Input (World Direction)
    ```
@@ -580,8 +580,8 @@ public:
      * Get current price for item at market
      */
     UFUNCTION(BlueprintCallable, Category="Economy")
-    float GetItemPrice(UMarketDataAsset* Market, 
-                      UTradeItemDataAsset* Item, 
+    float GetItemPrice(UMarketDataAsset* Market,
+                      UTradeItemDataAsset* Item,
                       bool bIsBuying) const;
 
     /**
@@ -589,9 +589,9 @@ public:
      * Updates supply/demand accordingly
      */
     UFUNCTION(BlueprintCallable, Category="Economy")
-    void RecordTransaction(UMarketDataAsset* Market, 
-                          UTradeItemDataAsset* Item, 
-                          int32 Quantity, 
+    void RecordTransaction(UMarketDataAsset* Market,
+                          UTradeItemDataAsset* Item,
+                          int32 Quantity,
                           bool bPlayerBought);
 
     /**
@@ -602,7 +602,7 @@ public:
 
 private:
     FTimerHandle UpdateTimerHandle;
-    
+
     void UpdateMarketPrices(UMarketDataAsset* Market, float DeltaHours);
     void SimulateBackgroundActivity(UMarketDataAsset* Market, float DeltaHours);
 };
@@ -618,11 +618,11 @@ private:
 void UEconomyManager::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
-    
+
     CurrentGameTime = 0.0f;
     TimeScale = 1.0f;
     UpdateInterval = 5.0f;  // Update every 5 seconds
-    
+
     // Start update timer
     if (UGameInstance* GameInstance = GetGameInstance())
     {
@@ -641,7 +641,7 @@ void UEconomyManager::UpdateEconomy()
     // Convert update interval to game time (1 real second = 1 game minute by default)
     float DeltaHours = (UpdateInterval * TimeScale) / 60.0f;
     CurrentGameTime += DeltaHours;
-    
+
     // Update all markets
     for (UMarketDataAsset* Market : ActiveMarkets)
     {
@@ -653,21 +653,21 @@ void UEconomyManager::UpdateEconomy()
     }
 }
 
-float UEconomyManager::GetItemPrice(UMarketDataAsset* Market, 
-                                    UTradeItemDataAsset* Item, 
+float UEconomyManager::GetItemPrice(UMarketDataAsset* Market,
+                                    UTradeItemDataAsset* Item,
                                     bool bIsBuying) const
 {
     if (!Market || !Item) return 0.0f;
     return Market->GetItemPrice(Item, bIsBuying);
 }
 
-void UEconomyManager::RecordTransaction(UMarketDataAsset* Market, 
-                                       UTradeItemDataAsset* Item, 
-                                       int32 Quantity, 
+void UEconomyManager::RecordTransaction(UMarketDataAsset* Market,
+                                       UTradeItemDataAsset* Item,
+                                       int32 Quantity,
                                        bool bPlayerBought)
 {
     if (!Market || !Item) return;
-    
+
     // Find inventory entry
     for (FMarketInventoryEntry& Entry : Market->Inventory)
     {
@@ -687,7 +687,7 @@ void UEconomyManager::RecordTransaction(UMarketDataAsset* Market,
                 Entry.SupplyLevel *= 1.05f;  // Supply increased
                 Entry.DemandLevel *= 0.95f;  // Demand decreased
             }
-            
+
             // Clamp values
             Entry.SupplyLevel = FMath::Clamp(Entry.SupplyLevel, 0.1f, 3.0f);
             Entry.DemandLevel = FMath::Clamp(Entry.DemandLevel, 0.1f, 3.0f);
@@ -700,7 +700,7 @@ void UEconomyManager::UpdateMarketPrices(UMarketDataAsset* Market, float DeltaHo
 {
     // Gradually return supply/demand to baseline
     const float RecoveryRate = 0.1f * DeltaHours;  // 10% per hour
-    
+
     for (FMarketInventoryEntry& Entry : Market->Inventory)
     {
         Entry.SupplyLevel = FMath::Lerp(Entry.SupplyLevel, 1.0f, RecoveryRate);
@@ -716,7 +716,7 @@ void UEconomyManager::SimulateBackgroundActivity(UMarketDataAsset* Market, float
         if (Entry.TradeItem)
         {
             int32 ReplenishAmount = Entry.TradeItem->ReplenishmentRate * DeltaHours;
-            Entry.CurrentStock = FMath::Min(Entry.CurrentStock + ReplenishAmount, 
+            Entry.CurrentStock = FMath::Min(Entry.CurrentStock + ReplenishAmount,
                                            Entry.MaxStock);
         }
     }
@@ -1215,5 +1215,5 @@ After completing all phases:
 
 ---
 
-**Last Updated**: 2025-12-25  
+**Last Updated**: 2025-12-25
 **Status**: Active Implementation Guide

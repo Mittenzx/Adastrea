@@ -298,7 +298,7 @@ The generator automatically checks for name collisions and ensures uniqueness. I
 ```cpp
 // C++ example
 FString SectorName = UNameGenerator::GenerateSectorName(
-    static_cast<uint8>(ESectorNamingTheme::Military), 
+    static_cast<uint8>(ESectorNamingTheme::Military),
     0  // seed
 );
 
@@ -315,7 +315,7 @@ Set `Owner Faction` on object definitions to assign ownership:
 ```cpp
 Station Definition:
   Owner Faction: DA_Faction_TradingGuild
-  
+
 Ship Definition:
   Owner Faction: DA_Faction_Military
   Ship Data: DA_Ship_Corvette
@@ -337,7 +337,7 @@ Create multiple object definitions with different factions:
 ```yaml
 Object Definitions:
   - Station (Faction: Trading Guild)
-  - Station (Faction: Mining Cooperative)  
+  - Station (Faction: Mining Cooperative)
   - Ships (Faction: Trading Guild)
   - Ships (Faction: Pirates)
 ```
@@ -525,6 +525,6 @@ Event OnObjectSpawned
 
 ---
 
-**Last Updated**: 2025-12-19  
-**Version**: 1.0  
+**Last Updated**: 2025-12-19
+**Version**: 1.0
 **Maintained by**: Adastrea Development Team

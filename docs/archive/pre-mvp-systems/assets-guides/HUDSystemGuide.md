@@ -64,7 +64,7 @@ In the Widget Blueprint designer:
 
 1. **Health Bar**:
    - Bind Percent to `HealthPercent` variable
-   
+
 2. **Shield Bar**:
    - Bind Percent to `ShieldPercent` variable
 
@@ -335,7 +335,7 @@ In Combat Manager:
   On Target Acquired
     → Get Player HUD
     → Call UpdateTargetInfo(Target Name, Distance, Is Hostile)
-  
+
   On Target Lost
     → Get Player HUD
     → Call ClearTargetInfo()
@@ -356,15 +356,15 @@ Add custom elements by extending the base class:
 
 ```
 In Custom HUD Blueprint:
-  
+
   // Add custom property
   Variable: CurrentFuel (Float)
-  
+
   // Add custom function
   Function: UpdateFuel(NewFuel)
     → Set CurrentFuel = NewFuel
     → Update Fuel Bar widget
-  
+
   // Auto-update custom elements
   Override UpdateHUDFromGameState
     → Parent: UpdateHUDFromGameState
@@ -580,6 +580,6 @@ Layout:
 
 ---
 
-**Last Updated**: November 11, 2025  
-**Version**: 1.0  
+**Last Updated**: November 11, 2025
+**Version**: 1.0
 **Maintained by**: Adastrea Development Team

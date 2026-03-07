@@ -1,6 +1,6 @@
 # Space Station Modules - Documentation Index
 
-**Last Updated**: 2026-01-18  
+**Last Updated**: 2026-01-18
 **Purpose**: Index of all space station module documentation
 
 ---
@@ -32,8 +32,8 @@ Legend:
 
 ### Docking Bay Module
 
-**Purpose**: Ship docking facilities  
-**Power**: 50 units (consumption)  
+**Purpose**: Ship docking facilities
+**Power**: 50 units (consumption)
 **Key Features**:
 - Multiple docking points (up to 20)
 - Automatic docking point management
@@ -46,8 +46,8 @@ Legend:
 
 ### Marketplace Module
 
-**Purpose**: Trading and commerce  
-**Power**: 40 units (consumption)  
+**Purpose**: Trading and commerce
+**Power**: 40 units (consumption)
 **Key Features**:
 - Configurable market data assets
 - Dynamic pricing support
@@ -60,8 +60,8 @@ Legend:
 
 ### Cargo Bay Module
 
-**Purpose**: General storage  
-**Power**: 5 units (consumption)  
+**Purpose**: General storage
+**Power**: 5 units (consumption)
 **Key Features**:
 - Low power consumption
 - Automated inventory management
@@ -337,5 +337,5 @@ When creating documentation for new modules:
 
 ---
 
-**Maintained by**: Adastrea Development Team  
+**Maintained by**: Adastrea Development Team
 **For Support**: See main project [README.md](../../README.md)

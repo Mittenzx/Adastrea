@@ -24,7 +24,7 @@ ULODManagerComponent::ULODManagerComponent()
 void ULODManagerComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	// Force initial LOD update
 	ForceUpdateLOD();
 }

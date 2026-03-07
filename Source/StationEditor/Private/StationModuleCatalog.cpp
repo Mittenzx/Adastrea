@@ -25,7 +25,7 @@ TArray<FStationModuleEntry> UStationModuleCatalog::GetModulesByGroup(EStationMod
 
 	// Filter by group
 	FilteredEntries.Reserve(ModuleEntries.Num() / 4); // Estimate 25% might match
-	
+
 	for (const FStationModuleEntry& Entry : ModuleEntries)
 	{
 		if (Entry.ModuleGroup == Group)

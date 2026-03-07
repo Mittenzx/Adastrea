@@ -2,14 +2,14 @@
 
 ################################################################################
 # Adastrea - Pre-Build Setup Check Script
-# 
+#
 # This script verifies that the development environment is properly configured
 # before building the Unreal Engine project. It checks for:
 # - Unreal Engine version compatibility
 # - C++ compiler availability
 # - Required project folders and files
 # - Optional: Static analysis tools (cppcheck)
-# 
+#
 # Usage:
 #   ./SetupCheck.sh [options]
 #
@@ -216,12 +216,12 @@ done
 ################################################################################
 if [ "$CLEAN_BUILD" = true ]; then
     print_header "6. Cleaning Build Folders"
-    
+
     CLEAN_FOLDERS=("Intermediate" "Saved" "Binaries")
-    
+
     echo -n "This will delete Intermediate, Saved, and Binaries folders. Continue? (y/N): "
     read -r response
-    
+
     if [[ "$response" =~ ^[Yy]$ ]]; then
         for folder in "${CLEAN_FOLDERS[@]}"; do
             if [ -d "$folder" ]; then
@@ -243,11 +243,11 @@ fi
 ################################################################################
 if [ "$RUN_ANALYSIS" = true ]; then
     print_header "7. Running Static Analysis"
-    
+
     if command -v cppcheck &> /dev/null; then
         print_info "Running cppcheck on Source directory..."
         print_warning "Note: This may take several minutes..."
-        
+
         # Run cppcheck with appropriate flags for Unreal Engine
         cppcheck --enable=warning,style,performance,portability \
                  --suppress=unusedFunction \
@@ -255,7 +255,7 @@ if [ "$RUN_ANALYSIS" = true ]; then
                  --quiet \
                  --template='{file}:{line}: {severity}: {message}' \
                  Source/ 2>&1 | tee cppcheck_results.txt
-        
+
         if [ -s cppcheck_results.txt ]; then
             print_warning "Static analysis found issues. See cppcheck_results.txt"
             ((WARNINGS++))

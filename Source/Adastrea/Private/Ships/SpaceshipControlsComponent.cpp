@@ -233,7 +233,7 @@ void USpaceshipControlsComponent::InitializeInputBindings(UInputComponent* Playe
 	// Check if there's already a mapping context registered (e.g., from Blueprint/TestGameMode)
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = GetEnhancedInputSubsystem();
 	bool bExternalMappingContextExists = false;
-	
+
 	if (Subsystem)
 	{
 		// Check if any mapping contexts are already registered
@@ -251,7 +251,7 @@ void USpaceshipControlsComponent::InitializeInputBindings(UInputComponent* Playe
 	{
 		// Bind input actions
 		SetupInputBindings(EnhancedInputComp);
-		
+
 		// Enable controls (add mapping context)
 		EnableControls();
 		UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent: Input bindings initialized and programmatic controls enabled"));
@@ -367,7 +367,7 @@ void USpaceshipControlsComponent::SetCurrentSpeed(float NewSpeed)
 {
 	float OldSpeed = CurrentSpeed;
 	CurrentSpeed = FMath::Clamp(NewSpeed, MinSpeed, MaxSpeed);
-	
+
 	if (!FMath::IsNearlyEqual(OldSpeed, CurrentSpeed))
 	{
 		float Delta = CurrentSpeed - OldSpeed;
@@ -397,7 +397,7 @@ void USpaceshipControlsComponent::HandleMove(const FInputActionValue& Value)
 void USpaceshipControlsComponent::HandleLook(const FInputActionValue& Value)
 {
 	FVector2D LookValue = Value.Get<FVector2D>();
-	
+
 	// Normalize input relative to viewport aspect ratio to compensate for
 	// larger horizontal deltas on wide screens, ensuring consistent feel
 	AActor* Owner = GetOwner();
@@ -411,7 +411,7 @@ void USpaceshipControlsComponent::HandleLook(const FInputActionValue& Value)
 			{
 				int32 ViewportSizeX, ViewportSizeY;
 				PC->GetViewportSize(ViewportSizeX, ViewportSizeY);
-				
+
 				if (ViewportSizeX > 0 && ViewportSizeY > 0)
 				{
 					// Normalize X (horizontal) input by aspect ratio
@@ -419,20 +419,20 @@ void USpaceshipControlsComponent::HandleLook(const FInputActionValue& Value)
 					// compensates for this, making horizontal/vertical sensitivity feel balanced
 					float AspectRatio = static_cast<float>(ViewportSizeX) / static_cast<float>(ViewportSizeY);
 					LookValue.X /= AspectRatio;
-					
-					UE_LOG(LogAdastreaInput, Verbose, TEXT("SpaceshipControlsComponent::HandleLook - NORMALIZED LookValue: X=%.2f Y=%.2f (AspectRatio=%.2f)"), 
+
+					UE_LOG(LogAdastreaInput, Verbose, TEXT("SpaceshipControlsComponent::HandleLook - NORMALIZED LookValue: X=%.2f Y=%.2f (AspectRatio=%.2f)"),
 						LookValue.X, LookValue.Y, AspectRatio);
 				}
 			}
 		}
 	}
-	
+
 	// Apply separate sensitivity for horizontal (yaw) and vertical (pitch)
 	// Use LookSensitivityVertical if greater than 0, otherwise fall back to LookSensitivity
 	float VerticalSensitivity = (LookSensitivityVertical > 0.0f) ? LookSensitivityVertical : LookSensitivity;
 	LookValue.X *= LookSensitivity;  // Horizontal (yaw)
 	LookValue.Y *= VerticalSensitivity;  // Vertical (pitch)
-	
+
 	// Apply Y axis inversion if enabled
 	if (bInvertLookY)
 	{
@@ -459,7 +459,7 @@ void USpaceshipControlsComponent::HandleFireReleased(const FInputActionValue& Va
 void USpaceshipControlsComponent::HandleSpeed(const FInputActionValue& Value)
 {
 	float ScrollValue = Value.Get<float>();
-	
+
 	// Early return for zero values to avoid unnecessary processing
 	if (FMath::IsNearlyZero(ScrollValue))
 	{
@@ -520,14 +520,14 @@ void USpaceshipControlsComponent::OnLookInput_Implementation(FVector2D LookValue
 
 	// Apply rotation in local space to prevent gimbal lock and unwanted roll
 	// LookValue.X = yaw (left/right), LookValue.Y = pitch (up/down)
-	// 
+	//
 	// IMPORTANT: Rotation is applied around the actor's pivot (RootComponent location).
 	// If the ship mesh appears to rotate around an external point, ensure that:
 	// 1. The mesh component in the Blueprint is centered at (0,0,0) relative to the RootComponent
 	// 2. The mesh's pivot point in the 3D modeling software is at the center of the ship
 	const float DeltaTime = World->GetDeltaSeconds();
 	FRotator DeltaRotation = FRotator(LookValue.Y * DeltaTime, LookValue.X * DeltaTime, 0.0f);
-	UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent::OnLookInput - Applying rotation: Pitch=%.2f Yaw=%.2f"), 
+	UE_LOG(LogAdastreaInput, Log, TEXT("SpaceshipControlsComponent::OnLookInput - Applying rotation: Pitch=%.2f Yaw=%.2f"),
 		DeltaRotation.Pitch, DeltaRotation.Yaw);
 	OwningPawn->AddActorLocalRotation(DeltaRotation);
 }

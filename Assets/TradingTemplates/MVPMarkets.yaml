@@ -21,7 +21,7 @@
   ai_trader_count: 5
   ai_trade_frequency: 10
   allow_ai_price_manipulation: false
-  
+
   # Inventory - what this market produces (cheap) and needs (expensive)
   inventory:
     # PRODUCES (Low prices, high stock)
@@ -30,32 +30,32 @@
       max_stock: 50000
       supply_level: 2.0      # Abundant supply
       demand_level: 0.5      # Low demand
-      
+
     - item_id: protein_packs
       current_stock: 5000
       max_stock: 20000
       supply_level: 1.8
       demand_level: 0.6
-      
+
     - item_id: luxury_food
       current_stock: 500
       max_stock: 2000
       supply_level: 1.5
       demand_level: 0.7
-    
+
     # IMPORTS (High prices, low stock)
     - item_id: basic_alloys
       current_stock: 200
       max_stock: 1000
       supply_level: 0.3      # Scarce
       demand_level: 2.0      # High demand
-      
+
     - item_id: ship_components
       current_stock: 50
       max_stock: 500
       supply_level: 0.2
       demand_level: 2.5
-      
+
     - item_id: basic_computers
       current_stock: 100
       max_stock: 500
@@ -81,7 +81,7 @@
   ai_trader_count: 8
   ai_trade_frequency: 15
   allow_ai_price_manipulation: true
-  
+
   inventory:
     # PRODUCES (Cheap here)
     - item_id: basic_alloys
@@ -89,32 +89,32 @@
       max_stock: 40000
       supply_level: 2.5
       demand_level: 0.4
-      
+
     - item_id: refined_metals
       current_stock: 3000
       max_stock: 15000
       supply_level: 2.0
       demand_level: 0.5
-      
+
     - item_id: ship_components
       current_stock: 2000
       max_stock: 10000
       supply_level: 1.8
       demand_level: 0.6
-    
+
     # IMPORTS (Expensive here)
     - item_id: water_purified
       current_stock: 500
       max_stock: 3000
       supply_level: 0.3
       demand_level: 2.0
-      
+
     - item_id: protein_packs
       current_stock: 300
       max_stock: 2000
       supply_level: 0.2
       demand_level: 2.5
-      
+
     - item_id: hydrogen_fuel
       current_stock: 1000
       max_stock: 5000
@@ -140,7 +140,7 @@
   ai_trader_count: 3
   ai_trade_frequency: 5
   allow_ai_price_manipulation: false
-  
+
   inventory:
     # PRODUCES (Tech items)
     - item_id: basic_computers
@@ -148,32 +148,32 @@
       max_stock: 5000
       supply_level: 1.8
       demand_level: 0.6
-      
+
     - item_id: advanced_electronics
       current_stock: 500
       max_stock: 2000
       supply_level: 1.5
       demand_level: 0.7
-      
+
     - item_id: ai_cores
       current_stock: 100
       max_stock: 500
       supply_level: 1.2
       demand_level: 0.8
-    
+
     # IMPORTS (Needs supplies)
     - item_id: basic_alloys
       current_stock: 200
       max_stock: 1000
       supply_level: 0.4
       demand_level: 1.8
-      
+
     - item_id: basic_medicine
       current_stock: 150
       max_stock: 1000
       supply_level: 0.3
       demand_level: 2.0
-      
+
     - item_id: protein_packs
       current_stock: 200
       max_stock: 1500
@@ -199,7 +199,7 @@
   ai_trader_count: 2
   ai_trade_frequency: 3
   allow_ai_price_manipulation: false
-  
+
   inventory:
     # LUXURY GOODS (In stock)
     - item_id: luxury_food
@@ -207,32 +207,32 @@
       max_stock: 2000
       supply_level: 1.5
       demand_level: 1.2
-      
+
     - item_id: entertainment_systems
       current_stock: 800
       max_stock: 3000
       supply_level: 1.3
       demand_level: 1.0
-      
+
     - item_id: rare_art
       current_stock: 50
       max_stock: 200
       supply_level: 1.0
       demand_level: 1.5
-    
+
     # QUALITY TECH (Available)
     - item_id: advanced_electronics
       current_stock: 300
       max_stock: 1000
       supply_level: 1.2
       demand_level: 1.0
-      
+
     - item_id: ai_cores
       current_stock: 50
       max_stock: 200
       supply_level: 0.8
       demand_level: 1.3
-      
+
     # HIGH-END MEDICAL
     - item_id: advanced_medicine
       current_stock: 200
@@ -259,7 +259,7 @@
   ai_trader_count: 15
   ai_trade_frequency: 20
   allow_ai_price_manipulation: true
-  
+
   inventory:
     # BALANCED INVENTORY (Everything available, medium prices)
     - item_id: water_purified
@@ -267,55 +267,55 @@
       max_stock: 25000
       supply_level: 1.2
       demand_level: 1.0
-      
+
     - item_id: protein_packs
       current_stock: 3000
       max_stock: 15000
       supply_level: 1.1
       demand_level: 1.0
-      
+
     - item_id: basic_alloys
       current_stock: 4000
       max_stock: 20000
       supply_level: 1.2
       demand_level: 1.1
-      
+
     - item_id: refined_metals
       current_stock: 2000
       max_stock: 10000
       supply_level: 1.0
       demand_level: 1.1
-      
+
     - item_id: ship_components
       current_stock: 1000
       max_stock: 5000
       supply_level: 1.1
       demand_level: 1.0
-      
+
     - item_id: basic_computers
       current_stock: 800
       max_stock: 4000
       supply_level: 1.0
       demand_level: 1.1
-      
+
     - item_id: basic_medicine
       current_stock: 1500
       max_stock: 8000
       supply_level: 1.2
       demand_level: 0.9
-      
+
     - item_id: hydrogen_fuel
       current_stock: 3000
       max_stock: 15000
       supply_level: 1.3
       demand_level: 1.0
-      
+
     - item_id: entertainment_systems
       current_stock: 400
       max_stock: 2000
       supply_level: 0.9
       demand_level: 1.1
-      
+
     - item_id: advanced_electronics
       current_stock: 300
       max_stock: 1500

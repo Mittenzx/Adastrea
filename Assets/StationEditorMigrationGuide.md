@@ -1,7 +1,7 @@
 # Station Editor Migration Guide - Blueprint to C++
 
-**Version**: 1.0  
-**Last Updated**: December 7, 2025  
+**Version**: 1.0
+**Last Updated**: December 7, 2025
 **Purpose**: Guide for migrating from Blueprint-based station editor opening logic to C++ implementation
 
 ---
@@ -34,22 +34,22 @@ If you have a Blueprint derived from `AAdastreaPlayerController` (e.g., `BP_Spac
 1. **Open your Player Controller Blueprint**
 
 2. **Assign Configuration Properties** (if not already set):
-   
+
    In the **Details** panel, find the "Station Editor" category:
-   
+
    - **Station Editor Widget Class**: Set to your widget Blueprint (e.g., `WBP_StationEditor`)
    - **Module Catalog**: Set to your catalog data asset (e.g., `DA_StationModuleCatalog`)
    - **Station Search Radius**: Adjust if needed (default: 5000 units)
 
 3. **Remove Old Blueprint Logic** (if you have it):
-   
+
    - Find any nodes connected to the `OnStationEditorToggle` event
    - **DELETE** all nodes that:
      - Find nearest station
      - Create station editor widget
      - Initialize editor manager
      - Set input mode
-   
+
    **Important**: The event still exists for backward compatibility, but you no longer need to handle it manually.
 
 ### Step 2: Verify Input Bindings
@@ -101,7 +101,7 @@ When `ToggleStationEditor()` is called:
 1. **Validate State**: Checks if player is controlling a spaceship
 2. **Find Station**: Searches for nearest station within radius using `FindNearestStation()`
 3. **Create Widget**: Creates widget instance if it doesn't exist
-4. **Initialize Manager**: 
+4. **Initialize Manager**:
    - Creates `UStationEditorManager` instance
    - Assigns the module catalog
    - Calls `BeginEditing()` with the found station
@@ -139,7 +139,7 @@ The C++ implementation includes comprehensive error checking:
 
 **"No station found within X units"**
 - **Cause**: No station exists nearby, or search radius is too small
-- **Fix**: 
+- **Fix**:
   - Move closer to a station, or
   - Increase `StationSearchRadius`, or
   - Place a station in the level
@@ -164,7 +164,7 @@ ASpaceStation* FindNearestStation() override
 {
     // Custom logic here
     // Example: Find only stations owned by player
-    
+
     return NearestOwnedStation;
 }
 ```
@@ -311,5 +311,5 @@ If you encounter issues:
 
 ---
 
-**Last Updated**: December 7, 2025  
+**Last Updated**: December 7, 2025
 **Maintained by**: Adastrea Development Team

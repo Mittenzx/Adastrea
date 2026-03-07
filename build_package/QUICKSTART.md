@@ -125,5 +125,5 @@ ls -lh build_package/*.{bat,sh,md} build_package/.github/workflows/*.yml
 
 ---
 
-**Last Updated**: 2025-11-14  
+**Last Updated**: 2025-11-14
 **Purpose**: Quick access to PR #120 build files

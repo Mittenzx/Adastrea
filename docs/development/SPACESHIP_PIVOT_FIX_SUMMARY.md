@@ -42,7 +42,7 @@ CameraSpringArm->SetupAttachment(ShipRoot);  // Was: SetupAttachment(RootCompone
 - No more spinning around distant world origin
 - More intuitive control feeling
 
-### 2. Blueprint Flexibility  
+### 2. Blueprint Flexibility
 - Designers can attach mesh components to ShipRoot
 - Mesh position can be adjusted to center the ship visually
 - Consistent component hierarchy across all ship Blueprints
@@ -115,7 +115,7 @@ If you encounter problems:
 ## Commit Information
 
 - **Branch**: copilot/fix-ship-pivot-point
-- **Commits**: 
+- **Commits**:
   - bda29ab - Add ShipRoot component to fix spaceship pivot point
   - c29877d - Add documentation for spaceship pivot point fix
 - **Date**: 2026-02-01
@@ -137,6 +137,6 @@ If you encounter problems:
 
 ---
 
-**Last Updated**: 2026-02-01  
-**Status**: Implementation Complete, Awaiting Testing  
+**Last Updated**: 2026-02-01
+**Status**: Implementation Complete, Awaiting Testing
 **Priority**: High (affects all spaceship Blueprints)

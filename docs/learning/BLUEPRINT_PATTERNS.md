@@ -2,8 +2,8 @@
 
 > **Common Blueprint patterns and solutions used in Adastrea**
 
-**Last Updated**: January 17, 2026  
-**Purpose**: Reusable Blueprint patterns for common tasks  
+**Last Updated**: January 17, 2026
+**Purpose**: Reusable Blueprint patterns for common tasks
 **Audience**: Intermediate Blueprint developers
 
 ---

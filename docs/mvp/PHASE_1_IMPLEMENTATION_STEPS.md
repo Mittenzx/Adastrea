@@ -1,8 +1,8 @@
 # Phase 1 Implementation Steps - Trade Simulator MVP
 
-**Purpose**: Step-by-step guide to implement Phase 1 (Weeks 1-4) hardcoded prototype  
-**Target**: Playable trading loop for Week 4 playtest (60%+ "fun" rating)  
-**Last Updated**: 2025-12-25  
+**Purpose**: Step-by-step guide to implement Phase 1 (Weeks 1-4) hardcoded prototype
+**Target**: Playable trading loop for Week 4 playtest (60%+ "fun" rating)
+**Last Updated**: 2025-12-25
 **Status**: Ready to implement
 
 ---
@@ -534,11 +534,11 @@ Check PlayerShip.CargoHold Map
    - Agricultural Station:
      - Location: (0, 0, 0)
      - Rotation: (0, 0, 0)
-   
+
    - Industrial Station:
      - Location: (10000, 0, 0)  // 10,000 units away
      - Rotation: (0, 0, 0)
-   
+
    - Distance: ~1 minute flight at speed 1000
 
 4. **Add Player Start**:
@@ -693,15 +693,15 @@ OnEndOverlap → Ship.CloseTradingUI()
 2. **Create README.txt**:
    ```
    Trading Prototype - Playtest Instructions
-   
+
    Goal: Test if "buy low, sell high" is fun
-   
+
    Controls:
    - WASD: Move ship
    - E/Q: Up/Down
    - Mouse: Look around
    - Fly into stations to dock
-   
+
    Instructions:
    1. You start with 1000 credits
    2. Fly to the GREEN station (ahead)
@@ -712,7 +712,7 @@ OnEndOverlap → Ship.CloseTradingUI()
    7. Dock and sell your Water (it's expensive here)
    8. Check your profit!
    9. Try to make as much profit as possible in 10 minutes
-   
+
    After playing:
    - Was this fun? (Yes/No)
    - Would you play more? (Yes/No)
@@ -747,7 +747,7 @@ OnEndOverlap → Ship.CloseTradingUI()
 3. **Feedback Form**:
    ```
    Trading Prototype Feedback
-   
+
    1. Was this fun? (Yes/No)
    2. Would you play more? (Yes/No/Maybe)
    3. What confused you?
@@ -827,22 +827,22 @@ OnEndOverlap → Ship.CloseTradingUI()
 
 ## 📝 Common Questions
 
-**Q: Should I add more items/stations in Phase 1?**  
+**Q: Should I add more items/stations in Phase 1?**
 A: NO. Keep it minimal. 2 stations, 3 items. Validate core loop first.
 
-**Q: Should I make it look good?**  
+**Q: Should I make it look good?**
 A: NO. Placeholder cubes are fine. Function over form in Phase 1.
 
-**Q: Should I add save/load?**  
+**Q: Should I add save/load?**
 A: NO. Session-only is fine for prototype.
 
-**Q: Should I use Data Assets in Phase 1?**  
+**Q: Should I use Data Assets in Phase 1?**
 A: NO. Hardcode everything. Speed is priority.
 
-**Q: What if playtesters want more features?**  
+**Q: What if playtesters want more features?**
 A: Document requests, but focus on validating core loop. Add features in Phase 2 IF GO decision.
 
-**Q: How do I know if 60% "fun" is good enough?**  
+**Q: How do I know if 60% "fun" is good enough?**
 A: 60% is the minimum bar. If you get 60-70%, proceed cautiously. If 75%+, you have something solid.
 
 ---
@@ -856,7 +856,7 @@ A: 60% is the minimum bar. If you get 60-70%, proceed cautiously. If 75%+, you h
 
 ---
 
-**Last Updated**: 2025-12-25  
-**Phase**: 1 of 3 (Weeks 1-4)  
-**Status**: Ready to implement  
+**Last Updated**: 2025-12-25
+**Phase**: 1 of 3 (Weeks 1-4)
+**Status**: Ready to implement
 **Next**: Begin Step 1 folder setup

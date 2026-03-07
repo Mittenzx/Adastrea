@@ -174,11 +174,11 @@ Shows visual link between mouse cursor and ship direction.
 ```
 
 **Visual Properties:**
-- Inner Circle (Deadzone): 
+- Inner Circle (Deadzone):
   - Diameter: 100-200 pixels (default 50px radius × 2)
   - Color: White with 30-40 alpha
   - Style: Dashed or dotted line
-  
+
 - Outer Circle (Max Radius - Optional):
   - Diameter: 800 pixels (default 400px radius × 2)
   - Color: White with 15-20 alpha
@@ -272,7 +272,7 @@ Rotation Speed: 0% ────────────────────�
                 │                                     │
 Mouse Color:    Light Gray → White → Yellow → Orange
                 (180,180,180) (255,255,255) (255,200,100)
-                
+
 Ship Color:     Center → Cyan → Orange → Red
                 (100,200,255) (255,150,100) (255,100,100)
 
@@ -373,13 +373,13 @@ Ship Indicator: 96 pixels (scaled)
 
 ```
 Frame 1:  ↗ ║ ◈   (Rotating, outside deadzone)
-          
+
 Frame 2:  ↗ ║ ◈   (Approaching center)
            ╚╝
-           
+
 Frame 3:  ↗ ⊕     (Mouse entering deadzone)
           ┼       (Ship centering)
-          
+
 Frame 4:  ⊕┼      (Overlapped, gray, no rotation)
 ```
 Duration: 0.2 seconds with ease-out curve
@@ -394,11 +394,11 @@ Frame 1:  ⊕┼      (In deadzone, overlapped)
 Frame 2:  ↗       (Ship indicator appears)
           ┼║
            ◈      (Mouse moving out)
-           
+
 Frame 3:  ↗       (Indicators separating)
           ┼║
            ║◈
-           
+
 Frame 4:  ↗       (Full separation, active)
           ┼║
            ║
@@ -620,6 +620,6 @@ Shows where to aim to hit moving target.
 
 ---
 
-**Last Updated**: January 13, 2026  
-**Version**: 1.0  
+**Last Updated**: January 13, 2026
+**Version**: 1.0
 **Author**: Adastrea Development Team

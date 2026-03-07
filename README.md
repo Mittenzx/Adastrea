@@ -2,9 +2,9 @@
 
 **Open-World Space Flight Game** built on Unreal Engine 5.6
 
-**Current Focus**: Trade Simulator MVP (Week 3-4 of 12)  
-**Status**: 🔥 **ACTIVE DEVELOPMENT - March 2026**  
-**Latest Update**: Improved TODO comments and deprecation documentation (March 7, 2026)  
+**Current Focus**: Trade Simulator MVP (Week 3-4 of 12)
+**Status**: 🔥 **ACTIVE DEVELOPMENT - March 2026**
+**Latest Update**: Improved TODO comments and deprecation documentation (March 7, 2026)
 **License**: MIT
 
 ---
@@ -64,7 +64,7 @@ After comprehensive critical review (Dec 24, 2025), Adastrea is focused on a **T
 
 ### What's Changing
 
-**NEW FOCUS**: Build playable trading game in 12 weeks  
+**NEW FOCUS**: Build playable trading game in 12 weeks
 **Core Loop**: Buy low → Fly → Sell high → Upgrade ship → Repeat
 
 **Scope Discipline**:
@@ -253,11 +253,11 @@ The validation scripts check for:
    ```bash
    # Linux/Mac/WSL
    ./Tools/SetupCheck.sh
-   
+
    # Or cross-platform Python
    python Tools/SetupCheck.py
    ```
-   
+
    This validates your environment and identifies any missing prerequisites before building.
 
 3. **Generate Project Files**:
@@ -348,7 +348,7 @@ python ProceduralGenerators.py
 
 All generated content is saved as YAML files compatible with the existing Data Asset system and can be imported directly into Unreal Engine.
 
-**Quick Start**: See [PROCEDURAL_GENERATION_docs/QUICKSTART.md](PROCEDURAL_GENERATION_docs/QUICKSTART.md)  
+**Quick Start**: See [PROCEDURAL_GENERATION_docs/QUICKSTART.md](PROCEDURAL_GENERATION_docs/QUICKSTART.md)
 **Full Guide**: See [PROCEDURAL_GENERATION_GUIDE.md](PROCEDURAL_GENERATION_GUIDE.md)
 
 ### First Steps
@@ -375,7 +375,7 @@ All generated content is saved as YAML files compatible with the existing Data A
 - Community and modding ecosystem plans
 - How to contribute to upcoming features
 
-**Current Status**: Alpha 1.0.0-alpha - Phase 4 (Gameplay & Polish) in progress  
+**Current Status**: Alpha 1.0.0-alpha - Phase 4 (Gameplay & Polish) in progress
 **Next Milestone**: Phase 4 completion and Phase 5 (Content & Beta) - 2026
 
 **📝 Contributing to the Roadmap**: When submitting PRs that affect project milestones or system status, please update ROADMAP.md.

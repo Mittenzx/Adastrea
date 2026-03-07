@@ -20,16 +20,16 @@ enum class ELODLevel : uint8
 
 /**
  * LOD Manager Component for dynamic Level of Detail management
- * 
+ *
  * This component automatically adjusts visual quality based on distance
  * from the camera and performance requirements.
- * 
+ *
  * Usage:
  * 1. Add this component to actors that need LOD management
  * 2. Configure LOD distance thresholds
  * 3. Component automatically updates LOD level based on camera distance
  * 4. Blueprint events are fired when LOD changes
- * 
+ *
  * Example:
  * - Add to space station actor
  * - Set HighToMediumDistance to 5000 units

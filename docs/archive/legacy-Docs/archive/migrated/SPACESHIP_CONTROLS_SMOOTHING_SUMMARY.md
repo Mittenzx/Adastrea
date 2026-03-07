@@ -1,7 +1,7 @@
 # Spaceship Controls Smoothing - Implementation Summary
 
-**Date:** December 6, 2024  
-**Issue:** Jerky mouse look and WASD controls  
+**Date:** December 6, 2024
+**Issue:** Jerky mouse look and WASD controls
 **Solution:** Added configurable smoothing system with interpolation
 
 ---

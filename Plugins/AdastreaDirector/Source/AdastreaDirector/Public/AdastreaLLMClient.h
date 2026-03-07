@@ -15,7 +15,7 @@ struct FChatMessage
 	FString Role;      // "system", "user", "assistant", "tool"
 	FString Content;
 	FString ToolCallId; // For tool responses
-	
+
 	TSharedPtr<FJsonObject> ToJson() const;
 	static FChatMessage FromJson(const TSharedPtr<FJsonObject>& Json);
 };
@@ -28,7 +28,7 @@ struct FToolCall
 	FString Id;
 	FString ToolName;
 	TSharedPtr<FJsonObject> Arguments;
-	
+
 	static FToolCall FromJson(const TSharedPtr<FJsonObject>& Json);
 };
 
@@ -40,7 +40,7 @@ struct FToolDefinition
 	FString Name;
 	FString Description;
 	TSharedPtr<FJsonObject> Parameters;
-	
+
 	TSharedPtr<FJsonObject> ToJson() const;
 };
 
@@ -65,7 +65,7 @@ enum class ELLMProvider : uint8
 
 /**
  * Direct C++ client for LLM APIs (Gemini, OpenAI)
- * 
+ *
  * Note: This class should inherit from TSharedFromThis<FAdastreaLLMClient>
  * to safely use weak pointers in async callbacks.
  */
@@ -114,10 +114,10 @@ private:
 	FString ApiKey;
 	FString ModelName;
 	float Temperature;
-	
+
 	TSharedPtr<IHttpRequest> CurrentRequest;
 	FString StreamBuffer;
-	
+
 	// Provider-specific implementations
 	void SendGeminiRequest(
 		const TArray<FChatMessage>& Messages,
@@ -125,14 +125,14 @@ private:
 		FOnStreamChunk OnStreamChunk,
 		FOnLLMComplete OnComplete
 	);
-	
+
 	void SendOpenAIRequest(
 		const TArray<FChatMessage>& Messages,
 		const TArray<FToolDefinition>& Tools,
 		FOnStreamChunk OnStreamChunk,
 		FOnLLMComplete OnComplete
 	);
-	
+
 	// HTTP callbacks
 	void OnResponseReceived(
 		FHttpRequestPtr Request,
@@ -140,14 +140,14 @@ private:
 		bool bWasSuccessful,
 		FOnLLMComplete OnComplete
 	);
-	
+
 	void OnStreamDataReceived(
 		FHttpRequestPtr Request,
 		uint64 BytesSent,
 		uint64 BytesReceived,
 		FOnStreamChunk OnStreamChunk
 	);
-	
+
 	// Parsing helpers
 	void ParseSSEChunk(const FString& Chunk, FOnStreamChunk OnStreamChunk);
 	TArray<FToolCall> ExtractToolCalls(const TSharedPtr<FJsonObject>& Response);

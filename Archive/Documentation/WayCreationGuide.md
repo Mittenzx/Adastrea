@@ -154,7 +154,7 @@ Produced Resources:
     Resource ID: IronOre
     Quantity: 1000
     Quality: Quality
-  
+
   - Resource Name: "Rare Metals"
     Resource ID: RareMetals
     Quantity: 200
@@ -205,7 +205,7 @@ Produced Resources:
     Resource ID: EliteShipComponents
     Quantity: 500
     Quality: Elite
-  
+
   - Resource Name: "Custom Parts"
     Resource ID: CustomParts
     Quantity: 100
@@ -216,7 +216,7 @@ Consumed Resources:
     Resource ID: IronOre
     Quantity: 800
     Quality: Quality
-  
+
   - Resource Name: "Rare Metals"
     Resource ID: RareMetals
     Quantity: 150
@@ -267,7 +267,7 @@ Produced Resources:
     Resource ID: SurveyData
     Quantity: 300
     Quality: Quality
-  
+
   - Resource Name: "Salvage Materials"
     Resource ID: SalvageMaterials
     Quantity: 400
@@ -278,7 +278,7 @@ Consumed Resources:
     Resource ID: Fuel
     Quantity: 200
     Quality: Standard
-  
+
   - Resource Name: "Ship Repairs"
     Resource ID: ShipRepairs
     Quantity: 80

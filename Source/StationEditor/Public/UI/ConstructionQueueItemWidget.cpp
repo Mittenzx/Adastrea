@@ -48,7 +48,7 @@ void UConstructionQueueItemWidget::SetQueueData(const FConstructionQueueItem& It
 	if (ItemNameText)
 	{
 		FText ModuleName = FText::FromString(TEXT("Module")); // Default fallback
-		
+
 		if (Item.ModuleClass)
 		{
 			ASpaceStationModule* CDO = Item.ModuleClass->GetDefaultObject<ASpaceStationModule>();
@@ -62,7 +62,7 @@ void UConstructionQueueItemWidget::SetQueueData(const FConstructionQueueItem& It
 				}
 			}
 		}
-		
+
 		ItemNameText->SetText(ModuleName);
 	}
 
@@ -83,7 +83,7 @@ void UConstructionQueueItemWidget::UpdateProgress(float Progress, float TimeRema
 	{
 		int32 Minutes = FMath::FloorToInt(TimeRemaining / 60.0f);
 		int32 Seconds = FMath::FloorToInt(TimeRemaining) % 60;
-		
+
 		FText TimeText = FText::FromString(FString::Printf(TEXT("%02d:%02d"), Minutes, Seconds));
 		TimeRemainingText->SetText(TimeText);
 	}

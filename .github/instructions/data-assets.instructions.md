@@ -23,7 +23,7 @@ All game content in Adastrea uses Blueprint Data Assets. This is the PRIMARY des
 
 /**
  * Brief description of what this Data Asset represents
- * 
+ *
  * Usage:
  * 1. Create a Blueprint based on this class
  * 2. Configure properties in the Unreal Editor
@@ -74,7 +74,7 @@ FText Description;
 
 ```cpp
 // Integer with range
-UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Stats", 
+UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Stats",
     meta=(ClampMin=1, ClampMax=100))
 int32 Level;
 
@@ -143,7 +143,7 @@ UYourDataAsset::UYourDataAsset()
 virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override
 {
     Super::PostEditChangeProperty(PropertyChangedEvent);
-    
+
     // Validate properties when changed in editor
     if (SomeValue < 0.0f)
     {
@@ -179,13 +179,13 @@ float CalculateComplexValue(float Input) const
 {
     // Document complex calculations
     float Result = BaseValue;
-    
+
     // Apply modifiers
     for (const FModifier& Mod : Modifiers)
     {
         Result *= Mod.Multiplier;
     }
-    
+
     return Result;
 }
 ```

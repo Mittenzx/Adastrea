@@ -172,52 +172,52 @@ No additional C++ work required.
 ## Template Characteristics
 
 ### Core Systems Sector
-**Theme:** Capital region - safe, prosperous, well-governed  
-**Council:** 12 seats, 60% supermajority required  
-**Economics:** Moderate taxes (23%), high infrastructure investment  
-**Security:** Low priority (30%) - area is safe  
+**Theme:** Capital region - safe, prosperous, well-governed
+**Council:** 12 seats, 60% supermajority required
+**Economics:** Moderate taxes (23%), high infrastructure investment
+**Security:** Low priority (30%) - area is safe
 **Gameplay:** Tutorial zone, new player starting area, stable economy
 
 ### Frontier Mining Sector
-**Theme:** Dangerous but profitable mining territory  
-**Council:** 8 seats, 51% simple majority (fast decisions)  
-**Economics:** Moderate taxes (23%), minimal services  
-**Security:** Top priority (70%) - constant pirate threat  
+**Theme:** Dangerous but profitable mining territory
+**Council:** 8 seats, 51% simple majority (fast decisions)
+**Economics:** Moderate taxes (23%), minimal services
+**Security:** Top priority (70%) - constant pirate threat
 **Gameplay:** High risk/high reward, experienced players, mining focus
 
 ### Trade Hub Sector
-**Theme:** Bustling commerce center  
-**Council:** 15 seats, merchant-dominated, 55% majority  
-**Economics:** Low taxes (18%) to encourage trade volume  
-**Security:** Moderate (40%) - protect cargo and traders  
+**Theme:** Bustling commerce center
+**Council:** 15 seats, merchant-dominated, 55% majority
+**Economics:** Low taxes (18%) to encourage trade volume
+**Security:** Moderate (40%) - protect cargo and traders
 **Gameplay:** Trading focus, economic gameplay, high traffic
 
 ### Research Sector
-**Theme:** Academic and scientific hub  
-**Council:** 10 seats, scholar-dominated, 66% supermajority  
-**Economics:** Moderate taxes (23%), research-focused budget  
-**Security:** Low priority (20%) - peaceful area  
+**Theme:** Academic and scientific hub
+**Council:** 10 seats, scholar-dominated, 66% supermajority
+**Economics:** Moderate taxes (23%), research-focused budget
+**Security:** Low priority (20%) - peaceful area
 **Gameplay:** Technology advancement, experimental equipment, innovation
 
 ### Military Border Sector
-**Theme:** Fortified border facing external threats  
-**Council:** 9 seats, military-dominated, 51% majority  
-**Economics:** High taxes (35%) for military operations  
-**Security:** Overwhelming priority (80%)  
+**Theme:** Fortified border facing external threats
+**Council:** 9 seats, military-dominated, 51% majority
+**Economics:** High taxes (35%) for military operations
+**Security:** Overwhelming priority (80%)
 **Gameplay:** Combat missions, military operations, high tension
 
 ### Independent Colonies Sector
-**Theme:** Frontier colonies valuing autonomy  
-**Council:** 7 seats, 70% threshold (designed for gridlock)  
-**Economics:** Ultra-low taxes (7%), minimal central authority  
-**Security:** Volunteer militia (40%)  
+**Theme:** Frontier colonies valuing autonomy
+**Council:** 7 seats, 70% threshold (designed for gridlock)
+**Economics:** Ultra-low taxes (7%), minimal central authority
+**Security:** Volunteer militia (40%)
 **Gameplay:** Self-reliance, frontier experience, maximum freedom
 
 ### Contested Territory Sector
-**Theme:** Political instability and competing factions  
-**Council:** 14 seats, three competing power blocs, 60% majority  
-**Economics:** High taxes (30%), mismanaged bureaucracy  
-**Security:** High (55%) - internal and external threats  
+**Theme:** Political instability and competing factions
+**Council:** 14 seats, three competing power blocs, 60% majority
+**Economics:** High taxes (30%), mismanaged bureaucracy
+**Security:** High (55%) - internal and external threats
 **Gameplay:** Political intrigue, faction gameplay, player as kingmaker
 
 ## Technical Specifications
@@ -365,7 +365,7 @@ The sector system is **complete and ready for use**. Designers can immediately c
 
 ---
 
-**Created:** November 2024  
-**Version:** 1.0  
-**Status:** Complete and Production-Ready  
+**Created:** November 2024
+**Version:** 1.0
+**Status:** Complete and Production-Ready
 **Maintained by:** Adastrea Development Team

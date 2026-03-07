@@ -43,10 +43,10 @@ struct FActiveQuest
 
 /**
  * Subsystem for managing quest state, progression, and tracking
- * 
+ *
  * Handles quest acceptance, objective tracking, completion, and rewards.
  * Persists across level loads and integrates with save system.
- * 
+ *
  * Usage:
  * - Access via UGameInstance::GetSubsystem<UQuestManagerSubsystem>()
  * - Use Blueprint functions to accept/complete quests

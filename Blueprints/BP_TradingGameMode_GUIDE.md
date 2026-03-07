@@ -1,16 +1,16 @@
 # Trading Game Mode - Blueprint Guide
 
-> **⚠️ DEPRECATED**: This guide has been consolidated into the unified Trading and Docking Complete Guide.  
+> **⚠️ DEPRECATED**: This guide has been consolidated into the unified Trading and Docking Complete Guide.
 > **See**: [Trading and Docking Complete Guide](../docs/mvp/TRADING_AND_DOCKING_COMPLETE_GUIDE.md)
 
 ---
 
 > **Create the game mode that manages economy simulation and game rules**
 
-**Blueprint Type**: Game Mode  
-**Complexity**: Intermediate  
-**Time to Complete**: 35-45 minutes  
-**Last Updated**: 2026-01-08  
+**Blueprint Type**: Game Mode
+**Complexity**: Intermediate
+**Time to Complete**: 35-45 minutes
+**Last Updated**: 2026-01-08
 **Status**: **DEPRECATED** - Refer to unified guide above
 
 ---
@@ -267,7 +267,7 @@ Print String: "Economy active. Updates every [X] seconds"
    - Connect output to `EconomyTimerHandle` variable (Set)
 6. Add another `Print String` showing update interval
 
-**Expected Result**: 
+**Expected Result**:
 - Console prints initialization message
 - Economy updates start automatically
 - Timer runs every UpdateInterval seconds
@@ -324,7 +324,7 @@ Print String: "Economy initialized with [X] items"
    - **Add to MarketDemand**: ItemID → 100
 6. After loops, print total item count
 
-**Expected Result**: 
+**Expected Result**:
 - All items have initial prices (base prices)
 - Supply and demand start at neutral (100)
 - Console shows item count
@@ -385,7 +385,7 @@ Print String: "Economy updated. [X] items adjusted"
    - Repeat for MarketDemand
 6. Print completion message
 
-**Expected Result**: 
+**Expected Result**:
 - Prices change gradually over time
 - Supply/demand slowly return to neutral
 - Console shows update every UpdateInterval
@@ -437,7 +437,7 @@ Branch (Was found?)
    - Print warning with ItemID
    - Return `0.0`
 
-**Expected Result**: 
+**Expected Result**:
 - Returns correct price for items
 - Accounts for market-specific multipliers
 - Warning if item doesn't exist
@@ -508,7 +508,7 @@ Print String: "Supply/Demand updated for [ItemID]"
    - Update Demand
 6. Print confirmation message
 
-**Expected Result**: 
+**Expected Result**:
 - Supply decreases when player buys
 - Supply increases when player sells
 - Demand adjusts accordingly
@@ -556,7 +556,7 @@ Return: Clamped Ratio
    - Max: `2.0` (prices can't rise above 200% base)
 6. **Return** the clamped ratio
 
-**Expected Result**: 
+**Expected Result**:
 - Returns 1.0 when supply/demand balanced
 - Returns 0.5-2.0 based on imbalance
 - Never returns extreme values (clamped)
@@ -597,7 +597,7 @@ Call OnEconomyUpdated
    - **Call OnEconomyUpdated** with these arrays
 5. Other Blueprints can now bind to this event
 
-**Expected Result**: 
+**Expected Result**:
 - Trading UI can listen for price changes
 - Station displays update automatically
 - HUD can show price alerts
@@ -627,7 +627,7 @@ UpdateEconomy
 5. Call `UpdateEconomy` function
 6. Can now type `UpdateEconomy` in console to test
 
-**Expected Result**: 
+**Expected Result**:
 - Can trigger updates anytime via console
 - Useful for testing economy changes
 - Helps debug price calculations
@@ -646,7 +646,7 @@ UpdateEconomy
 3. Press Play (PIE)
 4. Check console output
 
-**Success Criteria**: 
+**Success Criteria**:
 - Console shows "Initializing economy..."
 - Console shows "Economy initialized with [X] items"
 - No errors in Output Log
@@ -669,7 +669,7 @@ UpdateEconomy
 6. Wait another 30 seconds
 7. Check if prices changed
 
-**Success Criteria**: 
+**Success Criteria**:
 - Console shows economy updates at regular intervals
 - Prices fluctuate slightly over time
 - No crashes or errors
@@ -691,7 +691,7 @@ UpdateEconomy
 6. Sell 100 units of Water
 7. Check Water price again (should be lower)
 
-**Success Criteria**: 
+**Success Criteria**:
 - Buying increases price
 - Selling decreases price
 - Changes visible in trading UI
@@ -711,7 +711,7 @@ UpdateEconomy
 3. Wait 2-3 minutes (several update cycles)
 4. Check price again
 
-**Success Criteria**: 
+**Success Criteria**:
 - Price gradually returns toward base price
 - Not instant recovery (gradual)
 - Eventually stabilizes near base price
@@ -986,12 +986,12 @@ After completing this guide, you now know:
 
 ---
 
-**Questions or Issues?** 
+**Questions or Issues?**
 - Check the [Blueprint Guide for Beginners](../docs/development/BLUEPRINT_GUIDE_FOR_BEGINNERS.md)
 - Review the [Blueprint Image Guide](../docs/reference/BLUEPRINT_IMAGE_GUIDE.md) for node documentation
 - See [MVP Documentation](../docs/mvp/README.md)
 
 ---
 
-**Guide created for**: Trade Simulator MVP (Phase 1)  
+**Guide created for**: Trade Simulator MVP (Phase 1)
 **Maintained by**: Adastrea Development Team

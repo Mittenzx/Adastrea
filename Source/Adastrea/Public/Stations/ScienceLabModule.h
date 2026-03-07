@@ -8,10 +8,10 @@
 
 /**
  * Research laboratory module for space stations
- * 
+ *
  * Scientific research facility for experimentation and development.
  * Supports various research disciplines including physics, biology, and engineering.
- * 
+ *
  * Power Consumption: 75 units
  * Module Group: Processing
  */

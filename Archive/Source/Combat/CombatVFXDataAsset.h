@@ -140,13 +140,13 @@ struct FWeaponHeatVisuals
 
 /**
  * Data Asset for Combat Visual Effects
- * 
+ *
  * Defines visual effects for weapon fire, including:
  * - Muzzle flashes and beam effects
  * - Projectile trails
  * - Heat management visuals
  * - Camera shake and audio integration
- * 
+ *
  * Supports all 6 weapon types:
  * - Energy weapons: Laser beam with glow and heat distortion
  * - Projectile weapons: Tracer rounds with muzzle flash
@@ -154,7 +154,7 @@ struct FWeaponHeatVisuals
  * - Torpedo weapons: Plasma trail effect
  * - Beam weapons: Sustained beam with start/end points
  * - Plasma weapons: Ball lightning with arcing
- * 
+ *
  * Usage:
  * - Create a Blueprint based on this class
  * - Configure fire effects for weapon type
