@@ -468,6 +468,7 @@ float ASpaceStation::ApplyDamage_Implementation(float Damage, EDamageType Damage
 
     // TODO: Apply damage type modifiers based on station shields/armor
     // Stations might have different resistances than ships
+    // MVP NOTE: Combat system archived - damage types will be reimplemented in post-MVP
     float ActualDamage = FMath::Min(Damage, CurrentStructuralIntegrity);
     CurrentStructuralIntegrity -= ActualDamage;
 
@@ -483,6 +484,7 @@ float ASpaceStation::ApplyDamage_Implementation(float Damage, EDamageType Damage
         bIsDestroyed = true;
         UE_LOG(LogAdastreaStations, Warning, TEXT("%s has been destroyed!"), *GetName());
         // TODO: Trigger destruction effects, module separation, debris spawning
+        // MVP NOTE: Combat system archived - destruction effects will be reimplemented in post-MVP
     }
 
     return ActualDamage;

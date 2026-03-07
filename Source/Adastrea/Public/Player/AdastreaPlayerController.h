@@ -395,6 +395,10 @@ public:
 	 * Attempt to initiate trading with the nearest station
 	 * Called when player presses the interaction key (F by default)
 	 * Only works if player is within TradingInteractionRadius of a station
+	 * @deprecated Since December 2025 (v2.0), will be removed in v3.0 (mid-2026).
+	 * Trading system has been refactored for Trade Simulator MVP.
+	 * Use direct market access via TradingWidget->OpenMarket(UMarketDataAsset*) instead.
+	 * This function logs an error and does nothing when called.
 	 */
 	UFUNCTION(BlueprintCallable, Category="Player|Trading")
 	void AttemptTradeWithNearestStation();
