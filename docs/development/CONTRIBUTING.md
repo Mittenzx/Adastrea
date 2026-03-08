@@ -279,6 +279,28 @@ We love feature requests! Please provide:
 - **Impact**: Who benefits from this feature?
 - **Examples**: Similar features in other projects
 
+## Endless Development System
+
+Adastrea uses an **Endless Development Cycle** for continuous improvement:
+
+### 🕐 Hourly Maintenance
+- **Code Quality**: Automated checks and improvements every hour
+- **Documentation**: Regular updates to keep docs current
+- **TODOs**: Tracking and resolution of technical debt
+- **GitHub Activity**: Regular commits to maintain visibility
+
+### 🔄 How It Works
+1. **Hourly Cycles**: Each hour focuses on 1-2 improvement areas
+2. **Priority Areas**: Code quality, documentation, TODOs, small improvements
+3. **GitHub Integration**: Commits pushed hourly to show active development
+4. **Quality Focus**: Each cycle leaves the codebase better than before
+
+### 🤝 Contributing During Endless Development
+- **Small Improvements**: Perfect for fixing TODOs or improving documentation
+- **Code Quality**: Focus on clean code, better comments, and error handling
+- **Documentation**: Help keep guides current with project progress
+- **Testing**: Add tests for existing functionality
+
 ## Questions?
 
 - **Documentation**: Check the `Assets/` folder for comprehensive guides
