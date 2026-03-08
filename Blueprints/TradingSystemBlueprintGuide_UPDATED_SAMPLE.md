@@ -33,7 +33,7 @@ graph TD
     A[🖱️ Event: OnBuyButtonClicked] --> B[💰 Get Item Price]
     B --> C[⚙️ Call: CurrentMarket→GetItemPrice]
     C --> D[📝 Print String:<br/>Show price to console]
-    D --> E[💡 TODO: Implement<br/>Purchase Logic]
+    D --> E[💡 IMPLEMENTED: Purchase Logic<br/>See TradingPurchaseSystem.py]
     E --> F[✅ Complete]
 
     style A fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
@@ -66,8 +66,8 @@ EXECUTION FLOW
     ├─→ 📝 Print String
     │     └─→ Message: "Price: $[price]"
     │
-    └─→ 💡 TODO Implementation
-          └─→ Add: Purchase validation
+    └─→ 💡 IMPLEMENTED: TradingPurchaseSystem.py
+          └─→ Complete: Purchase validation
                   Credit deduction
                   Inventory update
                   UI refresh
