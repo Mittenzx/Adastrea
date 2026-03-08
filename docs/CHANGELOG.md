@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added - 2026-03-08
+
+#### Documentation: TODO Management Standards
+
+**Problem**: Inconsistent TODO comments without clear prioritization or context made it difficult to track future work.
+
+**Solution**: Created comprehensive TODO management standards document with tagging system and review process.
+
+**Changes**:
+- **Added** `docs/development/CODE_QUALITY_TODOS.md` - Complete TODO standards guide
+- **Defined** tagging system with priority, phase, and category tags
+- **Established** weekly review process for TODO management
+- **Updated** existing TODO comments with better context
+- **Improved** two TODO comments in `ShipUpgradeComponent.cpp` and `Verse.cpp`
+
+**Benefits**:
+- Clear tracking of technical debt
+- Better prioritization of future work
+- Consistent documentation standards
+- Easier onboarding for new contributors
+
+**Status**: ✅ **Documentation standards established** - TODO management system implemented.
+
 ### Fixed - 2026-03-07
 
 #### Code Quality: Trailing Whitespace Cleanup

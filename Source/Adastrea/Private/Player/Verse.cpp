@@ -1,5 +1,6 @@
 #include "Player/Verse.h"
-// TODO: Way system archived - Feat and Way will be reimplemented in MVP
+// TODO: [ARCHITECTURE] Way system archived - Feat and Way will be reimplemented in MVP Phase 3
+// Original design: Skill tree system for player progression
 // #include "Way/Feat.h"
 // #include "Way/Way.h"
 #include "AdastreaLog.h"

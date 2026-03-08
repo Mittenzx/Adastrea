@@ -367,8 +367,9 @@ bool UShipUpgradeComponent::CheckUpgradeRequirements(UShipUpgradeDataAsset* Upgr
 	if (Req.RequiredMaterials.Num() > 0)
 	{
 		UE_LOG(LogAdastrea, Verbose, TEXT("Upgrade requires materials (MVP stub): %s"), *Upgrade->GetName());
-		// TODO: Implement proper material checking when inventory system is ready
-		// For MVP, assume player has required materials
+		// TODO: [MVP-PHASE-2] Implement proper material checking when inventory system is ready
+		// For MVP Phase 1 (Trade Simulator), assume player has required materials
+		// Related: InventorySystem component, MaterialDatabase, PlayerEconomy
 	}
 
 	return true;
