@@ -1,4 +1,21 @@
 #include "Ships/SpaceshipControlsComponent.h"
+
+// ============================================================================
+// COMBAT SYSTEM ARCHIVED - MVP FOCUS ON TRADE SIMULATOR
+// ============================================================================
+// The combat system has been temporarily archived to focus development on the
+// Trade Simulator MVP (Minimum Viable Product). All weapon-related functionality
+// is commented out but preserved for future reimplementation.
+//
+// ARCHIVED COMPONENTS:
+// - WeaponComponent.h include (line below)
+// - Fire input action binding
+// - Weapon component caching
+// - Fire pressed/released handlers
+// - Fire implementation functions
+//
+// REIMPLEMENTATION PLAN: MVP Phase 3 (Post-Trade Simulator)
+// ============================================================================
 // TODO: Combat system archived - weapon firing will be reimplemented in MVP
 // #include "Combat/WeaponComponent.h"
 #include "AdastreaLog.h"
@@ -27,6 +44,7 @@ USpaceshipControlsComponent::USpaceshipControlsComponent()
 	, RollAction(nullptr)
 	, SpaceshipMappingContext(nullptr)
 	, bControlsEnabled(false)
+	// ARCHIVED: Weapon component caching (combat system archived for MVP)
 	// , CachedWeaponComponent(nullptr)
 {
 	PrimaryComponentTick.bCanEverTick = false;
