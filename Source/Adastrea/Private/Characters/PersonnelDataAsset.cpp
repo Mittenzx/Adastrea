@@ -1,3 +1,14 @@
+// ============================================================================
+// PersonnelDataAsset.cpp
+// ============================================================================
+// Implementation of UPersonnelDataAsset - Data asset for personnel characters
+//
+// This data asset stores all properties for personnel characters in Adastrea,
+// including skills, attributes, roles, and biographical information.
+//
+// MVP STATUS: Active - Personnel system is part of Trade Simulator MVP
+// ============================================================================
+
 #include "Characters/PersonnelDataAsset.h"
 #include "Misc/DataValidation.h"
 

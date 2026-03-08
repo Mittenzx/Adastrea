@@ -26,6 +26,8 @@ This document tracks all TODO comments found in the Adastrea codebase, organized
 - MaterialDatabase
 - PlayerEconomy system
 
+**Design Document:** [MATERIAL_CHECKING_DESIGN.md](docs/mvp/MATERIAL_CHECKING_DESIGN.md) - Created March 8, 2026
+
 **Priority:** Medium (MVP Phase 2)
 
 ### 3. Space Station System TODOs
@@ -99,10 +101,21 @@ This document tracks all TODO comments found in the Adastrea codebase, organized
 - MVP Phase 2: Add material and inventory systems
 - Post-MVP: Combat and destruction systems
 
+### 4. Code Cleanup (March 8, 2026 - 11:10 GMT)
+- **Fixed empty comments** in `SpaceshipControlsComponent.cpp` (line 541)
+- **Fixed empty comments** in `AdastreaPlayerController.cpp` (line 99)
+- **Improved code formatting** by removing trailing whitespace in comments
+- **Maintained code consistency** across the codebase
+
 ## Next Steps
 
+### Completed (March 8, 2026 - 11:10 GMT)
+1. ✅ **Code quality improvements** - Fixed empty comments and improved formatting
+2. ✅ **Documentation updates** - Enhanced TODO tracking with current progress
+
+### Pending
 1. **Review archived combat code** - Ensure all combat-related code is properly commented out
-2. **Create material system design** - Document requirements for MVP Phase 2
+2. ✅ **Create material system design** - Document requirements for MVP Phase 2 (Design document created)
 3. **Add placeholder positions** - Implement basic market positions for AI traders
 4. **Update test coverage** - Ensure all MVP functionality has adequate testing
 
