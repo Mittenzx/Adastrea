@@ -80,7 +80,7 @@ void SAdastreaDirectorPanel::Construct(const FArguments& InArgs)
 	bIsProcessing = false;
 	bIsIngesting = false;
 	IngestionProgress = 0.0f;
-	IngestionStatusMessage = LOCTEXT("IngestionIdle", "Ready to ingest documents");
+	IngestionStatusMessage = LOCTEXT("IngestionIdle", "Legacy ingestion - See debug log for migration details");
 	IngestionDetailsMessage = FText::GetEmpty();
 	DatabaseStatusMessage = LOCTEXT("DbStatusNotLoaded", "Not loaded - Click Refresh to check");
 	CurrentResults = LOCTEXT("WelcomeMessage", "Welcome to Adastrea Director!\n\nEnter a query above and click 'Send Query' or press Enter to get started.\n\nExample: \"What is Unreal Engine?\"");
@@ -94,7 +94,7 @@ void SAdastreaDirectorPanel::Construct(const FArguments& InArgs)
 	LastStatusLightsUpdateTime = 0.0;
 
 	// Initialize ingestion debug log
-	CurrentIngestionDebugLog = TEXT("📋 Ingestion Debug Log\n\nDebug messages will appear here when you start ingestion.\nThis shows exactly what's happening during the ingestion process.\n");
+	CurrentIngestionDebugLog = TEXT("📋 Legacy Ingestion Debug Log\n\nNOTE: Document ingestion feature has been removed in Phase 3 migration.\nThe VibeUE architecture uses runtime asset discovery instead.\n\nClick 'Start Ingestion' to see migration details in the debug log.\n");
 	CachedIngestionDebugLogText = FText::FromString(CurrentIngestionDebugLog);
 
 	// Initialize Tests tab state
@@ -1016,12 +1016,11 @@ FReply SAdastreaDirectorPanel::OnStartIngestionClicked()
 
 FReply SAdastreaDirectorPanel::OnStopIngestionClicked()
 {
-	// For now, just mark as not ingesting
-	// TODO: Send stop signal to Python backend (e.g., via IPC stop_ingest request or process interruption).
-	//       This will require adding a cancellation mechanism to the Python ingestion loop.
-	//       The ingestion will continue in Python but UI will stop monitoring progress.
+	// NOTE: Legacy ingestion system has been removed in Phase 3 migration
+	// The VibeUE architecture uses runtime asset discovery instead of document ingestion
+	// See StartIngestion() function for details on the migration
 	bIsIngesting = false;
-	IngestionStatusMessage = LOCTEXT("IngestionStopped", "Ingestion stopped by user");
+	IngestionStatusMessage = LOCTEXT("IngestionStopped", "Ingestion feature is legacy - See debug log for details");
 
 	return FReply::Handled();
 }
