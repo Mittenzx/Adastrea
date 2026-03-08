@@ -520,7 +520,7 @@ void USpaceshipControlsComponent::OnLookInput_Implementation(FVector2D LookValue
 
 	// Apply rotation in local space to prevent gimbal lock and unwanted roll
 	// LookValue.X = yaw (left/right), LookValue.Y = pitch (up/down)
-	//
+	// 
 	// IMPORTANT: Rotation is applied around the actor's pivot (RootComponent location).
 	// If the ship mesh appears to rotate around an external point, ensure that:
 	// 1. The mesh component in the Blueprint is centered at (0,0,0) relative to the RootComponent
