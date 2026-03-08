@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added - 2026-03-08 (Hour 4)
+
+#### Asset Configuration: Faction and Personnel Column Definitions
+
+**Problem**: AssetConfig.py had TODO comments for faction and personnel column definitions, preventing full integration of these asset types with the Google Sheets/CSV import system.
+
+**Solution**: Implemented comprehensive column definitions for both faction and personnel asset types based on existing template structures and game design requirements.
+
+**Changes**:
+- **Added** `get_faction_columns()` function with 50+ column definitions covering government, military, economy, territory, diplomacy, culture, and lore
+- **Added** `get_personnel_columns()` function with 30+ column definitions covering identity, role, skills, status, employment, personality, relationships, and history
+- **Updated** `get_asset_configs()` to use the new column definitions instead of empty lists
+- **Enhanced** `AdastreaAssetValidator.py` with advanced personnel property validation
+- **Added** `get_asset_property()` helper method for property path resolution in validation
+
+**Code Improvements**:
+- Faction columns include: GovernmentType, MilitaryStrength, EconomicPower, ControlledSystems, DiplomaticStatus, CulturalValues, etc.
+- Personnel columns include: PersonnelID, DisplayName, PrimaryRole, Skills, Status values, Personality traits, etc.
+- Validation now checks: valid roles/genders/species/departments, skill/status ranges, required fields, logical constraints
+- Property access uses dot notation paths (e.g., 'BasicInfo.ShipID', 'CoreStats.HullStrength')
+
+**Benefits**:
+- Complete asset type support for data import/export systems
+- Better data validation and quality control
+- Consistent data structure across all asset types
+- Foundation for automated content generation tools
+
 ### Added - 2026-03-08
 
 #### Documentation: TODO Management Standards

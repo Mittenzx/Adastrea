@@ -90,6 +90,38 @@ class AdastreaAssetValidator:
         self.info_messages.append(message)
         unreal.log(f"[Asset Validation] INFO: {message}")
 
+    def get_asset_property(self, asset, property_path: str):
+        """
+        Get a property value from an asset using dot notation path
+        
+        Args:
+            asset: The Unreal asset object
+            property_path: Dot notation path to the property (e.g., 'BasicInfo.ShipID')
+            
+        Returns:
+            The property value or None if not found
+        """
+        try:
+            # Split the path by dots
+            parts = property_path.split('.')
+            current_obj = asset
+            
+            for part in parts:
+                # Try to get the property
+                if hasattr(current_obj, part):
+                    current_obj = getattr(current_obj, part)
+                else:
+                    # Try to get as a property via get_editor_property
+                    try:
+                        current_obj = current_obj.get_editor_property(part)
+                    except:
+                        return None
+            
+            return current_obj
+        except Exception as e:
+            unreal.log_warning(f"[Asset Validation] Error getting property {property_path}: {str(e)}")
+            return None
+
     def validate_naming_convention(self, asset_name, asset_type):
         """
         Validate asset naming convention based on config rules
@@ -194,14 +226,62 @@ class AdastreaAssetValidator:
         # Get validation rules from config
         spaceship_rules = self.config.get('validation_rules', {}).get('data_assets', {}).get('spaceship', {})
         stat_ranges = spaceship_rules.get('stat_ranges', {'min': 0, 'max': 1000})
+        valid_ship_classes = spaceship_rules.get('valid_ship_classes', ['Fighter', 'Frigate', 'Destroyer', 'Cruiser', 'Battleship', 'Carrier', 'Transport', 'Mining', 'Science', 'Exploration'])
+        valid_rarity_tiers = spaceship_rules.get('valid_rarity_tiers', ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary'])
 
-        # TODO: Advanced validation for spaceship properties
-        # - Validate hull strength, cargo capacity, crew requirements
-        # - Check combat stats (armor, shields, weapons)
-        # - Verify mobility stats (speed, acceleration, maneuverability)
-        # - Ensure operational stats are reasonable
+        # Advanced validation for spaceship properties
+        for asset in spaceship_assets:
+            asset_name = asset.get_name()
+            
+            # Validate ship class
+            ship_class = self.get_asset_property(asset, 'BasicInfo.ShipClass')
+            if ship_class and ship_class not in valid_ship_classes:
+                self.log_warning(f"Spaceship {asset_name}: ShipClass '{ship_class}' is not in valid classes list: {valid_ship_classes}")
+            
+            # Validate rarity tier
+            rarity = self.get_asset_property(asset, 'Lore.RarityTier')
+            if rarity and rarity not in valid_rarity_tiers:
+                self.log_warning(f"Spaceship {asset_name}: RarityTier '{rarity}' is not in valid tiers list: {valid_rarity_tiers}")
+            
+            # Validate core stats
+            core_stats = ['HullStrength', 'CargoCapacity', 'CrewRequired', 'MaxCrew']
+            for stat in core_stats:
+                value = self.get_asset_property(asset, f'CoreStats.{stat}')
+                if value is not None:
+                    if value < stat_ranges['min'] or value > stat_ranges['max']:
+                        self.log_warning(f"Spaceship {asset_name}: CoreStats.{stat} {value} is outside recommended range {stat_ranges}")
+                    if stat in ['CrewRequired', 'MaxCrew'] and value < 1:
+                        self.log_error(f"Spaceship {asset_name}: {stat} must be at least 1")
+            
+            # Validate combat stats
+            combat_stats = ['ArmorRating', 'ShieldStrength', 'ShieldRechargeRate', 'WeaponPowerCapacity']
+            for stat in combat_stats:
+                value = self.get_asset_property(asset, f'CombatStats.{stat}')
+                if value is not None and (value < stat_ranges['min'] or value > stat_ranges['max']):
+                    self.log_warning(f"Spaceship {asset_name}: CombatStats.{stat} {value} is outside recommended range {stat_ranges}")
+            
+            # Validate mobility stats
+            mobility_stats = ['MaxSpeed', 'Acceleration', 'Maneuverability', 'JumpRange']
+            for stat in mobility_stats:
+                value = self.get_asset_property(asset, f'MobilityStats.{stat}')
+                if value is not None and (value < stat_ranges['min'] or value > stat_ranges['max']):
+                    self.log_warning(f"Spaceship {asset_name}: MobilityStats.{stat} {value} is outside recommended range {stat_ranges}")
+            
+            # Check for required fields
+            required_fields = ['ShipID', 'ShipName', 'ShipClass']
+            for field in required_fields:
+                value = self.get_asset_property(asset, f'BasicInfo.{field}')
+                if not value:
+                    self.log_error(f"Spaceship {asset_name}: Required field 'BasicInfo.{field}' is missing or empty")
+            
+            # Validate crew requirements
+            crew_required = self.get_asset_property(asset, 'CoreStats.CrewRequired')
+            max_crew = self.get_asset_property(asset, 'CoreStats.MaxCrew')
+            if crew_required is not None and max_crew is not None:
+                if crew_required > max_crew:
+                    self.log_error(f"Spaceship {asset_name}: CrewRequired ({crew_required}) cannot exceed MaxCrew ({max_crew})")
 
-        self.log_info("Spaceship Data Asset validation complete")
+        self.log_info(f"Spaceship Data Asset validation complete - checked {len(spaceship_assets)} assets")
 
     def validate_personnel_data_assets(self):
         """
@@ -226,15 +306,72 @@ class AdastreaAssetValidator:
         valid_roles = personnel_rules.get('valid_roles', [])
         skill_range = personnel_rules.get('skill_level_range', [1, 10])
         status_range = personnel_rules.get('status_range', [0, 100])
+        valid_genders = personnel_rules.get('valid_genders', ['Male', 'Female', 'Non-Binary', 'Other'])
+        valid_species = personnel_rules.get('valid_species', ['Human', 'Alien', 'Synthetic', 'Hybrid'])
+        valid_departments = personnel_rules.get('valid_departments', ['Command', 'Engineering', 'Medical', 'Security', 'Science', 'Operations'])
 
-        # TODO: Advanced validation for personnel properties
-        # - Validate role against valid_roles list
-        # - Check skill levels are within skill_range
-        # - Verify status values (health, morale, fatigue) are within status_range
-        # - Ensure relationships reference valid personnel IDs
-        # - Check performance metrics are properly configured
+        # Advanced validation for personnel properties
+        for asset in personnel_assets:
+            asset_name = asset.get_name()
+            
+            # Validate role against valid_roles list
+            role = self.get_asset_property(asset, 'PrimaryRole')
+            if role and valid_roles and role not in valid_roles:
+                self.log_warning(f"Personnel {asset_name}: Role '{role}' is not in valid roles list: {valid_roles}")
+            
+            # Validate gender
+            gender = self.get_asset_property(asset, 'Gender')
+            if gender and gender not in valid_genders:
+                self.log_warning(f"Personnel {asset_name}: Gender '{gender}' is not in valid genders list: {valid_genders}")
+            
+            # Validate species
+            species = self.get_asset_property(asset, 'Species')
+            if species and species not in valid_species:
+                self.log_warning(f"Personnel {asset_name}: Species '{species}' is not in valid species list: {valid_species}")
+            
+            # Validate department
+            department = self.get_asset_property(asset, 'Department')
+            if department and department not in valid_departments:
+                self.log_warning(f"Personnel {asset_name}: Department '{department}' is not in valid departments list: {valid_departments}")
+            
+            # Check skill levels are within skill_range
+            overall_skill = self.get_asset_property(asset, 'OverallSkillLevel')
+            if overall_skill is not None:
+                if overall_skill < skill_range[0] or overall_skill > skill_range[1]:
+                    self.log_error(f"Personnel {asset_name}: OverallSkillLevel {overall_skill} is outside valid range {skill_range}")
+            
+            # Verify status values (health, morale, fatigue) are within status_range
+            status_fields = ['Health', 'Morale', 'Fatigue', 'Loyalty', 'Reputation']
+            for field in status_fields:
+                value = self.get_asset_property(asset, field)
+                if value is not None:
+                    if value < status_range[0] or value > status_range[1]:
+                        self.log_warning(f"Personnel {asset_name}: {field} {value} is outside recommended range {status_range}")
+            
+            # Validate age is reasonable
+            age = self.get_asset_property(asset, 'Age')
+            if age is not None:
+                if age < 18:
+                    self.log_warning(f"Personnel {asset_name}: Age {age} is below minimum working age (18)")
+                elif age > 120:
+                    self.log_warning(f"Personnel {asset_name}: Age {age} is unusually high for personnel")
+            
+            # Validate salary is reasonable
+            salary = self.get_asset_property(asset, 'Salary')
+            if salary is not None:
+                if salary < 0:
+                    self.log_error(f"Personnel {asset_name}: Salary {salary} cannot be negative")
+                elif salary > 1000000:
+                    self.log_warning(f"Personnel {asset_name}: Salary {salary} is unusually high")
+            
+            # Check for required fields
+            required_fields = ['PersonnelID', 'DisplayName', 'PrimaryRole']
+            for field in required_fields:
+                value = self.get_asset_property(asset, field)
+                if not value:
+                    self.log_error(f"Personnel {asset_name}: Required field '{field}' is missing or empty")
 
-        self.log_info("Personnel Data Asset validation complete")
+        self.log_info(f"Personnel Data Asset validation complete - checked {len(personnel_assets)} assets")
 
     def validate_blueprint_assets(self):
         """

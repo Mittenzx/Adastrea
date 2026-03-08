@@ -99,6 +99,140 @@ def get_trade_item_columns() -> List[Dict[str, str]]:
     ]
 
 
+def get_faction_columns() -> List[Dict[str, str]]:
+    """Get column definitions for faction data"""
+    return [
+        # Basic Info
+        {'header': 'Faction ID', 'path': 'BasicInfo.FactionID', 'type': 'string'},
+        {'header': 'Faction Name', 'path': 'BasicInfo.FactionName', 'type': 'string'},
+        {'header': 'Description', 'path': 'BasicInfo.Description', 'type': 'string'},
+        {'header': 'Short Name', 'path': 'BasicInfo.ShortName', 'type': 'string'},
+        {'header': 'Founding Year', 'path': 'BasicInfo.FoundingYear', 'type': 'integer'},
+        {'header': 'Founder', 'path': 'BasicInfo.Founder', 'type': 'string'},
+        
+        # Government & Politics
+        {'header': 'Government Type', 'path': 'Government.GovernmentType', 'type': 'string'},
+        {'header': 'Political System', 'path': 'Government.PoliticalSystem', 'type': 'string'},
+        {'header': 'Leadership Title', 'path': 'Government.LeadershipTitle', 'type': 'string'},
+        {'header': 'Current Leader', 'path': 'Government.CurrentLeader', 'type': 'string'},
+        {'header': 'Capital Planet', 'path': 'Government.CapitalPlanet', 'type': 'string'},
+        {'header': 'Capital System', 'path': 'Government.CapitalSystem', 'type': 'string'},
+        
+        # Military & Economy
+        {'header': 'Military Strength', 'path': 'Military.MilitaryStrength', 'type': 'integer'},
+        {'header': 'Naval Power', 'path': 'Military.NavalPower', 'type': 'integer'},
+        {'header': 'Ground Forces', 'path': 'Military.GroundForces', 'type': 'integer'},
+        {'header': 'Economic Power', 'path': 'Economy.EconomicPower', 'type': 'integer'},
+        {'header': 'Primary Industries', 'path': 'Economy.PrimaryIndustries', 'type': 'string'},
+        {'header': 'Trade Influence', 'path': 'Economy.TradeInfluence', 'type': 'integer'},
+        {'header': 'Technology Level', 'path': 'Economy.TechnologyLevel', 'type': 'integer'},
+        {'header': 'Resource Wealth', 'path': 'Economy.ResourceWealth', 'type': 'integer'},
+        
+        # Territory & Population
+        {'header': 'Controlled Systems', 'path': 'Territory.ControlledSystems', 'type': 'integer'},
+        {'header': 'Colonized Planets', 'path': 'Territory.ColonizedPlanets', 'type': 'integer'},
+        {'header': 'Population', 'path': 'Territory.Population', 'type': 'integer'},
+        {'header': 'Population Growth Rate', 'path': 'Territory.PopulationGrowthRate', 'type': 'number'},
+        {'header': 'Core Worlds', 'path': 'Territory.CoreWorlds', 'type': 'string'},
+        {'header': 'Border Regions', 'path': 'Territory.BorderRegions', 'type': 'string'},
+        
+        # Diplomacy & Relations
+        {'header': 'Diplomatic Status', 'path': 'Diplomacy.DiplomaticStatus', 'type': 'string'},
+        {'header': 'Aggression Level', 'path': 'Diplomacy.AggressionLevel', 'type': 'integer'},
+        {'header': 'Trustworthiness', 'path': 'Diplomacy.Trustworthiness', 'type': 'integer'},
+        {'header': 'Player Reputation', 'path': 'Diplomacy.PlayerReputation', 'type': 'integer'},
+        {'header': 'Allies', 'path': 'Diplomacy.Allies', 'type': 'string'},
+        {'header': 'Rivals', 'path': 'Diplomacy.Rivals', 'type': 'string'},
+        {'header': 'Enemies', 'path': 'Diplomacy.Enemies', 'type': 'string'},
+        
+        # Culture & Society
+        {'header': 'Primary Language', 'path': 'Culture.PrimaryLanguage', 'type': 'string'},
+        {'header': 'Secondary Languages', 'path': 'Culture.SecondaryLanguages', 'type': 'string'},
+        {'header': 'Cultural Values', 'path': 'Culture.CulturalValues', 'type': 'string'},
+        {'header': 'Social Structure', 'path': 'Culture.SocialStructure', 'type': 'string'},
+        {'header': 'Religious Beliefs', 'path': 'Culture.ReligiousBeliefs', 'type': 'string'},
+        {'header': 'Artistic Style', 'path': 'Culture.ArtisticStyle', 'type': 'string'},
+        
+        # Military Doctrine
+        {'header': 'Naval Doctrine', 'path': 'MilitaryDoctrine.NavalDoctrine', 'type': 'string'},
+        {'header': 'Ground Doctrine', 'path': 'MilitaryDoctrine.GroundDoctrine', 'type': 'string'},
+        {'header': 'Preferred Ship Types', 'path': 'MilitaryDoctrine.PreferredShipTypes', 'type': 'string'},
+        {'header': 'Preferred Tactics', 'path': 'MilitaryDoctrine.PreferredTactics', 'type': 'string'},
+        {'header': 'Defensive Strategy', 'path': 'MilitaryDoctrine.DefensiveStrategy', 'type': 'string'},
+        {'header': 'Offensive Strategy', 'path': 'MilitaryDoctrine.OffensiveStrategy', 'type': 'string'},
+        
+        # Economic Policies
+        {'header': 'Trade Policy', 'path': 'EconomicPolicies.TradePolicy', 'type': 'string'},
+        {'header': 'Taxation Level', 'path': 'EconomicPolicies.TaxationLevel', 'type': 'integer'},
+        {'header': 'Regulation Level', 'path': 'EconomicPolicies.RegulationLevel', 'type': 'integer'},
+        {'header': 'Foreign Investment Policy', 'path': 'EconomicPolicies.ForeignInvestmentPolicy', 'type': 'string'},
+        {'header': 'Technology Sharing Policy', 'path': 'EconomicPolicies.TechnologySharingPolicy', 'type': 'string'},
+        
+        # Lore & History
+        {'header': 'Historical Events', 'path': 'Lore.HistoricalEvents', 'type': 'string'},
+        {'header': 'Notable Figures', 'path': 'Lore.NotableFigures', 'type': 'string'},
+        {'header': 'Major Conflicts', 'path': 'Lore.MajorConflicts', 'type': 'string'},
+        {'header': 'Cultural Achievements', 'path': 'Lore.CulturalAchievements', 'type': 'string'},
+        {'header': 'Current Goals', 'path': 'Lore.CurrentGoals', 'type': 'string'},
+        {'header': 'Internal Challenges', 'path': 'Lore.InternalChallenges', 'type': 'string'},
+    ]
+
+
+def get_personnel_columns() -> List[Dict[str, str]]:
+    """Get column definitions for personnel data"""
+    return [
+        # Basic Identity
+        {'header': 'Personnel ID', 'path': 'BasicInfo.PersonnelID', 'type': 'string'},
+        {'header': 'Display Name', 'path': 'BasicInfo.DisplayName', 'type': 'string'},
+        {'header': 'Full Name', 'path': 'BasicInfo.FullName', 'type': 'string'},
+        {'header': 'Biography', 'path': 'BasicInfo.Biography', 'type': 'string'},
+        {'header': 'Age', 'path': 'BasicInfo.Age', 'type': 'integer'},
+        {'header': 'Gender', 'path': 'BasicInfo.Gender', 'type': 'string'},
+        {'header': 'Species', 'path': 'BasicInfo.Species', 'type': 'string'},
+        {'header': 'Nationality', 'path': 'BasicInfo.Nationality', 'type': 'string'},
+        {'header': 'Tags', 'path': 'BasicInfo.Tags', 'type': 'string'},
+        
+        # Role and Assignment
+        {'header': 'Primary Role', 'path': 'Role.PrimaryRole', 'type': 'string'},
+        {'header': 'Current Assignment', 'path': 'Role.CurrentAssignment', 'type': 'string'},
+        {'header': 'Department', 'path': 'Role.Department', 'type': 'string'},
+        {'header': 'Manager ID', 'path': 'Role.ManagerID', 'type': 'string'},
+        {'header': 'Direct Reports', 'path': 'Role.DirectReports', 'type': 'string'},
+        
+        # Skills and Experience
+        {'header': 'Overall Skill Level', 'path': 'Skills.OverallSkillLevel', 'type': 'integer'},
+        {'header': 'Total Experience', 'path': 'Skills.TotalExperience', 'type': 'integer'},
+        {'header': 'Skills List', 'path': 'Skills.SkillsList', 'type': 'string'},
+        {'header': 'Specialties', 'path': 'Skills.Specialties', 'type': 'string'},
+        
+        # Status and Condition
+        {'header': 'Morale', 'path': 'Status.Morale', 'type': 'integer'},
+        {'header': 'Health', 'path': 'Status.Health', 'type': 'integer'},
+        {'header': 'Fatigue', 'path': 'Status.Fatigue', 'type': 'integer'},
+        {'header': 'Loyalty', 'path': 'Status.Loyalty', 'type': 'integer'},
+        {'header': 'Reputation', 'path': 'Status.Reputation', 'type': 'integer'},
+        
+        # Employment
+        {'header': 'Salary', 'path': 'Employment.Salary', 'type': 'integer'},
+        {'header': 'Contract Duration', 'path': 'Employment.ContractDuration', 'type': 'integer'},
+        {'header': 'Contract Months Remaining', 'path': 'Employment.ContractMonthsRemaining', 'type': 'integer'},
+        
+        # Personality and Traits
+        {'header': 'Personality Type', 'path': 'Personality.PersonalityType', 'type': 'string'},
+        {'header': 'Personality Description', 'path': 'Personality.PersonalityDescription', 'type': 'string'},
+        {'header': 'Traits List', 'path': 'Personality.TraitsList', 'type': 'string'},
+        
+        # Relationships
+        {'header': 'Relationships', 'path': 'Relationships.RelationshipsList', 'type': 'string'},
+        
+        # Performance Metrics
+        {'header': 'Performance Metrics', 'path': 'Performance.MetricsList', 'type': 'string'},
+        
+        # Past Assignments
+        {'header': 'Past Assignments', 'path': 'History.PastAssignments', 'type': 'string'},
+    ]
+
+
 def get_asset_configs() -> Dict[str, Dict[str, Any]]:
     """
     Get configuration for all supported asset types
@@ -132,7 +266,7 @@ def get_asset_configs() -> Dict[str, Dict[str, Any]]:
             'id_field': 'FactionID',
             'name_field': 'FactionName',
             'sheet_name': 'Factions',
-            'columns': []  # TODO: Define faction columns when faction schema is implemented
+            'columns': get_faction_columns()
         },
         'personnel': {
             'schema_name': 'personnel',
@@ -141,6 +275,6 @@ def get_asset_configs() -> Dict[str, Dict[str, Any]]:
             'id_field': 'PersonnelID',
             'name_field': 'DisplayName',
             'sheet_name': 'Personnel',
-            'columns': []  # TODO: Define personnel columns when personnel schema is implemented
+            'columns': get_personnel_columns()
         }
     }
