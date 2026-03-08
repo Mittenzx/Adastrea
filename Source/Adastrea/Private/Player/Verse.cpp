@@ -1,6 +1,11 @@
 #include "Player/Verse.h"
-// TODO: [ARCHITECTURE] Way system archived - Feat and Way will be reimplemented in MVP Phase 3
-// Original design: Skill tree system for player progression
+// TODO: [ARCHITECTURE][POST-MVP] Way system archived - Feat and Way will be reimplemented in MVP Phase 3
+// Status: Archived - Original skill tree system deferred post-MVP
+// Original design: Skill tree system for player progression with branching paths
+// Archived components: Feat.h, Way.h, SkillTreeWidget, ProgressionDatabase
+// Current MVP: Simplified progression via VerseComponent with title-based achievements
+// Future: Reimplement as modular skill tree with unlockable abilities and passive bonuses
+// Priority: Low - Post-MVP feature for expanded gameplay depth
 // #include "Way/Feat.h"
 // #include "Way/Way.h"
 #include "AdastreaLog.h"

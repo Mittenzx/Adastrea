@@ -9,7 +9,8 @@ class UInputAction;
 class UInputMappingContext;
 class UEnhancedInputLocalPlayerSubsystem;
 class UEnhancedInputComponent;
-// TODO: Combat system archived - weapon component will be reimplemented in MVP
+// TODO: [COMBAT][POST-MVP] Combat system archived - weapon component will be reimplemented in MVP Phase 3
+// Status: Archived - Weapon system deferred post-MVP for trade simulator focus
 // class UWeaponComponent;
 
 /**

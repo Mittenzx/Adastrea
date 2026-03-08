@@ -466,9 +466,12 @@ float ASpaceStation::ApplyDamage_Implementation(float Damage, EDamageType Damage
         return 0.0f;
     }
 
-    // TODO: Apply damage type modifiers based on station shields/armor
+    // TODO: [COMBAT][POST-MVP] Apply damage type modifiers based on station shields/armor
+    // Status: Archived - Damage system deferred post-MVP for trade simulator focus
+    // Function: Apply damage type resistances (kinetic, energy, explosive) to stations
+    // Dependencies: DamageType system, shield/armor component, resistance modifiers
+    // Priority: Low - Post-MVP feature for combat depth
     // Stations might have different resistances than ships
-    // MVP NOTE: Combat system archived - damage types will be reimplemented in post-MVP
     float ActualDamage = FMath::Min(Damage, CurrentStructuralIntegrity);
     CurrentStructuralIntegrity -= ActualDamage;
 
@@ -483,8 +486,11 @@ float ASpaceStation::ApplyDamage_Implementation(float Damage, EDamageType Damage
         CurrentStructuralIntegrity = 0.0f;
         bIsDestroyed = true;
         UE_LOG(LogAdastreaStations, Warning, TEXT("%s has been destroyed!"), *GetName());
-        // TODO: Trigger destruction effects, module separation, debris spawning
-        // MVP NOTE: Combat system archived - destruction effects will be reimplemented in post-MVP
+        // TODO: [COMBAT][POST-MVP] Trigger destruction effects, module separation, debris spawning
+        // Status: Archived - Destruction effects deferred post-MVP for trade simulator focus
+        // Function: Visual/audio effects for station destruction, module separation physics
+        // Dependencies: VFX system, audio system, physics simulation, debris spawning
+        // Priority: Low - Post-MVP feature for visual polish and immersion
     }
 
     return ActualDamage;
