@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """
 Module Dependency Checker for Adastrea
+
+Copyright (c) 2025 Mittenzx. Licensed under MIT.
+
 Detects circular dependencies between Unreal Engine modules
 """
 

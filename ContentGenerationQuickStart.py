@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """
 Adastrea Content Generation Quick Start
+
+Copyright (c) 2025 Mittenzx. Licensed under MIT.
+
 Run this script to generate content quickly and easily
 """
 

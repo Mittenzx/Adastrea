@@ -2,6 +2,8 @@
 """
 Comprehensive Build Error Detection for Adastrea
 
+Copyright (c) 2025 Mittenzx. Licensed under MIT.
+
 This standalone test suite performs exhaustive checks for potential build errors.
 Designed to run on main branch after merges to catch any issues that slipped through.
 

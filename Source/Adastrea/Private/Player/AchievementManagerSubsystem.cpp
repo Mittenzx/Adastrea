@@ -1,3 +1,5 @@
+// Copyright (c) 2025 Mittenzx. Licensed under MIT.
+
 #include "Player/AchievementManagerSubsystem.h"
 #include "Player/PlayerProgressionComponent.h"
 #include "Player/PlayerUnlockComponent.h"

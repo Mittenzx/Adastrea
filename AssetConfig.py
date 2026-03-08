@@ -1,6 +1,8 @@
 """
 Adastrea - Asset Configuration Definitions
 
+Copyright (c) 2025 Mittenzx. Licensed under MIT.
+
 Shared configuration for asset types, column mappings, and data paths.
 Used by both Google Sheets and CSV integration modules.
 """
