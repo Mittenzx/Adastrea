@@ -5,16 +5,16 @@
 
 > This roadmap outlines the current MVP development plan and long-term vision for the Adastrea space trading game.
 
-**Last Updated**: January 21, 2026
+**Last Updated**: March 8, 2026
 **Current Version**: 1.0.0-alpha
-**Project Status**: Trade Simulator MVP - Week 3-4 of 12 (Hardcoded Prototype Phase)
+**Project Status**: Trade Simulator MVP - Week 10 of 12 (Polish & Demo Phase)
 **Timeline**: December 2025 - March 2026
 
 ---
 
 ## Table of Contents
 
-- [🚨 Current Status](#-current-status-week-3-4-of-12-in-progress)
+- [🚨 Current Status](#-current-status-week-10-of-12-polish--demo)
 - [📅 12-Week MVP Timeline](#-12-week-mvp-timeline)
 - [🎯 Post-MVP Roadmap](#-post-mvp-roadmap-conditional-on-success)
 - [📖 Vision & Long-Term Goals](#-vision--long-term-goals)
@@ -28,67 +28,63 @@
 
 ---
 
-## 🚨 CURRENT STATUS: Week 3-4 of 12 (In Progress)
+## 🚨 CURRENT STATUS: Week 10 of 12 (Polish & Demo)
 
-> **Phase**: Trade Simulator MVP - Hardcoded Prototype Development
-> **Dates**: January 19 - January 25, 2026 (Week 3-4 transition)
-> **Goal**: Complete playable trading loop for Week 4 external playtest
-> **Critical Deadline**: Week 4 GO/NO-GO decision (January 26, 2026)
+> **Phase**: Trade Simulator MVP - Polish & Demo Phase
+> **Dates**: March 1 - March 8, 2026 (Week 10)
+> **Goal**: Visual polish, sound effects, and balance pass
+> **Target**: 30-minute polished demo ready for publishers by Week 12
 
-### Week 3-4 Mission-Critical Tasks (NOW)
+### Week 10 Mission-Critical Tasks (NOW)
 
-**Context**: We are in the final days of hardcoded prototype development. Focus is on completing the core trading loop for Week 4 external playtest.
+**Context**: We are in the polish phase. Focus is on improving visual quality, adding audio feedback, and balancing the economy.
 
-#### 🎯 Immediate Priorities (Next 48 Hours)
+#### 🎯 Immediate Priorities (Current Week)
 
-1. **✅ Complete Core Systems** (Should be done or nearly done)
-   - Flyable ship with 3D movement
-   - Two trading stations (Agricultural & Industrial)
-   - Basic Trading HUD showing credits and cargo
-   - Trading Interface for buy/sell operations
-   - Test level with proper spacing
+1. **🎨 Visual Polish** (In Progress)
+   - [ ] VFX improvements for engines and trading
+   - [ ] UI improvements for trading interface
+   - [ ] Station visual enhancements
+   - [ ] Ship model refinements
 
-2. **🔧 Polish & Bug Fixes** (Critical for playtest)
-   - [ ] Test complete trading loop (5 consecutive trades)
-   - [ ] Fix any crashes or blocking bugs
-   - [ ] Verify profit calculations are correct
-   - [ ] Ensure docking trigger works reliably
-   - [ ] Balance prices if needed (target: ~20% profit per trip)
+2. **🔊 Audio Integration** (In Progress)
+   - [ ] Add engine sounds
+   - [ ] Add trading confirmation sounds
+   - [ ] Add ambient space audio
+   - [ ] Add UI feedback sounds
 
-3. **📦 Playtest Preparation** (Week 4 start)
-   - [ ] Package standalone build (Windows)
-   - [ ] Write 1-page playtest instructions
-   - [ ] Create feedback form (Google Forms)
-   - [ ] Recruit 5-10 external playtesters (NOT friends/family)
-   - [ ] Schedule playtest sessions
+3. **⚖️ Balance Pass** (In Progress)
+   - [ ] Review all trade prices
+   - [ ] Verify profit margins (target: 15-25% per trip)
+   - [ ] Test progression curve over 30 minutes
+   - [ ] Adjust ship upgrade costs if needed
 
-#### 📝 Week 3-4 Success Criteria
+#### 📝 Week 10-11 Success Criteria
 
-By end of Week 4 (January 26, 2026), must demonstrate:
-- ✅ Ship flies smoothly between stations in ~1 minute
-- ✅ Docking trigger opens trading UI correctly
-- ✅ Can complete full trade loop without bugs
-- ✅ Profit shows correctly on HUD
-- ✅ No crashes during 10-minute play session
-- ✅ **60%+ external playtesters rate gameplay as "fun"**
+By end of Week 11 (March 15, 2026), must demonstrate:
+- ✅ Visual polish complete (no placeholder assets visible)
+- ✅ Sound effects integrated for all major actions
+- ✅ Economy balanced for 30-minute play session
+- ✅ No crashes during 30-minute play session
+- ✅ Tutorial/onboarding functional
 
-**GO/NO-GO Decision Point**: If &lt;60% fun rating, must pivot or redesign core loop.
+### 🚧 Phase 3 Focus
 
-### 🚧 What We're NOT Doing (Defer to Later Phases)
-
-- ❌ Data Assets - hardcode everything for now
-- ❌ Supply/demand simulation - static prices only
-- ❌ Save/load system - session only
-- ❌ Multiple ships - one ship only
-- ❌ Ship upgrades - defer to Phase 2
-- ❌ Visual polish - placeholder meshes are fine
-- ❌ Quest system, combat, exploration - completely out of scope
+- ✅ Expand to 10 stations with varied economies
+- ✅ Expand to 20 trade items
+- ✅ Add 3 ships (starter, mid-tier, advanced)
+- ✅ Implement basic save/load
+- 🔄 Add tutorial/onboarding
+- 🔄 Visual polish (VFX, UI improvements)
+- 🔄 Sound effects and audio feedback
+- 📋 Balance pass on all prices and progression
+- 📋 Bug fixing sprint
 
 ---
 
 ## 📅 12-Week MVP Timeline
 
-### Phase 1: Hardcoded Prototype (Weeks 1-4) ⏳ IN PROGRESS
+### Phase 1: Hardcoded Prototype (Weeks 1-4) ✅ COMPLETE
 
 **Goal**: Validate core trading gameplay loop is fun
 
@@ -98,56 +94,56 @@ By end of Week 4 (January 26, 2026), must demonstrate:
 - ✅ Ship movement implementation
 - ✅ Station placement
 
-#### Week 3-4 (Jan 12 - Jan 26) 🔄 CURRENT WEEK
-- 🔄 Complete hardcoded prototype
-- 🔄 Bug fixes and polish
-- 📦 Package for external playtest
-- ⚠️ **GO/NO-GO Decision**: 60%+ must rate "fun"
+#### Week 3-4 (Jan 12 - Jan 26) ✅ COMPLETE
+- ✅ Complete hardcoded prototype
+- ✅ Bug fixes and polish
+- ✅ Package for external playtest
+- ✅ **GO/NO-GO Decision**: Proceeded to Phase 2
 
-**Deliverable**: Playable 5-minute trading loop
+**Deliverable**: ✅ Playable 5-minute trading loop
 
 ---
 
-### Phase 2: Structured Version (Weeks 5-8) 📋 PLANNED
+### Phase 2: Structured Version (Weeks 5-8) ✅ COMPLETE
 
 **Goal**: Convert prototype to scalable Data Asset architecture
 
-#### Week 5-6 (Jan 27 - Feb 8)
-- [ ] Create `UTradeItemDataAsset` with 10-15 items
-- [ ] Create `UMarketDataAsset` for 5 stations
-- [ ] Create `USpaceshipDataAsset` for starter ship
-- [ ] Migrate hardcoded data to Data Assets
-- [ ] Test all systems work with Data Assets
+#### Week 5-6 (Jan 27 - Feb 8) ✅ COMPLETE
+- ✅ Create `UTradeItemDataAsset` with 10-15 items
+- ✅ Create `UMarketDataAsset` for 5 stations
+- ✅ Create `USpaceshipDataAsset` for starter ship
+- ✅ Migrate hardcoded data to Data Assets
+- ✅ Test all systems work with Data Assets
 
-#### Week 7-8 (Feb 9 - Feb 22)
-- [ ] Implement basic economy simulation (supply/demand)
-- [ ] Add 3 more stations (total: 5)
-- [ ] Add 10 more items (total: 15)
-- [ ] Implement simple ship upgrades (cargo capacity)
-- [ ] Balance testing and iteration
+#### Week 7-8 (Feb 9 - Feb 22) ✅ COMPLETE
+- ✅ Implement basic economy simulation (supply/demand)
+- ✅ Add 3 more stations (total: 5)
+- ✅ Add 10 more items (total: 15)
+- ✅ Implement simple ship upgrades (cargo capacity)
+- ✅ Balance testing and iteration
 
-**Deliverable**: 10-minute gameplay with progression
+**Deliverable**: ✅ 10-minute gameplay with progression
 
 ---
 
-### Phase 3: Polish & Demo (Weeks 9-12) ✨ PLANNED
+### Phase 3: Polish & Demo (Weeks 9-12) ⏳ IN PROGRESS
 
 **Goal**: 30-minute polished demo ready for publishers
 
-#### Week 9-10 (Feb 23 - Mar 8)
-- [ ] Expand to 10 stations with varied economies
-- [ ] Expand to 20 trade items
-- [ ] Add 3 ships (starter, mid-tier, advanced)
-- [ ] Implement basic save/load
-- [ ] Add tutorial/onboarding
+#### Week 9-10 (Feb 23 - Mar 8) 🔄 CURRENT WEEK
+- ✅ Expand to 10 stations with varied economies
+- ✅ Expand to 20 trade items
+- ✅ Add 3 ships (starter, mid-tier, advanced)
+- ✅ Implement basic save/load
+- 🔄 Add tutorial/onboarding
 
-#### Week 11 (Mar 9 - Mar 15)
+#### Week 11 (Mar 9 - Mar 15) 📋 PLANNED
 - [ ] Visual polish (VFX, UI improvements)
 - [ ] Sound effects and audio feedback
 - [ ] Balance pass on all prices and progression
 - [ ] Bug fixing sprint
 
-#### Week 12 (Mar 16 - Mar 22)
+#### Week 12 (Mar 16 - Mar 22) 📋 PLANNED
 - [ ] Final playtesting (20+ testers)
 - [ ] Demo packaging and optimization
 - [ ] Marketing materials (screenshots, video)
