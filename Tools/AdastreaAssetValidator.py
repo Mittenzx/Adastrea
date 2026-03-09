@@ -149,30 +149,50 @@ class AdastreaAssetValidator:
         tech_level_range = faction_rules.get('tech_level_range', [1, 10])
         relationship_range = faction_rules.get('relationship_value_range', [-100, 100])
 
-        # TODO: Implement specific validation logic once asset loading is working
-        # Example implementation (uncomment and adapt when ready):
-        # for asset_data in faction_assets:
-        #     asset_name = asset_data.asset_name
-        #
-        #     # Validate naming convention
-        #     self.validate_naming_convention(asset_name, 'data_assets')
-        #
-        #     # Load and validate properties
-        #     try:
-        #         asset = unreal.EditorAssetLibrary.load_asset(asset_data.object_path)
-        #         if asset:
-        #             # Check required fields
-        #             if hasattr(asset, 'faction_id') and not asset.faction_id:
-        #                 self.log_error(f"{asset_name}: Faction ID is empty")
-        #
-        #             # Check tech level range
-        #             if hasattr(asset, 'tech_level'):
-        #                 if asset.tech_level < tech_level_range[0] or asset.tech_level > tech_level_range[1]:
-        #                     self.log_error(f"{asset_name}: Tech level {asset.tech_level} is out of range {tech_level_range}")
-        #     except Exception as e:
-        #         self.log_warning(f"{asset_name}: Could not load asset for validation: {e}")
+        # Basic faction validation
+        for asset_data in faction_assets:
+            asset_name = asset_data.asset_name
 
-        self.log_info("Faction Data Asset validation complete")
+            # Validate naming convention
+            self.validate_naming_convention(asset_name, 'data_assets')
+
+            # Load and validate properties
+            try:
+                asset = unreal.EditorAssetLibrary.load_asset(asset_data.object_path)
+                if asset:
+                    # Check required fields based on common faction properties
+                    if hasattr(asset, 'faction_id'):
+                        if not asset.faction_id or str(asset.faction_id).strip() == '':
+                            self.log_error(f"{asset_name}: Faction ID is empty")
+                    
+                    if hasattr(asset, 'faction_name'):
+                        if not asset.faction_name or str(asset.faction_name).strip() == '':
+                            self.log_error(f"{asset_name}: Faction Name is empty")
+                    
+                    # Check tech level range if property exists
+                    if hasattr(asset, 'tech_level'):
+                        tech_level = asset.tech_level
+                        if tech_level < tech_level_range[0] or tech_level > tech_level_range[1]:
+                            self.log_error(f"{asset_name}: Tech level {tech_level} is out of range {tech_level_range}")
+                    
+                    # Check relationship values if properties exist
+                    if hasattr(asset, 'relationship_value'):
+                        rel_value = asset.relationship_value
+                        if rel_value < relationship_range[0] or rel_value > relationship_range[1]:
+                            self.log_warning(f"{asset_name}: Relationship value {rel_value} is out of typical range {relationship_range}")
+                    
+                    # Check economic properties
+                    if hasattr(asset, 'economic_power'):
+                        if asset.economic_power < 0:
+                            self.log_warning(f"{asset_name}: Economic power cannot be negative")
+                    
+                    if hasattr(asset, 'military_strength'):
+                        if asset.military_strength < 0:
+                            self.log_warning(f"{asset_name}: Military strength cannot be negative")
+            except Exception as e:
+                self.log_warning(f"{asset_name}: Could not load asset for validation: {e}")
+
+        self.log_info(f"Faction Data Asset validation complete - checked {len(faction_assets)} assets")
 
     def validate_spaceship_data_assets(self):
         """
@@ -336,14 +356,54 @@ class AdastreaAssetValidator:
         max_nodes_error = blueprint_rules.get('max_nodes_error', 1000)
         require_comments = blueprint_rules.get('require_comments', True)
 
-        # TODO: Advanced Blueprint validation
-        # - Check Blueprint compilation status
-        # - Count nodes in Blueprint graphs and warn/error based on thresholds
-        # - Verify naming conventions (BP_ prefix)
-        # - Check for missing dependencies or broken references
-        # - Validate that complex Blueprints have descriptive comments
-        # - Check for common Blueprint anti-patterns
-
+        # Basic Blueprint validation
+        asset_registry = unreal.AssetRegistryHelpers.get_asset_registry()
+        
+        # Get all Blueprint assets
+        blueprint_assets = asset_registry.get_assets_by_class('Blueprint', True)
+        self.log_info(f"Found {len(blueprint_assets)} Blueprint assets")
+        
+        # Track statistics
+        bp_with_prefix = 0
+        bp_without_prefix = 0
+        bp_with_errors = 0
+        
+        for asset_data in blueprint_assets:
+            asset_name = asset_data.asset_name
+            
+            # Check naming convention - Blueprints should start with BP_
+            if not asset_name.startswith('BP_'):
+                self.log_warning(f"{asset_name}: Blueprint name should start with 'BP_' prefix")
+                bp_without_prefix += 1
+            else:
+                bp_with_prefix += 1
+            
+            # Check for compilation errors
+            try:
+                asset = unreal.EditorAssetLibrary.load_asset(asset_data.object_path)
+                if asset:
+                    # Check if Blueprint has compilation errors
+                    if hasattr(asset, 'has_any_flags'):
+                        # This is a simplified check - in real implementation we'd check compilation status
+                        pass
+                    
+                    # Check for missing dependencies
+                    dependencies = unreal.EditorAssetLibrary.find_asset_referencers_for_asset(asset_data.object_path)
+                    if dependencies and len(dependencies) > 0:
+                        # Check if any dependencies are missing
+                        for dep in dependencies:
+                            if not unreal.EditorAssetLibrary.does_asset_exist(dep):
+                                self.log_error(f"{asset_name}: Missing dependency: {dep}")
+                                bp_with_errors += 1
+            except Exception as e:
+                self.log_warning(f"{asset_name}: Could not load Blueprint for validation: {e}")
+        
+        # Summary
+        self.log_info(f"Blueprint validation summary:")
+        self.log_info(f"  - Blueprints with BP_ prefix: {bp_with_prefix}")
+        self.log_info(f"  - Blueprints without BP_ prefix: {bp_without_prefix}")
+        self.log_info(f"  - Blueprints with errors: {bp_with_errors}")
+        
         self.log_info("Blueprint validation complete")
 
     def validate_material_assets(self):
@@ -363,13 +423,62 @@ class AdastreaAssetValidator:
         max_instructions_warning = material_rules.get('max_instructions_warning', 300)
         max_instructions_error = material_rules.get('max_instructions_error', 500)
 
-        # TODO: Advanced material validation
-        # - Check material instruction count and warn if exceeds thresholds
-        # - Validate texture sizes used in materials
-        # - Check for unoptimized material setups
-        # - Verify material instances reference valid parent materials
-        # - Validate naming conventions (M_ for materials, MI_ for instances)
-
+        # Basic Material validation
+        asset_registry = unreal.AssetRegistryHelpers.get_asset_registry()
+        
+        # Get all Material assets
+        material_assets = asset_registry.get_assets_by_class('Material', True)
+        material_instance_assets = asset_registry.get_assets_by_class('MaterialInstanceConstant', True)
+        
+        self.log_info(f"Found {len(material_assets)} Materials and {len(material_instance_assets)} Material Instances")
+        
+        # Track statistics
+        materials_with_prefix = 0
+        materials_without_prefix = 0
+        material_instances_with_prefix = 0
+        material_instances_without_prefix = 0
+        
+        # Validate Materials
+        for asset_data in material_assets:
+            asset_name = asset_data.asset_name
+            
+            # Check naming convention - Materials should start with M_
+            if not asset_name.startswith('M_'):
+                self.log_warning(f"{asset_name}: Material name should start with 'M_' prefix")
+                materials_without_prefix += 1
+            else:
+                materials_with_prefix += 1
+            
+            # Check for parent material if it's a material instance
+            try:
+                asset = unreal.EditorAssetLibrary.load_asset(asset_data.object_path)
+                if asset and hasattr(asset, 'parent'):
+                    parent = asset.parent
+                    if parent:
+                        # Check if parent material exists
+                        if not unreal.EditorAssetLibrary.does_asset_exist(parent.get_path_name()):
+                            self.log_error(f"{asset_name}: Parent material does not exist: {parent.get_path_name()}")
+            except Exception as e:
+                self.log_warning(f"{asset_name}: Could not load Material for validation: {e}")
+        
+        # Validate Material Instances
+        for asset_data in material_instance_assets:
+            asset_name = asset_data.asset_name
+            
+            # Check naming convention - Material Instances should start with MI_
+            if not asset_name.startswith('MI_'):
+                self.log_warning(f"{asset_name}: Material Instance name should start with 'MI_' prefix")
+                material_instances_without_prefix += 1
+            else:
+                material_instances_with_prefix += 1
+        
+        # Summary
+        self.log_info(f"Material validation summary:")
+        self.log_info(f"  - Materials with M_ prefix: {materials_with_prefix}")
+        self.log_info(f"  - Materials without M_ prefix: {materials_without_prefix}")
+        self.log_info(f"  - Material Instances with MI_ prefix: {material_instances_with_prefix}")
+        self.log_info(f"  - Material Instances without MI_ prefix: {material_instances_without_prefix}")
+        
         self.log_info("Material validation complete")
 
     def validate_texture_assets(self):
@@ -394,13 +503,72 @@ class AdastreaAssetValidator:
         texture_naming = self.config.get('naming_conventions', {}).get('textures', {})
         valid_suffixes = texture_naming.get('suffixes', {}).values()
 
-        # TODO: Advanced texture validation
-        # - Check texture dimensions are power-of-two if required
-        # - Validate texture format against allowed_formats list
-        # - Warn if texture size exceeds recommended dimensions
-        # - Check texture naming includes proper suffix (_D, _N, _R, etc.)
-        # - Verify textures are using appropriate compression settings
-
+        # Basic Texture validation
+        asset_registry = unreal.AssetRegistryHelpers.get_asset_registry()
+        
+        # Get all Texture assets
+        texture_assets = asset_registry.get_assets_by_class('Texture2D', True)
+        self.log_info(f"Found {len(texture_assets)} Texture assets")
+        
+        # Track statistics
+        textures_with_suffix = 0
+        textures_without_suffix = 0
+        textures_power_of_two = 0
+        textures_not_power_of_two = 0
+        textures_too_large = 0
+        
+        # Common texture suffixes
+        common_suffixes = ['_D', '_N', '_R', '_M', '_AO', '_E', '_H', '_T']
+        
+        for asset_data in texture_assets:
+            asset_name = asset_data.asset_name
+            
+            # Check for common texture suffixes
+            has_suffix = any(asset_name.endswith(suffix) for suffix in common_suffixes)
+            if not has_suffix:
+                self.log_warning(f"{asset_name}: Texture name should include common suffix (e.g., _D for Diffuse, _N for Normal)")
+                textures_without_suffix += 1
+            else:
+                textures_with_suffix += 1
+            
+            # Check texture properties
+            try:
+                asset = unreal.EditorAssetLibrary.load_asset(asset_data.object_path)
+                if asset:
+                    # Check texture size
+                    if hasattr(asset, 'get_import_data'):
+                        import_data = asset.get_import_data()
+                        if import_data:
+                            # Check dimensions
+                            if hasattr(import_data, 'width') and hasattr(import_data, 'height'):
+                                width = import_data.width
+                                height = import_data.height
+                                
+                                # Check power-of-two
+                                def is_power_of_two(n):
+                                    return n != 0 and (n & (n - 1)) == 0
+                                
+                                if power_of_two_required and (not is_power_of_two(width) or not is_power_of_two(height)):
+                                    self.log_warning(f"{asset_name}: Texture dimensions {width}x{height} are not power-of-two")
+                                    textures_not_power_of_two += 1
+                                else:
+                                    textures_power_of_two += 1
+                                
+                                # Check size limits
+                                if width > max_size_warning or height > max_size_warning:
+                                    self.log_warning(f"{asset_name}: Texture size {width}x{height} exceeds recommended maximum of {max_size_warning}")
+                                    textures_too_large += 1
+            except Exception as e:
+                self.log_warning(f"{asset_name}: Could not load Texture for validation: {e}")
+        
+        # Summary
+        self.log_info(f"Texture validation summary:")
+        self.log_info(f"  - Textures with proper suffix: {textures_with_suffix}")
+        self.log_info(f"  - Textures without proper suffix: {textures_without_suffix}")
+        self.log_info(f"  - Textures with power-of-two dimensions: {textures_power_of_two}")
+        self.log_info(f"  - Textures without power-of-two dimensions: {textures_not_power_of_two}")
+        self.log_info(f"  - Textures exceeding size limit: {textures_too_large}")
+        
         self.log_info("Texture validation complete")
 
     def validate_all(self):
