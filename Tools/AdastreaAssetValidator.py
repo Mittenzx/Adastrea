@@ -195,13 +195,54 @@ class AdastreaAssetValidator:
         spaceship_rules = self.config.get('validation_rules', {}).get('data_assets', {}).get('spaceship', {})
         stat_ranges = spaceship_rules.get('stat_ranges', {'min': 0, 'max': 1000})
 
-        # TODO: Advanced validation for spaceship properties
-        # - Validate hull strength, cargo capacity, crew requirements
-        # - Check combat stats (armor, shields, weapons)
-        # - Verify mobility stats (speed, acceleration, maneuverability)
-        # - Ensure operational stats are reasonable
+        # Basic validation for spaceship properties
+        for asset_data in spaceship_assets:
+            asset_name = asset_data.asset_name
+            
+            # Validate naming convention
+            self.validate_naming_convention(asset_name, 'data_assets')
+            
+            # Try to load and validate the asset
+            try:
+                asset = unreal.EditorAssetLibrary.load_asset(asset_data.object_path)
+                if asset:
+                    # Check for required properties (using hasattr to be safe)
+                    if hasattr(asset, 'hull_strength'):
+                        if asset.hull_strength < stat_ranges.get('min', 0) or asset.hull_strength > stat_ranges.get('max', 1000):
+                            self.log_warning(f"{asset_name}: Hull strength {asset.hull_strength} is outside recommended range {stat_ranges}")
+                    
+                    if hasattr(asset, 'cargo_capacity'):
+                        if asset.cargo_capacity < 0:
+                            self.log_error(f"{asset_name}: Cargo capacity cannot be negative")
+                    
+                    if hasattr(asset, 'min_crew'):
+                        if asset.min_crew < 0:
+                            self.log_error(f"{asset_name}: Minimum crew cannot be negative")
+                        if hasattr(asset, 'max_crew') and asset.max_crew < asset.min_crew:
+                            self.log_error(f"{asset_name}: Max crew ({asset.max_crew}) cannot be less than min crew ({asset.min_crew})")
+                    
+                    # Check combat stats if available
+                    if hasattr(asset, 'armor_rating'):
+                        if asset.armor_rating < 0:
+                            self.log_warning(f"{asset_name}: Armor rating is negative")
+                    
+                    if hasattr(asset, 'shield_strength'):
+                        if asset.shield_strength < 0:
+                            self.log_warning(f"{asset_name}: Shield strength is negative")
+                    
+                    # Check mobility stats
+                    if hasattr(asset, 'max_speed'):
+                        if asset.max_speed < 0:
+                            self.log_error(f"{asset_name}: Max speed cannot be negative")
+                    
+                    if hasattr(asset, 'acceleration'):
+                        if asset.acceleration < 0:
+                            self.log_warning(f"{asset_name}: Acceleration is negative")
+                    
+            except Exception as e:
+                self.log_warning(f"{asset_name}: Could not load asset for validation: {e}")
 
-        self.log_info("Spaceship Data Asset validation complete")
+        self.log_info(f"Spaceship Data Asset validation complete - checked {len(spaceship_assets)} assets")
 
     def validate_personnel_data_assets(self):
         """
@@ -227,14 +268,54 @@ class AdastreaAssetValidator:
         skill_range = personnel_rules.get('skill_level_range', [1, 10])
         status_range = personnel_rules.get('status_range', [0, 100])
 
-        # TODO: Advanced validation for personnel properties
-        # - Validate role against valid_roles list
-        # - Check skill levels are within skill_range
-        # - Verify status values (health, morale, fatigue) are within status_range
-        # - Ensure relationships reference valid personnel IDs
-        # - Check performance metrics are properly configured
+        # Basic validation for personnel properties
+        for asset_data in personnel_assets:
+            asset_name = asset_data.asset_name
+            
+            # Validate naming convention
+            self.validate_naming_convention(asset_name, 'data_assets')
+            
+            # Try to load and validate the asset
+            try:
+                asset = unreal.EditorAssetLibrary.load_asset(asset_data.object_path)
+                if asset:
+                    # Check role against valid roles list
+                    if hasattr(asset, 'role'):
+                        if valid_roles and asset.role not in valid_roles:
+                            self.log_warning(f"{asset_name}: Role '{asset.role}' is not in valid roles list: {valid_roles}")
+                    
+                    # Check skill levels
+                    if hasattr(asset, 'skill_level'):
+                        if asset.skill_level < skill_range[0] or asset.skill_level > skill_range[1]:
+                            self.log_warning(f"{asset_name}: Skill level {asset.skill_level} is outside valid range {skill_range}")
+                    
+                    # Check status values
+                    if hasattr(asset, 'health'):
+                        if asset.health < status_range[0] or asset.health > status_range[1]:
+                            self.log_warning(f"{asset_name}: Health {asset.health} is outside valid range {status_range}")
+                    
+                    if hasattr(asset, 'morale'):
+                        if asset.morale < status_range[0] or asset.morale > status_range[1]:
+                            self.log_warning(f"{asset_name}: Morale {asset.morale} is outside valid range {status_range}")
+                    
+                    # Check for required fields
+                    if hasattr(asset, 'display_name'):
+                        if not asset.display_name or str(asset.display_name).strip() == '':
+                            self.log_error(f"{asset_name}: Display name is empty")
+                    
+                    # Check salary/economic values
+                    if hasattr(asset, 'salary'):
+                        if asset.salary < 0:
+                            self.log_error(f"{asset_name}: Salary cannot be negative")
+                    
+                    if hasattr(asset, 'hire_cost'):
+                        if asset.hire_cost < 0:
+                            self.log_warning(f"{asset_name}: Hire cost is negative")
+                    
+            except Exception as e:
+                self.log_warning(f"{asset_name}: Could not load asset for validation: {e}")
 
-        self.log_info("Personnel Data Asset validation complete")
+        self.log_info(f"Personnel Data Asset validation complete - checked {len(personnel_assets)} assets")
 
     def validate_blueprint_assets(self):
         """

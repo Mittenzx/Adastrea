@@ -101,6 +101,109 @@ def get_trade_item_columns() -> List[Dict[str, str]]:
     ]
 
 
+def get_faction_columns() -> List[Dict[str, str]]:
+    """Get column definitions for faction data"""
+    return [
+        # Basic Info
+        {'header': 'Faction ID', 'path': 'FactionID', 'type': 'string'},
+        {'header': 'Faction Name', 'path': 'FactionName', 'type': 'string'},
+        {'header': 'Description', 'path': 'Description', 'type': 'string'},
+        {'header': 'Faction Type', 'path': 'FactionType', 'type': 'string'},
+        {'header': 'Ethos', 'path': 'Ethos', 'type': 'string'},
+        
+        # Economic Properties
+        {'header': 'Economic Power', 'path': 'EconomicPower', 'type': 'integer'},
+        {'header': 'Technological Level', 'path': 'TechnologicalLevel', 'type': 'integer'},
+        {'header': 'Military Strength', 'path': 'MilitaryStrength', 'type': 'integer'},
+        
+        # Traits (comma-separated)
+        {'header': 'Traits', 'path': 'Traits', 'type': 'string'},
+        
+        # Colors
+        {'header': 'Primary Color R', 'path': 'PrimaryColor.R', 'type': 'number'},
+        {'header': 'Primary Color G', 'path': 'PrimaryColor.G', 'type': 'number'},
+        {'header': 'Primary Color B', 'path': 'PrimaryColor.B', 'type': 'number'},
+        {'header': 'Primary Color A', 'path': 'PrimaryColor.A', 'type': 'number'},
+        {'header': 'Secondary Color R', 'path': 'SecondaryColor.R', 'type': 'number'},
+        {'header': 'Secondary Color G', 'path': 'SecondaryColor.G', 'type': 'number'},
+        {'header': 'Secondary Color B', 'path': 'SecondaryColor.B', 'type': 'number'},
+        {'header': 'Secondary Color A', 'path': 'SecondaryColor.A', 'type': 'number'},
+        
+        # Relationships (comma-separated faction IDs with status)
+        {'header': 'Allies', 'path': 'Allies', 'type': 'string'},
+        {'header': 'Enemies', 'path': 'Enemies', 'type': 'string'},
+        {'header': 'Neutrals', 'path': 'Neutrals', 'type': 'string'},
+        
+        # Home System
+        {'header': 'Home System ID', 'path': 'HomeSystemID', 'type': 'string'},
+        {'header': 'Territory Size', 'path': 'TerritorySize', 'type': 'integer'},
+        
+        # Gameplay
+        {'header': 'Starting Reputation', 'path': 'StartingReputation', 'type': 'integer'},
+        {'header': 'Trade Modifier', 'path': 'TradeModifier', 'type': 'number'},
+        {'header': 'Mission Frequency', 'path': 'MissionFrequency', 'type': 'number'},
+    ]
+
+
+def get_personnel_columns() -> List[Dict[str, str]]:
+    """Get column definitions for personnel data"""
+    return [
+        # Basic Info
+        {'header': 'Personnel ID', 'path': 'PersonnelID', 'type': 'string'},
+        {'header': 'Display Name', 'path': 'DisplayName', 'type': 'string'},
+        {'header': 'Full Name', 'path': 'FullName', 'type': 'string'},
+        {'header': 'Title', 'path': 'Title', 'type': 'string'},
+        {'header': 'Description', 'path': 'Description', 'type': 'string'},
+        {'header': 'Biography', 'path': 'Biography', 'type': 'string'},
+        
+        # Core Attributes
+        {'header': 'Role', 'path': 'Role', 'type': 'string'},
+        {'header': 'Specialization', 'path': 'Specialization', 'type': 'string'},
+        {'header': 'Experience Level', 'path': 'ExperienceLevel', 'type': 'integer'},
+        {'header': 'Skill Points', 'path': 'SkillPoints', 'type': 'integer'},
+        
+        # Skills (0-100 scale)
+        {'header': 'Piloting Skill', 'path': 'Skills.Piloting', 'type': 'integer'},
+        {'header': 'Gunnery Skill', 'path': 'Skills.Gunnery', 'type': 'integer'},
+        {'header': 'Engineering Skill', 'path': 'Skills.Engineering', 'type': 'integer'},
+        {'header': 'Science Skill', 'path': 'Skills.Science', 'type': 'integer'},
+        {'header': 'Medical Skill', 'path': 'Skills.Medical', 'type': 'integer'},
+        {'header': 'Diplomacy Skill', 'path': 'Skills.Diplomacy', 'type': 'integer'},
+        {'header': 'Trade Skill', 'path': 'Skills.Trade', 'type': 'integer'},
+        {'header': 'Security Skill', 'path': 'Skills.Security', 'type': 'integer'},
+        
+        # Stats
+        {'header': 'Health', 'path': 'Stats.Health', 'type': 'integer'},
+        {'header': 'Stamina', 'path': 'Stats.Stamina', 'type': 'integer'},
+        {'header': 'Morale', 'path': 'Stats.Morale', 'type': 'integer'},
+        {'header': 'Loyalty', 'path': 'Stats.Loyalty', 'type': 'integer'},
+        
+        # Faction & Location
+        {'header': 'Faction ID', 'path': 'FactionID', 'type': 'string'},
+        {'header': 'Home Station ID', 'path': 'HomeStationID', 'type': 'string'},
+        {'header': 'Current Station ID', 'path': 'CurrentStationID', 'type': 'string'},
+        {'header': 'Current Ship ID', 'path': 'CurrentShipID', 'type': 'string'},
+        
+        # Economic
+        {'header': 'Salary', 'path': 'Salary', 'type': 'number'},
+        {'header': 'Hire Cost', 'path': 'HireCost', 'type': 'number'},
+        {'header': 'Contract Length', 'path': 'ContractLength', 'type': 'integer'},
+        
+        # Traits (comma-separated)
+        {'header': 'Personality Traits', 'path': 'PersonalityTraits', 'type': 'string'},
+        {'header': 'Professional Traits', 'path': 'ProfessionalTraits', 'type': 'string'},
+        
+        # Availability
+        {'header': 'Is Available', 'path': 'bIsAvailable', 'type': 'boolean'},
+        {'header': 'Is Unique', 'path': 'bIsUnique', 'type': 'boolean'},
+        {'header': 'Is Story Character', 'path': 'bIsStoryCharacter', 'type': 'boolean'},
+        
+        # Visual
+        {'header': 'Portrait Path', 'path': 'PortraitPath', 'type': 'string'},
+        {'header': 'Voice Set ID', 'path': 'VoiceSetID', 'type': 'string'},
+    ]
+
+
 def get_asset_configs() -> Dict[str, Dict[str, Any]]:
     """
     Get configuration for all supported asset types
@@ -134,7 +237,7 @@ def get_asset_configs() -> Dict[str, Dict[str, Any]]:
             'id_field': 'FactionID',
             'name_field': 'FactionName',
             'sheet_name': 'Factions',
-            'columns': []  # TODO: Define faction columns when faction schema is implemented
+            'columns': get_faction_columns()
         },
         'personnel': {
             'schema_name': 'personnel',
@@ -143,6 +246,6 @@ def get_asset_configs() -> Dict[str, Dict[str, Any]]:
             'id_field': 'PersonnelID',
             'name_field': 'DisplayName',
             'sheet_name': 'Personnel',
-            'columns': []  # TODO: Define personnel columns when personnel schema is implemented
+            'columns': get_personnel_columns()
         }
     }
