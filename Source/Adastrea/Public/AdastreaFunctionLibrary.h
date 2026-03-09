@@ -323,4 +323,16 @@ public:
      */
     UFUNCTION(BlueprintPure, Category="Adastrea|Utilities|Trading", meta=(Keywords="profit trade total economy"))
     static float CalculateTotalProfit(float BuyPrice, float SellPrice, int32 Quantity);
+
+    /**
+     * Calculate return on investment (ROI) percentage
+     * Useful for: Trade Simulator MVP investment analysis
+     * Formula: ((TotalProfit / TotalInvestment) * 100)
+     *
+     * @param TotalInvestment Total money invested (BuyPrice * Quantity)
+     * @param TotalProfit Total profit from trade
+     * @return ROI percentage (can be negative for losses)
+     */
+    UFUNCTION(BlueprintPure, Category="Adastrea|Utilities|Trading", meta=(Keywords="roi return investment percentage economy"))
+    static float CalculateROIPercentage(float TotalInvestment, float TotalProfit);
 };

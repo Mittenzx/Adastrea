@@ -7,6 +7,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added - 2026-03-09 (Evening - Endless Development Cycle)
+
+#### Code Quality: Trading Utility Function Enhancement
+
+**Problem**: Trade Simulator MVP needed additional financial analysis tools for better gameplay feedback during Week 11 (Polish & Demo Phase).
+
+**Solution**: Added ROI calculation function to AdastreaFunctionLibrary for comprehensive trade analysis.
+
+**Changes**:
+- **Added** `CalculateROIPercentage()` function to AdastreaFunctionLibrary
+  - Calculates return on investment percentage: `(TotalProfit / TotalInvestment) * 100`
+  - Includes proper error handling for division by zero
+  - Categorized under "Adastrea|Utilities|Trading" for Blueprint discovery
+  - Added keywords: "roi", "return", "investment", "percentage", "economy"
+- **Updated** TODO comment in ShipUpgradeComponent.cpp to reflect current MVP status
+  - Changed from `[MVP-PHASE-2][INVENTORY]` to `[POST-MVP][INVENTORY]`
+  - Updated status description to "Deferred to post-MVP (Trade Simulator MVP complete March 2026)"
+  - Added current MVP context: "Week 11 of 12 (Polish & Demo Phase) - Focus on demo preparation"
+
+**Benefits**:
+- Enhanced trading analysis capabilities for MVP demo
+- Better financial feedback for players
+- Updated documentation reflects current project status
+- Maintains code quality standards during endless development cycles
+
+#### Documentation: ROADMAP Week 11 Activation
+
+**Problem**: ROADMAP showed Week 10 as active when Week 11 (March 9-15) had begun.
+
+**Solution**: Updated ROADMAP to reflect current Week 11 status and updated mission-critical tasks.
+
+**Changes**:
+- **Updated** Last Updated date: March 8, 2026 → March 9, 2026
+- **Updated** Project Status: Week 10 → Week 11 (Polish & Demo Phase) - **ACTIVE NOW**
+- **Updated** Week 10 section to Week 11 with new dates: March 9-15, 2026
+- **Updated** Mission-critical tasks for Week 11 focus:
+  - Bug Fixing Sprint (crash resolution, UI glitches, performance)
+  - Final Visual Polish (VFX, UI consistency, lighting)
+  - Final Balance Pass (trade prices, profit margins, progression)
+  - Demo Preparation (script/scenario, save file, demo flow testing)
+- **Updated** Success criteria for Week 11 completion
+
+**Benefits**:
+- Accurate project timeline for stakeholders
+- Clear focus areas for final week before demo
+- Maintains project momentum during endless development
+
 ### Added - 2026-03-08 (Evening)
 
 #### Documentation: Component Header Documentation Enhancement

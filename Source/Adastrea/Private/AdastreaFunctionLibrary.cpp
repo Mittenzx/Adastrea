@@ -390,3 +390,13 @@ float UAdastreaFunctionLibrary::CalculateTotalProfit(float BuyPrice, float SellP
     float ProfitPerUnit = SellPrice - BuyPrice;
     return ProfitPerUnit * Quantity;
 }
+
+float UAdastreaFunctionLibrary::CalculateROIPercentage(float TotalInvestment, float TotalProfit)
+{
+    if (FMath::IsNearlyZero(TotalInvestment))
+    {
+        return 0.0f; // Avoid division by zero
+    }
+
+    return (TotalProfit / TotalInvestment) * 100.0f;
+}

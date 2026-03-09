@@ -5,9 +5,9 @@
 
 > This roadmap outlines the current MVP development plan and long-term vision for the Adastrea space trading game.
 
-**Last Updated**: March 8, 2026 (Hour 20:54 GMT - Endless Development Cycle)
+**Last Updated**: March 9, 2026 (Hour 21:10 GMT - Endless Development Cycle)
 **Current Version**: 1.0.0-alpha
-**Project Status**: Trade Simulator MVP - Week 10 of 12 (Polish & Demo Phase)
+**Project Status**: Trade Simulator MVP - Week 11 of 12 (Polish & Demo Phase) - **ACTIVE NOW**
 **Timeline**: December 2025 - March 2026
 **Development Mode**: 🔄 **Endless Development Active** - Hourly improvements and maintenance
 
@@ -29,46 +29,53 @@
 
 ---
 
-## 🚨 CURRENT STATUS: Week 10 of 12 (Polish & Demo)
+## 🚨 CURRENT STATUS: Week 11 of 12 (Polish & Demo)
 
 > **Phase**: Trade Simulator MVP - Polish & Demo Phase
-> **Dates**: March 1 - March 8, 2026 (Week 10) - **COMPLETING TODAY**
-> **Goal**: Visual polish, sound effects, and balance pass
+> **Dates**: March 9 - March 15, 2026 (Week 11) - **ACTIVE NOW**
+> **Goal**: Final polish, bug fixing, and demo preparation
 > **Target**: 30-minute polished demo ready for publishers by Week 12
 > **Endless Development**: Hourly code quality improvements and documentation updates active
 
-### Week 10 Mission-Critical Tasks (NOW)
+### Week 11 Mission-Critical Tasks (NOW)
 
-**Context**: We are in the polish phase. Focus is on improving visual quality, adding audio feedback, and balancing the economy.
+**Context**: Final week before demo completion. Focus is on bug fixing, final polish, and ensuring demo stability.
 
 #### 🎯 Immediate Priorities (Current Week)
 
-1. **🎨 Visual Polish** (In Progress)
-   - [ ] VFX improvements for engines and trading
-   - [ ] UI improvements for trading interface
-   - [ ] Station visual enhancements
-   - [ ] Ship model refinements
+1. **🐛 Bug Fixing Sprint** (In Progress)
+   - [ ] Fix any remaining crashes
+   - [ ] Resolve UI glitches
+   - [ ] Address performance issues
+   - [ ] Test 30-minute play session stability
 
-2. **🔊 Audio Integration** (In Progress)
-   - [ ] Add engine sounds
-   - [ ] Add trading confirmation sounds
-   - [ ] Add ambient space audio
-   - [ ] Add UI feedback sounds
+2. **🎨 Final Visual Polish** (In Progress)
+   - [ ] Final VFX polish for engines and trading
+   - [ ] UI polish and consistency check
+   - [ ] Station and ship visual final touches
+   - [ ] Lighting and atmosphere improvements
 
-3. **⚖️ Balance Pass** (In Progress)
-   - [ ] Review all trade prices
+3. **⚖️ Final Balance Pass** (In Progress)
+   - [ ] Final trade price adjustments
    - [ ] Verify profit margins (target: 15-25% per trip)
-   - [ ] Test progression curve over 30 minutes
-   - [ ] Adjust ship upgrade costs if needed
+   - [ ] Test full 30-minute progression curve
+   - [ ] Final ship upgrade cost balancing
 
-#### 📝 Week 10-11 Success Criteria
+4. **📋 Demo Preparation** (In Progress)
+   - [ ] Create demo script/scenario
+   - [ ] Prepare save file for demo start
+   - [ ] Test demo flow (beginning to end)
+   - [ ] Record demo video backup
+
+#### 📝 Week 11 Success Criteria
 
 By end of Week 11 (March 15, 2026), must demonstrate:
-- ✅ Visual polish complete (no placeholder assets visible)
-- ✅ Sound effects integrated for all major actions
-- ✅ Economy balanced for 30-minute play session
-- ✅ No crashes during 30-minute play session
-- ✅ Tutorial/onboarding functional
+- ✅ Zero crashes during 30-minute play session
+- ✅ All visual polish complete
+- ✅ All sound effects integrated and working
+- ✅ Economy perfectly balanced for demo
+- ✅ Demo script/scenario ready
+- ✅ Tutorial/onboarding fully functional
 
 ### 🚧 Phase 3 Focus
 
