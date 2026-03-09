@@ -364,3 +364,29 @@ float UAdastreaFunctionLibrary::GetPercentageInRange(float Value, float Min, flo
     float Percentage = (Value - Min) / (Max - Min);
     return FMath::Clamp(Percentage, 0.0f, 1.0f);
 }
+
+// ====================
+// TRADING UTILITIES (MVP Focus)
+// ====================
+
+float UAdastreaFunctionLibrary::CalculateProfitPercentage(float BuyPrice, float SellPrice)
+{
+    if (FMath::IsNearlyZero(BuyPrice))
+    {
+        return 0.0f; // Avoid division by zero
+    }
+
+    float Profit = SellPrice - BuyPrice;
+    return (Profit / BuyPrice) * 100.0f;
+}
+
+float UAdastreaFunctionLibrary::CalculateTotalProfit(float BuyPrice, float SellPrice, int32 Quantity)
+{
+    if (Quantity <= 0)
+    {
+        return 0.0f; // No profit for zero or negative quantity
+    }
+
+    float ProfitPerUnit = SellPrice - BuyPrice;
+    return ProfitPerUnit * Quantity;
+}

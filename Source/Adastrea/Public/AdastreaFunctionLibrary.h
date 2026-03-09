@@ -294,4 +294,33 @@ public:
      */
     UFUNCTION(BlueprintPure, Category="Adastrea|Utilities|Math", meta=(Keywords="percentage ratio range"))
     static float GetPercentageInRange(float Value, float Min, float Max);
+
+    // ====================
+    // TRADING UTILITIES (MVP Focus)
+    // ====================
+
+    /**
+     * Calculate profit percentage for a trade
+     * Useful for: Trade Simulator MVP profit calculations
+     * Formula: ((SellPrice - BuyPrice) / BuyPrice) * 100
+     *
+     * @param BuyPrice Purchase price
+     * @param SellPrice Selling price
+     * @return Profit percentage (can be negative for losses)
+     */
+    UFUNCTION(BlueprintPure, Category="Adastrea|Utilities|Trading", meta=(Keywords="profit trade percentage economy"))
+    static float CalculateProfitPercentage(float BuyPrice, float SellPrice);
+
+    /**
+     * Calculate total profit for a trade with quantity
+     * Useful for: Trade Simulator MVP profit calculations
+     * Formula: (SellPrice - BuyPrice) * Quantity
+     *
+     * @param BuyPrice Purchase price per unit
+     * @param SellPrice Selling price per unit
+     * @param Quantity Number of units traded
+     * @return Total profit (can be negative for losses)
+     */
+    UFUNCTION(BlueprintPure, Category="Adastrea|Utilities|Trading", meta=(Keywords="profit trade total economy"))
+    static float CalculateTotalProfit(float BuyPrice, float SellPrice, int32 Quantity);
 };
