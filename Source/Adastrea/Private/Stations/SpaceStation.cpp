@@ -504,9 +504,20 @@ bool ASpaceStation::CanTakeDamage_Implementation() const
         return false;
     }
 
-    // TODO: Add additional checks for:
-    // - Invulnerability (quest protection, safe zones)
-    // - Shield coverage
+    // Check for invulnerability (quest protection, safe zones, etc.)
+    if (bIsInvulnerable)
+    {
+        return false;
+    }
+
+    // Check if shields are active and would block damage
+    // For trade simulator MVP, we assume stations have basic shield protection
+    // that can be disabled for gameplay purposes
+    if (bShieldsActive && CurrentShieldStrength > 0.0f)
+    {
+        // Shields would absorb damage first
+        return true; // Damage can be taken, but shields will absorb it
+    }
 
     return true;
 }
@@ -549,7 +560,9 @@ bool ASpaceStation::CanBeTargeted_Implementation() const
     }
 
     // Stations are always visible (no cloaking)
-    // TODO: Add checks for safe zones if needed
+    // Safe zone check - not implemented for Trade Simulator MVP
+    // TODO: Implement safe zone system when combat/security features are added
+    // if (IsInSafeZone()) return false;
 
     return true;
 }
@@ -577,8 +590,16 @@ FText ASpaceStation::GetTargetDisplayName_Implementation() const
 
 UTexture2D* ASpaceStation::GetTargetIcon_Implementation() const
 {
-    // TODO: Return station icon
-    // For now return nullptr, UI can use default icon
+    // TODO: Return station icon for targeting UI
+    // For Trade Simulator MVP, return nullptr - UI will use default icon
+    // Future implementation: Load from StationIcon property or data asset
+    
+    // Example future implementation:
+    // if (StationIconDataAsset && StationIconDataAsset->TargetIcon)
+    // {
+    //     return StationIconDataAsset->TargetIcon;
+    // }
+    
     return nullptr;
 }
 

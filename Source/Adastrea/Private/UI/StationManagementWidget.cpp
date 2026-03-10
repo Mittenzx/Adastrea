@@ -104,14 +104,21 @@ float UStationManagementWidget::GetOperationalStatusPercent() const
 		return 100.0f; // No modules = fully operational (empty station)
 	}
 
-	// TODO: Implement IsOperational() method in ASpaceStationModule when needed
-	// For now, use a simple heuristic: modules that are not hidden are considered operational
+	// Operational status calculation for Trade Simulator MVP
+	// TODO: Implement IsOperational() method in ASpaceStationModule when station management features expand
+	// Current heuristic: modules that are not hidden and not destroyed are considered operational
 	int32 OperationalCount = 0;
 	for (ASpaceStationModule* Module : AllModules)
 	{
 		if (Module && !Module->IsHidden())
 		{
-			OperationalCount++;
+			// Check if module is destroyed (using IDamageable interface)
+			// Note: This is a basic check - future IsOperational() would consider more factors
+			IDamageable* DamageableModule = Cast<IDamageable>(Module);
+			if (!DamageableModule || !DamageableModule->IsDestroyed())
+			{
+				OperationalCount++;
+			}
 		}
 	}
 

@@ -57,11 +57,18 @@ float ASpaceStationModule::ApplyDamage_Implementation(float Damage, EDamageType 
         bIsDestroyed = true;
         UE_LOG(LogAdastreaStations, Warning, TEXT("Module %s has been destroyed!"), *GetName());
 
-        // TODO: Trigger module destruction effects
-        // - Disable module functionality
-        // - Spawn debris
+        // Module destruction effects - basic implementation for MVP
+        // TODO: Enhance for full combat system (spawn debris, propagate damage, etc.)
+        
+        // Disable module functionality
+        OnModuleDestroyed();
+        
+        // For Trade Simulator MVP, we just log the destruction
+        // Future combat system would:
+        // - Spawn debris particles
         // - Propagate damage to parent station
         // - Remove from station's module list
+        // - Trigger station-wide effects
     }
 
     return ActualDamage;
@@ -160,6 +167,18 @@ FText ASpaceStationModule::GetTargetDisplayName_Implementation() const
 UTexture2D* ASpaceStationModule::GetTargetIcon_Implementation() const
 {
     // TODO: Return module-specific icon based on ModuleGroup
+    // For Trade Simulator MVP, return nullptr - UI will use default icon
+    // Future implementation: Load icon based on ModuleGroup or ModuleType
+    
+    // Example future implementation:
+    // switch (ModuleGroup)
+    // {
+    //     case EStationModuleGroup::Docking: return DockingIcon;
+    //     case EStationModuleGroup::Market: return MarketIcon;
+    //     case EStationModuleGroup::Habitation: return HabitationIcon;
+    //     default: return GenericModuleIcon;
+    // }
+    
     return nullptr;
 }
 
@@ -201,4 +220,28 @@ bool ASpaceStationModule::IsHostileToActor_Implementation(AActor* Observer) cons
 
     // Default to non-hostile
     return false;
+}
+
+void ASpaceStationModule::OnModuleDestroyed()
+{
+    // Basic module destruction handling for MVP
+    // TODO: Enhance for full combat system
+    
+    // Disable collision to prevent further interactions
+    if (MeshComponent)
+    {
+        MeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    }
+    
+    // Log detailed destruction info
+    UE_LOG(LogAdastreaStations, Warning, TEXT("Module %s (%s) has been destroyed - functionality disabled"),
+        *GetName(), *ModuleType);
+    
+    // Note: For Trade Simulator MVP, we don't need complex destruction effects
+    // Future combat system would:
+    // - Spawn particle effects
+    // - Play destruction sounds
+    // - Create debris actors
+    // - Notify parent station
+    // - Trigger gameplay events
 }

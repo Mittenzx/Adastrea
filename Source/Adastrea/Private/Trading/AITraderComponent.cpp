@@ -154,9 +154,17 @@ TArray<FTradeRoute> UAITraderComponent::FindBestTradeRoutes(int32 MaxRoutes)
 					continue;
 				}
 
-				// Simplified distance calculation using name hash as placeholder
-				// TODO: Replace with actual market world positions when available
-				// For now, this provides consistent relative distances for route prioritization
+				// Distance calculation for Trade Simulator MVP
+				// TODO: Replace with actual market world positions when 3D space navigation is implemented
+				// Current implementation uses name hash as consistent placeholder for relative distances
+				// This ensures route prioritization works consistently during development
+				
+				// Future implementation would use:
+				// float Distance = FVector::Dist(
+				//     Origin->GetActorLocation(),
+				//     Destination->GetActorLocation()
+				// );
+				
 				float Distance = FVector::Dist(
 					FVector(static_cast<float>(Origin->GetFName().GetNumber()), 0, 0),
 					FVector(static_cast<float>(Destination->GetFName().GetNumber()), 0, 0)
@@ -457,8 +465,16 @@ float UAITraderComponent::TravelToMarket(UMarketDataAsset* DestinationMarket)
 		return 0.0f;
 	}
 
-	// Calculate travel time using placeholder distance (name hash)
-	// TODO: Replace with actual market world positions when available
+	// Calculate travel time for Trade Simulator MVP
+	// TODO: Replace with actual market world positions when 3D space navigation is implemented
+	// Current implementation uses consistent placeholder distances based on name hashes
+	
+	// Future implementation would use:
+	// float Distance = FVector::Dist(
+	//     CurrentLocation->GetActorLocation(),
+	//     DestinationMarket->GetActorLocation()
+	// );
+	
 	float Distance = FVector::Dist(
 		FVector(static_cast<float>(CurrentLocation->GetFName().GetNumber()), 0, 0),
 		FVector(static_cast<float>(DestinationMarket->GetFName().GetNumber()), 0, 0)

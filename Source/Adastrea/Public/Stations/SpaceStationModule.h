@@ -130,4 +130,8 @@ protected:
     /** Flag indicating if module is destroyed */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Module Status")
     bool bIsDestroyed;
+
+private:
+    /** Called when module is destroyed - handles cleanup and effects */
+    void OnModuleDestroyed();
 };

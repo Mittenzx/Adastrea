@@ -230,11 +230,18 @@ void UPlayerModComponent::ApplyStatModifiers(const FPlayerModDefinition& Def, in
         UE_LOG(LogAdastreaPlayerMods, Log, TEXT("PlayerModComponent::ApplyStatModifiers - %s: Applying %s modifier of %f (Stacks: %d)"),
             *Def.ModID.ToString(), *StatName.ToString(), ModifierValue, Stacks);
 
-        // TODO: When UPlayerStatsComponent is implemented, integrate here:
-        // Example implementation:
+        // Stat modifier integration for Trade Simulator MVP
+        // TODO: Integrate with UPlayerStatsComponent when player progression system is implemented
+        // Current implementation logs modifiers but doesn't apply them to gameplay stats
+        
+        // Future implementation would look like:
         // if (UPlayerStatsComponent* StatsComp = GetOwner()->FindComponentByClass<UPlayerStatsComponent>())
         // {
         //     StatsComp->AddStatModifier(StatName, ModifierValue, Def.ModID);
+        // }
+        // else
+        // {
+        //     UE_LOG(LogAdastreaPlayerMods, Warning, TEXT("PlayerModComponent: No UPlayerStatsComponent found on owner"));
         // }
 
         // For now, we store the intention and log it for future integration
@@ -256,11 +263,18 @@ void UPlayerModComponent::RemoveStatModifiers(const FPlayerModDefinition& Def)
         UE_LOG(LogAdastreaPlayerMods, Log, TEXT("PlayerModComponent::RemoveStatModifiers - %s: Removing %s modifier"),
             *Def.ModID.ToString(), *StatName.ToString());
 
-        // TODO: When UPlayerStatsComponent is implemented, integrate here:
-        // Example implementation:
+        // Stat modifier removal for Trade Simulator MVP
+        // TODO: Integrate with UPlayerStatsComponent when player progression system is implemented
+        // Current implementation logs removal but doesn't affect gameplay stats
+        
+        // Future implementation would look like:
         // if (UPlayerStatsComponent* StatsComp = GetOwner()->FindComponentByClass<UPlayerStatsComponent>())
         // {
         //     StatsComp->RemoveStatModifier(StatName, Def.ModID);
+        // }
+        // else
+        // {
+        //     UE_LOG(LogAdastreaPlayerMods, Warning, TEXT("PlayerModComponent: No UPlayerStatsComponent found on owner"));
         // }
 
         // The stat modification system will reverse the effects when PlayerStatsComponent exists
