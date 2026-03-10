@@ -3,7 +3,8 @@
 #include "AutomatedTestLibrary.h"
 #include "Ships/SpaceshipDataAsset.h"
 // REMOVED: #include "Factions/FactionDataAsset.h" - faction system removed per Trade Simulator MVP
-// TODO: Combat system archived - will be reimplemented in MVP
+// NOTE: Combat system archived - will be reimplemented in MVP Phase 3
+// WeaponDataAsset and combat tests are POST-MVP features
 // #include "Combat/WeaponDataAsset.h"
 #include "DataValidationLibrary.h"
 #include "Performance/PerformanceBenchmarkLibrary.h"
@@ -58,7 +59,8 @@ bool UAutomatedTestLibrary::RunTestCategory(
             bAllPassed &= TestFactionRelationships(WorldContextObject, Result);
             OutResults.Add(Result);
 
-            // TODO: Combat system archived - weapon test will be reimplemented in MVP
+            // NOTE: Combat system archived - weapon tests will be reimplemented in MVP Phase 3
+            // Weapon damage tests are POST-MVP features
             // bAllPassed &= TestWeaponDamage(WorldContextObject, Result);
             // OutResults.Add(Result);
 
@@ -118,7 +120,8 @@ bool UAutomatedTestLibrary::RunSingleTest(
     TMap<FString, TFunction<bool(UObject*, FTestResult&)>> TestMap = {
         {TEXT("SpaceshipCalculations"), TestSpaceshipCalculations},
         {TEXT("FactionRelationships"), TestFactionRelationships},
-        // TODO: Combat system archived - weapon test will be reimplemented in MVP
+        // NOTE: Combat system archived - weapon tests will be reimplemented in MVP Phase 3
+        // Weapon damage tests are POST-MVP features
         // {TEXT("WeaponDamage"), TestWeaponDamage},
         {TEXT("DataValidation"), TestDataValidation},
         {TEXT("SpaceshipWeaponIntegration"), TestSpaceshipWeaponIntegration},
@@ -282,9 +285,10 @@ bool UAutomatedTestLibrary::TestFactionRelationships(UObject* WorldContextObject
 
 bool UAutomatedTestLibrary::TestWeaponDamage(UObject* WorldContextObject, FTestResult& OutResult)
 {
-    // TODO: Combat system archived - weapon test will be reimplemented in MVP
+    // NOTE: Combat system archived - weapon tests will be reimplemented in MVP Phase 3
+    // Weapon damage tests are POST-MVP features
     OutResult = ExecuteTest([&](FTestResult& Result) -> bool {
-        Result.Message = TEXT("TestWeaponDamage skipped - Combat system archived");
+        Result.Message = TEXT("TestWeaponDamage skipped - Combat system archived (MVP Phase 3)");
         return true;
     }, TEXT("WeaponDamage"));
 

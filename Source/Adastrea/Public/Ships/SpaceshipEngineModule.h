@@ -1,4 +1,4 @@
 #pragma once
 
 // Placeholder for SpaceshipEngineModule class
-// TODO: Implement engine module system
+// NOTE: [POST-MVP][MEDIUM] Implement engine module system - specialized engine components with performance tuning

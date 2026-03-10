@@ -1,5 +1,5 @@
 #include "Ships/SpaceshipControlsComponent.h"
-// TODO: [COMBAT][POST-MVP] Combat system archived - weapon firing will be reimplemented in MVP Phase 3
+// NOTE: [COMBAT][POST-MVP] Combat system archived - weapon firing will be reimplemented in MVP Phase 3
 // Status: Archived - Combat system deferred post-MVP for trade simulator focus
 // Original design: Weapon firing, targeting, damage calculation, visual effects
 // Archived components: WeaponComponent, WeaponDataAsset, CombatVFXComponent, TargetingSystem
@@ -33,7 +33,7 @@ USpaceshipControlsComponent::USpaceshipControlsComponent()
 	, RollAction(nullptr)
 	, SpaceshipMappingContext(nullptr)
 	, bControlsEnabled(false)
-	// TODO: [COMBAT][POST-MVP] Weapon component caching archived - will be reimplemented in MVP Phase 3
+	// NOTE: [COMBAT][POST-MVP] Weapon component caching archived - will be reimplemented in MVP Phase 3
 	// , CachedWeaponComponent(nullptr)
 {
 	PrimaryComponentTick.bCanEverTick = false;
@@ -47,7 +47,7 @@ void USpaceshipControlsComponent::BeginPlay()
 	CreateInputActions();
 	CreateInputMappingContext();
 
-	// TODO: [COMBAT][POST-MVP] Weapon component caching archived - will be reimplemented in MVP Phase 3
+	// NOTE: [COMBAT][POST-MVP] Weapon component caching archived - will be reimplemented in MVP Phase 3
 	// Status: Archived - Weapon system deferred post-MVP
 	// Function: Cache weapon component reference for efficient access during gameplay
 	// Dependencies: WeaponComponent class, GetWeaponComponent() helper method
@@ -203,7 +203,7 @@ void USpaceshipControlsComponent::SetupInputBindings(UEnhancedInputComponent* Pl
 		PlayerInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &USpaceshipControlsComponent::HandleLook);
 	}
 
-	// TODO: [COMBAT][POST-MVP] Fire binding archived - will be reimplemented in MVP Phase 3
+	// NOTE: [COMBAT][POST-MVP] Fire binding archived - will be reimplemented in MVP Phase 3
 	// Status: Archived - Weapon firing deferred post-MVP
 	// Function: Bind fire input actions (pressed/released) for weapon control
 	// Dependencies: FireAction input action, HandleFirePressed/Released methods
@@ -300,7 +300,7 @@ UEnhancedInputLocalPlayerSubsystem* USpaceshipControlsComponent::GetEnhancedInpu
 	return LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
 }
 
-// TODO: [COMBAT][POST-MVP] Weapon component access archived - will be reimplemented in MVP Phase 3
+// NOTE: [COMBAT][POST-MVP] Weapon component access archived - will be reimplemented in MVP Phase 3
 // Status: Archived - Weapon system deferred post-MVP
 // Function: Helper method to retrieve weapon component from owning actor
 // Dependencies: WeaponComponent class, component query system
@@ -462,7 +462,7 @@ void USpaceshipControlsComponent::HandleLook(const FInputActionValue& Value)
 	OnLookInput(LookValue);
 }
 
-// TODO: [COMBAT][POST-MVP] Fire input handlers archived - will be reimplemented in MVP Phase 3
+// NOTE: [COMBAT][POST-MVP] Fire input handlers archived - will be reimplemented in MVP Phase 3
 // Status: Archived - Weapon firing deferred post-MVP
 // Function: Handle fire button pressed/released events for weapon control
 // Dependencies: FireAction input binding, OnFirePressed/Released delegate events
@@ -576,7 +576,7 @@ void USpaceshipControlsComponent::OnRollInput_Implementation(float RollValue)
 	OwningPawn->AddActorLocalRotation(DeltaRotation);
 }
 
-// TODO: [COMBAT][POST-MVP] Fire implementation archived - will be reimplemented in MVP Phase 3
+// NOTE: [COMBAT][POST-MVP] Fire implementation archived - will be reimplemented in MVP Phase 3
 // Status: Archived - Weapon firing deferred post-MVP
 // Function: Blueprint-implementable fire event handlers for weapon control
 // Dependencies: CachedWeaponComponent, weapon firing interface

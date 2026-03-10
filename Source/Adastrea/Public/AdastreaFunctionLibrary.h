@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-// TODO: Combat system archived - WeaponDataAsset (for damage types) will be reimplemented in MVP
+// NOTE: Combat system archived - WeaponDataAsset (for damage types) will be reimplemented in MVP Phase 3
 // For now, EDamageType is temporarily defined in IDamageable.h
 // #include "Combat/WeaponDataAsset.h"
 #include "AdastreaFunctionLibrary.generated.h"
@@ -126,15 +126,21 @@ public:
     // ====================
 
     /**
-     * Calculate damage after armor reduction
-     * Formula considers armor penetration and damage type effectiveness
+     * Calculate damage after armor reduction with damage type modifiers
+     * 
+     * Damage Type Effectiveness:
+     * - Kinetic: Standard armor penetration (no modifier)
+     * - Energy: Bypasses 30% of armor (more effective against armor)
+     * - Explosive: Reduced by 20% more armor (less effective against armor)
+     * - Thermal: Minimal armor effect (bypasses 70% of armor)
+     * - EMP: Ignores armor completely (affects electronic systems)
      *
      * @param RawDamage Base damage value
-     * @param ArmorValue Target's armor rating
+     * @param ArmorValue Target's armor rating (0-100+)
      * @param DamageType Type of damage being dealt
-     * @return Final damage after armor mitigation
+     * @return Final damage after armor mitigation and damage type modifiers
      */
-    UFUNCTION(BlueprintPure, Category="Adastrea|Utilities|Combat", meta=(Keywords="damage armor penetration"))
+    UFUNCTION(BlueprintPure, Category="Adastrea|Utilities|Combat", meta=(Keywords="damage armor penetration type modifier"))
     static float CalculateDamageAfterArmor(float RawDamage, float ArmorValue, EDamageType DamageType);
 
     /**

@@ -466,7 +466,7 @@ float ASpaceStation::ApplyDamage_Implementation(float Damage, EDamageType Damage
         return 0.0f;
     }
 
-    // TODO: [COMBAT][POST-MVP] Apply damage type modifiers based on station shields/armor
+    // NOTE: [COMBAT][POST-MVP] Apply damage type modifiers based on station shields/armor
     // Status: Archived - Damage system deferred post-MVP for trade simulator focus
     // Function: Apply damage type resistances (kinetic, energy, explosive) to stations
     // Dependencies: DamageType system, shield/armor component, resistance modifiers
@@ -486,7 +486,7 @@ float ASpaceStation::ApplyDamage_Implementation(float Damage, EDamageType Damage
         CurrentStructuralIntegrity = 0.0f;
         bIsDestroyed = true;
         UE_LOG(LogAdastreaStations, Warning, TEXT("%s has been destroyed!"), *GetName());
-        // TODO: [COMBAT][POST-MVP] Trigger destruction effects, module separation, debris spawning
+        // NOTE: [COMBAT][POST-MVP] Trigger destruction effects, module separation, debris spawning
         // Status: Archived - Destruction effects deferred post-MVP for trade simulator focus
         // Function: Visual/audio effects for station destruction, module separation physics
         // Dependencies: VFX system, audio system, physics simulation, debris spawning

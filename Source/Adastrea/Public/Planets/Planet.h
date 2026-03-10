@@ -19,4 +19,4 @@
  */
 #pragma once
 
-// TODO: [POST-MVP][MEDIUM] Implement planet system - planetary bodies with landing zones and surface trading
+// NOTE: [POST-MVP][MEDIUM] Implement planet system - planetary bodies with landing zones and surface trading

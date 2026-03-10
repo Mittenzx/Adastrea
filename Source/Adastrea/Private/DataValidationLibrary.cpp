@@ -3,7 +3,8 @@
 #include "DataValidationLibrary.h"
 #include "Ships/SpaceshipDataAsset.h"
 // REMOVED: #include "Factions/FactionDataAsset.h" - faction system removed per Trade Simulator MVP
-// TODO: Combat system archived - will be reimplemented in MVP
+// NOTE: Combat system archived - will be reimplemented in MVP Phase 3
+// WeaponDataAsset validation is POST-MVP feature
 // #include "Combat/WeaponDataAsset.h"
 #include "Engine/AssetManager.h"
 #include "UObject/UObjectIterator.h"
@@ -35,7 +36,8 @@ bool UDataValidationLibrary::ValidateDataAsset(
         bPassed &= ValidateSpaceshipData(SpaceshipAsset, OutErrors, OutWarnings);
     }
     // REMOVED: Faction data validation - faction system removed per Trade Simulator MVP
-    // TODO: Combat system archived - weapon validation will be reimplemented in MVP
+    // NOTE: Combat system archived - weapon validation will be reimplemented in MVP Phase 3
+    // Weapon data validation is POST-MVP feature
     // else if (UWeaponDataAsset* WeaponAsset = Cast<UWeaponDataAsset>(DataAsset))
     // {
     //     bPassed &= ValidateWeaponData(WeaponAsset, OutErrors, OutWarnings);
@@ -49,7 +51,7 @@ bool UDataValidationLibrary::ValidateDataAsset(
             bPassed = false;
         }
 
-        // TODO: Update to UE5 data validation system
+        // NOTE: Update to UE5 data validation system needed
         // The UDataValidation interface has been replaced with FDataValidationContext in UE5
         // This section is commented out until proper UE5 validation is implemented
         /*
@@ -165,7 +167,7 @@ bool UDataValidationLibrary::ValidateSpaceshipData(
 
     // Note: ShipMesh and Hardpoints properties not present in current SpaceshipDataAsset
     // These validations are commented out until the properties are added
-    // TODO: Add visual mesh and hardpoint configuration to SpaceshipDataAsset
+    // NOTE: Add visual mesh and hardpoint configuration to SpaceshipDataAsset (POST-MVP)
     /*
     // Object reference validation
     if (!ValidateObjectReference(SpaceshipAsset->ShipMesh, "ShipMesh", OutErrors))
@@ -187,7 +189,7 @@ bool UDataValidationLibrary::ValidateSpaceshipData(
 // REMOVED: ValidateFactionData() - faction system removed per Trade Simulator MVP
 // REMOVED: ValidateFactionRelationships() - faction system removed per Trade Simulator MVP
 
-// TODO: Combat system archived - weapon validation will be reimplemented in MVP
+// NOTE: Combat system archived - weapon validation will be reimplemented in MVP Phase 3
 /*
 bool UDataValidationLibrary::ValidateWeaponData(
     UWeaponDataAsset* WeaponAsset,
@@ -435,7 +437,7 @@ void UDataValidationLibrary::ValidateSpaceshipStats(
 
 // REMOVED: ValidateFactionRelationships() - faction system removed per Trade Simulator MVP
 
-// TODO: Combat system archived - weapon balance validation will be reimplemented in MVP
+// NOTE: Combat system archived - weapon balance validation will be reimplemented in MVP Phase 3
 /*
 void UDataValidationLibrary::ValidateWeaponBalance(
     UWeaponDataAsset* WeaponAsset,

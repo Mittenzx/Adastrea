@@ -134,17 +134,50 @@ float UAdastreaFunctionLibrary::CalculateDamageAfterArmor(float RawDamage, float
 
     // Basic armor mitigation formula
     // Higher armor = more damage reduction
-    // Different damage types could have different penetration in the future
     float ArmorReduction = ArmorValue / (ArmorValue + 100.0f);
 
-    // TODO: Apply damage type modifiers
-    // - Kinetic: standard penetration
-    // - Energy: bypasses some armor
-    // - Explosive: reduced by armor
-    // - Thermal: minimal armor effect
-    // - EMP: ignores armor completely
+    // Apply damage type modifiers based on damage type
+    float DamageTypeMultiplier = 1.0f;
+    
+    switch (DamageType)
+    {
+        case EDamageType::Kinetic:
+            // Kinetic: Standard armor penetration (no modifier)
+            DamageTypeMultiplier = 1.0f;
+            break;
+            
+        case EDamageType::Energy:
+            // Energy: Bypasses 30% of armor (more effective against armor)
+            DamageTypeMultiplier = 1.0f - (ArmorReduction * 0.7f);
+            break;
+            
+        case EDamageType::Explosive:
+            // Explosive: Reduced by 20% more armor (less effective against armor)
+            DamageTypeMultiplier = 1.0f - (ArmorReduction * 1.2f);
+            break;
+            
+        case EDamageType::Thermal:
+            // Thermal: Minimal armor effect (bypasses 70% of armor)
+            DamageTypeMultiplier = 1.0f - (ArmorReduction * 0.3f);
+            break;
+            
+        case EDamageType::EMP:
+            // EMP: Ignores armor completely (only affects electronic systems)
+            DamageTypeMultiplier = 1.0f;
+            // Note: EMP should have separate handling for electronic damage vs hull damage
+            // For now, it bypasses armor but may need special handling in the future
+            break;
+            
+        default:
+            // Default to kinetic behavior
+            DamageTypeMultiplier = 1.0f - ArmorReduction;
+            break;
+    }
 
-    float FinalDamage = RawDamage * (1.0f - ArmorReduction);
+    // Clamp multiplier to valid range
+    DamageTypeMultiplier = FMath::Clamp(DamageTypeMultiplier, 0.0f, 1.0f);
+    
+    float FinalDamage = RawDamage * DamageTypeMultiplier;
     return FMath::Max(FinalDamage, 0.0f);
 }
 

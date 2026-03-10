@@ -1,5 +1,5 @@
 #include "Player/Verse.h"
-// TODO: [ARCHITECTURE][POST-MVP] Way system archived - Feat and Way will be reimplemented in MVP Phase 3
+// NOTE: [ARCHITECTURE][POST-MVP] Way system archived - Feat and Way will be reimplemented in MVP Phase 3
 // Status: Archived - Original skill tree system deferred post-MVP
 // Original design: Skill tree system for player progression with branching paths
 // Archived components: Feat.h, Way.h, SkillTreeWidget, ProgressionDatabase

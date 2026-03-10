@@ -152,7 +152,7 @@ public:
 
     /**
      * Validate weapon data asset
-     * TODO: Combat system archived - will be reimplemented in MVP
+     * NOTE: Combat system archived - will be reimplemented in MVP Phase 3
      * @param WeaponAsset Weapon asset to validate
      * @param OutErrors Validation errors
      * @param OutWarnings Validation warnings
@@ -281,7 +281,7 @@ private:
     // REMOVED: ValidateFactionRelationships() - faction system removed per Trade Simulator MVP
 
     /** Internal validation helper for weapon data */
-    /** TODO: Combat system archived - will be reimplemented in MVP */
+    /** NOTE: Combat system archived - will be reimplemented in MVP Phase 3 */
     /*
     static void ValidateWeaponBalance(
         UWeaponDataAsset* WeaponAsset,

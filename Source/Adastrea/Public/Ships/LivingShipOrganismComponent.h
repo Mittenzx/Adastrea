@@ -1,5 +1,5 @@
 // LivingShipOrganismComponent.h
-// TODO: [POST-MVP][LOW] Living ship system - organic ships with mood and mutation mechanics
+// NOTE: [POST-MVP][LOW] Living ship system - organic ships with mood and mutation mechanics
 #pragma once
 
 #include "CoreMinimal.h"

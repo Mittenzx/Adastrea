@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Ships/ShipModuleDataAsset.h"
-// TODO: Combat system archived - WeaponDataAsset (for damage types) will be reimplemented in MVP
+// NOTE: Combat system archived - WeaponDataAsset (for damage types) will be reimplemented in MVP Phase 3
 // For now, EDamageType is temporarily defined in IDamageable.h
 // #include "Combat/WeaponDataAsset.h"
 #include "ShieldModuleDataAsset.generated.h"

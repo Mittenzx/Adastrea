@@ -367,7 +367,7 @@ bool UShipUpgradeComponent::CheckUpgradeRequirements(UShipUpgradeDataAsset* Upgr
 	if (Req.RequiredMaterials.Num() > 0)
 	{
 		UE_LOG(LogAdastrea, Verbose, TEXT("Upgrade requires materials (MVP stub): %s"), *Upgrade->GetName());
-		// TODO: [POST-MVP][INVENTORY] Implement proper material checking when inventory system is ready
+		// NOTE: [POST-MVP][INVENTORY] Implement proper material checking when inventory system is ready
 		// Status: Deferred to post-MVP (Trade Simulator MVP complete March 2026)
 		// For Trade Simulator MVP (Weeks 1-12), assume player has required materials
 		// Related systems: InventorySystem component, MaterialDatabase, PlayerEconomy

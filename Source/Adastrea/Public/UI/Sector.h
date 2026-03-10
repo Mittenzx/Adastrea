@@ -19,4 +19,4 @@
  */
 #pragma once
 
-// TODO: [POST-MVP][MEDIUM] Implement sector UI system - map displays, route planning, sector navigation
+// NOTE: [POST-MVP][MEDIUM] Implement sector UI system - map displays, route planning, sector navigation

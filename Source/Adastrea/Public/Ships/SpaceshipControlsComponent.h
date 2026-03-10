@@ -9,7 +9,7 @@ class UInputAction;
 class UInputMappingContext;
 class UEnhancedInputLocalPlayerSubsystem;
 class UEnhancedInputComponent;
-// TODO: [COMBAT][POST-MVP] Combat system archived - weapon component will be reimplemented in MVP Phase 3
+// NOTE: [COMBAT][POST-MVP] Combat system archived - weapon component will be reimplemented in MVP Phase 3
 // Status: Archived - Weapon system deferred post-MVP for trade simulator focus
 // class UWeaponComponent;
 
@@ -28,7 +28,7 @@ class UEnhancedInputComponent;
  * - Separate sensitivity settings for horizontal and vertical mouse movement
  *
  * Combat:
- * - Left Mouse Button: Fire primary weapon (TODO: Currently commented out - Combat system archived)
+ * - Left Mouse Button: Fire primary weapon (NOTE: Currently commented out - Combat system archived)
  *
  * Speed:
  * - Mouse Wheel Up: Increase speed
@@ -43,7 +43,7 @@ class UEnhancedInputComponent;
  * Integration:
  * - Works with ASpaceship pawn class
  * - Uses Unreal Engine 5 Enhanced Input System
- * - TODO: Weapon firing will be reimplemented when Combat system returns in MVP
+ * - NOTE: Weapon firing will be reimplemented when Combat system returns in MVP Phase 3
  */
 UCLASS(ClassGroup=(Ships), meta=(BlueprintSpawnableComponent))
 class ADASTREA_API USpaceshipControlsComponent : public UActorComponent
@@ -256,7 +256,7 @@ public:
 	/**
 	 * Called when fire input is pressed
 	 * Override in Blueprint to customize fire behavior
-	 * TODO: Combat system archived - will be reimplemented in MVP
+	 * NOTE: Combat system archived - will be reimplemented in MVP Phase 3
 	 */
 	/*
 	UFUNCTION(BlueprintNativeEvent, Category="Controls")
@@ -328,7 +328,7 @@ protected:
 	/**
 	 * Get the weapon component on the owning actor
 	 * @return Weapon component or nullptr if not found
-	 * TODO: Combat system archived - will be reimplemented in MVP
+	 * NOTE: Combat system archived - will be reimplemented in MVP Phase 3
 	 */
 	/*
 	UWeaponComponent* GetWeaponComponent() const;
@@ -338,7 +338,7 @@ protected:
 	void HandleMove(const FInputActionValue& Value);
 	void HandleLook(const FInputActionValue& Value);
 	void HandleRoll(const FInputActionValue& Value);
-	// TODO: Combat system archived - fire handlers will be reimplemented in MVP
+	// NOTE: Combat system archived - fire handlers will be reimplemented in MVP Phase 3
 	// void HandleFirePressed(const FInputActionValue& Value);
 	// void HandleFireReleased(const FInputActionValue& Value);
 	void HandleSpeed(const FInputActionValue& Value);
@@ -348,7 +348,7 @@ private:
 	bool bControlsEnabled;
 
 	/** Cached reference to weapon component */
-	/** TODO: Combat system archived - will be reimplemented in MVP */
+	/** NOTE: Combat system archived - will be reimplemented in MVP Phase 3 */
 	// UPROPERTY()
 	// UWeaponComponent* CachedWeaponComponent;
 };
