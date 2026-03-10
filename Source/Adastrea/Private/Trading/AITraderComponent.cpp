@@ -155,10 +155,12 @@ TArray<FTradeRoute> UAITraderComponent::FindBestTradeRoutes(int32 MaxRoutes)
 				}
 
 				// Distance calculation for Trade Simulator MVP
-				// TODO: Replace with actual market world positions when 3D space navigation is implemented
-				// Current implementation uses name hash as consistent placeholder for relative distances
-				// This ensures route prioritization works consistently during development
-				
+				// NOTE: Using name hash as consistent placeholder for relative distances during MVP development
+				// This ensures route prioritization works consistently while 3D space navigation is being implemented
+				// 
+				// Implementation Status: MVP Phase - Placeholder distances
+				// Future Enhancement: Replace with actual market world positions when 3D space navigation is implemented
+				// 
 				// Future implementation would use:
 				// float Distance = FVector::Dist(
 				//     Origin->GetActorLocation(),
@@ -466,9 +468,12 @@ float UAITraderComponent::TravelToMarket(UMarketDataAsset* DestinationMarket)
 	}
 
 	// Calculate travel time for Trade Simulator MVP
-	// TODO: Replace with actual market world positions when 3D space navigation is implemented
-	// Current implementation uses consistent placeholder distances based on name hashes
-	
+	// NOTE: Using consistent placeholder distances based on name hashes during MVP development
+	// This provides predictable travel times while 3D space navigation is being implemented
+	// 
+	// Implementation Status: MVP Phase - Placeholder distances
+	// Future Enhancement: Replace with actual market world positions when 3D space navigation is implemented
+	// 
 	// Future implementation would use:
 	// float Distance = FVector::Dist(
 	//     CurrentLocation->GetActorLocation(),

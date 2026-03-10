@@ -105,8 +105,10 @@ float UStationManagementWidget::GetOperationalStatusPercent() const
 	}
 
 	// Operational status calculation for Trade Simulator MVP
-	// TODO: Implement IsOperational() method in ASpaceStationModule when station management features expand
-	// Current heuristic: modules that are not hidden and not destroyed are considered operational
+	// NOTE: Using heuristic approach during MVP - modules that are not hidden and not destroyed are considered operational
+	// Implementation Status: MVP Phase - Basic operational check
+	// Future Enhancement: Implement IsOperational() method in ASpaceStationModule when station management features expand
+	// Future implementation would consider: power status, crew assignment, maintenance requirements, resource availability
 	int32 OperationalCount = 0;
 	for (ASpaceStationModule* Module : AllModules)
 	{

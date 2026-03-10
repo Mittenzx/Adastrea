@@ -7,7 +7,24 @@ Simulates the C++ logic in Python for verification.
 def calculate_damage_after_armor(raw_damage, armor_value, damage_type):
     """
     Python implementation of CalculateDamageAfterArmor function
+    
+    Args:
+        raw_damage (float): Base damage before armor mitigation
+        armor_value (float): Armor value (0-∞)
+        damage_type (str): Damage type from ['Kinetic', 'Energy', 'Explosive', 'Thermal', 'EMP']
+    
+    Returns:
+        float: Final damage after armor mitigation
+    
+    Raises:
+        ValueError: If invalid parameters are provided
     """
+    # Input validation
+    if raw_damage < 0.0:
+        raise ValueError(f"raw_damage must be non-negative, got {raw_damage}")
+    if armor_value < 0.0:
+        raise ValueError(f"armor_value must be non-negative, got {armor_value}")
+    
     if raw_damage <= 0.0:
         return 0.0
     
@@ -17,7 +34,7 @@ def calculate_damage_after_armor(raw_damage, armor_value, damage_type):
     # Apply damage type modifiers
     damage_type_multiplier = 1.0
     
-    # Damage type enum mapping
+    # Damage type enum mapping with validation
     DAMAGE_TYPES = {
         'Kinetic': 0,
         'Energy': 1,
@@ -26,7 +43,11 @@ def calculate_damage_after_armor(raw_damage, armor_value, damage_type):
         'EMP': 4
     }
     
-    damage_type_idx = DAMAGE_TYPES.get(damage_type, 0)
+    if damage_type not in DAMAGE_TYPES:
+        valid_types = ', '.join(DAMAGE_TYPES.keys())
+        raise ValueError(f"Invalid damage_type '{damage_type}'. Must be one of: {valid_types}")
+    
+    damage_type_idx = DAMAGE_TYPES[damage_type]
     
     if damage_type_idx == 0:  # Kinetic
         damage_type_multiplier = 1.0 - armor_reduction
@@ -62,6 +83,11 @@ def run_test_suite():
         (100.0, 100.0, 'EMP', "EMP vs heavy armor - ignores armor"),
         (50.0, 200.0, 'Kinetic', "High armor vs low damage"),
         (200.0, 10.0, 'Energy', "Low armor vs high energy damage"),
+        # Edge cases
+        (0.0, 100.0, 'Kinetic', "Zero damage - should return 0"),
+        (100.0, 0.0, 'EMP', "EMP with no armor - full damage"),
+        (1.0, 1000.0, 'Kinetic', "Very low damage vs very high armor"),
+        (1000.0, 1.0, 'Explosive', "Very high damage vs very low armor"),
     ]
     
     for raw_damage, armor, damage_type, description in test_cases:
@@ -73,10 +99,32 @@ def run_test_suite():
         print(f"   Raw Damage: {raw_damage:.1f}, Armor: {armor:.1f}, Type: {damage_type}")
         print(f"   Armor Reduction: {armor_reduction:.1%}")
         print(f"   Final Damage: {result:.1f}")
-        print(f"   Damage Blocked: {damage_received:.1f} ({damage_received/raw_damage:.1%})")
+        if raw_damage > 0:
+            print(f"   Damage Blocked: {damage_received:.1f} ({damage_received/raw_damage:.1%})")
+        else:
+            print(f"   Damage Blocked: {damage_received:.1f} (N/A - zero raw damage)")
     
     print("\n" + "=" * 60)
     print("[OK] Test suite completed successfully!")
+    
+    # Test error cases
+    print("\n=== Error Case Testing ===")
+    print("-" * 40)
+    
+    error_cases = [
+        (-10.0, 50.0, 'Kinetic', "Negative damage"),
+        (100.0, -5.0, 'Energy', "Negative armor"),
+        (100.0, 50.0, 'Invalid', "Invalid damage type"),
+    ]
+    
+    for raw_damage, armor, damage_type, description in error_cases:
+        print(f"\n[Error Test] {description}")
+        print(f"   Raw Damage: {raw_damage}, Armor: {armor}, Type: {damage_type}")
+        try:
+            result = calculate_damage_after_armor(raw_damage, armor, damage_type)
+            print(f"   Result: {result:.1f} (UNEXPECTED - should have raised ValueError)")
+        except ValueError as e:
+            print(f"   [OK] Correctly raised ValueError: {e}")
     
     # Comparative analysis
     print("\n=== Comparative Analysis (100 damage vs 50 armor) ===")
