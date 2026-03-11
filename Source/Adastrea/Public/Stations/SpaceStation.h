@@ -350,12 +350,12 @@ protected:
     // REMOVED: OwningFaction - faction system removed per Trade Simulator MVP
 
     /** Current structural integrity (health) */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Status")
-    float CurrentStructuralIntegrity;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Status", meta=(ClampMin="0.0"))
+    float CurrentStructuralIntegrity = 10000.0f;
 
     /** Maximum structural integrity */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Status")
-    float MaxStructuralIntegrity;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Status", meta=(ClampMin="0.0"))
+    float MaxStructuralIntegrity = 10000.0f;
 
     /** Flag indicating if station is destroyed */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Station Status")

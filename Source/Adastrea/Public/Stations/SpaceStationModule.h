@@ -120,12 +120,12 @@ protected:
     TObjectPtr<UStaticMeshComponent> MeshComponent;
 
     /** Current module integrity (health) */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module Status")
-    float CurrentModuleIntegrity;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module Status", meta=(ClampMin="0.0"))
+    float CurrentModuleIntegrity = 1000.0f;
 
     /** Maximum module integrity */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module Status")
-    float MaxModuleIntegrity;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module Status", meta=(ClampMin="0.0"))
+    float MaxModuleIntegrity = 1000.0f;
 
     /** Flag indicating if module is destroyed */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Module Status")

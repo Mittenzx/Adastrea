@@ -24,9 +24,10 @@ ASpaceStationModule::ASpaceStationModule()
     ModuleGroup = EStationModuleGroup::Other;
     // REMOVED: ModuleFaction - faction system removed per Trade Simulator MVP
 
-    // Initialize health/integrity values
-    CurrentModuleIntegrity = 1000.0f;  // Modules are less durable than full stations
-    MaxModuleIntegrity = 1000.0f;
+    // Note: Module integrity values are now set via default values in header
+    // This allows Blueprint/editor customization without constructor override
+    // Default values: CurrentModuleIntegrity = 1000.0f, MaxModuleIntegrity = 1000.0f
+    
     bIsDestroyed = false;
 }
 

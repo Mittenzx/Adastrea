@@ -10,9 +10,10 @@ ASpaceStation::ASpaceStation()
     PrimaryActorTick.bCanEverTick = false;
     // REMOVED: OwningFaction - faction system removed per Trade Simulator MVP
 
-    // Initialize health/integrity values
-    CurrentStructuralIntegrity = 10000.0f;  // Stations are much tougher than ships
-    MaxStructuralIntegrity = 10000.0f;
+    // Note: Structural integrity values are now set via default values in header
+    // This allows Blueprint/editor customization without constructor override
+    // Default values: CurrentStructuralIntegrity = 10000.0f, MaxStructuralIntegrity = 10000.0f
+    
     bIsDestroyed = false;
 
     // Default station name
