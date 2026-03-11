@@ -59,6 +59,15 @@ float ASpaceStationModule::ApplyDamage_Implementation(float Damage, EDamageType 
 
         // Module destruction effects - basic implementation for MVP
         // TODO: Enhance for full combat system (spawn debris, propagate damage, etc.)
+        // Implementation Status: Deferred until Phase 5 (Combat & Security Systems)
+        // Current Trade Simulator MVP: Basic destruction logging only
+        // Future Implementation:
+        // - Debris particle system with physics simulation
+        // - Damage propagation to adjacent modules (chain reactions)
+        // - Emergency shutdown sequences with visual/audio effects
+        // - Crew evacuation animations and notifications
+        // - Station-wide alert system activation
+        // - Faction reputation impact for destroying stations
         
         // Disable module functionality
         OnModuleDestroyed();
@@ -167,6 +176,13 @@ FText ASpaceStationModule::GetTargetDisplayName_Implementation() const
 UTexture2D* ASpaceStationModule::GetTargetIcon_Implementation() const
 {
     // TODO: Return module-specific icon based on ModuleGroup
+    // Implementation Status: Deferred until UI polish phase
+    // Current Trade Simulator MVP: Returns nullptr - UI uses default module icon
+    // Future Implementation:
+    // - ModuleGroup-specific icons (docking, power, storage, defense, etc.)
+    // - ModuleType variations within groups (small/medium/large docking bays)
+    // - Visual state indicators (operational, damaged, under construction)
+    // - Integration with station management UI for module identification
     // For Trade Simulator MVP, return nullptr - UI will use default icon
     // Future implementation: Load icon based on ModuleGroup or ModuleType
     
@@ -226,6 +242,15 @@ void ASpaceStationModule::OnModuleDestroyed()
 {
     // Basic module destruction handling for MVP
     // TODO: Enhance for full combat system
+    // Implementation Status: Deferred until Phase 5 (Combat & Security Systems)
+    // Current Trade Simulator MVP: Basic collision disabling only
+    // Future Implementation:
+    // - Emergency power shutdown with cascading effects
+    // - Atmospheric venting particle effects
+    // - Structural integrity warnings to adjacent modules
+    // - Crew evacuation protocols and AI behavior
+    // - Station-wide emergency broadcast system
+    // - Salvageable debris generation for player interaction
     
     // Disable collision to prevent further interactions
     if (MeshComponent)

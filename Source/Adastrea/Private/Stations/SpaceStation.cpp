@@ -562,6 +562,13 @@ bool ASpaceStation::CanBeTargeted_Implementation() const
     // Stations are always visible (no cloaking)
     // Safe zone check - not implemented for Trade Simulator MVP
     // TODO: Implement safe zone system when combat/security features are added
+    // Implementation Status: Deferred until Phase 5 (Combat & Security Systems)
+    // Current Trade Simulator MVP: Stations are always targetable for trading
+    // Future Implementation: 
+    // - SafeZoneComponent that defines protected areas around stations
+    // - Faction-based access control (allied vs hostile factions)
+    // - Security level system (low/medium/high security zones)
+    // - Automated defense activation when station is attacked
     // if (IsInSafeZone()) return false;
 
     return true;
@@ -591,6 +598,13 @@ FText ASpaceStation::GetTargetDisplayName_Implementation() const
 UTexture2D* ASpaceStation::GetTargetIcon_Implementation() const
 {
     // TODO: Return station icon for targeting UI
+    // Implementation Status: Deferred until UI polish phase
+    // Current Trade Simulator MVP: Returns nullptr - UI uses default station icon
+    // Future Implementation: 
+    // - StationIconDataAsset property on ASpaceStation class
+    // - Dynamic icon loading based on station type (trading hub, refinery, shipyard, etc.)
+    // - Faction-based icon variations (different icons for different faction stations)
+    // - Visual state indicators (under attack, low power, welcoming traders, etc.)
     // For Trade Simulator MVP, return nullptr - UI will use default icon
     // Future implementation: Load from StationIcon property or data asset
     

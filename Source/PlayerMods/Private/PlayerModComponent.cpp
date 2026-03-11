@@ -232,6 +232,14 @@ void UPlayerModComponent::ApplyStatModifiers(const FPlayerModDefinition& Def, in
 
         // Stat modifier integration for Trade Simulator MVP
         // TODO: Integrate with UPlayerStatsComponent when player progression system is implemented
+        // Implementation Status: Deferred until Phase 4 (Player Progression System)
+        // Current Trade Simulator MVP: Logs modifiers for debugging only
+        // Future Implementation:
+        // - UPlayerStatsComponent integration for real stat modifications
+        // - Stacking rules and duration management
+        // - Visual feedback for active modifiers (UI indicators)
+        // - Save/Load system integration for persistent modifiers
+        // - Modifier synergy system (combinations that create bonus effects)
         // Current implementation logs modifiers but doesn't apply them to gameplay stats
         
         // Future implementation would look like:
