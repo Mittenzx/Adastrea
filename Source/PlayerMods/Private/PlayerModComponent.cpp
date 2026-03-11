@@ -231,7 +231,7 @@ void UPlayerModComponent::ApplyStatModifiers(const FPlayerModDefinition& Def, in
             *Def.ModID.ToString(), *StatName.ToString(), ModifierValue, Stacks);
 
         // Stat modifier integration for Trade Simulator MVP
-        // TODO: Integrate with UPlayerStatsComponent when player progression system is implemented
+        // TODO: [PROGRESSION][HIGH-PRIORITY] Integrate with UPlayerStatsComponent when player progression system is implemented
         // Implementation Status: Deferred until Phase 4 (Player Progression System)
         // Current Trade Simulator MVP: Logs modifiers for debugging only
         // Future Implementation:
@@ -240,6 +240,8 @@ void UPlayerModComponent::ApplyStatModifiers(const FPlayerModDefinition& Def, in
         // - Visual feedback for active modifiers (UI indicators)
         // - Save/Load system integration for persistent modifiers
         // - Modifier synergy system (combinations that create bonus effects)
+        // Priority: High - Core gameplay feature for player progression and customization
+        // Dependencies: PlayerStatsComponent implementation, UI system, save system
         // Current implementation logs modifiers but doesn't apply them to gameplay stats
         
         // Future implementation would look like:
@@ -272,8 +274,10 @@ void UPlayerModComponent::RemoveStatModifiers(const FPlayerModDefinition& Def)
             *Def.ModID.ToString(), *StatName.ToString());
 
         // Stat modifier removal for Trade Simulator MVP
-        // TODO: Integrate with UPlayerStatsComponent when player progression system is implemented
+        // TODO: [PROGRESSION][HIGH-PRIORITY] Integrate with UPlayerStatsComponent when player progression system is implemented
         // Current implementation logs removal but doesn't affect gameplay stats
+        // Priority: High - Core gameplay feature for player progression and customization
+        // Dependencies: PlayerStatsComponent implementation, UI system, save system
         
         // Future implementation would look like:
         // if (UPlayerStatsComponent* StatsComp = GetOwner()->FindComponentByClass<UPlayerStatsComponent>())

@@ -58,7 +58,7 @@ float ASpaceStationModule::ApplyDamage_Implementation(float Damage, EDamageType 
         UE_LOG(LogAdastreaStations, Warning, TEXT("Module %s has been destroyed!"), *GetName());
 
         // Module destruction effects - basic implementation for MVP
-        // TODO: Enhance for full combat system (spawn debris, propagate damage, etc.)
+        // TODO: [COMBAT][POST-MVP] Enhance for full combat system (spawn debris, propagate damage, etc.)
         // Implementation Status: Deferred until Phase 5 (Combat & Security Systems)
         // Current Trade Simulator MVP: Basic destruction logging only
         // Future Implementation:
@@ -68,6 +68,8 @@ float ASpaceStationModule::ApplyDamage_Implementation(float Damage, EDamageType 
         // - Crew evacuation animations and notifications
         // - Station-wide alert system activation
         // - Faction reputation impact for destroying stations
+        // Priority: Low - Post-MVP feature for visual polish and combat immersion
+        // Dependencies: VFX system, audio system, physics simulation, debris spawning
         
         // Disable module functionality
         OnModuleDestroyed();
@@ -175,7 +177,7 @@ FText ASpaceStationModule::GetTargetDisplayName_Implementation() const
 
 UTexture2D* ASpaceStationModule::GetTargetIcon_Implementation() const
 {
-    // TODO: Return module-specific icon based on ModuleGroup
+    // TODO: [UI][POST-MVP] Return module-specific icon based on ModuleGroup
     // Implementation Status: Deferred until UI polish phase
     // Current Trade Simulator MVP: Returns nullptr - UI uses default module icon
     // Future Implementation:
@@ -183,6 +185,8 @@ UTexture2D* ASpaceStationModule::GetTargetIcon_Implementation() const
     // - ModuleType variations within groups (small/medium/large docking bays)
     // - Visual state indicators (operational, damaged, under construction)
     // - Integration with station management UI for module identification
+    // Priority: Medium - Improves UI clarity and player targeting experience
+    // Dependencies: UI asset system, icon design, module type definitions
     // For Trade Simulator MVP, return nullptr - UI will use default icon
     // Future implementation: Load icon based on ModuleGroup or ModuleType
     
@@ -241,7 +245,7 @@ bool ASpaceStationModule::IsHostileToActor_Implementation(AActor* Observer) cons
 void ASpaceStationModule::OnModuleDestroyed()
 {
     // Basic module destruction handling for MVP
-    // TODO: Enhance for full combat system
+    // TODO: [COMBAT][POST-MVP] Enhance for full combat system
     // Implementation Status: Deferred until Phase 5 (Combat & Security Systems)
     // Current Trade Simulator MVP: Basic collision disabling only
     // Future Implementation:
@@ -251,6 +255,8 @@ void ASpaceStationModule::OnModuleDestroyed()
     // - Crew evacuation protocols and AI behavior
     // - Station-wide emergency broadcast system
     // - Salvageable debris generation for player interaction
+    // Priority: Low - Post-MVP feature for visual polish and gameplay depth
+    // Dependencies: VFX system, audio system, AI behavior, emergency systems
     
     // Disable collision to prevent further interactions
     if (MeshComponent)

@@ -561,7 +561,7 @@ bool ASpaceStation::CanBeTargeted_Implementation() const
 
     // Stations are always visible (no cloaking)
     // Safe zone check - not implemented for Trade Simulator MVP
-    // TODO: Implement safe zone system when combat/security features are added
+    // TODO: [COMBAT][POST-MVP] Implement safe zone system when combat/security features are added
     // Implementation Status: Deferred until Phase 5 (Combat & Security Systems)
     // Current Trade Simulator MVP: Stations are always targetable for trading
     // Future Implementation: 
@@ -569,6 +569,8 @@ bool ASpaceStation::CanBeTargeted_Implementation() const
     // - Faction-based access control (allied vs hostile factions)
     // - Security level system (low/medium/high security zones)
     // - Automated defense activation when station is attacked
+    // Priority: Low - Post-MVP feature for combat depth and security mechanics
+    // Dependencies: Faction system, security component, combat mechanics
     // if (IsInSafeZone()) return false;
 
     return true;
@@ -597,7 +599,7 @@ FText ASpaceStation::GetTargetDisplayName_Implementation() const
 
 UTexture2D* ASpaceStation::GetTargetIcon_Implementation() const
 {
-    // TODO: Return station icon for targeting UI
+    // TODO: [UI][POST-MVP] Return station icon for targeting UI
     // Implementation Status: Deferred until UI polish phase
     // Current Trade Simulator MVP: Returns nullptr - UI uses default station icon
     // Future Implementation: 
@@ -605,6 +607,8 @@ UTexture2D* ASpaceStation::GetTargetIcon_Implementation() const
     // - Dynamic icon loading based on station type (trading hub, refinery, shipyard, etc.)
     // - Faction-based icon variations (different icons for different faction stations)
     // - Visual state indicators (under attack, low power, welcoming traders, etc.)
+    // Priority: Medium - Improves UI polish and player experience
+    // Dependencies: UI asset system, data asset creation, icon design
     // For Trade Simulator MVP, return nullptr - UI will use default icon
     // Future implementation: Load from StationIcon property or data asset
     
