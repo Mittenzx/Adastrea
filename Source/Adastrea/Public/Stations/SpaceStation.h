@@ -361,6 +361,10 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Station Status")
     bool bIsDestroyed;
 
+    /** Sensor signature multiplier for detection systems */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station|Sensors", meta=(ClampMin="0.1", ClampMax="10.0"))
+    float SensorSignatureMultiplier = 2.0f;
+
     /** Display name for this station */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Station")
     FText StationName;

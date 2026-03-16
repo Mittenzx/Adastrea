@@ -632,7 +632,8 @@ float ASpaceStation::GetTargetSignature_Implementation() const
 {
     // Stations have very high signatures (large, lots of power)
     // They are easy to detect and cannot hide
-    return 2.0f;  // Enhanced signature
+    // Now configurable via SensorSignatureMultiplier property
+    return SensorSignatureMultiplier;
 }
 
 float ASpaceStation::GetDistanceFromLocation_Implementation(FVector FromLocation) const
