@@ -113,6 +113,25 @@ class TestNameGeneratorShipNames:
             assert len(name) > 0
 
 
+class TestNameGeneratorAvailableTypes:
+    """Tests for the get_available_name_types method."""
+
+    def test_get_available_name_types_returns_list(self):
+        """Test that get_available_name_types returns a list."""
+        if hasattr(NameGenerator, 'get_available_name_types'):
+            types = NameGenerator.get_available_name_types()
+            assert isinstance(types, list)
+            assert len(types) > 0
+    
+    def test_available_types_contains_expected_values(self):
+        """Test that available types list contains expected values."""
+        if hasattr(NameGenerator, 'get_available_name_types'):
+            types = NameGenerator.get_available_name_types()
+            expected_types = ["person", "star", "planet", "ship"]
+            for expected in expected_types:
+                assert expected in types
+
+
 class TestNameGeneratorMultipleNames:
     """Tests for bulk name generation."""
 

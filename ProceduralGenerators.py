@@ -155,6 +155,16 @@ class NameGenerator:
         return f"{prefix} {ship_type}"
     
     @classmethod
+    def get_available_name_types(cls) -> List[str]:
+        """
+        Get list of available name types for generation.
+        
+        Returns:
+            List of valid name type strings
+        """
+        return ["person", "star", "planet", "ship"]
+    
+    @classmethod
     def generate_multiple_names(cls, count: int = 10, name_type: str = "person") -> List[str]:
         """
         Generate multiple names of the specified type.
@@ -165,6 +175,9 @@ class NameGenerator:
             
         Returns:
             List of generated name strings
+            
+        Raises:
+            ValueError: If name_type is not one of the available types
         """
         name_generators = {
             "person": cls.generate_person_name,
@@ -174,7 +187,8 @@ class NameGenerator:
         }
         
         if name_type not in name_generators:
-            raise ValueError(f"Invalid name_type: {name_type}. Must be one of: {list(name_generators.keys())}")
+            available_types = cls.get_available_name_types()
+            raise ValueError(f"Invalid name_type: {name_type}. Must be one of: {available_types}")
         
         generator = name_generators[name_type]
         return [generator() for _ in range(count)]
@@ -189,6 +203,8 @@ if __name__ == "__main__":
     print(f"Star: {NameGenerator.generate_star_name()}")
     print(f"Planet: {NameGenerator.generate_planet_name()}")
     print(f"Ship: {NameGenerator.generate_ship_name()}")
+    
+    print(f"\nAvailable name types: {NameGenerator.get_available_name_types()}")
     
     print("\nBulk generation example:")
     print("5 person names:", NameGenerator.generate_multiple_names(5, "person"))

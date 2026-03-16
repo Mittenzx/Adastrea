@@ -143,6 +143,20 @@ Generates a procedural ship name.
 ship = NameGenerator.generate_ship_name()  # "USS Voyager 42"
 ```
 
+##### `get_available_name_types()`
+
+Returns a list of available name types for generation.
+
+**Returns:**
+- `List[str]`: List of valid name type strings
+
+**Example:**
+```python
+available_types = NameGenerator.get_available_name_types()
+print(f"Available name types: {available_types}")
+# Output: ['person', 'star', 'planet', 'ship']
+```
+
 ##### `generate_multiple_names(count=10, name_type="person")`
 
 Generates multiple names of the specified type.
@@ -154,8 +168,15 @@ Generates multiple names of the specified type.
 **Returns:**
 - `List[str]`: List of generated name strings
 
+**Raises:**
+- `ValueError`: If `name_type` is not one of the available types
+
 **Example:**
 ```python
+# Get available types first
+available_types = NameGenerator.get_available_name_types()
+print(f"Available: {available_types}")
+
 # Generate 5 person names
 people = NameGenerator.generate_multiple_names(5, "person")
 
@@ -260,6 +281,12 @@ names = [NameGenerator.generate_person_name() for _ in range(1000)]
 This module is part of the Adastrea project and is licensed under the same terms as the main project.
 
 ## Changelog
+
+### Version 1.2.0 (2026-03-16)
+- Added `get_available_name_types()` method for API discoverability
+- Enhanced test coverage with 19 comprehensive tests (2 new tests)
+- Updated documentation with new method examples
+- Improved error messages with available type suggestions
 
 ### Version 1.1.0 (2026-03-16)
 - Added `generate_multiple_names()` method for bulk name generation
