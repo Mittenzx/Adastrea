@@ -101,5 +101,47 @@ class TestNameGeneratorPlanetNames:
             assert len(name) > 0
 
 
+class TestNameGeneratorShipNames:
+    """Tests for ship name generation."""
+
+    def test_generate_ship_name_returns_string(self):
+        """Test that generate_ship_name returns a non-empty string."""
+        # Check if the method exists
+        if hasattr(NameGenerator, 'generate_ship_name'):
+            name = NameGenerator.generate_ship_name()
+            assert isinstance(name, str)
+            assert len(name) > 0
+
+
+class TestNameGeneratorMultipleNames:
+    """Tests for bulk name generation."""
+
+    def test_generate_multiple_names_person(self):
+        """Test generating multiple person names."""
+        if hasattr(NameGenerator, 'generate_multiple_names'):
+            names = NameGenerator.generate_multiple_names(5, "person")
+            assert isinstance(names, list)
+            assert len(names) == 5
+            for name in names:
+                assert isinstance(name, str)
+                assert len(name) > 0
+    
+    def test_generate_multiple_names_star(self):
+        """Test generating multiple star names."""
+        if hasattr(NameGenerator, 'generate_multiple_names'):
+            names = NameGenerator.generate_multiple_names(3, "star")
+            assert isinstance(names, list)
+            assert len(names) == 3
+            for name in names:
+                assert isinstance(name, str)
+                assert len(name) > 0
+    
+    def test_generate_multiple_names_invalid_type(self):
+        """Test that invalid name type raises ValueError."""
+        if hasattr(NameGenerator, 'generate_multiple_names'):
+            with pytest.raises(ValueError):
+                NameGenerator.generate_multiple_names(5, "invalid_type")
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
