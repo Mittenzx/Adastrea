@@ -289,13 +289,13 @@ def main():
     
     # Health assessment
     if score >= 90:
-        print("[EXCELLENT] Repository is in excellent health! 🎉")
+        print("[EXCELLENT] Repository is in excellent health! [SUCCESS]")
     elif score >= 75:
-        print("[GOOD] Repository is in good health 👍")
+        print("[GOOD] Repository is in good health [OK]")
     elif score >= 60:
-        print("[FAIR] Repository needs some attention ⚠️")
+        print("[FAIR] Repository needs some attention [WARNING]")
     else:
-        print("[POOR] Repository needs significant attention 🚨")
+        print("[POOR] Repository needs significant attention [CRITICAL]")
     
     # Save detailed report
     report = {
