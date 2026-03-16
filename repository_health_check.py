@@ -19,18 +19,18 @@ def check_git_status():
                               capture_output=True, text=True, cwd=os.getcwd())
         
         if "not a git repository" in result.stderr:
-            print("❌ Not a git repository")
+            print("[ERROR] Not a git repository")
             return False
         
         if "nothing to commit" in result.stdout:
-            print("✅ Repository is clean")
+            print("[OK] Repository is clean")
             return True
         else:
-            print("⚠️  Repository has uncommitted changes")
+            print("[WARN] Repository has uncommitted changes")
             return False
             
     except Exception as e:
-        print(f"❌ Error checking git status: {e}")
+        print(f"[ERROR] Error checking git status: {e}")
         return False
 
 def check_python_tests():
@@ -52,16 +52,16 @@ def check_python_tests():
                                       capture_output=True, text=True, cwd=os.getcwd())
                 
                 if result.returncode == 0:
-                    print(f"  ✅ {test_file} passed")
+                    print(f"  [OK] {test_file} passed")
                 else:
-                    print(f"  ❌ {test_file} failed")
+                    print(f"  [ERROR] {test_file} failed")
                     print(f"    Error: {result.stderr[:200]}")
                     all_passed = False
             except Exception as e:
-                print(f"  ❌ Error running {test_file}: {e}")
+                print(f"  [ERROR] Error running {test_file}: {e}")
                 all_passed = False
         else:
-            print(f"  ⚠️  {test_file} not found")
+            print(f"  [WARN] {test_file} not found")
     
     return all_passed
 
@@ -86,11 +86,11 @@ def check_documentation_files():
             days_old = (datetime.now() - mod_date).days
             
             if days_old <= 7:
-                print(f"  ✅ {doc_file} (updated {days_old} days ago)")
+                print(f"  [OK] {doc_file} (updated {days_old} days ago)")
             else:
-                print(f"  ⚠️  {doc_file} (updated {days_old} days ago - consider updating)")
+                print(f"  [WARN] {doc_file} (updated {days_old} days ago - consider updating)")
         else:
-            print(f"  ❌ {doc_file} not found")
+            print(f"  [ERROR] {doc_file} not found")
             all_exist = False
     
     return all_exist
@@ -109,9 +109,9 @@ def check_code_files():
     all_exist = True
     for cpp_file in key_cpp_files:
         if os.path.exists(cpp_file):
-            print(f"  ✅ {cpp_file}")
+            print(f"  [OK] {cpp_file}")
         else:
-            print(f"  ❌ {cpp_file} not found")
+            print(f"  [ERROR] {cpp_file} not found")
             all_exist = False
     
     return all_exist
@@ -142,21 +142,21 @@ def main():
     
     for check_name, status in results:
         if status:
-            print(f"✅ {check_name}: PASSED")
+            print(f"[PASS] {check_name}")
             passed += 1
         else:
-            print(f"❌ {check_name}: FAILED")
+            print(f"[FAIL] {check_name}")
     
-    print(f"\n📊 Score: {passed}/{total} checks passed ({passed/total*100:.1f}%)")
+    print(f"\n[SCORE] {passed}/{total} checks passed ({passed/total*100:.1f}%)")
     
     if passed == total:
-        print("🎉 Repository is in excellent health!")
+        print("[EXCELLENT] Repository is in excellent health!")
         return 0
     elif passed >= total * 0.75:
-        print("⚠️  Repository has minor issues but is generally healthy")
+        print("[WARNING] Repository has minor issues but is generally healthy")
         return 1
     else:
-        print("❌ Repository needs attention")
+        print("[ERROR] Repository needs attention")
         return 2
 
 if __name__ == "__main__":
