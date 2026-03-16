@@ -1,17 +1,18 @@
 # Getting Started with Adastrea
 
-**Last Updated**: January 14, 2026
-**Project Status**: Trade Simulator MVP Development (Week 3-4 of 12)
+**Last Updated**: March 16, 2026 (Endless Development Cycle #12)
+**Project Status**: Trade Simulator MVP - Week 12 of 12 (Final Polish & Demo Preparation)
 **Engine**: Unreal Engine 5.6
 **Language**: C++ with Blueprint integration
+**Development Mode**: 🔄 **Endless Development Active** - Hourly improvements and maintenance
 
 ---
 
-## 🎯 Current Focus: Trade Simulator MVP
+## 🎯 Current Focus: Trade Simulator MVP Final Demo
 
-Adastrea is building a **space trading game MVP** to validate market interest and secure funding. We're focused on ONE core gameplay loop: **buy low, sell high, upgrade ship, repeat**.
+Adastrea is completing a **space trading game MVP** to validate market interest and secure funding. We're focused on ONE core gameplay loop: **buy low, sell high, upgrade ship, repeat**.
 
-**Target**: Playable 30-minute demo by March 2026
+**Target**: Playable 30-minute demo ready for publishers (March 2026)
 
 ---
 
@@ -20,12 +21,14 @@ Adastrea is building a **space trading game MVP** to validate market interest an
 Choose your role:
 
 ### 🎮 Want to Play the MVP?
-*Available: March 2026 (Week 12)*
+*Available Now: March 2026 (Week 12 - Final Demo Preparation)*
 
-We're building a playable demo. Check back in March 2026, or:
-- Star/watch this repo for updates
-- See `docs/mvp/README.md` for development progress
-- Follow `.github/instructions/trade-simulator-mvp.instructions.md`
+The MVP demo is in final preparation phase. You can:
+- **Star/watch this repo** for demo release announcements
+- **Check `ROADMAP.md`** for current development status and timeline
+- **See `docs/mvp/README.md`** for MVP development progress
+- **Follow `.github/instructions/trade-simulator-mvp.instructions.md`** for MVP implementation details
+- **Test Python validation scripts** in the repository to understand game mechanics
 
 ### 💻 Want to Contribute Code?
 *C++ and Blueprint developers*
