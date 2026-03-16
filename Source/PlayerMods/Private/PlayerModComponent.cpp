@@ -242,6 +242,15 @@ void UPlayerModComponent::ApplyStatModifiers(const FPlayerModDefinition& Def, in
         // - Modifier synergy system (combinations that create bonus effects)
         // Priority: High - Core gameplay feature for player progression and customization
         // Dependencies: PlayerStatsComponent implementation, UI system, save system
+        // Implementation Details:
+        // 1. Create UPlayerStatsComponent class with comprehensive stat management
+        // 2. Implement AddStatModifier/RemoveStatModifier methods with source tracking
+        // 3. Create stacking rules system (additive, multiplicative, best-of)
+        // 4. Add UI indicators for active modifiers with duration displays
+        // 5. Implement save/load system for persistent mod installations
+        // 6. Create modifier synergy system with combination bonuses
+        // 7. Add visual/audio feedback for mod activation and expiration
+        // 8. Implement mod slot system with capacity limits
         // Current implementation logs modifiers but doesn't apply them to gameplay stats
         
         // Future implementation would look like:
@@ -278,6 +287,15 @@ void UPlayerModComponent::RemoveStatModifiers(const FPlayerModDefinition& Def)
         // Current implementation logs removal but doesn't affect gameplay stats
         // Priority: High - Core gameplay feature for player progression and customization
         // Dependencies: PlayerStatsComponent implementation, UI system, save system
+        // Implementation Details:
+        // 1. Create RemoveStatModifier method in UPlayerStatsComponent with source tracking
+        // 2. Implement modifier cleanup system to prevent orphaned modifiers
+        // 3. Add UI updates for modifier removal with visual feedback
+        // 4. Create stat recalculation system when modifiers are removed
+        // 5. Implement modifier dependency tracking (some mods depend on others)
+        // 6. Add audio/visual feedback for modifier expiration
+        // 7. Create modifier history system for debugging and player review
+        // 8. Implement modifier cooldown system to prevent rapid switching
         
         // Future implementation would look like:
         // if (UPlayerStatsComponent* StatsComp = GetOwner()->FindComponentByClass<UPlayerStatsComponent>())

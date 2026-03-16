@@ -572,6 +572,13 @@ bool ASpaceStation::CanBeTargeted_Implementation() const
     // - Automated defense activation when station is attacked
     // Priority: Low - Post-MVP feature for combat depth and security mechanics
     // Dependencies: Faction system, security component, combat mechanics
+    // Implementation Details:
+    // 1. Create USafeZoneComponent that defines spherical/cylindrical protected zones
+    // 2. Add security level property (Low/Medium/High) to stations
+    // 3. Implement faction relationship checks for access control
+    // 4. Add automated turret/defense system activation
+    // 5. Create visual indicators for safe zones (shader effects, boundary markers)
+    // 6. Add gameplay consequences for violating safe zones (fines, reputation loss, combat)
     // if (IsInSafeZone()) return false;
 
     return true;
@@ -610,6 +617,14 @@ UTexture2D* ASpaceStation::GetTargetIcon_Implementation() const
     // - Visual state indicators (under attack, low power, welcoming traders, etc.)
     // Priority: Medium - Improves UI polish and player experience
     // Dependencies: UI asset system, data asset creation, icon design
+    // Implementation Details:
+    // 1. Create UStationIconDataAsset class with icon textures and metadata
+    // 2. Add StationIconDataAsset property to ASpaceStation header
+    // 3. Create icon set for different station types (8-12 unique icons)
+    // 4. Implement dynamic icon selection based on station properties
+    // 5. Add visual state overlays (red for hostile, yellow for neutral, green for friendly)
+    // 6. Create animated icons for special states (under attack, welcoming traders)
+    // 7. Add LOD system for icons at different distances
     // For Trade Simulator MVP, return nullptr - UI will use default icon
     // Future implementation: Load from StationIcon property or data asset
     

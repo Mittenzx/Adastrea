@@ -71,6 +71,15 @@ float ASpaceStationModule::ApplyDamage_Implementation(float Damage, EDamageType 
         // - Faction reputation impact for destroying stations
         // Priority: Low - Post-MVP feature for visual polish and combat immersion
         // Dependencies: VFX system, audio system, physics simulation, debris spawning
+        // Implementation Details:
+        // 1. Create UDebrisSpawnerComponent for physics-based debris generation
+        // 2. Implement damage propagation system using adjacency graphs
+        // 3. Create emergency shutdown VFX/audio sequences
+        // 4. Add crew evacuation AI behavior and animations
+        // 5. Implement station-wide alert broadcast system
+        // 6. Create faction reputation impact system
+        // 7. Add salvageable debris with gameplay interaction
+        // 8. Implement chain reaction mechanics for volatile modules
         
         // Disable module functionality
         OnModuleDestroyed();
@@ -188,6 +197,15 @@ UTexture2D* ASpaceStationModule::GetTargetIcon_Implementation() const
     // - Integration with station management UI for module identification
     // Priority: Medium - Improves UI clarity and player targeting experience
     // Dependencies: UI asset system, icon design, module type definitions
+    // Implementation Details:
+    // 1. Create UModuleIconDataAsset class with icon sets for each ModuleGroup
+    // 2. Add ModuleIconDataAsset property to ASpaceStationModule header
+    // 3. Design 8-12 unique icons covering all ModuleGroup types
+    // 4. Create icon variations for module states (operational/damaged/destroyed)
+    // 5. Implement dynamic icon loading system with caching
+    // 6. Add LOD system for icons at different zoom levels
+    // 7. Create animated icons for special states (under construction, repairing)
+    // 8. Integrate with station management UI for visual module identification
     // For Trade Simulator MVP, return nullptr - UI will use default icon
     // Future implementation: Load icon based on ModuleGroup or ModuleType
     
@@ -258,6 +276,15 @@ void ASpaceStationModule::OnModuleDestroyed()
     // - Salvageable debris generation for player interaction
     // Priority: Low - Post-MVP feature for visual polish and gameplay depth
     // Dependencies: VFX system, audio system, AI behavior, emergency systems
+    // Implementation Details:
+    // 1. Create UEmergencyShutdownComponent for power cascade effects
+    // 2. Implement atmospheric venting VFX with particle systems
+    // 3. Add structural integrity propagation system to adjacent modules
+    // 4. Create crew evacuation AI behavior with navigation and animations
+    // 5. Implement station-wide emergency broadcast with audio/visual alerts
+    // 6. Add salvageable debris spawning with physics and gameplay interaction
+    // 7. Create chain reaction system for volatile modules (fuel, weapons)
+    // 8. Add environmental hazards (radiation leaks, fire spread, toxic gas)
     
     // Disable collision to prevent further interactions
     if (MeshComponent)
