@@ -3,19 +3,19 @@
     "total_trade_items": 15,
     "total_markets": 5,
     "categories": [
-      "RawMaterials",
+      "Food",
       "RefinedGoods",
       "Luxury",
-      "Technology",
       "Components",
       "Medical",
-      "Food"
+      "RawMaterials",
+      "Technology"
     ],
     "station_types": [
-      "LuxuryBazaar",
-      "IndustrialDepot",
       "ResearchHub",
-      "OpenMarket"
+      "OpenMarket",
+      "IndustrialDepot",
+      "LuxuryBazaar"
     ]
   },
   "trade_items": [
