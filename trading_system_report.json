@@ -1,0 +1,251 @@
+{
+  "summary": {
+    "total_trade_items": 15,
+    "total_markets": 5,
+    "categories": [
+      "RawMaterials",
+      "RefinedGoods",
+      "Luxury",
+      "Technology",
+      "Components",
+      "Medical",
+      "Food"
+    ],
+    "station_types": [
+      "LuxuryBazaar",
+      "IndustrialDepot",
+      "ResearchHub",
+      "OpenMarket"
+    ]
+  },
+  "trade_items": [
+    {
+      "Class": "/Script/Adastrea.TradeItemDataAsset",
+      "AssetName": "DA_Item_AdvancedElectronics",
+      "ItemName": "Advanced Electronics",
+      "ItemID": "advanced_electronics",
+      "Category": "Technology",
+      "BasePrice": 1200.0,
+      "VolumePerUnit": 3.0,
+      "MassPerUnit": 2.0,
+      "StandardLotSize": 5
+    },
+    {
+      "Class": "/Script/Adastrea.TradeItemDataAsset",
+      "AssetName": "DA_Item_AdvancedMedicine",
+      "ItemName": "Advanced Medical Equipment",
+      "ItemID": "advanced_medicine",
+      "Category": "Medical",
+      "BasePrice": 800.0,
+      "VolumePerUnit": 5.0,
+      "MassPerUnit": 3.0,
+      "StandardLotSize": 10
+    },
+    {
+      "Class": "/Script/Adastrea.TradeItemDataAsset",
+      "AssetName": "DA_Item_AiCores",
+      "ItemName": "AI Processing Cores",
+      "ItemID": "ai_cores",
+      "Category": "Technology",
+      "BasePrice": 5000.0,
+      "VolumePerUnit": 3.0,
+      "MassPerUnit": 1.0,
+      "StandardLotSize": 1
+    },
+    {
+      "Class": "/Script/Adastrea.TradeItemDataAsset",
+      "AssetName": "DA_Item_AntimatterCores",
+      "ItemName": "Antimatter Power Cores",
+      "ItemID": "antimatter_cores",
+      "Category": "Technology",
+      "BasePrice": 10000.0,
+      "VolumePerUnit": 5.0,
+      "MassPerUnit": 10.0,
+      "StandardLotSize": 1
+    },
+    {
+      "Class": "/Script/Adastrea.TradeItemDataAsset",
+      "AssetName": "DA_Item_BasicAlloys",
+      "ItemName": "Basic Alloys",
+      "ItemID": "basic_alloys",
+      "Category": "RawMaterials",
+      "BasePrice": 50.0,
+      "VolumePerUnit": 5.0,
+      "MassPerUnit": 10.0,
+      "StandardLotSize": 100
+    },
+    {
+      "Class": "/Script/Adastrea.TradeItemDataAsset",
+      "AssetName": "DA_Item_BasicComputers",
+      "ItemName": "Basic Computer Systems",
+      "ItemID": "basic_computers",
+      "Category": "Technology",
+      "BasePrice": 500.0,
+      "VolumePerUnit": 5.0,
+      "MassPerUnit": 3.0,
+      "StandardLotSize": 10
+    },
+    {
+      "Class": "/Script/Adastrea.TradeItemDataAsset",
+      "AssetName": "DA_Item_BasicMedicine",
+      "ItemName": "Basic Medical Supplies",
+      "ItemID": "basic_medicine",
+      "Category": "Medical",
+      "BasePrice": 200.0,
+      "VolumePerUnit": 2.0,
+      "MassPerUnit": 1.0,
+      "StandardLotSize": 25
+    },
+    {
+      "Class": "/Script/Adastrea.TradeItemDataAsset",
+      "AssetName": "DA_Item_EntertainmentSystems",
+      "ItemName": "Entertainment Systems",
+      "ItemID": "entertainment_systems",
+      "Category": "Luxury",
+      "BasePrice": 600.0,
+      "VolumePerUnit": 8.0,
+      "MassPerUnit": 5.0,
+      "StandardLotSize": 10
+    },
+    {
+      "Class": "/Script/Adastrea.TradeItemDataAsset",
+      "AssetName": "DA_Item_HydrogenFuel",
+      "ItemName": "Hydrogen Fuel Cells",
+      "ItemID": "hydrogen_fuel",
+      "Category": "RefinedGoods",
+      "BasePrice": 75.0,
+      "VolumePerUnit": 4.0,
+      "MassPerUnit": 2.0,
+      "StandardLotSize": 100
+    },
+    {
+      "Class": "/Script/Adastrea.TradeItemDataAsset",
+      "AssetName": "DA_Item_LuxuryFood",
+      "ItemName": "Luxury Foodstuffs",
+      "ItemID": "luxury_food",
+      "Category": "Luxury",
+      "BasePrice": 100.0,
+      "VolumePerUnit": 2.0,
+      "MassPerUnit": 1.0,
+      "StandardLotSize": 10
+    },
+    {
+      "Class": "/Script/Adastrea.TradeItemDataAsset",
+      "AssetName": "DA_Item_ProteinPacks",
+      "ItemName": "Protein Packs",
+      "ItemID": "protein_packs",
+      "Category": "Food",
+      "BasePrice": 25.0,
+      "VolumePerUnit": 1.0,
+      "MassPerUnit": 0.5,
+      "StandardLotSize": 50
+    },
+    {
+      "Class": "/Script/Adastrea.TradeItemDataAsset",
+      "AssetName": "DA_Item_RareArt",
+      "ItemName": "Rare Artwork",
+      "ItemID": "rare_art",
+      "Category": "Luxury",
+      "BasePrice": 3000.0,
+      "VolumePerUnit": 10.0,
+      "MassPerUnit": 5.0,
+      "StandardLotSize": 1
+    },
+    {
+      "Class": "/Script/Adastrea.TradeItemDataAsset",
+      "AssetName": "DA_Item_RefinedMetals",
+      "ItemName": "Refined Metals",
+      "ItemID": "refined_metals",
+      "Category": "RefinedGoods",
+      "BasePrice": 150.0,
+      "VolumePerUnit": 3.0,
+      "MassPerUnit": 8.0,
+      "StandardLotSize": 50
+    },
+    {
+      "Class": "/Script/Adastrea.TradeItemDataAsset",
+      "AssetName": "DA_Item_ShipComponents",
+      "ItemName": "Ship Components",
+      "ItemID": "ship_components",
+      "Category": "Components",
+      "BasePrice": 300.0,
+      "VolumePerUnit": 10.0,
+      "MassPerUnit": 15.0,
+      "StandardLotSize": 20
+    },
+    {
+      "Class": "/Script/Adastrea.TradeItemDataAsset",
+      "AssetName": "DA_Item_WaterPurified",
+      "ItemName": "Purified Water",
+      "ItemID": "water_purified",
+      "Category": "Food",
+      "BasePrice": 10.0,
+      "VolumePerUnit": 1.0,
+      "MassPerUnit": 1.0,
+      "StandardLotSize": 100
+    }
+  ],
+  "markets": [
+    {
+      "Class": "/Script/Adastrea.MarketDataAsset",
+      "AssetName": "DA_Market_AgriculturalStationMarket",
+      "MarketName": "Farming Collective Market",
+      "MarketID": "agricultural_station_market",
+      "StationType": "OpenMarket",
+      "TransactionTaxRate": 0.05,
+      "StockRefreshRate": 24.0,
+      "RandomEventChance": 0.1,
+      "FactionAffiliation": "Neutral"
+    },
+    {
+      "Class": "/Script/Adastrea.MarketDataAsset",
+      "AssetName": "DA_Market_IndustrialStationMarket",
+      "MarketName": "Industrial Exchange",
+      "MarketID": "industrial_station_market",
+      "StationType": "IndustrialDepot",
+      "TransactionTaxRate": 0.03,
+      "StockRefreshRate": 12.0,
+      "RandomEventChance": 0.15,
+      "FactionAffiliation": "Neutral"
+    },
+    {
+      "Class": "/Script/Adastrea.MarketDataAsset",
+      "AssetName": "DA_Market_LuxuryBazaarMarket",
+      "MarketName": "Stellar Bazaar",
+      "MarketID": "luxury_bazaar_market",
+      "StationType": "LuxuryBazaar",
+      "TransactionTaxRate": 0.15,
+      "StockRefreshRate": 72.0,
+      "RandomEventChance": 0.2,
+      "FactionAffiliation": "Neutral"
+    },
+    {
+      "Class": "/Script/Adastrea.MarketDataAsset",
+      "AssetName": "DA_Market_ResearchStationMarket",
+      "MarketName": "Research Consortium",
+      "MarketID": "research_station_market",
+      "StationType": "ResearchHub",
+      "TransactionTaxRate": 0.08,
+      "StockRefreshRate": 48.0,
+      "RandomEventChance": 0.05,
+      "FactionAffiliation": "Neutral"
+    },
+    {
+      "Class": "/Script/Adastrea.MarketDataAsset",
+      "AssetName": "DA_Market_TradeHubMarket",
+      "MarketName": "Central Trading Exchange",
+      "MarketID": "trade_hub_market",
+      "StationType": "OpenMarket",
+      "TransactionTaxRate": 0.06,
+      "StockRefreshRate": 18.0,
+      "RandomEventChance": 0.12,
+      "FactionAffiliation": "Neutral"
+    }
+  ],
+  "analysis": {
+    "most_valuable_item": "Antimatter Power Cores",
+    "least_valuable_item": "Purified Water",
+    "highest_volume_item": "Rare Artwork",
+    "lowest_volume_item": "Protein Packs"
+  }
+}
