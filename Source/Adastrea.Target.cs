@@ -8,7 +8,7 @@ public class AdastreaTarget : TargetRules
 	public AdastreaTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
-		DefaultBuildSettings = BuildSettingsVersion.V5;
+		DefaultBuildSettings = BuildSettingsVersion.V6;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
 		
 		// Disable warnings as errors for third-party plugins

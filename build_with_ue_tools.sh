@@ -229,7 +229,7 @@ main() {
     echo ""
     echo "Build output: ${SCRIPT_DIR}/Binaries/${PLATFORM}/"
     echo ""
-    echo "Note: To run the editor, you still need a full Unreal Engine 5.6 installation."
+    echo "Note: To run the editor, you still need a full Unreal Engine 5.8 installation."
     echo "These build tools are for compilation only."
 }
 

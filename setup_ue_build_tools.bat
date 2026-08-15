@@ -7,7 +7,7 @@ setlocal enabledelayedexpansion
 
 set SCRIPT_DIR=%~dp0
 set UE_TOOLS_DIR=%SCRIPT_DIR%UnrealBuildTools
-set UE_VERSION=5.6
+set UE_VERSION=5.8
 set UE_REPO=https://github.com/EpicGames/UnrealEngine.git
 
 echo ========================================
@@ -180,7 +180,7 @@ echo 1. Run 'build_with_ue_tools.bat' to build Adastrea
 echo 2. Or use the build tools directly with UnrealBuildTool
 echo.
 echo Note: This contains only build tools, not the full engine.
-echo For development/editing, install Unreal Engine 5.6 normally.
+echo For development/editing, install Unreal Engine 5.8 normally.
 
 endlocal
 exit /b 0

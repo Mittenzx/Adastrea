@@ -1,6 +1,6 @@
 @echo off
-REM Script to build Adastrea using installed Unreal Engine 5.6
-REM Detects UE 5.6 installation and uses its build tools
+REM Script to build Adastrea using installed Unreal Engine 5.8
+REM Detects UE 5.8 installation and uses its build tools
 
 setlocal enabledelayedexpansion
 
@@ -14,7 +14,7 @@ if "%BUILD_CONFIG%"=="" set BUILD_CONFIG=Development
 if "%PLATFORM%"=="" set PLATFORM=Win64
 
 echo ========================================
-echo Adastrea - Build with Unreal Engine 5.6
+echo Adastrea - Build with Unreal Engine 5.8
 echo ========================================
 echo.
 
@@ -24,7 +24,7 @@ if not exist "%PROJECT_FILE%" (
     exit /b 1
 )
 
-REM Detect Unreal Engine 5.6 installation
+REM Detect Unreal Engine 5.8 installation
 call :detect_ue_install
 if errorlevel 1 exit /b 1
 
@@ -85,10 +85,10 @@ endlocal
 exit /b 0
 
 REM ============================================
-REM Function: Detect Unreal Engine 5.6 installation
+REM Function: Detect Unreal Engine 5.8 installation
 REM ============================================
 :detect_ue_install
-echo Detecting Unreal Engine 5.6 installation...
+echo Detecting Unreal Engine 5.8 installation...
 
     REM Check environment variable first
     if not "%UE5_ROOT%"=="" (
@@ -129,56 +129,56 @@ if not "%UE_ROOT%"=="" (
 REM Check standard Epic Games Launcher installation paths
 set EPIC_GAMES_DIR=C:\Program Files\Epic Games
 
-REM Try exact 5.6 version first
-if exist "%EPIC_GAMES_DIR%\UE_5.6\Engine\Binaries\DotNET" (
-    set UE_ROOT=%EPIC_GAMES_DIR%\UE_5.6
-    echo ✓ Found UE 5.6 at: %UE_ROOT%
+REM Try exact 5.8 version first
+if exist "%EPIC_GAMES_DIR%\UE_5.8\Engine\Binaries\DotNET" (
+    set UE_ROOT=%EPIC_GAMES_DIR%\UE_5.8
+    echo ✓ Found UE 5.8 at: %UE_ROOT%
     exit /b 0
 )
 
 REM Try without underscore
-if exist "%EPIC_GAMES_DIR%\UE5.6\Engine\Binaries\DotNET" (
-    set UE_ROOT=%EPIC_GAMES_DIR%\UE5.6
-    echo ✓ Found UE 5.6 at: %UE_ROOT%
+if exist "%EPIC_GAMES_DIR%\UE5.8\Engine\Binaries\DotNET" (
+    set UE_ROOT=%EPIC_GAMES_DIR%\UE5.8
+    echo ✓ Found UE 5.8 at: %UE_ROOT%
     exit /b 0
 )
 
-REM Try 5.6.0
-if exist "%EPIC_GAMES_DIR%\UE_5.6.0\Engine\Binaries\DotNET" (
-    set UE_ROOT=%EPIC_GAMES_DIR%\UE_5.6.0
-    echo ✓ Found UE 5.6.0 at: %UE_ROOT%
+REM Try 5.8.0
+if exist "%EPIC_GAMES_DIR%\UE_5.8.0\Engine\Binaries\DotNET" (
+    set UE_ROOT=%EPIC_GAMES_DIR%\UE_5.8.0
+    echo ✓ Found UE 5.8.0 at: %UE_ROOT%
     exit /b 0
 )
 
 REM Check registry for custom installation path
-for /f "tokens=2*" %%a in ('reg query "HKEY_LOCAL_MACHINE\SOFTWARE\EpicGames\Unreal Engine\5.6" /v "InstalledDirectory" 2^>nul') do (
+for /f "tokens=2*" %%a in ('reg query "HKEY_LOCAL_MACHINE\SOFTWARE\EpicGames\Unreal Engine\5.8" /v "InstalledDirectory" 2^>nul') do (
     set UE_ROOT=%%b
     if exist "!UE_ROOT!\Engine\Binaries\DotNET" (
-        echo ✓ Found UE 5.6 via registry at: !UE_ROOT!
+        echo ✓ Found UE 5.8 via registry at: !UE_ROOT!
         exit /b 0
     )
 )
 
 REM Also check HKEY_CURRENT_USER
-for /f "tokens=2*" %%a in ('reg query "HKEY_CURRENT_USER\SOFTWARE\EpicGames\Unreal Engine\5.6" /v "InstalledDirectory" 2^>nul') do (
+for /f "tokens=2*" %%a in ('reg query "HKEY_CURRENT_USER\SOFTWARE\EpicGames\Unreal Engine\5.8" /v "InstalledDirectory" 2^>nul') do (
     set UE_ROOT=%%b
     if exist "!UE_ROOT!\Engine\Binaries\DotNET" (
-        echo ✓ Found UE 5.6 via registry at: !UE_ROOT!
+        echo ✓ Found UE 5.8 via registry at: !UE_ROOT!
         exit /b 0
     )
 )
 
 echo.
-echo ERROR: Unreal Engine 5.6 installation not found
+echo ERROR: Unreal Engine 5.8 installation not found
 echo.
 echo Searched locations:
 echo   - Environment variables: UE5_ROOT, UE_ROOT
-echo   - %EPIC_GAMES_DIR%\UE_5.6
-echo   - %EPIC_GAMES_DIR%\UE5.6
-echo   - %EPIC_GAMES_DIR%\UE_5.6.0
+echo   - %EPIC_GAMES_DIR%\UE_5.8
+echo   - %EPIC_GAMES_DIR%\UE5.8
+echo   - %EPIC_GAMES_DIR%\UE_5.8.0
 echo   - Windows Registry (HKLM and HKCU)
 echo.
-echo Please install Unreal Engine 5.6 or set UE5_ROOT environment variable.
+echo Please install Unreal Engine 5.8 or set UE5_ROOT environment variable.
 echo.
 exit /b 1
 

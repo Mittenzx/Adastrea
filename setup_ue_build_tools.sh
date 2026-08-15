@@ -4,7 +4,7 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 UE_TOOLS_DIR="${SCRIPT_DIR}/UnrealBuildTools"
-UE_VERSION="5.6"
+UE_VERSION="5.8"
 UE_REPO="https://github.com/EpicGames/UnrealEngine.git"
 
 echo "========================================"
@@ -206,7 +206,7 @@ main() {
     echo "2. Or use the build tools directly with UnrealBuildTool"
     echo ""
     echo "Note: This contains only build tools, not the full engine."
-    echo "For development/editing, install Unreal Engine 5.6 normally."
+    echo "For development/editing, install Unreal Engine 5.8 normally."
 }
 
 # Run main function
