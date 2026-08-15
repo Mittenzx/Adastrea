@@ -12,16 +12,17 @@
 
 ## 🚀 Quick Navigation
 
-**👉 New to Adastrea?** → **[docs/GETTING_STARTED.md](docs/GETTING_STARTED.md)** - Start here! ⭐
+**👉 New to Adastrea?** → **[docs/INDEX.md](docs/INDEX.md)** - Start here! ⭐
 
 | For... | Go to... |
 |--------|----------|
-| 🎮 **Want to understand the project** | [docs/GETTING_STARTED.md](docs/GETTING_STARTED.md) |
-| 💻 **Want to contribute code** | [docs/development/CONTRIBUTING.md](docs/development/CONTRIBUTING.md) → [docs/development/CODE_STYLE.md](docs/development/CODE_STYLE.md) |
-| 📚 **Looking for documentation** | [docs/README.md](docs/README.md) or [docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md) |
-| 🎯 **Understanding the MVP** | [docs/mvp/README.md](docs/mvp/README.md) |
-| 🏗️ **Architecture questions** | [ARCHITECTURE.md](ARCHITECTURE.md) |
+| 🎮 **Want to understand the project** | [docs/02-MVP_OVERVIEW.md](docs/02-MVP_OVERVIEW.md) |
+| 💻 **Want to contribute code** | [docs/08-CONTRIBUTING.md](docs/08-CONTRIBUTING.md) |
+| 📚 **Looking for documentation** | [docs/INDEX.md](docs/INDEX.md) |
+| 🎯 **Understanding the MVP** | [docs/02-MVP_OVERVIEW.md](docs/02-MVP_OVERVIEW.md) |
+| 🏗️ **Architecture questions** | [docs/04-ARCHITECTURE.md](docs/04-ARCHITECTURE.md) |
 | 📝 **Recent changes** | [docs/CHANGELOG.md](docs/CHANGELOG.md) |
+| ⚡ **Quick reference (MCP)** | [docs/MVP_QUICK_REFERENCE_CONSOLIDATED.md](docs/MVP_QUICK_REFERENCE_CONSOLIDATED.md) |
 
 **Historical Context:**
 - **January 2026**: Repository modernization (documentation consolidation)

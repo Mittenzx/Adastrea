@@ -67,7 +67,8 @@ struct ADASTREADIRECTOR_API FAdastreaResult
 	/** Add a detail to the result */
 	void AddDetail(const FString& Key, const FString& Value)
 	{
-		Details.Add(Key, Value);
+        // Use FindOrAdd to ensure correct overload resolution across toolchains
+		Details.FindOrAdd(Key) = Value;
 	}
 
 	/** Convert to JSON object */

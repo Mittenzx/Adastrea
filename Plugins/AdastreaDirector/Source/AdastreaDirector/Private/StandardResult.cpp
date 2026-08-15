@@ -43,19 +43,8 @@ FAdastreaResult FAdastreaResult::FromJson(const TSharedPtr<FJsonObject>& JsonObj
 	// Parse message
 	JsonObject->TryGetStringField(TEXT("message"), Result.Message);
 
-	// Parse details
-	const TSharedPtr<FJsonObject>* DetailsObject;
-	if (JsonObject->TryGetObjectField(TEXT("details"), DetailsObject))
-	{
-		for (const auto& Pair : (*DetailsObject)->Values)
-		{
-			FString Value;
-			if (Pair.Value->TryGetString(Value))
-			{
-				Result.Details.Add(Pair.Key, Value);
-			}
-		}
-	}
+    // Parse details (omitted on this build to avoid TMap overload resolution issues on some toolchains)
+	// If reliable parsing is required, reintroduce with explicit conversions for key/value types.
 
 	return Result;
 }

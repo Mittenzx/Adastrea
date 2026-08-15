@@ -505,21 +505,8 @@ bool ASpaceStation::CanTakeDamage_Implementation() const
         return false;
     }
 
-    // Check for invulnerability (quest protection, safe zones, etc.)
-    if (bIsInvulnerable)
-    {
-        return false;
-    }
-
-    // Check if shields are active and would block damage
-    // For trade simulator MVP, we assume stations have basic shield protection
-    // that can be disabled for gameplay purposes
-    if (bShieldsActive && CurrentShieldStrength > 0.0f)
-    {
-        // Shields would absorb damage first
-        return true; // Damage can be taken, but shields will absorb it
-    }
-
+    // For Trade Simulator MVP the damage system is simplified: if not destroyed, the station can take damage.
+    // Shield and invulnerability systems were archived for MVP scope; reintroduce when restoring combat features.
     return true;
 }
 

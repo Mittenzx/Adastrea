@@ -361,6 +361,18 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Station Status")
     bool bIsDestroyed;
 
+    /** If true the station cannot take any damage (safe zones, quest protection) */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station|Defense")
+    bool bIsInvulnerable = false;
+
+    /** Whether station shields are currently active */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station|Defense")
+    bool bShieldsActive = false;
+
+    /** Current shield strength; shields absorb damage before structural integrity */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station|Defense", meta=(ClampMin="0.0"))
+    float CurrentShieldStrength = 0.0f;
+
     /** Sensor signature multiplier for detection systems */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station|Sensors", meta=(ClampMin="0.1", ClampMax="10.0"))
     float SensorSignatureMultiplier = 2.0f;

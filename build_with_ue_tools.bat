@@ -90,19 +90,29 @@ REM ============================================
 :detect_ue_install
 echo Detecting Unreal Engine 5.6 installation...
 
-REM Check environment variable first
-if not "%UE5_ROOT%"=="" (
-    if exist "%UE5_ROOT%\Engine\Binaries\DotNET" (
-        set UE_ROOT=%UE5_ROOT%
-        echo ✓ Found UE via UE5_ROOT environment variable
-        exit /b 0
-    ) else (
-        echo WARNING: UE5_ROOT is set to "%UE5_ROOT%" but does not contain a valid UE installation
-        echo Expected to find: %UE5_ROOT%\Engine\Binaries\DotNET
-        echo Continuing search in other locations...
-        echo.
+    REM Check environment variable first
+    if not "%UE5_ROOT%"=="" (
+        if exist "%UE5_ROOT%\Engine\Binaries\DotNET" (
+            set UE_ROOT=%UE5_ROOT%
+            echo ✓ Found UE via UE5_ROOT environment variable
+            exit /b 0
+        ) else (
+            echo WARNING: UE5_ROOT is set to "%UE5_ROOT%" but does not contain a valid UE installation
+            echo Expected to find: %UE5_ROOT%\Engine\Binaries\DotNET
+            echo Continuing search in other locations...
+            echo.
+        )
     )
-)
+
+    REM If UE5_ROOT not set, check common default install path for UE 5.8
+    if "%UE5_ROOT%"=="" (
+        if exist "C:\Program Files\Epic Games\UE_5.8\Engine\Binaries\DotNET" (
+            set UE5_ROOT=C:\Program Files\Epic Games\UE_5.8
+            set UE_ROOT=C:\Program Files\Epic Games\UE_5.8
+            echo ✓ Found UE 5.8 at default location: C:\Program Files\Epic Games\UE_5.8
+            exit /b 0
+        )
+    )
 
 if not "%UE_ROOT%"=="" (
     if exist "%UE_ROOT%\Engine\Binaries\DotNET" (

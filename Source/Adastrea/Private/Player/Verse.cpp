@@ -164,20 +164,16 @@ void UVerseComponent::GetTopAlignedPrecepts(TArray<EPrecept>& OutTopPrecepts) co
     OutTopPrecepts.Empty();
 
     // Calculate alignment for all Precepts
-    TMap<EPrecept, int32> PreceptScores;
+    TMap<int32, int32> PreceptScores;
 
-    // Iterate through all possible Precepts
-    const UEnum* EnumPtr = FindObject<UEnum>(nullptr, TEXT("/Script/Adastrea.EPrecept"), true);
-    if (EnumPtr)
+    // Iterate through all possible Precepts using the enum MAX value to avoid reflection warnings
+    for (int32 i = 0; i < static_cast<int32>(EPrecept::MAX); ++i)
     {
-        for (int32 i = 0; i < EnumPtr->NumEnums() - 1; ++i) // -1 to skip MAX
+        EPrecept CurrentPrecept = static_cast<EPrecept>(i);
+        int32 Score = GetTotalPreceptAlignment(CurrentPrecept);
+        if (Score > 0)
         {
-            EPrecept CurrentPrecept = static_cast<EPrecept>(EnumPtr->GetValueByIndex(i));
-            int32 Score = GetTotalPreceptAlignment(CurrentPrecept);
-            if (Score > 0)
-            {
-                PreceptScores.Add(CurrentPrecept, Score);
-            }
+            PreceptScores.Add(static_cast<int32>(CurrentPrecept), Score);
         }
     }
 
@@ -191,7 +187,7 @@ void UVerseComponent::GetTopAlignedPrecepts(TArray<EPrecept>& OutTopPrecepts) co
         {
             break;
         }
-        OutTopPrecepts.Add(Pair.Key);
+        OutTopPrecepts.Add(static_cast<EPrecept>(Pair.Key));
         ++Count;
     }
 }
