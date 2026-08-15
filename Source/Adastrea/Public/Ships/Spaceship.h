@@ -16,6 +16,8 @@ class USpaceshipDataAsset;
 class UDockingSettingsDataAsset;
 class ASpaceStationModule;
 class UUserWidget;
+class UCargoComponent;
+class UPlayerTraderComponent;
 
 /**
  * Base spaceship actor class for player and NPC ships
@@ -58,6 +60,14 @@ public:
     // Camera component for player view
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
     TObjectPtr<UCameraComponent> Camera;
+
+    // Cargo hold component (trading inventory)
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Trading")
+    TObjectPtr<UCargoComponent> CargoComponent;
+
+    // Player trader component (credits, buy/sell)
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Trading")
+    TObjectPtr<UPlayerTraderComponent> PlayerTraderComponent;
 
     // Default maximum movement speed
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement", meta=(ClampMin="0.0"))

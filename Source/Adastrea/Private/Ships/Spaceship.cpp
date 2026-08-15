@@ -16,6 +16,8 @@
 #include "Blueprint/UserWidget.h"
 #include "UI/AdastreaHUDWidget.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
+#include "Trading/CargoComponent.h"
+#include "Trading/PlayerTraderComponent.h"
 
 // Debug flag for docking system - can be disabled for shipping builds
 #ifndef DOCKING_DEBUG_ENABLED
@@ -119,6 +121,10 @@ ASpaceship::ASpaceship()
 
     Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
     Camera->SetupAttachment(CameraSpringArm, USpringArmComponent::SocketName);
+
+    // Create trading components (cargo hold + player trader) so every ship can trade
+    CargoComponent = CreateDefaultSubobject<UCargoComponent>(TEXT("CargoComponent"));
+    PlayerTraderComponent = CreateDefaultSubobject<UPlayerTraderComponent>(TEXT("PlayerTraderComponent"));
 }
 
 void ASpaceship::BeginPlay()
