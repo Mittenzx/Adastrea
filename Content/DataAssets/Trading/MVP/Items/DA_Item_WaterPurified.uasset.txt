@@ -55,7 +55,7 @@ BehaviorTags: []
 # TRADING ECONOMICS
 # ============================================
 Price per Lot (@ base): 1000 credits
-Volume per Lot: 100.0 m³
+Volume per Lot: 100.0 mÂ³
 Mass per Lot: 100.0 kg
 
 Profit Potential:

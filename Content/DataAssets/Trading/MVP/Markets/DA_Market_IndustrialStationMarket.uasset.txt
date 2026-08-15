@@ -99,11 +99,11 @@ Inventory Entry:
 # ============================================
 
 Buy from this market (cheap):
-  • basic_alloys (supply: 2.5, demand: 0.4)
-  • refined_metals (supply: 2.0, demand: 0.5)
-  • ship_components (supply: 1.8, demand: 0.6)
+  â€¢ basic_alloys (supply: 2.5, demand: 0.4)
+  â€¢ refined_metals (supply: 2.0, demand: 0.5)
+  â€¢ ship_components (supply: 1.8, demand: 0.6)
 
 Sell to this market (expensive):
-  • water_purified (supply: 0.3, demand: 2.0)
-  • protein_packs (supply: 0.2, demand: 2.5)
-  • hydrogen_fuel (supply: 0.5, demand: 1.8)
+  â€¢ water_purified (supply: 0.3, demand: 2.0)
+  â€¢ protein_packs (supply: 0.2, demand: 2.5)
+  â€¢ hydrogen_fuel (supply: 0.5, demand: 1.8)

@@ -209,10 +209,10 @@
       demand_level: 1.2
 
     - item_id: entertainment_systems
-      current_stock: 800
-      max_stock: 3000
-      supply_level: 1.3
-      demand_level: 1.0
+      current_stock: 400
+      max_stock: 1500
+      supply_level: 0.9
+      demand_level: 1.3
 
     - item_id: rare_art
       current_stock: 50

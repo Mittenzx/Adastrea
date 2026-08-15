@@ -22,8 +22,8 @@ BasePrice: 50
 
 PriceVolatility:
   VolatilityMultiplier: 1.0
-  MinPriceDeviation: 0.6
-  MaxPriceDeviation: 2.0
+  MinPriceDeviation: 0.7
+  MaxPriceDeviation: 1.6
 
 bAffectedBySupplyDemand: true
 bAffectedByMarketEvents: true
@@ -55,10 +55,10 @@ BehaviorTags: []
 # TRADING ECONOMICS
 # ============================================
 Price per Lot (@ base): 5000 credits
-Volume per Lot: 500.0 m³
+Volume per Lot: 500.0 mÂ³
 Mass per Lot: 1000.0 kg
 
 Profit Potential:
-  Min Price: 30.0 credits/unit
-  Max Price: 100.0 credits/unit
-  Max Spread: 70.0 credits/unit
+  Min Price: 35.0 credits/unit
+  Max Price: 80.0 credits/unit
+  Max Spread: 45.0 credits/unit

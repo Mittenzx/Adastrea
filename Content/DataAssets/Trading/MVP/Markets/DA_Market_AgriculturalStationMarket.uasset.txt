@@ -99,10 +99,10 @@ Inventory Entry:
 # ============================================
 
 Buy from this market (cheap):
-  • water_purified (supply: 2.0, demand: 0.5)
-  • protein_packs (supply: 1.8, demand: 0.6)
+  â€¢ water_purified (supply: 2.0, demand: 0.5)
+  â€¢ protein_packs (supply: 1.8, demand: 0.6)
 
 Sell to this market (expensive):
-  • basic_alloys (supply: 0.3, demand: 2.0)
-  • ship_components (supply: 0.2, demand: 2.5)
-  • basic_computers (supply: 0.4, demand: 1.8)
+  â€¢ basic_alloys (supply: 0.3, demand: 2.0)
+  â€¢ ship_components (supply: 0.2, demand: 2.5)
+  â€¢ basic_computers (supply: 0.4, demand: 1.8)

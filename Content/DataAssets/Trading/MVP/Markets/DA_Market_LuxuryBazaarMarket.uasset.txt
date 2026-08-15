@@ -51,10 +51,10 @@ Inventory Entry:
 # Item: entertainment_systems
 Inventory Entry:
   TradeItem: DA_Item_EntertainmentSystems
-  CurrentStock: 800
-  MaxStock: 3000
-  SupplyLevel: 1.3  # Normal
-  DemandLevel: 1.0  # Normal
+  CurrentStock: 400
+  MaxStock: 1500
+  SupplyLevel: 0.9  # Normal
+  DemandLevel: 1.3  # Normal
   bInStock: true
 
 # Item: rare_art

@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "5.8",
+	"EngineAssociation": "{9630B6E3-478D-509F-7A06-15898BD42707}",
 	"Category": "",
 	"Description": "Adastrea - Open World Space Flight Game",
 	"Modules": [
@@ -63,14 +63,19 @@
 			"SupportedTargetPlatforms": [
 				"Win64"
 			]
+		},
+		{
+			"Name": "ModelContextProtocol",
+			"Enabled": true
+		},
+		{
+			"Name": "AllToolsets",
+			"Enabled": true
 		}
 	],
 	"TargetPlatforms": [
 		"Windows",
 		"Mac",
 		"Linux"
-	],
-	"AdditionalRootDirectories": [],
-	"AdditionalPluginDirectories": [],
-	"EpicSampleNameHash": ""
+	]
 }
