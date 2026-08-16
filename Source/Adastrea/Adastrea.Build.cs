@@ -33,11 +33,9 @@ public class Adastrea : ModuleRules
 			"Niagara"
 		});
 
-		PrivateDependencyModuleNames.AddRange(new string[] 
-		{ 
-			"AIModule",
-			"NavigationSystem"
-		});
+		// Note: AIModule and NavigationSystem were removed (Aug 2026) — their only
+		// consumers (NavigationComponent, SimpleAIMovementComponent, AI/Personnel
+		// cluster) were dead code and have been stripped. Re-add if AI/nav is re-enabled.
 
 		// Uncomment if you are using online features
 		// PrivateDependencyModuleNames.Add("OnlineSubsystem");

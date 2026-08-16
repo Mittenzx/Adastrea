@@ -7,11 +7,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "HAL/PlatformMemory.h"
 #include "Misc/App.h"
-#include "Performance/LODManagerComponent.h"
 // #include "Combat/ProjectilePoolComponent.h" // Archived for post-MVP
 #include "Ships/SpaceshipDataAsset.h"
 #include "Stations/SpaceStation.h"
-#include "AI/NPCLogicBase.h"
 
 //================================================================================
 // SHIP SPAWNING BENCHMARKS
@@ -352,18 +350,18 @@ FString UPerformanceBenchmarkLibrary::BenchmarkLODSystem(
                 // Simulate LOD distance calculations
                 float DistanceToCamera = FMath::FRandRange(100.0f, 50000.0f);
 
-                // Simulate LOD level determination
-                ELODLevel CurrentLOD = ELODLevel::High;
-                if (DistanceToCamera > 5000) CurrentLOD = ELODLevel::Medium;
-                if (DistanceToCamera > 15000) CurrentLOD = ELODLevel::Low;
-                if (DistanceToCamera > 30000) CurrentLOD = ELODLevel::VeryLow;
+                // Simulate LOD level determination (0=High, 1=Medium, 2=Low, 3=VeryLow)
+                int32 CurrentLOD = 0;
+                if (DistanceToCamera > 5000) CurrentLOD = 1;
+                if (DistanceToCamera > 15000) CurrentLOD = 2;
+                if (DistanceToCamera > 30000) CurrentLOD = 3;
 
                 // Simulate LOD transition
                 bool LODChanged = FMath::FRand() > 0.95f; // 5% chance of transition
                 if (LODChanged)
                 {
                     // Simulate visual quality changes
-                    volatile int QualitySetting = static_cast<int32>(CurrentLOD);
+                    volatile int QualitySetting = CurrentLOD;
                 }
             }
         }
