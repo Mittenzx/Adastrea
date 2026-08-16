@@ -113,9 +113,17 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Controls|Input")
 	UInputAction* FireAction;
 
-	/** Input action for speed adjustment (mouse wheel) - 1D axis */
+	/** Input action for speed adjustment (mouse wheel + R/F keys) - 1D axis */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Controls|Input")
 	UInputAction* SpeedAction;
+
+	/** Input action for throttle up (R key) - digital */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Controls|Input")
+	UInputAction* ThrottleUpAction;
+
+	/** Input action for throttle down (F key) - digital */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Controls|Input")
+	UInputAction* ThrottleDownAction;
 
 	/** Input action for roll control (Q/E keys) - 1D axis */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Controls|Input")
@@ -342,6 +350,9 @@ protected:
 	// void HandleFirePressed(const FInputActionValue& Value);
 	// void HandleFireReleased(const FInputActionValue& Value);
 	void HandleSpeed(const FInputActionValue& Value);
+	// Throttle up/down key handlers (R/F - no mouse wheel needed on laptops)
+	void HandleThrottleUp(const FInputActionValue& Value);
+	void HandleThrottleDown(const FInputActionValue& Value);
 
 private:
 	/** Whether controls are currently enabled */

@@ -121,6 +121,31 @@ void AAdastreaPlayerController::OnPossessSpaceship_Implementation(ASpaceship* Ne
 	}
 }
 
+void AAdastreaPlayerController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+
+	// Capture the mouse so Enhanced Input mouse-look (Mouse2D) works.
+	// Without GameOnly input mode the cursor stays visible and mouse movement
+	// rotates nothing.
+	if (InPawn)
+	{
+		SetInputMode(FInputModeGameOnly());
+		bShowMouseCursor = false;
+		bEnableClickEvents = false;
+		bEnableMouseOverEvents = false;
+		UE_LOG(LogAdastrea, Log, TEXT("AdastreaPlayerController: Captured mouse for pawn %s"), *InPawn->GetName());
+	}
+}
+
+void AAdastreaPlayerController::OnUnPossess()
+{
+	// Release mouse capture when leaving the pawn
+	Super::OnUnPossess();
+	SetInputMode(FInputModeGameAndUI());
+	bShowMouseCursor = true;
+}
+
 ASpaceship* AAdastreaPlayerController::GetControlledSpaceship() const
 {
 	return Cast<ASpaceship>(GetPawn());

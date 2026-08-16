@@ -251,6 +251,11 @@ protected:
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+	// Capture the mouse (GameOnly input mode) when possessing a ship so
+	// mouse-look works. Restore when unpossessing.
+	virtual void OnPossess(APawn* InPawn) override;
+	virtual void OnUnPossess() override;
+
 public:
 	/**
 	 * Called when the player possesses a new spaceship

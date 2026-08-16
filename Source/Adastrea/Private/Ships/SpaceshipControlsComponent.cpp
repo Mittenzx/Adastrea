@@ -106,6 +106,20 @@ void USpaceshipControlsComponent::CreateInputActions()
 		SpeedAction->ValueType = EInputActionValueType::Axis1D;
 	}
 
+	// Create Throttle Up Action (digital for R key)
+	ThrottleUpAction = NewObject<UInputAction>(this, TEXT("IA_SpaceshipThrottleUp"));
+	if (ThrottleUpAction)
+	{
+		ThrottleUpAction->ValueType = EInputActionValueType::Boolean;
+	}
+
+	// Create Throttle Down Action (digital for F key)
+	ThrottleDownAction = NewObject<UInputAction>(this, TEXT("IA_SpaceshipThrottleDown"));
+	if (ThrottleDownAction)
+	{
+		ThrottleDownAction->ValueType = EInputActionValueType::Boolean;
+	}
+
 	// Create Roll Action (1D Axis for Q/E)
 	RollAction = NewObject<UInputAction>(this, TEXT("IA_SpaceshipRoll"));
 	if (RollAction)
@@ -168,6 +182,16 @@ void USpaceshipControlsComponent::CreateInputMappingContext()
 		SpaceshipMappingContext->MapKey(SpeedAction, EKeys::MouseWheelAxis);
 	}
 
+	// Map R and F keys (Throttle up/down - alternative to mouse wheel for laptops)
+	if (ThrottleUpAction)
+	{
+		SpaceshipMappingContext->MapKey(ThrottleUpAction, EKeys::R);
+	}
+	if (ThrottleDownAction)
+	{
+		SpaceshipMappingContext->MapKey(ThrottleDownAction, EKeys::F);
+	}
+
 	// Map Q and E keys (Roll control)
 	if (RollAction)
 	{
@@ -219,6 +243,16 @@ void USpaceshipControlsComponent::SetupInputBindings(UEnhancedInputComponent* Pl
 	if (SpeedAction)
 	{
 		PlayerInputComponent->BindAction(SpeedAction, ETriggerEvent::Triggered, this, &USpaceshipControlsComponent::HandleSpeed);
+	}
+
+	// Bind Throttle Up/Down actions (R/F keys)
+	if (ThrottleUpAction)
+	{
+		PlayerInputComponent->BindAction(ThrottleUpAction, ETriggerEvent::Started, this, &USpaceshipControlsComponent::HandleThrottleUp);
+	}
+	if (ThrottleDownAction)
+	{
+		PlayerInputComponent->BindAction(ThrottleDownAction, ETriggerEvent::Started, this, &USpaceshipControlsComponent::HandleThrottleDown);
 	}
 
 	// Bind Roll action
@@ -494,6 +528,24 @@ void USpaceshipControlsComponent::HandleSpeed(const FInputActionValue& Value)
 		IncreaseSpeed();
 	}
 	else
+	{
+		DecreaseSpeed();
+	}
+}
+
+// R key - throttle up
+void USpaceshipControlsComponent::HandleThrottleUp(const FInputActionValue& Value)
+{
+	if (Value.Get<bool>())
+	{
+		IncreaseSpeed();
+	}
+}
+
+// F key - throttle down
+void USpaceshipControlsComponent::HandleThrottleDown(const FInputActionValue& Value)
+{
+	if (Value.Get<bool>())
 	{
 		DecreaseSpeed();
 	}
