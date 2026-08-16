@@ -60,7 +60,8 @@ struct FTestResult
     FDateTime Timestamp;
 
     FTestResult()
-        : bPassed(false)
+        : Category(ETestCategory::UnitTests)
+        , bPassed(false)
         , ExecutionTime(0.0f)
         , Timestamp(FDateTime::Now())
     {}

@@ -36,7 +36,8 @@ struct ADASTREA_API FTradeTransaction
 	// ====================
 
 	// Unique transaction ID
-	UPROPERTY(BlueprintReadWrite, Category="Transaction")
+	// (Non-deterministic FGuid::NewGuid() - excluded from member-init test)
+	UPROPERTY(BlueprintReadWrite, Category="Transaction", meta=(IgnoreForMemberInitializationTest))
 	FGuid TransactionID;
 
 	// Type of transaction
