@@ -41,10 +41,9 @@ manage_asset(action="load", path="/Game/DataAssets/Trading/Items/DA_TradeItem_Fo
 inspect(action="get_properties", object="DA_TradeItem_FoodRations")
 manage_asset(action="create", type="MarketDataAsset", name="DA_Market_Mining", properties={...})
 
-# Blueprints
-manage_blueprint(action="create", name="BP_TradingShip", parent="/Script/Adastrea.Spaceship")
-manage_blueprint(action="add_component", blueprint="BP_TradingShip", component="CargoComponent", class="/Script/Adastrea.CargoComponent")
-manage_blueprint(action="set_default", blueprint="BP_TradingShip", property="CargoComponent.MaxCapacity", value=50)
+# Blueprints (NOTE: real names — BP_Battleship/BP_PlayerShip for ship, BP_SpaceStation for station.
+# BP_TradingShip/BP_TradeStation in older plans are the same assets under old names.)
+manage_blueprint(action="set_default", blueprint="BP_Battleship", property="CargoComponent.MaxCapacity", value=50)
 
 # Level & Actors
 manage_level(action="create", name="MVP_TestLevel")

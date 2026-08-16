@@ -11,10 +11,10 @@
 │                        ADASTREA MVP                             │
 ├─────────────────────────────────────────────────────────────────┤
 │  GAMEPLAY LAYER (Blueprints)                                    │
-│  ├── BP_TradingShip ← UCargoComponent, UPlayerTraderComponent  │
-│  ├── BP_TradeStation ← MarketplaceModule, DockingBayModule     │
+│  ├── BP_Battleship / BP_PlayerShip ← CargoComponent, PlayerTrader │
+│  ├── BP_SpaceStation ← MarketplaceModule, DockingBayModule        │
 │  ├── WBP_TradingUI (UMG)                                        │
-│  └── BP_TradingGameMode ← UEconomyManager                       │
+│  └── BP_SpaceGameMode ← UEconomyManager                          │
 ├─────────────────────────────────────────────────────────────────┤
 │  SYSTEMS LAYER (C++ Modules)                                    │
 │  ├── TradingModule    ← TradeItem, Market, Economy, Cargo      │

@@ -50,9 +50,9 @@ int32 CargoSpace = 10;
 
 **Added Blueprints:**
 - `BP_SpaceStation` with marketplace modules ✅
-- `BP_SpaceStationModule_Marketplace` ✅
-- `BP_TradingShip` (cargo management) ✅
-- `WBP_TradingUI` (market interface) - **NEEDS FINAL WIRING**
+- `BP_SpaceStationModule_Market` ✅
+- `BP_Battleship` / `BP_PlayerShip` (trading ship, cargo management) ✅
+- `WBP_TradingUI` (market interface) ✅ wired (buy/sell/close + market inventory events)
 
 **Added Features:**
 - Ship upgrades (cargo capacity) ✅

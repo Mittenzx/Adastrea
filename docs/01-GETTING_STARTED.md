@@ -82,10 +82,11 @@ The `unreal-engine-mcp-server` is configured. To use:
 ## 🎮 First Playtest (PIE)
 
 ### Quick Test Without MCP
-1. Open `Content/Maps/` - find or create a test level
-2. Place `BP_TradingShip` and `BP_TradeStation` from Content Browser
-3. Press **Play** (PIE)
-4. Fly to station, dock, trade!
+1. Open `Content/Maps/TestLevel` (the active test level)
+2. Player ship `BP_Battleship` spawns via `BP_SpaceGameMode` (DefaultPawn)
+3. `BP_SpaceStation` and market modules are already placed/wired
+4. Press **Play** (PIE)
+5. Fly to station, dock, trade!
 
 ### With MCP (Automated)
 Once MCP is connected, I'll:

@@ -40,6 +40,11 @@ control_editor(action="stop_pie")
 
 ## DAY 2: Core Content Creation (Tomorrow)
 
+> **Naming note**: The MCP `create` commands in this plan use the original design
+> names (`BP_TradingShip`, `BP_TradeStation`). These already exist under their real
+> names — `BP_Battleship`/`BP_PlayerShip` (ship) and `BP_SpaceStation` (station).
+> Do **not** create new ones; wire the existing blueprints instead.
+>
 ### Step 4: Validate All DataAssets (Critical)
 ```python
 # 15 Trade Items - verify each loads with valid properties

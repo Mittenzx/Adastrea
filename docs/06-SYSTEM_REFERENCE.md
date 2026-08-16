@@ -88,13 +88,26 @@ Adastrea (Core Module)
 
 ## 🎮 Blueprint Requirements (MVP)
 
+> **Note**: Actual blueprint names differ from the original design docs. The
+> trading ship is `BP_Battleship`/`BP_PlayerShip`, the station is `BP_SpaceStation`,
+> the marketplace module is `BP_SpaceStationModule_Market`, and the game mode is
+> `BP_SpaceGameMode`. Docs below use real names.
+
 | Blueprint | Parent | Components Required | Status |
 |-----------|--------|---------------------|--------|
-| `BP_TradingShip` | `ASpaceship` | CargoComponent, PlayerTraderComponent, SpaceshipControlsComponent | Template only |
-| `BP_TradeStation` | `ASpaceStation` | DefaultModuleClasses: [DockingBay, Marketplace, CargoBay] | Template only |
-| `BP_MarketplaceModule` | `AMarketplaceModule` | MarketDataAsset reference | Template only |
-| `WBP_TradingUI` | `UserWidget` | Item list, buy/sell buttons, credits, cargo, profit | Mockup only |
-| `BP_TradingGameMode` | `AGameModeBase` | EconomyManager subsystem | Not created |
+| `BP_Battleship` / `BP_PlayerShip` | `ASpaceship` | CargoComponent, PlayerTraderComponent (C++ base), SpaceshipControlsComponent | ✅ Wired |
+| `BP_SpaceStation` | `ASpaceStation` | DefaultModuleClasses: [DockingBay, Marketplace, CargoBay] | ✅ Wired |
+| `BP_SpaceStationModule_Market` | `AMarketplaceModule` | MarketDataAsset reference | ✅ Wired |
+| `WBP_TradingUI` | `TradingInterfaceWidget` (C++) | Item list, buy/sell buttons, credits, cargo, profit | ✅ Wired |
+| `BP_SpaceGameMode` | `AAdastreaGameMode` | EconomyManager subsystem, DefaultPawn=BP_Battleship | ✅ Wired |
+
+### Other Ship Blueprints
+| Blueprint | Parent | Notes |
+|-----------|--------|-------|
+| `BP_Ship_Corvette/Cruiser/Destroyer/Fighter/Freighter` | `ASpaceship` | Converted from generic Pawn (Aug 2026). Unused templates, ready for use |
+| `BP_CommandXL`, `BP_Super` | `ASpaceship` | Ship variants |
+| `BP_Import` | `ASpaceship` | Used by BP_TestGameMode |
+| `BP_ImportAI` | `ASpaceship` | AI ship variant |
 
 ---
 

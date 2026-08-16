@@ -78,18 +78,23 @@ Support Systems:
 - No player start configured
 - No lighting/skybox for space
 
-### 2. Blueprints Not Wired
-| Blueprint | Status | Missing |
-|-----------|--------|---------|
-| `BP_TradingShip` | Template only | CargoComponent, PlayerTraderComponent not added |
-| `BP_TradeStation` | Template only | DefaultModuleClasses not configured |
-| `WBP_TradingUI` | Mockup only | No graph logic, no data binding |
-| `BP_TradingGameMode` | Not created | EconomyManager not hooked up |
+### 2. Blueprints Now Wired (as of Aug 2026)
+| Blueprint | Status | Notes |
+|-----------|--------|-------|
+| `BP_Battleship` / `BP_PlayerShip` (trading ship) | ✅ Wired | CargoComponent + PlayerTraderComponent on C++ base; TradingUI + docking prompt set |
+| `BP_SpaceStation` (trade station) | ✅ Wired | DockingBay + Marketplace + CargoBay modules |
+| `BP_SpaceStationModule_Market` (marketplace) | ✅ Wired | MarketDataAsset reference |
+| `WBP_TradingUI` | ✅ Wired | Buy/sell/close events + market inventory update |
+| `BP_SpaceGameMode` (trading game mode) | ✅ Wired | DefaultPawn = BP_Battleship, EconomyManager |
 
-### 3. Trading Loop Not Functional
+> **Naming**: The original design docs used `BP_TradingShip` / `BP_TradeStation` /
+> `BP_MarketplaceModule` / `BP_TradingGameMode`. The actual blueprints use the
+> names above. See `06-SYSTEM_REFERENCE.md` for the full mapping.
+
+### 3. Trading Loop Status
 ```
-CURRENT:  C++ classes exist → but no Blueprint wiring → no PIE test possible
-NEEDED:   C++ → Blueprint components → Graph logic → PIE → Validated
+CURRENT:  C++ classes wired → Blueprint components on ships → trading UI/docking set → PIE-verified (ship possessed, cargo/trader live, credits=1000, cargo=10)
+REMAINING: Full manual playtest (fly→dock→buy→sell) + per-station market arbitrage
 ```
 
 ### 4. Content Gaps
