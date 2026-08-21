@@ -331,14 +331,13 @@ void ASpaceship::Move(const FInputActionValue& Value)
     UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship::Move - MovementVector: X=%.2f Y=%.2f Z=%.2f"),
         MovementVector.X, MovementVector.Y, MovementVector.Z);
 
-    // Forward/Backward (W/S)
-    MoveForward(MovementVector.X);
-
-    // Left/Right (A/D)
+    // Control scheme (MVP):
+    //   W/S  -> vertical (up/down)  — X axis
+    //   A/D  -> strafe (left/right) — Y axis
+    //   Forward thrust is driven by the throttle (R/F) via UpdateThrottleVelocity.
+    //   X4-style: WASD gives direct vertical + strafe velocity, throttle = cruise.
+    MoveUp(MovementVector.X);
     MoveRight(MovementVector.Y);
-
-    // Up/Down (Q/E)
-    MoveUp(MovementVector.Z);
 }
 
 FVector2D ASpaceship::NormalizeLookInputByAspectRatio(const FVector2D& LookInput, APlayerController* PC)
