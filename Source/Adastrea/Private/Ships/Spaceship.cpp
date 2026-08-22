@@ -11,6 +11,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputAction.h"
+#include "InputMappingContext.h"
 #include "Stations/SpaceStationModule.h"
 #include "Stations/DockingBayModule.h"
 #include "Blueprint/UserWidget.h"
@@ -252,6 +253,10 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
     UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship::SetupPlayerInputComponent called on %s"), *GetName());
 
+    // Ensure the ship has its own actions + mapping context (WASD/look/throttle/dock)
+    // so controls work regardless of which GameMode is active.
+    EnsureOwnInputActionsAndContext();
+
     // Setup Enhanced Input bindings for ASpaceship's input (throttle, free look, etc.)
     if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
     {
@@ -320,6 +325,94 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
         {
             EnhancedInputComponent->BindAction(DockAction, ETriggerEvent::Triggered, this, &ASpaceship::RequestDocking);
             UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound DockAction to RequestDocking"));
+        }
+    }
+}
+
+void ASpaceship::EnsureOwnInputActionsAndContext()
+{
+    // Create a self-contained input mapping context so the ship controls work
+    // even when the active GameMode doesn't add a content-side IMC (e.g. the
+    // playable AdastreaGameMode, which only TestGameMode currently adds).
+    if (!RuntimeInputMappingContext)
+    {
+        RuntimeInputMappingContext = NewObject<UInputMappingContext>(this, TEXT("IMC_SpaceshipRuntime"));
+
+        // Movement: W/S = up/down (vertical), A/D = strafe (left/right).
+                // Move() routes MoveAction.Get<FVector>().X -> MoveUp (vertical) and
+                // .Y -> MoveRight (strafe). Route each key to the right component:
+                //   W = +vertical  (default X+=1)            -> .X=+1
+                //   S = -vertical  (X+1, negated)            -> .X=-1
+                //   D = +strafe    (swizzle XY so X->Y)      -> .Y=+1
+                //   A = -strafe    (swizzle XY + negate)     -> .Y=-1
+                if (!MoveAction)
+                {
+                    MoveAction = NewObject<UInputAction>(this, TEXT("IA_Move_Runtime"));
+                    MoveAction->ValueType = EInputActionValueType::Axis3D;
+                }
+                RuntimeInputMappingContext->MapKey(MoveAction, EKeys::W);
+
+                {
+                    FEnhancedActionKeyMapping& SMapping = RuntimeInputMappingContext->MapKey(MoveAction, EKeys::S);
+                    UInputModifierNegate* SNegate = NewObject<UInputModifierNegate>(RuntimeInputMappingContext);
+                    SMapping.Modifiers.Add(SNegate);
+                }
+                {
+                    FEnhancedActionKeyMapping& DMapping = RuntimeInputMappingContext->MapKey(MoveAction, EKeys::D);
+                    UInputModifierSwizzleAxis* DSwizzle = NewObject<UInputModifierSwizzleAxis>(RuntimeInputMappingContext);
+                    DSwizzle->Order = EInputAxisSwizzle::YXZ;
+                    DMapping.Modifiers.Add(DSwizzle);
+                }
+                {
+                    FEnhancedActionKeyMapping& AMapping = RuntimeInputMappingContext->MapKey(MoveAction, EKeys::A);
+                    UInputModifierSwizzleAxis* ASwizzle = NewObject<UInputModifierSwizzleAxis>(RuntimeInputMappingContext);
+                    ASwizzle->Order = EInputAxisSwizzle::YXZ;
+                    AMapping.Modifiers.Add(ASwizzle);
+                    UInputModifierNegate* ANegate = NewObject<UInputModifierNegate>(RuntimeInputMappingContext);
+                    AMapping.Modifiers.Add(ANegate);
+                }
+
+        // Look: mouse XY
+        if (!LookAction)
+        {
+            LookAction = NewObject<UInputAction>(this, TEXT("IA_Look_Runtime"));
+            LookAction->ValueType = EInputActionValueType::Axis2D;
+        }
+        RuntimeInputMappingContext->MapKey(LookAction, EKeys::Mouse2D);
+
+        // Throttle: R = up, F = down (no mouse wheel needed)
+        if (!ThrottleUpAction)
+        {
+            ThrottleUpAction = NewObject<UInputAction>(this, TEXT("IA_ThrottleUp_Runtime"));
+            ThrottleUpAction->ValueType = EInputActionValueType::Boolean;
+        }
+        RuntimeInputMappingContext->MapKey(ThrottleUpAction, EKeys::R);
+
+        if (!ThrottleDownAction)
+        {
+            ThrottleDownAction = NewObject<UInputAction>(this, TEXT("IA_ThrottleDown_Runtime"));
+            ThrottleDownAction->ValueType = EInputActionValueType::Boolean;
+        }
+        RuntimeInputMappingContext->MapKey(ThrottleDownAction, EKeys::F);
+
+        // Dock: E key (docking/trading prompt). NOTE: F is used for throttle-down,
+                // so dock uses E to avoid conflicting.
+                if (!DockAction)
+                {
+                    DockAction = NewObject<UInputAction>(this, TEXT("IA_Dock_Runtime"));
+                    DockAction->ValueType = EInputActionValueType::Boolean;
+                }
+                RuntimeInputMappingContext->MapKey(DockAction, EKeys::E);
+    }
+
+    // Add the mapping context to the local player's input subsystem
+    if (APlayerController* PC = Cast<APlayerController>(GetController()))
+    {
+        if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
+            ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
+        {
+            Subsystem->AddMappingContext(RuntimeInputMappingContext, 10);
+            UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Added runtime input mapping context"));
         }
     }
 }
