@@ -3,6 +3,8 @@
 #include "GameFramework/PlayerController.h"
 #include "Player/AdastreaGameInstance.h"
 #include "Kismet/GameplayStatics.h"
+#include "Trading/CargoComponent.h"
+#include "Trading/PlayerTraderComponent.h"
 
 UAdastreaHUDWidget::UAdastreaHUDWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -224,11 +226,23 @@ void UAdastreaHUDWidget::UpdateHUDFromGameState_Implementation(float DeltaTime)
 	// Get current spaceship
 	ControlledSpaceship = GetControlledSpaceship();
 
-	// Update coordinates automatically if we have a spaceship
 	if (ControlledSpaceship)
 	{
 		FVector CurrentPosition = ControlledSpaceship->GetActorLocation();
 		UpdateCoordinates(CurrentPosition);
+
+		// Pull live credits + cargo from the ship's trading components,
+		// so the HUD reflects actual buy/sell state.
+		if (UPlayerTraderComponent* Trader = ControlledSpaceship->PlayerTraderComponent)
+		{
+			UpdatePlayerCredits(Trader->GetCredits());
+		}
+		if (UCargoComponent* Cargo = ControlledSpaceship->CargoComponent)
+		{
+			// Used = capacity - available (GetAvailableCargoSpace returns REMAINING space)
+			float UsedVolume = FMath::Max(0.0f, Cargo->CargoCapacity - Cargo->GetAvailableCargoSpace());
+			UpdateCargo(UsedVolume, Cargo->CargoCapacity);
+		}
 	}
 
 	// Blueprint can override this to implement custom auto-update logic
@@ -264,6 +278,18 @@ void UAdastreaHUDWidget::UpdatePlayerCredits_Implementation(int32 Credits)
 {
 	CurrentPlayerCredits = Credits;
 	// Blueprint implementation handles visual display
+}
+
+void UAdastreaHUDWidget::UpdateCargo_Implementation(float UsedSpace, float MaxSpace)
+{
+	CurrentCargoUsed = UsedSpace;
+	CurrentCargoCapacity = MaxSpace;
+	// Blueprint implementation handles visual display (e.g., "Cargo: 3/10")
+}
+
+void UAdastreaHUDWidget::SetPlayerCredits(int32 Credits)
+{
+	UpdatePlayerCredits(Credits);
 }
 
 void UAdastreaHUDWidget::UpdatePlayerInfo(const FText& PlayerName, int32 Level, int32 Credits)

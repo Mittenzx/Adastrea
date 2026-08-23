@@ -206,6 +206,26 @@ protected:
 	void UpdatePlayerInfo(const FText& PlayerName, int32 Level, int32 Credits);
 
 	// ====================
+	// CARGO & FINANCE DISPLAY
+	// ====================
+
+	/**
+	 * Update cargo hold usage display
+	 * @param UsedSpace Currently used cargo volume
+	 * @param MaxSpace Maximum cargo capacity
+	 */
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="HUD|Cargo")
+	void UpdateCargo(float UsedSpace, float MaxSpace);
+	virtual void UpdateCargo_Implementation(float UsedSpace, float MaxSpace);
+
+	/**
+	 * Update player credits display from the live trader component
+	 * @param Credits The player's current credits
+	 */
+	UFUNCTION(BlueprintCallable, Category="HUD|Player Info")
+	void SetPlayerCredits(int32 Credits);
+
+	// ====================
 	// SHIP INFO DISPLAY
 	// ====================
 
@@ -270,6 +290,14 @@ protected:
 	/** Current player credits for display */
 	UPROPERTY(BlueprintReadOnly, Category="HUD|State")
 	int32 CurrentPlayerCredits;
+
+	/** Current cargo used volume for display */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|State")
+	float CurrentCargoUsed;
+
+	/** Current cargo max capacity for display */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|State")
+	float CurrentCargoCapacity;
 
 	/** Current ship name for display */
 	UPROPERTY(BlueprintReadOnly, Category="HUD|State")
