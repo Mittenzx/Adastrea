@@ -1087,31 +1087,33 @@ void ASpaceship::UpdateThrottleVelocity(float DeltaTime)
         return;
     }
 
-    // Calculate target speed based on throttle percentage
+    // Convert throttle (0-100) into a forward movement input magnitude (0..1).
+    // UFloatingPawnMovement only produces motion through AddMovementInput, so we
+    // drive it that way rather than writing Velocity directly (which the movement
+    // component overrides each tick). This makes throttle actually move the ship.
+    float ThrottleMagnitude = FMath::Clamp(ThrottlePercentage / 100.0f, 0.0f, 1.0f);
+
+    // When throttle is above 0 and we aren't being given explicit forward input,
+    // add forward movement input so the ship cruises at the set throttle.
+    if (ThrottleMagnitude > 0.0f && FMath::IsNearlyZero(ForwardInput, 0.01f))
+    {
+        AddMovementInput(GetActorForwardVector(), ThrottleMagnitude);
+    }
+
+    // Interpolate a tracked velocity toward the throttle target for any systems
+    // (particles, HUD) that read it, and clamp to max speed.
     float EffectiveMaxSpeed = GetEffectiveMaxSpeed();
-    float TargetSpeed = (ThrottlePercentage / 100.0f) * EffectiveMaxSpeed;
-
-    // Get current forward velocity
+    float TargetSpeed = ThrottleMagnitude * EffectiveMaxSpeed;
     FVector ForwardVector = GetActorForwardVector();
-    float CurrentForwardSpeed = FVector::DotProduct(MovementComponent->Velocity, ForwardVector);
-
-    // Calculate desired velocity
     TargetVelocity = ForwardVector * TargetSpeed;
 
-    // Smoothly interpolate current velocity towards target
-    // Use different interpolation speed for acceleration vs deceleration
-    float InterpSpeed = (CurrentForwardSpeed < TargetSpeed) ?
-        (DefaultAcceleration / EffectiveMaxSpeed) * FlightAssistResponsiveness :
-        (DefaultDeceleration / EffectiveMaxSpeed) * FlightAssistResponsiveness;
-
-    // Apply velocity interpolation only if flight assist is on
     if (bFlightAssistEnabled)
     {
-        // Blend current velocity with target throttle velocity
+        float CurrentForwardSpeed = FVector::DotProduct(MovementComponent->Velocity, ForwardVector);
+        float InterpSpeed = (CurrentForwardSpeed < TargetSpeed) ?
+            (DefaultAcceleration / FMath::Max(EffectiveMaxSpeed, 1.0f)) * FlightAssistResponsiveness :
+            (DefaultDeceleration / FMath::Max(EffectiveMaxSpeed, 1.0f)) * FlightAssistResponsiveness;
         FVector BlendedVelocity = FMath::VInterpTo(MovementComponent->Velocity, TargetVelocity, DeltaTime, InterpSpeed);
-
-        // Update movement component with new velocity
-        // Note: This works in conjunction with AddMovementInput for strafe/vertical
         MovementComponent->Velocity = BlendedVelocity;
     }
 }
