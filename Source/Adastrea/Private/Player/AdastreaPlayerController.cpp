@@ -55,27 +55,30 @@ void AAdastreaPlayerController::BeginPlay()
 	// Input mapping contexts are now configured by the GameMode through DA_InputConfig
 	// This ensures centralized input configuration and prevents conflicts
 
-	// Create HUD widget if class is set
+	// Create HUD widget. Prefer the configured Blueprint class (designer HUD) if
+	// set; otherwise instantiate the base UAdastreaHUDWidget, which self-builds a
+	// runtime text panel (coords/speed/throttle/credits/cargo) so we always have
+	// a single, visible HUD.
 	if (HUDWidgetClass)
 	{
 		HUDWidget = CreateWidget<UAdastreaHUDWidget>(this, HUDWidgetClass);
-		if (HUDWidget)
-		{
-			HUDWidget->AddToViewport(0);
-			HUDWidget->InitializeHUD();
-			UE_LOG(LogAdastrea, Log, TEXT("AdastreaPlayerController: Created and initialized HUD widget"));
-		}
-		else
-		{
-			UE_LOG(LogAdastrea, Warning, TEXT("AdastreaPlayerController: Failed to create HUD widget"));
-		}
 	}
 	else
 	{
-		UE_LOG(LogAdastrea, Log, TEXT("AdastreaPlayerController: No HUD widget class set - HUD will not be displayed"));
+		HUDWidget = CreateWidget<UAdastreaHUDWidget>(this, UAdastreaHUDWidget::StaticClass());
+	}
+	if (HUDWidget)
+	{
+		HUDWidget->AddToViewport(0);
+		HUDWidget->InitializeHUD();
+		UE_LOG(LogAdastrea, Log, TEXT("AdastreaPlayerController: Created and initialized HUD widget"));
+	}
+	else
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("AdastreaPlayerController: Failed to create HUD widget"));
 	}
 
-	// Start timer to check for nearby tradable stations
+			// Start timer to check for nearby tradable stations
 	UWorld* World = GetWorld();
 	if (World)
 	{

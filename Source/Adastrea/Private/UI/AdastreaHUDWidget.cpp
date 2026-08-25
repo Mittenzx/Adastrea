@@ -7,6 +7,8 @@
 #include "Trading/PlayerTraderComponent.h"
 #include "Components/TextBlock.h"
 #include "Blueprint/WidgetTree.h"
+#include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
 
 UAdastreaHUDWidget::UAdastreaHUDWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -58,9 +60,15 @@ void UAdastreaHUDWidget::CreateRuntimeDebugWidget()
 		return;
 	}
 
-	// Create a TextBlock that shows the labeled test-status string. We use the
-	// widget tree so it's added as a child of this HUD (works even if the
-	// designer canvas is empty).
+	// Root is a full-screen CanvasPanel so we can anchor the debug text.
+	UCanvasPanel* RootCanvas = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), TEXT("HUDCanvas"));
+	if (!RootCanvas)
+	{
+		return;
+	}
+	WidgetTree->RootWidget = RootCanvas;
+
+	// The labeled telemetry text, anchored to the top-left of the viewport.
 	DebugTextBlock = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("DebugStatusText"));
 	if (DebugTextBlock)
 	{
@@ -68,8 +76,15 @@ void UAdastreaHUDWidget::CreateRuntimeDebugWidget()
 		DebugTextBlock->SetColorAndOpacity(FSlateColor(FLinearColor::White));
 		DebugTextBlock->SetFontSize(14);
 		DebugTextBlock->SetShadowOffset(FVector2D(1.0f, 1.0f));
-		WidgetTree->RootWidget = DebugTextBlock;
-		UE_LOG(LogTemp, Log, TEXT("AdastreaHUD: Created runtime debug text block"));
+
+		RootCanvas->AddChildToCanvas(DebugTextBlock);
+		if (UCanvasPanelSlot* PanelSlot = Cast<UCanvasPanelSlot>(DebugTextBlock->Slot))
+		{
+			PanelSlot->SetAnchors(FAnchors(0.0f, 0.0f, 0.0f, 0.0f)); // top-left
+			PanelSlot->SetAlignment(FVector2D(0.0f, 0.0f));
+			PanelSlot->SetPosition(FVector2D(8.0f, 8.0f));
+		}
+		UE_LOG(LogTemp, Log, TEXT("AdastreaHUD: Created runtime debug text block (top-left)"));
 	}
 }
 
