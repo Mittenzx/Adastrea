@@ -18,7 +18,11 @@ UAdastreaHUDWidget::UAdastreaHUDWidget(const FObjectInitializer& ObjectInitializ
 	, CurrentPlayerName(FText::FromString("Player"))
 	, CurrentPlayerLevel(1)
 	, CurrentPlayerCredits(0)
-	, CurrentShipName(FText::FromString("Ship"))
+		, CurrentCargoUsed(0.0f)
+		, CurrentCargoCapacity(0.0f)
+		, CurrentThrottlePercent(0.0f)
+		, CurrentShipSpeed(0.0f)
+		, CurrentShipName(FText::FromString("Ship"))
 	, CurrentShipClass(FText::FromString("Unknown"))
 	, ShipIntegrityPercent(1.0f)
 	, WeaponAimPosition(FVector2D(0.5f, 0.5f))
@@ -243,6 +247,22 @@ void UAdastreaHUDWidget::UpdateHUDFromGameState_Implementation(float DeltaTime)
 			float UsedVolume = FMath::Max(0.0f, Cargo->CargoCapacity - Cargo->GetAvailableCargoSpace());
 			UpdateCargo(UsedVolume, Cargo->CargoCapacity);
 		}
+
+		// Populate speed, throttle, and a labeled combined status line for testing.
+		CurrentThrottlePercent = ControlledSpaceship->ThrottlePercentage;
+		if (ControlledSpaceship->MovementComponent)
+		{
+			CurrentShipSpeed = ControlledSpaceship->MovementComponent->Velocity.Size();
+		}
+		UpdateSpeed(CurrentShipSpeed, ControlledSpaceship->DefaultMaxSpeed);
+
+		TestStatusText = FText::Format(
+			NSLOCTEXT("AdastreaHUD", "TestStatus", "Credits: {0}  Cargo: {1}/{2}  Speed: {3}  Throttle: {4}%"),
+			FText::AsNumber(CurrentPlayerCredits),
+			FText::AsNumber(FMath::RoundToInt(CurrentCargoUsed)),
+			FText::AsNumber(FMath::RoundToInt(CurrentCargoCapacity)),
+			FText::AsNumber(FMath::RoundToInt(CurrentShipSpeed)),
+			FText::AsNumber(FMath::RoundToInt(CurrentThrottlePercent)));
 	}
 
 	// Blueprint can override this to implement custom auto-update logic

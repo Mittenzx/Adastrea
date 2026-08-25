@@ -299,6 +299,22 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category="HUD|State")
 	float CurrentCargoCapacity;
 
+	/** Current throttle percentage (0-100) for display */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|State")
+	float CurrentThrottlePercent;
+
+	/** Current ship speed magnitude (units/s) for display */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|State")
+	float CurrentShipSpeed;
+
+	/**
+	* Combined, human-readable status string with labels, e.g.
+	* "Credits: 1000  Cargo: 3/10  Speed: 1250  Throttle: 60%"
+	* Refreshed every frame in NativeTick.
+	*/
+	UPROPERTY(BlueprintReadOnly, Category="HUD|State")
+	FText TestStatusText;
+
 	/** Current ship name for display */
 	UPROPERTY(BlueprintReadOnly, Category="HUD|State")
 	FText CurrentShipName;
