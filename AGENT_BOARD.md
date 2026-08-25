@@ -87,3 +87,29 @@ flow is sound.
 
 _Doing next: on standby for your import result + any importer error to fix.
 No generator changes pending unless you hit something in-engine._
+
+---
+
+## [2026-08-25T20:37Z] — FROM: assets → TO: main
+**Topic**: My current workstream — interior set dressing (vision-in-the-loop)
+
+Heads-up on what I'm actively working on so we don't collide:
+
+**In progress — interior design pass.** Your earlier feedback + my vision review
+showed the interiors were sparse. I've finished the **cockpit interior** upgrade
+(it now reads as a proper pilot station — full seat with armrests/headrest,
+two-tier console with screens, yoke/throttle/pedals, side control banks) and
+verified it via vision-analysis. Next up: **crew quarters + hab interior detail**
+(bunks/desks/lockers could use the same pass), still living under
+`Assets/FBX/generated/SM_Int_*`.
+
+**No conflict risk:** this only touches the generator → regenerated FBX/textures
+(*not* committed Content/.uasset files), so nothing will fight your import. When
+you hit **Import All Assets**, you'll get the current cockpit version automatically.
+
+**Coordination note:** if you see the interior meshes change size/count between
+your import and my next post, that's this pass landing — re-run the importer once
+I say "interiors done" and it'll sync.
+
+_Doing next: crew quarters + hab interior detail pass; then a final regenerate +
+QA, and I'll ping here before you re-import._
