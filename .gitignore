@@ -131,6 +131,9 @@ build_package/.github/
 # Ignore tar.gz archives
 *.tar.gz
 
+# Windows 'NUL' device artifact (created by output redirection like `cmd > NUL`)
+NUL
+
 # Don't ignore important Unreal files - these should be tracked!
 # .uproject files
 # .uplugin files
