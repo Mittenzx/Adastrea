@@ -5,6 +5,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Trading/CargoComponent.h"
 #include "Trading/PlayerTraderComponent.h"
+#include "Components/TextBlock.h"
+#include "Blueprint/WidgetTree.h"
 
 UAdastreaHUDWidget::UAdastreaHUDWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -45,6 +47,30 @@ void UAdastreaHUDWidget::InitializeHUD_Implementation()
 	ShieldPercent = 1.0f;
 	CurrentSpeedValue = 0.0f;
 	bHasTarget = false;
+
+	CreateRuntimeDebugWidget();
+}
+
+void UAdastreaHUDWidget::CreateRuntimeDebugWidget()
+{
+	if (DebugTextBlock || !WidgetTree)
+	{
+		return;
+	}
+
+	// Create a TextBlock that shows the labeled test-status string. We use the
+	// widget tree so it's added as a child of this HUD (works even if the
+	// designer canvas is empty).
+	DebugTextBlock = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("DebugStatusText"));
+	if (DebugTextBlock)
+	{
+		DebugTextBlock->SetText(FText::FromString("Credits: 0  Cargo: 0/0  Speed: 0  Throttle: 0%"));
+		DebugTextBlock->SetColorAndOpacity(FSlateColor(FLinearColor::White));
+		DebugTextBlock->SetFontSize(14);
+		DebugTextBlock->SetShadowOffset(FVector2D(1.0f, 1.0f));
+		WidgetTree->RootWidget = DebugTextBlock;
+		UE_LOG(LogTemp, Log, TEXT("AdastreaHUD: Created runtime debug text block"));
+	}
 }
 
 void UAdastreaHUDWidget::UpdateHealth_Implementation(float CurrentHealth, float MaxHealth)
@@ -257,12 +283,19 @@ void UAdastreaHUDWidget::UpdateHUDFromGameState_Implementation(float DeltaTime)
 		UpdateSpeed(CurrentShipSpeed, ControlledSpaceship->DefaultMaxSpeed);
 
 		TestStatusText = FText::Format(
-			NSLOCTEXT("AdastreaHUD", "TestStatus", "Credits: {0}  Cargo: {1}/{2}  Speed: {3}  Throttle: {4}%"),
+			NSLOCTEXT("AdastreaHUD", "TestStatus", "Credits: {0}  Cargo: {1}/{2}  Speed: {3}  Throttle: {4}%\nPos: {5}"),
 			FText::AsNumber(CurrentPlayerCredits),
 			FText::AsNumber(FMath::RoundToInt(CurrentCargoUsed)),
 			FText::AsNumber(FMath::RoundToInt(CurrentCargoCapacity)),
 			FText::AsNumber(FMath::RoundToInt(CurrentShipSpeed)),
-			FText::AsNumber(FMath::RoundToInt(CurrentThrottlePercent)));
+			FText::AsNumber(FMath::RoundToInt(CurrentThrottlePercent)),
+			FText::FromString(FString::Printf(TEXT("X=%.0f Y=%.0f Z=%.0f"),
+				CurrentCoordinates.X, CurrentCoordinates.Y, CurrentCoordinates.Z)));
+
+		if (DebugTextBlock)
+		{
+			DebugTextBlock->SetText(TestStatusText);
+		}
 	}
 
 	// Blueprint can override this to implement custom auto-update logic
