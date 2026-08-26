@@ -1,81 +1,85 @@
 {
-	"FileVersion": 3,
-	"EngineAssociation": "{9630B6E3-478D-509F-7A06-15898BD42707}",
-	"Category": "",
-	"Description": "Adastrea - Open World Space Flight Game",
-	"Modules": [
-		{
-			"Name": "Adastrea",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		},
-		{
-			"Name": "PlayerMods",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		},
-		{
-			"Name": "StationEditor",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		}
-	],
-	"Plugins": [
-		{
-			"Name": "RemoteControlComponents",
-			"Enabled": true
-		},
-		{
-			"Name": "BlueprintStats",
-			"Enabled": true
-		},
-		{
-			"Name": "JsonBlueprintUtilities",
-			"Enabled": true
-		},
-		{
-			"Name": "UIFramework",
-			"Enabled": true
-		},
-		{
-			"Name": "ModelViewViewModel",
-			"Enabled": true
-		},
-		{
-			"Name": "PythonScriptPlugin",
-			"Enabled": true
-		},
-		{
-			"Name": "EditorScriptingUtilities",
-			"Enabled": true
-		},
-		{
-			"Name": "GeometryScripting",
-			"Enabled": true
-		},
-		{
-			"Name": "AdastreaDirector",
-			"Enabled": true
-		},
-		{
-			"Name": "VisualStudioTools",
-			"Enabled": false,
-			"SupportedTargetPlatforms": [
-				"Win64"
-			]
-		},
-		{
-			"Name": "ModelContextProtocol",
-			"Enabled": true
-		},
-		{
-			"Name": "AllToolsets",
-			"Enabled": true
-		}
-	],
-	"TargetPlatforms": [
-		"Windows",
-		"Mac",
-		"Linux"
-	]
+    "FileVersion": 3,
+    "EngineAssociation": "{9630B6E3-478D-509F-7A06-15898BD42707}",
+    "Category": "",
+    "Description": "Adastrea - Open World Space Flight Game",
+    "Modules": [
+        {
+            "Name": "Adastrea",
+            "Type": "Runtime",
+            "LoadingPhase": "Default"
+        },
+        {
+            "Name": "PlayerMods",
+            "Type": "Runtime",
+            "LoadingPhase": "Default"
+        },
+        {
+            "Name": "StationEditor",
+            "Type": "Runtime",
+            "LoadingPhase": "Default"
+        }
+    ],
+    "Plugins": [
+        {
+            "Name": "RemoteControlComponents",
+            "Enabled": true
+        },
+        {
+            "Name": "BlueprintStats",
+            "Enabled": true
+        },
+        {
+            "Name": "JsonBlueprintUtilities",
+            "Enabled": true
+        },
+        {
+            "Name": "UIFramework",
+            "Enabled": true
+        },
+        {
+            "Name": "ModelViewViewModel",
+            "Enabled": true
+        },
+        {
+            "Name": "PythonScriptPlugin",
+            "Enabled": true
+        },
+        {
+            "Name": "EditorScriptingUtilities",
+            "Enabled": true
+        },
+        {
+            "Name": "GeometryScripting",
+            "Enabled": true
+        },
+        {
+            "Name": "AdastreaDirector",
+            "Enabled": true
+        },
+        {
+            "Name": "VisualStudioTools",
+            "Enabled": false,
+            "SupportedTargetPlatforms": [
+                "Win64"
+            ]
+        },
+        {
+            "Name": "ModelContextProtocol",
+            "Enabled": true
+        },
+        {
+            "Name": "AllToolsets",
+            "Enabled": true
+        },
+        {
+            "Name": "AdastreaShips",
+            "Enabled": true
+        }
+    ],
+    "TargetPlatforms": [
+        "Windows",
+        "Mac",
+        "Linux"
+    ]
 }

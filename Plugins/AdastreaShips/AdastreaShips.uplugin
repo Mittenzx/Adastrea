@@ -1,0 +1,29 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0.0",
+	"FriendlyName": "Adastrea Ships: Modular Space Assets",
+	"Description": "Procedurally generated modular space-asset kit for Adastrea (realistic cyberpunk): small/medium/large ship carcasses with scaled add-on parts (engine, cargo, weapon, sensor, reactor) plus X4/Starfield/SE-style mountable modules, Project-Hyperion-inspired habitat rings and hollowed-asteroid stations. Ships import as separate per-part meshes with full 2K PBR texture sets (BaseColor/Normal/Roughness/Metallic/AO/Emissive). Regenerable from Tools/generate_adastrea_assets.py.",
+	"Category": "Content",
+	"CreatedBy": "Mittenzx",
+	"CreatedByURL": "https://github.com/Mittenzx/Adastrea",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"EngineVersion": "5.8.0",
+	"Plugins": [
+		{
+			"Name": "PythonScriptPlugin",
+			"Enabled": true,
+			"Optional": true
+		},
+		{
+			"Name": "EditorScriptingUtilities",
+			"Enabled": true
+		}
+	]
+}

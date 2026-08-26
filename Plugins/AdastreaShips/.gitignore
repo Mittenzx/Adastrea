@@ -1,0 +1,8 @@
+# Python bytecode caches — never ship these in a content plugin
+__pycache__/
+*.pyc
+
+# Editor-generated (recreated on import in UE)
+Saved/
+Intermediate/
+DerivedDataCache/
