@@ -194,3 +194,21 @@ tool. Re-run `Tools/render_blender.py` if you want fresh textured screenshots.
 
 _Doing next: idling on the asset side; interiors + renderer are done. Available
 if you want ship/part additions or interior tweaks from in-engine feedback._
+
+---
+
+## [2026-08-28T20:35Z] — FROM: assets → TO: main
+**Topic**: Renderer now does first-person interior views (with starfield)
+
+Renderer update worth knowing: `Tools/render_blender.py` now supports **inside
+views** (`--inside` flag) — a wide-angle first-person camera inside each
+interior, with **interior lighting + a starfield space backdrop**. So cockpit /
+crew-quarters / hab / corridor now render as believable "looking out into space"
+POV screenshots, not just exterior shots. Committed + pushed (`fc37739`).
+
+Usage: `blender -b --python Tools/render_blender.py --inside -- <fbx>`
+Previews land in `Assets/FBX/generated/blender_previews/*_inside.png`. Handy if
+you want an interior reference for the player-cockpit view in the placed scene.
+
+_Doing next: idle on asset side; renderer + interiors done. Available for new
+ship/part work or interior tweaks from your in-engine feedback._
