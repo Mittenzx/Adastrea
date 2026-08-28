@@ -19,7 +19,7 @@ def clear_scene():
     sc.unit_settings.system = 'METRIC'
     sc.unit_settings.length_unit = 'CENTIMETERS'
 
-def frame_mesh():
+def frame_mesh(inside=False):
     """Center camera + lights on the active mesh's bounds, return radius."""
     objs = [o for o in bpy.data.objects if o.type == 'MESH']
     if not objs:
@@ -32,34 +32,70 @@ def frame_mesh():
                 vmin[i] = min(vmin[i], w[i]); vmax[i] = max(vmax[i], w[i])
     center = (vmin + vmax) * 0.5
     radius = max((vmax - vmin).length * 0.8, 60)
+
     # camera
     for c in [o for o in bpy.data.objects if o.type == 'CAMERA']:
         bpy.data.objects.remove(c, do_unlink=True)
-    bpy.ops.object.camera_add(location=center + Vector((radius, -radius*0.8, radius*0.5)))
-    cam = bpy.context.active_object
-    bpy.context.scene.camera = cam
-    # track to center
-    target = bpy.data.objects.new("Target", None)
-    target.location = center
-    bpy.context.collection.objects.link(target)
-    t = cam.constraints.new('TRACK_TO'); t.target = target; t.track_axis='TRACK_NEGATIVE_Z'; t.up_axis='UP_Y'
-    # lights: large, well-powered area lights for a readable preview
+    # clear any track target
+    for o in list(bpy.data.objects):
+        if o.name.startswith('Target'):
+            bpy.data.objects.remove(o, do_unlink=True)
+
+    if inside:
+        # Interior view: place camera inside the room near one open end,
+        # looking along the longest axis at standing height (~150cm).
+        # Wide lens so framing edges / walls come into view (believable cockpit).
+        Lx = vmax[0]-vmin[0]; Ly = vmax[1]-vmin[1]
+        along_x = Lx >= Ly
+        eye_h = vmin[2] + 145
+        # back the camera up slightly so more interior framing is visible
+        if along_x:
+            camloc = Vector((vmin[0]+Lx*0.25, center[1], eye_h))
+            look = Vector((vmin[0]+Lx*0.7, center[1], eye_h+5))
+        else:
+            camloc = Vector((center[0], vmin[1]+Ly*0.25, eye_h))
+            look = Vector((center[0], vmin[1]+Ly*0.7, eye_h+5))
+        bpy.ops.object.camera_add(location=camloc)
+        cam = bpy.context.active_object
+        bpy.context.scene.camera = cam
+        cam.rotation_euler = (0,0,0)
+        # point at look via track
+        target = bpy.data.objects.new("Target", None); target.location = look
+        bpy.context.collection.objects.link(target)
+        t = cam.constraints.new('TRACK_TO'); t.target=target; t.track_axis='TRACK_NEGATIVE_Z'; t.up_axis='UP_Y'
+        # interior needs a very wide FOV to capture framing + walls
+        cam.data.lens = 16   # very wide
+    else:
+        bpy.ops.object.camera_add(location=center + Vector((radius, -radius*0.8, radius*0.5)))
+        cam = bpy.context.active_object
+        bpy.context.scene.camera = cam
+        target = bpy.data.objects.new("Target", None); target.location = center
+        bpy.context.collection.objects.link(target)
+        t = cam.constraints.new('TRACK_TO'); t.target = target; t.track_axis='TRACK_NEGATIVE_Z'; t.up_axis='UP_Y'
+
+    # lights
     for l in [o for o in bpy.data.objects if o.type=='LIGHT']:
         bpy.data.objects.remove(l, do_unlink=True)
-    # key light (big soft area from front-top)
-    bpy.ops.object.light_add(type='AREA', location=center+Vector((radius*0.5, radius*0.5, radius*0.6)))
-    l1=bpy.context.active_object
-    l1.scale=(2,2,2)          # grow the light source
-    l1.data.size=radius*0.8
-    l1.data.energy=8000
-    # rim/fill from back-left
-    bpy.ops.object.light_add(type='AREA', location=center+Vector((-radius*0.7, -radius*0.6, radius*0.3)))
-    l2=bpy.context.active_object
-    l2.data.size=radius*0.8
-    l2.data.energy=4000; l2.data.color=(0.8,0.85,1.0)
-    # a point light to lift the interior dark spots
-    bpy.ops.object.light_add(type='POINT', location=center+Vector((0,0,radius*0.8)))
-    l3=bpy.context.active_object; l3.data.energy=3000
+    if inside:
+        # interior lighting: gentle overhead + ceiling-emissive glow
+        bpy.ops.object.light_add(type='AREA', location=center+Vector((0,0,vmax[2])))
+        l1=bpy.context.active_object; l1.data.size=Lx*0.5; l1.data.energy=600
+        bpy.ops.object.light_add(type='AREA', location=camloc+Vector((0,0,120)))
+        l2=bpy.context.active_object; l2.data.size=200; l2.data.energy=150
+        # small point near far end
+        bpy.ops.object.light_add(type='POINT', location=look); l3=bpy.context.active_object; l3.data.energy=300
+    else:
+        # key light (big soft area from front-top)
+        bpy.ops.object.light_add(type='AREA', location=center+Vector((radius*0.5, radius*0.5, radius*0.6)))
+        l1=bpy.context.active_object
+        l1.scale=(2,2,2); l1.data.size=radius*0.8; l1.data.energy=8000
+        # rim/fill from back-left
+        bpy.ops.object.light_add(type='AREA', location=center+Vector((-radius*0.7, -radius*0.6, radius*0.3)))
+        l2=bpy.context.active_object
+        l2.data.size=radius*0.8; l2.data.energy=4000; l2.data.color=(0.8,0.85,1.0)
+        # point light to lift interior dark spots
+        bpy.ops.object.light_add(type='POINT', location=center+Vector((0,0,radius*0.8)))
+        l3=bpy.context.active_object; l3.data.energy=3000
     return radius
 
 def make_pbr_material(mat_name, tex_prefix, out_png_base):
@@ -200,7 +236,54 @@ def assign_material(fbx_path, tex_prefix):
     return mat
 
 
-def render_fbx(fbx_path, out_png, engine='BLENDER_EEVEE'):
+def add_starfield_world():
+    """Set the world background to a dark space + procedurally-generated
+    starfield so interior 'windows' read as outer space instead of blank grey."""
+    import numpy as np
+    sc = bpy.context.scene
+    if sc.world is None:
+        sc.world = bpy.data.worlds.new("Space")
+    w = sc.world
+    w.use_nodes = True
+    nt = w.node_tree
+    nt.nodes.clear()
+    # dark background
+    bg = nt.nodes.new('ShaderNodeBackground')
+    bg.inputs[0].default_value = (0.01, 0.012, 0.02, 1.0)   # near-black
+    bg.inputs[1].default_value = 1.0
+    out = nt.nodes.new('ShaderNodeOutputWorld')
+    nt.links.new(bg.outputs['Background'], out.inputs['Surface'])
+    # add a starfield: generate small star points on the world via a Voronoi /
+    # noise-based brightness. A simpler robust route: a big sphere with an
+    # emissive star texture is heavy; instead bake stars into world via a
+    # ColorRamp on Noise. Use a Voronoi for star-like points.
+    try:
+        # Background with a large star noise: use a Noise Texture + ColorRamp
+        # mapping high values to white (stars), low to black.
+        coord = nt.nodes.new('ShaderNodeTexCoord')
+        noise = nt.nodes.new('ShaderNodeTexVoronoi')
+        noise.inputs['Scale'].default_value = 300.0
+        ramp = nt.nodes.new('ShaderNodeValToRGB')
+        ramp.color_ramp.elements[0].color=(0.0,0.0,0.0,1.0)
+        ramp.color_ramp.elements[0].position=0.9
+        ramp.color_ramp.elements[1].color=(1.0,1.0,1.0,1.0)
+        ramp.color_ramp.elements[1].position=1.0
+        nt.links.new(coord.outputs['Generated'], noise.inputs['Vector'])
+        nt.links.new(noise.outputs['Distance'], ramp.inputs['Fac'])
+        # make stars full-white and boost emission
+        bg_star = nt.nodes.new('ShaderNodeBackground')
+        bg_star.inputs[0].default_value=(1.0,1.0,1.0,1.0)
+        bg_star.inputs[1].default_value=4.0
+        mix = nt.nodes.new('ShaderNodeMixShader')
+        nt.links.new(ramp.outputs['Color'], mix.inputs['Fac'])
+        nt.links.new(bg.outputs['Background'], mix.inputs[1])
+        nt.links.new(bg_star.outputs['Background'], mix.inputs[2])
+        nt.links.new(mix.outputs['Shader'], out.inputs['Surface'])
+    except Exception:
+        # fallback: just the dark bg
+        nt.links.new(bg.outputs['Background'], out.inputs['Surface'])
+
+def render_fbx(fbx_path, out_png, engine='BLENDER_EEVEE', inside=False):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.import_scene.fbx(filepath=fbx_path)
     sc = bpy.context.scene
@@ -209,20 +292,23 @@ def render_fbx(fbx_path, out_png, engine='BLENDER_EEVEE'):
     # assign a real textured PBR material (so it isn't a flat grey blob)
     assign_material(fbx_path, None)
 
-    # brighten world so nothing is pitch black, but keep slight ambient
-    if sc.world is None:
-        sc.world = bpy.data.worlds.new("W")
-    w = sc.world
-    w.use_nodes = True
-    try:
-        bg = w.node_tree.nodes.get("Background")
-        if bg:
-            bg.inputs[0].default_value = (0.30, 0.32, 0.36, 1.0)
-            bg.inputs[1].default_value = 0.4
-    except Exception:
-        pass
+    # world background: starfield for interior 'windows', soft grey for exterior
+    if inside:
+        add_starfield_world()
+    else:
+        if sc.world is None:
+            sc.world = bpy.data.worlds.new("W")
+        w = sc.world
+        w.use_nodes = True
+        try:
+            bg = w.node_tree.nodes.get("Background")
+            if bg:
+                bg.inputs[0].default_value = (0.30, 0.32, 0.36, 1.0)
+                bg.inputs[1].default_value = 0.4
+        except Exception:
+            pass
 
-    frame_mesh()
+    frame_mesh(inside=inside)
     sc.render.engine = engine
     sc.render.resolution_x=1200; sc.render.resolution_y=825; sc.render.resolution_percentage=100
     sc.render.image_settings.file_format='PNG'
@@ -231,17 +317,24 @@ def render_fbx(fbx_path, out_png, engine='BLENDER_EEVEE'):
     return os.path.exists(out_png)
 
 if __name__ == "__main__":
-    targets = sys.argv[sys.argv.index("--")+1:] if "--" in sys.argv else []
+    argv = sys.argv
+    inside = '--inside' in argv
+    # gather fbx targets after '--'
+    if '--' in argv:
+        seg = argv[argv.index('--')+1:]
+        # drop any flags like --inside
+        targets = [f for f in seg if not f.startswith('--')]
+    else:
+        targets = []
     if not targets:
-        # default: all SM_ + SM_Int fbx
         targets = [f for f in os.listdir(GEN) if f.endswith('.fbx')]
     for f in targets:
         p = os.path.join(GEN, f)
-        out = os.path.join(OUT, f.replace('.fbx','.png'))
-        ok = render_fbx(p, out)
+        stem = f.replace('.fbx','')
+        out = os.path.join(OUT, stem + ('_inside' if inside else '') + '.png')
+        ok = render_fbx(p, out, inside=inside)
         if not ok:
-            # workbench fallback
-            ok2 = render_fbx(p, out, engine='BLENDER_WORKBENCH')
+            ok2 = render_fbx(p, out, engine='BLENDER_WORKBENCH', inside=inside)
             print(f"{f}: eevEE={'OK' if ok else 'none'} workbench={'OK' if ok2 else 'none'} -> {os.path.basename(out)}")
         else:
             print(f"{f}: eevEE OK -> {os.path.basename(out)}")
