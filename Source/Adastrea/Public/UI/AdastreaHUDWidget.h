@@ -316,16 +316,28 @@ protected:
 	FText TestStatusText;
 
 	// ====================
-	// TEST TELEMETRY DRAW
+	// TEST TELEMETRY PANEL (real UMG widgets)
 	// ====================
 
 	/**
-	 * Draw the labeled test-status string (TestStatusText) as an on-screen debug
-	 * message every frame. This is the reliable mechanism for test telemetry:
-	 * it draws directly over the game viewport with no widget-tree dependency,
-	 * so it is always visible during PIE/demo regardless of HUD layout state.
+	 * Build the HUD layout (a top-left anchored CanvasPanel with labeled text
+	 * blocks) during NativeConstruct. Unlike mutating WidgetTree->RootWidget,
+	 * this is the correct, reliable way to build a runtime widget: the tree is
+	 * valid when NativeConstruct runs, and each frame the data properties
+	 * below are pushed into the text blocks.
 	 */
-	void DrawTestTelemetry();
+	virtual void NativeConstruct() override;
+
+	/** Refreshes the visible text blocks from the current telemetry state. */
+	void RefreshTelemetryText();
+
+	/** Root canvas that holds the telemetry panel. */
+	UPROPERTY(Transient)
+	class UCanvasPanel* TelemetryCanvas;
+
+	/** Multiline telemetry text block (credits/cargo/speed/throttle/pos). */
+	UPROPERTY(Transient)
+	class UTextBlock* TelemetryTextBlock;
 
 	/** Current ship name for display */
 	UPROPERTY(BlueprintReadOnly, Category="HUD|State")

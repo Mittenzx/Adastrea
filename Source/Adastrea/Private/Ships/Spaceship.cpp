@@ -194,15 +194,15 @@ void ASpaceship::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    // Only apply flight physics if ship is possessed by a controller
-    // This avoids unnecessary CPU usage on unpossessed NPC ships
-    if (!GetController())
-    {
-        return;
-    }
+        // Only apply flight physics if ship is possessed by a controller
+        // This avoids unnecessary CPU usage on unpossessed NPC ships
+        if (!GetController())
+        {
+            return;
+        }
 
-    // Update X4-style mouse position flight controls every frame (when enabled)
-    // This allows continuous rotation based on cursor position, not mouse movement
+        // Update X4-style mouse position flight controls every frame (when enabled)
+        // This allows continuous rotation based on cursor position, not mouse movement
     if (bUseMousePositionFlight && bFlightAssistEnabled)
     {
         UpdateMousePositionFlight(DeltaTime);

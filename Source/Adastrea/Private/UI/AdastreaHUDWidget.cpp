@@ -5,7 +5,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "Trading/CargoComponent.h"
 #include "Trading/PlayerTraderComponent.h"
-#include "Engine/Engine.h"
+#include "Blueprint/WidgetTree.h"
+#include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
+#include "Components/TextBlock.h"
 
 UAdastreaHUDWidget::UAdastreaHUDWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -48,19 +51,48 @@ void UAdastreaHUDWidget::InitializeHUD_Implementation()
 	bHasTarget = false;
 }
 
-void UAdastreaHUDWidget::DrawTestTelemetry()
+void UAdastreaHUDWidget::NativeConstruct()
 {
-	// Draw the labeled test-status string directly over the game viewport.
-	// AddOnScreenDebugMessage is the reliable mechanism for test telemetry:
-	// no widget-tree dependency, always visible during PIE/demo.
-	if (GEngine)
+	Super::NativeConstruct();
+
+	if (!TelemetryCanvas && WidgetTree)
 	{
-		const int32 Key = 426900; // stable key so it overwrites in place (no spam)
-		GEngine->AddOnScreenDebugMessage(
-			Key,
-			0.1f,
-			FColor::Cyan,
-			TestStatusText.ToString());
+		// Root: a full-screen canvas we can anchor the telemetry on.
+		TelemetryCanvas = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), TEXT("TelemetryCanvas"));
+		if (TelemetryCanvas)
+		{
+			WidgetTree->RootWidget = TelemetryCanvas;
+		}
+	}
+
+	// Multiline telemetry text block, anchored top-left of the viewport.
+	if (TelemetryCanvas)
+	{
+		TelemetryTextBlock = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("TelemetryText"));
+		if (TelemetryTextBlock)
+		{
+			TelemetryTextBlock->SetText(FText::FromString(
+				TEXT("Credits: 0  Cargo: 0/0  Speed: 0  Throttle: 0%\nPos: X=0 Y=0 Z=0")));
+			TelemetryTextBlock->SetColorAndOpacity(FSlateColor(FLinearColor::White));
+			TelemetryTextBlock->SetFontSize(16);
+			TelemetryTextBlock->SetShadowOffset(FVector2D(2.0f, 2.0f));
+
+			TelemetryCanvas->AddChildToCanvas(TelemetryTextBlock);
+			if (UCanvasPanelSlot* PanelSlot = Cast<UCanvasPanelSlot>(TelemetryTextBlock->Slot))
+			{
+				PanelSlot->SetAnchors(FAnchors(0.0f, 0.0f, 0.0f, 0.0f)); // top-left
+				PanelSlot->SetAlignment(FVector2D(0.0f, 0.0f));
+				PanelSlot->SetPosition(FVector2D(12.0f, 12.0f));
+			}
+		}
+	}
+}
+
+void UAdastreaHUDWidget::RefreshTelemetryText()
+{
+	if (TelemetryTextBlock)
+	{
+		TelemetryTextBlock->SetText(TestStatusText);
 	}
 }
 
@@ -283,7 +315,7 @@ void UAdastreaHUDWidget::UpdateHUDFromGameState_Implementation(float DeltaTime)
 			FText::FromString(FString::Printf(TEXT("X=%.0f Y=%.0f Z=%.0f"),
 				CurrentCoordinates.X, CurrentCoordinates.Y, CurrentCoordinates.Z)));
 
-		DrawTestTelemetry();
+		RefreshTelemetryText();
 	}
 
 	// Blueprint can override this to implement custom auto-update logic
