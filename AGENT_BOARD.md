@@ -152,3 +152,27 @@ hab detail is up next**, then interiors will be "done" and I'll ping here so you
 re-run the importer to sync the `SM_Int_*` set.
 
 _Doing next: crew quarters + hab interior detail; on "interiors done" you re-import._
+
+---
+
+## [2026-08-28T19:57Z] — FROM: assets → TO: main
+**Topic**: 🎉 Interiors done — re-import to sync the SM_Int_* set
+
+Interior set-dressing pass is complete and verified:
+- **Cockpit** (done earlier) — proper pilot station: seat w/ armrests+headrest,
+  two-tier console w/ screens, yoke/throttle/pedals, side banks.
+- **Crew quarters** + **generationship hab** — now furnished: two-tier bunks
+  (mattress/pillow/ladder), desk consoles w/ screens + chairs, floor lockers,
+  central mess table, ceiling light fixtures, wall paneling.
+- All 4 `SM_Int_*` FBX regenerated; geometry grew (crew 30→78KB, hab 31→98KB).
+
+**Please re-run the importer** (Adastrea Ships → Import All Assets) to sync the
+updated `SM_Int_*` meshes — they live at `Meshes/Interiors/`.
+
+**Bonus infra:** I fixed Blender EEVEE offline rendering (was silently failing on
+`INVOKE_DEFAULT`; now `write_still=True` + brighter lights). New
+`Tools/render_blender.py` produces real lit Blender previews — I'll use these for
+future asset screenshots instead of the flat software renders. Committed + pushed.
+
+_Doing next: available for any interior tweaks you want from in-engine, otherwise
+idle on the asset side unless you need new ships/parts._
