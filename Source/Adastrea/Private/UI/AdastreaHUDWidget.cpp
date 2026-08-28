@@ -5,10 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Trading/CargoComponent.h"
 #include "Trading/PlayerTraderComponent.h"
-#include "Components/TextBlock.h"
-#include "Blueprint/WidgetTree.h"
-#include "Components/CanvasPanel.h"
-#include "Components/CanvasPanelSlot.h"
+#include "Engine/Engine.h"
 
 UAdastreaHUDWidget::UAdastreaHUDWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -49,42 +46,21 @@ void UAdastreaHUDWidget::InitializeHUD_Implementation()
 	ShieldPercent = 1.0f;
 	CurrentSpeedValue = 0.0f;
 	bHasTarget = false;
-
-	CreateRuntimeDebugWidget();
 }
 
-void UAdastreaHUDWidget::CreateRuntimeDebugWidget()
+void UAdastreaHUDWidget::DrawTestTelemetry()
 {
-	if (DebugTextBlock || !WidgetTree)
+	// Draw the labeled test-status string directly over the game viewport.
+	// AddOnScreenDebugMessage is the reliable mechanism for test telemetry:
+	// no widget-tree dependency, always visible during PIE/demo.
+	if (GEngine)
 	{
-		return;
-	}
-
-	// Root is a full-screen CanvasPanel so we can anchor the debug text.
-	UCanvasPanel* RootCanvas = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), TEXT("HUDCanvas"));
-	if (!RootCanvas)
-	{
-		return;
-	}
-	WidgetTree->RootWidget = RootCanvas;
-
-	// The labeled telemetry text, anchored to the top-left of the viewport.
-	DebugTextBlock = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("DebugStatusText"));
-	if (DebugTextBlock)
-	{
-		DebugTextBlock->SetText(FText::FromString("Credits: 0  Cargo: 0/0  Speed: 0  Throttle: 0%"));
-		DebugTextBlock->SetColorAndOpacity(FSlateColor(FLinearColor::White));
-		DebugTextBlock->SetFontSize(14);
-		DebugTextBlock->SetShadowOffset(FVector2D(1.0f, 1.0f));
-
-		RootCanvas->AddChildToCanvas(DebugTextBlock);
-		if (UCanvasPanelSlot* PanelSlot = Cast<UCanvasPanelSlot>(DebugTextBlock->Slot))
-		{
-			PanelSlot->SetAnchors(FAnchors(0.0f, 0.0f, 0.0f, 0.0f)); // top-left
-			PanelSlot->SetAlignment(FVector2D(0.0f, 0.0f));
-			PanelSlot->SetPosition(FVector2D(8.0f, 8.0f));
-		}
-		UE_LOG(LogTemp, Log, TEXT("AdastreaHUD: Created runtime debug text block (top-left)"));
+		const int32 Key = 426900; // stable key so it overwrites in place (no spam)
+		GEngine->AddOnScreenDebugMessage(
+			Key,
+			0.1f,
+			FColor::Cyan,
+			TestStatusText.ToString());
 	}
 }
 
@@ -307,10 +283,7 @@ void UAdastreaHUDWidget::UpdateHUDFromGameState_Implementation(float DeltaTime)
 			FText::FromString(FString::Printf(TEXT("X=%.0f Y=%.0f Z=%.0f"),
 				CurrentCoordinates.X, CurrentCoordinates.Y, CurrentCoordinates.Z)));
 
-		if (DebugTextBlock)
-		{
-			DebugTextBlock->SetText(TestStatusText);
-		}
+		DrawTestTelemetry();
 	}
 
 	// Blueprint can override this to implement custom auto-update logic

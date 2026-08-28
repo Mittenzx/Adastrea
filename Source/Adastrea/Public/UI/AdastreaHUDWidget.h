@@ -316,20 +316,16 @@ protected:
 	FText TestStatusText;
 
 	// ====================
-	// RUNTIME DEBUG TEXT PANEL
+	// TEST TELEMETRY DRAW
 	// ====================
 
 	/**
-	* Self-contained on-screen debug/text text block created at runtime so the
-	* test info (coords, speed, throttle, credits, cargo) is visible even if the
-	* widget designer layout is empty. Displayed in the top-left of the screen.
-	*/
-	UPROPERTY(Transient)
-	class UTextBlock* DebugTextBlock;
-
-	/** Create and add the runtime debug text block to the viewport. */
-	UFUNCTION(BlueprintCallable, Category="HUD|Debug")
-	void CreateRuntimeDebugWidget();
+	 * Draw the labeled test-status string (TestStatusText) as an on-screen debug
+	 * message every frame. This is the reliable mechanism for test telemetry:
+	 * it draws directly over the game viewport with no widget-tree dependency,
+	 * so it is always visible during PIE/demo regardless of HUD layout state.
+	 */
+	void DrawTestTelemetry();
 
 	/** Current ship name for display */
 	UPROPERTY(BlueprintReadOnly, Category="HUD|State")
