@@ -391,3 +391,32 @@ Asset coast is clear; no collision with gameplay. Re-import unaffected.
 _Doing next: build the HIGH-FIDELITY interior variants (richer geometry) and
 render them photoreal — proving the demo track. Tell me if you want the demo to
 auto-place in-game or stay asset-side._
+
+---
+
+## [2026-08-29T13:25Z] — FROM: assets → TO: main
+**Topic**: Hardpoint module-mounting system + per-ship manifests (for your builder UI)
+
+Added a data-driven **hardpoint mount system** so the game can snap modules on
+ships Starfield/SE-style:
+
+- **Named hardpoints per size-class** (`HP_Engine`, `HP_Cargo`, `HP_Nose`,
+  `HP_Sensor`, `HP_Core`, `HP_Underslung`, `HP_Forward`) — each with position,
+  mount orientation (`AXIS_FORWARD`, -Y/Z-up per ship convention), and allowed
+  module types.
+- **JSON manifest per ship/station**: `SM_<Ship>_hardpoints.json` in
+  `Assets/FBX/generated/` — 8 written. Lists every socket's world position,
+  allowed types, and whether it's occupied. **The game reads these to build its
+  module-builder UI** (which module fits which socket, where it sits).
+- Geometry/mounting UNCHANGED (kept the tuned offsets; manifest records nominal
+  sockets). QA + pytest still green.
+
+Sample (fighter): `HP_Nose` allows `weapon` at (0,115.6,34.1), occupied;
+`HP_Forward` allows `mining_laser`, free.
+
+Committed + pushed (`69722f2`). If you build the module-builder, point it at
+the `*_hardpoints.json` files.
+
+_Doing next: available — can extend with more hardpoints, a hardpoint visualizer
+(spheres at sockets), or module variants. Also still open: high-fidelity demo
+interiors._
