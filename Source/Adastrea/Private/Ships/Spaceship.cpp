@@ -57,9 +57,9 @@ ASpaceship::ASpaceship()
     TravelModeMultiplier = 5.0f;              // 5x speed in travel mode
     StrafeIndependence = 0.8f;                // High strafe independence
     MouseFlightSensitivity = 1.0f;            // 1:1 mouse sensitivity
-    bUseMousePositionFlight = true;           // X4-style mouse position flight by default
-    MouseDeadzoneRadius = 50.0f;              // 50 pixel deadzone from center
-    MouseMaxRadius = 400.0f;                  // 400 pixels for 100% rotation speed
+        bUseMousePositionFlight = false;          // Simple mouse-delta look (X4 position flight deferred)
+        MouseDeadzoneRadius = 50.0f;              // 50 pixel deadzone from center
+        MouseMaxRadius = 400.0f;                  // 400 pixels for 100% rotation speed
 
     // Initialize free look camera parameters
     bFreeLookActive = false;
