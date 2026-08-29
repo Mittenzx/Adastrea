@@ -1419,7 +1419,12 @@ def build_hab_interior(sz, outname, room_count=1):
 
 
 def build_corridor(prefix):
-    """Standard spine corridor + hatches (joinable between modules)."""
+    """Standard spine corridor + hatches (joinable between modules).
+
+    Enriched vs v1: added wall paneling strips, floor conduit runs, ceiling
+    light strips, emergency bulkhead rings, junction boxes, and hatches at
+    each end so it reads as a proper pressurized corridor.
+    """
     k = 1.0  # corridors share a standard scale across classes
     parts = []
     L = 260
@@ -1436,17 +1441,114 @@ def build_corridor(prefix):
     for x in range(-100, 101, 50):
         ring = box(f"Bulkhead{x}", 70*k, 5*k, 70*k, loc=(x, 0, H/2))
         parts.append(ring)
+    # wall paneling + conduit runs up the side walls
+    for x in range(-120, 121, 30):
+        pnl = box(f"WallPanel{x}", 10*k, 3*k, 40*k, loc=(x, 34*k, 35*k))
+        parts.append(pnl)
+        cond = box(f"Conduit{x}", 4*k, 4*k, H-10*k, loc=(x, -30*k, H/2))
+        parts.append(cond)
+    # junction boxes on the ceiling + emergency hatch lights
+    for x in (-100, 0, 100):
+        jb = box(f"Junction{x}", 14*k, 8*k, 4*k, loc=(x, 0, H-4*k))
+        parts.append(jb)
+    # end hatches (door frames)
+    for side in (-1, 1):
+        fr_l = box(f"HatchFrame{side}L", 4*k, 6*k, H-10*k, loc=(side*(L/2-8*k), -30*k, 40*k))
+        fr_r = box(f"HatchFrame{side}R", 4*k, 6*k, H-10*k, loc=(side*(L/2-8*k), 30*k, 40*k))
+        fr_t = box(f"HatchFrame{side}T", 4*k, 60*k, 8*k, loc=(side*(L/2-8*k), 0, H-8*k))
+        hatch = box(f"Hatch{side}", 3*k, 52*k, H-14*k, loc=(side*(L/2-2*k), 0, 40*k))  # door slab
+        parts += [fr_l, fr_r, fr_t, hatch]
     jo, out = finalize_part(parts, prefix + "_Corridor", "M_Interior_Hab")
     return [(jo, out)]
 
 
+def build_engineering_bay(sz, outname):
+    """Engineering / mechanical bay interior — reactor housing, pipe walls,
+    tool benches, conduit rigging. A distinct interior role from crew quarters."""
+    k = sc(sz)
+    parts = []
+    L = 300*k; W = 160*k; H = 120*k
+    # shell
+    floor = box("EngFloor", L, W, 8*k, loc=(0,0,0)); bevel(floor,2,1); parts.append(floor)
+    for side in (-1,1):
+        w = box(f"EngWall{side}", 8*k, W, H, loc=(side*L/2, 0, H/2)); bevel(w,2,1); parts.append(w)
+    ceil = box("EngCeil", L, W, 6*k, loc=(0,0,H)); bevel(ceil,2,1); parts.append(ceil)
+    # central reactor core housing (large cylinder + bands)
+    core = cyl("EngCore", 34*k, 90*k, loc=(0, -30*k, 45*k), verts=20); bevel(core,3,1)
+    core_band1 = torus("CoreBand1", 34*k, 5*k, loc=(0, -30*k, 25*k), maj=24, minr=6)
+    core_band2 = torus("CoreBand2", 34*k, 5*k, loc=(0, -30*k, 70*k), maj=24, minr=6)
+    parts += [core, core_band1, core_band2]
+    # pipe racks along one wall + energy conduits across the ceiling
+    for y in range(int(-W/2)+40, int(W/2), 50):
+        rack = box(f"PipeRack{y}", 60*k, 6*k, 8*k, loc=(-L/2+40*k, y, 40*k)); bevel(rack,1,1)
+        for p in (-1,1):
+            pipe = cyl(f"Pipe{y}_{p}", 4*k, 12*k, loc=(-L/2+40*k+p*14*k, y, 50*k),
+                       rot=(math.radians(90),0,0), verts=8)
+            parts.append(pipe)
+        parts.append(rack)
+    # ceiling conduit rigging (cross beams + hanging conduits)
+    for x in range(-100, 101, 100):
+        beam = box(f"CeilBeam{x}", 8*k, W-20*k, 6*k, loc=(x, 0, H-20*k))
+        parts.append(beam)
+    # work benches + tool wall + floor battery banks
+    bench1 = box("WorkBench1", 80*k, 20*k, 35*k, loc=(L/2-60*k, -50*k, 20*k)); bevel(bench1,2,1)
+    bench2 = box("WorkBench2", 60*k, 12*k, 30*k, loc=(L/2-50*k, 40*k, 17*k)); bevel(bench2,2,1)
+    tool_wall = box("ToolWall", 5*k, 60*k, 40*k, loc=(L/2-80*k, -30*k, 55*k)); bevel(tool_wall,1,1)
+    # batteries along the back
+    for i in range(5):
+        bat = box(f"Battery{i}", 22*k, 22*k, 50*k, loc=(-L/2+30*k+i*45*k, W/2-16*k, 30*k)); bevel(bat,2,1)
+        parts.append(bat)
+    # emergency light strips + hazard floor strips
+    for x in (-100, 0, 100):
+        ls = box(f"EngLight{x}", 40*k, 5*k, 4*k, loc=(x, 0, H-4*k))
+        parts.append(ls)
+    for y in range(int(-W/2)+10, int(W/2), 40):
+        hz = box(f"EngHazard{y}", L-20*k, 6*k, 2*k, loc=(0, y, 5*k))
+        parts.append(hz)
+    parts += [bench1, bench2, tool_wall]
+    jo, out = finalize_part(parts, outname, "M_Interior_Eng")
+    return [(jo, out)]
+
+
+def build_airlock(prefix):
+    """Airlock module — the threshold between interior and exterior void."""
+    k = 1.0
+    parts = []
+    L = 140; W = 80; H = 70
+    floor = box("ALFloor", L, W, 6*k, loc=(0,0,0)); bevel(floor,1,1); parts.append(floor)
+    for side in (-1,1):
+        w = box(f"ALWall{side}", 6*k, W, H, loc=(side*L/2, 0, H/2)); bevel(w,1,1); parts.append(w)
+    ceil = box("ALCeil", L, W, 5*k, loc=(0,0,H)); bevel(ceil,1,1); parts.append(ceil)
+    # inner + outer pressure hatches
+    for x in (-L/2+12, L/2-12):
+        fr_l = box(f"ALFrL{x}", 6*k, 5*k, H-8*k, loc=(x, -32*k, 40*k))
+        fr_r = box(f"ALFrR{x}", 6*k, 5*k, H-8*k, loc=(x, 32*k, 40*k))
+        fr_t = box(f"ALFrT{x}", 6*k, 64*k, 6*k, loc=(x, 0, H-6*k))
+        door = box(f"ALDoor{x}", 4*k, 50*k, H-12*k, loc=(x, 0, 40*k))  # pressure slab
+        parts += [fr_l, fr_r, fr_t, door]
+    # light strips + lockers + pressure-lines
+    for x in (-40, 0, 40):
+        parts.append(box(f"ALLight{x}", 20*k, 5*k, 3*k, loc=(x, 0, H-5*k)))
+    for side in (-1,1):
+        lk = box(f"ALLocker{side}", 26*k, 4*k, 55*k, loc=(side*38*k, 0, 30*k)); bevel(lk,1,1)
+        parts.append(lk)
+    # floor conduit
+    parts.append(box("ALConduit", L-20*k, 4*k, 4*k, loc=(0, -34*k, 5*k)))
+    jo, out = finalize_part(parts, prefix + "_Airlock", "M_Interior_Hab")
+    return [(jo, out)]
+
+
 def build_interior_set():
-    """Build all interior instances, one per ship class + standard corridor."""
+    """Build all interior instances (cockpit, crew quarters, hab, corridor, +
+    engineering bay, airlock)."""
     results = []
     results += build_cockpit_interior('small', "SM_Int_Fighter_Cockpit")
     results += build_hab_interior('medium', "SM_Int_Freighter_CrewQuarters")
     results += build_hab_interior('large', "SM_Int_Generationship_Hab", room_count=2)
     results += build_corridor("SM_Int_Standard")
+    # new interior roles
+    results += build_engineering_bay('medium', "SM_Int_Freighter_EngineRoom")
+    results += build_airlock("SM_Int_Standard")
     return results
 
 
