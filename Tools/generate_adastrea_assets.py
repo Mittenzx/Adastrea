@@ -741,6 +741,91 @@ def assemble_ship(sz, outname, opts, carcass_builder=None):
     return results
 
 
+def assemble_whole_ship(sz, outname, opts, carcass_builder=None):
+    """Build a WHOLE ship as a single joined mesh (carcass + all mounted parts
+    joined into one object at their true positions). Produces a ready-to-place
+    `<outname>_Assembled.fbx` that reads as an actual ship silhouette.
+
+    Uses ONLY raw primitives (never finalize_part, which deletes sibling meshes),
+    then joins once into a single mesh.
+    """
+    clear_scene()
+    objs = []
+    k = sc(sz)
+    s = SIZE_CLASSES[sz]
+    lx, ly, lz = s['carcass']; locz = s['z']
+
+    # --- carcass (raw hull + spine + nose) ---
+    hull = box("Hull", lx, ly, lz, loc=(0,0,locz)); bevel(hull, 6, 2)
+    nose = box("Nose", lx*0.5, ly*0.3, lz*0.55, loc=(0, ly*0.62, locz)); bevel(nose, 5, 2)
+    spine = box("Spine", lx*0.28, ly*0.85, lz*0.26, loc=(0, -ly*0.05, locz+lz*0.6)); bevel(spine, 4, 2)
+    objs += [hull, nose, spine]
+
+    # --- engine block (twin nacelles + bells) ---
+    if opts.get('engine'):
+        eb = box("EngBlk", 150*k, 200*k, 95*k, loc=(0, -ly*0.52, locz - 10*k)); bevel(eb, 5, 2)
+        objs.append(eb)
+        for side in (-1, 1):
+            nac = box(f"EngNac{side}", 60*k, 150*k, 72*k, loc=(side*120*k, -ly*0.5, locz - 20*k),
+                      rot=(0,0,math.radians(8*side))); bevel(nac,4,1)
+            noz = cone(f"EngNoz{side}", 22*k, 55*k, loc=(side*120*k, -ly*0.62, locz - 25*k),
+                       rot=(math.radians(90),0,0), verts=14)
+            objs += [nac, noz]
+
+    # --- cargo bay + cells ---
+    if opts.get('cargo'):
+        cb = box("Cargo", 200*k, 260*k, 90*k, loc=(0, -ly*0.05, locz - 20*k)); bevel(cb,4,2)
+        objs.append(cb)
+        for i, dx in enumerate([-60, 0, 60]):
+            c = greeble(f"CargoCell{i}", loc=(dx*k, -ly*0.08, locz - 5*k), sx=30*k, sy=70*k, sz=30*k)
+            objs.append(c)
+
+    # --- weapon pod ---
+    if opts.get('weapon'):
+        for side in (-1, 1):
+            w = greeble(f"Weapon{side}", loc=(side*42*k, ly*0.34, locz - 25*k), sx=16*k, sy=90*k, sz=16*k)
+            barrel = cyl(f"Barrel{side}", 5*k, 40*k, loc=(side*42*k, ly*0.42, locz - 25*k),
+                         rot=(math.radians(90),0,0), verts=10)
+            objs += [w, barrel]
+
+    # --- sensor mast ---
+    if opts.get('sensor'):
+        mast = cyl("SensorMast", 6*k, 140*k, loc=(0, ly*0.18, locz + 70*k), verts=12)
+        tip = sphere("SensorTip", 9*k, loc=(0, ly*0.18, locz + 160*k), verts=12)
+        objs += [mast, tip]
+
+    # --- reactor core ---
+    if opts.get('reactor'):
+        core = box("Reactor", 90*k, 90*k, 90*k, loc=(0, -ly*0.35, locz + 40*k)); bevel(core,5,2)
+        objs.append(core)
+
+    # --- drill rig (underslung) ---
+    if opts.get('drill'):
+        boom = box("DrillBoom", 26*k, 220*k, 34*k, loc=(0, -ly*0.3, locz - 15*k)); bevel(boom,4,2)
+        head = cone("DrillHead", 30*k, 90*k, loc=(0, -ly*0.45, locz - 20*k), verts=16)
+        objs += [boom, head]
+
+    # --- mining laser ---
+    if opts.get('mining_laser'):
+        barrel = cyl("MLBarrel", 10*k, 160*k, loc=(0, ly*0.35, locz - 10*k),
+                     rot=(math.radians(90),0,0), verts=14)
+        emitter = box("MLEmit", 26*k, 24*k, 30*k, loc=(0, ly*0.42, locz - 10*k)); bevel(emitter,3,1)
+        objs += [barrel, emitter]
+
+    # join everything into one mesh (raw join, no finalize deletion)
+    joined = join(objs, f"{outname}_AssembledGeo")
+    apply_mods(joined)
+    clean_mesh(joined)
+    smart_uv(joined)
+    joined.name = f"{outname}_Assembled"
+    m = bpy.data.materials.new("M_Assembled")
+    m.use_nodes = True
+    if not joined.data.materials:
+        joined.data.materials.append(m)
+    out = export_fbx(joined, f"{outname}_Assembled")
+    return [(joined, out)]
+
+
 # ----------------------------------------------------------------------------
 # Assets
 # ----------------------------------------------------------------------------
@@ -1362,6 +1447,26 @@ def main():
     for ship_name, parts in ship_parts.items():
         for obj, out in parts:
             print(f"  {ship_name}: {os.path.basename(out)} ({os.path.getsize(out) if os.path.exists(out) else 0} B)")
+
+    # Whole-ship assembled meshes (single joined object, ready-to-place)
+    print("Building assembled whole ships...")
+    assembled_specs = {
+        "SM_Ship_Fighter_01": ('small', {'engine': True, 'cargo': True, 'weapon': True,
+                                          'weapon_twin': True, 'sensor': True}),
+        "SM_Ship_Freighter_01": ('medium', {'engine': True, 'cargo': True, 'sensor': True,
+                                            'reactor': True}),
+        "SM_Ship_Gunship_02": ('small', {'engine': True, 'weapon': True, 'weapon_twin': True,
+                                         'sensor': True, 'sensor_asym': True}),
+        "SM_Ship_Corvette_01": ('corvette', {'engine': True, 'cargo': True, 'weapon': True,
+                                             'weapon_twin': True, 'sensor': True, 'reactor': True}),
+        "SM_Ship_Miner_01": ('corvette', {'engine': True, 'cargo': True, 'drill': True,
+                                          'mining_laser': True, 'sensor': True}),
+    }
+    assembled_count = 0
+    for name, (sz, opts) in assembled_specs.items():
+        for obj, out in assemble_whole_ship(sz, name, opts):
+            assembled_count += 1
+            print(f"  {name}: assembled {os.path.basename(out)} ({os.path.getsize(out) if os.path.exists(out) else 0} B)")
 
     # Project-Hyperion-inspired generation ships (ring habitat + asteroid shell)
     print("Building Project-Hyperion generation ships...")
