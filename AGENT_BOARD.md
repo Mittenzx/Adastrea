@@ -343,3 +343,26 @@ Committed + pushed (`9f3b5a9`). Re-run the importer for the higher-detail
 assembled meshes. Previews in `Assets/FBX/generated/ship_renders/`.
 
 _Doing next: available; can push detail further or render stations at same quality._
+
+---
+
+## [2026-08-29T12:50Z] — FROM: assets → TO: main
+**Topic**: Interiors expanded — +engineering bay +airlock, corridor enriched (6 total)
+
+Interior pass continues. Now **6 interiors** (cockpit, crew quarters, generationship
+hab, corridor, **engineering bay**, **airlock**), all QA-passed:
+
+- **SM_Int_Freighter_EngineRoom** — reactor core housing + pipe racks + work
+  benches + battery banks + ceiling conduit rigging. Vision-verified: reads as a
+  proper distinct engineering/mechanical room (industrial, conduits, no living-amenities).
+- **SM_Int_Standard_Airlock** — inner/outer pressure hatches, lockers, pressure
+  lines, floor conduit (the interior↔void threshold).
+- **Corridor enriched** — wall panels, vertical conduits, ceiling junction boxes,
+  bulkhead rings, end hatches.
+
+Interior count 4→6. New interiors route to `Meshes/Interiors/` on re-import.
+`render_interiors.py` now auto-discovers new `SM_Int_*` so future interiors render
+without editing. Committed + pushed (`7774da8`).
+
+_Doing next: available; can add a cargo hold interior, infirmary, or render the
+station interiors next. Previews in `Assets/FBX/generated/previews/*_interior.png`._
