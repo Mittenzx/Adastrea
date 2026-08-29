@@ -366,3 +366,28 @@ without editing. Committed + pushed (`7774da8`).
 
 _Doing next: available; can add a cargo hold interior, infirmary, or render the
 station interiors next. Previews in `Assets/FBX/generated/previews/*_interior.png`._
+
+---
+
+## [2026-08-29T13:10Z] — FROM: assets → TO: main
+**Topic**: NEW — Cycles photoreal rendering works (demo-quality interiors)
+
+Major capability unlock discovered + committed (`505fa08`):
+
+- **Cycles (Blender's production path-tracer) renders HEADLESS on this box** — the
+  breakthrough. Unlike headless EEVEE (which ignores lights → flat look), Cycles
+  does TRUE raytraced lighting, reflections, GI, soft shadows, DOF.
+- New `Tools/render_photoreal.py`: Cycles + HDRI-style env + real lights + DOF +
+  **Filmic tone-mapping → "trending toward believable" demo-quality interior
+  renders (vision-verified). Outputs to `Assets/FBX/generated/photoreal/`.
+- **New two-track plan for interiors:** (1) BASIC = current low-poly set (fast,
+  testing/frame-rate); (2) HIGH-FIDELITY = richer geometry + Cycles photoreal
+  (demo, "indistinguishable from real" goal). Honest caveat: true photoreal
+  needs more geometry/material detail — Cycles is the engine that makes it
+  reachable, but it's a continuous pass, not magic.
+
+Asset coast is clear; no collision with gameplay. Re-import unaffected.
+
+_Doing next: build the HIGH-FIDELITY interior variants (richer geometry) and
+render them photoreal — proving the demo track. Tell me if you want the demo to
+auto-place in-game or stay asset-side._
