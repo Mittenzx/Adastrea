@@ -1008,6 +1008,37 @@ def assemble_ship(sz, outname, opts, carcass_builder=None):
     return results
 
 
+def build_tapered_hull(lx, ly, lz, locz, k=1.0, prefix="Hull"):
+    """Build a TAPERED, layered fuselage instead of a plain box — the X4-style
+    silhouette. Layers stack from bottom to top with offset + scaling so the
+    hull reads as angled armor plating, not a single block.
+
+    Returns list of mesh objects."""
+    objs = []
+    # main tapered belly (wider at rear, tapering narrower forward)
+    for i, (sx, sy, sz, yoff) in enumerate([
+        (1.00, 1.00, 0.40, -0.12),   # lower belly
+        (0.92, 0.94, 0.36, -0.02),   # mid
+        (0.82, 0.86, 0.32,  0.08),   # upper
+        (0.66, 0.72, 0.26,  0.20),   # spine apex
+    ]):
+        seg = box(f"{prefix}_Layer{i}", lx*sx, ly*sy, lz*sz,
+                  loc=(0, yoff*ly, locz + lz*(0.5 - (i+0.5)*0.24)),
+                  rot=(0, math.radians(sy*1.2), math.radians(sx*8)))
+        bevel(seg, 6, 2)
+        objs.append(seg)
+    # angled nose cone (tapered fore) - replaces the box nose
+    nose = cone(f"{prefix}_Nose", ly*0.10, ly*0.55, loc=(0, ly*0.60, locz + lz*0.1),
+                rot=(math.radians(90), 0, 0), verts=16)
+    bevel(nose, 2, 1)
+    objs.append(nose)
+    # spine ridge (dorsal raised rail)
+    spine = box(f"{prefix}_Spine", lx*0.34, ly*0.30, lz*0.30, loc=(0, -ly*0.05, locz + lz*0.75),
+                rot=(0, math.radians(4), 0)); bevel(spine, 4, 2)
+    objs.append(spine)
+    return objs
+
+
 def assemble_whole_ship(sz, outname, opts, carcass_builder=None):
     """Build a WHOLE ship as a single joined mesh (carcass + all mounted parts
     joined into one object at their true positions). Produces a ready-to-place
@@ -1022,11 +1053,8 @@ def assemble_whole_ship(sz, outname, opts, carcass_builder=None):
     s = SIZE_CLASSES[sz]
     lx, ly, lz = s['carcass']; locz = s['z']
 
-    # --- carcass (raw hull + spine + nose) ---
-    hull = box("Hull", lx, ly, lz, loc=(0,0,locz)); bevel(hull, 6, 2)
-    nose = box("Nose", lx*0.5, ly*0.3, lz*0.55, loc=(0, ly*0.62, locz)); bevel(nose, 5, 2)
-    spine = box("Spine", lx*0.28, ly*0.85, lz*0.26, loc=(0, -ly*0.05, locz+lz*0.6)); bevel(spine, 4, 2)
-    objs += [hull, nose, spine]
+    # --- carcass (TAPERED layered hull + nose + spine) ---
+    objs += build_tapered_hull(lx, ly, lz, locz, k)
 
     # --- engine block (twin nacelles + bells) ---
     if opts.get('engine'):
@@ -1124,22 +1152,79 @@ def assemble_whole_ship(sz, outname, opts, carcass_builder=None):
         wl = box(f"Winglet{side}", 16*k, 90*k, 60*k, loc=(side*0.4*lx, -ly*0.78, locz + lz*0.55),
                  rot=(0, 0, math.radians(-14*side))); bevel(wl, 4, 1)
         objs.append(wl)
-    # --- hull greeble cladding: MIRRORED small boxes/riders so the ship stays
-    # X-symmetric (matches QA's symmetry requirement) ---
+    # --- HULL GREEBBLE CLADDING: dense X4-style kitbash (mirrored for symmetry) ---
     import random
     rng = random.Random(hash(outname) % 100000)
+    def clamp(v):
+        return max(-0.98, min(0.98, v))
+    gp = []  # (loc, size, rot, kind)
+    # large cladding plates/ridges scattered across the hull
+    for i in range(12):
+        gx = clamp((rng.random()-0.5)*1.7)
+        gy = clamp((rng.random()*0.9 - 0.45))
+        gz = clamp(rng.random()*0.9 + 0.05)
+        gp.append((gx, gy, gz,
+                   (14+rng.random()*22, 6+rng.random()*20, 5+rng.random()*10),
+                   (rng.random()*0.25, rng.random()*0.25, rng.random()*0.35),
+                   'plate'))
+    # conduit pipes / cable runs (thin cylinders along hull)
     for i in range(8):
-        gx = (rng.random()-0.5)*lx*0.8
-        gy = (rng.random()*0.6 - 0.2)*ly
-        gz = locz + (rng.random()*0.5 + 0.1)*lz
-        sxv = (6+rng.random()*10)*k; syv = (4+rng.random()*16)*k; szv = (4+rng.random()*6)*k
-        rotv = (rng.random()*0.2, rng.random()*0.2, rng.random()*0.3)
-        g = greeble(f"Greeble{i}", loc=(gx, gy, gz), sx=sxv, sy=syv, sz=szv, rot=rotv)
-        objs.append(g)
-        # mirrored twin on the opposite X side
-        gm = greeble(f"GreebleMir{i}", loc=(-gx, gy, gz), sx=sxv, sy=syv, sz=szv,
-                     rot=(-rotv[0], rotv[1], rotv[2]))
-        objs.append(gm)
+        gx = clamp((rng.random()-0.5)*1.6)
+        gy = clamp((rng.random()*0.9 - 0.45))
+        gz = clamp(rng.random()*0.7 + 0.15)
+        gp.append((gx, gy, gz,
+                   (6+rng.random()*8, 3+rng.random()*4, 3+rng.random()*4),
+                   (rng.random()*0.4, rng.random()*0.4, rng.random()*0.4),
+                   'pipe'))
+    # small tanks / canisters
+    for i in range(6):
+        gx = clamp((rng.random()-0.5)*1.5)
+        gy = clamp((rng.random()*0.8 - 0.4))
+        gz = clamp(rng.random()*0.5 + 0.3)
+        gp.append((gx, gy, gz,
+                   (0, 0, 0),
+                   (0, 0, 0),
+                   'tank'))
+    # antennas / masts
+    for i in range(5):
+        gx = clamp((rng.random()-0.5)*1.4)
+        gy = clamp((rng.random()*0.7 - 0.3))
+        gz = clamp(rng.random()*0.5 + 0.4)
+        gp.append((gx, gy, gz,
+                   (0, 0, 0),
+                   (0, 0, 0),
+                   'antenna'))
+    for i, (gx, gy, gz, size, rot, kind) in enumerate(gp):
+        px, py, pz = gx*lx, gy*ly, locz + gz*lz
+        if kind == 'plate':
+            objs.append(greeble(f"KPlate{i}", loc=(px, py, pz), sx=size[0]*k,
+                                sy=size[1]*k, sz=size[2]*k, rot=rot))
+            objs.append(greeble(f"KPlateM{i}", loc=(-px, py, pz), sx=size[0]*k,
+                                sy=size[1]*k, sz=size[2]*k, rot=(-rot[0], rot[1], rot[2])))
+        elif kind == 'pipe':
+            c = cyl(f"KPipe{i}", size[1]*k, (14+rng.random()*20)*k, loc=(px, py, pz),
+                    rot=(rng.random()*math.pi, rng.random()*math.pi/2, rng.random()*math.pi),
+                    verts=6)
+            bevel(c, 1, 1); objs.append(c)
+            c2 = cyl(f"KPipeM{i}", size[1]*k, (14+rng.random()*20)*k, loc=(-px, py, pz),
+                     rot=(rng.random()*math.pi, rng.random()*math.pi/2, rng.random()*math.pi),
+                     verts=6)
+            bevel(c2, 1, 1); objs.append(c2)
+        elif kind == 'tank':
+            t = cyl(f"KTank{i}", (8+rng.random()*8)*k, (12+rng.random()*14)*k,
+                    loc=(px, py, pz), rot=(rng.random()*math.pi/2, 0, 0), verts=10)
+            bevel(t, 1, 1); objs.append(t)
+            t2 = cyl(f"KTankM{i}", (8+rng.random()*8)*k, (12+rng.random()*14)*k,
+                     loc=(-px, py, pz), rot=(rng.random()*math.pi/2, 0, 0), verts=10)
+            bevel(t2, 1, 1); objs.append(t2)
+        elif kind == 'antenna':
+            a = cyl(f"KAnt{i}", 2*k, (20+rng.random()*20)*k, loc=(px, py, pz),
+                    verts=6)
+            tip = sphere(f"KAntTip{i}", 3*k, loc=(px, py, pz + 28*k), verts=6)
+            objs += [a, tip]
+            a2 = cyl(f"KAntM{i}", 2*k, (20+rng.random()*20)*k, loc=(-px, py, pz), verts=6)
+            tip2 = sphere(f"KAntTipM{i}", 3*k, loc=(-px, py, pz + 28*k), verts=6)
+            objs += [a2, tip2]
     # =================== /DETAIL PASS ===================
 
     # join everything into one mesh (raw join, no finalize deletion)
