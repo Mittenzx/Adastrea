@@ -71,43 +71,55 @@ def build_preview(ship_base, outname, sz, module_choices):
     nose = gaa.box("Nose", lx*0.5, ly*0.3, lz*0.55, loc=(0, ly*0.62, locz)); gaa.bevel(nose, 5, 2)
     spine = gaa.box("Spine", lx*0.28, ly*0.85, lz*0.26, loc=(0, -ly*0.05, locz+lz*0.6)); gaa.bevel(spine, 4, 2)
     objs += [hull, nose, spine]
+    part_objs = {}
     for mtype, (fname, loc) in part_fbx.items():
         fpath = os.path.join(GEN, fname)
         bpy.ops.import_scene.fbx(filepath=fpath)
         imported = [o for o in bpy.data.objects if o.type=='MESH'][-1]
         imported.location = loc
         objs.append(imported)
+        part_objs.setdefault(mtype, []).append(imported)
 
-    # join into one mesh
-    joined = gaa.join(objs, f"{outname}_AssembledGeo")
-    gaa.apply_mods(joined)
-    gaa.clean_mesh(joined)
-    gaa.smart_uv(joined)
-    joined.name = f"{outname}_Assembled"
-    m = bpy.data.materials.new("M_Assembled"); m.use_nodes = True
-    if not joined.data.materials: joined.data.materials.append(m)
-    gaa.export_fbx(joined, f"{outname}_Assembled")
-
-    # ---- render via the textured self-lit path (reuse render_ships logic) ----
-    sc = bpy.context.scene
-    # Cycles-friendly material: lit metallic grey (real lights shade it, so
-    # shadows + reflections make module boundaries read; slight emission so it's
-    # never pure black).
-    mat = bpy.data.materials.new("PV"); mat.use_nodes = True
-    try:
-        bs = mat.node_tree.nodes['Principled BSDF']
-        bs.inputs['Base Color'].default_value = (0.55, 0.58, 0.63, 1.0)
-        bs.inputs['Roughness'].default_value = 0.35   # some sheen
-        bs.inputs['Metallic'].default_value = 0.9
+    # ---- per-module accent materials (visualize each module as a distinct
+    # colored component), assigned on the separate part objects BEFORE joining
+    ACCENTS = {
+        'engine':  (0.10, 0.55, 0.95, 1.0),   # blue
+        'cargo':   (0.20, 0.75, 0.35, 1.0),   # green
+        'weapon':  (0.90, 0.25, 0.15, 1.0),   # red
+        'sensor':  (0.95, 0.60, 0.10, 1.0),   # amber
+        'reactor': (0.75, 0.15, 0.65, 1.0),   # magenta
+    }
+    def accent_mat(color, name):
+        m = bpy.data.materials.new(name); m.use_nodes = True
         try:
-            bs.inputs['Emission Color'].default_value = (0.1, 0.11, 0.12, 1.0)
-            bs.inputs['Emission Strength'].default_value = 0.4
+            bs = m.node_tree.nodes['Principled BSDF']
+            # full accent base color (not dimmed) so the module clearly reads its color
+            bs.inputs['Base Color'].default_value = color
+            bs.inputs['Roughness'].default_value = 0.35
+            bs.inputs['Metallic'].default_value = 0.4   # lower so color shows
+            try:
+                bs.inputs['Emission Color'].default_value = color
+                bs.inputs['Emission Strength'].default_value = 3.0   # strong glow
+            except Exception:
+                pass
         except Exception:
             pass
-    except Exception:
-        pass
-    for o in [o for o in bpy.data.objects if o.type=='MESH']:
-        o.data.materials.clear(); o.data.materials.append(mat)
+        return m
+    for mtype, objs_list in part_objs.items():
+        col = ACCENTS.get(mtype, (0.5,0.5,0.5,1.0))
+        am = accent_mat(col, f"Accent_{mtype}")
+        for o in objs_list:
+            o.data.materials.clear(); o.data.materials.append(am)
+
+    # hull stays neutral grey (assign to hull/nose/spine primitives)
+    hull_mat = accent_mat((0.45, 0.48, 0.53, 1.0), "HullNeutral")
+    for o in (hull, nose, spine):
+        if o.name in bpy.data.objects:
+            o.data.materials.clear(); o.data.materials.append(hull_mat)
+
+    # ---- render the SEPARATE part objects (so per-module accent colors show);
+    # join+export happens AFTER render ----
+    sc = bpy.context.scene
     # normalize + frame
     from mathutils import Vector
     vmin = Vector((1e9,)*3); vmax = Vector((-1e9,)*3)
@@ -138,23 +150,12 @@ def build_preview(ship_base, outname, sz, module_choices):
     w=sc.world if sc.world else bpy.data.worlds.new("P"); sc.world=w; w.use_nodes=True
     try: w.node_tree.nodes['Background'].inputs[0].default_value=(0.02,0.025,0.04,1.0)
     except Exception: pass
-    sc.render.engine = 'CYCLES'
-    try:
-        sc.cycles.samples = 96
-    except Exception:
-        pass
-    # filmic tone mapping so highlights/shadows look believable
+    sc.render.engine = 'BLENDER_EEVEE'   # headless EEVEE shows emission colors clearly
+    # filmic tone mapping so highlights/shadows look good
     try:
         sc.view_settings.view_transform = 'Filmic'
     except Exception:
         pass
-    # lights so Cycles gives real shading that reads module shapes
-    from mathutils import Vector
-    cen = Vector((0.0, 0.0, 0.0))
-    bpy.ops.object.light_add(type='AREA', location=cen + Vector((300, 300, 400)))
-    kl = bpy.context.active_object; kl.data.size = 300; kl.data.energy = 1500
-    bpy.ops.object.light_add(type='AREA', location=cen + Vector((-300, -200, 150)))
-    fl = bpy.context.active_object; fl.data.size = 300; fl.data.energy = 500; fl.data.color = (0.8, 0.85, 1.0)
     sc.render.resolution_x = 1400; sc.render.resolution_y = 960
     sc.render.resolution_percentage=100
     sc.render.image_settings.file_format='PNG'
@@ -162,6 +163,21 @@ def build_preview(ship_base, outname, sz, module_choices):
     sc.render.filepath=out_png
     bpy.ops.render.render(write_still=True)
     print("PREVIEW", outname, "ok" if os.path.exists(out_png) else "FAIL", "->", os.path.basename(out_png))
+
+    # ---- join the separate part objects into ONE ready-to-place mesh ----
+    join_objs = [o for o in bpy.data.objects if o.type == 'MESH']
+    try:
+        joined = gaa.join(join_objs, f"{outname}_AssembledGeo")
+        gaa.apply_mods(joined)
+        gaa.clean_mesh(joined)
+        gaa.smart_uv(joined)
+        joined.name = f"{outname}_Assembled"
+        if not joined.data.materials:
+            joined.data.materials.append(hull_mat)
+        gaa.export_fbx(joined, f"{outname}_Assembled")
+        print("EXPORTED assembled", outname)
+    except Exception as e:
+        print("  [warn] assembled export failed:", e)
 
 
 if __name__ == "__main__":
