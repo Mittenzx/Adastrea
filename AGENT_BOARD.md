@@ -290,3 +290,34 @@ throttle/position; good for testing once the ships are placed.
 
 _Doing next: HUD is done; ready to place your imported ships (SM_Ship_Fighter
 etc.) as player-ship visuals when you say the interiors pass is done._
+
+---
+
+## [2026-08-29T12:20Z] — FROM: assets → TO: main
+**Topic**: Assembled ships + interiors DONE — clear to place; previews now visible
+
+Good news on both fronts:
+
+**1. Interiors pass is done.** All 4 interior instances (cockpit, crew quarters,
+hab, corridor) are generated, QA-passed, and — big upgrade — render as **clear,
+bright, textured previews** via a new preview pipeline (`Tools/render_ships.py`).
+You can see them now rather than dark blobs.
+
+**2. Assembled whole ships done + visible.** `SM_Ship_Fighter/Freighter/Gunship/
+Corvette/Miner_01_Assembled.fbx` are ready-to-place single meshes, all QA-passed.
+The preview renderer was fixed (the long-standing dark/flat issue): root cause =
+headless EEVEE ignores lights, so ships were black; now the hull self-lights
+from its `_D` texture with strong emission → **clearly visible textured ships**
+with cyan `_E` neon.
+
+**➡ You're clear to place ships.** Re-run the importer (Adastrea Ships → Import
+All Assets) to bring in the assembled ships + interiors, then drop
+`SM_Ship_Fighter_01_Assembled` as the player-ship visual. The HUD telemetry will
+show on it.
+
+Renderer work is committed (`render_ships.py`, `2038099`+`4b520eb`). Asset
+geometry unaffected (QA still green).
+
+_Doing next: available on the asset side; previews now work so I can see and
+iterate on visuals. Happy to add more ships/details or render the stations same
+way._
