@@ -46,7 +46,7 @@ ASpaceship::ASpaceship()
     // Initialize X4-style flight control parameters
     bFlightAssistEnabled = true;              // Flight assist on by default
     RotationDampingFactor = 0.85f;            // Smooth rotation with high damping
-    AutoLevelStrength = 0.5f;                 // Moderate auto-leveling
+    AutoLevelStrength = 0.0f;                 // off - auto-level fights simple mouse-look
     FlightAssistResponsiveness = 2.0f;        // Responsive but not twitchy
     ThrottlePercentage = 0.0f;                // Start at zero throttle
     ThrottleStep = 10.0f;                     // 10% increments
@@ -600,20 +600,17 @@ void ASpaceship::Turn(float Value)
             if (!bUseMousePositionFlight)
             {
                 // Original X4-style smooth rotation with damping (mouse delta mode)
-                // Apply mouse flight sensitivity and ship rotation multiplier
-                float RotationRate = Value * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
+                                // Apply mouse flight sensitivity and ship rotation multiplier
+                                float RotationRate = Value * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
 
-                UE_LOG(LogAdastreaInput, Verbose, TEXT("ASpaceship::Turn - YawInput=%.2f, RotationRate=%.2f"),
-                    Value, RotationRate);
+                                UE_LOG(LogAdastreaInput, Verbose, TEXT("ASpaceship::Turn - YawInput=%.2f, RotationRate=%.2f"),
+                                    Value, RotationRate);
 
-                // Interpolate rotation velocity for smooth feel
-                RotationVelocity.Yaw = FMath::FInterpTo(RotationVelocity.Yaw, RotationRate, DeltaSeconds, FlightAssistResponsiveness);
-
-                // Apply rotation directly to actor
-                FRotator DeltaRotation = FRotator(0.0f, RotationVelocity.Yaw * DeltaSeconds, 0.0f);
-                AddActorWorldRotation(DeltaRotation);
-            }
-            // else: Mouse position mode - rotation handled in UpdateMousePositionFlight()
+                                // Simple mouse-look: apply rotation directly (no interpolation lag).
+                                // AddActorWorldRotation takes degrees/sec * deltaSeconds.
+                                AddActorWorldRotation(FRotator(0.0f, RotationRate * DeltaSeconds, 0.0f));
+                            }
+                            // else: Mouse position mode - rotation handled in UpdateMousePositionFlight()
         }
         else
         {
@@ -653,19 +650,15 @@ void ASpaceship::LookUp(float Value)
             if (!bUseMousePositionFlight)
             {
                 // Original X4-style smooth rotation with damping (mouse delta mode)
-                float RotationRate = Value * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
+                                float RotationRate = Value * TurnRate * ShipRotationMultiplier * MouseFlightSensitivity;
 
-                UE_LOG(LogAdastreaInput, Verbose, TEXT("ASpaceship::LookUp - PitchInput=%.2f, RotationRate=%.2f"),
-                    Value, RotationRate);
+                                UE_LOG(LogAdastreaInput, Verbose, TEXT("ASpaceship::LookUp - PitchInput=%.2f, RotationRate=%.2f"),
+                                    Value, RotationRate);
 
-                // Interpolate rotation velocity for smooth feel
-                RotationVelocity.Pitch = FMath::FInterpTo(RotationVelocity.Pitch, RotationRate, DeltaSeconds, FlightAssistResponsiveness);
-
-                // Apply rotation directly to actor
-                FRotator DeltaRotation = FRotator(RotationVelocity.Pitch * DeltaSeconds, 0.0f, 0.0f);
-                AddActorWorldRotation(DeltaRotation);
-            }
-            // else: Mouse position mode - rotation handled in UpdateMousePositionFlight()
+                                // Simple mouse-look: apply rotation directly (no interpolation lag).
+                                AddActorWorldRotation(FRotator(RotationRate * DeltaSeconds, 0.0f, 0.0f));
+                            }
+                            // else: Mouse position mode - rotation handled in UpdateMousePositionFlight()
         }
         else
         {
