@@ -546,9 +546,29 @@ def build_mining_station_carcass(sz, outname, drill=True):
     return finalize_part(parts, f"{outname}_Carcass", "M_Station_Hab")
 
 
-def build_engine_part(sz, outname):
-    """Engine block add-on, scaled to carcass size class; twin nacelles + bells."""
+def build_engine_part(sz, outname, variant='standard'):
+    """Engine block add-on, scaled to carcass size class; twin nacelles + bells.
+    variant: 'standard' (twin boxes+bells), 'ion' (long pylons), 'compact'."""
     k = sc(sz)
+    if variant == 'ion':
+        # long ion-drive pylons on both flanks
+        blk = box("Ion_Blk", 120*k, 180*k, 80*k, loc=(0, 0, 0)); bevel(blk, 5, 2)
+        parts = [blk]
+        for side in (-1, 1):
+            pylon = cyl(f"Ion_Pylon{side}", 22*k, 260*k, loc=(side*120*k, 5*k, 10*k),
+                        rot=(0, 0, math.radians(9*side)), verts=12); bevel(pylon, 2, 1)
+            glow = torus(f"Ion_Glow{side}", 22*k, 5*k, loc=(side*120*k, -120*k, 8*k),
+                         maj=14, minr=5)
+            parts += [pylon, glow]
+        return finalize_part(parts, outname, "M_Engine_Ion", origin='ORIGIN_CENTER_OF_VOLUME')
+    if variant == 'compact':
+        # single squat engine pod
+        pod = box("Compact_Pod", 150*k, 160*k, 80*k, loc=(0, 0, 0)); bevel(pod, 6, 2)
+        noz = cone("Compact_Noz", 34*k, 60*k, loc=(0, -130*k, 0),
+                   rot=(math.radians(90), 0, 0), verts=16)
+        return finalize_part([pod, noz], outname, "M_Engine_Compact",
+                             origin='ORIGIN_CENTER_OF_VOLUME')
+    # standard: twin nacelles + bells
     blk = box("Eng_Blk", 150*k, 200*k, 95*k, loc=(0, 0, 0))
     bevel(blk, 5, 2)
     parts = [blk]
@@ -563,9 +583,30 @@ def build_engine_part(sz, outname):
     return joined
 
 
-def build_cargo_part(sz, outname):
-    """Cargo bay add-on: box + container cells scaled per class."""
+def build_cargo_part(sz, outname, variant='containers'):
+    """Cargo bay add-on. variant: 'containers' (box + cells), 'bulk_tank'
+    (cylindrical hold), 'flat_rack' (open frame)."""
     k = sc(sz)
+    if variant == 'bulk_tank':
+        tank = cyl("Bulk_Tank", 70*k, 240*k, loc=(0, 0, 0), verts=18); bevel(tank, 3, 1)
+        cap1 = sphere("Bulk_Cap1", 70*k, loc=(0, 0, 120*k), verts=12); cap1.scale = (1, 1, 0.3)
+        bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
+        cap2 = sphere("Bulk_Cap2", 70*k, loc=(0, 0, -120*k), verts=12); cap2.scale = (1, 1, 0.3)
+        bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
+        ring1 = torus("Bulk_Ring1", 70*k, 5*k, loc=(0, 0, 0), maj=24, minr=6)
+        return finalize_part([tank, cap1, cap2, ring1], outname, "M_Cargo_Tank", origin='ORIGIN_CENTER_OF_VOLUME')
+    if variant == 'flat_rack':
+        base = box("Rack_Base", 190*k, 240*k, 20*k, loc=(0, 0, 0)); bevel(base, 3, 1)
+        # open container frame struts
+        parts = [base]
+        for side in (-1, 1):
+            rail = box(f"Rack_Rail{side}", 12*k, 220*k, 14*k, loc=(side*85*k, 0, 30*k)); bevel(rail, 1, 1)
+            parts.append(rail)
+        for dy in (-80*k, 80*k):
+            beam = box(f"Rack_Beam{dy}", 180*k, 12*k, 14*k, loc=(0, dy, 30*k)); bevel(beam, 1, 1)
+            parts.append(beam)
+        return finalize_part(parts, outname, "M_Cargo_Rack", origin='ORIGIN_CENTER_OF_VOLUME')
+    # containers (default)
     base = box("Cargo_Base", 200*k, 260*k, 90*k, loc=(0, 0, 0))
     bevel(base, 4, 2)
     parts = [base]
@@ -575,9 +616,31 @@ def build_cargo_part(sz, outname):
     return finalize_part(parts, outname, "M_Cargo_Hold", origin='ORIGIN_CENTER_OF_VOLUME')
 
 
-def build_weapon_part(sz, outname, twin=True):
-    """Weapon/cannon add-on, twin gun pods."""
+def build_weapon_part(sz, outname, twin=True, variant='cannon'):
+    """Weapon/cannon add-on (nose mount). 
+    variant: 'cannon' (twin/single gun pods), 'tri_laser' (3 barrels), 'missile' (pods)."""
     k = sc(sz)
+    if variant == 'tri_laser':
+        parts = []
+        # 3 laser barrels fanning out
+        for side in (-1, 0, 1):
+            bx = cyl(f"Tri_Barrel{side}", 4*k, 70*k, loc=(side*18*k, 60*k, side*4*k),
+                     rot=(math.radians(90), 0, math.radians(side*10)), verts=10)
+            parts.append(bx)
+        base = box("Tri_Base", 70*k, 30*k, 24*k, loc=(0, -10*k, 0)); bevel(base, 3, 1)
+        return finalize_part([base] + parts, outname, "M_Weapon_TriLaser", origin='ORIGIN_CENTER_OF_VOLUME')
+    if variant == 'missile':
+        parts = []
+        for side in (-1, 1):
+            pod = box(f"Missile_Pod{side}", 22*k, 80*k, 22*k, loc=(side*40*k, 30*k, 0)); bevel(pod, 2, 1)
+            # 4 missile tubes per pod
+            for t in range(4):
+                tube = cyl(f"Missile_Tube{side}_{t}", 4*k, 22*k, loc=(side*40*k, 75*k, (-12+t*8)*k),
+                           rot=(math.radians(90), 0, 0), verts=8)
+                parts.append(tube)
+            parts.append(pod)
+        return finalize_part(parts, outname, "M_Weapon_Missile", origin='ORIGIN_CENTER_OF_VOLUME')
+    # cannon (default): twin/single gun pods
     parts = []
     for side in (-1, 1) if twin else (0,):
         dom = greeble(f"Weapon_{side}", loc=(side*42*k, -6*k, 0), sx=16*k, sy=90*k, sz=16*k)
@@ -587,9 +650,21 @@ def build_weapon_part(sz, outname, twin=True):
     return finalize_part(parts, outname, "M_Weapon_Block", origin='ORIGIN_CENTER_OF_VOLUME')
 
 
-def build_sensor_part(sz, outname, asym=False):
-    """Sensor array add-on: mast + tip + maybe radar dome."""
+def build_sensor_part(sz, outname, asym=False, variant='mast'):
+    """Sensor array add-on. variant: 'mast' (post+tip), 'dome' (radar dome),
+    'cross' (phased-array lattice)."""
     k = sc(sz)
+    if variant == 'dome':
+        base = box("Dome_Base", 40*k, 40*k, 14*k, loc=(0, 0, 0)); bevel(base, 3, 1)
+        dome = sphere("Dome", 24*k, loc=(0, 0, 34*k), verts=16)
+        return finalize_part([base, dome], outname, "M_Sensor_Dome", origin='ORIGIN_CENTER_OF_VOLUME')
+    if variant == 'cross':
+        post = cyl("Cross_Post", 5*k, 90*k, loc=(0, 0, 45*k), verts=10)
+        bar_x = box("Cross_X", 90*k, 6*k, 6*k, loc=(0, 0, 90*k))
+        bar_y = box("Cross_Y", 6*k, 90*k, 6*k, loc=(0, 0, 90*k))
+        tip = sphere("Cross_Tip", 7*k, loc=(0, 0, 100*k), verts=10)
+        return finalize_part([post, bar_x, bar_y, tip], outname, "M_Sensor_Cross", origin='ORIGIN_CENTER_OF_VOLUME')
+    # mast (default)
     mast = cyl("Sensor_Mast", 6*k, 140*k, loc=(0, 0, 90*k), verts=12)
     tip = sphere("Sensor_Tip", 9*k, loc=(0, 0, 170*k), verts=12)
     parts = [mast, tip]
@@ -599,9 +674,22 @@ def build_sensor_part(sz, outname, asym=False):
     return finalize_part(parts, outname, "M_Sensor_Block", origin='ORIGIN_CENTER_OF_VOLUME')
 
 
-def build_reactor_part(sz, outname):
-    """Reactor/core add-on from SE grid-discipline (a block module)."""
+def build_reactor_part(sz, outname, variant='core'):
+    """Reactor/core add-on. variant: 'core' (block + bands), 'fusion_ring'
+    (torus reactor), 'spike' (reactor with heat-spike fins)."""
     k = sc(sz)
+    if variant == 'fusion_ring':
+        ring = torus("Fusion_Ring", 60*k, 20*k, loc=(0, 0, 0), maj=30, minr=8)
+        core = sphere("Fusion_Core", 26*k, loc=(0, 0, 0), verts=14)
+        return finalize_part([ring, core], outname, "M_Reactor_Fusion", origin='ORIGIN_CENTER_OF_VOLUME')
+    if variant == 'spike':
+        core = box("Spike_Core", 80*k, 80*k, 80*k, loc=(0, 0, 0)); bevel(core, 5, 2)
+        spikes = []
+        for i, (sx, sy, sz) in enumerate([(1,0,0),(-1,0,0),(0,1,0),(0,-1,0),(0,0,1),(0,0,-1)]):
+            sp = cone(f"Spike{i}", 10*k, 50*k, loc=(sx*60*k, sy*60*k, sz*60*k), verts=8)
+            spikes.append(sp)
+        return finalize_part([core] + spikes, outname, "M_Reactor_Spike", origin='ORIGIN_CENTER_OF_VOLUME')
+    # core (default)
     core = box("Reactor_Core", 90*k, 90*k, 90*k, loc=(0, 0, 0))
     bevel(core, 5, 2)
     bands = [greeble(f"Reactor_Band{i}", loc=(0, 0, z*70*k), sx=100*k, sy=100*k, sz=14*k)
@@ -785,6 +873,60 @@ def name_to_type_key(hp_name):
     return m.get(hp_name, '')
 
 
+# Catalog of available module VARIANTS per type — the game's builder offers
+# these choices for each hardpoint that accepts the type.
+MODULE_CATALOG = {
+    'engine': {
+        'standard': 'Twin nacelles + bells (balanced)',
+        'ion':      'Long ion-drive pylons (fast, sleek)',
+        'compact':  'Squat single pod (budget)',
+    },
+    'cargo': {
+        'containers': 'Container bay',
+        'bulk_tank':  'Cylindrical bulk tank',
+        'flat_rack':  'Open frame rack',
+    },
+    'weapon': {
+        'cannon':   'Twin/single gun pods',
+        'tri_laser': 'Triple-laser mount',
+        'missile':  'Missile pods',
+    },
+    'sensor': {
+        'mast':  'Mast + tip',
+        'dome':  'Radar dome',
+        'cross': 'Phased-array lattice',
+    },
+    'reactor': {
+        'core':       'Block core + bands',
+        'fusion_ring': 'Fusion torus',
+        'spike':       'Heat-spike reactor',
+    },
+}
+
+
+def build_module_catalog(outname="SM_Modules_catalog"):
+    """Emit a JSON catalog of all module types + variants + the hardpoints that
+    accept them. The game reads this to populate its module-builder menu."""
+    import json
+    catalog = {"modules": {}}
+    for mtype, variants in MODULE_CATALOG.items():
+        # which hardpoints accept this type (union across size classes)
+        hps = set()
+        for sz, defs in HARDPOINT_DEFS.items():
+            for hp, spec in defs.items():
+                if mtype in spec['types']:
+                    hps.add(hp)
+        catalog["modules"][mtype] = {
+            "variant_name": mtype,
+            "options": [{"id": v, "description": d} for v, d in variants.items()],
+            "fits_hardpoints": sorted(hps),
+        }
+    out = os.path.join(ASSETS_OUT, f"{outname}.json")
+    with open(out, 'w') as f:
+        json.dump(catalog, f, indent=2)
+    return out
+
+
 def assemble_ship(sz, outname, opts, carcass_builder=None):
     """Build a full ship: carcass + mounted add-ons. Each part stays a separate
     mesh exported as its own FBX (`<outname>_<Part>.fbx`). opts may select which
@@ -819,23 +961,25 @@ def assemble_ship(sz, outname, opts, carcass_builder=None):
     # NOMINAL socket positions + allowed types for the game's module-builder;
     # it doesn't replace the tuned in-mesh mount.
     if opts.get('engine'):
-        eobj, ep = build_engine_part(sz, f"{outname}_Engine")
+        eobj, ep = build_engine_part(sz, f"{outname}_Engine", variant=opts.get('engine_variant', 'standard'))
         eobj.location = (0, -ly*0.52, locz - 10*k)
         results.append((eobj, ep))
     if opts.get('cargo'):
-        cobj, cp = build_cargo_part(sz, f"{outname}_Cargo")
+        cobj, cp = build_cargo_part(sz, f"{outname}_Cargo", variant=opts.get('cargo_variant', 'containers'))
         cobj.location = (0, -ly*0.05, locz - 20*k)
         results.append((cobj, cp))
     if opts.get('weapon'):
-        wobj, wp = build_weapon_part(sz, f"{outname}_Weapon", twin=opts.get('weapon_twin', True))
+        wobj, wp = build_weapon_part(sz, f"{outname}_Weapon", twin=opts.get('weapon_twin', True),
+                                     variant=opts.get('weapon_variant', 'cannon'))
         wobj.location = (0, ly*0.34, locz - 25*k)
         results.append((wobj, wp))
     if opts.get('sensor'):
-        sobj, sp = build_sensor_part(sz, f"{outname}_Sensor", asym=opts.get('sensor_asym', False))
+        sobj, sp = build_sensor_part(sz, f"{outname}_Sensor", asym=opts.get('sensor_asym', False),
+                                     variant=opts.get('sensor_variant', 'mast'))
         sobj.location = (0, ly*0.18, locz + 70*k)
         results.append((sobj, sp))
     if opts.get('reactor'):
-        robj, rp = build_reactor_part(sz, f"{outname}_Reactor")
+        robj, rp = build_reactor_part(sz, f"{outname}_Reactor", variant=opts.get('reactor_variant', 'core'))
         robj.location = (0, -ly*0.35, locz + 40*k)
         results.append((robj, rp))
     if opts.get('mining_laser'):
@@ -1756,6 +1900,31 @@ def main():
             assembled_count += 1
             print(f"  {name}: assembled {os.path.basename(out)} ({os.path.getsize(out) if os.path.exists(out) else 0} B)")
 
+    # Module VARIANT demonstration ships — prove the hardpoint mount system can
+    # mix-and-match module types/variants on the same sockets.
+    print("Building module-variant ships...")
+    variant_specs = {
+        # a 'sleek' fighter: ion engines + tri-laser + fusion reactor + dome sensor
+        "SM_Ship_Fighter_02_Arcangel": ('small', {
+            'engine': True, 'engine_variant': 'ion',
+            'weapon': True, 'weapon_variant': 'tri_laser',
+            'reactor': True, 'reactor_variant': 'fusion_ring',
+            'sensor': True, 'sensor_variant': 'dome',
+            'cargo': True, 'cargo_variant': 'flat_rack',
+        }),
+        # a 'hauler' variant of the freighter: bulk-tank cargo + spiked reactor
+        "SM_Ship_Freighter_02_Bulkhauler": ('medium', {
+            'engine': True, 'engine_variant': 'compact',
+            'cargo': True, 'cargo_variant': 'bulk_tank',
+            'reactor': True, 'reactor_variant': 'spike',
+            'sensor': True, 'sensor_variant': 'cross',
+        }),
+    }
+    for name, (sz, opts) in variant_specs.items():
+        parts = assemble_ship(sz, name, opts)
+        for obj, out in parts:
+            print(f"  {name}: {os.path.basename(out)} ({os.path.getsize(out) if os.path.exists(out) else 0} B)")
+
     # Project-Hyperion-inspired generation ships (ring habitat + asteroid shell)
     print("Building Project-Hyperion generation ships...")
     gen_parts = {
@@ -1819,6 +1988,12 @@ def main():
     print("Station:", os.path.basename(out4), os.path.getsize(out4) if os.path.exists(out4) else 0)
     print("Interiors:", len(inter))
     print("Textures:", len(os.listdir(TEXDIR)))
+    # module catalog (variants the game's builder can offer per socket)
+    try:
+        cat = build_module_catalog()
+        print("Module catalog:", os.path.basename(cat))
+    except Exception as e:
+        print("  [warn] module catalog failed:", e)
 
 
 if __name__ == "__main__":
