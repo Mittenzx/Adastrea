@@ -11,6 +11,7 @@
 class ASpaceshipInterior;
 class UInputAction;
 class USpringArmComponent;
+class UStaticMeshComponent;
 class UCameraComponent;
 class USpaceshipDataAsset;
 class UDockingSettingsDataAsset;
@@ -42,10 +43,15 @@ public:
     ASpaceship();
 
     // Root scene component - provides proper pivot point for ship rotation
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
-    TObjectPtr<USceneComponent> ShipRoot;
+        UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+        TObjectPtr<USceneComponent> ShipRoot;
 
-    // Movement component for floating pawn movement in space
+        // Visual static mesh for the ship hull (assembled ship silhouette). Each ship
+        // Blueprint overrides the mesh asset (e.g. SM_Ship_Fighter_01_Assembled).
+        UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+        TObjectPtr<UStaticMeshComponent> ShipMeshComponent;
+
+        // Movement component for floating pawn movement in space
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Movement")
     TObjectPtr<UFloatingPawnMovement> MovementComponent;
 

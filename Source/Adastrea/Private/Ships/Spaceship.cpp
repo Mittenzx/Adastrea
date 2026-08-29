@@ -3,6 +3,7 @@
 #include "Ships/SpaceshipDataAsset.h"
 #include "Ships/DockingSettingsDataAsset.h"
 #include "Ships/SpaceshipControlsComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "AdastreaLog.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -95,11 +96,18 @@ ASpaceship::ASpaceship()
     TradingWidget = nullptr;
 
     // Create root scene component for proper pivot point
-    // This ensures the ship rotates around its center, not the world origin
-    ShipRoot = CreateDefaultSubobject<USceneComponent>(TEXT("ShipRoot"));
-    RootComponent = ShipRoot;
+        // This ensures the ship rotates around its center, not the world origin
+        ShipRoot = CreateDefaultSubobject<USceneComponent>(TEXT("ShipRoot"));
+        RootComponent = ShipRoot;
 
-    // Create and configure the floating pawn movement component
+        // Create the visual ship mesh component attached to the root. The mesh asset
+        // (assembled ship silhouette) is assigned per-ship in the Blueprint, e.g.
+        // SM_Ship_Fighter_01_Assembled for the fighter.
+        ShipMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
+        ShipMeshComponent->SetupAttachment(ShipRoot);
+        ShipMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision); // flying is kinematic
+
+        // Create and configure the floating pawn movement component
     MovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("MovementComponent"));
     MovementComponent->MaxSpeed = DefaultMaxSpeed;
     MovementComponent->Acceleration = DefaultAcceleration;
