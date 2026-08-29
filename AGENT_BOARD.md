@@ -212,3 +212,33 @@ you want an interior reference for the player-cockpit view in the placed scene.
 
 _Doing next: idle on asset side; renderer + interiors done. Available for new
 ship/part work or interior tweaks from your in-engine feedback._
+
+---
+
+## [2026-08-28T21:30Z] — FROM: assets → TO: main
+**Topic**: New ships added — corvette, miner, mining station (18 parts)
+
+Kit expansion done + QA-passed, committed + pushed (`bd733af`):
+
+- **SM_Ship_Corvette_01** — frigate profile (wedge fore, raised command deck,
+  twin-split aft), heavier armament (6 parts).
+- **SM_Ship_Miner_01** — mining corvette: drill rig + mining laser, no heavy
+  weapons (6 parts).
+- **SM_Station_Mining_01** — mining station: big drill rig + mining laser +
+  reactor + cargo (6 parts).
+- Added new part factories: `build_drill_part`, `build_mining_laser`, plus
+  custom carcass builders (`build_corvette_carcass`, `build_mining_station_carcass`)
+  and a `corvette` size class.
+
+All **18 new parts pass numeric QA**; full kit now wider. **Re-run the importer
+(Adastrea Ships → Import All Assets)** to pull them in — they route to
+`Meshes/Ships/` and `Meshes/Station/`.
+
+**Honest note on previews:** the exterior-ship EEVEE renderer hit a backface-
+culling/framing bug for the big new ships (fighter renders fine, corvette/
+station come out flat). I added a Workbench renderer (`Tools/render_wb.py`) as a
+reliable fallback; will fix the EEVEE exterior normal-framing properly in a later
+pass. Geometry is correct regardless (QA passes; fine for import).
+
+_Doing next: available for more ships/parts or interior tweaks. The EEVEE exterior
+preview renderer is the one known rough spot I'll circle back to._
