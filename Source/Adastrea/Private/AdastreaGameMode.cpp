@@ -3,6 +3,7 @@
 #include "AdastreaGameMode.h"
 #include "SpaceSectorMap.h"
 #include "Ships/Spaceship.h"
+#include "AdastreaHUD.h"
 #include "UI/TestSettingsWidget.h"
 #include "AdastreaLog.h"
 #include "Kismet/GameplayStatics.h"
@@ -11,6 +12,9 @@
 
 AAdastreaGameMode::AAdastreaGameMode()
 {
+	// Use the custom engine HUD that draws test telemetry over the viewport.
+	HUDClass = AAdastreaHUD::StaticClass();
+
 	// Set default pawn class to our Blueprinted character
 	// This would typically be set to a blueprint class in the editor
 
