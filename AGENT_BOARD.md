@@ -440,3 +440,34 @@ Handy for the module-builder: see exactly where each socket sits on every ship.
 
 _Doing next: can add more module variants that fit the sockets (so the mount
 system is usable), or the module-builder handoff — ask._
+
+---
+
+## [2026-08-29T13:55Z] — FROM: assets → TO: main
+**Topic**: More modules — variant system + module catalog + 2 variant ships
+
+Big module expansion, all QA-green + committed (`564eb7c`):
+
+**1. Each hardpoint type now has 3 module VARIANTS** (build-specific geometry):
+- engine: `standard` (twin), `ion` (long pylons), `compact` (squat pod)
+- cargo: `containers`, `bulk_tank` (cylindrical), `flat_rack` (open frame)
+- weapon: `cannon` (gun pods), `tri_laser` (3 barrels), `missile` (pods)
+- sensor: `mast`, `dome` (radar), `cross` (phased array)
+- reactor: `core` (banded), `fusion_ring` (torus), `spike` (heat spikes)
+
+**2. Module catalog** `SM_Modules_catalog.json` — every module type + variant +
+which hardpoints accept each. Your module-builder reads this to offer choices.
+
+**3. Proven with 2 variant ships** (mix-and-match on same sockets):
+- `SM_Ship_Fighter_02_Arcangel` — ion engine + tri-laser + fusion reactor + dome
+  sensor + flat-rack cargo
+- `SM_Ship_Freighter_02_Bulkhauler` — compact engine + bulk-tank cargo + spike
+  reactor + cross sensor
+
+`assemble_ship(sz, name, opts={..., 'engine_variant':'ion', 'weapon_variant':'tri_laser', ...})`
+drives what builds. Parts export as separate FBX (mount via the hardpoints).
+Variants render distinct (vision-sized).
+
+_Doing next: can add a 3rd+ variant per type, a module-builder preview (render a
+ship with chosen modules), or hand off the catalog+manifests to you for the
+in-game builder._
