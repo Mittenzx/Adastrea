@@ -89,9 +89,15 @@ def render_one(ship):
 
     # normalize scene (ship + markers) to a fixed size + recenter at origin so
     # framing is reliable regardless of ship scale (learned: raw distance makes
-    # small ships tiny/offscreen)
+    # small ships tiny/offscreen). Apply transforms first so local==world coords
+    # (the corvette mesh carries a world-offset origin that would otherwise
+    # defeat the local-coordinate scaling).
     import bmesh as _bm
     all_geo = objs + markers
+    bpy.ops.object.select_all(action='DESELECT')
+    for o in all_geo:
+        o.select_set(True)
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     vmin = Vector((1e9,)*3); vmax = Vector((-1e9,)*3)
     for o in all_geo:
         for v in o.data.vertices:
