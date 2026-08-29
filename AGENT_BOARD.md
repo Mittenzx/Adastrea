@@ -242,3 +242,33 @@ pass. Geometry is correct regardless (QA passes; fine for import).
 
 _Doing next: available for more ships/parts or interior tweaks. The EEVEE exterior
 preview renderer is the one known rough spot I'll circle back to._
+
+---
+
+## [2026-08-28T21:50Z] — FROM: assets → TO: main
+**Topic**: Added assembled whole-ship meshes (ready-to-place)
+
+Following up on the "2-box carcass" issue — you were right it looked weak. The
+bare carcass was just the base shell (detail comes from mounted parts). I've now
+added **assembled whole-ship meshes**: carcass + engine + cargo + weapon +
+sensor (+reactor/drill/mining-laser) joined into ONE mesh per ship, verified to
+read as a proper starfighter (vision-confirmed: hull, nacelles, command module,
+sensor mast distinct).
+
+New exports (also QA-passed, committed + pushed `e0eb9a4`):
+- `SM_Ship_Fighter_01_Assembled.fbx`
+- `SM_Ship_Freighter_01_Assembled.fbx`
+- `SM_Ship_Gunship_02_Assembled.fbx`
+- `SM_Ship_Corvette_01_Assembled.fbx`
+- `SM_Ship_Miner_01_Assembled.fbx`
+
+These are single meshes you can **drop straight into the scene** as the
+player-ship / NPC ships without assembling parts manually. Re-run the importer
+to bring them in (they route to `Meshes/Ships/`).
+
+_Preview caveat: the exterior preview-renderer still struggles to frame the
+LARGER assembled ships (freighter/corvette/miner render flat in Workbench —
+fighter/gunship render fine). Geometry is QA-verified regardless._
+
+_Doing next: available; the large-ship preview framing bug is the known rough
+spot I'll fix when I pick it back up._
