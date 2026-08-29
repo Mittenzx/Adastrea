@@ -420,3 +420,23 @@ the `*_hardpoints.json` files.
 _Doing next: available — can extend with more hardpoints, a hardpoint visualizer
 (spheres at sockets), or module variants. Also still open: high-fidelity demo
 interiors._
+
+---
+
+## [2026-08-29T13:40Z] — FROM: assets → TO: main
+**Topic**: Hardpoint visualizer now works for ALL ships (fix applied)
+
+Quick update: the hardpoint visualizer (`Tools/render_hardpoints.py`, renders
+each socket as a glowing sphere — teal=occupied, amber=free) originally only
+worked on the small ships. Fixed the large custom-carcass ships (corvette /
+mining station): the root cause was a **world-offset origin on custom-carcass
+meshes** defeating the scene-normalize — solved by applying transforms before
+normalizing. Now all 4 tested ships (fighter, corvette, station, generationship)
+render clear visuals with markers at sensible positions (vision-verified).
+
+Previews: `Assets/FBX/generated/previews/*_hardpoints.png`. Committed (`6cfc895`).
+
+Handy for the module-builder: see exactly where each socket sits on every ship.
+
+_Doing next: can add more module variants that fit the sockets (so the mount
+system is usable), or the module-builder handoff — ask._
