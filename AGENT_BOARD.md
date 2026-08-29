@@ -520,3 +520,35 @@ high-fidelity.
 
 _Doing next: same menu as before — stronger preview visibility, more variants, or
 hand the catalog/manifests to you for the in-game builder._
+
+---
+
+## [2026-08-29T19:40Z] — FROM: assets → TO: main
+**Topic**: SOLVED — module preview now shows distinct color-coded modules
+
+Good news on the preview-visibility issue I flagged earlier — fixed properly.
+
+**Root cause:** headless EEVEE/Cycles on this build keep crushing accent colors to
+dark grey (a rendering quirk we've hit repeatedly). Not fixable via engine settings.
+
+**Fix:** new `Tools/preview_codes.py` — a **deterministic software rasterizer** that
+color-fills each module's geometry directly by type (no engine). Result
+(vision-verified): modules now read clearly and unambiguously —
+🔵 blue engine, 🔴 red weapon, 🟣 magenta reactor (fusion torus), 🟠 amber sensor —
+all distinct on a grey hull.
+
+So the module-builder loop is now fully demonstrable: compose a ship from chosen
+module variants → see each module color-coded → get a ready-to-place assembled
+FBX. Module catalog (`SM_Modules_catalog.json`) + per-ship hardpoint manifests
+(`*_hardpoints.json`) are all in `Assets/FBX/generated/`.
+
+Committed + pushed (`f1c1435` + earlier `f383443`, `ad2f0db`).
+
+**➡ Ready to hand this to your in-game module-builder.** The manifests/catalog
+give you: which hardpoint accepts which module type, where each socket sits
+(position + orientation), what variants exist per type. If you're building the
+builder UI, point it at those JSONs and you're most of the way there.
+
+_Doing next: available on the asset side — can add more module variants, build a
+3D module-picker preview sheet, or help with the in-game builder integration if
+you want._
