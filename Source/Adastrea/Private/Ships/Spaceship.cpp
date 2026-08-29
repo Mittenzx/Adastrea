@@ -88,7 +88,7 @@ ASpaceship::ASpaceship()
     CurrentDockingPoint = nullptr;
     bIsDocked = false;
     bIsDocking = false;
-    DockingRange = 2000.0f;
+    DockingRange = 8000.0f;
     DockingPromptWidget = nullptr;
     DockingPromptWidgetClass = nullptr;
     TradingInterfaceClass = nullptr;

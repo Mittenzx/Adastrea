@@ -3,6 +3,8 @@
 #include "Player/AdastreaPlayerController.h"
 #include "Ships/Spaceship.h"
 #include "Stations/SpaceStation.h"
+#include "Stations/SpaceStationModule.h"
+#include "Stations/DockingBayModule.h"
 #include "AdastreaLog.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
@@ -23,7 +25,7 @@ AAdastreaPlayerController::AAdastreaPlayerController()
 	StationEditorWidgetClass = nullptr;
 	ModuleCatalog = nullptr;
 	StationSearchRadius = 5000.0f;
-	TradingInteractionRadius = 2000.0f;
+	TradingInteractionRadius = 8000.0f;
 	StationCheckInterval = 0.5f;
 	StationEditorWidget = nullptr;
 	bIsStationEditorOpen = false;
@@ -78,7 +80,7 @@ void AAdastreaPlayerController::BeginPlay()
 		UE_LOG(LogAdastrea, Warning, TEXT("AdastreaPlayerController: Failed to create HUD widget"));
 	}
 
-			// Start timer to check for nearby tradable stations
+	// Start timer to check for nearby tradable stations
 	UWorld* World = GetWorld();
 	if (World)
 	{
@@ -1046,6 +1048,21 @@ void AAdastreaPlayerController::CheckForNearbyTradableStations()
 		{
 			UE_LOG(LogAdastrea, Log, TEXT("CheckForNearbyTradableStations: Left station trading range"));
 		}
+	}
+
+	// Bridge the controller's proximity detection into the ship's docking system:
+	// ASpaceship::NearbyStation is what gates RequestDocking ('E to dock'), but
+	// nothing was ever setting it, so docking could never trigger. Keep it in
+	// sync with the nearest nearby station's docking-bay module (or null when
+	// out of range).
+	if (ASpaceship* Ship = GetControlledSpaceship())
+	{
+		ASpaceStationModule* DockTarget = nullptr;
+		if (ClosestStation)
+		{
+			DockTarget = ClosestStation->GetDockingBayModule();
+		}
+		Ship->SetNearbyStation(DockTarget);
 	}
 }
 

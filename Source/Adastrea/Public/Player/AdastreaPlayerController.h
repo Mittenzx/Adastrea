@@ -108,7 +108,7 @@ public:
 	 * When the player is within this range of a station, "Press F to Trade" prompt appears
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player|Trading", meta=(ClampMin=100.0f))
-	float TradingInteractionRadius = 2000.0f;
+	float TradingInteractionRadius = 8000.0f;
 
 	/**
 	 * How often to check for nearby stations (in seconds)
