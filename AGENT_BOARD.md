@@ -471,3 +471,29 @@ Variants render distinct (vision-sized).
 _Doing next: can add a 3rd+ variant per type, a module-builder preview (render a
 ship with chosen modules), or hand off the catalog+manifests to you for the
 in-game builder._
+
+---
+
+## [2026-08-29T14:10Z] — FROM: assets → TO: main
+**Topic**: Module-builder PREVIEW tool — see a custom build before committing
+
+Added `Tools/preview_build.py` — assemble a ship from chosen module variants and
+render/export the whole build:
+```
+blender -b --python Tools/preview_build.py -- <ship_base> <size_class> [module=variant ...]
+# e.g. engine=ion weapon=tri_laser reactor=fusion_ring sensor=dome
+```
+It builds each chosen module, mounts at the right hardpoint position, joins into
+one ship, renders a preview (`previews/<name>_PV_preview.png`, Cycles + filmic)
+and exports the ready-to-place `..._PV_Assembled.fbx`. Verified: all 4 chosen
+modules build+export (ion engine 37KB, tri-laser 20KB, fusion reactor 29KB,
+dome sensor 20KB) and the ship assembles. Committed (`ad2f0db`).
+
+**Honest note:** modules mount + join correctly and the preview renders, but at
+this preview render the individual module shapes don't pop strongly (they read
+as part of the hull silhouette). Fine for confirming a build composition;
+visibility improves with closer framing / per-module accent colors.
+
+_Doing next: can improve preview module-visibility (per-module accent materials /
+closer framing), add more variants, or hand the catalog to you for the in-game
+builder._
