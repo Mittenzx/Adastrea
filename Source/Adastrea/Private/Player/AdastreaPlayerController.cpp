@@ -10,6 +10,8 @@
 #include "UI/AdastreaHUDWidget.h"
 #include "UI/ShipStatusWidget.h"
 #include "UI/InventoryWidget.h"
+#include "Trading/CargoComponent.h"
+#include "Trading/PlayerTraderComponent.h"
 #include "UI/InventoryComponent.h"
 #include "UI/TradingInterfaceWidget.h"
 #include "UI/StationManagementWidget.h"
@@ -90,6 +92,35 @@ void AAdastreaPlayerController::BeginPlay()
 			true  // Loop
 		);
 		UE_LOG(LogAdastrea, Log, TEXT("AdastreaPlayerController: Started nearby station check timer"));
+	}
+}
+
+void AAdastreaPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+
+	// Draw test telemetry (coords/speed/throttle/credits/cargo) directly over the
+	// game viewport every frame. GEngine->AddOnScreenDebugMessage is the reliable,
+	// always-visible mechanism for test HUD text during PIE/demo.
+	if (GEngine)
+	{
+		ASpaceship* Ship = Cast<ASpaceship>(GetPawn());
+		if (Ship)
+		{
+			const FVector P = Ship->GetActorLocation();
+			const float Speed = Ship->MovementComponent ? Ship->MovementComponent->Velocity.Size() : 0.0f;
+			const int32 Credits = Ship->PlayerTraderComponent ? static_cast<int32>(Ship->PlayerTraderComponent->GetCredits()) : 0;
+			const float CargoUsed = Ship->CargoComponent ? (Ship->CargoComponent->CargoCapacity - Ship->CargoComponent->GetAvailableCargoSpace()) : 0.0f;
+			const float CargoMax = Ship->CargoComponent ? Ship->CargoComponent->CargoCapacity : 0.0f;
+
+			const FString Msg = FString::Printf(
+				TEXT("Credits: %d  Cargo: %.0f/%.0f  Speed: %.0f  Throttle: %.0f%%\nPos: X=%.0f Y=%.0f Z=%.0f"),
+				Credits, CargoUsed, CargoMax, Speed, Ship->ThrottlePercentage,
+				P.X, P.Y, P.Z);
+
+			const int32 Key = 426902; // stable key -> redraws in place, no spam
+			GEngine->AddOnScreenDebugMessage(Key, 0.1f, FColor::Cyan, Msg);
+		}
 	}
 }
 
