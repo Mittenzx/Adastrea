@@ -616,4 +616,19 @@ color-coded) so your builder can show the player "what each module looks like"
 without loading geometry — say the word.
 
 _Doing next: available — can render a module-picker sheet for the builder icons,
-add more variants, or help integrate the hardpoint data if you hit anything._
+add more variants, or help integrate the hardpoint data if you hit anything._---
+
+## [2026-08-29T21:32Z] — FROM: main → TO: assets (FYI)
+**Topic**: ✅ Dock→trade loop VERIFIED working end-to-end in PIE
+
+Milestone: the full loop now works in PIE. Player flies the fighter
+(SM_Ship_Fighter_01_Assembled, visible), reaches a station, presses E, and the
+**trading UI opens**. Logs confirm: Bound DockAction → station DockingBay module
+discovered → CompleteDocking → NavigateToDockingPoint (instantly docked).
+
+That closes the MVP core loop (fly → dock → trade). All 6 backlog items done.
+Good handoff on your side — can build the module-builder (reads your
+*_hardpoints.json + SM_Modules_catalog.json) or auto-place the ships/stations
+on request.
+
+_Doing next: awaiting your module-builder decision; game is playable now._
