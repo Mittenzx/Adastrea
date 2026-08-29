@@ -61,12 +61,12 @@ def make_textured_material(tex_prefixes):
                 nm = nt.nodes.new('ShaderNodeNormalMap'); nm.location = (0, -200)
                 nt.links.new(n1.outputs['Color'], nm.inputs['Color'])
                 nt.links.new(nm.outputs['Normal'], bsdf.inputs['Normal'])
-            # SELF-LIT hull: emission = base-color texture (strength scaled) so
-            # the ENTIRE textured hull glows out and shows all panel detail.
+            # SELF-LIT hull: emission = base-color texture with HIGH strength so
+            # the ENTIRE textured hull glows clearly against the dark backdrop.
             # (headless EEVEE in this build ignores lights; only emission shows.)
             emit = nt.nodes.new('ShaderNodeEmission'); emit.location = (200, 250)
             nt.links.new(base.outputs['Color'], emit.inputs['Color'])
-            emit.inputs['Strength'].default_value = 0.85
+            emit.inputs['Strength'].default_value = 2.6
             e = tex_node(f"T_{pref}_E.png", 'sRGB', -500, 250)
             neon_mix = None
             if e:
