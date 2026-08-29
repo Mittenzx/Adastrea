@@ -20,6 +20,7 @@ from mathutils import Vector
 import numpy as np
 
 BASE = r"C:\Users\akuma\Adastrea\Assets\FBX\generated"
+ASSETS_OUT = BASE
 TEXDIR = os.path.join(BASE, "Textures")
 os.makedirs(TEXDIR, exist_ok=True)
 
@@ -679,6 +680,111 @@ def build_asteroid_shell(sz, outname):
                          origin='ORIGIN_CENTER_OF_VOLUME')
 
 
+# ----------------------------------------------------------------------------
+# Hardpoint module-mounting system
+# ----------------------------------------------------------------------------
+# A data-driven way to attach modules onto a ship carcass and to describe those
+# mount points to the GAME (Starfield/SE-style module builder). Each hardpoint
+# is a named socket: {name, position (units), mount_scale, allowed part types}.
+# The generator can mount parts by hardpoint, and emit a JSON manifest the game
+# consumes (which modules fit which hardpoints, where they sit, how they scale).
+#
+# Hardpoints are defined per size-class (positions relative to the class dims).
+
+HARDPOINT_DEFS = {
+    # keyed by size class -> {name: {pos:(dx,dy,dz) frac-of-class, types:[...]}}
+    'small': {
+        'HP_Engine':      {'pos': (0, -0.52, -0.06), 'types': ['engine']},
+        'HP_Cargo':       {'pos': (0, -0.05, -0.18), 'types': ['cargo']},
+        'HP_Nose':        {'pos': (0,  0.34, -0.22), 'types': ['weapon']},
+        'HP_Sensor':      {'pos': (0,  0.18,  0.72), 'types': ['sensor']},
+        'HP_Core':        {'pos': (0, -0.35,  0.40), 'types': ['reactor']},
+        'HP_Underslung':  {'pos': (0, -0.30, -0.16), 'types': ['drill']},
+        'HP_Forward':     {'pos': (0,  0.30, -0.10), 'types': ['mining_laser']},
+    },
+    'medium': {
+        'HP_Engine':      {'pos': (0, -0.52, -0.03), 'types': ['engine']},
+        'HP_Cargo':       {'pos': (0, -0.05, -0.10), 'types': ['cargo']},
+        'HP_Nose':        {'pos': (0,  0.30, -0.13), 'types': ['weapon']},
+        'HP_Sensor':      {'pos': (0,  0.18,  0.68), 'types': ['sensor']},
+        'HP_Core':        {'pos': (0, -0.35,  0.36), 'types': ['reactor']},
+        'HP_Underslung':  {'pos': (0, -0.30, -0.11), 'types': ['drill']},
+        'HP_Forward':     {'pos': (0,  0.30, -0.06), 'types': ['mining_laser']},
+    },
+    'corvette': {
+        'HP_Engine':      {'pos': (0, -0.50, -0.04), 'types': ['engine']},
+        'HP_Cargo':       {'pos': (0, -0.04, -0.09), 'types': ['cargo']},
+        'HP_Nose':        {'pos': (0,  0.32, -0.14), 'types': ['weapon']},
+        'HP_Sensor':      {'pos': (0,  0.18,  0.70), 'types': ['sensor']},
+        'HP_Core':        {'pos': (0, -0.34,  0.38), 'types': ['reactor']},
+        'HP_Underslung':  {'pos': (0, -0.30, -0.11), 'types': ['drill']},
+        'HP_Forward':     {'pos': (0,  0.30, -0.07), 'types': ['mining_laser']},
+    },
+    'large': {
+        'HP_Engine':      {'pos': (0, -0.50, -0.03), 'types': ['engine']},
+        'HP_Cargo':       {'pos': (0, -0.04, -0.08), 'types': ['cargo']},
+        'HP_Nose':        {'pos': (0,  0.30, -0.12), 'types': ['weapon']},
+        'HP_Sensor':      {'pos': (0,  0.18,  0.66), 'types': ['sensor']},
+        'HP_Core':        {'pos': (0, -0.34,  0.36), 'types': ['reactor']},
+        'HP_Underslung':  {'pos': (0, -0.30, -0.09), 'types': ['drill']},
+        'HP_Forward':     {'pos': (0,  0.30, -0.06), 'types': ['mining_laser']},
+    },
+}
+
+
+def hardpoint_positions(sz, dims):
+    """Given size-class 'sz' and carcass (lx,ly,lz,locz)-ish dims, return
+    {hardpoint_name: (world_x, world_y, world_z)} for mount placement."""
+    lx, ly, lz, locz = dims
+    k = sc(sz)
+    defs = HARDPOINT_DEFS.get(sz, {})
+    out = {}
+    for name, spec in defs.items():
+        dx, dy, dz = spec['pos']
+        # convert fractional offsets to world units (y,z scale by their actual
+        # dimensions; x offsets left at 0 since these are centered sockets)
+        out[name] = (dx * lx, dy * ly, locz + dz * lz)
+    return out
+
+
+def build_hardpoint_manifest(sz, dims, outname, opts):
+    """Emit a JSON manifest describing this ship's hardpoints + which module
+    types each accepts. The game reads this to render its module-builder UI.
+    Returns path to the JSON."""
+    import json
+    lx, ly, lz, locz = dims
+    k = sc(sz)
+    manifest = {
+        "ship": outname,
+        "size_class": sz,
+        "scale": k,
+        "carcass_dims": [lx, ly, lz],
+        "hardpoints": {},
+    }
+    defs = HARDPOINT_DEFS.get(sz, {})
+    for name, spec in defs.items():
+        hp = hardpoint_positions(sz, dims)[name]
+        manifest["hardpoints"][name] = {
+            "position": [round(float(x), 1) for x in hp],
+            "mount_orientation": "AXIS_FORWARD",   # -Y forward, Z-up (ship convention)
+            "allowed_types": spec['types'],
+            "occupied": opts.get(name_to_type_key(name)) if name_to_type_key(name) in opts else False,
+        }
+    out = os.path.join(ASSETS_OUT, f"{outname}_hardpoints.json")
+    with open(out, 'w') as f:
+        json.dump(manifest, f, indent=2)
+    return out
+
+
+def name_to_type_key(hp_name):
+    """Map a hardpoint name to its module-type option key (e.g. HP_Engine->engine).
+    Keeps manifest `occupied` accurate to what assemble mounts there."""
+    m = {'HP_Engine':'engine', 'HP_Cargo':'cargo', 'HP_Nose':'weapon',
+         'HP_Sensor':'sensor', 'HP_Core':'reactor', 'HP_Underslung':'drill',
+         'HP_Forward':'mining_laser'}
+    return m.get(hp_name, '')
+
+
 def assemble_ship(sz, outname, opts, carcass_builder=None):
     """Build a full ship: carcass + mounted add-ons. Each part stays a separate
     mesh exported as its own FBX (`<outname>_<Part>.fbx`). opts may select which
@@ -708,6 +814,10 @@ def assemble_ship(sz, outname, opts, carcass_builder=None):
         k = sc(sz)
         _, ly, _, locz = dims
 
+    # NOTE: mounting keeps its tuned per-part offsets below (these were visually
+    # dialed in per class). The hardpoint manifest (also emitted) records the
+    # NOMINAL socket positions + allowed types for the game's module-builder;
+    # it doesn't replace the tuned in-mesh mount.
     if opts.get('engine'):
         eobj, ep = build_engine_part(sz, f"{outname}_Engine")
         eobj.location = (0, -ly*0.52, locz - 10*k)
@@ -745,6 +855,12 @@ def assemble_ship(sz, outname, opts, carcass_builder=None):
         aobj, ap = build_asteroid_shell(sz, f"{outname}_AsteroidShell")
         aobj.location = (0, -ly*0.2, locz)
         results.append((aobj, ap))
+
+    # Emit the hardpoint manifest for the game's module-builder (best-effort).
+    try:
+        build_hardpoint_manifest(sz, dims, outname, opts)
+    except Exception as e:
+        print(f"  [warn] hardpoint manifest failed for {outname}: {e}")
     return results
 
 
