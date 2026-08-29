@@ -58,6 +58,13 @@ def clean_mesh(ob, eps=0.01):
     bpy.ops.object.mode_set(mode='EDIT')
     bpy.ops.mesh.select_all(action='SELECT')
     bpy.ops.mesh.remove_doubles(threshold=eps / 100.0)  # in Blender units (meters)
+    # recalc normals outward so the exported FBX faces render correctly in UE
+    # and aren't backface-culled in EEVEE (join of primitives can leave
+    # inward-flipped faces)
+    try:
+        bpy.ops.mesh.normals_make_consistent(inside=False)
+    except Exception:
+        pass
     bpy.ops.object.mode_set(mode='OBJECT')
     nv_after = len(ob.data.vertices)
     print(f"  clean_mesh: {nv_before} -> {nv_after} verts (merged {nv_before - nv_after})")
@@ -811,6 +818,69 @@ def assemble_whole_ship(sz, outname, opts, carcass_builder=None):
                      rot=(math.radians(90),0,0), verts=14)
         emitter = box("MLEmit", 26*k, 24*k, 30*k, loc=(0, ly*0.42, locz - 10*k)); bevel(emitter,3,1)
         objs += [barrel, emitter]
+
+    # ===================== DETAIL PASS =====================
+    # Add scale-aware surface detail so the ship reads as a real vessel, not
+    # plain boxes: hull panel ridges, vents, antennae, sensor bumps, thrusters,
+    # stabilizers, greebles. All sized to the size-class scalar.
+    dk = max(k, 1.0)
+    # --- hull panel ridges along the flanks (reveals "plating" seams) ---
+    for i, xoff in enumerate([-0.42, 0.42]):
+        for j, yfrac in enumerate([0.15, 0.45, 0.72]):
+            r = box(f"PanelRidge{i}_{j}", 8*k, lz*0.30, 10*k,
+                    loc=(xoff*lx, (yfrac-0.5)*ly, locz + lz*0.15),
+                    rot=(math.radians(4), 0, 0)); bevel(r, 1, 1)
+            objs.append(r)
+    # --- dorsal vent/grille strips along the top deck ---
+    for i, xoff in enumerate([-0.16, 0.16]):
+        for j, yfrac in enumerate([0.05, 0.5, 0.9]):
+            v = box(f"Vent{i}_{j}", 6*k, lz*0.5, 4*k,
+                    loc=(xoff*lx, (yfrac-0.5)*ly, locz + lz*0.55),
+                    rot=(0, math.radians(6), 0)); bevel(v, 1, 1)
+            objs.append(v)
+    # --- fore antenna array (2-3 masts with tips) ---
+    for i, a in enumerate([(-0.2, ly*0.55), (0.2, ly*0.55), (0, ly*0.4)]):
+        if i == 2 and not opts.get('sensor'):
+            continue
+        ax, ay = a
+        m = cyl(f"AntMast{i}", 3*k, 55*k, loc=(ax*lx, ay, locz + lz*0.95), verts=8)
+        t = sphere(f"AntTip{i}", 5*k, loc=(ax*lx, ay, locz + lz*0.95 + 55*k), verts=8)
+        bevel(m, 1, 1)
+        objs += [m, t]
+    # --- dorsal sensor bumps near the nose ---
+    for i, xoff in enumerate([-0.3, 0.3]):
+        g = greeble(f"SensorBump{i}", loc=(xoff*lx, ly*0.5, locz + lz*0.42),
+                    sx=12*k, sy=14*k, sz=8*k)
+        objs.append(g)
+    # --- rear thruster exhausts + side maneuvering thrusters ---
+    for side in (-1, 1):
+        ex = cyl(f"ExNoz{side}", 7*k, 22*k, loc=(side*0.30*lx, -ly*0.72, locz + lz*0.1),
+                 rot=(math.radians(90), 0, 0), verts=10)
+        thr = cyl(f"ManeuverThr{side}", 5*k, 12*k, loc=(side*0.55*lx, -ly*0.3, locz + lz*0.35),
+                  rot=(0, math.radians(90), 0), verts=8)
+        objs += [ex, thr]
+    # --- tail winglet stabilizers (if not a pure box silhouette) ---
+    for side in (-1, 1):
+        wl = box(f"Winglet{side}", 16*k, 90*k, 60*k, loc=(side*0.4*lx, -ly*0.78, locz + lz*0.55),
+                 rot=(0, 0, math.radians(-14*side))); bevel(wl, 4, 1)
+        objs.append(wl)
+    # --- hull greeble cladding: MIRRORED small boxes/riders so the ship stays
+    # X-symmetric (matches QA's symmetry requirement) ---
+    import random
+    rng = random.Random(hash(outname) % 100000)
+    for i in range(8):
+        gx = (rng.random()-0.5)*lx*0.8
+        gy = (rng.random()*0.6 - 0.2)*ly
+        gz = locz + (rng.random()*0.5 + 0.1)*lz
+        sxv = (6+rng.random()*10)*k; syv = (4+rng.random()*16)*k; szv = (4+rng.random()*6)*k
+        rotv = (rng.random()*0.2, rng.random()*0.2, rng.random()*0.3)
+        g = greeble(f"Greeble{i}", loc=(gx, gy, gz), sx=sxv, sy=syv, sz=szv, rot=rotv)
+        objs.append(g)
+        # mirrored twin on the opposite X side
+        gm = greeble(f"GreebleMir{i}", loc=(-gx, gy, gz), sx=sxv, sy=syv, sz=szv,
+                     rot=(-rotv[0], rotv[1], rotv[2]))
+        objs.append(gm)
+    # =================== /DETAIL PASS ===================
 
     # join everything into one mesh (raw join, no finalize deletion)
     joined = join(objs, f"{outname}_AssembledGeo")
