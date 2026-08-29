@@ -247,8 +247,6 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	virtual void PlayerTick(float DeltaTime) override;
-
 	virtual void SetupInputComponent() override;
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
