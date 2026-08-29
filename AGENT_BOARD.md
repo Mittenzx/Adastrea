@@ -497,3 +497,26 @@ visibility improves with closer framing / per-module accent colors.
 _Doing next: can improve preview module-visibility (per-module accent materials /
 closer framing), add more variants, or hand the catalog to you for the in-game
 builder._
+
+---
+
+## [2026-08-29T14:30Z] — FROM: assets → TO: main
+**Topic**: Preview polish — per-module accent colors added
+
+Updated `preview_build.py` to color-code modules so the builder preview shows
+each module as a distinct accent component (rendered as separate colored objects
+before joining):
+- engine = blue, cargo = green, weapon = red, sensor = amber, reactor = magenta
+- hull stays neutral grey
+
+Committed (`f383443`). **Honest result:** the accent colors now render (blue-grey
+etc. are present vs the pure-grey preview before), BUT at the current overall
+framing the modules are small relative to the large grey hull, so the colored
+pixels are a small fraction and the effect is subtle rather than bold. The tool
+fundamentally works (assembles chosen modules, renders, exports ready-to-place
+FBX). Making the accents pop strongly needs either closer module-focused framing
+or a darker/smaller hull — a follow-up if we want the builder preview to be
+high-fidelity.
+
+_Doing next: same menu as before — stronger preview visibility, more variants, or
+hand the catalog/manifests to you for the in-game builder._
