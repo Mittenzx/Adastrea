@@ -292,10 +292,37 @@ void AAdastreaPlayerController::HandleMapToggle()
 	{
 		return;
 	}
-	if (AAdastreaHUD* GameHUD = Cast<AAdastreaHUD>(GetHUD()))
+	AAdastreaHUD* GameHUD = Cast<AAdastreaHUD>(GetHUD());
+	if (!GameHUD)
 	{
-		GameHUD->ToggleMap();
-		UE_LOG(LogAdastrea, Log, TEXT("Map toggled: %s"), GameHUD->bShowMap ? TEXT("ON") : TEXT("OFF"));
+		return;
+	}
+
+	// Toggle the map.
+	GameHUD->ToggleMap();
+	const bool bMapOpen = GameHUD->bShowMap;
+
+	// When the map is open, switch to mouse mode (cursor shown, ship mouse-look
+	// paused) so the player can freely move the mouse over the map. On close,
+	// return to ship mouse-look.
+	if (bMapOpen)
+	{
+		SetInputMode(FInputModeGameAndUI());
+		bShowMouseCursor = true;
+		bEnableClickEvents = true;
+		bEnableMouseOverEvents = true;
+		bLockMouseLook = true; // pause ship mouse-look while map is open
+		bTargetingModeActive = false; // keep separate from map (no hover reticle on map)
+		UE_LOG(LogAdastrea, Log, TEXT("Map opened - mouse mode (ship look paused)"));
+	}
+	else
+	{
+		SetInputMode(FInputModeGameOnly());
+		bShowMouseCursor = false;
+		bEnableClickEvents = false;
+		bEnableMouseOverEvents = false;
+		bLockMouseLook = false;
+		UE_LOG(LogAdastrea, Log, TEXT("Map closed - ship look restored"));
 	}
 }
 

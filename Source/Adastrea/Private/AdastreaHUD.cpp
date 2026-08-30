@@ -266,9 +266,10 @@ void AAdastreaHUD::DrawHUD()
 		PC->GetViewportSize(VX, VY);
 		float VW = (float)VX, VH = (float)VY;
 
-		// Map area: a centered wide rect (~70% width, 60% height), preserving world aspect.
-		float MapW = VW * 0.70f;
-		float MapH = VH * 0.60f;
+		// Map area: full-screen overlay (with a small margin frame), preserving world aspect.
+		const float Margin = 20.0f;
+		float MapW = VW - Margin * 2.0f;
+		float MapH = VH - Margin * 2.0f - 40.0f; // leave room for the title/footer
 		// Fit extent into MapW x MapH by uniform scale.
 		float WorldAspect = ExtentX / FMath::Max(ExtentY, 1.0f);
 		float MapAspect = MapW / FMath::Max(MapH, 1.0f);
@@ -283,8 +284,11 @@ void AAdastreaHUD::DrawHUD()
 			Scale = MapH / FMath::Max(ExtentY, 1.0f);
 			MapW = ExtentX * Scale;
 		}
-		const float PX = (VW - MapW) * 0.5f;
-		const float PY = (VH - MapH) * 0.5f;
+		const float PX = Margin + (VW - Margin * 2.0f - MapW) * 0.5f;
+		const float PY = Margin + (VH - Margin * 2.0f - MapH) * 0.5f;
+
+		// Full-screen backing (solid, covers the play viewport while map is up).
+		DrawRect(FLinearColor(0.01f, 0.015f, 0.025f, 1.0f), 0.0f, 0.0f, VW, VH);
 
 		// Screen position for a world (X,Y) point, Y up -> screen Y down.
 		auto ToScreen = [&](const FVector& W) -> FVector2D
@@ -337,6 +341,10 @@ void AAdastreaHUD::DrawHUD()
 		DrawLine(PPt.X - PA * 0.8f, PPt.Y + PA * 0.5f, PPt.X + PA * 0.8f, PPt.Y + PA * 0.5f, kBorder, 2.0f);
 		DrawText(TEXT("YOU"), FLinearColor(0.15f, 0.9f, 0.6f, 1.0f), PPt.X - 8.0f, PPt.Y + 12.0f, BodyFont, 0.6f);
 
-		// Footer hint
-		DrawText(TEXT("Press M to close map"), FLinearColor(0.5f,0.6f,0.7f,1.0f), (VW - MapW) * 0.5f, PY + MapH + 8.0f, BodyFont, 0.7f);
+		// Footer hint (bottom-center of screen)
+		DrawText(TEXT("Press M to close map"), FLinearColor(0.5f,0.6f,0.7f,1.0f),
+			VW * 0.5f - 70.0f, VH - 36.0f, BodyFont, 0.7f);
+
+	// Legend (top-right)
+		DrawText(TEXT("Y (up)"), FLinearColor(0.4f,0.5f,0.6f,1.0f), VW - 90.0f, 12.0f, BodyFont, 0.6f);
 	}
