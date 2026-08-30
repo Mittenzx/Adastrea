@@ -21,4 +21,19 @@ class ADASTREA_API AAdastreaHUD : public AHUD
 
 public:
 	virtual void DrawHUD() override;
+
+	/** Whether the full-screen 2D sector map is shown (toggled by M). */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Map")
+	bool bShowMap = false;
+
+	/** Toggle the full-screen map on/off. */
+	UFUNCTION(BlueprintCallable, Category="HUD|Map")
+	void ToggleMap() { bShowMap = !bShowMap; }
+
+	/** Set the map's visibility directly. */
+	UFUNCTION(BlueprintCallable, Category="HUD|Map")
+	void SetMapVisible(bool bVisible) { bShowMap = bVisible; }
+
+	/** Draw the full-screen 2D top-down sector map (stations + player). */
+	void DrawSectorMap(APlayerController* PC, const FVector& ShipPos);
 };

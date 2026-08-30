@@ -8,6 +8,7 @@
 #include "Stations/SpaceStation.h"
 #include "Engine/Canvas.h"
 #include "Engine/Engine.h"
+#include "Kismet/GameplayStatics.h"
 
 // Palette (subtle sci-fi, on-brand for a teal/cyan accent theme)
 static const FLinearColor kBg      (0.02f, 0.03f, 0.05f, 0.72f); // deep space panel
@@ -28,6 +29,16 @@ void AAdastreaHUD::DrawHUD()
 	if (!PC)
 	{
 		return;
+	}
+
+	// Full-screen sector map (toggled by M) draws over everything.
+	if (bShowMap)
+	{
+		APawn* Pawn = PC->GetPawn();
+		if (Pawn)
+		{
+			DrawSectorMap(PC, Pawn->GetActorLocation());
+		}
 	}
 
 	ASpaceship* Ship = Cast<ASpaceship>(PC->GetPawn());
@@ -198,15 +209,134 @@ void AAdastreaHUD::DrawHUD()
 	}
 
 	// Subtle targeting-mode indicator (bottom-center, unobtrusive).
-		if (AController && AController->IsTargetingModeActive())
-		{
-			int32 VSizeX = 0, VSizeY = 0;
-			if (PC)
+			if (AController && AController->IsTargetingModeActive())
 			{
-				PC->GetViewportSize(VSizeX, VSizeY);
-				const FString Hint = TEXT("TARGETING ACTIVE - Tab to exit");
-				DrawText(Hint, FLinearColor(0.6f, 0.7f, 0.75f, 0.9f),
-					VSizeX * 0.5f - 80.0f, VSizeY - 40.0f, BodyFont, 0.6f);
+				int32 VSizeX = 0, VSizeY = 0;
+				if (PC)
+				{
+					PC->GetViewportSize(VSizeX, VSizeY);
+					const FString Hint = TEXT("TARGETING ACTIVE - Tab to exit");
+					DrawText(Hint, FLinearColor(0.6f, 0.7f, 0.75f, 0.9f),
+						VSizeX * 0.5f - 80.0f, VSizeY - 40.0f, BodyFont, 0.6f);
+				}
 			}
+	}
+
+	void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
+	{
+		if (!PC)
+		{
+			return;
 		}
+
+		UWorld* World = PC->GetWorld();
+		if (!World)
+		{
+			return;
+		}
+
+		// Gather stations.
+		TArray<AActor*> Stations;
+		UGameplayStatics::GetAllActorsOfClass(World, ASpaceStation::StaticClass(), Stations);
+
+		// Compute world bounds covering all stations + the player (X/Y plane).
+		float MinX = ShipPos.X, MaxX = ShipPos.X;
+		float MinY = ShipPos.Y, MaxY = ShipPos.Y;
+		FVector Ship2D = FVector(ShipPos.X, ShipPos.Y, 0.0f);
+		for (AActor* S : Stations)
+		{
+			if (!S)
+			{
+				continue;
+			}
+			FVector Loc = S->GetActorLocation();
+			MinX = FMath::Min(MinX, Loc.X); MaxX = FMath::Max(MaxX, Loc.X);
+			MinY = FMath::Min(MinY, Loc.Y); MaxY = FMath::Max(MaxY, Loc.Y);
+		}
+		// Ensure a minimum extent so a lone ship still has a useful view.
+		float ExtentX = FMath::Max(MaxX - MinX, 20000.0f);
+		float ExtentY = FMath::Max(MaxY - MinY, 20000.0f);
+		float Cx = (MinX + MaxX) * 0.5f;
+		float Cy = (MinY + MaxY) * 0.5f;
+		MinX = Cx - ExtentX * 0.5f; MaxX = Cx + ExtentX * 0.5f;
+		MinY = Cy - ExtentY * 0.5f; MaxY = Cy + ExtentY * 0.5f;
+
+		// Retina/viewport size.
+		int32 VX = 0, VY = 0;
+		PC->GetViewportSize(VX, VY);
+		float VW = (float)VX, VH = (float)VY;
+
+		// Map area: a centered wide rect (~70% width, 60% height), preserving world aspect.
+		float MapW = VW * 0.70f;
+		float MapH = VH * 0.60f;
+		// Fit extent into MapW x MapH by uniform scale.
+		float WorldAspect = ExtentX / FMath::Max(ExtentY, 1.0f);
+		float MapAspect = MapW / FMath::Max(MapH, 1.0f);
+		float Scale;
+		if (WorldAspect > MapAspect)
+		{
+			Scale = MapW / FMath::Max(ExtentX, 1.0f);
+			MapH = ExtentY * Scale;
+		}
+		else
+		{
+			Scale = MapH / FMath::Max(ExtentY, 1.0f);
+			MapW = ExtentX * Scale;
+		}
+		const float PX = (VW - MapW) * 0.5f;
+		const float PY = (VH - MapH) * 0.5f;
+
+		// Screen position for a world (X,Y) point, Y up -> screen Y down.
+		auto ToScreen = [&](const FVector& W) -> FVector2D
+		{
+			float sx = PX + (W.X - MinX) * Scale;
+			float sy = PY + (MaxY - W.Y) * Scale; // invert so +Y is up
+			return FVector2D(sx, sy);
+		};
+
+		// ---- Panel background + border ----
+		DrawRect(FLinearColor(0.02f, 0.03f, 0.05f, 0.88f), PX, PY, MapW, MapH);
+		DrawRect(FLinearColor(0.10f, 0.65f, 0.72f, 0.9f), PX, PY, 3.0f, MapH);           // left accent
+		DrawRect(FLinearColor(0.10f, 0.65f, 0.72f, 0.9f), PX, PY, MapW, 3.0f);           // top accent
+		DrawRect(FLinearColor(0.10f, 0.65f, 0.72f, 0.7f), PX, PY + MapH - 3.0f, MapW, 3.0f);
+
+		// Title
+		UFont* TitleFont = GEngine->GetLargeFont();
+		UFont* BodyFont  = GEngine->GetSmallFont();
+		DrawText(TEXT("SECTOR MAP"), FLinearColor(0.60f, 0.85f, 0.90f, 1.0f), PX + 20.0f, PY - 28.0f, TitleFont, 0.9f);
+
+		// Legend
+		DrawText(TEXT("Y (up)"), FLinearColor(0.4f,0.5f,0.6f,1.0f), PX + MapW - 90.0f, PY + 10.0f, BodyFont, 0.6f);
+
+		// ---- Station markers + names ----
+		for (AActor* S : Stations)
+		{
+			if (!S)
+			{
+				continue;
+			}
+			FVector2D SP = ToScreen(S->GetActorLocation());
+			// Clip to map rect.
+			if (SP.X < PX || SP.X > PX + MapW || SP.Y < PY || SP.Y > PY + MapH)
+			{
+				continue;
+			}
+			// Small square marker.
+			const float M = 6.0f;
+			DrawRect(FLinearColor(0.95f, 0.78f, 0.30f, 1.0f), SP.X - M, SP.Y - M, M * 2.0f, M * 2.0f);
+			// Name below marker.
+			DrawText(S->GetActorLabel(), FLinearColor(0.85f, 0.9f, 0.95f, 1.0f), SP.X - 12.0f, SP.Y + 8.0f, BodyFont, 0.6f);
+		}
+
+		// ---- Player marker (teal arrow) ----
+		FVector2D PPt = ToScreen(Ship2D);
+		const float PA = 10.0f;
+		// Simple triangle pointing up (ship "north" = +Y).
+		DrawLine(PPt.X, PPt.Y - PA, PPt.X - PA * 0.8f, PPt.Y + PA * 0.5f, kBorder, 2.0f);
+		DrawLine(PPt.X, PPt.Y - PA, PPt.X + PA * 0.8f, PPt.Y + PA * 0.5f, kBorder, 2.0f);
+		DrawLine(PPt.X - PA * 0.8f, PPt.Y + PA * 0.5f, PPt.X + PA * 0.8f, PPt.Y + PA * 0.5f, kBorder, 2.0f);
+		DrawText(TEXT("YOU"), FLinearColor(0.15f, 0.9f, 0.6f, 1.0f), PPt.X - 8.0f, PPt.Y + 12.0f, BodyFont, 0.6f);
+
+		// Footer hint
+		DrawText(TEXT("Press M to close map"), FLinearColor(0.5f,0.6f,0.7f,1.0f), (VW - MapW) * 0.5f, PY + MapH + 8.0f, BodyFont, 0.7f);
 	}

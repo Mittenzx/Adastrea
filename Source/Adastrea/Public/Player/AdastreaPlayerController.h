@@ -307,7 +307,10 @@ public:
 					void HandleTargetingToggle();
 
 					/** Input handler: Left-mouse-click selects/locks a station in targeting mode. */
-					void HandleTargetClick();
+							void HandleTargetClick();
+
+							/** Input handler: M toggles the full-screen 2D sector map. */
+							void HandleMapToggle();
 
 					/** Screen-space ray from the cursor; returns the targetable station under it. */
 					class ASpaceStation* GetStationUnderCursor();

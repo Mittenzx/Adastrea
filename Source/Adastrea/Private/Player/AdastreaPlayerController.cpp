@@ -3,6 +3,7 @@
 #include "Player/AdastreaPlayerController.h"
 #include "Ships/Spaceship.h"
 #include "Stations/SpaceStation.h"
+#include "AdastreaHUD.h"
 #include "Stations/SpaceStationModule.h"
 #include "Stations/DockingBayModule.h"
 #include "AdastreaLog.h"
@@ -113,6 +114,8 @@ void AAdastreaPlayerController::SetupInputComponent()
 		InputComponent->BindKey(EKeys::Tab, IE_Pressed, this, &AAdastreaPlayerController::HandleTargetingToggle);
 		// LMB: in targeting mode, click a station to lock it as the target
 		InputComponent->BindKey(EKeys::LeftMouseButton, IE_Pressed, this, &AAdastreaPlayerController::HandleTargetClick);
+		// M: toggle the full-screen 2D sector map
+		InputComponent->BindKey(EKeys::M, IE_Pressed, this, &AAdastreaPlayerController::HandleMapToggle);
 	}
 }
 
@@ -280,6 +283,19 @@ void AAdastreaPlayerController::HandleTargetClick()
 	{
 		LockedTargetActor = Station;
 		UE_LOG(LogAdastrea, Log, TEXT("TARGET LOCKED: %s"), *Station->GetName());
+	}
+}
+
+void AAdastreaPlayerController::HandleMapToggle()
+{
+	if (!IsControllingSpaceship())
+	{
+		return;
+	}
+	if (AAdastreaHUD* GameHUD = Cast<AAdastreaHUD>(GetHUD()))
+	{
+		GameHUD->ToggleMap();
+		UE_LOG(LogAdastrea, Log, TEXT("Map toggled: %s"), GameHUD->bShowMap ? TEXT("ON") : TEXT("OFF"));
 	}
 }
 
