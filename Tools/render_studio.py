@@ -157,12 +157,15 @@ def render_one(base, W=1400, H=1000):
     # ---- camera framing (turntable 3/4 view around origin) ----
     center = V.mean(0)
     span = (V.max(0) - V.min(0)).max()
-    radius = max(span * 1.25, 80)
-    az, el = math.radians(42), math.radians(20)
+    # tight framing so the ship fills the frame (smaller radius = bigger ship)
+    radius = max(span * 0.85, 60)
+    az, el = math.radians(42), math.radians(22)
     cam = np.array([center[0] + radius*math.cos(el)*math.sin(az),
                     center[1] + radius*math.cos(el)*math.cos(az),
                     center[2] + radius*math.sin(el)])
-    fwd = (center - cam); fwd /= np.linalg.norm(fwd)
+    # aim slightly below the ship's centroid so the hull is centered, not the floor
+    look = center + np.array([0, 0, span*0.1])
+    fwd = (look - cam); fwd /= np.linalg.norm(fwd)
     right = np.cross(fwd, np.array([0, 0, 1])); right /= np.linalg.norm(right)
     up = np.cross(right, fwd)
     Rm = np.stack([right, up, -fwd])
@@ -190,7 +193,7 @@ def render_one(base, W=1400, H=1000):
 
     # ---- floor plane (large quad below ship, soft gradient) ----
     fy = V[:, 2].min() - (V[:, 2].max() - V[:, 2].min()) * 0.12
-    sp = span * 2.4
+    sp = span * 1.2
     fc = np.array([(center[0]-sp/2, center[1]-sp/2, fy), (center[0]+sp/2, center[1]-sp/2, fy),
                    (center[0]+sp/2, center[1]+sp/2, fy), (center[0]-sp/2, center[1]+sp/2, fy)])
     proj = []
