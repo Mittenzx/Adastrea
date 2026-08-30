@@ -107,6 +107,33 @@ void AAdastreaHUD::DrawHUD()
 	// ---- Locked target (from controller targeting) ----
 	AAdastreaPlayerController* AController = Cast<AAdastreaPlayerController>(PC);
 	AActor* LockedTarget = AController ? AController->GetLockedTarget() : nullptr;
+
+	// Hover highlight: while targeting, show which station the cursor is over.
+	AActor* HoverTarget = nullptr;
+	if (AController && AController->IsTargetingModeActive())
+	{
+		HoverTarget = AController->GetStationUnderCursor();
+	}
+
+	// Draw reticle on the hovered station (if any, and not already locked).
+	if (HoverTarget && HoverTarget != LockedTarget && PC)
+	{
+		FVector2D SPt;
+		if (PC->ProjectWorldLocationToScreen(HoverTarget->GetActorLocation(), SPt))
+		{
+			const FLinearColor HoverCol = FLinearColor(1.0f, 0.85f, 0.3f, 1.0f); // amber
+			const float BH = 30.0f;
+			DrawLine(SPt.X - BH, SPt.Y - BH, SPt.X - 10.0f, SPt.Y - BH, HoverCol, 2.0f);
+			DrawLine(SPt.X + BH, SPt.Y - BH, SPt.X + 10.0f, SPt.Y - BH, HoverCol, 2.0f);
+			DrawLine(SPt.X - BH, SPt.Y + BH, SPt.X - 10.0f, SPt.Y + BH, HoverCol, 2.0f);
+			DrawLine(SPt.X + BH, SPt.Y + BH, SPt.X + 10.0f, SPt.Y + BH, HoverCol, 2.0f);
+			DrawLine(SPt.X - BH, SPt.Y - BH, SPt.X - BH, SPt.Y - 10.0f, HoverCol, 2.0f);
+			DrawLine(SPt.X + BH, SPt.Y - BH, SPt.X + BH, SPt.Y - 10.0f, HoverCol, 2.0f);
+			DrawLine(SPt.X - BH, SPt.Y + BH, SPt.X - BH, SPt.Y + 10.0f, HoverCol, 2.0f);
+			DrawLine(SPt.X + BH, SPt.Y + BH, SPt.X + BH, SPt.Y + 10.0f, HoverCol, 2.0f);
+		}
+	}
+
 	if (LockedTarget)
 	{
 		DrawText(TEXT("TARGET"), kLabel, LabelX, Y, BodyFont, 0.8f);
@@ -114,6 +141,32 @@ void AAdastreaHUD::DrawHUD()
 		const float TgtDist = FVector::Dist(P, LockedTarget->GetActorLocation());
 		DrawText(FString::Printf(TEXT("%s  (%.0f)"), *TgtName, TgtDist),
 			FLinearColor(0.95f, 0.55f, 0.35f, 1.0f), ValueX, Y, BodyFont, 0.8f);
+
+		// ---- Screen-space target reticle (corner box around the locked target) ----
+		FVector2D ScreenPt;
+		if (PC && PC->ProjectWorldLocationToScreen(LockedTarget->GetActorLocation(), ScreenPt))
+		{
+			const FLinearColor Reticle = FLinearColor(0.15f, 0.9f, 0.6f, 1.0f); // teal-green
+			// Box grows slightly with distance to stay readable, clamped.
+			const float BoxHalf = FMath::Clamp(TgtDist * 0.01f, 20.0f, 60.0f);
+			const float RX = ScreenPt.X;
+			const float RY = ScreenPt.Y;
+			const float L = 12.0f; // corner length
+
+			// Four corner brackets
+			DrawLine(RX - BoxHalf, RY - BoxHalf, RX - BoxHalf + L, RY - BoxHalf, Reticle, 2.0f);
+			DrawLine(RX - BoxHalf, RY - BoxHalf, RX - BoxHalf, RY - BoxHalf + L, Reticle, 2.0f);
+			DrawLine(RX + BoxHalf, RY - BoxHalf, RX + BoxHalf - L, RY - BoxHalf, Reticle, 2.0f);
+			DrawLine(RX + BoxHalf, RY - BoxHalf, RX + BoxHalf, RY - BoxHalf + L, Reticle, 2.0f);
+			DrawLine(RX - BoxHalf, RY + BoxHalf, RX - BoxHalf + L, RY + BoxHalf, Reticle, 2.0f);
+			DrawLine(RX - BoxHalf, RY + BoxHalf, RX - BoxHalf, RY + BoxHalf - L, Reticle, 2.0f);
+			DrawLine(RX + BoxHalf, RY + BoxHalf, RX + BoxHalf - L, RY + BoxHalf, Reticle, 2.0f);
+			DrawLine(RX + BoxHalf, RY + BoxHalf, RX + BoxHalf, RY + BoxHalf - L, Reticle, 2.0f);
+
+			// Center crosshair
+			DrawLine(RX - 6.0f, RY, RX + 6.0f, RY, Reticle, 1.0f);
+			DrawLine(RX, RY - 6.0f, RX, RY + 6.0f, Reticle, 1.0f);
+		}
 	}
 	if (AController && AController->IsTargetingModeActive())
 	{
