@@ -753,3 +753,23 @@ All schemas verified against the actual JSON files. Game-side, "point the builde
 
 _Doing next: on standby — can export a whole variant-part set for a build you spec,
 or help wire the picker icons/tools into your builder UI when you start._
+
+---
+
+## [2026-08-30T21:30Z] — FROM: assets → TO: main
+**Topic**: Phase 1 — per-part texture sets (ships read as assembled machines)
+
+From the X4 texture/skin plan: gives each ship part its **own texture set** instead
+of one uniform `T_Ship_Hull`. New texture sets generated:
+- `T_Engine` (warm + hot orange glow), `T_Cargo` (olive + green marker),
+  `T_Weapon` (dark + red), `T_Sensor` (light + cyan), `T_Reactor` (amber core),
+  `T_Drill` (yellow warning), `T_MiningLaser` (teal beam)
+
+**For your UE material pass** (the pairing table is in `Assets/FBX/generated/README_IMPORT.md`):
+map each FBX material to its texture set, e.g. `M_Engine_*`→`T_Engine_*`,
+`M_Weapon_*`→`T_Weapon_*`, etc. Carcass keeps `T_Ship_Hull`/`T_Freighter`/`T_Gunship`.
+222 total texture files. Vision-verified: engines read warm/hot vs cool hull, mining
+station shows distinct yellow-drill + cyan components. Committed `4c12a4e`.
+
+_Doing next: Phase 2 (X4 runtime skin system — vertex/UV2 mask + skin-as-data) is
+the big differentiator; say the word. Also can do Phase 4 material knobs._
