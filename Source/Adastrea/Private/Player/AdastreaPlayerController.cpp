@@ -275,6 +275,17 @@ ASpaceStation* AAdastreaPlayerController::GetStationUnderCursor()
 
 void AAdastreaPlayerController::HandleTargetClick()
 {
+	// If the map is open, interpret the click on the map (convert pixel -> world point,
+	// pick nearest station to that point). Otherwise use normal targeting cursor picking.
+	if (AAdastreaHUD* GameHUD = Cast<AAdastreaHUD>(GetHUD()))
+	{
+		if (GameHUD->bShowMap)
+		{
+			HandleMapClick();
+			return;
+		}
+	}
+
 	if (!bTargetingModeActive)
 	{
 		return;
@@ -283,6 +294,75 @@ void AAdastreaPlayerController::HandleTargetClick()
 	{
 		LockedTargetActor = Station;
 		UE_LOG(LogAdastrea, Log, TEXT("TARGET LOCKED: %s"), *Station->GetName());
+	}
+}
+
+void AAdastreaPlayerController::HandleMapClick()
+{
+	// Convert the cursor screen position into a world (X,Y) point using the same
+	// map projection as DrawSectorMap, then target the nearest station to it.
+	if (!GetWorld())
+	{
+		return;
+	}
+	FVector2D MousePos;
+	if (!GetMousePosition(MousePos.X, MousePos.Y))
+	{
+		return;
+	}
+	int32 VX = 0, VY = 0;
+	GetViewportSize(VX, VY);
+	float VW = (float)VX, VH = (float)VY;
+
+	// Recompute map bounds (match DrawSectorMap).
+	APawn* ControlledPawn = GetPawn();
+	FVector ShipPos = ControlledPawn ? ControlledPawn->GetActorLocation() : FVector::ZeroVector;
+	float MinX = ShipPos.X, MaxX = ShipPos.X, MinY = ShipPos.Y, MaxY = ShipPos.Y;
+	TArray<AActor*> Stations;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpaceStation::StaticClass(), Stations);
+	for (AActor* S : Stations)
+	{
+		if (!S) continue;
+		FVector L = S->GetActorLocation();
+		MinX = FMath::Min(MinX, L.X); MaxX = FMath::Max(MaxX, L.X);
+		MinY = FMath::Min(MinY, L.Y); MaxY = FMath::Max(MaxY, L.Y);
+	}
+	float ExtentX = FMath::Max(MaxX - MinX, 20000.0f);
+	float ExtentY = FMath::Max(MaxY - MinY, 20000.0f);
+	float Cx = (MinX + MaxX) * 0.5f, Cy = (MinY + MaxY) * 0.5f;
+	MinX = Cx - ExtentX * 0.5f; MaxX = Cx + ExtentX * 0.5f;
+	MinY = Cy - ExtentY * 0.5f; MaxY = Cy + ExtentY * 0.5f;
+
+	const float Margin = 20.0f;
+	float MapW = VW - Margin * 2.0f;
+	float MapH = VH - Margin * 2.0f - 40.0f;
+	float WA = ExtentX / FMath::Max(ExtentY, 1.0f);
+	float MA = MapW / FMath::Max(MapH, 1.0f);
+	float Scale;
+	if (WA > MA) { Scale = MapW / FMath::Max(ExtentX, 1.0f); MapH = ExtentY * Scale; }
+	else         { Scale = MapH / FMath::Max(ExtentY, 1.0f); MapW = ExtentX * Scale; }
+	float PX = Margin + (VW - Margin * 2.0f - MapW) * 0.5f;
+	float PY = Margin + (VH - Margin * 2.0f - MapH) * 0.5f;
+
+	// Inverse map: screen -> world.
+	// sx = PX + (W.X - MinX)*Scale  => W.X = MinX + (sx - PX)/Scale
+	// sy = PY + (MaxY - W.Y)*Scale  => W.Y = MaxY - (sy - PY)/Scale
+	FVector ClickWorld((float)(MinX + (MousePos.X - PX) / Scale), (float)(MaxY - (MousePos.Y - PY) / Scale), 0.0f);
+
+	// Pick nearest station to the clicked world point.
+	ASpaceStation* Best = nullptr;
+	float BestDist = TNumericLimits<float>::Max();
+	for (AActor* S : Stations)
+	{
+		if (!S) continue;
+		FVector L = S->GetActorLocation();
+		float D = FVector::Dist(ClickWorld, L);
+		if (D < BestDist) { BestDist = D; Best = Cast<ASpaceStation>(S); }
+	}
+	if (Best)
+	{
+		LockedTargetActor = Best;
+		UE_LOG(LogAdastrea, Log, TEXT("MAP TARGET LOCKED: %s"), *Best->GetName());
 	}
 }
 

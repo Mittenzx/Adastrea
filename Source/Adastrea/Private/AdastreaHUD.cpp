@@ -304,6 +304,24 @@ void AAdastreaHUD::DrawHUD()
 		DrawRect(FLinearColor(0.10f, 0.65f, 0.72f, 0.9f), PX, PY, MapW, 3.0f);           // top accent
 		DrawRect(FLinearColor(0.10f, 0.65f, 0.72f, 0.7f), PX, PY + MapH - 3.0f, MapW, 3.0f);
 
+		// ---- Grid lines (world-space intervals) ----
+		const FLinearColor kGrid = FLinearColor(0.12f, 0.18f, 0.22f, 0.6f);
+		const float GridStep = 10000.0f; // world units per grid cell
+		const float StartX = FMath::FloorToFloat(MinX / GridStep) * GridStep;
+		const float StartY = FMath::FloorToFloat(MinY / GridStep) * GridStep;
+		for (float WX = StartX; WX <= MaxX; WX += GridStep)
+		{
+			FVector2D A = ToScreen(FVector(WX, MinY, 0.0f));
+			FVector2D B = ToScreen(FVector(WX, MaxY, 0.0f));
+			DrawLine(A.X, A.Y, B.X, B.Y, kGrid, 1.0f);
+		}
+		for (float WY = StartY; WY <= MaxY; WY += GridStep)
+		{
+			FVector2D A = ToScreen(FVector(MinX, WY, 0.0f));
+			FVector2D B = ToScreen(FVector(MaxX, WY, 0.0f));
+			DrawLine(A.X, A.Y, B.X, B.Y, kGrid, 1.0f);
+		}
+
 		// Title
 		UFont* TitleFont = GEngine->GetLargeFont();
 		UFont* BodyFont  = GEngine->GetSmallFont();

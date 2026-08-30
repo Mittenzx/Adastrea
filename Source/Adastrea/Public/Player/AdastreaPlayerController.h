@@ -310,7 +310,10 @@ public:
 							void HandleTargetClick();
 
 							/** Input handler: M toggles the full-screen 2D sector map. */
-							void HandleMapToggle();
+												void HandleMapToggle();
+
+												/** Map open: click converts screen->world and targets nearest station. */
+												void HandleMapClick();
 
 					/** Screen-space ray from the cursor; returns the targetable station under it. */
 					class ASpaceStation* GetStationUnderCursor();
