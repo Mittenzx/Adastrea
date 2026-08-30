@@ -1986,6 +1986,37 @@ def main():
                                     'windows':{'cols':14,'frac':0.65,'cool':[0.3,0.65,1.0],'warm':[1.0,0.6,0.25]},
                                     'neon':[0.3,1.0,1.0], 'neon_thick':2, 'grime':True,
                                     'cable':{'runs':6}, 'hazard':{'bands':3}}, 2048, seed=66)
+    # ---- Phase 1: per-part texture sets (distinct material sections per part) ----
+    # Each part type gets its own accent/emissive palette so a ship reads as an
+    # assembled machine (cool carcass, hot engines, dark weapons, etc.) instead of
+    # one uniform texture.
+    gen_texture_set("Engine", {'base':[0.5,0.48,0.46], 'accent':[0.35,0.35,0.4],
+                               'emissive':[1.0,0.35,0.1],  # hot engine glow
+                               'neon':[1.0,0.4,0.15], 'neon_thick':2,
+                               'grime':True, 'hazard':{'bands':3}, 'cable':{'runs':4}}, 2048, seed=170)
+    gen_texture_set("Cargo", {'base':[0.55,0.58,0.5], 'accent':[0.22,0.3,0.2],
+                              'emissive':[0.4,0.9,0.3],  # green container marker
+                              'neon':[0.4,0.9,0.3], 'neon_thick':2,
+                              'grime':True, 'hazard':{'bands':4}, 'cable':{'runs':5}}, 2048, seed=171)
+    gen_texture_set("Weapon", {'base':[0.4,0.38,0.35], 'accent':[0.05,0.05,0.08],
+                               'emissive':[1.0,0.1,0.05],  # menacing red weapon
+                               'neon':[1.0,0.15,0.05], 'neon_thick':2,
+                               'grime':True, 'hazard':{'bands':3}, 'cable':{'runs':3}}, 2048, seed=172)
+    gen_texture_set("Sensor", {'base':[0.6,0.62,0.65], 'accent':[0.1,0.25,0.4],
+                               'emissive':[0.2,0.7,1.0],  # cool sensor/scan
+                               'neon':[0.2,0.7,1.0], 'neon_thick':2,
+                               'cable':{'runs':4}}, 2048, seed=173)
+    gen_texture_set("Reactor", {'base':[0.45,0.44,0.42], 'accent':[0.3,0.15,0.1],
+                                'emissive':[1.0,0.6,0.1],  # amber reactor core
+                                'neon':[1.0,0.7,0.2], 'neon_thick':3,
+                                'grime':True, 'hazard':{'bands':3}, 'cable':{'runs':5}}, 2048, seed=174)
+    gen_texture_set("Drill", {'base':[0.5,0.5,0.46], 'accent':[0.35,0.3,0.2],
+                              'emissive':[0.9,0.6,0.2], 'grime':True,
+                              'hazard':{'bands':4}, 'cable':{'runs':5}}, 1024, seed=175)
+    gen_texture_set("MiningLaser", {'base':[0.45,0.42,0.4], 'accent':[0.1,0.2,0.2],
+                                    'emissive':[0.3,1.0,0.6],  # teal mining beam
+                                    'neon':[0.3,1.0,0.6], 'neon_thick':2,
+                                    'grime':True, 'cable':{'runs':4}}, 1024, seed=176)
     gen_texture_set("Derelict", {'base':[0.4,0.37,0.33], 'accent':[0.25,0.22,0.18],
                                  'emissive':[0.9,0.5,0.1], 'grime':True, 'hazard':{'bands':3}}, 2048, seed=77)
     gen_texture_set("Satellite", {'base':[0.75,0.76,0.78], 'accent':[0.35,0.4,0.5],

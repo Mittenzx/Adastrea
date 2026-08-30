@@ -26,11 +26,11 @@ TEXDIR = r"C:\Users\akuma\Adastrea\Assets\FBX\generated\Textures"
 OUTDIR = r"C:\Users\akuma\Adastrea\Assets\FBX\generated\scene_renders"
 os.makedirs(OUTDIR, exist_ok=True)
 
-# per-part type -> texture set name (matches generator's texture naming)
+# per-part type -> texture set name (Phase 1: each part reads as a distinct material)
 PART_TEX = {
-    "Carcass": "T_Ship_Hull", "Engine": "T_Ship_Hull", "Cargo": "T_Ship_Hull",
-    "Weapon": "T_Ship_Hull", "Sensor": "T_Ship_Hull", "Reactor": "T_Ship_Hull",
-    "MiningLaser": "T_Ship_Hull", "Drill": "T_Station_Hab",
+    "Carcass": "T_Ship_Hull", "Engine": "T_Engine", "Cargo": "T_Cargo",
+    "Weapon": "T_Weapon", "Sensor": "T_Sensor", "Reactor": "T_Reactor",
+    "MiningLaser": "T_MiningLaser", "Drill": "T_Drill",
     "HabRing": "T_HabRing", "AsteroidShell": "T_AsteroidShell", "Hab": "T_Station_Hab",
 }
 # whole-ship override reuse: these ship bases have distinct hull textures
