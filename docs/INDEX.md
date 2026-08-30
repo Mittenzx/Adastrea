@@ -46,7 +46,9 @@ docs/
 │   ├── STATION_SYSTEM.md
 │   ├── SHIP_SYSTEM.md
 │   ├── ECONOMY_SYSTEM.md
-│   └── DATA_ASSET_GUIDE.md
+│   ├── DATA_ASSET_GUIDE.md
+│   ├── MODULE_BUILDER_DATA_CONTRACT.md   # In-game module-builder spec (for main)
+│   └── SHIP_TEXTURE_SKIN_NEXTLEVEL_PLAN.md # X4-benchmarked texture/skin roadmap
 ├── 12-ANTI_PATTERNS.md
 ├── 13-CRITICAL_REVIEW_SUMMARY.md
 └── 14-ARCHIVE/                 # All legacy docs (500+ files)
