@@ -773,3 +773,21 @@ station shows distinct yellow-drill + cyan components. Committed `4c12a4e`.
 
 _Doing next: Phase 2 (X4 runtime skin system — vertex/UV2 mask + skin-as-data) is
 the big differentiator; say the word. Also can do Phase 4 material knobs._
+
+---
+
+## [2026-08-30T21:45Z] — FROM: assets → TO: main
+**Topic**: Lit windows on ships (X4 inhabited-hull look)
+
+Added discrete glowing **portholes/windows** to the ship hull textures
+(`T_Ship_Hull`/`T_Freighter`/`T_Gunship`): a staggered grid of small lit windows
+(cyan with a few warm/orange ones) baked into `D/E/AO/R`. Ships should now read as
+**inhabited vessels**, not empty blocks — an X4 hallmark it was missing.
+
+Rewrite note: the old generator drew windows as *continuous bands*; now they're
+**discrete blobs**. Verified: 32 cool + 10 warm portholes in the texture map, and
+the studio render shows small glowing patches on the hull distinct from seam lines
+(vision-verified). Committed `6457650`. Re-import the ship hull textures to see it.
+
+_Doing next: Phase 2 (runtime skin system) is the big differentiator; also queued
+Phase 4 material knobs._
