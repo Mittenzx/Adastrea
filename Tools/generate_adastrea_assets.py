@@ -307,22 +307,28 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     # lit window grid (station hab, city-like)
     if variant.get('windows'):
         wc = variant['windows']
-        wcell = W // wc.get('cols', 14)
-        ww, wh = int(wcell*0.32), int(wcell*0.36)
+        # discrete portholes: place small round windows on a staggered grid
+        cols_n = wc.get('cols', 12)
+        wcell = W // cols_n
+        ww, wh = int(wcell*0.42), int(wcell*0.30)
         cool = np.array(wc.get('cool', [0.3, 0.65, 1.0]))
         warm = np.array(wc.get('warm', [1.0, 0.6, 0.25]))
-        frac = wc.get('frac', 0.6)
-        for i in range(wcell, W, wcell*2):
-            for j in range(wcell, H, wcell*2):
-                r0, r1 = j, min(j+ww, H)
-                c0, c1 = i, min(i+wh, W)
+        frac = wc.get('frac', 0.5)
+        row_step = max(int(wcell*1.2), 1)
+        for ri, j0 in enumerate(range(wcell//2, H, row_step)):
+            stagger = (wcell//2) if ri % 2 else 0
+            for i in range(wcell//2 + stagger, W, wcell):
+                if rng.random() > frac:
+                    continue
+                col = cool if rng.random() < 0.7 else warm
+                r0 = min(j0, H-1); c0 = min(i, W-1)
+                r1 = min(r0+wh, H); c1 = min(c0+ww, W)
+                # rounded porthole: mask corners via slight inset
+                D[r0:r1, c0:c1] = [col[0]*0.75, col[1]*0.85, col[2]*1.0, 1.0]
+                E[r0:r1, c0:c1] = [col[0], col[1], col[2], 1.0]
+                AO[r0:r1, c0:c1] = 0.1
+                R[r0:r1, c0:c1] = 0.3
                 h[r0:r1, c0:c1] = 0.16
-                if rng.random() < frac:
-                    col = cool if rng.random() < 0.7 else warm
-                    D[r0:r1, c0:c1] = [col[0]*0.8, col[1]*0.88, col[2]*1.0, 1.0]
-                    E[r0:r1, c0:c1] = [col[0], col[1], col[2], 1.0]
-                    AO[r0:r1, c0:c1] = 0.1
-                    R[r0:r1, c0:c1] = 0.3
     # neon trim
     if variant.get('neon'):
         nc = variant['neon']
@@ -1970,8 +1976,10 @@ def main():
     print("Generating textures...")
     # existing ship/prop textures (kept for compatibility)
     gen_texture_set("Ship_Hull", {'base':[0.55,0.58,0.6], 'accent':[0.12,0.16,0.22], 'emissive':[0.2,0.55,1.0],
+                                  'windows':{'cols':12,'frac':0.4,'cool':[0.3,0.65,1.0],'warm':[1.0,0.6,0.25]},
                                   'cable':{'runs':4}}, 2048, seed=11)
     gen_texture_set("Freighter", {'base':[0.6,0.55,0.5], 'accent':[0.2,0.25,0.2], 'emissive':[0.6,0.3,0.05],
+                                  'windows':{'cols':10,'frac':0.5,'cool':[0.3,0.7,1.0],'warm':[1.0,0.7,0.3]},
                                   'grime':True, 'hazard':{'bands':3}}, 2048, seed=22)
     gen_texture_set("Prop_Crate", {'base':[0.45,0.5,0.55], 'accent':[0.3,0.3,0.0], 'emissive':[0.2,1.0,0.2],
                                    'hazard':{'bands':3}}, 1024, seed=33)
@@ -1980,6 +1988,7 @@ def main():
     # cyberpunk additions
     gen_texture_set("Gunship", {'base':[0.22,0.23,0.26], 'accent':[0.4,0.05,0.05],
                                 'emissive':[1.0,0.15,0.05], 'neon':[1.0,0.2,0.1], 'neon_thick':3,
+                                'windows':{'cols':16,'frac':0.2,'cool':[0.3,0.7,1.0]},
                                 'grime':True, 'hazard':{'bands':3}}, 2048, seed=55)
     gen_texture_set("Station_Hab", {'base':[0.3,0.32,0.38], 'accent':[0.15,0.18,0.24],
                                     'emissive':[0.2,0.55,1.0],
