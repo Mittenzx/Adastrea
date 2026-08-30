@@ -1898,6 +1898,73 @@ def build_interior_set():
 
 
 # ----------------------------------------------------------------------------
+# Combat / weapon-fx assets (projectiles, missile, debris, hull-break pieces)
+# ----------------------------------------------------------------------------
+# These give the gameplay side (targeting/combat, which is next) ready-to-place
+# meshes: rifle/plasma bolts, a missile/torpedo, and reusable debris + hull-break
+# fragments for impact/damage states. Each exports as its own FBX via
+# finalize_part (per-component style, like ships/props).
+
+def build_combat_assets():
+    """Generate projectile + missile + debris parts. Returns list of
+    (obj, fbxpath) pairs."""
+    results = []
+    k = 1.0  # combat props are small; keep at unit scale
+
+    # --- 1. Plasma bolt (glowing energy round) ---
+    bolt = sphere("PlasmaBolt", 5*k, loc=(0, 0, 0), verts=14)
+    glow = sphere("PlasmaGlow", 7.5*k, loc=(0, 0, 0), verts=14)
+    glow.scale = (1, 1, 1.4)
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    results.append(finalize_part([bolt, glow], "SM_Combat_PlasmaBolt", "M_Combat_Plasma",
+                                 origin='ORIGIN_CENTER_OF_VOLUME'))
+
+    # --- 2. Laser bolt (elongated energy round) ---
+    core = cyl("LaserCore", 3.5*k, 18*k, loc=(0, 0, 0), verts=10)
+    sleeve = cyl("LaserSleeve", 5.5*k, 16*k, loc=(0, 0, 0), verts=10)
+    tip = cone("LaserTip", 4*k, 8*k, loc=(0, 12*k, 0), rot=(math.radians(90), 0, 0), verts=10)
+    results.append(finalize_part([core, sleeve, tip], "SM_Combat_LaserBolt", "M_Combat_Laser",
+                                 origin='ORIGIN_CENTER_OF_VOLUME'))
+
+    # --- 3. Missile / torpedo ---
+    body = cyl("MissileBody", 6*k, 40*k, loc=(0, 0, 0), verts=14)
+    nose = cone("MissileNose", 6*k, 14*k, loc=(0, 26*k, 0),
+                rot=(math.radians(90), 0, 0), verts=14)
+    nozzle = cone("MissileNozzle", 4.5*k, 6*k, loc=(0, -24*k, 0),
+                  rot=(math.radians(90), 0, 0), verts=14)
+    fin1 = box("MissileFin1", 2*k, 10*k, 4*k, loc=(4*k, -6*k, 0)); bevel(fin1, 1, 1)
+    fin2 = box("MissileFin2", 2*k, 10*k, 4*k, loc=(-4*k, -6*k, 0)); bevel(fin2, 1, 1)
+    results.append(finalize_part([body, nose, nozzle, fin1, fin2], "SM_Combat_Missile",
+                                 "M_Combat_Missile", origin='ORIGIN_CENTER_OF_VOLUME'))
+
+    # --- 4. Impact flash (burst of shards around a point) ---
+    flash = []
+    for i in range(8):
+        fr = rock(f"FragFlash{i}", 6*k, loc=(0, 0, 0), scale_xyz=(1, 1, 1))
+        fr.rotation_euler = (i*0.7, i*0.5, i*0.3)
+        flash.append(fr)
+    results.append(finalize_part(flash, "SM_Combat_ImpactFlash", "M_Combat_Hit",
+                                 origin='ORIGIN_CENTER_OF_VOLUME'))
+
+    return results
+
+
+def build_debris(n=6, radius=14):
+    """Build a scatter of reusable hull-break debris rocks for damage states."""
+    parts = []
+    import random
+    rng = random.Random(42)
+    for i in range(n):
+        d = rock(f"Debris{i}", radius, loc=(0, 0, 0),
+                 sub=1, scale_xyz=(rng.uniform(0.5, 1.2),
+                                   rng.uniform(0.5, 1.2),
+                                   rng.uniform(0.4, 1.0)))
+        d.rotation_euler = (rng.uniform(0, 3), rng.uniform(0, 3), rng.uniform(0, 3))
+        parts.append(d)
+    return parts
+
+
+# ----------------------------------------------------------------------------
 def main():
     setup_scene()
     print("Generating textures...")
@@ -1944,6 +2011,15 @@ def main():
     gen_texture_set("Int_Cockpit", {'base':[0.25,0.27,0.3], 'accent':[0.18,0.2,0.24], 'emissive':[0.1,0.6,0.9],
                                     'cells':8, 'windows':{'cols':16,'frac':0.5,'cool':[0.2,0.7,1.0]},
                                     'neon':[0.15,0.7,1.0], 'neon_thick':2}, 1024, seed=153)
+    # Combat / weapon-fx textures
+    gen_texture_set("Combat_Plasma", {'base':[0.9,0.3,0.2], 'accent':[0.5,0.1,0.05], 'emissive':[1.0,0.2,0.1],
+                                      'neon':[1.0,0.2,0.1], 'neon_thick':3, 'hazard':{'bands':2}}, 512, seed=160)
+    gen_texture_set("Combat_Laser", {'base':[0.2,0.6,0.9], 'accent':[0.1,0.35,0.6], 'emissive':[0.2,0.7,1.0],
+                                     'neon':[0.2,0.7,1.0], 'neon_thick':3}, 512, seed=161)
+    gen_texture_set("Combat_Missile", {'base':[0.5,0.55,0.6], 'accent':[0.3,0.3,0.35], 'emissive':[1.0,0.4,0.1],
+                                       'hazard':{'bands':3}, 'grime':True}, 512, seed=162)
+    gen_texture_set("Combat_Hit", {'base':[0.9,0.7,0.4], 'accent':[0.6,0.3,0.1], 'emissive':[1.0,0.6,0.2],
+                                   'hazard':{'bands':2}}, 512, seed=163)
 
     print("Building ships (modular carcass + add-ons)...")
     # Each ship = carcass + scaled parts, each exported as its own FBX.
@@ -2048,6 +2124,22 @@ def main():
     for name, parts in new_parts.items():
         for obj, out in parts:
             print(f"  {name}: {os.path.basename(out)} ({os.path.getsize(out) if os.path.exists(out) else 0} B)")
+
+    print("Building combat assets...")
+    combat = build_combat_assets()
+    for ob, out in combat:
+        print("  exported:", os.path.basename(out), os.path.getsize(out) if os.path.exists(out) else 0)
+    # debris scatter as a ready-to-use hull-break fragment set (single object)
+    debris = build_debris(8, 14)
+    for i, d in enumerate(debris):
+        d.name = f"DebrisPiece{i}"
+    dj = join(debris, "SM_Combat_Debris")
+    smart_uv(dj); clean_mesh(dj)
+    dmat = bpy.data.materials.get("M_Combat_Hit") or bpy.data.materials.new("M_Combat_Hit")
+    dmat.use_nodes = True
+    if not dj.data.materials: dj.data.materials.append(dmat)
+    outd = export_fbx(dj, "SM_Combat_Debris")
+    print("  exported: SM_Combat_Debris", os.path.getsize(outd) if os.path.exists(outd) else 0)
 
     print("Building station...")
     st = build_station(); out4 = export_fbx(st, "SM_Station_Habitation_01")

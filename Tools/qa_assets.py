@@ -54,7 +54,11 @@ def qa_one(obj_path):
     info = {}
 
     # 1. triangle budget (category-aware)
-    if "Ship" in name and "_Int_" not in name and not name.startswith("SM_Int_"):
+    if "_Assembled" in name:
+        # Whole-ship composition (carcass + all parts merged). Bundles several
+        # components, so budget matches the large whole-build tier (like stations).
+        budget = 50000
+    elif "Ship" in name and "_Int_" not in name and not name.startswith("SM_Int_"):
         budget = 10000
     elif "Station" in name or name.startswith("SM_Int_") or "_Int_" in name:
         budget = 50000
