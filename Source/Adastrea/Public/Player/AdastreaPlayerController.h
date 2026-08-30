@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Blueprint/UserWidget.h"
 #include "AdastreaPlayerController.generated.h"
 
 // Forward declarations
@@ -277,7 +278,39 @@ public:
 	 * @return True if the player is possessing a spaceship actor
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player")
-	bool IsControllingSpaceship() const;
+		bool IsControllingSpaceship() const;
+
+		/**
+		 * Toggle targeting mode: shows the cursor and lets the player click a station
+		 * to target/lock it. When off, the mouse resumes ship-look control.
+		 */
+		UFUNCTION(BlueprintCallable, Category="Player|Targeting")
+		void ToggleTargetingMode();
+
+		/** Whether targeting mode is currently active. */
+		UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Targeting")
+		bool IsTargetingModeActive() const { return bTargetingModeActive; }
+
+		/** The currently locked target actor (station), if any. */
+		UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Targeting")
+		AActor* GetLockedTarget() const { return LockedTargetActor; }
+
+		/** Clear the current locked target. */
+			UFUNCTION(BlueprintCallable, Category="Player|Targeting")
+			void ClearTarget();
+
+			/** When true, the ship's mouse-look is paused (targeting cursor mode). */
+					UPROPERTY(BlueprintReadOnly, Category="Player|Targeting")
+					bool bLockMouseLook;
+
+					/** Input handler: Tab toggles targeting mode. */
+					void HandleTargetingToggle();
+
+					/** Input handler: Left-mouse-click selects/locks a station in targeting mode. */
+					void HandleTargetClick();
+
+					/** Screen-space ray from the cursor; returns the targetable station under it. */
+					class ASpaceStation* GetStationUnderCursor();
 
 	/**
 	 * Toggle the station editor UI
@@ -600,5 +633,21 @@ private:
 	bool bWasNearTradableStation;
 
 	/** Timer handle for periodic station proximity checks */
-	FTimerHandle StationCheckTimerHandle;
-};
+		FTimerHandle StationCheckTimerHandle;
+
+		// ====================
+		// TARGETING (cursor select / lock)
+		// ====================
+
+		/** Whether targeting mode is active (mouse shown, ship mouse-look paused). */
+				UPROPERTY()
+				bool bTargetingModeActive;
+
+				/** Hovered actor under the targeting cursor (for hover highlight). */
+				UPROPERTY()
+				AActor* HoveredTargetActor;
+
+				/** The currently targeted/locked actor (e.g. a station). */
+				UPROPERTY()
+				AActor* LockedTargetActor;
+			};

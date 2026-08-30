@@ -48,6 +48,10 @@ AAdastreaPlayerController::AAdastreaPlayerController()
 	bIsStationManagementOpen = false;
 	NearbyTradableStation = nullptr;
 	bWasNearTradableStation = false;
+	bTargetingModeActive = false;
+	HoveredTargetActor = nullptr;
+	LockedTargetActor = nullptr;
+	bLockMouseLook = false;
 }
 
 void AAdastreaPlayerController::BeginPlay()
@@ -102,7 +106,14 @@ void AAdastreaPlayerController::SetupInputComponent()
 	// Input mapping contexts and bindings are configured by the GameMode through DA_InputConfig
 	// This ensures centralized input configuration and prevents conflicts between systems
 	//
-	// Station Editor: Bind StationEditorAction to ToggleStationEditor() in Blueprint
+	// Targeting toggle (Tab) + click-to-target are bound directly for reliability.
+	if (InputComponent)
+	{
+		// Tab: toggle targeting mode (cursor shown, click selects/locks a station)
+		InputComponent->BindKey(EKeys::Tab, IE_Pressed, this, &AAdastreaPlayerController::HandleTargetingToggle);
+		// LMB: in targeting mode, click a station to lock it as the target
+		InputComponent->BindKey(EKeys::LeftMouseButton, IE_Pressed, this, &AAdastreaPlayerController::HandleTargetClick);
+	}
 }
 
 void AAdastreaPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -159,6 +170,117 @@ ASpaceship* AAdastreaPlayerController::GetControlledSpaceship() const
 bool AAdastreaPlayerController::IsControllingSpaceship() const
 {
 	return GetControlledSpaceship() != nullptr;
+}
+
+void AAdastreaPlayerController::ToggleTargetingMode()
+{
+	bTargetingModeActive = !bTargetingModeActive;
+
+	if (bTargetingModeActive)
+	{
+		// Show the cursor so the player can select/lock a station. Ship mouse-look
+		// is paused while the cursor is shown (GameAndUI mode keeps keyboard flight).
+		SetInputMode(FInputModeGameAndUI());
+		bShowMouseCursor = true;
+		bEnableClickEvents = true;
+		bEnableMouseOverEvents = true;
+		bLockMouseLook = true; // pause ship mouse-look (checked by ship's Tick)
+		UE_LOG(LogAdastrea, Log, TEXT("Targeting mode ON - select a station to lock it (Tab to exit)"));
+	}
+	else
+	{
+		// Return to ship-control mouse-look.
+		SetInputMode(FInputModeGameOnly());
+		bShowMouseCursor = false;
+		bEnableClickEvents = false;
+		bEnableMouseOverEvents = false;
+		bLockMouseLook = false;
+		UE_LOG(LogAdastrea, Log, TEXT("Targeting mode OFF - mouse controls ship look again"));
+	}
+}
+
+void AAdastreaPlayerController::ClearTarget()
+{
+	LockedTargetActor = nullptr;
+}
+
+void AAdastreaPlayerController::HandleTargetingToggle()
+{
+	if (!IsControllingSpaceship())
+	{
+		return;
+	}
+	ToggleTargetingMode();
+}
+
+/**
+ * Screen-space ray cast at the cursor to find a targetable station under it.
+ * Returns the station hit, or nullptr.
+ */
+ASpaceStation* AAdastreaPlayerController::GetStationUnderCursor()
+{
+	if (!GetWorld())
+	{
+		return nullptr;
+	}
+
+	// Project the cursor screen position to a world ray.
+	FVector WorldOrigin;
+	FVector WorldDirection;
+	if (!DeprojectMousePositionToWorld(WorldOrigin, WorldDirection))
+	{
+		return nullptr;
+	}
+
+	// Trace against stations (and world) in the ship's interaction radius.
+	TArray<AActor*> Stations;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpaceStation::StaticClass(), Stations);
+
+	FVector ShipLoc = GetPawn() ? GetPawn()->GetActorLocation() : WorldOrigin;
+	ASpaceStation* Best = nullptr;
+	float BestDist = TNumericLimits<float>::Max();
+	for (AActor* S : Stations)
+	{
+		if (!S)
+		{
+			continue;
+		}
+		// Skip stations way outside a targeting radius (e.g. 100k).
+		if (FVector::Dist(ShipLoc, S->GetActorLocation()) > 200000.0f)
+		{
+			continue;
+		}
+		// Sphere raycast (use the station's root/scene extent or a generous radius).
+		FVector Center = S->GetActorLocation();
+		FVector Rel = Center - WorldOrigin;
+		float Proj = FVector::DotProduct(Rel, WorldDirection);
+		FVector Closest = WorldOrigin + WorldDirection * FMath::Max(Proj, 0.0f);
+		float DistToCenter = (Closest - Center).Size();
+		float SelectRadius = 15000.0f; // generous clickable sphere around station
+		if (DistToCenter < SelectRadius)
+		{
+			float D = FVector::Dist(ShipLoc, Center);
+			if (D < BestDist)
+			{
+				BestDist = D;
+				Best = Cast<ASpaceStation>(S);
+			}
+		}
+	}
+	return Best;
+}
+
+void AAdastreaPlayerController::HandleTargetClick()
+{
+	if (!bTargetingModeActive)
+	{
+		return;
+	}
+	if (ASpaceStation* Station = GetStationUnderCursor())
+	{
+		LockedTargetActor = Station;
+		UE_LOG(LogAdastrea, Log, TEXT("TARGET LOCKED: %s"), *Station->GetName());
+	}
 }
 
 void AAdastreaPlayerController::ToggleStationEditor()

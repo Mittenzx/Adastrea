@@ -1,4 +1,5 @@
 #include "Ships/DockingSettingsDataAsset.h"
+#include "Blueprint/UserWidget.h"
 
 #if WITH_EDITOR
 #include "Misc/DataValidation.h"

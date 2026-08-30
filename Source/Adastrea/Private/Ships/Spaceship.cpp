@@ -3,6 +3,8 @@
 #include "Ships/SpaceshipDataAsset.h"
 #include "Ships/DockingSettingsDataAsset.h"
 #include "Ships/SpaceshipControlsComponent.h"
+#include "Player/AdastreaPlayerController.h"
+#include "Blueprint/UserWidget.h"
 #include "Components/StaticMeshComponent.h"
 #include "AdastreaLog.h"
 #include "GameFramework/PlayerController.h"
@@ -478,6 +480,18 @@ void ASpaceship::Look(const FInputActionValue& Value)
     if (bFreeLookActive)
     {
         return;
+    }
+
+    // Pause mouse-look when the player controller is in targeting mode (bLockMouseLook).
+    if (APlayerController* LookPC = Cast<APlayerController>(GetController()))
+    {
+        if (AAdastreaPlayerController* AdPC = Cast<AAdastreaPlayerController>(LookPC))
+        {
+            if (AdPC->bLockMouseLook)
+            {
+                return;
+            }
+        }
     }
 
     // Get the 2D vector input (mouse X/Y)

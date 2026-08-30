@@ -4,6 +4,8 @@
 #include "Ships/Spaceship.h"
 #include "Trading/CargoComponent.h"
 #include "Trading/PlayerTraderComponent.h"
+#include "Player/AdastreaPlayerController.h"
+#include "Stations/SpaceStation.h"
 #include "Engine/Canvas.h"
 #include "Engine/Engine.h"
 
@@ -100,4 +102,22 @@ void AAdastreaHUD::DrawHUD()
 	DrawText(TEXT("POSITION"), kLabel, LabelX, Y, BodyFont, 0.8f);
 	DrawText(FString::Printf(TEXT("X %8.0f   Y %8.0f   Z %8.0f"), P.X, P.Y, P.Z),
 		kPos, ValueX, Y, BodyFont, 0.8f);
+	Y += RowH;
+
+	// ---- Locked target (from controller targeting) ----
+	AAdastreaPlayerController* AController = Cast<AAdastreaPlayerController>(PC);
+	AActor* LockedTarget = AController ? AController->GetLockedTarget() : nullptr;
+	if (LockedTarget)
+	{
+		DrawText(TEXT("TARGET"), kLabel, LabelX, Y, BodyFont, 0.8f);
+		const FString TgtName = LockedTarget->GetActorLabel();
+		const float TgtDist = FVector::Dist(P, LockedTarget->GetActorLocation());
+		DrawText(FString::Printf(TEXT("%s  (%.0f)"), *TgtName, TgtDist),
+			FLinearColor(0.95f, 0.55f, 0.35f, 1.0f), ValueX, Y, BodyFont, 0.8f);
+	}
+	if (AController && AController->IsTargetingModeActive())
+	{
+		Y += RowH;
+		DrawText(TEXT("TARGETING MODE - click a station / Tab to exit"), kThrottle, LabelX, Y, BodyFont, 0.7f);
+	}
 }
