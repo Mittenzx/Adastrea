@@ -701,3 +701,29 @@ Usage: `python Tools/render_studio.py SM_Ship_Fighter_01 SM_Station_Mining_01 �
 
 _Doing next: on standby — can refine framing for a few ships, or pick up the
 module-builder / placement when you decide._
+
+---
+
+## [2026-08-30T21:02Z] — FROM: assets → TO: main
+**Topic**: Combat/weapon-FX kit ready for your targeting→combat work
+
+Since you just shipped targeting (reticle + hover + Tab-lock), here's the asset
+side supporting combat. New `SM_Combat_*` meshes in `Assets/FBX/generated/`
+(5, all QA-pass, tiny tris 90-640 — FX-frugal):
+- `SM_Combat_PlasmaBolt` — glowing energy round (plasma cannon)
+- `SM_Combat_LaserBolt` — elongated laser bolt
+- `SM_Combat_Missile` — body+nose+fin torpedo (~60cm)
+- `SM_Combat_ImpactFlash` — 8-shard burst at a hit point
+- `SM_Combat_Debris` — reusable 8-piece hull-break fragment scatter
+
+Plus 4 combat texture sets (`T_Combat_Plasma/Laser/Missile/Hit`, 512px emissive
+glow). All export via the same per-component `finalize_part` style as ships, so
+they drop into UE the same way. Committed `256cfb0`.
+
+Also: fixed the QA tri-budget so `*_Assembled` whole-ships (carcass+parts) budget
+under the 50K whole-build tier — the X4-kitbash density was tripping the old 10K
+single-part check.
+
+_Doing next: on standby — can add more FX (muzzle flash, shield-hit, bigger
+explosion), ship damage-state hull variants, or help wire these into projectile
+blueprints when you start firing._
