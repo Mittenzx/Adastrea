@@ -89,17 +89,16 @@ def build_preview(ship_base, outname, sz, module_choices):
         'sensor':  (0.95, 0.60, 0.10, 1.0),   # amber
         'reactor': (0.75, 0.15, 0.65, 1.0),   # magenta
     }
-    def accent_mat(color, name):
+    def accent_mat(color, name, emissive=8.0):
         m = bpy.data.materials.new(name); m.use_nodes = True
         try:
             bs = m.node_tree.nodes['Principled BSDF']
-            # full accent base color (not dimmed) so the module clearly reads its color
             bs.inputs['Base Color'].default_value = color
-            bs.inputs['Roughness'].default_value = 0.35
-            bs.inputs['Metallic'].default_value = 0.4   # lower so color shows
+            bs.inputs['Roughness'].default_value = 0.3
+            bs.inputs['Metallic'].default_value = 0.2
             try:
                 bs.inputs['Emission Color'].default_value = color
-                bs.inputs['Emission Strength'].default_value = 3.0   # strong glow
+                bs.inputs['Emission Strength'].default_value = emissive
             except Exception:
                 pass
         except Exception:
@@ -111,8 +110,8 @@ def build_preview(ship_base, outname, sz, module_choices):
         for o in objs_list:
             o.data.materials.clear(); o.data.materials.append(am)
 
-    # hull stays neutral grey (assign to hull/nose/spine primitives)
-    hull_mat = accent_mat((0.45, 0.48, 0.53, 1.0), "HullNeutral")
+    # hull stays a DARK silhouette (near-zero emission) so the colored modules pop
+    hull_mat = accent_mat((0.10, 0.10, 0.12, 1.0), "HullNeutral", emissive=0.05)
     for o in (hull, nose, spine):
         if o.name in bpy.data.objects:
             o.data.materials.clear(); o.data.materials.append(hull_mat)
@@ -148,7 +147,7 @@ def build_preview(ship_base, outname, sz, module_choices):
     cam=bpy.context.active_object; sc.camera=cam; cam.data.lens=35
     d=(center-loc).normalized(); cam.rotation_euler=d.to_track_quat('-Z','Y').to_euler()
     w=sc.world if sc.world else bpy.data.worlds.new("P"); sc.world=w; w.use_nodes=True
-    try: w.node_tree.nodes['Background'].inputs[0].default_value=(0.02,0.025,0.04,1.0)
+    try: w.node_tree.nodes['Background'].inputs[0].default_value=(0.16,0.17,0.20,1.0)
     except Exception: pass
     sc.render.engine = 'BLENDER_EEVEE'   # headless EEVEE shows emission colors clearly
     # filmic tone mapping so highlights/shadows look good
