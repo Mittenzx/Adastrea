@@ -1,15 +1,21 @@
-"""STUDIO SCENE for rendering ships with lighting — deterministic software
-rasterizer (numpy/PIL). The Cycles path keeps failing on the multi-object
-assembled FBX (normals/material/framing), so this reuses the proven software
-fill that made the interiors + module picker render cleanly.
+"""STUDIO SCENE for rendering ships/stations with lighting — deterministic
+software rasterizer (numpy/PIL), ported onto the proven render_pbr.py per-part
+core.
 
-It builds a proper lit scene: gradient studio backdrop + floor plane + 3-point
-Lambert lighting (key/fill/rim), and texture-maps each part with its PBR base +
-emissive into the diffuse shading.
+Why this works where the old version failed:
+- Old version loaded ONE merged `_Assembled` OBJ -> interleaved geometry lost
+  per-part UVs and mapped everything to a single texture, and its triangle loop
+  used a VERTEX index as a UV index (wrong -> garbled/dark faces).
+- This loads each PART OBJ separately (correct per-part UVs), maps the right
+  texture set per part, mounts parts at hardpoints, and only then flattens into
+  one vertex array with SEPARATE vertex + uv index offsets (render_pbr pattern).
 
-Usage: python Tools/render_studio.py <ship_outname> [more...]
-  e.g. python Tools/render_studio.py SM_Ship_Fighter_01_Assembled SM_Ship_Corvette_01_Assembled
-Output: Assets/FBX/generated/scene_renders/<name>.png
+It also builds a proper studio scene: gradient backdrop + floor plane + 3-point
+Lambert lighting (key/fill/rim), and self-lits emissive regions.
+
+Usage: python Tools/render_studio.py <ship_or_station_base> [more...]
+  e.g. python Tools/render_studio.py SM_Ship_Fighter_01 SM_Station_Habitation_01
+Output: Assets/FBX/generated/scene_renders/<base>.png
 """
 import os, sys, math
 import numpy as np
@@ -20,12 +26,47 @@ TEXDIR = r"C:\Users\akuma\Adastrea\Assets\FBX\generated\Textures"
 OUTDIR = r"C:\Users\akuma\Adastrea\Assets\FBX\generated\scene_renders"
 os.makedirs(OUTDIR, exist_ok=True)
 
-# which texture set per part type
+# per-part type -> texture set name (matches generator's texture naming)
 PART_TEX = {
     "Carcass": "T_Ship_Hull", "Engine": "T_Ship_Hull", "Cargo": "T_Ship_Hull",
     "Weapon": "T_Ship_Hull", "Sensor": "T_Ship_Hull", "Reactor": "T_Ship_Hull",
-    "Assembled": "T_Ship_Hull",
+    "MiningLaser": "T_Ship_Hull", "Drill": "T_Station_Hab",
+    "HabRing": "T_HabRing", "AsteroidShell": "T_AsteroidShell", "Hab": "T_Station_Hab",
 }
+# whole-ship override reuse: these ship bases have distinct hull textures
+SHIP_TEX = {
+    "SM_Ship_Freighter_01": "T_Freighter",
+    "SM_Ship_Gunship_02": "T_Gunship",
+}
+
+# size class -> (lx, ly, lz, locz)  (mirrors SIZE_CLASSES in generator)
+SCLS = {
+    "small": (250, 340, 95, 55), "medium": (380, 720, 190, 130),
+    "corvette": (460, 880, 220, 150), "large": (520, 980, 250, 175),
+}
+K = {"small": 1.0, "medium": 1.65, "corvette": 2.0, "large": 2.3}
+# part type -> (y_frac_of_ly, z_offset_units) mount (mirrors assemble_ship);
+# x=0 for all standard mounts
+MOUNT_FRAC = {
+    "Carcass": (0.0, 0.0), "Engine": (-0.52, -10), "Cargo": (-0.05, -20),
+    "Weapon": (0.34, -25), "Sensor": (0.18, 70), "Reactor": (-0.35, 40),
+    "MiningLaser": (0.30, -10), "Drill": (-0.30, -15),
+    "HabRing": (0.0, 0.0), "AsteroidShell": (0.0, 0.0), "Hab": (0.0, 0.0),
+}
+PARTS_ORDER = ["Carcass", "HabRing", "AsteroidShell", "Hab",
+               "Engine", "Cargo", "Weapon", "Sensor", "Reactor",
+               "MiningLaser", "Drill"]
+
+
+def size_class_of(base):
+    b = base.lower()
+    if 'corvette' in b or 'miner' in b:
+        return 'corvette'
+    if 'freighter' in b or 'bulkhauler' in b:
+        return 'medium'
+    if 'station' in b or 'hab' in b or 'generation' in b:
+        return 'large'
+    return 'small'  # fighter/gunship
 
 
 def load_obj(path):
@@ -40,10 +81,10 @@ def load_obj(path):
                 fidx = [t.split('/') for t in p[1:]]
                 tri = []
                 for vi, uv, _ in fidx:
-                    tri.append((int(vi)-1, int(uv)-1 if uv else -1))
-                for k in range(1, len(tri)-1):
-                    faces.append((tri[0], tri[k], tri[k+1]))
-    faces = np.array(faces, dtype=int)
+                    tri.append((int(vi) - 1, int(uv) - 1 if uv else -1))
+                for k in range(1, len(tri) - 1):
+                    faces.append((tri[0], tri[k], tri[k + 1]))
+    faces = np.array(faces, dtype=int)  # (F,3,2): [corner][v,uv]
     return (np.array(verts, float), np.array(uvs, float), faces)
 
 
@@ -55,29 +96,69 @@ def load_tex(name):
     return D, E
 
 
-def render_one(objname, W=1400, H=1000):
-    # load the assembled OBJ (single mesh = whole ship already joined)
-    p = os.path.join(OBJDIR, objname + ".obj")
-    if not os.path.exists(p):
-        print("NO OBJ", objname); return
-    V, UV, F = load_obj(p)
-    if len(F) == 0:
-        print("NO FACES", objname); return
-    tname = "T_Ship_Hull"
-    D, E = load_tex(tname)
+def mount_for(base, sz):
+    """Return dict {part_type: (x,y,z) mount offset} in world units."""
+    lx, ly, lz, locz = SCLS[sz]
+    k = K[sz]
+    m = {}
+    for pt, (yf, zoff) in MOUNT_FRAC.items():
+        if pt == "Carcass":
+            m[pt] = (0, 0, 0)
+        else:
+            m[pt] = (0, yf * ly, locz + zoff * k)
+    return m
 
-    # ground floor plane (a large quad below the ship)
-    ymin = V[:, 2].min()
-    span = (V.max(0) - V.min(0)).max() * 3.5
-    fy = ymin - (V[:, 2].max() - V[:, 2].min()) * 0.15
-    floor_col = np.array([0.14, 0.15, 0.17])
-    # We'll raster the floor separately before the ship.
 
+def render_one(base, W=1400, H=1000):
+    sz = size_class_of(base)
+    mount = mount_for(base, sz)
+
+    # gather per-part geometry with SEPARATE vertex + uv index offsets, per-part tex
+    allV, allUV, allFv, allFuv = [], [], [], []
+    texset = []      # list of (D, E)
+    ftex = []        # per-face texture-set index
+    vbase = 0; ubase = 0
+    for pt in PARTS_ORDER:
+        p = os.path.join(OBJDIR, f"{base}_{pt}.obj")
+        if not os.path.exists(p): continue
+        V, U, F = load_obj(p)
+        # texture set: for Carcass use the ship's hull texture (or per-ship override);
+        # for part types use their own tex or fall back to the hull tex.
+        if pt == "Carcass":
+            tname = SHIP_TEX.get(base, "T_Ship_Hull")
+        else:
+            tname = PART_TEX.get(pt, "T_Ship_Hull")
+        D, E = load_tex(tname)
+        ts_idx = len(texset)
+        texset.append((D, E))
+        # mount offset (x y z)
+        off = mount.get(pt, (0, 0, 0))
+        V = V + np.array(off)
+        allV.append(V)
+        allUV.append(U)
+        fv = F[:, :, 0] + vbase
+        fu = F[:, :, 1] + ubase
+        valid_uv = F[:, :, 1] >= 0
+        fu = np.where(valid_uv, fu, -1)
+        allFv.append(fv)
+        allFuv.append(fu)
+        ftex.extend([ts_idx] * len(F))
+        vbase += len(V)
+        ubase += len(U)
+
+    V = np.vstack(allV)
+    UV = np.vstack(allUV)
+    allFv = np.vstack(allFv)
+    allFuv = np.vstack(allFuv)
+    ftex = np.array(ftex)
+    if len(V) == 0:
+        print("NO GEOMETRY", base); return
+
+    # ---- camera framing (turntable 3/4 view around origin) ----
     center = V.mean(0)
-    radius = max((V.max(0) - V.min(0)).max() * 1.2, 60)   # proven framing value
-
-    # camera: 3/4 turntable view
-    az, el = math.radians(40), math.radians(20)
+    span = (V.max(0) - V.min(0)).max()
+    radius = max(span * 1.25, 80)
+    az, el = math.radians(42), math.radians(20)
     cam = np.array([center[0] + radius*math.cos(el)*math.sin(az),
                     center[1] + radius*math.cos(el)*math.cos(az),
                     center[2] + radius*math.sin(el)])
@@ -86,42 +167,44 @@ def render_one(objname, W=1400, H=1000):
     up = np.cross(right, fwd)
     Rm = np.stack([right, up, -fwd])
     Vc = (V - cam) @ Rm.T
-    fov = 40; focal = (H/2) / math.tan(math.radians(fov/2))
+    fov = 42; focal = (H / 2) / math.tan(math.radians(fov / 2))
     zc = -Vc[:, 2]; zc = np.where(zc < 0.1, 0.1, zc)
     xs = Vc[:, 0]*focal/zc + W/2
     ys = -Vc[:, 1]*focal/zc + H/2
     v2d = np.stack([xs, ys], 1)
 
-    # 3-point lighting (key/fill/rim) as Lambert factors
-    L_key = np.array([0.5, -0.5, 0.7]); L_key /= np.linalg.norm(L_key)
-    L_fill = np.array([-0.6, 0.3, 0.4]); L_fill /= np.linalg.norm(L_fill)
-    L_rim = np.array([-0.4, -0.6, -0.5]); L_rim /= np.linalg.norm(L_rim)
-    kk, kf, kr = 0.9, 0.35, 0.25
-    amb = 0.3
+    # ---- 3-point lighting ----
+    L_key = np.array([0.5, -0.55, 0.7]); L_key /= np.linalg.norm(L_key)
+    L_fill = np.array([-0.6, 0.3, 0.45]); L_fill /= np.linalg.norm(L_fill)
+    L_rim = np.array([-0.35, -0.6, -0.6]); L_rim /= np.linalg.norm(L_rim)
+    kk, kf, kr, amb = 1.05, 0.45, 0.35, 0.55
 
     fb = np.full((H, W, 3), 0.0)
     zb = np.full((H, W), 1e9)
 
-    # raster floor first (a big quad) so the ship sits on it
-    # floor corners in world
-    fc = [(center[0]-span/2, center[1]-span/2, fy), (center[0]+span/2, center[1]-span/2, fy),
-          (center[0]+span/2, center[1]+span/2, fy), (center[0]-span/2, center[1]+span/2, fy)]
-    # project floor quad
+    # ---- backdrop gradient (darker top -> lighter horizon) ----
+    for yy in range(H):
+        t = yy / H
+        g = 0.05 + 0.16 * (1 - t)
+        fb[yy, :, :] = (g, g * 1.05, g * 1.1)
+
+    # ---- floor plane (large quad below ship, soft gradient) ----
+    fy = V[:, 2].min() - (V[:, 2].max() - V[:, 2].min()) * 0.12
+    sp = span * 2.4
+    fc = np.array([(center[0]-sp/2, center[1]-sp/2, fy), (center[0]+sp/2, center[1]-sp/2, fy),
+                   (center[0]+sp/2, center[1]+sp/2, fy), (center[0]-sp/2, center[1]+sp/2, fy)])
     proj = []
     for c in fc:
-        c = np.array(c)
         vc = (c - cam) @ Rm.T
-        zz = -vc[2]; zz = max(zz, 0.1)
-        proj.append([vc[0]*focal/zz + W/2, -vc[1]*focal/zz + H/2, -vc[2]])
-    # two triangles
+        zz = max(-vc[2], 0.1)
+        proj.append(np.array([vc[0]*focal/zz + W/2, -vc[1]*focal/zz + H/2, -vc[2]]))
     for i0, i1, i2 in [(0, 1, 2), (0, 2, 3)]:
-        p0 = np.array(proj[i0][:2]); p1 = np.array(proj[i1][:2]); p2 = np.array(proj[i2][:2])
+        p0, p1, p2 = proj[i0][:2], proj[i1][:2], proj[i2][:2]
         e1 = p1-p0; e2 = p2-p0
-        area = e1[0]*e2[1]-e1[1]*e2[0]
+        area = e1[0]*e2[1] - e1[1]*e2[0]
         if abs(area) < 1e-6: continue
         x0 = max(0, int(min(p0[0], p1[0], p2[0]))); x1 = min(W-1, int(max(p0[0], p1[0], p2[0])))
         y0 = max(0, int(min(p0[1], p1[1], p2[1]))); y1 = min(H-1, int(max(p0[1], p1[1], p2[1])))
-        # shade floor with a soft gradient (vignette)
         for yy in range(y0, y1+1):
             for xx in range(x0, x1+1):
                 a = ((p1[1]-p2[1])*(xx-p2[0]) + (p2[0]-p1[0])*(yy-p2[1])) / area
@@ -131,35 +214,30 @@ def render_one(objname, W=1400, H=1000):
                 zv = a*(-proj[i0][2])+b*(-proj[i1][2])+c*(-proj[i2][2])
                 if zv > zb[yy, xx]: continue
                 zb[yy, xx] = zv
-                grad = 0.7 + 0.3*(0.5-c)  # lighten toward camera
-                fb[yy, xx] = floor_col * grad
+                grad = 0.75 + 0.25*(0.5-c)
+                fb[yy, xx] = np.array([0.16, 0.17, 0.19]) * grad
 
-    # background gradient (dark studio top to lighter horizon)
-    for yy in range(H):
-        t = yy / H
-        fb[yy, :, :] = (0.04 + 0.16*(1-t))  # darker top (#0.04) to lighter bottom
-    # (we overwrite with floor below horizon; the ship z-test handles the rest)
-
-    # raster ship with texturing + 3-point lighting
-    def tri(face, fuv):
-        i0, i1, i2 = face[:, 0]
+    # ---- raster ships (per-face texture sampled with correct UV indices) ----
+    def tri_tex(face, fuvf, D, E):
+        i0, i1, i2 = face
+        u0i, u1i, u2i = fuvf
         p0, p1, p2 = v2d[i0], v2d[i1], v2d[i2]
         e1 = p1-p0; e2 = p2-p0
-        area = e1[0]*e2[1]-e1[1]*e2[0]
-        if area >= 0: return
+        area = e1[0]*e2[1] - e1[1]*e2[0]
+        if area >= 0: return  # backface cull
         w0, w1, w2 = V[i0], V[i1], V[i2]
         n = np.cross(w1-w0, w2-w0); nl = np.linalg.norm(n)
         if nl < 1e-9: return
         n = n/nl
         if np.dot(n, (cam-w0)) < 0: n = -n
-        # 3-point lambert
         lam = amb + kk*max(np.dot(n, L_key), 0) + kf*max(np.dot(n, L_fill), 0) + kr*max(np.dot(n, L_rim), 0)
-        lam = min(lam, 1.3)
-        # texture sample
-        u0 = fuv[0][1]; u1 = fuv[1][1]; u2 = fuv[2][1]
+        lam = min(lam, 1.35)
+        got_uv = (u0i >= 0 and u1i >= 0 and u2i >= 0)
+        if got_uv:
+            u0, u1, u2 = UV[u0i], UV[u1i], UV[u2i]
+        th, tw = D.shape[0], D.shape[1]
         x0 = max(0, int(min(p0[0], p1[0], p2[0]))); x1 = min(W-1, int(max(p0[0], p1[0], p2[0])))
         y0 = max(0, int(min(p0[1], p1[1], p2[1]))); y1 = min(H-1, int(max(p0[1], p1[1], p2[1])))
-        th, tw = D.shape[0], D.shape[1]
         for yy in range(y0, y1+1):
             for xx in range(x0, x1+1):
                 a = ((p1[1]-p2[1])*(xx-p2[0]) + (p2[0]-p1[0])*(yy-p2[1])) / area
@@ -169,10 +247,9 @@ def render_one(objname, W=1400, H=1000):
                 zview = a*(-Vc[i0,2])+b*(-Vc[i1,2])+c*(-Vc[i2,2])
                 if zview > zb[yy, xx]: continue
                 zb[yy, xx] = zview
-                col = D[th-1, tw-1]  # default
-                if u0 >= 0 and u1 >= 0 and u2 >= 0:
-                    uu = UV[u0][0]*a + UV[u1][0]*b + UV[u2][0]*c
-                    vv = UV[u0][1]*a + UV[u1][1]*b + UV[u2][1]*c
+                if got_uv:
+                    uu = u0[0]*a + u1[0]*b + u2[0]*c
+                    vv = u0[1]*a + u1[1]*b + u2[1]*c
                     tx = int((uu % 1.0)*tw) % tw; ty = int((vv % 1.0)*th) % th
                     col = D[ty, tx]
                     em = E[ty, tx]
@@ -181,21 +258,25 @@ def render_one(objname, W=1400, H=1000):
                     else:
                         col = col*lam
                 else:
-                    col = np.array([0.6, 0.62, 0.66])*lam
+                    col = np.array([0.6, 0.62, 0.66]) * lam
                 fb[yy, xx] = np.clip(col, 0, 1)
 
-    for fi in range(len(F)):
-        tri(F[fi], F[fi])
+    for fi in range(len(allFv)):
+        ti = ftex[fi]
+        D, E = texset[ti]
+        tri_tex(allFv[fi], allFuv[fi], D, E)
 
-    img = Image.fromarray((fb*255).astype(np.uint8))
-    out = os.path.join(OUTDIR, objname + ".png")
+    img = Image.fromarray((fb * 255).astype(np.uint8))
+    out = os.path.join(OUTDIR, f"{base}.png")
     img.save(out)
-    print("OK", objname, len(F), "tris ->", os.path.basename(out))
+    print("OK", base, "tris", len(allFv), "->", os.path.basename(out))
 
 
-for name in sys.argv[1:]:
-    try:
-        render_one(name)
-    except Exception as e:
-        import traceback; traceback.print_exc()
-        print("ERROR", name)
+if __name__ == "__main__":
+    args = sys.argv[1:] or ["SM_Ship_Fighter_01"]
+    for name in args:
+        try:
+            render_one(name)
+        except Exception as e:
+            import traceback; traceback.print_exc()
+            print("ERROR", name)
