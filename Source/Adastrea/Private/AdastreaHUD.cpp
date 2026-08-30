@@ -104,7 +104,7 @@ void AAdastreaHUD::DrawHUD()
 		kPos, ValueX, Y, BodyFont, 0.8f);
 	Y += RowH;
 
-	// ---- Locked target (from controller targeting) ----
+	// ---- Locked target reticle (world-space box around the locked target) ----
 	AAdastreaPlayerController* AController = Cast<AAdastreaPlayerController>(PC);
 	AActor* LockedTarget = AController ? AController->GetLockedTarget() : nullptr;
 
@@ -136,24 +136,19 @@ void AAdastreaHUD::DrawHUD()
 
 	if (LockedTarget)
 	{
-		DrawText(TEXT("TARGET"), kLabel, LabelX, Y, BodyFont, 0.8f);
+		// Screen-space corner-box reticle + crosshair around the locked target.
+		const FVector TgtLoc = LockedTarget->GetActorLocation();
 		const FString TgtName = LockedTarget->GetActorLabel();
-		const float TgtDist = FVector::Dist(P, LockedTarget->GetActorLocation());
-		DrawText(FString::Printf(TEXT("%s  (%.0f)"), *TgtName, TgtDist),
-			FLinearColor(0.95f, 0.55f, 0.35f, 1.0f), ValueX, Y, BodyFont, 0.8f);
+		const float TgtDist = FVector::Dist(P, TgtLoc);
 
-		// ---- Screen-space target reticle (corner box around the locked target) ----
 		FVector2D ScreenPt;
-		if (PC && PC->ProjectWorldLocationToScreen(LockedTarget->GetActorLocation(), ScreenPt))
+		if (PC && PC->ProjectWorldLocationToScreen(TgtLoc, ScreenPt))
 		{
 			const FLinearColor Reticle = FLinearColor(0.15f, 0.9f, 0.6f, 1.0f); // teal-green
-			// Box grows slightly with distance to stay readable, clamped.
 			const float BoxHalf = FMath::Clamp(TgtDist * 0.01f, 20.0f, 60.0f);
 			const float RX = ScreenPt.X;
 			const float RY = ScreenPt.Y;
-			const float L = 12.0f; // corner length
-
-			// Four corner brackets
+			const float L = 12.0f;
 			DrawLine(RX - BoxHalf, RY - BoxHalf, RX - BoxHalf + L, RY - BoxHalf, Reticle, 2.0f);
 			DrawLine(RX - BoxHalf, RY - BoxHalf, RX - BoxHalf, RY - BoxHalf + L, Reticle, 2.0f);
 			DrawLine(RX + BoxHalf, RY - BoxHalf, RX + BoxHalf - L, RY - BoxHalf, Reticle, 2.0f);
@@ -162,15 +157,56 @@ void AAdastreaHUD::DrawHUD()
 			DrawLine(RX - BoxHalf, RY + BoxHalf, RX - BoxHalf, RY + BoxHalf - L, Reticle, 2.0f);
 			DrawLine(RX + BoxHalf, RY + BoxHalf, RX + BoxHalf - L, RY + BoxHalf, Reticle, 2.0f);
 			DrawLine(RX + BoxHalf, RY + BoxHalf, RX + BoxHalf, RY + BoxHalf - L, Reticle, 2.0f);
-
-			// Center crosshair
 			DrawLine(RX - 6.0f, RY, RX + 6.0f, RY, Reticle, 1.0f);
 			DrawLine(RX, RY - 6.0f, RX, RY + 6.0f, Reticle, 1.0f);
 		}
+
+		// ---- Right-side target info panel ----
+		int32 VSizeX = 0, VSizeY = 0;
+		if (PC)
+		{
+			PC->GetViewportSize(VSizeX, VSizeY);
+			const float PX = VSizeX - 300.0f;
+			const float PY = VSizeY * 0.45f;
+			const float PW = 280.0f;
+			const float PH = 130.0f;
+			const float LX = PX + 12.0f;
+			const float VX = PX + 100.0f;
+
+			DrawRect(FLinearColor(0.02f, 0.03f, 0.05f, 0.75f), PX, PY, PW, PH);
+			DrawLine(PX, PY, PX, PY + PH, kBorder, 3.0f); // teal accent edge
+
+			DrawText(TEXT("TARGET LOCKED"), FLinearColor(0.15f, 0.9f, 0.6f, 1.0f), LX, PY + 8.0f, TitleFont, 0.9f);
+			DrawLine(PX + 10.0f, PY + 30.0f, PX + PW - 10.0f, PY + 30.0f, kBorder, 1.0f);
+
+			DrawText(TEXT("NAME"), kLabel, LX, PY + 40.0f, BodyFont, 0.7f);
+			DrawText(TgtName, FLinearColor::White, VX, PY + 40.0f, BodyFont, 0.7f);
+
+			DrawText(TEXT("DISTANCE"), kLabel, LX, PY + 62.0f, BodyFont, 0.7f);
+			DrawText(FString::Printf(TEXT("%.0f u"), TgtDist), kSpeed, VX, PY + 62.0f, BodyFont, 0.7f);
+
+			// Station module info (if it's a station)
+			if (ASpaceStation* Station = Cast<ASpaceStation>(LockedTarget))
+			{
+				int32 ModuleCount = Station->GetModuleCount();
+				int32 Docks = Station->GetDockingBayModules().Num();
+				DrawText(TEXT("MODULES"), kLabel, LX, PY + 84.0f, BodyFont, 0.7f);
+				DrawText(FString::Printf(TEXT("%d  (%d docks)"), ModuleCount, Docks),
+					kCargo, VX, PY + 84.0f, BodyFont, 0.7f);
+			}
+		}
 	}
-	if (AController && AController->IsTargetingModeActive())
-	{
-		Y += RowH;
-		DrawText(TEXT("TARGETING MODE - click a station / Tab to exit"), kThrottle, LabelX, Y, BodyFont, 0.7f);
+
+	// Subtle targeting-mode indicator (bottom-center, unobtrusive).
+		if (AController && AController->IsTargetingModeActive())
+		{
+			int32 VSizeX = 0, VSizeY = 0;
+			if (PC)
+			{
+				PC->GetViewportSize(VSizeX, VSizeY);
+				const FString Hint = TEXT("TARGETING ACTIVE - Tab to exit");
+				DrawText(Hint, FLinearColor(0.6f, 0.7f, 0.75f, 0.9f),
+					VSizeX * 0.5f - 80.0f, VSizeY - 40.0f, BodyFont, 0.6f);
+			}
+		}
 	}
-}
