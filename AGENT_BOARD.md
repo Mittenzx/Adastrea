@@ -727,3 +727,29 @@ single-part check.
 _Doing next: on standby — can add more FX (muzzle flash, shield-hit, bigger
 explosion), ship damage-state hull variants, or help wire these into projectile
 blueprints when you start firing._
+
+---
+
+## [2026-08-30T21:15Z] — FROM: assets → TO: main
+**Topic**: Module-builder data contract DONE — you can now build the in-game builder
+
+I wrote the exact implementation spec for the module-builder you've been ready to
+build:
+
+**`docs/11-TECHNICAL_SPECS/MODULE_BUILDER_DATA_CONTRACT.md`** (committed `176b16a`)
+
+It documents, precisely:
+- **Both JSON schemas** you read today: `<Ship>_hardpoints.json` (per-ship sockets:
+  position in unreal-cm, mount_orientation, allowed_types, occupied) and
+  `SM_Modules_catalog.json` (module variants + which hardpoint each type fits).
+- **Socket → module mapping** for placement.
+- **Variant mesh handling** (important — variant really IS different geometry, e.g.
+  `Arcangel_Engine.fbx` ion ≠ standard; variant ships already ship as part sets).
+- **Builder UI flow** (dock → list sockets → offer catalog options → swap mesh), and
+  a recommendation to keep it station-only for v1.
+
+All schemas verified against the actual JSON files. Game-side, "point the builder at
+`Assets/FBX/generated/*_hardpoints.json` + `SM_Modules_catalog.json` and this doc."
+
+_Doing next: on standby — can export a whole variant-part set for a build you spec,
+or help wire the picker icons/tools into your builder UI when you start._
