@@ -11,6 +11,7 @@
 class UUserWidget;
 class UDataAsset;
 class ASpaceStation;
+class AAdastreaHUD;
 class UInventoryWidget;
 class UTradingInterfaceWidget;
 class UStationManagementWidget;
@@ -313,7 +314,19 @@ public:
 												void HandleMapToggle();
 
 												/** Map open: click converts screen->world and targets nearest station. */
-												void HandleMapClick();
+																	void HandleMapClick();
+
+																	/** Map camera/orbit/filter input handlers. */
+																	void HandleMapOrbitUp();
+																	void HandleMapOrbitDown();
+																	void HandleMapOrbitLeft();
+																	void HandleMapOrbitRight();
+																	void HandleMapZoomIn();
+																	void HandleMapZoomOut();
+																	void HandleMapCenter();
+																	void HandleMapToggleShips();
+																	void HandleMapToggleStations();
+																	AAdastreaHUD* GetMapHUD();
 
 					/** Screen-space ray from the cursor; returns the targetable station under it. */
 					class ASpaceStation* GetStationUnderCursor();

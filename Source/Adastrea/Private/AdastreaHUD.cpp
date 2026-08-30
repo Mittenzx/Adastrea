@@ -222,147 +222,168 @@ void AAdastreaHUD::DrawHUD()
 			}
 	}
 
-	void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
+
+void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
+{
+	if (!PC || !PC->GetWorld())
 	{
-		if (!PC)
-		{
-			return;
-		}
-
-		UWorld* World = PC->GetWorld();
-		if (!World)
-		{
-			return;
-		}
-
-		// Gather stations.
-		TArray<AActor*> Stations;
-		UGameplayStatics::GetAllActorsOfClass(World, ASpaceStation::StaticClass(), Stations);
-
-		// Compute world bounds covering all stations + the player (X/Y plane).
-		float MinX = ShipPos.X, MaxX = ShipPos.X;
-		float MinY = ShipPos.Y, MaxY = ShipPos.Y;
-		FVector Ship2D = FVector(ShipPos.X, ShipPos.Y, 0.0f);
-		for (AActor* S : Stations)
-		{
-			if (!S)
-			{
-				continue;
-			}
-			FVector Loc = S->GetActorLocation();
-			MinX = FMath::Min(MinX, Loc.X); MaxX = FMath::Max(MaxX, Loc.X);
-			MinY = FMath::Min(MinY, Loc.Y); MaxY = FMath::Max(MaxY, Loc.Y);
-		}
-		// Ensure a minimum extent so a lone ship still has a useful view.
-		float ExtentX = FMath::Max(MaxX - MinX, 20000.0f);
-		float ExtentY = FMath::Max(MaxY - MinY, 20000.0f);
-		float Cx = (MinX + MaxX) * 0.5f;
-		float Cy = (MinY + MaxY) * 0.5f;
-		MinX = Cx - ExtentX * 0.5f; MaxX = Cx + ExtentX * 0.5f;
-		MinY = Cy - ExtentY * 0.5f; MaxY = Cy + ExtentY * 0.5f;
-
-		// Retina/viewport size.
-		int32 VX = 0, VY = 0;
-		PC->GetViewportSize(VX, VY);
-		float VW = (float)VX, VH = (float)VY;
-
-		// Map area: full-screen overlay (with a small margin frame), preserving world aspect.
-		const float Margin = 20.0f;
-		float MapW = VW - Margin * 2.0f;
-		float MapH = VH - Margin * 2.0f - 40.0f; // leave room for the title/footer
-		// Fit extent into MapW x MapH by uniform scale.
-		float WorldAspect = ExtentX / FMath::Max(ExtentY, 1.0f);
-		float MapAspect = MapW / FMath::Max(MapH, 1.0f);
-		float Scale;
-		if (WorldAspect > MapAspect)
-		{
-			Scale = MapW / FMath::Max(ExtentX, 1.0f);
-			MapH = ExtentY * Scale;
-		}
-		else
-		{
-			Scale = MapH / FMath::Max(ExtentY, 1.0f);
-			MapW = ExtentX * Scale;
-		}
-		const float PX = Margin + (VW - Margin * 2.0f - MapW) * 0.5f;
-		const float PY = Margin + (VH - Margin * 2.0f - MapH) * 0.5f;
-
-		// Full-screen backing (solid, covers the play viewport while map is up).
-		DrawRect(FLinearColor(0.01f, 0.015f, 0.025f, 1.0f), 0.0f, 0.0f, VW, VH);
-
-		// Screen position for a world (X,Y) point, Y up -> screen Y down.
-		auto ToScreen = [&](const FVector& W) -> FVector2D
-		{
-			float sx = PX + (W.X - MinX) * Scale;
-			float sy = PY + (MaxY - W.Y) * Scale; // invert so +Y is up
-			return FVector2D(sx, sy);
-		};
-
-		// ---- Panel background + border ----
-		DrawRect(FLinearColor(0.02f, 0.03f, 0.05f, 0.88f), PX, PY, MapW, MapH);
-		DrawRect(FLinearColor(0.10f, 0.65f, 0.72f, 0.9f), PX, PY, 3.0f, MapH);           // left accent
-		DrawRect(FLinearColor(0.10f, 0.65f, 0.72f, 0.9f), PX, PY, MapW, 3.0f);           // top accent
-		DrawRect(FLinearColor(0.10f, 0.65f, 0.72f, 0.7f), PX, PY + MapH - 3.0f, MapW, 3.0f);
-
-		// ---- Grid lines (world-space intervals) ----
-		const FLinearColor kGrid = FLinearColor(0.12f, 0.18f, 0.22f, 0.6f);
-		const float GridStep = 10000.0f; // world units per grid cell
-		const float StartX = FMath::FloorToFloat(MinX / GridStep) * GridStep;
-		const float StartY = FMath::FloorToFloat(MinY / GridStep) * GridStep;
-		for (float WX = StartX; WX <= MaxX; WX += GridStep)
-		{
-			FVector2D A = ToScreen(FVector(WX, MinY, 0.0f));
-			FVector2D B = ToScreen(FVector(WX, MaxY, 0.0f));
-			DrawLine(A.X, A.Y, B.X, B.Y, kGrid, 1.0f);
-		}
-		for (float WY = StartY; WY <= MaxY; WY += GridStep)
-		{
-			FVector2D A = ToScreen(FVector(MinX, WY, 0.0f));
-			FVector2D B = ToScreen(FVector(MaxX, WY, 0.0f));
-			DrawLine(A.X, A.Y, B.X, B.Y, kGrid, 1.0f);
-		}
-
-		// Title
-		UFont* TitleFont = GEngine->GetLargeFont();
-		UFont* BodyFont  = GEngine->GetSmallFont();
-		DrawText(TEXT("SECTOR MAP"), FLinearColor(0.60f, 0.85f, 0.90f, 1.0f), PX + 20.0f, PY - 28.0f, TitleFont, 0.9f);
-
-		// Legend
-		DrawText(TEXT("Y (up)"), FLinearColor(0.4f,0.5f,0.6f,1.0f), PX + MapW - 90.0f, PY + 10.0f, BodyFont, 0.6f);
-
-		// ---- Station markers + names ----
-		for (AActor* S : Stations)
-		{
-			if (!S)
-			{
-				continue;
-			}
-			FVector2D SP = ToScreen(S->GetActorLocation());
-			// Clip to map rect.
-			if (SP.X < PX || SP.X > PX + MapW || SP.Y < PY || SP.Y > PY + MapH)
-			{
-				continue;
-			}
-			// Small square marker.
-			const float M = 6.0f;
-			DrawRect(FLinearColor(0.95f, 0.78f, 0.30f, 1.0f), SP.X - M, SP.Y - M, M * 2.0f, M * 2.0f);
-			// Name below marker.
-			DrawText(S->GetActorLabel(), FLinearColor(0.85f, 0.9f, 0.95f, 1.0f), SP.X - 12.0f, SP.Y + 8.0f, BodyFont, 0.6f);
-		}
-
-		// ---- Player marker (teal arrow) ----
-		FVector2D PPt = ToScreen(Ship2D);
-		const float PA = 10.0f;
-		// Simple triangle pointing up (ship "north" = +Y).
-		DrawLine(PPt.X, PPt.Y - PA, PPt.X - PA * 0.8f, PPt.Y + PA * 0.5f, kBorder, 2.0f);
-		DrawLine(PPt.X, PPt.Y - PA, PPt.X + PA * 0.8f, PPt.Y + PA * 0.5f, kBorder, 2.0f);
-		DrawLine(PPt.X - PA * 0.8f, PPt.Y + PA * 0.5f, PPt.X + PA * 0.8f, PPt.Y + PA * 0.5f, kBorder, 2.0f);
-		DrawText(TEXT("YOU"), FLinearColor(0.15f, 0.9f, 0.6f, 1.0f), PPt.X - 8.0f, PPt.Y + 12.0f, BodyFont, 0.6f);
-
-		// Footer hint (bottom-center of screen)
-		DrawText(TEXT("Press M to close map"), FLinearColor(0.5f,0.6f,0.7f,1.0f),
-			VW * 0.5f - 70.0f, VH - 36.0f, BodyFont, 0.7f);
-
-	// Legend (top-right)
-		DrawText(TEXT("Y (up)"), FLinearColor(0.4f,0.5f,0.6f,1.0f), VW - 90.0f, 12.0f, BodyFont, 0.6f);
+		return;
 	}
+	UWorld* World = PC->GetWorld();
+
+	// ---- Viewport ----
+	int32 VX = 0, VY = 0;
+	PC->GetViewportSize(VX, VY);
+	float VW = (float)VX, VH = (float)VY;
+
+	// Full-screen backing.
+	DrawRect(FLinearColor(0.008f, 0.012f, 0.02f, 1.0f), 0.0f, 0.0f, VW, VH);
+
+	// Map view box (X4 style: big centered 3D viewport).
+	const float Margin = 40.0f;
+	const float BoxW = VW - Margin * 2.0f;
+	const float BoxH = VH - Margin * 2.0f - 70.0f;
+	const float BoxX = Margin;
+	const float BoxY = Margin + 30.0f;
+
+	// ---- Camera / projection ----
+	// Orbit camera looking at MapCenter from (yaw,pitch,zoom).
+	float YawR = FMath::DegreesToRadians(MapYaw);
+	float PitchR = FMath::DegreesToRadians(MapPitch);
+	FVector Eye = MapCenter
+		+ FVector(FMath::Cos(PitchR) * FMath::Cos(YawR),
+				  FMath::Cos(PitchR) * FMath::Sin(YawR),
+				  FMath::Sin(PitchR)) * MapZoom;
+	FVector Fwd = (MapCenter - Eye).GetSafeNormal();
+	FVector WorldUp(0, 0, 1);
+	FVector Right = Fwd.Cross(WorldUp).GetSafeNormal();
+	if (Right.IsNearlyZero()) { Right = FVector(1, 0, 0); }
+	FVector Up = Right.Cross(Fwd).GetSafeNormal();
+
+	// Project world -> camera-space -> screen.
+	// Center of box = optical axis; scale so MapZoom frames the box.
+	float Focal = BoxW * 0.5f;
+
+	auto Project = [&](const FVector& W, FVector2D& Out) -> bool
+	{
+		FVector Rel = W - Eye;
+		float CamX = Rel.Dot(Right);
+		float CamY = Rel.Dot(Up);
+		float CamZ = Rel.Dot(Fwd);
+		if (CamZ < 1000.0f) { return false; } // behind/near too close
+		float S = Focal / CamZ;
+		float sx = BoxX + BoxW * 0.5f + CamX * S;
+		float sy = BoxY + BoxH * 0.5f - CamY * S;
+		Out = FVector2D(sx, sy);
+		return (sx >= BoxX && sx <= BoxX + BoxW && sy >= BoxY && sy <= BoxY + BoxH);
+	};
+
+	// ---- Grid on Z=0 plane ----
+	{
+		const FLinearColor kGrid = FLinearColor(0.13f, 0.20f, 0.26f, 0.5f);
+		const float G = 20000.0f;
+		float R = MapZoom * 1.5f;
+		for (float gx = -FMath::RoundToFloat(R/G)*G; gx <= R; gx += G)
+		for (float gy = -FMath::RoundToFloat(R/G)*G; gy <= R; gy += G)
+		{
+			FVector2D A, B;
+			if (Project(MapCenter + FVector(gx, -R, 0), A) && Project(MapCenter + FVector(gx, R, 0), B))
+				DrawLine(A.X, A.Y, B.X, B.Y, kGrid, 1.0f);
+			if (Project(MapCenter + FVector(-R, gy, 0), A) && Project(MapCenter + FVector(R, gy, 0), B))
+				DrawLine(A.X, A.Y, B.X, B.Y, kGrid, 1.0f);
+		}
+	}
+
+	UFont* TitleFont = GEngine->GetLargeFont();
+	UFont* MiniFont  = GEngine->GetSmallFont();
+
+	// ---- Box background + border ----
+	DrawRect(FLinearColor(0.03f, 0.05f, 0.07f, 0.9f), BoxX, BoxY, BoxW, BoxH);
+	DrawRect(FLinearColor(0.10f, 0.55f, 0.60f, 0.9f), BoxX, BoxY, 3.0f, BoxH);      // left
+	DrawRect(FLinearColor(0.10f, 0.55f, 0.60f, 0.9f), BoxX, BoxY, BoxW, 3.0f);      // top
+	DrawRect(FLinearColor(0.10f, 0.55f, 0.60f, 0.9f), BoxX, BoxY + BoxH - 3.0f, BoxW, 3.0f); // bottom
+
+	// ---- Object icons ----
+	TArray<AActor*> Ships;
+	UGameplayStatics::GetAllActorsOfClass(World, ASpaceship::StaticClass(), Ships);
+	TArray<AActor*> Stations;
+	UGameplayStatics::GetAllActorsOfClass(World, ASpaceStation::StaticClass(), Stations);
+
+	// Stations: gold square + label
+	if (bShowStations)
+	{
+		for (AActor* A : Stations)
+		{
+			if (!A) continue;
+			FVector2D SP;
+			if (!Project(A->GetActorLocation(), SP)) continue;
+			const float R = 5.0f;
+			DrawRect(FLinearColor(0.95f, 0.78f, 0.30f, 1.0f), SP.X - R, SP.Y - R, R * 2.0f, R * 2.0f);
+			DrawText(A->GetActorLabel(), FLinearColor(0.8f, 0.9f, 1.0f, 0.95f), SP.X + 8.0f, SP.Y - 6.0f, MiniFont, 0.55f);
+		}
+	}
+	// Ships: cyan triangle + label
+	if (bShowShips)
+	{
+		for (AActor* A : Ships)
+		{
+			if (!A || A == PC->GetPawn()) continue; // skip the player's own ship (shown as YOU)
+			FVector2D SP;
+			if (!Project(A->GetActorLocation(), SP)) continue;
+			const float R = 6.0f;
+			DrawLine(SP.X, SP.Y - R, SP.X - R, SP.Y + R * 0.6f, FLinearColor(0.3f, 0.8f, 0.9f, 1.0f), 2.0f);
+			DrawLine(SP.X, SP.Y - R, SP.X + R, SP.Y + R * 0.6f, FLinearColor(0.3f, 0.8f, 0.9f, 1.0f), 2.0f);
+			DrawLine(SP.X - R, SP.Y + R * 0.6f, SP.X + R, SP.Y + R * 0.6f, FLinearColor(0.3f, 0.8f, 0.9f, 1.0f), 2.0f);
+			DrawText(A->GetActorLabel(), FLinearColor(0.8f, 0.9f, 1.0f, 0.95f), SP.X + 8.0f, SP.Y - 6.0f, MiniFont, 0.55f);
+		}
+	}
+
+	// ---- Player marker (bright teal arrow, "YOU") ----
+	{
+		FVector2D PPt;
+		if (Project(ShipPos, PPt))
+		{
+			const float R = 9.0f;
+			DrawLine(PPt.X, PPt.Y - R, PPt.X - R, PPt.Y + R * 0.6f, FLinearColor(0.15f, 0.95f, 0.6f, 1.0f), 2.0f);
+			DrawLine(PPt.X, PPt.Y - R, PPt.X + R, PPt.Y + R * 0.6f, FLinearColor(0.15f, 0.95f, 0.6f, 1.0f), 2.0f);
+			DrawLine(PPt.X - R, PPt.Y + R * 0.6f, PPt.X + R, PPt.Y + R * 0.6f, FLinearColor(0.15f, 0.95f, 0.6f, 1.0f), 2.0f);
+			DrawText(TEXT("YOU"), FLinearColor(0.15f, 0.95f, 0.6f, 1.0f), PPt.X - 7.0f, PPt.Y + 11.0f, MiniFont, 0.6f);
+		}
+	}
+
+	// ---- Locked target highlight on map ----
+	if (AAdastreaPlayerController* AController = Cast<AAdastreaPlayerController>(PC))
+	{
+		if (AActor* T = AController->GetLockedTarget())
+		{
+			FVector2D TP;
+			if (Project(T->GetActorLocation(), TP))
+			{
+				const float R = 11.0f;
+				const FLinearColor Rc(0.15f, 0.9f, 0.6f, 1.0f);
+				DrawLine(TP.X - R, TP.Y - R, TP.X + R, TP.Y - R, Rc, 2.0f);
+				DrawLine(TP.X + R, TP.Y - R, TP.X + R, TP.Y + R, Rc, 2.0f);
+				DrawLine(TP.X + R, TP.Y + R, TP.X - R, TP.Y + R, Rc, 2.0f);
+				DrawLine(TP.X - R, TP.Y + R, TP.X - R, TP.Y - R, Rc, 2.0f);
+			}
+		}
+	}
+
+	// ---- HUD overlay (title, controls, legend) ----
+	DrawText(TEXT("SECTOR MAP"), FLinearColor(0.6f, 0.9f, 1.0f, 1.0f), BoxX + 16.0f, 12.0f, TitleFont, 0.9f);
+	// Controls help (bottom)
+	DrawText(TEXT("[Q/E] orbit    [A/D] pan X   [W/S] pan Y   [R/F] zoom    LMB target    [M] close"),
+		FLinearColor(0.6f,0.7f,0.8f,0.9f), VW*0.5f - 360.0f, VH - 30.0f, MiniFont, 0.7f);
+	// Legend (top-right)
+	float LegY = 16.0f;
+	DrawText(TEXT("Stations"), FLinearColor(0.8f,0.9f,1.0f,1.0f), BoxX + BoxW - 130.0f, LegY, MiniFont, 0.6f);
+	DrawRect(FLinearColor(0.95f,0.78f,0.30f,1.0f), BoxX + BoxW - 160.0f, LegY + 1.0f, 8.0f, 8.0f);
+	LegY += 16.0f;
+	DrawText(TEXT("Ships"), FLinearColor(0.8f,0.9f,1.0f,1.0f), BoxX + BoxW - 130.0f, LegY, MiniFont, 0.6f);
+	DrawText(TEXT("<|"), FLinearColor(0.3f,0.8f,0.9f,1.0f), BoxX + BoxW - 158.0f, LegY - 1.0f, MiniFont, 0.7f);
+
+	// Filters (bottom-left)
+	DrawText(FString::Printf(TEXT("[1] Ships:%s   [2] Stations:%s"),
+		bShowShips ? TEXT("ON") : TEXT("OFF"), bShowStations ? TEXT("ON") : TEXT("OFF")),
+		FLinearColor(0.6f,0.7f,0.8f,0.9f), Margin, VH - 30.0f, MiniFont, 0.7f);
+}

@@ -112,10 +112,20 @@ void AAdastreaPlayerController::SetupInputComponent()
 	{
 		// Tab: toggle targeting mode (cursor shown, click selects/locks a station)
 		InputComponent->BindKey(EKeys::Tab, IE_Pressed, this, &AAdastreaPlayerController::HandleTargetingToggle);
-		// LMB: in targeting mode, click a station to lock it as the target
+		// LMB: in targeting mode, click a station to lock it as the target / map click
 		InputComponent->BindKey(EKeys::LeftMouseButton, IE_Pressed, this, &AAdastreaPlayerController::HandleTargetClick);
-		// M: toggle the full-screen 2D sector map
+		// M: toggle the full-screen sector map
 		InputComponent->BindKey(EKeys::M, IE_Pressed, this, &AAdastreaPlayerController::HandleMapToggle);
+		// Map navigation (only acted on when the map is open)
+		InputComponent->BindKey(EKeys::Up,    IE_Repeat, this, &AAdastreaPlayerController::HandleMapOrbitUp);
+		InputComponent->BindKey(EKeys::Down,  IE_Repeat, this, &AAdastreaPlayerController::HandleMapOrbitDown);
+		InputComponent->BindKey(EKeys::Left,  IE_Repeat, this, &AAdastreaPlayerController::HandleMapOrbitLeft);
+		InputComponent->BindKey(EKeys::Right, IE_Repeat, this, &AAdastreaPlayerController::HandleMapOrbitRight);
+		InputComponent->BindKey(EKeys::Equals, IE_Pressed, this, &AAdastreaPlayerController::HandleMapZoomIn);
+		InputComponent->BindKey(EKeys::Hyphen, IE_Pressed, this, &AAdastreaPlayerController::HandleMapZoomOut);
+		InputComponent->BindKey(EKeys::C, IE_Pressed, this, &AAdastreaPlayerController::HandleMapCenter);
+		InputComponent->BindKey(EKeys::One, IE_Pressed, this, &AAdastreaPlayerController::HandleMapToggleShips);
+		InputComponent->BindKey(EKeys::Two, IE_Pressed, this, &AAdastreaPlayerController::HandleMapToggleStations);
 	}
 }
 
@@ -364,6 +374,75 @@ void AAdastreaPlayerController::HandleMapClick()
 		LockedTargetActor = Best;
 		UE_LOG(LogAdastrea, Log, TEXT("MAP TARGET LOCKED: %s"), *Best->GetName());
 	}
+}
+
+void AAdastreaPlayerController::HandleMapOrbitUp()
+{
+	if (AAdastreaHUD* G = GetMapHUD()) { if (G->bShowMap) G->MapOrbit(0, -4.0f); }
+}
+
+void AAdastreaPlayerController::HandleMapOrbitDown()
+{
+	if (AAdastreaHUD* G = GetMapHUD()) { if (G->bShowMap) G->MapOrbit(0, 4.0f); }
+}
+
+void AAdastreaPlayerController::HandleMapOrbitLeft()
+{
+	if (AAdastreaHUD* G = GetMapHUD()) { if (G->bShowMap) G->MapOrbit(-4.0f, 0); }
+}
+
+void AAdastreaPlayerController::HandleMapOrbitRight()
+{
+	if (AAdastreaHUD* G = GetMapHUD()) { if (G->bShowMap) G->MapOrbit(4.0f, 0); }
+}
+
+void AAdastreaPlayerController::HandleMapZoomIn()
+{
+	if (AAdastreaHUD* GameHUD = GetMapHUD())
+	{
+		if (GameHUD->bShowMap) { GameHUD->MapZoomBy(-30000.0f); }
+	}
+}
+
+void AAdastreaPlayerController::HandleMapZoomOut()
+{
+	if (AAdastreaHUD* GameHUD = GetMapHUD())
+	{
+		if (GameHUD->bShowMap) { GameHUD->MapZoomBy(30000.0f); }
+	}
+}
+
+void AAdastreaPlayerController::HandleMapCenter()
+{
+	if (AAdastreaHUD* GameHUD = GetMapHUD())
+	{
+		if (!GameHUD->bShowMap) { return; }
+		if (APawn* ControlledPawn = GetPawn())
+		{
+			GameHUD->MapRecenter(ControlledPawn->GetActorLocation());
+		}
+	}
+}
+
+void AAdastreaPlayerController::HandleMapToggleShips()
+{
+	if (AAdastreaHUD* GameHUD = GetMapHUD())
+	{
+		if (GameHUD->bShowMap) { GameHUD->bShowShips = !GameHUD->bShowShips; }
+	}
+}
+
+void AAdastreaPlayerController::HandleMapToggleStations()
+{
+	if (AAdastreaHUD* GameHUD = GetMapHUD())
+	{
+		if (GameHUD->bShowMap) { GameHUD->bShowStations = !GameHUD->bShowStations; }
+	}
+}
+
+AAdastreaHUD* AAdastreaPlayerController::GetMapHUD()
+{
+	return Cast<AAdastreaHUD>(GetHUD());
 }
 
 void AAdastreaPlayerController::HandleMapToggle()

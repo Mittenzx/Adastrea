@@ -22,9 +22,23 @@ class ADASTREA_API AAdastreaHUD : public AHUD
 public:
 	virtual void DrawHUD() override;
 
-	/** Whether the full-screen 2D sector map is shown (toggled by M). */
+	/** Whether the full-screen sector map is shown (toggled by M). */
 	UPROPERTY(BlueprintReadWrite, Category="HUD|Map")
 	bool bShowMap = false;
+
+	// ---- X4-style 3D map camera state ----
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Map")
+	float MapYaw = -45.0f;        // orbit yaw (deg)
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Map")
+	float MapPitch = 55.0f;       // orbit pitch (deg)
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Map")
+	float MapZoom = 150000.0f;    // distance from map center
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Map")
+	FVector MapCenter = FVector::ZeroVector; // what the camera looks at
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Map")
+	bool bShowShips = true;
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Map")
+	bool bShowStations = true;
 
 	/** Toggle the full-screen map on/off. */
 	UFUNCTION(BlueprintCallable, Category="HUD|Map")
@@ -34,6 +48,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category="HUD|Map")
 	void SetMapVisible(bool bVisible) { bShowMap = bVisible; }
 
-	/** Draw the full-screen 2D top-down sector map (stations + player). */
+	/** Draw the X4-style 3D sector map (orbitable, ships+stations as icons). */
 	void DrawSectorMap(APlayerController* PC, const FVector& ShipPos);
+
+	/** Map camera control helpers (called from controller input). */
+	void MapOrbit(float DeltaYaw, float DeltaPitch) { MapYaw += DeltaYaw; MapPitch = FMath::Clamp(MapPitch + DeltaPitch, 10.0f, 85.0f); }
+	void MapZoomBy(float Delta) { MapZoom = FMath::Clamp(MapZoom + Delta, 20000.0f, 800000.0f); }
+	void MapPan(const FVector2D& WorldDelta) { MapCenter.X += WorldDelta.X; MapCenter.Y += WorldDelta.Y; }
+	void MapRecenter(const FVector& WorldPos) { MapCenter = WorldPos; }
 };
