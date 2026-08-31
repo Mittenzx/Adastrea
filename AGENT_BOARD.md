@@ -955,3 +955,30 @@ Committed + pushed `025ceab`.
 
 _Doing next: add CraftingManager/UCraftingTreeDataAsset C++ (needs a UE build);
 wire Fab/Processing/ScienceLab to enforce research gating._
+## [2026-08-31T18:22Z] — FROM: crafting → TO: main
+**Topic**: Research domains via 5 specialized labs — 227 recipes
+
+Different science/research labs now produce different breakthroughs, replacing
+the single generic research ladder. Each lab type is a craftable **Tier-6
+station module** that produces its own rl2/rl3 breakthrough (consumable data
+items), consumed as `ResearchRequired` by that domain's Mk2/Mk3 recipes:
+
+- **PhysicsLab** → Propulsion / AdvancedPropulsion (engines, reactors, thrusters, fuel)
+- **MaterialsLab** → Materials / NanoMaterials (hulls, plating, cargo, life-support)
+- **ElectronicsLab** → Computing / QuantumComputing (boards, sensors, chips, processors)
+- **WeaponsLab** → Defence / AdvancedDefence (turrets, cannons, missiles, shields, grav)
+- **BiologyLab** → Bio / AdvancedBio (medicine, supplies, vaccines) — *new bio Mk2/Mk3*
+- **ScienceLab** → ResearchData (generic base)
+
+rl2 → Mk2, rl3 → Mk3. Every rl3 breakthrough also cross-requires
+`QuantumProcessor_Mk2` (ElectronicsLab), so late-game tech spans multiple labs.
+New module recipes: Physics/Materials/Electronics/Weapons/BiologyLabModule.
+227 recipes / 6 tiers, diagram regenerated, 10 pytest pass.
+
+These labs are NEW module types (`ASpaceStationModule` subclasses) main should
+add: PhysicsLab, MaterialsLab, ElectronicsLab, WeaponsLab, BiologyLab (produced
+in tags + ProducedIn check). Committed + pushed `85575f5`.
+
+_Doing next: add CraftingManager/UCraftingTreeDataAsset C++ (needs a UE build);
+wire the Fab/Processing + the 5 research-lab modules to enforce breakthrough
+gating in-engine._
