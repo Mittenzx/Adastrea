@@ -189,6 +189,43 @@ def join(objs, target_name, keep_named=None):
             bpy.data.objects.remove(ob, do_unlink=True)
     return out
 
+
+def union_into(objs, target_name, bevel_amt=4, bevel_segs=2, keep_named=None):
+    """Boolean-UNION a set of overlapping primitives into ONE continuous hull, then
+    bevel the transition seams so it reads as a single integrated vessel silhouette
+    instead of stacked boxes. Needed because plain joint() overlaps volumes."""
+    if len(objs) < 2:
+        return join(objs, target_name, keep_named)
+    # start from first object, union the rest via a single boolean chain then apply
+    base = objs[0]
+    sel_activate(base)
+    for i, ob in enumerate(objs[1:]):
+        m = base.modifiers.new(f"UnionB{i}", 'BOOLEAN')
+        m.operation = 'UNION'
+        m.object = ob
+    bpy.context.view_layer.objects.active = base
+    # apply boolean modifiers one at a time (apply-as-DATA renames the mesh)
+    for i in range(len(objs) - 1):
+        bpy.ops.object.modifier_apply(modifier=f"UnionB{i}")
+    joined = base
+    joined.name = target_name
+    # bevel the union seams to fillet transitions
+    try:
+        sel_activate(joined)
+        bpy.ops.object.mode_set(mode='EDIT')
+        bpy.ops.mesh.select_all(action='SELECT')
+        bpy.ops.mesh.bevel(offset=bevel_amt, offset_type='OFFSET',
+                           segments=bevel_segs, affect='EDGES')
+        bpy.ops.object.mode_set(mode='OBJECT')
+    except Exception:
+        pass
+    keep = (keep_named or set()) | {target_name}
+    for ob in list(bpy.data.objects):
+        if ob.name not in keep and ob.type == 'MESH' and ob is not joined:
+            bpy.data.objects.remove(ob, do_unlink=True)
+    return joined
+
+
 class Mat:
     """Named material slot wrapper so each mesh carries proper slots."""
 
@@ -695,29 +732,36 @@ def build_carcass(sz):
 
 
 def build_cargo_carcass(sz, outname):
-    """Cargo/trading-specialist carcass — a freight-hauler profile: broad boxy
-    cargo-hold hull with a raised dorsal command deck and flanking container
-    racks, so a trade ship reads as a 'box hauler' distinct from the fighter/
-    corvette wedges. Returns the finalized carcass (obj, path)."""
+    """Cargo/trading-specialist carcass — a freight-hauler that reads as ONE
+    integrated vessel, not stacked boxes. A single tapered, broad fuselage forms
+    the silhouette (narrowing fore & aft so it reads as a ship hull), with the
+    dorsal bridge and flank pods bedded FLUSH into it. A strong fillet bevel rounds
+    every transition so nothing looks like a box glued on top of another."""
     s = SIZE_CLASSES[sz]
     lx, ly, lz = s['carcass']
     locz = s['z']
     k = sc(sz)
-    # broad, slightly slab-sided cargo hull
-    hull = box(f"Carg_{sz}_Hull", lx*1.1, ly, lz*0.85, loc=(0, 0, locz)); bevel(hull, 8, 3)
-    # raised dorsal command/crew deck (trading bridge)
-    cmd = box(f"Carg_{sz}_Cmd", lx*0.5, ly*0.34, lz*0.5, loc=(0, ly*0.16, locz + lz*0.55)); bevel(cmd, 4, 2)
-    # forward sensor/radome stalk + aft engine mounting boxer
-    rad = cyl("Carg_Rad", lz*0.12, lz*0.5, loc=(0, ly*0.4, locz + lz*0.75), verts=12); bevel(rad, 2, 1)
-    aft = box("Carg_Aft", lx*0.5, lz*0.9, lz*0.4, loc=(0, -ly*0.34, locz)); bevel(aft, 4, 2)
-    objs = [hull, cmd, rad, aft]
-    # dorsally-mounted container pods (banked) on both flanks
+    # --- dominant tapered fuselage ---
+    hull = box(f"Carg_{sz}_Hull", lx*1.05, ly, lz*0.75, loc=(0, 0, locz))
+    # taper: fore + aft wedges pulled inward so the silhouette narrows like a hull
+    fore = box("Carg_Fore", lx*0.42, ly*0.30, lz*0.7, loc=(0, ly*0.66, locz)); bevel(fore, 6, 2)
+    aft = box("Carg_Aft", lx*0.62, ly*0.22, lz*0.6, loc=(0, -ly*0.66, locz)); bevel(aft, 6, 2)
+    # --- shallow dorsal bridge, bedded flush into the hull top ---
+    br = box("Carg_Bridge", lx*0.40, ly*0.26, lz*0.16, loc=(0, ly*0.12, locz + lz*0.46))
+    bevel(br, 10, 4)
+    # --- flank pods: shallow shoulders that only slightly break the hull width ---
+    objs = [hull, fore, aft, br]
     for side in (-1, 1):
-        for i, dy in enumerate((0.22, -0.10)):
-            pod = box(f"Carg_Pod{side}{i}", lx*0.30, ly*0.22, lz*0.34,
-                      loc=(side*lx*0.52, ly*dy, locz + lz*0.42)); bevel(pod, 3, 2)
-            objs.append(pod)
-    return finalize_part(objs, f"{outname}_Carcass", "M_Hull")
+        pod = box(f"Carg_Pod{side}", lx*0.30, ly*0.30, lz*0.22,
+                  loc=(side*lx*0.30, ly*0.02, locz + lz*0.02)); bevel(pod, 8, 3)
+        objs.append(pod)
+    # slim sensor mast (a slender mast reads as a fixture, not a stacked box)
+    mast = cyl("Carg_Mast", lz*0.08, lz*0.5, loc=(0, ly*0.38, locz + lz*0.55), verts=14); bevel(mast, 2, 1)
+    objs.append(mast)
+    # merge overlapping volumes into one silhouette, then a STRONG fillet bevel
+    integrated = union_into(objs, f"{outname}_HullInt", bevel_amt=max(20, int(lz*0.18)),
+                            bevel_segs=3)
+    return finalize_part([integrated], f"{outname}_Carcass", "M_Hull")
 
 
 def build_corvette_carcass(sz, outname):
