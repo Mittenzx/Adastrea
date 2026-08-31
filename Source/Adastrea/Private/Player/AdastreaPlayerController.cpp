@@ -6,6 +6,10 @@
 #include "AdastreaHUD.h"
 #include "Stations/SpaceStationModule.h"
 #include "Stations/DockingBayModule.h"
+#include "Stations/MarketplaceModule.h"
+#include "Trading/MarketDataAsset.h"
+#include "Trading/PlayerTraderComponent.h"
+#include "Trading/TradeItemDataAsset.h"
 #include "AdastreaLog.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
@@ -126,6 +130,14 @@ void AAdastreaPlayerController::SetupInputComponent()
 		InputComponent->BindKey(EKeys::C, IE_Pressed, this, &AAdastreaPlayerController::HandleMapCenter);
 		InputComponent->BindKey(EKeys::One, IE_Pressed, this, &AAdastreaPlayerController::HandleMapToggleShips);
 		InputComponent->BindKey(EKeys::Two, IE_Pressed, this, &AAdastreaPlayerController::HandleMapToggleStations);
+		// Trade screen input (only acted on when the trade screen is open)
+		InputComponent->BindKey(EKeys::Up, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeSelectUp);
+		InputComponent->BindKey(EKeys::Down, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeSelectDown);
+		InputComponent->BindKey(EKeys::B, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeToggleMode);
+		InputComponent->BindKey(EKeys::S, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeToggleMode);
+		InputComponent->BindKey(EKeys::SpaceBar, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeExecute1);
+		InputComponent->BindKey(EKeys::Q, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeExecute5);
+		InputComponent->BindKey(EKeys::Escape, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeClose);
 	}
 }
 
@@ -373,6 +385,85 @@ void AAdastreaPlayerController::HandleMapClick()
 	{
 		LockedTargetActor = Best;
 		UE_LOG(LogAdastrea, Log, TEXT("MAP TARGET LOCKED: %s"), *Best->GetName());
+	}
+}
+
+void AAdastreaPlayerController::HandleTradeSelectUp()
+{
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
+	{
+		if (H->bShowTradeScreen) { H->MoveTradeSelection(-1); }
+	}
+}
+
+void AAdastreaPlayerController::HandleTradeSelectDown()
+{
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
+	{
+		if (H->bShowTradeScreen) { H->MoveTradeSelection(1); }
+	}
+}
+
+void AAdastreaPlayerController::HandleTradeToggleMode()
+{
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
+	{
+		if (H->bShowTradeScreen) { H->ToggleBuySellMode(); }
+	}
+}
+
+void AAdastreaPlayerController::HandleTradeExecute1()   { ExecuteTrade(1); }
+void AAdastreaPlayerController::HandleTradeExecute5()   { ExecuteTrade(5); }
+
+void AAdastreaPlayerController::ExecuteTrade(int32 Quantity)
+{
+	AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD());
+	if (!H || !H->bShowTradeScreen)
+	{
+		return;
+	}
+	ASpaceship* Ship = GetControlledSpaceship();
+	if (!Ship || !Ship->PlayerTraderComponent || !Ship->CargoComponent)
+	{
+		return;
+	}
+	// Get the selected market item.
+	ASpaceStation* Station = GetNearestTradableStation();
+	if (!Station || !Station->GetMarketplaceModule())
+	{
+		return;
+	}
+	UMarketDataAsset* Market = Station->GetMarketplaceModule()->GetMarketData();
+	if (!Market || !Market->Inventory.IsValidIndex(H->SelectedTradeIndex))
+	{
+		return;
+	}
+	const FMarketInventoryEntry& Entry = Market->Inventory[H->SelectedTradeIndex];
+	UTradeItemDataAsset* Item = Entry.TradeItem;
+	if (!Item)
+	{
+		return;
+	}
+	const bool bOK = H->bBuyMode
+		? Ship->PlayerTraderComponent->BuyItem(Market, Item, Quantity, Ship->CargoComponent)
+		: Ship->PlayerTraderComponent->SellItem(Market, Item, Quantity, Ship->CargoComponent);
+	UE_LOG(LogAdastrea, Log, TEXT("Trade %s x%d %s (ok=%d)"),
+		H->bBuyMode ? TEXT("BUY") : TEXT("SELL"), Quantity, *Item->GetName(), bOK);
+}
+
+void AAdastreaPlayerController::HandleTradeClose()
+{
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
+	{
+		if (H->bShowTradeScreen)
+		{
+			H->HideTradeScreen();
+			CloseTrading();
+			// return to flight input
+			SetInputMode(FInputModeGameOnly());
+			bShowMouseCursor = false;
+			bLockMouseLook = false;
+		}
 	}
 }
 

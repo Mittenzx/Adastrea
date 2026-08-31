@@ -4,6 +4,7 @@
 #include "Ships/DockingSettingsDataAsset.h"
 #include "Ships/SpaceshipControlsComponent.h"
 #include "Player/AdastreaPlayerController.h"
+#include "AdastreaHUD.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/StaticMeshComponent.h"
 #include "AdastreaLog.h"
@@ -1903,9 +1904,19 @@ void ASpaceship::CompleteDocking()
     #endif
 
     // Get effective trading interface class (from settings or fallback)
-    TSubclassOf<UUserWidget> EffectiveTradingClass = GetEffectiveTradingInterfaceClass();
+        TSubclassOf<UUserWidget> EffectiveTradingClass = GetEffectiveTradingInterfaceClass();
 
-    // Create and show trading widget
+        // NEW: Show the canvas-drawn trading screen (reliable in PIE) via the AHUD.
+        if (PC)
+        {
+            if (AAdastreaHUD* GameHUD = Cast<AAdastreaHUD>(PC->GetHUD()))
+            {
+                GameHUD->ShowTradeScreen();
+                UE_LOG(LogAdastreaShips, Log, TEXT("ASpaceship::CompleteDocking - Opened canvas trading screen"));
+            }
+        }
+
+        // Create and show trading widget
     if (EffectiveTradingClass)
     {
         #if DOCKING_DEBUG_ENABLED
@@ -1970,13 +1981,14 @@ void ASpaceship::CompleteDocking()
     }
 
     // Set input mode to UI only
-    PC->bShowMouseCursor = true;
-    FInputModeUIOnly InputMode;
-    if (TradingWidget)
-    {
-        InputMode.SetWidgetToFocus(TradingWidget->TakeWidget());
-    }
-    PC->SetInputMode(InputMode);
+        PC->bShowMouseCursor = true;
+        FInputModeGameAndUI InputMode;
+        InputMode.SetHideCursorDuringCapture(false);
+        if (TradingWidget)
+        {
+            InputMode.SetWidgetToFocus(TradingWidget->TakeWidget());
+        }
+        PC->SetInputMode(InputMode);
 
     #if DOCKING_DEBUG_ENABLED
 
@@ -2085,32 +2097,43 @@ void ASpaceship::Undock()
     #endif
 
     // Remove trading widget
-    if (TradingWidget)
-    {
-        TradingWidget->RemoveFromParent();
-        TradingWidget = nullptr;
-
-        #if DOCKING_DEBUG_ENABLED
-
-
-        // Debug print - widget removed
-        if (GEngine)
+        if (TradingWidget)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
-                TEXT("[UNDOCKING] Trading UI widget removed from viewport"));
+            TradingWidget->RemoveFromParent();
+            TradingWidget = nullptr;
+
+            #if DOCKING_DEBUG_ENABLED
+
+
+            // Debug print - widget removed
+            if (GEngine)
+            {
+                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
+                    TEXT("[UNDOCKING] Trading UI widget removed from viewport"));
+            }
+
+
+            #endif
         }
 
+        // Hide the canvas trading screen (AHUD) on undock.
+        if (APlayerController* UndockPC = Cast<APlayerController>(GetController()))
+        {
+            if (AAdastreaHUD* GameHUD = Cast<AAdastreaHUD>(UndockPC->GetHUD()))
+            {
+                GameHUD->HideTradeScreen();
+            }
+            UndockPC->SetInputMode(FInputModeGameOnly());
+            UndockPC->bShowMouseCursor = false;
+        }
 
-        #endif
-    }
+        // Get player controller
+        APlayerController* PC = Cast<APlayerController>(GetController());
+        if (!PC)
+        {
+            #if DOCKING_DEBUG_ENABLED
 
-    // Get player controller
-    APlayerController* PC = Cast<APlayerController>(GetController());
-    if (!PC)
-    {
-        #if DOCKING_DEBUG_ENABLED
-
-        // Debug print - no player controller
+            // Debug print - no player controller
         if (GEngine)
         {
             GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,

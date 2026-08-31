@@ -316,6 +316,15 @@ public:
 												/** Map open: click converts screen->world and targets nearest station. */
 																	void HandleMapClick();
 
+																	/** Trade screen input handlers. */
+																						void HandleTradeSelectUp();
+																						void HandleTradeSelectDown();
+																						void HandleTradeToggleMode();
+																						void HandleTradeExecute1();
+																						void HandleTradeExecute5();
+																						void HandleTradeClose();
+																						void ExecuteTrade(int32 Quantity);
+
 																	/** Map camera/orbit/filter input handlers. */
 																	void HandleMapOrbitUp();
 																	void HandleMapOrbitDown();

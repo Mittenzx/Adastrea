@@ -6,6 +6,9 @@
 #include "GameFramework/HUD.h"
 #include "AdastreaHUD.generated.h"
 
+class AAdastreaPlayerController;
+class ASpaceship;
+
 /**
  * Adastrea in-game HUD.
  *
@@ -56,4 +59,37 @@ public:
 	void MapZoomBy(float Delta) { MapZoom = FMath::Clamp(MapZoom + Delta, 20000.0f, 800000.0f); }
 	void MapPan(const FVector2D& WorldDelta) { MapCenter.X += WorldDelta.X; MapCenter.Y += WorldDelta.Y; }
 	void MapRecenter(const FVector& WorldPos) { MapCenter = WorldPos; }
+
+	// ========================
+	// TRADING SCREEN (canvas-drawn, reliable in PIE)
+	// ========================
+
+	/** Whether the docked trading screen is shown. */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Trading")
+	bool bShowTradeScreen = false;
+
+	/** Whether we're in buy mode (true) or sell mode (false). */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Trading")
+	bool bBuyMode = true;
+
+	/** Index of the currently selected item row. */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Trading")
+	int32 SelectedTradeIndex = 0;
+
+	/** Show the trading screen (set when docked at a market). */
+	UFUNCTION(BlueprintCallable, Category="HUD|Trading")
+	void ShowTradeScreen() { bShowTradeScreen = true; SelectedTradeIndex = 0; }
+
+	/** Hide the trading screen (set when undocked / closing). */
+	UFUNCTION(BlueprintCallable, Category="HUD|Trading")
+	void HideTradeScreen() { bShowTradeScreen = false; }
+
+	/** Draw the docked trading screen (market list, credits, cargo, buy/sell). */
+	void DrawTradeScreen(APlayerController* PC, AAdastreaPlayerController* AdController, ASpaceship* Ship);
+
+	/** Move the trade selection up/down (controller input). Step +1 or -1. */
+	void MoveTradeSelection(int32 Step);
+
+	/** Toggle buy/sell mode. */
+	void ToggleBuySellMode() { bBuyMode = !bBuyMode; }
 };
