@@ -122,6 +122,27 @@ class TestCraftingTree:
                 visit(node)
         assert not cycles, f"Circular recipes: {cycles}"
 
+    def test_research_required_is_valid(self):
+        """ResearchRequired (if set) names an existing item at an unlocked research level."""
+        data = load_tree()
+        recipes = data["Recipes"]
+        items = {r["OutputItem"] for r in recipes}
+        levels = {r["OutputItem"]: r["ResearchLevel"] for r in recipes}
+        for r in recipes:
+            req = r.get("ResearchRequired")
+            if not req:
+                continue
+            assert req in items, f"{r['OutputItem']}: research '{req}' not produced"
+            assert levels[req] <= r["ResearchLevel"], \
+                f"{r['OutputItem']}: research '{req}' at lvl {levels[req]} > own {r['ResearchLevel']}"
+
+    def test_all_have_research_level(self):
+        """Every recipe exposes a numeric ResearchLevel (1..4)."""
+        data = load_tree()
+        for r in data["Recipes"]:
+            assert isinstance(r.get("ResearchLevel"), int)
+            assert 1 <= r["ResearchLevel"] <= 4, r["OutputItem"]
+
 
 if __name__ == "__main__":
     try:

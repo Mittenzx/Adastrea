@@ -213,7 +213,7 @@ def main():
         fill = CAT_FILL.get(ck, DEFAULT_FILL)
         # node
         svg_parts.append(
-            f'<g class="node" data-item="{item}" data-tier="{r["Tier"]}" data-cat="{ck}" data-ing="{json.dumps([i["ItemID"] for i in r["Ingredients"]])}">'
+            f'<g class="node" data-item="{item}" data-tier="{r["Tier"]}" data-cat="{ck}" data-rl="{r.get("ResearchLevel",1)}" data-ing="{json.dumps([i["ItemID"] for i in r["Ingredients"]])}">'
             f'<rect x="{nx}" y="{ny}" width="{NODE_W}" height="{NODE_H}" rx="6" fill="#0f172a"/>'
             f'<rect x="{nx}" y="{ny}" width="{NODE_W}" height="{NODE_H}" rx="6" fill="{fill}" stroke="{stroke}" stroke-width="1.5"/>'
             f'<text x="{nx+8}" y="{ny+17}" fill="#e2e8f0" font-family="monospace" font-size="12" font-weight="bold">{item}</text>'
@@ -266,7 +266,7 @@ document.querySelectorAll('.node').forEach(n=>{{
     tip.style.display='block';
     const mx=e.clientX+14, my=e.clientY+14;
     tip.style.left=mx+'px'; tip.style.top=my+'px';
-    tip.innerHTML = `<b>${{item}}</b> · Tier ${{tier}}<br/><span style="color:#94a3b8">${{CAT_LABEL[cat]||cat}}</span><br/>Requires: ${{ings}}`;
+    tip.innerHTML = `<b>${{item}}</b> · Tier ${{tier}} · ${{CAT_LABEL[cat]||cat}}<br/><span style="color:#94a3b8">${{n.dataset.rl ? 'Research Lv '+n.dataset.rl : ''}}</span><br/>Requires: ${{ings}}`;
   }});
   n.addEventListener('mouseleave',()=>document.getElementById('tip').style.display='none');
 }});

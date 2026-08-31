@@ -22,6 +22,13 @@ The generator validates the tree before writing:
   - every ingredient is producible by some recipe
   - tier monotonicity (ingredient tier <= output tier)
   - acyclic recipe graph
+  - research monotonicity (ResearchRequired exists and is at a strictly prior
+    level)
+
+Research/progression model: recipes carry ResearchLevel (1..4) and optionally a
+ResearchRequired item. ScienceLab milestones — ResearchData, AdvancedResearch,
+QuantumResearch — gate Mk2/Mk3 upgrades of components, ship parts, weapons,
+shields. The tree is edited here, then regenerated to JSON.
 """
 import json
 import os
@@ -49,15 +56,24 @@ TIER_LABELS = {
 # Recipe catalog.  Each entry:
 #   (output, tier, produced_in, category, [ (ingredient, qty), ... ])
 # Acquisition recipes (Tier 1) have an empty ingredient list.
+#
+# Research model: each recipe carries a ResearchLevel (rl) 1..4 and, when it is
+# a researched MILESTONE or an upgraded Mk2/Mk3 part, a ResearchRequired item
+# (the research data asset that must be unlocked first). Research data is
+# itself producible via ScienceLab, so research is a real consumable in-tree.
+#   rl 1  base                    rl 2  ResearchData
+#   rl 3  AdvancedResearch        rl 4  QuantumResearch
 # --------------------------------------------------------------------------
 R = []
-def add(output, tier, produced_in, category, ingredients=()):
+def add(output, tier, produced_in, category, ingredients=(), research=None, rl=1):
     R.append({
         "OutputItem": output,
         "Tier": tier,
         "ProducedIn": produced_in,
         "Category": category,
         "Ingredients": [{"ItemID": i, "Qty": q} for i, q in ingredients],
+        "ResearchLevel": rl,
+        "ResearchRequired": research,
     })
 
 
@@ -223,7 +239,7 @@ add("NanoInjectors", 4, "ScienceLab", "Contraband", [("QuantumProcessor", 1), ("
 
 # --- AI / research (ScienceLab) ---
 add("AICores", 4, "ScienceLab", "Technology", [("QuantumProcessor", 1), ("Microchips", 2)])
-add("ResearchData", 4, "ScienceLab", "Data", [("AdvancedSensors", 1), ("BasicComputer", 1)])
+add("ResearchData", 4, "ScienceLab", "Data", [("AdvancedSensors", 1), ("BasicComputer", 1)], rl=2)
 add("AdvancedAICore", 5, "ScienceLab", "Technology", [("AICores", 1), ("QuantumProcessor", 2), ("ResearchData", 1)])
 add("HackWare", 4, "ScienceLab", "Data", [("AICores", 1), ("NavigationComputer", 1), ("MemoryUnit", 1)])
 
@@ -266,6 +282,87 @@ add("MiningStation", 7, "Fabrication", "Other", [("ProcessingModule", 1), ("Carg
 add("ResearchStation", 7, "Fabrication", "Other", [("ScienceLabModule", 2), ("SolarArrayModule", 1), ("AdvancedAICore", 1)])
 add("DefenceStation", 7, "Fabrication", "Other", [("TurretModule", 2), ("ShieldGeneratorModule", 1), ("DockingPortModule", 1)])
 add("ColonyStation", 7, "Fabrication", "Other", [("HabitationModule", 2), ("BarracksModule", 1), ("LifeSupportUnit", 2)])
+
+# =========================== RESEARCH PROGRESSION ============================
+# ScienceLab research chain. ResearchData (exists, T4) is the first milestone;
+# AdvancedResearch and QuantumResearch unlock higher tech. Consumed by Mk2/Mk3
+# recipes to gate craftable ship parts / weapons / shields / components.
+#   ResearchData (rl2)  -> ResearchData  [base milestone]
+add("AdvancedResearch", 5, "ScienceLab", "Data", [("QuantumProcessor", 1), ("AdvancedSensors", 1), ("ResearchData", 1)], research="ResearchData", rl=3)
+add("QuantumResearch", 6, "ScienceLab", "Data", [("AdvancedResearch", 1), ("QuantumProcessor_Mk2", 1), ("AdvancedAICore", 1)], research="AdvancedResearch", rl=4)
+
+def _mk(base, suffix, tier, produced_in, cat, extra, research, rl, prev_suffix):
+    """Add a `base<suffix>` mark/version recipe: consumes preceding version
+    (or base), extra ingredients, and (implicitly) its research milestone."""
+    prev = base if prev_suffix is None else base + prev_suffix
+    add(base + suffix, tier, produced_in, cat, [(prev, 1)] + extra + [(research, 1)], research=research, rl=rl)
+
+# --- Component / electronics upgrades (base T3; Mk2->T4, Mk3->T5) ---
+_mk("Electronics", "_Mk2", 4, "Fabrication", "Components", [("SuperConductingWire", 2), ("Microchips", 1)], "ResearchData", 2, None)
+_mk("Microchips", "_Mk2", 4, "Fabrication", "Components", [("SiliconWafer", 3), ("PalladiumCatalyst", 1)], "ResearchData", 2, None)
+_mk("CircuitBoard", "_Mk2", 4, "Fabrication", "Components", [("Electronics_Mk2", 1), ("Microchips_Mk2", 1), ("PalladiumCatalyst", 1)], "ResearchData", 2, None)
+_mk("MemoryUnit", "_Mk2", 4, "Fabrication", "Technology", [("Microchips_Mk2", 2), ("SiliconWafer", 1)], "ResearchData", 2, None)
+_mk("ControlUnit", "_Mk2", 4, "Fabrication", "Components", [("BasicComputer_Mk2", 1), ("SuperConductingWire", 2)], "ResearchData", 2, None)
+_mk("PowerDistributionUnit", "_Mk2", 4, "Fabrication", "Components", [("AdvancedPowerCells", 2), ("Electronics_Mk2", 1)], "ResearchData", 2, None)
+_mk("BasicComputer", "_Mk2", 4, "Fabrication", "Technology", [("Electronics_Mk2", 2), ("Microchips_Mk2", 1)], "ResearchData", 2, None)
+_mk("AdvancedSensors", "_Mk2", 4, "ScienceLab", "Technology", [("Electronics_Mk2", 2), ("QuantumProcessor", 1)], "ResearchData", 2, None)
+_mk("QuantumProcessor", "_Mk2", 4, "ScienceLab", "Technology", [("Microchips_Mk2", 4), ("PlatinumCatalyst", 2), ("RareEarthElements", 1)], "ResearchData", 2, None)
+_mk("TargetingComputer", "_Mk2", 4, "ScienceLab", "Technology", [("AdvancedSensors_Mk2", 1), ("QuantumProcessor_Mk2", 1)], "ResearchData", 2, None)
+_mk("NavigationComputer", "_Mk2", 4, "ScienceLab", "Technology", [("QuantumProcessor_Mk2", 1), ("AdvancedSensors_Mk2", 1)], "ResearchData", 2, None)
+_mk("ServoActuator", "_Mk2", 4, "Fabrication", "Components", [("HydraulicPiston", 1), ("SuperConductingWire", 1)], "ResearchData", 2, None)
+_mk("SuperConductingWire", "_Mk2", 4, "Fabrication", "Components", [("CobaltMagnet", 3), ("CopperWiring", 1)], "ResearchData", 2, None)
+
+_mk("Electronics", "_Mk3", 5, "Fabrication", "Components", [("Electronics_Mk2", 1), ("QuantumProcessor", 1)], "AdvancedResearch", 3, "_Mk2")
+_mk("Microchips", "_Mk3", 5, "Fabrication", "Components", [("Microchips_Mk2", 1), ("QuantumProcessor", 1)], "AdvancedResearch", 3, "_Mk2")
+_mk("CircuitBoard", "_Mk3", 5, "Fabrication", "Components", [("CircuitBoard_Mk2", 1), ("QuantumProcessor_Mk2", 1)], "AdvancedResearch", 3, "_Mk2")
+_mk("MemoryUnit", "_Mk3", 5, "Fabrication", "Technology", [("MemoryUnit_Mk2", 1), ("QuantumProcessor", 1)], "AdvancedResearch", 3, "_Mk2")
+_mk("ControlUnit", "_Mk3", 5, "Fabrication", "Components", [("ControlUnit_Mk2", 1), ("QuantumProcessor", 1)], "AdvancedResearch", 3, "_Mk2")
+_mk("PowerDistributionUnit", "_Mk3", 5, "Fabrication", "Components", [("PowerDistributionUnit_Mk2", 1), ("QuantumProcessor", 1)], "AdvancedResearch", 3, "_Mk2")
+_mk("BasicComputer", "_Mk3", 5, "Fabrication", "Technology", [("BasicComputer_Mk2", 1), ("QuantumProcessor", 1)], "AdvancedResearch", 3, "_Mk2")
+_mk("AdvancedSensors", "_Mk3", 5, "ScienceLab", "Technology", [("AdvancedSensors_Mk2", 1), ("QuantumProcessor_Mk2", 1)], "AdvancedResearch", 3, "_Mk2")
+_mk("QuantumProcessor", "_Mk3", 5, "ScienceLab", "Technology", [("QuantumProcessor_Mk2", 1), ("RareEarthElements", 2), ("PlatinumCatalyst", 2)], "AdvancedResearch", 3, "_Mk2")
+
+# --- Ship parts upgrades (base T4; Mk2->T5, Mk3->T6) ---
+_mk("ShipEngine", "_Mk2", 5, "Fabrication", "Military", [("Thruster", 1), ("ReinforcedGirder", 1), ("SuperConductingWire", 1)], "AdvancedResearch", 3, None)
+_mk("ShipReactor", "_Mk2", 5, "Fabrication", "Military", [("FusionFuelCell", 2), ("CobaltMagnet", 1), ("StructuralFrame", 1)], "AdvancedResearch", 3, None)
+_mk("ShipShieldGenerator", "_Mk2", 5, "Fabrication", "Military", [("ShieldCapacitor", 1), ("AdvancedSensors_Mk2", 1)], "AdvancedResearch", 3, None)
+_mk("Thruster", "_Mk2", 5, "Fabrication", "Military", [("TungstenCarbide", 2), ("ServoActuator_Mk2", 1)], "AdvancedResearch", 3, None)
+_mk("FuelTank", "_Mk2", 5, "Fabrication", "Military", [("ReinforcedGirder", 1), ("CeramicTiles", 2)], "AdvancedResearch", 3, None)
+_mk("CargoPod", "_Mk2", 5, "Fabrication", "Military", [("StructuralFrame", 2), ("ReinforcedGirder", 1)], "AdvancedResearch", 3, None)
+_mk("LifeSupportPod", "_Mk2", 5, "Fabrication", "Military", [("Vaccines", 1), ("CompositePlating", 1)], "AdvancedResearch", 3, None)
+_mk("ShipComponents", "_Mk2", 5, "Fabrication", "Components", [("ArmourPlate", 1), ("Microchips_Mk2", 1), ("ReinforcedGirder", 1)], "AdvancedResearch", 3, None)
+_mk("ArmourHull", "_Mk2", 5, "Fabrication", "Military", [("ArmourPlate", 4), ("CarbonFibre", 2)], "AdvancedResearch", 3, None)
+_mk("HullPlating", "_Mk2", 5, "Fabrication", "Military", [("ArmourPlate", 2), ("TitaniumAlloy", 1)], "AdvancedResearch", 3, None)
+_mk("ShieldCapacitor", "_Mk2", 5, "Fabrication", "Military", [("CobaltMagnet", 3), ("SuperConductingWire_Mk2", 2)], "AdvancedResearch", 3, None)
+
+_mk("ShipEngine", "_Mk3", 6, "Fabrication", "Military", [("ReinforcedGirder", 2), ("FusionFuelCell", 1)], "QuantumResearch", 4, "_Mk2")
+_mk("ShipReactor", "_Mk3", 6, "Fabrication", "Military", [("FusionFuelCell", 2), ("QuantumProcessor_Mk2", 1)], "QuantumResearch", 4, "_Mk2")
+_mk("ShipShieldGenerator", "_Mk3", 6, "Fabrication", "Military", [("ShieldCapacitor_Mk2", 1), ("AdvancedSensors_Mk3", 1)], "QuantumResearch", 4, "_Mk2")
+_mk("Thruster", "_Mk3", 6, "Fabrication", "Military", [("TungstenCarbide", 2), ("CobaltMagnet", 1)], "QuantumResearch", 4, "_Mk2")
+_mk("FuelTank", "_Mk3", 6, "Fabrication", "Military", [("AluminiumComposite", 1), ("EnrichedUranium", 1)], "QuantumResearch", 4, "_Mk2")
+_mk("ArmourHull", "_Mk3", 6, "Fabrication", "Military", [("ArmourPlate", 4), ("CarbonFibre", 2)], "QuantumResearch", 4, "_Mk2")
+
+# --- Weapons upgrades (base T4; Mk2->T5, Mk3->T6) ---
+_mk("TurretWeapon", "_Mk2", 5, "Fabrication", "Military", [("TargetingComputer", 1), ("ArmourPlate", 1)], "AdvancedResearch", 3, None)
+_mk("EnergyCannon", "_Mk2", 5, "Fabrication", "Military", [("SuperConductingWire_Mk2", 2), ("AdvancedPowerCells", 1)], "AdvancedResearch", 3, None)
+_mk("TriLaser", "_Mk2", 5, "Fabrication", "Military", [("SuperConductingWire_Mk2", 2), ("Microchips_Mk2", 1)], "AdvancedResearch", 3, None)
+_mk("MissileLauncher", "_Mk2", 5, "Fabrication", "Military", [("ServoActuator_Mk2", 1), ("TargetingComputer", 1)], "AdvancedResearch", 3, None)
+_mk("Railgun", "_Mk2", 5, "Fabrication", "Military", [("SuperConductingWire_Mk2", 3), ("CobaltMagnet", 1)], "AdvancedResearch", 3, None)
+_mk("PlasmaCannon", "_Mk2", 5, "Fabrication", "Military", [("SuperConductingWire_Mk2", 2), ("AdvancedPowerCells", 2)], "AdvancedResearch", 3, None)
+_mk("TorpedoLauncher", "_Mk2", 5, "Fabrication", "Military", [("MissileLauncher_Mk2", 1), ("CobaltMagnet", 1)], "AdvancedResearch", 3, None)
+_mk("PointDefenceLaser", "_Mk2", 5, "Fabrication", "Military", [("TriLaser_Mk2", 1), ("TargetingComputer_Mk2", 1)], "AdvancedResearch", 3, None)
+
+_mk("TurretWeapon", "_Mk3", 6, "Fabrication", "Military", [("QuantumProcessor", 1), ("ArmourPlate", 2)], "QuantumResearch", 4, "_Mk2")
+_mk("EnergyCannon", "_Mk3", 6, "Fabrication", "Military", [("SuperConductingWire_Mk2", 3), ("FusionFuelCell", 1)], "QuantumResearch", 4, "_Mk2")
+_mk("TriLaser", "_Mk3", 6, "Fabrication", "Military", [("SuperConductingWire_Mk2", 3), ("TargetingComputer", 1)], "QuantumResearch", 4, "_Mk2")
+_mk("MissileLauncher", "_Mk3", 6, "Fabrication", "Military", [("ServoActuator_Mk2", 2), ("FusionFuelCell", 1)], "QuantumResearch", 4, "_Mk2")
+_mk("Railgun", "_Mk3", 6, "Fabrication", "Military", [("SuperConductingWire_Mk2", 3), ("TungstenCarbide", 3)], "QuantumResearch", 4, "_Mk2")
+_mk("PlasmaCannon", "_Mk3", 6, "Fabrication", "Military", [("SuperConductingWire_Mk2", 2), ("FusionFuelCell", 1)], "QuantumResearch", 4, "_Mk2")
+_mk("TorpedoLauncher", "_Mk3", 6, "Fabrication", "Military", [("MissileLauncher_Mk2", 1), ("AdvancedSensors_Mk2", 1)], "QuantumResearch", 4, "_Mk2")
+_mk("PointDefenceLaser", "_Mk3", 6, "Fabrication", "Military", [("TriLaser_Mk2", 1), ("AdvancedSensors_Mk3", 1)], "QuantumResearch", 4, "_Mk2")
+
+# --- Defence upgrades (base T5; Mk2->T6) ---
+_mk("GravitationGenerator", "_Mk2", 6, "Reactor", "Technology", [("CobaltMagnet", 3), ("SuperConductingWire_Mk2", 2)], "QuantumResearch", 4, None)
 
 # =========================== Derived helper tables ==========================
 def cat(tier):
@@ -343,6 +440,20 @@ def check():
     if cycles:
         errors.append(f"Circular recipes: {cycles}")
 
+    # ---- research monotonicity ----
+    # ResearchRequired must exist, be a Set (research milestone), and its level
+    # must be < the recipe's level (an upgrade requires strictly prior research).
+    rlevels = {r["OutputItem"]: r["ResearchLevel"] for r in R}
+    rreq = {r["OutputItem"]: r["ResearchRequired"] for r in R}
+    for r in R:
+        req = r["ResearchRequired"]
+        if req is None:
+            continue
+        if req not in rlevels:
+            errors.append(f"{r['OutputItem']}: ResearchRequired '{req}' has no producer")
+        elif rlevels[req] > r["ResearchLevel"]:
+            errors.append(f"{r['OutputItem']}: research '{req}' level {rlevels[req]} > own {r['ResearchLevel']}")
+
     return errors
 
 
@@ -357,6 +468,8 @@ def build_recipes_with_ids():
             "ProducedIn": r["ProducedIn"],
             "Category": r["Category"],
             "Acquisition": r["Tier"] == 1,
+            "ResearchLevel": r["ResearchLevel"],
+            "ResearchRequired": r["ResearchRequired"],
             "Ingredients": r["Ingredients"],
         })
     return out
@@ -375,7 +488,7 @@ def main():
         "$schema": "http://json-schema.org/draft-07/schema#",
         "Title": "Adastrea Crafting & Building Tree",
         "Description": "Machine-readable crafting/building tree: raw extraction -> refined materials -> components & electronics -> ship parts -> weapons -> station construction parts -> modules -> station assembly. Authoritative generator: docs/11-TECHNICAL_SPECS/generate_crafting_tree.py",
-        "SchemaVersion": "1.1.0",
+        "SchemaVersion": "1.2.0",
         "LastUpdated": "2026-08-31",
         "ItemIDConvention": "^[A-Za-z][A-Za-z0-9_]*$",
         "NoteHelium3": "Existing trade asset uses 'Helium-3' (hyphen, violates ItemID regex). Crafting data canonicalizes to 'Helium3' and maps to DA_TradeItem_Helium-3.",

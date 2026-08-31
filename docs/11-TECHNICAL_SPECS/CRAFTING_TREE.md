@@ -55,6 +55,25 @@ station assembly. It is the design companion to the machine-readable
 | **6** | Station modules & assembly | `Fabrication`                        | Corridor, cargo bay, docking, reactor, turret, shield module, etc. |
 | **7** | Station assembly          | `Fabrication` (mega-fabrication)    | Trade, Industrial, Mining, Research, Defence, Colony stations |
 
+### Research / progression axis
+
+Independent of the construction tiers above, the tree has a **research ladder** that
+gates upgraded (Mk2/Mk3) versions of most functional items. Research is a real,
+consumable set of items produced by the **ScienceLab**:
+
+| Research item        | Level | Unlocks |
+|----------------------|-------|---------|
+| (base)               | 1     | All base recipes |
+| `ResearchData`       | 2     | Mk2 of components & electronics |
+| `AdvancedResearch`   | 3     | Mk3 of components; Mk2 of ship parts & weapons |
+| `QuantumResearch`    | 4     | Mk3 of ship parts, weapons, shields & defence |
+
+Every recipe in `CraftingTree.json` carries a `ResearchLevel` (1–4) and, when
+upgraded, a `ResearchRequired` item that must exist at a level ≤ the recipe's. This
+produces the "research more advanced ship parts / shields / weapons as the game
+progresses" loop: gather materials → build base gear → research milestones in a
+Science Lab → craft Mk2/Mk3 gear with strictly better output per material spent.
+
 ---
 
 ## 3. Acquisition — Where Raw Materials Come From
@@ -275,15 +294,17 @@ Reference tables from the canonical JSON. **Ingredient quantities are unit count
 
 ## 7. Verification
 
-The JSON (`Content/Data/CraftingTree.json`, **153 recipes across 7 tiers**) is validated by the
+The JSON (`Content/Data/CraftingTree.json`, **211 recipes across 7 tiers** — including **56 Mk2/Mk3 progression versions**, of which 58 recipes are research-gated) is validated by the
 `check_crafting_tree()` logic in `generate_crafting_tree.py` plus `tests/test_crafting_tree.py`:
 - ✅ All recipes have unique `RecipeID` and unique `OutputItem`.
 - ✅ Every `ItemID` matches `^[A-Za-z][A-Za-z0-9_]*$`.
 - ✅ No circular recipes (graph acyclic).
 - ✅ Every ingredient is produced by some recipe (nothing is an unproducible leaf
-  that is required).
+  that is required), including Mk versions and research items.
 - ✅ Tier monotonicity (ingredient tier ≤ output tier; equal-tier combination
   recipes are intentional, e.g. Electronics+Chips → BasicComputer).
+- ✅ Research monotonicity (`ResearchRequired` names a produced item at a level ≤
+  the recipe's own `ResearchLevel`).
 - ✅ Only the canonical `ProducedIn` module tags are used.
 
 ---

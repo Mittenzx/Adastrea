@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "Title": "Adastrea Crafting & Building Tree",
   "Description": "Machine-readable crafting/building tree: raw extraction -> refined materials -> components & electronics -> ship parts -> weapons -> station construction parts -> modules -> station assembly. Authoritative generator: docs/11-TECHNICAL_SPECS/generate_crafting_tree.py",
-  "SchemaVersion": "1.1.0",
+  "SchemaVersion": "1.2.0",
   "LastUpdated": "2026-08-31",
   "ItemIDConvention": "^[A-Za-z][A-Za-z0-9_]*$",
   "NoteHelium3": "Existing trade asset uses 'Helium-3' (hyphen, violates ItemID regex). Crafting data canonicalizes to 'Helium3' and maps to DA_TradeItem_Helium-3.",
@@ -37,6 +37,8 @@
       "ProducedIn": "ShipMining",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -47,6 +49,8 @@
       "ProducedIn": "ShipMining",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -57,6 +61,8 @@
       "ProducedIn": "ShipMining",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -67,6 +73,8 @@
       "ProducedIn": "ShipMining",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -77,6 +85,8 @@
       "ProducedIn": "ShipMining",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -87,6 +97,8 @@
       "ProducedIn": "ShipMining",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -97,6 +109,8 @@
       "ProducedIn": "ShipMining",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -107,6 +121,8 @@
       "ProducedIn": "ShipMining",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -117,6 +133,8 @@
       "ProducedIn": "ShipMining",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -127,6 +145,8 @@
       "ProducedIn": "ShipMining",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -137,6 +157,8 @@
       "ProducedIn": "ShipMining",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -147,6 +169,8 @@
       "ProducedIn": "ShipMining",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -157,6 +181,8 @@
       "ProducedIn": "ShipMining",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -167,6 +193,8 @@
       "ProducedIn": "ShipMining",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -177,6 +205,8 @@
       "ProducedIn": "ShipMining",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -187,6 +217,8 @@
       "ProducedIn": "ShipMining",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -197,6 +229,8 @@
       "ProducedIn": "ShipMining",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -207,6 +241,8 @@
       "ProducedIn": "ShipMining",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -217,6 +253,8 @@
       "ProducedIn": "ShipMining",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -227,6 +265,8 @@
       "ProducedIn": "ShipMining",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -237,6 +277,8 @@
       "ProducedIn": "ShipMining",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -247,6 +289,8 @@
       "ProducedIn": "GasHarvesting",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -257,6 +301,8 @@
       "ProducedIn": "GasHarvesting",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -267,6 +313,8 @@
       "ProducedIn": "GasHarvesting",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -277,6 +325,8 @@
       "ProducedIn": "GasHarvesting",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -287,6 +337,8 @@
       "ProducedIn": "GasHarvesting",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -297,6 +349,8 @@
       "ProducedIn": "IceCollection",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -307,6 +361,8 @@
       "ProducedIn": "OrganicFarming",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -317,6 +373,8 @@
       "ProducedIn": "OrganicFarming",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -327,6 +385,8 @@
       "ProducedIn": "OrganicFarming",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -337,6 +397,8 @@
       "ProducedIn": "Salvage",
       "Category": "Components",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -347,6 +409,8 @@
       "ProducedIn": "Salvage",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -357,6 +421,8 @@
       "ProducedIn": "Salvage",
       "Category": "RawMaterials",
       "Acquisition": true,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": []
     },
     {
@@ -367,6 +433,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "IronOre",
@@ -386,6 +454,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "CopperOre",
@@ -401,6 +471,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "NickelOre",
@@ -420,6 +492,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ZincOre",
@@ -435,6 +509,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ChromiumOre",
@@ -450,6 +526,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "AluminiumOre",
@@ -469,6 +547,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "GoldOre",
@@ -484,6 +564,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "SilverOre",
@@ -499,6 +581,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "TitaniumOre",
@@ -518,6 +602,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "TungstenOre",
@@ -537,6 +623,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "Platinum",
@@ -556,6 +644,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "Palladium",
@@ -575,6 +665,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "CobaltOre",
@@ -594,6 +686,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "UraniumOre",
@@ -613,6 +707,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "LithiumOre",
@@ -628,6 +724,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "Silicon",
@@ -643,6 +741,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "CarbonCrystal",
@@ -658,6 +758,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "Silicon",
@@ -677,6 +779,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "Silicon",
@@ -696,6 +800,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "Hydrogen",
@@ -711,6 +817,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "MethaneGas",
@@ -726,6 +834,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "NitrogenGas",
@@ -741,6 +851,8 @@
       "ProducedIn": "FuelDepot",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "Hydrogen",
@@ -760,6 +872,8 @@
       "ProducedIn": "SolarArray",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "SiliconWafer",
@@ -775,6 +889,8 @@
       "ProducedIn": "Reactor",
       "Category": "Technology",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "PowerCells",
@@ -794,6 +910,8 @@
       "ProducedIn": "Reactor",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "Helium3",
@@ -817,6 +935,8 @@
       "ProducedIn": "Processing",
       "Category": "Food",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "AlgaeBiomass",
@@ -832,6 +952,8 @@
       "ProducedIn": "Processing",
       "Category": "Food",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "OrganicBiomass",
@@ -851,6 +973,8 @@
       "ProducedIn": "Processing",
       "Category": "Food",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "SyntheticProtein",
@@ -870,6 +994,8 @@
       "ProducedIn": "Processing",
       "Category": "Food",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "FoodRations",
@@ -889,6 +1015,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "OrganicBiomass",
@@ -908,6 +1036,8 @@
       "ProducedIn": "Processing",
       "Category": "RefinedGoods",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "PlantFibre",
@@ -927,6 +1057,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "SteelAlloy",
@@ -942,6 +1074,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "TitaniumAlloy",
@@ -961,6 +1095,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "SteelAlloy",
@@ -980,6 +1116,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "NickelSteel",
@@ -999,6 +1137,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "SteelAlloy",
@@ -1018,6 +1158,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "NickelSteel",
@@ -1037,6 +1179,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "StructuralFrame",
@@ -1056,6 +1200,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ChromiumPlating",
@@ -1075,6 +1221,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "CopperWiring",
@@ -1094,6 +1242,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "CopperWiring",
@@ -1113,6 +1263,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "SiliconWafer",
@@ -1132,6 +1284,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "Electronics",
@@ -1155,6 +1309,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Technology",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "Microchips",
@@ -1174,6 +1330,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "BasicComputer",
@@ -1193,6 +1351,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "PowerCells",
@@ -1212,6 +1372,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Technology",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "Electronics",
@@ -1231,6 +1393,8 @@
       "ProducedIn": "ScienceLab",
       "Category": "Technology",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "Microchips",
@@ -1254,6 +1418,8 @@
       "ProducedIn": "ScienceLab",
       "Category": "Technology",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "Electronics",
@@ -1277,6 +1443,8 @@
       "ProducedIn": "ScienceLab",
       "Category": "Technology",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "QuantumProcessor",
@@ -1300,6 +1468,8 @@
       "ProducedIn": "ScienceLab",
       "Category": "Technology",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "AdvancedSensors",
@@ -1323,6 +1493,8 @@
       "ProducedIn": "Processing",
       "Category": "Medical",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "BioCompound",
@@ -1346,6 +1518,8 @@
       "ProducedIn": "Processing",
       "Category": "Medical",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "RefinedMedicine",
@@ -1369,6 +1543,8 @@
       "ProducedIn": "ScienceLab",
       "Category": "Medical",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "RefinedMedicine",
@@ -1388,6 +1564,8 @@
       "ProducedIn": "Processing",
       "Category": "Luxury",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "WaterIce",
@@ -1407,6 +1585,8 @@
       "ProducedIn": "Processing",
       "Category": "Luxury",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "WaterIce",
@@ -1426,6 +1606,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Luxury",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "GoldIngot",
@@ -1449,6 +1631,8 @@
       "ProducedIn": "Processing",
       "Category": "Luxury",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "SyntheticTextiles",
@@ -1468,6 +1652,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Luxury",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "CeramicTiles",
@@ -1491,6 +1677,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "StructuralFrame",
@@ -1514,6 +1702,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Military",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "CompositePlating",
@@ -1533,6 +1723,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Military",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ArmourPlate",
@@ -1552,6 +1744,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Military",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "SteelAlloy",
@@ -1575,6 +1769,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Military",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "Thruster",
@@ -1598,6 +1794,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Military",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "AdvancedPowerCells",
@@ -1625,6 +1823,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Military",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "BasicComputer",
@@ -1648,6 +1848,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Military",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "SteelAlloy",
@@ -1671,6 +1873,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Military",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "StructuralFrame",
@@ -1694,6 +1898,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Military",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "HydraulicPiston",
@@ -1717,6 +1923,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Military",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "AdvancedSensors",
@@ -1740,6 +1948,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Military",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "SteelAlloy",
@@ -1763,6 +1973,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Military",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "TurretWeapon",
@@ -1786,6 +1998,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Military",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "EnergyCannon",
@@ -1809,6 +2023,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Military",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "TurretWeapon",
@@ -1836,6 +2052,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Military",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "TungstenCarbide",
@@ -1859,6 +2077,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Military",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "EnergyCannon",
@@ -1882,6 +2102,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Military",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "MissileLauncher",
@@ -1905,6 +2127,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Military",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "AdvancedPowerCells",
@@ -1928,6 +2152,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Military",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "TriLaser",
@@ -1951,6 +2177,8 @@
       "ProducedIn": "ScienceLab",
       "Category": "Contraband",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "EnergyCannon",
@@ -1970,6 +2198,8 @@
       "ProducedIn": "ScienceLab",
       "Category": "Contraband",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "QuantumProcessor",
@@ -1993,6 +2223,8 @@
       "ProducedIn": "ScienceLab",
       "Category": "Technology",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "QuantumProcessor",
@@ -2012,6 +2244,8 @@
       "ProducedIn": "ScienceLab",
       "Category": "Data",
       "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "AdvancedSensors",
@@ -2031,6 +2265,8 @@
       "ProducedIn": "ScienceLab",
       "Category": "Technology",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "AICores",
@@ -2054,6 +2290,8 @@
       "ProducedIn": "ScienceLab",
       "Category": "Data",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "AICores",
@@ -2077,6 +2315,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "StructuralFrame",
@@ -2100,6 +2340,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ConstructionMaterials",
@@ -2119,6 +2361,8 @@
       "ProducedIn": "Reactor",
       "Category": "Technology",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "AdvancedPowerCells",
@@ -2142,6 +2386,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "Electronics",
@@ -2165,6 +2411,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "StationHullFrame",
@@ -2184,6 +2432,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ReinforcedGirder",
@@ -2203,6 +2453,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "StationHullFrame",
@@ -2222,6 +2474,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "HydraulicPiston",
@@ -2245,6 +2499,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -2268,6 +2524,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -2287,6 +2545,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "SteelAlloy",
@@ -2310,6 +2570,8 @@
       "ProducedIn": "Reactor",
       "Category": "Technology",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "CobaltMagnet",
@@ -2333,6 +2595,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Components",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ShipShieldGenerator",
@@ -2356,6 +2620,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Other",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -2375,6 +2641,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Other",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -2398,6 +2666,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Other",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -2421,6 +2691,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Other",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -2440,6 +2712,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Other",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -2463,6 +2737,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Other",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -2486,6 +2762,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Other",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -2509,6 +2787,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Other",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -2532,6 +2812,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Other",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "PowerCore",
@@ -2551,6 +2833,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Other",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "PowerCells",
@@ -2574,6 +2858,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Other",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -2597,6 +2883,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Other",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -2620,6 +2908,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Other",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -2643,6 +2933,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Other",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "TurretWeapon",
@@ -2662,6 +2954,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Other",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ShieldEmitter",
@@ -2685,6 +2979,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Other",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "DockingBayModule",
@@ -2708,6 +3004,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Other",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ProcessingModule",
@@ -2731,6 +3029,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Other",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ProcessingModule",
@@ -2754,6 +3054,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Other",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "ScienceLabModule",
@@ -2777,6 +3079,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Other",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "TurretModule",
@@ -2800,6 +3104,8 @@
       "ProducedIn": "Fabrication",
       "Category": "Other",
       "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
       "Ingredients": [
         {
           "ItemID": "HabitationModule",
@@ -2812,6 +3118,1704 @@
         {
           "ItemID": "LifeSupportUnit",
           "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_154_AdvancedResearch",
+      "OutputItem": "AdvancedResearch",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "ScienceLab",
+      "Category": "Data",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "ResearchData",
+      "Ingredients": [
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedSensors",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ResearchData",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_155_QuantumResearch",
+      "OutputItem": "QuantumResearch",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "ScienceLab",
+      "Category": "Data",
+      "Acquisition": false,
+      "ResearchLevel": 4,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedAICore",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_156_Electronics_Mk2",
+      "OutputItem": "Electronics_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ResearchData",
+      "Ingredients": [
+        {
+          "ItemID": "Electronics",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire",
+          "Qty": 2
+        },
+        {
+          "ItemID": "Microchips",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ResearchData",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_157_Microchips_Mk2",
+      "OutputItem": "Microchips_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ResearchData",
+      "Ingredients": [
+        {
+          "ItemID": "Microchips",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SiliconWafer",
+          "Qty": 3
+        },
+        {
+          "ItemID": "PalladiumCatalyst",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ResearchData",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_158_CircuitBoard_Mk2",
+      "OutputItem": "CircuitBoard_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ResearchData",
+      "Ingredients": [
+        {
+          "ItemID": "CircuitBoard",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Electronics_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Microchips_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "PalladiumCatalyst",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ResearchData",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_159_MemoryUnit_Mk2",
+      "OutputItem": "MemoryUnit_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ResearchData",
+      "Ingredients": [
+        {
+          "ItemID": "MemoryUnit",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Microchips_Mk2",
+          "Qty": 2
+        },
+        {
+          "ItemID": "SiliconWafer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ResearchData",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_160_ControlUnit_Mk2",
+      "OutputItem": "ControlUnit_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ResearchData",
+      "Ingredients": [
+        {
+          "ItemID": "ControlUnit",
+          "Qty": 1
+        },
+        {
+          "ItemID": "BasicComputer_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ResearchData",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_161_PowerDistributionUnit_Mk2",
+      "OutputItem": "PowerDistributionUnit_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ResearchData",
+      "Ingredients": [
+        {
+          "ItemID": "PowerDistributionUnit",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedPowerCells",
+          "Qty": 2
+        },
+        {
+          "ItemID": "Electronics_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ResearchData",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_162_BasicComputer_Mk2",
+      "OutputItem": "BasicComputer_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ResearchData",
+      "Ingredients": [
+        {
+          "ItemID": "BasicComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Electronics_Mk2",
+          "Qty": 2
+        },
+        {
+          "ItemID": "Microchips_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ResearchData",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_163_AdvancedSensors_Mk2",
+      "OutputItem": "AdvancedSensors_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ResearchData",
+      "Ingredients": [
+        {
+          "ItemID": "AdvancedSensors",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Electronics_Mk2",
+          "Qty": 2
+        },
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ResearchData",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_164_QuantumProcessor_Mk2",
+      "OutputItem": "QuantumProcessor_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ResearchData",
+      "Ingredients": [
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Microchips_Mk2",
+          "Qty": 4
+        },
+        {
+          "ItemID": "PlatinumCatalyst",
+          "Qty": 2
+        },
+        {
+          "ItemID": "RareEarthElements",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ResearchData",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_165_TargetingComputer_Mk2",
+      "OutputItem": "TargetingComputer_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ResearchData",
+      "Ingredients": [
+        {
+          "ItemID": "TargetingComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedSensors_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ResearchData",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_166_NavigationComputer_Mk2",
+      "OutputItem": "NavigationComputer_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ResearchData",
+      "Ingredients": [
+        {
+          "ItemID": "NavigationComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedSensors_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ResearchData",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_167_ServoActuator_Mk2",
+      "OutputItem": "ServoActuator_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ResearchData",
+      "Ingredients": [
+        {
+          "ItemID": "ServoActuator",
+          "Qty": 1
+        },
+        {
+          "ItemID": "HydraulicPiston",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ResearchData",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_168_SuperConductingWire_Mk2",
+      "OutputItem": "SuperConductingWire_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ResearchData",
+      "Ingredients": [
+        {
+          "ItemID": "SuperConductingWire",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CobaltMagnet",
+          "Qty": 3
+        },
+        {
+          "ItemID": "CopperWiring",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ResearchData",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_169_Electronics_Mk3",
+      "OutputItem": "Electronics_Mk3",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "Electronics_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Electronics_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_170_Microchips_Mk3",
+      "OutputItem": "Microchips_Mk3",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "Microchips_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Microchips_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_171_CircuitBoard_Mk3",
+      "OutputItem": "CircuitBoard_Mk3",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "CircuitBoard_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CircuitBoard_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_172_MemoryUnit_Mk3",
+      "OutputItem": "MemoryUnit_Mk3",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "MemoryUnit_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "MemoryUnit_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_173_ControlUnit_Mk3",
+      "OutputItem": "ControlUnit_Mk3",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "ControlUnit_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ControlUnit_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_174_PowerDistributionUnit_Mk3",
+      "OutputItem": "PowerDistributionUnit_Mk3",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "PowerDistributionUnit_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "PowerDistributionUnit_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_175_BasicComputer_Mk3",
+      "OutputItem": "BasicComputer_Mk3",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "BasicComputer_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "BasicComputer_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_176_AdvancedSensors_Mk3",
+      "OutputItem": "AdvancedSensors_Mk3",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "AdvancedSensors_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedSensors_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_177_QuantumProcessor_Mk3",
+      "OutputItem": "QuantumProcessor_Mk3",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "QuantumProcessor_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "RareEarthElements",
+          "Qty": 2
+        },
+        {
+          "ItemID": "PlatinumCatalyst",
+          "Qty": 2
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_178_ShipEngine_Mk2",
+      "OutputItem": "ShipEngine_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "ShipEngine",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Thruster",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ReinforcedGirder",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_179_ShipReactor_Mk2",
+      "OutputItem": "ShipReactor_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "ShipReactor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "FusionFuelCell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "CobaltMagnet",
+          "Qty": 1
+        },
+        {
+          "ItemID": "StructuralFrame",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_180_ShipShieldGenerator_Mk2",
+      "OutputItem": "ShipShieldGenerator_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "ShipShieldGenerator",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ShieldCapacitor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedSensors_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_181_Thruster_Mk2",
+      "OutputItem": "Thruster_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "Thruster",
+          "Qty": 1
+        },
+        {
+          "ItemID": "TungstenCarbide",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ServoActuator_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_182_FuelTank_Mk2",
+      "OutputItem": "FuelTank_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "FuelTank",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ReinforcedGirder",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CeramicTiles",
+          "Qty": 2
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_183_CargoPod_Mk2",
+      "OutputItem": "CargoPod_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "CargoPod",
+          "Qty": 1
+        },
+        {
+          "ItemID": "StructuralFrame",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ReinforcedGirder",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_184_LifeSupportPod_Mk2",
+      "OutputItem": "LifeSupportPod_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "LifeSupportPod",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Vaccines",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CompositePlating",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_185_ShipComponents_Mk2",
+      "OutputItem": "ShipComponents_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "ShipComponents",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ArmourPlate",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Microchips_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ReinforcedGirder",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_186_ArmourHull_Mk2",
+      "OutputItem": "ArmourHull_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "ArmourHull",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ArmourPlate",
+          "Qty": 4
+        },
+        {
+          "ItemID": "CarbonFibre",
+          "Qty": 2
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_187_HullPlating_Mk2",
+      "OutputItem": "HullPlating_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "HullPlating",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ArmourPlate",
+          "Qty": 2
+        },
+        {
+          "ItemID": "TitaniumAlloy",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_188_ShieldCapacitor_Mk2",
+      "OutputItem": "ShieldCapacitor_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "ShieldCapacitor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CobaltMagnet",
+          "Qty": 3
+        },
+        {
+          "ItemID": "SuperConductingWire_Mk2",
+          "Qty": 2
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_189_ShipEngine_Mk3",
+      "OutputItem": "ShipEngine_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 4,
+      "ResearchRequired": "QuantumResearch",
+      "Ingredients": [
+        {
+          "ItemID": "ShipEngine_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ReinforcedGirder",
+          "Qty": 2
+        },
+        {
+          "ItemID": "FusionFuelCell",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_190_ShipReactor_Mk3",
+      "OutputItem": "ShipReactor_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 4,
+      "ResearchRequired": "QuantumResearch",
+      "Ingredients": [
+        {
+          "ItemID": "ShipReactor_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "FusionFuelCell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "QuantumProcessor_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_191_ShipShieldGenerator_Mk3",
+      "OutputItem": "ShipShieldGenerator_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 4,
+      "ResearchRequired": "QuantumResearch",
+      "Ingredients": [
+        {
+          "ItemID": "ShipShieldGenerator_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ShieldCapacitor_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedSensors_Mk3",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_192_Thruster_Mk3",
+      "OutputItem": "Thruster_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 4,
+      "ResearchRequired": "QuantumResearch",
+      "Ingredients": [
+        {
+          "ItemID": "Thruster_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "TungstenCarbide",
+          "Qty": 2
+        },
+        {
+          "ItemID": "CobaltMagnet",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_193_FuelTank_Mk3",
+      "OutputItem": "FuelTank_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 4,
+      "ResearchRequired": "QuantumResearch",
+      "Ingredients": [
+        {
+          "ItemID": "FuelTank_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AluminiumComposite",
+          "Qty": 1
+        },
+        {
+          "ItemID": "EnrichedUranium",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_194_ArmourHull_Mk3",
+      "OutputItem": "ArmourHull_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 4,
+      "ResearchRequired": "QuantumResearch",
+      "Ingredients": [
+        {
+          "ItemID": "ArmourHull_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ArmourPlate",
+          "Qty": 4
+        },
+        {
+          "ItemID": "CarbonFibre",
+          "Qty": 2
+        },
+        {
+          "ItemID": "QuantumResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_195_TurretWeapon_Mk2",
+      "OutputItem": "TurretWeapon_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "TurretWeapon",
+          "Qty": 1
+        },
+        {
+          "ItemID": "TargetingComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ArmourPlate",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_196_EnergyCannon_Mk2",
+      "OutputItem": "EnergyCannon_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "EnergyCannon",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire_Mk2",
+          "Qty": 2
+        },
+        {
+          "ItemID": "AdvancedPowerCells",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_197_TriLaser_Mk2",
+      "OutputItem": "TriLaser_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "TriLaser",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire_Mk2",
+          "Qty": 2
+        },
+        {
+          "ItemID": "Microchips_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_198_MissileLauncher_Mk2",
+      "OutputItem": "MissileLauncher_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "MissileLauncher",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ServoActuator_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "TargetingComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_199_Railgun_Mk2",
+      "OutputItem": "Railgun_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "Railgun",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire_Mk2",
+          "Qty": 3
+        },
+        {
+          "ItemID": "CobaltMagnet",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_200_PlasmaCannon_Mk2",
+      "OutputItem": "PlasmaCannon_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "PlasmaCannon",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire_Mk2",
+          "Qty": 2
+        },
+        {
+          "ItemID": "AdvancedPowerCells",
+          "Qty": 2
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_201_TorpedoLauncher_Mk2",
+      "OutputItem": "TorpedoLauncher_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "TorpedoLauncher",
+          "Qty": 1
+        },
+        {
+          "ItemID": "MissileLauncher_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CobaltMagnet",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_202_PointDefenceLaser_Mk2",
+      "OutputItem": "PointDefenceLaser_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AdvancedResearch",
+      "Ingredients": [
+        {
+          "ItemID": "PointDefenceLaser",
+          "Qty": 1
+        },
+        {
+          "ItemID": "TriLaser_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "TargetingComputer_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_203_TurretWeapon_Mk3",
+      "OutputItem": "TurretWeapon_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 4,
+      "ResearchRequired": "QuantumResearch",
+      "Ingredients": [
+        {
+          "ItemID": "TurretWeapon_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ArmourPlate",
+          "Qty": 2
+        },
+        {
+          "ItemID": "QuantumResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_204_EnergyCannon_Mk3",
+      "OutputItem": "EnergyCannon_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 4,
+      "ResearchRequired": "QuantumResearch",
+      "Ingredients": [
+        {
+          "ItemID": "EnergyCannon_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire_Mk2",
+          "Qty": 3
+        },
+        {
+          "ItemID": "FusionFuelCell",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_205_TriLaser_Mk3",
+      "OutputItem": "TriLaser_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 4,
+      "ResearchRequired": "QuantumResearch",
+      "Ingredients": [
+        {
+          "ItemID": "TriLaser_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire_Mk2",
+          "Qty": 3
+        },
+        {
+          "ItemID": "TargetingComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_206_MissileLauncher_Mk3",
+      "OutputItem": "MissileLauncher_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 4,
+      "ResearchRequired": "QuantumResearch",
+      "Ingredients": [
+        {
+          "ItemID": "MissileLauncher_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ServoActuator_Mk2",
+          "Qty": 2
+        },
+        {
+          "ItemID": "FusionFuelCell",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_207_Railgun_Mk3",
+      "OutputItem": "Railgun_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 4,
+      "ResearchRequired": "QuantumResearch",
+      "Ingredients": [
+        {
+          "ItemID": "Railgun_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire_Mk2",
+          "Qty": 3
+        },
+        {
+          "ItemID": "TungstenCarbide",
+          "Qty": 3
+        },
+        {
+          "ItemID": "QuantumResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_208_PlasmaCannon_Mk3",
+      "OutputItem": "PlasmaCannon_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 4,
+      "ResearchRequired": "QuantumResearch",
+      "Ingredients": [
+        {
+          "ItemID": "PlasmaCannon_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire_Mk2",
+          "Qty": 2
+        },
+        {
+          "ItemID": "FusionFuelCell",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_209_TorpedoLauncher_Mk3",
+      "OutputItem": "TorpedoLauncher_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 4,
+      "ResearchRequired": "QuantumResearch",
+      "Ingredients": [
+        {
+          "ItemID": "TorpedoLauncher_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "MissileLauncher_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedSensors_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_210_PointDefenceLaser_Mk3",
+      "OutputItem": "PointDefenceLaser_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 4,
+      "ResearchRequired": "QuantumResearch",
+      "Ingredients": [
+        {
+          "ItemID": "PointDefenceLaser_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "TriLaser_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedSensors_Mk3",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_211_GravitationGenerator_Mk2",
+      "OutputItem": "GravitationGenerator_Mk2",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Reactor",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 4,
+      "ResearchRequired": "QuantumResearch",
+      "Ingredients": [
+        {
+          "ItemID": "GravitationGenerator",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CobaltMagnet",
+          "Qty": 3
+        },
+        {
+          "ItemID": "SuperConductingWire_Mk2",
+          "Qty": 2
+        },
+        {
+          "ItemID": "QuantumResearch",
+          "Qty": 1
         }
       ]
     }
