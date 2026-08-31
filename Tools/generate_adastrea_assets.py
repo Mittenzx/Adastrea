@@ -694,6 +694,32 @@ def build_carcass(sz):
     return [hull, spine], (lx, ly, lz, locz)
 
 
+def build_cargo_carcass(sz, outname):
+    """Cargo/trading-specialist carcass — a freight-hauler profile: broad boxy
+    cargo-hold hull with a raised dorsal command deck and flanking container
+    racks, so a trade ship reads as a 'box hauler' distinct from the fighter/
+    corvette wedges. Returns the finalized carcass (obj, path)."""
+    s = SIZE_CLASSES[sz]
+    lx, ly, lz = s['carcass']
+    locz = s['z']
+    k = sc(sz)
+    # broad, slightly slab-sided cargo hull
+    hull = box(f"Carg_{sz}_Hull", lx*1.1, ly, lz*0.85, loc=(0, 0, locz)); bevel(hull, 8, 3)
+    # raised dorsal command/crew deck (trading bridge)
+    cmd = box(f"Carg_{sz}_Cmd", lx*0.5, ly*0.34, lz*0.5, loc=(0, ly*0.16, locz + lz*0.55)); bevel(cmd, 4, 2)
+    # forward sensor/radome stalk + aft engine mounting boxer
+    rad = cyl("Carg_Rad", lz*0.12, lz*0.5, loc=(0, ly*0.4, locz + lz*0.75), verts=12); bevel(rad, 2, 1)
+    aft = box("Carg_Aft", lx*0.5, lz*0.9, lz*0.4, loc=(0, -ly*0.34, locz)); bevel(aft, 4, 2)
+    objs = [hull, cmd, rad, aft]
+    # dorsally-mounted container pods (banked) on both flanks
+    for side in (-1, 1):
+        for i, dy in enumerate((0.22, -0.10)):
+            pod = box(f"Carg_Pod{side}{i}", lx*0.30, ly*0.22, lz*0.34,
+                      loc=(side*lx*0.52, ly*dy, locz + lz*0.42)); bevel(pod, 3, 2)
+            objs.append(pod)
+    return finalize_part(objs, f"{outname}_Carcass", "M_Hull")
+
+
 def build_corvette_carcass(sz, outname):
     """Corvette carcass — longer, wedge-fore, twin-split aft (frigate profile)."""
     s = SIZE_CLASSES[sz]
@@ -2266,6 +2292,27 @@ def main():
             {'engine': True, 'cargo': False, 'weapon': True, 'weapon_twin': True,
              'sensor': True, 'sensor_asym': True}),
     }
+    # ---- Cargo / trading ship line (all sizes) — cargo-specialist haulers ----
+    # Each uses build_cargo_carcass (broad box-hauler profile) + a cargo variant
+    # suited to its size class, so the trade fleet reads as containerized haulers.
+    ship_parts["SM_Ship_Courier_01"] = assemble_ship('small',
+        'SM_Ship_Courier_01', {'engine': True, 'cargo': True, 'cargo_variant': 'flat_rack',
+                               'sensor': True, 'reactor': True},
+        carcass_builder=build_cargo_carcass)
+    ship_parts["SM_Ship_CargoFreighter_01"] = assemble_ship('medium',
+        'SM_Ship_CargoFreighter_01', {'engine': True, 'cargo': True, 'cargo_variant': 'containers',
+                                      'sensor': True, 'reactor': True, 'weapon': True},
+        carcass_builder=build_cargo_carcass)
+    ship_parts["SM_Ship_HeavyHauler_01"] = assemble_ship('corvette',
+        'SM_Ship_HeavyHauler_01', {'engine': True, 'cargo': True, 'cargo_variant': 'bulk_tank',
+                                   'sensor': True, 'reactor': True, 'weapon': True,
+                                   'weapon_twin': True},
+        carcass_builder=build_cargo_carcass)
+    ship_parts["SM_Ship_BulkCarrier_01"] = assemble_ship('large',
+        'SM_Ship_BulkCarrier_01', {'engine': True, 'cargo': True, 'cargo_variant': 'containers',
+                                   'sensor': True, 'reactor': True, 'weapon': True},
+        carcass_builder=build_cargo_carcass)
+    ship_parts = ship_parts
     for ship_name, parts in ship_parts.items():
         for obj, out in parts:
             print(f"  {ship_name}: {os.path.basename(out)} ({os.path.getsize(out) if os.path.exists(out) else 0} B)")
@@ -2283,6 +2330,15 @@ def main():
                                              'weapon_twin': True, 'sensor': True, 'reactor': True}),
         "SM_Ship_Miner_01": ('corvette', {'engine': True, 'cargo': True, 'drill': True,
                                           'mining_laser': True, 'sensor': True}),
+        "SM_Ship_Courier_01": ('small', {'engine': True, 'cargo': True,
+                                          'cargo_variant': 'flat_rack', 'sensor': True}),
+        "SM_Ship_CargoFreighter_01": ('medium', {'engine': True, 'cargo': True,
+                                          'sensor': True, 'reactor': True}),
+        "SM_Ship_HeavyHauler_01": ('corvette', {'engine': True, 'cargo': True,
+                                          'cargo_variant': 'bulk_tank', 'sensor': True,
+                                          'reactor': True, 'weapon': True}),
+        "SM_Ship_BulkCarrier_01": ('large', {'engine': True, 'cargo': True,
+                                          'sensor': True, 'reactor': True}),
     }
     assembled_count = 0
     for name, (sz, opts) in assembled_specs.items():
