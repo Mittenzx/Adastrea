@@ -48,7 +48,8 @@ docs/
 │   ├── ECONOMY_SYSTEM.md
 │   ├── DATA_ASSET_GUIDE.md
 │   ├── MODULE_BUILDER_DATA_CONTRACT.md   # In-game module-builder spec (for main)
-│   └── SHIP_TEXTURE_SKIN_NEXTLEVEL_PLAN.md # X4-benchmarked texture/skin roadmap
+│   ├── SHIP_TEXTURE_SKIN_NEXTLEVEL_PLAN.md # X4-benchmarked texture/skin roadmap
+│   └── SHIP_UV_COMPOSITION_ANALYSIS.md    # UV symmetry/consistency diagnosis + fix
 ├── 12-ANTI_PATTERNS.md
 ├── 13-CRITICAL_REVIEW_SUMMARY.md
 └── 14-ARCHIVE/                 # All legacy docs (500+ files)
