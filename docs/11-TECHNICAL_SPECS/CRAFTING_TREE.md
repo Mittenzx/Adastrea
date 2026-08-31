@@ -62,22 +62,35 @@ the design companion to the machine-readable
 
 ### Research / progression axis
 
-Independent of the construction tiers above, the tree has a **research ladder** that
-gates upgraded (Mk2/Mk3) versions of most functional items. Research is a real,
-consumable set of items produced by the **ScienceLab**:
+Independent of the construction tiers above, the tree has a **research system** built
+around **specialized labs**: each type of science/research lab unlocks a **different
+breakthrough domain**. A domain's breakthroughs are real, consumable items produced
+inside that lab, and they gate the upgraded (Mk2/Mk3) versions of that domain's
+equipment.
 
-| Research item        | Level | Unlocks |
-|----------------------|-------|---------|
-| (base)               | 1     | All base recipes |
-| `ResearchData`       | 2     | Mk2 of components & electronics |
-| `AdvancedResearch`   | 3     | Mk3 of components; Mk2 of ship parts & weapons |
-| `QuantumResearch`    | 4     | Mk3 of ship parts, weapons, shields & defence |
+| Lab (`ASpaceStationModule`) | Domain breakthrough (rl2 / rl3) | Unlocks Mk2/Mk3 of |
+|-----------------------------|-------------------------------|--------------------|
+| `PhysicsLab` (PhysicsLabModule) | `PropulsionResearch` / `AdvancedPropulsionResearch` | Engines, reactors, thrusters, fuel tanks |
+| `MaterialsLab` (MaterialsLabModule) | `MaterialsResearch` / `NanoMaterialsResearch` | Hulls, plating, cargo pods, life-support, ship components |
+| `ElectronicsLab` (ElectronicsLabModule) | `ComputingResearch` / `QuantumComputingResearch` | Electronics, chips, boards, computers, sensors, processors |
+| `WeaponsLab` (WeaponsLabModule) | `DefenceResearch` / `AdvancedDefenceResearch` | Turrets, cannons, missiles, shields, grav-generation |
+| `BiologyLab` (BiologyLabModule) | `BioResearch` / `AdvancedBioResearch` | Refined medicine, supplies, vaccines |
+| `ScienceLab` (ScienceLabModule) | `ResearchData` (generic base) | — (base tech line) |
 
-Every recipe in `CraftingTree.json` carries a `ResearchLevel` (1–4) and, when
-upgraded, a `ResearchRequired` item that must exist at a level ≤ the recipe's. This
-produces the "research more advanced ship parts / shields / weapons as the game
-progresses" loop: gather materials → build base gear → research milestones in a
-Science Lab → craft Mk2/Mk3 gear with strictly better output per material spent.
+Each lab module is itself a craftable **Tier-6 station module**, built in
+`Fabrication`. A research **breakthrough** is produced **inside** its own lab
+(e.g. PropulsionResearch from a `PhysicsLab`), and is consumed (required) by the
+Mk2/Mk3 recipes of that domain. Research **levels**: rl2 breakthroughs unlock Mk2
+versions; rl3 breakthroughs unlock Mk3 versions. Every recipe carries a
+`ResearchLevel` (1–4) and, when upgraded, a `ResearchRequired` item at a level ≤
+its own.
+
+**Cross-lab coupling is intentional**: every rl3 breakthrough also requires
+high-tier computing (`QuantumProcessor_Mk2`, unlocked by the ElectronicsLab), so a
+player chasing late-game tech must stand up more than one lab type. The resulting
+loop: gather mats → build base gear → construct a specialized lab → produce its
+breakthrough → craft Mk2/Mk3 gear in that domain (then branch to other labs for the
+rest).
 
 ---
 
@@ -299,7 +312,7 @@ Reference tables from the canonical JSON. **Ingredient quantities are unit count
 
 ## 7. Verification
 
-The JSON (`Content/Data/CraftingTree.json`, **205 recipes across 6 tiers** — including **56 Mk2/Mk3 progression versions**, of which 58 recipes are research-gated; no whole-station assembly recipes) is validated by the
+The JSON (`Content/Data/CraftingTree.json`, **227 recipes across 6 tiers** — including the Mk2/Mk3 progression versions and the 5 specialized research-lab domains + breakthroughs; no whole-station assembly recipes) is validated by the
 `check_crafting_tree()` logic in `generate_crafting_tree.py` plus `tests/test_crafting_tree.py`:
 - ✅ All recipes have unique `RecipeID` and unique `OutputItem`.
 - ✅ Every `ItemID` matches `^[A-Za-z][A-Za-z0-9_]*$`.

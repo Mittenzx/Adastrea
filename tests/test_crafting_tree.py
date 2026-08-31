@@ -21,6 +21,7 @@ ITEM_ID_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]*$")
 PRODUCED_IN_TAGS = {
     "ShipMining", "GasHarvesting", "IceCollection", "OrganicFarming", "Salvage",
     "Processing", "Fabrication", "Reactor", "SolarArray", "ScienceLab", "FuelDepot",
+    "PhysicsLab", "MaterialsLab", "ElectronicsLab", "WeaponsLab", "BiologyLab",
 }
 
 
