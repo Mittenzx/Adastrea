@@ -309,9 +309,12 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     AO = np.clip(AO, 0.05, 1.0)
 
     # ---- optional cyberpunk / industrial overlays ----
-    # lit window grid — framed viewports that actually read as windows: a dark
-    # bezel ring around each pane, a small mullion crossbar, and separate LIT
-    # (cool/warm glow, emissive) vs DARK (unlit but frame-visible) windows.
+    # STARSHIP strip viewports — NOT house windows. These are long, narrow
+    # horizontal band windows set into the hull like armored pressure-rated
+    # viewports: a slim raised frame (thick top+bottom rail), glass that's either
+    # lit (cool/warm interior light) or dark (unlit/reflective), and only thin
+    # vertical stiffener mullions at intervals (NOT a centered crossbar). They run
+    # along the hull as bands, recessed slightly, rather than being square panes.
     if variant.get('windows'):
         wc = variant['windows']
         cols_n = wc.get('cols', 12)
@@ -319,45 +322,48 @@ def gen_texture_set(name, variant, size=2048, seed=1):
         cool = np.array(wc.get('cool', [0.3, 0.65, 1.0]))
         warm = np.array(wc.get('warm', [1.0, 0.6, 0.25]))
         litfrac = wc.get('frac', 0.5)
-        framing = wc.get('frame_thick', max(4, int(wcell*0.09)))  # bezel thickness
-        row_step = max(int(wcell*1.25), 1)
-        for ri, j0 in enumerate(range(wcell//2 + wcell, H - wcell, row_step)):
-            stagger = (wcell//2) if ri % 2 else 0
+        density = wc.get('density', 0.9)
+        rail = max(3, int(wcell*0.06))          # armored top/bottom rail thickness
+        band_h = max(4, int(wcell*0.24))        # glass band height (narrow!)
+        band_w = int(wcell*0.85)                # glass band width (long)
+        mull = max(1, int(wcell*0.025))         # thin vertical stiffener
+        row_step = max(int(wcell*1.6), 2)
+        for ri, j0 in enumerate(range(wcell//2 + wcell, H - wcell*2, row_step)):
+            stagger = int(wcell//2) if ri % 2 else int(rng.integers(0, wcell//3))
             for i in range(wcell//2 + stagger + wcell, W - wcell, wcell):
-                if rng.random() > wc.get('density', 0.85):
+                if rng.random() > density:
                     continue
-                whh = int(wcell*0.36); www = int(wcell*0.42)
-                r0 = min(j0, H-4); c0 = min(i, W-4)
-                r1 = min(r0 + whh, H); c1 = min(c0 + www, W)
+                c0 = min(i, W - band_w - 1); c1 = min(c0 + band_w, W)
+                r0 = min(j0, H - band_h - 1); r1 = min(r0 + band_h, H)
                 if r1 - r0 < 3 or c1 - c0 < 3:
                     continue
-                # dark bezel frame (raised lip) around the pane
-                fr = slice(r0, r1); fc = slice(c0, c1)
-                D[fr, fc] = [accent[0]*1.15, accent[1]*1.15, accent[2]*1.15, 1.0]
-                h[fr, fc] = 0.34; AO[fr, fc] = 0.35; R[fr, fc] = 0.6
-                # inner pane (inset by the frame thickness)
-                pi0, pj0 = r0+framing, c0+framing
-                pi1, pj1 = r1-framing, c1-framing
-                psr = slice(pi0, max(pi0+1, pi1)); psc = slice(pj0, max(pj0+1, pj1))
-                # mullion crossbar splitting the pane into 4
-                my = (pi0+pi1)//2; mx = (pj0+pj1)//2
-                if rng.random() < litfrac:
-                    # LIT: glass tint + glow + soft AO
+                # armored frame: raised rail top+bottom, darker rim sides
+                D[r0, c0:c1] = [accent[0]*1.3, accent[1]*1.3, accent[2]*1.3, 1.0]; h[r0, c0:c1] = 0.34
+                D[r1-1, c0:c1] = [accent[0]*1.3, accent[1]*1.3, accent[2]*1.3, 1.0]; h[r1-1, c0:c1] = 0.34
+                AO[slice(r0,r1), slice(c0,c1)] = 0.4
+                R[slice(r0,r1), slice(c0,c1)] = 0.55
+                fixed[slice(r0,r1), slice(c0,c1)] = True
+                # glass inset (below the rail, above the rail) = the band strip
+                gr_, gb_ = r0+rail, r1-rail
+                gsr = slice(gr_, max(gr_+1, gb_))
+                gsc = slice(c0, c1)
+                lit = rng.random() < litfrac
+                if lit:
                     col = cool if rng.random() < 0.7 else warm
-                    D[psr, psc] = [col[0]*0.6, col[1]*0.72, col[2]*0.95, 1.0]
-                    E[psr, psc] = [col[0], col[1], col[2], 1.0]
-                    AO[psr, psc] = 0.12; R[psr, psc] = 0.12
-                    # thin mullion strips (dark) inside the lit pane
-                    D[my-2:my+2, psc] = [0.05,0.05,0.06,1.0]
-                    D[psr, mx-2:mx+2] = [0.05,0.05,0.06,1.0]
-                    E[my-2:my+2, psc] = 0.0; E[psr, mx-2:mx+2] = 0.0
+                    D[gsr, gsc] = [col[0]*0.6, col[1]*0.72, col[2]*0.95, 1.0]
+                    E[gsr, gsc] = [col[0], col[1], col[2], 1.0]
+                    AO[gsr, gsc] = 0.12; R[gsr, gsc] = 0.12
                 else:
-                    # DARK/unlit: dark glass, no glow, frame still visible
-                    D[psr, psc] = [0.06, 0.08, 0.10, 1.0]
-                    AO[psr, psc] = 0.55; R[psr, psc] = 0.15
-                h[psr, psc] = 0.12
-                fixed[fr, fc] = True
-    # neon trim
+                    D[gsr, gsc] = [0.06, 0.08, 0.10, 1.0]
+                    AO[gsr, gsc] = 0.55; R[gsr, gsc] = 0.15
+                h[gsr, gsc] = 0.12
+                # thin vertical stiffener mullions at intervals across the band
+                if lit:
+                    mid = (gr_ + gb_) // 2
+                    for mx in range(c0 + band_w//4, c1, band_w//4):
+                        D[mid-1:mid+2, max(c0,mx)-1:max(c0,mx)+2] = [0.05,0.05,0.06,1.0]
+                        E[mid-1:mid+2, max(c0,mx)-1:max(c0,mx)+2] = 0.0
+    # neon trim    # neon trim
     if variant.get('neon'):
         nc = variant['neon']
         nc = np.array(nc[:3] if isinstance(nc, (list, tuple)) else [0.3,1.0,1.0])
