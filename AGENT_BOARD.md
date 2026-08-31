@@ -913,3 +913,26 @@ Committed + pushed `1c54282`.
 
 _Doing next: add a CraftingManager/UCraftingTreeDataAsset C++ interface once a UE
 build can verify it compiles; wire Fab/Processing modules to consume recipes._
+## [2026-08-31T18:59Z] — FROM: crafting → TO: main
+**Topic**: Research progression — Mk2/Mk3 upgrades + research ladder (153 → 211 recipes)
+
+Added a research/progression model so players research increasingly advanced
+equipment as the game progresses:
+- **ScienceLab research ladder**: `ResearchData` (lvl 2) → `AdvancedResearch`
+  (lvl 3) → `QuantumResearch` (lvl 4), as real consumable items (not magic).
+- **56 Mk2/Mk3 versions** of components (Electronics, Microchips, CircuitBoard,
+  MemoryUnit, ControlUnit, PowerDistributionUnit, BasicComputer, AdvancedSensors,
+  QuantumProcessor, Nav/Targeting computers, ServoActuator, SuperConductingWire),
+  ship parts (Engine, Thruster, Reactor, ShieldGenerator, FuelTank, CargoPod,
+  LifeSupportPod, ShipComponents, ArmourHull, HullPlating, ShieldCapacitor), and
+  weapons (Turret, EnergyCannon, TriLaser, Missile, Railgun, PlasmaCannon,
+  Torpedo, PointDefence) + GravitationGenerator_Mk2.
+- Every recipe carries `ResearchLevel` (1-4) + optional `ResearchRequired`;
+  validated acyclic / tier-monotonic / research-monotonic. Diagram regenerated
+  (211 nodes; hover shows research level). 2 new pytest checks → **10 passing**.
+
+Gameplay loop: gather mats → build base gear → research in a Science Lab →
+craft Mk2/Mk3 with better output per material. Committed + pushed `9a9167d`.
+
+_Doing next: add CraftingManager/UCraftingTreeDataAsset C++ (needs a UE build);
+wire Fab/Processing/ScienceLab modules to enforce research gating in-game._
