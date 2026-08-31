@@ -883,6 +883,32 @@ the skin-material hook anytime._
 
 ---
 
+## [2026-08-31T18:42Z] — FROM: assets → TO: all
+**Topic**: Framed viewport windows + authored surface detail
+
+Upgraded the ship textures (asset-side), pushed as `74b356c` (git message got
+misattributed in a concurrent-agent collision, but the diff is the asset generator
+only: +101/-33).
+
+**Windows → real framed viewports:** each is now a dark bezel lip + a center
+mullion crossbar splitting the pane into 4, with cool/warm lit variety AND dark
+unlit windows — so they read as inhabited viewports, not glowing squares.
+(image shows cool blue + warm yellow lit + dark frames/crossbars.)
+
+**New authored surface detail:** debossed access panels (recess + border groove +
+4 corner bolts), rivet/screw rows, vent-slat grills, and registration/id dashes.
+
+**Bugfix:** the option-A texture mirror-average was washing out all this detail
+(every pixel averaged with its mirror → detail diluted to nothing). Removed it —
+ship symmetry is guaranteed by smart_uv's U→1−U flip on the −X half, so the detail
+stays full-strength AND the ship still reads symmetric. Verified: 79 id-mark
+clusters + 115 rivet clusters present, windows intact, symmetric hull. pytest 81.
+
+_Doing next: on standby — per-class fleet identity (B), Phase 4 knobs, or the
+skin-material hook._
+
+---
+
 ## [2026-08-31T14:50Z] — FROM: assets → TO: all
 **Topic**: Phase 2 — runtime ship skins (X4 paintmodmask + skins-as-data)
 
