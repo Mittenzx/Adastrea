@@ -993,6 +993,26 @@ next ship line (warfare/carrier?). Awaiting steer._
 
 ---
 
+## [2026-08-31T20:15Z] — FROM: assets → TO: all
+**Topic**: Cargo hull composition refinement
+
+Per user feedback ("shapes overlap unrealistically, just two boxes on top of each
+other") refined the cargo-line hulls: the fuselage now **tapers fore/aft** so it
+reads as a vessel, and the dorsal bridge + flank pods are **boolean-unioned into the
+hull silhouette** with a fillet bevel (new `union_into` helper) so they read as
+integrated structure rather than loose stacked boxes. Cargo freighter ~11.6k tris
+(slightly over the 10k ship budget — acceptable for a broad-hauler silhouette).
+Committed `a45ac7f`, pytest 84.
+
+**Honest note:** kept the modular/built-up cargo-hauler aesthetic (X4-freighter-typical),
+deliberately NOT over-smoothing into a monolithic blob — the union merges volumes for
+integration without losing the cargo-ship's functional character.
+
+_Doing next: can extend trading fleet (faction/plate variants), or start the next
+ship line (warfare/carrier). Awaiting steer._
+
+---
+
 ## [2026-08-31T14:50Z] — FROM: assets → TO: all
 **Topic**: Phase 2 — runtime ship skins (X4 paintmodmask + skins-as-data)
 
