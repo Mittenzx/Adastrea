@@ -309,32 +309,54 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     AO = np.clip(AO, 0.05, 1.0)
 
     # ---- optional cyberpunk / industrial overlays ----
-    # lit window grid (station hab, city-like)
+    # lit window grid — framed viewports that actually read as windows: a dark
+    # bezel ring around each pane, a small mullion crossbar, and separate LIT
+    # (cool/warm glow, emissive) vs DARK (unlit but frame-visible) windows.
     if variant.get('windows'):
         wc = variant['windows']
-        # discrete portholes: place small round windows on a staggered grid
         cols_n = wc.get('cols', 12)
         wcell = W // cols_n
-        ww, wh = int(wcell*0.42), int(wcell*0.30)
         cool = np.array(wc.get('cool', [0.3, 0.65, 1.0]))
         warm = np.array(wc.get('warm', [1.0, 0.6, 0.25]))
-        frac = wc.get('frac', 0.5)
-        row_step = max(int(wcell*1.2), 1)
-        for ri, j0 in enumerate(range(wcell//2, H, row_step)):
+        litfrac = wc.get('frac', 0.5)
+        framing = wc.get('frame_thick', max(4, int(wcell*0.09)))  # bezel thickness
+        row_step = max(int(wcell*1.25), 1)
+        for ri, j0 in enumerate(range(wcell//2 + wcell, H - wcell, row_step)):
             stagger = (wcell//2) if ri % 2 else 0
-            for i in range(wcell//2 + stagger, W, wcell):
-                if rng.random() > frac:
+            for i in range(wcell//2 + stagger + wcell, W - wcell, wcell):
+                if rng.random() > wc.get('density', 0.85):
                     continue
-                col = cool if rng.random() < 0.7 else warm
-                r0 = min(j0, H-1); c0 = min(i, W-1)
-                r1 = min(r0+wh, H); c1 = min(c0+ww, W)
-                # rounded porthole: mask corners via slight inset
-                D[r0:r1, c0:c1] = [col[0]*0.75, col[1]*0.85, col[2]*1.0, 1.0]
-                E[r0:r1, c0:c1] = [col[0], col[1], col[2], 1.0]
-                AO[r0:r1, c0:c1] = 0.1
-                R[r0:r1, c0:c1] = 0.3
-                h[r0:r1, c0:c1] = 0.16
-                fixed[r0:r1, c0:c1] = True
+                whh = int(wcell*0.36); www = int(wcell*0.42)
+                r0 = min(j0, H-4); c0 = min(i, W-4)
+                r1 = min(r0 + whh, H); c1 = min(c0 + www, W)
+                if r1 - r0 < 3 or c1 - c0 < 3:
+                    continue
+                # dark bezel frame (raised lip) around the pane
+                fr = slice(r0, r1); fc = slice(c0, c1)
+                D[fr, fc] = [accent[0]*1.15, accent[1]*1.15, accent[2]*1.15, 1.0]
+                h[fr, fc] = 0.34; AO[fr, fc] = 0.35; R[fr, fc] = 0.6
+                # inner pane (inset by the frame thickness)
+                pi0, pj0 = r0+framing, c0+framing
+                pi1, pj1 = r1-framing, c1-framing
+                psr = slice(pi0, max(pi0+1, pi1)); psc = slice(pj0, max(pj0+1, pj1))
+                # mullion crossbar splitting the pane into 4
+                my = (pi0+pi1)//2; mx = (pj0+pj1)//2
+                if rng.random() < litfrac:
+                    # LIT: glass tint + glow + soft AO
+                    col = cool if rng.random() < 0.7 else warm
+                    D[psr, psc] = [col[0]*0.6, col[1]*0.72, col[2]*0.95, 1.0]
+                    E[psr, psc] = [col[0], col[1], col[2], 1.0]
+                    AO[psr, psc] = 0.12; R[psr, psc] = 0.12
+                    # thin mullion strips (dark) inside the lit pane
+                    D[my-2:my+2, psc] = [0.05,0.05,0.06,1.0]
+                    D[psr, mx-2:mx+2] = [0.05,0.05,0.06,1.0]
+                    E[my-2:my+2, psc] = 0.0; E[psr, mx-2:mx+2] = 0.0
+                else:
+                    # DARK/unlit: dark glass, no glow, frame still visible
+                    D[psr, psc] = [0.06, 0.08, 0.10, 1.0]
+                    AO[psr, psc] = 0.55; R[psr, psc] = 0.15
+                h[psr, psc] = 0.12
+                fixed[fr, fc] = True
     # neon trim
     if variant.get('neon'):
         nc = variant['neon']
@@ -389,6 +411,59 @@ def gen_texture_set(name, variant, size=2048, seed=1):
                     h[max(0,min(H-1,y)):min(H,y+3), max(0,min(W-1,x)):min(W,x+2)] = 0.10
 
     # ---- normal map with micro-displacement for high detail ----
+    # ---- authored surface detail: access panels, rivets, vents, id marks ----
+    # Adds believable "kit" to the hull beyond the tiled base — framed access
+    # hatches, rivet/screw rows, vent slats, and small registration markings.
+    acc = np.array(accent); bas = np.array(base)
+    if variant.get('detail', True):
+        # 3-5 debossed access panels with a recessed lip + 4 corner bolts
+        for _ in range(rng.integers(3, 6)):
+            pw = int(rng.integers(W//16, W//6)); ph = int(pw*rng.uniform(0.6,0.9))
+            px0 = int(rng.integers(0, W-pw)); py0 = int(rng.integers(0, H-ph))
+            psr = slice(py0, py0+ph); psc = slice(px0, px0+pw)
+            h[psr, psc] = 0.20; AO[psr, psc] = 0.45
+            D[psr, psc] = [bas[0]*0.88, bas[1]*0.88, bas[2]*0.88, 1.0]
+            # recessed border groove
+            D[py0, px0:px0+pw] = [acc[0]*1.35, acc[1]*1.35, acc[2]*1.35, 1.0]; h[py0, px0:px0+pw] = 0.32
+            D[py0+ph-1, px0:px0+pw] = [acc[0]*1.35, acc[1]*1.35, acc[2]*1.35, 1.0]; h[py0+ph-1, px0:px0+pw] = 0.32
+            D[py0:py0+ph, px0] = [acc[0]*1.35, acc[1]*1.35, acc[2]*1.35, 1.0]; h[py0:py0+ph, px0] = 0.32
+            D[py0:py0+ph, px0+pw-1] = [acc[0]*1.35, acc[1]*1.35, acc[2]*1.35, 1.0]; h[py0:py0+ph, px0+pw-1] = 0.32
+            for (bx,by) in [(px0+3,py0+3),(px0+pw-5,py0+3),(px0+3,py0+ph-5),(px0+pw-5,py0+ph-5)]:
+                for dy in range(-3,4):
+                    for dx in range(-3,4):
+                        if dx*dx+dy*dy<9:
+                            yy,xx=by+dy,bx+dx
+                            if 0<=yy<H and 0<=xx<W:
+                                h[yy,xx]=0.12; AO[yy,xx]=0.3; D[yy,xx]=[0.6,0.62,0.65,1.0]
+        # rivet/screw rows along a horizontal seam
+        for _ in range(2):
+            ry0 = int(rng.integers(H*0.15, H*0.85)); rx0 = int(rng.integers(0, W//4))
+            step = max(int(rng.integers(W//28, W//22)), 4)
+            for xx0 in range(rx0, W - rx0, step):
+                for dy in range(-2,3):
+                    for dx in range(-2,3):
+                        if dx*dx+dy*dy<4:
+                            yy,xx=ry0+dy,xx0+dx
+                            if 0<=yy<H and 0<=xx<W:
+                                h[yy,xx]=0.10; AO[yy,xx]=0.28; D[yy,xx]=[0.5,0.52,0.55,1.0]
+        # vent slat grill (2-3 short slat stacks)
+        for _ in range(rng.integers(2,4)):
+            gw=int(rng.integers(W//30, W//18)); gx0=int(rng.integers(0,W-gw))
+            gy0=int(rng.integers(0,H//2)); gslats=int(rng.integers(6,11)); sh=max(int(gw*0.35),2)
+            for k in range(gslats):
+                yy=gy0+k*sh*2
+                if yy+sh<H:
+                    D[yy:yy+sh, gx0:gx0+gw]=[acc[0]*1.25, acc[1]*1.25, acc[2]*1.25, 1.0]
+                    h[yy:yy+sh, gx0:gx0+gw]=0.28; AO[yy:yy+sh, gx0:gx0+gw]=0.4
+        # small registration / id number dashes (non-emissive dark markings)
+        if variant.get('id_marks', True):
+            for _ in range(rng.integers(2,4)):
+                sx0=int(rng.integers(0,W-W//8)); sy0=int(rng.integers(0,H-20))
+                for k in range(9):
+                    seg = int(k*7); ch_=1 if k%2==0 else 0
+                    D[sy0+4*ch_:sy0+4*ch_+3, sx0+seg:sx0+seg+4]=[0.05,0.05,0.06,1.0]
+                    AO[sy0+4*ch_:sy0+4*ch_+3, sx0+seg:sx0+seg+4]=0.5
+
     # smooth the macro height a touch, then add high-freq noise
     hn = h.copy()
     gx, gy = np.gradient(hn)
@@ -411,21 +486,14 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     # windows/hazard) that a runtime skin must NOT recolor (X4 paintmodmask analog)
     SKIN = np.where(fixed, 0.0, 1.0).astype(np.float32)
 
-    # ---- strict L-R texture symmetry ----
-    # UV mapping is world-aligned, so on the ship +X samples the texture as U and
-    # -X as (const-U). For the sampled detail to read symmetric across the ship's
-    # centerline, the texture itself must be symmetric about U=0.5 (texture[U] ==
-    # texture[1-U]). The base panel grid is already centered/regular; mirroring it
-    # keeps it tileable and forces every random mark (windows/grime/hazard/neon) to
-    # appear mirrored, so the ship reads strictly symmetric L-R.
-    def sym_h(plane):
-        return (plane + plane[:, ::-1]) * 0.5
-    D = sym_h(D); E = sym_h(E); R = sym_h(R); M = sym_h(M); AO = sym_h(AO)
-    SKIN = sym_h(SKIN)
-    # normal map: horizontal mirror reverses tangent-X, so flip the R channel sign
-    Nf = N[:, ::-1].copy()
-    Nf[..., 0] = -Nf[..., 0]
-    N = (N + Nf) * 0.5
+    # ---- ship symmetry (NOT destructive) ----
+    # Ship L-R symmetry is enforced by smart_uv's U -> 1-U flip on the -X half:
+    # the -X faces sample the mirror of their +X twins, so the ship reads symmetric
+    # EVEN IF the texture is asymmetric. We deliberately do NOT average the texture
+    # with its mirror here (an earlier version did and washed out every random
+    # detail: rivets, vents, panels, id marks). Keep detail full-strength; the
+    # UV flip guarantees the rendered ship is symmetric.
+
     maps = {'_D': D, '_N': N, '_R': _to4(R), '_M': _to4(M), '_AO': _to4(AO), '_E': E, '_SKIN': _to4(SKIN)}
     for suf, arr in maps.items():
         fname = f"T_{name}{suf}.png"
