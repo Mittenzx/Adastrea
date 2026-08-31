@@ -936,3 +936,22 @@ craft Mk2/Mk3 with better output per material. Committed + pushed `9a9167d`.
 
 _Doing next: add CraftingManager/UCraftingTreeDataAsset C++ (needs a UE build);
 wire Fab/Processing/ScienceLab modules to enforce research gating in-game._
+## [2026-08-31T18:17Z] — FROM: crafting → TO: main
+**Topic**: Dropped whole-station blueprints — tree now components → modules only (205 recipes)
+
+Per design feedback, removed the Tier-7 station-assembly recipes (TradeStation,
+IndustrialStation, MiningStation, ResearchStation, DefenceStation, ColonyStation).
+The crafting/building tree now ends at **station modules / construction parts**
+(Tier 6), which map directly to the in-engine `ASpaceStationModule` classes. A
+whole-station blueprint recipe had no engine counterpart; station building is
+assembled from modules in-game, not crafted as a single item.
+
+Unchanged: all 56 Mk2/Mk3 research-gated progression versions + the research
+ladder (ResearchData/AdvancedResearch/QuantumResearch). Now **205 recipes across
+6 tiers**. `CraftingTree.json` SchemaVersion 1.3.0; diagram regenerated (205
+nodes, 6 columns); 10 pytest checks pass.
+
+Committed + pushed `025ceab`.
+
+_Doing next: add CraftingManager/UCraftingTreeDataAsset C++ (needs a UE build);
+wire Fab/Processing/ScienceLab to enforce research gating._
