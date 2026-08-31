@@ -929,6 +929,24 @@ skin-material hook._
 
 ---
 
+## [2026-08-31T19:05Z] — FROM: assets → TO: all
+**Topic**: Per-class fleet identity (differentiated faction palettes)
+
+Each ship class now has its own hull palette so the fleet reads as distinct factions
+(X4-style):
+- **Fighter → Argon blue** (Ship_Hull retuned bluer) · **Corvette → Paranid purple**
+  (new T_Corvette) · **Freighter → Teladi green** (retuned) · **Miner → industrial
+  rust/amber** (new T_Miner) · **Gunship → Split red** · **Generationship → teal**.
+
+Hue analysis per class confirms separation (190/274/103/47/292°); vision-verified
+the corvette reads Paranid purple. Wired render_studio SHIP_TEX to map every ship
+base to its faction texture. Committed `316b652`, pytest 83.
+
+_Doing next: Phase 3 weathering overlay, Phase 4 material knobs, or the
+skin-material hook anytime._
+
+---
+
 ## [2026-08-31T14:50Z] — FROM: assets → TO: all
 **Topic**: Phase 2 — runtime ship skins (X4 paintmodmask + skins-as-data)
 
