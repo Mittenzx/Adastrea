@@ -41,9 +41,30 @@ void ASpaceStation::BeginPlay()
     }
 
     UE_LOG(LogAdastreaStations, Log,
-        TEXT("SpaceStation::BeginPlay - Station %s initialized with %d modules"),
-        *GetName(), Modules.Num());
-}
+            TEXT("SpaceStation::BeginPlay - Station %s initialized with %d modules"),
+            *GetName(), Modules.Num());
+
+        // Apply the station's market specialization (if set) to its marketplace modules.
+        ApplyStationMarket();
+    }
+
+    void ASpaceStation::ApplyStationMarket()
+        {
+            if (!StationMarket)
+            {
+                return;
+            }
+            for (AMarketplaceModule* Marketplace : GetMarketplaceModules())
+            {
+                if (Marketplace)
+                {
+                    Marketplace->MarketDataAsset = StationMarket;
+                    UE_LOG(LogAdastreaStations, Log,
+                        TEXT("SpaceStation::ApplyStationMarket - Assigned market '%s' to %s on station %s"),
+                        *StationMarket->GetName(), *Marketplace->GetName(), *GetName());
+                }
+            }
+        }
 
 void ASpaceStation::AddModule(ASpaceStationModule* Module)
 {

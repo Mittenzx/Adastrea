@@ -10,6 +10,7 @@
 // Forward declarations
 class AMarketplaceModule;
 class ADockingBayModule;
+class UMarketDataAsset;
 
 /**
  * Core space station actor with modular construction system
@@ -379,5 +380,17 @@ protected:
 
     /** Display name for this station */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Station")
-    FText StationName;
-};
+        FText StationName;
+
+        /**
+         * The market data asset for this station. If set, the station assigns it to
+         * its marketplace modules during BeginPlay (overriding the module's own
+         * default). This puts market specialization on the STATION actor so it
+         * persists (per-module edits revert because modules are ChildActorComponents).
+         */
+        UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station|Economy")
+        UMarketDataAsset* StationMarket;
+
+        /** Assign the given market to all marketplace modules on this station. */
+        void ApplyStationMarket();
+    };
