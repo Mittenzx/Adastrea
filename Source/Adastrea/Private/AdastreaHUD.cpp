@@ -368,13 +368,31 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 	DrawRect(FLinearColor(0.10f, 0.55f, 0.60f, 0.9f), BoxX, BoxY, BoxW, 3.0f);      // top
 	DrawRect(FLinearColor(0.10f, 0.55f, 0.60f, 0.9f), BoxX, BoxY + BoxH - 3.0f, BoxW, 3.0f); // bottom
 
-	// ---- Object icons ----
+	// ---- Object icons (type-distinct glyphs) ----
 	TArray<AActor*> Ships;
 	UGameplayStatics::GetAllActorsOfClass(World, ASpaceship::StaticClass(), Ships);
 	TArray<AActor*> Stations;
 	UGameplayStatics::GetAllActorsOfClass(World, ASpaceStation::StaticClass(), Stations);
 
-	// Stations: gold square + label
+	// Station glyph: hollow gold square (ring) so it reads clearly as a station/landmark
+	auto DrawStationIcon = [&](float X, float Y, float R, const FLinearColor& Col, float Thick)
+	{
+		DrawLine(X - R, Y - R, X + R, Y - R, Col, Thick);
+		DrawLine(X + R, Y - R, X + R, Y + R, Col, Thick);
+		DrawLine(X + R, Y + R, X - R, Y + R, Col, Thick);
+		DrawLine(X - R, Y + R, X - R, Y - R, Col, Thick);
+	};
+
+	// Ship glyph: hollow diamond (other ships)
+	auto DrawShipIcon = [&](float X, float Y, float R, const FLinearColor& Col, float Thick)
+	{
+		DrawLine(X, Y - R, X + R, Y, Col, Thick);
+		DrawLine(X + R, Y, X, Y + R, Col, Thick);
+		DrawLine(X, Y + R, X - R, Y, Col, Thick);
+		DrawLine(X - R, Y, X, Y - R, Col, Thick);
+	};
+
+	// Stations: gold hollow-square icon + label
 	if (bShowStations)
 	{
 		for (AActor* A : Stations)
@@ -382,12 +400,11 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 			if (!A) continue;
 			FVector2D SP;
 			if (!Project(A->GetActorLocation(), SP)) continue;
-			const float R = 5.0f;
-			DrawRect(FLinearColor(0.95f, 0.78f, 0.30f, 1.0f), SP.X - R, SP.Y - R, R * 2.0f, R * 2.0f);
-			DrawText(A->GetActorLabel(), FLinearColor(0.8f, 0.9f, 1.0f, 0.95f), SP.X + 8.0f, SP.Y - 6.0f, MiniFont, 0.55f);
+			DrawStationIcon(SP.X, SP.Y, 6.0f, FLinearColor(0.95f, 0.78f, 0.30f, 1.0f), 2.0f);
+			DrawText(A->GetActorLabel(), FLinearColor(0.9f, 0.85f, 0.6f, 1.0f), SP.X + 9.0f, SP.Y - 6.0f, MiniFont, 0.55f);
 		}
 	}
-	// Ships: cyan triangle + label
+	// Ships: cyan hollow diamond icon + label
 	if (bShowShips)
 	{
 		for (AActor* A : Ships)
@@ -395,11 +412,8 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 			if (!A || A == PC->GetPawn()) continue; // skip the player's own ship (shown as YOU)
 			FVector2D SP;
 			if (!Project(A->GetActorLocation(), SP)) continue;
-			const float R = 6.0f;
-			DrawLine(SP.X, SP.Y - R, SP.X - R, SP.Y + R * 0.6f, FLinearColor(0.3f, 0.8f, 0.9f, 1.0f), 2.0f);
-			DrawLine(SP.X, SP.Y - R, SP.X + R, SP.Y + R * 0.6f, FLinearColor(0.3f, 0.8f, 0.9f, 1.0f), 2.0f);
-			DrawLine(SP.X - R, SP.Y + R * 0.6f, SP.X + R, SP.Y + R * 0.6f, FLinearColor(0.3f, 0.8f, 0.9f, 1.0f), 2.0f);
-			DrawText(A->GetActorLabel(), FLinearColor(0.8f, 0.9f, 1.0f, 0.95f), SP.X + 8.0f, SP.Y - 6.0f, MiniFont, 0.55f);
+			DrawShipIcon(SP.X, SP.Y, 6.0f, FLinearColor(0.3f, 0.8f, 0.9f, 1.0f), 2.0f);
+			DrawText(A->GetActorLabel(), FLinearColor(0.6f, 0.85f, 0.95f, 1.0f), SP.X + 8.0f, SP.Y - 6.0f, MiniFont, 0.55f);
 		}
 	}
 
@@ -442,10 +456,18 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 	// Legend (top-right)
 	float LegY = 16.0f;
 	DrawText(TEXT("Stations"), FLinearColor(0.8f,0.9f,1.0f,1.0f), BoxX + BoxW - 130.0f, LegY, MiniFont, 0.6f);
-	DrawRect(FLinearColor(0.95f,0.78f,0.30f,1.0f), BoxX + BoxW - 160.0f, LegY + 1.0f, 8.0f, 8.0f);
+	// hollow gold square (station)
+	DrawLine(BoxX + BoxW - 160.0f, LegY + 1.0f, BoxX + BoxW - 148.0f, LegY + 1.0f, FLinearColor(0.95f,0.78f,0.30f,1.0f), 2.0f);
+	DrawLine(BoxX + BoxW - 148.0f, LegY + 1.0f, BoxX + BoxW - 148.0f, LegY + 11.0f, FLinearColor(0.95f,0.78f,0.30f,1.0f), 2.0f);
+	DrawLine(BoxX + BoxW - 148.0f, LegY + 11.0f, BoxX + BoxW - 160.0f, LegY + 11.0f, FLinearColor(0.95f,0.78f,0.30f,1.0f), 2.0f);
+	DrawLine(BoxX + BoxW - 160.0f, LegY + 11.0f, BoxX + BoxW - 160.0f, LegY + 1.0f, FLinearColor(0.95f,0.78f,0.30f,1.0f), 2.0f);
 	LegY += 16.0f;
 	DrawText(TEXT("Ships"), FLinearColor(0.8f,0.9f,1.0f,1.0f), BoxX + BoxW - 130.0f, LegY, MiniFont, 0.6f);
-	DrawText(TEXT("<|"), FLinearColor(0.3f,0.8f,0.9f,1.0f), BoxX + BoxW - 158.0f, LegY - 1.0f, MiniFont, 0.7f);
+	// hollow cyan diamond (ship)
+	DrawLine(BoxX + BoxW - 154.0f, LegY + 1.0f, BoxX + BoxW - 147.0f, LegY + 6.0f, FLinearColor(0.3f,0.8f,0.9f,1.0f), 2.0f);
+	DrawLine(BoxX + BoxW - 147.0f, LegY + 6.0f, BoxX + BoxW - 154.0f, LegY + 11.0f, FLinearColor(0.3f,0.8f,0.9f,1.0f), 2.0f);
+	DrawLine(BoxX + BoxW - 154.0f, LegY + 11.0f, BoxX + BoxW - 161.0f, LegY + 6.0f, FLinearColor(0.3f,0.8f,0.9f,1.0f), 2.0f);
+	DrawLine(BoxX + BoxW - 161.0f, LegY + 6.0f, BoxX + BoxW - 154.0f, LegY + 1.0f, FLinearColor(0.3f,0.8f,0.9f,1.0f), 2.0f);
 
 	// Filters (bottom-left)
 	DrawText(FString::Printf(TEXT("[1] Ships:%s   [2] Stations:%s"),
