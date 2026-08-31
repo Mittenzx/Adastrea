@@ -2356,6 +2356,19 @@ def main():
         'SM_Ship_BulkCarrier_01', {'engine': True, 'cargo': True, 'cargo_variant': 'containers',
                                    'sensor': True, 'reactor': True, 'weapon': True},
         carcass_builder=build_cargo_carcass)
+    # ---- Trading ROLE specialists (distinct from the straight haulers) ----
+    # Starter Trader: cheap medium trader, flat-rack cargo, minimal weapons — the
+    # player's first freighter.
+    ship_parts["SM_Ship_Trader_01"] = assemble_ship('medium',
+        'SM_Ship_Trader_01', {'engine': True, 'cargo': True, 'cargo_variant': 'flat_rack',
+                              'sensor': True, 'reactor': True},
+        carcass_builder=build_cargo_carcass)
+    # Fast Smuggler: small agile runner, compact engine, no weapons but quick —
+    # sneaks small lucrative packs through hostile space.
+    ship_parts["SM_Ship_Smuggler_01"] = assemble_ship('small',
+        'SM_Ship_Smuggler_01', {'engine': True, 'engine_variant': 'compact',
+                                'cargo': True, 'cargo_variant': 'flat_rack', 'sensor': True},
+        carcass_builder=build_cargo_carcass)
     ship_parts = ship_parts
     for ship_name, parts in ship_parts.items():
         for obj, out in parts:
@@ -2383,6 +2396,11 @@ def main():
                                           'reactor': True, 'weapon': True}),
         "SM_Ship_BulkCarrier_01": ('large', {'engine': True, 'cargo': True,
                                           'sensor': True, 'reactor': True}),
+        "SM_Ship_Trader_01": ('medium', {'engine': True, 'cargo': True, 'cargo_variant': 'flat_rack',
+                                          'sensor': True, 'reactor': True}),
+        "SM_Ship_Smuggler_01": ('small', {'engine': True, 'engine_variant': 'compact',
+                                          'cargo': True, 'cargo_variant': 'flat_rack',
+                                          'sensor': True}),
     }
     assembled_count = 0
     for name, (sz, opts) in assembled_specs.items():
