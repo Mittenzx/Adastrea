@@ -92,8 +92,7 @@ def main():
     TIER_RANGE = sorted(groups.keys())          # e.g. [1..6]
     TIER_LABELS = {1:"RAW EXTRACTION",2:"REFINED MATERIALS",
                    3:"COMPONENTS & ELECTRONICS",4:"SHIP PARTS / WEAPONS",
-                   5:"STATION CONSTRUCTION PARTS",6:"STATION MODULES (ASSEMBLY)",
-                   7:"STATION ASSEMBLY"}
+                   5:"STATION CONSTRUCTION PARTS",6:"STATION MODULES (ASSEMBLY)"}
     NODE_W = 190
     NODE_H = 44
     COL_GAP_X = 300
@@ -247,7 +246,7 @@ def main():
 <body>
 <div class="card">
   <h1>Adastrea — Crafting &amp; Building Tree</h1>
-  <div class="sub">Tiers 1–7 · generated from Content/Data/CraftingTree.json ({len(recipes)} recipes) · acyclic · hover any node for its recipe</div>
+  <div class="sub">Tiers 1–6 · generated from Content/Data/CraftingTree.json ({len(recipes)} recipes) · acyclic · hover any node for its recipe</div>
   <div class="legend" id="legend"></div>
 </div>
 <div class="card"> {svg} </div>

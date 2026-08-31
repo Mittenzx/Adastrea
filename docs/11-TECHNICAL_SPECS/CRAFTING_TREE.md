@@ -4,8 +4,8 @@
 
 This spec defines the full **crafting / building tree** for Adastrea: the chain from
 raw materials (and how they are obtained) → refined materials → components &
-electronics → ship parts → weapons → station construction parts → modules →
-station assembly. It is the design companion to the machine-readable
+electronics → ship parts → weapons → station construction parts → modules. It is
+the design companion to the machine-readable
 `Content/Data/CraftingTree.json`.
 
 **Grounded in existing systems:**
@@ -30,7 +30,8 @@ station assembly. It is the design companion to the machine-readable
    ingredient's tier; no recipe produces itself, directly or transitively.
 2. **Four production depths, three build depths.** Tiers 1–2 are *raw/refined*
    (extraction + processing). Tiers 3 establish *intermediate goods*. Tiers 4–5
-   are *functional assemblies*. Tier 6 is *station construction*.
+   are *functional assemblies*. Tier 6 is *station modules/construction* — the
+   tree stops here (no whole-station blueprints).
 3. **Every ingredient is producible.** Nothing in the tree is a dead leaf that is
    also a required input without a producer.
 4. **Module tags match the real station modules.** `Processing` (the refinery
@@ -53,7 +54,11 @@ station assembly. It is the design companion to the machine-readable
 | **4** | Functional assemblies | `Fabrication`, `ScienceLab`            | Ship parts, weapons, shields, AI cores |
 | **5** | Station construction parts | `Fabrication`, `Reactor`, `ScienceLab` | Construction materials, hull frame, power core, life support, module shell |
 | **6** | Station modules & assembly | `Fabrication`                        | Corridor, cargo bay, docking, reactor, turret, shield module, etc. |
-| **7** | Station assembly          | `Fabrication` (mega-fabrication)    | Trade, Industrial, Mining, Research, Defence, Colony stations |
+
+> Note: the tree deliberately **stops at station modules/construction parts** —
+> there are no whole-station "blueprint" recipes. Station *modules* map to the
+> in-engine `ASpaceStationModule` classes; the player assembles a station from those
+> modules in the game, but a full-station assembly recipe is out of scope.
 
 ### Research / progression axis
 
@@ -294,7 +299,7 @@ Reference tables from the canonical JSON. **Ingredient quantities are unit count
 
 ## 7. Verification
 
-The JSON (`Content/Data/CraftingTree.json`, **211 recipes across 7 tiers** — including **56 Mk2/Mk3 progression versions**, of which 58 recipes are research-gated) is validated by the
+The JSON (`Content/Data/CraftingTree.json`, **205 recipes across 6 tiers** — including **56 Mk2/Mk3 progression versions**, of which 58 recipes are research-gated; no whole-station assembly recipes) is validated by the
 `check_crafting_tree()` logic in `generate_crafting_tree.py` plus `tests/test_crafting_tree.py`:
 - ✅ All recipes have unique `RecipeID` and unique `OutputItem`.
 - ✅ Every `ItemID` matches `^[A-Za-z][A-Za-z0-9_]*$`.

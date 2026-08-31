@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "Title": "Adastrea Crafting & Building Tree",
-  "Description": "Machine-readable crafting/building tree: raw extraction -> refined materials -> components & electronics -> ship parts -> weapons -> station construction parts -> modules -> station assembly. Authoritative generator: docs/11-TECHNICAL_SPECS/generate_crafting_tree.py",
-  "SchemaVersion": "1.2.0",
+  "Description": "Machine-readable crafting/building tree: raw extraction -> refined materials -> components & electronics -> ship parts -> weapons -> station construction parts -> modules. Authoritative generator: docs/11-TECHNICAL_SPECS/generate_crafting_tree.py",
+  "SchemaVersion": "1.3.0",
   "LastUpdated": "2026-08-31",
   "ItemIDConvention": "^[A-Za-z][A-Za-z0-9_]*$",
   "NoteHelium3": "Existing trade asset uses 'Helium-3' (hyphen, violates ItemID regex). Crafting data canonicalizes to 'Helium3' and maps to DA_TradeItem_Helium-3.",
@@ -25,8 +25,7 @@
     "3": "Components & Electronics",
     "4": "Ship Parts / Weapons",
     "5": "Station Construction Parts",
-    "6": "Station Modules (Assembly)",
-    "7": "Station Assembly"
+    "6": "Station Modules (Assembly)"
   },
   "Recipes": [
     {
@@ -2972,157 +2971,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_148_TradeStation",
-      "OutputItem": "TradeStation",
-      "OutputQty": 1,
-      "Tier": 7,
-      "ProducedIn": "Fabrication",
-      "Category": "Other",
-      "Acquisition": false,
-      "ResearchLevel": 1,
-      "ResearchRequired": null,
-      "Ingredients": [
-        {
-          "ItemID": "DockingBayModule",
-          "Qty": 1
-        },
-        {
-          "ItemID": "MarketplaceModule",
-          "Qty": 1
-        },
-        {
-          "ItemID": "CargoBayModule",
-          "Qty": 1
-        }
-      ]
-    },
-    {
-      "RecipeID": "RCP_149_IndustrialStation",
-      "OutputItem": "IndustrialStation",
-      "OutputQty": 1,
-      "Tier": 7,
-      "ProducedIn": "Fabrication",
-      "Category": "Other",
-      "Acquisition": false,
-      "ResearchLevel": 1,
-      "ResearchRequired": null,
-      "Ingredients": [
-        {
-          "ItemID": "ProcessingModule",
-          "Qty": 2
-        },
-        {
-          "ItemID": "FabricationModule",
-          "Qty": 1
-        },
-        {
-          "ItemID": "ReactorModule",
-          "Qty": 1
-        }
-      ]
-    },
-    {
-      "RecipeID": "RCP_150_MiningStation",
-      "OutputItem": "MiningStation",
-      "OutputQty": 1,
-      "Tier": 7,
-      "ProducedIn": "Fabrication",
-      "Category": "Other",
-      "Acquisition": false,
-      "ResearchLevel": 1,
-      "ResearchRequired": null,
-      "Ingredients": [
-        {
-          "ItemID": "ProcessingModule",
-          "Qty": 1
-        },
-        {
-          "ItemID": "CargoBayModule",
-          "Qty": 1
-        },
-        {
-          "ItemID": "PowerCore",
-          "Qty": 1
-        }
-      ]
-    },
-    {
-      "RecipeID": "RCP_151_ResearchStation",
-      "OutputItem": "ResearchStation",
-      "OutputQty": 1,
-      "Tier": 7,
-      "ProducedIn": "Fabrication",
-      "Category": "Other",
-      "Acquisition": false,
-      "ResearchLevel": 1,
-      "ResearchRequired": null,
-      "Ingredients": [
-        {
-          "ItemID": "ScienceLabModule",
-          "Qty": 2
-        },
-        {
-          "ItemID": "SolarArrayModule",
-          "Qty": 1
-        },
-        {
-          "ItemID": "AdvancedAICore",
-          "Qty": 1
-        }
-      ]
-    },
-    {
-      "RecipeID": "RCP_152_DefenceStation",
-      "OutputItem": "DefenceStation",
-      "OutputQty": 1,
-      "Tier": 7,
-      "ProducedIn": "Fabrication",
-      "Category": "Other",
-      "Acquisition": false,
-      "ResearchLevel": 1,
-      "ResearchRequired": null,
-      "Ingredients": [
-        {
-          "ItemID": "TurretModule",
-          "Qty": 2
-        },
-        {
-          "ItemID": "ShieldGeneratorModule",
-          "Qty": 1
-        },
-        {
-          "ItemID": "DockingPortModule",
-          "Qty": 1
-        }
-      ]
-    },
-    {
-      "RecipeID": "RCP_153_ColonyStation",
-      "OutputItem": "ColonyStation",
-      "OutputQty": 1,
-      "Tier": 7,
-      "ProducedIn": "Fabrication",
-      "Category": "Other",
-      "Acquisition": false,
-      "ResearchLevel": 1,
-      "ResearchRequired": null,
-      "Ingredients": [
-        {
-          "ItemID": "HabitationModule",
-          "Qty": 2
-        },
-        {
-          "ItemID": "BarracksModule",
-          "Qty": 1
-        },
-        {
-          "ItemID": "LifeSupportUnit",
-          "Qty": 2
-        }
-      ]
-    },
-    {
-      "RecipeID": "RCP_154_AdvancedResearch",
+      "RecipeID": "RCP_148_AdvancedResearch",
       "OutputItem": "AdvancedResearch",
       "OutputQty": 1,
       "Tier": 5,
@@ -3147,7 +2996,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_155_QuantumResearch",
+      "RecipeID": "RCP_149_QuantumResearch",
       "OutputItem": "QuantumResearch",
       "OutputQty": 1,
       "Tier": 6,
@@ -3172,7 +3021,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_156_Electronics_Mk2",
+      "RecipeID": "RCP_150_Electronics_Mk2",
       "OutputItem": "Electronics_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3201,7 +3050,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_157_Microchips_Mk2",
+      "RecipeID": "RCP_151_Microchips_Mk2",
       "OutputItem": "Microchips_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3230,7 +3079,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_158_CircuitBoard_Mk2",
+      "RecipeID": "RCP_152_CircuitBoard_Mk2",
       "OutputItem": "CircuitBoard_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3263,7 +3112,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_159_MemoryUnit_Mk2",
+      "RecipeID": "RCP_153_MemoryUnit_Mk2",
       "OutputItem": "MemoryUnit_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3292,7 +3141,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_160_ControlUnit_Mk2",
+      "RecipeID": "RCP_154_ControlUnit_Mk2",
       "OutputItem": "ControlUnit_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3321,7 +3170,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_161_PowerDistributionUnit_Mk2",
+      "RecipeID": "RCP_155_PowerDistributionUnit_Mk2",
       "OutputItem": "PowerDistributionUnit_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3350,7 +3199,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_162_BasicComputer_Mk2",
+      "RecipeID": "RCP_156_BasicComputer_Mk2",
       "OutputItem": "BasicComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3379,7 +3228,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_163_AdvancedSensors_Mk2",
+      "RecipeID": "RCP_157_AdvancedSensors_Mk2",
       "OutputItem": "AdvancedSensors_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3408,7 +3257,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_164_QuantumProcessor_Mk2",
+      "RecipeID": "RCP_158_QuantumProcessor_Mk2",
       "OutputItem": "QuantumProcessor_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3441,7 +3290,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_165_TargetingComputer_Mk2",
+      "RecipeID": "RCP_159_TargetingComputer_Mk2",
       "OutputItem": "TargetingComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3470,7 +3319,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_166_NavigationComputer_Mk2",
+      "RecipeID": "RCP_160_NavigationComputer_Mk2",
       "OutputItem": "NavigationComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3499,7 +3348,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_167_ServoActuator_Mk2",
+      "RecipeID": "RCP_161_ServoActuator_Mk2",
       "OutputItem": "ServoActuator_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3528,7 +3377,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_168_SuperConductingWire_Mk2",
+      "RecipeID": "RCP_162_SuperConductingWire_Mk2",
       "OutputItem": "SuperConductingWire_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3557,7 +3406,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_169_Electronics_Mk3",
+      "RecipeID": "RCP_163_Electronics_Mk3",
       "OutputItem": "Electronics_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -3586,7 +3435,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_170_Microchips_Mk3",
+      "RecipeID": "RCP_164_Microchips_Mk3",
       "OutputItem": "Microchips_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -3615,7 +3464,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_171_CircuitBoard_Mk3",
+      "RecipeID": "RCP_165_CircuitBoard_Mk3",
       "OutputItem": "CircuitBoard_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -3644,7 +3493,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_172_MemoryUnit_Mk3",
+      "RecipeID": "RCP_166_MemoryUnit_Mk3",
       "OutputItem": "MemoryUnit_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -3673,7 +3522,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_173_ControlUnit_Mk3",
+      "RecipeID": "RCP_167_ControlUnit_Mk3",
       "OutputItem": "ControlUnit_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -3702,7 +3551,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_174_PowerDistributionUnit_Mk3",
+      "RecipeID": "RCP_168_PowerDistributionUnit_Mk3",
       "OutputItem": "PowerDistributionUnit_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -3731,7 +3580,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_175_BasicComputer_Mk3",
+      "RecipeID": "RCP_169_BasicComputer_Mk3",
       "OutputItem": "BasicComputer_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -3760,7 +3609,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_176_AdvancedSensors_Mk3",
+      "RecipeID": "RCP_170_AdvancedSensors_Mk3",
       "OutputItem": "AdvancedSensors_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -3789,7 +3638,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_177_QuantumProcessor_Mk3",
+      "RecipeID": "RCP_171_QuantumProcessor_Mk3",
       "OutputItem": "QuantumProcessor_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -3822,7 +3671,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_178_ShipEngine_Mk2",
+      "RecipeID": "RCP_172_ShipEngine_Mk2",
       "OutputItem": "ShipEngine_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -3855,7 +3704,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_179_ShipReactor_Mk2",
+      "RecipeID": "RCP_173_ShipReactor_Mk2",
       "OutputItem": "ShipReactor_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -3888,7 +3737,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_180_ShipShieldGenerator_Mk2",
+      "RecipeID": "RCP_174_ShipShieldGenerator_Mk2",
       "OutputItem": "ShipShieldGenerator_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -3917,7 +3766,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_181_Thruster_Mk2",
+      "RecipeID": "RCP_175_Thruster_Mk2",
       "OutputItem": "Thruster_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -3946,7 +3795,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_182_FuelTank_Mk2",
+      "RecipeID": "RCP_176_FuelTank_Mk2",
       "OutputItem": "FuelTank_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -3975,7 +3824,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_183_CargoPod_Mk2",
+      "RecipeID": "RCP_177_CargoPod_Mk2",
       "OutputItem": "CargoPod_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4004,7 +3853,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_184_LifeSupportPod_Mk2",
+      "RecipeID": "RCP_178_LifeSupportPod_Mk2",
       "OutputItem": "LifeSupportPod_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4033,7 +3882,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_185_ShipComponents_Mk2",
+      "RecipeID": "RCP_179_ShipComponents_Mk2",
       "OutputItem": "ShipComponents_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4066,7 +3915,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_186_ArmourHull_Mk2",
+      "RecipeID": "RCP_180_ArmourHull_Mk2",
       "OutputItem": "ArmourHull_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4095,7 +3944,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_187_HullPlating_Mk2",
+      "RecipeID": "RCP_181_HullPlating_Mk2",
       "OutputItem": "HullPlating_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4124,7 +3973,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_188_ShieldCapacitor_Mk2",
+      "RecipeID": "RCP_182_ShieldCapacitor_Mk2",
       "OutputItem": "ShieldCapacitor_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4153,7 +4002,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_189_ShipEngine_Mk3",
+      "RecipeID": "RCP_183_ShipEngine_Mk3",
       "OutputItem": "ShipEngine_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4182,7 +4031,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_190_ShipReactor_Mk3",
+      "RecipeID": "RCP_184_ShipReactor_Mk3",
       "OutputItem": "ShipReactor_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4211,7 +4060,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_191_ShipShieldGenerator_Mk3",
+      "RecipeID": "RCP_185_ShipShieldGenerator_Mk3",
       "OutputItem": "ShipShieldGenerator_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4240,7 +4089,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_192_Thruster_Mk3",
+      "RecipeID": "RCP_186_Thruster_Mk3",
       "OutputItem": "Thruster_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4269,7 +4118,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_193_FuelTank_Mk3",
+      "RecipeID": "RCP_187_FuelTank_Mk3",
       "OutputItem": "FuelTank_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4298,7 +4147,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_194_ArmourHull_Mk3",
+      "RecipeID": "RCP_188_ArmourHull_Mk3",
       "OutputItem": "ArmourHull_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4327,7 +4176,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_195_TurretWeapon_Mk2",
+      "RecipeID": "RCP_189_TurretWeapon_Mk2",
       "OutputItem": "TurretWeapon_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4356,7 +4205,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_196_EnergyCannon_Mk2",
+      "RecipeID": "RCP_190_EnergyCannon_Mk2",
       "OutputItem": "EnergyCannon_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4385,7 +4234,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_197_TriLaser_Mk2",
+      "RecipeID": "RCP_191_TriLaser_Mk2",
       "OutputItem": "TriLaser_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4414,7 +4263,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_198_MissileLauncher_Mk2",
+      "RecipeID": "RCP_192_MissileLauncher_Mk2",
       "OutputItem": "MissileLauncher_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4443,7 +4292,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_199_Railgun_Mk2",
+      "RecipeID": "RCP_193_Railgun_Mk2",
       "OutputItem": "Railgun_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4472,7 +4321,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_200_PlasmaCannon_Mk2",
+      "RecipeID": "RCP_194_PlasmaCannon_Mk2",
       "OutputItem": "PlasmaCannon_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4501,7 +4350,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_201_TorpedoLauncher_Mk2",
+      "RecipeID": "RCP_195_TorpedoLauncher_Mk2",
       "OutputItem": "TorpedoLauncher_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4530,7 +4379,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_202_PointDefenceLaser_Mk2",
+      "RecipeID": "RCP_196_PointDefenceLaser_Mk2",
       "OutputItem": "PointDefenceLaser_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4559,7 +4408,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_203_TurretWeapon_Mk3",
+      "RecipeID": "RCP_197_TurretWeapon_Mk3",
       "OutputItem": "TurretWeapon_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4588,7 +4437,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_204_EnergyCannon_Mk3",
+      "RecipeID": "RCP_198_EnergyCannon_Mk3",
       "OutputItem": "EnergyCannon_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4617,7 +4466,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_205_TriLaser_Mk3",
+      "RecipeID": "RCP_199_TriLaser_Mk3",
       "OutputItem": "TriLaser_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4646,7 +4495,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_206_MissileLauncher_Mk3",
+      "RecipeID": "RCP_200_MissileLauncher_Mk3",
       "OutputItem": "MissileLauncher_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4675,7 +4524,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_207_Railgun_Mk3",
+      "RecipeID": "RCP_201_Railgun_Mk3",
       "OutputItem": "Railgun_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4704,7 +4553,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_208_PlasmaCannon_Mk3",
+      "RecipeID": "RCP_202_PlasmaCannon_Mk3",
       "OutputItem": "PlasmaCannon_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4733,7 +4582,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_209_TorpedoLauncher_Mk3",
+      "RecipeID": "RCP_203_TorpedoLauncher_Mk3",
       "OutputItem": "TorpedoLauncher_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4762,7 +4611,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_210_PointDefenceLaser_Mk3",
+      "RecipeID": "RCP_204_PointDefenceLaser_Mk3",
       "OutputItem": "PointDefenceLaser_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4791,7 +4640,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_211_GravitationGenerator_Mk2",
+      "RecipeID": "RCP_205_GravitationGenerator_Mk2",
       "OutputItem": "GravitationGenerator_Mk2",
       "OutputQty": 1,
       "Tier": 6,

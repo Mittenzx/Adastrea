@@ -3,8 +3,8 @@
 Adastrea Crafting & Building Tree — authoritative generator.
 
 Defines the COMPLETE crafting/building catalog (raw acquisition -> refined ->
-components -> ship parts/weapons -> station parts -> modules -> station assembly)
-and emits the canonical machine-readable file Content/Data/CraftingTree.json.
+components -> ship parts/weapons -> station construction parts/modules) and
+emits the canonical machine-readable file Content/Data/CraftingTree.json.
 
 This generator IS the single source of truth for the tree's recipe catalog.
 The JSON it emits is what the game reads and what tests/ the diagram generate
@@ -48,7 +48,7 @@ PRODUCED_IN_TAGS = {
 TIER_LABELS = {
     1: "Raw Acquisition", 2: "Refined Materials", 3: "Components & Electronics",
     4: "Ship Parts / Weapons", 5: "Station Construction Parts",
-    6: "Station Modules (Assembly)", 7: "Station Assembly",
+    6: "Station Modules (Assembly)",
 }
 
 
@@ -275,14 +275,6 @@ add("FuelDepotModule", 6, "Fabrication", "Other", [("ModuleShell", 2), ("SteelAl
 add("TurretModule", 6, "Fabrication", "Other", [("TurretWeapon", 2), ("ModuleShell", 2)])
 add("ShieldGeneratorModule", 6, "Fabrication", "Other", [("ShieldEmitter", 1), ("ModuleShell", 2), ("AdvancedPowerCells", 2)])
 
-# =========================== TIER 7 : STATION ASSEMBLY ==========================
-add("TradeStation", 7, "Fabrication", "Other", [("DockingBayModule", 1), ("MarketplaceModule", 1), ("CargoBayModule", 1)])
-add("IndustrialStation", 7, "Fabrication", "Other", [("ProcessingModule", 2), ("FabricationModule", 1), ("ReactorModule", 1)])
-add("MiningStation", 7, "Fabrication", "Other", [("ProcessingModule", 1), ("CargoBayModule", 1), ("PowerCore", 1)])
-add("ResearchStation", 7, "Fabrication", "Other", [("ScienceLabModule", 2), ("SolarArrayModule", 1), ("AdvancedAICore", 1)])
-add("DefenceStation", 7, "Fabrication", "Other", [("TurretModule", 2), ("ShieldGeneratorModule", 1), ("DockingPortModule", 1)])
-add("ColonyStation", 7, "Fabrication", "Other", [("HabitationModule", 2), ("BarracksModule", 1), ("LifeSupportUnit", 2)])
-
 # =========================== RESEARCH PROGRESSION ============================
 # ScienceLab research chain. ResearchData (exists, T4) is the first milestone;
 # AdvancedResearch and QuantumResearch unlock higher tech. Consumed by Mk2/Mk3
@@ -487,8 +479,8 @@ def main():
     doc = {
         "$schema": "http://json-schema.org/draft-07/schema#",
         "Title": "Adastrea Crafting & Building Tree",
-        "Description": "Machine-readable crafting/building tree: raw extraction -> refined materials -> components & electronics -> ship parts -> weapons -> station construction parts -> modules -> station assembly. Authoritative generator: docs/11-TECHNICAL_SPECS/generate_crafting_tree.py",
-        "SchemaVersion": "1.2.0",
+        "Description": "Machine-readable crafting/building tree: raw extraction -> refined materials -> components & electronics -> ship parts -> weapons -> station construction parts -> modules. Authoritative generator: docs/11-TECHNICAL_SPECS/generate_crafting_tree.py",
+        "SchemaVersion": "1.3.0",
         "LastUpdated": "2026-08-31",
         "ItemIDConvention": "^[A-Za-z][A-Za-z0-9_]*$",
         "NoteHelium3": "Existing trade asset uses 'Helium-3' (hyphen, violates ItemID regex). Crafting data canonicalizes to 'Helium3' and maps to DA_TradeItem_Helium-3.",
