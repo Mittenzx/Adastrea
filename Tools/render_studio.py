@@ -157,14 +157,16 @@ def render_one(base, W=1400, H=1000):
     # ---- camera framing (turntable 3/4 view around origin) ----
     center = V.mean(0)
     span = (V.max(0) - V.min(0)).max()
-    # tight framing so the ship fills the frame (smaller radius = bigger ship)
-    radius = max(span * 0.85, 60)
+    # frame bounds: use full bounding sphere around center so tall masts fit
+    d = V - center
+    bsphere = np.sqrt((d*d).sum(1)).max()
+    radius = max(bsphere * 1.15, 70)
     az, el = math.radians(42), math.radians(22)
     cam = np.array([center[0] + radius*math.cos(el)*math.sin(az),
                     center[1] + radius*math.cos(el)*math.cos(az),
                     center[2] + radius*math.sin(el)])
-    # aim slightly below the ship's centroid so the hull is centered, not the floor
-    look = center + np.array([0, 0, span*0.1])
+    # aim at the ship's centroid so the hull stays centered (not the bottom)
+    look = center + np.array([0, 0, span*0.05])
     fwd = (look - cam); fwd /= np.linalg.norm(fwd)
     right = np.cross(fwd, np.array([0, 0, 1])); right /= np.linalg.norm(right)
     up = np.cross(right, fwd)
@@ -191,34 +193,8 @@ def render_one(base, W=1400, H=1000):
         g = 0.05 + 0.16 * (1 - t)
         fb[yy, :, :] = (g, g * 1.05, g * 1.1)
 
-    # ---- floor plane (large quad below ship, soft gradient) ----
-    fy = V[:, 2].min() - (V[:, 2].max() - V[:, 2].min()) * 0.12
-    sp = span * 1.2
-    fc = np.array([(center[0]-sp/2, center[1]-sp/2, fy), (center[0]+sp/2, center[1]-sp/2, fy),
-                   (center[0]+sp/2, center[1]+sp/2, fy), (center[0]-sp/2, center[1]+sp/2, fy)])
-    proj = []
-    for c in fc:
-        vc = (c - cam) @ Rm.T
-        zz = max(-vc[2], 0.1)
-        proj.append(np.array([vc[0]*focal/zz + W/2, -vc[1]*focal/zz + H/2, -vc[2]]))
-    for i0, i1, i2 in [(0, 1, 2), (0, 2, 3)]:
-        p0, p1, p2 = proj[i0][:2], proj[i1][:2], proj[i2][:2]
-        e1 = p1-p0; e2 = p2-p0
-        area = e1[0]*e2[1] - e1[1]*e2[0]
-        if abs(area) < 1e-6: continue
-        x0 = max(0, int(min(p0[0], p1[0], p2[0]))); x1 = min(W-1, int(max(p0[0], p1[0], p2[0])))
-        y0 = max(0, int(min(p0[1], p1[1], p2[1]))); y1 = min(H-1, int(max(p0[1], p1[1], p2[1])))
-        for yy in range(y0, y1+1):
-            for xx in range(x0, x1+1):
-                a = ((p1[1]-p2[1])*(xx-p2[0]) + (p2[0]-p1[0])*(yy-p2[1])) / area
-                b = ((p2[1]-p0[1])*(xx-p2[0]) + (p0[0]-p2[0])*(yy-p2[1])) / area
-                c = 1-a-b
-                if a < 0 or b < 0 or c < 0: continue
-                zv = a*(-proj[i0][2])+b*(-proj[i1][2])+c*(-proj[i2][2])
-                if zv > zb[yy, xx]: continue
-                zb[yy, xx] = zv
-                grad = 0.75 + 0.25*(0.5-c)
-                fb[yy, xx] = np.array([0.16, 0.17, 0.19]) * grad
+    # (floor plane intentionally removed — a dark floor band ate the bottom of the
+    # frame and blocked the ship's underside; ships now float against the backdrop)
 
     # ---- raster ships (per-face texture sampled with correct UV indices) ----
     def tri_tex(face, fuvf, D, E):
