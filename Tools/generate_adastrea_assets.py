@@ -764,6 +764,38 @@ def build_cargo_carcass(sz, outname):
     return finalize_part([integrated], f"{outname}_Carcass", "M_Hull")
 
 
+def build_warship_carcass(sz, outname):
+    """Warship/combat-specialist carcass — an arrowhead wedge fuselage with a
+    dorsal command ridge, twin flank gun-stub outriggers, and a heavy nose canoe —
+    reads as a dedicated warship (aggressive, zero cargo volume), distinct from the
+    cargo-hauler and the small fighter. Returns the finalized carcass."""
+    s = SIZE_CLASSES[sz]
+    lx, ly, lz = s['carcass']
+    locz = s['z']
+    k = sc(sz)
+    # long arrowhead nose wedge (aggressive)
+    hull = box(f"War_{sz}_Hull", lx*0.9, ly, lz*0.7, loc=(0, 0, locz)); bevel(hull, 9, 3)
+    nose = cone("War_Nose", lx*0.34, ly*0.26, loc=(0, ly*0.66, locz),
+                rot=(math.radians(90), 0, 0), verts=14); bevel(nose, 3, 2)
+    # dorsal command ridge / spine
+    ridge = box("War_Ridge", lx*0.30, ly*0.5, lz*0.42, loc=(0, -ly*0.1, locz + lz*0.5)); bevel(ridge, 6, 3)
+    # twin flank gun-stub outriggers (dedicated hardpoint pylons)
+    objs = [hull, nose, ridge]
+    for side in (-1, 1):
+        pylon = box(f"War_Pylon{side}", lx*0.14, ly*0.5, lz*0.3,
+                    loc=(side*lx*0.46, -ly*0.1, locz + lz*0.05)); bevel(pylon, 4, 2)
+        objs.append(pylon)
+    # slim aft fin
+    fin = box("War_Fin", lx*0.06, ly*0.18, lz*0.8, loc=(0, -ly*0.52, locz + lz*0.4)); bevel(fin, 3, 2)
+    objs.append(fin)
+    # Join (plain merge) rather than boolean-union — boolean of overlapping
+    # primitives produced degenerate faces + exploded tri counts on the larger
+    # classes. Warships read as built-up/armored by nature, so overlapping
+    # plates read fine; skip the risky boolean here.
+    joined = join(objs, f"{outname}_CarcassGeo")
+    return finalize_part([joined], f"{outname}_Carcass", "M_Hull")
+
+
 def build_corvette_carcass(sz, outname):
     """Corvette carcass — longer, wedge-fore, twin-split aft (frigate profile)."""
     s = SIZE_CLASSES[sz]
@@ -2369,6 +2401,21 @@ def main():
         'SM_Ship_Smuggler_01', {'engine': True, 'engine_variant': 'compact',
                                 'cargo': True, 'cargo_variant': 'flat_rack', 'sensor': True},
         carcass_builder=build_cargo_carcass)
+    # ---- Warship line (dedicated combat, all sizes) — arrowhead hulls ----
+    ship_parts["SM_Ship_Escort_01"] = assemble_ship('small',
+        'SM_Ship_Escort_01', {'engine': True, 'weapon': True, 'weapon_twin': True,
+                              'weapon_variant': 'cannon', 'sensor': True, 'reactor': True},
+        carcass_builder=build_warship_carcass)
+    ship_parts["SM_Ship_Destroyer_01"] = assemble_ship('corvette',
+        'SM_Ship_Destroyer_01', {'engine': True, 'weapon': True, 'weapon_twin': True,
+                                 'weapon_variant': 'tri_laser', 'sensor': True,
+                                 'reactor': True, 'cargo': False},
+        carcass_builder=build_warship_carcass)
+    ship_parts["SM_Ship_Battleship_01"] = assemble_ship('large',
+        'SM_Ship_Battleship_01', {'engine': True, 'weapon': True, 'weapon_twin': True,
+                                  'weapon_variant': 'cannon', 'sensor': True, 'reactor': True,
+                                  'cargo': False},
+        carcass_builder=build_warship_carcass)
     ship_parts = ship_parts
     for ship_name, parts in ship_parts.items():
         for obj, out in parts:
@@ -2400,7 +2447,9 @@ def main():
                                           'sensor': True, 'reactor': True}),
         "SM_Ship_Smuggler_01": ('small', {'engine': True, 'engine_variant': 'compact',
                                           'cargo': True, 'cargo_variant': 'flat_rack',
-                                          'sensor': True}),
+                                          'sensor': True}), "SM_Ship_Escort_01": ('small', {'engine': True, 'weapon': True, 'weapon_twin': True, 'sensor': True, 'reactor': True}),
+        "SM_Ship_Destroyer_01": ('corvette', {'engine': True, 'weapon': True, 'weapon_twin': True, 'weapon_variant': 'tri_laser', 'sensor': True, 'reactor': True}),
+        "SM_Ship_Battleship_01": ('large', {'engine': True, 'weapon': True, 'weapon_twin': True, 'sensor': True, 'reactor': True}),
     }
     assembled_count = 0
     for name, (sz, opts) in assembled_specs.items():

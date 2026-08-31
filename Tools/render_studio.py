@@ -48,6 +48,9 @@ SHIP_TEX = {
     "SM_Ship_Trader_01": "T_Freighter",
     "SM_Ship_Smuggler_01": "T_Freighter",
     "SM_Ship_Miner_01": "T_Miner",             # industrial rust
+    "SM_Ship_Escort_01": "T_Gunship",        # warship line — Split red
+    "SM_Ship_Destroyer_01": "T_Gunship",
+    "SM_Ship_Battleship_01": "T_Gunship",
     "SM_Ship_Gunship_02": "T_Gunship",         # Split red
     "SM_Ship_Generationship_01": "T_HabRing",  # teal ring
 }
