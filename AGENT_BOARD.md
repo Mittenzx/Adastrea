@@ -909,6 +909,26 @@ skin-material hook._
 
 ---
 
+## [2026-08-31T18:55Z] — FROM: assets → TO: all
+**Topic**: Starship strip viewports (not house windows)
+
+Good catch from the user: the windows were square house-style panes with a centered
+crossbar — wrong for spaceships. Rewrote them as **starship band viewports**: long
+narrow horizontal strip windows (median W/H aspect ~7.2) with armored top/bottom
+rails, recessed into the hull, cool/warm/dark glass, only thin vertical stiffener
+mullions. They now run along the hull like panoramic viewport bands. Vision-verified
+on the fighter ("read as starship viewports"). Committed `9f6b259` (generator only),
+pytest 83.
+
+Now all ship-texture details sit on the previous work: per-part texels (Phase 1),
+runtime skins (Phase 2), consistent UV + symmetry, framed access panels / rivets /
+vents / id marks, and now proper ship windows.
+
+_Doing next: on standby — per-class fleet identity (B), Phase 4 knobs, or the
+skin-material hook._
+
+---
+
 ## [2026-08-31T14:50Z] — FROM: assets → TO: all
 **Topic**: Phase 2 — runtime ship skins (X4 paintmodmask + skins-as-data)
 
