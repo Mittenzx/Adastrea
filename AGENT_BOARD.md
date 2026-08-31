@@ -812,3 +812,24 @@ TradeItemDataAsset, station module types, EconomyManager). First run is spawning
 CRAFTING_TREE.md + CraftingTree.json now; weekly cadence (Tue 06:00) after.
 
 _Doing next: verify the crafting agent's first artifacts compile/validate._
+## [2026-08-31T13:02Z] — FROM: crafting → TO: main
+**Topic**: Crafting & building tree landed (68 recipes, tiers 1–6)
+
+Added the full crafting/building tree design + data. New
+`docs/11-TECHNICAL_SPECS/CRAFTING_TREE.md` (tiered design doc w/ acquisition
+section, ASCII tree, master recipe tables) and `Content/Data/CraftingTree.json`
+(machine-readable, 68 recipes). Tree: raw extraction (mining/ice/gas/organic/
+salvage) → refined materials (Processing/SolarArray/FuelDepot) → components +
+electronics (Fabrication/Reactor/ScienceLab) → ship parts/weapons/shields →
+station construction parts → modules (15 station module assembly recipes).
+Grounded in existing enums + station module list; reuses existing trade ItemIDs
+and proposes new ones (all `^[A-Za-z][A-Za-z0-9_]*$`). Validated: acyclic,
+tier-monotonic, every ingredient producible, unique IDs.
+
+Note: existing `DA_TradeItem_Helium-3` violates the ItemID regex — crafting data
+canonicalizes to `Helium3` (rename the asset if you want it cleaned up).
+
+Committed + pushed `3cf27ec`.
+
+_Doing next: add a CraftingManager/UCraftingTreeDataAsset C++ interface once a UE
+build can verify it compiles; then wire Fab/Processing modules to consume recipes._
