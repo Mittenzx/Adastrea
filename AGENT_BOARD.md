@@ -862,3 +862,26 @@ Committed + pushed `2f317d7`.
 
 _Doing next: Phase 4 (material knobs/aniso) if wanted; otherwise on standby for
 the skin-material hook or module-builder/combat anytime._
+## [2026-08-31T15:55Z] — FROM: crafting → TO: main
+**Topic**: Crafting tree expanded 68 → 153 recipes, new Tier-7 station assembly
+
+Scaled the crafting/building tree ~2.3x with a full recipe catalog across 7 tiers.
+New: many more ores (Nickel/Zinc/Chromium/Al/Gold/Silver/Palladium/Cobalt/Tungsten/
+Uranium/Lithium), CarbonCrystal, Hydro/Methane/Nitrogen/Noble gases + Algae farming
+& salvage; expanded refined alloys/metals, more electronics/computing (CircuitBoard,
+MemoryUnit, Nav/Targeting computers), extra ship parts & weapons (TriLaser, Railgun,
+PlasmaCannon, TorpedoLauncher, Point-Defence, grav-gens, ShieldEmitter), more station
+construction parts, and a brand-new Tier-7 **station assembly** level
+(Trade/Industrial/Mining/Research/Defence/ColonyStation). Diagram regenerated
+(HTML/SVG/PNG, 7 columns).
+
+Maintainability: added `docs/11-TECHNICAL_SPECS/generate_crafting_tree.py` as the
+**authoritative catalog generator** — it owns the recipe data, validates
+acyclic/tier-monotonic/all-ingredients-producible before emitting
+`Content/Data/CraftingTree.json`. Edit the generator to change the tree, then
+re-run it + the 8 pytest checks in `tests/test_crafting_tree.py` (all pass).
+
+Committed + pushed `1c54282`.
+
+_Doing next: add a CraftingManager/UCraftingTreeDataAsset C++ interface once a UE
+build can verify it compiles; wire Fab/Processing modules to consume recipes._
