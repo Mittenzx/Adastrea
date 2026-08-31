@@ -1,0 +1,61 @@
+{
+  "_comment": "Adastrea ship SKINS — X4-style runtime skin recipes. Each skin recolors the skinnable hull regions (where the _SKIN mask = 1) and leaves fixed regions (windows/neon/hazard/accent) intact. hue/brightness/saturation mirror X4's paintmod recipe. accentRGB is the secondary trim color.",
+  "skins": [
+    {
+      "id": "foundation",
+      "name": "Foundation (default)",
+      "hue": 0, "brightness": 0.0, "saturation": 0.0,
+      "accentRGB": [0.12, 0.16, 0.22],
+      "metal": 0.96, "smooth": 0.34
+    },
+    {
+      "id": "argon_blue",
+      "name": "Argon Federation Blue",
+      "hue": 210, "brightness": 0.0, "saturation": 0.55,
+      "accentRGB": [0.1, 0.3, 0.6],
+      "metal": 0.9, "smooth": 0.4
+    },
+    {
+      "id": "teladi_green",
+      "name": "Teladi Company Green",
+      "hue": 120, "brightness": 0.0, "saturation": 0.5,
+      "accentRGB": [0.2, 0.5, 0.2],
+      "metal": 0.9, "smooth": 0.35
+    },
+    {
+      "id": "paranid_purple",
+      "name": "Godrealm Purple",
+      "hue": 280, "brightness": 0.0, "saturation": 0.5,
+      "accentRGB": [0.5, 0.2, 0.6],
+      "metal": 0.9, "smooth": 0.4
+    },
+    {
+      "id": "split_red",
+      "name": "Split Red",
+      "hue": 0, "brightness": 0.0, "saturation": 0.6,
+      "accentRGB": [0.6, 0.1, 0.1],
+      "metal": 0.9, "smooth": 0.3
+    },
+    {
+      "id": "obsidian",
+      "name": "Obsidian Black",
+      "hue": 0, "brightness": -0.5, "saturation": 0.0,
+      "accentRGB": [0.1, 0.1, 0.12],
+      "metal": 0.98, "smooth": 0.5
+    },
+    {
+      "id": "rust",
+      "name": "Rust",
+      "hue": 20, "brightness": -0.1, "saturation": 0.5,
+      "accentRGB": [0.5, 0.2, 0.1],
+      "metal": 0.7, "smooth": 0.6
+    },
+    {
+      "id": "camo",
+      "name": "Federation Camo",
+      "hue": 90, "brightness": -0.1, "saturation": 0.3,
+      "accentRGB": [0.3, 0.35, 0.2],
+      "metal": 0.8, "smooth": 0.5
+    }
+  ]
+}

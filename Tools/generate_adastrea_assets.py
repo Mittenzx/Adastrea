@@ -279,9 +279,14 @@ def gen_texture_set(name, variant, size=2048, seed=1):
         D[..., ch] = np.clip(base[ch] - (0.5 - h) * 0.3, 0, 1)
     D[..., 3] = 1.0
     # accent seam stripes
+    # 'fixed' marks regions that must NOT be re-skinned (stripes/neon/windows/
+    # hazard) — the skin mask is the inverse, so a runtime skin only recolors the
+    # plain hull panels and leaves accents/lights intact (mirrors X4's paintmodmask).
     stripe = np.zeros((H, W), dtype=bool)
+    fixed = np.zeros((H, W), dtype=bool)
     for i in range(cell, W, cell):
         stripe[max(0,i-3):i+3, :] = True
+    fixed |= stripe
     D[stripe] = [accent[0], accent[1], accent[2], 1.0]
 
     # emissive mask: glow seams + hazard-light dots
@@ -329,6 +334,7 @@ def gen_texture_set(name, variant, size=2048, seed=1):
                 AO[r0:r1, c0:c1] = 0.1
                 R[r0:r1, c0:c1] = 0.3
                 h[r0:r1, c0:c1] = 0.16
+                fixed[r0:r1, c0:c1] = True
     # neon trim
     if variant.get('neon'):
         nc = variant['neon']
@@ -340,6 +346,7 @@ def gen_texture_set(name, variant, size=2048, seed=1):
         D[neon] = [nc[0]*0.7, nc[1]*0.7, nc[2]*0.7, 1.0]
         E[neon] = [nc[0], nc[1], nc[2], 1.0]
         AO[neon] = 0.55
+        fixed |= neon
     # grime / scorch streaks
     if variant.get('grime'):
         for _ in range(rng.integers(10, 18)):
@@ -366,6 +373,7 @@ def gen_texture_set(name, variant, size=2048, seed=1):
                     y0 = sy + k
                     D[max(0,y0):min(H,y0+sw), sx:sx+sw] = [1.0, 0.8, 0.1, 1.0]
             R[sy:sy+sw, sx:sx+sw] = 0.6
+            fixed[sy:sy+sw, sx:sx+sw] = True
     # cable / conduit runs
     if variant.get('cable'):
         for _ in range(variant['cable'].get('runs', 5)):
@@ -399,7 +407,10 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     N[...,2] = -N[...,2]
     N[...,3] = 1.0
 
-    maps = {'_D': D, '_N': N, '_R': _to4(R), '_M': _to4(M), '_AO': _to4(AO), '_E': E}
+    # skin mask: 1.0 = skinnable hull panel, 0.0 = fixed region (accent/neon/
+    # windows/hazard) that a runtime skin must NOT recolor (X4 paintmodmask analog)
+    SKIN = np.where(fixed, 0.0, 1.0).astype(np.float32)
+    maps = {'_D': D, '_N': N, '_R': _to4(R), '_M': _to4(M), '_AO': _to4(AO), '_E': E, '_SKIN': _to4(SKIN)}
     for suf, arr in maps.items():
         fname = f"T_{name}{suf}.png"
         bpy.data.images.new(fname, width=W, height=H)

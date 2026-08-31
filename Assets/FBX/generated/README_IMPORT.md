@@ -69,6 +69,26 @@ its texture set like so:
 > ships); engaged, the FBX `M_*` name is the hook — create the UE material `M_Engine`
 > from `T_Engine_*` and assign it to the part's material slot.
 
+### Skin system (Phase 2 — runtime ship skins, X4-style)
+Each texture set also ships a **skin mask**: `T_<name>_SKIN.png` (grayscale,
+`1.0` = skinnable hull panel, `0.0` = fixed region that must NOT be recolored —
+accent stripes / windows / neon / hazard). Skins are defined as **data** in
+`Assets/FBX/generated/skins.json` (8 base skins, each a `hue/brightness/saturation`
+recipe mirroring X4's paintmod recipe plus `metal`/`smooth`).
+
+**UE material hook (to make skins work in-engine):**
+1. In the ship hull material, connect the `T_<name>_SKIN` mask between the base
+   albedo and the output: `albedo = lerp(baseAlbedo, skinColor, skinMask)`.
+2. `skinColor` comes from the selected skin's recipe — a `LinearColor` parameter the
+   game sets from `skins.json` (derive RGB from hue/saturation, or just lerp the
+   hull tint toward the skin's accent color).
+3. Left/right-click the ship at a dock → cycle the skin (Redesign-bay analog).
+   Because the skin COLOR is a runtime parameter, **any skin applies to any ship
+   with no per-skin texture** — exactly X4's payoff.
+
+Preview: `python Tools/render_studio.py SM_Ship_Fighter_01 --skin argon_blue`
+recolors the skinnable hull while keeping windows/accents fixed (verified).
+
 ## Regenerate / tweak
 Everything is code-driven — edit `Tools/generate_adastrea_assets.py` (a parametric
 builder: box/cyl/cone/sphere/torus/rock primitives + bevel + join + clean) and re-run:

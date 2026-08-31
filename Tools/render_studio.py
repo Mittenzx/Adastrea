@@ -17,10 +17,11 @@ Usage: python Tools/render_studio.py <ship_or_station_base> [more...]
   e.g. python Tools/render_studio.py SM_Ship_Fighter_01 SM_Station_Habitation_01
 Output: Assets/FBX/generated/scene_renders/<base>.png
 """
-import os, sys, math
+import os, sys, math, json
 import numpy as np
 from PIL import Image
 
+GEN = r"C:\Users\akuma\Adastrea\Assets\FBX\generated"
 OBJDIR = r"C:\Users\akuma\Adastrea\Assets\FBX\generated\obj"
 TEXDIR = r"C:\Users\akuma\Adastrea\Assets\FBX\generated\Textures"
 OUTDIR = r"C:\Users\akuma\Adastrea\Assets\FBX\generated\scene_renders"
@@ -93,7 +94,35 @@ def load_tex(name):
     e = os.path.join(TEXDIR, name + "_E.png")
     D = np.asarray(Image.open(d).convert('RGB'), float) / 255.0
     E = np.asarray(Image.open(e).convert('RGB'), float) / 255.0 if os.path.exists(e) else np.zeros_like(D)
-    return D, E
+    # skin mask: 1.0 = skinnable hull, 0.0 = fixed regions (X4 paintmodmask analog)
+    sk = os.path.join(TEXDIR, name + "_SKIN.png")
+    SKIN = np.asarray(Image.open(sk).convert('L'), float) / 255.0 if os.path.exists(sk) else np.ones(D.shape[:2])
+    return D, E, SKIN
+
+
+def apply_skin(D, SKIN, skin):
+    """Recolor the skinnable hull regions toward a skin's target color.
+    Fixed regions (SKIN==0: windows/neon/hazard/accent) keep their original color.
+    Preserves per-texel luminance so panel/rivet detail survives; this is the
+    X4 paintmodmask behavior (hue recolor gated by a mask)."""
+    if skin is None:
+        return D
+    hue = skin.get('hue', 0) / 360.0
+    sat = skin.get('saturation', 0)
+    bri = skin.get('brightness', 0)
+    # target color from hue/sat/bri (HLS with lightness ~0.5 + bri)
+    tl = 0.35 + bri
+    import colorsys
+    tc = np.array(colorsys.hls_to_rgb(hue, min(max(tl, 0), 1), min(max(sat, 0), 1)))
+    out = D.copy()
+    mask = SKIN >= 0.5
+    if not mask.any():
+        return out
+    # preserve per-texel luminance, map to target color
+    lum = D[..., :3].mean(2)
+    lum = np.clip(lum, 0, 1)
+    out[mask] = tc * lum[mask][:, None]
+    return out
 
 
 def mount_for(base, sz):
@@ -109,9 +138,26 @@ def mount_for(base, sz):
     return m
 
 
-def render_one(base, W=1400, H=1000):
+def render_one(base, W=1400, H=1000, skin_id=None):
     sz = size_class_of(base)
     mount = mount_for(base, sz)
+
+    # load optional skin recipe (X4-style): recolors skinnable hull regions
+    skin = None
+    skins_db = None
+    skpath = os.path.join(GEN, "skins.json")
+    if os.path.exists(skpath):
+        try:
+            with open(skpath) as f: skins_db = json.load(f)["skins"]
+        except Exception: skins_db = None
+    if skin_id and skins_db:
+        for s in skins_db:
+            if s.get("id") == skin_id:
+                skin = {k: s.get(k) for k in ("hue","brightness","saturation","accentRGB")}
+                break
+    # skin applies to the hull surface + parts that are skinnable (Carcass mostly)
+    if skin:
+        skin = {"Carcass": skin}
 
     # gather per-part geometry with SEPARATE vertex + uv index offsets, per-part tex
     allV, allUV, allFv, allFuv = [], [], [], []
@@ -128,7 +174,8 @@ def render_one(base, W=1400, H=1000):
             tname = SHIP_TEX.get(base, "T_Ship_Hull")
         else:
             tname = PART_TEX.get(pt, "T_Ship_Hull")
-        D, E = load_tex(tname)
+        D, E, SKIN = load_tex(tname)
+        D = apply_skin(D, SKIN, skin.get(pt) if skin else None)
         ts_idx = len(texset)
         texset.append((D, E))
         # mount offset (x y z)
@@ -246,16 +293,22 @@ def render_one(base, W=1400, H=1000):
         tri_tex(allFv[fi], allFuv[fi], D, E)
 
     img = Image.fromarray((fb * 255).astype(np.uint8))
-    out = os.path.join(OUTDIR, f"{base}.png")
+    suffix = f"_{skin_id}" if skin_id else ""
+    out = os.path.join(OUTDIR, f"{base}{suffix}.png")
     img.save(out)
     print("OK", base, "tris", len(allFv), "->", os.path.basename(out))
 
 
 if __name__ == "__main__":
     args = sys.argv[1:] or ["SM_Ship_Fighter_01"]
+    skin_id = None
+    if "--skin" in args:
+        i = args.index("--skin")
+        skin_id = args[i+1]
+        del args[i:i+2]
     for name in args:
         try:
-            render_one(name)
+            render_one(name, skin_id=skin_id)
         except Exception as e:
             import traceback; traceback.print_exc()
             print("ERROR", name)
