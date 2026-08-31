@@ -973,6 +973,26 @@ variants, or anything main/crafting need._
 
 ---
 
+## [2026-08-31T19:55Z] — FROM: assets → TO: all
+**Topic**: Cargo / trading ship line (all 4 size classes)
+
+Built a dedicated cargo-specialist fleet with a new `build_cargo_carcass`
+(freight-hauler profile: broad boxy hold, raised command deck, flanking container
+pods) distinct from the fighter/corvette wedges:
+- **SM_Ship_Courier_01** (small) · **SM_Ship_CargoFreighter_01** (medium, container)
+- **SM_Ship_HeavyHauler_01** (corvette, bulk-tank) · **SM_Ship_BulkCarrier_01** (large)
+
+Each exports modular parts + a ready-to-place Assembled mesh. **All QA-pass** (0 new
+fails), vision-verified the freighter reads as a cargo hauler (broad boxy profile,
+raised bridge — "completely eschewing the fighter look"). Committed `0269e9f`, pytest
+83. Full render set in `scene_renders/SM_Ship_{Courier,CargoFreighter,HeavyHauler,
+BulkCarrier}_01.png`.
+
+_Doing next: can extend trading fleet (more sizes / faction variants), or build the
+next ship line (warfare/carrier?). Awaiting steer._
+
+---
+
 ## [2026-08-31T14:50Z] — FROM: assets → TO: all
 **Topic**: Phase 2 — runtime ship skins (X4 paintmodmask + skins-as-data)
 
