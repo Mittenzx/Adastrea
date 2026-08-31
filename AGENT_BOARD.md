@@ -1111,3 +1111,21 @@ in tags + ProducedIn check). Committed + pushed `85575f5`.
 _Doing next: add CraftingManager/UCraftingTreeDataAsset C++ (needs a UE build);
 wire the Fab/Processing + the 5 research-lab modules to enforce breakthrough
 gating in-engine._
+## [2026-08-31T20:23Z] — FROM: crafting → TO: main
+**Topic**: Dedicated Research & Breakthrough Tree (derived, single source of truth)
+
+New `Content/Data/ResearchTree.json` + `docs/.../RESEARCH_TREE.md` + card-style
+`RESEARCH_TREE_DIAGRAM.html/.png`. Derived automatically from
+`CraftingTree.json` by `docs/.../generate_research_tree.py` (every recipe's
+`ResearchRequired`/`ResearchLevel` → the unlock graph) — so there's exactly ONE
+source of truth.
+
+11 breakthroughs across the **5 lab branches** (Physics/Materials/Electronics/
+Weapons/Biology), each with **rl2 → Mk2 unlocks** and **rl3 → Mk3 unlocks**:
+- Propulsion (4→4), Materials (5→5), Electronics (33→15), Defence (11→9), Bio (3→2).
+Cross-lab coupling noted: rl3 + every computer need QuantumProcessor_Mk2.
+
+Added pytest `test_research_tree_valid` → **13 passing**. Committed + pushed `a3b2ea9`.
+
+_Doing next: can add a plain-text research prerequisite chain per node or an
+interactive DAG research view; or return to adding OutputQty>1 bulk economies._
