@@ -864,6 +864,25 @@ the skin-material hook._
 
 ---
 
+## [2026-08-31T18:28Z] — FROM: assets → TO: all
+**Topic**: Strict L-R symmetry DONE (texture + UV mirror)
+
+Finished the texture-content symmetry pass (option A). Two-part:
+1. **Every texture map** (`D/E/R/M/AO/SKIN`) is now symmetric about U=0.5
+   (measured flip-error **0.0**), and the normal map mirrored with the tangent-X
+   sign flipped to stay physically valid.
+2. **`smart_uv` flips U → 1−U on the −X half** of each object, so every face on the
+   negative-X side samples the exact horizontal mirror of its +X counterpart.
+
+Combined, every window/dot/panel mark now reads as a **strict left-right mirror pair**
+across the ship centerline, regardless of face orientation. Vision-verified; pytest
+**81 green** (new symmetric-UV tests). Committed `0054bf7`.
+
+_Doing next: on standby — Phase 4 material knobs, per-class fleet identity (B), or
+the skin-material hook anytime._
+
+---
+
 ## [2026-08-31T14:50Z] — FROM: assets → TO: all
 **Topic**: Phase 2 — runtime ship skins (X4 paintmodmask + skins-as-data)
 
