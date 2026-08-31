@@ -429,11 +429,48 @@ def _to4(gray):
 # UV + export helpers
 # ----------------------------------------------------------------------------
 def smart_uv(ob, angle=66, margin=0.03):
+    """Normalized, consistent UV via world-aligned triplanar projection.
+
+    Replaces per-object smart_project(scale_to_bounds=True), which made every part
+    fill the full 0-1 tile -> inconsistent texel density and random per-island
+    orientation across mirrored parts. Instead:
+      - Every face projects along its dominant world axis at a FIXED texel density
+        (tile_cm texels per cm), so all parts share the same px/cm -> consistent.
+      - UV derived from world position -> left/right mirrored geometry gets the SAME
+        projection, so the texture detail reads symmetric across X=0 (fixes the
+        asymmetry/inconsistency from smart_project).
+    Keeps U/V oriented consistently per axis so panel lines run true.
+    """
+    import bmesh as bm3
     sel_activate(ob)
-    bpy.ops.object.mode_set(mode='EDIT')
-    bpy.ops.mesh.select_all(action='SELECT')
-    bpy.ops.uv.smart_project(angle_limit=angle, island_margin=margin, scale_to_bounds=True)
-    bpy.ops.object.mode_set(mode='OBJECT')
+    me = ob.data
+    bm = bm3.new()
+    bm.from_mesh(me)
+    bm.faces.ensure_lookup_table()
+    tile_cm = 200.0   # one texture tile (U=1) per 200cm -> 10.24 px/cm at 2048
+    # UV channel: use per-face-loop data (need a uv loop layer)
+    uv_layer = bm.loops.layers.uv.get("UVMap") or bm.loops.layers.uv.new("UVMap")
+    import mathutils
+    axes = [mathutils.Vector((1,0,0)), mathutils.Vector((0,1,0)), mathutils.Vector((0,0,1))]
+    for f in bm.faces:
+        n = f.normal.copy()
+        # dominant axis of the face normal (world space)
+        ax = max(range(3), key=lambda i: abs(n[i]))
+        # U/V world axes perpendicular to the dominant axis
+        if ax == 0:
+            u_ax, v_ax = axes[1], axes[2]   # X-dominant face: U=Y, V=Z
+        elif ax == 1:
+            u_ax, v_ax = axes[2], axes[0]   # Y-dominant: U=Z, V=X
+        else:
+            u_ax, v_ax = axes[0], axes[1]   # Z-dominant: U=X, V=Y
+        for loop in f.loops:
+            v = ob.matrix_world @ loop.vert.co   # world position
+            u = (v @ u_ax) / tile_cm
+            ww = (v @ v_ax) / tile_cm
+            loop[uv_layer].uv = (u, ww)
+    bm.to_mesh(me)
+    bm.free()
+    me.update()
 
 def export_fbx(obj, outname):
     sel_activate(obj)

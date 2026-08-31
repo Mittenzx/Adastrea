@@ -105,9 +105,11 @@ def qa_one(obj_path):
 
     # 5. UV presence
     if len(uvs):
-        hi = uvs.max()
-        has_uv = uvs.min() >= -0.01 and hi <= 1.01
-        results.append(("uv_present", has_uv, f"{len(uvs)} uv coords, range {uvs.min():.2f}-{hi:.2f}"))
+        hi = uvs.max(); lo = uvs.min()
+        # World-aligned tiling UVs legitimately extend past 0-1 (seamless tileable
+        # textures repeat). Sanity-check they exist + finite + sane tile count.
+        has_uv = np.isfinite(lo) and np.isfinite(hi) and abs(hi) < 64 and abs(lo) < 64
+        results.append(("uv_present", has_uv, f"{len(uvs)} uv coords, range {lo:.2f}-{hi:.2f} (tiling ok)"))
     else:
         results.append(("uv_present", False, "no UVs -> texture will render black"))
 
