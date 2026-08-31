@@ -107,6 +107,24 @@ A **Contraband** line sold at under-the-table premium: `Black Market Drugs`,
 BiologyLab) and `Contraband Tech` at tier 4. All are `Hazardous` storage and carry a
 ~2.5× base-value premium, so they're high-risk/high-reward trade goods.
 
+### Electronics & the computer family
+
+A broad electronics tier underpins the tree. Beyond the base `Electronics` /
+`Microchips` / `CircuitBoard`, there's a library of dedicated components at tier 3 —
+`MicroCapacitor`, `CapacitorBank`, `TransceiverUnit`, `SignalAmplifier`, `OpticalLens`,
+`SensorArray`, `FiberOpticCable`, `DataMatrix`, `Gyroscope`, `RadioAntenna`,
+`PowerRelay`, `ThermalCoupler`, `LogicChip`, `VoltageRegulator`, `EncryptedCircuit`,
+`RelayCoil`, `ClockGenerator` — each feeding higher assemblies.
+
+Sitting above them is a **family of 12 computers** (ScienceLab), from `BasicComputer`
+to niche roles: `PilotComputer`, `CargoComputer`, `ShipComputer`, `TradingComputer`,
+`ScanComputer`, `ScienceComputer`, `EngineeringComputer`, `ResearchComputer`,
+`AutomatedDefenceComputer` (plus the existing `NavigationComputer` and
+`TargetingComputer`). Every one gets Mk2/Mk3 upgrades under the ElectronicsLab
+**ComputingResearch** domain, so computers escalate in value from ~800cr (t3) to
+~4000cr (t4) to legendary Mk3 tiers — a rich "different computers for different jobs"
+progression.
+
 ---
 
 ## 3. Acquisition — Where Raw Materials Come From
@@ -354,7 +372,7 @@ genuinely more valuable. The interactive diagram's node tooltip shows these stat
 
 ## 7. Verification
 
-The JSON (`Content/Data/CraftingTree.json`, **243 recipes across 6 tiers** — including the Mk2/Mk3 progression versions, the 5 specialized research-lab domains + breakthroughs, a food-variety line, and black-market goods; no whole-station assembly recipes) is validated by the
+The JSON (`Content/Data/CraftingTree.json`, **295 recipes across 6 tiers** — including the Mk2/Mk3 progression versions, the 5 specialized research-lab domains + breakthroughs, a food-variety line, black-market goods, and a broad electronics/components & computer-family line; no whole-station assembly recipes) is validated by the
 `check_crafting_tree()` logic in `generate_crafting_tree.py` plus `tests/test_crafting_tree.py`:
 - ✅ All recipes have unique `RecipeID` and unique `OutputItem`.
 - ✅ Every `ItemID` matches `^[A-Za-z][A-Za-z0-9_]*$`.

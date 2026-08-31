@@ -211,11 +211,41 @@ add("ControlUnit", 3, "Fabrication", "Components", [("BasicComputer", 1), ("Copp
 add("PowerDistributionUnit", 3, "Fabrication", "Components", [("PowerCells", 2), ("Electronics", 1)])
 add("BasicComputer", 3, "Fabrication", "Technology", [("Electronics", 2), ("Microchips", 1)])
 
-# --- Advanced tech (ScienceLab) ---
+# --- more electronics components (Fabrication) ---
+add("MicroCapacitor", 3, "Fabrication", "Components", [("PowerCells", 1), ("Electronics", 1)])
+add("CapacitorBank", 3, "Fabrication", "Components", [("MicroCapacitor", 4), ("AluminiumComposite", 1)])
+add("TransceiverUnit", 3, "Fabrication", "Components", [("Electronics", 1), ("Microchips", 1), ("CopperWiring", 1)])
+add("SignalAmplifier", 3, "Fabrication", "Components", [("TransceiverUnit", 1), ("SuperConductingWire", 1)])
+add("OpticalLens", 3, "Fabrication", "Components", [("GlassComposite", 2), ("CobaltMagnet", 1)])
+add("SensorArray", 3, "Fabrication", "Components", [("AdvancedSensors", 1), ("OpticalLens", 2), ("SignalAmplifier", 1)])
+add("FiberOpticCable", 3, "Fabrication", "Components", [("GlassComposite", 2), ("Microchips", 1)])
+add("DataMatrix", 3, "Fabrication", "Components", [("MemoryUnit", 1), ("Microchips", 1)])
+add("Gyroscope", 3, "Fabrication", "Components", [("CobaltMagnet", 2), ("PrecisionFastener", 2), ("ServoActuator", 1)])
+add("RadioAntenna", 3, "Fabrication", "Components", [("TransceiverUnit", 1), ("AluminiumComposite", 1)])
+add("PowerRelay", 3, "Fabrication", "Components", [("SuperConductingWire", 1), ("CopperWiring", 2)])
+add("ThermalCoupler", 3, "Fabrication", "Components", [("CeramicTiles", 2), ("CopperWiring", 1)])
+add("LogicChip", 3, "Fabrication", "Components", [("Microchips", 2), ("SiliconWafer", 1)])
+add("VoltageRegulator", 3, "Fabrication", "Components", [("MicroCapacitor", 2), ("CeramicTiles", 1)])
+add("EncryptedCircuit", 3, "Fabrication", "Components", [("CircuitBoard", 1), ("Microchips", 1), ("PalladiumCatalyst", 1)])
+add("RelayCoil", 3, "Fabrication", "Components", [("CopperWiring", 2), ("CobaltMagnet", 1), ("SteelAlloy", 1)])
+add("ClockGenerator", 3, "Fabrication", "Components", [("Microchips", 1), ("PlatinumCatalyst", 1)])
+
+# --- Advanced tech & the computer family (ScienceLab / Fabrication) ---
 add("QuantumProcessor", 3, "ScienceLab", "Technology", [("Microchips", 4), ("PlatinumCatalyst", 2), ("RareEarthElements", 1)])
 add("AdvancedSensors", 3, "ScienceLab", "Technology", [("Electronics", 2), ("SiliconWafer", 1), ("PowerCells", 1)])
 add("NavigationComputer", 3, "ScienceLab", "Technology", [("QuantumProcessor", 1), ("AdvancedSensors", 1), ("MemoryUnit", 1)])
 add("TargetingComputer", 3, "ScienceLab", "Technology", [("AdvancedSensors", 1), ("QuantumProcessor", 1), ("CircuitBoard", 1)])
+
+# --- the computer family (Fabrication / ScienceLab, tier 3-4) ---
+add("PilotComputer", 3, "ScienceLab", "Technology", [("BasicComputer", 1), ("Gyroscope", 1), ("NavigationComputer", 1)])
+add("CargoComputer", 3, "ScienceLab", "Technology", [("BasicComputer", 1), ("DataMatrix", 2), ("MemoryUnit", 1)])
+add("ShipComputer", 3, "ScienceLab", "Technology", [("BasicComputer", 1), ("ControlUnit", 1), ("LogicChip", 2)])
+add("TradingComputer", 3, "ScienceLab", "Technology", [("CargoComputer", 1), ("EncryptedCircuit", 1), ("TransceiverUnit", 1)])
+add("ScanComputer", 3, "ScienceLab", "Technology", [("AdvancedSensors", 1), ("SensorArray", 1), ("MemoryUnit", 1)])
+add("ScienceComputer", 4, "ScienceLab", "Technology", [("QuantumProcessor", 1), ("ScanComputer", 1), ("DataMatrix", 2)])
+add("EngineeringComputer", 4, "ScienceLab", "Technology", [("ShipComputer", 1), ("LogicChip", 2), ("ControlUnit", 1)])
+add("AutomatedDefenceComputer", 4, "ScienceLab", "Technology", [("TargetingComputer", 1), ("ShipComputer", 1), ("LogicChip", 2)])
+add("ResearchComputer", 4, "ScienceLab", "Technology", [("ScienceComputer", 1), ("QuantumProcessor", 1), ("MemoryUnit", 1)])
 add("RefinedMedicine", 3, "Processing", "Medical", [("BioCompound", 2), ("SyntheticProtein", 1), ("LiquidNitrogen", 1)])
 add("MedicalSupplies", 3, "Processing", "Medical", [("RefinedMedicine", 1), ("WaterIce", 1), ("SyntheticTextiles", 1)])
 add("Vaccines", 3, "ScienceLab", "Medical", [("RefinedMedicine", 2), ("QuantumProcessor", 1)])
@@ -363,6 +393,37 @@ _mk("PowerDistributionUnit", "_Mk3", 5, "Fabrication", "Components", [("PowerDis
 _mk("BasicComputer", "_Mk3", 5, "Fabrication", "Technology", [("BasicComputer_Mk2", 1), ("QuantumProcessor", 1)], COMPUTING, "_Mk2")
 _mk("AdvancedSensors", "_Mk3", 5, "ScienceLab", "Technology", [("AdvancedSensors_Mk2", 1), ("QuantumProcessor_Mk2", 1)], COMPUTING, "_Mk2")
 _mk("QuantumProcessor", "_Mk3", 5, "ScienceLab", "Technology", [("QuantumProcessor_Mk2", 1), ("RareEarthElements", 2), ("PlatinumCatalyst", 2)], COMPUTING, "_Mk2")
+
+# --- COMPUTING Mk2: new electronics components + computer family (rl2) ---
+_mk("MicroCapacitor", "_Mk2", 4, "Fabrication", "Components", [("AdvancedPowerCells", 1), ("Electronics_Mk2", 1)], COMPUTING, None)
+_mk("CapacitorBank", "_Mk2", 4, "Fabrication", "Components", [("MicroCapacitor_Mk2", 4), ("AluminiumComposite", 1)], COMPUTING, None)
+_mk("TransceiverUnit", "_Mk2", 4, "Fabrication", "Components", [("Electronics_Mk2", 1), ("Microchips_Mk2", 1)], COMPUTING, None)
+_mk("SignalAmplifier", "_Mk2", 4, "Fabrication", "Components", [("TransceiverUnit_Mk2", 1), ("SuperConductingWire_Mk2", 1)], COMPUTING, None)
+_mk("OpticalLens", "_Mk2", 4, "Fabrication", "Components", [("GlassComposite", 2), ("CobaltMagnet", 2)], COMPUTING, None)
+_mk("SensorArray", "_Mk2", 4, "Fabrication", "Components", [("AdvancedSensors_Mk2", 1), ("OpticalLens_Mk2", 2)], COMPUTING, None)
+_mk("FiberOpticCable", "_Mk2", 4, "Fabrication", "Components", [("GlassComposite", 2), ("Microchips_Mk2", 1)], COMPUTING, None)
+_mk("DataMatrix", "_Mk2", 4, "Fabrication", "Components", [("MemoryUnit_Mk2", 1), ("Microchips_Mk2", 1)], COMPUTING, None)
+_mk("LogicChip", "_Mk2", 4, "Fabrication", "Components", [("Microchips_Mk2", 2), ("SiliconWafer", 1)], COMPUTING, None)
+_mk("EncryptedCircuit", "_Mk2", 4, "Fabrication", "Components", [("CircuitBoard_Mk2", 1), ("Microchips_Mk2", 1)], COMPUTING, None)
+_mk("ClockGenerator", "_Mk2", 4, "Fabrication", "Components", [("Microchips_Mk2", 1), ("PlatinumCatalyst", 1)], COMPUTING, None)
+# computers Mk2 (tier 4)
+_mk("PilotComputer", "_Mk2", 4, "ScienceLab", "Technology", [("NavigationComputer_Mk2", 1), ("Gyroscope", 2)], COMPUTING, None)
+_mk("CargoComputer", "_Mk2", 4, "ScienceLab", "Technology", [("DataMatrix_Mk2", 2), ("MemoryUnit_Mk2", 1)], COMPUTING, None)
+_mk("ShipComputer", "_Mk2", 4, "ScienceLab", "Technology", [("LogicChip_Mk2", 2), ("ControlUnit_Mk2", 1)], COMPUTING, None)
+_mk("TradingComputer", "_Mk2", 4, "ScienceLab", "Technology", [("CargoComputer_Mk2", 1), ("EncryptedCircuit_Mk2", 1)], COMPUTING, None)
+_mk("ScanComputer", "_Mk2", 4, "ScienceLab", "Technology", [("SensorArray_Mk2", 1), ("MemoryUnit_Mk2", 1)], COMPUTING, None)
+_mk("ScienceComputer", "_Mk2", 5, "ScienceLab", "Technology", [("ScienceComputer", 1), ("QuantumProcessor_Mk2", 1)], COMPUTING, None)
+_mk("EngineeringComputer", "_Mk2", 5, "ScienceLab", "Technology", [("ShipComputer_Mk2", 1), ("LogicChip_Mk2", 2)], COMPUTING, None)
+_mk("AutomatedDefenceComputer", "_Mk2", 5, "ScienceLab", "Technology", [("TargetingComputer_Mk2", 1), ("ShipComputer_Mk2", 1)], COMPUTING, None)
+_mk("ResearchComputer", "_Mk2", 5, "ScienceLab", "Technology", [("ScienceComputer_Mk2", 1), ("QuantumProcessor_Mk2", 1)], COMPUTING, None)
+
+# --- COMPUTING Mk3: flagship components + computers (rl3) ---
+_mk("SensorArray", "_Mk3", 5, "Fabrication", "Components", [("SensorArray_Mk2", 1), ("QuantumProcessor", 1)], COMPUTING, "_Mk2")
+_mk("LogicChip", "_Mk3", 5, "Fabrication", "Components", [("LogicChip_Mk2", 1), ("QuantumProcessor", 1)], COMPUTING, "_Mk2")
+_mk("ShipComputer", "_Mk3", 5, "ScienceLab", "Technology", [("ShipComputer_Mk2", 1), ("QuantumProcessor", 1)], COMPUTING, "_Mk2")
+_mk("ScienceComputer", "_Mk3", 6, "ScienceLab", "Technology", [("ScienceComputer_Mk2", 1), ("QuantumProcessor_Mk2", 1)], COMPUTING, "_Mk2")
+_mk("ResearchComputer", "_Mk3", 6, "ScienceLab", "Technology", [("ResearchComputer_Mk2", 1), ("QuantumProcessor_Mk2", 1)], COMPUTING, "_Mk2")
+_mk("AutomatedDefenceComputer", "_Mk3", 6, "ScienceLab", "Technology", [("AutomatedDefenceComputer_Mk2", 1), ("AdvancedSensors_Mk3", 1)], COMPUTING, "_Mk2")
 
 # --- PROPULSION domain (PhysicsLab): engines / reactors / thrusters / fuel ---
 _mk("ShipEngine", "_Mk2", 5, "Fabrication", "Military", [("Thruster", 1), ("ReinforcedGirder", 1), ("SuperConductingWire", 1)], PROPULSION, None)
@@ -590,6 +651,23 @@ def build_items(recipes):
         "HackingTool": "Slick malware toolkit for slicing station networks.",
         "SmuggledBioweapon": "Engineered pathogen sealed in a hazmat canister.",
         "ContrabandTech": "Stolen military-grade tech, no questions asked.",
+        "OpticalLens": "Precision-ground lens for imaging, scanning and sensors.",
+        "SensorArray": "Chip of optical sensors, lenses and amplifiers for detection.",
+        "TransceiverUnit": "Radio/signal transceiver for ship and station comms.",
+        "MicroCapacitor": "Tiny energy storage cell for circuit boards.",
+        "LogicChip": "Programmable logic array accelerating dedicated operations.",
+        "Gyroscope": "Inertial stabiliser that keeps a ship's attitude true.",
+        "DataMatrix": "High-density optical storage module for records.",
+        "ClockGenerator": "Precision oscillator that paces a computer's operations.",
+        "PilotComputer": "Dedicated flight-assist computer managing ship control.",
+        "CargoComputer": "Manages cargo manifests, mass, and docking logistics.",
+        "ShipComputer": "Central onboard computer coordinating all ship subsystems.",
+        "TradingComputer": "Live market-analysis computer for finding the best routes.",
+        "ScanComputer": "Fast signal-processing computer for sensor sweeps.",
+        "ScienceComputer": "Heavy-compute computer for research and data analysis.",
+        "EngineeringComputer": "Diagnostic computer for repairs and system tuning.",
+        "ResearchComputer": "Scientist-grade computing cluster for breakthroughs.",
+        "AutomatedDefenceComputer": "Auto-targeting computer for turrets and point-defence.",
     }
     def desc(item, tier, cat):
         if item in DESC:

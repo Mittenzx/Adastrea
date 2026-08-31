@@ -1597,7 +1597,384 @@
       ]
     },
     {
-      "RecipeID": "RCP_093_QuantumProcessor",
+      "RecipeID": "RCP_093_MicroCapacitor",
+      "OutputItem": "MicroCapacitor",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "PowerCells",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Electronics",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_094_CapacitorBank",
+      "OutputItem": "CapacitorBank",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "MicroCapacitor",
+          "Qty": 4
+        },
+        {
+          "ItemID": "AluminiumComposite",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_095_TransceiverUnit",
+      "OutputItem": "TransceiverUnit",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "Electronics",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Microchips",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CopperWiring",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_096_SignalAmplifier",
+      "OutputItem": "SignalAmplifier",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "TransceiverUnit",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_097_OpticalLens",
+      "OutputItem": "OpticalLens",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "GlassComposite",
+          "Qty": 2
+        },
+        {
+          "ItemID": "CobaltMagnet",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_098_SensorArray",
+      "OutputItem": "SensorArray",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "AdvancedSensors",
+          "Qty": 1
+        },
+        {
+          "ItemID": "OpticalLens",
+          "Qty": 2
+        },
+        {
+          "ItemID": "SignalAmplifier",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_099_FiberOpticCable",
+      "OutputItem": "FiberOpticCable",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "GlassComposite",
+          "Qty": 2
+        },
+        {
+          "ItemID": "Microchips",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_100_DataMatrix",
+      "OutputItem": "DataMatrix",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "MemoryUnit",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Microchips",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_101_Gyroscope",
+      "OutputItem": "Gyroscope",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "CobaltMagnet",
+          "Qty": 2
+        },
+        {
+          "ItemID": "PrecisionFastener",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ServoActuator",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_102_RadioAntenna",
+      "OutputItem": "RadioAntenna",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "TransceiverUnit",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AluminiumComposite",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_103_PowerRelay",
+      "OutputItem": "PowerRelay",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "SuperConductingWire",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CopperWiring",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_104_ThermalCoupler",
+      "OutputItem": "ThermalCoupler",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "CeramicTiles",
+          "Qty": 2
+        },
+        {
+          "ItemID": "CopperWiring",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_105_LogicChip",
+      "OutputItem": "LogicChip",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "Microchips",
+          "Qty": 2
+        },
+        {
+          "ItemID": "SiliconWafer",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_106_VoltageRegulator",
+      "OutputItem": "VoltageRegulator",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "MicroCapacitor",
+          "Qty": 2
+        },
+        {
+          "ItemID": "CeramicTiles",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_107_EncryptedCircuit",
+      "OutputItem": "EncryptedCircuit",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "CircuitBoard",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Microchips",
+          "Qty": 1
+        },
+        {
+          "ItemID": "PalladiumCatalyst",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_108_RelayCoil",
+      "OutputItem": "RelayCoil",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "CopperWiring",
+          "Qty": 2
+        },
+        {
+          "ItemID": "CobaltMagnet",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SteelAlloy",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_109_ClockGenerator",
+      "OutputItem": "ClockGenerator",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "Microchips",
+          "Qty": 1
+        },
+        {
+          "ItemID": "PlatinumCatalyst",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_110_QuantumProcessor",
       "OutputItem": "QuantumProcessor",
       "OutputQty": 1,
       "Tier": 3,
@@ -1622,7 +1999,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_094_AdvancedSensors",
+      "RecipeID": "RCP_111_AdvancedSensors",
       "OutputItem": "AdvancedSensors",
       "OutputQty": 1,
       "Tier": 3,
@@ -1647,7 +2024,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_095_NavigationComputer",
+      "RecipeID": "RCP_112_NavigationComputer",
       "OutputItem": "NavigationComputer",
       "OutputQty": 1,
       "Tier": 3,
@@ -1672,7 +2049,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_096_TargetingComputer",
+      "RecipeID": "RCP_113_TargetingComputer",
       "OutputItem": "TargetingComputer",
       "OutputQty": 1,
       "Tier": 3,
@@ -1697,7 +2074,232 @@
       ]
     },
     {
-      "RecipeID": "RCP_097_RefinedMedicine",
+      "RecipeID": "RCP_114_PilotComputer",
+      "OutputItem": "PilotComputer",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "BasicComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Gyroscope",
+          "Qty": 1
+        },
+        {
+          "ItemID": "NavigationComputer",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_115_CargoComputer",
+      "OutputItem": "CargoComputer",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "BasicComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "DataMatrix",
+          "Qty": 2
+        },
+        {
+          "ItemID": "MemoryUnit",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_116_ShipComputer",
+      "OutputItem": "ShipComputer",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "BasicComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ControlUnit",
+          "Qty": 1
+        },
+        {
+          "ItemID": "LogicChip",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_117_TradingComputer",
+      "OutputItem": "TradingComputer",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "CargoComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "EncryptedCircuit",
+          "Qty": 1
+        },
+        {
+          "ItemID": "TransceiverUnit",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_118_ScanComputer",
+      "OutputItem": "ScanComputer",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "AdvancedSensors",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SensorArray",
+          "Qty": 1
+        },
+        {
+          "ItemID": "MemoryUnit",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_119_ScienceComputer",
+      "OutputItem": "ScienceComputer",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ScanComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "DataMatrix",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_120_EngineeringComputer",
+      "OutputItem": "EngineeringComputer",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "ShipComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "LogicChip",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ControlUnit",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_121_AutomatedDefenceComputer",
+      "OutputItem": "AutomatedDefenceComputer",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "TargetingComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ShipComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "LogicChip",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_122_ResearchComputer",
+      "OutputItem": "ResearchComputer",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "ScienceComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "MemoryUnit",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_123_RefinedMedicine",
       "OutputItem": "RefinedMedicine",
       "OutputQty": 1,
       "Tier": 3,
@@ -1722,7 +2324,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_098_MedicalSupplies",
+      "RecipeID": "RCP_124_MedicalSupplies",
       "OutputItem": "MedicalSupplies",
       "OutputQty": 1,
       "Tier": 3,
@@ -1747,7 +2349,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_099_Vaccines",
+      "RecipeID": "RCP_125_Vaccines",
       "OutputItem": "Vaccines",
       "OutputQty": 1,
       "Tier": 3,
@@ -1768,7 +2370,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_100_FineSpirits",
+      "RecipeID": "RCP_126_FineSpirits",
       "OutputItem": "FineSpirits",
       "OutputQty": 1,
       "Tier": 3,
@@ -1789,7 +2391,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_101_LuxuryBeverages",
+      "RecipeID": "RCP_127_LuxuryBeverages",
       "OutputItem": "LuxuryBeverages",
       "OutputQty": 1,
       "Tier": 3,
@@ -1810,7 +2412,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_102_Jewelry",
+      "RecipeID": "RCP_128_Jewelry",
       "OutputItem": "Jewelry",
       "OutputQty": 1,
       "Tier": 4,
@@ -1835,7 +2437,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_103_FineSilk",
+      "RecipeID": "RCP_129_FineSilk",
       "OutputItem": "FineSilk",
       "OutputQty": 1,
       "Tier": 3,
@@ -1856,7 +2458,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_104_LuxuryFurniture",
+      "RecipeID": "RCP_130_LuxuryFurniture",
       "OutputItem": "LuxuryFurniture",
       "OutputQty": 1,
       "Tier": 4,
@@ -1881,7 +2483,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_105_ShipComponents",
+      "RecipeID": "RCP_131_ShipComponents",
       "OutputItem": "ShipComponents",
       "OutputQty": 1,
       "Tier": 4,
@@ -1906,7 +2508,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_106_HullPlating",
+      "RecipeID": "RCP_132_HullPlating",
       "OutputItem": "HullPlating",
       "OutputQty": 1,
       "Tier": 4,
@@ -1927,7 +2529,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_107_ArmourHull",
+      "RecipeID": "RCP_133_ArmourHull",
       "OutputItem": "ArmourHull",
       "OutputQty": 1,
       "Tier": 4,
@@ -1948,7 +2550,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_108_Thruster",
+      "RecipeID": "RCP_134_Thruster",
       "OutputItem": "Thruster",
       "OutputQty": 1,
       "Tier": 4,
@@ -1973,7 +2575,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_109_ShipEngine",
+      "RecipeID": "RCP_135_ShipEngine",
       "OutputItem": "ShipEngine",
       "OutputQty": 1,
       "Tier": 4,
@@ -1998,7 +2600,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_110_ShipReactor",
+      "RecipeID": "RCP_136_ShipReactor",
       "OutputItem": "ShipReactor",
       "OutputQty": 1,
       "Tier": 4,
@@ -2027,7 +2629,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_111_LifeSupportPod",
+      "RecipeID": "RCP_137_LifeSupportPod",
       "OutputItem": "LifeSupportPod",
       "OutputQty": 1,
       "Tier": 4,
@@ -2052,7 +2654,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_112_FuelTank",
+      "RecipeID": "RCP_138_FuelTank",
       "OutputItem": "FuelTank",
       "OutputQty": 1,
       "Tier": 4,
@@ -2077,7 +2679,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_113_CargoPod",
+      "RecipeID": "RCP_139_CargoPod",
       "OutputItem": "CargoPod",
       "OutputQty": 1,
       "Tier": 4,
@@ -2102,7 +2704,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_114_GrapplerBoom",
+      "RecipeID": "RCP_140_GrapplerBoom",
       "OutputItem": "GrapplerBoom",
       "OutputQty": 1,
       "Tier": 4,
@@ -2127,7 +2729,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_115_ShipShieldGenerator",
+      "RecipeID": "RCP_141_ShipShieldGenerator",
       "OutputItem": "ShipShieldGenerator",
       "OutputQty": 1,
       "Tier": 4,
@@ -2152,7 +2754,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_116_TurretWeapon",
+      "RecipeID": "RCP_142_TurretWeapon",
       "OutputItem": "TurretWeapon",
       "OutputQty": 1,
       "Tier": 4,
@@ -2177,7 +2779,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_117_EnergyCannon",
+      "RecipeID": "RCP_143_EnergyCannon",
       "OutputItem": "EnergyCannon",
       "OutputQty": 1,
       "Tier": 4,
@@ -2202,7 +2804,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_118_TriLaser",
+      "RecipeID": "RCP_144_TriLaser",
       "OutputItem": "TriLaser",
       "OutputQty": 1,
       "Tier": 4,
@@ -2227,7 +2829,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_119_MissileLauncher",
+      "RecipeID": "RCP_145_MissileLauncher",
       "OutputItem": "MissileLauncher",
       "OutputQty": 1,
       "Tier": 4,
@@ -2256,7 +2858,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_120_Railgun",
+      "RecipeID": "RCP_146_Railgun",
       "OutputItem": "Railgun",
       "OutputQty": 1,
       "Tier": 4,
@@ -2281,7 +2883,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_121_PlasmaCannon",
+      "RecipeID": "RCP_147_PlasmaCannon",
       "OutputItem": "PlasmaCannon",
       "OutputQty": 1,
       "Tier": 4,
@@ -2306,7 +2908,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_122_TorpedoLauncher",
+      "RecipeID": "RCP_148_TorpedoLauncher",
       "OutputItem": "TorpedoLauncher",
       "OutputQty": 1,
       "Tier": 4,
@@ -2331,7 +2933,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_123_ShieldCapacitor",
+      "RecipeID": "RCP_149_ShieldCapacitor",
       "OutputItem": "ShieldCapacitor",
       "OutputQty": 1,
       "Tier": 4,
@@ -2356,7 +2958,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_124_PointDefenceLaser",
+      "RecipeID": "RCP_150_PointDefenceLaser",
       "OutputItem": "PointDefenceLaser",
       "OutputQty": 1,
       "Tier": 4,
@@ -2381,7 +2983,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_125_ProhibitedWeapons",
+      "RecipeID": "RCP_151_ProhibitedWeapons",
       "OutputItem": "ProhibitedWeapons",
       "OutputQty": 1,
       "Tier": 4,
@@ -2402,7 +3004,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_126_NanoInjectors",
+      "RecipeID": "RCP_152_NanoInjectors",
       "OutputItem": "NanoInjectors",
       "OutputQty": 1,
       "Tier": 4,
@@ -2427,7 +3029,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_127_BlackMarketDrugs",
+      "RecipeID": "RCP_153_BlackMarketDrugs",
       "OutputItem": "BlackMarketDrugs",
       "OutputQty": 1,
       "Tier": 3,
@@ -2448,7 +3050,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_128_ForgedCredits",
+      "RecipeID": "RCP_154_ForgedCredits",
       "OutputItem": "ForgedCredits",
       "OutputQty": 1,
       "Tier": 3,
@@ -2473,7 +3075,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_129_HackingTool",
+      "RecipeID": "RCP_155_HackingTool",
       "OutputItem": "HackingTool",
       "OutputQty": 1,
       "Tier": 4,
@@ -2494,7 +3096,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_130_SmuggledBioweapon",
+      "RecipeID": "RCP_156_SmuggledBioweapon",
       "OutputItem": "SmuggledBioweapon",
       "OutputQty": 1,
       "Tier": 4,
@@ -2519,7 +3121,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_131_ContrabandTech",
+      "RecipeID": "RCP_157_ContrabandTech",
       "OutputItem": "ContrabandTech",
       "OutputQty": 1,
       "Tier": 4,
@@ -2544,7 +3146,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_132_AICores",
+      "RecipeID": "RCP_158_AICores",
       "OutputItem": "AICores",
       "OutputQty": 1,
       "Tier": 4,
@@ -2565,7 +3167,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_133_ResearchData",
+      "RecipeID": "RCP_159_ResearchData",
       "OutputItem": "ResearchData",
       "OutputQty": 1,
       "Tier": 4,
@@ -2586,7 +3188,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_134_AdvancedAICore",
+      "RecipeID": "RCP_160_AdvancedAICore",
       "OutputItem": "AdvancedAICore",
       "OutputQty": 1,
       "Tier": 5,
@@ -2611,7 +3213,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_135_HackWare",
+      "RecipeID": "RCP_161_HackWare",
       "OutputItem": "HackWare",
       "OutputQty": 1,
       "Tier": 4,
@@ -2636,7 +3238,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_136_ConstructionMaterials",
+      "RecipeID": "RCP_162_ConstructionMaterials",
       "OutputItem": "ConstructionMaterials",
       "OutputQty": 1,
       "Tier": 5,
@@ -2661,7 +3263,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_137_StationHullFrame",
+      "RecipeID": "RCP_163_StationHullFrame",
       "OutputItem": "StationHullFrame",
       "OutputQty": 1,
       "Tier": 5,
@@ -2682,7 +3284,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_138_PowerCore",
+      "RecipeID": "RCP_164_PowerCore",
       "OutputItem": "PowerCore",
       "OutputQty": 1,
       "Tier": 5,
@@ -2707,7 +3309,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_139_LifeSupportUnit",
+      "RecipeID": "RCP_165_LifeSupportUnit",
       "OutputItem": "LifeSupportUnit",
       "OutputQty": 1,
       "Tier": 5,
@@ -2732,7 +3334,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_140_ModuleShell",
+      "RecipeID": "RCP_166_ModuleShell",
       "OutputItem": "ModuleShell",
       "OutputQty": 1,
       "Tier": 5,
@@ -2753,7 +3355,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_141_StructuralGirder",
+      "RecipeID": "RCP_167_StructuralGirder",
       "OutputItem": "StructuralGirder",
       "OutputQty": 1,
       "Tier": 5,
@@ -2774,7 +3376,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_142_HullSegment",
+      "RecipeID": "RCP_168_HullSegment",
       "OutputItem": "HullSegment",
       "OutputQty": 1,
       "Tier": 5,
@@ -2795,7 +3397,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_143_DockingMechanism",
+      "RecipeID": "RCP_169_DockingMechanism",
       "OutputItem": "DockingMechanism",
       "OutputQty": 1,
       "Tier": 5,
@@ -2820,7 +3422,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_144_HabitationPod",
+      "RecipeID": "RCP_170_HabitationPod",
       "OutputItem": "HabitationPod",
       "OutputQty": 1,
       "Tier": 5,
@@ -2845,7 +3447,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_145_CorridorSegment",
+      "RecipeID": "RCP_171_CorridorSegment",
       "OutputItem": "CorridorSegment",
       "OutputQty": 1,
       "Tier": 5,
@@ -2866,7 +3468,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_146_AirTank",
+      "RecipeID": "RCP_172_AirTank",
       "OutputItem": "AirTank",
       "OutputQty": 1,
       "Tier": 5,
@@ -2891,7 +3493,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_147_GravitationGenerator",
+      "RecipeID": "RCP_173_GravitationGenerator",
       "OutputItem": "GravitationGenerator",
       "OutputQty": 1,
       "Tier": 5,
@@ -2916,7 +3518,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_148_ShieldEmitter",
+      "RecipeID": "RCP_174_ShieldEmitter",
       "OutputItem": "ShieldEmitter",
       "OutputQty": 1,
       "Tier": 5,
@@ -2941,7 +3543,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_149_CorridorModule",
+      "RecipeID": "RCP_175_CorridorModule",
       "OutputItem": "CorridorModule",
       "OutputQty": 1,
       "Tier": 6,
@@ -2962,7 +3564,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_150_CargoBayModule",
+      "RecipeID": "RCP_176_CargoBayModule",
       "OutputItem": "CargoBayModule",
       "OutputQty": 1,
       "Tier": 6,
@@ -2987,7 +3589,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_151_DockingBayModule",
+      "RecipeID": "RCP_177_DockingBayModule",
       "OutputItem": "DockingBayModule",
       "OutputQty": 1,
       "Tier": 6,
@@ -3012,7 +3614,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_152_DockingPortModule",
+      "RecipeID": "RCP_178_DockingPortModule",
       "OutputItem": "DockingPortModule",
       "OutputQty": 1,
       "Tier": 6,
@@ -3033,7 +3635,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_153_HabitationModule",
+      "RecipeID": "RCP_179_HabitationModule",
       "OutputItem": "HabitationModule",
       "OutputQty": 1,
       "Tier": 6,
@@ -3058,7 +3660,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_154_BarracksModule",
+      "RecipeID": "RCP_180_BarracksModule",
       "OutputItem": "BarracksModule",
       "OutputQty": 1,
       "Tier": 6,
@@ -3083,7 +3685,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_155_MarketplaceModule",
+      "RecipeID": "RCP_181_MarketplaceModule",
       "OutputItem": "MarketplaceModule",
       "OutputQty": 1,
       "Tier": 6,
@@ -3108,7 +3710,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_156_ScienceLabModule",
+      "RecipeID": "RCP_182_ScienceLabModule",
       "OutputItem": "ScienceLabModule",
       "OutputQty": 1,
       "Tier": 6,
@@ -3133,7 +3735,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_157_ReactorModule",
+      "RecipeID": "RCP_183_ReactorModule",
       "OutputItem": "ReactorModule",
       "OutputQty": 1,
       "Tier": 6,
@@ -3154,7 +3756,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_158_SolarArrayModule",
+      "RecipeID": "RCP_184_SolarArrayModule",
       "OutputItem": "SolarArrayModule",
       "OutputQty": 1,
       "Tier": 6,
@@ -3179,7 +3781,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_159_ProcessingModule",
+      "RecipeID": "RCP_185_ProcessingModule",
       "OutputItem": "ProcessingModule",
       "OutputQty": 1,
       "Tier": 6,
@@ -3204,7 +3806,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_160_FabricationModule",
+      "RecipeID": "RCP_186_FabricationModule",
       "OutputItem": "FabricationModule",
       "OutputQty": 1,
       "Tier": 6,
@@ -3229,7 +3831,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_161_FuelDepotModule",
+      "RecipeID": "RCP_187_FuelDepotModule",
       "OutputItem": "FuelDepotModule",
       "OutputQty": 1,
       "Tier": 6,
@@ -3254,7 +3856,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_162_TurretModule",
+      "RecipeID": "RCP_188_TurretModule",
       "OutputItem": "TurretModule",
       "OutputQty": 1,
       "Tier": 6,
@@ -3275,7 +3877,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_163_ShieldGeneratorModule",
+      "RecipeID": "RCP_189_ShieldGeneratorModule",
       "OutputItem": "ShieldGeneratorModule",
       "OutputQty": 1,
       "Tier": 6,
@@ -3300,7 +3902,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_164_PhysicsLabModule",
+      "RecipeID": "RCP_190_PhysicsLabModule",
       "OutputItem": "PhysicsLabModule",
       "OutputQty": 1,
       "Tier": 6,
@@ -3325,7 +3927,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_165_MaterialsLabModule",
+      "RecipeID": "RCP_191_MaterialsLabModule",
       "OutputItem": "MaterialsLabModule",
       "OutputQty": 1,
       "Tier": 6,
@@ -3350,7 +3952,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_166_ElectronicsLabModule",
+      "RecipeID": "RCP_192_ElectronicsLabModule",
       "OutputItem": "ElectronicsLabModule",
       "OutputQty": 1,
       "Tier": 6,
@@ -3375,7 +3977,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_167_WeaponsLabModule",
+      "RecipeID": "RCP_193_WeaponsLabModule",
       "OutputItem": "WeaponsLabModule",
       "OutputQty": 1,
       "Tier": 6,
@@ -3400,7 +4002,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_168_BiologyLabModule",
+      "RecipeID": "RCP_194_BiologyLabModule",
       "OutputItem": "BiologyLabModule",
       "OutputQty": 1,
       "Tier": 6,
@@ -3425,7 +4027,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_169_PropulsionResearch",
+      "RecipeID": "RCP_195_PropulsionResearch",
       "OutputItem": "PropulsionResearch",
       "OutputQty": 1,
       "Tier": 5,
@@ -3446,7 +4048,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_170_AdvancedPropulsionResearch",
+      "RecipeID": "RCP_196_AdvancedPropulsionResearch",
       "OutputItem": "AdvancedPropulsionResearch",
       "OutputQty": 1,
       "Tier": 6,
@@ -3467,7 +4069,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_171_MaterialsResearch",
+      "RecipeID": "RCP_197_MaterialsResearch",
       "OutputItem": "MaterialsResearch",
       "OutputQty": 1,
       "Tier": 5,
@@ -3488,7 +4090,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_172_NanoMaterialsResearch",
+      "RecipeID": "RCP_198_NanoMaterialsResearch",
       "OutputItem": "NanoMaterialsResearch",
       "OutputQty": 1,
       "Tier": 6,
@@ -3509,7 +4111,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_173_ComputingResearch",
+      "RecipeID": "RCP_199_ComputingResearch",
       "OutputItem": "ComputingResearch",
       "OutputQty": 1,
       "Tier": 4,
@@ -3530,7 +4132,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_174_QuantumComputingResearch",
+      "RecipeID": "RCP_200_QuantumComputingResearch",
       "OutputItem": "QuantumComputingResearch",
       "OutputQty": 1,
       "Tier": 5,
@@ -3555,7 +4157,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_175_DefenceResearch",
+      "RecipeID": "RCP_201_DefenceResearch",
       "OutputItem": "DefenceResearch",
       "OutputQty": 1,
       "Tier": 5,
@@ -3576,7 +4178,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_176_AdvancedDefenceResearch",
+      "RecipeID": "RCP_202_AdvancedDefenceResearch",
       "OutputItem": "AdvancedDefenceResearch",
       "OutputQty": 1,
       "Tier": 6,
@@ -3597,7 +4199,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_177_BioResearch",
+      "RecipeID": "RCP_203_BioResearch",
       "OutputItem": "BioResearch",
       "OutputQty": 1,
       "Tier": 4,
@@ -3618,7 +4220,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_178_AdvancedBioResearch",
+      "RecipeID": "RCP_204_AdvancedBioResearch",
       "OutputItem": "AdvancedBioResearch",
       "OutputQty": 1,
       "Tier": 5,
@@ -3639,7 +4241,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_179_Electronics_Mk2",
+      "RecipeID": "RCP_205_Electronics_Mk2",
       "OutputItem": "Electronics_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3668,7 +4270,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_180_Microchips_Mk2",
+      "RecipeID": "RCP_206_Microchips_Mk2",
       "OutputItem": "Microchips_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3697,7 +4299,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_181_CircuitBoard_Mk2",
+      "RecipeID": "RCP_207_CircuitBoard_Mk2",
       "OutputItem": "CircuitBoard_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3730,7 +4332,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_182_MemoryUnit_Mk2",
+      "RecipeID": "RCP_208_MemoryUnit_Mk2",
       "OutputItem": "MemoryUnit_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3759,7 +4361,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_183_ControlUnit_Mk2",
+      "RecipeID": "RCP_209_ControlUnit_Mk2",
       "OutputItem": "ControlUnit_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3788,7 +4390,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_184_PowerDistributionUnit_Mk2",
+      "RecipeID": "RCP_210_PowerDistributionUnit_Mk2",
       "OutputItem": "PowerDistributionUnit_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3817,7 +4419,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_185_BasicComputer_Mk2",
+      "RecipeID": "RCP_211_BasicComputer_Mk2",
       "OutputItem": "BasicComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3846,7 +4448,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_186_AdvancedSensors_Mk2",
+      "RecipeID": "RCP_212_AdvancedSensors_Mk2",
       "OutputItem": "AdvancedSensors_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3875,7 +4477,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_187_QuantumProcessor_Mk2",
+      "RecipeID": "RCP_213_QuantumProcessor_Mk2",
       "OutputItem": "QuantumProcessor_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3908,7 +4510,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_188_TargetingComputer_Mk2",
+      "RecipeID": "RCP_214_TargetingComputer_Mk2",
       "OutputItem": "TargetingComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3937,7 +4539,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_189_NavigationComputer_Mk2",
+      "RecipeID": "RCP_215_NavigationComputer_Mk2",
       "OutputItem": "NavigationComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3966,7 +4568,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_190_ServoActuator_Mk2",
+      "RecipeID": "RCP_216_ServoActuator_Mk2",
       "OutputItem": "ServoActuator_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -3995,7 +4597,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_191_SuperConductingWire_Mk2",
+      "RecipeID": "RCP_217_SuperConductingWire_Mk2",
       "OutputItem": "SuperConductingWire_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4024,7 +4626,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_192_Electronics_Mk3",
+      "RecipeID": "RCP_218_Electronics_Mk3",
       "OutputItem": "Electronics_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4053,7 +4655,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_193_Microchips_Mk3",
+      "RecipeID": "RCP_219_Microchips_Mk3",
       "OutputItem": "Microchips_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4082,7 +4684,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_194_CircuitBoard_Mk3",
+      "RecipeID": "RCP_220_CircuitBoard_Mk3",
       "OutputItem": "CircuitBoard_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4111,7 +4713,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_195_MemoryUnit_Mk3",
+      "RecipeID": "RCP_221_MemoryUnit_Mk3",
       "OutputItem": "MemoryUnit_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4140,7 +4742,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_196_ControlUnit_Mk3",
+      "RecipeID": "RCP_222_ControlUnit_Mk3",
       "OutputItem": "ControlUnit_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4169,7 +4771,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_197_PowerDistributionUnit_Mk3",
+      "RecipeID": "RCP_223_PowerDistributionUnit_Mk3",
       "OutputItem": "PowerDistributionUnit_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4198,7 +4800,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_198_BasicComputer_Mk3",
+      "RecipeID": "RCP_224_BasicComputer_Mk3",
       "OutputItem": "BasicComputer_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4227,7 +4829,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_199_AdvancedSensors_Mk3",
+      "RecipeID": "RCP_225_AdvancedSensors_Mk3",
       "OutputItem": "AdvancedSensors_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4256,7 +4858,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_200_QuantumProcessor_Mk3",
+      "RecipeID": "RCP_226_QuantumProcessor_Mk3",
       "OutputItem": "QuantumProcessor_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4289,7 +4891,761 @@
       ]
     },
     {
-      "RecipeID": "RCP_201_ShipEngine_Mk2",
+      "RecipeID": "RCP_227_MicroCapacitor_Mk2",
+      "OutputItem": "MicroCapacitor_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "MicroCapacitor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedPowerCells",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Electronics_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_228_CapacitorBank_Mk2",
+      "OutputItem": "CapacitorBank_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "CapacitorBank",
+          "Qty": 1
+        },
+        {
+          "ItemID": "MicroCapacitor_Mk2",
+          "Qty": 4
+        },
+        {
+          "ItemID": "AluminiumComposite",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_229_TransceiverUnit_Mk2",
+      "OutputItem": "TransceiverUnit_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "TransceiverUnit",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Electronics_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Microchips_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_230_SignalAmplifier_Mk2",
+      "OutputItem": "SignalAmplifier_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "SignalAmplifier",
+          "Qty": 1
+        },
+        {
+          "ItemID": "TransceiverUnit_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_231_OpticalLens_Mk2",
+      "OutputItem": "OpticalLens_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "OpticalLens",
+          "Qty": 1
+        },
+        {
+          "ItemID": "GlassComposite",
+          "Qty": 2
+        },
+        {
+          "ItemID": "CobaltMagnet",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_232_SensorArray_Mk2",
+      "OutputItem": "SensorArray_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "SensorArray",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedSensors_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "OpticalLens_Mk2",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_233_FiberOpticCable_Mk2",
+      "OutputItem": "FiberOpticCable_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "FiberOpticCable",
+          "Qty": 1
+        },
+        {
+          "ItemID": "GlassComposite",
+          "Qty": 2
+        },
+        {
+          "ItemID": "Microchips_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_234_DataMatrix_Mk2",
+      "OutputItem": "DataMatrix_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "DataMatrix",
+          "Qty": 1
+        },
+        {
+          "ItemID": "MemoryUnit_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Microchips_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_235_LogicChip_Mk2",
+      "OutputItem": "LogicChip_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "LogicChip",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Microchips_Mk2",
+          "Qty": 2
+        },
+        {
+          "ItemID": "SiliconWafer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_236_EncryptedCircuit_Mk2",
+      "OutputItem": "EncryptedCircuit_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "EncryptedCircuit",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CircuitBoard_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Microchips_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_237_ClockGenerator_Mk2",
+      "OutputItem": "ClockGenerator_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "ClockGenerator",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Microchips_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "PlatinumCatalyst",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_238_PilotComputer_Mk2",
+      "OutputItem": "PilotComputer_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "PilotComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "NavigationComputer_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Gyroscope",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_239_CargoComputer_Mk2",
+      "OutputItem": "CargoComputer_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "CargoComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "DataMatrix_Mk2",
+          "Qty": 2
+        },
+        {
+          "ItemID": "MemoryUnit_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_240_ShipComputer_Mk2",
+      "OutputItem": "ShipComputer_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "ShipComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "LogicChip_Mk2",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ControlUnit_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_241_TradingComputer_Mk2",
+      "OutputItem": "TradingComputer_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "TradingComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CargoComputer_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "EncryptedCircuit_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_242_ScanComputer_Mk2",
+      "OutputItem": "ScanComputer_Mk2",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "ScanComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SensorArray_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "MemoryUnit_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_243_ScienceComputer_Mk2",
+      "OutputItem": "ScienceComputer_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "ScienceComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ScienceComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_244_EngineeringComputer_Mk2",
+      "OutputItem": "EngineeringComputer_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "EngineeringComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ShipComputer_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "LogicChip_Mk2",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_245_AutomatedDefenceComputer_Mk2",
+      "OutputItem": "AutomatedDefenceComputer_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "AutomatedDefenceComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "TargetingComputer_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ShipComputer_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_246_ResearchComputer_Mk2",
+      "OutputItem": "ResearchComputer_Mk2",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 2,
+      "ResearchRequired": "ComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "ResearchComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ScienceComputer_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_247_SensorArray_Mk3",
+      "OutputItem": "SensorArray_Mk3",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "QuantumComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "SensorArray_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SensorArray_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_248_LogicChip_Mk3",
+      "OutputItem": "LogicChip_Mk3",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "QuantumComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "LogicChip_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "LogicChip_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_249_ShipComputer_Mk3",
+      "OutputItem": "ShipComputer_Mk3",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "QuantumComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "ShipComputer_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ShipComputer_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_250_ScienceComputer_Mk3",
+      "OutputItem": "ScienceComputer_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "QuantumComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "ScienceComputer_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ScienceComputer_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_251_ResearchComputer_Mk3",
+      "OutputItem": "ResearchComputer_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "QuantumComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "ResearchComputer_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ResearchComputer_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_252_AutomatedDefenceComputer_Mk3",
+      "OutputItem": "AutomatedDefenceComputer_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "QuantumComputingResearch",
+      "Ingredients": [
+        {
+          "ItemID": "AutomatedDefenceComputer_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AutomatedDefenceComputer_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedSensors_Mk3",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumComputingResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_253_ShipEngine_Mk2",
       "OutputItem": "ShipEngine_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4322,7 +5678,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_202_ShipReactor_Mk2",
+      "RecipeID": "RCP_254_ShipReactor_Mk2",
       "OutputItem": "ShipReactor_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4355,7 +5711,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_203_Thruster_Mk2",
+      "RecipeID": "RCP_255_Thruster_Mk2",
       "OutputItem": "Thruster_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4384,7 +5740,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_204_FuelTank_Mk2",
+      "RecipeID": "RCP_256_FuelTank_Mk2",
       "OutputItem": "FuelTank_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4413,7 +5769,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_205_ShipEngine_Mk3",
+      "RecipeID": "RCP_257_ShipEngine_Mk3",
       "OutputItem": "ShipEngine_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4442,7 +5798,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_206_ShipReactor_Mk3",
+      "RecipeID": "RCP_258_ShipReactor_Mk3",
       "OutputItem": "ShipReactor_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4471,7 +5827,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_207_Thruster_Mk3",
+      "RecipeID": "RCP_259_Thruster_Mk3",
       "OutputItem": "Thruster_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4500,7 +5856,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_208_FuelTank_Mk3",
+      "RecipeID": "RCP_260_FuelTank_Mk3",
       "OutputItem": "FuelTank_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4529,7 +5885,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_209_CargoPod_Mk2",
+      "RecipeID": "RCP_261_CargoPod_Mk2",
       "OutputItem": "CargoPod_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4558,7 +5914,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_210_LifeSupportPod_Mk2",
+      "RecipeID": "RCP_262_LifeSupportPod_Mk2",
       "OutputItem": "LifeSupportPod_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4587,7 +5943,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_211_ShipComponents_Mk2",
+      "RecipeID": "RCP_263_ShipComponents_Mk2",
       "OutputItem": "ShipComponents_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4620,7 +5976,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_212_ArmourHull_Mk2",
+      "RecipeID": "RCP_264_ArmourHull_Mk2",
       "OutputItem": "ArmourHull_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4649,7 +6005,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_213_HullPlating_Mk2",
+      "RecipeID": "RCP_265_HullPlating_Mk2",
       "OutputItem": "HullPlating_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4678,7 +6034,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_214_CargoPod_Mk3",
+      "RecipeID": "RCP_266_CargoPod_Mk3",
       "OutputItem": "CargoPod_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4707,7 +6063,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_215_LifeSupportPod_Mk3",
+      "RecipeID": "RCP_267_LifeSupportPod_Mk3",
       "OutputItem": "LifeSupportPod_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4736,7 +6092,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_216_ShipComponents_Mk3",
+      "RecipeID": "RCP_268_ShipComponents_Mk3",
       "OutputItem": "ShipComponents_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4769,7 +6125,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_217_ArmourHull_Mk3",
+      "RecipeID": "RCP_269_ArmourHull_Mk3",
       "OutputItem": "ArmourHull_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4798,7 +6154,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_218_HullPlating_Mk3",
+      "RecipeID": "RCP_270_HullPlating_Mk3",
       "OutputItem": "HullPlating_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -4827,7 +6183,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_219_ShipShieldGenerator_Mk2",
+      "RecipeID": "RCP_271_ShipShieldGenerator_Mk2",
       "OutputItem": "ShipShieldGenerator_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4856,7 +6212,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_220_ShieldCapacitor_Mk2",
+      "RecipeID": "RCP_272_ShieldCapacitor_Mk2",
       "OutputItem": "ShieldCapacitor_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4885,7 +6241,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_221_TurretWeapon_Mk2",
+      "RecipeID": "RCP_273_TurretWeapon_Mk2",
       "OutputItem": "TurretWeapon_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4914,7 +6270,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_222_EnergyCannon_Mk2",
+      "RecipeID": "RCP_274_EnergyCannon_Mk2",
       "OutputItem": "EnergyCannon_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4943,7 +6299,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_223_TriLaser_Mk2",
+      "RecipeID": "RCP_275_TriLaser_Mk2",
       "OutputItem": "TriLaser_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -4972,7 +6328,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_224_MissileLauncher_Mk2",
+      "RecipeID": "RCP_276_MissileLauncher_Mk2",
       "OutputItem": "MissileLauncher_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5001,7 +6357,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_225_Railgun_Mk2",
+      "RecipeID": "RCP_277_Railgun_Mk2",
       "OutputItem": "Railgun_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5030,7 +6386,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_226_PlasmaCannon_Mk2",
+      "RecipeID": "RCP_278_PlasmaCannon_Mk2",
       "OutputItem": "PlasmaCannon_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5059,7 +6415,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_227_TorpedoLauncher_Mk2",
+      "RecipeID": "RCP_279_TorpedoLauncher_Mk2",
       "OutputItem": "TorpedoLauncher_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5088,7 +6444,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_228_PointDefenceLaser_Mk2",
+      "RecipeID": "RCP_280_PointDefenceLaser_Mk2",
       "OutputItem": "PointDefenceLaser_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5117,7 +6473,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_229_ShipShieldGenerator_Mk3",
+      "RecipeID": "RCP_281_ShipShieldGenerator_Mk3",
       "OutputItem": "ShipShieldGenerator_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5146,7 +6502,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_230_TurretWeapon_Mk3",
+      "RecipeID": "RCP_282_TurretWeapon_Mk3",
       "OutputItem": "TurretWeapon_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5175,7 +6531,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_231_EnergyCannon_Mk3",
+      "RecipeID": "RCP_283_EnergyCannon_Mk3",
       "OutputItem": "EnergyCannon_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5204,7 +6560,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_232_TriLaser_Mk3",
+      "RecipeID": "RCP_284_TriLaser_Mk3",
       "OutputItem": "TriLaser_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5233,7 +6589,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_233_MissileLauncher_Mk3",
+      "RecipeID": "RCP_285_MissileLauncher_Mk3",
       "OutputItem": "MissileLauncher_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5262,7 +6618,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_234_Railgun_Mk3",
+      "RecipeID": "RCP_286_Railgun_Mk3",
       "OutputItem": "Railgun_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5291,7 +6647,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_235_PlasmaCannon_Mk3",
+      "RecipeID": "RCP_287_PlasmaCannon_Mk3",
       "OutputItem": "PlasmaCannon_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5320,7 +6676,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_236_TorpedoLauncher_Mk3",
+      "RecipeID": "RCP_288_TorpedoLauncher_Mk3",
       "OutputItem": "TorpedoLauncher_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5349,7 +6705,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_237_PointDefenceLaser_Mk3",
+      "RecipeID": "RCP_289_PointDefenceLaser_Mk3",
       "OutputItem": "PointDefenceLaser_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5378,7 +6734,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_238_GravitationGenerator_Mk2",
+      "RecipeID": "RCP_290_GravitationGenerator_Mk2",
       "OutputItem": "GravitationGenerator_Mk2",
       "OutputQty": 1,
       "Tier": 6,
@@ -5407,7 +6763,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_239_RefinedMedicine_Mk2",
+      "RecipeID": "RCP_291_RefinedMedicine_Mk2",
       "OutputItem": "RefinedMedicine_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5436,7 +6792,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_240_MedicalSupplies_Mk2",
+      "RecipeID": "RCP_292_MedicalSupplies_Mk2",
       "OutputItem": "MedicalSupplies_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5465,7 +6821,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_241_Vaccines_Mk2",
+      "RecipeID": "RCP_293_Vaccines_Mk2",
       "OutputItem": "Vaccines_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5494,7 +6850,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_242_RefinedMedicine_Mk3",
+      "RecipeID": "RCP_294_RefinedMedicine_Mk3",
       "OutputItem": "RefinedMedicine_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -5523,7 +6879,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_243_MedicalSupplies_Mk3",
+      "RecipeID": "RCP_295_MedicalSupplies_Mk3",
       "OutputItem": "MedicalSupplies_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -6473,6 +7829,176 @@
       "BaseValue": 800,
       "MaterialCategory": "Electronics"
     },
+    "MicroCapacitor": {
+      "ItemName": "Micro Capacitor",
+      "Description": "Tiny energy storage cell for circuit boards.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "CapacitorBank": {
+      "ItemName": "Capacitor Bank",
+      "Description": "Refined capacitor bank, produced by advanced fabrication.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "TransceiverUnit": {
+      "ItemName": "Transceiver Unit",
+      "Description": "Radio/signal transceiver for ship and station comms.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "SignalAmplifier": {
+      "ItemName": "Signal Amplifier",
+      "Description": "Refined signal amplifier, produced by advanced fabrication.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "OpticalLens": {
+      "ItemName": "Optical Lens",
+      "Description": "Precision-ground lens for imaging, scanning and sensors.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "SensorArray": {
+      "ItemName": "Sensor Array",
+      "Description": "Chip of optical sensors, lenses and amplifiers for detection.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "FiberOpticCable": {
+      "ItemName": "Fiber Optic Cable",
+      "Description": "Refined fiber optic cable, produced by advanced fabrication.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "DataMatrix": {
+      "ItemName": "Data Matrix",
+      "Description": "High-density optical storage module for records.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "Gyroscope": {
+      "ItemName": "Gyroscope",
+      "Description": "Inertial stabiliser that keeps a ship's attitude true.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "RadioAntenna": {
+      "ItemName": "Radio Antenna",
+      "Description": "Refined radio antenna, produced by advanced fabrication.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "PowerRelay": {
+      "ItemName": "Power Relay",
+      "Description": "Refined power relay, produced by advanced fabrication.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "ThermalCoupler": {
+      "ItemName": "Thermal Coupler",
+      "Description": "Refined thermal coupler, produced by advanced fabrication.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "LogicChip": {
+      "ItemName": "Logic Chip",
+      "Description": "Programmable logic array accelerating dedicated operations.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "VoltageRegulator": {
+      "ItemName": "Voltage Regulator",
+      "Description": "Refined voltage regulator, produced by advanced fabrication.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "EncryptedCircuit": {
+      "ItemName": "Encrypted Circuit",
+      "Description": "Refined encrypted circuit, produced by advanced fabrication.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "RelayCoil": {
+      "ItemName": "Relay Coil",
+      "Description": "Refined relay coil, produced by advanced fabrication.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "ClockGenerator": {
+      "ItemName": "Clock Generator",
+      "Description": "Precision oscillator that paces a computer's operations.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
     "QuantumProcessor": {
       "ItemName": "Quantum Processor",
       "Description": "Refined quantum processor, produced by advanced fabrication.",
@@ -6511,6 +8037,96 @@
       "StorageType": "Solid",
       "Rarity": "Uncommon",
       "BaseValue": 800,
+      "MaterialCategory": "Electronics"
+    },
+    "PilotComputer": {
+      "ItemName": "Pilot Computer",
+      "Description": "Dedicated flight-assist computer managing ship control.",
+      "WeightKg": 11.5,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Electronics"
+    },
+    "CargoComputer": {
+      "ItemName": "Cargo Computer",
+      "Description": "Manages cargo manifests, mass, and docking logistics.",
+      "WeightKg": 11.5,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Electronics"
+    },
+    "ShipComputer": {
+      "ItemName": "Ship Computer",
+      "Description": "Central onboard computer coordinating all ship subsystems.",
+      "WeightKg": 11.5,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Electronics"
+    },
+    "TradingComputer": {
+      "ItemName": "Trading Computer",
+      "Description": "Live market-analysis computer for finding the best routes.",
+      "WeightKg": 11.5,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Electronics"
+    },
+    "ScanComputer": {
+      "ItemName": "Scan Computer",
+      "Description": "Fast signal-processing computer for sensor sweeps.",
+      "WeightKg": 11.5,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Electronics"
+    },
+    "ScienceComputer": {
+      "ItemName": "Science Computer",
+      "Description": "Heavy-compute computer for research and data analysis.",
+      "WeightKg": 13.8,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 4000,
+      "MaterialCategory": "Electronics"
+    },
+    "EngineeringComputer": {
+      "ItemName": "Engineering Computer",
+      "Description": "Diagnostic computer for repairs and system tuning.",
+      "WeightKg": 13.8,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 4000,
+      "MaterialCategory": "Electronics"
+    },
+    "AutomatedDefenceComputer": {
+      "ItemName": "Automated Defence Computer",
+      "Description": "Auto-targeting computer for turrets and point-defence.",
+      "WeightKg": 13.8,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 4000,
+      "MaterialCategory": "Electronics"
+    },
+    "ResearchComputer": {
+      "ItemName": "Research Computer",
+      "Description": "Scientist-grade computing cluster for breakthroughs.",
+      "WeightKg": 13.8,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 4000,
       "MaterialCategory": "Electronics"
     },
     "RefinedMedicine": {
@@ -7551,6 +9167,266 @@
       "StorageType": "Solid",
       "Rarity": "VeryRare",
       "BaseValue": 48000,
+      "MaterialCategory": "Electronics"
+    },
+    "MicroCapacitor_Mk2": {
+      "ItemName": "Micro Capacitor Mk2",
+      "Description": "Refined micro capacitor mk2, produced by advanced fabrication.",
+      "WeightKg": 20.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Component"
+    },
+    "CapacitorBank_Mk2": {
+      "ItemName": "Capacitor Bank Mk2",
+      "Description": "Refined capacitor bank mk2, produced by advanced fabrication.",
+      "WeightKg": 20.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Component"
+    },
+    "TransceiverUnit_Mk2": {
+      "ItemName": "Transceiver Unit Mk2",
+      "Description": "Refined transceiver unit mk2, produced by advanced fabrication.",
+      "WeightKg": 20.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Component"
+    },
+    "SignalAmplifier_Mk2": {
+      "ItemName": "Signal Amplifier Mk2",
+      "Description": "Refined signal amplifier mk2, produced by advanced fabrication.",
+      "WeightKg": 20.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Component"
+    },
+    "OpticalLens_Mk2": {
+      "ItemName": "Optical Lens Mk2",
+      "Description": "Refined optical lens mk2, produced by advanced fabrication.",
+      "WeightKg": 20.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Component"
+    },
+    "SensorArray_Mk2": {
+      "ItemName": "Sensor Array Mk2",
+      "Description": "Refined sensor array mk2, produced by advanced fabrication.",
+      "WeightKg": 20.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Component"
+    },
+    "FiberOpticCable_Mk2": {
+      "ItemName": "Fiber Optic Cable Mk2",
+      "Description": "Refined fiber optic cable mk2, produced by advanced fabrication.",
+      "WeightKg": 20.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Component"
+    },
+    "DataMatrix_Mk2": {
+      "ItemName": "Data Matrix Mk2",
+      "Description": "Refined data matrix mk2, produced by advanced fabrication.",
+      "WeightKg": 20.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Component"
+    },
+    "LogicChip_Mk2": {
+      "ItemName": "Logic Chip Mk2",
+      "Description": "Refined logic chip mk2, produced by advanced fabrication.",
+      "WeightKg": 20.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Component"
+    },
+    "EncryptedCircuit_Mk2": {
+      "ItemName": "Encrypted Circuit Mk2",
+      "Description": "Refined encrypted circuit mk2, produced by advanced fabrication.",
+      "WeightKg": 20.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Component"
+    },
+    "ClockGenerator_Mk2": {
+      "ItemName": "Clock Generator Mk2",
+      "Description": "Refined clock generator mk2, produced by advanced fabrication.",
+      "WeightKg": 20.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Component"
+    },
+    "PilotComputer_Mk2": {
+      "ItemName": "Pilot Computer Mk2",
+      "Description": "Refined pilot computer mk2, produced by advanced fabrication.",
+      "WeightKg": 13.8,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Electronics"
+    },
+    "CargoComputer_Mk2": {
+      "ItemName": "Cargo Computer Mk2",
+      "Description": "Refined cargo computer mk2, produced by advanced fabrication.",
+      "WeightKg": 13.8,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Electronics"
+    },
+    "ShipComputer_Mk2": {
+      "ItemName": "Ship Computer Mk2",
+      "Description": "Refined ship computer mk2, produced by advanced fabrication.",
+      "WeightKg": 13.8,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Electronics"
+    },
+    "TradingComputer_Mk2": {
+      "ItemName": "Trading Computer Mk2",
+      "Description": "Refined trading computer mk2, produced by advanced fabrication.",
+      "WeightKg": 13.8,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Electronics"
+    },
+    "ScanComputer_Mk2": {
+      "ItemName": "Scan Computer Mk2",
+      "Description": "Refined scan computer mk2, produced by advanced fabrication.",
+      "WeightKg": 13.8,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Electronics"
+    },
+    "ScienceComputer_Mk2": {
+      "ItemName": "Science Computer Mk2",
+      "Description": "Refined science computer mk2, produced by advanced fabrication.",
+      "WeightKg": 16.6,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 27200,
+      "MaterialCategory": "Electronics"
+    },
+    "EngineeringComputer_Mk2": {
+      "ItemName": "Engineering Computer Mk2",
+      "Description": "Refined engineering computer mk2, produced by advanced fabrication.",
+      "WeightKg": 16.6,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 27200,
+      "MaterialCategory": "Electronics"
+    },
+    "AutomatedDefenceComputer_Mk2": {
+      "ItemName": "Automated Defence Computer Mk2",
+      "Description": "Refined automated defence computer mk2, produced by advanced fabrication.",
+      "WeightKg": 16.6,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 27200,
+      "MaterialCategory": "Electronics"
+    },
+    "ResearchComputer_Mk2": {
+      "ItemName": "Research Computer Mk2",
+      "Description": "Refined research computer mk2, produced by advanced fabrication.",
+      "WeightKg": 16.6,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 27200,
+      "MaterialCategory": "Electronics"
+    },
+    "SensorArray_Mk3": {
+      "ItemName": "Sensor Array Mk3",
+      "Description": "Refined sensor array mk3, produced by advanced fabrication.",
+      "WeightKg": 24.9,
+      "VolumeM3": 0.06,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 48000,
+      "MaterialCategory": "Component"
+    },
+    "LogicChip_Mk3": {
+      "ItemName": "Logic Chip Mk3",
+      "Description": "Refined logic chip mk3, produced by advanced fabrication.",
+      "WeightKg": 24.9,
+      "VolumeM3": 0.06,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 48000,
+      "MaterialCategory": "Component"
+    },
+    "ShipComputer_Mk3": {
+      "ItemName": "Ship Computer Mk3",
+      "Description": "Refined ship computer mk3, produced by advanced fabrication.",
+      "WeightKg": 16.6,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 48000,
+      "MaterialCategory": "Electronics"
+    },
+    "ScienceComputer_Mk3": {
+      "ItemName": "Science Computer Mk3",
+      "Description": "Refined science computer mk3, produced by advanced fabrication.",
+      "WeightKg": 19.9,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 192000,
+      "MaterialCategory": "Electronics"
+    },
+    "ResearchComputer_Mk3": {
+      "ItemName": "Research Computer Mk3",
+      "Description": "Refined research computer mk3, produced by advanced fabrication.",
+      "WeightKg": 19.9,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 192000,
+      "MaterialCategory": "Electronics"
+    },
+    "AutomatedDefenceComputer_Mk3": {
+      "ItemName": "Automated Defence Computer Mk3",
+      "Description": "Refined automated defence computer mk3, produced by advanced fabrication.",
+      "WeightKg": 19.9,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 192000,
       "MaterialCategory": "Electronics"
     },
     "ShipEngine_Mk2": {
