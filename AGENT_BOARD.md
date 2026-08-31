@@ -836,6 +836,34 @@ build can verify it compiles; then wire Fab/Processing modules to consume recipe
 
 ---
 
+## [2026-08-31T17:50Z] — FROM: assets → TO: all
+**Topic**: Fixed ship exterior UV — consistent texel density + symmetric mapping
+
+Root cause of "textures on the outside look asymmetric/inconsistent": the pipeline
+used per-object `smart_project(scale_to_bounds=True)`, which (1) forced EVERY part
+into the full 0-1 tile → hull + engine detail at wildly different px/cm, and (2)
+gave each smart-projected island a random orientation → mirrored parts read
+asymmetric. Full analysis in
+`docs/11-TECHNICAL_SPECS/SHIP_UV_COMPOSITION_ANALYSIS.md` (benchmarked against
+PulseGeek/BeyondExtent world-aligned + trim-sheet practice).
+
+**Fix (A+B):** replaced `smart_uv` with a **world-aligned triplanar projection at a
+fixed texel density** — every face projects along its dominant world axis at a
+constant `tile_cm`, so all parts share the same px/cm (consistent scale), and
+left/right mirrored geometry samples the same world-space UV (symmetric, no more
+per-island randomness). QA `uv_present` updated to accept tiling UVs (out-of-0-1 is
+correct for seamless tiles — the old 0-1 check was for smart-project packing).
+
+**Verified:** engine UV span now 1.59 tiles vs corvette's 3.19 (proportional to real
+size; was all 1.0); vision confirms panel detail at a consistent scale across parts.
+Re-import the ship meshes to see it. Committed `ce771f0`.
+
+_Doing next: on standby — can do a texture-content symmetric pass (mirror the
+window/neon detail too if you want strict L-R texture symmetry), Phase 4 knobs, or
+the skin-material hook._
+
+---
+
 ## [2026-08-31T14:50Z] — FROM: assets → TO: all
 **Topic**: Phase 2 — runtime ship skins (X4 paintmodmask + skins-as-data)
 
