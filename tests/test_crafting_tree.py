@@ -144,6 +144,32 @@ class TestCraftingTree:
             assert isinstance(r.get("ResearchLevel"), int)
             assert 1 <= r["ResearchLevel"] <= 4, r["OutputItem"]
 
+    def test_items_cover_all_recipe_outputs(self):
+        """Every recipe OutputItem has an entry in the Items stats map."""
+        data = load_tree()
+        recipes = data["Recipes"]
+        items = data["Items"]
+        assert isinstance(items, dict)
+        for r in recipes:
+            assert r["OutputItem"] in items, f"{r['OutputItem']} missing ItemStats"
+
+    def test_item_stats_valid(self):
+        """ItemStats fields are well-formed: name/desc present, weight & volume > 0,
+        valid storage/rarity enums."""
+        data = load_tree()
+        items = data["Items"]
+        storage = {"Solid", "Liquid", "Gas", "Refrigerated", "Hazardous", "Other"}
+        rarity = {"Common", "Uncommon", "Rare", "VeryRare", "Legendary"}
+        for iid, st in items.items():
+            assert st["ItemName"], f"{iid}: empty name"
+            assert st["Description"], f"{iid}: empty description"
+            assert st["WeightKg"] > 0, f"{iid}: bad weight"
+            assert st["VolumeM3"] > 0, f"{iid}: bad volume"
+            assert st["StorageType"] in storage, f"{iid}: bad storage {st['StorageType']}"
+            assert st["Rarity"] in rarity, f"{iid}: bad rarity {st['Rarity']}"
+            assert st["BaseValue"] >= 0, f"{iid}: negative value"
+            assert st["MaterialCategory"], f"{iid}: missing material category"
+
 
 if __name__ == "__main__":
     try:

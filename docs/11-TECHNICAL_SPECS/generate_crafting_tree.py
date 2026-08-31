@@ -491,7 +491,155 @@ def check():
         elif rlevels[req] > r["ResearchLevel"]:
             errors.append(f"{r['OutputItem']}: research '{req}' level {rlevels[req]} > own {r['ResearchLevel']}")
 
+    # ---- item stats coverage ----
+    items = build_items(build_recipes_with_ids())
+    for iid in ids:
+        if iid not in items:
+            errors.append(f"{iid}: missing ItemStats entry")
+            continue
+        st = items[iid]
+        if not st["ItemName"]:
+            errors.append(f"{iid}: empty ItemName")
+        if not st["Description"]:
+            errors.append(f"{iid}: empty Description")
+        if st["WeightKg"] <= 0 or st["VolumeM3"] <= 0:
+            errors.append(f"{iid}: non-positive weight/volume")
+        if st["StorageType"] not in ("Solid", "Liquid", "Gas", "Refrigerated", "Hazardous", "Other"):
+            errors.append(f"{iid}: bad StorageType '{st['StorageType']}'")
+        if st["Rarity"] not in ("Common", "Uncommon", "Rare", "VeryRare", "Legendary"):
+            errors.append(f"{iid}: bad Rarity '{st['Rarity']}'")
+
     return errors
+
+
+def build_items(recipes):
+    """Per-item stats map. Keyed by ItemID; fields mirror MaterialDataAsset /
+    TradeItemDataAsset domains so the JSON plugs straight into the game:
+    ItemName, Description, WeightKg, VolumeM3, StorageType, Rarity, BaseValue,
+    MaterialCategory. Heuristics fill defaults; overrides fix notable items."""
+    # ---- category -> storage / material-category defaults ----
+    STORE = {
+        "RawMaterials": "Solid", "RefinedGoods": "Solid", "Components": "Solid",
+        "Technology": "Solid", "Food": "Refrigerated", "Luxury": "Solid",
+        "Contraband": "Solid", "Military": "Solid", "Medical": "Refrigerated",
+        "Data": "Other", "Other": "Solid",
+    }
+    MATCAT = {
+        "RawMaterials": "Mineral", "RefinedGoods": "RefinedMineral",
+        "Components": "Component", "Technology": "Electronics", "Food": "Food",
+        "Luxury": "Other", "Contraband": "Other", "Military": "ShipPart",
+        "Medical": "Food", "Data": "Research", "Other": "Other",
+    }
+    TIER_RARITY = {1: "Common", 2: "Common", 3: "Uncommon", 4: "Rare",
+                   5: "VeryRare", 6: "Legendary"}
+    # base value per tier (credits / unit); shaped up for Military & modules
+    TIER_VALUE = {1: 60, 2: 200, 3: 800, 4: 4000, 5: 16000, 6: 64000}
+
+    # ---- manual overrides for display names & flavor descriptions ----
+    NAME_OVERRIDES = {
+        "Helium3": "Helium-3", "WaterIce": "Water Ice", "RawOre": "Raw Ore",
+        "RareEarthElements": "Rare Earth Elements", "CarbonCrystal": "Carbon Crystal",
+        "PreciousStones": "Precious Stones", "OrganicBiomass": "Organic Biomass",
+        "AlgaeBiomass": "Algae Biomass", "PlantFibre": "Plant Fibre",
+        "SalvagedComponents": "Salvaged Components", "DerelictHullPlate": "Derelict Hull Plate",
+        "MRE_Rations": "MRE Rations", "BioCompound": "Bio Compound",
+        "SyntheticTextiles": "Synthetic Textiles", "FineSpirits": "Fine Spirits",
+        "FineSilk": "Fine Silk", "LuxuryFurniture": "Luxury Furniture",
+        "LuxuryBeverages": "Luxury Beverages", "Military": "Military",
+    }
+    def human(item):
+        if item in NAME_OVERRIDES:
+            return NAME_OVERRIDES[item]
+        s = item.replace("_", " ").replace("Mk2", "Mk2").replace("Mk3", "Mk3")
+        s = re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', s)   # camelCase -> spaces
+        return s
+
+    DESC = {
+        "SteelAlloy": "Forged iron-copper alloy; the backbone of most construction.",
+        "SiliconWafer": "Ultra-flat silicon disk etched for microelectronics.",
+        "Electronics": "Assembled circuit assemblies for sensors and computers.",
+        "Microchips": "High-density processors etched from refined silicon.",
+    }
+    def desc(item, tier, cat):
+        if item in DESC:
+            return DESC[item]
+        head = human(item)
+        if item.endswith("Ore") or cat == "RawMaterials" and tier == 1:
+            return f"{head}, mined from asteroids and planetary deposits."
+        if tier == 1:
+            return f"Raw {head.lower()}, extracted directly from space environments."
+        if item.endswith("Module"):
+            return f"{head}: a prefabricated station module ready for assembly."
+        if item.endswith("Research"):
+            return f"Unlocked {head.lower()} — a Science Lab breakthrough data-file."
+        return f"Refined {head.lower()}, produced by advanced fabrication."
+
+    # ---- weight (kg) heuristic per category & tier ----
+    def weight(item, tier, cat, produced_in):
+        if cat == "Military":
+            base = 60.0 if tier == 4 else 250.0 if tier in (5, 6) else 40.0
+        else:
+            base = {"RawMaterials": 4.0, "RefinedGoods": 6.0, "Components": 12.0,
+                    "Technology": 8.0, "Food": 2.0, "Medical": 3.0, "Data": 1.0,
+                    "Luxury": 5.0, "Contraband": 6.0, "Other": 6.0}[cat]
+        if item.endswith("Module"):
+            base *= 40.0
+        if item.endswith("Ore"):
+            return 8.0
+        # density: metals & processing get heavier
+        if produced_in == "ShipMining" and tier == 1:
+            return 8.0
+        return round(base * (1.2 ** (tier - 1)), 1)
+
+    def volume(item, tier, cat, weight_kg):
+        # derive from weight with a loose packing density (kg/m^3 ~ 400 base)
+        v = weight_kg / 400.0
+        if cat == "Food":
+            v = weight_kg / 900.0
+        if cat == "Technology":
+            v = weight_kg / 600.0
+        if cat == "Military":
+            v = weight_kg / 500.0
+        return round(max(v, 0.05), 2)
+
+    def storage(item, cat, produced_in):
+        if item in ("Hydrogen", "Helium3", "MethaneGas", "NitrogenGas", "NobleGas"):
+            return "Gas"
+        if item in ("CompressedMethane",):
+            return "Hazardous"
+        if item in ("LiquidHydrogen", "LiquidNitrogen", "Water", "HydrogenFuel",
+                    "FusionFuelCell"):
+            return "Liquid"
+        if item in ("EnrichedUranium", "PlasmaFuel", "ProhibitedWeapons", "NanoInjectors"):
+            return "Hazardous"
+        if cat in ("Food", "Medical"):
+            return "Refrigerated"
+        return STORE[cat]
+
+    items = {}
+    for r in recipes:
+        iid, tier, cat = r["OutputItem"], r["Tier"], r["Category"]
+        st = storage(iid, cat, r["ProducedIn"])
+        wt = weight(iid, tier, cat, r["ProducedIn"])
+        rar = TIER_RARITY.get(tier, "Common")
+        base_v = TIER_VALUE.get(tier, 100)
+        if cat in ("Military", "Contraband"):
+            base_v *= 1.5
+        if r["ResearchLevel"] > 1:
+            base_v *= (1.7 if r["ResearchLevel"] == 2 else 3.0)
+        if r["Acquisition"]:
+            base_v *= 0.5
+        items[iid] = {
+            "ItemName": human(iid),
+            "Description": desc(iid, tier, cat),
+            "WeightKg": wt,
+            "VolumeM3": volume(iid, tier, cat, wt),
+            "StorageType": st,
+            "Rarity": rar,
+            "BaseValue": int(round(base_v)),
+            "MaterialCategory": MATCAT[cat],
+        }
+    return items
 
 
 def build_recipes_with_ids():
@@ -521,17 +669,19 @@ def main():
         sys.exit(1)
 
     recipes = build_recipes_with_ids()
+    items = build_items(recipes)
     doc = {
         "$schema": "http://json-schema.org/draft-07/schema#",
         "Title": "Adastrea Crafting & Building Tree",
-        "Description": "Machine-readable crafting/building tree: raw extraction -> refined materials -> components & electronics -> ship parts -> weapons -> station construction parts -> modules. Authoritative generator: docs/11-TECHNICAL_SPECS/generate_crafting_tree.py",
-        "SchemaVersion": "1.4.0",
+        "Description": "Machine-readable crafting/building tree (recipes + per-item stats): raw extraction -> refined materials -> components & electronics -> ship parts -> weapons -> station construction parts -> modules. Authoritative generator: docs/11-TECHNICAL_SPECS/generate_crafting_tree.py",
+        "SchemaVersion": "1.5.0",
         "LastUpdated": "2026-08-31",
         "ItemIDConvention": "^[A-Za-z][A-Za-z0-9_]*$",
         "NoteHelium3": "Existing trade asset uses 'Helium-3' (hyphen, violates ItemID regex). Crafting data canonicalizes to 'Helium3' and maps to DA_TradeItem_Helium-3.",
         "ProducedInTags": sorted(PRODUCED_IN_TAGS),
         "TierLabels": TIER_LABELS,
         "Recipes": recipes,
+        "Items": items,
     }
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as f:

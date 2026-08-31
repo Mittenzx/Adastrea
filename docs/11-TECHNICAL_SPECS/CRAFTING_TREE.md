@@ -310,6 +310,33 @@ Reference tables from the canonical JSON. **Ingredient quantities are unit count
 
 ---
 
+## 6b. Item Stats
+
+Every item in the tree also carries a **per-unit stats entry** in the ``Items``
+map of `CraftingTree.json` (keyed by `ItemID`, one per recipe output). The fields
+mirror the existing `UMaterialDataAsset` / `UTradeItemDataAsset` domains so the
+data plugs straight into the game:
+
+| Field             | Type      | Meaning |
+|-------------------|-----------|---------|
+| `ItemName`        | string    | Human-readable display name (e.g. `Ship Engine Mk3`) |
+| `Description`     | string    | One-line flavor/functional description |
+| `WeightKg`        | float     | Mass per 1 unit |
+| `VolumeM3`        | float     | Stowage volume per 1 unit |
+| `StorageType`     | enum      | `Solid` / `Liquid` / `Gas` / `Refrigerated` / `Hazardous` / `Other` (`EStorageType`) |
+| `Rarity`          | enum      | `Common`…`Legendary` (`EMaterialRarity`) |
+| `BaseValue`       | int       | Base price in credits per 1 unit (tier-, category- and research-scaled) |
+| `MaterialCategory`| enum      | `Mineral`…`Other` (`EMaterialCategory`) |
+
+Assignments are heuristic + override driven in the generator: weight/volume scale
+with tier & category (ores ~8 kg, ship parts 60–250 kg, station modules heavier
+still), gases/liquids/hazardous materials get the correct `StorageType`, and
+rarity/base value escalate with tier and Mk level so late-game research items are
+genuinely more valuable. The interactive diagram's node tooltip shows these stats
+(name, star-rating by rarity, kg, m³, storage, credits) on hover.
+
+---
+
 ## 7. Verification
 
 The JSON (`Content/Data/CraftingTree.json`, **227 recipes across 6 tiers** — including the Mk2/Mk3 progression versions and the 5 specialized research-lab domains + breakthroughs; no whole-station assembly recipes) is validated by the
@@ -324,6 +351,8 @@ The JSON (`Content/Data/CraftingTree.json`, **227 recipes across 6 tiers** — i
 - ✅ Research monotonicity (`ResearchRequired` names a produced item at a level ≤
   the recipe's own `ResearchLevel`).
 - ✅ Only the canonical `ProducedIn` module tags are used.
+- ✅ Every output item has a valid `Items` stats entry (name, description, positive
+  weight & volume, and valid `StorageType`/`Rarity`) — 12 unit tests pass.
 
 ---
 

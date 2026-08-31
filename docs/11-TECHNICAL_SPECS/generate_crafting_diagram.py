@@ -52,15 +52,16 @@ def parse():
     with open(TREE) as f:
         data = json.load(f)
     recipes = data["Recipes"]
+    items = data.get("Items", {})
     # output item -> recipe
     produced = {}
     for r in recipes:
         produced[r["OutputItem"]] = r
-    return recipes, produced
+    return recipes, produced, items
 
 
 def main():
-    recipes, produced = parse()
+    recipes, produced, items = parse()
 
     # Determine material category for each output from ingestion (+ fallback)
     # Use recipe Category (trade) mapped to a display; prefer material category.
@@ -205,6 +206,9 @@ def main():
             if ing["ItemID"] in out_adj:
                 out_adj[ing["ItemID"]].append(r["OutputItem"])
     item_list = sorted(produced.keys())
+    stats_dict = {k: {"n": v["ItemName"], "d": v["Description"], "w": v["WeightKg"],
+                      "m": v["VolumeM3"], "s": v["StorageType"], "r": v["Rarity"],
+                      "b": v["BaseValue"]} for k, v in items.items()}
 
     # ---- arrow marker + svg ----------------------------------------------
     def node_center(item):
@@ -367,6 +371,7 @@ const CAT_LABEL = {J({
 const DOMAIN_LABEL = {J(DOMAIN_LABEL)};
 const DOMAIN_COLOR = {J(DOMAIN_COLOR)};
 const OUT = {J(out_adj)};
+const STATS = {J(stats_dict)};
 
 const nodes = [...document.querySelectorAll('.node')];
 const edges = [...document.querySelectorAll('.edge')];
@@ -466,14 +471,20 @@ window.addEventListener('keydown', e => {{ if (e.key === 'Escape') {{ focus=null
 // ---- tooltip ----
 nodes.forEach(n => n.addEventListener('mousemove', e => {{
   const t = document.getElementById('tip');
+  const itm = n.dataset.item;
   const ing = JSON.parse(n.dataset.ing);
   const ings = ing.length ? ing.join(', ') : '(raw extraction)';
   const dom = DOMAIN_LABEL[n.dataset.domain] || n.dataset.domain;
-  t.style.display = (focus === n.dataset.item) ? 'none' : 'block';
+  const st = STATS[itm] || {{}};
+  const star = {{Common:'★', Uncommon:'★★', Rare:'★★★', VeryRare:'★★★★', Legendary:'★★★★★'}}[st.r] || '';
+  t.style.display = (focus === itm) ? 'none' : 'block';
   t.style.left = (e.clientX + 14) + 'px'; t.style.top = (e.clientY + 14) + 'px';
-  t.innerHTML = `<b>${{n.dataset.item}}</b> · Tier ${{n.dataset.tier}} · ${{CAT_LABEL[n.dataset.cat]||n.dataset.cat}}<br/>
+  t.innerHTML = `<b>${{st.n || itm}}</b> <span style="color:#fbbf24">${{star}}</span> · <span style="color:#94a3b8">${{st.r || ''}}</span> · Tier ${{n.dataset.tier}} · ${{CAT_LABEL[n.dataset.cat]||n.dataset.cat}}<br/>
+    <span style="color:#64748b">${{st.d || ''}}</span><br/>
     <span style="color:${{DOMAIN_COLOR[n.dataset.domain]}}">■</span> <span style="color:#94a3b8">${{dom}}</span>
     <span style="color:#94a3b8">${{n.dataset.rl>1 ? '· Research Lv '+n.dataset.rl : ''}}</span><br/>
+    <span style="color:#7dd3fc">${{st.w ? st.w+' kg' : ''}}</span> · <span style="color:#7dd3fc">${{st.m ? st.m+' m³' : ''}}</span> ·
+    <span style="color:#94a3b8">${{st.s || ''}}</span> · <span style="color:#4ade80">${{st.b ? st.b+' cr' : ''}}</span><br/>
     Requires: ${{ings}}`;
 }}));
 nodes.forEach(n => n.addEventListener('mouseleave', () => {{ if (focus !== n.dataset.item) document.getElementById('tip').style.display='none'; }}));

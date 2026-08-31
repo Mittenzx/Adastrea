@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "Title": "Adastrea Crafting & Building Tree",
-  "Description": "Machine-readable crafting/building tree: raw extraction -> refined materials -> components & electronics -> ship parts -> weapons -> station construction parts -> modules. Authoritative generator: docs/11-TECHNICAL_SPECS/generate_crafting_tree.py",
-  "SchemaVersion": "1.4.0",
+  "Description": "Machine-readable crafting/building tree (recipes + per-item stats): raw extraction -> refined materials -> components & electronics -> ship parts -> weapons -> station construction parts -> modules. Authoritative generator: docs/11-TECHNICAL_SPECS/generate_crafting_tree.py",
+  "SchemaVersion": "1.5.0",
   "LastUpdated": "2026-08-31",
   "ItemIDConvention": "^[A-Za-z][A-Za-z0-9_]*$",
   "NoteHelium3": "Existing trade asset uses 'Helium-3' (hyphen, violates ItemID regex). Crafting data canonicalizes to 'Helium3' and maps to DA_TradeItem_Helium-3.",
@@ -5227,5 +5227,2277 @@
         }
       ]
     }
-  ]
+  ],
+  "Items": {
+    "IronOre": {
+      "ItemName": "Iron Ore",
+      "Description": "Iron Ore, mined from asteroids and planetary deposits.",
+      "WeightKg": 8.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "CopperOre": {
+      "ItemName": "Copper Ore",
+      "Description": "Copper Ore, mined from asteroids and planetary deposits.",
+      "WeightKg": 8.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "TitaniumOre": {
+      "ItemName": "Titanium Ore",
+      "Description": "Titanium Ore, mined from asteroids and planetary deposits.",
+      "WeightKg": 8.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "NickelOre": {
+      "ItemName": "Nickel Ore",
+      "Description": "Nickel Ore, mined from asteroids and planetary deposits.",
+      "WeightKg": 8.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "ZincOre": {
+      "ItemName": "Zinc Ore",
+      "Description": "Zinc Ore, mined from asteroids and planetary deposits.",
+      "WeightKg": 8.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "ChromiumOre": {
+      "ItemName": "Chromium Ore",
+      "Description": "Chromium Ore, mined from asteroids and planetary deposits.",
+      "WeightKg": 8.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "AluminiumOre": {
+      "ItemName": "Aluminium Ore",
+      "Description": "Aluminium Ore, mined from asteroids and planetary deposits.",
+      "WeightKg": 8.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "ManganeseOre": {
+      "ItemName": "Manganese Ore",
+      "Description": "Manganese Ore, mined from asteroids and planetary deposits.",
+      "WeightKg": 8.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "GoldOre": {
+      "ItemName": "Gold Ore",
+      "Description": "Gold Ore, mined from asteroids and planetary deposits.",
+      "WeightKg": 8.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "SilverOre": {
+      "ItemName": "Silver Ore",
+      "Description": "Silver Ore, mined from asteroids and planetary deposits.",
+      "WeightKg": 8.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "Platinum": {
+      "ItemName": "Platinum",
+      "Description": "Platinum, mined from asteroids and planetary deposits.",
+      "WeightKg": 8.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "Palladium": {
+      "ItemName": "Palladium",
+      "Description": "Palladium, mined from asteroids and planetary deposits.",
+      "WeightKg": 8.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "CobaltOre": {
+      "ItemName": "Cobalt Ore",
+      "Description": "Cobalt Ore, mined from asteroids and planetary deposits.",
+      "WeightKg": 8.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "TungstenOre": {
+      "ItemName": "Tungsten Ore",
+      "Description": "Tungsten Ore, mined from asteroids and planetary deposits.",
+      "WeightKg": 8.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "UraniumOre": {
+      "ItemName": "Uranium Ore",
+      "Description": "Uranium Ore, mined from asteroids and planetary deposits.",
+      "WeightKg": 8.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "LithiumOre": {
+      "ItemName": "Lithium Ore",
+      "Description": "Lithium Ore, mined from asteroids and planetary deposits.",
+      "WeightKg": 8.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "Silicon": {
+      "ItemName": "Silicon",
+      "Description": "Silicon, mined from asteroids and planetary deposits.",
+      "WeightKg": 8.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "CarbonCrystal": {
+      "ItemName": "Carbon Crystal",
+      "Description": "Carbon Crystal, mined from asteroids and planetary deposits.",
+      "WeightKg": 8.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "RareEarthElements": {
+      "ItemName": "Rare Earth Elements",
+      "Description": "Rare Earth Elements, mined from asteroids and planetary deposits.",
+      "WeightKg": 8.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "PreciousStones": {
+      "ItemName": "Precious Stones",
+      "Description": "Precious Stones, mined from asteroids and planetary deposits.",
+      "WeightKg": 8.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "RawOre": {
+      "ItemName": "Raw Ore",
+      "Description": "Raw Ore, mined from asteroids and planetary deposits.",
+      "WeightKg": 8.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "Helium3": {
+      "ItemName": "Helium-3",
+      "Description": "Helium-3, mined from asteroids and planetary deposits.",
+      "WeightKg": 4.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Gas",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "Hydrogen": {
+      "ItemName": "Hydrogen",
+      "Description": "Hydrogen, mined from asteroids and planetary deposits.",
+      "WeightKg": 4.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Gas",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "MethaneGas": {
+      "ItemName": "Methane Gas",
+      "Description": "Methane Gas, mined from asteroids and planetary deposits.",
+      "WeightKg": 4.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Gas",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "NitrogenGas": {
+      "ItemName": "Nitrogen Gas",
+      "Description": "Nitrogen Gas, mined from asteroids and planetary deposits.",
+      "WeightKg": 4.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Gas",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "NobleGas": {
+      "ItemName": "Noble Gas",
+      "Description": "Noble Gas, mined from asteroids and planetary deposits.",
+      "WeightKg": 4.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Gas",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "WaterIce": {
+      "ItemName": "Water Ice",
+      "Description": "Water Ice, mined from asteroids and planetary deposits.",
+      "WeightKg": 4.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "OrganicBiomass": {
+      "ItemName": "Organic Biomass",
+      "Description": "Organic Biomass, mined from asteroids and planetary deposits.",
+      "WeightKg": 4.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "AlgaeBiomass": {
+      "ItemName": "Algae Biomass",
+      "Description": "Algae Biomass, mined from asteroids and planetary deposits.",
+      "WeightKg": 4.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "PlantFibre": {
+      "ItemName": "Plant Fibre",
+      "Description": "Plant Fibre, mined from asteroids and planetary deposits.",
+      "WeightKg": 4.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "SalvagedComponents": {
+      "ItemName": "Salvaged Components",
+      "Description": "Raw salvaged components, extracted directly from space environments.",
+      "WeightKg": 12.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Component"
+    },
+    "ScrapMetal": {
+      "ItemName": "Scrap Metal",
+      "Description": "Scrap Metal, mined from asteroids and planetary deposits.",
+      "WeightKg": 4.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "DerelictHullPlate": {
+      "ItemName": "Derelict Hull Plate",
+      "Description": "Derelict Hull Plate, mined from asteroids and planetary deposits.",
+      "WeightKg": 4.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 30,
+      "MaterialCategory": "Mineral"
+    },
+    "SteelAlloy": {
+      "ItemName": "Steel Alloy",
+      "Description": "Forged iron-copper alloy; the backbone of most construction.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "CopperWiring": {
+      "ItemName": "Copper Wiring",
+      "Description": "Refined copper wiring, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "NickelSteel": {
+      "ItemName": "Nickel Steel",
+      "Description": "Refined nickel steel, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "ZincPlate": {
+      "ItemName": "Zinc Plate",
+      "Description": "Refined zinc plate, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "ChromiumPlating": {
+      "ItemName": "Chromium Plating",
+      "Description": "Refined chromium plating, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "AluminiumComposite": {
+      "ItemName": "Aluminium Composite",
+      "Description": "Refined aluminium composite, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "GoldIngot": {
+      "ItemName": "Gold Ingot",
+      "Description": "Refined gold ingot, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "SilverIngot": {
+      "ItemName": "Silver Ingot",
+      "Description": "Refined silver ingot, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "TitaniumAlloy": {
+      "ItemName": "Titanium Alloy",
+      "Description": "Refined titanium alloy, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "TungstenCarbide": {
+      "ItemName": "Tungsten Carbide",
+      "Description": "Refined tungsten carbide, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "PlatinumCatalyst": {
+      "ItemName": "Platinum Catalyst",
+      "Description": "Refined platinum catalyst, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "PalladiumCatalyst": {
+      "ItemName": "Palladium Catalyst",
+      "Description": "Refined palladium catalyst, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "CobaltMagnet": {
+      "ItemName": "Cobalt Magnet",
+      "Description": "Refined cobalt magnet, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "EnrichedUranium": {
+      "ItemName": "Enriched Uranium",
+      "Description": "Refined enriched uranium, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Hazardous",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "LithiumCompound": {
+      "ItemName": "Lithium Compound",
+      "Description": "Refined lithium compound, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "SiliconWafer": {
+      "ItemName": "Silicon Wafer",
+      "Description": "Ultra-flat silicon disk etched for microelectronics.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "CarbonFibre": {
+      "ItemName": "Carbon Fibre",
+      "Description": "Refined carbon fibre, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "GlassComposite": {
+      "ItemName": "Glass Composite",
+      "Description": "Refined glass composite, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "CeramicTiles": {
+      "ItemName": "Ceramic Tiles",
+      "Description": "Refined ceramic tiles, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "LiquidHydrogen": {
+      "ItemName": "Liquid Hydrogen",
+      "Description": "Refined liquid hydrogen, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Liquid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "CompressedMethane": {
+      "ItemName": "Compressed Methane",
+      "Description": "Refined compressed methane, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Hazardous",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "LiquidNitrogen": {
+      "ItemName": "Liquid Nitrogen",
+      "Description": "Refined liquid nitrogen, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Liquid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "HydrogenFuel": {
+      "ItemName": "Hydrogen Fuel",
+      "Description": "Refined hydrogen fuel, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Liquid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "PowerCells": {
+      "ItemName": "Power Cells",
+      "Description": "Refined power cells, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "AdvancedPowerCells": {
+      "ItemName": "Advanced Power Cells",
+      "Description": "Refined advanced power cells, produced by advanced fabrication.",
+      "WeightKg": 11.5,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Electronics"
+    },
+    "FusionFuelCell": {
+      "ItemName": "Fusion Fuel Cell",
+      "Description": "Refined fusion fuel cell, produced by advanced fabrication.",
+      "WeightKg": 8.6,
+      "VolumeM3": 0.05,
+      "StorageType": "Liquid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "AlgaePaste": {
+      "ItemName": "Algae Paste",
+      "Description": "Refined algae paste, produced by advanced fabrication.",
+      "WeightKg": 2.4,
+      "VolumeM3": 0.05,
+      "StorageType": "Refrigerated",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "Food"
+    },
+    "SyntheticProtein": {
+      "ItemName": "Synthetic Protein",
+      "Description": "Refined synthetic protein, produced by advanced fabrication.",
+      "WeightKg": 2.4,
+      "VolumeM3": 0.05,
+      "StorageType": "Refrigerated",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "Food"
+    },
+    "FoodRations": {
+      "ItemName": "Food Rations",
+      "Description": "Refined food rations, produced by advanced fabrication.",
+      "WeightKg": 2.4,
+      "VolumeM3": 0.05,
+      "StorageType": "Refrigerated",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "Food"
+    },
+    "MRE_Rations": {
+      "ItemName": "MRE Rations",
+      "Description": "Refined mre rations, produced by advanced fabrication.",
+      "WeightKg": 2.4,
+      "VolumeM3": 0.05,
+      "StorageType": "Refrigerated",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "Food"
+    },
+    "BioCompound": {
+      "ItemName": "Bio Compound",
+      "Description": "Refined bio compound, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "SyntheticTextiles": {
+      "ItemName": "Synthetic Textiles",
+      "Description": "Refined synthetic textiles, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 200,
+      "MaterialCategory": "RefinedMineral"
+    },
+    "StructuralFrame": {
+      "ItemName": "Structural Frame",
+      "Description": "Refined structural frame, produced by advanced fabrication.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "CompositePlating": {
+      "ItemName": "Composite Plating",
+      "Description": "Refined composite plating, produced by advanced fabrication.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "ServoActuator": {
+      "ItemName": "Servo Actuator",
+      "Description": "Refined servo actuator, produced by advanced fabrication.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "GearAssembly": {
+      "ItemName": "Gear Assembly",
+      "Description": "Refined gear assembly, produced by advanced fabrication.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "HydraulicPiston": {
+      "ItemName": "Hydraulic Piston",
+      "Description": "Refined hydraulic piston, produced by advanced fabrication.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "PrecisionFastener": {
+      "ItemName": "Precision Fastener",
+      "Description": "Refined precision fastener, produced by advanced fabrication.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "ReinforcedGirder": {
+      "ItemName": "Reinforced Girder",
+      "Description": "Refined reinforced girder, produced by advanced fabrication.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "ArmourPlate": {
+      "ItemName": "Armour Plate",
+      "Description": "Refined armour plate, produced by advanced fabrication.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "SuperConductingWire": {
+      "ItemName": "Super Conducting Wire",
+      "Description": "Refined super conducting wire, produced by advanced fabrication.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "Electronics": {
+      "ItemName": "Electronics",
+      "Description": "Assembled circuit assemblies for sensors and computers.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "Microchips": {
+      "ItemName": "Microchips",
+      "Description": "High-density processors etched from refined silicon.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "CircuitBoard": {
+      "ItemName": "Circuit Board",
+      "Description": "Refined circuit board, produced by advanced fabrication.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "MemoryUnit": {
+      "ItemName": "Memory Unit",
+      "Description": "Refined memory unit, produced by advanced fabrication.",
+      "WeightKg": 11.5,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Electronics"
+    },
+    "ControlUnit": {
+      "ItemName": "Control Unit",
+      "Description": "Refined control unit, produced by advanced fabrication.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "PowerDistributionUnit": {
+      "ItemName": "Power Distribution Unit",
+      "Description": "Refined power distribution unit, produced by advanced fabrication.",
+      "WeightKg": 17.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Component"
+    },
+    "BasicComputer": {
+      "ItemName": "Basic Computer",
+      "Description": "Refined basic computer, produced by advanced fabrication.",
+      "WeightKg": 11.5,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Electronics"
+    },
+    "QuantumProcessor": {
+      "ItemName": "Quantum Processor",
+      "Description": "Refined quantum processor, produced by advanced fabrication.",
+      "WeightKg": 11.5,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Electronics"
+    },
+    "AdvancedSensors": {
+      "ItemName": "Advanced Sensors",
+      "Description": "Refined advanced sensors, produced by advanced fabrication.",
+      "WeightKg": 11.5,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Electronics"
+    },
+    "NavigationComputer": {
+      "ItemName": "Navigation Computer",
+      "Description": "Refined navigation computer, produced by advanced fabrication.",
+      "WeightKg": 11.5,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Electronics"
+    },
+    "TargetingComputer": {
+      "ItemName": "Targeting Computer",
+      "Description": "Refined targeting computer, produced by advanced fabrication.",
+      "WeightKg": 11.5,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Electronics"
+    },
+    "RefinedMedicine": {
+      "ItemName": "Refined Medicine",
+      "Description": "Refined refined medicine, produced by advanced fabrication.",
+      "WeightKg": 4.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Refrigerated",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Food"
+    },
+    "MedicalSupplies": {
+      "ItemName": "Medical Supplies",
+      "Description": "Refined medical supplies, produced by advanced fabrication.",
+      "WeightKg": 4.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Refrigerated",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Food"
+    },
+    "Vaccines": {
+      "ItemName": "Vaccines",
+      "Description": "Refined vaccines, produced by advanced fabrication.",
+      "WeightKg": 4.3,
+      "VolumeM3": 0.05,
+      "StorageType": "Refrigerated",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Food"
+    },
+    "FineSpirits": {
+      "ItemName": "Fine Spirits",
+      "Description": "Refined fine spirits, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Other"
+    },
+    "LuxuryBeverages": {
+      "ItemName": "Luxury Beverages",
+      "Description": "Refined luxury beverages, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Other"
+    },
+    "Jewelry": {
+      "ItemName": "Jewelry",
+      "Description": "Refined jewelry, produced by advanced fabrication.",
+      "WeightKg": 8.6,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 4000,
+      "MaterialCategory": "Other"
+    },
+    "FineSilk": {
+      "ItemName": "Fine Silk",
+      "Description": "Refined fine silk, produced by advanced fabrication.",
+      "WeightKg": 7.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Uncommon",
+      "BaseValue": 800,
+      "MaterialCategory": "Other"
+    },
+    "LuxuryFurniture": {
+      "ItemName": "Luxury Furniture",
+      "Description": "Refined luxury furniture, produced by advanced fabrication.",
+      "WeightKg": 8.6,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 4000,
+      "MaterialCategory": "Other"
+    },
+    "ShipComponents": {
+      "ItemName": "Ship Components",
+      "Description": "Refined ship components, produced by advanced fabrication.",
+      "WeightKg": 20.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 4000,
+      "MaterialCategory": "Component"
+    },
+    "HullPlating": {
+      "ItemName": "Hull Plating",
+      "Description": "Refined hull plating, produced by advanced fabrication.",
+      "WeightKg": 103.7,
+      "VolumeM3": 0.21,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6000,
+      "MaterialCategory": "ShipPart"
+    },
+    "ArmourHull": {
+      "ItemName": "Armour Hull",
+      "Description": "Refined armour hull, produced by advanced fabrication.",
+      "WeightKg": 103.7,
+      "VolumeM3": 0.21,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6000,
+      "MaterialCategory": "ShipPart"
+    },
+    "Thruster": {
+      "ItemName": "Thruster",
+      "Description": "Refined thruster, produced by advanced fabrication.",
+      "WeightKg": 103.7,
+      "VolumeM3": 0.21,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6000,
+      "MaterialCategory": "ShipPart"
+    },
+    "ShipEngine": {
+      "ItemName": "Ship Engine",
+      "Description": "Refined ship engine, produced by advanced fabrication.",
+      "WeightKg": 103.7,
+      "VolumeM3": 0.21,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6000,
+      "MaterialCategory": "ShipPart"
+    },
+    "ShipReactor": {
+      "ItemName": "Ship Reactor",
+      "Description": "Refined ship reactor, produced by advanced fabrication.",
+      "WeightKg": 103.7,
+      "VolumeM3": 0.21,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6000,
+      "MaterialCategory": "ShipPart"
+    },
+    "LifeSupportPod": {
+      "ItemName": "Life Support Pod",
+      "Description": "Refined life support pod, produced by advanced fabrication.",
+      "WeightKg": 103.7,
+      "VolumeM3": 0.21,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6000,
+      "MaterialCategory": "ShipPart"
+    },
+    "FuelTank": {
+      "ItemName": "Fuel Tank",
+      "Description": "Refined fuel tank, produced by advanced fabrication.",
+      "WeightKg": 103.7,
+      "VolumeM3": 0.21,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6000,
+      "MaterialCategory": "ShipPart"
+    },
+    "CargoPod": {
+      "ItemName": "Cargo Pod",
+      "Description": "Refined cargo pod, produced by advanced fabrication.",
+      "WeightKg": 103.7,
+      "VolumeM3": 0.21,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6000,
+      "MaterialCategory": "ShipPart"
+    },
+    "GrapplerBoom": {
+      "ItemName": "Grappler Boom",
+      "Description": "Refined grappler boom, produced by advanced fabrication.",
+      "WeightKg": 103.7,
+      "VolumeM3": 0.21,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6000,
+      "MaterialCategory": "ShipPart"
+    },
+    "ShipShieldGenerator": {
+      "ItemName": "Ship Shield Generator",
+      "Description": "Refined ship shield generator, produced by advanced fabrication.",
+      "WeightKg": 103.7,
+      "VolumeM3": 0.21,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6000,
+      "MaterialCategory": "ShipPart"
+    },
+    "TurretWeapon": {
+      "ItemName": "Turret Weapon",
+      "Description": "Refined turret weapon, produced by advanced fabrication.",
+      "WeightKg": 103.7,
+      "VolumeM3": 0.21,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6000,
+      "MaterialCategory": "ShipPart"
+    },
+    "EnergyCannon": {
+      "ItemName": "Energy Cannon",
+      "Description": "Refined energy cannon, produced by advanced fabrication.",
+      "WeightKg": 103.7,
+      "VolumeM3": 0.21,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6000,
+      "MaterialCategory": "ShipPart"
+    },
+    "TriLaser": {
+      "ItemName": "Tri Laser",
+      "Description": "Refined tri laser, produced by advanced fabrication.",
+      "WeightKg": 103.7,
+      "VolumeM3": 0.21,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6000,
+      "MaterialCategory": "ShipPart"
+    },
+    "MissileLauncher": {
+      "ItemName": "Missile Launcher",
+      "Description": "Refined missile launcher, produced by advanced fabrication.",
+      "WeightKg": 103.7,
+      "VolumeM3": 0.21,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6000,
+      "MaterialCategory": "ShipPart"
+    },
+    "Railgun": {
+      "ItemName": "Railgun",
+      "Description": "Refined railgun, produced by advanced fabrication.",
+      "WeightKg": 103.7,
+      "VolumeM3": 0.21,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6000,
+      "MaterialCategory": "ShipPart"
+    },
+    "PlasmaCannon": {
+      "ItemName": "Plasma Cannon",
+      "Description": "Refined plasma cannon, produced by advanced fabrication.",
+      "WeightKg": 103.7,
+      "VolumeM3": 0.21,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6000,
+      "MaterialCategory": "ShipPart"
+    },
+    "TorpedoLauncher": {
+      "ItemName": "Torpedo Launcher",
+      "Description": "Refined torpedo launcher, produced by advanced fabrication.",
+      "WeightKg": 103.7,
+      "VolumeM3": 0.21,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6000,
+      "MaterialCategory": "ShipPart"
+    },
+    "ShieldCapacitor": {
+      "ItemName": "Shield Capacitor",
+      "Description": "Refined shield capacitor, produced by advanced fabrication.",
+      "WeightKg": 103.7,
+      "VolumeM3": 0.21,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6000,
+      "MaterialCategory": "ShipPart"
+    },
+    "PointDefenceLaser": {
+      "ItemName": "Point Defence Laser",
+      "Description": "Refined point defence laser, produced by advanced fabrication.",
+      "WeightKg": 103.7,
+      "VolumeM3": 0.21,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6000,
+      "MaterialCategory": "ShipPart"
+    },
+    "ProhibitedWeapons": {
+      "ItemName": "Prohibited Weapons",
+      "Description": "Refined prohibited weapons, produced by advanced fabrication.",
+      "WeightKg": 10.4,
+      "VolumeM3": 0.05,
+      "StorageType": "Hazardous",
+      "Rarity": "Rare",
+      "BaseValue": 6000,
+      "MaterialCategory": "Other"
+    },
+    "NanoInjectors": {
+      "ItemName": "Nano Injectors",
+      "Description": "Refined nano injectors, produced by advanced fabrication.",
+      "WeightKg": 10.4,
+      "VolumeM3": 0.05,
+      "StorageType": "Hazardous",
+      "Rarity": "Rare",
+      "BaseValue": 6000,
+      "MaterialCategory": "Other"
+    },
+    "AICores": {
+      "ItemName": "AICores",
+      "Description": "Refined aicores, produced by advanced fabrication.",
+      "WeightKg": 13.8,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 4000,
+      "MaterialCategory": "Electronics"
+    },
+    "ResearchData": {
+      "ItemName": "Research Data",
+      "Description": "Refined research data, produced by advanced fabrication.",
+      "WeightKg": 1.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Research"
+    },
+    "AdvancedAICore": {
+      "ItemName": "Advanced AICore",
+      "Description": "Refined advanced aicore, produced by advanced fabrication.",
+      "WeightKg": 16.6,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 16000,
+      "MaterialCategory": "Electronics"
+    },
+    "HackWare": {
+      "ItemName": "Hack Ware",
+      "Description": "Refined hack ware, produced by advanced fabrication.",
+      "WeightKg": 1.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "Rare",
+      "BaseValue": 4000,
+      "MaterialCategory": "Research"
+    },
+    "ConstructionMaterials": {
+      "ItemName": "Construction Materials",
+      "Description": "Refined construction materials, produced by advanced fabrication.",
+      "WeightKg": 24.9,
+      "VolumeM3": 0.06,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 16000,
+      "MaterialCategory": "Component"
+    },
+    "StationHullFrame": {
+      "ItemName": "Station Hull Frame",
+      "Description": "Refined station hull frame, produced by advanced fabrication.",
+      "WeightKg": 24.9,
+      "VolumeM3": 0.06,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 16000,
+      "MaterialCategory": "Component"
+    },
+    "PowerCore": {
+      "ItemName": "Power Core",
+      "Description": "Refined power core, produced by advanced fabrication.",
+      "WeightKg": 16.6,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 16000,
+      "MaterialCategory": "Electronics"
+    },
+    "LifeSupportUnit": {
+      "ItemName": "Life Support Unit",
+      "Description": "Refined life support unit, produced by advanced fabrication.",
+      "WeightKg": 24.9,
+      "VolumeM3": 0.06,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 16000,
+      "MaterialCategory": "Component"
+    },
+    "ModuleShell": {
+      "ItemName": "Module Shell",
+      "Description": "Refined module shell, produced by advanced fabrication.",
+      "WeightKg": 24.9,
+      "VolumeM3": 0.06,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 16000,
+      "MaterialCategory": "Component"
+    },
+    "StructuralGirder": {
+      "ItemName": "Structural Girder",
+      "Description": "Refined structural girder, produced by advanced fabrication.",
+      "WeightKg": 24.9,
+      "VolumeM3": 0.06,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 16000,
+      "MaterialCategory": "Component"
+    },
+    "HullSegment": {
+      "ItemName": "Hull Segment",
+      "Description": "Refined hull segment, produced by advanced fabrication.",
+      "WeightKg": 24.9,
+      "VolumeM3": 0.06,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 16000,
+      "MaterialCategory": "Component"
+    },
+    "DockingMechanism": {
+      "ItemName": "Docking Mechanism",
+      "Description": "Refined docking mechanism, produced by advanced fabrication.",
+      "WeightKg": 24.9,
+      "VolumeM3": 0.06,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 16000,
+      "MaterialCategory": "Component"
+    },
+    "HabitationPod": {
+      "ItemName": "Habitation Pod",
+      "Description": "Refined habitation pod, produced by advanced fabrication.",
+      "WeightKg": 24.9,
+      "VolumeM3": 0.06,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 16000,
+      "MaterialCategory": "Component"
+    },
+    "CorridorSegment": {
+      "ItemName": "Corridor Segment",
+      "Description": "Refined corridor segment, produced by advanced fabrication.",
+      "WeightKg": 24.9,
+      "VolumeM3": 0.06,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 16000,
+      "MaterialCategory": "Component"
+    },
+    "AirTank": {
+      "ItemName": "Air Tank",
+      "Description": "Refined air tank, produced by advanced fabrication.",
+      "WeightKg": 24.9,
+      "VolumeM3": 0.06,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 16000,
+      "MaterialCategory": "Component"
+    },
+    "GravitationGenerator": {
+      "ItemName": "Gravitation Generator",
+      "Description": "Refined gravitation generator, produced by advanced fabrication.",
+      "WeightKg": 16.6,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 16000,
+      "MaterialCategory": "Electronics"
+    },
+    "ShieldEmitter": {
+      "ItemName": "Shield Emitter",
+      "Description": "Refined shield emitter, produced by advanced fabrication.",
+      "WeightKg": 24.9,
+      "VolumeM3": 0.06,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 16000,
+      "MaterialCategory": "Component"
+    },
+    "CorridorModule": {
+      "ItemName": "Corridor Module",
+      "Description": "Corridor Module: a prefabricated station module ready for assembly.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 64000,
+      "MaterialCategory": "Other"
+    },
+    "CargoBayModule": {
+      "ItemName": "Cargo Bay Module",
+      "Description": "Cargo Bay Module: a prefabricated station module ready for assembly.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 64000,
+      "MaterialCategory": "Other"
+    },
+    "DockingBayModule": {
+      "ItemName": "Docking Bay Module",
+      "Description": "Docking Bay Module: a prefabricated station module ready for assembly.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 64000,
+      "MaterialCategory": "Other"
+    },
+    "DockingPortModule": {
+      "ItemName": "Docking Port Module",
+      "Description": "Docking Port Module: a prefabricated station module ready for assembly.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 64000,
+      "MaterialCategory": "Other"
+    },
+    "HabitationModule": {
+      "ItemName": "Habitation Module",
+      "Description": "Habitation Module: a prefabricated station module ready for assembly.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 64000,
+      "MaterialCategory": "Other"
+    },
+    "BarracksModule": {
+      "ItemName": "Barracks Module",
+      "Description": "Barracks Module: a prefabricated station module ready for assembly.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 64000,
+      "MaterialCategory": "Other"
+    },
+    "MarketplaceModule": {
+      "ItemName": "Marketplace Module",
+      "Description": "Marketplace Module: a prefabricated station module ready for assembly.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 64000,
+      "MaterialCategory": "Other"
+    },
+    "ScienceLabModule": {
+      "ItemName": "Science Lab Module",
+      "Description": "Science Lab Module: a prefabricated station module ready for assembly.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 64000,
+      "MaterialCategory": "Other"
+    },
+    "ReactorModule": {
+      "ItemName": "Reactor Module",
+      "Description": "Reactor Module: a prefabricated station module ready for assembly.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 64000,
+      "MaterialCategory": "Other"
+    },
+    "SolarArrayModule": {
+      "ItemName": "Solar Array Module",
+      "Description": "Solar Array Module: a prefabricated station module ready for assembly.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 64000,
+      "MaterialCategory": "Other"
+    },
+    "ProcessingModule": {
+      "ItemName": "Processing Module",
+      "Description": "Processing Module: a prefabricated station module ready for assembly.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 64000,
+      "MaterialCategory": "Other"
+    },
+    "FabricationModule": {
+      "ItemName": "Fabrication Module",
+      "Description": "Fabrication Module: a prefabricated station module ready for assembly.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 64000,
+      "MaterialCategory": "Other"
+    },
+    "FuelDepotModule": {
+      "ItemName": "Fuel Depot Module",
+      "Description": "Fuel Depot Module: a prefabricated station module ready for assembly.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 64000,
+      "MaterialCategory": "Other"
+    },
+    "TurretModule": {
+      "ItemName": "Turret Module",
+      "Description": "Turret Module: a prefabricated station module ready for assembly.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 64000,
+      "MaterialCategory": "Other"
+    },
+    "ShieldGeneratorModule": {
+      "ItemName": "Shield Generator Module",
+      "Description": "Shield Generator Module: a prefabricated station module ready for assembly.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 64000,
+      "MaterialCategory": "Other"
+    },
+    "PhysicsLabModule": {
+      "ItemName": "Physics Lab Module",
+      "Description": "Physics Lab Module: a prefabricated station module ready for assembly.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 64000,
+      "MaterialCategory": "Other"
+    },
+    "MaterialsLabModule": {
+      "ItemName": "Materials Lab Module",
+      "Description": "Materials Lab Module: a prefabricated station module ready for assembly.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 64000,
+      "MaterialCategory": "Other"
+    },
+    "ElectronicsLabModule": {
+      "ItemName": "Electronics Lab Module",
+      "Description": "Electronics Lab Module: a prefabricated station module ready for assembly.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 64000,
+      "MaterialCategory": "Other"
+    },
+    "WeaponsLabModule": {
+      "ItemName": "Weapons Lab Module",
+      "Description": "Weapons Lab Module: a prefabricated station module ready for assembly.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 64000,
+      "MaterialCategory": "Other"
+    },
+    "BiologyLabModule": {
+      "ItemName": "Biology Lab Module",
+      "Description": "Biology Lab Module: a prefabricated station module ready for assembly.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 64000,
+      "MaterialCategory": "Other"
+    },
+    "PropulsionResearch": {
+      "ItemName": "Propulsion Research",
+      "Description": "Unlocked propulsion research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 2.1,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "VeryRare",
+      "BaseValue": 27200,
+      "MaterialCategory": "Research"
+    },
+    "AdvancedPropulsionResearch": {
+      "ItemName": "Advanced Propulsion Research",
+      "Description": "Unlocked advanced propulsion research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 2.5,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "Legendary",
+      "BaseValue": 192000,
+      "MaterialCategory": "Research"
+    },
+    "MaterialsResearch": {
+      "ItemName": "Materials Research",
+      "Description": "Unlocked materials research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 2.1,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "VeryRare",
+      "BaseValue": 27200,
+      "MaterialCategory": "Research"
+    },
+    "NanoMaterialsResearch": {
+      "ItemName": "Nano Materials Research",
+      "Description": "Unlocked nano materials research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 2.5,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "Legendary",
+      "BaseValue": 192000,
+      "MaterialCategory": "Research"
+    },
+    "ComputingResearch": {
+      "ItemName": "Computing Research",
+      "Description": "Unlocked computing research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 1.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Research"
+    },
+    "QuantumComputingResearch": {
+      "ItemName": "Quantum Computing Research",
+      "Description": "Unlocked quantum computing research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 2.1,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "VeryRare",
+      "BaseValue": 48000,
+      "MaterialCategory": "Research"
+    },
+    "DefenceResearch": {
+      "ItemName": "Defence Research",
+      "Description": "Unlocked defence research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 2.1,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "VeryRare",
+      "BaseValue": 27200,
+      "MaterialCategory": "Research"
+    },
+    "AdvancedDefenceResearch": {
+      "ItemName": "Advanced Defence Research",
+      "Description": "Unlocked advanced defence research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 2.5,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "Legendary",
+      "BaseValue": 192000,
+      "MaterialCategory": "Research"
+    },
+    "BioResearch": {
+      "ItemName": "Bio Research",
+      "Description": "Unlocked bio research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 1.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Research"
+    },
+    "AdvancedBioResearch": {
+      "ItemName": "Advanced Bio Research",
+      "Description": "Unlocked advanced bio research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 2.1,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "VeryRare",
+      "BaseValue": 48000,
+      "MaterialCategory": "Research"
+    },
+    "Electronics_Mk2": {
+      "ItemName": "Electronics Mk2",
+      "Description": "Refined electronics mk2, produced by advanced fabrication.",
+      "WeightKg": 20.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Component"
+    },
+    "Microchips_Mk2": {
+      "ItemName": "Microchips Mk2",
+      "Description": "Refined microchips mk2, produced by advanced fabrication.",
+      "WeightKg": 20.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Component"
+    },
+    "CircuitBoard_Mk2": {
+      "ItemName": "Circuit Board Mk2",
+      "Description": "Refined circuit board mk2, produced by advanced fabrication.",
+      "WeightKg": 20.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Component"
+    },
+    "MemoryUnit_Mk2": {
+      "ItemName": "Memory Unit Mk2",
+      "Description": "Refined memory unit mk2, produced by advanced fabrication.",
+      "WeightKg": 13.8,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Electronics"
+    },
+    "ControlUnit_Mk2": {
+      "ItemName": "Control Unit Mk2",
+      "Description": "Refined control unit mk2, produced by advanced fabrication.",
+      "WeightKg": 20.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Component"
+    },
+    "PowerDistributionUnit_Mk2": {
+      "ItemName": "Power Distribution Unit Mk2",
+      "Description": "Refined power distribution unit mk2, produced by advanced fabrication.",
+      "WeightKg": 20.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Component"
+    },
+    "BasicComputer_Mk2": {
+      "ItemName": "Basic Computer Mk2",
+      "Description": "Refined basic computer mk2, produced by advanced fabrication.",
+      "WeightKg": 13.8,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Electronics"
+    },
+    "AdvancedSensors_Mk2": {
+      "ItemName": "Advanced Sensors Mk2",
+      "Description": "Refined advanced sensors mk2, produced by advanced fabrication.",
+      "WeightKg": 13.8,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Electronics"
+    },
+    "QuantumProcessor_Mk2": {
+      "ItemName": "Quantum Processor Mk2",
+      "Description": "Refined quantum processor mk2, produced by advanced fabrication.",
+      "WeightKg": 13.8,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Electronics"
+    },
+    "TargetingComputer_Mk2": {
+      "ItemName": "Targeting Computer Mk2",
+      "Description": "Refined targeting computer mk2, produced by advanced fabrication.",
+      "WeightKg": 13.8,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Electronics"
+    },
+    "NavigationComputer_Mk2": {
+      "ItemName": "Navigation Computer Mk2",
+      "Description": "Refined navigation computer mk2, produced by advanced fabrication.",
+      "WeightKg": 13.8,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Electronics"
+    },
+    "ServoActuator_Mk2": {
+      "ItemName": "Servo Actuator Mk2",
+      "Description": "Refined servo actuator mk2, produced by advanced fabrication.",
+      "WeightKg": 20.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Component"
+    },
+    "SuperConductingWire_Mk2": {
+      "ItemName": "Super Conducting Wire Mk2",
+      "Description": "Refined super conducting wire mk2, produced by advanced fabrication.",
+      "WeightKg": 20.7,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Component"
+    },
+    "Electronics_Mk3": {
+      "ItemName": "Electronics Mk3",
+      "Description": "Refined electronics mk3, produced by advanced fabrication.",
+      "WeightKg": 24.9,
+      "VolumeM3": 0.06,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 48000,
+      "MaterialCategory": "Component"
+    },
+    "Microchips_Mk3": {
+      "ItemName": "Microchips Mk3",
+      "Description": "Refined microchips mk3, produced by advanced fabrication.",
+      "WeightKg": 24.9,
+      "VolumeM3": 0.06,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 48000,
+      "MaterialCategory": "Component"
+    },
+    "CircuitBoard_Mk3": {
+      "ItemName": "Circuit Board Mk3",
+      "Description": "Refined circuit board mk3, produced by advanced fabrication.",
+      "WeightKg": 24.9,
+      "VolumeM3": 0.06,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 48000,
+      "MaterialCategory": "Component"
+    },
+    "MemoryUnit_Mk3": {
+      "ItemName": "Memory Unit Mk3",
+      "Description": "Refined memory unit mk3, produced by advanced fabrication.",
+      "WeightKg": 16.6,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 48000,
+      "MaterialCategory": "Electronics"
+    },
+    "ControlUnit_Mk3": {
+      "ItemName": "Control Unit Mk3",
+      "Description": "Refined control unit mk3, produced by advanced fabrication.",
+      "WeightKg": 24.9,
+      "VolumeM3": 0.06,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 48000,
+      "MaterialCategory": "Component"
+    },
+    "PowerDistributionUnit_Mk3": {
+      "ItemName": "Power Distribution Unit Mk3",
+      "Description": "Refined power distribution unit mk3, produced by advanced fabrication.",
+      "WeightKg": 24.9,
+      "VolumeM3": 0.06,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 48000,
+      "MaterialCategory": "Component"
+    },
+    "BasicComputer_Mk3": {
+      "ItemName": "Basic Computer Mk3",
+      "Description": "Refined basic computer mk3, produced by advanced fabrication.",
+      "WeightKg": 16.6,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 48000,
+      "MaterialCategory": "Electronics"
+    },
+    "AdvancedSensors_Mk3": {
+      "ItemName": "Advanced Sensors Mk3",
+      "Description": "Refined advanced sensors mk3, produced by advanced fabrication.",
+      "WeightKg": 16.6,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 48000,
+      "MaterialCategory": "Electronics"
+    },
+    "QuantumProcessor_Mk3": {
+      "ItemName": "Quantum Processor Mk3",
+      "Description": "Refined quantum processor mk3, produced by advanced fabrication.",
+      "WeightKg": 16.6,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 48000,
+      "MaterialCategory": "Electronics"
+    },
+    "ShipEngine_Mk2": {
+      "ItemName": "Ship Engine Mk2",
+      "Description": "Refined ship engine mk2, produced by advanced fabrication.",
+      "WeightKg": 518.4,
+      "VolumeM3": 1.04,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 40800,
+      "MaterialCategory": "ShipPart"
+    },
+    "ShipReactor_Mk2": {
+      "ItemName": "Ship Reactor Mk2",
+      "Description": "Refined ship reactor mk2, produced by advanced fabrication.",
+      "WeightKg": 518.4,
+      "VolumeM3": 1.04,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 40800,
+      "MaterialCategory": "ShipPart"
+    },
+    "Thruster_Mk2": {
+      "ItemName": "Thruster Mk2",
+      "Description": "Refined thruster mk2, produced by advanced fabrication.",
+      "WeightKg": 518.4,
+      "VolumeM3": 1.04,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 40800,
+      "MaterialCategory": "ShipPart"
+    },
+    "FuelTank_Mk2": {
+      "ItemName": "Fuel Tank Mk2",
+      "Description": "Refined fuel tank mk2, produced by advanced fabrication.",
+      "WeightKg": 518.4,
+      "VolumeM3": 1.04,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 40800,
+      "MaterialCategory": "ShipPart"
+    },
+    "ShipEngine_Mk3": {
+      "ItemName": "Ship Engine Mk3",
+      "Description": "Refined ship engine mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 288000,
+      "MaterialCategory": "ShipPart"
+    },
+    "ShipReactor_Mk3": {
+      "ItemName": "Ship Reactor Mk3",
+      "Description": "Refined ship reactor mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 288000,
+      "MaterialCategory": "ShipPart"
+    },
+    "Thruster_Mk3": {
+      "ItemName": "Thruster Mk3",
+      "Description": "Refined thruster mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 288000,
+      "MaterialCategory": "ShipPart"
+    },
+    "FuelTank_Mk3": {
+      "ItemName": "Fuel Tank Mk3",
+      "Description": "Refined fuel tank mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 288000,
+      "MaterialCategory": "ShipPart"
+    },
+    "CargoPod_Mk2": {
+      "ItemName": "Cargo Pod Mk2",
+      "Description": "Refined cargo pod mk2, produced by advanced fabrication.",
+      "WeightKg": 518.4,
+      "VolumeM3": 1.04,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 40800,
+      "MaterialCategory": "ShipPart"
+    },
+    "LifeSupportPod_Mk2": {
+      "ItemName": "Life Support Pod Mk2",
+      "Description": "Refined life support pod mk2, produced by advanced fabrication.",
+      "WeightKg": 518.4,
+      "VolumeM3": 1.04,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 40800,
+      "MaterialCategory": "ShipPart"
+    },
+    "ShipComponents_Mk2": {
+      "ItemName": "Ship Components Mk2",
+      "Description": "Refined ship components mk2, produced by advanced fabrication.",
+      "WeightKg": 24.9,
+      "VolumeM3": 0.06,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 27200,
+      "MaterialCategory": "Component"
+    },
+    "ArmourHull_Mk2": {
+      "ItemName": "Armour Hull Mk2",
+      "Description": "Refined armour hull mk2, produced by advanced fabrication.",
+      "WeightKg": 518.4,
+      "VolumeM3": 1.04,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 40800,
+      "MaterialCategory": "ShipPart"
+    },
+    "HullPlating_Mk2": {
+      "ItemName": "Hull Plating Mk2",
+      "Description": "Refined hull plating mk2, produced by advanced fabrication.",
+      "WeightKg": 518.4,
+      "VolumeM3": 1.04,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 40800,
+      "MaterialCategory": "ShipPart"
+    },
+    "CargoPod_Mk3": {
+      "ItemName": "Cargo Pod Mk3",
+      "Description": "Refined cargo pod mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 288000,
+      "MaterialCategory": "ShipPart"
+    },
+    "LifeSupportPod_Mk3": {
+      "ItemName": "Life Support Pod Mk3",
+      "Description": "Refined life support pod mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 288000,
+      "MaterialCategory": "ShipPart"
+    },
+    "ShipComponents_Mk3": {
+      "ItemName": "Ship Components Mk3",
+      "Description": "Refined ship components mk3, produced by advanced fabrication.",
+      "WeightKg": 29.9,
+      "VolumeM3": 0.07,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 192000,
+      "MaterialCategory": "Component"
+    },
+    "ArmourHull_Mk3": {
+      "ItemName": "Armour Hull Mk3",
+      "Description": "Refined armour hull mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 288000,
+      "MaterialCategory": "ShipPart"
+    },
+    "HullPlating_Mk3": {
+      "ItemName": "Hull Plating Mk3",
+      "Description": "Refined hull plating mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 288000,
+      "MaterialCategory": "ShipPart"
+    },
+    "ShipShieldGenerator_Mk2": {
+      "ItemName": "Ship Shield Generator Mk2",
+      "Description": "Refined ship shield generator mk2, produced by advanced fabrication.",
+      "WeightKg": 518.4,
+      "VolumeM3": 1.04,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 40800,
+      "MaterialCategory": "ShipPart"
+    },
+    "ShieldCapacitor_Mk2": {
+      "ItemName": "Shield Capacitor Mk2",
+      "Description": "Refined shield capacitor mk2, produced by advanced fabrication.",
+      "WeightKg": 518.4,
+      "VolumeM3": 1.04,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 40800,
+      "MaterialCategory": "ShipPart"
+    },
+    "TurretWeapon_Mk2": {
+      "ItemName": "Turret Weapon Mk2",
+      "Description": "Refined turret weapon mk2, produced by advanced fabrication.",
+      "WeightKg": 518.4,
+      "VolumeM3": 1.04,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 40800,
+      "MaterialCategory": "ShipPart"
+    },
+    "EnergyCannon_Mk2": {
+      "ItemName": "Energy Cannon Mk2",
+      "Description": "Refined energy cannon mk2, produced by advanced fabrication.",
+      "WeightKg": 518.4,
+      "VolumeM3": 1.04,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 40800,
+      "MaterialCategory": "ShipPart"
+    },
+    "TriLaser_Mk2": {
+      "ItemName": "Tri Laser Mk2",
+      "Description": "Refined tri laser mk2, produced by advanced fabrication.",
+      "WeightKg": 518.4,
+      "VolumeM3": 1.04,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 40800,
+      "MaterialCategory": "ShipPart"
+    },
+    "MissileLauncher_Mk2": {
+      "ItemName": "Missile Launcher Mk2",
+      "Description": "Refined missile launcher mk2, produced by advanced fabrication.",
+      "WeightKg": 518.4,
+      "VolumeM3": 1.04,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 40800,
+      "MaterialCategory": "ShipPart"
+    },
+    "Railgun_Mk2": {
+      "ItemName": "Railgun Mk2",
+      "Description": "Refined railgun mk2, produced by advanced fabrication.",
+      "WeightKg": 518.4,
+      "VolumeM3": 1.04,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 40800,
+      "MaterialCategory": "ShipPart"
+    },
+    "PlasmaCannon_Mk2": {
+      "ItemName": "Plasma Cannon Mk2",
+      "Description": "Refined plasma cannon mk2, produced by advanced fabrication.",
+      "WeightKg": 518.4,
+      "VolumeM3": 1.04,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 40800,
+      "MaterialCategory": "ShipPart"
+    },
+    "TorpedoLauncher_Mk2": {
+      "ItemName": "Torpedo Launcher Mk2",
+      "Description": "Refined torpedo launcher mk2, produced by advanced fabrication.",
+      "WeightKg": 518.4,
+      "VolumeM3": 1.04,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 40800,
+      "MaterialCategory": "ShipPart"
+    },
+    "PointDefenceLaser_Mk2": {
+      "ItemName": "Point Defence Laser Mk2",
+      "Description": "Refined point defence laser mk2, produced by advanced fabrication.",
+      "WeightKg": 518.4,
+      "VolumeM3": 1.04,
+      "StorageType": "Solid",
+      "Rarity": "VeryRare",
+      "BaseValue": 40800,
+      "MaterialCategory": "ShipPart"
+    },
+    "ShipShieldGenerator_Mk3": {
+      "ItemName": "Ship Shield Generator Mk3",
+      "Description": "Refined ship shield generator mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 288000,
+      "MaterialCategory": "ShipPart"
+    },
+    "TurretWeapon_Mk3": {
+      "ItemName": "Turret Weapon Mk3",
+      "Description": "Refined turret weapon mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 288000,
+      "MaterialCategory": "ShipPart"
+    },
+    "EnergyCannon_Mk3": {
+      "ItemName": "Energy Cannon Mk3",
+      "Description": "Refined energy cannon mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 288000,
+      "MaterialCategory": "ShipPart"
+    },
+    "TriLaser_Mk3": {
+      "ItemName": "Tri Laser Mk3",
+      "Description": "Refined tri laser mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 288000,
+      "MaterialCategory": "ShipPart"
+    },
+    "MissileLauncher_Mk3": {
+      "ItemName": "Missile Launcher Mk3",
+      "Description": "Refined missile launcher mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 288000,
+      "MaterialCategory": "ShipPart"
+    },
+    "Railgun_Mk3": {
+      "ItemName": "Railgun Mk3",
+      "Description": "Refined railgun mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 288000,
+      "MaterialCategory": "ShipPart"
+    },
+    "PlasmaCannon_Mk3": {
+      "ItemName": "Plasma Cannon Mk3",
+      "Description": "Refined plasma cannon mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 288000,
+      "MaterialCategory": "ShipPart"
+    },
+    "TorpedoLauncher_Mk3": {
+      "ItemName": "Torpedo Launcher Mk3",
+      "Description": "Refined torpedo launcher mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 288000,
+      "MaterialCategory": "ShipPart"
+    },
+    "PointDefenceLaser_Mk3": {
+      "ItemName": "Point Defence Laser Mk3",
+      "Description": "Refined point defence laser mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 288000,
+      "MaterialCategory": "ShipPart"
+    },
+    "GravitationGenerator_Mk2": {
+      "ItemName": "Gravitation Generator Mk2",
+      "Description": "Refined gravitation generator mk2, produced by advanced fabrication.",
+      "WeightKg": 19.9,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 108800,
+      "MaterialCategory": "Electronics"
+    },
+    "RefinedMedicine_Mk2": {
+      "ItemName": "Refined Medicine Mk2",
+      "Description": "Refined refined medicine mk2, produced by advanced fabrication.",
+      "WeightKg": 5.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Refrigerated",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Food"
+    },
+    "MedicalSupplies_Mk2": {
+      "ItemName": "Medical Supplies Mk2",
+      "Description": "Refined medical supplies mk2, produced by advanced fabrication.",
+      "WeightKg": 5.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Refrigerated",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Food"
+    },
+    "Vaccines_Mk2": {
+      "ItemName": "Vaccines Mk2",
+      "Description": "Refined vaccines mk2, produced by advanced fabrication.",
+      "WeightKg": 5.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Refrigerated",
+      "Rarity": "Rare",
+      "BaseValue": 6800,
+      "MaterialCategory": "Food"
+    },
+    "RefinedMedicine_Mk3": {
+      "ItemName": "Refined Medicine Mk3",
+      "Description": "Refined refined medicine mk3, produced by advanced fabrication.",
+      "WeightKg": 6.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Refrigerated",
+      "Rarity": "VeryRare",
+      "BaseValue": 48000,
+      "MaterialCategory": "Food"
+    },
+    "MedicalSupplies_Mk3": {
+      "ItemName": "Medical Supplies Mk3",
+      "Description": "Refined medical supplies mk3, produced by advanced fabrication.",
+      "WeightKg": 6.2,
+      "VolumeM3": 0.05,
+      "StorageType": "Refrigerated",
+      "Rarity": "VeryRare",
+      "BaseValue": 48000,
+      "MaterialCategory": "Food"
+    }
+  }
 }
