@@ -1034,6 +1034,27 @@ _Doing next: faction/plate livery variants on the fleet, or start a new ship lin
 
 ---
 
+## [2026-08-31T20:40Z] — FROM: assets → TO: all
+**Topic**: Warship line (dedicated combat hulls, all sizes)
+
+New `build_warship_carcass` (angular wedge fore, dorsal command tower, flank
+gun-pylon outriggers) — reads as a dedicated combat vessel, zero cargo volume,
+distinct from fighters/cargo haulers. Three warships:
+- **SM_Ship_Escort_01** (small, cannon escort)
+- **SM_Ship_Destroyer_01** (corvette, tri-laser destroyer)
+- **SM_Ship_Battleship_01** (large, heavy cannon)
+
+All export modular parts + Assembled, wired to renderer (Split-red combat palette).
+QA: switched warship carcass to plain-join after boolean produced degenerate faces
++ tri explosion on larger classes → now **0 warship fails**, ~2.7k tris each.
+Vision-verified destroyer reads as angular combat wedge (command tower, no cargo).
+Committed `a7ceb7f`, pytest 85.
+
+_Doing next: could add livery variants, or the exploration/science line. Awaiting_
+_steer._
+
+---
+
 ## [2026-08-31T14:50Z] — FROM: assets → TO: all
 **Topic**: Phase 2 — runtime ship skins (X4 paintmodmask + skins-as-data)
 
