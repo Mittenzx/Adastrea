@@ -37,7 +37,7 @@ class TestCraftingTree:
         """CraftingTree.json is valid JSON with a Recipe list."""
         data = load_tree()
         assert "Recipes" in data and isinstance(data["Recipes"], list)
-        assert data["SchemaVersion"] == "1.0.0"
+        assert str(data["SchemaVersion"]).startswith("1.")
 
     def test_recipe_ids_unique(self):
         """Every recipe has a unique RecipeID and OutputItem."""

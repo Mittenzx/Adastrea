@@ -1,89 +1,2819 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "Title": "Adastrea Crafting & Building Tree",
-  "Description": "Machine-readable crafting/building tree: raw extraction -> refined materials -> components & electronics -> ship parts -> weapons -> station construction parts -> modules -> station assembly.",
-  "SchemaVersion": "1.0.0",
+  "Description": "Machine-readable crafting/building tree: raw extraction -> refined materials -> components & electronics -> ship parts -> weapons -> station construction parts -> modules -> station assembly. Authoritative generator: docs/11-TECHNICAL_SPECS/generate_crafting_tree.py",
+  "SchemaVersion": "1.1.0",
   "LastUpdated": "2026-08-31",
   "ItemIDConvention": "^[A-Za-z][A-Za-z0-9_]*$",
   "NoteHelium3": "Existing trade asset uses 'Helium-3' (hyphen, violates ItemID regex). Crafting data canonicalizes to 'Helium3' and maps to DA_TradeItem_Helium-3.",
   "ProducedInTags": [
-    "ShipMining", "GasHarvesting", "IceCollection", "OrganicFarming", "Salvage",
-    "Processing", "Fabrication", "Reactor", "SolarArray", "ScienceLab", "FuelDepot"
+    "Fabrication",
+    "FuelDepot",
+    "GasHarvesting",
+    "IceCollection",
+    "OrganicFarming",
+    "Processing",
+    "Reactor",
+    "Salvage",
+    "ScienceLab",
+    "ShipMining",
+    "SolarArray"
   ],
+  "TierLabels": {
+    "1": "Raw Acquisition",
+    "2": "Refined Materials",
+    "3": "Components & Electronics",
+    "4": "Ship Parts / Weapons",
+    "5": "Station Construction Parts",
+    "6": "Station Modules (Assembly)",
+    "7": "Station Assembly"
+  },
   "Recipes": [
-    { "RecipeID": "EXT_IronOre",       "OutputItem": "IronOre",          "OutputQty": 1, "Tier": 1, "ProducedIn": "ShipMining",     "Category": "RawMaterials", "Acquisition": true, "Source": "Asteroid/planetary iron ore; mining-laser or drill equipped vessel.", "Ingredients": [] },
-    { "RecipeID": "EXT_CopperOre",     "OutputItem": "CopperOre",        "OutputQty": 1, "Tier": 1, "ProducedIn": "ShipMining",     "Category": "RawMaterials", "Acquisition": true, "Source": "Asteroid/planetary copper ore.", "Ingredients": [] },
-    { "RecipeID": "EXT_TitaniumOre",   "OutputItem": "TitaniumOre",      "OutputQty": 1, "Tier": 1, "ProducedIn": "ShipMining",     "Category": "RawMaterials", "Acquisition": true, "Source": "Rich asteroid belts; harder than iron, more profitable.", "Ingredients": [] },
-    { "RecipeID": "EXT_Platinum",      "OutputItem": "Platinum",         "OutputQty": 1, "Tier": 1, "ProducedIn": "ShipMining",     "Category": "RawMaterials", "Acquisition": true, "Source": "Rare PGM asteroid deposits; high value, low yield.", "Ingredients": [] },
-    { "RecipeID": "EXT_RareEarth",     "OutputItem": "RareEarthElements","OutputQty": 1, "Tier": 1, "ProducedIn": "ShipMining",     "Category": "RawMaterials", "Acquisition": true, "Source": "Technetium/lanthanide-rich bodies; prized for electronics.", "Ingredients": [] },
-    { "RecipeID": "EXT_Silicon",       "OutputItem": "Silicon",          "OutputQty": 1, "Tier": 1, "ProducedIn": "ShipMining",     "Category": "RawMaterials", "Acquisition": true, "Source": "Silicate asteroids; base for wafers and solar cells.", "Ingredients": [] },
-    { "RecipeID": "EXT_RawOre",        "OutputItem": "RawOre",           "OutputQty": 1, "Tier": 1, "ProducedIn": "ShipMining",     "Category": "RawMaterials", "Acquisition": true, "Source": "Generic low-grade ore (bulk, always available).", "Ingredients": [] },
-    { "RecipeID": "EXT_WaterIce",      "OutputItem": "WaterIce",         "OutputQty": 1, "Tier": 1, "ProducedIn": "IceCollection",  "Category": "RawMaterials", "Acquisition": true, "Source": "Comet/icy-asteroid collection by ice harvester ships.", "Ingredients": [] },
-    { "RecipeID": "EXT_Helium3",       "OutputItem": "Helium3",          "OutputQty": 1, "Tier": 1, "ProducedIn": "GasHarvesting",  "Category": "RawMaterials", "Acquisition": true, "Source": "Gas-giant atmosphere skimming with gas harvester craft.", "Ingredients": [] },
-    { "RecipeID": "EXT_OrganicBiomass", "OutputItem": "OrganicBiomass",  "OutputQty": 1, "Tier": 1, "ProducedIn": "OrganicFarming",   "Category": "RawMaterials", "Acquisition": true, "Source": "Hydroponic/aquaponic crops and algae at agricultural stations.", "Ingredients": [] },
-    { "RecipeID": "EXT_SalvagedComp",  "OutputItem": "SalvagedComponents","OutputQty": 1, "Tier": 1, "ProducedIn": "Salvage",        "Category": "Components",   "Acquisition": true, "Source": "Scavenged from derelicts/debris fields by salvage vessels.", "Ingredients": [] },
-
-    { "RecipeID": "RCT_SteelAlloy",    "OutputItem": "SteelAlloy",       "OutputQty": 1, "Tier": 2, "ProducedIn": "Processing",  "Category": "RefinedGoods", "Ingredients": [ { "ItemID": "IronOre", "Qty": 2 }, { "ItemID": "CopperOre", "Qty": 1 } ] },
-    { "RecipeID": "RCT_Water",         "OutputItem": "Water",            "OutputQty": 2, "Tier": 2, "ProducedIn": "Processing",  "Category": "Food",         "Ingredients": [ { "ItemID": "WaterIce", "Qty": 1 } ] },
-    { "RecipeID": "RCT_BasicFuel",     "OutputItem": "BasicFuel",        "OutputQty": 2, "Tier": 2, "ProducedIn": "FuelDepot",   "Category": "RefinedGoods", "Ingredients": [ { "ItemID": "Helium3", "Qty": 2 }, { "ItemID": "Water", "Qty": 1 } ] },
-    { "RecipeID": "RCT_SiliconWafer",  "OutputItem": "SiliconWafer",     "OutputQty": 3, "Tier": 2, "ProducedIn": "Processing",  "Category": "RefinedGoods", "Ingredients": [ { "ItemID": "Silicon", "Qty": 3 } ] },
-    { "RecipeID": "RCT_CopperWiring",  "OutputItem": "CopperWiring",     "OutputQty": 2, "Tier": 2, "ProducedIn": "Processing",  "Category": "RefinedGoods", "Ingredients": [ { "ItemID": "CopperOre", "Qty": 2 } ] },
-    { "RecipeID": "RCT_TitaniumAlloy", "OutputItem": "TitaniumAlloy",    "OutputQty": 1, "Tier": 2, "ProducedIn": "Processing",  "Category": "RefinedGoods", "Ingredients": [ { "ItemID": "TitaniumOre", "Qty": 2 }, { "ItemID": "RareEarthElements", "Qty": 1 } ] },
-    { "RecipeID": "RCT_PlatinumCatalyst", "OutputItem": "PlatinumCatalyst","OutputQty": 1,"Tier": 2, "ProducedIn": "Processing", "Category": "RefinedGoods", "Ingredients": [ { "ItemID": "Platinum", "Qty": 1 }, { "ItemID": "RareEarthElements", "Qty": 1 } ] },
-    { "RecipeID": "RCT_PowerCells",    "OutputItem": "PowerCells",       "OutputQty": 2, "Tier": 2, "ProducedIn": "SolarArray",  "Category": "RefinedGoods", "Ingredients": [ { "ItemID": "SiliconWafer", "Qty": 2 } ] },
-    { "RecipeID": "RCT_AdvPowerCells", "OutputItem": "AdvancedPowerCells","OutputQty": 1,"Tier": 3, "ProducedIn": "Reactor",     "Category": "Technology",   "Ingredients": [ { "ItemID": "PowerCells", "Qty": 2 }, { "ItemID": "PlatinumCatalyst", "Qty": 1 } ] },
-    { "RecipeID": "RCT_PlasmaFuel",    "OutputItem": "PlasmaFuel",       "OutputQty": 1, "Tier": 3, "ProducedIn": "Reactor",     "Category": "RefinedGoods", "Ingredients": [ { "ItemID": "Helium3", "Qty": 3 }, { "ItemID": "PlatinumCatalyst", "Qty": 1 } ] },
-    { "RecipeID": "RCT_SynProtein",    "OutputItem": "SyntheticProtein", "OutputQty": 2, "Tier": 2, "ProducedIn": "Processing",  "Category": "Food",         "Ingredients": [ { "ItemID": "OrganicBiomass", "Qty": 2 }, { "ItemID": "Water", "Qty": 1 } ] },
-    { "RecipeID": "RCT_FoodRations",   "OutputItem": "FoodRations",      "OutputQty": 1, "Tier": 2, "ProducedIn": "Processing",  "Category": "Food",         "Ingredients": [ { "ItemID": "SyntheticProtein", "Qty": 1 }, { "ItemID": "Water", "Qty": 1 } ] },
-
-    { "RecipeID": "RCT_Electronics",   "OutputItem": "Electronics",      "OutputQty": 1, "Tier": 3, "ProducedIn": "Fabrication", "Category": "Components",  "Ingredients": [ { "ItemID": "CopperWiring", "Qty": 2 }, { "ItemID": "SiliconWafer", "Qty": 2 } ] },
-    { "RecipeID": "RCT_Microchips",    "OutputItem": "Microchips",       "OutputQty": 1, "Tier": 3, "ProducedIn": "Fabrication", "Category": "Components",  "Ingredients": [ { "ItemID": "SiliconWafer", "Qty": 3 }, { "ItemID": "PlatinumCatalyst", "Qty": 1 } ] },
-    { "RecipeID": "RCT_StructuralFrame","OutputItem": "StructuralFrame", "OutputQty": 1, "Tier": 3, "ProducedIn": "Fabrication", "Category": "Components",  "Ingredients": [ { "ItemID": "SteelAlloy", "Qty": 3 } ] },
-    { "RecipeID": "RCT_CompositePlating","OutputItem": "CompositePlating","OutputQty": 1,"Tier": 3, "ProducedIn": "Fabrication","Category": "Components", "Ingredients": [ { "ItemID": "TitaniumAlloy", "Qty": 2 }, { "ItemID": "OrganicBiomass", "Qty": 1 } ] },
-    { "RecipeID": "RCT_ServoActuator", "OutputItem": "ServoActuator",    "OutputQty": 1, "Tier": 3, "ProducedIn": "Fabrication", "Category": "Components",  "Ingredients": [ { "ItemID": "SteelAlloy", "Qty": 1 }, { "ItemID": "CopperWiring", "Qty": 2 } ] },
-    { "RecipeID": "RCT_BasicComputer", "OutputItem": "BasicComputer",    "OutputQty": 1, "Tier": 3, "ProducedIn": "Fabrication", "Category": "Technology",  "Ingredients": [ { "ItemID": "Electronics", "Qty": 2 }, { "ItemID": "Microchips", "Qty": 1 } ] },
-    { "RecipeID": "RCT_ControlUnit",   "OutputItem": "ControlUnit",      "OutputQty": 1, "Tier": 3, "ProducedIn": "Fabrication", "Category": "Components",  "Ingredients": [ { "ItemID": "BasicComputer", "Qty": 1 }, { "ItemID": "CopperWiring", "Qty": 2 } ] },
-    { "RecipeID": "RCT_PowerDistUnit", "OutputItem": "PowerDistributionUnit","OutputQty": 1,"Tier": 3, "ProducedIn": "Fabrication","Category": "Components","Ingredients": [ { "ItemID": "PowerCells", "Qty": 2 }, { "ItemID": "Electronics", "Qty": 1 } ] },
-    { "RecipeID": "RCT_QuantumProc",   "OutputItem": "QuantumProcessor", "OutputQty": 1, "Tier": 3, "ProducedIn": "ScienceLab", "Category": "Technology",  "Ingredients": [ { "ItemID": "Microchips", "Qty": 4 }, { "ItemID": "PlatinumCatalyst", "Qty": 2 }, { "ItemID": "RareEarthElements", "Qty": 1 } ] },
-    { "RecipeID": "RCT_AICores",       "OutputItem": "AICores",          "OutputQty": 1, "Tier": 4, "ProducedIn": "ScienceLab", "Category": "Technology",  "Ingredients": [ { "ItemID": "QuantumProcessor", "Qty": 1 }, { "ItemID": "Microchips", "Qty": 2 } ] },
-    { "RecipeID": "RCT_AdvSensors",    "OutputItem": "AdvancedSensors",  "OutputQty": 1, "Tier": 3, "ProducedIn": "ScienceLab", "Category": "Technology",  "Ingredients": [ { "ItemID": "Electronics", "Qty": 2 }, { "ItemID": "SiliconWafer", "Qty": 1 }, { "ItemID": "PowerCells", "Qty": 1 } ] },
-    { "RecipeID": "RCT_Medical",       "OutputItem": "MedicalSupplies",  "OutputQty": 1, "Tier": 3, "ProducedIn": "Processing",  "Category": "Medical",     "Ingredients": [ { "ItemID": "SyntheticProtein", "Qty": 1 }, { "ItemID": "Electronics", "Qty": 1 }, { "ItemID": "Water", "Qty": 1 } ] },
-    { "RecipeID": "RCT_LuxBeverages",  "OutputItem": "LuxuryBeverages",  "OutputQty": 1, "Tier": 3, "ProducedIn": "Processing",  "Category": "Luxury",      "Ingredients": [ { "ItemID": "Water", "Qty": 2 }, { "ItemID": "OrganicBiomass", "Qty": 1 } ] },
-    { "RecipeID": "RCT_Jewelry",       "OutputItem": "Jewelry",          "OutputQty": 1, "Tier": 4, "ProducedIn": "Fabrication", "Category": "Luxury",      "Ingredients": [ { "ItemID": "Platinum", "Qty": 2 }, { "ItemID": "RareEarthElements", "Qty": 1 } ] },
-
-    { "RecipeID": "RCT_ShipComponents","OutputItem": "ShipComponents",   "OutputQty": 1, "Tier": 4, "ProducedIn": "Fabrication", "Category": "Components",  "Ingredients": [ { "ItemID": "StructuralFrame", "Qty": 2 }, { "ItemID": "CompositePlating", "Qty": 1 }, { "ItemID": "Electronics", "Qty": 1 } ] },
-    { "RecipeID": "RCT_HullPlating",   "OutputItem": "HullPlating",      "OutputQty": 1, "Tier": 4, "ProducedIn": "Fabrication", "Category": "Military",    "Ingredients": [ { "ItemID": "CompositePlating", "Qty": 3 }, { "ItemID": "TitaniumAlloy", "Qty": 1 } ] },
-    { "RecipeID": "RCT_ShipEngine",    "OutputItem": "ShipEngine",       "OutputQty": 1, "Tier": 4, "ProducedIn": "Fabrication", "Category": "Military",    "Ingredients": [ { "ItemID": "SteelAlloy", "Qty": 2 }, { "ItemID": "ShipComponents", "Qty": 1 }, { "ItemID": "CopperWiring", "Qty": 1 } ] },
-    { "RecipeID": "RCT_ShipThruster",  "OutputItem": "ShipThruster",     "OutputQty": 1, "Tier": 4, "ProducedIn": "Fabrication", "Category": "Military",    "Ingredients": [ { "ItemID": "SteelAlloy", "Qty": 2 }, { "ItemID": "PowerDistributionUnit", "Qty": 1 } ] },
-    { "RecipeID": "RCT_ShipReactor",   "OutputItem": "ShipReactor",      "OutputQty": 1, "Tier": 4, "ProducedIn": "Fabrication", "Category": "Military",    "Ingredients": [ { "ItemID": "AdvancedPowerCells", "Qty": 2 }, { "ItemID": "ShipComponents", "Qty": 2 }, { "ItemID": "StructuralFrame", "Qty": 1 } ] },
-    { "RecipeID": "RCT_ShieldGen",     "OutputItem": "ShipShieldGenerator","OutputQty": 1,"Tier": 4, "ProducedIn": "Fabrication","Category": "Military",  "Ingredients": [ { "ItemID": "AdvancedSensors", "Qty": 1 }, { "ItemID": "AdvancedPowerCells", "Qty": 2 }, { "ItemID": "CompositePlating", "Qty": 2 } ] },
-    { "RecipeID": "RCT_TurretWeapon",  "OutputItem": "TurretWeapon",     "OutputQty": 1, "Tier": 4, "ProducedIn": "Fabrication", "Category": "Military",    "Ingredients": [ { "ItemID": "SteelAlloy", "Qty": 3 }, { "ItemID": "ShipComponents", "Qty": 1 }, { "ItemID": "ControlUnit", "Qty": 1 } ] },
-    { "RecipeID": "RCT_EnergyCannon",  "OutputItem": "EnergyCannon",     "OutputQty": 1, "Tier": 4, "ProducedIn": "Fabrication", "Category": "Military",    "Ingredients": [ { "ItemID": "TurretWeapon", "Qty": 1 }, { "ItemID": "AdvancedPowerCells", "Qty": 2 }, { "ItemID": "AdvancedSensors", "Qty": 1 } ] },
-    { "RecipeID": "RCT_ProhibitedWeapons","OutputItem": "ProhibitedWeapons","OutputQty": 1,"Tier": 4, "ProducedIn": "ScienceLab", "Category": "Contraband","Ingredients": [ { "ItemID": "EnergyCannon", "Qty": 1 }, { "ItemID": "QuantumProcessor", "Qty": 1 } ] },
-
-    { "RecipeID": "RCT_ConstructionMaterials","OutputItem": "ConstructionMaterials","OutputQty": 1,"Tier": 5, "ProducedIn": "Fabrication","Category":"Components","Ingredients": [ { "ItemID": "StructuralFrame", "Qty": 2 }, { "ItemID": "SteelAlloy", "Qty": 2 }, { "ItemID": "CompositePlating", "Qty": 1 } ] },
-    { "RecipeID": "RCT_StationHullFrame","OutputItem": "StationHullFrame","OutputQty": 1,"Tier": 5, "ProducedIn": "Fabrication","Category":"Components","Ingredients": [ { "ItemID": "ConstructionMaterials", "Qty": 2 }, { "ItemID": "TitaniumAlloy", "Qty": 2 } ] },
-    { "RecipeID": "RCT_PowerCore",     "OutputItem": "PowerCore",        "OutputQty": 1, "Tier": 5, "ProducedIn": "Reactor",     "Category": "Technology",  "Ingredients": [ { "ItemID": "AdvancedPowerCells", "Qty": 3 }, { "ItemID": "ControlUnit", "Qty": 1 }, { "ItemID": "QuantumProcessor", "Qty": 1 } ] },
-    { "RecipeID": "RCT_LifeSupport",   "OutputItem": "LifeSupportUnit",  "OutputQty": 1, "Tier": 5, "ProducedIn": "Fabrication", "Category": "Components",  "Ingredients": [ { "ItemID": "Electronics", "Qty": 2 }, { "ItemID": "StructuralFrame", "Qty": 1 }, { "ItemID": "BasicComputer", "Qty": 1 } ] },
-    { "RecipeID": "RCT_ModuleShell",   "OutputItem": "ModuleShell",      "OutputQty": 1, "Tier": 5, "ProducedIn": "Fabrication", "Category": "Components",  "Ingredients": [ { "ItemID": "StationHullFrame", "Qty": 1 }, { "ItemID": "CompositePlating", "Qty": 1 } ] },
-
-    { "RecipeID": "RCT_CorridorModule",  "OutputItem": "CorridorModule",   "OutputQty": 1, "Tier": 6, "ProducedIn": "Fabrication", "Category": "Other", "Ingredients": [ { "ItemID": "ModuleShell", "Qty": 2 }, { "ItemID": "StructuralFrame", "Qty": 1 } ] },
-    { "RecipeID": "RCT_CargoBayModule",  "OutputItem": "CargoBayModule",   "OutputQty": 1, "Tier": 6, "ProducedIn": "Fabrication", "Category": "Other", "Ingredients": [ { "ItemID": "ModuleShell", "Qty": 3 }, { "ItemID": "ConstructionMaterials", "Qty": 1 } ] },
-    { "RecipeID": "RCT_DockingBayModule","OutputItem": "DockingBayModule", "OutputQty": 1, "Tier": 6, "ProducedIn": "Fabrication", "Category": "Other", "Ingredients": [ { "ItemID": "ModuleShell", "Qty": 3 }, { "ItemID": "ControlUnit", "Qty": 1 }, { "ItemID": "StructuralFrame", "Qty": 2 } ] },
-    { "RecipeID": "RCT_DockingPortModule","OutputItem": "DockingPortModule","OutputQty": 1, "Tier": 6, "ProducedIn": "Fabrication", "Category": "Other", "Ingredients": [ { "ItemID": "ModuleShell", "Qty": 2 }, { "ItemID": "ControlUnit", "Qty": 1 } ] },
-    { "RecipeID": "RCT_HabitationModule","OutputItem": "HabitationModule", "OutputQty": 1, "Tier": 6, "ProducedIn": "Fabrication", "Category": "Other", "Ingredients": [ { "ItemID": "ModuleShell", "Qty": 3 }, { "ItemID": "LifeSupportUnit", "Qty": 2 } ] },
-    { "RecipeID": "RCT_BarracksModule",  "OutputItem": "BarracksModule",   "OutputQty": 1, "Tier": 6, "ProducedIn": "Fabrication", "Category": "Other", "Ingredients": [ { "ItemID": "ModuleShell", "Qty": 2 }, { "ItemID": "LifeSupportUnit", "Qty": 1 }, { "ItemID": "StructuralFrame", "Qty": 1 } ] },
-    { "RecipeID": "RCT_MarketplaceModule","OutputItem": "MarketplaceModule","OutputQty": 1, "Tier": 6, "ProducedIn": "Fabrication", "Category": "Other", "Ingredients": [ { "ItemID": "ModuleShell", "Qty": 2 }, { "ItemID": "BasicComputer", "Qty": 3 }, { "ItemID": "LifeSupportUnit", "Qty": 1 } ] },
-    { "RecipeID": "RCT_ScienceLabModule","OutputItem": "ScienceLabModule", "OutputQty": 1, "Tier": 6, "ProducedIn": "Fabrication", "Category": "Other", "Ingredients": [ { "ItemID": "ModuleShell", "Qty": 2 }, { "ItemID": "QuantumProcessor", "Qty": 1 }, { "ItemID": "AdvancedSensors", "Qty": 1 } ] },
-    { "RecipeID": "RCT_ReactorModule",   "OutputItem": "ReactorModule",    "OutputQty": 1, "Tier": 6, "ProducedIn": "Fabrication", "Category": "Other", "Ingredients": [ { "ItemID": "PowerCore", "Qty": 2 }, { "ItemID": "ModuleShell", "Qty": 2 } ] },
-    { "RecipeID": "RCT_SolarArrayModule","OutputItem": "SolarArrayModule", "OutputQty": 1, "Tier": 6, "ProducedIn": "Fabrication", "Category": "Other", "Ingredients": [ { "ItemID": "PowerCells", "Qty": 4 }, { "ItemID": "SiliconWafer", "Qty": 3 }, { "ItemID": "ModuleShell", "Qty": 1 } ] },
-    { "RecipeID": "RCT_ProcessingModule","OutputItem": "ProcessingModule", "OutputQty": 1, "Tier": 6, "ProducedIn": "Fabrication", "Category": "Other", "Ingredients": [ { "ItemID": "ModuleShell", "Qty": 2 }, { "ItemID": "SteelAlloy", "Qty": 2 }, { "ItemID": "ControlUnit", "Qty": 1 } ] },
-    { "RecipeID": "RCT_FabricationModule","OutputItem": "FabricationModule","OutputQty": 1, "Tier": 6, "ProducedIn": "Fabrication", "Category": "Other", "Ingredients": [ { "ItemID": "ModuleShell", "Qty": 2 }, { "ItemID": "ControlUnit", "Qty": 2 }, { "ItemID": "ConstructionMaterials", "Qty": 1 } ] },
-    { "RecipeID": "RCT_FuelDepotModule","OutputItem": "FuelDepotModule",   "OutputQty": 1, "Tier": 6, "ProducedIn": "Fabrication", "Category": "Other", "Ingredients": [ { "ItemID": "ModuleShell", "Qty": 2 }, { "ItemID": "SteelAlloy", "Qty": 2 }, { "ItemID": "PowerCells", "Qty": 1 } ] },
-    { "RecipeID": "RCT_TurretModule",   "OutputItem": "TurretModule",     "OutputQty": 1, "Tier": 6, "ProducedIn": "Fabrication", "Category": "Other", "Ingredients": [ { "ItemID": "TurretWeapon", "Qty": 2 }, { "ItemID": "ModuleShell", "Qty": 2 } ] },
-    { "RecipeID": "RCT_ShieldGenModule","OutputItem": "ShieldGeneratorModule","OutputQty": 1, "Tier": 6, "ProducedIn": "Fabrication", "Category": "Other", "Ingredients": [ { "ItemID": "ShipShieldGenerator", "Qty": 1 }, { "ItemID": "ModuleShell", "Qty": 2 }, { "ItemID": "AdvancedPowerCells", "Qty": 2 } ] },
-
-    { "RecipeID": "RCT_ResearchData",   "OutputItem": "ResearchData",     "OutputQty": 1, "Tier": 4, "ProducedIn": "ScienceLab",   "Category": "Data",        "Ingredients": [ { "ItemID": "AdvancedSensors", "Qty": 1 }, { "ItemID": "BasicComputer", "Qty": 1 } ] },
-    { "RecipeID": "RCT_AdvAICore",     "OutputItem": "AdvancedAICore",    "OutputQty": 1, "Tier": 5, "ProducedIn": "ScienceLab",   "Category": "Technology",  "Ingredients": [ { "ItemID": "AICores", "Qty": 1 }, { "ItemID": "QuantumProcessor", "Qty": 2 }, { "ItemID": "ResearchData", "Qty": 1 } ] }
+    {
+      "RecipeID": "RCP_001_IronOre",
+      "OutputItem": "IronOre",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "ShipMining",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_002_CopperOre",
+      "OutputItem": "CopperOre",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "ShipMining",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_003_TitaniumOre",
+      "OutputItem": "TitaniumOre",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "ShipMining",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_004_NickelOre",
+      "OutputItem": "NickelOre",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "ShipMining",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_005_ZincOre",
+      "OutputItem": "ZincOre",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "ShipMining",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_006_ChromiumOre",
+      "OutputItem": "ChromiumOre",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "ShipMining",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_007_AluminiumOre",
+      "OutputItem": "AluminiumOre",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "ShipMining",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_008_ManganeseOre",
+      "OutputItem": "ManganeseOre",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "ShipMining",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_009_GoldOre",
+      "OutputItem": "GoldOre",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "ShipMining",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_010_SilverOre",
+      "OutputItem": "SilverOre",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "ShipMining",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_011_Platinum",
+      "OutputItem": "Platinum",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "ShipMining",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_012_Palladium",
+      "OutputItem": "Palladium",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "ShipMining",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_013_CobaltOre",
+      "OutputItem": "CobaltOre",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "ShipMining",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_014_TungstenOre",
+      "OutputItem": "TungstenOre",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "ShipMining",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_015_UraniumOre",
+      "OutputItem": "UraniumOre",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "ShipMining",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_016_LithiumOre",
+      "OutputItem": "LithiumOre",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "ShipMining",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_017_Silicon",
+      "OutputItem": "Silicon",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "ShipMining",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_018_CarbonCrystal",
+      "OutputItem": "CarbonCrystal",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "ShipMining",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_019_RareEarthElements",
+      "OutputItem": "RareEarthElements",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "ShipMining",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_020_PreciousStones",
+      "OutputItem": "PreciousStones",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "ShipMining",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_021_RawOre",
+      "OutputItem": "RawOre",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "ShipMining",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_022_Helium3",
+      "OutputItem": "Helium3",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "GasHarvesting",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_023_Hydrogen",
+      "OutputItem": "Hydrogen",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "GasHarvesting",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_024_MethaneGas",
+      "OutputItem": "MethaneGas",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "GasHarvesting",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_025_NitrogenGas",
+      "OutputItem": "NitrogenGas",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "GasHarvesting",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_026_NobleGas",
+      "OutputItem": "NobleGas",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "GasHarvesting",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_027_WaterIce",
+      "OutputItem": "WaterIce",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "IceCollection",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_028_OrganicBiomass",
+      "OutputItem": "OrganicBiomass",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "OrganicFarming",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_029_AlgaeBiomass",
+      "OutputItem": "AlgaeBiomass",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "OrganicFarming",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_030_PlantFibre",
+      "OutputItem": "PlantFibre",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "OrganicFarming",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_031_SalvagedComponents",
+      "OutputItem": "SalvagedComponents",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "Salvage",
+      "Category": "Components",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_032_ScrapMetal",
+      "OutputItem": "ScrapMetal",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "Salvage",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_033_DerelictHullPlate",
+      "OutputItem": "DerelictHullPlate",
+      "OutputQty": 1,
+      "Tier": 1,
+      "ProducedIn": "Salvage",
+      "Category": "RawMaterials",
+      "Acquisition": true,
+      "Ingredients": []
+    },
+    {
+      "RecipeID": "RCP_034_SteelAlloy",
+      "OutputItem": "SteelAlloy",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "IronOre",
+          "Qty": 2
+        },
+        {
+          "ItemID": "CopperOre",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_035_CopperWiring",
+      "OutputItem": "CopperWiring",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "CopperOre",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_036_NickelSteel",
+      "OutputItem": "NickelSteel",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "NickelOre",
+          "Qty": 2
+        },
+        {
+          "ItemID": "IronOre",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_037_ZincPlate",
+      "OutputItem": "ZincPlate",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ZincOre",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_038_ChromiumPlating",
+      "OutputItem": "ChromiumPlating",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ChromiumOre",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_039_AluminiumComposite",
+      "OutputItem": "AluminiumComposite",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "AluminiumOre",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ManganeseOre",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_040_GoldIngot",
+      "OutputItem": "GoldIngot",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "GoldOre",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_041_SilverIngot",
+      "OutputItem": "SilverIngot",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "SilverOre",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_042_TitaniumAlloy",
+      "OutputItem": "TitaniumAlloy",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "TitaniumOre",
+          "Qty": 2
+        },
+        {
+          "ItemID": "RareEarthElements",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_043_TungstenCarbide",
+      "OutputItem": "TungstenCarbide",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "TungstenOre",
+          "Qty": 2
+        },
+        {
+          "ItemID": "CarbonCrystal",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_044_PlatinumCatalyst",
+      "OutputItem": "PlatinumCatalyst",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "Platinum",
+          "Qty": 1
+        },
+        {
+          "ItemID": "RareEarthElements",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_045_PalladiumCatalyst",
+      "OutputItem": "PalladiumCatalyst",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "Palladium",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Platinum",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_046_CobaltMagnet",
+      "OutputItem": "CobaltMagnet",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "CobaltOre",
+          "Qty": 2
+        },
+        {
+          "ItemID": "RareEarthElements",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_047_EnrichedUranium",
+      "OutputItem": "EnrichedUranium",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "UraniumOre",
+          "Qty": 2
+        },
+        {
+          "ItemID": "CarbonCrystal",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_048_LithiumCompound",
+      "OutputItem": "LithiumCompound",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "LithiumOre",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_049_SiliconWafer",
+      "OutputItem": "SiliconWafer",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "Silicon",
+          "Qty": 3
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_050_CarbonFibre",
+      "OutputItem": "CarbonFibre",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "CarbonCrystal",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_051_GlassComposite",
+      "OutputItem": "GlassComposite",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "Silicon",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CopperOre",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_052_CeramicTiles",
+      "OutputItem": "CeramicTiles",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "Silicon",
+          "Qty": 1
+        },
+        {
+          "ItemID": "RareEarthElements",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_053_LiquidHydrogen",
+      "OutputItem": "LiquidHydrogen",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "Hydrogen",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_054_CompressedMethane",
+      "OutputItem": "CompressedMethane",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "MethaneGas",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_055_LiquidNitrogen",
+      "OutputItem": "LiquidNitrogen",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "NitrogenGas",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_056_HydrogenFuel",
+      "OutputItem": "HydrogenFuel",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "FuelDepot",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "Hydrogen",
+          "Qty": 2
+        },
+        {
+          "ItemID": "WaterIce",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_057_PowerCells",
+      "OutputItem": "PowerCells",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "SolarArray",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "SiliconWafer",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_058_AdvancedPowerCells",
+      "OutputItem": "AdvancedPowerCells",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Reactor",
+      "Category": "Technology",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "PowerCells",
+          "Qty": 2
+        },
+        {
+          "ItemID": "PlatinumCatalyst",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_059_FusionFuelCell",
+      "OutputItem": "FusionFuelCell",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Reactor",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "Helium3",
+          "Qty": 3
+        },
+        {
+          "ItemID": "PlatinumCatalyst",
+          "Qty": 1
+        },
+        {
+          "ItemID": "LiquidHydrogen",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_060_AlgaePaste",
+      "OutputItem": "AlgaePaste",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "Food",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "AlgaeBiomass",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_061_SyntheticProtein",
+      "OutputItem": "SyntheticProtein",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "Food",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "OrganicBiomass",
+          "Qty": 2
+        },
+        {
+          "ItemID": "WaterIce",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_062_FoodRations",
+      "OutputItem": "FoodRations",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "Food",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "SyntheticProtein",
+          "Qty": 1
+        },
+        {
+          "ItemID": "WaterIce",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_063_MRE_Rations",
+      "OutputItem": "MRE_Rations",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "Food",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "FoodRations",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AlgaePaste",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_064_BioCompound",
+      "OutputItem": "BioCompound",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "OrganicBiomass",
+          "Qty": 2
+        },
+        {
+          "ItemID": "LiquidNitrogen",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_065_SyntheticTextiles",
+      "OutputItem": "SyntheticTextiles",
+      "OutputQty": 1,
+      "Tier": 2,
+      "ProducedIn": "Processing",
+      "Category": "RefinedGoods",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "PlantFibre",
+          "Qty": 2
+        },
+        {
+          "ItemID": "BioCompound",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_066_StructuralFrame",
+      "OutputItem": "StructuralFrame",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "SteelAlloy",
+          "Qty": 3
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_067_CompositePlating",
+      "OutputItem": "CompositePlating",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "TitaniumAlloy",
+          "Qty": 2
+        },
+        {
+          "ItemID": "OrganicBiomass",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_068_ServoActuator",
+      "OutputItem": "ServoActuator",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "SteelAlloy",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CopperWiring",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_069_GearAssembly",
+      "OutputItem": "GearAssembly",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "NickelSteel",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ZincPlate",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_070_HydraulicPiston",
+      "OutputItem": "HydraulicPiston",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "SteelAlloy",
+          "Qty": 2
+        },
+        {
+          "ItemID": "TungstenCarbide",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_071_PrecisionFastener",
+      "OutputItem": "PrecisionFastener",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "NickelSteel",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SteelAlloy",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_072_ReinforcedGirder",
+      "OutputItem": "ReinforcedGirder",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "StructuralFrame",
+          "Qty": 1
+        },
+        {
+          "ItemID": "NickelSteel",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_073_ArmourPlate",
+      "OutputItem": "ArmourPlate",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ChromiumPlating",
+          "Qty": 2
+        },
+        {
+          "ItemID": "TungstenCarbide",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_074_SuperConductingWire",
+      "OutputItem": "SuperConductingWire",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "CopperWiring",
+          "Qty": 2
+        },
+        {
+          "ItemID": "CobaltMagnet",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_075_Electronics",
+      "OutputItem": "Electronics",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "CopperWiring",
+          "Qty": 2
+        },
+        {
+          "ItemID": "SiliconWafer",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_076_Microchips",
+      "OutputItem": "Microchips",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "SiliconWafer",
+          "Qty": 3
+        },
+        {
+          "ItemID": "PlatinumCatalyst",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_077_CircuitBoard",
+      "OutputItem": "CircuitBoard",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "Electronics",
+          "Qty": 2
+        },
+        {
+          "ItemID": "Microchips",
+          "Qty": 1
+        },
+        {
+          "ItemID": "GlassComposite",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_078_MemoryUnit",
+      "OutputItem": "MemoryUnit",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Technology",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "Microchips",
+          "Qty": 2
+        },
+        {
+          "ItemID": "SiliconWafer",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_079_ControlUnit",
+      "OutputItem": "ControlUnit",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "BasicComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CopperWiring",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_080_PowerDistributionUnit",
+      "OutputItem": "PowerDistributionUnit",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "PowerCells",
+          "Qty": 2
+        },
+        {
+          "ItemID": "Electronics",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_081_BasicComputer",
+      "OutputItem": "BasicComputer",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Fabrication",
+      "Category": "Technology",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "Electronics",
+          "Qty": 2
+        },
+        {
+          "ItemID": "Microchips",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_082_QuantumProcessor",
+      "OutputItem": "QuantumProcessor",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "Microchips",
+          "Qty": 4
+        },
+        {
+          "ItemID": "PlatinumCatalyst",
+          "Qty": 2
+        },
+        {
+          "ItemID": "RareEarthElements",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_083_AdvancedSensors",
+      "OutputItem": "AdvancedSensors",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "Electronics",
+          "Qty": 2
+        },
+        {
+          "ItemID": "SiliconWafer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "PowerCells",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_084_NavigationComputer",
+      "OutputItem": "NavigationComputer",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedSensors",
+          "Qty": 1
+        },
+        {
+          "ItemID": "MemoryUnit",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_085_TargetingComputer",
+      "OutputItem": "TargetingComputer",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "AdvancedSensors",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CircuitBoard",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_086_RefinedMedicine",
+      "OutputItem": "RefinedMedicine",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Processing",
+      "Category": "Medical",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "BioCompound",
+          "Qty": 2
+        },
+        {
+          "ItemID": "SyntheticProtein",
+          "Qty": 1
+        },
+        {
+          "ItemID": "LiquidNitrogen",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_087_MedicalSupplies",
+      "OutputItem": "MedicalSupplies",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Processing",
+      "Category": "Medical",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "RefinedMedicine",
+          "Qty": 1
+        },
+        {
+          "ItemID": "WaterIce",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SyntheticTextiles",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_088_Vaccines",
+      "OutputItem": "Vaccines",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "ScienceLab",
+      "Category": "Medical",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "RefinedMedicine",
+          "Qty": 2
+        },
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_089_FineSpirits",
+      "OutputItem": "FineSpirits",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Processing",
+      "Category": "Luxury",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "WaterIce",
+          "Qty": 2
+        },
+        {
+          "ItemID": "AlgaePaste",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_090_LuxuryBeverages",
+      "OutputItem": "LuxuryBeverages",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Processing",
+      "Category": "Luxury",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "WaterIce",
+          "Qty": 2
+        },
+        {
+          "ItemID": "OrganicBiomass",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_091_Jewelry",
+      "OutputItem": "Jewelry",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Luxury",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "GoldIngot",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SilverIngot",
+          "Qty": 1
+        },
+        {
+          "ItemID": "PreciousStones",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_092_FineSilk",
+      "OutputItem": "FineSilk",
+      "OutputQty": 1,
+      "Tier": 3,
+      "ProducedIn": "Processing",
+      "Category": "Luxury",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "SyntheticTextiles",
+          "Qty": 2
+        },
+        {
+          "ItemID": "PlantFibre",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_093_LuxuryFurniture",
+      "OutputItem": "LuxuryFurniture",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Luxury",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "CeramicTiles",
+          "Qty": 2
+        },
+        {
+          "ItemID": "AluminiumComposite",
+          "Qty": 1
+        },
+        {
+          "ItemID": "FineSilk",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_094_ShipComponents",
+      "OutputItem": "ShipComponents",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "StructuralFrame",
+          "Qty": 2
+        },
+        {
+          "ItemID": "CompositePlating",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Electronics",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_095_HullPlating",
+      "OutputItem": "HullPlating",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "CompositePlating",
+          "Qty": 3
+        },
+        {
+          "ItemID": "TitaniumAlloy",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_096_ArmourHull",
+      "OutputItem": "ArmourHull",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ArmourPlate",
+          "Qty": 4
+        },
+        {
+          "ItemID": "CarbonFibre",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_097_Thruster",
+      "OutputItem": "Thruster",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "SteelAlloy",
+          "Qty": 2
+        },
+        {
+          "ItemID": "PowerDistributionUnit",
+          "Qty": 1
+        },
+        {
+          "ItemID": "TungstenCarbide",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_098_ShipEngine",
+      "OutputItem": "ShipEngine",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "Thruster",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ShipComponents",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedPowerCells",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_099_ShipReactor",
+      "OutputItem": "ShipReactor",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "AdvancedPowerCells",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ShipComponents",
+          "Qty": 2
+        },
+        {
+          "ItemID": "StructuralFrame",
+          "Qty": 1
+        },
+        {
+          "ItemID": "FusionFuelCell",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_100_LifeSupportPod",
+      "OutputItem": "LifeSupportPod",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "BasicComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "RefinedMedicine",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CompositePlating",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_101_FuelTank",
+      "OutputItem": "FuelTank",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "SteelAlloy",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ReinforcedGirder",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CeramicTiles",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_102_CargoPod",
+      "OutputItem": "CargoPod",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "StructuralFrame",
+          "Qty": 2
+        },
+        {
+          "ItemID": "SteelAlloy",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ZincPlate",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_103_GrapplerBoom",
+      "OutputItem": "GrapplerBoom",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "HydraulicPiston",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ReinforcedGirder",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ServoActuator",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_104_ShipShieldGenerator",
+      "OutputItem": "ShipShieldGenerator",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "AdvancedSensors",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedPowerCells",
+          "Qty": 2
+        },
+        {
+          "ItemID": "CompositePlating",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_105_TurretWeapon",
+      "OutputItem": "TurretWeapon",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "SteelAlloy",
+          "Qty": 3
+        },
+        {
+          "ItemID": "ShipComponents",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ControlUnit",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_106_EnergyCannon",
+      "OutputItem": "EnergyCannon",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "TurretWeapon",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedPowerCells",
+          "Qty": 2
+        },
+        {
+          "ItemID": "AdvancedSensors",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_107_TriLaser",
+      "OutputItem": "TriLaser",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "EnergyCannon",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire",
+          "Qty": 2
+        },
+        {
+          "ItemID": "Microchips",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_108_MissileLauncher",
+      "OutputItem": "MissileLauncher",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "TurretWeapon",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ShipComponents",
+          "Qty": 1
+        },
+        {
+          "ItemID": "GearAssembly",
+          "Qty": 2
+        },
+        {
+          "ItemID": "FusionFuelCell",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_109_Railgun",
+      "OutputItem": "Railgun",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "TungstenCarbide",
+          "Qty": 3
+        },
+        {
+          "ItemID": "SuperConductingWire",
+          "Qty": 3
+        },
+        {
+          "ItemID": "ShipComponents",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_110_PlasmaCannon",
+      "OutputItem": "PlasmaCannon",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "EnergyCannon",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire",
+          "Qty": 2
+        },
+        {
+          "ItemID": "AdvancedPowerCells",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_111_TorpedoLauncher",
+      "OutputItem": "TorpedoLauncher",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "MissileLauncher",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ShipComponents",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CobaltMagnet",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_112_ShieldCapacitor",
+      "OutputItem": "ShieldCapacitor",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "AdvancedPowerCells",
+          "Qty": 3
+        },
+        {
+          "ItemID": "CobaltMagnet",
+          "Qty": 2
+        },
+        {
+          "ItemID": "SuperConductingWire",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_113_PointDefenceLaser",
+      "OutputItem": "PointDefenceLaser",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "TriLaser",
+          "Qty": 1
+        },
+        {
+          "ItemID": "TargetingComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "PowerDistributionUnit",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_114_ProhibitedWeapons",
+      "OutputItem": "ProhibitedWeapons",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "ScienceLab",
+      "Category": "Contraband",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "EnergyCannon",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_115_NanoInjectors",
+      "OutputItem": "NanoInjectors",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "ScienceLab",
+      "Category": "Contraband",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "BioCompound",
+          "Qty": 2
+        },
+        {
+          "ItemID": "PalladiumCatalyst",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_116_AICores",
+      "OutputItem": "AICores",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Microchips",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_117_ResearchData",
+      "OutputItem": "ResearchData",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "ScienceLab",
+      "Category": "Data",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "AdvancedSensors",
+          "Qty": 1
+        },
+        {
+          "ItemID": "BasicComputer",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_118_AdvancedAICore",
+      "OutputItem": "AdvancedAICore",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "ScienceLab",
+      "Category": "Technology",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "AICores",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ResearchData",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_119_HackWare",
+      "OutputItem": "HackWare",
+      "OutputQty": 1,
+      "Tier": 4,
+      "ProducedIn": "ScienceLab",
+      "Category": "Data",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "AICores",
+          "Qty": 1
+        },
+        {
+          "ItemID": "NavigationComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "MemoryUnit",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_120_ConstructionMaterials",
+      "OutputItem": "ConstructionMaterials",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "StructuralFrame",
+          "Qty": 2
+        },
+        {
+          "ItemID": "SteelAlloy",
+          "Qty": 2
+        },
+        {
+          "ItemID": "CompositePlating",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_121_StationHullFrame",
+      "OutputItem": "StationHullFrame",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ConstructionMaterials",
+          "Qty": 2
+        },
+        {
+          "ItemID": "TitaniumAlloy",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_122_PowerCore",
+      "OutputItem": "PowerCore",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Reactor",
+      "Category": "Technology",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "AdvancedPowerCells",
+          "Qty": 3
+        },
+        {
+          "ItemID": "ControlUnit",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_123_LifeSupportUnit",
+      "OutputItem": "LifeSupportUnit",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "Electronics",
+          "Qty": 2
+        },
+        {
+          "ItemID": "StructuralFrame",
+          "Qty": 1
+        },
+        {
+          "ItemID": "BasicComputer",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_124_ModuleShell",
+      "OutputItem": "ModuleShell",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "StationHullFrame",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CompositePlating",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_125_StructuralGirder",
+      "OutputItem": "StructuralGirder",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ReinforcedGirder",
+          "Qty": 2
+        },
+        {
+          "ItemID": "NickelSteel",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_126_HullSegment",
+      "OutputItem": "HullSegment",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "StationHullFrame",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ArmourPlate",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_127_DockingMechanism",
+      "OutputItem": "DockingMechanism",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "HydraulicPiston",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ServoActuator",
+          "Qty": 2
+        },
+        {
+          "ItemID": "SteelAlloy",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_128_HabitationPod",
+      "OutputItem": "HabitationPod",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 1
+        },
+        {
+          "ItemID": "LifeSupportUnit",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CeramicTiles",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_129_CorridorSegment",
+      "OutputItem": "CorridorSegment",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 1
+        },
+        {
+          "ItemID": "StructuralGirder",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_130_AirTank",
+      "OutputItem": "AirTank",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "SteelAlloy",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CeramicTiles",
+          "Qty": 1
+        },
+        {
+          "ItemID": "LiquidNitrogen",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_131_GravitationGenerator",
+      "OutputItem": "GravitationGenerator",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Reactor",
+      "Category": "Technology",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "CobaltMagnet",
+          "Qty": 3
+        },
+        {
+          "ItemID": "SuperConductingWire",
+          "Qty": 3
+        },
+        {
+          "ItemID": "AdvancedPowerCells",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_132_ShieldEmitter",
+      "OutputItem": "ShieldEmitter",
+      "OutputQty": 1,
+      "Tier": 5,
+      "ProducedIn": "Fabrication",
+      "Category": "Components",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ShipShieldGenerator",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedPowerCells",
+          "Qty": 2
+        },
+        {
+          "ItemID": "CarbonFibre",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_133_CorridorModule",
+      "OutputItem": "CorridorModule",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "CorridorSegment",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_134_CargoBayModule",
+      "OutputItem": "CargoBayModule",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 3
+        },
+        {
+          "ItemID": "ConstructionMaterials",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CargoPod",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_135_DockingBayModule",
+      "OutputItem": "DockingBayModule",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 3
+        },
+        {
+          "ItemID": "ControlUnit",
+          "Qty": 1
+        },
+        {
+          "ItemID": "DockingMechanism",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_136_DockingPortModule",
+      "OutputItem": "DockingPortModule",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "DockingMechanism",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_137_HabitationModule",
+      "OutputItem": "HabitationModule",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 3
+        },
+        {
+          "ItemID": "LifeSupportUnit",
+          "Qty": 2
+        },
+        {
+          "ItemID": "HabitationPod",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_138_BarracksModule",
+      "OutputItem": "BarracksModule",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "LifeSupportUnit",
+          "Qty": 1
+        },
+        {
+          "ItemID": "HabitationPod",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_139_MarketplaceModule",
+      "OutputItem": "MarketplaceModule",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "BasicComputer",
+          "Qty": 3
+        },
+        {
+          "ItemID": "LifeSupportUnit",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_140_ScienceLabModule",
+      "OutputItem": "ScienceLabModule",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedSensors",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_141_ReactorModule",
+      "OutputItem": "ReactorModule",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "PowerCore",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_142_SolarArrayModule",
+      "OutputItem": "SolarArrayModule",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "PowerCells",
+          "Qty": 4
+        },
+        {
+          "ItemID": "SiliconWafer",
+          "Qty": 3
+        },
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_143_ProcessingModule",
+      "OutputItem": "ProcessingModule",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "SteelAlloy",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ControlUnit",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_144_FabricationModule",
+      "OutputItem": "FabricationModule",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ControlUnit",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ConstructionMaterials",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_145_FuelDepotModule",
+      "OutputItem": "FuelDepotModule",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "SteelAlloy",
+          "Qty": 2
+        },
+        {
+          "ItemID": "FuelTank",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_146_TurretModule",
+      "OutputItem": "TurretModule",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "TurretWeapon",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_147_ShieldGeneratorModule",
+      "OutputItem": "ShieldGeneratorModule",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ShieldEmitter",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "AdvancedPowerCells",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_148_TradeStation",
+      "OutputItem": "TradeStation",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "DockingBayModule",
+          "Qty": 1
+        },
+        {
+          "ItemID": "MarketplaceModule",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CargoBayModule",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_149_IndustrialStation",
+      "OutputItem": "IndustrialStation",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ProcessingModule",
+          "Qty": 2
+        },
+        {
+          "ItemID": "FabricationModule",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ReactorModule",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_150_MiningStation",
+      "OutputItem": "MiningStation",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ProcessingModule",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CargoBayModule",
+          "Qty": 1
+        },
+        {
+          "ItemID": "PowerCore",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_151_ResearchStation",
+      "OutputItem": "ResearchStation",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "ScienceLabModule",
+          "Qty": 2
+        },
+        {
+          "ItemID": "SolarArrayModule",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedAICore",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_152_DefenceStation",
+      "OutputItem": "DefenceStation",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "TurretModule",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ShieldGeneratorModule",
+          "Qty": 1
+        },
+        {
+          "ItemID": "DockingPortModule",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_153_ColonyStation",
+      "OutputItem": "ColonyStation",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "Ingredients": [
+        {
+          "ItemID": "HabitationModule",
+          "Qty": 2
+        },
+        {
+          "ItemID": "BarracksModule",
+          "Qty": 1
+        },
+        {
+          "ItemID": "LifeSupportUnit",
+          "Qty": 2
+        }
+      ]
+    }
   ]
 }

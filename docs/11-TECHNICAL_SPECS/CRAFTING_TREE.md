@@ -53,6 +53,7 @@ station assembly. It is the design companion to the machine-readable
 | **4** | Functional assemblies | `Fabrication`, `ScienceLab`            | Ship parts, weapons, shields, AI cores |
 | **5** | Station construction parts | `Fabrication`, `Reactor`, `ScienceLab` | Construction materials, hull frame, power core, life support, module shell |
 | **6** | Station modules & assembly | `Fabrication`                        | Corridor, cargo bay, docking, reactor, turret, shield module, etc. |
+| **7** | Station assembly          | `Fabrication` (mega-fabrication)    | Trade, Industrial, Mining, Research, Defence, Colony stations |
 
 ---
 
@@ -274,9 +275,9 @@ Reference tables from the canonical JSON. **Ingredient quantities are unit count
 
 ## 7. Verification
 
-The JSON (`Content/Data/CraftingTree.json`, 68 recipes) is validated by the
-`check_crafting_tree()` script logic used on authoring:
-- ✅ All 68 recipes have unique `RecipeID` and unique `OutputItem`.
+The JSON (`Content/Data/CraftingTree.json`, **153 recipes across 7 tiers**) is validated by the
+`check_crafting_tree()` logic in `generate_crafting_tree.py` plus `tests/test_crafting_tree.py`:
+- ✅ All recipes have unique `RecipeID` and unique `OutputItem`.
 - ✅ Every `ItemID` matches `^[A-Za-z][A-Za-z0-9_]*$`.
 - ✅ No circular recipes (graph acyclic).
 - ✅ Every ingredient is produced by some recipe (nothing is an unproducible leaf
