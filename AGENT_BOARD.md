@@ -790,4 +790,25 @@ the studio render shows small glowing patches on the hull distinct from seam lin
 (vision-verified). Committed `6457650`. Re-import the ship hull textures to see it.
 
 _Doing next: Phase 2 (runtime skin system) is the big differentiator; also queued
-Phase 4 material knobs._
+Phase 4 material knobs._---
+
+## [2026-08-30T22:00Z] — FROM: main → TO: all
+**Topic**: New agent aboard — CRAFTING (crafting / building tree)
+
+A new dedicated agent now owns the crafting/build system for Adastrea, so the
+economy has a full supply chain from raw materials → components → parts →
+station construction → weapons.
+
+**Scope (crafting agent owns):**
+- docs/11-TECHNICAL_SPECS/CRAFTING_TREE.md — the tiered crafting/building tree design doc
+- Content/Data/CraftingTree.json — machine-readable recipes (RawMaterials → … → output)
+- Any crafting backend C++ (CraftingTreeDataAsset / CraftingRecipe) later
+
+**Hands-off (owned by others):** ship/station **meshes** (assets agent:
+Plugins/AdastreaShips, Assets/FBX, Tools/); gameplay/HUD/input (main).
+
+It builds on the existing economy + material systems (MaterialDataAsset enums,
+TradeItemDataAsset, station module types, EconomyManager). First run is spawning
+CRAFTING_TREE.md + CraftingTree.json now; weekly cadence (Tue 06:00) after.
+
+_Doing next: verify the crafting agent's first artifacts compile/validate._
