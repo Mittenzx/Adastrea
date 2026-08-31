@@ -172,12 +172,37 @@ void AAdastreaHUD::DrawHUD()
 			DrawText(Label, Col, Sx - 7.0f, Sy - 9.0f, BodyFont, 0.75f);
 		};
 		DrawCompassPoint(TEXT("N"), 0.0f,   NCol);
-		DrawCompassPoint(TEXT("E"), 90.0f,  PtCol);
-		DrawCompassPoint(TEXT("S"), 180.0f, PtCol);
-		DrawCompassPoint(TEXT("W"), 270.0f, PtCol);
+				DrawCompassPoint(TEXT("E"), 90.0f,  PtCol);
+				DrawCompassPoint(TEXT("S"), 180.0f, PtCol);
+				DrawCompassPoint(TEXT("W"), 270.0f, PtCol);
 
-		// Fixed forward tick at the top of the ring (the heading you face).
-		DrawLine(Cx - 1.0f, Cy - R - 3.0f, Cx + 1.0f, Cy - R - 1.0f, kBorder, 2.0f);
+				// ---- Station bearings (gold dots on the ring pointing to each station) ----
+				const FVector ShipLoc = Ship->GetActorLocation();
+				TArray<AActor*> StationActors;
+				UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpaceStation::StaticClass(), StationActors);
+				// Draw only the near/far-relevant stations for clarity (skip huge distance).
+				for (AActor* SA : StationActors)
+				{
+					if (!SA) { continue; }
+					const FVector Delta = SA->GetActorLocation() - ShipLoc;
+					const float Dist = Delta.Size();
+					// Skip stations beyond a reasonable flux-cone (optional) — 150k units.
+					if (Dist < 1.0f || Dist > 200000.0f) { continue; }
+					// Clockwise world angle from +X (the "incident" direction). +X=0, +Y=90.
+					const float DotWorld = FMath::RadiansToDegrees(FMath::Atan2(Delta.Y, Delta.X));
+					const float BearingClock = FMath::Fmod(DotWorld + 360.0f, 360.0f);
+					// Place the dot on the ring, displaced by -heading like compass points:
+					// the direction you face is at the top.
+					const float AngleRad = FMath::DegreesToRadians(HeadingClock - BearingClock) + PI;
+					const float Sx = Cx + FMath::Cos(AngleRad) * R;
+					const float Sy = Cy + FMath::Sin(AngleRad) * R;
+					// Gold dot (same family as N marker) sized by closeness.
+					const float DotR = FMath::Clamp(40000.0f / Dist, 1.5f, 3.5f);
+					DrawRect(FLinearColor(0.95f, 0.75f, 0.35f, 0.95f), Sx - DotR, Sy - DotR, DotR*2.0f, DotR*2.0f);
+				}
+
+				// Fixed forward tick at the top of the ring (the heading you face).
+				DrawLine(Cx - 1.0f, Cy - R - 3.0f, Cx + 1.0f, Cy - R - 1.0f, kBorder, 2.0f);
 
 		// ---- Pitch ladder (vertical bar to the right of the ring) ----
 		const float Lx = Cx + R + 10.0f;
