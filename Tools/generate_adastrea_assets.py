@@ -363,7 +363,7 @@ def gen_texture_set(name, variant, size=2048, seed=1):
                     for mx in range(c0 + band_w//4, c1, band_w//4):
                         D[mid-1:mid+2, max(c0,mx)-1:max(c0,mx)+2] = [0.05,0.05,0.06,1.0]
                         E[mid-1:mid+2, max(c0,mx)-1:max(c0,mx)+2] = 0.0
-    # neon trim    # neon trim
+    # neon trim
     if variant.get('neon'):
         nc = variant['neon']
         nc = np.array(nc[:3] if isinstance(nc, (list, tuple)) else [0.3,1.0,1.0])
@@ -375,17 +375,49 @@ def gen_texture_set(name, variant, size=2048, seed=1):
         E[neon] = [nc[0], nc[1], nc[2], 1.0]
         AO[neon] = 0.55
         fixed |= neon
-    # grime / scorch streaks
-    if variant.get('grime'):
-        for _ in range(rng.integers(10, 18)):
-            gx = int(rng.integers(0, W)); gy = int(rng.integers(0, H))
-            glen = int(rng.integers(H//10, H//3))
-            y0 = max(0, gy - glen//2); y1 = min(H, gy + glen//2)
-            w = int(rng.integers(1, 4))
-            for ch in range(3):
-                D[y0:y1, gx:gx+w, ch] *= (0.72 - 0.08*ch)
-            R[y0:y1, gx:gx+w] = 0.92
-            AO[y0:y1, gx:gx+w] = 0.5
+    # ---- Phase 3: AO-driven weathering overlay (dirt + streaks) ----
+    # The single biggest "worn/real" win (X4 trick). Dirt accumulates where AO is
+    # low (recessed grooves/crevices), plus directional streak/scorch marks running
+    # along panel seams, and faint micro-scratches. All read ABOVE the base albedo.
+    if variant.get('grime') or variant.get('weather'):
+        # 1) AO-driven dirt: darken D in low-AO / deep-groove regions and roughen them
+        #    (dirt pools, doesn't sit on exposed raised panels).
+        dirt_mask = (h < 0.42)  # deep grooves/crevices already carry low h from panels/cables
+        # soften: only pool where there's actual recessed structure
+        Dd = np.empty_like(D[:, :, :3])
+        for ch in range(3):
+            Dd[..., ch] = np.clip(D[:, :, ch] * (0.82 - 0.06*ch), 0, 1)
+        D[:, :, :3][dirt_mask] = Dd[dirt_mask]
+        R[dirt_mask] = np.maximum(R[dirt_mask], 0.85)
+        AO[dirt_mask] = np.minimum(AO[dirt_mask], 0.45)
+        # 2) directional streaks/scorch running along panel seams (vertical + horizontal)
+        for _ in range(rng.integers(8, 14)):
+            hz = rng.random() < 0.5
+            sx = int(rng.integers(0, W)); sy = int(rng.integers(0, H))
+            length = int(rng.integers(W//6, W//3)) if hz else int(rng.integers(H//8, H//3))
+            w = int(rng.integers(1, 3))
+            fade = np.clip(np.linspace(1.0, 0.3, length), 0, 1)
+            for k in range(length):
+                if hz:
+                    x = sx + k; y = sy
+                    if 0 <= x < W and 0 <= y < H:
+                        D[y, x] *= 0.80 - 0.10*w + (fade[k]*0.1)
+                        R[y, x] = 0.9
+                else:
+                    y = sy + k; x = sx
+                    if 0 <= y < H and 0 <= x < W:
+                        D[y, x] *= (0.80 - 0.10*w) + (fade[k]*0.1)
+                        R[y, x] = 0.9
+        # 3) faint micro-scratch noise (short thin lighter marks)
+        for _ in range(rng.integers(25, 45)):
+            sx = int(rng.integers(0, W)); sy = int(rng.integers(0, H))
+            ang = rng.random()*3.14
+            L = int(rng.integers(4, 14))
+            for k in range(L):
+                x = int(sx + k*math.cos(ang)); y = int(sy + k*math.sin(ang))
+                if 0 <= x < W and 0 <= y < H:
+                    D[y, x] = np.clip(D[y, x] - [0.12, 0.12, 0.12, 0.0], 0, 1)
+                    AO[y, x] = min(AO[y, x], 0.5)
     # hazard warning stripes
     if variant.get('hazard'):
         for _ in range(variant['hazard'].get('bands', 4)):
