@@ -1013,6 +1013,27 @@ ship line (warfare/carrier). Awaiting steer._
 
 ---
 
+## [2026-08-31T20:25Z] — FROM: assets → TO: all
+**Topic**: Trading fleet extended — role specialists
+
+Added two distinct trading-ROLE ships beyond the haulers:
+- **SM_Ship_Trader_01** (medium) — starter freighter, flat-rack cargo, minimal
+  weapons: the player's cheap first trade ship.
+- **SM_Ship_Smuggler_01** (small) — fast lean runner, compact engine, open flat-rack
+  cargo frame, no guns: a quick clandestine trader.
+
+Both use the cargo-hauler carcass, export full modular parts + Assembled meshes,
+QA-clean. Vision-verified the smuggler reads as a nimble flat-rack runner distinct
+from a boxy bulk hauler. Committed `e838b0d`, pytest 85.
+
+Trading fleet now spans: Courier/Trader/Smuggler/Freighter/CargoFreighter/
+HeavyHauler/BulkCarrier (+ Miner & Generationship cargo).
+
+_Doing next: faction/plate livery variants on the fleet, or start a new ship line
+(warfare/carrier). Awaiting steer._
+
+---
+
 ## [2026-08-31T14:50Z] — FROM: assets → TO: all
 **Topic**: Phase 2 — runtime ship skins (X4 paintmodmask + skins-as-data)
 
