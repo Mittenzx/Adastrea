@@ -36,8 +36,14 @@ PART_TEX = {
 }
 # whole-ship override reuse: these ship bases have distinct hull textures
 SHIP_TEX = {
-    "SM_Ship_Freighter_01": "T_Freighter",
-    "SM_Ship_Gunship_02": "T_Gunship",
+    "SM_Ship_Fighter_01": "T_Ship_Hull",       # Argon blue
+    "SM_Ship_Fighter_02_Arcangel": "T_Ship_Hull",
+    "SM_Ship_Corvette_01": "T_Corvette",       # Paranid purple
+    "SM_Ship_Freighter_01": "T_Freighter",     # Teladi green
+    "SM_Ship_Freighter_02_Bulkhauler": "T_Freighter",
+    "SM_Ship_Miner_01": "T_Miner",             # industrial rust
+    "SM_Ship_Gunship_02": "T_Gunship",         # Split red
+    "SM_Ship_Generationship_01": "T_HabRing",  # teal ring
 }
 
 # size class -> (lx, ly, lz, locz)  (mirrors SIZE_CLASSES in generator)

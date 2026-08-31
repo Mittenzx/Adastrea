@@ -2107,11 +2107,11 @@ def main():
     setup_scene()
     print("Generating textures...")
     # existing ship/prop textures (kept for compatibility)
-    gen_texture_set("Ship_Hull", {'base':[0.55,0.58,0.6], 'accent':[0.12,0.16,0.22], 'emissive':[0.2,0.55,1.0],
-                                  'windows':{'cols':12,'frac':0.4,'cool':[0.3,0.65,1.0],'warm':[1.0,0.6,0.25]},
+    gen_texture_set("Ship_Hull", {'base':[0.5,0.56,0.62], 'accent':[0.1,0.22,0.35], 'emissive':[0.2,0.65,1.0],
+                                  'windows':{'cols':12,'frac':0.4,'cool':[0.3,0.7,1.0],'warm':[1.0,0.6,0.25]},
                                   'cable':{'runs':4}}, 2048, seed=11)
-    gen_texture_set("Freighter", {'base':[0.6,0.55,0.5], 'accent':[0.2,0.25,0.2], 'emissive':[0.6,0.3,0.05],
-                                  'windows':{'cols':10,'frac':0.5,'cool':[0.3,0.7,1.0],'warm':[1.0,0.7,0.3]},
+    gen_texture_set("Freighter", {'base':[0.45,0.55,0.45], 'accent':[0.15,0.35,0.18], 'emissive':[0.4,0.8,0.3],
+                                  'windows':{'cols':10,'frac':0.5,'cool':[0.3,0.7,1.0],'warm':[0.5,0.9,0.4]},
                                   'grime':True, 'hazard':{'bands':3}}, 2048, seed=22)
     gen_texture_set("Prop_Crate", {'base':[0.45,0.5,0.55], 'accent':[0.3,0.3,0.0], 'emissive':[0.2,1.0,0.2],
                                    'hazard':{'bands':3}}, 1024, seed=33)
@@ -2122,6 +2122,12 @@ def main():
                                 'emissive':[1.0,0.15,0.05], 'neon':[1.0,0.2,0.1], 'neon_thick':3,
                                 'windows':{'cols':16,'frac':0.2,'cool':[0.3,0.7,1.0]},
                                 'grime':True, 'hazard':{'bands':3}}, 2048, seed=55)
+    gen_texture_set("Corvette", {'base':[0.4,0.34,0.46], 'accent':[0.25,0.15,0.4], 'emissive':[0.6,0.3,1.0],
+                                'windows':{'cols':14,'frac':0.45,'cool':[0.6,0.5,1.0],'warm':[1.0,0.5,0.7]},
+                                'grime':True, 'hazard':{'bands':3}, 'cable':{'runs':5}}, 2048, seed=77)
+    gen_texture_set("Miner", {'base':[0.55,0.47,0.4], 'accent':[0.4,0.2,0.1], 'emissive':[1.0,0.5,0.1],
+                              'windows':{'cols':10,'frac':0.3,'cool':[0.5,0.7,1.0],'warm':[1.0,0.6,0.3]},
+                              'drill_accent':True, 'grime':True, 'hazard':{'bands':4}, 'cable':{'runs':6}}, 2048, seed=88)
     gen_texture_set("Station_Hab", {'base':[0.3,0.32,0.38], 'accent':[0.15,0.18,0.24],
                                     'emissive':[0.2,0.55,1.0],
                                     'windows':{'cols':14,'frac':0.65,'cool':[0.3,0.65,1.0],'warm':[1.0,0.6,0.25]},
