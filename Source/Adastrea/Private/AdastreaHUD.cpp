@@ -84,7 +84,7 @@ void AAdastreaHUD::DrawHUD()
 	const float TitleY = PanelY + 10.0f;
 	const float RowStartY = TitleY + 34.0f;
 
-	const float PanelH = RowStartY + (PanelY) + 5 * RowH + 16.0f;
+	const float PanelH = RowStartY + (PanelY) + 5 * RowH + 16.0f + 64.0f; // extra room for the 3D compass
 
 	// ---- Dark translucent panel ----
 	DrawRect(kBg, PanelX, PanelY, PanelW, PanelH);
@@ -128,6 +128,77 @@ void AAdastreaHUD::DrawHUD()
 	DrawText(FString::Printf(TEXT("X %8.0f   Y %8.0f   Z %8.0f"), P.X, P.Y, P.Z),
 		kPos, ValueX, Y, BodyFont, 0.8f);
 	Y += RowH;
+
+	// ---- 3D compass (bearing + pitch) under the ship position ----
+	{
+		// Ship facing from its world rotation.
+		const FRotator ShipRot = Ship->GetActorRotation();
+		const float YawDeg   = ShipRot.Yaw;           // heading: 0 = +X, 90 = +Y
+		const float PitchDeg = ShipRot.Pitch;          // +up / -down
+
+		// Compass geometry: a ring centered under the panel, near the position row.
+		const float Cx = PanelX + PanelW * 0.5f;
+		const float Cy = Y + 6.0f;
+		const float R  = 22.0f;                        // compass ring radius
+
+		// ---- Bearing ring (N/E/S/W projected from current yaw) ----
+		// World heading (degrees, 0..360) where +X=0, +Y=90; flip so it reads clockwise.
+		const float HeadingClock = FMath::Fmod(YawDeg + 360.0f, 360.0f);
+		// Rotate the four compass points opposite the heading so the point we face
+		// stays fixed at the "forward" (top) of the ring.
+		const float Fwd = HeadingClock;                // degrees, clockwise from +X
+		// Points: N=0, E=90, S=180, W=270 (world). Screen offset = -(heading - point).
+		const FLinearColor PtCol = FLinearColor(0.62f, 0.78f, 0.85f, 0.9f); // cyan-ish
+		const FLinearColor NCol  = FLinearColor(0.95f, 0.75f, 0.45f, 1.0f); // gold = north
+
+		// Draw ring (circle) via short line segments.
+		const int32 Segs = 40;
+		for (int32 i = 0; i < Segs; ++i)
+		{
+			const float A0 = (float)i / Segs * 2.0f * PI;
+			const float A1 = (float)(i + 1) / Segs * 2.0f * PI;
+			const FVector2D P0(Cx + FMath::Cos(A0 + PI) * R, Cy + FMath::Sin(A0 + PI) * R);
+			const FVector2D P1(Cx + FMath::Cos(A1 + PI) * R, Cy + FMath::Sin(A1 + PI) * R);
+			DrawLine(P0.X, P0.Y, P1.X, P1.Y, FLinearColor(0.25f, 0.35f, 0.42f, 0.9f), 1.0f);
+		}
+
+		// Projected compass point labels (N/E/S/W), displaced by heading so the
+		// direction you face sits at the top.
+		auto DrawCompassPoint = [&](const TCHAR* Label, float PointDeg, const FLinearColor& Col)
+		{
+			const float AngleRad = FMath::DegreesToRadians(HeadingClock - PointDeg) + PI;
+			const float Sx = Cx + FMath::Cos(AngleRad) * R;
+			const float Sy = Cy + FMath::Sin(AngleRad) * R;
+			DrawText(Label, Col, Sx - 7.0f, Sy - 9.0f, BodyFont, 0.75f);
+		};
+		DrawCompassPoint(TEXT("N"), 0.0f,   NCol);
+		DrawCompassPoint(TEXT("E"), 90.0f,  PtCol);
+		DrawCompassPoint(TEXT("S"), 180.0f, PtCol);
+		DrawCompassPoint(TEXT("W"), 270.0f, PtCol);
+
+		// Fixed forward tick at the top of the ring (the heading you face).
+		DrawLine(Cx - 1.0f, Cy - R - 3.0f, Cx + 1.0f, Cy - R - 1.0f, kBorder, 2.0f);
+
+		// ---- Pitch ladder (vertical bar to the right of the ring) ----
+		const float Lx = Cx + R + 10.0f;
+		const float PitchHalves = FMath::Clamp(PitchDeg / 90.0f, -1.0f, 1.0f);
+		// Draw a vertical scale from -45 (down) at bottom to +45 (up) at top.
+		const float Lh = R * 2.0f;
+		DrawLine(Lx, Cy - R, Lx, Cy + R, FLinearColor(0.25f,0.35f,0.42f,0.9f), 1.0f);
+		DrawLine(Lx - 4.0f, Cy, Lx + 4.0f, Cy + 1.0f, FLinearColor(0.35f,0.5f,0.6f,0.9f), 1.0f); // mid (0)
+		// Marker that rises/falls with pitch.
+		const float MarkY = Cy + R - (PitchHalves + 1.0f) * 0.5f * Lh;
+		DrawLine(Lx - 5.0f, MarkY, Lx + 5.0f, MarkY, kBorder, 2.0f);
+		// up/down arrows
+		DrawText(TEXT("^"), FLinearColor(0.5f,0.9f,0.7f,1.0f), Lx + 7.0f, Cy - R - 2.0f, BodyFont, 0.6f);
+		DrawText(TEXT("v"), FLinearColor(0.9f,0.5f,0.5f,1.0f), Lx + 8.0f, Cy + R - 6.0f, BodyFont, 0.6f);
+
+		// ---- Heading readout (degrees) ----
+		const FString HeadingStr = FString::Printf(TEXT("%03.0f."), HeadingClock);
+		DrawText(HeadingStr, kPos, Cx - 24.0f, Cy + R + 3.0f, BodyFont, 0.8f);
+
+		Y += RowH + 24.0f;
+	}
 
 	// ---- Locked target reticle (world-space box around the locked target) ----
 	AAdastreaPlayerController* AController = Cast<AAdastreaPlayerController>(PC);
