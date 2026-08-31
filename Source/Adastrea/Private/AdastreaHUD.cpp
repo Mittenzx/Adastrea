@@ -147,15 +147,28 @@ void AAdastreaHUD::DrawHUD()
 
 	if (LockedTarget)
 	{
-		// Screen-space corner-box reticle + crosshair around the locked target.
+		// Target screen position + in-view/off-view determination.
 		const FVector TgtLoc = LockedTarget->GetActorLocation();
 		const FString TgtName = LockedTarget->GetActorLabel();
 		const float TgtDist = FVector::Dist(P, TgtLoc);
 
-		FVector2D ScreenPt;
-		if (PC && PC->ProjectWorldLocationToScreen(TgtLoc, ScreenPt))
+		int32 VSizeX = 0, VSizeY = 0;
+		if (PC) { PC->GetViewportSize(VSizeX, VSizeY); }
+		const float VW = (float)VSizeX, VH = (float)VSizeY;
+		const float Margin = 40.0f; // edge margin for off-screen clamp + "on screen" test
+
+		FVector2D ScreenPt(0.0f, 0.0f);
+		const bool bProjected = PC && PC->ProjectWorldLocationToScreen(TgtLoc, ScreenPt);
+		const bool bOnScreen = bProjected
+			&& ScreenPt.X >= Margin && ScreenPt.X <= VW - Margin
+			&& ScreenPt.Y >= Margin && ScreenPt.Y <= VH - Margin
+			&& ScreenPt.X > 0 && ScreenPt.Y > 0; // valid (not behind camera when out of view)
+
+		const FLinearColor Reticle = FLinearColor(0.15f, 0.9f, 0.6f, 1.0f); // teal-green
+
+		if (bOnScreen)
 		{
-			const FLinearColor Reticle = FLinearColor(0.15f, 0.9f, 0.6f, 1.0f); // teal-green
+			// On-screen corner-box reticle + crosshair around the locked target.
 			const float BoxHalf = FMath::Clamp(TgtDist * 0.01f, 20.0f, 60.0f);
 			const float RX = ScreenPt.X;
 			const float RY = ScreenPt.Y;
@@ -171,9 +184,40 @@ void AAdastreaHUD::DrawHUD()
 			DrawLine(RX - 6.0f, RY, RX + 6.0f, RY, Reticle, 1.0f);
 			DrawLine(RX, RY - 6.0f, RX, RY + 6.0f, Reticle, 1.0f);
 		}
+		else if (PC)
+		{
+			// Off-screen: draw an arrow at the viewport edge pointing at the target.
+			// Clamp the target's screen position to the edge box (with margin) to get
+			// the arrow base, then orient a triangle toward the true on-screen direction.
+			FVector2D EdgePt = ScreenPt;
+			EdgePt.X = FMath::Clamp(EdgePt.X, Margin, VW - Margin);
+			EdgePt.Y = FMath::Clamp(EdgePt.Y, Margin, VH - Margin);
+
+			// Arrow direction = from screen center to the (possibly off-screen) target.
+			const FVector2D Center(VW * 0.5f, VH * 0.5f);
+			FVector2D Dir = ScreenPt - Center;
+			const float Ln = FMath::Max(Dir.Size(), KINDA_SMALL_NUMBER);
+			Dir /= Ln;
+			const FVector2D N(-Dir.Y, Dir.X); // perpendicular
+
+			const float ArrowLen = 24.0f;
+			const float HalfW = 9.0f;
+			const FVector2D Tip = EdgePt + Dir * ArrowLen;
+			const FVector2D BaseLeft = EdgePt - N * HalfW;
+			const FVector2D BaseRight = EdgePt + N * HalfW;
+			const FVector2D Back = EdgePt + Dir * (ArrowLen * 0.45f);
+
+			DrawLine(Tip.X, Tip.Y, BaseLeft.X, BaseLeft.Y, Reticle, 2.5f);
+			DrawLine(Tip.X, Tip.Y, BaseRight.X, BaseRight.Y, Reticle, 2.5f);
+			DrawLine(BaseLeft.X, BaseLeft.Y, Back.X, Back.Y, Reticle, 2.5f);
+			DrawLine(BaseRight.X, BaseRight.Y, Back.X, Back.Y, Reticle, 2.5f);
+
+			// Distance label under the arrow.
+			DrawText(FString::Printf(TEXT("%.0f"), TgtDist), Reticle,
+				EdgePt.X - 14.0f, EdgePt.Y + 12.0f, BodyFont, 0.6f);
+		}
 
 		// ---- Right-side target info panel ----
-		int32 VSizeX = 0, VSizeY = 0;
 		if (PC)
 		{
 			PC->GetViewportSize(VSizeX, VSizeY);
