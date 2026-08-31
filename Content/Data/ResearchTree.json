@@ -1,0 +1,380 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "Title": "Adastrea Research & Breakthrough Tree",
+  "Description": "Research tree derived from Content/Data/CraftingTree.json. Each research benchmark unlocks the Mk2/Mk3 crafts that reference it. Single source of truth is the crafting tree.",
+  "SchemaVersion": "1.0.0",
+  "LastUpdated": "2026-08-31",
+  "Source": "Content/Data/CraftingTree.json",
+  "ResearchLevels": {
+    "Base": 1,
+    "Mk2": 2,
+    "Mk3": 3
+  },
+  "Branches": [
+    {
+      "Domain": "Propulsion",
+      "Lab": "PhysicsLab",
+      "LabModule": "PhysicsLabModule",
+      "ResearchLevel2": "PropulsionResearch",
+      "ResearchLevel3": "AdvancedPropulsionResearch",
+      "Unlocks": 8
+    },
+    {
+      "Domain": "Materials",
+      "Lab": "MaterialsLab",
+      "LabModule": "MaterialsLabModule",
+      "ResearchLevel2": "MaterialsResearch",
+      "ResearchLevel3": "NanoMaterialsResearch",
+      "Unlocks": 10
+    },
+    {
+      "Domain": "Computing",
+      "Lab": "ElectronicsLab",
+      "LabModule": "ElectronicsLabModule",
+      "ResearchLevel2": "ComputingResearch",
+      "ResearchLevel3": "QuantumComputingResearch",
+      "Unlocks": 48
+    },
+    {
+      "Domain": "Defence",
+      "Lab": "WeaponsLab",
+      "LabModule": "WeaponsLabModule",
+      "ResearchLevel2": "DefenceResearch",
+      "ResearchLevel3": "AdvancedDefenceResearch",
+      "Unlocks": 20
+    },
+    {
+      "Domain": "Bio",
+      "Lab": "BiologyLab",
+      "LabModule": "BiologyLabModule",
+      "ResearchLevel2": "BioResearch",
+      "ResearchLevel3": "AdvancedBioResearch",
+      "Unlocks": 5
+    }
+  ],
+  "ResearchNodes": [
+    {
+      "ResearchID": "AdvancedBioResearch",
+      "Name": "Advanced Bio-Tech",
+      "Description": "Advanced bio-tech giving Mk3 medical supplies and bioweapons.",
+      "ResearchLevel": 3,
+      "ProducedIn": "BiologyLab",
+      "LabModule": "BiologyLabModule",
+      "UnlocksCount": 2,
+      "Unlocks": [
+        "MedicalSupplies_Mk3",
+        "RefinedMedicine_Mk3"
+      ],
+      "UnlocksNames": [
+        "Medical Supplies Mk3",
+        "Refined Medicine Mk3"
+      ]
+    },
+    {
+      "ResearchID": "AdvancedDefenceResearch",
+      "Name": "Advanced Defence Systems",
+      "Description": "Advanced weapons research giving Mk3 weapons, shields and point-defence.",
+      "ResearchLevel": 3,
+      "ProducedIn": "WeaponsLab",
+      "LabModule": "WeaponsLabModule",
+      "UnlocksCount": 9,
+      "Unlocks": [
+        "EnergyCannon_Mk3",
+        "MissileLauncher_Mk3",
+        "PlasmaCannon_Mk3",
+        "PointDefenceLaser_Mk3",
+        "Railgun_Mk3",
+        "ShipShieldGenerator_Mk3",
+        "TorpedoLauncher_Mk3",
+        "TriLaser_Mk3",
+        "TurretWeapon_Mk3"
+      ],
+      "UnlocksNames": [
+        "Energy Cannon Mk3",
+        "Missile Launcher Mk3",
+        "Plasma Cannon Mk3",
+        "Point Defence Laser Mk3",
+        "Railgun Mk3",
+        "Ship Shield Generator Mk3",
+        "Torpedo Launcher Mk3",
+        "Tri Laser Mk3",
+        "Turret Weapon Mk3"
+      ]
+    },
+    {
+      "ResearchID": "AdvancedPropulsionResearch",
+      "Name": "Advanced Propulsion Engines",
+      "Description": "Top-tier propulsion giving Mk3 engines, reactors and fuel systems.",
+      "ResearchLevel": 3,
+      "ProducedIn": "PhysicsLab",
+      "LabModule": "PhysicsLabModule",
+      "UnlocksCount": 4,
+      "Unlocks": [
+        "FuelTank_Mk3",
+        "ShipEngine_Mk3",
+        "ShipReactor_Mk3",
+        "Thruster_Mk3"
+      ],
+      "UnlocksNames": [
+        "Fuel Tank Mk3",
+        "Ship Engine Mk3",
+        "Ship Reactor Mk3",
+        "Thruster Mk3"
+      ]
+    },
+    {
+      "ResearchID": "BioResearch",
+      "Name": "Biotech Research",
+      "Description": "Biology-lab breakthrough enabling Mk2 medicine and vaccines.",
+      "ResearchLevel": 2,
+      "ProducedIn": "BiologyLab",
+      "LabModule": "BiologyLabModule",
+      "UnlocksCount": 3,
+      "Unlocks": [
+        "MedicalSupplies_Mk2",
+        "RefinedMedicine_Mk2",
+        "Vaccines_Mk2"
+      ],
+      "UnlocksNames": [
+        "Medical Supplies Mk2",
+        "Refined Medicine Mk2",
+        "Vaccines Mk2"
+      ]
+    },
+    {
+      "ResearchID": "ComputingResearch",
+      "Name": "Computing Research",
+      "Description": "Electronics-lab breakthrough unlocking the broad Mk2 electronics & computer network.",
+      "ResearchLevel": 2,
+      "ProducedIn": "ElectronicsLab",
+      "LabModule": "ElectronicsLabModule",
+      "UnlocksCount": 33,
+      "Unlocks": [
+        "AdvancedSensors_Mk2",
+        "AutomatedDefenceComputer_Mk2",
+        "BasicComputer_Mk2",
+        "CapacitorBank_Mk2",
+        "CargoComputer_Mk2",
+        "CircuitBoard_Mk2",
+        "ClockGenerator_Mk2",
+        "ControlUnit_Mk2",
+        "DataMatrix_Mk2",
+        "Electronics_Mk2",
+        "EncryptedCircuit_Mk2",
+        "EngineeringComputer_Mk2",
+        "FiberOpticCable_Mk2",
+        "LogicChip_Mk2",
+        "MemoryUnit_Mk2",
+        "MicroCapacitor_Mk2",
+        "Microchips_Mk2",
+        "NavigationComputer_Mk2",
+        "OpticalLens_Mk2",
+        "PilotComputer_Mk2",
+        "PowerDistributionUnit_Mk2",
+        "QuantumProcessor_Mk2",
+        "ResearchComputer_Mk2",
+        "ScanComputer_Mk2",
+        "ScienceComputer_Mk2",
+        "SensorArray_Mk2",
+        "ServoActuator_Mk2",
+        "ShipComputer_Mk2",
+        "SignalAmplifier_Mk2",
+        "SuperConductingWire_Mk2",
+        "TargetingComputer_Mk2",
+        "TradingComputer_Mk2",
+        "TransceiverUnit_Mk2"
+      ],
+      "UnlocksNames": [
+        "Advanced Sensors Mk2",
+        "Automated Defence Computer Mk2",
+        "Basic Computer Mk2",
+        "Capacitor Bank Mk2",
+        "Cargo Computer Mk2",
+        "Circuit Board Mk2",
+        "Clock Generator Mk2",
+        "Control Unit Mk2",
+        "Data Matrix Mk2",
+        "Electronics Mk2",
+        "Encrypted Circuit Mk2",
+        "Engineering Computer Mk2",
+        "Fiber Optic Cable Mk2",
+        "Logic Chip Mk2",
+        "Memory Unit Mk2",
+        "Micro Capacitor Mk2",
+        "Microchips Mk2",
+        "Navigation Computer Mk2",
+        "Optical Lens Mk2",
+        "Pilot Computer Mk2",
+        "Power Distribution Unit Mk2",
+        "Quantum Processor Mk2",
+        "Research Computer Mk2",
+        "Scan Computer Mk2",
+        "Science Computer Mk2",
+        "Sensor Array Mk2",
+        "Servo Actuator Mk2",
+        "Ship Computer Mk2",
+        "Signal Amplifier Mk2",
+        "Super Conducting Wire Mk2",
+        "Targeting Computer Mk2",
+        "Trading Computer Mk2",
+        "Transceiver Unit Mk2"
+      ]
+    },
+    {
+      "ResearchID": "DefenceResearch",
+      "Name": "Defence Research",
+      "Description": "Weapons-lab breakthrough enabling Mk2 turrets, cannons, missiles and shields.",
+      "ResearchLevel": 2,
+      "ProducedIn": "WeaponsLab",
+      "LabModule": "WeaponsLabModule",
+      "UnlocksCount": 11,
+      "Unlocks": [
+        "EnergyCannon_Mk2",
+        "GravitationGenerator_Mk2",
+        "MissileLauncher_Mk2",
+        "PlasmaCannon_Mk2",
+        "PointDefenceLaser_Mk2",
+        "Railgun_Mk2",
+        "ShieldCapacitor_Mk2",
+        "ShipShieldGenerator_Mk2",
+        "TorpedoLauncher_Mk2",
+        "TriLaser_Mk2",
+        "TurretWeapon_Mk2"
+      ],
+      "UnlocksNames": [
+        "Energy Cannon Mk2",
+        "Gravitation Generator Mk2",
+        "Missile Launcher Mk2",
+        "Plasma Cannon Mk2",
+        "Point Defence Laser Mk2",
+        "Railgun Mk2",
+        "Shield Capacitor Mk2",
+        "Ship Shield Generator Mk2",
+        "Torpedo Launcher Mk2",
+        "Tri Laser Mk2",
+        "Turret Weapon Mk2"
+      ]
+    },
+    {
+      "ResearchID": "MaterialsResearch",
+      "Name": "Materials Research",
+      "Description": "Materials-lab breakthrough enabling Mk2 hulls, plating and cargo pods.",
+      "ResearchLevel": 2,
+      "ProducedIn": "MaterialsLab",
+      "LabModule": "MaterialsLabModule",
+      "UnlocksCount": 5,
+      "Unlocks": [
+        "ArmourHull_Mk2",
+        "CargoPod_Mk2",
+        "HullPlating_Mk2",
+        "LifeSupportPod_Mk2",
+        "ShipComponents_Mk2"
+      ],
+      "UnlocksNames": [
+        "Armour Hull Mk2",
+        "Cargo Pod Mk2",
+        "Hull Plating Mk2",
+        "Life Support Pod Mk2",
+        "Ship Components Mk2"
+      ]
+    },
+    {
+      "ResearchID": "NanoMaterialsResearch",
+      "Name": "Nano-Materials",
+      "Description": "Nano-materials giving Mk3 hulls, plating and ship components.",
+      "ResearchLevel": 3,
+      "ProducedIn": "MaterialsLab",
+      "LabModule": "MaterialsLabModule",
+      "UnlocksCount": 5,
+      "Unlocks": [
+        "ArmourHull_Mk3",
+        "CargoPod_Mk3",
+        "HullPlating_Mk3",
+        "LifeSupportPod_Mk3",
+        "ShipComponents_Mk3"
+      ],
+      "UnlocksNames": [
+        "Armour Hull Mk3",
+        "Cargo Pod Mk3",
+        "Hull Plating Mk3",
+        "Life Support Pod Mk3",
+        "Ship Components Mk3"
+      ]
+    },
+    {
+      "ResearchID": "PropulsionResearch",
+      "Name": "Propulsion Research",
+      "Description": "Physics-lab breakthrough enabling Mk2 engines, reactors and thrusters.",
+      "ResearchLevel": 2,
+      "ProducedIn": "PhysicsLab",
+      "LabModule": "PhysicsLabModule",
+      "UnlocksCount": 4,
+      "Unlocks": [
+        "FuelTank_Mk2",
+        "ShipEngine_Mk2",
+        "ShipReactor_Mk2",
+        "Thruster_Mk2"
+      ],
+      "UnlocksNames": [
+        "Fuel Tank Mk2",
+        "Ship Engine Mk2",
+        "Ship Reactor Mk2",
+        "Thruster Mk2"
+      ]
+    },
+    {
+      "ResearchID": "QuantumComputingResearch",
+      "Name": "Quantum Computing",
+      "Description": "Quantum-class computing unlocking the deepest Mk3 electronics and computers.",
+      "ResearchLevel": 3,
+      "ProducedIn": "ElectronicsLab",
+      "LabModule": "ElectronicsLabModule",
+      "UnlocksCount": 15,
+      "Unlocks": [
+        "AdvancedSensors_Mk3",
+        "AutomatedDefenceComputer_Mk3",
+        "BasicComputer_Mk3",
+        "CircuitBoard_Mk3",
+        "ControlUnit_Mk3",
+        "Electronics_Mk3",
+        "LogicChip_Mk3",
+        "MemoryUnit_Mk3",
+        "Microchips_Mk3",
+        "PowerDistributionUnit_Mk3",
+        "QuantumProcessor_Mk3",
+        "ResearchComputer_Mk3",
+        "ScienceComputer_Mk3",
+        "SensorArray_Mk3",
+        "ShipComputer_Mk3"
+      ],
+      "UnlocksNames": [
+        "Advanced Sensors Mk3",
+        "Automated Defence Computer Mk3",
+        "Basic Computer Mk3",
+        "Circuit Board Mk3",
+        "Control Unit Mk3",
+        "Electronics Mk3",
+        "Logic Chip Mk3",
+        "Memory Unit Mk3",
+        "Microchips Mk3",
+        "Power Distribution Unit Mk3",
+        "Quantum Processor Mk3",
+        "Research Computer Mk3",
+        "Science Computer Mk3",
+        "Sensor Array Mk3",
+        "Ship Computer Mk3"
+      ]
+    },
+    {
+      "ResearchID": "ResearchData",
+      "Name": "Research Data",
+      "Description": "The generic research milestone that unlocks early Mk2 upgrades.",
+      "ResearchLevel": 2,
+      "ProducedIn": "ScienceLab",
+      "LabModule": "ScienceLabModule",
+      "UnlocksCount": 0,
+      "Unlocks": [],
+      "UnlocksNames": []
+    }
+  ]
+}

@@ -170,6 +170,30 @@ class TestCraftingTree:
             assert st["BaseValue"] >= 0, f"{iid}: negative value"
             assert st["MaterialCategory"], f"{iid}: missing material category"
 
+    def test_research_tree_valid(self):
+        """ResearchTree.json is present, parses, every lab research has its nodes,
+        and every Unlock is a real recipe OutputItem in the crafting tree."""
+        research_path = Path(__file__).parent.parent / "Content" / "Data" / "ResearchTree.json"
+        assert research_path.is_file(), "ResearchTree.json missing"
+        with open(research_path) as f:
+            rtree = json.load(f)
+        assert rtree.get("Branches"), "no branches"
+        assert rtree.get("ResearchNodes"), "no research nodes"
+        crafting = load_tree()
+        outputs = {r["OutputItem"] for r in crafting["Recipes"]}
+        research_nodes = {n["ResearchID"] for n in rtree["ResearchNodes"]}
+        # every research node's unlocks are real craftable items
+        for n in rtree["ResearchNodes"]:
+            for unlock in n["Unlocks"]:
+                assert unlock in outputs, \
+                    f"{n['ResearchID']} unlocks {unlock} which is not a crafted item"
+        # every lab in Branches has matching nodes
+        for b in rtree["Branches"]:
+            lab_nodes = [n for n in rtree["ResearchNodes"] if n["ProducedIn"] == b["Lab"]]
+            assert lab_nodes, f"branch {b['Domain']} has no nodes"
+            assert b["ResearchLevel2"] and b["ResearchLevel3"], \
+                f"branch {b['Domain']} missing rl2/rl3"
+
 
 if __name__ == "__main__":
     try:
