@@ -278,27 +278,92 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 		return (sx >= BoxX && sx <= BoxX + BoxW && sy >= BoxY && sy <= BoxY + BoxH);
 	};
 
-	// ---- Grid on Z=0 plane ----
+	// Non-clipping projector (for grid lines whose endpoints may be off-box).
+	auto ProjectRaw = [&](const FVector& W, FVector2D& Out) -> bool
 	{
-		const FLinearColor kGrid = FLinearColor(0.13f, 0.20f, 0.26f, 0.5f);
-		const float G = 20000.0f;
-		float R = MapZoom * 1.5f;
-		for (float gx = -FMath::RoundToFloat(R/G)*G; gx <= R; gx += G)
-		for (float gy = -FMath::RoundToFloat(R/G)*G; gy <= R; gy += G)
+		FVector Rel = W - Eye;
+		float CamX = Rel.Dot(Right);
+		float CamY = Rel.Dot(Up);
+		float CamZ = Rel.Dot(Fwd);
+		if (CamZ < 1000.0f) { return false; }
+		float S = Focal / CamZ;
+		Out = FVector2D(BoxX + BoxW * 0.5f + CamX * S, BoxY + BoxH * 0.5f - CamY * S);
+		return true;
+	};
+
+	// Draw a screen-space line clipped to the map box (Liang-Barsky).
+	auto DrawGridLine = [&](FVector2D A, FVector2D B, const FLinearColor& Col, float Thick)
+	{
+		const float XMin = BoxX, XMax = BoxX + BoxW;
+		const float YMin = BoxY, YMax = BoxY + BoxH;
+		const float x0 = A.X, y0 = A.Y, x1 = B.X, y1 = B.Y;
+		const float dx = x1 - x0, dy = y1 - y0;
+
+		const float P[4] = { -dx, dx, -dy, dy };
+		const float Q[4] = { x0 - XMin, XMax - x0, y0 - YMin, YMax - y0 };
+
+		float u0 = 0.0f, u1 = 1.0f;
+		bool bVisible = true;
+		for (int32 i = 0; i < 4; ++i)
 		{
-			FVector2D A, B;
-			if (Project(MapCenter + FVector(gx, -R, 0), A) && Project(MapCenter + FVector(gx, R, 0), B))
-				DrawLine(A.X, A.Y, B.X, B.Y, kGrid, 1.0f);
-			if (Project(MapCenter + FVector(-R, gy, 0), A) && Project(MapCenter + FVector(R, gy, 0), B))
-				DrawLine(A.X, A.Y, B.X, B.Y, kGrid, 1.0f);
+			if (FMath::Abs(P[i]) < 1.e-6f)
+			{
+				if (Q[i] < 0.0f) { bVisible = false; break; }
+			}
+			else
+			{
+				float r = Q[i] / P[i];
+				if (P[i] < 0.0f) { u0 = FMath::Max(u0, r); }
+				else             { u1 = FMath::Min(u1, r); }
+			}
 		}
+		if (!bVisible || u0 > u1) { return; }
+
+		const FVector2D C(x0 + u0 * dx, y0 + u0 * dy);
+		const FVector2D D(x0 + u1 * dx, y0 + u1 * dy);
+		DrawLine(C.X, C.Y, D.X, D.Y, Col, Thick);
+	};
+
+	// ---- Box background (drawn before the grid so the grid stays visible) ----
+	DrawRect(FLinearColor(0.03f, 0.05f, 0.07f, 0.9f), BoxX, BoxY, BoxW, BoxH);
+
+	// ---- Grid on Z=0 plane (hierarchical: minor + major lines for perspective) ----
+	{
+		const FLinearColor kMinor = FLinearColor(0.13f, 0.20f, 0.26f, 0.6f);
+		const FLinearColor kMajor = FLinearColor(0.35f, 0.60f, 0.68f, 0.85f);
+		// Adaptive minor spacing so the grid always reads at any zoom.
+		float G = FMath::Pow(10.0f, FMath::FloorToFloat(FMath::LogX(10.0f, MapZoom * 0.25f)));
+		G = FMath::Clamp(G, 5000.0f, 50000.0f);
+		const float Major = G * 4.0f;
+		float R = MapZoom * 1.6f;
+
+		auto DrawAxis = [&](float Coord, bool bX)
+		{
+			bool bIsMajor = (FMath::Abs(Coord) < 1.0f) || (FMath::Abs(FMath::Fmod(Coord, Major)) < 1.0f);
+			const FLinearColor& Col = bIsMajor ? kMajor : kMinor;
+			float Thick = bIsMajor ? 2.0f : 1.0f;
+			FVector2D A, B;
+			if (bX)
+			{
+				if (ProjectRaw(MapCenter + FVector(Coord, -R, 0), A) && ProjectRaw(MapCenter + FVector(Coord, R, 0), B))
+					DrawGridLine(A, B, Col, Thick);
+			}
+			else
+			{
+				if (ProjectRaw(MapCenter + FVector(-R, Coord, 0), A) && ProjectRaw(MapCenter + FVector(R, Coord, 0), B))
+					DrawGridLine(A, B, Col, Thick);
+			}
+		};
+
+		float Start = -FMath::FloorToFloat(R / G) * G;
+		for (float gx = Start; gx <= R; gx += G) DrawAxis(gx, true);
+		for (float gy = Start; gy <= R; gy += G) DrawAxis(gy, false);
 	}
 
 	UFont* TitleFont = GEngine->GetLargeFont();
 	UFont* MiniFont  = GEngine->GetSmallFont();
 
-	// ---- Box background + border ----
-	DrawRect(FLinearColor(0.03f, 0.05f, 0.07f, 0.9f), BoxX, BoxY, BoxW, BoxH);
+	// ---- Box border (outline; the bg fill is drawn before the grid) ----
 	DrawRect(FLinearColor(0.10f, 0.55f, 0.60f, 0.9f), BoxX, BoxY, 3.0f, BoxH);      // left
 	DrawRect(FLinearColor(0.10f, 0.55f, 0.60f, 0.9f), BoxX, BoxY, BoxW, 3.0f);      // top
 	DrawRect(FLinearColor(0.10f, 0.55f, 0.60f, 0.9f), BoxX, BoxY + BoxH - 3.0f, BoxW, 3.0f); // bottom
