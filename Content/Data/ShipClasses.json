@@ -1,0 +1,61 @@
+{
+  "$schema": "https://local/Schemas/ship_class_schema.json",
+  "deprecated_note": "Design spec for common ship stats + class archetypes. For reference only — actual ship tuning lives in each USpaceshipDataAsset.",
+  "mobility_triangle": {
+    "description": "Each class trades mobility axes. Nobody is good at everything.",
+    "hauler": "High MaxSpeed + low TurnRate/Accel  = goes straight fast, turns like a barge",
+    "fighter": "High TurnRate/Accel + low MaxSpeed   = turns on a dime, plods straight, short legs",
+    "courier": "High MaxSpeed/Accel + short Range   = quick and responsive but tiny tank + small hold"
+  },
+  "classes": [
+    {
+      "Class": "Fighter",
+      "default_pawn": true,
+      "Mobility": { "TurnRate": 90, "RotationRateMultiplier": 1.0, "MaxSpeed": 420, "Acceleration": 100, "Maneuverability": 9, "TurnStability": 0.9 },
+      "Endurance": { "JumpRange": 6, "FuelCapacity": 400, "FuelConsumptionRate": 60, "CruiseEfficiency": 1.0 },
+      "Role": { "CargoCapacity": 10, "HullIntegrity": 200, "ShieldStrength": 150, "ShieldRechargeRate": 20, "SensorRange": 4000 }
+    },
+    {
+      "Class": "Scout",
+      "data_asset": "DA_Ship_PlayerScout",
+      "Mobility": { "TurnRate": 45, "RotationRateMultiplier": 0.5, "MaxSpeed": 500, "Acceleration": 50, "Maneuverability": 8, "TurnStability": 0.8 },
+      "Endurance": { "JumpRange": 10, "FuelCapacity": 1000, "FuelConsumptionRate": 100, "CruiseEfficiency": 1.0 },
+      "Role": { "CargoCapacity": 50, "HullIntegrity": 300, "ShieldStrength": 100, "ShieldRechargeRate": 10, "SensorRange": 5000 }
+    },
+    {
+      "Class": "Freighter",
+      "profile": "heavy cargo hauler - fast in a line, wallows in turns",
+      "Mobility": { "TurnRate": 25, "RotationRateMultiplier": 0.25, "MaxSpeed": 700, "Acceleration": 40, "Maneuverability": 3, "TurnStability": 0.6 },
+      "Endurance": { "JumpRange": 18, "FuelCapacity": 2400, "FuelConsumptionRate": 180, "CruiseEfficiency": 0.6 },
+      "Role": { "CargoCapacity": 2000, "HullIntegrity": 800, "ShieldStrength": 400, "ShieldRechargeRate": 25, "SensorRange": 3000 }
+    },
+    {
+      "Class": "Courier",
+      "profile": "short-range quick cargo - swift+responsive but tiny tank, small hold",
+      "Mobility": { "TurnRate": 55, "RotationRateMultiplier": 0.6, "MaxSpeed": 800, "Acceleration": 110, "Maneuverability": 6, "TurnStability": 0.75 },
+      "Endurance": { "JumpRange": 4, "FuelCapacity": 300, "FuelConsumptionRate": 80, "CruiseEfficiency": 1.2 },
+      "Role": { "CargoCapacity": 150, "HullIntegrity": 250, "ShieldStrength": 150, "ShieldRechargeRate": 20, "SensorRange": 3500 }
+    },
+    {
+      "Class": "Corvette",
+      "profile": "mobile skirmisher - mid everything",
+      "Mobility": { "TurnRate": 60, "RotationRateMultiplier": 0.7, "MaxSpeed": 520, "Acceleration": 85, "Maneuverability": 7, "TurnStability": 0.8 },
+      "Endurance": { "JumpRange": 12, "FuelCapacity": 900, "FuelConsumptionRate": 120, "CruiseEfficiency": 0.9 },
+      "Role": { "CargoCapacity": 120, "HullIntegrity": 450, "ShieldStrength": 350, "ShieldRechargeRate": 30, "SensorRange": 4500 }
+    },
+    {
+      "Class": "Cruiser",
+      "profile": "multirole - sluggish but capable",
+      "Mobility": { "TurnRate": 35, "RotationRateMultiplier": 0.35, "MaxSpeed": 480, "Acceleration": 60, "Maneuverability": 5, "TurnStability": 0.7 },
+      "Endurance": { "JumpRange": 20, "FuelCapacity": 3000, "FuelConsumptionRate": 220, "CruiseEfficiency": 0.7 },
+      "Role": { "CargoCapacity": 900, "HullIntegrity": 1200, "ShieldStrength": 900, "ShieldRechargeRate": 45, "SensorRange": 4000 }
+    },
+    {
+      "Class": "Battleship",
+      "profile": "fortress that handles like a fortress",
+      "Mobility": { "TurnRate": 15, "RotationRateMultiplier": 0.15, "MaxSpeed": 400, "Acceleration": 30, "Maneuverability": 2, "TurnStability": 0.5 },
+      "Endurance": { "JumpRange": 25, "FuelCapacity": 5000, "FuelConsumptionRate": 350, "CruiseEfficiency": 0.5 },
+      "Role": { "CargoCapacity": 500, "HullIntegrity": 4000, "ShieldStrength": 3000, "ShieldRechargeRate": 60, "SensorRange": 5000 }
+    }
+  ]
+}
