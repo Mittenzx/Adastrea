@@ -125,7 +125,9 @@ add("WaterIce", 1, "IceCollection", "RawMaterials")
 # --- Farming / organic ---
 ORGANICS = [
     ("OrganicBiomass", "RawMaterials"), ("AlgaeBiomass", "RawMaterials"),
-    ("PlantFibre", "RawMaterials"),
+    ("PlantFibre", "RawMaterials"), ("GrainCrop", "RawMaterials"),
+    ("FruitCrop", "RawMaterials"), ("FungusCrop", "RawMaterials"),
+    ("LivestockCulture", "RawMaterials"),
 ]
 for o, cat in ORGANICS:
     add(o, 1, "OrganicFarming", cat)
@@ -178,8 +180,15 @@ add("AlgaePaste", 2, "Processing", "Food", [("AlgaeBiomass", 2)])
 add("SyntheticProtein", 2, "Processing", "Food", [("OrganicBiomass", 2), ("WaterIce", 1)])
 add("FoodRations", 2, "Processing", "Food", [("SyntheticProtein", 1), ("WaterIce", 1)])
 add("MRE_Rations", 2, "Processing", "Food", [("FoodRations", 1), ("AlgaePaste", 1)])
+add("GrainTortilla", 2, "Processing", "Food", [("GrainCrop", 2), ("WaterIce", 1)])
+add("FreshProduce", 2, "Processing", "Food", [("FruitCrop", 2), ("WaterIce", 1)])
+add("FungusSteak", 2, "Processing", "Food", [("FungusCrop", 3), ("SyntheticProtein", 1)])
+add("CulturedMeat", 2, "Processing", "Food", [("LivestockCulture", 2), ("SyntheticProtein", 1)])
+add("NutritionBar", 2, "Processing", "Food", [("GrainCrop", 1), ("SyntheticProtein", 1), ("FruitCrop", 1)])
 add("BioCompound", 2, "Processing", "RefinedGoods", [("OrganicBiomass", 2), ("LiquidNitrogen", 1)])
 add("SyntheticTextiles", 2, "Processing", "RefinedGoods", [("PlantFibre", 2), ("BioCompound", 1)])
+add("BalancedMeal", 3, "Processing", "Food", [("CulturedMeat", 1), ("FreshProduce", 1), ("GrainTortilla", 1)])
+add("LuxuryFeast", 3, "Processing", "Food", [("BalancedMeal", 1), ("FungusSteak", 1), ("FineSpirits", 1)])
 
 # =========================== TIER 3 : COMPONENTS & ELECTRONICS ==========================
 # --- Mechanical components (Fabrication) ---
@@ -243,9 +252,14 @@ add("TorpedoLauncher", 4, "Fabrication", "Military", [("MissileLauncher", 1), ("
 add("ShieldCapacitor", 4, "Fabrication", "Military", [("AdvancedPowerCells", 3), ("CobaltMagnet", 2), ("SuperConductingWire", 2)])
 add("PointDefenceLaser", 4, "Fabrication", "Military", [("TriLaser", 1), ("TargetingComputer", 1), ("PowerDistributionUnit", 1)])
 
-# --- Contraband / special (ScienceLab) ---
+# --- Contraband / black market (ScienceLab / BiologyLab) ---
 add("ProhibitedWeapons", 4, "ScienceLab", "Contraband", [("EnergyCannon", 1), ("QuantumProcessor", 1)])
 add("NanoInjectors", 4, "ScienceLab", "Contraband", [("QuantumProcessor", 1), ("BioCompound", 2), ("PalladiumCatalyst", 1)])
+add("BlackMarketDrugs", 3, "Processing", "Contraband", [("BioCompound", 2), ("OrganicBiomass", 2)])   # cheap, illegal stimulants
+add("ForgedCredits", 3, "ScienceLab", "Contraband", [("GoldIngot", 1), ("Microchips", 2), ("PalladiumCatalyst", 1)])
+add("HackingTool", 4, "ScienceLab", "Contraband", [("HackWare", 1), ("MemoryUnit", 1)])
+add("SmuggledBioweapon", 4, "BiologyLab", "Contraband", [("Vaccines", 1), ("BioCompound", 3), ("ProhibitedWeapons", 1)])
+add("ContrabandTech", 4, "ScienceLab", "Contraband", [("AdvancedSensors_Mk2", 1), ("QuantumProcessor", 1), ("ShieldCapacitor", 1)])
 
 # --- AI / research (ScienceLab) ---
 add("AICores", 4, "ScienceLab", "Technology", [("QuantumProcessor", 1), ("Microchips", 2)])
@@ -546,6 +560,14 @@ def build_items(recipes):
         "SyntheticTextiles": "Synthetic Textiles", "FineSpirits": "Fine Spirits",
         "FineSilk": "Fine Silk", "LuxuryFurniture": "Luxury Furniture",
         "LuxuryBeverages": "Luxury Beverages", "Military": "Military",
+        "GrainTortilla": "Grain Tortilla", "FreshProduce": "Fresh Produce",
+        "FungusSteak": "Fungus Steak", "CulturedMeat": "Cultured Meat",
+        "NutritionBar": "Nutrition Bar", "BalancedMeal": "Balanced Meal",
+        "LuxuryFeast": "Luxury Feast", "BlackMarketDrugs": "Black Market Drugs",
+        "ForgedCredits": "Forged Credits", "HackingTool": "Hacking Tool",
+        "SmuggledBioweapon": "Smuggled Bioweapon", "ContrabandTech": "Contraband Tech",
+        "GrainCrop": "Grain Crop", "FruitCrop": "Fruit Crop",
+        "FungusCrop": "Fungus Crop", "LivestockCulture": "Livestock Culture",
     }
     def human(item):
         if item in NAME_OVERRIDES:
@@ -559,6 +581,15 @@ def build_items(recipes):
         "SiliconWafer": "Ultra-flat silicon disk etched for microelectronics.",
         "Electronics": "Assembled circuit assemblies for sensors and computers.",
         "Microchips": "High-density processors etched from refined silicon.",
+        "CulturedMeat": "Lab-grown protein with the texture of real meat.",
+        "FungusSteak": "Dense myco-protein steak, a favourite mid-tier food.",
+        "FreshProduce": "Fresh fruit and vegetables grown in hydroponic farms.",
+        "LuxuryFeast": "A celebrated multi-course meal fit for station VIPs.",
+        "BlackMarketDrugs": "Illicit stimulants that boost focus at a cost.",
+        "ForgedCredits": "Counterfeit credit chits indistinguishable from real.",
+        "HackingTool": "Slick malware toolkit for slicing station networks.",
+        "SmuggledBioweapon": "Engineered pathogen sealed in a hazmat canister.",
+        "ContrabandTech": "Stolen military-grade tech, no questions asked.",
     }
     def desc(item, tier, cat):
         if item in DESC:
@@ -610,7 +641,9 @@ def build_items(recipes):
         if item in ("LiquidHydrogen", "LiquidNitrogen", "Water", "HydrogenFuel",
                     "FusionFuelCell"):
             return "Liquid"
-        if item in ("EnrichedUranium", "PlasmaFuel", "ProhibitedWeapons", "NanoInjectors"):
+        if item in ("EnrichedUranium", "PlasmaFuel", "ProhibitedWeapons", "NanoInjectors",
+                    "SmuggledBioweapon", "BlackMarketDrugs", "ContrabandTech", "ForgedCredits",
+                    "HackingTool"):
             return "Hazardous"
         if cat in ("Food", "Medical"):
             return "Refrigerated"
@@ -625,6 +658,8 @@ def build_items(recipes):
         base_v = TIER_VALUE.get(tier, 100)
         if cat in ("Military", "Contraband"):
             base_v *= 1.5
+        if cat == "Contraband":
+            base_v *= 1.7   # black-market premium
         if r["ResearchLevel"] > 1:
             base_v *= (1.7 if r["ResearchLevel"] == 2 else 3.0)
         if r["Acquisition"]:

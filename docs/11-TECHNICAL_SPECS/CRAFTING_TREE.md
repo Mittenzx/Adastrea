@@ -92,6 +92,21 @@ loop: gather mats → build base gear → construct a specialized lab → produc
 breakthrough → craft Mk2/Mk3 gear in that domain (then branch to other labs for the
 rest).
 
+### Food varieties (moderate depth)
+
+Hydro farming (`OrganicFarming`) yields **grain, fruit, fungus, and livestock
+culture** raws, which `Processing` turns into a spread of everyday foods — `Grain
+Tortilla`, `Fresh Produce`, `Fungus Steak`, `Cultured Meat`, `Nutrition Bar` — that
+add to the staple `Food Rations`. A tier-3 `Balanced Meal` and `Luxury Feast`
+complete a shallow but varied food ladder (nice trade margins, no deep-engineering).
+
+### Black market
+
+A **Contraband** line sold at under-the-table premium: `Black Market Drugs`,
+`Forged Credits`, and `Hacking Tool` at tier 3–4, plus `Smuggled Bioweapon` (from the
+BiologyLab) and `Contraband Tech` at tier 4. All are `Hazardous` storage and carry a
+~2.5× base-value premium, so they're high-risk/high-reward trade goods.
+
 ---
 
 ## 3. Acquisition — Where Raw Materials Come From
@@ -339,7 +354,7 @@ genuinely more valuable. The interactive diagram's node tooltip shows these stat
 
 ## 7. Verification
 
-The JSON (`Content/Data/CraftingTree.json`, **227 recipes across 6 tiers** — including the Mk2/Mk3 progression versions and the 5 specialized research-lab domains + breakthroughs; no whole-station assembly recipes) is validated by the
+The JSON (`Content/Data/CraftingTree.json`, **243 recipes across 6 tiers** — including the Mk2/Mk3 progression versions, the 5 specialized research-lab domains + breakthroughs, a food-variety line, and black-market goods; no whole-station assembly recipes) is validated by the
 `check_crafting_tree()` logic in `generate_crafting_tree.py` plus `tests/test_crafting_tree.py`:
 - ✅ All recipes have unique `RecipeID` and unique `OutputItem`.
 - ✅ Every `ItemID` matches `^[A-Za-z][A-Za-z0-9_]*$`.
