@@ -48,6 +48,13 @@ And `previews/` — isometric matplotlib renders for eyeballing each mesh.
 4. Create one `M_*` PBR material per set; connect: `_D`→BaseColor, `_N`→Normal,
    `_R`→Roughness, `_M`→Metallic, `_AO`→AO, `_E`→Emissive.
    - Enable Emissive on `_E` where you want neon/windows to glow.
+   - **Phase 4 material knobs:** `_R` now carries **anisotropic grain** (directional
+     low-freq striations, H/V-grad ~1.3) so long panels break reflections
+     realistically — feed `_R` into a Roughness channel and, for best gold, drive a
+     masked Anisotropy node from the same `_R` where grain is strong. `_M` carries
+     painted-vs-bare-metal variation (raised seams bare-metal, recesses primer).
+   - Per-class feel is baked into each texture set's `rough`/`metal` params (e.g.
+     Argon polished 0.30/0.97, Miner heavy-duty 0.52/0.88, Teladi matte 0.45/0.92).
 5. Add **2–3 LODs** (Mesh LODInfo) — the biggest win on an Intel Arc iGPU.
 
 ### Per-part material→texture pairing (Phase 1)
