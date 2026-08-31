@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "Title": "Adastrea Crafting & Building Tree",
-  "Description": "Machine-readable crafting/building tree (recipes + per-item stats): raw extraction -> refined materials -> components & electronics -> ship parts -> weapons -> station construction parts -> modules. Authoritative generator: docs/11-TECHNICAL_SPECS/generate_crafting_tree.py",
-  "SchemaVersion": "1.5.0",
+  "Description": "Machine-readable crafting/building tree (recipes + per-item stats + recipe economy): raw extraction -> refined materials -> components & electronics -> ship parts -> weapons -> station construction parts -> modules. Authoritative generator: docs/11-TECHNICAL_SPECS/generate_crafting_tree.py",
+  "SchemaVersion": "1.6.0",
   "LastUpdated": "2026-08-31",
   "ItemIDConvention": "^[A-Za-z][A-Za-z0-9_]*$",
   "NoteHelium3": "Existing trade asset uses 'Helium-3' (hyphen, violates ItemID regex). Crafting data canonicalizes to 'Helium3' and maps to DA_TradeItem_Helium-3.",
@@ -7286,7 +7286,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 135,
       "MaterialCategory": "RefinedMineral"
     },
     "CopperWiring": {
@@ -7296,7 +7296,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 90,
       "MaterialCategory": "RefinedMineral"
     },
     "NickelSteel": {
@@ -7306,7 +7306,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 135,
       "MaterialCategory": "RefinedMineral"
     },
     "ZincPlate": {
@@ -7316,7 +7316,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 90,
       "MaterialCategory": "RefinedMineral"
     },
     "ChromiumPlating": {
@@ -7326,7 +7326,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 90,
       "MaterialCategory": "RefinedMineral"
     },
     "AluminiumComposite": {
@@ -7336,7 +7336,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 135,
       "MaterialCategory": "RefinedMineral"
     },
     "GoldIngot": {
@@ -7346,7 +7346,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 90,
       "MaterialCategory": "RefinedMineral"
     },
     "SilverIngot": {
@@ -7356,7 +7356,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 90,
       "MaterialCategory": "RefinedMineral"
     },
     "TitaniumAlloy": {
@@ -7366,7 +7366,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 135,
       "MaterialCategory": "RefinedMineral"
     },
     "TungstenCarbide": {
@@ -7376,7 +7376,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 135,
       "MaterialCategory": "RefinedMineral"
     },
     "PlatinumCatalyst": {
@@ -7386,7 +7386,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 90,
       "MaterialCategory": "RefinedMineral"
     },
     "PalladiumCatalyst": {
@@ -7396,7 +7396,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 90,
       "MaterialCategory": "RefinedMineral"
     },
     "CobaltMagnet": {
@@ -7406,7 +7406,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 135,
       "MaterialCategory": "RefinedMineral"
     },
     "EnrichedUranium": {
@@ -7416,7 +7416,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Hazardous",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 135,
       "MaterialCategory": "RefinedMineral"
     },
     "LithiumCompound": {
@@ -7426,7 +7426,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 90,
       "MaterialCategory": "RefinedMineral"
     },
     "SiliconWafer": {
@@ -7436,7 +7436,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 135,
       "MaterialCategory": "RefinedMineral"
     },
     "CarbonFibre": {
@@ -7446,7 +7446,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 90,
       "MaterialCategory": "RefinedMineral"
     },
     "GlassComposite": {
@@ -7456,7 +7456,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 90,
       "MaterialCategory": "RefinedMineral"
     },
     "CeramicTiles": {
@@ -7466,7 +7466,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 90,
       "MaterialCategory": "RefinedMineral"
     },
     "LiquidHydrogen": {
@@ -7476,7 +7476,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Liquid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 90,
       "MaterialCategory": "RefinedMineral"
     },
     "CompressedMethane": {
@@ -7486,7 +7486,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Hazardous",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 90,
       "MaterialCategory": "RefinedMineral"
     },
     "LiquidNitrogen": {
@@ -7496,7 +7496,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Liquid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 90,
       "MaterialCategory": "RefinedMineral"
     },
     "HydrogenFuel": {
@@ -7506,7 +7506,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Liquid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 135,
       "MaterialCategory": "RefinedMineral"
     },
     "PowerCells": {
@@ -7516,7 +7516,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 405,
       "MaterialCategory": "RefinedMineral"
     },
     "AdvancedPowerCells": {
@@ -7526,7 +7526,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 1350,
       "MaterialCategory": "Electronics"
     },
     "FusionFuelCell": {
@@ -7536,7 +7536,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Liquid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 405,
       "MaterialCategory": "RefinedMineral"
     },
     "AlgaePaste": {
@@ -7546,7 +7546,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Refrigerated",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 90,
       "MaterialCategory": "Food"
     },
     "SyntheticProtein": {
@@ -7556,7 +7556,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Refrigerated",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 135,
       "MaterialCategory": "Food"
     },
     "FoodRations": {
@@ -7566,7 +7566,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Refrigerated",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 248,
       "MaterialCategory": "Food"
     },
     "MRE_Rations": {
@@ -7576,7 +7576,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Refrigerated",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 507,
       "MaterialCategory": "Food"
     },
     "GrainTortilla": {
@@ -7586,7 +7586,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Refrigerated",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 135,
       "MaterialCategory": "Food"
     },
     "FreshProduce": {
@@ -7596,7 +7596,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Refrigerated",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 135,
       "MaterialCategory": "Food"
     },
     "FungusSteak": {
@@ -7606,7 +7606,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Refrigerated",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 338,
       "MaterialCategory": "Food"
     },
     "CulturedMeat": {
@@ -7616,7 +7616,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Refrigerated",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 292,
       "MaterialCategory": "Food"
     },
     "NutritionBar": {
@@ -7626,7 +7626,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Refrigerated",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 292,
       "MaterialCategory": "Food"
     },
     "BioCompound": {
@@ -7636,7 +7636,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 225,
       "MaterialCategory": "RefinedMineral"
     },
     "SyntheticTextiles": {
@@ -7646,7 +7646,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Common",
-      "BaseValue": 200,
+      "BaseValue": 428,
       "MaterialCategory": "RefinedMineral"
     },
     "BalancedMeal": {
@@ -7656,7 +7656,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Refrigerated",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 843,
       "MaterialCategory": "Food"
     },
     "LuxuryFeast": {
@@ -7666,7 +7666,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Refrigerated",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 2344,
       "MaterialCategory": "Food"
     },
     "StructuralFrame": {
@@ -7676,7 +7676,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 608,
       "MaterialCategory": "Component"
     },
     "CompositePlating": {
@@ -7686,7 +7686,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 450,
       "MaterialCategory": "Component"
     },
     "ServoActuator": {
@@ -7696,7 +7696,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 472,
       "MaterialCategory": "Component"
     },
     "GearAssembly": {
@@ -7706,7 +7706,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 540,
       "MaterialCategory": "Component"
     },
     "HydraulicPiston": {
@@ -7716,7 +7716,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 608,
       "MaterialCategory": "Component"
     },
     "PrecisionFastener": {
@@ -7726,7 +7726,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 405,
       "MaterialCategory": "Component"
     },
     "ReinforcedGirder": {
@@ -7736,7 +7736,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 1317,
       "MaterialCategory": "Component"
     },
     "ArmourPlate": {
@@ -7746,7 +7746,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 472,
       "MaterialCategory": "Component"
     },
     "SuperConductingWire": {
@@ -7756,7 +7756,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 472,
       "MaterialCategory": "Component"
     },
     "Electronics": {
@@ -7766,7 +7766,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 675,
       "MaterialCategory": "Component"
     },
     "Microchips": {
@@ -7776,7 +7776,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 742,
       "MaterialCategory": "Component"
     },
     "CircuitBoard": {
@@ -7786,7 +7786,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 3273,
       "MaterialCategory": "Component"
     },
     "MemoryUnit": {
@@ -7796,7 +7796,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 2428,
       "MaterialCategory": "Electronics"
     },
     "ControlUnit": {
@@ -7806,7 +7806,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 4977,
       "MaterialCategory": "Component"
     },
     "PowerDistributionUnit": {
@@ -7816,7 +7816,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 2228,
       "MaterialCategory": "Component"
     },
     "BasicComputer": {
@@ -7826,7 +7826,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 3138,
       "MaterialCategory": "Electronics"
     },
     "MicroCapacitor": {
@@ -7836,7 +7836,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 1620,
       "MaterialCategory": "Component"
     },
     "CapacitorBank": {
@@ -7846,7 +7846,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 9922,
       "MaterialCategory": "Component"
     },
     "TransceiverUnit": {
@@ -7856,7 +7856,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 2260,
       "MaterialCategory": "Component"
     },
     "SignalAmplifier": {
@@ -7866,7 +7866,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 4098,
       "MaterialCategory": "Component"
     },
     "OpticalLens": {
@@ -7876,7 +7876,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 472,
       "MaterialCategory": "Component"
     },
     "SensorArray": {
@@ -7886,7 +7886,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 11816,
       "MaterialCategory": "Component"
     },
     "FiberOpticCable": {
@@ -7896,7 +7896,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 1383,
       "MaterialCategory": "Component"
     },
     "DataMatrix": {
@@ -7906,7 +7906,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 4755,
       "MaterialCategory": "Component"
     },
     "Gyroscope": {
@@ -7916,7 +7916,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 2328,
       "MaterialCategory": "Component"
     },
     "RadioAntenna": {
@@ -7926,7 +7926,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 3592,
       "MaterialCategory": "Component"
     },
     "PowerRelay": {
@@ -7936,7 +7936,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 978,
       "MaterialCategory": "Component"
     },
     "ThermalCoupler": {
@@ -7946,7 +7946,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 405,
       "MaterialCategory": "Component"
     },
     "LogicChip": {
@@ -7956,7 +7956,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 2428,
       "MaterialCategory": "Component"
     },
     "VoltageRegulator": {
@@ -7966,7 +7966,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 4995,
       "MaterialCategory": "Component"
     },
     "EncryptedCircuit": {
@@ -7976,7 +7976,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 6158,
       "MaterialCategory": "Component"
     },
     "RelayCoil": {
@@ -7986,7 +7986,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 675,
       "MaterialCategory": "Component"
     },
     "ClockGenerator": {
@@ -7996,7 +7996,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 1248,
       "MaterialCategory": "Component"
     },
     "QuantumProcessor": {
@@ -8006,7 +8006,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 4767,
       "MaterialCategory": "Electronics"
     },
     "AdvancedSensors": {
@@ -8016,7 +8016,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 2835,
       "MaterialCategory": "Electronics"
     },
     "NavigationComputer": {
@@ -8026,7 +8026,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 15045,
       "MaterialCategory": "Electronics"
     },
     "TargetingComputer": {
@@ -8036,7 +8036,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 16312,
       "MaterialCategory": "Electronics"
     },
     "PilotComputer": {
@@ -8046,7 +8046,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 30766,
       "MaterialCategory": "Electronics"
     },
     "CargoComputer": {
@@ -8056,7 +8056,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 22614,
       "MaterialCategory": "Electronics"
     },
     "ShipComputer": {
@@ -8066,7 +8066,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 19456,
       "MaterialCategory": "Electronics"
     },
     "TradingComputer": {
@@ -8076,7 +8076,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 46548,
       "MaterialCategory": "Electronics"
     },
     "ScanComputer": {
@@ -8086,7 +8086,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 25618,
       "MaterialCategory": "Electronics"
     },
     "ScienceComputer": {
@@ -8096,7 +8096,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 4000,
+      "BaseValue": 59842,
       "MaterialCategory": "Electronics"
     },
     "EngineeringComputer": {
@@ -8106,7 +8106,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 4000,
+      "BaseValue": 43934,
       "MaterialCategory": "Electronics"
     },
     "AutomatedDefenceComputer": {
@@ -8116,7 +8116,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 4000,
+      "BaseValue": 60936,
       "MaterialCategory": "Electronics"
     },
     "ResearchComputer": {
@@ -8126,7 +8126,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 4000,
+      "BaseValue": 100556,
       "MaterialCategory": "Electronics"
     },
     "RefinedMedicine": {
@@ -8136,7 +8136,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Refrigerated",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 1012,
       "MaterialCategory": "Food"
     },
     "MedicalSupplies": {
@@ -8146,7 +8146,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Refrigerated",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 2205,
       "MaterialCategory": "Food"
     },
     "Vaccines": {
@@ -8156,7 +8156,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Refrigerated",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 10186,
       "MaterialCategory": "Food"
     },
     "FineSpirits": {
@@ -8166,7 +8166,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 382,
       "MaterialCategory": "Other"
     },
     "LuxuryBeverages": {
@@ -8176,7 +8176,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 229,
       "MaterialCategory": "Other"
     },
     "Jewelry": {
@@ -8186,7 +8186,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 4000,
+      "BaseValue": 536,
       "MaterialCategory": "Other"
     },
     "FineSilk": {
@@ -8196,7 +8196,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Uncommon",
-      "BaseValue": 800,
+      "BaseValue": 2259,
       "MaterialCategory": "Other"
     },
     "LuxuryFurniture": {
@@ -8206,7 +8206,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 4000,
+      "BaseValue": 6564,
       "MaterialCategory": "Other"
     },
     "ShipComponents": {
@@ -8216,7 +8216,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 4000,
+      "BaseValue": 3512,
       "MaterialCategory": "Component"
     },
     "HullPlating": {
@@ -8226,7 +8226,7 @@
       "VolumeM3": 0.21,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6000,
+      "BaseValue": 3341,
       "MaterialCategory": "ShipPart"
     },
     "ArmourHull": {
@@ -8236,7 +8236,7 @@
       "VolumeM3": 0.21,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6000,
+      "BaseValue": 4450,
       "MaterialCategory": "ShipPart"
     },
     "Thruster": {
@@ -8246,7 +8246,7 @@
       "VolumeM3": 0.21,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6000,
+      "BaseValue": 5924,
       "MaterialCategory": "ShipPart"
     },
     "ShipEngine": {
@@ -8256,7 +8256,7 @@
       "VolumeM3": 0.21,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6000,
+      "BaseValue": 24268,
       "MaterialCategory": "ShipPart"
     },
     "ShipReactor": {
@@ -8266,7 +8266,7 @@
       "VolumeM3": 0.21,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6000,
+      "BaseValue": 24158,
       "MaterialCategory": "ShipPart"
     },
     "LifeSupportPod": {
@@ -8276,7 +8276,7 @@
       "VolumeM3": 0.21,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6000,
+      "BaseValue": 10350,
       "MaterialCategory": "ShipPart"
     },
     "FuelTank": {
@@ -8286,7 +8286,7 @@
       "VolumeM3": 0.21,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6000,
+      "BaseValue": 3773,
       "MaterialCategory": "ShipPart"
     },
     "CargoPod": {
@@ -8296,7 +8296,7 @@
       "VolumeM3": 0.21,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6000,
+      "BaseValue": 3242,
       "MaterialCategory": "ShipPart"
     },
     "GrapplerBoom": {
@@ -8306,7 +8306,7 @@
       "VolumeM3": 0.21,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6000,
+      "BaseValue": 6761,
       "MaterialCategory": "ShipPart"
     },
     "ShipShieldGenerator": {
@@ -8316,7 +8316,7 @@
       "VolumeM3": 0.21,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6000,
+      "BaseValue": 14479,
       "MaterialCategory": "ShipPart"
     },
     "TurretWeapon": {
@@ -8326,7 +8326,7 @@
       "VolumeM3": 0.21,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6000,
+      "BaseValue": 20012,
       "MaterialCategory": "ShipPart"
     },
     "EnergyCannon": {
@@ -8336,7 +8336,7 @@
       "VolumeM3": 0.21,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6000,
+      "BaseValue": 57481,
       "MaterialCategory": "ShipPart"
     },
     "TriLaser": {
@@ -8346,7 +8346,7 @@
       "VolumeM3": 0.21,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6000,
+      "BaseValue": 133126,
       "MaterialCategory": "ShipPart"
     },
     "MissileLauncher": {
@@ -8356,7 +8356,7 @@
       "VolumeM3": 0.21,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6000,
+      "BaseValue": 56270,
       "MaterialCategory": "ShipPart"
     },
     "Railgun": {
@@ -8366,7 +8366,7 @@
       "VolumeM3": 0.21,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6000,
+      "BaseValue": 11999,
       "MaterialCategory": "ShipPart"
     },
     "PlasmaCannon": {
@@ -8376,7 +8376,7 @@
       "VolumeM3": 0.21,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6000,
+      "BaseValue": 137531,
       "MaterialCategory": "ShipPart"
     },
     "TorpedoLauncher": {
@@ -8386,7 +8386,7 @@
       "VolumeM3": 0.21,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6000,
+      "BaseValue": 134813,
       "MaterialCategory": "ShipPart"
     },
     "ShieldCapacitor": {
@@ -8396,7 +8396,7 @@
       "VolumeM3": 0.21,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6000,
+      "BaseValue": 11844,
       "MaterialCategory": "ShipPart"
     },
     "PointDefenceLaser": {
@@ -8406,7 +8406,7 @@
       "VolumeM3": 0.21,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6000,
+      "BaseValue": 341248,
       "MaterialCategory": "ShipPart"
     },
     "ProhibitedWeapons": {
@@ -8416,7 +8416,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Hazardous",
       "Rarity": "Rare",
-      "BaseValue": 10200,
+      "BaseValue": 186744,
       "MaterialCategory": "Other"
     },
     "NanoInjectors": {
@@ -8426,7 +8426,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Hazardous",
       "Rarity": "Rare",
-      "BaseValue": 10200,
+      "BaseValue": 15921,
       "MaterialCategory": "Other"
     },
     "BlackMarketDrugs": {
@@ -8436,7 +8436,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Hazardous",
       "Rarity": "Uncommon",
-      "BaseValue": 2040,
+      "BaseValue": 1530,
       "MaterialCategory": "Other"
     },
     "ForgedCredits": {
@@ -8446,7 +8446,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Hazardous",
       "Rarity": "Uncommon",
-      "BaseValue": 2040,
+      "BaseValue": 4992,
       "MaterialCategory": "Other"
     },
     "HackingTool": {
@@ -8456,7 +8456,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Hazardous",
       "Rarity": "Rare",
-      "BaseValue": 10200,
+      "BaseValue": 128106,
       "MaterialCategory": "Other"
     },
     "SmuggledBioweapon": {
@@ -8466,7 +8466,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Hazardous",
       "Rarity": "Rare",
-      "BaseValue": 10200,
+      "BaseValue": 592815,
       "MaterialCategory": "Other"
     },
     "ContrabandTech": {
@@ -8476,7 +8476,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Hazardous",
       "Rarity": "Rare",
-      "BaseValue": 10200,
+      "BaseValue": 802362,
       "MaterialCategory": "Other"
     },
     "AICores": {
@@ -8486,7 +8486,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 4000,
+      "BaseValue": 9376,
       "MaterialCategory": "Electronics"
     },
     "ResearchData": {
@@ -8496,7 +8496,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Other",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 15231,
       "MaterialCategory": "Research"
     },
     "AdvancedAICore": {
@@ -8506,7 +8506,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 16000,
+      "BaseValue": 51212,
       "MaterialCategory": "Electronics"
     },
     "HackWare": {
@@ -8516,7 +8516,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Other",
       "Rarity": "Rare",
-      "BaseValue": 4000,
+      "BaseValue": 40274,
       "MaterialCategory": "Research"
     },
     "ConstructionMaterials": {
@@ -8526,7 +8526,7 @@
       "VolumeM3": 0.06,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 16000,
+      "BaseValue": 2904,
       "MaterialCategory": "Component"
     },
     "StationHullFrame": {
@@ -8536,7 +8536,7 @@
       "VolumeM3": 0.06,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 16000,
+      "BaseValue": 9117,
       "MaterialCategory": "Component"
     },
     "PowerCore": {
@@ -8546,7 +8546,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 16000,
+      "BaseValue": 20691,
       "MaterialCategory": "Electronics"
     },
     "LifeSupportUnit": {
@@ -8556,7 +8556,7 @@
       "VolumeM3": 0.06,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 16000,
+      "BaseValue": 7644,
       "MaterialCategory": "Component"
     },
     "ModuleShell": {
@@ -8566,7 +8566,7 @@
       "VolumeM3": 0.06,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 16000,
+      "BaseValue": 14350,
       "MaterialCategory": "Component"
     },
     "StructuralGirder": {
@@ -8576,7 +8576,7 @@
       "VolumeM3": 0.06,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 16000,
+      "BaseValue": 4356,
       "MaterialCategory": "Component"
     },
     "HullSegment": {
@@ -8586,7 +8586,7 @@
       "VolumeM3": 0.06,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 16000,
+      "BaseValue": 15092,
       "MaterialCategory": "Component"
     },
     "DockingMechanism": {
@@ -8596,7 +8596,7 @@
       "VolumeM3": 0.06,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 16000,
+      "BaseValue": 3645,
       "MaterialCategory": "Component"
     },
     "HabitationPod": {
@@ -8606,7 +8606,7 @@
       "VolumeM3": 0.06,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 16000,
+      "BaseValue": 33126,
       "MaterialCategory": "Component"
     },
     "CorridorSegment": {
@@ -8616,7 +8616,7 @@
       "VolumeM3": 0.06,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 16000,
+      "BaseValue": 28059,
       "MaterialCategory": "Component"
     },
     "AirTank": {
@@ -8626,7 +8626,7 @@
       "VolumeM3": 0.06,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 16000,
+      "BaseValue": 472,
       "MaterialCategory": "Component"
     },
     "GravitationGenerator": {
@@ -8636,7 +8636,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 16000,
+      "BaseValue": 4756,
       "MaterialCategory": "Electronics"
     },
     "ShieldEmitter": {
@@ -8646,7 +8646,7 @@
       "VolumeM3": 0.06,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 16000,
+      "BaseValue": 25904,
       "MaterialCategory": "Component"
     },
     "CorridorModule": {
@@ -8656,7 +8656,7 @@
       "VolumeM3": 1.49,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 64000,
+      "BaseValue": 85138,
       "MaterialCategory": "Other"
     },
     "CargoBayModule": {
@@ -8666,7 +8666,7 @@
       "VolumeM3": 1.49,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 64000,
+      "BaseValue": 73794,
       "MaterialCategory": "Other"
     },
     "DockingBayModule": {
@@ -8676,7 +8676,7 @@
       "VolumeM3": 1.49,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 64000,
+      "BaseValue": 77508,
       "MaterialCategory": "Other"
     },
     "DockingPortModule": {
@@ -8686,7 +8686,7 @@
       "VolumeM3": 1.49,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 64000,
+      "BaseValue": 48518,
       "MaterialCategory": "Other"
     },
     "HabitationModule": {
@@ -8696,7 +8696,7 @@
       "VolumeM3": 1.49,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 64000,
+      "BaseValue": 137196,
       "MaterialCategory": "Other"
     },
     "BarracksModule": {
@@ -8706,7 +8706,7 @@
       "VolumeM3": 1.49,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 64000,
+      "BaseValue": 104205,
       "MaterialCategory": "Other"
     },
     "MarketplaceModule": {
@@ -8716,7 +8716,7 @@
       "VolumeM3": 1.49,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 64000,
+      "BaseValue": 68637,
       "MaterialCategory": "Other"
     },
     "ScienceLabModule": {
@@ -8726,7 +8726,7 @@
       "VolumeM3": 1.49,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 64000,
+      "BaseValue": 54453,
       "MaterialCategory": "Other"
     },
     "ReactorModule": {
@@ -8736,7 +8736,7 @@
       "VolumeM3": 1.49,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 64000,
+      "BaseValue": 105123,
       "MaterialCategory": "Other"
     },
     "SolarArrayModule": {
@@ -8746,7 +8746,7 @@
       "VolumeM3": 1.49,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 64000,
+      "BaseValue": 24562,
       "MaterialCategory": "Other"
     },
     "ProcessingModule": {
@@ -8756,7 +8756,7 @@
       "VolumeM3": 1.49,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 64000,
+      "BaseValue": 50920,
       "MaterialCategory": "Other"
     },
     "FabricationModule": {
@@ -8766,7 +8766,7 @@
       "VolumeM3": 1.49,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 64000,
+      "BaseValue": 62337,
       "MaterialCategory": "Other"
     },
     "FuelDepotModule": {
@@ -8776,7 +8776,7 @@
       "VolumeM3": 1.49,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 64000,
+      "BaseValue": 49114,
       "MaterialCategory": "Other"
     },
     "TurretModule": {
@@ -8786,7 +8786,7 @@
       "VolumeM3": 1.49,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 64000,
+      "BaseValue": 103086,
       "MaterialCategory": "Other"
     },
     "ShieldGeneratorModule": {
@@ -8796,7 +8796,7 @@
       "VolumeM3": 1.49,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 64000,
+      "BaseValue": 85956,
       "MaterialCategory": "Other"
     },
     "PhysicsLabModule": {
@@ -8806,7 +8806,7 @@
       "VolumeM3": 1.49,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 64000,
+      "BaseValue": 80502,
       "MaterialCategory": "Other"
     },
     "MaterialsLabModule": {
@@ -8816,7 +8816,7 @@
       "VolumeM3": 1.49,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 64000,
+      "BaseValue": 58142,
       "MaterialCategory": "Other"
     },
     "ElectronicsLabModule": {
@@ -8826,7 +8826,7 @@
       "VolumeM3": 1.49,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 64000,
+      "BaseValue": 67170,
       "MaterialCategory": "Other"
     },
     "WeaponsLabModule": {
@@ -8836,7 +8836,7 @@
       "VolumeM3": 1.49,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 64000,
+      "BaseValue": 153740,
       "MaterialCategory": "Other"
     },
     "BiologyLabModule": {
@@ -8846,7 +8846,7 @@
       "VolumeM3": 1.49,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 64000,
+      "BaseValue": 46424,
       "MaterialCategory": "Other"
     },
     "PropulsionResearch": {
@@ -8856,7 +8856,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Other",
       "Rarity": "VeryRare",
-      "BaseValue": 27200,
+      "BaseValue": 7114,
       "MaterialCategory": "Research"
     },
     "AdvancedPropulsionResearch": {
@@ -8866,7 +8866,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Other",
       "Rarity": "Legendary",
-      "BaseValue": 192000,
+      "BaseValue": 35658,
       "MaterialCategory": "Research"
     },
     "MaterialsResearch": {
@@ -8876,7 +8876,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Other",
       "Rarity": "VeryRare",
-      "BaseValue": 27200,
+      "BaseValue": 1377,
       "MaterialCategory": "Research"
     },
     "NanoMaterialsResearch": {
@@ -8886,7 +8886,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Other",
       "Rarity": "Legendary",
-      "BaseValue": 192000,
+      "BaseValue": 1866789,
       "MaterialCategory": "Research"
     },
     "ComputingResearch": {
@@ -8896,7 +8896,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Other",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 12906,
       "MaterialCategory": "Research"
     },
     "QuantumComputingResearch": {
@@ -8906,7 +8906,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Other",
       "Rarity": "VeryRare",
-      "BaseValue": 48000,
+      "BaseValue": 2923866,
       "MaterialCategory": "Research"
     },
     "DefenceResearch": {
@@ -8916,7 +8916,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Other",
       "Rarity": "VeryRare",
-      "BaseValue": 27200,
+      "BaseValue": 148984,
       "MaterialCategory": "Research"
     },
     "AdvancedDefenceResearch": {
@@ -8926,7 +8926,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Other",
       "Rarity": "Legendary",
-      "BaseValue": 192000,
+      "BaseValue": 2531020,
       "MaterialCategory": "Research"
     },
     "BioResearch": {
@@ -8936,7 +8936,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Other",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 28555,
       "MaterialCategory": "Research"
     },
     "AdvancedBioResearch": {
@@ -8946,7 +8946,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Other",
       "Rarity": "VeryRare",
-      "BaseValue": 48000,
+      "BaseValue": 639364,
       "MaterialCategory": "Research"
     },
     "Electronics_Mk2": {
@@ -8956,7 +8956,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 38931,
       "MaterialCategory": "Component"
     },
     "Microchips_Mk2": {
@@ -8966,7 +8966,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 36065,
       "MaterialCategory": "Component"
     },
     "CircuitBoard_Mk2": {
@@ -8976,7 +8976,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 232726,
       "MaterialCategory": "Component"
     },
     "MemoryUnit_Mk2": {
@@ -8986,7 +8986,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 223377,
       "MaterialCategory": "Electronics"
     },
     "ControlUnit_Mk2": {
@@ -8996,7 +8996,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 893145,
       "MaterialCategory": "Component"
     },
     "PowerDistributionUnit_Mk2": {
@@ -9006,7 +9006,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 144751,
       "MaterialCategory": "Component"
     },
     "BasicComputer_Mk2": {
@@ -9016,7 +9016,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 331426,
       "MaterialCategory": "Electronics"
     },
     "AdvancedSensors_Mk2": {
@@ -9026,7 +9026,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 250843,
       "MaterialCategory": "Electronics"
     },
     "QuantumProcessor_Mk2": {
@@ -9036,7 +9036,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 413465,
       "MaterialCategory": "Electronics"
     },
     "TargetingComputer_Mk2": {
@@ -9046,7 +9046,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 1768491,
       "MaterialCategory": "Electronics"
     },
     "NavigationComputer_Mk2": {
@@ -9056,7 +9056,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 1765260,
       "MaterialCategory": "Electronics"
     },
     "ServoActuator_Mk2": {
@@ -9066,7 +9066,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 36868,
       "MaterialCategory": "Component"
     },
     "SuperConductingWire_Mk2": {
@@ -9076,7 +9076,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 35376,
       "MaterialCategory": "Component"
     },
     "Electronics_Mk3": {
@@ -9086,7 +9086,7 @@
       "VolumeM3": 0.06,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 48000,
+      "BaseValue": 13529228,
       "MaterialCategory": "Component"
     },
     "Microchips_Mk3": {
@@ -9096,7 +9096,7 @@
       "VolumeM3": 0.06,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 48000,
+      "BaseValue": 13503434,
       "MaterialCategory": "Component"
     },
     "CircuitBoard_Mk3": {
@@ -9106,7 +9106,7 @@
       "VolumeM3": 0.06,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 48000,
+      "BaseValue": 17112524,
       "MaterialCategory": "Component"
     },
     "MemoryUnit_Mk3": {
@@ -9116,7 +9116,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 48000,
+      "BaseValue": 15189242,
       "MaterialCategory": "Electronics"
     },
     "ControlUnit_Mk3": {
@@ -9126,7 +9126,7 @@
       "VolumeM3": 0.06,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 48000,
+      "BaseValue": 21217154,
       "MaterialCategory": "Component"
     },
     "PowerDistributionUnit_Mk3": {
@@ -9136,7 +9136,7 @@
       "VolumeM3": 0.06,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 48000,
+      "BaseValue": 14481608,
       "MaterialCategory": "Component"
     },
     "BasicComputer_Mk3": {
@@ -9146,7 +9146,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 48000,
+      "BaseValue": 16161682,
       "MaterialCategory": "Electronics"
     },
     "AdvancedSensors_Mk3": {
@@ -9156,7 +9156,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 48000,
+      "BaseValue": 17275576,
       "MaterialCategory": "Electronics"
     },
     "QuantumProcessor_Mk3": {
@@ -9166,7 +9166,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 48000,
+      "BaseValue": 16879662,
       "MaterialCategory": "Electronics"
     },
     "MicroCapacitor_Mk2": {
@@ -9176,7 +9176,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 139758,
       "MaterialCategory": "Component"
     },
     "CapacitorBank_Mk2": {
@@ -9186,7 +9186,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 1484087,
       "MaterialCategory": "Component"
     },
     "TransceiverUnit_Mk2": {
@@ -9196,7 +9196,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 229913,
       "MaterialCategory": "Component"
     },
     "SignalAmplifier_Mk2": {
@@ -9206,7 +9206,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 719847,
       "MaterialCategory": "Component"
     },
     "OpticalLens_Mk2": {
@@ -9216,7 +9216,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 35261,
       "MaterialCategory": "Component"
     },
     "SensorArray_Mk2": {
@@ -9226,7 +9226,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 882522,
       "MaterialCategory": "Component"
     },
     "FiberOpticCable_Mk2": {
@@ -9236,7 +9236,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 128862,
       "MaterialCategory": "Component"
     },
     "DataMatrix_Mk2": {
@@ -9246,7 +9246,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 706613,
       "MaterialCategory": "Component"
     },
     "LogicChip_Mk2": {
@@ -9256,7 +9256,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 223377,
       "MaterialCategory": "Component"
     },
     "EncryptedCircuit_Mk2": {
@@ -9266,7 +9266,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 734030,
       "MaterialCategory": "Component"
     },
     "ClockGenerator_Mk2": {
@@ -9276,7 +9276,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 128288,
       "MaterialCategory": "Component"
     },
     "PilotComputer_Mk2": {
@@ -9286,7 +9286,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 4624649,
       "MaterialCategory": "Electronics"
     },
     "CargoComputer_Mk2": {
@@ -9296,7 +9296,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 4263914,
       "MaterialCategory": "Electronics"
     },
     "ShipComputer_Mk2": {
@@ -9306,7 +9306,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 3499266,
       "MaterialCategory": "Electronics"
     },
     "TradingComputer_Mk2": {
@@ -9316,7 +9316,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 12896365,
       "MaterialCategory": "Electronics"
     },
     "ScanComputer_Mk2": {
@@ -9326,7 +9326,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 2918279,
       "MaterialCategory": "Electronics"
     },
     "ScienceComputer_Mk2": {
@@ -9336,7 +9336,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 27200,
+      "BaseValue": 1392440,
       "MaterialCategory": "Electronics"
     },
     "EngineeringComputer_Mk2": {
@@ -9346,7 +9346,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 27200,
+      "BaseValue": 10207293,
       "MaterialCategory": "Electronics"
     },
     "AutomatedDefenceComputer_Mk2": {
@@ -9356,7 +9356,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 27200,
+      "BaseValue": 13621077,
       "MaterialCategory": "Electronics"
     },
     "ResearchComputer_Mk2": {
@@ -9366,7 +9366,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 27200,
+      "BaseValue": 4894386,
       "MaterialCategory": "Electronics"
     },
     "SensorArray_Mk3": {
@@ -9376,7 +9376,7 @@
       "VolumeM3": 0.06,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 48000,
+      "BaseValue": 21121546,
       "MaterialCategory": "Component"
     },
     "LogicChip_Mk3": {
@@ -9386,7 +9386,7 @@
       "VolumeM3": 0.06,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 48000,
+      "BaseValue": 15189242,
       "MaterialCategory": "Component"
     },
     "ShipComputer_Mk3": {
@@ -9396,7 +9396,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 48000,
+      "BaseValue": 44672242,
       "MaterialCategory": "Electronics"
     },
     "ScienceComputer_Mk3": {
@@ -9406,7 +9406,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 192000,
+      "BaseValue": 27549950,
       "MaterialCategory": "Electronics"
     },
     "ResearchComputer_Mk3": {
@@ -9416,7 +9416,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 192000,
+      "BaseValue": 59067464,
       "MaterialCategory": "Electronics"
     },
     "AutomatedDefenceComputer_Mk3": {
@@ -9426,7 +9426,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 192000,
+      "BaseValue": 213487182,
       "MaterialCategory": "Electronics"
     },
     "ShipEngine_Mk2": {
@@ -9436,7 +9436,7 @@
       "VolumeM3": 1.04,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 40800,
+      "BaseValue": 149538,
       "MaterialCategory": "ShipPart"
     },
     "ShipReactor_Mk2": {
@@ -9446,7 +9446,7 @@
       "VolumeM3": 1.04,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 40800,
+      "BaseValue": 125556,
       "MaterialCategory": "ShipPart"
     },
     "Thruster_Mk2": {
@@ -9456,7 +9456,7 @@
       "VolumeM3": 1.04,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 40800,
+      "BaseValue": 191923,
       "MaterialCategory": "ShipPart"
     },
     "FuelTank_Mk2": {
@@ -9466,7 +9466,7 @@
       "VolumeM3": 1.04,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 40800,
+      "BaseValue": 47369,
       "MaterialCategory": "ShipPart"
     },
     "ShipEngine_Mk3": {
@@ -9476,7 +9476,7 @@
       "VolumeM3": 1.24,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 288000,
+      "BaseValue": 1270586,
       "MaterialCategory": "ShipPart"
     },
     "ShipReactor_Mk3": {
@@ -9486,7 +9486,7 @@
       "VolumeM3": 1.24,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 288000,
+      "BaseValue": 3884551,
       "MaterialCategory": "ShipPart"
     },
     "Thruster_Mk3": {
@@ -9496,7 +9496,7 @@
       "VolumeM3": 1.24,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 288000,
+      "BaseValue": 1538906,
       "MaterialCategory": "ShipPart"
     },
     "FuelTank_Mk3": {
@@ -9506,7 +9506,7 @@
       "VolumeM3": 1.24,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 288000,
+      "BaseValue": 562255,
       "MaterialCategory": "ShipPart"
     },
     "CargoPod_Mk2": {
@@ -9516,7 +9516,7 @@
       "VolumeM3": 1.04,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 40800,
+      "BaseValue": 27356,
       "MaterialCategory": "ShipPart"
     },
     "LifeSupportPod_Mk2": {
@@ -9526,7 +9526,7 @@
       "VolumeM3": 1.04,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 40800,
+      "BaseValue": 85538,
       "MaterialCategory": "ShipPart"
     },
     "ShipComponents_Mk2": {
@@ -9536,7 +9536,7 @@
       "VolumeM3": 0.06,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 27200,
+      "BaseValue": 108995,
       "MaterialCategory": "Component"
     },
     "ArmourHull_Mk2": {
@@ -9546,7 +9546,7 @@
       "VolumeM3": 1.04,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 40800,
+      "BaseValue": 30198,
       "MaterialCategory": "ShipPart"
     },
     "HullPlating_Mk2": {
@@ -9556,7 +9556,7 @@
       "VolumeM3": 1.04,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 40800,
+      "BaseValue": 22174,
       "MaterialCategory": "ShipPart"
     },
     "CargoPod_Mk3": {
@@ -9566,7 +9566,7 @@
       "VolumeM3": 1.24,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 288000,
+      "BaseValue": 12802576,
       "MaterialCategory": "ShipPart"
     },
     "LifeSupportPod_Mk3": {
@@ -9576,7 +9576,7 @@
       "VolumeM3": 1.24,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 288000,
+      "BaseValue": 13947545,
       "MaterialCategory": "ShipPart"
     },
     "ShipComponents_Mk3": {
@@ -9586,7 +9586,7 @@
       "VolumeM3": 0.07,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 192000,
+      "BaseValue": 69664532,
       "MaterialCategory": "Component"
     },
     "ArmourHull_Mk3": {
@@ -9596,7 +9596,7 @@
       "VolumeM3": 1.24,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 288000,
+      "BaseValue": 12818621,
       "MaterialCategory": "ShipPart"
     },
     "HullPlating_Mk3": {
@@ -9606,7 +9606,7 @@
       "VolumeM3": 1.24,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 288000,
+      "BaseValue": 12757784,
       "MaterialCategory": "ShipPart"
     },
     "ShipShieldGenerator_Mk2": {
@@ -9616,7 +9616,7 @@
       "VolumeM3": 1.04,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 40800,
+      "BaseValue": 1630024,
       "MaterialCategory": "ShipPart"
     },
     "ShieldCapacitor_Mk2": {
@@ -9626,7 +9626,7 @@
       "VolumeM3": 1.04,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 40800,
+      "BaseValue": 887343,
       "MaterialCategory": "ShipPart"
     },
     "TurretWeapon_Mk2": {
@@ -9636,7 +9636,7 @@
       "VolumeM3": 1.04,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 40800,
+      "BaseValue": 710608,
       "MaterialCategory": "ShipPart"
     },
     "EnergyCannon_Mk2": {
@@ -9646,7 +9646,7 @@
       "VolumeM3": 1.04,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 40800,
+      "BaseValue": 1065519,
       "MaterialCategory": "ShipPart"
     },
     "TriLaser_Mk2": {
@@ -9656,7 +9656,7 @@
       "VolumeM3": 1.04,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 40800,
+      "BaseValue": 1487646,
       "MaterialCategory": "ShipPart"
     },
     "MissileLauncher_Mk2": {
@@ -9666,7 +9666,7 @@
       "VolumeM3": 1.04,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 40800,
+      "BaseValue": 988510,
       "MaterialCategory": "ShipPart"
     },
     "Railgun_Mk2": {
@@ -9676,7 +9676,7 @@
       "VolumeM3": 1.04,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 40800,
+      "BaseValue": 1022216,
       "MaterialCategory": "ShipPart"
     },
     "PlasmaCannon_Mk2": {
@@ -9686,7 +9686,7 @@
       "VolumeM3": 1.04,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 40800,
+      "BaseValue": 1376874,
       "MaterialCategory": "ShipPart"
     },
     "TorpedoLauncher_Mk2": {
@@ -9696,7 +9696,7 @@
       "VolumeM3": 1.04,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 40800,
+      "BaseValue": 4867091,
       "MaterialCategory": "ShipPart"
     },
     "PointDefenceLaser_Mk2": {
@@ -9706,7 +9706,7 @@
       "VolumeM3": 1.04,
       "StorageType": "Solid",
       "Rarity": "VeryRare",
-      "BaseValue": 40800,
+      "BaseValue": 14329861,
       "MaterialCategory": "ShipPart"
     },
     "ShipShieldGenerator_Mk3": {
@@ -9716,7 +9716,7 @@
       "VolumeM3": 1.24,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 288000,
+      "BaseValue": 150686750,
       "MaterialCategory": "ShipPart"
     },
     "TurretWeapon_Mk3": {
@@ -9726,7 +9726,7 @@
       "VolumeM3": 1.24,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 288000,
+      "BaseValue": 21919538,
       "MaterialCategory": "ShipPart"
     },
     "EnergyCannon_Mk3": {
@@ -9736,7 +9736,7 @@
       "VolumeM3": 1.24,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 288000,
+      "BaseValue": 24995736,
       "MaterialCategory": "ShipPart"
     },
     "TriLaser_Mk3": {
@@ -9746,7 +9746,7 @@
       "VolumeM3": 1.24,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 288000,
+      "BaseValue": 27952466,
       "MaterialCategory": "ShipPart"
     },
     "MissileLauncher_Mk3": {
@@ -9756,7 +9756,7 @@
       "VolumeM3": 1.24,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 288000,
+      "BaseValue": 24257279,
       "MaterialCategory": "ShipPart"
     },
     "Railgun_Mk3": {
@@ -9766,7 +9766,7 @@
       "VolumeM3": 1.24,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 288000,
+      "BaseValue": 24703441,
       "MaterialCategory": "ShipPart"
     },
     "PlasmaCannon_Mk3": {
@@ -9776,7 +9776,7 @@
       "VolumeM3": 1.24,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 288000,
+      "BaseValue": 26858594,
       "MaterialCategory": "ShipPart"
     },
     "TorpedoLauncher_Mk3": {
@@ -9786,7 +9786,7 @@
       "VolumeM3": 1.24,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 288000,
+      "BaseValue": 58302882,
       "MaterialCategory": "ShipPart"
     },
     "PointDefenceLaser_Mk3": {
@@ -9796,7 +9796,7 @@
       "VolumeM3": 1.24,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 288000,
+      "BaseValue": 240462695,
       "MaterialCategory": "ShipPart"
     },
     "GravitationGenerator_Mk2": {
@@ -9806,7 +9806,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Solid",
       "Rarity": "Legendary",
-      "BaseValue": 108800,
+      "BaseValue": 573487,
       "MaterialCategory": "Electronics"
     },
     "RefinedMedicine_Mk2": {
@@ -9816,7 +9816,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Refrigerated",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 102518,
       "MaterialCategory": "Food"
     },
     "MedicalSupplies_Mk2": {
@@ -9826,7 +9826,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Refrigerated",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 105560,
       "MaterialCategory": "Food"
     },
     "Vaccines_Mk2": {
@@ -9836,7 +9836,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Refrigerated",
       "Rarity": "Rare",
-      "BaseValue": 6800,
+      "BaseValue": 113526,
       "MaterialCategory": "Food"
     },
     "RefinedMedicine_Mk3": {
@@ -9846,7 +9846,7 @@
       "VolumeM3": 0.05,
       "StorageType": "Refrigerated",
       "Rarity": "VeryRare",
-      "BaseValue": 48000,
+      "BaseValue": 3852374,
       "MaterialCategory": "Food"
     },
     "MedicalSupplies_Mk3": {
@@ -9856,8 +9856,1816 @@
       "VolumeM3": 0.05,
       "StorageType": "Refrigerated",
       "Rarity": "VeryRare",
-      "BaseValue": 48000,
+      "BaseValue": 3866062,
       "MaterialCategory": "Food"
+    }
+  },
+  "Economy": {
+    "SteelAlloy": {
+      "IngredientCost": 90,
+      "OutputValue": 135,
+      "Profit": 45,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "CopperWiring": {
+      "IngredientCost": 60,
+      "OutputValue": 90,
+      "Profit": 30,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "NickelSteel": {
+      "IngredientCost": 90,
+      "OutputValue": 135,
+      "Profit": 45,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "ZincPlate": {
+      "IngredientCost": 60,
+      "OutputValue": 90,
+      "Profit": 30,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "ChromiumPlating": {
+      "IngredientCost": 60,
+      "OutputValue": 90,
+      "Profit": 30,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "AluminiumComposite": {
+      "IngredientCost": 90,
+      "OutputValue": 135,
+      "Profit": 45,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "GoldIngot": {
+      "IngredientCost": 60,
+      "OutputValue": 90,
+      "Profit": 30,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "SilverIngot": {
+      "IngredientCost": 60,
+      "OutputValue": 90,
+      "Profit": 30,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "TitaniumAlloy": {
+      "IngredientCost": 90,
+      "OutputValue": 135,
+      "Profit": 45,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "TungstenCarbide": {
+      "IngredientCost": 90,
+      "OutputValue": 135,
+      "Profit": 45,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "PlatinumCatalyst": {
+      "IngredientCost": 60,
+      "OutputValue": 90,
+      "Profit": 30,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "PalladiumCatalyst": {
+      "IngredientCost": 60,
+      "OutputValue": 90,
+      "Profit": 30,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "CobaltMagnet": {
+      "IngredientCost": 90,
+      "OutputValue": 135,
+      "Profit": 45,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "EnrichedUranium": {
+      "IngredientCost": 90,
+      "OutputValue": 135,
+      "Profit": 45,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "LithiumCompound": {
+      "IngredientCost": 60,
+      "OutputValue": 90,
+      "Profit": 30,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "SiliconWafer": {
+      "IngredientCost": 90,
+      "OutputValue": 135,
+      "Profit": 45,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "CarbonFibre": {
+      "IngredientCost": 60,
+      "OutputValue": 90,
+      "Profit": 30,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "GlassComposite": {
+      "IngredientCost": 60,
+      "OutputValue": 90,
+      "Profit": 30,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "CeramicTiles": {
+      "IngredientCost": 60,
+      "OutputValue": 90,
+      "Profit": 30,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "LiquidHydrogen": {
+      "IngredientCost": 60,
+      "OutputValue": 90,
+      "Profit": 30,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "CompressedMethane": {
+      "IngredientCost": 60,
+      "OutputValue": 90,
+      "Profit": 30,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "LiquidNitrogen": {
+      "IngredientCost": 60,
+      "OutputValue": 90,
+      "Profit": 30,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "HydrogenFuel": {
+      "IngredientCost": 90,
+      "OutputValue": 135,
+      "Profit": 45,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "PowerCells": {
+      "IngredientCost": 270,
+      "OutputValue": 405,
+      "Profit": 135,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "AdvancedPowerCells": {
+      "IngredientCost": 900,
+      "OutputValue": 1350,
+      "Profit": 450,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "FusionFuelCell": {
+      "IngredientCost": 270,
+      "OutputValue": 405,
+      "Profit": 135,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "AlgaePaste": {
+      "IngredientCost": 60,
+      "OutputValue": 90,
+      "Profit": 30,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "SyntheticProtein": {
+      "IngredientCost": 90,
+      "OutputValue": 135,
+      "Profit": 45,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "FoodRations": {
+      "IngredientCost": 165,
+      "OutputValue": 248,
+      "Profit": 83,
+      "Margin": 0.503,
+      "IntendedMarkup": 1.5
+    },
+    "MRE_Rations": {
+      "IngredientCost": 338,
+      "OutputValue": 507,
+      "Profit": 169,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "GrainTortilla": {
+      "IngredientCost": 90,
+      "OutputValue": 135,
+      "Profit": 45,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "FreshProduce": {
+      "IngredientCost": 90,
+      "OutputValue": 135,
+      "Profit": 45,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "FungusSteak": {
+      "IngredientCost": 225,
+      "OutputValue": 338,
+      "Profit": 113,
+      "Margin": 0.502,
+      "IntendedMarkup": 1.5
+    },
+    "CulturedMeat": {
+      "IngredientCost": 195,
+      "OutputValue": 292,
+      "Profit": 97,
+      "Margin": 0.497,
+      "IntendedMarkup": 1.5
+    },
+    "NutritionBar": {
+      "IngredientCost": 195,
+      "OutputValue": 292,
+      "Profit": 97,
+      "Margin": 0.497,
+      "IntendedMarkup": 1.5
+    },
+    "BioCompound": {
+      "IngredientCost": 150,
+      "OutputValue": 225,
+      "Profit": 75,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "SyntheticTextiles": {
+      "IngredientCost": 285,
+      "OutputValue": 428,
+      "Profit": 143,
+      "Margin": 0.502,
+      "IntendedMarkup": 1.5
+    },
+    "BalancedMeal": {
+      "IngredientCost": 562,
+      "OutputValue": 843,
+      "Profit": 281,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "LuxuryFeast": {
+      "IngredientCost": 1563,
+      "OutputValue": 2344,
+      "Profit": 781,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "StructuralFrame": {
+      "IngredientCost": 405,
+      "OutputValue": 608,
+      "Profit": 203,
+      "Margin": 0.501,
+      "IntendedMarkup": 1.5
+    },
+    "CompositePlating": {
+      "IngredientCost": 300,
+      "OutputValue": 450,
+      "Profit": 150,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "ServoActuator": {
+      "IngredientCost": 315,
+      "OutputValue": 472,
+      "Profit": 157,
+      "Margin": 0.498,
+      "IntendedMarkup": 1.5
+    },
+    "GearAssembly": {
+      "IngredientCost": 360,
+      "OutputValue": 540,
+      "Profit": 180,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "HydraulicPiston": {
+      "IngredientCost": 405,
+      "OutputValue": 608,
+      "Profit": 203,
+      "Margin": 0.501,
+      "IntendedMarkup": 1.5
+    },
+    "PrecisionFastener": {
+      "IngredientCost": 270,
+      "OutputValue": 405,
+      "Profit": 135,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "ReinforcedGirder": {
+      "IngredientCost": 878,
+      "OutputValue": 1317,
+      "Profit": 439,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "ArmourPlate": {
+      "IngredientCost": 315,
+      "OutputValue": 472,
+      "Profit": 157,
+      "Margin": 0.498,
+      "IntendedMarkup": 1.5
+    },
+    "SuperConductingWire": {
+      "IngredientCost": 315,
+      "OutputValue": 472,
+      "Profit": 157,
+      "Margin": 0.498,
+      "IntendedMarkup": 1.5
+    },
+    "Electronics": {
+      "IngredientCost": 450,
+      "OutputValue": 675,
+      "Profit": 225,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "Microchips": {
+      "IngredientCost": 495,
+      "OutputValue": 742,
+      "Profit": 247,
+      "Margin": 0.499,
+      "IntendedMarkup": 1.5
+    },
+    "CircuitBoard": {
+      "IngredientCost": 2182,
+      "OutputValue": 3273,
+      "Profit": 1091,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "MemoryUnit": {
+      "IngredientCost": 1619,
+      "OutputValue": 2428,
+      "Profit": 809,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "ControlUnit": {
+      "IngredientCost": 3318,
+      "OutputValue": 4977,
+      "Profit": 1659,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "PowerDistributionUnit": {
+      "IngredientCost": 1485,
+      "OutputValue": 2228,
+      "Profit": 743,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "BasicComputer": {
+      "IngredientCost": 2092,
+      "OutputValue": 3138,
+      "Profit": 1046,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "MicroCapacitor": {
+      "IngredientCost": 1080,
+      "OutputValue": 1620,
+      "Profit": 540,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "CapacitorBank": {
+      "IngredientCost": 6615,
+      "OutputValue": 9922,
+      "Profit": 3307,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "TransceiverUnit": {
+      "IngredientCost": 1507,
+      "OutputValue": 2260,
+      "Profit": 753,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "SignalAmplifier": {
+      "IngredientCost": 2732,
+      "OutputValue": 4098,
+      "Profit": 1366,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "OpticalLens": {
+      "IngredientCost": 315,
+      "OutputValue": 472,
+      "Profit": 157,
+      "Margin": 0.498,
+      "IntendedMarkup": 1.5
+    },
+    "SensorArray": {
+      "IngredientCost": 7877,
+      "OutputValue": 11816,
+      "Profit": 3939,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "FiberOpticCable": {
+      "IngredientCost": 922,
+      "OutputValue": 1383,
+      "Profit": 461,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "DataMatrix": {
+      "IngredientCost": 3170,
+      "OutputValue": 4755,
+      "Profit": 1585,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "Gyroscope": {
+      "IngredientCost": 1552,
+      "OutputValue": 2328,
+      "Profit": 776,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "RadioAntenna": {
+      "IngredientCost": 2395,
+      "OutputValue": 3592,
+      "Profit": 1197,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "PowerRelay": {
+      "IngredientCost": 652,
+      "OutputValue": 978,
+      "Profit": 326,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "ThermalCoupler": {
+      "IngredientCost": 270,
+      "OutputValue": 405,
+      "Profit": 135,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "LogicChip": {
+      "IngredientCost": 1619,
+      "OutputValue": 2428,
+      "Profit": 809,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "VoltageRegulator": {
+      "IngredientCost": 3330,
+      "OutputValue": 4995,
+      "Profit": 1665,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "EncryptedCircuit": {
+      "IngredientCost": 4105,
+      "OutputValue": 6158,
+      "Profit": 2053,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "RelayCoil": {
+      "IngredientCost": 450,
+      "OutputValue": 675,
+      "Profit": 225,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "ClockGenerator": {
+      "IngredientCost": 832,
+      "OutputValue": 1248,
+      "Profit": 416,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "QuantumProcessor": {
+      "IngredientCost": 3178,
+      "OutputValue": 4767,
+      "Profit": 1589,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "AdvancedSensors": {
+      "IngredientCost": 1890,
+      "OutputValue": 2835,
+      "Profit": 945,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "NavigationComputer": {
+      "IngredientCost": 10030,
+      "OutputValue": 15045,
+      "Profit": 5015,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "TargetingComputer": {
+      "IngredientCost": 10875,
+      "OutputValue": 16312,
+      "Profit": 5437,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "PilotComputer": {
+      "IngredientCost": 20511,
+      "OutputValue": 30766,
+      "Profit": 10255,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "CargoComputer": {
+      "IngredientCost": 15076,
+      "OutputValue": 22614,
+      "Profit": 7538,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "ShipComputer": {
+      "IngredientCost": 12971,
+      "OutputValue": 19456,
+      "Profit": 6485,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "TradingComputer": {
+      "IngredientCost": 31032,
+      "OutputValue": 46548,
+      "Profit": 15516,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "ScanComputer": {
+      "IngredientCost": 17079,
+      "OutputValue": 25618,
+      "Profit": 8539,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "ScienceComputer": {
+      "IngredientCost": 39895,
+      "OutputValue": 59842,
+      "Profit": 19947,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "EngineeringComputer": {
+      "IngredientCost": 29289,
+      "OutputValue": 43934,
+      "Profit": 14645,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "AutomatedDefenceComputer": {
+      "IngredientCost": 40624,
+      "OutputValue": 60936,
+      "Profit": 20312,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "ResearchComputer": {
+      "IngredientCost": 67037,
+      "OutputValue": 100556,
+      "Profit": 33519,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "RefinedMedicine": {
+      "IngredientCost": 675,
+      "OutputValue": 1012,
+      "Profit": 337,
+      "Margin": 0.499,
+      "IntendedMarkup": 1.5
+    },
+    "MedicalSupplies": {
+      "IngredientCost": 1470,
+      "OutputValue": 2205,
+      "Profit": 735,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "Vaccines": {
+      "IngredientCost": 6791,
+      "OutputValue": 10186,
+      "Profit": 3395,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "FineSpirits": {
+      "IngredientCost": 150,
+      "OutputValue": 382,
+      "Profit": 232,
+      "Margin": 1.547,
+      "IntendedMarkup": 2.55
+    },
+    "LuxuryBeverages": {
+      "IngredientCost": 90,
+      "OutputValue": 229,
+      "Profit": 139,
+      "Margin": 1.544,
+      "IntendedMarkup": 2.55
+    },
+    "Jewelry": {
+      "IngredientCost": 210,
+      "OutputValue": 536,
+      "Profit": 326,
+      "Margin": 1.552,
+      "IntendedMarkup": 2.55
+    },
+    "FineSilk": {
+      "IngredientCost": 886,
+      "OutputValue": 2259,
+      "Profit": 1373,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "LuxuryFurniture": {
+      "IngredientCost": 2574,
+      "OutputValue": 6564,
+      "Profit": 3990,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "ShipComponents": {
+      "IngredientCost": 2341,
+      "OutputValue": 3512,
+      "Profit": 1171,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "HullPlating": {
+      "IngredientCost": 1485,
+      "OutputValue": 3341,
+      "Profit": 1856,
+      "Margin": 1.25,
+      "IntendedMarkup": 2.25
+    },
+    "ArmourHull": {
+      "IngredientCost": 1978,
+      "OutputValue": 4450,
+      "Profit": 2472,
+      "Margin": 1.25,
+      "IntendedMarkup": 2.25
+    },
+    "Thruster": {
+      "IngredientCost": 2633,
+      "OutputValue": 5924,
+      "Profit": 3291,
+      "Margin": 1.25,
+      "IntendedMarkup": 2.25
+    },
+    "ShipEngine": {
+      "IngredientCost": 10786,
+      "OutputValue": 24268,
+      "Profit": 13482,
+      "Margin": 1.25,
+      "IntendedMarkup": 2.25
+    },
+    "ShipReactor": {
+      "IngredientCost": 10737,
+      "OutputValue": 24158,
+      "Profit": 13421,
+      "Margin": 1.25,
+      "IntendedMarkup": 2.25
+    },
+    "LifeSupportPod": {
+      "IngredientCost": 4600,
+      "OutputValue": 10350,
+      "Profit": 5750,
+      "Margin": 1.25,
+      "IntendedMarkup": 2.25
+    },
+    "FuelTank": {
+      "IngredientCost": 1677,
+      "OutputValue": 3773,
+      "Profit": 2096,
+      "Margin": 1.25,
+      "IntendedMarkup": 2.25
+    },
+    "CargoPod": {
+      "IngredientCost": 1441,
+      "OutputValue": 3242,
+      "Profit": 1801,
+      "Margin": 1.25,
+      "IntendedMarkup": 2.25
+    },
+    "GrapplerBoom": {
+      "IngredientCost": 3005,
+      "OutputValue": 6761,
+      "Profit": 3756,
+      "Margin": 1.25,
+      "IntendedMarkup": 2.25
+    },
+    "ShipShieldGenerator": {
+      "IngredientCost": 6435,
+      "OutputValue": 14479,
+      "Profit": 8044,
+      "Margin": 1.25,
+      "IntendedMarkup": 2.25
+    },
+    "TurretWeapon": {
+      "IngredientCost": 8894,
+      "OutputValue": 20012,
+      "Profit": 11118,
+      "Margin": 1.25,
+      "IntendedMarkup": 2.25
+    },
+    "EnergyCannon": {
+      "IngredientCost": 25547,
+      "OutputValue": 57481,
+      "Profit": 31934,
+      "Margin": 1.25,
+      "IntendedMarkup": 2.25
+    },
+    "TriLaser": {
+      "IngredientCost": 59167,
+      "OutputValue": 133126,
+      "Profit": 73959,
+      "Margin": 1.25,
+      "IntendedMarkup": 2.25
+    },
+    "MissileLauncher": {
+      "IngredientCost": 25009,
+      "OutputValue": 56270,
+      "Profit": 31261,
+      "Margin": 1.25,
+      "IntendedMarkup": 2.25
+    },
+    "Railgun": {
+      "IngredientCost": 5333,
+      "OutputValue": 11999,
+      "Profit": 6666,
+      "Margin": 1.25,
+      "IntendedMarkup": 2.25
+    },
+    "PlasmaCannon": {
+      "IngredientCost": 61125,
+      "OutputValue": 137531,
+      "Profit": 76406,
+      "Margin": 1.25,
+      "IntendedMarkup": 2.25
+    },
+    "TorpedoLauncher": {
+      "IngredientCost": 59917,
+      "OutputValue": 134813,
+      "Profit": 74896,
+      "Margin": 1.25,
+      "IntendedMarkup": 2.25
+    },
+    "ShieldCapacitor": {
+      "IngredientCost": 5264,
+      "OutputValue": 11844,
+      "Profit": 6580,
+      "Margin": 1.25,
+      "IntendedMarkup": 2.25
+    },
+    "PointDefenceLaser": {
+      "IngredientCost": 151666,
+      "OutputValue": 341248,
+      "Profit": 189582,
+      "Margin": 1.25,
+      "IntendedMarkup": 2.25
+    },
+    "ProhibitedWeapons": {
+      "IngredientCost": 62248,
+      "OutputValue": 186744,
+      "Profit": 124496,
+      "Margin": 2.0,
+      "IntendedMarkup": 3.0
+    },
+    "NanoInjectors": {
+      "IngredientCost": 5307,
+      "OutputValue": 15921,
+      "Profit": 10614,
+      "Margin": 2.0,
+      "IntendedMarkup": 3.0
+    },
+    "BlackMarketDrugs": {
+      "IngredientCost": 510,
+      "OutputValue": 1530,
+      "Profit": 1020,
+      "Margin": 2.0,
+      "IntendedMarkup": 3.0
+    },
+    "ForgedCredits": {
+      "IngredientCost": 1664,
+      "OutputValue": 4992,
+      "Profit": 3328,
+      "Margin": 2.0,
+      "IntendedMarkup": 3.0
+    },
+    "HackingTool": {
+      "IngredientCost": 42702,
+      "OutputValue": 128106,
+      "Profit": 85404,
+      "Margin": 2.0,
+      "IntendedMarkup": 3.0
+    },
+    "SmuggledBioweapon": {
+      "IngredientCost": 197605,
+      "OutputValue": 592815,
+      "Profit": 395210,
+      "Margin": 2.0,
+      "IntendedMarkup": 3.0
+    },
+    "ContrabandTech": {
+      "IngredientCost": 267454,
+      "OutputValue": 802362,
+      "Profit": 534908,
+      "Margin": 2.0,
+      "IntendedMarkup": 3.0
+    },
+    "AICores": {
+      "IngredientCost": 6251,
+      "OutputValue": 9376,
+      "Profit": 3125,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "ResearchData": {
+      "IngredientCost": 5973,
+      "OutputValue": 15231,
+      "Profit": 9258,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "AdvancedAICore": {
+      "IngredientCost": 34141,
+      "OutputValue": 51212,
+      "Profit": 17071,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "HackWare": {
+      "IngredientCost": 26849,
+      "OutputValue": 40274,
+      "Profit": 13425,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "ConstructionMaterials": {
+      "IngredientCost": 1936,
+      "OutputValue": 2904,
+      "Profit": 968,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "StationHullFrame": {
+      "IngredientCost": 6078,
+      "OutputValue": 9117,
+      "Profit": 3039,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "PowerCore": {
+      "IngredientCost": 13794,
+      "OutputValue": 20691,
+      "Profit": 6897,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "LifeSupportUnit": {
+      "IngredientCost": 5096,
+      "OutputValue": 7644,
+      "Profit": 2548,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "ModuleShell": {
+      "IngredientCost": 9567,
+      "OutputValue": 14350,
+      "Profit": 4783,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "StructuralGirder": {
+      "IngredientCost": 2904,
+      "OutputValue": 4356,
+      "Profit": 1452,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "HullSegment": {
+      "IngredientCost": 10061,
+      "OutputValue": 15092,
+      "Profit": 5031,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "DockingMechanism": {
+      "IngredientCost": 2430,
+      "OutputValue": 3645,
+      "Profit": 1215,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "HabitationPod": {
+      "IngredientCost": 22084,
+      "OutputValue": 33126,
+      "Profit": 11042,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "CorridorSegment": {
+      "IngredientCost": 18706,
+      "OutputValue": 28059,
+      "Profit": 9353,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "AirTank": {
+      "IngredientCost": 315,
+      "OutputValue": 472,
+      "Profit": 157,
+      "Margin": 0.498,
+      "IntendedMarkup": 1.5
+    },
+    "GravitationGenerator": {
+      "IngredientCost": 3171,
+      "OutputValue": 4756,
+      "Profit": 1585,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "ShieldEmitter": {
+      "IngredientCost": 17269,
+      "OutputValue": 25904,
+      "Profit": 8635,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "CorridorModule": {
+      "IngredientCost": 56759,
+      "OutputValue": 85138,
+      "Profit": 28379,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "CargoBayModule": {
+      "IngredientCost": 49196,
+      "OutputValue": 73794,
+      "Profit": 24598,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "DockingBayModule": {
+      "IngredientCost": 51672,
+      "OutputValue": 77508,
+      "Profit": 25836,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "DockingPortModule": {
+      "IngredientCost": 32345,
+      "OutputValue": 48518,
+      "Profit": 16173,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "HabitationModule": {
+      "IngredientCost": 91464,
+      "OutputValue": 137196,
+      "Profit": 45732,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "BarracksModule": {
+      "IngredientCost": 69470,
+      "OutputValue": 104205,
+      "Profit": 34735,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "MarketplaceModule": {
+      "IngredientCost": 45758,
+      "OutputValue": 68637,
+      "Profit": 22879,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "ScienceLabModule": {
+      "IngredientCost": 36302,
+      "OutputValue": 54453,
+      "Profit": 18151,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "ReactorModule": {
+      "IngredientCost": 70082,
+      "OutputValue": 105123,
+      "Profit": 35041,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "SolarArrayModule": {
+      "IngredientCost": 16375,
+      "OutputValue": 24562,
+      "Profit": 8187,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "ProcessingModule": {
+      "IngredientCost": 33947,
+      "OutputValue": 50920,
+      "Profit": 16973,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "FabricationModule": {
+      "IngredientCost": 41558,
+      "OutputValue": 62337,
+      "Profit": 20779,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "FuelDepotModule": {
+      "IngredientCost": 32743,
+      "OutputValue": 49114,
+      "Profit": 16371,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "TurretModule": {
+      "IngredientCost": 68724,
+      "OutputValue": 103086,
+      "Profit": 34362,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "ShieldGeneratorModule": {
+      "IngredientCost": 57304,
+      "OutputValue": 85956,
+      "Profit": 28652,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "PhysicsLabModule": {
+      "IngredientCost": 53668,
+      "OutputValue": 80502,
+      "Profit": 26834,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "MaterialsLabModule": {
+      "IngredientCost": 38761,
+      "OutputValue": 58142,
+      "Profit": 19381,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "ElectronicsLabModule": {
+      "IngredientCost": 44780,
+      "OutputValue": 67170,
+      "Profit": 22390,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "WeaponsLabModule": {
+      "IngredientCost": 102493,
+      "OutputValue": 153740,
+      "Profit": 51247,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "BiologyLabModule": {
+      "IngredientCost": 30949,
+      "OutputValue": 46424,
+      "Profit": 15475,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "PropulsionResearch": {
+      "IngredientCost": 2790,
+      "OutputValue": 7114,
+      "Profit": 4324,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "AdvancedPropulsionResearch": {
+      "IngredientCost": 7924,
+      "OutputValue": 35658,
+      "Profit": 27734,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "MaterialsResearch": {
+      "IngredientCost": 540,
+      "OutputValue": 1377,
+      "Profit": 837,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "NanoMaterialsResearch": {
+      "IngredientCost": 414842,
+      "OutputValue": 1866789,
+      "Profit": 1451947,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "ComputingResearch": {
+      "IngredientCost": 5061,
+      "OutputValue": 12906,
+      "Profit": 7845,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "QuantumComputingResearch": {
+      "IngredientCost": 649748,
+      "OutputValue": 2923866,
+      "Profit": 2274118,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "DefenceResearch": {
+      "IngredientCost": 58425,
+      "OutputValue": 148984,
+      "Profit": 90559,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "AdvancedDefenceResearch": {
+      "IngredientCost": 562449,
+      "OutputValue": 2531020,
+      "Profit": 1968571,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "BioResearch": {
+      "IngredientCost": 11198,
+      "OutputValue": 28555,
+      "Profit": 17357,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "AdvancedBioResearch": {
+      "IngredientCost": 142081,
+      "OutputValue": 639364,
+      "Profit": 497283,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "Electronics_Mk2": {
+      "IngredientCost": 15267,
+      "OutputValue": 38931,
+      "Profit": 23664,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "Microchips_Mk2": {
+      "IngredientCost": 14143,
+      "OutputValue": 36065,
+      "Profit": 21922,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "CircuitBoard_Mk2": {
+      "IngredientCost": 91265,
+      "OutputValue": 232726,
+      "Profit": 141461,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "MemoryUnit_Mk2": {
+      "IngredientCost": 87599,
+      "OutputValue": 223377,
+      "Profit": 135778,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "ControlUnit_Mk2": {
+      "IngredientCost": 350253,
+      "OutputValue": 893145,
+      "Profit": 542892,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "PowerDistributionUnit_Mk2": {
+      "IngredientCost": 56765,
+      "OutputValue": 144751,
+      "Profit": 87986,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "BasicComputer_Mk2": {
+      "IngredientCost": 129971,
+      "OutputValue": 331426,
+      "Profit": 201455,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "AdvancedSensors_Mk2": {
+      "IngredientCost": 98370,
+      "OutputValue": 250843,
+      "Profit": 152473,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "QuantumProcessor_Mk2": {
+      "IngredientCost": 162143,
+      "OutputValue": 413465,
+      "Profit": 251322,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "TargetingComputer_Mk2": {
+      "IngredientCost": 693526,
+      "OutputValue": 1768491,
+      "Profit": 1074965,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "NavigationComputer_Mk2": {
+      "IngredientCost": 692259,
+      "OutputValue": 1765260,
+      "Profit": 1073001,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "ServoActuator_Mk2": {
+      "IngredientCost": 14458,
+      "OutputValue": 36868,
+      "Profit": 22410,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "SuperConductingWire_Mk2": {
+      "IngredientCost": 13873,
+      "OutputValue": 35376,
+      "Profit": 21503,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "Electronics_Mk3": {
+      "IngredientCost": 3006495,
+      "OutputValue": 13529228,
+      "Profit": 10522733,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "Microchips_Mk3": {
+      "IngredientCost": 3000763,
+      "OutputValue": 13503434,
+      "Profit": 10502671,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "CircuitBoard_Mk3": {
+      "IngredientCost": 3802783,
+      "OutputValue": 17112524,
+      "Profit": 13309741,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "MemoryUnit_Mk3": {
+      "IngredientCost": 3375387,
+      "OutputValue": 15189242,
+      "Profit": 11813855,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "ControlUnit_Mk3": {
+      "IngredientCost": 4714923,
+      "OutputValue": 21217154,
+      "Profit": 16502231,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "PowerDistributionUnit_Mk3": {
+      "IngredientCost": 3218135,
+      "OutputValue": 14481608,
+      "Profit": 11263473,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "BasicComputer_Mk3": {
+      "IngredientCost": 3591485,
+      "OutputValue": 16161682,
+      "Profit": 12570197,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "AdvancedSensors_Mk3": {
+      "IngredientCost": 3839017,
+      "OutputValue": 17275576,
+      "Profit": 13436559,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "QuantumProcessor_Mk3": {
+      "IngredientCost": 3751036,
+      "OutputValue": 16879662,
+      "Profit": 13128626,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "MicroCapacitor_Mk2": {
+      "IngredientCost": 54807,
+      "OutputValue": 139758,
+      "Profit": 84951,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "CapacitorBank_Mk2": {
+      "IngredientCost": 581995,
+      "OutputValue": 1484087,
+      "Profit": 902092,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "TransceiverUnit_Mk2": {
+      "IngredientCost": 90162,
+      "OutputValue": 229913,
+      "Profit": 139751,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "SignalAmplifier_Mk2": {
+      "IngredientCost": 282293,
+      "OutputValue": 719847,
+      "Profit": 437554,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "OpticalLens_Mk2": {
+      "IngredientCost": 13828,
+      "OutputValue": 35261,
+      "Profit": 21433,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "SensorArray_Mk2": {
+      "IngredientCost": 346087,
+      "OutputValue": 882522,
+      "Profit": 536435,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "FiberOpticCable_Mk2": {
+      "IngredientCost": 50534,
+      "OutputValue": 128862,
+      "Profit": 78328,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "DataMatrix_Mk2": {
+      "IngredientCost": 277103,
+      "OutputValue": 706613,
+      "Profit": 429510,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "LogicChip_Mk2": {
+      "IngredientCost": 87599,
+      "OutputValue": 223377,
+      "Profit": 135778,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "EncryptedCircuit_Mk2": {
+      "IngredientCost": 287855,
+      "OutputValue": 734030,
+      "Profit": 446175,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "ClockGenerator_Mk2": {
+      "IngredientCost": 50309,
+      "OutputValue": 128288,
+      "Profit": 77979,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "PilotComputer_Mk2": {
+      "IngredientCost": 1813588,
+      "OutputValue": 4624649,
+      "Profit": 2811061,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "CargoComputer_Mk2": {
+      "IngredientCost": 1672123,
+      "OutputValue": 4263914,
+      "Profit": 2591791,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "ShipComputer_Mk2": {
+      "IngredientCost": 1372261,
+      "OutputValue": 3499266,
+      "Profit": 2127005,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "TradingComputer_Mk2": {
+      "IngredientCost": 5057398,
+      "OutputValue": 12896365,
+      "Profit": 7838967,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "ScanComputer_Mk2": {
+      "IngredientCost": 1144423,
+      "OutputValue": 2918279,
+      "Profit": 1773856,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "ScienceComputer_Mk2": {
+      "IngredientCost": 546055,
+      "OutputValue": 1392440,
+      "Profit": 846385,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "EngineeringComputer_Mk2": {
+      "IngredientCost": 4002860,
+      "OutputValue": 10207293,
+      "Profit": 6204433,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "AutomatedDefenceComputer_Mk2": {
+      "IngredientCost": 5341599,
+      "OutputValue": 13621077,
+      "Profit": 8279478,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "ResearchComputer_Mk2": {
+      "IngredientCost": 1919367,
+      "OutputValue": 4894386,
+      "Profit": 2975019,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "SensorArray_Mk3": {
+      "IngredientCost": 4693677,
+      "OutputValue": 21121546,
+      "Profit": 16427869,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "LogicChip_Mk3": {
+      "IngredientCost": 3375387,
+      "OutputValue": 15189242,
+      "Profit": 11813855,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "ShipComputer_Mk3": {
+      "IngredientCost": 9927165,
+      "OutputValue": 44672242,
+      "Profit": 34745077,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "ScienceComputer_Mk3": {
+      "IngredientCost": 6122211,
+      "OutputValue": 27549950,
+      "Profit": 21427739,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "ResearchComputer_Mk3": {
+      "IngredientCost": 13126103,
+      "OutputValue": 59067464,
+      "Profit": 45941361,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "AutomatedDefenceComputer_Mk3": {
+      "IngredientCost": 47441596,
+      "OutputValue": 213487182,
+      "Profit": 166045586,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "ShipEngine_Mk2": {
+      "IngredientCost": 39095,
+      "OutputValue": 149538,
+      "Profit": 110443,
+      "Margin": 2.825,
+      "IntendedMarkup": 3.825
+    },
+    "ShipReactor_Mk2": {
+      "IngredientCost": 32825,
+      "OutputValue": 125556,
+      "Profit": 92731,
+      "Margin": 2.825,
+      "IntendedMarkup": 3.825
+    },
+    "Thruster_Mk2": {
+      "IngredientCost": 50176,
+      "OutputValue": 191923,
+      "Profit": 141747,
+      "Margin": 2.825,
+      "IntendedMarkup": 3.825
+    },
+    "FuelTank_Mk2": {
+      "IngredientCost": 12384,
+      "OutputValue": 47369,
+      "Profit": 34985,
+      "Margin": 2.825,
+      "IntendedMarkup": 3.825
+    },
+    "ShipEngine_Mk3": {
+      "IngredientCost": 188235,
+      "OutputValue": 1270586,
+      "Profit": 1082351,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "ShipReactor_Mk3": {
+      "IngredientCost": 575489,
+      "OutputValue": 3884551,
+      "Profit": 3309062,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "Thruster_Mk3": {
+      "IngredientCost": 227986,
+      "OutputValue": 1538906,
+      "Profit": 1310920,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "FuelTank_Mk3": {
+      "IngredientCost": 83297,
+      "OutputValue": 562255,
+      "Profit": 478958,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "CargoPod_Mk2": {
+      "IngredientCost": 7152,
+      "OutputValue": 27356,
+      "Profit": 20204,
+      "Margin": 2.825,
+      "IntendedMarkup": 3.825
+    },
+    "LifeSupportPod_Mk2": {
+      "IngredientCost": 22363,
+      "OutputValue": 85538,
+      "Profit": 63175,
+      "Margin": 2.825,
+      "IntendedMarkup": 3.825
+    },
+    "ShipComponents_Mk2": {
+      "IngredientCost": 42743,
+      "OutputValue": 108995,
+      "Profit": 66252,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "ArmourHull_Mk2": {
+      "IngredientCost": 7895,
+      "OutputValue": 30198,
+      "Profit": 22303,
+      "Margin": 2.825,
+      "IntendedMarkup": 3.825
+    },
+    "HullPlating_Mk2": {
+      "IngredientCost": 5797,
+      "OutputValue": 22174,
+      "Profit": 16377,
+      "Margin": 2.825,
+      "IntendedMarkup": 3.825
+    },
+    "CargoPod_Mk3": {
+      "IngredientCost": 1896678,
+      "OutputValue": 12802576,
+      "Profit": 10905898,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "LifeSupportPod_Mk3": {
+      "IngredientCost": 2066303,
+      "OutputValue": 13947545,
+      "Profit": 11881242,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "ShipComponents_Mk3": {
+      "IngredientCost": 15481007,
+      "OutputValue": 69664532,
+      "Profit": 54183525,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "ArmourHull_Mk3": {
+      "IngredientCost": 1899055,
+      "OutputValue": 12818621,
+      "Profit": 10919566,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "HullPlating_Mk3": {
+      "IngredientCost": 1890042,
+      "OutputValue": 12757784,
+      "Profit": 10867742,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "ShipShieldGenerator_Mk2": {
+      "IngredientCost": 426150,
+      "OutputValue": 1630024,
+      "Profit": 1203874,
+      "Margin": 2.825,
+      "IntendedMarkup": 3.825
+    },
+    "ShieldCapacitor_Mk2": {
+      "IngredientCost": 231985,
+      "OutputValue": 887343,
+      "Profit": 655358,
+      "Margin": 2.825,
+      "IntendedMarkup": 3.825
+    },
+    "TurretWeapon_Mk2": {
+      "IngredientCost": 185780,
+      "OutputValue": 710608,
+      "Profit": 524828,
+      "Margin": 2.825,
+      "IntendedMarkup": 3.825
+    },
+    "EnergyCannon_Mk2": {
+      "IngredientCost": 278567,
+      "OutputValue": 1065519,
+      "Profit": 786952,
+      "Margin": 2.825,
+      "IntendedMarkup": 3.825
+    },
+    "TriLaser_Mk2": {
+      "IngredientCost": 388927,
+      "OutputValue": 1487646,
+      "Profit": 1098719,
+      "Margin": 2.825,
+      "IntendedMarkup": 3.825
+    },
+    "MissileLauncher_Mk2": {
+      "IngredientCost": 258434,
+      "OutputValue": 988510,
+      "Profit": 730076,
+      "Margin": 2.825,
+      "IntendedMarkup": 3.825
+    },
+    "Railgun_Mk2": {
+      "IngredientCost": 267246,
+      "OutputValue": 1022216,
+      "Profit": 754970,
+      "Margin": 2.825,
+      "IntendedMarkup": 3.825
+    },
+    "PlasmaCannon_Mk2": {
+      "IngredientCost": 359967,
+      "OutputValue": 1376874,
+      "Profit": 1016907,
+      "Margin": 2.825,
+      "IntendedMarkup": 3.825
+    },
+    "TorpedoLauncher_Mk2": {
+      "IngredientCost": 1272442,
+      "OutputValue": 4867091,
+      "Profit": 3594649,
+      "Margin": 2.825,
+      "IntendedMarkup": 3.825
+    },
+    "PointDefenceLaser_Mk2": {
+      "IngredientCost": 3746369,
+      "OutputValue": 14329861,
+      "Profit": 10583492,
+      "Margin": 2.825,
+      "IntendedMarkup": 3.825
+    },
+    "ShipShieldGenerator_Mk3": {
+      "IngredientCost": 22323963,
+      "OutputValue": 150686750,
+      "Profit": 128362787,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "TurretWeapon_Mk3": {
+      "IngredientCost": 3247339,
+      "OutputValue": 21919538,
+      "Profit": 18672199,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "EnergyCannon_Mk3": {
+      "IngredientCost": 3703072,
+      "OutputValue": 24995736,
+      "Profit": 21292664,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "TriLaser_Mk3": {
+      "IngredientCost": 4141106,
+      "OutputValue": 27952466,
+      "Profit": 23811360,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "MissileLauncher_Mk3": {
+      "IngredientCost": 3593671,
+      "OutputValue": 24257279,
+      "Profit": 20663608,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "Railgun_Mk3": {
+      "IngredientCost": 3659769,
+      "OutputValue": 24703441,
+      "Profit": 21043672,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "PlasmaCannon_Mk3": {
+      "IngredientCost": 3979051,
+      "OutputValue": 26858594,
+      "Profit": 22879543,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "TorpedoLauncher_Mk3": {
+      "IngredientCost": 8637464,
+      "OutputValue": 58302882,
+      "Profit": 49665418,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "PointDefenceLaser_Mk3": {
+      "IngredientCost": 35624103,
+      "OutputValue": 240462695,
+      "Profit": 204838592,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "GravitationGenerator_Mk2": {
+      "IngredientCost": 224897,
+      "OutputValue": 573487,
+      "Profit": 348590,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "RefinedMedicine_Mk2": {
+      "IngredientCost": 40203,
+      "OutputValue": 102518,
+      "Profit": 62315,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "MedicalSupplies_Mk2": {
+      "IngredientCost": 41396,
+      "OutputValue": 105560,
+      "Profit": 64164,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "Vaccines_Mk2": {
+      "IngredientCost": 44520,
+      "OutputValue": 113526,
+      "Profit": 69006,
+      "Margin": 1.55,
+      "IntendedMarkup": 2.55
+    },
+    "RefinedMedicine_Mk3": {
+      "IngredientCost": 856083,
+      "OutputValue": 3852374,
+      "Profit": 2996291,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "MedicalSupplies_Mk3": {
+      "IngredientCost": 859125,
+      "OutputValue": 3866062,
+      "Profit": 3006937,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
     }
   }
 }

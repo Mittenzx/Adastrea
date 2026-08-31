@@ -385,7 +385,11 @@ The JSON (`Content/Data/CraftingTree.json`, **295 recipes across 6 tiers** — i
   the recipe's own `ResearchLevel`).
 - ✅ Only the canonical `ProducedIn` module tags are used.
 - ✅ Every output item has a valid `Items` stats entry (name, description, positive
-  weight & volume, and valid `StorageType`/`Rarity`) — 12 unit tests pass.
+  weight & volume, and valid `StorageType`/`Rarity`) — 14 unit tests pass.
+- ✅ Recipe economy is coherent: `Economy` map derives each crafted item's value from
+  its ingredient cost × a bounded category/research markup, so no recipe is a net loss
+  and margins stay within intended range (base 1.5×, Military 2.25×, Contraband 3.0×,
+  Mk3 flagship up to 6.75×).
 
 ---
 

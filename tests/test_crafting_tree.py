@@ -194,6 +194,17 @@ class TestCraftingTree:
             assert b["ResearchLevel2"] and b["ResearchLevel3"], \
                 f"branch {b['Domain']} missing rl2/rl3"
 
+    def test_economy_is_coherent(self):
+        """Every crafted recipe's output value is >= ingredient cost (no loss),
+        every Economy entry present, and values positive."""
+        data = load_tree()
+        economy = data.get("Economy")
+        assert economy, "no Economy map"
+        for item, e in economy.items():
+            assert e["OutputValue"] >= e["IngredientCost"], \
+                f"{item}: output {e['OutputValue']} < cost {e['IngredientCost']} (loss)"
+            assert e["IngredientCost"] > 0, f"{item}: zero ingredient cost"
+
 
 if __name__ == "__main__":
     try:

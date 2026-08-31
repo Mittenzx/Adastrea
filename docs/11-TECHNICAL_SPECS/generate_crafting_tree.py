@@ -728,20 +728,54 @@ def build_items(recipes):
         return STORE[cat]
 
     items = {}
+    # ---- BaseValue: COST-DRIVEN via memoized topological resolve ----
+    # A crafted item is worth (sum of its ingredients' values) x markup, where
+    # markup = value-add for processing/machining, scaled by category and
+    # research level. This guarantees every crafted recipe has a positive,
+    # BOUNDED margin (no loss, no free-money arbitrage). Raws are market-priced.
+    def raw_value(tier):
+        return round(TIER_VALUE.get(tier, 100) * 0.5)
+
+    def markup_for(r):
+        m = 1.5                     # base value-add for refining/crafting one step
+        if r["Category"] == "Military":
+            m *= 1.5                # weapons/parts carry a premium
+        if r["Category"] == "Contraband":
+            m *= 2.0                # black-market premium
+        if r["Category"] == "Luxury":
+            m *= 1.7                # luxury markup
+        if r["ResearchLevel"] == 2:
+            m *= 1.7                # Mk2 better-than-base
+        elif r["ResearchLevel"] == 3:
+            m *= 3.0                # Mk3 flagship
+        return m
+
+    recipe_by_out = {r["OutputItem"]: r for r in recipes}
+    value_cache = {}
+
+    def value_of(item):
+        if item in value_cache:
+            return value_cache[item]
+        r = recipe_by_out.get(item)
+        if r is None:
+            value_cache[item] = 0
+            return 0
+        if r["Acquisition"]:
+            v = raw_value(r["Tier"])
+        else:
+            cost = sum(ing["Qty"] * value_of(ing["ItemID"]) for ing in r["Ingredients"])
+            v = round(cost * markup_for(r))
+        value_cache[item] = v
+        return v
+
+    # Pre-seed with basic fields, then resolve values in a stable pass.
     for r in recipes:
         iid, tier, cat = r["OutputItem"], r["Tier"], r["Category"]
         st = storage(iid, cat, r["ProducedIn"])
         wt = weight(iid, tier, cat, r["ProducedIn"])
         rar = TIER_RARITY.get(tier, "Common")
-        base_v = TIER_VALUE.get(tier, 100)
-        if cat in ("Military", "Contraband"):
-            base_v *= 1.5
-        if cat == "Contraband":
-            base_v *= 1.7   # black-market premium
-        if r["ResearchLevel"] > 1:
-            base_v *= (1.7 if r["ResearchLevel"] == 2 else 3.0)
-        if r["Acquisition"]:
-            base_v *= 0.5
+        # resolve values depth-first; acyclic so memoization terminates
+        base_v = value_of(iid)
         items[iid] = {
             "ItemName": human(iid),
             "Description": desc(iid, tier, cat),
@@ -773,6 +807,61 @@ def build_recipes_with_ids():
     return out
 
 
+def compute_economy(recipes, items):
+    """Per-recipe economy. For each (non-acquisition) recipe: sum ingredient cost
+    from their BaseValue, and compare to the output BaseValue. Returns a dict of
+    RecipeID -> {IngredientCost, OutputValue, Profit, Margin}. Also returns a list
+    of (RecipeID, kind, message) flags for real anomalies: genuine losses (output
+    below ingredient cost) or margins that diverge from the recipe's INTENDED
+    markup (catches data-entry errors), not the normal value-add profit."""
+    value = {i: st["BaseValue"] for i, st in items.items()}
+
+    def intended_markup(r):
+        m = 1.5
+        if r["Category"] == "Military":
+            m *= 1.5
+        if r["Category"] == "Contraband":
+            m *= 2.0
+        if r["Category"] == "Luxury":
+            m *= 1.7
+        if r["ResearchLevel"] == 2:
+            m *= 1.7
+        elif r["ResearchLevel"] == 3:
+            m *= 3.0
+        return m
+
+    ec = {}
+    flags = []
+    for r in recipes:
+        if r["Acquisition"]:
+            continue
+        cost = sum(ing["Qty"] * value.get(ing["ItemID"], 0) for ing in r["Ingredients"])
+        out_val = value.get(r["OutputItem"], 0)
+        profit = out_val - cost
+        margin = (profit / cost) if cost else 0.0
+        ec[r["OutputItem"]] = {
+            "IngredientCost": cost,
+            "OutputValue": out_val,
+            "Profit": profit,
+            "Margin": round(margin, 3),
+            "IntendedMarkup": round(intended_markup(r), 3),
+        }
+        # genuine loss (would never craft it)
+        if cost > 0 and out_val < cost:
+            flags.append((r["OutputItem"], "loss",
+                          f"output {out_val}cr < ingredient cost {cost}cr (margin {round(margin*100)}%)"))
+        # divergence from intended markup (data-entry / modeling error)
+        elif cost > 0:
+            intended_margin = intended_markup(r) - 1.0
+            if margin > intended_margin * 2.0 + 0.1:
+                flags.append((r["OutputItem"], "margin-high",
+                              f"margin {round(margin*100)}% far above intended {round(intended_margin*100)}%"))
+            elif margin < intended_margin * 0.4:
+                flags.append((r["OutputItem"], "margin-low",
+                              f"margin {round(margin*100)}% far below intended {round(intended_margin*100)}%"))
+    return ec, flags
+
+
 def main():
     errors = check()
     if errors:
@@ -783,11 +872,12 @@ def main():
 
     recipes = build_recipes_with_ids()
     items = build_items(recipes)
+    economy, eflags = compute_economy(recipes, items)
     doc = {
         "$schema": "http://json-schema.org/draft-07/schema#",
         "Title": "Adastrea Crafting & Building Tree",
-        "Description": "Machine-readable crafting/building tree (recipes + per-item stats): raw extraction -> refined materials -> components & electronics -> ship parts -> weapons -> station construction parts -> modules. Authoritative generator: docs/11-TECHNICAL_SPECS/generate_crafting_tree.py",
-        "SchemaVersion": "1.5.0",
+        "Description": "Machine-readable crafting/building tree (recipes + per-item stats + recipe economy): raw extraction -> refined materials -> components & electronics -> ship parts -> weapons -> station construction parts -> modules. Authoritative generator: docs/11-TECHNICAL_SPECS/generate_crafting_tree.py",
+        "SchemaVersion": "1.6.0",
         "LastUpdated": "2026-08-31",
         "ItemIDConvention": "^[A-Za-z][A-Za-z0-9_]*$",
         "NoteHelium3": "Existing trade asset uses 'Helium-3' (hyphen, violates ItemID regex). Crafting data canonicalizes to 'Helium3' and maps to DA_TradeItem_Helium-3.",
@@ -795,6 +885,7 @@ def main():
         "TierLabels": TIER_LABELS,
         "Recipes": recipes,
         "Items": items,
+        "Economy": economy,
     }
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as f:
@@ -805,6 +896,15 @@ def main():
         counts[r["Tier"]] += 1
     print(f"VALID: {len(recipes)} recipes written to {OUT}")
     print("  per-tier:", ", ".join(f"T{t}={counts[t]}" for t in sorted(counts)))
+    n_loss = len([f for f in eflags if f[1] == "loss"])
+    n_hi = len([f for f in eflags if f[1] == "margin-high"])
+    n_lo = len([f for f in eflags if f[1] == "margin-low"])
+    if eflags:
+        print(f"  ECONOMY FLAGS: {len(eflags)} ({n_loss} loss, {n_hi} margin-high, {n_lo} margin-low)")
+        for rid, kind, msg in eflags[:20]:
+            print(f"    [{kind:11s}] {rid}: {msg}")
+    else:
+        print("  ECONOMY: all margins within intended range (no loss/arbitrage)")
 
 
 if __name__ == "__main__":
