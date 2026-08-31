@@ -410,6 +410,22 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     # skin mask: 1.0 = skinnable hull panel, 0.0 = fixed region (accent/neon/
     # windows/hazard) that a runtime skin must NOT recolor (X4 paintmodmask analog)
     SKIN = np.where(fixed, 0.0, 1.0).astype(np.float32)
+
+    # ---- strict L-R texture symmetry ----
+    # UV mapping is world-aligned, so on the ship +X samples the texture as U and
+    # -X as (const-U). For the sampled detail to read symmetric across the ship's
+    # centerline, the texture itself must be symmetric about U=0.5 (texture[U] ==
+    # texture[1-U]). The base panel grid is already centered/regular; mirroring it
+    # keeps it tileable and forces every random mark (windows/grime/hazard/neon) to
+    # appear mirrored, so the ship reads strictly symmetric L-R.
+    def sym_h(plane):
+        return (plane + plane[:, ::-1]) * 0.5
+    D = sym_h(D); E = sym_h(E); R = sym_h(R); M = sym_h(M); AO = sym_h(AO)
+    SKIN = sym_h(SKIN)
+    # normal map: horizontal mirror reverses tangent-X, so flip the R channel sign
+    Nf = N[:, ::-1].copy()
+    Nf[..., 0] = -Nf[..., 0]
+    N = (N + Nf) * 0.5
     maps = {'_D': D, '_N': N, '_R': _to4(R), '_M': _to4(M), '_AO': _to4(AO), '_E': E, '_SKIN': _to4(SKIN)}
     for suf, arr in maps.items():
         fname = f"T_{name}{suf}.png"
@@ -429,45 +445,39 @@ def _to4(gray):
 # UV + export helpers
 # ----------------------------------------------------------------------------
 def smart_uv(ob, angle=66, margin=0.03):
-    """Normalized, consistent UV via world-aligned triplanar projection.
-
-    Replaces per-object smart_project(scale_to_bounds=True), which made every part
-    fill the full 0-1 tile -> inconsistent texel density and random per-island
-    orientation across mirrored parts. Instead:
-      - Every face projects along its dominant world axis at a FIXED texel density
-        (tile_cm texels per cm), so all parts share the same px/cm -> consistent.
-      - UV derived from world position -> left/right mirrored geometry gets the SAME
-        projection, so the texture detail reads symmetric across X=0 (fixes the
-        asymmetry/inconsistency from smart_project).
-    Keeps U/V oriented consistently per axis so panel lines run true.
-    """
+    """Normalized, consistent UV via world-aligned triplanar projection."""
     import bmesh as bm3
     sel_activate(ob)
     me = ob.data
     bm = bm3.new()
     bm.from_mesh(me)
     bm.faces.ensure_lookup_table()
-    tile_cm = 200.0   # one texture tile (U=1) per 200cm -> 10.24 px/cm at 2048
-    # UV channel: use per-face-loop data (need a uv loop layer)
+    tile_cm = 200.0
     uv_layer = bm.loops.layers.uv.get("UVMap") or bm.loops.layers.uv.new("UVMap")
     import mathutils
     axes = [mathutils.Vector((1,0,0)), mathutils.Vector((0,1,0)), mathutils.Vector((0,0,1))]
     for f in bm.faces:
         n = f.normal.copy()
-        # dominant axis of the face normal (world space)
         ax = max(range(3), key=lambda i: abs(n[i]))
-        # U/V world axes perpendicular to the dominant axis
         if ax == 0:
-            u_ax, v_ax = axes[1], axes[2]   # X-dominant face: U=Y, V=Z
+            u_ax, v_ax = axes[1], axes[2]
         elif ax == 1:
-            u_ax, v_ax = axes[2], axes[0]   # Y-dominant: U=Z, V=X
+            u_ax, v_ax = axes[2], axes[0]
         else:
-            u_ax, v_ax = axes[0], axes[1]   # Z-dominant: U=X, V=Y
+            u_ax, v_ax = axes[0], axes[1]
         for loop in f.loops:
-            v = ob.matrix_world @ loop.vert.co   # world position
+            v = ob.matrix_world @ loop.vert.co
             u = (v @ u_ax) / tile_cm
             ww = (v @ v_ax) / tile_cm
             loop[uv_layer].uv = (u, ww)
+        # STRICT L-R mirror: flip U on the -X half so every -X face samples the
+        # horizontal mirror of its +X counterpart. Combined with the (now
+        # U=0.5-symmetric) texture, paired faces read as exact mirrors.
+        fcx = sum((ob.matrix_world @ lc.vert.co)[0] for lc in f.loops) / len(f.loops)
+        if fcx < -0.01:
+            for loop in f.loops:
+                uu2, vv2 = loop[uv_layer].uv
+                loop[uv_layer].uv = (1.0 - uu2, vv2)
     bm.to_mesh(me)
     bm.free()
     me.update()
