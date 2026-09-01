@@ -11,7 +11,12 @@
 #include "Stations/SpaceStation.h"
 #include "Stations/MarketplaceModule.h"
 #include "Components/SceneCaptureComponent2D.h"
+#include "Engine/SceneCapture2D.h"
+#include "Engine/DirectionalLight.h"
 #include "Engine/TextureRenderTarget2D.h"
+#include "Engine/StaticMesh.h"
+#include "Components/StaticMeshComponent.h"
+#include "Engine/StaticMeshActor.h"
 #include "Engine/Canvas.h"
 #include "Engine/Engine.h"
 #include "Kismet/GameplayStatics.h"
@@ -771,6 +776,17 @@ static const TCHAR* ShipRosterClassPaths[] = {
 };
 static const int32 ShipRosterCount = UE_ARRAY_COUNT(ShipRosterClassPaths);
 
+// Preview mesh per roster entry (an _Assembled static mesh). The roster pawns
+// don't all have meshes assigned in-editor, so we render a mesh directly.
+static const TCHAR* ShipRosterMeshPaths[] = {
+	TEXT("/AdastreaShips/Meshes/Ships/SM_Ship_Fighter_01_Assembled.SM_Ship_Fighter_01_Assembled"),
+	TEXT("/AdastreaShips/Meshes/Ships/SM_Ship_Freighter_01_Assembled.SM_Ship_Freighter_01_Assembled"),
+	TEXT("/AdastreaShips/Meshes/Ships/SM_Ship_Corvette_01_Assembled.SM_Ship_Corvette_01_Assembled"),
+	TEXT("/AdastreaShips/Meshes/Ships/SM_Ship_Gunship_02_Assembled.SM_Ship_Gunship_02_Assembled"),
+	TEXT("/AdastreaShips/Meshes/Ships/SM_Ship_Miner_01_Assembled.SM_Ship_Miner_01_Assembled"),
+};
+static_assert(UE_ARRAY_COUNT(ShipRosterMeshPaths) == ShipRosterCount, "roster mesh mismatch");
+
 // For each roster entry, optionally associate a data asset whose stats we show.
 // This decouples the readout from whatever the live pawn happens to expose.
 static const TCHAR* ShipRosterDataAssets[] = {
@@ -877,29 +893,42 @@ void AAdastreaHUD::RebuildShipPreview(APlayerController* PC)
 		return;
 	}
 
-	// Spawn the preview ship far from the play area so its mesh doesn't appear
-	// in the main view, but within the world for the SceneCapture to see.
-	const FVector PreviewLoc(90000.0f, -90000.0f, 10000.0f);
-	FActorSpawnParameters Params;
-	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	Params.ObjectFlags = RF_Transient;
-	ShipPreviewActor = World->SpawnActor<AActor>(ShipClass, PreviewLoc, FRotator::ZeroRotator, Params);
-	UE_LOG(LogTemp, Log, TEXT("ShipSelect: spawned preview actor %s (valid=%d)"),
-		ShipPreviewActor ? *ShipPreviewActor->GetName() : TEXT("null"), ShipPreviewActor ? 1 : 0);
-	if (ASpaceship* PreviewShip = Cast<ASpaceship>(ShipPreviewActor))
+	// Spawn a static-mesh actor holding the roster mesh, far from the play area so
+		// its mesh doesn't appear in the main view, but within the world for the
+		// SceneCapture to see. A StaticMeshActor renders reliably (unlike a detached
+		// bare component), which is what the SceneCapture needs to pick it up.
+		const FVector PreviewLoc(90000.0f, -90000.0f, 10000.0f);
+		UStaticMesh* PreviewMesh = nullptr;
+		if (ShipSelectIndex >= 0 && ShipSelectIndex < ShipRosterCount)
 		{
-			UE_LOG(LogTemp, Log, TEXT("ShipSelect: preview is a Spaceship with mesh=%s"),
-				PreviewShip->ShipMeshComponent ? *PreviewShip->ShipMeshComponent->GetName() : TEXT("none"));
-			if (PreviewShip->ShipMeshComponent)
+			PreviewMesh = LoadObject<UStaticMesh>(nullptr, ShipRosterMeshPaths[ShipSelectIndex]);
+		}
+		ShipPreviewActor = World->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), PreviewLoc, FRotator::ZeroRotator);
+		ShipPreviewMeshComp = nullptr;
+		if (AStaticMeshActor* SMA = Cast<AStaticMeshActor>(ShipPreviewActor))
+		{
+			UStaticMeshComponent* SMComp = SMA->GetStaticMeshComponent();
+			if (SMComp && PreviewMesh)
 			{
-				UE_LOG(LogTemp, Log, TEXT("ShipSelect: mesh bounds=%s scale=%s"),
-					*PreviewShip->ShipMeshComponent->Bounds.BoxExtent.ToString(),
-					*PreviewShip->ShipMeshComponent->GetComponentScale().ToString());
-				// Ensure the preview mesh is visible to the capture (not hidden, not culled).
-				PreviewShip->ShipMeshComponent->SetHiddenInGame(false);
-				PreviewShip->ShipMeshComponent->SetVisibility(true, true);
-				PreviewShip->ShipMeshComponent->SetRenderCustomDepth(false);
+				SMComp->SetStaticMesh(PreviewMesh);
+				SMComp->SetHiddenInGame(false);
+				SMComp->SetVisibility(true, true);
+				// Normalize the preview mesh to a display radius ~1000u.
+				const FBoxSphereBounds OrigBounds = PreviewMesh->GetBounds();
+				const FVector OrigSize = OrigBounds.BoxExtent * 2.0f;
+				const float OrigRadius = OrigSize.Size() * 0.5f;
+				if (OrigRadius > 1.0f)
+				{
+					SMComp->SetWorldScale3D(FVector(1000.0f / OrigRadius));
+				}
+				ShipPreviewMeshComp = SMComp;
+				UE_LOG(LogTemp, Log, TEXT("ShipSelect: preview mesh size=%s scaled=%s"),
+					*OrigSize.ToString(), *SMComp->GetComponentScale().ToString());
 			}
+		}
+		if (!PreviewMesh)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("ShipSelect: no mesh at path for index %d"), ShipSelectIndex);
 		}
 
 	// Render target for the capture.
@@ -912,19 +941,42 @@ void AAdastreaHUD::RebuildShipPreview(APlayerController* PC)
 		ShipPreviewRT->ClearColor = FLinearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	}
 
-	// Scene capture aimed at the preview ship.
-	ShipPreviewCapture = NewObject<USceneCaptureComponent2D>(this, TEXT("ShipPreviewCapture"));
-		ShipPreviewCapture->SetupAttachment(RootComponent);
-		ShipPreviewCapture->RegisterComponent();
-		ShipPreviewCapture->SetWorldLocation(PreviewLoc + FVector(-140.0f, 0, 15.0f));
-				ShipPreviewCapture->SetWorldRotation(FRotator(0, 0, 0));
-		ShipPreviewCapture->TextureTarget = ShipPreviewRT;
-		ShipPreviewCapture->ShowFlags.SetFog(false);
-		ShipPreviewCapture->ShowFlags.SetSkyLighting(false);
-		ShipPreviewCapture->FOVAngle = 30.0f;
-		ShipPreviewCapture->CaptureSource = SCS_SceneColorHDR;
-		ShipPreviewCapture->bCaptureEveryFrame = true;
-		ShipPreviewCapture->bUseRayTracingIfEnabled = false;
+	// Scene capture: spawn a dedicated ASceneCapture2D actor at the preview area
+			// (most reliable — bare HUD-attached components are fragile in PIE).
+			ASceneCapture2D* CapActor = World->SpawnActor<ASceneCapture2D>(ASceneCapture2D::StaticClass(),
+				PreviewLoc + FVector(-2400.0f, 0, 0), FRotator(0, 0, 0));
+		if (CapActor)
+		{
+			ShipPreviewCapture = CapActor->GetCaptureComponent2D();
+		}
+		else
+		{
+			ShipPreviewCapture = nullptr;
+		}
+		if (ShipPreviewCapture)
+			{
+				ShipPreviewCapture->TextureTarget = ShipPreviewRT;
+				ShipPreviewCapture->ShowFlags.SetFog(false);
+				ShipPreviewCapture->ShowFlags.SetSkyLighting(false);
+				ShipPreviewCapture->ShowFlags.SetDynamicShadows(false);
+				ShipPreviewCapture->FOVAngle = 20.0f;
+				ShipPreviewCapture->CaptureSource = SCS_SceneColorHDR;
+				ShipPreviewCapture->bCaptureEveryFrame = true;
+				ShipPreviewCapture->bUseRayTracingIfEnabled = false;
+				// Keep capture seeing the WHOLE world (not ShowOnly) so a near preview
+				// directional light can illuminate the mesh.
+				ShipPreviewCapture->PrimitiveRenderMode = ESceneCapturePrimitiveRenderMode::PRM_RenderScenePrimitives;
+				ShipPreviewCapture->CaptureScene();
+			}
+
+			// Add a small directional light near the preview so the mesh is lit (the far
+			// world location has no scene lights, which made the preview render black).
+			ADirectionalLight* PreviewLight = World->SpawnActor<ADirectionalLight>(
+				ADirectionalLight::StaticClass(), PreviewLoc + FVector(0, 0, 3000.0f), FRotator(-45.0f, 45.0f, 0.0f));
+			if (PreviewLight)
+			{
+				PreviewLight->SetActorScale3D(FVector(1, 1, 1));
+			}
 
 	bShipCaptureReady = ShipPreviewCapture && ShipPreviewRT;
 	UE_LOG(LogTemp, Log, TEXT("ShipSelect: preview rebuilt for roster index %d (ready=%d)"),
@@ -1012,12 +1064,14 @@ void AAdastreaHUD::DrawShipSelectScreen(APlayerController* PC)
 		// Apply current preview orbit to the preview ship + capture each frame.
 			if (bShipCaptureReady && ShipPreviewCapture && ShipPreviewActor)
 			{
-				// Rotate the model to the orbit yaw/pitch; capture stays on the -X axis
-				// looking at the ship, so rotating the model orbits it.
+				// Rotate the model to the orbit yaw/pitch.
 				ShipPreviewActor->SetActorRotation(FRotator(ShipPreviewPitch, ShipPreviewYaw, 0.0f));
-							const FVector ActorLoc = ShipPreviewActor->GetActorLocation();
-							ShipPreviewCapture->SetWorldLocation(ActorLoc + FVector(-140.0f, 0, 15.0f));
-							ShipPreviewCapture->SetWorldRotation(FRotator(0, 0, 0));
+								const FVector ActorLoc = ShipPreviewActor->GetActorLocation();
+								// We normalized the mesh to ~1000u display radius, so a fixed arm
+								// frames every ship consistently.
+								const float CamDist = 2400.0f;
+								ShipPreviewCapture->SetWorldLocation(ActorLoc + FVector(-CamDist, 0, 0));
+								ShipPreviewCapture->SetWorldRotation(FRotator(0, 0, 0));
 			}
 
 			UFont* TitleFont = GEngine->GetLargeFont();

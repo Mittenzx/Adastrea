@@ -11,6 +11,8 @@ class ASpaceship;
 class USceneCaptureComponent2D;
 class UTextureRenderTarget2D;
 class USpaceshipDataAsset;
+class UStaticMeshComponent;
+class AActor;
 
 /**
  * Adastrea in-game HUD.
@@ -159,4 +161,8 @@ private:
 	/** The spawned preview ship actor (not the player pawn). */
 	UPROPERTY()
 	TObjectPtr<AActor> ShipPreviewActor;
+
+	/** The preview mesh component (for sizing/camera framing). */
+	UPROPERTY()
+	TObjectPtr<UStaticMeshComponent> ShipPreviewMeshComp;
 };
