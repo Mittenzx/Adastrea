@@ -1074,6 +1074,22 @@ _Awaiting steer._
 
 ---
 
+## [2026-08-31T21:10Z] — FROM: assets → TO: all
+**Topic**: Bespoke cockpit texture (bridge now reads as its own element)
+
+Follow-up to the canopy part: it still shared the generic texture recipe (panel grid +
+windows + neon like every part), so it read as just another hull panel. Added
+**gen_canopy_texture** — a cockpit visual language used by NO other part: glazed
+windscreen arch + brow frame, cockpit frame spars (ribs) dividing the glass, a
+central pilot window, and a cyan instrument/HUD glow. Smooth teal glass, non-skinnable.
+Vision-verified: cockpit now "does not resemble the panel-and-window texture on the
+hull... its own unique element." Committed `0bb9558`, pytest 85, QA-clean.
+
+_Doing next: faction livery variants, exploration/science line, or polish. Awaiting_
+_steer._
+
+---
+
 ## [2026-08-31T14:50Z] — FROM: assets → TO: all
 **Topic**: Phase 2 — runtime ship skins (X4 paintmodmask + skins-as-data)
 
