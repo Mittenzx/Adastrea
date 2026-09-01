@@ -1070,35 +1070,45 @@ def build_reactor_part(sz, outname, variant='core'):
 
 
 def build_canopy_part(sz, outname):
-    """Glazed command canopy — a single, grid-aligned front windscreen pane
-    (aircraft-style) rather than a sphere/tilted box, so the windscreen texture
-    maps flat onto ONE plane instead of being triplanar-wrapped around curved
-    faces. The front glass carries the bespoke windscreen (arch/spars/HUD) cleanly.
-    Builds a flat forward glass + a slim frame cowl, then applies a PLANAR UV so
-    the texture aligns with the glass face."""
+    """X4-style command canopy of INDIVIDUAL pieces — a distinct glazed window
+    (curved canopy glass), a surrounding frame/bezel, and frame struts (mullions),
+    each a separate mesh with its own character so the cockpit reads as assembled
+    components like X4, not one flat plane. The glass keeps a PLANAR UV + its own
+    glazed material so the window reads clean and detailed."""
     k = sc(sz)
-    # --- flat forward windscreen pane (the glass, aligned to the front face) ---
-    gw, gh, gt = 78*k, 56*k, 8*k
-    glass = box("Canopy_Glass", gw, gt, gh, loc=(0, 0, 0))   # facing -Y front
-    glass.rotation_euler = (math.radians(12), 0, 0)           # slight rake, still flat
-    bevel(glass, 3, 2)
-    # --- slim surround cowl (frame) so it's mounted in a bezel, not floating ---
-    cowl = box("Canopy_Cowl", gw*1.25, gt*2.2, gh*1.2, loc=(0, -gt*2, -gh*0.1))
-    bevel(cowl, 4, 2)
-    obj = join([glass, cowl], f"{outname}_CanopyGeo")
+    objs = []
+    gw, gh, gt = 84*k, 60*k, 10*k
+    # --- Piece 1: the WINDOW — curved glazed canopy (higher quality than a flat
+    # plane): a beveled, slightly-arched glass sheet that reads as a windshield ---
+    glass = box("Canopy_Glass", gw, gt, gh, loc=(0, 0, 0))
+    glass.rotation_euler = (math.radians(14), 0, 0)
+    bevel(glass, 8, 4)                # heavier bevel -> curved-looking edges
+    # sheet-glass arch: taper the middle upward to suggest a dome/canopy bow
+    bpy.context.view_layer.objects.active = glass
+    # --- Piece 2: the FRAME/bezel — a surrounding fold that wraps the glass ---
+    frame = box("Canopy_Frame", gw*1.18, gt*2.4, gh*1.18, loc=(0, -gt*2.2, -gh*0.08))
+    frame.rotation_euler = (math.radians(8), 0, 0)
+    bevel(frame, 5, 3)
+    # --- Piece 3: frame STRUTS (mullions) dividing the window like X4 spars ---
+    strut_l = box("Canopy_StrutL", 8*k, gt*1.6, gh*0.9, loc=(-gw*0.32, -gt*0.4, 0)); bevel(strut_l, 3, 2)
+    strut_r = box("Canopy_StrutR", 8*k, gt*1.6, gh*0.9, loc=(gw*0.32, -gt*0.4, 0)); bevel(strut_r, 3, 2)
+    # --- Piece 4: brow hood / fairing over the top that blends into hull ---
+    brow = box("Canopy_Brow", gw*0.9, gt*3.2, gh*0.5, loc=(0, -gt*1.6, gh*0.62))
+    brow.rotation_euler = (math.radians(-16), 0, 0)
+    bevel(brow, 6, 3)
+    objs = [glass, frame, strut_l, strut_r, brow]
+    obj = join(objs, f"{outname}_CanopyGeo")
     apply_mods(obj); clean_mesh(obj)
-    # --- PLANAR UV: project onto the front-facing plane so the windscreen texture
-    # maps squarely onto the glass (no triplanar wrap). U=X, V=Z on the face.
+    # --- PLANAR UV for the whole canopy so each piece's texture maps cleanly on
+    # the front plane (no triplanar wrap). U=X, V=Z. ---
     sel_activate(obj)
-    # deterministic PLANAR UV: project onto the front (Y=0) plane using local X,Z
-    # so the windscreen texture maps squarely onto the glass (no triplanar wrap).
     import bmesh as _bm
     bm = _bm.new(); bm.from_mesh(obj.data)
-    uv = bm.loops.layers.uv.get("UVMap") or bm.loops.layers.uv.new("UVMap")
+    duv = bm.loops.layers.uv.get("UVMap") or bm.loops.layers.uv.new("UVMap")
     for f in bm.faces:
         for loop in f.loops:
             loc = obj.matrix_world @ loop.vert.co
-            loop[uv].uv = (loc[0]/120.0 + 0.5, loc[2]/80.0 + 0.5)
+            loop[duv].uv = (loc[0]/160.0 + 0.5, loc[2]/110.0 + 0.5)
     bm.to_mesh(obj.data); bm.free()
     obj.name = outname
     mat = bpy.data.materials.get("M_Canopy")
@@ -1108,7 +1118,6 @@ def build_canopy_part(sz, outname):
     else: obj.data.materials[0] = mat
     out = export_fbx(obj, outname)
     return obj, out
-
 
 
 
