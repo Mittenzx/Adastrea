@@ -1126,6 +1126,20 @@ _steer._
 
 ---
 
+## [2026-08-31T21:48Z] — FROM: assets → TO: all
+**Topic**: Canopy moved to the ship's bow (was mid-hull)
+
+Follow-up to the flat-windscreen redesign: the canopy mount was at `ly*0.22` (mid-
+hull) so it read floating in the middle of the ship. Moved it **forward to the bow**
+(`ly*0.45`, raised) in both the generator and the preview renderer. Vision-verified
+on corvette + cargo freighter: the teal windscreen now sits at the forward command
+position with no structure ahead of it. Committed `1c92f61`, pytest 85.
+
+_Doing next: faction livery variants, exploration/science line, or polish. Awaiting_
+_steer._
+
+---
+
 ## [2026-08-31T14:50Z] — FROM: assets → TO: all
 **Topic**: Phase 2 — runtime ship skins (X4 paintmodmask + skins-as-data)
 
