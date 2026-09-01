@@ -58,6 +58,12 @@ public:
 protected:
     virtual void OnConstruction(const FTransform& Transform) override;
 
+    /** Called when the avatar overlaps the cockpit/seat trigger -> return to ship. */
+    UFUNCTION()
+    void OnExitTriggerOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+                              UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
+                              bool bFromSweep, const FHitResult& SweepResult);
+
     // World location where players spawn when entering the interior
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
     FVector EntryLocation;
@@ -78,6 +84,10 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
     TObjectPtr<UBoxComponent> InteriorVolume;
 
+    /** Trigger volume at the cockpit/seat. Avatar walking into it returns to the ship. */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
+    TObjectPtr<UBoxComponent> ExitTrigger;
+
 public:
     // Walkable floor dimensions
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
@@ -87,5 +97,13 @@ public:
     float FloorWidth = 600.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
-    float CeilingHeight = 350.0f;
-};
+        float CeilingHeight = 350.0f;
+
+        /** Local offset of the cockpit/seat exit trigger from the interior origin. */
+        UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
+        FVector ExitTriggerOffset = FVector(500.0f, 0.0f, 175.0f);
+
+        /** Size of the cockpit/seat exit trigger box. */
+        UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
+        FVector ExitTriggerSize = FVector(100.0f, 150.0f, 200.0f);
+    };

@@ -1,5 +1,8 @@
 #include "Ships/SpaceshipInterior.h"
+#include "Ships/SpaceshipAvatar.h"
+#include "Player/AdastreaPlayerController.h"
 #include "Components/BoxComponent.h"
+#include "AdastreaLog.h"
 
 ASpaceshipInterior::ASpaceshipInterior()
 {
@@ -16,6 +19,17 @@ ASpaceshipInterior::ASpaceshipInterior()
     InteriorVolume->SetCollisionObjectType(ECC_WorldStatic);
     InteriorVolume->SetCollisionResponseToAllChannels(ECR_Block);
 
+    // Trigger volume at the cockpit/seat: walking the avatar into it re-possesses the ship.
+    ExitTrigger = CreateDefaultSubobject<UBoxComponent>(TEXT("ExitTrigger"));
+    ExitTrigger->SetupAttachment(SceneRoot);
+    ExitTrigger->SetBoxExtent(FVector(100.0f, 150.0f, 200.0f));
+    ExitTrigger->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    ExitTrigger->SetCollisionObjectType(ECC_WorldDynamic);
+    ExitTrigger->SetCollisionResponseToAllChannels(ECR_Ignore);
+    ExitTrigger->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+    ExitTrigger->SetGenerateOverlapEvents(true);
+    ExitTrigger->OnComponentBeginOverlap.AddDynamic(this, &ASpaceshipInterior::OnExitTriggerOverlap);
+
     EntryLocation = FVector(0, 0, 200); // Example entry point
     EntryRotation = FRotator(0, 0, 0);
     ExitLocation = FVector(0, 0, 100); // Default exit point (same as entry)
@@ -31,6 +45,13 @@ void ASpaceshipInterior::OnConstruction(const FTransform& Transform)
         InteriorVolume->SetBoxExtent(FVector(FloorForwardDepth * 0.5f, FloorWidth * 0.5f, CeilingHeight * 0.5f));
         // Lift the volume so its bottom is at the floor (avatar stands on it).
         InteriorVolume->SetRelativeLocation(FVector(0.0f, 0.0f, CeilingHeight * 0.5f));
+    }
+
+    // Place the cockpit/seat exit trigger at the configured local offset.
+    if (ExitTrigger)
+    {
+        ExitTrigger->SetBoxExtent(ExitTriggerSize);
+        ExitTrigger->SetRelativeLocation(ExitTriggerOffset);
     }
 }
 
@@ -56,5 +77,26 @@ void ASpaceshipInterior::SetFloorDimensions(float ForwardDepth, float Width)
     if (InteriorVolume)
     {
         InteriorVolume->SetBoxExtent(FVector(ForwardDepth * 0.5f, Width * 0.5f, CeilingHeight * 0.5f));
+    }
+}
+
+void ASpaceshipInterior::OnExitTriggerOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+                                              UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
+                                              bool bFromSweep, const FHitResult& SweepResult)
+{
+    // Only react to the walking avatar entering the cockpit/seat trigger.
+    ASpaceshipAvatar* Avatar = Cast<ASpaceshipAvatar>(OtherActor);
+    if (!Avatar)
+    {
+        return;
+    }
+
+    if (AAdastreaPlayerController* PC = Cast<AAdastreaPlayerController>(Avatar->GetController()))
+    {
+        if (ASpaceship* SourceShip = Avatar->SourceShip)
+        {
+            UE_LOG(LogAdastrea, Log, TEXT("InteriorExitTrigger: avatar reached the cockpit seat -> returning to ship."));
+            PC->ExitShipInterior(SourceShip);
+        }
     }
 }
