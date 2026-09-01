@@ -68,7 +68,7 @@ MOUNT_FRAC = {
     "Weapon": (0.34, -25), "Sensor": (0.18, 70), "Reactor": (-0.35, 40),
     "MiningLaser": (0.30, -10), "Drill": (-0.30, -15),
     "HabRing": (0.0, 0.0), "AsteroidShell": (0.0, 0.0), "Hab": (0.0, 0.0),
-    "Canopy": (0.22, 55),
+    "Canopy": (0.45, 60),
 }
 PARTS_ORDER = ["Carcass", "HabRing", "AsteroidShell", "Hab",
                "Engine", "Cargo", "Weapon", "Sensor", "Reactor",

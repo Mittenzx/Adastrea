@@ -1408,7 +1408,7 @@ def assemble_ship(sz, outname, opts, carcass_builder=None):
         cop = build_canopy_part(sz, f"{outname}_Canopy")
         copobj, cppath = cop
         # forward command position: ahead of the dorsal bridge/ridge, elevated
-        copobj.location = (0, ly*0.22, locz + 55*k)
+        copobj.location = (0, ly*0.45, locz + 60*k)   # at the bow, raised
         results.append((copobj, cppath))
     if opts.get('drill'):
         dj, dp = build_drill_part(sz, f"{outname}_Drill")
