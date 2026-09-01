@@ -598,6 +598,71 @@ def gen_texture_set(name, variant, size=2048, seed=1):
         bpy.data.images[fname].save()
     return {suf: f"T_{name}{suf}.png" for suf in maps}
 
+
+def gen_canopy_texture(name, size=1024, seed=180):
+    """BESPOKE canopy/cockpit texture — a glazed windscreen language used by NO
+    other part. Draws an enclosed glass canopy: smooth tinted glass, a distinct
+    windscreen arch with a brow frame, cockpit spars (structural ribs), a central
+    pilot window, and a soft instrument/head-up glow. Does NOT use the shared
+    panel-grid/stripe/grime recipe, so the bridge reads as the pilot's eye, not
+    another hull panel."""
+    rng = np.random.default_rng(seed)
+    W = H = size
+    h = np.ones((H, W), dtype=np.float32) * 0.5
+    arch_cx, arch_cy, arch_r = W*0.5, H*0.42, W*0.30
+    yy, xx = np.mgrid[:H, :W]
+    dist = (xx - arch_cx)**2 + (yy - arch_cy)**2
+    glass = dist < arch_r**2
+    h[glass] = 0.30
+    arch = (dist < (arch_r*1.04)**2) & ~glass
+    D = np.zeros((H, W, 4), dtype=np.float32)
+    D[..., 3] = 1.0
+    D[..., 0][glass] = 0.05; D[..., 1][glass] = 0.11; D[..., 2][glass] = 0.12
+    D[..., 0][arch] = 0.10; D[..., 1][arch] = 0.12; D[..., 2][arch] = 0.14
+    deck = (yy > arch_cy + arch_r*0.4)
+    D[..., 0][deck] = 0.06; D[..., 1][deck] = 0.07; D[..., 2][deck] = 0.08
+    hline = np.zeros((H, W), dtype=bool)
+    for sx in [0.18, 0.36, 0.64, 0.82]:
+        x0 = int(W*sx); hline[:, max(0,x0-1):x0+1] = True
+    spars = hline & glass
+    D[..., 0][spars] = 0.13; D[..., 1][spars] = 0.15; D[..., 2][spars] = 0.17
+    pil_r = int(W*0.13); pcy, pcx = int(H*0.36), int(W*0.5)
+    pwin = (xx-pcx)**2 + (yy-pcy)**2 < pil_r**2
+    D[..., 0][pwin] = 0.12; D[..., 1][pwin] = 0.32; D[..., 2][pwin] = 0.30
+    E = np.zeros((H, W, 4), dtype=np.float32); E[..., 3] = 1.0
+    hud = np.zeros((H, W), dtype=bool)
+    for gx in [0.3, 0.5, 0.7]:
+        hud[max(0,int(H*0.78)-8):int(H*0.78)+8, max(0,int(W*gx)-14):int(W*gx)+14] = True
+    E[hud] = [0.3, 0.9, 1.0, 1.0]; D[hud] = (0.2, 0.6, 0.7, 1.0)
+    fixed = np.zeros((H, W), dtype=bool); fixed[hud] = True
+    rim = dist < (arch_r*1.02)**2
+    rim &= ~glass & ~arch
+    E[rim] = [0.5, 0.9, 1.0, 1.0]; D[rim] = (0.3, 0.6, 0.7, 1.0); fixed[rim] = True
+    try:
+        from scipy.ndimage import uniform_filter
+        hn = uniform_filter(h, 2)
+    except ImportError:
+        hn = h
+    gx_, gy_ = np.gradient(hn)
+    N = np.empty((H, W, 4), dtype=np.float32); inv = 2.8
+    N[..., 0] = -gx_ * inv; N[..., 1] = -gy_ * inv; N[..., 2] = 1.0
+    nr = np.sqrt(N[...,0]**2 + N[...,1]**2 + N[...,2]**2)
+    N[...,0] /= nr; N[...,1] /= nr; N[...,2] = -N[...,2]; N[...,3] = 1.0
+    R = np.full((H, W), 0.12, dtype=np.float32)
+    AO = np.full((H, W), 0.5, dtype=np.float32)
+    M = np.full((H, W), 0.1, dtype=np.float32)
+    SKIN = np.zeros((H, W), dtype=np.float32)
+    maps = {'_D': D, '_N': N, '_R': _to4(R), '_M': _to4(M), '_AO': _to4(AO), '_E': E, '_SKIN': _to4(SKIN)}
+    for suf, arr in maps.items():
+        fname = f"T_{name}{suf}.png"
+        bpy.data.images.new(fname, width=W, height=H)
+        bpy.data.images[fname].pixels = arr.flatten().tolist()
+        bpy.data.images[fname].filepath_raw = os.path.join(TEXDIR, fname)
+        bpy.data.images[fname].file_format = 'PNG'
+        bpy.data.images[fname].save()
+    return {suf: f"T_{name}{suf}.png" for suf in maps}
+
+
 def _to4(gray):
     a = np.empty((gray.shape[0], gray.shape[1], 4), dtype=np.float32)
     a[...,0] = gray; a[...,1] = gray; a[...,2] = gray; a[...,3] = 1.0
@@ -2356,11 +2421,10 @@ def main():
                                     'emissive':[0.3,1.0,0.6],  # teal mining beam
                                     'neon':[0.3,1.0,0.6], 'neon_thick':2,
                                     'grime':True, 'cable':{'runs':4}}, 1024, seed=176)
-    # glazed command canopy texture: dark tinted glass with a lit rim/window band
-    # so the cockpit/bridge reads from outside as a 'pilot's eye' viewport.
-    gen_texture_set("Canopy", {'base':[0.08,0.10,0.12], 'accent':[0.2,0.45,0.6], 'emissive':[0.4,0.8,1.0],
-                               'windows':{'cols':18,'frac':0.55,'cool':[0.4,0.8,1.0],'warm':[1.0,0.7,0.4]},
-                               'neon':[0.4,0.8,1.0], 'neon_thick':2, 'grime':True}, 1024, seed=180)
+    # BESPOKE canopy/cockpit texture: a glazed windscreen language used by NO other
+    # part (arch, spars, pilot window, HUD glow) so the bridge reads as a distinct
+    # cockpit rather than another hull panel shared with every part.
+    gen_canopy_texture("Canopy", 1024, seed=180)
     gen_texture_set("Derelict", {'base':[0.4,0.37,0.33], 'accent':[0.25,0.22,0.18],
                                  'emissive':[0.9,0.5,0.1], 'grime':True, 'hazard':{'bands':3}}, 2048, seed=77)
     gen_texture_set("Satellite", {'base':[0.75,0.76,0.78], 'accent':[0.35,0.4,0.5],
