@@ -988,6 +988,28 @@ def build_reactor_part(sz, outname, variant='core'):
     return finalize_part([core] + bands, outname, "M_Reactor_Block", origin='ORIGIN_CENTER_OF_VOLUME')
 
 
+def build_canopy_part(sz, outname):
+    """Glazed command canopy / windscreen — the visible 'pilot's eye'. A prominent
+    forward glazed bubble (sphere) + a wide tilted windscreen pane + a lit emissive
+    rim band, sized to read from outside against the hull. Carries M_Canopy so it
+    renders as dark-tinted glass with a lit edge, distinct from hull material.
+    Mounts at the forward command deck."""
+    k = sc(sz)
+    # prominent glazed bubble (the easy-toread cockpit form)
+    bubble = sphere("Canopy_Bubble", 40*k, loc=(0, 0, 0), verts=16)
+    bubble.scale = (1.15, 1.5, 0.9)
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    bevel(bubble, 2, 1)
+    # wide tilted windscreen pane sweeping forward
+    pane = box("Canopy_Pane", 88*k, 120*k, 18*k, loc=(0, 22*k, 6*k))
+    pane.rotation_euler = (math.radians(34), 0, 0)
+    bevel(pane, 7, 3)
+    # lit emissive rim band along the forward edge (reads as lit viewport/glow)
+    strip = box("Canopy_Strip", 82*k, 8*k, 6*k, loc=(0, 40*k, -4*k))
+    bevel(strip, 3, 2)
+    return finalize_part([bubble, pane, strip], outname, "M_Canopy", origin='ORIGIN_CENTER_OF_VOLUME')
+
+
 def build_mining_laser(sz, outname):
     """Mining laser / cutter add-on: emitter barrel + focusing optics + coolant."""
     k = sc(sz)
@@ -1277,6 +1299,15 @@ def assemble_ship(sz, outname, opts, carcass_builder=None):
         mj, mp = build_mining_laser(sz, f"{outname}_MiningLaser")
         mj.location = (0, ly*0.3, locz - 10*k)
         results.append((mj, mp))
+    # A visible cockpit/bridge is mounted by default on every ship so it reads as
+    # a piloted vessel from outside; opt out with 'canopy': False if a ship is
+    # truly unmanned/drone.
+    if opts.get('canopy', True):
+        cop = build_canopy_part(sz, f"{outname}_Canopy")
+        copobj, cppath = cop
+        # forward command position: ahead of the dorsal bridge/ridge, elevated
+        copobj.location = (0, ly*0.22, locz + 55*k)
+        results.append((copobj, cppath))
     if opts.get('drill'):
         dj, dp = build_drill_part(sz, f"{outname}_Drill")
         dj.location = (0, -ly*0.3, locz - 15*k)
@@ -1384,6 +1415,14 @@ def assemble_whole_ship(sz, outname, opts, carcass_builder=None):
     if opts.get('reactor'):
         core = box("Reactor", 90*k, 90*k, 90*k, loc=(0, -ly*0.35, locz + 40*k)); bevel(core,5,2)
         objs.append(core)
+
+    # --- glazed command canopy (forward pilot/crew viewport) ---
+    if opts.get('canopy', True):
+        pane = box("CanopyPane", 74*k, lz, 14*k, loc=(0, ly*0.22, locz + 55*k))
+        pane.rotation_euler = (math.radians(38), 0, 0)
+        glass = box("CanopyGlass", 64*k, lz*0.8, 8*k, loc=(0, ly*0.20, locz + 68*k))
+        glass.rotation_euler = (math.radians(38), 0, 0)
+        objs += [pane, glass]
 
     # --- drill rig (underslung) ---
     if opts.get('drill'):
@@ -2317,6 +2356,11 @@ def main():
                                     'emissive':[0.3,1.0,0.6],  # teal mining beam
                                     'neon':[0.3,1.0,0.6], 'neon_thick':2,
                                     'grime':True, 'cable':{'runs':4}}, 1024, seed=176)
+    # glazed command canopy texture: dark tinted glass with a lit rim/window band
+    # so the cockpit/bridge reads from outside as a 'pilot's eye' viewport.
+    gen_texture_set("Canopy", {'base':[0.08,0.10,0.12], 'accent':[0.2,0.45,0.6], 'emissive':[0.4,0.8,1.0],
+                               'windows':{'cols':18,'frac':0.55,'cool':[0.4,0.8,1.0],'warm':[1.0,0.7,0.4]},
+                               'neon':[0.4,0.8,1.0], 'neon_thick':2, 'grime':True}, 1024, seed=180)
     gen_texture_set("Derelict", {'base':[0.4,0.37,0.33], 'accent':[0.25,0.22,0.18],
                                  'emissive':[0.9,0.5,0.1], 'grime':True, 'hazard':{'bands':3}}, 2048, seed=77)
     gen_texture_set("Satellite", {'base':[0.75,0.76,0.78], 'accent':[0.35,0.4,0.5],
@@ -2358,7 +2402,7 @@ def main():
         "SM_Ship_Fighter_01": assemble_ship('small',
             'SM_Ship_Fighter_01',
             {'engine': True, 'cargo': True, 'weapon': True, 'weapon_twin': True,
-             'sensor': True}),
+             'sensor': True, 'canopy': True}),
         "SM_Ship_Freighter_01": assemble_ship('medium',
             'SM_Ship_Freighter_01',
             {'engine': True, 'cargo': True, 'weapon': False, 'sensor': True,
