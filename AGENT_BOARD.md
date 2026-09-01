@@ -1191,3 +1191,74 @@ Added pytest `test_research_tree_valid` → **13 passing**. Committed + pushed `
 
 _Doing next: can add a plain-text research prerequisite chain per node or an
 interactive DAG research view; or return to adding OutputQty>1 bulk economies._
+---
+## [2026-09-01T18:09Z] — FROM: main → TO: all (new agent: avatar)
+**Topic**: SPEC — first-person-walkable ship interiors via third-person avatar (get in/out of cockpit)
+
+The user wants to leave the cockpit and walk ship interiors in THIRD PERSON as an avatar.
+`main` does NOT build this — this is a handoff SPEC for a NEW dedicated agent (`avatar`).
+`main` owns flight/HUD/map/trading/stations; `avatar` owns the walkable-interior system.
+
+**Architecture (how it should work):**
+```
+[ASpaceship]  --InteriorInstance(TWeakObjectPtr<ASpaceshipInterior>)-->  [walkable interior]
+                                     ^
+   docked / parked  ==(key)==>  player possesses [ACharacter avatar] at InteriorEntry
+   walk around  ==(interact key at cockpit)==>  re-possess [ASpaceship], hide interior
+```
+State flips between TWO possessed pawns on the SAME AAdastreaPlayerController:
+- Ship mode (today): player possesses `ASpaceship` (third-person ship camera).
+- Avatar mode (new): controller POSSESSES a new `ACharacter`, placed at `InteriorEntry`,
+  third-person avatar camera. Ship stays alive (not destroyed), just out of focus.
+
+**Existing code to build ON (DO NOT rewrite to fit main's taste — integrate):**
+- `Source/Adastrea/Public/Ships/SpaceshipInterior.h` + `Private/Ships/SpaceshipInterior.cpp`
+  = STUB, intentionally minimal. Currently: `EntryLocation(FVector, default 0,0,100)`,
+  `EntryRotation(FRotator)`, `ExitLocation(FVector)`, + getters. The `avatar` agent owns
+  fleshing this out: real walkable floor volume + cockpit/corridor layout + collision.
+- `ASpaceship::EnterInterior(APlayerController*)` (Spaceship.cpp ~line 243) — already:
+  hides the exterior, shows `InteriorInstance`, teleports the CUR pawn to `EntryLocation`,
+  and has an explicit TODO "switch possession to a walkable character". Replace the pawn
+  teleport with a controller->Possess(avatar). Add a matching `LeaveInterior`.
+- `ASpaceship` owns `InteriorInstance` (TWeakObjectPtr<ASpaceshipInterior>, spawned attached,
+  hidden until entered, Spaceship.cpp ~line 156-165). Keep this ownership.
+- `AAdastreaPlayerController` already has `OnPossess`/`OnUnPossess` (mouse capture for the
+  ship camera), `GetControlledSpaceship()`, `IsControllingSpaceship()`, and a working input
+  pattern (Enhanced Input actions + `RuntimeInputMappingContext` on the ship). Reuse Enhanced
+  Input; do NOT introduce legacy BindKey for the avatar.
+
+**Deliverables for `avatar`:**
+1. New `ACharacter` subclass (e.g. `ASpaceshipAvatar`), **third-person**: CapsuleComponent +
+   CharacterMovementComponent + SpringArm + CameraComponent; WASD walk + mouse look; a skeletal
+   or simple mesh body; walk speed ~<250; collide with the interior floor/walls.
+2. Get-in/out wiring: an input action (e.g. a dedicated `LeaveCockpit` on the ship and an
+   `EnterCockpit`/interact on the avatar) that flips possession on the controller between
+   ship and avatar. Store the ship's pre-leave transform so you return to the cockpit.
+3. `ASpaceshipInterior` made real: a walkable floor volume + cockpit-to-corridor layout with
+   collision so the capsule doesn't clip through. Keep the `GetEntryLocation/GetExitLocation`
+   API (main's docking/trade reads nearby-station logic and must stay unaffected).
+4. A HUD `DrawHUD` note (AHUD canvas in `AdastreaHUD.cpp`) — main can add a "Inside ship — press
+   X to sit down" hint IF you wire a getter the canvas can poll. Optional; otherwise main skips it.
+5. Update `AGENT_BOARD.md` (this post is the spec; reply FROM avatar when done).
+
+**Build/test constraints (critical):**
+- Kill the running editor before any C++ build (Live Coding lock → false `Failed`).
+  Build: `Build.bat AdastreaEditor Win64 Development -Project=...\Adastrea.uproject -WaitMutex`.
+- `AIModule`/`NavigationSystem` are REMOVED from `Adastrea.Build.cs` — do NOT re-add them;
+  a `ACharacter` + `UCharacterMovementComponent` is engine-core (no nav/AI module needed).
+- UMG/designer widgets DO NOT render in this project's PIE (project-wide known issue) — the
+  ship HUD and map are all AHUD-canvas. For the avatar, PREFER the AHUD canvas for any 2D hint;
+  do NOT rely on UMG for the core system.
+- Keep `pytest` green (run `pytest`; ~85 tests incl. crafting/research tree validators).
+- Commit + push each change with a descriptive message; do NOT force-push shared history.
+
+**HANDS-OFF for `avatar` (do not touch):**
+- `Plugins/AdastreaShips/`, `Assets/FBX/`, `Tools/generate_adastrea_assets.py`, `Tools/fbx2obj.py`
+  = `assets` agent.
+- `Content/Data/CraftingTree.json`, `Content/Data/ResearchTree.json`,
+  `docs/**/generate_*_tree.py`, `CRAFTING_TREE.md`, `RESEARCH_TREE.md` = `crafting` agent.
+- Ship flight controls / HUD telemetry / compass / map / trading screens / station logic = `main`.
+- `AGENT_BOARD.md` history (append only).
+
+_Doing next (main): awaiting `avatar`'s reply + implementation; flight/HUD/map work is green
+(compass + station bearings committed `ba61c6b`, trading screen rebuilt `85f9599`)._
