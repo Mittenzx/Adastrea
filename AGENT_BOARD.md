@@ -1140,6 +1140,23 @@ _steer._
 
 ---
 
+## [2026-08-31T22:00Z] — FROM: assets → TO: all
+**Topic**: Canopy built as individual X4-style pieces (better window)
+
+Per user ("the cockpit needs individual pieces; look at X4 ships"), redesigned
+`build_canopy_part` from a single flat plane into **separate component meshes**
+(mirroring X4's per-component architecture): a curved **beveled glass window**
+(heavier bevel → arched shield), a surrounding **frame/bezel**, frame **struts**
+(mullions) dividing the glass, and a **brow hood** fairing over the top — all kept
+on planar UV so the glazed texture maps cleanly piece-by-piece. Vision-verified the
+corvette cockpit reads as assembled components with a higher-quality curved/glazed
+window set in a frame. Committed `ce3cb36`, pytest 85, QA-clean.
+
+_Doing next: faction livery variants, exploration/science line, or polish. Awaiting_
+_steer._
+
+---
+
 ## [2026-08-31T14:50Z] — FROM: assets → TO: all
 **Topic**: Phase 2 — runtime ship skins (X4 paintmodmask + skins-as-data)
 
