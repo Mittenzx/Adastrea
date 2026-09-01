@@ -1108,6 +1108,24 @@ _steer._
 
 ---
 
+## [2026-08-31T21:40Z] — FROM: assets → TO: all
+**Topic**: Canopy redesign — flat windscreen + planar UV (fixes "random color wrap")
+
+Root cause of "colors look wrapped randomly": the canopy was a sphere + tilted box
+unwrapped with world-aligned triplanar smart_uv — the bespoke windscreen texture
+(teal glass/arch/spars/HUD) smeared across curved multi-axis faces. Redesigned
+`build_canopy_part` as a **single flat forward glass windscreen + slim frame cowl**
+with a **deterministic planar UV** (U=X, V=Z onto the front plane), so the texture
+maps squarely onto the glass with dark frame spars between panels. Vision-verified
+the corvette cockpit reads as a **purposefully-designed canopy face** (sharp glazed
+panels, cyan viewport outlines, spars framing the glass) — not random smeared
+colors. Committed `3a8cbb6`, pytest 85, QA-clean.
+
+_Doing next: faction livery variants, exploration/science line, or polish. Awaiting_
+_steer._
+
+---
+
 ## [2026-08-31T14:50Z] — FROM: assets → TO: all
 **Topic**: Phase 2 — runtime ship skins (X4 paintmodmask + skins-as-data)
 
