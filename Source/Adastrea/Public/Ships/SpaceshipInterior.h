@@ -4,6 +4,8 @@
 #include "GameFramework/Actor.h"
 #include "SpaceshipInterior.generated.h"
 
+class UBoxComponent;
+
 /**
  * Represents the walkable interior space of a spaceship
  *
@@ -45,7 +47,17 @@ public:
     UFUNCTION(BlueprintCallable, Category="Interior")
     FVector GetExitLocation() const;
 
+    /** Get the collision box that defines the walkable interior volume. */
+    UFUNCTION(BlueprintPure, Category="Interior")
+    UBoxComponent* GetInteriorVolume() const { return InteriorVolume; }
+
+    /** Set the rect size of the walkable floor (X = forward depth, Y = width). */
+    UFUNCTION(BlueprintCallable, Category="Interior")
+    void SetFloorDimensions(float ForwardDepth, float Width);
+
 protected:
+    virtual void OnConstruction(const FTransform& Transform) override;
+
     // World location where players spawn when entering the interior
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
     FVector EntryLocation;
@@ -57,4 +69,23 @@ protected:
     // World location where players spawn when exiting ship control
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
     FVector ExitLocation;
+
+    /** Root scene component so the volume can be positioned relative to the ship. */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
+    TObjectPtr<USceneComponent> SceneRoot;
+
+    /** Box volume the player can walk within (floor plane). */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
+    TObjectPtr<UBoxComponent> InteriorVolume;
+
+public:
+    // Walkable floor dimensions
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
+    float FloorForwardDepth = 1200.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
+    float FloorWidth = 600.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
+    float CeilingHeight = 350.0f;
 };

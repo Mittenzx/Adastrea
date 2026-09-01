@@ -15,6 +15,7 @@ class AAdastreaHUD;
 class UInventoryWidget;
 class UTradingInterfaceWidget;
 class UStationManagementWidget;
+class ASpaceshipAvatar;
 // REMOVED: UFactionDataAsset - faction system removed per Trade Simulator MVP
 
 /**
@@ -293,8 +294,35 @@ public:
 		bool IsTargetingModeActive() const { return bTargetingModeActive; }
 
 		/** The currently locked target actor (station), if any. */
-		UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Targeting")
-		AActor* GetLockedTarget() const { return LockedTargetActor; }
+			UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Targeting")
+			AActor* GetLockedTarget() const { return LockedTargetActor; }
+
+			/**
+			 * Leave the ship's cockpit (ship mode) and possess a third-person avatar to walk
+			 * the ship's interior volume. Requires the ship to have an interior instance.
+			 * @param Ship The ship to leave.
+			 */
+			UFUNCTION(BlueprintCallable, Category="Player|Interior")
+			void EnterShipInterior(class ASpaceship* Ship);
+
+			/**
+			 * Return from the walking avatar to the pilot's seat of the given ship,
+			 * restoring the ship's previously-saved cockpit transform.
+			 * @param Ship The ship to repossess.
+			 */
+			UFUNCTION(BlueprintCallable, Category="Player|Interior")
+			void ExitShipInterior(class ASpaceship* Ship);
+
+			/** The walking avatar pawn (when on foot). */
+			UFUNCTION(BlueprintPure, Category="Player|Interior")
+			class ASpaceshipAvatar* GetAvatarPawn() const { return AvatarPawn; }
+
+			/** Whether the player is currently walking on foot inside an interior. */
+						UFUNCTION(BlueprintPure, Category="Player|Interior")
+						bool IsOnFoot() const { return AvatarPawn != nullptr && GetPawn() == static_cast<APawn*>(AvatarPawn); }
+
+						/** Input handler: V toggles between flying the ship and walking its interior. */
+						void HandleToggleInterior();
 
 		/** Clear the current locked target. */
 			UFUNCTION(BlueprintCallable, Category="Player|Targeting")
@@ -676,6 +704,14 @@ private:
 				AActor* HoveredTargetActor;
 
 				/** The currently targeted/locked actor (e.g. a station). */
-				UPROPERTY()
-				AActor* LockedTargetActor;
-			};
+								UPROPERTY()
+								AActor* LockedTargetActor;
+
+								/** Third-person walking avatar possession (when on foot inside an interior). */
+								UPROPERTY()
+								TObjectPtr<class ASpaceshipAvatar> AvatarPawn;
+
+								/** The ship we left, saved while on foot so we can return to its cockpit. */
+								UPROPERTY()
+								TWeakObjectPtr<class ASpaceship> InteriorSourceShip;
+							};

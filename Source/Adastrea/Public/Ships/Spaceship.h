@@ -93,7 +93,11 @@ public:
 
     // Reference to the walkable interior
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interior")
-    TWeakObjectPtr<ASpaceshipInterior> InteriorInstance;
+        TWeakObjectPtr<ASpaceshipInterior> InteriorInstance;
+
+        /** Get the ship's interior instance (may be null if unset). */
+        UFUNCTION(BlueprintPure, Category="Interior")
+        ASpaceshipInterior* GetInteriorInstance() const { return InteriorInstance.Get(); }
 
     // Turn rate for ship rotation (degrees per second)
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Control", meta=(ClampMin="0.0"))

@@ -2,6 +2,8 @@
 
 #include "Player/AdastreaPlayerController.h"
 #include "Ships/Spaceship.h"
+#include "Ships/SpaceshipAvatar.h"
+#include "Ships/SpaceshipInterior.h"
 #include "Stations/SpaceStation.h"
 #include "AdastreaHUD.h"
 #include "Stations/SpaceStationModule.h"
@@ -138,6 +140,8 @@ void AAdastreaPlayerController::SetupInputComponent()
 		InputComponent->BindKey(EKeys::SpaceBar, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeExecute1);
 		InputComponent->BindKey(EKeys::Q, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeExecute5);
 		InputComponent->BindKey(EKeys::Escape, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeClose);
+		// V: toggle between flying the ship (cockpit) and walking the interior (avatar)
+		InputComponent->BindKey(EKeys::V, IE_Pressed, this, &AAdastreaPlayerController::HandleToggleInterior);
 	}
 }
 
@@ -1518,4 +1522,102 @@ ASpaceStation* AAdastreaPlayerController::GetNearestTradableStation() const
 {
 	// Return the cached nearby station (updated by timer)
 	return NearbyTradableStation;
+}
+
+// ====================
+// Interior walk (avatar) control
+// ====================
+
+void AAdastreaPlayerController::HandleToggleInterior()
+{
+	if (ASpaceship* Ship = GetControlledSpaceship())
+	{
+		// Currently flying the ship -> leave the cockpit and walk the interior.
+		EnterShipInterior(Ship);
+	}
+	else if (IsOnFoot())
+	{
+		// Currently on foot -> sit back down in the source ship's cockpit.
+		if (ASpaceship* SourceShip = InteriorSourceShip.Get())
+		{
+			ExitShipInterior(SourceShip);
+		}
+	}
+}
+
+void AAdastreaPlayerController::EnterShipInterior(ASpaceship* Ship)
+{
+	if (!Ship)
+	{
+		return;
+	}
+
+	ASpaceshipInterior* Interior = Ship->GetInteriorInstance();
+	if (!Interior)
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("EnterShipInterior: ship %s has no interior instance; nothing to walk through."), *Ship->GetName());
+		return;
+	}
+
+	// Save the ship as the source so we can return to its cockpit.
+	InteriorSourceShip = Ship;
+
+	// The interior is attached to the ship, so transform its LOCAL entry point to world.
+	const FVector WorldEntry = Interior->GetActorTransform().TransformPosition(Interior->GetEntryLocation());
+	const FRotator WorldEntryRot = Interior->GetActorRotation() + Interior->GetEntryRotation();
+
+	// (Re)spawn the avatar if needed.
+	if (!AvatarPawn)
+	{
+		FActorSpawnParameters Params;
+		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		AvatarPawn = GetWorld()->SpawnActor<ASpaceshipAvatar>(ASpaceshipAvatar::StaticClass(),
+			WorldEntry, WorldEntryRot, Params);
+	}
+
+	if (!AvatarPawn)
+	{
+		UE_LOG(LogAdastrea, Error, TEXT("EnterShipInterior: failed to spawn avatar."));
+		return;
+	}
+
+	// Position the avatar at the interior entry and mark its source ship.
+	AvatarPawn->SetActorLocation(WorldEntry);
+	AvatarPawn->SetActorRotation(WorldEntryRot);
+	AvatarPawn->SourceShip = Ship;
+	AvatarPawn->CurrentInterior = Interior;
+
+	// Show the interior, switch possession, capture mouse for the avatar camera.
+	Interior->SetActorHiddenInGame(false);
+	UnPossess();
+	Possess(AvatarPawn);
+	SetInputMode(FInputModeGameOnly());
+	bShowMouseCursor = false;
+
+	UE_LOG(LogAdastrea, Log, TEXT("EnterShipInterior: player walked into %s's interior."), *Ship->GetName());
+}
+
+void AAdastreaPlayerController::ExitShipInterior(ASpaceship* Ship)
+{
+	if (!Ship)
+	{
+		return;
+	}
+
+	// Return to the ship's cockpit (its transform was unchanged while docked).
+	if (AvatarPawn)
+	{
+		UnPossess();
+	}
+	Possess(Ship);
+	SetInputMode(FInputModeGameOnly());
+	bShowMouseCursor = false;
+
+	if (ASpaceshipInterior* Interior = Ship->GetInteriorInstance())
+	{
+		Interior->SetActorHiddenInGame(true);
+	}
+
+	InteriorSourceShip = nullptr;
+	UE_LOG(LogAdastrea, Log, TEXT("ExitShipInterior: player returned to %s's cockpit."), *Ship->GetName());
 }
