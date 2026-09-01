@@ -351,7 +351,16 @@ public:
 																						void HandleTradeExecute1();
 																						void HandleTradeExecute5();
 																						void HandleTradeClose();
-																						void ExecuteTrade(int32 Quantity);
+																											void ExecuteTrade(int32 Quantity);
+
+																											/** Ship-select screen input handlers. */
+																											void HandleShipSelectPrev();
+																											void HandleShipSelectNext();
+																											void HandleShipSelectRotateL();
+																											void HandleShipSelectRotateR();
+																											void HandleShipSelectFly();
+																																void HandleShipSelectClose();
+																																void HandleShipSelectOpen();
 
 																	/** Map camera/orbit/filter input handlers. */
 																	void HandleMapOrbitUp();

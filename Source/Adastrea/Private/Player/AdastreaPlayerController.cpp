@@ -142,6 +142,15 @@ void AAdastreaPlayerController::SetupInputComponent()
 		InputComponent->BindKey(EKeys::Escape, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeClose);
 		// V: toggle between flying the ship (cockpit) and walking the interior (avatar)
 		InputComponent->BindKey(EKeys::V, IE_Pressed, this, &AAdastreaPlayerController::HandleToggleInterior);
+		// Ship-select screen input (only acted on when the ship-select screen is open)
+		InputComponent->BindKey(EKeys::Left, IE_Pressed, this, &AAdastreaPlayerController::HandleShipSelectRotateL);
+		InputComponent->BindKey(EKeys::Right, IE_Pressed, this, &AAdastreaPlayerController::HandleShipSelectRotateR);
+		InputComponent->BindKey(EKeys::Up, IE_Pressed, this, &AAdastreaPlayerController::HandleShipSelectPrev);
+		InputComponent->BindKey(EKeys::Down, IE_Pressed, this, &AAdastreaPlayerController::HandleShipSelectNext);
+		InputComponent->BindKey(EKeys::SpaceBar, IE_Pressed, this, &AAdastreaPlayerController::HandleShipSelectFly);
+		InputComponent->BindKey(EKeys::Escape, IE_Pressed, this, &AAdastreaPlayerController::HandleShipSelectClose);
+		// P: open the ship-select screen
+		InputComponent->BindKey(EKeys::P, IE_Pressed, this, &AAdastreaPlayerController::HandleShipSelectOpen);
 	}
 }
 
@@ -468,6 +477,64 @@ void AAdastreaPlayerController::HandleTradeClose()
 			bShowMouseCursor = false;
 			bLockMouseLook = false;
 		}
+	}
+}
+
+void AAdastreaPlayerController::HandleShipSelectPrev()
+{
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
+	{
+		if (H->bShowShipSelect) { H->CycleShipSelect(-1); }
+	}
+}
+
+void AAdastreaPlayerController::HandleShipSelectNext()
+{
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
+	{
+		if (H->bShowShipSelect) { H->CycleShipSelect(1); }
+	}
+}
+
+void AAdastreaPlayerController::HandleShipSelectRotateL()
+{
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
+	{
+		if (H->bShowShipSelect) { H->OrbitShipPreview(-8.0f, 0.0f); }
+	}
+}
+
+void AAdastreaPlayerController::HandleShipSelectRotateR()
+{
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
+	{
+		if (H->bShowShipSelect) { H->OrbitShipPreview(8.0f, 0.0f); }
+	}
+}
+
+void AAdastreaPlayerController::HandleShipSelectFly()
+{
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
+	{
+		if (H->bShowShipSelect) { H->SpawnSelectedShip(this); }
+	}
+}
+
+void AAdastreaPlayerController::HandleShipSelectClose()
+{
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
+	{
+		if (H->bShowShipSelect) { H->HideShipSelect(); }
+	}
+}
+
+void AAdastreaPlayerController::HandleShipSelectOpen()
+{
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
+	{
+		H->ShowShipSelect();
+		// pause ship mouse-look so keys/cursor don't fight
+		bLockMouseLook = true;
 	}
 }
 

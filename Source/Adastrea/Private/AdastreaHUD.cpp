@@ -2,6 +2,7 @@
 
 #include "AdastreaHUD.h"
 #include "Ships/Spaceship.h"
+#include "Ships/SpaceshipDataAsset.h"
 #include "Trading/CargoComponent.h"
 #include "Trading/PlayerTraderComponent.h"
 #include "Trading/MarketDataAsset.h"
@@ -9,9 +10,12 @@
 #include "Player/AdastreaPlayerController.h"
 #include "Stations/SpaceStation.h"
 #include "Stations/MarketplaceModule.h"
+#include "Components/SceneCaptureComponent2D.h"
+#include "Engine/TextureRenderTarget2D.h"
 #include "Engine/Canvas.h"
 #include "Engine/Engine.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetRenderingLibrary.h"
 
 // Palette (subtle sci-fi, on-brand for a teal/cyan accent theme)
 static const FLinearColor kBg      (0.02f, 0.03f, 0.05f, 0.72f); // deep space panel
@@ -53,6 +57,13 @@ void AAdastreaHUD::DrawHUD()
 		{
 			DrawTradeScreen(PC, Cast<AAdastreaPlayerController>(PC), Ship);
 		}
+		return;
+	}
+
+	// Ship-select screen draws over everything when shown.
+	if (bShowShipSelect)
+	{
+		DrawShipSelectScreen(PC);
 		return;
 	}
 
@@ -742,4 +753,346 @@ void AAdastreaHUD::DrawTradeScreen(APlayerController* PC, AAdastreaPlayerControl
 	// Footer controls.
 	DrawText(TEXT("Up/Down: select    [B]/[S]: toggle Buy/Sell    [Space]: trade 1    [Esc]: close    [Q]: trade 5"),
 		FLinearColor(0.6f,0.7f,0.8f,0.9f), VW*0.5f - 380.0f, VH - 40.0f, BodyFont, 0.7f);
+}
+
+// ========================================================================
+// SHIP SELECT SCREEN (concept prototype — canvas + SceneCapture2D preview)
+// ========================================================================
+
+// Ship roster: order = the ship Blueprints (spawnable pawns, selectable/testable).
+// This is the list the screen cycles. Later this will come from a data table /
+// the crafting tree / ship-construction facility data.
+static const TCHAR* ShipRosterClassPaths[] = {
+	TEXT("/Game/Blueprints/Ships/BP_Ship_Fighter"),
+	TEXT("/Game/Blueprints/Ships/BP_Ship_Freighter"),
+	TEXT("/Game/Blueprints/Ships/BP_Ship_Corvette"),
+	TEXT("/Game/Blueprints/Ships/BP_Ship_Cruiser"),
+	TEXT("/Game/Blueprints/Ships/BP_Ship_Destroyer"),
+};
+static const int32 ShipRosterCount = UE_ARRAY_COUNT(ShipRosterClassPaths);
+
+// For each roster entry, optionally associate a data asset whose stats we show.
+// This decouples the readout from whatever the live pawn happens to expose.
+static const TCHAR* ShipRosterDataAssets[] = {
+	TEXT("/Game/DataAssets/Ships/DA_Fighter_ViperInterceptor"),
+	TEXT("/Game/DataAssets/Ships/DA_Transport_BehemothFreighter"),
+	TEXT("/Game/DataAssets/Ships/DA_Corvette_RaptorAssault"),
+	TEXT("/Game/DataAssets/Ships/DA_Cruiser_LifelineMedical"),
+	TEXT("/Game/DataAssets/Ships/DA_Transport_GenesisColony"),
+};
+static_assert(UE_ARRAY_COUNT(ShipRosterDataAssets) == ShipRosterCount, "roster data mismatch");
+
+static TSubclassOf<AActor> LoadShipRosterClass(int32 Index)
+{
+	if (Index < 0 || Index >= ShipRosterCount)
+	{
+		return nullptr;
+	}
+	// Resolve the '/Game/...' path to a Blueprint class. FSoftClassPath needs the
+	// full '<asset>/<folder>/Name.Name_C' form, so append '.<name>_C'.
+		const FString ObjPath = FString(ShipRosterClassPaths[Index]);
+		const FString Path = ObjPath + TEXT(".") + FPaths::GetBaseFilename(ObjPath) + TEXT("_C");
+		const FSoftClassPath SoftPath(Path);
+		if (!SoftPath.IsValid())
+		{
+			return nullptr;
+		}
+		return SoftPath.TryLoadClass<AActor>();
+}
+
+void AAdastreaHUD::ShowShipSelect()
+{
+	bShowShipSelect = true;
+	ShipSelectIndex = 0;
+	bShipCaptureReady = false;
+	if (APlayerController* PC = GetOwningPlayerController())
+	{
+		RebuildShipPreview(PC);
+	}
+	// Enter UI-ish input so keyboard nav works without fighting mouse-look.
+	if (APlayerController* PC = GetOwningPlayerController())
+	{
+		FInputModeGameAndUI InputMode;
+		InputMode.SetHideCursorDuringCapture(false);
+		PC->SetInputMode(InputMode);
+		PC->bShowMouseCursor = true;
+	}
+}
+
+void AAdastreaHUD::HideShipSelect()
+{
+	bShowShipSelect = false;
+	bShipCaptureReady = false;
+	// Destroy preview actor + capture.
+	if (ShipPreviewActor)
+	{
+		ShipPreviewActor->Destroy();
+		ShipPreviewActor = nullptr;
+	}
+	if (ShipPreviewCapture)
+	{
+		ShipPreviewCapture->DestroyComponent();
+		ShipPreviewCapture = nullptr;
+	}
+	if (ShipPreviewRT)
+	{
+		ShipPreviewRT = nullptr;
+	}
+	if (APlayerController* PC = GetOwningPlayerController())
+	{
+		PC->SetInputMode(FInputModeGameOnly());
+		PC->bShowMouseCursor = false;
+		AAdastreaPlayerController* AdPC = Cast<AAdastreaPlayerController>(PC);
+		if (AdPC) { AdPC->bLockMouseLook = false; }
+	}
+	UE_LOG(LogTemp, Log, TEXT("ShipSelect: screen hidden"));
+}
+
+void AAdastreaHUD::RebuildShipPreview(APlayerController* PC)
+{
+	if (!PC || !PC->GetWorld())
+	{
+		return;
+	}
+	UWorld* World = PC->GetWorld();
+
+	// Tear down any existing preview.
+	if (ShipPreviewActor)
+	{
+		ShipPreviewActor->Destroy();
+		ShipPreviewActor = nullptr;
+	}
+	if (ShipPreviewCapture)
+	{
+		ShipPreviewCapture->DestroyComponent();
+		ShipPreviewCapture = nullptr;
+	}
+
+	// Load this roster entry's ship class.
+	const TSubclassOf<AActor> ShipClass = LoadShipRosterClass(ShipSelectIndex);
+	if (!ShipClass)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ShipSelect: no class for index %d"), ShipSelectIndex);
+		bShipCaptureReady = false;
+		return;
+	}
+
+	// Spawn the preview ship far from the play area so its mesh doesn't appear
+	// in the main view, but within the world for the SceneCapture to see.
+	const FVector PreviewLoc(90000.0f, -90000.0f, 10000.0f);
+	FActorSpawnParameters Params;
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	Params.ObjectFlags = RF_Transient;
+	ShipPreviewActor = World->SpawnActor<AActor>(ShipClass, PreviewLoc, FRotator::ZeroRotator, Params);
+	UE_LOG(LogTemp, Log, TEXT("ShipSelect: spawned preview actor %s (valid=%d)"),
+		ShipPreviewActor ? *ShipPreviewActor->GetName() : TEXT("null"), ShipPreviewActor ? 1 : 0);
+	if (ASpaceship* PreviewShip = Cast<ASpaceship>(ShipPreviewActor))
+		{
+			UE_LOG(LogTemp, Log, TEXT("ShipSelect: preview is a Spaceship with mesh=%s"),
+				PreviewShip->ShipMeshComponent ? *PreviewShip->ShipMeshComponent->GetName() : TEXT("none"));
+			if (PreviewShip->ShipMeshComponent)
+			{
+				UE_LOG(LogTemp, Log, TEXT("ShipSelect: mesh bounds=%s scale=%s"),
+					*PreviewShip->ShipMeshComponent->Bounds.BoxExtent.ToString(),
+					*PreviewShip->ShipMeshComponent->GetComponentScale().ToString());
+				// Ensure the preview mesh is visible to the capture (not hidden, not culled).
+				PreviewShip->ShipMeshComponent->SetHiddenInGame(false);
+				PreviewShip->ShipMeshComponent->SetVisibility(true, true);
+				PreviewShip->ShipMeshComponent->SetRenderCustomDepth(false);
+			}
+		}
+
+	// Render target for the capture.
+	if (!ShipPreviewRT)
+	{
+		ShipPreviewRT = UKismetRenderingLibrary::CreateRenderTarget2D(World, 512, 512, RTF_RGBA8);
+	}
+	if (ShipPreviewRT)
+	{
+		ShipPreviewRT->ClearColor = FLinearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	}
+
+	// Scene capture aimed at the preview ship.
+	ShipPreviewCapture = NewObject<USceneCaptureComponent2D>(this, TEXT("ShipPreviewCapture"));
+		ShipPreviewCapture->SetupAttachment(RootComponent);
+		ShipPreviewCapture->RegisterComponent();
+		ShipPreviewCapture->SetWorldLocation(PreviewLoc + FVector(-140.0f, 0, 15.0f));
+				ShipPreviewCapture->SetWorldRotation(FRotator(0, 0, 0));
+		ShipPreviewCapture->TextureTarget = ShipPreviewRT;
+		ShipPreviewCapture->ShowFlags.SetFog(false);
+		ShipPreviewCapture->ShowFlags.SetSkyLighting(false);
+		ShipPreviewCapture->FOVAngle = 30.0f;
+		ShipPreviewCapture->CaptureSource = SCS_SceneColorHDR;
+		ShipPreviewCapture->bCaptureEveryFrame = true;
+		ShipPreviewCapture->bUseRayTracingIfEnabled = false;
+
+	bShipCaptureReady = ShipPreviewCapture && ShipPreviewRT;
+	UE_LOG(LogTemp, Log, TEXT("ShipSelect: preview rebuilt for roster index %d (ready=%d)"),
+		ShipSelectIndex, bShipCaptureReady ? 1 : 0);
+}
+
+void AAdastreaHUD::CycleShipSelect(int32 Step)
+{
+	const int32 Next = FMath::Clamp(ShipSelectIndex + Step, 0, ShipRosterCount - 1);
+	if (Next != ShipSelectIndex)
+	{
+		ShipSelectIndex = Next;
+		ShipPreviewYaw = -35.0f;
+		ShipPreviewPitch = 8.0f;
+		if (APlayerController* PC = GetOwningPlayerController())
+		{
+			RebuildShipPreview(PC);
+		}
+	}
+}
+
+void AAdastreaHUD::OrbitShipPreview(float DeltaYaw, float DeltaPitch)
+{
+	ShipPreviewYaw = FMath::Fmod(ShipPreviewYaw + DeltaYaw, 360.0f);
+	ShipPreviewPitch = FMath::Clamp(ShipPreviewPitch + DeltaPitch, -60.0f, 60.0f);
+}
+
+USpaceshipDataAsset* AAdastreaHUD::GetPreviewShipDataAsset() const
+{
+	// Read stats from the roster's associated data asset (robust regardless of
+	// whether the live pawn exposes ShipDataAsset).
+	if (ShipSelectIndex < 0 || ShipSelectIndex >= ShipRosterCount)
+	{
+		return nullptr;
+	}
+	return LoadObject<USpaceshipDataAsset>(nullptr, ShipRosterDataAssets[ShipSelectIndex]);
+}
+
+void AAdastreaHUD::SpawnSelectedShip(APlayerController* PC)
+{
+	if (!PC || !PC->GetWorld())
+	{
+		return;
+	}
+	const TSubclassOf<AActor> ShipClass = LoadShipRosterClass(ShipSelectIndex);
+	if (!ShipClass)
+	{
+		return;
+	}
+	UWorld* World = PC->GetWorld();
+	const FVector SpawnLoc = PC->GetPawn() ? PC->GetPawn()->GetActorLocation() : FVector(18000, 18000, 5000);
+	const FRotator SpawnRot = PC->GetPawn() ? PC->GetPawn()->GetActorRotation() : FRotator::ZeroRotator;
+
+	FActorSpawnParameters Params;
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	AActor* NewPawn = World->SpawnActor<AActor>(ShipClass, SpawnLoc, SpawnRot, Params);
+	if (NewPawn)
+	{
+		// Destroy old pawn, possess new.
+		AActor* Old = PC->GetPawn();
+		PC->UnPossess();
+		PC->Possess(Cast<APawn>(NewPawn));
+		PC->SetViewTarget(NewPawn);
+		if (Old) { Old->Destroy(); }
+		UE_LOG(LogTemp, Log, TEXT("ShipSelect: spawned+possessed %llx"), (void*)NewPawn);
+	}
+	HideShipSelect();
+}
+
+void AAdastreaHUD::DrawShipSelectScreen(APlayerController* PC)
+{
+	if (!PC) { return; }
+	// Ensure the preview capture is built (first draw / after opening).
+	if (!bShipCaptureReady)
+	{
+		RebuildShipPreview(PC);
+	}
+	int32 VX = 0, VY = 0;
+	PC->GetViewportSize(VX, VY);
+	const float VW = (float)VX, VH = (float)VY;
+
+	// Full-screen dim backdrop.
+		DrawRect(FLinearColor(0.02f, 0.03f, 0.05f, 0.92f), 0.0f, 0.0f, VW, VH);
+
+		// Apply current preview orbit to the preview ship + capture each frame.
+			if (bShipCaptureReady && ShipPreviewCapture && ShipPreviewActor)
+			{
+				// Rotate the model to the orbit yaw/pitch; capture stays on the -X axis
+				// looking at the ship, so rotating the model orbits it.
+				ShipPreviewActor->SetActorRotation(FRotator(ShipPreviewPitch, ShipPreviewYaw, 0.0f));
+							const FVector ActorLoc = ShipPreviewActor->GetActorLocation();
+							ShipPreviewCapture->SetWorldLocation(ActorLoc + FVector(-140.0f, 0, 15.0f));
+							ShipPreviewCapture->SetWorldRotation(FRotator(0, 0, 0));
+			}
+
+			UFont* TitleFont = GEngine->GetLargeFont();
+	UFont* BodyFont  = GEngine->GetSmallFont();
+
+	DrawText(TEXT("SHIP SELECT"), FLinearColor(0.15f,0.9f,0.6f,1.0f), VW*0.5f - 80.0f, 18.0f, TitleFont, 1.2f);
+
+	// ---- Left: ship list ----
+	const float LX = 40.0f, LY = 80.0f;
+	for (int32 i = 0; i < ShipRosterCount; ++i)
+	{
+		const TSubclassOf<AActor> Cls = LoadShipRosterClass(i);
+		FString Label = Cls ? Cls->GetName() : FString(TEXT("<unknown>"));
+		Label.RemoveFromStart(TEXT("BP_"));
+		const float RowY = LY + i * 30.0f;
+		const bool bSelected = (i == ShipSelectIndex);
+		if (bSelected)
+		{
+			DrawRect(FLinearColor(0.15f,0.32f,0.35f,0.5f), LX, RowY, 220.0f, 24.0f);
+		}
+		DrawText(Label, bSelected ? FLinearColor(1,1,1,1) : FLinearColor(0.7f,0.8f,0.9f,1), LX+8, RowY+2, BodyFont, 0.85f);
+	}
+
+	// ---- Center-right: 3D preview ----
+	const float PX = VW*0.5f - 40.0f, PY = 60.0f, PW = 460.0f, PH = 460.0f;
+	DrawRect(FLinearColor(0.03f,0.06f,0.09f,0.95f), PX, PY, PW, PH);   // preview stage
+	DrawLine(PX, PY, PX+PW, PY, kBorder, 2.0f);
+	DrawLine(PX, PY+PH, PX+PW, PY+PH, kBorder, 2.0f);
+	DrawLine(PX, PY, PX, PY+PH, kBorder, 2.0f);
+	DrawLine(PX+PW, PY, PX+PW, PY+PH, kBorder, 2.0f);
+
+	if (bShipCaptureReady && ShipPreviewRT)
+	{
+		DrawTexture(ShipPreviewRT, PX+20, PY+20, PW-40, PH-40, 0, 0, 1, 1, FLinearColor::White);
+	}
+	else
+	{
+		DrawText(TEXT("[ preview unavailable ]"), FLinearColor(0.5f,0.6f,0.7f,1), PX+PW*0.5f-110, PY+PH*0.5f, BodyFont, 0.8f);
+	}
+
+	// ---- Right: stats ----
+	const float SX = PX + PW + 30.0f, SY = 80.0f;
+	USpaceshipDataAsset* DA = GetPreviewShipDataAsset();
+	if (DA)
+	{
+		const FString ShipName = DA->ShipName.ToString();
+		const FString ShipClass = DA->ShipClass.ToString();
+		TArray<FString> Lbls;
+		TArray<FString> Vals;
+		Lbls.Add(TEXT("CLASS"));    Vals.Add(ShipClass);
+		Lbls.Add(TEXT("MAX SPEED"));Vals.Add(FString::Printf(TEXT("%.0f u/s"), DA->MaxSpeed));
+		Lbls.Add(TEXT("ACCEL"));    Vals.Add(FString::Printf(TEXT("%.0f u/s^2"), DA->Acceleration));
+		Lbls.Add(TEXT("MANEUVER")); Vals.Add(FString::Printf(TEXT("%d/10"), DA->Maneuverability));
+		Lbls.Add(TEXT("HULL"));     Vals.Add(FString::Printf(TEXT("%.0f"), DA->HullStrength));
+		Lbls.Add(TEXT("SHIELD"));   Vals.Add(FString::Printf(TEXT("%.0f"), DA->ShieldStrength));
+		Lbls.Add(TEXT("CARGO"));    Vals.Add(FString::Printf(TEXT("%.0f m^3"), DA->CargoCapacity));
+		Lbls.Add(TEXT("JUMP RANGE"));Vals.Add(FString::Printf(TEXT("%.0f ly"), DA->JumpRange));
+		Lbls.Add(TEXT("MOBILITY")); Vals.Add(FString::Printf(TEXT("%.0f"), DA->GetMobilityRating()));
+		Lbls.Add(TEXT("COMBAT"));   Vals.Add(FString::Printf(TEXT("%.0f"), DA->GetCombatRating()));
+
+		DrawText(ShipName, FLinearColor(0.95f,0.78f,0.30f,1), SX, SY, TitleFont, 1.0f);
+		float Y = SY + 40.0f;
+		for (int32 i = 0; i < Lbls.Num(); ++i)
+		{
+			DrawText(Lbls[i], kLabel, SX, Y, BodyFont, 0.85f);
+			DrawText(Vals[i], FLinearColor(0.85f,0.9f,0.95f,1), SX+150, Y, BodyFont, 0.85f);
+			Y += 24.0f;
+		}
+	}
+	else
+	{
+		DrawText(TEXT("(no data asset on this pawn)"), FLinearColor(0.6f,0.7f,0.8f,1), SX, SY, BodyFont, 0.8f);
+	}
+
+	// ---- Footer controls ----
+	DrawText(TEXT("Left/Right: rotate    Up/Down or A/D: cycle ship    [Space]: select & fly    [Esc]: close"),
+		FLinearColor(0.6f,0.7f,0.8f,0.9f), VW*0.5f - 400.0f, VH - 40.0f, BodyFont, 0.7f);
 }

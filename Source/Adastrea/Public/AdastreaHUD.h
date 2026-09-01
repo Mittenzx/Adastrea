@@ -8,6 +8,9 @@
 
 class AAdastreaPlayerController;
 class ASpaceship;
+class USceneCaptureComponent2D;
+class UTextureRenderTarget2D;
+class USpaceshipDataAsset;
 
 /**
  * Adastrea in-game HUD.
@@ -92,4 +95,68 @@ public:
 
 	/** Toggle buy/sell mode. */
 	void ToggleBuySellMode() { bBuyMode = !bBuyMode; }
+
+	// ========================
+	// SHIP SELECT SCREEN (concept prototype — later reused at construction
+	// facilities / map object-inspection; canvas-drawn + SceneCapture2D preview)
+	// ========================
+
+	/** Whether the ship-select screen is shown. */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|ShipSelect")
+	bool bShowShipSelect = false;
+
+	/** Index of currently selected ship in the roster. */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|ShipSelect")
+	int32 ShipSelectIndex = 0;
+
+	/** Preview orbit yaw (deg). */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|ShipSelect")
+	float ShipPreviewYaw = -35.0f;
+
+	/** Preview orbit pitch (deg). */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|ShipSelect")
+	float ShipPreviewPitch = 8.0f;
+
+	/** Whether the SceneCapture preview has been initialized. */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|ShipSelect")
+	bool bShipCaptureReady = false;
+
+	/** The render target the preview is drawn into. */
+	UPROPERTY()
+	TObjectPtr<UTextureRenderTarget2D> ShipPreviewRT;
+
+	/** Show the ship-select screen (creates preview capture on first show). */
+	UFUNCTION(BlueprintCallable, Category="HUD|ShipSelect")
+	void ShowShipSelect();
+
+	/** Hide the ship-select screen and tear down the preview capture. */
+	UFUNCTION(BlueprintCallable, Category="HUD|ShipSelect")
+	void HideShipSelect();
+
+	/** Draw the ship-select screen (stats + 3D preview + list + controls). */
+	void DrawShipSelectScreen(APlayerController* PC);
+
+	/** Select the next/prev ship in the roster (Step +1/-1). Rebuilds preview. */
+	void CycleShipSelect(int32 Step);
+
+	/** Rotate the preview model (DeltaYaw, DeltaPitch). */
+	void OrbitShipPreview(float DeltaYaw, float DeltaPitch);
+
+	/** Spawn the currently selected ship as the player's pawn. */
+	void SpawnSelectedShip(APlayerController* PC);
+
+	/** Get the preview pawn's data asset (for stats readout). */
+	USpaceshipDataAsset* GetPreviewShipDataAsset() const;
+
+	/** Build the 3D preview capture + render target for the current roster index. */
+	void RebuildShipPreview(APlayerController* PC);
+
+private:
+	/** The camera that renders the preview ship into ShipPreviewRT. */
+	UPROPERTY()
+	TObjectPtr<USceneCaptureComponent2D> ShipPreviewCapture;
+
+	/** The spawned preview ship actor (not the player pawn). */
+	UPROPERTY()
+	TObjectPtr<AActor> ShipPreviewActor;
 };
