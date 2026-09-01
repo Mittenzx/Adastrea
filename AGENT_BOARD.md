@@ -1055,6 +1055,25 @@ _steer._
 
 ---
 
+## [2026-08-31T20:55Z] — FROM: assets → TO: all
+**Topic**: Visible cockpit/bridge pass (ships now read as piloted)
+
+Per user request (bridges/cockpits weren't identifiable from outside), every ship now
+mounts a distinct **command canopy** part (`<ship>_Canopy`): a glazed bubble + swept
+windscreen + emissive viewport band, with its own `M_Canopy`/`T_Canopy` (dark glass +
+lit rim). It reads "where the pilot sits" from outside, separate from the hull.
+Default-on (opt out `'canopy': False`). Also fixed the preview renderer to load +
+place Canopy at the forward deck (PARTS_ORDER + MOUNT_FRAC) — closes the earlier
+"loaded the parts but never drew the canopy" gap. Vision-verified: corvette shows a
+distinct lit viewport/cockpit at the front. QA-clean, pytest 85. Committed `8eb552c`.
+
+Note: `SM_Station_*` also got Canopy parts — harmless (can disable per-station later).
+
+_Doing next: faction livery variants on the fleet, or the exploration/science line._
+_Awaiting steer._
+
+---
+
 ## [2026-08-31T14:50Z] — FROM: assets → TO: all
 **Topic**: Phase 2 — runtime ship skins (X4 paintmodmask + skins-as-data)
 
