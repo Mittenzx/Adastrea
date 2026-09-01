@@ -600,58 +600,74 @@ def gen_texture_set(name, variant, size=2048, seed=1):
 
 
 def gen_canopy_texture(name, size=1024, seed=180):
-    """BESPOKE canopy/cockpit texture — a glazed windscreen language used by NO
-    other part. Draws an enclosed glass canopy: smooth tinted glass, a distinct
-    windscreen arch with a brow frame, cockpit spars (structural ribs), a central
-    pilot window, and a soft instrument/head-up glow. Does NOT use the shared
-    panel-grid/stripe/grime recipe, so the bridge reads as the pilot's eye, not
-    another hull panel."""
+    """BESPOKE canopy/cockpit texture — a glazed windscreen used by NO other part.
+    Draws a VISIBLE glazed canopy: a mid-tone teal glass windscreen with a dark
+    brow/frame, structural spars (ribs) dividing the glass, a bright cyan HUD
+    readout bar, and a lit rim glow. Uses clearly visible colors (not near-black)
+    so the cockpit reads on the ship, distinct from hull panels."""
     rng = np.random.default_rng(seed)
     W = H = size
-    h = np.ones((H, W), dtype=np.float32) * 0.5
-    arch_cx, arch_cy, arch_r = W*0.5, H*0.42, W*0.30
     yy, xx = np.mgrid[:H, :W]
+    arch_cx, arch_cy, arch_r = W*0.5, H*0.40, W*0.34
     dist = (xx - arch_cx)**2 + (yy - arch_cy)**2
     glass = dist < arch_r**2
-    h[glass] = 0.30
-    arch = (dist < (arch_r*1.04)**2) & ~glass
-    D = np.zeros((H, W, 4), dtype=np.float32)
-    D[..., 3] = 1.0
-    D[..., 0][glass] = 0.05; D[..., 1][glass] = 0.11; D[..., 2][glass] = 0.12
-    D[..., 0][arch] = 0.10; D[..., 1][arch] = 0.12; D[..., 2][arch] = 0.14
-    deck = (yy > arch_cy + arch_r*0.4)
-    D[..., 0][deck] = 0.06; D[..., 1][deck] = 0.07; D[..., 2][deck] = 0.08
+    # background = dark hull framing the windscreen (visible, not black)
+    D = np.empty((H, W, 4), dtype=np.float32)
+    D[..., 0] = 0.16; D[..., 1] = 0.18; D[..., 2] = 0.20; D[..., 3] = 1.0
+    # glass: MID-TONE teal windscreen (clearly visible, translucent-looking)
+    D[..., 0][glass] = 0.16 + 0.10*(1 - dist[glass]/arch_r**2)
+    D[..., 1][glass] = 0.40 + 0.12*(1 - dist[glass]/arch_r**2)
+    D[..., 2][glass] = 0.42 + 0.12*(1 - dist[glass]/arch_r**2)
+    # brow/frame ring: darker gunmetal around the glass
+    ring = (dist < (arch_r*1.06)**2) & ~glass
+    D[..., 0][ring] = 0.08; D[..., 1][ring] = 0.10; D[..., 2][ring] = 0.11
+    # lower instrument deck (below glass)
+    deck = yy > arch_cy + arch_r*0.45
+    D[..., 0][deck] = 0.05; D[..., 1][deck] = 0.06; D[..., 2][deck] = 0.07
+    # frame spars (ribs) across the glass, darker against bright glass
     hline = np.zeros((H, W), dtype=bool)
-    for sx in [0.18, 0.36, 0.64, 0.82]:
+    for sx in [0.22, 0.40, 0.60, 0.78]:
         x0 = int(W*sx); hline[:, max(0,x0-1):x0+1] = True
     spars = hline & glass
-    D[..., 0][spars] = 0.13; D[..., 1][spars] = 0.15; D[..., 2][spars] = 0.17
-    pil_r = int(W*0.13); pcy, pcx = int(H*0.36), int(W*0.5)
+    D[..., 0][spars] = 0.02; D[..., 1][spars] = 0.03; D[..., 2][spars] = 0.04
+    # central pilot window: brighter glass highlight
+    pil_r = int(W*0.13); pcy, pcx = int(H*0.34), int(W*0.5)
     pwin = (xx-pcx)**2 + (yy-pcy)**2 < pil_r**2
-    D[..., 0][pwin] = 0.12; D[..., 1][pwin] = 0.32; D[..., 2][pwin] = 0.30
+    D[..., 0][pwin] = 0.30; D[..., 1][pwin] = 0.62; D[..., 2][pwin] = 0.66
+    # ---- emissive: bright cyan HUD bar + lit rim (thick, visible) ----
     E = np.zeros((H, W, 4), dtype=np.float32); E[..., 3] = 1.0
-    hud = np.zeros((H, W), dtype=bool)
-    for gx in [0.3, 0.5, 0.7]:
-        hud[max(0,int(H*0.78)-8):int(H*0.78)+8, max(0,int(W*gx)-14):int(W*gx)+14] = True
-    E[hud] = [0.3, 0.9, 1.0, 1.0]; D[hud] = (0.2, 0.6, 0.7, 1.0)
-    fixed = np.zeros((H, W), dtype=bool); fixed[hud] = True
-    rim = dist < (arch_r*1.02)**2
-    rim &= ~glass & ~arch
-    E[rim] = [0.5, 0.9, 1.0, 1.0]; D[rim] = (0.3, 0.6, 0.7, 1.0); fixed[rim] = True
+    hudbar = np.zeros((H, W), dtype=bool)
+    hudbar[max(0,int(H*0.30)-14):int(H*0.30)+14, int(W*0.22):int(W*0.78)] = True
+    hudbar &= glass
+    E[hudbar] = (0.30, 0.95, 1.0, 1.0); D[hudbar] = (0.35, 0.8, 0.9, 1.0)
+    # cyan readout ticks along the HUD
+    ticks = np.zeros((H, W), dtype=bool)
+    for tx in [0.25,0.35,0.45,0.55,0.65,0.75]:
+        ticks[int(H*0.30)-4:int(H*0.30)+4, int(W*tx)-3:int(W*tx)+3] = True
+    ticks &= glass; E[ticks] = (0.7,1.0,1.0,1.0); D[ticks] = (0.5,0.9,1.0,1.0)
+    # lit rim glow on the windscreen ring
+    E[ring] = (0.35, 0.9, 1.0, 1.0); D[ring] = (0.4, 0.7, 0.8, 1.0)
+    fixed = hudbar | ticks | ring
+    # normal map (smooth glass + ridges on spars/ring)
+    # build a height field for glass/frame/spars (smooth glass, ridges on frame)
+    hn = np.full((H, W), 0.3, dtype=np.float32)
+    hn[glass] = 0.25
+    hn[ring] = 0.12
+    hn[spars] = 0.05
     try:
         from scipy.ndimage import uniform_filter
-        hn = uniform_filter(h, 2)
+        hn = uniform_filter(hn, 2)
     except ImportError:
-        hn = h
+        pass
     gx_, gy_ = np.gradient(hn)
-    N = np.empty((H, W, 4), dtype=np.float32); inv = 2.8
+    N = np.empty((H, W, 4), dtype=np.float32); inv = 3.0
     N[..., 0] = -gx_ * inv; N[..., 1] = -gy_ * inv; N[..., 2] = 1.0
     nr = np.sqrt(N[...,0]**2 + N[...,1]**2 + N[...,2]**2)
     N[...,0] /= nr; N[...,1] /= nr; N[...,2] = -N[...,2]; N[...,3] = 1.0
-    R = np.full((H, W), 0.12, dtype=np.float32)
-    AO = np.full((H, W), 0.5, dtype=np.float32)
-    M = np.full((H, W), 0.1, dtype=np.float32)
-    SKIN = np.zeros((H, W), dtype=np.float32)
+    R = np.full((H, W), 0.15, dtype=np.float32)   # smooth glass
+    AO = np.full((H, W), 0.4, dtype=np.float32)
+    M = np.full((H, W), 0.1, dtype=np.float32)     # glass (non-metal)
+    SKIN = np.zeros((H, W), dtype=np.float32)      # canopy not skinnable
     maps = {'_D': D, '_N': N, '_R': _to4(R), '_M': _to4(M), '_AO': _to4(AO), '_E': E, '_SKIN': _to4(SKIN)}
     for suf, arr in maps.items():
         fname = f"T_{name}{suf}.png"
