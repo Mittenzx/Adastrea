@@ -2,6 +2,7 @@
 
 #include "Stations/SpaceStation.h"
 #include "Stations/MarketplaceModule.h"
+#include "Trading/CraftingTreeLoader.h"
 #include "Stations/DockingBayModule.h"
 #include "AdastreaLog.h"
 
@@ -49,22 +50,33 @@ void ASpaceStation::BeginPlay()
     }
 
     void ASpaceStation::ApplyStationMarket()
-        {
-            if (!StationMarket)
             {
-                return;
-            }
-            for (AMarketplaceModule* Marketplace : GetMarketplaceModules())
-            {
-                if (Marketplace)
+                if (!StationMarket)
                 {
-                    Marketplace->MarketDataAsset = StationMarket;
-                    UE_LOG(LogAdastreaStations, Log,
-                        TEXT("SpaceStation::ApplyStationMarket - Assigned market '%s' to %s on station %s"),
-                        *StationMarket->GetName(), *Marketplace->GetName(), *GetName());
+                    return;
+                }
+                // Populate the market inventory dynamically from the crafting tree so
+                // every crafting material is tradeable at runtime (per design choice).
+                UCraftingTreeLoader* Loader = NewObject<UCraftingTreeLoader>(this);
+                if (Loader)
+                {
+                    if (!Loader->IsLoaded())
+                    {
+                        Loader->LoadCraftingTree();
+                    }
+                    Loader->PopulateMarketInventory(StationMarket);
+                }
+                for (AMarketplaceModule* Marketplace : GetMarketplaceModules())
+                {
+                    if (Marketplace)
+                    {
+                        Marketplace->MarketDataAsset = StationMarket;
+                        UE_LOG(LogAdastreaStations, Log,
+                            TEXT("SpaceStation::ApplyStationMarket - Assigned market '%s' to %s on station %s"),
+                            *StationMarket->GetName(), *Marketplace->GetName(), *GetName());
+                    }
                 }
             }
-        }
 
 void ASpaceStation::AddModule(ASpaceStationModule* Module)
 {

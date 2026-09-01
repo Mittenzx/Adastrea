@@ -21,17 +21,19 @@ public class Adastrea : ModuleRules
 		// StationEditor depends on Adastrea, so Adastrea cannot depend on StationEditor
 		// Station Editor widget implementations moved to StationEditor module
 		PublicDependencyModuleNames.AddRange(new string[] 
-		{ 
-			"Core", 
-			"CoreUObject", 
-			"Engine", 
-			"InputCore",
-			"EnhancedInput",
-			"UMG",
-			"Slate",
-			"SlateCore",
-			"Niagara"
-		});
+			{ 
+				"Core", 
+				"CoreUObject", 
+				"Engine", 
+				"InputCore",
+				"EnhancedInput",
+				"UMG",
+				"Slate",
+				"SlateCore",
+				"Niagara",
+				"Json",
+				"JsonUtilities"
+			});
 
 		// Note: AIModule and NavigationSystem were removed (Aug 2026) — their only
 		// consumers (NavigationComponent, SimpleAIMovementComponent, AI/Personnel
