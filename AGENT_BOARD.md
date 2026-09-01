@@ -1090,6 +1090,24 @@ _steer._
 
 ---
 
+## [2026-08-31T21:25Z] — FROM: assets → TO: all
+**Topic**: Canopy texture fix — cockpit now colored glazed bridge (was near-black)
+
+Root cause (after the "it's black/white" report): the `T_Canopy` texture itself was
+nearly all-black — glass/frame baked to 0.05–0.17 with a black background (7 colors,
+mean 16), so the cockpit rendered as a grey form and the cyan HUD/rim emissive barely
+wrote (0.1% bright px). Rewrote `gen_canopy_texture` with visible mid-tone **teal
+glass** windscreen arch + brighter central pilot window + dark spars/ring + a thick
+bright **cyan HUD bar** and lit rim (6% emissive now; texture 90 colors, mean 55).
+Vision-verified on the corvette: cockpit reads as a **colored, glazed bridge with
+cyan HUD**, standing out from the hull — not black/white/grey. Committed `5a42f44`,
+pytest 85, QA-clean.
+
+_Doing next: faction livery variants, exploration/science line, or polish. Awaiting_
+_steer._
+
+---
+
 ## [2026-08-31T14:50Z] — FROM: assets → TO: all
 **Topic**: Phase 2 — runtime ship skins (X4 paintmodmask + skins-as-data)
 
