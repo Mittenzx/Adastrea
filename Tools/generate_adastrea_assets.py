@@ -1070,25 +1070,46 @@ def build_reactor_part(sz, outname, variant='core'):
 
 
 def build_canopy_part(sz, outname):
-    """Glazed command canopy / windscreen — the visible 'pilot's eye'. A prominent
-    forward glazed bubble (sphere) + a wide tilted windscreen pane + a lit emissive
-    rim band, sized to read from outside against the hull. Carries M_Canopy so it
-    renders as dark-tinted glass with a lit edge, distinct from hull material.
-    Mounts at the forward command deck."""
+    """Glazed command canopy — a single, grid-aligned front windscreen pane
+    (aircraft-style) rather than a sphere/tilted box, so the windscreen texture
+    maps flat onto ONE plane instead of being triplanar-wrapped around curved
+    faces. The front glass carries the bespoke windscreen (arch/spars/HUD) cleanly.
+    Builds a flat forward glass + a slim frame cowl, then applies a PLANAR UV so
+    the texture aligns with the glass face."""
     k = sc(sz)
-    # prominent glazed bubble (the easy-toread cockpit form)
-    bubble = sphere("Canopy_Bubble", 40*k, loc=(0, 0, 0), verts=16)
-    bubble.scale = (1.15, 1.5, 0.9)
-    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-    bevel(bubble, 2, 1)
-    # wide tilted windscreen pane sweeping forward
-    pane = box("Canopy_Pane", 88*k, 120*k, 18*k, loc=(0, 22*k, 6*k))
-    pane.rotation_euler = (math.radians(34), 0, 0)
-    bevel(pane, 7, 3)
-    # lit emissive rim band along the forward edge (reads as lit viewport/glow)
-    strip = box("Canopy_Strip", 82*k, 8*k, 6*k, loc=(0, 40*k, -4*k))
-    bevel(strip, 3, 2)
-    return finalize_part([bubble, pane, strip], outname, "M_Canopy", origin='ORIGIN_CENTER_OF_VOLUME')
+    # --- flat forward windscreen pane (the glass, aligned to the front face) ---
+    gw, gh, gt = 78*k, 56*k, 8*k
+    glass = box("Canopy_Glass", gw, gt, gh, loc=(0, 0, 0))   # facing -Y front
+    glass.rotation_euler = (math.radians(12), 0, 0)           # slight rake, still flat
+    bevel(glass, 3, 2)
+    # --- slim surround cowl (frame) so it's mounted in a bezel, not floating ---
+    cowl = box("Canopy_Cowl", gw*1.25, gt*2.2, gh*1.2, loc=(0, -gt*2, -gh*0.1))
+    bevel(cowl, 4, 2)
+    obj = join([glass, cowl], f"{outname}_CanopyGeo")
+    apply_mods(obj); clean_mesh(obj)
+    # --- PLANAR UV: project onto the front-facing plane so the windscreen texture
+    # maps squarely onto the glass (no triplanar wrap). U=X, V=Z on the face.
+    sel_activate(obj)
+    # deterministic PLANAR UV: project onto the front (Y=0) plane using local X,Z
+    # so the windscreen texture maps squarely onto the glass (no triplanar wrap).
+    import bmesh as _bm
+    bm = _bm.new(); bm.from_mesh(obj.data)
+    uv = bm.loops.layers.uv.get("UVMap") or bm.loops.layers.uv.new("UVMap")
+    for f in bm.faces:
+        for loop in f.loops:
+            loc = obj.matrix_world @ loop.vert.co
+            loop[uv].uv = (loc[0]/120.0 + 0.5, loc[2]/80.0 + 0.5)
+    bm.to_mesh(obj.data); bm.free()
+    obj.name = outname
+    mat = bpy.data.materials.get("M_Canopy")
+    if mat is None:
+        mat = bpy.data.materials.new("M_Canopy"); mat.use_nodes = True
+    if not obj.data.materials: obj.data.materials.append(mat)
+    else: obj.data.materials[0] = mat
+    out = export_fbx(obj, outname)
+    return obj, out
+
+
 
 
 def build_mining_laser(sz, outname):
