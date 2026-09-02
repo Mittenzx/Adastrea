@@ -142,3 +142,6 @@ NUL
 
 # Reference models (mixed CC licenses) — local inspection only, not shipped
 ref_ships/
+
+# Reference study textures (CC0) — local inspection only
+ref_textures/
