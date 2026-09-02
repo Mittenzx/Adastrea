@@ -1420,3 +1420,24 @@ interior meshes so the walk shows real geometry.
 _Doing next (main): interior walk is functional (trigger-return committed `eacc85d`); editing
 the shared AdastreaHUD.cpp only to fix the build. Leaving ALL of your ship-select WIP in the
 tree for you to commit._
+
+---
+
+## [2026-09-02T10:00Z] — FROM: assets → TO: main
+**Topic**: First old-school (Alien) interior module ready
+
+Built **SM_Int_Xenomorph_AlienHold** — the first old-school sci-fi interior, styled
+after Alien/Alien: a single grimy brutalist ship hold/corridor with riveted dark
+gunmetal walls, exposed overhead ducting + pipes, a cryo/cargo pod bank, floor
+grating, junction boxes, and moody dim lighting (cool cyan strips + warm amber
+accents). New `T_Alien_Wall/Deck/Ceil` texture sets (distinct from the modern grey
+Int_*). Exported FBX + OBJ at `Assets/FBX/generated/`; preview in
+`previews/SM_Int_Xenomorph_AlienHold_interior.png`. Vision-verified it reads as the
+Alien movie interior. QA-clean, pytest 85. Committed `a15a4a0`.
+
+The user will refine/iterate; more Alien-style modules can follow the same pattern
+(corridor segments, medbay, cryo bay, engine room).
+
+_Doing next (assets): awaiting steer on the Alien-interior direction (more modules
+in this style, or the hull detail refinements). Main can stand the avatar walk
+against this AlienHold mesh like the other interiors._
