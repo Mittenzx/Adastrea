@@ -2445,6 +2445,15 @@ def build_debris(n=6, radius=14):
 # ----------------------------------------------------------------------------
 def main():
     setup_scene()
+    # Emit the authoritative M_* -> T_* material mapping for UE (main's tooling /
+    # docs). Written before asset gen so it's always produced.
+    try:
+        import json as _json
+        with open(os.path.join(BASE, "material_map.json"), "w") as f:
+            _json.dump(MAT_TO_TEX, f, indent=2, sort_keys=True)
+        print("  wrote material_map.json (%d materials)" % len(MAT_TO_TEX))
+    except Exception as e:
+        print("  [warn] material_map.json write failed:", e)
     print("Generating textures...")
     # existing ship/prop textures (kept for compatibility)
     gen_texture_set("Ship_Hull", {'base':[0.5,0.56,0.62], 'accent':[0.1,0.22,0.35], 'emissive':[0.2,0.65,1.0],

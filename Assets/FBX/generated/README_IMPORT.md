@@ -76,6 +76,12 @@ its texture set like so:
 > ships); engaged, the FBX `M_*` name is the hook — create the UE material `M_Engine`
 > from `T_Engine_*` and assign it to the part's material slot.
 
+**> Full authoritative mapping:** see
+> `docs/11-TECHNICAL_SPECS/UE_MATERIAL_REFERENCE.md` for every `M_*` → `T_*` pairing
+> (hulls, propulsion, weapons, reactors, interiors, combat FX, glass, hand-authored
+> ships). The same map is emitted machine-readably as
+> `Assets/FBX/generated/material_map.json` (42 entries) for main's import tooling.
+
 ### Skin system (Phase 2 — runtime ship skins, X4-style)
 Each texture set also ships a **skin mask**: `T_<name>_SKIN.png` (grayscale,
 `1.0` = skinnable hull panel, `0.0` = fixed region that must NOT be recolored —
