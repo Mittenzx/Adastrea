@@ -599,85 +599,6 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     return {suf: f"T_{name}{suf}.png" for suf in maps}
 
 
-def gen_canopy_texture(name, size=1024, seed=180):
-    """BESPOKE canopy/cockpit texture — a glazed windscreen used by NO other part.
-    Draws a VISIBLE glazed canopy: a mid-tone teal glass windscreen with a dark
-    brow/frame, structural spars (ribs) dividing the glass, a bright cyan HUD
-    readout bar, and a lit rim glow. Uses clearly visible colors (not near-black)
-    so the cockpit reads on the ship, distinct from hull panels."""
-    rng = np.random.default_rng(seed)
-    W = H = size
-    yy, xx = np.mgrid[:H, :W]
-    arch_cx, arch_cy, arch_r = W*0.5, H*0.40, W*0.34
-    dist = (xx - arch_cx)**2 + (yy - arch_cy)**2
-    glass = dist < arch_r**2
-    # background = dark hull framing the windscreen (visible, not black)
-    D = np.empty((H, W, 4), dtype=np.float32)
-    D[..., 0] = 0.16; D[..., 1] = 0.18; D[..., 2] = 0.20; D[..., 3] = 1.0
-    # glass: MID-TONE teal windscreen (clearly visible, translucent-looking)
-    D[..., 0][glass] = 0.16 + 0.10*(1 - dist[glass]/arch_r**2)
-    D[..., 1][glass] = 0.40 + 0.12*(1 - dist[glass]/arch_r**2)
-    D[..., 2][glass] = 0.42 + 0.12*(1 - dist[glass]/arch_r**2)
-    # brow/frame ring: darker gunmetal around the glass
-    ring = (dist < (arch_r*1.06)**2) & ~glass
-    D[..., 0][ring] = 0.08; D[..., 1][ring] = 0.10; D[..., 2][ring] = 0.11
-    # lower instrument deck (below glass)
-    deck = yy > arch_cy + arch_r*0.45
-    D[..., 0][deck] = 0.05; D[..., 1][deck] = 0.06; D[..., 2][deck] = 0.07
-    # frame spars (ribs) across the glass, darker against bright glass
-    hline = np.zeros((H, W), dtype=bool)
-    for sx in [0.22, 0.40, 0.60, 0.78]:
-        x0 = int(W*sx); hline[:, max(0,x0-1):x0+1] = True
-    spars = hline & glass
-    D[..., 0][spars] = 0.02; D[..., 1][spars] = 0.03; D[..., 2][spars] = 0.04
-    # central pilot window: brighter glass highlight
-    pil_r = int(W*0.13); pcy, pcx = int(H*0.34), int(W*0.5)
-    pwin = (xx-pcx)**2 + (yy-pcy)**2 < pil_r**2
-    D[..., 0][pwin] = 0.30; D[..., 1][pwin] = 0.62; D[..., 2][pwin] = 0.66
-    # ---- emissive: bright cyan HUD bar + lit rim (thick, visible) ----
-    E = np.zeros((H, W, 4), dtype=np.float32); E[..., 3] = 1.0
-    hudbar = np.zeros((H, W), dtype=bool)
-    hudbar[max(0,int(H*0.30)-14):int(H*0.30)+14, int(W*0.22):int(W*0.78)] = True
-    hudbar &= glass
-    E[hudbar] = (0.30, 0.95, 1.0, 1.0); D[hudbar] = (0.35, 0.8, 0.9, 1.0)
-    # cyan readout ticks along the HUD
-    ticks = np.zeros((H, W), dtype=bool)
-    for tx in [0.25,0.35,0.45,0.55,0.65,0.75]:
-        ticks[int(H*0.30)-4:int(H*0.30)+4, int(W*tx)-3:int(W*tx)+3] = True
-    ticks &= glass; E[ticks] = (0.7,1.0,1.0,1.0); D[ticks] = (0.5,0.9,1.0,1.0)
-    # lit rim glow on the windscreen ring
-    E[ring] = (0.35, 0.9, 1.0, 1.0); D[ring] = (0.4, 0.7, 0.8, 1.0)
-    fixed = hudbar | ticks | ring
-    # normal map (smooth glass + ridges on spars/ring)
-    # build a height field for glass/frame/spars (smooth glass, ridges on frame)
-    hn = np.full((H, W), 0.3, dtype=np.float32)
-    hn[glass] = 0.25
-    hn[ring] = 0.12
-    hn[spars] = 0.05
-    try:
-        from scipy.ndimage import uniform_filter
-        hn = uniform_filter(hn, 2)
-    except ImportError:
-        pass
-    gx_, gy_ = np.gradient(hn)
-    N = np.empty((H, W, 4), dtype=np.float32); inv = 3.0
-    N[..., 0] = -gx_ * inv; N[..., 1] = -gy_ * inv; N[..., 2] = 1.0
-    nr = np.sqrt(N[...,0]**2 + N[...,1]**2 + N[...,2]**2)
-    N[...,0] /= nr; N[...,1] /= nr; N[...,2] = -N[...,2]; N[...,3] = 1.0
-    R = np.full((H, W), 0.15, dtype=np.float32)   # smooth glass
-    AO = np.full((H, W), 0.4, dtype=np.float32)
-    M = np.full((H, W), 0.1, dtype=np.float32)     # glass (non-metal)
-    SKIN = np.zeros((H, W), dtype=np.float32)      # canopy not skinnable
-    maps = {'_D': D, '_N': N, '_R': _to4(R), '_M': _to4(M), '_AO': _to4(AO), '_E': E, '_SKIN': _to4(SKIN)}
-    for suf, arr in maps.items():
-        fname = f"T_{name}{suf}.png"
-        bpy.data.images.new(fname, width=W, height=H)
-        bpy.data.images[fname].pixels = arr.flatten().tolist()
-        bpy.data.images[fname].filepath_raw = os.path.join(TEXDIR, fname)
-        bpy.data.images[fname].file_format = 'PNG'
-        bpy.data.images[fname].save()
-    return {suf: f"T_{name}{suf}.png" for suf in maps}
-
 
 def _to4(gray):
     a = np.empty((gray.shape[0], gray.shape[1], 4), dtype=np.float32)
@@ -1069,58 +990,6 @@ def build_reactor_part(sz, outname, variant='core'):
     return finalize_part([core] + bands, outname, "M_Reactor_Block", origin='ORIGIN_CENTER_OF_VOLUME')
 
 
-def build_canopy_part(sz, outname):
-    """X4-style command canopy of INDIVIDUAL pieces — a distinct glazed window
-    (curved canopy glass), a surrounding frame/bezel, and frame struts (mullions),
-    each a separate mesh with its own character so the cockpit reads as assembled
-    components like X4, not one flat plane. The glass keeps a PLANAR UV + its own
-    glazed material so the window reads clean and detailed."""
-    k = sc(sz)
-    objs = []
-    gw, gh, gt = 84*k, 60*k, 10*k
-    # --- Piece 1: the WINDOW — curved glazed canopy (higher quality than a flat
-    # plane): a beveled, slightly-arched glass sheet that reads as a windshield ---
-    glass = box("Canopy_Glass", gw, gt, gh, loc=(0, 0, 0))
-    glass.rotation_euler = (math.radians(14), 0, 0)
-    bevel(glass, 8, 4)                # heavier bevel -> curved-looking edges
-    # sheet-glass arch: taper the middle upward to suggest a dome/canopy bow
-    bpy.context.view_layer.objects.active = glass
-    # --- Piece 2: the FRAME/bezel — a surrounding fold that wraps the glass ---
-    frame = box("Canopy_Frame", gw*1.18, gt*2.4, gh*1.18, loc=(0, -gt*2.2, -gh*0.08))
-    frame.rotation_euler = (math.radians(8), 0, 0)
-    bevel(frame, 5, 3)
-    # --- Piece 3: frame STRUTS (mullions) dividing the window like X4 spars ---
-    strut_l = box("Canopy_StrutL", 8*k, gt*1.6, gh*0.9, loc=(-gw*0.32, -gt*0.4, 0)); bevel(strut_l, 3, 2)
-    strut_r = box("Canopy_StrutR", 8*k, gt*1.6, gh*0.9, loc=(gw*0.32, -gt*0.4, 0)); bevel(strut_r, 3, 2)
-    # --- Piece 4: brow hood / fairing over the top that blends into hull ---
-    brow = box("Canopy_Brow", gw*0.9, gt*3.2, gh*0.5, loc=(0, -gt*1.6, gh*0.62))
-    brow.rotation_euler = (math.radians(-16), 0, 0)
-    bevel(brow, 6, 3)
-    objs = [glass, frame, strut_l, strut_r, brow]
-    obj = join(objs, f"{outname}_CanopyGeo")
-    apply_mods(obj); clean_mesh(obj)
-    # --- PLANAR UV for the whole canopy so each piece's texture maps cleanly on
-    # the front plane (no triplanar wrap). U=X, V=Z. ---
-    sel_activate(obj)
-    import bmesh as _bm
-    bm = _bm.new(); bm.from_mesh(obj.data)
-    duv = bm.loops.layers.uv.get("UVMap") or bm.loops.layers.uv.new("UVMap")
-    for f in bm.faces:
-        for loop in f.loops:
-            loc = obj.matrix_world @ loop.vert.co
-            loop[duv].uv = (loc[0]/160.0 + 0.5, loc[2]/110.0 + 0.5)
-    bm.to_mesh(obj.data); bm.free()
-    obj.name = outname
-    mat = bpy.data.materials.get("M_Canopy")
-    if mat is None:
-        mat = bpy.data.materials.new("M_Canopy"); mat.use_nodes = True
-    if not obj.data.materials: obj.data.materials.append(mat)
-    else: obj.data.materials[0] = mat
-    out = export_fbx(obj, outname)
-    return obj, out
-
-
-
 def build_mining_laser(sz, outname):
     """Mining laser / cutter add-on: emitter barrel + focusing optics + coolant."""
     k = sc(sz)
@@ -1410,15 +1279,6 @@ def assemble_ship(sz, outname, opts, carcass_builder=None):
         mj, mp = build_mining_laser(sz, f"{outname}_MiningLaser")
         mj.location = (0, ly*0.3, locz - 10*k)
         results.append((mj, mp))
-    # A visible cockpit/bridge is mounted by default on every ship so it reads as
-    # a piloted vessel from outside; opt out with 'canopy': False if a ship is
-    # truly unmanned/drone.
-    if opts.get('canopy', True):
-        cop = build_canopy_part(sz, f"{outname}_Canopy")
-        copobj, cppath = cop
-        # forward command position: ahead of the dorsal bridge/ridge, elevated
-        copobj.location = (0, ly*0.45, locz + 60*k)   # at the bow, raised
-        results.append((copobj, cppath))
     if opts.get('drill'):
         dj, dp = build_drill_part(sz, f"{outname}_Drill")
         dj.location = (0, -ly*0.3, locz - 15*k)
@@ -1527,13 +1387,6 @@ def assemble_whole_ship(sz, outname, opts, carcass_builder=None):
         core = box("Reactor", 90*k, 90*k, 90*k, loc=(0, -ly*0.35, locz + 40*k)); bevel(core,5,2)
         objs.append(core)
 
-    # --- glazed command canopy (forward pilot/crew viewport) ---
-    if opts.get('canopy', True):
-        pane = box("CanopyPane", 74*k, lz, 14*k, loc=(0, ly*0.22, locz + 55*k))
-        pane.rotation_euler = (math.radians(38), 0, 0)
-        glass = box("CanopyGlass", 64*k, lz*0.8, 8*k, loc=(0, ly*0.20, locz + 68*k))
-        glass.rotation_euler = (math.radians(38), 0, 0)
-        objs += [pane, glass]
 
     # --- drill rig (underslung) ---
     if opts.get('drill'):
@@ -2467,10 +2320,6 @@ def main():
                                     'emissive':[0.3,1.0,0.6],  # teal mining beam
                                     'neon':[0.3,1.0,0.6], 'neon_thick':2,
                                     'grime':True, 'cable':{'runs':4}}, 1024, seed=176)
-    # BESPOKE canopy/cockpit texture: a glazed windscreen language used by NO other
-    # part (arch, spars, pilot window, HUD glow) so the bridge reads as a distinct
-    # cockpit rather than another hull panel shared with every part.
-    gen_canopy_texture("Canopy", 1024, seed=180)
     gen_texture_set("Derelict", {'base':[0.4,0.37,0.33], 'accent':[0.25,0.22,0.18],
                                  'emissive':[0.9,0.5,0.1], 'grime':True, 'hazard':{'bands':3}}, 2048, seed=77)
     gen_texture_set("Satellite", {'base':[0.75,0.76,0.78], 'accent':[0.35,0.4,0.5],
@@ -2512,7 +2361,7 @@ def main():
         "SM_Ship_Fighter_01": assemble_ship('small',
             'SM_Ship_Fighter_01',
             {'engine': True, 'cargo': True, 'weapon': True, 'weapon_twin': True,
-             'sensor': True, 'canopy': True}),
+             'sensor': True}),
         "SM_Ship_Freighter_01": assemble_ship('medium',
             'SM_Ship_Freighter_01',
             {'engine': True, 'cargo': True, 'weapon': False, 'sensor': True,

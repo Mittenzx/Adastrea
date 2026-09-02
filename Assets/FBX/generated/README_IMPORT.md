@@ -71,7 +71,6 @@ its texture set like so:
 | `M_Reactor_*` / `M_Reactor_Block/Fusion/Spike` | `T_Reactor_*` | warm + amber core |
 | `M_Drill` (has `M_Station_Hab` currently) | `T_Drill_*` | industrial yellow warning |
 | `M_MiningLaser` (uses `M_Weapon_Block`) | `T_MiningLaser_*` | teal beam |
-| `M_Canopy` | `T_Canopy_*` | dark glazed glass + lit viewport band (bridges/cockpits) |
 
 > The Carcass/hull keeps `T_Ship_Hull` (or `T_Freighter` / `T_Gunship` for those
 > ships); engaged, the FBX `M_*` name is the hook — create the UE material `M_Engine`

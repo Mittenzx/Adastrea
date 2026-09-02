@@ -31,7 +31,7 @@ os.makedirs(OUTDIR, exist_ok=True)
 PART_TEX = {
     "Carcass": "T_Ship_Hull", "Engine": "T_Engine", "Cargo": "T_Cargo",
     "Weapon": "T_Weapon", "Sensor": "T_Sensor", "Reactor": "T_Reactor",
-    "MiningLaser": "T_MiningLaser", "Drill": "T_Drill", "Canopy": "T_Canopy",
+    "MiningLaser": "T_MiningLaser", "Drill": "T_Drill",
     "HabRing": "T_HabRing", "AsteroidShell": "T_AsteroidShell", "Hab": "T_Station_Hab",
 }
 # whole-ship override reuse: these ship bases have distinct hull textures
@@ -68,11 +68,10 @@ MOUNT_FRAC = {
     "Weapon": (0.34, -25), "Sensor": (0.18, 70), "Reactor": (-0.35, 40),
     "MiningLaser": (0.30, -10), "Drill": (-0.30, -15),
     "HabRing": (0.0, 0.0), "AsteroidShell": (0.0, 0.0), "Hab": (0.0, 0.0),
-    "Canopy": (0.45, 60),
 }
 PARTS_ORDER = ["Carcass", "HabRing", "AsteroidShell", "Hab",
                "Engine", "Cargo", "Weapon", "Sensor", "Reactor",
-               "MiningLaser", "Drill", "Canopy"]
+               "MiningLaser", "Drill"]
 
 
 def size_class_of(base):
