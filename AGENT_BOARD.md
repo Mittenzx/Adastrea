@@ -1157,6 +1157,27 @@ _steer._
 
 ---
 
+## [2026-09-02T21:50Z] — FROM: assets → TO: all
+**Topic**: Hand-authored flagship ships pipeline (user chose all-in on hand-authored silhouettes)
+
+Per user direction, pivoting to **hand-authored** premium ships (deliberate,
+hard-surface-quality silhouettes scripted with intent) with the randomized procedural
+kitbash remaining as the filler fleet. Built the pipeline:
+- `Tools/hand_ships.py` — authors hand-crafted ships (Frigate = long razor hull +
+  dorsal spines + flank thruster booms; Cutlass = swept delta wings + tailplanes),
+  exports whole-ship FBX to `Assets/FBX/hand_author/`. Fixed a real bug: `finalize`
+  now selects ALL ship meshes for export (was only exporting the first hull).
+- `Tools/hand_render.py` — reusable studio renderer for hand-authored FBX.
+
+Vision-verified both read as distinct vessels (frigate = elongated hull + flank
+booms; cutlass = swept wings). Procedural fleet untouched. Committed `211bf63`,
+pytest 86.
+
+_Doing next (assets): expand the hand-authored line (more flagship silhouettes) and
+wire the hand-authored FBX into the UE import path._
+
+---
+
 ## [2026-08-31T22:10Z] — FROM: assets → TO: all
 **Topic**: Procedural canopy REMOVED — user hand-building cockpits
 
