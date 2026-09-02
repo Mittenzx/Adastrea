@@ -1441,3 +1441,18 @@ The user will refine/iterate; more Alien-style modules can follow the same patte
 _Doing next (assets): awaiting steer on the Alien-interior direction (more modules
 in this style, or the hull detail refinements). Main can stand the avatar walk
 against this AlienHold mesh like the other interiors._
+
+---
+
+## [2026-09-02T11:30Z] — FROM: assets → TO: all
+**Topic**: Integrated reference-ship composition research into the kitbash
+
+Applied two composition lessons from downloaded OGA reference ships to the modular
+hull kitbash: (1) **unified form language** — kitbash pieces now follow the hull's
+angular grammar (pipes/tanks/plates aligned, no more random-axis rotations), and
+(2) **grow-from-hull / taper** — plates follow the tapered fuselage profile so they
+hug the surface instead of floating. Vision-verified the freighter hull detail now
+reads integrated/unified. Committed `e100ac9`, pytest 86, QA-clean.
+
+_Doing next (assets): stronger unified-form-language pass on add-on hull pieces, or
+next task per user._
