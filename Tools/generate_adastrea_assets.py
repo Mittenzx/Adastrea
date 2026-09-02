@@ -681,8 +681,133 @@ def finalize_part(objs, outname, matname, origin='ORIGIN_CENTER_OF_VOLUME'):
         joined.data.materials.append(mat)
     else:
         joined.data.materials[0] = mat
+    # wire the generated PBR texture set into the material (not flat grey)
+    try:
+        wire_pbr_material(mat, resolve_texset(matname), emissive_strength=2.6)
+    except Exception as e:
+        print(f"  [warn] material wire fail {matname}: {e}")
     out = export_fbx(joined, outname)
     return joined, out
+
+
+# --- Material <-> texture-set wiring ------------------------------
+# Maps the FBX material name (the UE hook) to the generated texture-set prefix.
+# wire_pbr_material() builds real PBR node graphs so FBX materials carry textures,
+# not flat Principled grey.
+MAT_TO_TEX = {
+    "M_Hull": "Ship_Hull", "M_Fighter_Hull": "Ship_Hull",
+    "M_Freighter_Hull": "Freighter", "M_Gunship_Hull": "Gunship",
+    "M_Corvette_Hull": "Corvette", "M_Miner_Hull": "Miner",
+    "M_Engine_Block": "Engine", "M_Engine_Ion": "Engine",
+    "M_Engine_Compact": "Engine", "M_Fighter_Engine": "Engine",
+    "M_Cargo_Hold": "Cargo", "M_Cargo_Rack": "Cargo", "M_Cargo_Tank": "Cargo",
+    "M_Weapon_Block": "Weapon", "M_Weapon_TriLaser": "Weapon",
+    "M_Weapon_Missile": "Weapon",
+    "M_Sensor_Block": "Sensor", "M_Sensor_Dome": "Sensor",
+    "M_Sensor_Cross": "Sensor",
+    "M_Reactor_Block": "Reactor", "M_Reactor_Fusion": "Reactor",
+    "M_Reactor_Spike": "Reactor",
+    "M_Drill": "Drill", "M_MiningLaser": "MiningLaser",
+    "M_Habitat_Ring": "HabRing", "M_Asteroid_Shell": "AsteroidShell",
+    "M_Station_Hab": "Station_Hab", "M_Prop_Crate": "Prop_Crate",
+    "M_Prop_Tank": "Prop_Tank", "M_Derelict": "Derelict",
+    "M_FuelCell": "FuelCell", "M_Satellite": "Satellite",
+    "M_CommsTower": "CommsTower",
+    "M_Combat_Hit": "Combat_Hit", "M_Combat_Laser": "Combat_Laser",
+    "M_Combat_Missile": "Combat_Missile", "M_Combat_Plasma": "Combat_Plasma",
+    "M_Interior_Deck": "Int_Deck", "M_Interior_Hab": "Int_Wall",
+    "M_Interior_Alien": "Alien_Wall", "M_Interior_Cockpit": "Int_Cockpit",
+    "M_Fighter_Glass": "Basic_Glass",
+}
+
+
+def resolve_texset(matname):
+    """Return the texture-set prefix for a material name, or None if unmapped."""
+    if matname in MAT_TO_TEX:
+        return MAT_TO_TEX[matname]
+    cand = matname[2:] if matname.startswith("M_") else matname
+    if os.path.exists(os.path.join(TEXDIR, f"T_{cand}_D.png")):
+        return cand
+    return None
+
+
+def wire_pbr_material(mat, texset, emissive_strength=2.6):
+    """Build the full PBR node graph for a material from a texture set. Uses the
+    proven headless-render recipe: _D into Base Color AND into an Emission node
+    (high strength) mixed over Principled, so it renders in EEVEE which ignores
+    lights; adds _N normal, _R rough, _M metal, _AO, and _E glow atop. Returns
+    False if the set's D map is absent (material left as-is)."""
+    if texset is None:
+        return False
+    dpath = os.path.join(TEXDIR, f"T_{texset}_D.png")
+    if not os.path.exists(dpath):
+        return False
+    mat.use_nodes = True
+    nt = mat.node_tree
+    nt.nodes.clear()
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    prin = nt.nodes.new("ShaderNodeBsdfPrincipled")
+    out.location = (720, 0); prin.location = (120, 0)
+    nt.links.new(prin.outputs["BSDF"], out.inputs["Surface"])
+    # Base Color
+    imgD = nt.nodes.new("ShaderNodeTexImage")
+    imgD.image = bpy.data.images.load(dpath)
+    imgD.label = "BaseColor_D"; imgD.location = (-760, 200)
+    nt.links.new(imgD.outputs["Color"], prin.inputs["Base Color"])
+    # Normal
+    np_ = os.path.join(TEXDIR, f"T_{texset}_N.png")
+    if os.path.exists(np_):
+        imgN = nt.nodes.new("ShaderNodeTexImage")
+        imgN.image = bpy.data.images.load(np_); imgN.image.colorspace_settings.name = "Non-Color"
+        imgN.location = (-760, -80)
+        nm = nt.nodes.new("ShaderNodeNormalMap"); nm.location = (-420, -80)
+        nt.links.new(imgN.outputs["Color"], nm.inputs["Color"])
+        nt.links.new(nm.outputs["Normal"], prin.inputs["Normal"])
+    # Roughness
+    rp = os.path.join(TEXDIR, f"T_{texset}_R.png")
+    if os.path.exists(rp):
+        imgR = nt.nodes.new("ShaderNodeTexImage")
+        imgR.image = bpy.data.images.load(rp); imgR.image.colorspace_settings.name = "Non-Color"
+        imgR.location = (-760, -260)
+        nt.links.new(imgR.outputs["Color"], prin.inputs["Roughness"])
+    # Metallic
+    mp = os.path.join(TEXDIR, f"T_{texset}_M.png")
+    if os.path.exists(mp):
+        imgM = nt.nodes.new("ShaderNodeTexImage")
+        imgM.image = bpy.data.images.load(mp); imgM.image.colorspace_settings.name = "Non-Color"
+        imgM.location = (-760, -420)
+        nt.links.new(imgM.outputs["Color"], prin.inputs["Metallic"])
+    # AO multiply into base color
+    ap = os.path.join(TEXDIR, f"T_{texset}_AO.png")
+    if os.path.exists(ap):
+        imgAO = nt.nodes.new("ShaderNodeTexImage")
+        imgAO.image = bpy.data.images.load(ap); imgAO.image.colorspace_settings.name = "Non-Color"
+        imgAO.location = (-760, 460)
+        mul = nt.nodes.new("ShaderNodeMix")
+        mul.data_type = "RGBA"; mul.inputs["Factor"].default_value = 1.0
+        mul.location = (-400, 320)
+        nt.links.new(imgD.outputs["Color"], mul.inputs["A"])
+        nt.links.new(imgAO.outputs["Color"], mul.inputs["B"])
+        nt.links.new(mul.outputs["Result"], prin.inputs["Base Color"])
+    # Emissive: _D into Emission (strength) mixed over, _E glow on top
+    em = nt.nodes.new("ShaderNodeEmission"); em.location = (120, 320)
+    em.inputs["Strength"].default_value = emissive_strength
+    nt.links.new(imgD.outputs["Color"], em.inputs["Color"])
+    mix = nt.nodes.new("ShaderNodeMixShader"); mix.location = (420, 180)
+    mix.inputs["Fac"].default_value = 0.92
+    nt.links.new(em.outputs["Emission"], mix.inputs[1])
+    nt.links.new(prin.outputs["BSDF"], mix.inputs[2])
+    nt.links.new(mix.outputs["Shader"], out.inputs["Surface"])
+    ep = os.path.join(TEXDIR, f"T_{texset}_E.png")
+    if os.path.exists(ep):
+        imgE = nt.nodes.new("ShaderNodeTexImage")
+        imgE.image = bpy.data.images.load(ep); imgE.label = "Glow_E"
+        imgE.location = (-760, 640)
+        glow = nt.nodes.new("ShaderNodeEmission"); glow.location = (120, 520)
+        glow.inputs["Strength"].default_value = 1.0
+        nt.links.new(imgE.outputs["Color"], glow.inputs["Color"])
+        nt.links.new(glow.outputs["Emission"], mix.inputs[1])
+    return True
 
 
 def build_from_parts(base_out, parts, base_name_short):

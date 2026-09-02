@@ -69,11 +69,83 @@ def union(objnames, outname, bevel_amt=6):
     base.name = outname
     return base
 
+_TEX = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+               "..", "Assets", "FBX", "generated", "Textures")
+
+
+def _wire_pbr(mat, name):
+    """Wire a PBR texture set into the material so hand-authored ships aren't
+    flat. Tries the base hull texture (Ship_Hull) + a per-ship override if the
+    ship name maps to a known faction set."""
+    import bpy, os
+    overrides = {"Frigate": "Freighter", "Cutlass": "Gunship"}
+    texset = None
+    for k, v in overrides.items():
+        if k.lower() in name.lower():
+            texset = v
+    if texset is None:
+        texset = "Ship_Hull"
+    dpath = os.path.join(_TEX, f"T_{texset}_D.png")
+    if not os.path.exists(dpath):
+        return
+    mat.use_nodes = True
+    nt = mat.node_tree
+    nt.nodes.clear()
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    prin = nt.nodes.new("ShaderNodeBsdfPrincipled")
+    out.location = (720, 0); prin.location = (120, 0)
+    nt.links.new(prin.outputs["BSDF"], out.inputs["Surface"])
+    imgD = nt.nodes.new("ShaderNodeTexImage")
+    imgD.image = bpy.data.images.load(dpath)
+    imgD.label = "BaseColor_D"; imgD.location = (-760, 200)
+    nt.links.new(imgD.outputs["Color"], prin.inputs["Base Color"])
+    np_ = os.path.join(_TEX, f"T_{texset}_N.png")
+    if os.path.exists(np_):
+        imgN = nt.nodes.new("ShaderNodeTexImage")
+        imgN.image = bpy.data.images.load(np_); imgN.image.colorspace_settings.name = "Non-Color"
+        imgN.location = (-760, -80)
+        nm = nt.nodes.new("ShaderNodeNormalMap"); nm.location = (-420, -80)
+        nt.links.new(imgN.outputs["Color"], nm.inputs["Color"])
+        nt.links.new(nm.outputs["Normal"], prin.inputs["Normal"])
+    rp = os.path.join(_TEX, f"T_{texset}_R.png")
+    if os.path.exists(rp):
+        imgR = nt.nodes.new("ShaderNodeTexImage")
+        imgR.image = bpy.data.images.load(rp); imgR.image.colorspace_settings.name = "Non-Color"
+        imgR.location = (-760, -260)
+        nt.links.new(imgR.outputs["Color"], prin.inputs["Roughness"])
+    mp = os.path.join(_TEX, f"T_{texset}_M.png")
+    if os.path.exists(mp):
+        imgM = nt.nodes.new("ShaderNodeTexImage")
+        imgM.image = bpy.data.images.load(mp); imgM.image.colorspace_settings.name = "Non-Color"
+        imgM.location = (-760, -420)
+        nt.links.new(imgM.outputs["Color"], prin.inputs["Metallic"])
+    ap = os.path.join(_TEX, f"T_{texset}_AO.png")
+    if os.path.exists(ap):
+        imgAO = nt.nodes.new("ShaderNodeTexImage")
+        imgAO.image = bpy.data.images.load(ap); imgAO.image.colorspace_settings.name = "Non-Color"
+        imgAO.location = (-760, 460)
+        mul = nt.nodes.new("ShaderNodeMix")
+        mul.data_type = "RGBA"; mul.inputs["Factor"].default_value = 1.0
+        mul.location = (-400, 320)
+        nt.links.new(imgD.outputs["Color"], mul.inputs["A"])
+        nt.links.new(imgAO.outputs["Color"], mul.inputs["B"])
+        nt.links.new(mul.outputs["Result"], prin.inputs["Base Color"])
+    em = nt.nodes.new("ShaderNodeEmission"); em.location = (120, 320)
+    em.inputs["Strength"].default_value = 2.6
+    nt.links.new(imgD.outputs["Color"], em.inputs["Color"])
+    mix = nt.nodes.new("ShaderNodeMixShader"); mix.location = (420, 180)
+    mix.inputs["Fac"].default_value = 0.92
+    nt.links.new(em.outputs["Emission"], mix.inputs[1])
+    nt.links.new(prin.outputs["BSDF"], mix.inputs[2])
+    nt.links.new(mix.outputs["Shader"], out.inputs["Surface"])
+
+
 def finalize(name, outname, matname="M_Hull"):
     """Export the whole authored ship (all mesh objects) as one FBX."""
     mat = bpy.data.materials.get(matname)
     if mat is None:
         mat = bpy.data.materials.new(matname); mat.use_nodes = True
+    _wire_pbr(mat, outname)
     meshes = [o for o in bpy.data.objects if o.type == 'MESH']
     for ob in meshes:
         if not ob.data.materials:
