@@ -103,6 +103,16 @@ the existing `EStationModuleGroup` enum, with a suggested power profile:
 | `WeaponsLabModule` | Weapons R&D | -45 | Defence / AdvancedDefence |
 | `BiologyLabModule` | Bio / medical R&D | -40 | Bio / AdvancedBio |
 
+### B2. Niche / upgraded research labs (group: Research)
+A **weapons specialisation** split — build the base `WeaponsLabModule`, then upgrade
+to a niche lab to unlock a weapon family's Mk2/3:
+| New module | Built from | Niche breakthrough | Unlocks |
+|------------|-----------|--------------------|---------|
+| `ProjectileWeaponsLab` | WeaponsLabModule + Railgun | KineticWeaponResearch | Railgun, Missile, Torpedo Mk2/3 |
+| `BeamWeaponsLab` | WeaponsLabModule + PlasmaCannon | BeamWeaponResearch | TriLaser, PlasmaCannon, Point-Defence Mk2/3 |
+
+The pattern generalises to the other labs (e.g. a propulsion sub-field) as the tree grows.
+
 > Note: the 5 research-lab modules are *already* in the crafting tree as craftable
 > Tier-6 outputs (e.g. `PhysicsLabModule`, `ElectronicsLabModule`...). Building them
 > in-game is the requirement; they just need engine classes. The industry plan makes

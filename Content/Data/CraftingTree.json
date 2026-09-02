@@ -2,11 +2,12 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "Title": "Adastrea Crafting & Building Tree",
   "Description": "Machine-readable crafting/building tree (recipes + per-item stats + recipe economy): raw extraction -> refined materials -> components & electronics -> ship parts -> weapons -> station construction parts -> modules. Authoritative generator: docs/11-TECHNICAL_SPECS/generate_crafting_tree.py",
-  "SchemaVersion": "1.6.0",
+  "SchemaVersion": "1.7.0",
   "LastUpdated": "2026-08-31",
   "ItemIDConvention": "^[A-Za-z][A-Za-z0-9_]*$",
   "NoteHelium3": "Existing trade asset uses 'Helium-3' (hyphen, violates ItemID regex). Crafting data canonicalizes to 'Helium3' and maps to DA_TradeItem_Helium-3.",
   "ProducedInTags": [
+    "BeamWeaponsLab",
     "BiologyLab",
     "ElectronicsLab",
     "Fabrication",
@@ -17,6 +18,7 @@
     "OrganicFarming",
     "PhysicsLab",
     "Processing",
+    "ProjectileWeaponsLab",
     "Reactor",
     "Salvage",
     "ScienceLab",
@@ -4027,7 +4029,65 @@
       ]
     },
     {
-      "RecipeID": "RCP_195_PropulsionResearch",
+      "RecipeID": "RCP_195_ProjectileWeaponsLab",
+      "OutputItem": "ProjectileWeaponsLab",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "WeaponsLabModule",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Railgun",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire_Mk2",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_196_BeamWeaponsLab",
+      "OutputItem": "BeamWeaponsLab",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "Ingredients": [
+        {
+          "ItemID": "WeaponsLabModule",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 1
+        },
+        {
+          "ItemID": "PlasmaCannon",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedPowerCells",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_197_PropulsionResearch",
       "OutputItem": "PropulsionResearch",
       "OutputQty": 1,
       "Tier": 5,
@@ -4048,7 +4108,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_196_AdvancedPropulsionResearch",
+      "RecipeID": "RCP_198_AdvancedPropulsionResearch",
       "OutputItem": "AdvancedPropulsionResearch",
       "OutputQty": 1,
       "Tier": 6,
@@ -4069,7 +4129,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_197_MaterialsResearch",
+      "RecipeID": "RCP_199_MaterialsResearch",
       "OutputItem": "MaterialsResearch",
       "OutputQty": 1,
       "Tier": 5,
@@ -4090,7 +4150,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_198_NanoMaterialsResearch",
+      "RecipeID": "RCP_200_NanoMaterialsResearch",
       "OutputItem": "NanoMaterialsResearch",
       "OutputQty": 1,
       "Tier": 6,
@@ -4111,7 +4171,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_199_ComputingResearch",
+      "RecipeID": "RCP_201_ComputingResearch",
       "OutputItem": "ComputingResearch",
       "OutputQty": 1,
       "Tier": 4,
@@ -4132,7 +4192,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_200_QuantumComputingResearch",
+      "RecipeID": "RCP_202_QuantumComputingResearch",
       "OutputItem": "QuantumComputingResearch",
       "OutputQty": 1,
       "Tier": 5,
@@ -4157,7 +4217,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_201_DefenceResearch",
+      "RecipeID": "RCP_203_DefenceResearch",
       "OutputItem": "DefenceResearch",
       "OutputQty": 1,
       "Tier": 5,
@@ -4178,7 +4238,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_202_AdvancedDefenceResearch",
+      "RecipeID": "RCP_204_AdvancedDefenceResearch",
       "OutputItem": "AdvancedDefenceResearch",
       "OutputQty": 1,
       "Tier": 6,
@@ -4199,7 +4259,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_203_BioResearch",
+      "RecipeID": "RCP_205_BioResearch",
       "OutputItem": "BioResearch",
       "OutputQty": 1,
       "Tier": 4,
@@ -4220,7 +4280,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_204_AdvancedBioResearch",
+      "RecipeID": "RCP_206_AdvancedBioResearch",
       "OutputItem": "AdvancedBioResearch",
       "OutputQty": 1,
       "Tier": 5,
@@ -4241,7 +4301,57 @@
       ]
     },
     {
-      "RecipeID": "RCP_205_Electronics_Mk2",
+      "RecipeID": "RCP_207_KineticWeaponResearch",
+      "OutputItem": "KineticWeaponResearch",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "ProjectileWeaponsLab",
+      "Category": "Data",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "KineticWeaponResearch",
+      "Ingredients": [
+        {
+          "ItemID": "DefenceResearch",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Railgun",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire_Mk2",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_208_BeamWeaponResearch",
+      "OutputItem": "BeamWeaponResearch",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "BeamWeaponsLab",
+      "Category": "Data",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "BeamWeaponResearch",
+      "Ingredients": [
+        {
+          "ItemID": "DefenceResearch",
+          "Qty": 1
+        },
+        {
+          "ItemID": "PlasmaCannon",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedPowerCells",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_209_Electronics_Mk2",
       "OutputItem": "Electronics_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4270,7 +4380,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_206_Microchips_Mk2",
+      "RecipeID": "RCP_210_Microchips_Mk2",
       "OutputItem": "Microchips_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4299,7 +4409,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_207_CircuitBoard_Mk2",
+      "RecipeID": "RCP_211_CircuitBoard_Mk2",
       "OutputItem": "CircuitBoard_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4332,7 +4442,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_208_MemoryUnit_Mk2",
+      "RecipeID": "RCP_212_MemoryUnit_Mk2",
       "OutputItem": "MemoryUnit_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4361,7 +4471,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_209_ControlUnit_Mk2",
+      "RecipeID": "RCP_213_ControlUnit_Mk2",
       "OutputItem": "ControlUnit_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4390,7 +4500,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_210_PowerDistributionUnit_Mk2",
+      "RecipeID": "RCP_214_PowerDistributionUnit_Mk2",
       "OutputItem": "PowerDistributionUnit_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4419,7 +4529,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_211_BasicComputer_Mk2",
+      "RecipeID": "RCP_215_BasicComputer_Mk2",
       "OutputItem": "BasicComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4448,7 +4558,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_212_AdvancedSensors_Mk2",
+      "RecipeID": "RCP_216_AdvancedSensors_Mk2",
       "OutputItem": "AdvancedSensors_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4477,7 +4587,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_213_QuantumProcessor_Mk2",
+      "RecipeID": "RCP_217_QuantumProcessor_Mk2",
       "OutputItem": "QuantumProcessor_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4510,7 +4620,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_214_TargetingComputer_Mk2",
+      "RecipeID": "RCP_218_TargetingComputer_Mk2",
       "OutputItem": "TargetingComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4539,7 +4649,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_215_NavigationComputer_Mk2",
+      "RecipeID": "RCP_219_NavigationComputer_Mk2",
       "OutputItem": "NavigationComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4568,7 +4678,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_216_ServoActuator_Mk2",
+      "RecipeID": "RCP_220_ServoActuator_Mk2",
       "OutputItem": "ServoActuator_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4597,7 +4707,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_217_SuperConductingWire_Mk2",
+      "RecipeID": "RCP_221_SuperConductingWire_Mk2",
       "OutputItem": "SuperConductingWire_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4626,7 +4736,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_218_Electronics_Mk3",
+      "RecipeID": "RCP_222_Electronics_Mk3",
       "OutputItem": "Electronics_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4655,7 +4765,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_219_Microchips_Mk3",
+      "RecipeID": "RCP_223_Microchips_Mk3",
       "OutputItem": "Microchips_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4684,7 +4794,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_220_CircuitBoard_Mk3",
+      "RecipeID": "RCP_224_CircuitBoard_Mk3",
       "OutputItem": "CircuitBoard_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4713,7 +4823,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_221_MemoryUnit_Mk3",
+      "RecipeID": "RCP_225_MemoryUnit_Mk3",
       "OutputItem": "MemoryUnit_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4742,7 +4852,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_222_ControlUnit_Mk3",
+      "RecipeID": "RCP_226_ControlUnit_Mk3",
       "OutputItem": "ControlUnit_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4771,7 +4881,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_223_PowerDistributionUnit_Mk3",
+      "RecipeID": "RCP_227_PowerDistributionUnit_Mk3",
       "OutputItem": "PowerDistributionUnit_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4800,7 +4910,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_224_BasicComputer_Mk3",
+      "RecipeID": "RCP_228_BasicComputer_Mk3",
       "OutputItem": "BasicComputer_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4829,7 +4939,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_225_AdvancedSensors_Mk3",
+      "RecipeID": "RCP_229_AdvancedSensors_Mk3",
       "OutputItem": "AdvancedSensors_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4858,7 +4968,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_226_QuantumProcessor_Mk3",
+      "RecipeID": "RCP_230_QuantumProcessor_Mk3",
       "OutputItem": "QuantumProcessor_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4891,7 +5001,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_227_MicroCapacitor_Mk2",
+      "RecipeID": "RCP_231_MicroCapacitor_Mk2",
       "OutputItem": "MicroCapacitor_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4920,7 +5030,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_228_CapacitorBank_Mk2",
+      "RecipeID": "RCP_232_CapacitorBank_Mk2",
       "OutputItem": "CapacitorBank_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4949,7 +5059,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_229_TransceiverUnit_Mk2",
+      "RecipeID": "RCP_233_TransceiverUnit_Mk2",
       "OutputItem": "TransceiverUnit_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4978,7 +5088,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_230_SignalAmplifier_Mk2",
+      "RecipeID": "RCP_234_SignalAmplifier_Mk2",
       "OutputItem": "SignalAmplifier_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5007,7 +5117,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_231_OpticalLens_Mk2",
+      "RecipeID": "RCP_235_OpticalLens_Mk2",
       "OutputItem": "OpticalLens_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5036,7 +5146,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_232_SensorArray_Mk2",
+      "RecipeID": "RCP_236_SensorArray_Mk2",
       "OutputItem": "SensorArray_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5065,7 +5175,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_233_FiberOpticCable_Mk2",
+      "RecipeID": "RCP_237_FiberOpticCable_Mk2",
       "OutputItem": "FiberOpticCable_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5094,7 +5204,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_234_DataMatrix_Mk2",
+      "RecipeID": "RCP_238_DataMatrix_Mk2",
       "OutputItem": "DataMatrix_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5123,7 +5233,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_235_LogicChip_Mk2",
+      "RecipeID": "RCP_239_LogicChip_Mk2",
       "OutputItem": "LogicChip_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5152,7 +5262,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_236_EncryptedCircuit_Mk2",
+      "RecipeID": "RCP_240_EncryptedCircuit_Mk2",
       "OutputItem": "EncryptedCircuit_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5181,7 +5291,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_237_ClockGenerator_Mk2",
+      "RecipeID": "RCP_241_ClockGenerator_Mk2",
       "OutputItem": "ClockGenerator_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5210,7 +5320,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_238_PilotComputer_Mk2",
+      "RecipeID": "RCP_242_PilotComputer_Mk2",
       "OutputItem": "PilotComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5239,7 +5349,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_239_CargoComputer_Mk2",
+      "RecipeID": "RCP_243_CargoComputer_Mk2",
       "OutputItem": "CargoComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5268,7 +5378,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_240_ShipComputer_Mk2",
+      "RecipeID": "RCP_244_ShipComputer_Mk2",
       "OutputItem": "ShipComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5297,7 +5407,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_241_TradingComputer_Mk2",
+      "RecipeID": "RCP_245_TradingComputer_Mk2",
       "OutputItem": "TradingComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5326,7 +5436,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_242_ScanComputer_Mk2",
+      "RecipeID": "RCP_246_ScanComputer_Mk2",
       "OutputItem": "ScanComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5355,7 +5465,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_243_ScienceComputer_Mk2",
+      "RecipeID": "RCP_247_ScienceComputer_Mk2",
       "OutputItem": "ScienceComputer_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5384,7 +5494,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_244_EngineeringComputer_Mk2",
+      "RecipeID": "RCP_248_EngineeringComputer_Mk2",
       "OutputItem": "EngineeringComputer_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5413,7 +5523,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_245_AutomatedDefenceComputer_Mk2",
+      "RecipeID": "RCP_249_AutomatedDefenceComputer_Mk2",
       "OutputItem": "AutomatedDefenceComputer_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5442,7 +5552,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_246_ResearchComputer_Mk2",
+      "RecipeID": "RCP_250_ResearchComputer_Mk2",
       "OutputItem": "ResearchComputer_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5471,7 +5581,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_247_SensorArray_Mk3",
+      "RecipeID": "RCP_251_SensorArray_Mk3",
       "OutputItem": "SensorArray_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -5500,7 +5610,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_248_LogicChip_Mk3",
+      "RecipeID": "RCP_252_LogicChip_Mk3",
       "OutputItem": "LogicChip_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -5529,7 +5639,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_249_ShipComputer_Mk3",
+      "RecipeID": "RCP_253_ShipComputer_Mk3",
       "OutputItem": "ShipComputer_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -5558,7 +5668,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_250_ScienceComputer_Mk3",
+      "RecipeID": "RCP_254_ScienceComputer_Mk3",
       "OutputItem": "ScienceComputer_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5587,7 +5697,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_251_ResearchComputer_Mk3",
+      "RecipeID": "RCP_255_ResearchComputer_Mk3",
       "OutputItem": "ResearchComputer_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5616,7 +5726,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_252_AutomatedDefenceComputer_Mk3",
+      "RecipeID": "RCP_256_AutomatedDefenceComputer_Mk3",
       "OutputItem": "AutomatedDefenceComputer_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5645,7 +5755,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_253_ShipEngine_Mk2",
+      "RecipeID": "RCP_257_ShipEngine_Mk2",
       "OutputItem": "ShipEngine_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5678,7 +5788,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_254_ShipReactor_Mk2",
+      "RecipeID": "RCP_258_ShipReactor_Mk2",
       "OutputItem": "ShipReactor_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5711,7 +5821,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_255_Thruster_Mk2",
+      "RecipeID": "RCP_259_Thruster_Mk2",
       "OutputItem": "Thruster_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5740,7 +5850,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_256_FuelTank_Mk2",
+      "RecipeID": "RCP_260_FuelTank_Mk2",
       "OutputItem": "FuelTank_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5769,7 +5879,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_257_ShipEngine_Mk3",
+      "RecipeID": "RCP_261_ShipEngine_Mk3",
       "OutputItem": "ShipEngine_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5798,7 +5908,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_258_ShipReactor_Mk3",
+      "RecipeID": "RCP_262_ShipReactor_Mk3",
       "OutputItem": "ShipReactor_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5827,7 +5937,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_259_Thruster_Mk3",
+      "RecipeID": "RCP_263_Thruster_Mk3",
       "OutputItem": "Thruster_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5856,7 +5966,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_260_FuelTank_Mk3",
+      "RecipeID": "RCP_264_FuelTank_Mk3",
       "OutputItem": "FuelTank_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5885,7 +5995,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_261_CargoPod_Mk2",
+      "RecipeID": "RCP_265_CargoPod_Mk2",
       "OutputItem": "CargoPod_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5914,7 +6024,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_262_LifeSupportPod_Mk2",
+      "RecipeID": "RCP_266_LifeSupportPod_Mk2",
       "OutputItem": "LifeSupportPod_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5943,7 +6053,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_263_ShipComponents_Mk2",
+      "RecipeID": "RCP_267_ShipComponents_Mk2",
       "OutputItem": "ShipComponents_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5976,7 +6086,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_264_ArmourHull_Mk2",
+      "RecipeID": "RCP_268_ArmourHull_Mk2",
       "OutputItem": "ArmourHull_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -6005,7 +6115,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_265_HullPlating_Mk2",
+      "RecipeID": "RCP_269_HullPlating_Mk2",
       "OutputItem": "HullPlating_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -6034,7 +6144,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_266_CargoPod_Mk3",
+      "RecipeID": "RCP_270_CargoPod_Mk3",
       "OutputItem": "CargoPod_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6063,7 +6173,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_267_LifeSupportPod_Mk3",
+      "RecipeID": "RCP_271_LifeSupportPod_Mk3",
       "OutputItem": "LifeSupportPod_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6092,7 +6202,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_268_ShipComponents_Mk3",
+      "RecipeID": "RCP_272_ShipComponents_Mk3",
       "OutputItem": "ShipComponents_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6125,7 +6235,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_269_ArmourHull_Mk3",
+      "RecipeID": "RCP_273_ArmourHull_Mk3",
       "OutputItem": "ArmourHull_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6154,7 +6264,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_270_HullPlating_Mk3",
+      "RecipeID": "RCP_274_HullPlating_Mk3",
       "OutputItem": "HullPlating_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6183,7 +6293,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_271_ShipShieldGenerator_Mk2",
+      "RecipeID": "RCP_275_ShipShieldGenerator_Mk2",
       "OutputItem": "ShipShieldGenerator_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -6212,7 +6322,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_272_ShieldCapacitor_Mk2",
+      "RecipeID": "RCP_276_ShieldCapacitor_Mk2",
       "OutputItem": "ShieldCapacitor_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -6241,7 +6351,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_273_TurretWeapon_Mk2",
+      "RecipeID": "RCP_277_TurretWeapon_Mk2",
       "OutputItem": "TurretWeapon_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -6270,7 +6380,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_274_EnergyCannon_Mk2",
+      "RecipeID": "RCP_278_EnergyCannon_Mk2",
       "OutputItem": "EnergyCannon_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -6299,181 +6409,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_275_TriLaser_Mk2",
-      "OutputItem": "TriLaser_Mk2",
-      "OutputQty": 1,
-      "Tier": 5,
-      "ProducedIn": "Fabrication",
-      "Category": "Military",
-      "Acquisition": false,
-      "ResearchLevel": 2,
-      "ResearchRequired": "DefenceResearch",
-      "Ingredients": [
-        {
-          "ItemID": "TriLaser",
-          "Qty": 1
-        },
-        {
-          "ItemID": "SuperConductingWire_Mk2",
-          "Qty": 2
-        },
-        {
-          "ItemID": "Microchips_Mk2",
-          "Qty": 1
-        },
-        {
-          "ItemID": "DefenceResearch",
-          "Qty": 1
-        }
-      ]
-    },
-    {
-      "RecipeID": "RCP_276_MissileLauncher_Mk2",
-      "OutputItem": "MissileLauncher_Mk2",
-      "OutputQty": 1,
-      "Tier": 5,
-      "ProducedIn": "Fabrication",
-      "Category": "Military",
-      "Acquisition": false,
-      "ResearchLevel": 2,
-      "ResearchRequired": "DefenceResearch",
-      "Ingredients": [
-        {
-          "ItemID": "MissileLauncher",
-          "Qty": 1
-        },
-        {
-          "ItemID": "ServoActuator_Mk2",
-          "Qty": 1
-        },
-        {
-          "ItemID": "TargetingComputer",
-          "Qty": 1
-        },
-        {
-          "ItemID": "DefenceResearch",
-          "Qty": 1
-        }
-      ]
-    },
-    {
-      "RecipeID": "RCP_277_Railgun_Mk2",
-      "OutputItem": "Railgun_Mk2",
-      "OutputQty": 1,
-      "Tier": 5,
-      "ProducedIn": "Fabrication",
-      "Category": "Military",
-      "Acquisition": false,
-      "ResearchLevel": 2,
-      "ResearchRequired": "DefenceResearch",
-      "Ingredients": [
-        {
-          "ItemID": "Railgun",
-          "Qty": 1
-        },
-        {
-          "ItemID": "SuperConductingWire_Mk2",
-          "Qty": 3
-        },
-        {
-          "ItemID": "CobaltMagnet",
-          "Qty": 1
-        },
-        {
-          "ItemID": "DefenceResearch",
-          "Qty": 1
-        }
-      ]
-    },
-    {
-      "RecipeID": "RCP_278_PlasmaCannon_Mk2",
-      "OutputItem": "PlasmaCannon_Mk2",
-      "OutputQty": 1,
-      "Tier": 5,
-      "ProducedIn": "Fabrication",
-      "Category": "Military",
-      "Acquisition": false,
-      "ResearchLevel": 2,
-      "ResearchRequired": "DefenceResearch",
-      "Ingredients": [
-        {
-          "ItemID": "PlasmaCannon",
-          "Qty": 1
-        },
-        {
-          "ItemID": "SuperConductingWire_Mk2",
-          "Qty": 2
-        },
-        {
-          "ItemID": "AdvancedPowerCells",
-          "Qty": 2
-        },
-        {
-          "ItemID": "DefenceResearch",
-          "Qty": 1
-        }
-      ]
-    },
-    {
-      "RecipeID": "RCP_279_TorpedoLauncher_Mk2",
-      "OutputItem": "TorpedoLauncher_Mk2",
-      "OutputQty": 1,
-      "Tier": 5,
-      "ProducedIn": "Fabrication",
-      "Category": "Military",
-      "Acquisition": false,
-      "ResearchLevel": 2,
-      "ResearchRequired": "DefenceResearch",
-      "Ingredients": [
-        {
-          "ItemID": "TorpedoLauncher",
-          "Qty": 1
-        },
-        {
-          "ItemID": "MissileLauncher_Mk2",
-          "Qty": 1
-        },
-        {
-          "ItemID": "CobaltMagnet",
-          "Qty": 1
-        },
-        {
-          "ItemID": "DefenceResearch",
-          "Qty": 1
-        }
-      ]
-    },
-    {
-      "RecipeID": "RCP_280_PointDefenceLaser_Mk2",
-      "OutputItem": "PointDefenceLaser_Mk2",
-      "OutputQty": 1,
-      "Tier": 5,
-      "ProducedIn": "Fabrication",
-      "Category": "Military",
-      "Acquisition": false,
-      "ResearchLevel": 2,
-      "ResearchRequired": "DefenceResearch",
-      "Ingredients": [
-        {
-          "ItemID": "PointDefenceLaser",
-          "Qty": 1
-        },
-        {
-          "ItemID": "TriLaser_Mk2",
-          "Qty": 1
-        },
-        {
-          "ItemID": "TargetingComputer_Mk2",
-          "Qty": 1
-        },
-        {
-          "ItemID": "DefenceResearch",
-          "Qty": 1
-        }
-      ]
-    },
-    {
-      "RecipeID": "RCP_281_ShipShieldGenerator_Mk3",
+      "RecipeID": "RCP_279_ShipShieldGenerator_Mk3",
       "OutputItem": "ShipShieldGenerator_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6502,7 +6438,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_282_TurretWeapon_Mk3",
+      "RecipeID": "RCP_280_TurretWeapon_Mk3",
       "OutputItem": "TurretWeapon_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6531,7 +6467,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_283_EnergyCannon_Mk3",
+      "RecipeID": "RCP_281_EnergyCannon_Mk3",
       "OutputItem": "EnergyCannon_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6560,181 +6496,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_284_TriLaser_Mk3",
-      "OutputItem": "TriLaser_Mk3",
-      "OutputQty": 1,
-      "Tier": 6,
-      "ProducedIn": "Fabrication",
-      "Category": "Military",
-      "Acquisition": false,
-      "ResearchLevel": 3,
-      "ResearchRequired": "AdvancedDefenceResearch",
-      "Ingredients": [
-        {
-          "ItemID": "TriLaser_Mk2",
-          "Qty": 1
-        },
-        {
-          "ItemID": "SuperConductingWire_Mk2",
-          "Qty": 3
-        },
-        {
-          "ItemID": "TargetingComputer",
-          "Qty": 1
-        },
-        {
-          "ItemID": "AdvancedDefenceResearch",
-          "Qty": 1
-        }
-      ]
-    },
-    {
-      "RecipeID": "RCP_285_MissileLauncher_Mk3",
-      "OutputItem": "MissileLauncher_Mk3",
-      "OutputQty": 1,
-      "Tier": 6,
-      "ProducedIn": "Fabrication",
-      "Category": "Military",
-      "Acquisition": false,
-      "ResearchLevel": 3,
-      "ResearchRequired": "AdvancedDefenceResearch",
-      "Ingredients": [
-        {
-          "ItemID": "MissileLauncher_Mk2",
-          "Qty": 1
-        },
-        {
-          "ItemID": "ServoActuator_Mk2",
-          "Qty": 2
-        },
-        {
-          "ItemID": "FusionFuelCell",
-          "Qty": 1
-        },
-        {
-          "ItemID": "AdvancedDefenceResearch",
-          "Qty": 1
-        }
-      ]
-    },
-    {
-      "RecipeID": "RCP_286_Railgun_Mk3",
-      "OutputItem": "Railgun_Mk3",
-      "OutputQty": 1,
-      "Tier": 6,
-      "ProducedIn": "Fabrication",
-      "Category": "Military",
-      "Acquisition": false,
-      "ResearchLevel": 3,
-      "ResearchRequired": "AdvancedDefenceResearch",
-      "Ingredients": [
-        {
-          "ItemID": "Railgun_Mk2",
-          "Qty": 1
-        },
-        {
-          "ItemID": "SuperConductingWire_Mk2",
-          "Qty": 3
-        },
-        {
-          "ItemID": "TungstenCarbide",
-          "Qty": 3
-        },
-        {
-          "ItemID": "AdvancedDefenceResearch",
-          "Qty": 1
-        }
-      ]
-    },
-    {
-      "RecipeID": "RCP_287_PlasmaCannon_Mk3",
-      "OutputItem": "PlasmaCannon_Mk3",
-      "OutputQty": 1,
-      "Tier": 6,
-      "ProducedIn": "Fabrication",
-      "Category": "Military",
-      "Acquisition": false,
-      "ResearchLevel": 3,
-      "ResearchRequired": "AdvancedDefenceResearch",
-      "Ingredients": [
-        {
-          "ItemID": "PlasmaCannon_Mk2",
-          "Qty": 1
-        },
-        {
-          "ItemID": "SuperConductingWire_Mk2",
-          "Qty": 2
-        },
-        {
-          "ItemID": "FusionFuelCell",
-          "Qty": 1
-        },
-        {
-          "ItemID": "AdvancedDefenceResearch",
-          "Qty": 1
-        }
-      ]
-    },
-    {
-      "RecipeID": "RCP_288_TorpedoLauncher_Mk3",
-      "OutputItem": "TorpedoLauncher_Mk3",
-      "OutputQty": 1,
-      "Tier": 6,
-      "ProducedIn": "Fabrication",
-      "Category": "Military",
-      "Acquisition": false,
-      "ResearchLevel": 3,
-      "ResearchRequired": "AdvancedDefenceResearch",
-      "Ingredients": [
-        {
-          "ItemID": "TorpedoLauncher_Mk2",
-          "Qty": 1
-        },
-        {
-          "ItemID": "MissileLauncher_Mk2",
-          "Qty": 1
-        },
-        {
-          "ItemID": "AdvancedSensors_Mk2",
-          "Qty": 1
-        },
-        {
-          "ItemID": "AdvancedDefenceResearch",
-          "Qty": 1
-        }
-      ]
-    },
-    {
-      "RecipeID": "RCP_289_PointDefenceLaser_Mk3",
-      "OutputItem": "PointDefenceLaser_Mk3",
-      "OutputQty": 1,
-      "Tier": 6,
-      "ProducedIn": "Fabrication",
-      "Category": "Military",
-      "Acquisition": false,
-      "ResearchLevel": 3,
-      "ResearchRequired": "AdvancedDefenceResearch",
-      "Ingredients": [
-        {
-          "ItemID": "PointDefenceLaser_Mk2",
-          "Qty": 1
-        },
-        {
-          "ItemID": "TriLaser_Mk2",
-          "Qty": 1
-        },
-        {
-          "ItemID": "AdvancedSensors_Mk3",
-          "Qty": 1
-        },
-        {
-          "ItemID": "AdvancedDefenceResearch",
-          "Qty": 1
-        }
-      ]
-    },
-    {
-      "RecipeID": "RCP_290_GravitationGenerator_Mk2",
+      "RecipeID": "RCP_282_GravitationGenerator_Mk2",
       "OutputItem": "GravitationGenerator_Mk2",
       "OutputQty": 1,
       "Tier": 6,
@@ -6763,7 +6525,355 @@
       ]
     },
     {
-      "RecipeID": "RCP_291_RefinedMedicine_Mk2",
+      "RecipeID": "RCP_283_Railgun_Mk2",
+      "OutputItem": "Railgun_Mk2",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "KineticWeaponResearch",
+      "Ingredients": [
+        {
+          "ItemID": "Railgun",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire_Mk2",
+          "Qty": 3
+        },
+        {
+          "ItemID": "CobaltMagnet",
+          "Qty": 1
+        },
+        {
+          "ItemID": "KineticWeaponResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_284_MissileLauncher_Mk2",
+      "OutputItem": "MissileLauncher_Mk2",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "KineticWeaponResearch",
+      "Ingredients": [
+        {
+          "ItemID": "MissileLauncher",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ServoActuator_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "TargetingComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "KineticWeaponResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_285_TorpedoLauncher_Mk2",
+      "OutputItem": "TorpedoLauncher_Mk2",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "KineticWeaponResearch",
+      "Ingredients": [
+        {
+          "ItemID": "TorpedoLauncher",
+          "Qty": 1
+        },
+        {
+          "ItemID": "MissileLauncher_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CobaltMagnet",
+          "Qty": 1
+        },
+        {
+          "ItemID": "KineticWeaponResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_286_Railgun_Mk3",
+      "OutputItem": "Railgun_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "KineticWeaponResearch",
+      "Ingredients": [
+        {
+          "ItemID": "Railgun_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire_Mk2",
+          "Qty": 3
+        },
+        {
+          "ItemID": "TungstenCarbide",
+          "Qty": 3
+        },
+        {
+          "ItemID": "KineticWeaponResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_287_MissileLauncher_Mk3",
+      "OutputItem": "MissileLauncher_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "KineticWeaponResearch",
+      "Ingredients": [
+        {
+          "ItemID": "MissileLauncher_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ServoActuator_Mk2",
+          "Qty": 2
+        },
+        {
+          "ItemID": "FusionFuelCell",
+          "Qty": 1
+        },
+        {
+          "ItemID": "KineticWeaponResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_288_TorpedoLauncher_Mk3",
+      "OutputItem": "TorpedoLauncher_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "KineticWeaponResearch",
+      "Ingredients": [
+        {
+          "ItemID": "TorpedoLauncher_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "MissileLauncher_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedSensors_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "KineticWeaponResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_289_TriLaser_Mk2",
+      "OutputItem": "TriLaser_Mk2",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "BeamWeaponResearch",
+      "Ingredients": [
+        {
+          "ItemID": "TriLaser",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire_Mk2",
+          "Qty": 2
+        },
+        {
+          "ItemID": "Microchips_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "BeamWeaponResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_290_PlasmaCannon_Mk2",
+      "OutputItem": "PlasmaCannon_Mk2",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "BeamWeaponResearch",
+      "Ingredients": [
+        {
+          "ItemID": "PlasmaCannon",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire_Mk2",
+          "Qty": 2
+        },
+        {
+          "ItemID": "AdvancedPowerCells",
+          "Qty": 2
+        },
+        {
+          "ItemID": "BeamWeaponResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_291_PointDefenceLaser_Mk2",
+      "OutputItem": "PointDefenceLaser_Mk2",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "BeamWeaponResearch",
+      "Ingredients": [
+        {
+          "ItemID": "PointDefenceLaser",
+          "Qty": 1
+        },
+        {
+          "ItemID": "TriLaser_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "TargetingComputer_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "BeamWeaponResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_292_TriLaser_Mk3",
+      "OutputItem": "TriLaser_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "BeamWeaponResearch",
+      "Ingredients": [
+        {
+          "ItemID": "TriLaser_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire_Mk2",
+          "Qty": 3
+        },
+        {
+          "ItemID": "TargetingComputer",
+          "Qty": 1
+        },
+        {
+          "ItemID": "BeamWeaponResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_293_PlasmaCannon_Mk3",
+      "OutputItem": "PlasmaCannon_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "BeamWeaponResearch",
+      "Ingredients": [
+        {
+          "ItemID": "PlasmaCannon_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "SuperConductingWire_Mk2",
+          "Qty": 2
+        },
+        {
+          "ItemID": "FusionFuelCell",
+          "Qty": 1
+        },
+        {
+          "ItemID": "BeamWeaponResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_294_PointDefenceLaser_Mk3",
+      "OutputItem": "PointDefenceLaser_Mk3",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Military",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "BeamWeaponResearch",
+      "Ingredients": [
+        {
+          "ItemID": "PointDefenceLaser_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "TriLaser_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedSensors_Mk3",
+          "Qty": 1
+        },
+        {
+          "ItemID": "BeamWeaponResearch",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_295_RefinedMedicine_Mk2",
       "OutputItem": "RefinedMedicine_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -6792,7 +6902,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_292_MedicalSupplies_Mk2",
+      "RecipeID": "RCP_296_MedicalSupplies_Mk2",
       "OutputItem": "MedicalSupplies_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -6821,7 +6931,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_293_Vaccines_Mk2",
+      "RecipeID": "RCP_297_Vaccines_Mk2",
       "OutputItem": "Vaccines_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -6850,7 +6960,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_294_RefinedMedicine_Mk3",
+      "RecipeID": "RCP_298_RefinedMedicine_Mk3",
       "OutputItem": "RefinedMedicine_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -6879,7 +6989,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_295_MedicalSupplies_Mk3",
+      "RecipeID": "RCP_299_MedicalSupplies_Mk3",
       "OutputItem": "MedicalSupplies_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -8849,6 +8959,26 @@
       "BaseValue": 46424,
       "MaterialCategory": "Other"
     },
+    "ProjectileWeaponsLab": {
+      "ItemName": "Projectile Weapons Lab",
+      "Description": "Refined projectile weapons lab, produced by advanced fabrication.",
+      "WeightKg": 17.9,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 323198,
+      "MaterialCategory": "Other"
+    },
+    "BeamWeaponsLab": {
+      "ItemName": "Beam Weapons Lab",
+      "Description": "Refined beam weapons lab, produced by advanced fabrication.",
+      "WeightKg": 17.9,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 462482,
+      "MaterialCategory": "Other"
+    },
     "PropulsionResearch": {
       "ItemName": "Propulsion Research",
       "Description": "Unlocked propulsion research \u2014 a Science Lab breakthrough data-file.",
@@ -8947,6 +9077,26 @@
       "StorageType": "Other",
       "Rarity": "VeryRare",
       "BaseValue": 639364,
+      "MaterialCategory": "Research"
+    },
+    "KineticWeaponResearch": {
+      "ItemName": "Kinetic Weapon Research",
+      "Description": "Unlocked kinetic weapon research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 2.5,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "Legendary",
+      "BaseValue": 1042808,
+      "MaterialCategory": "Research"
+    },
+    "BeamWeaponResearch": {
+      "ItemName": "Beam Weapon Research",
+      "Description": "Unlocked beam weapon research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 2.5,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "Legendary",
+      "BaseValue": 1301468,
       "MaterialCategory": "Research"
     },
     "Electronics_Mk2": {
@@ -9649,66 +9799,6 @@
       "BaseValue": 1065519,
       "MaterialCategory": "ShipPart"
     },
-    "TriLaser_Mk2": {
-      "ItemName": "Tri Laser Mk2",
-      "Description": "Refined tri laser mk2, produced by advanced fabrication.",
-      "WeightKg": 518.4,
-      "VolumeM3": 1.04,
-      "StorageType": "Solid",
-      "Rarity": "VeryRare",
-      "BaseValue": 1487646,
-      "MaterialCategory": "ShipPart"
-    },
-    "MissileLauncher_Mk2": {
-      "ItemName": "Missile Launcher Mk2",
-      "Description": "Refined missile launcher mk2, produced by advanced fabrication.",
-      "WeightKg": 518.4,
-      "VolumeM3": 1.04,
-      "StorageType": "Solid",
-      "Rarity": "VeryRare",
-      "BaseValue": 988510,
-      "MaterialCategory": "ShipPart"
-    },
-    "Railgun_Mk2": {
-      "ItemName": "Railgun Mk2",
-      "Description": "Refined railgun mk2, produced by advanced fabrication.",
-      "WeightKg": 518.4,
-      "VolumeM3": 1.04,
-      "StorageType": "Solid",
-      "Rarity": "VeryRare",
-      "BaseValue": 1022216,
-      "MaterialCategory": "ShipPart"
-    },
-    "PlasmaCannon_Mk2": {
-      "ItemName": "Plasma Cannon Mk2",
-      "Description": "Refined plasma cannon mk2, produced by advanced fabrication.",
-      "WeightKg": 518.4,
-      "VolumeM3": 1.04,
-      "StorageType": "Solid",
-      "Rarity": "VeryRare",
-      "BaseValue": 1376874,
-      "MaterialCategory": "ShipPart"
-    },
-    "TorpedoLauncher_Mk2": {
-      "ItemName": "Torpedo Launcher Mk2",
-      "Description": "Refined torpedo launcher mk2, produced by advanced fabrication.",
-      "WeightKg": 518.4,
-      "VolumeM3": 1.04,
-      "StorageType": "Solid",
-      "Rarity": "VeryRare",
-      "BaseValue": 4867091,
-      "MaterialCategory": "ShipPart"
-    },
-    "PointDefenceLaser_Mk2": {
-      "ItemName": "Point Defence Laser Mk2",
-      "Description": "Refined point defence laser mk2, produced by advanced fabrication.",
-      "WeightKg": 518.4,
-      "VolumeM3": 1.04,
-      "StorageType": "Solid",
-      "Rarity": "VeryRare",
-      "BaseValue": 14329861,
-      "MaterialCategory": "ShipPart"
-    },
     "ShipShieldGenerator_Mk3": {
       "ItemName": "Ship Shield Generator Mk3",
       "Description": "Refined ship shield generator mk3, produced by advanced fabrication.",
@@ -9739,66 +9829,6 @@
       "BaseValue": 24995736,
       "MaterialCategory": "ShipPart"
     },
-    "TriLaser_Mk3": {
-      "ItemName": "Tri Laser Mk3",
-      "Description": "Refined tri laser mk3, produced by advanced fabrication.",
-      "WeightKg": 622.1,
-      "VolumeM3": 1.24,
-      "StorageType": "Solid",
-      "Rarity": "Legendary",
-      "BaseValue": 27952466,
-      "MaterialCategory": "ShipPart"
-    },
-    "MissileLauncher_Mk3": {
-      "ItemName": "Missile Launcher Mk3",
-      "Description": "Refined missile launcher mk3, produced by advanced fabrication.",
-      "WeightKg": 622.1,
-      "VolumeM3": 1.24,
-      "StorageType": "Solid",
-      "Rarity": "Legendary",
-      "BaseValue": 24257279,
-      "MaterialCategory": "ShipPart"
-    },
-    "Railgun_Mk3": {
-      "ItemName": "Railgun Mk3",
-      "Description": "Refined railgun mk3, produced by advanced fabrication.",
-      "WeightKg": 622.1,
-      "VolumeM3": 1.24,
-      "StorageType": "Solid",
-      "Rarity": "Legendary",
-      "BaseValue": 24703441,
-      "MaterialCategory": "ShipPart"
-    },
-    "PlasmaCannon_Mk3": {
-      "ItemName": "Plasma Cannon Mk3",
-      "Description": "Refined plasma cannon mk3, produced by advanced fabrication.",
-      "WeightKg": 622.1,
-      "VolumeM3": 1.24,
-      "StorageType": "Solid",
-      "Rarity": "Legendary",
-      "BaseValue": 26858594,
-      "MaterialCategory": "ShipPart"
-    },
-    "TorpedoLauncher_Mk3": {
-      "ItemName": "Torpedo Launcher Mk3",
-      "Description": "Refined torpedo launcher mk3, produced by advanced fabrication.",
-      "WeightKg": 622.1,
-      "VolumeM3": 1.24,
-      "StorageType": "Solid",
-      "Rarity": "Legendary",
-      "BaseValue": 58302882,
-      "MaterialCategory": "ShipPart"
-    },
-    "PointDefenceLaser_Mk3": {
-      "ItemName": "Point Defence Laser Mk3",
-      "Description": "Refined point defence laser mk3, produced by advanced fabrication.",
-      "WeightKg": 622.1,
-      "VolumeM3": 1.24,
-      "StorageType": "Solid",
-      "Rarity": "Legendary",
-      "BaseValue": 240462695,
-      "MaterialCategory": "ShipPart"
-    },
     "GravitationGenerator_Mk2": {
       "ItemName": "Gravitation Generator Mk2",
       "Description": "Refined gravitation generator mk2, produced by advanced fabrication.",
@@ -9808,6 +9838,126 @@
       "Rarity": "Legendary",
       "BaseValue": 573487,
       "MaterialCategory": "Electronics"
+    },
+    "Railgun_Mk2": {
+      "ItemName": "Railgun Mk2",
+      "Description": "Refined railgun mk2, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 7837222,
+      "MaterialCategory": "ShipPart"
+    },
+    "MissileLauncher_Mk2": {
+      "ItemName": "Missile Launcher Mk2",
+      "Description": "Refined missile launcher mk2, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 7777742,
+      "MaterialCategory": "ShipPart"
+    },
+    "TorpedoLauncher_Mk2": {
+      "ItemName": "Torpedo Launcher Mk2",
+      "Description": "Refined torpedo launcher mk2, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 60449612,
+      "MaterialCategory": "ShipPart"
+    },
+    "Railgun_Mk3": {
+      "ItemName": "Railgun Mk3",
+      "Description": "Refined railgun mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 60659300,
+      "MaterialCategory": "ShipPart"
+    },
+    "MissileLauncher_Mk3": {
+      "ItemName": "Missile Launcher Mk3",
+      "Description": "Refined missile launcher mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 60039164,
+      "MaterialCategory": "ShipPart"
+    },
+    "TorpedoLauncher_Mk3": {
+      "ItemName": "Torpedo Launcher Mk3",
+      "Description": "Refined torpedo launcher mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 469266784,
+      "MaterialCategory": "ShipPart"
+    },
+    "TriLaser_Mk2": {
+      "ItemName": "Tri Laser Mk2",
+      "Description": "Refined tri laser mk2, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 10404524,
+      "MaterialCategory": "ShipPart"
+    },
+    "PlasmaCannon_Mk2": {
+      "ItemName": "Plasma Cannon Mk2",
+      "Description": "Refined plasma cannon mk2, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 10209044,
+      "MaterialCategory": "ShipPart"
+    },
+    "PointDefenceLaser_Mk2": {
+      "ItemName": "Point Defence Laser Mk2",
+      "Description": "Refined point defence laser mk2, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 93256184,
+      "MaterialCategory": "ShipPart"
+    },
+    "TriLaser_Mk3": {
+      "ItemName": "Tri Laser Mk3",
+      "Description": "Refined tri laser mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 79841916,
+      "MaterialCategory": "ShipPart"
+    },
+    "PlasmaCannon_Mk3": {
+      "ItemName": "Plasma Cannon Mk3",
+      "Description": "Refined plasma cannon mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 78176266,
+      "MaterialCategory": "ShipPart"
+    },
+    "PointDefenceLaser_Mk3": {
+      "ItemName": "Point Defence Laser Mk3",
+      "Description": "Refined point defence laser mk3, produced by advanced fabrication.",
+      "WeightKg": 622.1,
+      "VolumeM3": 1.24,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 825104826,
+      "MaterialCategory": "ShipPart"
     },
     "RefinedMedicine_Mk2": {
       "ItemName": "Refined Medicine Mk2",
@@ -10960,6 +11110,20 @@
       "Margin": 0.5,
       "IntendedMarkup": 1.5
     },
+    "ProjectileWeaponsLab": {
+      "IngredientCost": 215465,
+      "OutputValue": 323198,
+      "Profit": 107733,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "BeamWeaponsLab": {
+      "IngredientCost": 308321,
+      "OutputValue": 462482,
+      "Profit": 154161,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
     "PropulsionResearch": {
       "IngredientCost": 2790,
       "OutputValue": 7114,
@@ -11027,6 +11191,20 @@
       "IngredientCost": 142081,
       "OutputValue": 639364,
       "Profit": 497283,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "KineticWeaponResearch": {
+      "IngredientCost": 231735,
+      "OutputValue": 1042808,
+      "Profit": 811073,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "BeamWeaponResearch": {
+      "IngredientCost": 289215,
+      "OutputValue": 1301468,
+      "Profit": 1012253,
       "Margin": 3.5,
       "IntendedMarkup": 4.5
     },
@@ -11520,48 +11698,6 @@
       "Margin": 2.825,
       "IntendedMarkup": 3.825
     },
-    "TriLaser_Mk2": {
-      "IngredientCost": 388927,
-      "OutputValue": 1487646,
-      "Profit": 1098719,
-      "Margin": 2.825,
-      "IntendedMarkup": 3.825
-    },
-    "MissileLauncher_Mk2": {
-      "IngredientCost": 258434,
-      "OutputValue": 988510,
-      "Profit": 730076,
-      "Margin": 2.825,
-      "IntendedMarkup": 3.825
-    },
-    "Railgun_Mk2": {
-      "IngredientCost": 267246,
-      "OutputValue": 1022216,
-      "Profit": 754970,
-      "Margin": 2.825,
-      "IntendedMarkup": 3.825
-    },
-    "PlasmaCannon_Mk2": {
-      "IngredientCost": 359967,
-      "OutputValue": 1376874,
-      "Profit": 1016907,
-      "Margin": 2.825,
-      "IntendedMarkup": 3.825
-    },
-    "TorpedoLauncher_Mk2": {
-      "IngredientCost": 1272442,
-      "OutputValue": 4867091,
-      "Profit": 3594649,
-      "Margin": 2.825,
-      "IntendedMarkup": 3.825
-    },
-    "PointDefenceLaser_Mk2": {
-      "IngredientCost": 3746369,
-      "OutputValue": 14329861,
-      "Profit": 10583492,
-      "Margin": 2.825,
-      "IntendedMarkup": 3.825
-    },
     "ShipShieldGenerator_Mk3": {
       "IngredientCost": 22323963,
       "OutputValue": 150686750,
@@ -11583,54 +11719,96 @@
       "Margin": 5.75,
       "IntendedMarkup": 6.75
     },
-    "TriLaser_Mk3": {
-      "IngredientCost": 4141106,
-      "OutputValue": 27952466,
-      "Profit": 23811360,
-      "Margin": 5.75,
-      "IntendedMarkup": 6.75
-    },
-    "MissileLauncher_Mk3": {
-      "IngredientCost": 3593671,
-      "OutputValue": 24257279,
-      "Profit": 20663608,
-      "Margin": 5.75,
-      "IntendedMarkup": 6.75
-    },
-    "Railgun_Mk3": {
-      "IngredientCost": 3659769,
-      "OutputValue": 24703441,
-      "Profit": 21043672,
-      "Margin": 5.75,
-      "IntendedMarkup": 6.75
-    },
-    "PlasmaCannon_Mk3": {
-      "IngredientCost": 3979051,
-      "OutputValue": 26858594,
-      "Profit": 22879543,
-      "Margin": 5.75,
-      "IntendedMarkup": 6.75
-    },
-    "TorpedoLauncher_Mk3": {
-      "IngredientCost": 8637464,
-      "OutputValue": 58302882,
-      "Profit": 49665418,
-      "Margin": 5.75,
-      "IntendedMarkup": 6.75
-    },
-    "PointDefenceLaser_Mk3": {
-      "IngredientCost": 35624103,
-      "OutputValue": 240462695,
-      "Profit": 204838592,
-      "Margin": 5.75,
-      "IntendedMarkup": 6.75
-    },
     "GravitationGenerator_Mk2": {
       "IngredientCost": 224897,
       "OutputValue": 573487,
       "Profit": 348590,
       "Margin": 1.55,
       "IntendedMarkup": 2.55
+    },
+    "Railgun_Mk2": {
+      "IngredientCost": 1161070,
+      "OutputValue": 7837222,
+      "Profit": 6676152,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "MissileLauncher_Mk2": {
+      "IngredientCost": 1152258,
+      "OutputValue": 7777742,
+      "Profit": 6625484,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "TorpedoLauncher_Mk2": {
+      "IngredientCost": 8955498,
+      "OutputValue": 60449612,
+      "Profit": 51494114,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "Railgun_Mk3": {
+      "IngredientCost": 8986563,
+      "OutputValue": 60659300,
+      "Profit": 51672737,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "MissileLauncher_Mk3": {
+      "IngredientCost": 8894691,
+      "OutputValue": 60039164,
+      "Profit": 51144473,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "TorpedoLauncher_Mk3": {
+      "IngredientCost": 69521005,
+      "OutputValue": 469266784,
+      "Profit": 399745779,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "TriLaser_Mk2": {
+      "IngredientCost": 1541411,
+      "OutputValue": 10404524,
+      "Profit": 8863113,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "PlasmaCannon_Mk2": {
+      "IngredientCost": 1512451,
+      "OutputValue": 10209044,
+      "Profit": 8696593,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "PointDefenceLaser_Mk2": {
+      "IngredientCost": 13815731,
+      "OutputValue": 93256184,
+      "Profit": 79440453,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "TriLaser_Mk3": {
+      "IngredientCost": 11828432,
+      "OutputValue": 79841916,
+      "Profit": 68013484,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "PlasmaCannon_Mk3": {
+      "IngredientCost": 11581669,
+      "OutputValue": 78176266,
+      "Profit": 66594597,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
+    },
+    "PointDefenceLaser_Mk3": {
+      "IngredientCost": 122237752,
+      "OutputValue": 825104826,
+      "Profit": 702867074,
+      "Margin": 5.75,
+      "IntendedMarkup": 6.75
     },
     "RefinedMedicine_Mk2": {
       "IngredientCost": 40203,

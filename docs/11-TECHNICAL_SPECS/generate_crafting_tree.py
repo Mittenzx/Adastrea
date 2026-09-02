@@ -45,6 +45,8 @@ PRODUCED_IN_TAGS = {
     "Processing", "Fabrication", "Reactor", "SolarArray", "ScienceLab", "FuelDepot",
     # specialized research labs — each produces its own breakthrough domain
     "PhysicsLab", "MaterialsLab", "ElectronicsLab", "WeaponsLab", "BiologyLab",
+    # upgraded / niche research labs (specialized sub-fields)
+    "ProjectileWeaponsLab", "BeamWeaponsLab",
 }
 
 # Research domains: each specialized lab unlocks its own breakthrough chain.
@@ -350,6 +352,18 @@ add("ElectronicsLabModule", 6, "Fabrication", "Other", [("ModuleShell", 2), ("Qu
 add("WeaponsLabModule", 6, "Fabrication", "Other", [("ModuleShell", 2), ("EnergyCannon", 1), ("TargetingComputer", 1)])
 add("BiologyLabModule", 6, "Fabrication", "Other", [("ModuleShell", 2), ("RefinedMedicine", 2), ("BioCompound", 1)])
 
+# --- UPGRADED / SPECIALIZED RESEARCH LABS -------------------------------
+# Each lab can be upgraded to (a) an upgraded hull that boosts its domain, and
+# (b) niche specializations that unlock targeted breakthroughs. A niche lab is a
+# distinct craftable Tier-7 module whose ProducedIn tag doubles as its domain,
+# and it produces the niche breakthrough(s) that gate that niche's recipes.
+#   WeaponsLab -> ProjectileWeaponsLab (rail, missiles, torpedoes)
+#             -> BeamWeaponsLab       (laser, plasma, point-defence)
+#   PhysicsLab -> PropulsionNicheLab  (engine/reactor/flinger sub-fields, placeholder)
+# (add similar niches per lab as the tree grows)
+add("ProjectileWeaponsLab", 7, "Fabrication", "Other", [("WeaponsLabModule", 1), ("ModuleShell", 1), ("Railgun", 1), ("SuperConductingWire_Mk2", 1)])
+add("BeamWeaponsLab", 7, "Fabrication", "Other", [("WeaponsLabModule", 1), ("ModuleShell", 1), ("PlasmaCannon", 1), ("AdvancedPowerCells", 2)])
+
 # --- Domain breakthroughs (produced inside their own lab) ---
 add("PropulsionResearch", 5, "PhysicsLab", "Data", [("Helium3", 3), ("AdvancedPowerCells", 2)], research="PropulsionResearch", rl=2)
 add("AdvancedPropulsionResearch", 6, "PhysicsLab", "Data", [("PropulsionResearch", 1), ("FusionFuelCell", 2)], research="AdvancedPropulsionResearch", rl=3)
@@ -362,6 +376,12 @@ add("AdvancedDefenceResearch", 6, "WeaponsLab", "Data", [("DefenceResearch", 1),
 add("BioResearch", 4, "BiologyLab", "Data", [("RefinedMedicine", 1), ("Vaccines", 1)], research="BioResearch", rl=2)
 add("AdvancedBioResearch", 5, "BiologyLab", "Data", [("BioResearch", 1), ("Vaccines_Mk2", 1)], research="AdvancedBioResearch", rl=3)
 
+# --- Niche specialization breakthroughs (produced inside their niche labs) ---
+# A secondary breakthrough, produced only by the upgraded/specialized lab, that
+# unlocks the niche's deeper tech. Consumed by (and gating) niche Mk2/3 recipes.
+add("KineticWeaponResearch", 6, "ProjectileWeaponsLab", "Data", [("DefenceResearch", 1), ("Railgun", 1), ("SuperConductingWire_Mk2", 2)], research="KineticWeaponResearch", rl=3)
+add("BeamWeaponResearch", 6, "BeamWeaponsLab", "Data", [("DefenceResearch", 1), ("PlasmaCannon", 1), ("AdvancedPowerCells", 2)], research="BeamWeaponResearch", rl=3)
+
 def _mk(base, suffix, tier, produced_in, cat, extra, domain, prev_suffix):
     """Add a `base<suffix>` mark/version. Consumes the preceding version (or base),
     extra ingredients, and the domain's breakthrough (Mk2 -> rl2, Mk3 -> rl3)."""
@@ -369,6 +389,15 @@ def _mk(base, suffix, tier, produced_in, cat, extra, domain, prev_suffix):
     research = domain[1] if suffix == "_Mk3" else domain[0]
     prev = base if prev_suffix is None else base + prev_suffix
     add(base + suffix, tier, produced_in, cat, [(prev, 1)] + extra + [(research, 1)], research=research, rl=rl)
+
+
+def _mk_niche(base, suffix, tier, produced_in, cat, extra, niche_research, prev_suffix, rl):
+    """Add a `base<suffix>` mark/version gated by a SINGLE niche-lab breakthrough
+    (niche_research), used for weapons/families that only unlock via an upgraded
+    niche lab. The niche breakthrough is consumed and set as ResearchRequired."""
+    prev = base if prev_suffix is None else base + prev_suffix
+    add(base + suffix, tier, produced_in, cat, [(prev, 1)] + extra + [(niche_research, 1)],
+        research=niche_research, rl=rl)
 
 # --- COMPUTING domain (ElectronicsLab): component / electronics upgrades ---
 _mk("Electronics", "_Mk2", 4, "Fabrication", "Components", [("SuperConductingWire", 2), ("Microchips", 1)], COMPUTING, None)
@@ -447,27 +476,37 @@ _mk("ShipComponents", "_Mk3", 6, "Fabrication", "Components", [("ArmourPlate", 1
 _mk("ArmourHull", "_Mk3", 6, "Fabrication", "Military", [("ArmourPlate", 4), ("CarbonFibre", 2)], MATERIALS, "_Mk2")
 _mk("HullPlating", "_Mk3", 6, "Fabrication", "Military", [("ArmourPlate", 2), ("TitaniumAlloy", 1)], MATERIALS, "_Mk2")
 
-# --- DEFENCE domain (WeaponsLab): weapons + shields ---
+# --- DEFENCE domain (WeaponsLab TL: bastions + energy cannons + shields; weapon
+# families split into NICHE labs). Base WeaponsLab handles the general "bread &
+# butter" weapons (turret, energy cannon, missiles). Niche labs unlock specialized
+# families: ProjectileWeaponsLab -> rail/missile/torpedo, BeamWeaponsLab ->
+# laser/plasma/point-defence. A family's Mk upgrades need that niche lab's
+# breakthrough, so specializing early pays off. ---
+# general (base WeaponsLab):
 _mk("ShipShieldGenerator", "_Mk2", 5, "Fabrication", "Military", [("ShieldCapacitor", 1), ("AdvancedSensors_Mk2", 1)], DEFENCE, None)
 _mk("ShieldCapacitor", "_Mk2", 5, "Fabrication", "Military", [("CobaltMagnet", 3), ("SuperConductingWire_Mk2", 2)], DEFENCE, None)
 _mk("TurretWeapon", "_Mk2", 5, "Fabrication", "Military", [("TargetingComputer", 1), ("ArmourPlate", 1)], DEFENCE, None)
 _mk("EnergyCannon", "_Mk2", 5, "Fabrication", "Military", [("SuperConductingWire_Mk2", 2), ("AdvancedPowerCells", 1)], DEFENCE, None)
-_mk("TriLaser", "_Mk2", 5, "Fabrication", "Military", [("SuperConductingWire_Mk2", 2), ("Microchips_Mk2", 1)], DEFENCE, None)
-_mk("MissileLauncher", "_Mk2", 5, "Fabrication", "Military", [("ServoActuator_Mk2", 1), ("TargetingComputer", 1)], DEFENCE, None)
-_mk("Railgun", "_Mk2", 5, "Fabrication", "Military", [("SuperConductingWire_Mk2", 3), ("CobaltMagnet", 1)], DEFENCE, None)
-_mk("PlasmaCannon", "_Mk2", 5, "Fabrication", "Military", [("SuperConductingWire_Mk2", 2), ("AdvancedPowerCells", 2)], DEFENCE, None)
-_mk("TorpedoLauncher", "_Mk2", 5, "Fabrication", "Military", [("MissileLauncher_Mk2", 1), ("CobaltMagnet", 1)], DEFENCE, None)
-_mk("PointDefenceLaser", "_Mk2", 5, "Fabrication", "Military", [("TriLaser_Mk2", 1), ("TargetingComputer_Mk2", 1)], DEFENCE, None)
 _mk("ShipShieldGenerator", "_Mk3", 6, "Fabrication", "Military", [("ShieldCapacitor_Mk2", 1), ("AdvancedSensors_Mk3", 1)], DEFENCE, "_Mk2")
 _mk("TurretWeapon", "_Mk3", 6, "Fabrication", "Military", [("QuantumProcessor", 1), ("ArmourPlate", 2)], DEFENCE, "_Mk2")
 _mk("EnergyCannon", "_Mk3", 6, "Fabrication", "Military", [("SuperConductingWire_Mk2", 3), ("FusionFuelCell", 1)], DEFENCE, "_Mk2")
-_mk("TriLaser", "_Mk3", 6, "Fabrication", "Military", [("SuperConductingWire_Mk2", 3), ("TargetingComputer", 1)], DEFENCE, "_Mk2")
-_mk("MissileLauncher", "_Mk3", 6, "Fabrication", "Military", [("ServoActuator_Mk2", 2), ("FusionFuelCell", 1)], DEFENCE, "_Mk2")
-_mk("Railgun", "_Mk3", 6, "Fabrication", "Military", [("SuperConductingWire_Mk2", 3), ("TungstenCarbide", 3)], DEFENCE, "_Mk2")
-_mk("PlasmaCannon", "_Mk3", 6, "Fabrication", "Military", [("SuperConductingWire_Mk2", 2), ("FusionFuelCell", 1)], DEFENCE, "_Mk2")
-_mk("TorpedoLauncher", "_Mk3", 6, "Fabrication", "Military", [("MissileLauncher_Mk2", 1), ("AdvancedSensors_Mk2", 1)], DEFENCE, "_Mk2")
-_mk("PointDefenceLaser", "_Mk3", 6, "Fabrication", "Military", [("TriLaser_Mk2", 1), ("AdvancedSensors_Mk3", 1)], DEFENCE, "_Mk2")
 _mk("GravitationGenerator", "_Mk2", 6, "Reactor", "Technology", [("CobaltMagnet", 3), ("SuperConductingWire_Mk2", 2)], DEFENCE, None)
+
+# --- PROJECTILE family (ProjectileWeaponsLab -> KineticWeaponResearch) ---
+_mk_niche("Railgun", "_Mk2", 6, "Fabrication", "Military", [("SuperConductingWire_Mk2", 3), ("CobaltMagnet", 1)], "KineticWeaponResearch", None, 3)
+_mk_niche("MissileLauncher", "_Mk2", 6, "Fabrication", "Military", [("ServoActuator_Mk2", 1), ("TargetingComputer", 1)], "KineticWeaponResearch", None, 3)
+_mk_niche("TorpedoLauncher", "_Mk2", 6, "Fabrication", "Military", [("MissileLauncher_Mk2", 1), ("CobaltMagnet", 1)], "KineticWeaponResearch", None, 3)
+_mk_niche("Railgun", "_Mk3", 6, "Fabrication", "Military", [("SuperConductingWire_Mk2", 3), ("TungstenCarbide", 3)], "KineticWeaponResearch", "_Mk2", 3)
+_mk_niche("MissileLauncher", "_Mk3", 6, "Fabrication", "Military", [("ServoActuator_Mk2", 2), ("FusionFuelCell", 1)], "KineticWeaponResearch", "_Mk2", 3)
+_mk_niche("TorpedoLauncher", "_Mk3", 6, "Fabrication", "Military", [("MissileLauncher_Mk2", 1), ("AdvancedSensors_Mk2", 1)], "KineticWeaponResearch", "_Mk2", 3)
+
+# --- BEAM family (BeamWeaponsLab -> BeamWeaponResearch) ---
+_mk_niche("TriLaser", "_Mk2", 6, "Fabrication", "Military", [("SuperConductingWire_Mk2", 2), ("Microchips_Mk2", 1)], "BeamWeaponResearch", None, 3)
+_mk_niche("PlasmaCannon", "_Mk2", 6, "Fabrication", "Military", [("SuperConductingWire_Mk2", 2), ("AdvancedPowerCells", 2)], "BeamWeaponResearch", None, 3)
+_mk_niche("PointDefenceLaser", "_Mk2", 6, "Fabrication", "Military", [("TriLaser_Mk2", 1), ("TargetingComputer_Mk2", 1)], "BeamWeaponResearch", None, 3)
+_mk_niche("TriLaser", "_Mk3", 6, "Fabrication", "Military", [("SuperConductingWire_Mk2", 3), ("TargetingComputer", 1)], "BeamWeaponResearch", "_Mk2", 3)
+_mk_niche("PlasmaCannon", "_Mk3", 6, "Fabrication", "Military", [("SuperConductingWire_Mk2", 2), ("FusionFuelCell", 1)], "BeamWeaponResearch", "_Mk2", 3)
+_mk_niche("PointDefenceLaser", "_Mk3", 6, "Fabrication", "Military", [("TriLaser_Mk2", 1), ("AdvancedSensors_Mk3", 1)], "BeamWeaponResearch", "_Mk2", 3)
 
 # --- BIO domain (BiologyLab): medical / bio upgrades ---
 _mk("RefinedMedicine", "_Mk2", 4, "Processing", "Medical", [("BioCompound", 2), ("Vaccines", 1)], BIO, None)
@@ -877,8 +916,8 @@ def main():
         "$schema": "http://json-schema.org/draft-07/schema#",
         "Title": "Adastrea Crafting & Building Tree",
         "Description": "Machine-readable crafting/building tree (recipes + per-item stats + recipe economy): raw extraction -> refined materials -> components & electronics -> ship parts -> weapons -> station construction parts -> modules. Authoritative generator: docs/11-TECHNICAL_SPECS/generate_crafting_tree.py",
-        "SchemaVersion": "1.6.0",
-        "LastUpdated": "2026-08-31",
+        "SchemaVersion": "1.7.0",
+                "LastUpdated": "2026-08-31",
         "ItemIDConvention": "^[A-Za-z][A-Za-z0-9_]*$",
         "NoteHelium3": "Existing trade asset uses 'Helium-3' (hyphen, violates ItemID regex). Crafting data canonicalizes to 'Helium3' and maps to DA_TradeItem_Helium-3.",
         "ProducedInTags": sorted(PRODUCED_IN_TAGS),

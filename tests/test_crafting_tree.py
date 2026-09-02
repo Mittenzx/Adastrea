@@ -22,6 +22,7 @@ PRODUCED_IN_TAGS = {
     "ShipMining", "GasHarvesting", "IceCollection", "OrganicFarming", "Salvage",
     "Processing", "Fabrication", "Reactor", "SolarArray", "ScienceLab", "FuelDepot",
     "PhysicsLab", "MaterialsLab", "ElectronicsLab", "WeaponsLab", "BiologyLab",
+    "ProjectileWeaponsLab", "BeamWeaponsLab",
 }
 
 
@@ -191,8 +192,13 @@ class TestCraftingTree:
         for b in rtree["Branches"]:
             lab_nodes = [n for n in rtree["ResearchNodes"] if n["ProducedIn"] == b["Lab"]]
             assert lab_nodes, f"branch {b['Domain']} has no nodes"
-            assert b["ResearchLevel2"] and b["ResearchLevel3"], \
-                f"branch {b['Domain']} missing rl2/rl3"
+            # Niche/specialization labs legitimately have a single rl3 breakthrough;
+            # main domain labs should have both an rl2 and an rl3 milestone.
+            if b["Domain"] in ("Projectile Weapons", "Beam Weapons"):
+                assert b["ResearchLevel3"], f"niche branch {b['Domain']} missing rl3"
+            else:
+                assert b["ResearchLevel2"] and b["ResearchLevel3"], \
+                    f"branch {b['Domain']} missing rl2/rl3"
 
     def test_economy_is_coherent(self):
         """Every crafted recipe's output value is >= ingredient cost (no loss),

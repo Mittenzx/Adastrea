@@ -372,7 +372,7 @@ genuinely more valuable. The interactive diagram's node tooltip shows these stat
 
 ## 7. Verification
 
-The JSON (`Content/Data/CraftingTree.json`, **295 recipes across 6 tiers** — including the Mk2/Mk3 progression versions, the 5 specialized research-lab domains + breakthroughs, a food-variety line, black-market goods, and a broad electronics/components & computer-family line; no whole-station assembly recipes) is validated by the
+The JSON (`Content/Data/CraftingTree.json`, **299 recipes across 7 tiers** — including the Mk2/Mk3 progression versions, the 5 specialized research-lab domains + breakthroughs and 2 niche upgraded labs, a food-variety line, black-market goods, and a broad electronics/components & computer-family line; no whole-station assembly recipes) is validated by the
 `check_crafting_tree()` logic in `generate_crafting_tree.py` plus `tests/test_crafting_tree.py`:
 - ✅ All recipes have unique `RecipeID` and unique `OutputItem`.
 - ✅ Every `ItemID` matches `^[A-Za-z][A-Za-z0-9_]*$`.

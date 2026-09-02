@@ -44,6 +44,8 @@ R_NAME = {
     "AdvancedDefenceResearch": "Advanced Defence Systems",
     "BioResearch": "Biotech Research",
     "AdvancedBioResearch": "Advanced Bio-Tech",
+    "KineticWeaponResearch": "Kinetic Weapons",
+    "BeamWeaponResearch": "Beam Weapons",
 }
 R_DESC = {
     "ResearchData": "The generic research milestone that unlocks early Mk2 upgrades.",
@@ -57,11 +59,15 @@ R_DESC = {
     "AdvancedDefenceResearch": "Advanced weapons research giving Mk3 weapons, shields and point-defence.",
     "BioResearch": "Biology-lab breakthrough enabling Mk2 medicine and vaccines.",
     "AdvancedBioResearch": "Advanced bio-tech giving Mk3 medical supplies and bioweapons.",
+    "KineticWeaponResearch": "Projectile-lab specialization enabling railguns, missiles and torpedoes.",
+    "BeamWeaponResearch": "Beam-lab specialization enabling lasers, plasma cannons and point-defence.",
 }
 LAB_TO_DOMAIN = {
     "PhysicsLab": ("Propulsion", "PhysicsLabModule"), "MaterialsLab": ("Materials", "MaterialsLabModule"),
     "ElectronicsLab": ("Computing", "ElectronicsLabModule"), "WeaponsLab": ("Defence", "WeaponsLabModule"),
     "BiologyLab": ("Bio", "BiologyLabModule"), "ScienceLab": ("Base", "ScienceLabModule"),
+    "ProjectileWeaponsLab": ("Projectile Weapons", "ProjectileWeaponsLab"),
+    "BeamWeaponsLab": ("Beam Weapons", "BeamWeaponsLab"),
 }
 
 # Clean display name for a non-research item (used to list unlocks)
@@ -120,7 +126,8 @@ def main():
 
     # ---- group nodes into research branches by lab (rl2 then rl3) ----
     branches = []
-    branch_order = ["PhysicsLab", "MaterialsLab", "ElectronicsLab", "WeaponsLab", "BiologyLab"]
+    branch_order = ["PhysicsLab", "MaterialsLab", "ElectronicsLab", "WeaponsLab",
+                    "BiologyLab", "ProjectileWeaponsLab", "BeamWeaponsLab"]
     for lab in branch_order:
         dn, module = LAB_TO_DOMAIN[lab]
         lab_nodes = [n for n in nodes if n["ProducedIn"] == lab]

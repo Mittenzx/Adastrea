@@ -41,7 +41,7 @@
       "LabModule": "WeaponsLabModule",
       "ResearchLevel2": "DefenceResearch",
       "ResearchLevel3": "AdvancedDefenceResearch",
-      "Unlocks": 20
+      "Unlocks": 8
     },
     {
       "Domain": "Bio",
@@ -50,6 +50,22 @@
       "ResearchLevel2": "BioResearch",
       "ResearchLevel3": "AdvancedBioResearch",
       "Unlocks": 5
+    },
+    {
+      "Domain": "Projectile Weapons",
+      "Lab": "ProjectileWeaponsLab",
+      "LabModule": "ProjectileWeaponsLab",
+      "ResearchLevel2": null,
+      "ResearchLevel3": "KineticWeaponResearch",
+      "Unlocks": 6
+    },
+    {
+      "Domain": "Beam Weapons",
+      "Lab": "BeamWeaponsLab",
+      "LabModule": "BeamWeaponsLab",
+      "ResearchLevel2": null,
+      "ResearchLevel3": "BeamWeaponResearch",
+      "Unlocks": 6
     }
   ],
   "ResearchNodes": [
@@ -77,27 +93,15 @@
       "ResearchLevel": 3,
       "ProducedIn": "WeaponsLab",
       "LabModule": "WeaponsLabModule",
-      "UnlocksCount": 9,
+      "UnlocksCount": 3,
       "Unlocks": [
         "EnergyCannon_Mk3",
-        "MissileLauncher_Mk3",
-        "PlasmaCannon_Mk3",
-        "PointDefenceLaser_Mk3",
-        "Railgun_Mk3",
         "ShipShieldGenerator_Mk3",
-        "TorpedoLauncher_Mk3",
-        "TriLaser_Mk3",
         "TurretWeapon_Mk3"
       ],
       "UnlocksNames": [
         "Energy Cannon Mk3",
-        "Missile Launcher Mk3",
-        "Plasma Cannon Mk3",
-        "Point Defence Laser Mk3",
-        "Railgun Mk3",
         "Ship Shield Generator Mk3",
-        "Torpedo Launcher Mk3",
-        "Tri Laser Mk3",
         "Turret Weapon Mk3"
       ]
     },
@@ -120,6 +124,31 @@
         "Ship Engine Mk3",
         "Ship Reactor Mk3",
         "Thruster Mk3"
+      ]
+    },
+    {
+      "ResearchID": "BeamWeaponResearch",
+      "Name": "Beam Weapons",
+      "Description": "Beam-lab specialization enabling lasers, plasma cannons and point-defence.",
+      "ResearchLevel": 3,
+      "ProducedIn": "BeamWeaponsLab",
+      "LabModule": "BeamWeaponsLab",
+      "UnlocksCount": 6,
+      "Unlocks": [
+        "PlasmaCannon_Mk2",
+        "PlasmaCannon_Mk3",
+        "PointDefenceLaser_Mk2",
+        "PointDefenceLaser_Mk3",
+        "TriLaser_Mk2",
+        "TriLaser_Mk3"
+      ],
+      "UnlocksNames": [
+        "Plasma Cannon Mk2",
+        "Plasma Cannon Mk3",
+        "Point Defence Laser Mk2",
+        "Point Defence Laser Mk3",
+        "Tri Laser Mk2",
+        "Tri Laser Mk3"
       ]
     },
     {
@@ -227,32 +256,45 @@
       "ResearchLevel": 2,
       "ProducedIn": "WeaponsLab",
       "LabModule": "WeaponsLabModule",
-      "UnlocksCount": 11,
+      "UnlocksCount": 5,
       "Unlocks": [
         "EnergyCannon_Mk2",
         "GravitationGenerator_Mk2",
-        "MissileLauncher_Mk2",
-        "PlasmaCannon_Mk2",
-        "PointDefenceLaser_Mk2",
-        "Railgun_Mk2",
         "ShieldCapacitor_Mk2",
         "ShipShieldGenerator_Mk2",
-        "TorpedoLauncher_Mk2",
-        "TriLaser_Mk2",
         "TurretWeapon_Mk2"
       ],
       "UnlocksNames": [
         "Energy Cannon Mk2",
         "Gravitation Generator Mk2",
-        "Missile Launcher Mk2",
-        "Plasma Cannon Mk2",
-        "Point Defence Laser Mk2",
-        "Railgun Mk2",
         "Shield Capacitor Mk2",
         "Ship Shield Generator Mk2",
-        "Torpedo Launcher Mk2",
-        "Tri Laser Mk2",
         "Turret Weapon Mk2"
+      ]
+    },
+    {
+      "ResearchID": "KineticWeaponResearch",
+      "Name": "Kinetic Weapons",
+      "Description": "Projectile-lab specialization enabling railguns, missiles and torpedoes.",
+      "ResearchLevel": 3,
+      "ProducedIn": "ProjectileWeaponsLab",
+      "LabModule": "ProjectileWeaponsLab",
+      "UnlocksCount": 6,
+      "Unlocks": [
+        "MissileLauncher_Mk2",
+        "MissileLauncher_Mk3",
+        "Railgun_Mk2",
+        "Railgun_Mk3",
+        "TorpedoLauncher_Mk2",
+        "TorpedoLauncher_Mk3"
+      ],
+      "UnlocksNames": [
+        "Missile Launcher Mk2",
+        "Missile Launcher Mk3",
+        "Railgun Mk2",
+        "Railgun Mk3",
+        "Torpedo Launcher Mk2",
+        "Torpedo Launcher Mk3"
       ]
     },
     {

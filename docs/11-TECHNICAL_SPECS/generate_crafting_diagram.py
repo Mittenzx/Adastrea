@@ -161,6 +161,7 @@ def main():
     DOMAIN_SLUG = {
         "PhysicsLab": "propulsion", "MaterialsLab": "materials",
         "ElectronicsLab": "computing", "WeaponsLab": "defence", "BiologyLab": "bio",
+        "ProjectileWeaponsLab": "defence", "BeamWeaponsLab": "defence",
     }
     RESEARCH_TO_DOMAIN = {
         "PropulsionResearch": "propulsion", "AdvancedPropulsionResearch": "propulsion",
@@ -168,6 +169,7 @@ def main():
         "ComputingResearch": "computing", "QuantumComputingResearch": "computing",
         "DefenceResearch": "defence", "AdvancedDefenceResearch": "defence",
         "BioResearch": "bio", "AdvancedBioResearch": "bio", "ResearchData": "base",
+        "KineticWeaponResearch": "defence", "BeamWeaponResearch": "defence",
     }
     DOMAIN_LABEL = {
         "propulsion": "Physics Lab", "materials": "Materials Lab",
