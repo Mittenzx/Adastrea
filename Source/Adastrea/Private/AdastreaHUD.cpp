@@ -44,16 +44,35 @@ void AAdastreaHUD::DrawHUD()
 	}
 
 	// Full-screen sector map (toggled by M) draws over everything.
-	if (bShowMap)
-	{
-		APawn* Pawn = PC->GetPawn();
-		if (Pawn)
+		if (bShowMap)
 		{
-			DrawSectorMap(PC, Pawn->GetActorLocation());
+			APawn* Pawn = PC->GetPawn();
+			if (Pawn)
+			{
+				DrawSectorMap(PC, Pawn->GetActorLocation());
+			}
 		}
-	}
 
-	ASpaceship* Ship = Cast<ASpaceship>(PC->GetPawn());
+		// Tick and draw the transient message (only over the normal flight HUD).
+		if (MessageDuration > 0.0f)
+		{
+			if (UWorld* World = GetWorld())
+			{
+				MessageElapsed += World->GetDeltaSeconds();
+			}
+			if (MessageElapsed >= MessageDuration)
+			{
+				PendingMessage = TEXT("");
+				MessageDuration = 0.0f;
+				MessageElapsed = 0.0f;
+			}
+			else if (!PendingMessage.IsEmpty())
+			{
+				DrawTransientMessage(PC);
+			}
+		}
+
+		ASpaceship* Ship = Cast<ASpaceship>(PC->GetPawn());
 
 	// Docked trading screen draws over everything when shown.
 	if (bShowTradeScreen)
@@ -1149,4 +1168,41 @@ void AAdastreaHUD::DrawShipSelectScreen(APlayerController* PC)
 	// ---- Footer controls ----
 	DrawText(TEXT("Left/Right: rotate    Up/Down or A/D: cycle ship    [Space]: select & fly    [Esc]: close"),
 		FLinearColor(0.6f,0.7f,0.8f,0.9f), VW*0.5f - 400.0f, VH - 40.0f, BodyFont, 0.7f);
+}
+
+void AAdastreaHUD::ShowMessage(const FString& InMessage, float DurationSecs, bool bIsWarning)
+{
+	PendingMessage = InMessage;
+	MessageDuration = FMath::Max(0.1f, DurationSecs);
+	MessageElapsed = 0.0f;
+	bMessageIsWarning = bIsWarning;
+}
+
+void AAdastreaHUD::DrawTransientMessage(APlayerController* PC)
+{
+	if (!Canvas || PendingMessage.IsEmpty())
+	{
+		return;
+	}
+
+	UFont* MsgFont = GEngine->GetSmallFont();
+
+	int32 VW = 0;
+	int32 VH = 0;
+	if (PC) { PC->GetViewportSize(VW, VH); }
+
+	const FString Message = PendingMessage;
+	const FLinearColor Colour = bMessageIsWarning ? FLinearColor(1.0f, 0.4f, 0.35f, 1.0f) : FLinearColor(0.4f, 0.9f, 1.0f, 1.0f);
+
+	// Measure the text so we can center it and size the backing bar.
+	float TextW = 0.0f;
+	float TextH = 0.0f;
+	Canvas->StrLen(MsgFont, Message, TextW, TextH);
+
+	const float X = (VW - TextW) * 0.5f;
+	const float Y = 120.0f;
+	const float Pad = 10.0f;
+
+	DrawRect(FLinearColor(0.0f, 0.0f, 0.0f, 0.55f), X - Pad, Y - Pad, TextW + Pad * 2.0f, TextH + Pad * 2.0f);
+	DrawText(Message, Colour, X, Y, MsgFont, 0.8f);
 }

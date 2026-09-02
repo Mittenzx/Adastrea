@@ -141,15 +141,57 @@ public:
     float GetCurrentHullIntegrity() const;
 
     /**
-     * Get the maximum hull integrity
-     * @return The maximum hull integrity value
-     *
-     * @note POST-MVP: Deferred - damage/health system not in MVP (no combat)
-     */
-    // UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship") // DEFERRED: Post-MVP damage system
-    float GetMaxHullIntegrity() const;
-    // ==========================================
-    // X4-STYLE FLIGHT CONTROL PARAMETERS
+         * Get the maximum hull integrity
+         * @return The maximum hull integrity value
+         *
+         * @note POST-MVP: Deferred - damage/health system not in MVP (no combat)
+         */
+        // UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship") // DEFERRED: Post-MVP damage system
+        float GetMaxHullIntegrity() const;
+
+         // ==========================================
+         // COCKPIT / LEAVE CANDIDATE CONDITIONS
+         // ==========================================
+
+         /** Current linear speed (units/sec) of the ship. */
+         UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship|Control")
+         float GetCurrentSpeed() const;
+
+         /** Current world velocity vector of the ship. */
+         UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship|Control")
+         FVector GetCurrentVelocity() const { return CurrentVelocity; }
+
+         /** Whether the ship is effectively stationary (moving slower than the threshold). */
+         UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship|Control")
+         bool IsStationary(float SpeedThreshold = 25.0f) const { return GetCurrentSpeed() <= SpeedThreshold; }
+
+         /** Whether the ship is currently flagged as in combat. */
+         UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship|Combat")
+         bool IsInCombat() const { return bIsInCombat; }
+
+         /** Set/clear the in-combat flag (used by future combat system). */
+         UFUNCTION(BlueprintCallable, Category="Spaceship|Combat")
+         void SetInCombat(bool bInCombat) { bIsInCombat = bInCombat; }
+
+         /** Whether autopilot / flight to destination is engaged. */
+         UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship|Autopilot")
+         bool IsOnAutopilot() const { return bIsOnAutopilot; }
+
+         /** Set/clear the autopilot flag. */
+         UFUNCTION(BlueprintCallable, Category="Spaceship|Autopilot")
+         void SetAutopilot(bool bEnabled) { bIsOnAutopilot = bEnabled; }
+
+         /**
+          * Whether the player is permitted to leave the cockpit right now.
+          * Prevents leaving while moving, in combat, on autopilot, or mid-docking.
+          * @param OutReason Rfilled with a human-readable reason if the player cannot leave.
+          * @return True if the player may leave the cockpit.
+          */
+         UFUNCTION(BlueprintCallable, Category="Spaceship|Control")
+         bool CanLeaveCockpit(FString& OutReason) const;
+
+         // ==========================================
+         // X4-STYLE FLIGHT CONTROL PARAMETERS
     // ==========================================
 
     /**
@@ -550,8 +592,16 @@ protected:
     bool bIsDocked = false;
 
     /** Is the ship currently in a docking sequence? */
-    UPROPERTY(BlueprintReadOnly, Category="Docking")
-    bool bIsDocking = false;
+        UPROPERTY(BlueprintReadOnly, Category="Docking")
+        bool bIsDocking = false;
+
+        /** Whether the ship is currently flagged as in combat (cannot leave cockpit). */
+        UPROPERTY(BlueprintReadOnly, Category="Combat")
+        bool bIsInCombat = false;
+
+        /** Whether autopilot / auto-flight-to-destination is engaged (cannot leave cockpit). */
+        UPROPERTY(BlueprintReadOnly, Category="Autopilot")
+        bool bIsOnAutopilot = false;
 
     /**
      * Maximum distance from docking point to allow docking

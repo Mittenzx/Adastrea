@@ -869,6 +869,51 @@ float ASpaceship::GetMaxHullIntegrity() const
     return MaxHullIntegrity;
 }
 
+float ASpaceship::GetCurrentSpeed() const
+{
+    // Use the movement component's velocity when present, else the tracked velocity.
+    if (MovementComponent)
+    {
+        return MovementComponent->Velocity.Size();
+    }
+    return CurrentVelocity.Size();
+}
+
+bool ASpaceship::CanLeaveCockpit(FString& OutReason) const
+{
+    // Cannot leave while actively docking/undocking.
+    if (bIsDocking)
+    {
+        OutReason = TEXT("Cannot leave cockpit while docking.");
+        return false;
+    }
+
+    // Cannot leave while the ship is moving.
+    if (!IsStationary())
+    {
+        const int32 Speed = FMath::RoundToInt(GetCurrentSpeed());
+        OutReason = FString::Printf(TEXT("Cannot leave cockpit while moving (%d u/s). Stop the ship first."), Speed);
+        return false;
+    }
+
+    // Cannot leave while in combat.
+    if (bIsInCombat)
+    {
+        OutReason = TEXT("Cannot leave cockpit while in combat.");
+        return false;
+    }
+
+    // Cannot leave while on autopilot.
+    if (bIsOnAutopilot)
+    {
+        OutReason = TEXT("Cannot leave cockpit while autopilot is engaged.");
+        return false;
+    }
+
+    OutReason = TEXT("");
+    return true;
+}
+
 // ==========================================
 // X4-STYLE FLIGHT CONTROL IMPLEMENTATION
 // ==========================================

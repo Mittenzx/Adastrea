@@ -322,7 +322,10 @@ public:
 						bool IsOnFoot() const { return AvatarPawn != nullptr && GetPawn() == static_cast<APawn*>(AvatarPawn); }
 
 						/** Input handler: V toggles between flying the ship and walking its interior. */
-						void HandleToggleInterior();
+									void HandleToggleInterior();
+
+									/** Show a transient message on the HUD canvas. */
+									void ShowHUDMessage(const FString& InMessage, float DurationSecs, bool bIsWarning);
 
 		/** Clear the current locked target. */
 			UFUNCTION(BlueprintCallable, Category="Player|Targeting")

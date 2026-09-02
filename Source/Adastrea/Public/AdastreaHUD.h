@@ -66,6 +66,30 @@ public:
 	void MapRecenter(const FVector& WorldPos) { MapCenter = WorldPos; }
 
 	// ========================
+	// TRANSIENT MESSAGE (canvas)
+	// ========================
+
+	/** Set a transient message to draw on the HUD canvas. */
+	UFUNCTION(BlueprintCallable, Category="HUD|Message")
+	void ShowMessage(const FString& InMessage, float DurationSecs, bool bIsWarning);
+
+	/** Draw the current transient message (called from DrawHUD while active). */
+	void DrawTransientMessage(APlayerController* PC);
+
+	/** The current transient message (cleared when expired). */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|Message")
+	FString PendingMessage;
+
+	/** Elapsed time of the current message. */
+	float MessageElapsed = 0.0f;
+
+	/** Message display duration in seconds. */
+	float MessageDuration = 0.0f;
+
+	/** Whether the current message is a warning (different colour). */
+	bool bMessageIsWarning = false;
+
+	// ========================
 	// TRADING SCREEN (canvas-drawn, reliable in PIE)
 	// ========================
 

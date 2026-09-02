@@ -1612,10 +1612,28 @@ void AAdastreaPlayerController::HandleToggleInterior()
 	}
 }
 
+void AAdastreaPlayerController::ShowHUDMessage(const FString& InMessage, float DurationSecs, bool bIsWarning)
+{
+	if (AAdastreaHUD* GameHUD = GetMapHUD())
+	{
+		GameHUD->ShowMessage(InMessage, DurationSecs, bIsWarning);
+	}
+}
+
 void AAdastreaPlayerController::EnterShipInterior(ASpaceship* Ship)
 {
 	if (!Ship)
 	{
+		return;
+	}
+
+	// Gate: you can only leave the cockpit when stationary, out of combat,
+	// and not on autopilot.
+	FString LeaveReason;
+	if (!Ship->CanLeaveCockpit(LeaveReason))
+	{
+		UE_LOG(LogAdastrea, Warning, TEXT("EnterShipInterior: %s"), *LeaveReason);
+		ShowHUDMessage(LeaveReason, 3.0f, true);
 		return;
 	}
 
