@@ -1459,7 +1459,7 @@ def assemble_whole_ship(sz, outname, opts, carcass_builder=None):
         gz = clamp(rng.random()*0.9 + 0.05)
         gp.append((gx, gy, gz,
                    (14+rng.random()*22, 6+rng.random()*20, 5+rng.random()*10),
-                   (rng.random()*0.25, rng.random()*0.25, rng.random()*0.35),
+                   (math.radians(6), rng.random()*0.12, rng.random()*0.10),  # unified hull taper angle
                    'plate'))
     # conduit pipes / cable runs (thin cylinders along hull)
     for i in range(8):
@@ -1489,7 +1489,14 @@ def assemble_whole_ship(sz, outname, opts, carcass_builder=None):
                    (0, 0, 0),
                    'antenna'))
     for i, (gx, gy, gz, size, rot, kind) in enumerate(gp):
-        px, py, pz = gx*lx, gy*ly, locz + gz*lz
+        # GROW-FROM-HULL: sit each part ON the tapered hull's surface rather than
+        # floating at an arbitrary height. The tapered fuselage rises toward the
+        # aft and narrows toward the nose; follow that profile so plating hugs the
+        # belly curve (taper/growth-from-hull = research lesson #3).
+        taper = 0.35 * (0.5 - gy*0.5)          # higher toward aft, lower toward nose
+        pz = locz + gz*lz * (0.72 + 0.28*(1-abs(gx))) - taper*lz*0.35
+        py = gy*ly
+        px = gx*lx
         if kind == 'plate':
             objs.append(greeble(f"KPlate{i}", loc=(px, py, pz), sx=size[0]*k,
                                 sy=size[1]*k, sz=size[2]*k, rot=rot))
@@ -1497,19 +1504,19 @@ def assemble_whole_ship(sz, outname, opts, carcass_builder=None):
                                 sy=size[1]*k, sz=size[2]*k, rot=(-rot[0], rot[1], rot[2])))
         elif kind == 'pipe':
             c = cyl(f"KPipe{i}", size[1]*k, (14+rng.random()*20)*k, loc=(px, py, pz),
-                    rot=(rng.random()*math.pi, rng.random()*math.pi/2, rng.random()*math.pi),
+                    rot=(0, math.radians(8), math.radians(6)),  # follow hull angular grammar
                     verts=6)
             bevel(c, 1, 1); objs.append(c)
             c2 = cyl(f"KPipeM{i}", size[1]*k, (14+rng.random()*20)*k, loc=(-px, py, pz),
-                     rot=(rng.random()*math.pi, rng.random()*math.pi/2, rng.random()*math.pi),
+                     rot=(0, math.radians(8), math.radians(-6)),  # mirrored, hull-grammar
                      verts=6)
             bevel(c2, 1, 1); objs.append(c2)
         elif kind == 'tank':
             t = cyl(f"KTank{i}", (8+rng.random()*8)*k, (12+rng.random()*14)*k,
-                    loc=(px, py, pz), rot=(rng.random()*math.pi/2, 0, 0), verts=10)
+                    loc=(px, py, pz), rot=(0, math.radians(4), math.radians(5)), verts=10)
             bevel(t, 1, 1); objs.append(t)
             t2 = cyl(f"KTankM{i}", (8+rng.random()*8)*k, (12+rng.random()*14)*k,
-                     loc=(-px, py, pz), rot=(rng.random()*math.pi/2, 0, 0), verts=10)
+                     loc=(-px, py, pz), rot=(0, math.radians(4), math.radians(-5)), verts=10)
             bevel(t2, 1, 1); objs.append(t2)
         elif kind == 'antenna':
             a = cyl(f"KAnt{i}", 2*k, (20+rng.random()*20)*k, loc=(px, py, pz),
