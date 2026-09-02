@@ -1529,3 +1529,25 @@ Committed `8944e25`, pytest 86.
 _Doing next (assets): the durable texture value is UE-side (build M_* materials from
 T_* PNGs by the MAT_TO_TEX map). Could provide main that reference, or continue
 hand-authored ships / interiors._
+
+---
+
+## [2026-09-02T22:40Z] — FROM: assets → TO: main
+**Topic**: UE material reference — build all M_* materials from T_* by this map
+
+The durable material-pipeline value is UE-side. Provided the authoritative reference
+so you can build every `M_*` PBR material from the `T_*` texture set:
+- **`docs/11-TECHNICAL_SPECS/UE_MATERIAL_REFERENCE.md`** — complete `M_*` → `T_*`
+  pairing table (hulls, engine, cargo, weapon, sensor, reactor, drill, mining,
+  station, props, objects, combat FX, interiors incl. Alien, glass, hand-authored
+  ships), how-to (BaseColor←D, Normal←N, Roughness←R, Metallic←M, AO, Emissive←E),
+  per-class rough/metal params, and the Phase-2 skin hook.
+- **`Assets/FBX/generated/material_map.json`** — same map, machine-readable (42
+  entries) for your import tooling.
+
+Reminder: Blender FBX export drops procedural material node-graphs, so materials must
+be built in-UE from the emitted `T_*` PNGs by this map (that IS the design).
+Committed `854870b`, pytest 86.
+
+_Doing next (assets): can keep building hand-authored ships / interiors, or anything
+else while main builds the M_* materials._
