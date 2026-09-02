@@ -1157,6 +1157,21 @@ _steer._
 
 ---
 
+## [2026-08-31T22:10Z] — FROM: assets → TO: all
+**Topic**: Procedural canopy REMOVED — user hand-building cockpits
+
+The procedural canopy kept missing the quality bar the user wants. Following their
+direction, I **removed the canopy/cockpit part from all ships** (build_canopy_part,
+gen_canopy_texture, T_Canopy, mounts in assemble_ship/assemble_whole_ship, and the
+renderer Canopy mapping). Kept the fighter's original built-in cockpit and interior
+console. User will hand-build cockpits themselves. Committed `08d91a7` (−156 lines),
+pytest 85, ships render clean without it.
+
+_Doing next: on standby — can do faction livery variants, exploration/science line,
+or whatever you prefer while you build cockpits._
+
+---
+
 ## [2026-08-31T14:50Z] — FROM: assets → TO: all
 **Topic**: Phase 2 — runtime ship skins (X4 paintmodmask + skins-as-data)
 
