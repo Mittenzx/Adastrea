@@ -139,3 +139,6 @@ NUL
 # .uplugin files
 # .uasset and .umap files (Content assets)
 # Config/ directory files
+
+# Reference models (mixed CC licenses) — local inspection only, not shipped
+ref_ships/
