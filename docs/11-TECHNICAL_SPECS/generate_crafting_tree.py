@@ -47,6 +47,10 @@ PRODUCED_IN_TAGS = {
     "PhysicsLab", "MaterialsLab", "ElectronicsLab", "WeaponsLab", "BiologyLab",
     # upgraded / niche research labs (specialized sub-fields)
     "ProjectileWeaponsLab", "BeamWeaponsLab",
+    # deeper niche sub-labs
+    "IonPropulsionLab", "GravMaterialsLab", "EncryptionLab", "OptronicsLab", "CyberneticsLab",
+    # contract-gated deep research (must be contracted to a guild/company)
+    "Contract:Researchers",
 }
 
 # Research domains: each specialized lab unlocks its own breakthrough chain.
@@ -56,6 +60,25 @@ MATERIALS  = ("MaterialsResearch",  "NanoMaterialsResearch")
 COMPUTING  = ("ComputingResearch",  "QuantumComputingResearch")
 DEFENCE    = ("DefenceResearch",    "AdvancedDefenceResearch")
 BIO        = ("BioResearch",        "AdvancedBioResearch")
+
+# ---- GUILDS / COMPANIES that can research for you (contract providers) ----
+# Reuses the existing DA_Way_* / guild data-asset concept. The more niche a
+# breakthrough, the more it needs OUTSIDE staff expertise + facilities.
+#   ResearchProvider  -> (GuildName, DA asset)
+PROVIDERS = {
+    "ScholarsSyndicate":   ("Scholars' Syndicate",     "DA_ScholarsSyndicate"),
+    "EngineersCollective": ("Engineers' Collective",   "DA_CraftsmenCompact"),
+    "FrontierAlliance":    ("Frontier Alliance",       "DA_FrontierAlliance"),
+    "HonorCircle":         ("Honour Circle",           "DA_HonorCircle"),
+    "MerchantCoalition":   ("Merchant Coalition",      "DA_MerchantCoalition"),
+    "TradersGuild":        ("Traders' Guild",          "DA_Way_TradersGuild"),
+}
+
+# Expertise levels: 1 = in-house lab can do it; 2 = needs an upgraded niche lab;
+# 3 = must be CONTRACTED OUT to a guild/company (external staff + facility).
+EXPERTISE_INHOUSE = 1
+EXPERTISE_NICHE = 2
+EXPERTISE_CONTRACT = 3
 
 TIER_LABELS = {
     1: "Raw Acquisition", 2: "Refined Materials", 3: "Components & Electronics",
@@ -77,7 +100,7 @@ TIER_LABELS = {
 #   rl 3  AdvancedResearch        rl 4  QuantumResearch
 # --------------------------------------------------------------------------
 R = []
-def add(output, tier, produced_in, category, ingredients=(), research=None, rl=1):
+def add(output, tier, produced_in, category, ingredients=(), research=None, rl=1, provider=None, expertise=1):
     R.append({
         "OutputItem": output,
         "Tier": tier,
@@ -86,6 +109,8 @@ def add(output, tier, produced_in, category, ingredients=(), research=None, rl=1
         "Ingredients": [{"ItemID": i, "Qty": q} for i, q in ingredients],
         "ResearchLevel": rl,
         "ResearchRequired": research,
+        "ResearchProvider": provider,
+        "ExpertiseLevel": expertise,
     })
 
 
@@ -364,6 +389,18 @@ add("BiologyLabModule", 6, "Fabrication", "Other", [("ModuleShell", 2), ("Refine
 add("ProjectileWeaponsLab", 7, "Fabrication", "Other", [("WeaponsLabModule", 1), ("ModuleShell", 1), ("Railgun", 1), ("SuperConductingWire_Mk2", 1)])
 add("BeamWeaponsLab", 7, "Fabrication", "Other", [("WeaponsLabModule", 1), ("ModuleShell", 1), ("PlasmaCannon", 1), ("AdvancedPowerCells", 2)])
 
+# --- More niche sub-labs across domains (the 'specialize a lab' pattern) ---
+# IonPropulsionLab  : PhysicsLab -> focused ion/flinger propulsion
+# GravMaterialsLab  : MaterialsLab -> gravitational/negative-mass materials
+# EncryptionLab     : ElectronicsLab -> encryption & counter-encryption
+# OptronicsLab      : ElectronicsLab -> optical/optical-computing
+# CyberneticsLab    : BiologyLab -> cybernetic augmentation
+add("IonPropulsionLab", 7, "Fabrication", "Other", [("PhysicsLabModule", 1), ("ModuleShell", 1), ("ShipEngine_Mk2", 1), ("CobaltMagnet", 2)])
+add("GravMaterialsLab", 7, "Fabrication", "Other", [("MaterialsLabModule", 1), ("ModuleShell", 1), ("GravitationGenerator_Mk2", 1), ("EnrichedUranium", 1)])
+add("EncryptionLab", 7, "Fabrication", "Other", [("ElectronicsLabModule", 1), ("ModuleShell", 1), ("EncryptedCircuit_Mk2", 1), ("QuantumProcessor_Mk2", 1)])
+add("OptronicsLab", 7, "Fabrication", "Other", [("ElectronicsLabModule", 1), ("ModuleShell", 1), ("OpticalLens_Mk2", 2), ("FiberOpticCable_Mk2", 1)])
+add("CyberneticsLab", 7, "Fabrication", "Other", [("BiologyLabModule", 1), ("ModuleShell", 1), ("NanoInjectors", 1), ("RefinedMedicine_Mk2", 1)])
+
 # --- Domain breakthroughs (produced inside their own lab) ---
 add("PropulsionResearch", 5, "PhysicsLab", "Data", [("Helium3", 3), ("AdvancedPowerCells", 2)], research="PropulsionResearch", rl=2)
 add("AdvancedPropulsionResearch", 6, "PhysicsLab", "Data", [("PropulsionResearch", 1), ("FusionFuelCell", 2)], research="AdvancedPropulsionResearch", rl=3)
@@ -381,6 +418,24 @@ add("AdvancedBioResearch", 5, "BiologyLab", "Data", [("BioResearch", 1), ("Vacci
 # unlocks the niche's deeper tech. Consumed by (and gating) niche Mk2/3 recipes.
 add("KineticWeaponResearch", 6, "ProjectileWeaponsLab", "Data", [("DefenceResearch", 1), ("Railgun", 1), ("SuperConductingWire_Mk2", 2)], research="KineticWeaponResearch", rl=3)
 add("BeamWeaponResearch", 6, "BeamWeaponsLab", "Data", [("DefenceResearch", 1), ("PlasmaCannon", 1), ("AdvancedPowerCells", 2)], research="BeamWeaponResearch", rl=3)
+
+# --- Niche breakthroughs for the 5 new sub-labs (tier 7) ---
+add("IonPropulsionResearch", 7, "IonPropulsionLab", "Data", [("PropulsionResearch", 1), ("ShipEngine_Mk2", 1), ("CobaltMagnet", 2)], research="IonPropulsionResearch", rl=3)
+add("GravMaterialsResearch", 7, "GravMaterialsLab", "Data", [("NanoMaterialsResearch", 1), ("GravitationGenerator_Mk2", 1), ("EnrichedUranium", 1)], research="GravMaterialsResearch", rl=3)
+add("EncryptionResearch", 7, "EncryptionLab", "Data", [("QuantumComputingResearch", 1), ("EncryptedCircuit_Mk2", 1), ("QuantumProcessor_Mk2", 1)], research="EncryptionResearch", rl=3)
+add("OptronicsResearch", 7, "OptronicsLab", "Data", [("QuantumComputingResearch", 1), ("OpticalLens_Mk2", 2), ("FiberOpticCable_Mk2", 1)], research="OptronicsResearch", rl=3)
+add("CyberneticsResearch", 7, "CyberneticsLab", "Data", [("AdvancedBioResearch", 1), ("NanoInjectors", 1), ("RefinedMedicine_Mk2", 1)], research="CyberneticsResearch", rl=3)
+
+# --- CONTRACT-GATED DEEP RESEARCH (expertise 3): the most niche work MUST be
+# contracted out. A guild/company with the staff + facility produces the
+# researcher-contract; you can't build an in-house lab for it. Each produces a
+# tier-7 breakthrough that unlocks deep tech. ProducedIn = the provider guild. ---
+add("AntimatterContainmentResearch", 7, "Contract:Researchers", "Data", [("ResearchData", 1), ("EnrichedUranium", 1), ("PalladiumCatalyst", 1)], research="AntimatterContainmentResearch", rl=3, provider="ScholarsSyndicate", expertise=3)
+add("WormholeNavigationResearch", 7, "Contract:Researchers", "Data", [("ResearchData", 1), ("QuantumProcessor_Mk2", 1), ("NavigationComputer_Mk2", 1)], research="WormholeNavigationResearch", rl=3, provider="FrontierAlliance", expertise=3)
+add("FusionMiniaturizationResearch", 7, "Contract:Researchers", "Data", [("ResearchData", 1), ("FusionFuelCell", 2), ("ShipReactor_Mk2", 1)], research="FusionMiniaturizationResearch", rl=3, provider="EngineersCollective", expertise=3)
+add("ShieldBypassResearch", 7, "Contract:Researchers", "Data", [("ResearchData", 1), ("ShipShieldGenerator_Mk2", 1), ("QuantumProcessor", 1)], research="ShieldBypassResearch", rl=3, provider="HonorCircle", expertise=3)
+add("FactionMicroFabricationResearch", 7, "Contract:Researchers", "Data", [("ResearchData", 1), ("ConstructionMaterials", 1), ("Microchips_Mk2", 1)], research="FactionMicroFabricationResearch", rl=3, provider="MerchantCoalition", expertise=3)
+add("DeepSpaceSurveyResearch", 7, "Contract:Researchers", "Data", [("ResearchData", 1), ("AdvancedSensors_Mk2", 1), ("ScanComputer_Mk2", 1)], research="DeepSpaceSurveyResearch", rl=3, provider="TradersGuild", expertise=3)
 
 def _mk(base, suffix, tier, produced_in, cat, extra, domain, prev_suffix):
     """Add a `base<suffix>` mark/version. Consumes the preceding version (or base),
@@ -592,20 +647,35 @@ def check():
         errors.append(f"Circular recipes: {cycles}")
 
     # ---- research monotonicity ----
-    # ResearchRequired must exist, be a Set (research milestone), and its level
-    # must be < the recipe's level (an upgrade requires strictly prior research).
-    rlevels = {r["OutputItem"]: r["ResearchLevel"] for r in R}
-    rreq = {r["OutputItem"]: r["ResearchRequired"] for r in R}
-    for r in R:
-        req = r["ResearchRequired"]
-        if req is None:
-            continue
-        if req not in rlevels:
-            errors.append(f"{r['OutputItem']}: ResearchRequired '{req}' has no producer")
-        elif rlevels[req] > r["ResearchLevel"]:
-            errors.append(f"{r['OutputItem']}: research '{req}' level {rlevels[req]} > own {r['ResearchLevel']}")
+        # ResearchRequired must exist, be a Set (research milestone), and its level
+        # must be < the recipe's level (an upgrade requires strictly prior research).
+        rlevels = {r["OutputItem"]: r["ResearchLevel"] for r in R}
+        rreq = {r["OutputItem"]: r["ResearchRequired"] for r in R}
+        for r in R:
+            req = r["ResearchRequired"]
+            if req is None:
+                continue
+            if req not in rlevels:
+                errors.append(f"{r['OutputItem']}: ResearchRequired '{req}' has no producer")
+            elif rlevels[req] > r["ResearchLevel"]:
+                errors.append(f"{r['OutputItem']}: research '{req}' level {rlevels[req]} > own {r['ResearchLevel']}")
 
-    # ---- item stats coverage ----
+        # ---- expertise / contract validation ----
+        # expertise 3 (contract) research must have a valid provider and be produced in
+        # the Contract:Researchers channel; expertise 1/2 need no provider.
+        for r in R:
+            exp = r["ExpertiseLevel"]
+            if exp == 3:
+                if not r["ResearchProvider"]:
+                    errors.append(f"{r['OutputItem']}: contract research (expertise 3) needs a ResearchProvider")
+                elif r["ResearchProvider"] not in PROVIDERS:
+                    errors.append(f"{r['OutputItem']}: unknown ResearchProvider '{r['ResearchProvider']}'")
+                if r["ProducedIn"] != "Contract:Researchers":
+                    errors.append(f"{r['OutputItem']}: contract research must be produced in Contract:Researchers (got {r['ProducedIn']})")
+            elif r["ResearchProvider"]:
+                errors.append(f"{r['OutputItem']}: provider set but expertise != 3")
+
+        # ---- item stats coverage ----
     items = build_items(build_recipes_with_ids())
     for iid in ids:
         if iid not in items:
@@ -841,6 +911,8 @@ def build_recipes_with_ids():
             "Acquisition": r["Tier"] == 1,
             "ResearchLevel": r["ResearchLevel"],
             "ResearchRequired": r["ResearchRequired"],
+            "ResearchProvider": r["ResearchProvider"],
+            "ExpertiseLevel": r["ExpertiseLevel"],
             "Ingredients": r["Ingredients"],
         })
     return out
@@ -916,7 +988,7 @@ def main():
         "$schema": "http://json-schema.org/draft-07/schema#",
         "Title": "Adastrea Crafting & Building Tree",
         "Description": "Machine-readable crafting/building tree (recipes + per-item stats + recipe economy): raw extraction -> refined materials -> components & electronics -> ship parts -> weapons -> station construction parts -> modules. Authoritative generator: docs/11-TECHNICAL_SPECS/generate_crafting_tree.py",
-        "SchemaVersion": "1.7.0",
+        "SchemaVersion": "1.8.0",
                 "LastUpdated": "2026-08-31",
         "ItemIDConvention": "^[A-Za-z][A-Za-z0-9_]*$",
         "NoteHelium3": "Existing trade asset uses 'Helium-3' (hyphen, violates ItemID regex). Crafting data canonicalizes to 'Helium3' and maps to DA_TradeItem_Helium-3.",

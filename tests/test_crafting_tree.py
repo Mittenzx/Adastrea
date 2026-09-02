@@ -23,6 +23,8 @@ PRODUCED_IN_TAGS = {
     "Processing", "Fabrication", "Reactor", "SolarArray", "ScienceLab", "FuelDepot",
     "PhysicsLab", "MaterialsLab", "ElectronicsLab", "WeaponsLab", "BiologyLab",
     "ProjectileWeaponsLab", "BeamWeaponsLab",
+    "IonPropulsionLab", "GravMaterialsLab", "EncryptionLab", "OptronicsLab", "CyberneticsLab",
+    "Contract:Researchers",
 }
 
 
@@ -189,16 +191,18 @@ class TestCraftingTree:
                 assert unlock in outputs, \
                     f"{n['ResearchID']} unlocks {unlock} which is not a crafted item"
         # every lab in Branches has matching nodes
+        main_labs = {"PhysicsLab", "MaterialsLab", "ElectronicsLab", "WeaponsLab", "BiologyLab"}
         for b in rtree["Branches"]:
             lab_nodes = [n for n in rtree["ResearchNodes"] if n["ProducedIn"] == b["Lab"]]
             assert lab_nodes, f"branch {b['Domain']} has no nodes"
-            # Niche/specialization labs legitimately have a single rl3 breakthrough;
-            # main domain labs should have both an rl2 and an rl3 milestone.
-            if b["Domain"] in ("Projectile Weapons", "Beam Weapons"):
-                assert b["ResearchLevel3"], f"niche branch {b['Domain']} missing rl3"
-            else:
+            # Main domain labs have both an rl2 and an rl3 milestone. Niche /
+            # specialized / contracted branches legitimately have a single
+            # breakthrough (usually rl3) gating their niche or contract tech.
+            if b["Lab"] in main_labs:
                 assert b["ResearchLevel2"] and b["ResearchLevel3"], \
                     f"branch {b['Domain']} missing rl2/rl3"
+            else:
+                assert b["ResearchLevel3"], f"niche/contract branch {b['Domain']} missing rl3"
 
     def test_economy_is_coherent(self):
         """Every crafted recipe's output value is >= ingredient cost (no loss),
@@ -210,6 +214,25 @@ class TestCraftingTree:
             assert e["OutputValue"] >= e["IngredientCost"], \
                 f"{item}: output {e['OutputValue']} < cost {e['IngredientCost']} (loss)"
             assert e["IngredientCost"] > 0, f"{item}: zero ingredient cost"
+
+    def test_contract_research_model(self):
+        """Expertise-level-3 (contract) research has a valid provider and is produced
+        in the Contract:Researchers channel; expertise 1/2 items have no provider."""
+        data = load_tree()
+        providers = {"ScholarsSyndicate", "EngineersCollective", "FrontierAlliance",
+                     "HonorCircle", "MerchantCoalition", "TradersGuild"}
+        contract = [r for r in data["Recipes"] if r.get("ExpertiseLevel") == 3]
+        assert contract, "no contract research"
+        for r in contract:
+            assert r["ProducedIn"] == "Contract:Researchers", \
+                f"{r['OutputItem']}: contract research must use Contract:Researchers"
+            assert r["ResearchProvider"] in providers, \
+                f"{r['OutputItem']}: bad provider {r.get('ResearchProvider')}"
+        # only contract research may carry a provider
+        for r in data["Recipes"]:
+            if r["ExpertiseLevel"] != 3:
+                assert not r.get("ResearchProvider"), \
+                    f"{r['OutputItem']}: provider without expertise 3"
 
 
 if __name__ == "__main__":

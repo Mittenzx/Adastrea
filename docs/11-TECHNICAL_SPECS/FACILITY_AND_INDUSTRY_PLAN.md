@@ -111,7 +111,33 @@ to a niche lab to unlock a weapon family's Mk2/3:
 | `ProjectileWeaponsLab` | WeaponsLabModule + Railgun | KineticWeaponResearch | Railgun, Missile, Torpedo Mk2/3 |
 | `BeamWeaponsLab` | WeaponsLabModule + PlasmaCannon | BeamWeaponResearch | TriLaser, PlasmaCannon, Point-Defence Mk2/3 |
 
-The pattern generalises to the other labs (e.g. a propulsion sub-field) as the tree grows.
+The pattern generalises to the other labs (e.g. a propulsion sub-field) as the tree grows. Current set:
+| New module | Built from | Niche breakthrough |
+|------------|-----------|--------------------|
+| `IonPropulsionLab` | PhysicsLabModule | Ion Propulsion |
+| `GravMaterialsLab` | MaterialsLabModule | Gravity Materials |
+| `EncryptionLab` | ElectronicsLabModule | Encryption |
+| `OptronicsLab` | ElectronicsLabModule | Optronics |
+| `CyberneticsLab` | BiologyLabModule | Cybernetics |
+
+### B3. Contracted research (the most niche work is outsourced)
+The **deepest, most niche** breakthroughs can't be researched in any in-house lab at
+all — they require the **staff expertise + facilities of an external guild/company**.
+These are produced in the `Contract:Researchers` channel by a designated provider, and
+carry `ExpertiseLevel 3`:
+| Contract breakthrough | Provider (guild/company) | `DA_Way_*` asset |
+|----------------------|--------------------------|------------------|
+| Antimatter Containment | Scholars' Syndicate | DA_ScholarsSyndicate |
+| Wormhole Navigation | Frontier Alliance | DA_FrontierAlliance |
+| Fusion Miniaturization | Engineers' Collective | DA_CraftsmenCompact |
+| Shield Bypass | Honour Circle | DA_HonorCircle |
+| Micro-Fabrication | Merchant Coalition | DA_MerchantCoalition |
+| Deep-Space Survey | Traders' Guild | DA_Way_TradersGuild |
+
+This reintroduces a **faction/guild layer** on top of the removed MVP reputation
+system: to get these, the player must find/befriend the guild and use their contracted
+research service — a natural hook for the DA_Way_* guilds that already exist as data
+assets.
 
 > Note: the 5 research-lab modules are *already* in the crafting tree as craftable
 > Tier-6 outputs (e.g. `PhysicsLabModule`, `ElectronicsLabModule`...). Building them

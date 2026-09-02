@@ -2,19 +2,25 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "Title": "Adastrea Crafting & Building Tree",
   "Description": "Machine-readable crafting/building tree (recipes + per-item stats + recipe economy): raw extraction -> refined materials -> components & electronics -> ship parts -> weapons -> station construction parts -> modules. Authoritative generator: docs/11-TECHNICAL_SPECS/generate_crafting_tree.py",
-  "SchemaVersion": "1.7.0",
+  "SchemaVersion": "1.8.0",
   "LastUpdated": "2026-08-31",
   "ItemIDConvention": "^[A-Za-z][A-Za-z0-9_]*$",
   "NoteHelium3": "Existing trade asset uses 'Helium-3' (hyphen, violates ItemID regex). Crafting data canonicalizes to 'Helium3' and maps to DA_TradeItem_Helium-3.",
   "ProducedInTags": [
     "BeamWeaponsLab",
     "BiologyLab",
+    "Contract:Researchers",
+    "CyberneticsLab",
     "ElectronicsLab",
+    "EncryptionLab",
     "Fabrication",
     "FuelDepot",
     "GasHarvesting",
+    "GravMaterialsLab",
     "IceCollection",
+    "IonPropulsionLab",
     "MaterialsLab",
+    "OptronicsLab",
     "OrganicFarming",
     "PhysicsLab",
     "Processing",
@@ -45,6 +51,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -57,6 +65,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -69,6 +79,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -81,6 +93,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -93,6 +107,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -105,6 +121,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -117,6 +135,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -129,6 +149,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -141,6 +163,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -153,6 +177,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -165,6 +191,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -177,6 +205,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -189,6 +219,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -201,6 +233,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -213,6 +247,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -225,6 +261,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -237,6 +275,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -249,6 +289,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -261,6 +303,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -273,6 +317,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -285,6 +331,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -297,6 +345,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -309,6 +359,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -321,6 +373,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -333,6 +387,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -345,6 +401,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -357,6 +415,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -369,6 +429,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -381,6 +443,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -393,6 +457,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -405,6 +471,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -417,6 +485,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -429,6 +499,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -441,6 +513,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -453,6 +527,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -465,6 +541,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -477,6 +555,8 @@
       "Acquisition": true,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": []
     },
     {
@@ -489,6 +569,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "IronOre",
@@ -510,6 +592,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "CopperOre",
@@ -527,6 +611,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "NickelOre",
@@ -548,6 +634,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ZincOre",
@@ -565,6 +653,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ChromiumOre",
@@ -582,6 +672,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "AluminiumOre",
@@ -603,6 +695,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "GoldOre",
@@ -620,6 +714,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "SilverOre",
@@ -637,6 +733,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "TitaniumOre",
@@ -658,6 +756,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "TungstenOre",
@@ -679,6 +779,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Platinum",
@@ -700,6 +802,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Palladium",
@@ -721,6 +825,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "CobaltOre",
@@ -742,6 +848,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "UraniumOre",
@@ -763,6 +871,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "LithiumOre",
@@ -780,6 +890,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Silicon",
@@ -797,6 +909,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "CarbonCrystal",
@@ -814,6 +928,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Silicon",
@@ -835,6 +951,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Silicon",
@@ -856,6 +974,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Hydrogen",
@@ -873,6 +993,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "MethaneGas",
@@ -890,6 +1012,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "NitrogenGas",
@@ -907,6 +1031,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Hydrogen",
@@ -928,6 +1054,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "SiliconWafer",
@@ -945,6 +1073,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "PowerCells",
@@ -966,6 +1096,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Helium3",
@@ -991,6 +1123,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "AlgaeBiomass",
@@ -1008,6 +1142,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "OrganicBiomass",
@@ -1029,6 +1165,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "SyntheticProtein",
@@ -1050,6 +1188,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "FoodRations",
@@ -1071,6 +1211,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "GrainCrop",
@@ -1092,6 +1234,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "FruitCrop",
@@ -1113,6 +1257,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "FungusCrop",
@@ -1134,6 +1280,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "LivestockCulture",
@@ -1155,6 +1303,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "GrainCrop",
@@ -1180,6 +1330,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "OrganicBiomass",
@@ -1201,6 +1353,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "PlantFibre",
@@ -1222,6 +1376,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "CulturedMeat",
@@ -1247,6 +1403,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "BalancedMeal",
@@ -1272,6 +1430,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "SteelAlloy",
@@ -1289,6 +1449,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "TitaniumAlloy",
@@ -1310,6 +1472,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "SteelAlloy",
@@ -1331,6 +1495,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "NickelSteel",
@@ -1352,6 +1518,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "SteelAlloy",
@@ -1373,6 +1541,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "NickelSteel",
@@ -1394,6 +1564,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "StructuralFrame",
@@ -1415,6 +1587,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ChromiumPlating",
@@ -1436,6 +1610,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "CopperWiring",
@@ -1457,6 +1633,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "CopperWiring",
@@ -1478,6 +1656,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "SiliconWafer",
@@ -1499,6 +1679,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Electronics",
@@ -1524,6 +1706,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Microchips",
@@ -1545,6 +1729,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "BasicComputer",
@@ -1566,6 +1752,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "PowerCells",
@@ -1587,6 +1775,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Electronics",
@@ -1608,6 +1798,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "PowerCells",
@@ -1629,6 +1821,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "MicroCapacitor",
@@ -1650,6 +1844,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Electronics",
@@ -1675,6 +1871,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "TransceiverUnit",
@@ -1696,6 +1894,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "GlassComposite",
@@ -1717,6 +1917,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "AdvancedSensors",
@@ -1742,6 +1944,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "GlassComposite",
@@ -1763,6 +1967,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "MemoryUnit",
@@ -1784,6 +1990,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "CobaltMagnet",
@@ -1809,6 +2017,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "TransceiverUnit",
@@ -1830,6 +2040,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "SuperConductingWire",
@@ -1851,6 +2063,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "CeramicTiles",
@@ -1872,6 +2086,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Microchips",
@@ -1893,6 +2109,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "MicroCapacitor",
@@ -1914,6 +2132,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "CircuitBoard",
@@ -1939,6 +2159,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "CopperWiring",
@@ -1964,6 +2186,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Microchips",
@@ -1985,6 +2209,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Microchips",
@@ -2010,6 +2236,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Electronics",
@@ -2035,6 +2263,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "QuantumProcessor",
@@ -2060,6 +2290,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "AdvancedSensors",
@@ -2085,6 +2317,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "BasicComputer",
@@ -2110,6 +2344,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "BasicComputer",
@@ -2135,6 +2371,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "BasicComputer",
@@ -2160,6 +2398,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "CargoComputer",
@@ -2185,6 +2425,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "AdvancedSensors",
@@ -2210,6 +2452,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "QuantumProcessor",
@@ -2235,6 +2479,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ShipComputer",
@@ -2260,6 +2506,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "TargetingComputer",
@@ -2285,6 +2533,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ScienceComputer",
@@ -2310,6 +2560,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "BioCompound",
@@ -2335,6 +2587,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "RefinedMedicine",
@@ -2360,6 +2614,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "RefinedMedicine",
@@ -2381,6 +2637,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "WaterIce",
@@ -2402,6 +2660,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "WaterIce",
@@ -2423,6 +2683,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "GoldIngot",
@@ -2448,6 +2710,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "SyntheticTextiles",
@@ -2469,6 +2733,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "CeramicTiles",
@@ -2494,6 +2760,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "StructuralFrame",
@@ -2519,6 +2787,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "CompositePlating",
@@ -2540,6 +2810,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ArmourPlate",
@@ -2561,6 +2833,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "SteelAlloy",
@@ -2586,6 +2860,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Thruster",
@@ -2611,6 +2887,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "AdvancedPowerCells",
@@ -2640,6 +2918,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "BasicComputer",
@@ -2665,6 +2945,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "SteelAlloy",
@@ -2690,6 +2972,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "StructuralFrame",
@@ -2715,6 +2999,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "HydraulicPiston",
@@ -2740,6 +3026,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "AdvancedSensors",
@@ -2765,6 +3053,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "SteelAlloy",
@@ -2790,6 +3080,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "TurretWeapon",
@@ -2815,6 +3107,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "EnergyCannon",
@@ -2840,6 +3134,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "TurretWeapon",
@@ -2869,6 +3165,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "TungstenCarbide",
@@ -2894,6 +3192,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "EnergyCannon",
@@ -2919,6 +3219,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "MissileLauncher",
@@ -2944,6 +3246,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "AdvancedPowerCells",
@@ -2969,6 +3273,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "TriLaser",
@@ -2994,6 +3300,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "EnergyCannon",
@@ -3015,6 +3323,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "QuantumProcessor",
@@ -3040,6 +3350,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "BioCompound",
@@ -3061,6 +3373,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "GoldIngot",
@@ -3086,6 +3400,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "HackWare",
@@ -3107,6 +3423,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Vaccines",
@@ -3132,6 +3450,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "AdvancedSensors_Mk2",
@@ -3157,6 +3477,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "QuantumProcessor",
@@ -3178,6 +3500,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "AdvancedSensors",
@@ -3199,6 +3523,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "AICores",
@@ -3224,6 +3550,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "AICores",
@@ -3249,6 +3577,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "StructuralFrame",
@@ -3274,6 +3604,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ConstructionMaterials",
@@ -3295,6 +3627,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "AdvancedPowerCells",
@@ -3320,6 +3654,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Electronics",
@@ -3345,6 +3681,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "StationHullFrame",
@@ -3366,6 +3704,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ReinforcedGirder",
@@ -3387,6 +3727,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "StationHullFrame",
@@ -3408,6 +3750,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "HydraulicPiston",
@@ -3433,6 +3777,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -3458,6 +3804,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -3479,6 +3827,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "SteelAlloy",
@@ -3504,6 +3854,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "CobaltMagnet",
@@ -3529,6 +3881,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ShipShieldGenerator",
@@ -3554,6 +3908,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -3575,6 +3931,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -3600,6 +3958,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -3625,6 +3985,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -3646,6 +4008,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -3671,6 +4035,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -3696,6 +4062,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -3721,6 +4089,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -3746,6 +4116,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "PowerCore",
@@ -3767,6 +4139,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "PowerCells",
@@ -3792,6 +4166,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -3817,6 +4193,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -3842,6 +4220,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -3867,6 +4247,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "TurretWeapon",
@@ -3888,6 +4270,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ShieldEmitter",
@@ -3913,6 +4297,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -3938,6 +4324,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -3963,6 +4351,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -3988,6 +4378,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -4013,6 +4405,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ModuleShell",
@@ -4038,6 +4432,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "WeaponsLabModule",
@@ -4067,6 +4463,8 @@
       "Acquisition": false,
       "ResearchLevel": 1,
       "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "WeaponsLabModule",
@@ -4087,7 +4485,162 @@
       ]
     },
     {
-      "RecipeID": "RCP_197_PropulsionResearch",
+      "RecipeID": "RCP_197_IonPropulsionLab",
+      "OutputItem": "IonPropulsionLab",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "Ingredients": [
+        {
+          "ItemID": "PhysicsLabModule",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ShipEngine_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CobaltMagnet",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_198_GravMaterialsLab",
+      "OutputItem": "GravMaterialsLab",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "Ingredients": [
+        {
+          "ItemID": "MaterialsLabModule",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 1
+        },
+        {
+          "ItemID": "GravitationGenerator_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "EnrichedUranium",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_199_EncryptionLab",
+      "OutputItem": "EncryptionLab",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "Ingredients": [
+        {
+          "ItemID": "ElectronicsLabModule",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 1
+        },
+        {
+          "ItemID": "EncryptedCircuit_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor_Mk2",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_200_OptronicsLab",
+      "OutputItem": "OptronicsLab",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "Ingredients": [
+        {
+          "ItemID": "ElectronicsLabModule",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 1
+        },
+        {
+          "ItemID": "OpticalLens_Mk2",
+          "Qty": 2
+        },
+        {
+          "ItemID": "FiberOpticCable_Mk2",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_201_CyberneticsLab",
+      "OutputItem": "CyberneticsLab",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "Ingredients": [
+        {
+          "ItemID": "BiologyLabModule",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 1
+        },
+        {
+          "ItemID": "NanoInjectors",
+          "Qty": 1
+        },
+        {
+          "ItemID": "RefinedMedicine_Mk2",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_202_PropulsionResearch",
       "OutputItem": "PropulsionResearch",
       "OutputQty": 1,
       "Tier": 5,
@@ -4096,6 +4649,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "PropulsionResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Helium3",
@@ -4108,7 +4663,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_198_AdvancedPropulsionResearch",
+      "RecipeID": "RCP_203_AdvancedPropulsionResearch",
       "OutputItem": "AdvancedPropulsionResearch",
       "OutputQty": 1,
       "Tier": 6,
@@ -4117,6 +4672,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "AdvancedPropulsionResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "PropulsionResearch",
@@ -4129,7 +4686,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_199_MaterialsResearch",
+      "RecipeID": "RCP_204_MaterialsResearch",
       "OutputItem": "MaterialsResearch",
       "OutputQty": 1,
       "Tier": 5,
@@ -4138,6 +4695,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "MaterialsResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "TungstenCarbide",
@@ -4150,7 +4709,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_200_NanoMaterialsResearch",
+      "RecipeID": "RCP_205_NanoMaterialsResearch",
       "OutputItem": "NanoMaterialsResearch",
       "OutputQty": 1,
       "Tier": 6,
@@ -4159,6 +4718,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "NanoMaterialsResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "MaterialsResearch",
@@ -4171,7 +4732,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_201_ComputingResearch",
+      "RecipeID": "RCP_206_ComputingResearch",
       "OutputItem": "ComputingResearch",
       "OutputQty": 1,
       "Tier": 4,
@@ -4180,6 +4741,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Microchips",
@@ -4192,7 +4755,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_202_QuantumComputingResearch",
+      "RecipeID": "RCP_207_QuantumComputingResearch",
       "OutputItem": "QuantumComputingResearch",
       "OutputQty": 1,
       "Tier": 5,
@@ -4201,6 +4764,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "QuantumComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ComputingResearch",
@@ -4217,7 +4782,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_203_DefenceResearch",
+      "RecipeID": "RCP_208_DefenceResearch",
       "OutputItem": "DefenceResearch",
       "OutputQty": 1,
       "Tier": 5,
@@ -4226,6 +4791,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "DefenceResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "EnergyCannon",
@@ -4238,7 +4805,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_204_AdvancedDefenceResearch",
+      "RecipeID": "RCP_209_AdvancedDefenceResearch",
       "OutputItem": "AdvancedDefenceResearch",
       "OutputQty": 1,
       "Tier": 6,
@@ -4247,6 +4814,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "AdvancedDefenceResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "DefenceResearch",
@@ -4259,7 +4828,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_205_BioResearch",
+      "RecipeID": "RCP_210_BioResearch",
       "OutputItem": "BioResearch",
       "OutputQty": 1,
       "Tier": 4,
@@ -4268,6 +4837,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "BioResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "RefinedMedicine",
@@ -4280,7 +4851,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_206_AdvancedBioResearch",
+      "RecipeID": "RCP_211_AdvancedBioResearch",
       "OutputItem": "AdvancedBioResearch",
       "OutputQty": 1,
       "Tier": 5,
@@ -4289,6 +4860,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "AdvancedBioResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "BioResearch",
@@ -4301,7 +4874,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_207_KineticWeaponResearch",
+      "RecipeID": "RCP_212_KineticWeaponResearch",
       "OutputItem": "KineticWeaponResearch",
       "OutputQty": 1,
       "Tier": 6,
@@ -4310,6 +4883,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "KineticWeaponResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "DefenceResearch",
@@ -4326,7 +4901,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_208_BeamWeaponResearch",
+      "RecipeID": "RCP_213_BeamWeaponResearch",
       "OutputItem": "BeamWeaponResearch",
       "OutputQty": 1,
       "Tier": 6,
@@ -4335,6 +4910,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "BeamWeaponResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "DefenceResearch",
@@ -4351,7 +4928,304 @@
       ]
     },
     {
-      "RecipeID": "RCP_209_Electronics_Mk2",
+      "RecipeID": "RCP_214_IonPropulsionResearch",
+      "OutputItem": "IonPropulsionResearch",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "IonPropulsionLab",
+      "Category": "Data",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "IonPropulsionResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "Ingredients": [
+        {
+          "ItemID": "PropulsionResearch",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ShipEngine_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CobaltMagnet",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_215_GravMaterialsResearch",
+      "OutputItem": "GravMaterialsResearch",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "GravMaterialsLab",
+      "Category": "Data",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "GravMaterialsResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "Ingredients": [
+        {
+          "ItemID": "NanoMaterialsResearch",
+          "Qty": 1
+        },
+        {
+          "ItemID": "GravitationGenerator_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "EnrichedUranium",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_216_EncryptionResearch",
+      "OutputItem": "EncryptionResearch",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "EncryptionLab",
+      "Category": "Data",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "EncryptionResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "Ingredients": [
+        {
+          "ItemID": "QuantumComputingResearch",
+          "Qty": 1
+        },
+        {
+          "ItemID": "EncryptedCircuit_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor_Mk2",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_217_OptronicsResearch",
+      "OutputItem": "OptronicsResearch",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "OptronicsLab",
+      "Category": "Data",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "OptronicsResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "Ingredients": [
+        {
+          "ItemID": "QuantumComputingResearch",
+          "Qty": 1
+        },
+        {
+          "ItemID": "OpticalLens_Mk2",
+          "Qty": 2
+        },
+        {
+          "ItemID": "FiberOpticCable_Mk2",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_218_CyberneticsResearch",
+      "OutputItem": "CyberneticsResearch",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "CyberneticsLab",
+      "Category": "Data",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "CyberneticsResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "Ingredients": [
+        {
+          "ItemID": "AdvancedBioResearch",
+          "Qty": 1
+        },
+        {
+          "ItemID": "NanoInjectors",
+          "Qty": 1
+        },
+        {
+          "ItemID": "RefinedMedicine_Mk2",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_219_AntimatterContainmentResearch",
+      "OutputItem": "AntimatterContainmentResearch",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "Contract:Researchers",
+      "Category": "Data",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "AntimatterContainmentResearch",
+      "ResearchProvider": "ScholarsSyndicate",
+      "ExpertiseLevel": 3,
+      "Ingredients": [
+        {
+          "ItemID": "ResearchData",
+          "Qty": 1
+        },
+        {
+          "ItemID": "EnrichedUranium",
+          "Qty": 1
+        },
+        {
+          "ItemID": "PalladiumCatalyst",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_220_WormholeNavigationResearch",
+      "OutputItem": "WormholeNavigationResearch",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "Contract:Researchers",
+      "Category": "Data",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "WormholeNavigationResearch",
+      "ResearchProvider": "FrontierAlliance",
+      "ExpertiseLevel": 3,
+      "Ingredients": [
+        {
+          "ItemID": "ResearchData",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "NavigationComputer_Mk2",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_221_FusionMiniaturizationResearch",
+      "OutputItem": "FusionMiniaturizationResearch",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "Contract:Researchers",
+      "Category": "Data",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "FusionMiniaturizationResearch",
+      "ResearchProvider": "EngineersCollective",
+      "ExpertiseLevel": 3,
+      "Ingredients": [
+        {
+          "ItemID": "ResearchData",
+          "Qty": 1
+        },
+        {
+          "ItemID": "FusionFuelCell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ShipReactor_Mk2",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_222_ShieldBypassResearch",
+      "OutputItem": "ShieldBypassResearch",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "Contract:Researchers",
+      "Category": "Data",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "ShieldBypassResearch",
+      "ResearchProvider": "HonorCircle",
+      "ExpertiseLevel": 3,
+      "Ingredients": [
+        {
+          "ItemID": "ResearchData",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ShipShieldGenerator_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_223_FactionMicroFabricationResearch",
+      "OutputItem": "FactionMicroFabricationResearch",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "Contract:Researchers",
+      "Category": "Data",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "FactionMicroFabricationResearch",
+      "ResearchProvider": "MerchantCoalition",
+      "ExpertiseLevel": 3,
+      "Ingredients": [
+        {
+          "ItemID": "ResearchData",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ConstructionMaterials",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Microchips_Mk2",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_224_DeepSpaceSurveyResearch",
+      "OutputItem": "DeepSpaceSurveyResearch",
+      "OutputQty": 1,
+      "Tier": 7,
+      "ProducedIn": "Contract:Researchers",
+      "Category": "Data",
+      "Acquisition": false,
+      "ResearchLevel": 3,
+      "ResearchRequired": "DeepSpaceSurveyResearch",
+      "ResearchProvider": "TradersGuild",
+      "ExpertiseLevel": 3,
+      "Ingredients": [
+        {
+          "ItemID": "ResearchData",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedSensors_Mk2",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ScanComputer_Mk2",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_225_Electronics_Mk2",
       "OutputItem": "Electronics_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4360,6 +5234,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Electronics",
@@ -4380,7 +5256,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_210_Microchips_Mk2",
+      "RecipeID": "RCP_226_Microchips_Mk2",
       "OutputItem": "Microchips_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4389,6 +5265,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Microchips",
@@ -4409,7 +5287,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_211_CircuitBoard_Mk2",
+      "RecipeID": "RCP_227_CircuitBoard_Mk2",
       "OutputItem": "CircuitBoard_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4418,6 +5296,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "CircuitBoard",
@@ -4442,7 +5322,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_212_MemoryUnit_Mk2",
+      "RecipeID": "RCP_228_MemoryUnit_Mk2",
       "OutputItem": "MemoryUnit_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4451,6 +5331,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "MemoryUnit",
@@ -4471,7 +5353,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_213_ControlUnit_Mk2",
+      "RecipeID": "RCP_229_ControlUnit_Mk2",
       "OutputItem": "ControlUnit_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4480,6 +5362,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ControlUnit",
@@ -4500,7 +5384,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_214_PowerDistributionUnit_Mk2",
+      "RecipeID": "RCP_230_PowerDistributionUnit_Mk2",
       "OutputItem": "PowerDistributionUnit_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4509,6 +5393,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "PowerDistributionUnit",
@@ -4529,7 +5415,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_215_BasicComputer_Mk2",
+      "RecipeID": "RCP_231_BasicComputer_Mk2",
       "OutputItem": "BasicComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4538,6 +5424,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "BasicComputer",
@@ -4558,7 +5446,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_216_AdvancedSensors_Mk2",
+      "RecipeID": "RCP_232_AdvancedSensors_Mk2",
       "OutputItem": "AdvancedSensors_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4567,6 +5455,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "AdvancedSensors",
@@ -4587,7 +5477,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_217_QuantumProcessor_Mk2",
+      "RecipeID": "RCP_233_QuantumProcessor_Mk2",
       "OutputItem": "QuantumProcessor_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4596,6 +5486,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "QuantumProcessor",
@@ -4620,7 +5512,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_218_TargetingComputer_Mk2",
+      "RecipeID": "RCP_234_TargetingComputer_Mk2",
       "OutputItem": "TargetingComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4629,6 +5521,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "TargetingComputer",
@@ -4649,7 +5543,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_219_NavigationComputer_Mk2",
+      "RecipeID": "RCP_235_NavigationComputer_Mk2",
       "OutputItem": "NavigationComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4658,6 +5552,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "NavigationComputer",
@@ -4678,7 +5574,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_220_ServoActuator_Mk2",
+      "RecipeID": "RCP_236_ServoActuator_Mk2",
       "OutputItem": "ServoActuator_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4687,6 +5583,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ServoActuator",
@@ -4707,7 +5605,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_221_SuperConductingWire_Mk2",
+      "RecipeID": "RCP_237_SuperConductingWire_Mk2",
       "OutputItem": "SuperConductingWire_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -4716,6 +5614,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "SuperConductingWire",
@@ -4736,7 +5636,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_222_Electronics_Mk3",
+      "RecipeID": "RCP_238_Electronics_Mk3",
       "OutputItem": "Electronics_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4745,6 +5645,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "QuantumComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Electronics_Mk2",
@@ -4765,7 +5667,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_223_Microchips_Mk3",
+      "RecipeID": "RCP_239_Microchips_Mk3",
       "OutputItem": "Microchips_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4774,6 +5676,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "QuantumComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Microchips_Mk2",
@@ -4794,7 +5698,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_224_CircuitBoard_Mk3",
+      "RecipeID": "RCP_240_CircuitBoard_Mk3",
       "OutputItem": "CircuitBoard_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4803,6 +5707,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "QuantumComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "CircuitBoard_Mk2",
@@ -4823,7 +5729,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_225_MemoryUnit_Mk3",
+      "RecipeID": "RCP_241_MemoryUnit_Mk3",
       "OutputItem": "MemoryUnit_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4832,6 +5738,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "QuantumComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "MemoryUnit_Mk2",
@@ -4852,7 +5760,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_226_ControlUnit_Mk3",
+      "RecipeID": "RCP_242_ControlUnit_Mk3",
       "OutputItem": "ControlUnit_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4861,6 +5769,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "QuantumComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ControlUnit_Mk2",
@@ -4881,7 +5791,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_227_PowerDistributionUnit_Mk3",
+      "RecipeID": "RCP_243_PowerDistributionUnit_Mk3",
       "OutputItem": "PowerDistributionUnit_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4890,6 +5800,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "QuantumComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "PowerDistributionUnit_Mk2",
@@ -4910,7 +5822,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_228_BasicComputer_Mk3",
+      "RecipeID": "RCP_244_BasicComputer_Mk3",
       "OutputItem": "BasicComputer_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4919,6 +5831,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "QuantumComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "BasicComputer_Mk2",
@@ -4939,7 +5853,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_229_AdvancedSensors_Mk3",
+      "RecipeID": "RCP_245_AdvancedSensors_Mk3",
       "OutputItem": "AdvancedSensors_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4948,6 +5862,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "QuantumComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "AdvancedSensors_Mk2",
@@ -4968,7 +5884,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_230_QuantumProcessor_Mk3",
+      "RecipeID": "RCP_246_QuantumProcessor_Mk3",
       "OutputItem": "QuantumProcessor_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -4977,6 +5893,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "QuantumComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "QuantumProcessor_Mk2",
@@ -5001,7 +5919,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_231_MicroCapacitor_Mk2",
+      "RecipeID": "RCP_247_MicroCapacitor_Mk2",
       "OutputItem": "MicroCapacitor_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5010,6 +5928,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "MicroCapacitor",
@@ -5030,7 +5950,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_232_CapacitorBank_Mk2",
+      "RecipeID": "RCP_248_CapacitorBank_Mk2",
       "OutputItem": "CapacitorBank_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5039,6 +5959,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "CapacitorBank",
@@ -5059,7 +5981,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_233_TransceiverUnit_Mk2",
+      "RecipeID": "RCP_249_TransceiverUnit_Mk2",
       "OutputItem": "TransceiverUnit_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5068,6 +5990,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "TransceiverUnit",
@@ -5088,7 +6012,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_234_SignalAmplifier_Mk2",
+      "RecipeID": "RCP_250_SignalAmplifier_Mk2",
       "OutputItem": "SignalAmplifier_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5097,6 +6021,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "SignalAmplifier",
@@ -5117,7 +6043,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_235_OpticalLens_Mk2",
+      "RecipeID": "RCP_251_OpticalLens_Mk2",
       "OutputItem": "OpticalLens_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5126,6 +6052,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "OpticalLens",
@@ -5146,7 +6074,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_236_SensorArray_Mk2",
+      "RecipeID": "RCP_252_SensorArray_Mk2",
       "OutputItem": "SensorArray_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5155,6 +6083,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "SensorArray",
@@ -5175,7 +6105,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_237_FiberOpticCable_Mk2",
+      "RecipeID": "RCP_253_FiberOpticCable_Mk2",
       "OutputItem": "FiberOpticCable_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5184,6 +6114,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "FiberOpticCable",
@@ -5204,7 +6136,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_238_DataMatrix_Mk2",
+      "RecipeID": "RCP_254_DataMatrix_Mk2",
       "OutputItem": "DataMatrix_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5213,6 +6145,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "DataMatrix",
@@ -5233,7 +6167,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_239_LogicChip_Mk2",
+      "RecipeID": "RCP_255_LogicChip_Mk2",
       "OutputItem": "LogicChip_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5242,6 +6176,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "LogicChip",
@@ -5262,7 +6198,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_240_EncryptedCircuit_Mk2",
+      "RecipeID": "RCP_256_EncryptedCircuit_Mk2",
       "OutputItem": "EncryptedCircuit_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5271,6 +6207,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "EncryptedCircuit",
@@ -5291,7 +6229,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_241_ClockGenerator_Mk2",
+      "RecipeID": "RCP_257_ClockGenerator_Mk2",
       "OutputItem": "ClockGenerator_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5300,6 +6238,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ClockGenerator",
@@ -5320,7 +6260,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_242_PilotComputer_Mk2",
+      "RecipeID": "RCP_258_PilotComputer_Mk2",
       "OutputItem": "PilotComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5329,6 +6269,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "PilotComputer",
@@ -5349,7 +6291,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_243_CargoComputer_Mk2",
+      "RecipeID": "RCP_259_CargoComputer_Mk2",
       "OutputItem": "CargoComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5358,6 +6300,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "CargoComputer",
@@ -5378,7 +6322,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_244_ShipComputer_Mk2",
+      "RecipeID": "RCP_260_ShipComputer_Mk2",
       "OutputItem": "ShipComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5387,6 +6331,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ShipComputer",
@@ -5407,7 +6353,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_245_TradingComputer_Mk2",
+      "RecipeID": "RCP_261_TradingComputer_Mk2",
       "OutputItem": "TradingComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5416,6 +6362,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "TradingComputer",
@@ -5436,7 +6384,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_246_ScanComputer_Mk2",
+      "RecipeID": "RCP_262_ScanComputer_Mk2",
       "OutputItem": "ScanComputer_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -5445,6 +6393,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ScanComputer",
@@ -5465,7 +6415,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_247_ScienceComputer_Mk2",
+      "RecipeID": "RCP_263_ScienceComputer_Mk2",
       "OutputItem": "ScienceComputer_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5474,6 +6424,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ScienceComputer",
@@ -5494,7 +6446,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_248_EngineeringComputer_Mk2",
+      "RecipeID": "RCP_264_EngineeringComputer_Mk2",
       "OutputItem": "EngineeringComputer_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5503,6 +6455,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "EngineeringComputer",
@@ -5523,7 +6477,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_249_AutomatedDefenceComputer_Mk2",
+      "RecipeID": "RCP_265_AutomatedDefenceComputer_Mk2",
       "OutputItem": "AutomatedDefenceComputer_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5532,6 +6486,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "AutomatedDefenceComputer",
@@ -5552,7 +6508,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_250_ResearchComputer_Mk2",
+      "RecipeID": "RCP_266_ResearchComputer_Mk2",
       "OutputItem": "ResearchComputer_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5561,6 +6517,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "ComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ResearchComputer",
@@ -5581,7 +6539,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_251_SensorArray_Mk3",
+      "RecipeID": "RCP_267_SensorArray_Mk3",
       "OutputItem": "SensorArray_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -5590,6 +6548,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "QuantumComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "SensorArray_Mk2",
@@ -5610,7 +6570,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_252_LogicChip_Mk3",
+      "RecipeID": "RCP_268_LogicChip_Mk3",
       "OutputItem": "LogicChip_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -5619,6 +6579,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "QuantumComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "LogicChip_Mk2",
@@ -5639,7 +6601,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_253_ShipComputer_Mk3",
+      "RecipeID": "RCP_269_ShipComputer_Mk3",
       "OutputItem": "ShipComputer_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -5648,6 +6610,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "QuantumComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ShipComputer_Mk2",
@@ -5668,7 +6632,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_254_ScienceComputer_Mk3",
+      "RecipeID": "RCP_270_ScienceComputer_Mk3",
       "OutputItem": "ScienceComputer_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5677,6 +6641,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "QuantumComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ScienceComputer_Mk2",
@@ -5697,7 +6663,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_255_ResearchComputer_Mk3",
+      "RecipeID": "RCP_271_ResearchComputer_Mk3",
       "OutputItem": "ResearchComputer_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5706,6 +6672,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "QuantumComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ResearchComputer_Mk2",
@@ -5726,7 +6694,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_256_AutomatedDefenceComputer_Mk3",
+      "RecipeID": "RCP_272_AutomatedDefenceComputer_Mk3",
       "OutputItem": "AutomatedDefenceComputer_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5735,6 +6703,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "QuantumComputingResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "AutomatedDefenceComputer_Mk2",
@@ -5755,7 +6725,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_257_ShipEngine_Mk2",
+      "RecipeID": "RCP_273_ShipEngine_Mk2",
       "OutputItem": "ShipEngine_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5764,6 +6734,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "PropulsionResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ShipEngine",
@@ -5788,7 +6760,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_258_ShipReactor_Mk2",
+      "RecipeID": "RCP_274_ShipReactor_Mk2",
       "OutputItem": "ShipReactor_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5797,6 +6769,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "PropulsionResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ShipReactor",
@@ -5821,7 +6795,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_259_Thruster_Mk2",
+      "RecipeID": "RCP_275_Thruster_Mk2",
       "OutputItem": "Thruster_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5830,6 +6804,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "PropulsionResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Thruster",
@@ -5850,7 +6826,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_260_FuelTank_Mk2",
+      "RecipeID": "RCP_276_FuelTank_Mk2",
       "OutputItem": "FuelTank_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -5859,6 +6835,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "PropulsionResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "FuelTank",
@@ -5879,7 +6857,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_261_ShipEngine_Mk3",
+      "RecipeID": "RCP_277_ShipEngine_Mk3",
       "OutputItem": "ShipEngine_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5888,6 +6866,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "AdvancedPropulsionResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ShipEngine_Mk2",
@@ -5908,7 +6888,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_262_ShipReactor_Mk3",
+      "RecipeID": "RCP_278_ShipReactor_Mk3",
       "OutputItem": "ShipReactor_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5917,6 +6897,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "AdvancedPropulsionResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ShipReactor_Mk2",
@@ -5937,7 +6919,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_263_Thruster_Mk3",
+      "RecipeID": "RCP_279_Thruster_Mk3",
       "OutputItem": "Thruster_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5946,6 +6928,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "AdvancedPropulsionResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Thruster_Mk2",
@@ -5966,7 +6950,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_264_FuelTank_Mk3",
+      "RecipeID": "RCP_280_FuelTank_Mk3",
       "OutputItem": "FuelTank_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -5975,6 +6959,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "AdvancedPropulsionResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "FuelTank_Mk2",
@@ -5995,7 +6981,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_265_CargoPod_Mk2",
+      "RecipeID": "RCP_281_CargoPod_Mk2",
       "OutputItem": "CargoPod_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -6004,6 +6990,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "MaterialsResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "CargoPod",
@@ -6024,7 +7012,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_266_LifeSupportPod_Mk2",
+      "RecipeID": "RCP_282_LifeSupportPod_Mk2",
       "OutputItem": "LifeSupportPod_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -6033,6 +7021,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "MaterialsResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "LifeSupportPod",
@@ -6053,7 +7043,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_267_ShipComponents_Mk2",
+      "RecipeID": "RCP_283_ShipComponents_Mk2",
       "OutputItem": "ShipComponents_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -6062,6 +7052,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "MaterialsResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ShipComponents",
@@ -6086,7 +7078,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_268_ArmourHull_Mk2",
+      "RecipeID": "RCP_284_ArmourHull_Mk2",
       "OutputItem": "ArmourHull_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -6095,6 +7087,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "MaterialsResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ArmourHull",
@@ -6115,7 +7109,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_269_HullPlating_Mk2",
+      "RecipeID": "RCP_285_HullPlating_Mk2",
       "OutputItem": "HullPlating_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -6124,6 +7118,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "MaterialsResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "HullPlating",
@@ -6144,7 +7140,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_270_CargoPod_Mk3",
+      "RecipeID": "RCP_286_CargoPod_Mk3",
       "OutputItem": "CargoPod_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6153,6 +7149,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "NanoMaterialsResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "CargoPod_Mk2",
@@ -6173,7 +7171,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_271_LifeSupportPod_Mk3",
+      "RecipeID": "RCP_287_LifeSupportPod_Mk3",
       "OutputItem": "LifeSupportPod_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6182,6 +7180,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "NanoMaterialsResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "LifeSupportPod_Mk2",
@@ -6202,7 +7202,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_272_ShipComponents_Mk3",
+      "RecipeID": "RCP_288_ShipComponents_Mk3",
       "OutputItem": "ShipComponents_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6211,6 +7211,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "NanoMaterialsResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ShipComponents_Mk2",
@@ -6235,7 +7237,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_273_ArmourHull_Mk3",
+      "RecipeID": "RCP_289_ArmourHull_Mk3",
       "OutputItem": "ArmourHull_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6244,6 +7246,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "NanoMaterialsResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ArmourHull_Mk2",
@@ -6264,7 +7268,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_274_HullPlating_Mk3",
+      "RecipeID": "RCP_290_HullPlating_Mk3",
       "OutputItem": "HullPlating_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6273,6 +7277,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "NanoMaterialsResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "HullPlating_Mk2",
@@ -6293,7 +7299,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_275_ShipShieldGenerator_Mk2",
+      "RecipeID": "RCP_291_ShipShieldGenerator_Mk2",
       "OutputItem": "ShipShieldGenerator_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -6302,6 +7308,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "DefenceResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ShipShieldGenerator",
@@ -6322,7 +7330,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_276_ShieldCapacitor_Mk2",
+      "RecipeID": "RCP_292_ShieldCapacitor_Mk2",
       "OutputItem": "ShieldCapacitor_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -6331,6 +7339,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "DefenceResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ShieldCapacitor",
@@ -6351,7 +7361,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_277_TurretWeapon_Mk2",
+      "RecipeID": "RCP_293_TurretWeapon_Mk2",
       "OutputItem": "TurretWeapon_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -6360,6 +7370,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "DefenceResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "TurretWeapon",
@@ -6380,7 +7392,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_278_EnergyCannon_Mk2",
+      "RecipeID": "RCP_294_EnergyCannon_Mk2",
       "OutputItem": "EnergyCannon_Mk2",
       "OutputQty": 1,
       "Tier": 5,
@@ -6389,6 +7401,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "DefenceResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "EnergyCannon",
@@ -6409,7 +7423,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_279_ShipShieldGenerator_Mk3",
+      "RecipeID": "RCP_295_ShipShieldGenerator_Mk3",
       "OutputItem": "ShipShieldGenerator_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6418,6 +7432,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "AdvancedDefenceResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "ShipShieldGenerator_Mk2",
@@ -6438,7 +7454,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_280_TurretWeapon_Mk3",
+      "RecipeID": "RCP_296_TurretWeapon_Mk3",
       "OutputItem": "TurretWeapon_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6447,6 +7463,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "AdvancedDefenceResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "TurretWeapon_Mk2",
@@ -6467,7 +7485,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_281_EnergyCannon_Mk3",
+      "RecipeID": "RCP_297_EnergyCannon_Mk3",
       "OutputItem": "EnergyCannon_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6476,6 +7494,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "AdvancedDefenceResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "EnergyCannon_Mk2",
@@ -6496,7 +7516,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_282_GravitationGenerator_Mk2",
+      "RecipeID": "RCP_298_GravitationGenerator_Mk2",
       "OutputItem": "GravitationGenerator_Mk2",
       "OutputQty": 1,
       "Tier": 6,
@@ -6505,6 +7525,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "DefenceResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "GravitationGenerator",
@@ -6525,7 +7547,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_283_Railgun_Mk2",
+      "RecipeID": "RCP_299_Railgun_Mk2",
       "OutputItem": "Railgun_Mk2",
       "OutputQty": 1,
       "Tier": 6,
@@ -6534,6 +7556,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "KineticWeaponResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Railgun",
@@ -6554,7 +7578,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_284_MissileLauncher_Mk2",
+      "RecipeID": "RCP_300_MissileLauncher_Mk2",
       "OutputItem": "MissileLauncher_Mk2",
       "OutputQty": 1,
       "Tier": 6,
@@ -6563,6 +7587,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "KineticWeaponResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "MissileLauncher",
@@ -6583,7 +7609,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_285_TorpedoLauncher_Mk2",
+      "RecipeID": "RCP_301_TorpedoLauncher_Mk2",
       "OutputItem": "TorpedoLauncher_Mk2",
       "OutputQty": 1,
       "Tier": 6,
@@ -6592,6 +7618,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "KineticWeaponResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "TorpedoLauncher",
@@ -6612,7 +7640,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_286_Railgun_Mk3",
+      "RecipeID": "RCP_302_Railgun_Mk3",
       "OutputItem": "Railgun_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6621,6 +7649,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "KineticWeaponResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Railgun_Mk2",
@@ -6641,7 +7671,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_287_MissileLauncher_Mk3",
+      "RecipeID": "RCP_303_MissileLauncher_Mk3",
       "OutputItem": "MissileLauncher_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6650,6 +7680,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "KineticWeaponResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "MissileLauncher_Mk2",
@@ -6670,7 +7702,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_288_TorpedoLauncher_Mk3",
+      "RecipeID": "RCP_304_TorpedoLauncher_Mk3",
       "OutputItem": "TorpedoLauncher_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6679,6 +7711,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "KineticWeaponResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "TorpedoLauncher_Mk2",
@@ -6699,7 +7733,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_289_TriLaser_Mk2",
+      "RecipeID": "RCP_305_TriLaser_Mk2",
       "OutputItem": "TriLaser_Mk2",
       "OutputQty": 1,
       "Tier": 6,
@@ -6708,6 +7742,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "BeamWeaponResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "TriLaser",
@@ -6728,7 +7764,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_290_PlasmaCannon_Mk2",
+      "RecipeID": "RCP_306_PlasmaCannon_Mk2",
       "OutputItem": "PlasmaCannon_Mk2",
       "OutputQty": 1,
       "Tier": 6,
@@ -6737,6 +7773,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "BeamWeaponResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "PlasmaCannon",
@@ -6757,7 +7795,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_291_PointDefenceLaser_Mk2",
+      "RecipeID": "RCP_307_PointDefenceLaser_Mk2",
       "OutputItem": "PointDefenceLaser_Mk2",
       "OutputQty": 1,
       "Tier": 6,
@@ -6766,6 +7804,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "BeamWeaponResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "PointDefenceLaser",
@@ -6786,7 +7826,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_292_TriLaser_Mk3",
+      "RecipeID": "RCP_308_TriLaser_Mk3",
       "OutputItem": "TriLaser_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6795,6 +7835,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "BeamWeaponResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "TriLaser_Mk2",
@@ -6815,7 +7857,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_293_PlasmaCannon_Mk3",
+      "RecipeID": "RCP_309_PlasmaCannon_Mk3",
       "OutputItem": "PlasmaCannon_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6824,6 +7866,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "BeamWeaponResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "PlasmaCannon_Mk2",
@@ -6844,7 +7888,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_294_PointDefenceLaser_Mk3",
+      "RecipeID": "RCP_310_PointDefenceLaser_Mk3",
       "OutputItem": "PointDefenceLaser_Mk3",
       "OutputQty": 1,
       "Tier": 6,
@@ -6853,6 +7897,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "BeamWeaponResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "PointDefenceLaser_Mk2",
@@ -6873,7 +7919,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_295_RefinedMedicine_Mk2",
+      "RecipeID": "RCP_311_RefinedMedicine_Mk2",
       "OutputItem": "RefinedMedicine_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -6882,6 +7928,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "BioResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "RefinedMedicine",
@@ -6902,7 +7950,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_296_MedicalSupplies_Mk2",
+      "RecipeID": "RCP_312_MedicalSupplies_Mk2",
       "OutputItem": "MedicalSupplies_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -6911,6 +7959,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "BioResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "MedicalSupplies",
@@ -6931,7 +7981,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_297_Vaccines_Mk2",
+      "RecipeID": "RCP_313_Vaccines_Mk2",
       "OutputItem": "Vaccines_Mk2",
       "OutputQty": 1,
       "Tier": 4,
@@ -6940,6 +7990,8 @@
       "Acquisition": false,
       "ResearchLevel": 2,
       "ResearchRequired": "BioResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "Vaccines",
@@ -6960,7 +8012,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_298_RefinedMedicine_Mk3",
+      "RecipeID": "RCP_314_RefinedMedicine_Mk3",
       "OutputItem": "RefinedMedicine_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -6969,6 +8021,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "AdvancedBioResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "RefinedMedicine_Mk2",
@@ -6989,7 +8043,7 @@
       ]
     },
     {
-      "RecipeID": "RCP_299_MedicalSupplies_Mk3",
+      "RecipeID": "RCP_315_MedicalSupplies_Mk3",
       "OutputItem": "MedicalSupplies_Mk3",
       "OutputQty": 1,
       "Tier": 5,
@@ -6998,6 +8052,8 @@
       "Acquisition": false,
       "ResearchLevel": 3,
       "ResearchRequired": "AdvancedBioResearch",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "Ingredients": [
         {
           "ItemID": "MedicalSupplies_Mk2",
@@ -8979,6 +10035,56 @@
       "BaseValue": 462482,
       "MaterialCategory": "Other"
     },
+    "IonPropulsionLab": {
+      "ItemName": "Ion Propulsion Lab",
+      "Description": "Refined ion propulsion lab, produced by advanced fabrication.",
+      "WeightKg": 17.9,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 366990,
+      "MaterialCategory": "Other"
+    },
+    "GravMaterialsLab": {
+      "ItemName": "Grav Materials Lab",
+      "Description": "Refined grav materials lab, produced by advanced fabrication.",
+      "WeightKg": 17.9,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 969171,
+      "MaterialCategory": "Other"
+    },
+    "EncryptionLab": {
+      "ItemName": "Encryption Lab",
+      "Description": "Refined encryption lab, produced by advanced fabrication.",
+      "WeightKg": 17.9,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 1843522,
+      "MaterialCategory": "Other"
+    },
+    "OptronicsLab": {
+      "ItemName": "Optronics Lab",
+      "Description": "Refined optronics lab, produced by advanced fabrication.",
+      "WeightKg": 17.9,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 421356,
+      "MaterialCategory": "Other"
+    },
+    "CyberneticsLab": {
+      "ItemName": "Cybernetics Lab",
+      "Description": "Refined cybernetics lab, produced by advanced fabrication.",
+      "WeightKg": 17.9,
+      "VolumeM3": 0.05,
+      "StorageType": "Solid",
+      "Rarity": "Common",
+      "BaseValue": 268820,
+      "MaterialCategory": "Other"
+    },
     "PropulsionResearch": {
       "ItemName": "Propulsion Research",
       "Description": "Unlocked propulsion research \u2014 a Science Lab breakthrough data-file.",
@@ -9097,6 +10203,116 @@
       "StorageType": "Other",
       "Rarity": "Legendary",
       "BaseValue": 1301468,
+      "MaterialCategory": "Research"
+    },
+    "IonPropulsionResearch": {
+      "ItemName": "Ion Propulsion Research",
+      "Description": "Unlocked ion propulsion research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 3.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "Common",
+      "BaseValue": 706149,
+      "MaterialCategory": "Research"
+    },
+    "GravMaterialsResearch": {
+      "ItemName": "Grav Materials Research",
+      "Description": "Unlocked grav materials research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 3.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "Common",
+      "BaseValue": 10981850,
+      "MaterialCategory": "Research"
+    },
+    "EncryptionResearch": {
+      "ItemName": "Encryption Research",
+      "Description": "Unlocked encryption research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 3.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "Common",
+      "BaseValue": 18321124,
+      "MaterialCategory": "Research"
+    },
+    "OptronicsResearch": {
+      "ItemName": "Optronics Research",
+      "Description": "Unlocked optronics research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 3.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "Common",
+      "BaseValue": 14054625,
+      "MaterialCategory": "Research"
+    },
+    "CyberneticsResearch": {
+      "ItemName": "Cybernetics Research",
+      "Description": "Unlocked cybernetics research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 3.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "Common",
+      "BaseValue": 3410114,
+      "MaterialCategory": "Research"
+    },
+    "AntimatterContainmentResearch": {
+      "ItemName": "Antimatter Containment Research",
+      "Description": "Unlocked antimatter containment research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 3.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "Common",
+      "BaseValue": 69552,
+      "MaterialCategory": "Research"
+    },
+    "WormholeNavigationResearch": {
+      "ItemName": "Wormhole Navigation Research",
+      "Description": "Unlocked wormhole navigation research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 3.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "Common",
+      "BaseValue": 9872802,
+      "MaterialCategory": "Research"
+    },
+    "FusionMiniaturizationResearch": {
+      "ItemName": "Fusion Miniaturization Research",
+      "Description": "Unlocked fusion miniaturization research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 3.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "Common",
+      "BaseValue": 637186,
+      "MaterialCategory": "Research"
+    },
+    "ShieldBypassResearch": {
+      "ItemName": "Shield Bypass Research",
+      "Description": "Unlocked shield bypass research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 3.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "Common",
+      "BaseValue": 7425099,
+      "MaterialCategory": "Research"
+    },
+    "FactionMicroFabricationResearch": {
+      "ItemName": "Faction Micro Fabrication Research",
+      "Description": "Unlocked faction micro fabrication research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 3.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "Common",
+      "BaseValue": 243900,
+      "MaterialCategory": "Research"
+    },
+    "DeepSpaceSurveyResearch": {
+      "ItemName": "Deep Space Survey Research",
+      "Description": "Unlocked deep space survey research \u2014 a Science Lab breakthrough data-file.",
+      "WeightKg": 3.0,
+      "VolumeM3": 0.05,
+      "StorageType": "Other",
+      "Rarity": "Common",
+      "BaseValue": 14329588,
       "MaterialCategory": "Research"
     },
     "Electronics_Mk2": {
@@ -11124,6 +12340,41 @@
       "Margin": 0.5,
       "IntendedMarkup": 1.5
     },
+    "IonPropulsionLab": {
+      "IngredientCost": 244660,
+      "OutputValue": 366990,
+      "Profit": 122330,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "GravMaterialsLab": {
+      "IngredientCost": 646114,
+      "OutputValue": 969171,
+      "Profit": 323057,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "EncryptionLab": {
+      "IngredientCost": 1229015,
+      "OutputValue": 1843522,
+      "Profit": 614507,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "OptronicsLab": {
+      "IngredientCost": 280904,
+      "OutputValue": 421356,
+      "Profit": 140452,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+    "CyberneticsLab": {
+      "IngredientCost": 179213,
+      "OutputValue": 268820,
+      "Profit": 89607,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
     "PropulsionResearch": {
       "IngredientCost": 2790,
       "OutputValue": 7114,
@@ -11205,6 +12456,83 @@
       "IngredientCost": 289215,
       "OutputValue": 1301468,
       "Profit": 1012253,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "IonPropulsionResearch": {
+      "IngredientCost": 156922,
+      "OutputValue": 706149,
+      "Profit": 549227,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "GravMaterialsResearch": {
+      "IngredientCost": 2440411,
+      "OutputValue": 10981850,
+      "Profit": 8541439,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "EncryptionResearch": {
+      "IngredientCost": 4071361,
+      "OutputValue": 18321124,
+      "Profit": 14249763,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "OptronicsResearch": {
+      "IngredientCost": 3123250,
+      "OutputValue": 14054625,
+      "Profit": 10931375,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "CyberneticsResearch": {
+      "IngredientCost": 757803,
+      "OutputValue": 3410114,
+      "Profit": 2652311,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "AntimatterContainmentResearch": {
+      "IngredientCost": 15456,
+      "OutputValue": 69552,
+      "Profit": 54096,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "WormholeNavigationResearch": {
+      "IngredientCost": 2193956,
+      "OutputValue": 9872802,
+      "Profit": 7678846,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "FusionMiniaturizationResearch": {
+      "IngredientCost": 141597,
+      "OutputValue": 637186,
+      "Profit": 495589,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "ShieldBypassResearch": {
+      "IngredientCost": 1650022,
+      "OutputValue": 7425099,
+      "Profit": 5775077,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "FactionMicroFabricationResearch": {
+      "IngredientCost": 54200,
+      "OutputValue": 243900,
+      "Profit": 189700,
+      "Margin": 3.5,
+      "IntendedMarkup": 4.5
+    },
+    "DeepSpaceSurveyResearch": {
+      "IngredientCost": 3184353,
+      "OutputValue": 14329588,
+      "Profit": 11145235,
       "Margin": 3.5,
       "IntendedMarkup": 4.5
     },

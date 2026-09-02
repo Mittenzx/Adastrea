@@ -66,6 +66,54 @@
       "ResearchLevel2": null,
       "ResearchLevel3": "BeamWeaponResearch",
       "Unlocks": 6
+    },
+    {
+      "Domain": "Ion Propulsion",
+      "Lab": "IonPropulsionLab",
+      "LabModule": "IonPropulsionLab",
+      "ResearchLevel2": null,
+      "ResearchLevel3": "IonPropulsionResearch",
+      "Unlocks": 0
+    },
+    {
+      "Domain": "Gravity Materials",
+      "Lab": "GravMaterialsLab",
+      "LabModule": "GravMaterialsLab",
+      "ResearchLevel2": null,
+      "ResearchLevel3": "GravMaterialsResearch",
+      "Unlocks": 0
+    },
+    {
+      "Domain": "Encryption",
+      "Lab": "EncryptionLab",
+      "LabModule": "EncryptionLab",
+      "ResearchLevel2": null,
+      "ResearchLevel3": "EncryptionResearch",
+      "Unlocks": 0
+    },
+    {
+      "Domain": "Optronics",
+      "Lab": "OptronicsLab",
+      "LabModule": "OptronicsLab",
+      "ResearchLevel2": null,
+      "ResearchLevel3": "OptronicsResearch",
+      "Unlocks": 0
+    },
+    {
+      "Domain": "Cybernetics",
+      "Lab": "CyberneticsLab",
+      "LabModule": "CyberneticsLab",
+      "ResearchLevel2": null,
+      "ResearchLevel3": "CyberneticsResearch",
+      "Unlocks": 0
+    },
+    {
+      "Domain": "Contracted Research",
+      "Lab": "Contract:Researchers",
+      "LabModule": "Contract:Researchers",
+      "ResearchLevel2": null,
+      "ResearchLevel3": "AntimatterContainmentResearch",
+      "Unlocks": 0
     }
   ],
   "ResearchNodes": [
@@ -76,6 +124,8 @@
       "ResearchLevel": 3,
       "ProducedIn": "BiologyLab",
       "LabModule": "BiologyLabModule",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "UnlocksCount": 2,
       "Unlocks": [
         "MedicalSupplies_Mk3",
@@ -93,6 +143,8 @@
       "ResearchLevel": 3,
       "ProducedIn": "WeaponsLab",
       "LabModule": "WeaponsLabModule",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "UnlocksCount": 3,
       "Unlocks": [
         "EnergyCannon_Mk3",
@@ -112,6 +164,8 @@
       "ResearchLevel": 3,
       "ProducedIn": "PhysicsLab",
       "LabModule": "PhysicsLabModule",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "UnlocksCount": 4,
       "Unlocks": [
         "FuelTank_Mk3",
@@ -127,12 +181,27 @@
       ]
     },
     {
+      "ResearchID": "AntimatterContainmentResearch",
+      "Name": "Antimatter Containment",
+      "Description": "CONTRACT \u2014 antimatter storage, done by the Scholars' Syndicate.",
+      "ResearchLevel": 3,
+      "ProducedIn": "Contract:Researchers",
+      "LabModule": "Contract:Researchers",
+      "ResearchProvider": "ScholarsSyndicate",
+      "ExpertiseLevel": 3,
+      "UnlocksCount": 0,
+      "Unlocks": [],
+      "UnlocksNames": []
+    },
+    {
       "ResearchID": "BeamWeaponResearch",
       "Name": "Beam Weapons",
       "Description": "Beam-lab specialization enabling lasers, plasma cannons and point-defence.",
       "ResearchLevel": 3,
       "ProducedIn": "BeamWeaponsLab",
       "LabModule": "BeamWeaponsLab",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "UnlocksCount": 6,
       "Unlocks": [
         "PlasmaCannon_Mk2",
@@ -158,6 +227,8 @@
       "ResearchLevel": 2,
       "ProducedIn": "BiologyLab",
       "LabModule": "BiologyLabModule",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "UnlocksCount": 3,
       "Unlocks": [
         "MedicalSupplies_Mk2",
@@ -177,6 +248,8 @@
       "ResearchLevel": 2,
       "ProducedIn": "ElectronicsLab",
       "LabModule": "ElectronicsLabModule",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "UnlocksCount": 33,
       "Unlocks": [
         "AdvancedSensors_Mk2",
@@ -250,12 +323,40 @@
       ]
     },
     {
+      "ResearchID": "CyberneticsResearch",
+      "Name": "Cybernetics",
+      "Description": "Cybernetic augmentation and wetware interfaces.",
+      "ResearchLevel": 3,
+      "ProducedIn": "CyberneticsLab",
+      "LabModule": "CyberneticsLab",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "UnlocksCount": 0,
+      "Unlocks": [],
+      "UnlocksNames": []
+    },
+    {
+      "ResearchID": "DeepSpaceSurveyResearch",
+      "Name": "Deep-Space Survey",
+      "Description": "CONTRACT \u2014 long-range survey, done by the Traders' Guild.",
+      "ResearchLevel": 3,
+      "ProducedIn": "Contract:Researchers",
+      "LabModule": "Contract:Researchers",
+      "ResearchProvider": "TradersGuild",
+      "ExpertiseLevel": 3,
+      "UnlocksCount": 0,
+      "Unlocks": [],
+      "UnlocksNames": []
+    },
+    {
       "ResearchID": "DefenceResearch",
       "Name": "Defence Research",
       "Description": "Weapons-lab breakthrough enabling Mk2 turrets, cannons, missiles and shields.",
       "ResearchLevel": 2,
       "ProducedIn": "WeaponsLab",
       "LabModule": "WeaponsLabModule",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "UnlocksCount": 5,
       "Unlocks": [
         "EnergyCannon_Mk2",
@@ -273,12 +374,79 @@
       ]
     },
     {
+      "ResearchID": "EncryptionResearch",
+      "Name": "Encryption",
+      "Description": "Encryption lab for unbreakable comms and secure computing.",
+      "ResearchLevel": 3,
+      "ProducedIn": "EncryptionLab",
+      "LabModule": "EncryptionLab",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "UnlocksCount": 0,
+      "Unlocks": [],
+      "UnlocksNames": []
+    },
+    {
+      "ResearchID": "FactionMicroFabricationResearch",
+      "Name": "Micro-Fabrication",
+      "Description": "CONTRACT \u2014 nanofacturing, done by the Merchant Coalition.",
+      "ResearchLevel": 3,
+      "ProducedIn": "Contract:Researchers",
+      "LabModule": "Contract:Researchers",
+      "ResearchProvider": "MerchantCoalition",
+      "ExpertiseLevel": 3,
+      "UnlocksCount": 0,
+      "Unlocks": [],
+      "UnlocksNames": []
+    },
+    {
+      "ResearchID": "FusionMiniaturizationResearch",
+      "Name": "Fusion Miniaturization",
+      "Description": "CONTRACT \u2014 pocket fusion, done by the Engineers' Collective.",
+      "ResearchLevel": 3,
+      "ProducedIn": "Contract:Researchers",
+      "LabModule": "Contract:Researchers",
+      "ResearchProvider": "EngineersCollective",
+      "ExpertiseLevel": 3,
+      "UnlocksCount": 0,
+      "Unlocks": [],
+      "UnlocksNames": []
+    },
+    {
+      "ResearchID": "GravMaterialsResearch",
+      "Name": "Gravity Materials",
+      "Description": "Gravity-materials lab producing exotic negative-mass alloys.",
+      "ResearchLevel": 3,
+      "ProducedIn": "GravMaterialsLab",
+      "LabModule": "GravMaterialsLab",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "UnlocksCount": 0,
+      "Unlocks": [],
+      "UnlocksNames": []
+    },
+    {
+      "ResearchID": "IonPropulsionResearch",
+      "Name": "Ion Propulsion",
+      "Description": "Ion-focus lab unlocking compact, high-ISP ion drives.",
+      "ResearchLevel": 3,
+      "ProducedIn": "IonPropulsionLab",
+      "LabModule": "IonPropulsionLab",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "UnlocksCount": 0,
+      "Unlocks": [],
+      "UnlocksNames": []
+    },
+    {
       "ResearchID": "KineticWeaponResearch",
       "Name": "Kinetic Weapons",
       "Description": "Projectile-lab specialization enabling railguns, missiles and torpedoes.",
       "ResearchLevel": 3,
       "ProducedIn": "ProjectileWeaponsLab",
       "LabModule": "ProjectileWeaponsLab",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "UnlocksCount": 6,
       "Unlocks": [
         "MissileLauncher_Mk2",
@@ -304,6 +472,8 @@
       "ResearchLevel": 2,
       "ProducedIn": "MaterialsLab",
       "LabModule": "MaterialsLabModule",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "UnlocksCount": 5,
       "Unlocks": [
         "ArmourHull_Mk2",
@@ -327,6 +497,8 @@
       "ResearchLevel": 3,
       "ProducedIn": "MaterialsLab",
       "LabModule": "MaterialsLabModule",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "UnlocksCount": 5,
       "Unlocks": [
         "ArmourHull_Mk3",
@@ -344,12 +516,27 @@
       ]
     },
     {
+      "ResearchID": "OptronicsResearch",
+      "Name": "Optronics",
+      "Description": "Optical-computing lab for photonic processors and optics.",
+      "ResearchLevel": 3,
+      "ProducedIn": "OptronicsLab",
+      "LabModule": "OptronicsLab",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "UnlocksCount": 0,
+      "Unlocks": [],
+      "UnlocksNames": []
+    },
+    {
       "ResearchID": "PropulsionResearch",
       "Name": "Propulsion Research",
       "Description": "Physics-lab breakthrough enabling Mk2 engines, reactors and thrusters.",
       "ResearchLevel": 2,
       "ProducedIn": "PhysicsLab",
       "LabModule": "PhysicsLabModule",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "UnlocksCount": 4,
       "Unlocks": [
         "FuelTank_Mk2",
@@ -371,6 +558,8 @@
       "ResearchLevel": 3,
       "ProducedIn": "ElectronicsLab",
       "LabModule": "ElectronicsLabModule",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
       "UnlocksCount": 15,
       "Unlocks": [
         "AdvancedSensors_Mk3",
@@ -414,6 +603,34 @@
       "ResearchLevel": 2,
       "ProducedIn": "ScienceLab",
       "LabModule": "ScienceLabModule",
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "UnlocksCount": 0,
+      "Unlocks": [],
+      "UnlocksNames": []
+    },
+    {
+      "ResearchID": "ShieldBypassResearch",
+      "Name": "Shield Bypass",
+      "Description": "CONTRACT \u2014 shield-piercing tech, done by the Honour Circle.",
+      "ResearchLevel": 3,
+      "ProducedIn": "Contract:Researchers",
+      "LabModule": "Contract:Researchers",
+      "ResearchProvider": "HonorCircle",
+      "ExpertiseLevel": 3,
+      "UnlocksCount": 0,
+      "Unlocks": [],
+      "UnlocksNames": []
+    },
+    {
+      "ResearchID": "WormholeNavigationResearch",
+      "Name": "Wormhole Navigation",
+      "Description": "CONTRACT \u2014 fold-drive nav, done by the Frontier Alliance.",
+      "ResearchLevel": 3,
+      "ProducedIn": "Contract:Researchers",
+      "LabModule": "Contract:Researchers",
+      "ResearchProvider": "FrontierAlliance",
+      "ExpertiseLevel": 3,
       "UnlocksCount": 0,
       "Unlocks": [],
       "UnlocksNames": []

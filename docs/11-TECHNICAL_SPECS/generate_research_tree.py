@@ -46,6 +46,17 @@ R_NAME = {
     "AdvancedBioResearch": "Advanced Bio-Tech",
     "KineticWeaponResearch": "Kinetic Weapons",
     "BeamWeaponResearch": "Beam Weapons",
+    "IonPropulsionResearch": "Ion Propulsion",
+    "GravMaterialsResearch": "Gravity Materials",
+    "EncryptionResearch": "Encryption",
+    "OptronicsResearch": "Optronics",
+    "CyberneticsResearch": "Cybernetics",
+    "AntimatterContainmentResearch": "Antimatter Containment",
+    "WormholeNavigationResearch": "Wormhole Navigation",
+    "FusionMiniaturizationResearch": "Fusion Miniaturization",
+    "ShieldBypassResearch": "Shield Bypass",
+    "FactionMicroFabricationResearch": "Micro-Fabrication",
+    "DeepSpaceSurveyResearch": "Deep-Space Survey",
 }
 R_DESC = {
     "ResearchData": "The generic research milestone that unlocks early Mk2 upgrades.",
@@ -61,6 +72,17 @@ R_DESC = {
     "AdvancedBioResearch": "Advanced bio-tech giving Mk3 medical supplies and bioweapons.",
     "KineticWeaponResearch": "Projectile-lab specialization enabling railguns, missiles and torpedoes.",
     "BeamWeaponResearch": "Beam-lab specialization enabling lasers, plasma cannons and point-defence.",
+    "IonPropulsionResearch": "Ion-focus lab unlocking compact, high-ISP ion drives.",
+    "GravMaterialsResearch": "Gravity-materials lab producing exotic negative-mass alloys.",
+    "EncryptionResearch": "Encryption lab for unbreakable comms and secure computing.",
+    "OptronicsResearch": "Optical-computing lab for photonic processors and optics.",
+    "CyberneticsResearch": "Cybernetic augmentation and wetware interfaces.",
+    "AntimatterContainmentResearch": "CONTRACT — antimatter storage, done by the Scholars' Syndicate.",
+    "WormholeNavigationResearch": "CONTRACT — fold-drive nav, done by the Frontier Alliance.",
+    "FusionMiniaturizationResearch": "CONTRACT — pocket fusion, done by the Engineers' Collective.",
+    "ShieldBypassResearch": "CONTRACT — shield-piercing tech, done by the Honour Circle.",
+    "FactionMicroFabricationResearch": "CONTRACT — nanofacturing, done by the Merchant Coalition.",
+    "DeepSpaceSurveyResearch": "CONTRACT — long-range survey, done by the Traders' Guild.",
 }
 LAB_TO_DOMAIN = {
     "PhysicsLab": ("Propulsion", "PhysicsLabModule"), "MaterialsLab": ("Materials", "MaterialsLabModule"),
@@ -68,6 +90,12 @@ LAB_TO_DOMAIN = {
     "BiologyLab": ("Bio", "BiologyLabModule"), "ScienceLab": ("Base", "ScienceLabModule"),
     "ProjectileWeaponsLab": ("Projectile Weapons", "ProjectileWeaponsLab"),
     "BeamWeaponsLab": ("Beam Weapons", "BeamWeaponsLab"),
+    "IonPropulsionLab": ("Ion Propulsion", "IonPropulsionLab"),
+    "GravMaterialsLab": ("Gravity Materials", "GravMaterialsLab"),
+    "EncryptionLab": ("Encryption", "EncryptionLab"),
+    "OptronicsLab": ("Optronics", "OptronicsLab"),
+    "CyberneticsLab": ("Cybernetics", "CyberneticsLab"),
+    "Contract:Researchers": ("Contracted Research", "Contract:Researchers"),
 }
 
 # Clean display name for a non-research item (used to list unlocks)
@@ -119,6 +147,8 @@ def main():
             "ResearchLevel": r.get("ResearchLevel", 1),
             "ProducedIn": r.get("ProducedIn", "?"),
             "LabModule": LAB_TO_DOMAIN.get(r.get("ProducedIn"), ("", "?"))[1],
+            "ResearchProvider": r.get("ResearchProvider"),
+            "ExpertiseLevel": r.get("ExpertiseLevel", 1),
             "UnlocksCount": len(unlocks),
             "Unlocks": unlocks,
             "UnlocksNames": unlock_names,
@@ -127,7 +157,9 @@ def main():
     # ---- group nodes into research branches by lab (rl2 then rl3) ----
     branches = []
     branch_order = ["PhysicsLab", "MaterialsLab", "ElectronicsLab", "WeaponsLab",
-                    "BiologyLab", "ProjectileWeaponsLab", "BeamWeaponsLab"]
+                    "BiologyLab", "ProjectileWeaponsLab", "BeamWeaponsLab",
+                    "IonPropulsionLab", "GravMaterialsLab", "EncryptionLab",
+                    "OptronicsLab", "CyberneticsLab", "Contract:Researchers"]
     for lab in branch_order:
         dn, module = LAB_TO_DOMAIN[lab]
         lab_nodes = [n for n in nodes if n["ProducedIn"] == lab]
@@ -198,22 +230,27 @@ def write_html(doc):
     J = lambda o: json.dumps(o)
     # Build a per-branch card layout with rl2/rl3 and their unlock lists.
     cards = []
+    PROVIDER_NAME = {
+        "ScholarsSyndicate": "Scholars' Syndicate", "EngineersCollective": "Engineers' Collective",
+        "FrontierAlliance": "Frontier Alliance", "HonorCircle": "Honour Circle",
+        "MerchantCoalition": "Merchant Coalition", "TradersGuild": "Traders' Guild",
+    }
     for b in doc["Branches"]:
         lab = b["Lab"]
         nodes = [n for n in doc["ResearchNodes"] if n["ProducedIn"] == lab]
-        rl2 = next((n for n in nodes if n["ResearchLevel"] == 2), None)
-        rl3 = next((n for n in nodes if n["ResearchLevel"] == 3), None)
-        def unlock_chips(n):
-            if not n:
-                return ""
-            mk = "Mk2" if n["ResearchLevel"] == 2 else "Mk3"
+        def block(n):
+            mk = "Mk2" if n["ResearchLevel"] == 2 else "Mk3" if n["ResearchLevel"] == 3 else "Lv" + str(n["ResearchLevel"])
             chips = "".join(f'<span class="u">{u}</span>' for u in n["UnlocksNames"])
-            return (f'<div class="bmark {mk}"><div class="btitle">{mk} · {n["Name"]}'
-                    f'</div><div class="bdesc">{n["Description"]}</div>'
+            prov = ""
+            if n.get("ResearchProvider"):
+                prov = f'<div class="prov">🔬 {PROVIDER_NAME.get(n["ResearchProvider"], n["ResearchProvider"])}</div>'
+            return (f'<div class="bmark {mk}"><div class="btitle">{mk} · {n["Name"]}</div>'
+                    f'{prov}<div class="bdesc">{n["Description"]}</div>'
                     f'<div class="unchips">{chips}</div></div>')
+        blocks = "".join(block(n) for n in sorted(nodes, key=lambda x: x["ResearchLevel"]))
         cards.append(
             f'<div class="branch"><div class="blab">{b["Domain"]} Lab · {lab}</div>'
-            f'{unlock_chips(rl2)}{unlock_chips(rl3)}</div>'
+            f'{blocks}</div>'
         )
     html = f"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
@@ -231,6 +268,7 @@ def write_html(doc):
   .bmark.Mk3 {{ border-color:#f472b6; }}
   .btitle {{ font-weight:600; color:#f8fafc; margin-bottom:4px; }}
   .bdesc {{ color:#64748b; font-size:12px; margin-bottom:8px; }}
+  .prov {{ color:#fbbf24; font-size:11px; font-weight:600; margin-bottom:4px; }}
   .unchips {{ display:flex; flex-wrap:wrap; gap:4px; }}
   .u {{ background:#1e293b; border:1px solid #334155; border-radius:11px; padding:2px 8px;
        font-size:10px; color:#94a3b8; }}

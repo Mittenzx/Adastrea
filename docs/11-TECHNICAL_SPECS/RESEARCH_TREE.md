@@ -26,6 +26,23 @@ Different **science/research labs** produce **different breakthroughs**. Each br
 - **`KineticWeaponResearch`** — *Kinetic Weapons* (Mk3) — unlocks 6 crafts: Missile Launcher Mk2, Missile Launcher Mk3, Railgun Mk2, Railgun Mk3, Torpedo Launcher Mk2, Torpedo Launcher Mk3
 ### Beam Weapons — `BeamWeaponsLab` (`BeamWeaponsLab`)
 - **`BeamWeaponResearch`** — *Beam Weapons* (Mk3) — unlocks 6 crafts: Plasma Cannon Mk2, Plasma Cannon Mk3, Point Defence Laser Mk2, Point Defence Laser Mk3, Tri Laser Mk2, Tri Laser Mk3
+### Ion Propulsion — `IonPropulsionLab` (`IonPropulsionLab`)
+- **`IonPropulsionResearch`** — *Ion Propulsion* (Mk3) — unlocks 0 crafts: —
+### Gravity Materials — `GravMaterialsLab` (`GravMaterialsLab`)
+- **`GravMaterialsResearch`** — *Gravity Materials* (Mk3) — unlocks 0 crafts: —
+### Encryption — `EncryptionLab` (`EncryptionLab`)
+- **`EncryptionResearch`** — *Encryption* (Mk3) — unlocks 0 crafts: —
+### Optronics — `OptronicsLab` (`OptronicsLab`)
+- **`OptronicsResearch`** — *Optronics* (Mk3) — unlocks 0 crafts: —
+### Cybernetics — `CyberneticsLab` (`CyberneticsLab`)
+- **`CyberneticsResearch`** — *Cybernetics* (Mk3) — unlocks 0 crafts: —
+### Contracted Research — `Contract:Researchers` (`Contract:Researchers`)
+- **`AntimatterContainmentResearch`** — *Antimatter Containment* (Mk3) — unlocks 0 crafts: —
+- **`DeepSpaceSurveyResearch`** — *Deep-Space Survey* (Mk3) — unlocks 0 crafts: —
+- **`FactionMicroFabricationResearch`** — *Micro-Fabrication* (Mk3) — unlocks 0 crafts: —
+- **`FusionMiniaturizationResearch`** — *Fusion Miniaturization* (Mk3) — unlocks 0 crafts: —
+- **`ShieldBypassResearch`** — *Shield Bypass* (Mk3) — unlocks 0 crafts: —
+- **`WormholeNavigationResearch`** — *Wormhole Navigation* (Mk3) — unlocks 0 crafts: —
 ## Cross-Lab Coupling
 Reverse-engineering the crafting tree shows the strong couplings: several rl3 breakthroughs and *every* computer-family item require `QuantumProcessor_Mk2` (unlocked by ElectronicsLab **ComputingResearch**). So maxing one lab is impossible — late-game tech spans multiple labs.
 ## Research Items (all)
@@ -34,13 +51,24 @@ Reverse-engineering the crafting tree shows the strong couplings: several rl3 br
 | `AdvancedBioResearch` | Advanced Bio-Tech | 3 | BiologyLab | 2 |
 | `AdvancedDefenceResearch` | Advanced Defence Systems | 3 | WeaponsLab | 3 |
 | `AdvancedPropulsionResearch` | Advanced Propulsion Engines | 3 | PhysicsLab | 4 |
+| `AntimatterContainmentResearch` | Antimatter Containment | 3 | Contract:Researchers | 0 |
 | `BeamWeaponResearch` | Beam Weapons | 3 | BeamWeaponsLab | 6 |
 | `BioResearch` | Biotech Research | 2 | BiologyLab | 3 |
 | `ComputingResearch` | Computing Research | 2 | ElectronicsLab | 33 |
+| `CyberneticsResearch` | Cybernetics | 3 | CyberneticsLab | 0 |
+| `DeepSpaceSurveyResearch` | Deep-Space Survey | 3 | Contract:Researchers | 0 |
 | `DefenceResearch` | Defence Research | 2 | WeaponsLab | 5 |
+| `EncryptionResearch` | Encryption | 3 | EncryptionLab | 0 |
+| `FactionMicroFabricationResearch` | Micro-Fabrication | 3 | Contract:Researchers | 0 |
+| `FusionMiniaturizationResearch` | Fusion Miniaturization | 3 | Contract:Researchers | 0 |
+| `GravMaterialsResearch` | Gravity Materials | 3 | GravMaterialsLab | 0 |
+| `IonPropulsionResearch` | Ion Propulsion | 3 | IonPropulsionLab | 0 |
 | `KineticWeaponResearch` | Kinetic Weapons | 3 | ProjectileWeaponsLab | 6 |
 | `MaterialsResearch` | Materials Research | 2 | MaterialsLab | 5 |
 | `NanoMaterialsResearch` | Nano-Materials | 3 | MaterialsLab | 5 |
+| `OptronicsResearch` | Optronics | 3 | OptronicsLab | 0 |
 | `PropulsionResearch` | Propulsion Research | 2 | PhysicsLab | 4 |
 | `QuantumComputingResearch` | Quantum Computing | 3 | ElectronicsLab | 15 |
 | `ResearchData` | Research Data | 2 | ScienceLab | 0 |
+| `ShieldBypassResearch` | Shield Bypass | 3 | Contract:Researchers | 0 |
+| `WormholeNavigationResearch` | Wormhole Navigation | 3 | Contract:Researchers | 0 |
