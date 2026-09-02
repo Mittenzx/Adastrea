@@ -2,6 +2,9 @@
 
 #include "AdastreaHUD.h"
 #include "Ships/Spaceship.h"
+#include "Ships/SpaceshipAvatar.h"
+#include "Player/WorldInteractable.h"
+#include "Player/PlayerInteractableComponent.h"
 #include "Ships/SpaceshipDataAsset.h"
 #include "Trading/CargoComponent.h"
 #include "Trading/PlayerTraderComponent.h"
@@ -53,6 +56,8 @@ void AAdastreaHUD::DrawHUD()
 			}
 		}
 
+		ASpaceship* Ship = Cast<ASpaceship>(PC->GetPawn());
+
 		// Tick and draw the transient message (only over the normal flight HUD).
 		if (MessageDuration > 0.0f)
 		{
@@ -72,17 +77,21 @@ void AAdastreaHUD::DrawHUD()
 			}
 		}
 
-		ASpaceship* Ship = Cast<ASpaceship>(PC->GetPawn());
-
-	// Docked trading screen draws over everything when shown.
-	if (bShowTradeScreen)
-	{
-		if (Ship)
+		// Draw the worldwide interactable prompt (only when not flying a ship).
+		if (CurrentInteractable && !Ship)
 		{
-			DrawTradeScreen(PC, Cast<AAdastreaPlayerController>(PC), Ship);
+			DrawInteractPrompt(PC);
 		}
-		return;
-	}
+
+		// Docked trading screen draws over everything when shown.
+		if (bShowTradeScreen)
+		{
+			if (Ship)
+			{
+				DrawTradeScreen(PC, Cast<AAdastreaPlayerController>(PC), Ship);
+			}
+			return;
+		}
 
 	// Ship-select screen draws over everything when shown.
 	if (bShowShipSelect)
@@ -1205,4 +1214,50 @@ void AAdastreaHUD::DrawTransientMessage(APlayerController* PC)
 
 	DrawRect(FLinearColor(0.0f, 0.0f, 0.0f, 0.55f), X - Pad, Y - Pad, TextW + Pad * 2.0f, TextH + Pad * 2.0f);
 	DrawText(Message, Colour, X, Y, MsgFont, 0.8f);
+}
+
+void AAdastreaHUD::SetCurrentInteractable(AActor* InActor)
+{
+	CurrentInteractable = InActor;
+}
+
+void AAdastreaHUD::DrawInteractPrompt(APlayerController* PC)
+{
+	if (!Canvas || !CurrentInteractable)
+	{
+		return;
+	}
+
+	const IWorldInteractable* Interactable = Cast<IWorldInteractable>(CurrentInteractable);
+	if (!Interactable)
+	{
+		// Actor may carry a UPlayerInteractableComponent.
+		if (UPlayerInteractableComponent* Comp = CurrentInteractable->FindComponentByClass<UPlayerInteractableComponent>())
+		{
+			Interactable = Comp;
+		}
+	}
+	if (!Interactable)
+	{
+		return;
+	}
+
+	const FText Prompt = Interactable->GetInteractPrompt_Implementation();
+	UFont* MsgFont = GEngine->GetSmallFont();
+
+	int32 VW = 0;
+	int32 VH = 0;
+	if (PC) { PC->GetViewportSize(VW, VH); }
+
+	const FString Line = FString::Printf(TEXT("%s   [E]"), *Prompt.ToString());
+	float TextW = 0.0f;
+	float TextH = 0.0f;
+	Canvas->StrLen(MsgFont, Line, TextW, TextH);
+
+	const float X = (VW - TextW) * 0.5f;
+	const float Y = VH - 140.0f;
+	const float Pad = 10.0f;
+
+	DrawRect(FLinearColor(0.0f, 0.0f, 0.0f, 0.6f), X - Pad, Y - Pad, TextW + Pad * 2.0f, TextH + Pad * 2.0f);
+	DrawText(Line, FLinearColor(0.4f, 0.95f, 1.0f, 1.0f), X, Y, MsgFont, 0.85f);
 }

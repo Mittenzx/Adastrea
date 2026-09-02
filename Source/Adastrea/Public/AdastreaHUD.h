@@ -76,6 +76,17 @@ public:
 	/** Draw the current transient message (called from DrawHUD while active). */
 	void DrawTransientMessage(APlayerController* PC);
 
+	/** Set the currently-prompted interactable actor (or null to clear the prompt). */
+	UFUNCTION(BlueprintCallable, Category="HUD|Interaction")
+	void SetCurrentInteractable(AActor* InActor);
+
+	/** The actor currently being prompted for interaction (may be null). */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|Interaction")
+	AActor* CurrentInteractable;
+
+	/** Draw the interactable prompt near the avatar (called from DrawHUD while on foot). */
+	void DrawInteractPrompt(APlayerController* PC);
+
 	/** The current transient message (cleared when expired). */
 	UPROPERTY(BlueprintReadOnly, Category="HUD|Message")
 	FString PendingMessage;

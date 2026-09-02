@@ -1,6 +1,8 @@
 #include "Ships/SpaceshipInterior.h"
+#include "Ships/Spaceship.h"
 #include "Ships/SpaceshipAvatar.h"
 #include "Player/AdastreaPlayerController.h"
+#include "Player/PlayerInteractableComponent.h"
 #include "Components/BoxComponent.h"
 #include "AdastreaLog.h"
 
@@ -28,12 +30,18 @@ ASpaceshipInterior::ASpaceshipInterior()
     ExitTrigger->SetCollisionResponseToAllChannels(ECR_Ignore);
     ExitTrigger->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
     ExitTrigger->SetGenerateOverlapEvents(true);
-    ExitTrigger->OnComponentBeginOverlap.AddDynamic(this, &ASpaceshipInterior::OnExitTriggerOverlap);
+        ExitTrigger->OnComponentBeginOverlap.AddDynamic(this, &ASpaceshipInterior::OnExitTriggerOverlap);
 
-    EntryLocation = FVector(0, 0, 200); // Example entry point
-    EntryRotation = FRotator(0, 0, 0);
-    ExitLocation = FVector(0, 0, 100); // Default exit point (same as entry)
-}
+        // Worldwide E-interactable at the cockpit seat: pressing E also returns to the ship.
+        SeatInteractable = CreateDefaultSubobject<UPlayerInteractableComponent>(TEXT("SeatInteractable"));
+        SeatInteractable->InteractPrompt = NSLOCTEXT("Adastrea", "BoardCockpit", "Board Cockpit");
+        SeatInteractable->InteractionRadius = 250.0f;
+        SeatInteractable->OnInteracted.AddDynamic(this, &ASpaceshipInterior::OnSeatInteract);
+
+        EntryLocation = FVector(0, 0, 200); // Example entry point
+        EntryRotation = FRotator(0, 0, 0);
+        ExitLocation = FVector(0, 0, 100); // Default exit point (same as entry)
+    }
 
 void ASpaceshipInterior::OnConstruction(const FTransform& Transform)
 {
@@ -98,5 +106,26 @@ void ASpaceshipInterior::OnExitTriggerOverlap(UPrimitiveComponent* OverlappedCom
             UE_LOG(LogAdastrea, Log, TEXT("InteriorExitTrigger: avatar reached the cockpit seat -> returning to ship."));
             PC->ExitShipInterior(SourceShip);
         }
+    }
+}
+void ASpaceshipInterior::OnSeatInteract(AAdastreaPlayerController* PC)
+{
+    if (!PC)
+    {
+        return;
+    }
+
+    // The avatar interacting with the seat returns to the ship its SourceShip points at.
+    // Guard: only act when the player is the on-foot avatar standing in this interior.
+    ASpaceshipAvatar* Avatar = Cast<ASpaceshipAvatar>(PC->GetPawn());
+    if (!Avatar || !Avatar->CurrentInterior || Avatar->CurrentInterior != this)
+    {
+        return;
+    }
+
+    if (ASpaceship* SourceShip = Avatar->SourceShip)
+    {
+        UE_LOG(LogAdastrea, Log, TEXT("InteriorSeat: E interact -> returning to %s cockpit."), *SourceShip->GetName());
+        PC->ExitShipInterior(SourceShip);
     }
 }

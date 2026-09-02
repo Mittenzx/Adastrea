@@ -5,6 +5,7 @@
 #include "SpaceshipInterior.generated.h"
 
 class UBoxComponent;
+class AAdastreaPlayerController;
 
 /**
  * Represents the walkable interior space of a spaceship
@@ -59,10 +60,14 @@ protected:
     virtual void OnConstruction(const FTransform& Transform) override;
 
     /** Called when the avatar overlaps the cockpit/seat trigger -> return to ship. */
-    UFUNCTION()
-    void OnExitTriggerOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
-                              UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
-                              bool bFromSweep, const FHitResult& SweepResult);
+        UFUNCTION()
+        void OnExitTriggerOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+                                  UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
+                                  bool bFromSweep, const FHitResult& SweepResult);
+
+        /** Called when the avatar uses E on the cockpit seat -> return to ship. */
+        UFUNCTION()
+        void OnSeatInteract(AAdastreaPlayerController* PC);
 
     // World location where players spawn when entering the interior
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
@@ -85,8 +90,12 @@ protected:
     TObjectPtr<UBoxComponent> InteriorVolume;
 
     /** Trigger volume at the cockpit/seat. Avatar walking into it returns to the ship. */
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
-    TObjectPtr<UBoxComponent> ExitTrigger;
+        UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
+        TObjectPtr<UBoxComponent> ExitTrigger;
+
+        /** Worldwide interactable on the cockpit seat: E also returns to the ship. */
+        UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
+        TObjectPtr<class UPlayerInteractableComponent> SeatInteractable;
 
 public:
     // Walkable floor dimensions

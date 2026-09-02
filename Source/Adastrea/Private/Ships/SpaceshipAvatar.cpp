@@ -3,7 +3,6 @@
 #include "Ships/SpaceshipAvatar.h"
 #include "Components/InputComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/SkeletalMeshComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -15,7 +14,12 @@
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipInterior.h"
 #include "Player/AdastreaPlayerController.h"
+#include "Player/PlayerInteractableComponent.h"
+#include "Player/WorldInteractable.h"
+#include "AdastreaHUD.h"
 #include "AdastreaLog.h"
+#include "Engine/World.h"
+#include "EngineUtils.h"
 
 ASpaceshipAvatar::ASpaceshipAvatar()
 {
@@ -36,9 +40,9 @@ ASpaceshipAvatar::ASpaceshipAvatar()
 	// Camera boom + follow camera.
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 380.0f;
+	CameraBoom->TargetArmLength = 500.0f;
 	CameraBoom->bUsePawnControlRotation = true;  // rotate boom with controller (mouse look)
-	CameraBoom->SetRelativeRotation(FRotator(-10.0f, 0.0f, 0.0f)); // slight downward tilt
+	CameraBoom->SetRelativeRotation(FRotator(-12.0f, 0.0f, 0.0f)); // slight downward tilt
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
@@ -50,15 +54,20 @@ ASpaceshipAvatar::ASpaceshipAvatar()
 void ASpaceshipAvatar::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	// Keep the interactable prompt current every frame.
+	if (APlayerController* PC = Cast<APlayerController>(GetController()))
+	{
+		UpdateInteractableScan(PC);
+	}
 }
 
 void ASpaceshipAvatar::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	// Reliable legacy key bindings so the avatar walks/looks without requiring
-	// (possibly absent) Blueprint-configured input-action assets. This mirrors
-	// how the ship core controls (Tab/M/map/trading) are bound directly.
+	// Reliable legacy key bindings so the avatar walks/looks/interacts without
+	// requiring (possibly absent) Blueprint-configured input-action assets.
 	if (InputComponent)
 	{
 		// Movement
@@ -71,10 +80,16 @@ void ASpaceshipAvatar::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		InputComponent->BindKey(EKeys::D, IE_Pressed, this, &ASpaceshipAvatar::MoveRight);
 		InputComponent->BindKey(EKeys::D, IE_Repeat, this, &ASpaceshipAvatar::MoveRight);
 		InputComponent->BindKey(EKeys::SpaceBar, IE_Pressed, this, &ASpaceshipAvatar::Jump);
+		// Sprint / couch
+		InputComponent->BindKey(EKeys::LeftShift, IE_Pressed, this, &ASpaceshipAvatar::SprintStart);
+		InputComponent->BindKey(EKeys::LeftShift, IE_Released, this, &ASpaceshipAvatar::SprintEnd);
+		InputComponent->BindKey(EKeys::C, IE_Pressed, this, &ASpaceshipAvatar::CrouchStart);
+		InputComponent->BindKey(EKeys::C, IE_Released, this, &ASpaceshipAvatar::CrouchEnd);
 		// Look
 		InputComponent->BindAxis("Turn", this, &ASpaceshipAvatar::Turn);
 		InputComponent->BindAxis("LookUp", this, &ASpaceshipAvatar::LookUp);
-		// Sit down / return to cockpit
+		// Worldwide interact (E) and return-to-seat (V)
+		InputComponent->BindKey(EKeys::E, IE_Pressed, this, &ASpaceshipAvatar::Interact);
 		InputComponent->BindKey(EKeys::V, IE_Pressed, this, &ASpaceshipAvatar::SitDown);
 	}
 
@@ -110,6 +125,26 @@ void ASpaceshipAvatar::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	}
 }
 
+void ASpaceshipAvatar::Move(const FInputActionValue& Value)
+{
+	const FVector2D Axis = Value.Get<FVector2D>();
+	if (APlayerController* PC = Cast<APlayerController>(GetController()))
+	{
+		const FRotator YawRot(0.0f, PC->GetControlRotation().Yaw, 0.0f);
+		const FVector Forward = FRotationMatrix(YawRot).GetUnitAxis(EAxis::X);
+		const FVector Right = FRotationMatrix(YawRot).GetUnitAxis(EAxis::Y);
+		AddMovementInput(Forward, Axis.X);
+		AddMovementInput(Right, Axis.Y);
+	}
+}
+
+void ASpaceshipAvatar::Look(const FInputActionValue& Value)
+{
+	const FVector2D LookAxis = Value.Get<FVector2D>();
+	AddControllerYawInput(LookAxis.X);
+	AddControllerPitchInput(LookAxis.Y);
+}
+
 void ASpaceshipAvatar::MoveForward() { AddMovementInput(GetActorForwardVector(), 1.0f); }
 void ASpaceshipAvatar::MoveBack()    { AddMovementInput(GetActorForwardVector(), -1.0f); }
 void ASpaceshipAvatar::MoveLeft()    { AddMovementInput(GetActorRightVector(), -1.0f); }
@@ -129,26 +164,114 @@ void ASpaceshipAvatar::LookUp(float Value)
 	}
 }
 
-void ASpaceshipAvatar::Move(const FInputActionValue& Value)
+void ASpaceshipAvatar::SprintStart()
 {
-	const FVector2D Axis = Value.Get<FVector2D>();
-
-	// Walk relative to the controller's facing (forward/right).
-	if (APlayerController* PC = Cast<APlayerController>(GetController()))
+	if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
 	{
-		const FRotator YawRot(0.0f, PC->GetControlRotation().Yaw, 0.0f);
-		const FVector Forward = FRotationMatrix(YawRot).GetUnitAxis(EAxis::X);
-		const FVector Right = FRotationMatrix(YawRot).GetUnitAxis(EAxis::Y);
-		AddMovementInput(Forward, Axis.X);
-		AddMovementInput(Right, Axis.Y);
+		MoveComp->MaxWalkSpeed = WalkSpeed * SprintMultiplier;
+	}
+}
+void ASpaceshipAvatar::SprintEnd()
+{
+	if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
+	{
+		MoveComp->MaxWalkSpeed = WalkSpeed;
+	}
+}
+void ASpaceshipAvatar::CrouchStart()
+{
+	if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
+	{
+		MoveComp->MaxWalkSpeed = WalkSpeed * CrouchMultiplier;
+		MoveComp->bWantsToCrouch = true;
+	}
+}
+void ASpaceshipAvatar::CrouchEnd()
+{
+	if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
+	{
+		MoveComp->MaxWalkSpeed = WalkSpeed;
+		MoveComp->bWantsToCrouch = false;
 	}
 }
 
-void ASpaceshipAvatar::Look(const FInputActionValue& Value)
+void ASpaceshipAvatar::SetMovementTuning(float InWalkSpeed, float InSprintMultiplier, float InCrouchMultiplier)
 {
-	const FVector2D LookAxis = Value.Get<FVector2D>();
-	AddControllerYawInput(LookAxis.X);
-	AddControllerPitchInput(LookAxis.Y);
+	WalkSpeed = InWalkSpeed;
+	SprintMultiplier = InSprintMultiplier;
+	CrouchMultiplier = InCrouchMultiplier;
+	if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
+	{
+		MoveComp->MaxWalkSpeed = WalkSpeed;
+	}
+}
+
+void ASpaceshipAvatar::UpdateInteractableScan(APlayerController* PC)
+{
+	AActor* Best = nullptr;
+	float BestDist = InteractionScanRadius;
+	const FVector AvatarLoc = GetActorLocation();
+
+	// Iterate the world for actors that are interactable: either they implement
+	// IWorldInteractable directly, or they carry a UPlayerInteractableComponent.
+	for (TActorIterator<AActor> It(GetWorld()); It; ++It)
+	{
+		AActor* Candidate = *It;
+		if (!Candidate || Candidate == this)
+		{
+			continue;
+		}
+
+		float CandidateDist = TNumericLimits<float>::Max();
+		if (Candidate->Implements<UWorldInteractable>())
+		{
+			CandidateDist = FVector::Dist(AvatarLoc, Candidate->GetActorLocation());
+		}
+		else if (UPlayerInteractableComponent* Comp = Candidate->FindComponentByClass<UPlayerInteractableComponent>())
+		{
+			CandidateDist = FVector::Dist(AvatarLoc, Comp->GetInteractionWorldPoint());
+		}
+		else
+		{
+			continue;
+		}
+
+		if (CandidateDist < BestDist)
+		{
+			BestDist = CandidateDist;
+			Best = Candidate;
+		}
+	}
+
+	// Notify the HUD when the interactable under the cursor changes.
+	if (Best != CurrentInteractable)
+	{
+		CurrentInteractable = Best;
+		if (AAdastreaHUD* HUD = PC->GetHUD<AAdastreaHUD>())
+		{
+			HUD->SetCurrentInteractable(Best);
+		}
+	}
+}
+
+void ASpaceshipAvatar::Interact()
+{
+	if (!CurrentInteractable)
+	{
+		return;
+	}
+	if (AAdastreaPlayerController* PC = Cast<AAdastreaPlayerController>(GetController()))
+	{
+		// Prefer a UPlayerInteractableComponent if present, else use the actor-level interface.
+		if (UPlayerInteractableComponent* Comp = CurrentInteractable->FindComponentByClass<UPlayerInteractableComponent>())
+		{
+			Comp->Interact_Implementation(PC);
+		}
+		else if (CurrentInteractable->Implements<UWorldInteractable>())
+		{
+			IWorldInteractable::Execute_Interact(CurrentInteractable, PC);
+		}
+	}
 }
 
 void ASpaceshipAvatar::SitDown()
