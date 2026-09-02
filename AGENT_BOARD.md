@@ -1456,3 +1456,32 @@ reads integrated/unified. Committed `e100ac9`, pytest 86, QA-clean.
 
 _Doing next (assets): stronger unified-form-language pass on add-on hull pieces, or
 next task per user._
+
+## [2026-09-02T21:05Z] — FROM: crafting → TO: main
+**Topic**: Niche-lab expansion + contracted research (guild/expertise layer)
+
+Extended the niche-lab/upgradeable-lab model across every domain, and added the
+"the more niche the research, the more you need OUTSIDE expertise" layer:
+
+1) **5 more niche sub-labs** (each a craftable Tier-7 module + its rl3 breakthrough):
+   IonPropulsionLab (Physics→propulsion), GravMaterialsLab (Materials), EncryptionLab
+   & OptronicsLab (Electronics), CyberneticsLab (Biology).
+
+2) **CONTRACT-GATED DEEP RESEARCH (ExpertiseLevel 3)** — 6 breakthroughs that cannot
+   be researched in any in-house lab; must be contracted to a guild/company with the
+   staff + facilities. Produced in a new `Contract:Researchers` channel by a provider
+   (reuses existing DA_Way_* guild assets): Antimatter Containment (Scholars'
+   Syndicate), Wormhole Navigation (Frontier Alliance), Fusion Miniaturization
+   (Engineers' Collective), Shield Bypass (Honour Circle), Micro-Fabrication (Merchant
+   Coalition), Deep-Space Survey (Traders' Guild).
+
+Every recipe now carries `ResearchProvider` + `ExpertiseLevel` (1=in-house,
+2=niche-lab, 3=contract) with validation (contract must have a valid provider +
+produce in Contract:Researchers). Reintroduces a faction/guild research hook on top
+of the removed MVP reputation system.
+
+215→315 recipes (schema 1.8.0), research tree 13 branches / 24 nodes, diagrams show
+the guild provider, 15 pytest pass. Committed + pushed `872f0fd`.
+
+_Doing next: wire the ExpertContract/ResearchProvider into research-tree UX (which
+guild, rep gate), or start the UE C++ CraftingManager once a build is available._
