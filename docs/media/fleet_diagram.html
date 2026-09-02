@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adastrea — Ship Roster</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:#020617; color:#e2e8f0;
+    font-family:'JetBrains Mono', monospace;
+    padding:40px 24px;
+  }
+  .wrap { max-width:1180px; margin:0 auto; }
+  .header { display:flex; align-items:center; gap:14px; margin-bottom:6px; }
+  .dot { width:12px; height:12px; border-radius:50%; background:#22d3ee;
+         box-shadow:0 0 12px #22d3ee; animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+  h1 { font-size:22px; font-weight:700; letter-spacing:.5px; }
+  .sub { color:#64748b; font-size:11px; margin-bottom:24px; }
+  .card { border:1px solid #1e293b; border-radius:14px; padding:22px;
+          background:linear-gradient(180deg,#0b1220 0%,#020617 100%);
+          overflow:hidden; }
+  .row-title { font-size:13px; font-weight:700; color:#94a3b8;
+               text-transform:uppercase; letter-spacing:1.5px;
+               margin:26px 0 12px; display:flex; align-items:center; gap:10px; }
+  .row-title .bar { width:8px; height:16px; border-radius:2px; }
+  .ships { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; }
+  .ship { border:1.5px solid; border-radius:10px; padding:12px 12px 10px;
+          background:rgba(15,23,42,0.6); position:relative; }
+  .ship .nm { font-size:11px; font-weight:600; margin-bottom:2px; }
+  .ship .id { font-size:8.5px; color:#94a3b8; opacity:.8; }
+  .ship .cls { font-size:8px; color:#64748b; margin-top:6px;
+               text-transform:uppercase; letter-spacing:.8px; }
+  .ship .label { position:absolute; top:60px; right:8px; }
+  /* color themes per line */
+  .warship  { border-color:#fb7185; } .warship .nm{color:#fda4af}
+  .fighter  { border-color:#22d3ee; } .fighter .nm{color:#67e8f9}
+  .cargo    { border-color:#34d399; } .cargo .nm{color:#6ee7b7}
+  .opirate  { border-color:#fbbf24; } .opirate .nm{color:#fcd34d}
+  .ind      { border-color:#a78bfa; } .ind .nm{color:#c4b5fd}
+  .reads    { background:#020617; margin-top:8px; font-size:9px; color:#64748b;
+              border:1px solid #1e293b; border-radius:8px; padding:10px; line-height:1.7; }
+  .legend { display:flex; gap:18px; flex-wrap:wrap; margin-top:18px; font-size:9.5px; color:#94a3b8;}
+  .lg-item { display:flex; align-items:center; gap:7px;}
+  .lg-swatch { width:14px; height:10px; border-radius:3px; border:1.5px solid;}
+  .footer { text-align:center; color:#334155; font-size:9px; margin-top:22px; }
+  .stat { font-size:10px; color:#7dd3fc; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header"><div class="dot"></div><h1>Adastrea Ship Roster</h1><span class="stat">17 built</span></div>
+  <div class="sub">Procedurally generated modular fleet · size classes small → medium → corvette → large · each ship = carcass + independent part meshes</div>
+
+  <div class="card">
+
+    <div class="row-title"><div class="bar" style="background:#fb7185"></div>Warships — dedicated combat</div>
+    <div class="ships">
+      <div class="ship warship"><div class="nm">Escort_01</div><div class="id">SM_Ship_Escort_01</div><div class="cls">small · cannon escort</div></div>
+      <div class="ship warship"><div class="nm">Destroyer_01</div><div class="id">SM_Ship_Destroyer_01</div><div class="cls">corvette · tri-laser</div></div>
+      <div class="ship warship"><div class="nm">Battleship_01</div><div class="id">SM_Ship_Battleship_01</div><div class="cls">large · heavy cannon</div></div>
+      <div class="ship warship"><div class="nm">Gunship_02</div><div class="id">SM_Ship_Gunship_02</div><div class="cls">small · assault</div></div>
+    </div>
+
+    <div class="row-title"><div class="bar" style="background:#22d3ee"></div>Fighters</div>
+    <div class="ships">
+      <div class="ship fighter"><div class="nm">Fighter_01</div><div class="id">SM_Ship_Fighter_01</div><div class="cls">small · interceptor</div></div>
+      <div class="ship fighter"><div class="nm">Fighter_02 Arcangel</div><div class="id">SM_Ship_Fighter_02_Arcangel</div><div class="cls">small · ion/tri-laser demo</div></div>
+    </div>
+
+    <div class="row-title"><div class="bar" style="background:#34d399"></div>Cargo / Trading</div>
+    <div class="ships">
+      <div class="ship cargo"><div class="nm">Courier_01</div><div class="id">SM_Ship_Courier_01</div><div class="cls">small · fast courier</div></div>
+      <div class="ship cargo"><div class="nm">Smuggler_01</div><div class="id">SM_Ship_Smuggler_01</div><div class="cls">small · runner</div></div>
+      <div class="ship cargo"><div class="nm">Trader_01</div><div class="id">SM_Ship_Trader_01</div><div class="cls">medium · starter freighter</div></div>
+      <div class="ship cargo"><div class="nm">Freighter_01</div><div class="id">SM_Ship_Freighter_01</div><div class="cls">medium · container</div></div>
+      <div class="ship cargo"><div class="nm">CargoFreighter_01</div><div class="id">SM_Ship_CargoFreighter_01</div><div class="cls">medium · containerized</div></div>
+      <div class="ship cargo"><div class="nm">Freighter_02 Bulkhauler</div><div class="id">SM_Ship_Freighter_02_Bulkhauler</div><div class="cls">medium · bulk-tank variant</div></div>
+      <div class="ship cargo"><div class="nm">HeavyHauler_01</div><div class="id">SM_Ship_HeavyHauler_01</div><div class="cls">corvette · bulk + self-defence</div></div>
+      <div class="ship cargo"><div class="nm">BulkCarrier_01</div><div class="id">SM_Ship_BulkCarrier_01</div><div class="cls">large · max volume</div></div>
+    </div>
+
+    <div class="row-title"><div class="bar" style="background:#a78bfa"></div>Industrial / Special</div>
+    <div class="ships">
+      <div class="ship ind"><div class="nm">Miner_01</div><div class="id">SM_Ship_Miner_01</div><div class="cls">corvette · drill + mining laser</div></div>
+      <div class="ship ind"><div class="nm">Corvette_01</div><div class="id">SM_Ship_Corvette_01</div><div class="cls">corvette · multi-role</div></div>
+      <div class="ship ind"><div class="nm">Generationship_01</div><div class="id">SM_Ship_Generationship_01</div><div class="cls">large · habitation ring</div></div>
+    </div>
+
+    <div class="legend">
+      <div class="lg-item"><div class="lg-swatch" style="border-color:#fb7185"></div>Warship</div>
+      <div class="lg-item"><div class="lg-swatch" style="border-color:#22d3ee"></div>Fighter</div>
+      <div class="lg-item"><div class="lg-swatch" style="border-color:#34d399"></div>Cargo/Trade</div>
+      <div class="lg-item"><div class="lg-swatch" style="border-color:#a78bfa"></div>Industrial</div>
+      <div class="lg-item" style="color:#94a3b8">each ship exports modular parts + a ready-to-place <b>_Assembled</b> mesh</div>
+    </div>
+
+    <div class="reads">Each ship is a <b>carcass</b> (size class) + scaled add-on parts (engine/cargo/weapon/sensor/reactor/drill/canopy), each a separate mesh/FBX with its own pivot + material so UE treats parts as independent (X4-style): warships red, fighters cyan, cargo green, industrial violet.</div>
+
+  </div>
+  <div class="footer">Adastrea · UE 5.8 · procedural asset pipeline · generated 2026-09-02</div>
+</div>
+</body>
+</html>
