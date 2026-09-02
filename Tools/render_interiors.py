@@ -1,6 +1,6 @@
 """Interior PBR preview — renders each SM_Int_* from an interior viewpoint
 with its Int_* emissive lighting so the walkable space reads clearly."""
-import os, math
+import os, math, sys
 import numpy as np
 from PIL import Image
 
@@ -15,6 +15,7 @@ INTERIORS = {
     "SM_Int_Standard_Corridor":      ("T_Int_Wall", "T_Int_Glow"),
     "SM_Int_Freighter_EngineRoom":   ("T_Int_Wall", "T_Int_Glow"),
     "SM_Int_Standard_Airlock":       ("T_Int_Wall", "T_Int_Glow"),
+    "SM_Int_Xenomorph_AlienHold":    ("T_Alien_Wall", "T_Alien_Wall"),
 }
 # auto-add any SM_Int_* OBJ found on disk (so future interiors render w/o editing)
 if os.path.isdir(OBJDIR):
@@ -125,7 +126,10 @@ def render(name, wall_tex, glow_tex, W=1000, H=760):
     Image.fromarray((fb*255).astype(np.uint8)).save(out)
     print("rendered", os.path.basename(out))
 
+_only = sys.argv[1] if len(sys.argv) > 1 else None
 for name,(w,g) in INTERIORS.items():
+    if _only and _only not in name:
+        continue
     try:
         render(name,w,g)
     except Exception as e:

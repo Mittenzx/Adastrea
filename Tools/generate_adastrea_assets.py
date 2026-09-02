@@ -2177,6 +2177,56 @@ def build_airlock(prefix):
     return [(jo, out)]
 
 
+
+def build_alien_hold(prefix):
+    """Old-school (Alien/Alien) interior module — a single grimy hold/corridor.
+    Brute riveted metal, exposed overhead ducting + pipe runs, floor grating,
+    a bulkhead/cargo pod, junction boxes, and moody COOL strip-lights with an
+    AMBER accent glow. Utilitarian, worn, dim — the Alien sleepler/industrial
+    look, distinct from the modern grey corridors."""
+    k = 1.0
+    parts = []
+    L = 340; W = 110; H = 110
+    # shell: riveted metal wall/floor/ceiling plates
+    floor = box("AH_Floor", L, W, 7*k, loc=(0, 0, 0)); bevel(floor, 2, 2); parts.append(floor)
+    for side in (-1, 1):
+        w = box(f"AH_Wall{side}", 8*k, W, H, loc=(side*L/2, 0, H/2)); bevel(w, 2, 2); parts.append(w)
+    ceil = box("AH_Ceil", L, W, 6*k, loc=(0, 0, H)); bevel(ceil, 2, 2); parts.append(ceil)
+    # exposed overhead ducting + conduit runs (the Alien look)
+    for x in (-120, -60, 0, 60, 120):
+        duct = box(f"AH_Duct{x}", 40*k, 22*k, 10*k, loc=(x, 0, H-18*k)); bevel(duct, 2, 1)
+        parts.append(duct)
+    for x in range(-150, 151, 50):
+        pipe = cyl(f"AH_Pipe{x}", 3.5*k, 30*k, loc=(x, 0, H-8*k),
+                   rot=(math.radians(90), 0, 0), verts=10)
+        parts.append(pipe)
+    # ceiling strip-lights (cool) + amber accent lights
+    for x in (-140, -70, 0, 70, 140):
+        parts.append(box(f"AH_Light{x}", 34*k, 6*k, 3*k, loc=(x, 0, H-4*k)))
+        # amber accent glow strip on the side walls
+        for side in (-1, 1):
+            parts.append(box(f"AH_Amber{x}_{side}", 34*k, 3*k, 4*k,
+                             loc=(x, side*(W/2-6*k), 40*k)))
+    # bulkhead frames + riveted panel ribs down the walls
+    for x in range(-150, 151, 50):
+        ring = box(f"AH_Ring{x}", W, 6*k, H-10*k, loc=(x, 0, H/2)); bevel(ring, 1, 1)
+        parts.append(ring)
+    # a large cryo/cargo pod (Alien's cryo-tubes room): banked cylinders
+    pod = box("AH_PodBase", 60*k, 80*k, 12*k, loc=(0, -28*k, 25*k)); bevel(pod, 3, 2)
+    parts.append(pod)
+    for i, dy in enumerate(range(-30, 31, 20)):
+        cryo = cyl(f"AH_Cryo{i}", 8*k, 55*k, loc=(-18*k, dy-30*k, 52*k), verts=14)
+        parts.append(cryo)
+    # floor grating ribs
+    for x in range(-160, 161, 20):
+        parts.append(box(f"AH_Grate{x}", 4*k, W-10*k, 3*k, loc=(x, 0, 8*k)))
+    # junction boxes
+    for x in (-130, 0, 130):
+        parts.append(box(f"AH_Jbox{x}", 16*k, 8*k, 8*k, loc=(x, 34*k, 70*k)))
+    jo, out = finalize_part(parts, prefix + "_AlienHold", "M_Interior_Alien")
+    return [(jo, out)]
+
+
 def build_interior_set():
     """Build all interior instances (cockpit, crew quarters, hab, corridor, +
     engineering bay, airlock)."""
@@ -2188,6 +2238,8 @@ def build_interior_set():
     # new interior roles
     results += build_engineering_bay('medium', "SM_Int_Freighter_EngineRoom")
     results += build_airlock("SM_Int_Standard")
+    # old-school (Alien) interstitial hold — unique brute-metal squeeze
+    results += build_alien_hold("SM_Int_Xenomorph")
     return results
 
 
@@ -2345,6 +2397,16 @@ def main():
     gen_texture_set("Int_Cockpit", {'base':[0.25,0.27,0.3], 'accent':[0.18,0.2,0.24], 'emissive':[0.1,0.6,0.9],
                                     'cells':8, 'windows':{'cols':16,'frac':0.5,'cool':[0.2,0.7,1.0]},
                                     'neon':[0.15,0.7,1.0], 'neon_thick':2}, 1024, seed=153)
+    # OLD-SCHOOL (Alien/Alien) interstitial: brute riveted metal, heavy grime,
+    # dark gunmetal panels with a moody COOL strip-light + amber accent glow.
+    gen_texture_set("Alien_Wall", {'base':[0.24,0.26,0.28], 'accent':[0.45,0.2,0.12], 'emissive':[0.2,0.5,0.7],
+                                   'cells':7, 'grime':True, 'cable':{'runs':7}, 'grime':True,
+                                   'neon':[0.25,0.65,0.85], 'neon_thick':2}, 1024, seed=200)
+    gen_texture_set("Alien_Deck", {'base':[0.16,0.16,0.18], 'accent':[0.3,0.28,0.24], 'emissive':[0.08,0.1,0.14],
+                                   'cells':12, 'grime':True, 'cable':{'runs':6}, 'grime':True,
+                                   'hazard':{'bands':3}}, 1024, seed=201)
+    gen_texture_set("Alien_Ceil", {'base':[0.2,0.21,0.23], 'accent':[0.35,0.3,0.28], 'emissive':[0.15,0.45,0.6],
+                                   'cells':8, 'grime':True, 'cable':{'runs':8}, 'grime':True}, 1024, seed=202)
     # Combat / weapon-fx textures
     gen_texture_set("Combat_Plasma", {'base':[0.9,0.3,0.2], 'accent':[0.5,0.1,0.05], 'emissive':[1.0,0.2,0.1],
                                       'neon':[1.0,0.2,0.1], 'neon_thick':3, 'hazard':{'bands':2}}, 512, seed=160)
