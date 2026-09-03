@@ -693,7 +693,7 @@ def export_fbx(obj, outname):
     return out
 
 
-def finalize_part(objs, outname, matname, origin='ORIGIN_CENTER_OF_VOLUME'):
+def finalize_part(objs, outname, matname, origin='ORIGIN_CENTER_OF_VOLUME', keep_named=None):
     """Join a set of objects into ONE component mesh, clean it, UV it, set a
     sensible local pivot, attach a material slot, and export as its own FBX.
 
@@ -701,7 +701,7 @@ def finalize_part(objs, outname, matname, origin='ORIGIN_CENTER_OF_VOLUME'):
     is a separate mesh with its own pivot + material, so UE can treat them as
     independent (and, in gameplay, destroyable) parts.
     """
-    joined = join(objs, outname + "_Geo")
+    joined = join(objs, outname + "_Geo", keep_named=keep_named)
     apply_mods(joined)
     clean_mesh(joined)
     # center the pivot at the part's own volume (so e.g. an engine rotates in place)
@@ -844,6 +844,20 @@ def wire_pbr_material(mat, texset, emissive_strength=2.6):
         nt.links.new(imgE.outputs["Color"], glow.inputs["Color"])
         nt.links.new(glow.outputs["Emission"], mix.inputs[1])
     return True
+
+
+def solid_mat(name, color):
+    """Create/reuse a material with a SOLID base color baked in. Unlike the
+    texture-driven PBR materials, this gives a furniture item a distinct flat
+    color that survives the FBX export (FBX carries the base-color diffues). """
+    mat = bpy.data.materials.get(name)
+    if mat is None:
+        mat = bpy.data.materials.new(name); mat.use_nodes = True
+    # set Principled base color
+    bsdf = next((n for n in mat.node_tree.nodes if n.type == 'BSDF_PRINCIPLED'), None)
+    if bsdf is not None:
+        bsdf.inputs["Base Color"].default_value = (color[0], color[1], color[2], 1.0)
+    return mat
 
 
 def build_from_parts(base_out, parts, base_name_short):
@@ -2151,84 +2165,106 @@ def build_cockpit_interior(sz, outname):
 
 
 def build_hab_interior(sz, outname, room_count=1):
-    """FLAGSHIP Crew Quarters / Hab module — LARGER walkable footprint AND densely
-    furnished so it reads as a real, populated ship interior (not a placeholder).
-    Zones: sleeping arc (double bunks), a mess/dining area, computer workstations,
-    a storage locker wall, a small galley, and an overhead service deck. Large
-    open floor (460x220, 140 high), multi-room feel, heavy set dressing (pipes,
-    vents, T-grid ceiling lights, floor grating, cabinets)."""
+    """FLAGSHIP Crew Quarters / Hab module — LARGER walkable footprint, densely
+    furnished, and split into SEPARATE colored items (X4-style modular interior).
+    Each furniture zone (shell, ceiling lights, bunks, mess, desks, galley,
+    vents, hatch) is exported as its OWN FBX with a DISTINCT solid-color material,
+    so UE places/colors them independently like ship parts."""
     k = sc(sz)
-    parts = []
-    L = 460*k
-    W = 220*k
-    H = 140*k
-    # ---- shell ----
-    floor = box("HabFloor", L, W, 8*k, loc=(0, 0, 0)); bevel(floor, 3, 1); parts.append(floor)
-    for side in (-1, 1):
-        w = box(f"HabWall{side}", 10*k, W, H, loc=(side*L/2, 0, H/2)); bevel(w, 3, 1); parts.append(w)
-    w_f = box("HabWallF", L, 8*k, H, loc=(0, -W/2, H/2)); bevel(w_f, 3, 1); parts.append(w_f)
-    ceil = box("HabCeil", L, W, 7*k, loc=(0, 0, H)); bevel(ceil, 3, 1); parts.append(ceil)
-
-    # ---- ceiling: T-bar grid lights + overhead conduit runs ----
+    L = 460*k; W = 220*k; H = 140*k
+    # each zone: dict name -> (list of objects, rgba color)
+    zones = {}
+    def add(zn, ob): zones.setdefault(zn, ([], None))[0].append(ob)
+    # ---- shell (grey floor/walls/ceil/grating/cond) ----
+    def shell_objs():
+        z = []
+        z.append(box("HabFloor", L, W, 8*k, loc=(0,0,0)))
+        for side in (-1,1):
+            z.append(box(f"HabWall{side}", 10*k, W, H, loc=(side*L/2,0,H/2)))
+        z.append(box("HabWallF", L, 8*k, H, loc=(0,-W/2,H/2)))
+        z.append(box("HabCeil", L, W, 7*k, loc=(0,0,H)))
+        for gx in range(int(-L/2+20), int(L/2), 24):   # floor grating
+            z.append(box(f"Grate{gx}", 4*k, W, 3*k, loc=(gx,0,9*k)))
+        for gx in range(int(-L/2+40), int(L/2), 60):   # overhead conduits
+            z.append(box(f"Cond{gx}", 4*k, W, 5*k, loc=(gx,0,H-16*k)))
+        return z
+    zones["Shell"] = (shell_objs(), (0.42, 0.44, 0.47))
+    # ---- ceiling lights (cool) ----
+    lightobjs = []
     for gx in range(int(-L/2+60), int(L/2), 120):
-        parts.append(box(f"Light{gx}", 70*k, 8*k, 5*k, loc=(gx, 0, H-7*k)))
-        parts.append(box(f"LightFit{gx}", 78*k, 14*k, 7*k, loc=(gx, 0, H-10*k)))
-    for gx in range(int(-L/2+40), int(L/2), 60):
-        parts.append(box(f"Cond{gx}", 4*k, W, 5*k, loc=(gx, 0, H-16*k)))
-
-    # ---- floor grating ribs ----
-    for gx in range(int(-L/2+20), int(L/2), 24):
-        parts.append(box(f"Grate{gx}", 4*k, W, 3*k, loc=(gx, 0, 9*k)))
-
-    # ---- ZONE A: sleeping arc — 4 double-bunk stacks + lockers ----
+        lightobjs.append(box(f"LightFit{gx}", 78*k, 14*k, 7*k, loc=(gx,0,H-10*k)))
+        lightobjs.append(box(f"Light{gx}", 70*k, 8*k, 5*k, loc=(gx,0,H-7*k)))
+    zones["Lights"] = (lightobjs, (0.45, 0.75, 0.9))
+    # ---- bunks (tan/brown frame + lighter bedding) ----
+    bunkobjs = []
     for bi in range(4):
         ox = -L/2 + 100*k + bi*60*k
-        parts.append(box(f"Bunk{bi}_lo", 34*k, 70*k, 16*k, loc=(ox, -70*k, 8*k)))
-        parts.append(box(f"Bunk{bi}_lom", 30*k, 64*k, 7*k, loc=(ox, -70*k, 20*k)))
-        parts.append(box(f"Bunk{bi}_hi", 34*k, 70*k, 16*k, loc=(ox, -70*k, 52*k)))
-        parts.append(box(f"Bunk{bi}_him", 30*k, 64*k, 7*k, loc=(ox, -70*k, 64*k)))
-        parts.append(box(f"Bunk{bi}_pillow", 26*k, 18*k, 6*k, loc=(ox, -42*k, 23*k)))
-        for dx, dy in ((-16*k, -34*k), (16*k, -34*k), (-16*k, 34*k), (16*k, 34*k)):
-            parts.append(box(f"Bunk{bi}_post", 6*k, 6*k, 72*k, loc=(ox+dx, -70*k+dy, 36*k)))
+        bunkobjs.append(box(f"Bunk{bi}_lo", 34*k,70*k,16*k, loc=(ox,-70*k,8*k)))
+        bunkobjs.append(box(f"Bunk{bi}_lom", 30*k,64*k,7*k, loc=(ox,-70*k,20*k)))
+        bunkobjs.append(box(f"Bunk{bi}_hi", 34*k,70*k,16*k, loc=(ox,-70*k,52*k)))
+        bunkobjs.append(box(f"Bunk{bi}_him", 30*k,64*k,7*k, loc=(ox,-70*k,64*k)))
+        bunkobjs.append(box(f"Bunk{bi}_pillow", 26*k,18*k,6*k, loc=(ox,-42*k,23*k)))
+        for dx,dy in ((-16*k,-34*k),(16*k,-34*k),(-16*k,34*k),(16*k,34*k)):
+            bunkobjs.append(box(f"Bunk{bi}_post", 6*k,6*k,72*k, loc=(ox+dx,-70*k+dy,36*k)))
         for rr in range(5):
-            parts.append(box(f"Bunk{bi}_rung{rr}", 5*k, 20*k, 5*k, loc=(ox, -40*k, 16*k+rr*14*k)))
-        parts.append(box(f"Lock{bi}", 26*k, 8*k, 64*k, loc=(ox+44*k, -78*k, 40*k)))
-
-    # ---- ZONE B: mess/dining — long central table + benches + wall cabinets ----
-    parts.append(box("MessTable", 130*k, 40*k, 9*k, loc=(0, -60*k, 9*k)))
+            bunkobjs.append(box(f"Bunk{bi}_rung{rr}", 5*k,20*k,5*k, loc=(ox,-40*k,16*k+rr*14*k)))
+        bunkobjs.append(box(f"Lock{bi}", 26*k,8*k,64*k, loc=(ox+44*k,-78*k,40*k)))
+    zones["Bunks"] = (bunkobjs, (0.45, 0.38, 0.28))
+    # ---- mess (warm) ----
+    messobjs = []
+    messobjs.append(box("MessTable", 130*k,40*k,9*k, loc=(0,-60*k,9*k)))
     for i in range(5):
-        parts.append(box(f"TLeg{i}", 6*k, 6*k, 9*k, loc=(-55*k+i*27*k, -70*k, 2*k)))
-    for side in (-1, 1):
-        parts.append(box(f"Bench{side}", 130*k, 18*k, 8*k, loc=(0, -48*k+side*26*k, 4*k)))
+        messobjs.append(box(f"TLeg{i}", 6*k,6*k,9*k, loc=(-55*k+i*27*k,-70*k,2*k)))
+    for side in (-1,1):
+        messobjs.append(box(f"Bench{side}", 130*k,18*k,8*k, loc=(0,-48*k+side*26*k,4*k)))
     for gx in range(int(-L/2+60), int(L/2), 90):
-        parts.append(box(f"Cab{gx}", 34*k, 12*k, 34*k, loc=(gx, 76*k, 70*k)))
-
-    # ---- ZONE C: computer workstation row ----
+        messobjs.append(box(f"Cab{gx}", 34*k,12*k,34*k, loc=(gx,76*k,70*k)))
+    zones["Mess"] = (messobjs, (0.5, 0.42, 0.32))
+    # ---- desks/workstations (teal) ----
+    deskobjs = []
     for ci in range(4):
         ox = -L/2 + 40*k + ci*60*k
-        parts.append(box(f"Desk{ci}", 42*k, 30*k, 32*k, loc=(ox, 40*k, 16*k)))
-        parts.append(box(f"Screen{ci}", 26*k, 4*k, 18*k, loc=(ox, 34*k, 44*k)))
-        parts.append(box(f"Kbd{ci}", 26*k, 10*k, 4*k, loc=(ox, 46*k, 32*k)))
-        parts.append(box(f"Chair{ci}", 16*k, 16*k, 10*k, loc=(ox, 60*k, 5*k)))
-        parts.append(box(f"ChairB{ci}", 16*k, 6*k, 30*k, loc=(ox, 66*k, 25*k)))
-
-    # ---- ZONE D: small galley ----
-    parts.append(box("GalleyCounter", 70*k, 34*k, 30*k, loc=(-L/2+60*k, 40*k, 15*k)))
-    parts.append(box("GalleySink", 24*k, 16*k, 8*k, loc=(-L/2+60*k, 44*k, 26*k)))
-    parts.append(box("GalleyLight", 40*k, 8*k, 4*k, loc=(-L/2+60*k, 40*k, H-30*k)))
-
-    # ---- ZONE E: air vents + emergency wall lights ----
+        deskobjs.append(box(f"Desk{ci}", 42*k,30*k,32*k, loc=(ox,40*k,16*k)))
+        deskobjs.append(box(f"Screen{ci}", 26*k,4*k,18*k, loc=(ox,34*k,44*k)))
+        deskobjs.append(box(f"Kbd{ci}", 26*k,10*k,4*k, loc=(ox,46*k,32*k)))
+        deskobjs.append(box(f"Chair{ci}", 16*k,16*k,10*k, loc=(ox,60*k,5*k)))
+        deskobjs.append(box(f"ChairB{ci}", 16*k,6*k,30*k, loc=(ox,66*k,25*k)))
+    zones["Desks"] = (deskobjs, (0.28, 0.5, 0.55))
+    # ---- galley (light steel) ----
+    gallyobjs = [
+        box("GalleyCounter", 70*k,34*k,30*k, loc=(-L/2+60*k,40*k,15*k)),
+        box("GalleySink", 24*k,16*k,8*k, loc=(-L/2+60*k,44*k,26*k)),
+        box("GalleyLight", 40*k,8*k,4*k, loc=(-L/2+60*k,40*k,H-30*k)),
+    ]
+    zones["Galley"] = (gallyobjs, (0.62, 0.6, 0.52))
+    # ---- vents/emergency (thin accent) ----
+    ventobjs = []
     for gx in range(int(-L/2+40), int(L/2), 80):
-        parts.append(box(f"Vent{gx}", 20*k, 4*k, 14*k, loc=(gx, -W/2+6*k, 26*k)))
-        parts.append(box(f"Emg{gx}", 3*k, 2*k, 3*k, loc=(gx, -W/2+5*k, 60*k)))
+        ventobjs.append(box(f"Vent{gx}", 20*k,4*k,14*k, loc=(gx,-W/2+6*k,26*k)))
+        ventobjs.append(box(f"Emg{gx}", 3*k,2*k,3*k, loc=(gx,-W/2+5*k,60*k)))
+    zones["Vents"] = (ventobjs, (0.7, 0.35, 0.3))
+    # ---- entrance hatch (dark) ----
+    hatchobjs = [
+        box("HatchL", 6*k,12*k,120*k, loc=(-L/2+10*k,W/2-6*k,60*k)),
+        box("HatchR", 6*k,12*k,120*k, loc=(L/2-10*k,W/2-6*k,60*k)),
+        box("HatchT", L-20*k,12*k,10*k, loc=(0,W/2-6*k,H-8*k)),
+    ]
+    zones["Hatch"] = (hatchobjs, (0.18, 0.2, 0.22))
 
-    # ---- entrance hatch frame ----
-    parts.append(box("HatchL", 6*k, 12*k, 120*k, loc=(-L/2+10*k, W/2-6*k, 60*k)))
-    parts.append(box("HatchR", 6*k, 12*k, 120*k, loc=(L/2-10*k, W/2-6*k, 60*k)))
-    parts.append(box("HatchT", L-20*k, 12*k, 10*k, loc=(0, W/2-6*k, H-8*k)))
-
-    jo, out = finalize_part(parts, outname, "M_Interior_Hab")
-    return [(jo, out)]
+    # keep ALL zone objects alive while each zone is exported (join() deletes
+    # non-kept meshes, which would remove not-yet-exported zones' furniture)
+    all_names = set()
+    for zn, (objs, _) in zones.items():
+        for o in objs:
+            all_names.add(o.name)
+    # export each zone as its OWN FBX with a distinct solid-color material
+    results = []
+    for zn, (objs, col) in zones.items():
+        matname = f"M_Int_{zn}"
+        solid_mat(matname, col)
+        obj, out = finalize_part(objs, f"{outname}_{zn}", matname, keep_named=all_names)
+        results.append((obj, out))
+    return results
 
 
 
