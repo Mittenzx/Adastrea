@@ -18,6 +18,11 @@
             "Name": "StationEditor",
             "Type": "Runtime",
             "LoadingPhase": "Default"
+        },
+        {
+            "Name": "AdastreaEditor",
+            "Type": "Editor",
+            "LoadingPhase": "Default"
         }
     ],
     "Plugins": [
@@ -74,6 +79,10 @@
         },
         {
             "Name": "AdastreaShips",
+            "Enabled": true
+        },
+        {
+            "Name": "DataValidation",
             "Enabled": true
         }
     ],
