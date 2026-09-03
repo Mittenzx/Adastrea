@@ -2438,6 +2438,95 @@ def build_alien_hold(prefix):
     return [(jo, out)]
 
 
+def build_bridge_interior(prefix):
+    """FLAGSHIP COMMAND BRIDGE — a polished, impressive interior (not placeholder).
+    A broad raised command deck facing a large forward viewport, with a big central
+    holographic command console, twin angled crew station banks (side consoles +
+    chairs), overhead halo light rings, an access hatch, and starfield-viewport
+    framing. Split into DISTINCT colored items (X4-style) so UE places/colors each
+    independently: Shell, Deck, Viewport, Console, Stations, Lights, Hatch.
+    Dense, dramatic, and reads as the ship's nerve center."""
+    k = 1.0
+    L = 340*k; W = 200*k; H = 130*k
+    zones = {}
+    def zadd(zn, ob): zones.setdefault(zn, ([], None))[0].append(ob)
+
+    # ---- SHELL: floor, walls (open front = viewport), ceiling ----
+    shell = []
+    shell.append(box("Br_Floor", L, W, 8*k, loc=(0, 0, 0)))
+    for side in (-1, 1):
+        shell.append(box(f"Br_Wall{side}", 10*k, W, H, loc=(side*L/2, 0, H/2)))
+    shell.append(box("Br_BackWall", L, 10*k, H, loc=(0, -W/2, H/2)))   # back wall
+    shell.append(box("Br_Ceiling", L, W, 7*k, loc=(0, 0, H)))
+    # floor cable conduits
+    for gx in range(int(-L/2+30), int(L/2), 50):
+        shell.append(box(f"Br_Cond{gx}", 5*k, W, 4*k, loc=(gx, 0, 10*k)))
+    zones["Shell"] = (shell, (0.36, 0.38, 0.42))
+
+    # ---- raised command deck (upper tier, near viewport) ----
+    deck = []
+    deck.append(box("Br_Deck", L*0.5, W, 12*k, loc=(L/2-40*k, 0, 8*k)))  # forward raised deck
+    deck.append(box("Br_DeckRamp", L*0.12, W, 8*k, loc=(L/2+10*k, 0, 2*k)))  # ramp down
+    zones["Deck"] = (deck, (0.42, 0.4, 0.38))
+
+    # ---- central holographic command console ----
+    console = []
+    # main console body + angled screen face
+    console.append(box("Br_Console", 90*k, 40*k, 34*k, loc=(L/2-70*k, 20*k, 34*k)))
+    console.append(box("Br_ConsoleScreen", 70*k, 6*k, 30*k, loc=(L/2-70*k, 38*k, 52*k)))  # emissive scre
+    # side data desks
+    for side in (-1, 1):
+        console.append(box(f"Br_SideDesk{side}", 30*k, 24*k, 26*k, loc=(L/2-70*k+side*46*k, -20*k, 16*k)))
+    zones["Console"] = (console, (0.2, 0.35, 0.4))  # deep teal
+
+    # ---- twin crew station banks (side consoles + chairs) ----
+    stations = []
+    for side in (-1, 1):
+        sx = side*(L/2-90*k)
+        # station console
+        stations.append(box(f"Br_Station{side}", 40*k, 26*k, 30*k, loc=(sx, 20*k, 15*k)))
+        # station screen
+        stations.append(box(f"Br_SScreen{side}", 30*k, 4*k, 20*k, loc=(sx, 30*k, 40*k)))
+        # chair
+        stations.append(box(f"Br_Chair{side}", 18*k, 18*k, 12*k, loc=(sx, 0, 4*k)))
+        stations.append(box(f"Br_ChairBack{side}", 18*k, 6*k, 30*k, loc=(sx, -12*k, 22*k)))
+    zones["Stations"] = (stations, (0.3, 0.45, 0.5))  # teal stations
+
+    # ---- forward viewport (glass wall band with mullions) ----
+    viewport = []
+    viewport.append(box("Br_VPFrame", L, 10*k, H, loc=(0, W/2, H/2)))     # front frame
+    viewport.append(box("Br_VPGlass", L-40*k, 4*k, H-30*k, loc=(0, W/2-4*k, 60*k)))  # glazed
+    for mx in range(int(-L/2+30), int(L/2), 60):
+        viewport.append(box(f"Br_VPMullion{mx}", 5*k, 4*k, H-30*k, loc=(mx, W/2-4*k, 60*k)))
+    zones["Viewport"] = (viewport, (0.15, 0.25, 0.3))  # dark glass band
+
+    # ---- overhead halo light rings + ceiling glow strips ----
+    lights = []
+    for gx in range(int(-L/2+80), int(L/2), 100):
+        lights.append(box(f"Br_Halo{gx}", 60*k, 6*k, 4*k, loc=(gx, 0, H-6*k)))
+    zones["Lights"] = (lights, (0.5, 0.8, 1.0))  # cool bright
+
+    # ---- access hatch (rear) ----
+    hatch = [
+        box("Br_HatchL", 6*k, 12*k, 120*k, loc=(-L/2+10*k, -W/2+6*k, 60*k)),
+        box("Br_HatchR", 6*k, 12*k, 120*k, loc=(L/2-10*k, -W/2+6*k, 60*k)),
+        box("Br_HatchT", L-30*k, 12*k, 10*k, loc=(-15*k, -W/2+6*k, H-8*k)),
+    ]
+    zones["Hatch"] = (hatch, (0.12, 0.14, 0.16))
+
+    # export each zone as its OWN FBX with distinct solid-color material
+    all_names = set()
+    for zn, (objs, _) in zones.items():
+        for o in objs: all_names.add(o.name)
+    results = []
+    for zn, (objs, col) in zones.items():
+        matname = f"M_Int_{zn}"
+        solid_mat(matname, col)
+        obj, out = finalize_part(objs, f"{prefix}_{zn}", matname, keep_named=all_names)
+        results.append((obj, out))
+    return results
+
+
 def build_interior_set():
     """Build all interior instances (cockpit, crew quarters, hab, corridor, +
     engineering bay, airlock)."""
@@ -2451,6 +2540,8 @@ def build_interior_set():
     results += build_airlock("SM_Int_Standard")
     # old-school (Alien) interstitial hold — unique brute-metal squeeze
     results += build_alien_hold("SM_Int_Xenomorph")
+    # flagship command bridge — the ship's impressive nerve center
+    results += build_bridge_interior("SM_Int_CommandBridge")
     return results
 
 
