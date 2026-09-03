@@ -81,3 +81,33 @@ Split worn 0.40/0.94 · Miner heavy-duty 0.52/0.88.
   `Frigate`→`Freighter`, `Cutlass`→`Gunship` in `Tools/hand_ships.py`.
 - This mapping lives in two places and SHOULD match: this doc + `MAT_TO_TEX` in the
   generator. If you add a texture set, update both.
+
+## Interior furniture materials (solid-color, modular)
+
+The crew-quarters hab and the flagship command bridge interiors are split into
+**separate FBX items per furniture zone**, each with a DISTINCT **solid-color**
+material (not texture-driven). These are `M_Int_*` materials — build each as a UE
+material with a plain solid Base Color (from the FBX import) and assign to the
+part's slot. They are independent, so UE can color them separately.
+
+| FBX item (part) | `M_Int_*` material | Color |
+|---|---|---|
+| Shell | `M_Int_Shell` | grey (0.42,0.44,0.47) |
+| Lights | `M_Int_Lights` | cool blue |
+| Bunks | `M_Int_Bunks` | tan |
+| Mess | `M_Int_Mess` | warm brown |
+| Desks | `M_Int_Desks` | teal |
+| Galley | `M_Int_Galley` | light steel |
+| Vents | `M_Int_Vents` | red accent |
+| Hatch | `M_Int_Hatch` | dark |
+| (Bridge) Deck | `M_Int_Deck` | warm grey |
+| (Bridge) Console | `M_Int_Console` | deep teal |
+| (Bridge) Stations | `M_Int_Stations` | teal |
+| (Bridge) Viewport | `M_Int_Viewport` | dark glass |
+| (Bridge) Lights | `M_Int_Lights` | cool |
+| (Bridge) Hatch | `M_Int_Hatch` | dark |
+
+These FBX live in `Assets/FBX/generated/SM_Int_*_<Zone>.fbx` (crew quarters:
+`_Shell/_Bunks/_Mess/_Desks/_Galley/_Lights/_Vents/_Hatch`; command bridge:
+`SM_Int_CommandBridge_*`). Import each onto the walkable interior; the solid color
+is carried in the FBX material.
