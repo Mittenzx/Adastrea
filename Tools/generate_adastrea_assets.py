@@ -274,11 +274,15 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     h = np.ones((H, W), dtype=np.float32) * 0.5
     def groove(v):
         return 0.14 + 0.06 * rng.random()
-    # primary panel grooves
+    # primary panel grooves — INTERLOCKING/staggered seams (alternate rows/cols
+    # offset by half a cell), so it reads as manufactured modular plating, not a
+    # uniform checkerboard (sci-fi panel study lesson #4).
     for i in range(cell, W, cell):
-        h[:, max(0,i-1):i+1] = groove(i)
+        off = 0 if (i // cell) % 2 == 0 else cell // 2
+        h[:, max(0, i-1):i+1] = groove(i + off)
     for j in range(cell, H, cell):
-        h[max(0,j-1):j+1, :] = groove(j)
+        off = 0 if (j // cell) % 2 == 0 else cell // 2
+        h[max(0, j-1):j+1, :] = groove(j + off)
     # secondary micro-paneling (half-grid, fainter) for extra density
     subcell = cell // 2
     for i in range(subcell, W, subcell):
@@ -313,7 +317,18 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     accent = np.array(variant.get('accent', [0.1, 0.15, 0.2]))
     D = np.empty((H, W, 4), dtype=np.float32)
     for ch in range(3):
-        D[..., ch] = np.clip(base[ch] - (0.5 - h) * 0.3, 0, 1)
+        D[..., ch] = np.clip(base[ch] - (0.5 - h) * 0.52, 0, 1)  # deeper relief contrast
+    # per-panel tonal variation: modulate each panel's brightness slightly so the
+    # plating doesn't read as one uniform flat (real panels show tone variation).
+    # Build a coarse panel-locked noise field (V=row, U=col), plus gentle wear streaking.
+    panelV, panelU = np.mgrid[0:H, 0:W].astype(np.float32)
+    panel = np.sin(panelU / cell * 2.1 + seed) * np.sin(panelV / cell * 1.6 + seed * 0.5)
+    panel += 0.6 * np.sin(panelU * 0.05 + panelV * 0.03)
+    tone = 0.12 * panel  # gentle tonal float per panel
+    # wear: darken streaks near seams/edges and some pitting fading
+    wear = 0.5 * (h < 0.3) - 0.06 * np.sin(panelV * 0.02)
+    for ch in range(3):
+        D[..., ch] = np.clip(D[..., ch] * (1 + tone) + wear * 0.06, 0, 1)
     D[..., 3] = 1.0
     # accent seam stripes
     # 'fixed' marks regions that must NOT be re-skinned (stripes/neon/windows/
@@ -357,11 +372,12 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     paint = 0.10 * np.sin(rg_x * 0.02 + rg_y * 0.03) + 0.06 * np.sin(rg_y * 0.05)
     M = np.clip(M - paint, 0.3, 1.0)
     # accent seams / grooves: bare metal edge highlight (higher metallic)
-    M[stripe] = np.minimum(1.0, M[stripe] + 0.15)
-    M[h < 0.2] = 0.55  # recessed, slightly non-metal (primer/grime)
+    M[stripe] = np.minimum(1.0, M[stripe] + 0.18)
+    M[h < 0.28] = 0.62   # recessed plates: primer / grime-tinged (less metallic)
+    M[h < 0.16] = 0.45   # deep grooves: clearly non-metal (painted-under / dirt)
 
     # AO: multi-scale, darker in deep grooves & pits
-    AO = (h - 0.5) * 2.0 + 0.62
+    AO = (h - 0.5) * 2.4 + 0.62
     AO = np.clip(AO, 0.05, 1.0)
 
     # ---- optional cyberpunk / industrial overlays ----
