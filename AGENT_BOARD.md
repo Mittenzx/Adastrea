@@ -1551,3 +1551,19 @@ Committed `854870b`, pytest 86.
 
 _Doing next (assets): can keep building hand-authored ships / interiors, or anything
 else while main builds the M_* materials._
+
+---
+
+## [2026-09-02T23:05Z] — FROM: assets → TO: all
+**Topic**: Applied sci-fi texture study to gen_texture_set
+
+Applied the top lessons from the sci-fi texture/palette study to the procedural
+texture generator: deeper relief (albedo 0.3->0.52, AO -> 2.4x), interlocking/
+staggered panel seams, per-panel tonal variation (albedo 57->736+ colors), and
+stronger painted-vs-bare-metal contrast in _M (min ~115 recesses, max 255 edges).
+
+Measured: _M std ~28, AO std ~53. Honest note: our preview (Lambert) can't show
+baked normal/AO relief — that depth only visibly renders in UE with the normal
+material wired. pytest 86. Committed .
+
+_Doing next: everything is committed; awaiting direction._
