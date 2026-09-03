@@ -1142,6 +1142,48 @@ def build_sensor_part(sz, outname, asym=False, variant='mast'):
     return finalize_part(parts, outname, "M_Sensor_Block", origin='ORIGIN_CENTER_OF_VOLUME')
 
 
+
+def emissive_mat(name, color, strength=8.0):
+    """Bright emissive material (survives FBX as a glowing color)."""
+    mat = bpy.data.materials.get(name)
+    if mat is None:
+        mat = bpy.data.materials.new(name); mat.use_nodes = True
+        bsdf = next((n for n in mat.node_tree.nodes if n.type == 'BSDF_PRINCIPLED'), None)
+        if bsdf is not None:
+            bsdf.inputs["Base Color"].default_value = (color[0], color[1], color[2], 1.0)
+        em = mat.node_tree.nodes.new("ShaderNodeEmission")
+        em.inputs["Color"].default_value = (color[0], color[1], color[2], 1.0)
+        em.inputs["Strength"].default_value = strength
+        out = next((n for n in mat.node_tree.nodes if n.type == 'OUTPUT_MATERIAL'), None)
+        if out is not None:
+            mat.node_tree.links.new(em.outputs["Emission"], out.inputs["Surface"])
+    return mat
+
+
+def build_nav_lights(sz, outname):
+    """Navigation / strobe lights as ONE joined part (with a bright emissive
+    material so they glow). All the small light bulbs on the hull — port/green +
+    starboard/red wingtips, tail white, dorsal red beacon — joined and exported as
+    a single `<outname>_Nav.fbx` with an emissive material, so they survive as
+    glowing points on the ship. (A single material keeps them uniformly bright; the
+    colour variation can be added later via per-face materials if needed.)"""
+    k = sc(sz)
+    parts = []
+    # wingtip nav lights (green port, red starboard)
+    for side in (-1, 1):
+        parts.append(cyl(f"NavWing{side}", 3*k, 16*k, loc=(side*20*k, 6*k, 8*k), verts=8))
+        parts.append(sphere(f"NavBulb{side}", 6*k, loc=(side*20*k, 14*k, 8*k), verts=8))
+    # tail white running light
+    parts.append(sphere("NavTail", 5*k, loc=(0, -20*k, 10*k), verts=8))
+    # dorsal beacon (mast + red tip)
+    parts.append(cyl("BeaconMast", 2*k, 30*k, loc=(0, 12*k, 30*k), verts=6))
+    parts.append(sphere("Beacon", 5*k, loc=(0, 12*k, 62*k), verts=8))
+    matname = "M_NavLights"
+    emissive_mat(matname, (1.0, 1.0, 1.0), strength=8.0)
+    obj, path = finalize_part(parts, outname, matname)
+    return [(obj, path)]
+
+
 def build_reactor_part(sz, outname, variant='core'):
     """Reactor/core add-on. variant: 'core' (block + bands), 'fusion_ring'
     (torus reactor), 'spike' (reactor with heat-spike fins)."""
@@ -1454,6 +1496,11 @@ def assemble_ship(sz, outname, opts, carcass_builder=None):
         mj, mp = build_mining_laser(sz, f"{outname}_MiningLaser")
         mj.location = (0, ly*0.3, locz - 10*k)
         results.append((mj, mp))
+    # navigation / strobe lights (single glowing part, default ON)
+    if opts.get('nav_lights', True):
+        no, np_ = build_nav_lights(sz, f"{outname}_Nav")[0]
+        no.location = (0, ly*0.05, locz + dims[2]*0.15)
+        results.append((no, np_))
     if opts.get('drill'):
         dj, dp = build_drill_part(sz, f"{outname}_Drill")
         dj.location = (0, -ly*0.3, locz - 15*k)
@@ -1654,15 +1701,13 @@ def assemble_whole_ship(sz, outname, opts, carcass_builder=None):
                    (0, 0, 0),
                    (0, 0, 0),
                    'tank'))
-    # antennas / masts
-    for i in range(5):
+    # antennas / masts (whip masts + a couple of dishes for variety)
+    for i in range(7):
         gx = clamp((rng.random()-0.5)*1.4)
         gy = clamp((rng.random()*0.7 - 0.3))
         gz = clamp(rng.random()*0.5 + 0.4)
-        gp.append((gx, gy, gz,
-                   (0, 0, 0),
-                   (0, 0, 0),
-                   'antenna'))
+        kind = 'dish' if (i % 3 == 0) else 'antenna'
+        gp.append((gx, gy, gz, (0, 0, 0), (0, 0, 0), kind))
     for i, (gx, gy, gz, size, rot, kind) in enumerate(gp):
         # GROW-FROM-HULL: sit each part ON the tapered hull's surface rather than
         # floating at an arbitrary height. The tapered fuselage rises toward the
@@ -1701,6 +1746,13 @@ def assemble_whole_ship(sz, outname, opts, carcass_builder=None):
             a2 = cyl(f"KAntM{i}", 2*k, (20+rng.random()*20)*k, loc=(-px, py, pz), verts=6)
             tip2 = sphere(f"KAntTipM{i}", 3*k, loc=(-px, py, pz + 28*k), verts=6)
             objs += [a2, tip2]
+        elif kind == 'dish':
+            mast = cyl(f"KDishMast{i}", 2*k, 18*k, loc=(px, py, pz), verts=6)
+            dish = sphere(f"KDish{i}", 9*k, loc=(px, py, pz + 22*k), verts=10)
+            objs += [mast, dish]
+            m2 = cyl(f"KDishMastM{i}", 2*k, 18*k, loc=(-px, py, pz), verts=6)
+            d2 = sphere(f"KDishM{i}", 9*k, loc=(-px, py, pz + 22*k), verts=10)
+            objs += [m2, d2]
     # =================== /DETAIL PASS ===================
 
     # join everything into one mesh (raw join, no finalize deletion)
