@@ -131,8 +131,17 @@ public:
         FVector ExitTriggerOffset = FVector(500.0f, 0.0f, 175.0f);
 
         /** Size of the cockpit/seat exit trigger box. */
-                UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
-                FVector ExitTriggerSize = FVector(100.0f, 150.0f, 200.0f);
+                        UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
+                        FVector ExitTriggerSize = FVector(100.0f, 150.0f, 200.0f);
+
+                        /** Grace period (s) after entry during which the exit trigger is
+                         * ignored, so the avatar doesn't instantly re-trip the cockpit seat
+                         * it just spawned on top of. */
+                        UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
+                        float ExitTriggerGracePeriod = 2.0f;
+
+                        /** World time of the most recent interior entry (used for the grace check). */
+                        float EntranceWorldTime = -1.0f;
 
                 /** Default interior shell mesh path when none is configured (fallback). */
                 UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")

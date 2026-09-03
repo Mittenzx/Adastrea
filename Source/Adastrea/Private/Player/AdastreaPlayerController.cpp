@@ -1674,6 +1674,9 @@ void AAdastreaPlayerController::EnterShipInterior(ASpaceship* Ship)
 
 	// Show the interior, switch possession, capture mouse for the avatar camera.
 	Interior->SetActorHiddenInGame(false);
+	// Record the entrance time so the exit trigger ignores the spawn overlap for
+	// a short grace period (else the avatar instantly bounces back to the cockpit).
+	Interior->EntranceWorldTime = Interior->GetWorld()->GetTimeSeconds();
 	UnPossess();
 	Possess(AvatarPawn);
 	SetInputMode(FInputModeGameOnly());

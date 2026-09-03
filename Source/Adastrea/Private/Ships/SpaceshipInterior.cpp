@@ -104,13 +104,23 @@ void ASpaceshipInterior::OnExitTriggerOverlap(UPrimitiveComponent* OverlappedCom
                                               bool bFromSweep, const FHitResult& SweepResult)
 {
     // Only react to the walking avatar entering the cockpit/seat trigger.
-    ASpaceshipAvatar* Avatar = Cast<ASpaceshipAvatar>(OtherActor);
-    if (!Avatar)
-    {
-        return;
-    }
+        ASpaceshipAvatar* Avatar = Cast<ASpaceshipAvatar>(OtherActor);
+        if (!Avatar)
+        {
+            return;
+        }
 
-    if (AAdastreaPlayerController* PC = Cast<AAdastreaPlayerController>(Avatar->GetController()))
+        // Ignore the overlap that immediately follows entry — the avatar spawns on the
+        // cockpit seat, so without this grace it bounces straight back to the ship.
+        if (EntranceWorldTime > 0.0f && GetWorld()->GetTimeSeconds() - EntranceWorldTime < ExitTriggerGracePeriod)
+        {
+            UE_LOG(LogAdastrea, Log,
+                TEXT("InteriorExitTrigger: ignoring spawn overlap (%.1fs < grace %.1fs)"),
+                GetWorld()->GetTimeSeconds() - EntranceWorldTime, ExitTriggerGracePeriod);
+            return;
+        }
+
+        if (AAdastreaPlayerController* PC = Cast<AAdastreaPlayerController>(Avatar->GetController()))
     {
         if (ASpaceship* SourceShip = Avatar->SourceShip)
         {
