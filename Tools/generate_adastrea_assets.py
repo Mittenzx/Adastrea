@@ -22,6 +22,10 @@ import numpy as np
 BASE = r"C:\Users\akuma\Adastrea\Assets\FBX\generated"
 ASSETS_OUT = BASE
 TEXDIR = os.path.join(BASE, "Textures")
+
+# Master switch: disable weathering/grime for clean, shiny new ships.
+# Set True to enable the Phase-3 dirt/streak/scratch pass.
+WEATHERING = False
 os.makedirs(TEXDIR, exist_ok=True)
 
 # ----------------------------------------------------------------------------
@@ -304,13 +308,6 @@ def gen_texture_set(name, variant, size=2048, seed=1):
             for dx, dy in ((0,0),(br,0),(0,br)):
                 yy, xx = min(j, H-1), min(i, W-1)
                 h[yy:yy+br, xx:xx+br] = 0.12
-    # random ablative pitting / battle damage
-    for _ in range(rng.integers(40, 70)):
-        px, py = rng.integers(0, W), rng.integers(0, H)
-        r = rng.integers(size//60, size//18)
-        yy, xx = np.ogrid[:size, :size]
-        m = (xx - px)**2 + (yy - py)**2 < r**2
-        h[m] = 0.24 + 0.12*rng.random()
 
     # base color
     base = np.array(variant.get('base', [0.55, 0.56, 0.58]))
@@ -335,36 +332,38 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     rsz = (rsz[:, :-2] + rsz[:, 1:-1] + rsz[:, 2:]) / 3.0
     pad = np.pad(rsz, 1, mode='edge')
     tone = 0.10 * pad
-    # wear: darken streaks near seams + faint plate-edge smudge (subtle)
-    wear = 0.5 * (h < 0.3) - 0.05 * pad
+    # clean plate tones only — no wear/weathering (shiny new ships)
     for ch in range(3):
-        D[..., ch] = np.clip(D[..., ch] * (1 + tone) + wear * 0.06, 0, 1)
+        D[..., ch] = np.clip(D[..., ch] * (1 + tone), 0, 1)
     D[..., 3] = 1.0
     # accent seam stripes
     # 'fixed' marks regions that must NOT be re-skinned (stripes/neon/windows/
     # hazard) — the skin mask is the inverse, so a runtime skin only recolors the
     # plain hull panels and leaves accents/lights intact (mirrors X4's paintmodmask).
-    # accent seam edges — DASHED, not continuous glowing bands. A full-width
-    # glowing stripe every cell reads as "stripey"; real sci-fi plating has short
-    # accent dashes / edge highlights that follow seams without dominating the
-    # hull. We place short dashes along each seam (split into segments).
+    # accent seam edges — SUBTLE LIGHT edge highlights, not dark marks. Painting
+    # a dark/emissive accent at many points reads as "dark spots all over the
+    # hull". Real plating reads via thin, faintly-LIGHTER panel-edge highlights.
+    # We add a few thin short highlights that nudge the albedo slightly brighter
+    # at seams (like light catching a bevel), kept sparse so they read as detail.
     stripe = np.zeros((H, W), dtype=bool)
     fixed = np.zeros((H, W), dtype=bool)
     for i in range(cell, W, cell):
-        dash = (W // cell) // 2
-        for k in range(dash):
-            x0 = (k * 2) * cell // dash            # skip gaps -> dashes
-            x0 += (i // cell % 2) * (cell // 2)    # stagger on alternate seams
-            seg = min(x0 + cell // 2, W)
-            stripe[max(0,i-2):i+3, x0:seg] = True
+        # only a few, thin, short highlight marks per seam (not many dashes)
+        for k in range(2):
+            x0 = (k * 5) * cell // 2
+            x0 += (i // cell % 2) * (cell // 3)
+            seg = min(x0 + cell // 3, W)
+            stripe[max(0,i-1):i+2, x0:seg] = True
     fixed |= stripe
-    D[stripe] = [accent[0], accent[1], accent[2], 1.0]
+    # lighten the seam highlight: brighter tint of base (bevel catch-light)
+    for ch in range(3):
+        D[..., ch][stripe] = np.clip(base[ch] * 1.18, 0, 1)
 
-    # emissive mask: glow the dashed seam accents + hazard-light dots (subtle)
+    # emissive mask: subtle warm seams (not neon; small, faint)
     E = np.zeros((H, W, 4), dtype=np.float32)
     E[..., 3] = 1.0
     em = np.array(variant.get('emissive', [0.2, 0.55, 1.0]))
-    E[stripe] = [em[0]*0.7, em[1]*0.7, em[2]*0.7, 1.0]  # dimmer, not neon stripes
+    E[stripe] = [em[0]*0.35, em[1]*0.35, em[2]*0.35, 1.0]  # faint warm seams
 
     # ---- Phase 4: material quality (shader knobs) ----
     # roughness: smooth metal with anisotropic grain + rough grooves. A directional
@@ -374,14 +373,14 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     R = np.ones((H, W), dtype=np.float32) * variant.get('rough', 0.34)
     # anisotropic grain: smooth, banded low-freq striations (brushed-metal feel)
     rg_y, rg_x = np.mgrid[0:H, 0:W].astype(np.float32)
-    aniso = 0.14 * np.sin(rg_x * 0.06 + 11.7) * np.sin(rg_y * 0.011 + 3.3)
-    aniso += 0.08 * np.sin(rg_x * 0.013 + rg_y * 0.02)
+    aniso = 0.08 * np.sin(rg_x * 0.06 + 11.7) * np.sin(rg_y * 0.011 + 3.3)
+    aniso += 0.04 * np.sin(rg_x * 0.013 + rg_y * 0.02)
     R = np.clip(R + aniso, 0.05, 1.0)
     # accent/edge regions read as machined (slightly smoother, metal-bare)
     R[stripe] = np.maximum(0.05, R[stripe] - 0.12)
     # deep grooves stay rough
-    R[h < 0.28] = 0.82
-    R[h < 0.16] = 0.95
+    R[h < 0.28] = 0.60   # clean machined recesses (shiny new ships)
+    R[h < 0.16] = 0.72
 
     # metallic: mostly metal with painted-vs-bare variation. Painted panels are a
     # bit less metallic; worn/raised edges and grooves read as bare metal (higher).
@@ -470,7 +469,9 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     # The single biggest "worn/real" win (X4 trick). Dirt accumulates where AO is
     # low (recessed grooves/crevices), plus directional streak/scorch marks running
     # along panel seams, and faint micro-scratches. All read ABOVE the base albedo.
-    if variant.get('grime') or variant.get('weather'):
+    # WEATHERING MASTER SWITCH — user wants shin新 new ships for now, no wear/
+    # weathering/grime. Set WEATHERING = True to re-enable the Phase-3 grime pass.
+    if WEATHERING and (variant.get('grime') or variant.get('weather')):
         # 1) AO-driven dirt: darken D in low-AO / deep-groove regions and roughen them
         #    (dirt pools, doesn't sit on exposed raised panels).
         dirt_mask = (h < 0.42)  # deep grooves/crevices already carry low h from panels/cables
