@@ -321,12 +321,22 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     # per-panel tonal variation: modulate each panel's brightness slightly so the
     # plating doesn't read as one uniform flat (real panels show tone variation).
     # Build a coarse panel-locked noise field (V=row, U=col), plus gentle wear streaking.
-    panelV, panelU = np.mgrid[0:H, 0:W].astype(np.float32)
-    panel = np.sin(panelU / cell * 2.1 + seed) * np.sin(panelV / cell * 1.6 + seed * 0.5)
-    panel += 0.6 * np.sin(panelU * 0.05 + panelV * 0.03)
-    tone = 0.12 * panel  # gentle tonal float per panel
-    # wear: darken streaks near seams/edges and some pitting fading
-    wear = 0.5 * (h < 0.3) - 0.06 * np.sin(panelV * 0.02)
+    # Per-panel tonal variation using ORGANIC noise (not a repeating sine, which
+    # caused visible periodic striping). Smooth random scratch-noise gives each
+    # plate a slightly different tone without a grid/bands look.
+    # Organic per-panel tonal variation: coarse random noise field upscaled to
+    # full res (nearest-neighbour -> blocky 'plate' tones), plus a faint smooth
+    # low-freq blend. No repeating sine (which caused periodic striping).
+    nsz = 4
+    noise = rng.random((H // nsz + 1, W // nsz + 1)) - 0.5
+    rsz = np.kron(noise, np.ones((nsz, nsz)))[:H, :W].astype(np.float32)
+    # soft plate edges: box-blur the blocky field (separable, shape-safe)
+    rsz = (rsz[:-2, :] + rsz[1:-1, :] + rsz[2:, :]) / 3.0
+    rsz = (rsz[:, :-2] + rsz[:, 1:-1] + rsz[:, 2:]) / 3.0
+    pad = np.pad(rsz, 1, mode='edge')
+    tone = 0.10 * pad
+    # wear: darken streaks near seams + faint plate-edge smudge (subtle)
+    wear = 0.5 * (h < 0.3) - 0.05 * pad
     for ch in range(3):
         D[..., ch] = np.clip(D[..., ch] * (1 + tone) + wear * 0.06, 0, 1)
     D[..., 3] = 1.0
@@ -334,18 +344,27 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     # 'fixed' marks regions that must NOT be re-skinned (stripes/neon/windows/
     # hazard) — the skin mask is the inverse, so a runtime skin only recolors the
     # plain hull panels and leaves accents/lights intact (mirrors X4's paintmodmask).
+    # accent seam edges — DASHED, not continuous glowing bands. A full-width
+    # glowing stripe every cell reads as "stripey"; real sci-fi plating has short
+    # accent dashes / edge highlights that follow seams without dominating the
+    # hull. We place short dashes along each seam (split into segments).
     stripe = np.zeros((H, W), dtype=bool)
     fixed = np.zeros((H, W), dtype=bool)
     for i in range(cell, W, cell):
-        stripe[max(0,i-3):i+3, :] = True
+        dash = (W // cell) // 2
+        for k in range(dash):
+            x0 = (k * 2) * cell // dash            # skip gaps -> dashes
+            x0 += (i // cell % 2) * (cell // 2)    # stagger on alternate seams
+            seg = min(x0 + cell // 2, W)
+            stripe[max(0,i-2):i+3, x0:seg] = True
     fixed |= stripe
     D[stripe] = [accent[0], accent[1], accent[2], 1.0]
 
-    # emissive mask: glow seams + hazard-light dots
+    # emissive mask: glow the dashed seam accents + hazard-light dots (subtle)
     E = np.zeros((H, W, 4), dtype=np.float32)
     E[..., 3] = 1.0
     em = np.array(variant.get('emissive', [0.2, 0.55, 1.0]))
-    E[stripe] = [em[0], em[1], em[2], 1.0]
+    E[stripe] = [em[0]*0.7, em[1]*0.7, em[2]*0.7, 1.0]  # dimmer, not neon stripes
 
     # ---- Phase 4: material quality (shader knobs) ----
     # roughness: smooth metal with anisotropic grain + rough grooves. A directional
