@@ -164,8 +164,25 @@ void ASpaceshipInterior::ConfigureInterior(UStaticMesh* ShellMesh, bool bShowNow
 
     InteriorMesh->SetStaticMesh(Mesh);
 
-    // Fit the walkable volume + seat trigger to the mesh bounds so the avatar walks
-    // inside the real interior footprint.
+    // Normalize the interior to a human-walkable size. The authored interior
+    // shells are large (radius 8k-60k, ship-shell scale), but the avatar is
+    // human-scale (~192 units tall). If left at raw scale, the walk volume
+    // becomes a gigantic void. Scale the mesh so its shell radius maps to a
+    // comfortable room (~650 units ~ a few metres across for a 1.9m avatar).
+    const float TargetRadius = 650.0f;
+    const FBoxSphereBounds RawBounds = Mesh->GetBounds();
+    if (RawBounds.SphereRadius > 1.0f)
+    {
+        const float Scale = TargetRadius / RawBounds.SphereRadius;
+        InteriorMesh->SetRelativeScale3D(FVector(Scale, Scale, Scale));
+    }
+    else
+    {
+        InteriorMesh->SetRelativeScale3D(FVector::OneVector);
+    }
+
+    // Fit the walkable volume + seat trigger to the (now normalized) mesh bounds
+    // so the avatar walks inside a correctly-sized interior footprint.
     FitVolumeToMesh();
 
     // Hidden until the player enters unless asked to show now.
