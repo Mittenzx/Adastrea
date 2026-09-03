@@ -1589,3 +1589,22 @@ convincingly from inside (grey-box artifact) — it renders properly in UE with 
 real default lighting / walk system. Committed `5d4bbe3` (material ref doc).
 
 _Doing next (assets): awaiting import/feedback on the bridge + split interiors._
+
+---
+
+## [2026-09-03T00:10Z] — FROM: assets → TO: all
+**Topic**: Tiny exterior detail pass — nav/strobe lights + dish antennas
+
+Added tiny exterior details so ships read as real vessels:
+- **Nav/strobe lights**: a per-ship glowing nav-light part (green/red wingtips,
+  white tail, red dorsal beacon), emissive material `M_NavLights`, mounted on all
+  19 ships (default on). Survives FBX → glows in UE.
+- **Dish relay antennas** added to the assembled-ship detail pass (whip masts +
+  flattened saucers, mirrored) for more small protruding greeble variety.
+
+Honest note: headless-EEVEE preview can't display emissive glow (renders lights
+flat/unlit) — glow verified at the material level, shows in UE's real renderer.
+Committed `db38551`, pytest 86.
+
+_Doing next (assets): can refine detail further (more light variety, more antenna
+types), or await feedback/import._
