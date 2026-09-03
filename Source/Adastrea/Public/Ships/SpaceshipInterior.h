@@ -53,8 +53,22 @@ public:
     UBoxComponent* GetInteriorVolume() const { return InteriorVolume; }
 
     /** Set the rect size of the walkable floor (X = forward depth, Y = width). */
-    UFUNCTION(BlueprintCallable, Category="Interior")
-    void SetFloorDimensions(float ForwardDepth, float Width);
+        UFUNCTION(BlueprintCallable, Category="Interior")
+        void SetFloorDimensions(float ForwardDepth, float Width);
+
+        /**
+         * Configure the interior to show (and walk within) a given static-mesh interior.
+         * Assigns the mesh, hides it until entered, and sizes the walkable volume + exit
+         * trigger to the mesh's real bounds so the avatar walks inside the correct footprint.
+         * @param ShellMesh The interior static mesh (e.g. the ship's cockpit/hold shell).
+         * @param bShowNow If true, unhide immediately (else hidden until EnterInterior).
+         */
+        UFUNCTION(BlueprintCallable, Category="Interior")
+        void ConfigureInterior(class UStaticMesh* ShellMesh, bool bShowNow = false);
+
+        /** Resize the walk volume + seat trigger to the currently-assigned mesh bounds. */
+        UFUNCTION(BlueprintCallable, Category="Interior")
+        void FitVolumeToMesh();
 
 protected:
     virtual void OnConstruction(const FTransform& Transform) override;
@@ -82,8 +96,12 @@ protected:
     FVector ExitLocation;
 
     /** Root scene component so the volume can be positioned relative to the ship. */
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
-    TObjectPtr<USceneComponent> SceneRoot;
+        UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
+        TObjectPtr<USceneComponent> SceneRoot;
+
+        /** Visible interior geometry (shell/parts) the avatar walks inside. */
+        UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
+        TObjectPtr<class UStaticMeshComponent> InteriorMesh;
 
     /** Box volume the player can walk within (floor plane). */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
@@ -113,6 +131,10 @@ public:
         FVector ExitTriggerOffset = FVector(500.0f, 0.0f, 175.0f);
 
         /** Size of the cockpit/seat exit trigger box. */
-        UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
-        FVector ExitTriggerSize = FVector(100.0f, 150.0f, 200.0f);
+                UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
+                FVector ExitTriggerSize = FVector(100.0f, 150.0f, 200.0f);
+
+                /** Default interior shell mesh path when none is configured (fallback). */
+                UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
+                TSoftObjectPtr<UStaticMesh> DefaultInteriorMesh;
     };

@@ -153,18 +153,21 @@ void ASpaceship::BeginPlay()
     }
 
     // Spawn the interior actor if needed
-    if (!InteriorInstance.IsValid())
-    {
-        FActorSpawnParameters SpawnParams;
-        SpawnParams.Owner = this;
-        ASpaceshipInterior* SpawnedInterior = GetWorld()->SpawnActor<ASpaceshipInterior>(ASpaceshipInterior::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
-        if (SpawnedInterior)
+        if (!InteriorInstance.IsValid())
         {
-            SpawnedInterior->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
-            SpawnedInterior->SetActorHiddenInGame(true); // Hide until entered
-            InteriorInstance = SpawnedInterior;
+            FActorSpawnParameters SpawnParams;
+            SpawnParams.Owner = this;
+            ASpaceshipInterior* SpawnedInterior = GetWorld()->SpawnActor<ASpaceshipInterior>(ASpaceshipInterior::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+            if (SpawnedInterior)
+            {
+                SpawnedInterior->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
+                SpawnedInterior->SetActorHiddenInGame(true); // Hide until entered
+                // Show the real interior geometry and size the walkable volume to it.
+                UStaticMesh* ShellMesh = InteriorShellMesh.IsNull() ? nullptr : InteriorShellMesh.LoadSynchronous();
+                SpawnedInterior->ConfigureInterior(ShellMesh, false);
+                InteriorInstance = SpawnedInterior;
+            }
         }
-    }
 }
 
 #if WITH_EDITOR

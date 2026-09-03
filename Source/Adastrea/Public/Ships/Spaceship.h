@@ -12,6 +12,7 @@ class ASpaceshipInterior;
 class UInputAction;
 class USpringArmComponent;
 class UStaticMeshComponent;
+class UStaticMesh;
 class UCameraComponent;
 class USpaceshipDataAsset;
 class UDockingSettingsDataAsset;
@@ -92,12 +93,16 @@ public:
     float DefaultTurningBoost;
 
     // Reference to the walkable interior
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interior")
-        TWeakObjectPtr<ASpaceshipInterior> InteriorInstance;
+        UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interior")
+            TWeakObjectPtr<ASpaceshipInterior> InteriorInstance;
 
-        /** Get the ship's interior instance (may be null if unset). */
-        UFUNCTION(BlueprintPure, Category="Interior")
-        ASpaceshipInterior* GetInteriorInstance() const { return InteriorInstance.Get(); }
+            /** Interior shell mesh to show when walking the ship (e.g. cockpit/hold). */
+            UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interior")
+            TSoftObjectPtr<UStaticMesh> InteriorShellMesh;
+
+            /** Get the ship's interior instance (may be null if unset). */
+            UFUNCTION(BlueprintPure, Category="Interior")
+            ASpaceshipInterior* GetInteriorInstance() const { return InteriorInstance.Get(); }
 
     // Turn rate for ship rotation (degrees per second)
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Control", meta=(ClampMin="0.0"))

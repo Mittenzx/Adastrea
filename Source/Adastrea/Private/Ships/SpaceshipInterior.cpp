@@ -4,6 +4,8 @@
 #include "Player/AdastreaPlayerController.h"
 #include "Player/PlayerInteractableComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Engine/StaticMesh.h"
 #include "AdastreaLog.h"
 
 ASpaceshipInterior::ASpaceshipInterior()
@@ -13,13 +15,22 @@ ASpaceshipInterior::ASpaceshipInterior()
     SceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("SceneRoot"));
     SetRootComponent(SceneRoot);
 
+    // Visible interior geometry (shell/parts) the avatar walks inside.
+    InteriorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("InteriorMesh"));
+    InteriorMesh->SetupAttachment(SceneRoot);
+    InteriorMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    InteriorMesh->SetCollisionObjectType(ECC_WorldStatic);
+    InteriorMesh->SetCollisionResponseToAllChannels(ECR_Block);
+    InteriorMesh->SetHiddenInGame(true); // hidden until the player enters
+
     // Box volume defines the walkable interior region (floor plane).
     InteriorVolume = CreateDefaultSubobject<UBoxComponent>(TEXT("InteriorVolume"));
     InteriorVolume->SetupAttachment(SceneRoot);
     InteriorVolume->SetBoxExtent(FVector(500.0f, 300.0f, 175.0f)); // default 1000x600x350
-    InteriorVolume->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    InteriorVolume->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     InteriorVolume->SetCollisionObjectType(ECC_WorldStatic);
-    InteriorVolume->SetCollisionResponseToAllChannels(ECR_Block);
+    InteriorVolume->SetCollisionResponseToAllChannels(ECR_Ignore);
+    InteriorVolume->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block); // keep the avatar on the floor region
 
     // Trigger volume at the cockpit/seat: walking the avatar into it re-possesses the ship.
     ExitTrigger = CreateDefaultSubobject<UBoxComponent>(TEXT("ExitTrigger"));
@@ -128,4 +139,71 @@ void ASpaceshipInterior::OnSeatInteract(AAdastreaPlayerController* PC)
         UE_LOG(LogAdastrea, Log, TEXT("InteriorSeat: E interact -> returning to %s cockpit."), *SourceShip->GetName());
         PC->ExitShipInterior(SourceShip);
     }
+}
+
+void ASpaceshipInterior::ConfigureInterior(UStaticMesh* ShellMesh, bool bShowNow)
+{
+    if (!InteriorMesh)
+    {
+        return;
+    }
+
+    // Resolve the mesh: explicit arg, else the configured default, else a fallback path.
+    UStaticMesh* Mesh = ShellMesh;
+    if (!Mesh && !DefaultInteriorMesh.IsNull())
+    {
+        Mesh = DefaultInteriorMesh.LoadSynchronous();
+    }
+
+    if (!Mesh)
+    {
+        // Fallback: try the fighter cockpit interior by path so the walk is never empty.
+        static const TCHAR* Fallback = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_Fighter_Cockpit.SM_Int_Fighter_Cockpit");
+        Mesh = LoadObject<UStaticMesh>(nullptr, Fallback);
+    }
+
+    InteriorMesh->SetStaticMesh(Mesh);
+
+    // Fit the walkable volume + seat trigger to the mesh bounds so the avatar walks
+    // inside the real interior footprint.
+    FitVolumeToMesh();
+
+    // Hidden until the player enters unless asked to show now.
+    InteriorMesh->SetHiddenInGame(!bShowNow);
+    UE_LOG(LogAdastrea, Log, TEXT("Interior %s configured with mesh %s (visible=%d)"),
+        *GetName(), Mesh ? *Mesh->GetName() : TEXT("NULL"), bShowNow ? 1 : 0);
+}
+
+void ASpaceshipInterior::FitVolumeToMesh()
+{
+    if (!InteriorMesh || !InteriorMesh->GetStaticMesh())
+    {
+        return;
+    }
+
+    const FBoxSphereBounds Bounds = InteriorMesh->Bounds;
+    const FVector Extent = Bounds.BoxExtent;
+    const float HalfDepth = FMath::Max(Extent.X, 50.0f);
+    const float HalfWidth = FMath::Max(Extent.Y, 50.0f);
+    const float HalfHeight = FMath::Max(Extent.Z, 100.0f);
+
+    // Walkable floor: cover the interior's footprint (X/Y), modest height, sits on the floor.
+    if (InteriorVolume)
+    {
+        InteriorVolume->SetBoxExtent(FVector(HalfDepth, HalfWidth, 100.0f));
+        // Rise so its bottom is at the interior floor (mesh bounds min Z, local).
+        const float FloorZ = Bounds.Origin.Z - Extent.Z;
+        InteriorVolume->SetRelativeLocation(FVector(0.0f, 0.0f, FloorZ + 100.0f));
+    }
+
+    // Seat/exit trigger near the front of the interior.
+    if (ExitTrigger)
+    {
+        ExitTrigger->SetRelativeLocation(FVector(HalfDepth * 0.6f, 0.0f, HalfHeight * 0.6f));
+    }
+
+    // Default entry point: centre of the interior, standing on the floor.
+    EntryLocation = FVector(0.0f, 0.0f, 200.0f);
+    UE_LOG(LogAdastrea, Log, TEXT("Interior %s volume fitted to mesh bounds (d=%.0f w=%.0f h=%.0f)"),
+        *GetName(), HalfDepth * 2, HalfWidth * 2, HalfHeight * 2);
 }
