@@ -46,6 +46,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Avatar")
 	void SitDown();
 
+	/** Switch to a first-person (eyes-height) camera inside an interior. */
+	UFUNCTION(BlueprintCallable, Category="Avatar|Camera")
+	void SetFirstPersonView(bool bEnable);
+
+	/** True when the avatar is in first-person view (e.g. inside a ship interior). */
+	UFUNCTION(BlueprintPure, Category="Avatar|Camera")
+	bool IsFirstPersonView() const { return bFirstPersonView; }
+
 	/** Set the movement speed multipliers for walk/sprint/crouch — configurable per biome. */
 	UFUNCTION(BlueprintCallable, Category="Avatar|Movement")
 	void SetMovementTuning(float InWalkSpeed, float InSprintMultiplier, float InCrouchMultiplier);
@@ -77,6 +85,9 @@ protected:
 	TObjectPtr<USpringArmComponent> CameraBoom;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
 	TObjectPtr<UCameraComponent> FollowCamera;
+
+	/** True while in first-person (interior) view — the camera rides at eye height. */
+	bool bFirstPersonView = false;
 
 	// --- Input ---
 	UPROPERTY(EditDefaultsOnly, Category="Input")

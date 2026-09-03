@@ -18,10 +18,10 @@ ASpaceshipInterior::ASpaceshipInterior()
     // Visible interior geometry (shell/parts) the avatar walks inside.
     InteriorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("InteriorMesh"));
     InteriorMesh->SetupAttachment(SceneRoot);
-    InteriorMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-    InteriorMesh->SetCollisionObjectType(ECC_WorldStatic);
-    InteriorMesh->SetCollisionResponseToAllChannels(ECR_Block);
-    InteriorMesh->SetHiddenInGame(true); // hidden until the player enters
+        InteriorMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics); // solid: avatar stands on real geometry
+        InteriorMesh->SetCollisionObjectType(ECC_WorldStatic);
+        InteriorMesh->SetCollisionResponseToAllChannels(ECR_Block);
+        InteriorMesh->SetHiddenInGame(true); // hidden until the player enters
 
     // Box volume defines the walkable interior region (floor plane).
     InteriorVolume = CreateDefaultSubobject<UBoxComponent>(TEXT("InteriorVolume"));
@@ -30,7 +30,7 @@ ASpaceshipInterior::ASpaceshipInterior()
     InteriorVolume->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     InteriorVolume->SetCollisionObjectType(ECC_WorldStatic);
     InteriorVolume->SetCollisionResponseToAllChannels(ECR_Ignore);
-    InteriorVolume->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block); // keep the avatar on the floor region
+    InteriorVolume->SetCollisionResponseToAllChannels(ECR_Ignore); // overlay only; the solid shell floors the avatar
 
     // Trigger volume at the cockpit/seat: walking the avatar into it re-possesses the ship.
     ExitTrigger = CreateDefaultSubobject<UBoxComponent>(TEXT("ExitTrigger"));
@@ -199,6 +199,15 @@ void ASpaceshipInterior::ConfigureInterior(UStaticMesh* ShellMesh, bool bShowNow
     InteriorMesh->SetHiddenInGame(!bShowNow);
     UE_LOG(LogAdastrea, Log, TEXT("Interior %s configured with mesh %s (visible=%d)"),
         *GetName(), Mesh ? *Mesh->GetName() : TEXT("NULL"), bShowNow ? 1 : 0);
+}
+
+void ASpaceshipInterior::RevealInterior()
+{
+    if (InteriorMesh)
+    {
+        InteriorMesh->SetHiddenInGame(false);
+    }
+    SetActorHiddenInGame(false);
 }
 
 void ASpaceshipInterior::FitVolumeToMesh()

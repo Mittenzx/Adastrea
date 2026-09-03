@@ -51,6 +51,43 @@ ASpaceshipAvatar::ASpaceshipAvatar()
 	bUseControllerRotationYaw = true; // character faces where we look
 }
 
+void ASpaceshipAvatar::SetFirstPersonView(bool bEnable)
+{
+	bFirstPersonView = bEnable;
+
+	if (bEnable)
+	{
+		// First-person: keep the boom attached to the capsule (so it follows the
+		// pawn) but pull the camera to the mount point (arm length 0) at eye height,
+		// and let controller rotation steer it. Hide the avatar mesh so it doesn't
+		// clip into the near view.
+		CameraBoom->TargetArmLength = 0.0f;
+		CameraBoom->SetRelativeLocation(FVector(0.0f, 0.0f, 165.0f)); // eye height
+		CameraBoom->SetRelativeRotation(FRotator::ZeroRotator);
+		CameraBoom->bUsePawnControlRotation = true;
+		FollowCamera->bUsePawnControlRotation = true;
+		if (GetMesh())
+		{
+			GetMesh()->SetVisibility(false, true);
+			GetMesh()->SetHiddenInGame(true, true);
+		}
+	}
+	else
+	{
+		// Third-person: restore the follow boom behind the avatar.
+		CameraBoom->SetRelativeLocation(FVector::ZeroVector);
+		CameraBoom->TargetArmLength = 500.0f;
+		CameraBoom->SetRelativeRotation(FRotator(-12.0f, 0.0f, 0.0f));
+		CameraBoom->bUsePawnControlRotation = true;
+		FollowCamera->bUsePawnControlRotation = false;
+		if (GetMesh())
+		{
+			GetMesh()->SetVisibility(true, true);
+			GetMesh()->SetHiddenInGame(false, true);
+		}
+	}
+}
+
 void ASpaceshipAvatar::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);

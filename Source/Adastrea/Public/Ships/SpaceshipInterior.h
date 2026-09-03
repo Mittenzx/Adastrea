@@ -67,8 +67,13 @@ public:
         void ConfigureInterior(class UStaticMesh* ShellMesh, bool bShowNow = false);
 
         /** Resize the walk volume + seat trigger to the currently-assigned mesh bounds. */
-        UFUNCTION(BlueprintCallable, Category="Interior")
-        void FitVolumeToMesh();
+                UFUNCTION(BlueprintCallable, Category="Interior")
+                void FitVolumeToMesh();
+
+                /** Un-hide the interior shell so the avatar can see the room around it.
+                 * SetActorHiddenInGame(false) on the actor doesn't always override a
+                 * component explicitly hidden by ConfigureInterior, so force it here. */
+                void RevealInterior();
 
 protected:
     virtual void OnConstruction(const FTransform& Transform) override;

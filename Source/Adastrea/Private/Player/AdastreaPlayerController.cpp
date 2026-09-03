@@ -4,6 +4,7 @@
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipAvatar.h"
 #include "Ships/SpaceshipInterior.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Stations/SpaceStation.h"
 #include "AdastreaHUD.h"
 #include "Stations/SpaceStationModule.h"
@@ -1674,6 +1675,31 @@ void AAdastreaPlayerController::EnterShipInterior(ASpaceship* Ship)
 
 	// Show the interior, switch possession, capture mouse for the avatar camera.
 	Interior->SetActorHiddenInGame(false);
+	Interior->RevealInterior(); // explicitly unhide the shell mesh too
+	// Zero the avatar's gravity inside (space interior has no planet) so it walks
+	// at entry height instead of falling off the shell. Restored on exit.
+	if (UCharacterMovementComponent* MoveComp = AvatarPawn->GetCharacterMovement())
+	{
+		MoveComp->GravityScale = 0.0f;
+		MoveComp->Velocity = FVector::ZeroVector;
+		MoveComp->SetMovementMode(MOVE_Flying);
+	}
+	// The avatar walks INSIDE the ship's hull — disable the ship's solid collision
+	// so CharacterMovement doesn't eject the avatar out of the shell on spawn.
+	if (USceneComponent* ShipRoot = Ship->GetRootComponent())
+	{
+		TArray<USceneComponent*> ShipChildren;
+		ShipRoot->GetChildrenComponents(true, ShipChildren);
+		for (USceneComponent* C : ShipChildren)
+		{
+			UPrimitiveComponent* Prim = Cast<UPrimitiveComponent>(C);
+			if (Prim)
+			{
+				Prim->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+				Prim->SetSimulatePhysics(false);
+			}
+		}
+	}
 	// Record the entrance time so the exit trigger ignores the spawn overlap for
 	// a short grace period (else the avatar instantly bounces back to the cockpit).
 	Interior->EntranceWorldTime = Interior->GetWorld()->GetTimeSeconds();
@@ -1681,6 +1707,9 @@ void AAdastreaPlayerController::EnterShipInterior(ASpaceship* Ship)
 	Possess(AvatarPawn);
 	SetInputMode(FInputModeGameOnly());
 	bShowMouseCursor = false;
+	// Frame the interior from the avatar's eyes (first-person) so the room walls
+	// surround the view instead of a 3rd-person camera clipping through them.
+	AvatarPawn->SetFirstPersonView(true);
 
 	UE_LOG(LogAdastrea, Log, TEXT("EnterShipInterior: player walked into %s's interior."), *Ship->GetName());
 }
@@ -1700,6 +1729,36 @@ void AAdastreaPlayerController::ExitShipInterior(ASpaceship* Ship)
 	Possess(Ship);
 	SetInputMode(FInputModeGameOnly());
 	bShowMouseCursor = false;
+
+	if (AvatarPawn)
+	{
+		AvatarPawn->SetFirstPersonView(false); // restore 3rd-person ship cam
+		// Restore normal gravity/walking for the ship (or elsewhere on foot).
+		if (UCharacterMovementComponent* MoveComp = AvatarPawn->GetCharacterMovement())
+		{
+			MoveComp->GravityScale = 1.0f;
+			MoveComp->SetMovementMode(MOVE_Walking);
+		}
+	}
+
+	// Restore the ship's collision now that we're back at the helm.
+	if (USceneComponent* ShipRoot = Ship->GetRootComponent())
+	{
+		TArray<USceneComponent*> ShipChildren;
+		ShipRoot->GetChildrenComponents(true, ShipChildren);
+		for (USceneComponent* C : ShipChildren)
+		{
+			UPrimitiveComponent* Prim = Cast<UPrimitiveComponent>(C);
+			if (Prim)
+			{
+				Prim->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+				if (Prim->IsSimulatingPhysics())
+				{
+					Prim->SetSimulatePhysics(false);
+				}
+			}
+		}
+	}
 
 	if (ASpaceshipInterior* Interior = Ship->GetInteriorInstance())
 	{
