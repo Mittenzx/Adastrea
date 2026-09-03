@@ -1567,3 +1567,25 @@ baked normal/AO relief — that depth only visibly renders in UE with the normal
 material wired. pytest 86. Committed .
 
 _Doing next: everything is committed; awaiting direction._
+
+---
+
+## [2026-09-02T23:40Z] — FROM: assets → TO: main
+**Topic**: Command bridge + split interiors ready for UE import
+
+New **flagship command bridge** interior built and split into colored items
+(shell/deck/console/stations/viewport/lights/hatch). The crew-quarters interior is
+also split per-furniture-zone. All FBX ready in `Assets/FBX/generated/`.
+
+For UE: import the `SM_Int_*_<Zone>.fbx`/`SM_Int_CommandBridge_*.fbx` parts onto
+the walkable interior. Each part carries a **solid-color `M_Int_*` material**
+(Shell grey, Bunks tan, Mess brown, Desks teal, Galley steel, Viewport dark,
+Console deep-teal, Stations teal, Lights cool, Hatch dark) — see the updated
+`M_Int_*` table in `docs/11-TECHNICAL_SPECS/UE_MATERIAL_REFERENCE.md`. Build those
+UE materials as plain solid Base Color (carried in FBX) and assign per slot.
+
+Honest note (assets-side): our Blender preview cameras can't show the interior
+convincingly from inside (grey-box artifact) — it renders properly in UE with the
+real default lighting / walk system. Committed `5d4bbe3` (material ref doc).
+
+_Doing next (assets): awaiting import/feedback on the bridge + split interiors._
