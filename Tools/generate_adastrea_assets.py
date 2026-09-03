@@ -2151,78 +2151,85 @@ def build_cockpit_interior(sz, outname):
 
 
 def build_hab_interior(sz, outname, room_count=1):
-    """Crew-quarters / hab interior module — floor, walls, ceiling, bunks,
-    desks, lockers, central table, light fixtures, paneling.
-
-    Enhanced set dressing vs v1 (addresses vision review): two-tier bunks with
-    ladders + pillows, defined desk consoles with screens, floor lockers, a
-    central mess table, wall-mounted light fixtures, and wall paneling.
-    """
+    """FLAGSHIP Crew Quarters / Hab module — LARGER walkable footprint AND densely
+    furnished so it reads as a real, populated ship interior (not a placeholder).
+    Zones: sleeping arc (double bunks), a mess/dining area, computer workstations,
+    a storage locker wall, a small galley, and an overhead service deck. Large
+    open floor (460x220, 140 high), multi-room feel, heavy set dressing (pipes,
+    vents, T-grid ceiling lights, floor grating, cabinets)."""
     k = sc(sz)
     parts = []
-    L = 300*k
-    W = 140*k
-    H = 110*k
-    # open shell: floor + 2 long walls (front/back open for modularity)
-    floor = box("HabFloor", L, W, 8*k, loc=(0, 0, 0)); bevel(floor, 2, 1); parts.append(floor)
-    w_l = box("HabWallL", 8*k, W, H, loc=(-L/2, 0, H/2)); bevel(w_l, 2, 1)
-    w_r = box("HabWallR", 8*k, W, H, loc=(L/2, 0, H/2)); bevel(w_r, 2, 1)
-    parts += [w_l, w_r]
-    # ceiling
-    ceil = box("HabCeil", L, W, 6*k, loc=(0, 0, H)); bevel(ceil, 2, 1); parts.append(ceil)
-    # wall paneling strips (vertical, on the long walls)
+    L = 460*k
+    W = 220*k
+    H = 140*k
+    # ---- shell ----
+    floor = box("HabFloor", L, W, 8*k, loc=(0, 0, 0)); bevel(floor, 3, 1); parts.append(floor)
     for side in (-1, 1):
-        for y in range(int(-W/2)+12, int(W/2), 24):
-            pnl = box(f"Panel{side}_{y}", 3*k, 16*k, 40*k, loc=(side*(L/2-6*k), y, 45*k))
-            parts.append(pnl)
-    # ceiling light fixtures (recessed panels + glow strips)
-    for x in (-L/4, 0, L/4):
-        ls = box(f"Light{x}", 40*k, 6*k, 4*k, loc=(x, 0, H-6*k))
-        lf = box(f"LightFit{x}", 46*k, 10*k, 6*k, loc=(x, 0, H-8*k))  # fixture frame
-        parts += [ls, lf]
+        w = box(f"HabWall{side}", 10*k, W, H, loc=(side*L/2, 0, H/2)); bevel(w, 3, 1); parts.append(w)
+    w_f = box("HabWallF", L, 8*k, H, loc=(0, -W/2, H/2)); bevel(w_f, 3, 1); parts.append(w_f)
+    ceil = box("HabCeil", L, W, 7*k, loc=(0, 0, H)); bevel(ceil, 3, 1); parts.append(ceil)
 
-    # two-tier bunks (upper + lower) with ladders, pillows
-    for i in range(max(1, room_count*2)):
-        ox = -L/2 + 80*k + i*80*k
-        # lower bunk
-        b_low_base = box(f"BunkLoBase{i}", 40*k, 60*k, 14*k, loc=(ox, -40*k, 7*k)); bevel(b_low_base, 2, 1)
-        b_low_matt = box(f"BunkLoMatt{i}", 34*k, 54*k, 6*k, loc=(ox, -40*k, 17*k))  # mattress
-        # upper bunk
-        b_hi_base = box(f"BunkHiBase{i}", 40*k, 60*k, 14*k, loc=(ox, -40*k, 48*k)); bevel(b_hi_base, 2, 1)
-        b_hi_matt = box(f"BunkHiMatt{i}", 34*k, 54*k, 6*k, loc=(ox, -40*k, 58*k))
-        # vertical frame corners
-        for dx, dy in ((-20*k, -30*k), (20*k, -30*k), (-20*k, 30*k), (20*k, 30*k)):
-            post = box(f"Post{i}_{dx}_{dy}", 5*k, 5*k, 65*k, loc=(ox+dx, -40*k+dy, 33*k))
-            parts.append(post)
-        # pillow at head
-        pillow = box(f"Pillow{i}", 30*k, 16*k, 6*k, loc=(ox, -12*k, 20*k)); bevel(pillow, 2, 1)
-        # side ladder rungs
-        for rr in range(4):
-            rung = box(f"Rung{i}_{rr}", 4*k, 18*k, 4*k, loc=(ox-24*k, -20*k, 12*k + rr*14*k))
-            parts.append(rung)
-        parts += [b_low_base, b_low_matt, b_hi_base, b_hi_matt, pillow]
+    # ---- ceiling: T-bar grid lights + overhead conduit runs ----
+    for gx in range(int(-L/2+60), int(L/2), 120):
+        parts.append(box(f"Light{gx}", 70*k, 8*k, 5*k, loc=(gx, 0, H-7*k)))
+        parts.append(box(f"LightFit{gx}", 78*k, 14*k, 7*k, loc=(gx, 0, H-10*k)))
+    for gx in range(int(-L/2+40), int(L/2), 60):
+        parts.append(box(f"Cond{gx}", 4*k, W, 5*k, loc=(gx, 0, H-16*k)))
 
-    # desk consoles with raised screens + side keyboard
-    for i in range(max(1, room_count)):
-        ox = -L/2 + 60*k + i*120*k
-        desk = box(f"Desk{i}", 50*k, 30*k, 34*k, loc=(ox, 30*k, 17*k)); bevel(desk, 2, 1)
-        screen = box(f"DeskScreen{i}", 30*k, 4*k, 18*k, loc=(ox, 26*k, 46*k))   # emissive
-        kbd = box(f"DeskKbd{i}", 30*k, 10*k, 4*k, loc=(ox, 36*k, 34*k))
-        chair_base = box(f"ChairBase{i}", 16*k, 16*k, 10*k, loc=(ox, 46*k, 5*k))
-        chair_back = box(f"ChairBack{i}", 16*k, 6*k, 26*k, loc=(ox, 52*k, 24*k)); bevel(chair_back, 2, 1)
-        parts += [desk, screen, kbd, chair_base, chair_back]
+    # ---- floor grating ribs ----
+    for gx in range(int(-L/2+20), int(L/2), 24):
+        parts.append(box(f"Grate{gx}", 4*k, W, 3*k, loc=(gx, 0, 9*k)))
 
-    # storage lockers (tall, right wall) + a central mess table
-    for i in range(4):
-        lk = box(f"Locker{i}", 24*k, 6*k, 60*k, loc=(-L/2+30*k+i*70*k, 62*k, 40*k)); bevel(lk, 1, 1)
-        parts.append(lk)
-    table = box("MessTable", 70*k, 40*k, 8*k, loc=(0, -6*k, 8*k)); bevel(table, 2, 1)
-    table_legs = [box(f"TLeg{i}", 5*k, 5*k, 8*k, loc=(x, y, 2*k))
-                  for i, (x, y) in enumerate([(-32*k, -16*k), (32*k, -16*k), (-32*k, 16*k), (32*k, 16*k)])]
-    parts += [table] + table_legs
+    # ---- ZONE A: sleeping arc — 4 double-bunk stacks + lockers ----
+    for bi in range(4):
+        ox = -L/2 + 100*k + bi*60*k
+        parts.append(box(f"Bunk{bi}_lo", 34*k, 70*k, 16*k, loc=(ox, -70*k, 8*k)))
+        parts.append(box(f"Bunk{bi}_lom", 30*k, 64*k, 7*k, loc=(ox, -70*k, 20*k)))
+        parts.append(box(f"Bunk{bi}_hi", 34*k, 70*k, 16*k, loc=(ox, -70*k, 52*k)))
+        parts.append(box(f"Bunk{bi}_him", 30*k, 64*k, 7*k, loc=(ox, -70*k, 64*k)))
+        parts.append(box(f"Bunk{bi}_pillow", 26*k, 18*k, 6*k, loc=(ox, -42*k, 23*k)))
+        for dx, dy in ((-16*k, -34*k), (16*k, -34*k), (-16*k, 34*k), (16*k, 34*k)):
+            parts.append(box(f"Bunk{bi}_post", 6*k, 6*k, 72*k, loc=(ox+dx, -70*k+dy, 36*k)))
+        for rr in range(5):
+            parts.append(box(f"Bunk{bi}_rung{rr}", 5*k, 20*k, 5*k, loc=(ox, -40*k, 16*k+rr*14*k)))
+        parts.append(box(f"Lock{bi}", 26*k, 8*k, 64*k, loc=(ox+44*k, -78*k, 40*k)))
+
+    # ---- ZONE B: mess/dining — long central table + benches + wall cabinets ----
+    parts.append(box("MessTable", 130*k, 40*k, 9*k, loc=(0, -60*k, 9*k)))
+    for i in range(5):
+        parts.append(box(f"TLeg{i}", 6*k, 6*k, 9*k, loc=(-55*k+i*27*k, -70*k, 2*k)))
+    for side in (-1, 1):
+        parts.append(box(f"Bench{side}", 130*k, 18*k, 8*k, loc=(0, -48*k+side*26*k, 4*k)))
+    for gx in range(int(-L/2+60), int(L/2), 90):
+        parts.append(box(f"Cab{gx}", 34*k, 12*k, 34*k, loc=(gx, 76*k, 70*k)))
+
+    # ---- ZONE C: computer workstation row ----
+    for ci in range(4):
+        ox = -L/2 + 40*k + ci*60*k
+        parts.append(box(f"Desk{ci}", 42*k, 30*k, 32*k, loc=(ox, 40*k, 16*k)))
+        parts.append(box(f"Screen{ci}", 26*k, 4*k, 18*k, loc=(ox, 34*k, 44*k)))
+        parts.append(box(f"Kbd{ci}", 26*k, 10*k, 4*k, loc=(ox, 46*k, 32*k)))
+        parts.append(box(f"Chair{ci}", 16*k, 16*k, 10*k, loc=(ox, 60*k, 5*k)))
+        parts.append(box(f"ChairB{ci}", 16*k, 6*k, 30*k, loc=(ox, 66*k, 25*k)))
+
+    # ---- ZONE D: small galley ----
+    parts.append(box("GalleyCounter", 70*k, 34*k, 30*k, loc=(-L/2+60*k, 40*k, 15*k)))
+    parts.append(box("GalleySink", 24*k, 16*k, 8*k, loc=(-L/2+60*k, 44*k, 26*k)))
+    parts.append(box("GalleyLight", 40*k, 8*k, 4*k, loc=(-L/2+60*k, 40*k, H-30*k)))
+
+    # ---- ZONE E: air vents + emergency wall lights ----
+    for gx in range(int(-L/2+40), int(L/2), 80):
+        parts.append(box(f"Vent{gx}", 20*k, 4*k, 14*k, loc=(gx, -W/2+6*k, 26*k)))
+        parts.append(box(f"Emg{gx}", 3*k, 2*k, 3*k, loc=(gx, -W/2+5*k, 60*k)))
+
+    # ---- entrance hatch frame ----
+    parts.append(box("HatchL", 6*k, 12*k, 120*k, loc=(-L/2+10*k, W/2-6*k, 60*k)))
+    parts.append(box("HatchR", 6*k, 12*k, 120*k, loc=(L/2-10*k, W/2-6*k, 60*k)))
+    parts.append(box("HatchT", L-20*k, 12*k, 10*k, loc=(0, W/2-6*k, H-8*k)))
 
     jo, out = finalize_part(parts, outname, "M_Interior_Hab")
     return [(jo, out)]
+
 
 
 def build_corridor(prefix):
