@@ -18,9 +18,10 @@ ASpaceshipInterior::ASpaceshipInterior()
     // Visible interior geometry (shell/parts) the avatar walks inside.
     InteriorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("InteriorMesh"));
     InteriorMesh->SetupAttachment(SceneRoot);
-        InteriorMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics); // solid: avatar stands on real geometry
+        InteriorMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics); // solid to world/objects
         InteriorMesh->SetCollisionObjectType(ECC_WorldStatic);
         InteriorMesh->SetCollisionResponseToAllChannels(ECR_Block);
+        InteriorMesh->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore); // avatar walks INSIDE it, not blocked
         InteriorMesh->SetHiddenInGame(true); // hidden until the player enters
 
     // Box volume defines the walkable interior region (floor plane).

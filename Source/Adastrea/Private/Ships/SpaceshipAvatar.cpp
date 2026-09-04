@@ -33,7 +33,7 @@ ASpaceshipAvatar::ASpaceshipAvatar()
 	// CharacterMovement: normal third-person walking.
 	UCharacterMovementComponent* MoveComp = GetCharacterMovement();
 	MoveComp->MaxWalkSpeed = 300.0f;
-	MoveComp->bOrientRotationToMovement = true;
+	MoveComp->bOrientRotationToMovement = false; // face the look direction (first-person)
 	MoveComp->RotationRate = FRotator(0.0f, 540.0f, 0.0f);
 	MoveComp->bUseControllerDesiredRotation = false;
 
