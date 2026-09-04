@@ -89,6 +89,9 @@ protected:
 	/** True while in first-person (interior) view — the camera rides at eye height. */
 	bool bFirstPersonView = false;
 
+	/** Standing altitude (local Z) the avatar is held at while inside an interior. */
+	float InteriorFloorAltitude = 96.0f;
+
 	// --- Input ---
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputAction> MoveAction;

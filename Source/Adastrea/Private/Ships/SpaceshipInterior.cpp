@@ -279,6 +279,21 @@ void ASpaceshipInterior::ApplyInteriorMaterials()
         UE_LOG(LogAdastrea, Log, TEXT("Interior %s materials applied by slot name."), *GetName());
     }
 
+bool ASpaceshipInterior::GetLocalHalfExtents(const float InAltitude, FVector& OutHalfExtents) const
+{
+    if (!InteriorMesh || !InteriorMesh->GetStaticMesh())
+    {
+        return false;
+    }
+    // Use the current scaled mesh bounds for walk limits (already normalized to a
+    // comfortable room). Hold the avatar at the requested standing altitude.
+    const FBoxSphereBounds Bounds = InteriorMesh->Bounds;
+    OutHalfExtents = FVector(FMath::Max(Bounds.BoxExtent.X, 100.0f),
+                             FMath::Max(Bounds.BoxExtent.Y, 100.0f),
+                             InAltitude);
+    return true;
+}
+
 void ASpaceshipInterior::FitVolumeToMesh()
 {
     if (!InteriorMesh || !InteriorMesh->GetStaticMesh())

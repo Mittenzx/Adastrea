@@ -78,7 +78,13 @@ public:
                 protected:
                         /** Re-point the exported mesh's world-grid material slots to the authored
                          * M_Int_* kit materials so the interior reads as a designed room. */
-                        void ApplyInteriorMaterials();
+                                void ApplyInteriorMaterials();
+
+                public:
+                        /** Return the interior's floor half-extents (local X/Y walk limits) and a
+                         * standing altitude (local Z) the avatar should be held at. Returns false
+                         * if no mesh is configured yet. */
+                        bool GetLocalHalfExtents(const float InAltitude, FVector& OutHalfExtents) const;
 
 protected:
     virtual void OnConstruction(const FTransform& Transform) override;
