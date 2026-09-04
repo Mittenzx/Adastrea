@@ -6,6 +6,8 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/StaticMesh.h"
+#include "Materials/MaterialInterface.h"
+#include "Materials/Material.h"
 #include "AdastreaLog.h"
 
 ASpaceshipInterior::ASpaceshipInterior()
@@ -175,6 +177,11 @@ void ASpaceshipInterior::ConfigureInterior(UStaticMesh* ShellMesh, bool bShowNow
 
     InteriorMesh->SetStaticMesh(Mesh);
 
+    // Assign the authored M_Int_* kit materials over the world-grid defaults so the
+    // interior reads as a designed room (the exported meshes ship with a placeholder
+    // grid material on every slot). Map each material slot to its matching kit asset.
+    ApplyInteriorMaterials();
+
     // Normalize the interior to a human-walkable size. The authored interior
     // shells are large (radius 8k-60k, ship-shell scale), but the avatar is
     // human-scale (~192 units tall). If left at raw scale, the walk volume
@@ -210,6 +217,67 @@ void ASpaceshipInterior::RevealInterior()
     }
     SetActorHiddenInGame(false);
 }
+
+void ASpaceshipInterior::ApplyInteriorMaterials()
+{
+    if (!InteriorMesh)
+    {
+        return;
+    }
+    const UStaticMesh* Mesh = InteriorMesh->GetStaticMesh();
+    if (!Mesh)
+    {
+        return;
+    }
+
+    auto LoadMat = [&](const TCHAR* Path) -> UMaterialInterface*
+    {
+        return LoadObject<UMaterialInterface>(nullptr, Path);
+    };
+
+    UMaterialInterface* ShellMat   = LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Shell"));
+    UMaterialInterface* DeckMat    = LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Deck"));
+    UMaterialInterface* ConsoleMat = LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Console"));
+    UMaterialInterface* LightsMat  = LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Lights"));
+    UMaterialInterface* VentsMat   = LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Vents"));
+    UMaterialInterface* StationsMat= LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Stations"));
+    UMaterialInterface* ViewportMat= LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Viewport"));
+    UMaterialInterface* BunksMat   = LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Bunks"));
+    UMaterialInterface* DesksMat   = LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Desks"));
+    UMaterialInterface* GalleyMat  = LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Galley"));
+    UMaterialInterface* MessMat    = LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Mess"));
+    UMaterialInterface* HatchMat   = LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Hatch"));
+
+        // Apply each kit material to its matching slot by SLOT NAME. The exported meshes
+        // ship with WorldGridMaterial on every slot, so the slot NAME (M_Int_Shell,
+        // M_Int_Deck, ...) is the reliable key, not the current material's type.
+        auto TrySetByName = [&](const TCHAR* SlotName, UMaterialInterface* Mat)
+        {
+            if (!Mat) return;
+            const FName Name(SlotName);
+            if (InteriorMesh->GetMaterialByName(Name) != nullptr)
+            {
+                InteriorMesh->SetMaterialByName(Name, Mat);
+            }
+        };
+
+        TrySetByName(TEXT("M_Int_Shell"), ShellMat);
+        TrySetByName(TEXT("M_Int_Deck"), DeckMat);
+        TrySetByName(TEXT("M_Int_Console"), ConsoleMat);
+        TrySetByName(TEXT("M_Int_Lights"), LightsMat);
+        TrySetByName(TEXT("M_Int_Vents"), VentsMat);
+        TrySetByName(TEXT("M_Int_Stations"), StationsMat);
+        TrySetByName(TEXT("M_Int_Viewport"), ViewportMat);
+        TrySetByName(TEXT("M_Int_Bunks"), BunksMat);
+        TrySetByName(TEXT("M_Int_Desks"), DesksMat);
+        TrySetByName(TEXT("M_Int_Galley"), GalleyMat);
+        TrySetByName(TEXT("M_Int_Mess"), MessMat);
+        TrySetByName(TEXT("M_Int_Hatch"), HatchMat);
+        // Fighter cockpit uses an M_Interior_* slot name; map its shell slot too.
+        TrySetByName(TEXT("M_Interior_Cockpit"), ShellMat);
+
+        UE_LOG(LogAdastrea, Log, TEXT("Interior %s materials applied by slot name."), *GetName());
+    }
 
 void ASpaceshipInterior::FitVolumeToMesh()
 {

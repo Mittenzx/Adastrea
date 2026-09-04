@@ -71,9 +71,14 @@ public:
                 void FitVolumeToMesh();
 
                 /** Un-hide the interior shell so the avatar can see the room around it.
-                 * SetActorHiddenInGame(false) on the actor doesn't always override a
-                 * component explicitly hidden by ConfigureInterior, so force it here. */
-                void RevealInterior();
+                         * SetActorHiddenInGame(false) on the actor doesn't always override a
+                         * component explicitly hidden by ConfigureInterior, so force it here. */
+                                void RevealInterior();
+
+                protected:
+                        /** Re-point the exported mesh's world-grid material slots to the authored
+                         * M_Int_* kit materials so the interior reads as a designed room. */
+                        void ApplyInteriorMaterials();
 
 protected:
     virtual void OnConstruction(const FTransform& Transform) override;
