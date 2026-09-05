@@ -363,9 +363,12 @@ public:
 																											void HandleShipSelectRotateR();
 																											void HandleShipSelectFly();
 																																void HandleShipSelectClose();
-																																void HandleShipSelectOpen();
+																																	void HandleShipSelectOpen();
 
-																	/** Map camera/orbit/filter input handlers. */
+																																	/** Input handler: N toggles the station information overview screen. */
+																																	void HandleStationInfoToggle();
+
+																																	/** Map camera/orbit/filter input handlers. */
 																	void HandleMapOrbitUp();
 																	void HandleMapOrbitDown();
 																	void HandleMapOrbitLeft();
@@ -521,7 +524,15 @@ public:
 	 * @return The nearest station, or nullptr if none within range
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Trading")
-	ASpaceStation* GetNearestTradableStation() const;
+		ASpaceStation* GetNearestTradableStation() const;
+
+		/**
+		 * Public accessor: the nearest space station within the search radius,
+		 * regardless of tradability (used by the HUD station-info overview).
+		 * @return The nearest station, or nullptr if none found
+		 */
+		UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Station Overview")
+			ASpaceStation* GetNearestStation();
 
 	/**
 	 * Blueprint implementable event called when nearby tradable station state changes

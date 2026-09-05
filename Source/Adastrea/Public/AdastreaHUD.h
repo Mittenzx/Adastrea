@@ -8,6 +8,7 @@
 
 class AAdastreaPlayerController;
 class ASpaceship;
+class ASpaceStation;
 class USceneCaptureComponent2D;
 class UTextureRenderTarget2D;
 class USpaceshipDataAsset;
@@ -187,6 +188,28 @@ public:
 
 	/** Build the 3D preview capture + render target for the current roster index. */
 	void RebuildShipPreview(APlayerController* PC);
+
+	// ========================
+	// STATION INFO SCREEN (canvas-drawn, reliable in PIE)
+	// Overview of the nearest space station's live systems: power, shields,
+	// population, capabilities, storage/fuel, defence. Toggled by N. Uses the
+	// aggregate getters on ASpaceStation added in the module-behaviour pass.
+	// ========================
+
+	/** Whether the station information screen is shown (toggled by N). */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|StationInfo")
+	bool bShowStationInfo = false;
+
+	/** Show the station info screen (locks in the current nearest station). */
+	UFUNCTION(BlueprintCallable, Category="HUD|StationInfo")
+	void ShowStationInfo();
+
+	/** Hide the station info screen. */
+	UFUNCTION(BlueprintCallable, Category="HUD|StationInfo")
+	void HideStationInfo();
+
+	/** Draw the full station overview panel (power/shields/crew/capabilities). */
+	void DrawStationInfoScreen(APlayerController* PC, ASpaceStation* Station, const FVector& ObserverPos);
 
 private:
 	/** The camera that renders the preview ship into ShipPreviewRT. */

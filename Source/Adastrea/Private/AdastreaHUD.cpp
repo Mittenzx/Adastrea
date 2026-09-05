@@ -12,6 +12,7 @@
 #include "Trading/TradeItemDataAsset.h"
 #include "Player/AdastreaPlayerController.h"
 #include "Stations/SpaceStation.h"
+#include "Stations/StationModuleTypes.h"
 #include "Stations/MarketplaceModule.h"
 #include "Components/SceneCaptureComponent2D.h"
 #include "Engine/SceneCapture2D.h"
@@ -94,16 +95,35 @@ void AAdastreaHUD::DrawHUD()
 		}
 
 	// Ship-select screen draws over everything when shown.
-	if (bShowShipSelect)
-	{
-		DrawShipSelectScreen(PC);
-		return;
-	}
+		if (bShowShipSelect)
+		{
+			DrawShipSelectScreen(PC);
+			return;
+		}
 
-	if (!Ship)
-	{
-		return; // only draw once we're flying the ship
-	}
+		// Station info screen draws over everything when shown.
+		if (bShowStationInfo)
+		{
+			if (AAdastreaPlayerController* AdPC = Cast<AAdastreaPlayerController>(PC))
+						{
+							ASpaceStation* Station = AdPC->GetNearestStation();
+				const FVector Observer = Ship ? Ship->GetActorLocation() : FVector::ZeroVector;
+				if (Station)
+				{
+					DrawStationInfoScreen(PC, Station, Observer);
+				}
+				else
+				{
+					DrawText(TEXT("No station within range."), FLinearColor(0.9f,0.6f,0.4f,1.0f), 200.0f, 200.0f, GEngine->GetSmallFont(), 1.0f);
+				}
+			}
+			return;
+		}
+
+		if (!Ship)
+		{
+			return; // only draw once we're flying the ship
+		}
 
 	// ---- Gather live data ----
 	const FVector P = Ship->GetActorLocation();
@@ -1259,5 +1279,134 @@ void AAdastreaHUD::DrawInteractPrompt(APlayerController* PC)
 	const float Pad = 10.0f;
 
 	DrawRect(FLinearColor(0.0f, 0.0f, 0.0f, 0.6f), X - Pad, Y - Pad, TextW + Pad * 2.0f, TextH + Pad * 2.0f);
-	DrawText(Line, FLinearColor(0.4f, 0.95f, 1.0f, 1.0f), X, Y, MsgFont, 0.85f);
-}
+		DrawText(Line, FLinearColor(0.4f, 0.95f, 1.0f, 1.0f), X, Y, MsgFont, 0.85f);
+	}
+
+	// ========================================================================
+	// STATION INFO SCREEN
+	// ========================================================================
+
+	void AAdastreaHUD::ShowStationInfo()
+	{
+		bShowStationInfo = true;
+	}
+
+	void AAdastreaHUD::HideStationInfo()
+	{
+		bShowStationInfo = false;
+	}
+
+	void AAdastreaHUD::DrawStationInfoScreen(APlayerController* PC, ASpaceStation* Station, const FVector& ObserverPos)
+	{
+		if (!PC || !Station)
+		{
+			return;
+		}
+
+		int32 VX = 0, VY = 0;
+		PC->GetViewportSize(VX, VY);
+		const float VW = (float)VX, VH = (float)VY;
+
+		// Full-screen dim backdrop.
+		DrawRect(FLinearColor(0.02f, 0.03f, 0.05f, 0.94f), 0.0f, 0.0f, VW, VH);
+
+		UFont* TitleFont = GEngine->GetLargeFont();
+		UFont* BodyFont  = GEngine->GetSmallFont();
+
+		// Title + name.
+		DrawText(TEXT("STATION OVERVIEW"), FLinearColor(0.15f,0.9f,0.6f,1.0f), VW*0.5f - 90.0f, 18.0f, TitleFont, 1.2f);
+		DrawText(Station->GetTargetDisplayName_Implementation().ToString(),
+			FLinearColor(0.8f,0.9f,1.0f,1.0f), VW*0.5f - 70.0f, 52.0f, BodyFont, 0.85f);
+
+		// Distance to observer.
+		const float Dist = FVector::Dist(Station->GetActorLocation(), ObserverPos);
+		DrawText(FString::Printf(TEXT("DISTANCE: %.0f u"), Dist), FLinearColor(0.6f,0.7f,0.8f,1.0f), 40.0f, 40.0f, BodyFont, 0.8f);
+
+		// ---- Left column: POWER + SHIELDS ----
+		const float CX = 40.0f;
+		const float CY = 90.0f;
+		const float ColW = 380.0f;
+		const float RowH = 26.0f;
+
+		DrawText(TEXT("— POWER —"), FLinearColor(0.35f,0.8f,0.9f,1.0f), CX, CY, BodyFont, 0.8f);
+		float Y = CY + 26.0f;
+		DrawText(FString::Printf(TEXT("Generation:   %.0f"), Station->GetTotalPowerGeneration()),
+			kCargo, CX+14.0f, Y, BodyFont, 0.75f); Y += RowH;
+		DrawText(FString::Printf(TEXT("Consumption:  %.0f"), Station->GetTotalPowerConsumption()),
+			kThrottle, CX+14.0f, Y, BodyFont, 0.75f); Y += RowH;
+		// Net balance; colour green on surplus, red on deficit.
+		const float Balance = Station->GetPowerBalance();
+		const FLinearColor BalCol = Balance >= 0.0f ? FLinearColor(0.3f,0.9f,0.4f,1.0f) : FLinearColor(1.0f,0.4f,0.35f,1.0f);
+		DrawText(FString::Printf(TEXT("Net balance:  %+.0f"), Balance), BalCol, CX+14.0f, Y, BodyFont, 0.75f); Y += RowH;
+		// Breakdown of generation sources.
+		DrawText(FString::Printf(TEXT("        Reactor: %.0f   Solar: %.0f"),
+			Station->GetTotalReactorOutput(), Station->GetTotalSolarOutput()),
+			kLabel, CX+14.0f, Y, BodyFont, 0.7f); Y += RowH + 6.0f;
+
+		DrawText(TEXT("— SHIELDS —"), FLinearColor(0.35f,0.8f,0.9f,1.0f), CX, Y, BodyFont, 0.8f); Y += 26.0f;
+		const float Cur = Station->GetTotalCurrentShieldStrength();
+		const float Max = Station->GetTotalShieldStrength();
+		const float ShieldFrac = Max > 0.0f ? FMath::Clamp(Cur / Max, 0.0f, 1.0f) : 0.0f;
+		DrawText(FString::Printf(TEXT("Shield:  %.0f / %.0f  (%.0f%%)"), Cur, Max, ShieldFrac*100.0f),
+			FLinearColor(0.45f,0.85f,0.95f,1.0f), CX+14.0f, Y, BodyFont, 0.75f); Y += RowH;
+		DrawText(FString::Printf(TEXT("Turret DPS:  %.0f"), Station->GetTotalTurretDps()),
+			FLinearColor(0.9f,0.5f,0.3f,1.0f), CX+14.0f, Y, BodyFont, 0.75f); Y += RowH + 6.0f;
+
+		// ---- Middle column: POPULATION ----
+		const float MX = CX + ColW + 40.0f;
+		Y = CY;
+		DrawText(TEXT("— POPULATION —"), FLinearColor(0.35f,0.8f,0.9f,1.0f), MX, Y, BodyFont, 0.8f); Y += 26.0f;
+		DrawText(FString::Printf(TEXT("Residents:  %d"), Station->GetTotalResidents()),
+			kPos, MX+14.0f, Y, BodyFont, 0.75f); Y += RowH;
+		DrawText(FString::Printf(TEXT("Crew berths: %d  (barracks)"), Station->GetTotalCrewCapacity()),
+			kPos, MX+14.0f, Y, BodyFont, 0.75f); Y += RowH + 6.0f;
+
+		DrawText(TEXT("— STORAGE —"), FLinearColor(0.35f,0.8f,0.9f,1.0f), MX, Y, BodyFont, 0.8f); Y += 26.0f;
+		DrawText(FString::Printf(TEXT("Cargo: %d / %d stored"), Station->GetTotalCargoStored(), Station->GetTotalStorageCapacity()),
+			kCargo, MX+14.0f, Y, BodyFont, 0.75f); Y += RowH;
+		DrawText(FString::Printf(TEXT("Fuel: %.0f / %.0f L"), Station->GetTotalFuelStored(), Station->GetTotalFuelCapacity()),
+			kCargo, MX+14.0f, Y, BodyFont, 0.75f); Y += RowH + 6.0f;
+
+		DrawText(TEXT("— COMMERCE —"), FLinearColor(0.35f,0.8f,0.9f,1.0f), MX, Y, BodyFont, 0.8f); Y += 26.0f;
+		const int32 Open = Station->GetOpenMarketplaceCount();
+		DrawText(FString::Printf(TEXT("Markets: %d open / %d total"), Open, Station->GetTotalMarketplaceCount()),
+			kCredit, MX+14.0f, Y, BodyFont, 0.75f); Y += RowH;
+		DrawText(FString::Printf(TEXT("Docking: %d points / %d capacity"), Station->GetTotalDockingPoints(), Station->GetTotalDockingCapacity()),
+			kPos, MX+14.0f, Y, BodyFont, 0.75f); Y += RowH;
+
+		// ---- Right column: CAPABILITIES + MODULES ----
+		const float RX = MX + ColW + 40.0f;
+		Y = CY;
+		DrawText(TEXT("— CAPABILITIES —"), FLinearColor(0.35f,0.8f,0.9f,1.0f), RX, Y, BodyFont, 0.8f); Y += 26.0f;
+		const FLinearColor CapYes(0.3f,0.85f,0.5f,1.0f);
+		const FLinearColor CapNo (0.6f,0.4f,0.4f,1.0f);
+		DrawText(FString::Printf(TEXT("Docking bay:   %s"), Station->HasDockingCapability() ? TEXT("YES") : TEXT("no")),
+			Station->HasDockingCapability() ? CapYes : CapNo, RX+14.0f, Y, BodyFont, 0.75f); Y += RowH;
+		DrawText(FString::Printf(TEXT("Marketplace:   %s"), Station->HasMarketplace() ? TEXT("YES") : TEXT("no")),
+			Station->HasMarketplace() ? CapYes : CapNo, RX+14.0f, Y, BodyFont, 0.75f); Y += RowH;
+		DrawText(FString::Printf(TEXT("Cargo storage: %s"), Station->HasCargoStorage() ? TEXT("YES") : TEXT("no")),
+			Station->HasCargoStorage() ? CapYes : CapNo, RX+14.0f, Y, BodyFont, 0.75f); Y += RowH + 6.0f;
+
+		DrawText(TEXT("— MODULES BY TYPE —"), FLinearColor(0.35f,0.8f,0.9f,1.0f), RX, Y, BodyFont, 0.8f); Y += 26.0f;
+		constexpr EStationModuleGroup Groups[] = {
+			EStationModuleGroup::Docking, EStationModuleGroup::Power, EStationModuleGroup::Storage,
+			EStationModuleGroup::Processing, EStationModuleGroup::Defence, EStationModuleGroup::Habitation,
+			EStationModuleGroup::Public, EStationModuleGroup::Connection,
+		};
+		const TCHAR* GroupNames[] = {
+			TEXT("Docking"), TEXT("Power"), TEXT("Storage"), TEXT("Processing"),
+			TEXT("Defence"), TEXT("Habitation"), TEXT("Public"), TEXT("Connection"),
+		};
+		for (int32 i = 0; i < UE_ARRAY_COUNT(Groups); ++i)
+		{
+			const int32 Count = Station->GetModuleCountByGroup(Groups[i]);
+			FLinearColor CountCol = kLabel;
+			if (Count > 0) { CountCol = FLinearColor(0.7f,0.85f,0.9f,1.0f); }
+			DrawText(FString::Printf(TEXT("%-12s  %d"), GroupNames[i], Count), CountCol, RX+14.0f, Y, BodyFont, 0.72f);
+			Y += 22.0f;
+		}
+
+		// Footer controls.
+		DrawText(TEXT("[N]: close    (live readout from current station systems)"),
+			FLinearColor(0.6f,0.7f,0.8f,0.9f), VW*0.5f - 240.0f, VH - 40.0f, BodyFont, 0.7f);
+	}

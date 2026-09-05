@@ -152,6 +152,7 @@ void AAdastreaPlayerController::SetupInputComponent()
 		InputComponent->BindKey(EKeys::Escape, IE_Pressed, this, &AAdastreaPlayerController::HandleShipSelectClose);
 		// P: open the ship-select screen
 		InputComponent->BindKey(EKeys::P, IE_Pressed, this, &AAdastreaPlayerController::HandleShipSelectOpen);
+		InputComponent->BindKey(EKeys::N, IE_Pressed, this, &AAdastreaPlayerController::HandleStationInfoToggle);
 	}
 }
 
@@ -648,6 +649,36 @@ void AAdastreaPlayerController::HandleMapToggle()
 	}
 }
 
+void AAdastreaPlayerController::HandleStationInfoToggle()
+{
+	AAdastreaHUD* GameHUD = Cast<AAdastreaHUD>(GetHUD());
+	if (!GameHUD)
+	{
+		return;
+	}
+
+	// Toggle the station info screen.
+	GameHUD->bShowStationInfo = !GameHUD->bShowStationInfo;
+	const bool bOpen = GameHUD->bShowStationInfo;
+
+	// Same input-mode dance as the map: pause ship mouse-look while the info
+	// screen is open so keys/cursor don't fight flight controls.
+	if (bOpen)
+	{
+		SetInputMode(FInputModeGameAndUI());
+		bShowMouseCursor = true;
+		bLockMouseLook = true;
+		UE_LOG(LogAdastrea, Log, TEXT("Station info opened - ship look paused"));
+	}
+	else
+	{
+		SetInputMode(FInputModeGameOnly());
+		bShowMouseCursor = false;
+		bLockMouseLook = false;
+		UE_LOG(LogAdastrea, Log, TEXT("Station info closed - ship look restored"));
+	}
+}
+
 void AAdastreaPlayerController::ToggleStationEditor()
 {
 	// Only allow station editor when controlling a spaceship
@@ -733,6 +764,11 @@ ASpaceStation* AAdastreaPlayerController::FindNearestStation()
 	}
 
 	return NearestStation;
+}
+
+ASpaceStation* AAdastreaPlayerController::GetNearestStation()
+{
+	return FindNearestStation();
 }
 
 UUserWidget* AAdastreaPlayerController::CreateStationEditorWidget()
