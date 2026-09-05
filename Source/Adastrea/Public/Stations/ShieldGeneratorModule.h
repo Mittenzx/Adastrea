@@ -9,9 +9,9 @@
 /**
  * Shield generator module for space stations
  *
- * Defensive shield projection system for station protection.
- * Generates energy barriers to absorb incoming damage from weapons and debris.
- * High power consumption due to continuous field generation.
+ * Projects an energy shield that absorbs incoming damage before it reaches the
+ * station's structure. Charging costs power; the station recharges the bubble
+ * up to MaxShieldStrength over time using its power surplus.
  *
  * Power Consumption: 200 units
  * Module Group: Defence
@@ -23,4 +23,32 @@ class ADASTREA_API AShieldGeneratorModule : public ASpaceStationModule
 
 public:
 	AShieldGeneratorModule();
+
+	/** Maximum shield hit points this generator projects. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="ShieldGenerator", meta=(ClampMin="0.0"))
+	float MaxShieldStrength = 4000.0f;
+
+	/** Current shield hit points. */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="ShieldGenerator", meta=(ClampMin="0.0"))
+	float CurrentShieldStrength = 4000.0f;
+
+	/** Shield points regenerated per second while the station has power. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="ShieldGenerator", meta=(ClampMin="0.0"))
+	float RechargePerSecond = 25.0f;
+
+	/** Whether the bubble is up (consumes power). */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="ShieldGenerator")
+	bool bShieldsActive = true;
+
+	/** Shield fraction 0..1. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="ShieldGenerator")
+	float GetShieldRatio() const;
+
+	/** Absorb incoming damage; returns the damage that passed through to the hull. */
+	UFUNCTION(BlueprintCallable, Category="ShieldGenerator")
+	float AbsorbDamage(float IncomingDamage);
+
+	/** Recharge the bubble by this tick's power allocation; clamps to max. */
+	UFUNCTION(BlueprintCallable, Category="ShieldGenerator")
+	void RechargeShield(float PowerAllocated);
 };

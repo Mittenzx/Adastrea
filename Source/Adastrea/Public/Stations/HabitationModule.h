@@ -7,10 +7,11 @@
 #include "HabitationModule.generated.h"
 
 /**
- * Living quarters habitation module for space stations
+ * Habitation module for space stations
  *
- * Residential facility providing living spaces for station inhabitants.
- * Includes life support, private quarters, and communal areas.
+ * Civilian living quarters. Houses the station's permanent population
+ * (residents / workforce) as opposed to military berths in the barracks.
+ * Tracks capacity + current residents.
  *
  * Power Consumption: 30 units
  * Module Group: Habitation
@@ -22,4 +23,28 @@ class ADASTREA_API AHabitationModule : public ASpaceStationModule
 
 public:
 	AHabitationModule();
+
+	/** Total resident capacity. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Habitation", meta=(ClampMin="0"))
+	int32 Capacity = 250;
+
+	/** Number of residents currently living here. */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Habitation", meta=(ClampMin="0"))
+	int32 Residents = 0;
+
+	/** Free residential capacity. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Habitation")
+	int32 GetFreeCapacity() const;
+
+	/** Occupancy fraction 0..1. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Habitation")
+	float GetOccupancyRatio() const;
+
+	/** Add up to Count residents. Returns number actually housed. */
+	UFUNCTION(BlueprintCallable, Category="Habitation")
+	int32 AddResidents(int32 Count);
+
+	/** Remove up to Count residents. Returns number actually removed. */
+	UFUNCTION(BlueprintCallable, Category="Habitation")
+	int32 RemoveResidents(int32 Count);
 };

@@ -7,10 +7,12 @@
 #include "FabricationModule.generated.h"
 
 /**
- * Manufacturing fabrication module for space stations
+ * Fabrication module for space stations
  *
- * Advanced manufacturing facility for producing equipment and components.
- * Includes 3D printing, assembly lines, and quality control systems.
+ * Advanced manufacturing bay that builds complex items (components, parts,
+ * station modules, research-lab hulls). Holds a FIFO queue of jobs; each job
+ * carries the remaining work units. The station feeds BuildRatePerSecond worth
+ * of work each tick via AdvanceJob(), and a job pops when its work hits zero.
  *
  * Power Consumption: 150 units
  * Module Group: Processing
@@ -22,4 +24,40 @@ class ADASTREA_API AFabricationModule : public ASpaceStationModule
 
 public:
 	AFabricationModule();
+
+	/** Maximum number of queued jobs this bay can hold. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Fabrication", meta=(ClampMin="1"))
+	int32 MaxJobCount = 4;
+
+	/** Units of work applied to the front job per second when running. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Fabrication", meta=(ClampMin="1.0"))
+	float BuildRatePerSecond = 50.0f;
+
+	/** Number of jobs currently queued (not yet built). */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Fabrication")
+	int32 GetQueuedJobCount() const;
+
+	/** Whether a job slot is free. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Fabrication")
+	bool CanAcceptJob() const;
+
+	/** Queue a job needing WorkUnits of fabrication. Returns true if accepted. */
+	UFUNCTION(BlueprintCallable, Category="Fabrication")
+	bool AddJob(float WorkUnits);
+
+	/**
+	 * Apply WorkDone units to the front job. Returns the number of jobs that
+	 * completed this tick (0, 1, or more if work overran into subsequent jobs).
+	 */
+	UFUNCTION(BlueprintCallable, Category="Fabrication")
+	int32 AdvanceJob(float WorkDone);
+
+	/** Progress fraction (0..1) of the front-most job; 0 if empty. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Fabrication")
+	float GetFrontJobProgress() const;
+
+private:
+	/** Remaining work units per queued job (FIFO; front = index 0). */
+	UPROPERTY(VisibleAnywhere, Category="Fabrication")
+	TArray<float> JobQueue;
 };

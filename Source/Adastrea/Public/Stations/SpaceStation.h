@@ -317,7 +317,58 @@ public:
      * MVP USE: Query specific facility types
      */
     UFUNCTION(BlueprintCallable, Category="Station|Modules")
-    TArray<ASpaceStationModule*> GetModulesByGroup(EStationModuleGroup ModuleGroup) const;
+        TArray<ASpaceStationModule*> GetModulesByGroup(EStationModuleGroup ModuleGroup) const;
+
+        // ====================
+        // MODULE ECONOMY / SERVICE AGGREGATES (Phase 1)
+        // Totals across all attached modules of the relevant type. These surface
+        // station-wide capability (storage, fuel, power output, shields, crew,
+        // firepower) that HUD / trading / combat layers can read directly.
+        // ====================
+
+        /** Total cargo volume across all CargoBay modules. */
+        UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Economy")
+        int32 GetTotalStorageCapacity() const;
+
+        /** Total cargo currently stored across all CargoBay modules. */
+        UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Economy")
+        int32 GetTotalCargoStored() const;
+
+        /** Total fuel capacity (litres) across all FuelDepot modules. */
+        UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Economy")
+        float GetTotalFuelCapacity() const;
+
+        /** Total fuel currently stored across all FuelDepot modules. */
+        UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Economy")
+        float GetTotalFuelStored() const;
+
+        /** Effective power output from all online/undamaged Reactor modules. */
+        UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Power")
+        float GetTotalReactorOutput() const;
+
+        /** Effective power output from all illuminated Solar Array modules. */
+        UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Power")
+        float GetTotalSolarOutput() const;
+
+        /** Total shield strength (max) across all ShieldGenerator modules. */
+        UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Defence")
+        float GetTotalShieldStrength() const;
+
+        /** Total current shield points across all ShieldGenerator modules. */
+        UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Defence")
+        float GetTotalCurrentShieldStrength() const;
+
+        /** Combined DPS of all operational Turret modules. */
+        UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Defence")
+        float GetTotalTurretDps() const;
+
+        /** Total crew berths across all Barracks modules. */
+        UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Habitation")
+        int32 GetTotalCrewCapacity() const;
+
+        /** Total residents across all Habitation modules. */
+        UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Habitation")
+        int32 GetTotalResidents() const;
 
     // REMOVED: SetFaction() - faction system removed per Trade Simulator MVP scope
 

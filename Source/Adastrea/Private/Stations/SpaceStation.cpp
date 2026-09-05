@@ -4,6 +4,14 @@
 #include "Stations/MarketplaceModule.h"
 #include "Trading/CraftingTreeLoader.h"
 #include "Stations/DockingBayModule.h"
+#include "Stations/ReactorModule.h"
+#include "Stations/SolarArrayModule.h"
+#include "Stations/CargoBayModule.h"
+#include "Stations/FuelDepotModule.h"
+#include "Stations/ShieldGeneratorModule.h"
+#include "Stations/TurretModule.h"
+#include "Stations/BarracksModule.h"
+#include "Stations/HabitationModule.h"
 #include "AdastreaLog.h"
 
 ASpaceStation::ASpaceStation()
@@ -357,6 +365,156 @@ TArray<ASpaceStationModule*> ASpaceStation::GetModulesByType(const FString& Modu
 int32 ASpaceStation::GetModuleCount() const
 {
     return Modules.Num();
+}
+
+// ====================
+// MODULE ECONOMY / SERVICE AGGREGATES (Phase 1)
+// ====================
+
+int32 ASpaceStation::GetTotalStorageCapacity() const
+{
+    int32 Total = 0;
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (ACargoBayModule* CargoBay = Cast<ACargoBayModule>(Module))
+        {
+            Total += CargoBay->StorageCapacity;
+        }
+    }
+    return Total;
+}
+
+int32 ASpaceStation::GetTotalCargoStored() const
+{
+    int32 Total = 0;
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (ACargoBayModule* CargoBay = Cast<ACargoBayModule>(Module))
+        {
+            Total += CargoBay->StoredAmount;
+        }
+    }
+    return Total;
+}
+
+float ASpaceStation::GetTotalFuelCapacity() const
+{
+    float Total = 0.0f;
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (AFuelDepotModule* FuelDepot = Cast<AFuelDepotModule>(Module))
+        {
+            Total += FuelDepot->FuelCapacity;
+        }
+    }
+    return Total;
+}
+
+float ASpaceStation::GetTotalFuelStored() const
+{
+    float Total = 0.0f;
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (AFuelDepotModule* FuelDepot = Cast<AFuelDepotModule>(Module))
+        {
+            Total += FuelDepot->GetFuelLevel();
+        }
+    }
+    return Total;
+}
+
+float ASpaceStation::GetTotalReactorOutput() const
+{
+    float Total = 0.0f;
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (AReactorModule* Reactor = Cast<AReactorModule>(Module))
+        {
+            Total += Reactor->GetCurrentPowerOutput();
+        }
+    }
+    return Total;
+}
+
+float ASpaceStation::GetTotalSolarOutput() const
+{
+    float Total = 0.0f;
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (ASolarArrayModule* SolarArray = Cast<ASolarArrayModule>(Module))
+        {
+            Total += SolarArray->GetEffectiveOutput();
+        }
+    }
+    return Total;
+}
+
+float ASpaceStation::GetTotalShieldStrength() const
+{
+    float Total = 0.0f;
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (AShieldGeneratorModule* Shield = Cast<AShieldGeneratorModule>(Module))
+        {
+            Total += Shield->MaxShieldStrength;
+        }
+    }
+    return Total;
+}
+
+float ASpaceStation::GetTotalCurrentShieldStrength() const
+{
+    float Total = 0.0f;
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (AShieldGeneratorModule* Shield = Cast<AShieldGeneratorModule>(Module))
+        {
+            Total += Shield->CurrentShieldStrength;
+        }
+    }
+    return Total;
+}
+
+float ASpaceStation::GetTotalTurretDps() const
+{
+    float Total = 0.0f;
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (ATurretModule* Turret = Cast<ATurretModule>(Module))
+        {
+            if (Turret->CanFire())
+            {
+                Total += Turret->GetDps();
+            }
+        }
+    }
+    return Total;
+}
+
+int32 ASpaceStation::GetTotalCrewCapacity() const
+{
+    int32 Total = 0;
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (ABarracksModule* Barracks = Cast<ABarracksModule>(Module))
+        {
+            Total += Barracks->Capacity;
+        }
+    }
+    return Total;
+}
+
+int32 ASpaceStation::GetTotalResidents() const
+{
+    int32 Total = 0;
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (AHabitationModule* Habitation = Cast<AHabitationModule>(Module))
+        {
+            Total += Habitation->Residents;
+        }
+    }
+    return Total;
 }
 
 // ====================
