@@ -1,6 +1,7 @@
 // Copyright (c) 2025 Mittenzx. Licensed under MIT.
 
 #include "Stations/SpaceStation.h"
+#include "Stations/UStationLayoutDataAsset.h"
 #include "Stations/MarketplaceModule.h"
 #include "Trading/CraftingTreeLoader.h"
 #include "Stations/DockingBayModule.h"
@@ -190,6 +191,56 @@ bool ASpaceStation::MoveModule(ASpaceStationModule* Module, FVector NewRelativeL
 TArray<ASpaceStationModule*> ASpaceStation::GetModules() const
 {
     return Modules;
+}
+
+int32 ASpaceStation::BuildFromLayout(UStationLayoutDataAsset* Layout)
+{
+    if (!Layout)
+    {
+        UE_LOG(LogAdastreaStations, Warning, TEXT("BuildFromLayout: null layout asset."));
+        return 0;
+    }
+
+    int32 Spawned = 0;
+    const float Spacing = FMath::Max(Layout->GridSpacing, 1.0f);
+    for (const FStationLayoutModule& Entry : Layout->Modules)
+    {
+        const FName ItemID = Entry.ItemID;
+                if (!ItemID.IsValid())
+                {
+                    continue;
+                }
+
+        // Resolve the module class from its crafting-tree ItemID (the C++ subclass
+                // name, e.g. "CorridorModule"). Skip if no such class resolves.
+                const FString ModuleClassPath = ItemID.ToString();
+                UClass* ModuleClass = LoadClass<ASpaceStationModule>(nullptr, *ModuleClassPath);
+                if (!ModuleClass)
+                {
+                    UE_LOG(LogAdastreaStations, Warning,
+                        TEXT("BuildFromLayout: no module class for ItemID %s; skipping."), *ModuleClassPath);
+                    continue;
+                }
+
+                ASpaceStationModule* Module = GetWorld()->SpawnActor<ASpaceStationModule>(ModuleClass);
+        if (!Module)
+        {
+            continue;
+        }
+
+        const FVector GridLoc(Entry.GridPos.X * Spacing, Entry.GridPos.Y * Spacing, Entry.GridPos.Z * Spacing);
+        AddModuleAtLocation(Module, GridLoc);
+
+        if (Entry.Rotation != 0)
+        {
+            Module->SetActorRotation(FRotator(0.0f, (float)Entry.Rotation, 0.0f));
+        }
+        ++Spawned;
+    }
+
+    UE_LOG(LogAdastreaStations, Log, TEXT("BuildFromLayout: %s spawned %d module(s)."),
+        *Layout->StationName, Spawned);
+    return Spawned;
 }
 
 AMarketplaceModule* ASpaceStation::GetMarketplaceModule() const
