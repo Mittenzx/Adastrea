@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Adastrea — Station Builder (Prototype)</title>
+<style>
+  :root {
+    --bg:#020617; --panel:#0f172a; --edge:#1e293b; --txt:#cbd5e1; --dim:#64748b; --hi:#f8fafc;
+    --ok:#22c55e; --bad:#ef4444; --warn:#f59e0b;
+    --corridor:#38bdf8; --cargo:#22c55e; --dock:#f59e0b; --reactor:#e879f9; --market:#a78bfa;
+  }
+  * { box-sizing:border-box; }
+  html,body { margin:0; background:var(--bg); color:var(--txt); font-family:system-ui,Segoe UI,Roboto; }
+  body { display:flex; height:100vh; overflow:hidden; }
+
+  /* ---------- left palette ---------- */
+  #palette { width:250px; background:var(--panel); border-right:1px solid var(--edge); padding:16px;
+             display:flex; flex-direction:column; gap:6px; }
+  #palette h1 { font-size:15px; color:var(--hi); margin:0 0 4px; }
+  #palette .sub { font-size:10px; color:var(--dim); margin:0 0 12px; }
+  .pal-label { font-size:10px; color:var(--dim); text-transform:uppercase; letter-spacing:1px; margin-top:4px; }
+  .pal-item { display:flex; align-items:center; gap:8px; padding:6px 8px; border:1px solid var(--edge);
+              border-radius:6px; background:#111827; font-size:11px; }
+  .pal-item .sw { width:12px; height:12px; border-radius:3px; display:inline-block; }
+  .pal-item .pw { margin-left:auto; color:var(--dim); font-size:9px; }
+  #status { position:sticky; bottom:0; font-size:10px; color:var(--dim); margin-top:8px; padding:6px;
+            background:#0b1220; border:1px solid var(--edge); border-radius:6px; }
+
+  /* ---------- center grid ---------- */
+  #stage { flex:1; display:flex; flex-direction:column; }
+  #hud { display:flex; justify-content:space-between; align-items:center; padding:8px 16px;
+         background:var(--panel); border-bottom:1px solid var(--edge); }
+  #hud .title { font-size:13px; color:var(--hi); font-weight:600; }
+  #hud .mode { font-size:11px; color:var(--warn); background:rgba(245,158,11,.12); padding:2px 8px; border-radius:10px; }
+  #stats { font-size:10px; color:var(--dim); }
+  #gridwrap { flex:1; display:grid; place-items:center; }
+  #grid { position:relative; width:820px; height:560px; background:linear-gradient(#0b1220,#0b1220);
+          border:1px solid var(--edge); border-radius:8px; }
+  .cell { position:absolute; width:64px; height:64px; border:1px dashed #1e3a5f; border-radius:6px; }
+  .cell.used { border-style:solid; }
+  .label { position:absolute; font-size:8px; color:#334155; }
+
+  /* module tiles */
+  .tile { position:absolute; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,.5); }
+  .tile .nm { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#0b1220;
+              font-size:10px; font-weight:700; text-align:center; }
+  .tile.core { outline:2px solid #fbbf24; }
+
+  /* ---------- right validation ---------- */
+  #valid { width:280px; background:var(--panel); border-left:1px solid var(--edge); padding:16px;
+           display:flex; flex-direction:column; }
+  #valid .vh { font-size:12px; color:var(--hi); font-weight:600; margin-bottom:12px; }
+  .vitem { display:flex; align-items:center; gap:8px; padding:6px 8px; margin-bottom:6px;
+           border-radius:6px; background:#111827; font-size:11px; }
+  .vdot { width:10px; height:10px; border-radius:50%; }
+  .vitem .vl { flex:1; }
+  .vok { color:#14532d; } .vbad { color:#7f1d1d; }
+  #verdict { margin-top:10px; font-size:12px; font-weight:700; text-align:center; padding:8px;
+             border-radius:8px; }
+  #buildbtn { margin-top:8px; font-size:11px; padding:8px; border-radius:8px; background:#14532d;
+              color:#f0fdf4; border:none; font-weight:700; }
+
+  /* overlay */
+  #overlay { position:fixed; inset:0; background:rgba(2,6,23,.78); display:none; align-items:center;
+             justify-content:center; z-index:20; flex-direction:column; }
+  #overlay .big { font-size:30px; color:var(--ok); font-weight:800; margin-bottom:8px; }
+  #overlay .small { font-size:14px; color:var(--hi); }
+</style>
+</head>
+<body>
+
+<!-- PALETTE -->
+<div id="palette">
+  <h1>Station Builder</h1>
+  <div class="sub">X4-style constructor · plan mode</div>
+  <div class="pal-label">Connection</div>
+  <div class="pal-item"><span class="sw" style="background:var(--corridor)"></span>Corridor <span class="pw">1×1 · -5</span></div>
+  <div class="pal-label">Storage / Power / Docking</div>
+  <div class="pal-item"><span class="sw" style="background:var(--cargo)"></span>Cargo Bay <span class="pw">2×2 · -20</span></div>
+  <div class="pal-item"><span class="sw" style="background:var(--dock)"></span>Docking Bay <span class="pw">3×2 · -30</span></div>
+  <div class="pal-item"><span class="sw" style="background:var(--reactor)"></span>Reactor <span class="pw">2×2 · +200</span></div>
+  <div class="pal-label">Public</div>
+  <div class="pal-item"><span class="sw" style="background:var(--market)"></span>Marketplace <span class="pw">2×2 · -40</span></div>
+  <div id="status">● plan mode — click palette, place on grid<br>R rotate · Del remove · Ctrl+Z undo</div>
+</div>
+
+<!-- STAGE -->
+<div id="stage">
+  <div id="hud">
+    <div><span class="title">Untitled Station</span> &nbsp;<span class="mode">PLAN MODE</span></div>
+    <div id="stats">modules 0 · power +0 · docking 0 · cost 0 cr</div>
+  </div>
+  <div id="gridwrap"><div id="grid"></div></div>
+</div>
+
+<!-- VALIDATION -->
+<div id="valid">
+  <div class="vh">Live Validation</div>
+  <div id="vlist"></div>
+  <div id="verdict">⚠️ DESIGN REQUIRED</div>
+  <button id="buildbtn" disabled>Build Station</button>
+</div>
+
+<div id="overlay">
+  <div class="big">✔ Station Built</div>
+  <div class="small">Corridor core · Cargo · Docking · Reactor · Marketplace</div>
+</div>
+
+<script>
+/* ================= Adastrea Station Builder prototype =================
+   Frame-driven demo: set STEP = URL hash (#s=N) and the page renders exactly
+   that build-state so we can capture a deterministic frame per step with
+   headless Edge, then assemble a video with ffmpeg. */
+
+var GRID_W = 13, GRID_H = 8, CELL = 64;
+
+// x,y in cells (bottom-left origin for the tile), size, color, name, power (neg generate)
+var MODULES = {
+  corridor:{sx:1, sy:1, c:"#38bdf8", n:"Corridor",   p:-5},
+  cargo:   {sx:2, sy:2, c:"#22c55e", n:"Cargo",      p:20},
+  dock:    {sx:3, sy:2, c:"#f59e0b", n:"Docking",    p:30},
+  reactor: {sx:2, sy:2, c:"#e879f9", n:"Reactor",    p:-200},
+  market:  {sx:2, sy:2, c:"#a78bfa", n:"Market",     p:40},
+};
+
+// The scripted build: [ {x,y,type}, ... ] — bottom-left corner in cells.
+// Verified-connected layout: corridor(core) touches cargo & reactor,
+// cargo touches dock, reactor touches market. All 5 stay in a 8-tall grid.
+// The 5th placement (market) is when validation flips fully green.
+var SCRIPT = [
+  {x:5, y:4, type:"corridor"},   // core
+  {x:6, y:4, type:"cargo"},      // touches corridor
+  {x:5, y:6, type:"dock"},       // touches cargo
+  {x:3, y:4, type:"reactor"},    // touches corridor
+  {x:3, y:6, type:"market"}      // touches reactor -> fully valid end
+];
+
+var STEP = parseInt((location.hash.match(/#s=(\d+)/)||[])[1] || "0", 10);
+
+function render() {
+  var grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  // grid cells
+  for (var i=0;i<GRID_H;i++) for (var j=0;j<GRID_W;j++){
+    var c=document.createElement("div"); c.className="cell";
+    c.style.left=(30+j*CELL)+"px"; c.style.top=(30+(GRID_H-1-i)*CELL)+"px"; grid.appendChild(c);
+  }
+  // tiles placed so far (STEP placed modules)
+  var placed = SCRIPT.slice(0, STEP);
+  var placedCells = [];
+  placed.forEach(function(m,i){
+    var mt=MODULES[m.type];
+    var t=document.createElement("div"); t.className="tile"; if(i===0) t.className="tile core";
+    var px=2+ m.x*CELL, py=2+(GRID_H-1-(m.y+mt.sy-1))*CELL;
+    t.style.left=px+"px"; t.style.top=py+"px"; t.style.width=(mt.sx*CELL-4)+"px"; t.style.height=(mt.sy*CELL-4)+"px";
+    t.style.background=mt.c; t.style.opacity= i<STEP? 1:0.35; // later tiles semi-ghost
+    t.innerHTML='<div class="nm">'+mt.n+'</div>';
+    grid.appendChild(t);
+  });
+  // connection lines between adjacent placed tiles (center to center)
+  var cs = placed.map(function(m,i){var mt=MODULES[m.type];
+    return {cx:(2+(m.x*CELL)+(mt.sx*CELL)/2), cy:(2+(GRID_H-1-(m.y+mt.sy-1))*CELL)+(mt.sy*CELL)/2, name:mt.n, id:i};});
+  for (var a=0;a<cs.length;a++)for (var b=a+1;b<cs.length;b++){
+    var d=Math.hypot(cs[a].cx-cs[b].cx, cs[a].cy-cs[b].cy);
+    if (d < 100){ // adjacent-ish
+      var l=document.createElement("div"); l.style.position="absolute"; l.style.height="3px";
+      l.style.background="rgba(255,255,255,.25)"; l.style.transformOrigin="0 50%";
+      var mx=(cs[a].cx+cs[b].cx)/2, my=(cs[a].cy+cs[b].cy)/2;
+      var ang=Math.atan2(cs[b].cy-cs[a].cy,cs[b].cx-cs[a].cx)*180/Math.PI;
+      var len=d;
+      l.style.left=mx+"px"; l.style.top=my+"px"; l.style.width=len+"px";
+      l.style.transform="rotate("+ang+"deg) translateX("+(-len/2)+"px)";
+      grid.appendChild(l);
+    }
+  }
+  // stats + validation
+  updateStats(placed); updateValid(placed);
+  // 'ghost' cursor prompt at step boundary
+  var ghost = document.createElement("div");
+  ghost.style.position="absolute"; ghost.style.left="10px"; ghost.style.top="4px";
+  ghost.style.fontSize="10px"; ghost.style.color="#60a5fa";
+  if (STEP < SCRIPT.length)
+    ghost.textContent = "➤ placing: "+MODULES[SCRIPT[STEP].type].n+" @ ["+SCRIPT[STEP].x+","+SCRIPT[STEP].y+"]";
+  else
+    ghost.textContent = "✔ design complete";
+  grid.appendChild(ghost);
+}
+
+function updateStats(placed){
+  var sumP=0, nMod=placed.length, dock=0, cost=0;
+  placed.forEach(function(m){ var p=MODULES[m.type].p; sumP+=p; if(m.type==="dock")dock=1; });
+  var gen=-Math.min(sumP,0), cons=Math.max(sumP,0);
+  document.getElementById("stats").textContent =
+    "modules "+nMod+" · power "+(gen-cons)+" · docking "+(dock?"yes":"none")+" · cost 4,800 cr";
+}
+
+function updateValid(placed){
+  var list=document.getElementById("vlist"); list.innerHTML="";
+  var items=[], ok=true;
+  // connectivity: BFS adjacency from core
+  var connected = allConnected(placed);
+  items.push(["Connectivity to core", connected, "All modules reach the core via connections"]);
+  // power
+  var sumP=0; placed.forEach(function(m){sumP+=MODULES[m.type].p;});
+  var gen=-Math.min(sumP,0), cons=Math.max(sumP,0);
+  items.push(["Power balance", gen>=cons && gen>0, "Generate "+gen+" ≥ consume "+cons]);
+  // docking
+  var hasDock = placed.some(function(m){return m.type==="dock";});
+  items.push(["Docking access", hasDock, "Station reachable by ships"]);
+  // single core
+  items.push(["Core module", placed.length>=1, "Core anchors the station"]);
+
+  placed.forEach(function(m){ if(!m) return; });
+  items.forEach(function(it){
+    var d=document.createElement("div"); d.className="vitem";
+    var dot=document.createElement("span"); dot.className="vdot";
+    dot.style.background = it[1]? "var(--ok)":"var(--bad)";
+    d.appendChild(dot);
+    var l=document.createElement("span"); l.className="vl";
+    l.innerHTML = "<b>"+it[0]+"</b>";
+    d.appendChild(l);
+    var st=document.createElement("span"); st.textContent= it[1]?"PASS":"FAIL";
+    st.style.color = it[1]?"#22c55e":"#ef4444"; st.style.fontSize="9px";
+    d.appendChild(st);
+    list.appendChild(d);
+    if (!it[1]) ok=false;
+  });
+  var v=document.getElementById("verdict");
+  if (placed.length===0){ v.textContent="⚠️ DESIGN REQUIRED"; v.style.background="rgba(245,158,11,.15)"; v.style.color="var(--warn)"; }
+  else if (ok){ v.textContent="✔ VALID — READY TO BUILD"; v.style.background="rgba(34,197,94,.15)"; v.style.color="var(--ok)"; }
+  else { v.textContent="✖ INVALID — fix issues"; v.style.background="rgba(239,68,68,.15)"; v.style.color="var(--bad)"; }
+  document.getElementById("buildbtn").disabled = !ok || placed.length===0;
+}
+
+function allConnected(placed){
+  if (placed.length===0) return false;
+  var adj = {};
+  placed.forEach(function(m,i){ adj[i]=[]; });
+  for (var a=0;a<placed.length;a++)for(var b=a+1;b<placed.length;b++){
+    var ma=MODULES[placed[a].type], mb=MODULES[placed[b].type];
+    // footprints
+    var fa=[],fb=[];
+    for(var xa=0;xa<ma.sx;xa++)for(var ya=0;ya<ma.sy;ya++)fa.push([placed[a].x+xa,placed[a].y+ya]);
+    for(var xb=0;xb<mb.sx;xb++)for(var yb=0;yb<mb.sy;yb++)fb.push([placed[b].x+xb,placed[b].y+yb]);
+    var touch=false;
+    for(var i=0;i<fa.length && !touch;i++)for(var j=0;j<fb.length;j++){
+      if (Math.abs(fa[i][0]-fb[j][0])+Math.abs(fa[i][1]-fb[j][1])===1){touch=true;break;}
+    }
+    if (touch){ adj[a].push(b); adj[b].push(a); }
+  }
+  var seen=new Set([0]), stack=[0];
+  while(stack.length){ var n=stack.pop(); adj[n].forEach(function(m){ if(!seen.has(m)){seen.add(m);stack.push(m);} }); }
+  return seen.size===placed.length;
+}
+
+render();
+
+// If not in capture mode, allow click-through interaction (palette->grid) too.
+document.addEventListener("click", function(){
+  if (location.hash.indexOf("s=") >= 0) return; // capture mode: no interaction
+  if (STEP < SCRIPT.length){ STEP++; render(); }
+  else { document.getElementById("overlay").style.display="flex"; }
+});
+</script>
+</body>
+</html>
