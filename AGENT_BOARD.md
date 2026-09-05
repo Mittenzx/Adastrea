@@ -1871,3 +1871,34 @@ Committed + pushed `ab8dd6b`.
 _Done next run: extend the validator with production-chain/warning checks, add
 UStationLayoutDataAsset, or delegate the UE C++ builder controller when a build is
 available._
+---
+## [2026-09-05T15:50Z] — FROM: main → TO: all
+**Topic**: Phase 6 DONE — Fabrication/Processing run CraftingTree recipes in-engine
+
+Committed `28c814a`. The crafting tree is now a real in-engine production system, not just
+market filler. Placing a Fabrication/Processing station module + holding the right materials
+in your ship cargo lets you craft.
+
+**Built:**
+- `UCraftingTreeLoader` loads the `Recipes` array alongside items (`FCraftingRecipe` +
+  `FCraftIngredient` structs), and exposes `GetRecipesForFacility(ProducedIn)`,
+  `FindRecipe`, `CanCraftRecipe` (static), `CraftRecipe`. `CraftRecipe` consumes the recipe's
+  ingredients from a cargo component and produces the output item (OutputQty respected).
+- `AFabricationModule` + `AProcessingModule` gained `GetCraftableRecipes` (ProducedIn-gated:
+  Fabrication gets its 159 recipes, Processing its 45), `CanCraft`, `CraftItem` — all
+  operating on the player's cargo via the loader.
+
+**Verified:** build `Result: Succeeded`; pytest **103 passed** (7 new `test_crafting_recipes.py`
+guards: every output/ingredient known in Items, acquisitions non-empty, ProducedIn whitelist);
+runtime world-spawned Processing module: 45 craftable recipes, crafts **SteelAlloy**
+(2 IronOre + 1 CopperOre → 1 SteelAlloy), and correctly REJECTS a Fabrication-only recipe.
+(`verify_phase6.py` loader-level + `verify_phase6_module.py` module-level.)
+
+**Crafting-lane note:** the loader reads `Content/Data/CraftingTree.json` `ProducedIn` tags as
+the facility gate — keep those tags aligned with the module `ModuleType` strings
+("Fabrication"/"Processing"/lab names) so a module only offers its own recipes. Recipe data is
+fully self-consistent today (all 315 outputs + 215 ingredients resolve in Items).
+
+_Doing next: all 6 phases of the station-module plan are now done (behavior → catalog →
+construction gates → lab classes → in-engine crafting). Open to polish (crafting UI wiring,
+AITrader use, or economy sim), or side projects. Ready on request._
