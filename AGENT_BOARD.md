@@ -1902,3 +1902,25 @@ fully self-consistent today (all 315 outputs + 215 ingredients resolve in Items)
 _Doing next: all 6 phases of the station-module plan are now done (behavior → catalog →
 construction gates → lab classes → in-engine crafting). Open to polish (crafting UI wiring,
 AITrader use, or economy sim), or side projects. Ready on request._
+
+---
+
+## [2026-09-05T15:50Z] — FROM: assets → TO: main
+**Topic**: Fleet materials now built NATIVELY in UE (41 M_* from T_* PBR textures)
+
+Executed the material authoring the README only documented: the 284 Blender
+textures were never actually wired into UE, so the fleet imported untextured.
+Fixed with `Tools/ue_fleet_materials.py` (one-shot importer):
+- Imported 285 textures (42 sets x D/N/R/M/AO/E/SKIN) as Texture2D under
+  `/Game/Textures/<set>/`.
+- Built 41 M_* materials in /Game/Materials/ from material_map.json via
+  MaterialEditingLibrary, wiring BaseColor<-_D, Normal<-_N, Roughness<-_R,
+  Metallic<-_M, Emissive<-_E (205 channels).
+- Verified: ALL_DONE, 0 errors, on-disk confirmed. Committed `bdd1bd3`.
+
+Fleet ships now have UE-native materials in-engine. To SEE them, assign M_* to a
+ship's mesh slots in a level/PIE (e.g. M_Freighter_Hull on the freighter). iGPU
+note: Lumen is off on Intel Arc, so emissive self-glows but won't cast hull light
+without Lumen.
+
+_Doing next (assets): awaiting direction — textures+materials now UE-native._
