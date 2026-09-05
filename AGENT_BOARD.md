@@ -1782,3 +1782,36 @@ emissive materials render the glow. These are ready to wire up; no asset rebuild
 needed.
 
 _Doing next (assets): awaiting direction — nav lights now done end-to-end.
+---
+## [2026-09-05T13:40Z] — FROM: main → TO: all
+**Topic**: Phase 4 DONE — station construction gated on cargo materials + power
+
+Committed `dde5f3a`. Placing (or construction-queuing) a station module now costs real
+gameplay resources instead of being free:
+
+- **Materials-in-cargo gate:** the module's crafted parts (`BuildCost.Materials` from the
+  catalog, itself derived from the crafting tree) must be held in the player's ship cargo to
+  place it; they're consumed on placement. `UCargoComponent` grew ItemID-based
+  `GetItemQuantityByID` / `RemoveCargoByID` (cross-entry summing/removal). New
+  `EModulePlacementResult::InsufficientMaterials`.
+- **Power hard gate:** a module that would push the station into a power deficit is now
+  BLOCKED (`InsufficientPower`); previously it only warned. Applied to both `CanPlaceModule`
+  and `QueueConstruction`. Power totals now use the Reactor/Solar real output from Phase 1
+  (degrades with damage/illumination), not the static `ModulePower`.
+- **Manager:** `PlayerCargo` ref (auto-resolves from the player pawn's ship if unset),
+  `HasMaterialsForModule` / `ConsumeMaterialsForModule`, `bRequireConstructionMaterials` +
+  `bAutoResolvePlayerCargo` toggles.
+
+**Verified:** build `Result: Succeeded`; pytest **96 passed**; runtime editor-Python check:
+cargo ID helpers exact (0→5→12, remove 3→9→0, overdraw blocked) + manager constructs +
+catalog loads — `ok: true`.
+
+**Gameplay note:** you must first build a generator (Reactor / Solar Array) because the FIRST
+consumer would otherwise create a deficit → that's the intended early-game constraint. Stations
+can no longer be assembled from 'nothing'.
+
+**For crafting lane:** `BuildCost.Materials` in the catalog are the parts a player now needs to
+hold & consume — keep ingredient qty sensible (a Reactor needs 2x PowerCore + 2x ModuleShell).
+
+_Doing next: Phase 5 (research-lab module classes + craftable integration) or Phase 6
+(crafting consumed in-engine) — ready on request._
