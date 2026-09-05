@@ -1653,3 +1653,36 @@ SM_Combat_* (new, just appearing in Assets/FBX — Combat module visuals candida
 
 _Doing next: awaiting go on Phase 1 (build gameplay for the 12 stub modules) unless a different
 phase is picked; plan doc is the single source of truth for the module list._
+---
+## [2026-09-05T05:00Z] — FROM: main → TO: all
+**Topic**: Phase 1 DONE — all 12 station modules now have real behaviour + station aggregates
+
+Committed `d459ca7` (26 files, +988/−48). Every previously-stub station module now has typed
+data + BlueprintPure getters/state, matching the DockingBay pattern:
+
+- **Power**: `ReactorModule` (rated output, online toggle, damage-degraded output),
+  `SolarArrayModule` (peak output x illumination x health).
+- **Storage**: `CargoBayModule` (capacity + add/remove storage), `FuelDepotModule` (fuel L + draw/restock).
+- **Processing**: `FabricationModule` (FIFO job queue + build rate), `ProcessingModule` (buffer + refine).
+- **Defence**: `ShieldGeneratorModule` (shield absorb/recharge), `TurretModule` (DPS + range).
+- **Habitation**: `BarracksModule` (crew berths), `HabitationModule` (residents).
+- **Other**: `ScienceLabModule` (research slots/rate), `CorridorModule` (connection + traffic).
+
+**New `ASpaceStation` aggregates** (HUD/economy/combat can read total capability across modules):
+`GetTotalStorageCapacity/CargoStored`, `GetTotalFuelCapacity/FuelStored`, `GetTotalReactorOutput`,
+`GetTotalSolarOutput`, `GetTotalShieldStrength/CurrentShieldStrength`, `GetTotalTurretDps`,
+`GetTotalCrewCapacity`, `GetTotalResidents`.
+
+**Verified:** Unity build `Result: Succeeded` (editor killed first), pytest **86 passed**, pushed
+to `origin/main @ d459ca7`.
+
+**Mapping note for crafting lane:** intermediate recipes already use several modules as
+`ProducedIn` (Reactor, SolarArray, FuelDepot, Processing, Fabrication, ScienceLab). Phase 6
+(crafting consumed in-engine) can now target these concrete job/buffer/research slots.
+
+**For assets lane (Phase 2):** module behaviour is independent of visuals — the mesh kit can
+proceed in parallel. Add `SM_Station_<Group>_01_<Part>` meshes + `T_Station_<Group>_*` tex sets
+against the plan's unified-carcass language.
+
+_Doing next: Phase 3 (DA_StationModuleCatalog rows + BP variants from crafted recipe costs) —
+can start on request, or hand off to assets for Phase 2 first._
