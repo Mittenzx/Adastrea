@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "Title": "Adastrea Station Layout",
+  "SchemaVersion": "1.0.0",
+  "StationName": "Example Trade Hub",
+  "PlotSize": [
+    1000,
+    1000,
+    1000
+  ],
+  "GridSpacing": 100,
+  "Modules": [
+    {
+      "ModuleID": "M1",
+      "ItemID": "CorridorModule",
+      "GridPos": [
+        0,
+        0,
+        0
+      ],
+      "Rotation": 0,
+      "IsCore": true
+    },
+    {
+      "ModuleID": "M2",
+      "ItemID": "CargoBayModule",
+      "GridPos": [
+        1,
+        0,
+        0
+      ],
+      "Rotation": 0,
+      "IsCore": false
+    },
+    {
+      "ModuleID": "M3",
+      "ItemID": "DockingBayModule",
+      "GridPos": [
+        0,
+        1,
+        0
+      ],
+      "Rotation": 0,
+      "IsCore": false
+    },
+    {
+      "ModuleID": "M4",
+      "ItemID": "ReactorModule",
+      "GridPos": [
+        0,
+        2,
+        0
+      ],
+      "Rotation": 0,
+      "IsCore": false
+    },
+    {
+      "ModuleID": "M5",
+      "ItemID": "MarketplaceModule",
+      "GridPos": [
+        1,
+        1,
+        0
+      ],
+      "Rotation": 0,
+      "IsCore": false
+    }
+  ]
+}

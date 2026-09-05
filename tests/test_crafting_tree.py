@@ -12,7 +12,9 @@ Usage:
 """
 
 import json
+import os
 import re
+import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -233,6 +235,44 @@ class TestCraftingTree:
             if r["ExpertiseLevel"] != 3:
                 assert not r.get("ResearchProvider"), \
                     f"{r['OutputItem']}: provider without expertise 3"
+
+    def test_station_builder_layout_valid(self):
+        """The example station layout validates under the station-builder rules,
+        and known-bad layouts (disconnected, no power, no dock, no core) fail."""
+        base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        sys.path.insert(0, os.path.join(base, "docs", "11-TECHNICAL_SPECS"))
+        try:
+            import generate_station_builder as gsb
+        finally:
+            sys.path.pop(0)
+        # valid example
+        layout = gsb.example_layout()
+        ok, errs = gsb.check_station_layout(layout, gsb.build_meta())
+        assert ok, f"example layout should be valid: {errs}"
+        # disconnected: move marketplace far away
+        bad = json.loads(json.dumps(layout))
+        bad["Modules"][4]["GridPos"] = [8, 8, 8]
+        ok, errs = gsb.check_station_layout(bad, gsb.build_meta())
+        assert not ok
+        assert any("disconnected" in e for e in errs)
+        # no power: drop the reactor
+        bad = json.loads(json.dumps(layout))
+        bad["Modules"] = [m for m in bad["Modules"] if m["ItemID"] != "ReactorModule"]
+        ok, errs = gsb.check_station_layout(bad, gsb.build_meta())
+        assert not ok
+        assert any("power" in e for e in errs)
+        # no dock
+        bad = json.loads(json.dumps(layout))
+        bad["Modules"] = [m for m in bad["Modules"] if m["ItemID"] != "DockingBayModule"]
+        ok, errs = gsb.check_station_layout(bad, gsb.build_meta())
+        assert not ok
+        assert any("docking" in e for e in errs)
+        # two cores
+        bad = json.loads(json.dumps(layout))
+        bad["Modules"][1]["IsCore"] = True
+        ok, errs = gsb.check_station_layout(bad, gsb.build_meta())
+        assert not ok
+        assert any("core" in e for e in errs)
 
 
 if __name__ == "__main__":

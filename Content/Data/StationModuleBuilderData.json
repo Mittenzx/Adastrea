@@ -1,0 +1,225 @@
+{
+  "SchemaVersion": "1.0.0",
+  "Modules": {
+    "CorridorModule": {
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "power": -5,
+      "group": "Connection",
+      "BaseValue": 85138,
+      "WeightKg": 597.2
+    },
+    "CargoBayModule": {
+      "size": [
+        2,
+        2,
+        1
+      ],
+      "power": 20,
+      "group": "Storage",
+      "BaseValue": 73794,
+      "WeightKg": 597.2
+    },
+    "DockingBayModule": {
+      "size": [
+        3,
+        2,
+        1
+      ],
+      "power": 30,
+      "group": "Docking",
+      "BaseValue": 77508,
+      "WeightKg": 597.2
+    },
+    "DockingPortModule": {
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "power": 10,
+      "group": "Docking",
+      "BaseValue": 48518,
+      "WeightKg": 597.2
+    },
+    "MarketplaceModule": {
+      "size": [
+        2,
+        2,
+        1
+      ],
+      "power": 40,
+      "group": "Public",
+      "BaseValue": 68637,
+      "WeightKg": 597.2
+    },
+    "HabitationModule": {
+      "size": [
+        2,
+        2,
+        1
+      ],
+      "power": 25,
+      "group": "Habitation",
+      "BaseValue": 137196,
+      "WeightKg": 597.2
+    },
+    "BarracksModule": {
+      "size": [
+        2,
+        2,
+        1
+      ],
+      "power": 30,
+      "group": "Habitation",
+      "BaseValue": 104205,
+      "WeightKg": 597.2
+    },
+    "ReactorModule": {
+      "size": [
+        2,
+        2,
+        1
+      ],
+      "power": -200,
+      "group": "Power",
+      "BaseValue": 105123,
+      "WeightKg": 597.2
+    },
+    "SolarArrayModule": {
+      "size": [
+        3,
+        1,
+        1
+      ],
+      "power": -50,
+      "group": "Power",
+      "BaseValue": 24562,
+      "WeightKg": 597.2
+    },
+    "ProcessingModule": {
+      "size": [
+        2,
+        2,
+        1
+      ],
+      "power": 40,
+      "group": "Processing",
+      "BaseValue": 50920,
+      "WeightKg": 597.2
+    },
+    "FabricationModule": {
+      "size": [
+        2,
+        2,
+        1
+      ],
+      "power": 50,
+      "group": "Processing",
+      "BaseValue": 62337,
+      "WeightKg": 597.2
+    },
+    "ScienceLabModule": {
+      "size": [
+        2,
+        2,
+        1
+      ],
+      "power": 40,
+      "group": "Processing",
+      "BaseValue": 54453,
+      "WeightKg": 597.2
+    },
+    "FuelDepotModule": {
+      "size": [
+        2,
+        2,
+        1
+      ],
+      "power": 30,
+      "group": "Storage",
+      "BaseValue": 49114,
+      "WeightKg": 597.2
+    },
+    "ShieldGeneratorModule": {
+      "size": [
+        2,
+        2,
+        1
+      ],
+      "power": 60,
+      "group": "Defence",
+      "BaseValue": 85956,
+      "WeightKg": 597.2
+    },
+    "TurretModule": {
+      "size": [
+        1,
+        1,
+        1
+      ],
+      "power": 40,
+      "group": "Defence",
+      "BaseValue": 103086,
+      "WeightKg": 597.2
+    },
+    "PhysicsLabModule": {
+      "size": [
+        2,
+        2,
+        1
+      ],
+      "power": 40,
+      "group": "Research",
+      "BaseValue": 80502,
+      "WeightKg": 597.2
+    },
+    "MaterialsLabModule": {
+      "size": [
+        2,
+        2,
+        1
+      ],
+      "power": 40,
+      "group": "Research",
+      "BaseValue": 58142,
+      "WeightKg": 597.2
+    },
+    "ElectronicsLabModule": {
+      "size": [
+        2,
+        2,
+        1
+      ],
+      "power": 45,
+      "group": "Research",
+      "BaseValue": 67170,
+      "WeightKg": 597.2
+    },
+    "WeaponsLabModule": {
+      "size": [
+        2,
+        2,
+        1
+      ],
+      "power": 45,
+      "group": "Research",
+      "BaseValue": 153740,
+      "WeightKg": 597.2
+    },
+    "BiologyLabModule": {
+      "size": [
+        2,
+        2,
+        1
+      ],
+      "power": 40,
+      "group": "Research",
+      "BaseValue": 46424,
+      "WeightKg": 597.2
+    }
+  }
+}
