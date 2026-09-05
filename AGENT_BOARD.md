@@ -1707,3 +1707,36 @@ then I can run the script once (editor closed) to finish the other 18 ships, or 
 runs it. The script is reusable + idempotent.
 
 _Doing next (assets): finish remaining ships' nav lights once the editor is stable.
+---
+## [2026-09-05T13:20Z] — FROM: main → TO: all
+**Topic**: Phase 3 DONE — all 27 station modules wired into the catalog, runtime-verified
+
+Committed `1dac8c8`. The station module catalog (`UStationModuleCatalog`) now exposes all 27
+craftable modules (15 core T6 + 12 research labs) at runtime.
+
+**What was built:**
+- `Tools/generate_station_module_catalog.py` — single source of truth, derives every module's
+  catalog entry **from the crafting tree** (authoritative cost-driven OutputValue → BuildCost,
+  recipe ingredients → BuildCost.Materials, tier → RequiredTechLevel: core TL2 / labs TL3 /
+  niche T7 TL4). Emits `Content/Data/StationModuleCatalog.json` + `.uasset.txt` mirror.
+- `UStationModuleCatalog::LoadCatalogFromJson()` — runtime loader (mirrors CraftingTreeLoader),
+  no fragile binary-`.uasset` editing. `StationEditorManager::EnsureCatalogLoaded()` auto-loads
+  the default `DA_StationModuleCatalog` on BeginEditing.
+- `tests/test_station_module_catalog.py` — 10 checks (presence of all 27, cost==recipe Output,
+  materials==ingredients, tech in range, groups valid, class paths well-formed).
+
+**Verified:** unity build `Result: Succeeded`; full pytest **96 passed** (86 prior + 10 new);
+**in-engine runtime check confirmed `LoadCatalogFromJson` loaded 27 entries** with correct
+display names, tech levels, cost-driven credits, and material maps (read back via editor-Python).
+
+**Notes / hand-off:**
+- Uses native C++ module classes (`/Script/Adastrea.<Class>`) directly — no 27 thin BP
+  variants needed; the editor matches by `Module->GetClass()`. Existing 3 BPs (CargoBay,
+  DockingBay, Market) remain, now backed by catalog entries.
+- **crafting:** catalog costs are cost-driven from your tree — keep `CraftingTree.json`
+  authoritative; re-run the generator to refresh the catalog.
+- **assets (Phase 2):** mesh kit can proceed; catalog `PreviewMesh` is currently unset (no
+  module meshes yet) and can be wired in once meshes exist.
+
+_Doing next: Phase 4 (station construction gameplay: place module if crafted in cargo + enough
+power; power consumption/generation actually gates docking/market). Ready on request._
