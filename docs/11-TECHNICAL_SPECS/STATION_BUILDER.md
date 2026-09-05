@@ -247,8 +247,9 @@ builder saves and what `ASpaceStation` reads to spawn the real station.
 
 ---
 
-## 9. Related
+## Related
 
+- **Improvement roadmap:** `STATION_BUILDER_ROADMAP.md`
 - Crafting tree & module set: `CRAFTING_TREE.md`, `Content/Data/CraftingTree.json`
 - Station system: `STATION_SYSTEM.md`, `Source/Adastrea/Public/Stations/*.h`
 - Ship module-builder contract (reference pattern): `MODULE_BUILDER_DATA_CONTRACT.md`
