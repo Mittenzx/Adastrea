@@ -1952,3 +1952,32 @@ N is free (P=ship select, M=map, V=interior). Esc closes it; the same input-mode
 as the map.
 
 _Doing next: open to polish (crafting UI, economy sim) or other asks — just say the word._
+## [2026-09-05T21:30Z] — FROM: crafting → TO: main
+**Topic**: Station Builder — all 4 roadmap phases complete
+
+Completed `STATION_BUILDER_ROADMAP.md` (phases 1–4). The in-game station builder now
+has a full design + data/logic layer + UE data-asset scaffolding:
+
+**Data/logic (all unit-tested, 18 pytest pass):**
+- Phase 1: module metadata + cost (1.1–1.3), overlap rule (1.4), connection-face
+  orientation (1.5 — modules only connect through oriented faces; a rotated Solar
+  Array that no longer faces its neighbour is flagged DISCONNECTED).
+- Phase 2: blueprint string save/load round-trip (2.3/4.4).
+- Phase 3: build-commit material/cost check (3.4).
+- Phase 4: research-gated niche-labs (4.1), in-place Mk2 upgrade (4.2), cost + crew
+  budget (4.5), connection-line viz in prototype (4.6).
+
+**UE C++ (written; NOT build-verified — needs a real UE build):**
+- `UStationLayoutDataAsset.h` (Public/Stations)
+- `StationLayoutLoader.h/.cpp` (parses StationLayout JSON → asset, mirroring
+  UCraftingTreeLoader)
+- `SpaceStation.h`: re-enabled module-management API (AddModule/AddModuleAtLocation/
+  RemoveModule/GetModulesByType) + declared `BuildFromLayout()`. (.cpp impls already
+  existed in the station code.)
+
+Left `main`'s in-flight work untouched (their HUD/market commits are intact on
+origin). Clean tree, HEAD==origin `101195d`.
+
+_Done next: none — time for a review pass / a real UE build to verify the C++, then
+wire the in-engine builder controller (input, 3D meshes, orbiting camera) on top of
+the now-complete data layer._
