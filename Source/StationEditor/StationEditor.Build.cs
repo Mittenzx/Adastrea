@@ -16,16 +16,18 @@ public class StationEditor : ModuleRules
 		// The module now follows standard UE5 structure with all source files organized under Public/ and Private/
 
 		PublicDependencyModuleNames.AddRange(new string[] 
-		{ 
-			"Core", 
-			"CoreUObject", 
-			"Engine",
-			"Adastrea",  // Dependency on main module for station and faction systems
-			"UMG",       // For widget functionality
-			"Slate",
-			"SlateCore",
-			"InputCore"   // Needed for EKeys and input handling in widgets
-		});
+				{ 
+					"Core", 
+					"CoreUObject", 
+					"Engine",
+					"Adastrea",  // Dependency on main module for station and faction systems
+					"UMG",       // For widget functionality
+					"Slate",
+					"SlateCore",
+					"InputCore",   // Needed for EKeys and input handling in widgets
+					"Json",        // StationModuleCatalog::LoadCatalogFromJson parses JSON
+					"JsonUtilities"
+				});
 
 		PrivateDependencyModuleNames.AddRange(new string[] 
 		{ 

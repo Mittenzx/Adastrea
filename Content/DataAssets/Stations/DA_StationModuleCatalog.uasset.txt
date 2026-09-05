@@ -1,0 +1,275 @@
+# DA_StationModuleCatalog
+# Station Module Catalog Configuration
+# Source: CraftingTree.json (authoritative) via generate_station_module_catalog.py
+
+ModuleCount: 27
+
+Module: BarracksModule
+  Class: /Script/Adastrea.BarracksModule
+  DisplayName: Barracks
+  Group: Habitation
+  RequiredTechLevel: 2
+  BuildCost.Credits: 104205
+  BuildTime: 300.0
+  Materials: HabitationPodx1, LifeSupportUnitx1, ModuleShellx2
+  Description: Barracks Module: a prefabricated station module ready for assembly.
+
+Module: BeamWeaponsLab
+  Class: /Script/Adastrea.BeamWeaponsLab
+  DisplayName: Beam Weapons Lab
+  Group: Processing
+  RequiredTechLevel: 4
+  BuildCost.Credits: 462482
+  BuildTime: 1260.0
+  Materials: AdvancedPowerCellsx2, ModuleShellx1, PlasmaCannonx1, WeaponsLabModulex1
+  Description: Refined beam weapons lab, produced by advanced fabrication.
+
+Module: BiologyLabModule
+  Class: /Script/Adastrea.BiologyLabModule
+  DisplayName: Biology Lab
+  Group: Processing
+  RequiredTechLevel: 3
+  BuildCost.Credits: 46424
+  BuildTime: 120.0
+  Materials: BioCompoundx1, ModuleShellx2, RefinedMedicinex2
+  Description: Biology Lab Module: a prefabricated station module ready for assembly.
+
+Module: CargoBayModule
+  Class: /Script/Adastrea.CargoBayModule
+  DisplayName: Cargo Bay
+  Group: Storage
+  RequiredTechLevel: 2
+  BuildCost.Credits: 73794
+  BuildTime: 180.0
+  Materials: CargoPodx1, ConstructionMaterialsx1, ModuleShellx3
+  Description: Cargo Bay Module: a prefabricated station module ready for assembly.
+
+Module: CorridorModule
+  Class: /Script/Adastrea.CorridorModule
+  DisplayName: Corridor
+  Group: Connection
+  RequiredTechLevel: 2
+  BuildCost.Credits: 85138
+  BuildTime: 240.0
+  Materials: CorridorSegmentx1, ModuleShellx2
+  Description: Corridor Module: a prefabricated station module ready for assembly.
+
+Module: CyberneticsLab
+  Class: /Script/Adastrea.CyberneticsLab
+  DisplayName: Cybernetics Lab
+  Group: Processing
+  RequiredTechLevel: 4
+  BuildCost.Credits: 268820
+  BuildTime: 720.0
+  Materials: BiologyLabModulex1, ModuleShellx1, NanoInjectorsx1, RefinedMedicine_Mk2x1
+  Description: Refined cybernetics lab, produced by advanced fabrication.
+
+Module: DockingBayModule
+  Class: /Script/Adastrea.DockingBayModule
+  DisplayName: Docking Bay
+  Group: Docking
+  RequiredTechLevel: 2
+  BuildCost.Credits: 77508
+  BuildTime: 180.0
+  Materials: ControlUnitx1, DockingMechanismx1, ModuleShellx3
+  Description: Docking Bay Module: a prefabricated station module ready for assembly.
+
+Module: DockingPortModule
+  Class: /Script/Adastrea.DockingPortModule
+  DisplayName: Docking Port
+  Group: Docking
+  RequiredTechLevel: 2
+  BuildCost.Credits: 48518
+  BuildTime: 120.0
+  Materials: DockingMechanismx1, ModuleShellx2
+  Description: Docking Port Module: a prefabricated station module ready for assembly.
+
+Module: ElectronicsLabModule
+  Class: /Script/Adastrea.ElectronicsLabModule
+  DisplayName: Electronics Lab
+  Group: Processing
+  RequiredTechLevel: 3
+  BuildCost.Credits: 67170
+  BuildTime: 180.0
+  Materials: CircuitBoardx2, ModuleShellx2, QuantumProcessorx2
+  Description: Electronics Lab Module: a prefabricated station module ready for assembly.
+
+Module: EncryptionLab
+  Class: /Script/Adastrea.EncryptionLab
+  DisplayName: Encryption Lab
+  Group: Processing
+  RequiredTechLevel: 4
+  BuildCost.Credits: 1843522
+  BuildTime: 4920.0
+  Materials: ElectronicsLabModulex1, EncryptedCircuit_Mk2x1, ModuleShellx1, QuantumProcessor_Mk2x1
+  Description: Refined encryption lab, produced by advanced fabrication.
+
+Module: FabricationModule
+  Class: /Script/Adastrea.FabricationModule
+  DisplayName: Fabrication
+  Group: Processing
+  RequiredTechLevel: 2
+  BuildCost.Credits: 62337
+  BuildTime: 180.0
+  Materials: ConstructionMaterialsx1, ControlUnitx2, ModuleShellx2
+  Description: Fabrication Module: a prefabricated station module ready for assembly.
+
+Module: FuelDepotModule
+  Class: /Script/Adastrea.FuelDepotModule
+  DisplayName: Fuel Depot
+  Group: Storage
+  RequiredTechLevel: 2
+  BuildCost.Credits: 49114
+  BuildTime: 120.0
+  Materials: FuelTankx1, ModuleShellx2, SteelAlloyx2
+  Description: Fuel Depot Module: a prefabricated station module ready for assembly.
+
+Module: GravMaterialsLab
+  Class: /Script/Adastrea.GravMaterialsLab
+  DisplayName: Grav Materials Lab
+  Group: Processing
+  RequiredTechLevel: 4
+  BuildCost.Credits: 969171
+  BuildTime: 2580.0
+  Materials: EnrichedUraniumx1, GravitationGenerator_Mk2x1, MaterialsLabModulex1, ModuleShellx1
+  Description: Refined grav materials lab, produced by advanced fabrication.
+
+Module: HabitationModule
+  Class: /Script/Adastrea.HabitationModule
+  DisplayName: Habitation
+  Group: Habitation
+  RequiredTechLevel: 2
+  BuildCost.Credits: 137196
+  BuildTime: 360.0
+  Materials: HabitationPodx1, LifeSupportUnitx2, ModuleShellx3
+  Description: Habitation Module: a prefabricated station module ready for assembly.
+
+Module: IonPropulsionLab
+  Class: /Script/Adastrea.IonPropulsionLab
+  DisplayName: Ion Propulsion Lab
+  Group: Processing
+  RequiredTechLevel: 4
+  BuildCost.Credits: 366990
+  BuildTime: 960.0
+  Materials: CobaltMagnetx2, ModuleShellx1, PhysicsLabModulex1, ShipEngine_Mk2x1
+  Description: Refined ion propulsion lab, produced by advanced fabrication.
+
+Module: MarketplaceModule
+  Class: /Script/Adastrea.MarketplaceModule
+  DisplayName: Marketplace
+  Group: Public
+  RequiredTechLevel: 2
+  BuildCost.Credits: 68637
+  BuildTime: 180.0
+  Materials: BasicComputerx3, LifeSupportUnitx1, ModuleShellx2
+  Description: Marketplace Module: a prefabricated station module ready for assembly.
+
+Module: MaterialsLabModule
+  Class: /Script/Adastrea.MaterialsLabModule
+  DisplayName: Materials Lab
+  Group: Processing
+  RequiredTechLevel: 3
+  BuildCost.Credits: 58142
+  BuildTime: 180.0
+  Materials: ArmourPlatex2, ModuleShellx2, StationHullFramex1
+  Description: Materials Lab Module: a prefabricated station module ready for assembly.
+
+Module: OptronicsLab
+  Class: /Script/Adastrea.OptronicsLab
+  DisplayName: Optronics Lab
+  Group: Processing
+  RequiredTechLevel: 4
+  BuildCost.Credits: 421356
+  BuildTime: 1140.0
+  Materials: ElectronicsLabModulex1, FiberOpticCable_Mk2x1, ModuleShellx1, OpticalLens_Mk2x2
+  Description: Refined optronics lab, produced by advanced fabrication.
+
+Module: PhysicsLabModule
+  Class: /Script/Adastrea.PhysicsLabModule
+  DisplayName: Physics Lab
+  Group: Processing
+  RequiredTechLevel: 3
+  BuildCost.Credits: 80502
+  BuildTime: 240.0
+  Materials: FusionFuelCellx2, ModuleShellx2, ShipReactorx1
+  Description: Physics Lab Module: a prefabricated station module ready for assembly.
+
+Module: ProcessingModule
+  Class: /Script/Adastrea.ProcessingModule
+  DisplayName: Processing
+  Group: Processing
+  RequiredTechLevel: 2
+  BuildCost.Credits: 50920
+  BuildTime: 120.0
+  Materials: ControlUnitx1, ModuleShellx2, SteelAlloyx2
+  Description: Processing Module: a prefabricated station module ready for assembly.
+
+Module: ProjectileWeaponsLab
+  Class: /Script/Adastrea.ProjectileWeaponsLab
+  DisplayName: Projectile Weapons Lab
+  Group: Processing
+  RequiredTechLevel: 4
+  BuildCost.Credits: 323198
+  BuildTime: 840.0
+  Materials: ModuleShellx1, Railgunx1, SuperConductingWire_Mk2x1, WeaponsLabModulex1
+  Description: Refined projectile weapons lab, produced by advanced fabrication.
+
+Module: ReactorModule
+  Class: /Script/Adastrea.ReactorModule
+  DisplayName: Reactor
+  Group: Power
+  RequiredTechLevel: 2
+  BuildCost.Credits: 105123
+  BuildTime: 300.0
+  Materials: ModuleShellx2, PowerCorex2
+  Description: Reactor Module: a prefabricated station module ready for assembly.
+
+Module: ScienceLabModule
+  Class: /Script/Adastrea.ScienceLabModule
+  DisplayName: Science Lab
+  Group: Processing
+  RequiredTechLevel: 3
+  BuildCost.Credits: 54453
+  BuildTime: 120.0
+  Materials: AdvancedSensorsx1, ModuleShellx2, QuantumProcessorx1
+  Description: Science Lab Module: a prefabricated station module ready for assembly.
+
+Module: ShieldGeneratorModule
+  Class: /Script/Adastrea.ShieldGeneratorModule
+  DisplayName: Shield Generator
+  Group: Defence
+  RequiredTechLevel: 2
+  BuildCost.Credits: 85956
+  BuildTime: 240.0
+  Materials: AdvancedPowerCellsx2, ModuleShellx2, ShieldEmitterx1
+  Description: Shield Generator Module: a prefabricated station module ready for assembly.
+
+Module: SolarArrayModule
+  Class: /Script/Adastrea.SolarArrayModule
+  DisplayName: Solar Array
+  Group: Power
+  RequiredTechLevel: 2
+  BuildCost.Credits: 24562
+  BuildTime: 60.0
+  Materials: ModuleShellx1, PowerCellsx4, SiliconWaferx3
+  Description: Solar Array Module: a prefabricated station module ready for assembly.
+
+Module: TurretModule
+  Class: /Script/Adastrea.TurretModule
+  DisplayName: Turret
+  Group: Defence
+  RequiredTechLevel: 2
+  BuildCost.Credits: 103086
+  BuildTime: 300.0
+  Materials: ModuleShellx2, TurretWeaponx2
+  Description: Turret Module: a prefabricated station module ready for assembly.
+
+Module: WeaponsLabModule
+  Class: /Script/Adastrea.WeaponsLabModule
+  DisplayName: Weapons Lab
+  Group: Processing
+  RequiredTechLevel: 3
+  BuildCost.Credits: 153740
+  BuildTime: 420.0
+  Materials: EnergyCannonx1, ModuleShellx2, TargetingComputerx1
+  Description: Weapons Lab Module: a prefabricated station module ready for assembly.

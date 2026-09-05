@@ -446,8 +446,16 @@ public:
 	// =====================
 
 	/** The catalog of available modules for this editor */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration")
-	UStationModuleCatalog* ModuleCatalog;
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration")
+		UStationModuleCatalog* ModuleCatalog;
+
+		/**
+		 * Ensure ModuleCatalog has entries, auto-loading from the crafting-derived
+		 * JSON spec (Content/Data/StationModuleCatalog.json) via LoadCatalogFromJson()
+		 * if it is empty or unloaded. Call once before the editor surfaces modules.
+		 */
+		UFUNCTION(BlueprintCallable, Category="Station Editor|Configuration")
+		void EnsureCatalogLoaded();
 
 	/** Current player's tech level (used for module availability) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration", meta=(ClampMin=1, ClampMax=10))

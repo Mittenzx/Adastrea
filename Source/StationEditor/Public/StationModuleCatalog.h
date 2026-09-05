@@ -109,8 +109,11 @@ public:
 	UStationModuleCatalog();
 
 	/** Array of all available module entries in this catalog */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module Catalog")
-	TArray<FStationModuleEntry> ModuleEntries;
+		UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module Catalog")
+		TArray<FStationModuleEntry> ModuleEntries;
+
+		/** True if LoadCatalogFromJson() successfully populated ModuleEntries. */
+		bool bLoadedFromJson = false;
 
 	/**
 	 * Get all module entries in the catalog
@@ -145,13 +148,32 @@ public:
 	TArray<FStationModuleEntry> GetModulesFiltered(EStationModuleGroup Group, int32 MaxTechLevel) const;
 
 	/**
-	 * Find a module entry by its class
-	 * @param ModuleClass The class to search for
-	 * @param OutEntry The found entry (only valid if function returns true)
-	 * @return True if entry was found, false otherwise
-	 */
-	UFUNCTION(BlueprintCallable, Category="Module Catalog")
-	bool FindModuleByClass(TSubclassOf<ASpaceStationModule> ModuleClass, FStationModuleEntry& OutEntry) const;
+		 * Find a module entry by its class
+		 * @param ModuleClass The class to search for
+		 * @param OutEntry The found entry (only valid if function returns true)
+		 * @return True if entry was found, false otherwise
+		 */
+		UFUNCTION(BlueprintCallable, Category="Module Catalog")
+		bool FindModuleByClass(TSubclassOf<ASpaceStationModule> ModuleClass, FStationModuleEntry& OutEntry) const;
+
+		/**
+		 * Populate ModuleEntries from Content/Data/StationModuleCatalog.json
+		 * (authored by generate_station_module_catalog.py, which derives it from the
+		 * crafting tree). Mirrors UCraftingTreeLoader's runtime-load pattern so the
+		 * catalog stays in sync with the authoritative crafting data without hand-
+		 * editing a binary .uasset.
+		 *
+		 * @return Number of entries loaded, or 0 on failure.
+		 */
+		UFUNCTION(BlueprintCallable, Category="Module Catalog")
+		int32 LoadCatalogFromJson();
+
+		/** Whether LoadCatalogFromJson() has run and produced entries. */
+		UFUNCTION(BlueprintCallable, BlueprintPure, Category="Module Catalog")
+		bool IsCatalogLoaded() const { return bLoadedFromJson && ModuleEntries.Num() > 0; }
+
+		/** Map a catalog "ModuleGroup" string to the EStationModuleGroup enum. */
+		static EStationModuleGroup MapModuleGroup(const FString& Group);
 
 	/**
 	 * Get the number of modules in the catalog

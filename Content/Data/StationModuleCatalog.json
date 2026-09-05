@@ -1,0 +1,466 @@
+{
+  "entries": [
+    {
+      "item_id": "CorridorModule",
+      "cpp_class": "ACorridorModule",
+      "class_path": "/Script/Adastrea.CorridorModule",
+      "display_name": "Corridor",
+      "description": "Corridor Module: a prefabricated station module ready for assembly.",
+      "group": "Connection",
+      "required_tech_level": 2,
+      "build_cost_credits": 85138,
+      "build_time_seconds": 240.0,
+      "materials": {
+        "ModuleShell": 2,
+        "CorridorSegment": 1
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "CargoBayModule",
+      "cpp_class": "ACargoBayModule",
+      "class_path": "/Script/Adastrea.CargoBayModule",
+      "display_name": "Cargo Bay",
+      "description": "Cargo Bay Module: a prefabricated station module ready for assembly.",
+      "group": "Storage",
+      "required_tech_level": 2,
+      "build_cost_credits": 73794,
+      "build_time_seconds": 180.0,
+      "materials": {
+        "ModuleShell": 3,
+        "ConstructionMaterials": 1,
+        "CargoPod": 1
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "DockingBayModule",
+      "cpp_class": "ADockingBayModule",
+      "class_path": "/Script/Adastrea.DockingBayModule",
+      "display_name": "Docking Bay",
+      "description": "Docking Bay Module: a prefabricated station module ready for assembly.",
+      "group": "Docking",
+      "required_tech_level": 2,
+      "build_cost_credits": 77508,
+      "build_time_seconds": 180.0,
+      "materials": {
+        "ModuleShell": 3,
+        "ControlUnit": 1,
+        "DockingMechanism": 1
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "DockingPortModule",
+      "cpp_class": "ADockingPortModule",
+      "class_path": "/Script/Adastrea.DockingPortModule",
+      "display_name": "Docking Port",
+      "description": "Docking Port Module: a prefabricated station module ready for assembly.",
+      "group": "Docking",
+      "required_tech_level": 2,
+      "build_cost_credits": 48518,
+      "build_time_seconds": 120.0,
+      "materials": {
+        "ModuleShell": 2,
+        "DockingMechanism": 1
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "HabitationModule",
+      "cpp_class": "AHabitationModule",
+      "class_path": "/Script/Adastrea.HabitationModule",
+      "display_name": "Habitation",
+      "description": "Habitation Module: a prefabricated station module ready for assembly.",
+      "group": "Habitation",
+      "required_tech_level": 2,
+      "build_cost_credits": 137196,
+      "build_time_seconds": 360.0,
+      "materials": {
+        "ModuleShell": 3,
+        "LifeSupportUnit": 2,
+        "HabitationPod": 1
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "BarracksModule",
+      "cpp_class": "ABarracksModule",
+      "class_path": "/Script/Adastrea.BarracksModule",
+      "display_name": "Barracks",
+      "description": "Barracks Module: a prefabricated station module ready for assembly.",
+      "group": "Habitation",
+      "required_tech_level": 2,
+      "build_cost_credits": 104205,
+      "build_time_seconds": 300.0,
+      "materials": {
+        "ModuleShell": 2,
+        "LifeSupportUnit": 1,
+        "HabitationPod": 1
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "MarketplaceModule",
+      "cpp_class": "AMarketplaceModule",
+      "class_path": "/Script/Adastrea.MarketplaceModule",
+      "display_name": "Marketplace",
+      "description": "Marketplace Module: a prefabricated station module ready for assembly.",
+      "group": "Public",
+      "required_tech_level": 2,
+      "build_cost_credits": 68637,
+      "build_time_seconds": 180.0,
+      "materials": {
+        "ModuleShell": 2,
+        "BasicComputer": 3,
+        "LifeSupportUnit": 1
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "ScienceLabModule",
+      "cpp_class": "AScienceLabModule",
+      "class_path": "/Script/Adastrea.ScienceLabModule",
+      "display_name": "Science Lab",
+      "description": "Science Lab Module: a prefabricated station module ready for assembly.",
+      "group": "Processing",
+      "required_tech_level": 3,
+      "build_cost_credits": 54453,
+      "build_time_seconds": 120.0,
+      "materials": {
+        "ModuleShell": 2,
+        "QuantumProcessor": 1,
+        "AdvancedSensors": 1
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "ReactorModule",
+      "cpp_class": "AReactorModule",
+      "class_path": "/Script/Adastrea.ReactorModule",
+      "display_name": "Reactor",
+      "description": "Reactor Module: a prefabricated station module ready for assembly.",
+      "group": "Power",
+      "required_tech_level": 2,
+      "build_cost_credits": 105123,
+      "build_time_seconds": 300.0,
+      "materials": {
+        "PowerCore": 2,
+        "ModuleShell": 2
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "SolarArrayModule",
+      "cpp_class": "ASolarArrayModule",
+      "class_path": "/Script/Adastrea.SolarArrayModule",
+      "display_name": "Solar Array",
+      "description": "Solar Array Module: a prefabricated station module ready for assembly.",
+      "group": "Power",
+      "required_tech_level": 2,
+      "build_cost_credits": 24562,
+      "build_time_seconds": 60.0,
+      "materials": {
+        "PowerCells": 4,
+        "SiliconWafer": 3,
+        "ModuleShell": 1
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "ProcessingModule",
+      "cpp_class": "AProcessingModule",
+      "class_path": "/Script/Adastrea.ProcessingModule",
+      "display_name": "Processing",
+      "description": "Processing Module: a prefabricated station module ready for assembly.",
+      "group": "Processing",
+      "required_tech_level": 2,
+      "build_cost_credits": 50920,
+      "build_time_seconds": 120.0,
+      "materials": {
+        "ModuleShell": 2,
+        "SteelAlloy": 2,
+        "ControlUnit": 1
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "FabricationModule",
+      "cpp_class": "AFabricationModule",
+      "class_path": "/Script/Adastrea.FabricationModule",
+      "display_name": "Fabrication",
+      "description": "Fabrication Module: a prefabricated station module ready for assembly.",
+      "group": "Processing",
+      "required_tech_level": 2,
+      "build_cost_credits": 62337,
+      "build_time_seconds": 180.0,
+      "materials": {
+        "ModuleShell": 2,
+        "ControlUnit": 2,
+        "ConstructionMaterials": 1
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "FuelDepotModule",
+      "cpp_class": "AFuelDepotModule",
+      "class_path": "/Script/Adastrea.FuelDepotModule",
+      "display_name": "Fuel Depot",
+      "description": "Fuel Depot Module: a prefabricated station module ready for assembly.",
+      "group": "Storage",
+      "required_tech_level": 2,
+      "build_cost_credits": 49114,
+      "build_time_seconds": 120.0,
+      "materials": {
+        "ModuleShell": 2,
+        "SteelAlloy": 2,
+        "FuelTank": 1
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "TurretModule",
+      "cpp_class": "ATurretModule",
+      "class_path": "/Script/Adastrea.TurretModule",
+      "display_name": "Turret",
+      "description": "Turret Module: a prefabricated station module ready for assembly.",
+      "group": "Defence",
+      "required_tech_level": 2,
+      "build_cost_credits": 103086,
+      "build_time_seconds": 300.0,
+      "materials": {
+        "TurretWeapon": 2,
+        "ModuleShell": 2
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "ShieldGeneratorModule",
+      "cpp_class": "AShieldGeneratorModule",
+      "class_path": "/Script/Adastrea.ShieldGeneratorModule",
+      "display_name": "Shield Generator",
+      "description": "Shield Generator Module: a prefabricated station module ready for assembly.",
+      "group": "Defence",
+      "required_tech_level": 2,
+      "build_cost_credits": 85956,
+      "build_time_seconds": 240.0,
+      "materials": {
+        "ShieldEmitter": 1,
+        "ModuleShell": 2,
+        "AdvancedPowerCells": 2
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "PhysicsLabModule",
+      "cpp_class": "APhysicsLabModule",
+      "class_path": "/Script/Adastrea.PhysicsLabModule",
+      "display_name": "Physics Lab",
+      "description": "Physics Lab Module: a prefabricated station module ready for assembly.",
+      "group": "Processing",
+      "required_tech_level": 3,
+      "build_cost_credits": 80502,
+      "build_time_seconds": 240.0,
+      "materials": {
+        "ModuleShell": 2,
+        "ShipReactor": 1,
+        "FusionFuelCell": 2
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "MaterialsLabModule",
+      "cpp_class": "AMaterialsLabModule",
+      "class_path": "/Script/Adastrea.MaterialsLabModule",
+      "display_name": "Materials Lab",
+      "description": "Materials Lab Module: a prefabricated station module ready for assembly.",
+      "group": "Processing",
+      "required_tech_level": 3,
+      "build_cost_credits": 58142,
+      "build_time_seconds": 180.0,
+      "materials": {
+        "ModuleShell": 2,
+        "StationHullFrame": 1,
+        "ArmourPlate": 2
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "ElectronicsLabModule",
+      "cpp_class": "AElectronicsLabModule",
+      "class_path": "/Script/Adastrea.ElectronicsLabModule",
+      "display_name": "Electronics Lab",
+      "description": "Electronics Lab Module: a prefabricated station module ready for assembly.",
+      "group": "Processing",
+      "required_tech_level": 3,
+      "build_cost_credits": 67170,
+      "build_time_seconds": 180.0,
+      "materials": {
+        "ModuleShell": 2,
+        "QuantumProcessor": 2,
+        "CircuitBoard": 2
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "WeaponsLabModule",
+      "cpp_class": "AWeaponsLabModule",
+      "class_path": "/Script/Adastrea.WeaponsLabModule",
+      "display_name": "Weapons Lab",
+      "description": "Weapons Lab Module: a prefabricated station module ready for assembly.",
+      "group": "Processing",
+      "required_tech_level": 3,
+      "build_cost_credits": 153740,
+      "build_time_seconds": 420.0,
+      "materials": {
+        "ModuleShell": 2,
+        "EnergyCannon": 1,
+        "TargetingComputer": 1
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "BiologyLabModule",
+      "cpp_class": "ABiologyLabModule",
+      "class_path": "/Script/Adastrea.BiologyLabModule",
+      "display_name": "Biology Lab",
+      "description": "Biology Lab Module: a prefabricated station module ready for assembly.",
+      "group": "Processing",
+      "required_tech_level": 3,
+      "build_cost_credits": 46424,
+      "build_time_seconds": 120.0,
+      "materials": {
+        "ModuleShell": 2,
+        "RefinedMedicine": 2,
+        "BioCompound": 1
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "ProjectileWeaponsLab",
+      "cpp_class": "AProjectileWeaponsLab",
+      "class_path": "/Script/Adastrea.ProjectileWeaponsLab",
+      "display_name": "Projectile Weapons Lab",
+      "description": "Refined projectile weapons lab, produced by advanced fabrication.",
+      "group": "Processing",
+      "required_tech_level": 4,
+      "build_cost_credits": 323198,
+      "build_time_seconds": 840.0,
+      "materials": {
+        "WeaponsLabModule": 1,
+        "ModuleShell": 1,
+        "Railgun": 1,
+        "SuperConductingWire_Mk2": 1
+      },
+      "recipe_tier": 7
+    },
+    {
+      "item_id": "BeamWeaponsLab",
+      "cpp_class": "ABeamWeaponsLab",
+      "class_path": "/Script/Adastrea.BeamWeaponsLab",
+      "display_name": "Beam Weapons Lab",
+      "description": "Refined beam weapons lab, produced by advanced fabrication.",
+      "group": "Processing",
+      "required_tech_level": 4,
+      "build_cost_credits": 462482,
+      "build_time_seconds": 1260.0,
+      "materials": {
+        "WeaponsLabModule": 1,
+        "ModuleShell": 1,
+        "PlasmaCannon": 1,
+        "AdvancedPowerCells": 2
+      },
+      "recipe_tier": 7
+    },
+    {
+      "item_id": "IonPropulsionLab",
+      "cpp_class": "AIonPropulsionLab",
+      "class_path": "/Script/Adastrea.IonPropulsionLab",
+      "display_name": "Ion Propulsion Lab",
+      "description": "Refined ion propulsion lab, produced by advanced fabrication.",
+      "group": "Processing",
+      "required_tech_level": 4,
+      "build_cost_credits": 366990,
+      "build_time_seconds": 960.0,
+      "materials": {
+        "PhysicsLabModule": 1,
+        "ModuleShell": 1,
+        "ShipEngine_Mk2": 1,
+        "CobaltMagnet": 2
+      },
+      "recipe_tier": 7
+    },
+    {
+      "item_id": "GravMaterialsLab",
+      "cpp_class": "AGravMaterialsLab",
+      "class_path": "/Script/Adastrea.GravMaterialsLab",
+      "display_name": "Grav Materials Lab",
+      "description": "Refined grav materials lab, produced by advanced fabrication.",
+      "group": "Processing",
+      "required_tech_level": 4,
+      "build_cost_credits": 969171,
+      "build_time_seconds": 2580.0,
+      "materials": {
+        "MaterialsLabModule": 1,
+        "ModuleShell": 1,
+        "GravitationGenerator_Mk2": 1,
+        "EnrichedUranium": 1
+      },
+      "recipe_tier": 7
+    },
+    {
+      "item_id": "EncryptionLab",
+      "cpp_class": "AEncryptionLab",
+      "class_path": "/Script/Adastrea.EncryptionLab",
+      "display_name": "Encryption Lab",
+      "description": "Refined encryption lab, produced by advanced fabrication.",
+      "group": "Processing",
+      "required_tech_level": 4,
+      "build_cost_credits": 1843522,
+      "build_time_seconds": 4920.0,
+      "materials": {
+        "ElectronicsLabModule": 1,
+        "ModuleShell": 1,
+        "EncryptedCircuit_Mk2": 1,
+        "QuantumProcessor_Mk2": 1
+      },
+      "recipe_tier": 7
+    },
+    {
+      "item_id": "OptronicsLab",
+      "cpp_class": "AOptronicsLab",
+      "class_path": "/Script/Adastrea.OptronicsLab",
+      "display_name": "Optronics Lab",
+      "description": "Refined optronics lab, produced by advanced fabrication.",
+      "group": "Processing",
+      "required_tech_level": 4,
+      "build_cost_credits": 421356,
+      "build_time_seconds": 1140.0,
+      "materials": {
+        "ElectronicsLabModule": 1,
+        "ModuleShell": 1,
+        "OpticalLens_Mk2": 2,
+        "FiberOpticCable_Mk2": 1
+      },
+      "recipe_tier": 7
+    },
+    {
+      "item_id": "CyberneticsLab",
+      "cpp_class": "ACyberneticsLab",
+      "class_path": "/Script/Adastrea.CyberneticsLab",
+      "display_name": "Cybernetics Lab",
+      "description": "Refined cybernetics lab, produced by advanced fabrication.",
+      "group": "Processing",
+      "required_tech_level": 4,
+      "build_cost_credits": 268820,
+      "build_time_seconds": 720.0,
+      "materials": {
+        "BiologyLabModule": 1,
+        "ModuleShell": 1,
+        "NanoInjectors": 1,
+        "RefinedMedicine_Mk2": 1
+      },
+      "recipe_tier": 7
+    }
+  ]
+}

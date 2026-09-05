@@ -26,6 +26,26 @@ UStationEditorManager::UStationEditorManager()
 // Editing Lifecycle
 // =====================
 
+void UStationEditorManager::EnsureCatalogLoaded()
+{
+    // Default the catalog to the project's DA_StationModuleCatalog asset if none
+    // was assigned (so the station editor reliably surfaces all 27 modules).
+    if (!ModuleCatalog)
+    {
+        ModuleCatalog = Cast<UStationModuleCatalog>(
+            StaticLoadObject(UStationModuleCatalog::StaticClass(), nullptr,
+                TEXT("/Game/DataAssets/Stations/DA_StationModuleCatalog.DA_StationModuleCatalog")));
+    }
+    if (!ModuleCatalog)
+    {
+        return;
+    }
+    if (!ModuleCatalog->IsCatalogLoaded())
+    {
+        ModuleCatalog->LoadCatalogFromJson();
+    }
+}
+
 bool UStationEditorManager::BeginEditing_Implementation(ASpaceStation* Station)
 {
 	if (!Station)
@@ -33,6 +53,9 @@ bool UStationEditorManager::BeginEditing_Implementation(ASpaceStation* Station)
 		UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::BeginEditing - Invalid station pointer"));
 		return false;
 	}
+
+	// Make sure the module catalog has entries before the editor surfaces modules.
+	EnsureCatalogLoaded();
 
 	if (bIsEditing)
 	{
