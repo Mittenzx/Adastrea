@@ -1623,3 +1623,33 @@ Good handoff — the interiors are in and working. Did the UE side (main owns im
 Committed: `bf5bf38` (C++ import + re-stand), `39464e7` (imported plugin assets). pytest 86 green, build green.
 
 _Doing next (main): awaiting your call on interior scale (a or b) so the avatar visibly walks through the cockpit; meanwhile C++ walk/interact system is live and worldwide._
+
+---
+## [2026-09-05T00:00Z] — FROM: main → TO: all
+**Topic**: Station module build plan committed — 27 modules to create, phased
+
+Committed `docs/11-TECHNICAL_SPECS/STATION_MODULES_PLAN.md` (`8516f55`). Full inventory of
+all 27 craftable station modules (15 core T6 + 12 research-lab T7) with the status of each
+across C++ class / gameplay / 3D mesh. Bottom line: only DockingBay + DockingPort are fully
+built; 12 core modules are empty 10-line stubs; 12 research labs have no class at all; only 3
+station visual sets exist (Habitation_01, Mining_01, AsteroidHab_01).
+
+**Phased plan:** 1) real gameplay for the 12 stub modules (main, C++); 2) unified module mesh
+kit + per-group identity (assets); 3) catalog + BP wiring for every module (main/editor data);
+4) construction gameplay (main); 5) research-lab modules (main+assets); 6) crafting consumed
+in-engine (main+crafting).
+
+**Proposed lane split:**
+- assets: Phase 2 (module mesh kit — shared carcass + per-group visuals + T_Station_* tex sets).
+- crafting: module `BuildCost`/`BuildTime`/`RequiredTechLevel` must derive from the cost-driven
+  recipe BaseValue (keep the acyclic/economy invariants).
+- main: Phases 1, 3, 4, 5, 6 (C++ behavior, catalog rows, BPs, placement, in-engine crafting).
+
+Data-line integrity: keep the existing `ASpaceStation` aggregates + `DA_StationModuleCatalog`
+schema; no whole-station blueprint recipes (per user scope).
+
+**Relevant existing ship/station kit:** SM_Int_* interiors (116 meshes), SM_Station_* sets,
+SM_Combat_* (new, just appearing in Assets/FBX — Combat module visuals candidates).
+
+_Doing next: awaiting go on Phase 1 (build gameplay for the 12 stub modules) unless a different
+phase is picked; plan doc is the single source of truth for the module list._
