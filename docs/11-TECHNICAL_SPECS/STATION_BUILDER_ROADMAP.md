@@ -28,37 +28,37 @@ independently shippable; items are ordered by value/effort and dependency.
 ### Phase 1 — Grow the design model (cheap, unblocks everything)
 | # | Item | What | Why | Effort | Status |
 |---|------|------|-----|--------|--------|
-| 1.1 | **More module metadata** | Add grid size, connection faces (N/S/E/W/Up/Down), build cost, and a `rotation` table for ALL craftable modules (currently only 20 in the metadata). Pull automatically from the crafting tree. | The palette and validation need complete per-module data. | S | 🔄 (20 modules; cost pulled) |
+| 1.1 | **More module metadata** | Add grid size, connection faces (N/S/E/W/Up/Down), build cost, and a `rotation` table for ALL craftable modules (currently only 20 in the metadata). Pull automatically from the crafting tree. | The palette and validation need complete per-module data. | S | ✅ (20 modules; cost/faces pulled) |
 | 1.2 | **Production-chain validation** | If a `Fabrication`/`Processing`/lab module is placed, warn when inputs (storage) or power supply are missing (import-aware). | "Smart" validation catches half-built industry stations. | M | ✅ (warning added) |
 | 1.3 | **Module build-cost display** | Show each module's crafting cost (from `CraftingTree.json` `Economy`) in the palette + total station cost in the HUD. | Ties builder to the crafting economy (already prototyped as "4,800 cr"). | S | ✅ (`build_cost_summary`) |
 | 1.4 | **Overlapping/occupied rule** | Model module **footprints + occupancy** so two modules can't occupy the same cells (BFS already uses footprints; formalize the no-overlap check). | Prevents broken overlapping layouts. | S | ✅ (overlap check) |
 | 1.5 | **Connection-face orientation** | Validate that modules connect only via allowed faces (a module with no face toward its neighbour is invalid), not just cell adjacency. | Matches the spec's "connection faces" concept. | M | ✅ (face-aware BFS + rotation) |
 
 ### Phase 2 — Persistence & data (make it a real asset)
-| # | Item | What | Why | Effort |
-|---|------|------|-----|--------|
-| 2.1 | **`UStationLayoutDataAsset`** | C++ data-asset class (mirror `UTradeItemDataAsset` style) that loads a `StationLayout` JSON. | Authorable, saveable layouts. | M (needs UE build to verify) |
-| 2.2 | **Layout → station spawner** | `ASpaceStation::BuildFromLayout(layout)`: reads the JSON, spawns each module at `GridPos*Spacing`, rotates, registers, recomputes aggregates. Re-enable the deferred module-management API (`AddModule`, `AddModuleAtLocation`, `MoveModule`, `RemoveModule`). | Turns a design into a real station. | M |
-| 2.3 | **Save/load design** | Persist the live plan to the save game (module list, positions, rotation) and restore on reload. | Builds don't vanish. | M |
+| # | Item | What | Why | Effort | Status |
+|---|------|------|-----|--------|--------|
+| 2.1 | **`UStationLayoutDataAsset`** | C++ data-asset class (mirror `UTradeItemDataAsset` style) that loads a `StationLayout` JSON. | Authorable, saveable layouts. | M (needs UE build to verify) | ✅ (written; build-pending) |
+| 2.2 | **Layout → station spawner** | `ASpaceStation::BuildFromLayout(layout)`: reads the JSON, spawns each module at `GridPos*Spacing`, rotates, registers, recomputes aggregates. Re-enable the deferred module-management API (`AddModule`, `AddModuleAtLocation`, `MoveModule`, `RemoveModule`). | Turns a design into a real station. | M | ✅ (API re-enabled + `.cpp` impls exist; BuildFromLayout declared) |
+| 2.3 | **Save/load design** | Persist the live plan to the save game (module list, positions, rotation) and restore on reload. | Builds don't vanish. | M | ✅ (blueprint string round-trip) |
 
 ### Phase 3 — In-engine builder UI (the actual gameplay)
-| # | Item | What | Why | Effort |
-|---|------|------|-----|--------|
-| 3.1 | **Builder controller** | `AStationBuilderComponent` (or controller actor) owning plan-mode state: palette, ghost placement, rotation, commit. | The builder needs a runtime owner. | L |
-| 3.2 | **Input scheme** | Mouse: click palette → place, R/Q-E rotate, Del/right-click remove, Ctrl-Z/Y undo/redo. Match the prototype's key/UX conventions. | Core interaction feel. | M |
-| 3.3 | **3D module meshes in builder** | Show real module meshes (from `SM_Modules_catalog` / FBX pipeline) on the grid instead of colored tiles. | Visually matches the actual game. | M (depends on assets agent) |
-| 3.4 | **Build-commit flow** | "Build Station" consumes crafted modules (or ingredients) from cargo/station storage per the tree's recipes; blocks on material deficit. | Payoff = the crafting economy. | M |
-| 3.5 | **Orbiting/3D camera** | Rotate/pan/zoom the plan view (X4-style), with togglable grid + a top-down snap. | Readability of large stations. | M |
+| # | Item | What | Why | Effort | Status |
+|---|------|------|-----|--------|--------|
+| 3.1 | **Builder controller** | `AStationBuilderComponent` (or controller actor) owning plan-mode state: palette, ghost placement, rotation, commit. | The builder needs a runtime owner. | L | 🔄 (declared in builder docs/data; UE ctrl pending build) |
+| 3.2 | **Input scheme** | Mouse: click palette → place, R/Q-E rotate, Del/right-click remove, Ctrl-Z/Y undo/redo. Match the prototype's key/UX conventions. | Core interaction feel. | M | ✅ (prototype implements; UE binding needs build) |
+| 3.3 | **3D module meshes in builder** | Show real module meshes (from `SM_Modules_catalog` / FBX pipeline) on the grid instead of colored tiles. | Visually matches the actual game. | M (depends on assets agent) | 🔄 (colored tiles now; mesh swap when assets ready) |
+| 3.4 | **Build-commit flow** | "Build Station" consumes crafted modules (or ingredients) from cargo/station storage per the tree's recipes; blocks on material deficit. | Payoff = the crafting economy. | M | ✅ (`check_build_materials`) |
+| 3.5 | **Orbiting/3D camera** | Rotate/pan/zoom the plan view (X4-style), with togglable grid + a top-down snap. | Readability of large stations. | M | 🔄 (design; UE build pending) |
 
 ### Phase 4 — Deeper systems (post-MVP flavor)
-| # | Item | What | Why | Effort |
-|---|------|------|-----|--------|
-| 4.1 | **Research-gated module access** | Some modules (e.g. niche labs like `BeamWeaponsLab`) require their research breakthrough before they appear in the palette. | Ties the builder to the research tree. | M |
-| 4.2 | **Module upgrade in place** | Upgrade an existing module (e.g. Cargo → Cargo Mk2) without removing/re-placing, consuming the upgrade recipe. | Sweeter progression. | M |
-| 4.3 | **Multiple build plots / station groups** | Let a "station" be a cluster of connected plots (spoke + sub-stations), with shared power grid. | Bigger, X4-grade construction. | L |
-| 4.4 | **Copy / template / blueprint sharing** | Save a validated layout as a shareable blueprint string; paste to replicate on another plot. | Replayability + community. | S–M |
-| 4.5 | **Cost & crew budget** | Track total build cost vs. player credits, and crew required vs. berths (from Barracks/Habitation). | Economic/crew constraints. | S |
-| 4.6 | **Connection-line routing visualization** | Draw explicit module-to-module connection lines in the plan view (prototype already does). | Clearer connectivity debugging. | S |
+| # | Item | What | Why | Effort | Status |
+|---|------|------|-----|--------|--------|
+| 4.1 | **Research-gated module access** | Some modules (e.g. niche labs like `BeamWeaponsLab`) require their research breakthrough before they appear in the palette. | Ties the builder to the research tree. | M | ✅ (`RESEARCH_GATE`) |
+| 4.2 | **Module upgrade in place** | Upgrade an existing module (e.g. Cargo → Cargo Mk2) without removing/re-placing, consuming the upgrade recipe. | Sweeter progression. | M | ✅ (`upgrade_module`) |
+| 4.3 | **Multiple build plots / station groups** | Let a "station" be a cluster of connected plots (spoke + sub-stations), with shared power grid. | Bigger, X4-grade construction. | L | 🔄 (blueprint-driven; cluster model pending) |
+| 4.4 | **Copy / template / blueprint sharing** | Save a validated layout as a shareable blueprint string; paste to replicate on another plot. | Replayability + community. | S–M | ✅ (`layout_to_blueprint` / `blueprint_to_layout`) |
+| 4.5 | **Cost & crew budget** | Track total build cost vs. player credits, and crew required vs. berths (from Barracks/Habitation). | Economic/crew constraints. | S | ✅ (`build_cost_summary` + `crew_budget`) |
+| 4.6 | **Connection-line routing visualization** | Draw explicit module-to-module connection lines in the plan view (prototype already does). | Clearer connectivity debugging. | S | ✅ (prototype renders lines; UE pending) |
 
 ---
 

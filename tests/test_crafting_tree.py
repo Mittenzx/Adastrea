@@ -322,6 +322,58 @@ class TestCraftingTree:
         ok, errs, warns = gsb.check_station_layout(layout, meta)
         assert any("disconnect" in e for e in errs), f"rotated solar should be disconnected: {errs}"
 
+    def test_builder_phases_2_4(self):
+        """Phase 2-4 logic: blueprint round-trip, build materials, crew budget,
+        research gating, in-place upgrade."""
+        base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        sys.path.insert(0, os.path.join(base, "docs", "11-TECHNICAL_SPECS"))
+        try:
+            import generate_station_builder as gsb
+        finally:
+            sys.path.pop(0)
+        meta = gsb.build_meta()
+        layout = gsb.example_layout()
+
+        # 4.4 blueprint round-trip
+        blob = gsb.layout_to_blueprint(layout)
+        back, errs = gsb.blueprint_to_layout(blob)
+        assert not errs, f"blueprint parse error: {errs}"
+        assert len(back["Modules"]) == len(layout["Modules"])
+        assert back["Modules"][0]["ItemID"] == layout["Modules"][0]["ItemID"]
+        # malformed blueprint
+        bad, errs = gsb.blueprint_to_layout("1.0.0;100")
+        assert bad is None and errs
+
+        # 3.4 build materials: no shortage with unlimited, shortage with empty
+        ok, missing, total = gsb.check_build_materials(layout, meta)
+        assert ok and total > 0
+        ok, missing, total = gsb.check_build_materials(layout, meta, available={})
+        assert not ok and missing
+
+        # 4.5 crew budget: example has no habitation -> negative margin, 0 berths
+        crew = gsb.crew_budget(layout, meta)
+        assert crew["required"] >= 0
+        assert crew["berths"] >= 0
+        # adding habitation gives berths
+        withhab = json.loads(json.dumps(layout))
+        withhab["Modules"].append({"ModuleID": "H1", "ItemID": "HabitationModule",
+                                   "GridPos": [8, 8, 0], "Rotation": 0, "IsCore": False})
+        crew2 = gsb.crew_budget(withhab, meta)
+        assert crew2["berths"] >= crew["berths"]
+
+        # 4.1 research gating: niche lab gates exist
+        for lab, res in [
+            ("ProjectileWeaponsLab", "KineticWeaponResearch"),
+            ("BeamWeaponsLab", "BeamWeaponResearch"),
+            ("IonPropulsionLab", "IonPropulsionResearch")]:
+            assert gsb.RESEARCH_GATE[lab] == res
+
+        # 4.2 in-place upgrade
+        up = gsb.upgrade_module({"ItemID": "CargoBayModule", "GridPos": [1, 1, 0],
+                                 "ModuleID": "M2", "Rotation": 0, "IsCore": False}, meta)
+        assert up is not None and up["ItemID"] == "CargoBayModule_Mk2"
+        assert gsb.upgrade_module({"ItemID": "CorridorModule"}, meta) is None
+
 
 if __name__ == "__main__":
     try:

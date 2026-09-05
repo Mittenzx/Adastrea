@@ -291,6 +291,150 @@ def example_layout():
     }
 
 
+# ============================================================================
+# Phase 2 / 3 / 4 — persistence, budget, research gating, upgrades, blueprints
+# ============================================================================
+
+# ---- 4.5 crew: how many crew each module needs / provides ----
+CREW_META = {
+    "HabitationModule":      {"need": -5, "berth": 40},   # provides berths
+    "BarracksModule":        {"need": -3, "berth": 25},   # provides berths (NPC)
+    "CargoBayModule":        {"need": 2, "berth": 0},
+    "DockingBayModule":      {"need": 4, "berth": 0},
+    "MarketplaceModule":     {"need": 6, "berth": 0},
+    "ReactorModule":         {"need": 3, "berth": 0},
+    "SolarArrayModule":      {"need": 1, "berth": 0},
+    "ProcessingModule":      {"need": 5, "berth": 0},
+    "FabricationModule":     {"need": 6, "berth": 0},
+    "ScienceLabModule":      {"need": 4, "berth": 0},
+    "FuelDepotModule":       {"need": 2, "berth": 0},
+    "ShieldGeneratorModule": {"need": 2, "berth": 0},
+    "TurretModule":          {"need": 1, "berth": 0},
+    "CorridorModule":        {"need": 0, "berth": 0},
+}
+for _k in ("PhysicsLabModule", "MaterialsLabModule", "ElectronicsLabModule",
+           "WeaponsLabModule", "BiologyLabModule"):
+    CREW_META[_k] = {"need": 5, "berth": 0}
+
+
+# ---- 4.1 research gating: module -> required research breakthrough ----
+# A niche lab module requires its research before it appears in the palette.
+RESEARCH_GATE = {
+    "ProjectileWeaponsLab": "KineticWeaponResearch",
+    "BeamWeaponsLab": "BeamWeaponResearch",
+    "IonPropulsionLab": "IonPropulsionResearch",
+    "GravMaterialsLab": "GravMaterialsResearch",
+    "EncryptionLab": "EncryptionResearch",
+    "OptronicsLab": "OptronicsResearch",
+    "CyberneticsLab": "CyberneticsResearch",
+}
+
+
+# ---- 2.3 + 4.4 save/load + blueprint ----
+def layout_to_blueprint(layout):
+    """Serialize a layout into a compact, shareable blueprint string.
+    Format: SchemaVersion;PlotSize0,PlotSize1,PlotSize2;GridSpacing;[M:Item:gx,gy,gz:rot:core]..."""
+    modules = layout.get("Modules", [])
+    parts = []
+    for m in modules:
+        core = "1" if m.get("IsCore") else "0"
+        gx, gy, gz = m["GridPos"]
+        parts.append(f"{m['ModuleID']}:{m['ItemID']}:{gx},{gy},{gz}:{m.get('Rotation',0)}:{core}")
+    plot = layout.get("PlotSize", [1000, 1000, 1000])
+    return (f"{layout.get('SchemaVersion','1.0.0')};{plot[0]},{plot[1]},{plot[2]};"
+            f"{layout.get('GridSpacing',100)};" + ";".join(parts))
+
+
+def blueprint_to_layout(blob, station_name="Untitled Station"):
+    """Parse a blueprint string back into a layout dict. Returns (layout, errors)."""
+    try:
+        tok = blob.split(";")
+        if len(tok) < 4:
+            return None, ["blueprint: expected >=4 ';'-separated fields"]
+        ver = tok[0]
+        plot = [int(x) for x in tok[1].split(",")]
+        spacing = int(tok[2])
+        mods = tok[3:]  # each is M:Item:gx,gy,gz:rot:core
+        modules = []
+        for off in mods:
+            sub = off.split(":")
+            if len(sub) < 3:
+                continue
+            mid, iid = sub[0], sub[1]
+            xyz = [int(x) for x in sub[2].split(",")]
+            rot = int(sub[3]) if len(sub) > 3 else 0
+            core = sub[4] == "1" if len(sub) > 4 else False
+            modules.append({"ModuleID": mid, "ItemID": iid, "GridPos": xyz,
+                            "Rotation": rot, "IsCore": core})
+        return {"$schema": "http://json-schema.org/draft-07/schema#",
+                "Title": "Adastrea Station Layout", "SchemaVersion": ver,
+                "StationName": station_name, "PlotSize": plot, "GridSpacing": spacing,
+                "Modules": modules}, []
+    except Exception as e:
+        return None, [f"blueprint parse error: {e}"]
+
+
+# ---- 4.2 in-place upgrade ----
+# Map a base module to its Mk2 equivalent (same craft family). For modules without a
+# Mk2 variant listed, upgrade is not available.
+UPGRADE_TARGET = {
+    "CargoBayModule": "CargoBayModule_Mk2",
+    "MarketplaceModule": "MarketplaceModule_Mk2",
+    "ReactorModule": "ReactorModule_Mk2",
+    "FabricationModule": "FabricationModule_Mk2",
+}
+
+
+def upgrade_module(module, meta):
+    """Produce an upgraded copy of a module dict (same position/rotation/core),
+    given the Mk2 target. Returns the upgraded module or None if unavailable."""
+    target = UPGRADE_TARGET.get(module["ItemID"])
+    if not target:
+        return None
+    new = dict(module)
+    new["ItemID"] = target
+    new["ModuleID"] += "_U"
+    return new
+
+
+# ---- 3.4 build-commit (material/cost check) ----
+def check_build_materials(layout, meta, available=None):
+    """Return (can_build, missing{ItemID: qty}, total_cost). available: dict of
+    ItemID->qty the player holds. If None, treat as unlimited (just cost report).
+    Module build 'cost' uses its crafted OutputValue; a real build also consumes
+    ingredients — here we report cost and (if available given) material shortfall."""
+    cost = build_cost_summary(layout, meta)
+    total = cost["total_cost"]
+    if available is None:
+        return True, {}, total
+    missing = {}
+    for m in layout.get("Modules", []):
+        iid = m["ItemID"]
+        have = available.get(iid, 0)
+        need = 1
+        if have < need:
+            missing[iid] = missing.get(iid, 0) + (need - have)
+    return (len(missing) == 0), missing, total
+
+
+# ---- 4.5 crew budget ----
+def crew_budget(layout, meta=None, crew_meta=None):
+    """Return a dict with total berths provided, crew required, and margin.
+    Positive margin = enough berths; negative = understaffed."""
+    meta = meta or MODULE_META
+    crew_meta = crew_meta or CREW_META
+    berths = 0
+    required = 0
+    counts = {}
+    for m in layout.get("Modules", []):
+        cm = crew_meta.get(m["ItemID"], {"need": 1, "berth": 0})
+        berths += cm["berth"] if cm["berth"] > 0 else 0
+        required += max(cm["need"], 0)
+        counts[m["ItemID"]] = counts.get(m["ItemID"], 0) + 1
+    return {"berths": berths, "required": required, "margin": berths - required,
+            "crew_by_module": counts}
+
+
 def main():
     meta = build_meta()
     os.makedirs(os.path.dirname(OUT_META), exist_ok=True)
@@ -305,9 +449,13 @@ def main():
 
     ok, errors, warnings = check_station_layout(layout, meta)
     cost = build_cost_summary(layout, meta)
+    crew = crew_budget(layout, meta)
+    blob = layout_to_blueprint(layout)
     print(f"Wrote {OUT_META}")
     print(f"Wrote {OUT_EXAMPLE}")
     print(f"Example layout valid: {ok}  (build cost {cost['total_cost']:,} cr, {len(layout['Modules'])} modules)")
+    print(f"  crew: {crew['required']} required / {crew['berths']} berths (margin {crew['margin']:+d})")
+    print(f"  blueprint: {blob[:60]}...")
     for e in errors:
         print("  [error] ", e)
     for w in warnings:

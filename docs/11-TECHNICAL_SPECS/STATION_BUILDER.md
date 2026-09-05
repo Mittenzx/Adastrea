@@ -252,10 +252,57 @@ builder saves and what `ASpaceStation` reads to spawn the real station.
 
 ---
 
-## Related
+## 9. Related
 
 - **Improvement roadmap:** `STATION_BUILDER_ROADMAP.md`
 - Crafting tree & module set: `CRAFTING_TREE.md`, `Content/Data/CraftingTree.json`
 - Station system: `STATION_SYSTEM.md`, `Source/Adastrea/Public/Stations/*.h`
 - Ship module-builder contract (reference pattern): `MODULE_BUILDER_DATA_CONTRACT.md`
 - Facility/industry plan (which modules to build): `FACILITY_AND_INDUSTRY_PLAN.md`
+
+## 10. Persistence, blueprints & in-UE integration
+
+Beyond the design + validator, the builder's **data/logic layer** now supports the
+full construction loop (implemented + unit-tested in `generate_station_builder.py`):
+
+### 10.1 Blueprint string (4.4)
+A validated layout serializes to a compact, shareable string and back:
+```
+1.0.0;1000,1000,1000;100;M1:CorridorModule:6,4,0:0:1;M2:CargoBayModule:7,4,0:0:0;...
+```
+Format: `SchemaVersion;PlotXYZ;GridSpacing;` then `ModuleID:ItemID:gx,gy,gz:rot:isCore`
+per module. `layout_to_blueprint()` / `blueprint_to_layout()` round-trip exactly.
+Use for copying designs, templates, and community sharing.
+
+### 10.2 Build-cost + crew budget (3.4 / 4.5)
+- `build_cost_summary()` — total build cost (sum of each module's crafted
+  `OutputValue`) + per-group module counts.
+- `crew_budget()` — berths provided (Habitation/Barracks) vs crew required by
+  operational modules; positive margin = fully staffed.
+- `check_build_materials()` — given the player's held modules/cargo, reports
+  whether the design can be built and any material shortfall.
+
+### 10.3 Research-gated modules (4.1)
+Niche lab modules require their research breakthrough before appearing in the
+palette (the `RESEARCH_GATE` map): `BeamWeaponsLab` ↦ `BeamWeaponResearch`, etc.
+This ties construction to the research tree.
+
+### 10.4 In-place upgrade (4.2)
+A placed module can be upgraded to its Mk2 variant in place (`upgrade_module()`),
+keeping its grid position/rotation/core, e.g. `CargoBayModule` → `CargoBayModule_Mk2`.
+
+### 10.5 In-UE data assets (2.1 / 2.2, written; need a UE build to verify)
+- `UStationLayoutDataAsset` (`Public/Stations/`): a `UDataAsset` holding a parsed
+  layout — `StationName`, `PlotSize`, `GridSpacing`, `Modules[]`, cost/crew fields.
+  Mirror of `UTradeItemDataAsset`.
+- `UStationLayoutLoader` (`Private/Stations/`): reads a StationLayout JSON (e.g.
+  `Content/Data/ExampleStationLayout.json`) into the asset, mirroring
+  `UCraftingTreeLoader`'s JSON pattern.
+- `ASpaceStation::BuildFromLayout(Layout)` is declared (with the module-management
+  API `AddModule`/`AddModuleAtLocation`/`RemoveModule`/`GetModulesByType` re-enabled);
+  their implementations already exist in `SpaceStation.cpp`. This is the hook that
+  spawns the real station from a committed design.
+
+> ⚠️ **Build status:** the C++ files compile-check cleanly (balanced braces/parens)
+> but have NOT been verified with a full UE build in this environment. Verify with a
+> real `Build.bat` before merging to a playable branch.
