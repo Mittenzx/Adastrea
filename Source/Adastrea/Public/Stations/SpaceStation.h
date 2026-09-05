@@ -95,9 +95,22 @@ public:
         UFUNCTION(BlueprintCallable, Category="Station|Builder")
         bool RemoveModule(ASpaceStationModule* Module);
 
+        /**
+         * Move a module to a new location within the station.
+         * @param Module The module to move
+         * @param NewRelativeLocation New position relative to the station
+         * @return True if found and moved
+         */
+        UFUNCTION(BlueprintCallable, Category="Station|Builder")
+        bool MoveModule(ASpaceStationModule* Module, FVector NewRelativeLocation);
+
         /** Get all modules of a specific type (e.g. "ReactorModule"). */
         UFUNCTION(BlueprintCallable, Category="Station|Builder")
         TArray<ASpaceStationModule*> GetModulesByType(const FString& ModuleType) const;
+
+        /** Number of attached modules. */
+        UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Builder")
+        int32 GetModuleCount() const;
 
         /**
          * Build the station from a layout data asset: spawns each module's subclass at

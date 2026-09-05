@@ -6,6 +6,7 @@
 #include "Serialization/JsonSerializer.h"
 #include "Serialization/JsonReader.h"
 #include "Dom/JsonObject.h"
+#include "Dom/JsonValue.h"
 
 int32 UStationLayoutLoader::LoadLayout(UStationLayoutDataAsset* Layout)
 {
@@ -31,35 +32,57 @@ int32 UStationLayoutLoader::LoadLayout(UStationLayoutDataAsset* Layout)
 		return 0;
 	}
 
-	Layout->StationName = Root->GetStringField(TEXT("StationName"));
-	Layout->GridSpacing = (float)Root->GetNumberField(TEXT("GridSpacing"), 100.0);
+	Root->TryGetStringField(TEXT("StationName"), Layout->StationName);
 
-	const TArray<FJsonValue>& PlotArr = Root->GetArrayField(TEXT("PlotSize"));
-	if (PlotArr.Num() >= 3)
+	double Spacing = 100.0;
+	Root->TryGetNumberField(TEXT("GridSpacing"), Spacing);
+	Layout->GridSpacing = (float)Spacing;
+
+	// PlotSize: [x, y, z] array of numbers.
+	const TArray<TSharedPtr<FJsonValue>>* PlotArr = nullptr;
+	if (Root->TryGetArrayField(TEXT("PlotSize"), PlotArr) && PlotArr->Num() >= 3)
 	{
-		Layout->PlotSize = FVector((float)PlotArr[0].GetNumber(),
-			(float)PlotArr[1].GetNumber(), (float)PlotArr[2].GetNumber());
+		double PX = 0.0, PY = 0.0, PZ = 0.0;
+		(*PlotArr)[0]->TryGetNumber(PX);
+		(*PlotArr)[1]->TryGetNumber(PY);
+		(*PlotArr)[2]->TryGetNumber(PZ);
+		Layout->PlotSize = FVector((float)PX, (float)PY, (float)PZ);
 	}
 
-	const TArray<FJsonValue>& Mods = Root->GetArrayField(TEXT("Modules"));
-	for (const FJsonValue& Mv : Mods)
+	// Modules: array of objects.
+	const TArray<TSharedPtr<FJsonValue>>* Mods = nullptr;
+	if (!Root->TryGetArrayField(TEXT("Modules"), Mods))
 	{
-		const TSharedPtr<FJsonObject>& Mo = Mv.GetObject();
+		UE_LOG(LogTemp, Warning, TEXT("StationLayoutLoader: no 'Modules' array"));
+		return 0;
+	}
+
+	for (const TSharedPtr<FJsonValue>& Mv : *Mods)
+	{
+		const TSharedPtr<FJsonObject>& Mo = Mv->AsObject();
 		if (!Mo.IsValid())
 		{
 			continue;
 		}
 		FStationLayoutModule Mod;
-		Mod.ModuleID = Mo->GetStringField(TEXT("ModuleID"));
-		Mod.ItemID = FName(*Mo->GetStringField(TEXT("ItemID")));
-		const TArray<FJsonValue>& Gp = Mo->GetArrayField(TEXT("GridPos"));
-		if (Gp.Num() >= 3)
+		FString ItemIDStr;
+		Mo->TryGetStringField(TEXT("ModuleID"), Mod.ModuleID);
+		Mo->TryGetStringField(TEXT("ItemID"), ItemIDStr);
+		Mod.ItemID = FName(*ItemIDStr);
+
+		// GridPos: [x, y, z] array of numbers.
+		const TArray<TSharedPtr<FJsonValue>>* Gp = nullptr;
+		if (Mo->TryGetArrayField(TEXT("GridPos"), Gp) && Gp->Num() >= 3)
 		{
-			Mod.GridPos = FIntVector((int32)Gp[0].GetNumber(),
-				(int32)Gp[1].GetNumber(), (int32)Gp[2].GetNumber());
+			int32 GX = 0, GY = 0, GZ = 0;
+			(*Gp)[0]->TryGetNumber(GX);
+			(*Gp)[1]->TryGetNumber(GY);
+			(*Gp)[2]->TryGetNumber(GZ);
+			Mod.GridPos = FIntVector(GX, GY, GZ);
 		}
-		Mod.Rotation = (int32)Mo->GetNumberField(TEXT("Rotation"), 0.0);
-		Mod.IsCore = Mo->GetBoolField(TEXT("IsCore"));
+
+		Mo->TryGetNumberField(TEXT("Rotation"), Mod.Rotation);
+		Mo->TryGetBoolField(TEXT("IsCore"), Mod.IsCore);
 		Layout->Modules.Add(Mod);
 	}
 
