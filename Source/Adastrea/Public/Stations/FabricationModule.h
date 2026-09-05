@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "SpaceStationModule.h"
+#include "Trading/CraftingTreeLoader.h"
 #include "FabricationModule.generated.h"
+
+class UCargoComponent;
 
 /**
  * Fabrication module for space stations
@@ -53,11 +56,33 @@ public:
 	int32 AdvanceJob(float WorkDone);
 
 	/** Progress fraction (0..1) of the front-most job; 0 if empty. */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Fabrication")
-	float GetFrontJobProgress() const;
+		UFUNCTION(BlueprintCallable, BlueprintPure, Category="Fabrication")
+		float GetFrontJobProgress() const;
 
-private:
-	/** Remaining work units per queued job (FIFO; front = index 0). */
-	UPROPERTY(VisibleAnywhere, Category="Fabrication")
-	TArray<float> JobQueue;
+		// ====================
+		// CRAFTING (Phase 6) — this module runs Fabrication recipes from CraftingTree
+		// ====================
+
+		/** All recipes this facility can produce (ProducedIn == "Fabrication"). */
+		UFUNCTION(BlueprintCallable, BlueprintPure, Category="Fabrication|Crafting")
+		TArray<FCraftingRecipe> GetCraftableRecipes() const;
+
+		/** Whether enough ingredients are held in Cargo to craft OutputItem here. */
+		UFUNCTION(BlueprintCallable, BlueprintPure, Category="Fabrication|Crafting")
+		bool CanCraft(FName OutputItemID, UCargoComponent* Cargo) const;
+
+		/**
+		 * Craft OutputItem in this facility, consuming ingredients from Cargo and
+		 * adding the output. Returns true on success.
+		 */
+		UFUNCTION(BlueprintCallable, Category="Fabrication|Crafting")
+		bool CraftItem(FName OutputItemID, UCargoComponent* Cargo);
+
+		/** Get the crafting-tree loader (lazily created + loaded). */
+		UCraftingTreeLoader* GetCraftingLoader() const;
+
+	private:
+		/** Remaining work units per queued job (FIFO; front = index 0). */
+		UPROPERTY(VisibleAnywhere, Category="Fabrication")
+		TArray<float> JobQueue;
 };

@@ -7,6 +7,70 @@
 #include "CraftingTreeLoader.generated.h"
 
 class UMarketDataAsset;
+class UCargoComponent;
+
+/** A single ingredient required to craft an item. */
+USTRUCT(BlueprintType)
+struct FCraftIngredient
+{
+	GENERATED_BODY()
+
+	/** Crafting-tree ItemID (matches Items map / trade item ItemID). */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Recipe")
+	FName ItemID;
+
+	/** How many units are required. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Recipe", meta=(ClampMin=0))
+	int32 Quantity = 0;
+
+	FCraftIngredient() {}
+	FCraftIngredient(FName InItemID, int32 InQuantity) : ItemID(InItemID), Quantity(InQuantity) {}
+};
+
+/** A crafted recipe: consumes Ingredients to produce OutputItem. */
+USTRUCT(BlueprintType)
+struct FCraftingRecipe
+{
+	GENERATED_BODY()
+
+	/** Recipe ID (e.g. "RCP_038_SteelAlloy"). */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Recipe")
+	FString RecipeID;
+
+	/** What this recipe produces. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Recipe")
+	FName OutputItem;
+
+	/** Number of output units per craft. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Recipe", meta=(ClampMin=1))
+	int32 OutputQuantity = 1;
+
+	/** Crafting tier. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Recipe")
+	int32 Tier = 1;
+
+	/** Where this is produced (Fabrication / Processing / a lab ...). Must match
+	 *  the crafting module's ModuleType / ProducedIn tag. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Recipe")
+	FString ProducedIn;
+
+	/** Ingredient requirements. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Recipe")
+	TArray<FCraftIngredient> Ingredients;
+
+	/** Convenience: look up the ingredient quantity for an ItemID (0 if absent). */
+	int32 GetIngredientQuantity(FName ItemID) const
+	{
+		for (const FCraftIngredient& Ing : Ingredients)
+		{
+			if (Ing.ItemID == ItemID)
+			{
+				return Ing.Quantity;
+			}
+		}
+		return 0;
+	}
+};
 
 /**
  * Crafts items from the machine-readable CraftingTree.json at runtime.
@@ -48,6 +112,51 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Crafting")
 	UTradeItemDataAsset* GetTradeItem(const FString& ItemID) const;
 
+	/**
+	 * Load the craft Recipes from Content/Data/CraftingTree.json. Call after
+	 * LoadCraftingTree(); populates the recipe pool alongside the item pool.
+	 * Returns the number of recipes loaded, or 0 on failure.
+	 */
+	UFUNCTION(BlueprintCallable, Category="Crafting")
+	int32 LoadRecipes();
+
+	/**
+	 * Get all recipes that are produced in the given facility (ProducedIn tag).
+	 * @param ProducedIn e.g. "Fabrication", "Processing", "Reactor", "ScienceLab"
+	 * @return Matching recipes (empty if none / not loaded)
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Crafting")
+	TArray<FCraftingRecipe> GetRecipesForFacility(const FString& ProducedIn) const;
+
+	/** Find a recipe by its output ItemID. Returns false if not found. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Crafting")
+	bool FindRecipe(FName OutputItem, FCraftingRecipe& OutRecipe) const;
+
+	/**
+	 * Check whether crafting the given recipe is possible: the player cargo holds
+	 * every ingredient at the required quantity.
+	 * @param Recipe The recipe to check
+	 * @param Cargo The cargo hold (player's ship)
+	 * @return True if all ingredients are present
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Crafting")
+	static bool CanCraftRecipe(const FCraftingRecipe& Recipe, UCargoComponent* Cargo);
+
+	/**
+	 * Attempt to craft the given recipe: consumes its ingredients from the cargo
+	 * and adds the output item. Returns true if crafted (ingredients consumed and
+	 * output added).
+	 * @param Recipe The recipe to craft
+	 * @param Cargo The cargo hold (player's ship)
+	 * @return True on success
+	 */
+	UFUNCTION(BlueprintCallable, Category="Crafting")
+	bool CraftRecipe(const FCraftingRecipe& Recipe, UCargoComponent* Cargo);
+
+	/** Number of recipes loaded. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Crafting")
+	int32 GetLoadedRecipeCount() const { return Recipes.Num(); }
+
 	/** Number of trade items loaded. */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Crafting")
 	int32 GetLoadedItemCount() const { return ItemPool.Num(); }
@@ -60,6 +169,10 @@ private:
 	/** Map of crafting item ID -> transient trade item (owned, keep alive). */
 	UPROPERTY()
 	TMap<FString, TObjectPtr<UTradeItemDataAsset>> ItemPool;
+
+	/** All craft recipes loaded from the crafting tree (index = recipe order). */
+	UPROPERTY()
+	TArray<FCraftingRecipe> Recipes;
 
 	/** Whether LoadCraftingTree() succeeded. */
 	bool bLoaded = false;

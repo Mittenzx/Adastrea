@@ -1,6 +1,7 @@
 // Copyright (c) 2025 Mittenzx. Licensed under MIT.
 
 #include "Stations/FabricationModule.h"
+#include "UObject/UObjectGlobals.h"
 
 AFabricationModule::AFabricationModule()
 {
@@ -65,4 +66,63 @@ int32 AFabricationModule::AdvanceJob(float WorkDone)
 float AFabricationModule::GetFrontJobProgress() const
 {
     return JobQueue.IsEmpty() ? 0.0f : 1.0f;
+}
+
+UCraftingTreeLoader* AFabricationModule::GetCraftingLoader() const
+{
+    UCraftingTreeLoader* Loader = NewObject<UCraftingTreeLoader>(GetTransientPackage());
+    if (Loader)
+    {
+        if (!Loader->IsLoaded())
+        {
+            Loader->LoadCraftingTree();
+        }
+        if (Loader->GetLoadedRecipeCount() == 0)
+        {
+            Loader->LoadRecipes();
+        }
+    }
+    return Loader;
+}
+
+TArray<FCraftingRecipe> AFabricationModule::GetCraftableRecipes() const
+{
+    UCraftingTreeLoader* Loader = GetCraftingLoader();
+    if (!Loader)
+    {
+        return {};
+    }
+    return Loader->GetRecipesForFacility(TEXT("Fabrication"));
+}
+
+bool AFabricationModule::CanCraft(FName OutputItemID, UCargoComponent* Cargo) const
+{
+    UCraftingTreeLoader* Loader = GetCraftingLoader();
+    if (!Loader || !Cargo)
+    {
+        return false;
+    }
+    FCraftingRecipe Recipe;
+    if (!Loader->FindRecipe(OutputItemID, Recipe) || Recipe.ProducedIn != TEXT("Fabrication"))
+    {
+        return false;
+    }
+    return UCraftingTreeLoader::CanCraftRecipe(Recipe, Cargo);
+}
+
+bool AFabricationModule::CraftItem(FName OutputItemID, UCargoComponent* Cargo)
+{
+    UCraftingTreeLoader* Loader = GetCraftingLoader();
+    if (!Loader || !Cargo)
+    {
+        return false;
+    }
+    FCraftingRecipe Recipe;
+    if (!Loader->FindRecipe(OutputItemID, Recipe) || Recipe.ProducedIn != TEXT("Fabrication"))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("FabricationModule: no Fabrication recipe for %s"),
+            *OutputItemID.ToString());
+        return false;
+    }
+    return Loader->CraftRecipe(Recipe, Cargo);
 }

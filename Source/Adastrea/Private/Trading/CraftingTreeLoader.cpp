@@ -2,6 +2,7 @@
 
 #include "Trading/CraftingTreeLoader.h"
 #include "Trading/MarketDataAsset.h"
+#include "Trading/CargoComponent.h"
 #include "Misc/Paths.h"
 #include "Misc/FileHelper.h"
 #include "Serialization/JsonSerializer.h"
@@ -134,6 +135,166 @@ UTradeItemDataAsset* UCraftingTreeLoader::GetTradeItem(const FString& ItemID) co
 {
 	const TObjectPtr<UTradeItemDataAsset>* Found = ItemPool.Find(ItemID);
 	return Found ? Found->Get() : nullptr;
+}
+
+int32 UCraftingTreeLoader::LoadRecipes()
+{
+	Recipes.Empty();
+
+	// Re-use the same JSON file; LoadCraftingTree() may or may not have run first.
+	const FString FullPath = FPaths::ProjectContentDir() + GetCraftingTreePath();
+	FString JsonStr;
+	if (!FFileHelper::LoadFileToString(JsonStr, *FullPath))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CraftingTreeLoader: could not read %s for recipes"), *FullPath);
+		return 0;
+	}
+
+	TSharedPtr<FJsonObject> Root;
+	const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonStr);
+	if (!FJsonSerializer::Deserialize(Reader, Root) || !Root.IsValid())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CraftingTreeLoader: failed to parse JSON for recipes"));
+		return 0;
+	}
+
+	const TArray<TSharedPtr<FJsonValue>>* RecipesArr = nullptr;
+	if (!Root->TryGetArrayField(TEXT("Recipes"), RecipesArr))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CraftingTreeLoader: no 'Recipes' array in crafting tree"));
+		return 0;
+	}
+
+	for (const TSharedPtr<FJsonValue>& Val : *RecipesArr)
+	{
+		const TSharedPtr<FJsonObject>& Obj = Val->AsObject();
+		if (!Obj.IsValid())
+		{
+			continue;
+		}
+
+		FCraftingRecipe Recipe;
+		Obj->TryGetStringField(TEXT("RecipeID"), Recipe.RecipeID);
+		Obj->TryGetStringField(TEXT("ProducedIn"), Recipe.ProducedIn);
+		FString OutputItemStr;
+		Obj->TryGetStringField(TEXT("OutputItem"), OutputItemStr);
+		Recipe.OutputItem = FName(*OutputItemStr);
+		Obj->TryGetNumberField(TEXT("OutputQty"), Recipe.OutputQuantity);
+		Obj->TryGetNumberField(TEXT("Tier"), Recipe.Tier);
+
+		const TArray<TSharedPtr<FJsonValue>>* IngArr = nullptr;
+		if (Obj->TryGetArrayField(TEXT("Ingredients"), IngArr))
+		{
+			for (const TSharedPtr<FJsonValue>& IngVal : *IngArr)
+			{
+				const TSharedPtr<FJsonObject>& IngObj = IngVal->AsObject();
+				if (!IngObj.IsValid())
+				{
+					continue;
+				}
+				FString ItemIDStr;
+				int32 Qty = 0;
+				IngObj->TryGetStringField(TEXT("ItemID"), ItemIDStr);
+				IngObj->TryGetNumberField(TEXT("Qty"), Qty);
+				Recipe.Ingredients.Add(FCraftIngredient(FName(*ItemIDStr), Qty));
+			}
+		}
+
+		Recipes.Add(Recipe);
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("CraftingTreeLoader: loaded %d recipes from crafting tree"), Recipes.Num());
+	return Recipes.Num();
+}
+
+TArray<FCraftingRecipe> UCraftingTreeLoader::GetRecipesForFacility(const FString& ProducedIn) const
+{
+	TArray<FCraftingRecipe> Out;
+	for (const FCraftingRecipe& Recipe : Recipes)
+	{
+		if (Recipe.ProducedIn == ProducedIn)
+		{
+			Out.Add(Recipe);
+		}
+	}
+	return Out;
+}
+
+bool UCraftingTreeLoader::FindRecipe(FName OutputItem, FCraftingRecipe& OutRecipe) const
+{
+	for (const FCraftingRecipe& Recipe : Recipes)
+	{
+		if (Recipe.OutputItem == OutputItem)
+		{
+			OutRecipe = Recipe;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool UCraftingTreeLoader::CanCraftRecipe(const FCraftingRecipe& Recipe, UCargoComponent* Cargo)
+{
+	if (!Cargo)
+	{
+		return false;
+	}
+	for (const FCraftIngredient& Ing : Recipe.Ingredients)
+	{
+		if (Ing.Quantity > 0 && Cargo->GetItemQuantityByID(Ing.ItemID) < Ing.Quantity)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+bool UCraftingTreeLoader::CraftRecipe(const FCraftingRecipe& Recipe, UCargoComponent* Cargo)
+{
+	// Pre-validate ingredients are present before consuming anything.
+	if (!CanCraftRecipe(Recipe, Cargo))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CraftingTreeLoader: cannot craft %s - ingredients missing"),
+			*Recipe.OutputItem.ToString());
+		return false;
+	}
+
+	// Consume ingredients.
+	for (const FCraftIngredient& Ing : Recipe.Ingredients)
+	{
+		if (Ing.Quantity > 0)
+		{
+			Cargo->RemoveCargoByID(Ing.ItemID, Ing.Quantity);
+		}
+	}
+
+	// Add the output item(s). The output item must exist in the item pool to be
+	// placeable in cargo; fall back to a fresh item if the pool lacks it.
+	UTradeItemDataAsset* OutputItem = GetTradeItem(Recipe.OutputItem.ToString());
+	if (!OutputItem)
+	{
+		OutputItem = NewObject<UTradeItemDataAsset>(this);
+		if (OutputItem)
+		{
+			OutputItem->ItemID = Recipe.OutputItem;
+			OutputItem->ItemName = FText::FromName(Recipe.OutputItem);
+		}
+	}
+	if (!OutputItem)
+	{
+		return false;
+	}
+	const int32 Qty = FMath::Max(1, Recipe.OutputQuantity);
+	if (!Cargo->AddCargo(OutputItem, Qty))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CraftingTreeLoader: crafted %s but cargo has no space for output"),
+			*Recipe.OutputItem.ToString());
+		return false;
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("CraftingTreeLoader: crafted %d x %s in %s"),
+		Qty, *Recipe.OutputItem.ToString(), *Recipe.ProducedIn);
+	return true;
 }
 
 void UCraftingTreeLoader::PopulateMarketInventory(UMarketDataAsset* Market) const

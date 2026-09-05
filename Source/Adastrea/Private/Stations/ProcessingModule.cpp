@@ -1,6 +1,7 @@
 // Copyright (c) 2025 Mittenzx. Licensed under MIT.
 
 #include "Stations/ProcessingModule.h"
+#include "UObject/UObjectGlobals.h"
 
 AProcessingModule::AProcessingModule()
 {
@@ -43,4 +44,63 @@ int32 AProcessingModule::Process(int32 Amount)
     BufferedAmount -= Processed;
     bIsRunning = true;
     return Processed;
+}
+
+UCraftingTreeLoader* AProcessingModule::GetCraftingLoader() const
+{
+    UCraftingTreeLoader* Loader = NewObject<UCraftingTreeLoader>(GetTransientPackage());
+    if (Loader)
+    {
+        if (!Loader->IsLoaded())
+        {
+            Loader->LoadCraftingTree();
+        }
+        if (Loader->GetLoadedRecipeCount() == 0)
+        {
+            Loader->LoadRecipes();
+        }
+    }
+    return Loader;
+}
+
+TArray<FCraftingRecipe> AProcessingModule::GetCraftableRecipes() const
+{
+    UCraftingTreeLoader* Loader = GetCraftingLoader();
+    if (!Loader)
+    {
+        return {};
+    }
+    return Loader->GetRecipesForFacility(TEXT("Processing"));
+}
+
+bool AProcessingModule::CanCraft(FName OutputItemID, UCargoComponent* Cargo) const
+{
+    UCraftingTreeLoader* Loader = GetCraftingLoader();
+    if (!Loader || !Cargo)
+    {
+        return false;
+    }
+    FCraftingRecipe Recipe;
+    if (!Loader->FindRecipe(OutputItemID, Recipe) || Recipe.ProducedIn != TEXT("Processing"))
+    {
+        return false;
+    }
+    return UCraftingTreeLoader::CanCraftRecipe(Recipe, Cargo);
+}
+
+bool AProcessingModule::CraftItem(FName OutputItemID, UCargoComponent* Cargo)
+{
+    UCraftingTreeLoader* Loader = GetCraftingLoader();
+    if (!Loader || !Cargo)
+    {
+        return false;
+    }
+    FCraftingRecipe Recipe;
+    if (!Loader->FindRecipe(OutputItemID, Recipe) || Recipe.ProducedIn != TEXT("Processing"))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("ProcessingModule: no Processing recipe for %s"),
+            *OutputItemID.ToString());
+        return false;
+    }
+    return Loader->CraftRecipe(Recipe, Cargo);
 }

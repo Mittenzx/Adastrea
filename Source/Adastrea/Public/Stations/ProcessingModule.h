@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "SpaceStationModule.h"
+#include "Trading/CraftingTreeLoader.h"
 #include "ProcessingModule.generated.h"
+
+class UCargoComponent;
 
 /**
  * Processing module for space stations
@@ -49,6 +52,25 @@ public:
 	bool FeedRawMaterial(int32 Amount);
 
 	/** Request the station processes up to Amount worth; clamps to buffered + sets running. */
-	UFUNCTION(BlueprintCallable, Category="Processing")
-	int32 Process(int32 Amount);
+		UFUNCTION(BlueprintCallable, Category="Processing")
+		int32 Process(int32 Amount);
+
+		// ====================
+		// CRAFTING (Phase 6) — this module runs Processing recipes from CraftingTree
+		// ====================
+
+		/** All recipes this facility can produce (ProducedIn == "Processing"). */
+		UFUNCTION(BlueprintCallable, BlueprintPure, Category="Processing|Crafting")
+		TArray<FCraftingRecipe> GetCraftableRecipes() const;
+
+		/** Whether enough ingredients are held in Cargo to craft OutputItem here. */
+		UFUNCTION(BlueprintCallable, BlueprintPure, Category="Processing|Crafting")
+		bool CanCraft(FName OutputItemID, UCargoComponent* Cargo) const;
+
+		/** Craft OutputItem, consuming ingredients from Cargo and adding the output. */
+		UFUNCTION(BlueprintCallable, Category="Processing|Crafting")
+		bool CraftItem(FName OutputItemID, UCargoComponent* Cargo);
+
+		/** Get the crafting-tree loader (lazily created + loaded). */
+		UCraftingTreeLoader* GetCraftingLoader() const;
 };
