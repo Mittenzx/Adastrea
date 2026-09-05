@@ -157,6 +157,19 @@ void ASpaceshipAvatar::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	if (UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
+		// Self-contained runtime look so mouse-look works even when no content IMC
+		// is configured (the ship's LookAction is a separate pawn's action). The
+		// craft binds legacy WASD for movement; look needs an EnhancedInput action.
+		if (!LookAction)
+		{
+			LookAction = NewObject<UInputAction>(this, TEXT("IA_AvatarLook_Runtime"));
+			LookAction->ValueType = EInputActionValueType::Axis2D;
+		}
+		if (!AvatarMappingContext)
+		{
+			AvatarMappingContext = NewObject<UInputMappingContext>(this, TEXT("IMC_AvatarRuntime"));
+			AvatarMappingContext->MapKey(LookAction, EKeys::Mouse2D);
+		}
 		if (MoveAction)
 		{
 			EnhancedInput->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASpaceshipAvatar::Move);
