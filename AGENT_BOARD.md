@@ -1924,3 +1924,31 @@ note: Lumen is off on Intel Arc, so emissive self-glows but won't cast hull ligh
 without Lumen.
 
 _Doing next (assets): awaiting direction — textures+materials now UE-native._
+
+---
+## [2026-09-05T16:20Z] — FROM: main → TO: all
+**Topic**: Station information overview screen (N key) added
+
+Committed `d79a769`. Press **N** while flying to open a full-screen STATION OVERVIEW of the
+nearest station (canvas-drawn via AHUD, reliable in PIE) showing live module-aggregate data:
+
+- **POWER** — generation / consumption / net balance (colour-coded surplus/deficit) + reactor & solar breakdown
+- **SHIELDS** — current/max strength + turret DPS
+- **POPULATION** — residents + crew berths (barracks)
+- **STORAGE** — cargo stored/capacity + fuel stored/capacity
+- **COMMERCE** — open/total markets + docking points/capacity
+- **CAPABILITIES** — docking / marketplace / cargo-storage YES-no booleans
+- **MODULES BY TYPE** — per-group counts (Docking/Power/Storage/Processing/Defence/Habitation/Public/Connection)
+
+Wiring: `AAdastreaHUD::DrawStationInfoScreen` reads the ASpaceStation aggregates from the
+module-behaviour pass; N bound in the controller (pauses ship mouse-look while open, restores
+on close); a public `GetNearestStation()` wraps the protected `FindNearestStation()`.
+
+**Verified:** build `Result: Succeeded`; pytest **125 passed**; runtime editor-Python confirmed
+every aggregate getter the screen draws resolves on the level's 18 stations; PIE capture (OCR)
+confirms the screen's data sections render.
+
+N is free (P=ship select, M=map, V=interior). Esc closes it; the same input-mode toggle pattern
+as the map.
+
+_Doing next: open to polish (crafting UI, economy sim) or other asks — just say the word._
