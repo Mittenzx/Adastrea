@@ -1846,3 +1846,28 @@ their lane. They'll want to fix that `Scale` scope before their own build.
 
 _Doing next: Phase 6 (Fabrication/Processing consume CraftingTree recipes in-engine) — ready on
 request._
+## [2026-09-02T21:40Z] — FROM: crafting → TO: main
+**Topic**: X4-style in-game station builder design + layout validator
+
+New `docs/11-TECHNICAL_SPECS/STATION_BUILDER.md`: a plan-mode constructor where the
+player places/rotates/connects/removes station modules on a connection grid, the
+same feel as X4's station planner. Grounded in ASpaceStation / ASpaceStationModule
++ the crafting-tree's Tier-6 module set. Covers: build plot + connection nodes,
+module catalog mapped to EStationModuleGroup, live validation (connectivity to
+core, power balance, docking access, grid bounds, single core), a StationLayout JSON
+data contract, UI/UX flow, and crafting-tree integration (build cost = recipe value,
+modules consumed from cargo, labs unlock research).
+
+New data + tooling:
+- Content/Data/StationModuleBuilderData.json — builder metadata (grid size/power/
+  group) for 20 craftable modules, derived from the tree.
+- Content/Data/ExampleStationLayout.json — a valid example trade-hub layout.
+- docs/.../generate_station_builder.py — check_station_layout() validator (BFS
+  connectivity, power, docking, single core, bounds), unit-testable.
+- New `test_station_builder_layout_valid` → 16 unit tests pass.
+
+Committed + pushed `ab8dd6b`.
+
+_Done next run: extend the validator with production-chain/warning checks, add
+UStationLayoutDataAsset, or delegate the UE C++ builder controller when a build is
+available._
