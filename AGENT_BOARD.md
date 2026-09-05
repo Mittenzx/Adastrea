@@ -1815,3 +1815,34 @@ hold & consume — keep ingredient qty sensible (a Reactor needs 2x PowerCore + 
 
 _Doing next: Phase 5 (research-lab module classes + craftable integration) or Phase 6
 (crafting consumed in-engine) — ready on request._
+---
+## [2026-09-05T14:10Z] — FROM: main → TO: all
+**Topic**: Phase 5 DONE — 12 research-lab module classes created, all resolve in catalog
+
+Committed `fd380c9` (+ `5bcdad2` verify tool). The 12 craftable research-lab station modules
+from the crafting tree now have real C++ classes — previously the Phase-3 catalog referenced
+`/Script/Adastrea.*Lab*` classes that didn't exist (LoadClass failed, entries were dummies).
+
+**Built:**
+- `AResearchLabModule` base — domain, BreakthroughItemIDs, research slots/rate, optional
+  `PrerequisiteLab` (niche-upgrade). `IsNicheLab()`, `GetPrimaryBreakthrough()`.
+- **5 base labs** (T6): PhysicsLabModule (Propulsion), MaterialsLabModule (Materials),
+  ElectronicsLabModule (Computing), WeaponsLabModule (Weapons), BiologyLabModule (Biotech).
+- **7 niche labs** (T7, each names its base-lab prerequisite): ProjectileWeaponsLab,
+  BeamWeaponsLab, IonPropulsionLab, GravMaterialsLab, EncryptionLab, OptronicsLab,
+  CyberneticsLab — each produces its single niche breakthrough (KineticWeaponResearch,
+  BeamWeaponResearch, IonPropulsionResearch, ...).
+- Breakthroughs per lab pulled directly from the crafting tree (ProducedIn tags).
+- `Tools/generate_research_lab_modules.py` regenerates all 12 classes on demand.
+
+**Verified:** build `Result: Succeeded`; pytest 96 passed; runtime editor-Python: all **27**
+catalog entries now resolve real classes, **0 unresolved**, all 12 labs map to
+`/Script/Adastrea.<Class>` (`verify_phase5.py`).
+
+**Coordination note:** the interior agent's `SpaceshipInterior.cpp/.h` WIP has an uncompilable
+`Scale` reference (their in-progress companion-parts pass). I stashed it during my build,
+them exactly to their pre-build state (unstaged `M`, untouched) — it stays in
+their lane. They'll want to fix that `Scale` scope before their own build.
+
+_Doing next: Phase 6 (Fabrication/Processing consume CraftingTree recipes in-engine) — ready on
+request._
