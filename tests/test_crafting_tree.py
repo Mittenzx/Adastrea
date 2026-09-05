@@ -295,6 +295,33 @@ class TestCraftingTree:
         ok, errs, warns = gsb.check_station_layout(bad, gsb.build_meta())
         assert any("storage" in w for w in warns) or any("industry" in w for w in warns)
 
+    def test_connection_face_orientation(self):
+        """1.5: modules connect ONLY through their oriented connection faces.
+        A SolarArray (connects via its W face only) links when abutting that face,
+        and is DISCONNECTED when rotated so its W face no longer points at the core."""
+        base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        sys.path.insert(0, os.path.join(base, "docs", "11-TECHNICAL_SPECS"))
+        try:
+            import generate_station_builder as gsb
+        finally:
+            sys.path.pop(0)
+        meta = gsb.build_meta()
+        # solar only exposes W; confirm the metadata
+        assert gsb.module_faces("SolarArrayModule", meta, 0) == {"W"}
+        # corridor core at [2,4]; solar abuts its W face at [3,4]
+        layout = {"PlotSize": [1000, 1000, 1000], "GridSpacing": 100, "Modules": [
+            {"ModuleID": "C", "ItemID": "CorridorModule", "GridPos": [2, 4, 0], "Rotation": 0, "IsCore": True},
+            {"ModuleID": "S", "ItemID": "SolarArrayModule", "GridPos": [3, 4, 0], "Rotation": 0, "IsCore": False},
+        ]}
+        ok, errs, warns = gsb.check_station_layout(layout, meta)
+        # solar connects through W (no disconnect); still needs a dock -> ok may be
+        # False only for docking, but NOT for connectivity
+        assert not any("disconnect" in e for e in errs)
+        # rotate solar 90 so its W face no longer points at the core -> disconnected
+        layout["Modules"][1]["Rotation"] = 90
+        ok, errs, warns = gsb.check_station_layout(layout, meta)
+        assert any("disconnect" in e for e in errs), f"rotated solar should be disconnected: {errs}"
+
 
 if __name__ == "__main__":
     try:

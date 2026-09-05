@@ -125,6 +125,11 @@ Validation rules (each returns pass/fail + a message):
 - Every placed module must be **connected** to the core (directly or transitively
   through other modules). A module with no connection face touching a neighbour is
   **disconnected** → invalid.
+- **Face-aware:** two modules connect only when they are cell-adjacent **and** each
+  exposes a compatible connection face on the shared side (module A's `N` face meets
+  module B's `S` face, etc.). Rotation re-orients a module's faces, so a directional
+  module (e.g. a `SolarArrayModule` that only connects through its `W` hub face) will
+  *disconnect* if rotated so that face no longer points at its neighbour.
 - The **core** is the first module placed; it anchors the station.
 
 ### 4.2 Power balance

@@ -32,7 +32,7 @@ independently shippable; items are ordered by value/effort and dependency.
 | 1.2 | **Production-chain validation** | If a `Fabrication`/`Processing`/lab module is placed, warn when inputs (storage) or power supply are missing (import-aware). | "Smart" validation catches half-built industry stations. | M | ✅ (warning added) |
 | 1.3 | **Module build-cost display** | Show each module's crafting cost (from `CraftingTree.json` `Economy`) in the palette + total station cost in the HUD. | Ties builder to the crafting economy (already prototyped as "4,800 cr"). | S | ✅ (`build_cost_summary`) |
 | 1.4 | **Overlapping/occupied rule** | Model module **footprints + occupancy** so two modules can't occupy the same cells (BFS already uses footprints; formalize the no-overlap check). | Prevents broken overlapping layouts. | S | ✅ (overlap check) |
-| 1.5 | **Connection-face orientation** | Validate that modules connect only via allowed faces (a module with no face toward its neighbour is invalid), not just cell adjacency. | Matches the spec's "connection faces" concept. | M | ⬜ |
+| 1.5 | **Connection-face orientation** | Validate that modules connect only via allowed faces (a module with no face toward its neighbour is invalid), not just cell adjacency. | Matches the spec's "connection faces" concept. | M | ✅ (face-aware BFS + rotation) |
 
 ### Phase 2 — Persistence & data (make it a real asset)
 | # | Item | What | Why | Effort |

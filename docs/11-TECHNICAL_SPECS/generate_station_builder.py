@@ -27,28 +27,94 @@ OUT_EXAMPLE = os.path.join(ROOT, "Content", "Data", "ExampleStationLayout.json")
 
 # Builder-only metadata: grid size (in grid cells), connection faces, power.
 # Power mirrors the runtime module classes (negative = generates).
+#
+# connection faces: which of the 6 cell faces (N/S/E/W/U/D) the module can attach
+# through. A face present here means "a neighbouring module can connect via this
+# side once the module is rotated into place." The DEFAULT for a module with no
+# explicit entry is ALL faces ('all'). Rotation (0/90/180/270) rotates the module's
+# facing so its directional faces point the right way.
+#
+# Design intent:
+#   - Solar array connects only toward the station (W/hub side); the panel extends
+#     outward so it can't accept a module on its face.
+#   - Docking bay opens on its forward (N) face and connects to the station on the
+#     other faces; treat it as all-except-forward-hub.
 MODULE_META = {
-    "CorridorModule":        {"size": (1, 1, 1), "power": -5,  "group": "Connection"},
-    "CargoBayModule":        {"size": (2, 2, 1), "power": 20,  "group": "Storage"},
-    "DockingBayModule":      {"size": (3, 2, 1), "power": 30,  "group": "Docking"},
-    "DockingPortModule":     {"size": (1, 1, 1), "power": 10,  "group": "Docking"},
-    "MarketplaceModule":     {"size": (2, 2, 1), "power": 40,  "group": "Public"},
-    "HabitationModule":      {"size": (2, 2, 1), "power": 25,  "group": "Habitation"},
-    "BarracksModule":        {"size": (2, 2, 1), "power": 30,  "group": "Habitation"},
-    "ReactorModule":         {"size": (2, 2, 1), "power": -200, "group": "Power"},
-    "SolarArrayModule":      {"size": (3, 1, 1), "power": -50, "group": "Power"},
-    "ProcessingModule":      {"size": (2, 2, 1), "power": 40,  "group": "Processing"},
-    "FabricationModule":     {"size": (2, 2, 1), "power": 50,  "group": "Processing"},
-    "ScienceLabModule":      {"size": (2, 2, 1), "power": 40,  "group": "Processing"},
-    "FuelDepotModule":       {"size": (2, 2, 1), "power": 30,  "group": "Storage"},
-    "ShieldGeneratorModule": {"size": (2, 2, 1), "power": 60,  "group": "Defence"},
-    "TurretModule":          {"size": (1, 1, 1), "power": 40,  "group": "Defence"},
-    "PhysicsLabModule":      {"size": (2, 2, 1), "power": 40,  "group": "Research"},
-    "MaterialsLabModule":    {"size": (2, 2, 1), "power": 40,  "group": "Research"},
-    "ElectronicsLabModule":  {"size": (2, 2, 1), "power": 45,  "group": "Research"},
-    "WeaponsLabModule":      {"size": (2, 2, 1), "power": 45,  "group": "Research"},
-    "BiologyLabModule":      {"size": (2, 2, 1), "power": 40,  "group": "Research"},
+    "CorridorModule":        {"size": (1, 1, 1), "power": -5,  "group": "Connection", "faces": "all"},
+    "CargoBayModule":        {"size": (2, 2, 1), "power": 20,  "group": "Storage",   "faces": "all"},
+    "DockingBayModule":      {"size": (3, 2, 1), "power": 30,  "group": "Docking",   "faces": "all"},
+    "DockingPortModule":     {"size": (1, 1, 1), "power": 10,  "group": "Docking",   "faces": "all"},
+    "MarketplaceModule":     {"size": (2, 2, 1), "power": 40,  "group": "Public",    "faces": "all"},
+    "HabitationModule":      {"size": (2, 2, 1), "power": 25,  "group": "Habitation","faces": "all"},
+    "BarracksModule":        {"size": (2, 2, 1), "power": 30,  "group": "Habitation","faces": "all"},
+    "ReactorModule":         {"size": (2, 2, 1), "power": -200,"group": "Power",     "faces": "all"},
+    "SolarArrayModule":      {"size": (3, 1, 1), "power": -50, "group": "Power",     "faces": ["W"]},
+    "ProcessingModule":      {"size": (2, 2, 1), "power": 40,  "group": "Processing","faces": "all"},
+    "FabricationModule":     {"size": (2, 2, 1), "power": 50,  "group": "Processing","faces": "all"},
+    "ScienceLabModule":      {"size": (2, 2, 1), "power": 40,  "group": "Processing","faces": "all"},
+    "FuelDepotModule":       {"size": (2, 2, 1), "power": 30,  "group": "Storage",   "faces": "all"},
+    "ShieldGeneratorModule": {"size": (2, 2, 1), "power": 60,  "group": "Defence",   "faces": "all"},
+    "TurretModule":          {"size": (1, 1, 1), "power": 40,  "group": "Defence",   "faces": "all"},
+    "PhysicsLabModule":      {"size": (2, 2, 1), "power": 40,  "group": "Research",  "faces": "all"},
+    "MaterialsLabModule":    {"size": (2, 2, 1), "power": 40,  "group": "Research",  "faces": "all"},
+    "ElectronicsLabModule":  {"size": (2, 2, 1), "power": 45,  "group": "Research",  "faces": "all"},
+    "WeaponsLabModule":      {"size": (2, 2, 1), "power": 45,  "group": "Research",  "faces": "all"},
+    "BiologyLabModule":      {"size": (2, 2, 1), "power": 40,  "group": "Research",  "faces": "all"},
 }
+
+# Face name -> unit vector (in grid cells). Module convention: +Y is "N" (forward),
+# -Y "S", +X "E", -X "W", +Z "U", -Z "D". Rotation is yaw about +Z: 90 = turn N->E.
+FACE_VEC = {"N": (0, 1, 0), "S": (0, -1, 0), "E": (1, 0, 0), "W": (-1, 0, 0), "U": (0, 0, 1), "D": (0, 0, -1)}
+
+
+def rotate_face(face, rotation):
+    """Rotate a N/S/E/W face by `rotation` degrees (90/180/270) about Z. U/D unchanged."""
+    if face in ("U", "D"):
+        return face
+    order = ["N", "E", "S", "W"]
+    if face not in order:
+        return face
+    return order[(order.index(face) + (rotation // 90)) % 4]
+
+
+def module_faces(item, meta, rotation):
+    """The set of world-direction faces this module can connect through, honoring
+    its rotation. 'all' -> all 6; a list -> those, rotated."""
+    entry = meta.get(item, {})
+    faces = entry.get("faces", "all")
+    if faces == "all":
+        return set("NESWUD")
+    return {rotate_face(f, rotation) for f in faces}
+
+
+def module_cells(item, pos, meta):
+    """The set of grid cells occupied by a module (its footprint), as (x,y,z)."""
+    size = meta.get(item, {}).get("size", (1, 1, 1))
+    x, y, z = pos
+    return set((x + dx, y + dy, z + dz)
+               for dx in range(size[0]) for dy in range(size[1]) for dz in range(size[2]))
+
+
+def modules_connect(m_a, m_b, meta):
+    """True if module m_b touches m_a such that m_a has a connection face pointing at
+    m_b. m_a/m_b are (item, gridpos, rotation). Face-aware: checks every cell boundary
+    between the two footprints and requires BOTH modules to expose a compatible
+    connection face on the shared side."""
+    item_a, pos_a, rot_a = m_a
+    item_b, pos_b, rot_b = m_b
+    cells_a = module_cells(item_a, pos_a, meta)
+    cells_b = module_cells(item_b, pos_b, meta)
+    fa = module_faces(item_a, meta, rot_a)
+    fb = module_faces(item_b, meta, rot_b)
+    # For every face of every cell of A, if the adjacent cell is occupied by B, the
+    # pair connects through that face if A exposes it and B exposes the opposite.
+    opp = {"N": "S", "S": "N", "E": "W", "W": "E", "U": "D", "D": "U"}
+    for (ax, ay, az) in cells_a:
+        for face, (dx, dy, dz) in FACE_VEC.items():
+            if (ax + dx, ay + dy, az + dz) in cells_b:
+                if face in fa and opp[face] in fb:
+                    return True
+    return False
 
 
 def load_tree():
@@ -59,86 +125,6 @@ def load_tree():
 def craftable_modules():
     tree = load_tree()
     return {r["OutputItem"] for r in tree["Recipes"] if r["OutputItem"].endswith("Module")}
-
-
-def check_station_layout(layout, meta=None):
-    """Validate a station layout dict. Returns (ok, errors[])."""
-    meta = meta or MODULE_META
-    errors = []
-    modules = layout.get("Modules", [])
-    if not modules:
-        return False, ["no modules"]
-    craftable = craftable_modules()
-
-    # exactly one core
-    cores = [m for m in modules if m.get("IsCore")]
-    if len(cores) != 1:
-        errors.append(f"must have exactly one core (found {len(cores)})")
-
-    # every module is craftable + has metadata
-    for m in modules:
-        iid = m["ItemID"]
-        if iid not in craftable:
-            errors.append(f"{m['ModuleID']}: '{iid}' is not a craftable station module")
-        if iid not in meta:
-            errors.append(f"{m['ModuleID']}: '{iid}' missing builder metadata")
-
-    # grid bounds
-    plot = layout.get("PlotSize", [1000, 1000, 1000])
-    spacing = layout.get("GridSpacing", 100)
-    for m in modules:
-        gx, gy, gz = m["GridPos"]
-        if not (0 <= gx * spacing < plot[0] and 0 <= gy * spacing < plot[1] and 0 <= gz * spacing < plot[2]):
-            errors.append(f"{m['ModuleID']}: out of plot bounds")
-
-    # connectivity (BFS from core over adjacent grid cells)
-    if cores:
-        core = cores[0]
-        pos_to_id = {tuple(m["GridPos"]): m["ModuleID"] for m in modules}
-        # adjacency: two modules connect if their grid footprints touch on a face
-        def footprint(m):
-            size = meta.get(m["ItemID"], {}).get("size", (1, 1, 1))
-            x, y, z = m["GridPos"]
-            return [(x + dx, y + dy, z + dz) for dx in range(size[0]) for dy in range(size[1]) for dz in range(size[2])]
-        cells = {}
-        for m in modules:
-            for c in footprint(m):
-                cells.setdefault(c, []).append(m["ModuleID"])
-        # BFS over modules that share a face (adjacent cells)
-        from collections import deque
-        start = core["ModuleID"]
-        seen = {start}
-        dq = deque([start])
-        while dq:
-            cur = dq.popleft()
-            cur_m = next(m for m in modules if m["ModuleID"] == cur)
-            cur_cells = set(footprint(cur_m))
-            for other in modules:
-                if other["ModuleID"] in seen:
-                    continue
-                o_cells = set(footprint(other))
-                # share a face if any cell is adjacent (manhattan dist 1) to a cur cell
-                if any((abs(a[0]-b[0]) + abs(a[1]-b[1]) + abs(a[2]-b[2])) == 1
-                       for a in cur_cells for b in o_cells):
-                    seen.add(other["ModuleID"])
-                    dq.append(other["ModuleID"])
-        for m in modules:
-            if m["ModuleID"] not in seen:
-                errors.append(f"{m['ModuleID']}: disconnected from core")
-
-    # power balance (negative power = generates, positive = consumes)
-    gen = sum(-m for m in (meta.get(x["ItemID"], {}).get("power", 0) for x in modules) if m < 0)
-    cons = sum(m for m in (meta.get(x["ItemID"], {}).get("power", 0) for x in modules) if m > 0)
-    if gen == 0:
-        errors.append("no power-generating module (needs Reactor or SolarArray)")
-    if cons > gen:
-        errors.append(f"power deficit: consume {cons} > generate {gen}")
-
-    # docking
-    if not any(meta.get(m["ItemID"], {}).get("group") == "Docking" for m in modules):
-        errors.append("no docking module (station unreachable by ships)")
-
-    return (len(errors) == 0), errors
 
 
 def build_meta():
@@ -154,6 +140,7 @@ def build_meta():
             "size": list(m["size"]),
             "power": m["power"],
             "group": m["group"],
+            "faces": m.get("faces", "all"),
             "cost": ec.get("OutputValue", st.get("BaseValue", 0)),
             "BaseValue": st.get("BaseValue", 0),
             "WeightKg": st.get("WeightKg", 0),
@@ -226,23 +213,32 @@ def check_station_layout(layout, meta=None, strict_overlap=True):
             else:
                 seen_cells[c] = m["ModuleID"]
 
-    # connectivity (BFS from core over adjacent grid cells)
+    # connectivity (BFS from core over face-aligned adjacent cells)
+    # Two modules connect if a corner of `other` is face-adjacent to a corner of
+    # `cur` AND each connects through an oriented connection face that accepts the
+    # other (face-aware per STATION_BUILDER.md 4.1).
     if cores:
         core = cores[0]
         from collections import deque
+
+        def face_aligned(m1, m2):
+            """True if m1 and m2 share a face-level boundary with compatible faces.
+            m1/m2 are module dicts; uses their oriented connection faces."""
+            (i1, p1, r1) = (m1["ItemID"], tuple(m1["GridPos"]), m1.get("Rotation", 0))
+            (i2, p2, r2) = (m2["ItemID"], tuple(m2["GridPos"]), m2.get("Rotation", 0))
+            return modules_connect((i1, p1, r1), (i2, p2, r2), meta) or \
+                   modules_connect((i2, p2, r2), (i1, p1, r1), meta)
+
         start = core["ModuleID"]
         seen = {start}
         dq = deque([start])
         while dq:
             cur = dq.popleft()
             cur_m = next(m for m in modules if m["ModuleID"] == cur)
-            cur_cells = footprint(cur_m)
             for other in modules:
                 if other["ModuleID"] in seen:
                     continue
-                o_cells = footprint(other)
-                if any((abs(a[0]-b[0]) + abs(a[1]-b[1]) + abs(a[2]-b[2])) == 1
-                       for a in cur_cells for b in o_cells):
+                if face_aligned(cur_m, other):
                     seen.add(other["ModuleID"])
                     dq.append(other["ModuleID"])
         for m in modules:
