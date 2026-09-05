@@ -1161,27 +1161,43 @@ def emissive_mat(name, color, strength=8.0):
 
 
 def build_nav_lights(sz, outname):
-    """Navigation / strobe lights as ONE joined part (with a bright emissive
-    material so they glow). All the small light bulbs on the hull — port/green +
-    starboard/red wingtips, tail white, dorsal red beacon — joined and exported as
-    a single `<outname>_Nav.fbx` with an emissive material, so they survive as
-    glowing points on the ship. (A single material keeps them uniformly bright; the
-    colour variation can be added later via per-face materials if needed.)"""
+    """Navigation / strobe lights as FOUR separate colored FBX parts, each with
+    its own emissive colour so they read as distinct glows on the ship:
+      _NavGreen  port wingtip  -> green     (0.0, 1.0, 0.4)
+      _NavRed    starboard     -> red       (1.0, 0.15, 0.15)
+      _NavWhite  tail running  -> white     (1.0, 1.0, 0.95)
+      _NavBeacon dorsal strobe -> amber/red (1.0, 0.55, 0.1)
+    Each is a short mast/strut + glowing bulb exported as its own FBX with a
+    distinct emissive material. All light objects are kept alive across the
+    sub-part exports (join() otherwise deletes not-yet-exported meshes)."""
     k = sc(sz)
-    parts = []
-    # wingtip nav lights (green port, red starboard)
-    for side in (-1, 1):
-        parts.append(cyl(f"NavWing{side}", 3*k, 16*k, loc=(side*20*k, 6*k, 8*k), verts=8))
-        parts.append(sphere(f"NavBulb{side}", 6*k, loc=(side*20*k, 14*k, 8*k), verts=8))
-    # tail white running light
-    parts.append(sphere("NavTail", 5*k, loc=(0, -20*k, 10*k), verts=8))
-    # dorsal beacon (mast + red tip)
-    parts.append(cyl("BeaconMast", 2*k, 30*k, loc=(0, 12*k, 30*k), verts=6))
-    parts.append(sphere("Beacon", 5*k, loc=(0, 12*k, 62*k), verts=8))
-    matname = "M_NavLights"
-    emissive_mat(matname, (1.0, 1.0, 1.0), strength=8.0)
-    obj, path = finalize_part(parts, outname, matname)
-    return [(obj, path)]
+    # (suffix, matname, colour, [objs,])  -- objects created up-front
+    def wing(side, kind):
+        return [cyl(f"Nav{kind}S{side}", 2.5*k, 14*k, loc=(side*18*k, 6*k, 6*k), verts=8),
+                sphere(f"Nav{kind}B{side}", 5.5*k, loc=(side*18*k, 13*k, 6*k), verts=10)]
+    specs = [
+        ("NavGreen",  "M_Nav_Green",  (0.0, 1.0, 0.4),  wing(-1, "Green")),
+        ("NavRed",    "M_Nav_Red",    (1.0, 0.15, 0.15), wing(1, "Red")),
+        ("NavWhite",  "M_Nav_White",  (1.0, 1.0, 0.95), [sphere("NavWhiteB", 5*k, loc=(0, -16*k, 8*k), verts=10)]),
+        ("NavBeacon", "M_Nav_Beacon", (1.0, 0.55, 0.1), [cyl("BeaconMast", 2*k, 26*k, loc=(0, 12*k, 22*k), verts=6),
+                                                         sphere("BeaconB", 4.5*k, loc=(0, 12*k, 48*k), verts=10)]),
+    ]
+    # pre-register every source object name so no finalize deletes a sibling
+    keep_n = set()
+    for _suf, _mat, _col, objs in specs:
+        for o in objs:
+            keep_n.add(o.name)
+    results = []
+    for suf, matn, col, objs in specs:
+        mat = emissive_mat(matn, col, strength=10.0)
+        for o in objs:
+            if not o.data.materials: o.data.materials.append(mat)
+            else: o.data.materials[0] = mat
+        obj, path = finalize_part(objs, f"{outname}_{suf}", matn, keep_named=keep_n)
+        keep_n.add(obj.name)          # keep this exported output alive for later joins
+        results.append((obj, path))
+    return results
+
 
 
 def build_reactor_part(sz, outname, variant='core'):
@@ -1496,11 +1512,16 @@ def assemble_ship(sz, outname, opts, carcass_builder=None):
         mj, mp = build_mining_laser(sz, f"{outname}_MiningLaser")
         mj.location = (0, ly*0.3, locz - 10*k)
         results.append((mj, mp))
-    # navigation / strobe lights (single glowing part, default ON)
+    # navigation / strobe lights (4 coloured parts): port green / starboard red
+    # wingtip, white tail, amber dorsal beacon -- different-colour glows on ship
     if opts.get('nav_lights', True):
-        no, np_ = build_nav_lights(sz, f"{outname}_Nav")[0]
-        no.location = (0, ly*0.05, locz + dims[2]*0.15)
-        results.append((no, np_))
+        nav_pos = [("NavGreen",  (-dims[0]*0.5, ly*0.02, locz + dims[2]*0.12)),   # port green
+                   ("NavRed",    ( dims[0]*0.5, ly*0.02, locz + dims[2]*0.12)),   # starboard red
+                   ("NavWhite",  ( 0.0,  -ly*0.52, locz + dims[2]*0.18)),          # tail white
+                   ("NavBeacon", ( 0.0,   ly*0.12, locz + dims[2]*0.90))]          # dorsal amber
+        for (obj, path), (_suf, pos) in zip(build_nav_lights(sz, f"{outname}_Nav"), nav_pos):
+            obj.location = pos
+            results.append((obj, path))
     if opts.get('drill'):
         dj, dp = build_drill_part(sz, f"{outname}_Drill")
         dj.location = (0, -ly*0.3, locz - 15*k)
