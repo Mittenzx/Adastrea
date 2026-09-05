@@ -277,7 +277,7 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     # -- height field: base + panel grid --
     h = np.ones((H, W), dtype=np.float32) * 0.5
     def groove(v):
-        return 0.14 + 0.06 * rng.random()
+        return 0.09 + 0.05 * rng.random()   # deeper primary seams (lower h = darker groove)
     # primary panel grooves — INTERLOCKING/staggered seams (alternate rows/cols
     # offset by half a cell), so it reads as manufactured modular plating, not a
     # uniform checkerboard (sci-fi panel study lesson #4).
@@ -314,7 +314,7 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     accent = np.array(variant.get('accent', [0.1, 0.15, 0.2]))
     D = np.empty((H, W, 4), dtype=np.float32)
     for ch in range(3):
-        D[..., ch] = np.clip(base[ch] - (0.5 - h) * 0.52, 0, 1)  # deeper relief contrast
+        D[..., ch] = np.clip(base[ch] - (0.5 - h) * 0.72, 0, 1)  # stronger relief contrast
     # per-panel tonal variation: modulate each panel's brightness slightly so the
     # plating doesn't read as one uniform flat (real panels show tone variation).
     # Build a coarse panel-locked noise field (V=row, U=col), plus gentle wear streaking.
@@ -363,7 +363,13 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     E = np.zeros((H, W, 4), dtype=np.float32)
     E[..., 3] = 1.0
     em = np.array(variant.get('emissive', [0.2, 0.55, 1.0]))
-    E[stripe] = [em[0]*0.35, em[1]*0.35, em[2]*0.35, 1.0]  # faint warm seams
+    E[stripe] = [em[0]*0.7, em[1]*0.7, em[2]*0.7, 1.0]  # brighter seam glow (pops w/o Lumen)
+    # hairline emissive along every panel groove: thin bright line so the panel
+    # grid reads even at flight distance (self-emissive accents per main's ask)
+    for i in range(cell, W, cell):
+        E[max(0,i-1):i+1, :] = [em[0]*0.5, em[1]*0.5, em[2]*0.5, 1.0]
+    for j in range(cell, H, cell):
+        E[:, max(0,j-1):j+1] = [em[0]*0.5, em[1]*0.5, em[2]*0.5, 1.0]
 
     # ---- Phase 4: material quality (shader knobs) ----
     # roughness: smooth metal with anisotropic grain + rough grooves. A directional
@@ -373,8 +379,8 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     R = np.ones((H, W), dtype=np.float32) * variant.get('rough', 0.34)
     # anisotropic grain: smooth, banded low-freq striations (brushed-metal feel)
     rg_y, rg_x = np.mgrid[0:H, 0:W].astype(np.float32)
-    aniso = 0.08 * np.sin(rg_x * 0.06 + 11.7) * np.sin(rg_y * 0.011 + 3.3)
-    aniso += 0.04 * np.sin(rg_x * 0.013 + rg_y * 0.02)
+    aniso = 0.14 * np.sin(rg_x * 0.06 + 11.7) * np.sin(rg_y * 0.011 + 3.3)
+    aniso += 0.07 * np.sin(rg_x * 0.013 + rg_y * 0.02)  # stronger anisotropic grain (varied sheen)
     R = np.clip(R + aniso, 0.05, 1.0)
     # accent/edge regions read as machined (slightly smoother, metal-bare)
     R[stripe] = np.maximum(0.05, R[stripe] - 0.12)
@@ -597,7 +603,7 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     # smooth the macro height a touch, then add high-freq noise
     hn = h.copy()
     gx, gy = np.gradient(hn)
-    inv = 2.6
+    inv = 5.2   # stronger normal relief so panels/grooves catch light at distance
     N = np.empty((H, W, 4), dtype=np.float32)
     N[..., 0] = -gx * inv
     N[..., 1] = -gy * inv
