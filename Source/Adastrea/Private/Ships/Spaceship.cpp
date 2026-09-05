@@ -7,6 +7,8 @@
 #include "AdastreaHUD.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/StaticMeshComponent.h"
+#include "Materials/MaterialInterface.h"
+#include "Materials/Material.h"
 #include "AdastreaLog.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -144,6 +146,13 @@ void ASpaceship::BeginPlay()
     Super::BeginPlay();
 
     UE_LOG(LogAdastreaShips, Warning, TEXT("*** ASpaceship::BeginPlay on %s ***"), *GetName());
+
+    // Assign the imported hull material to the ship mesh so the ship renders
+    // textured instead of un-textured. The assets agent imported M_*_Hull
+    // materials (/Game/Materials) but the BP meshes' overrideMaterials are empty
+    // (a BP-component-graph edit that resisted MCP/-ExecutePythonScript). We map
+    // the hull per ship class here in code, which is robust and main-side.
+    ApplyShipHullMaterial();
 
     // Initialize hull integrity from data asset if available
     if (ShipDataAsset)
@@ -860,6 +869,50 @@ FText ASpaceship::GetShipClass() const
 
     // Default fallback
     return FText::FromString("Starship");
+}
+
+void ASpaceship::ApplyShipHullMaterial()
+{
+    if (!ShipMeshComponent || !ShipMeshComponent->GetStaticMesh())
+    {
+        return;
+    }
+
+    // Map the ship's class to its imported hull material (assets agent authored
+    // these at /Game/Materials). Default to a generic hull if unknown.
+    FString HullMat = TEXT("/Game/Materials/M_Fighter_Hull");
+    const FString ActorName = GetName();
+    if (ActorName.Contains(TEXT("Freighter")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Freighter_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Corvette")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Corvette_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Cruiser")) || ActorName.Contains(TEXT("Gunship")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Gunship_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Destroyer")) || ActorName.Contains(TEXT("Miner")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Miner_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Fighter")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Fighter_Hull");
+    }
+
+    UMaterialInterface* Mat = LoadObject<UMaterialInterface>(nullptr, *HullMat);
+    if (!Mat)
+    {
+        UE_LOG(LogAdastreaShips, Warning, TEXT("ApplyShipHullMaterial: material %s not found."), *HullMat);
+        return;
+    }
+
+    ShipMeshComponent->SetMaterial(0, Mat);
+    UE_LOG(LogAdastreaShips, Log, TEXT("ApplyShipHullMaterial: %s hull set to %s"),
+        *GetName(), *Mat->GetName());
 }
 
 float ASpaceship::GetCurrentHullIntegrity() const

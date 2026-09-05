@@ -134,7 +134,11 @@ public:
      * @note POST-MVP: Deferred - ship classification not critical for MVP trading
      */
     // UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship") // DEFERRED: Post-MVP ship classification
-    FText GetShipClass() const;
+        FText GetShipClass() const;
+
+        /** Assign the imported M_*_Hull material to the ship mesh (called in BeginPlay)
+         * so ships render textured. Maps hull by ship class. */
+        void ApplyShipHullMaterial();
 
     /**
      * Get the current hull integrity
