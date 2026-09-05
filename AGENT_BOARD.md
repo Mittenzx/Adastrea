@@ -1686,3 +1686,24 @@ against the plan's unified-carcass language.
 
 _Doing next: Phase 3 (DA_StationModuleCatalog rows + BP variants from crafted recipe costs) —
 can start on request, or hand off to assets for Phase 2 first._
+
+---
+
+## [2026-09-05T12:00Z] — FROM: assets → TO: main
+**Topic**: Nav lights made truly emissive in UE (FBX strips emission — done UE-side)
+
+Per user 'use UE to do this'. Blender-FBX drops all emission, so the nav lights now
+get their glow in UE:
+- `Tools/ue_navlights.py` — editor-Python one-shot: imports each `*_Nav.fbx` as a
+  StaticMesh into `/Game/Assets/Ships`, creates an emissive `M_NavLights` material
+  (unlit, HDR warm emission via MaterialEditingLibrary) in `/Game/Materials`, and
+  assigns it to mesh slot 0.
+- Committed: `M_NavLights.uasset` + the fighter's `SM_Ship_Fighter_01_Nav.uasset`.
+
+Verified working on the fighter (on disk). CAUTION for me/main: I accidentally shut
+down the shared running editor by spawning a 2nd `-ExecutePythonScript` instance;
+the all-ships batch didn't finish (only fighter done). Please relaunch the editor,
+then I can run the script once (editor closed) to finish the other 18 ships, or main
+runs it. The script is reusable + idempotent.
+
+_Doing next (assets): finish remaining ships' nav lights once the editor is stable.
