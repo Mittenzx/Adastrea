@@ -138,6 +138,68 @@ int32 UCargoComponent::GetItemQuantity(UTradeItemDataAsset* Item) const
 	return 0;
 }
 
+int32 UCargoComponent::GetItemQuantityByID(FName ItemID) const
+{
+	if (ItemID.IsNone())
+	{
+		return 0;
+	}
+
+	int32 Total = 0;
+	for (const FCargoEntry& Entry : CargoInventory)
+	{
+		if (Entry.Item && Entry.Item->ItemID == ItemID)
+		{
+			Total += Entry.Quantity;
+		}
+	}
+
+	return Total;
+}
+
+bool UCargoComponent::RemoveCargoByID(FName ItemID, int32 Quantity)
+{
+	if (ItemID.IsNone() || Quantity <= 0)
+	{
+		return false;
+	}
+
+	// Check we hold enough first.
+	if (GetItemQuantityByID(ItemID) < Quantity)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CargoComponent: don't hold %d x %s in cargo (have %d)"),
+			Quantity, *ItemID.ToString(), GetItemQuantityByID(ItemID));
+		return false;
+	}
+
+	// Apply across all entries carrying this ID (front-first).
+	int32 Remaining = Quantity;
+	for (int32 i = 0; i < CargoInventory.Num() && Remaining > 0; ++i)
+	{
+		FCargoEntry& Entry = CargoInventory[i];
+		if (Entry.Item && Entry.Item->ItemID == ItemID)
+		{
+			int32 Take = FMath::Min(Entry.Quantity, Remaining);
+			Entry.Quantity -= Take;
+			Remaining -= Take;
+			if (Entry.Quantity <= 0)
+			{
+				CargoInventory.RemoveAt(i);
+				--i;
+			}
+		}
+	}
+
+	if (Remaining == 0)
+	{
+		OnCargoRemoved.Broadcast(nullptr, Quantity);
+		OnCargoSpaceChanged.Broadcast(GetAvailableCargoSpace());
+		return true;
+	}
+
+	return false;
+}
+
 int32 UCargoComponent::FindCargoEntryIndex(UTradeItemDataAsset* Item) const
 {
 	if (!Item)

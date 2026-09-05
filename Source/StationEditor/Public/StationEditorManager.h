@@ -12,6 +12,8 @@
 // Forward declarations
 class AStationBuildPreview;
 class UStationGridSystem;
+class UCargoComponent;
+class ASpaceship;
 
 /**
  * Result of a module placement validation check
@@ -25,8 +27,9 @@ enum class EModulePlacementResult : uint8
 	CollisionDetected	UMETA(DisplayName="Collision Detected"),
 	InsufficientPower	UMETA(DisplayName="Insufficient Power"),
 	InsufficientTech	UMETA(DisplayName="Insufficient Tech Level"),
-	InsufficientFunds	UMETA(DisplayName="Insufficient Funds"),
-	NoStation			UMETA(DisplayName="No Station Selected"),
+		InsufficientFunds	UMETA(DisplayName="Insufficient Funds"),
+		InsufficientMaterials UMETA(DisplayName="Insufficient Construction Materials"),
+		NoStation			UMETA(DisplayName="No Station Selected"),
 	NotEditing			UMETA(DisplayName="Not In Edit Mode")
 };
 
@@ -462,8 +465,46 @@ public:
 	int32 PlayerTechLevel = 1;
 
 	/** Current player's available credits */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration", meta=(ClampMin=0))
-	int32 PlayerCredits = 0;
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration", meta=(ClampMin=0))
+		int32 PlayerCredits = 0;
+
+		/** Current player's cargo hold (source of construction/parts materials). */
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration")
+		TWeakObjectPtr<UCargoComponent> PlayerCargo;
+
+		/** Whether placing/queuing a module requires its crafted materials in the player's cargo. */
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration")
+		bool bRequireConstructionMaterials = true;
+
+		/**
+		 * Whether the station builder will attempt to auto-resolve the player cargo
+		 * from the player pawn when PlayerCargo isn't assigned (looks for an
+		 * owning ship's CargoComponent). Disable if the editor is used without a
+		 * player pawn (e.g. AI/autonomous construction).
+		 */
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration")
+		bool bAutoResolvePlayerCargo = true;
+
+		/**
+		 * Check the current player cargo holds everything in BuildCost.Materials for
+		 * the given module class.
+		 * @param ModuleClass The module to build
+		 * @return True if all required parts are present, false if any are missing
+		 */
+		UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station Editor|Construction")
+		bool HasMaterialsForModule(TSubclassOf<ASpaceStationModule> ModuleClass) const;
+
+		/**
+		 * Remove BuildCost.Materials from the player's cargo. Call after a successful
+		 * placement to consume the constructed parts.
+		 * @param ModuleClass The module that was built
+		 * @return True if all materials were removed
+		 */
+		UFUNCTION(BlueprintCallable, Category="Station Editor|Construction")
+		bool ConsumeMaterialsForModule(TSubclassOf<ASpaceStationModule> ModuleClass);
+
+		/** Resolve the cargo component to check/deduct construction materials from. */
+		UCargoComponent* GetConstructionCargo() const;
 
 	/** Whether to automatically snap modules to grid */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration")

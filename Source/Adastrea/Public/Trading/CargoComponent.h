@@ -118,12 +118,31 @@ public:
 	bool HasSpaceFor(UTradeItemDataAsset* Item, int32 Quantity) const;
 
 	/**
-	 * Get quantity of specific item in cargo
-	 * @param Item The item to check
-	 * @return Quantity in cargo (0 if not found)
-	 */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Cargo|Queries")
-	int32 GetItemQuantity(UTradeItemDataAsset* Item) const;
+		 * Get quantity of specific item in cargo
+		 * @param Item The item to check
+		 * @return Quantity in cargo (0 if not found)
+		 */
+		UFUNCTION(BlueprintCallable, BlueprintPure, Category="Cargo|Queries")
+		int32 GetItemQuantity(UTradeItemDataAsset* Item) const;
+
+		/**
+		 * Get quantity of a cargo item by its ItemID (FName). Matches the catalog /
+		 * crafting-tree materials keys so the station builder can check parts held.
+		 * @param ItemID The inventory/crafting ID of the item
+		 * @return Quantity in cargo (0 if nothing with that ID)
+		 */
+		UFUNCTION(BlueprintCallable, BlueprintPure, Category="Cargo|Queries")
+		int32 GetItemQuantityByID(FName ItemID) const;
+
+		/**
+		 * Remove cargo by ItemID. Returns true only if at least Quantity of an item
+		 * with that ID was held and removed.
+		 * @param ItemID The inventory/crafting ID of the item
+		 * @param Quantity Number of units to remove
+		 * @return True if removed, false if not enough held or not found
+		 */
+		UFUNCTION(BlueprintCallable, Category="Cargo|Operations")
+		bool RemoveCargoByID(FName ItemID, int32 Quantity);
 
 	/**
 	 * Get all cargo entries

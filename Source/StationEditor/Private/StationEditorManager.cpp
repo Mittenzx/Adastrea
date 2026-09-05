@@ -6,6 +6,10 @@
 #include "AdastreaLog.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
+#include "Trading/CargoComponent.h"
+#include "Ships/Spaceship.h"
+#include "Stations/ReactorModule.h"
+#include "Stations/SolarArrayModule.h"
 
 UStationEditorManager::UStationEditorManager()
 {
@@ -37,16 +41,125 @@ void UStationEditorManager::EnsureCatalogLoaded()
                 TEXT("/Game/DataAssets/Stations/DA_StationModuleCatalog.DA_StationModuleCatalog")));
     }
     if (!ModuleCatalog)
-    {
-        return;
+        {
+            return;
+        }
+        if (!ModuleCatalog->IsCatalogLoaded())
+        {
+            ModuleCatalog->LoadCatalogFromJson();
+        }
     }
-    if (!ModuleCatalog->IsCatalogLoaded())
-    {
-        ModuleCatalog->LoadCatalogFromJson();
-    }
-}
 
-bool UStationEditorManager::BeginEditing_Implementation(ASpaceStation* Station)
+    UCargoComponent* UStationEditorManager::GetConstructionCargo() const
+    {
+        if (PlayerCargo.IsValid())
+        {
+            return PlayerCargo.Get();
+        }
+
+        if (!bAutoResolvePlayerCargo)
+        {
+            return nullptr;
+        }
+
+        // Auto-resolve from the player pawn's owning ship (if any).
+                UWorld* World = GetWorld();
+                if (!World && CurrentStation)
+                {
+                    World = CurrentStation->GetWorld();
+                }
+                if (!World)
+                {
+                    return nullptr;
+                }
+                APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(World, 0);
+                if (ASpaceship* Ship = Cast<ASpaceship>(PlayerPawn))
+                {
+                    return Ship->CargoComponent.Get();
+                }
+                return nullptr;
+    }
+
+    bool UStationEditorManager::HasMaterialsForModule(TSubclassOf<ASpaceStationModule> ModuleClass) const
+    {
+        if (!bRequireConstructionMaterials || !ModuleCatalog || !ModuleClass)
+        {
+            // Materials not required, or no catalog to check against.
+            return true;
+        }
+
+        FStationModuleEntry Entry;
+        if (!ModuleCatalog->FindModuleByClass(ModuleClass, Entry))
+        {
+            return true; // Not in catalog, allow it.
+        }
+
+        if (Entry.BuildCost.Materials.Num() == 0)
+        {
+            return true;
+        }
+
+        UCargoComponent* Cargo = GetConstructionCargo();
+        if (!Cargo)
+        {
+            UE_LOG(LogAdastreaStations, Warning,
+                TEXT("StationEditorManager::HasMaterialsForModule - No player cargo available to check materials"));
+            return false;
+        }
+
+        for (const TPair<FName, int32>& Mat : Entry.BuildCost.Materials)
+        {
+            if (!Mat.Key.IsNone() && Mat.Value > 0 && Cargo->GetItemQuantityByID(Mat.Key) < Mat.Value)
+            {
+                UE_LOG(LogAdastreaStations, Log,
+                    TEXT("StationEditorManager::HasMaterialsForModule - %s requires %d x %s (have %d)"),
+                    *ModuleClass->GetName(), Mat.Value, *Mat.Key.ToString(), Cargo->GetItemQuantityByID(Mat.Key));
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    bool UStationEditorManager::ConsumeMaterialsForModule(TSubclassOf<ASpaceStationModule> ModuleClass)
+    {
+        if (!bRequireConstructionMaterials || !ModuleCatalog || !ModuleClass)
+        {
+            return true;
+        }
+
+        FStationModuleEntry Entry;
+        if (!ModuleCatalog->FindModuleByClass(ModuleClass, Entry))
+        {
+            return true;
+        }
+
+        UCargoComponent* Cargo = GetConstructionCargo();
+        if (!Cargo)
+        {
+            return false;
+        }
+
+        bool bAllRemoved = true;
+        for (const TPair<FName, int32>& Mat : Entry.BuildCost.Materials)
+        {
+            if (Mat.Key.IsNone() || Mat.Value <= 0)
+            {
+                continue;
+            }
+            if (!Cargo->RemoveCargoByID(Mat.Key, Mat.Value))
+            {
+                bAllRemoved = false;
+                UE_LOG(LogAdastreaStations, Warning,
+                    TEXT("StationEditorManager::ConsumeMaterialsForModule - could not remove %d x %s"),
+                    Mat.Value, *Mat.Key.ToString());
+            }
+        }
+
+        return bAllRemoved;
+    }
+
+    bool UStationEditorManager::BeginEditing_Implementation(ASpaceStation* Station)
 {
 	if (!Station)
 	{
@@ -282,11 +395,19 @@ ASpaceStationModule* UStationEditorManager::PlaceModule_Implementation(TSubclass
 	NotifyPowerBalanceChanged();
 
 	// Deduct credits if applicable
-	FStationBuildCost Cost;
-	if (GetModuleBuildCost(ModuleClass, Cost))
-	{
-		PlayerCredits = FMath::Max(0, PlayerCredits - Cost.Credits);
-	}
+		FStationBuildCost Cost;
+		if (GetModuleBuildCost(ModuleClass, Cost))
+		{
+			PlayerCredits = FMath::Max(0, PlayerCredits - Cost.Credits);
+		}
+
+		// Consume construction materials from the player's cargo
+		if (!ConsumeMaterialsForModule(ModuleClass))
+		{
+			UE_LOG(LogAdastreaStations, Warning,
+				TEXT("StationEditorManager::PlaceModule - Built %s but could not consume all construction materials from cargo"),
+				*ModuleClass->GetName());
+		}
 
 	UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::PlaceModule - Placed module %s at (%.2f, %.2f, %.2f)"),
 		*NewModule->GetName(), FinalPosition.X, FinalPosition.Y, FinalPosition.Z);
@@ -482,26 +603,33 @@ EModulePlacementResult UStationEditorManager::CanPlaceModule_Implementation(TSub
 	}
 
 	// Check funds
-	if (!CanAffordModule(ModuleClass))
-	{
-		return EModulePlacementResult::InsufficientFunds;
-	}
+		if (!CanAffordModule(ModuleClass))
+		{
+			return EModulePlacementResult::InsufficientFunds;
+		}
 
-	// Check collisions
-	if (bCheckCollisions && CheckCollision(ModuleClass, Position, Rotation))
-	{
-		return EModulePlacementResult::CollisionDetected;
-	}
+		// Check construction materials are held in the player's cargo
+		if (!HasMaterialsForModule(ModuleClass))
+		{
+			UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::CanPlaceModule - Missing construction materials for %s"), *ModuleClass->GetName());
+			return EModulePlacementResult::InsufficientMaterials;
+		}
 
-	// Check power (warn but don't block - stations can run at deficit)
-	// This is a soft check; actual placement allows it
-	if (WouldCausePowerDeficit(ModuleClass))
-	{
-		// Log warning but still allow placement
-		UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::CanPlaceModule - Warning: This placement would cause power deficit"));
-	}
+		// Check collisions
+		if (bCheckCollisions && CheckCollision(ModuleClass, Position, Rotation))
+		{
+			return EModulePlacementResult::CollisionDetected;
+		}
 
-	return EModulePlacementResult::Success;
+		// Check power - this is a hard gate: placing a module that would push the
+		// station into a power deficit is disallowed (stations must stay powered).
+		if (WouldCausePowerDeficit(ModuleClass))
+		{
+			UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::CanPlaceModule - %s would cause a power deficit"), *ModuleClass->GetName());
+			return EModulePlacementResult::InsufficientPower;
+		}
+
+		return EModulePlacementResult::Success;
 }
 
 bool UStationEditorManager::CheckCollision(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position, FRotator Rotation) const
@@ -589,8 +717,18 @@ float UStationEditorManager::GetTotalPowerConsumption() const
 
 	for (const ASpaceStationModule* Module : CurrentStation->Modules)
 	{
-		// Positive ModulePower = consumption
-		if (Module && Module->ModulePower > 0.0f)
+		if (!Module)
+		{
+			continue;
+		}
+
+		// Reactors and solar arrays generate (handled in generation); every other
+		// module with positive ModulePower is a consumer.
+		if (Cast<const AReactorModule>(Module) || Cast<const ASolarArrayModule>(Module))
+		{
+			continue;
+		}
+		if (Module->ModulePower > 0.0f)
 		{
 			TotalConsumption += Module->ModulePower;
 		}
@@ -610,8 +748,22 @@ float UStationEditorManager::GetTotalPowerGeneration() const
 
 	for (const ASpaceStationModule* Module : CurrentStation->Modules)
 	{
-		// Negative ModulePower = generation (use absolute value)
-		if (Module && Module->ModulePower < 0.0f)
+		if (!Module)
+		{
+			continue;
+		}
+
+		// Use the enhanced per-module output for generators (degrades with damage
+		// / illumination); fall back to static ModulePower for other sources.
+		if (const AReactorModule* Reactor = Cast<const AReactorModule>(Module))
+		{
+			TotalGeneration += Reactor->GetCurrentPowerOutput();
+		}
+		else if (const ASolarArrayModule* Solar = Cast<const ASolarArrayModule>(Module))
+		{
+			TotalGeneration += Solar->GetEffectiveOutput();
+		}
+		else if (Module->ModulePower < 0.0f)
 		{
 			TotalGeneration += FMath::Abs(Module->ModulePower);
 		}
@@ -1268,6 +1420,26 @@ int32 UStationEditorManager::QueueConstruction(TSubclassOf<ASpaceStationModule> 
 {
 	if (!ModuleClass)
 	{
+		return -1;
+	}
+
+	// Enforce the same construction gates as placement: funds, materials, power.
+	if (!CanAffordModule(ModuleClass))
+	{
+		AddNotification(FText::FromString(TEXT("Insufficient credits for construction")),
+			ENotificationSeverity::Warning, nullptr);
+		return -1;
+	}
+	if (!HasMaterialsForModule(ModuleClass))
+	{
+		AddNotification(FText::FromString(TEXT("Missing construction materials in cargo")),
+			ENotificationSeverity::Warning, nullptr);
+		return -1;
+	}
+	if (WouldCausePowerDeficit(ModuleClass))
+	{
+		AddNotification(FText::FromString(TEXT("Construction would cause a power deficit")),
+			ENotificationSeverity::Warning, nullptr);
 		return -1;
 	}
 
