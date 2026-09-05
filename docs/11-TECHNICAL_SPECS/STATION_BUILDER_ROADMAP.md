@@ -26,13 +26,13 @@ independently shippable; items are ordered by value/effort and dependency.
 ## Roadmap (prioritized)
 
 ### Phase 1 — Grow the design model (cheap, unblocks everything)
-| # | Item | What | Why | Effort |
-|---|------|------|-----|--------|
-| 1.1 | **More module metadata** | Add grid size, connection faces (N/S/E/W/Up/Down), build cost, and a `rotation` table for ALL craftable modules (currently only 20 in the metadata). Pull automatically from the crafting tree. | The palette and validation need complete per-module data. | S |
-| 1.2 | **Production-chain validation** | If a `Fabrication`/`Processing`/lab module is placed, warn when inputs (storage) or power supply are missing (import-aware). | "Smart" validation catches half-built industry stations. | M |
-| 1.3 | **Module build-cost display** | Show each module's crafting cost (from `CraftingTree.json` `Economy`) in the palette + total station cost in the HUD. | Ties builder to the crafting economy (already prototyped as "4,800 cr"). | S |
-| 1.4 | **Overlapping/occupied rule** | Model module **footprints + occupancy** so two modules can't occupy the same cells (BFS already uses footprints; formalize the no-overlap check). | Prevents broken overlapping layouts. | S |
-| 1.5 | **Connection-face orientation** | Validate that modules connect only via allowed faces (a module with no face toward its neighbour is invalid), not just cell adjacency. | Matches the spec's "connection faces" concept. | M |
+| # | Item | What | Why | Effort | Status |
+|---|------|------|-----|--------|--------|
+| 1.1 | **More module metadata** | Add grid size, connection faces (N/S/E/W/Up/Down), build cost, and a `rotation` table for ALL craftable modules (currently only 20 in the metadata). Pull automatically from the crafting tree. | The palette and validation need complete per-module data. | S | 🔄 (20 modules; cost pulled) |
+| 1.2 | **Production-chain validation** | If a `Fabrication`/`Processing`/lab module is placed, warn when inputs (storage) or power supply are missing (import-aware). | "Smart" validation catches half-built industry stations. | M | ✅ (warning added) |
+| 1.3 | **Module build-cost display** | Show each module's crafting cost (from `CraftingTree.json` `Economy`) in the palette + total station cost in the HUD. | Ties builder to the crafting economy (already prototyped as "4,800 cr"). | S | ✅ (`build_cost_summary`) |
+| 1.4 | **Overlapping/occupied rule** | Model module **footprints + occupancy** so two modules can't occupy the same cells (BFS already uses footprints; formalize the no-overlap check). | Prevents broken overlapping layouts. | S | ✅ (overlap check) |
+| 1.5 | **Connection-face orientation** | Validate that modules connect only via allowed faces (a module with no face toward its neighbour is invalid), not just cell adjacency. | Matches the spec's "connection faces" concept. | M | ⬜ |
 
 ### Phase 2 — Persistence & data (make it a real asset)
 | # | Item | What | Why | Effort |

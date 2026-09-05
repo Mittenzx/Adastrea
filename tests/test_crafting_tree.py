@@ -247,32 +247,53 @@ class TestCraftingTree:
             sys.path.pop(0)
         # valid example
         layout = gsb.example_layout()
-        ok, errs = gsb.check_station_layout(layout, gsb.build_meta())
+        ok, errs, warns = gsb.check_station_layout(layout, gsb.build_meta())
         assert ok, f"example layout should be valid: {errs}"
         # disconnected: move marketplace far away
         bad = json.loads(json.dumps(layout))
         bad["Modules"][4]["GridPos"] = [8, 8, 8]
-        ok, errs = gsb.check_station_layout(bad, gsb.build_meta())
+        ok, errs, warns = gsb.check_station_layout(bad, gsb.build_meta())
         assert not ok
         assert any("disconnected" in e for e in errs)
         # no power: drop the reactor
         bad = json.loads(json.dumps(layout))
         bad["Modules"] = [m for m in bad["Modules"] if m["ItemID"] != "ReactorModule"]
-        ok, errs = gsb.check_station_layout(bad, gsb.build_meta())
+        ok, errs, warns = gsb.check_station_layout(bad, gsb.build_meta())
         assert not ok
         assert any("power" in e for e in errs)
         # no dock
         bad = json.loads(json.dumps(layout))
         bad["Modules"] = [m for m in bad["Modules"] if m["ItemID"] != "DockingBayModule"]
-        ok, errs = gsb.check_station_layout(bad, gsb.build_meta())
+        ok, errs, warns = gsb.check_station_layout(bad, gsb.build_meta())
         assert not ok
         assert any("docking" in e for e in errs)
         # two cores
         bad = json.loads(json.dumps(layout))
         bad["Modules"][1]["IsCore"] = True
-        ok, errs = gsb.check_station_layout(bad, gsb.build_meta())
+        ok, errs, warns = gsb.check_station_layout(bad, gsb.build_meta())
         assert not ok
         assert any("core" in e for e in errs)
+        # footprint overlap: stack cargo on the core
+        bad = json.loads(json.dumps(layout))
+        core_pos = next(m["GridPos"] for m in bad["Modules"] if m["IsCore"])
+        bad["Modules"][1]["GridPos"] = list(core_pos)  # same corner as corridor core
+        ok, errs, warns = gsb.check_station_layout(bad, gsb.build_meta())
+        assert not ok
+        assert any("overlap" in e for e in errs)
+        # cost summary present
+        cost = gsb.build_cost_summary(layout, gsb.build_meta())
+        assert cost["total_cost"] > 0
+        assert sum(cost["group_counts"].values()) == len(layout["Modules"])
+        # no industry present -> the production-chain warn should NOT fire on the base layout
+        ok, errs, warns = gsb.check_station_layout(layout, gsb.build_meta())
+        assert not any(("industry" in w or "storage" in w) for w in warns), f"unexpected warn: {warns}"
+        # add a FabricationModule (industry) but drop storage -> warning fires
+        bad = json.loads(json.dumps(layout))
+        bad["Modules"] = [m for m in bad["Modules"] if m["ItemID"] != "CargoBayModule"]
+        bad["Modules"].append({"ModuleID": "M9", "ItemID": "FabricationModule",
+                               "GridPos": [9, 4, 0], "Rotation": 0, "IsCore": False})
+        ok, errs, warns = gsb.check_station_layout(bad, gsb.build_meta())
+        assert any("storage" in w for w in warns) or any("industry" in w for w in warns)
 
 
 if __name__ == "__main__":

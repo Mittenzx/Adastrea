@@ -9,8 +9,19 @@
       ],
       "power": -5,
       "group": "Connection",
+      "cost": 85138,
       "BaseValue": 85138,
-      "WeightKg": 597.2
+      "WeightKg": 597.2,
+      "recipe": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "CorridorSegment",
+          "Qty": 1
+        }
+      ]
     },
     "CargoBayModule": {
       "size": [
@@ -20,8 +31,23 @@
       ],
       "power": 20,
       "group": "Storage",
+      "cost": 73794,
       "BaseValue": 73794,
-      "WeightKg": 597.2
+      "WeightKg": 597.2,
+      "recipe": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 3
+        },
+        {
+          "ItemID": "ConstructionMaterials",
+          "Qty": 1
+        },
+        {
+          "ItemID": "CargoPod",
+          "Qty": 1
+        }
+      ]
     },
     "DockingBayModule": {
       "size": [
@@ -31,8 +57,23 @@
       ],
       "power": 30,
       "group": "Docking",
+      "cost": 77508,
       "BaseValue": 77508,
-      "WeightKg": 597.2
+      "WeightKg": 597.2,
+      "recipe": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 3
+        },
+        {
+          "ItemID": "ControlUnit",
+          "Qty": 1
+        },
+        {
+          "ItemID": "DockingMechanism",
+          "Qty": 1
+        }
+      ]
     },
     "DockingPortModule": {
       "size": [
@@ -42,8 +83,19 @@
       ],
       "power": 10,
       "group": "Docking",
+      "cost": 48518,
       "BaseValue": 48518,
-      "WeightKg": 597.2
+      "WeightKg": 597.2,
+      "recipe": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "DockingMechanism",
+          "Qty": 1
+        }
+      ]
     },
     "MarketplaceModule": {
       "size": [
@@ -53,8 +105,23 @@
       ],
       "power": 40,
       "group": "Public",
+      "cost": 68637,
       "BaseValue": 68637,
-      "WeightKg": 597.2
+      "WeightKg": 597.2,
+      "recipe": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "BasicComputer",
+          "Qty": 3
+        },
+        {
+          "ItemID": "LifeSupportUnit",
+          "Qty": 1
+        }
+      ]
     },
     "HabitationModule": {
       "size": [
@@ -64,8 +131,23 @@
       ],
       "power": 25,
       "group": "Habitation",
+      "cost": 137196,
       "BaseValue": 137196,
-      "WeightKg": 597.2
+      "WeightKg": 597.2,
+      "recipe": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 3
+        },
+        {
+          "ItemID": "LifeSupportUnit",
+          "Qty": 2
+        },
+        {
+          "ItemID": "HabitationPod",
+          "Qty": 1
+        }
+      ]
     },
     "BarracksModule": {
       "size": [
@@ -75,8 +157,23 @@
       ],
       "power": 30,
       "group": "Habitation",
+      "cost": 104205,
       "BaseValue": 104205,
-      "WeightKg": 597.2
+      "WeightKg": 597.2,
+      "recipe": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "LifeSupportUnit",
+          "Qty": 1
+        },
+        {
+          "ItemID": "HabitationPod",
+          "Qty": 1
+        }
+      ]
     },
     "ReactorModule": {
       "size": [
@@ -86,8 +183,19 @@
       ],
       "power": -200,
       "group": "Power",
+      "cost": 105123,
       "BaseValue": 105123,
-      "WeightKg": 597.2
+      "WeightKg": 597.2,
+      "recipe": [
+        {
+          "ItemID": "PowerCore",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        }
+      ]
     },
     "SolarArrayModule": {
       "size": [
@@ -97,8 +205,23 @@
       ],
       "power": -50,
       "group": "Power",
+      "cost": 24562,
       "BaseValue": 24562,
-      "WeightKg": 597.2
+      "WeightKg": 597.2,
+      "recipe": [
+        {
+          "ItemID": "PowerCells",
+          "Qty": 4
+        },
+        {
+          "ItemID": "SiliconWafer",
+          "Qty": 3
+        },
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 1
+        }
+      ]
     },
     "ProcessingModule": {
       "size": [
@@ -108,8 +231,23 @@
       ],
       "power": 40,
       "group": "Processing",
+      "cost": 50920,
       "BaseValue": 50920,
-      "WeightKg": 597.2
+      "WeightKg": 597.2,
+      "recipe": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "SteelAlloy",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ControlUnit",
+          "Qty": 1
+        }
+      ]
     },
     "FabricationModule": {
       "size": [
@@ -119,8 +257,23 @@
       ],
       "power": 50,
       "group": "Processing",
+      "cost": 62337,
       "BaseValue": 62337,
-      "WeightKg": 597.2
+      "WeightKg": 597.2,
+      "recipe": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ControlUnit",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ConstructionMaterials",
+          "Qty": 1
+        }
+      ]
     },
     "ScienceLabModule": {
       "size": [
@@ -130,8 +283,23 @@
       ],
       "power": 40,
       "group": "Processing",
+      "cost": 54453,
       "BaseValue": 54453,
-      "WeightKg": 597.2
+      "WeightKg": 597.2,
+      "recipe": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "AdvancedSensors",
+          "Qty": 1
+        }
+      ]
     },
     "FuelDepotModule": {
       "size": [
@@ -141,8 +309,23 @@
       ],
       "power": 30,
       "group": "Storage",
+      "cost": 49114,
       "BaseValue": 49114,
-      "WeightKg": 597.2
+      "WeightKg": 597.2,
+      "recipe": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "SteelAlloy",
+          "Qty": 2
+        },
+        {
+          "ItemID": "FuelTank",
+          "Qty": 1
+        }
+      ]
     },
     "ShieldGeneratorModule": {
       "size": [
@@ -152,8 +335,23 @@
       ],
       "power": 60,
       "group": "Defence",
+      "cost": 85956,
       "BaseValue": 85956,
-      "WeightKg": 597.2
+      "WeightKg": 597.2,
+      "recipe": [
+        {
+          "ItemID": "ShieldEmitter",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "AdvancedPowerCells",
+          "Qty": 2
+        }
+      ]
     },
     "TurretModule": {
       "size": [
@@ -163,8 +361,19 @@
       ],
       "power": 40,
       "group": "Defence",
+      "cost": 103086,
       "BaseValue": 103086,
-      "WeightKg": 597.2
+      "WeightKg": 597.2,
+      "recipe": [
+        {
+          "ItemID": "TurretWeapon",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        }
+      ]
     },
     "PhysicsLabModule": {
       "size": [
@@ -174,8 +383,23 @@
       ],
       "power": 40,
       "group": "Research",
+      "cost": 80502,
       "BaseValue": 80502,
-      "WeightKg": 597.2
+      "WeightKg": 597.2,
+      "recipe": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ShipReactor",
+          "Qty": 1
+        },
+        {
+          "ItemID": "FusionFuelCell",
+          "Qty": 2
+        }
+      ]
     },
     "MaterialsLabModule": {
       "size": [
@@ -185,8 +409,23 @@
       ],
       "power": 40,
       "group": "Research",
+      "cost": 58142,
       "BaseValue": 58142,
-      "WeightKg": 597.2
+      "WeightKg": 597.2,
+      "recipe": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "StationHullFrame",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ArmourPlate",
+          "Qty": 2
+        }
+      ]
     },
     "ElectronicsLabModule": {
       "size": [
@@ -196,8 +435,23 @@
       ],
       "power": 45,
       "group": "Research",
+      "cost": 67170,
       "BaseValue": 67170,
-      "WeightKg": 597.2
+      "WeightKg": 597.2,
+      "recipe": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "QuantumProcessor",
+          "Qty": 2
+        },
+        {
+          "ItemID": "CircuitBoard",
+          "Qty": 2
+        }
+      ]
     },
     "WeaponsLabModule": {
       "size": [
@@ -207,8 +461,23 @@
       ],
       "power": 45,
       "group": "Research",
+      "cost": 153740,
       "BaseValue": 153740,
-      "WeightKg": 597.2
+      "WeightKg": 597.2,
+      "recipe": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "EnergyCannon",
+          "Qty": 1
+        },
+        {
+          "ItemID": "TargetingComputer",
+          "Qty": 1
+        }
+      ]
     },
     "BiologyLabModule": {
       "size": [
@@ -218,8 +487,23 @@
       ],
       "power": 40,
       "group": "Research",
+      "cost": 46424,
       "BaseValue": 46424,
-      "WeightKg": 597.2
+      "WeightKg": 597.2,
+      "recipe": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "RefinedMedicine",
+          "Qty": 2
+        },
+        {
+          "ItemID": "BioCompound",
+          "Qty": 1
+        }
+      ]
     }
   }
 }
