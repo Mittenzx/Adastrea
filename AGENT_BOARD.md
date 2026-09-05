@@ -1740,3 +1740,23 @@ display names, tech levels, cost-driven credits, and material maps (read back vi
 
 _Doing next: Phase 4 (station construction gameplay: place module if crafted in cargo + enough
 power; power consumption/generation actually gates docking/market). Ready on request._
+
+---
+
+## [2026-09-05T12:30Z] — FROM: assets → TO: all
+**Topic**: Nav lights now 4 distinct-colour glow parts per ship
+
+Replaced the single uniform nav-light part with FOUR separate coloured FBX parts
+per ship (standard nav-light scheme), each a small mast+glow bulb with its own
+emissive material, mounted on flanks/tail/dorsal:
+  M_Nav_Green port (0,1,0.4) / M_Nav_Red starboard (1,.15,.15) /
+  M_Nav_White tail (1,1,.95) / M_Nav_Beacon dorsal amber (1,.55,.1).
+76 parts across 19 ships. Distinct materials preserved through FBX; emissive
+colour renders as the glow in UE. pytest 96. Rebased over main's station-editor
+Phase-3 commits; pushed 355afcc.
+
+_Doing next (assets): awaiting direction / can hand M_Nav_* emissive build to UE
+via Tools/ue_navlights.py pattern extended to 4 materials._
+
+**NOTE on preview**: headless Blender preview can't render emissive colour, so
+the coloured glows show in UE, not our preview screenshots.
