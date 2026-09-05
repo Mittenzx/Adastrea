@@ -188,23 +188,54 @@ void ASpaceshipInterior::ConfigureInterior(UStaticMesh* ShellMesh, bool bShowNow
     // becomes a gigantic void. Scale the mesh so its shell radius maps to a
     // comfortable room (~650 units ~ a few metres across for a 1.9m avatar).
     const float TargetRadius = 650.0f;
-    const FBoxSphereBounds RawBounds = Mesh->GetBounds();
-    if (RawBounds.SphereRadius > 1.0f)
-    {
-        const float Scale = TargetRadius / RawBounds.SphereRadius;
-        InteriorMesh->SetRelativeScale3D(FVector(Scale, Scale, Scale));
-    }
-    else
-    {
-        InteriorMesh->SetRelativeScale3D(FVector::OneVector);
-    }
+        const FBoxSphereBounds RawBounds = Mesh->GetBounds();
+        float Scale = 1.0f;
+        if (RawBounds.SphereRadius > 1.0f)
+        {
+            Scale = TargetRadius / RawBounds.SphereRadius;
+            InteriorMesh->SetRelativeScale3D(FVector(Scale, Scale, Scale));
+        }
+        else
+        {
+            InteriorMesh->SetRelativeScale3D(FVector::OneVector);
+        }
 
     // Fit the walkable volume + seat trigger to the (now normalized) mesh bounds
-    // so the avatar walks inside a correctly-sized interior footprint.
-    FitVolumeToMesh();
+        // so the avatar walks inside a correctly-sized interior footprint.
+        FitVolumeToMesh();
 
-    // Hidden until the player enters unless asked to show now.
-    InteriorMesh->SetHiddenInGame(!bShowNow);
+        // Mount companion part meshes (Console/Deck/Lights/Stations/etc.) for the
+        // interior family, at the same scale as the shell, so the room isn't an empty
+        // shell. Watershed the interior type from the shell mesh name.
+        if (Scale > 0.0f)
+        {
+            const FVector Scale3D(Scale, Scale, Scale);
+            const FString ShellName = Mesh->GetName();
+            FString Prefix = TEXT("");
+            FString Family = TEXT("");
+            if (ShellName.Contains(TEXT("CommandBridge")))
+            {
+                Prefix = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_CommandBridge");
+                Family = TEXT("CommandBridge");
+            }
+            else if (ShellName.Contains(TEXT("CrewQuarters")))
+            {
+                Prefix = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_Freighter_CrewQuarters");
+                Family = TEXT("CrewQuarters");
+            }
+            else if (ShellName.Contains(TEXT("Hab")))
+            {
+                Prefix = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_Generationship_Hab");
+                Family = TEXT("Hab");
+            }
+            if (!Prefix.IsEmpty())
+            {
+                MountInteriorParts(Prefix, Family, Scale3D);
+            }
+        }
+
+        // Hidden until the player enters unless asked to show now.
+        InteriorMesh->SetHiddenInGame(!bShowNow);
     UE_LOG(LogAdastrea, Log, TEXT("Interior %s configured with mesh %s (visible=%d)"),
         *GetName(), Mesh ? *Mesh->GetName() : TEXT("NULL"), bShowNow ? 1 : 0);
 }
@@ -215,7 +246,77 @@ void ASpaceshipInterior::RevealInterior()
     {
         InteriorMesh->SetHiddenInGame(false);
     }
+    for (TObjectPtr<UStaticMeshComponent> Part : InteriorParts)
+    {
+        if (Part)
+        {
+            Part->SetHiddenInGame(false);
+        }
+    }
     SetActorHiddenInGame(false);
+}
+
+void ASpaceshipInterior::MountInteriorPart(const FString& PartPath, const FVector& Scale3D)
+{
+    UStaticMesh* PartMesh = LoadObject<UStaticMesh>(nullptr, *PartPath);
+    if (!PartMesh)
+    {
+        UE_LOG(LogAdastrea, Log, TEXT("Interior: companion part missing (%s)."), *PartPath);
+        return;
+    }
+    UStaticMeshComponent* Comp = NewObject<UStaticMeshComponent>(this);
+    Comp->SetupAttachment(SceneRoot);
+    Comp->SetStaticMesh(PartMesh);
+    Comp->SetRelativeScale3D(Scale3D);
+    Comp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    Comp->SetHiddenInGame(true); // hidden until reveal
+    Comp->RegisterComponent();
+    InteriorParts.Add(Comp);
+    UE_LOG(LogAdastrea, Log, TEXT("Interior: mounted companion part %s"), *PartMesh->GetName());
+}
+
+void ASpaceshipInterior::MountInteriorParts(FString Prefix, FString Family, const FVector& Scale3D)
+{
+    auto TryPart = [&](const TCHAR* Suffix)
+        {
+            // Object path = /AdastreaShips/Meshes/Interiors/<prefix>_<suffix>.<basename>_<suffix>
+            // The '.' suffix is the SHORT object name (last path segment), not the full path.
+            const int32 LastSlash = Prefix.Find(TEXT("/"), ESearchCase::IgnoreCase, ESearchDir::FromEnd);
+            const FString BaseName = LastSlash >= 0 ? Prefix.Right(Prefix.Len() - LastSlash - 1) : Prefix;
+            const FString ObjPath = Prefix + TEXT("_") + Suffix + TEXT(".") + BaseName + TEXT("_") + Suffix;
+            MountInteriorPart(ObjPath, Scale3D);
+        };
+
+    // Mount every known kit part for this family, skipping any that don't exist.
+    if (Family == TEXT("CommandBridge"))
+    {
+        TryPart(TEXT("Console"));
+        TryPart(TEXT("Deck"));
+        TryPart(TEXT("Lights"));
+        TryPart(TEXT("Stations"));
+        TryPart(TEXT("Viewport"));
+        TryPart(TEXT("Hatch"));
+    }
+    else if (Family == TEXT("CrewQuarters"))
+    {
+        TryPart(TEXT("Bunks"));
+        TryPart(TEXT("Desks"));
+        TryPart(TEXT("Galley"));
+        TryPart(TEXT("Lights"));
+        TryPart(TEXT("Mess"));
+        TryPart(TEXT("Vents"));
+        TryPart(TEXT("Hatch"));
+    }
+    else if (Family == TEXT("Hab"))
+    {
+        TryPart(TEXT("Bunks"));
+        TryPart(TEXT("Desks"));
+        TryPart(TEXT("Galley"));
+        TryPart(TEXT("Lights"));
+        TryPart(TEXT("Mess"));
+        TryPart(TEXT("Vents"));
+        TryPart(TEXT("Hatch"));
+    }
 }
 
 void ASpaceshipInterior::ApplyInteriorMaterials()

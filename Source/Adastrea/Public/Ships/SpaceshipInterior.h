@@ -84,7 +84,15 @@ public:
                         /** Return the interior's floor half-extents (local X/Y walk limits) and a
                          * standing altitude (local Z) the avatar should be held at. Returns false
                          * if no mesh is configured yet. */
-                        bool GetLocalHalfExtents(const float InAltitude, FVector& OutHalfExtents) const;
+                                bool GetLocalHalfExtents(const float InAltitude, FVector& OutHalfExtents) const;
+
+                protected:
+                        /** Mount a companion part mesh (Console/Deck/Lights/...) co-located with the
+                         * shell, scaled identically, hidden until reveal. Attaches to SceneRoot. */
+                        void MountInteriorPart(const FString& PartPath, const FVector& Scale3D);
+
+                        /** Mount all sibling part meshes for the given shell family + prefix. */
+                        void MountInteriorParts(FString Prefix, FString Family, const FVector& Scale3D);
 
 protected:
     virtual void OnConstruction(const FTransform& Transform) override;
@@ -116,8 +124,12 @@ protected:
         TObjectPtr<USceneComponent> SceneRoot;
 
         /** Visible interior geometry (shell/parts) the avatar walks inside. */
-        UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
-        TObjectPtr<class UStaticMeshComponent> InteriorMesh;
+                UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
+                TObjectPtr<class UStaticMeshComponent> InteriorMesh;
+
+                /** Additional mounted companion part meshes (Console/Deck/Lights/etc.). */
+                UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
+                TArray<TObjectPtr<class UStaticMeshComponent>> InteriorParts;
 
     /** Box volume the player can walk within (floor plane). */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
