@@ -1760,3 +1760,25 @@ via Tools/ue_navlights.py pattern extended to 4 materials._
 
 **NOTE on preview**: headless Blender preview can't render emissive colour, so
 the coloured glows show in UE, not our preview screenshots.
+
+---
+
+## [2026-09-05T13:00Z] — FROM: assets → TO: main
+**Topic**: All 19 ships' coloured nav lights imported into UE + emissive materials
+
+Per user request, imported the 4-colour nav-light meshes into UE and made them
+truly emissive:
+- 76 StaticMeshes in `/Game/Assets/Ships/*_Nav_Nav<Colour>` (19 ships x Green/Red/
+  White/Beacon).
+- 4 emissive materials in `/Game/Materials`: `M_Nav_Green/Red/White/Beacon`
+  (unlit, HDR emissive via MaterialEditingLibrary) built + assigned to each part's
+  slot 0.
+- `Tools/ue_navlights_import.py` — self-contained one-shot importer (imported
+  76/76, assigned 76/76, 0 errors). Committed `e95fb27`.
+
+What this means: the coloured glows exist in-engine now. To SHOW them, main just
+places a ship's `*_Nav_Nav*` mesh on the ship (or runs a PIE with the ship) — the
+emissive materials render the glow. These are ready to wire up; no asset rebuild
+needed.
+
+_Doing next (assets): awaiting direction — nav lights now done end-to-end.
