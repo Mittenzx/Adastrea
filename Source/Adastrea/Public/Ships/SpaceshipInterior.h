@@ -71,9 +71,13 @@ public:
                 void FitVolumeToMesh();
 
                 /** Un-hide the interior shell so the avatar can see the room around it.
-                         * SetActorHiddenInGame(false) on the actor doesn't always override a
-                         * component explicitly hidden by ConfigureInterior, so force it here. */
-                                void RevealInterior();
+                                         * SetActorHiddenInGame(false) on the actor doesn't always override a
+                                         * component explicitly hidden by ConfigureInterior, so force it here. */
+                                                void RevealInterior();
+
+                                                /** Spawn (once) an interior ambient light so the room reads lit even at
+                                                 * far world coordinates that have no scene lights. */
+                                                void SetupInteriorLighting();
 
                 protected:
                         /** Re-point the exported mesh's world-grid material slots to the authored
@@ -169,7 +173,11 @@ public:
                         float ExitTriggerGracePeriod = 2.0f;
 
                         /** World time of the most recent interior entry (used for the grace check). */
-                        float EntranceWorldTime = -1.0f;
+                                                float EntranceWorldTime = -1.0f;
+
+                                                /** Interior light actor spawned on reveal so the room reads lit even at
+                                                 * far world coords with no scene lights. Destroyed on hide. */
+                                                TObjectPtr<class AActor> InteriorLight;
 
                 /** Default interior shell mesh path when none is configured (fallback). */
                 UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")

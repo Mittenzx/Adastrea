@@ -6,6 +6,8 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/StaticMesh.h"
+#include "Engine/PointLight.h"
+#include "Engine/World.h"
 #include "Materials/MaterialInterface.h"
 #include "Materials/Material.h"
 #include "AdastreaLog.h"
@@ -254,6 +256,43 @@ void ASpaceshipInterior::RevealInterior()
         }
     }
     SetActorHiddenInGame(false);
+    SetupInteriorLighting();
+}
+
+void ASpaceshipInterior::SetupInteriorLighting()
+{
+    // The interior often sits at far world coordinates (away from the level's
+    // scene lights), so as-authored it reads as a dark flat void. Add a local
+    // room light attached to the interior so the shell + parts catch light and
+    // the room reads lit. A point light avoids competing with the scene's main
+    // directional for forward-shading (which the level's directional also uses).
+    if (InteriorLight)
+    {
+        return; // already spawned
+    }
+    UWorld* World = GetWorld();
+    if (!World)
+    {
+        return;
+    }
+    const FVector Centre = GetActorLocation();
+    FActorSpawnParameters Params;
+    Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+    InteriorLight = World->SpawnActor<APointLight>(
+        APointLight::StaticClass(),
+        Centre + FVector(0.0f, 0.0f, 200.0f), FRotator::ZeroRotator, Params);
+    if (InteriorLight)
+    {
+        InteriorLight->SetActorScale3D(FVector(1, 1, 1));
+        // Attach to the interior so it moves/scales with the ship, and soften it
+                // to a diffuse room fill.
+                if (USceneComponent* LightRoot = InteriorLight->GetRootComponent())
+                {
+                    LightRoot->SetAbsolute(false, false, false);
+                }
+        InteriorLight->AttachToActor(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+        UE_LOG(LogAdastrea, Log, TEXT("Interior %s lighting spawned."), *GetName());
+    }
 }
 
 void ASpaceshipInterior::MountInteriorPart(const FString& PartPath, const FVector& Scale3D)
