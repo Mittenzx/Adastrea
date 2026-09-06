@@ -1712,14 +1712,16 @@ void AAdastreaPlayerController::EnterShipInterior(ASpaceship* Ship)
 	// Show the interior, switch possession, capture mouse for the avatar camera.
 	Interior->SetActorHiddenInGame(false);
 	Interior->RevealInterior(); // explicitly unhide the shell mesh too
-	// Zero the avatar's gravity inside (space interior has no planet) so it walks
-	// at entry height instead of falling off the shell. Restored on exit.
-	if (UCharacterMovementComponent* MoveComp = AvatarPawn->GetCharacterMovement())
-	{
-		MoveComp->GravityScale = 0.0f;
-		MoveComp->Velocity = FVector::ZeroVector;
-		MoveComp->SetMovementMode(MOVE_Flying);
-	}
+	// Use flying movement (gravity-less) so the avatar is ALWAYS able to move by
+	    // input regardless of ground-contact state (a floating capsule in MOVE_Walking
+	    // ignores ground-required input and stalls). The interior clamp actively holds
+	    // it inside the room and zeroes velocity on wall-hit so it can't escape.
+	    if (UCharacterMovementComponent* MoveComp = AvatarPawn->GetCharacterMovement())
+	    {
+	        MoveComp->GravityScale = 0.0f;
+	        MoveComp->Velocity = FVector::ZeroVector;
+	        MoveComp->SetMovementMode(MOVE_Flying);
+	    }
 	// The avatar walks INSIDE the ship's hull — disable the ship's solid collision
 	// so CharacterMovement doesn't eject the avatar out of the shell on spawn.
 	if (USceneComponent* ShipRoot = Ship->GetRootComponent())

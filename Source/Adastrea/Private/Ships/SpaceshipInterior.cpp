@@ -26,19 +26,18 @@ ASpaceshipInterior::ASpaceshipInterior()
     InteriorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("InteriorMesh"));
     InteriorMesh->SetupAttachment(SceneRoot);
         InteriorMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics); // solid to world/objects
-        InteriorMesh->SetCollisionObjectType(ECC_WorldStatic);
-        InteriorMesh->SetCollisionResponseToAllChannels(ECR_Block);
-        InteriorMesh->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore); // avatar walks INSIDE it, not blocked
+            InteriorMesh->SetCollisionObjectType(ECC_WorldStatic);
+            InteriorMesh->SetCollisionResponseToAllChannels(ECR_Block);
+            InteriorMesh->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore); // avatar not blocked by shell; clamp confines it
         InteriorMesh->SetHiddenInGame(true); // hidden until the player enters
 
     // Box volume defines the walkable interior region (floor plane).
     InteriorVolume = CreateDefaultSubobject<UBoxComponent>(TEXT("InteriorVolume"));
     InteriorVolume->SetupAttachment(SceneRoot);
     InteriorVolume->SetBoxExtent(FVector(500.0f, 300.0f, 175.0f)); // default 1000x600x350
-    InteriorVolume->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-    InteriorVolume->SetCollisionObjectType(ECC_WorldStatic);
-    InteriorVolume->SetCollisionResponseToAllChannels(ECR_Ignore);
-    InteriorVolume->SetCollisionResponseToAllChannels(ECR_Ignore); // overlay only; the solid shell floors the avatar
+    InteriorVolume->SetCollisionEnabled(ECollisionEnabled::QueryOnly); // overlay only; not a solid box (would eject a flying avatar)
+        InteriorVolume->SetCollisionObjectType(ECC_WorldStatic);
+        InteriorVolume->SetCollisionResponseToAllChannels(ECR_Ignore);
 
     // Trigger volume at the cockpit/seat: walking the avatar into it re-possesses the ship.
     ExitTrigger = CreateDefaultSubobject<UBoxComponent>(TEXT("ExitTrigger"));

@@ -98,31 +98,44 @@ void ASpaceshipAvatar::Tick(float DeltaSeconds)
 		UpdateInteractableScan(PC);
 	}
 
-	// Confine the avatar to the interior room (first-person walk) so it can't walk
-	// through the walls into space. Horizontal position is clamped to the floor
-	// extent; height is held to a standing altitude off the floor.
-	if (bFirstPersonView && CurrentInterior)
-	{
-		ASpaceshipInterior* Room = Cast<ASpaceshipInterior>(CurrentInterior);
-		if (Room)
-		{
-			FVector HP;
-			if (Room->GetLocalHalfExtents(InteriorFloorAltitude, HP))
-			{
-				// Convert the room-centre + local half-extents into an absolute clamp box.
-				const FVector Centre = Room->GetActorLocation();
-				const FRotator Rot = Room->GetActorRotation();
-				const FVector LocalPos = Rot.UnrotateVector(GetActorLocation() - Centre);
-				const FVector ClampedLocal(FMath::Clamp(LocalPos.X, -HP.X, HP.X),
-					FMath::Clamp(LocalPos.Y, -HP.Y, HP.Y),
-					InteriorFloorAltitude);
-				// Snap to the clamped (floor-altitude) local position.
-				const FVector NewWorld = Centre + Rot.RotateVector(ClampedLocal);
-				SetActorLocation(NewWorld, false, nullptr, ETeleportType::TeleportPhysics);
-			}
-		}
+	// Confine the avatar to the interior room so it can't drift out of the ship.
+	    // The avatar flies (MOVE_Flying) so input always moves it regardless of ground;
+	    // here we actively hold it inside the walkable room extent, and ZERO its
+	    // velocity only when a wall/boundary actually stops it (X or Y was clamped) so
+	    // it can't escape the hull. Z is left alone (the entry altitude is fine).
+	    if (bFirstPersonView && CurrentInterior)
+	    {
+	        ASpaceshipInterior* Room = Cast<ASpaceshipInterior>(CurrentInterior);
+	        if (Room)
+	        {
+	            FVector HP;
+	            if (Room->GetLocalHalfExtents(InteriorFloorAltitude, HP))
+	            {
+	                const FVector Centre = Room->GetActorLocation();
+	                const FRotator Rot = Room->GetActorRotation();
+	                const FVector LocalPos = Rot.UnrotateVector(GetActorLocation() - Centre);
+
+	                const float ClampedX = FMath::Clamp(LocalPos.X, -HP.X, HP.X);
+	                const float ClampedY = FMath::Clamp(LocalPos.Y, -HP.Y, HP.Y);
+	                const bool bHitWall = (FMath::Abs(ClampedX - LocalPos.X) > 5.0f) ||
+	                                      (FMath::Abs(ClampedY - LocalPos.Y) > 5.0f);
+	                const FVector ResolvedLocal(ClampedX, ClampedY, LocalPos.Z);
+	                const FVector NewWorld = Centre + Rot.RotateVector(ResolvedLocal);
+	                if (!NewWorld.Equals(GetActorLocation(), 1.0f))
+	                {
+	                    SetActorLocation(NewWorld, false, nullptr, ETeleportType::TeleportPhysics);
+	                    if (bHitWall)
+	                    {
+	                        if (UCharacterMovementComponent* MC = GetCharacterMovement())
+	                        {
+	                            MC->Velocity = FVector::ZeroVector;
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	    }
 	}
-}
 
 void ASpaceshipAvatar::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
