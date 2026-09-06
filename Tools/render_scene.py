@@ -20,6 +20,7 @@ TEX = os.path.join(GEN, "Textures")
 
 def tex_prefixes(target):
     b = target.replace('.fbx', '')
+    if 'Demo' in b:       return ['Fighter_Demo']  # research demo ship
     if 'Freighter' in b: return ['Freighter', 'Ship_Hull']
     if 'Gunship' in b:   return ['Gunship', 'Ship_Hull']
     if 'Corvette' in b:  return ['Ship_Hull']

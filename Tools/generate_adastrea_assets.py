@@ -600,6 +600,30 @@ def gen_texture_set(name, variant, size=2048, seed=1):
                     D[sy0+4*ch_:sy0+4*ch_+3, sx0+seg:sx0+seg+4]=[0.05,0.05,0.06,1.0]
                     AO[sy0+4*ch_:sy0+4*ch_+3, sx0+seg:sx0+seg+4]=0.5
 
+    # ---- RESEARCH: directional bevels (machined, uniformity-breaking detail) ----
+    # From the sci-fi material research (80.lv Substance workflow): random repeated
+    # hard-edged bevel strips + raised ridges break up flat panels and read as
+    # manufactured/machined plating (not checkerboard). Optional via variant['bevels'].
+    if variant.get('bevels'):
+        bvW = int(W*0.5); bvN = variant.get('bevels', 3)
+        for _ in range(bvN):
+            ox = int(rng.integers(0, W-bvW)); oy = int(rng.integers(0, H-30))
+            ang = rng.uniform(-0.4, 0.4)
+            # a beveled raised strip: bright top edge (bevel catch) + recessed core
+            for x in range(ox, ox+bvW):
+                yy = int(oy + (x-ox)*ang)
+                if not (0 <= yy < H-8): continue
+                h[yy:yy+8, x] = 0.22                    # recessed groove
+                D[yy:yy+8, x] = [accent[0]*0.6, accent[1]*0.6, accent[2]*0.6, 1.0]
+                AO[yy:yy+8, x] = 0.55
+                if yy>0: h[yy-1, x]=0.55                 # raised top bevel (light catch)
+                if yy+8<H: h[yy+8, x]=0.08                # deep lower edge
+            # occasional bolt pairs along the strip
+            for bp in range(ox+6, ox+bvW-4, 24):
+                by = int(oy + (bp-ox)*ang)
+                if 0<=by<H-8:
+                    h[by:by+3, bp:bp+3]=0.14; AO[by:by+3, bp:bp+3]=0.35
+                    D[by:by+3, bp:bp+3]=[0.5,0.52,0.55,1.0]
     # smooth the macro height a touch, then add high-freq noise
     hn = h.copy()
     gx, gy = np.gradient(hn)
@@ -737,7 +761,7 @@ def finalize_part(objs, outname, matname, origin='ORIGIN_CENTER_OF_VOLUME', keep
 # wire_pbr_material() builds real PBR node graphs so FBX materials carry textures,
 # not flat Principled grey.
 MAT_TO_TEX = {
-    "M_Hull": "Ship_Hull", "M_Fighter_Hull": "Ship_Hull",
+    "M_Hull": "Ship_Hull", "M_Fighter_Hull": "Ship_Hull", "M_Fighter_Demo": "Fighter_Demo",
     "M_Freighter_Hull": "Freighter", "M_Gunship_Hull": "Gunship",
     "M_Corvette_Hull": "Corvette", "M_Miner_Hull": "Miner",
     "M_Engine_Block": "Engine", "M_Engine_Ion": "Engine",
@@ -2708,6 +2732,13 @@ def main():
     gen_texture_set("Ship_Hull", {'base':[0.5,0.56,0.62], 'accent':[0.1,0.22,0.35], 'emissive':[0.2,0.65,1.0],
                                   'windows':{'cols':12,'frac':0.4,'cool':[0.3,0.7,1.0],'warm':[1.0,0.6,0.25]},
                                   'cable':{'runs':4}, 'rough':0.30, 'metal':0.97}, 2048, seed=11)
+    # ---- RESEARCH DEMO ship (fighter): directional bevels + flat-albedo + tuned rough
+    gen_texture_set("Fighter_Demo", {'base':[0.52,0.56,0.60],   # flat plausible metal-grey albedo
+                                      'accent':[0.12,0.18,0.24],
+                                      'emissive':[0.25,0.75,1.0],  # cool windows + cyan seams
+                                      'windows':{'cols':12,'frac':0.45,'cool':[0.3,0.7,1.0],'warm':[1.0,0.6,0.25]},
+                                      'bevels':4,                    # directional machined bevels (research)
+                                      'rough':0.28, 'metal':0.97}, 2048, seed=9101)
     gen_texture_set("Freighter", {'base':[0.45,0.55,0.45], 'accent':[0.15,0.35,0.18], 'emissive':[0.4,0.8,0.3],
                                   'windows':{'cols':10,'frac':0.5,'cool':[0.3,0.7,1.0],'warm':[0.5,0.9,0.4]},
                                   'grime':True, 'hazard':{'bands':3}, 'rough':0.45, 'metal':0.92}, 2048, seed=22)
