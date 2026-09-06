@@ -374,6 +374,45 @@ class TestCraftingTree:
         assert up is not None and up["ItemID"] == "CargoBayModule_Mk2"
         assert gsb.upgrade_module({"ItemID": "CorridorModule"}, meta) is None
 
+    def test_builder_cluster(self):
+        """4.3: station clusters (multi-plot, shared power grid)."""
+        base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        sys.path.insert(0, os.path.join(base, "docs", "11-TECHNICAL_SPECS"))
+        try:
+            import generate_station_builder as gsb
+        finally:
+            sys.path.pop(0)
+        meta = gsb.build_meta()
+        cluster = gsb.example_cluster()
+        ok, errs, warns = gsb.validate_cluster(cluster, meta)
+        assert ok, f"2-plot example cluster should validate: {errs}"
+        # shared power grid aggregates across plots
+        gen, cons, net = gsb.cluster_power(cluster, meta)
+        assert net >= 0
+        assert cons > 0 and gen >= cons
+        # crew aggregates
+        crew = gsb.cluster_crew(cluster, meta)
+        assert crew["required"] >= 0
+        # a plot without power is fine cluster-wide as long as the cluster generates
+        power_only = [{"Modules": [{"ModuleID": "P1", "ItemID": "CorridorModule",
+                                    "GridPos": [0, 0, 0], "Rotation": 0, "IsCore": True}]},
+                      {"Modules": [{"ModuleID": "R1", "ItemID": "ReactorModule",
+                                    "GridPos": [0, 0, 0], "Rotation": 0, "IsCore": True},
+                                   {"ModuleID": "D1", "ItemID": "DockingPortModule",
+                                    "GridPos": [2, 0, 0], "Rotation": 0, "IsCore": False}]}]
+        ok, errs, warns = gsb.validate_cluster(power_only, meta)
+        # reactor plot supplies power; docking present cluster-wide; corridor plot has
+        # connectivity (single module = core). Should be valid.
+        assert ok, f"shared-grid cluster should validate: {errs}"
+        # drop the reactor entirely -> cluster power deficit
+        dead = [{"Modules": [{"ModuleID": "P1", "ItemID": "CorridorModule",
+                              "GridPos": [0, 0, 0], "Rotation": 0, "IsCore": True}]},
+                {"Modules": [{"ModuleID": "D1", "ItemID": "DockingPortModule",
+                              "GridPos": [2, 0, 0], "Rotation": 0, "IsCore": True}]}]
+        ok, errs, warns = gsb.validate_cluster(dead, meta)
+        assert not ok
+        assert any("power" in e for e in errs)
+
 
 if __name__ == "__main__":
     try:

@@ -55,7 +55,7 @@ independently shippable; items are ordered by value/effort and dependency.
 |---|------|------|-----|--------|--------|
 | 4.1 | **Research-gated module access** | Some modules (e.g. niche labs like `BeamWeaponsLab`) require their research breakthrough before they appear in the palette. | Ties the builder to the research tree. | M | ✅ (`RESEARCH_GATE`) |
 | 4.2 | **Module upgrade in place** | Upgrade an existing module (e.g. Cargo → Cargo Mk2) without removing/re-placing, consuming the upgrade recipe. | Sweeter progression. | M | ✅ (`upgrade_module`) |
-| 4.3 | **Multiple build plots / station groups** | Let a "station" be a cluster of connected plots (spoke + sub-stations), with shared power grid. | Bigger, X4-grade construction. | L | 🔄 (blueprint-driven; cluster model pending) |
+| 4.3 | **Multiple build plots / station groups** | Let a "station" be a cluster of connected plots (spoke + sub-stations), with shared power grid. | Bigger, X4-grade construction. | L | ✅ (`validate_cluster`/`cluster_power`/`cluster_crew`) |
 | 4.4 | **Copy / template / blueprint sharing** | Save a validated layout as a shareable blueprint string; paste to replicate on another plot. | Replayability + community. | S–M | ✅ (`layout_to_blueprint` / `blueprint_to_layout`) |
 | 4.5 | **Cost & crew budget** | Track total build cost vs. player credits, and crew required vs. berths (from Barracks/Habitation). | Economic/crew constraints. | S | ✅ (`build_cost_summary` + `crew_budget`) |
 | 4.6 | **Connection-line routing visualization** | Draw explicit module-to-module connection lines in the plan view (prototype already does). | Clearer connectivity debugging. | S | ✅ (prototype renders lines; UE pending) |

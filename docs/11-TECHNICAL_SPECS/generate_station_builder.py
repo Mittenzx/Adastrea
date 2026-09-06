@@ -435,6 +435,115 @@ def crew_budget(layout, meta=None, crew_meta=None):
             "crew_by_module": counts}
 
 
+# ---- 4.3 multi-plot / station clusters ----
+# A station "cluster" is an ordered set of plots (each a StationLayout), linked in a
+# chain and sharing ONE cluster-wide power grid. Each plot keeps its own
+# connectivity (internal to its core) but power / docking / crew are aggregated
+# across the whole cluster.
+
+
+def validate_cluster(plots, meta=None, strict_overlap=True):
+    """Validate a station cluster = list of layout dicts. Returns
+    (ok, errors, warnings).
+    Cluster rules:
+      - every plot passes its own layout validation (connectivity, single core, …)
+      - cluster power: total generation across all plots >= total consumption (net)
+      - cluster has at least one docking module overall
+      - every plot must be "power present" isn't required individually (shared grid)
+    """
+    meta = meta or MODULE_META
+    errors = []
+    warnings = []
+    if not plots:
+        return False, ["cluster: no plots"], warnings
+
+    total_gen = 0.0
+    total_cons = 0.0
+    has_dock = False
+
+    for idx, layout in enumerate(plots):
+        ok, perr, pwarn = check_station_layout(layout, meta, strict_overlap=strict_overlap)
+        for m in layout.get("Modules", []):
+            p = meta.get(m["ItemID"], {}).get("power", 0)
+            if p < 0:
+                total_gen += -p
+            elif p > 0:
+                total_cons += p
+            if meta.get(m["ItemID"], {}).get("group") == "Docking":
+                has_dock = True
+        # plot-level errors: only STRUCTURAL ones fail a cluster plot. Power and
+        # docking are aggregated cluster-wide (a plot may be a pure power/dock spire).
+        skip_plot = ("no power-generating", "power deficit", "no docking module")
+        for e in perr:
+            if any(k in e for k in skip_plot):
+                continue
+            errors.append(f"plot{idx}: {e}")
+        for w in pwarn:
+            warnings.append(f"plot{idx}: {w}")
+
+    if total_gen == 0:
+        errors.append("cluster: no power-generating module across plots (needs a Reactor/SolarArray)")
+    if total_cons > total_gen:
+        errors.append(f"cluster power deficit: consume {total_cons} > generate {total_gen}")
+
+    if not has_dock:
+        errors.append("cluster: no docking module (station unreachable by ships)")
+
+    return (len(errors) == 0), errors, warnings
+
+
+def cluster_power(plots, meta=None):
+    """Aggregate net power across a cluster. Returns (generation, consumption, net)."""
+    meta = meta or MODULE_META
+    gen = 0.0
+    cons = 0.0
+    for layout in plots:
+        for m in layout.get("Modules", []):
+            p = meta.get(m["ItemID"], {}).get("power", 0)
+            if p < 0:
+                gen += -p
+            elif p > 0:
+                cons += p
+    return gen, cons, gen - cons
+
+
+def cluster_crew(plots, meta=None, crew_meta=None):
+    """Aggregate crew budget across a cluster. Returns a dict like crew_budget()."""
+    meta = meta or MODULE_META
+    crew_meta = crew_meta or CREW_META
+    berths = 0
+    required = 0
+    counts = {}
+    for layout in plots:
+        c = crew_budget(layout, meta, crew_meta)
+        berths += c["berths"]
+        required += c["required"]
+        for k, v in c["crew_by_module"].items():
+            counts[k] = counts.get(k, 0) + v
+    return {"berths": berths, "required": required, "margin": berths - required,
+            "crew_by_module": counts}
+
+
+def example_cluster():
+    """A small 2-plot station cluster: a power/gate plot + a connected hub plot."""
+    hub = example_layout()
+    hub["StationName"] = "Trade Hub"
+    # A second plot providing extra power + a solar array.
+    power_plot = {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "Title": "Adastrea Station Layout",
+        "SchemaVersion": "1.0.0",
+        "StationName": "Power Spire",
+        "PlotSize": [1000, 1000, 1000],
+        "GridSpacing": 100,
+        "Modules": [
+            {"ModuleID": "P1", "ItemID": "CorridorModule", "GridPos": [0, 0, 0], "Rotation": 0, "IsCore": True},
+            {"ModuleID": "P2", "ItemID": "SolarArrayModule", "GridPos": [1, 0, 0], "Rotation": 0, "IsCore": False},
+        ],
+    }
+    return [hub, power_plot]
+
+
 def main():
     meta = build_meta()
     os.makedirs(os.path.dirname(OUT_META), exist_ok=True)

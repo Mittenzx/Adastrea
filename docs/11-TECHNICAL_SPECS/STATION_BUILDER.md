@@ -291,7 +291,16 @@ This ties construction to the research tree.
 A placed module can be upgraded to its Mk2 variant in place (`upgrade_module()`),
 keeping its grid position/rotation/core, e.g. `CargoBayModule` → `CargoBayModule_Mk2`.
 
-### 10.5 In-UE data assets (2.1 / 2.2, written; need a UE build to verify)
+### 10.5 Station clusters (4.3)
+A "station" can be a **cluster of multiple build plots**, each a layout, sharing one
+power grid. `validate_cluster(plots)` validates each plot's structure (connectivity,
+single core) while aggregating power and docking **cluster-wide** — a plot may be a
+pure power/dock spire with its own net deficit, as long as the cluster as a whole
+generates enough power and has docking. Helpers: `cluster_power()` (gen/cons/net),
+`cluster_crew()` (berths/required/margin across plots), `example_cluster()` (a 2-plot
+hub + power spire).
+
+### 10.6 In-UE data assets (2.1 / 2.2, written; need a UE build to verify)
 - `UStationLayoutDataAsset` (`Public/Stations/`): a `UDataAsset` holding a parsed
   layout — `StationName`, `PlotSize`, `GridSpacing`, `Modules[]`, cost/crew fields.
   Mirror of `UTradeItemDataAsset`.
