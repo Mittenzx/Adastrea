@@ -4,6 +4,9 @@
 #include "Player/AdastreaPlayerController.h"
 #include "Player/PlayerInteractableComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/LightComponent.h"
+#include "Components/LocalLightComponent.h"
+#include "Components/PointLightComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/StaticMesh.h"
 #include "Engine/PointLight.h"
@@ -262,10 +265,14 @@ void ASpaceshipInterior::RevealInterior()
 void ASpaceshipInterior::SetupInteriorLighting()
 {
     // The interior often sits at far world coordinates (away from the level's
-    // scene lights), so as-authored it reads as a dark flat void. Add a local
-    // room light attached to the interior so the shell + parts catch light and
-    // the room reads lit. A point light avoids competing with the scene's main
-    // directional for forward-shading (which the level's directional also uses).
+    // scene lights), so as-authored it reads as a dark flat void. Interior
+    // lighting plan (no-Lumen, iGPU):
+    //   1. A low ambient Directional Light (Cast Shadows = OFF) so the room is
+    //      "dim but readable" rather than pitch black (the world/ambient meta-light
+    //      trick).
+    //   2. A couple of Point/Rect fixture lights with tight attenuation where a
+    //      real lamp/screen is, Cast Shadows = ON on these for depth.
+    // All attach to the interior so they move/scale with the ship.
     if (InteriorLight)
     {
         return; // already spawned
@@ -278,22 +285,57 @@ void ASpaceshipInterior::SetupInteriorLighting()
     const FVector Centre = GetActorLocation();
     FActorSpawnParameters Params;
     Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-    InteriorLight = World->SpawnActor<APointLight>(
-        APointLight::StaticClass(),
-        Centre + FVector(0.0f, 0.0f, 200.0f), FRotator::ZeroRotator, Params);
-    if (InteriorLight)
-    {
-        InteriorLight->SetActorScale3D(FVector(1, 1, 1));
-        // Attach to the interior so it moves/scales with the ship, and soften it
-                // to a diffuse room fill.
-                if (USceneComponent* LightRoot = InteriorLight->GetRootComponent())
+
+    // 1) Ambient base fill — a broad, low-intensity, NO-shadow point light centred in
+        // the room. (Not a directional: a spawned directional competes with the level's
+        // main DirectionalLight for forward-shading and logs a "competing directional
+        // lights" warning.) A wide fill point keeps everything dim-but-readable, shadows off.
+        InteriorLight = World->SpawnActor<APointLight>(
+            APointLight::StaticClass(),
+            Centre + FVector(0.0f, 0.0f, 180.0f), FRotator::ZeroRotator, Params);
+        if (APointLight* Fill = Cast<APointLight>(InteriorLight))
+        {
+            if (UPointLightComponent* LC = Cast<UPointLightComponent>(Fill->GetLightComponent()))
+            {
+                LC->SetCastShadows(false);
+                LC->SetAttenuationRadius(4000.0f); // wide room fill
+                LC->SetIntensity(30.0f);           // low, even wash
+                LC->SetLightColor(FLinearColor(0.75f, 0.82f, 0.9f)); // cool neutral
+            }
+            if (USceneComponent* LightRoot = Fill->GetRootComponent())
+            {
+                LightRoot->SetAbsolute(false, false, false);
+            }
+            Fill->AttachToActor(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+            UE_LOG(LogAdastrea, Log, TEXT("Interior %s ambient fill spawned."), *GetName());
+        }
+
+        // 2) Fixture points — warm pools at the room's near-floor, cast shadows for depth.
+        const int32 FixtureCount = 2;
+        for (int32 i = 0; i < FixtureCount; ++i)
+        {
+            const float Angle = 2.0f * PI * i / FixtureCount;
+            const FVector Offset(300.0f * FMath::Cos(Angle), 300.0f * FMath::Sin(Angle), 80.0f);
+            APointLight* Fixture = World->SpawnActor<APointLight>(
+                APointLight::StaticClass(), Centre + Offset, FRotator::ZeroRotator, Params);
+            if (Fixture)
+            {
+                if (UPointLightComponent* LC = Cast<UPointLightComponent>(Fixture->GetLightComponent()))
+                {
+                    LC->SetIntensity(3000.0f);      // lumens-ish
+                    LC->SetAttenuationRadius(500.0f); // tight pool, ~ room scale
+                    LC->SetCastShadows(true);
+                    LC->SetLightColor(FLinearColor(1.0f, 0.85f, 0.65f)); // warm pool
+                }
+                if (USceneComponent* LightRoot = Fixture->GetRootComponent())
                 {
                     LightRoot->SetAbsolute(false, false, false);
                 }
-        InteriorLight->AttachToActor(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-        UE_LOG(LogAdastrea, Log, TEXT("Interior %s lighting spawned."), *GetName());
+                Fixture->AttachToActor(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+                UE_LOG(LogAdastrea, Log, TEXT("Interior %s fixture light %d spawned."), *GetName(), i);
+            }
+        }
     }
-}
 
 void ASpaceshipInterior::MountInteriorPart(const FString& PartPath, const FVector& Scale3D)
 {
