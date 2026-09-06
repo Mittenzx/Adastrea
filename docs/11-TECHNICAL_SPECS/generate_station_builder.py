@@ -87,6 +87,25 @@ def module_faces(item, meta, rotation):
     return {rotate_face(f, rotation) for f in faces}
 
 
+# ---- part family (see STATION_STRUCTURE_PARTS.md) ----
+# Categorises each craftable station piece as a FUNCTIONAL MODULE or a STRUCTURAL
+# / SUPPORT PART (connector, defence, habitation, utility, public). Parts are
+# mostly passive/shape-the-station; modules do an economic job. Defaults to
+# "Module" for anything not listed.
+PART_FAMILY = {
+    # Connector / transit (Connection)
+    "CorridorModule": "Connector",
+    # Defence (Defence): mounts/protects; the crafted weapon is the real cost
+    "TurretModule": "Defence",
+    "ShieldGeneratorModule": "Defence",
+    # Habitation / personnel (Habitation)
+    "HabitationModule": "Habitation",
+    "BarracksModule": "Habitation",
+    # Utility (Other): passive support with no market role
+    "FuelDepotModule": "Utility",
+}
+
+
 def module_cells(item, pos, meta):
     """The set of grid cells occupied by a module (its footprint), as (x,y,z)."""
     size = meta.get(item, {}).get("size", (1, 1, 1))
@@ -144,6 +163,7 @@ def build_meta():
             "cost": ec.get("OutputValue", st.get("BaseValue", 0)),
             "BaseValue": st.get("BaseValue", 0),
             "WeightKg": st.get("WeightKg", 0),
+            "part_family": PART_FAMILY.get(iid, "Module"),
             "recipe": recipes.get(iid, {}).get("Ingredients", []),
         }
     return meta

@@ -13,6 +13,7 @@
       "cost": 85138,
       "BaseValue": 85138,
       "WeightKg": 597.2,
+      "part_family": "Connector",
       "recipe": [
         {
           "ItemID": "ModuleShell",
@@ -36,6 +37,7 @@
       "cost": 73794,
       "BaseValue": 73794,
       "WeightKg": 597.2,
+      "part_family": "Module",
       "recipe": [
         {
           "ItemID": "ModuleShell",
@@ -63,6 +65,7 @@
       "cost": 77508,
       "BaseValue": 77508,
       "WeightKg": 597.2,
+      "part_family": "Module",
       "recipe": [
         {
           "ItemID": "ModuleShell",
@@ -90,6 +93,7 @@
       "cost": 48518,
       "BaseValue": 48518,
       "WeightKg": 597.2,
+      "part_family": "Module",
       "recipe": [
         {
           "ItemID": "ModuleShell",
@@ -113,6 +117,7 @@
       "cost": 68637,
       "BaseValue": 68637,
       "WeightKg": 597.2,
+      "part_family": "Module",
       "recipe": [
         {
           "ItemID": "ModuleShell",
@@ -140,6 +145,7 @@
       "cost": 137196,
       "BaseValue": 137196,
       "WeightKg": 597.2,
+      "part_family": "Habitation",
       "recipe": [
         {
           "ItemID": "ModuleShell",
@@ -167,6 +173,7 @@
       "cost": 104205,
       "BaseValue": 104205,
       "WeightKg": 597.2,
+      "part_family": "Habitation",
       "recipe": [
         {
           "ItemID": "ModuleShell",
@@ -194,6 +201,7 @@
       "cost": 105123,
       "BaseValue": 105123,
       "WeightKg": 597.2,
+      "part_family": "Module",
       "recipe": [
         {
           "ItemID": "PowerCore",
@@ -219,6 +227,7 @@
       "cost": 24562,
       "BaseValue": 24562,
       "WeightKg": 597.2,
+      "part_family": "Module",
       "recipe": [
         {
           "ItemID": "PowerCells",
@@ -246,6 +255,7 @@
       "cost": 50920,
       "BaseValue": 50920,
       "WeightKg": 597.2,
+      "part_family": "Module",
       "recipe": [
         {
           "ItemID": "ModuleShell",
@@ -273,6 +283,7 @@
       "cost": 62337,
       "BaseValue": 62337,
       "WeightKg": 597.2,
+      "part_family": "Module",
       "recipe": [
         {
           "ItemID": "ModuleShell",
@@ -300,6 +311,7 @@
       "cost": 54453,
       "BaseValue": 54453,
       "WeightKg": 597.2,
+      "part_family": "Module",
       "recipe": [
         {
           "ItemID": "ModuleShell",
@@ -327,6 +339,7 @@
       "cost": 49114,
       "BaseValue": 49114,
       "WeightKg": 597.2,
+      "part_family": "Utility",
       "recipe": [
         {
           "ItemID": "ModuleShell",
@@ -354,6 +367,7 @@
       "cost": 85956,
       "BaseValue": 85956,
       "WeightKg": 597.2,
+      "part_family": "Defence",
       "recipe": [
         {
           "ItemID": "ShieldEmitter",
@@ -381,6 +395,7 @@
       "cost": 103086,
       "BaseValue": 103086,
       "WeightKg": 597.2,
+      "part_family": "Defence",
       "recipe": [
         {
           "ItemID": "TurretWeapon",
@@ -404,6 +419,7 @@
       "cost": 80502,
       "BaseValue": 80502,
       "WeightKg": 597.2,
+      "part_family": "Module",
       "recipe": [
         {
           "ItemID": "ModuleShell",
@@ -431,6 +447,7 @@
       "cost": 58142,
       "BaseValue": 58142,
       "WeightKg": 597.2,
+      "part_family": "Module",
       "recipe": [
         {
           "ItemID": "ModuleShell",
@@ -458,6 +475,7 @@
       "cost": 67170,
       "BaseValue": 67170,
       "WeightKg": 597.2,
+      "part_family": "Module",
       "recipe": [
         {
           "ItemID": "ModuleShell",
@@ -485,6 +503,7 @@
       "cost": 153740,
       "BaseValue": 153740,
       "WeightKg": 597.2,
+      "part_family": "Module",
       "recipe": [
         {
           "ItemID": "ModuleShell",
@@ -512,6 +531,7 @@
       "cost": 46424,
       "BaseValue": 46424,
       "WeightKg": 597.2,
+      "part_family": "Module",
       "recipe": [
         {
           "ItemID": "ModuleShell",

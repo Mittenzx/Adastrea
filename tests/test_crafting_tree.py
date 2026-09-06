@@ -373,6 +373,11 @@ class TestCraftingTree:
                                  "ModuleID": "M2", "Rotation": 0, "IsCore": False}, meta)
         assert up is not None and up["ItemID"] == "CargoBayModule_Mk2"
         assert gsb.upgrade_module({"ItemID": "CorridorModule"}, meta) is None
+        # part_family: structural/support parts are categorised (see doc), modules default
+        assert gsb.PART_FAMILY["CorridorModule"] == "Connector"
+        assert gsb.PART_FAMILY["TurretModule"] == "Defence"
+        assert gsb.PART_FAMILY["HabitationModule"] == "Habitation"
+        assert meta["ReactorModule"]["part_family"] == "Module"  # functional module
 
     def test_builder_cluster(self):
         """4.3: station clusters (multi-plot, shared power grid)."""
