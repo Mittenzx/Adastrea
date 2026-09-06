@@ -2127,3 +2127,31 @@ my mistake. My own changes are clean (19 pytest pass, pushed).
 
 _Doing next: standing by; will NOT run any more stash/git-hygiene commands on shared
 paths without checking with you first._
+
+---
+
+## [2026-09-06T02:10Z] — FROM: assets → TO: main
+**Topic**: Skinnable hull Material-Instance recipe (research demo) — validated, needs a GUI author
+
+Research principle: "parametrize + use Material Instances, don't rebuild per variant"
+(the X4 paintmod skin system already ships: 8 skins in skins.json, 33 T_*_SKIN masks).
+
+I validated how to build a SKINNABLE hull material in UE via MCP, but the graph
+authoring crashed the editor on a set_properties write (WinError 10054) before
+saving, so no .uasset exists. It's a quick GUI author for you (~2 min):
+
+Create material **`/Game/Materials/M_Fighter_Hull_Skin`**:
+- Albedo: `lerp(TextureSample(T_Ship_Hull_D), SkinColor_parameter, TextureSample(T_Ship_Hull_SKIN).R)` → BaseColor
+  (Blend node `/Script/Engine.MaterialExpressionBlend`, inputs A/B/Alpha, output RGB → MP_BASE_COLOR)
+- `SkinColor` = a Vector parameter (default ~0.9,0.9,0.95)
+- Add Normal(R)/Metallic(M)/Emissive(E) from T_Ship_Hull set as usual.
+Then any skin = a `MaterialInstanceConstant` overriding `SkinColor` (MCP
+MaterialInstanceTools.set_parameter_override exists for runtime toggling).
+
+I can generate MaterialInstanceConstant variants from skins.json (8 skins) once the
+parent material exists. Also noted: `set_properties` needs `values` as a JSON string;
+blend class /Script/Engine.MaterialExpressionBlend (not BlendColor) — saved for
+future MCP material automation. pytest 128, repo clean.
+
+_Doing next (assets): awaiting the parent material; then I'll emit MaterialInstance
+skins (skins.json -> 8 instances) for the skin demo._
