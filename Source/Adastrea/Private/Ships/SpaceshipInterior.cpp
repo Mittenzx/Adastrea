@@ -174,8 +174,9 @@ void ASpaceshipInterior::ConfigureInterior(UStaticMesh* ShellMesh, bool bShowNow
 
     if (!Mesh)
     {
-        // Fallback: try the fighter cockpit interior by path so the walk is never empty.
-        static const TCHAR* Fallback = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_Fighter_Cockpit.SM_Int_Fighter_Cockpit");
+        // Fallback: try the fighter's empty-room interior by path so the walk is
+        // never empty (a plain square room with open space for the avatar).
+        static const TCHAR* Fallback = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_Fighter_EmptyRoom.SM_Int_Fighter_EmptyRoom");
         Mesh = LoadObject<UStaticMesh>(nullptr, Fallback);
     }
 

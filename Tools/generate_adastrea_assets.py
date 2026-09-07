@@ -2267,6 +2267,35 @@ def build_cockpit_interior(sz, outname):
     return [(jo, out)]
 
 
+def build_empty_room_interior(sz, outname):
+    """PLAIN EMPTY SQUARE ROOM interior — no furniture, no clutter.
+
+    A clean rectangular room shell (floor + 4 walls + ceiling) big enough to
+    spawn the avatar comfortably inside (the walkable volume is fitted to this
+    mesh, and the entry is centred). Nothing inside, so the avatar has open space.
+    Sized generously: interior footprint ~1000x800, ceiling ~500 (local), which
+    normalizes down to a comfortable human-walkable room via ConfigureInterior.
+    """
+    k = sc(sz)
+    parts = []
+    L = 1000*k; W = 800*k; H = 500*k; T = 16*k  # wall/floor/ceiling thickness
+    # floor
+    parts.append(box("ER_Floor", L, W, T, loc=(0, 0, 0)))
+    # four walls (front/back + left/right), from floor to ceiling
+    parts.append(box("ER_WallLeft",  T, W, H, loc=(-L/2, 0, H/2)))
+    parts.append(box("ER_WallRight", T, W, H, loc=( L/2, 0, H/2)))
+    parts.append(box("ER_WallFront", L, T, H, loc=(0,  W/2, H/2)))
+    parts.append(box("ER_WallBack",  L, T, H, loc=(0, -W/2, H/2)))
+    # ceiling
+    parts.append(box("ER_Ceiling", L, W, T, loc=(0, 0, H)))
+    for ob in parts:
+        try: bevel(ob, 4, 2)
+        except Exception: pass
+    # a single interior material (plain deck/wall feel, fits the M_Interior kit)
+    jo, out = finalize_part(parts, outname, "M_Interior_Deck")
+    return [(jo, out)]
+
+
 def build_hab_interior(sz, outname, room_count=1):
     """FLAGSHIP Crew Quarters / Hab module — LARGER walkable footprint, densely
     furnished, and split into SEPARATE colored items (X4-style modular interior).
@@ -2635,6 +2664,7 @@ def build_interior_set():
     engineering bay, airlock)."""
     results = []
     results += build_cockpit_interior('small', "SM_Int_Fighter_Cockpit")
+    results += build_empty_room_interior('small', "SM_Int_Fighter_EmptyRoom")
     results += build_hab_interior('medium', "SM_Int_Freighter_CrewQuarters")
     results += build_hab_interior('large', "SM_Int_Generationship_Hab", room_count=2)
     results += build_corridor("SM_Int_Standard")
