@@ -59,10 +59,6 @@
             "Enabled": true
         },
         {
-            "Name": "AdastreaDirector",
-            "Enabled": true
-        },
-        {
             "Name": "VisualStudioTools",
             "Enabled": false,
             "SupportedTargetPlatforms": [
