@@ -4,6 +4,7 @@
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipAvatar.h"
 #include "Ships/SpaceshipInterior.h"
+#include "Ships/SpaceshipDataAsset.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Stations/SpaceStation.h"
 #include "AdastreaHUD.h"
@@ -17,6 +18,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
+#include "DrawDebugHelpers.h"
 #include "UI/AdastreaHUDWidget.h"
 #include "UI/ShipStatusWidget.h"
 #include "UI/InventoryWidget.h"
@@ -1701,9 +1703,8 @@ void AAdastreaPlayerController::EnterShipInterior(ASpaceship* Ship)
 	// to tune AvatarSpawnOffset/AvatarSpawnYaw on the ship's data asset.
 	if (UWorld* W = GetWorld())
 	{
-		W->DrawDebugBox(SpawnWorld - FVector(30.0f, 30.0f, 100.0f),
-		                SpawnWorld + FVector(30.0f, 30.0f, 100.0f),
-		                FColor::Green, false, 8.0f, 0, 3.0f);
+		DrawDebugBox(W, SpawnWorld, FVector(30.0f, 30.0f, 100.0f),
+		             FColor::Green, false, 8.0f, 0, 3.0f);
 		UE_LOG(LogAdastrea, Log,
 			TEXT("AvatarSpawn[%s] local=(%s) world=(%s) yaw=%.1f (dataAsset=%d)"),
 			*Ship->GetName(), *SpawnLocal.ToString(), *SpawnWorld.ToString(),
