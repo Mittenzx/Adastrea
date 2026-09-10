@@ -194,6 +194,13 @@ void AAdastreaPlayerController::OnPossess(APawn* InPawn)
 		bEnableMouseOverEvents = false;
 		UE_LOG(LogAdastrea, Log, TEXT("AdastreaPlayerController: Captured mouse for pawn %s"), *InPawn->GetName());
 	}
+
+	// Offer the "fly normally / start inside the ship" menu once, when the
+	// session's first spaceship is possessed (the HUD exists by now).
+	if (ASpaceship* Ship = Cast<ASpaceship>(InPawn))
+	{
+		ShowStartMenuOnce();
+	}
 }
 
 void AAdastreaPlayerController::OnUnPossess()
@@ -594,6 +601,12 @@ void AAdastreaPlayerController::HandleMapToggleShips()
 {
 	if (AAdastreaHUD* GameHUD = GetMapHUD())
 	{
+		if (GameHUD->bShowStartMenu)
+		{
+			// Key 1 while the start menu is up = fly normally.
+			GameHUD->HideStartMenu();
+			return;
+		}
 		if (GameHUD->bShowMap) { GameHUD->bShowShips = !GameHUD->bShowShips; }
 	}
 }
@@ -602,6 +615,16 @@ void AAdastreaPlayerController::HandleMapToggleStations()
 {
 	if (AAdastreaHUD* GameHUD = GetMapHUD())
 	{
+		if (GameHUD->bShowStartMenu)
+		{
+			// Key 2 while the start menu is up = start inside the ship.
+			GameHUD->HideStartMenu();
+			if (ASpaceship* Ship = GetControlledSpaceship())
+			{
+				EnterShipInterior(Ship);
+			}
+			return;
+		}
 		if (GameHUD->bShowMap) { GameHUD->bShowStations = !GameHUD->bShowStations; }
 	}
 }
@@ -1648,6 +1671,53 @@ void AAdastreaPlayerController::HandleToggleInterior()
 		{
 			ExitShipInterior(SourceShip);
 		}
+	}
+}
+
+void AAdastreaPlayerController::ShowStartMenuOnce()
+{
+	if (bStartMenuHandled)
+	{
+		return;
+	}
+
+	AAdastreaHUD* GameHUD = GetMapHUD();
+	ASpaceship* Ship = GetControlledSpaceship();
+
+	// Wait until both the HUD and a ship exist, and the ship's interior has been
+	// created (it spawns in the ship's BeginPlay, a tick later). Retry briefly.
+	const bool bReady = GameHUD && Ship && Ship->GetInteriorInstance() != nullptr;
+
+	constexpr int32 MaxRetries = 25; // ~5s at 0.2s
+	constexpr float RetryInterval = 0.2f;
+
+	if (bReady)
+	{
+		bStartMenuHandled = true;
+		GameHUD->ShowStartMenu();
+		UE_LOG(LogAdastrea, Log, TEXT("ShowStartMenuOnce: showing start menu (ship %s has interior)."), *Ship->GetName());
+		return;
+	}
+
+	// Not ready yet. Schedule a bounded retry; give up quietly after MaxRetries.
+	if (StartMenuRetryCount >= MaxRetries)
+	{
+		bStartMenuHandled = true; // stop retrying
+		UE_LOG(LogAdastrea, Warning, TEXT("ShowStartMenuOnce: giving up after %d retries (interior never appeared)."), StartMenuRetryCount);
+		return;
+	}
+
+	++StartMenuRetryCount;
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		World->GetTimerManager().SetTimer(
+			StartMenuRetryTimerHandle,
+			this,
+			&AAdastreaPlayerController::ShowStartMenuOnce,
+			RetryInterval,
+			false  // one-shot; re-arms itself until ready
+		);
 	}
 }
 

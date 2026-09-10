@@ -31,6 +31,21 @@ class ADASTREA_API AAdastreaHUD : public AHUD
 public:
 	virtual void DrawHUD() override;
 
+	/** Whether the start-of-session menu is shown (1=fly normally, 2=start in cockpit). */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|StartMenu")
+	bool bShowStartMenu = false;
+
+	/** Show the start-of-session choice menu on the PIE canvas. */
+	UFUNCTION(BlueprintCallable, Category="HUD|StartMenu")
+	void ShowStartMenu();
+
+	/** Hide the start-of-session choice menu. */
+	UFUNCTION(BlueprintCallable, Category="HUD|StartMenu")
+	void HideStartMenu();
+
+	/** Draw the start menu overlay (called from DrawHUD while visible). */
+	void DrawStartMenu(APlayerController* PC);
+
 	/** Whether the full-screen sector map is shown (toggled by M). */
 	UPROPERTY(BlueprintReadWrite, Category="HUD|Map")
 	bool bShowMap = false;

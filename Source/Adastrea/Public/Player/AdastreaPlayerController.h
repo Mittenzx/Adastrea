@@ -322,21 +322,28 @@ public:
 						bool IsOnFoot() const { return AvatarPawn != nullptr && GetPawn() == static_cast<APawn*>(AvatarPawn); }
 
 						/** Input handler: V toggles between flying the ship and walking its interior. */
-									void HandleToggleInterior();
+												void HandleToggleInterior();
 
-									/** Show a transient message on the HUD canvas. */
-									void ShowHUDMessage(const FString& InMessage, float DurationSecs, bool bIsWarning);
+												/** Show the start-of-session menu once (guarded); call after the player ship spawns. */
+												void ShowStartMenuOnce();
+
+												/** Show a transient message on the HUD canvas. */
+												void ShowHUDMessage(const FString& InMessage, float DurationSecs, bool bIsWarning);
 
 		/** Clear the current locked target. */
 			UFUNCTION(BlueprintCallable, Category="Player|Targeting")
 			void ClearTarget();
 
 			/** When true, the ship's mouse-look is paused (targeting cursor mode). */
-					UPROPERTY(BlueprintReadOnly, Category="Player|Targeting")
-					bool bLockMouseLook;
+									UPROPERTY(BlueprintReadOnly, Category="Player|Targeting")
+									bool bLockMouseLook;
 
-					/** Input handler: Tab toggles targeting mode. */
-					void HandleTargetingToggle();
+									/** True once the start-of-session menu has been shown (so it doesn't re-show on interior return). */
+									UPROPERTY(Transient)
+									bool bStartMenuHandled = false;
+
+									/** Input handler: Tab toggles targeting mode. */
+									void HandleTargetingToggle();
 
 					/** Input handler: Left-mouse-click selects/locks a station in targeting mode. */
 							void HandleTargetClick();
@@ -712,11 +719,17 @@ private:
 	bool bWasNearTradableStation;
 
 	/** Timer handle for periodic station proximity checks */
-		FTimerHandle StationCheckTimerHandle;
+			FTimerHandle StationCheckTimerHandle;
 
-		// ====================
-		// TARGETING (cursor select / lock)
-		// ====================
+			/** Timer handle used to retry showing the start menu until the ship's interior exists. */
+			FTimerHandle StartMenuRetryTimerHandle;
+
+			/** Number of start-menu retries so far (bounded). */
+			int32 StartMenuRetryCount = 0;
+
+			// ====================
+			// TARGETING (cursor select / lock)
+			// ====================
 
 		/** Whether targeting mode is active (mouse shown, ship mouse-look paused). */
 				UPROPERTY()
