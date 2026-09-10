@@ -235,12 +235,32 @@ public:
     FText LoreNotes;
 
     // Primary color scheme
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Lore")
-    FLinearColor PrimaryColor;
+        UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Lore")
+        FLinearColor PrimaryColor;
 
-    // Secondary color scheme
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Lore")
-    FLinearColor SecondaryColor;
+        // Secondary color scheme
+        UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Lore")
+        FLinearColor SecondaryColor;
+
+        // ====================
+        // AVATAR INTERIOR SPAWN
+        // ====================
+
+        // When true, override the interior's default entry location with
+        // AvatarSpawnOffset/AvatarSpawnYaw (local space of the interior).
+        // Keep false to use the interior actor's own EntryLocation/EntryRotation.
+        UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Avatar Spawn")
+        bool bUseCustomAvatarSpawn = false;
+
+        // Local-space offset (units) from the interior origin where the on-foot
+        // avatar should spawn when the player leaves the cockpit. Use the debug
+        // marker (V to enter) to find the right spot, then drop the number here.
+        UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Avatar Spawn")
+        FVector AvatarSpawnOffset = FVector(0.0f, 0.0f, 200.0f);
+
+        // Yaw (degrees) the avatar faces when spawning (0 = forward/+X).
+        UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Avatar Spawn", meta=(ClampMin="-360.0", ClampMax="360.0"))
+        float AvatarSpawnYaw = 0.0f;
 
     // ====================
     // Constructor

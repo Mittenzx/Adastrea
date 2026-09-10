@@ -1684,9 +1684,31 @@ void AAdastreaPlayerController::EnterShipInterior(ASpaceship* Ship)
 	// Save the ship as the source so we can return to its cockpit.
 	InteriorSourceShip = Ship;
 
-	// The interior is attached to the ship, so transform its LOCAL entry point to world.
-	const FVector WorldEntry = Interior->GetActorTransform().TransformPosition(Interior->GetEntryLocation());
-	const FRotator WorldEntryRot = Interior->GetActorRotation() + Interior->GetEntryRotation();
+	// Resolve a per-ship spawn override from the ship's data asset (durable tuning).
+	// Local space of the interior; falls back to the interior actor's defaults.
+	FVector SpawnLocal = Interior->GetEntryLocation();
+	FRotator SpawnLocalRot = Interior->GetEntryRotation();
+	if (Ship->ShipDataAsset && Ship->ShipDataAsset->bUseCustomAvatarSpawn)
+	{
+		SpawnLocal = Ship->ShipDataAsset->AvatarSpawnOffset;
+		SpawnLocalRot = FRotator(0.0f, Ship->ShipDataAsset->AvatarSpawnYaw, 0.0f);
+	}
+	const FVector SpawnWorld = Interior->GetActorTransform().TransformPosition(SpawnLocal);
+	const FRotator SpawnWorldRot = Interior->GetActorRotation() + SpawnLocalRot;
+
+	// DEBUG MARKER: draw a green box outline at the avatar spawn point so you can
+	// SEE where the avatar drops when entering this ship, and log the exact numbers
+	// to tune AvatarSpawnOffset/AvatarSpawnYaw on the ship's data asset.
+	if (UWorld* W = GetWorld())
+	{
+		W->DrawDebugBox(SpawnWorld - FVector(30.0f, 30.0f, 100.0f),
+		                SpawnWorld + FVector(30.0f, 30.0f, 100.0f),
+		                FColor::Green, false, 8.0f, 0, 3.0f);
+		UE_LOG(LogAdastrea, Log,
+			TEXT("AvatarSpawn[%s] local=(%s) world=(%s) yaw=%.1f (dataAsset=%d)"),
+			*Ship->GetName(), *SpawnLocal.ToString(), *SpawnWorld.ToString(),
+			SpawnLocalRot.Yaw, Ship->ShipDataAsset && Ship->ShipDataAsset->bUseCustomAvatarSpawn ? 1 : 0);
+	}
 
 	// (Re)spawn the avatar if needed.
 	if (!AvatarPawn)
@@ -1694,7 +1716,7 @@ void AAdastreaPlayerController::EnterShipInterior(ASpaceship* Ship)
 		FActorSpawnParameters Params;
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		AvatarPawn = GetWorld()->SpawnActor<ASpaceshipAvatar>(ASpaceshipAvatar::StaticClass(),
-			WorldEntry, WorldEntryRot, Params);
+			SpawnWorld, SpawnWorldRot, Params);
 	}
 
 	if (!AvatarPawn)
@@ -1704,8 +1726,8 @@ void AAdastreaPlayerController::EnterShipInterior(ASpaceship* Ship)
 	}
 
 	// Position the avatar at the interior entry and mark its source ship.
-	AvatarPawn->SetActorLocation(WorldEntry);
-	AvatarPawn->SetActorRotation(WorldEntryRot);
+	AvatarPawn->SetActorLocation(SpawnWorld);
+	AvatarPawn->SetActorRotation(SpawnWorldRot);
 	AvatarPawn->SourceShip = Ship;
 	AvatarPawn->CurrentInterior = Interior;
 
@@ -1741,6 +1763,9 @@ void AAdastreaPlayerController::EnterShipInterior(ASpaceship* Ship)
 	// Record the entrance time so the exit trigger ignores the spawn overlap for
 	// a short grace period (else the avatar instantly bounces back to the cockpit).
 	Interior->EntranceWorldTime = Interior->GetWorld()->GetTimeSeconds();
+	// Disable the ship's flight input mapping context so it can't keep stealing
+	// WASD/look from the avatar's own bindings while we walk the interior.
+	Ship->SetRuntimeInputEnabled(false);
 	UnPossess();
 	Possess(AvatarPawn);
 	SetInputMode(FInputModeGameOnly());
@@ -1764,6 +1789,8 @@ void AAdastreaPlayerController::ExitShipInterior(ASpaceship* Ship)
 	{
 		UnPossess();
 	}
+	// Re-enable the ship's flight input mapping context now that we're back at the helm.
+	Ship->SetRuntimeInputEnabled(true);
 	Possess(Ship);
 	SetInputMode(FInputModeGameOnly());
 	bShowMouseCursor = false;
