@@ -5,6 +5,7 @@
 #include "Ships/Spaceship.h"
 #include "AdastreaHUD.h"
 #include "UI/TestSettingsWidget.h"
+#include "Player/AdastreaPlayerController.h"
 #include "AdastreaLog.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerController.h"
