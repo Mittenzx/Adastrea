@@ -32,6 +32,20 @@ AAdastreaGameMode::AAdastreaGameMode()
 	TestSettingsWidget = nullptr;
 }
 
+void AAdastreaGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
+{
+	// Force the C++ controller class BEFORE Super::InitGame() runs. PlayerController
+	// Login() is driven by InitGame/world bring-up, which completes before BeginPlay
+	// ever executes -- a BeginPlay-only override is always too late, so PIE was
+	// failing with "Couldn't spawn player controller of class NULL" whenever the
+	// level's GameMode Blueprint (BP_SpaceGameMode) carried a stale/removed
+	// PlayerControllerClass override (BP_SpaceshipController, deleted with the input
+	// blueprints). Forcing it here, ahead of Super::InitGame(), makes sure a dead
+	// Blueprint reference can never win.
+	PlayerControllerClass = AAdastreaPlayerController::StaticClass();
+	Super::InitGame(MapName, Options, ErrorMessage);
+}
+
 void AAdastreaGameMode::BeginPlay()
 {
 	Super::BeginPlay();

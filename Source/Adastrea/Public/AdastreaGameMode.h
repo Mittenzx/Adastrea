@@ -84,6 +84,17 @@ public:
 	FVector FallbackSpawnLocation;
 
 protected:
+	/**
+	 * Force PlayerControllerClass to the C++ controller BEFORE any player login
+	 * happens. This must run in InitGame (not BeginPlay): PlayerController Login()
+	 * is driven by world bring-up as part of InitGame, which completes before
+	 * BeginPlay ever runs -- so a BeginPlay-only override is always too late and
+	 * a stale/removed Blueprint PlayerControllerClass reference (e.g. from
+	 * BP_SpaceGameMode pointing at a deleted BP_SpaceshipController) resolves to
+	 * NULL and PIE fails with "Couldn't spawn player controller of class NULL".
+	 */
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
+
 	virtual void BeginPlay() override;
 
 	/**

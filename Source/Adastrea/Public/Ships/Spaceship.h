@@ -682,6 +682,14 @@ private:
     UPROPERTY(Transient)
     class UInputMappingContext* RuntimeInputMappingContext;
 
+public:
+    /** Enable/disable the ship's runtime flight input mapping context. */
+    UFUNCTION(BlueprintCallable, Category="Input")
+    void SetRuntimeInputEnabled(bool bEnabled);
+
+private:
+
+
     /**
     * Creates the ship's input actions + mapping context if not already set,
     * and adds the mapping context to the local player. Ensures WASD, mouse-look,

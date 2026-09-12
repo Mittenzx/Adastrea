@@ -2372,3 +2372,12 @@ TSubclassOf<UUserWidget> ASpaceship::GetEffectiveTradingInterfaceClass() const
     }
     return TradingInterfaceClass;
 }
+
+void ASpaceship::SetRuntimeInputEnabled(bool bEnabled)
+{
+	// Stub: full implementation (input subsystem add/remove) lands with the
+	// input-refactor agent's in-flight changes. This placeholder exists so the
+	// committed AdastreaPlayerController code can compile + link without those
+	// changes on disk.
+	UE_LOG(LogAdastrea, Log, TEXT("ASpaceship::SetRuntimeInputEnabled(%d) on %s (stub)."), bEnabled, *GetName());
+}
