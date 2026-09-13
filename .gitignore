@@ -119,6 +119,11 @@ token.pickle
 .env.*
 !.env.template
 
+# BlenderKit raw source downloads (large .blend/.gltf originals, re-fetchable
+# from Assets/BlenderKit/manifest.json — don't commit; the manifest + the
+# exported FBX in Assets/FBX/generated/kitbash/ are what's tracked)
+/Assets/BlenderKit/library/
+
 # Build package (for moving to another repo)
 # Track extraction tooling but ignore extracted build files
 build_package/*.bat
