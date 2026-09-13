@@ -2,12 +2,15 @@
 
 **Version**: 1.0 | **Last Updated**: August 9, 2026 | **Project Status**: Trade Simulator MVP - Week 12 of 12 (Final Polish)
 
+> **⚡ Start here**: [00-KNOWLEDGE_BASE.md](00-KNOWLEDGE_BASE.md) — the authoritative, repo-current snapshot of architecture, systems, pipelines, tooling, testing, and known issues (written from direct repo inspection, 2026-09-13).
+
 ---
 
 ## 🚀 Quick Navigation
 
 | You Want To... | Go To |
 |----------------|-------|
+| **Get the project map** | [00-KNOWLEDGE_BASE.md](00-KNOWLEDGE_BASE.md) ⭐ |
 | **Start developing** | [01-GETTING_STARTED.md](01-GETTING_STARTED.md) |
 | **Understand the MVP** | [02-MVP_OVERVIEW.md](02-MVP_OVERVIEW.md) |
 | **See current status** | [03-CURRENT_STATUS.md](03-CURRENT_STATUS.md) |
