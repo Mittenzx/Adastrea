@@ -8,6 +8,27 @@ class UBoxComponent;
 class AAdastreaPlayerController;
 
 /**
+ * Which interior kit family a ship's interior belongs to: drives which companion
+ * parts (console/deck/bunks/...) get mounted alongside the shell mesh and which
+ * kit material set applies. Set explicitly on the ship (preferred) rather than
+ * inferred by string-matching the shell mesh's asset name.
+ */
+UENUM(BlueprintType)
+enum class EShipInteriorFamily : uint8
+{
+    None,
+    Fighter,
+    CommandBridge,
+    CrewQuarters,
+    GenerationHab,
+    /** Bespoke corvette-hull bridge (SM_Int_Corvette_Bridge_*), replacing the
+     * CommandBridge stopgap that Corvette/Cruiser/Destroyer used to share
+     * identically. Cruiser/Destroyer stay on CommandBridge until they get
+     * their own bespoke pass. */
+    CorvetteBridge,
+};
+
+/**
  * Represents the walkable interior space of a spaceship
  *
  * This actor defines the physical interior that players can explore when boarding
@@ -61,10 +82,13 @@ public:
          * Assigns the mesh, hides it until entered, and sizes the walkable volume + exit
          * trigger to the mesh's real bounds so the avatar walks inside the correct footprint.
          * @param ShellMesh The interior static mesh (e.g. the ship's cockpit/hold shell).
+         * @param Family Which companion-part kit + material set to mount alongside the
+         *        shell. Pass None to fall back to inferring the family from the shell
+         *        mesh's asset name (legacy behaviour, kept for content not yet migrated).
          * @param bShowNow If true, unhide immediately (else hidden until EnterInterior).
          */
         UFUNCTION(BlueprintCallable, Category="Interior")
-        void ConfigureInterior(class UStaticMesh* ShellMesh, bool bShowNow = false);
+        void ConfigureInterior(class UStaticMesh* ShellMesh, EShipInteriorFamily Family = EShipInteriorFamily::None, bool bShowNow = false);
 
         /** Resize the walk volume + seat trigger to the currently-assigned mesh bounds. */
                 UFUNCTION(BlueprintCallable, Category="Interior")
@@ -86,9 +110,11 @@ public:
 
                 public:
                         /** Return the interior's floor half-extents (local X/Y walk limits) and a
-                         * standing altitude (local Z) the avatar should be held at. Returns false
-                         * if no mesh is configured yet. */
-                                bool GetLocalHalfExtents(const float InAltitude, FVector& OutHalfExtents) const;
+                         * standing altitude (local Z) the avatar should be held at, plus the
+                         * room's true local centre (X/Y) — the mesh's bounding-box centre, which
+                         * is very often NOT the actor's pivot. Returns false if no mesh is
+                         * configured yet. */
+                                bool GetLocalHalfExtents(const float InAltitude, FVector& OutHalfExtents, FVector2D& OutLocalCentreXY) const;
 
                 protected:
                         /** Mount a companion part mesh (Console/Deck/Lights/...) co-located with the
@@ -135,9 +161,17 @@ protected:
                 UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
                 TArray<TObjectPtr<class UStaticMeshComponent>> InteriorParts;
 
-    /** Box volume the player can walk within (floor plane). */
+    /** Box volume the player can walk within (floor plane). Query-only (not solid) —
+     * purely a footprint marker, see FloorCollision for the walkable surface itself. */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
     TObjectPtr<UBoxComponent> InteriorVolume;
+
+    /** Thin, solid floor the avatar actually stands and walks on (blocks Pawn only).
+     * The interior shell mesh ignores Pawn collision entirely (it's a reused/oversized
+     * exterior hull, not clean walkable geometry), so without this the avatar has
+     * nothing to stand on and CharacterMovement's normal Walking mode can't work. */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
+    TObjectPtr<UBoxComponent> FloorCollision;
 
     /** Trigger volume at the cockpit/seat. Avatar walking into it returns to the ship. */
         UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
@@ -174,6 +208,20 @@ public:
 
                         /** World time of the most recent interior entry (used for the grace check). */
                                                 float EntranceWorldTime = -1.0f;
+
+                                                /** World location the avatar was placed at on the most recent entry. The
+                                                 * exit trigger ignores overlaps until the avatar has actually walked away
+                                                 * from this point — otherwise, on rooms where the seat trigger sits only
+                                                 * a step or two from the spawn point, a couple of seconds of held
+                                                 * movement walks straight into it and instantly boots the player back to
+                                                 * the cockpit before they've gone anywhere. */
+                                                UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
+                                                FVector LastEntryWorldLocation = FVector::ZeroVector;
+
+                                                /** Minimum distance (world units) the avatar must move away from
+                                                 * LastEntryWorldLocation before the exit trigger will act on an overlap. */
+                                                UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
+                                                float MinDistanceFromEntryToExit = 200.0f;
 
                                                 /** Interior light actor spawned on reveal so the room reads lit even at
                                                  * far world coords with no scene lights. Destroyed on hide. */

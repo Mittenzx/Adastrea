@@ -86,9 +86,17 @@ def import_texture(png_name, dest_path, srgb=True):
 # ---------------------------------------------------------------------------
 # FBX (static mesh) import
 # ---------------------------------------------------------------------------
-def import_mesh(fbx_name, dest_path):
-    """Import one FBX as a StaticMesh into dest_path."""
-    src = os.path.join(GEN_DIR, fbx_name + ".fbx")
+def import_mesh(fbx_name, dest_path, src_override=None, import_real_materials=False):
+    """Import one FBX as a StaticMesh into dest_path.
+
+    import_real_materials=True is for BlenderKit-sourced kitbash content
+    (Tools/blenderkit_import.py embeds real textures via path_mode=COPY,
+    embed_textures=True specifically so this can extract them). Procedural
+    meshes deliberately import WITHOUT materials/textures because a later
+    pass (build_material_instances / ApplyInteriorMaterials) re-points their
+    slots to authored kit materials by slot name; sourced content has no
+    matching slot names, so it needs its own real materials imported."""
+    src = src_override or os.path.join(GEN_DIR, fbx_name + ".fbx")
     if not os.path.exists(src):
         print(f"  ! missing mesh {fbx_name}")
         return None
@@ -105,8 +113,8 @@ def import_mesh(fbx_name, dest_path):
     options.import_as_skeletal = False
     options.import_mesh = True
     options.import_animations = False
-    options.import_textures = False
-    options.import_materials = False
+    options.import_textures = import_real_materials
+    options.import_materials = import_real_materials
     options.create_physics_asset = False
     # Use Unreal units; FBX already exported at real-world cm scale
     options.set_editor_property("import_as_skeletal", False)
@@ -271,6 +279,25 @@ def main():
                 sub = MESH_ROOT + "/Objects"
             ensure_dir(sub)
             import_mesh(name, sub)
+    # Sourced (BlenderKit) kitbash meshes live in a separate subfolder so it's
+    # obvious at a glance which meshes are generated vs. sourced (see
+    # Tools/blenderkit_import.py) -- import those too, same routing rules.
+    kitbash_dir = os.path.join(GEN_DIR, "kitbash")
+    if os.path.isdir(kitbash_dir):
+        for f in sorted(os.listdir(kitbash_dir)):
+            if f.endswith(".fbx") and f.startswith("SM_"):
+                name = f[:-4]
+                if name.startswith("SM_Int_") or "_Int_" in name:
+                    sub = MESH_ROOT + "/Interiors"
+                elif "Ship" in name or "Generationship" in name:
+                    sub = MESH_ROOT + "/Ships"
+                elif "Station" in name:
+                    sub = MESH_ROOT + "/Station"
+                else:
+                    sub = MESH_ROOT + "/Objects"
+                ensure_dir(sub)
+                import_mesh(name, sub, src_override=os.path.join(kitbash_dir, f),
+                            import_real_materials=True)
     print("  done meshes")
 
     # 3) Materials
