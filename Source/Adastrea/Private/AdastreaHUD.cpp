@@ -47,14 +47,6 @@ void AAdastreaHUD::DrawHUD()
 		return;
 	}
 
-	// Start-of-session menu draws over everything and captures input until one
-	// option is chosen (1 = fly normally, 2 = start inside the ship).
-	if (bShowStartMenu)
-	{
-		DrawStartMenu(PC);
-		return;
-	}
-
 	// Full-screen sector map (toggled by M) draws over everything.
 		if (bShowMap)
 		{
@@ -1213,68 +1205,6 @@ void AAdastreaHUD::ShowMessage(const FString& InMessage, float DurationSecs, boo
 	MessageDuration = FMath::Max(0.1f, DurationSecs);
 	MessageElapsed = 0.0f;
 	bMessageIsWarning = bIsWarning;
-}
-
-void AAdastreaHUD::ShowStartMenu()
-{
-	bShowStartMenu = true;
-
-	if (APlayerController* PC = GetOwningPlayerController())
-	{
-		// Keep the mouse captured (GameOnly) so the flight HUD input doesn't fight;
-		// the menu is chosen with the 1 / 2 keys.
-		PC->SetInputMode(FInputModeGameAndUI());
-		PC->bShowMouseCursor = true;
-	}
-}
-
-void AAdastreaHUD::HideStartMenu()
-{
-	bShowStartMenu = false;
-
-	if (APlayerController* PC = GetOwningPlayerController())
-	{
-		PC->SetInputMode(FInputModeGameOnly());
-		PC->bShowMouseCursor = false;
-	}
-}
-
-void AAdastreaHUD::DrawStartMenu(APlayerController* PC)
-{
-	if (!Canvas)
-	{
-		return;
-	}
-
-	int32 VW = 0;
-	int32 VH = 0;
-	if (PC) { PC->GetViewportSize(VW, VH); }
-
-	// Darken the screen.
-	DrawRect(FLinearColor(0.00f, 0.00f, 0.02f, 0.92f), 0.0f, 0.0f, VW, VH);
-
-	UFont* TitleFont = GEngine->GetLargeFont();
-	UFont* BodyFont = GEngine->GetSmallFont();
-
-	const FString Title = TEXT("A D A S T R E A -- NEW SESSION");
-	const FString Opt1 = TEXT("1  -  FLY NORMALLY  (pilot the ship as usual)");
-	const FString Opt2 = TEXT("2  -  START INSIDE THE SHIP  (walk the interior)");
-
-	float TxtW = 0.0f; float TxtH = 0.0f;
-	Canvas->StrLen(TitleFont, Title, TxtW, TxtH);
-	const float TitleY = VH * 0.38f;
-	const float X = (VW - TxtW) * 0.5f;
-
-	DrawText(Title, FLinearColor(0.15f, 0.9f, 0.8f, 1.0f), X, TitleY, TitleFont, 1.1f);
-
-	Canvas->StrLen(BodyFont, Opt1, TxtW, TxtH);
-	const float OptX = (VW - TxtW) * 0.5f;
-	DrawText(Opt1, FLinearColor(0.8f, 0.9f, 1.0f, 1.0f), OptX, TitleY + 90.0f, BodyFont, 0.9f);
-	DrawText(Opt2, FLinearColor(0.9f, 0.75f, 0.4f, 1.0f), OptX, TitleY + 130.0f, BodyFont, 0.9f);
-
-	Canvas->StrLen(BodyFont, TEXT("Press a number key to select"), TxtW, TxtH);
-	DrawText(TEXT("Press a number key to select"), FLinearColor(0.5f, 0.6f, 0.65f, 0.9f),
-	         OptX, TitleY + 180.0f, BodyFont, 0.7f);
 }
 
 void AAdastreaHUD::DrawTransientMessage(APlayerController* PC)

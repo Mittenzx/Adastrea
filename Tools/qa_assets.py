@@ -64,6 +64,11 @@ def qa_one(obj_path):
         budget = 50000
     elif "Obj" in name or "Prop" in name:
         budget = 3000   # space objects & large props (comms tower, fuel cell, satellite)
+    elif "Dome" in name or "Skybox" in name or "Backdrop" in name:
+        budget = 20000  # large background environment shells seen from everywhere;
+                        # the generic 1000 default wrongly flagged SM_StarDome_Dense
+                        # (16128 tris) as over-budget when it's actually reasonable
+                        # for a dome meant to surround the whole playable volume.
     else:
         budget = 1000
     ntris = len(faces)
