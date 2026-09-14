@@ -1,7 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "Player/AdastreaPlayerController.h"
-#include "UObject/ConstructorHelpers.h"
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipAvatar.h"
 #include "Ships/SpaceshipInterior.h"
@@ -33,15 +32,16 @@
 AAdastreaPlayerController::AAdastreaPlayerController()
 {
 	// Set default values
-	// StationEditorWidgetClass was previously left null with nothing ever assigning
-	// it in Blueprint (confirmed live: PIE logged "StationEditorWidgetClass is not
-	// set!" every time G was pressed - the editor "opened" per the log but no widget
-	// ever existed to show). Default it to the actual WBP_StationEditor asset here so
-	// the station editor works with zero Blueprint setup; a subclass can still override
-	// it. Soft content-path lookup, not a StationEditor module include - keeps the
-	// module boundary the rest of this class already works around.
-	static ConstructorHelpers::FClassFinder<UUserWidget> StationEditorWidgetBPClass(TEXT("/Game/UI/Stations/WBP_StationEditor"));
-	StationEditorWidgetClass = StationEditorWidgetBPClass.Succeeded() ? StationEditorWidgetBPClass.Class : nullptr;
+	// StationEditorWidgetClass is resolved lazily in CreateStationEditorWidget()
+	// instead of here - a ConstructorHelpers::FClassFinder load in the constructor
+	// runs during CDO construction, very early in engine startup, before there's
+	// any guarantee the StationEditor module (which WBP_StationEditor's parent
+	// class UStationEditorWidgetCpp lives in) has been loaded. Adastrea doesn't
+	// module-depend on StationEditor by design (see the circular-dependency fix
+	// doc), so that's a real race, not a hypothetical one: it crashed the editor
+	// on startup (EXCEPTION_ACCESS_VIOLATION chasing a null class) the one time
+	// it lost. Left null here; resolved on first actual use instead.
+	StationEditorWidgetClass = nullptr;
 	ModuleCatalog = nullptr;
 	StationSearchRadius = 5000.0f;
 	DefaultStationClass = ASpaceStation::StaticClass();
@@ -861,6 +861,17 @@ UUserWidget* AAdastreaPlayerController::CreateStationEditorWidget()
 	if (StationEditorWidget)
 	{
 		return StationEditorWidget;
+	}
+
+	// Lazily resolve the default WBP_StationEditor if nothing was assigned in
+	// Blueprint. Deliberately NOT done in the constructor (CDO construction runs
+	// too early in engine startup for a cross-module Blueprint load to be safe -
+	// see the comment on the StationEditorWidgetClass default above). By the time
+	// a player actually opens the editor at runtime, every module is loaded.
+	if (!StationEditorWidgetClass)
+	{
+		StationEditorWidgetClass = StaticLoadClass(UUserWidget::StaticClass(), nullptr,
+			TEXT("/Game/UI/Stations/WBP_StationEditor.WBP_StationEditor_C"));
 	}
 
 	// Check if widget class is assigned
