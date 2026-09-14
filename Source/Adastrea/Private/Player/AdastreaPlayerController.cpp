@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "Player/AdastreaPlayerController.h"
+#include "UObject/ConstructorHelpers.h"
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipAvatar.h"
 #include "Ships/SpaceshipInterior.h"
@@ -32,9 +33,19 @@
 AAdastreaPlayerController::AAdastreaPlayerController()
 {
 	// Set default values
-	StationEditorWidgetClass = nullptr;
+	// StationEditorWidgetClass was previously left null with nothing ever assigning
+	// it in Blueprint (confirmed live: PIE logged "StationEditorWidgetClass is not
+	// set!" every time G was pressed - the editor "opened" per the log but no widget
+	// ever existed to show). Default it to the actual WBP_StationEditor asset here so
+	// the station editor works with zero Blueprint setup; a subclass can still override
+	// it. Soft content-path lookup, not a StationEditor module include - keeps the
+	// module boundary the rest of this class already works around.
+	static ConstructorHelpers::FClassFinder<UUserWidget> StationEditorWidgetBPClass(TEXT("/Game/UI/Stations/WBP_StationEditor"));
+	StationEditorWidgetClass = StationEditorWidgetBPClass.Succeeded() ? StationEditorWidgetBPClass.Class : nullptr;
 	ModuleCatalog = nullptr;
 	StationSearchRadius = 5000.0f;
+	DefaultStationClass = ASpaceStation::StaticClass();
+	NewStationSpawnDistance = 3000.0f;
 	TradingInteractionRadius = 8000.0f;
 	StationCheckInterval = 0.5f;
 	StationEditorWidget = nullptr;
@@ -155,6 +166,10 @@ void AAdastreaPlayerController::SetupInputComponent()
 		// P: open the ship-select screen
 		InputComponent->BindKey(EKeys::P, IE_Pressed, this, &AAdastreaPlayerController::HandleShipSelectOpen);
 		InputComponent->BindKey(EKeys::N, IE_Pressed, this, &AAdastreaPlayerController::HandleStationInfoToggle);
+		// G: open/close the full Station Editor (module placement, undo/redo, construction
+		// queue). Was previously unreachable - IA_OpenStationEditor/StationEditorAction were
+		// declared but never bound to ToggleStationEditor(). G is unused by any other system.
+		InputComponent->BindKey(EKeys::G, IE_Pressed, this, &AAdastreaPlayerController::ToggleStationEditor);
 	}
 }
 
@@ -725,18 +740,26 @@ void AAdastreaPlayerController::ToggleStationEditor()
 	}
 	else
 	{
-		// Open the editor - find nearest station
-		ASpaceStation* NearestStation = FindNearestStation();
-
-		if (!NearestStation)
+		// Open the editor - edit the nearest existing station if there is one,
+		// otherwise spawn a fresh empty station so the player can build from
+		// scratch without needing to be near anything first.
+		ASpaceStation* TargetStation = FindNearestStation();
+		const bool bIsNewStation = (TargetStation == nullptr);
+		if (bIsNewStation)
 		{
-			UE_LOG(LogAdastrea, Warning, TEXT("ToggleStationEditor: No station found within %.0f units"), StationSearchRadius);
+			TargetStation = SpawnStationForBuilder();
+		}
+
+		if (!TargetStation)
+		{
+			UE_LOG(LogAdastrea, Warning, TEXT("ToggleStationEditor: No station nearby and failed to spawn a new one"));
 			// Don't broadcast event on failure - no state change occurred
 			return;
 		}
 
-		ShowStationEditor(NearestStation);
-		UE_LOG(LogAdastrea, Log, TEXT("ToggleStationEditor: Opened station editor for station: %s"), *NearestStation->GetName());
+		ShowStationEditor(TargetStation);
+		UE_LOG(LogAdastrea, Log, TEXT("ToggleStationEditor: Opened station editor for %s station: %s"),
+			bIsNewStation ? TEXT("new") : TEXT("existing"), *TargetStation->GetName());
 
 		// Broadcast the event for backward compatibility with existing Blueprints
 		OnStationEditorToggle.Broadcast();
@@ -789,6 +812,42 @@ ASpaceStation* AAdastreaPlayerController::FindNearestStation()
 	}
 
 	return NearestStation;
+}
+
+ASpaceStation* AAdastreaPlayerController::SpawnStationForBuilder()
+{
+	UWorld* World = GetWorld();
+	APawn* ControlledPawn = GetPawn();
+	if (!World || !ControlledPawn)
+	{
+		return nullptr;
+	}
+
+	UClass* ClassToSpawn = DefaultStationClass ? *DefaultStationClass : ASpaceStation::StaticClass();
+
+	// Drop it out in front of the player, axis-aligned (not player-facing) so
+	// it matches the editor's world-axis-aligned build grid from the start.
+	// Named StationSpawnLocation (not SpawnLocation) - APlayerController already
+	// declares a SpawnLocation member and /we4458 makes shadowing it a hard error.
+	const FVector StationSpawnLocation = ControlledPawn->GetActorLocation()
+		+ ControlledPawn->GetActorForwardVector() * NewStationSpawnDistance;
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	ASpaceStation* NewStation = World->SpawnActor<ASpaceStation>(ClassToSpawn, StationSpawnLocation, FRotator::ZeroRotator, SpawnParams);
+
+	if (NewStation)
+	{
+		UE_LOG(LogAdastrea, Log, TEXT("SpawnStationForBuilder: Spawned new empty station %s at (%.0f, %.0f, %.0f) for from-scratch building"),
+			*NewStation->GetName(), StationSpawnLocation.X, StationSpawnLocation.Y, StationSpawnLocation.Z);
+	}
+	else
+	{
+		UE_LOG(LogAdastrea, Error, TEXT("SpawnStationForBuilder: Failed to spawn station of class %s"), *ClassToSpawn->GetName());
+	}
+
+	return NewStation;
 }
 
 ASpaceStation* AAdastreaPlayerController::GetNearestStation()

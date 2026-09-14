@@ -621,6 +621,14 @@ EModulePlacementResult UStationEditorManager::CanPlaceModule_Implementation(TSub
 			return EModulePlacementResult::CollisionDetected;
 		}
 
+		// X4-style connectivity: every module past the first must attach to the
+		// growing structure. Prevents disconnected/floating modules.
+		if (!IsAdjacentToExistingModule(Position))
+		{
+			UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::CanPlaceModule - %s is not adjacent to any existing module"), *ModuleClass->GetName());
+			return EModulePlacementResult::Disconnected;
+		}
+
 		// Check power - this is a hard gate: placing a module that would push the
 		// station into a power deficit is disallowed (stations must stay powered).
 		if (WouldCausePowerDeficit(ModuleClass))
@@ -661,6 +669,37 @@ bool UStationEditorManager::CheckCollision(TSubclassOf<ASpaceStationModule> Modu
 		if (Distance < CollisionRadius * 2.0f)
 		{
 			return true; // Collision detected
+		}
+	}
+
+	return false;
+}
+
+bool UStationEditorManager::IsAdjacentToExistingModule(FVector Position) const
+{
+	if (!CurrentStation)
+	{
+		return false;
+	}
+
+	// Empty station: this module becomes the core/anchor, always allowed.
+	if (CurrentStation->Modules.Num() == 0)
+	{
+		return true;
+	}
+
+	if (!GridSystem)
+	{
+		// No grid system to judge adjacency against - don't block placement,
+		// just skip the connectivity rule (matches CheckCollision's fail-open).
+		return true;
+	}
+
+	for (const ASpaceStationModule* ExistingModule : CurrentStation->Modules)
+	{
+		if (ExistingModule && GridSystem->ArePositionsAdjacent(Position, ExistingModule->GetActorLocation()))
+		{
+			return true;
 		}
 	}
 
@@ -837,10 +876,11 @@ void UStationEditorManager::UpdatePreview(FVector Position, FRotator Rotation)
 	PreviewActor->UpdatePosition(FinalPosition, Rotation);
 
 	// Update validity visual using current module class from preview actor
-	if (CurrentStation && bCheckCollisions && PreviewActor->CurrentModuleClass)
+	if (CurrentStation && PreviewActor->CurrentModuleClass)
 	{
-		bool bHasCollision = CheckCollision(PreviewActor->CurrentModuleClass, FinalPosition, Rotation);
-		PreviewActor->SetValid(!bHasCollision);
+		bool bHasCollision = bCheckCollisions && CheckCollision(PreviewActor->CurrentModuleClass, FinalPosition, Rotation);
+		bool bConnected = IsAdjacentToExistingModule(FinalPosition);
+		PreviewActor->SetValid(!bHasCollision && bConnected);
 	}
 }
 

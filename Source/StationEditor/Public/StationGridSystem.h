@@ -39,9 +39,11 @@ public:
 	// Configuration
 	// =====================
 
-	/** Size of each grid cell in world units (default 100 = 1 meter) */
+	/** Size of each grid cell in world units. Default 400 keeps grid-adjacent modules
+	 *  just clear of UStationEditorManager's default collision check (2x its 200-unit
+	 *  CollisionRadius) - shrink it only if CollisionRadius shrinks to match. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Grid|Configuration", meta=(ClampMin=1.0f, UIMin=1.0f))
-	float GridSize = 100.0f;
+	float GridSize = 400.0f;
 
 	/** Whether the grid is enabled */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Grid|Configuration")

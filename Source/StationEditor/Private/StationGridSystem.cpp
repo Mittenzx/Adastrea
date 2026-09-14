@@ -7,7 +7,10 @@ UStationGridSystem::UStationGridSystem()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 
-	GridSize = 100.0f;
+	// Must be >= 2x UStationEditorManager::DefaultCollisionRadius (200 -> 400), or
+	// grid-adjacent modules (the X4-style connectivity rule) always overlap and
+	// CheckCollision rejects every placement that IsAdjacentToExistingModule allows.
+	GridSize = 400.0f;
 	bGridEnabled = true;
 	GridOrigin = FVector::ZeroVector;
 	bSnapRotation = true;
