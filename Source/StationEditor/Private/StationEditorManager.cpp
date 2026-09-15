@@ -1047,7 +1047,9 @@ FString UStationEditorManager::ExportStationBlueprint() const
 
 	// STATION_BUILDER.md's schema version - this is the same on-disk format its
 	// Python blueprint_to_layout()/layout_to_blueprint() already round-trip.
-	FString Result = TEXT("1.0.0;1000,1000,1000;") + FString::SanitizeFloat(Spacing);
+	// Integer, not SanitizeFloat - the Python side (blueprint_to_layout) parses
+	// this field with int(tok[2]), which throws on a decimal point like "400.0".
+	FString Result = TEXT("1.0.0;1000,1000,1000;") + FString::FromInt(FMath::RoundToInt(Spacing));
 
 	int32 ModuleIndex = 0;
 	for (const ASpaceStationModule* Module : CurrentStation->Modules)
