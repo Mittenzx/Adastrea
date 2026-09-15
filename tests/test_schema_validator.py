@@ -10,8 +10,8 @@ import os
 import pytest
 import json
 
-# Add parent directory to path to import the module
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Add Tools/ to path to import the module (SchemaValidator.py lives there, not the repo root)
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'Tools'))
 
 # Check if jsonschema is available for testing
 try:
