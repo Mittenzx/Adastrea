@@ -7,9 +7,12 @@ UStationGridSystem::UStationGridSystem()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 
-	// Must be >= 2x UStationEditorManager::DefaultCollisionRadius (200 -> 400), or
-	// grid-adjacent modules (the X4-style connectivity rule) always overlap and
-	// CheckCollision rejects every placement that IsAdjacentToExistingModule allows.
+	// Must be >= 2x the smallest module's effective radius (a 1x1 module's radius
+	// equals UStationEditorManager::CollisionRadius, default 200 -> needs >= 400),
+	// or grid-adjacent 1x1 modules always overlap and CheckCollision rejects every
+	// placement that IsAdjacentToExistingModule allows. Larger modules (per their
+	// catalog GridFootprint) scale their own required clearance proportionally, via
+	// UStationEditorManager::GetModuleEffectiveRadius - this is just the floor.
 	GridSize = 400.0f;
 	bGridEnabled = true;
 	GridOrigin = FVector::ZeroVector;
