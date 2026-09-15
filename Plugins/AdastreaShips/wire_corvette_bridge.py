@@ -69,10 +69,21 @@ def main():
 try:
     ok = main()
     print("RESULT_OK" if ok else "RESULT_FAIL")
+    # Update 2026-09-14: originally this only skipped quit_editor() on
+    # failure (see below), on the theory the crash was tied to quitting from
+    # a failed script's error path. Turned out wrong -- the fighter cabin
+    # wiring script hit the exact same ModeManagerInteractiveToolsContext
+    # teardown crash on a SUCCESSFUL run too. So: never call quit_editor()
+    # from either path. The actual save already completed synchronously
+    # above regardless of what happens next, so this is just noise
+    # avoidance, not a data-integrity fix. Leave the editor open; close it
+    # manually or let the next launch replace it.
+    #
+    # (Original reasoning, kept for context: adastrea-1e traced a real crash
+    # dump to quit_editor() being called unconditionally in a finally block
+    # including on failure -- that was A cause, just not the only one.)
 except Exception as e:
     import traceback
     unreal.log_error("Corvette bridge wiring crashed: %s" % e)
     unreal.log_error(traceback.format_exc())
     print("RESULT_FAIL")
-finally:
-    unreal.SystemLibrary.quit_editor()

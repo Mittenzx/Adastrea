@@ -41,5 +41,19 @@
       "scifi",
       "futuristic"
     ]
+  },
+  "017b7f3b-d275-4c80-9a9a-68b9dd13c79d": {
+    "name": "Tactical Seat",
+    "author": "Smelchak Studio",
+    "license": "royalty_free",
+    "asset_type": "model",
+    "source_url": "https://www.blenderkit.com/asset-gallery-detail/017b7f3b-d275-4c80-9a9a-68b9dd13c79d/",
+    "file_type": "blend",
+    "local_path": "Assets/BlenderKit/library/017b7f3b-d275-4c80-9a9a-68b9dd13c79d.blend",
+    "tags": [
+      "tactical_pi",
+      "seat_cockpit_vehic",
+      "interior_military_"
+    ]
   }
 }

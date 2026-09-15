@@ -20,6 +20,8 @@ HULL = [
     ("M_Corvette_Hull", "T_Corvette"),
     ("M_Gunship_Hull", "T_Gunship"),
     ("M_Miner_Hull", "T_Miner"),
+    ("M_Destroyer_Hull", "T_Destroyer"),
+    ("M_Battleship_Hull", "T_Battleship"),
 ]
 MAPS = ["D","N","R","M","AO","E"]
 

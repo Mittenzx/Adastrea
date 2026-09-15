@@ -124,6 +124,12 @@ token.pickle
 # exported FBX in Assets/FBX/generated/kitbash/ are what's tracked)
 /Assets/BlenderKit/library/
 
+# .fbm folders: side-effect texture extraction Blender creates when
+# re-importing an embed_textures=True FBX (e.g. via fbx2obj.py) — pure
+# derived duplicate of textures already embedded in the source .fbx itself,
+# not something to commit.
+*.fbm/
+
 # Build package (for moving to another repo)
 # Track extraction tooling but ignore extracted build files
 build_package/*.bat
