@@ -829,6 +829,39 @@ public:
 	bool GetModuleBuildCost(TSubclassOf<ASpaceStationModule> ModuleClass, FStationBuildCost& OutCost) const;
 
 	// =====================
+	// Blueprint Save/Load
+	//
+	// A compact, shareable string encoding of the currently-built station -
+	// same format STATION_BUILDER.md's plan-mode Python validator already
+	// round-trips (layout_to_blueprint/blueprint_to_layout):
+	//   SchemaVersion;PlotX,PlotY,PlotZ;GridSpacing;ModuleID:ItemID:gx,gy,gz:rot:isCore;...
+	// GridSpacing is always this editor's own GridSystem->GridSize at export
+	// time (not the plan-mode tool's 100), so a round-trip through THIS editor
+	// stays self-consistent even though the two tools use different scales -
+	// the string carries its own spacing rather than assuming one.
+	// =====================
+
+	/**
+	 * Export the currently-edited station as a shareable blueprint string.
+	 * @return The blueprint string, or an empty string if not currently editing a station
+	 */
+	UFUNCTION(BlueprintCallable, Category="Station Editor|Blueprint")
+	FString ExportStationBlueprint() const;
+
+	/**
+	 * Import a blueprint string into the currently-edited station, spawning
+	 * each module at its recorded grid position (relative to the station's
+	 * own location) and rotation. Like ASpaceStation::BuildFromLayout(), this
+	 * is a direct reconstruction - it does not charge credits or consume
+	 * construction materials (those were already paid when the design now
+	 * being shared was first built).
+	 * @param BlueprintString The blueprint string, from ExportStationBlueprint() (this editor or the Python plan-mode tool)
+	 * @return Number of modules successfully spawned
+	 */
+	UFUNCTION(BlueprintCallable, Category="Station Editor|Blueprint")
+	int32 ImportStationBlueprint(const FString& BlueprintString);
+
+	// =====================
 	// Undo/Redo System
 	// =====================
 

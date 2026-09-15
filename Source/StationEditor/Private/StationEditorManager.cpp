@@ -1028,6 +1028,142 @@ bool UStationEditorManager::GetModuleBuildCost(TSubclassOf<ASpaceStationModule> 
 }
 
 // =====================
+// Blueprint Save/Load
+// =====================
+
+FString UStationEditorManager::ExportStationBlueprint() const
+{
+	if (!CurrentStation)
+	{
+		return FString();
+	}
+
+	const float Spacing = GridSystem ? GridSystem->GridSize : CollisionRadius * 2.0f;
+	const FVector StationOrigin = CurrentStation->GetActorLocation();
+
+	// STATION_BUILDER.md's schema version - this is the same on-disk format its
+	// Python blueprint_to_layout()/layout_to_blueprint() already round-trip.
+	FString Result = TEXT("1.0.0;1000,1000,1000;") + FString::SanitizeFloat(Spacing);
+
+	int32 ModuleIndex = 0;
+	for (const ASpaceStationModule* Module : CurrentStation->Modules)
+	{
+		if (!Module)
+		{
+			continue;
+		}
+
+		const FVector RelativePos = Module->GetActorLocation() - StationOrigin;
+		const int32 GX = FMath::RoundToInt(RelativePos.X / Spacing);
+		const int32 GY = FMath::RoundToInt(RelativePos.Y / Spacing);
+		const int32 GZ = FMath::RoundToInt(RelativePos.Z / Spacing);
+
+		// Normalize to the nearest 90 degrees - modules are placed axis-aligned
+		// (RotationSnapDegrees), this just guards against float drift.
+		const int32 RotationDegrees = (FMath::RoundToInt(Module->GetActorRotation().Yaw / 90.0f) * 90) % 360;
+
+		// The first module in the array anchors the station, same "first
+		// placed = core" convention IsAdjacentToExistingModule already uses
+		// for an empty station.
+		const bool bIsCore = (ModuleIndex == 0);
+
+		Result += FString::Printf(TEXT(";M%d:%s:%d,%d,%d:%d:%d"),
+			ModuleIndex + 1, *Module->GetClass()->GetName(), GX, GY, GZ, RotationDegrees, bIsCore ? 1 : 0);
+
+		++ModuleIndex;
+	}
+
+	return Result;
+}
+
+int32 UStationEditorManager::ImportStationBlueprint(const FString& BlueprintString)
+{
+	if (!bIsEditing || !CurrentStation)
+	{
+		UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::ImportStationBlueprint - Not in editing mode"));
+		return 0;
+	}
+
+	UWorld* World = CurrentStation->GetWorld();
+	if (!World)
+	{
+		return 0;
+	}
+
+	TArray<FString> Fields;
+	BlueprintString.ParseIntoArray(Fields, TEXT(";"), true);
+	if (Fields.Num() < 3)
+	{
+		UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::ImportStationBlueprint - Malformed blueprint string (expected at least SchemaVersion;PlotSize;GridSpacing)"));
+		return 0;
+	}
+
+	// Fields[0] = SchemaVersion, Fields[1] = PlotSize (informational, not needed
+	// to reconstruct) - only GridSpacing (Fields[2]) actually matters here.
+	const float Spacing = FMath::Max(FCString::Atof(*Fields[2]), 1.0f);
+	const FVector StationOrigin = CurrentStation->GetActorLocation();
+
+	int32 NumSpawned = 0;
+	for (int32 i = 3; i < Fields.Num(); ++i)
+	{
+		// Each module entry: ModuleID:ItemID:gx,gy,gz:rot:isCore
+		TArray<FString> Parts;
+		Fields[i].ParseIntoArray(Parts, TEXT(":"), true);
+		if (Parts.Num() < 5)
+		{
+			UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::ImportStationBlueprint - Skipping malformed entry: %s"), *Fields[i]);
+			continue;
+		}
+
+		const FString& ItemID = Parts[1];
+		TArray<FString> GridParts;
+		Parts[2].ParseIntoArray(GridParts, TEXT(","), true);
+		if (GridParts.Num() < 3)
+		{
+			continue;
+		}
+
+		// Same LoadClass path convention as ASpaceStation::BuildFromLayout - every
+		// catalog module is a native class in /Script/Adastrea.
+		const FString ModuleClassPath = FString::Printf(TEXT("/Script/Adastrea.%s"), *ItemID);
+		UClass* ModuleClass = LoadClass<ASpaceStationModule>(nullptr, *ModuleClassPath);
+		if (!ModuleClass)
+		{
+			UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::ImportStationBlueprint - No module class for ItemID %s; skipping."), *ItemID);
+			continue;
+		}
+
+		const FVector GridPos(FCString::Atof(*GridParts[0]), FCString::Atof(*GridParts[1]), FCString::Atof(*GridParts[2]));
+		const FVector WorldPos = StationOrigin + GridPos * Spacing;
+		const float RotationDegrees = Parts.Num() > 3 ? FCString::Atof(*Parts[3]) : 0.0f;
+
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = CurrentStation;
+		ASpaceStationModule* NewModule = World->SpawnActor<ASpaceStationModule>(
+			ModuleClass, WorldPos, FRotator(0.0f, RotationDegrees, 0.0f), SpawnParams);
+		if (!NewModule)
+		{
+			continue;
+		}
+
+		CurrentStation->AddModuleAtLocation(NewModule, GridPos * Spacing);
+		AutoGenerateConnections(NewModule);
+		++NumSpawned;
+	}
+
+	if (NumSpawned > 0)
+	{
+		bStatisticsDirty = true;
+		NotifyPowerBalanceChanged();
+		AddNotification(FText::FromString(FString::Printf(TEXT("Imported %d module(s) from blueprint"), NumSpawned)),
+			ENotificationSeverity::Success, nullptr);
+	}
+
+	UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::ImportStationBlueprint - Spawned %d module(s)"), NumSpawned);
+	return NumSpawned;
+}
+
+// =====================
 // Internal Functions
 // =====================
 
