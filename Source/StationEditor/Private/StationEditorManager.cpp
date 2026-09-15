@@ -873,7 +873,9 @@ float UStationEditorManager::GetTotalPowerConsumption() const
 		}
 		if (Module->ModulePower > 0.0f)
 		{
-			TotalConsumption += Module->ModulePower;
+			// Upgrades make a consumer more efficient (needs less power for the
+			// same job), not hungrier - the bonus divides consumption down.
+			TotalConsumption += Module->ModulePower / (1.0f + UpgradeBonusPerLevel * Module->UpgradeLevel);
 		}
 	}
 
@@ -898,17 +900,19 @@ float UStationEditorManager::GetTotalPowerGeneration() const
 
 		// Use the enhanced per-module output for generators (degrades with damage
 		// / illumination); fall back to static ModulePower for other sources.
+		// Upgrades multiply a generator's output up directly.
+		const float UpgradeMultiplier = 1.0f + UpgradeBonusPerLevel * Module->UpgradeLevel;
 		if (const AReactorModule* Reactor = Cast<const AReactorModule>(Module))
 		{
-			TotalGeneration += Reactor->GetCurrentPowerOutput();
+			TotalGeneration += Reactor->GetCurrentPowerOutput() * UpgradeMultiplier;
 		}
 		else if (const ASolarArrayModule* Solar = Cast<const ASolarArrayModule>(Module))
 		{
-			TotalGeneration += Solar->GetEffectiveOutput();
+			TotalGeneration += Solar->GetEffectiveOutput() * UpgradeMultiplier;
 		}
 		else if (Module->ModulePower < 0.0f)
 		{
-			TotalGeneration += FMath::Abs(Module->ModulePower);
+			TotalGeneration += FMath::Abs(Module->ModulePower) * UpgradeMultiplier;
 		}
 	}
 
@@ -1986,7 +1990,7 @@ void UStationEditorManager::RecalculateStatisticsInternal() const
 	{
 		if (Module && Module->ModuleGroup == EStationModuleGroup::Storage)
 		{
-			CachedStatistics.CargoCapacity += DefaultCargoCapacityPerModule;
+			CachedStatistics.CargoCapacity += DefaultCargoCapacityPerModule * (1.0f + UpgradeBonusPerLevel * Module->UpgradeLevel);
 		}
 	}
 
@@ -2034,7 +2038,7 @@ int32 UStationEditorManager::GetPopulationCapacity() const
 	{
 		if (Module && Module->ModuleGroup == EStationModuleGroup::Habitation)
 		{
-			Capacity += DefaultPopulationCapacityPerModule;
+			Capacity += FMath::RoundToInt(DefaultPopulationCapacityPerModule * (1.0f + UpgradeBonusPerLevel * Module->UpgradeLevel));
 		}
 	}
 
@@ -2054,7 +2058,7 @@ float UStationEditorManager::GetDefenseRating() const
 	{
 		if (Module && Module->ModuleGroup == EStationModuleGroup::Defence)
 		{
-			Rating += DefaultDefenseRatingPerModule;
+			Rating += DefaultDefenseRatingPerModule * (1.0f + UpgradeBonusPerLevel * Module->UpgradeLevel);
 		}
 	}
 
@@ -2319,10 +2323,16 @@ bool UStationEditorManager::UpgradeModule(ASpaceStationModule* Module)
 	// Deduct credits
 	PlayerCredits -= Cost.Credits;
 
+	// The actual upgrade: previously this function charged credits and did
+	// nothing else. Incrementing UpgradeLevel is what makes the charge honest -
+	// GetTotalPowerGeneration/Consumption, cargo capacity, population capacity,
+	// and defense rating all read it (UpgradeBonusPerLevel per level).
+	++Module->UpgradeLevel;
+
 	// Note: Upgrade actions are not recorded to undo stack as they cannot be reversed
 
 	// Add notification
-	AddNotification(FText::FromString(FString::Printf(TEXT("%s upgraded successfully"), *Module->ModuleType)),
+	AddNotification(FText::FromString(FString::Printf(TEXT("%s upgraded to level %d"), *Module->ModuleType, Module->UpgradeLevel)),
 		ENotificationSeverity::Success, Module);
 
 	bStatisticsDirty = true;

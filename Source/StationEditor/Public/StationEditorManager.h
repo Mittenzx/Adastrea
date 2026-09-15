@@ -421,6 +421,14 @@ public:
 	/** Default upgrade cost multiplier (0.5 = 50% of build cost) */
 	static constexpr float DefaultUpgradeCostMultiplier = 0.5f;
 
+	/**
+	 * Per-level bonus UpgradeModule() actually applies (0.25 = 25% per level):
+	 * generators produce more, consumers need less, storage/habitation/defence
+	 * modules do more of their job. Previously UpgradeModule() charged credits
+	 * and changed nothing - this is what makes the charge honest.
+	 */
+	static constexpr float UpgradeBonusPerLevel = 0.25f;
+
 	/** Efficiency penalty for power deficit */
 	static constexpr float PowerDeficitEfficiencyPenalty = 0.3f;
 
