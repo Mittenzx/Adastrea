@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/SceneComponent.h"
 #include "Stations/SpaceStationModule.h"
 #include "Interfaces/IDamageable.h"
 #include "Interfaces/ITargetable.h"
@@ -45,6 +46,17 @@ class ADASTREA_API ASpaceStation : public AActor, public IDamageable, public ITa
 
 public:
     ASpaceStation();
+
+    /**
+     * Default scene root. The base C++ class has no visual/collision components
+     * of its own (those come from Blueprint subclasses like BP_SpaceStation), but
+     * every station still needs a real root so GetActorLocation()/SetActorLocation()
+     * mean something - without one, AActor::GetActorLocation() always returns the
+     * zero vector, which breaks module placement math and station lookup by
+     * distance (e.g. the builder's "spawn a fresh station from scratch" path).
+     */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Station")
+    USceneComponent* StationRoot;
 
     /**
      * Array of currently attached modules (runtime tracking)

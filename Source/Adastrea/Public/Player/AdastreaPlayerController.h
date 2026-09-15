@@ -102,6 +102,22 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Player|Station Editor", meta=(ClampMin=100.0f))
 	float StationSearchRadius = 5000.0f;
 
+	/**
+	 * Station class spawned for a fresh build when ToggleStationEditor() finds no
+	 * existing station within StationSearchRadius (the "build from scratch" case).
+	 * Defaults to the base ASpaceStation so this works with no Blueprint setup;
+	 * point it at BP_SpaceStation for a dressed one.
+	 */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Player|Station Editor")
+	TSubclassOf<ASpaceStation> DefaultStationClass;
+
+	/**
+	 * Distance in front of the player to spawn a fresh from-scratch station
+	 * (in world units)
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Player|Station Editor", meta=(ClampMin=500.0f))
+	float NewStationSpawnDistance = 3000.0f;
+
 	// ====================
 	// Trading Interaction
 	// ====================
@@ -584,6 +600,13 @@ protected:
 	 */
 	UFUNCTION(BlueprintCallable, Category="Player|Station Editor")
 	ASpaceStation* FindNearestStation();
+
+	/**
+	 * Spawn a brand-new, empty station near the player for building from scratch,
+	 * used by ToggleStationEditor() when FindNearestStation() comes up empty.
+	 * @return The newly spawned station, or nullptr if spawning failed
+	 */
+	ASpaceStation* SpawnStationForBuilder();
 
 	/**
 	 * Create the station editor widget if it doesn't exist

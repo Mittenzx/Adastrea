@@ -30,6 +30,7 @@ enum class EModulePlacementResult : uint8
 		InsufficientFunds	UMETA(DisplayName="Insufficient Funds"),
 		InsufficientMaterials UMETA(DisplayName="Insufficient Construction Materials"),
 		NoStation			UMETA(DisplayName="No Station Selected"),
+		Disconnected		UMETA(DisplayName="Not Connected To Station"),
 	NotEditing			UMETA(DisplayName="Not In Edit Mode")
 };
 
@@ -677,6 +678,17 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category="Station Editor|Validation")
 	bool CheckCollision(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position, FRotator Rotation) const;
+
+	/**
+	 * X4-style connectivity rule: every module (after the first) must sit on a grid
+	 * cell adjacent to an existing module, so the station can never grow a floating,
+	 * disconnected piece. The first module placed on an empty station always passes
+	 * (it becomes the station's anchor/core).
+	 * @param Position Position to check
+	 * @return True if the position is adjacent to an existing module, or the station is empty
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station Editor|Validation")
+	bool IsAdjacentToExistingModule(FVector Position) const;
 
 	/**
 	 * Check if player has sufficient tech level for a module

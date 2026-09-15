@@ -35,9 +35,19 @@ ASpaceshipInterior::ASpaceshipInterior()
     InteriorVolume = CreateDefaultSubobject<UBoxComponent>(TEXT("InteriorVolume"));
     InteriorVolume->SetupAttachment(SceneRoot);
     InteriorVolume->SetBoxExtent(FVector(500.0f, 300.0f, 175.0f)); // default 1000x600x350
-    InteriorVolume->SetCollisionEnabled(ECollisionEnabled::QueryOnly); // overlay only; not a solid box (would eject a flying avatar)
+    InteriorVolume->SetCollisionEnabled(ECollisionEnabled::QueryOnly); // overlay only, not solid
         InteriorVolume->SetCollisionObjectType(ECC_WorldStatic);
         InteriorVolume->SetCollisionResponseToAllChannels(ECR_Ignore);
+
+    // Thin solid floor slab the avatar actually walks on (real ground for
+    // CharacterMovement's normal Walking mode — see header comment).
+    FloorCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("FloorCollision"));
+    FloorCollision->SetupAttachment(SceneRoot);
+    FloorCollision->SetBoxExtent(FVector(500.0f, 300.0f, 10.0f));
+    FloorCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+        FloorCollision->SetCollisionObjectType(ECC_WorldStatic);
+        FloorCollision->SetCollisionResponseToAllChannels(ECR_Ignore);
+        FloorCollision->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
 
     // Trigger volume at the cockpit/seat: walking the avatar into it re-possesses the ship.
     ExitTrigger = CreateDefaultSubobject<UBoxComponent>(TEXT("ExitTrigger"));
@@ -71,6 +81,13 @@ void ASpaceshipInterior::OnConstruction(const FTransform& Transform)
         InteriorVolume->SetBoxExtent(FVector(FloorForwardDepth * 0.5f, FloorWidth * 0.5f, CeilingHeight * 0.5f));
         // Lift the volume so its bottom is at the floor (avatar stands on it).
         InteriorVolume->SetRelativeLocation(FVector(0.0f, 0.0f, CeilingHeight * 0.5f));
+    }
+
+    // Match the solid floor slab to the same footprint, sitting right at floor level.
+    if (FloorCollision)
+    {
+        FloorCollision->SetBoxExtent(FVector(FloorForwardDepth * 0.5f, FloorWidth * 0.5f, 10.0f));
+        FloorCollision->SetRelativeLocation(FVector(0.0f, 0.0f, -10.0f));
     }
 
     // Place the cockpit/seat exit trigger at the configured local offset.
@@ -127,6 +144,20 @@ void ASpaceshipInterior::OnExitTriggerOverlap(UPrimitiveComponent* OverlappedCom
             return;
         }
 
+        // Also require the avatar to have actually walked away from the entry point at
+        // least once. The grace period above only covers the first couple of seconds;
+        // on smaller rooms the seat trigger can still be well within a few seconds' walk
+        // of the spawn point, so a player who spawns, pauses, then holds a movement key
+        // would otherwise get bounced straight back to the cockpit before going anywhere.
+        if (FVector::DistSquared(Avatar->GetActorLocation(), LastEntryWorldLocation) <
+            FMath::Square(MinDistanceFromEntryToExit))
+        {
+            UE_LOG(LogAdastrea, Log,
+                TEXT("InteriorExitTrigger: ignoring overlap, avatar hasn't left the entry area yet (%.0f < %.0f)"),
+                FVector::Dist(Avatar->GetActorLocation(), LastEntryWorldLocation), MinDistanceFromEntryToExit);
+            return;
+        }
+
         if (AAdastreaPlayerController* PC = Cast<AAdastreaPlayerController>(Avatar->GetController()))
     {
         if (ASpaceship* SourceShip = Avatar->SourceShip)
@@ -158,7 +189,7 @@ void ASpaceshipInterior::OnSeatInteract(AAdastreaPlayerController* PC)
     }
 }
 
-void ASpaceshipInterior::ConfigureInterior(UStaticMesh* ShellMesh, bool bShowNow)
+void ASpaceshipInterior::ConfigureInterior(UStaticMesh* ShellMesh, EShipInteriorFamily Family, bool bShowNow)
 {
     if (!InteriorMesh)
     {
@@ -174,9 +205,9 @@ void ASpaceshipInterior::ConfigureInterior(UStaticMesh* ShellMesh, bool bShowNow
 
     if (!Mesh)
     {
-        // Fallback: try the fighter's empty-room interior by path so the walk is
-        // never empty (a plain square room with open space for the avatar).
-        static const TCHAR* Fallback = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_Fighter_EmptyRoom.SM_Int_Fighter_EmptyRoom");
+        // Fallback: try the fighter's cabin interior by path so the walk is
+        // never empty.
+        static const TCHAR* Fallback = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_Fighter_Cabin.SM_Int_Fighter_Cabin");
         Mesh = LoadObject<UStaticMesh>(nullptr, Fallback);
     }
 
@@ -211,31 +242,61 @@ void ASpaceshipInterior::ConfigureInterior(UStaticMesh* ShellMesh, bool bShowNow
 
         // Mount companion part meshes (Console/Deck/Lights/Stations/etc.) for the
         // interior family, at the same scale as the shell, so the room isn't an empty
-        // shell. Watershed the interior type from the shell mesh name.
+        // shell.
         if (Scale > 0.0f)
         {
             const FVector Scale3D(Scale, Scale, Scale);
-            const FString ShellName = Mesh->GetName();
-            FString Prefix = TEXT("");
-            FString Family = TEXT("");
-            if (ShellName.Contains(TEXT("CommandBridge")))
+            FString Prefix;
+            FString FamilyString;
+            switch (Family)
             {
+            case EShipInteriorFamily::CommandBridge:
                 Prefix = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_CommandBridge");
-                Family = TEXT("CommandBridge");
-            }
-            else if (ShellName.Contains(TEXT("CrewQuarters")))
-            {
+                FamilyString = TEXT("CommandBridge");
+                break;
+            case EShipInteriorFamily::CorvetteBridge:
+                Prefix = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_Corvette_Bridge");
+                FamilyString = TEXT("CorvetteBridge");
+                break;
+            case EShipInteriorFamily::CrewQuarters:
                 Prefix = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_Freighter_CrewQuarters");
-                Family = TEXT("CrewQuarters");
-            }
-            else if (ShellName.Contains(TEXT("Hab")))
-            {
+                FamilyString = TEXT("CrewQuarters");
+                break;
+            case EShipInteriorFamily::GenerationHab:
                 Prefix = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_Generationship_Hab");
-                Family = TEXT("Hab");
+                FamilyString = TEXT("Hab");
+                break;
+            case EShipInteriorFamily::Fighter:
+            case EShipInteriorFamily::None:
+            default:
+                break;
             }
+
+            // Legacy fallback: content that hasn't been migrated to an explicit
+            // EShipInteriorFamily yet is inferred from the shell mesh's own name.
+            if (Prefix.IsEmpty())
+            {
+                const FString ShellName = Mesh->GetName();
+                if (ShellName.Contains(TEXT("CommandBridge")))
+                {
+                    Prefix = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_CommandBridge");
+                    FamilyString = TEXT("CommandBridge");
+                }
+                else if (ShellName.Contains(TEXT("CrewQuarters")))
+                {
+                    Prefix = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_Freighter_CrewQuarters");
+                    FamilyString = TEXT("CrewQuarters");
+                }
+                else if (ShellName.Contains(TEXT("Hab")))
+                {
+                    Prefix = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_Generationship_Hab");
+                    FamilyString = TEXT("Hab");
+                }
+            }
+
             if (!Prefix.IsEmpty())
             {
-                MountInteriorParts(Prefix, Family, Scale3D);
+                MountInteriorParts(Prefix, FamilyString, Scale3D);
             }
         }
 
@@ -369,7 +430,7 @@ void ASpaceshipInterior::MountInteriorParts(FString Prefix, FString Family, cons
         };
 
     // Mount every known kit part for this family, skipping any that don't exist.
-    if (Family == TEXT("CommandBridge"))
+    if (Family == TEXT("CommandBridge") || Family == TEXT("CorvetteBridge"))
     {
         TryPart(TEXT("Console"));
         TryPart(TEXT("Deck"));
@@ -412,67 +473,73 @@ void ASpaceshipInterior::ApplyInteriorMaterials()
         return;
     }
 
-    auto LoadMat = [&](const TCHAR* Path) -> UMaterialInterface*
-    {
-        return LoadObject<UMaterialInterface>(nullptr, Path);
+    // Slot name -> kit material path. The exported meshes ship with WorldGridMaterial
+    // on every slot, so the slot NAME (M_Int_Shell, M_Int_Deck, ...) is the reliable
+    // key, not the current material's type. Only slots present on THIS mesh get
+    // loaded, so a simple shell (e.g. the fighter empty room, 1-2 slots) doesn't pay
+    // for loading all twelve kit materials.
+    static const TPair<FName, const TCHAR*> SlotMaterials[] = {
+        { TEXT("M_Int_Shell"),    TEXT("/AdastreaShips/Materials/Interiors/M_Int_Shell") },
+        { TEXT("M_Int_Deck"),     TEXT("/AdastreaShips/Materials/Interiors/M_Int_Deck") },
+        { TEXT("M_Int_Console"),  TEXT("/AdastreaShips/Materials/Interiors/M_Int_Console") },
+        { TEXT("M_Int_Lights"),   TEXT("/AdastreaShips/Materials/Interiors/M_Int_Lights") },
+        { TEXT("M_Int_Vents"),    TEXT("/AdastreaShips/Materials/Interiors/M_Int_Vents") },
+        { TEXT("M_Int_Stations"), TEXT("/AdastreaShips/Materials/Interiors/M_Int_Stations") },
+        { TEXT("M_Int_Viewport"), TEXT("/AdastreaShips/Materials/Interiors/M_Int_Viewport") },
+        { TEXT("M_Int_Bunks"),    TEXT("/AdastreaShips/Materials/Interiors/M_Int_Bunks") },
+        { TEXT("M_Int_Desks"),    TEXT("/AdastreaShips/Materials/Interiors/M_Int_Desks") },
+        { TEXT("M_Int_Galley"),   TEXT("/AdastreaShips/Materials/Interiors/M_Int_Galley") },
+        { TEXT("M_Int_Mess"),     TEXT("/AdastreaShips/Materials/Interiors/M_Int_Mess") },
+        { TEXT("M_Int_Hatch"),    TEXT("/AdastreaShips/Materials/Interiors/M_Int_Hatch") },
+        // Fighter cockpit uses an M_Interior_* slot name; map its shell slot too.
+        { TEXT("M_Interior_Cockpit"), TEXT("/AdastreaShips/Materials/Interiors/M_Int_Shell") },
+        // SM_Int_Freighter_EngineRoom's only slot is M_Interior_Eng, which has no
+        // bespoke material yet (known issue: reads flat grey without this). Reuse
+        // the shell material as a stand-in until a real engineering-bay material
+        // is authored, rather than leave it on the exported placeholder grid material.
+        { TEXT("M_Interior_Eng"), TEXT("/AdastreaShips/Materials/Interiors/M_Int_Shell") },
+        // SM_Int_Generationship_Hab's slot is M_Interior_Hab; same gap, same stand-in.
+        { TEXT("M_Interior_Hab"), TEXT("/AdastreaShips/Materials/Interiors/M_Int_Shell") },
     };
 
-    UMaterialInterface* ShellMat   = LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Shell"));
-    UMaterialInterface* DeckMat    = LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Deck"));
-    UMaterialInterface* ConsoleMat = LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Console"));
-    UMaterialInterface* LightsMat  = LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Lights"));
-    UMaterialInterface* VentsMat   = LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Vents"));
-    UMaterialInterface* StationsMat= LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Stations"));
-    UMaterialInterface* ViewportMat= LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Viewport"));
-    UMaterialInterface* BunksMat   = LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Bunks"));
-    UMaterialInterface* DesksMat   = LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Desks"));
-    UMaterialInterface* GalleyMat  = LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Galley"));
-    UMaterialInterface* MessMat    = LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Mess"));
-    UMaterialInterface* HatchMat   = LoadMat(TEXT("/AdastreaShips/Materials/Interiors/M_Int_Hatch"));
-
-        // Apply each kit material to its matching slot by SLOT NAME. The exported meshes
-        // ship with WorldGridMaterial on every slot, so the slot NAME (M_Int_Shell,
-        // M_Int_Deck, ...) is the reliable key, not the current material's type.
-        auto TrySetByName = [&](const TCHAR* SlotName, UMaterialInterface* Mat)
+    for (const TPair<FName, const TCHAR*>& Entry : SlotMaterials)
+    {
+        if (InteriorMesh->GetMaterialByName(Entry.Key) == nullptr)
         {
-            if (!Mat) return;
-            const FName Name(SlotName);
-            if (InteriorMesh->GetMaterialByName(Name) != nullptr)
-            {
-                InteriorMesh->SetMaterialByName(Name, Mat);
-            }
-        };
-
-        TrySetByName(TEXT("M_Int_Shell"), ShellMat);
-        TrySetByName(TEXT("M_Int_Deck"), DeckMat);
-        TrySetByName(TEXT("M_Int_Console"), ConsoleMat);
-        TrySetByName(TEXT("M_Int_Lights"), LightsMat);
-        TrySetByName(TEXT("M_Int_Vents"), VentsMat);
-        TrySetByName(TEXT("M_Int_Stations"), StationsMat);
-        TrySetByName(TEXT("M_Int_Viewport"), ViewportMat);
-        TrySetByName(TEXT("M_Int_Bunks"), BunksMat);
-        TrySetByName(TEXT("M_Int_Desks"), DesksMat);
-        TrySetByName(TEXT("M_Int_Galley"), GalleyMat);
-        TrySetByName(TEXT("M_Int_Mess"), MessMat);
-        TrySetByName(TEXT("M_Int_Hatch"), HatchMat);
-        // Fighter cockpit uses an M_Interior_* slot name; map its shell slot too.
-        TrySetByName(TEXT("M_Interior_Cockpit"), ShellMat);
-
-        UE_LOG(LogAdastrea, Log, TEXT("Interior %s materials applied by slot name."), *GetName());
+            continue; // this slot doesn't exist on this mesh
+        }
+        if (UMaterialInterface* Mat = LoadObject<UMaterialInterface>(nullptr, Entry.Value))
+        {
+            InteriorMesh->SetMaterialByName(Entry.Key, Mat);
+        }
     }
 
-bool ASpaceshipInterior::GetLocalHalfExtents(const float InAltitude, FVector& OutHalfExtents) const
+    UE_LOG(LogAdastrea, Log, TEXT("Interior %s materials applied by slot name."), *GetName());
+}
+
+bool ASpaceshipInterior::GetLocalHalfExtents(const float InAltitude, FVector& OutHalfExtents, FVector2D& OutLocalCentreXY) const
 {
     if (!InteriorMesh || !InteriorMesh->GetStaticMesh())
     {
         return false;
     }
-    // Use the current scaled mesh bounds for walk limits (already normalized to a
-    // comfortable room). Hold the avatar at the requested standing altitude.
-    const FBoxSphereBounds Bounds = InteriorMesh->Bounds;
-    OutHalfExtents = FVector(FMath::Max(Bounds.BoxExtent.X, 100.0f),
-                             FMath::Max(Bounds.BoxExtent.Y, 100.0f),
+    // Use the STATIC MESH ASSET's own bounds (its local, unrotated frame) scaled by the
+    // component's scale — NOT InteriorMesh->Bounds, which is a WORLD-space axis-aligned
+    // box. The interior is rigidly attached to the ship, so its world rotation is
+    // whatever heading the ship is parked at; a rotated room's world AABB is larger than
+    // its true local extents, so clamping the avatar's LOCAL position (see caller) against
+    // that inflated world-space size let it walk straight through the visible walls
+    // (hull collision is disabled while inside) before this clamp ever engaged.
+    const FBoxSphereBounds LocalBounds = InteriorMesh->GetStaticMesh()->GetBounds();
+    const FVector Scale = InteriorMesh->GetComponentScale();
+    const FVector Extent = LocalBounds.BoxExtent * Scale;
+    const FVector Origin = LocalBounds.Origin * Scale;
+    OutHalfExtents = FVector(FMath::Max(Extent.X, 100.0f),
+                             FMath::Max(Extent.Y, 100.0f),
                              InAltitude);
+    // The mesh's bounding-box centre, NOT the actor's local (0,0) — see FitVolumeToMesh,
+    // which places the floor/trigger/spawn around this same centre.
+    OutLocalCentreXY = FVector2D(Origin.X, Origin.Y);
     return true;
 }
 
@@ -483,29 +550,52 @@ void ASpaceshipInterior::FitVolumeToMesh()
         return;
     }
 
-    const FBoxSphereBounds Bounds = InteriorMesh->Bounds;
-    const FVector Extent = Bounds.BoxExtent;
+    // Use the STATIC MESH ASSET's own bounds (local, unrotated frame) scaled by the
+    // component's scale, not InteriorMesh->Bounds (world-space) — see GetLocalHalfExtents
+    // for why: the interior's world rotation tracks the ship's current heading, so the
+    // world-space AABB is inflated whenever the ship isn't level, oversizing the walkable
+    // volume and mis-placing the exit trigger relative to the visible mesh.
+    const FBoxSphereBounds RawBounds = InteriorMesh->GetStaticMesh()->GetBounds();
+    const FVector Scale = InteriorMesh->GetComponentScale();
+    const FVector Origin = RawBounds.Origin * Scale;
+    const FVector Extent = RawBounds.BoxExtent * Scale;
     const float HalfDepth = FMath::Max(Extent.X, 50.0f);
     const float HalfWidth = FMath::Max(Extent.Y, 50.0f);
     const float HalfHeight = FMath::Max(Extent.Z, 100.0f);
 
     // Walkable floor: cover the interior's footprint (X/Y), modest height, sits on the floor.
+    // Every placement below is centred on Origin.X/Y, NOT the interior actor's local (0,0) —
+    // the mesh's own bounding-box centre is very often NOT at its pivot (an asymmetric
+    // cockpit/cabin layout, an off-centre canopy, etc.), so treating (0,0) as "the middle
+    // of the room" silently misplaces the floor/trigger/spawn relative to the actual
+    // visible geometry. (Z already accounted for Origin.Z; X/Y did not, which is the
+    // same class of bug.)
+    const float FloorZ = Origin.Z - Extent.Z;
     if (InteriorVolume)
     {
         InteriorVolume->SetBoxExtent(FVector(HalfDepth, HalfWidth, 100.0f));
         // Rise so its bottom is at the interior floor (mesh bounds min Z, local).
-        const float FloorZ = Bounds.Origin.Z - Extent.Z;
-        InteriorVolume->SetRelativeLocation(FVector(0.0f, 0.0f, FloorZ + 100.0f));
+        InteriorVolume->SetRelativeLocation(FVector(Origin.X, Origin.Y, FloorZ + 100.0f));
+    }
+
+    // Solid floor slab the avatar actually stands on: top surface flush with FloorZ.
+    if (FloorCollision)
+    {
+        FloorCollision->SetBoxExtent(FVector(HalfDepth, HalfWidth, 10.0f));
+        FloorCollision->SetRelativeLocation(FVector(Origin.X, Origin.Y, FloorZ - 10.0f));
     }
 
     // Seat/exit trigger near the front of the interior.
     if (ExitTrigger)
     {
-        ExitTrigger->SetRelativeLocation(FVector(HalfDepth * 0.6f, 0.0f, HalfHeight * 0.6f));
+        ExitTrigger->SetRelativeLocation(FVector(Origin.X + HalfDepth * 0.6f, Origin.Y, HalfHeight * 0.6f));
     }
 
-    // Default entry point: centre of the interior, standing on the floor.
-    EntryLocation = FVector(0.0f, 0.0f, 200.0f);
+    // Default entry point: the BACK of the interior (opposite the seat/exit trigger,
+    // which sits at +0.6*HalfDepth), standing ON the floor (FloorZ + roughly a capsule
+    // half-height) rather than at a fixed height that could float above or sink below
+    // the real floor once the avatar uses real gravity/Walking mode.
+    EntryLocation = FVector(Origin.X - HalfDepth * 0.6f, Origin.Y, FloorZ + 100.0f);
     UE_LOG(LogAdastrea, Log, TEXT("Interior %s volume fitted to mesh bounds (d=%.0f w=%.0f h=%.0f)"),
         *GetName(), HalfDepth * 2, HalfWidth * 2, HalfHeight * 2);
 }

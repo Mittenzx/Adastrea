@@ -19,5 +19,27 @@
       "lowpoly",
       "button"
     ]
+  },
+  "21f76859-2f0e-4a97-956d-fbe8f1243923": {
+    "name": "Spacecraft/Plane Cockpit+Seat",
+    "author": "OuterSpaceSimon ",
+    "license": "royalty_free",
+    "asset_type": "model",
+    "source_url": "https://www.blenderkit.com/asset-gallery-detail/21f76859-2f0e-4a97-956d-fbe8f1243923/",
+    "file_type": "blend",
+    "local_path": "Assets/BlenderKit/library/21f76859-2f0e-4a97-956d-fbe8f1243923.blend",
+    "tags": [
+      "Cockpit",
+      "control",
+      "steering",
+      "spacecraft",
+      "spaceship",
+      "seat",
+      "leather",
+      "stool",
+      "chair",
+      "scifi",
+      "futuristic"
+    ]
   }
 }

@@ -2203,96 +2203,89 @@ def interior_shell(sz, parts, outname, floor_tex="M_Interior_Deck",
     return finalize_part(parts, outname, floor_tex)
 
 
-def build_cockpit_interior(sz, outname):
-    """Cockpit interior — small flight deck shell + proper pilot station.
+def build_fighter_cabin_interior(sz, outname):
+    """Fighter cabin interior (v2, replaces the old separate Cockpit/EmptyRoom
+    pair). A single walkable cabin: a proper pilot station (seat, two-tier
+    console, yoke/throttle/pedals, canopy ring) toward -Y, PLUS a generous open
+    floor behind it (toward +Y) so the avatar has real room to stand and walk
+    rather than spawning nose-to-console. A hatch frame at +Y marks the entry.
 
-    Enhanced set dressing vs v1 (addresses vision review): full pilot seat
-    (base + back + headrest + armrests), two-tier control console with a
-    main screen + secondary panel, overhead console, yoke + throttle,
-    pedals, and side-wall control banks.
+    Note on orientation: FBX export uses axis_forward='-Y' (see export_fbx),
+    so local -Y becomes UE +X after import -- the same axis ConfigureInterior's
+    FitVolumeToMesh uses to place the exit/seat trigger (60% toward local +X).
+    Putting the pilot station on the -Y side means walking up to the seat is
+    what re-boards the ship, not the open floor behind it.
+
+    Layout (local space):
+      +40*k .. +160*k   open floor (avatar walk space, entered via HatchFrame)
+       -30*k .. +40*k   pilot seat
+      -90*k .. -30*k    console + controls
+     -100*k .. -90*k    canopy ring / forward glass
     """
     k = sc(sz)
     parts = []
-    # floor
-    floor = box("Floor", 200*k, 240*k, 8*k, loc=(0, 0, 0)); bevel(floor, 2, 1)
-    parts.append(floor)
-    # low walls / bulkheads (open-top glass ring style)
-    for side in (-1, 1):
-        w = box(f"Wall{side}", 8*k, 240*k, 90*k, loc=(side*104*k, 0, 45*k))
-        bevel(w, 2, 1); parts.append(w)
-    wf = box("WallFront", 200*k, 8*k, 90*k, loc=(0, 120*k, 45*k))
-    bevel(wf, 2, 1); parts.append(wf)
-    wb = box("WallBack", 200*k, 8*k, 90*k, loc=(0, -120*k, 45*k))
-    bevel(wb, 2, 1); parts.append(wb)
+    L = 210*k; W = 320*k; H = 190*k  # width (X), depth (Y), ceiling height
+    T = 8*k
 
-    # ---- pilot seat (full: base/back/headrest/armrests) ----
-    seat_base = box("SeatBase", 40*k, 40*k, 16*k, loc=(0, -30*k, 8*k)); bevel(seat_base, 3, 1)
-    seat_cush = box("SeatCush", 34*k, 30*k, 10*k, loc=(0, -28*k, 20*k)); bevel(seat_cush, 3, 1)
-    seat_back = box("SeatBack", 34*k, 10*k, 46*k, loc=(0, -48*k, 42*k)); bevel(seat_back, 3, 1)
-    headrest = box("Headrest", 26*k, 10*k, 14*k, loc=(0, -48*k, 72*k)); bevel(headrest, 3, 1)
-    # armrests: clearly raised, thicker, forward-pointing arms offset from back
-    arm_l = box("ArmL", 8*k, 30*k, 12*k, loc=(-22*k, -40*k, 22*k)); bevel(arm_l, 2, 1)
-    arm_r = box("ArmR", 8*k, 30*k, 12*k, loc=(22*k, -40*k, 22*k)); bevel(arm_r, 2, 1)
-    # broad pads on top so arms read distinctly from the backrest
-    pad_l = box("ArmPadL", 10*k, 24*k, 6*k, loc=(-22*k, -38*k, 30*k)); bevel(pad_l, 2, 1)
-    pad_r = box("ArmPadR", 10*k, 24*k, 6*k, loc=(22*k, -38*k, 30*k)); bevel(pad_r, 2, 1)
+    # floor / ceiling
+    floor = box("Floor", L, W, T, loc=(0, 0, 0)); bevel(floor, 2, 1)
+    ceiling = box("Ceiling", L, W, T, loc=(0, 0, H))
+    parts += [floor, ceiling]
+
+    # side walls span the full depth so the open rear half reads as one room
+    # with the cockpit, not a separate box.
+    for side in (-1, 1):
+        w = box(f"Wall{side}", T, W, H, loc=(side*(L/2), 0, H/2))
+        bevel(w, 2, 1); parts.append(w)
+    wall_canopy_back = box("WallCanopyBack", L, T, H, loc=(0, -W/2, H/2))  # behind the canopy
+    bevel(wall_canopy_back, 2, 1); parts.append(wall_canopy_back)
+
+    # ---- hatch frame marking the entry (open passage, frame only) ----
+    hatch_y = W/2 - 6*k
+    hatch_l = box("HatchL", 6*k, 12*k, 110*k, loc=(-L/2+16*k, hatch_y, 55*k))
+    hatch_r = box("HatchR", 6*k, 12*k, 110*k, loc=( L/2-16*k, hatch_y, 55*k))
+    hatch_t = box("HatchT", L-24*k, 12*k, 10*k, loc=(0, hatch_y, 105*k))
+    parts += [hatch_l, hatch_r, hatch_t]
+
+    # ---- pilot seat (base/cushion/back/headrest/armrests) ----
+    seat_y = 5*k
+    seat_base = box("SeatBase", 40*k, 40*k, 16*k, loc=(0, seat_y+5*k, 8*k)); bevel(seat_base, 3, 1)
+    seat_cush = box("SeatCush", 34*k, 30*k, 10*k, loc=(0, seat_y+3*k, 20*k)); bevel(seat_cush, 3, 1)
+    seat_back = box("SeatBack", 34*k, 10*k, 46*k, loc=(0, seat_y+23*k, 42*k)); bevel(seat_back, 3, 1)
+    headrest = box("Headrest", 26*k, 10*k, 14*k, loc=(0, seat_y+23*k, 72*k)); bevel(headrest, 3, 1)
+    arm_l = box("ArmL", 8*k, 30*k, 12*k, loc=(-22*k, seat_y+15*k, 22*k)); bevel(arm_l, 2, 1)
+    arm_r = box("ArmR", 8*k, 30*k, 12*k, loc=(22*k, seat_y+15*k, 22*k)); bevel(arm_r, 2, 1)
+    pad_l = box("ArmPadL", 10*k, 24*k, 6*k, loc=(-22*k, seat_y+13*k, 30*k)); bevel(pad_l, 2, 1)
+    pad_r = box("ArmPadR", 10*k, 24*k, 6*k, loc=(22*k, seat_y+13*k, 30*k)); bevel(pad_r, 2, 1)
     parts += [seat_base, seat_cush, seat_back, headrest, arm_l, arm_r, pad_l, pad_r]
 
     # ---- control console: two tiers + main/secondary screens ----
-    console_lo = box("ConsoleLo", 90*k, 24*k, 20*k, loc=(0, 78*k, 10*k)); bevel(console_lo, 2, 1)
-    console_hi = box("ConsoleHi", 70*k, 14*k, 26*k, loc=(0, 72*k, 34*k)); bevel(console_hi, 2, 1)
-    main_screen = box("MainScreen", 46*k, 4*k, 14*k, loc=(0, 66*k, 56*k))   # emissive HUD
-    sec_screen = box("SecScreen", 22*k, 4*k, 10*k, loc=(-26*k, 70*k, 50*k))
+    console_lo = box("ConsoleLo", 90*k, 24*k, 20*k, loc=(0, -60*k, 10*k)); bevel(console_lo, 2, 1)
+    console_hi = box("ConsoleHi", 70*k, 14*k, 26*k, loc=(0, -54*k, 34*k)); bevel(console_hi, 2, 1)
+    main_screen = box("MainScreen", 46*k, 4*k, 14*k, loc=(0, -48*k, 56*k))
+    sec_screen = box("SecScreen", 22*k, 4*k, 10*k, loc=(-26*k, -52*k, 50*k))
     parts += [console_lo, console_hi, main_screen, sec_screen]
 
     # ---- controls: yoke, throttle, pedals ----
-    yoke = box("Yoke", 10*k, 14*k, 10*k, loc=(0, 58*k, 28*k)); bevel(yoke, 2, 1)
-    throttle = box("Throttle", 6*k, 10*k, 14*k, loc=(24*k, 70*k, 20*k)); bevel(throttle, 1, 1)
-    pedal_l = box("PedalL", 6*k, 4*k, 12*k, loc=(-14*k, 56*k, 4*k))
-    pedal_r = box("PedalR", 6*k, 4*k, 12*k, loc=(14*k, 56*k, 4*k))
+    yoke = box("Yoke", 10*k, 14*k, 10*k, loc=(0, -40*k, 28*k)); bevel(yoke, 2, 1)
+    throttle = box("Throttle", 6*k, 10*k, 14*k, loc=(24*k, -52*k, 20*k)); bevel(throttle, 1, 1)
+    pedal_l = box("PedalL", 6*k, 4*k, 12*k, loc=(-14*k, -38*k, 4*k))
+    pedal_r = box("PedalR", 6*k, 4*k, 12*k, loc=(14*k, -38*k, 4*k))
     parts += [yoke, throttle, pedal_l, pedal_r]
 
     # ---- overhead console + canopy framing ring + light strip ----
-    overhead = box("Overhead", 60*k, 16*k, 8*k, loc=(0, 20*k, 88*k)); bevel(overhead, 2, 1)
-    frame = torus("CanopyRing", 96*k, 6*k, loc=(0, 0, 95*k), maj=28, minr=7)
-    light = box("LightStrip", 160*k, 6*k, 4*k, loc=(0, 0, 118*k))
+    overhead = box("Overhead", 60*k, 16*k, 8*k, loc=(0, -2*k, 88*k)); bevel(overhead, 2, 1)
+    frame = torus("CanopyRing", 96*k, 6*k, loc=(0, -82*k, 95*k), maj=28, minr=7)
+    light = box("LightStrip", 160*k, 6*k, 4*k, loc=(0, 20*k, 118*k))
     parts += [overhead, frame, light]
 
-    # ---- side-wall control banks (starboard/port) ----
-    bank_l = box("PanelBankL", 4*k, 40*k, 22*k, loc=(-102*k, 30*k, 30*k)); bevel(bank_l, 1, 1)
-    bank_r = box("PanelBankR", 4*k, 40*k, 22*k, loc=(102*k, 30*k, 30*k)); bevel(bank_r, 1, 1)
+    # ---- side-wall control banks, kept in the console half only so the rear
+    # walk space stays clear of greebles ----
+    bank_l = box("PanelBankL", 4*k, 40*k, 22*k, loc=(-L/2+2*k, -40*k, 30*k)); bevel(bank_l, 1, 1)
+    bank_r = box("PanelBankR", 4*k, 40*k, 22*k, loc=(L/2-2*k, -40*k, 30*k)); bevel(bank_r, 1, 1)
     parts += [bank_l, bank_r]
 
     jo, out = finalize_part(parts, outname, "M_Interior_Cockpit")
-    return [(jo, out)]
-
-
-def build_empty_room_interior(sz, outname):
-    """PLAIN EMPTY SQUARE ROOM interior — no furniture, no clutter.
-
-    A clean rectangular room shell (floor + 4 walls + ceiling) big enough to
-    spawn the avatar comfortably inside (the walkable volume is fitted to this
-    mesh, and the entry is centred). Nothing inside, so the avatar has open space.
-    Sized generously: interior footprint ~1000x800, ceiling ~500 (local), which
-    normalizes down to a comfortable human-walkable room via ConfigureInterior.
-    """
-    k = sc(sz)
-    parts = []
-    L = 1000*k; W = 800*k; H = 500*k; T = 16*k  # wall/floor/ceiling thickness
-    # floor
-    parts.append(box("ER_Floor", L, W, T, loc=(0, 0, 0)))
-    # four walls (front/back + left/right), from floor to ceiling
-    parts.append(box("ER_WallLeft",  T, W, H, loc=(-L/2, 0, H/2)))
-    parts.append(box("ER_WallRight", T, W, H, loc=( L/2, 0, H/2)))
-    parts.append(box("ER_WallFront", L, T, H, loc=(0,  W/2, H/2)))
-    parts.append(box("ER_WallBack",  L, T, H, loc=(0, -W/2, H/2)))
-    # ceiling
-    parts.append(box("ER_Ceiling", L, W, T, loc=(0, 0, H)))
-    for ob in parts:
-        try: bevel(ob, 4, 2)
-        except Exception: pass
-    # a single interior material (plain deck/wall feel, fits the M_Interior kit)
-    jo, out = finalize_part(parts, outname, "M_Interior_Deck")
     return [(jo, out)]
 
 
@@ -2659,12 +2652,115 @@ def build_bridge_interior(prefix):
     return results
 
 
+def build_corvette_bridge_interior(prefix):
+    """CORVETTE BRIDGE — bespoke command deck for the Corvette hull, replacing
+    the SM_Int_CommandBridge_* stopgap that Corvette/Cruiser/Destroyer used to
+    share identically (flagged in the 2026-09 project review as the next thing
+    to fix: "bespoke geometry per hull size is the natural next step").
+
+    Distinct from the shared bridge on purpose (not just a resize): ONE central
+    raised octagonal command platform (vs. the shared version's twin-tier deck),
+    a segmented diagonal-braced viewport (vs. its plain grid mullions), and
+    tighter single-row crew stations (a corvette's bridge crew is a handful of
+    people, not a capital-ship bridge crew).
+
+    Zones: Shell, Deck, Stations, Viewport, Lights, Hatch — all procedural,
+    same X4-style separate-colored-FBX-per-zone convention as build_bridge_
+    interior. Deliberately NOT included here: Console. That zone is populated
+    by a real sourced BlenderKit prop (Tools/blenderkit_fetch.py + blenderkit_
+    import.py) instead of another procedural greeble box, per the 2026-09-13
+    content-pipeline review's recommendation to source hero furniture rather
+    than generate it — see Tools/blenderkit_import.py invocation in the
+    corvette bridge build notes (docs/00-KNOWLEDGE_BASE.md 5.3b). If no
+    SM_Int_Corvette_Bridge_Console.fbx exists yet, ConfigureInterior's
+    MountInteriorParts simply skips that slot (logs and continues) — the room
+    still works, just without a seat, so this function is safe to run before
+    that prop is sourced.
+    """
+    k = 1.0
+    L = 300*k; W = 240*k; H = 145*k
+    zones = {}
+
+    # ---- SHELL: floor, walls (open front = viewport), ceiling ----
+    shell = []
+    shell.append(box("Cvb_Floor", L, W, 8*k, loc=(0, 0, 0)))
+    for side in (-1, 1):
+        shell.append(box(f"Cvb_Wall{side}", 10*k, W, H, loc=(side*L/2, 0, H/2)))
+    shell.append(box("Cvb_BackWall", L, 10*k, H, loc=(0, -W/2, H/2)))
+    shell.append(box("Cvb_Ceiling", L, W, 7*k, loc=(0, 0, H)))
+    for gx in range(int(-L/2+25), int(L/2), 45):
+        shell.append(box(f"Cvb_Cond{gx}", 5*k, W, 4*k, loc=(gx, 0, 10*k)))
+    zones["Shell"] = (shell, (0.34, 0.36, 0.4))
+
+    # ---- ONE central raised octagonal command platform (not a twin tier) ----
+    # Centered near the room's Y-middle (not pushed to the viewport end) so a
+    # camera walking in from either the hatch or viewport end of the room
+    # encounters it quickly, not just blank floor -- see render_int_inside.py's
+    # walk-the-long-axis camera heuristic (Tools notes, 2026-09-14 corvette
+    # bridge build).
+    deck = []
+    platform = box("Cvb_Deck", 130*k, 120*k, 14*k, loc=(0, 0, 7*k))
+    bevel(platform, 28*k, 4)  # heavy bevel -> reads octagonal, not square
+    deck.append(platform)
+    deck.append(box("Cvb_DeckRamp", 40*k, 50*k, 8*k, loc=(0, -70*k, 3*k)))  # ramp toward hatch
+    zones["Deck"] = (deck, (0.4, 0.38, 0.36))
+
+    # ---- single-row crew stations, tight to the platform (small bridge crew) ----
+    stations = []
+    for side in (-1, 1):
+        sx = side*70*k
+        stations.append(box(f"Cvb_Station{side}", 34*k, 22*k, 26*k, loc=(sx, 25*k, 14*k+7*k)))
+        stations.append(box(f"Cvb_SScreen{side}", 26*k, 4*k, 16*k, loc=(sx, 35*k, 34*k+7*k)))
+        stations.append(box(f"Cvb_Chair{side}", 16*k, 16*k, 10*k, loc=(sx, 0*k, 4*k+7*k)))
+        stations.append(box(f"Cvb_ChairBack{side}", 16*k, 5*k, 26*k, loc=(sx, -10*k, 20*k+7*k)))
+    zones["Stations"] = (stations, (0.28, 0.42, 0.48))
+
+    # ---- forward viewport: segmented band with diagonal corner braces
+    # (visually distinct from the shared bridge's plain grid mullions) ----
+    viewport = []
+    viewport.append(box("Cvb_VPFrame", L, 10*k, H, loc=(0, W/2, H/2)))
+    viewport.append(box("Cvb_VPGlass", L-36*k, 4*k, H-28*k, loc=(0, W/2-4*k, 58*k)))
+    for mx in range(int(-L/2+30), int(L/2), 50):
+        viewport.append(box(f"Cvb_VPMullion{mx}", 4*k, 4*k, H-28*k, loc=(mx, W/2-4*k, 58*k)))
+    for side in (-1, 1):
+        brace = box(f"Cvb_VPBrace{side}", 60*k, 4*k, 8*k, loc=(side*L/4, W/2-4*k, H-24*k))
+        brace.rotation_euler = (0, 0, math.radians(side*28))
+        viewport.append(brace)
+    zones["Viewport"] = (viewport, (0.14, 0.24, 0.29))
+
+    # ---- overhead lighting: halo ring over the command platform + side strips ----
+    lights = []
+    ring = torus("Cvb_HaloRing", 60*k, 4*k, loc=(0, 0, H-8*k), maj=24, minr=6)
+    lights.append(ring)
+    for gx in (-L/2+70*k, L/2-70*k):
+        lights.append(box(f"Cvb_SideStrip{int(gx)}", 8*k, W-40*k, 4*k, loc=(gx, 0, H-6*k)))
+    zones["Lights"] = (lights, (0.55, 0.82, 1.0))
+
+    # ---- rear access hatch ----
+    hatch = [
+        box("Cvb_HatchL", 6*k, 12*k, 110*k, loc=(-40*k, -W/2+6*k, 55*k)),
+        box("Cvb_HatchR", 6*k, 12*k, 110*k, loc=(40*k, -W/2+6*k, 55*k)),
+        box("Cvb_HatchT", 92*k, 12*k, 10*k, loc=(0, -W/2+6*k, H-10*k)),
+    ]
+    zones["Hatch"] = (hatch, (0.12, 0.14, 0.16))
+
+    all_names = set()
+    for zn, (objs, _) in zones.items():
+        for o in objs: all_names.add(o.name)
+    results = []
+    for zn, (objs, col) in zones.items():
+        matname = f"M_Int_{zn}"
+        solid_mat(matname, col)
+        obj, out = finalize_part(objs, f"{prefix}_{zn}", matname, keep_named=all_names)
+        results.append((obj, out))
+    return results
+
+
 def build_interior_set():
     """Build all interior instances (cockpit, crew quarters, hab, corridor, +
     engineering bay, airlock)."""
     results = []
-    results += build_cockpit_interior('small', "SM_Int_Fighter_Cockpit")
-    results += build_empty_room_interior('small', "SM_Int_Fighter_EmptyRoom")
+    results += build_fighter_cabin_interior('small', "SM_Int_Fighter_Cabin")
     results += build_hab_interior('medium', "SM_Int_Freighter_CrewQuarters")
     results += build_hab_interior('large', "SM_Int_Generationship_Hab", room_count=2)
     results += build_corridor("SM_Int_Standard")
@@ -2675,6 +2771,8 @@ def build_interior_set():
     results += build_alien_hold("SM_Int_Xenomorph")
     # flagship command bridge — the ship's impressive nerve center
     results += build_bridge_interior("SM_Int_CommandBridge")
+    # bespoke corvette bridge (replaces the CommandBridge stopgap for that hull)
+    results += build_corvette_bridge_interior("SM_Int_Corvette_Bridge")
     return results
 
 

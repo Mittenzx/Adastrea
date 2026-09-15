@@ -30,7 +30,6 @@ class UTradeItemDataAsset;
  *
  * Integration:
  * - PlayerTraderComponent uses this for all trading operations
- * - AITraderComponent uses this for NPC trading
  * - MarketDataAsset provides market configuration
  * - TradeItemDataAsset defines tradeable items
  *

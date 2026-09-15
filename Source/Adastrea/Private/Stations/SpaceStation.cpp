@@ -18,6 +18,10 @@
 ASpaceStation::ASpaceStation()
 {
     PrimaryActorTick.bCanEverTick = false;
+
+    StationRoot = CreateDefaultSubobject<USceneComponent>(TEXT("StationRoot"));
+    RootComponent = StationRoot;
+
     // REMOVED: OwningFaction - faction system removed per Trade Simulator MVP
 
     // Note: Structural integrity values are now set via default values in header
@@ -212,8 +216,12 @@ int32 ASpaceStation::BuildFromLayout(UStationLayoutDataAsset* Layout)
                 }
 
         // Resolve the module class from its crafting-tree ItemID (the C++ subclass
-                // name, e.g. "CorridorModule"). Skip if no such class resolves.
-                const FString ModuleClassPath = ItemID.ToString();
+                // name, e.g. "CorridorModule"). LoadClass needs the fully-qualified native
+                // path, not the bare class name - every station module is a native class in
+                // this module (verified against all 27 Content/Data/StationModuleCatalog.json
+                // entries' class_path, which all share the "/Script/Adastrea." prefix), so
+                // build it directly rather than pulling in the StationEditor module's catalog.
+                const FString ModuleClassPath = FString::Printf(TEXT("/Script/Adastrea.%s"), *ItemID.ToString());
                 UClass* ModuleClass = LoadClass<ASpaceStationModule>(nullptr, *ModuleClassPath);
                 if (!ModuleClass)
                 {

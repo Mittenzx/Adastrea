@@ -106,7 +106,7 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Mobility Stats", meta=(ClampMin="0", ClampMax="10000"))
     float MaxSpeed;
 
-    // Acceleration in m/s²
+    // Acceleration in m/s^2
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Mobility Stats", meta=(ClampMin="0", ClampMax="1000"))
     float Acceleration;
 
@@ -278,7 +278,6 @@ public:
      *
      * @note POST-MVP: Deferred - combat rating not needed for MVP (no combat)
      */
-    // UFUNCTION(BlueprintCallable, Category="Spaceship Stats") // DEFERRED: Post-MVP combat system
     float GetCombatRating() const;
 
     /**
@@ -294,7 +293,6 @@ public:
      *
      * @note POST-MVP: Deferred - utility systems not needed for MVP trading
      */
-    // UFUNCTION(BlueprintCallable, Category="Spaceship Stats") // DEFERRED: Post-MVP utility systems
     float GetUtilityRating() const;
 
     /**
@@ -311,7 +309,6 @@ public:
      *
      * @note POST-MVP: Deferred - size categorization not critical for MVP
      */
-    // UFUNCTION(BlueprintCallable, Category="Spaceship Stats") // DEFERRED: Post-MVP classification
     FString GetSizeCategory() const;
 
     /**
