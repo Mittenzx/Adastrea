@@ -178,12 +178,36 @@ int32 UStationModuleCatalog::LoadFootprintsFromJson()
 		}
 
 		const TArray<TSharedPtr<FJsonValue>>* SizeArr = nullptr;
+		bool bMatchedThisEntry = false;
 		if ((*ModuleObj)->TryGetArrayField(TEXT("size"), SizeArr) && SizeArr && SizeArr->Num() >= 3)
 		{
 			const int32 SX = FMath::Max(1, (int32)(*SizeArr)[0]->AsNumber());
 			const int32 SY = FMath::Max(1, (int32)(*SizeArr)[1]->AsNumber());
 			const int32 SZ = FMath::Max(1, (int32)(*SizeArr)[2]->AsNumber());
 			Entry.GridFootprint = FIntVector(SX, SY, SZ);
+			bMatchedThisEntry = true;
+		}
+
+		// "faces": "all" (string, most modules) leaves ConnectionFaces empty
+		// (empty == unrestricted); "faces": ["W"] (array, e.g. SolarArrayModule)
+		// records the specific faces it connects through.
+		Entry.ConnectionFaces.Empty();
+		const TArray<TSharedPtr<FJsonValue>>* FacesArr = nullptr;
+		if ((*ModuleObj)->TryGetArrayField(TEXT("faces"), FacesArr) && FacesArr)
+		{
+			for (const TSharedPtr<FJsonValue>& FaceVal : *FacesArr)
+			{
+				FString FaceStr;
+				if (FaceVal->TryGetString(FaceStr))
+				{
+					Entry.ConnectionFaces.Add(FName(*FaceStr));
+				}
+			}
+		}
+		// else: "faces" is the string "all" (or absent) - ConnectionFaces stays empty/unrestricted.
+
+		if (bMatchedThisEntry)
+		{
 			++NumMatched;
 		}
 	}

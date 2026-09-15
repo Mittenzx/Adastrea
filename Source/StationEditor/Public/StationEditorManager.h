@@ -692,12 +692,27 @@ public:
 	 * judged against each module PAIR's real footprint (GetModuleEffectiveRadius),
 	 * not a fixed radius, so a large module correctly needs to sit further from
 	 * its neighbour's center than a small one does.
-	 * @param ModuleClass The class of module being placed (for its footprint)
+	 * @param ModuleClass The class of module being placed (for its footprint and faces)
 	 * @param Position Position to check
+	 * @param Rotation Rotation the module would be placed at (its faces rotate with it)
 	 * @return True if the position is adjacent to an existing module, or the station is empty
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station Editor|Validation")
-	bool IsAdjacentToExistingModule(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position) const;
+	bool IsAdjacentToExistingModule(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position, FRotator Rotation) const;
+
+	/**
+	 * Whether a module facing DirectionToOther through one of its (rotation-adjusted)
+	 * connection faces - per its catalog entry's ConnectionFaces (empty = "all", always
+	 * true; matches STATION_BUILDER.md's per-face connectivity model). A module with no
+	 * catalog entry, or no ModuleCatalog assigned, is treated as unrestricted (fail-open,
+	 * same convention as CheckCollision/IsAdjacentToExistingModule use elsewhere).
+	 * @param ModuleClass The module class to check faces for
+	 * @param ModuleRotation The module's placed/would-be-placed rotation
+	 * @param DirectionToOther Normalized world-space direction from this module toward the other
+	 * @return True if one of the module's faces points toward DirectionToOther
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station Editor|Validation")
+	bool DoesModuleFaceDirection(TSubclassOf<ASpaceStationModule> ModuleClass, FRotator ModuleRotation, FVector DirectionToOther) const;
 
 	/**
 	 * Effective horizontal bounding radius for a module class, derived from its

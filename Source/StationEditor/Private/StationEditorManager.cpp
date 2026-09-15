@@ -628,7 +628,7 @@ EModulePlacementResult UStationEditorManager::CanPlaceModule_Implementation(TSub
 
 		// X4-style connectivity: every module past the first must attach to the
 		// growing structure. Prevents disconnected/floating modules.
-		if (!IsAdjacentToExistingModule(ModuleClass, Position))
+		if (!IsAdjacentToExistingModule(ModuleClass, Position, Rotation))
 		{
 			UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::CanPlaceModule - %s is not adjacent to any existing module"), *ModuleClass->GetName());
 			return EModulePlacementResult::Disconnected;
@@ -704,7 +704,7 @@ float UStationEditorManager::GetModuleEffectiveRadius(TSubclassOf<ASpaceStationM
 	return CollisionRadius;
 }
 
-bool UStationEditorManager::IsAdjacentToExistingModule(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position) const
+bool UStationEditorManager::IsAdjacentToExistingModule(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position, FRotator Rotation) const
 {
 	if (!CurrentStation)
 	{
@@ -740,8 +740,68 @@ bool UStationEditorManager::IsAdjacentToExistingModule(TSubclassOf<ASpaceStation
 
 		const float OtherRadius = GetModuleEffectiveRadius(ExistingModule->GetClass());
 		const float ClearDistance = ThisRadius + OtherRadius;
-		const float Distance = FVector::Dist(Position, ExistingModule->GetActorLocation());
-		if (Distance >= ClearDistance && Distance <= ClearDistance + CellSize)
+		const FVector ToOther = ExistingModule->GetActorLocation() - Position;
+		const float Distance = ToOther.Size();
+		if (Distance < ClearDistance || Distance > ClearDistance + CellSize)
+		{
+			continue;
+		}
+
+		// X4-style face matching: both modules need a face pointed at each other,
+		// not just be close enough (a SolarArrayModule facing the wrong way is
+		// still a neighbour by distance, but not a valid connection).
+		const FVector Direction = ToOther.GetSafeNormal();
+		const bool bThisFaces = DoesModuleFaceDirection(ModuleClass, Rotation, Direction);
+		const bool bOtherFaces = DoesModuleFaceDirection(ExistingModule->GetClass(), ExistingModule->GetActorRotation(), -Direction);
+		if (bThisFaces && bOtherFaces)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool UStationEditorManager::DoesModuleFaceDirection(TSubclassOf<ASpaceStationModule> ModuleClass, FRotator ModuleRotation, FVector DirectionToOther) const
+{
+	if (!ModuleClass || !ModuleCatalog)
+	{
+		return true; // Fail-open, same convention as the rest of validation.
+	}
+
+	FStationModuleEntry Entry;
+	if (!ModuleCatalog->FindModuleByClass(ModuleClass, Entry) || Entry.ConnectionFaces.Num() == 0)
+	{
+		return true; // Not in catalog, or "all" faces (empty = unrestricted).
+	}
+
+	// N/S/E/W/Up/Down in the module's own local space, rotated into world space.
+	// N = local forward (+X), matching UE's convention and BuildFromLayout's plain
+	// yaw rotation - an arbitrary but internally consistent choice, since this data
+	// has no prior in-engine convention to match (STATION_BUILDER.md's faces are a
+	// pure-Python/plan-mode concept until now).
+	static const TMap<FName, FVector> FaceLocalDirections = {
+		{ FName("N"),    FVector(1, 0, 0) },
+		{ FName("S"),    FVector(-1, 0, 0) },
+		{ FName("E"),    FVector(0, 1, 0) },
+		{ FName("W"),    FVector(0, -1, 0) },
+		{ FName("Up"),   FVector(0, 0, 1) },
+		{ FName("Down"), FVector(0, 0, -1) },
+	};
+
+	for (const FName& Face : Entry.ConnectionFaces)
+	{
+		const FVector* LocalDir = FaceLocalDirections.Find(Face);
+		if (!LocalDir)
+		{
+			continue;
+		}
+
+		const FVector WorldFaceDir = ModuleRotation.RotateVector(*LocalDir);
+		// Generous tolerance (60 degrees either side of the face's exact direction)
+		// since faces are 90 degrees apart on a cardinal grid - this only needs to
+		// disambiguate between faces, not demand pixel-perfect alignment.
+		if (FVector::DotProduct(WorldFaceDir, DirectionToOther) > 0.5f)
 		{
 			return true;
 		}
@@ -923,7 +983,7 @@ void UStationEditorManager::UpdatePreview(FVector Position, FRotator Rotation)
 	if (CurrentStation && PreviewActor->CurrentModuleClass)
 	{
 		bool bHasCollision = bCheckCollisions && CheckCollision(PreviewActor->CurrentModuleClass, FinalPosition, Rotation);
-		bool bConnected = IsAdjacentToExistingModule(PreviewActor->CurrentModuleClass, FinalPosition);
+		bool bConnected = IsAdjacentToExistingModule(PreviewActor->CurrentModuleClass, FinalPosition, Rotation);
 		PreviewActor->SetValid(!bHasCollision && bConnected);
 	}
 }
@@ -1429,13 +1489,19 @@ void UStationEditorManager::AutoGenerateConnections(ASpaceStationModule* Module)
 			continue;
 		}
 
-		// Same footprint-aware "neighbour" band as IsAdjacentToExistingModule, so a
-		// module that was allowed to place next to another always gets a connection
-		// to it (and vice versa - they can't disagree on who's a neighbour).
+		// Same footprint- and face-aware "neighbour" test as IsAdjacentToExistingModule,
+		// so a module that was allowed to place next to another always gets a
+		// connection to it (and vice versa - they can't disagree on who's a neighbour).
 		const float OtherRadius = GetModuleEffectiveRadius(OtherModule->GetClass());
 		const float ClearDistance = ModuleRadius + OtherRadius;
-		const float Distance = FVector::Dist(ModulePosition, OtherModule->GetActorLocation());
-		if (Distance >= ClearDistance && Distance <= ClearDistance + CellSize)
+		const FVector ToOther = OtherModule->GetActorLocation() - ModulePosition;
+		const float Distance = ToOther.Size();
+		const bool bInRange = Distance >= ClearDistance && Distance <= ClearDistance + CellSize;
+		const FVector Direction = ToOther.GetSafeNormal();
+		const bool bFacesMatch = bInRange
+			&& DoesModuleFaceDirection(Module->GetClass(), Module->GetActorRotation(), Direction)
+			&& DoesModuleFaceDirection(OtherModule->GetClass(), OtherModule->GetActorRotation(), -Direction);
+		if (bFacesMatch)
 		{
 			// Auto-add power connection
 			AddConnection(Module, OtherModule, EModuleConnectionType::Power);
