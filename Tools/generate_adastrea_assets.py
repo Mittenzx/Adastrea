@@ -2204,11 +2204,15 @@ def interior_shell(sz, parts, outname, floor_tex="M_Interior_Deck",
 
 
 def build_fighter_cabin_interior(sz, outname):
-    """Fighter cabin interior (v2, replaces the old separate Cockpit/EmptyRoom
-    pair). A single walkable cabin: a proper pilot station (seat, two-tier
-    console, yoke/throttle/pedals, canopy ring) toward -Y, PLUS a generous open
-    floor behind it (toward +Y) so the avatar has real room to stand and walk
-    rather than spawning nose-to-console. A hatch frame at +Y marks the entry.
+    """Fighter cabin interior (v3, 2026-09-14 -- complete redo of the v2
+    single-joined-mesh cabin). Split into X4-style separate-colored zones
+    (Shell/Viewport/Lights), same convention as build_corvette_bridge_
+    interior, instead of one joined FBX -- so a real BlenderKit-sourced pilot
+    seat+console can be dropped into the Console zone instead of another
+    procedural greeble stack. Requires EShipInteriorFamily::Fighter to route
+    through MountInteriorParts like CommandBridge/CorvetteBridge do (see
+    SpaceshipInterior.cpp) -- the old v2 never split zones because that
+    routing didn't exist yet.
 
     Note on orientation: FBX export uses axis_forward='-Y' (see export_fbx),
     so local -Y becomes UE +X after import -- the same axis ConfigureInterior's
@@ -2216,77 +2220,86 @@ def build_fighter_cabin_interior(sz, outname):
     Putting the pilot station on the -Y side means walking up to the seat is
     what re-boards the ship, not the open floor behind it.
 
-    Layout (local space):
+    Layout (local space, unchanged footprint from v2 -- ConfigureInterior
+    normalizes to a fixed target radius anyway, so absolute size doesn't
+    matter, only relative proportion):
       +40*k .. +160*k   open floor (avatar walk space, entered via HatchFrame)
-       -30*k .. +40*k   pilot seat
-      -90*k .. -30*k    console + controls
-     -100*k .. -90*k    canopy ring / forward glass
+       -30*k .. +40*k   pilot seat + console (sourced, Console zone)
+      -100*k .. -30*k   angled wedge windscreen (Viewport zone)
     """
     k = sc(sz)
-    parts = []
     L = 210*k; W = 320*k; H = 190*k  # width (X), depth (Y), ceiling height
     T = 8*k
 
-    # floor / ceiling
-    floor = box("Floor", L, W, T, loc=(0, 0, 0)); bevel(floor, 2, 1)
-    ceiling = box("Ceiling", L, W, T, loc=(0, 0, H))
-    parts += [floor, ceiling]
-
-    # side walls span the full depth so the open rear half reads as one room
-    # with the cockpit, not a separate box.
+    # ---- SHELL: floor, ceiling, walls, hatch, side panel banks ----
+    shell = []
+    floor = box("Fc_Floor", L, W, T, loc=(0, 0, 0)); bevel(floor, 2, 1)
+    ceiling = box("Fc_Ceiling", L, W, T, loc=(0, 0, H))
+    shell += [floor, ceiling]
     for side in (-1, 1):
-        w = box(f"Wall{side}", T, W, H, loc=(side*(L/2), 0, H/2))
-        bevel(w, 2, 1); parts.append(w)
-    wall_canopy_back = box("WallCanopyBack", L, T, H, loc=(0, -W/2, H/2))  # behind the canopy
-    bevel(wall_canopy_back, 2, 1); parts.append(wall_canopy_back)
-
-    # ---- hatch frame marking the entry (open passage, frame only) ----
+        w = box(f"Fc_Wall{side}", T, W, H, loc=(side*(L/2), 0, H/2))
+        bevel(w, 2, 1); shell.append(w)
     hatch_y = W/2 - 6*k
-    hatch_l = box("HatchL", 6*k, 12*k, 110*k, loc=(-L/2+16*k, hatch_y, 55*k))
-    hatch_r = box("HatchR", 6*k, 12*k, 110*k, loc=( L/2-16*k, hatch_y, 55*k))
-    hatch_t = box("HatchT", L-24*k, 12*k, 10*k, loc=(0, hatch_y, 105*k))
-    parts += [hatch_l, hatch_r, hatch_t]
+    hatch_l = box("Fc_HatchL", 6*k, 12*k, 110*k, loc=(-L/2+16*k, hatch_y, 55*k))
+    hatch_r = box("Fc_HatchR", 6*k, 12*k, 110*k, loc=( L/2-16*k, hatch_y, 55*k))
+    hatch_t = box("Fc_HatchT", L-24*k, 12*k, 10*k, loc=(0, hatch_y, 105*k))
+    shell += [hatch_l, hatch_r, hatch_t]
+    bank_l = box("Fc_PanelBankL", 4*k, 40*k, 22*k, loc=(-L/2+2*k, -40*k, 30*k)); bevel(bank_l, 1, 1)
+    bank_r = box("Fc_PanelBankR", 4*k, 40*k, 22*k, loc=(L/2-2*k, -40*k, 30*k)); bevel(bank_r, 1, 1)
+    shell += [bank_l, bank_r]
 
-    # ---- pilot seat (base/cushion/back/headrest/armrests) ----
-    seat_y = 5*k
-    seat_base = box("SeatBase", 40*k, 40*k, 16*k, loc=(0, seat_y+5*k, 8*k)); bevel(seat_base, 3, 1)
-    seat_cush = box("SeatCush", 34*k, 30*k, 10*k, loc=(0, seat_y+3*k, 20*k)); bevel(seat_cush, 3, 1)
-    seat_back = box("SeatBack", 34*k, 10*k, 46*k, loc=(0, seat_y+23*k, 42*k)); bevel(seat_back, 3, 1)
-    headrest = box("Headrest", 26*k, 10*k, 14*k, loc=(0, seat_y+23*k, 72*k)); bevel(headrest, 3, 1)
-    arm_l = box("ArmL", 8*k, 30*k, 12*k, loc=(-22*k, seat_y+15*k, 22*k)); bevel(arm_l, 2, 1)
-    arm_r = box("ArmR", 8*k, 30*k, 12*k, loc=(22*k, seat_y+15*k, 22*k)); bevel(arm_r, 2, 1)
-    pad_l = box("ArmPadL", 10*k, 24*k, 6*k, loc=(-22*k, seat_y+13*k, 30*k)); bevel(pad_l, 2, 1)
-    pad_r = box("ArmPadR", 10*k, 24*k, 6*k, loc=(22*k, seat_y+13*k, 30*k)); bevel(pad_r, 2, 1)
-    parts += [seat_base, seat_cush, seat_back, headrest, arm_l, arm_r, pad_l, pad_r]
+    # ---- VIEWPORT: angled wedge windscreen (distinct from the corvette
+    # bridge's flat diagonal-braced band -- a fighter's canopy comes to a
+    # point, it isn't a wall you glimpse to the side) ----
+    viewport = []
+    wall_canopy_back = box("Fc_WallCanopyBack", L, T, H, loc=(0, -W/2, H/2))
+    bevel(wall_canopy_back, 2, 1); viewport.append(wall_canopy_back)
+    ring = torus("Fc_CanopyRing", 96*k, 6*k, loc=(0, -82*k, 95*k), maj=28, minr=7)
+    viewport.append(ring)
+    # two angled glass panels meeting at a forward peak -> a wedge, not a flat pane
+    pane_l = box("Fc_CanopyPaneL", 56*k, 3*k, 60*k, loc=(-30*k, -100*k, 100*k))
+    pane_l.rotation_euler = (0, math.radians(-22), math.radians(14))
+    pane_r = box("Fc_CanopyPaneR", 56*k, 3*k, 60*k, loc=(30*k, -100*k, 100*k))
+    pane_r.rotation_euler = (0, math.radians(-22), math.radians(-14))
+    viewport += [pane_l, pane_r]
 
-    # ---- control console: two tiers + main/secondary screens ----
-    console_lo = box("ConsoleLo", 90*k, 24*k, 20*k, loc=(0, -60*k, 10*k)); bevel(console_lo, 2, 1)
-    console_hi = box("ConsoleHi", 70*k, 14*k, 26*k, loc=(0, -54*k, 34*k)); bevel(console_hi, 2, 1)
-    main_screen = box("MainScreen", 46*k, 4*k, 14*k, loc=(0, -48*k, 56*k))
-    sec_screen = box("SecScreen", 22*k, 4*k, 10*k, loc=(-26*k, -52*k, 50*k))
-    parts += [console_lo, console_hi, main_screen, sec_screen]
+    # ---- LIGHTS: overhead strip + a pair of accent strips along the canopy
+    # ring seam ----
+    lights = []
+    light = box("Fc_LightStrip", 160*k, 6*k, 4*k, loc=(0, 20*k, 118*k))
+    lights.append(light)
+    for side in (-1, 1):
+        accent = box(f"Fc_CanopyAccent{side}", 4*k, 30*k, 3*k,
+                      loc=(side*46*k, -85*k, 100*k))
+        accent.rotation_euler = (0, math.radians(-22), 0)
+        lights.append(accent)
+    overhead = box("Fc_Overhead", 60*k, 16*k, 8*k, loc=(0, -2*k, 88*k)); bevel(overhead, 2, 1)
+    lights.append(overhead)
 
-    # ---- controls: yoke, throttle, pedals ----
-    yoke = box("Yoke", 10*k, 14*k, 10*k, loc=(0, -40*k, 28*k)); bevel(yoke, 2, 1)
-    throttle = box("Throttle", 6*k, 10*k, 14*k, loc=(24*k, -52*k, 20*k)); bevel(throttle, 1, 1)
-    pedal_l = box("PedalL", 6*k, 4*k, 12*k, loc=(-14*k, -38*k, 4*k))
-    pedal_r = box("PedalR", 6*k, 4*k, 12*k, loc=(14*k, -38*k, 4*k))
-    parts += [yoke, throttle, pedal_l, pedal_r]
+    # ---- HATCH is part of Shell above (kept as one zone -- a fighter cabin
+    # doesn't need a separate hatch material, it's the same hull plating) ----
 
-    # ---- overhead console + canopy framing ring + light strip ----
-    overhead = box("Overhead", 60*k, 16*k, 8*k, loc=(0, -2*k, 88*k)); bevel(overhead, 2, 1)
-    frame = torus("CanopyRing", 96*k, 6*k, loc=(0, -82*k, 95*k), maj=28, minr=7)
-    light = box("LightStrip", 160*k, 6*k, 4*k, loc=(0, 20*k, 118*k))
-    parts += [overhead, frame, light]
+    zones = {
+        "Shell": (shell, (0.34, 0.36, 0.4)),
+        "Viewport": (viewport, (0.14, 0.24, 0.29)),
+        "Lights": (lights, (0.55, 0.82, 1.0)),
+    }
+    # NOTE: no procedural "Console" zone -- deliberately left for a real
+    # BlenderKit-sourced pilot seat+console (Tools/blenderkit_fetch.py +
+    # blenderkit_import.py), same approach as SM_Int_Corvette_Bridge_Console,
+    # but sourced from a DIFFERENT asset so the two ship classes don't end up
+    # with an identical-looking seat.
 
-    # ---- side-wall control banks, kept in the console half only so the rear
-    # walk space stays clear of greebles ----
-    bank_l = box("PanelBankL", 4*k, 40*k, 22*k, loc=(-L/2+2*k, -40*k, 30*k)); bevel(bank_l, 1, 1)
-    bank_r = box("PanelBankR", 4*k, 40*k, 22*k, loc=(L/2-2*k, -40*k, 30*k)); bevel(bank_r, 1, 1)
-    parts += [bank_l, bank_r]
-
-    jo, out = finalize_part(parts, outname, "M_Interior_Cockpit")
-    return [(jo, out)]
+    all_names = set()
+    for zn, (objs, _) in zones.items():
+        for o in objs: all_names.add(o.name)
+    results = []
+    for zn, (objs, col) in zones.items():
+        matname = f"M_Int_{zn}"
+        solid_mat(matname, col)
+        obj, out = finalize_part(objs, f"{outname}_{zn}", matname, keep_named=all_names)
+        results.append((obj, out))
+    return results
 
 
 def build_hab_interior(sz, outname, room_count=1):

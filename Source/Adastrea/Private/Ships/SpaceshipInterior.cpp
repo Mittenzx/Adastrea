@@ -8,6 +8,7 @@
 #include "Components/LocalLightComponent.h"
 #include "Components/PointLightComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Engine/Scene.h" // ELightUnits (full enum def, LightComponent.h only forward-declares it)
 #include "Engine/StaticMesh.h"
 #include "Engine/PointLight.h"
 #include "Engine/World.h"
@@ -267,6 +268,13 @@ void ASpaceshipInterior::ConfigureInterior(UStaticMesh* ShellMesh, EShipInterior
                 FamilyString = TEXT("Hab");
                 break;
             case EShipInteriorFamily::Fighter:
+                // v3 fighter cabin (2026-09-14) split into zones like the
+                // bridge families -- v2 was a single joined mesh because this
+                // case never routed through MountInteriorParts, so it had no
+                // way to mount a separate sourced Console piece.
+                Prefix = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_Fighter_Cabin");
+                FamilyString = TEXT("Fighter");
+                break;
             case EShipInteriorFamily::None:
             default:
                 break;
@@ -360,7 +368,13 @@ void ASpaceshipInterior::SetupInteriorLighting()
             {
                 LC->SetCastShadows(false);
                 LC->SetAttenuationRadius(4000.0f); // wide room fill
-                LC->SetIntensity(30.0f);           // low, even wash
+                // Explicit units + a real value: UE5's default PointLightComponent
+                // uses physically-based Candela, where 30 is close to imperceptible
+                // over a 4000-unit falloff radius -- rooms were reading as pitch
+                // black, not just dim as the comment intended. 5000 cd matches
+                // roughly what a default UE5 Point Light actor ships with.
+                LC->SetIntensityUnits(ELightUnits::Candelas);
+                LC->SetIntensity(5000.0f);
                 LC->SetLightColor(FLinearColor(0.75f, 0.82f, 0.9f)); // cool neutral
             }
             if (USceneComponent* LightRoot = Fill->GetRootComponent())
@@ -383,7 +397,11 @@ void ASpaceshipInterior::SetupInteriorLighting()
             {
                 if (UPointLightComponent* LC = Cast<UPointLightComponent>(Fixture->GetLightComponent()))
                 {
-                    LC->SetIntensity(3000.0f);      // lumens-ish
+                    // Same units fix as the ambient fill above -- 3000 candela
+                    // over a 500-unit radius was still too dim to read as a
+                    // "warm pool," never mind fill the whole room.
+                    LC->SetIntensityUnits(ELightUnits::Candelas);
+                    LC->SetIntensity(12000.0f);
                     LC->SetAttenuationRadius(500.0f); // tight pool, ~ room scale
                     LC->SetCastShadows(true);
                     LC->SetLightColor(FLinearColor(1.0f, 0.85f, 0.65f)); // warm pool
@@ -458,6 +476,15 @@ void ASpaceshipInterior::MountInteriorParts(FString Prefix, FString Family, cons
         TryPart(TEXT("Mess"));
         TryPart(TEXT("Vents"));
         TryPart(TEXT("Hatch"));
+    }
+    else if (Family == TEXT("Fighter"))
+    {
+        // v3 cabin zones (see generate_adastrea_assets.py build_fighter_cabin_
+        // interior) -- no Deck/Stations/Hatch/Bunks-style parts, a one-seat
+        // cabin doesn't need them (hatch geometry is folded into Shell).
+        TryPart(TEXT("Console"));
+        TryPart(TEXT("Lights"));
+        TryPart(TEXT("Viewport"));
     }
 }
 

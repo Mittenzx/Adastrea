@@ -173,7 +173,7 @@ void ASpaceship::BeginPlay()
                 SpawnedInterior->SetActorHiddenInGame(true); // Hide until entered
                 // Show the real interior geometry and size the walkable volume to it.
                 UStaticMesh* ShellMesh = InteriorShellMesh.IsNull() ? nullptr : InteriorShellMesh.LoadSynchronous();
-                SpawnedInterior->ConfigureInterior(ShellMesh, false);
+                SpawnedInterior->ConfigureInterior(ShellMesh, InteriorFamily, false);
                 InteriorInstance = SpawnedInterior;
             }
         }
@@ -894,9 +894,26 @@ void ASpaceship::ApplyShipHullMaterial()
     {
         HullMat = TEXT("/Game/Materials/M_Gunship_Hull");
     }
-    else if (ActorName.Contains(TEXT("Destroyer")) || ActorName.Contains(TEXT("Miner")))
+    else if (ActorName.Contains(TEXT("Destroyer")))
+    {
+        // Was TEXT("Destroyer") || TEXT("Miner") -> M_Miner_Hull, i.e. the
+        // destroyer wore the mining ship's material (and, separately, its
+        // MESH too -- see BP_Ship_Destroyer's ShipMeshComponent, fixed
+        // 2026-09-15 to point at its own already-generated SM_Ship_Destroyer_
+        // 01_Assembled instead). Split into its own dedicated hull now that
+        // T_Destroyer_* textures exist (Tools/build_fleet_hull_textures.py).
+        HullMat = TEXT("/Game/Materials/M_Destroyer_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Miner")))
     {
         HullMat = TEXT("/Game/Materials/M_Miner_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Battleship")))
+    {
+        // Previously unhandled -> fell through to the M_Fighter_Hull default,
+        // wrong for a capital ship. T_Battleship_* textures added alongside
+        // Destroyer's (Tools/build_fleet_hull_textures.py).
+        HullMat = TEXT("/Game/Materials/M_Battleship_Hull");
     }
     else if (ActorName.Contains(TEXT("Fighter")))
     {
