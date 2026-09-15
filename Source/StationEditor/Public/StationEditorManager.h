@@ -267,6 +267,11 @@ struct STATIONEDITOR_API FStationStatistics
 	UPROPERTY(BlueprintReadOnly, Category="Station Statistics")
 	float LifeSupportCoverage = 1.0f;
 
+	/** Whether the station has at least one docking module (matches
+	 *  ASpaceStation::HasDockingCapability()) - without one it's unreachable by ships. */
+	UPROPERTY(BlueprintReadOnly, Category="Station Statistics")
+	bool bHasDockingAccess = false;
+
 	/**
 	 * Get power balance (generation - consumption)
 	 */
@@ -680,15 +685,47 @@ public:
 	bool CheckCollision(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position, FRotator Rotation) const;
 
 	/**
-	 * X4-style connectivity rule: every module (after the first) must sit on a grid
-	 * cell adjacent to an existing module, so the station can never grow a floating,
-	 * disconnected piece. The first module placed on an empty station always passes
-	 * (it becomes the station's anchor/core).
+	 * X4-style connectivity rule: every module (after the first) must sit close
+	 * enough to an existing module to be its neighbour, so the station can never
+	 * grow a floating, disconnected piece. The first module placed on an empty
+	 * station always passes (it becomes the station's anchor/core). Distance is
+	 * judged against each module PAIR's real footprint (GetModuleEffectiveRadius),
+	 * not a fixed radius, so a large module correctly needs to sit further from
+	 * its neighbour's center than a small one does.
+	 * @param ModuleClass The class of module being placed (for its footprint and faces)
 	 * @param Position Position to check
+	 * @param Rotation Rotation the module would be placed at (its faces rotate with it)
 	 * @return True if the position is adjacent to an existing module, or the station is empty
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station Editor|Validation")
-	bool IsAdjacentToExistingModule(FVector Position) const;
+	bool IsAdjacentToExistingModule(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position, FRotator Rotation) const;
+
+	/**
+	 * Whether a module facing DirectionToOther through one of its (rotation-adjusted)
+	 * connection faces - per its catalog entry's ConnectionFaces (empty = "all", always
+	 * true; matches STATION_BUILDER.md's per-face connectivity model). A module with no
+	 * catalog entry, or no ModuleCatalog assigned, is treated as unrestricted (fail-open,
+	 * same convention as CheckCollision/IsAdjacentToExistingModule use elsewhere).
+	 * @param ModuleClass The module class to check faces for
+	 * @param ModuleRotation The module's placed/would-be-placed rotation
+	 * @param DirectionToOther Normalized world-space direction from this module toward the other
+	 * @return True if one of the module's faces points toward DirectionToOther
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station Editor|Validation")
+	bool DoesModuleFaceDirection(TSubclassOf<ASpaceStationModule> ModuleClass, FRotator ModuleRotation, FVector DirectionToOther) const;
+
+	/**
+	 * Effective horizontal bounding radius for a module class, derived from its
+	 * catalog GridFootprint (the larger of X/Y cells) and the grid system's cell
+	 * size. Falls back to DefaultCollisionRadius when there's no catalog entry
+	 * (e.g. no catalog assigned), so a large module (a 3x2 DockingBay) needs more
+	 * clearance than a small one (a 1x1 Corridor) instead of every module using
+	 * the same fixed radius regardless of actual size.
+	 * @param ModuleClass The module class to measure
+	 * @return Effective radius in world units (unreal-cm)
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station Editor|Validation")
+	float GetModuleEffectiveRadius(TSubclassOf<ASpaceStationModule> ModuleClass) const;
 
 	/**
 	 * Check if player has sufficient tech level for a module
@@ -1149,6 +1186,15 @@ protected:
 	 * Generate a notification based on current station state
 	 */
 	void GenerateStatusNotifications();
+
+	/**
+	 * X4-style "smart" validation: warn (don't block) when a just-placed Processing
+	 * module has no storage on the station to hold its inputs/outputs, or the
+	 * station can't actually power it. Called once per placement, not every stat
+	 * refresh, so it doesn't repeat the same warning on every frame.
+	 * @param Module The module that was just placed
+	 */
+	void CheckProductionChainWarning(const ASpaceStationModule* Module);
 
 	/**
 	 * Internal helper to recalculate statistics (const-safe for mutable cache)

@@ -124,7 +124,98 @@ int32 UStationModuleCatalog::LoadCatalogFromJson()
 	UE_LOG(LogAdastreaStations, Log,
 		TEXT("StationModuleCatalog: loaded %d module entries from %s"),
 		ModuleEntries.Num(), *FullPath);
+
+	LoadFootprintsFromJson();
+
 	return ModuleEntries.Num();
+}
+
+int32 UStationModuleCatalog::LoadFootprintsFromJson()
+{
+	// Content/Data/StationModuleBuilderData.json - the X4-style plan-mode builder's
+	// per-module grid size/faces/power table (see STATION_BUILDER.md). Reused here so
+	// the real-time editor's collision/adjacency checks respect each module's actual
+	// footprint instead of treating every module as the same size.
+	const FString FullPath = FPaths::ProjectContentDir() + TEXT("Data/StationModuleBuilderData.json");
+	FString JsonStr;
+	if (!FFileHelper::LoadFileToString(JsonStr, *FullPath))
+	{
+		UE_LOG(LogAdastreaStations, Warning, TEXT("StationModuleCatalog: could not read %s (module footprints default to 1x1x1)"), *FullPath);
+		return 0;
+	}
+
+	TSharedPtr<FJsonObject> Root;
+	const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonStr);
+	if (!FJsonSerializer::Deserialize(Reader, Root) || !Root.IsValid())
+	{
+		UE_LOG(LogAdastreaStations, Warning, TEXT("StationModuleCatalog: failed to parse %s"), *FullPath);
+		return 0;
+	}
+
+	const TSharedPtr<FJsonObject>* ModulesObj = nullptr;
+	if (!Root->TryGetObjectField(TEXT("Modules"), ModulesObj) || !ModulesObj->IsValid())
+	{
+		UE_LOG(LogAdastreaStations, Warning, TEXT("StationModuleCatalog: no 'Modules' object in %s"), *FullPath);
+		return 0;
+	}
+
+	int32 NumMatched = 0;
+	for (FStationModuleEntry& Entry : ModuleEntries)
+	{
+		if (!Entry.ModuleClass)
+		{
+			continue;
+		}
+
+		// ItemID keys in the JSON match the native class's short name (e.g.
+		// "CorridorModule" for ACorridorModule - UClass::GetName() already drops
+		// the 'A' prefix, same as the class_path convention in StationModuleCatalog.json).
+		const FString ItemID = Entry.ModuleClass->GetName();
+		const TSharedPtr<FJsonObject>* ModuleObj = nullptr;
+		if (!(*ModulesObj)->TryGetObjectField(ItemID, ModuleObj) || !ModuleObj->IsValid())
+		{
+			continue;
+		}
+
+		const TArray<TSharedPtr<FJsonValue>>* SizeArr = nullptr;
+		bool bMatchedThisEntry = false;
+		if ((*ModuleObj)->TryGetArrayField(TEXT("size"), SizeArr) && SizeArr && SizeArr->Num() >= 3)
+		{
+			const int32 SX = FMath::Max(1, (int32)(*SizeArr)[0]->AsNumber());
+			const int32 SY = FMath::Max(1, (int32)(*SizeArr)[1]->AsNumber());
+			const int32 SZ = FMath::Max(1, (int32)(*SizeArr)[2]->AsNumber());
+			Entry.GridFootprint = FIntVector(SX, SY, SZ);
+			bMatchedThisEntry = true;
+		}
+
+		// "faces": "all" (string, most modules) leaves ConnectionFaces empty
+		// (empty == unrestricted); "faces": ["W"] (array, e.g. SolarArrayModule)
+		// records the specific faces it connects through.
+		Entry.ConnectionFaces.Empty();
+		const TArray<TSharedPtr<FJsonValue>>* FacesArr = nullptr;
+		if ((*ModuleObj)->TryGetArrayField(TEXT("faces"), FacesArr) && FacesArr)
+		{
+			for (const TSharedPtr<FJsonValue>& FaceVal : *FacesArr)
+			{
+				FString FaceStr;
+				if (FaceVal->TryGetString(FaceStr))
+				{
+					Entry.ConnectionFaces.Add(FName(*FaceStr));
+				}
+			}
+		}
+		// else: "faces" is the string "all" (or absent) - ConnectionFaces stays empty/unrestricted.
+
+		if (bMatchedThisEntry)
+		{
+			++NumMatched;
+		}
+	}
+
+	UE_LOG(LogAdastreaStations, Log,
+		TEXT("StationModuleCatalog: matched footprints for %d/%d module entries from %s"),
+		NumMatched, ModuleEntries.Num(), *FullPath);
+	return NumMatched;
 }
 
 TArray<FStationModuleEntry> UStationModuleCatalog::GetAllModules() const

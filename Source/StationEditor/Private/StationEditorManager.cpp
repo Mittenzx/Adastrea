@@ -412,6 +412,11 @@ ASpaceStationModule* UStationEditorManager::PlaceModule_Implementation(TSubclass
 	UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::PlaceModule - Placed module %s at (%.2f, %.2f, %.2f)"),
 		*NewModule->GetName(), FinalPosition.X, FinalPosition.Y, FinalPosition.Z);
 
+	// X4-style "smart" feedback: docking-access completeness + production-chain
+	// warnings, evaluated once now rather than every stat refresh.
+	GenerateStatusNotifications();
+	CheckProductionChainWarning(NewModule);
+
 	// Broadcast event
 	OnModulePlaced.Broadcast(NewModule);
 
@@ -623,7 +628,7 @@ EModulePlacementResult UStationEditorManager::CanPlaceModule_Implementation(TSub
 
 		// X4-style connectivity: every module past the first must attach to the
 		// growing structure. Prevents disconnected/floating modules.
-		if (!IsAdjacentToExistingModule(Position))
+		if (!IsAdjacentToExistingModule(ModuleClass, Position, Rotation))
 		{
 			UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::CanPlaceModule - %s is not adjacent to any existing module"), *ModuleClass->GetName());
 			return EModulePlacementResult::Disconnected;
@@ -654,9 +659,11 @@ bool UStationEditorManager::CheckCollision(TSubclassOf<ASpaceStationModule> Modu
 		return false;
 	}
 
-	// Simple sphere-based collision check with existing modules
-	// A more sophisticated system would use actual mesh bounds
-	// Uses the configurable CollisionRadius property
+	// Sphere-based collision check against each existing module's own footprint-
+	// derived radius (GetModuleEffectiveRadius), summed with this module's own -
+	// so a large module (a 3x2 DockingBay) needs more clearance than a small one
+	// (a 1x1 Corridor) instead of every module using the same fixed CollisionRadius.
+	const float ThisRadius = GetModuleEffectiveRadius(ModuleClass);
 
 	for (ASpaceStationModule* ExistingModule : CurrentStation->Modules)
 	{
@@ -665,8 +672,9 @@ bool UStationEditorManager::CheckCollision(TSubclassOf<ASpaceStationModule> Modu
 			continue;
 		}
 
-		float Distance = FVector::Dist(Position, ExistingModule->GetActorLocation());
-		if (Distance < CollisionRadius * 2.0f)
+		const float OtherRadius = GetModuleEffectiveRadius(ExistingModule->GetClass());
+		const float Distance = FVector::Dist(Position, ExistingModule->GetActorLocation());
+		if (Distance < ThisRadius + OtherRadius)
 		{
 			return true; // Collision detected
 		}
@@ -675,7 +683,28 @@ bool UStationEditorManager::CheckCollision(TSubclassOf<ASpaceStationModule> Modu
 	return false;
 }
 
-bool UStationEditorManager::IsAdjacentToExistingModule(FVector Position) const
+float UStationEditorManager::GetModuleEffectiveRadius(TSubclassOf<ASpaceStationModule> ModuleClass) const
+{
+	if (ModuleClass && ModuleCatalog)
+	{
+		FStationModuleEntry Entry;
+		if (ModuleCatalog->FindModuleByClass(ModuleClass, Entry))
+		{
+			const float CellSize = GridSystem ? GridSystem->GridSize : CollisionRadius * 2.0f;
+			// Horizontal footprint only (X/Y) - the dimension that matters for
+			// station-plan layout; use the larger side as the bounding radius.
+			const int32 LargerSideCells = FMath::Max(Entry.GridFootprint.X, Entry.GridFootprint.Y);
+			return (LargerSideCells * CellSize) * 0.5f;
+		}
+	}
+
+	// No catalog entry (no catalog assigned, or module not in it) - fall back to
+	// the configurable instance radius so behavior degrades gracefully rather than
+	// breaking, and still respects a designer's CollisionRadius override.
+	return CollisionRadius;
+}
+
+bool UStationEditorManager::IsAdjacentToExistingModule(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position, FRotator Rotation) const
 {
 	if (!CurrentStation)
 	{
@@ -695,9 +724,84 @@ bool UStationEditorManager::IsAdjacentToExistingModule(FVector Position) const
 		return true;
 	}
 
+	// "Neighbour" = just clear of collision (ThisRadius + OtherRadius) out to one
+	// more grid cell beyond that - i.e. touching or one cell of gap, not floating
+	// off in open space. Footprint-aware, so a big module's neighbour band starts
+	// further out than a small module's does.
+	const float ThisRadius = GetModuleEffectiveRadius(ModuleClass);
+	const float CellSize = GridSystem->GridSize;
+
 	for (const ASpaceStationModule* ExistingModule : CurrentStation->Modules)
 	{
-		if (ExistingModule && GridSystem->ArePositionsAdjacent(Position, ExistingModule->GetActorLocation()))
+		if (!ExistingModule)
+		{
+			continue;
+		}
+
+		const float OtherRadius = GetModuleEffectiveRadius(ExistingModule->GetClass());
+		const float ClearDistance = ThisRadius + OtherRadius;
+		const FVector ToOther = ExistingModule->GetActorLocation() - Position;
+		const float Distance = ToOther.Size();
+		if (Distance < ClearDistance || Distance > ClearDistance + CellSize)
+		{
+			continue;
+		}
+
+		// X4-style face matching: both modules need a face pointed at each other,
+		// not just be close enough (a SolarArrayModule facing the wrong way is
+		// still a neighbour by distance, but not a valid connection).
+		const FVector Direction = ToOther.GetSafeNormal();
+		const bool bThisFaces = DoesModuleFaceDirection(ModuleClass, Rotation, Direction);
+		const bool bOtherFaces = DoesModuleFaceDirection(ExistingModule->GetClass(), ExistingModule->GetActorRotation(), -Direction);
+		if (bThisFaces && bOtherFaces)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool UStationEditorManager::DoesModuleFaceDirection(TSubclassOf<ASpaceStationModule> ModuleClass, FRotator ModuleRotation, FVector DirectionToOther) const
+{
+	if (!ModuleClass || !ModuleCatalog)
+	{
+		return true; // Fail-open, same convention as the rest of validation.
+	}
+
+	FStationModuleEntry Entry;
+	if (!ModuleCatalog->FindModuleByClass(ModuleClass, Entry) || Entry.ConnectionFaces.Num() == 0)
+	{
+		return true; // Not in catalog, or "all" faces (empty = unrestricted).
+	}
+
+	// N/S/E/W/Up/Down in the module's own local space, rotated into world space.
+	// N = local forward (+X), matching UE's convention and BuildFromLayout's plain
+	// yaw rotation - an arbitrary but internally consistent choice, since this data
+	// has no prior in-engine convention to match (STATION_BUILDER.md's faces are a
+	// pure-Python/plan-mode concept until now).
+	static const TMap<FName, FVector> FaceLocalDirections = {
+		{ FName("N"),    FVector(1, 0, 0) },
+		{ FName("S"),    FVector(-1, 0, 0) },
+		{ FName("E"),    FVector(0, 1, 0) },
+		{ FName("W"),    FVector(0, -1, 0) },
+		{ FName("Up"),   FVector(0, 0, 1) },
+		{ FName("Down"), FVector(0, 0, -1) },
+	};
+
+	for (const FName& Face : Entry.ConnectionFaces)
+	{
+		const FVector* LocalDir = FaceLocalDirections.Find(Face);
+		if (!LocalDir)
+		{
+			continue;
+		}
+
+		const FVector WorldFaceDir = ModuleRotation.RotateVector(*LocalDir);
+		// Generous tolerance (60 degrees either side of the face's exact direction)
+		// since faces are 90 degrees apart on a cardinal grid - this only needs to
+		// disambiguate between faces, not demand pixel-perfect alignment.
+		if (FVector::DotProduct(WorldFaceDir, DirectionToOther) > 0.5f)
 		{
 			return true;
 		}
@@ -879,7 +983,7 @@ void UStationEditorManager::UpdatePreview(FVector Position, FRotator Rotation)
 	if (CurrentStation && PreviewActor->CurrentModuleClass)
 	{
 		bool bHasCollision = bCheckCollisions && CheckCollision(PreviewActor->CurrentModuleClass, FinalPosition, Rotation);
-		bool bConnected = IsAdjacentToExistingModule(FinalPosition);
+		bool bConnected = IsAdjacentToExistingModule(PreviewActor->CurrentModuleClass, FinalPosition, Rotation);
 		PreviewActor->SetValid(!bHasCollision && bConnected);
 	}
 }
@@ -1374,6 +1478,8 @@ void UStationEditorManager::AutoGenerateConnections(ASpaceStationModule* Module)
 	}
 
 	FVector ModulePosition = Module->GetActorLocation();
+	const float ModuleRadius = GetModuleEffectiveRadius(Module->GetClass());
+	const float CellSize = GridSystem->GridSize;
 
 	// Check all existing modules for adjacency
 	for (ASpaceStationModule* OtherModule : CurrentStation->Modules)
@@ -1383,8 +1489,19 @@ void UStationEditorManager::AutoGenerateConnections(ASpaceStationModule* Module)
 			continue;
 		}
 
-		// Check if modules are adjacent
-		if (GridSystem->ArePositionsAdjacent(ModulePosition, OtherModule->GetActorLocation()))
+		// Same footprint- and face-aware "neighbour" test as IsAdjacentToExistingModule,
+		// so a module that was allowed to place next to another always gets a
+		// connection to it (and vice versa - they can't disagree on who's a neighbour).
+		const float OtherRadius = GetModuleEffectiveRadius(OtherModule->GetClass());
+		const float ClearDistance = ModuleRadius + OtherRadius;
+		const FVector ToOther = OtherModule->GetActorLocation() - ModulePosition;
+		const float Distance = ToOther.Size();
+		const bool bInRange = Distance >= ClearDistance && Distance <= ClearDistance + CellSize;
+		const FVector Direction = ToOther.GetSafeNormal();
+		const bool bFacesMatch = bInRange
+			&& DoesModuleFaceDirection(Module->GetClass(), Module->GetActorRotation(), Direction)
+			&& DoesModuleFaceDirection(OtherModule->GetClass(), OtherModule->GetActorRotation(), -Direction);
+		if (bFacesMatch)
 		{
 			// Auto-add power connection
 			AddConnection(Module, OtherModule, EModuleConnectionType::Power);
@@ -1685,6 +1802,10 @@ void UStationEditorManager::CompleteConstruction(FConstructionQueueItem& Item)
 		// Add completion notification
 		AddNotification(FText::FromString(FString::Printf(TEXT("%s construction complete"), *NewModule->ModuleType)),
 			ENotificationSeverity::Success, NewModule);
+
+		// Same X4-style completeness/production-chain feedback as a direct placement.
+		GenerateStatusNotifications();
+		CheckProductionChainWarning(NewModule);
 	}
 }
 
@@ -1722,6 +1843,7 @@ void UStationEditorManager::RecalculateStatisticsInternal() const
 	CachedStatistics.MaxPopulation = GetPopulationCapacity();
 	CachedStatistics.DefenseRating = GetDefenseRating();
 	CachedStatistics.EfficiencyRating = GetEfficiencyRating();
+	CachedStatistics.bHasDockingAccess = CurrentStation->HasDockingCapability();
 
 	// Calculate cargo capacity using configurable default
 	for (const ASpaceStationModule* Module : CurrentStation->Modules)
@@ -1927,6 +2049,49 @@ void UStationEditorManager::GenerateStatusNotifications()
 	{
 		AddNotification(FText::FromString(TEXT("Population approaching capacity. Consider adding habitation modules.")),
 			ENotificationSeverity::Warning, nullptr);
+	}
+
+	// X4-style completeness check: a station with no docking module is unreachable
+	// by ships (matches ASpaceStation::HasDockingCapability(), the same rule
+	// STATION_BUILDER.md's plan-mode validator enforces as a hard block - here it's
+	// a warning, since the real-time editor lets you build incrementally).
+	if (!Stats.bHasDockingAccess && CurrentStation->Modules.Num() > 0)
+	{
+		AddNotification(FText::FromString(TEXT("No docking module yet - ships can't reach this station. Add a Docking Bay or Docking Port.")),
+			ENotificationSeverity::Warning, nullptr);
+	}
+}
+
+void UStationEditorManager::CheckProductionChainWarning(const ASpaceStationModule* Module)
+{
+	if (!Module || !CurrentStation || Module->ModuleGroup != EStationModuleGroup::Processing)
+	{
+		return;
+	}
+
+	bool bHasStorage = false;
+	for (const ASpaceStationModule* Existing : CurrentStation->Modules)
+	{
+		if (Existing && Existing->ModuleGroup == EStationModuleGroup::Storage)
+		{
+			bHasStorage = true;
+			break;
+		}
+	}
+
+	if (!bHasStorage)
+	{
+		AddNotification(FText::FromString(FString::Printf(
+				TEXT("%s has no Cargo Bay on the station to hold its inputs/outputs - it won't have anything to process."),
+				*Module->ModuleType)),
+			ENotificationSeverity::Warning, const_cast<ASpaceStationModule*>(Module));
+	}
+
+	if (!HasSufficientPower())
+	{
+		AddNotification(FText::FromString(FString::Printf(
+				TEXT("%s is on a station running a power deficit and won't run at full capacity."), *Module->ModuleType)),
+			ENotificationSeverity::Warning, const_cast<ASpaceStationModule*>(Module));
 	}
 }
 
