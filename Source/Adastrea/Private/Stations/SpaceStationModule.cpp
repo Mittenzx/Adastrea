@@ -37,7 +37,13 @@ ASpaceStationModule::ASpaceStationModule()
         FName("CargoBayModule"), FName("MarketplaceModule"), FName("HabitationModule"), FName("BarracksModule"),
         FName("ReactorModule"), FName("ProcessingModule"), FName("FabricationModule"), FName("ScienceLabModule"),
         FName("FuelDepotModule"), FName("ShieldGeneratorModule"), FName("PhysicsLabModule"), FName("MaterialsLabModule"),
-        FName("ElectronicsLabModule"), FName("WeaponsLabModule"), FName("BiologyLabModule")
+        FName("ElectronicsLabModule"), FName("WeaponsLabModule"), FName("BiologyLabModule"),
+        // The 7 tier-4 labs - added to StationModuleBuilderData.json alongside this
+        // (they were in the runtime catalog with class_path resolving fine, just
+        // had no grid footprint entry at all, so the station editor couldn't have
+        // placed them - same [2,2,1]/"all faces" shape as their tier-1 parent labs).
+        FName("ProjectileWeaponsLab"), FName("BeamWeaponsLab"), FName("IonPropulsionLab"),
+        FName("GravMaterialsLab"), FName("EncryptionLab"), FName("OptronicsLab"), FName("CyberneticsLab")
     };
 
     const FName ClassFName(GetClass()->GetFName());
