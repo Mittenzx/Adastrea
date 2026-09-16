@@ -25,6 +25,9 @@ SHELLS = [
 TEXSETS = [
     ("M_StationModule_Shell", "T_StationModule_Shell"),
     ("M_StationModule_SolarArray", "T_StationModule_SolarArray"),
+    ("M_StationModule_Connector", "T_StationModule_Connector"),
+    ("M_StationModule_Utility", "T_StationModule_Utility"),
+    ("M_StationModule_Defence", "T_StationModule_Defence"),
 ]
 MAPS = ["D", "N", "R", "M", "AO", "E"]
 
@@ -91,7 +94,7 @@ def build_material(matname, texset):
         mat = at.create_asset(matname, MAT_FOLDER, unreal.Material, unreal.MaterialFactoryNew())
     ED = unreal.MaterialEditingLibrary
     ED.delete_all_material_expressions(mat)
-    mat.set_editor_property("shading_model", unreal.MaterialShadingModel.MSM_UNLIT)
+    mat.set_editor_property("shading_model", unreal.MaterialShadingModel.MSM_DEFAULT_LIT)
     mat.set_editor_property("blend_mode", unreal.BlendMode.BLEND_OPAQUE)
     y = 60
     def sample(asset, y_):
