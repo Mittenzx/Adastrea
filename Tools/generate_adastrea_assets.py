@@ -2092,6 +2092,187 @@ def build_station():
     return joined
 
 
+def build_station_agricultural():
+    """SM_Station_Agricultural_01 - wide rotating hab-ring with greenhouse domes."""
+    clear_scene()
+    hub = cyl("Hub", 60, 140, loc=(0, 0, 0), verts=20); bevel(hub, 4, 2)
+    hub_cap1 = sphere("HubCapTop", 60, loc=(0, 0, 70), verts=16)
+    hub_cap2 = sphere("HubCapBot", 60, loc=(0, 0, -70), verts=16)
+    ring = torus("HabRing", 620, 55, loc=(0, 0, 0), maj=56, minr=14)
+    spokes = []
+    for k in range(6):
+        ang = math.radians(k * 60)
+        cx, cy = math.cos(ang) * 340, math.sin(ang) * 340
+        sp = box(f"Spoke{k}", 620, 30, 30, loc=(cx, cy, 0), rot=(0, 0, ang))
+        spokes.append(sp)
+    # greenhouse domes around the ring, alternating above/below the ring plane
+    domes = []
+    for k in range(12):
+        ang = math.radians(k * 30)
+        cx, cy = math.cos(ang) * 620, math.sin(ang) * 620
+        dz = 90 if k % 2 == 0 else -90
+        d = sphere(f"Greenhouse{k}", 45, loc=(cx, cy, dz), verts=14)
+        d.scale = (1, 1, 0.6)
+        bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+        domes.append(d)
+    # solar wings off the hub, perpendicular to the ring plane
+    p1 = box("AgSolar1", 20, 260, 180, loc=(0, 0, 260))
+    p2 = box("AgSolar2", 20, 260, 180, loc=(0, 0, -260))
+    joined = join([hub, hub_cap1, hub_cap2, ring] + spokes + domes + [p1, p2], "StationGeo")
+    apply_mods(joined); clean_mesh(joined); smart_uv(joined)
+    joined.name = "SM_Station_Agricultural_01"
+    m = bpy.data.materials.new("M_Station_Agricultural")
+    m.use_nodes = True
+    if not joined.data.materials:
+        joined.data.materials.append(m)
+    return joined
+
+
+def build_station_research():
+    """SM_Station_Research_01 - spindly sensor/dish array station."""
+    clear_scene()
+    spine = cyl("Spine", 26, 900, loc=(0, 0, 450), verts=16); bevel(spine, 2, 1)
+    base_pod = box("BasePod", 140, 140, 120, loc=(0, 0, 60)); bevel(base_pod, 5, 2)
+    core_pod = box("CorePod", 100, 100, 140, loc=(0, 0, 480)); bevel(core_pod, 4, 2)
+    top_pod = box("TopPod", 80, 80, 100, loc=(0, 0, 850)); bevel(top_pod, 3, 2)
+    # 3 big flattened dishes at different heights, tilted outward
+    dishes = []
+    dish_specs = [
+        (300, 700, (0, math.radians(35), 0)),
+        (-260, 300, (0, math.radians(-40), math.radians(180))),
+        (0, 950, (math.radians(50), 0, 0)),
+    ]
+    for i, (dx, dz, rot) in enumerate(dish_specs):
+        mast = cyl(f"DishMast{i}", 8, 120, loc=(dx * 0.5, 0, dz), verts=10)
+        dish = sphere(f"Dish{i}", 60, loc=(dx, 0, dz), verts=16)
+        dish.scale = (0.22, 1, 1)
+        dish.rotation_euler = rot
+        bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
+        dishes.append(mast); dishes.append(dish)
+    # thin sensor booms sticking out radially from the spine
+    booms = []
+    for k in range(4):
+        ang = math.radians(k * 90 + 45)
+        bx, by = math.cos(ang) * 150, math.sin(ang) * 150
+        boom = box(f"Boom{k}", 260, 8, 8, loc=(bx, by, 500), rot=(0, 0, ang))
+        booms.append(boom)
+    joined = join([spine, base_pod, core_pod, top_pod] + dishes + booms, "StationGeo")
+    apply_mods(joined); clean_mesh(joined); smart_uv(joined)
+    joined.name = "SM_Station_Research_01"
+    m = bpy.data.materials.new("M_Station_Research")
+    m.use_nodes = True
+    if not joined.data.materials:
+        joined.data.materials.append(m)
+    return joined
+
+
+def build_station_luxury():
+    """SM_Station_Luxury_01 - tall tapered spire with glass viewport ring-bands."""
+    clear_scene()
+    tiers = []
+    specs = [
+        (110, 260, 0),
+        (95, 240, 240),
+        (78, 220, 460),
+        (62, 200, 660),
+        (46, 180, 840),
+        (30, 160, 1000),
+    ]
+    for i, (r, h, z0) in enumerate(specs):
+        t = cyl(f"Tier{i}", r, h, loc=(0, 0, z0 + h / 2), verts=24); bevel(t, 3, 2)
+        tiers.append(t)
+    cap_cone = cone("SpireCap", 26, 160, loc=(0, 0, 1240), verts=20); bevel(cap_cone, 2, 1)
+    beacon = sphere("Beacon", 10, loc=(0, 0, 1320), verts=10)
+    band1 = torus("ViewBand1", 130, 22, loc=(0, 0, 340), maj=44, minr=10)
+    band2 = torus("ViewBand2", 92, 18, loc=(0, 0, 760), maj=40, minr=8)
+    skirt = cyl("BaseSkirt", 170, 40, loc=(0, 0, 20), verts=28); bevel(skirt, 3, 2)
+    arms = []
+    for k in range(3):
+        ang = math.radians(k * 120)
+        ax, ay = math.cos(ang) * 260, math.sin(ang) * 260
+        arm = box(f"DockArm{k}", 300, 16, 16, loc=(ax, ay, 60), rot=(0, 0, ang))
+        arms.append(arm)
+    joined = join(tiers + [cap_cone, beacon, band1, band2, skirt] + arms, "StationGeo")
+    apply_mods(joined); clean_mesh(joined); smart_uv(joined)
+    joined.name = "SM_Station_Luxury_01"
+    m = bpy.data.materials.new("M_Station_Luxury")
+    m.use_nodes = True
+    if not joined.data.materials:
+        joined.data.materials.append(m)
+    return joined
+
+
+def build_station_industrial():
+    """SM_Station_Industrial_01 - boxy refinery/factory station."""
+    clear_scene()
+    core = box("Core", 260, 200, 220, loc=(0, 0, 110)); bevel(core, 6, 2)
+    core2 = box("CoreUpper", 180, 150, 140, loc=(0, 0, 290)); bevel(core2, 5, 2)
+    tanks = []
+    for i, (tx, ty) in enumerate([(-220, -140), (220, -140), (-220, 140), (220, 140)]):
+        t = cyl(f"Tank{i}", 55, 260, loc=(tx, ty, 130), verts=18); bevel(t, 3, 1)
+        cap = sphere(f"TankCap{i}", 55, loc=(tx, ty, 260), verts=12)
+        tanks.append(t); tanks.append(cap)
+    stacks = []
+    for i, (sx, sy) in enumerate([(-70, 0), (70, 0)]):
+        s = cyl(f"Stack{i}", 24, 220, loc=(sx, sy, 470), verts=14); bevel(s, 2, 1)
+        stacks.append(s)
+    girders = []
+    for i in range(4):
+        ang = math.radians(i * 90 + 45)
+        gx, gy = math.cos(ang) * 210, math.sin(ang) * 210
+        g = box(f"Girder{i}", 340, 14, 14, loc=(gx * 0.5, gy * 0.5, 350), rot=(0, 0, ang))
+        girders.append(g)
+    arm = box("LoadingArm", 300, 24, 24, loc=(360, 0, 60))
+    arm_tip = box("LoadingArmTip", 40, 80, 80, loc=(510, 0, 60)); bevel(arm_tip, 3, 2)
+    lights = []
+    for k in range(6):
+        ang = math.radians(k * 60)
+        lx, ly = math.cos(ang) * 135, math.sin(ang) * 105
+        lights.append(greeble(f"Light{k}", (lx, ly, 220), sx=8, sy=8, sz=4))
+    joined = join([core, core2] + tanks + stacks + girders + [arm, arm_tip] + lights, "StationGeo")
+    apply_mods(joined); clean_mesh(joined); smart_uv(joined)
+    joined.name = "SM_Station_Industrial_01"
+    m = bpy.data.materials.new("M_Station_Industrial")
+    m.use_nodes = True
+    if not joined.data.materials:
+        joined.data.materials.append(m)
+    return joined
+
+
+def build_station_blackmarket():
+    """SM_Station_BlackMarket_01 - irregular hidden outpost built around a small
+    asteroid chunk; deliberately asymmetric, unlike the other archetypes."""
+    clear_scene()
+    core_rock = rock("CoreRock", 160, loc=(0, 0, 0), sub=3, scale_xyz=(1.2, 0.9, 0.8))
+    # module offsets are well outside the rock's max extents (~192,144,128)
+    # so they read as bolted-on structures rather than buried inside it
+    mod_specs = [
+        (140, 40, 40, (230, 60, 30), (0, 0, math.radians(20))),
+        (60, 100, 60, (-90, 210, -10), (0, math.radians(15), math.radians(-30))),
+        (50, 50, 130, (20, -190, 100), (math.radians(-10), 0, 0)),
+        (90, 60, 60, (190, -110, -90), (0, 0, math.radians(70))),
+    ]
+    mods = []
+    for i, (sx, sy, sz, loc, rot) in enumerate(mod_specs):
+        mo = box(f"Module{i}", sx, sy, sz, loc=loc, rot=rot); bevel(mo, 3, 1)
+        mods.append(mo)
+    mast = cyl("Mast", 6, 220, loc=(30, -230, 190),
+               rot=(math.radians(15), math.radians(-10), 0), verts=8)
+    stub1 = cyl("DockStub1", 14, 110, loc=(250, 90, 50), rot=(0, math.radians(90), 0), verts=10)
+    stub2 = cyl("DockStub2", 14, 110, loc=(-150, 240, -50),
+                rot=(0, math.radians(70), math.radians(40)), verts=10)
+    lights = [greeble(f"BMLight{k}", loc, sx=6, sy=6, sz=4)
+              for k, loc in enumerate([(250, 60, 60), (-90, 220, 10), (18, -210, 150)])]
+    joined = join([core_rock] + mods + [mast, stub1, stub2] + lights, "StationGeo")
+    apply_mods(joined); clean_mesh(joined); smart_uv(joined)
+    joined.name = "SM_Station_BlackMarket_01"
+    m = bpy.data.materials.new("M_Station_BlackMarket")
+    m.use_nodes = True
+    if not joined.data.materials:
+        joined.data.materials.append(m)
+    return joined
+
+
 def build_extra_objects():
     """SM_Obj_* - satellite, asteroid derelict, fuel battery, comm tower."""
     results = []
