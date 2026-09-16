@@ -21,12 +21,12 @@
 | 📚 **Looking for documentation** | [docs/INDEX.md](docs/INDEX.md) |
 | 🎯 **Understanding the MVP** | [docs/02-MVP_OVERVIEW.md](docs/02-MVP_OVERVIEW.md) |
 | 🏗️ **Architecture questions** | [docs/04-ARCHITECTURE.md](docs/04-ARCHITECTURE.md) |
-| 📝 **Recent changes** | [docs/CHANGELOG.md](docs/CHANGELOG.md) |
+| 📝 **Recent changes** | `git log` (no maintained root CHANGELOG.md currently exists) |
 | ⚡ **Quick reference (MCP)** | [docs/MVP_QUICK_REFERENCE_CONSOLIDATED.md](docs/MVP_QUICK_REFERENCE_CONSOLIDATED.md) |
 
 **Historical Context:**
 - **January 2026**: Repository modernization (documentation consolidation)
-- **December 2025**: [Critical review and MVP pivot](docs/archive/critical-review-2025/README.md)
+- **December 2025**: [Critical review and MVP pivot](docs/14-ARCHIVE/archive_old/critical-review-2025/README.md) (archived)
 - **October-December 2025**: Initial development (infrastructure-first approach)
 
 ---
@@ -83,72 +83,36 @@ After comprehensive critical review (Dec 24, 2025), Adastrea is focused on a **T
 
 ### Critical Documents
 
-**Must Read Before Contributing**:
-1. 📊 [Critical Review Summary](CRITICAL_REVIEW_SUMMARY.md) - Honest assessment, why we're pivoting
-2. 📋 [Action Plan](CRITICAL_REVIEW_ACTION_PLAN.md) - 12-week recovery roadmap
+**Historical context** (see the note above — this list documented the Dec 2025 pivot, not current reading order):
+1. 📊 [Critical Review Summary](docs/13-CRITICAL_REVIEW_SUMMARY.md) - Honest assessment, why we're pivoting
+2. 📋 [Action Plan](docs/14-ARCHIVE/archive_old/critical-review-2025/CRITICAL_REVIEW_ACTION_PLAN.md) - 12-week recovery roadmap (archived)
 3. 🎯 [MVP Instructions](.github/instructions/trade-simulator-mvp.instructions.md) - What to build
 4. 🚫 [Anti-Patterns](.github/instructions/anti-patterns.instructions.md) - Lessons learned (18 mistakes to avoid)
-5. 📁 [MVP Documentation](docs/mvp/README.md) - Current phase details
+5. 📁 [MVP Documentation](docs/14-ARCHIVE/archive_old/critical-review-2025/README.md) - Original phase details (archived)
 
 **Key Principle**: One polished gameplay loop beats ten half-finished systems.
 
 ---
 
-## 🆕 Important: Documentation Reorganization (December 2025)
-
-**Major Documentation Update:**
-- 📁 **[docs/](docs/)** - All documentation now organized in structured folders
-- 📚 **[MASTER_DOCUMENTATION.md](MASTER_DOCUMENTATION.md)** - Complete documentation in one comprehensive file
-- 📊 **[CURRENT_STATUS.md](CURRENT_STATUS.md)** - Realistic project status (code 85% complete, content 10% complete)
-- 🗑️ **Removed 80+ obsolete files** - Cleaned up duplicate and outdated documentation
-
-**⚠️ Reality Check**: The project is **code-complete but not content-complete**. C++ systems are implemented, but editor content (Blueprints, Data Assets, Maps, UI) needs to be created. See [CURRENT_STATUS.md](CURRENT_STATUS.md) for details.
-
-## 🔄 Endless Development System (March 2026)
-
-**Active Maintenance**: Adastrea runs an **automated endless development system** with hourly cycles to maintain code quality, documentation, and GitHub activity.
-
-**Current Cycle**: #18 - Code quality improvements and documentation updates (March 16, 2026 23:23 GMT)
-
-**System Overview**: The Endless Development System performs hourly maintenance cycles that:
-1. **Code Quality**: Review TODOs, fix formatting, ensure cross-platform compatibility
-2. **Documentation**: Update README, CHANGELOG, and tracking documentation
-3. **Testing**: Run automated test suite (17+ Python tests)
-4. **Health Checks**: Comprehensive 7-point repository validation
-5. **GitHub Activity**: Regular commits demonstrating active development
-
-**Recent Improvements (Last 24 Hours):**
-- ✅ **Cycle #14**: Trading system improvements and documentation
-- ✅ **Cycle #15**: Windows compatibility fixes and Unicode encoding validation
-- ✅ **Cycle #16**: Procedural name generators with bulk generation support  
-- ✅ **Cycle #17**: Code quality maintenance and system documentation
-- ✅ **Cycle #18**: Code quality improvements and documentation updates (current)
-- ✅ **Repository Health**: 85.7% score with regular monitoring
-- ✅ **Test Suite**: 17+ Python tests passing consistently
-- ✅ **Cross-Platform**: Windows compatibility verified and documented
-
-**System Documentation**: See [Endless Development System](docs/endless-development-system.md) for complete details on the automated maintenance framework.
-
-**Goal**: Maintain production-ready repository with consistent quality assurance while MVP development continues.
-
 ## 📖 Documentation Navigation
 
-**New to Adastrea?** Multiple documentation options:
-- 📁 **[docs/](docs/)** - Browse organized documentation by category ⭐ **NEW**
-- 📚 **[MASTER_DOCUMENTATION.md](MASTER_DOCUMENTATION.md)** - Complete documentation in one file
-- 📊 **[docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** - Complete documentation index
+**New to Adastrea?** Start with the current, maintained docs:
+- 📁 **[docs/INDEX.md](docs/INDEX.md)** - Master documentation index
+- ⭐ **[docs/00-KNOWLEDGE_BASE.md](docs/00-KNOWLEDGE_BASE.md)** - Authoritative, repo-current technical snapshot
+- 📊 **[docs/05-ROADMAP.md](docs/05-ROADMAP.md)** - Current status and priorities
+
+Plus a wiki mirror covering core systems and architecture:
 - 🚀 [Quick Start Guide](wiki/Getting-Started/Quick-Start.md) - Get running in 10 minutes
 - 🎨 [Designer Onboarding](wiki/Getting-Started/Designer-Onboarding.md) - For non-programmers
-- 🎮 [Core Systems Overview](wiki/Core-Systems/README.md) - All 22+ game systems
+- 🎮 [Core Systems Overview](wiki/Core-Systems/README.md) - Game systems
 - 💻 [Developer Guides](wiki/Developer-Guides/Architecture.md) - Architecture and contributing
 
-**Documentation Categories:**
-- 📂 [docs/systems/](docs/systems/) - Game system documentation
-- 📂 [docs/development/](docs/development/) - Developer guides
-- 📂 [docs/setup/](docs/setup/) - Installation and setup
-- 📂 [docs/testing/](docs/testing/) - Testing documentation
-- 📂 [docs/content-generation/](docs/content-generation/) - Content creation tools
-- 📂 [docs/reference/](docs/reference/) - Quick references and cheatsheets
+> The many individual per-system guides this section used to link to (under `Assets/`, plus a
+> `docs/development/`, `docs/setup/`, `docs/systems/` folder structure) were consolidated into
+> `docs/` and the rest archived to `docs/14-ARCHIVE/` during a documentation reorg. A handful of
+> `Assets/*.md` guides are still live and linked from their relevant system sections below; the
+> "Endless Development System" hourly-cycle automation described in an earlier version of this
+> README is not currently active.
 
 ## Table of Contents
 
@@ -215,9 +179,9 @@ build_with_ue_tools.bat Development Win64
 ./build_with_ue_tools.sh Development Linux
 ```
 
-> **🚨 Windows Users:** If experiencing MSBuild SetEnv task failures (49KB+ include paths), this is the **required workaround** for UE 5.6 large projects. See [Windows Build Scripts Reference](docs/reference/WINDOWS_BUILD_SCRIPTS.md).
+> **🚨 Windows Users:** If experiencing MSBuild SetEnv task failures (49KB+ include paths), this was the workaround used for large UE 5.6 projects (unverified whether it's still needed on 5.8). See [Windows Build Scripts Reference](docs/14-ARCHIVE/reference/WINDOWS_BUILD_SCRIPTS.md) (archived).
 
-See **[BUILD_WITH_UE_TOOLS.md](docs/setup/BUILD_WITH_UE_TOOLS.md)** for complete instructions.
+See **[BUILD_WITH_UE_TOOLS.md](docs/09-SETUP_GUIDES/BUILD_WITH_UE_TOOLS.md)** for complete instructions.
 
 **Perfect for:**
 - ✓ CI/CD pipelines
@@ -296,8 +260,8 @@ The validation scripts check for:
 3. **Generate Project Files**:
    - Right-click on the `.uproject` file
    - Select "Generate Visual Studio project files"
-   - **Having issues?** See [PROJECT_GENERATION_QUICK_FIX.md](PROJECT_GENERATION_QUICK_FIX.md) for immediate solutions
-   - **Need details?** See [VISUAL_STUDIO_PROJECT_GENERATION.md](VISUAL_STUDIO_PROJECT_GENERATION.md) for comprehensive troubleshooting
+   - **Having issues?** See [PROJECT_GENERATION_QUICK_FIX.md](docs/09-SETUP_GUIDES/PROJECT_GENERATION_QUICK_FIX.md) for immediate solutions
+   - **Need details?** See [VISUAL_STUDIO_PROJECT_GENERATION.md](docs/09-SETUP_GUIDES/VISUAL_STUDIO_PROJECT_GENERATION.md) for comprehensive troubleshooting
 
 4. **Build the project**:
    - Open the generated `.sln` file in Visual Studio
@@ -308,52 +272,20 @@ The validation scripts check for:
    - Launch the editor
    - Check that all example Data Assets load correctly
    - Run the game with the Play button
-   - (Optional) Run [AdastreaAssetValidator.py](AdastreaAssetValidator.py) in the Unreal Editor Python console for asset validation
+   - (Optional) run asset validation via `Tools/qa_assets.py`
 
 ### Testing and Automation
 
-The project includes comprehensive automated testing tools for reliability and validation:
+> **Verified during this pass**: `AutomationRunner.py`, `AdastreaAssetValidator.py`, and
+> `test_epic_connection.sh` (all referenced in an earlier version of this section) no longer
+> exist at the repo root, and no `CONTAINER_DIAGNOSTICS.md`/`CLOUD_BUILD_*.md`/
+> `TESTING_AUTOMATION_GUIDE.md` file exists anywhere in the repo (not even archived) — the
+> Docker/Epic-container build path this section described appears to have been dropped entirely.
 
-- **Smoke Tests**: Automatically load all maps and detect missing assets, broken references, and errors
-- **Screenshot Tests**: Capture screenshots and perform visual regression testing against golden masters
-- **Automation Runner**: CLI utility for running tests and scheduling overnight validation runs
-
-```bash
-# Run all automated tests
-python AutomationRunner.py --all
-
-# Run only smoke tests
-python AutomationRunner.py --smoke-test
-
-# Schedule overnight validation at 11 PM
-python AutomationRunner.py --all --schedule "23:00"
-```
-
-See [TESTING_AUTOMATION_GUIDE.md](TESTING_AUTOMATION_GUIDE.md) for complete documentation.
-
-### Cloud Build Services
-
-For automated building and CI/CD in cloud environments, multiple services are available:
-
-- **GitHub Actions + Docker**: Free for public repos, integrated CI/CD (recommended for Adastrea) ✅ **Active**
-- **Epic Games Horde**: Native UE5 build platform with distributed compilation
-- **Unreal Cloud Build**: Managed cloud service without self-hosting
-- **TensorWorks Admiral**: Enterprise-grade managed UE5 CI/CD
-- **AWS Game Tech**: Comprehensive cloud infrastructure for UE5
-
-**Current Status**: GitHub Actions workflow is active with project validation. Docker builds require Epic Games organization membership (see detailed setup below).
-
-**Important for Docker Builds**: To use Unreal Engine containers, you must:
-1. Link Epic account at [www.epicgames.com/account/connections](https://www.epicgames.com/account/connections)
-2. Accept Epic Games GitHub organization invitation
-3. Verify membership at [github.com/EpicGames](https://github.com/EpicGames)
-
-**Troubleshooting Container Access**:
-- 🔍 **Run diagnostics**: `./test_epic_connection.sh` (local) or trigger "Diagnose Container Access" workflow (GitHub Actions)
-- 📖 **See [CONTAINER_DIAGNOSTICS.md](CONTAINER_DIAGNOSTICS.md)** for comprehensive troubleshooting guide
-- ⚙️ **Error: "denied"?** See [Container Diagnostics](CONTAINER_DIAGNOSTICS.md#symptom-error-response-from-daemon-denied) for specific solutions
-
-See [CLOUD_BUILD_SERVICES.md](CLOUD_BUILD_SERVICES.md) for detailed comparisons and [CLOUD_BUILD_QUICK_START.md](CLOUD_BUILD_QUICK_START.md) for complete setup instructions.
+The project's real, current test suite is **128 pytest tests** (`python -m pytest`, see
+[docs/00-KNOWLEDGE_BASE.md §6](docs/00-KNOWLEDGE_BASE.md)) plus `Tools/qa_assets.py` for
+per-asset QA checks (tri budgets, degenerate faces, bounds). CI runs via GitHub Actions
+(`.github/workflows/`) — no Docker/Epic Games container step is currently configured.
 
 ### Procedural Content Generation
 
@@ -381,159 +313,80 @@ python ProceduralGenerators.py
 
 All generated content is saved as YAML files compatible with the existing Data Asset system and can be imported directly into Unreal Engine.
 
-**Quick Start**: See [PROCEDURAL_GENERATION_docs/QUICKSTART.md](PROCEDURAL_GENERATION_docs/QUICKSTART.md)
-**Full Guide**: See [PROCEDURAL_GENERATION_GUIDE.md](PROCEDURAL_GENERATION_GUIDE.md)
+The `PROCEDURAL_GENERATION_docs/QUICKSTART.md` and `PROCEDURAL_GENERATION_GUIDE.md` guides this
+section used to link to no longer exist — the commands above are runnable as-is against the
+current `ProceduralGenerators.py`.
 
 ### First Steps
 
-1. **For Fast Content Creation** ⭐ **NEW**: See [FAST_FORWARD_QUICK_START.md](FAST_FORWARD_QUICK_START.md) - Generate ships, interiors, and stations in 30 minutes!
-2. **For Designers**: Read [Assets/DesignerOnboarding.md](Assets/DesignerOnboarding.md)
-3. **For Programmers (C++ Focused)**: Read [CPP_FOCUSED_SETUP.md](CPP_FOCUSED_SETUP.md) and [ESSENTIAL_BLUEPRINTS_ONLY.md](ESSENTIAL_BLUEPRINTS_ONLY.md)
-4. **For Programmers (General)**: Read [docs/development/CONTRIBUTING.md](docs/development/CONTRIBUTING.md) and [ARCHITECTURE.md](ARCHITECTURE.md)
-5. **For Playing in PIE (Quick Start)**: See [BLUEPRINT_QUICK_START_PIE.md](BLUEPRINT_QUICK_START_PIE.md) - Get flying in 5 minutes!
-6. **For Blueprint Creation**: See [BLUEPRINT_REQUIREMENTS_LIST.md](BLUEPRINT_REQUIREMENTS_LIST.md) for complete list of required Blueprints
-7. **For PIE Setup Guide**: See [BLUEPRINT_LIST_FOR_PIE.md](BLUEPRINT_LIST_FOR_PIE.md) for detailed blueprint checklist
-8. **For Testing**: Create a Test Mode level - see [Docs/TestMode_INDEX.md](Docs/TestMode_INDEX.md) for complete guide
-9. **For Automation**: See [TESTING_AUTOMATION_GUIDE.md](TESTING_AUTOMATION_GUIDE.md) for automated testing
-10. **For Procedural Content**: See [PROCEDURAL_GENERATION_docs/QUICKSTART.md](PROCEDURAL_GENERATION_docs/QUICKSTART.md)
-11. **Quick Reference**: See individual system guides in the Assets/ folder
+> Most of the 11 linked guides this list originally pointed to (`FAST_FORWARD_QUICK_START.md`,
+> `CPP_FOCUSED_SETUP.md`, `ESSENTIAL_BLUEPRINTS_ONLY.md`, `BLUEPRINT_QUICK_START_PIE.md`,
+> `BLUEPRINT_REQUIREMENTS_LIST.md`, `BLUEPRINT_LIST_FOR_PIE.md`, `Docs/TestMode_INDEX.md`,
+> `TESTING_AUTOMATION_GUIDE.md`, `PROCEDURAL_GENERATION_docs/QUICKSTART.md`) no longer exist.
+> Trimmed to what's real:
+
+1. **For Designers**: Read [Assets/DesignerOnboarding.md](Assets/DesignerOnboarding.md)
+2. **For Programmers**: Read [docs/08-CONTRIBUTING.md](docs/08-CONTRIBUTING.md) and [ARCHITECTURE.md](ARCHITECTURE.md)
+3. **For the current technical picture**: [docs/00-KNOWLEDGE_BASE.md](docs/00-KNOWLEDGE_BASE.md)
+4. **For Procedural Content**: `python ProceduralGenerators.py` (root) or the `Tools/` pipeline scripts
+5. **Quick Reference**: See the still-live per-system guides listed in [Documentation](#documentation) below
 
 ## Project Roadmap
 
-📍 **Want to see where the project is headed?** Check out our comprehensive [ROADMAP.md](ROADMAP.md) for:
-- Development phases and timelines
-- Completed, in-progress, and planned features
-- Detailed feature breakdowns for all systems
-- Technical roadmap and optimization plans
-- Community and modding ecosystem plans
-- How to contribute to upcoming features
+📍 **Want to see where the project is headed?** See **[docs/05-ROADMAP.md](docs/05-ROADMAP.md)** for
+current status, active work, and known gaps — kept in sync with the live development happening in
+this repo (a root-level `ROADMAP.md` also exists but predates the current MVP-focused docs
+structure and is not kept current).
 
-**Current Status**: Alpha 1.0.0-alpha - Phase 4 (Gameplay & Polish) in progress
-**Next Milestone**: Phase 4 completion and Phase 5 (Content & Beta) - 2026
+## Content Generation
 
-**📝 Contributing to the Roadmap**: When submitting PRs that affect project milestones or system status, please update ROADMAP.md.
+The project's real content pipeline (Blender-based procedural generation plus a licensed
+BlenderKit sourcing path for hero props) lives in **`Tools/`** — see
+**[docs/00-KNOWLEDGE_BASE.md](docs/00-KNOWLEDGE_BASE.md#5-content-asset-pipeline-blender--ue)**
+for the current, accurate description of `generate_adastrea_assets.py`,
+`blenderkit_fetch.py`/`blenderkit_import.py`, the render/QA scripts, and the UE import workflow.
+`ProceduralGenerators.py` (galaxy systems, NPCs, quests, ship variants) is also still present at
+the repo root.
 
-## Fast-Forward Content Creation
-
-⚡ **NEW**: Accelerate development with 100% FREE tools and resources!
-
-The project is **code-complete** (85%) but needs **content creation** (10% complete). Use these guides to generate ships, interiors, station modules, and graphics in weeks instead of months:
-
-### Quick Links
-
-- 🚀 **[FAST_FORWARD_QUICK_START.md](FAST_FORWARD_QUICK_START.md)** - ⭐ **START HERE** - Get content creation moving in 30 minutes
-- 📚 **[FREE_CONTENT_GENERATION_GUIDE.md](FREE_CONTENT_GENERATION_GUIDE.md)** - Comprehensive guide to free tools and workflows
-- 🔧 **[FREE_TOOLS_COMPARISON.md](FREE_TOOLS_COMPARISON.md)** - Tool comparison and recommendations
-
-### What You Get (100% FREE)
-
-**Automated Content Generation:**
-- ✅ 290+ assets in ~10 minutes (run MasterContentGenerator.py)
-- ✅ Procedural ships, NPCs, quests, stations
-- ✅ Complete VFX system generation
-
-**Free 3D Assets & Tools:**
-- ✅ Quixel Megascans (10,000+ assets via Bridge - already enabled!)
-- ✅ Blender + Spaceship Generator (procedural ship creation)
-- ✅ NASA 3D Resources (real spacecraft models)
-- ✅ Sketchfab, Blend Swap, OpenGameArt (free model libraries)
-
-**Time Savings:**
-- Ships: 80% faster (10 ships in 4-5 hours vs 100-200 hours)
-- Interiors: 80% faster (modular system setup once, reuse forever)
-- Station Modules: 80% faster (20 modules in 15-20 hours vs 400 hours)
-- VFX: 85% faster (24 systems in 1 hour vs 200 hours)
-
-**Total Savings: 850-950 hours (85-90% reduction)**
-
-### Quick Start (30 Minutes)
-
-```bash
-# 1. Enable Python automation in Unreal Editor (5 min)
-Edit → Plugins → "Python Script Plugin" → Enable → Restart
-
-# 2. Generate all content (10 min)
-Tools → Python → Python Console
->>> import MasterContentGenerator
->>> MasterContentGenerator.generate_all_content()
-
-# 3. Access free assets (10 min)
-Window → Quixel Bridge → Sign in → Download materials
-
-# 4. Download Blender (5 min)
-Visit blender.org → Download → Install
-```
-
-**Result:** Project populated with 290+ assets, ready to create custom 3D content
-
-### Resources
-
-- **Automation Scripts**: MasterContentGenerator.py, ProceduralGenerators.py, ScenePopulator.py
-- **Free Asset Sources**: Quixel Megascans, NASA 3D, Sketchfab, Blend Swap
-- **3D Tools**: Blender (free), Spaceship Generator (free), Geometry Nodes (free)
-- **Materials**: Quixel Megascans (10,000+ PBR materials, all FREE)
-
-See [FREE_CONTENT_GENERATION_GUIDE.md](FREE_CONTENT_GENERATION_GUIDE.md) for complete workflows and tutorials.
+> An earlier version of this section described a `MasterContentGenerator.py` one-shot generator
+> and linked to `FAST_FORWARD_QUICK_START.md` / `FREE_CONTENT_GENERATION_GUIDE.md` /
+> `FREE_TOOLS_COMPARISON.md`. None of those exist anymore — the content pipeline has since moved
+> to the `Tools/` scripts referenced above.
 
 ## Project Structure
+
+> The tree below reflects the actual current repo layout (see
+> [docs/00-KNOWLEDGE_BASE.md §2](docs/00-KNOWLEDGE_BASE.md) for the maintained version). An
+> earlier version of this section described a `Python Scripts/` folder and several root-level
+> guide files that no longer exist — content generation and automation now live under `Tools/`.
+
 ```
 Adastrea/
-├── README.md                # Project overview
-├── ROADMAP.md              # Development roadmap
-├── ARCHITECTURE.md          # MVP architecture
-├── LICENSE                  # MIT License
+├── Adastrea.uproject          # UE project file
+├── README.md                  # Project overview
+├── ROADMAP.md                 # Legacy pre-MVP roadmap (see docs/05-ROADMAP.md for current)
+├── ARCHITECTURE.md            # MVP architecture
+├── LICENSE                    # MIT License
+├── AGENT_BOARD.md             # Cross-agent async coordination board
 │
-├── docs/                    # All documentation
-│   ├── CHANGELOG.md         # Version history
-│   ├── GETTING_STARTED.md   # Setup guide
-│   ├── QUICKSTART.md        # Quick start
-│   ├── DOCUMENTATION_INDEX.md # Doc index
-│   ├── development/         # Development guides
-│   ├── mvp/                 # MVP documentation
-│   └── archive/             # Archived docs
+├── docs/                      # Current documentation (start at docs/INDEX.md)
+│   ├── 00-KNOWLEDGE_BASE.md   # Authoritative technical snapshot
+│   ├── 05-ROADMAP.md          # Current status and priorities
+│   ├── 11-TECHNICAL_SPECS/    # Per-system technical specs
+│   └── 14-ARCHIVE/            # Archived legacy documentation (500+ files)
 │
-├── Assets/                 # YAML templates (deferred systems)
-├── Blueprints/             # Blueprint documentation
-├── Config/                 # Unreal Engine configuration
+├── Source/Adastrea/           # Core game C++ module
+│   ├── Public/ Private/       # Ships, Stations, Trading, Player, UI, Input, Materials, Planets
 │
-├── Content/                # Game content (UE assets)
-│   ├── Blueprints/        # Blueprint classes
-│   ├── Homeworlds/        # Homeworld assets
-│   ├── Maps/              # Level maps
-│   ├── Planets/           # Planet assets
-│   ├── SpaceStations/     # Station assets and modules
-│   └── UI/                # UI widgets
+├── Plugins/
+│   ├── AdastreaShips/         # Imported 3D kit (meshes, interiors, materials)
+│   └── vc-ue-extensions/      # VS/UE editor extensions
 │
-├── Python Scripts/         # Automation and testing
-│   ├── SmokeTest.py           # Smoke testing script
-│   ├── ScreenshotTester.py    # Screenshot and visual regression testing
-│   ├── AutomationRunner.py    # CLI automation orchestrator
-│   ├── AdastreaAssetValidator.py  # Asset validation
-│   ├── EditorUtilities.py     # Editor utility functions
-│   ├── ScenePopulator.py      # Automated scene population
-│   ├── InteriorLayoutPopulator.py # Interior layout automation
-│   ├── ProceduralGenerators.py # Procedural content generation
-│   ├── TemplateGenerator.py   # YAML template generator
-│   ├── GuideGenerator.py      # Documentation generator
-│   ├── YAMLtoDataAsset.py     # YAML import tool
-│   ├── SetupCheck.py          # Environment validation
-│   ├── PopulationTemplates/   # Scene population config templates
-│   ├── smoke_test_config.json      # Smoke test configuration
-│   ├── screenshot_test_config.json # Screenshot test configuration
-│   └── automation_config.json      # Automation runner configuration
-│
-└── Source/                 # C++ source code
-    ├── Adastrea/          # Core game systems
-        ├── AI/            # AI logic classes
-        ├── Characters/    # Character and personnel
-        ├── Factions/      # Faction system
-        ├── Materials/     # Material system
-        ├── Planets/       # Planet classes
-        ├── Player/        # Player-specific systems
-        ├── Ships/         # Spaceship classes
-        ├── Stations/      # Space station classes
-        ├── Trading/       # Trading economy
-        └── UI/            # UI widgets
+├── Content/                   # UE assets: Blueprints, DataAssets, Maps, Materials, Textures, UI
+├── Assets/FBX/generated/      # Blender exports: ships, interiors, textures
+├── Tools/                     # ~60 Python scripts: asset generation, renderers, QA, UE importers
+├── tests/                     # pytest test suite
+└── wiki/                      # Git-wiki mirror (Core-Systems, Developer-Guides...)
 ```
 
 ## Core Features
@@ -572,7 +425,6 @@ A comprehensive spaceship specification system that allows designers to create d
 - **Complete Guide**: [Assets/SpaceshipDataAssetGuide.md](Assets/SpaceshipDataAssetGuide.md) - Full ship creation walkthrough
 - **Templates Reference**: [Assets/SpaceshipTemplates.md](Assets/SpaceshipTemplates.md) - All ship templates with stats
 - **Workflow Guide**: [Assets/SpaceshipDesignerWorkflow.md](Assets/SpaceshipDesignerWorkflow.md) - Best practices and workflows
-- **Interior Guide**: [Assets/SpaceshipInteriorGuide.md](Assets/SpaceshipInteriorGuide.md) - Complete interior implementation guide
 - **Control Guide**: [Assets/ShipControlGuide.md](Assets/ShipControlGuide.md) - Ship control system from interiors
 - **YAML Templates**: [Assets/SpaceshipTemplates/](Assets/SpaceshipTemplates/) - Copy-paste ready ship configurations
 
@@ -669,16 +521,12 @@ The Way System provides specialized guilds (Ways) and micro-alliances (Way Netwo
 - **Scholars' Syndicate** - Knowledge and research (Researchers, Archivists, Scientists)
 
 **Documentation:**
-- **Complete Guide**: [Assets/WaySystemGuide.md](Assets/WaySystemGuide.md) - Comprehensive system overview
-- **Overview**: [Assets/WaySystemOverview.md](Assets/WaySystemOverview.md) - Introduction to Ways and Networks
-- **Quick Reference**: [Assets/WaySystemQuickReference.md](Assets/WaySystemQuickReference.md) - Fast lookup tables
-- **API Reference**: [Assets/WaySystemAPIReference.md](Assets/WaySystemAPIReference.md) - Developer C++/Blueprint reference
-- **Way Creation**: [Assets/WayCreationGuide.md](Assets/WayCreationGuide.md) - Step-by-step Way creation
-- **Network Guide**: [Assets/WayNetworkGuide.md](Assets/WayNetworkGuide.md) - Complete network documentation
-- **Network Quick Start**: [Assets/WayNetworkQuickStart.md](Assets/WayNetworkQuickStart.md) - 5-minute setup
-- **Network Workflow**: [Assets/WayNetworkWorkflow.md](Assets/WayNetworkWorkflow.md) - Designer workflow
 - **Blueprint Examples**: [Blueprints/WayNetworkBlueprintExamples.md](Blueprints/WayNetworkBlueprintExamples.md) - Copy-paste examples
-- **YAML Templates**: [Assets/WayNetworkTemplates/](Assets/WayNetworkTemplates/) - 5 ready-to-use network configs
+- **YAML Templates**: [Assets/WayNetworkTemplates/](Assets/WayNetworkTemplates/) - Ready-to-use network configs
+
+> The dedicated Way/Way-Network prose guides this section used to link to (`WaySystemGuide.md`,
+> `WayCreationGuide.md`, `WayNetworkGuide.md`, etc.) have been archived; `UWayDataAsset` /
+> `UWayNetworkDataAsset` still exist in source (`Source/Adastrea/Public/Player/Verse.h`).
 
 **Quick Usage:**
 
@@ -706,184 +554,41 @@ The Way System provides specialized guilds (Ways) and micro-alliances (Way Netwo
 - Access network-exclusive missions, discounts, and rewards
 - Participate in sector council decisions as Way leader
 
-### Faction and Personnel AI System
-The game includes a complete AI framework for data-driven faction and personnel behaviors, supporting peaceful/exploration early-game priorities and personality-driven decision making.
+### Faction and Personnel AI System — design documentation, not current code
 
-**Key Components:**
-- `UNPCLogicBase` - Base class for all NPC AI logic with BlueprintNativeEvent hooks
-- `UFactionLogic` - Faction-level strategic AI (macro decisions: expansion, trade, diplomacy)
-- `UPersonnelLogic` - Individual crew AI (micro decisions: tasks, social, training)
-- Early Game Priorities - Configurable peaceful/exploration focus for factions
-- 8 Personality Dispositions - Cautious, Bold, Analytical, Empathetic, Pragmatic, Curious, Disciplined, Creative
-- Truces and Relationships - Diplomatic systems for peaceful gameplay
-- Task Priorities - Dynamic daily scheduling for personnel based on personality
-
-**Advanced Features:**
-- **Blueprint-Friendly Extension**: All AI logic uses BlueprintNativeEvent pattern
-  - Override any behavior in Blueprints without C++ knowledge
-  - Call parent implementation when needed
-  - Mix C++ performance with Blueprint flexibility
-
-- **Peaceful Early-Game AI**: Factions support exploration-focused gameplay
-  - Configurable priority system (0-10 scale for each activity)
-  - Automatic transition from early to mid/late game
-  - Truce system for maintaining peace
-  - Trade and diplomacy emphasis over conflict
-
-- **Personality-Driven Personnel**: 8 dispositions affect all decisions
-  - Curious: Exploration and research focus
-  - Disciplined: Protocol adherence, by-the-book
-  - Empathetic: People-focused, supportive
-  - Pragmatic: Efficiency and results
-  - Bold: Risk-taking, decisive
-  - Cautious: Safety-first, methodical
-  - Analytical: Logic and calculation
-  - Creative: Innovation and unconventional solutions
-
-- **Social and Relationship Systems**: Dynamic crew interactions
-  - Friendship and rivalry development
-  - Personality compatibility affects collaboration
-  - Morale impacts based on social dynamics
-  - Command hierarchy with manager/report relationships
-
-**YAML Templates:**
-- `FactionAI/PeacefulExplorers.yaml` - Exploration-focused peaceful faction
-- `FactionAI/TradeCoalition.yaml` - Commerce-focused merchant faction
-- `PersonnelAI/CuriousExplorer.yaml` - Inquisitive science officer
-- `PersonnelAI/DisciplinedSecurity.yaml` - By-the-book security officer
-- `PersonnelAI/EmpatheticMedic.yaml` - Caring medical officer
-
-**Documentation:**
-- **Faction AI Guide**: [Assets/FactionAISetupGuide.md](Assets/FactionAISetupGuide.md) - Complete faction AI setup
-- **Personnel AI Guide**: [Assets/PersonnelAISetupGuide.md](Assets/PersonnelAISetupGuide.md) - Complete personnel AI setup
-- **Designer Workflow**: [Assets/AIDesignerWorkflow.md](Assets/AIDesignerWorkflow.md) - No C++ workflow for designers
-- **System Integration**: [Assets/AISystemIntegration.md](Assets/AISystemIntegration.md) - Connecting AI to game systems
-- **YAML Templates**: [Assets/FactionAITemplates/](Assets/FactionAITemplates/) and [Assets/PersonnelAITemplates/](Assets/PersonnelAITemplates/)
-
-**Quick Usage:**
-
-*Creating Faction AI:*
-1. Create a FactionDataAsset with traits and relationships
-2. Create a Blueprint based on UFactionLogic
-3. Assign FactionDataAsset and configure Early Game Priorities
-4. Override BlueprintNativeEvents to customize behavior (optional)
-5. Integrate with ships/stations via component or reference
-
-*Creating Personnel AI:*
-1. Create a PersonnelDataAsset with skills, traits, and relationships
-2. Create a Blueprint based on UPersonnelLogic
-3. Assign PersonnelDataAsset and set Disposition
-4. Override BlueprintNativeEvents for custom personality (optional)
-5. Add to character actors and update in Tick
-
-*For Designers (No C++ Required):*
-- Use YAML templates as reference for values
-- Configure all behavior through Data Assets
-- Customize decisions in Blueprint visual scripting
-- Test and iterate without recompiling
-- All AI hooks are BlueprintNativeEvents
+> **Verified during this pass**: none of `UNPCLogicBase`, `UFactionLogic`, `UPersonnelLogic`, or
+> `UPersonnelDataAsset` exist anywhere under `Source/` (checked directly, no matches). This
+> section (and Personnel Management below) describes a designed system that isn't implemented in
+> the current codebase — not just missing docs for something that exists. `docs/05-ROADMAP.md`
+> lists "Personnel/Crew" and "Faction Diplomacy" as large deferred systems; treat the detailed
+> class/feature descriptions that used to live here as design intent for that future work, not a
+> description of what's buildable today. YAML templates for reference values are still present at
+> [Assets/PersonnelAITemplates/](Assets/PersonnelAITemplates/) and
+> [Assets/PersonnelTemplates/](Assets/PersonnelTemplates/) (`Assets/FactionAITemplates/` is gone).
 
 ### Personnel Management System
-The game includes a comprehensive personnel/crew management system for creating and managing crew members, staff, and character progression.
 
-**Key Components:**
-- `UPersonnelDataAsset` - C++ Data Asset class for defining personnel with 31 role types
-- `FPersonnelTrait` - Struct for personnel traits with gameplay modifiers
-- `FPersonnelRelationship` - Struct for interpersonal relationships
-- `FPersonnelSkill` - Struct for skill tracking with levels and experience
-- `FPerformanceMetric` - Struct for tracking effectiveness over time
-- 7 ready-to-use YAML templates for common roles
-
-**Advanced Features:**
-- **Role System**: 31 distinct roles from Captain to Janitor
-  - Command: Captain, XO, Station Manager
-  - Flight: Pilot, Navigator
-  - Technical: Engineer, AI Operator, Researcher
-  - Combat: Gunnery Chief, Gunner, Security Officer
-  - Medical: Medical Officer, Science Officer
-  - Support: Quartermaster, Chef, Bartender, Janitor
-  - Specialized: Diplomat, Trader, Salvage Specialist, Mining Specialist, Smuggler
-  - General: Crew Member, Station Staff, Entertainment, Civilian, Ambassador
-
-- **Skill System**: Multi-level skill tracking with experience points
-  - Blueprint-callable functions: `GetSkillByName()`, `GetSkillLevel()`, `HasSpecialty()`
-  - Individual skill levels (1-10) and experience points
-  - Support for skill progression and career development
-
-- **Status Tracking**: Comprehensive personnel condition monitoring
-  - Health, Morale, Fatigue, Loyalty, Reputation
-  - Blueprint-callable functions: `IsInGoodCondition()`, `NeedsRest()`, `IsLoyal()`, `HasLowMorale()`
-  - Real-time status affects performance
-
-- **Relationship System**: Track interpersonal connections
-  - Friend, Rival, Mentor, Professional, Family relationships
-  - Relationship strength (-100 to 100)
-  - Blueprint-callable functions: `IsFriendsWith()`, `IsRivalWith()`, `GetRelationshipStrength()`
-
-- **Performance Metrics**: Track effectiveness and career history
-  - Multiple customizable performance metrics
-  - Trend tracking (improving/declining)
-  - Past assignments with ratings
-  - Blueprint-callable functions: `GetPerformanceMetric()`, `GetAveragePerformance()`, `IsPerformingWell()`
-
-- **Command Hierarchy**: Build organizational structures
-  - Manager/Direct Report relationships
-  - Department assignment
-  - Role-based queries: `IsInLeadershipRole()`, `IsInCombatRole()`, `GetDirectReportCount()`
-
-- **Employment System**: Contract and compensation management
-  - Salary tracking
-  - Contract duration and remaining time
-  - Employment history
-
-- **Trait System**: Unique characteristics with gameplay modifiers
-  - Blueprint-callable functions: `HasTrait()`, `GetTraitModifier()`, `GetTraits()`
-  - Support for stacking modifiers
-  - Personality types and descriptions
-
-**YAML Templates:**
-- `Captain.yaml` - Ship commander template with leadership stats
-- `Pilot.yaml` - Flight operations specialist
-- `Gunner.yaml` - Weapons operator template
-- `Engineer.yaml` - Technical specialist template
-- `MedicalOfficer.yaml` - Healthcare provider template
-- `StationManager.yaml` - Station operations manager
-- `CrewMember_Generic.yaml` - General crew member template
-
-**Documentation:**
-- **Complete Guide**: [Assets/PersonnelSystemGuide.md](Assets/PersonnelSystemGuide.md) - Full system documentation
-- **Role Templates**: [Assets/PersonnelTemplates.md](Assets/PersonnelTemplates.md) - All 31 roles with stats and examples
-- **Designer Workflow**: [Assets/PersonnelDesignerWorkflow.md](Assets/PersonnelDesignerWorkflow.md) - Step-by-step creation workflows
-- **YAML Templates**: [Assets/PersonnelTemplates/](Assets/PersonnelTemplates/) - 7 ready-to-use templates
-
-**Quick Usage:**
-1. Create a new PersonnelDataAsset in the Content Browser
-2. Configure personnel properties (role, skills, status, relationships, traits)
-3. Use YAML templates as reference for typical values and structure
-4. Assign to ships/stations via CurrentAssignment property
-5. Use Blueprint-callable functions to query personnel data in gameplay
-6. Build command hierarchies using Manager ID and Direct Reports
-7. Create relationships between personnel for team dynamics
+See the note above — this section previously documented `UPersonnelDataAsset` and a 31-role
+personnel system that does not currently exist in `Source/`. Treated as design intent for the
+deferred Personnel/Crew system rather than rewritten with invented current behavior.
 
 ### Additional Core Systems
 
-**Combat System** - Complete weapon, targeting, and damage mechanics with 6 weapon types, directional shields, point defense, and 5-phase boarding. See [Assets/CombatSystemGuide.md](Assets/CombatSystemGuide.md).
+Combat, Navigation/Autopilot, Quest, Save, Tutorial, Audio, and Player Progression systems are
+present in the codebase but currently **deferred/disabled** per [docs/05-ROADMAP.md](docs/05-ROADMAP.md)
+(Combat/Navigation/Quest/Faction Diplomacy/Advanced AI/Way Network are "complete, disabled";
+Save/Load and Exploration are "partial"). The per-system prose guides this section used to link
+to (`CombatSystemGuide.md`, `NavigationSystemGuide.md`, `QuestSystemGuide.md`, `SaveSystemGuide.md`,
+`TutorialSystemGuide.md`, `AudioSystemGuide.md`, `PlayerProgressionGuide.md`) have been archived;
+see `docs/06-SYSTEM_REFERENCE.md` for the current active/deferred system breakdown.
 
-**Navigation System** - Autopilot, 3D pathfinding, and AI following behavior. Supports multi-waypoint paths with obstacle avoidance. See [Assets/NavigationSystemGuide.md](Assets/NavigationSystemGuide.md).
+**Enhanced Input System** - Centralized input configuration with 30+ actions organized into categories (Movement, Combat, Navigation, System, Camera). See [Assets/EnhancedInputImplementation.md](Assets/EnhancedInputImplementation.md) and [Assets/MousewheelThrottleSetupGuide.md](Assets/MousewheelThrottleSetupGuide.md) for detailed mousewheel throttle control setup.
 
-**Quest System** - Mission tracking with 10 quest types and 9 objective types. Supports quest chains, procedural generation, and difficulty-scaled rewards. See [Assets/QuestSystemGuide.md](Assets/QuestSystemGuide.md).
+**UI Systems** - HUD (`AAdastreaHUD`, the reliably-rendering canvas path in PIE), Ship Status/Inventory/Ship Customization/Trading/Station Management widgets, all verified present in `Source/Adastrea/Public/{Player,UI}/`. The dedicated `ShipStatusScreenSetup.md` guide this bullet used to link to has been archived.
 
-**Enhanced Input System** - Centralized input configuration with 30+ actions organized into categories (Movement, Combat, Navigation, System, Camera). See [Assets/EnhancedInputImplementation.md](Assets/EnhancedInputImplementation.md) and [Assets/MousewheelThrottleSetupGuide.md](Assets/MousewheelThrottleSetupGuide.md) for detailed mousewheel throttle control setup in UE 5.6.
-
-**Save System** - Complete save/load with multiple slots, auto-save, metadata tracking, and version control. See [Assets/SaveSystemGuide.md](Assets/SaveSystemGuide.md).
-
-**Tutorial System** - Interactive tutorials with 6 step types (Message, UI Highlight, Wait for Action, etc.). Progress tracking and designer-friendly. See [Assets/TutorialSystemGuide.md](Assets/TutorialSystemGuide.md).
-
-**Audio System** - Sound effects with 8 categories and dynamic music system with 8 moods. Includes spatial audio and priority management. See [Assets/AudioSystemGuide.md](Assets/AudioSystemGuide.md).
-
-**Player Progression** - Leveling, reputation tracking, ship upgrades, and unlock systems. See [Assets/PlayerProgressionGuide.md](Assets/PlayerProgressionGuide.md).
-
-**UI Systems** - Complete HUD (AdastreaHUDWidget), Ship Status Screen (ShipStatusWidget), Inventory management (InventoryWidget), Ship Customization (ShipCustomizationWidget), Trading interface (TradingInterfaceWidget), and Station Management (StationManagementWidget). See [Assets/ShipStatusScreenSetup.md](Assets/ShipStatusScreenSetup.md) for ship status screen setup and system-specific guides in Assets/.
+**Performance Tools** - referenced `LODManagerComponent`/`PerformanceProfiler` and their guide
+(`PerformanceOptimizationGuide.md`) could not be verified in current `Source/` during this pass —
+flagging rather than asserting either way.
 
 ### Map System
 
@@ -908,143 +613,69 @@ A comprehensive navigation system for displaying the universe and individual sec
 **Usage:**
 Create Widget Blueprints based on `UniverseMapWidget` and `SectorMapWidget` classes, design the UI layout, and bind to player controller for map toggle (M key recommended).
 
-**Documentation:**
-- [Map System Guide](Assets/MapSystemGuide.md) - Complete documentation with API reference
-- [Map System Quick Start](Assets/MapSystemQuickStart.md) - 5-minute setup guide
-
-**Performance Tools** - LOD management (LODManagerComponent) and performance profiling (PerformanceProfiler). See [Assets/PerformanceOptimizationGuide.md](Assets/PerformanceOptimizationGuide.md).
+> The `Map System Guide`/`Map System Quick Start` docs this section used to link to
+> (`Assets/MapSystemGuide.md`, `Assets/MapSystemQuickStart.md`) have been archived; the
+> component descriptions above are verified against current source
+> (`Source/Adastrea/Public/UI/UniverseMapWidget.h` / `SectorMapWidget.h`).
 
 ## Documentation
 
-### Plugin & Tool Integration
+> This section previously listed ~80 links across Plugin/Tool, Project Planning, Research,
+> Visual Design, Developer, Build/CI, Quick Start, Blueprint, and System Documentation
+> subsections. Auditing them during this pass found the large majority dead (root-level and
+> `Assets/*.md` files that were archived to `docs/14-ARCHIVE/` in a later documentation reorg).
+> Consolidated to what's actually current, plus the real subset of `Assets/*.md` guides that are
+> still live.
 
-- **[Plugin Recommendations](PLUGIN_RECOMMENDATIONS.md)** - ⭐ **NEW** Comprehensive analysis of UE built-in and Fab marketplace plugins
-- **[Plugin Quick Reference](PLUGIN_QUICK_REFERENCE.md)** - ⭐ **NEW** Quick lookup guide for plugin selection
-- **[Director Plugin Overview](DIRECTOR_PLUGIN_OVERVIEW.md)** - Executive overview of plugin development strategy
-- **[Director Knowledge Base](DIRECTOR_KNOWLEDGE_BASE.md)** - Comprehensive knowledge base for Adastrea-Director AI tool
-- **[UE Plugin Feasibility Report](UE_PLUGIN_FEASIBILITY_REPORT.md)** - Technical feasibility analysis for native plugin
-- **[Plugin Development Guide](PLUGIN_DEVELOPMENT_GUIDE.md)** - Implementation roadmap for plugin conversion
+**Start here**: [docs/INDEX.md](docs/INDEX.md) → [docs/00-KNOWLEDGE_BASE.md](docs/00-KNOWLEDGE_BASE.md)
+(authoritative technical snapshot) → [docs/05-ROADMAP.md](docs/05-ROADMAP.md) (current status/priorities).
 
-### Project Planning
+**Setup**: [Build with UE Tools](docs/09-SETUP_GUIDES/BUILD_WITH_UE_TOOLS.md) ·
+[Visual Studio Project Generation](docs/09-SETUP_GUIDES/VISUAL_STUDIO_PROJECT_GENERATION.md) ·
+[Project Generation Quick Fix](docs/09-SETUP_GUIDES/PROJECT_GENERATION_QUICK_FIX.md)
 
-- **[Project Roadmap](ROADMAP.md)** - Development phases, timelines, and future features
-- **[Stub and Placeholder Audit](STUB_AND_PLACEHOLDER_AUDIT.md)** - ⭐ Complete audit of stubs, placeholders, and TODOs - realistic assessment of remaining work
-- **[Current Status](CURRENT_STATUS.md)** - Realistic project status assessment (code 85% complete, content 10% complete)
+**Contributing**: [docs/08-CONTRIBUTING.md](docs/08-CONTRIBUTING.md) ·
+[Unreal Directive Best Practices](.github/instructions/unreal-directive-best-practices.md) ·
+[Custom Agents](.github/agents/README.md)
 
-### Research and Analysis
+**Still-live per-system guides** (the rest were archived — see the note above):
+- Spaceship: [Data Asset Guide](Assets/SpaceshipDataAssetGuide.md) ·
+  [Templates](Assets/SpaceshipTemplates.md) ·
+  [Designer Workflow](Assets/SpaceshipDesignerWorkflow.md) ·
+  [Control Guide](Assets/ShipControlGuide.md) ·
+  [X4 Flight Controls](Assets/X4FlightControlsGuide.md) ·
+  [Mousewheel Throttle Setup](Assets/MousewheelThrottleSetupGuide.md)
+- Station Editor: [PIE Testing Guide](Assets/StationEditorPIETestingGuide.md) ·
+  [Migration Guide](Assets/StationEditorMigrationGuide.md) ·
+  [System Guide](Assets/StationEditorSystemGuide.md) ·
+  [Management Guide](Assets/StationManagementGuide.md) ·
+  [Blueprint README](Content/Blueprints/STATION_EDITOR_README.md)
+- Trading: [System Guide](Assets/TradingSystemGuide.md) ·
+  [API Reference](Assets/TradingAPIReference.md) ·
+  [Designer Workflow](Assets/TradingDesignerWorkflow.md)
+- Way Network (design docs for a deferred system): [Blueprint Examples](Blueprints/WayNetworkBlueprintExamples.md)
+- General: [Designer Onboarding](Assets/DesignerOnboarding.md) ·
+  [Playtesting Checklist](Assets/PlaytestingChecklist.md) ·
+  [Iteration Guide](Assets/IterationGuide.md) ·
+  [Blueprint Workflow Templates](Assets/BlueprintWorkflowTemplates.md)
 
-- **[X4 Foundations Research](X4_FOUNDATIONS_RESEARCH.md)** - 🆕 Comprehensive analysis of X4's architecture, modding, and design patterns
-- **[X4 Quick Reference](X4_QUICK_REFERENCE.md)** - 🆕 TL;DR summary with actionable recommendations
-
-### Visual Design
-
-- **[Game Mockups](GAME_MOCKUPS.md)** - Comprehensive visual mockups showing current vs. desired UI/UX for all game screens
-- **[Interactive UI Demo](UI_MOCKUP_DEMO.html)** - HTML/CSS interactive demo of game interfaces (open in browser)
-
-### Developer Documentation
-
-Comprehensive technical documentation for contributors and developers:
-
-- **[Architecture Overview](ARCHITECTURE.md)** - High-level system architecture with visual diagrams
-- **[Contributing Guidelines](docs/development/CONTRIBUTING.md)** - How to contribute code, documentation, and assets
-- **[Code Style Guide](docs/development/CODE_STYLE.md)** - C++ and Blueprint coding standards
-- **[Copilot Memory Review](COPILOT_MEMORY_REVIEW.md)** - 🆕 **NEW** Comprehensive review of 30+ stored patterns and conventions for GitHub Copilot
-- **[Unreal Directive Best Practices](.github/instructions/unreal-directive-best-practices.md)** - 🆕 Advanced Unreal Engine best practices
-- **[Unreal Directive Suggestions](docs/development/UNREAL_DIRECTIVE_SUGGESTIONS.md)** - 🆕 Comprehensive improvement suggestions for Adastrea
-- **[Performance Improvements](PERFORMANCE_IMPROVEMENTS.md)** - Optimization guidelines
-- **[Custom Agents](.github/agents/README.md)** - AI assistants with project expertise for GitHub Copilot
-
-### Build and CI/CD Documentation
-
-- **[Build with UE Tools](docs/setup/BUILD_WITH_UE_TOOLS.md)** - 🆕 Build using only UE build tools (~500MB) instead of full engine (~50GB)
-- **[Windows Build Scripts Reference](docs/reference/WINDOWS_BUILD_SCRIPTS.md)** - 🔧 **NEW** Windows batch scripts for MSBuild SetEnv workaround (UE 5.6)
-- **[Build Troubleshooting](docs/development/BUILD_TROUBLESHOOTING.md)** - Common build issues and solutions
-- **[GitHub Token & Docker Setup](GITHUB_TOKEN_DOCKER_SETUP.md)** - ⭐ Complete guide for setting up GitHub Actions with Docker for Unreal builds
-- **[Container Diagnostics](CONTAINER_DIAGNOSTICS.md)** - 🔍 **NEW** Troubleshooting guide for Epic Games container access issues
-- **[Cloud Build Quick Start](CLOUD_BUILD_QUICK_START.md)** - Quick reference for cloud build setup
-- **[Cloud Build Services](CLOUD_BUILD_SERVICES.md)** - Comprehensive comparison of build services
-
-### Quick Start Guides
-- [Designer Onboarding](Assets/DesignerOnboarding.md) - Start here if you're new to the project
-- [Quick Start](docs/QUICKSTART.md) - Get up and running quickly
-- [Content Creation Quick Start](CONTENT_CREATION_docs/QUICKSTART.md) - For content creators
-- [Editor Implementation Guide](EDITOR_IMPLEMENTATION_GUIDE.md) - Complete guide to working in Unreal Engine editor
-
-### Blueprint Documentation
-- **[Blueprint Guide for Beginners](BLUEPRINT_GUIDE_FOR_BEGINNERS.md)** - ⭐ **START HERE!** Complete beginner-friendly guide assuming zero Blueprint knowledge
-- **[Blueprint Quick Start Summary](BLUEPRINT_QUICK_START_SUMMARY.md)** - One-page printable summary with all essentials
-- **[Blueprint Roadmap Visual](BLUEPRINT_ROADMAP_VISUAL.md)** - Visual progression map and flowcharts
-- **[Blueprint Requirements List](BLUEPRINT_REQUIREMENTS_LIST.md)** - Comprehensive list of all user-created Blueprints needed in the editor (~100+ Blueprints organized by priority)
-- **[Blueprint Checklist](BLUEPRINT_CHECKLIST.md)** - Quick checklist for creating required Blueprints in phases
-- **[Blueprint Quick Reference](BLUEPRINT_QUICK_REFERENCE.md)** - One-page visual reference card with priorities and paths
-- [Blueprint Creation Guide](BLUEPRINT_CREATION_GUIDE.md) - Step-by-step Blueprint creation instructions
-
-### System Documentation
-
-#### Core Systems
-- [Spaceship System Guide](Assets/SpaceshipDataAssetGuide.md)
-  - [Mousewheel Throttle Setup Guide (UE 5.6)](Assets/MousewheelThrottleSetupGuide.md)
-  - [X4 Flight Controls Guide](Assets/X4FlightControlsGuide.md)
-  - [Ship Control Guide](Assets/ShipControlGuide.md)
-- [Space Station System](Content/Blueprints/STATION_EDITOR_README.md)
-- [Faction System Guide](Assets/BlueprintFactionAssetGuide.md)
-- [Way System Guide](Assets/WaySystemGuide.md)
-  - [Way System Overview](Assets/WaySystemOverview.md)
-  - [Way System Quick Reference](Assets/WaySystemQuickReference.md)
-  - [Way System API Reference](Assets/WaySystemAPIReference.md)
-  - [Way Creation Guide](Assets/WayCreationGuide.md)
-  - [Way Network Guide](Assets/WayNetworkGuide.md)
-  - [Way Network Quick Start](Assets/WayNetworkQuickStart.md)
-  - [Way Network Workflow](Assets/WayNetworkWorkflow.md)
-- [Personnel System Guide](Assets/PersonnelSystemGuide.md)
-
-#### Advanced Systems
-- [AI System Overview](Assets/AI_QUICK_START.md)
-  - [Faction AI Setup](Assets/FactionAISetupGuide.md)
-  - [Personnel AI Setup](Assets/PersonnelAISetupGuide.md)
-  - [AI Designer Workflow](Assets/AIDesignerWorkflow.md)
-- [Trading System Guide](Assets/TradingSystemGuide.md)
-- [Material System Guide](Assets/MaterialSystemGuide.md)
-- [Map System Guide](Assets/MapSystemGuide.md)
-  - [Map System Quick Start](Assets/MapSystemQuickStart.md)
-- [Homeworld System Guide](Assets/HomeworldSystemGuide.md)
-
-#### Templates and References
-- [Spaceship Templates](Assets/SpaceshipTemplates.md) - 6 pre-built ship designs
-- [Faction Templates](Assets/FactionSetupGuide.md) - 10 pre-made factions
-- [Personnel Templates](Assets/PersonnelTemplates.md) - 31 role templates
-- [Blueprint Workflows](Assets/BlueprintWorkflowTemplates.md)
-- [Trading API Reference](Assets/TradingAPIReference.md)
-
-#### Integration Guides
-- [AI System Integration](Assets/AISystemIntegration.md)
-- [Material-Station Integration](Assets/MaterialStationIntegration.md)
-- [Trading Blueprint Guide](Blueprints/TradingSystemBlueprintGuide.md)
-
-#### Workflows and Best Practices
-- [Spaceship Designer Workflow](Assets/SpaceshipDesignerWorkflow.md)
-- [Personnel Designer Workflow](Assets/PersonnelDesignerWorkflow.md)
-- [Trading Designer Workflow](Assets/TradingDesignerWorkflow.md)
-- [Playtesting Checklist](Assets/PlaytestingChecklist.md)
-- [Iteration Guide](Assets/IterationGuide.md)
-
-#### Editor Development
-*Note: The AdastreaEditor C++ module has been removed, but `AdastreaEditor.Target.cs` is included for building the project in Unreal Editor. Future editor customizations can be added as a new module if needed.*
+**Editor Development**: *The `AdastreaEditor` C++ module has been removed, but `AdastreaEditor.Target.cs` is included for building the project in Unreal Editor. Future editor customizations can be added as a new module if needed.*
 
 ### YAML Templates
 
-All systems include ready-to-use YAML templates in their respective folders:
+Ready-to-use YAML templates that still exist:
 - `Assets/SpaceshipTemplates/` - Ship configurations
-- `Assets/FactionAITemplates/` - Faction AI behaviors
 - `Assets/PersonnelAITemplates/` - Personnel AI personalities
 - `Assets/PersonnelTemplates/` - Crew member profiles
 - `Assets/TradingTemplates/` - Trade items and markets
+
+(`Assets/FactionAITemplates/` referenced in an earlier version of this section no longer exists.)
 
 ## Contributing
 
 We welcome contributions! Here's how to get started:
 
-1. **Read the Guidelines**: See [docs/development/CONTRIBUTING.md](docs/development/CONTRIBUTING.md) for detailed instructions
+1. **Read the Guidelines**: See [docs/08-CONTRIBUTING.md](docs/08-CONTRIBUTING.md) for detailed instructions
 2. **Check Issues**: Look for issues labeled "good first issue" or "help wanted"
 3. **Fork & Clone**: Fork the repository and create a feature branch
 4. **Make Changes**: Follow our coding standards and best practices
@@ -1067,7 +698,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Version History
 
-See [docs/CHANGELOG.md](docs/CHANGELOG.md) for detailed version history and release notes.
+No maintained root changelog currently exists — see `git log` for detailed version history.
 
 ## Support
 
