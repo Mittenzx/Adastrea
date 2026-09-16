@@ -546,6 +546,118 @@
           "Qty": 1
         }
       ]
+    },
+    "ProjectileWeaponsLab": {
+      "size": [2, 2, 1],
+      "power": 90,
+      "group": "Processing",
+      "faces": "all",
+      "cost": 323198,
+      "BaseValue": 323198,
+      "WeightKg": 597.2,
+      "part_family": "Module",
+      "recipe": [
+        { "ItemID": "WeaponsLabModule", "Qty": 1 },
+        { "ItemID": "ModuleShell", "Qty": 1 },
+        { "ItemID": "Railgun", "Qty": 1 },
+        { "ItemID": "SuperConductingWire_Mk2", "Qty": 1 }
+      ]
+    },
+    "BeamWeaponsLab": {
+      "size": [2, 2, 1],
+      "power": 90,
+      "group": "Processing",
+      "faces": "all",
+      "cost": 462482,
+      "BaseValue": 462482,
+      "WeightKg": 597.2,
+      "part_family": "Module",
+      "recipe": [
+        { "ItemID": "WeaponsLabModule", "Qty": 1 },
+        { "ItemID": "ModuleShell", "Qty": 1 },
+        { "ItemID": "PlasmaCannon", "Qty": 1 },
+        { "ItemID": "AdvancedPowerCells", "Qty": 2 }
+      ]
+    },
+    "IonPropulsionLab": {
+      "size": [2, 2, 1],
+      "power": 90,
+      "group": "Processing",
+      "faces": "all",
+      "cost": 366990,
+      "BaseValue": 366990,
+      "WeightKg": 597.2,
+      "part_family": "Module",
+      "recipe": [
+        { "ItemID": "PhysicsLabModule", "Qty": 1 },
+        { "ItemID": "ModuleShell", "Qty": 1 },
+        { "ItemID": "ShipEngine_Mk2", "Qty": 1 },
+        { "ItemID": "CobaltMagnet", "Qty": 2 }
+      ]
+    },
+    "GravMaterialsLab": {
+      "size": [2, 2, 1],
+      "power": 90,
+      "group": "Processing",
+      "faces": "all",
+      "cost": 969171,
+      "BaseValue": 969171,
+      "WeightKg": 597.2,
+      "part_family": "Module",
+      "recipe": [
+        { "ItemID": "MaterialsLabModule", "Qty": 1 },
+        { "ItemID": "ModuleShell", "Qty": 1 },
+        { "ItemID": "GravitationGenerator_Mk2", "Qty": 1 },
+        { "ItemID": "EnrichedUranium", "Qty": 1 }
+      ]
+    },
+    "EncryptionLab": {
+      "size": [2, 2, 1],
+      "power": 90,
+      "group": "Processing",
+      "faces": "all",
+      "cost": 1843522,
+      "BaseValue": 1843522,
+      "WeightKg": 597.2,
+      "part_family": "Module",
+      "recipe": [
+        { "ItemID": "ElectronicsLabModule", "Qty": 1 },
+        { "ItemID": "ModuleShell", "Qty": 1 },
+        { "ItemID": "EncryptedCircuit_Mk2", "Qty": 1 },
+        { "ItemID": "QuantumProcessor_Mk2", "Qty": 1 }
+      ]
+    },
+    "OptronicsLab": {
+      "size": [2, 2, 1],
+      "power": 90,
+      "group": "Processing",
+      "faces": "all",
+      "cost": 421356,
+      "BaseValue": 421356,
+      "WeightKg": 597.2,
+      "part_family": "Module",
+      "recipe": [
+        { "ItemID": "ElectronicsLabModule", "Qty": 1 },
+        { "ItemID": "ModuleShell", "Qty": 1 },
+        { "ItemID": "OpticalLens_Mk2", "Qty": 2 },
+        { "ItemID": "FiberOpticCable_Mk2", "Qty": 1 }
+      ]
+    },
+    "CyberneticsLab": {
+      "size": [2, 2, 1],
+      "power": 90,
+      "group": "Processing",
+      "faces": "all",
+      "cost": 268820,
+      "BaseValue": 268820,
+      "WeightKg": 597.2,
+      "part_family": "Module",
+      "recipe": [
+        { "ItemID": "BiologyLabModule", "Qty": 1 },
+        { "ItemID": "ModuleShell", "Qty": 1 },
+        { "ItemID": "NanoInjectors", "Qty": 1 },
+        { "ItemID": "RefinedMedicine_Mk2", "Qty": 1 }
+      ]
     }
   }
 }

@@ -76,6 +76,24 @@ struct STATIONEDITOR_API FStationModuleEntry
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module Entry")
 	EStationModuleGroup ModuleGroup = EStationModuleGroup::Other;
 
+	/**
+	 * Footprint in grid cells (X, Y, Z), from Content/Data/StationModuleBuilderData.json's
+	 * "size" field. Defaults to a single cell (1,1,1) for anything not found in that table
+	 * (e.g. no catalog loaded), matching the old uniform-size behavior.
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module Entry")
+	FIntVector GridFootprint = FIntVector(1, 1, 1);
+
+	/**
+	 * Connection faces this module exposes, from StationModuleBuilderData.json's
+	 * "faces" field: N/S/E/W/Up/Down, or empty for "all" (the JSON's "all" string
+	 * value - every module has this except SolarArrayModule, which only connects
+	 * through "W"). A module only connects to a neighbour on one of these faces
+	 * (rotated with the module) - see UStationEditorManager::DoesModuleFaceDirection.
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module Entry")
+	TArray<FName> ConnectionFaces;
+
 	/** Constructor with default values */
 	FStationModuleEntry()
 		: RequiredTechLevel(1)
@@ -167,6 +185,16 @@ public:
 		 */
 		UFUNCTION(BlueprintCallable, Category="Module Catalog")
 		int32 LoadCatalogFromJson();
+
+		/**
+		 * Fill in each entry's GridFootprint from Content/Data/StationModuleBuilderData.json's
+		 * per-module "size" field, matched by ItemID (= module class name). Called automatically
+		 * at the end of LoadCatalogFromJson(); exposed separately so it can be re-run or tested
+		 * on its own. A module with no matching entry in that table keeps the (1,1,1) default.
+		 * @return Number of entries whose footprint was set from the file.
+		 */
+		UFUNCTION(BlueprintCallable, Category="Module Catalog")
+		int32 LoadFootprintsFromJson();
 
 		/** Whether LoadCatalogFromJson() has run and produced entries. */
 		UFUNCTION(BlueprintCallable, BlueprintPure, Category="Module Catalog")

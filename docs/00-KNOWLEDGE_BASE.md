@@ -209,9 +209,9 @@ Run one file: `python -m pytest tests/<file>.py`. **Randomization note**: a coup
 1. **Interior textures are the ship-hull recipe reused** — reads "wallpaper" on furniture at scale; needs bespoke interior language (priority item).
 2. **`SM_StarDome_Dense`** tri budget exceed (pre-existing QA failure).
 3. **`M_Interior_Eng`** has no texture mapping → engineering bay flat grey.
-4. **`SetRuntimeInputEnabled`** is a logging stub until the input refactor agent's changes land.
+4. ~~`SetRuntimeInputEnabled` is a logging stub~~ — fixed 2026-09-15: it now really adds/removes the ship's runtime input mapping context.
 5. **Bridge viewport zone** doesn't read as glass in renders (material polish item).
-6. **Test-order randomization** can make 2 interior contract tests fail when run alone.
+6. ~~Test-order randomization can make 2 interior contract tests fail when run alone~~ — misdiagnosed. `tests/test_interiors_walk_scales.py` has no shared/mutable state between tests (every test reads C++ source fresh); the real cause was 5 tests asserting against the pre-Enhanced-Input-rewrite avatar/interior confinement code (`InteriorFloorAltitude`, `GetLocalHalfExtents`, the manual per-tick clamp) after that code was replaced by real wall/floor collision + swept movement. Fixed 2026-09-15 by rewriting the stale assertions to match the current contract; confirmed passing both together and each in full isolation (pytest-randomly isn't even installed in this env).
 7. **README** still states UE 5.6 / older phase status — docs lag; the repo is current.
 8. **Interior preview tooling** (`render_int_inside.py`) is fixed and the correct way to judge rooms — don't trust `render_interiors.py` for furniture legibility.
 

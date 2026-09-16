@@ -62,7 +62,7 @@ def rebuild(matname, texset):
         mat = at.create_asset(matname, MAT_FOLDER, unreal.Material, unreal.MaterialFactoryNew())
     ED = unreal.MaterialEditingLibrary
     ED.delete_all_material_expressions(mat)
-    mat.set_editor_property("shading_model", unreal.MaterialShadingModel.MSM_UNLIT)
+    mat.set_editor_property("shading_model", unreal.MaterialShadingModel.MSM_DEFAULT_LIT)
     mat.set_editor_property("blend_mode", unreal.BlendMode.BLEND_OPAQUE)
     y=60; ok=0
     def sample(asset, x, y):

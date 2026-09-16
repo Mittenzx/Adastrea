@@ -84,45 +84,71 @@ class TestWalkExtentContracts:
         assert 200 <= ceil <= 800, f"CeilingHeight out of human range: {ceil}"
 
     def test_walk_extents_have_floor(self):
-        """GetLocalHalfExtents clamps below a 100-unit minimum so the walk box
-        is never degenerate."""
+        """FitVolumeToMesh clamps the walk footprint below a minimum so the
+        walk box is never degenerate, even for a tiny/malformed shell mesh."""
         src = self._interior_cpp()
-        assert "FMath::Max(Bounds.BoxExtent.X, 100.0f)" in src, \
-            "X walk half-extent must have a 100u floor"
-        assert "FMath::Max(Bounds.BoxExtent.Y, 100.0f)" in src, \
-            "Y walk half-extent must have a 100u floor"
+        assert "FMath::Max(Extent.X, 50.0f)" in src, \
+            "X walk half-extent (HalfDepth) must have a floor"
+        assert "FMath::Max(Extent.Y, 50.0f)" in src, \
+            "Y walk half-extent (HalfWidth) must have a floor"
+        assert "FMath::Max(Extent.Z, 100.0f)" in src, \
+            "Z walk half-extent (HalfHeight) must have a floor"
 
     def test_exit_trigger_front_of_room(self):
         """Exit trigger sits ~60% toward the front of the walk depth."""
         src = self._interior_cpp()
         assert "HalfDepth * 0.6f" in src, "Exit trigger should sit near the room front"
 
+    def test_walls_block_pawn_confining_the_room(self):
+        """Four wall BoxComponents provide the real confinement (the avatar's
+        own swept movement stops at them) — this is what replaced the old
+        manual per-tick position clamp."""
+        src = self._interior_cpp()
+        for wall in ("WallNorth", "WallSouth", "WallEast", "WallWest"):
+            assert f"{wall} = MakeWall" in src, f"{wall} must be constructed"
+        assert 'Wall->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block)' in src, \
+            "Walls must block the Pawn channel to confine the avatar"
+
 
 class TestAvatarFloorAltitude:
-    """The avatar is held at a standing altitude (~96u) while walking an interior."""
+    """The avatar stands at human height and is held on the floor / confined to
+    the room by real collision, not a manual position clamp (see MoveSafe/
+    SnapToFloor in SpaceshipAvatar.cpp and the wall BoxComponents in
+    SpaceshipInterior.cpp — the old GetLocalHalfExtents + per-tick clamp
+    approach was replaced by swept movement against real wall/floor colliders)."""
 
-    def _avatar_h(self):
-        return _src(AVATAR_H)
+    def _avatar_cpp(self):
+        return _src(AVATAR_CPP)
 
-    def test_interior_floor_altitude_present(self):
-        src = self._avatar_h()
-        assert "InteriorFloorAltitude" in src, "Avatar must expose an interior floor altitude"
+    def test_capsule_is_human_standing(self):
+        """~96u capsule half-height (~192u total) so the avatar reads as a
+        standing human, not sunk or towering."""
+        src = self._avatar_cpp()
+        r = _const(src, "InitCapsuleSize", None)
+        # InitCapsuleSize(Radius, HalfHeight) — pull the HalfHeight (2nd arg).
+        m = re.search(r"InitCapsuleSize\(\s*[-0-9.]+f?\s*,\s*([-0-9.]+)f?\s*\)", src)
+        assert m is not None, "Avatar must set its capsule size in the constructor"
+        half_height = float(m.group(1))
+        assert 60 <= half_height <= 140, f"Capsule half-height should be ~96u standing, got {half_height}"
 
-    def test_floor_altitude_is_human_standing(self):
-        """~96u (~0.5x the 192u capsule) so eyes sit near eye height, not sunk
-        or hovering."""
-        r = _const(self._avatar_h(), "InteriorFloorAltitude", -1)
-        assert r is not None
-        assert 60 <= r <= 140, f"InteriorFloorAltitude should be ~96u standing, got {r}"
+    def test_avatar_moves_via_swept_collision(self):
+        """Movement is a direct swept capsule translation (MoveSafe), which
+        naturally stops at real wall/floor colliders — no manual room-extent
+        clamp is needed or present."""
+        src = self._avatar_cpp()
+        assert "AddActorWorldOffset(WorldDelta, true, &Hit)" in src, \
+            "MoveSafe must sweep the capsule so it collides with real walls/floor"
+        assert "GetLocalHalfExtents" not in src, \
+            "Manual room-extent clamping was replaced by real wall collision — should not reappear"
 
-    def test_avatar_confined_in_tick(self):
-        """The avatar clamps position to the room each tick (can't walk through
-        the shell into space)."""
-        src = _src(AVATAR_CPP)
-        assert "GetLocalHalfExtents(InteriorFloorAltitude, HP)" in src, \
-            "Avatar Tick must query the room's local half-extents"
-        assert "FMath::Clamp(LocalPos.X" in src and "FMath::Clamp(LocalPos.Y" in src, \
-            "Avatar must clamp X and Y to the room extent"
+    def test_avatar_holds_floor_height(self):
+        """SnapToFloor holds standing height via a downward line trace against
+        the real floor collider, not a fixed/hardcoded altitude constant."""
+        src = self._avatar_cpp()
+        assert "LineTraceSingleByChannel(Hit, Start, End, ECC_Pawn" in src, \
+            "SnapToFloor must trace down against Pawn-blocking floor collision"
+        assert "Hit.Location.Z + HalfHeight" in src, \
+            "SnapToFloor must place the capsule center HalfHeight above the traced floor"
 
 
 class TestEntryPoint:
@@ -131,11 +157,20 @@ class TestEntryPoint:
     def _interior_cpp(self):
         return _src(INTERIOR_CPP)
 
-    def test_entry_is_room_center_standing(self):
-        """Entry local point is (0,0,~200): centered, a couple units up so the
-        avatar is standing (not embedded in the floor)."""
+    def test_entry_is_away_from_seat_trigger_standing(self):
+        """Entry local point is offset toward the opposite end of the room from
+        the seat/exit trigger (which sits at +0.6*HalfDepth), so the avatar
+        doesn't spawn a couple steps from instantly re-triggering the
+        return-to-ship overlap, and stands at a sane height (floor-relative,
+        so it can't float/sink as the room's actual floor height varies).
+        Offset by Origin.X/Y too — the mesh's bounding-box centre is often not
+        at its pivot, so (0,0) alone would misplace the entry point relative
+        to the actual visible geometry."""
         src = self._interior_cpp()
-        assert "FVector(0.0f, 0.0f, 200.0f)" in src, "Entry should be centered at Z=200 standing height"
+        assert "EntryLocation = FVector(Origin.X - HalfDepth * 0.6f, Origin.Y," in src, \
+            "Entry should sit opposite the seat trigger (X = Origin.X - 0.6*HalfDepth), offset by Origin.Y"
+        assert "FloorZ + 100.0f)" in src, \
+            "Entry Z should be floor-relative (FloorZ + standing offset)"
 
 
 class TestCompanionPartFamilies:

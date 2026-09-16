@@ -11,11 +11,64 @@ ASpaceStationModule::ASpaceStationModule()
     MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ModuleMesh"));
     RootComponent = MeshComponent;
 
-    // Load the cube mesh from engine basic shapes
+    // Load the cube mesh from engine basic shapes (ultimate fallback if a real
+    // shell isn't found below).
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMeshAsset(TEXT("/Engine/BasicShapes/Cube.Cube"));
-    if (CubeMeshAsset.Succeeded())
+    UStaticMesh* MeshToUse = CubeMeshAsset.Succeeded() ? CubeMeshAsset.Object : nullptr;
+
+    // Real shell geometry (Foundry, 2026-09-15): 4 shared shells sized to match
+    // Content/Data/StationModuleBuilderData.json's per-module grid footprint -
+    // Standard (2x2x1, most modules), Large (3x2x1, DockingBay), ConnectorThin
+    // (1x1x1, Corridor/DockingPort/Turret), and SolarArray (3x1x1, its own shell
+    // since it's the one module whose face-restricted connection is visually
+    // meaningful - see UStationEditorManager::DoesModuleFaceDirection).
+    // GetClass() here returns the most-derived class (UE sets the class pointer
+    // before running any constructor body, base included), so this one place
+    // covers every subclass without touching their 20 individual constructors.
+    static ConstructorHelpers::FObjectFinder<UStaticMesh> ShellStandardAsset(TEXT("/AdastreaShips/Meshes/Station/SM_StationModule_Shell_Standard.SM_StationModule_Shell_Standard"));
+    static ConstructorHelpers::FObjectFinder<UStaticMesh> ShellLargeAsset(TEXT("/AdastreaShips/Meshes/Station/SM_StationModule_Shell_Large.SM_StationModule_Shell_Large"));
+    static ConstructorHelpers::FObjectFinder<UStaticMesh> ShellConnectorThinAsset(TEXT("/AdastreaShips/Meshes/Station/SM_StationModule_Shell_ConnectorThin.SM_StationModule_Shell_ConnectorThin"));
+    static ConstructorHelpers::FObjectFinder<UStaticMesh> ShellSolarArrayAsset(TEXT("/AdastreaShips/Meshes/Station/SM_StationModule_Shell_SolarArray.SM_StationModule_Shell_SolarArray"));
+
+    static const TSet<FName> ConnectorThinClasses = { FName("CorridorModule"), FName("DockingPortModule"), FName("TurretModule") };
+    static const TSet<FName> LargeClasses = { FName("DockingBayModule") };
+    static const TSet<FName> SolarArrayClasses = { FName("SolarArrayModule") };
+    static const TSet<FName> StandardClasses = {
+        FName("CargoBayModule"), FName("MarketplaceModule"), FName("HabitationModule"), FName("BarracksModule"),
+        FName("ReactorModule"), FName("ProcessingModule"), FName("FabricationModule"), FName("ScienceLabModule"),
+        FName("FuelDepotModule"), FName("ShieldGeneratorModule"), FName("PhysicsLabModule"), FName("MaterialsLabModule"),
+        FName("ElectronicsLabModule"), FName("WeaponsLabModule"), FName("BiologyLabModule"),
+        // The 7 tier-4 labs - added to StationModuleBuilderData.json alongside this
+        // (they were in the runtime catalog with class_path resolving fine, just
+        // had no grid footprint entry at all, so the station editor couldn't have
+        // placed them - same [2,2,1]/"all faces" shape as their tier-1 parent labs).
+        FName("ProjectileWeaponsLab"), FName("BeamWeaponsLab"), FName("IonPropulsionLab"),
+        FName("GravMaterialsLab"), FName("EncryptionLab"), FName("OptronicsLab"), FName("CyberneticsLab")
+    };
+
+    const FName ClassFName(GetClass()->GetFName());
+    if (ConnectorThinClasses.Contains(ClassFName) && ShellConnectorThinAsset.Succeeded())
     {
-        MeshComponent->SetStaticMesh(CubeMeshAsset.Object);
+        MeshToUse = ShellConnectorThinAsset.Object;
+    }
+    else if (LargeClasses.Contains(ClassFName) && ShellLargeAsset.Succeeded())
+    {
+        MeshToUse = ShellLargeAsset.Object;
+    }
+    else if (SolarArrayClasses.Contains(ClassFName) && ShellSolarArrayAsset.Succeeded())
+    {
+        MeshToUse = ShellSolarArrayAsset.Object;
+    }
+    else if (StandardClasses.Contains(ClassFName) && ShellStandardAsset.Succeeded())
+    {
+        MeshToUse = ShellStandardAsset.Object;
+    }
+    // Everything else (base ASpaceStationModule itself, the 3 niche research labs
+    // not yet in the builder data table, and anything else) keeps the cube.
+
+    if (MeshToUse)
+    {
+        MeshComponent->SetStaticMesh(MeshToUse);
     }
 
     // Default values

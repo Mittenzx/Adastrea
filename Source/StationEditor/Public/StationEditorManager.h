@@ -267,6 +267,11 @@ struct STATIONEDITOR_API FStationStatistics
 	UPROPERTY(BlueprintReadOnly, Category="Station Statistics")
 	float LifeSupportCoverage = 1.0f;
 
+	/** Whether the station has at least one docking module (matches
+	 *  ASpaceStation::HasDockingCapability()) - without one it's unreachable by ships. */
+	UPROPERTY(BlueprintReadOnly, Category="Station Statistics")
+	bool bHasDockingAccess = false;
+
 	/**
 	 * Get power balance (generation - consumption)
 	 */
@@ -415,6 +420,14 @@ public:
 
 	/** Default upgrade cost multiplier (0.5 = 50% of build cost) */
 	static constexpr float DefaultUpgradeCostMultiplier = 0.5f;
+
+	/**
+	 * Per-level bonus UpgradeModule() actually applies (0.25 = 25% per level):
+	 * generators produce more, consumers need less, storage/habitation/defence
+	 * modules do more of their job. Previously UpgradeModule() charged credits
+	 * and changed nothing - this is what makes the charge honest.
+	 */
+	static constexpr float UpgradeBonusPerLevel = 0.25f;
 
 	/** Efficiency penalty for power deficit */
 	static constexpr float PowerDeficitEfficiencyPenalty = 0.3f;
@@ -680,15 +693,47 @@ public:
 	bool CheckCollision(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position, FRotator Rotation) const;
 
 	/**
-	 * X4-style connectivity rule: every module (after the first) must sit on a grid
-	 * cell adjacent to an existing module, so the station can never grow a floating,
-	 * disconnected piece. The first module placed on an empty station always passes
-	 * (it becomes the station's anchor/core).
+	 * X4-style connectivity rule: every module (after the first) must sit close
+	 * enough to an existing module to be its neighbour, so the station can never
+	 * grow a floating, disconnected piece. The first module placed on an empty
+	 * station always passes (it becomes the station's anchor/core). Distance is
+	 * judged against each module PAIR's real footprint (GetModuleEffectiveRadius),
+	 * not a fixed radius, so a large module correctly needs to sit further from
+	 * its neighbour's center than a small one does.
+	 * @param ModuleClass The class of module being placed (for its footprint and faces)
 	 * @param Position Position to check
+	 * @param Rotation Rotation the module would be placed at (its faces rotate with it)
 	 * @return True if the position is adjacent to an existing module, or the station is empty
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station Editor|Validation")
-	bool IsAdjacentToExistingModule(FVector Position) const;
+	bool IsAdjacentToExistingModule(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position, FRotator Rotation) const;
+
+	/**
+	 * Whether a module facing DirectionToOther through one of its (rotation-adjusted)
+	 * connection faces - per its catalog entry's ConnectionFaces (empty = "all", always
+	 * true; matches STATION_BUILDER.md's per-face connectivity model). A module with no
+	 * catalog entry, or no ModuleCatalog assigned, is treated as unrestricted (fail-open,
+	 * same convention as CheckCollision/IsAdjacentToExistingModule use elsewhere).
+	 * @param ModuleClass The module class to check faces for
+	 * @param ModuleRotation The module's placed/would-be-placed rotation
+	 * @param DirectionToOther Normalized world-space direction from this module toward the other
+	 * @return True if one of the module's faces points toward DirectionToOther
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station Editor|Validation")
+	bool DoesModuleFaceDirection(TSubclassOf<ASpaceStationModule> ModuleClass, FRotator ModuleRotation, FVector DirectionToOther) const;
+
+	/**
+	 * Effective horizontal bounding radius for a module class, derived from its
+	 * catalog GridFootprint (the larger of X/Y cells) and the grid system's cell
+	 * size. Falls back to DefaultCollisionRadius when there's no catalog entry
+	 * (e.g. no catalog assigned), so a large module (a 3x2 DockingBay) needs more
+	 * clearance than a small one (a 1x1 Corridor) instead of every module using
+	 * the same fixed radius regardless of actual size.
+	 * @param ModuleClass The module class to measure
+	 * @return Effective radius in world units (unreal-cm)
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station Editor|Validation")
+	float GetModuleEffectiveRadius(TSubclassOf<ASpaceStationModule> ModuleClass) const;
 
 	/**
 	 * Check if player has sufficient tech level for a module
@@ -790,6 +835,39 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category="Station Editor|Utility")
 	bool GetModuleBuildCost(TSubclassOf<ASpaceStationModule> ModuleClass, FStationBuildCost& OutCost) const;
+
+	// =====================
+	// Blueprint Save/Load
+	//
+	// A compact, shareable string encoding of the currently-built station -
+	// same format STATION_BUILDER.md's plan-mode Python validator already
+	// round-trips (layout_to_blueprint/blueprint_to_layout):
+	//   SchemaVersion;PlotX,PlotY,PlotZ;GridSpacing;ModuleID:ItemID:gx,gy,gz:rot:isCore;...
+	// GridSpacing is always this editor's own GridSystem->GridSize at export
+	// time (not the plan-mode tool's 100), so a round-trip through THIS editor
+	// stays self-consistent even though the two tools use different scales -
+	// the string carries its own spacing rather than assuming one.
+	// =====================
+
+	/**
+	 * Export the currently-edited station as a shareable blueprint string.
+	 * @return The blueprint string, or an empty string if not currently editing a station
+	 */
+	UFUNCTION(BlueprintCallable, Category="Station Editor|Blueprint")
+	FString ExportStationBlueprint() const;
+
+	/**
+	 * Import a blueprint string into the currently-edited station, spawning
+	 * each module at its recorded grid position (relative to the station's
+	 * own location) and rotation. Like ASpaceStation::BuildFromLayout(), this
+	 * is a direct reconstruction - it does not charge credits or consume
+	 * construction materials (those were already paid when the design now
+	 * being shared was first built).
+	 * @param BlueprintString The blueprint string, from ExportStationBlueprint() (this editor or the Python plan-mode tool)
+	 * @return Number of modules successfully spawned
+	 */
+	UFUNCTION(BlueprintCallable, Category="Station Editor|Blueprint")
+	int32 ImportStationBlueprint(const FString& BlueprintString);
 
 	// =====================
 	// Undo/Redo System
@@ -1149,6 +1227,15 @@ protected:
 	 * Generate a notification based on current station state
 	 */
 	void GenerateStatusNotifications();
+
+	/**
+	 * X4-style "smart" validation: warn (don't block) when a just-placed Processing
+	 * module has no storage on the station to hold its inputs/outputs, or the
+	 * station can't actually power it. Called once per placement, not every stat
+	 * refresh, so it doesn't repeat the same warning on every frame.
+	 * @param Module The module that was just placed
+	 */
+	void CheckProductionChainWarning(const ASpaceStationModule* Module);
 
 	/**
 	 * Internal helper to recalculate statistics (const-safe for mutable cache)

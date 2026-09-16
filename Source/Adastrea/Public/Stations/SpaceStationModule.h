@@ -54,6 +54,15 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module")
     EStationModuleGroup ModuleGroup;
 
+    // How many times this module has been upgraded (UStationEditorManager::
+    // UpgradeModule()). Each level makes it modestly better at its actual job -
+    // see UStationEditorManager::UpgradeBonusPerLevel and where it's applied
+    // (power generation/consumption, cargo capacity, population capacity,
+    // defense rating) - rather than just being a number nothing reads, which is
+    // what it was before: UpgradeModule() charged credits and changed nothing.
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Module")
+    int32 UpgradeLevel = 0;
+
     // REMOVED: Faction system not needed for Trade Simulator MVP
     // Module ownership handled at station level if needed
 
