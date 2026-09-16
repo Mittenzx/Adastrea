@@ -1,12 +1,12 @@
 # 🚀 Adastrea - Open-World Space Flight Game
 
-**Built on Unreal Engine 5.6** | **MIT License** | **Active Development**
+**Built on Unreal Engine 5.8** | **MIT License** | **Active Development**
 
 ## 📊 Current Status
 
-**🎯 Current Focus**: Trade Simulator MVP (Week 12 of 12 - Final Polish & Demo Preparation)  
-**🔥 Status**: **ACTIVE DEVELOPMENT - March 2026**  
-**🔄 Latest Update**: Endless development cycle #18 - Code quality improvements and documentation updates (March 16, 2026 23:23 GMT)  
+**🎯 Current Focus**: X4-style trade sim — fly, dock, trade, and walk ship interiors on foot; multiple Claude Code sessions developing in parallel  
+**🔥 Status**: **ACTIVE DEVELOPMENT**  
+**🔄 Latest Update**: See [docs/00-KNOWLEDGE_BASE.md](docs/00-KNOWLEDGE_BASE.md) for the current technical snapshot, or `AGENT_BOARD.md` for live cross-agent status  
 
 ---
 
@@ -34,16 +34,21 @@
 # Adastrea - Open World Space Flight Game
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Unreal Engine](https://img.shields.io/badge/Unreal%20Engine-5.x-blue.svg)](https://www.unrealengine.com/)
+[![Unreal Engine](https://img.shields.io/badge/Unreal%20Engine-5.8-blue.svg)](https://www.unrealengine.com/)
 [![Build Status](https://github.com/Mittenzx/Adastrea/actions/workflows/ue-build-example.yml/badge.svg)](https://github.com/Mittenzx/Adastrea/actions/workflows/ue-build-example.yml)
 
-> **Current Focus**: Trade Simulator MVP (Dec 2025 - Mar 2026) - Building playable trading game to validate market interest
+> **Current Focus**: X4-style trade sim — fly ships, dock at stations, buy/sell cargo, walk interior spaces on foot. See [docs/05-ROADMAP.md](docs/05-ROADMAP.md) for current status.
 
 ---
 
-## 🚨 CRITICAL PROJECT UPDATE (December 29, 2025)
+> **Note**: The sections immediately below describe a December 2025–March 2026 "12-week MVP sprint"
+> that has since been superseded by open-ended multi-agent development — see
+> [docs/05-ROADMAP.md](docs/05-ROADMAP.md) and [docs/00-KNOWLEDGE_BASE.md](docs/00-KNOWLEDGE_BASE.md)
+> for what's actually true today. Left in place as historical context rather than rewritten in full.
 
-**Project Status**: **TRADE SIMULATOR MVP - WEEK 1 OF 12**
+## 🚨 PROJECT UPDATE (December 29, 2025) — historical
+
+**Project Status at the time**: **TRADE SIMULATOR MVP - WEEK 1 OF 12**
 
 After comprehensive critical review (Dec 24, 2025), Adastrea is focused on a **Trade Simulator MVP** to validate gameplay before expanding scope.
 
@@ -169,7 +174,7 @@ After comprehensive critical review (Dec 24, 2025), Adastrea is focused on a **T
 
 ## About
 
-**Adastrea** is an open-world space flight game built on Unreal Engine 5.6. Players can explore vast galaxies, engage in thrilling space battles, discover new planets, manage space stations, build crew relationships, and participate in a dynamic galactic economy. The project features 22 major game systems with over 33,000 lines of C++ code and comprehensive Blueprint integration.
+**Adastrea** is an open-world space flight game built on Unreal Engine 5.8. Players can explore vast galaxies, engage in thrilling space battles, discover new planets, manage space stations, build crew relationships, and participate in a dynamic galactic economy. The project features 22 major game systems with over 33,000 lines of C++ code and comprehensive Blueprint integration.
 
 ### Key Highlights
 
@@ -184,7 +189,7 @@ After comprehensive critical review (Dec 24, 2025), Adastrea is focused on a **T
 
 ### Prerequisites
 
-- **Unreal Engine 5.6** (check the .uproject file for exact version)
+- **Unreal Engine 5.8** (check the .uproject file for exact version)
 - **Visual Studio 2022** (Windows) or **Xcode** (Mac) for C++ development
 - **Git** for version control
 
@@ -221,7 +226,7 @@ See **[BUILD_WITH_UE_TOOLS.md](docs/setup/BUILD_WITH_UE_TOOLS.md)** for complete
 - ✓ Code compilation without full editor
 - ✓ **Windows: Bypassing MSBuild SetEnv limitations**
 
-**Note:** To actually run and edit the project, you still need the full Unreal Engine 5.6 installation.
+**Note:** To actually run and edit the project, you still need the full Unreal Engine 5.8 installation.
 
 ### Robust Setup Validation
 
@@ -260,7 +265,7 @@ python Tools/SetupCheck.py --help
 ```
 
 The validation scripts check for:
-- ✓ Unreal Engine version compatibility (5.6)
+- ✓ Unreal Engine version compatibility (5.8)
 - ✓ C++ compiler availability (MSVC, GCC, Clang)
 - ✓ Required project folders (Source, Config, Content, Assets)
 - ✓ Required project files (.uproject, module headers)
