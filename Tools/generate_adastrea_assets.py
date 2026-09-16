@@ -2769,6 +2769,151 @@ def build_corvette_bridge_interior(prefix):
     return results
 
 
+def build_station_module_shells():
+    """Shared connector-compliant shell geometry for the Station Editor's
+    27-module catalog (Content/Data/StationModuleCatalog.json /
+    StationModuleBuilderData.json) -- currently ZERO of those 27 types have
+    any dedicated mesh at all (audited 2026-09 via cross-session coordination
+    with the Station Editor work, "Liaison"/"Drydock").
+
+    Connectivity is pure grid math (Source/StationEditor/Private/
+    StationEditorManager.cpp::DoesModuleFaceDirection) -- N/S/E/W/Up/Down map
+    to local +-X/+-Y/+-Z, GridSize=400 units/cell, and adjacency is resolved
+    by grid position + rotation, NOT by any embedded socket/marker geometry.
+    So these shells only need to be flat-faced rectangular prisms sized to
+    size[x,y,z]*400 cm -- no bespoke connector geometry is load-bearing, only
+    visually expected (X4-style modules read as snapping together cleanly).
+
+    Size distribution across the 20 catalog entries that currently have a
+    footprint (StationModuleBuilderData.json; 7 tier-4 "advanced lab" types
+    aren't in the footprint data at all yet, so no shell needed for them):
+      1x1x1 (400x400x400 cm):  Corridor (Connector), DockingPort, Turret
+      2x2x1 (800x800x400 cm):  15 of 20 types -- the workhorse size
+      3x2x1 (1200x800x400 cm): DockingBay (biggest single type)
+      3x1x1: SolarArray -- the one directional module (faces=['W']); left
+             for a later bespoke pass rather than forcing it into one of
+             these three, since it's a different aspect ratio AND the only
+             one with a real orientation requirement.
+
+    Three shells, following the same shared-shell-plus-per-type-dressing
+    pattern already proven on ship hardpoint modules (T_Engine/T_Cargo/
+    T_Weapon/etc. sharing carcass conventions): per-family color/texture and
+    per-type accent props are a follow-up pass, not part of this shell.
+    """
+    GRID = 400.0
+
+    def module_shell(name, cells_x, cells_y, cells_z, corridor_style=False):
+        L = cells_x * GRID   # local X width
+        W = cells_y * GRID   # local Y depth
+        H = cells_z * GRID   # local Z height
+        T = 10.0             # hull plate thickness
+        parts = []
+
+        if not corridor_style:
+            # ---- Standard/Large: beveled rectangular module block ----
+            body = box(f"{name}_Body", L - T*2, W - T*2, H - T*2, loc=(0, 0, 0))
+            bevel(body, 18, 3)
+            parts.append(body)
+            # thin outer hull skin (slightly proud of the body, reads as
+            # panel plating rather than a bare primitive)
+            skin = box(f"{name}_Skin", L, W, H, loc=(0, 0, 0))
+            bevel(skin, 22, 3)
+            parts.append(skin)
+            # docking-collar frame on each of the 4 side (N/S/E/W) faces --
+            # purely cosmetic (connectivity is grid math, see docstring) but
+            # sells the "modules snap together" read the connectivity system
+            # implies. Up/Down get no collar (top/bottom aren't cardinal
+            # connection faces in the N/S/E/W/Up/Down convention's typical use).
+            collar_d = 14.0
+            for axis, sign, dim in ((0, 1, L), (0, -1, L), (1, 1, W), (1, -1, W)):
+                cx = sign * (dim/2 - collar_d/2) if axis == 0 else 0
+                cy = sign * (dim/2 - collar_d/2) if axis == 1 else 0
+                if axis == 0:
+                    collar = torus(f"{name}_Collar{'N' if sign>0 else 'S'}",
+                                    min(W, H)*0.32, 8, loc=(cx, 0, 0),
+                                    rot=(0, math.radians(90), 0), maj=20, minr=6)
+                else:
+                    collar = torus(f"{name}_Collar{'E' if sign>0 else 'W'}",
+                                    min(L, H)*0.32, 8, loc=(0, cy, 0),
+                                    rot=(math.radians(90), 0, 0), maj=20, minr=6)
+                parts.append(collar)
+            # a few surface vents/panel greebles so it doesn't read as a
+            # bare bevel box before per-family texturing lands
+            for i, (gx, gy) in enumerate([(-L*0.25, -W*0.3), (L*0.25, -W*0.3),
+                                            (-L*0.25, W*0.3), (L*0.25, W*0.3)]):
+                if abs(gx) < L/2 - 30 and abs(gy) < W/2 - 30:
+                    vent = box(f"{name}_Vent{i}", 40, 40, 6, loc=(gx, gy, H/2 - 3))
+                    parts.append(vent)
+        else:
+            # ---- ConnectorThin: an octagonal corridor tube, not a full
+            # block -- connects primarily along its N/S ends, thin walls,
+            # open-feeling passage rather than a dense module. ----
+            tube = cyl(f"{name}_Tube", min(W, H)*0.4, L - T*2, loc=(0, 0, 0),
+                       rot=(0, math.radians(90), 0), verts=8)
+            parts.append(tube)
+            # square mating collars at each end so it still presents a flat
+            # face flush with the grid cell boundary for neighbors to butt against
+            for sign in (1, -1):
+                cap = box(f"{name}_Cap{'N' if sign>0 else 'S'}", collar_d if False else 24,
+                           W*0.9, H*0.9, loc=(sign*(L/2 - 12), 0, 0))
+                parts.append(cap)
+            ring1 = torus(f"{name}_RingMid", min(W, H)*0.42, 6, loc=(0, 0, 0),
+                          rot=(0, math.radians(90), 0), maj=16, minr=5)
+            parts.append(ring1)
+
+        obj, out = finalize_part(parts, name, "M_StationModule_Shell")
+        return [(obj, out)]
+
+    def solar_array_shell(name):
+        """SolarArray is [3,1,1] -- 1200x400x400 cm, the one module with a
+        real ConnectionFaces restriction (ConnectionFaces=['W'], local -Y).
+        Not a generic room block: a mounting flange on the -Y face (the
+        actual connection point) plus a ribbed panel spine along the long
+        (N/S, local X) axis, so the restricted face reads as visually
+        distinct from the other three -- confirmed with Drydock this is the
+        only module needing that (2026-09-15 cross-session coordination)."""
+        L = 3 * GRID   # 1200, long axis = local X (N/S)
+        Wd = 1 * GRID  # 400, local Y -- the mounting (-Y/W) axis
+        H = 1 * GRID   # 400
+        parts = []
+
+        # central spine along the long axis
+        spine = box(f"{name}_Spine", L - 20, Wd*0.35, H*0.35, loc=(0, Wd*0.1, 0))
+        bevel(spine, 10, 2)
+        parts.append(spine)
+
+        # mounting flange at the -Y (W) face -- the restricted connection
+        # face -- denser/mechanical block, flush to the cell boundary so it
+        # butts against whatever it's attached to.
+        flange = box(f"{name}_MountFlange", Wd*0.6, 40, H*0.6, loc=(0, -Wd/2 + 20, 0))
+        bevel(flange, 6, 2)
+        parts.append(flange)
+        for fx in (-L*0.32, 0, L*0.32):
+            bolt = cyl(f"{name}_FlangeBolt{int(fx)}", 12, 46, loc=(fx, -Wd/2 + 23, 0),
+                       rot=(math.radians(90), 0, 0), verts=8)
+            parts.append(bolt)
+
+        # ribbed panel wings on the +Y face (opposite the mount) -- reads as
+        # the actual solar-collecting surface, distinct from the mount side
+        panel = box(f"{name}_Panel", L - 60, 30, H - 60, loc=(0, Wd*0.28, 0))
+        parts.append(panel)
+        rib_count = 9
+        for i in range(rib_count):
+            rx = -L/2 + 60 + i * (L - 120) / (rib_count - 1)
+            rib = box(f"{name}_Rib{i}", 8, 34, H - 40, loc=(rx, Wd*0.28, 0))
+            parts.append(rib)
+
+        obj, out = finalize_part(parts, name, "M_StationModule_SolarArray")
+        return [(obj, out)]
+
+    results = []
+    results += module_shell("SM_StationModule_Shell_Standard", 2, 2, 1)
+    results += module_shell("SM_StationModule_Shell_Large", 3, 2, 1)
+    results += module_shell("SM_StationModule_Shell_ConnectorThin", 1, 1, 1, corridor_style=True)
+    results += solar_array_shell("SM_StationModule_Shell_SolarArray")
+    return results
+
+
 def build_interior_set():
     """Build all interior instances (cockpit, crew quarters, hab, corridor, +
     engineering bay, airlock)."""
@@ -3181,6 +3326,13 @@ def main():
     print("Building interior instances...")
     inter = build_interior_set()
     for ob, out in inter:
+        print("  exported:", os.path.basename(out), os.path.getsize(out) if os.path.exists(out) else 0)
+
+    # Station Editor module shells (shared connector-compliant shells for the
+    # 27-module catalog, which has zero dedicated meshes as of 2026-09-15)
+    print("Building station module shells...")
+    stmod = build_station_module_shells()
+    for ob, out in stmod:
         print("  exported:", os.path.basename(out), os.path.getsize(out) if os.path.exists(out) else 0)
 
     print("DONE")
