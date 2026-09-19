@@ -2136,13 +2136,16 @@ void ASpaceship::CompleteDocking()
         {
             if (AAdastreaHUD* GameHUD = Cast<AAdastreaHUD>(PC->GetHUD()))
             {
-                GameHUD->ShowTradeScreen();
-                UE_LOG(LogAdastreaShips, Log, TEXT("ASpaceship::CompleteDocking - Opened canvas trading screen"));
+                GameHUD->ShowStationMenu();
+                UE_LOG(LogAdastreaShips, Log, TEXT("ASpaceship::CompleteDocking - Opened station services menu"));
             }
         }
 
         // Create and show trading widget
-    if (EffectiveTradingClass)
+    // The legacy UMG trading widget is superseded by the HUD canvas station menu/trade
+    // screens; spawning it here would draw over the menu.
+    constexpr bool bSpawnLegacyTradingWidget = false;
+    if (bSpawnLegacyTradingWidget && EffectiveTradingClass)
     {
         #if DOCKING_DEBUG_ENABLED
 

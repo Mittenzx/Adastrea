@@ -200,6 +200,8 @@ void AAdastreaPlayerController::SetupInputComponent()
 		InputComponent->BindKey(EKeys::SpaceBar, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeExecute1);
 		InputComponent->BindKey(EKeys::Q, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeExecute5);
 		InputComponent->BindKey(EKeys::Escape, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeClose);
+		InputComponent->BindKey(EKeys::BackSpace, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeClose);
+		InputComponent->BindKey(EKeys::Enter, IE_Pressed, this, &AAdastreaPlayerController::HandleStationMenuConfirm);
 		// V: toggle between flying the ship (cockpit) and walking the interior (avatar)
 		InputComponent->BindKey(EKeys::V, IE_Pressed, this, &AAdastreaPlayerController::HandleToggleInterior);
 		// Ship-select screen input (only acted on when the ship-select screen is open)
@@ -470,7 +472,8 @@ void AAdastreaPlayerController::HandleTradeSelectUp()
 {
 	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
 	{
-		if (H->bShowTradeScreen) { H->MoveTradeSelection(-1); }
+		if (H->bShowStationMenu) { H->MoveStationMenuSelection(-1); }
+		else if (H->bShowTradeScreen) { H->MoveTradeSelection(-1); }
 	}
 }
 
@@ -478,7 +481,8 @@ void AAdastreaPlayerController::HandleTradeSelectDown()
 {
 	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
 	{
-		if (H->bShowTradeScreen) { H->MoveTradeSelection(1); }
+		if (H->bShowStationMenu) { H->MoveStationMenuSelection(1); }
+		else if (H->bShowTradeScreen) { H->MoveTradeSelection(1); }
 	}
 }
 
@@ -529,18 +533,29 @@ void AAdastreaPlayerController::ExecuteTrade(int32 Quantity)
 		H->bBuyMode ? TEXT("BUY") : TEXT("SELL"), Quantity, *Item->GetName(), bOK);
 }
 
+void AAdastreaPlayerController::HandleStationMenuConfirm()
+{
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
+	{
+		if (H->bShowStationMenu) { H->ConfirmStationMenuSelection(this); }
+	}
+}
+
 void AAdastreaPlayerController::HandleTradeClose()
 {
 	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
 	{
-		if (H->bShowTradeScreen)
+		if (H->bShowStationMenu)
 		{
+			// Escape from the top-level station menu undocks.
+			H->UndockFromStationMenu(this);
+		}
+		else if (H->bShowTradeScreen)
+		{
+			// Leaving the trading department returns to the station menu.
 			H->HideTradeScreen();
 			CloseTrading();
-			// return to flight input
-			SetInputMode(FInputModeGameOnly());
-			bShowMouseCursor = false;
-			bLockMouseLook = false;
+			H->ShowStationMenu();
 		}
 	}
 }

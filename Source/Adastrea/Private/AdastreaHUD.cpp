@@ -84,6 +84,16 @@ void AAdastreaHUD::DrawHUD()
 			DrawInteractPrompt(PC);
 		}
 
+		// Docked station menu draws over everything when shown.
+		if (bShowStationMenu)
+		{
+			if (Ship)
+			{
+				DrawStationMenu(PC, Cast<AAdastreaPlayerController>(PC), Ship);
+			}
+			return;
+		}
+
 		// Docked trading screen draws over everything when shown.
 		if (bShowTradeScreen)
 		{
@@ -709,6 +719,112 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 	DrawText(FString::Printf(TEXT("[1] Ships:%s   [2] Stations:%s"),
 		bShowShips ? TEXT("ON") : TEXT("OFF"), bShowStations ? TEXT("ON") : TEXT("OFF")),
 		FLinearColor(0.6f,0.7f,0.8f,0.9f), Margin, VH - 30.0f, MiniFont, 0.7f);
+}
+
+namespace
+{
+	struct FStationMenuOption
+	{
+		const TCHAR* Label;
+		const TCHAR* Blurb;
+		bool bAvailable;
+	};
+
+	// Each option will lead to a different part of the station. Only the trading
+	// department and undocking are implemented so far.
+	const FStationMenuOption kStationMenuOptions[] =
+	{
+		{ TEXT("Trading Department"), TEXT("Buy and sell goods at the station market"),    true  },
+		{ TEXT("Maintenance Dock"),   TEXT("Repairs, refits and ship upgrades"),           false },
+		{ TEXT("Habitation"),         TEXT("Crew quarters, lounge and station residents"), false },
+		{ TEXT("Undock"),             TEXT("Leave the station and return to flight"),      true  },
+	};
+	constexpr int32 kStationMenuCount = UE_ARRAY_COUNT(kStationMenuOptions);
+}
+
+void AAdastreaHUD::MoveStationMenuSelection(int32 Step)
+{
+	StationMenuIndex = (StationMenuIndex + Step + kStationMenuCount) % kStationMenuCount;
+}
+
+void AAdastreaHUD::UndockFromStationMenu(APlayerController* PC)
+{
+	bShowStationMenu = false;
+	if (ASpaceship* Ship = PC ? Cast<ASpaceship>(PC->GetPawn()) : nullptr)
+	{
+		Ship->Undock();
+	}
+}
+
+void AAdastreaHUD::ConfirmStationMenuSelection(APlayerController* PC)
+{
+	const int32 Index = FMath::Clamp(StationMenuIndex, 0, kStationMenuCount - 1);
+	const FStationMenuOption& Option = kStationMenuOptions[Index];
+	UE_LOG(LogTemp, Log, TEXT("StationMenu: selected '%s'"), Option.Label);
+
+	if (!Option.bAvailable)
+	{
+		ShowMessage(FString::Printf(TEXT("%s is not available yet"), Option.Label), 3.0f, true);
+		return;
+	}
+
+	switch (Index)
+	{
+	case 0: // Trading Department
+		bShowStationMenu = false;
+		ShowTradeScreen();
+		break;
+	case 3: // Undock
+		UndockFromStationMenu(PC);
+		break;
+	default:
+		break;
+	}
+}
+
+void AAdastreaHUD::DrawStationMenu(APlayerController* PC, AAdastreaPlayerController* AdController, ASpaceship* Ship)
+{
+	UFont* TitleFont = GEngine->GetLargeFont();
+	UFont* BodyFont  = GEngine->GetSmallFont();
+	const float VW = Canvas->SizeX;
+	const float VH = Canvas->SizeY;
+
+	DrawRect(FLinearColor(0.0f, 0.0f, 0.02f, 0.72f), 0.0f, 0.0f, VW, VH);
+
+	const float PanelW = 520.0f;
+	const float RowH   = 64.0f;
+	const float PanelH = 120.0f + RowH * kStationMenuCount + 44.0f;
+	const float X = (VW - PanelW) * 0.5f;
+	const float Y = (VH - PanelH) * 0.5f;
+
+	DrawRect(kBg, X, Y, PanelW, PanelH);
+	DrawLine(X, Y, X, Y + PanelH, kBorder, 3.0f);
+
+	const ASpaceStation* Station = AdController ? AdController->GetNearestStation() : nullptr;
+	DrawText(TEXT("STATION SERVICES"), kHeader, X + 24.0f, Y + 16.0f, TitleFont, 1.0f);
+	DrawText(Station ? Station->GetActorLabel() : FString(TEXT("Docked")), kLabel, X + 24.0f, Y + 52.0f, BodyFont, 0.9f);
+	DrawLine(X + 16.0f, Y + 80.0f, X + PanelW - 16.0f, Y + 80.0f, kBorder, 1.0f);
+
+	const FLinearColor Accent(0.15f, 0.9f, 0.6f, 1.0f);
+	for (int32 i = 0; i < kStationMenuCount; ++i)
+	{
+		const FStationMenuOption& Option = kStationMenuOptions[i];
+		const float RowY = Y + 92.0f + RowH * i;
+		const bool bSel = (i == StationMenuIndex);
+		if (bSel)
+		{
+			DrawRect(FLinearColor(0.15f, 0.9f, 0.6f, 0.18f), X + 12.0f, RowY, PanelW - 24.0f, RowH - 6.0f);
+			DrawLine(X + 12.0f, RowY, X + 12.0f, RowY + RowH - 6.0f, Accent, 3.0f);
+		}
+		const FLinearColor LabelCol = !Option.bAvailable ? FLinearColor(0.5f, 0.5f, 0.55f, 1.0f)
+			: (bSel ? Accent : FLinearColor::White);
+		DrawText(FString(Option.Label) + (Option.bAvailable ? TEXT("") : TEXT("   (coming soon)")),
+			LabelCol, X + 28.0f, RowY + 8.0f, TitleFont, 0.9f);
+		DrawText(Option.Blurb, kLabel, X + 28.0f, RowY + 34.0f, BodyFont, 0.8f);
+	}
+
+	DrawText(TEXT("[UP/DOWN] select     [ENTER] confirm     [ESC/BACKSPACE] back / undock"), kLabel,
+		X + 24.0f, Y + PanelH - 30.0f, BodyFont, 0.8f);
 }
 
 void AAdastreaHUD::MoveTradeSelection(int32 Step)

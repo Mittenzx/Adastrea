@@ -386,6 +386,7 @@ public:
 																						void HandleTradeExecute1();
 																						void HandleTradeExecute5();
 																						void HandleTradeClose();
+	void HandleStationMenuConfirm();
 																											void ExecuteTrade(int32 Quantity);
 
 																											/** Ship-select screen input handlers. */
