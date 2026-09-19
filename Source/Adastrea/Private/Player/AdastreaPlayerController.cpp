@@ -1698,11 +1698,31 @@ void AAdastreaPlayerController::CheckForNearbyTradableStations()
 	// out of range).
 	if (ASpaceship* Ship = GetControlledSpaceship())
 	{
+		// Docking range is independent of the (larger) trading radius: pick the
+		// nearest station docking bay within the ship's effective docking range.
 		ASpaceStationModule* DockTarget = nullptr;
-		if (ClosestStation)
+		float BestDockDist = Ship->GetEffectiveDockingRange();
+		for (AActor* Actor : FoundStations)
 		{
-			DockTarget = ClosestStation->GetDockingBayModule();
+			const ASpaceStation* Station = Cast<ASpaceStation>(Actor);
+			ADockingBayModule* Bay = Station ? Station->GetDockingBayModule() : nullptr;
+			if (!Bay)
+			{
+				continue;
+			}
+			const float Dist = FVector::Dist(PlayerLocation, Bay->GetActorLocation());
+			if (Dist <= BestDockDist)
+			{
+				BestDockDist = Dist;
+				DockTarget = Bay;
+			}
 		}
+		if (DockTarget != LastDockTarget.Get())
+		{
+			UE_LOG(LogAdastrea, Log, TEXT("Docking range: %s (%.0f cm)"),
+				DockTarget ? *DockTarget->GetName() : TEXT("left range"), DockTarget ? BestDockDist : 0.0f);
+		}
+		LastDockTarget = DockTarget;
 		Ship->SetNearbyStation(DockTarget);
 	}
 }

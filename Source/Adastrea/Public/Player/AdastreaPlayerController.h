@@ -11,6 +11,7 @@
 class UUserWidget;
 class UDataAsset;
 class ASpaceStation;
+class ASpaceStationModule;
 class AAdastreaHUD;
 class UInventoryWidget;
 class UTradingInterfaceWidget;
@@ -748,6 +749,9 @@ private:
 
 	/** Whether we were near a tradable station on the last check */
 	bool bWasNearTradableStation;
+
+	/** Docking bay last pushed to the ship (used to log docking-range enter/leave). */
+	TWeakObjectPtr<ASpaceStationModule> LastDockTarget;
 
 	/** Timer handle for periodic station proximity checks */
 			FTimerHandle StationCheckTimerHandle;

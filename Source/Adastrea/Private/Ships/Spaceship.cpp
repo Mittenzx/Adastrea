@@ -1525,6 +1525,35 @@ void ASpaceship::SetNearbyStation(ASpaceStationModule* Station)
 #endif
 }
 
+bool ASpaceship::CanRequestDocking(float& OutDistance, FString& OutStationName) const
+{
+    OutDistance = 0.0f;
+    OutStationName.Reset();
+
+    const ADockingBayModule* DockingBay = Cast<ADockingBayModule>(NearbyStation);
+    if (!DockingBay || bIsDocked || bIsDocking)
+    {
+        return false;
+    }
+
+    OutStationName = DockingBay->GetName();
+    OutDistance = FVector::Dist(GetActorLocation(), DockingBay->GetActorLocation());
+
+    if (!DockingBay->HasAvailableDocking())
+    {
+        return false;
+    }
+
+    const USceneComponent* DockingPoint = DockingBay->GetAvailableDockingPoint();
+    if (!DockingPoint)
+    {
+        return false;
+    }
+
+    OutDistance = FVector::Dist(GetActorLocation(), DockingPoint->GetComponentLocation());
+    return OutDistance <= GetEffectiveDockingRange();
+}
+
 void ASpaceship::ShowDockingPrompt(bool bShow)
 {
     if (bShow)

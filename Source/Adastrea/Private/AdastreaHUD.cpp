@@ -125,6 +125,24 @@ void AAdastreaHUD::DrawHUD()
 			return; // only draw once we're flying the ship
 		}
 
+	// ---- Docking prompt (shown only while RequestDocking would succeed) ----
+	{
+		float DockDist = 0.0f;
+		FString DockName;
+		if (Ship->CanRequestDocking(DockDist, DockName))
+		{
+			UFont* PromptFont = GEngine->GetLargeFont();
+			const FString Line = FString::Printf(TEXT("[E]  DOCK   -   %s   (%.0f m)"), *DockName, DockDist / 100.0f);
+			float W = 0.0f, H = 0.0f;
+			GetTextSize(Line, W, H, PromptFont, 1.0f);
+			const float X = (Canvas->SizeX - W) * 0.5f;
+			const float Y = Canvas->SizeY * 0.72f;
+			DrawRect(kBg, X - 16.0f, Y - 8.0f, W + 32.0f, H + 16.0f);
+			DrawLine(X - 16.0f, Y + H + 8.0f, X + W + 16.0f, Y + H + 8.0f, kBorder, 2.0f);
+			DrawText(Line, FLinearColor(0.15f, 0.9f, 0.6f, 1.0f), X, Y, PromptFont, 1.0f);
+		}
+	}
+
 	// ---- Gather live data ----
 	const FVector P = Ship->GetActorLocation();
 	const float Speed = Ship->MovementComponent ? Ship->MovementComponent->Velocity.Size() : 0.0f;

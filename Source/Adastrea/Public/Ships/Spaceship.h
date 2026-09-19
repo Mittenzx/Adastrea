@@ -438,6 +438,15 @@ public:
     void SetNearbyStation(ASpaceStationModule* Station);
 
     /**
+     * True when RequestDocking() would currently succeed: a docking bay is in range,
+     * has a free slot and docking point within the effective docking range.
+     * @param OutDistance Distance to the docking point (or bay) in cm, if one exists
+     * @param OutStationName Name of the nearby station module, if one exists
+     */
+    UFUNCTION(BlueprintCallable, Category="Docking")
+    bool CanRequestDocking(float& OutDistance, FString& OutStationName) const;
+
+    /**
      * Show or hide the docking prompt UI
      * @param bShow True to show prompt, false to hide
      */
