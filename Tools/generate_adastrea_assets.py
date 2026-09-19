@@ -912,7 +912,9 @@ SIZE_CLASSES = {
     'small':   {'scale': 1.0,  'carcass': (250, 340, 95),  'z': 55},   # fighter
     'medium':  {'scale': 1.65, 'carcass': (380, 720, 190), 'z': 130},  # freighter
     'corvette':{'scale': 2.0,  'carcass': (460, 880, 220), 'z': 150},  # frigate/corvette
+    'cruiser': {'scale': 2.15, 'carcass': (490, 930, 235), 'z': 162},  # heavy cruiser — between corvette and capship 'large'
     'large':   {'scale': 2.3,  'carcass': (520, 980, 250), 'z': 175},  # capship-ish
+    'flagship':{'scale': 2.7,  'carcass': (620, 1150, 300), 'z': 205}, # command flagship (CommandXL), biggest hull
 }
 
 def sc(sz, factor=1.0):
@@ -1673,6 +1675,42 @@ def assemble_whole_ship(sz, outname, opts, carcass_builder=None):
                      rot=(math.radians(90),0,0), verts=14)
         emitter = box("MLEmit", 26*k, 24*k, 30*k, loc=(0, ly*0.42, locz - 10*k)); bevel(emitter,3,1)
         objs += [barrel, emitter]
+
+    # --- command flagship superstructure (bridge-heavy silhouette) ---
+    if opts.get('command_tower'):
+        ht = locz + lz*0.9   # approx hull/spine top
+        # stepped command tower, set aft of midships
+        t1 = box("CmdTowerBase", lx*0.42, ly*0.24, lz*0.45, loc=(0, -ly*0.10, ht + lz*0.15)); bevel(t1, 8, 2)
+        t2 = box("CmdTowerMid", lx*0.30, ly*0.17, lz*0.40, loc=(0, -ly*0.10, ht + lz*0.55)); bevel(t2, 6, 2)
+        # wide bridge deck with forward-raked window band and side bridge wings
+        deck = box("CmdBridgeDeck", lx*0.62, ly*0.14, lz*0.20, loc=(0, -ly*0.08, ht + lz*0.85)); bevel(deck, 5, 2)
+        glass = box("CmdBridgeGlass", lx*0.50, ly*0.05, lz*0.10, loc=(0, -ly*0.008, ht + lz*0.87)); bevel(glass, 2, 1)
+        objs += [t1, t2, deck, glass]
+        for side in (-1, 1):
+            bw = box(f"CmdBridgeWing{side}", lx*0.20, ly*0.10, lz*0.12,
+                     loc=(side*lx*0.42, -ly*0.08, ht + lz*0.85)); bevel(bw, 3, 1)
+            objs.append(bw)
+        # comms/sensor array on top: mast, lattice cross bars, dishes
+        cm = cyl("CmdCommsMast", 7*k, 190*k, loc=(0, -ly*0.10, ht + lz*1.15 + 60*k), verts=12)
+        objs.append(cm)
+        for i, zoff in enumerate((60, 110, 150)):
+            bar = box(f"CmdLattice{i}", (150 - i*30)*k, 8*k, 8*k, loc=(0, -ly*0.10, ht + lz*1.15 + zoff*k))
+            objs.append(bar)
+        for side in (-1, 1):
+            dm = sphere(f"CmdDish{side}", 30*k, loc=(side*lx*0.20, -ly*0.16, ht + lz*1.0 + 20*k), verts=14)
+            dm.scale = (1, 1, 0.45)
+            bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
+            ds = cyl(f"CmdDishStalk{side}", 5*k, 40*k, loc=(side*lx*0.20, -ly*0.16, ht + lz*0.9), verts=8)
+            objs += [dm, ds]
+        # flank hangar/fleet-support sponsons + forward battle-management dome
+        for side in (-1, 1):
+            sp = box(f"CmdSponson{side}", lx*0.24, ly*0.42, lz*0.55,
+                     loc=(side*lx*0.62, ly*0.02, locz - lz*0.05)); bevel(sp, 8, 2)
+            bay = box(f"CmdHangarBay{side}", lx*0.02, ly*0.22, lz*0.28,
+                      loc=(side*lx*0.75, ly*0.05, locz - lz*0.05)); bevel(bay, 1, 1)
+            objs += [sp, bay]
+        dome = sphere("CmdWarRoomDome", 60*k, loc=(0, ly*0.22, ht + lz*0.05), verts=18)
+        objs.append(dome)
 
     # ===================== DETAIL PASS =====================
     # Add scale-aware surface detail so the ship reads as a real vessel, not
@@ -3364,6 +3402,14 @@ def main():
                                  'weapon_variant': 'tri_laser', 'sensor': True,
                                  'reactor': True, 'cargo': False},
         carcass_builder=build_warship_carcass)
+    # Cruiser — heavy warship, a class up from the Corvette/Destroyer frigate
+    # profile but not full capship scale; reuses the arrowhead warship carcass
+    # at the new 'cruiser' size class.
+    ship_parts["SM_Ship_Cruiser_01"] = assemble_ship('cruiser',
+        'SM_Ship_Cruiser_01', {'engine': True, 'weapon': True, 'weapon_twin': True,
+                               'weapon_variant': 'tri_laser', 'sensor': True,
+                               'reactor': True, 'cargo': False},
+        carcass_builder=build_warship_carcass)
     ship_parts["SM_Ship_Battleship_01"] = assemble_ship('large',
         'SM_Ship_Battleship_01', {'engine': True, 'weapon': True, 'weapon_twin': True,
                                   'weapon_variant': 'cannon', 'sensor': True, 'reactor': True,
@@ -3402,7 +3448,10 @@ def main():
                                           'cargo': True, 'cargo_variant': 'flat_rack',
                                           'sensor': True}), "SM_Ship_Escort_01": ('small', {'engine': True, 'weapon': True, 'weapon_twin': True, 'sensor': True, 'reactor': True}),
         "SM_Ship_Destroyer_01": ('corvette', {'engine': True, 'weapon': True, 'weapon_twin': True, 'weapon_variant': 'tri_laser', 'sensor': True, 'reactor': True}),
+        "SM_Ship_Cruiser_01": ('cruiser', {'engine': True, 'weapon': True, 'weapon_twin': True, 'weapon_variant': 'tri_laser', 'sensor': True, 'reactor': True}),
         "SM_Ship_Battleship_01": ('large', {'engine': True, 'weapon': True, 'weapon_twin': True, 'sensor': True, 'reactor': True}),
+        # Command XL - flagship: biggest hull + bridge-heavy command tower/comms array + hangar sponsons
+        "SM_Ship_CommandXL_01": ('flagship', {'engine': True, 'weapon': True, 'weapon_twin': True, 'sensor': True, 'reactor': True, 'command_tower': True}),
     }
     assembled_count = 0
     for name, (sz, opts) in assembled_specs.items():
