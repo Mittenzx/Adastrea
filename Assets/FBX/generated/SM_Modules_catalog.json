@@ -1,0 +1,104 @@
+{
+  "modules": {
+    "engine": {
+      "variant_name": "engine",
+      "options": [
+        {
+          "id": "standard",
+          "description": "Twin nacelles + bells (balanced)"
+        },
+        {
+          "id": "ion",
+          "description": "Long ion-drive pylons (fast, sleek)"
+        },
+        {
+          "id": "compact",
+          "description": "Squat single pod (budget)"
+        }
+      ],
+      "fits_hardpoints": [
+        "HP_Engine"
+      ]
+    },
+    "cargo": {
+      "variant_name": "cargo",
+      "options": [
+        {
+          "id": "containers",
+          "description": "Container bay"
+        },
+        {
+          "id": "bulk_tank",
+          "description": "Cylindrical bulk tank"
+        },
+        {
+          "id": "flat_rack",
+          "description": "Open frame rack"
+        }
+      ],
+      "fits_hardpoints": [
+        "HP_Cargo"
+      ]
+    },
+    "weapon": {
+      "variant_name": "weapon",
+      "options": [
+        {
+          "id": "cannon",
+          "description": "Twin/single gun pods"
+        },
+        {
+          "id": "tri_laser",
+          "description": "Triple-laser mount"
+        },
+        {
+          "id": "missile",
+          "description": "Missile pods"
+        }
+      ],
+      "fits_hardpoints": [
+        "HP_Nose"
+      ]
+    },
+    "sensor": {
+      "variant_name": "sensor",
+      "options": [
+        {
+          "id": "mast",
+          "description": "Mast + tip"
+        },
+        {
+          "id": "dome",
+          "description": "Radar dome"
+        },
+        {
+          "id": "cross",
+          "description": "Phased-array lattice"
+        }
+      ],
+      "fits_hardpoints": [
+        "HP_Sensor"
+      ]
+    },
+    "reactor": {
+      "variant_name": "reactor",
+      "options": [
+        {
+          "id": "core",
+          "description": "Block core + bands"
+        },
+        {
+          "id": "fusion_ring",
+          "description": "Fusion torus"
+        },
+        {
+          "id": "spike",
+          "description": "Heat-spike reactor"
+        }
+      ],
+      "fits_hardpoints": [
+        "HP_Core"
+      ]
+    }
+  }
+}

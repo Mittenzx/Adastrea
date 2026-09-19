@@ -50,6 +50,23 @@ ASpaceshipInterior::ASpaceshipInterior()
         FloorCollision->SetCollisionResponseToAllChannels(ECR_Ignore);
         FloorCollision->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
 
+    // Four thin walls enclosing the walkable footprint (real collision, same reasoning
+    // as FloorCollision — see header comment).
+    auto MakeWall = [this](const TCHAR* Name) -> UBoxComponent*
+    {
+        UBoxComponent* Wall = CreateDefaultSubobject<UBoxComponent>(Name);
+        Wall->SetupAttachment(SceneRoot);
+        Wall->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+        Wall->SetCollisionObjectType(ECC_WorldStatic);
+        Wall->SetCollisionResponseToAllChannels(ECR_Ignore);
+        Wall->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
+        return Wall;
+    };
+    WallNorth = MakeWall(TEXT("WallNorth"));
+    WallSouth = MakeWall(TEXT("WallSouth"));
+    WallEast = MakeWall(TEXT("WallEast"));
+    WallWest = MakeWall(TEXT("WallWest"));
+
     // Trigger volume at the cockpit/seat: walking the avatar into it re-possesses the ship.
     ExitTrigger = CreateDefaultSubobject<UBoxComponent>(TEXT("ExitTrigger"));
     ExitTrigger->SetupAttachment(SceneRoot);
@@ -544,32 +561,6 @@ void ASpaceshipInterior::ApplyInteriorMaterials()
     UE_LOG(LogAdastrea, Log, TEXT("Interior %s materials applied by slot name."), *GetName());
 }
 
-bool ASpaceshipInterior::GetLocalHalfExtents(const float InAltitude, FVector& OutHalfExtents, FVector2D& OutLocalCentreXY) const
-{
-    if (!InteriorMesh || !InteriorMesh->GetStaticMesh())
-    {
-        return false;
-    }
-    // Use the STATIC MESH ASSET's own bounds (its local, unrotated frame) scaled by the
-    // component's scale — NOT InteriorMesh->Bounds, which is a WORLD-space axis-aligned
-    // box. The interior is rigidly attached to the ship, so its world rotation is
-    // whatever heading the ship is parked at; a rotated room's world AABB is larger than
-    // its true local extents, so clamping the avatar's LOCAL position (see caller) against
-    // that inflated world-space size let it walk straight through the visible walls
-    // (hull collision is disabled while inside) before this clamp ever engaged.
-    const FBoxSphereBounds LocalBounds = InteriorMesh->GetStaticMesh()->GetBounds();
-    const FVector Scale = InteriorMesh->GetComponentScale();
-    const FVector Extent = LocalBounds.BoxExtent * Scale;
-    const FVector Origin = LocalBounds.Origin * Scale;
-    OutHalfExtents = FVector(FMath::Max(Extent.X, 100.0f),
-                             FMath::Max(Extent.Y, 100.0f),
-                             InAltitude);
-    // The mesh's bounding-box centre, NOT the actor's local (0,0) — see FitVolumeToMesh,
-    // which places the floor/trigger/spawn around this same centre.
-    OutLocalCentreXY = FVector2D(Origin.X, Origin.Y);
-    return true;
-}
-
 void ASpaceshipInterior::FitVolumeToMesh()
 {
     if (!InteriorMesh || !InteriorMesh->GetStaticMesh())
@@ -578,10 +569,11 @@ void ASpaceshipInterior::FitVolumeToMesh()
     }
 
     // Use the STATIC MESH ASSET's own bounds (local, unrotated frame) scaled by the
-    // component's scale, not InteriorMesh->Bounds (world-space) — see GetLocalHalfExtents
-    // for why: the interior's world rotation tracks the ship's current heading, so the
-    // world-space AABB is inflated whenever the ship isn't level, oversizing the walkable
-    // volume and mis-placing the exit trigger relative to the visible mesh.
+    // component's scale, not InteriorMesh->Bounds (world-space): the interior is rigidly
+    // attached to the ship, so its world rotation tracks whatever heading the ship is
+    // parked at, and a rotated room's world AABB is larger than its true local extents —
+    // sizing/placing the floor/walls/trigger/spawn off that inflated world-space box
+    // would put them somewhere other than where the visible mesh actually is.
     const FBoxSphereBounds RawBounds = InteriorMesh->GetStaticMesh()->GetBounds();
     const FVector Scale = InteriorMesh->GetComponentScale();
     const FVector Origin = RawBounds.Origin * Scale;
@@ -610,6 +602,33 @@ void ASpaceshipInterior::FitVolumeToMesh()
     {
         FloorCollision->SetBoxExtent(FVector(HalfDepth, HalfWidth, 10.0f));
         FloorCollision->SetRelativeLocation(FVector(Origin.X, Origin.Y, FloorZ - 10.0f));
+    }
+
+    // Four walls enclosing the footprint, centred mid-height, real Pawn-blocking collision
+    // so CharacterMovement stops the avatar naturally instead of a manual position clamp.
+    constexpr float WallHalfThickness = 10.0f;
+    const float RoomMidZ = FloorZ + HalfHeight;
+    if (WallNorth)
+    {
+        WallNorth->SetBoxExtent(FVector(WallHalfThickness, HalfWidth, HalfHeight));
+        WallNorth->SetRelativeLocation(FVector(Origin.X + HalfDepth + WallHalfThickness, Origin.Y, RoomMidZ));
+    }
+    if (WallSouth)
+    {
+        WallSouth->SetBoxExtent(FVector(WallHalfThickness, HalfWidth, HalfHeight));
+        WallSouth->SetRelativeLocation(FVector(Origin.X - HalfDepth - WallHalfThickness, Origin.Y, RoomMidZ));
+    }
+    if (WallEast)
+    {
+        // Extended past the depth by a wall-thickness on each end so it seals the corners
+        // against WallNorth/WallSouth rather than leaving a gap an avatar could slip through.
+        WallEast->SetBoxExtent(FVector(HalfDepth + WallHalfThickness, WallHalfThickness, HalfHeight));
+        WallEast->SetRelativeLocation(FVector(Origin.X, Origin.Y + HalfWidth + WallHalfThickness, RoomMidZ));
+    }
+    if (WallWest)
+    {
+        WallWest->SetBoxExtent(FVector(HalfDepth + WallHalfThickness, WallHalfThickness, HalfHeight));
+        WallWest->SetRelativeLocation(FVector(Origin.X, Origin.Y - HalfWidth - WallHalfThickness, RoomMidZ));
     }
 
     // Seat/exit trigger near the front of the interior.

@@ -1,0 +1,96 @@
+{
+  "ship": "SM_Ship_Battleship_01",
+  "size_class": "large",
+  "scale": 2.3,
+  "carcass_dims": [
+    551.2000122070312,
+    1372.0,
+    372.72314453125
+  ],
+  "hardpoints": {
+    "HP_Engine": {
+      "position": [
+        0.0,
+        -686.0,
+        177.5
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "engine"
+      ],
+      "occupied": true
+    },
+    "HP_Cargo": {
+      "position": [
+        0.0,
+        -54.9,
+        158.8
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "cargo"
+      ],
+      "occupied": false
+    },
+    "HP_Nose": {
+      "position": [
+        0.0,
+        411.6,
+        143.9
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "weapon"
+      ],
+      "occupied": true
+    },
+    "HP_Sensor": {
+      "position": [
+        0.0,
+        247.0,
+        434.6
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "sensor"
+      ],
+      "occupied": true
+    },
+    "HP_Core": {
+      "position": [
+        0.0,
+        -466.5,
+        322.8
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "reactor"
+      ],
+      "occupied": true
+    },
+    "HP_Underslung": {
+      "position": [
+        0.0,
+        -411.6,
+        155.1
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "drill"
+      ],
+      "occupied": false
+    },
+    "HP_Forward": {
+      "position": [
+        0.0,
+        411.6,
+        166.3
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "mining_laser"
+      ],
+      "occupied": false
+    }
+  }
+}

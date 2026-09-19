@@ -5,7 +5,6 @@
 #include "Ships/SpaceshipAvatar.h"
 #include "Ships/SpaceshipInterior.h"
 #include "Ships/SpaceshipDataAsset.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "Stations/SpaceStation.h"
 #include "AdastreaHUD.h"
 #include "Stations/SpaceStationModule.h"
@@ -120,6 +119,53 @@ void AAdastreaPlayerController::BeginPlay()
 	}
 }
 
+void AAdastreaPlayerController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	UpdateSpaceBackdrop();
+}
+
+void AAdastreaPlayerController::UpdateSpaceBackdrop()
+{
+	// The star-dome backdrop is a huge but fixed-in-world-space mesh; if the
+	// camera travels any appreciable fraction of its radius (routine between
+	// sectors), nearer parts of the star pattern visibly shift against farther
+	// ones -- background stars should read as infinitely far away, with zero
+	// positional parallax, regardless of how far the ship flies. Recentering it
+	// on the camera every frame (position only, no rotation) gives that for
+	// free without needing an enormous dome or a real skybox/cubemap.
+	if (!bSpaceBackdropSearchDone)
+	{
+		bSpaceBackdropSearchDone = true;
+		TArray<AActor*> Found;
+		UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("SpaceBackdrop"), Found);
+		if (Found.Num() > 0)
+		{
+			SpaceBackdropActor = Found[0];
+		}
+		else
+		{
+			UE_LOG(LogAdastrea, Warning, TEXT("UpdateSpaceBackdrop: no actor tagged 'SpaceBackdrop' found; star dome will not follow the camera."));
+		}
+	}
+
+	if (!SpaceBackdropActor)
+	{
+		return;
+	}
+
+	FVector CameraLocation = FVector::ZeroVector;
+	if (PlayerCameraManager)
+	{
+		CameraLocation = PlayerCameraManager->GetCameraLocation();
+	}
+	else if (APawn* ControlledPawn = GetPawn())
+	{
+		CameraLocation = ControlledPawn->GetActorLocation();
+	}
+	SpaceBackdropActor->SetActorLocation(CameraLocation);
+}
+
 void AAdastreaPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
@@ -208,13 +254,6 @@ void AAdastreaPlayerController::OnPossess(APawn* InPawn)
 		bEnableClickEvents = false;
 		bEnableMouseOverEvents = false;
 		UE_LOG(LogAdastrea, Log, TEXT("AdastreaPlayerController: Captured mouse for pawn %s"), *InPawn->GetName());
-	}
-
-	// Offer the "fly normally / start inside the ship" menu once, when the
-	// session's first spaceship is possessed (the HUD exists by now).
-	if (ASpaceship* Ship = Cast<ASpaceship>(InPawn))
-	{
-		ShowStartMenuOnce();
 	}
 }
 
@@ -616,12 +655,6 @@ void AAdastreaPlayerController::HandleMapToggleShips()
 {
 	if (AAdastreaHUD* GameHUD = GetMapHUD())
 	{
-		if (GameHUD->bShowStartMenu)
-		{
-			// Key 1 while the start menu is up = fly normally.
-			GameHUD->HideStartMenu();
-			return;
-		}
 		if (GameHUD->bShowMap) { GameHUD->bShowShips = !GameHUD->bShowShips; }
 	}
 }
@@ -630,16 +663,6 @@ void AAdastreaPlayerController::HandleMapToggleStations()
 {
 	if (AAdastreaHUD* GameHUD = GetMapHUD())
 	{
-		if (GameHUD->bShowStartMenu)
-		{
-			// Key 2 while the start menu is up = start inside the ship.
-			GameHUD->HideStartMenu();
-			if (ASpaceship* Ship = GetControlledSpaceship())
-			{
-				EnterShipInterior(Ship);
-			}
-			return;
-		}
 		if (GameHUD->bShowMap) { GameHUD->bShowStations = !GameHUD->bShowStations; }
 	}
 }
@@ -1744,53 +1767,6 @@ void AAdastreaPlayerController::HandleToggleInterior()
 	}
 }
 
-void AAdastreaPlayerController::ShowStartMenuOnce()
-{
-	if (bStartMenuHandled)
-	{
-		return;
-	}
-
-	AAdastreaHUD* GameHUD = GetMapHUD();
-	ASpaceship* Ship = GetControlledSpaceship();
-
-	// Wait until both the HUD and a ship exist, and the ship's interior has been
-	// created (it spawns in the ship's BeginPlay, a tick later). Retry briefly.
-	const bool bReady = GameHUD && Ship && Ship->GetInteriorInstance() != nullptr;
-
-	constexpr int32 MaxRetries = 25; // ~5s at 0.2s
-	constexpr float RetryInterval = 0.2f;
-
-	if (bReady)
-	{
-		bStartMenuHandled = true;
-		GameHUD->ShowStartMenu();
-		UE_LOG(LogAdastrea, Log, TEXT("ShowStartMenuOnce: showing start menu (ship %s has interior)."), *Ship->GetName());
-		return;
-	}
-
-	// Not ready yet. Schedule a bounded retry; give up quietly after MaxRetries.
-	if (StartMenuRetryCount >= MaxRetries)
-	{
-		bStartMenuHandled = true; // stop retrying
-		UE_LOG(LogAdastrea, Warning, TEXT("ShowStartMenuOnce: giving up after %d retries (interior never appeared)."), StartMenuRetryCount);
-		return;
-	}
-
-	++StartMenuRetryCount;
-	UWorld* World = GetWorld();
-	if (World)
-	{
-		World->GetTimerManager().SetTimer(
-			StartMenuRetryTimerHandle,
-			this,
-			&AAdastreaPlayerController::ShowStartMenuOnce,
-			RetryInterval,
-			false  // one-shot; re-arms itself until ready
-		);
-	}
-}
-
 void AAdastreaPlayerController::ShowHUDMessage(const FString& InMessage, float DurationSecs, bool bIsWarning)
 {
 	if (AAdastreaHUD* GameHUD = GetMapHUD())
@@ -1875,24 +1851,25 @@ void AAdastreaPlayerController::EnterShipInterior(ASpaceship* Ship)
 	// Show the interior, switch possession, capture mouse for the avatar camera.
 	Interior->SetActorHiddenInGame(false);
 	Interior->RevealInterior(); // explicitly unhide the shell mesh too
-	// Use flying movement (gravity-less) so the avatar is ALWAYS able to move by
-	    // input regardless of ground-contact state (a floating capsule in MOVE_Walking
-	    // ignores ground-required input and stalls). The interior clamp actively holds
-	    // it inside the room and zeroes velocity on wall-hit so it can't escape.
-	    if (UCharacterMovementComponent* MoveComp = AvatarPawn->GetCharacterMovement())
-	    {
-	        MoveComp->GravityScale = 0.0f;
-	        MoveComp->Velocity = FVector::ZeroVector;
-	        MoveComp->SetMovementMode(MOVE_Flying);
-	    }
+	// Movement is the avatar's own direct swept translation (CharacterMovementComponent
+	// is disabled entirely on this class — see ASpaceshipAvatar's constructor), so there's
+	// no movement mode/gravity to configure here.
 	// The avatar walks INSIDE the ship's hull — disable the ship's solid collision
 	// so CharacterMovement doesn't eject the avatar out of the shell on spawn.
+	// GetChildrenComponents(true, ...) walks the WHOLE attachment tree under the
+	// ship's root, which also includes the interior actor's own components (it's
+	// attached to the ship) — skip those, or this disables the interior's own
+	// FloorCollision too and the avatar free-falls straight through the hull.
 	if (USceneComponent* ShipRoot = Ship->GetRootComponent())
 	{
 		TArray<USceneComponent*> ShipChildren;
 		ShipRoot->GetChildrenComponents(true, ShipChildren);
 		for (USceneComponent* C : ShipChildren)
 		{
+			if (!C || C->GetOwner() == Interior)
+			{
+				continue;
+			}
 			UPrimitiveComponent* Prim = Cast<UPrimitiveComponent>(C);
 			if (Prim)
 			{
@@ -1901,9 +1878,12 @@ void AAdastreaPlayerController::EnterShipInterior(ASpaceship* Ship)
 			}
 		}
 	}
-	// Record the entrance time so the exit trigger ignores the spawn overlap for
-	// a short grace period (else the avatar instantly bounces back to the cockpit).
+	// Record the entrance time/location so the exit trigger ignores the spawn overlap
+	// for a short grace period, and ignores any overlap at all until the avatar has
+	// actually walked away from the spawn point (else the avatar instantly bounces
+	// back to the cockpit).
 	Interior->EntranceWorldTime = Interior->GetWorld()->GetTimeSeconds();
+	Interior->LastEntryWorldLocation = SpawnWorld;
 	// Disable the ship's flight input mapping context so it can't keep stealing
 	// WASD/look from the avatar's own bindings while we walk the interior.
 	Ship->SetRuntimeInputEnabled(false);
@@ -1930,30 +1910,35 @@ void AAdastreaPlayerController::ExitShipInterior(ASpaceship* Ship)
 	{
 		UnPossess();
 	}
-	// Re-enable the ship's flight input mapping context now that we're back at the helm.
-	Ship->SetRuntimeInputEnabled(true);
 	Possess(Ship);
+	// Re-enable the ship's flight input mapping context now that we're back at the
+	// helm. Must come after Possess() — SetRuntimeInputEnabled looks up the subsystem
+	// via Ship->GetController(), which is null until the ship is possessed.
+	Ship->SetRuntimeInputEnabled(true);
 	SetInputMode(FInputModeGameOnly());
 	bShowMouseCursor = false;
 
 	if (AvatarPawn)
 	{
 		AvatarPawn->SetFirstPersonView(false); // restore 3rd-person ship cam
-		// Restore normal gravity/walking for the ship (or elsewhere on foot).
-		if (UCharacterMovementComponent* MoveComp = AvatarPawn->GetCharacterMovement())
-		{
-			MoveComp->GravityScale = 1.0f;
-			MoveComp->SetMovementMode(MOVE_Walking);
-		}
 	}
 
-	// Restore the ship's collision now that we're back at the helm.
+	ASpaceshipInterior* Interior = Ship->GetInteriorInstance();
+
+	// Restore the ship's collision now that we're back at the helm. Skip the
+	// interior's own components (attached under the ship's root, so they're in this
+	// same descendant walk) — it manages its own collision setup (FloorCollision must
+	// stay solid, InteriorVolume/ExitTrigger must stay query-only).
 	if (USceneComponent* ShipRoot = Ship->GetRootComponent())
 	{
 		TArray<USceneComponent*> ShipChildren;
 		ShipRoot->GetChildrenComponents(true, ShipChildren);
 		for (USceneComponent* C : ShipChildren)
 		{
+			if (!C || C->GetOwner() == Interior)
+			{
+				continue;
+			}
 			UPrimitiveComponent* Prim = Cast<UPrimitiveComponent>(C);
 			if (Prim)
 			{
@@ -1966,7 +1951,7 @@ void AAdastreaPlayerController::ExitShipInterior(ASpaceship* Ship)
 		}
 	}
 
-	if (ASpaceshipInterior* Interior = Ship->GetInteriorInstance())
+	if (Interior)
 	{
 		Interior->SetActorHiddenInGame(true);
 	}

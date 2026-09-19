@@ -890,9 +890,13 @@ void ASpaceship::ApplyShipHullMaterial()
     {
         HullMat = TEXT("/Game/Materials/M_Corvette_Hull");
     }
-    else if (ActorName.Contains(TEXT("Cruiser")) || ActorName.Contains(TEXT("Gunship")))
+    else if (ActorName.Contains(TEXT("Gunship")))
     {
         HullMat = TEXT("/Game/Materials/M_Gunship_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Cruiser")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Cruiser_Hull");
     }
     else if (ActorName.Contains(TEXT("Destroyer")))
     {
@@ -918,6 +922,50 @@ void ASpaceship::ApplyShipHullMaterial()
     else if (ActorName.Contains(TEXT("Fighter")))
     {
         HullMat = TEXT("/Game/Materials/M_Fighter_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Carrier")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Carrier_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Command")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Command_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Frigate")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Frigate_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Luxury")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Luxury_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Mining")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Mining_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Patrol")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Patrol_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Science")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Science_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Trading")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Trading_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Behemoth")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Transport_Behemoth_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Genesis")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Transport_Genesis_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Utility")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Utility_Hull");
     }
 
     UMaterialInterface* Mat = LoadObject<UMaterialInterface>(nullptr, *HullMat);
@@ -1249,6 +1297,14 @@ void ASpaceship::UpdateThrottleVelocity(float DeltaTime)
             (DefaultDeceleration / FMath::Max(EffectiveMaxSpeed, 1.0f)) * FlightAssistResponsiveness;
         FVector BlendedVelocity = FMath::VInterpTo(MovementComponent->Velocity, TargetVelocity, DeltaTime, InterpSpeed);
         MovementComponent->Velocity = BlendedVelocity;
+
+        // Keep the "preserve inertia" snapshot in sync with this throttle-driven speed.
+        // Without this, ApplyFlightAssist (which runs before this function each tick and
+        // re-imposes CurrentVelocity whenever WASD is idle) re-asserts the OLD velocity
+        // every frame, undoing this interpolation before it can compound — so throttling
+        // down to 0% never actually slowed the ship; it just cruised forever at whatever
+        // speed it last had when WASD was touched.
+        CurrentVelocity = BlendedVelocity;
     }
 }
 
@@ -1688,6 +1744,28 @@ void ASpaceship::RequestDocking()
 
 
     #endif
+
+    // Check ship-size compatibility (X4-style dock sizing - a small dock like
+    // DockingPortModule restricts AllowedShipSizeCategories to small ships;
+    // DockingBayModule leaves it unrestricted). ShipDataAsset missing is treated
+    // as compatible - fail-open, matching how the rest of this project's
+    // validation degrades gracefully with no catalog/data asset assigned.
+    if (ShipDataAsset && NearbyStation && !NearbyStation->IsShipSizeCompatible(ShipDataAsset->GetSizeCategory()))
+    {
+        UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::RequestDocking - Ship size '%s' not compatible with this dock"),
+            *ShipDataAsset->GetSizeCategory());
+
+        #if DOCKING_DEBUG_ENABLED
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
+                FString::Printf(TEXT("[DOCKING] ERROR: %s is too large for this dock"), *ShipDataAsset->GetSizeCategory()));
+        }
+        #endif
+
+        ShowHUDAlert(FText::FromString("Ship too large for this dock"), 3.0f, true);
+        return;
+    }
 
     // Check if docking is available
     if (!DockingBay->HasAvailableDocking())
@@ -2392,9 +2470,28 @@ TSubclassOf<UUserWidget> ASpaceship::GetEffectiveTradingInterfaceClass() const
 
 void ASpaceship::SetRuntimeInputEnabled(bool bEnabled)
 {
-	// Stub: full implementation (input subsystem add/remove) lands with the
-	// input-refactor agent's in-flight changes. This placeholder exists so the
-	// committed AdastreaPlayerController code can compile + link without those
-	// changes on disk.
-	UE_LOG(LogAdastrea, Log, TEXT("ASpaceship::SetRuntimeInputEnabled(%d) on %s (stub)."), bEnabled, *GetName());
+	// Without this, RuntimeInputMappingContext (added once in
+	// EnsureOwnInputActionsAndContext, priority 10) stays on the subsystem for the
+	// rest of the game even after the player leaves the cockpit to walk the
+	// interior, competing with the avatar's own mapping context for the same
+	// WASD keys.
+	if (APlayerController* PC = Cast<APlayerController>(GetController()))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
+			ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
+		{
+			if (RuntimeInputMappingContext)
+			{
+				if (bEnabled)
+				{
+					Subsystem->AddMappingContext(RuntimeInputMappingContext, 10);
+				}
+				else
+				{
+					Subsystem->RemoveMappingContext(RuntimeInputMappingContext);
+				}
+			}
+		}
+	}
+	UE_LOG(LogAdastrea, Log, TEXT("ASpaceship::SetRuntimeInputEnabled(%d) on %s"), bEnabled, *GetName());
 }

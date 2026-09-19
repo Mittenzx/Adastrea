@@ -108,14 +108,6 @@ public:
                          * M_Int_* kit materials so the interior reads as a designed room. */
                                 void ApplyInteriorMaterials();
 
-                public:
-                        /** Return the interior's floor half-extents (local X/Y walk limits) and a
-                         * standing altitude (local Z) the avatar should be held at, plus the
-                         * room's true local centre (X/Y) — the mesh's bounding-box centre, which
-                         * is very often NOT the actor's pivot. Returns false if no mesh is
-                         * configured yet. */
-                                bool GetLocalHalfExtents(const float InAltitude, FVector& OutHalfExtents, FVector2D& OutLocalCentreXY) const;
-
                 protected:
                         /** Mount a companion part mesh (Console/Deck/Lights/...) co-located with the
                          * shell, scaled identically, hidden until reveal. Attaches to SceneRoot. */
@@ -172,6 +164,22 @@ protected:
      * nothing to stand on and CharacterMovement's normal Walking mode can't work. */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
     TObjectPtr<UBoxComponent> FloorCollision;
+
+    /** Four thin walls (blocks Pawn only) enclosing the walkable footprint, same reason
+     * as FloorCollision: the shell mesh ignores Pawn collision, so without real wall
+     * collision nothing stops the avatar from walking through it. A real collision wall
+     * lets CharacterMovement handle containment itself (sliding along walls, etc.) —
+     * a prior approach manually teleported the avatar back inside a computed bounds each
+     * tick, which fought CharacterMovement's own velocity bookkeeping and froze it at
+     * zero velocity permanently, even while grounded and receiving movement input. */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
+    TObjectPtr<UBoxComponent> WallNorth;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
+    TObjectPtr<UBoxComponent> WallSouth;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
+    TObjectPtr<UBoxComponent> WallEast;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")
+    TObjectPtr<UBoxComponent> WallWest;
 
     /** Trigger volume at the cockpit/seat. Avatar walking into it returns to the ship. */
         UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interior")

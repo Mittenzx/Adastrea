@@ -9,7 +9,7 @@ TEXDIR = r"C:\Users\akuma\Adastrea\Assets\FBX\generated\Textures"
 OUTDIR = r"C:\Users\akuma\Adastrea\Assets\FBX\generated\previews"
 
 INTERIORS = {
-    "SM_Int_Fighter_Cockpit":        ("T_Int_Cockpit", "T_Int_Cockpit"),
+    "SM_Int_Fighter_Cabin":          ("T_Int_Cockpit", "T_Int_Cockpit"),
     "SM_Int_Freighter_CrewQuarters": ("T_Int_Wall", "T_Int_Glow"),
     "SM_Int_Generationship_Hab":     ("T_Int_Wall", "T_Int_Glow"),
     "SM_Int_Standard_Corridor":      ("T_Int_Wall", "T_Int_Glow"),

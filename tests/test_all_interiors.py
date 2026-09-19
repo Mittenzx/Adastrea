@@ -31,8 +31,7 @@ EXPECTED_INTERIORS = [
     "SM_Int_CommandBridge_Shell",
     "SM_Int_CommandBridge_Stations",
     "SM_Int_CommandBridge_Viewport",
-    "SM_Int_Fighter_Cockpit",
-    "SM_Int_Fighter_EmptyRoom",
+    "SM_Int_Fighter_Cabin",
     "SM_Int_Freighter_CrewQuarters",
     "SM_Int_Freighter_CrewQuarters_Bunks",
     "SM_Int_Freighter_CrewQuarters_Desks",
@@ -166,8 +165,7 @@ class TestShellMeshesAreSelectable:
 
     def test_singleton_interiors_present(self):
         for s in [
-            "SM_Int_Fighter_Cockpit",
-    "SM_Int_Fighter_EmptyRoom",
+            "SM_Int_Fighter_Cabin",
             "SM_Int_Freighter_EngineRoom",
             "SM_Int_Standard_Airlock",
             "SM_Int_Standard_Corridor",

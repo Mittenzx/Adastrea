@@ -23,12 +23,12 @@ import sys
 import time
 
 INTERIOR_MESH_REF = "/Game/Maps/UEDPIE_0_TestLevel.TestLevel:PersistentLevel.SpaceshipInterior_0.InteriorMesh"
-RESTORE_MESH = "SM_Int_Fighter_Cockpit"
+RESTORE_MESH = "SM_Int_Fighter_Cabin"
 SUBDIR = "/AdastreaShips/Meshes/Interiors"
 
-# The full 30-mesh interior kit (shells + companion parts + singletons).
+# The full interior kit (shells + companion parts + singletons).
 INTERIORS = [
-    "SM_Int_Fighter_Cockpit",
+    "SM_Int_Fighter_Cabin",
     "SM_Int_CommandBridge_Shell", "SM_Int_CommandBridge_Console", "SM_Int_CommandBridge_Deck",
     "SM_Int_CommandBridge_Hatch", "SM_Int_CommandBridge_Lights", "SM_Int_CommandBridge_Stations",
     "SM_Int_CommandBridge_Viewport",

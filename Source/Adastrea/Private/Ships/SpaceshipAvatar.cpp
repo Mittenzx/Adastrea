@@ -4,6 +4,7 @@
 #include "Components/InputComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/SpotLightComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "EnhancedInputComponent.h"
@@ -25,17 +26,20 @@ ASpaceshipAvatar::ASpaceshipAvatar()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Capsule (movement + collision with the interior volume).
+	// Capsule: still the collision shape movement sweeps against, and what the
+	// interior's FloorCollision/wall colliders block.
 	GetCapsuleComponent()->InitCapsuleSize(42.0f, 96.0f);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
 
-	// CharacterMovement: normal third-person walking.
-	UCharacterMovementComponent* MoveComp = GetCharacterMovement();
-	MoveComp->MaxWalkSpeed = 300.0f;
-	MoveComp->bOrientRotationToMovement = false; // face the look direction (first-person)
-	MoveComp->RotationRate = FRotator(0.0f, 540.0f, 0.0f);
-	MoveComp->bUseControllerDesiredRotation = false;
+	// Movement is direct swept translation driven from Tick (MoveSafe/SnapToFloor),
+	// not CharacterMovementComponent's walking simulation — disable it entirely so
+	// it can never tick, apply gravity, or otherwise interfere with manual moves.
+	if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
+	{
+		MoveComp->SetComponentTickEnabled(false);
+		MoveComp->SetMovementMode(MOVE_None);
+	}
 
 	// Camera boom + follow camera.
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -47,6 +51,19 @@ ASpaceshipAvatar::ASpaceshipAvatar()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false; // camera stays level relative to boom
+
+	// Flashlight: attached directly to the camera (not the boom) so it always
+	// points exactly where the player is looking, in both first- and third-person.
+	// Off by default — toggled with F, since ship interiors have no other lighting.
+	Flashlight = CreateDefaultSubobject<USpotLightComponent>(TEXT("Flashlight"));
+	Flashlight->SetupAttachment(FollowCamera);
+	Flashlight->Intensity = 5000.0f;
+	Flashlight->AttenuationRadius = 1500.0f;
+	Flashlight->InnerConeAngle = 15.0f;
+	Flashlight->OuterConeAngle = 30.0f;
+	Flashlight->SetLightColor(FLinearColor(1.0f, 0.95f, 0.85f)); // warm white
+	Flashlight->CastShadows = true;
+	Flashlight->SetVisibility(false);
 
 	bUseControllerRotationYaw = true; // character faces where we look
 }
@@ -88,6 +105,39 @@ void ASpaceshipAvatar::SetFirstPersonView(bool bEnable)
 	}
 }
 
+void ASpaceshipAvatar::SetFlashlightEnabled(bool bEnable)
+{
+	bFlashlightOn = bEnable;
+	if (Flashlight)
+	{
+		Flashlight->SetVisibility(bEnable);
+	}
+}
+
+void ASpaceshipAvatar::UnPossessed()
+{
+	// Remove our runtime mapping context before the controller lets go of us. It's
+	// added at priority 30 (SetupPlayerInputComponent) — above the ship's own
+	// priority-10 context — and maps Mouse2D. Left in place, it keeps silently
+	// claiming the mouse-look key after the player returns to the ship, so the
+	// ship's own Mouse2D->LookAction mapping never sees input again.
+	if (APlayerController* PC = Cast<APlayerController>(GetController()))
+	{
+		if (ULocalPlayer* LP = PC->GetLocalPlayer())
+		{
+			if (UEnhancedInputLocalPlayerSubsystem* Subsystem = LP->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+			{
+				if (AvatarMappingContext)
+				{
+					Subsystem->RemoveMappingContext(AvatarMappingContext);
+				}
+			}
+		}
+	}
+
+	Super::UnPossessed();
+}
+
 void ASpaceshipAvatar::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
@@ -98,116 +148,200 @@ void ASpaceshipAvatar::Tick(float DeltaSeconds)
 		UpdateInteractableScan(PC);
 	}
 
-	// Confine the avatar to the interior room so it can't drift out of the ship.
-	    // The avatar flies (MOVE_Flying) so input always moves it regardless of ground;
-	    // here we actively hold it inside the walkable room extent, and ZERO its
-	    // velocity only when a wall/boundary actually stops it (X or Y was clamped) so
-	    // it can't escape the hull. Z is left alone (the entry altitude is fine).
-	    if (bFirstPersonView && CurrentInterior)
-	    {
-	        ASpaceshipInterior* Room = Cast<ASpaceshipInterior>(CurrentInterior);
-	        if (Room)
-	        {
-	            FVector HP;
-	            if (Room->GetLocalHalfExtents(InteriorFloorAltitude, HP))
-	            {
-	                const FVector Centre = Room->GetActorLocation();
-	                const FRotator Rot = Room->GetActorRotation();
-	                const FVector LocalPos = Rot.UnrotateVector(GetActorLocation() - Centre);
+	// Consume this frame's move input (set by Move() via Enhanced Input's Triggered
+	// event, which fires every frame a movement key is held) and clear it — if no
+	// new input arrives before the next Tick, movement naturally stops.
+	if (!PendingMoveInput.IsNearlyZero())
+	{
+		float Speed = WalkSpeed;
+		if (bSprinting)
+		{
+			Speed *= SprintMultiplier;
+		}
+		else if (bCrouchingSpeed)
+		{
+			Speed *= CrouchMultiplier;
+		}
 
-	                const float ClampedX = FMath::Clamp(LocalPos.X, -HP.X, HP.X);
-	                const float ClampedY = FMath::Clamp(LocalPos.Y, -HP.Y, HP.Y);
-	                const bool bHitWall = (FMath::Abs(ClampedX - LocalPos.X) > 5.0f) ||
-	                                      (FMath::Abs(ClampedY - LocalPos.Y) > 5.0f);
-	                const FVector ResolvedLocal(ClampedX, ClampedY, LocalPos.Z);
-	                const FVector NewWorld = Centre + Rot.RotateVector(ResolvedLocal);
-	                if (!NewWorld.Equals(GetActorLocation(), 1.0f))
-	                {
-	                    SetActorLocation(NewWorld, false, nullptr, ETeleportType::TeleportPhysics);
-	                    if (bHitWall)
-	                    {
-	                        if (UCharacterMovementComponent* MC = GetCharacterMovement())
-	                        {
-	                            MC->Velocity = FVector::ZeroVector;
-	                        }
-	                    }
-	                }
-	            }
-	        }
-	    }
+		const FVector Forward = GetActorForwardVector();
+		const FVector Right = GetActorRightVector();
+		const FVector Delta = (Forward * PendingMoveInput.X + Right * PendingMoveInput.Y) * Speed * DeltaSeconds;
+		MoveSafe(Delta);
 	}
+	PendingMoveInput = FVector2D::ZeroVector;
+
+	if (bFirstPersonView && CurrentInterior)
+	{
+		SnapToFloor();
+	}
+}
+
+void ASpaceshipAvatar::MoveSafe(const FVector& WorldDelta)
+{
+	if (WorldDelta.IsNearlyZero())
+	{
+		return;
+	}
+
+	FHitResult Hit;
+	AddActorWorldOffset(WorldDelta, true, &Hit);
+	if (Hit.IsValidBlockingHit())
+	{
+		// Slide the remaining distance along the surface we hit, once — enough to
+		// walk smoothly along a wall instead of stopping dead on first contact.
+		const FVector Remaining = WorldDelta * (1.0f - Hit.Time);
+		const FVector SlideDelta = FVector::VectorPlaneProject(Remaining, Hit.Normal);
+		if (!SlideDelta.IsNearlyZero())
+		{
+			AddActorWorldOffset(SlideDelta, true);
+		}
+	}
+}
+
+void ASpaceshipAvatar::SnapToFloor()
+{
+	UCapsuleComponent* Capsule = GetCapsuleComponent();
+	if (!Capsule || !GetWorld())
+	{
+		return;
+	}
+
+	const float HalfHeight = Capsule->GetScaledCapsuleHalfHeight();
+	const FVector Start = GetActorLocation();
+	const FVector End = Start - FVector(0.0f, 0.0f, HalfHeight + 50.0f);
+
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+
+	FHitResult Hit;
+	if (GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Pawn, Params))
+	{
+		const FVector NewLocation(Start.X, Start.Y, Hit.Location.Z + HalfHeight);
+		if (!NewLocation.Equals(Start, 0.1f))
+		{
+			SetActorLocation(NewLocation, false);
+		}
+	}
+}
 
 void ASpaceshipAvatar::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	// Reliable legacy key bindings so the avatar walks/looks/interacts without
-	// requiring (possibly absent) Blueprint-configured input-action assets.
-	if (InputComponent)
+	UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	if (!EnhancedInput)
 	{
-		// Movement
-		InputComponent->BindKey(EKeys::W, IE_Pressed, this, &ASpaceshipAvatar::MoveForward);
-		InputComponent->BindKey(EKeys::W, IE_Repeat, this, &ASpaceshipAvatar::MoveForward);
-		InputComponent->BindKey(EKeys::S, IE_Pressed, this, &ASpaceshipAvatar::MoveBack);
-		InputComponent->BindKey(EKeys::S, IE_Repeat, this, &ASpaceshipAvatar::MoveBack);
-		InputComponent->BindKey(EKeys::A, IE_Pressed, this, &ASpaceshipAvatar::MoveLeft);
-		InputComponent->BindKey(EKeys::A, IE_Repeat, this, &ASpaceshipAvatar::MoveLeft);
-		InputComponent->BindKey(EKeys::D, IE_Pressed, this, &ASpaceshipAvatar::MoveRight);
-		InputComponent->BindKey(EKeys::D, IE_Repeat, this, &ASpaceshipAvatar::MoveRight);
-		InputComponent->BindKey(EKeys::SpaceBar, IE_Pressed, this, &ASpaceshipAvatar::Jump);
-		// Sprint / couch
-		InputComponent->BindKey(EKeys::LeftShift, IE_Pressed, this, &ASpaceshipAvatar::SprintStart);
-		InputComponent->BindKey(EKeys::LeftShift, IE_Released, this, &ASpaceshipAvatar::SprintEnd);
-		InputComponent->BindKey(EKeys::C, IE_Pressed, this, &ASpaceshipAvatar::CrouchStart);
-		InputComponent->BindKey(EKeys::C, IE_Released, this, &ASpaceshipAvatar::CrouchEnd);
-		// Look
-		InputComponent->BindAxis("Turn", this, &ASpaceshipAvatar::Turn);
-		InputComponent->BindAxis("LookUp", this, &ASpaceshipAvatar::LookUp);
-		// Worldwide interact (E) and return-to-seat (V)
-		InputComponent->BindKey(EKeys::E, IE_Pressed, this, &ASpaceshipAvatar::Interact);
-		InputComponent->BindKey(EKeys::V, IE_Pressed, this, &ASpaceshipAvatar::SitDown);
+		UE_LOG(LogAdastrea, Error, TEXT("SpaceshipAvatar: PlayerInputComponent is not Enhanced Input — avatar has no controls."));
+		return;
 	}
 
-	if (UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+	// Build a self-contained runtime mapping context so controls work without a
+	// Blueprint-configured Input Action/Mapping Context asset — the same pattern
+	// ASpaceship uses for its own controls (EnsureOwnInputActionsAndContext).
+	if (!AvatarMappingContext)
 	{
-		// Self-contained runtime look so mouse-look works even when no content IMC
-		// is configured (the ship's LookAction is a separate pawn's action). The
-		// craft binds legacy WASD for movement; look needs an EnhancedInput action.
+		AvatarMappingContext = NewObject<UInputMappingContext>(this, TEXT("IMC_AvatarRuntime"));
+
+		// Move: W/S = forward/back (X), A/D = strafe (Y), matching Move()'s
+		// Axis.X = forward, Axis.Y = right convention.
+		if (!MoveAction)
+		{
+			MoveAction = NewObject<UInputAction>(this, TEXT("IA_AvatarMove_Runtime"));
+			MoveAction->ValueType = EInputActionValueType::Axis2D;
+		}
+		AvatarMappingContext->MapKey(MoveAction, EKeys::W);
+		{
+			FEnhancedActionKeyMapping& SMapping = AvatarMappingContext->MapKey(MoveAction, EKeys::S);
+			SMapping.Modifiers.Add(NewObject<UInputModifierNegate>(AvatarMappingContext));
+		}
+		{
+			FEnhancedActionKeyMapping& DMapping = AvatarMappingContext->MapKey(MoveAction, EKeys::D);
+			UInputModifierSwizzleAxis* DSwizzle = NewObject<UInputModifierSwizzleAxis>(AvatarMappingContext);
+			DSwizzle->Order = EInputAxisSwizzle::YXZ;
+			DMapping.Modifiers.Add(DSwizzle);
+		}
+		{
+			FEnhancedActionKeyMapping& AMapping = AvatarMappingContext->MapKey(MoveAction, EKeys::A);
+			UInputModifierSwizzleAxis* ASwizzle = NewObject<UInputModifierSwizzleAxis>(AvatarMappingContext);
+			ASwizzle->Order = EInputAxisSwizzle::YXZ;
+			AMapping.Modifiers.Add(ASwizzle);
+			AMapping.Modifiers.Add(NewObject<UInputModifierNegate>(AvatarMappingContext));
+		}
+
+		// Look: mouse XY.
 		if (!LookAction)
 		{
 			LookAction = NewObject<UInputAction>(this, TEXT("IA_AvatarLook_Runtime"));
 			LookAction->ValueType = EInputActionValueType::Axis2D;
 		}
-		if (!AvatarMappingContext)
+		AvatarMappingContext->MapKey(LookAction, EKeys::Mouse2D);
+
+		// Sprint / crouch (speed multipliers only — see Tick).
+		if (!SprintAction)
 		{
-			AvatarMappingContext = NewObject<UInputMappingContext>(this, TEXT("IMC_AvatarRuntime"));
-			AvatarMappingContext->MapKey(LookAction, EKeys::Mouse2D);
+			SprintAction = NewObject<UInputAction>(this, TEXT("IA_AvatarSprint_Runtime"));
+			SprintAction->ValueType = EInputActionValueType::Boolean;
 		}
-		if (MoveAction)
+		AvatarMappingContext->MapKey(SprintAction, EKeys::LeftShift);
+
+		if (!CrouchAction)
 		{
-			EnhancedInput->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASpaceshipAvatar::Move);
+			CrouchAction = NewObject<UInputAction>(this, TEXT("IA_AvatarCrouch_Runtime"));
+			CrouchAction->ValueType = EInputActionValueType::Boolean;
 		}
-		if (LookAction)
+		AvatarMappingContext->MapKey(CrouchAction, EKeys::C);
+
+		// Worldwide interact (E) and return-to-seat (V).
+		if (!InteractAction)
 		{
-			EnhancedInput->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASpaceshipAvatar::Look);
+			InteractAction = NewObject<UInputAction>(this, TEXT("IA_AvatarInteract_Runtime"));
+			InteractAction->ValueType = EInputActionValueType::Boolean;
 		}
-		if (SitDownAction)
+		AvatarMappingContext->MapKey(InteractAction, EKeys::E);
+
+		if (!SitDownAction)
 		{
-			EnhancedInput->BindAction(SitDownAction, ETriggerEvent::Started, this, &ASpaceshipAvatar::SitDown);
+			SitDownAction = NewObject<UInputAction>(this, TEXT("IA_AvatarSitDown_Runtime"));
+			SitDownAction->ValueType = EInputActionValueType::Boolean;
 		}
+		AvatarMappingContext->MapKey(SitDownAction, EKeys::V);
+
+		if (!FlashlightAction)
+		{
+			FlashlightAction = NewObject<UInputAction>(this, TEXT("IA_AvatarFlashlight_Runtime"));
+			FlashlightAction->ValueType = EInputActionValueType::Boolean;
+		}
+		AvatarMappingContext->MapKey(FlashlightAction, EKeys::F);
+
+		// Toggle first-/third-person while walking (entering an interior forces
+		// first-person by default, but the player can switch back and forth).
+		if (!ToggleViewAction)
+		{
+			ToggleViewAction = NewObject<UInputAction>(this, TEXT("IA_AvatarToggleView_Runtime"));
+			ToggleViewAction->ValueType = EInputActionValueType::Boolean;
+		}
+		AvatarMappingContext->MapKey(ToggleViewAction, EKeys::T);
 	}
 
-	// Register the avatar's mapping context on the local player if present.
+	EnhancedInput->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASpaceshipAvatar::Move);
+	EnhancedInput->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASpaceshipAvatar::Look);
+	EnhancedInput->BindAction(SprintAction, ETriggerEvent::Started, this, &ASpaceshipAvatar::SprintStarted);
+	EnhancedInput->BindAction(SprintAction, ETriggerEvent::Completed, this, &ASpaceshipAvatar::SprintCompleted);
+	EnhancedInput->BindAction(CrouchAction, ETriggerEvent::Started, this, &ASpaceshipAvatar::CrouchStarted);
+	EnhancedInput->BindAction(CrouchAction, ETriggerEvent::Completed, this, &ASpaceshipAvatar::CrouchCompleted);
+	EnhancedInput->BindAction(InteractAction, ETriggerEvent::Started, this, &ASpaceshipAvatar::InteractPressed);
+	EnhancedInput->BindAction(SitDownAction, ETriggerEvent::Started, this, &ASpaceshipAvatar::SitDownPressed);
+	EnhancedInput->BindAction(FlashlightAction, ETriggerEvent::Started, this, &ASpaceshipAvatar::FlashlightPressed);
+	EnhancedInput->BindAction(ToggleViewAction, ETriggerEvent::Started, this, &ASpaceshipAvatar::ToggleViewPressed);
+
+	// Register the avatar's mapping context on the local player.
 	if (APlayerController* PC = Cast<APlayerController>(GetController()))
 	{
 		if (ULocalPlayer* LP = PC->GetLocalPlayer())
 		{
 			if (UEnhancedInputLocalPlayerSubsystem* Subsystem = LP->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
 			{
-				if (AvatarMappingContext)
-				{
-					Subsystem->AddMappingContext(AvatarMappingContext, 30);
-				}
+				Subsystem->AddMappingContext(AvatarMappingContext, 30);
 			}
 		}
 	}
@@ -215,15 +349,7 @@ void ASpaceshipAvatar::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void ASpaceshipAvatar::Move(const FInputActionValue& Value)
 {
-	const FVector2D Axis = Value.Get<FVector2D>();
-	if (APlayerController* PC = Cast<APlayerController>(GetController()))
-	{
-		const FRotator YawRot(0.0f, PC->GetControlRotation().Yaw, 0.0f);
-		const FVector Forward = FRotationMatrix(YawRot).GetUnitAxis(EAxis::X);
-		const FVector Right = FRotationMatrix(YawRot).GetUnitAxis(EAxis::Y);
-		AddMovementInput(Forward, Axis.X);
-		AddMovementInput(Right, Axis.Y);
-	}
+	PendingMoveInput = Value.Get<FVector2D>();
 }
 
 void ASpaceshipAvatar::Look(const FInputActionValue& Value)
@@ -233,65 +359,20 @@ void ASpaceshipAvatar::Look(const FInputActionValue& Value)
 	AddControllerPitchInput(LookAxis.Y);
 }
 
-void ASpaceshipAvatar::MoveForward() { AddMovementInput(GetActorForwardVector(), 1.0f); }
-void ASpaceshipAvatar::MoveBack()    { AddMovementInput(GetActorForwardVector(), -1.0f); }
-void ASpaceshipAvatar::MoveLeft()    { AddMovementInput(GetActorRightVector(), -1.0f); }
-void ASpaceshipAvatar::MoveRight()   { AddMovementInput(GetActorRightVector(), 1.0f); }
-void ASpaceshipAvatar::Turn(float Value)
-{
-	if (APlayerController* PC = Cast<APlayerController>(GetController()))
-	{
-		PC->AddYawInput(Value);
-	}
-}
-void ASpaceshipAvatar::LookUp(float Value)
-{
-	if (APlayerController* PC = Cast<APlayerController>(GetController()))
-	{
-		PC->AddPitchInput(Value);
-	}
-}
-
-void ASpaceshipAvatar::SprintStart()
-{
-	if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
-	{
-		MoveComp->MaxWalkSpeed = WalkSpeed * SprintMultiplier;
-	}
-}
-void ASpaceshipAvatar::SprintEnd()
-{
-	if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
-	{
-		MoveComp->MaxWalkSpeed = WalkSpeed;
-	}
-}
-void ASpaceshipAvatar::CrouchStart()
-{
-	if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
-	{
-		MoveComp->MaxWalkSpeed = WalkSpeed * CrouchMultiplier;
-		MoveComp->bWantsToCrouch = true;
-	}
-}
-void ASpaceshipAvatar::CrouchEnd()
-{
-	if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
-	{
-		MoveComp->MaxWalkSpeed = WalkSpeed;
-		MoveComp->bWantsToCrouch = false;
-	}
-}
+void ASpaceshipAvatar::SprintStarted(const FInputActionValue& Value)   { bSprinting = true; }
+void ASpaceshipAvatar::SprintCompleted(const FInputActionValue& Value) { bSprinting = false; }
+void ASpaceshipAvatar::CrouchStarted(const FInputActionValue& Value)   { bCrouchingSpeed = true; }
+void ASpaceshipAvatar::CrouchCompleted(const FInputActionValue& Value) { bCrouchingSpeed = false; }
+void ASpaceshipAvatar::InteractPressed(const FInputActionValue& Value) { Interact(); }
+void ASpaceshipAvatar::SitDownPressed(const FInputActionValue& Value)  { SitDown(); }
+void ASpaceshipAvatar::FlashlightPressed(const FInputActionValue& Value) { SetFlashlightEnabled(!bFlashlightOn); }
+void ASpaceshipAvatar::ToggleViewPressed(const FInputActionValue& Value) { SetFirstPersonView(!bFirstPersonView); }
 
 void ASpaceshipAvatar::SetMovementTuning(float InWalkSpeed, float InSprintMultiplier, float InCrouchMultiplier)
 {
 	WalkSpeed = InWalkSpeed;
 	SprintMultiplier = InSprintMultiplier;
 	CrouchMultiplier = InCrouchMultiplier;
-	if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
-	{
-		MoveComp->MaxWalkSpeed = WalkSpeed;
-	}
 }
 
 void ASpaceshipAvatar::UpdateInteractableScan(APlayerController* PC)
