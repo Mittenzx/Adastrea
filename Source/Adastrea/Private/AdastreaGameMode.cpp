@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "AdastreaGameMode.h"
+#include "GameFramework/PlayerStart.h"
 #include "SpaceSectorMap.h"
 #include "Ships/Spaceship.h"
 #include "AdastreaHUD.h"
@@ -123,6 +124,18 @@ void AAdastreaGameMode::SpawnPlayerSpaceship()
 
 	// Spawn the spaceship
 	FRotator SpawnRotation = FRotator::ZeroRotator; // Facing forward
+	if (bSpawnAtPlayerStart)
+	{
+		TArray<AActor*> Starts;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), Starts);
+		if (Starts.Num() > 0)
+		{
+			AActor* Start = Starts[0];
+			SpawnLocation = Start->GetActorLocation();
+			SpawnRotation = Start->GetActorRotation();
+			UE_LOG(LogAdastrea, Log, TEXT("AdastreaGameMode: Spawning player spaceship at PlayerStart %s"), *SpawnLocation.ToString());
+		}
+	}
 	ASpaceship* PlayerShip = GetWorld()->SpawnActor<ASpaceship>(DefaultSpaceshipClass, SpawnLocation, SpawnRotation, SpawnParams);
 
 	if (!PlayerShip)

@@ -375,13 +375,13 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Mining")
     class UInputAction* LockAsteroidAction;
 
-    UFUNCTION(BlueprintCallable, Category="Mining")
+    UFUNCTION(Exec, BlueprintCallable, Category="Mining")
     void StartMining();
 
-    UFUNCTION(BlueprintCallable, Category="Mining")
+    UFUNCTION(Exec, BlueprintCallable, Category="Mining")
     void StopMining();
 
-    UFUNCTION(BlueprintCallable, Category="Mining")
+    UFUNCTION(Exec, BlueprintCallable, Category="Mining")
     void LockAsteroid();
 
     // Enhanced Input callbacks
@@ -479,7 +479,7 @@ public:
      * Request docking at nearby station (called by input)
      * Validates station availability and initiates docking sequence
      */
-    UFUNCTION(BlueprintCallable, Category="Docking")
+    UFUNCTION(Exec, BlueprintCallable, Category="Docking")
     void RequestDocking();
 
     /**

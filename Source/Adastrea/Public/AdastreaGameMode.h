@@ -74,6 +74,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player Spawn")
 	bool bSpawnAtCenter;
 
+	/** Spawn the player ship at the level's PlayerStart (location and rotation) instead of the sector map. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player Spawning")
+	bool bSpawnAtPlayerStart = false;
+
 	/**
 	 * Fallback spawn location (world space) when no SpaceSectorMap is found in the level
 	 * Used to allow ship spawning in test levels or simple maps without sectors

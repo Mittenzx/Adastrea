@@ -944,7 +944,7 @@ void AAdastreaHUD::DrawTradeScreen(APlayerController* PC, AAdastreaPlayerControl
 	}
 
 	// Footer controls.
-	DrawText(TEXT("Up/Down: select    [B]/[S]: toggle Buy/Sell    [Space]: trade 1    [Esc]: close    [Q]: trade 5"),
+	DrawText(TEXT("Up/Down: select    [B]/[S]: toggle Buy/Sell    [Space]: trade 1    [Esc]: close    [Q]: trade 5    [X]: sell all"),
 		FLinearColor(0.6f,0.7f,0.8f,0.9f), VW*0.5f - 380.0f, VH - 40.0f, BodyFont, 0.7f);
 }
 

@@ -380,14 +380,26 @@ public:
 																	void HandleMapClick();
 
 																	/** Trade screen input handlers. */
+																						UFUNCTION(Exec)
 																						void HandleTradeSelectUp();
+																						UFUNCTION(Exec)
 																						void HandleTradeSelectDown();
+																						UFUNCTION(Exec)
 																						void HandleTradeToggleMode();
+																						UFUNCTION(Exec)
 																						void HandleTradeExecute1();
+																						UFUNCTION(Exec)
 																						void HandleTradeExecute5();
+																						UFUNCTION(Exec)
 																						void HandleTradeClose();
+	UFUNCTION(Exec)
 	void HandleStationMenuConfirm();
+																											UFUNCTION(Exec)
 																											void ExecuteTrade(int32 Quantity);
+
+	/** Sell (in sell mode) the whole held quantity of the selected market item. Key: X. */
+	UFUNCTION(Exec)
+	void HandleTradeSellAll();
 
 																											/** Ship-select screen input handlers. */
 																											void HandleShipSelectPrev();
