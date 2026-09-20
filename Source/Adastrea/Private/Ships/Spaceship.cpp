@@ -890,9 +890,18 @@ void ASpaceship::ApplyShipHullMaterial()
     {
         HullMat = TEXT("/Game/Materials/M_Corvette_Hull");
     }
-    else if (ActorName.Contains(TEXT("Cruiser")) || ActorName.Contains(TEXT("Gunship")))
+    else if (ActorName.Contains(TEXT("Gunship")))
     {
         HullMat = TEXT("/Game/Materials/M_Gunship_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Cruiser")))
+    {
+        // Was lumped in with Gunship (ActorName.Contains("Cruiser") ||
+        // Contains("Gunship") -> M_Gunship_Hull) before T_Cruiser_* textures
+        // existed for DA_Cruiser_LifelineMedical. Split into its own dedicated
+        // hull now that the asset pack has been imported (see
+        // Tools/regen_ship_hull_textures_v2.py).
+        HullMat = TEXT("/Game/Materials/M_Cruiser_Hull");
     }
     else if (ActorName.Contains(TEXT("Destroyer")))
     {
@@ -918,6 +927,62 @@ void ASpaceship::ApplyShipHullMaterial()
     else if (ActorName.Contains(TEXT("Fighter")))
     {
         HullMat = TEXT("/Game/Materials/M_Fighter_Hull");
+    }
+    // 13 new dedicated hull classes added alongside the roster of DA_* ship
+    // data assets (Tools/regen_ship_hull_textures_v2.py generated their
+    // T_<Class>_* textures and the M_<Class>_Hull materials). None of these
+    // classes have a placed BP_Ship_<Class> yet, but wiring the dispatch now
+    // means any future ship whose actor name contains the token below (e.g.
+    // a "BP_Ship_Carrier" instance) picks up its dedicated hull material
+    // instead of silently falling back to M_Fighter_Hull.
+    else if (ActorName.Contains(TEXT("Carrier")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Carrier_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Command")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Command_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Frigate")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Frigate_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Luxury")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Luxury_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Mining")))
+    {
+        // Distinct from "Miner" (M_Miner_Hull) above -- "Mining" (as in
+        // DA_Mining_Excavator) does not match Contains("Miner"), so this
+        // needs its own branch rather than falling into the Miner one.
+        HullMat = TEXT("/Game/Materials/M_Mining_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Patrol")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Patrol_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Science")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Science_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Trading")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Trading_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Behemoth")))
+    {
+        // Matched on "Behemoth" rather than "Transport" so it doesn't collide
+        // with DA_Transport_GenesisColony below.
+        HullMat = TEXT("/Game/Materials/M_Transport_Behemoth_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Genesis")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Transport_Genesis_Hull");
+    }
+    else if (ActorName.Contains(TEXT("Utility")))
+    {
+        HullMat = TEXT("/Game/Materials/M_Utility_Hull");
     }
 
     UMaterialInterface* Mat = LoadObject<UMaterialInterface>(nullptr, *HullMat);

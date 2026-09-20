@@ -314,7 +314,7 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     accent = np.array(variant.get('accent', [0.1, 0.15, 0.2]))
     D = np.empty((H, W, 4), dtype=np.float32)
     for ch in range(3):
-        D[..., ch] = np.clip(base[ch] - (0.5 - h) * 0.72, 0, 1)  # stronger relief contrast
+        D[..., ch] = np.clip(base[ch] - (0.5 - h) * 0.92, 0, 1)  # stronger relief contrast (was 0.72 -- too flat/low-contrast per X4-benchmark review)
     # per-panel tonal variation: modulate each panel's brightness slightly so the
     # plating doesn't read as one uniform flat (real panels show tone variation).
     # Build a coarse panel-locked noise field (V=row, U=col), plus gentle wear streaking.
@@ -331,7 +331,7 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     rsz = (rsz[:-2, :] + rsz[1:-1, :] + rsz[2:, :]) / 3.0
     rsz = (rsz[:, :-2] + rsz[:, 1:-1] + rsz[:, 2:]) / 3.0
     pad = np.pad(rsz, 1, mode='edge')
-    tone = 0.10 * pad
+    tone = 0.17 * pad  # was 0.10 -- more per-plate brightness variance breaks the "flat wrap" look
     # clean plate tones only — no wear/weathering (shiny new ships)
     for ch in range(3):
         D[..., ch] = np.clip(D[..., ch] * (1 + tone), 0, 1)
@@ -400,9 +400,10 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     M[h < 0.28] = 0.62   # recessed plates: primer / grime-tinged (less metallic)
     M[h < 0.16] = 0.45   # deep grooves: clearly non-metal (painted-under / dirt)
 
-    # AO: multi-scale, darker in deep grooves & pits
-    AO = (h - 0.5) * 2.4 + 0.62
-    AO = np.clip(AO, 0.05, 1.0)
+    # AO: multi-scale, darker in deep grooves & pits (deeper contrast than v1 so
+    # panel seams/rivets/access-panels read as real occlusion, not a flat overlay)
+    AO = (h - 0.5) * 2.9 + 0.58
+    AO = np.clip(AO, 0.035, 1.0)
 
     # ---- optional cyberpunk / industrial overlays ----
     # STARSHIP strip viewports — NOT house windows. These are long, narrow
@@ -635,8 +636,8 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     # add fine noise displacement (high-frequency micro-grain)
     noise = rng.random((H, W)).astype(np.float32)
     ngx, ngy = np.gradient(noise)
-    N[..., 0] += -ngx * 0.12
-    N[..., 1] += -ngy * 0.12
+    N[..., 0] += -ngx * 0.17  # was 0.12 -- finer micro-grain so hulls don't read glass-smooth up close
+    N[..., 1] += -ngy * 0.17
     nrm = np.sqrt(N[...,0]**2 + N[...,1]**2 + N[...,2]**2)
     N[...,0] /= nrm; N[...,1] /= nrm; N[...,2] /= nrm
     N[...,2] = -N[...,2]
