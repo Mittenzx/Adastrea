@@ -626,21 +626,26 @@ def gen_texture_set(name, variant, size=2048, seed=1):
                     D[by:by+3, bp:bp+3]=[0.5,0.52,0.55,1.0]
     # smooth the macro height a touch, then add high-freq noise
     hn = h.copy()
-    gx, gy = np.gradient(hn)
-    inv = 5.2   # stronger normal relief so panels/grooves catch light at distance
+    # np.gradient returns (d/d axis0 = rows = image V/up, d/d axis1 = cols = U/right).
+    # Blender pixel row 0 is the BOTTOM row, so +row == up.
+    dhdy, dhdx = np.gradient(hn)
+    inv = 5.2   # relief strength (slope multiplier on the height field)
     N = np.empty((H, W, 4), dtype=np.float32)
-    N[..., 0] = -gx * inv
-    N[..., 1] = -gy * inv
+    N[..., 0] = -dhdx * inv
+    N[..., 1] = -dhdy * inv          # OpenGL-style (green up) for now
     N[..., 2] = 1.0
     # add fine noise displacement (high-frequency micro-grain)
     noise = rng.random((H, W)).astype(np.float32)
-    ngx, ngy = np.gradient(noise)
-    N[..., 0] += -ngx * 0.12
-    N[..., 1] += -ngy * 0.12
+    ndy, ndx = np.gradient(noise)
+    N[..., 0] += -ndx * 0.12
+    N[..., 1] += -ndy * 0.12
     nrm = np.sqrt(N[...,0]**2 + N[...,1]**2 + N[...,2]**2)
     N[...,0] /= nrm; N[...,1] /= nrm; N[...,2] /= nrm
-    N[...,2] = -N[...,2]
-    N[...,3] = 1.0
+    # DirectX-style (Unreal convention): flip green so it points down.
+    N[..., 1] = -N[..., 1]
+    # Encode signed [-1,1] vector into [0,1] (flat = 0.5,0.5,1.0 = 128,128,255).
+    N[..., 0:3] = N[..., 0:3] * 0.5 + 0.5
+    N[..., 3] = 1.0
 
     # skin mask: 1.0 = skinnable hull panel, 0.0 = fixed region (accent/neon/
     # windows/hazard) that a runtime skin must NOT recolor (X4 paintmodmask analog)
@@ -658,6 +663,10 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     for suf, arr in maps.items():
         fname = f"T_{name}{suf}.png"
         bpy.data.images.new(fname, width=W, height=H)
+        if suf == '_N':
+            # data texture: without this Blender applies the sRGB OETF on save
+            # and 0.5 would be written as ~188
+            bpy.data.images[fname].colorspace_settings.name = 'Non-Color'
         bpy.data.images[fname].pixels = arr.flatten().tolist()
         bpy.data.images[fname].filepath_raw = os.path.join(TEXDIR, fname)
         bpy.data.images[fname].file_format = 'PNG'
