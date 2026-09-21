@@ -1,6 +1,7 @@
 // Copyright (c) 2025 Mittenzx. Licensed under MIT.
 
 #include "Stations/DockingBayModule.h"
+#include "Stations/DockingDebug.h"
 
 // Debug flag for docking system - can be disabled for shipping builds
 #ifndef DOCKING_DEBUG_ENABLED
@@ -35,8 +36,7 @@ void ADockingBayModule::PopulateDockingPointsFromTags()
 #if DOCKING_DEBUG_ENABLED
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,
-            FString::Printf(TEXT("[DOCKING] Found %d components tagged as 'DockingPoint'"), TaggedComponents.Num()));
+        AdastreaDockingDebug::Print(5.0f, FColor::Cyan, FString::Printf(TEXT("[DOCKING] Found %d components tagged as 'DockingPoint'"), TaggedComponents.Num()));
     }
 #endif
 
@@ -50,8 +50,7 @@ void ADockingBayModule::PopulateDockingPointsFromTags()
 #if DOCKING_DEBUG_ENABLED
             if (GEngine)
             {
-                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
-                    FString::Printf(TEXT("[DOCKING] Added docking point: %s at location %s"),
+                AdastreaDockingDebug::Print(5.0f, FColor::Green, FString::Printf(TEXT("[DOCKING] Added docking point: %s at location %s"),
                         *SceneComp->GetName(),
                         *SceneComp->GetComponentLocation().ToString()));
             }
@@ -65,8 +64,7 @@ void ADockingBayModule::PopulateDockingPointsFromTags()
 #if DOCKING_DEBUG_ENABLED
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red,
-                FString::Printf(TEXT("[DOCKING] WARNING: No docking points found! Tag Scene Components with 'DockingPoint'")));
+            AdastreaDockingDebug::Print(10.0f, FColor::Red, FString::Printf(TEXT("[DOCKING] WARNING: No docking points found! Tag Scene Components with 'DockingPoint'")));
         }
 #endif
 
@@ -79,8 +77,7 @@ void ADockingBayModule::PopulateDockingPointsFromTags()
 #if DOCKING_DEBUG_ENABLED
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow,
-                FString::Printf(TEXT("[DOCKING] WARNING: Only %d docking points for capacity of %d ships"),
+            AdastreaDockingDebug::Print(10.0f, FColor::Yellow, FString::Printf(TEXT("[DOCKING] WARNING: Only %d docking points for capacity of %d ships"),
                     DockingPoints.Num(), MaxDockedShips));
         }
 #endif
@@ -96,8 +93,7 @@ USceneComponent* ADockingBayModule::GetAvailableDockingPoint() const
     // Debug print - function entry
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,
-            FString::Printf(TEXT("[DOCKING] GetAvailableDockingPoint() called on %s"), *GetName()));
+        AdastreaDockingDebug::Print(5.0f, FColor::Cyan, FString::Printf(TEXT("[DOCKING] GetAvailableDockingPoint() called on %s"), *GetName()));
     }
 #endif
 
@@ -112,8 +108,7 @@ USceneComponent* ADockingBayModule::GetAvailableDockingPoint() const
         // Debug print - no capacity
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
-                FString::Printf(TEXT("[DOCKING] ERROR: No docking capacity (%d/%d occupied)"),
+            AdastreaDockingDebug::Print(5.0f, FColor::Red, FString::Printf(TEXT("[DOCKING] ERROR: No docking capacity (%d/%d occupied)"),
                     CurrentDockedShips, MaxDockedShips));
         }
 #endif
@@ -127,8 +122,7 @@ USceneComponent* ADockingBayModule::GetAvailableDockingPoint() const
         // Debug print - no docking points
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
-                TEXT("[DOCKING] ERROR: No docking points defined in module"));
+            AdastreaDockingDebug::Print(5.0f, FColor::Red, TEXT("[DOCKING] ERROR: No docking points defined in module"));
         }
 #endif
 
@@ -144,8 +138,7 @@ USceneComponent* ADockingBayModule::GetAvailableDockingPoint() const
     // Debug print - point found
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
-            FString::Printf(TEXT("[DOCKING] Docking point found: Index %d of %d points"),
+        AdastreaDockingDebug::Print(5.0f, FColor::Green, FString::Printf(TEXT("[DOCKING] Docking point found: Index %d of %d points"),
                 NextDockingIndex, DockingPoints.Num()));
     }
 #endif
@@ -159,8 +152,7 @@ bool ADockingBayModule::DockShip()
     // Debug print - function entry
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,
-            TEXT("[DOCKING] DockShip() called on station module"));
+        AdastreaDockingDebug::Print(5.0f, FColor::Cyan, TEXT("[DOCKING] DockShip() called on station module"));
     }
 #endif
 
@@ -170,8 +162,7 @@ bool ADockingBayModule::DockShip()
         // Debug print - no capacity
         if (GEngine)
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
-                FString::Printf(TEXT("[DOCKING] ERROR: Cannot dock - all slots occupied (%d/%d)"),
+            AdastreaDockingDebug::Print(5.0f, FColor::Red, FString::Printf(TEXT("[DOCKING] ERROR: Cannot dock - all slots occupied (%d/%d)"),
                     CurrentDockedShips, MaxDockedShips));
         }
 #endif
@@ -185,8 +176,7 @@ bool ADockingBayModule::DockShip()
     // Debug print - docked successfully
     if (GEngine)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
-            FString::Printf(TEXT("[DOCKING] Ship docked successfully - occupied slots: %d/%d"),
+        AdastreaDockingDebug::Print(5.0f, FColor::Green, FString::Printf(TEXT("[DOCKING] Ship docked successfully - occupied slots: %d/%d"),
                 CurrentDockedShips, MaxDockedShips));
     }
 #endif
