@@ -209,14 +209,14 @@ void AAIPilotController::UndockShip()
 	}
 }
 
-void AAIPilotController::SteerToward(const FVector& Location, float DeltaSeconds)
+float AAIPilotController::FaceToward(const FVector& Location, float DeltaSeconds)
 {
 	ASpaceship* Ship = GetShip();
 	const FVector ToTarget = Location - Ship->GetActorLocation();
 	const float Distance = ToTarget.Size();
 	if (Distance < KINDA_SMALL_NUMBER)
 	{
-		return;
+		return 1.0f;
 	}
 
 	FRotator Desired = ToTarget.Rotation();
@@ -224,8 +224,20 @@ void AAIPilotController::SteerToward(const FVector& Location, float DeltaSeconds
 	const FRotator Current = Ship->GetActorRotation();
 	Ship->SetActorRotation(FMath::RInterpConstantTo(Current, Desired, DeltaSeconds, Ship->TurnRate));
 
+	return FVector::DotProduct(Ship->GetActorForwardVector(), ToTarget / Distance);
+}
+
+void AAIPilotController::SteerToward(const FVector& Location, float DeltaSeconds)
+{
+	ASpaceship* Ship = GetShip();
+	const float Distance = FVector::Dist(Location, Ship->GetActorLocation());
+	if (Distance < KINDA_SMALL_NUMBER)
+	{
+		return;
+	}
+
 	// Ease off while still turning toward the target and again on final approach.
-	const float Alignment = FVector::DotProduct(Ship->GetActorForwardVector(), ToTarget / Distance);
+	const float Alignment = FaceToward(Location, DeltaSeconds);
 	const float TurnFactor = Alignment > 0.7f ? 1.0f : 0.3f;
 	const float ApproachFactor = FMath::Clamp(Distance / (Ship->GetEffectiveDockingRange() * 4.0f), 0.25f, 1.0f);
 	Ship->SetThrottle(CruiseThrottle * TurnFactor * ApproachFactor);

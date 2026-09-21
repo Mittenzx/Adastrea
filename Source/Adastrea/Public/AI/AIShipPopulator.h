@@ -31,11 +31,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Population", meta=(ClampMin="0", ClampMax="100"))
 	int32 ShipCount = 5;
 
+	/** Ship Blueprints for AI miners (falls back to ShipClasses when empty). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Population")
+	TArray<TSubclassOf<ASpaceship>> MinerShipClasses;
+
+	/** How many AI miners to spawn (they mine any asteroids already in the level). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Population", meta=(ClampMin="0", ClampMax="100"))
+	int32 MinerCount = 0;
+
 	/** Spawn automatically when play begins. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Population")
 	bool bSpawnOnBeginPlay = true;
 
-	/** Spawn ShipCount ships now. Returns how many were created. */
+	/** Spawn ShipCount traders and MinerCount miners now. Returns how many were created. */
 	UFUNCTION(BlueprintCallable, Category="Population")
 	int32 Populate();
 
