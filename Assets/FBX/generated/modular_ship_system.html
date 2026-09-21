@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adastrea Modular Ship System</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: #020617;
+      min-height: 100vh;
+      padding: 2rem;
+      color: white;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .header { margin-bottom: 2rem; }
+    .header-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; }
+    .pulse-dot { width: 12px; height: 12px; background: #22d3ee; border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.025em; }
+    .subtitle { color: #94a3b8; font-size: 0.875rem; margin-left: 1.75rem; }
+    .diagram-container {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 1rem;
+      border: 1px solid #1e293b;
+      padding: 1.5rem;
+      overflow-x: auto;
+    }
+    svg { width: 100%; min-width: 900px; display: block; }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .card {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 0.75rem;
+      border: 1px solid #1e293b;
+      padding: 1.25rem;
+    }
+    .card-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .card-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .card-dot.cyan { background: #22d3ee; }
+    .card-dot.emerald { background: #34d399; }
+    .card-dot.violet { background: #a78bfa; }
+    .card-dot.amber { background: #fbbf24; }
+    .card-dot.rose { background: #fb7185; }
+    .card h3 { font-size: 0.875rem; font-weight: 600; }
+    .card ul { list-style: none; color: #94a3b8; font-size: 0.75rem; }
+    .card li { margin-bottom: 0.375rem; }
+    .footer { text-align: center; margin-top: 1.5rem; color: #475569; font-size: 0.75rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-row">
+        <div class="pulse-dot"></div>
+        <h1>Adastrea — Modular Ship System</h1>
+      </div>
+      <p class="subtitle">Size-class carcass + scaled add-on parts, exported per-component for UE 5.8 (X4 / Starfield / Space Engineers style)</p>
+    </div>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 1000 720">
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+          </marker>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid)" />
+
+        <!-- ============ SIZE CLASS BOUNDARY ============ -->
+        <rect x="30" y="70" width="620" height="560" rx="12" fill="rgba(251, 191, 36, 0.05)" stroke="#fbbf24" stroke-width="1" stroke-dasharray="8,4"/>
+        <text x="42" y="88" fill="#fbbf24" font-size="10" font-weight="600">SIZE CLASS SYSTEM (parses: small / medium / large)</text>
+
+        <!-- ============ CARCASS (center) ============ -->
+        <rect x="230" y="120" width="220" height="70" rx="8" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="340" y="148" fill="white" font-size="12" font-weight="700" text-anchor="middle">CARCASS</text>
+        <text x="340" y="166" fill="#94a3b8" font-size="9" text-anchor="middle">Build_carcass(sz)</text>
+        <text x="340" y="181" fill="#94a3b8" font-size="9" text-anchor="middle">hull + dorsal mounting spine</text>
+
+        <!-- Size-class cards under carcass -->
+        <rect x="70" y="230" width="140" height="70" rx="6" fill="rgba(120, 53, 15, 0.3)" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="140" y="252" fill="white" font-size="11" font-weight="600" text-anchor="middle">small</text>
+        <text x="140" y="268" fill="#94a3b8" font-size="9" text-anchor="middle">scale 1.0x</text>
+        <text x="140" y="281" fill="#94a3b8" font-size="9" text-anchor="middle">fighter</text>
+
+        <rect x="230" y="230" width="140" height="70" rx="6" fill="rgba(120, 53, 15, 0.3)" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="300" y="252" fill="white" font-size="11" font-weight="600" text-anchor="middle">medium</text>
+        <text x="300" y="268" fill="#94a3b8" font-size="9" text-anchor="middle">scale 1.65x</text>
+        <text x="300" y="281" fill="#94a3b8" font-size="9" text-anchor="middle">freighter</text>
+
+        <rect x="390" y="230" width="140" height="70" rx="6" fill="rgba(120, 53, 15, 0.3)" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="460" y="252" fill="white" font-size="11" font-weight="600" text-anchor="middle">large</text>
+        <text x="460" y="268" fill="#94a3b8" font-size="9" text-anchor="middle">scale 2.3x</text>
+        <text x="460" y="281" fill="#94a3b8" font-size="9" text-anchor="middle">capship</text>
+
+        <!-- arrows carcass->classes -->
+        <line x1="270" y1="190" x2="140" y2="228" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <line x1="300" y1="190" x2="300" y2="228" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <line x1="390" y1="190" x2="460" y2="228" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+        <!-- ============ ADD-ON PARTS LIBRARY ============ -->
+        <text x="42" y="344" fill="white" font-size="11" font-weight="600">ADD-ON PARTS — scaled to class (sc(sz))</text>
+
+        <!-- Engine -->
+        <rect x="30" y="360" width="170" height="60" rx="6" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="115" y="382" fill="white" font-size="11" font-weight="600" text-anchor="middle">ENGINE</text>
+        <text x="115" y="398" fill="#94a3b8" font-size="9" text-anchor="middle">twin nacelles + nozzle bells</text>
+        <text x="115" y="411" fill="#22d3ee" font-size="8" text-anchor="middle">_Engine.fbx</text>
+
+        <!-- Cargo -->
+        <rect x="220" y="360" width="170" height="60" rx="6" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="305" y="382" fill="white" font-size="11" font-weight="600" text-anchor="middle">CARGO</text>
+        <text x="305" y="398" fill="#94a3b8" font-size="9" text-anchor="middle">bay + container cells</text>
+        <text x="305" y="411" fill="#22d3ee" font-size="8" text-anchor="middle">_Cargo.fbx</text>
+
+        <!-- Weapon -->
+        <rect x="410" y="360" width="170" height="60" rx="6" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="495" y="382" fill="white" font-size="11" font-weight="600" text-anchor="middle">WEAPON</text>
+        <text x="495" y="398" fill="#94a3b8" font-size="9" text-anchor="middle">twin/single gun pod</text>
+        <text x="495" y="411" fill="#22d3ee" font-size="8" text-anchor="middle">_Weapon.fbx</text>
+
+        <!-- Sensor -->
+        <rect x="30" y="440" width="170" height="60" rx="6" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="115" y="462" fill="white" font-size="11" font-weight="600" text-anchor="middle">SENSOR</text>
+        <text x="115" y="478" fill="#94a3b8" font-size="9" text-anchor="middle">mast + tip (+radar dome)</text>
+        <text x="115" y="491" fill="#22d3ee" font-size="8" text-anchor="middle">_Sensor.fbx</text>
+
+        <!-- Reactor -->
+        <rect x="220" y="440" width="170" height="60" rx="6" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="305" y="462" fill="white" font-size="11" font-weight="600" text-anchor="middle">REACTOR</text>
+        <text x="305" y="478" fill="#94a3b8" font-size="9" text-anchor="middle">grid-style core block</text>
+        <text x="305" y="491" fill="#22d3ee" font-size="8" text-anchor="middle">_Reactor.fbx</text>
+
+        <!-- Assembly arrow parts -> ship -->
+        <text x="610" y="410" fill="#94a3b8" font-size="9">opts select</text>
+        <line x1="600" y1="415" x2="650" y2="415" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+        <!-- Hyperion add-ons in parts library -->
+        <rect x="410" y="440" width="170" height="60" rx="6" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="495" y="462" fill="white" font-size="11" font-weight="600" text-anchor="middle">HAB RING</text>
+        <text x="495" y="478" fill="#94a3b8" font-size="9" text-anchor="middle">dual-torus artificial gravity</text>
+        <text x="495" y="491" fill="#22d3ee" font-size="8" text-anchor="middle">_HabRing.fbx</text>
+
+        <rect x="30" y="520" width="170" height="60" rx="6" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="115" y="542" fill="white" font-size="11" font-weight="600" text-anchor="middle">ASTEROID SHELL</text>
+        <text x="115" y="558" fill="#94a3b8" font-size="9" text-anchor="middle">hollowed asteroid housing</text>
+        <text x="115" y="571" fill="#22d3ee" font-size="8" text-anchor="middle">_AsteroidShell.fbx</text>
+
+        <!-- ============ SHIP OUTPUT (right) ============ -->
+        <rect x="660" y="120" width="320" height="380" rx="12" fill="rgba(76, 29, 149, 0.15)" stroke="#a78bfa" stroke-width="1" stroke-dasharray="8,4"/>
+        <text x="678" y="140" fill="#a78bfa" font-size="10" font-weight="600">assemble_ship(sz, name, opts)</text>
+
+        <rect x="680" y="160" width="280" height="44" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="820" y="178" fill="white" font-size="11" font-weight="600" text-anchor="middle">SM_Ship_Fighter_01</text>
+        <text x="820" y="194" fill="#94a3b8" font-size="9" text-anchor="middle">small: carcass + engine + cargo + weapon + sensor</text>
+
+        <rect x="680" y="214" width="280" height="44" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="820" y="232" fill="white" font-size="11" font-weight="600" text-anchor="middle">SM_Ship_Freighter_01</text>
+        <text x="820" y="248" fill="#94a3b8" font-size="9" text-anchor="middle">medium: + reactor, no weapon</text>
+
+        <rect x="680" y="268" width="280" height="44" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="820" y="286" fill="white" font-size="11" font-weight="600" text-anchor="middle">SM_Ship_Gunship_02</text>
+        <text x="820" y="302" fill="#94a3b8" font-size="9" text-anchor="middle">small: asym sensor + weapon, no cargo</text>
+
+        <text x="680" y="336" fill="#94a3b8" font-size="9">Each part = own mesh, pivot, material slot</text>
+        <text x="680" y="352" fill="#94a3b8" font-size="9">14 ship-part FBX, all UE-import ready</text>
+        <text x="680" y="368" fill="#a78bfa" font-size="9">* parts independent -> detachable</text>
+        <text x="680" y="384" fill="#a78bfa" font-size="9">* swap same engine onto any class</text>
+
+        <!-- ============ LEGEND ============ -->
+        <text x="720" y="430" fill="white" font-size="10" font-weight="600">Legend</text>
+        <rect x="720" y="442" width="16" height="10" rx="2" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1"/>
+        <text x="742" y="450" fill="#94a3b8" font-size="8">Carcass</text>
+        <rect x="720" y="458" width="16" height="10" rx="2" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1"/>
+        <text x="742" y="466" fill="#94a3b8" font-size="8">Add-on part</text>
+        <rect x="720" y="474" width="16" height="10" rx="2" fill="rgba(120, 53, 15, 0.3)" stroke="#fbbf24" stroke-width="1"/>
+        <text x="742" y="482" fill="#94a3b8" font-size="8">Size class</text>
+        <rect x="720" y="490" width="16" height="10" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1"/>
+        <text x="742" y="498" fill="#94a3b8" font-size="8">Assembled ship</text>
+      </svg>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="cards">
+      <div class="card">
+        <div class="card-header"><div class="card-dot emerald"></div><h3>Why modular (X4/Starfield/SE)</h3></div>
+        <ul>
+          <li>• Components are independent meshes, not one blob</li>
+          <li>• Each part has its own pivot + material slot</li>
+          <li>• Supports damage/break-off subsystems (X4)</li>
+          <li>• Parts snap/scaffold onto a shared scale (Starfield)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-dot amber"></div><h3>Size-class scaling</h3></div>
+        <ul>
+          <li>• small / medium / large define scale + carcass dims</li>
+          <li>• Add-ons scale via sc(sz) — engine/cargo/weapon fit any class</li>
+          <li>• One part library, many ships</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-dot violet"></div><h3>Pipeline</h3></div>
+        <ul>
+          <li>• Blender headless bpy -> FBX per part</li>
+          <li>• 2K PBR D/N/R/M/AO/E textures</li>
+          <li>• Numeric QA: tri budget, degenerate, symmetry, UV</li>
+          <li>• 21 FBX total + 60 textures, UE-import-ready</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="footer">Adastrea • procedural modular space-asset kit • UE 5.8</p>
+  </div>
+</body>
+</html>

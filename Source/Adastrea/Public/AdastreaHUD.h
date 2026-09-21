@@ -125,6 +125,37 @@ public:
 	UFUNCTION(BlueprintCallable, Category="HUD|Trading")
 	void HideTradeScreen() { bShowTradeScreen = false; }
 
+	// ========================
+	// STATION MENU (shown on docking; each option leads to a part of the station)
+	// ========================
+
+	/** Whether the docked station option menu is shown. */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|StationMenu")
+	bool bShowStationMenu = false;
+
+	/** Index of the highlighted station menu option. */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|StationMenu")
+	int32 StationMenuIndex = 0;
+
+	/** Open the station menu (called on docking, and when leaving a sub-screen). */
+	UFUNCTION(BlueprintCallable, Category="HUD|StationMenu")
+	void ShowStationMenu() { bShowStationMenu = true; bShowTradeScreen = false; StationMenuIndex = 0; }
+
+	UFUNCTION(BlueprintCallable, Category="HUD|StationMenu")
+	void HideStationMenu() { bShowStationMenu = false; }
+
+	/** Move the highlighted option up/down (wraps). */
+	void MoveStationMenuSelection(int32 Step);
+
+	/** Activate the highlighted option (Trading Department, Maintenance Dock, Habitation, Undock). */
+	void ConfirmStationMenuSelection(APlayerController* PC);
+
+	/** Leave the station (closes menu and undocks the ship). */
+	void UndockFromStationMenu(APlayerController* PC);
+
+	/** Draw the station option menu. */
+	void DrawStationMenu(APlayerController* PC, AAdastreaPlayerController* AdController, ASpaceship* Ship);
+
 	/** Draw the docked trading screen (market list, credits, cargo, buy/sell). */
 	void DrawTradeScreen(APlayerController* PC, AAdastreaPlayerController* AdController, ASpaceship* Ship);
 

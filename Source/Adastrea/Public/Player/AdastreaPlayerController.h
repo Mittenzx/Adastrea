@@ -11,6 +11,7 @@
 class UUserWidget;
 class UDataAsset;
 class ASpaceStation;
+class ASpaceStationModule;
 class AAdastreaHUD;
 class UInventoryWidget;
 class UTradingInterfaceWidget;
@@ -265,6 +266,21 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+
+	/** Recenter the space backdrop (star dome) on the camera every frame so its
+	 * fixed-in-world-space geometry never shows parallax against real travel
+	 * distances -- background stars are meant to read as infinitely far away. */
+	void UpdateSpaceBackdrop();
+
+	/** Cached reference to the level's star-dome backdrop actor (tagged
+	 * "SpaceBackdrop"), found once on first Tick. */
+	UPROPERTY(Transient)
+	TObjectPtr<AActor> SpaceBackdropActor;
+
+	/** Whether we've already tried (and possibly failed) to find the backdrop,
+	 * so a level with none doesn't repeat the search every frame. */
+	bool bSpaceBackdropSearchDone = false;
 
 	virtual void SetupInputComponent() override;
 
@@ -340,9 +356,6 @@ public:
 						/** Input handler: V toggles between flying the ship and walking its interior. */
 												void HandleToggleInterior();
 
-												/** Show the start-of-session menu once (guarded); call after the player ship spawns. */
-												void ShowStartMenuOnce();
-
 												/** Show a transient message on the HUD canvas. */
 												void ShowHUDMessage(const FString& InMessage, float DurationSecs, bool bIsWarning);
 
@@ -353,10 +366,6 @@ public:
 			/** When true, the ship's mouse-look is paused (targeting cursor mode). */
 									UPROPERTY(BlueprintReadOnly, Category="Player|Targeting")
 									bool bLockMouseLook;
-
-									/** True once the start-of-session menu has been shown (so it doesn't re-show on interior return). */
-									UPROPERTY(Transient)
-									bool bStartMenuHandled = false;
 
 									/** Input handler: Tab toggles targeting mode. */
 									void HandleTargetingToggle();
@@ -377,6 +386,7 @@ public:
 																						void HandleTradeExecute1();
 																						void HandleTradeExecute5();
 																						void HandleTradeClose();
+	void HandleStationMenuConfirm();
 																											void ExecuteTrade(int32 Quantity);
 
 																											/** Ship-select screen input handlers. */
@@ -741,14 +751,11 @@ private:
 	/** Whether we were near a tradable station on the last check */
 	bool bWasNearTradableStation;
 
+	/** Docking bay last pushed to the ship (used to log docking-range enter/leave). */
+	TWeakObjectPtr<ASpaceStationModule> LastDockTarget;
+
 	/** Timer handle for periodic station proximity checks */
 			FTimerHandle StationCheckTimerHandle;
-
-			/** Timer handle used to retry showing the start menu until the ship's interior exists. */
-			FTimerHandle StartMenuRetryTimerHandle;
-
-			/** Number of start-menu retries so far (bounded). */
-			int32 StartMenuRetryCount = 0;
 
 			// ====================
 			// TARGETING (cursor select / lock)

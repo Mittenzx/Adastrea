@@ -896,11 +896,6 @@ void ASpaceship::ApplyShipHullMaterial()
     }
     else if (ActorName.Contains(TEXT("Cruiser")))
     {
-        // Was lumped in with Gunship (ActorName.Contains("Cruiser") ||
-        // Contains("Gunship") -> M_Gunship_Hull) before T_Cruiser_* textures
-        // existed for DA_Cruiser_LifelineMedical. Split into its own dedicated
-        // hull now that the asset pack has been imported (see
-        // Tools/regen_ship_hull_textures_v2.py).
         HullMat = TEXT("/Game/Materials/M_Cruiser_Hull");
     }
     else if (ActorName.Contains(TEXT("Destroyer")))
@@ -928,13 +923,6 @@ void ASpaceship::ApplyShipHullMaterial()
     {
         HullMat = TEXT("/Game/Materials/M_Fighter_Hull");
     }
-    // 13 new dedicated hull classes added alongside the roster of DA_* ship
-    // data assets (Tools/regen_ship_hull_textures_v2.py generated their
-    // T_<Class>_* textures and the M_<Class>_Hull materials). None of these
-    // classes have a placed BP_Ship_<Class> yet, but wiring the dispatch now
-    // means any future ship whose actor name contains the token below (e.g.
-    // a "BP_Ship_Carrier" instance) picks up its dedicated hull material
-    // instead of silently falling back to M_Fighter_Hull.
     else if (ActorName.Contains(TEXT("Carrier")))
     {
         HullMat = TEXT("/Game/Materials/M_Carrier_Hull");
@@ -953,9 +941,6 @@ void ASpaceship::ApplyShipHullMaterial()
     }
     else if (ActorName.Contains(TEXT("Mining")))
     {
-        // Distinct from "Miner" (M_Miner_Hull) above -- "Mining" (as in
-        // DA_Mining_Excavator) does not match Contains("Miner"), so this
-        // needs its own branch rather than falling into the Miner one.
         HullMat = TEXT("/Game/Materials/M_Mining_Hull");
     }
     else if (ActorName.Contains(TEXT("Patrol")))
@@ -972,8 +957,6 @@ void ASpaceship::ApplyShipHullMaterial()
     }
     else if (ActorName.Contains(TEXT("Behemoth")))
     {
-        // Matched on "Behemoth" rather than "Transport" so it doesn't collide
-        // with DA_Transport_GenesisColony below.
         HullMat = TEXT("/Game/Materials/M_Transport_Behemoth_Hull");
     }
     else if (ActorName.Contains(TEXT("Genesis")))
@@ -1314,6 +1297,14 @@ void ASpaceship::UpdateThrottleVelocity(float DeltaTime)
             (DefaultDeceleration / FMath::Max(EffectiveMaxSpeed, 1.0f)) * FlightAssistResponsiveness;
         FVector BlendedVelocity = FMath::VInterpTo(MovementComponent->Velocity, TargetVelocity, DeltaTime, InterpSpeed);
         MovementComponent->Velocity = BlendedVelocity;
+
+        // Keep the "preserve inertia" snapshot in sync with this throttle-driven speed.
+        // Without this, ApplyFlightAssist (which runs before this function each tick and
+        // re-imposes CurrentVelocity whenever WASD is idle) re-asserts the OLD velocity
+        // every frame, undoing this interpolation before it can compound — so throttling
+        // down to 0% never actually slowed the ship; it just cruised forever at whatever
+        // speed it last had when WASD was touched.
+        CurrentVelocity = BlendedVelocity;
     }
 }
 
@@ -1532,6 +1523,35 @@ void ASpaceship::SetNearbyStation(ASpaceStationModule* Station)
         }
     }
 #endif
+}
+
+bool ASpaceship::CanRequestDocking(float& OutDistance, FString& OutStationName) const
+{
+    OutDistance = 0.0f;
+    OutStationName.Reset();
+
+    const ADockingBayModule* DockingBay = Cast<ADockingBayModule>(NearbyStation);
+    if (!DockingBay || bIsDocked || bIsDocking)
+    {
+        return false;
+    }
+
+    OutStationName = DockingBay->GetName();
+    OutDistance = FVector::Dist(GetActorLocation(), DockingBay->GetActorLocation());
+
+    if (!DockingBay->HasAvailableDocking())
+    {
+        return false;
+    }
+
+    const USceneComponent* DockingPoint = DockingBay->GetAvailableDockingPoint();
+    if (!DockingPoint)
+    {
+        return false;
+    }
+
+    OutDistance = FVector::Dist(GetActorLocation(), DockingPoint->GetComponentLocation());
+    return OutDistance <= GetEffectiveDockingRange();
 }
 
 void ASpaceship::ShowDockingPrompt(bool bShow)
@@ -1753,6 +1773,28 @@ void ASpaceship::RequestDocking()
 
 
     #endif
+
+    // Check ship-size compatibility (X4-style dock sizing - a small dock like
+    // DockingPortModule restricts AllowedShipSizeCategories to small ships;
+    // DockingBayModule leaves it unrestricted). ShipDataAsset missing is treated
+    // as compatible - fail-open, matching how the rest of this project's
+    // validation degrades gracefully with no catalog/data asset assigned.
+    if (ShipDataAsset && NearbyStation && !NearbyStation->IsShipSizeCompatible(ShipDataAsset->GetSizeCategory()))
+    {
+        UE_LOG(LogAdastreaShips, Warning, TEXT("ASpaceship::RequestDocking - Ship size '%s' not compatible with this dock"),
+            *ShipDataAsset->GetSizeCategory());
+
+        #if DOCKING_DEBUG_ENABLED
+        if (GEngine)
+        {
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
+                FString::Printf(TEXT("[DOCKING] ERROR: %s is too large for this dock"), *ShipDataAsset->GetSizeCategory()));
+        }
+        #endif
+
+        ShowHUDAlert(FText::FromString("Ship too large for this dock"), 3.0f, true);
+        return;
+    }
 
     // Check if docking is available
     if (!DockingBay->HasAvailableDocking())
@@ -2094,13 +2136,16 @@ void ASpaceship::CompleteDocking()
         {
             if (AAdastreaHUD* GameHUD = Cast<AAdastreaHUD>(PC->GetHUD()))
             {
-                GameHUD->ShowTradeScreen();
-                UE_LOG(LogAdastreaShips, Log, TEXT("ASpaceship::CompleteDocking - Opened canvas trading screen"));
+                GameHUD->ShowStationMenu();
+                UE_LOG(LogAdastreaShips, Log, TEXT("ASpaceship::CompleteDocking - Opened station services menu"));
             }
         }
 
         // Create and show trading widget
-    if (EffectiveTradingClass)
+    // The legacy UMG trading widget is superseded by the HUD canvas station menu/trade
+    // screens; spawning it here would draw over the menu.
+    constexpr bool bSpawnLegacyTradingWidget = false;
+    if (bSpawnLegacyTradingWidget && EffectiveTradingClass)
     {
         #if DOCKING_DEBUG_ENABLED
 
@@ -2457,9 +2502,28 @@ TSubclassOf<UUserWidget> ASpaceship::GetEffectiveTradingInterfaceClass() const
 
 void ASpaceship::SetRuntimeInputEnabled(bool bEnabled)
 {
-	// Stub: full implementation (input subsystem add/remove) lands with the
-	// input-refactor agent's in-flight changes. This placeholder exists so the
-	// committed AdastreaPlayerController code can compile + link without those
-	// changes on disk.
-	UE_LOG(LogAdastrea, Log, TEXT("ASpaceship::SetRuntimeInputEnabled(%d) on %s (stub)."), bEnabled, *GetName());
+	// Without this, RuntimeInputMappingContext (added once in
+	// EnsureOwnInputActionsAndContext, priority 10) stays on the subsystem for the
+	// rest of the game even after the player leaves the cockpit to walk the
+	// interior, competing with the avatar's own mapping context for the same
+	// WASD keys.
+	if (APlayerController* PC = Cast<APlayerController>(GetController()))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
+			ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
+		{
+			if (RuntimeInputMappingContext)
+			{
+				if (bEnabled)
+				{
+					Subsystem->AddMappingContext(RuntimeInputMappingContext, 10);
+				}
+				else
+				{
+					Subsystem->RemoveMappingContext(RuntimeInputMappingContext);
+				}
+			}
+		}
+	}
+	UE_LOG(LogAdastrea, Log, TEXT("ASpaceship::SetRuntimeInputEnabled(%d) on %s"), bEnabled, *GetName());
 }

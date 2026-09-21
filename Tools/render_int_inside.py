@@ -21,7 +21,7 @@ Usage:
 A "group" is a base name that matches multiple zone FBX on disk, e.g.
 "SM_Int_Freighter_CrewQuarters" pulls in CrewQuarters_Shell/_Bunks/_Desks/...
 A single explicit filename (ending .fbx) is imported alone (e.g. non-split
-interiors: SM_Int_Fighter_Cockpit.fbx, SM_Int_Xenomorph_AlienHold.fbx).
+interiors: SM_Int_Fighter_Cabin.fbx, SM_Int_Xenomorph_AlienHold.fbx).
 """
 import bpy, os, sys, glob, bmesh
 from mathutils import Vector

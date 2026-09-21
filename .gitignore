@@ -156,3 +156,6 @@ ref_ships/
 
 # Reference study textures (CC0) — local inspection only
 ref_textures/
+
+# self-learning queue
+.claude/learnings-queue.jsonl

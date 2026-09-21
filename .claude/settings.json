@@ -1,0 +1,11 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          { "type": "command", "command": "python .claude/hooks/capture_correction.py" }
+        ]
+      }
+    ]
+  }
+}

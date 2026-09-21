@@ -99,9 +99,9 @@ Inventory Entry:
 # ============================================
 
 Buy from this market (cheap):
-  â€¢ basic_computers (supply: 1.8, demand: 0.6)
+  • basic_computers (supply: 1.8, demand: 0.6)
 
 Sell to this market (expensive):
-  â€¢ basic_alloys (supply: 0.4, demand: 1.8)
-  â€¢ basic_medicine (supply: 0.3, demand: 2.0)
-  â€¢ protein_packs (supply: 0.4, demand: 1.5)
+  • basic_alloys (supply: 0.4, demand: 1.8)
+  • basic_medicine (supply: 0.3, demand: 2.0)
+  • protein_packs (supply: 0.4, demand: 1.5)

@@ -54,6 +54,29 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Module")
     EStationModuleGroup ModuleGroup;
 
+    /**
+     * Ship size categories (USpaceshipDataAsset::GetSizeCategory() - "Fighter",
+     * "Corvette", "Frigate", "Cruiser", "Battleship", "Capital") this module can
+     * dock. Empty = unrestricted (any size) - the default, so existing modules
+     * keep working exactly as before. A small dock (e.g. DockingPortModule)
+     * restricts this to only the sizes it's actually built for - X4-style
+     * docking-size variety (S/M/L/XL docks), gated by whatever real ship size
+     * already exists rather than inventing a new one.
+     */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Docking")
+    TArray<FString> AllowedShipSizeCategories;
+
+    /**
+     * Whether a ship of the given size category is allowed to dock here.
+     * @param ShipSizeCategory From USpaceshipDataAsset::GetSizeCategory()
+     * @return True if AllowedShipSizeCategories is empty (unrestricted) or contains it
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Docking")
+    bool IsShipSizeCompatible(const FString& ShipSizeCategory) const
+    {
+        return AllowedShipSizeCategories.Num() == 0 || AllowedShipSizeCategories.Contains(ShipSizeCategory);
+    }
+
     // How many times this module has been upgraded (UStationEditorManager::
     // UpgradeModule()). Each level makes it modestly better at its actual job -
     // see UStationEditorManager::UpgradeBonusPerLevel and where it's applied

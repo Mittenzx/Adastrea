@@ -12,6 +12,11 @@ ADockingPortModule::ADockingPortModule()
     ModuleType = TEXT("Docking Port");
     ModulePower = 10.0f;
     ModuleGroup = EStationModuleGroup::Docking;
+
+    // A single-port dock (1x1 ConnectorThin shell) is sized for small ships -
+    // X4-style docking variety: this is the "S" dock, DockingBayModule (3x2
+    // Large shell, unrestricted AllowedShipSizeCategories) is the "L" dock.
+    AllowedShipSizeCategories = { TEXT("Fighter"), TEXT("Corvette") };
 }
 
 void ADockingPortModule::BeginPlay()

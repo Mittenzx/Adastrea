@@ -1,9 +1,10 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Ships/SpaceshipParticleComponent.h"
+#include "Ships/SpaceshipInterior.h"
 #include "InputActionValue.h"
 #include "Spaceship.generated.h"
 
@@ -100,6 +101,12 @@ public:
             UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interior")
             TSoftObjectPtr<UStaticMesh> InteriorShellMesh;
 
+            /** Which companion-part kit + material set the interior shell belongs to.
+             * Leave at None to infer it from the shell mesh's asset name (legacy
+             * behaviour); set explicitly for new ships instead of relying on naming. */
+            UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interior")
+            EShipInteriorFamily InteriorFamily = EShipInteriorFamily::None;
+
             /** Get the ship's interior instance (may be null if unset). */
             UFUNCTION(BlueprintPure, Category="Interior")
             ASpaceshipInterior* GetInteriorInstance() const { return InteriorInstance.Get(); }
@@ -133,7 +140,6 @@ public:
      *
      * @note POST-MVP: Deferred - ship classification not critical for MVP trading
      */
-    // UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship") // DEFERRED: Post-MVP ship classification
         FText GetShipClass() const;
 
         /** Assign the imported M_*_Hull material to the ship mesh (called in BeginPlay)
@@ -146,7 +152,6 @@ public:
      *
      * @note POST-MVP: Deferred - damage/health system not in MVP (no combat)
      */
-    // UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship") // DEFERRED: Post-MVP damage system
     float GetCurrentHullIntegrity() const;
 
     /**
@@ -155,7 +160,6 @@ public:
          *
          * @note POST-MVP: Deferred - damage/health system not in MVP (no combat)
          */
-        // UFUNCTION(BlueprintCallable, BlueprintPure, Category="Spaceship") // DEFERRED: Post-MVP damage system
         float GetMaxHullIntegrity() const;
 
          // ==========================================
@@ -305,7 +309,6 @@ public:
      *
      * @note POST-MVP: Deferred - interior exploration not needed for MVP trading
      */
-    // UFUNCTION(BlueprintCallable, Category="Spaceship") // DEFERRED: Post-MVP ship interior system
     void EnterInterior(class APlayerController* PlayerController);
 
     /**
@@ -372,7 +375,6 @@ public:
      *
      * @note POST-MVP: Deferred - basic flight sufficient for MVP, advanced controls post-MVP
      */
-    // UFUNCTION(BlueprintCallable, Category="Flight Control") // DEFERRED: Post-MVP advanced flight control
     void ToggleFlightAssist();
 
     /**
@@ -380,7 +382,6 @@ public:
      *
      * @note POST-MVP: Deferred - use SpaceshipControlsComponent instead for MVP
      */
-    // UFUNCTION(BlueprintCallable, Category="Flight Control") // DEFERRED: Post-MVP - use Controls component
     void ThrottleUp();
 
     /**
@@ -388,7 +389,6 @@ public:
      *
      * @note POST-MVP: Deferred - use SpaceshipControlsComponent instead for MVP
      */
-    // UFUNCTION(BlueprintCallable, Category="Flight Control") // DEFERRED: Post-MVP - use Controls component
     void ThrottleDown();
 
     /**
@@ -397,7 +397,6 @@ public:
      *
      * @note POST-MVP: Deferred - use SpaceshipControlsComponent instead for MVP
      */
-    // UFUNCTION(BlueprintCallable, Category="Flight Control") // DEFERRED: Post-MVP - use Controls component
     void SetThrottle(float Percentage);
 
     /**
@@ -405,7 +404,6 @@ public:
      *
      * @note POST-MVP: Deferred - boost mechanic not needed for basic MVP trading
      */
-    // UFUNCTION(BlueprintCallable, Category="Flight Control") // DEFERRED: Post-MVP advanced flight
     void ActivateBoost();
 
     /**
@@ -413,7 +411,6 @@ public:
      *
      * @note POST-MVP: Deferred - boost mechanic not needed for basic MVP trading
      */
-    // UFUNCTION(BlueprintCallable, Category="Flight Control") // DEFERRED: Post-MVP advanced flight
     void DeactivateBoost();
 
     /**
@@ -421,7 +418,6 @@ public:
      *
      * @note POST-MVP: Deferred - travel mode not needed for basic MVP trading
      */
-    // UFUNCTION(BlueprintCallable, Category="Flight Control") // DEFERRED: Post-MVP advanced flight
     void ToggleTravelMode();
 
     /**
@@ -430,7 +426,6 @@ public:
      *
      * @note POST-MVP: Deferred - advanced speed calculation not needed for MVP
      */
-    // UFUNCTION(BlueprintCallable, BlueprintPure, Category="Flight Control") // DEFERRED: Post-MVP advanced stats
     float GetEffectiveMaxSpeed() const;
 
     // ===== DOCKING FUNCTIONS =====
@@ -441,6 +436,15 @@ public:
      */
     UFUNCTION(BlueprintCallable, Category="Docking")
     void SetNearbyStation(ASpaceStationModule* Station);
+
+    /**
+     * True when RequestDocking() would currently succeed: a docking bay is in range,
+     * has a free slot and docking point within the effective docking range.
+     * @param OutDistance Distance to the docking point (or bay) in cm, if one exists
+     * @param OutStationName Name of the nearby station module, if one exists
+     */
+    UFUNCTION(BlueprintCallable, Category="Docking")
+    bool CanRequestDocking(float& OutDistance, FString& OutStationName) const;
 
     /**
      * Show or hide the docking prompt UI
