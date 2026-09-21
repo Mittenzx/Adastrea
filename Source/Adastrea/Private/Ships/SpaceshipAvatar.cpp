@@ -135,6 +135,7 @@ void ASpaceshipAvatar::UnPossessed()
 		}
 	}
 
+	CurrentInteractable = nullptr;
 	Super::UnPossessed();
 }
 
@@ -151,6 +152,21 @@ void ASpaceshipAvatar::Tick(float DeltaSeconds)
 	// Consume this frame's move input (set by Move() via Enhanced Input's Triggered
 	// event, which fires every frame a movement key is held) and clear it — if no
 	// new input arrives before the next Tick, movement naturally stops.
+	// Read the held move value straight from Enhanced Input rather than relying only on
+	// the Triggered event having fired before this Tick this frame (tick order vs. input
+	// processing) — otherwise walking drops out on frames that also carry mouse-look.
+	if (const UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(InputComponent))
+	{
+		if (MoveAction)
+		{
+			const FVector2D Held = EIC->GetBoundActionValue(MoveAction).Get<FVector2D>();
+			if (Held.SizeSquared() > PendingMoveInput.SizeSquared())
+			{
+				PendingMoveInput = Held;
+			}
+		}
+	}
+
 	if (!PendingMoveInput.IsNearlyZero())
 	{
 		float Speed = WalkSpeed;
@@ -170,7 +186,7 @@ void ASpaceshipAvatar::Tick(float DeltaSeconds)
 	}
 	PendingMoveInput = FVector2D::ZeroVector;
 
-	if (bFirstPersonView && CurrentInterior)
+	if (bFirstPersonView && (CurrentInterior || bWalkingStation))
 	{
 		SnapToFloor();
 	}
@@ -448,7 +464,11 @@ void ASpaceshipAvatar::SitDown()
 	// Return possession to the ship at its saved cockpit transform.
 	if (AAdastreaPlayerController* PC = Cast<AAdastreaPlayerController>(GetController()))
 	{
-		if (SourceShip)
+		if (bWalkingStation)
+		{
+			PC->ExitStationInterior(false);
+		}
+		else if (SourceShip)
 		{
 			PC->ExitShipInterior(SourceShip);
 		}
