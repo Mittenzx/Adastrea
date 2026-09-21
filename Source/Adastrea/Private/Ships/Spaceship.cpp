@@ -26,6 +26,7 @@
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Trading/CargoComponent.h"
 #include "Trading/PlayerTraderComponent.h"
+#include "Mining/MiningLaserComponent.h"
 
 // Debug flag for docking system - can be disabled for shipping builds
 #ifndef DOCKING_DEBUG_ENABLED
@@ -140,6 +141,12 @@ ASpaceship::ASpaceship()
     // Create trading components (cargo hold + player trader) so every ship can trade
     CargoComponent = CreateDefaultSubobject<UCargoComponent>(TEXT("CargoComponent"));
     PlayerTraderComponent = CreateDefaultSubobject<UPlayerTraderComponent>(TEXT("PlayerTraderComponent"));
+
+    // Mining laser on a nose hardpoint (relative offset; Blueprints can move it to a socket).
+    // Stays inert unless enabled - see BeginPlay (ships with a MiningRating).
+    MiningLaser = CreateDefaultSubobject<UMiningLaserComponent>(TEXT("MiningLaser"));
+    MiningLaser->SetupAttachment(ShipRoot);
+    MiningLaser->SetRelativeLocation(FVector(300.0f, 0.0f, -50.0f));
 }
 
 void ASpaceship::BeginPlay()
@@ -160,6 +167,13 @@ void ASpaceship::BeginPlay()
     {
         MaxHullIntegrity = ShipDataAsset->HullStrength;
         CurrentHullIntegrity = MaxHullIntegrity; // Start at full health
+
+        // Ships rated for mining get a working laser; power scales with the rating.
+        if (MiningLaser && ShipDataAsset->MiningRating > 0)
+        {
+            MiningLaser->bMiningEnabled = true;
+            MiningLaser->MiningPower = FMath::Max(MiningLaser->MiningPower, ShipDataAsset->MiningRating * 0.5f);
+        }
     }
 
     // Spawn the interior actor if needed
@@ -350,6 +364,51 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
             EnhancedInputComponent->BindAction(DockAction, ETriggerEvent::Triggered, this, &ASpaceship::RequestDocking);
             UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound DockAction to RequestDocking"));
         }
+
+        if (MineAction)
+        {
+            EnhancedInputComponent->BindAction(MineAction, ETriggerEvent::Started, this, &ASpaceship::StartMining);
+            EnhancedInputComponent->BindAction(MineAction, ETriggerEvent::Completed, this, &ASpaceship::StopMining);
+            EnhancedInputComponent->BindAction(MineAction, ETriggerEvent::Canceled, this, &ASpaceship::StopMining);
+        }
+        if (LockAsteroidAction)
+        {
+            EnhancedInputComponent->BindAction(LockAsteroidAction, ETriggerEvent::Started, this, &ASpaceship::LockAsteroid);
+        }
+    }
+}
+
+void ASpaceship::StartMining()
+{
+    if (!MiningLaser || !MiningLaser->bMiningEnabled || bIsDocked || bIsDocking)
+    {
+        return;
+    }
+    // While the targeting cursor is up (station picking), clicks belong to the picker.
+    if (const AAdastreaPlayerController* PC = Cast<AAdastreaPlayerController>(GetController()))
+    {
+        if (PC->IsTargetingModeActive())
+        {
+            return;
+        }
+    }
+    MiningLaser->StartMining();
+}
+
+void ASpaceship::StopMining()
+{
+    if (MiningLaser)
+    {
+        MiningLaser->StopMining();
+    }
+}
+
+void ASpaceship::LockAsteroid()
+{
+    if (MiningLaser && MiningLaser->bMiningEnabled)
+    {
+        const bool bOk = MiningLaser->LockNearestAhead();
+        UE_LOG(LogAdastreaShips, Log, TEXT("LockAsteroid: %s"), bOk ? TEXT("locked") : TEXT("nothing in the aim cone"));
     }
 }
 
@@ -427,6 +486,20 @@ void ASpaceship::EnsureOwnInputActionsAndContext()
                     DockAction->ValueType = EInputActionValueType::Boolean;
                 }
                 RuntimeInputMappingContext->MapKey(DockAction, EKeys::E);
+
+                // Mining: hold Left Mouse to fire the laser, T to lock the asteroid ahead.
+                if (!MineAction)
+                {
+                    MineAction = NewObject<UInputAction>(this, TEXT("IA_Mine_Runtime"));
+                    MineAction->ValueType = EInputActionValueType::Boolean;
+                }
+                RuntimeInputMappingContext->MapKey(MineAction, EKeys::LeftMouseButton);
+                if (!LockAsteroidAction)
+                {
+                    LockAsteroidAction = NewObject<UInputAction>(this, TEXT("IA_LockAsteroid_Runtime"));
+                    LockAsteroidAction->ValueType = EInputActionValueType::Boolean;
+                }
+                RuntimeInputMappingContext->MapKey(LockAsteroidAction, EKeys::T);
     }
 
     // Add the mapping context to the local player's input subsystem

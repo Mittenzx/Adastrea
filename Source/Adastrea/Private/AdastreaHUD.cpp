@@ -11,6 +11,10 @@
 #include "Trading/PlayerTraderComponent.h"
 #include "Trading/MarketDataAsset.h"
 #include "Trading/TradeItemDataAsset.h"
+#include "Camera/PlayerCameraManager.h"
+#include "Mining/MiningLaserComponent.h"
+#include "Mining/Asteroid.h"
+#include "Mining/AsteroidDataAsset.h"
 #include "Player/AdastreaPlayerController.h"
 #include "Stations/SpaceStation.h"
 #include "Stations/StationModuleTypes.h"
@@ -153,6 +157,8 @@ void AAdastreaHUD::DrawHUD()
 			DrawText(Line, FLinearColor(0.15f, 0.9f, 0.6f, 1.0f), X, Y, PromptFont, 1.0f);
 		}
 	}
+
+	DrawMiningHUD(PC, Ship);
 
 	// ---- Gather live data ----
 	const FVector P = Ship->GetActorLocation();
@@ -959,7 +965,7 @@ void AAdastreaHUD::DrawTradeScreen(APlayerController* PC, AAdastreaPlayerControl
 	}
 
 	// Footer controls.
-	DrawText(TEXT("Up/Down: select    [B]/[S]: toggle Buy/Sell    [Space]: trade 1    [Esc]: close    [Q]: trade 5"),
+	DrawText(TEXT("Up/Down: select    [B]/[S]: toggle Buy/Sell    [Space]: trade 1    [Esc]: close    [Q]: trade 5    [X]: sell all"),
 		FLinearColor(0.6f,0.7f,0.8f,0.9f), VW*0.5f - 380.0f, VH - 40.0f, BodyFont, 0.7f);
 }
 
@@ -1565,3 +1571,113 @@ void AAdastreaHUD::DrawInteractPrompt(APlayerController* PC)
 		DrawText(TEXT("[N]: close    (live readout from current station systems)"),
 			FLinearColor(0.6f,0.7f,0.8f,0.9f), VW*0.5f - 240.0f, VH - 40.0f, BodyFont, 0.7f);
 	}
+
+
+void AAdastreaHUD::DrawMiningHUD(APlayerController* PC, ASpaceship* Ship)
+{
+	UMiningLaserComponent* Laser = Ship ? Ship->MiningLaser : nullptr;
+	if (!Laser || !Laser->bMiningEnabled || !Canvas)
+	{
+		return;
+	}
+	UFont* BodyFont = GEngine->GetSmallFont();
+	UFont* TitleFont = GEngine->GetLargeFont();
+	const EMiningStatus Status = Laser->GetStatus();
+	const FLinearColor StatusColor =
+		Status == EMiningStatus::Mining ? FLinearColor(0.3f, 1.0f, 0.5f, 1.0f) :
+		(Status == EMiningStatus::Idle) ? FLinearColor(0.6f, 0.85f, 1.0f, 1.0f) :
+		FLinearColor(1.0f, 0.65f, 0.25f, 1.0f);
+
+	AAsteroid* Rock = Cast<AAsteroid>(Laser->GetTarget());
+	FLinearColor Tint = FLinearColor(0.6f, 0.85f, 1.0f, 1.0f);
+
+	// ---- Lock brackets around the locked asteroid ----
+	if (Rock)
+	{
+		if (UAsteroidDataAsset* Type = Rock->GetAsteroidType())
+		{
+			Tint = Type->OreTint;
+			Tint.A = 1.0f;
+		}
+		FVector2D Centre, Edge;
+		const FVector CamRight = PC->PlayerCameraManager ? FRotationMatrix(PC->PlayerCameraManager->GetCameraRotation()).GetScaledAxis(EAxis::Y) : FVector::RightVector;
+		if (PC->ProjectWorldLocationToScreen(Rock->GetActorLocation(), Centre) &&
+			PC->ProjectWorldLocationToScreen(Rock->GetActorLocation() + CamRight * Rock->GetRadius(), Edge))
+		{
+			const float R = FMath::Clamp(FVector2D::Distance(Centre, Edge) * 1.15f, 24.0f, 400.0f);
+			const float L = FMath::Max(R * 0.35f, 10.0f);
+			const float X0 = Centre.X - R, X1 = Centre.X + R, Y0 = Centre.Y - R, Y1 = Centre.Y + R;
+			const float T = 2.0f;
+			DrawLine(X0, Y0, X0 + L, Y0, Tint, T); DrawLine(X0, Y0, X0, Y0 + L, Tint, T);
+			DrawLine(X1, Y0, X1 - L, Y0, Tint, T); DrawLine(X1, Y0, X1, Y0 + L, Tint, T);
+			DrawLine(X0, Y1, X0 + L, Y1, Tint, T); DrawLine(X0, Y1, X0, Y1 - L, Tint, T);
+			DrawLine(X1, Y1, X1 - L, Y1, Tint, T); DrawLine(X1, Y1, X1, Y1 - L, Tint, T);
+		}
+	}
+
+	// ---- Bottom-centre mining panel ----
+	const float PW = 360.0f, PH = Rock ? 112.0f : 64.0f;
+	const float PX = (Canvas->SizeX - PW) * 0.5f;
+	const float PY = Canvas->SizeY - PH - 40.0f;
+	DrawRect(kBg, PX, PY, PW, PH);
+	DrawLine(PX, PY, PX + PW, PY, Tint, 2.0f);
+	float Y = PY + 8.0f;
+	DrawText(TEXT("MINING LASER"), kHeader, PX + 12.0f, Y, BodyFont, 0.9f);
+	const FString StatusStr = Laser->StatusToText(Status).ToString();
+	float SW = 0.0f, SH = 0.0f;
+	GetTextSize(StatusStr, SW, SH, TitleFont, 0.8f);
+	DrawText(StatusStr, StatusColor, PX + PW - SW - 12.0f, Y - 2.0f, TitleFont, 0.8f);
+	Y += 24.0f;
+	if (Rock)
+	{
+		DrawText(Rock->GetTargetDisplayName_Implementation().ToString(), Tint, PX + 12.0f, Y, BodyFont, 1.0f);
+		const float Dist = Laser->GetTargetSurfaceDistance();
+		const FString DistStr = FString::Printf(TEXT("%.0f m  (range %.0f m)"), Dist / 100.0f, Laser->Range / 100.0f);
+		float DW = 0.0f, DH = 0.0f;
+		GetTextSize(DistStr, DW, DH, BodyFont, 0.9f);
+		DrawText(DistStr, Dist <= Laser->Range ? kLabel : FLinearColor(1.0f, 0.5f, 0.3f, 1.0f), PX + PW - DW - 12.0f, Y, BodyFont, 0.9f);
+		Y += 22.0f;
+		const float Frac = FMath::Clamp(Rock->GetOreFraction(), 0.0f, 1.0f);
+		DrawRect(FLinearColor(0.08f, 0.10f, 0.12f, 0.9f), PX + 12.0f, Y, PW - 24.0f, 10.0f);
+		DrawRect(Tint, PX + 12.0f, Y, FMath::Max((PW - 24.0f) * Frac, 2.0f), 10.0f);
+		Y += 16.0f;
+		DrawText(FString::Printf(TEXT("ORE REMAINING  %.0f%%   (%.0f units)"), Frac * 100.0f, Rock->GetRemainingOre()),
+			kLabel, PX + 12.0f, Y, BodyFont, 0.85f);
+	}
+	else
+	{
+		DrawText(TEXT("[T] lock asteroid ahead    [Hold LMB] fire mining laser"), kLabel, PX + 12.0f, Y, BodyFont, 0.85f);
+	}
+
+	// ---- Hold contents (right side): what has been mined ----
+	if (Ship->CargoComponent)
+	{
+		const TArray<FCargoEntry>& Entries = Ship->CargoComponent->CargoInventory;
+		const float HW = 250.0f;
+		const float HH = 40.0f + FMath::Max(Entries.Num(), 1) * 20.0f + 18.0f;
+		const float HX = Canvas->SizeX - HW - 20.0f;
+		const float HY = 20.0f;
+		DrawRect(kBg, HX, HY, HW, HH);
+		DrawLine(HX, HY, HX, HY + HH, kCargo, 3.0f);
+		const float Used = Ship->CargoComponent->CargoCapacity - Ship->CargoComponent->GetAvailableCargoSpace();
+		const float Cap = FMath::Max(Ship->CargoComponent->CargoCapacity, 0.01f);
+		DrawText(FString::Printf(TEXT("CARGO HOLD  %.0f / %.0f"), Used, Cap), kHeader, HX + 12.0f, HY + 8.0f, BodyFont, 0.95f);
+		DrawRect(FLinearColor(0.08f, 0.10f, 0.12f, 0.9f), HX + 12.0f, HY + 28.0f, HW - 24.0f, 6.0f);
+		DrawRect(Used / Cap > 0.9f ? FLinearColor(1.0f, 0.4f, 0.3f, 1.0f) : kCargo, HX + 12.0f, HY + 28.0f, FMath::Max((HW - 24.0f) * FMath::Clamp(Used / Cap, 0.0f, 1.0f), 1.0f), 6.0f);
+		float RY = HY + 42.0f;
+		int32 Shown = 0;
+		for (const FCargoEntry& E : Entries)
+		{
+			if (E.Item && E.Quantity > 0)
+			{
+				DrawText(FString::Printf(TEXT("%s  x%d"), *E.Item->ItemName.ToString(), E.Quantity), kLabel, HX + 12.0f, RY, BodyFont, 0.9f);
+				RY += 20.0f;
+				++Shown;
+			}
+		}
+		if (Shown == 0)
+		{
+			DrawText(TEXT("(empty)"), kLabel, HX + 12.0f, RY, BodyFont, 0.9f);
+		}
+	}
+}
