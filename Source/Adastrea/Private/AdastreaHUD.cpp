@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "AdastreaHUD.h"
+#include "Stations/StationInterior.h"
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipAvatar.h"
 #include "Player/WorldInteractable.h"
@@ -730,13 +731,14 @@ namespace
 		bool bAvailable;
 	};
 
-	// Each option will lead to a different part of the station. Only the trading
-	// department and undocking are implemented so far.
+	// Each option leads to a different part of the station. Trading, walking the
+	// station and undocking are implemented so far.
 	const FStationMenuOption kStationMenuOptions[] =
 	{
 		{ TEXT("Trading Department"), TEXT("Buy and sell goods at the station market"),    true  },
-		{ TEXT("Maintenance Dock"),   TEXT("Repairs, refits and ship upgrades"),           false },
-		{ TEXT("Habitation"),         TEXT("Crew quarters, lounge and station residents"), false },
+		{ TEXT("Walk the Station"),   TEXT("Leave your ship and explore the station on foot"), true },
+		{ TEXT("Maintenance Dock"),   TEXT("Walk to the hangar bay: repairs, refits and ship upgrades"), true },
+		{ TEXT("Habitation"),         TEXT("Walk to the crew cabins and lounge"),          true },
 		{ TEXT("Undock"),             TEXT("Leave the station and return to flight"),      true  },
 	};
 	constexpr int32 kStationMenuCount = UE_ARRAY_COUNT(kStationMenuOptions);
@@ -774,7 +776,26 @@ void AAdastreaHUD::ConfirmStationMenuSelection(APlayerController* PC)
 		bShowStationMenu = false;
 		ShowTradeScreen();
 		break;
-	case 3: // Undock
+	case 1: // Walk the Station
+		if (AAdastreaPlayerController* AdPC = Cast<AAdastreaPlayerController>(PC))
+		{
+			if (ASpaceship* Ship = Cast<ASpaceship>(PC->GetPawn()))
+			{
+				AdPC->EnterStationInterior(Ship);
+			}
+		}
+		break;
+	case 2: // Maintenance Dock
+	case 3: // Habitation
+		if (AAdastreaPlayerController* AdPC = Cast<AAdastreaPlayerController>(PC))
+		{
+			if (ASpaceship* Ship = Cast<ASpaceship>(PC->GetPawn()))
+			{
+				AdPC->EnterStationRoom(Ship, Index == 2 ? EStationRoom::Maintenance : EStationRoom::Habitation);
+			}
+		}
+		break;
+	case 4: // Undock
 		UndockFromStationMenu(PC);
 		break;
 	default:

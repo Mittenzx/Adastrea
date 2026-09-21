@@ -26,6 +26,8 @@
 #include "UI/StationManagementWidget.h"
 // REMOVED: #include "Factions/FactionDataAsset.h" - faction system removed per Trade Simulator MVP
 // REMOVED: #include "Interfaces/IFactionMember.h" - faction system removed per Trade Simulator MVP
+#include "Stations/StationInterior.h"
+#include "Player/WorldInteractable.h"
 #include "TimerManager.h"
 
 AAdastreaPlayerController::AAdastreaPlayerController()
@@ -1792,6 +1794,11 @@ void AAdastreaPlayerController::HandleToggleInterior()
 		// Currently flying the ship -> leave the cockpit and walk the interior.
 		EnterShipInterior(Ship);
 	}
+	else if (IsWalkingStation())
+	{
+		// Walking the station -> back to the docked ship.
+		ExitStationInterior(false);
+	}
 	else if (IsOnFoot())
 	{
 		// Currently on foot -> sit back down in the source ship's cockpit.
@@ -1993,4 +2000,260 @@ void AAdastreaPlayerController::ExitShipInterior(ASpaceship* Ship)
 
 	InteriorSourceShip = nullptr;
 	UE_LOG(LogAdastrea, Log, TEXT("ExitShipInterior: player returned to %s's cockpit."), *Ship->GetName());
+}
+
+// ====================
+// Station interior walk
+// ====================
+
+namespace
+{
+	/** Spawn a station room at Origin (Room is set before BeginPlay builds it). */
+	AStationInterior* SpawnStationRoom(UWorld* World, const FVector& Origin, EStationRoom Room)
+	{
+		FTransform T(FRotator::ZeroRotator, Origin);
+		AStationInterior* Interior = World->SpawnActorDeferred<AStationInterior>(
+			AStationInterior::StaticClass(), T, nullptr, nullptr,
+			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+		if (Interior)
+		{
+			Interior->Room = Room;
+			Interior->FinishSpawning(T);
+		}
+		return Interior;
+	}
+
+	/** Destroy a station room along with the terminals attached to it. */
+	void DestroyStationRoom(AStationInterior* Interior)
+	{
+		if (!Interior)
+		{
+			return;
+		}
+		TArray<AActor*> Attached;
+		Interior->GetAttachedActors(Attached);
+		for (AActor* A : Attached)
+		{
+			A->Destroy();
+		}
+		Interior->Destroy();
+	}
+}
+
+void AAdastreaPlayerController::EnterStationInterior(ASpaceship* Ship)
+{
+	EnterStationRoom(Ship, EStationRoom::Concourse);
+}
+
+void AAdastreaPlayerController::SwitchStationRoom(EStationRoom Room)
+{
+	UWorld* World = GetWorld();
+	if (!World || !ActiveStationInterior || !AvatarPawn)
+	{
+		return;
+	}
+	const FVector Origin = ActiveStationInterior->GetActorLocation();
+	DestroyStationRoom(ActiveStationInterior);
+	ActiveStationInterior = SpawnStationRoom(World, Origin, Room);
+	if (!ActiveStationInterior)
+	{
+		UE_LOG(LogAdastrea, Error, TEXT("SwitchStationRoom: failed to build room; returning to ship."));
+		ActiveStationInterior = nullptr;
+		return;
+	}
+	const FTransform Arrival = ActiveStationInterior->GetArrivalTransform();
+	AvatarPawn->SetActorLocationAndRotation(Arrival.GetLocation(), Arrival.Rotator());
+	SetControlRotation(Arrival.Rotator());
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
+	{
+		H->SetCurrentInteractable(nullptr);
+	}
+}
+
+void AAdastreaPlayerController::EnterStationRoom(ASpaceship* Ship, EStationRoom Room)
+{
+	UWorld* World = GetWorld();
+	if (!Ship || !World || ActiveStationInterior)
+	{
+		return;
+	}
+
+	// Build the station far below the sector so nothing else intrudes on it.
+	const FVector InteriorOrigin = Ship->GetActorLocation() + FVector(0.0f, 0.0f, -200000.0f);
+	ActiveStationInterior = SpawnStationRoom(World, InteriorOrigin, Room);
+	if (!ActiveStationInterior)
+	{
+		UE_LOG(LogAdastrea, Error, TEXT("EnterStationRoom: failed to spawn station interior."));
+		return;
+	}
+
+	const FTransform Arrival = ActiveStationInterior->GetArrivalTransform();
+
+	if (!AvatarPawn)
+	{
+		FActorSpawnParameters AvatarParams;
+		AvatarParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		AvatarPawn = World->SpawnActor<ASpaceshipAvatar>(ASpaceshipAvatar::StaticClass(),
+			Arrival.GetLocation(), Arrival.Rotator(), AvatarParams);
+	}
+	if (!AvatarPawn)
+	{
+		UE_LOG(LogAdastrea, Error, TEXT("EnterStationInterior: failed to spawn avatar."));
+		ActiveStationInterior->Destroy();
+		ActiveStationInterior = nullptr;
+		return;
+	}
+
+	StationVisitShip = Ship;
+	AvatarPawn->SetActorLocationAndRotation(Arrival.GetLocation(), Arrival.Rotator());
+	AvatarPawn->SourceShip = Ship;
+	AvatarPawn->CurrentInterior = nullptr;
+	AvatarPawn->bWalkingStation = true;
+
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
+	{
+		H->HideStationMenu();
+	}
+
+	// Same hand-off as walking a ship interior: silence flight input, swap possession.
+	Ship->SetRuntimeInputEnabled(false);
+	UnPossess();
+	Possess(AvatarPawn);
+	SetInputMode(FInputModeGameOnly());
+	bShowMouseCursor = false;
+	AvatarPawn->SetFirstPersonView(true);
+
+	UE_LOG(LogAdastrea, Log, TEXT("EnterStationInterior: player left %s to walk the station."), *Ship->GetName());
+}
+
+void AAdastreaPlayerController::ExitStationInterior(bool bOpenTrade)
+{
+	ASpaceship* Ship = StationVisitShip.Get();
+	if (!ActiveStationInterior || !Ship)
+	{
+		return;
+	}
+
+	if (AvatarPawn)
+	{
+		UnPossess();
+		AvatarPawn->bWalkingStation = false;
+		AvatarPawn->SetFirstPersonView(false);
+	}
+	Possess(Ship);
+	Ship->SetRuntimeInputEnabled(true);
+	SetInputMode(FInputModeGameOnly());
+	bShowMouseCursor = false;
+
+	// Tear the interior down (terminals are attached to it) and drop the stale prompt.
+	DestroyStationRoom(ActiveStationInterior);
+	ActiveStationInterior = nullptr;
+	StationVisitShip = nullptr;
+
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
+	{
+		H->SetCurrentInteractable(nullptr);
+		if (bOpenTrade)
+		{
+			H->ShowTradeScreen();
+		}
+		else
+		{
+			H->ShowStationMenu();
+		}
+	}
+
+	UE_LOG(LogAdastrea, Log, TEXT("ExitStationInterior: player returned to %s."), *Ship->GetName());
+}
+
+void AAdastreaPlayerController::DebugStationWalk()
+{
+	ASpaceship* Ship = GetControlledSpaceship();
+	UE_LOG(LogAdastrea, Log, TEXT("STATIONTEST: ship=%s"), Ship ? *Ship->GetName() : TEXT("none"));
+	if (!Ship)
+	{
+		return;
+	}
+	EnterStationInterior(Ship);
+	FTimerHandle H1, H2, H3;
+	GetWorldTimerManager().SetTimer(H1, FTimerDelegate::CreateLambda([this]()
+	{
+		UE_LOG(LogAdastrea, Log, TEXT("STATIONTEST: walking=%d onFoot=%d avatarLoc=%s interior=%s"),
+			IsWalkingStation(), IsOnFoot(), AvatarPawn ? *AvatarPawn->GetActorLocation().ToString() : TEXT("-"),
+			ActiveStationInterior ? *ActiveStationInterior->GetActorLocation().ToString() : TEXT("-"));
+		if (ActiveStationInterior && AvatarPawn)
+		{
+			const FVector Kiosk = ActiveStationInterior->GetActorTransform().TransformPosition(FVector(200, 540, 100));
+			AvatarPawn->SetActorLocation(Kiosk);
+		}
+	}), 1.5f, false);
+	GetWorldTimerManager().SetTimer(H2, FTimerDelegate::CreateLambda([this]()
+	{
+		AActor* I = AvatarPawn ? AvatarPawn->GetCurrentInteractableActor() : nullptr;
+		UE_LOG(LogAdastrea, Log, TEXT("STATIONTEST: avatarLoc=%s interactable=%s"),
+			AvatarPawn ? *AvatarPawn->GetActorLocation().ToString() : TEXT("-"), I ? *I->GetName() : TEXT("none"));
+		if (I && I->Implements<UWorldInteractable>())
+		{
+			IWorldInteractable::Execute_Interact(I, this);
+		}
+	}), 3.0f, false);
+	GetWorldTimerManager().SetTimer(H3, FTimerDelegate::CreateLambda([this]()
+	{
+		AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD());
+		UE_LOG(LogAdastrea, Log, TEXT("STATIONTEST: after interact walking=%d pawn=%s tradeScreen=%d"),
+			IsWalkingStation(), GetPawn() ? *GetPawn()->GetName() : TEXT("none"), H ? H->bShowTradeScreen : -1);
+	}), 4.0f, false);
+}
+
+void AAdastreaPlayerController::DebugStationRooms()
+{
+	ASpaceship* Ship = GetControlledSpaceship();
+	if (!Ship)
+	{
+		return;
+	}
+	EnterStationInterior(Ship);
+	static const EStationRoom Order[] = { EStationRoom::Maintenance, EStationRoom::Habitation, EStationRoom::Concourse };
+	for (int32 i = 0; i < 3; ++i)
+	{
+		FTimerHandle H;
+		GetWorldTimerManager().SetTimer(H, FTimerDelegate::CreateLambda([this, i]()
+		{
+			SwitchStationRoom(Order[i]);
+		}), 2.0f * (i + 1), false);
+	}
+	for (int32 i = 0; i < 4; ++i)
+	{
+		FTimerHandle H;
+		GetWorldTimerManager().SetTimer(H, FTimerDelegate::CreateLambda([this, i]()
+		{
+			if (!ActiveStationInterior || !AvatarPawn) { UE_LOG(LogAdastrea, Log, TEXT("STATIONTEST: room %d no interior"), i); return; }
+			int32 Terminals = 0;
+			TArray<AActor*> Att; ActiveStationInterior->GetAttachedActors(Att);
+			for (AActor* A : Att) { if (Cast<AStationTerminal>(A)) { ++Terminals; } }
+			UE_LOG(LogAdastrea, Log, TEXT("STATIONTEST: room=%d terminals=%d avatarRelZ=%.1f pawn=%s"),
+				(int32)ActiveStationInterior->Room, Terminals,
+				AvatarPawn->GetActorLocation().Z - ActiveStationInterior->GetActorLocation().Z,
+				GetPawn() ? *GetPawn()->GetName() : TEXT("none"));
+		}), 2.0f * i + 1.0f, false);
+	}
+	FTimerHandle HE;
+	GetWorldTimerManager().SetTimer(HE, FTimerDelegate::CreateLambda([this]()
+	{
+		ExitStationInterior(false);
+		UE_LOG(LogAdastrea, Log, TEXT("STATIONTEST: exited walking=%d pawn=%s"), IsWalkingStation(), GetPawn() ? *GetPawn()->GetName() : TEXT("none"));
+	}), 9.0f, false);
+}
+
+void AAdastreaPlayerController::HandleStationTerminalUsed(EStationTerminalType Type)
+{
+	switch (Type)
+	{
+	case EStationTerminalType::Trading:       ExitStationInterior(true); break;
+	case EStationTerminalType::Airlock:       ExitStationInterior(false); break;
+	case EStationTerminalType::ToConcourse:   SwitchStationRoom(EStationRoom::Concourse); break;
+	case EStationTerminalType::ToMaintenance: SwitchStationRoom(EStationRoom::Maintenance); break;
+	case EStationTerminalType::ToHabitation:  SwitchStationRoom(EStationRoom::Habitation); break;
+	default: break;
+	}
 }
