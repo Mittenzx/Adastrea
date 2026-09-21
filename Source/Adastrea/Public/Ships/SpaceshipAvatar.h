@@ -51,6 +51,10 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category="Avatar")
 	TObjectPtr<class ASpaceshipInterior> CurrentInterior;
 
+	/** True while walking a station interior (no ASpaceshipInterior); still needs floor snapping. */
+	UPROPERTY(BlueprintReadWrite, Category="Avatar")
+	bool bWalkingStation = false;
+
 	/** Return possession to the ship at its saved cockpit transform. */
 	UFUNCTION(BlueprintCallable, Category="Avatar")
 	void SitDown();
