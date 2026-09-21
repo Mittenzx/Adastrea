@@ -94,6 +94,10 @@ protected:
 	/** Undock from the current bay (freeing its slot) and push the ship clear. */
 	void UndockShip();
 
+	/** Rotate toward Location at the ship's turn rate without touching the throttle.
+	 * @return Dot product of the ship's forward vector with the direction to Location (1 = dead ahead). */
+	float FaceToward(const FVector& Location, float DeltaSeconds);
+
 	/** Turn toward and cruise at Location, easing the throttle off on approach. */
 	void SteerToward(const FVector& Location, float DeltaSeconds);
 

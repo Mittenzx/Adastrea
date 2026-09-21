@@ -20,6 +20,7 @@ class UDockingSettingsDataAsset;
 class ASpaceStationModule;
 class UUserWidget;
 class UCargoComponent;
+class UMiningLaserComponent;
 class UPlayerTraderComponent;
 
 /**
@@ -72,6 +73,10 @@ public:
     // Cargo hold component (trading inventory)
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Trading")
     TObjectPtr<UCargoComponent> CargoComponent;
+
+    // Mining laser mounted on the nose hardpoint (enabled for ships with a MiningRating)
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Mining")
+    TObjectPtr<UMiningLaserComponent> MiningLaser;
 
     // Player trader component (credits, buy/sell)
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Trading")
@@ -362,6 +367,23 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
     class UInputAction* DockAction;
 
+    /** Hold to fire the mining laser (Left Mouse). */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Mining")
+    class UInputAction* MineAction;
+
+    /** Lock the asteroid nearest the ship's nose (T). */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Mining")
+    class UInputAction* LockAsteroidAction;
+
+    UFUNCTION(Exec, BlueprintCallable, Category="Mining")
+    void StartMining();
+
+    UFUNCTION(Exec, BlueprintCallable, Category="Mining")
+    void StopMining();
+
+    UFUNCTION(Exec, BlueprintCallable, Category="Mining")
+    void LockAsteroid();
+
     // Enhanced Input callbacks
     void Move(const FInputActionValue& Value);
     void Look(const FInputActionValue& Value);
@@ -457,7 +479,7 @@ public:
      * Request docking at nearby station (called by input)
      * Validates station availability and initiates docking sequence
      */
-    UFUNCTION(BlueprintCallable, Category="Docking")
+    UFUNCTION(Exec, BlueprintCallable, Category="Docking")
     void RequestDocking();
 
     /**
