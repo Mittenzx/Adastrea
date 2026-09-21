@@ -17,6 +17,8 @@ class UInventoryWidget;
 class UTradingInterfaceWidget;
 class UStationManagementWidget;
 class ASpaceshipAvatar;
+enum class EStationTerminalType : uint8;
+enum class EStationRoom : uint8;
 // REMOVED: UFactionDataAsset - faction system removed per Trade Simulator MVP
 
 /**
@@ -344,6 +346,42 @@ public:
 			 */
 			UFUNCTION(BlueprintCallable, Category="Player|Interior")
 			void ExitShipInterior(class ASpaceship* Ship);
+
+			/**
+			 * Leave the docked ship and walk the station's interior on foot. Spawns a
+			 * walkable AStationInterior and possesses the shared avatar inside it.
+			 * @param Ship The docked ship the player is leaving.
+			 */
+			UFUNCTION(BlueprintCallable, Category="Player|Station")
+			void EnterStationInterior(class ASpaceship* Ship);
+
+			/** Leave the docked ship into a specific station room (concourse, maintenance dock, habitation). */
+			void EnterStationRoom(class ASpaceship* Ship, EStationRoom Room);
+
+			/** Move the on-foot player to another station room (rebuilds the interior). */
+			void SwitchStationRoom(EStationRoom Room);
+
+			/**
+			 * Return from walking the station to the docked ship's cockpit.
+			 * @param bOpenTrade If true, open the trade screen; otherwise the station services menu.
+			 */
+			UFUNCTION(BlueprintCallable, Category="Player|Station")
+			void ExitStationInterior(bool bOpenTrade = false);
+
+			/** True while the player is on foot inside a station interior. */
+			UFUNCTION(BlueprintPure, Category="Player|Station")
+			bool IsWalkingStation() const { return ActiveStationInterior != nullptr; }
+
+			/** Console test: enter the station, stand at the trading kiosk, use it, log the outcome. */
+			UFUNCTION(Exec)
+			void DebugStationWalk();
+
+			/** Console test: visit every station room in turn, logging where the avatar ends up. */
+			UFUNCTION(Exec)
+			void DebugStationRooms();
+
+			/** Called by station terminals when the avatar presses E on them. */
+			void HandleStationTerminalUsed(EStationTerminalType Type);
 
 			/** The walking avatar pawn (when on foot). */
 			UFUNCTION(BlueprintPure, Category="Player|Interior")
@@ -792,4 +830,11 @@ private:
 								/** The ship we left, saved while on foot so we can return to its cockpit. */
 								UPROPERTY()
 								TWeakObjectPtr<class ASpaceship> InteriorSourceShip;
+
+								/** The station interior the player is currently walking (null when not on a station). */
+								UPROPERTY()
+								TObjectPtr<class AStationInterior> ActiveStationInterior;
+
+								/** The docked ship the player left to walk the station. */
+								TWeakObjectPtr<class ASpaceship> StationVisitShip;
 							};
