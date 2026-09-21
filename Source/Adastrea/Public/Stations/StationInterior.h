@@ -121,8 +121,7 @@ protected:
 		const TCHAR* ServicePrompt = nullptr, const TCHAR* ServiceMessage = nullptr);
 
 	/** Add a solid, tinted box. Center/HalfExtent are local, in world units. */
-	UStaticMeshComponent* AddBox(const FName& Name, const FVector& Center, const FVector& HalfExtent,
-		const FLinearColor& Color, bool bBlocksPawn = true);
+	UStaticMeshComponent* AddBox(const FName& Name, const FVector& Center, const FVector& HalfExtent, const FLinearColor& Color, bool bBlocksPawn = true);
 
 	void AddLight(const FVector& Center, const FLinearColor& Color, float Intensity, float Radius);
 	void AddLabel(const FText& Text, const FVector& Center, float Yaw, const FLinearColor& Color);
