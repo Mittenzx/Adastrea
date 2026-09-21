@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "Player/AdastreaPlayerController.h"
+#include "Trading/CargoComponent.h"
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipAvatar.h"
 #include "Ships/SpaceshipInterior.h"
@@ -199,6 +200,7 @@ void AAdastreaPlayerController::SetupInputComponent()
 		InputComponent->BindKey(EKeys::S, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeToggleMode);
 		InputComponent->BindKey(EKeys::SpaceBar, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeExecute1);
 		InputComponent->BindKey(EKeys::Q, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeExecute5);
+		InputComponent->BindKey(EKeys::X, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeSellAll);
 		InputComponent->BindKey(EKeys::Escape, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeClose);
 		InputComponent->BindKey(EKeys::BackSpace, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeClose);
 		InputComponent->BindKey(EKeys::Enter, IE_Pressed, this, &AAdastreaPlayerController::HandleStationMenuConfirm);
@@ -496,6 +498,27 @@ void AAdastreaPlayerController::HandleTradeToggleMode()
 
 void AAdastreaPlayerController::HandleTradeExecute1()   { ExecuteTrade(1); }
 void AAdastreaPlayerController::HandleTradeExecute5()   { ExecuteTrade(5); }
+
+void AAdastreaPlayerController::HandleTradeSellAll()
+{
+	AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD());
+	ASpaceship* Ship = GetControlledSpaceship();
+	ASpaceStation* Station = GetNearestTradableStation();
+	if (!H || !H->bShowTradeScreen || H->bBuyMode || !Ship || !Ship->CargoComponent || !Station || !Station->GetMarketplaceModule())
+	{
+		return;
+	}
+	UMarketDataAsset* Market = Station->GetMarketplaceModule()->GetMarketData();
+	if (!Market || !Market->Inventory.IsValidIndex(H->SelectedTradeIndex))
+	{
+		return;
+	}
+	const int32 Held = Ship->CargoComponent->GetItemQuantity(Market->Inventory[H->SelectedTradeIndex].TradeItem);
+	if (Held > 0)
+	{
+		ExecuteTrade(Held);
+	}
+}
 
 void AAdastreaPlayerController::ExecuteTrade(int32 Quantity)
 {

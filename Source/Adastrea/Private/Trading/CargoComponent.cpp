@@ -1,6 +1,28 @@
 #include "Trading/CargoComponent.h"
 #include "Trading/TradeItemDataAsset.h"
 
+namespace
+{
+	// The hand-authored trade items ("TradeItem_IronOre") and the crafting-tree items the
+	// stations generate at runtime ("IronOre") describe the same goods under different IDs.
+	// Compare IDs ignoring the "TradeItem_" prefix, case and underscores so cargo is
+	// interchangeable between them (mined ore sells at stations and feeds recipes).
+	FString NormalizeItemID(FName ItemID)
+	{
+		FString S = ItemID.ToString();
+		S.RemoveFromStart(TEXT("DA_"));
+		S.RemoveFromStart(TEXT("TradeItem_"));
+		S.RemoveFromStart(TEXT("Item_"));
+		S.ReplaceInline(TEXT("_"), TEXT(""));
+		return S.ToLower();
+	}
+
+	bool IdsMatch(FName A, FName B)
+	{
+		return !A.IsNone() && !B.IsNone() && (A == B || NormalizeItemID(A) == NormalizeItemID(B));
+	}
+}
+
 UCargoComponent::UCargoComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
@@ -148,7 +170,7 @@ int32 UCargoComponent::GetItemQuantityByID(FName ItemID) const
 	int32 Total = 0;
 	for (const FCargoEntry& Entry : CargoInventory)
 	{
-		if (Entry.Item && Entry.Item->ItemID == ItemID)
+		if (Entry.Item && IdsMatch(Entry.Item->ItemID, ItemID))
 		{
 			Total += Entry.Quantity;
 		}
@@ -177,7 +199,7 @@ bool UCargoComponent::RemoveCargoByID(FName ItemID, int32 Quantity)
 	for (int32 i = 0; i < CargoInventory.Num() && Remaining > 0; ++i)
 	{
 		FCargoEntry& Entry = CargoInventory[i];
-		if (Entry.Item && Entry.Item->ItemID == ItemID)
+		if (Entry.Item && IdsMatch(Entry.Item->ItemID, ItemID))
 		{
 			int32 Take = FMath::Min(Entry.Quantity, Remaining);
 			Entry.Quantity -= Take;
@@ -210,6 +232,13 @@ int32 UCargoComponent::FindCargoEntryIndex(UTradeItemDataAsset* Item) const
 	for (int32 i = 0; i < CargoInventory.Num(); ++i)
 	{
 		if (CargoInventory[i].Item == Item)
+		{
+			return i;
+		}
+	}
+	for (int32 i = 0; i < CargoInventory.Num(); ++i)
+	{
+		if (CargoInventory[i].Item && IdsMatch(CargoInventory[i].Item->ItemID, Item->ItemID))
 		{
 			return i;
 		}

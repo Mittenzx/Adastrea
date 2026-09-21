@@ -637,9 +637,9 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     N[..., 2] = 1.0
     # add fine noise displacement (high-frequency micro-grain)
     noise = rng.random((H, W)).astype(np.float32)
-    ndy, ndx = np.gradient(noise)
-    N[..., 0] += -ndx * 0.12
-    N[..., 1] += -ndy * 0.12
+    ngx, ngy = np.gradient(noise)
+    N[..., 0] += -ngx * 0.17  # was 0.12 -- finer micro-grain so hulls don't read glass-smooth up close
+    N[..., 1] += -ngy * 0.17
     nrm = np.sqrt(N[...,0]**2 + N[...,1]**2 + N[...,2]**2)
     N[...,0] /= nrm; N[...,1] /= nrm; N[...,2] /= nrm
     # DirectX-style (Unreal convention): flip green so it points down.
