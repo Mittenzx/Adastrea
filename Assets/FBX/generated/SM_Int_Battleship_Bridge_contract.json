@@ -1,0 +1,92 @@
+{
+ "prefix": "SM_Int_Battleship_Bridge",
+ "design_bounds_cm": {
+  "min": [
+   -560.0,
+   -310.0,
+   -2.0
+  ],
+  "max": [
+   560.0,
+   310.0,
+   340.0
+  ]
+ },
+ "shell_sphere_radius_design": 636.66,
+ "runtime_uniform_scale_vs_design": 1.0209,
+ "runtime_scale_on_imported_mesh (FBX is 100x design units)": 0.010209,
+ "walk_box_uu": {
+  "depth_x": 1143,
+  "width_y": 633,
+  "height_z": 349
+ },
+ "floor_z_uu": -2.0,
+ "exit_trigger_center_uu": [
+  343.0,
+  0.0,
+  104.7
+ ],
+ "exit_trigger_center_design_cm": [
+  336.0,
+  0.0,
+  102.6
+ ],
+ "exit_trigger_extent_design_cm": [
+  97.9,
+  146.9,
+  195.9
+ ],
+ "entry_spawn_uu": [
+  -343.0,
+  0.0,
+  98.0
+ ],
+ "entry_spawn_design_cm": [
+  -336.0,
+  0.0,
+  95.9
+ ],
+ "tris": {
+  "Shell": 1168,
+  "Deck": 576,
+  "Console": 1604,
+  "Stations": 1704,
+  "Viewport": 432,
+  "Lights": 5516,
+  "Hatch": 108
+ },
+ "tris_total": 11108,
+ "slots": {
+  "Shell": [
+   "M_Int_Deck",
+   "M_Int_Shell",
+   "M_Int_Bunks",
+   "M_Int_Vents"
+  ],
+  "Deck": [
+   "M_Int_Deck"
+  ],
+  "Console": [
+   "M_Int_Console",
+   "M_Int_Lights"
+  ],
+  "Stations": [
+   "M_Int_Stations",
+   "M_Int_Console"
+  ],
+  "Viewport": [
+   "M_Int_Viewport",
+   "M_Int_Shell"
+  ],
+  "Lights": [
+   "M_Int_Lights",
+   "M_Int_Console"
+  ],
+  "Hatch": [
+   "M_Int_Hatch",
+   "M_Int_Lights"
+  ]
+ },
+ "blender_to_ue_axes": "UE(x, y, z) = Blender(x, -y, z) * 100 * runtime scale",
+ "problems": []
+}

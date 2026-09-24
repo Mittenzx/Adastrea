@@ -133,6 +133,14 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UMaterialInterface> BaseMaterial;
 
+	/** Room key used to pick textured surface instances in AddBox
+	 * ("Concourse" / "Maint" / "Hab"; set by each Build* function). */
+	FString SurfaceRoom;
+
+	/** Textured M_IntSurface_Oriented instance for a box of this name in the
+	 * current room, or nullptr to keep the tinted BasicShapeMaterial. */
+	UMaterialInterface* FindSurfaceMaterial(const FName& BoxName) const;
+
 	/** Where the avatar arrives, in local space (set per room while building). */
 	FVector ArrivalLocal = FVector(-1250.0f, 0.0f, 100.0f);
 };

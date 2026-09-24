@@ -24,6 +24,14 @@ class ADASTREA_API ATurretModule : public ASpaceStationModule
 public:
 	ATurretModule();
 
+	/**
+	 * Rotating head (SM_StationModule_TurretHead_01), attached to the base mesh at its
+	 * TurretHead socket location. Yaw = local Z, barrels along +X; head sockets
+	 * Muzzle_L / Muzzle_R / PitchAxis. Empty if the head mesh isn't imported.
+	 */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Turret")
+	TObjectPtr<UStaticMeshComponent> TurretHeadComponent;
+
 	/** Damage per shot. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Turret", meta=(ClampMin="0.0"))
 	float DamagePerShot = 10.0f;

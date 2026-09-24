@@ -26,6 +26,11 @@ enum class EShipInteriorFamily : uint8
      * identically. Cruiser/Destroyer stay on CommandBridge until they get
      * their own bespoke pass. */
     CorvetteBridge,
+    /** Capital-ship bridges (Roster art-gap pass): same part kit as the
+     * CommandBridge/CorvetteBridge families (Shell/Deck/Console/Stations/
+     * Viewport/Lights/Hatch). Appended so existing serialized values keep. */
+    BattleshipBridge,
+    CommandXLBridge,
 };
 
 /**

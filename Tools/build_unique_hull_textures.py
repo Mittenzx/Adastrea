@@ -38,17 +38,47 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import generate_adastrea_assets as gen
 
 # ----------------------------------------------------------------------------
-SHIP = "SM_Ship_Corvette_01"
+# Per-ship profiles (rollout 2026-09-23; the Corvette stays the default so the
+# original prototype command lines behave exactly as before). Select one with
+# `--ship <key>` anywhere after `--`.
+#   m_per_bu: game metres per Blender unit. The Corvette was calibrated from
+#   its in-Unreal length (~9.3 m for its 1439 BU mesh). Other ships reuse
+#   that density (FLEET_M_PER_BU) so that panel lines, rivets and livery keep
+#   the same physical size across the fleet, instead of guessing each
+#   Blueprint's component scale.
+#   Palettes match gen_texture_set(<tiled>) in regen_ship_hull_textures_v2.py;
+#   rough/metal use the prototype's "sensible painted-hull PBR" values rather
+#   than the tiled sets' near-mirror 0.96 metal.
+FLEET_M_PER_BU = 9.3 / 1439.0
+SHIP_PROFILES = {
+    'corvette': dict(ship="SM_Ship_Corvette_01", texset="Corvette_Unique", tiled="Corvette",
+                     game_length_m=9.3,
+                     variant={'base': (0.36, 0.28, 0.46), 'accent': (0.25, 0.15, 0.40),
+                              'emissive': (0.6, 0.3, 1.0), 'rough': 0.50, 'metal': 0.45,
+                              'win_cool': (0.6, 0.5, 1.0), 'win_warm': (1.0, 0.5, 0.7)}),
+    'battleship': dict(ship="SM_Ship_Battleship_01", texset="Battleship_Unique", tiled="Battleship",
+                       m_per_bu=FLEET_M_PER_BU,
+                       variant={'base': (0.16, 0.17, 0.20), 'accent': (0.68, 0.70, 0.74),
+                                'emissive': (0.2, 0.9, 1.0), 'rough': 0.46, 'metal': 0.55,
+                                'win_cool': (0.3, 0.75, 1.0), 'win_warm': (1.0, 0.65, 0.3),
+                                # steel command band + amber hazard pin (tiled set accent is pale steel)
+                                'livery1': (0.44, 0.46, 0.50), 'livery2': (0.78, 0.60, 0.16)}),
+}
+_a = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+PROFILE = SHIP_PROFILES[_a[_a.index('--ship') + 1] if '--ship' in _a else 'corvette']
+
+SHIP = PROFILE['ship']
 SRC_FBX = os.path.join(gen.BASE, f"{SHIP}_Assembled.fbx")
 OUT_NAME = f"{SHIP}_Assembled_UniqueUV"
-TEXSET = "Corvette_Unique"
-# In Unreal the Corvette is ~9.3 m long; the FBX mesh is 1439 Blender units long.
-GAME_LENGTH_M = 9.3
-# Same palette as gen_texture_set("Corvette", ...) in the generator (line ~3259)
-VARIANT = {'base': (0.36, 0.28, 0.46), 'accent': (0.25, 0.15, 0.40),
-           'emissive': (0.6, 0.3, 1.0), 'rough': 0.50, 'metal': 0.45,   # painted hull: sensible PBR, not a mirror
-           
-           'win_cool': (0.6, 0.5, 1.0), 'win_warm': (1.0, 0.5, 0.7)}
+TEXSET = PROFILE['texset']
+VARIANT = PROFILE['variant']
+
+
+def m_per_bu_for(length_bu):
+    """Game metres per Blender unit for the active profile."""
+    if 'm_per_bu' in PROFILE:
+        return PROFILE['m_per_bu']
+    return PROFILE['game_length_m'] / length_bu
 
 
 def argv_after_dashes():
@@ -539,8 +569,9 @@ def compose(B, size, px_per_m):
     D[..., 0] *= (1 + hue)
     D[..., 2] *= (1 - hue)
     D *= (1 - 0.10 * (micro[..., None] - 0.5))                            # fine grain
-    l1 = np.array([0.20, 0.10, 0.36], dtype=np.float32)                   # deep violet stripe
-    l2 = np.array([0.60, 0.58, 0.66], dtype=np.float32)                   # pale pin/hazard
+    # livery colours: per-profile, defaulting to the Corvette's violet stripe + pale pin
+    l1 = np.array(v.get('livery1', (0.20, 0.10, 0.36)), dtype=np.float32)  # main stripe
+    l2 = np.array(v.get('livery2', (0.60, 0.58, 0.66)), dtype=np.float32)  # pin/hazard
     D = D * (1 - liv1[..., None]) + (l1 * (1 + 0.15 * (plate[..., None] - 0.5))) * liv1[..., None]
     D = D * (1 - liv2[..., None]) + l2 * liv2[..., None]
     D *= (1 - 0.55 * gA)[..., None] * (1 - 0.35 * gB)[..., None]        # seam darkening
@@ -625,7 +656,7 @@ def cmd_build(args):
 
     ob = import_source()
     dims = ob.dimensions.copy()
-    m_per_bu = GAME_LENGTH_M / dims.y
+    m_per_bu = m_per_bu_for(dims.y)
     print(f"SRC dims BU {tuple(round(d, 1) for d in dims)}  m/BU={m_per_bu:.6f}  faces={len(ob.data.polygons)}")
     src_area = sum(p.area for p in ob.data.polygons) * m_per_bu ** 2
     if '--no-cull' not in args:
@@ -721,7 +752,7 @@ def cmd_preview(args):
     os.makedirs(outdir, exist_ok=True)
     spp = opt(args, '--spp', 48, int)
     cases = [
-        ("tiled", f"{SHIP}_Assembled.fbx", "Corvette", False, False),
+        ("tiled", f"{SHIP}_Assembled.fbx", PROFILE['tiled'], False, False),
         ("unique", f"{OUT_NAME}.fbx", TEXSET, True, True),
     ]
     views = {
@@ -735,7 +766,7 @@ def cmd_preview(args):
         gen.setup_scene()
         bpy.ops.import_scene.fbx(filepath=os.path.join(gen.BASE, fbx), axis_forward='-Y', axis_up='Z')
         ob = [o for o in bpy.data.objects if o.type == 'MESH'][0]
-        s = GAME_LENGTH_M / ob.dimensions.y
+        s = m_per_bu_for(ob.dimensions.y)
         ob.scale = (s, s, s)
         ob.location = (0, 0, 0)
         bpy.context.view_layer.update()

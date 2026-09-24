@@ -91,7 +91,7 @@ crosses into ship-side sizing.
 
 - Interior textures reuse the ship-hull material recipe — reads as "wallpaper" at furniture scale;
   needs its own bespoke interior texture language
-- `SM_StarDome_Dense` exceeds its tri budget (16,128 vs 1,000) — pre-existing QA failure
+- ~~`SM_StarDome_Dense` exceeds its tri budget (16,128 vs 1,000)~~ — fixed 2026-09-23: rebuilt as a 960-tri UV sphere (same UVs/name), pending UE reimport
 - `M_Interior_Eng` has no texture mapping — engineering bay renders flat grey
 - Bridge viewport zone doesn't read as glass in renders
 - Two interior-contract pytest tests are order-sensitive (`-p no:randomly` needed in isolation)

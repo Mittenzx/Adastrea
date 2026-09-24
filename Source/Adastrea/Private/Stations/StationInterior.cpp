@@ -160,6 +160,68 @@ void AStationInterior::BeginPlay()
 	BuildLayout();
 }
 
+UMaterialInterface* AStationInterior::FindSurfaceMaterial(const FName& BoxName) const
+{
+	// Box-name prefix -> surface, per MATERIAL_MAPPING.md section 4 ("Walkable station
+	// interior"). Instances live in /AdastreaShips/Materials/Interiors/Station/ as
+	// MI_Stn_<Room>_<Surface> (Tools/import_art_gap_assets.py --interiors); they use the
+	// world-aligned path because the engine cube has 0-1 UVs per face and is scaled.
+	static const TPair<const TCHAR*, const TCHAR*> PrefixToSurface[] = {
+		{ TEXT("Wall"), TEXT("Wall") },
+		{ TEXT("Bulkhead"), TEXT("Wall") },
+		{ TEXT("DoorLintel"), TEXT("Wall") },
+		{ TEXT("CabinFront"), TEXT("Wall") },
+		{ TEXT("CabinLintel"), TEXT("Wall") },
+		{ TEXT("CabinDivider"), TEXT("Wall") },
+		{ TEXT("HPillar"), TEXT("Wall") },
+		{ TEXT("Pillar"), TEXT("Pillar") },
+		{ TEXT("IslandBase"), TEXT("Pillar") },
+		{ TEXT("AirlockStripe"), TEXT("Hazard") },
+		{ TEXT("CradleHazard"), TEXT("Hazard") },
+		{ TEXT("FloorLane"), TEXT("Hazard") },
+		{ TEXT("GantryBeam"), TEXT("Hazard") },
+		{ TEXT("CradleBase"), TEXT("Grate") },
+		{ TEXT("GantryRail"), TEXT("Steel") },
+		{ TEXT("ToolRack"), TEXT("Steel") },
+		{ TEXT("Desk"), TEXT("Wood") },
+		{ TEXT("Table"), TEXT("Wood") },
+		{ TEXT("BarCounter"), TEXT("Wood") },
+		{ TEXT("BarShelf"), TEXT("Wood") },
+		{ TEXT("Bunk_"), TEXT("Fabric") },
+		{ TEXT("Sofa"), TEXT("Fabric") },
+	};
+	if (SurfaceRoom.IsEmpty())
+	{
+		return nullptr;
+	}
+	const FString Name = BoxName.ToString();
+	const TCHAR* Surface = nullptr;
+	// Exact names only: FloorLane / CeilingStrip* are trims, handled below or tinted.
+	if (Name == TEXT("Floor") || Name == TEXT("Ceiling"))
+	{
+		Surface = Name == TEXT("Floor") ? TEXT("Floor") : TEXT("Ceiling");
+	}
+	else
+	{
+		for (const TPair<const TCHAR*, const TCHAR*>& Entry : PrefixToSurface)
+		{
+			if (Name.StartsWith(Entry.Key))
+			{
+				Surface = Entry.Value;
+				break;
+			}
+		}
+	}
+	if (!Surface)
+	{
+		return nullptr;
+	}
+	const FString Short = FString::Printf(TEXT("MI_Stn_%s_%s"), *SurfaceRoom, Surface);
+	const FString Path = FString::Printf(TEXT("/AdastreaShips/Materials/Interiors/Station/%s.%s"), *Short, *Short);
+	// Not every room has every surface (e.g. no Grate outside Maintenance): quiet miss.
+	return LoadObject<UMaterialInterface>(nullptr, *Path, nullptr, LOAD_NoWarn | LOAD_Quiet);
+}
+
 UStaticMeshComponent* AStationInterior::AddBox(const FName& Name, const FVector& Center,
 	const FVector& HalfExtent, const FLinearColor& Color, bool bBlocksPawn)
 {
@@ -177,7 +239,17 @@ UStaticMeshComponent* AStationInterior::AddBox(const FName& Name, const FVector&
 		Box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		Box->SetCastShadow(false);
 	}
-	if (UMaterialInstanceDynamic* MID = MakeTinted(this, BaseMaterial, Color))
+	if (UMaterialInterface* Surface = FindSurfaceMaterial(Name))
+	{
+		// World-aligned texturing needs the room floor height for the floor-anchored
+		// wall bands (kick plate / ID stripe / upper panels); actor-local Z=0 is the floor.
+		if (UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(Surface, this))
+		{
+			MID->SetScalarParameterValue(TEXT("FloorZ"), GetActorLocation().Z);
+			Box->SetMaterial(0, MID);
+		}
+	}
+	else if (UMaterialInstanceDynamic* MID = MakeTinted(this, BaseMaterial, Color))
 	{
 		Box->SetMaterial(0, MID);
 	}
@@ -291,6 +363,7 @@ void AStationInterior::BuildConcourse()
 	const FLinearColor WallCol(0.16f, 0.19f, 0.24f);
 	const FLinearColor Trim(0.30f, 0.65f, 0.95f);
 	ArrivalLocal = FVector(-1250.0f, 0.0f, 100.0f);
+	SurfaceRoom = TEXT("Concourse");
 
 	BuildShell(HalfLen, HalfWid, H, WallCol);
 
@@ -342,6 +415,7 @@ void AStationInterior::BuildMaintenance()
 	const FLinearColor Hazard(0.95f, 0.75f, 0.10f);
 	const FLinearColor Steel(0.30f, 0.32f, 0.36f);
 	ArrivalLocal = FVector(-1450.0f, 0.0f, 100.0f);
+	SurfaceRoom = TEXT("Maint");
 
 	BuildShell(HalfLen, HalfWid, H, WallCol);
 
@@ -401,6 +475,7 @@ void AStationInterior::BuildHabitation()
 	const FLinearColor Wood(0.35f, 0.22f, 0.12f);
 	const FLinearColor Fabric(0.20f, 0.30f, 0.45f);
 	ArrivalLocal = FVector(-950.0f, 0.0f, 100.0f);
+	SurfaceRoom = TEXT("Hab");
 
 	BuildShell(HalfLen, HalfWid, H, WallCol);
 
