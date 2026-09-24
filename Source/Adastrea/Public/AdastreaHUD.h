@@ -156,8 +156,8 @@ public:
 	/** Draw the station option menu. */
 	void DrawStationMenu(APlayerController* PC, AAdastreaPlayerController* AdController, ASpaceship* Ship);
 
-	/** Draw mining lock brackets, target ore/status panel and the hold contents (flight HUD). */
-	void DrawMiningHUD(APlayerController* PC, ASpaceship* Ship);
+	/** Draw the mining lock brackets and the target / laser / hold panel at PanelTop (flight HUD; hidden with no asteroid locked). */
+	void DrawMiningHUD(APlayerController* PC, ASpaceship* Ship, float PanelTop);
 
 	/** Draw the docked trading screen (market list, credits, cargo, buy/sell). */
 	void DrawTradeScreen(APlayerController* PC, AAdastreaPlayerController* AdController, ASpaceship* Ship);

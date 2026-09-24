@@ -158,8 +158,6 @@ void AAdastreaHUD::DrawHUD()
 		}
 	}
 
-	DrawMiningHUD(PC, Ship);
-
 	// ---- Gather live data ----
 	const FVector P = Ship->GetActorLocation();
 	const float Speed = Ship->MovementComponent ? Ship->MovementComponent->Velocity.Size() : 0.0f;
@@ -323,6 +321,9 @@ void AAdastreaHUD::DrawHUD()
 
 		Y += RowH + 24.0f;
 	}
+
+	// ---- Mining panel (stacked under the telemetry panel; hidden unless an asteroid is locked) ----
+	DrawMiningHUD(PC, Ship, PanelY + PanelH + 12.0f);
 
 	// ---- Locked target reticle (world-space box around the locked target) ----
 	AAdastreaPlayerController* AController = Cast<AAdastreaPlayerController>(PC);
@@ -1573,111 +1574,142 @@ void AAdastreaHUD::DrawInteractPrompt(APlayerController* PC)
 	}
 
 
-void AAdastreaHUD::DrawMiningHUD(APlayerController* PC, ASpaceship* Ship)
+void AAdastreaHUD::DrawMiningHUD(APlayerController* PC, ASpaceship* Ship, float PanelTop)
 {
 	UMiningLaserComponent* Laser = Ship ? Ship->MiningLaser : nullptr;
-	if (!Laser || !Laser->bMiningEnabled || !Canvas)
+	if (!Laser || !Laser->bMiningEnabled || !Canvas || !PC)
 	{
 		return;
 	}
 	UFont* BodyFont = GEngine->GetSmallFont();
 	UFont* TitleFont = GEngine->GetLargeFont();
-	const EMiningStatus Status = Laser->GetStatus();
-	const FLinearColor StatusColor =
-		Status == EMiningStatus::Mining ? FLinearColor(0.3f, 1.0f, 0.5f, 1.0f) :
-		(Status == EMiningStatus::Idle) ? FLinearColor(0.6f, 0.85f, 1.0f, 1.0f) :
-		FLinearColor(1.0f, 0.65f, 0.25f, 1.0f);
+	const FLinearColor kTrack(0.08f, 0.10f, 0.12f, 0.9f);
+	const FLinearColor kGood(0.30f, 1.00f, 0.50f, 1.0f);
+	const FLinearColor kWarn(1.00f, 0.55f, 0.25f, 1.0f);
 
 	AAsteroid* Rock = Cast<AAsteroid>(Laser->GetTarget());
-	FLinearColor Tint = FLinearColor(0.6f, 0.85f, 1.0f, 1.0f);
-
-	// ---- Lock brackets around the locked asteroid ----
-	if (Rock)
+	if (!Rock)
 	{
-		if (UAsteroidDataAsset* Type = Rock->GetAsteroidType())
-		{
-			Tint = Type->OreTint;
-			Tint.A = 1.0f;
-		}
+		// Nothing locked: no panel, just the controls hint.
+		const FString Hint = TEXT("MINING LASER   [T] lock asteroid ahead    [Hold LMB] fire");
+		float HW = 0.0f, HH = 0.0f;
+		GetTextSize(Hint, HW, HH, BodyFont, 0.8f);
+		DrawText(Hint, FLinearColor(0.6f, 0.7f, 0.75f, 0.85f), (Canvas->SizeX - HW) * 0.5f, Canvas->SizeY - 64.0f, BodyFont, 0.8f);
+		return;
+	}
+
+	UAsteroidDataAsset* Type = Rock->GetAsteroidType();
+	UTradeItemDataAsset* Ore = Laser->GetTargetOre();
+	FLinearColor Tint = Type ? Type->OreTint : kCargo;
+	Tint.A = 1.0f;
+	const EMiningStatus Status = Laser->GetStatus();
+	const bool bFiring = Status == EMiningStatus::Mining;
+	const bool bInRange = Laser->IsTargetInRange();
+	const float Dist = Laser->GetTargetSurfaceDistance();
+	const float Now = GetWorld() ? GetWorld()->GetTimeSeconds() : 0.0f;
+
+	// ---- Lock brackets around the asteroid (ore tint, orange when out of range, pulse while the beam is on) ----
+	{
 		FVector2D Centre, Edge;
 		const FVector CamRight = PC->PlayerCameraManager ? FRotationMatrix(PC->PlayerCameraManager->GetCameraRotation()).GetScaledAxis(EAxis::Y) : FVector::RightVector;
 		if (PC->ProjectWorldLocationToScreen(Rock->GetActorLocation(), Centre) &&
 			PC->ProjectWorldLocationToScreen(Rock->GetActorLocation() + CamRight * Rock->GetRadius(), Edge))
 		{
-			const float R = FMath::Clamp(FVector2D::Distance(Centre, Edge) * 1.15f, 24.0f, 400.0f);
+			const float Pulse = bFiring ? 1.0f + 0.06f * FMath::Sin(Now * 12.0f) : 1.0f;
+			const float R = FMath::Clamp(FVector2D::Distance(Centre, Edge) * 1.15f, 24.0f, 400.0f) * Pulse;
 			const float L = FMath::Max(R * 0.35f, 10.0f);
 			const float X0 = Centre.X - R, X1 = Centre.X + R, Y0 = Centre.Y - R, Y1 = Centre.Y + R;
-			const float T = 2.0f;
-			DrawLine(X0, Y0, X0 + L, Y0, Tint, T); DrawLine(X0, Y0, X0, Y0 + L, Tint, T);
-			DrawLine(X1, Y0, X1 - L, Y0, Tint, T); DrawLine(X1, Y0, X1, Y0 + L, Tint, T);
-			DrawLine(X0, Y1, X0 + L, Y1, Tint, T); DrawLine(X0, Y1, X0, Y1 - L, Tint, T);
-			DrawLine(X1, Y1, X1 - L, Y1, Tint, T); DrawLine(X1, Y1, X1, Y1 - L, Tint, T);
+			const FLinearColor BC = bInRange ? Tint : kWarn;
+			const float T = bFiring ? 3.0f : 2.0f;
+			DrawLine(X0, Y0, X0 + L, Y0, BC, T); DrawLine(X0, Y0, X0, Y0 + L, BC, T);
+			DrawLine(X1, Y0, X1 - L, Y0, BC, T); DrawLine(X1, Y0, X1, Y0 + L, BC, T);
+			DrawLine(X0, Y1, X0 + L, Y1, BC, T); DrawLine(X0, Y1, X0, Y1 - L, BC, T);
+			DrawLine(X1, Y1, X1 - L, Y1, BC, T); DrawLine(X1, Y1, X1, Y1 - L, BC, T);
+			DrawText(FString::Printf(TEXT("%.0f m"), Dist / 100.0f), BC, X1 + 6.0f, Y1 - 12.0f, BodyFont, 0.75f);
 		}
 	}
 
-	// ---- Bottom-centre mining panel ----
-	const float PW = 360.0f, PH = Rock ? 112.0f : 64.0f;
-	const float PX = (Canvas->SizeX - PW) * 0.5f;
-	const float PY = Canvas->SizeY - PH - 40.0f;
-	DrawRect(kBg, PX, PY, PW, PH);
-	DrawLine(PX, PY, PX + PW, PY, Tint, 2.0f);
-	float Y = PY + 8.0f;
-	DrawText(TEXT("MINING LASER"), kHeader, PX + 12.0f, Y, BodyFont, 0.9f);
-	const FString StatusStr = Laser->StatusToText(Status).ToString();
-	float SW = 0.0f, SH = 0.0f;
-	GetTextSize(StatusStr, SW, SH, TitleFont, 0.8f);
-	DrawText(StatusStr, StatusColor, PX + PW - SW - 12.0f, Y - 2.0f, TitleFont, 0.8f);
-	Y += 24.0f;
-	if (Rock)
+	// ---- Mining panel (same look as the flight telemetry panel, stacked under it) ----
+	const float PanelX = 20.0f, PanelW = 380.0f, RowH = 22.0f;
+	const float LabelX = PanelX + 14.0f, ValueX = LabelX + 130.0f;
+	const float BarW = PanelW - 28.0f;
+	const float PanelH = 44.0f + 8.0f * RowH + 3.0f * 14.0f + 8.0f;
+	DrawRect(kBg, PanelX, PanelTop, PanelW, PanelH);
+	DrawLine(PanelX, PanelTop, PanelX, PanelTop + PanelH, Tint, 3.0f);
+	DrawLine(PanelX + 2, PanelTop + PanelH - 1, PanelX + PanelW - 2, PanelTop + PanelH - 1, kBorder, 1.0f);
+	DrawText(TEXT("MINING   //   TARGET"), kHeader, LabelX, PanelTop + 10.0f, TitleFont, 0.9f);
+	DrawLine(PanelX + 12.0f, PanelTop + 36.0f, PanelX + PanelW - 12.0f, PanelTop + 36.0f, kBorder, 1.0f);
+
+	float Y = PanelTop + 44.0f;
+	auto Row = [&](const TCHAR* Label, const FString& Value, const FLinearColor& ValueColor)
 	{
-		DrawText(Rock->GetTargetDisplayName_Implementation().ToString(), Tint, PX + 12.0f, Y, BodyFont, 1.0f);
-		const float Dist = Laser->GetTargetSurfaceDistance();
-		const FString DistStr = FString::Printf(TEXT("%.0f m  (range %.0f m)"), Dist / 100.0f, Laser->Range / 100.0f);
-		float DW = 0.0f, DH = 0.0f;
-		GetTextSize(DistStr, DW, DH, BodyFont, 0.9f);
-		DrawText(DistStr, Dist <= Laser->Range ? kLabel : FLinearColor(1.0f, 0.5f, 0.3f, 1.0f), PX + PW - DW - 12.0f, Y, BodyFont, 0.9f);
-		Y += 22.0f;
-		const float Frac = FMath::Clamp(Rock->GetOreFraction(), 0.0f, 1.0f);
-		DrawRect(FLinearColor(0.08f, 0.10f, 0.12f, 0.9f), PX + 12.0f, Y, PW - 24.0f, 10.0f);
-		DrawRect(Tint, PX + 12.0f, Y, FMath::Max((PW - 24.0f) * Frac, 2.0f), 10.0f);
-		Y += 16.0f;
-		DrawText(FString::Printf(TEXT("ORE REMAINING  %.0f%%   (%.0f units)"), Frac * 100.0f, Rock->GetRemainingOre()),
-			kLabel, PX + 12.0f, Y, BodyFont, 0.85f);
+		DrawText(Label, kLabel, LabelX, Y, BodyFont, 0.9f);
+		DrawText(Value, ValueColor, ValueX, Y, BodyFont, 0.9f);
+		Y += RowH;
+	};
+	auto Bar = [&](float Frac, const FLinearColor& Col)
+	{
+		DrawRect(kTrack, LabelX, Y, BarW, 8.0f);
+		DrawRect(Col, LabelX, Y, FMath::Max(BarW * FMath::Clamp(Frac, 0.0f, 1.0f), 2.0f), 8.0f);
+		Y += 14.0f;
+	};
+
+	// Target identity.
+	Row(TEXT("ASTEROID"), Rock->GetTargetDisplayName_Implementation().ToString(), Tint);
+	Row(TEXT("ORE"), Ore ? FString::Printf(TEXT("%s   (hardness %.1f)"), *Ore->ItemName.ToString(), Type ? Type->Hardness : 1.0f)
+		: FString(TEXT("none")), Ore ? Tint : kWarn);
+
+	// Remaining yield.
+	Row(TEXT("YIELD"), FString::Printf(TEXT("%.0f / %.0f u   (%.0f%%)"), Rock->GetRemainingOre(), Rock->GetTotalOre(),
+		Rock->GetOreFraction() * 100.0f), kPos);
+	Bar(Rock->GetOreFraction(), Tint);
+
+	// Range.
+	Row(TEXT("DISTANCE"), FString::Printf(TEXT("%.0f m   %s   (max %.0f m)"), Dist / 100.0f,
+		bInRange ? TEXT("IN RANGE") : TEXT("OUT OF RANGE"), Laser->Range / 100.0f), bInRange ? kGood : kWarn);
+
+	// Laser / beam state.
+	const FLinearColor StatusColor = bFiring ? kGood : (Status == EMiningStatus::Idle ? kSpeed : kWarn);
+	const TCHAR* BeamStr = bFiring ? TEXT("BEAM ON") : (Laser->IsTriggerHeld() ? TEXT("BEAM BLOCKED") : TEXT("BEAM OFF"));
+	Row(TEXT("LASER"), FString::Printf(TEXT("%s   -   %s"), *UMiningLaserComponent::StatusToText(Status).ToString(), BeamStr), StatusColor);
+	if (bFiring)
+	{
+		// Blinking beam-on lamp at the right edge of the LASER row.
+		const float Lamp = 0.6f + 0.4f * FMath::Abs(FMath::Sin(Now * 8.0f));
+		DrawRect(FLinearColor(kGood.R, kGood.G, kGood.B, Lamp), PanelX + PanelW - 26.0f, Y - RowH + 3.0f, 12.0f, 12.0f);
+	}
+
+	// Extraction progress: fill toward the next whole unit reaching the hold.
+	Row(TEXT("EXTRACTION"), FString::Printf(TEXT("%.1f u/s   next unit %.0f%%"), bFiring ? Laser->GetExtractionRate() : 0.0f,
+		Laser->GetUnitProgress() * 100.0f), bFiring ? kGood : kLabel);
+	Bar(Laser->GetUnitProgress(), bFiring ? kGood : kLabel);
+
+	// Hold fill + the ore currently being added.
+	if (UCargoComponent* Cargo = Ship->CargoComponent)
+	{
+		const float Cap = FMath::Max(Cargo->CargoCapacity, 0.01f);
+		const float Used = Cargo->CargoCapacity - Cargo->GetAvailableCargoSpace();
+		const float Frac = Used / Cap;
+		const FLinearColor HoldCol = Frac > 0.9f ? kWarn : kCargo;
+		Row(TEXT("HOLD"), FString::Printf(TEXT("%.0f / %.0f   (%.0f%%)"), Used, Cap, Frac * 100.0f), HoldCol);
+		Bar(Frac, HoldCol);
+		Row(TEXT("IN HOLD"), Ore ? FString::Printf(TEXT("%s  x%d"), *Ore->ItemName.ToString(), Cargo->GetItemQuantity(Ore))
+			: FString(TEXT("-")), kCargo);
+
+		// "+N" flash beside the IN HOLD row for a moment after each delivery.
+		const float Since = Laser->GetSecondsSinceLastMined();
+		if (Laser->GetLastMinedOre() && Since < 1.5f)
+		{
+			FLinearColor FlashCol = Tint;
+			FlashCol.A = FMath::Clamp(1.0f - Since / 1.5f, 0.0f, 1.0f);
+			const FString Plus = FString::Printf(TEXT("+%d"), Laser->GetLastMinedAmount());
+			float FW = 0.0f, FH = 0.0f;
+			GetTextSize(Plus, FW, FH, TitleFont, 0.9f);
+			DrawText(Plus, FlashCol, PanelX + PanelW - FW - 14.0f, Y - RowH - 4.0f - Since * 10.0f, TitleFont, 0.9f);
+		}
 	}
 	else
 	{
-		DrawText(TEXT("[T] lock asteroid ahead    [Hold LMB] fire mining laser"), kLabel, PX + 12.0f, Y, BodyFont, 0.85f);
-	}
-
-	// ---- Hold contents (right side): what has been mined ----
-	if (Ship->CargoComponent)
-	{
-		const TArray<FCargoEntry>& Entries = Ship->CargoComponent->CargoInventory;
-		const float HW = 250.0f;
-		const float HH = 40.0f + FMath::Max(Entries.Num(), 1) * 20.0f + 18.0f;
-		const float HX = Canvas->SizeX - HW - 20.0f;
-		const float HY = 20.0f;
-		DrawRect(kBg, HX, HY, HW, HH);
-		DrawLine(HX, HY, HX, HY + HH, kCargo, 3.0f);
-		const float Used = Ship->CargoComponent->CargoCapacity - Ship->CargoComponent->GetAvailableCargoSpace();
-		const float Cap = FMath::Max(Ship->CargoComponent->CargoCapacity, 0.01f);
-		DrawText(FString::Printf(TEXT("CARGO HOLD  %.0f / %.0f"), Used, Cap), kHeader, HX + 12.0f, HY + 8.0f, BodyFont, 0.95f);
-		DrawRect(FLinearColor(0.08f, 0.10f, 0.12f, 0.9f), HX + 12.0f, HY + 28.0f, HW - 24.0f, 6.0f);
-		DrawRect(Used / Cap > 0.9f ? FLinearColor(1.0f, 0.4f, 0.3f, 1.0f) : kCargo, HX + 12.0f, HY + 28.0f, FMath::Max((HW - 24.0f) * FMath::Clamp(Used / Cap, 0.0f, 1.0f), 1.0f), 6.0f);
-		float RY = HY + 42.0f;
-		int32 Shown = 0;
-		for (const FCargoEntry& E : Entries)
-		{
-			if (E.Item && E.Quantity > 0)
-			{
-				DrawText(FString::Printf(TEXT("%s  x%d"), *E.Item->ItemName.ToString(), E.Quantity), kLabel, HX + 12.0f, RY, BodyFont, 0.9f);
-				RY += 20.0f;
-				++Shown;
-			}
-		}
-		if (Shown == 0)
-		{
-			DrawText(TEXT("(empty)"), kLabel, HX + 12.0f, RY, BodyFont, 0.9f);
-		}
+		Row(TEXT("HOLD"), TEXT("no cargo hold"), kWarn);
 	}
 }
