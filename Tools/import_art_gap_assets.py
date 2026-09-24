@@ -26,6 +26,7 @@ Args (combinable):
   --unique-hull=Battleship  import T_<Ship>_Unique_* and build M_<Ship>_Hull_Unique (run with the
                         SM_Ship_<Ship>_01_Assembled_UniqueUV mesh so its M_Assembled slot binds)
   --capital-bps         set InteriorShellMesh/InteriorFamily on BP_Battleship / BP_CommandXL
+  --glass               rebuild only the M_Int_Viewport library glass (no other interior MIs)
   --textures=T_A,T_B    (re)import texture sets from Assets/FBX/generated/Textures with
                         the project's settings (see TEXTURE RULES below)
   --dry-run             print what would happen, change nothing
@@ -996,17 +997,22 @@ def build_library_glass(path="/AdastreaShips/Materials/Interiors/M_Int_Viewport"
     d = tex_node("D", -500)
     mask = tex_node("MASK", -200)
     nrm = tex_node("N", 100)
-    MEL.connect_material_property(d, "RGB", unreal.MaterialProperty.MP_BASE_COLOR)
+    # Darken the dirt tint: at full strength the grey film, lit per-pixel by the bridge
+    # lights, read as milky frosted glass and hid the starfield (PR #493 walkthrough).
+    dark = MEL.create_material_expression(mat, unreal.MaterialExpressionMultiply, -650, -500)
+    MEL.connect_material_expressions(d, "RGB", dark, "A")
+    dark.set_editor_property("const_b", 0.2)
+    MEL.connect_material_property(dark, "", unreal.MaterialProperty.MP_BASE_COLOR)
     MEL.connect_material_property(const(0.0, -500, -350), "", unreal.MaterialProperty.MP_METALLIC)
     MEL.connect_material_property(const(0.5, -500, -300), "", unreal.MaterialProperty.MP_SPECULAR)
     MEL.connect_material_property(lerp(const(0.03, -700, -250), const(0.45, -700, -200), mask, -400, -220),
                                   "", unreal.MaterialProperty.MP_ROUGHNESS)
-    base_op = lerp(const(0.10, -700, -120), const(0.55, -700, -80), mask, -450, -100)
+    base_op = lerp(const(0.04, -700, -120), const(0.22, -700, -80), mask, -450, -100)
     fres = MEL.create_material_expression(mat, unreal.MaterialExpressionFresnel, -700, 0)
     fres.set_editor_property("exponent", 4.0)
     fmul = MEL.create_material_expression(mat, unreal.MaterialExpressionMultiply, -450, 0)
     MEL.connect_material_expressions(fres, "", fmul, "A")
-    fmul.set_editor_property("const_b", 0.25)
+    fmul.set_editor_property("const_b", 0.15)
     add = MEL.create_material_expression(mat, unreal.MaterialExpressionAdd, -300, -50)
     MEL.connect_material_expressions(base_op, "", add, "A")
     MEL.connect_material_expressions(fmul, "", add, "B")
@@ -1119,7 +1125,7 @@ def wire_capital_bps():
 def main(argv):
     global DRY_RUN
     names, globs, texsets, fixes, accents = [], [], [], False, False
-    interiors = capital_bps = False
+    interiors = capital_bps = glass = False
     unique_hulls = []
     for arg in argv:
         if arg == "--dry-run":
@@ -1132,6 +1138,8 @@ def main(argv):
             interiors = True
         elif arg == "--capital-bps":
             capital_bps = True
+        elif arg == "--glass":
+            glass = True
         elif arg.startswith("--unique-hull="):
             unique_hulls += [h for h in arg.split("=", 1)[1].split(",") if h]
         elif arg.startswith("--glob="):
@@ -1170,6 +1178,8 @@ def main(argv):
         run_fixes()
     if capital_bps:
         wire_capital_bps()
+    if glass and not interiors:
+        build_library_glass()
     log("RESULT_OK" if ok else "RESULT_FAIL")
     return ok
 

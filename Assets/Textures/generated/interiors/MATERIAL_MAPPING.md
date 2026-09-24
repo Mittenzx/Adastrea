@@ -137,11 +137,11 @@ and keep `Color` as an optional tint param on the MI (`BaseColor * lerp(1, Color
 - BaseColor = `_D` (cool clear tint about 0.80/0.88/0.92).
 - Metallic = 0, Specular = 0.5.
 - Roughness = `lerp(0.03, 0.45, _MASK)`. `_R` already encodes this, so either works.
-- **Opacity = `lerp(0.10, 0.55, _MASK)`**: clean glass stays near-invisible while smudges and dust catch light.
+- **Opacity = `lerp(0.04, 0.22, _MASK)`** (tuned down from 0.10-0.55 after PIE: the bow windows read milky; base colour is also `_D x 0.2`): clean glass stays near-invisible while smudges and dust catch light.
   This is what makes it read as glass rather than a black hole.
 - Refraction: IOR 1.52 via Refraction Mode "Index of Refraction", or Pixel Normal Offset with strength 0.02 (subtle).
 - Normal = `_N` at 0.3 intensity (flatten the scratches).
-- Optional Fresnel: `Opacity += Fresnel(exponent 4) * 0.25` so grazing angles look reflective.
+- Optional Fresnel: `Opacity += Fresnel(exponent 4) * 0.15` so grazing angles look reflective.
 - Tiling 1.0 over the viewport (the texture is 2 m). For small portholes use 2.0.
 - Place a faint rim-lit `_MASK`-driven emissive (x 0.02, colour (0.5,0.7,1.0)) if the viewport faces pure black space and
   still vanishes.
