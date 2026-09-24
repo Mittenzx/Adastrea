@@ -1,10 +1,12 @@
 #include "Mining/AsteroidField.h"
+#include "AI/AIMinerController.h"
 #include "Mining/Asteroid.h"
 #include "Mining/AsteroidDataAsset.h"
 #include "Components/HierarchicalInstancedStaticMeshComponent.h"
 #include "Components/SceneComponent.h"
 #include "Engine/StaticMesh.h"
 #include "Engine/World.h"
+#include "EngineUtils.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/Pawn.h"
 #include "Camera/PlayerCameraManager.h"
@@ -259,12 +261,40 @@ void AAsteroidField::Tick(float DeltaSeconds)
 	{
 		return;
 	}
-	APlayerController* PC = World->GetFirstPlayerController();
-	if (!PC)
+	// Rocks go live near the player and near AI miners, so miners have something to mine
+	// anywhere in the field, not just where the player happens to be.
+	TArray<FVector, TInlineAllocator<8>> Viewers;
+	if (APlayerController* PC = World->GetFirstPlayerController())
+	{
+		if (PC->GetPawn())
+		{
+			Viewers.Add(PC->GetPawn()->GetActorLocation());
+		}
+		else if (PC->PlayerCameraManager)
+		{
+			Viewers.Add(PC->PlayerCameraManager->GetCameraLocation());
+		}
+	}
+	for (TActorIterator<AAIMinerController> It(World); It; ++It)
+	{
+		if (const APawn* Miner = It->GetPawn())
+		{
+			Viewers.Add(Miner->GetActorLocation());
+		}
+	}
+	if (Viewers.IsEmpty())
 	{
 		return;
 	}
-	const FVector Viewer = PC->GetPawn() ? PC->GetPawn()->GetActorLocation() : PC->PlayerCameraManager->GetCameraLocation();
+	auto NearestViewerDistance = [&Viewers](const FVector& Location)
+	{
+		float Best = TNumericLimits<float>::Max();
+		for (const FVector& Viewer : Viewers)
+		{
+			Best = FMath::Min(Best, static_cast<float>(FVector::Dist(Viewer, Location)));
+		}
+		return Best;
+	};
 	const double Now = World->GetTimeSeconds();
 	const float DemoteRadius = PromoteRadius * 1.3f;
 
@@ -283,7 +313,7 @@ void AAsteroidField::Tick(float DeltaSeconds)
 			continue;
 		}
 
-		const float Dist = FVector::Dist(Viewer, Rock.Home.GetLocation());
+		const float Dist = NearestViewerDistance(Rock.Home.GetLocation());
 		if (!Rock.Actor.IsValid() && Dist < PromoteRadius)
 		{
 			Promote(i);

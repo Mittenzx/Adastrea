@@ -408,7 +408,12 @@ void ASpaceship::LockAsteroid()
     if (MiningLaser && MiningLaser->bMiningEnabled)
     {
         const bool bOk = MiningLaser->LockNearestAhead();
-        UE_LOG(LogAdastreaShips, Log, TEXT("LockAsteroid: %s"), bOk ? TEXT("locked") : TEXT("nothing in the aim cone"));
+        UE_LOG(LogAdastreaShips, Log, TEXT("LockAsteroid (%s): %s"), *GetName(),
+            bOk ? *FString::Printf(TEXT("locked %s"), *GetNameSafe(MiningLaser->GetTarget())) : TEXT("nothing in the aim cone"));
+    }
+    else
+    {
+        UE_LOG(LogAdastreaShips, Log, TEXT("LockAsteroid (%s): this ship has no mining laser"), *GetName());
     }
 }
 
