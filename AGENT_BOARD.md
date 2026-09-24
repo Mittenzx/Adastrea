@@ -2507,3 +2507,190 @@ DockingPortModule/SpaceStationModule - not mine, leaving them as-is). Will relau
 it completes. Flagging so nobody's surprised the editor process disappears/reappears.
 
 _Doing next: waiting on the build, then launching the editor for the user._
+
+---
+## [2026-09-23T21:00Z] — FROM: ArtLead (art-gap coordinator) → TO: all
+**Topic**: Art-gap push kicked off at the user's request — 5 parallel workstreams
+
+Owners (please don't overlap):
+- **Modules-A** (blender-artist): dedicated meshes for dock/trade/utility station modules — DockingPort, Corridor, Habitation, Barracks, Reactor, SolarArray, FuelDepot, Processing, Fabrication (+ review the existing DockingBay/CargoBay/Market hero meshes).
+- **Modules-B** (blender-artist): shared research-lab kit (13 labs: ScienceLab/ResearchLab, 5 base, 7 tier-4) + Turret + ShieldGenerator.
+- **Interiors** (blender-artist): bespoke interior texture language (replacing the hull recipe), engineering-bay textures, bridge viewport glass, station-interior room dressing.
+- **Roster** (blender-artist): CommandXL + Battleship interiors, SM_StarDome_Dense retopo down to its tri budget.
+- **Integrator** (unreal-integrator): the ONLY session touching Unreal/C++/.uasset — per-class module mesh mapping, imports, material fixes, builds.
+
+Blender agents use headless `blender -b` only (leave the Blender GUI/MCP to the user). No commits from workstreams — ArtLead commits in scoped batches (`git commit -- <paths>`).
+
+_Doing next: coordinating hand-offs from the Blender agents to Integrator._
+
+---
+## [2026-09-23T21:20Z] — FROM: Integrator → TO: all
+**Topic**: Starting Phase 1 — headless UnrealEditor-Cmd runs (no GUI editor yet)
+
+GUI editor is closed (unreal-mcp down). I'll be running headless `UnrealEditor-Cmd -run=pythonscript` passes against Adastrea.uproject for inspection/asset edits, and a C++ build later. Please don't launch the editor meanwhile (file locks). Touching: Source/Adastrea/.../SpaceStationModule.*, SpaceshipInterior.cpp, Content/Blueprints/Stations/Modules/BP_*, station-module + interior materials, new Tools/import_art_gap_assets.py.
+
+_Doing next: inspecting module BPs/meshes/materials headlessly._
+
+---
+## [2026-09-23T21:20Z] — FROM: ArtLead → TO: all
+**Topic**: Editor launched at the user's request — Integrator owns it
+
+UnrealEditor (UE 5.8) is running on Adastrea.uproject; unreal-mcp answers on 127.0.0.1:8000. Integrator owns the editor for the art-gap push. Please don't start a full build or close the editor without posting here first (the DLL is locked while it's open).
+
+_Doing next: relaying Blender hand-offs to Integrator._
+
+---
+## [2026-09-23T21:55Z] — FROM: Integrator → TO: all
+**Topic**: Closing UnrealEditor now for a C++ build (SpaceStationModule + SpaceshipInterior)
+
+Closing the editor the coordinator launched, then `build_with_ue_tools.bat Development Win64`, then a headless `Tools/import_art_gap_assets.py --fixes` pass, then I'll relaunch the editor myself for MCP verification. Editor/DLL unavailable for the next ~10-20 min.
+
+Heads-up for Modules-A / Modules-B: C++ now auto-picks up a dedicated mesh per module class if an asset named `SM_StationModule_<X>_01` exists in /AdastreaShips/Meshes/Station, else falls back to the footprint shell. Expected <X> names: DockingPort, Corridor, Habitation, Barracks, Reactor, SolarArray, FuelDepot, Processing, Fabrication, Turret, ShieldGenerator, ScienceLab, ResearchLab, PhysicsLab, MaterialsLab, ElectronicsLab, WeaponsLab, BiologyLab, ProjectileWeaponsLab, BeamWeaponsLab, IonPropulsionLab, GravMaterialsLab, EncryptionLab, OptronicsLab, CyberneticsLab (DockingBay/CargoBay/Market already exist). All labs fall back to a shared **SM_StationModule_ResearchLab_01** kit mesh if no per-lab mesh exists — so Modules-B, if you do one shared lab kit, export it under that name. Material slot names should equal the target material asset name (e.g. `M_StationModule_Utility`) — the importer binds by slot name. Include `UCX_<MeshName>_NN` hulls for authored collision.
+
+_Doing next: build._
+
+---
+## [2026-09-23T21:05Z] — FROM: Modules-B → TO: Integrator, all
+**Topic**: Dedicated meshes for 14 research labs + Turret + ShieldGenerator exported (not imported)
+
+`Tools/generate_station_lab_defence_modules.py` (headless Blender 5.2) wrote 17 FBX to `Assets/FBX/generated/`:
+`SM_StationModule_{ScienceLab,ResearchLab,PhysicsLab,MaterialsLab,ElectronicsLab,WeaponsLab,BiologyLab,ProjectileWeaponsLab,BeamWeaponsLab,IonPropulsionLab,GravMaterialsLab,EncryptionLab,OptronicsLab,CyberneticsLab,Turret,TurretHead,ShieldGenerator}_01.fbx`.
+Previews + contact sheet: `Assets/FBX/generated/station_modules/` (`SM_StationModule_LabDefence_ContactSheet.png`).
+- Labs 800x800x400 cm, Turret 1x1x1 (base 400x400, top z=+52.9), Shield 800x800x400. All geometry stays inside the footprint, pivot at the footprint centre, node transforms are identity. Tris 1.8k-5.9k (head 944).
+- Import: Static Mesh, Scale 1.0, custom collision ON (UCX_<Mesh>_NN is authored, so do NOT Add Auto Convex), Combine Meshes ON.
+- Slots: labs = M_StationModule_Shell / _Connector / _Utility (some labs) / **M_StationModule_Accent (NEW emissive, make per-domain MIs)**; defence = M_StationModule_Defence / _Connector / _Accent.
+- Sockets: labs SOCKET_DomainProp/DeckPadA/DeckPadB/SensorMast; Turret base SOCKET_TurretHead (0,0,50); head SOCKET_Muzzle_L/_R, SOCKET_PitchAxis; Shield SOCKET_ShieldEmitter.
+- TurretHead pivot = yaw axis (head-local z=0 = ring top); attach it at base SOCKET_TurretHead; barrels point along Blender +X.
+- ResearchLabModule has no footprint entry (abstract base), so its mesh is a generic 2x2x1 fallback.
+Nothing under Source/Config/Content/.uasset was touched. Not committed.
+
+_Doing next: done; available for mesh revisions after the test import._
+
+---
+## [2026-09-23T22:15Z] — FROM: Integrator → TO: Modules-B, ArtLead
+**Topic**: Modules-B 17 meshes imported — but they're 100x oversized, and sockets are flipped
+
+Imported all 17 via `Tools/import_art_gap_assets.py` (UCX on, slots bound, new `M_StationModule_Accent` + 17 `MI_StationModule_Accent_<X>` in /Game/Materials/StationModuleAccents). Problems that need a **source fix in Blender** (I'm not compensating on the UE side):
+1. **Scale 100x**: at import scale 1.0 the labs are 80000x80000x40000 uu (extent 40000), Turret base 40000x40000, head socket at z=5000. Expected 800x800x400 / 400x400 / z=50. Looks like cm-valued geometry in a scene with scale_length=1.0 exported with FBX_SCALE_ALL+apply_unit_scale (same bug 1122306e fixed for Habitation). NB the existing `SM_StationModule_Shell_*` are ALSO 100x (extent 40000) — whoever owns build_station_module_shells should fix those too; the DockingBay/CargoBay/Market hero meshes are correct (1x).
+2. **Sockets**: every SOCKET_ imports with rotation yaw 180 / roll 180 (upside-down). Locations are fine. Please export socket empties with identity rotation in UE space. (I mount the TurretHead by socket location only, so this doesn't block the turret.)
+Once you re-export, I'll just rerun the importer (reimport in place; references survive).
+
+_Doing next: building the TurretHead component, relaunching the editor for visual verification._
+
+---
+## [2026-09-23T22:25Z] — FROM: Integrator → TO: all
+**Topic**: Build done (green); relaunching UnrealEditor now for MCP verification
+
+`build_with_ue_tools.bat Development Win64` succeeded (SpaceStationModule, SpaceshipInterior, TurretModule). Relaunching the editor on Adastrea.uproject; I still own it.
+
+---
+## [2026-09-23T21:13Z] — FROM: Modules-A → TO: Integrator, Modules-B, ArtLead
+**Topic**: 9 dedicated dock/utility module meshes exported + 3 heroes fixed/re-exported + 100x scale root cause
+
+`Tools/generate_station_module_meshes_b.py` (headless Blender 5.2) wrote `Assets/FBX/generated/SM_StationModule_{DockingPort,Corridor,Habitation,Reactor,SolarArray,FuelDepot,Processing,Fabrication,Barracks}_01.fbx` (0.99k-4.6k tris). Previews: `Assets/FBX/generated/station_modules/SM_StationModule_<X>_01_{A,B}.png`.
+- Geometry stays inside the footprint box, pivot at the footprint centre, identity node transforms, authored `UCX_<Mesh>_NN` hulls (auto collision OFF). No sockets.
+- Slots are exact existing asset names: M_StationModule_Shell/_Connector/_Utility/_Defence/_SolarArray, M_Station_Hab, M_Nav_White/_Green/_Red/_Beacon (static emissives used for windows, guide lights and core/furnace glow). No new materials.
+- SolarArray (faces=['W']): its only port is on UE **-Y**. UE's FBX import mirrors Y, so that is Blender +Y. NB the existing `SM_StationModule_Shell_SolarArray` puts its flange on Blender -Y, which is the UE **E** face (wrong side).
+- **100x root cause (Modules-B, and whoever owns build_station_module_shells)**: cm-valued geometry exported with the factory `scale_length=1.0` makes the FBX declare UnitScaleFactor=100 (m). Fix: set `scene.unit_settings.scale_length = 0.01` just before `export_scene.fbx` (same FBX_SCALE_ALL + apply_unit_scale). The file then carries UnitScaleFactor=1 (cm) with unchanged vertex values. Verified on all 12 of my files. The OLD hero FBX had the same 100x header, so the hero .uassets reading 1x were presumably imported with a compensating scale.
+- **Heroes re-exported** (Tools/generate_station_module_meshes.py; review requested by ArtLead): join-drops-bevels bug fixed (7.0k/5.7k/8.0k -> 2.1k/1.9k/2.3k tris), pivot moved to the footprint centre, skin inset 30 cm so details show, collars reach the boundary, overhangs removed (DockingBay +39 cm Y, CargoBay +59 cm Z, Market blister moved from the +X face to a roof dome). **Integrator: these are now cm-declared. When you reimport DockingBay/CargoBay/Market, force import_uniform_scale=1.0, or any stored 0.01 will shrink them 100x.**
+Nothing under Source/Config/Content or any .uasset was touched. Not committed.
+
+_Doing next: done; available for revisions after the test import._
+
+---
+## [2026-09-23T22:45Z] — FROM: Integrator → TO: all
+**Topic**: Closing editor again for a rebuild (module-mesh fix), relaunching right after
+
+Found a bug in my own refactor via in-editor verification (spawned modules had no mesh); fixing in C++ and rebuilding. TestLevel was NOT saved (the 4 ZZ_ArtGapTest_* actors I spawned are discarded).
+
+---
+## [2026-09-23T21:17Z] — FROM: Modules-A → TO: Integrator, ArtLead
+**Topic**: 4 shared shells re-exported at true cm scale; SolarArray shell flange moved to the W face. Reimport needed.
+
+`SM_StationModule_Shell_{Standard,Large,ConnectorThin,SolarArray}.fbx` re-exported from `build_station_module_shells()` in Tools/generate_adastrea_assets.py (headless; textures not regenerated). The fix is scoped to a new shell-only `finalize_shell()`: `scale_length=0.01` during export then restored, so no other asset in that file changes behaviour.
+- Verified: UnitScaleFactor 1.0 (cm), identity node transforms (ConnectorThin used to carry a 90 deg node rotation), pivot at the footprint centre. Bounds: Standard 800x800x400, Large 1200x800x400, ConnectorThin 400x360x360, SolarArray 1180x329x360 (Blender Y -129..+200).
+- SolarArray: mount flange now on UE **-Y (W)** (Blender +Y), panels on the opposite side. It was on UE +Y (E).
+- **Integrator:** reimport all 4 with **import_uniform_scale=1.0** (the old files were 100x). At the same time, remove any UE-side compensation for the old 100x. I found none in SpaceStationModule.cpp, the StationEditor C++, or any Content/Blueprints/Stations BP (no RelativeScale3D override serialized). So the only place one could hide is the shell .uassets' own stored import scale, or level-placed instances. Please check those. If SolarArray module instances were rotated to compensate for the flange being on the wrong face, that rotation needs removing too.
+Not committed.
+
+_Doing next: done._
+
+---
+## [2026-09-23T23:00Z] — FROM: Integrator → TO: all
+**Topic**: Rebuild green; Modules-A 12 + 4 shells imported at 1.0 scale; relaunching editor
+
+Imported headlessly while closed: Modules-A DockingPort/Corridor/Habitation/Reactor/SolarArray/FuelDepot/Processing/Fabrication/Barracks + reimported DockingBay/CargoBay/Market (all correct cm: 2x2 = 800x800, 1-cell = 400, SolarArray 1196x380) and the 4 Shell_* (now 800x800x400 etc.). Relaunching UnrealEditor now for in-level verification.
+
+---
+## [2026-09-23T22:50Z] — FROM: Modules-B → TO: Integrator
+**Topic**: Re: 22:15Z — all 17 Modules-B FBX re-exported with scale + socket fixes, please reimport
+
+Both bugs are fixed at the source in `Tools/generate_station_lab_defence_modules.py`. I checked by parsing the raw FBX, not by a Blender round-trip (that round-trip is what hid the 100x the first time):
+1. **Scale**: the coordinator's `scale_length=0.01` patch is kept. All 17 files: GlobalSettings `UnitScaleFactor=1.0`. Labs and Shield measure 800x800x400, Turret base 400x400x252.9, head 311.5x230x135. Socket translations are in cm (e.g. Turret `SOCKET_TurretHead` z=50).
+2. **Sockets**: the cause was the exporter writing the -Y-forward axis conversion as `Lcl Rotation Z=180` on each root node. UE folded that into the child SOCKET_ empties, giving yaw 180 / roll 180. The fix is `bake_space_transform=True`: every Model node in all 17 files now has zero rotation, and all 61 sockets have identity global rotation, so **expect Rotator(0,0,0)** on reimport.
+- Mesh vertices and socket locations are **unchanged in FBX global space** (I diffed old vs new PhysicsLab and TurretHead: identical bounds and socket positions). With your importer's default transform_vertex_to_absolute, meshes and socket locations should land exactly where they did before, with no orientation change.
+- Names, slots, UCX and sockets are the same as before, so reimport in place.
+
+FYI: `SM_StationModule_Shell_*` (build_station_module_shells / generate_adastrea_assets.py) and my first pass were both 100x, as you noted. I did not touch the shells' script.
+
+_Doing next: done unless the reimport shows otherwise._
+
+---
+## [2026-09-23T23:20Z] — FROM: Integrator → TO: all
+**Topic**: Closing editor to reimport Modules-B's 17 re-exports headlessly; relaunching after
+
+TestLevel not saved (temporary ZZ_ArtGapTest actors discarded).
+
+---
+## [2026-09-24T00:10Z] — FROM: Integrator → TO: all
+**Topic**: Modules-B 17 reimported (1.0 scale OK); relaunching UnrealEditor for in-level verification
+
+All station module meshes are now in at true cm scale. Relaunching the editor (I own it).
+
+---
+## [2026-09-24T00:30Z] — FROM: Interiors → TO: Integrator, Roster, all
+**Topic**: Interior texture library ready (16 human-scale PBR sets) + material mapping doc
+
+New interior material language: sets authored in real mm (not the hull recipe). PNGs are in `Assets/Textures/generated/interiors/T_Int_<Set>_{D,N,R,M,AO,E}.png` (+ `_MASK` for EngGrate/Glass). Sets: ShipDeck, ShipWall, ShipWallUpper, ShipCeiling, EngWall, EngWallUpper, EngGrate, Hazard, Console, HabWall, HabFloor, Glass, StnFloor, StnWall, StnWallUpper, StnCeiling. 2048 px per 2 m tile (1024 px per 1 m for Console/Hazard; Glass 1024 per 2 m), so tiling 1.0 on smart_uv meshes (1 UV = 200 cm). Normals are DirectX: import with **Flip Green OFF**, sRGB off on N/R/M/AO/MASK.
+- **Integrator**: build per `Assets/Textures/generated/interiors/MATERIAL_MAPPING.md`. It covers every M_Int_*, M_Interior_* (incl. the missing **M_Interior_Eng**, which fixes the flat-grey engineering bay), all AStationInterior boxes (world-aligned, since they're scaled engine cubes), and translucent glass params for M_Int_Viewport. Single-slot rooms (EngineRoom/Corridor/Airlock) need the normal-oriented blend master described there. I touched no .uasset/Source/Config.
+- **Roster**: please use these sets for the CommandXL/Battleship interiors (ShipDeck/ShipWall/ShipCeiling/Console/Glass for the bridge, Eng* for engineering) rather than new textures. See the doc's section 2 for tiling.
+Generator: `Tools/generate_interior_texture_library.py`. Test renders: `Tools/render_interior_texture_tests.py`. Previews are in `.../interiors/previews/`. Nothing committed.
+
+_Doing next: done; ping Interiors for variants._
+
+---
+## [2026-09-24T01:50Z] — FROM: Roster → TO: Integrator, ArtLead, Interiors
+**Topic**: Star dome retopo (960 tris), Battleship + CommandXL bridge interiors, Battleship unique-UV hull. FBX ready to import.
+
+1. **SM_StarDome_Dense.fbx**: same name, UVs, radius, export settings and path. 32x16 UV sphere, **960 tris** (was 16,128), so qa_assets passes. From the dome centre it renders the same as before (Milky Way band and dim stars are in T_Starfield). **Integrator**: straight reimport over /Game/Meshes/Environment/SM_StarDome_Dense with the same settings as before (import_uniform_scale 1.0, FBX UnitScaleFactor 100, radius 1 = 100 UU; the dome actor keeps its scale and M_Starfield_Real).
+2. **Interiors**: `Assets/FBX/generated/SM_Int_{Battleship,CommandXL}_Bridge_{Shell,Deck,Console,Stations,Viewport,Lights,Hatch}.fbx` (14 files), generator `Tools/build_capital_interiors.py`, contract JSON `..._Bridge_contract.json` next to them. The part suffixes are exactly the CommandBridge TryPart list. **Integrator C++**: add `EShipInteriorFamily::BattleshipBridge` and `::CommandXLBridge`. In the ConfigureInterior switch, map them to Prefix `/AdastreaShips/Meshes/Interiors/SM_Int_Battleship_Bridge` / `.../SM_Int_CommandXL_Bridge` and FamilyString `"BattleshipBridge"` / `"CommandXLBridge"`, and add both strings to the `CommandBridge || CorvetteBridge` branch in MountInteriorParts. Import them like the corvette bridge (import_interiors.py settings, uniform scale 1.0, same UnitScaleFactor 100 convention as every other SM_Int_ FBX, runtime normalizes to 650). BP_Battleship: interiorShellMesh = SM_Int_Battleship_Bridge_Shell, interiorFamily = BATTLESHIP_BRIDGE. BP_CommandXL: SM_Int_CommandXL_Bridge_Shell / COMMAND_XL_BRIDGE (check the Python enum spelling). Expected log: Battleship walk box d=1143 w=633 h=349; CommandXL d=992 w=921 h=421. Helm seat is inside the exit trigger (+0.6·HalfDepth) and the entry spawn is on a clear aisle by the rear hatch. Then append the 14 names to EXPECTED_INTERIORS in tests/test_all_interiors.py (there's a PENDING comment marking the spot; FAMILY_PREFIX already has both).
+3. **Interiors**: slots are plain M_Int_* names (Shell/Deck/Vents/Bunks on the shell; screens use M_Int_Lights; window frames use M_Int_Shell so only panes get the translucent M_Int_Viewport). Your MATERIAL_MAPPING applies unchanged. UVs are world-triplanar at 200 cm per UV and the floor is at local Z≈0.
+4. **Battleship unique hull**: `SM_Ship_Battleship_01_Assembled_UniqueUV.fbx` + `Textures/T_Battleship_Unique_{D,N,R,M,AO,E,SKIN}.png` (4096, ~212 px/m; Tools/build_unique_hull_textures.py now takes `--ship battleship`). Same scale and slot (M_Assembled) as the source Assembled FBX. Import like the Corvette unique (N is DirectX, sRGB off on N/R/M/AO) and make an M_Battleship_Hull_Unique like M_Corvette_Hull_Unique.
+Also: tests/test_all_interiors.py is de-staled (all 129 tests pass), qa_assets exempts SM_Int_ from the X-mirror check, and the docs no longer list the dome failure. Nothing committed; no .uasset/Source/Config touched.
+
+_Doing next: done._
+
+---
+## [2026-09-24T02:15Z] — FROM: Integrator → TO: all
+**Topic**: Station modules verified in-level; closing editor for one batched build (capital interior families + interior/station material hookup)
+
+Closing UnrealEditor, building, then headless passes: Interiors texture library + M_IntSurface_Oriented MIs, glass rebuild, star dome reimport, 14 capital-interior FBX, Battleship unique hull, BP_Battleship/BP_CommandXL interior wiring. Relaunching afterwards.
+
+---
+## [2026-09-24T02:40Z] — FROM: Integrator → TO: all
+**Topic**: Build green + interiors/roster imported headlessly; relaunching UnrealEditor for PIE verification
+
+Imported: Interiors library (16 sets -> /Game/Textures/Interiors), M_IntSurface_Oriented + 14 kit MIs + 16 station MIs, M_Int_Viewport rebuilt as library glass, M_Int_Lights emissive; 14 capital-bridge FBX; SM_StarDome_Dense reimport; Battleship unique hull + M_Battleship_Hull_Unique; BP_Battleship/BP_CommandXL InteriorShellMesh+InteriorFamily set. pytest 129 passed.
+
+---
+## [2026-09-24T02:55Z] — FROM: Integrator → TO: all
+**Topic**: Closing editor briefly to fix a shader error in M_IntSurface_Oriented (headless rebuild), relaunching after
+
+---
+## [2026-09-24T03:20Z] — FROM: Integrator → TO: ArtLead, all
+**Topic**: Done: all station modules + interiors + roster imported, wired and checked in the editor. Editor left running.
+
+- Station modules: 12 from Modules-A, 4 shells, 17 from Modules-B, all at cm scale 1.0 with UCX collision and slots bound. `M_StationModule_Accent` plus 17 domain MIs. A per-class mesh table in C++ falls back to the shells. Turret has a `TurretHead` component. Checked with in-level captures of DockingBay, Habitation, Reactor, SolarArray, ScienceLab and Turret with its head.
+- Interiors: 16 texture sets in /Game/Textures/Interiors. `M_IntSurface_Oriented` master, 14 ship-kit MIs (incl. `MI_Interior_Eng`, which fixes the flat-grey engine room) and 16 `MI_Stn_*` (the AStationInterior boxes now use them, world-aligned). `M_Int_Viewport` is now the translucent glass from the library, and `M_Int_Lights` is emissive. All SM_Int_* slots rebound. The interim `M_Int_Eng` is deleted.
+- Roster: 14 capital-bridge meshes imported. `BattleshipBridge`/`CommandXLBridge` families added. BP_Battleship/BP_CommandXL InteriorShellMesh+InteriorFamily are set, and I confirmed they persist after an editor relaunch. Star dome reimported. Battleship unique hull and `M_Battleship_Hull_Unique` created but NOT wired onto BP_Battleship, same as the Corvette prototype. pytest 129 passed.
+- Open issues: (1) **Modules-B**: sockets still import with roll 180 after the re-export. Turret doesn't use socket rotation, so it's not blocking. (2) TestLevel NOT saved (all test actors removed). (3) Didn't do a PIE walk-through of the interiors. MCP has no console-exec tool, so I couldn't run DebugStationRooms or board a Battleship.
