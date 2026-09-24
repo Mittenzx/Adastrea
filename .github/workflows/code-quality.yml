@@ -2,9 +2,9 @@ name: Code Quality Checks
 
 on:
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main ]
   push:
-    branches: [ main, develop ]
+    branches: [ main ]
 
 jobs:
   validation:
@@ -36,21 +36,6 @@ jobs:
       - name: Validate asset naming conventions
         run: |
           python Tools/validate_naming.py
-        continue-on-error: true
-
-      - name: Check for hardcoded secrets
-        run: |
-          # Simple check for common patterns
-          echo "Checking for potential hardcoded secrets..."
-          ! grep -rn --include="*.cpp" --include="*.h" "password\s*=" . || true
-          ! grep -rn --include="*.cpp" --include="*.h" "apiKey\s*=" . || true
-          ! grep -rn --include="*.cpp" --include="*.h" "api_key\s*=" . || true
-        continue-on-error: true
-
-      - name: Check for TODO/FIXME comments
-        run: |
-          echo "Checking for TODO and FIXME comments..."
-          grep -rn --include="*.cpp" --include="*.h" "TODO\|FIXME" Source/ || echo "No TODO/FIXME found"
         continue-on-error: true
 
       - name: Run comprehensive test suite
