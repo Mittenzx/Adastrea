@@ -3031,6 +3031,30 @@ def build_station_module_shells():
     """
     GRID = 400.0
 
+    def finalize_shell(parts, name, matname):
+        """finalize_part() for the shells only, with two fixes (2026-09-23, Modules-A):
+        - Geometry is authored in cm-valued units, so export with scale_length=0.01
+          (1 BU = 1 cm). The FBX then declares UnitScaleFactor=1 (cm) instead of 100 (m),
+          which made UE import the shells 100x oversized at import scale 1.0. The unit
+          setting is restored afterwards so no other asset in this file changes behaviour.
+        - Pivot at the footprint centre (world origin), not centre-of-volume. The station
+          editor places and adjacency-tests modules by actor location, and the asymmetric
+          SolarArray shell's volume centre is off the footprint centre."""
+        # bake part rotations (e.g. the ConnectorThin tube's unapplied cyl() rotation)
+        # so the joined mesh exports with an identity node transform
+        for ob in parts:
+            sel_activate(ob)
+            bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
+        us = bpy.context.scene.unit_settings
+        prev = (us.system, us.scale_length)
+        bpy.context.scene.cursor.location = (0, 0, 0)
+        try:
+            us.system = 'METRIC'
+            us.scale_length = 0.01
+            return finalize_part(parts, name, matname, origin='ORIGIN_CURSOR')
+        finally:
+            us.system, us.scale_length = prev
+
     def module_shell(name, cells_x, cells_y, cells_z, corridor_style=False):
         L = cells_x * GRID   # local X width
         W = cells_y * GRID   # local Y depth
@@ -3090,49 +3114,51 @@ def build_station_module_shells():
                           rot=(0, math.radians(90), 0), maj=16, minr=5)
             parts.append(ring1)
 
-        obj, out = finalize_part(parts, name, "M_StationModule_Shell")
+        obj, out = finalize_shell(parts, name, "M_StationModule_Shell")
         return [(obj, out)]
 
     def solar_array_shell(name):
         """SolarArray is [3,1,1] -- 1200x400x400 cm, the one module with a
-        real ConnectionFaces restriction (ConnectionFaces=['W'], local -Y).
-        Not a generic room block: a mounting flange on the -Y face (the
+        real ConnectionFaces restriction (ConnectionFaces=['W'], UE local -Y).
+        UE's FBX import mirrors Y, so UE -Y is Blender +Y: the mount flange is built on
+        Blender +Y (it was on Blender -Y = UE +Y = the E face until 2026-09-23).
+        Not a generic room block: a mounting flange on the W face (Blender +Y) (the
         actual connection point) plus a ribbed panel spine along the long
         (N/S, local X) axis, so the restricted face reads as visually
         distinct from the other three -- confirmed with Drydock this is the
         only module needing that (2026-09-15 cross-session coordination)."""
         L = 3 * GRID   # 1200, long axis = local X (N/S)
-        Wd = 1 * GRID  # 400, local Y -- the mounting (-Y/W) axis
+        Wd = 1 * GRID  # 400, local Y -- the mounting axis (W = UE -Y = Blender +Y)
         H = 1 * GRID   # 400
         parts = []
 
         # central spine along the long axis
-        spine = box(f"{name}_Spine", L - 20, Wd*0.35, H*0.35, loc=(0, Wd*0.1, 0))
+        spine = box(f"{name}_Spine", L - 20, Wd*0.35, H*0.35, loc=(0, -Wd*0.1, 0))
         bevel(spine, 10, 2)
         parts.append(spine)
 
-        # mounting flange at the -Y (W) face -- the restricted connection
+        # mounting flange at the W face (Blender +Y) -- the restricted connection
         # face -- denser/mechanical block, flush to the cell boundary so it
         # butts against whatever it's attached to.
-        flange = box(f"{name}_MountFlange", Wd*0.6, 40, H*0.6, loc=(0, -Wd/2 + 20, 0))
+        flange = box(f"{name}_MountFlange", Wd*0.6, 40, H*0.6, loc=(0, Wd/2 - 20, 0))
         bevel(flange, 6, 2)
         parts.append(flange)
         for fx in (-L*0.32, 0, L*0.32):
-            bolt = cyl(f"{name}_FlangeBolt{int(fx)}", 12, 46, loc=(fx, -Wd/2 + 23, 0),
+            bolt = cyl(f"{name}_FlangeBolt{int(fx)}", 12, 46, loc=(fx, Wd/2 - 23, 0),
                        rot=(math.radians(90), 0, 0), verts=8)
             parts.append(bolt)
 
-        # ribbed panel wings on the +Y face (opposite the mount) -- reads as
+        # ribbed panel wings on the Blender -Y side (opposite the mount) -- reads as
         # the actual solar-collecting surface, distinct from the mount side
-        panel = box(f"{name}_Panel", L - 60, 30, H - 60, loc=(0, Wd*0.28, 0))
+        panel = box(f"{name}_Panel", L - 60, 30, H - 60, loc=(0, -Wd*0.28, 0))
         parts.append(panel)
         rib_count = 9
         for i in range(rib_count):
             rx = -L/2 + 60 + i * (L - 120) / (rib_count - 1)
-            rib = box(f"{name}_Rib{i}", 8, 34, H - 40, loc=(rx, Wd*0.28, 0))
+            rib = box(f"{name}_Rib{i}", 8, 34, H - 40, loc=(rx, -Wd*0.28, 0))
             parts.append(rib)
 
-        obj, out = finalize_part(parts, name, "M_StationModule_SolarArray")
+        obj, out = finalize_shell(parts, name, "M_StationModule_SolarArray")
         return [(obj, out)]
 
     results = []

@@ -2,6 +2,251 @@
 #include "Stations/SpaceStation.h"
 #include "AdastreaLog.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Materials/MaterialInterface.h"
+#include "Misc/PackageName.h"
+#include "Misc/ScopeLock.h"
+
+// ============================================================================
+// Per-class default module meshes
+// ============================================================================
+// Each native module class maps to (in priority order):
+//   1. its own dedicated mesh  /AdastreaShips/Meshes/Station/SM_StationModule_<X>_01
+//   2. an optional shared-kit mesh (the research-lab kit shared by all labs)
+//   3. the shared shell matching its Content/Data/StationModuleBuilderData.json grid
+//      footprint - Standard (2x2x1), Large (3x2x1, DockingBay), ConnectorThin
+//      (1x1x1: Corridor/DockingPort/Turret), SolarArray (3x1x1) - with the module's
+//      family material (Content/Materials/M_StationModule_*) on slot 0
+//   4. /Engine/BasicShapes/Cube (base class, anything not in the table)
+// Dedicated/kit meshes that aren't imported yet are probed with
+// FPackageName::DoesPackageExist and loaded with LOAD_NoWarn|LOAD_Quiet, so
+// not-yet-imported art costs nothing and logs nothing (ConstructorHelpers would log a
+// CDO-constructor error per missing asset). Dedicated meshes carry their own slot
+// materials; the family material is only applied on the shell fallback.
+// To give a module its own mesh: import SM_StationModule_<X>_01 (see
+// Tools/import_art_gap_assets.py) and restart the editor - no code change needed.
+namespace
+{
+    enum class EModuleShell : uint8 { None, Standard, Large, ConnectorThin, SolarArray };
+    enum class EModuleFamily : uint8 { None, Shell, Connector, Utility, Defence, SolarArray };
+
+    struct FModuleMeshSpec
+    {
+        const TCHAR* ClassName;     // nearest NATIVE class name (no 'A' prefix)
+        const TCHAR* DedicatedMesh; // short asset name under StationMeshDir
+        const TCHAR* SharedKitMesh; // optional second choice, nullptr if none
+        EModuleShell Shell;
+        EModuleFamily Family;
+    };
+
+    const TCHAR* const StationMeshDir = TEXT("/AdastreaShips/Meshes/Station/");
+    const TCHAR* const ResearchLabKit = TEXT("SM_StationModule_ResearchLab_01");
+
+    const FModuleMeshSpec ModuleMeshSpecs[] = {
+        // Docking / connectors
+        { TEXT("DockingBayModule"),      TEXT("SM_StationModule_DockingBay_01"),      nullptr, EModuleShell::Large,         EModuleFamily::Connector },
+        { TEXT("DockingPortModule"),     TEXT("SM_StationModule_DockingPort_01"),     nullptr, EModuleShell::ConnectorThin, EModuleFamily::Connector },
+        { TEXT("CorridorModule"),        TEXT("SM_StationModule_Corridor_01"),        nullptr, EModuleShell::ConnectorThin, EModuleFamily::Connector },
+        // Trade / habitation
+        { TEXT("CargoBayModule"),        TEXT("SM_StationModule_CargoBay_01"),        nullptr, EModuleShell::Standard,      EModuleFamily::Utility },
+        { TEXT("MarketplaceModule"),     TEXT("SM_StationModule_Market_01"),          nullptr, EModuleShell::Standard,      EModuleFamily::Shell },
+        { TEXT("HabitationModule"),      TEXT("SM_StationModule_Habitation_01"),      nullptr, EModuleShell::Standard,      EModuleFamily::Shell },
+        { TEXT("BarracksModule"),        TEXT("SM_StationModule_Barracks_01"),        nullptr, EModuleShell::Standard,      EModuleFamily::Defence },
+        // Utility / industry
+        { TEXT("ReactorModule"),         TEXT("SM_StationModule_Reactor_01"),         nullptr, EModuleShell::Standard,      EModuleFamily::Utility },
+        { TEXT("SolarArrayModule"),      TEXT("SM_StationModule_SolarArray_01"),      nullptr, EModuleShell::SolarArray,    EModuleFamily::SolarArray },
+        { TEXT("FuelDepotModule"),       TEXT("SM_StationModule_FuelDepot_01"),       nullptr, EModuleShell::Standard,      EModuleFamily::Utility },
+        { TEXT("ProcessingModule"),      TEXT("SM_StationModule_Processing_01"),      nullptr, EModuleShell::Standard,      EModuleFamily::Utility },
+        { TEXT("FabricationModule"),     TEXT("SM_StationModule_Fabrication_01"),     nullptr, EModuleShell::Standard,      EModuleFamily::Utility },
+        // Defence
+        { TEXT("TurretModule"),          TEXT("SM_StationModule_Turret_01"),          nullptr, EModuleShell::ConnectorThin, EModuleFamily::Defence },
+        { TEXT("ShieldGeneratorModule"), TEXT("SM_StationModule_ShieldGenerator_01"), nullptr, EModuleShell::Standard,      EModuleFamily::Defence },
+        // Research: base + tier-1 labs + the 7 tier-4 labs, all falling back to the shared lab kit
+        { TEXT("ScienceLabModule"),      TEXT("SM_StationModule_ScienceLab_01"),           ResearchLabKit, EModuleShell::Standard, EModuleFamily::Shell },
+        { TEXT("ResearchLabModule"),     TEXT("SM_StationModule_ResearchLab_01"),          nullptr,        EModuleShell::Standard, EModuleFamily::Shell },
+        { TEXT("PhysicsLabModule"),      TEXT("SM_StationModule_PhysicsLab_01"),           ResearchLabKit, EModuleShell::Standard, EModuleFamily::Shell },
+        { TEXT("MaterialsLabModule"),    TEXT("SM_StationModule_MaterialsLab_01"),         ResearchLabKit, EModuleShell::Standard, EModuleFamily::Shell },
+        { TEXT("ElectronicsLabModule"),  TEXT("SM_StationModule_ElectronicsLab_01"),       ResearchLabKit, EModuleShell::Standard, EModuleFamily::Shell },
+        { TEXT("WeaponsLabModule"),      TEXT("SM_StationModule_WeaponsLab_01"),           ResearchLabKit, EModuleShell::Standard, EModuleFamily::Shell },
+        { TEXT("BiologyLabModule"),      TEXT("SM_StationModule_BiologyLab_01"),           ResearchLabKit, EModuleShell::Standard, EModuleFamily::Shell },
+        { TEXT("ProjectileWeaponsLab"),  TEXT("SM_StationModule_ProjectileWeaponsLab_01"), ResearchLabKit, EModuleShell::Standard, EModuleFamily::Shell },
+        { TEXT("BeamWeaponsLab"),        TEXT("SM_StationModule_BeamWeaponsLab_01"),       ResearchLabKit, EModuleShell::Standard, EModuleFamily::Shell },
+        { TEXT("IonPropulsionLab"),      TEXT("SM_StationModule_IonPropulsionLab_01"),     ResearchLabKit, EModuleShell::Standard, EModuleFamily::Shell },
+        { TEXT("GravMaterialsLab"),      TEXT("SM_StationModule_GravMaterialsLab_01"),     ResearchLabKit, EModuleShell::Standard, EModuleFamily::Shell },
+        { TEXT("EncryptionLab"),         TEXT("SM_StationModule_EncryptionLab_01"),        ResearchLabKit, EModuleShell::Standard, EModuleFamily::Shell },
+        { TEXT("OptronicsLab"),          TEXT("SM_StationModule_OptronicsLab_01"),         ResearchLabKit, EModuleShell::Standard, EModuleFamily::Shell },
+        { TEXT("CyberneticsLab"),        TEXT("SM_StationModule_CyberneticsLab_01"),       ResearchLabKit, EModuleShell::Standard, EModuleFamily::Shell },
+    };
+
+    const FModuleMeshSpec* FindModuleMeshSpec(const UClass* ModuleClass)
+    {
+        // Blueprint subclasses (BP_CargoBayModule_C, ...) resolve through their
+        // nearest native parent, so a BP that doesn't override ModuleMesh still
+        // gets its module's mesh.
+        const UClass* NativeClass = ModuleClass;
+        while (NativeClass && !NativeClass->HasAnyClassFlags(CLASS_Native))
+        {
+            NativeClass = NativeClass->GetSuperClass();
+        }
+        if (!NativeClass)
+        {
+            return nullptr;
+        }
+        const FString ClassName = NativeClass->GetName();
+        for (const FModuleMeshSpec& Spec : ModuleMeshSpecs)
+        {
+            if (ClassName.Equals(Spec.ClassName))
+            {
+                return &Spec;
+            }
+        }
+        return nullptr;
+    }
+
+    /** Load an optional station-module mesh by short name; nullptr (silently) if not imported yet. */
+    UStaticMesh* LoadOptionalStationMesh(const TCHAR* ShortName)
+    {
+        if (!ShortName)
+        {
+            return nullptr;
+        }
+        const FString PackageName = FString(StationMeshDir) + ShortName;
+        if (!FPackageName::DoesPackageExist(PackageName))
+        {
+            return nullptr;
+        }
+        const FString ObjectPath = PackageName + TEXT(".") + ShortName;
+        return LoadObject<UStaticMesh>(nullptr, *ObjectPath, nullptr, LOAD_NoWarn | LOAD_Quiet);
+    }
+
+    struct FResolvedModuleMesh
+    {
+        TWeakObjectPtr<UStaticMesh> Mesh;
+        TWeakObjectPtr<UMaterialInterface> FamilyMaterial; // only set on the shell fallback
+    };
+
+    /** Does the actual (possibly loading) resolution for one class. Constructor-only. */
+    FResolvedModuleMesh ResolveModuleMesh(const UClass* ModuleClass)
+    {
+        // These always exist (engine content + the committed shell kit/materials),
+        // so ConstructorHelpers is fine; function statics = resolved once.
+        static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMeshAsset(TEXT("/Engine/BasicShapes/Cube.Cube"));
+        static ConstructorHelpers::FObjectFinder<UStaticMesh> ShellStandardAsset(TEXT("/AdastreaShips/Meshes/Station/SM_StationModule_Shell_Standard.SM_StationModule_Shell_Standard"));
+        static ConstructorHelpers::FObjectFinder<UStaticMesh> ShellLargeAsset(TEXT("/AdastreaShips/Meshes/Station/SM_StationModule_Shell_Large.SM_StationModule_Shell_Large"));
+        static ConstructorHelpers::FObjectFinder<UStaticMesh> ShellConnectorThinAsset(TEXT("/AdastreaShips/Meshes/Station/SM_StationModule_Shell_ConnectorThin.SM_StationModule_Shell_ConnectorThin"));
+        static ConstructorHelpers::FObjectFinder<UStaticMesh> ShellSolarArrayAsset(TEXT("/AdastreaShips/Meshes/Station/SM_StationModule_Shell_SolarArray.SM_StationModule_Shell_SolarArray"));
+        static ConstructorHelpers::FObjectFinder<UMaterialInterface> MatShell(TEXT("/Game/Materials/M_StationModule_Shell.M_StationModule_Shell"));
+        static ConstructorHelpers::FObjectFinder<UMaterialInterface> MatConnector(TEXT("/Game/Materials/M_StationModule_Connector.M_StationModule_Connector"));
+        static ConstructorHelpers::FObjectFinder<UMaterialInterface> MatUtility(TEXT("/Game/Materials/M_StationModule_Utility.M_StationModule_Utility"));
+        static ConstructorHelpers::FObjectFinder<UMaterialInterface> MatDefence(TEXT("/Game/Materials/M_StationModule_Defence.M_StationModule_Defence"));
+        static ConstructorHelpers::FObjectFinder<UMaterialInterface> MatSolarArray(TEXT("/Game/Materials/M_StationModule_SolarArray.M_StationModule_SolarArray"));
+
+        UStaticMesh* MeshToUse = CubeMeshAsset.Succeeded() ? CubeMeshAsset.Object : nullptr;
+        UMaterialInterface* FamilyMaterial = nullptr;
+
+        if (const FModuleMeshSpec* Spec = FindModuleMeshSpec(ModuleClass))
+        {
+            UStaticMesh* Dedicated = LoadOptionalStationMesh(Spec->DedicatedMesh);
+            if (!Dedicated)
+            {
+                Dedicated = LoadOptionalStationMesh(Spec->SharedKitMesh);
+            }
+
+            if (Dedicated)
+            {
+                MeshToUse = Dedicated;
+            }
+            else
+            {
+                UStaticMesh* Shell = nullptr;
+                switch (Spec->Shell)
+                {
+                case EModuleShell::Standard:      Shell = ShellStandardAsset.Object; break;
+                case EModuleShell::Large:         Shell = ShellLargeAsset.Object; break;
+                case EModuleShell::ConnectorThin: Shell = ShellConnectorThinAsset.Object; break;
+                case EModuleShell::SolarArray:    Shell = ShellSolarArrayAsset.Object; break;
+                default: break;
+                }
+                if (Shell)
+                {
+                    MeshToUse = Shell;
+                    switch (Spec->Family)
+                    {
+                    case EModuleFamily::Shell:      FamilyMaterial = MatShell.Object; break;
+                    case EModuleFamily::Connector:  FamilyMaterial = MatConnector.Object; break;
+                    case EModuleFamily::Utility:    FamilyMaterial = MatUtility.Object; break;
+                    case EModuleFamily::Defence:    FamilyMaterial = MatDefence.Object; break;
+                    case EModuleFamily::SolarArray: FamilyMaterial = MatSolarArray.Object; break;
+                    default: break;
+                    }
+                }
+            }
+        }
+
+        FResolvedModuleMesh Result;
+        Result.Mesh = MeshToUse;
+        Result.FamilyMaterial = FamilyMaterial;
+        return Result;
+    }
+
+    /**
+     * Apply the class default mesh. Must run for EVERY construction, not just the
+     * CDO: for native classes UE does not copy native-constructor-set subobject
+     * properties from the CDO into instances (FObjectInitializer::InitProperties only
+     * copies non-native state), so an instance whose constructor skips SetStaticMesh
+     * ends up with no mesh. The resolution itself (package probe + load) happens once
+     * per native class - normally while building its CDO on the game thread - and is
+     * cached; later constructions (spawns, async level loads) only read the cache.
+     */
+    void ApplyDefaultModuleMesh(UStaticMeshComponent* MeshComponent, const UClass* ModuleClass)
+    {
+        if (!MeshComponent || !ModuleClass)
+        {
+            return;
+        }
+
+        const UClass* NativeClass = ModuleClass;
+        while (NativeClass && !NativeClass->HasAnyClassFlags(CLASS_Native))
+        {
+            NativeClass = NativeClass->GetSuperClass();
+        }
+        const FName CacheKey = NativeClass ? NativeClass->GetFName() : NAME_None;
+
+        static FCriticalSection CacheLock;
+        static TMap<FName, FResolvedModuleMesh> Cache;
+
+        FResolvedModuleMesh Resolved;
+        bool bCached = false;
+        {
+            FScopeLock Lock(&CacheLock);
+            if (const FResolvedModuleMesh* Found = Cache.Find(CacheKey))
+            {
+                Resolved = *Found;
+                bCached = Resolved.Mesh.IsValid();
+            }
+        }
+        if (!bCached)
+        {
+            if (!IsInGameThread())
+            {
+                // Never load from the async loading thread; the CDO (built on the game
+                // thread at startup) populates the cache before any level instance.
+                return;
+            }
+            Resolved = ResolveModuleMesh(ModuleClass);
+            FScopeLock Lock(&CacheLock);
+            Cache.Add(CacheKey, Resolved);
+        }
+
+        if (UStaticMesh* Mesh = Resolved.Mesh.Get())
+        {
+            MeshComponent->SetStaticMesh(Mesh);
+        }
+        if (UMaterialInterface* Mat = Resolved.FamilyMaterial.Get())
+        {
+            MeshComponent->SetMaterial(0, Mat);
+        }
+    }
+}
 
 ASpaceStationModule::ASpaceStationModule()
 {
@@ -11,65 +256,10 @@ ASpaceStationModule::ASpaceStationModule()
     MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ModuleMesh"));
     RootComponent = MeshComponent;
 
-    // Load the cube mesh from engine basic shapes (ultimate fallback if a real
-    // shell isn't found below).
-    static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMeshAsset(TEXT("/Engine/BasicShapes/Cube.Cube"));
-    UStaticMesh* MeshToUse = CubeMeshAsset.Succeeded() ? CubeMeshAsset.Object : nullptr;
-
-    // Real shell geometry (Foundry, 2026-09-15): 4 shared shells sized to match
-    // Content/Data/StationModuleBuilderData.json's per-module grid footprint -
-    // Standard (2x2x1, most modules), Large (3x2x1, DockingBay), ConnectorThin
-    // (1x1x1, Corridor/DockingPort/Turret), and SolarArray (3x1x1, its own shell
-    // since it's the one module whose face-restricted connection is visually
-    // meaningful - see UStationEditorManager::DoesModuleFaceDirection).
-    // GetClass() here returns the most-derived class (UE sets the class pointer
-    // before running any constructor body, base included), so this one place
-    // covers every subclass without touching their 20 individual constructors.
-    static ConstructorHelpers::FObjectFinder<UStaticMesh> ShellStandardAsset(TEXT("/AdastreaShips/Meshes/Station/SM_StationModule_Shell_Standard.SM_StationModule_Shell_Standard"));
-    static ConstructorHelpers::FObjectFinder<UStaticMesh> ShellLargeAsset(TEXT("/AdastreaShips/Meshes/Station/SM_StationModule_Shell_Large.SM_StationModule_Shell_Large"));
-    static ConstructorHelpers::FObjectFinder<UStaticMesh> ShellConnectorThinAsset(TEXT("/AdastreaShips/Meshes/Station/SM_StationModule_Shell_ConnectorThin.SM_StationModule_Shell_ConnectorThin"));
-    static ConstructorHelpers::FObjectFinder<UStaticMesh> ShellSolarArrayAsset(TEXT("/AdastreaShips/Meshes/Station/SM_StationModule_Shell_SolarArray.SM_StationModule_Shell_SolarArray"));
-
-    static const TSet<FName> ConnectorThinClasses = { FName("CorridorModule"), FName("DockingPortModule"), FName("TurretModule") };
-    static const TSet<FName> LargeClasses = { FName("DockingBayModule") };
-    static const TSet<FName> SolarArrayClasses = { FName("SolarArrayModule") };
-    static const TSet<FName> StandardClasses = {
-        FName("CargoBayModule"), FName("MarketplaceModule"), FName("HabitationModule"), FName("BarracksModule"),
-        FName("ReactorModule"), FName("ProcessingModule"), FName("FabricationModule"), FName("ScienceLabModule"),
-        FName("FuelDepotModule"), FName("ShieldGeneratorModule"), FName("PhysicsLabModule"), FName("MaterialsLabModule"),
-        FName("ElectronicsLabModule"), FName("WeaponsLabModule"), FName("BiologyLabModule"),
-        // The 7 tier-4 labs - added to StationModuleBuilderData.json alongside this
-        // (they were in the runtime catalog with class_path resolving fine, just
-        // had no grid footprint entry at all, so the station editor couldn't have
-        // placed them - same [2,2,1]/"all faces" shape as their tier-1 parent labs).
-        FName("ProjectileWeaponsLab"), FName("BeamWeaponsLab"), FName("IonPropulsionLab"),
-        FName("GravMaterialsLab"), FName("EncryptionLab"), FName("OptronicsLab"), FName("CyberneticsLab")
-    };
-
-    const FName ClassFName(GetClass()->GetFName());
-    if (ConnectorThinClasses.Contains(ClassFName) && ShellConnectorThinAsset.Succeeded())
-    {
-        MeshToUse = ShellConnectorThinAsset.Object;
-    }
-    else if (LargeClasses.Contains(ClassFName) && ShellLargeAsset.Succeeded())
-    {
-        MeshToUse = ShellLargeAsset.Object;
-    }
-    else if (SolarArrayClasses.Contains(ClassFName) && ShellSolarArrayAsset.Succeeded())
-    {
-        MeshToUse = ShellSolarArrayAsset.Object;
-    }
-    else if (StandardClasses.Contains(ClassFName) && ShellStandardAsset.Succeeded())
-    {
-        MeshToUse = ShellStandardAsset.Object;
-    }
-    // Everything else (base ASpaceStationModule itself, the 3 niche research labs
-    // not yet in the builder data table, and anything else) keeps the cube.
-
-    if (MeshToUse)
-    {
-        MeshComponent->SetStaticMesh(MeshToUse);
-    }
+    // Per-class default mesh (see ApplyDefaultModuleMesh above: resolved once per
+    // class, applied on every construction). Blueprint subclasses that override
+    // ModuleMesh still win - their overrides are applied after this constructor.
+    ApplyDefaultModuleMesh(MeshComponent, GetClass());
 
     // Default values
     ModuleType = TEXT("Generic");

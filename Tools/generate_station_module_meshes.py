@@ -38,6 +38,11 @@ import generate_adastrea_assets as gen  # noqa: E402  (reuse the project's own h
 
 GRID = 400.0  # cm per grid cell, matches build_station_module_shells()
 T = 10.0      # hull plate thickness, matches build_station_module_shells()
+# 2026-09-23 review fix (Modules-A): the hull skin used to fill the whole footprint, which
+# buried every collar/window/hatch/clamp inside it and forced the port ring, cargo pods and
+# observation blister to overhang the grid cell. The skin is now inset INSET cm per side
+# so details sit proud of it while everything stays inside the footprint box.
+INSET = 30.0
 
 # Assets/FBX/generated -- same folder as SM_StationModule_Shell_*.fbx. NOTE: this is
 # computed from this script's own location rather than reusing gen.BASE, because
@@ -54,8 +59,25 @@ gen.TEXDIR = os.path.join(OUT_DIR, "Textures")
 def make_ucx_box(name, cx, cy, cz, sx, sy, sz):
     """A simple box collision hull, named for Unreal's UCX_ auto-collision convention."""
     ob = gen.box(name, sx, sy, sz, loc=(cx, cy, cz))
+    gen.sel_activate(ob)
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     ob.display_type = 'WIRE'
     return ob
+
+
+def face_collar(prefix, axis, sign, half, r, zc=0.0):
+    """Connection collar on one side face: a neck from the inset skin out to the
+    footprint boundary plus a trim ring, so neighbours' collars meet on the boundary."""
+    tag = f"{prefix}_Collar{'NSEW'[(0 if sign > 0 else 1) if axis == 0 else (3 if sign > 0 else 2)]}"
+    t_mid = sign * (half - INSET / 2)
+    t_ring = sign * (half - 8)
+    if axis == 0:
+        neck = gen.cyl(tag + "Neck", r, INSET, loc=(t_mid, 0, zc), rot=(0, math.radians(90), 0), verts=16)
+        ring = gen.torus(tag, r, 6, loc=(t_ring, 0, zc), rot=(0, math.radians(90), 0), maj=20, minr=6)
+    else:
+        neck = gen.cyl(tag + "Neck", r, INSET, loc=(0, t_mid, zc), rot=(math.radians(90), 0, 0), verts=16)
+        ring = gen.torus(tag, r, 6, loc=(0, t_ring, zc), rot=(math.radians(90), 0, 0), maj=20, minr=6)
+    return [neck, ring]
 
 
 def export_with_collision(main_obj, ucx_objs, outname):
@@ -65,6 +87,11 @@ def export_with_collision(main_obj, ucx_objs, outname):
     for u in ucx_objs:
         u.select_set(True)
     out = os.path.join(OUT_DIR, outname + '.fbx')
+    # Geometry values are centimetres: declare 1 BU = 1 cm so the FBX carries
+    # UnitScaleFactor=1 (cm). With the factory default scale_length=1.0 it wrote 100
+    # (metres) and UE imports 100x oversized at import scale 1.0 (AGENT_BOARD 2026-09-23).
+    bpy.context.scene.unit_settings.system = 'METRIC'
+    bpy.context.scene.unit_settings.scale_length = 0.01
     bpy.ops.export_scene.fbx(
         filepath=out, use_selection=True, object_types={'MESH'},
         apply_scale_options='FBX_SCALE_ALL', apply_unit_scale=True,
@@ -77,11 +104,18 @@ def export_with_collision(main_obj, ucx_objs, outname):
 def finalize_module(parts, outname, matname, ucx_specs):
     """Join render parts into one mesh (matching gen.finalize_part), build UCX_
     collision as separate un-joined objects, and export both together."""
+    # apply every part's own modifiers BEFORE joining: bpy.ops.object.join() keeps only
+    # the active (first) object's modifier stack, so the other parts' bevels were
+    # silently dropped and the first part's bevel was re-applied to the whole mesh.
+    for p in parts:
+        gen.apply_mods(p)
     joined = gen.join(parts, outname + "_Geo")
-    gen.apply_mods(joined)
     gen.clean_mesh(joined)
+    # pivot = footprint centre (the station editor places/adjacency-tests modules by
+    # actor location), not centre-of-volume, which drifts with asymmetric details
+    bpy.context.scene.cursor.location = (0, 0, 0)
     gen.sel_activate(joined)
-    bpy.ops.object.origin_set(type='ORIGIN_CENTER_OF_VOLUME')
+    bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
     gen.smart_uv(joined)
     joined.name = outname
 
@@ -112,76 +146,59 @@ def finalize_module(parts, outname, matname, ucx_specs):
 # DockingBay -- 3x2x1 cells (1200 x 800 x 400 cm): docking clamps/ports +
 # structural framing. Material: M_StationModule_Connector (it's the module
 # whose entire job is *connecting* a ship to the station).
+# The +Y face carries the berthing port; the other three faces get connection collars.
 # ----------------------------------------------------------------------------
 def build_docking_bay():
     L, W, H = 3 * GRID, 2 * GRID, 1 * GRID  # 1200, 800, 400
+    I = INSET
     parts = []
 
-    body = gen.box("DB_Body", L - T * 2, W - T * 2, H - T * 2, loc=(0, 0, 0))
-    gen.bevel(body, 18, 3)
-    parts.append(body)
-
-    skin = gen.box("DB_Skin", L, W, H, loc=(0, 0, 0))
+    skin = gen.box("DB_Skin", L - 2 * I, W - 2 * I, H - 2 * I, loc=(0, 0, 0))
     gen.bevel(skin, 22, 3)
     parts.append(skin)
 
-    # side collars on N/S/E/W so this reads as connection-grid compliant,
-    # same as build_station_module_shells()'s module_shell()
-    for axis, sign, dim in ((0, 1, L), (0, -1, L), (1, 1, W), (1, -1, W)):
-        cx = sign * (dim / 2 - 7.0) if axis == 0 else 0
-        cy = sign * (dim / 2 - 7.0) if axis == 1 else 0
-        if axis == 0:
-            collar = gen.torus(f"DB_Collar{'N' if sign > 0 else 'S'}",
-                                min(W, H) * 0.32, 8, loc=(cx, 0, 0),
-                                rot=(0, math.radians(90), 0), maj=20, minr=6)
-        else:
-            collar = gen.torus(f"DB_Collar{'E' if sign > 0 else 'W'}",
-                                min(L, H) * 0.32, 8, loc=(0, cy, 0),
-                                rot=(math.radians(90), 0, 0), maj=20, minr=6)
-        parts.append(collar)
+    parts += face_collar("DB", 0, 1, L / 2, min(W, H) * 0.32)
+    parts += face_collar("DB", 0, -1, L / 2, min(W, H) * 0.32)
+    parts += face_collar("DB", 1, -1, W / 2, min(L, H) * 0.32)
 
-    # the actual berthing port: a ring collar proud of the +Y face with a
-    # recessed tunnel, this is the face a ship docks against
-    port_y = W / 2 + 4
-    port_ring = gen.torus("DB_PortRing", H * 0.34, 16, loc=(0, port_y, 0),
-                           rot=(math.radians(90), 0, 0), maj=24, minr=8)
-    parts.append(port_ring)
-    port_collar = gen.cyl("DB_PortCollar", H * 0.30, 40, loc=(0, port_y + 15, 0),
+    # the berthing port on +Y: collar block from the skin to the boundary with a
+    # big ring on its face (was overhanging the footprint by 39 cm)
+    port_collar = gen.cyl("DB_PortCollar", H * 0.30, I, loc=(0, W / 2 - I / 2, 0),
                            rot=(math.radians(90), 0, 0), verts=20)
     parts.append(port_collar)
+    port_ring = gen.torus("DB_PortRing", H * 0.34, 8, loc=(0, W / 2 - 10, 0),
+                           rot=(math.radians(90), 0, 0), maj=24, minr=8)
+    parts.append(port_ring)
 
-    # two mechanical clamp arms reaching from the body toward the port, the
-    # docking-clamp read the task calls for
+    # two mechanical clamp arms on the roof reaching toward the port (were buried
+    # inside the skin)
+    top = H / 2 - I
     for sign in (-1, 1):
         arm_x = sign * (H * 0.55)
         arm = gen.box(f"DB_ClampArm{'R' if sign > 0 else 'L'}",
-                       26, W * 0.55, 30, loc=(arm_x, W * 0.12, H * 0.32),
+                       26, W * 0.55, 26, loc=(arm_x, W * 0.12, top + 13),
                        rot=(0, 0, math.radians(sign * 12)))
         gen.bevel(arm, 6, 2)
         parts.append(arm)
         claw = gen.box(f"DB_ClampClaw{'R' if sign > 0 else 'L'}",
-                        40, 30, 46, loc=(arm_x * 0.6, W * 0.42, H * 0.30))
+                        40, 30, 26, loc=(arm_x * 0.6, W * 0.42, top + 13))
         gen.bevel(claw, 5, 2)
         parts.append(claw)
 
-    # X4-style structural girders on the flanks
+    # X4-style structural girders on the flanks (now proud of the inset skin)
     for sign in (-1, 1):
-        girder = gen.box(f"DB_Girder{'R' if sign > 0 else 'L'}", 16, W - 60, 16,
-                          loc=(sign * (L / 2 - 30), 0, -H / 2 + 25),
-                          rot=(0, 0, 0))
-        parts.append(girder)
-        girder_top = gen.box(f"DB_GirderTop{'R' if sign > 0 else 'L'}", 16, W - 60, 16,
-                              loc=(sign * (L / 2 - 30), 0, H / 2 - 25))
-        parts.append(girder_top)
+        for gz in (-H / 2 + I + 25, H / 2 - I - 25):
+            girder = gen.box(f"DB_Girder{'R' if sign > 0 else 'L'}{int(gz)}", 16, W - 2 * I - 60, 16,
+                              loc=(sign * (L / 2 - I), 0, gz))
+            parts.append(girder)
 
-    # a few vents/panel greebles, matching module_shell's dressing
     for i, (gx, gy) in enumerate([(-L * 0.28, -W * 0.25), (L * 0.28, -W * 0.25)]):
-        vent = gen.box(f"DB_Vent{i}", 46, 46, 6, loc=(gx, gy, H / 2 - 3))
+        vent = gen.box(f"DB_Vent{i}", 46, 46, 6, loc=(gx, gy, top + 3))
         parts.append(vent)
 
     ucx_specs = [
-        (0, 0, 0, L, W, H),                              # main body
-        (0, port_y + 7, 0, H * 0.65, 34, H * 0.65),        # port collar bulge
+        (0, 0, 0, L - 2 * I, W - 2 * I, H - 2 * I),        # main body
+        (0, W / 2 - I / 2, 0, H * 0.65, I, H * 0.65),       # port collar block
     ]
     return finalize_module(parts, "SM_StationModule_DockingBay_01",
                             "M_StationModule_Connector", ucx_specs)
@@ -190,67 +207,55 @@ def build_docking_bay():
 # ----------------------------------------------------------------------------
 # CargoBay -- 2x2x1 cells (800 x 800 x 400 cm): blocky container massing,
 # hatches, corrugated paneling. Material: M_StationModule_Utility (industrial
-# / functional storage read).
+# / functional storage read). Skin is lowered 20 cm so the roof containers fit
+# inside the 400 cm cell height (they used to overhang it by 59 cm).
 # ----------------------------------------------------------------------------
 def build_cargo_bay():
     L, W, H = 2 * GRID, 2 * GRID, 1 * GRID  # 800, 800, 400
+    I = INSET
+    zc, sh = -20.0, H - 2 * I - 40            # skin centre / height -> z -170..130
+    top = zc + sh / 2
     parts = []
 
-    body = gen.box("CB_Body", L - T * 2, W - T * 2, H - T * 2, loc=(0, 0, 0))
-    gen.bevel(body, 14, 2)
-    parts.append(body)
-
-    skin = gen.box("CB_Skin", L, W, H, loc=(0, 0, 0))
+    skin = gen.box("CB_Skin", L - 2 * I, W - 2 * I, sh, loc=(0, 0, zc))
     gen.bevel(skin, 18, 2)
     parts.append(skin)
 
-    for axis, sign, dim in ((0, 1, L), (0, -1, L), (1, 1, W), (1, -1, W)):
-        cx = sign * (dim / 2 - 7.0) if axis == 0 else 0
-        cy = sign * (dim / 2 - 7.0) if axis == 1 else 0
-        if axis == 0:
-            collar = gen.torus(f"CB_Collar{'N' if sign > 0 else 'S'}",
-                                min(W, H) * 0.32, 8, loc=(cx, 0, 0),
-                                rot=(0, math.radians(90), 0), maj=20, minr=6)
-        else:
-            collar = gen.torus(f"CB_Collar{'E' if sign > 0 else 'W'}",
-                                min(L, H) * 0.32, 8, loc=(0, cy, 0),
-                                rot=(math.radians(90), 0, 0), maj=20, minr=6)
-        parts.append(collar)
+    for axis, sign in ((0, 1), (0, -1), (1, 1), (1, -1)):
+        parts += face_collar("CB", axis, sign, (L if axis == 0 else W) / 2, min(L, H) * 0.32, zc)
 
-    # blocky "stacked container" massing bulging off the +Z face -- reads as
-    # cargo pods bolted onto the module rather than a bare box
+    # stacked cargo pods on the roof
     for i, (ox, oy) in enumerate([(-L * 0.22, -W * 0.20), (L * 0.20, -W * 0.05),
                                     (-L * 0.05, W * 0.25)]):
         cont = gen.box(f"CB_Container{i}", L * 0.34, W * 0.30, 60,
-                        loc=(ox, oy, H / 2 + 26))
+                        loc=(ox, oy, top + 30))
         gen.bevel(cont, 5, 2)
         parts.append(cont)
-        # corrugation ribs across the long side of each container
         for r in range(4):
             rib = gen.box(f"CB_ContainerRib{i}_{r}", 6, W * 0.30 - 10, 4,
-                           loc=(ox - L * 0.15 + r * (L * 0.30 / 3), oy, H / 2 + 26 + 31))
+                           loc=(ox - L * 0.15 + r * (L * 0.30 / 3), oy, top + 61))
             parts.append(rib)
 
-    # cargo hatch doors flush on the -Y face (paired sliding-door look)
+    # paired cargo hatch doors on the -Y face, either side of the collar (they were
+    # coplanar with the old full-size skin and z-fought)
+    face_y = -(W / 2 - I)
     for sign in (-1, 1):
-        hatch = gen.box(f"CB_Hatch{'L' if sign < 0 else 'R'}", L * 0.34, 6, H * 0.55,
-                         loc=(sign * L * 0.19, -W / 2 + 3, -H * 0.05))
+        hx = sign * 236
+        hatch = gen.box(f"CB_Hatch{'L' if sign < 0 else 'R'}", 176, 6, H * 0.55,
+                         loc=(hx, face_y - 3, zc))
         parts.append(hatch)
         for r in range(3):
-            rib = gen.box(f"CB_HatchRib{'L' if sign < 0 else 'R'}_{r}",
-                           L * 0.30, 3, 4,
-                           loc=(sign * L * 0.19, -W / 2 + 6.5,
-                                -H * 0.05 - H * 0.2 + r * (H * 0.55 / 3)))
+            rib = gen.box(f"CB_HatchRib{'L' if sign < 0 else 'R'}_{r}", 160, 3, 4,
+                           loc=(hx, face_y - 7.5, zc - H * 0.2 + r * (H * 0.55 / 3)))
             parts.append(rib)
 
-    # a couple of exterior vent/paneling greebles
     for i, (gx, gy) in enumerate([(-L * 0.3, W * 0.32), (L * 0.3, W * 0.32)]):
-        vent = gen.box(f"CB_Vent{i}", 40, 40, 6, loc=(gx, gy, H / 2 - 3))
+        vent = gen.box(f"CB_Vent{i}", 40, 40, 6, loc=(gx, gy, top + 3))
         parts.append(vent)
 
     ucx_specs = [
-        (0, 0, 0, L, W, H),                           # main body
-        (0, 0, H / 2 + 26, L * 0.94, W * 0.80, 60),   # stacked-container bulge
+        (0, 0, zc, L - 2 * I, W - 2 * I, sh),           # main body
+        (0, 0, top + 30, L * 0.9, W * 0.80, 60),         # stacked-container bulge
     ]
     return finalize_module(parts, "SM_StationModule_CargoBay_01",
                             "M_StationModule_Utility", ucx_specs)
@@ -258,68 +263,53 @@ def build_cargo_bay():
 
 # ----------------------------------------------------------------------------
 # Market -- 2x2x1 cells (800 x 800 x 400 cm): commerce/habitation read --
-# windows, finished paneling, an observation blister.
+# windows, finished paneling, an observation dome.
 # Material: M_StationModule_Shell (the most "finished/habitation" texture set).
+# The observation blister moved from the +X face (86 cm overhang, and it sat on top of
+# the N collar) to a roof dome, so all four side faces keep their connection collars.
 # ----------------------------------------------------------------------------
 def build_market():
     L, W, H = 2 * GRID, 2 * GRID, 1 * GRID  # 800, 800, 400
+    I = INSET
+    zc, sh = -35.0, 270.0                      # skin z -170..100, dome above
+    top = zc + sh / 2
     parts = []
 
-    body = gen.box("MK_Body", L - T * 2, W - T * 2, H - T * 2, loc=(0, 0, 0))
-    gen.bevel(body, 20, 3)
-    parts.append(body)
-
-    skin = gen.box("MK_Skin", L, W, H, loc=(0, 0, 0))
+    skin = gen.box("MK_Skin", L - 2 * I, W - 2 * I, sh, loc=(0, 0, zc))
     gen.bevel(skin, 26, 3)
     parts.append(skin)
 
-    for axis, sign, dim in ((0, 1, L), (0, -1, L), (1, 1, W), (1, -1, W)):
-        cx = sign * (dim / 2 - 7.0) if axis == 0 else 0
-        cy = sign * (dim / 2 - 7.0) if axis == 1 else 0
-        if axis == 0:
-            collar = gen.torus(f"MK_Collar{'N' if sign > 0 else 'S'}",
-                                min(W, H) * 0.32, 8, loc=(cx, 0, 0),
-                                rot=(0, math.radians(90), 0), maj=20, minr=6)
-        else:
-            collar = gen.torus(f"MK_Collar{'E' if sign > 0 else 'W'}",
-                                min(L, H) * 0.32, 8, loc=(0, cy, 0),
-                                rot=(math.radians(90), 0, 0), maj=20, minr=6)
-        parts.append(collar)
+    for axis, sign in ((0, 1), (0, -1), (1, 1), (1, -1)):
+        parts += face_collar("MK", axis, sign, (L if axis == 0 else W) / 2, min(L, H) * 0.30, zc)
 
-    # a row of recessed window strips on two opposite long faces -- inset
-    # boxes (not booleans, this kit avoids destructive booleans on the hero
-    # shape) so they read as glazed panels once the emissive T_*_E map lands
+    # glazed window panels on the two long faces, clear of the collar
+    face = W / 2 - I
     for sign in (-1, 1):
-        for i in range(3):
-            wy = sign * (W / 2 - 4)
-            wx = -L * 0.28 + i * (L * 0.28)
-            win = gen.box(f"MK_Window{'N' if sign > 0 else 'S'}{i}", 70, 8, 46,
-                           loc=(wx, wy, 20))
-            parts.append(win)
+        for i, wx in enumerate((-280, -180, 180, 280)):
             frame = gen.box(f"MK_WindowFrame{'N' if sign > 0 else 'S'}{i}", 78, 6, 54,
-                             loc=(wx, wy - sign * 2, 20))
+                             loc=(wx, sign * (face + 1), 20))
             parts.append(frame)
+            win = gen.box(f"MK_Window{'N' if sign > 0 else 'S'}{i}", 70, 8, 46,
+                           loc=(wx, sign * (face + 3), 20))
+            parts.append(win)
 
-    # observation blister -- a dome bulging off the +X face, the "display
-    # element" the task calls for (an observation deck / storefront window)
-    blister = gen.sphere("MK_Blister", H * 0.42, loc=(L / 2 - 6, 0, 0), verts=20)
-    blister.scale = (0.55, 1.0, 1.0)
-    gen.sel_activate(blister)
+    # observation dome on the roof
+    dome = gen.sphere("MK_Blister", H * 0.42, loc=(0, 0, top), verts=20)
+    dome.scale = (1.0, 1.0, 0.55)
+    gen.sel_activate(dome)
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-    parts.append(blister)
-    blister_ring = gen.torus("MK_BlisterRing", H * 0.42, 8, loc=(L / 2 - 6, 0, 0),
-                              rot=(0, math.radians(90), 0), maj=20, minr=6)
-    parts.append(blister_ring)
+    parts.append(dome)
+    dome_ring = gen.torus("MK_BlisterRing", H * 0.42, 6, loc=(0, 0, top), maj=24, minr=6)
+    parts.append(dome_ring)
 
-    # finished paneling seams -- thin raised trim lines instead of bare bevel
-    for i in range(2):
-        seam = gen.box(f"MK_Seam{i}", L - 40, 4, 4,
-                        loc=(0, -W / 2 + 40 + i * (W - 80), H * 0.30))
+    # finished paneling seams along the long faces
+    for sign in (-1, 1):
+        seam = gen.box(f"MK_Seam{sign}", L - 2 * I - 40, 4, 4, loc=(0, sign * (face + 2), 70))
         parts.append(seam)
 
     ucx_specs = [
-        (0, 0, 0, L, W, H),                          # main body
-        (L / 2 - 6, 0, 0, H * 0.55, H * 0.9, H * 0.9),  # observation blister
+        (0, 0, zc, L - 2 * I, W - 2 * I, sh),                        # main body
+        (0, 0, top + H * 0.115, H * 0.76, H * 0.76, H * 0.23),       # roof dome
     ]
     return finalize_module(parts, "SM_StationModule_Market_01",
                             "M_StationModule_Shell", ucx_specs)
