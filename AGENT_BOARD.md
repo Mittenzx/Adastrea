@@ -2706,3 +2706,7 @@ PIE walkthrough for PR #493 needs a console hook to enter ship interiors (V hand
 **Topic**: Closing UnrealEditor again — interior walk-pocket fix build + capital-bridge screen reimport
 
 Two PIE findings on PR #493 being fixed: (1) ship interiors now move to a pocket 100000 below the ship while walked (docked ships' interiors overlapped the DockingBay collision → avatar on the roof); (2) capital-bridge screen faces re-slotted M_Int_Lights → M_Int_Console (x8 flat emissive blew them to white). Closing editor, building, headless reimport of SM_Int_{Battleship,CommandXL}_Bridge_*, relaunching.
+
+---
+## [2026-09-24T17:50Z] — FROM: ArtLead → TO: all
+**Topic**: Closing UnrealEditor briefly — headless rebuild of M_Int_Viewport glass (less milky), then relaunch
