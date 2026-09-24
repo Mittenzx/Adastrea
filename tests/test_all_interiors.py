@@ -31,7 +31,22 @@ EXPECTED_INTERIORS = [
     "SM_Int_CommandBridge_Shell",
     "SM_Int_CommandBridge_Stations",
     "SM_Int_CommandBridge_Viewport",
+    # Bespoke corvette bridge (CorvetteBridge family)
+    "SM_Int_Corvette_Bridge_Console",
+    "SM_Int_Corvette_Bridge_Deck",
+    "SM_Int_Corvette_Bridge_Hatch",
+    "SM_Int_Corvette_Bridge_Lights",
+    "SM_Int_Corvette_Bridge_Shell",
+    "SM_Int_Corvette_Bridge_Stations",
+    "SM_Int_Corvette_Bridge_Viewport",
     "SM_Int_Fighter_Cabin",
+    # v3 fighter cabin zones (Fighter family) + the retired v1 pair still on disk
+    "SM_Int_Fighter_Cabin_Console",
+    "SM_Int_Fighter_Cabin_Lights",
+    "SM_Int_Fighter_Cabin_Shell",
+    "SM_Int_Fighter_Cabin_Viewport",
+    "SM_Int_Fighter_Cockpit",
+    "SM_Int_Fighter_EmptyRoom",
     "SM_Int_Freighter_CrewQuarters",
     "SM_Int_Freighter_CrewQuarters_Bunks",
     "SM_Int_Freighter_CrewQuarters_Desks",
@@ -54,7 +69,35 @@ EXPECTED_INTERIORS = [
     "SM_Int_Standard_Airlock",
     "SM_Int_Standard_Corridor",
     "SM_Int_Xenomorph_AlienHold",
+    # Capital bridges (BattleshipBridge / CommandXLBridge families), Roster art-gap
+    # pass; imported by Tools/import_art_gap_assets.py.
+    "SM_Int_Battleship_Bridge_Console",
+    "SM_Int_Battleship_Bridge_Deck",
+    "SM_Int_Battleship_Bridge_Hatch",
+    "SM_Int_Battleship_Bridge_Lights",
+    "SM_Int_Battleship_Bridge_Shell",
+    "SM_Int_Battleship_Bridge_Stations",
+    "SM_Int_Battleship_Bridge_Viewport",
+    "SM_Int_CommandXL_Bridge_Console",
+    "SM_Int_CommandXL_Bridge_Deck",
+    "SM_Int_CommandXL_Bridge_Hatch",
+    "SM_Int_CommandXL_Bridge_Lights",
+    "SM_Int_CommandXL_Bridge_Shell",
+    "SM_Int_CommandXL_Bridge_Stations",
+    "SM_Int_CommandXL_Bridge_Viewport",
 ]
+
+# C++ family string (MountInteriorParts) -> mesh prefix. A family that isn't in
+# the C++ yet is simply never looked up.
+FAMILY_PREFIX = {
+    "CommandBridge": "SM_Int_CommandBridge",
+    "CorvetteBridge": "SM_Int_Corvette_Bridge",
+    "CrewQuarters": "SM_Int_Freighter_CrewQuarters",
+    "Hab": "SM_Int_Generationship_Hab",
+    "Fighter": "SM_Int_Fighter_Cabin",
+    "BattleshipBridge": "SM_Int_Battleship_Bridge",
+    "CommandXLBridge": "SM_Int_CommandXL_Bridge",
+}
 
 # Companion parts the C++ mounts per shell family (build from the source to stay
 # in sync, but fall back to this if the source read fails).
@@ -65,15 +108,19 @@ def _cpp():
 
 
 def _families_from_cpp():
-    """Return {family: [part,...]} parsed from MountInteriorParts."""
+    """Return {family: [part,...]} parsed from MountInteriorParts.
+
+    Handles combined branches such as
+    'if (Family == TEXT("CommandBridge") || Family == TEXT("CorvetteBridge"))',
+    which the old single-family regex silently skipped."""
     src = _cpp()
-    # Find each 'if (Family == TEXT("X"))' block and collect TryPart(TEXT("Y")) inside it.
     families = {}
     blocks = re.findall(
-        r'if \(Family == TEXT\("(\w+)"\)\)\s*\{(.*?)\n    \}' , src, re.DOTALL)
-    for fam, body in blocks:
+        r'if \(((?:\s*(?:\|\|)?\s*Family == TEXT\("\w+"\))+)\)\s*\{(.*?)\n    \}', src, re.DOTALL)
+    for cond, body in blocks:
         parts = re.findall(r'TryPart\(TEXT\("(\w+)"\)\)', body)
-        families[fam] = parts
+        for fam in re.findall(r'Family == TEXT\("(\w+)"\)', cond):
+            families[fam] = parts
     return families
 
 
@@ -103,12 +150,8 @@ class TestEachInteriorIsEitherShellOrPart:
 
     def _shell_families(self):
         """Return {(prefix, family)} that the C++ mounts parts for."""
-        pref = {
-            "CommandBridge": "/AdastreaShips/Meshes/Interiors/SM_Int_CommandBridge",
-            "CrewQuarters": "/AdastreaShips/Meshes/Interiors/SM_Int_Freighter_CrewQuarters",
-            "Hab": "/AdastreaShips/Meshes/Interiors/SM_Int_Generationship_Hab",
-        }
-        return pref
+        return {fam: "/AdastreaShips/Meshes/Interiors/" + prefix
+                for fam, prefix in FAMILY_PREFIX.items()}
 
     def test_every_companion_part_has_a_known_family_prefix(self):
         """A companion part (name with _<Part> suffix) must belong to a family the
@@ -135,13 +178,8 @@ class TestCompanionAssetsExistForMountedParts:
     def test_mounted_parts_have_assets(self):
         families = _families_from_cpp()
         assert families, "Could not parse families from C++"
-        shell_to_prefix = {
-            "CommandBridge": "SM_Int_CommandBridge",
-            "CrewQuarters": "SM_Int_Freighter_CrewQuarters",
-            "Hab": "SM_Int_Generationship_Hab",
-        }
         for family, parts in families.items():
-            base = shell_to_prefix.get(family)
+            base = FAMILY_PREFIX.get(family)
             assert base, f"Family {family} has no known mesh prefix"
             for part in parts:
                 asset_name = f"{base}_{part}"

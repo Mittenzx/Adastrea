@@ -16,6 +16,12 @@
 #include "Materials/Material.h"
 #include "AdastreaLog.h"
 
+namespace
+{
+    // Defined next to ASpaceshipInterior::ApplyInteriorMaterials().
+    void ApplyKitMaterialsBySlot(UStaticMeshComponent* Comp);
+}
+
 ASpaceshipInterior::ASpaceshipInterior()
 {
     PrimaryActorTick.bCanEverTick = false;
@@ -276,6 +282,14 @@ void ASpaceshipInterior::ConfigureInterior(UStaticMesh* ShellMesh, EShipInterior
                 Prefix = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_Corvette_Bridge");
                 FamilyString = TEXT("CorvetteBridge");
                 break;
+            case EShipInteriorFamily::BattleshipBridge:
+                Prefix = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_Battleship_Bridge");
+                FamilyString = TEXT("BattleshipBridge");
+                break;
+            case EShipInteriorFamily::CommandXLBridge:
+                Prefix = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_CommandXL_Bridge");
+                FamilyString = TEXT("CommandXLBridge");
+                break;
             case EShipInteriorFamily::CrewQuarters:
                 Prefix = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_Freighter_CrewQuarters");
                 FamilyString = TEXT("CrewQuarters");
@@ -444,6 +458,7 @@ void ASpaceshipInterior::MountInteriorPart(const FString& PartPath, const FVecto
     UStaticMeshComponent* Comp = NewObject<UStaticMeshComponent>(this);
     Comp->SetupAttachment(SceneRoot);
     Comp->SetStaticMesh(PartMesh);
+    ApplyKitMaterialsBySlot(Comp); // parts ship with WorldGridMaterial slots too
     Comp->SetRelativeScale3D(Scale3D);
     Comp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     Comp->SetHiddenInGame(true); // hidden until reveal
@@ -465,7 +480,8 @@ void ASpaceshipInterior::MountInteriorParts(FString Prefix, FString Family, cons
         };
 
     // Mount every known kit part for this family, skipping any that don't exist.
-    if (Family == TEXT("CommandBridge") || Family == TEXT("CorvetteBridge"))
+    if (Family == TEXT("CommandBridge") || Family == TEXT("CorvetteBridge")
+        || Family == TEXT("BattleshipBridge") || Family == TEXT("CommandXLBridge"))
     {
         TryPart(TEXT("Console"));
         TryPart(TEXT("Deck"));
@@ -505,61 +521,92 @@ void ASpaceshipInterior::MountInteriorParts(FString Prefix, FString Family, cons
     }
 }
 
-void ASpaceshipInterior::ApplyInteriorMaterials()
+namespace
 {
-    if (!InteriorMesh)
+    // Slot name -> kit material path, applied to the interior shell AND to every
+    // mounted companion part (Viewport/Console/Deck/...). Companion parts used to
+    // skip this entirely and rendered on the exported WorldGridMaterial.
+    // Optional second path = fallback when the first isn't authored/imported yet.
+    struct FInteriorSlotMaterial
     {
-        return;
-    }
-    const UStaticMesh* Mesh = InteriorMesh->GetStaticMesh();
-    if (!Mesh)
-    {
-        return;
-    }
-
-    // Slot name -> kit material path. The exported meshes ship with WorldGridMaterial
-    // on every slot, so the slot NAME (M_Int_Shell, M_Int_Deck, ...) is the reliable
-    // key, not the current material's type. Only slots present on THIS mesh get
-    // loaded, so a simple shell (e.g. the fighter empty room, 1-2 slots) doesn't pay
-    // for loading all twelve kit materials.
-    static const TPair<FName, const TCHAR*> SlotMaterials[] = {
-        { TEXT("M_Int_Shell"),    TEXT("/AdastreaShips/Materials/Interiors/M_Int_Shell") },
-        { TEXT("M_Int_Deck"),     TEXT("/AdastreaShips/Materials/Interiors/M_Int_Deck") },
-        { TEXT("M_Int_Console"),  TEXT("/AdastreaShips/Materials/Interiors/M_Int_Console") },
-        { TEXT("M_Int_Lights"),   TEXT("/AdastreaShips/Materials/Interiors/M_Int_Lights") },
-        { TEXT("M_Int_Vents"),    TEXT("/AdastreaShips/Materials/Interiors/M_Int_Vents") },
-        { TEXT("M_Int_Stations"), TEXT("/AdastreaShips/Materials/Interiors/M_Int_Stations") },
-        { TEXT("M_Int_Viewport"), TEXT("/AdastreaShips/Materials/Interiors/M_Int_Viewport") },
-        { TEXT("M_Int_Bunks"),    TEXT("/AdastreaShips/Materials/Interiors/M_Int_Bunks") },
-        { TEXT("M_Int_Desks"),    TEXT("/AdastreaShips/Materials/Interiors/M_Int_Desks") },
-        { TEXT("M_Int_Galley"),   TEXT("/AdastreaShips/Materials/Interiors/M_Int_Galley") },
-        { TEXT("M_Int_Mess"),     TEXT("/AdastreaShips/Materials/Interiors/M_Int_Mess") },
-        { TEXT("M_Int_Hatch"),    TEXT("/AdastreaShips/Materials/Interiors/M_Int_Hatch") },
-        // Fighter cockpit uses an M_Interior_* slot name; map its shell slot too.
-        { TEXT("M_Interior_Cockpit"), TEXT("/AdastreaShips/Materials/Interiors/M_Int_Shell") },
-        // SM_Int_Freighter_EngineRoom's only slot is M_Interior_Eng, which has no
-        // bespoke material yet (known issue: reads flat grey without this). Reuse
-        // the shell material as a stand-in until a real engineering-bay material
-        // is authored, rather than leave it on the exported placeholder grid material.
-        { TEXT("M_Interior_Eng"), TEXT("/AdastreaShips/Materials/Interiors/M_Int_Shell") },
-        // SM_Int_Generationship_Hab's slot is M_Interior_Hab; same gap, same stand-in.
-        { TEXT("M_Interior_Hab"), TEXT("/AdastreaShips/Materials/Interiors/M_Int_Shell") },
+        const TCHAR* Slot;
+        const TCHAR* Material;
+        const TCHAR* Fallback;
     };
 
-    for (const TPair<FName, const TCHAR*>& Entry : SlotMaterials)
+    void ApplyKitMaterialsBySlot(UStaticMeshComponent* Comp)
     {
-        if (InteriorMesh->GetMaterialByName(Entry.Key) == nullptr)
+        if (!Comp || !Comp->GetStaticMesh())
         {
-            continue; // this slot doesn't exist on this mesh
+            return;
         }
-        if (UMaterialInterface* Mat = LoadObject<UMaterialInterface>(nullptr, Entry.Value))
+
+        // First path: textured instance of M_IntSurface_Oriented built by
+        // Tools/import_art_gap_assets.py --interiors per Assets/Textures/generated/
+        // interiors/MATERIAL_MAPPING.md. Fallback: the legacy flat-colour kit material.
+        static const FInteriorSlotMaterial SlotMaterials[] = {
+            { TEXT("M_Int_Shell"),    TEXT("/AdastreaShips/Materials/Interiors/MI_Int_Shell"),    TEXT("/AdastreaShips/Materials/Interiors/M_Int_Shell") },
+            { TEXT("M_Int_Deck"),     TEXT("/AdastreaShips/Materials/Interiors/MI_Int_Deck"),     TEXT("/AdastreaShips/Materials/Interiors/M_Int_Deck") },
+            { TEXT("M_Int_Console"),  TEXT("/AdastreaShips/Materials/Interiors/MI_Int_Console"),  TEXT("/AdastreaShips/Materials/Interiors/M_Int_Console") },
+            { TEXT("M_Int_Lights"),   TEXT("/AdastreaShips/Materials/Interiors/M_Int_Lights"),    nullptr },
+            { TEXT("M_Int_Vents"),    TEXT("/AdastreaShips/Materials/Interiors/MI_Int_Vents"),    TEXT("/AdastreaShips/Materials/Interiors/M_Int_Vents") },
+            { TEXT("M_Int_Stations"), TEXT("/AdastreaShips/Materials/Interiors/MI_Int_Stations"), TEXT("/AdastreaShips/Materials/Interiors/M_Int_Stations") },
+            // Translucent glass (T_Int_Glass set, rebuilt in place).
+            { TEXT("M_Int_Viewport"), TEXT("/AdastreaShips/Materials/Interiors/M_Int_Viewport"),  nullptr },
+            { TEXT("M_Int_Bunks"),    TEXT("/AdastreaShips/Materials/Interiors/MI_Int_Bunks"),    TEXT("/AdastreaShips/Materials/Interiors/M_Int_Bunks") },
+            { TEXT("M_Int_Desks"),    TEXT("/AdastreaShips/Materials/Interiors/MI_Int_Desks"),    TEXT("/AdastreaShips/Materials/Interiors/M_Int_Desks") },
+            { TEXT("M_Int_Galley"),   TEXT("/AdastreaShips/Materials/Interiors/MI_Int_Galley"),   TEXT("/AdastreaShips/Materials/Interiors/M_Int_Galley") },
+            { TEXT("M_Int_Mess"),     TEXT("/AdastreaShips/Materials/Interiors/MI_Int_Mess"),     TEXT("/AdastreaShips/Materials/Interiors/M_Int_Mess") },
+            { TEXT("M_Int_Hatch"),    TEXT("/AdastreaShips/Materials/Interiors/MI_Int_Hatch"),    TEXT("/AdastreaShips/Materials/Interiors/M_Int_Hatch") },
+            // Fighter cockpit uses an M_Interior_* slot name.
+            { TEXT("M_Interior_Cockpit"), TEXT("/AdastreaShips/Materials/Interiors/MI_Interior_Cockpit"), TEXT("/AdastreaShips/Materials/Interiors/M_Int_Shell") },
+            // SM_Int_Freighter_EngineRoom's only slot: textured engineering bay
+            // (EngGrate floor / EngWall walls / ShipCeiling), was flat grey.
+            { TEXT("M_Interior_Eng"), TEXT("/AdastreaShips/Materials/Interiors/MI_Interior_Eng"), TEXT("/AdastreaShips/Materials/Interiors/M_Int_Shell") },
+            // Generationship Hab; Corridor/Airlock share this slot name and are
+            // redirected to MI_Interior_Corridor below.
+            { TEXT("M_Interior_Hab"), TEXT("/AdastreaShips/Materials/Interiors/MI_Interior_Hab"), TEXT("/AdastreaShips/Materials/Interiors/M_Int_Shell") },
+        };
+
+        for (const FInteriorSlotMaterial& Entry : SlotMaterials)
         {
-            InteriorMesh->SetMaterialByName(Entry.Key, Mat);
+            const FName SlotName(Entry.Slot);
+            if (Comp->GetMaterialIndex(SlotName) == INDEX_NONE)
+            {
+                continue; // this slot doesn't exist on this mesh
+            }
+            const TCHAR* MaterialPath = Entry.Material;
+            if (SlotName == FName(TEXT("M_Interior_Hab")))
+            {
+                const FString MeshName = Comp->GetStaticMesh()->GetName();
+                if (MeshName.Contains(TEXT("Corridor")) || MeshName.Contains(TEXT("Airlock")))
+                {
+                    MaterialPath = TEXT("/AdastreaShips/Materials/Interiors/MI_Interior_Corridor");
+                }
+            }
+            UMaterialInterface* Mat = LoadObject<UMaterialInterface>(nullptr, MaterialPath, nullptr, LOAD_NoWarn | LOAD_Quiet);
+            if (!Mat && Entry.Fallback)
+            {
+                Mat = LoadObject<UMaterialInterface>(nullptr, Entry.Fallback, nullptr, LOAD_NoWarn | LOAD_Quiet);
+            }
+            if (Mat)
+            {
+                Comp->SetMaterialByName(SlotName, Mat);
+            }
         }
     }
+}
 
+void ASpaceshipInterior::ApplyInteriorMaterials()
+{
+    if (!InteriorMesh || !InteriorMesh->GetStaticMesh())
+    {
+        return;
+    }
+    ApplyKitMaterialsBySlot(InteriorMesh);
     UE_LOG(LogAdastrea, Log, TEXT("Interior %s materials applied by slot name."), *GetName());
 }
+
 
 void ASpaceshipInterior::FitVolumeToMesh()
 {
