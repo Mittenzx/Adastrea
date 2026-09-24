@@ -66,9 +66,9 @@ def qa_one(obj_path):
         budget = 3000   # space objects & large props (comms tower, fuel cell, satellite)
     elif "Dome" in name or "Skybox" in name or "Backdrop" in name:
         budget = 20000  # large background environment shells seen from everywhere;
-                        # the generic 1000 default wrongly flagged SM_StarDome_Dense
-                        # (16128 tris) as over-budget when it's actually reasonable
-                        # for a dome meant to surround the whole playable volume.
+                        # (SM_StarDome_Dense itself was retopo'd 2026-09-23 from
+                        # 16,128 to 960 tris -- stars live in the texture -- so it
+                        # now also fits the generic 1,000 budget.)
     else:
         budget = 1000
     ntris = len(faces)
@@ -98,6 +98,12 @@ def qa_one(obj_path):
     # detail (canted exhausts, antenna arrays, greeble cladding) — mirror
     # symmetry is not a meaningful pass/fail for them.
     if "_Assembled" in name:
+        is_primary = False
+    # Interior kit parts (SM_Int_*) are rooms, not hulls: a bridge is front/back
+    # asymmetric by design (helm at +X, hatch at -X per the ASpaceshipInterior
+    # trigger/entry contract), and "SM_Int_*_Stations" only matched "Station"
+    # by accident of naming.
+    if name.startswith("SM_Int_"):
         is_primary = False
     if is_primary:
         pts = {(round(x,1), round(y,1), round(z,1)): True for x,y,z in verts}

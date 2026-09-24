@@ -148,7 +148,7 @@ Procedurally authors the whole 3D kit:
 
 ### 5.4 QA gates
 - `pytest` — **128 passing** (run `python -m pytest`).
-- `Tools/qa_assets.py` — numeric per-asset checks (tri budget, degenerate faces, bounds cm, symmetry, UV presence, non-empty). **One known pre-existing failure**: `SM_StarDome_Dense` tri budget 16128 vs 1000 (unrelated to ships).
+- `Tools/qa_assets.py` — numeric per-asset checks (tri budget, degenerate faces, bounds cm, symmetry, UV presence, non-empty). `SM_StarDome_Dense` was retopo'd 2026-09-23 to 960 tris (stars live in `T_Starfield.png`; `Tools/gen_dense_dome.py`), so its old tri-budget failure is gone. Remaining known failures are the Nav_NavRed/NavGreen light pairs (intentionally asymmetric), the sourced `SM_Int_Corvette_Bridge_Console` (3 degenerate faces) and `SM_Station_Mining_01_Sensor`. Interior kit parts (`SM_Int_*`) are exempt from the X-mirror check (rooms are front/back asymmetric by contract).
 - Vision-verify renders with `vision_analyze` before claiming visual quality.
 
 ---
@@ -207,7 +207,7 @@ Run one file: `python -m pytest tests/<file>.py`. **Randomization note**: a coup
 ## 9. Known Issues & Gotchas (living list)
 
 1. **Interior textures are the ship-hull recipe reused** — reads "wallpaper" on furniture at scale; needs bespoke interior language (priority item).
-2. **`SM_StarDome_Dense`** tri budget exceed (pre-existing QA failure).
+2. ~~**`SM_StarDome_Dense`** tri budget exceed~~ — fixed 2026-09-23 (960-tri UV sphere, same UVs/name; needs a straight reimport in UE).
 3. **`M_Interior_Eng`** has no texture mapping → engineering bay flat grey.
 4. ~~`SetRuntimeInputEnabled` is a logging stub~~ — fixed 2026-09-15: it now really adds/removes the ship's runtime input mapping context.
 5. **Bridge viewport zone** doesn't read as glass in renders (material polish item).
