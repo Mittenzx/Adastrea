@@ -2228,6 +2228,13 @@ void AAdastreaPlayerController::DebugStationWalk()
 	}), 4.0f, false);
 }
 
+void AAdastreaPlayerController::DebugToggleInterior()
+{
+	HandleToggleInterior();
+	UE_LOG(LogAdastrea, Log, TEXT("INTERIORTEST: onFoot=%d pawn=%s"),
+		IsOnFoot() ? 1 : 0, GetPawn() ? *GetPawn()->GetName() : TEXT("none"));
+}
+
 void AAdastreaPlayerController::DebugStationRooms()
 {
 	ASpaceship* Ship = GetControlledSpaceship();

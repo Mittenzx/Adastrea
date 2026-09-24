@@ -380,6 +380,10 @@ public:
 			UFUNCTION(Exec)
 			void DebugStationRooms();
 
+			/** Console test: same as pressing V (enter/leave the ship interior), for scripted walkthroughs. */
+			UFUNCTION(Exec)
+			void DebugToggleInterior();
+
 			/** Called by station terminals when the avatar presses E on them. */
 			void HandleStationTerminalUsed(EStationTerminalType Type);
 
