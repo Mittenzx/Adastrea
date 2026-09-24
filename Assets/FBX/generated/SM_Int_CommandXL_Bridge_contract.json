@@ -71,14 +71,15 @@
   ],
   "Stations": [
    "M_Int_Stations",
-   "M_Int_Lights"
+   "M_Int_Console"
   ],
   "Viewport": [
    "M_Int_Viewport",
    "M_Int_Shell"
   ],
   "Lights": [
-   "M_Int_Lights"
+   "M_Int_Lights",
+   "M_Int_Console"
   ],
   "Hatch": [
    "M_Int_Hatch",

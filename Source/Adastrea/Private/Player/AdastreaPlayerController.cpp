@@ -1867,6 +1867,12 @@ void AAdastreaPlayerController::EnterShipInterior(ASpaceship* Ship)
 	// Save the ship as the source so we can return to its cockpit.
 	InteriorSourceShip = Ship;
 
+	// Walk the interior in a pocket well below the ship, the same way station rooms
+	// are built: at the ship's own location a docked ship's interior overlaps the
+	// station's docking-bay collision and the avatar gets shoved onto the roof.
+	// Stays attached (KeepRelative), so ExitShipInterior only has to zero it again.
+	Interior->SetActorLocation(Ship->GetActorLocation() + FVector(0.0f, 0.0f, -100000.0f));
+
 	// Resolve a per-ship spawn override from the ship's data asset (durable tuning).
 	// Local space of the interior; falls back to the interior actor's defaults.
 	FVector SpawnLocal = Interior->GetEntryLocation();
@@ -1989,6 +1995,11 @@ void AAdastreaPlayerController::ExitShipInterior(ASpaceship* Ship)
 	}
 
 	ASpaceshipInterior* Interior = Ship->GetInteriorInstance();
+	if (Interior)
+	{
+		// Bring the interior back from its walk pocket (see EnterShipInterior).
+		Interior->SetActorRelativeLocation(FVector::ZeroVector);
+	}
 
 	// Restore the ship's collision now that we're back at the helm. Skip the
 	// interior's own components (attached under the ship's root, so they're in this

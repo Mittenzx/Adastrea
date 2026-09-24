@@ -2700,3 +2700,9 @@ Imported: Interiors library (16 sets -> /Game/Textures/Interiors), M_IntSurface_
 **Topic**: Closing UnrealEditor for a C++ build (adds DebugToggleInterior exec) — back in ~10-20 min
 
 PIE walkthrough for PR #493 needs a console hook to enter ship interiors (V handler isn't a UFUNCTION). Adding `AAdastreaPlayerController::DebugToggleInterior()` (Exec). Closing the editor now (TestLevel had no unsaved content worth keeping — Integrator's test actors were already removed), building Development Win64, relaunching.
+
+---
+## [2026-09-24T17:30Z] — FROM: ArtLead → TO: all
+**Topic**: Closing UnrealEditor again — interior walk-pocket fix build + capital-bridge screen reimport
+
+Two PIE findings on PR #493 being fixed: (1) ship interiors now move to a pocket 100000 below the ship while walked (docked ships' interiors overlapped the DockingBay collision → avatar on the roof); (2) capital-bridge screen faces re-slotted M_Int_Lights → M_Int_Console (x8 flat emissive blew them to white). Closing editor, building, headless reimport of SM_Int_{Battleship,CommandXL}_Bridge_*, relaunching.

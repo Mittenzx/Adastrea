@@ -37,7 +37,9 @@ scale about 1.0. Human reference: avatar ~192 cm tall; desk 75 cm; seat 46 cm.
 
 Material slots are M_Int_* names, which is the key ApplyKitMaterialsBySlot maps
 to /AdastreaShips/Materials/Interiors/*. Multi-slot parts are used where it
-reads better: screens use M_Int_Lights, and window frames use M_Int_Shell so
+reads better: screen faces use M_Int_Console (M_Int_Lights is a flat x8 emissive
+meant for small fixtures, so large screens on it blow out to white), light strips
+and holograms use M_Int_Lights, and window frames use M_Int_Shell so
 that only the panes get the (translucent) M_Int_Viewport.
 """
 import bpy, bmesh, math, os, sys, json
@@ -422,7 +424,7 @@ def Mxy(x, y, yaw):
     return Matrix.Translation(Vector((x, y, 0))) @ Matrix.Rotation(math.radians(yaw), 4, 'Z')
 
 
-def console(part, x, y, yaw, width=110.0, body="M_Int_Stations", screen="M_Int_Lights",
+def console(part, x, y, yaw, width=110.0, body="M_Int_Stations", screen="M_Int_Console",
             depth=55.0, desk_h=76.0, back_h=112.0, monitor=True):
     """Sit-down console. Operator sits at local -X, faces local +X. (x,y) is the
     operator edge centre; the console extends forward (+X local) by `depth`."""
@@ -493,7 +495,7 @@ def ceiling_strip(room, x0, x1, y0, y1, drop=4.0):
 
 
 def wall_display(room, i, t0, t1, z0, z1, frame=6.0, panels=1, gap=8.0):
-    """Wall screen bank on edge i: `panels` glowing faces (Lights) set in one
+    """Wall screen bank on edge i: `panels` screen faces (Console) set in one
     Shell bezel, separated by bezel mullions so it reads as a display wall,
     not a single flat emissive sheet."""
     wt = room.wall_t
@@ -502,7 +504,7 @@ def wall_display(room, i, t0, t1, z0, z1, frame=6.0, panels=1, gap=8.0):
     w = (t1 - t0 - gap * (panels - 1)) / panels
     for k in range(panels):
         a = t0 + k * (w + gap)
-        room.P("Lights").prism_xy("M_Int_Lights", room.edge_quad(i, a, a + w, wt + 5.0, wt + 5.8), z0, z1)
+        room.P("Lights").prism_xy("M_Int_Console", room.edge_quad(i, a, a + w, wt + 5.0, wt + 5.8), z0, z1)
         # a slim status strip under each panel
         room.P("Lights").prism_xy("M_Int_Lights", room.edge_quad(i, a + w * 0.1, a + w * 0.9, wt + 5.0, wt + 5.8),
                                   z0 - frame - 8.0, z0 - frame - 5.0)
@@ -676,7 +678,7 @@ def build_battleship():
     CAPX = 238.0
     dk.prism_xy("M_Int_Deck", circle(CAPX, 0.0, 88.0, 40), 0.0, 7.0)
     li.annulus("M_Int_Lights", CAPX, 0.0, 84.0, 88.5, 7.0, 7.8, 40)
-    chair(co, CAPX, 0.0, 0.0, slot="M_Int_Console", big=True, arm_screens="M_Int_Lights")
+    chair(co, CAPX, 0.0, 0.0, slot="M_Int_Console", big=True, arm_screens="M_Int_Console")
     co.cyl("M_Int_Console", CAPX + 55, 60.0, 7.0, 85.0, 4.0, 10)            # side data post
     co.box("M_Int_Console", CAPX + 45, CAPX + 68, 45.0, 75.0, 85.0, 105.0)
     co.box("M_Int_Lights", CAPX + 46, CAPX + 67, 46.0, 74.0, 105.0, 105.8)
@@ -762,7 +764,7 @@ def build_commandxl():
     dk.prism_xy("M_Int_Deck", circle(DX, 0.0, 178.0, 48), 0.0, 8.0)
     li.annulus("M_Int_Lights", DX, 0.0, 173.0, 178.5, 8.0, 8.8, 48)
     dk.prism_xy("M_Int_Deck", circle(DX, 0.0, 150.0, 48), 8.0, 9.0)
-    chair(co, DX, 0.0, 0.0, slot="M_Int_Console", big=True, arm_screens="M_Int_Lights")
+    chair(co, DX, 0.0, 0.0, slot="M_Int_Console", big=True, arm_screens="M_Int_Console")
     # C-shaped command ring around the chair, open to the rear
     co.annulus("M_Int_Console", DX, 0.0, 104.0, 140.0, 8.0, 88.0, 40, -128.0, 128.0)
     li.annulus("M_Int_Lights", DX, 0.0, 110.0, 134.0, 88.0, 88.8, 40, -120.0, 120.0)
