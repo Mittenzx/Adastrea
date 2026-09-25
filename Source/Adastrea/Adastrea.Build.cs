@@ -35,6 +35,9 @@ public class Adastrea : ModuleRules
 				"JsonUtilities"
 			});
 
+		// RenderCore: GWhiteTexture for the canvas-drawn cockpit HUD's filled shapes
+		PrivateDependencyModuleNames.Add("RenderCore");
+
 		// Note: AIModule and NavigationSystem were removed (Aug 2026) — their only
 		// consumers (NavigationComponent, SimpleAIMovementComponent, AI/Personnel
 		// cluster) were dead code and have been stripped. Re-add if AI/nav is re-enabled.

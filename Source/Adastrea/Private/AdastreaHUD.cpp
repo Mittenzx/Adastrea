@@ -140,7 +140,8 @@ void AAdastreaHUD::DrawHUD()
 			return; // only draw once we're flying the ship
 		}
 
-	// ---- Docking prompt (shown only while RequestDocking would succeed) ----
+	// ---- Docking prompt (shown only while RequestDocking would succeed; the cockpit HUD draws its own) ----
+	if (!bCyberpunkFlightHUD)
 	{
 		float DockDist = 0.0f;
 		FString DockName;
@@ -158,172 +159,20 @@ void AAdastreaHUD::DrawHUD()
 		}
 	}
 
-	// ---- Gather live data ----
-	const FVector P = Ship->GetActorLocation();
-	const float Speed = Ship->MovementComponent ? Ship->MovementComponent->Velocity.Size() : 0.0f;
-	const int32 Credits = Ship->PlayerTraderComponent ? static_cast<int32>(Ship->PlayerTraderComponent->GetCredits()) : 0;
-	const float CargoUsed = Ship->CargoComponent ? (Ship->CargoComponent->CargoCapacity - Ship->CargoComponent->GetAvailableCargoSpace()) : 0.0f;
-	const float CargoMax = Ship->CargoComponent ? FMath::Max(Ship->CargoComponent->CargoCapacity, 0.01f) : 1.0f;
-	const float Throttle = Ship->ThrottlePercentage;
-
-	UFont* TitleFont   = GEngine->GetLargeFont();
-	UFont* BodyFont    = GEngine->GetSmallFont();
-
-	// Panel origin (top-left, slightly inset)
-	const float PanelX = 20.0f;
-	const float PanelY = 20.0f;
-
-	// We'll render into a fixed-size panel; rows of 22px.
-	const float RowH  = 22.0f;
-	const float PanelW = 380.0f;
-	const float LabelX = PanelX + 14.0f;
-	const float ValueX = LabelX + 130.0f;
-	const float TitleY = PanelY + 10.0f;
-	const float RowStartY = TitleY + 34.0f;
-
-	const float PanelH = RowStartY + (PanelY) + 5 * RowH + 16.0f + 64.0f; // extra room for the 3D compass
-
-	// ---- Dark translucent panel ----
-	DrawRect(kBg, PanelX, PanelY, PanelW, PanelH);
-
-	// ---- Accent border (teal line along the left edge) ----
-	DrawLine(PanelX, PanelY, PanelX, PanelY + PanelH, kBorder, 3.0f);
-	DrawLine(PanelX + 2, PanelY + PanelH - 1, PanelX + PanelW - 2, PanelY + PanelH - 1, kBorder, 1.0f);
-
-	// ---- Title + separator ----
-	DrawText(TEXT("A D A S T R E A   //   FLIGHT TELEMETRY"),
-		kHeader, PanelX + 14.0f, TitleY, TitleFont, 0.9f);
-	DrawLine(PanelX + 12.0f, TitleY + 26.0f, PanelX + PanelW - 12.0f, TitleY + 26.0f, kBorder, 1.0f);
-
-	float Y = RowStartY;
-	auto Row = [&](const TCHAR* Label, const FString& Value, const FLinearColor& ValueColor)
+	// ---- Flight HUD: neon cockpit layout, or the legacy telemetry panel ----
+	if (bCyberpunkFlightHUD)
 	{
-		DrawText(Label, kLabel, LabelX, Y, BodyFont, 0.9f);
-		DrawText(Value, ValueColor, ValueX, Y, BodyFont, 0.9f);
-		Y += RowH;
-	};
-
-	Row(TEXT("CREDITS"),   FString::Printf(TEXT("%d cr"), Credits), kCredit);
-	Row(TEXT("CARGO"),     FString::Printf(TEXT("%.0f / %.0f"), CargoUsed, CargoMax), kCargo);
-	Row(TEXT("VELOCITY"),  FString::Printf(TEXT("%.0f u/s"), Speed), kSpeed);
-	Row(TEXT("THROTTLE"),  FString::Printf(TEXT("%.0f%%"), Throttle), kThrottle);
-
-	// ---- Throttle bar (visual) ----
-	const float BarX = LabelX;
-	const float BarY = Y + 2.0f;
-	const float BarW = PanelW - 28.0f;
-	const float BarH = 10.0f;
-	DrawRect(FLinearColor(0.08f, 0.10f, 0.12f, 0.9f), BarX, BarY, BarW, BarH);            // track
-	const float Fill = FMath::Clamp(Throttle / 100.0f, 0.0f, 1.0f);
-	DrawRect(FLinearColor::LerpUsingHSV(FLinearColor(0.2f,0.6f,0.9f), FLinearColor(0.9f,0.3f,0.4f), Fill),
-		BarX, BarY, FMath::Max(BarW * Fill, 2.0f), BarH);                                  // fill
-	Y += RowH;
-
-	// ---- Position (bottom of panel) ----
-	Y += 4.0f;
-	DrawText(TEXT("POSITION"), kLabel, LabelX, Y, BodyFont, 0.8f);
-	DrawText(FString::Printf(TEXT("X %8.0f   Y %8.0f   Z %8.0f"), P.X, P.Y, P.Z),
-		kPos, ValueX, Y, BodyFont, 0.8f);
-	Y += RowH;
-
-	// ---- 3D compass (bearing + pitch) under the ship position ----
+		DrawCyberpunkFlightHUD(PC, Ship);
+	}
+	else
 	{
-		// Ship facing from its world rotation.
-		const FRotator ShipRot = Ship->GetActorRotation();
-		const float YawDeg   = ShipRot.Yaw;           // heading: 0 = +X, 90 = +Y
-		const float PitchDeg = ShipRot.Pitch;          // +up / -down
-
-		// Compass geometry: a ring centered under the panel, near the position row.
-		const float Cx = PanelX + PanelW * 0.5f;
-		const float Cy = Y + 6.0f;
-		const float R  = 22.0f;                        // compass ring radius
-
-		// ---- Bearing ring (N/E/S/W projected from current yaw) ----
-		// World heading (degrees, 0..360) where +X=0, +Y=90; flip so it reads clockwise.
-		const float HeadingClock = FMath::Fmod(YawDeg + 360.0f, 360.0f);
-		// Rotate the four compass points opposite the heading so the point we face
-		// stays fixed at the "forward" (top) of the ring.
-		const float Fwd = HeadingClock;                // degrees, clockwise from +X
-		// Points: N=0, E=90, S=180, W=270 (world). Screen offset = -(heading - point).
-		const FLinearColor PtCol = FLinearColor(0.62f, 0.78f, 0.85f, 0.9f); // cyan-ish
-		const FLinearColor NCol  = FLinearColor(0.95f, 0.75f, 0.45f, 1.0f); // gold = north
-
-		// Draw ring (circle) via short line segments.
-		const int32 Segs = 40;
-		for (int32 i = 0; i < Segs; ++i)
-		{
-			const float A0 = (float)i / Segs * 2.0f * PI;
-			const float A1 = (float)(i + 1) / Segs * 2.0f * PI;
-			const FVector2D P0(Cx + FMath::Cos(A0 + PI) * R, Cy + FMath::Sin(A0 + PI) * R);
-			const FVector2D P1(Cx + FMath::Cos(A1 + PI) * R, Cy + FMath::Sin(A1 + PI) * R);
-			DrawLine(P0.X, P0.Y, P1.X, P1.Y, FLinearColor(0.25f, 0.35f, 0.42f, 0.9f), 1.0f);
-		}
-
-		// Projected compass point labels (N/E/S/W), displaced by heading so the
-		// direction you face sits at the top.
-		auto DrawCompassPoint = [&](const TCHAR* Label, float PointDeg, const FLinearColor& Col)
-		{
-			const float AngleRad = FMath::DegreesToRadians(HeadingClock - PointDeg) + PI;
-			const float Sx = Cx + FMath::Cos(AngleRad) * R;
-			const float Sy = Cy + FMath::Sin(AngleRad) * R;
-			DrawText(Label, Col, Sx - 7.0f, Sy - 9.0f, BodyFont, 0.75f);
-		};
-		DrawCompassPoint(TEXT("N"), 0.0f,   NCol);
-				DrawCompassPoint(TEXT("E"), 90.0f,  PtCol);
-				DrawCompassPoint(TEXT("S"), 180.0f, PtCol);
-				DrawCompassPoint(TEXT("W"), 270.0f, PtCol);
-
-				// ---- Station bearings (gold dots on the ring pointing to each station) ----
-				const FVector ShipLoc = Ship->GetActorLocation();
-				TArray<AActor*> StationActors;
-				UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpaceStation::StaticClass(), StationActors);
-				// Draw only the near/far-relevant stations for clarity (skip huge distance).
-				for (AActor* SA : StationActors)
-				{
-					if (!SA) { continue; }
-					const FVector Delta = SA->GetActorLocation() - ShipLoc;
-					const float Dist = Delta.Size();
-					// Skip stations beyond a reasonable flux-cone (optional) — 150k units.
-					if (Dist < 1.0f || Dist > 200000.0f) { continue; }
-					// Clockwise world angle from +X (the "incident" direction). +X=0, +Y=90.
-					const float DotWorld = FMath::RadiansToDegrees(FMath::Atan2(Delta.Y, Delta.X));
-					const float BearingClock = FMath::Fmod(DotWorld + 360.0f, 360.0f);
-					// Place the dot on the ring, displaced by -heading like compass points:
-					// the direction you face is at the top.
-					const float AngleRad = FMath::DegreesToRadians(HeadingClock - BearingClock) + PI;
-					const float Sx = Cx + FMath::Cos(AngleRad) * R;
-					const float Sy = Cy + FMath::Sin(AngleRad) * R;
-					// Gold dot (same family as N marker) sized by closeness.
-					const float DotR = FMath::Clamp(40000.0f / Dist, 1.5f, 3.5f);
-					DrawRect(FLinearColor(0.95f, 0.75f, 0.35f, 0.95f), Sx - DotR, Sy - DotR, DotR*2.0f, DotR*2.0f);
-				}
-
-				// Fixed forward tick at the top of the ring (the heading you face).
-				DrawLine(Cx - 1.0f, Cy - R - 3.0f, Cx + 1.0f, Cy - R - 1.0f, kBorder, 2.0f);
-
-		// ---- Pitch ladder (vertical bar to the right of the ring) ----
-		const float Lx = Cx + R + 10.0f;
-		const float PitchHalves = FMath::Clamp(PitchDeg / 90.0f, -1.0f, 1.0f);
-		// Draw a vertical scale from -45 (down) at bottom to +45 (up) at top.
-		const float Lh = R * 2.0f;
-		DrawLine(Lx, Cy - R, Lx, Cy + R, FLinearColor(0.25f,0.35f,0.42f,0.9f), 1.0f);
-		DrawLine(Lx - 4.0f, Cy, Lx + 4.0f, Cy + 1.0f, FLinearColor(0.35f,0.5f,0.6f,0.9f), 1.0f); // mid (0)
-		// Marker that rises/falls with pitch.
-		const float MarkY = Cy + R - (PitchHalves + 1.0f) * 0.5f * Lh;
-		DrawLine(Lx - 5.0f, MarkY, Lx + 5.0f, MarkY, kBorder, 2.0f);
-		// up/down arrows
-		DrawText(TEXT("^"), FLinearColor(0.5f,0.9f,0.7f,1.0f), Lx + 7.0f, Cy - R - 2.0f, BodyFont, 0.6f);
-		DrawText(TEXT("v"), FLinearColor(0.9f,0.5f,0.5f,1.0f), Lx + 8.0f, Cy + R - 6.0f, BodyFont, 0.6f);
-
-		// ---- Heading readout (degrees) ----
-		const FString HeadingStr = FString::Printf(TEXT("%03.0f."), HeadingClock);
-		DrawText(HeadingStr, kPos, Cx - 24.0f, Cy + R + 3.0f, BodyFont, 0.8f);
-
-		Y += RowH + 24.0f;
+		// Mining panel stacks under the telemetry panel (hidden unless an asteroid is locked).
+		DrawMiningHUD(PC, Ship, DrawTelemetryPanel(Ship) + 12.0f);
 	}
 
-	// ---- Mining panel (stacked under the telemetry panel; hidden unless an asteroid is locked) ----
-	DrawMiningHUD(PC, Ship, PanelY + PanelH + 12.0f);
+	const FVector P = Ship->GetActorLocation();
+	UFont* TitleFont = GEngine->GetLargeFont();
+	UFont* BodyFont  = GEngine->GetSmallFont();
 
 	// ---- Locked target reticle (world-space box around the locked target) ----
 	AAdastreaPlayerController* AController = Cast<AAdastreaPlayerController>(PC);
@@ -494,6 +343,176 @@ void AAdastreaHUD::DrawHUD()
 				}
 			}
 	}
+
+
+float AAdastreaHUD::DrawTelemetryPanel(ASpaceship* Ship)
+{
+	// ---- Gather live data ----
+	const FVector P = Ship->GetActorLocation();
+	const float Speed = Ship->MovementComponent ? Ship->MovementComponent->Velocity.Size() : 0.0f;
+	const int32 Credits = Ship->PlayerTraderComponent ? static_cast<int32>(Ship->PlayerTraderComponent->GetCredits()) : 0;
+	const float CargoUsed = Ship->CargoComponent ? (Ship->CargoComponent->CargoCapacity - Ship->CargoComponent->GetAvailableCargoSpace()) : 0.0f;
+	const float CargoMax = Ship->CargoComponent ? FMath::Max(Ship->CargoComponent->CargoCapacity, 0.01f) : 1.0f;
+	const float Throttle = Ship->ThrottlePercentage;
+
+	UFont* TitleFont   = GEngine->GetLargeFont();
+	UFont* BodyFont    = GEngine->GetSmallFont();
+
+	// Panel origin (top-left, slightly inset)
+	const float PanelX = 20.0f;
+	const float PanelY = 20.0f;
+
+	// We'll render into a fixed-size panel; rows of 22px.
+	const float RowH  = 22.0f;
+	const float PanelW = 380.0f;
+	const float LabelX = PanelX + 14.0f;
+	const float ValueX = LabelX + 130.0f;
+	const float TitleY = PanelY + 10.0f;
+	const float RowStartY = TitleY + 34.0f;
+
+	const float PanelH = RowStartY + (PanelY) + 5 * RowH + 16.0f + 64.0f; // extra room for the 3D compass
+
+	// ---- Dark translucent panel ----
+	DrawRect(kBg, PanelX, PanelY, PanelW, PanelH);
+
+	// ---- Accent border (teal line along the left edge) ----
+	DrawLine(PanelX, PanelY, PanelX, PanelY + PanelH, kBorder, 3.0f);
+	DrawLine(PanelX + 2, PanelY + PanelH - 1, PanelX + PanelW - 2, PanelY + PanelH - 1, kBorder, 1.0f);
+
+	// ---- Title + separator ----
+	DrawText(TEXT("A D A S T R E A   //   FLIGHT TELEMETRY"),
+		kHeader, PanelX + 14.0f, TitleY, TitleFont, 0.9f);
+	DrawLine(PanelX + 12.0f, TitleY + 26.0f, PanelX + PanelW - 12.0f, TitleY + 26.0f, kBorder, 1.0f);
+
+	float Y = RowStartY;
+	auto Row = [&](const TCHAR* Label, const FString& Value, const FLinearColor& ValueColor)
+	{
+		DrawText(Label, kLabel, LabelX, Y, BodyFont, 0.9f);
+		DrawText(Value, ValueColor, ValueX, Y, BodyFont, 0.9f);
+		Y += RowH;
+	};
+
+	Row(TEXT("CREDITS"),   FString::Printf(TEXT("%d cr"), Credits), kCredit);
+	Row(TEXT("CARGO"),     FString::Printf(TEXT("%.0f / %.0f"), CargoUsed, CargoMax), kCargo);
+	Row(TEXT("VELOCITY"),  FString::Printf(TEXT("%.0f u/s"), Speed), kSpeed);
+	Row(TEXT("THROTTLE"),  FString::Printf(TEXT("%.0f%%"), Throttle), kThrottle);
+
+	// ---- Throttle bar (visual) ----
+	const float BarX = LabelX;
+	const float BarY = Y + 2.0f;
+	const float BarW = PanelW - 28.0f;
+	const float BarH = 10.0f;
+	DrawRect(FLinearColor(0.08f, 0.10f, 0.12f, 0.9f), BarX, BarY, BarW, BarH);            // track
+	const float Fill = FMath::Clamp(Throttle / 100.0f, 0.0f, 1.0f);
+	DrawRect(FLinearColor::LerpUsingHSV(FLinearColor(0.2f,0.6f,0.9f), FLinearColor(0.9f,0.3f,0.4f), Fill),
+		BarX, BarY, FMath::Max(BarW * Fill, 2.0f), BarH);                                  // fill
+	Y += RowH;
+
+	// ---- Position (bottom of panel) ----
+	Y += 4.0f;
+	DrawText(TEXT("POSITION"), kLabel, LabelX, Y, BodyFont, 0.8f);
+	DrawText(FString::Printf(TEXT("X %8.0f   Y %8.0f   Z %8.0f"), P.X, P.Y, P.Z),
+		kPos, ValueX, Y, BodyFont, 0.8f);
+	Y += RowH;
+
+	// ---- 3D compass (bearing + pitch) under the ship position ----
+	{
+		// Ship facing from its world rotation.
+		const FRotator ShipRot = Ship->GetActorRotation();
+		const float YawDeg   = ShipRot.Yaw;           // heading: 0 = +X, 90 = +Y
+		const float PitchDeg = ShipRot.Pitch;          // +up / -down
+
+		// Compass geometry: a ring centered under the panel, near the position row.
+		const float Cx = PanelX + PanelW * 0.5f;
+		const float Cy = Y + 6.0f;
+		const float R  = 22.0f;                        // compass ring radius
+
+		// ---- Bearing ring (N/E/S/W projected from current yaw) ----
+		// World heading (degrees, 0..360) where +X=0, +Y=90; flip so it reads clockwise.
+		const float HeadingClock = FMath::Fmod(YawDeg + 360.0f, 360.0f);
+		// Rotate the four compass points opposite the heading so the point we face
+		// stays fixed at the "forward" (top) of the ring.
+		const float Fwd = HeadingClock;                // degrees, clockwise from +X
+		// Points: N=0, E=90, S=180, W=270 (world). Screen offset = -(heading - point).
+		const FLinearColor PtCol = FLinearColor(0.62f, 0.78f, 0.85f, 0.9f); // cyan-ish
+		const FLinearColor NCol  = FLinearColor(0.95f, 0.75f, 0.45f, 1.0f); // gold = north
+
+		// Draw ring (circle) via short line segments.
+		const int32 Segs = 40;
+		for (int32 i = 0; i < Segs; ++i)
+		{
+			const float A0 = (float)i / Segs * 2.0f * PI;
+			const float A1 = (float)(i + 1) / Segs * 2.0f * PI;
+			const FVector2D P0(Cx + FMath::Cos(A0 + PI) * R, Cy + FMath::Sin(A0 + PI) * R);
+			const FVector2D P1(Cx + FMath::Cos(A1 + PI) * R, Cy + FMath::Sin(A1 + PI) * R);
+			DrawLine(P0.X, P0.Y, P1.X, P1.Y, FLinearColor(0.25f, 0.35f, 0.42f, 0.9f), 1.0f);
+		}
+
+		// Projected compass point labels (N/E/S/W), displaced by heading so the
+		// direction you face sits at the top.
+		auto DrawCompassPoint = [&](const TCHAR* Label, float PointDeg, const FLinearColor& Col)
+		{
+			const float AngleRad = FMath::DegreesToRadians(HeadingClock - PointDeg) + PI;
+			const float Sx = Cx + FMath::Cos(AngleRad) * R;
+			const float Sy = Cy + FMath::Sin(AngleRad) * R;
+			DrawText(Label, Col, Sx - 7.0f, Sy - 9.0f, BodyFont, 0.75f);
+		};
+		DrawCompassPoint(TEXT("N"), 0.0f,   NCol);
+				DrawCompassPoint(TEXT("E"), 90.0f,  PtCol);
+				DrawCompassPoint(TEXT("S"), 180.0f, PtCol);
+				DrawCompassPoint(TEXT("W"), 270.0f, PtCol);
+
+				// ---- Station bearings (gold dots on the ring pointing to each station) ----
+				const FVector ShipLoc = Ship->GetActorLocation();
+				TArray<AActor*> StationActors;
+				UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpaceStation::StaticClass(), StationActors);
+				// Draw only the near/far-relevant stations for clarity (skip huge distance).
+				for (AActor* SA : StationActors)
+				{
+					if (!SA) { continue; }
+					const FVector Delta = SA->GetActorLocation() - ShipLoc;
+					const float Dist = Delta.Size();
+					// Skip stations beyond a reasonable flux-cone (optional) — 150k units.
+					if (Dist < 1.0f || Dist > 200000.0f) { continue; }
+					// Clockwise world angle from +X (the "incident" direction). +X=0, +Y=90.
+					const float DotWorld = FMath::RadiansToDegrees(FMath::Atan2(Delta.Y, Delta.X));
+					const float BearingClock = FMath::Fmod(DotWorld + 360.0f, 360.0f);
+					// Place the dot on the ring, displaced by -heading like compass points:
+					// the direction you face is at the top.
+					const float AngleRad = FMath::DegreesToRadians(HeadingClock - BearingClock) + PI;
+					const float Sx = Cx + FMath::Cos(AngleRad) * R;
+					const float Sy = Cy + FMath::Sin(AngleRad) * R;
+					// Gold dot (same family as N marker) sized by closeness.
+					const float DotR = FMath::Clamp(40000.0f / Dist, 1.5f, 3.5f);
+					DrawRect(FLinearColor(0.95f, 0.75f, 0.35f, 0.95f), Sx - DotR, Sy - DotR, DotR*2.0f, DotR*2.0f);
+				}
+
+				// Fixed forward tick at the top of the ring (the heading you face).
+				DrawLine(Cx - 1.0f, Cy - R - 3.0f, Cx + 1.0f, Cy - R - 1.0f, kBorder, 2.0f);
+
+		// ---- Pitch ladder (vertical bar to the right of the ring) ----
+		const float Lx = Cx + R + 10.0f;
+		const float PitchHalves = FMath::Clamp(PitchDeg / 90.0f, -1.0f, 1.0f);
+		// Draw a vertical scale from -45 (down) at bottom to +45 (up) at top.
+		const float Lh = R * 2.0f;
+		DrawLine(Lx, Cy - R, Lx, Cy + R, FLinearColor(0.25f,0.35f,0.42f,0.9f), 1.0f);
+		DrawLine(Lx - 4.0f, Cy, Lx + 4.0f, Cy + 1.0f, FLinearColor(0.35f,0.5f,0.6f,0.9f), 1.0f); // mid (0)
+		// Marker that rises/falls with pitch.
+		const float MarkY = Cy + R - (PitchHalves + 1.0f) * 0.5f * Lh;
+		DrawLine(Lx - 5.0f, MarkY, Lx + 5.0f, MarkY, kBorder, 2.0f);
+		// up/down arrows
+		DrawText(TEXT("^"), FLinearColor(0.5f,0.9f,0.7f,1.0f), Lx + 7.0f, Cy - R - 2.0f, BodyFont, 0.6f);
+		DrawText(TEXT("v"), FLinearColor(0.9f,0.5f,0.5f,1.0f), Lx + 8.0f, Cy + R - 6.0f, BodyFont, 0.6f);
+
+		// ---- Heading readout (degrees) ----
+		const FString HeadingStr = FString::Printf(TEXT("%03.0f."), HeadingClock);
+		DrawText(HeadingStr, kPos, Cx - 24.0f, Cy + R + 3.0f, BodyFont, 0.8f);
+
+		Y += RowH + 24.0f;
+	}
+
+	return PanelY + PanelH;
+}
 
 
 void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
@@ -1609,11 +1628,21 @@ void AAdastreaHUD::DrawMiningHUD(APlayerController* PC, ASpaceship* Ship, float 
 	AAsteroid* Rock = Cast<AAsteroid>(Laser->GetTarget());
 	if (!Rock)
 	{
-		// Nothing locked: no panel, just the controls hint.
+		// Nothing locked: no panel, just the controls hint (the cockpit HUD draws its own).
+		if (bCyberpunkFlightHUD)
+		{
+			return;
+		}
 		const FString Hint = TEXT("MINING LASER   [T] lock asteroid ahead    [Hold LMB] fire");
 		float HW = 0.0f, HH = 0.0f;
 		GetTextSize(Hint, HW, HH, BodyFont, 0.8f);
 		DrawText(Hint, FLinearColor(0.6f, 0.7f, 0.75f, 0.85f), (Canvas->SizeX - HW) * 0.5f, Canvas->SizeY - 64.0f, BodyFont, 0.8f);
+		return;
+	}
+
+	if (bCyberpunkFlightHUD)
+	{
+		DrawCyberMiningHUD(PC, Ship, Laser, Rock, PanelTop);
 		return;
 	}
 
