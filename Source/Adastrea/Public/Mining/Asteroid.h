@@ -48,6 +48,10 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Asteroid")
 	float GetRemainingOre() const { return RemainingOre; }
 
+	/** Ore units the rock held when full. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Asteroid")
+	float GetTotalOre() const { return TotalOre; }
+
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Asteroid")
 	UAsteroidDataAsset* GetAsteroidType() const { return AsteroidType; }
 

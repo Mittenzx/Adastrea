@@ -26,6 +26,8 @@ UMiningLaserComponent::UMiningLaserComponent()
 	, Status(EMiningStatus::Disabled)
 	, bTriggerHeld(false)
 	, CarriedOre(0.0f)
+	, LastMinedAmount(0)
+	, LastMinedTime(-1.0)
 {
 	PrimaryComponentTick.bCanEverTick = true;
 	PrimaryComponentTick.bStartWithTickEnabled = true;
@@ -196,6 +198,33 @@ float UMiningLaserComponent::GetTargetSurfaceDistance() const
 	return -1.0f;
 }
 
+bool UMiningLaserComponent::IsTargetInRange() const
+{
+	const float Dist = GetTargetSurfaceDistance();
+	return Dist >= 0.0f && Dist <= Range;
+}
+
+UTradeItemDataAsset* UMiningLaserComponent::GetTargetOre() const
+{
+	const AAsteroid* Rock = Cast<AAsteroid>(Target.Get());
+	const UAsteroidDataAsset* Type = Rock ? Rock->GetAsteroidType() : nullptr;
+	return Type ? Type->OreItem.Get() : nullptr;
+}
+
+float UMiningLaserComponent::GetExtractionRate() const
+{
+	// Mirrors AAsteroid::ExtractOre.
+	const AAsteroid* Rock = Cast<AAsteroid>(Target.Get());
+	const UAsteroidDataAsset* Type = Rock ? Rock->GetAsteroidType() : nullptr;
+	return Type ? Type->OreYieldPerSecond * MiningPower / FMath::Max(Type->Hardness, 0.1f) : 0.0f;
+}
+
+float UMiningLaserComponent::GetSecondsSinceLastMined() const
+{
+	const UWorld* World = GetWorld();
+	return (World && LastMinedTime >= 0.0) ? static_cast<float>(World->GetTimeSeconds() - LastMinedTime) : 1.0e6f;
+}
+
 FText UMiningLaserComponent::StatusToText(EMiningStatus InStatus)
 {
 	switch (InStatus)
@@ -343,6 +372,9 @@ void UMiningLaserComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	{
 		CarriedOre -= Whole;
 		SessionOreMined += Whole;
+		LastMinedOre = Ore;
+		LastMinedAmount = Whole;
+		LastMinedTime = GetWorld()->GetTimeSeconds();
 		OnOreMined.Broadcast(Ore, Whole);
 		UE_LOG(LogAdastrea, Log, TEXT("MiningLaser: +%d %s from %s (hold %d, session %d)"),
 			Whole, *Ore->ItemName.ToString(), *RockName, Cargo->GetItemQuantity(Ore), SessionOreMined);

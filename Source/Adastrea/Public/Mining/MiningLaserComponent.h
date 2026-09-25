@@ -117,6 +117,34 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Mining")
 	float GetTargetSurfaceDistance() const;
 
+	/** True when a target is locked and its surface is within Range. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Mining")
+	bool IsTargetInRange() const;
+
+	/** Ore item the locked asteroid yields, or null. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Mining")
+	UTradeItemDataAsset* GetTargetOre() const;
+
+	/** Ore units per second this laser pulls from the locked asteroid while firing (0 with no target). */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Mining")
+	float GetExtractionRate() const;
+
+	/** Progress (0..1) of the partially extracted unit that has not reached the hold yet. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Mining")
+	float GetUnitProgress() const { return FMath::Clamp(CarriedOre - FMath::FloorToFloat(CarriedOre), 0.0f, 1.0f); }
+
+	/** Ore item most recently delivered to the hold, or null. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Mining")
+	UTradeItemDataAsset* GetLastMinedOre() const { return LastMinedOre.Get(); }
+
+	/** Units delivered to the hold by the most recent delivery. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Mining")
+	int32 GetLastMinedAmount() const { return LastMinedAmount; }
+
+	/** Seconds since ore was last delivered to the hold (large if never). */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Mining")
+	float GetSecondsSinceLastMined() const;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -137,6 +165,10 @@ private:
 
 	/** Fractional ore not yet delivered as a whole unit. */
 	float CarriedOre;
+
+	TWeakObjectPtr<UTradeItemDataAsset> LastMinedOre;
+	int32 LastMinedAmount;
+	double LastMinedTime;
 
 	UCargoComponent* GetCargo() const;
 	FVector GetMuzzleLocation() const { return GetComponentLocation(); }
