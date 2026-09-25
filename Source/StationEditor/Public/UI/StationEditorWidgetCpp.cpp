@@ -11,6 +11,7 @@
 #include "Components/ProgressBar.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerController.h"
+#include "Framework/Application/SlateApplication.h"
 #include "AdastreaLog.h"
 #include "StationBuildPreview.h"
 #include "InputCoreTypes.h"
@@ -27,13 +28,18 @@ UStationEditorWidgetCpp::UStationEditorWidgetCpp(const FObjectInitializer& Objec
 	, PowerBalanceBar(nullptr)
 	, CloseButton(nullptr)
 	, QueueScrollBox(nullptr)
+	, PlacementStatusText(nullptr)
+	, CreditsText(nullptr)
 	, ModuleCatalog(nullptr)
 	, CurrentStation(nullptr)
 	, EditorManager(nullptr)
 	, bIsInPlacementMode(false)
 	, PendingPlacementModule(nullptr)
 	, bPreviewPositioned(false)
+	, LastPlacementResult(EModulePlacementResult::Success)
 {
+	// Needed for the editor hotkeys (NativeOnKeyDown).
+	SetIsFocusable(true);
 }
 
 void UStationEditorWidgetCpp::NativeConstruct()
@@ -46,26 +52,42 @@ void UStationEditorWidgetCpp::NativeConstruct()
 	// Bind close button
 	if (CloseButton)
 	{
-		CloseButton->OnClicked.AddDynamic(this, &UStationEditorWidgetCpp::OnCloseButtonClicked);
+		CloseButton->OnClicked.AddUniqueDynamic(this, &UStationEditorWidgetCpp::OnCloseButtonClicked);
 	}
 
 	// Bind to EditorManager events
 	if (EditorManager)
 	{
-		EditorManager->OnModulePlaced.AddDynamic(this, &UStationEditorWidgetCpp::OnManagerModulePlaced);
-		EditorManager->OnModuleRemoved.AddDynamic(this, &UStationEditorWidgetCpp::OnManagerModuleRemoved);
-		EditorManager->OnStatisticsUpdated.AddDynamic(this, &UStationEditorWidgetCpp::OnManagerStatisticsUpdated);
-		EditorManager->OnConstructionQueueChanged.AddDynamic(this, &UStationEditorWidgetCpp::OnManagerQueueChanged);
+		EditorManager->OnModulePlaced.AddUniqueDynamic(this, &UStationEditorWidgetCpp::OnManagerModulePlaced);
+		EditorManager->OnModuleRemoved.AddUniqueDynamic(this, &UStationEditorWidgetCpp::OnManagerModuleRemoved);
+		EditorManager->OnStatisticsUpdated.AddUniqueDynamic(this, &UStationEditorWidgetCpp::OnManagerStatisticsUpdated);
+		EditorManager->OnConstructionQueueChanged.AddUniqueDynamic(this, &UStationEditorWidgetCpp::OnManagerQueueChanged);
+		EditorManager->OnNotificationAdded.AddUniqueDynamic(this, &UStationEditorWidgetCpp::OnManagerNotificationAdded);
 	}
 
 	// Initial refresh
 	RefreshModuleList();
 	RefreshStatistics();
 	UpdateConstructionQueue();
+	UpdateStatusText();
+
+	SetKeyboardFocus();
 }
 
 void UStationEditorWidgetCpp::NativeDestruct()
 {
+	// However the widget went away (Close button, the G toggle, a level change),
+	// end the editing session: commit what was built and drop the preview actor.
+	// Before this, closing with G left the session open and the preview alive.
+	if (bIsInPlacementMode)
+	{
+		ExitPlacementMode();
+	}
+	if (EditorManager && EditorManager->bIsEditing)
+	{
+		EditorManager->Save();
+	}
+
 	// Unbind events
 	if (EditorManager)
 	{
@@ -73,6 +95,7 @@ void UStationEditorWidgetCpp::NativeDestruct()
 		EditorManager->OnModuleRemoved.RemoveDynamic(this, &UStationEditorWidgetCpp::OnManagerModuleRemoved);
 		EditorManager->OnStatisticsUpdated.RemoveDynamic(this, &UStationEditorWidgetCpp::OnManagerStatisticsUpdated);
 		EditorManager->OnConstructionQueueChanged.RemoveDynamic(this, &UStationEditorWidgetCpp::OnManagerQueueChanged);
+		EditorManager->OnNotificationAdded.RemoveDynamic(this, &UStationEditorWidgetCpp::OnManagerNotificationAdded);
 	}
 
 	if (CloseButton)
@@ -98,6 +121,8 @@ void UStationEditorWidgetCpp::NativeTick(const FGeometry& MyGeometry, float InDe
 	{
 		UpdatePreviewPosition();
 	}
+
+	UpdateStatusText();
 }
 
 void UStationEditorWidgetCpp::InitializeEditor(ASpaceStation* Station, UStationModuleCatalog* Catalog)
@@ -111,7 +136,12 @@ void UStationEditorWidgetCpp::InitializeEditor(ASpaceStation* Station, UStationM
 	// Configure EditorManager
 	if (EditorManager)
 	{
-		EditorManager->ModuleCatalog = Catalog;
+		// Keep the manager's own fallback (DA_StationModuleCatalog, loaded in
+		// BeginEditing) when the caller has no catalog to give.
+		if (Catalog)
+		{
+			EditorManager->ModuleCatalog = Catalog;
+		}
 		EditorManager->PlayerTechLevel = DefaultPlayerTechLevel;
 		EditorManager->PlayerCredits = DefaultPlayerCredits;
 
@@ -121,6 +151,9 @@ void UStationEditorWidgetCpp::InitializeEditor(ASpaceStation* Station, UStationM
 			EditorManager->BeginEditing(Station);
 		}
 	}
+
+	PlacementRotation = FRotator::ZeroRotator;
+	LastNotificationText = FText::GetEmpty();
 
 	// Refresh UI
 	RefreshModuleList();
@@ -183,6 +216,11 @@ void UStationEditorWidgetCpp::RefreshStatistics()
 		FText CountText = FText::FromString(FString::Printf(TEXT("Modules: %d / %d"),
 			Stats.TotalModules, Stats.MaxModules));
 		ModuleCountDisplay->SetText(CountText);
+	}
+
+	if (CreditsText)
+	{
+		CreditsText->SetText(FText::FromString(FString::Printf(TEXT("Credits: %d"), EditorManager->PlayerCredits)));
 	}
 
 	// Update power balance bar
@@ -254,6 +292,9 @@ void UStationEditorWidgetCpp::OnModuleButtonClicked(TSubclassOf<ASpaceStationMod
 
 	// Enter placement mode instead of placing immediately
 	EnterPlacementMode(ModuleClass);
+
+	// The list button took focus; take it back so the hotkeys work.
+	SetKeyboardFocus();
 }
 
 void UStationEditorWidgetCpp::OnCloseButtonClicked()
@@ -265,7 +306,7 @@ void UStationEditorWidgetCpp::OnCloseButtonClicked()
 	}
 
 	// Save and end editing
-	if (EditorManager)
+	if (EditorManager && EditorManager->bIsEditing)
 	{
 		EditorManager->Save();
 	}
@@ -300,6 +341,7 @@ void UStationEditorWidgetCpp::OnManagerStatisticsUpdated(const FStationStatistic
 void UStationEditorWidgetCpp::OnManagerQueueChanged()
 {
 	UpdateConstructionQueue();
+	RefreshStatistics();
 }
 
 void UStationEditorWidgetCpp::OnQueueItemCancelled(int32 QueueId)
@@ -308,6 +350,13 @@ void UStationEditorWidgetCpp::OnQueueItemCancelled(int32 QueueId)
 	{
 		EditorManager->CancelConstruction(QueueId);
 	}
+}
+
+void UStationEditorWidgetCpp::OnManagerNotificationAdded(const FStationNotification& Notification)
+{
+	LastNotificationText = Notification.Message;
+	LastNotificationTime = GetWorld() ? GetWorld()->GetTimeSeconds() : 0.0f;
+	UpdateStatusText();
 }
 
 // =====================
@@ -361,81 +410,155 @@ void UStationEditorWidgetCpp::ExitPlacementMode()
 	UE_LOG(LogAdastreaStations, Log, TEXT("Station Editor: Exited placement mode"));
 }
 
-void UStationEditorWidgetCpp::UpdatePreviewPosition()
+ASpaceStationModule* UStationEditorWidgetCpp::GetModuleUnderCursor(FHitResult* OutHit)
 {
-	if (!EditorManager || !CurrentStation || !PendingPlacementModule)
+	if (!CurrentStation || !GetWorld())
 	{
-		return;
+		return nullptr;
 	}
 
-	// Get cursor world position
 	FVector WorldPosition, WorldDirection;
 	if (!GetCursorWorldPosition(WorldPosition, WorldDirection))
 	{
-		return;
+		return nullptr;
 	}
 
-	// Line trace to find placement location
-	FHitResult HitResult;
-	FVector TraceStart = WorldPosition;
-	FVector TraceEnd = WorldPosition + WorldDirection * MaxTraceDistance;
-
 	FCollisionQueryParams QueryParams;
-
-	// Add player pawn to ignored actors if valid
-	AActor* PlayerPawn = GetOwningPlayerPawn();
-	if (PlayerPawn)
+	if (AActor* PlayerPawn = GetOwningPlayerPawn())
 	{
 		QueryParams.AddIgnoredActor(PlayerPawn);
 	}
 
-	bool bHit = GetWorld()->LineTraceSingleByChannel(
-		HitResult,
-		TraceStart,
-		TraceEnd,
-		ECC_Visibility,
-		QueryParams
-	);
-
-	if (bHit)
+	FHitResult Hit;
+	if (!GetWorld()->LineTraceSingleByChannel(Hit, WorldPosition, WorldPosition + WorldDirection * MaxTraceDistance, ECC_Visibility, QueryParams))
 	{
-		// Update preview position
-		EditorManager->UpdatePreview(HitResult.Location, FRotator::ZeroRotator);
+		return nullptr;
+	}
 
-		// Mark that preview has been positioned at least once
-		bPreviewPositioned = true;
+	if (OutHit)
+	{
+		*OutHit = Hit;
+	}
 
-		// Ensure preview is visible after positioning
-		if (EditorManager->PreviewActor)
-		{
-			EditorManager->PreviewActor->Show();
-		}
+	ASpaceStationModule* Module = Cast<ASpaceStationModule>(Hit.GetActor());
+	return (Module && CurrentStation->Modules.Contains(Module)) ? Module : nullptr;
+}
 
-		// Perform comprehensive validation (tech level, funds, distance, collision)
-		// This provides complete validation feedback to the user
-		EModulePlacementResult ValidationResult = EditorManager->CanPlaceModule(
-			PendingPlacementModule,
-			HitResult.Location,
-			FRotator::ZeroRotator
-		);
+bool UStationEditorWidgetCpp::GetPlacementTarget(FVector& OutPosition)
+{
+	if (!EditorManager || !CurrentStation || !PendingPlacementModule)
+	{
+		return false;
+	}
 
-		// Set preview validity based on comprehensive validation
-		// UpdatePreview only checks collision, so we override with full validation result
-		if (EditorManager->PreviewActor)
-		{
-			bool bIsFullyValid = (ValidationResult == EModulePlacementResult::Success);
-			EditorManager->PreviewActor->SetValid(bIsFullyValid);
-		}
+	// First module: it becomes the station's core, so put it on the station origin
+	// (which is also the build grid's origin).
+	if (CurrentStation->Modules.Num() == 0)
+	{
+		OutPosition = CurrentStation->GetActorLocation();
+		return true;
+	}
+
+	FHitResult Hit;
+	ASpaceStationModule* HitModule = GetModuleUnderCursor(&Hit);
+	if (HitModule)
+	{
+		// Build against the face under the cursor. (Snapping the raw surface hit
+		// point usually landed inside the module that was clicked.)
+		return EditorManager->FindAttachPosition(PendingPlacementModule, HitModule, Hit.ImpactNormal, OutPosition);
+	}
+
+	if (Hit.bBlockingHit)
+	{
+		// Something that isn't one of this station's modules - use the hit point
+		// and let validation decide.
+		OutPosition = Hit.Location;
+		return true;
+	}
+
+	// Open space: where the cursor ray crosses the station's horizontal build plane.
+	FVector WorldPosition, WorldDirection;
+	if (!GetCursorWorldPosition(WorldPosition, WorldDirection) || FMath::IsNearlyZero(WorldDirection.Z, 1.e-3f))
+	{
+		return false;
+	}
+
+	const float Distance = (CurrentStation->GetActorLocation().Z - WorldPosition.Z) / WorldDirection.Z;
+	if (Distance <= 0.0f || Distance > MaxTraceDistance)
+	{
+		return false;
+	}
+
+	OutPosition = WorldPosition + WorldDirection * Distance;
+	return FVector::Dist(OutPosition, CurrentStation->GetActorLocation()) <= MaxPlacementDistance;
+}
+
+void UStationEditorWidgetCpp::UpdatePreviewPosition()
+{
+	if (!EditorManager || !CurrentStation || !PendingPlacementModule || !EditorManager->PreviewActor)
+	{
+		return;
+	}
+
+	FVector TargetPosition;
+	if (!GetPlacementTarget(TargetPosition))
+	{
+		// Nowhere to put it in this direction: hide the preview.
+		EditorManager->PreviewActor->Hide();
+		bPreviewPositioned = false;
+		LastPlacementResult = EModulePlacementResult::InvalidPosition;
+		return;
+	}
+
+	// Snap exactly as PlaceModule() will, so the preview sits where the module will.
+	FVector SnappedPosition;
+	FRotator SnappedRotation;
+	EditorManager->SnapPlacement(TargetPosition, PlacementRotation, SnappedPosition, SnappedRotation);
+
+	EditorManager->PreviewActor->UpdatePosition(SnappedPosition, SnappedRotation);
+	EditorManager->PreviewActor->Show();
+	bPreviewPositioned = true;
+
+	// Full validation (tech level, funds, materials, collision, connectivity, power)
+	LastPlacementResult = EditorManager->CanPlaceModule(PendingPlacementModule, SnappedPosition, SnappedRotation);
+	EditorManager->PreviewActor->SetValid(LastPlacementResult == EModulePlacementResult::Success);
+}
+
+void UStationEditorWidgetCpp::RotatePlacement(bool bClockwise)
+{
+	PlacementRotation.Yaw = FRotator::NormalizeAxis(PlacementRotation.Yaw + (bClockwise ? 90.0f : -90.0f));
+	if (bIsInPlacementMode)
+	{
+		UpdatePreviewPosition();
+	}
+}
+
+void UStationEditorWidgetCpp::UpdateStatusText()
+{
+	if (!PlacementStatusText)
+	{
+		return;
+	}
+
+	const float Now = GetWorld() ? GetWorld()->GetTimeSeconds() : 0.0f;
+	const bool bShowNotification = !LastNotificationText.IsEmpty() && (Now - LastNotificationTime) <= NotificationDisplayTime;
+
+	FString Status;
+	if (bShowNotification)
+	{
+		Status = LastNotificationText.ToString();
+	}
+	else if (bIsInPlacementMode)
+	{
+		Status = FString::Printf(TEXT("%s    [R] rotate  [Shift+Click] build more  [Esc/RMB] cancel"),
+			*UStationEditorManager::GetPlacementResultText(LastPlacementResult).ToString());
 	}
 	else
 	{
-		// No hit: hide the preview to indicate placement is not possible in this direction
-		if (EditorManager->PreviewActor)
-		{
-			EditorManager->PreviewActor->Hide();
-		}
-		bPreviewPositioned = false;
+		Status = TEXT("Pick a module to build    [Del] remove hovered module  [Ctrl+Z/Y] undo/redo  [Esc] close");
 	}
+
+	PlacementStatusText->SetText(FText::FromString(Status));
 }
 
 void UStationEditorWidgetCpp::OnViewportClicked()
@@ -448,33 +571,25 @@ void UStationEditorWidgetCpp::OnViewportClicked()
 	// Check if preview actor exists and has been positioned
 	if (!EditorManager->PreviewActor || !bPreviewPositioned)
 	{
-		UE_LOG(LogAdastreaStations, Warning, TEXT("Station Editor: Cannot place module - preview not positioned"));
+		UE_LOG(LogAdastreaStations, Verbose, TEXT("Station Editor: Cannot place module - preview not positioned"));
+		return;
+	}
+
+	if (LastPlacementResult != EModulePlacementResult::Success)
+	{
+		// The status line already says why; nothing else to do.
 		return;
 	}
 
 	// Get preview position
-	FVector PlacementPosition = EditorManager->PreviewActor->GetActorLocation();
-	FRotator PlacementRotation = EditorManager->PreviewActor->GetActorRotation();
+	const FVector PlacementPosition = EditorManager->PreviewActor->GetActorLocation();
+	const FRotator PreviewRotation = EditorManager->PreviewActor->GetActorRotation();
 
-	// Validate one more time before placement
-	EModulePlacementResult ValidationResult = EditorManager->CanPlaceModule(
-		PendingPlacementModule,
-		PlacementPosition,
-		PlacementRotation
-	);
-
-	if (ValidationResult != EModulePlacementResult::Success)
-	{
-		UE_LOG(LogAdastreaStations, Warning, TEXT("Station Editor: Cannot place module: %d"),
-			static_cast<int32>(ValidationResult));
-		return;
-	}
-
-	// Place the module
+	// PlaceModule re-validates the same snapped transform.
 	ASpaceStationModule* PlacedModule = EditorManager->PlaceModule(
 		PendingPlacementModule,
 		PlacementPosition,
-		PlacementRotation
+		PreviewRotation
 	);
 
 	if (PlacedModule)
@@ -482,12 +597,15 @@ void UStationEditorWidgetCpp::OnViewportClicked()
 		UE_LOG(LogAdastreaStations, Log, TEXT("Station Editor: Placed module %s at %s"),
 			*PlacedModule->GetName(), *PlacementPosition.ToString());
 
-		// Exit placement mode
-		ExitPlacementMode();
+		// Shift+Click keeps building the same module (X4-style repeat placement).
+		if (!FSlateApplication::Get().GetModifierKeys().IsShiftDown())
+		{
+			ExitPlacementMode();
+		}
 	}
 	else
 	{
-		UE_LOG(LogAdastreaStations, Error, TEXT("Station Editor: Failed to spawn module at %s"),
+		UE_LOG(LogAdastreaStations, Warning, TEXT("Station Editor: Failed to place module at %s"),
 			*PlacementPosition.ToString());
 	}
 }
@@ -529,16 +647,70 @@ FReply UStationEditorWidgetCpp::NativeOnMouseButtonDown(const FGeometry& InGeome
 		if (InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 		{
 			OnViewportClicked();
-			return FReply::Handled();
+			return FReply::Handled().SetUserFocus(TakeWidget(), EFocusCause::Mouse);
 		}
 		else if (InMouseEvent.GetEffectingButton() == EKeys::RightMouseButton)
 		{
 			OnViewportRightClicked();
-			return FReply::Handled();
+			return FReply::Handled().SetUserFocus(TakeWidget(), EFocusCause::Mouse);
 		}
 	}
 
 	return Reply;
+}
+
+FReply UStationEditorWidgetCpp::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
+{
+	if (!EditorManager || InKeyEvent.IsRepeat())
+	{
+		return Super::NativeOnKeyDown(InGeometry, InKeyEvent);
+	}
+
+	const FKey Key = InKeyEvent.GetKey();
+	const bool bCtrl = InKeyEvent.IsControlDown();
+	const bool bShift = InKeyEvent.IsShiftDown();
+
+	if (Key == EKeys::R && !bCtrl)
+	{
+		RotatePlacement(!bShift);
+		return FReply::Handled();
+	}
+
+	if (Key == EKeys::Escape)
+	{
+		if (bIsInPlacementMode)
+		{
+			ExitPlacementMode();
+		}
+		else
+		{
+			OnCloseButtonClicked();
+		}
+		return FReply::Handled();
+	}
+
+	if (bCtrl && (Key == EKeys::Y || (Key == EKeys::Z && bShift)))
+	{
+		EditorManager->Redo();
+		return FReply::Handled();
+	}
+
+	if (bCtrl && Key == EKeys::Z)
+	{
+		EditorManager->Undo();
+		return FReply::Handled();
+	}
+
+	if (Key == EKeys::Delete && !bIsInPlacementMode)
+	{
+		if (ASpaceStationModule* Module = GetModuleUnderCursor())
+		{
+			EditorManager->RemoveModule(Module);
+		}
+		return FReply::Handled();
+	}
+
+	return Super::NativeOnKeyDown(InGeometry, InKeyEvent);
 }
 
 void UStationEditorWidgetCpp::EnsureEditorManager()

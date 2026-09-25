@@ -14,6 +14,7 @@ class AStationBuildPreview;
 class UStationGridSystem;
 class UCargoComponent;
 class ASpaceship;
+class UTradeItemDataAsset;
 
 /**
  * Result of a module placement validation check
@@ -27,10 +28,10 @@ enum class EModulePlacementResult : uint8
 	CollisionDetected	UMETA(DisplayName="Collision Detected"),
 	InsufficientPower	UMETA(DisplayName="Insufficient Power"),
 	InsufficientTech	UMETA(DisplayName="Insufficient Tech Level"),
-		InsufficientFunds	UMETA(DisplayName="Insufficient Funds"),
-		InsufficientMaterials UMETA(DisplayName="Insufficient Construction Materials"),
-		NoStation			UMETA(DisplayName="No Station Selected"),
-		Disconnected		UMETA(DisplayName="Not Connected To Station"),
+	InsufficientFunds	UMETA(DisplayName="Insufficient Funds"),
+	InsufficientMaterials UMETA(DisplayName="Insufficient Construction Materials"),
+	NoStation			UMETA(DisplayName="No Station Selected"),
+	Disconnected		UMETA(DisplayName="Not Connected To Station"),
 	NotEditing			UMETA(DisplayName="Not In Edit Mode")
 };
 
@@ -82,6 +83,33 @@ enum class EStationEditorViewMode : uint8
 };
 
 /**
+ * What was actually paid to build one module: credits plus the exact cargo
+ * items consumed. Kept per module so undo, removing a module placed this
+ * session, cancelling a queued build, and Cancel() can refund exactly that.
+ */
+USTRUCT(BlueprintType)
+struct STATIONEDITOR_API FStationModuleSpend
+{
+	GENERATED_BODY()
+
+	/** Credits deducted */
+	UPROPERTY(BlueprintReadOnly, Category="Module Spend")
+	int32 Credits = 0;
+
+	/** Cargo items consumed (parallel to MaterialQuantities) */
+	UPROPERTY(BlueprintReadOnly, Category="Module Spend")
+	TArray<TObjectPtr<UTradeItemDataAsset>> MaterialItems;
+
+	/** Quantity consumed of each MaterialItems entry */
+	UPROPERTY(BlueprintReadOnly, Category="Module Spend")
+	TArray<int32> MaterialQuantities;
+
+	bool IsEmpty() const { return Credits == 0 && MaterialItems.Num() == 0; }
+
+	FStationModuleSpend() = default;
+};
+
+/**
  * Record of an editor action for undo/redo
  */
 USTRUCT(BlueprintType)
@@ -97,9 +125,16 @@ struct STATIONEDITOR_API FEditorAction
 	UPROPERTY(BlueprintReadOnly, Category="Editor Action")
 	TSubclassOf<ASpaceStationModule> ModuleClass;
 
-	/** The module instance (may be invalid after undo) */
+	/**
+	 * The module instance. Undone placements and removals only hide the module
+	 * (it is destroyed on Save), so this stays valid for the whole session.
+	 */
 	UPROPERTY(BlueprintReadOnly, Category="Editor Action")
 	ASpaceStationModule* Module = nullptr;
+
+	/** What placing the module cost (Place), or what removing it refunded (Remove) */
+	UPROPERTY(BlueprintReadOnly, Category="Editor Action")
+	FStationModuleSpend Spend;
 
 	/** Position before the action */
 	UPROPERTY(BlueprintReadOnly, Category="Editor Action")
@@ -198,6 +233,10 @@ struct STATIONEDITOR_API FConstructionQueueItem
 	/** Whether construction is paused */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Construction Queue")
 	bool bIsPaused = false;
+
+	/** Paid when queued; refunded if the item is cancelled or never completes */
+	UPROPERTY(BlueprintReadOnly, Category="Construction Queue")
+	FStationModuleSpend Spend;
 
 	/**
 	 * Get the construction progress (0.0 to 1.0)
@@ -455,70 +494,70 @@ public:
 	static constexpr float DefaultDataConnectionCapacity = 1000.0f;   // Mbps
 	static constexpr float DefaultLifeSupportConnectionCapacity = 50.0f;  // Crew capacity
 
-	/** Distance threshold for module matching during undo/redo (squared) */
-	static constexpr float ModuleMatchDistanceSquared = 100.0f;
+	/** Highest UpgradeLevel a module can reach (also capped by tech level, see CanUpgradeModule) */
+	static constexpr int32 MaxUpgradeLevel = 5;
 
 	// =====================
 	// Configuration
 	// =====================
 
 	/** The catalog of available modules for this editor */
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration")
-		UStationModuleCatalog* ModuleCatalog;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration")
+	UStationModuleCatalog* ModuleCatalog;
 
-		/**
-		 * Ensure ModuleCatalog has entries, auto-loading from the crafting-derived
-		 * JSON spec (Content/Data/StationModuleCatalog.json) via LoadCatalogFromJson()
-		 * if it is empty or unloaded. Call once before the editor surfaces modules.
-		 */
-		UFUNCTION(BlueprintCallable, Category="Station Editor|Configuration")
-		void EnsureCatalogLoaded();
+	/**
+	 * Ensure ModuleCatalog has entries, auto-loading from the crafting-derived
+	 * JSON spec (Content/Data/StationModuleCatalog.json) via LoadCatalogFromJson()
+	 * if it is empty or unloaded. Call once before the editor surfaces modules.
+	 */
+	UFUNCTION(BlueprintCallable, Category="Station Editor|Configuration")
+	void EnsureCatalogLoaded();
 
 	/** Current player's tech level (used for module availability) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration", meta=(ClampMin=1, ClampMax=10))
 	int32 PlayerTechLevel = 1;
 
 	/** Current player's available credits */
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration", meta=(ClampMin=0))
-		int32 PlayerCredits = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration", meta=(ClampMin=0))
+	int32 PlayerCredits = 0;
 
-		/** Current player's cargo hold (source of construction/parts materials). */
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration")
-		TWeakObjectPtr<UCargoComponent> PlayerCargo;
+	/** Current player's cargo hold (source of construction/parts materials). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration")
+	TWeakObjectPtr<UCargoComponent> PlayerCargo;
 
-		/** Whether placing/queuing a module requires its crafted materials in the player's cargo. */
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration")
-		bool bRequireConstructionMaterials = true;
+	/** Whether placing/queuing a module requires its crafted materials in the player's cargo. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration")
+	bool bRequireConstructionMaterials = true;
 
-		/**
-		 * Whether the station builder will attempt to auto-resolve the player cargo
-		 * from the player pawn when PlayerCargo isn't assigned (looks for an
-		 * owning ship's CargoComponent). Disable if the editor is used without a
-		 * player pawn (e.g. AI/autonomous construction).
-		 */
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration")
-		bool bAutoResolvePlayerCargo = true;
+	/**
+	 * Whether the station builder will attempt to auto-resolve the player cargo
+	 * from the player pawn when PlayerCargo isn't assigned (looks for an
+	 * owning ship's CargoComponent). Disable if the editor is used without a
+	 * player pawn (e.g. AI/autonomous construction).
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration")
+	bool bAutoResolvePlayerCargo = true;
 
-		/**
-		 * Check the current player cargo holds everything in BuildCost.Materials for
-		 * the given module class.
-		 * @param ModuleClass The module to build
-		 * @return True if all required parts are present, false if any are missing
-		 */
-		UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station Editor|Construction")
-		bool HasMaterialsForModule(TSubclassOf<ASpaceStationModule> ModuleClass) const;
+	/**
+	 * Check the current player cargo holds everything in BuildCost.Materials for
+	 * the given module class.
+	 * @param ModuleClass The module to build
+	 * @return True if all required parts are present, false if any are missing
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station Editor|Construction")
+	bool HasMaterialsForModule(TSubclassOf<ASpaceStationModule> ModuleClass) const;
 
-		/**
-		 * Remove BuildCost.Materials from the player's cargo. Call after a successful
-		 * placement to consume the constructed parts.
-		 * @param ModuleClass The module that was built
-		 * @return True if all materials were removed
-		 */
-		UFUNCTION(BlueprintCallable, Category="Station Editor|Construction")
-		bool ConsumeMaterialsForModule(TSubclassOf<ASpaceStationModule> ModuleClass);
+	/**
+	 * Remove BuildCost.Materials from the player's cargo. Call after a successful
+	 * placement to consume the constructed parts.
+	 * @param ModuleClass The module that was built
+	 * @return True if all materials were removed
+	 */
+	UFUNCTION(BlueprintCallable, Category="Station Editor|Construction")
+	bool ConsumeMaterialsForModule(TSubclassOf<ASpaceStationModule> ModuleClass);
 
-		/** Resolve the cargo component to check/deduct construction materials from. */
-		UCargoComponent* GetConstructionCargo() const;
+	/** Resolve the cargo component to check/deduct construction materials from. */
+	UCargoComponent* GetConstructionCargo() const;
 
 	/** Whether to automatically snap modules to grid */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration")
@@ -750,6 +789,44 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station Editor|Validation")
 	bool CanAffordModule(TSubclassOf<ASpaceStationModule> ModuleClass) const;
+
+	/**
+	 * Whether a module can be removed without splitting the rest of the station
+	 * into disconnected pieces (the removal counterpart of the placement
+	 * connectivity rule).
+	 * @param Module The module to check
+	 * @return True if the module is on the station and removing it keeps the station in one piece
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station Editor|Validation")
+	bool CanRemoveModule(ASpaceStationModule* Module) const;
+
+	/**
+	 * Where a module would attach against a face of an existing module: the
+	 * neighbour position on the side HitNormal points to (its dominant axis), at
+	 * exactly the pair's clearance distance, grid-snapped. Lets the UI "click a
+	 * face to build there" instead of snapping a surface hit point, which often
+	 * lands inside the module that was clicked.
+	 * @param ModuleClass The module being placed
+	 * @param ExistingModule The module under the cursor
+	 * @param HitNormal Surface normal under the cursor
+	 * @param OutPosition The attach position
+	 * @return True if ExistingModule is part of the edited station
+	 */
+	UFUNCTION(BlueprintCallable, Category="Station Editor|Validation")
+	bool FindAttachPosition(TSubclassOf<ASpaceStationModule> ModuleClass, ASpaceStationModule* ExistingModule, FVector HitNormal, FVector& OutPosition) const;
+
+	/**
+	 * Short player-facing reason for a placement result (status lines, tooltips).
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station Editor|Validation")
+	static FText GetPlacementResultText(EModulePlacementResult Result);
+
+	/**
+	 * Snap a world position and rotation the same way PlaceModule() will, so
+	 * callers validate the transform that will actually be used.
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station Editor|Validation")
+	void SnapPlacement(FVector Position, FRotator Rotation, FVector& OutPosition, FRotator& OutRotation) const;
 
 	// =====================
 	// Resource Tracking
@@ -1180,9 +1257,60 @@ public:
 	bool UpgradeModule(ASpaceStationModule* Module);
 
 protected:
-	/** Modules that were added during this editing session (for undo on cancel) */
+	/**
+	 * Every module spawned this session, including ones currently hidden by an
+	 * undo or a removal. Cancel() destroys all of them.
+	 */
 	UPROPERTY()
 	TArray<ASpaceStationModule*> ModulesAddedThisSession;
+
+	/**
+	 * Modules taken off the station this session (removed, or placement undone).
+	 * They are hidden rather than destroyed so undo/redo and Cancel() can bring
+	 * the same actor back; Save() destroys them.
+	 */
+	UPROPERTY()
+	TArray<ASpaceStationModule*> SoftDeletedModules;
+
+	/** What each built session module cost, refunded on Cancel() */
+	UPROPERTY()
+	TMap<ASpaceStationModule*, FStationModuleSpend> SessionSpend;
+
+	/** Spawn a module and attach it to the station (no validation, charging or undo record) */
+	ASpaceStationModule* SpawnModuleInternal(TSubclassOf<ASpaceStationModule> ModuleClass, FVector WorldPosition, FRotator Rotation);
+
+	/** Take a module off the station and hide it (see SoftDeletedModules) */
+	void SoftDeleteModule(ASpaceStationModule* Module);
+
+	/** Put a soft-deleted module back on the station */
+	void RestoreModule(ASpaceStationModule* Module);
+
+	/** Drop every connection that involves Module */
+	void RemoveConnectionsFor(const ASpaceStationModule* Module);
+
+	/** Rebuild Module's connections after it moved or rotated */
+	void RefreshModuleConnections(ASpaceStationModule* Module);
+
+	/** Check affordability, then deduct credits + materials for one module */
+	bool ChargeForModule(TSubclassOf<ASpaceStationModule> ModuleClass, FStationModuleSpend& OutSpend);
+
+	/** Deduct a previously refunded spend again (redo). Fails with no side effects if it can't be paid */
+	bool RechargeSpend(const FStationModuleSpend& Spend);
+
+	/** Give back credits and cargo items */
+	void RefundSpend(const FStationModuleSpend& Spend);
+
+	/** Refund and clear everything still in the construction queue */
+	void RefundConstructionQueue();
+
+	/** Collision test that skips one module (used when moving a module) */
+	bool CheckCollisionIgnoring(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position, const ASpaceStationModule* IgnoredModule) const;
+
+	/** Number of connected pieces the station's modules form, optionally pretending one is gone */
+	int32 CountConnectedComponents(const ASpaceStationModule* ExcludedModule) const;
+
+	/** AddNotification, unless an identical unread one is already listed */
+	void AddNotificationOnce(const FString& Message, ENotificationSeverity Severity, ASpaceStationModule* RelatedModule = nullptr);
 
 	/** Original positions of moved modules (for undo on cancel) */
 	UPROPERTY()
@@ -1206,12 +1334,12 @@ protected:
 	/**
 	 * Execute an action (for redo)
 	 */
-	bool ExecuteAction(const FEditorAction& Action);
+	bool ExecuteAction(FEditorAction& Action);
 
 	/**
 	 * Reverse an action (for undo)
 	 */
-	bool ReverseAction(const FEditorAction& Action);
+	bool ReverseAction(FEditorAction& Action);
 
 	/**
 	 * Notify undo/redo state changed

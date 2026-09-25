@@ -19,6 +19,8 @@ class UModuleListItemWidget;
 class UConstructionQueueItemWidget;
 struct FStationStatistics;
 struct FConstructionQueueItem;
+struct FStationNotification;
+enum class EModulePlacementResult : uint8;
 
 /**
  * Station Editor Widget - C++ Implementation
@@ -30,7 +32,11 @@ struct FConstructionQueueItem;
  * - Module list population from catalog
  * - Station statistics display (power, module count)
  * - Construction queue management
- * - Module placement at cursor position
+ * - Module placement at cursor position (snaps onto the face of the module
+ *   under the cursor, or onto the station's build plane in open space)
+ * - Keyboard: R / Shift+R rotate, Esc cancel placement (or close), Ctrl+Z undo,
+ *   Ctrl+Y / Ctrl+Shift+Z redo, Delete removes the module under the cursor,
+ *   Shift+Click keeps building the same module
  * - Event-driven UI updates
  *
  * Usage:
@@ -74,6 +80,21 @@ public:
 	/** Scroll box containing construction queue items */
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UScrollBox* QueueScrollBox;
+
+	/**
+	 * Optional status line: why the current placement is blocked, the latest
+	 * editor notification, and key hints. Add a TextBlock with this name to show it.
+	 */
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional))
+	UTextBlock* PlacementStatusText;
+
+	/** Optional credits readout */
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional))
+	UTextBlock* CreditsText;
+
+	/** How long an editor notification stays on the status line (seconds) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor", meta=(ClampMin=0.5f))
+	float NotificationDisplayTime = 4.0f;
 
 	// =====================
 	// Configuration
@@ -158,6 +179,9 @@ protected:
 	/** Called when a mouse button is pressed */
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
+	/** Editor hotkeys (rotate, cancel, undo/redo, delete) */
+	virtual FReply NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
+
 	// =====================
 	// Event Handlers
 	// =====================
@@ -209,6 +233,10 @@ protected:
 	UFUNCTION()
 	void OnQueueItemCancelled(int32 QueueId);
 
+	/** Show manager notifications (blocked removals, warnings, completions) on the status line */
+	UFUNCTION()
+	void OnManagerNotificationAdded(const FStationNotification& Notification);
+
 	// =====================
 	// Module Placement
 	// =====================
@@ -227,11 +255,24 @@ protected:
 	/**
 	 * Update preview position to follow cursor in 3D space.
 	 *
-	 * Updates preview position to follow cursor via line trace.
-	 * Preview is updated only if trace hits geometry. If no hit is detected,
-	 * the preview is hidden to indicate placement is not possible.
+	 * Over a module of this station: the preview attaches to the face under the
+	 * cursor (UStationEditorManager::FindAttachPosition). Over nothing: it sits
+	 * where the cursor ray crosses the station's horizontal build plane. The
+	 * first module of an empty station always goes on the station origin.
 	 */
 	void UpdatePreviewPosition();
+
+	/** Where the cursor wants the pending module, per the rules above */
+	bool GetPlacementTarget(FVector& OutPosition);
+
+	/** The module of the edited station under the cursor, if any */
+	ASpaceStationModule* GetModuleUnderCursor(FHitResult* OutHit = nullptr);
+
+	/** Rotate the pending module by 90 degrees (yaw) */
+	void RotatePlacement(bool bClockwise);
+
+	/** Refresh the optional status line */
+	void UpdateStatusText();
 
 	/**
 	 * Handle click in 3D viewport to confirm placement
@@ -274,4 +315,14 @@ private:
 	/** Whether the preview has been positioned at least once (not at world origin) */
 	UPROPERTY()
 	bool bPreviewPositioned;
+
+	/** Rotation applied to the next placement (R / Shift+R) */
+	FRotator PlacementRotation = FRotator::ZeroRotator;
+
+	/** Validation result for the preview's current spot */
+	EModulePlacementResult LastPlacementResult;
+
+	/** Latest notification text and when it arrived (world seconds) */
+	FText LastNotificationText;
+	float LastNotificationTime = -1000.0f;
 };
