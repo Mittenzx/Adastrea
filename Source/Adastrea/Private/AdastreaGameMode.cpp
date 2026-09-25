@@ -4,6 +4,7 @@
 #include "GameFramework/PlayerStart.h"
 #include "SpaceSectorMap.h"
 #include "Ships/Spaceship.h"
+#include "Stations/SpaceStation.h"
 #include "AdastreaHUD.h"
 #include "UI/TestSettingsWidget.h"
 #include "Player/AdastreaPlayerController.h"
@@ -63,6 +64,37 @@ void AAdastreaGameMode::BeginPlay()
 		// No test settings to show - proceed with normal initialization
 		OnTestSettingsContinue();
 	}
+}
+
+// Returns Location, or a point outside every station whose bounds contain it.
+// The sector center is typically where the hub station sits, so spawning there
+// would put the ship inside the hub's hull. Pushes out horizontally along the
+// station->spawn direction (-X when they coincide, so the ship faces the station).
+static FVector PushSpawnClearOfStations(UWorld* World, FVector Location)
+{
+	static constexpr float ClearanceMargin = 2000.0f;
+
+	TArray<AActor*> Stations;
+	UGameplayStatics::GetAllActorsOfClass(World, ASpaceStation::StaticClass(), Stations);
+	for (AActor* Station : Stations)
+	{
+		FVector Origin, Extent;
+		Station->GetActorBounds(false, Origin, Extent);
+		const float Radius = Extent.Size() + ClearanceMargin;
+		const FVector Offset = Location - Origin;
+		if (Offset.SizeSquared() >= FMath::Square(Radius))
+		{
+			continue;
+		}
+
+		// Push out horizontally so the ship ends up beside the station, not above/below it.
+		const FVector Flat(Offset.X, Offset.Y, 0.0f);
+		const FVector Dir = Flat.IsNearlyZero() ? -FVector::ForwardVector : Flat.GetSafeNormal();
+		Location = FVector(Origin.X, Origin.Y, Location.Z) + Dir * Radius;
+		UE_LOG(LogAdastrea, Log, TEXT("AdastreaGameMode: Spawn point was inside station '%s', moved to %s"),
+			*Station->GetName(), *Location.ToString());
+	}
+	return Location;
 }
 
 void AAdastreaGameMode::SpawnPlayerSpaceship()
@@ -136,7 +168,8 @@ void AAdastreaGameMode::SpawnPlayerSpaceship()
 			UE_LOG(LogAdastrea, Log, TEXT("AdastreaGameMode: Spawning player spaceship at PlayerStart %s"), *SpawnLocation.ToString());
 		}
 	}
-	ASpaceship* PlayerShip = GetWorld()->SpawnActor<ASpaceship>(DefaultSpaceshipClass, SpawnLocation, SpawnRotation, SpawnParams);
+	SpawnLocation = PushSpawnClearOfStations(GetWorld(), SpawnLocation);
+	ASpaceship* PlayerShip =GetWorld()->SpawnActor<ASpaceship>(DefaultSpaceshipClass, SpawnLocation, SpawnRotation, SpawnParams);
 
 	if (!PlayerShip)
 	{
