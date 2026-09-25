@@ -327,9 +327,9 @@ public:
 		UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Targeting")
 		bool IsTargetingModeActive() const { return bTargetingModeActive; }
 
-		/** The currently locked target actor (station), if any. */
+		/** The currently locked target actor (station, ship or asteroid), if any. */
 			UFUNCTION(BlueprintCallable, BlueprintPure, Category="Player|Targeting")
-			AActor* GetLockedTarget() const { return LockedTargetActor; }
+			AActor* GetLockedTarget() const { return IsValid(LockedTargetActor) ? LockedTargetActor : nullptr; }
 
 			/**
 			 * Leave the ship's cockpit (ship mode) and possess a third-person avatar to walk
@@ -412,7 +412,7 @@ public:
 									/** Input handler: Tab toggles targeting mode. */
 									void HandleTargetingToggle();
 
-					/** Input handler: Left-mouse-click selects/locks a station in targeting mode. */
+					/** Input handler: Left-mouse-click selects/locks a station, ship or asteroid in targeting mode. */
 							void HandleTargetClick();
 
 							/** Input handler: M toggles the full-screen 2D sector map. */
@@ -467,8 +467,20 @@ public:
 																	void HandleMapToggleStations();
 																	AAdastreaHUD* GetMapHUD();
 
-					/** Screen-space ray from the cursor; returns the targetable station under it. */
-					class ASpaceStation* GetStationUnderCursor();
+					/** Screen-space ray from the cursor; returns the targetable station, ship or asteroid under it. */
+					AActor* GetTargetUnderCursor();
+
+	/** Targets reachable by the cycle keys, nearest-first. */
+	TArray<AActor*> GetCycleTargets() const;
+
+	/** Step the locked target through GetCycleTargets() (+1 next, -1 previous), wrapping. */
+	void CycleTarget(int32 Direction);
+
+	/** Input handlers: ] next target, [ previous target, Y nearest target, Z clear target. */
+	void HandleNextTarget();
+	void HandlePreviousTarget();
+	void HandleNearestTarget();
+	void HandleClearTarget();
 
 	/**
 	 * Toggle the station editor UI
