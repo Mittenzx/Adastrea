@@ -220,6 +220,18 @@ void ASpaceshipInterior::ConfigureInterior(UStaticMesh* ShellMesh, EShipInterior
         return;
     }
 
+    // Tear down companion parts from any previous configuration -- otherwise a
+    // re-configure (e.g. Fighter -> CommandXLBridge) leaves the old family's
+    // parts mounted alongside the new kit.
+    for (TObjectPtr<UStaticMeshComponent> Part : InteriorParts)
+    {
+        if (Part)
+        {
+            Part->DestroyComponent();
+        }
+    }
+    InteriorParts.Empty();
+
     // Resolve the mesh: explicit arg, else the configured default, else a fallback path.
     UStaticMesh* Mesh = ShellMesh;
     if (!Mesh && !DefaultInteriorMesh.IsNull())
