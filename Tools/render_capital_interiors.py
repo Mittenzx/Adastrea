@@ -31,7 +31,58 @@ def base_name(n):
     return n.split(".")[0]
 
 
+INT_TEX = os.path.join(os.path.dirname(os.path.dirname(GEN)), "Textures", "generated", "interiors")
+
+
+def make_baked_mat(name):
+    """M_Int_<Kit>_<Atlas> slot from Tools/bake_interior_unique.py: preview the
+    real baked atlas (DirectX normal flipped to Blender's OpenGL)."""
+    tset = "T_Int_" + name[len("M_Int_"):]
+    if not os.path.exists(os.path.join(INT_TEX, tset + "_D.png")):
+        return None
+    m = bpy.data.materials.new("PV_" + name)
+    m.use_nodes = True
+    nt = m.node_tree; nt.nodes.clear()
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    b = nt.nodes.new("ShaderNodeBsdfPrincipled")
+    nt.links.new(b.outputs[0], out.inputs[0])
+
+    def tex(suf, cs):
+        n = nt.nodes.new("ShaderNodeTexImage")
+        n.image = bpy.data.images.load(os.path.join(INT_TEX, f"{tset}_{suf}.png"))
+        n.image.colorspace_settings.name = cs
+        return n
+    d, ao = tex("D", "sRGB"), tex("AO", "Non-Color")
+    mul = nt.nodes.new("ShaderNodeMix"); mul.data_type = 'RGBA'; mul.blend_type = 'MULTIPLY'
+    mul.inputs[0].default_value = 0.6
+    nt.links.new(d.outputs["Color"], mul.inputs[6]); nt.links.new(ao.outputs["Color"], mul.inputs[7])
+    nt.links.new(mul.outputs[2], b.inputs["Base Color"])
+    nt.links.new(tex("R", "Non-Color").outputs["Color"], b.inputs["Roughness"])
+    nt.links.new(tex("M", "Non-Color").outputs["Color"], b.inputs["Metallic"])
+    nt.links.new(tex("E", "sRGB").outputs["Color"], b.inputs["Emission Color"])
+    b.inputs["Emission Strength"].default_value = 3.0
+    n = tex("N", "Non-Color")
+    sep = nt.nodes.new("ShaderNodeSeparateColor"); com = nt.nodes.new("ShaderNodeCombineColor")
+    inv = nt.nodes.new("ShaderNodeMath"); inv.operation = 'SUBTRACT'; inv.inputs[0].default_value = 1.0
+    nt.links.new(n.outputs["Color"], sep.inputs[0])
+    nt.links.new(sep.outputs[0], com.inputs[0]); nt.links.new(sep.outputs[1], inv.inputs[1])
+    nt.links.new(inv.outputs[0], com.inputs[1]); nt.links.new(sep.outputs[2], com.inputs[2])
+    nm = nt.nodes.new("ShaderNodeNormalMap")
+    nt.links.new(com.outputs[0], nm.inputs["Color"]); nt.links.new(nm.outputs[0], b.inputs["Normal"])
+    # same weak self-light as the flat preview slots (headless EEVEE has no GI
+    # bounce here), so both kinds of kit preview are lit alike
+    em = nt.nodes.new("ShaderNodeEmission"); em.inputs["Strength"].default_value = 0.35
+    nt.links.new(mul.outputs[2], em.inputs["Color"])
+    add = nt.nodes.new("ShaderNodeAddShader")
+    nt.links.new(b.outputs[0], add.inputs[0]); nt.links.new(em.outputs[0], add.inputs[1])
+    nt.links.new(add.outputs[0], out.inputs[0])
+    return m
+
+
 def make_mat(name):
+    baked = make_baked_mat(name) if name.startswith("M_Int_") and name not in COL else None
+    if baked:
+        return baked
     col = COL.get(name, (0.5, 0.5, 0.5))
     m = bpy.data.materials.new("PV_" + name)
     m.use_nodes = True
