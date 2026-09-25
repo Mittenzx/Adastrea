@@ -791,8 +791,10 @@ void AAdastreaPlayerController::ToggleStationEditor()
 		return;
 	}
 
-	// Toggle editor state
-	if (bIsStationEditorOpen)
+	// Toggle editor state. Ask the widget, not just the flag: the editor can
+	// close itself (its Close button, Esc), which leaves bIsStationEditorOpen
+	// stale and made the next G press "close" an already-closed editor.
+	if (IsStationEditorOpen())
 	{
 		// Close the editor
 		HideStationEditor();

@@ -7,9 +7,19 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "Trading/CargoComponent.h"
+#include "Trading/TradeItemDataAsset.h"
 #include "Ships/Spaceship.h"
 #include "Stations/ReactorModule.h"
 #include "Stations/SolarArrayModule.h"
+
+namespace
+{
+	// Grid-adjacent neighbours sit at exactly the sum of their radii. Collision,
+	// adjacency and auto-connection all compare against that same distance, so
+	// they share this slack (1 cm) to stop float noise from flipping "touching"
+	// into "overlapping" or "not a neighbour" and making the three disagree.
+	constexpr float PlacementDistanceTolerance = 1.0f;
+}
 
 UStationEditorManager::UStationEditorManager()
 {
@@ -32,134 +42,422 @@ UStationEditorManager::UStationEditorManager()
 
 void UStationEditorManager::EnsureCatalogLoaded()
 {
-    // Default the catalog to the project's DA_StationModuleCatalog asset if none
-    // was assigned (so the station editor reliably surfaces all 27 modules).
-    if (!ModuleCatalog)
-    {
-        ModuleCatalog = Cast<UStationModuleCatalog>(
-            StaticLoadObject(UStationModuleCatalog::StaticClass(), nullptr,
-                TEXT("/Game/DataAssets/Stations/DA_StationModuleCatalog.DA_StationModuleCatalog")));
-    }
-    if (!ModuleCatalog)
-        {
-            return;
-        }
-        if (!ModuleCatalog->IsCatalogLoaded())
-        {
-            ModuleCatalog->LoadCatalogFromJson();
-        }
-    }
+	// Default the catalog to the project's DA_StationModuleCatalog asset if none
+	// was assigned (so the station editor reliably surfaces all 27 modules).
+	if (!ModuleCatalog)
+	{
+		ModuleCatalog = Cast<UStationModuleCatalog>(
+			StaticLoadObject(UStationModuleCatalog::StaticClass(), nullptr,
+				TEXT("/Game/DataAssets/Stations/DA_StationModuleCatalog.DA_StationModuleCatalog")));
+	}
+	if (!ModuleCatalog)
+	{
+		return;
+	}
+	if (!ModuleCatalog->IsCatalogLoaded())
+	{
+		ModuleCatalog->LoadCatalogFromJson();
+	}
+}
 
-    UCargoComponent* UStationEditorManager::GetConstructionCargo() const
-    {
-        if (PlayerCargo.IsValid())
-        {
-            return PlayerCargo.Get();
-        }
+UCargoComponent* UStationEditorManager::GetConstructionCargo() const
+{
+	if (PlayerCargo.IsValid())
+	{
+		return PlayerCargo.Get();
+	}
 
-        if (!bAutoResolvePlayerCargo)
-        {
-            return nullptr;
-        }
+	if (!bAutoResolvePlayerCargo)
+	{
+		return nullptr;
+	}
 
-        // Auto-resolve from the player pawn's owning ship (if any).
-                UWorld* World = GetWorld();
-                if (!World && CurrentStation)
-                {
-                    World = CurrentStation->GetWorld();
-                }
-                if (!World)
-                {
-                    return nullptr;
-                }
-                APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(World, 0);
-                if (ASpaceship* Ship = Cast<ASpaceship>(PlayerPawn))
-                {
-                    return Ship->CargoComponent.Get();
-                }
-                return nullptr;
-    }
+	// Auto-resolve from the player pawn's owning ship (if any).
+	UWorld* World = GetWorld();
+	if (!World && CurrentStation)
+	{
+		World = CurrentStation->GetWorld();
+	}
+	if (!World)
+	{
+		return nullptr;
+	}
+	APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(World, 0);
+	if (ASpaceship* Ship = Cast<ASpaceship>(PlayerPawn))
+	{
+		return Ship->CargoComponent.Get();
+	}
+	return nullptr;
+}
 
-    bool UStationEditorManager::HasMaterialsForModule(TSubclassOf<ASpaceStationModule> ModuleClass) const
-    {
-        if (!bRequireConstructionMaterials || !ModuleCatalog || !ModuleClass)
-        {
-            // Materials not required, or no catalog to check against.
-            return true;
-        }
+bool UStationEditorManager::HasMaterialsForModule(TSubclassOf<ASpaceStationModule> ModuleClass) const
+{
+	if (!bRequireConstructionMaterials || !ModuleCatalog || !ModuleClass)
+	{
+		// Materials not required, or no catalog to check against.
+		return true;
+	}
 
-        FStationModuleEntry Entry;
-        if (!ModuleCatalog->FindModuleByClass(ModuleClass, Entry))
-        {
-            return true; // Not in catalog, allow it.
-        }
+	FStationModuleEntry Entry;
+	if (!ModuleCatalog->FindModuleByClass(ModuleClass, Entry))
+	{
+		return true; // Not in catalog, allow it.
+	}
 
-        if (Entry.BuildCost.Materials.Num() == 0)
-        {
-            return true;
-        }
+	if (Entry.BuildCost.Materials.Num() == 0)
+	{
+		return true;
+	}
 
-        UCargoComponent* Cargo = GetConstructionCargo();
-        if (!Cargo)
-        {
-            UE_LOG(LogAdastreaStations, Warning,
-                TEXT("StationEditorManager::HasMaterialsForModule - No player cargo available to check materials"));
-            return false;
-        }
+	UCargoComponent* Cargo = GetConstructionCargo();
+	if (!Cargo)
+	{
+		// Verbose: this runs every frame while the placement preview is up.
+		UE_LOG(LogAdastreaStations, Verbose,
+			TEXT("StationEditorManager::HasMaterialsForModule - No player cargo available to check materials"));
+		return false;
+	}
 
-        for (const TPair<FName, int32>& Mat : Entry.BuildCost.Materials)
-        {
-            if (!Mat.Key.IsNone() && Mat.Value > 0 && Cargo->GetItemQuantityByID(Mat.Key) < Mat.Value)
-            {
-                UE_LOG(LogAdastreaStations, Log,
-                    TEXT("StationEditorManager::HasMaterialsForModule - %s requires %d x %s (have %d)"),
-                    *ModuleClass->GetName(), Mat.Value, *Mat.Key.ToString(), Cargo->GetItemQuantityByID(Mat.Key));
-                return false;
-            }
-        }
+	for (const TPair<FName, int32>& Mat : Entry.BuildCost.Materials)
+	{
+		if (!Mat.Key.IsNone() && Mat.Value > 0 && Cargo->GetItemQuantityByID(Mat.Key) < Mat.Value)
+		{
+			UE_LOG(LogAdastreaStations, Verbose,
+				TEXT("StationEditorManager::HasMaterialsForModule - %s requires %d x %s (have %d)"),
+				*ModuleClass->GetName(), Mat.Value, *Mat.Key.ToString(), Cargo->GetItemQuantityByID(Mat.Key));
+			return false;
+		}
+	}
 
-        return true;
-    }
+	return true;
+}
 
-    bool UStationEditorManager::ConsumeMaterialsForModule(TSubclassOf<ASpaceStationModule> ModuleClass)
-    {
-        if (!bRequireConstructionMaterials || !ModuleCatalog || !ModuleClass)
-        {
-            return true;
-        }
+bool UStationEditorManager::ConsumeMaterialsForModule(TSubclassOf<ASpaceStationModule> ModuleClass)
+{
+	if (!bRequireConstructionMaterials || !ModuleCatalog || !ModuleClass)
+	{
+		return true;
+	}
 
-        FStationModuleEntry Entry;
-        if (!ModuleCatalog->FindModuleByClass(ModuleClass, Entry))
-        {
-            return true;
-        }
+	FStationModuleEntry Entry;
+	if (!ModuleCatalog->FindModuleByClass(ModuleClass, Entry))
+	{
+		return true;
+	}
 
-        UCargoComponent* Cargo = GetConstructionCargo();
-        if (!Cargo)
-        {
-            return false;
-        }
+	UCargoComponent* Cargo = GetConstructionCargo();
+	if (!Cargo)
+	{
+		return false;
+	}
 
-        bool bAllRemoved = true;
-        for (const TPair<FName, int32>& Mat : Entry.BuildCost.Materials)
-        {
-            if (Mat.Key.IsNone() || Mat.Value <= 0)
-            {
-                continue;
-            }
-            if (!Cargo->RemoveCargoByID(Mat.Key, Mat.Value))
-            {
-                bAllRemoved = false;
-                UE_LOG(LogAdastreaStations, Warning,
-                    TEXT("StationEditorManager::ConsumeMaterialsForModule - could not remove %d x %s"),
-                    Mat.Value, *Mat.Key.ToString());
-            }
-        }
+	bool bAllRemoved = true;
+	for (const TPair<FName, int32>& Mat : Entry.BuildCost.Materials)
+	{
+		if (Mat.Key.IsNone() || Mat.Value <= 0)
+		{
+			continue;
+		}
+		if (!Cargo->RemoveCargoByID(Mat.Key, Mat.Value))
+		{
+			bAllRemoved = false;
+			UE_LOG(LogAdastreaStations, Warning,
+				TEXT("StationEditorManager::ConsumeMaterialsForModule - could not remove %d x %s"),
+				Mat.Value, *Mat.Key.ToString());
+		}
+	}
 
-        return bAllRemoved;
-    }
+	return bAllRemoved;
+}
 
-    bool UStationEditorManager::BeginEditing_Implementation(ASpaceStation* Station)
+// =====================
+// Spending / Refunds
+// =====================
+
+bool UStationEditorManager::ChargeForModule(TSubclassOf<ASpaceStationModule> ModuleClass, FStationModuleSpend& OutSpend)
+{
+	OutSpend = FStationModuleSpend();
+
+	if (!CanAffordModule(ModuleClass) || !HasMaterialsForModule(ModuleClass))
+	{
+		return false;
+	}
+
+	FStationBuildCost Cost;
+	if (GetModuleBuildCost(ModuleClass, Cost))
+	{
+		OutSpend.Credits = FMath::Min(Cost.Credits, PlayerCredits);
+		PlayerCredits -= OutSpend.Credits;
+	}
+
+	// Record exactly which cargo items were taken (diff the hold around the
+	// removal) so a refund gives back the same items. RemoveCargoByID matches
+	// IDs loosely, so the catalog's material IDs can't be used to add them back.
+	UCargoComponent* Cargo = bRequireConstructionMaterials ? GetConstructionCargo() : nullptr;
+	if (Cargo && Cost.Materials.Num() > 0)
+	{
+		TMap<UTradeItemDataAsset*, int32> Before;
+		for (const FCargoEntry& CargoEntry : Cargo->GetCargoContents())
+		{
+			Before.FindOrAdd(CargoEntry.Item) += CargoEntry.Quantity;
+		}
+
+		if (!ConsumeMaterialsForModule(ModuleClass))
+		{
+			UE_LOG(LogAdastreaStations, Warning,
+				TEXT("StationEditorManager::ChargeForModule - could not consume all construction materials for %s"),
+				*ModuleClass->GetName());
+		}
+
+		TMap<UTradeItemDataAsset*, int32> After;
+		for (const FCargoEntry& CargoEntry : Cargo->GetCargoContents())
+		{
+			After.FindOrAdd(CargoEntry.Item) += CargoEntry.Quantity;
+		}
+
+		for (const TPair<UTradeItemDataAsset*, int32>& Pair : Before)
+		{
+			const int32 Taken = Pair.Value - After.FindRef(Pair.Key);
+			if (Pair.Key && Taken > 0)
+			{
+				OutSpend.MaterialItems.Add(Pair.Key);
+				OutSpend.MaterialQuantities.Add(Taken);
+			}
+		}
+	}
+
+	return true;
+}
+
+bool UStationEditorManager::RechargeSpend(const FStationModuleSpend& Spend)
+{
+	if (PlayerCredits < Spend.Credits)
+	{
+		return false;
+	}
+
+	UCargoComponent* Cargo = Spend.MaterialItems.Num() > 0 ? GetConstructionCargo() : nullptr;
+	if (Spend.MaterialItems.Num() > 0)
+	{
+		if (!Cargo)
+		{
+			return false;
+		}
+		for (int32 i = 0; i < Spend.MaterialItems.Num(); ++i)
+		{
+			if (Cargo->GetItemQuantity(Spend.MaterialItems[i]) < Spend.MaterialQuantities[i])
+			{
+				return false;
+			}
+		}
+	}
+
+	PlayerCredits -= Spend.Credits;
+	for (int32 i = 0; i < Spend.MaterialItems.Num(); ++i)
+	{
+		Cargo->RemoveCargo(Spend.MaterialItems[i], Spend.MaterialQuantities[i]);
+	}
+	return true;
+}
+
+void UStationEditorManager::RefundSpend(const FStationModuleSpend& Spend)
+{
+	PlayerCredits += Spend.Credits;
+
+	if (Spend.MaterialItems.Num() == 0)
+	{
+		return;
+	}
+
+	UCargoComponent* Cargo = GetConstructionCargo();
+	for (int32 i = 0; i < Spend.MaterialItems.Num(); ++i)
+	{
+		UTradeItemDataAsset* Item = Spend.MaterialItems[i];
+		const int32 Quantity = Spend.MaterialQuantities[i];
+		if (!Cargo || !Item || !Cargo->AddCargo(Item, Quantity))
+		{
+			UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::RefundSpend - could not return %d x %s to cargo"),
+				Quantity, Item ? *Item->GetName() : TEXT("<null>"));
+			AddNotification(FText::FromString(FString::Printf(TEXT("Couldn't return %d x %s - cargo hold full or unavailable"),
+				Quantity, Item ? *Item->ItemName.ToString() : TEXT("materials"))),
+				ENotificationSeverity::Warning, nullptr);
+		}
+	}
+}
+
+void UStationEditorManager::RefundConstructionQueue()
+{
+	if (ConstructionQueue.Num() == 0)
+	{
+		return;
+	}
+
+	for (const FConstructionQueueItem& Item : ConstructionQueue)
+	{
+		RefundSpend(Item.Spend);
+	}
+	ConstructionQueue.Empty();
+	OnConstructionQueueChanged.Broadcast();
+}
+
+// =====================
+// Module Bookkeeping
+// =====================
+
+ASpaceStationModule* UStationEditorManager::SpawnModuleInternal(TSubclassOf<ASpaceStationModule> ModuleClass, FVector WorldPosition, FRotator Rotation)
+{
+	if (!ModuleClass || !CurrentStation)
+	{
+		return nullptr;
+	}
+
+	UWorld* World = CurrentStation->GetWorld();
+	if (!World)
+	{
+		UE_LOG(LogAdastreaStations, Error, TEXT("StationEditorManager::SpawnModuleInternal - No world available"));
+		return nullptr;
+	}
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = CurrentStation;
+	// Neighbouring modules touch by design; placement validity is our own rule
+	// (CanPlaceModule), not the physics overlap test.
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	ASpaceStationModule* NewModule = World->SpawnActor<ASpaceStationModule>(ModuleClass, WorldPosition, Rotation, SpawnParams);
+	if (!NewModule)
+	{
+		UE_LOG(LogAdastreaStations, Error, TEXT("StationEditorManager::SpawnModuleInternal - Failed to spawn %s"), *ModuleClass->GetName());
+		return nullptr;
+	}
+
+	CurrentStation->AddModuleAtLocation(NewModule, WorldPosition - CurrentStation->GetActorLocation());
+	ModulesAddedThisSession.Add(NewModule);
+	AutoGenerateConnections(NewModule);
+
+	bStatisticsDirty = true;
+	NotifyPowerBalanceChanged();
+	OnModulePlaced.Broadcast(NewModule);
+
+	return NewModule;
+}
+
+void UStationEditorManager::SoftDeleteModule(ASpaceStationModule* Module)
+{
+	if (!Module || !CurrentStation)
+	{
+		return;
+	}
+
+	RemoveConnectionsFor(Module);
+	CurrentStation->RemoveModule(Module);
+
+	// Hidden + no collision so it neither renders nor catches the placement trace.
+	Module->SetActorHiddenInGame(true);
+	Module->SetActorEnableCollision(false);
+	Module->SetActorTickEnabled(false);
+	SoftDeletedModules.AddUnique(Module);
+
+	bStatisticsDirty = true;
+	NotifyPowerBalanceChanged();
+	OnModuleRemoved.Broadcast(Module);
+}
+
+void UStationEditorManager::RestoreModule(ASpaceStationModule* Module)
+{
+	if (!Module || !CurrentStation)
+	{
+		return;
+	}
+
+	SoftDeletedModules.Remove(Module);
+
+	Module->SetActorHiddenInGame(false);
+	Module->SetActorEnableCollision(true);
+	Module->SetActorTickEnabled(true);
+	CurrentStation->AddModuleAtLocation(Module, Module->GetActorLocation() - CurrentStation->GetActorLocation());
+	AutoGenerateConnections(Module);
+
+	bStatisticsDirty = true;
+	NotifyPowerBalanceChanged();
+	OnModulePlaced.Broadcast(Module);
+}
+
+void UStationEditorManager::RemoveConnectionsFor(const ASpaceStationModule* Module)
+{
+	const int32 NumRemoved = Connections.RemoveAll([Module](const FModuleConnection& Conn)
+	{
+		return Conn.ModuleA == Module || Conn.ModuleB == Module;
+	});
+	if (NumRemoved > 0)
+	{
+		bStatisticsDirty = true;
+	}
+}
+
+void UStationEditorManager::RefreshModuleConnections(ASpaceStationModule* Module)
+{
+	RemoveConnectionsFor(Module);
+	AutoGenerateConnections(Module);
+	bStatisticsDirty = true;
+}
+
+int32 UStationEditorManager::CountConnectedComponents(const ASpaceStationModule* ExcludedModule) const
+{
+	if (!CurrentStation)
+	{
+		return 0;
+	}
+
+	TSet<const ASpaceStationModule*> Unvisited;
+	for (const ASpaceStationModule* Module : CurrentStation->Modules)
+	{
+		if (Module && Module != ExcludedModule)
+		{
+			Unvisited.Add(Module);
+		}
+	}
+
+	// Every face-matched neighbour pair gets a Power connection
+	// (AutoGenerateConnections), so the Power links are the station's structure.
+	TMultiMap<const ASpaceStationModule*, const ASpaceStationModule*> Links;
+	for (const FModuleConnection& Conn : Connections)
+	{
+		if (Conn.ConnectionType == EModuleConnectionType::Power && Conn.ModuleA && Conn.ModuleB)
+		{
+			Links.Add(Conn.ModuleA, Conn.ModuleB);
+			Links.Add(Conn.ModuleB, Conn.ModuleA);
+		}
+	}
+
+	int32 NumComponents = 0;
+	TArray<const ASpaceStationModule*> Stack;
+	while (Unvisited.Num() > 0)
+	{
+		++NumComponents;
+		const ASpaceStationModule* Seed = *Unvisited.CreateConstIterator();
+		Unvisited.Remove(Seed);
+		Stack.Reset();
+		Stack.Push(Seed);
+		while (Stack.Num() > 0)
+		{
+			const ASpaceStationModule* Current = Stack.Pop(EAllowShrinking::No);
+			TArray<const ASpaceStationModule*> Neighbours;
+			Links.MultiFind(Current, Neighbours);
+			for (const ASpaceStationModule* Neighbour : Neighbours)
+			{
+				if (Unvisited.Remove(Neighbour) > 0)
+				{
+					Stack.Push(Neighbour);
+				}
+			}
+		}
+	}
+
+	return NumComponents;
+}
+
+bool UStationEditorManager::BeginEditing_Implementation(ASpaceStation* Station)
 {
 	if (!Station)
 	{
@@ -182,6 +480,8 @@ void UStationEditorManager::EnsureCatalogLoaded()
 	// Clear session tracking
 	ModulesAddedThisSession.Empty();
 	OriginalModuleTransforms.Empty();
+	SoftDeletedModules.Empty();
+	SessionSpend.Empty();
 
 	// Clear undo/redo stacks for new session
 	ClearUndoHistory();
@@ -189,8 +489,8 @@ void UStationEditorManager::EnsureCatalogLoaded()
 	// Clear connections and regenerate from existing modules
 	Connections.Empty();
 
-	// Clear construction queue
-	ConstructionQueue.Empty();
+	// Clear construction queue (refunding anything left over)
+	RefundConstructionQueue();
 
 	// Clear notifications
 	ClearNotifications();
@@ -212,6 +512,12 @@ void UStationEditorManager::EnsureCatalogLoaded()
 	{
 		GridSystem = NewObject<UStationGridSystem>(this);
 	}
+
+	// Snap relative to the station, not the world origin. Existing modules sit
+	// on the station's own grid (BuildFromLayout / previous sessions), so a
+	// world-origin grid put new modules off-grid for any station that wasn't
+	// itself at a multiple of GridSize, breaking adjacency and collision spacing.
+	GridSystem->SetGridOrigin(Station->GetActorLocation());
 
 	// Create preview actor - clean up existing one first if invalid
 	UWorld* World = Station->GetWorld();
@@ -289,13 +595,10 @@ bool UStationEditorManager::Save_Implementation()
 		return false;
 	}
 
-	UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::Save - Saved changes to station %s (%d modules added)"),
-		*CurrentStation->GetName(), ModulesAddedThisSession.Num());
+	UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::Save - Saved changes to station %s (%d modules added, %d removed)"),
+		*CurrentStation->GetName(), ModulesAddedThisSession.Num() - SoftDeletedModules.Num(), SoftDeletedModules.Num());
 
-	// Clear session tracking without reverting
-	ModulesAddedThisSession.Empty();
-	OriginalModuleTransforms.Empty();
-
+	// EndEditing commits: destroys removed modules and drops session tracking.
 	EndEditing();
 
 	return true;
@@ -303,6 +606,26 @@ bool UStationEditorManager::Save_Implementation()
 
 void UStationEditorManager::EndEditing_Implementation()
 {
+	// Queued builds can only complete while a station is being edited, so
+	// anything still queued never gets built - give its cost back.
+	RefundConstructionQueue();
+
+	// Commit removals: modules only hidden for undo's sake are gone for good now.
+	for (ASpaceStationModule* Module : SoftDeletedModules)
+	{
+		if (IsValid(Module))
+		{
+			Module->Destroy();
+		}
+	}
+	SoftDeletedModules.Empty();
+	ModulesAddedThisSession.Empty();
+	OriginalModuleTransforms.Empty();
+	SessionSpend.Empty();
+
+	// Undo records point at the modules above; they mean nothing past this session.
+	ClearUndoHistory();
+
 	// Clean up preview actor
 	if (IsValid(PreviewActor))
 	{
@@ -327,53 +650,35 @@ void UStationEditorManager::EndEditing_Implementation()
 
 ASpaceStationModule* UStationEditorManager::PlaceModule_Implementation(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position, FRotator Rotation)
 {
-	// Validate placement
-	EModulePlacementResult Result = CanPlaceModule(ModuleClass, Position, Rotation);
+	// Validate the transform that will actually be used. (Validating the raw
+	// position and then spawning at the snapped one let the preview say "valid"
+	// for a spot the module never ends up in, and vice versa.)
+	FVector FinalPosition;
+	FRotator FinalRotation;
+	SnapPlacement(Position, Rotation, FinalPosition, FinalRotation);
+
+	const EModulePlacementResult Result = CanPlaceModule(ModuleClass, FinalPosition, FinalRotation);
 	if (Result != EModulePlacementResult::Success)
 	{
-		UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::PlaceModule - Cannot place module: %d"), static_cast<int32>(Result));
+		UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::PlaceModule - Cannot place module: %s"),
+			*GetPlacementResultText(Result).ToString());
 		return nullptr;
 	}
 
-	// Snap to grid if enabled
-	FVector FinalPosition = Position;
-	if (bSnapToGrid && GridSystem)
+	FStationModuleSpend Spend;
+	if (!ChargeForModule(ModuleClass, Spend))
 	{
-		FinalPosition = GridSystem->SnapToGrid(Position);
-	}
-
-	// Spawn the module
-	UWorld* World = CurrentStation->GetWorld();
-	if (!World)
-	{
-		UE_LOG(LogAdastreaStations, Error, TEXT("StationEditorManager::PlaceModule - No world available"));
 		return nullptr;
 	}
 
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.Owner = CurrentStation;
-
-	ASpaceStationModule* NewModule = World->SpawnActor<ASpaceStationModule>(
-		ModuleClass,
-		FinalPosition,
-		Rotation,
-		SpawnParams
-	);
-
+	ASpaceStationModule* NewModule = SpawnModuleInternal(ModuleClass, FinalPosition, FinalRotation);
 	if (!NewModule)
 	{
-		UE_LOG(LogAdastreaStations, Error, TEXT("StationEditorManager::PlaceModule - Failed to spawn module"));
+		RefundSpend(Spend);
 		return nullptr;
 	}
 
-	// Calculate relative location
-	FVector RelativeLocation = FinalPosition - CurrentStation->GetActorLocation();
-
-	// Add to station
-	CurrentStation->AddModuleAtLocation(NewModule, RelativeLocation);
-
-	// Track for potential undo
-	ModulesAddedThisSession.Add(NewModule);
+	SessionSpend.Add(NewModule, Spend);
 
 	// Record action for undo/redo
 	FEditorAction Action;
@@ -381,33 +686,10 @@ ASpaceStationModule* UStationEditorManager::PlaceModule_Implementation(TSubclass
 	Action.ModuleClass = ModuleClass;
 	Action.Module = NewModule;
 	Action.NewPosition = FinalPosition;
-	Action.NewRotation = Rotation;
+	Action.NewRotation = FinalRotation;
+	Action.Spend = Spend;
 	Action.Timestamp = CurrentTime;
 	RecordAction(Action);
-
-	// Auto-generate connections to adjacent modules
-	AutoGenerateConnections(NewModule);
-
-	// Mark statistics as dirty
-	bStatisticsDirty = true;
-
-	// Update power balance
-	NotifyPowerBalanceChanged();
-
-	// Deduct credits if applicable
-		FStationBuildCost Cost;
-		if (GetModuleBuildCost(ModuleClass, Cost))
-		{
-			PlayerCredits = FMath::Max(0, PlayerCredits - Cost.Credits);
-		}
-
-		// Consume construction materials from the player's cargo
-		if (!ConsumeMaterialsForModule(ModuleClass))
-		{
-			UE_LOG(LogAdastreaStations, Warning,
-				TEXT("StationEditorManager::PlaceModule - Built %s but could not consume all construction materials from cargo"),
-				*ModuleClass->GetName());
-		}
 
 	UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::PlaceModule - Placed module %s at (%.2f, %.2f, %.2f)"),
 		*NewModule->GetName(), FinalPosition.X, FinalPosition.Y, FinalPosition.Z);
@@ -416,9 +698,6 @@ ASpaceStationModule* UStationEditorManager::PlaceModule_Implementation(TSubclass
 	// warnings, evaluated once now rather than every stat refresh.
 	GenerateStatusNotifications();
 	CheckProductionChainWarning(NewModule);
-
-	// Broadcast event
-	OnModulePlaced.Broadcast(NewModule);
 
 	return NewModule;
 }
@@ -431,57 +710,43 @@ bool UStationEditorManager::RemoveModule_Implementation(ASpaceStationModule* Mod
 		return false;
 	}
 
-	if (!CurrentStation || !Module)
+	if (!CurrentStation || !Module || !CurrentStation->Modules.Contains(Module))
 	{
 		UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::RemoveModule - Invalid station or module"));
 		return false;
 	}
 
-	// Store module info for undo before removal
+	if (!CanRemoveModule(Module))
+	{
+		AddNotificationOnce(FString::Printf(TEXT("Can't remove %s - it would split the station in two"), *Module->ModuleType),
+			ENotificationSeverity::Warning, Module);
+		return false;
+	}
+
 	FEditorAction Action;
 	Action.ActionType = EEditorActionType::RemoveModule;
 	Action.ModuleClass = Module->GetClass();
-	Action.Module = nullptr; // Will be invalid after destroy
+	Action.Module = Module;
 	Action.PreviousPosition = Module->GetActorLocation();
 	Action.PreviousRotation = Module->GetActorRotation();
 	Action.Timestamp = CurrentTime;
 
-	// Remove connections involving this module
-	for (int32 i = Connections.Num() - 1; i >= 0; --i)
+	// A module placed this session was never committed: removing it gives back
+	// what it cost. Removing a module the station already had refunds nothing.
+	if (const FStationModuleSpend* Spend = SessionSpend.Find(Module))
 	{
-		if (Connections[i].ModuleA == Module || Connections[i].ModuleB == Module)
-		{
-			Connections.RemoveAt(i);
-		}
+		Action.Spend = *Spend;
+		RefundSpend(*Spend);
+		SessionSpend.Remove(Module);
 	}
-
-	// Remove from station
-	if (!CurrentStation->RemoveModule(Module))
-	{
-		UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::RemoveModule - Failed to remove module from station"));
-		return false;
-	}
-
-	// Remove from tracking
-	ModulesAddedThisSession.Remove(Module);
-	OriginalModuleTransforms.Remove(Module);
-
-	// Record action for undo
-	RecordAction(Action);
-
-	// Mark statistics as dirty
-	bStatisticsDirty = true;
 
 	UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::RemoveModule - Removed module %s"), *Module->GetName());
 
-	// Update power balance
-	NotifyPowerBalanceChanged();
+	// Hidden, not destroyed, until Save() - so undo and Cancel() can restore it.
+	SoftDeleteModule(Module);
+	RecordAction(Action);
 
-	// Broadcast event
-	OnModuleRemoved.Broadcast(Module);
-
-	// Optionally destroy the module
-	Module->Destroy();
+	GenerateStatusNotifications();
 
 	return true;
 }
@@ -494,50 +759,61 @@ bool UStationEditorManager::MoveModule_Implementation(ASpaceStationModule* Modul
 		return false;
 	}
 
-	if (!CurrentStation || !Module)
+	if (!CurrentStation || !Module || !CurrentStation->Modules.Contains(Module))
 	{
 		UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::MoveModule - Invalid station or module"));
 		return false;
 	}
 
-	// Store previous position for undo
-	FVector PreviousPosition = Module->GetActorLocation();
+	const FVector PreviousPosition = Module->GetActorLocation();
+
+	FVector FinalPosition;
+	FRotator UnusedRotation;
+	SnapPlacement(NewPosition, Module->GetActorRotation(), FinalPosition, UnusedRotation);
+
+	if (bCheckCollisions && CheckCollisionIgnoring(Module->GetClass(), FinalPosition, Module))
+	{
+		AddNotificationOnce(TEXT("Can't move there - it overlaps another module"), ENotificationSeverity::Warning, Module);
+		return false;
+	}
+
+	const int32 PiecesBefore = CountConnectedComponents(nullptr);
+	if (!CurrentStation->MoveModule(Module, FinalPosition - CurrentStation->GetActorLocation()))
+	{
+		return false;
+	}
+	RefreshModuleConnections(Module);
+
+	// Same connectivity rule as placement/removal: a move can't strand modules.
+	if (CountConnectedComponents(nullptr) > PiecesBefore)
+	{
+		CurrentStation->MoveModule(Module, PreviousPosition - CurrentStation->GetActorLocation());
+		RefreshModuleConnections(Module);
+		AddNotificationOnce(TEXT("Can't move there - the module would no longer connect to the station"), ENotificationSeverity::Warning, Module);
+		return false;
+	}
 
 	// Store original transform if not already stored
 	if (!OriginalModuleTransforms.Contains(Module))
 	{
-		OriginalModuleTransforms.Add(Module, Module->GetActorTransform());
+		FTransform Original = Module->GetActorTransform();
+		Original.SetLocation(PreviousPosition);
+		OriginalModuleTransforms.Add(Module, Original);
 	}
 
-	// Snap to grid if enabled
-	FVector FinalPosition = NewPosition;
-	if (bSnapToGrid && GridSystem)
-	{
-		FinalPosition = GridSystem->SnapToGrid(NewPosition);
-	}
+	FEditorAction Action;
+	Action.ActionType = EEditorActionType::MoveModule;
+	Action.ModuleClass = Module->GetClass();
+	Action.Module = Module;
+	Action.PreviousPosition = PreviousPosition;
+	Action.NewPosition = FinalPosition;
+	Action.Timestamp = CurrentTime;
+	RecordAction(Action);
 
-	// Calculate relative location
-	FVector RelativeLocation = FinalPosition - CurrentStation->GetActorLocation();
+	UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::MoveModule - Moved module to (%.2f, %.2f, %.2f)"),
+		FinalPosition.X, FinalPosition.Y, FinalPosition.Z);
 
-	// Move the module
-	bool bSuccess = CurrentStation->MoveModule(Module, RelativeLocation);
-
-	if (bSuccess)
-	{
-		// Record action for undo
-		FEditorAction Action;
-		Action.ActionType = EEditorActionType::MoveModule;
-		Action.Module = Module;
-		Action.PreviousPosition = PreviousPosition;
-		Action.NewPosition = FinalPosition;
-		Action.Timestamp = CurrentTime;
-		RecordAction(Action);
-
-		UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::MoveModule - Moved module to (%.2f, %.2f, %.2f)"),
-			FinalPosition.X, FinalPosition.Y, FinalPosition.Z);
-	}
-
-	return bSuccess;
+	return true;
 }
 
 bool UStationEditorManager::RotateModule_Implementation(ASpaceStationModule* Module, FRotator NewRotation)
@@ -548,34 +824,50 @@ bool UStationEditorManager::RotateModule_Implementation(ASpaceStationModule* Mod
 		return false;
 	}
 
-	if (!Module)
+	if (!CurrentStation || !Module || !CurrentStation->Modules.Contains(Module))
 	{
 		UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::RotateModule - Invalid module"));
 		return false;
 	}
 
-	// Store previous rotation for undo
-	FRotator PreviousRotation = Module->GetActorRotation();
+	const FRotator PreviousRotation = Module->GetActorRotation();
+
+	FVector UnusedPosition;
+	FRotator FinalRotation;
+	SnapPlacement(Module->GetActorLocation(), NewRotation, UnusedPosition, FinalRotation);
+
+	// Faces rotate with the module, so its connections can change.
+	const int32 PiecesBefore = CountConnectedComponents(nullptr);
+	Module->SetActorRotation(FinalRotation);
+	RefreshModuleConnections(Module);
+
+	if (CountConnectedComponents(nullptr) > PiecesBefore)
+	{
+		Module->SetActorRotation(PreviousRotation);
+		RefreshModuleConnections(Module);
+		AddNotificationOnce(TEXT("Can't rotate - no connecting face would point at the station"), ENotificationSeverity::Warning, Module);
+		return false;
+	}
 
 	// Store original transform if not already stored
 	if (!OriginalModuleTransforms.Contains(Module))
 	{
-		OriginalModuleTransforms.Add(Module, Module->GetActorTransform());
+		FTransform Original = Module->GetActorTransform();
+		Original.SetRotation(PreviousRotation.Quaternion());
+		OriginalModuleTransforms.Add(Module, Original);
 	}
 
-	Module->SetActorRotation(NewRotation);
-
-	// Record action for undo
 	FEditorAction Action;
 	Action.ActionType = EEditorActionType::RotateModule;
+	Action.ModuleClass = Module->GetClass();
 	Action.Module = Module;
 	Action.PreviousRotation = PreviousRotation;
-	Action.NewRotation = NewRotation;
+	Action.NewRotation = FinalRotation;
 	Action.Timestamp = CurrentTime;
 	RecordAction(Action);
 
 	UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::RotateModule - Rotated module to (%.2f, %.2f, %.2f)"),
-		NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
+		FinalRotation.Pitch, FinalRotation.Yaw, FinalRotation.Roll);
 
 	return true;
 }
@@ -586,6 +878,7 @@ bool UStationEditorManager::RotateModule_Implementation(ASpaceStationModule* Mod
 
 EModulePlacementResult UStationEditorManager::CanPlaceModule_Implementation(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position, FRotator Rotation)
 {
+	// Called every frame by the placement preview - keep logging here at Verbose.
 	if (!bIsEditing)
 	{
 		return EModulePlacementResult::NotEditing;
@@ -601,6 +894,12 @@ EModulePlacementResult UStationEditorManager::CanPlaceModule_Implementation(TSub
 		return EModulePlacementResult::InvalidModule;
 	}
 
+	// Judge the snapped transform PlaceModule will use (snapping is idempotent,
+	// so already-snapped input is unaffected).
+	FVector FinalPosition;
+	FRotator FinalRotation;
+	SnapPlacement(Position, Rotation, FinalPosition, FinalRotation);
+
 	// Check tech level
 	if (!HasSufficientTechLevel(ModuleClass))
 	{
@@ -608,53 +907,51 @@ EModulePlacementResult UStationEditorManager::CanPlaceModule_Implementation(TSub
 	}
 
 	// Check funds
-		if (!CanAffordModule(ModuleClass))
-		{
-			return EModulePlacementResult::InsufficientFunds;
-		}
+	if (!CanAffordModule(ModuleClass))
+	{
+		return EModulePlacementResult::InsufficientFunds;
+	}
 
-		// Check construction materials are held in the player's cargo
-		if (!HasMaterialsForModule(ModuleClass))
-		{
-			UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::CanPlaceModule - Missing construction materials for %s"), *ModuleClass->GetName());
-			return EModulePlacementResult::InsufficientMaterials;
-		}
+	// Check construction materials are held in the player's cargo
+	if (!HasMaterialsForModule(ModuleClass))
+	{
+		UE_LOG(LogAdastreaStations, Verbose, TEXT("StationEditorManager::CanPlaceModule - Missing construction materials for %s"), *ModuleClass->GetName());
+		return EModulePlacementResult::InsufficientMaterials;
+	}
 
-		// Check collisions
-		if (bCheckCollisions && CheckCollision(ModuleClass, Position, Rotation))
-		{
-			return EModulePlacementResult::CollisionDetected;
-		}
+	// Check collisions
+	if (bCheckCollisions && CheckCollision(ModuleClass, FinalPosition, FinalRotation))
+	{
+		return EModulePlacementResult::CollisionDetected;
+	}
 
-		// X4-style connectivity: every module past the first must attach to the
-		// growing structure. Prevents disconnected/floating modules.
-		if (!IsAdjacentToExistingModule(ModuleClass, Position, Rotation))
-		{
-			UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::CanPlaceModule - %s is not adjacent to any existing module"), *ModuleClass->GetName());
-			return EModulePlacementResult::Disconnected;
-		}
+	// X4-style connectivity: every module past the first must attach to the
+	// growing structure. Prevents disconnected/floating modules.
+	if (!IsAdjacentToExistingModule(ModuleClass, FinalPosition, FinalRotation))
+	{
+		UE_LOG(LogAdastreaStations, Verbose, TEXT("StationEditorManager::CanPlaceModule - %s is not adjacent to any existing module"), *ModuleClass->GetName());
+		return EModulePlacementResult::Disconnected;
+	}
 
-		// Check power - this is a hard gate: placing a module that would push the
-		// station into a power deficit is disallowed (stations must stay powered).
-		if (WouldCausePowerDeficit(ModuleClass))
-		{
-			UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::CanPlaceModule - %s would cause a power deficit"), *ModuleClass->GetName());
-			return EModulePlacementResult::InsufficientPower;
-		}
+	// Check power - this is a hard gate: placing a module that would push the
+	// station into a power deficit is disallowed (stations must stay powered).
+	if (WouldCausePowerDeficit(ModuleClass))
+	{
+		UE_LOG(LogAdastreaStations, Verbose, TEXT("StationEditorManager::CanPlaceModule - %s would cause a power deficit"), *ModuleClass->GetName());
+		return EModulePlacementResult::InsufficientPower;
+	}
 
-		return EModulePlacementResult::Success;
+	return EModulePlacementResult::Success;
 }
 
 bool UStationEditorManager::CheckCollision(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position, FRotator Rotation) const
 {
-	if (!ModuleClass || !CurrentStation)
-	{
-		return false;
-	}
+	return CheckCollisionIgnoring(ModuleClass, Position, nullptr);
+}
 
-	// Get default object for collision bounds
-	ASpaceStationModule* DefaultModule = ModuleClass->GetDefaultObject<ASpaceStationModule>();
-	if (!DefaultModule)
+bool UStationEditorManager::CheckCollisionIgnoring(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position, const ASpaceStationModule* IgnoredModule) const
+{
+	if (!ModuleClass || !CurrentStation)
 	{
 		return false;
 	}
@@ -667,14 +964,14 @@ bool UStationEditorManager::CheckCollision(TSubclassOf<ASpaceStationModule> Modu
 
 	for (ASpaceStationModule* ExistingModule : CurrentStation->Modules)
 	{
-		if (!ExistingModule)
+		if (!ExistingModule || ExistingModule == IgnoredModule)
 		{
 			continue;
 		}
 
 		const float OtherRadius = GetModuleEffectiveRadius(ExistingModule->GetClass());
 		const float Distance = FVector::Dist(Position, ExistingModule->GetActorLocation());
-		if (Distance < ThisRadius + OtherRadius)
+		if (Distance < ThisRadius + OtherRadius - PlacementDistanceTolerance)
 		{
 			return true; // Collision detected
 		}
@@ -742,7 +1039,7 @@ bool UStationEditorManager::IsAdjacentToExistingModule(TSubclassOf<ASpaceStation
 		const float ClearDistance = ThisRadius + OtherRadius;
 		const FVector ToOther = ExistingModule->GetActorLocation() - Position;
 		const float Distance = ToOther.Size();
-		if (Distance < ClearDistance || Distance > ClearDistance + CellSize)
+		if (Distance < ClearDistance - PlacementDistanceTolerance || Distance > ClearDistance + CellSize + PlacementDistanceTolerance)
 		{
 			continue;
 		}
@@ -824,6 +1121,88 @@ bool UStationEditorManager::HasSufficientTechLevel(TSubclassOf<ASpaceStationModu
 	}
 
 	return true; // Module not in catalog, allow it
+}
+
+bool UStationEditorManager::CanRemoveModule(ASpaceStationModule* Module) const
+{
+	if (!CurrentStation || !Module || !CurrentStation->Modules.Contains(Module))
+	{
+		return false;
+	}
+
+	// Compare piece counts rather than demanding exactly one piece, so a station
+	// that was already fragmented (e.g. hand-placed in the level) can still have
+	// its leaves trimmed - only a removal that makes things worse is refused.
+	return CountConnectedComponents(Module) <= CountConnectedComponents(nullptr);
+}
+
+bool UStationEditorManager::FindAttachPosition(TSubclassOf<ASpaceStationModule> ModuleClass, ASpaceStationModule* ExistingModule, FVector HitNormal, FVector& OutPosition) const
+{
+	if (!ModuleClass || !CurrentStation || !ExistingModule || !CurrentStation->Modules.Contains(ExistingModule))
+	{
+		return false;
+	}
+
+	// Collapse the normal to its dominant world axis - modules sit on a cardinal grid.
+	const FVector Abs = HitNormal.GetAbs();
+	FVector Direction;
+	if (Abs.X >= Abs.Y && Abs.X >= Abs.Z)
+	{
+		Direction = FVector(FMath::Sign(HitNormal.X), 0.0f, 0.0f);
+	}
+	else if (Abs.Y >= Abs.Z)
+	{
+		Direction = FVector(0.0f, FMath::Sign(HitNormal.Y), 0.0f);
+	}
+	else
+	{
+		Direction = FVector(0.0f, 0.0f, FMath::Sign(HitNormal.Z));
+	}
+	if (Direction.IsNearlyZero())
+	{
+		Direction = FVector::ForwardVector;
+	}
+
+	// Exactly touching: the same clearance CheckCollision/IsAdjacentToExistingModule use.
+	float Distance = GetModuleEffectiveRadius(ModuleClass) + GetModuleEffectiveRadius(ExistingModule->GetClass());
+
+	// Round the offset up to whole cells before snapping. Snapping the raw point
+	// rounds half-cells upward in world terms (+1.5 -> 2 but -1.5 -> -1), which on
+	// the -X/-Y/-Z side pulled odd-footprint pairs into each other.
+	if (bSnapToGrid && GridSystem && GridSystem->GridSize > 0.0f)
+	{
+		Distance = FMath::CeilToFloat(Distance / GridSystem->GridSize - KINDA_SMALL_NUMBER) * GridSystem->GridSize;
+	}
+	const FVector Raw = ExistingModule->GetActorLocation() + Direction * Distance;
+
+	FRotator UnusedRotation;
+	SnapPlacement(Raw, FRotator::ZeroRotator, OutPosition, UnusedRotation);
+	return true;
+}
+
+FText UStationEditorManager::GetPlacementResultText(EModulePlacementResult Result)
+{
+	switch (Result)
+	{
+		case EModulePlacementResult::Success:				return NSLOCTEXT("StationEditor", "PlaceOk", "Click to build");
+		case EModulePlacementResult::InvalidModule:			return NSLOCTEXT("StationEditor", "PlaceInvalidModule", "No module selected");
+		case EModulePlacementResult::InvalidPosition:		return NSLOCTEXT("StationEditor", "PlaceInvalidPos", "Can't build here");
+		case EModulePlacementResult::CollisionDetected:		return NSLOCTEXT("StationEditor", "PlaceCollision", "Overlaps an existing module");
+		case EModulePlacementResult::InsufficientPower:		return NSLOCTEXT("StationEditor", "PlacePower", "Not enough power - build a Reactor or Solar Array first");
+		case EModulePlacementResult::InsufficientTech:		return NSLOCTEXT("StationEditor", "PlaceTech", "Tech level too low");
+		case EModulePlacementResult::InsufficientFunds:		return NSLOCTEXT("StationEditor", "PlaceFunds", "Not enough credits");
+		case EModulePlacementResult::InsufficientMaterials:	return NSLOCTEXT("StationEditor", "PlaceMaterials", "Missing construction materials in cargo");
+		case EModulePlacementResult::NoStation:				return NSLOCTEXT("StationEditor", "PlaceNoStation", "No station selected");
+		case EModulePlacementResult::Disconnected:			return NSLOCTEXT("StationEditor", "PlaceDisconnected", "Must attach to the station (R rotates connection faces)");
+		case EModulePlacementResult::NotEditing:			return NSLOCTEXT("StationEditor", "PlaceNotEditing", "Not editing a station");
+		default:											return FText::GetEmpty();
+	}
+}
+
+void UStationEditorManager::SnapPlacement(FVector Position, FRotator Rotation, FVector& OutPosition, FRotator& OutRotation) const
+{
+	OutPosition = (bSnapToGrid && GridSystem) ? GridSystem->SnapToGrid(Position) : Position;
+	OutRotation = GridSystem ? GridSystem->SnapRotation(Rotation) : Rotation;
 }
 
 bool UStationEditorManager::CanAffordModule(TSubclassOf<ASpaceStationModule> ModuleClass) const
@@ -936,19 +1315,33 @@ bool UStationEditorManager::WouldCausePowerDeficit(TSubclassOf<ASpaceStationModu
 		return false;
 	}
 
-	ASpaceStationModule* DefaultModule = ModuleClass->GetDefaultObject<ASpaceStationModule>();
+	const ASpaceStationModule* DefaultModule = ModuleClass->GetDefaultObject<ASpaceStationModule>();
 	if (!DefaultModule)
 	{
 		return false;
 	}
 
-	float CurrentBalance = GetPowerBalance();
-	float ModulePower = DefaultModule->ModulePower;
+	// Positive ModulePower = consumption, negative = generation. Only a consumer
+	// can make things worse - a generator or zero-draw module must stay
+	// buildable even while the station is already short (otherwise a station
+	// in deficit could never build its way out of it).
+	const float ModulePower = DefaultModule->ModulePower;
+	if (ModulePower <= 0.0f)
+	{
+		return false;
+	}
 
-	// Positive ModulePower = consumption (decreases balance)
-	// Negative ModulePower = generation (subtracting negative increases balance)
-	float NewBalance = CurrentBalance - ModulePower;
+	// Builds already queued will draw (or add) power too once they finish.
+	float QueuedPower = 0.0f;
+	for (const FConstructionQueueItem& Item : ConstructionQueue)
+	{
+		if (Item.ModuleClass)
+		{
+			QueuedPower += Item.ModuleClass->GetDefaultObject<ASpaceStationModule>()->ModulePower;
+		}
+	}
 
+	const float NewBalance = GetPowerBalance() - QueuedPower - ModulePower;
 	return NewBalance < 0.0f;
 }
 
@@ -974,21 +1367,17 @@ void UStationEditorManager::UpdatePreview(FVector Position, FRotator Rotation)
 		return;
 	}
 
-	// Snap to grid if enabled
-	FVector FinalPosition = Position;
-	if (bSnapToGrid && GridSystem)
-	{
-		FinalPosition = GridSystem->SnapToGrid(Position);
-	}
+	FVector FinalPosition;
+	FRotator FinalRotation;
+	SnapPlacement(Position, Rotation, FinalPosition, FinalRotation);
 
-	PreviewActor->UpdatePosition(FinalPosition, Rotation);
+	PreviewActor->UpdatePosition(FinalPosition, FinalRotation);
 
-	// Update validity visual using current module class from preview actor
-	if (CurrentStation && PreviewActor->CurrentModuleClass)
+	// Full validation (tech, funds, materials, collision, connectivity, power),
+	// so green always means "clicking will build it".
+	if (PreviewActor->CurrentModuleClass)
 	{
-		bool bHasCollision = bCheckCollisions && CheckCollision(PreviewActor->CurrentModuleClass, FinalPosition, Rotation);
-		bool bConnected = IsAdjacentToExistingModule(PreviewActor->CurrentModuleClass, FinalPosition, Rotation);
-		PreviewActor->SetValid(!bHasCollision && bConnected);
+		PreviewActor->SetValid(CanPlaceModule(PreviewActor->CurrentModuleClass, FinalPosition, FinalRotation) == EModulePlacementResult::Success);
 	}
 }
 
@@ -1066,7 +1455,9 @@ FString UStationEditorManager::ExportStationBlueprint() const
 
 		// Normalize to the nearest 90 degrees - modules are placed axis-aligned
 		// (RotationSnapDegrees), this just guards against float drift.
-		const int32 RotationDegrees = (FMath::RoundToInt(Module->GetActorRotation().Yaw / 90.0f) * 90) % 360;
+		// Always 0/90/180/270: GetActorRotation().Yaw is in (-180, 180], and a
+		// plain % leaves negatives, which the Python tool doesn't expect.
+		const int32 RotationDegrees = ((FMath::RoundToInt(Module->GetActorRotation().Yaw / 90.0f) * 90) % 360 + 360) % 360;
 
 		// The first module in the array anchors the station, same "first
 		// placed = core" convention IsAdjacentToExistingModule already uses
@@ -1090,12 +1481,6 @@ int32 UStationEditorManager::ImportStationBlueprint(const FString& BlueprintStri
 		return 0;
 	}
 
-	UWorld* World = CurrentStation->GetWorld();
-	if (!World)
-	{
-		return 0;
-	}
-
 	TArray<FString> Fields;
 	BlueprintString.ParseIntoArray(Fields, TEXT(";"), true);
 	if (Fields.Num() < 3)
@@ -1110,6 +1495,7 @@ int32 UStationEditorManager::ImportStationBlueprint(const FString& BlueprintStri
 	const FVector StationOrigin = CurrentStation->GetActorLocation();
 
 	int32 NumSpawned = 0;
+	int32 NumSkipped = 0;
 	for (int32 i = 3; i < Fields.Num(); ++i)
 	{
 		// Each module entry: ModuleID:ItemID:gx,gy,gz:rot:isCore
@@ -1143,24 +1529,29 @@ int32 UStationEditorManager::ImportStationBlueprint(const FString& BlueprintStri
 		const FVector WorldPos = StationOrigin + GridPos * Spacing;
 		const float RotationDegrees = Parts.Num() > 3 ? FCString::Atof(*Parts[3]) : 0.0f;
 
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.Owner = CurrentStation;
-		ASpaceStationModule* NewModule = World->SpawnActor<ASpaceStationModule>(
-			ModuleClass, WorldPos, FRotator(0.0f, RotationDegrees, 0.0f), SpawnParams);
-		if (!NewModule)
+		// Importing onto a station that already has modules must not stack
+		// copies inside them.
+		if (bCheckCollisions && CheckCollision(ModuleClass, WorldPos, FRotator(0.0f, RotationDegrees, 0.0f)))
 		{
+			++NumSkipped;
 			continue;
 		}
 
-		CurrentStation->AddModuleAtLocation(NewModule, GridPos * Spacing);
-		AutoGenerateConnections(NewModule);
-		++NumSpawned;
+		// Tracked as a session module, so Cancel() removes an import too.
+		if (SpawnModuleInternal(ModuleClass, WorldPos, FRotator(0.0f, RotationDegrees, 0.0f)))
+		{
+			++NumSpawned;
+		}
+	}
+
+	if (NumSkipped > 0)
+	{
+		AddNotification(FText::FromString(FString::Printf(TEXT("Skipped %d blueprint module(s) that overlap existing modules"), NumSkipped)),
+			ENotificationSeverity::Warning, nullptr);
 	}
 
 	if (NumSpawned > 0)
 	{
-		bStatisticsDirty = true;
-		NotifyPowerBalanceChanged();
 		AddNotification(FText::FromString(FString::Printf(TEXT("Imported %d module(s) from blueprint"), NumSpawned)),
 			ENotificationSeverity::Success, nullptr);
 	}
@@ -1175,29 +1566,67 @@ int32 UStationEditorManager::ImportStationBlueprint(const FString& BlueprintStri
 
 void UStationEditorManager::RevertChanges()
 {
-	// Remove all modules added this session
+	if (!CurrentStation)
+	{
+		return;
+	}
+
+	// Give back what the session's still-built modules cost. (Modules removed
+	// or undone this session were refunded when that happened.)
+	for (const TPair<ASpaceStationModule*, FStationModuleSpend>& Pair : SessionSpend)
+	{
+		RefundSpend(Pair.Value);
+	}
+	SessionSpend.Empty();
+
+	// Remove all modules added this session (visible or soft-deleted)
 	for (ASpaceStationModule* Module : ModulesAddedThisSession)
 	{
-		if (Module && CurrentStation)
+		if (!IsValid(Module))
+		{
+			continue;
+		}
+		RemoveConnectionsFor(Module);
+		if (CurrentStation->Modules.Contains(Module))
 		{
 			CurrentStation->RemoveModule(Module);
-			Module->Destroy();
 		}
+		SoftDeletedModules.Remove(Module);
+		OriginalModuleTransforms.Remove(Module);
+		OnModuleRemoved.Broadcast(Module);
+		Module->Destroy();
 	}
 	ModulesAddedThisSession.Empty();
 
-	// Restore original transforms of moved modules
+	// Bring back original modules that were removed this session
+	for (ASpaceStationModule* Module : TArray<ASpaceStationModule*>(SoftDeletedModules))
+	{
+		if (IsValid(Module))
+		{
+			RestoreModule(Module);
+		}
+	}
+	SoftDeletedModules.Empty();
+
+	// Restore original transforms of moved/rotated modules
 	for (const auto& Pair : OriginalModuleTransforms)
 	{
-		ASpaceStationModule* Module = Pair.Key;
-		const FTransform& OriginalTransform = Pair.Value;
-
-		if (Module)
+		if (IsValid(Pair.Key))
 		{
-			Module->SetActorTransform(OriginalTransform);
+			Pair.Key->SetActorTransform(Pair.Value);
 		}
 	}
 	OriginalModuleTransforms.Empty();
+
+	// Positions and faces changed back - rebuild connectivity from scratch.
+	Connections.Empty();
+	for (ASpaceStationModule* Module : CurrentStation->Modules)
+	{
+		AutoGenerateConnections(Module);
+	}
+
+	bStatisticsDirty = true;
+	NotifyPowerBalanceChanged();
 
 	UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::RevertChanges - Reverted all changes"));
 }
@@ -1235,6 +1664,13 @@ bool UStationEditorManager::Undo()
 		return true;
 	}
 
+	// Keep a still-meaningful action (e.g. one that failed only because it
+	// couldn't be paid for right now) instead of silently dropping it.
+	if (IsValid(Action.Module))
+	{
+		UndoStack.Push(Action);
+	}
+	NotifyUndoRedoStateChanged();
 	return false;
 }
 
@@ -1256,6 +1692,11 @@ bool UStationEditorManager::Redo()
 		return true;
 	}
 
+	if (IsValid(Action.Module))
+	{
+		RedoStack.Push(Action);
+	}
+	NotifyUndoRedoStateChanged();
 	return false;
 }
 
@@ -1304,95 +1745,55 @@ void UStationEditorManager::RecordAction(const FEditorAction& Action)
 	NotifyUndoRedoStateChanged();
 }
 
-bool UStationEditorManager::ExecuteAction(const FEditorAction& Action)
+bool UStationEditorManager::ExecuteAction(FEditorAction& Action)
 {
+	if (!CurrentStation || !IsValid(Action.Module) || Action.Module->IsActorBeingDestroyed())
+	{
+		UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::Redo - module for action type %d is gone"), static_cast<int32>(Action.ActionType));
+		return false;
+	}
+
+	ASpaceStationModule* Module = Action.Module;
+
 	switch (Action.ActionType)
 	{
 		case EEditorActionType::PlaceModule:
-			if (Action.ModuleClass && CurrentStation)
+			// The undone module was only hidden - bring the same actor back.
+			if (SoftDeletedModules.Contains(Module))
 			{
-				// Re-place the module without recording action (we're executing from redo stack)
-				UWorld* World = CurrentStation->GetWorld();
-				if (World)
+				if (!RechargeSpend(Action.Spend))
 				{
-					FVector FinalPosition = bSnapToGrid && GridSystem ? GridSystem->SnapToGrid(Action.NewPosition) : Action.NewPosition;
-
-					FActorSpawnParameters SpawnParams;
-					SpawnParams.Owner = CurrentStation;
-
-					ASpaceStationModule* NewModule = World->SpawnActor<ASpaceStationModule>(
-						Action.ModuleClass,
-						FinalPosition,
-						Action.NewRotation,
-						SpawnParams
-					);
-
-					if (NewModule)
-					{
-						FVector RelativeLocation = FinalPosition - CurrentStation->GetActorLocation();
-						CurrentStation->AddModuleAtLocation(NewModule, RelativeLocation);
-						AutoGenerateConnections(NewModule);
-						bStatisticsDirty = true;
-						NotifyPowerBalanceChanged();
-						OnModulePlaced.Broadcast(NewModule);
-						return true;
-					}
+					AddNotificationOnce(TEXT("Can't redo - not enough credits or materials"), ENotificationSeverity::Warning, nullptr);
+					return false;
 				}
+				SessionSpend.Add(Module, Action.Spend);
+				RestoreModule(Module);
+				return true;
 			}
 			break;
 
 		case EEditorActionType::RemoveModule:
-			// For redo of remove, we need to find and remove the module we just recreated via undo
-			// Since we stored the position, we can find it
-			if (CurrentStation)
+			if (CurrentStation->Modules.Contains(Module))
 			{
-				for (ASpaceStationModule* Module : CurrentStation->Modules)
+				if (const FStationModuleSpend* Spend = SessionSpend.Find(Module))
 				{
-					if (Module &&
-						FVector::DistSquared(Module->GetActorLocation(), Action.PreviousPosition) < ModuleMatchDistanceSquared &&
-						Module->GetClass() == Action.ModuleClass)
-					{
-						// Remove connections for this module
-						for (int32 i = Connections.Num() - 1; i >= 0; --i)
-						{
-							if (Connections[i].ModuleA == Module || Connections[i].ModuleB == Module)
-							{
-								Connections.RemoveAt(i);
-							}
-						}
-						CurrentStation->RemoveModule(Module);
-						Module->Destroy();
-						bStatisticsDirty = true;
-						NotifyPowerBalanceChanged();
-						return true;
-					}
+					RefundSpend(*Spend);
+					SessionSpend.Remove(Module);
 				}
+				SoftDeleteModule(Module);
+				return true;
 			}
 			break;
 
 		case EEditorActionType::MoveModule:
-			if (Action.Module && IsValid(Action.Module) && !Action.Module->IsActorBeingDestroyed())
-			{
-				Action.Module->SetActorLocation(Action.NewPosition);
-				return true;
-			}
-			else
-			{
-				UE_LOG(LogAdastreaStations, Warning, TEXT("Redo MoveModule failed: Module is invalid or being destroyed."));
-			}
-			break;
+			CurrentStation->MoveModule(Module, Action.NewPosition - CurrentStation->GetActorLocation());
+			RefreshModuleConnections(Module);
+			return true;
 
 		case EEditorActionType::RotateModule:
-			if (Action.Module && IsValid(Action.Module) && !Action.Module->IsActorBeingDestroyed())
-			{
-				Action.Module->SetActorRotation(Action.NewRotation);
-				return true;
-			}
-			else
-			{
-				UE_LOG(LogAdastreaStations, Warning, TEXT("Redo RotateModule failed: Module is invalid or being destroyed."));
-			}
-			break;
+			Module->SetActorRotation(Action.NewRotation);
+			RefreshModuleConnections(Module);
+			return true;
 
 		case EEditorActionType::UpgradeModule:
 			// Upgrade actions are not undoable/redoable - just log and return false
@@ -1406,88 +1807,60 @@ bool UStationEditorManager::ExecuteAction(const FEditorAction& Action)
 	return false;
 }
 
-bool UStationEditorManager::ReverseAction(const FEditorAction& Action)
+bool UStationEditorManager::ReverseAction(FEditorAction& Action)
 {
+	if (!CurrentStation || !IsValid(Action.Module) || Action.Module->IsActorBeingDestroyed())
+	{
+		UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::Undo - module for action type %d is gone"), static_cast<int32>(Action.ActionType));
+		return false;
+	}
+
+	ASpaceStationModule* Module = Action.Module;
+
 	switch (Action.ActionType)
 	{
 		case EEditorActionType::PlaceModule:
-			// Reverse of place = remove
-			if (Action.Module && IsValid(Action.Module) && CurrentStation && !Action.Module->IsActorBeingDestroyed())
+			// Reverse of place = remove, with a refund of what it cost.
+			if (CurrentStation->Modules.Contains(Module))
 			{
-				// Remove connections for this module
-				for (int32 i = Connections.Num() - 1; i >= 0; --i)
+				if (const FStationModuleSpend* Spend = SessionSpend.Find(Module))
 				{
-					if (Connections[i].ModuleA == Action.Module || Connections[i].ModuleB == Action.Module)
-					{
-						Connections.RemoveAt(i);
-					}
+					RefundSpend(*Spend);
+					SessionSpend.Remove(Module);
 				}
-
-				CurrentStation->RemoveModule(Action.Module);
-				Action.Module->Destroy();
-				bStatisticsDirty = true;
-				NotifyPowerBalanceChanged();
+				SoftDeleteModule(Module);
 				return true;
 			}
 			break;
 
 		case EEditorActionType::RemoveModule:
-			// Reverse of remove = place (needs stored data to recreate)
-			// Don't call PlaceModule as it records a new action
-			if (Action.ModuleClass && CurrentStation)
+			// Reverse of remove = the same actor back (keeps its upgrades, health, ...).
+			if (SoftDeletedModules.Contains(Module))
 			{
-				UWorld* World = CurrentStation->GetWorld();
-				if (World)
+				if (!Action.Spend.IsEmpty())
 				{
-					FVector FinalPosition = bSnapToGrid && GridSystem ? GridSystem->SnapToGrid(Action.PreviousPosition) : Action.PreviousPosition;
-
-					FActorSpawnParameters SpawnParams;
-					SpawnParams.Owner = CurrentStation;
-
-					ASpaceStationModule* NewModule = World->SpawnActor<ASpaceStationModule>(
-						Action.ModuleClass,
-						FinalPosition,
-						Action.PreviousRotation,
-						SpawnParams
-					);
-
-					if (NewModule)
+					// It was a session module whose cost was refunded on removal.
+					if (!RechargeSpend(Action.Spend))
 					{
-						FVector RelativeLocation = FinalPosition - CurrentStation->GetActorLocation();
-						CurrentStation->AddModuleAtLocation(NewModule, RelativeLocation);
-						AutoGenerateConnections(NewModule);
-						bStatisticsDirty = true;
-						NotifyPowerBalanceChanged();
-						OnModulePlaced.Broadcast(NewModule);
-						return true;
+						AddNotificationOnce(TEXT("Can't undo - not enough credits or materials to rebuild it"), ENotificationSeverity::Warning, nullptr);
+						return false;
 					}
+					SessionSpend.Add(Module, Action.Spend);
 				}
+				RestoreModule(Module);
+				return true;
 			}
 			break;
 
 		case EEditorActionType::MoveModule:
-			if (Action.Module && IsValid(Action.Module) && !Action.Module->IsActorBeingDestroyed())
-			{
-				Action.Module->SetActorLocation(Action.PreviousPosition);
-				return true;
-			}
-			else
-			{
-				UE_LOG(LogAdastreaStations, Warning, TEXT("Undo MoveModule failed: Module is invalid or being destroyed."));
-			}
-			break;
+			CurrentStation->MoveModule(Module, Action.PreviousPosition - CurrentStation->GetActorLocation());
+			RefreshModuleConnections(Module);
+			return true;
 
 		case EEditorActionType::RotateModule:
-			if (Action.Module && IsValid(Action.Module) && !Action.Module->IsActorBeingDestroyed())
-			{
-				Action.Module->SetActorRotation(Action.PreviousRotation);
-				return true;
-			}
-			else
-			{
-				UE_LOG(LogAdastreaStations, Warning, TEXT("Undo RotateModule failed: Module is invalid or being destroyed."));
-			}
-			break;
+			Module->SetActorRotation(Action.PreviousRotation);
+			RefreshModuleConnections(Module);
+			return true;
 
 		case EEditorActionType::UpgradeModule:
 			// Upgrade actions are not undoable/redoable - just log and return false
@@ -1638,7 +2011,7 @@ void UStationEditorManager::AutoGenerateConnections(ASpaceStationModule* Module)
 		const float ClearDistance = ModuleRadius + OtherRadius;
 		const FVector ToOther = OtherModule->GetActorLocation() - ModulePosition;
 		const float Distance = ToOther.Size();
-		const bool bInRange = Distance >= ClearDistance && Distance <= ClearDistance + CellSize;
+		const bool bInRange = Distance >= ClearDistance - PlacementDistanceTolerance && Distance <= ClearDistance + CellSize + PlacementDistanceTolerance;
 		const FVector Direction = ToOther.GetSafeNormal();
 		const bool bFacesMatch = bInRange
 			&& DoesModuleFaceDirection(Module->GetClass(), Module->GetActorRotation(), Direction)
@@ -1722,31 +2095,43 @@ int32 UStationEditorManager::QueueConstruction(TSubclassOf<ASpaceStationModule> 
 		return -1;
 	}
 
-	// Enforce the same construction gates as placement: funds, materials, power.
-	if (!CanAffordModule(ModuleClass))
+	FVector FinalPosition;
+	FRotator FinalRotation;
+	SnapPlacement(Position, Rotation, FinalPosition, FinalRotation);
+
+	// Same gates as a direct placement (tech, funds, materials, collision,
+	// connectivity, power - the power check counts earlier queued builds too).
+	const EModulePlacementResult Result = CanPlaceModule(ModuleClass, FinalPosition, FinalRotation);
+	if (Result != EModulePlacementResult::Success)
 	{
-		AddNotification(FText::FromString(TEXT("Insufficient credits for construction")),
-			ENotificationSeverity::Warning, nullptr);
+		AddNotification(GetPlacementResultText(Result), ENotificationSeverity::Warning, nullptr);
 		return -1;
 	}
-	if (!HasMaterialsForModule(ModuleClass))
+
+	// Queued builds don't exist yet, so CheckCollision can't see them.
+	const float ThisRadius = GetModuleEffectiveRadius(ModuleClass);
+	for (const FConstructionQueueItem& Queued : ConstructionQueue)
 	{
-		AddNotification(FText::FromString(TEXT("Missing construction materials in cargo")),
-			ENotificationSeverity::Warning, nullptr);
-		return -1;
+		if (FVector::Dist(FinalPosition, Queued.TargetPosition) < ThisRadius + GetModuleEffectiveRadius(Queued.ModuleClass))
+		{
+			AddNotification(FText::FromString(TEXT("Overlaps a module that is already queued")), ENotificationSeverity::Warning, nullptr);
+			return -1;
+		}
 	}
-	if (WouldCausePowerDeficit(ModuleClass))
+
+	// Pay up front (X4-style), refunded if the build is cancelled.
+	FStationModuleSpend Spend;
+	if (!ChargeForModule(ModuleClass, Spend))
 	{
-		AddNotification(FText::FromString(TEXT("Construction would cause a power deficit")),
-			ENotificationSeverity::Warning, nullptr);
 		return -1;
 	}
 
 	FConstructionQueueItem Item;
 	Item.QueueId = NextQueueId++;
 	Item.ModuleClass = ModuleClass;
-	Item.TargetPosition = Position;
-	Item.TargetRotation = Rotation;
+	Item.TargetPosition = FinalPosition;
+	Item.TargetRotation = FinalRotation;
+	Item.Spend = Spend;
 
 	// Get build time from catalog
 	FStationBuildCost Cost;
@@ -1788,6 +2173,7 @@ bool UStationEditorManager::CancelConstruction(int32 QueueId)
 	{
 		if (ConstructionQueue[i].QueueId == QueueId)
 		{
+			RefundSpend(ConstructionQueue[i].Spend);
 			ConstructionQueue.RemoveAt(i);
 
 			// Start next item if we removed the current one
@@ -1906,49 +2292,38 @@ void UStationEditorManager::CompleteConstruction(FConstructionQueueItem& Item)
 {
 	if (!Item.ModuleClass || !CurrentStation)
 	{
+		RefundSpend(Item.Spend);
 		return;
 	}
 
-	// Spawn the module directly without recording an undo action
-	// Construction from queue is a committed action, not an editor operation
-	UWorld* World = CurrentStation->GetWorld();
-	if (!World)
+	// Something may have been placed on the spot while this was building.
+	if (bCheckCollisions && CheckCollision(Item.ModuleClass, Item.TargetPosition, Item.TargetRotation))
 	{
+		RefundSpend(Item.Spend);
+		AddNotification(FText::FromString(TEXT("Construction cancelled - the build site is now occupied (refunded)")),
+			ENotificationSeverity::Warning, nullptr);
 		return;
 	}
 
-	FVector FinalPosition = bSnapToGrid && GridSystem ? GridSystem->SnapToGrid(Item.TargetPosition) : Item.TargetPosition;
-
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.Owner = CurrentStation;
-
-	ASpaceStationModule* NewModule = World->SpawnActor<ASpaceStationModule>(
-		Item.ModuleClass,
-		FinalPosition,
-		Item.TargetRotation,
-		SpawnParams
-	);
-
-	if (NewModule)
+	// Spawn the module directly without recording an undo action: construction
+	// from the queue is a committed action, not an editor operation. It is still
+	// a session module, so Cancel() removes it and refunds it.
+	ASpaceStationModule* NewModule = SpawnModuleInternal(Item.ModuleClass, Item.TargetPosition, Item.TargetRotation);
+	if (!NewModule)
 	{
-		FVector RelativeLocation = FinalPosition - CurrentStation->GetActorLocation();
-		CurrentStation->AddModuleAtLocation(NewModule, RelativeLocation);
-
-		// Auto-generate connections
-		AutoGenerateConnections(NewModule);
-
-		bStatisticsDirty = true;
-		NotifyPowerBalanceChanged();
-		OnModulePlaced.Broadcast(NewModule);
-
-		// Add completion notification
-		AddNotification(FText::FromString(FString::Printf(TEXT("%s construction complete"), *NewModule->ModuleType)),
-			ENotificationSeverity::Success, NewModule);
-
-		// Same X4-style completeness/production-chain feedback as a direct placement.
-		GenerateStatusNotifications();
-		CheckProductionChainWarning(NewModule);
+		RefundSpend(Item.Spend);
+		return;
 	}
+
+	SessionSpend.Add(NewModule, Item.Spend);
+
+	// Add completion notification
+	AddNotification(FText::FromString(FString::Printf(TEXT("%s construction complete"), *NewModule->ModuleType)),
+		ENotificationSeverity::Success, NewModule);
+
+	// Same X4-style completeness/production-chain feedback as a direct placement.
+	GenerateStatusNotifications();
+	CheckProductionChainWarning(NewModule);
 }
 
 // =====================
@@ -1967,6 +2342,7 @@ FStationStatistics UStationEditorManager::GetStationStatistics() const
 void UStationEditorManager::RecalculateStatistics()
 {
 	RecalculateStatisticsInternal();
+	OnStatisticsUpdated.Broadcast(CachedStatistics);
 }
 
 void UStationEditorManager::RecalculateStatisticsInternal() const
@@ -2130,6 +2506,19 @@ int32 UStationEditorManager::AddNotification(FText Message, ENotificationSeverit
 	return Notification.NotificationId;
 }
 
+void UStationEditorManager::AddNotificationOnce(const FString& Message, ENotificationSeverity Severity, ASpaceStationModule* RelatedModule)
+{
+	// Placement feedback runs on every build; don't stack the same warning.
+	for (const FStationNotification& Existing : Notifications)
+	{
+		if (!Existing.bIsRead && Existing.Message.ToString() == Message)
+		{
+			return;
+		}
+	}
+	AddNotification(FText::FromString(Message), Severity, RelatedModule);
+}
+
 void UStationEditorManager::MarkNotificationRead(int32 NotificationId)
 {
 	for (FStationNotification& Notification : Notifications)
@@ -2173,23 +2562,25 @@ void UStationEditorManager::GenerateStatusNotifications()
 	}
 
 	// Check power status using configurable thresholds
-	float PowerBalance = GetPowerBalance();
+	const float PowerBalance = GetPowerBalance();
+	const float PowerGeneration = GetTotalPowerGeneration();
 	if (PowerBalance < 0)
 	{
-		AddNotification(FText::FromString(FString::Printf(TEXT("Power deficit: %.0f MW"), FMath::Abs(PowerBalance))),
+		AddNotificationOnce(FString::Printf(TEXT("Power deficit: %.0f MW"), FMath::Abs(PowerBalance)),
 			ENotificationSeverity::Warning, nullptr);
 	}
-	else if (PowerBalance > GetTotalPowerGeneration() * PowerLoadWarningThreshold)
+	else if (PowerGeneration > 0.0f && GetTotalPowerConsumption() > PowerGeneration * PowerLoadWarningThreshold)
 	{
-		AddNotification(FText::FromString(TEXT("Power load near maximum capacity")),
-			ENotificationSeverity::Warning, nullptr);
+		// Load above the threshold share of generation (was inverted: it fired
+		// when there was lots of spare power, and never when close to the limit).
+		AddNotificationOnce(TEXT("Power load near maximum capacity"), ENotificationSeverity::Warning, nullptr);
 	}
 
 	// Check population using configurable threshold
 	FStationStatistics Stats = GetStationStatistics();
 	if (Stats.CurrentPopulation > Stats.MaxPopulation * PopulationWarningThreshold)
 	{
-		AddNotification(FText::FromString(TEXT("Population approaching capacity. Consider adding habitation modules.")),
+		AddNotificationOnce(TEXT("Population approaching capacity. Consider adding habitation modules."),
 			ENotificationSeverity::Warning, nullptr);
 	}
 
@@ -2199,7 +2590,7 @@ void UStationEditorManager::GenerateStatusNotifications()
 	// a warning, since the real-time editor lets you build incrementally).
 	if (!Stats.bHasDockingAccess && CurrentStation->Modules.Num() > 0)
 	{
-		AddNotification(FText::FromString(TEXT("No docking module yet - ships can't reach this station. Add a Docking Bay or Docking Port.")),
+		AddNotificationOnce(TEXT("No docking module yet - ships can't reach this station. Add a Docking Bay or Docking Port."),
 			ENotificationSeverity::Warning, nullptr);
 	}
 }
@@ -2223,16 +2614,16 @@ void UStationEditorManager::CheckProductionChainWarning(const ASpaceStationModul
 
 	if (!bHasStorage)
 	{
-		AddNotification(FText::FromString(FString::Printf(
+		AddNotificationOnce(FString::Printf(
 				TEXT("%s has no Cargo Bay on the station to hold its inputs/outputs - it won't have anything to process."),
-				*Module->ModuleType)),
+				*Module->ModuleType),
 			ENotificationSeverity::Warning, const_cast<ASpaceStationModule*>(Module));
 	}
 
 	if (!HasSufficientPower())
 	{
-		AddNotification(FText::FromString(FString::Printf(
-				TEXT("%s is on a station running a power deficit and won't run at full capacity."), *Module->ModuleType)),
+		AddNotificationOnce(FString::Printf(
+				TEXT("%s is on a station running a power deficit and won't run at full capacity."), *Module->ModuleType),
 			ENotificationSeverity::Warning, const_cast<ASpaceStationModule*>(Module));
 	}
 }
@@ -2268,14 +2659,14 @@ bool UStationEditorManager::CanUpgradeModule(ASpaceStationModule* Module) const
 		return false;
 	}
 
-	// Simplified upgrade check: player can upgrade a module if their tech level
-	// exceeds the module's required tech level, implying access to better versions.
-	// A full implementation would query the catalog for specific upgrade paths.
+	// Each tech level the player has above the module's requirement unlocks one
+	// upgrade level, up to MaxUpgradeLevel. (Previously any module below the
+	// player's tech level could be upgraded without limit.)
 	FStationModuleEntry Entry;
 	if (ModuleCatalog->FindModuleByClass(Module->GetClass(), Entry))
 	{
-		// Module is upgradeable if player has surpassed its tech level
-		return Entry.RequiredTechLevel < PlayerTechLevel;
+		const int32 UnlockedLevels = FMath::Min(MaxUpgradeLevel, PlayerTechLevel - Entry.RequiredTechLevel);
+		return Module->UpgradeLevel < UnlockedLevels;
 	}
 
 	return false;
