@@ -6,6 +6,7 @@
 #include "Engine/World.h"
 #include "Interfaces/ITargetable.h"
 #include "Mining/Asteroid.h"
+#include "Mining/AsteroidField.h"
 #include "Mining/MiningLaserComponent.h"
 #include "Ships/Spaceship.h"
 #include "Stations/DockingBayModule.h"
@@ -70,13 +71,22 @@ float AAIMinerController::SurfaceDistance(const AAsteroid* Rock) const
 void AAIMinerController::TickSeeking()
 {
 	ASpaceship* Ship = GetShip();
-	Ship->SetThrottle(0.0f);
+
+	// Leave rocks other miners are already working so a group spreads across the field.
+	TSet<const AAsteroid*> Claimed;
+	for (TActorIterator<AAIMinerController> It(GetWorld()); It; ++It)
+	{
+		if (*It != this && It->TargetAsteroid)
+		{
+			Claimed.Add(It->TargetAsteroid);
+		}
+	}
 
 	AAsteroid* Best = nullptr;
 	float BestDistance = TNumericLimits<float>::Max();
 	for (TActorIterator<AAsteroid> It(GetWorld()); It; ++It)
 	{
-		if (IsMinable(*It))
+		if (IsMinable(*It) && !Claimed.Contains(*It))
 		{
 			const float Distance = FVector::Dist(Ship->GetActorLocation(), It->GetActorLocation());
 			if (Distance < BestDistance)
@@ -91,6 +101,31 @@ void AAIMinerController::TickSeeking()
 	{
 		TargetAsteroid = Best;
 		MinerState = EAIMinerState::ToAsteroid;
+		UE_LOG(LogAdastreaShips, Log, TEXT("AIMiner %s heading for %s"), *Ship->GetName(), *Best->GetName());
+		return;
+	}
+
+	// Asteroid fields only spawn real rocks near a ship, so with none loaded fly toward the
+	// nearest field; its rocks appear as we get close.
+	const AAsteroidField* NearestField = nullptr;
+	float FieldDistance = TNumericLimits<float>::Max();
+	for (TActorIterator<AAsteroidField> It(GetWorld()); It; ++It)
+	{
+		const float Distance = FVector::Dist(Ship->GetActorLocation(), It->GetActorLocation());
+		if (Distance < FieldDistance)
+		{
+			FieldDistance = Distance;
+			NearestField = *It;
+		}
+	}
+
+	if (NearestField && FieldDistance > NearestField->PromoteRadius * 0.5f)
+	{
+		SteerToward(NearestField->GetActorLocation(), GetWorld()->GetDeltaSeconds());
+	}
+	else
+	{
+		Ship->SetThrottle(0.0f);
 	}
 }
 
@@ -158,6 +193,7 @@ void AAIMinerController::TickMining(float DeltaSeconds)
 	case EMiningStatus::CargoFull:
 		Laser->StopMining();
 		Laser->ClearTarget();
+		TargetAsteroid = nullptr; // free the rock for other miners while we sell
 		DockedSeconds = 0.0f;
 		ChooseSellStation();
 		MinerState = TargetStation ? EAIMinerState::ToStation : EAIMinerState::SeekingAsteroid;
