@@ -337,3 +337,24 @@ ASpaceship* AAIMinerController::SpawnAIMiner(UWorld* World, TSubclassOf<ASpacesh
 {
 	return SpawnPilotedShip(World, ShipClass, Station, AAIMinerController::StaticClass());
 }
+
+FString AAIMinerController::GetObjectiveDescription() const
+{
+	switch (MinerState)
+	{
+	case EAIMinerState::SeekingAsteroid:
+		return TEXT("Looking for an asteroid");
+	case EAIMinerState::ToAsteroid:
+		return FString::Printf(TEXT("Flying to %s"), TargetAsteroid ? *TargetAsteroid->GetName() : TEXT("(lost rock)"));
+	case EAIMinerState::Mining:
+		return TargetAsteroid
+			? FString::Printf(TEXT("Mining %s (%.0f%% ore left)"), *TargetAsteroid->GetName(), TargetAsteroid->GetOreFraction() * 100.0f)
+			: FString(TEXT("Mining"));
+	case EAIMinerState::ToStation:
+		return FString::Printf(TEXT("Hold full, hauling ore to %s"), *GetStationDisplayName(TargetStation));
+	case EAIMinerState::Docked:
+		return FString::Printf(TEXT("Selling ore at %s, leaving in %.0fs"), *GetStationDisplayName(TargetStation),
+			FMath::Max(0.0f, DwellTime - DockedSeconds));
+	}
+	return FString();
+}

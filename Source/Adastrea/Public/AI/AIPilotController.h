@@ -66,6 +66,12 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="AI Pilot")
 	TObjectPtr<ASpaceStation> TargetStation;
 
+	/** One-line summary of what the pilot is doing right now (e.g. "Flying to Station_Agricultural"), for debug UI. */
+	virtual FString GetObjectiveDescription() const;
+
+	/** Display name for a station: its StationName, else the actor's name. */
+	static FString GetStationDisplayName(const ASpaceStation* Station);
+
 	/** Spawn an AI-piloted ship of ShipClass near Station, run by a controller of PilotClass. */
 	static ASpaceship* SpawnPilotedShip(UWorld* World, TSubclassOf<ASpaceship> ShipClass, ASpaceStation* Station, TSubclassOf<AAIPilotController> PilotClass);
 
