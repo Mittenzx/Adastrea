@@ -140,7 +140,8 @@ void AAdastreaHUD::DrawHUD()
 			return; // only draw once we're flying the ship
 		}
 
-	// ---- Docking prompt (shown only while RequestDocking would succeed) ----
+	// ---- Docking prompt (shown only while RequestDocking would succeed; the cockpit HUD draws its own) ----
+	if (!bCyberpunkFlightHUD)
 	{
 		float DockDist = 0.0f;
 		FString DockName;
@@ -158,6 +159,175 @@ void AAdastreaHUD::DrawHUD()
 		}
 	}
 
+	// ---- Flight HUD: neon cockpit layout, or the legacy telemetry panel ----
+	if (bCyberpunkFlightHUD)
+	{
+		DrawCyberpunkFlightHUD(PC, Ship);
+	}
+	else
+	{
+		// Mining panel stacks under the telemetry panel (hidden unless an asteroid is locked).
+		DrawMiningHUD(PC, Ship, DrawTelemetryPanel(Ship) + 12.0f);
+	}
+
+	const FVector P = Ship->GetActorLocation();
+	UFont* TitleFont = GEngine->GetLargeFont();
+	UFont* BodyFont  = GEngine->GetSmallFont();
+
+	// ---- Locked target reticle (world-space box around the locked target) ----
+	AAdastreaPlayerController* AController = Cast<AAdastreaPlayerController>(PC);
+	AActor* LockedTarget = AController ? AController->GetLockedTarget() : nullptr;
+
+	// Hover highlight: while targeting, show which station the cursor is over.
+	AActor* HoverTarget = nullptr;
+	if (AController && AController->IsTargetingModeActive())
+	{
+		HoverTarget = AController->GetStationUnderCursor();
+	}
+
+	// Draw reticle on the hovered station (if any, and not already locked).
+	if (HoverTarget && HoverTarget != LockedTarget && PC)
+	{
+		FVector2D SPt;
+		if (PC->ProjectWorldLocationToScreen(HoverTarget->GetActorLocation(), SPt))
+		{
+			const FLinearColor HoverCol = FLinearColor(1.0f, 0.85f, 0.3f, 1.0f); // amber
+			const float BH = 30.0f;
+			DrawLine(SPt.X - BH, SPt.Y - BH, SPt.X - 10.0f, SPt.Y - BH, HoverCol, 2.0f);
+			DrawLine(SPt.X + BH, SPt.Y - BH, SPt.X + 10.0f, SPt.Y - BH, HoverCol, 2.0f);
+			DrawLine(SPt.X - BH, SPt.Y + BH, SPt.X - 10.0f, SPt.Y + BH, HoverCol, 2.0f);
+			DrawLine(SPt.X + BH, SPt.Y + BH, SPt.X + 10.0f, SPt.Y + BH, HoverCol, 2.0f);
+			DrawLine(SPt.X - BH, SPt.Y - BH, SPt.X - BH, SPt.Y - 10.0f, HoverCol, 2.0f);
+			DrawLine(SPt.X + BH, SPt.Y - BH, SPt.X + BH, SPt.Y - 10.0f, HoverCol, 2.0f);
+			DrawLine(SPt.X - BH, SPt.Y + BH, SPt.X - BH, SPt.Y + 10.0f, HoverCol, 2.0f);
+			DrawLine(SPt.X + BH, SPt.Y + BH, SPt.X + BH, SPt.Y + 10.0f, HoverCol, 2.0f);
+		}
+	}
+
+	if (LockedTarget)
+	{
+		// Target screen position + in-view/off-view determination.
+		const FVector TgtLoc = LockedTarget->GetActorLocation();
+		const FString TgtName = LockedTarget->GetActorLabel();
+		const float TgtDist = FVector::Dist(P, TgtLoc);
+
+		int32 VSizeX = 0, VSizeY = 0;
+		if (PC) { PC->GetViewportSize(VSizeX, VSizeY); }
+		const float VW = (float)VSizeX, VH = (float)VSizeY;
+		const float Margin = 40.0f; // edge margin for off-screen clamp + "on screen" test
+
+		FVector2D ScreenPt(0.0f, 0.0f);
+		const bool bProjected = PC && PC->ProjectWorldLocationToScreen(TgtLoc, ScreenPt);
+		const bool bOnScreen = bProjected
+			&& ScreenPt.X >= Margin && ScreenPt.X <= VW - Margin
+			&& ScreenPt.Y >= Margin && ScreenPt.Y <= VH - Margin
+			&& ScreenPt.X > 0 && ScreenPt.Y > 0; // valid (not behind camera when out of view)
+
+		const FLinearColor Reticle = FLinearColor(0.15f, 0.9f, 0.6f, 1.0f); // teal-green
+
+		if (bOnScreen)
+		{
+			// On-screen corner-box reticle + crosshair around the locked target.
+			const float BoxHalf = FMath::Clamp(TgtDist * 0.01f, 20.0f, 60.0f);
+			const float RX = ScreenPt.X;
+			const float RY = ScreenPt.Y;
+			const float L = 12.0f;
+			DrawLine(RX - BoxHalf, RY - BoxHalf, RX - BoxHalf + L, RY - BoxHalf, Reticle, 2.0f);
+			DrawLine(RX - BoxHalf, RY - BoxHalf, RX - BoxHalf, RY - BoxHalf + L, Reticle, 2.0f);
+			DrawLine(RX + BoxHalf, RY - BoxHalf, RX + BoxHalf - L, RY - BoxHalf, Reticle, 2.0f);
+			DrawLine(RX + BoxHalf, RY - BoxHalf, RX + BoxHalf, RY - BoxHalf + L, Reticle, 2.0f);
+			DrawLine(RX - BoxHalf, RY + BoxHalf, RX - BoxHalf + L, RY + BoxHalf, Reticle, 2.0f);
+			DrawLine(RX - BoxHalf, RY + BoxHalf, RX - BoxHalf, RY + BoxHalf - L, Reticle, 2.0f);
+			DrawLine(RX + BoxHalf, RY + BoxHalf, RX + BoxHalf - L, RY + BoxHalf, Reticle, 2.0f);
+			DrawLine(RX + BoxHalf, RY + BoxHalf, RX + BoxHalf, RY + BoxHalf - L, Reticle, 2.0f);
+			DrawLine(RX - 6.0f, RY, RX + 6.0f, RY, Reticle, 1.0f);
+			DrawLine(RX, RY - 6.0f, RX, RY + 6.0f, Reticle, 1.0f);
+		}
+		else if (PC)
+		{
+			// Off-screen: draw an arrow at the viewport edge pointing at the target.
+			// Clamp the target's screen position to the edge box (with margin) to get
+			// the arrow base, then orient a triangle toward the true on-screen direction.
+			FVector2D EdgePt = ScreenPt;
+			EdgePt.X = FMath::Clamp(EdgePt.X, Margin, VW - Margin);
+			EdgePt.Y = FMath::Clamp(EdgePt.Y, Margin, VH - Margin);
+
+			// Arrow direction = from screen center to the (possibly off-screen) target.
+			const FVector2D Center(VW * 0.5f, VH * 0.5f);
+			FVector2D Dir = ScreenPt - Center;
+			const float Ln = FMath::Max(Dir.Size(), KINDA_SMALL_NUMBER);
+			Dir /= Ln;
+			const FVector2D N(-Dir.Y, Dir.X); // perpendicular
+
+			const float ArrowLen = 24.0f;
+			const float HalfW = 9.0f;
+			const FVector2D Tip = EdgePt + Dir * ArrowLen;
+			const FVector2D BaseLeft = EdgePt - N * HalfW;
+			const FVector2D BaseRight = EdgePt + N * HalfW;
+			const FVector2D Back = EdgePt + Dir * (ArrowLen * 0.45f);
+
+			DrawLine(Tip.X, Tip.Y, BaseLeft.X, BaseLeft.Y, Reticle, 2.5f);
+			DrawLine(Tip.X, Tip.Y, BaseRight.X, BaseRight.Y, Reticle, 2.5f);
+			DrawLine(BaseLeft.X, BaseLeft.Y, Back.X, Back.Y, Reticle, 2.5f);
+			DrawLine(BaseRight.X, BaseRight.Y, Back.X, Back.Y, Reticle, 2.5f);
+
+			// Distance label under the arrow.
+			DrawText(FString::Printf(TEXT("%.0f"), TgtDist), Reticle,
+				EdgePt.X - 14.0f, EdgePt.Y + 12.0f, BodyFont, 0.6f);
+		}
+
+		// ---- Right-side target info panel ----
+		if (PC)
+		{
+			PC->GetViewportSize(VSizeX, VSizeY);
+			const float PX = VSizeX - 300.0f;
+			const float PY = VSizeY * 0.45f;
+			const float PW = 280.0f;
+			const float PH = 130.0f;
+			const float LX = PX + 12.0f;
+			const float VX = PX + 100.0f;
+
+			DrawRect(FLinearColor(0.02f, 0.03f, 0.05f, 0.75f), PX, PY, PW, PH);
+			DrawLine(PX, PY, PX, PY + PH, kBorder, 3.0f); // teal accent edge
+
+			DrawText(TEXT("TARGET LOCKED"), FLinearColor(0.15f, 0.9f, 0.6f, 1.0f), LX, PY + 8.0f, TitleFont, 0.9f);
+			DrawLine(PX + 10.0f, PY + 30.0f, PX + PW - 10.0f, PY + 30.0f, kBorder, 1.0f);
+
+			DrawText(TEXT("NAME"), kLabel, LX, PY + 40.0f, BodyFont, 0.7f);
+			DrawText(TgtName, FLinearColor::White, VX, PY + 40.0f, BodyFont, 0.7f);
+
+			DrawText(TEXT("DISTANCE"), kLabel, LX, PY + 62.0f, BodyFont, 0.7f);
+			DrawText(FString::Printf(TEXT("%.0f u"), TgtDist), kSpeed, VX, PY + 62.0f, BodyFont, 0.7f);
+
+			// Station module info (if it's a station)
+			if (ASpaceStation* Station = Cast<ASpaceStation>(LockedTarget))
+			{
+				int32 ModuleCount = Station->GetModuleCount();
+				int32 Docks = Station->GetDockingBayModules().Num();
+				DrawText(TEXT("MODULES"), kLabel, LX, PY + 84.0f, BodyFont, 0.7f);
+				DrawText(FString::Printf(TEXT("%d  (%d docks)"), ModuleCount, Docks),
+					kCargo, VX, PY + 84.0f, BodyFont, 0.7f);
+			}
+		}
+	}
+
+	// Subtle targeting-mode indicator (bottom-center, unobtrusive).
+			if (AController && AController->IsTargetingModeActive())
+			{
+				int32 VSizeX = 0, VSizeY = 0;
+				if (PC)
+				{
+					PC->GetViewportSize(VSizeX, VSizeY);
+					const FString Hint = TEXT("TARGETING ACTIVE - Tab to exit");
+					DrawText(Hint, FLinearColor(0.6f, 0.7f, 0.75f, 0.9f),
+						VSizeX * 0.5f - 80.0f, VSizeY - 40.0f, BodyFont, 0.6f);
+				}
+			}
+	}
+
+
+float AAdastreaHUD::DrawTelemetryPanel(ASpaceship* Ship)
+{
 	// ---- Gather live data ----
 	const FVector P = Ship->GetActorLocation();
 	const float Speed = Ship->MovementComponent ? Ship->MovementComponent->Velocity.Size() : 0.0f;
@@ -322,159 +492,8 @@ void AAdastreaHUD::DrawHUD()
 		Y += RowH + 24.0f;
 	}
 
-	// ---- Mining panel (stacked under the telemetry panel; hidden unless an asteroid is locked) ----
-	DrawMiningHUD(PC, Ship, PanelY + PanelH + 12.0f);
-
-	// ---- Locked target reticle (world-space box around the locked target) ----
-	AAdastreaPlayerController* AController = Cast<AAdastreaPlayerController>(PC);
-	AActor* LockedTarget = AController ? AController->GetLockedTarget() : nullptr;
-
-	// Hover highlight: while targeting, show which station the cursor is over.
-	AActor* HoverTarget = nullptr;
-	if (AController && AController->IsTargetingModeActive())
-	{
-		HoverTarget = AController->GetStationUnderCursor();
-	}
-
-	// Draw reticle on the hovered station (if any, and not already locked).
-	if (HoverTarget && HoverTarget != LockedTarget && PC)
-	{
-		FVector2D SPt;
-		if (PC->ProjectWorldLocationToScreen(HoverTarget->GetActorLocation(), SPt))
-		{
-			const FLinearColor HoverCol = FLinearColor(1.0f, 0.85f, 0.3f, 1.0f); // amber
-			const float BH = 30.0f;
-			DrawLine(SPt.X - BH, SPt.Y - BH, SPt.X - 10.0f, SPt.Y - BH, HoverCol, 2.0f);
-			DrawLine(SPt.X + BH, SPt.Y - BH, SPt.X + 10.0f, SPt.Y - BH, HoverCol, 2.0f);
-			DrawLine(SPt.X - BH, SPt.Y + BH, SPt.X - 10.0f, SPt.Y + BH, HoverCol, 2.0f);
-			DrawLine(SPt.X + BH, SPt.Y + BH, SPt.X + 10.0f, SPt.Y + BH, HoverCol, 2.0f);
-			DrawLine(SPt.X - BH, SPt.Y - BH, SPt.X - BH, SPt.Y - 10.0f, HoverCol, 2.0f);
-			DrawLine(SPt.X + BH, SPt.Y - BH, SPt.X + BH, SPt.Y - 10.0f, HoverCol, 2.0f);
-			DrawLine(SPt.X - BH, SPt.Y + BH, SPt.X - BH, SPt.Y + 10.0f, HoverCol, 2.0f);
-			DrawLine(SPt.X + BH, SPt.Y + BH, SPt.X + BH, SPt.Y + 10.0f, HoverCol, 2.0f);
-		}
-	}
-
-	if (LockedTarget)
-	{
-		// Target screen position + in-view/off-view determination.
-		const FVector TgtLoc = LockedTarget->GetActorLocation();
-		const FString TgtName = LockedTarget->GetActorLabel();
-		const float TgtDist = FVector::Dist(P, TgtLoc);
-
-		int32 VSizeX = 0, VSizeY = 0;
-		if (PC) { PC->GetViewportSize(VSizeX, VSizeY); }
-		const float VW = (float)VSizeX, VH = (float)VSizeY;
-		const float Margin = 40.0f; // edge margin for off-screen clamp + "on screen" test
-
-		FVector2D ScreenPt(0.0f, 0.0f);
-		const bool bProjected = PC && PC->ProjectWorldLocationToScreen(TgtLoc, ScreenPt);
-		const bool bOnScreen = bProjected
-			&& ScreenPt.X >= Margin && ScreenPt.X <= VW - Margin
-			&& ScreenPt.Y >= Margin && ScreenPt.Y <= VH - Margin
-			&& ScreenPt.X > 0 && ScreenPt.Y > 0; // valid (not behind camera when out of view)
-
-		const FLinearColor Reticle = FLinearColor(0.15f, 0.9f, 0.6f, 1.0f); // teal-green
-
-		if (bOnScreen)
-		{
-			// On-screen corner-box reticle + crosshair around the locked target.
-			const float BoxHalf = FMath::Clamp(TgtDist * 0.01f, 20.0f, 60.0f);
-			const float RX = ScreenPt.X;
-			const float RY = ScreenPt.Y;
-			const float L = 12.0f;
-			DrawLine(RX - BoxHalf, RY - BoxHalf, RX - BoxHalf + L, RY - BoxHalf, Reticle, 2.0f);
-			DrawLine(RX - BoxHalf, RY - BoxHalf, RX - BoxHalf, RY - BoxHalf + L, Reticle, 2.0f);
-			DrawLine(RX + BoxHalf, RY - BoxHalf, RX + BoxHalf - L, RY - BoxHalf, Reticle, 2.0f);
-			DrawLine(RX + BoxHalf, RY - BoxHalf, RX + BoxHalf, RY - BoxHalf + L, Reticle, 2.0f);
-			DrawLine(RX - BoxHalf, RY + BoxHalf, RX - BoxHalf + L, RY + BoxHalf, Reticle, 2.0f);
-			DrawLine(RX - BoxHalf, RY + BoxHalf, RX - BoxHalf, RY + BoxHalf - L, Reticle, 2.0f);
-			DrawLine(RX + BoxHalf, RY + BoxHalf, RX + BoxHalf - L, RY + BoxHalf, Reticle, 2.0f);
-			DrawLine(RX + BoxHalf, RY + BoxHalf, RX + BoxHalf, RY + BoxHalf - L, Reticle, 2.0f);
-			DrawLine(RX - 6.0f, RY, RX + 6.0f, RY, Reticle, 1.0f);
-			DrawLine(RX, RY - 6.0f, RX, RY + 6.0f, Reticle, 1.0f);
-		}
-		else if (PC)
-		{
-			// Off-screen: draw an arrow at the viewport edge pointing at the target.
-			// Clamp the target's screen position to the edge box (with margin) to get
-			// the arrow base, then orient a triangle toward the true on-screen direction.
-			FVector2D EdgePt = ScreenPt;
-			EdgePt.X = FMath::Clamp(EdgePt.X, Margin, VW - Margin);
-			EdgePt.Y = FMath::Clamp(EdgePt.Y, Margin, VH - Margin);
-
-			// Arrow direction = from screen center to the (possibly off-screen) target.
-			const FVector2D Center(VW * 0.5f, VH * 0.5f);
-			FVector2D Dir = ScreenPt - Center;
-			const float Ln = FMath::Max(Dir.Size(), KINDA_SMALL_NUMBER);
-			Dir /= Ln;
-			const FVector2D N(-Dir.Y, Dir.X); // perpendicular
-
-			const float ArrowLen = 24.0f;
-			const float HalfW = 9.0f;
-			const FVector2D Tip = EdgePt + Dir * ArrowLen;
-			const FVector2D BaseLeft = EdgePt - N * HalfW;
-			const FVector2D BaseRight = EdgePt + N * HalfW;
-			const FVector2D Back = EdgePt + Dir * (ArrowLen * 0.45f);
-
-			DrawLine(Tip.X, Tip.Y, BaseLeft.X, BaseLeft.Y, Reticle, 2.5f);
-			DrawLine(Tip.X, Tip.Y, BaseRight.X, BaseRight.Y, Reticle, 2.5f);
-			DrawLine(BaseLeft.X, BaseLeft.Y, Back.X, Back.Y, Reticle, 2.5f);
-			DrawLine(BaseRight.X, BaseRight.Y, Back.X, Back.Y, Reticle, 2.5f);
-
-			// Distance label under the arrow.
-			DrawText(FString::Printf(TEXT("%.0f"), TgtDist), Reticle,
-				EdgePt.X - 14.0f, EdgePt.Y + 12.0f, BodyFont, 0.6f);
-		}
-
-		// ---- Right-side target info panel ----
-		if (PC)
-		{
-			PC->GetViewportSize(VSizeX, VSizeY);
-			const float PX = VSizeX - 300.0f;
-			const float PY = VSizeY * 0.45f;
-			const float PW = 280.0f;
-			const float PH = 130.0f;
-			const float LX = PX + 12.0f;
-			const float VX = PX + 100.0f;
-
-			DrawRect(FLinearColor(0.02f, 0.03f, 0.05f, 0.75f), PX, PY, PW, PH);
-			DrawLine(PX, PY, PX, PY + PH, kBorder, 3.0f); // teal accent edge
-
-			DrawText(TEXT("TARGET LOCKED"), FLinearColor(0.15f, 0.9f, 0.6f, 1.0f), LX, PY + 8.0f, TitleFont, 0.9f);
-			DrawLine(PX + 10.0f, PY + 30.0f, PX + PW - 10.0f, PY + 30.0f, kBorder, 1.0f);
-
-			DrawText(TEXT("NAME"), kLabel, LX, PY + 40.0f, BodyFont, 0.7f);
-			DrawText(TgtName, FLinearColor::White, VX, PY + 40.0f, BodyFont, 0.7f);
-
-			DrawText(TEXT("DISTANCE"), kLabel, LX, PY + 62.0f, BodyFont, 0.7f);
-			DrawText(FString::Printf(TEXT("%.0f u"), TgtDist), kSpeed, VX, PY + 62.0f, BodyFont, 0.7f);
-
-			// Station module info (if it's a station)
-			if (ASpaceStation* Station = Cast<ASpaceStation>(LockedTarget))
-			{
-				int32 ModuleCount = Station->GetModuleCount();
-				int32 Docks = Station->GetDockingBayModules().Num();
-				DrawText(TEXT("MODULES"), kLabel, LX, PY + 84.0f, BodyFont, 0.7f);
-				DrawText(FString::Printf(TEXT("%d  (%d docks)"), ModuleCount, Docks),
-					kCargo, VX, PY + 84.0f, BodyFont, 0.7f);
-			}
-		}
-	}
-
-	// Subtle targeting-mode indicator (bottom-center, unobtrusive).
-			if (AController && AController->IsTargetingModeActive())
-			{
-				int32 VSizeX = 0, VSizeY = 0;
-				if (PC)
-				{
-					PC->GetViewportSize(VSizeX, VSizeY);
-					const FString Hint = TEXT("TARGETING ACTIVE - Tab to exit");
-					DrawText(Hint, FLinearColor(0.6f, 0.7f, 0.75f, 0.9f),
-						VSizeX * 0.5f - 80.0f, VSizeY - 40.0f, BodyFont, 0.6f);
-				}
-			}
-	}
+	return PanelY + PanelH;
+}
 
 
 void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
@@ -1590,11 +1609,21 @@ void AAdastreaHUD::DrawMiningHUD(APlayerController* PC, ASpaceship* Ship, float 
 	AAsteroid* Rock = Cast<AAsteroid>(Laser->GetTarget());
 	if (!Rock)
 	{
-		// Nothing locked: no panel, just the controls hint.
+		// Nothing locked: no panel, just the controls hint (the cockpit HUD draws its own).
+		if (bCyberpunkFlightHUD)
+		{
+			return;
+		}
 		const FString Hint = TEXT("MINING LASER   [T] lock asteroid ahead    [Hold LMB] fire");
 		float HW = 0.0f, HH = 0.0f;
 		GetTextSize(Hint, HW, HH, BodyFont, 0.8f);
 		DrawText(Hint, FLinearColor(0.6f, 0.7f, 0.75f, 0.85f), (Canvas->SizeX - HW) * 0.5f, Canvas->SizeY - 64.0f, BodyFont, 0.8f);
+		return;
+	}
+
+	if (bCyberpunkFlightHUD)
+	{
+		DrawCyberMiningHUD(PC, Ship, Laser, Rock, PanelTop);
 		return;
 	}
 

@@ -13,6 +13,8 @@ class USceneCaptureComponent2D;
 class UTextureRenderTarget2D;
 class USpaceshipDataAsset;
 class UStaticMeshComponent;
+class UMiningLaserComponent;
+class AAsteroid;
 class AActor;
 
 /**
@@ -56,6 +58,23 @@ public:
 	/** Set the map's visibility directly. */
 	UFUNCTION(BlueprintCallable, Category="HUD|Map")
 	void SetMapVisible(bool bVisible) { bShowMap = bVisible; }
+
+	// ========================
+	// FLIGHT HUD
+	// ========================
+
+	/** Draw the neon cockpit flight HUD (false = the legacy top-left telemetry panel). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="HUD|Flight")
+	bool bCyberpunkFlightHUD = true;
+
+	/** Neon cockpit HUD: heading tape, flight reticle, defence (shield/hull) and propulsion panels. */
+	void DrawCyberpunkFlightHUD(APlayerController* PC, ASpaceship* Ship);
+
+	/** Neon lock brackets + mining uplink panel for a locked asteroid (cockpit HUD counterpart of DrawMiningHUD). */
+	void DrawCyberMiningHUD(APlayerController* PC, ASpaceship* Ship, UMiningLaserComponent* Laser, AAsteroid* Rock, float PanelTop);
+
+	/** Legacy telemetry panel + compass (top-left). Returns the panel's bottom edge Y. */
+	float DrawTelemetryPanel(ASpaceship* Ship);
 
 	/** Draw the X4-style 3D sector map (orbitable, ships+stations as icons). */
 	void DrawSectorMap(APlayerController* PC, const FVector& ShipPos);
@@ -246,6 +265,12 @@ public:
 	void DrawStationInfoScreen(APlayerController* PC, ASpaceStation* Station, const FVector& ObserverPos);
 
 private:
+	/** Last-frame shield/hull values and hit-flash timers for the cockpit HUD damage flash. */
+	float LastHudShield = -1.0f;
+	float LastHudHull = -1.0f;
+	float ShieldHitFlash = 0.0f;
+	float HullHitFlash = 0.0f;
+
 	/** The camera that renders the preview ship into ShipPreviewRT. */
 	UPROPERTY()
 	TObjectPtr<USceneCaptureComponent2D> ShipPreviewCapture;
