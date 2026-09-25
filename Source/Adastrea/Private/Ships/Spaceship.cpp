@@ -112,6 +112,9 @@ ASpaceship::ASpaceship()
         // SM_Ship_Fighter_01_Assembled for the fighter.
         ShipMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
         ShipMeshComponent->SetupAttachment(ShipRoot);
+        // The generated hull meshes (Tools/generate_adastrea_assets.py) are modelled nose-along
+        // Blender +Y, which imports as UE -Y. Yaw 90 turns the nose onto the actor's +X forward.
+        ShipMeshComponent->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));
         ShipMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision); // flying is kinematic
 
         // Create and configure the floating pawn movement component
