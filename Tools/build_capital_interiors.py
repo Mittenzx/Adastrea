@@ -58,7 +58,15 @@ SLOT_COLORS = {
     "M_Int_Hatch": (0.18, 0.18, 0.20), "M_Int_Deck": (0.45, 0.45, 0.48),
     "M_Int_Console": (0.10, 0.32, 0.36), "M_Int_Stations": (0.22, 0.55, 0.55),
     "M_Int_Viewport": (0.08, 0.10, 0.14),
+    # CommandXL hero pass only: command furniture bodies and the gold wall trim.
+    # Both are re-slotted onto the unique baked atlas by
+    # Tools/bake_interior_unique.py, so UE never sees these names.
+    "M_Int_Command": (0.07, 0.10, 0.20), "M_Int_Trim": (0.55, 0.45, 0.15),
 }
+
+# Slots that get real bevels in the hero pass (emissive strips and glass stay
+# crisp: a bevel there costs tris and is invisible under the bloom).
+BEVEL_SKIP_SLOTS = {"M_Int_Lights", "M_Int_Viewport", "M_Int_Console"}
 
 
 # ----------------------------------------------------------------------------
@@ -256,6 +264,56 @@ class Part:
         self.prism_xz(slot, [tuple(q) for q in p], y0 + w * inset * 0.5, y1 - w * inset * 0.5, M)
 
     # -- finalize -----------------------------------------------------------
+    def grid_cut(self, pitch=60.0, min_area=2500.0):
+        """Hero pass: split big flat faces on a world grid so the unique bake
+        can drop the parts that are covered (deck under consoles, wall behind
+        displays) instead of giving a whole slab texels. Coplanar cuts, so the
+        silhouette and the shading are unchanged."""
+        bm = self.bm
+        for axis in range(3):
+            no = Vector([1.0 if i == axis else 0.0 for i in range(3)])
+            big = [f for f in bm.faces if f.calc_area() > min_area]
+            if not big:
+                continue
+            lo = min(v.co[axis] for f in big for v in f.verts)
+            hi = max(v.co[axis] for f in big for v in f.verts)
+            k = math.floor(lo / pitch) + 1
+            while k * pitch < hi:
+                c = k * pitch
+                k += 1
+                faces = [f for f in bm.faces if f.is_valid and f.calc_area() > min_area
+                         and min(v.co[axis] for v in f.verts) < c - 0.5
+                         and max(v.co[axis] for v in f.verts) > c + 0.5]
+                if not faces:
+                    continue
+                edges = {e for f in faces for e in f.edges}
+                verts = {v for f in faces for v in f.verts}
+                bmesh.ops.bisect_plane(bm, geom=list(faces) + list(edges) + list(verts),
+                                       plane_co=no * c, plane_no=no)
+
+    def bevel_hard_edges(self, offset=1.0, segments=2, min_angle=30.0):
+        """Hero pass: chamfer every hard edge the way the exterior hulls are
+        bevelled (gen.bevel), so edges catch light and the baked edge-wear has
+        real geometry to sit on. Edges touching emissive/glass/screen faces are
+        left sharp."""
+        bm = self.bm
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        skip = {self.slots.index(s) for s in BEVEL_SKIP_SLOTS if s in self.slots}
+        edges = []
+        for e in bm.edges:
+            if len(e.link_faces) != 2:
+                continue
+            f0, f1 = e.link_faces
+            if f0.material_index in skip or f1.material_index in skip:
+                continue
+            if math.degrees(f0.normal.angle(f1.normal, 0.0)) >= min_angle:
+                edges.append(e)
+        if edges:
+            bmesh.ops.bevel(bm, geom=edges, offset=offset, offset_type='OFFSET',
+                            profile_type='SUPERELLIPSE', segments=segments, profile=0.5,
+                            affect='EDGES', clamp_overlap=True)
+        return len(edges)
+
     def to_object(self):
         bm = self.bm
         bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
@@ -425,19 +483,48 @@ def Mxy(x, y, yaw):
 
 
 def console(part, x, y, yaw, width=110.0, body="M_Int_Stations", screen="M_Int_Console",
-            depth=55.0, desk_h=76.0, back_h=112.0, monitor=True):
+            depth=55.0, desk_h=76.0, back_h=112.0, monitor=True, detail=False):
     """Sit-down console. Operator sits at local -X, faces local +X. (x,y) is the
-    operator edge centre; the console extends forward (+X local) by `depth`."""
+    operator edge centre; the console extends forward (+X local) by `depth`.
+    detail=True (hero pass) adds cheek plates, a toe-kick vent, a keyboard deck
+    and a monitor yoke, i.e. the greeble density of the exterior hulls."""
     M = Mxy(x, y, yaw)
     w0, w1 = -width / 2, width / 2
     prof = [(8, 0), (depth, 0), (depth, back_h), (depth - 12, back_h + 4), (-6, desk_h + 3),
             (-6, desk_h - 3), (8, desk_h - 6)]
     part.prism_xz(body, prof, w0, w1, M)
     part.slope_panel(screen, (-6, desk_h + 3), (depth - 12, back_h + 4), w0, w1, M=M)
+    if detail:
+        # cheek plates: slightly larger profile, proud of both ends
+        cheek = [(4, 0), (depth + 3, 0), (depth + 3, back_h + 3), (depth - 12, back_h + 8),
+                 (-9, desk_h + 5), (-9, desk_h - 6), (4, desk_h - 10)]
+        part.prism_xz(body, cheek, w0 - 3.0, w0, M)
+        part.prism_xz(body, cheek, w1, w1 + 3.0, M)
+        # toe-kick recess + vent slats on the operator face
+        part.box(body, 8.0, 12.0, w0 + 6, w1 - 6, 0.0, 12.0, M)
+        for k in range(4):
+            z = desk_h - 36.0 + k * 6.0
+            part.box(body, 6.5, 8.5, w0 + 14, w1 - 14, z, z + 2.5, M)
+        # keyboard deck on the desk lip (dark body) with key rows (screen)
+        a, b = Vector((-6, desk_h + 3)), Vector((depth - 12, back_h + 4))
+        d = (b - a).normalized()
+        n = Vector((-d.y, d.x))
+        p0, p1 = a + d * 3.0, a + d * 17.0
+        kb = [tuple(p0 + n * 0.6), tuple(p1 + n * 0.6), tuple(p1 + n * 3.0), tuple(p0 + n * 3.0)]
+        kw = min(60.0, width * 0.5)
+        part.prism_xz(body, kb, -kw / 2, kw / 2, M)
+        for r in range(3):
+            q0, q1 = a + d * (4.5 + r * 4.3), a + d * (7.8 + r * 4.3)
+            key = [tuple(q0 + n * 3.0), tuple(q1 + n * 3.0), tuple(q1 + n * 3.6), tuple(q0 + n * 3.6)]
+            part.prism_xz(screen, key, -kw / 2 + 3, kw / 2 - 3, M)
     if monitor:
         mh0, mh1 = back_h + 4, back_h + 52
         part.box(body, depth - 16, depth - 8, w0 + 8, w1 - 8, mh0 - 6, mh1, M)
         part.box(screen, depth - 16.8, depth - 16, w0 + 12, w1 - 12, mh0, mh1 - 4, M)
+        if detail:   # yoke arm + rear heat-sink fins
+            part.box(body, depth - 9, depth - 2, -6, 6, back_h - 10, mh0 + 18, M)
+            for k in range(-2, 3):
+                part.box(body, depth - 8, depth - 5, k * 12 - 1.5, k * 12 + 1.5, mh0 + 6, mh1 - 6, M)
 
 
 def chair(part, x, y, yaw, slot="M_Int_Stations", big=False, arm_screens=None):
@@ -462,12 +549,12 @@ def chair(part, x, y, yaw, slot="M_Int_Stations", big=False, arm_screens=None):
             part.box(arm_screens, -10 * k, 18 * k, min(yy0, yy1) + 2, max(yy0, yy1) - 2, 70.0, 70.8, M)
 
 
-def holo_emitter(room, cx, cy, table_r, top_z, holo_r, holo_z, big=False):
+def holo_emitter(room, cx, cy, table_r, top_z, holo_r, holo_z, big=False, body="M_Int_Console"):
     """Round holo table (Console) + hologram (Lights)."""
     co, li = room.P("Console"), room.P("Lights")
-    co.cyl("M_Int_Console", cx, cy, 0.0, 10.0, table_r * 0.55, 24)
-    co.cyl("M_Int_Console", cx, cy, 10.0, top_z - 14, table_r * 0.40, 24)
-    co.prism_xy("M_Int_Console", circle(cx, cy, table_r, 32), top_z - 14, top_z)
+    co.cyl(body, cx, cy, 0.0, 10.0, table_r * 0.55, 24)
+    co.cyl(body, cx, cy, 10.0, top_z - 14, table_r * 0.40, 24)
+    co.prism_xy(body, circle(cx, cy, table_r, 32), top_z - 14, top_z)
     li.annulus("M_Int_Lights", cx, cy, table_r * 0.15, table_r * 0.82, top_z, top_z + 0.8, 32)
     li.annulus("M_Int_Lights", cx, cy, table_r * 0.97, table_r * 1.01, top_z - 10, top_z - 4, 32)
     # hologram: gimbal rings + core + orbit
@@ -713,6 +800,67 @@ def build_battleship():
     return r
 
 
+def wall_run(room, i, t0, t1, d0, d1, z0, z1, slot, part="Shell"):
+    """Thin plate on the inner face of wall edge i (d measured from that face)."""
+    wt = room.wall_t
+    room.P(part).prism_xy(slot, room.edge_quad(i, t0, t1, wt + d0, wt + d1), z0, z1)
+
+
+def commandxl_hero_detail(r, x_at_e2, x_at_e6, y_at_e4):
+    """Exterior-grade greeble pass for the flagship bridge: gold livery trim,
+    wainscot plating, overhead conduits + cable trays. Matches the CommandXL
+    hull (deep navy plating, gold trim) instead of the generic teal kit."""
+    sh = r.P("Shell")
+    wt, YI = r.wall_t, r.yh - r.wall_t
+    L = {i: r.edge_len(i) for i in range(8)}
+
+    # --- gold command trim at 104-110 cm (edges 2..6, around the hatch) -----
+    for i in (2, 3, 5, 6):
+        wall_run(r, i, 0.0, L[i], 0.0, 1.6, 104.0, 110.0, "M_Int_Trim")
+        wall_run(r, i, 0.0, L[i], 0.0, 0.8, 114.0, 115.5, "M_Int_Trim")    # pinstripe
+    for (a, b) in ((0.0, 255.0), (495.0, L[4])):
+        wall_run(r, 4, a, b, 0.0, 1.6, 104.0, 110.0, "M_Int_Trim")
+        wall_run(r, 4, a, b, 0.0, 0.8, 114.0, 115.5, "M_Int_Trim")
+
+    # --- wainscot plating: raised 1 cm plates, 3 cm shadow gaps --------------
+    for i in (2, 3, 5, 6):
+        n = max(1, int(round(L[i] / 120.0)))
+        w = L[i] / n
+        for k in range(n):
+            wall_run(r, i, k * w + 1.5, (k + 1) * w - 1.5, 0.0, 1.0, 16.0, 98.0, "M_Int_Shell")
+        # upper plates between trim and conduits, only where the wall is solid
+        # (the chamfers; edges 2/6 carry windows + displays up there)
+        if i in (3, 5):
+            for k in range(n):
+                wall_run(r, i, k * w + 1.5, (k + 1) * w - 1.5, 0.0, 1.0, 122.0, 336.0, "M_Int_Shell")
+
+    # --- overhead conduits + brackets along both long walls -----------------
+    for s, conv in ((1, x_at_e2), (-1, x_at_e6)):
+        for (dy, rad, z) in ((9.0, 3.6, 352.0), (17.5, 2.6, 358.0), (9.0, 2.2, 362.0)):
+            y = s * (YI - dy)
+            sh.cyl_between("M_Int_Shell", (-380.0, y, z), (360.0, y, z), rad, 12)
+        for x in range(-360, 361, 90):
+            a, b = sorted((conv(x - 3.0), conv(x + 3.0)))
+            wall_run(r, 2 if s > 0 else 6, a, b, 0.0, 24.0, 344.0, 368.0, "M_Int_Shell")
+
+    # --- ceiling cable trays between the coffer edges ------------------------
+    for s in (-1, 1):
+        yc = s * 305.0
+        r.cbox("Shell", "M_Int_Shell", -400.0, 300.0, yc - 16, yc + 16, 389.0, 391.0)   # tray floor
+        for e in (-1, 1):
+            r.cbox("Shell", "M_Int_Shell", -400.0, 300.0, yc + e * 16 - 1.2, yc + e * 16 + 1.2, 389.0, 397.0)
+        for x in range(-390, 300, 70):                                             # hangers
+            r.cbox("Shell", "M_Int_Shell", x - 1.5, x + 1.5, yc - 18, yc + 18, 391.0, r.ceil_z)
+        for k, dy in enumerate((-9.0, -2.0, 6.0)):                                  # bundled cables
+            sh.cyl_between("M_Int_Shell", (-398.0, yc + dy, 393.0 + (k % 2)), (298.0, yc + dy, 393.0 + (k % 2)),
+                           2.2 + 0.6 * (k == 1), 8)
+
+    # --- deck: raised gold-edged plinth ring at the dais foot + aisle edging -
+    r.P("Deck").annulus("M_Int_Trim", -40.0, 0.0, 178.5, 181.0, 0.0, 3.0, 64)
+    for sgn in (-1, 1):
+        r.P("Deck").box("M_Int_Trim", -r.xh + wt + 40, -40.0 - 176.0, sgn * 69.0 - 1.0, sgn * 69.0 + 1.0, 0.0, 1.8)
+
+
 # ----------------------------------------------------------------------------
 # COMMANDXL: flagship bridge deck = crew arc + admiral's dais + fleet hologram
 # ----------------------------------------------------------------------------
@@ -764,31 +912,33 @@ def build_commandxl():
     dk.prism_xy("M_Int_Deck", circle(DX, 0.0, 178.0, 48), 0.0, 8.0)
     li.annulus("M_Int_Lights", DX, 0.0, 173.0, 178.5, 8.0, 8.8, 48)
     dk.prism_xy("M_Int_Deck", circle(DX, 0.0, 150.0, 48), 8.0, 9.0)
-    chair(co, DX, 0.0, 0.0, slot="M_Int_Console", big=True, arm_screens="M_Int_Console")
+    chair(co, DX, 0.0, 0.0, slot="M_Int_Command", big=True, arm_screens="M_Int_Console")
     # C-shaped command ring around the chair, open to the rear
-    co.annulus("M_Int_Console", DX, 0.0, 104.0, 140.0, 8.0, 88.0, 40, -128.0, 128.0)
+    co.annulus("M_Int_Command", DX, 0.0, 104.0, 140.0, 8.0, 88.0, 40, -128.0, 128.0)
     li.annulus("M_Int_Lights", DX, 0.0, 110.0, 134.0, 88.0, 88.8, 40, -120.0, 120.0)
-    co.annulus("M_Int_Console", DX, 0.0, 132.0, 140.0, 88.0, 118.0, 40, -70.0, 70.0)   # forward screen lip
+    co.annulus("M_Int_Command", DX, 0.0, 132.0, 140.0, 88.0, 118.0, 40, -70.0, 70.0)   # forward screen lip
     li.annulus("M_Int_Lights", DX, 0.0, 131.2, 132.0, 92.0, 115.0, 40, -66.0, 66.0)
 
     # ---------------- fleet hologram between dais and helm -----------------
     HOX = 150.0
-    holo_emitter(r, HOX, 0.0, table_r=62.0, top_z=36.0, holo_r=64.0, holo_z=205.0, big=True)
-    co.cyl("M_Int_Console", HOX, 0.0, r.ceil_z - 22.0, r.ceil_z, 34.0, 24)          # ceiling emitter
+    holo_emitter(r, HOX, 0.0, table_r=62.0, top_z=36.0, holo_r=64.0, holo_z=205.0, big=True,
+                 body="M_Int_Command")
+    co.cyl("M_Int_Command", HOX, 0.0, r.ceil_z - 22.0, r.ceil_z, 34.0, 24)          # ceiling emitter
     li.annulus("M_Int_Lights", HOX, 0.0, 12.0, 30.0, r.ceil_z - 22.8, r.ceil_z - 22.0, 24)
 
     # ---------------- helm on the trigger line ----------------------------
     HX = 0.6 * XH
-    chair(co, HX - 6.0, 0.0, 0.0, slot="M_Int_Console")
-    console(co, HX + 32.0, 0.0, 0.0, width=170.0, body="M_Int_Console", depth=62.0, desk_h=74.0)
+    chair(co, HX - 6.0, 0.0, 0.0, slot="M_Int_Command")
+    console(co, HX + 32.0, 0.0, 0.0, width=170.0, body="M_Int_Command", depth=62.0, desk_h=74.0, detail=True)
     for s in (-1, 1):
-        console(co, HX + 22.0, s * 108.0, s * 30.0, width=64.0, body="M_Int_Console", depth=50.0, monitor=False)
+        console(co, HX + 22.0, s * 108.0, s * 30.0, width=64.0, body="M_Int_Command", depth=50.0, monitor=False,
+                detail=True)
 
     # ---------------- forward crew arc (Stations) ----------------------------
     for ang in (-56.0, -34.0, 34.0, 56.0):
         a = math.radians(ang)
         rc = 350.0
-        console(st, rc * math.cos(a), rc * math.sin(a), ang, width=104.0, depth=54.0)
+        console(st, rc * math.cos(a), rc * math.sin(a), ang, width=104.0, depth=54.0, detail=True)
         rch = 305.0
         chair(st, rch * math.cos(a), rch * math.sin(a), ang)
     dk.annulus("M_Int_Deck", 0.0, 0.0, 262.0, 430.0, 0.0, 1.2, 40, -64.0, 64.0)
@@ -801,7 +951,7 @@ def build_commandxl():
     for s in (-1, 1):
         yaw = 90.0 * s
         for x in (-240.0, -130.0, -20.0):
-            console(st, x, s * (YI - 58.0), yaw, width=96.0, depth=52.0, monitor=False)
+            console(st, x, s * (YI - 58.0), yaw, width=96.0, depth=52.0, monitor=False, detail=True)
             chair(st, x, s * (YI - 58.0 - 42.0), yaw)
         ei = 2 if s > 0 else 6
         conv = x_at_e2 if s > 0 else x_at_e6
@@ -811,9 +961,9 @@ def build_commandxl():
     # ---------------- rear: tactical plot tables + status boards ------------
     for s in (-1, 1):
         cx, cy = -310.0, s * 250.0
-        co.box("M_Int_Console", cx - 100, cx + 100, cy - 58, cy + 58, 0.0, 12.0)
-        co.box("M_Int_Console", cx - 80, cx + 80, cy - 40, cy + 40, 12.0, 80.0)
-        co.box("M_Int_Console", cx - 104, cx + 104, cy - 62, cy + 62, 80.0, 92.0)
+        co.box("M_Int_Command", cx - 100, cx + 100, cy - 58, cy + 58, 0.0, 12.0)
+        co.box("M_Int_Command", cx - 80, cx + 80, cy - 40, cy + 40, 12.0, 80.0)
+        co.box("M_Int_Command", cx - 104, cx + 104, cy - 62, cy + 62, 80.0, 92.0)
         co.box("M_Int_Lights", cx - 92, cx + 92, cy - 50, cy + 50, 92.0, 92.8)
         for k in range(3):   # holo contacts over the plot
             li.ico("M_Int_Lights", (cx - 50 + 50 * k, cy + (20 if k % 2 else -15), 118.0 + 12 * k), 6.0, 1)
@@ -837,12 +987,35 @@ def build_commandxl():
     for s in (-1, 1):
         for x0 in range(int(-XH + 60), int(DX - 185), 55):
             li.box("M_Int_Lights", x0, x0 + 28, s * 72.0 - 1.5, s * 72.0 + 1.5, 0.0, 1.6)
+
+    commandxl_hero_detail(r, x_at_e2, x_at_e6, y_at_e4)
     return r
 
 
 # ----------------------------------------------------------------------------
 # Validation against the C++ contract + export
 # ----------------------------------------------------------------------------
+# Kits that get the exterior-grade pass: bevels + weighted normals + unique bake.
+HERO_KITS = {"commandxl"}
+
+
+def weighted_normals(ob):
+    """Smooth shading + face-area weighted custom normals: big flat faces stay
+    dead flat, the bevel strips carry the curvature (standard hard-surface
+    game-art normals, as on the hull meshes)."""
+    for poly in ob.data.polygons:
+        poly.use_smooth = True
+    bpy.ops.object.select_all(action='DESELECT')
+    ob.select_set(True)
+    bpy.context.view_layer.objects.active = ob
+    m = ob.modifiers.new("wn", 'WEIGHTED_NORMAL')
+    m.mode = 'FACE_AREA'
+    m.weight = 100
+    m.keep_sharp = True
+    m.thresh = 0.01
+    bpy.ops.object.modifier_apply(modifier=m.name)
+
+
 def world_pts(ob):
     return [ob.matrix_world @ v.co for v in ob.data.vertices]
 
@@ -922,19 +1095,36 @@ def export(ob, dry):
 def main():
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     dry = "--dry-run" in argv
-    which = [a for a in argv if not a.startswith("--")] or ["battleship", "commandxl"]
     builders = {"battleship": build_battleship, "commandxl": build_commandxl}
+    which = [a for a in argv if a in builders] or ["battleship", "commandxl"]
     for key in which:
         bpy.ops.wm.read_factory_settings(use_empty=True)
         sc = bpy.context.scene
         sc.unit_settings.system = 'METRIC'
         sc.unit_settings.length_unit = 'CENTIMETERS'
         room = builders[key]()
+        hero = key in HERO_KITS
+        if hero:
+            for p in PART_ORDER:
+                if p != "Lights":
+                    room.parts[p].grid_cut()
+                n = room.parts[p].bevel_hard_edges()
+                print(f"  bevel {p}: {n} hard edges")
         objs = {p: room.parts[p].to_object() for p in PART_ORDER}
-        for ob in objs.values():   # flat shading = hard-surface facets
-            for poly in ob.data.polygons:
-                poly.use_smooth = False
+        for ob in objs.values():
+            if hero:
+                weighted_normals(ob)
+            else:              # flat shading = hard-surface facets
+                for poly in ob.data.polygons:
+                    poly.use_smooth = False
         info = validate(room, objs)
+        if hero and (not dry or "--uv-only" in argv) and not info["problems"] and "--no-bake" not in argv:
+            # Unique UV atlas + Cycles-baked PBR set, same recipe as the hull
+            # textures (Tools/build_unique_hull_textures.py).
+            sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+            import bake_interior_unique
+            info["unique_bake"] = bake_interior_unique.bake_kit(room, objs, argv)
+            info["slots"] = {n: [m.name for m in ob.data.materials] for n, ob in objs.items()}
         print("CONTRACT", json.dumps(info, indent=1))
         if info["problems"]:
             print("CONTRACT_PROBLEMS", room.prefix, len(info["problems"]))

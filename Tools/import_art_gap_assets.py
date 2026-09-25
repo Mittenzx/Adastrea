@@ -25,6 +25,9 @@ Args (combinable):
                         glass per that folder's MATERIAL_MAPPING.md, then rebind SM_Int_* slots
   --unique-hull=Battleship  import T_<Ship>_Unique_* and build M_<Ship>_Hull_Unique (run with the
                         SM_Ship_<Ship>_01_Assembled_UniqueUV mesh so its M_Assembled slot binds)
+  --unique-interior=CommandXLBridge  import the kit's baked T_Int_<Kit>_{Floor,Room,Kit}_* atlases
+                        (Tools/bake_interior_unique.py) + T_Int_DetailMicro_N and build
+                        M_Int_UniqueBaked + MI_Int_<Kit>_<Atlas> (run with the kit's SM_Int_* meshes)
   --capital-bps         set InteriorShellMesh/InteriorFamily on BP_Battleship / BP_CommandXL
   --glass               rebuild only the M_Int_Viewport library glass (no other interior MIs)
   --textures=T_A,T_B    (re)import texture sets from Assets/FBX/generated/Textures with
@@ -1094,6 +1097,134 @@ def run_interiors():
     rebind_interior_meshes()
 
 
+# ---------------------------------------------------------------------------
+# Unique-baked interiors (Tools/bake_interior_unique.py): the ship-EXTERIOR
+# recipe applied to a room. Per kit: T_Int_<Kit>_{Floor,Room,Kit}_* 4K atlases
+# on UV0 + one shared tiling micro-detail normal for close range.
+# ---------------------------------------------------------------------------
+UNIQUE_INT_MASTER = INT_MAT_DIR + "/M_Int_UniqueBaked"
+UNIQUE_INT_ATLASES = ["Floor", "Room", "Kit"]
+DETAIL_TILE_M = 0.5            # T_Int_DetailMicro_N covers 50 cm
+
+
+def build_unique_interior_master():
+    log("material %s (unique-baked interior master)" % UNIQUE_INT_MASTER)
+    if DRY_RUN:
+        return None
+    folder, name = UNIQUE_INT_MASTER.rsplit("/", 1)
+    mat, path = get_or_create_material(folder, name)
+    MEL.delete_all_material_expressions(mat)
+    mat.set_editor_property("blend_mode", unreal.BlendMode.BLEND_OPAQUE)
+    mat.set_editor_property("shading_model", unreal.MaterialShadingModel.MSM_DEFAULT_LIT)
+    mat.set_editor_property("two_sided", False)
+    S = unreal.MaterialSamplerType
+    detail = int_tex("DetailMicro", "N")
+
+    def tparam(pname, tex, sampler, x, y, uv=None):
+        n = MEL.create_material_expression(mat, unreal.MaterialExpressionTextureSampleParameter2D, x, y)
+        n.set_editor_property("parameter_name", pname)
+        if tex:
+            n.set_editor_property("texture", tex)
+        n.set_editor_property("sampler_type", sampler)
+        if uv is not None:
+            MEL.connect_material_expressions(uv, "", n, "UVs")
+        return n
+
+    # defaults: any existing unique set, so the master compiles standalone
+    def any_tex(suffix):
+        for kit in ("CommandXLBridge",):
+            t = int_tex("%s_Room" % kit, suffix)
+            if t:
+                return t
+        return None
+    d = tparam("BaseColor", any_tex("D"), S.SAMPLERTYPE_COLOR, -900, -400)
+    n = tparam("Normal", any_tex("N"), S.SAMPLERTYPE_NORMAL, -900, -150)
+    r = tparam("Roughness", any_tex("R"), S.SAMPLERTYPE_MASKS, -900, 100)
+    m = tparam("Metallic", any_tex("M"), S.SAMPLERTYPE_MASKS, -900, 350)
+    ao = tparam("AmbientOcclusion", any_tex("AO"), S.SAMPLERTYPE_MASKS, -900, 600)
+    e = tparam("Emissive", any_tex("E"), S.SAMPLERTYPE_COLOR, -900, 850)
+
+    # detail normal on UV0 * DetailTiling: the atlas has uniform texel density,
+    # so this is a uniform world-scale tiling (the MI sets it per atlas).
+    uv = MEL.create_material_expression(mat, unreal.MaterialExpressionTextureCoordinate, -1500, -700)
+    til = _scalar(mat, "DetailTiling", 16.0, -1500, -600)
+    uvm = MEL.create_material_expression(mat, unreal.MaterialExpressionMultiply, -1300, -650)
+    MEL.connect_material_expressions(uv, "", uvm, "A")
+    MEL.connect_material_expressions(til, "", uvm, "B")
+    dn = tparam("DetailNormal", detail, S.SAMPLERTYPE_NORMAL, -900, -700, uv=uvm)
+    ds = _scalar(mat, "DetailStrength", 0.6, -900, -900)
+    blend = _custom(mat, -500, -300,
+                    "float2 d = D.xy * S; return normalize(float3(N.xy + d, N.z));",
+                    ["N", "D", "S"], unreal.CustomMaterialOutputType.CMOT_FLOAT3, "WhiteoutDetailNormal")
+    MEL.connect_material_expressions(n, "RGB", blend, "N")
+    MEL.connect_material_expressions(dn, "RGB", blend, "D")
+    MEL.connect_material_expressions(ds, "", blend, "S")
+    MEL.connect_material_property(blend, "", unreal.MaterialProperty.MP_NORMAL)
+
+    tint = MEL.create_material_expression(mat, unreal.MaterialExpressionVectorParameter, -900, -560)
+    tint.set_editor_property("parameter_name", "Tint")
+    tint.set_editor_property("default_value", unreal.LinearColor(1, 1, 1, 1))
+    bc = MEL.create_material_expression(mat, unreal.MaterialExpressionMultiply, -500, -450)
+    MEL.connect_material_expressions(d, "RGB", bc, "A")
+    MEL.connect_material_expressions(tint, "", bc, "B")
+    MEL.connect_material_property(bc, "", unreal.MaterialProperty.MP_BASE_COLOR)
+    rs = _scalar(mat, "RoughnessScale", 1.0, -700, 180)
+    rm = MEL.create_material_expression(mat, unreal.MaterialExpressionMultiply, -500, 120)
+    MEL.connect_material_expressions(r, "R", rm, "A")
+    MEL.connect_material_expressions(rs, "", rm, "B")
+    MEL.connect_material_property(rm, "", unreal.MaterialProperty.MP_ROUGHNESS)
+    MEL.connect_material_property(m, "R", unreal.MaterialProperty.MP_METALLIC)
+    MEL.connect_material_property(ao, "R", unreal.MaterialProperty.MP_AMBIENT_OCCLUSION)
+    es = _scalar(mat, "EmissiveStrength", 4.0, -700, 950)
+    em = MEL.create_material_expression(mat, unreal.MaterialExpressionMultiply, -500, 880)
+    MEL.connect_material_expressions(e, "RGB", em, "A")
+    MEL.connect_material_expressions(es, "", em, "B")
+    MEL.connect_material_property(em, "", unreal.MaterialProperty.MP_EMISSIVE_COLOR)
+    MEL.recompile_material(mat)
+    EAL.save_asset(path, only_if_is_dirty=False)
+    return mat
+
+
+def run_unique_interior(kit):
+    """kit = texture tag, e.g. CommandXLBridge (from prefix SM_Int_CommandXL_Bridge)."""
+    import json
+    contract = None
+    for fname in os.listdir(GEN_DIR):
+        if fname.startswith("SM_Int_") and fname.endswith("_contract.json") \
+                and fname[len("SM_Int_"):-len("_contract.json")].replace("_", "") == kit:
+            with open(os.path.join(GEN_DIR, fname)) as fh:
+                contract = json.load(fh)
+    bake = (contract or {}).get("unique_bake", {})
+    size = bake.get("size", 4096)
+    import_texture_set("T_Int_DetailMicro", src_dir=INT_TEX_SRC, dest_root=INT_TEX_ROOT)
+    for atlas in UNIQUE_INT_ATLASES:
+        import_texture_set("T_Int_%s_%s" % (kit, atlas), src_dir=INT_TEX_SRC, dest_root=INT_TEX_ROOT)
+    master = build_unique_interior_master()
+    if DRY_RUN:
+        return
+    for atlas in UNIQUE_INT_ATLASES:
+        set_name = "%s_%s" % (kit, atlas)
+        name = "MI_Int_" + set_name
+        path = INT_MAT_DIR + "/" + name
+        mi = unreal.load_asset(path) if asset_exists(path) else None
+        if mi is None:
+            mi = ASSET_TOOLS.create_asset(name, INT_MAT_DIR, unreal.MaterialInstanceConstant,
+                                          unreal.MaterialInstanceConstantFactoryNew())
+        MEL.set_material_instance_parent(mi, master)
+        for pname, suffix in (("BaseColor", "D"), ("Normal", "N"), ("Roughness", "R"), ("Metallic", "M"),
+                              ("AmbientOcclusion", "AO"), ("Emissive", "E")):
+            tex = int_tex(set_name, suffix)
+            if tex:
+                MEL.set_material_instance_texture_parameter_value(mi, pname, tex)
+        ppm = bake.get(atlas, {}).get("px_per_m_area_weighted_mean")
+        # UV0 spans size/ppm metres; one detail tile per DETAIL_TILE_M
+        tiling = (size / ppm) / DETAIL_TILE_M if ppm else 16.0
+        MEL.set_material_instance_scalar_parameter_value(mi, "DetailTiling", tiling)
+        MEL.update_material_instance(mi)
+        EAL.save_asset(path, only_if_is_dirty=False)
+        log("  %s: DetailTiling %.2f (%.0f px/m)" % (name, tiling, ppm or 0))
+
+
 CAPITAL_BPS = {
     "/Game/Blueprints/Ships/BP_Battleship": ("SM_Int_Battleship_Bridge_Shell", "BATTLESHIP_BRIDGE"),
     "/Game/Blueprints/Ships/BP_CommandXL":  ("SM_Int_CommandXL_Bridge_Shell", "COMMAND_XL_BRIDGE"),
@@ -1126,7 +1257,7 @@ def main(argv):
     global DRY_RUN
     names, globs, texsets, fixes, accents = [], [], [], False, False
     interiors = capital_bps = glass = False
-    unique_hulls = []
+    unique_hulls, unique_interiors = [], []
     for arg in argv:
         if arg == "--dry-run":
             DRY_RUN = True
@@ -1142,6 +1273,8 @@ def main(argv):
             glass = True
         elif arg.startswith("--unique-hull="):
             unique_hulls += [h for h in arg.split("=", 1)[1].split(",") if h]
+        elif arg.startswith("--unique-interior="):
+            unique_interiors += [k for k in arg.split("=", 1)[1].split(",") if k]
         elif arg.startswith("--glob="):
             globs.append(arg.split("=", 1)[1])
         elif arg.startswith("--textures="):
@@ -1172,6 +1305,8 @@ def main(argv):
                                  tiling=1.0, emissive_strength=1.0)
     if interiors:
         run_interiors()  # before meshes, so new SM_Int_* slots bind to the MIs
+    for kit in unique_interiors:
+        run_unique_interior(kit)  # before meshes, so M_Int_<Kit>_<Atlas> slots bind to the MIs
     for name in names:
         ok = import_mesh(name) and ok
     if fixes:

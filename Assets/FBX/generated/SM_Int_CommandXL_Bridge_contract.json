@@ -47,45 +47,176 @@
   95.7
  ],
  "tris": {
-  "Shell": 860,
-  "Deck": 712,
-  "Console": 1636,
-  "Stations": 2016,
-  "Viewport": 516,
+  "Shell": 34044,
+  "Deck": 5216,
+  "Console": 13410,
+  "Stations": 30740,
+  "Viewport": 5764,
   "Lights": 6924,
-  "Hatch": 108
+  "Hatch": 1300
  },
- "tris_total": 12772,
+ "tris_total": 97398,
  "slots": {
   "Shell": [
-   "M_Int_Deck",
-   "M_Int_Shell",
-   "M_Int_Vents"
+   "M_Int_CommandXLBridge_Floor",
+   "M_Int_CommandXLBridge_Room"
   ],
   "Deck": [
-   "M_Int_Deck"
+   "M_Int_CommandXLBridge_Floor"
   ],
   "Console": [
+   "M_Int_CommandXLBridge_Kit",
    "M_Int_Console",
    "M_Int_Lights"
   ],
   "Stations": [
-   "M_Int_Stations",
+   "M_Int_CommandXLBridge_Kit",
    "M_Int_Console"
   ],
   "Viewport": [
    "M_Int_Viewport",
-   "M_Int_Shell"
+   "M_Int_CommandXLBridge_Room"
   ],
   "Lights": [
    "M_Int_Lights",
    "M_Int_Console"
   ],
   "Hatch": [
-   "M_Int_Hatch",
-   "M_Int_Lights"
+   "M_Int_CommandXLBridge_Room",
+   "M_Int_Lights",
+   "M_Int_CommandXLBridge_Floor"
   ]
  },
  "blender_to_ue_axes": "UE(x, y, z) = Blender(x, -y, z) * 100 * runtime scale",
- "problems": []
+ "problems": [],
+ "unique_bake": {
+  "size": 4096,
+  "faces": {
+   "Shell": {
+    "Room": 8492,
+    "Floor": 25552,
+    "Kit": 0,
+    "visible_baked": 19437
+   },
+   "Deck": {
+    "Room": 0,
+    "Floor": 5216,
+    "Kit": 0,
+    "visible_baked": 4504
+   },
+   "Console": {
+    "Room": 0,
+    "Floor": 0,
+    "Kit": 13026,
+    "visible_baked": 11775
+   },
+   "Stations": {
+    "Room": 0,
+    "Floor": 0,
+    "Kit": 29980,
+    "visible_baked": 27119
+   },
+   "Viewport": {
+    "Room": 800,
+    "Floor": 0,
+    "Kit": 0,
+    "visible_baked": 666
+   },
+   "Lights": {
+    "Room": 0,
+    "Floor": 0,
+    "Kit": 0,
+    "visible_baked": 0
+   },
+   "Hatch": {
+    "Room": 1240,
+    "Floor": 36,
+    "Kit": 0,
+    "visible_baked": 926
+   }
+  },
+  "Floor": {
+   "px_per_m_area_weighted_mean": 245.13068502104673,
+   "px_per_m_median": 245.1355489094788,
+   "px_per_m_p5": 227.18741459092408,
+   "baked_area_m2": 116.77618674175292,
+   "wear_mean": 2.7174590400136367e-07,
+   "dirt_mean": 0.3244839310646057,
+   "slot": "M_Int_CommandXLBridge_Floor",
+   "bake_s": {
+    "P1": 13.7,
+    "P2": 346.1,
+    "P3": 30.9,
+    "P4": 31.1,
+    "P5": 27.1,
+    "P6": 25.7,
+    "P7": 29.9,
+    "AO": 223.5
+   },
+   "textures": [
+    "Assets\\Textures\\generated\\interiors\\T_Int_CommandXLBridge_Floor_D.png",
+    "Assets\\Textures\\generated\\interiors\\T_Int_CommandXLBridge_Floor_N.png",
+    "Assets\\Textures\\generated\\interiors\\T_Int_CommandXLBridge_Floor_R.png",
+    "Assets\\Textures\\generated\\interiors\\T_Int_CommandXLBridge_Floor_M.png",
+    "Assets\\Textures\\generated\\interiors\\T_Int_CommandXLBridge_Floor_AO.png",
+    "Assets\\Textures\\generated\\interiors\\T_Int_CommandXLBridge_Floor_E.png"
+   ]
+  },
+  "Room": {
+   "px_per_m_area_weighted_mean": 157.0018654160691,
+   "px_per_m_median": 157.0073272446954,
+   "px_per_m_p5": 151.6351088202851,
+   "baked_area_m2": 388.94715897213075,
+   "wear_mean": 0.0006231953157112002,
+   "dirt_mean": 0.39344531297683716,
+   "slot": "M_Int_CommandXLBridge_Room",
+   "bake_s": {
+    "P1": 41.6,
+    "P2": 523.8,
+    "P3": 15.1,
+    "P4": 14.9,
+    "P5": 12.6,
+    "P6": 11.2,
+    "P7": 13.1,
+    "AO": 102.6
+   },
+   "textures": [
+    "Assets\\Textures\\generated\\interiors\\T_Int_CommandXLBridge_Room_D.png",
+    "Assets\\Textures\\generated\\interiors\\T_Int_CommandXLBridge_Room_N.png",
+    "Assets\\Textures\\generated\\interiors\\T_Int_CommandXLBridge_Room_R.png",
+    "Assets\\Textures\\generated\\interiors\\T_Int_CommandXLBridge_Room_M.png",
+    "Assets\\Textures\\generated\\interiors\\T_Int_CommandXLBridge_Room_AO.png",
+    "Assets\\Textures\\generated\\interiors\\T_Int_CommandXLBridge_Room_E.png"
+   ]
+  },
+  "Kit": {
+   "px_per_m_area_weighted_mean": 240.14744385209138,
+   "px_per_m_median": 238.08183551059216,
+   "px_per_m_p5": 209.60660018840417,
+   "baked_area_m2": 161.749526322273,
+   "wear_mean": 0.003996530547738075,
+   "dirt_mean": 0.36906737089157104,
+   "slot": "M_Int_CommandXLBridge_Kit",
+   "bake_s": {
+    "P1": 11.8,
+    "P2": 235.9,
+    "P3": 9.9,
+    "P4": 10.2,
+    "P5": 8.6,
+    "P6": 8.0,
+    "P7": 9.6,
+    "AO": 91.8
+   },
+   "textures": [
+    "Assets\\Textures\\generated\\interiors\\T_Int_CommandXLBridge_Kit_D.png",
+    "Assets\\Textures\\generated\\interiors\\T_Int_CommandXLBridge_Kit_N.png",
+    "Assets\\Textures\\generated\\interiors\\T_Int_CommandXLBridge_Kit_R.png",
+    "Assets\\Textures\\generated\\interiors\\T_Int_CommandXLBridge_Kit_M.png",
+    "Assets\\Textures\\generated\\interiors\\T_Int_CommandXLBridge_Kit_AO.png",
+    "Assets\\Textures\\generated\\interiors\\T_Int_CommandXLBridge_Kit_E.png"
+   ]
+  },
+  "detail_normal": "Assets\\Textures\\generated\\interiors\\T_Int_DetailMicro_N.png",
+  "total_s": 2001.5
+ }
 }
