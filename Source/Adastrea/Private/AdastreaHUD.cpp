@@ -178,14 +178,14 @@ void AAdastreaHUD::DrawHUD()
 	AAdastreaPlayerController* AController = Cast<AAdastreaPlayerController>(PC);
 	AActor* LockedTarget = AController ? AController->GetLockedTarget() : nullptr;
 
-	// Hover highlight: while targeting, show which station the cursor is over.
+	// Hover highlight: while targeting, show which target the cursor is over.
 	AActor* HoverTarget = nullptr;
 	if (AController && AController->IsTargetingModeActive())
 	{
-		HoverTarget = AController->GetStationUnderCursor();
+		HoverTarget = AController->GetTargetUnderCursor();
 	}
 
-	// Draw reticle on the hovered station (if any, and not already locked).
+	// Draw reticle on the hovered target (if any, and not already locked).
 	if (HoverTarget && HoverTarget != LockedTarget && PC)
 	{
 		FVector2D SPt;
@@ -208,7 +208,15 @@ void AAdastreaHUD::DrawHUD()
 	{
 		// Target screen position + in-view/off-view determination.
 		const FVector TgtLoc = LockedTarget->GetActorLocation();
-		const FString TgtName = LockedTarget->GetActorLabel();
+		FString TgtName = LockedTarget->GetActorLabel();
+		if (const ASpaceship* TgtShip = Cast<ASpaceship>(LockedTarget))
+		{
+			TgtName = TgtShip->GetShipName().ToString();
+		}
+		else if (AAsteroid* TgtRock = Cast<AAsteroid>(LockedTarget))
+		{
+			TgtName = ITargetable::Execute_GetTargetDisplayName(TgtRock).ToString();
+		}
 		const float TgtDist = FVector::Dist(P, TgtLoc);
 
 		int32 VSizeX = 0, VSizeY = 0;
@@ -308,6 +316,17 @@ void AAdastreaHUD::DrawHUD()
 				DrawText(FString::Printf(TEXT("%d  (%d docks)"), ModuleCount, Docks),
 					kCargo, VX, PY + 84.0f, BodyFont, 0.7f);
 			}
+			else if (Cast<ASpaceship>(LockedTarget))
+			{
+				DrawText(TEXT("TYPE"), kLabel, LX, PY + 84.0f, BodyFont, 0.7f);
+				DrawText(TEXT("Ship"), kCargo, VX, PY + 84.0f, BodyFont, 0.7f);
+			}
+			else if (const AAsteroid* Rock = Cast<AAsteroid>(LockedTarget))
+			{
+				DrawText(TEXT("ORE"), kLabel, LX, PY + 84.0f, BodyFont, 0.7f);
+				DrawText(FString::Printf(TEXT("%.0f / %.0f  (%.0f%%)"), Rock->GetRemainingOre(), Rock->GetTotalOre(),
+					Rock->GetOreFraction() * 100.0f), kCargo, VX, PY + 84.0f, BodyFont, 0.7f);
+			}
 		}
 	}
 
@@ -318,9 +337,9 @@ void AAdastreaHUD::DrawHUD()
 				if (PC)
 				{
 					PC->GetViewportSize(VSizeX, VSizeY);
-					const FString Hint = TEXT("TARGETING ACTIVE - Tab to exit");
+					const FString Hint = TEXT("TARGETING ACTIVE - Click to lock   [ ] cycle   Y nearest   Z clear   Tab exit");
 					DrawText(Hint, FLinearColor(0.6f, 0.7f, 0.75f, 0.9f),
-						VSizeX * 0.5f - 80.0f, VSizeY - 40.0f, BodyFont, 0.6f);
+						VSizeX * 0.5f - 230.0f, VSizeY - 40.0f, BodyFont, 0.6f);
 				}
 			}
 	}
