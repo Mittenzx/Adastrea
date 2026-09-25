@@ -7,6 +7,8 @@
 #include "Ships/SpaceshipInterior.h"
 #include "Ships/SpaceshipDataAsset.h"
 #include "Stations/SpaceStation.h"
+#include "Mining/Asteroid.h"
+#include "EngineUtils.h"
 #include "AdastreaHUD.h"
 #include "Stations/SpaceStationModule.h"
 #include "Stations/DockingBayModule.h"
@@ -181,8 +183,13 @@ void AAdastreaPlayerController::SetupInputComponent()
 	{
 		// Tab: toggle targeting mode (cursor shown, click selects/locks a station)
 		InputComponent->BindKey(EKeys::Tab, IE_Pressed, this, &AAdastreaPlayerController::HandleTargetingToggle);
-		// LMB: in targeting mode, click a station to lock it as the target / map click
+		// LMB: in targeting mode, click a station/ship/asteroid to lock it as the target / map click
 		InputComponent->BindKey(EKeys::LeftMouseButton, IE_Pressed, this, &AAdastreaPlayerController::HandleTargetClick);
+		// ] / [: cycle next/previous target (nearest-first), Y: lock nearest, Z: clear lock
+		InputComponent->BindKey(EKeys::RightBracket, IE_Pressed, this, &AAdastreaPlayerController::HandleNextTarget);
+		InputComponent->BindKey(EKeys::LeftBracket, IE_Pressed, this, &AAdastreaPlayerController::HandlePreviousTarget);
+		InputComponent->BindKey(EKeys::Y, IE_Pressed, this, &AAdastreaPlayerController::HandleNearestTarget);
+		InputComponent->BindKey(EKeys::Z, IE_Pressed, this, &AAdastreaPlayerController::HandleClearTarget);
 		// M: toggle the full-screen sector map
 		InputComponent->BindKey(EKeys::M, IE_Pressed, this, &AAdastreaPlayerController::HandleMapToggle);
 		// Map navigation (only acted on when the map is open)
@@ -294,7 +301,7 @@ void AAdastreaPlayerController::ToggleTargetingMode()
 		bEnableClickEvents = true;
 		bEnableMouseOverEvents = true;
 		bLockMouseLook = true; // pause ship mouse-look (checked by ship's Tick)
-		UE_LOG(LogAdastrea, Log, TEXT("Targeting mode ON - select a station to lock it (Tab to exit)"));
+		UE_LOG(LogAdastrea, Log, TEXT("Targeting mode ON - click a station, ship or asteroid to lock it (Tab to exit)"));
 	}
 	else
 	{
@@ -322,17 +329,86 @@ void AAdastreaPlayerController::HandleTargetingToggle()
 	ToggleTargetingMode();
 }
 
-/**
- * Screen-space ray cast at the cursor to find a targetable station under it.
- * Returns the station hit, or nullptr.
- */
-ASpaceStation* AAdastreaPlayerController::GetStationUnderCursor()
+namespace AdastreaTargeting
 {
-	if (!GetWorld())
+	/** Stations and ships further than this can't be targeted. */
+	constexpr float MaxTargetRange = 200000.0f;
+	/** Asteroids are only cycled through within this range, so a dense field doesn't bury ships/stations. */
+	constexpr float MaxAsteroidCycleRange = 30000.0f;
+
+	struct FTargetCandidate
 	{
-		return nullptr;
+		AActor* Actor;
+		FVector Center;       // where the reticle/pick sphere is centred
+		float SelectRadius;   // clickable sphere radius
+		float Distance;       // from the player's ship
+	};
+}
+
+/**
+ * Every targetable actor in range: stations, other ships, and asteroids that still
+ * hold ore. Sorted nearest-first.
+ */
+static TArray<AdastreaTargeting::FTargetCandidate> GatherAdastreaTargetCandidates(UWorld* World, const APawn* OwnPawn, const FVector& FromLoc)
+{
+	using namespace AdastreaTargeting;
+	TArray<FTargetCandidate> Out;
+	if (!World)
+	{
+		return Out;
 	}
 
+	auto Add = [&](AActor* Actor, const FVector& Center, float SelectRadius)
+	{
+		const float D = FVector::Dist(FromLoc, Center);
+		if (D <= MaxTargetRange)
+		{
+			Out.Add({ Actor, Center, SelectRadius, D });
+		}
+	};
+
+	// Stations: generous fixed clickable sphere.
+	for (TActorIterator<ASpaceStation> It(World); It; ++It)
+	{
+		Add(*It, It->GetActorLocation(), 15000.0f);
+	}
+
+	// Ships (other than our own): sphere from the actor bounds, with a floor so
+	// small fighters are still clickable at range.
+	for (TActorIterator<ASpaceship> It(World); It; ++It)
+	{
+		ASpaceship* Ship = *It;
+		if (Ship == OwnPawn)
+		{
+			continue;
+		}
+		FVector Origin, Extent;
+		Ship->GetActorBounds(true, Origin, Extent);
+		Add(Ship, Origin, FMath::Max(Extent.Size(), 2000.0f));
+	}
+
+	// Asteroids that still hold ore.
+	for (TActorIterator<AAsteroid> It(World); It; ++It)
+	{
+		AAsteroid* Rock = *It;
+		if (!ITargetable::Execute_CanBeTargeted(Rock))
+		{
+			continue;
+		}
+		Add(Rock, Rock->GetActorLocation(), FMath::Max(Rock->GetRadius() * 1.2f, 1000.0f));
+	}
+
+	Out.Sort([](const FTargetCandidate& A, const FTargetCandidate& B) { return A.Distance < B.Distance; });
+	return Out;
+}
+
+/**
+ * Screen-space ray cast at the cursor to find a targetable actor under it
+ * (station, ship or asteroid). Each candidate is treated as a clickable sphere;
+ * if several are under the cursor, the one nearest the player's ship wins.
+ */
+AActor* AAdastreaPlayerController::GetTargetUnderCursor()
+{
 	// Project the cursor screen position to a world ray.
 	FVector WorldOrigin;
 	FVector WorldDirection;
@@ -341,42 +417,111 @@ ASpaceStation* AAdastreaPlayerController::GetStationUnderCursor()
 		return nullptr;
 	}
 
-	// Trace against stations (and world) in the ship's interaction radius.
-	TArray<AActor*> Stations;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASpaceStation::StaticClass(), Stations);
+	APawn* OwnPawn = GetPawn();
+	const FVector ShipLoc = OwnPawn ? OwnPawn->GetActorLocation() : WorldOrigin;
 
-	FVector ShipLoc = GetPawn() ? GetPawn()->GetActorLocation() : WorldOrigin;
-	ASpaceStation* Best = nullptr;
-	float BestDist = TNumericLimits<float>::Max();
-	for (AActor* S : Stations)
+	// Candidates are nearest-first, so the first one the ray passes through wins.
+	for (const AdastreaTargeting::FTargetCandidate& C : GatherAdastreaTargetCandidates(GetWorld(), OwnPawn, ShipLoc))
 	{
-		if (!S)
+		// Closest point on the cursor ray to the candidate's centre.
+		const float Proj = FVector::DotProduct(C.Center - WorldOrigin, WorldDirection);
+		if (Proj <= 0.0f)
 		{
-			continue;
+			continue; // behind the camera
 		}
-		// Skip stations way outside a targeting radius (e.g. 100k).
-		if (FVector::Dist(ShipLoc, S->GetActorLocation()) > 200000.0f)
+		const FVector Closest = WorldOrigin + WorldDirection * Proj;
+		if (FVector::DistSquared(Closest, C.Center) < FMath::Square(C.SelectRadius))
 		{
-			continue;
-		}
-		// Sphere raycast (use the station's root/scene extent or a generous radius).
-		FVector Center = S->GetActorLocation();
-		FVector Rel = Center - WorldOrigin;
-		float Proj = FVector::DotProduct(Rel, WorldDirection);
-		FVector Closest = WorldOrigin + WorldDirection * FMath::Max(Proj, 0.0f);
-		float DistToCenter = (Closest - Center).Size();
-		float SelectRadius = 15000.0f; // generous clickable sphere around station
-		if (DistToCenter < SelectRadius)
-		{
-			float D = FVector::Dist(ShipLoc, Center);
-			if (D < BestDist)
-			{
-				BestDist = D;
-				Best = Cast<ASpaceStation>(S);
-			}
+			return C.Actor;
 		}
 	}
-	return Best;
+	return nullptr;
+}
+
+/** Targets reachable by the cycle keys, nearest-first (asteroids limited to mining range). */
+TArray<AActor*> AAdastreaPlayerController::GetCycleTargets() const
+{
+	TArray<AActor*> Out;
+	APawn* OwnPawn = GetPawn();
+	if (!OwnPawn)
+	{
+		return Out;
+	}
+	for (const AdastreaTargeting::FTargetCandidate& C : GatherAdastreaTargetCandidates(GetWorld(), OwnPawn, OwnPawn->GetActorLocation()))
+	{
+		if (C.Actor->IsA<AAsteroid>() && C.Distance > AdastreaTargeting::MaxAsteroidCycleRange)
+		{
+			continue;
+		}
+		Out.Add(C.Actor);
+	}
+	return Out;
+}
+
+void AAdastreaPlayerController::CycleTarget(int32 Direction)
+{
+	if (!IsControllingSpaceship())
+	{
+		return;
+	}
+
+	const TArray<AActor*> Targets = GetCycleTargets();
+	if (Targets.Num() == 0)
+	{
+		ShowHUDMessage(TEXT("No targets in range"), 2.0f, true);
+		return;
+	}
+
+	// Step from the current target through the nearest-first list, wrapping.
+	// With nothing locked (or the lock out of range), Next starts at the nearest
+	// and Previous at the farthest.
+	const int32 Current = Targets.IndexOfByKey(GetLockedTarget());
+	int32 NewIndex;
+	if (Current == INDEX_NONE)
+	{
+		NewIndex = Direction >= 0 ? 0 : Targets.Num() - 1;
+	}
+	else
+	{
+		NewIndex = (Current + Direction + Targets.Num()) % Targets.Num();
+	}
+
+	LockedTargetActor = Targets[NewIndex];
+	UE_LOG(LogAdastrea, Log, TEXT("TARGET CYCLED (%d/%d): %s"), NewIndex + 1, Targets.Num(), *LockedTargetActor->GetName());
+}
+
+void AAdastreaPlayerController::HandleNextTarget()
+{
+	CycleTarget(+1);
+}
+
+void AAdastreaPlayerController::HandlePreviousTarget()
+{
+	CycleTarget(-1);
+}
+
+void AAdastreaPlayerController::HandleNearestTarget()
+{
+	if (!IsControllingSpaceship())
+	{
+		return;
+	}
+	const TArray<AActor*> Targets = GetCycleTargets();
+	if (Targets.Num() == 0)
+	{
+		ShowHUDMessage(TEXT("No targets in range"), 2.0f, true);
+		return;
+	}
+	LockedTargetActor = Targets[0];
+	UE_LOG(LogAdastrea, Log, TEXT("NEAREST TARGET: %s"), *LockedTargetActor->GetName());
+}
+
+void AAdastreaPlayerController::HandleClearTarget()
+{
+	if (IsControllingSpaceship())
+	{
+		ClearTarget();
+	}
 }
 
 void AAdastreaPlayerController::HandleTargetClick()
@@ -396,10 +541,10 @@ void AAdastreaPlayerController::HandleTargetClick()
 	{
 		return;
 	}
-	if (ASpaceStation* Station = GetStationUnderCursor())
+	if (AActor* Target = GetTargetUnderCursor())
 	{
-		LockedTargetActor = Station;
-		UE_LOG(LogAdastrea, Log, TEXT("TARGET LOCKED: %s"), *Station->GetName());
+		LockedTargetActor = Target;
+		UE_LOG(LogAdastrea, Log, TEXT("TARGET LOCKED: %s"), *Target->GetName());
 	}
 }
 
