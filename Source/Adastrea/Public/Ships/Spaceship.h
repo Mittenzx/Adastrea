@@ -459,6 +459,10 @@ public:
     UFUNCTION(BlueprintCallable, Category="Docking")
     void SetNearbyStation(ASpaceStationModule* Station);
 
+    /** The docking module in range (or docked at while IsDocked()), else null. */
+    UFUNCTION(BlueprintPure, Category="Docking")
+    ASpaceStationModule* GetNearbyStation() const { return NearbyStation; }
+
     /**
      * True when RequestDocking() would currently succeed: a docking bay is in range,
      * has a free slot and docking point within the effective docking range.

@@ -52,6 +52,8 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="AI Miner")
 	TObjectPtr<AAsteroid> TargetAsteroid;
 
+	virtual FString GetObjectiveDescription() const override;
+
 	/** Spawn an AI miner of ShipClass near Station and start it working. */
 	static ASpaceship* SpawnAIMiner(UWorld* World, TSubclassOf<ASpaceship> ShipClass, ASpaceStation* Station);
 

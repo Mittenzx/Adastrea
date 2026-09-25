@@ -413,3 +413,37 @@ ASpaceship* AAIPilotController::SpawnPilotedShip(UWorld* World, TSubclassOf<ASpa
 	Pilot->Possess(Ship);
 	return Ship;
 }
+
+// ---------------------------------------------------------------------------
+// Debug description
+// ---------------------------------------------------------------------------
+
+FString AAIPilotController::GetStationDisplayName(const ASpaceStation* Station)
+{
+	if (!Station)
+	{
+		return TEXT("(none)");
+	}
+	const FText Name = Station->GetTargetDisplayName_Implementation();
+	return Name.IsEmpty() ? Station->GetActorNameOrLabel() : Name.ToString();
+}
+
+FString AAIPilotController::GetObjectiveDescription() const
+{
+	switch (State)
+	{
+	case EAIPilotState::Choosing:
+		return TEXT("Choosing the next station");
+	case EAIPilotState::Flying:
+		return FString::Printf(TEXT("Flying to %s"), *GetStationDisplayName(TargetStation));
+	case EAIPilotState::Docked:
+		if (PlannedDestination)
+		{
+			return FString::Printf(TEXT("Docked at %s, hauling to %s in %.0fs"), *GetStationDisplayName(TargetStation),
+				*GetStationDisplayName(PlannedDestination), FMath::Max(0.0f, DwellTime - DockedSeconds));
+		}
+		return FString::Printf(TEXT("Docked at %s, leaving in %.0fs"), *GetStationDisplayName(TargetStation),
+			FMath::Max(0.0f, DwellTime - DockedSeconds));
+	}
+	return FString();
+}
