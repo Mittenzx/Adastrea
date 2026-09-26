@@ -335,8 +335,8 @@ current `ProceduralGenerators.py`.
 
 📍 **Want to see where the project is headed?** See **[docs/05-ROADMAP.md](docs/05-ROADMAP.md)** for
 current status, active work, and known gaps — kept in sync with the live development happening in
-this repo (a root-level `ROADMAP.md` also exists but predates the current MVP-focused docs
-structure and is not kept current).
+this repo (the root-level `ROADMAP.md` and `docs/03-CURRENT_STATUS.md` are retired and just point
+there).
 
 ## Content Generation
 
@@ -364,7 +364,7 @@ the repo root.
 Adastrea/
 ├── Adastrea.uproject          # UE project file
 ├── README.md                  # Project overview
-├── ROADMAP.md                 # Legacy pre-MVP roadmap (see docs/05-ROADMAP.md for current)
+├── ROADMAP.md                 # Retired: points to docs/05-ROADMAP.md
 ├── ARCHITECTURE.md            # MVP architecture
 ├── LICENSE                    # MIT License
 ├── AGENT_BOARD.md             # Cross-agent async coordination board

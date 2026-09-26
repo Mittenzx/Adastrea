@@ -127,7 +127,7 @@ Once MCP is connected, I'll:
 | You Want To... | Read |
 |----------------|------|
 | Understand the MVP | [02-MVP_OVERVIEW.md](02-MVP_OVERVIEW.md) |
-| See current status | [03-CURRENT_STATUS.md](03-CURRENT_STATUS.md) |
+| See current status | [05-ROADMAP.md](05-ROADMAP.md) |
 | Read architecture | [04-ARCHITECTURE.md](04-ARCHITECTURE.md) |
 | View roadmap | [05-ROADMAP.md](05-ROADMAP.md) |
 | Follow 3-day MCP plan | [07-MVP_EXECUTION_PLAN.md](07-MVP_EXECUTION_PLAN.md) |

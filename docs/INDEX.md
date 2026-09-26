@@ -13,9 +13,9 @@
 | **Get the project map** | [00-KNOWLEDGE_BASE.md](00-KNOWLEDGE_BASE.md) ⭐ |
 | **Start developing** | [01-GETTING_STARTED.md](01-GETTING_STARTED.md) |
 | **Understand the MVP** | [02-MVP_OVERVIEW.md](02-MVP_OVERVIEW.md) |
-| **See current status** | [03-CURRENT_STATUS.md](03-CURRENT_STATUS.md) |
+| **See current status** | [05-ROADMAP.md](05-ROADMAP.md) |
 | **Read architecture** | [04-ARCHITECTURE.md](04-ARCHITECTURE.md) |
-| **View roadmap** | [05-ROADMAP.md](05-ROADMAP.md) |
+| **View roadmap & open work** | [05-ROADMAP.md](05-ROADMAP.md) |
 | **Check systems** | [06-SYSTEM_REFERENCE.md](06-SYSTEM_REFERENCE.md) |
 | **Follow execution plan** | [07-MVP_EXECUTION_PLAN.md](07-MVP_EXECUTION_PLAN.md) |
 | **Contribute** | [08-CONTRIBUTING.md](08-CONTRIBUTING.md) |
@@ -29,9 +29,9 @@ docs/
 ├── INDEX.md                    # This file - master navigation
 ├── 01-GETTING_STARTED.md       # Setup, build, first run
 ├── 02-MVP_OVERVIEW.md          # What is the Trade Simulator MVP
-├── 03-CURRENT_STATUS.md        # Real status: code vs content
+├── 03-CURRENT_STATUS.md        # Retired: points to 05-ROADMAP.md
 ├── 04-ARCHITECTURE.md          # Technical architecture
-├── 05-ROADMAP.md               # Timeline & milestones
+├── 05-ROADMAP.md               # Current status, open work, deferred systems
 ├── 06-SYSTEM_REFERENCE.md      # All 22 systems summary
 ├── 07-MVP_EXECUTION_PLAN.md    # 3-day MCP execution plan
 ├── 08-CONTRIBUTING.md          # How to contribute
