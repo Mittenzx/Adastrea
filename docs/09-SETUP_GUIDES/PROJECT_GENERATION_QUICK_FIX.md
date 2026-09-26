@@ -123,7 +123,7 @@ After generation, verify:
 ## 🆘 Still Stuck?
 
 1. **Check Output Log** in VS: View → Output → Build
-2. **Run Health Check**: `python repository_health_check.py`
+2. **Run Health Check**: `python Tools/repository_health_check_enhanced.py`
 3. **GitHub Issues**: Search existing or create new with:
    - Full error message
    - OS, UE version, VS version

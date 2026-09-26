@@ -160,6 +160,50 @@ def calculate_effectiveness_matrix():
         print()
 
 
+# ---------------------------------------------------------------------------
+# pytest entry points
+#
+# NOTE: this is a Python mirror of UAdastreaFunctionLibrary::CalculateDamageAfterArmor.
+# The mirror has drifted for Kinetic: here Kinetic is reduced by armor, while the
+# C++ switch currently sets Kinetic's multiplier to 1.0 (no armor reduction). The
+# Kinetic assertions below describe this mirror, not the C++.
+# ---------------------------------------------------------------------------
+import pytest
+
+
+def test_zero_damage_returns_zero():
+    assert calculate_damage_after_armor(0.0, 100.0, 'Kinetic') == 0.0
+
+
+def test_emp_ignores_armor():
+    assert calculate_damage_after_armor(100.0, 1000.0, 'EMP') == pytest.approx(100.0)
+
+
+@pytest.mark.parametrize("damage_type,factor", [
+    ('Energy', 0.7), ('Explosive', 1.2), ('Thermal', 0.3),
+])
+def test_type_modifiers_match_cpp(damage_type, factor):
+    armor = 50.0
+    reduction = armor / (armor + 100.0)
+    expected = 100.0 * max(0.0, min(1.0, 1.0 - reduction * factor))
+    assert calculate_damage_after_armor(100.0, armor, damage_type) == pytest.approx(expected)
+
+
+def test_damage_never_negative_or_above_raw():
+    for damage_type in ['Kinetic', 'Energy', 'Explosive', 'Thermal', 'EMP']:
+        for armor in [0.0, 1.0, 50.0, 1000.0, 1e6]:
+            result = calculate_damage_after_armor(100.0, armor, damage_type)
+            assert 0.0 <= result <= 100.0
+
+
+@pytest.mark.parametrize("raw,armor,damage_type", [
+    (-10.0, 50.0, 'Kinetic'), (100.0, -5.0, 'Energy'), (100.0, 50.0, 'Invalid'),
+])
+def test_invalid_input_raises(raw, armor, damage_type):
+    with pytest.raises(ValueError):
+        calculate_damage_after_armor(raw, armor, damage_type)
+
+
 if __name__ == "__main__":
     run_test_suite()
     calculate_effectiveness_matrix()

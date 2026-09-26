@@ -320,7 +320,7 @@ def main():
     print("=" * 60)
     
     # Change to project directory
-    project_dir = Path(__file__).parent
+    project_dir = Path(__file__).resolve().parent.parent
     os.chdir(project_dir)
     
     # Load data assets
@@ -350,6 +350,23 @@ def main():
     print("=" * 60)
     
     return 0
+
+
+def test_trading_data_assets_load_and_validate():
+    """pytest entry point: MVP trade items and markets load and pass validation."""
+    cwd = os.getcwd()
+    os.chdir(Path(__file__).resolve().parent.parent)
+    try:
+        trade_items = load_trade_item_data_assets()
+        markets = load_market_data_assets()
+        assert trade_items, "no MVP trade items loaded"
+        assert markets, "no MVP markets loaded"
+        assert validate_trade_items(trade_items)
+        assert validate_markets(markets)
+        calculate_trading_metrics(trade_items, markets)  # must not raise
+    finally:
+        os.chdir(cwd)
+
 
 if __name__ == "__main__":
     sys.exit(main())

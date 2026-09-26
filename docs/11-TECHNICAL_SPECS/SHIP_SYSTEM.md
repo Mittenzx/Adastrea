@@ -437,7 +437,7 @@ ShipDataAsset = DA_Ship_Freighter  ; or DA_Ship_Corvette
 ```bash
 # No dedicated ship test yet
 # Test via trading system integration:
-python test_trading_system.py  # Validates cargo capacity from ship
+python tests/test_trading_system.py  # Validates cargo capacity from ship
 ```
 
 ---

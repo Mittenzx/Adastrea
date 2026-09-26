@@ -155,11 +155,10 @@ dir Binaries\Win64\UnrealEditor-Adastrea.exe  # Windows
 ### Run Tests After Build
 ```bash
 # Python tests (no editor needed)
-python test_trading_system.py
-python test_station_systems.py
-python test_damage_calculations.py
+python -m pytest -q tests/test_trading_system.py tests/test_damage_calculations.py
 
-# If these pass, C++ math logic is correct
+# Or the whole Python suite
+python -m pytest -q
 ```
 
 ---

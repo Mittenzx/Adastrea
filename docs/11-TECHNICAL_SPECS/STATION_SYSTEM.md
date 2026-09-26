@@ -347,16 +347,9 @@ ModulePower = -40
 
 ## 🧪 Testing
 
-```bash
-# Validates integrity, power, trading efficiency calculations
-python test_station_systems.py
-
-# Output includes:
-# - Module integrity status transitions
-# - Power distribution scenarios (adequate/deficit/critical)
-# - Trading efficiency by station type
-# - Error case handling
-```
+Station behaviour is covered by the C++ automation tests in the editor
+(Session Frontend → Automation) and by the Python suite (`python -m pytest -q`),
+e.g. `tests/test_station_module_catalog.py`.
 
 ---
 
