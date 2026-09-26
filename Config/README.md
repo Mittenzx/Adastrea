@@ -65,13 +65,19 @@ DefaultViewportMouseCaptureMode=CapturePermanently_IncludingInitialMouseDown
 bDefaultViewportMouseLock=True
 ```
 
-#### Game Settings (DefaultGame.ini)
+#### Maps (DefaultEngine.ini)
+`GameMapsSettings` is a `config=Engine` class, so it must live in DefaultEngine.ini
+(a copy in DefaultGame.ini is silently ignored).
 ```ini
 [/Script/EngineSettings.GameMapsSettings]
-GameDefaultMap=/Game/Maps/MainMenu
+GameDefaultMap=/Game/Maps/TestLevel.TestLevel
 EditorStartupMap=/Game/Maps/TestLevel
-GlobalDefaultGameMode=/Script/Adastrea.AdastreaGameMode
 ```
+
+#### Packaging (DefaultGame.ini)
+`[/Script/UnrealEd.ProjectPackagingSettings]` lists the maps to cook, the folders that
+C++ loads by string path (always cooked), and `Content/Data` JSON staged into the pak.
+See `docs/09-SETUP_GUIDES/PACKAGING.md`.
 
 ## Project-Specific Notes
 
