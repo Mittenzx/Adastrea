@@ -696,6 +696,15 @@ void ASpaceshipInterior::FitVolumeToMesh()
         ExitTrigger->SetRelativeLocation(FVector(Origin.X + HalfDepth * 0.6f, Origin.Y, HalfHeight * 0.6f));
     }
 
+    // The "Board Cockpit" E-prompt belongs on the same seat. Left at its default zero
+    // offset it sat at the interior actor's origin (the middle of the room, over the
+    // capital bridges' holo-table/captain's chair), so it appeared ~3.5 m from the helm
+    // and already within scan range of the entry spot.
+    if (SeatInteractable)
+    {
+        SeatInteractable->InteractionPointOffset = FVector(Origin.X + HalfDepth * 0.6f, Origin.Y, FloorZ + 100.0f);
+    }
+
     // Default entry point: the BACK of the interior (opposite the seat/exit trigger,
     // which sits at +0.6*HalfDepth), standing ON the floor (FloorZ + roughly a capsule
     // half-height) rather than at a fixed height that could float above or sink below

@@ -287,7 +287,12 @@ def import_mesh(name):
     sm_data.set_editor_property("convert_scene", True)
     sm_data.set_editor_property("combine_meshes", True)
     sm_data.set_editor_property("generate_lightmap_u_vs", True)
-    sm_data.set_editor_property("auto_generate_collision", not has_ucx)
+    # Keep this ON even when the FBX has UCX_ hulls. UE 5.8 routes FbxImportUI through
+    # Interchange, which maps auto_generate_collision onto the pipeline's "import
+    # collision" switch: OFF silently dropped every authored UCX hull (modules came in
+    # with zero collision). With it ON, Interchange (and the legacy importer) use the
+    # UCX_ hulls by name and only generate a hull when the FBX has none.
+    sm_data.set_editor_property("auto_generate_collision", True)
     try:
         sm_data.set_editor_property("one_convex_hull_per_ucx", True)
     except Exception:

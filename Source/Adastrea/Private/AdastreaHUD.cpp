@@ -1029,7 +1029,8 @@ static const int32 ShipRosterCount = UE_ARRAY_COUNT(ShipRosterClassPaths);
 static const TCHAR* ShipRosterMeshPaths[] = {
 	TEXT("/AdastreaShips/Meshes/Ships/SM_Ship_Fighter_01_Assembled.SM_Ship_Fighter_01_Assembled"),
 	TEXT("/AdastreaShips/Meshes/Ships/SM_Ship_Freighter_01_Assembled.SM_Ship_Freighter_01_Assembled"),
-	TEXT("/AdastreaShips/Meshes/Ships/SM_Ship_Corvette_01_Assembled.SM_Ship_Corvette_01_Assembled"),
+	// Unique-UV baked hull, same as BP_Ship_Corvette flies (its slot carries M_Corvette_Hull_Unique).
+	TEXT("/Game/Assets/Ships/SM_Ship_Corvette_01_Assembled_UniqueUV.SM_Ship_Corvette_01_Assembled_UniqueUV"),
 	TEXT("/AdastreaShips/Meshes/Ships/SM_Ship_Gunship_02_Assembled.SM_Ship_Gunship_02_Assembled"),
 	TEXT("/AdastreaShips/Meshes/Ships/SM_Ship_Miner_01_Assembled.SM_Ship_Miner_01_Assembled"),
 };
