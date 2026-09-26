@@ -128,4 +128,21 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category="Docking")
 	bool UndockShip();
+
+	/** Number of native default docking points created by the constructor (matches the default MaxDockedShips). */
+	static constexpr int32 NumDefaultDockingPoints = 4;
+
+protected:
+	/**
+	 * Native default docking points (tagged "DockingPoint"), laid out for
+	 * SM_StationModule_DockingBay_01. They make the bare native class dockable, which is
+	 * what the Station Editor spawns (StationModuleCatalog.json -> /Script/Adastrea.DockingBayModule).
+	 * If a Blueprint subclass or level instance authors its own "DockingPoint"-tagged
+	 * components, those win and these are ignored (see PopulateDockingPointsFromTags).
+	 */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Docking")
+	TArray<TObjectPtr<USceneComponent>> DefaultDockingPoints;
+
+	/** True if another module of the owning station sits too close to this berth to park a ship there. */
+	bool IsDockingPointObstructed(const USceneComponent* Point) const;
 };
