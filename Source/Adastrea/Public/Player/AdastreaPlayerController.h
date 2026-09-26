@@ -293,6 +293,48 @@ protected:
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual void OnUnPossess() override;
 
+	// ====================
+	// QUICKSAVE / QUICKLOAD (F5 / F9)
+	// ====================
+
+	/**
+	 * Controller-level mapping context for system keys (F5 quicksave, F9 quickload).
+	 * It lives on the controller, not a pawn, so it keeps working on foot and at the helm.
+	 * Created at runtime, the same way SpaceshipControlsComponent builds its input.
+	 */
+	UPROPERTY(Transient)
+	TObjectPtr<class UInputMappingContext> SystemMappingContext;
+
+	UPROPERTY(Transient)
+	TObjectPtr<class UInputAction> QuickSaveAction;
+
+	UPROPERTY(Transient)
+	TObjectPtr<class UInputAction> QuickLoadAction;
+
+	/** Priority of SystemMappingContext (above pawn contexts; F5/F9 aren't mapped anywhere else). */
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	int32 SystemMappingPriority = 10;
+
+	/** Create the runtime quicksave/quickload actions and their mapping context (once). */
+	void CreateSystemInput();
+
+	/** (Re-)add SystemMappingContext to the local player's Enhanced Input subsystem. */
+	void AddSystemMappingContext();
+
+	/** F5: USaveGameSubsystem::QuickSave(), with an on-screen confirmation. */
+	void HandleQuickSave();
+
+	/** F9: USaveGameSubsystem::QuickLoad(), with an on-screen confirmation. */
+	void HandleQuickLoad();
+
+public:
+	/**
+	 * Show a short message on the HUD (UAdastreaHUDWidget::ShowAlert, which has a
+	 * native toast fallback). Used for save/load confirmations.
+	 */
+	UFUNCTION(BlueprintCallable, Category="Player|HUD")
+	void ShowHUDMessage(const FText& Message, bool bIsWarning = false, float Duration = 2.5f);
+
 public:
 	/**
 	 * Called when the player possesses a new spaceship

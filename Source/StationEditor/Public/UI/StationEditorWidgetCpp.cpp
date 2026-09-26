@@ -123,6 +123,25 @@ void UStationEditorWidgetCpp::NativeTick(const FGeometry& MyGeometry, float InDe
 	}
 
 	UpdateStatusText();
+
+	// The wallet is the trader's, which trading/saves can change while the
+	// editor is open, so keep the readout live rather than only on stat updates.
+	UpdateCreditsText();
+}
+
+void UStationEditorWidgetCpp::UpdateCreditsText()
+{
+	if (!CreditsText || !EditorManager)
+	{
+		return;
+	}
+
+	const int32 Credits = EditorManager->GetPlayerCredits();
+	if (Credits != LastShownCredits)
+	{
+		LastShownCredits = Credits;
+		CreditsText->SetText(FText::Format(NSLOCTEXT("StationEditor", "CreditsReadout", "Credits: {0}"), FText::AsNumber(Credits)));
+	}
 }
 
 void UStationEditorWidgetCpp::InitializeEditor(ASpaceStation* Station, UStationModuleCatalog* Catalog)
@@ -143,7 +162,8 @@ void UStationEditorWidgetCpp::InitializeEditor(ASpaceStation* Station, UStationM
 			EditorManager->ModuleCatalog = Catalog;
 		}
 		EditorManager->PlayerTechLevel = DefaultPlayerTechLevel;
-		EditorManager->PlayerCredits = DefaultPlayerCredits;
+		// Credits aren't configured here: the manager pays from the player's
+		// UPlayerTraderComponent (the HUD wallet), resolved from the piloted ship.
 
 		// Begin editing the station
 		if (Station)
@@ -218,10 +238,7 @@ void UStationEditorWidgetCpp::RefreshStatistics()
 		ModuleCountDisplay->SetText(CountText);
 	}
 
-	if (CreditsText)
-	{
-		CreditsText->SetText(FText::FromString(FString::Printf(TEXT("Credits: %d"), EditorManager->PlayerCredits)));
-	}
+	UpdateCreditsText();
 
 	// Update power balance bar
 	if (PowerBalanceBar)

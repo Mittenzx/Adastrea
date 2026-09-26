@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Engine/TimerHandle.h"
 #include "AdastreaHUDWidget.generated.h"
 
 /**
@@ -338,6 +339,13 @@ protected:
 	/** Multiline telemetry text block (credits/cargo/speed/throttle/pos). */
 	UPROPERTY(Transient)
 	class UTextBlock* TelemetryTextBlock;
+
+	/** Toast text used by the native ShowAlert fallback (created on first alert). */
+	UPROPERTY(Transient)
+	class UTextBlock* AlertTextBlock = nullptr;
+
+	/** Hides AlertTextBlock once the alert's duration elapses. */
+	FTimerHandle AlertTimerHandle;
 
 	/** Current ship name for display */
 	UPROPERTY(BlueprintReadOnly, Category="HUD|State")

@@ -13,6 +13,7 @@
 class AStationBuildPreview;
 class UStationGridSystem;
 class UCargoComponent;
+class UPlayerTraderComponent;
 class ASpaceship;
 class UTradeItemDataAsset;
 
@@ -517,9 +518,29 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration", meta=(ClampMin=1, ClampMax=10))
 	int32 PlayerTechLevel = 1;
 
-	/** Current player's available credits */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration", meta=(ClampMin=0))
-	int32 PlayerCredits = 0;
+	/**
+	 * The wallet construction is paid from: the player's UPlayerTraderComponent
+	 * (the same credits the HUD shows and save v2 stores). Leave unset to
+	 * auto-resolve from the piloted ship (see bAutoResolvePlayerTrader).
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration")
+	TWeakObjectPtr<UPlayerTraderComponent> PlayerTrader;
+
+	/**
+	 * Whether to auto-resolve PlayerTrader from the player pawn when it isn't
+	 * assigned (the piloted ship's PlayerTraderComponent). With no trader,
+	 * anything that costs credits can't be afforded; free modules still build.
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration")
+	bool bAutoResolvePlayerTrader = true;
+
+	/** Resolve the trader component whose credits pay for construction (may be null). */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station Editor|Configuration")
+	UPlayerTraderComponent* GetPlayerTrader() const;
+
+	/** The player's spendable credits (the trader's wallet), or 0 when no trader resolves. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station Editor|Configuration")
+	int32 GetPlayerCredits() const;
 
 	/** Current player's cargo hold (source of construction/parts materials). */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Station Editor|Configuration")
@@ -1371,6 +1392,9 @@ protected:
 	void RecalculateStatisticsInternal() const;
 
 private:
+	/** Player 0's pawn, via this manager's world (or the edited station's). Used to auto-resolve cargo and wallet. */
+	APawn* GetLocalPlayerPawn() const;
+
 	/** Cached last power balance for change detection */
 	float LastPowerBalance = 0.0f;
 

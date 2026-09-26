@@ -250,8 +250,8 @@ Event Construct
 │        └─ Class: StationEditorManager
 ├─ Set EditorManager Properties
 │  ├─ ModuleCatalog = ModuleCatalog variable
-│  ├─ PlayerTechLevel = 5 (for testing)
-│  └─ PlayerCredits = 100000 (for testing)
+│  └─ PlayerTechLevel = 5 (for testing)
+│     (credits: the ship's PlayerTraderComponent wallet, auto-resolved)
 └─ RefreshModuleList
 ```
 
