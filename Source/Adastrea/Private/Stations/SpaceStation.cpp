@@ -251,6 +251,175 @@ int32 ASpaceStation::BuildFromLayout(UStationLayoutDataAsset* Layout)
     return Spawned;
 }
 
+// ====================
+// BLUEPRINT STRING
+// ====================
+
+const FName ASpaceStation::PlayerBuiltTag(TEXT("PlayerBuilt"));
+
+FString ASpaceStation::ExportBlueprintString(float GridSpacing, bool bPlayerBuiltOnly) const
+{
+    const float Spacing = FMath::Max(GridSpacing, 1.0f);
+    const FVector StationOrigin = GetActorLocation();
+
+    // STATION_BUILDER.md's schema version - the same format its Python
+    // blueprint_to_layout()/layout_to_blueprint() round-trip. GridSpacing is an
+    // integer because the Python side parses it with int().
+    FString Result = TEXT("1.0.0;1000,1000,1000;") + FString::FromInt(FMath::RoundToInt(Spacing));
+
+    int32 ModuleIndex = 0;
+    for (const ASpaceStationModule* Module : Modules)
+    {
+        if (!IsValid(Module) || (bPlayerBuiltOnly && !Module->ActorHasTag(PlayerBuiltTag)))
+        {
+            continue;
+        }
+
+        // World-axis offsets: the editor's build grid is world-aligned with its
+        // origin on the station, so placed modules sit on whole cells.
+        const FVector RelativePos = Module->GetActorLocation() - StationOrigin;
+        const int32 GX = FMath::RoundToInt(RelativePos.X / Spacing);
+        const int32 GY = FMath::RoundToInt(RelativePos.Y / Spacing);
+        const int32 GZ = FMath::RoundToInt(RelativePos.Z / Spacing);
+
+        // Always 0/90/180/270: Yaw is in (-180, 180] and the Python tool doesn't expect negatives.
+        const int32 RotationDegrees = ((FMath::RoundToInt(Module->GetActorRotation().Yaw / 90.0f) * 90) % 360 + 360) % 360;
+
+        // Native modules are written by bare class name (what BuildFromLayout and
+        // the Python tool expect); Blueprint modules need their full path to load.
+        const UClass* ModuleClass = Module->GetClass();
+        const FString ItemID = ModuleClass->IsNative() ? ModuleClass->GetName() : ModuleClass->GetPathName();
+
+        // The first module anchors the station ("first placed = core").
+        const bool bIsCore = (ModuleIndex == 0);
+
+        Result += FString::Printf(TEXT(";M%d:%s:%d,%d,%d:%d:%d"),
+            ModuleIndex + 1, *ItemID, GX, GY, GZ, RotationDegrees, bIsCore ? 1 : 0);
+
+        ++ModuleIndex;
+    }
+
+    return Result;
+}
+
+bool ASpaceStation::ParseBlueprintString(const FString& Blueprint, float& OutGridSpacing, TArray<FStationBlueprintEntry>& OutEntries)
+{
+    OutEntries.Reset();
+    OutGridSpacing = 1.0f;
+
+    TArray<FString> Fields;
+    Blueprint.ParseIntoArray(Fields, TEXT(";"), true);
+    if (Fields.Num() < 3)
+    {
+        return false;
+    }
+
+    // Fields[0] = SchemaVersion, Fields[1] = PlotSize (informational), Fields[2] = GridSpacing.
+    OutGridSpacing = FMath::Max(FCString::Atof(*Fields[2]), 1.0f);
+
+    for (int32 i = 3; i < Fields.Num(); ++i)
+    {
+        // ModuleID:ItemID:gx,gy,gz:rot:isCore
+        TArray<FString> Parts;
+        Fields[i].ParseIntoArray(Parts, TEXT(":"), true);
+        if (Parts.Num() < 5)
+        {
+            UE_LOG(LogAdastreaStations, Warning, TEXT("SpaceStation::ParseBlueprintString - Skipping malformed entry: %s"), *Fields[i]);
+            continue;
+        }
+
+        TArray<FString> GridParts;
+        Parts[2].ParseIntoArray(GridParts, TEXT(","), true);
+        if (GridParts.Num() < 3)
+        {
+            UE_LOG(LogAdastreaStations, Warning, TEXT("SpaceStation::ParseBlueprintString - Skipping entry with bad grid position: %s"), *Fields[i]);
+            continue;
+        }
+
+        FStationBlueprintEntry& Entry = OutEntries.AddDefaulted_GetRef();
+        Entry.ItemID = Parts[1];
+        Entry.GridPos = FIntVector(FCString::Atoi(*GridParts[0]), FCString::Atoi(*GridParts[1]), FCString::Atoi(*GridParts[2]));
+        Entry.YawDegrees = FCString::Atoi(*Parts[3]);
+        Entry.bIsCore = Parts[4] == TEXT("1");
+    }
+
+    return true;
+}
+
+UClass* ASpaceStation::ResolveBlueprintModuleClass(const FString& ItemID)
+{
+    // Every catalog module is a native class in /Script/Adastrea (same convention
+    // as BuildFromLayout); anything else was exported with its full class path.
+    const FString ClassPath = ItemID.StartsWith(TEXT("/")) ? ItemID : FString::Printf(TEXT("/Script/Adastrea.%s"), *ItemID);
+    return LoadClass<ASpaceStationModule>(nullptr, *ClassPath);
+}
+
+int32 ASpaceStation::BuildFromBlueprintString(const FString& Blueprint)
+{
+    UWorld* World = GetWorld();
+    float Spacing = 1.0f;
+    TArray<FStationBlueprintEntry> Entries;
+    if (!World || !ParseBlueprintString(Blueprint, Spacing, Entries))
+    {
+        UE_LOG(LogAdastreaStations, Warning, TEXT("SpaceStation::BuildFromBlueprintString - Malformed blueprint for %s"), *GetName());
+        return 0;
+    }
+
+    const FVector StationOrigin = GetActorLocation();
+    int32 Spawned = 0;
+    for (const FStationBlueprintEntry& Entry : Entries)
+    {
+        UClass* ModuleClass = ResolveBlueprintModuleClass(Entry.ItemID);
+        if (!ModuleClass)
+        {
+            UE_LOG(LogAdastreaStations, Warning, TEXT("SpaceStation::BuildFromBlueprintString - No module class for %s; skipping."), *Entry.ItemID);
+            continue;
+        }
+
+        const FVector WorldPos = StationOrigin + FVector(Entry.GridPos) * Spacing;
+        const FRotator WorldRot(0.0f, static_cast<float>(Entry.YawDegrees), 0.0f);
+
+        FActorSpawnParameters SpawnParams;
+        SpawnParams.Owner = this;
+        SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+        ASpaceStationModule* Module = World->SpawnActor<ASpaceStationModule>(ModuleClass, WorldPos, WorldRot, SpawnParams);
+        if (!Module)
+        {
+            continue;
+        }
+
+        // Keep the world placement the string describes (it was exported in world axes).
+        Module->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+        Module->Tags.AddUnique(PlayerBuiltTag);
+        Modules.AddUnique(Module);
+        ++Spawned;
+    }
+
+    UE_LOG(LogAdastreaStations, Log, TEXT("SpaceStation::BuildFromBlueprintString - %s spawned %d/%d module(s)"),
+        *GetName(), Spawned, Entries.Num());
+    return Spawned;
+}
+
+int32 ASpaceStation::RemovePlayerBuiltModules()
+{
+    TArray<ASpaceStationModule*> ToRemove;
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (IsValid(Module) && Module->ActorHasTag(PlayerBuiltTag))
+        {
+            ToRemove.Add(Module);
+        }
+    }
+
+    for (ASpaceStationModule* Module : ToRemove)
+    {
+        RemoveModule(Module);
+        Module->Destroy();
+    }
+
+    return ToRemove.Num();
+}
+
 AMarketplaceModule* ASpaceStation::GetMarketplaceModule() const
 {
     for (ASpaceStationModule* Module : Modules)

@@ -332,6 +332,8 @@ ASpaceStationModule* UStationEditorManager::SpawnModuleInternal(TSubclassOf<ASpa
 	}
 
 	CurrentStation->AddModuleAtLocation(NewModule, WorldPosition - CurrentStation->GetActorLocation());
+	// Marks it for the save system (SaveGameSubsystem stores player-built modules only).
+	NewModule->Tags.AddUnique(ASpaceStation::PlayerBuiltTag);
 	ModulesAddedThisSession.Add(NewModule);
 	AutoGenerateConnections(NewModule);
 
@@ -1431,46 +1433,10 @@ FString UStationEditorManager::ExportStationBlueprint() const
 		return FString();
 	}
 
+	// The format lives on ASpaceStation so the save system (Adastrea module,
+	// which can't depend on StationEditor) writes the same strings.
 	const float Spacing = GridSystem ? GridSystem->GridSize : CollisionRadius * 2.0f;
-	const FVector StationOrigin = CurrentStation->GetActorLocation();
-
-	// STATION_BUILDER.md's schema version - this is the same on-disk format its
-	// Python blueprint_to_layout()/layout_to_blueprint() already round-trip.
-	// Integer, not SanitizeFloat - the Python side (blueprint_to_layout) parses
-	// this field with int(tok[2]), which throws on a decimal point like "400.0".
-	FString Result = TEXT("1.0.0;1000,1000,1000;") + FString::FromInt(FMath::RoundToInt(Spacing));
-
-	int32 ModuleIndex = 0;
-	for (const ASpaceStationModule* Module : CurrentStation->Modules)
-	{
-		if (!Module)
-		{
-			continue;
-		}
-
-		const FVector RelativePos = Module->GetActorLocation() - StationOrigin;
-		const int32 GX = FMath::RoundToInt(RelativePos.X / Spacing);
-		const int32 GY = FMath::RoundToInt(RelativePos.Y / Spacing);
-		const int32 GZ = FMath::RoundToInt(RelativePos.Z / Spacing);
-
-		// Normalize to the nearest 90 degrees - modules are placed axis-aligned
-		// (RotationSnapDegrees), this just guards against float drift.
-		// Always 0/90/180/270: GetActorRotation().Yaw is in (-180, 180], and a
-		// plain % leaves negatives, which the Python tool doesn't expect.
-		const int32 RotationDegrees = ((FMath::RoundToInt(Module->GetActorRotation().Yaw / 90.0f) * 90) % 360 + 360) % 360;
-
-		// The first module in the array anchors the station, same "first
-		// placed = core" convention IsAdjacentToExistingModule already uses
-		// for an empty station.
-		const bool bIsCore = (ModuleIndex == 0);
-
-		Result += FString::Printf(TEXT(";M%d:%s:%d,%d,%d:%d:%d"),
-			ModuleIndex + 1, *Module->GetClass()->GetName(), GX, GY, GZ, RotationDegrees, bIsCore ? 1 : 0);
-
-		++ModuleIndex;
-	}
-
-	return Result;
+	return CurrentStation->ExportBlueprintString(Spacing);
 }
 
 int32 UStationEditorManager::ImportStationBlueprint(const FString& BlueprintString)
@@ -1481,53 +1447,29 @@ int32 UStationEditorManager::ImportStationBlueprint(const FString& BlueprintStri
 		return 0;
 	}
 
-	TArray<FString> Fields;
-	BlueprintString.ParseIntoArray(Fields, TEXT(";"), true);
-	if (Fields.Num() < 3)
+	float Spacing = 1.0f;
+	TArray<FStationBlueprintEntry> Entries;
+	if (!ASpaceStation::ParseBlueprintString(BlueprintString, Spacing, Entries))
 	{
 		UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::ImportStationBlueprint - Malformed blueprint string (expected at least SchemaVersion;PlotSize;GridSpacing)"));
 		return 0;
 	}
 
-	// Fields[0] = SchemaVersion, Fields[1] = PlotSize (informational, not needed
-	// to reconstruct) - only GridSpacing (Fields[2]) actually matters here.
-	const float Spacing = FMath::Max(FCString::Atof(*Fields[2]), 1.0f);
 	const FVector StationOrigin = CurrentStation->GetActorLocation();
 
 	int32 NumSpawned = 0;
 	int32 NumSkipped = 0;
-	for (int32 i = 3; i < Fields.Num(); ++i)
+	for (const FStationBlueprintEntry& Entry : Entries)
 	{
-		// Each module entry: ModuleID:ItemID:gx,gy,gz:rot:isCore
-		TArray<FString> Parts;
-		Fields[i].ParseIntoArray(Parts, TEXT(":"), true);
-		if (Parts.Num() < 5)
-		{
-			UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::ImportStationBlueprint - Skipping malformed entry: %s"), *Fields[i]);
-			continue;
-		}
-
-		const FString& ItemID = Parts[1];
-		TArray<FString> GridParts;
-		Parts[2].ParseIntoArray(GridParts, TEXT(","), true);
-		if (GridParts.Num() < 3)
-		{
-			continue;
-		}
-
-		// Same LoadClass path convention as ASpaceStation::BuildFromLayout - every
-		// catalog module is a native class in /Script/Adastrea.
-		const FString ModuleClassPath = FString::Printf(TEXT("/Script/Adastrea.%s"), *ItemID);
-		UClass* ModuleClass = LoadClass<ASpaceStationModule>(nullptr, *ModuleClassPath);
+		UClass* ModuleClass = ASpaceStation::ResolveBlueprintModuleClass(Entry.ItemID);
 		if (!ModuleClass)
 		{
-			UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::ImportStationBlueprint - No module class for ItemID %s; skipping."), *ItemID);
+			UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::ImportStationBlueprint - No module class for ItemID %s; skipping."), *Entry.ItemID);
 			continue;
 		}
 
-		const FVector GridPos(FCString::Atof(*GridParts[0]), FCString::Atof(*GridParts[1]), FCString::Atof(*GridParts[2]));
-		const FVector WorldPos = StationOrigin + GridPos * Spacing;
-		const float RotationDegrees = Parts.Num() > 3 ? FCString::Atof(*Parts[3]) : 0.0f;
+		const FVector WorldPos = StationOrigin + FVector(Entry.GridPos) * Spacing;
+		const float RotationDegrees = static_cast<float>(Entry.YawDegrees);
 
 		// Importing onto a station that already has modules must not stack
 		// copies inside them.

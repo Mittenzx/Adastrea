@@ -4,7 +4,11 @@
 
 UAdastreaSaveGame::UAdastreaSaveGame()
 	: SaveSlotName("DefaultSlot")
-	, SaveVersion(CURRENT_SAVE_VERSION)
+	// Not CURRENT_SAVE_VERSION: SaveGameToSlot only writes properties that differ from
+	// the class defaults, so version-1 files never stored SaveVersion (it equalled the
+	// default then). A missing value must keep reading back as 1. SaveGame() stamps
+	// CURRENT_SAVE_VERSION explicitly, which differs from this and is always written.
+	, SaveVersion(LEGACY_SAVE_VERSION)
 	, SaveTimestamp(FDateTime::Now())
 	, PlayerName("Player")
 	, CurrentLevelName("Unknown")
@@ -56,7 +60,7 @@ FText UAdastreaSaveGame::GetFormattedPlaytime() const
 
 bool UAdastreaSaveGame::IsCompatibleVersion() const
 {
-	// For now, only accept exact version match
-	// In future, could implement migration logic
-	return SaveVersion == CURRENT_SAVE_VERSION;
+	// Older saves load: newer fields keep their defaults and ApplyGameState skips them
+	// (see SHIP_AND_STATIONS_SAVE_VERSION). Saves from a newer build are rejected.
+	return SaveVersion >= MIN_SUPPORTED_SAVE_VERSION && SaveVersion <= CURRENT_SAVE_VERSION;
 }

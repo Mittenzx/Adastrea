@@ -109,6 +109,124 @@ struct FSavedShipCustomization
 };
 
 /**
+ * One stack of cargo in the player's hold (save version 2+)
+ */
+USTRUCT(BlueprintType)
+struct FSavedCargoEntry
+{
+	GENERATED_BODY()
+
+	/** Item ID (UTradeItemDataAsset::ItemID) */
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	FName ItemID;
+
+	/** Asset path for hand-authored items (DA_/TradeItem_ assets). Empty for the
+	 *  crafting-tree items built at runtime, which are resolved by ItemID instead. */
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	FSoftObjectPath ItemAsset;
+
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	int32 Quantity;
+
+	FSavedCargoEntry()
+		: ItemID(NAME_None)
+		, Quantity(0)
+	{}
+};
+
+/**
+ * The ship the player flies: class, credits, hold and docking (save version 2+)
+ */
+USTRUCT(BlueprintType)
+struct FSavedPlayerShip
+{
+	GENERATED_BODY()
+
+	/** False when the save was made away from the helm (e.g. walking the interior) */
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	bool bValid;
+
+	/** Ship pawn class (e.g. BP_Fighter) */
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	FSoftClassPath ShipClass;
+
+	/** USpaceshipDataAsset the ship was flying with */
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	FSoftObjectPath ShipDataAsset;
+
+	/** UPlayerTraderComponent credits (the wallet the HUD and markets use) */
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	int32 Credits;
+
+	/** UPlayerTraderComponent starting credits (profit baseline) */
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	int32 StartingCredits;
+
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	TArray<FSavedCargoEntry> Cargo;
+
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	bool bDocked;
+
+	/** Docked at a level station: its actor name */
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	FName DockedStationName;
+
+	/** Docked at a player-built station: index into UAdastreaSaveGame::Stations (else INDEX_NONE) */
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	int32 DockedSavedStationIndex;
+
+	/** Which of the station's docking bays (ASpaceStation::GetDockingBayModules order) */
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	int32 DockedBayIndex;
+
+	FSavedPlayerShip()
+		: bValid(false)
+		, Credits(0)
+		, StartingCredits(0)
+		, bDocked(false)
+		, DockedStationName(NAME_None)
+		, DockedSavedStationIndex(INDEX_NONE)
+		, DockedBayIndex(0)
+	{}
+};
+
+/**
+ * A station the player built or extended in the Station Editor (save version 2+).
+ * Modules are stored as a Station Editor blueprint string (ASpaceStation::ExportBlueprintString).
+ */
+USTRUCT(BlueprintType)
+struct FSavedStation
+{
+	GENERATED_BODY()
+
+	/** True: spawned by the player's builder, respawned on load. False: a level station the player added modules to. */
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	bool bPlayerBuilt;
+
+	/** Level station actor name (bPlayerBuilt == false) */
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	FName StationActorName;
+
+	/** Station class to respawn (bPlayerBuilt == true) */
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	FSoftClassPath StationClass;
+
+	/** Station world transform (bPlayerBuilt == true) */
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	FTransform StationTransform;
+
+	/** Player-built modules, as a blueprint string */
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	FString Blueprint;
+
+	FSavedStation()
+		: bPlayerBuilt(false)
+		, StationActorName(NAME_None)
+	{}
+};
+
+/**
  * Saved world state data
  */
 USTRUCT(BlueprintType)
@@ -153,6 +271,10 @@ struct FSavedWorldState
  * - Ship customizations
  * - World state (markets, discoveries)
  * - Game settings and options
+ * - Flown ship: class, data asset, trader credits, cargo (incl. mined ore), docking (v2)
+ * - Player-built stations / modules as Station Editor blueprint strings (v2)
+ *
+ * Versioning: see CURRENT_SAVE_VERSION. Older saves load; fields they predate are skipped.
  *
  * REMOVED (Trade Simulator MVP):
  * - Faction reputation (removed per MVP scope)
@@ -222,6 +344,14 @@ public:
 	/** Current ship ID */
 	UPROPERTY(BlueprintReadWrite, Category="Save|Player")
 	FName CurrentShipID;
+
+	/** The flown ship: class, data asset, trader credits, cargo, docking (version 2+) */
+	UPROPERTY(BlueprintReadWrite, Category="Save|Player")
+	FSavedPlayerShip PlayerShip;
+
+	/** Player-built stations and player-added modules on level stations (version 2+) */
+	UPROPERTY(BlueprintReadWrite, Category="Save|World")
+	TArray<FSavedStation> Stations;
 
 	// REMOVED: Reputation Data - faction reputation system removed per Trade Simulator MVP
 
@@ -329,6 +459,20 @@ public:
 	// Constants
 	// ====================
 
-	/** Current save game version */
-	static constexpr int32 CURRENT_SAVE_VERSION = 1;
+	/**
+	 * Current save game version.
+	 * 1: progression, GameInstance credits, pawn transform, unlocks, achievements.
+	 * 2: + PlayerShip (class, data asset, trader credits, cargo, docking) and Stations.
+	 * Fields added after a save's version keep their defaults and are not applied on load.
+	 */
+	static constexpr int32 CURRENT_SAVE_VERSION = 2;
+
+	/** Oldest version LoadGame still accepts */
+	static constexpr int32 MIN_SUPPORTED_SAVE_VERSION = 1;
+
+	/** Constructor default for SaveVersion, so files that never wrote it (all of version 1) read back as 1 */
+	static constexpr int32 LEGACY_SAVE_VERSION = 1;
+
+	/** First version that records PlayerShip and Stations */
+	static constexpr int32 SHIP_AND_STATIONS_SAVE_VERSION = 2;
 };
