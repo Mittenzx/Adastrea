@@ -960,6 +960,26 @@ void ASpaceship::ApplyShipHullMaterial()
         return;
     }
 
+    // A unique-UV baked hull carries its own material; the tiled class material
+    // below would be mapped across the wrong UVs.
+    if (!HullMaterialOverride.IsNull())
+    {
+        if (UMaterialInterface* Override = HullMaterialOverride.LoadSynchronous())
+        {
+            ShipMeshComponent->SetMaterial(0, Override);
+            UE_LOG(LogAdastreaShips, Log, TEXT("ApplyShipHullMaterial: %s hull set to override %s"),
+                *GetName(), *Override->GetName());
+            return;
+        }
+        UE_LOG(LogAdastreaShips, Warning, TEXT("ApplyShipHullMaterial: HullMaterialOverride %s on %s failed to load; using class material."),
+            *HullMaterialOverride.ToString(), *GetName());
+    }
+    else if (ShipMeshComponent->GetStaticMesh()->GetName().Contains(TEXT("UniqueUV")))
+    {
+        UE_LOG(LogAdastreaShips, Warning, TEXT("ApplyShipHullMaterial: %s uses unique-UV hull %s but has no HullMaterialOverride; the tiled class material will not line up."),
+            *GetName(), *ShipMeshComponent->GetStaticMesh()->GetName());
+    }
+
     // Map the ship's class to its imported hull material (assets agent authored
     // these at /Game/Materials). Default to a generic hull if unknown.
     FString HullMat = TEXT("/Game/Materials/M_Fighter_Hull");

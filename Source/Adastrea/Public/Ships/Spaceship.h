@@ -14,6 +14,7 @@ class UInputAction;
 class USpringArmComponent;
 class UStaticMeshComponent;
 class UStaticMesh;
+class UMaterialInterface;
 class UCameraComponent;
 class USpaceshipDataAsset;
 class UDockingSettingsDataAsset;
@@ -53,6 +54,13 @@ public:
         // Blueprint overrides the mesh asset (e.g. SM_Ship_Fighter_01_Assembled).
         UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
         TObjectPtr<UStaticMeshComponent> ShipMeshComponent;
+
+        /** Hull material for ShipMesh slot 0. When set, it replaces the per-class tiled
+         * hull material that ApplyShipHullMaterial picks from the actor name. Set it on
+         * ships that use a unique-UV baked hull (SM_*_Assembled_UniqueUV), because those
+         * UVs only line up with their own baked material (e.g. M_Battleship_Hull_Unique). */
+        UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Hull")
+        TSoftObjectPtr<UMaterialInterface> HullMaterialOverride;
 
         // Movement component for floating pawn movement in space
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Movement")
