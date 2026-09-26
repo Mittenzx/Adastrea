@@ -9,6 +9,8 @@
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/TextBlock.h"
+#include "Engine/Engine.h"
+#include "AdastreaHUD.h"
 
 UAdastreaHUDWidget::UAdastreaHUDWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -145,7 +147,20 @@ void UAdastreaHUDWidget::ClearTargetInfo_Implementation()
 
 void UAdastreaHUDWidget::ShowAlert_Implementation(const FText& Message, float Duration, bool bIsWarning)
 {
-	// Blueprint implementation handles message display
+	// Native fallback so alerts are visible without a Blueprint override. The
+	// on-screen HUD is AAdastreaHUD's canvas, so show it there as a transient
+	// message. A Blueprint HUD that overrides ShowAlert (and doesn't call the
+	// parent) replaces this entirely.
+	const float Secs = Duration > 0.0f ? Duration : 5.0f;
+	APlayerController* PC = GetOwningPlayer();
+	if (AAdastreaHUD* GameHUD = PC ? Cast<AAdastreaHUD>(PC->GetHUD()) : nullptr)
+	{
+		GameHUD->ShowMessage(Message.ToString(), Secs, bIsWarning);
+	}
+	else if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, Secs, bIsWarning ? FColor::Orange : FColor::Green, Message.ToString());
+	}
 }
 
 void UAdastreaHUDWidget::UpdateWeaponStatus_Implementation(int32 WeaponIndex, float CurrentAmmo, float MaxAmmo)

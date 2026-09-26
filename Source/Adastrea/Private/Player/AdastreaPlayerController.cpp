@@ -20,6 +20,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
+#include "Engine/Engine.h"
 #include "DrawDebugHelpers.h"
 #include "UI/AdastreaHUDWidget.h"
 #include "UI/ShipStatusWidget.h"
@@ -32,6 +33,11 @@
 #include "Stations/StationInterior.h"
 #include "Player/WorldInteractable.h"
 #include "TimerManager.h"
+#include "Player/SaveGameSubsystem.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "InputAction.h"
+#include "InputMappingContext.h"
 
 AAdastreaPlayerController::AAdastreaPlayerController()
 {
@@ -108,6 +114,10 @@ void AAdastreaPlayerController::BeginPlay()
 	{
 		UE_LOG(LogAdastrea, Warning, TEXT("AdastreaPlayerController: Failed to create HUD widget"));
 	}
+
+	// F5/F9 quicksave/quickload: the actions are bound in SetupInputComponent;
+	// the mapping context needs the local player's Enhanced Input subsystem.
+	AddSystemMappingContext();
 
 	// Start timer to check for nearby tradable stations
 	UWorld* World = GetWorld();
@@ -230,6 +240,124 @@ void AAdastreaPlayerController::SetupInputComponent()
 		// declared but never bound to ToggleStationEditor(). G is unused by any other system.
 		InputComponent->BindKey(EKeys::G, IE_Pressed, this, &AAdastreaPlayerController::ToggleStationEditor);
 	}
+
+	// F5 / F9: quicksave / quickload through Enhanced Input. Bound on the
+	// controller so they work whichever pawn (ship or walking avatar) is possessed.
+	CreateSystemInput();
+	if (UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(InputComponent))
+	{
+		if (QuickSaveAction)
+		{
+			EnhancedInput->BindAction(QuickSaveAction, ETriggerEvent::Started, this, &AAdastreaPlayerController::HandleQuickSave);
+		}
+		if (QuickLoadAction)
+		{
+			EnhancedInput->BindAction(QuickLoadAction, ETriggerEvent::Started, this, &AAdastreaPlayerController::HandleQuickLoad);
+		}
+	}
+	else
+	{
+		UE_LOG(LogAdastreaInput, Warning, TEXT("AdastreaPlayerController: InputComponent is not an EnhancedInputComponent; F5/F9 quicksave/quickload unavailable"));
+	}
+}
+
+void AAdastreaPlayerController::CreateSystemInput()
+{
+	if (SystemMappingContext)
+	{
+		return;
+	}
+
+	QuickSaveAction = NewObject<UInputAction>(this, TEXT("IA_QuickSave"));
+	QuickSaveAction->ValueType = EInputActionValueType::Boolean;
+
+	QuickLoadAction = NewObject<UInputAction>(this, TEXT("IA_QuickLoad"));
+	QuickLoadAction->ValueType = EInputActionValueType::Boolean;
+
+	SystemMappingContext = NewObject<UInputMappingContext>(this, TEXT("IMC_System"));
+	SystemMappingContext->MapKey(QuickSaveAction, EKeys::F5);
+	SystemMappingContext->MapKey(QuickLoadAction, EKeys::F9);
+
+	UE_LOG(LogAdastreaInput, Log, TEXT("AdastreaPlayerController: Created system input (F5 quicksave, F9 quickload)"));
+}
+
+void AAdastreaPlayerController::AddSystemMappingContext()
+{
+	CreateSystemInput();
+
+	ULocalPlayer* LocalPlayer = GetLocalPlayer();
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = LocalPlayer
+		? LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>() : nullptr;
+	if (!Subsystem || !SystemMappingContext)
+	{
+		return;
+	}
+
+	if (!Subsystem->HasMappingContext(SystemMappingContext))
+	{
+		Subsystem->AddMappingContext(SystemMappingContext, SystemMappingPriority);
+		UE_LOG(LogAdastreaInput, Log, TEXT("AdastreaPlayerController: Added IMC_System (F5/F9) at priority %d"), SystemMappingPriority);
+	}
+}
+
+namespace
+{
+	// How long the F5/F9 confirmation stays on the HUD canvas.
+	constexpr float QuickSaveMessageSecs = 2.5f;
+}
+
+void AAdastreaPlayerController::HandleQuickSave()
+{
+	USaveGameSubsystem* SaveSystem = GetGameInstance() ? GetGameInstance()->GetSubsystem<USaveGameSubsystem>() : nullptr;
+	if (!SaveSystem)
+	{
+		ShowHUDMessage(TEXT("Quicksave unavailable"), QuickSaveMessageSecs, true);
+		return;
+	}
+
+	UE_LOG(LogAdastrea, Log, TEXT("AdastreaPlayerController: F5 quicksave"));
+	if (SaveSystem->QuickSave())
+	{
+		ShowHUDMessage(TEXT("Game saved"), QuickSaveMessageSecs, false);
+	}
+	else
+	{
+		ShowHUDMessage(TEXT("Quicksave failed"), QuickSaveMessageSecs, true);
+	}
+}
+
+void AAdastreaPlayerController::HandleQuickLoad()
+{
+	USaveGameSubsystem* SaveSystem = GetGameInstance() ? GetGameInstance()->GetSubsystem<USaveGameSubsystem>() : nullptr;
+	if (!SaveSystem)
+	{
+		ShowHUDMessage(TEXT("Quickload unavailable"), QuickSaveMessageSecs, true);
+		return;
+	}
+
+	UE_LOG(LogAdastrea, Log, TEXT("AdastreaPlayerController: F9 quickload"));
+	if (!SaveSystem->DoesSaveExist(SaveSystem->QuickSaveSlotName))
+	{
+		ShowHUDMessage(TEXT("No quicksave"), QuickSaveMessageSecs, true);
+		return;
+	}
+
+	// Say why instead of failing silently (e.g. on foot, or with the Station Editor open).
+	const FString Blocker = SaveSystem->GetLoadBlocker();
+	if (!Blocker.IsEmpty())
+	{
+		ShowHUDMessage(FString::Printf(TEXT("Can't load: %s"), *Blocker), QuickSaveMessageSecs, true);
+		return;
+	}
+
+	if (SaveSystem->QuickLoad())
+	{
+		ShowHUDMessage(TEXT("Game loaded"), QuickSaveMessageSecs, false);
+	}
+	else
+	{
+		ShowHUDMessage(TEXT("Quickload failed"), QuickSaveMessageSecs, true);
+	}
 }
 
 void AAdastreaPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -268,6 +396,9 @@ void AAdastreaPlayerController::OnPossess(APawn* InPawn)
 		bEnableMouseOverEvents = false;
 		UE_LOG(LogAdastrea, Log, TEXT("AdastreaPlayerController: Captured mouse for pawn %s"), *InPawn->GetName());
 	}
+
+	// Pawn swaps (helm <-> on foot, quickload ship swaps) must never drop F5/F9.
+	AddSystemMappingContext();
 }
 
 void AAdastreaPlayerController::OnUnPossess()

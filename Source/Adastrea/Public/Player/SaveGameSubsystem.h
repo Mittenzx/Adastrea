@@ -193,6 +193,10 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Save|Query")
 	bool DoesSaveExist(const FString& SlotName) const;
 
+	/** Why a load can't be applied right now (empty when it can), e.g. for UI feedback. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Save|Query")
+	FString GetLoadBlocker() const;
+
 	/**
 	 * Get save slot information
 	 * @param SlotName Save slot name
@@ -324,9 +328,6 @@ protected:
 	 * Wrapper for AutoSave() that returns void for timer compatibility
 	 */
 	void AutoSaveTimerCallback();
-
-	/** Why a load can't be applied right now (empty when it can). */
-	FString GetLoadBlocker() const;
 
 	/** The ship the player is flying (the possessed pawn), or null when walking/in a menu. */
 	ASpaceship* GetPlayerShip() const;

@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "Trading/CargoComponent.h"
+#include "Trading/PlayerTraderComponent.h"
 #include "Trading/TradeItemDataAsset.h"
 #include "Ships/Spaceship.h"
 #include "Stations/ReactorModule.h"
@@ -25,7 +26,6 @@ UStationEditorManager::UStationEditorManager()
 {
 	ModuleCatalog = nullptr;
 	PlayerTechLevel = 1;
-	PlayerCredits = 0;
 	bSnapToGrid = true;
 	bCheckCollisions = true;
 	CollisionRadius = DefaultCollisionRadius;
@@ -73,21 +73,52 @@ UCargoComponent* UStationEditorManager::GetConstructionCargo() const
 	}
 
 	// Auto-resolve from the player pawn's owning ship (if any).
+	if (ASpaceship* Ship = Cast<ASpaceship>(GetLocalPlayerPawn()))
+	{
+		return Ship->CargoComponent.Get();
+	}
+	return nullptr;
+}
+
+APawn* UStationEditorManager::GetLocalPlayerPawn() const
+{
 	UWorld* World = GetWorld();
 	if (!World && CurrentStation)
 	{
 		World = CurrentStation->GetWorld();
 	}
-	if (!World)
+	return World ? UGameplayStatics::GetPlayerPawn(World, 0) : nullptr;
+}
+
+UPlayerTraderComponent* UStationEditorManager::GetPlayerTrader() const
+{
+	if (PlayerTrader.IsValid())
+	{
+		return PlayerTrader.Get();
+	}
+
+	if (!bAutoResolvePlayerTrader)
 	{
 		return nullptr;
 	}
-	APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(World, 0);
+
+	// The Station Editor only opens at the helm, so the wallet is the piloted
+	// ship's trader: the same component the HUD reads and save v2 stores.
+	APawn* PlayerPawn = GetLocalPlayerPawn();
 	if (ASpaceship* Ship = Cast<ASpaceship>(PlayerPawn))
 	{
-		return Ship->CargoComponent.Get();
+		if (Ship->PlayerTraderComponent)
+		{
+			return Ship->PlayerTraderComponent.Get();
+		}
 	}
-	return nullptr;
+	return PlayerPawn ? PlayerPawn->FindComponentByClass<UPlayerTraderComponent>() : nullptr;
+}
+
+int32 UStationEditorManager::GetPlayerCredits() const
+{
+	const UPlayerTraderComponent* Trader = GetPlayerTrader();
+	return Trader ? Trader->GetCredits() : 0;
 }
 
 bool UStationEditorManager::HasMaterialsForModule(TSubclassOf<ASpaceStationModule> ModuleClass) const
@@ -184,10 +215,16 @@ bool UStationEditorManager::ChargeForModule(TSubclassOf<ASpaceStationModule> Mod
 	}
 
 	FStationBuildCost Cost;
-	if (GetModuleBuildCost(ModuleClass, Cost))
+	const bool bHasCost = GetModuleBuildCost(ModuleClass, Cost);
+	if (bHasCost && Cost.Credits > 0)
 	{
-		OutSpend.Credits = FMath::Min(Cost.Credits, PlayerCredits);
-		PlayerCredits -= OutSpend.Credits;
+		// CanAffordModule already confirmed a trader with enough credits.
+		UPlayerTraderComponent* Trader = GetPlayerTrader();
+		if (!Trader || !Trader->RemoveCredits(Cost.Credits))
+		{
+			return false;
+		}
+		OutSpend.Credits = Cost.Credits;
 	}
 
 	// Record exactly which cargo items were taken (diff the hold around the
@@ -231,7 +268,8 @@ bool UStationEditorManager::ChargeForModule(TSubclassOf<ASpaceStationModule> Mod
 
 bool UStationEditorManager::RechargeSpend(const FStationModuleSpend& Spend)
 {
-	if (PlayerCredits < Spend.Credits)
+	UPlayerTraderComponent* Trader = Spend.Credits > 0 ? GetPlayerTrader() : nullptr;
+	if (Spend.Credits > 0 && (!Trader || Trader->GetCredits() < Spend.Credits))
 	{
 		return false;
 	}
@@ -252,7 +290,10 @@ bool UStationEditorManager::RechargeSpend(const FStationModuleSpend& Spend)
 		}
 	}
 
-	PlayerCredits -= Spend.Credits;
+	if (Trader && !Trader->RemoveCredits(Spend.Credits))
+	{
+		return false;
+	}
 	for (int32 i = 0; i < Spend.MaterialItems.Num(); ++i)
 	{
 		Cargo->RemoveCargo(Spend.MaterialItems[i], Spend.MaterialQuantities[i]);
@@ -262,7 +303,20 @@ bool UStationEditorManager::RechargeSpend(const FStationModuleSpend& Spend)
 
 void UStationEditorManager::RefundSpend(const FStationModuleSpend& Spend)
 {
-	PlayerCredits += Spend.Credits;
+	if (Spend.Credits > 0)
+	{
+		if (UPlayerTraderComponent* Trader = GetPlayerTrader())
+		{
+			Trader->AddCredits(Spend.Credits);
+		}
+		else
+		{
+			UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::RefundSpend - no player trader to refund %d credits to"),
+				Spend.Credits);
+			AddNotification(FText::FromString(FString::Printf(TEXT("Couldn't refund %d credits - no wallet available"), Spend.Credits)),
+				ENotificationSeverity::Warning, nullptr);
+		}
+	}
 
 	if (Spend.MaterialItems.Num() == 0)
 	{
@@ -1217,7 +1271,9 @@ bool UStationEditorManager::CanAffordModule(TSubclassOf<ASpaceStationModule> Mod
 	FStationModuleEntry Entry;
 	if (ModuleCatalog->FindModuleByClass(ModuleClass, Entry))
 	{
-		return PlayerCredits >= Entry.BuildCost.Credits;
+		// Free modules never need a wallet; anything that costs credits needs a
+		// resolved trader with enough of them.
+		return Entry.BuildCost.Credits <= 0 || GetPlayerCredits() >= Entry.BuildCost.Credits;
 	}
 
 	return true; // Module not in catalog, assume free
@@ -2647,16 +2703,14 @@ bool UStationEditorManager::UpgradeModule(ASpaceStationModule* Module)
 		return false;
 	}
 
-	// Check if player can afford
-	if (PlayerCredits < Cost.Credits)
+	// Check if player can afford, then deduct from the trader's wallet
+	UPlayerTraderComponent* Trader = Cost.Credits > 0 ? GetPlayerTrader() : nullptr;
+	if (Cost.Credits > 0 && (!Trader || !Trader->RemoveCredits(Cost.Credits)))
 	{
 		AddNotification(FText::FromString(TEXT("Insufficient credits for upgrade")),
 			ENotificationSeverity::Warning, Module);
 		return false;
 	}
-
-	// Deduct credits
-	PlayerCredits -= Cost.Credits;
 
 	// The actual upgrade: previously this function charged credits and did
 	// nothing else. Incrementing UpgradeLevel is what makes the charge honest -

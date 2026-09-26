@@ -53,7 +53,8 @@ Core manager class that handles all station editing operations.
 **Configuration Properties:**
 - `ModuleCatalog` - Reference to the module catalog
 - `PlayerTechLevel` - Current player's tech level (1-10)
-- `PlayerCredits` - Available credits for building
+- `PlayerTrader` - The `UPlayerTraderComponent` whose credits pay for building (the HUD wallet, saved by save v2). Auto-resolved from the piloted ship when unset; read it with `GetPlayerCredits()`
+- `bAutoResolvePlayerTrader` - Resolve `PlayerTrader` from the player pawn (default true). With no trader, modules that cost credits can't be afforded
 - `bSnapToGrid` - Enable/disable grid snapping
 - `bCheckCollisions` - Enable/disable collision checking
 - `CollisionRadius` - Configurable collision detection radius
@@ -158,7 +159,9 @@ enum class EModulePlacementResult : uint8
    UStationEditorManager* EditorManager = NewObject<UStationEditorManager>();
    EditorManager->ModuleCatalog = MyCatalog;
    EditorManager->PlayerTechLevel = PlayerState->GetTechLevel();
-   EditorManager->PlayerCredits = PlayerState->GetCredits();
+   // Credits come from the player's UPlayerTraderComponent (auto-resolved from the
+   // piloted ship). Assign one explicitly only when there's no player pawn:
+   // EditorManager->PlayerTrader = SomeTraderComponent;
    ```
 
 3. **Begin Editing a Station:**

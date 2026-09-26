@@ -9,6 +9,7 @@
 #include "Stations/SpaceStation.h"
 #include "Stations/ReactorModule.h"
 #include "Stations/CorridorModule.h"
+#include "Trading/PlayerTraderComponent.h"
 #include "Engine/Engine.h"
 #include "Engine/World.h"
 
@@ -43,13 +44,19 @@ namespace StationEditorTests
 		}
 	};
 
-	UStationEditorManager* MakeManager()
+	/** Manager paying from its own trader wallet (the test world has no player pawn to resolve one from). */
+	UStationEditorManager* MakeManager(int32 Credits = 1000000)
 	{
 		UStationEditorManager* Manager = NewObject<UStationEditorManager>();
 		Manager->bRequireConstructionMaterials = false;
 		Manager->bAutoResolvePlayerCargo = false;
+		Manager->bAutoResolvePlayerTrader = false;
 		Manager->PlayerTechLevel = 10;
-		Manager->PlayerCredits = 1000000;
+
+		UPlayerTraderComponent* Trader = NewObject<UPlayerTraderComponent>(Manager);
+		Trader->Credits = Credits;
+		Trader->StartingCredits = Credits;
+		Manager->PlayerTrader = Trader;
 		return Manager;
 	}
 
@@ -89,7 +96,7 @@ bool FStationEditorPlaceUndoRedoTest::RunTest(const FString& Parameters)
 	TestTrue(TEXT("BeginEditing"), Manager->BeginEditing(TestWorld.Station));
 	TestEqual(TEXT("Grid origin follows the station"), Manager->GridSystem->GridOrigin, TestWorld.Station->GetActorLocation());
 
-	const int32 StartCredits = Manager->PlayerCredits;
+	const int32 StartCredits = Manager->GetPlayerCredits();
 	const TArray<ASpaceStationModule*> Chain = BuildChain(Manager, TestWorld.Station, 1);
 	if (!TestEqual(TEXT("Reactor + corridor placed"), TestWorld.Station->Modules.Num(), 2) || !Chain[1])
 	{
@@ -97,7 +104,7 @@ bool FStationEditorPlaceUndoRedoTest::RunTest(const FString& Parameters)
 	}
 	ASpaceStationModule* Corridor = Chain[1];
 	TestTrue(TEXT("Reactor generates power"), Manager->GetTotalPowerGeneration() > 0.0f);
-	TestEqual(TEXT("Credits charged"), Manager->PlayerCredits,
+	TestEqual(TEXT("Credits charged"), Manager->GetPlayerCredits(),
 		StartCredits - BuildCost(Manager, AReactorModule::StaticClass()) - BuildCost(Manager, ACorridorModule::StaticClass()));
 
 	// Overlapping spot is rejected.
@@ -107,13 +114,13 @@ bool FStationEditorPlaceUndoRedoTest::RunTest(const FString& Parameters)
 
 	// Undo -> redo -> undo on the same placement (the second undo used to fail:
 	// redo respawned a new actor and the undo record kept pointing at the old one).
-	const int32 CreditsAfterBuild = Manager->PlayerCredits;
+	const int32 CreditsAfterBuild = Manager->GetPlayerCredits();
 	TestTrue(TEXT("Undo place"), Manager->Undo());
 	TestEqual(TEXT("Module gone after undo"), TestWorld.Station->Modules.Num(), 1);
-	TestEqual(TEXT("Undo refunds"), Manager->PlayerCredits, CreditsAfterBuild + BuildCost(Manager, ACorridorModule::StaticClass()));
+	TestEqual(TEXT("Undo refunds"), Manager->GetPlayerCredits(), CreditsAfterBuild + BuildCost(Manager, ACorridorModule::StaticClass()));
 	TestTrue(TEXT("Redo place"), Manager->Redo());
 	TestTrue(TEXT("Redo brings back the same actor"), TestWorld.Station->Modules.Contains(Corridor));
-	TestEqual(TEXT("Redo charges again"), Manager->PlayerCredits, CreditsAfterBuild);
+	TestEqual(TEXT("Redo charges again"), Manager->GetPlayerCredits(), CreditsAfterBuild);
 	TestTrue(TEXT("Second undo works"), Manager->Undo());
 	TestEqual(TEXT("Module gone after second undo"), TestWorld.Station->Modules.Num(), 1);
 	TestTrue(TEXT("Redo again"), Manager->Redo());
@@ -148,12 +155,12 @@ bool FStationEditorRemoveCancelTest::RunTest(const FString& Parameters)
 
 	// Session 2: removal rules, undo of a removal, and Cancel.
 	Manager->BeginEditing(TestWorld.Station);
-	const int32 StartCredits = Manager->PlayerCredits;
+	const int32 StartCredits = Manager->GetPlayerCredits();
 	TestFalse(TEXT("Middle module can't be removed (would split)"), Manager->CanRemoveModule(Chain[1]));
 	TestFalse(TEXT("RemoveModule refuses the split"), Manager->RemoveModule(Chain[1]));
 	TestTrue(TEXT("End module can be removed"), Manager->RemoveModule(Chain[2]));
 	TestEqual(TEXT("Removed"), TestWorld.Station->Modules.Num(), 2);
-	TestEqual(TEXT("Removing a committed module refunds nothing"), Manager->PlayerCredits, StartCredits);
+	TestEqual(TEXT("Removing a committed module refunds nothing"), Manager->GetPlayerCredits(), StartCredits);
 	TestTrue(TEXT("Undo removal"), Manager->Undo());
 	TestTrue(TEXT("Same actor restored"), TestWorld.Station->Modules.Contains(Chain[2]));
 	TestTrue(TEXT("Remove again"), Manager->RemoveModule(Chain[2]));
@@ -169,7 +176,7 @@ bool FStationEditorRemoveCancelTest::RunTest(const FString& Parameters)
 	TestTrue(TEXT("Cancel brings the removed module back"), TestWorld.Station->Modules.Contains(Chain[2]));
 	TestFalse(TEXT("Restored module is visible"), Chain[2]->IsHidden());
 	TestFalse(TEXT("Cancel removes the new module"), TestWorld.Station->Modules.Contains(NewCorridor));
-	TestEqual(TEXT("Cancel refunds the session's spend"), Manager->PlayerCredits, StartCredits);
+	TestEqual(TEXT("Cancel refunds the session's spend"), Manager->GetPlayerCredits(), StartCredits);
 	return true;
 }
 
@@ -189,17 +196,17 @@ bool FStationEditorQueueRefundTest::RunTest(const FString& Parameters)
 		return false;
 	}
 
-	const int32 CreditsBeforeQueue = Manager->PlayerCredits;
+	const int32 CreditsBeforeQueue = Manager->GetPlayerCredits();
 	FVector Position;
 	Manager->FindAttachPosition(ACorridorModule::StaticClass(), Reactor, FVector(0, 1, 0), Position);
 	const int32 QueueId = Manager->QueueConstruction(ACorridorModule::StaticClass(), Position, FRotator::ZeroRotator);
 	TestTrue(TEXT("Queued"), QueueId > 0);
-	TestEqual(TEXT("Queueing charges"), Manager->PlayerCredits, CreditsBeforeQueue - BuildCost(Manager, ACorridorModule::StaticClass()));
+	TestEqual(TEXT("Queueing charges"), Manager->GetPlayerCredits(), CreditsBeforeQueue - BuildCost(Manager, ACorridorModule::StaticClass()));
 	TestEqual(TEXT("Second build on the same queued spot is refused"),
 		Manager->QueueConstruction(ACorridorModule::StaticClass(), Position, FRotator::ZeroRotator), -1);
 
 	TestTrue(TEXT("Cancel queued build"), Manager->CancelConstruction(QueueId));
-	TestEqual(TEXT("Cancelling refunds"), Manager->PlayerCredits, CreditsBeforeQueue);
+	TestEqual(TEXT("Cancelling refunds"), Manager->GetPlayerCredits(), CreditsBeforeQueue);
 
 	// A build that finishes becomes a real module.
 	Manager->QueueConstruction(ACorridorModule::StaticClass(), Position, FRotator::ZeroRotator);
@@ -207,6 +214,51 @@ bool FStationEditorQueueRefundTest::RunTest(const FString& Parameters)
 	TestEqual(TEXT("Queued build completed"), TestWorld.Station->Modules.Num(), 2);
 
 	Manager->Save();
+	return true;
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FStationEditorTraderWalletTest, "Adastrea.StationEditor.TraderWallet",
+	EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FStationEditorTraderWalletTest::RunTest(const FString& Parameters)
+{
+	using namespace StationEditorTests;
+
+	FTestWorld TestWorld(FVector::ZeroVector);
+	UStationEditorManager* Manager = MakeManager(1000000);
+	Manager->BeginEditing(TestWorld.Station);
+	UPlayerTraderComponent* Trader = Manager->GetPlayerTrader();
+	if (!TestNotNull(TEXT("Trader resolves"), Trader))
+	{
+		return false;
+	}
+	const int32 ReactorCost = BuildCost(Manager, AReactorModule::StaticClass());
+	if (!TestTrue(TEXT("Reactor costs credits"), ReactorCost > 0))
+	{
+		return false;
+	}
+
+	// The editor reads and spends the trader's wallet, not a copy of it.
+	TestEqual(TEXT("Editor credits are the trader's"), Manager->GetPlayerCredits(), Trader->GetCredits());
+	TestNotNull(TEXT("Reactor placed"), Manager->PlaceModule(AReactorModule::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator));
+	TestEqual(TEXT("Build charged the trader"), Trader->GetCredits(), 1000000 - ReactorCost);
+	TestTrue(TEXT("Undo"), Manager->Undo());
+	TestEqual(TEXT("Undo refunded the trader"), Trader->GetCredits(), 1000000);
+
+	// Unaffordable: blocked, and nothing is taken.
+	Trader->Credits = ReactorCost - 1;
+	TestFalse(TEXT("Can't afford with too few credits"), Manager->CanAffordModule(AReactorModule::StaticClass()));
+	TestNull(TEXT("Unaffordable placement blocked"),
+		Manager->PlaceModule(AReactorModule::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator));
+	TestEqual(TEXT("Blocked build takes nothing"), Trader->GetCredits(), ReactorCost - 1);
+
+	// No wallet at all: costed modules are unaffordable instead of free.
+	Manager->PlayerTrader = nullptr;
+	TestNull(TEXT("No trader resolves"), Manager->GetPlayerTrader());
+	TestEqual(TEXT("No trader reads as 0 credits"), Manager->GetPlayerCredits(), 0);
+	TestFalse(TEXT("No trader: costed module unaffordable"), Manager->CanAffordModule(AReactorModule::StaticClass()));
+
+	Manager->Cancel();
 	return true;
 }
 

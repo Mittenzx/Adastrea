@@ -120,10 +120,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor", meta=(ClampMin=1, ClampMax=10))
 	int32 DefaultPlayerTechLevel = 5;
 
-	/** Default player credits used when initializing the editor manager (100000 = sufficient for testing all modules) */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor", meta=(ClampMin=0))
-	int32 DefaultPlayerCredits = 100000;
-
 	/** Maximum distance from station for module placement */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor", meta=(ClampMin=100.0f))
 	float MaxPlacementDistance = 5000.0f;
@@ -273,6 +269,12 @@ protected:
 
 	/** Refresh the optional status line */
 	void UpdateStatusText();
+
+	/** Refresh CreditsText from the player's trader wallet (only when the value changed) */
+	void UpdateCreditsText();
+
+	/** Last value written to CreditsText, so the per-tick refresh skips unchanged values */
+	int32 LastShownCredits = INDEX_NONE;
 
 	/**
 	 * Handle click in 3D viewport to confirm placement
