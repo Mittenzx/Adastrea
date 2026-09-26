@@ -372,7 +372,7 @@ Station->HasMarketplace() ?
 
 ```bash
 # Validates all DataAssets, pricing math, cargo efficiency
-python test_trading_system.py
+python tests/test_trading_system.py
 
 # Output: trading_system_report.json with:
 # - Price ranges per item

@@ -8,10 +8,10 @@ Workaround: first grow the array to N placeholder (empty) entries, then write
 the real data in (size is stable, so it's a pure content update).
 
 Usage:
-    python ue_populate_market.py <market_asset_path> '<json_inventory>'
+    python Tools/ue_populate_market.py <market_asset_path> '<json_inventory>'
 
 Example:
-    python ue_populate_market.py /Game/DataAssets/Trading/Markets/DA_Market_FreePort \
+    python Tools/ue_populate_market.py /Game/DataAssets/Trading/Markets/DA_Market_FreePort \
       '[{"tradeItem":{"refPath":"/Game/DataAssets/Trading/Items/DA_TradeItem_FoodRations.DA_TradeItem_FoodRations"},"currentStock":5000,"maxStock":20000,"supplyLevel":1.2,"demandLevel":1.0,"lastTradePrice":0.0,"bInStock":true}]'
 """
 import json

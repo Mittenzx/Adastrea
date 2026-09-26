@@ -241,7 +241,7 @@ UCLASS() class UMarketDataAsset : public UPrimaryDataAsset {
 | Area | Status | Notes |
 |------|--------|-------|
 | C++ Trading Systems | ✅ Complete | TradeItem, Market, Economy, Cargo, PlayerTrader |
-| DataAssets (Items) | ✅ 15/20 | Validated by test_trading_system.py |
+| DataAssets (Items) | ✅ 15/20 | Validated by tests/test_trading_system.py |
 | DataAssets (Markets) | ⚠️ 5/10 | Need 5 more MarketDataAssets |
 | Ship Blueprints | ✅ 3 ships | BP_PlayerShip, BP_Ship_Freighter, BP_Ship_Corvette |
 | Station Blueprints | ✅ Modular | BP_SpaceStation + modules |

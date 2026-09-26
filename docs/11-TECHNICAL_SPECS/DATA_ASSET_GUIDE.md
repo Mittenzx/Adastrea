@@ -294,7 +294,7 @@ void UAdastreaGameInstance::Init()
 ## 🧪 Validation Script
 
 ```bash
-python test_trading_system.py
+python tests/test_trading_system.py
 # Validates all TradeItem and Market DataAssets
 # Outputs: trading_system_report.json
 ```

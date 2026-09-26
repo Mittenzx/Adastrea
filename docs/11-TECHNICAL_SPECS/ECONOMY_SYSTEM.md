@@ -405,7 +405,7 @@ AISimulationIntervalHours=6.0
 ## 🧪 Testing
 
 ```bash
-python test_trading_system.py
+python tests/test_trading_system.py
 
 # Validates:
 # - All 15 items have valid price ranges

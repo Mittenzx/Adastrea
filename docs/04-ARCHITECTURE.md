@@ -216,10 +216,10 @@ World Save:
 
 ### Python Test Suite (CI-Ready)
 ```bash
-python test_trading_system.py      # DataAsset validation, price math
-python test_station_systems.py     # Integrity, power, trading efficiency
-python test_damage_calculations.py # 5 damage types × armor values
-python test_todo_verification.py   # Documentation standards
+python -m pytest -q                                  # whole suite (tests/)
+python -m pytest -q tests/test_trading_system.py     # DataAsset validation, price math
+python -m pytest -q tests/test_damage_calculations.py # 5 damage types × armor values
+python -m pytest -q tests/test_todo_verification.py  # TODO formatting scanner
 ```
 
 ### Automation (Editor)

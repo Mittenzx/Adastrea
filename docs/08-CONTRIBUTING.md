@@ -39,7 +39,7 @@
 # 1. Fork repository
 # 2. Create feature branch: git checkout -b feature/trading-ui-fix
 # 3. Make changes (follow Code Style below)
-# 4. Run tests: python test_trading_system.py
+# 4. Run tests: python -m pytest -q
 # 5. Submit PR → reference issue number
 ```
 
@@ -121,14 +121,11 @@ private:
 
 ### Before PR
 ```bash
-# Run all Python tests
-python test_trading_system.py
-python test_station_systems.py
-python test_damage_calculations.py
-python test_todo_verification.py
+# Run all Python tests (collects everything under tests/)
+python -m pytest -q
 
 # Repository health
-python repository_health_check_enhanced.py
+python Tools/repository_health_check_enhanced.py
 ```
 
 ### In Editor

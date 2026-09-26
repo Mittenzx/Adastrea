@@ -29,7 +29,7 @@ def check_file_for_unicode(filename):
 
 if __name__ == "__main__":
     files_to_check = [
-        "repository_health_check_enhanced.py",
+        "Tools/repository_health_check_enhanced.py",
         "docs/CHANGELOG.md",
         "TODO_TRACKING.md",
         "README.md"

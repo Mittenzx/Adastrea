@@ -7,6 +7,8 @@ Checks that C++ files have proper TODO formatting and documentation.
 import os
 import re
 
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 def check_todo_formatting(file_path):
     """Check if TODO comments have proper formatting."""
     with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
@@ -58,7 +60,7 @@ def main():
     print("=== TODO Documentation Verification Test ===\n")
     
     # Check Source directory
-    source_dir = os.path.join(os.getcwd(), "Source")
+    source_dir = os.path.join(REPO_ROOT, "Source")
     if not os.path.exists(source_dir):
         print(f"Source directory not found: {source_dir}")
         return
@@ -80,6 +82,27 @@ def main():
         
         print("\n[OK] TODO documentation improvements have been applied!")
         print("Some legacy TODOs may need updating in future cycles.")
+
+def test_source_directory_scannable():
+    """pytest entry point: the TODO scan runs over Source/ without errors.
+
+    Legacy TODOs without category/priority tags are reported as warnings by
+    main(), not failures, so this only checks the scanner itself works.
+    """
+    source_dir = os.path.join(REPO_ROOT, "Source")
+    assert os.path.isdir(source_dir)
+    issues = check_cpp_files(source_dir)
+    assert isinstance(issues, dict)
+
+
+def test_check_todo_formatting_flags_untagged_todo(tmp_path):
+    good = tmp_path / "good.cpp"
+    good.write_text("// TODO: [COMBAT] add lead targeting\n// Priority: High\n")
+    bad = tmp_path / "bad.cpp"
+    bad.write_text("// TODO: fix this later\n")
+    assert check_todo_formatting(str(good)) == []
+    assert len(check_todo_formatting(str(bad))) == 2
+
 
 if __name__ == "__main__":
     main()

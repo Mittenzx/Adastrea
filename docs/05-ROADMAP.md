@@ -1,6 +1,6 @@
 # Project Roadmap
 
-**Current status and open work | Updated: September 26, 2026 (main as of PR #505)**
+**Current status and open work | Updated: September 26, 2026 (main as of PR #511)**
 
 ---
 
@@ -52,6 +52,8 @@ sessions happens in `AGENT_BOARD.md`.
   instances, and a separate `TurretHead` on the turret
 - Docking: a range gate, a HUD dock prompt, and a station services menu on docking (#486)
 - Walkable station interior with Walk / Maintenance / Habitation rooms (#490)
+- Lab/turret/shield module sockets import at identity rotation, and their UCX collision hulls
+  now import (#508, #510)
 
 **Economy, mining and AI**
 - Trading loop: buy/sell against station marketplaces, with `UPlayerTraderComponent` for credits
@@ -64,6 +66,11 @@ sessions happens in `AGENT_BOARD.md`.
   then sell at the best-paying station (`AAIMinerController`, #491)
 - TestLevel has an asteroid belt plus AI miners and traders working it (#497)
 - Crafting tree: 68 recipes defined (`CraftingTree.json`) that feed station-module build costs
+
+**Save/load**
+- Save v2 (#509): ship class and DataAsset, trader credits, cargo (including mined ore), docked
+  station and bay, and player-built stations/modules. Console: `adastrea.SaveGame` /
+  `adastrea.LoadGame`. v1 saves still load
 
 **HUD, targeting and debug**
 - Neon cockpit flight HUD (#505): heading tape, boresight and flight-path marker, shield/hull
@@ -84,12 +91,12 @@ sessions happens in `AGENT_BOARD.md`.
 - Translucent bridge viewport glass (#493, #495) and emissive interior lights
 - Deep-space PostProcessVolume and a regenerated starfield. `SM_StarDome_Dense` was rebuilt at
   960 tris (under its 1,000 budget) and reimported (#493)
-- Unique-UV baked hull sets for the Corvette (prototype) and Battleship (#493). They're built but
-  not yet assigned on the ship Blueprints (see below)
+- Unique-UV baked hull sets for the Corvette (prototype) and Battleship (#493), now flown on
+  `BP_Ship_Corvette` and `BP_Battleship` via `ASpaceship::HullMaterialOverride` (#510)
 
 **Engine and tooling**
 - UE 5.8, SM5 (no Lumen/VSM, iGPU-friendly)
-- 129 pytest tests passing (`python -m pytest -q -p no:randomly`)
+- 159 pytest tests passing (`python -m pytest -q -p no:randomly`)
 - Procedural Blender asset pipeline (`Tools/generate_adastrea_assets.py`, station/interior
   generators) plus a licensed BlenderKit sourcing pipeline for hero/accent props
 - Multi-agent coordination protocol (`AGENT_BOARD.md`)
@@ -98,16 +105,6 @@ sessions happens in `AGENT_BOARD.md`.
 
 ## 🔨 Open work
 
-- **Modules-B sockets import with roll 180.** The lab/turret/shield `SOCKET_*` empties from
-  `Tools/generate_station_lab_defence_modules.py` come into UE rolled 180°. The turret doesn't use
-  socket rotation, so this doesn't block anything yet, but it will once something mounts on those
-  sockets. A fix at the source is in progress.
-- **Unique baked hulls are built but not on the ship Blueprints.** The Corvette and Battleship
-  unique-UV hull meshes and materials exist, but the Corvette BP and `BP_Battleship` still use the
-  shared hulls.
-- **Save/load doesn't cover the newer systems.** `UAdastreaSaveGame` stores credits, location,
-  generic inventory, ships, quests and market prices. It doesn't store mining cargo, player-built
-  stations or other state from the current live loop.
 - **`CraftingManager` is unbuilt.** The recipe tree exists, but no C++ system runs crafting.
 - **No packaged build yet.** Everything so far has been verified in the editor/PIE only.
 - **What to build next is an open product decision.** Combat is the most likely candidate, since
@@ -140,7 +137,7 @@ not dead code:
 | Advanced AI | Complete, disabled (the live AI traders/miners are separate, lightweight controllers) |
 | Exploration/Scanning | Partial |
 | Way Network | Complete, disabled |
-| Full Save/Load | Partial (doesn't cover mining cargo or player-built stations) |
+| Full Save/Load | Live loop covered by save v2 (#509); not re-checked against every deferred system |
 | Multiplayer | Planned only |
 | Crafting (build execution) | Recipe tree done. C++ `CraftingManager` not built |
 
@@ -157,7 +154,7 @@ building all of them, is a product decision, not an engineering one.
 | Build | `build_with_ue_tools.bat Development Win64` (UBT via dotnet + VS2022) |
 | MCP | Built-in UE MCP server on `http://127.0.0.1:8000/mcp`, used by agent sessions for live editor inspection and edits |
 | CI/CD | GitHub Actions (dead workflows removed in #494) |
-| Tests | 129 pytest tests (`python -m pytest -q -p no:randomly`) plus UE automation tests (`Adastrea.StationEditor.*`) |
+| Tests | 159 pytest tests (`python -m pytest -q -p no:randomly`) plus UE automation tests (`Adastrea.StationEditor.*`) |
 | Packaging | Not done yet |
 
 ---

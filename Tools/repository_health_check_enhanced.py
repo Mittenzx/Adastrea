@@ -71,9 +71,9 @@ def check_python_tests():
     print("\n[TEST] Running Python tests...")
     
     test_files = [
-        'test_todo_verification.py',
-        'test_station_systems.py', 
-        'test_damage_calculations.py'
+        'tests/test_todo_verification.py',
+        'tests/test_damage_calculations.py',
+        'tests/test_trading_system.py',
     ]
     
     results = []
@@ -83,7 +83,7 @@ def check_python_tests():
         if os.path.exists(test_file):
             print(f"  Running {test_file}...")
             try:
-                result = subprocess.run(['python', test_file], 
+                result = subprocess.run([sys.executable, test_file], 
                                       capture_output=True, text=True, cwd=os.getcwd())
                 
                 if result.returncode == 0:
@@ -231,6 +231,8 @@ def check_file_sizes():
 
 def main():
     """Run all enhanced health checks."""
+    # Always run from the repository root (this script lives in Tools/).
+    os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     print("=" * 60)
     print("Adastrea Enhanced Repository Health Check")
     print(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
