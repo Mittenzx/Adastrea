@@ -51,10 +51,11 @@ if not exist "%RUNUAT%" (
     exit /b 2
 )
 
-tasklist /FI "IMAGENAME eq UnrealEditor.exe" 2>nul | find /I "UnrealEditor.exe" >nul
-if not errorlevel 1 (
-    echo [package_win64] WARNING: UnrealEditor.exe is running. The cook may fail or
-    echo [package_win64]          contend for files. Close the editor first.
+REM Warn only if an editor has THIS project open (editors on other checkouts are fine).
+powershell -NoProfile -Command "if (Get-CimInstance Win32_Process -Filter \"Name like 'UnrealEditor%%'\" | Where-Object { $_.CommandLine -like '*%UPROJECT%*' }) { exit 1 } else { exit 0 }" >nul 2>&1
+if errorlevel 1 (
+    echo [package_win64] WARNING: an UnrealEditor has %UPROJECT% open. The cook may
+    echo [package_win64]          fail or contend for files. Close that editor first.
 )
 
 if not exist "%LOG_DIR%" mkdir "%LOG_DIR%"
