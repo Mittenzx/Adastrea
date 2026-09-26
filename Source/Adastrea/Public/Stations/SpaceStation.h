@@ -15,6 +15,26 @@ class UMarketDataAsset;
 class UStationLayoutDataAsset;
 
 /**
+ * One module entry of a station blueprint string (see ASpaceStation::ExportBlueprintString).
+ * Plain C++ (not reflected) - only the codec and its two callers (the Station Editor's
+ * blueprint export/import and the save system) use it.
+ */
+struct FStationBlueprintEntry
+{
+    /** Native module class name ("CargoBayModule"), or a full class path for Blueprint modules */
+    FString ItemID;
+
+    /** Position in grid cells relative to the station origin (world axes) */
+    FIntVector GridPos = FIntVector::ZeroValue;
+
+    /** World yaw, normalised to 0/90/180/270 */
+    int32 YawDegrees = 0;
+
+    /** First module of the station (informational; Python plan-mode tool uses it) */
+    bool bIsCore = false;
+};
+
+/**
  * Core space station actor with modular construction system
  *
  * Space stations are large structures that can be built from individual modules.
@@ -134,6 +154,39 @@ public:
          */
         UFUNCTION(BlueprintCallable, Category="Station|Builder")
         int32 BuildFromLayout(class UStationLayoutDataAsset* Layout);
+
+        // ====================
+        // BLUEPRINT STRING (STATION_BUILDER.md format)
+        // SchemaVersion;PlotX,Y,Z;GridSpacing;ModuleID:ItemID:gx,gy,gz:rot:isCore;...
+        // Shared by the Station Editor's blueprint export/import and the save system.
+        // ====================
+
+        /** Actor tag on stations spawned by the player's builder and modules the player placed. */
+        static const FName PlayerBuiltTag;
+
+        /**
+         * Encode this station's modules as a blueprint string.
+         * @param GridSpacing Grid cell size (cm) to quantise module positions to
+         * @param bPlayerBuiltOnly Only include modules tagged PlayerBuiltTag
+         */
+        FString ExportBlueprintString(float GridSpacing, bool bPlayerBuiltOnly = false) const;
+
+        /**
+         * Spawn and attach every module in a blueprint string, tagged PlayerBuiltTag.
+         * A direct reconstruction like BuildFromLayout: no credits or materials are
+         * charged. Modules keep the exact world placement they were exported with.
+         * @return Number of modules spawned
+         */
+        int32 BuildFromBlueprintString(const FString& Blueprint);
+
+        /** Destroy every module tagged PlayerBuiltTag. @return Number removed */
+        int32 RemovePlayerBuiltModules();
+
+        /** Parse a blueprint string. Malformed module entries are skipped. @return false if the header is malformed */
+        static bool ParseBlueprintString(const FString& Blueprint, float& OutGridSpacing, TArray<FStationBlueprintEntry>& OutEntries);
+
+        /** Resolve a blueprint ItemID to a module class (bare native name or full class path). */
+        static UClass* ResolveBlueprintModuleClass(const FString& ItemID);
 
     // ====================
     // MVP-CRITICAL: STATION CORE FUNCTIONS

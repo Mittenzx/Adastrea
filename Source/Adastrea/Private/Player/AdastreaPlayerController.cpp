@@ -1049,6 +1049,8 @@ ASpaceStation* AAdastreaPlayerController::SpawnStationForBuilder()
 
 	if (NewStation)
 	{
+		// SaveGameSubsystem saves (and respawns on load) stations carrying this tag.
+		NewStation->Tags.AddUnique(ASpaceStation::PlayerBuiltTag);
 		UE_LOG(LogAdastrea, Log, TEXT("SpawnStationForBuilder: Spawned new empty station %s at (%.0f, %.0f, %.0f) for from-scratch building"),
 			*NewStation->GetName(), StationSpawnLocation.X, StationSpawnLocation.Y, StationSpawnLocation.Z);
 	}

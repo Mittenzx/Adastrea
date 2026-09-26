@@ -5,6 +5,12 @@
 #include "Player/AdastreaSaveGame.h"
 #include "SaveGameSubsystem.generated.h"
 
+class APlayerController;
+class ASpaceship;
+class ASpaceStation;
+class UCraftingTreeLoader;
+class UTradeItemDataAsset;
+
 /**
  * Save slot info for UI display
  */
@@ -76,9 +82,14 @@ struct FSaveSlotInfo
  * Integration:
  * - AdastreaGameInstance coordinates save/load
  * - PlayerProgressionComponent serializes progression
- * - PlayerReputationComponent serializes reputation
  * - AchievementManagerSubsystem serializes achievements
- * - QuestManagerSubsystem serializes quest states
+ * - The flown ASpaceship: class + data asset, UPlayerTraderComponent credits,
+ *   UCargoComponent hold (incl. mined ore) and docked station (save version 2+)
+ * - Player-built stations and player-added modules, as Station Editor blueprint
+ *   strings (ASpaceStation::ExportBlueprintString) (save version 2+)
+ *
+ * Console (PIE / dev builds): adastrea.SaveGame [Slot], adastrea.LoadGame [Slot]
+ * (default slot: QuickSave).
  */
 UCLASS()
 class ADASTREA_API USaveGameSubsystem : public UGameInstanceSubsystem
@@ -313,4 +324,38 @@ protected:
 	 * Wrapper for AutoSave() that returns void for timer compatibility
 	 */
 	void AutoSaveTimerCallback();
+
+	/** Why a load can't be applied right now (empty when it can). */
+	FString GetLoadBlocker() const;
+
+	/** The ship the player is flying (the possessed pawn), or null when walking/in a menu. */
+	ASpaceship* GetPlayerShip() const;
+
+	/** Record player-built stations and player-added modules on level stations. */
+	void CollectStations(UAdastreaSaveGame* SaveGameObject) const;
+
+	/** Record ship class, credits, cargo and docking. */
+	void CollectPlayerShip(ASpaceship* Ship, UAdastreaSaveGame* SaveGameObject) const;
+
+	/**
+	 * Replace the world's player-built stations/modules with the saved ones.
+	 * @param OutSavedStations Station actor per UAdastreaSaveGame::Stations entry (null if not restored)
+	 */
+	void ApplyStations(const UAdastreaSaveGame* SaveGameObject, TArray<ASpaceStation*>& OutSavedStations);
+
+	/** Swap the possessed ship for the saved class/data asset if they differ. @return The ship now flown */
+	ASpaceship* ApplyPlayerShipClass(APlayerController* PC, ASpaceship* CurrentShip, const FSavedPlayerShip& Saved);
+
+	/** Restore trader credits and the cargo hold. */
+	void ApplyShipCreditsAndCargo(ASpaceship* Ship, const FSavedPlayerShip& Saved);
+
+	/** Re-dock at the saved station's docking bay. */
+	void ApplyDocking(ASpaceship* Ship, const FSavedPlayerShip& Saved, const TArray<ASpaceStation*>& SavedStations);
+
+	/** Find the trade item a saved cargo entry refers to (asset, then crafting-tree item by ID). */
+	UTradeItemDataAsset* ResolveCargoItem(const FSavedCargoEntry& Entry);
+
+	/** Resolves runtime crafting-tree items (e.g. "IronOre") when restoring cargo. */
+	UPROPERTY(Transient)
+	TObjectPtr<UCraftingTreeLoader> CraftingLoader;
 };
