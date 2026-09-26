@@ -26,10 +26,10 @@ ATurretModule::ATurretModule()
                 TEXT("/AdastreaShips/Meshes/Station/SM_StationModule_TurretHead_01.SM_StationModule_TurretHead_01"),
                 nullptr, LOAD_NoWarn | LOAD_Quiet);
         }
-        // Mount at the base TurretHead socket LOCATION only. The exported socket
-        // carries a flipped (yaw 180 / roll 180) rotation from the FBX axis
-        // conversion, so snapping to the socket transform would hang the head
-        // upside down; the head pivot is already its yaw axis.
+        // Mount at the base TurretHead socket LOCATION only; the head pivot is already
+        // its yaw axis. (Since the #508 re-export the sockets import at identity
+        // rotation; before that they came in yaw 180 / roll 180 and would have hung the
+        // head upside down.)
         if (const UStaticMesh* BaseMesh = MeshComponent ? MeshComponent->GetStaticMesh() : nullptr)
         {
             if (const UStaticMeshSocket* Socket = BaseMesh->FindSocket(TEXT("TurretHead")))
