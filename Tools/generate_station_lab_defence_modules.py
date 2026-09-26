@@ -27,8 +27,10 @@ ASpaceStationModule constructor.
 Conventions reused verbatim from Tools/generate_station_module_meshes.py /
 generate_adastrea_assets.py: same primitive helpers (imported as `gen`), 400 cm per
 grid cell, 1 Blender unit = 1 cm = 1 Unreal unit, triplanar gen.smart_uv, identical
-FBX export settings (FBX_SCALE_ALL, apply_unit_scale, Face smoothing, -Y fwd / Z up),
-authored UCX_<Mesh>_NN box collision exported in the same FBX.
+FBX export settings (FBX_SCALE_ALL, apply_unit_scale, Face smoothing),
+authored UCX_<Mesh>_NN box collision exported in the same FBX. Exception: axes
+are +Y fwd / Z up (not -Y fwd) so the file's declared axis system matches UE's
+and SOCKET_ rotations import as identity (see Kit.finalize).
 
 Differences (deliberate):
   * Multi-slot materials (Shell / Connector / Utility / Accent, or Defence / ...),
@@ -283,16 +285,28 @@ class Kit:
             filepath=out, use_selection=True, object_types={'MESH', 'EMPTY'},
             apply_scale_options='FBX_SCALE_ALL', apply_unit_scale=True,
             mesh_smooth_type='FACE',
-            axis_forward='-Y', axis_up='Z',
-            # Bake the -Y-fwd axis conversion (a 180deg Z turn) into vertex and
-            # child positions instead of writing it as Lcl Rotation Z=180 on each
-            # root node. Unbaked, UE folded that parent rotation into every
-            # SOCKET_ empty (imported yaw 180 / roll 180, Integrator 22:15Z).
-            # Baked, every Model node in the FBX has identity rotation, so sockets
-            # import at Rotator(0,0,0). Mesh result in UE is unchanged: the importer
-            # uses transform_vertex_to_absolute (default), which was already baking
-            # that root rotation into the vertices.
-            bake_space_transform=True,
+            # Export in Blender's own axes (+Y fwd / Z up). This is the only
+            # choice that (a) writes an identity global matrix, so vertices and
+            # node transforms are exactly the Blender values, and (b) declares
+            # the FBX axis system UpAxis=Z+, FrontAxis=Y-, CoordAxis=X+, which
+            # equals UE's import axis (Z up, -ParityOdd front, right-handed).
+            #
+            # Why it matters for SOCKET_ empties: with the old '-Y' forward the
+            # file declared FrontAxisSign=+1 / CoordAxisSign=-1, so UE (legacy
+            # and Interchange) ran FbxAxisSystem::ConvertScene (a 180deg turn
+            # about Z) AND then multiplied every socket by the inverse of
+            # FbxAxisSystem::GetMatrix-based AxisConversionMatrix, which for
+            # this pair is a 180deg turn about a horizontal axis, not Z. The
+            # two don't cancel: identity empties came in as roll 180 (and
+            # yaw 180 / roll 180 before bake_space_transform). When the
+            # declared axes already match UE, neither step runs, so an empty
+            # with identity rotation imports as Rotator(0,0,0).
+            #
+            # Mesh and socket placement in UE are unchanged: before, the file
+            # held Rz(180)-rotated coords that ConvertScene rotated back; now
+            # it holds the Blender coords directly. Either way UE sees the
+            # Blender coords with its usual Y mirror.
+            axis_forward='Y', axis_up='Z',
         )
         info = dict(fbx=out, tris=tris, verts=len(me.vertices), slots=slots,
                     ucx=len(ucx_objs), sockets=[s[0] for s in self.sockets],
