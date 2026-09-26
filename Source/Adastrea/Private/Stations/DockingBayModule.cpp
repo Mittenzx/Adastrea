@@ -2,17 +2,57 @@
 
 #include "Stations/DockingBayModule.h"
 #include "Stations/DockingDebug.h"
+#include "Stations/SpaceStation.h"
 
 // Debug flag for docking system - can be disabled for shipping builds
 #ifndef DOCKING_DEBUG_ENABLED
     #define DOCKING_DEBUG_ENABLED 1
 #endif
 
+namespace DockingBayDefaults
+{
+    // Half-extents of SM_StationModule_DockingBay_01 are 600 x 400 x 200 cm; berths sit
+    // this far from the module centre along each axis (hull face + clearance).
+    constexpr float BerthOffsetX = 1600.0f;
+    constexpr float BerthOffsetY = 1400.0f;
+    // A default berth is unusable if another module of the same station comes within
+    // this distance of it (covers a corvette's ~7.2 m half-length pointing back at the bay).
+    constexpr float BerthClearance = 750.0f;
+}
+
 ADockingBayModule::ADockingBayModule()
 {
     ModuleType = TEXT("Docking Bay");
     ModulePower = 50.0f;
     ModuleGroup = EStationModuleGroup::Docking;
+
+    // Native default docking points. The Station Editor spawns this native class
+    // directly (no hand-authored Blueprint points), so without these a player-built
+    // docking bay reported "No docking points found" and could never be docked at.
+    // Layout: SM_StationModule_DockingBay_01 is 1200 x 800 x 400 cm (3x2x1 grid cells),
+    // centred on the actor origin. Ships teleport onto the point's world transform
+    // (ASpaceship::NavigateToDockingPoint), so each point sits clear of the hull's
+    // collision and faces away from the module (nose out, so a corvette's ~7.2 m
+    // half-length still clears the hull). Points fill in order, so index 0 is the
+    // mesh's berthing port, which sits on the -Y face (Blender +Y imports as UE -Y).
+    struct FDefaultPoint { FVector Location; FRotator Rotation; };
+    static const FDefaultPoint DefaultPoints[NumDefaultDockingPoints] = {
+        { FVector(0.0f,    -DockingBayDefaults::BerthOffsetY,  0.0f), FRotator(0.0f,  -90.0f, 0.0f) },
+        { FVector(0.0f,     DockingBayDefaults::BerthOffsetY,  0.0f), FRotator(0.0f,   90.0f, 0.0f) },
+        { FVector( DockingBayDefaults::BerthOffsetX, 0.0f,     0.0f), FRotator(0.0f,    0.0f, 0.0f) },
+        { FVector(-DockingBayDefaults::BerthOffsetX, 0.0f,     0.0f), FRotator(0.0f,  180.0f, 0.0f) },
+    };
+
+    for (int32 Index = 0; Index < NumDefaultDockingPoints; ++Index)
+    {
+        // Unique names so they can't clash with SCS components a Blueprint subclass
+        // already calls "DockingPoint*".
+        USceneComponent* Point = CreateDefaultSubobject<USceneComponent>(*FString::Printf(TEXT("NativeDockingPoint_%d"), Index));
+        Point->SetupAttachment(RootComponent);
+        Point->SetRelativeLocationAndRotation(DefaultPoints[Index].Location, DefaultPoints[Index].Rotation);
+        Point->ComponentTags.Add(FName("DockingPoint"));
+        DefaultDockingPoints.Add(Point);
+    }
 }
 
 void ADockingBayModule::BeginPlay()
@@ -32,6 +72,21 @@ void ADockingBayModule::PopulateDockingPointsFromTags()
 
     // Get all components with the "DockingPoint" tag
     TArray<UActorComponent*> TaggedComponents = GetComponentsByTag(USceneComponent::StaticClass(), FName("DockingPoint"));
+
+    // Hand-authored points (Blueprint SCS or per-instance components, e.g.
+    // BP_SpaceStationModule_DockingBay) take precedence over the native defaults, so a
+    // Blueprint never ends up with its own points plus four extra native ones.
+    const bool bHasAuthoredPoints = TaggedComponents.ContainsByPredicate([this](const UActorComponent* Component)
+    {
+        return !DefaultDockingPoints.Contains(Component);
+    });
+    if (bHasAuthoredPoints)
+    {
+        TaggedComponents.RemoveAll([this](const UActorComponent* Component)
+        {
+            return DefaultDockingPoints.Contains(Component);
+        });
+    }
 
 #if DOCKING_DEBUG_ENABLED
     if (GEngine)
@@ -129,21 +184,63 @@ USceneComponent* ADockingBayModule::GetAvailableDockingPoint() const
         return nullptr;
     }
 
+    // The native default berths sit on all four faces, but on a player-built station
+    // some faces are attached to neighbouring modules; skip berths that would park a
+    // ship inside one. Hand-authored (Blueprint) points are trusted as-is.
+    TArray<USceneComponent*> Candidates;
+    const bool bUsingDefaultPoints = DefaultDockingPoints.Num() > 0 && DockingPoints.Contains(DefaultDockingPoints[0]);
+    for (USceneComponent* Point : DockingPoints)
+    {
+        if (Point && (!bUsingDefaultPoints || !IsDockingPointObstructed(Point)))
+        {
+            Candidates.Add(Point);
+        }
+    }
+    if (Candidates.Num() == 0)
+    {
+        Candidates = DockingPoints; // every face is built over: better a cramped berth than none
+    }
+
     // Select the next available docking point based on how many ships are currently docked.
     // This assumes docking points are filled in order and that HasAvailableDocking()
     // already enforces that CurrentDockedShips is within a valid range.
-    const int32 NextDockingIndex = FMath::Clamp(CurrentDockedShips, 0, DockingPoints.Num() - 1);
+    const int32 NextDockingIndex = FMath::Clamp(CurrentDockedShips, 0, Candidates.Num() - 1);
 
 #if DOCKING_DEBUG_ENABLED
     // Debug print - point found
     if (GEngine)
     {
-        AdastreaDockingDebug::Print(5.0f, FColor::Green, FString::Printf(TEXT("[DOCKING] Docking point found: Index %d of %d points"),
-                NextDockingIndex, DockingPoints.Num()));
+        AdastreaDockingDebug::Print(5.0f, FColor::Green, FString::Printf(TEXT("[DOCKING] Docking point found: Index %d of %d usable points (%d total)"),
+                NextDockingIndex, Candidates.Num(), DockingPoints.Num()));
     }
 #endif
 
-    return DockingPoints[NextDockingIndex];
+    return Candidates[NextDockingIndex];
+}
+
+bool ADockingBayModule::IsDockingPointObstructed(const USceneComponent* Point) const
+{
+    const ASpaceStation* Station = Cast<ASpaceStation>(GetAttachParentActor());
+    if (!Point || !Station)
+    {
+        return false;
+    }
+
+    const FVector PointLocation = Point->GetComponentLocation();
+    const float ClearanceSq = FMath::Square(DockingBayDefaults::BerthClearance);
+    for (const ASpaceStationModule* Other : Station->GetModules())
+    {
+        if (!IsValid(Other) || Other == this)
+        {
+            continue;
+        }
+        const FBox Bounds = Other->GetComponentsBoundingBox(true);
+        if (Bounds.IsValid && Bounds.ComputeSquaredDistanceToPoint(PointLocation) < ClearanceSq)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 bool ADockingBayModule::DockShip()
