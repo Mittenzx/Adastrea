@@ -1,4 +1,5 @@
 #include "AdastreaFunctionLibrary.h"
+#include "Interfaces/IDamageable.h" // full EDamageType definition (header only forward-declares it)
 // REMOVED: #include "Factions/FactionDataAsset.h" - faction system removed per Trade Simulator MVP
 // REMOVED: #include "Interfaces/IFactionMember.h" - faction system removed per Trade Simulator MVP
 #include "Kismet/GameplayStatics.h"

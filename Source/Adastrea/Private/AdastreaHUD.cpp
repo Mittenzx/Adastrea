@@ -42,6 +42,21 @@ static const FLinearColor kSpeed   (0.35f, 0.72f, 0.95f, 1.00f); // cyan
 static const FLinearColor kThrottle(0.80f, 0.55f, 0.90f, 1.00f); // violet
 static const FLinearColor kPos     (0.75f, 0.75f, 0.80f, 1.00f); // soft white
 
+// AActor::GetActorLabel() only exists in editor builds (WITH_EDITOR). Packaged (Game)
+// builds fall back to the object name so the HUD still compiles and shows something.
+static FString HudActorName(const AActor* Actor)
+{
+	if (!Actor)
+	{
+		return FString();
+	}
+#if WITH_EDITOR
+	return Actor->GetActorLabel();
+#else
+	return Actor->GetName();
+#endif
+}
+
 void AAdastreaHUD::DrawHUD()
 {
 	Super::DrawHUD();
@@ -208,7 +223,7 @@ void AAdastreaHUD::DrawHUD()
 	{
 		// Target screen position + in-view/off-view determination.
 		const FVector TgtLoc = LockedTarget->GetActorLocation();
-		FString TgtName = LockedTarget->GetActorLabel();
+		FString TgtName = HudActorName(LockedTarget);
 		if (const ASpaceship* TgtShip = Cast<ASpaceship>(LockedTarget))
 		{
 			TgtName = TgtShip->GetShipName().ToString();
@@ -693,7 +708,7 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 			FVector2D SP;
 			if (!Project(A->GetActorLocation(), SP)) continue;
 			DrawStationIcon(SP.X, SP.Y, 6.0f, FLinearColor(0.95f, 0.78f, 0.30f, 1.0f), 2.0f);
-			DrawText(A->GetActorLabel(), FLinearColor(0.9f, 0.85f, 0.6f, 1.0f), SP.X + 9.0f, SP.Y - 6.0f, MiniFont, 0.55f);
+			DrawText(HudActorName(A), FLinearColor(0.9f, 0.85f, 0.6f, 1.0f), SP.X + 9.0f, SP.Y - 6.0f, MiniFont, 0.55f);
 		}
 	}
 	// Ships: cyan hollow diamond icon + label
@@ -705,7 +720,7 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 			FVector2D SP;
 			if (!Project(A->GetActorLocation(), SP)) continue;
 			DrawShipIcon(SP.X, SP.Y, 6.0f, FLinearColor(0.3f, 0.8f, 0.9f, 1.0f), 2.0f);
-			DrawText(A->GetActorLabel(), FLinearColor(0.6f, 0.85f, 0.95f, 1.0f), SP.X + 8.0f, SP.Y - 6.0f, MiniFont, 0.55f);
+			DrawText(HudActorName(A), FLinearColor(0.6f, 0.85f, 0.95f, 1.0f), SP.X + 8.0f, SP.Y - 6.0f, MiniFont, 0.55f);
 		}
 	}
 
@@ -868,7 +883,7 @@ void AAdastreaHUD::DrawStationMenu(APlayerController* PC, AAdastreaPlayerControl
 
 	const ASpaceStation* Station = AdController ? AdController->GetNearestStation() : nullptr;
 	DrawText(TEXT("STATION SERVICES"), kHeader, X + 24.0f, Y + 16.0f, TitleFont, 1.0f);
-	DrawText(Station ? Station->GetActorLabel() : FString(TEXT("Docked")), kLabel, X + 24.0f, Y + 52.0f, BodyFont, 0.9f);
+	DrawText(Station ? HudActorName(Station) : FString(TEXT("Docked")), kLabel, X + 24.0f, Y + 52.0f, BodyFont, 0.9f);
 	DrawLine(X + 16.0f, Y + 80.0f, X + PanelW - 16.0f, Y + 80.0f, kBorder, 1.0f);
 
 	const FLinearColor Accent(0.15f, 0.9f, 0.6f, 1.0f);

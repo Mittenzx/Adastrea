@@ -67,11 +67,21 @@
 		},
 		{
 			"Name": "ModelContextProtocol",
-			"Enabled": true
+			"Enabled": true,
+			"TargetDenyList": [
+				"Game",
+				"Client",
+				"Server"
+			]
 		},
 		{
 			"Name": "AllToolsets",
-			"Enabled": true
+			"Enabled": true,
+			"TargetDenyList": [
+				"Game",
+				"Client",
+				"Server"
+			]
 		},
 		{
 			"Name": "AdastreaShips",
