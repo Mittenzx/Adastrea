@@ -300,23 +300,29 @@ void AAdastreaPlayerController::AddSystemMappingContext()
 	}
 }
 
+namespace
+{
+	// How long the F5/F9 confirmation stays on the HUD canvas.
+	constexpr float QuickSaveMessageSecs = 2.5f;
+}
+
 void AAdastreaPlayerController::HandleQuickSave()
 {
 	USaveGameSubsystem* SaveSystem = GetGameInstance() ? GetGameInstance()->GetSubsystem<USaveGameSubsystem>() : nullptr;
 	if (!SaveSystem)
 	{
-		ShowHUDMessage(NSLOCTEXT("AdastreaSave", "QuickSaveNoSystem", "Quicksave unavailable"), true);
+		ShowHUDMessage(TEXT("Quicksave unavailable"), QuickSaveMessageSecs, true);
 		return;
 	}
 
 	UE_LOG(LogAdastrea, Log, TEXT("AdastreaPlayerController: F5 quicksave"));
 	if (SaveSystem->QuickSave())
 	{
-		ShowHUDMessage(NSLOCTEXT("AdastreaSave", "QuickSaved", "Game saved"));
+		ShowHUDMessage(TEXT("Game saved"), QuickSaveMessageSecs, false);
 	}
 	else
 	{
-		ShowHUDMessage(NSLOCTEXT("AdastreaSave", "QuickSaveFailed", "Quicksave failed"), true);
+		ShowHUDMessage(TEXT("Quicksave failed"), QuickSaveMessageSecs, true);
 	}
 }
 
@@ -325,14 +331,14 @@ void AAdastreaPlayerController::HandleQuickLoad()
 	USaveGameSubsystem* SaveSystem = GetGameInstance() ? GetGameInstance()->GetSubsystem<USaveGameSubsystem>() : nullptr;
 	if (!SaveSystem)
 	{
-		ShowHUDMessage(NSLOCTEXT("AdastreaSave", "QuickLoadNoSystem", "Quickload unavailable"), true);
+		ShowHUDMessage(TEXT("Quickload unavailable"), QuickSaveMessageSecs, true);
 		return;
 	}
 
 	UE_LOG(LogAdastrea, Log, TEXT("AdastreaPlayerController: F9 quickload"));
 	if (!SaveSystem->DoesSaveExist(SaveSystem->QuickSaveSlotName))
 	{
-		ShowHUDMessage(NSLOCTEXT("AdastreaSave", "NoQuickSave", "No quicksave"), true);
+		ShowHUDMessage(TEXT("No quicksave"), QuickSaveMessageSecs, true);
 		return;
 	}
 
@@ -340,29 +346,17 @@ void AAdastreaPlayerController::HandleQuickLoad()
 	const FString Blocker = SaveSystem->GetLoadBlocker();
 	if (!Blocker.IsEmpty())
 	{
-		ShowHUDMessage(FText::Format(NSLOCTEXT("AdastreaSave", "QuickLoadBlocked", "Can't load: {0}"), FText::FromString(Blocker)), true);
+		ShowHUDMessage(FString::Printf(TEXT("Can't load: %s"), *Blocker), QuickSaveMessageSecs, true);
 		return;
 	}
 
 	if (SaveSystem->QuickLoad())
 	{
-		ShowHUDMessage(NSLOCTEXT("AdastreaSave", "QuickLoaded", "Game loaded"));
+		ShowHUDMessage(TEXT("Game loaded"), QuickSaveMessageSecs, false);
 	}
 	else
 	{
-		ShowHUDMessage(NSLOCTEXT("AdastreaSave", "QuickLoadFailed", "Quickload failed"), true);
-	}
-}
-
-void AAdastreaPlayerController::ShowHUDMessage(const FText& Message, bool bIsWarning, float Duration)
-{
-	if (HUDWidget)
-	{
-		HUDWidget->ShowAlert(Message, Duration, bIsWarning);
-	}
-	else if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, Duration, bIsWarning ? FColor::Orange : FColor::Green, Message.ToString());
+		ShowHUDMessage(TEXT("Quickload failed"), QuickSaveMessageSecs, true);
 	}
 }
 

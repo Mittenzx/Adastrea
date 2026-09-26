@@ -10,8 +10,7 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Components/TextBlock.h"
 #include "Engine/Engine.h"
-#include "Engine/World.h"
-#include "TimerManager.h"
+#include "AdastreaHUD.h"
 
 UAdastreaHUDWidget::UAdastreaHUDWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -148,57 +147,19 @@ void UAdastreaHUDWidget::ClearTargetInfo_Implementation()
 
 void UAdastreaHUDWidget::ShowAlert_Implementation(const FText& Message, float Duration, bool bIsWarning)
 {
-	// Native fallback so alerts are visible without a Blueprint override: a
-	// centred toast on the runtime canvas. A Blueprint HUD that overrides
-	// ShowAlert (and doesn't call the parent) replaces this entirely.
-	if (!AlertTextBlock && TelemetryCanvas && WidgetTree)
+	// Native fallback so alerts are visible without a Blueprint override. The
+	// on-screen HUD is AAdastreaHUD's canvas, so show it there as a transient
+	// message. A Blueprint HUD that overrides ShowAlert (and doesn't call the
+	// parent) replaces this entirely.
+	const float Secs = Duration > 0.0f ? Duration : 5.0f;
+	APlayerController* PC = GetOwningPlayer();
+	if (AAdastreaHUD* GameHUD = PC ? Cast<AAdastreaHUD>(PC->GetHUD()) : nullptr)
 	{
-		AlertTextBlock = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("AlertText"));
-		if (AlertTextBlock)
-		{
-			AlertTextBlock->SetFontSize(22);
-			AlertTextBlock->SetShadowOffset(FVector2D(2.0f, 2.0f));
-			AlertTextBlock->SetJustification(ETextJustify::Center);
-			TelemetryCanvas->AddChildToCanvas(AlertTextBlock);
-			if (UCanvasPanelSlot* PanelSlot = Cast<UCanvasPanelSlot>(AlertTextBlock->Slot))
-			{
-				PanelSlot->SetAnchors(FAnchors(0.5f, 0.2f, 0.5f, 0.2f)); // upper centre
-				PanelSlot->SetAlignment(FVector2D(0.5f, 0.5f));
-				PanelSlot->SetAutoSize(true);
-				PanelSlot->SetPosition(FVector2D::ZeroVector);
-			}
-		}
+		GameHUD->ShowMessage(Message.ToString(), Secs, bIsWarning);
 	}
-
-	if (!AlertTextBlock)
+	else if (GEngine)
 	{
-		// No canvas to draw on (e.g. a designer HUD without a Blueprint override).
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, Duration > 0.0f ? Duration : 5.0f,
-				bIsWarning ? FColor::Orange : FColor::Green, Message.ToString());
-		}
-		return;
-	}
-
-	AlertTextBlock->SetText(Message);
-	AlertTextBlock->SetColorAndOpacity(FSlateColor(bIsWarning ? FLinearColor(1.0f, 0.55f, 0.1f) : FLinearColor(0.35f, 1.0f, 0.45f)));
-	AlertTextBlock->SetVisibility(ESlateVisibility::HitTestInvisible);
-
-	if (UWorld* World = GetWorld())
-	{
-		World->GetTimerManager().ClearTimer(AlertTimerHandle);
-		if (Duration > 0.0f)
-		{
-			TWeakObjectPtr<UTextBlock> WeakAlert = AlertTextBlock;
-			World->GetTimerManager().SetTimer(AlertTimerHandle, FTimerDelegate::CreateWeakLambda(this, [WeakAlert]()
-			{
-				if (WeakAlert.IsValid())
-				{
-					WeakAlert->SetVisibility(ESlateVisibility::Collapsed);
-				}
-			}), Duration, false);
-		}
+		GEngine->AddOnScreenDebugMessage(-1, Secs, bIsWarning ? FColor::Orange : FColor::Green, Message.ToString());
 	}
 }
 

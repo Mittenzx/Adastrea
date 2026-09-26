@@ -329,14 +329,6 @@ protected:
 
 public:
 	/**
-	 * Show a short message on the HUD (UAdastreaHUDWidget::ShowAlert, which has a
-	 * native toast fallback). Used for save/load confirmations.
-	 */
-	UFUNCTION(BlueprintCallable, Category="Player|HUD")
-	void ShowHUDMessage(const FText& Message, bool bIsWarning = false, float Duration = 2.5f);
-
-public:
-	/**
 	 * Called when the player possesses a new spaceship
 	 * Override in Blueprints to handle custom possession logic
 	 */

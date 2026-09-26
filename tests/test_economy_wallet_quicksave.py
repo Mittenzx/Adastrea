@@ -153,6 +153,15 @@ class TestQuickSaveQuickLoad:
         assert "DoesSaveExist" in load and "No quicksave" in load
         assert "GetLoadBlocker()" in load
 
+    def test_engine_debug_bindings_on_f5_f9_removed(self):
+        """BaseInput.ini binds F5 to 'viewmode shadercomplexity' and F9 to 'shot showui'
+        in dev builds; both fire alongside quicksave/quickload unless removed."""
+        ini = (PROJECT_ROOT / "Config" / "DefaultInput.ini").read_text(encoding="utf-8", errors="replace")
+        section = ini[ini.rindex("[/Script/Engine.PlayerInput]"):]
+        section = section.split("\n[", 1)[0]
+        assert '-DebugExecBindings=(Key=F5,Command="viewmode shadercomplexity")' in section
+        assert '-DebugExecBindings=(Key=F9,Command="shot showui")' in section
+
     def test_load_blocker_is_public(self):
         h = _src(SAVE_SUBSYSTEM_H)
         public_part = h[:h.index("protected:")]
@@ -162,8 +171,17 @@ class TestQuickSaveQuickLoad:
 class TestHUDAlertFallback:
 
     def test_show_alert_has_a_native_body(self):
+        """The visible HUD is AAdastreaHUD's canvas (the UMG widget's runtime tree
+        doesn't render), so the native fallback must forward to its ShowMessage."""
         body = _function_body(_src(HUD_CPP), "UAdastreaHUDWidget::ShowAlert_Implementation(")
         code = _strip_comments(body)
-        assert "SetText(Message)" in code, "ShowAlert must display something natively"
-        assert "SetTimer" in code, "the toast must hide after its duration"
-        assert "AlertTextBlock" in _src(HUD_H)
+        assert "Cast<AAdastreaHUD>" in code and "ShowMessage(" in code, \
+            "ShowAlert must display something natively (via the canvas HUD)"
+
+    def test_quicksave_feedback_goes_to_the_canvas_hud(self):
+        cpp = _src(PC_CPP)
+        for handler in ("HandleQuickSave()", "HandleQuickLoad()"):
+            body = _function_body(cpp, f"AAdastreaPlayerController::{handler}")
+            assert "ShowHUDMessage(" in body
+        show = _function_body(cpp, "AAdastreaPlayerController::ShowHUDMessage(")
+        assert "ShowMessage(" in show
