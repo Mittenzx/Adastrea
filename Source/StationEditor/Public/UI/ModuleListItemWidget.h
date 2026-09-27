@@ -90,4 +90,8 @@ protected:
 	 */
 	UFUNCTION()
 	void OnBuildButtonClicked();
+
+	/** UI.Hover when the pointer moves onto the build button. */
+	UFUNCTION()
+	void OnBuildButtonHovered();
 };

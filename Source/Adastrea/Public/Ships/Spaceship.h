@@ -23,6 +23,7 @@ class UUserWidget;
 class UCargoComponent;
 class UMiningLaserComponent;
 class UPlayerTraderComponent;
+class UShipEngineAudioComponent;
 
 /**
  * Base spaceship actor class for player and NPC ships
@@ -89,6 +90,11 @@ public:
     // Player trader component (credits, buy/sell)
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Trading")
     TObjectPtr<UPlayerTraderComponent> PlayerTraderComponent;
+
+    // Engine voice: size/agility-derived loops driven by throttle, speed and boost.
+    // 2D for the player's ship (muffled on foot), 3D and very short range for everyone else.
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Audio")
+    TObjectPtr<UShipEngineAudioComponent> EngineAudio;
 
     // Default maximum movement speed
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement", meta=(ClampMin="0.0"))
@@ -742,4 +748,36 @@ private:
     * @return Normalized look input with X component adjusted for aspect ratio
     */
     static FVector2D NormalizeLookInputByAspectRatio(const FVector2D& LookInput, APlayerController* PC);
+
+    // ===== EVENT SFX (thrusters, collisions) =====
+
+    /**
+     * Player ship only: plays Thruster.Puff (light ships) or Thruster.HeavyGroan (heavy
+     * ships) when a rotation or strafe burst starts. Rate limited by ship size.
+     */
+    void UpdateThrusterAudio(float DeltaTime);
+
+    /** Rotation last frame, to measure the turn rate for thruster bursts. */
+    FQuat ThrusterAudioLastRotation = FQuat::Identity;
+    bool bThrusterAudioHasRotation = false;
+
+    /** Seconds the ship has been below the manoeuvre thresholds (a burst needs a quiet gap first). */
+    float ThrusterAudioQuietTime = 10.0f;
+
+    /** Whether the previous frame counted as manoeuvring. */
+    bool bThrusterAudioWasManeuvering = false;
+
+    /**
+     * World time of the last strafe/vertical input strong enough to fire thrusters, stamped in Move().
+     * (MoveAction is bound with BindAction, not BindActionValue, so GetBoundActionValue can't be used.)
+     */
+    double ThrusterAudioLastStrafeTime = -1.0;
+
+    /** Timer for Dock.AirlockHiss, shortly after the clamps engage. */
+    FTimerHandle AirlockHissTimerHandle;
+
+public:
+    /** Flight.CollisionBump on blocking hits (player ship only, rate limited). */
+    virtual void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved,
+        FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;
     };

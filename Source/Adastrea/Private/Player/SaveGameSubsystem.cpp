@@ -15,6 +15,7 @@
 #include "Trading/PlayerTraderComponent.h"
 #include "Trading/TradeItemDataAsset.h"
 #include "AdastreaLog.h"
+#include "Audio/AudioEventLibrary.h"
 #include "EngineUtils.h"
 #include "HAL/IConsoleManager.h"
 #include "Kismet/GameplayStatics.h"
@@ -472,6 +473,10 @@ void USaveGameSubsystem::ApplyGameState(UAdastreaSaveGame* SaveGameObject)
 	{
 		return;
 	}
+
+	// Applying a save undocks/re-docks the ship, rebuilds stations and rewrites the
+	// wallet; none of that should sound. The controller plays UI.QuickLoad after.
+	const UAudioEventLibrary::FScopedMute MuteGameplayAudio;
 
 	// Get player controller and pawn
 	APlayerController* PC = UGameplayStatics::GetPlayerController(World, 0);

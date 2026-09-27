@@ -4,6 +4,7 @@
 #include "Stations/SpaceStationModule.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
+#include "Audio/AudioEventLibrary.h"
 
 // StationEditor module includes
 #include "StationModuleCatalog.h"
@@ -25,7 +26,8 @@ void UModuleListItemWidget::NativeConstruct()
 	// Bind build button
 	if (BuildButton)
 	{
-		BuildButton->OnClicked.AddDynamic(this, &UModuleListItemWidget::OnBuildButtonClicked);
+		BuildButton->OnClicked.AddUniqueDynamic(this, &UModuleListItemWidget::OnBuildButtonClicked);
+		BuildButton->OnHovered.AddUniqueDynamic(this, &UModuleListItemWidget::OnBuildButtonHovered);
 	}
 }
 
@@ -35,6 +37,7 @@ void UModuleListItemWidget::NativeDestruct()
 	if (BuildButton)
 	{
 		BuildButton->OnClicked.RemoveDynamic(this, &UModuleListItemWidget::OnBuildButtonClicked);
+		BuildButton->OnHovered.RemoveDynamic(this, &UModuleListItemWidget::OnBuildButtonHovered);
 	}
 
 	Super::NativeDestruct();
@@ -64,6 +67,11 @@ void UModuleListItemWidget::SetModuleData(const FStationModuleEntry& Entry)
 			Entry.BuildCost.BuildTime));
 		CostText->SetText(CostDisplayText);
 	}
+}
+
+void UModuleListItemWidget::OnBuildButtonHovered()
+{
+	UAudioEventLibrary::PlaySecondary2D(this, TEXT("UI.Hover"), 0.05f);
 }
 
 void UModuleListItemWidget::OnBuildButtonClicked()

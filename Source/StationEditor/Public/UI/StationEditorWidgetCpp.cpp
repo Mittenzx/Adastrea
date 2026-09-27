@@ -15,6 +15,7 @@
 #include "AdastreaLog.h"
 #include "StationBuildPreview.h"
 #include "InputCoreTypes.h"
+#include "Audio/AudioEventLibrary.h"
 
 // StationEditor module includes
 #include "StationEditorManager.h"
@@ -72,6 +73,8 @@ void UStationEditorWidgetCpp::NativeConstruct()
 	UpdateStatusText();
 
 	SetKeyboardFocus();
+
+	UAudioEventLibrary::PlaySecondary2D(this, TEXT("UI.Open"), 0.1f);
 }
 
 void UStationEditorWidgetCpp::NativeDestruct()
@@ -87,6 +90,9 @@ void UStationEditorWidgetCpp::NativeDestruct()
 	{
 		EditorManager->Save();
 	}
+
+	// Secondary: when Save() just played Editor.Save, that is the closing sound.
+	UAudioEventLibrary::PlaySecondary2D(this, TEXT("UI.Close"), 0.1f);
 
 	// Unbind events
 	if (EditorManager)
@@ -306,6 +312,8 @@ void UStationEditorWidgetCpp::OnModuleButtonClicked(TSubclassOf<ASpaceStationMod
 	{
 		return;
 	}
+
+	UAudioEventLibrary::PlayEvent2D(this, TEXT("UI.Click"), 0.08f);
 
 	// Enter placement mode instead of placing immediately
 	EnterPlacementMode(ModuleClass);
@@ -544,6 +552,7 @@ void UStationEditorWidgetCpp::UpdatePreviewPosition()
 void UStationEditorWidgetCpp::RotatePlacement(bool bClockwise)
 {
 	PlacementRotation.Yaw = FRotator::NormalizeAxis(PlacementRotation.Yaw + (bClockwise ? 90.0f : -90.0f));
+	UAudioEventLibrary::PlayEvent2D(this, TEXT("Editor.Rotate"), 0.05f);
 	if (bIsInPlacementMode)
 	{
 		UpdatePreviewPosition();
@@ -589,12 +598,14 @@ void UStationEditorWidgetCpp::OnViewportClicked()
 	if (!EditorManager->PreviewActor || !bPreviewPositioned)
 	{
 		UE_LOG(LogAdastreaStations, Verbose, TEXT("Station Editor: Cannot place module - preview not positioned"));
+		UAudioEventLibrary::PlayEvent2D(this, TEXT("Editor.Invalid"), 0.25f);
 		return;
 	}
 
 	if (LastPlacementResult != EModulePlacementResult::Success)
 	{
-		// The status line already says why; nothing else to do.
+		// The status line already says why; the buzz says "no".
+		UAudioEventLibrary::PlayEvent2D(this, TEXT("Editor.Invalid"), 0.25f);
 		return;
 	}
 
