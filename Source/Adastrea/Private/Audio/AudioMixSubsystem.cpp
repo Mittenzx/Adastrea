@@ -197,7 +197,7 @@ void UAudioMixSubsystem::Tick(float DeltaTime)
 	const bool bInField = !bOnFoot && IsInsideAnyField(Listener);
 
 	bool bNearStation = false;
-	const float NearRange = GetHumRange() * 0.5f;
+	const float NearRange = GetHumRange() * 0.9f; // "near" = the hum is audible
 	for (const auto& Pair : StationHums)
 	{
 		const ASpaceStation* Station = Pair.Key.Get();
