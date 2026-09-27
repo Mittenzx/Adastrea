@@ -8,8 +8,11 @@
 UPlayerTraderComponent::UPlayerTraderComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
-	Credits = 1000;  // Default starting credits
-	StartingCredits = 1000;
+	// Enough for a first dockable outpost (Solar Array 24,562 + Docking Bay 77,508
+	// in StationModuleCatalog.json) with ~48k left as trading capital. Module
+	// costs derive from crafting-tree ingredient values, so tune this, not them.
+	Credits = 150000;
+	StartingCredits = 150000;
 	LastProfitMilestone = 0;
 
 	// Initialize default profit milestones (designers can customize in editor)
