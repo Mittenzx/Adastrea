@@ -32,7 +32,10 @@ MIXES = {
         "fade_in": 0.6,
         "fade_out": 0.9,
         "adjusters": [
-            ("SC_Engine", 0.45, 700.0),
+            # Mild: EngineVoice's component already muffles the player's own engine on foot
+            # (~700 Hz LPF, x0.4). This class-level part covers every engine (incl. AI ships
+            # heard from inside) and stacks to ~x0.32 for the player's; the lower LPF wins.
+            ("SC_Engine", 0.8, 900.0),
             ("SC_World", 0.55, 1200.0),
         ],
     },
