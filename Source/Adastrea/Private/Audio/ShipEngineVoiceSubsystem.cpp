@@ -2,6 +2,7 @@
 
 #include "Audio/ShipEngineVoiceSubsystem.h"
 #include "Audio/ShipEngineAudioComponent.h"
+#include "Ships/Spaceship.h"
 #include "Ships/SpaceshipDataAsset.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "Engine/Engine.h"
@@ -21,6 +22,45 @@ namespace
 		TEXT("adastrea.EngineVoiceReport"),
 		TEXT("Log the derived engine voice (size, agility, family, base pitch, whine) for every ship data asset."),
 		FConsoleCommandDelegate::CreateStatic(&UShipEngineVoiceSubsystem::LogVoiceReport));
+
+	ASpaceship* PlayerShip(UWorld* World)
+	{
+		const APlayerController* PC = World ? World->GetFirstPlayerController() : nullptr;
+		return PC ? Cast<ASpaceship>(PC->GetPawn()) : nullptr;
+	}
+
+	// Listening/test helpers: boost has no key binding yet, and scripted PIE runs need exact throttle values.
+	FAutoConsoleCommandWithWorldAndArgs GEngineVoiceThrottleCommand(
+		TEXT("adastrea.EngineVoiceThrottle"),
+		TEXT("Set the piloted ship's throttle (0-100). Usage: adastrea.EngineVoiceThrottle 50"),
+		FConsoleCommandWithWorldAndArgsDelegate::CreateLambda([](const TArray<FString>& Args, UWorld* World)
+		{
+			if (ASpaceship* Ship = PlayerShip(World))
+			{
+				Ship->SetThrottle(Args.IsEmpty() ? 0.0f : FCString::Atof(*Args[0]));
+				UE_LOG(LogAdastreaEngineVoice, Log, TEXT("EngineVoiceThrottle: %s throttle %.0f%%"), *Ship->GetName(), Ship->ThrottlePercentage);
+			}
+		}));
+
+	FAutoConsoleCommandWithWorldAndArgs GEngineVoiceBoostCommand(
+		TEXT("adastrea.EngineVoiceBoost"),
+		TEXT("Turn the piloted ship's boost on (1) or off (0); no argument toggles. Usage: adastrea.EngineVoiceBoost 1"),
+		FConsoleCommandWithWorldAndArgsDelegate::CreateLambda([](const TArray<FString>& Args, UWorld* World)
+		{
+			if (ASpaceship* Ship = PlayerShip(World))
+			{
+				const bool bOn = Args.IsEmpty() ? !Ship->bBoostActive : (FCString::Atoi(*Args[0]) != 0);
+				if (bOn)
+				{
+					Ship->ActivateBoost();
+				}
+				else
+				{
+					Ship->DeactivateBoost();
+				}
+				UE_LOG(LogAdastreaEngineVoice, Log, TEXT("EngineVoiceBoost: %s boost %s"), *Ship->GetName(), Ship->bBoostActive ? TEXT("on") : TEXT("off"));
+			}
+		}));
 
 	constexpr float ArbitrationInterval = 0.2f;
 	constexpr float DebugLogInterval = 0.5f;

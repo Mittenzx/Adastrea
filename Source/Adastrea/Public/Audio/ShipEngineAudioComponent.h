@@ -228,16 +228,27 @@ public:
 	void RefreshVoice();
 
 	/** Distance (cm) from a world point to the hull's bounding box (0 inside it). */
+	UFUNCTION(BlueprintPure, Category="Engine Voice")
 	float GetDistanceToHull(const FVector& WorldPoint) const;
 
 	/** Called by UShipEngineVoiceSubsystem: whether this AI ship may use one of the MaxAIVoices slots. */
 	void SetAIVoiceGranted(bool bGranted);
 	bool IsAIVoiceGranted() const { return bAIVoiceGranted; }
 
-	/** True when any layer is currently playing. */
+	/** True when the engine loops are playing (AI ships out of range or over the voice limit are stopped). */
+	UFUNCTION(BlueprintPure, Category="Engine Voice")
 	bool IsAudible() const { return bLayersPlaying; }
 
+	/** Current output pitch multiplier of the rev loops (after revs/boost, before the catalog entry factor). */
+	UFUNCTION(BlueprintPure, Category="Engine Voice")
+	float GetOutputPitch() const { return OutPitch; }
+
+	/** Master level for the current mode (player / muffled / AI). */
+	UFUNCTION(BlueprintPure, Category="Engine Voice")
+	float GetMasterVolume() const { return MasterVolume; }
+
 	/** One-line state for the debug readout / log. HullDistanceCm < 0 omits the distance. */
+	UFUNCTION(BlueprintCallable, Category="Engine Voice")
 	FString GetDebugLine(float HullDistanceCm = -1.0f) const;
 
 	ASpaceship* GetShip() const;
