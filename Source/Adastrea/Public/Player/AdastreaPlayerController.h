@@ -327,6 +327,37 @@ protected:
 	/** F9: USaveGameSubsystem::QuickLoad(), with an on-screen confirmation. */
 	void HandleQuickLoad();
 
+	// ====================
+	// EVENT SFX
+	// ====================
+
+	/** Bind the possessed ship's gameplay delegates (ore mined, credits changed) to event sounds. */
+	void BindShipAudioEvents(class ASpaceship* Ship);
+
+	/** Undo BindShipAudioEvents for the previously bound ship. */
+	void UnbindShipAudioEvents();
+
+	/** Mining.OreTick when ore reaches the hold (rate limited). */
+	UFUNCTION()
+	void HandleOreMinedAudio(class UTradeItemDataAsset* Ore, int32 Amount);
+
+	/** Trade.CreditsDing on a positive credits change that isn't a trade (secondary: yields to Trade.Sell etc.). */
+	UFUNCTION()
+	void HandleCreditsChangedAudio(int32 NewCredits, int32 ChangeAmount);
+
+	/** Ship whose delegates are bound for audio. */
+	TWeakObjectPtr<class ASpaceship> AudioBoundShip;
+
+	/** Interior.ShipHum loop while walking a ship interior. */
+	UPROPERTY(Transient)
+	TObjectPtr<class UAudioComponent> InteriorHumAudio;
+
+	/** Start the interior hum (fades in). */
+	void StartInteriorHum();
+
+	/** Fade the interior hum out. */
+	void StopInteriorHum();
+
 public:
 	/**
 	 * Called when the player possesses a new spaceship

@@ -2,6 +2,7 @@
 
 #include "Stations/StationInterior.h"
 #include "Player/AdastreaPlayerController.h"
+#include "Audio/AudioEventLibrary.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/PointLightComponent.h"
 #include "Components/TextRenderComponent.h"
@@ -116,6 +117,12 @@ void AStationTerminal::Interact_Implementation(AAdastreaPlayerController* PC)
 	if (!PC)
 	{
 		return;
+	}
+	// Consoles chirp; the room-to-room and airlock kiosks get the door sound instead
+	// (played by the controller when the room actually changes).
+	if (TerminalType == EStationTerminalType::Service || TerminalType == EStationTerminalType::Trading)
+	{
+		UAudioEventLibrary::PlayEventAtLocation(this, TEXT("Interior.ConsoleChirp"), GetActorLocation(), 0.3f);
 	}
 	if (TerminalType == EStationTerminalType::Service)
 	{

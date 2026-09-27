@@ -12,6 +12,7 @@
 #include "Ships/Spaceship.h"
 #include "Stations/ReactorModule.h"
 #include "Stations/SolarArrayModule.h"
+#include "Audio/AudioEventLibrary.h"
 
 namespace
 {
@@ -20,6 +21,30 @@ namespace
 	// they share this slack (1 cm) to stop float noise from flipping "touching"
 	// into "overlapping" or "not a neighbour" and making the three disagree.
 	constexpr float PlacementDistanceTolerance = 1.0f;
+
+	// ---- Event sounds (Editor.*) ----
+
+	/** Modules whose bounds half-diagonal reaches this (cm) get the heavy placement thunk. */
+	constexpr float LargeModuleExtent = 1500.0f;
+
+	/** Editor.Invalid is a short buzz; don't let a held key or rapid clicks stack it. */
+	constexpr float InvalidMinInterval = 0.25f;
+
+	void PlayEditorEvent(const UObject* Context, const TCHAR* EventId, float MinInterval = 0.05f)
+	{
+		UAudioEventLibrary::PlayEvent2D(Context, FName(EventId), MinInterval);
+	}
+
+	/** Editor.Place.Small or .Large from the placed module's actual size. */
+	void PlayPlaceEvent(const UObject* Context, const ASpaceStationModule* Module)
+	{
+		FVector Origin, Extent;
+		Module->GetActorBounds(true, Origin, Extent);
+		const bool bLarge = Extent.Size() >= LargeModuleExtent;
+		UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager: place sound %s for %s (extent %.0f cm)"),
+			bLarge ? TEXT("Large") : TEXT("Small"), *Module->GetName(), Extent.Size());
+		PlayEditorEvent(Context, bLarge ? TEXT("Editor.Place.Large") : TEXT("Editor.Place.Small"));
+	}
 }
 
 UStationEditorManager::UStationEditorManager()
@@ -654,6 +679,13 @@ bool UStationEditorManager::Save_Implementation()
 	UE_LOG(LogAdastreaStations, Log, TEXT("StationEditorManager::Save - Saved changes to station %s (%d modules added, %d removed)"),
 		*CurrentStation->GetName(), ModulesAddedThisSession.Num() - SoftDeletedModules.Num(), SoftDeletedModules.Num());
 
+	// Only a session that changed something gets the "build saved" sound; closing
+	// the editor without building just closes (UI.Close from the widget).
+	if (ModulesAddedThisSession.Num() > 0 || SoftDeletedModules.Num() > 0 || OriginalModuleTransforms.Num() > 0)
+	{
+		PlayEditorEvent(this, TEXT("Editor.Save"), 0.5f);
+	}
+
 	// EndEditing commits: destroys removed modules and drops session tracking.
 	EndEditing();
 
@@ -718,12 +750,14 @@ ASpaceStationModule* UStationEditorManager::PlaceModule_Implementation(TSubclass
 	{
 		UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::PlaceModule - Cannot place module: %s"),
 			*GetPlacementResultText(Result).ToString());
+		PlayEditorEvent(this, TEXT("Editor.Invalid"), InvalidMinInterval);
 		return nullptr;
 	}
 
 	FStationModuleSpend Spend;
 	if (!ChargeForModule(ModuleClass, Spend))
 	{
+		PlayEditorEvent(this, TEXT("Editor.Invalid"), InvalidMinInterval);
 		return nullptr;
 	}
 
@@ -731,9 +765,11 @@ ASpaceStationModule* UStationEditorManager::PlaceModule_Implementation(TSubclass
 	if (!NewModule)
 	{
 		RefundSpend(Spend);
+		PlayEditorEvent(this, TEXT("Editor.Invalid"), InvalidMinInterval);
 		return nullptr;
 	}
 
+	PlayPlaceEvent(this, NewModule);
 	SessionSpend.Add(NewModule, Spend);
 
 	// Record action for undo/redo
@@ -776,8 +812,10 @@ bool UStationEditorManager::RemoveModule_Implementation(ASpaceStationModule* Mod
 	{
 		AddNotificationOnce(FString::Printf(TEXT("Can't remove %s - it would split the station in two"), *Module->ModuleType),
 			ENotificationSeverity::Warning, Module);
+		PlayEditorEvent(this, TEXT("Editor.Invalid"), InvalidMinInterval);
 		return false;
 	}
+	PlayEditorEvent(this, TEXT("Editor.Remove"));
 
 	FEditorAction Action;
 	Action.ActionType = EEditorActionType::RemoveModule;
@@ -830,6 +868,7 @@ bool UStationEditorManager::MoveModule_Implementation(ASpaceStationModule* Modul
 	if (bCheckCollisions && CheckCollisionIgnoring(Module->GetClass(), FinalPosition, Module))
 	{
 		AddNotificationOnce(TEXT("Can't move there - it overlaps another module"), ENotificationSeverity::Warning, Module);
+		PlayEditorEvent(this, TEXT("Editor.Invalid"), InvalidMinInterval);
 		return false;
 	}
 
@@ -846,6 +885,7 @@ bool UStationEditorManager::MoveModule_Implementation(ASpaceStationModule* Modul
 		CurrentStation->MoveModule(Module, PreviousPosition - CurrentStation->GetActorLocation());
 		RefreshModuleConnections(Module);
 		AddNotificationOnce(TEXT("Can't move there - the module would no longer connect to the station"), ENotificationSeverity::Warning, Module);
+		PlayEditorEvent(this, TEXT("Editor.Invalid"), InvalidMinInterval);
 		return false;
 	}
 
@@ -902,8 +942,10 @@ bool UStationEditorManager::RotateModule_Implementation(ASpaceStationModule* Mod
 		Module->SetActorRotation(PreviousRotation);
 		RefreshModuleConnections(Module);
 		AddNotificationOnce(TEXT("Can't rotate - no connecting face would point at the station"), ENotificationSeverity::Warning, Module);
+		PlayEditorEvent(this, TEXT("Editor.Invalid"), InvalidMinInterval);
 		return false;
 	}
+	PlayEditorEvent(this, TEXT("Editor.Rotate"));
 
 	// Store original transform if not already stored
 	if (!OriginalModuleTransforms.Contains(Module))
@@ -1648,6 +1690,7 @@ bool UStationEditorManager::Undo()
 {
 	if (!CanUndo())
 	{
+		PlayEditorEvent(this, TEXT("Editor.Invalid"), InvalidMinInterval);
 		return false;
 	}
 
@@ -1655,6 +1698,7 @@ bool UStationEditorManager::Undo()
 
 	if (ReverseAction(Action))
 	{
+		PlayEditorEvent(this, TEXT("Editor.Undo"));
 		RedoStack.Push(Action);
 		NotifyUndoRedoStateChanged();
 		RecalculateStatistics();
@@ -1669,6 +1713,7 @@ bool UStationEditorManager::Undo()
 		UndoStack.Push(Action);
 	}
 	NotifyUndoRedoStateChanged();
+	PlayEditorEvent(this, TEXT("Editor.Invalid"), InvalidMinInterval);
 	return false;
 }
 
@@ -1676,6 +1721,7 @@ bool UStationEditorManager::Redo()
 {
 	if (!CanRedo())
 	{
+		PlayEditorEvent(this, TEXT("Editor.Invalid"), InvalidMinInterval);
 		return false;
 	}
 
@@ -1683,6 +1729,7 @@ bool UStationEditorManager::Redo()
 
 	if (ExecuteAction(Action))
 	{
+		PlayEditorEvent(this, TEXT("Editor.Redo"));
 		UndoStack.Push(Action);
 		NotifyUndoRedoStateChanged();
 		RecalculateStatistics();
@@ -1695,6 +1742,7 @@ bool UStationEditorManager::Redo()
 		RedoStack.Push(Action);
 	}
 	NotifyUndoRedoStateChanged();
+	PlayEditorEvent(this, TEXT("Editor.Invalid"), InvalidMinInterval);
 	return false;
 }
 

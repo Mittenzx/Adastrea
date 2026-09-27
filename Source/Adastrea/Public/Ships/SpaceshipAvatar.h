@@ -169,4 +169,15 @@ protected:
 	/** The actor (implementing IWorldInteractable) currently in range for the E key. */
 	UPROPERTY(BlueprintReadOnly, Category="Avatar|Interaction")
 	TObjectPtr<AActor> CurrentInteractable;
+
+	// --- Footsteps (Interior.Footstep.01..04) ---
+
+	/** Distance walked since the last footstep (cm). */
+	float FootstepDistance = 0.0f;
+
+	/** Last footstep variation played (1..4), so the same one never plays twice running. */
+	int32 LastFootstepIndex = 0;
+
+	/** Accumulate the distance actually moved this frame and play a footstep every stride. */
+	void UpdateFootsteps(float MovedDistance, float MoveSpeed);
 };

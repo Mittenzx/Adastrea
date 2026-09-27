@@ -27,6 +27,26 @@
 #include "Trading/CargoComponent.h"
 #include "Trading/PlayerTraderComponent.h"
 #include "Mining/MiningLaserComponent.h"
+#include "Audio/AudioEventLibrary.h"
+#include "TimerManager.h"
+
+namespace ShipEventAudio
+{
+    /** Turn rate (deg/s) that counts as a rotation burst. */
+    constexpr float TurnThresholdDegPerSec = 20.0f;
+    /** Above this the "turn" was a teleport (docking, load, respawn), not a manoeuvre. */
+    constexpr float TeleportTurnDegPerSec = 720.0f;
+    /** Strafe input magnitude that counts as a strafe burst. */
+    constexpr float StrafeThreshold = 0.5f;
+    /** A new burst needs this long without manoeuvring first. */
+    constexpr float MinQuietSeconds = 0.2f;
+    /** Rate limits: light ships puff often, heavy ships groan rarely. */
+    constexpr float PuffMinInterval = 0.35f;
+    constexpr float GroanMinInterval = 2.5f;
+    /** Airlock hiss follows the clamps after this delay. */
+    constexpr float AirlockHissDelay = 1.2f;
+    constexpr float CollisionBumpMinInterval = 0.6f;
+}
 
 // Debug flag for docking system - can be disabled for shipping builds
 #ifndef DOCKING_DEBUG_ENABLED
@@ -267,6 +287,73 @@ void ASpaceship::Tick(float DeltaTime)
     if (bFlightAssistEnabled && FMath::IsNearlyZero(YawInput, 0.01f))
     {
         ApplyAutoLeveling(DeltaTime);
+    }
+
+    UpdateThrusterAudio(DeltaTime);
+}
+
+void ASpaceship::UpdateThrusterAudio(float DeltaTime)
+{
+    using namespace ShipEventAudio;
+
+    // Only the player's own ship, and only while it is actually flying.
+    if (DeltaTime <= 0.0f || bIsDocked || bIsDocking || IsHidden() || !UAudioEventLibrary::IsLocalPlayerActor(this))
+    {
+        bThrusterAudioHasRotation = false;
+        bThrusterAudioWasManeuvering = false;
+        return;
+    }
+
+    // Turn rate from the actual rotation change, whichever input path caused it.
+    const FQuat Rotation = GetActorQuat();
+    float TurnDegPerSec = 0.0f;
+    if (bThrusterAudioHasRotation)
+    {
+        TurnDegPerSec = FMath::RadiansToDegrees(ThrusterAudioLastRotation.AngularDistance(Rotation)) / DeltaTime;
+        if (TurnDegPerSec > TeleportTurnDegPerSec)
+        {
+            TurnDegPerSec = 0.0f;
+        }
+    }
+    ThrusterAudioLastRotation = Rotation;
+    bThrusterAudioHasRotation = true;
+
+    // Strafe/vertical from the held Move value (RightInput/UpInput go stale on release).
+    float Strafe = 0.0f;
+    if (MoveAction)
+    {
+        if (const UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(InputComponent))
+        {
+            const FVector Move = EIC->GetBoundActionValue(MoveAction).Get<FVector>();
+            Strafe = FVector2D(Move.X, Move.Y).Size();
+        }
+    }
+
+    const bool bManeuvering = TurnDegPerSec > TurnThresholdDegPerSec || Strafe > StrafeThreshold;
+    if (bManeuvering && !bThrusterAudioWasManeuvering && ThrusterAudioQuietTime >= MinQuietSeconds)
+    {
+        if (UAudioEventLibrary::GetShipSizeFactor(ShipDataAsset) >= UAudioEventLibrary::HeavyShipSizeFactor)
+        {
+            UAudioEventLibrary::PlayEvent2D(this, TEXT("Thruster.HeavyGroan"), GroanMinInterval);
+        }
+        else
+        {
+            UAudioEventLibrary::PlayEvent2D(this, TEXT("Thruster.Puff"), PuffMinInterval);
+        }
+    }
+    ThrusterAudioQuietTime = bManeuvering ? 0.0f : ThrusterAudioQuietTime + DeltaTime;
+    bThrusterAudioWasManeuvering = bManeuvering;
+}
+
+void ASpaceship::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved,
+    FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
+{
+    Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
+
+    if (!bIsDocked && UAudioEventLibrary::IsLocalPlayerActor(this))
+    {
+        UAudioEventLibrary::PlayEventAtLocation(this, TEXT("Flight.CollisionBump"), HitLocation,
+            ShipEventAudio::CollisionBumpMinInterval);
     }
 }
 
@@ -2104,6 +2191,20 @@ void ASpaceship::CompleteDocking()
     bIsDocked = true;
     bIsDocking = false;
 
+    // Clamps, then the airlock pressurising a moment later (player ship only).
+    // (Not scheduled when the clamp was muted, e.g. while a save re-docks the ship.)
+    if (UAudioEventLibrary::IsLocalPlayerActor(this)
+        && UAudioEventLibrary::PlayEvent2D(this, TEXT("Dock.ClampEngage"), 1.0f))
+    {
+        GetWorldTimerManager().SetTimer(AirlockHissTimerHandle, FTimerDelegate::CreateWeakLambda(this, [this]()
+        {
+            if (bIsDocked)
+            {
+                UAudioEventLibrary::PlayEvent2D(this, TEXT("Dock.AirlockHiss"), 1.0f);
+            }
+        }), ShipEventAudio::AirlockHissDelay, false);
+    }
+
     #if DOCKING_DEBUG_ENABLED
 
 
@@ -2372,6 +2473,12 @@ void ASpaceship::Undock()
 
     // Update state
     bIsDocked = false;
+
+    GetWorldTimerManager().ClearTimer(AirlockHissTimerHandle);
+    if (UAudioEventLibrary::IsLocalPlayerActor(this))
+    {
+        UAudioEventLibrary::PlayEvent2D(this, TEXT("Dock.Release"), 1.0f);
+    }
 
     #if DOCKING_DEBUG_ENABLED
 

@@ -742,4 +742,30 @@ private:
     * @return Normalized look input with X component adjusted for aspect ratio
     */
     static FVector2D NormalizeLookInputByAspectRatio(const FVector2D& LookInput, APlayerController* PC);
+
+    // ===== EVENT SFX (thrusters, collisions) =====
+
+    /**
+     * Player ship only: plays Thruster.Puff (light ships) or Thruster.HeavyGroan (heavy
+     * ships) when a rotation or strafe burst starts. Rate limited by ship size.
+     */
+    void UpdateThrusterAudio(float DeltaTime);
+
+    /** Rotation last frame, to measure the turn rate for thruster bursts. */
+    FQuat ThrusterAudioLastRotation = FQuat::Identity;
+    bool bThrusterAudioHasRotation = false;
+
+    /** Seconds the ship has been below the manoeuvre thresholds (a burst needs a quiet gap first). */
+    float ThrusterAudioQuietTime = 10.0f;
+
+    /** Whether the previous frame counted as manoeuvring. */
+    bool bThrusterAudioWasManeuvering = false;
+
+    /** Timer for Dock.AirlockHiss, shortly after the clamps engage. */
+    FTimerHandle AirlockHissTimerHandle;
+
+public:
+    /** Flight.CollisionBump on blocking hits (player ship only, rate limited). */
+    virtual void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved,
+        FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;
     };

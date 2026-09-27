@@ -38,6 +38,19 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputAction.h"
 #include "InputMappingContext.h"
+#include "Audio/AudioEventLibrary.h"
+#include "Components/AudioComponent.h"
+#include "Mining/MiningLaserComponent.h"
+
+namespace PlayerEventAudio
+{
+	constexpr float OreTickMinInterval = 0.25f;
+	constexpr float CreditsDingMinInterval = 1.5f;
+	/** Don't re-ping the same approach: one beacon per bay per this many seconds. */
+	constexpr float BeaconMinInterval = 8.0f;
+	constexpr float HumFadeIn = 1.0f;
+	constexpr float HumFadeOut = 1.2f;
+}
 
 AAdastreaPlayerController::AAdastreaPlayerController()
 {
@@ -318,10 +331,12 @@ void AAdastreaPlayerController::HandleQuickSave()
 	UE_LOG(LogAdastrea, Log, TEXT("AdastreaPlayerController: F5 quicksave"));
 	if (SaveSystem->QuickSave())
 	{
+		UAudioEventLibrary::PlayEvent2D(this, TEXT("UI.QuickSave"), 0.3f);
 		ShowHUDMessage(TEXT("Game saved"), QuickSaveMessageSecs, false);
 	}
 	else
 	{
+		UAudioEventLibrary::PlayEvent2D(this, TEXT("UI.Error"), 0.3f);
 		ShowHUDMessage(TEXT("Quicksave failed"), QuickSaveMessageSecs, true);
 	}
 }
@@ -338,6 +353,7 @@ void AAdastreaPlayerController::HandleQuickLoad()
 	UE_LOG(LogAdastrea, Log, TEXT("AdastreaPlayerController: F9 quickload"));
 	if (!SaveSystem->DoesSaveExist(SaveSystem->QuickSaveSlotName))
 	{
+		UAudioEventLibrary::PlayEvent2D(this, TEXT("UI.Error"), 0.3f);
 		ShowHUDMessage(TEXT("No quicksave"), QuickSaveMessageSecs, true);
 		return;
 	}
@@ -346,16 +362,21 @@ void AAdastreaPlayerController::HandleQuickLoad()
 	const FString Blocker = SaveSystem->GetLoadBlocker();
 	if (!Blocker.IsEmpty())
 	{
+		UAudioEventLibrary::PlayEvent2D(this, TEXT("UI.Error"), 0.3f);
 		ShowHUDMessage(FString::Printf(TEXT("Can't load: %s"), *Blocker), QuickSaveMessageSecs, true);
 		return;
 	}
 
+	// The chime plays after the load, so the mute that covers applying the save
+	// (re-docking, rewriting the wallet) doesn't swallow it.
 	if (SaveSystem->QuickLoad())
 	{
+		UAudioEventLibrary::PlayEvent2D(this, TEXT("UI.QuickLoad"), 0.3f);
 		ShowHUDMessage(TEXT("Game loaded"), QuickSaveMessageSecs, false);
 	}
 	else
 	{
+		UAudioEventLibrary::PlayEvent2D(this, TEXT("UI.Error"), 0.3f);
 		ShowHUDMessage(TEXT("Quickload failed"), QuickSaveMessageSecs, true);
 	}
 }
@@ -368,7 +389,87 @@ void AAdastreaPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason
 		World->GetTimerManager().ClearTimer(StationCheckTimerHandle);
 	}
 
+	UnbindShipAudioEvents();
+	UAudioEventLibrary::FadeOutAndRelease(InteriorHumAudio, 0.0f);
+	InteriorHumAudio = nullptr;
+
 	Super::EndPlay(EndPlayReason);
+}
+
+void AAdastreaPlayerController::BindShipAudioEvents(ASpaceship* Ship)
+{
+	if (AudioBoundShip.Get() == Ship)
+	{
+		return;
+	}
+	UnbindShipAudioEvents();
+	if (!Ship)
+	{
+		return;
+	}
+	if (Ship->MiningLaser)
+	{
+		Ship->MiningLaser->OnOreMined.AddUniqueDynamic(this, &AAdastreaPlayerController::HandleOreMinedAudio);
+	}
+	if (Ship->PlayerTraderComponent)
+	{
+		Ship->PlayerTraderComponent->OnCreditsChanged.AddUniqueDynamic(this, &AAdastreaPlayerController::HandleCreditsChangedAudio);
+	}
+	AudioBoundShip = Ship;
+}
+
+void AAdastreaPlayerController::UnbindShipAudioEvents()
+{
+	if (ASpaceship* Ship = AudioBoundShip.Get())
+	{
+		if (Ship->MiningLaser)
+		{
+			Ship->MiningLaser->OnOreMined.RemoveDynamic(this, &AAdastreaPlayerController::HandleOreMinedAudio);
+		}
+		if (Ship->PlayerTraderComponent)
+		{
+			Ship->PlayerTraderComponent->OnCreditsChanged.RemoveDynamic(this, &AAdastreaPlayerController::HandleCreditsChangedAudio);
+		}
+	}
+	AudioBoundShip = nullptr;
+}
+
+void AAdastreaPlayerController::HandleOreMinedAudio(UTradeItemDataAsset* Ore, int32 Amount)
+{
+	if (Amount > 0)
+	{
+		UAudioEventLibrary::PlayEvent2D(this, TEXT("Mining.OreTick"), PlayerEventAudio::OreTickMinInterval);
+	}
+}
+
+void AAdastreaPlayerController::HandleCreditsChangedAudio(int32 NewCredits, int32 ChangeAmount)
+{
+	// Sales, refunds and the like also play their own sound in the same frame;
+	// as a secondary event the ding yields to those and only sounds on its own.
+	if (ChangeAmount > 0)
+	{
+		UAudioEventLibrary::PlaySecondary2D(this, TEXT("Trade.CreditsDing"), PlayerEventAudio::CreditsDingMinInterval);
+	}
+}
+
+void AAdastreaPlayerController::StartInteriorHum()
+{
+	if (InteriorHumAudio)
+	{
+		return;
+	}
+	// Non-spatial: the hull hums all around you.
+	InteriorHumAudio = UAudioEventLibrary::SpawnEventAttached(this, TEXT("Interior.ShipHum"), nullptr, false);
+	if (InteriorHumAudio)
+	{
+		InteriorHumAudio->FadeIn(PlayerEventAudio::HumFadeIn, 1.0f);
+	}
+}
+
+void AAdastreaPlayerController::StopInteriorHum()
+{
+	UAudioEventLibrary::FadeOutAndRelease(InteriorHumAudio, PlayerEventAudio::HumFadeOut);
+	InteriorHumAudio = nullptr;
 }
 
 void AAdastreaPlayerController::OnPossessSpaceship_Implementation(ASpaceship* NewSpaceship)
@@ -399,6 +500,13 @@ void AAdastreaPlayerController::OnPossess(APawn* InPawn)
 
 	// Pawn swaps (helm <-> on foot, quickload ship swaps) must never drop F5/F9.
 	AddSystemMappingContext();
+
+	// Ore/credit sounds follow the ship we fly. On foot the ship stays bound, so a
+	// sale via the station kiosk or a refund still sounds.
+	if (ASpaceship* Ship = Cast<ASpaceship>(InPawn))
+	{
+		BindShipAudioEvents(Ship);
+	}
 }
 
 void AAdastreaPlayerController::OnUnPossess()
@@ -830,6 +938,10 @@ void AAdastreaPlayerController::ExecuteTrade(int32 Quantity)
 	const bool bOK = H->bBuyMode
 		? Ship->PlayerTraderComponent->BuyItem(Market, Item, Quantity, Ship->CargoComponent)
 		: Ship->PlayerTraderComponent->SellItem(Market, Item, Quantity, Ship->CargoComponent);
+	// Denied covers can't afford, no stock, no hold space and nothing to sell.
+	UAudioEventLibrary::PlayEvent2D(this,
+		!bOK ? FName(TEXT("Trade.Denied")) : (H->bBuyMode ? FName(TEXT("Trade.Buy")) : FName(TEXT("Trade.Sell"))),
+		0.12f);
 	UE_LOG(LogAdastrea, Log, TEXT("Trade %s x%d %s (ok=%d)"),
 		H->bBuyMode ? TEXT("BUY") : TEXT("SELL"), Quantity, *Item->GetName(), bOK);
 }
@@ -2041,6 +2153,12 @@ void AAdastreaPlayerController::CheckForNearbyTradableStations()
 		{
 			UE_LOG(LogAdastrea, Log, TEXT("Docking range: %s (%.0f cm)"),
 				DockTarget ? *DockTarget->GetName() : TEXT("left range"), DockTarget ? BestDockDist : 0.0f);
+
+			// Approach beacon: a bay just came into docking range ('E to dock').
+			if (DockTarget && !Ship->IsDocked())
+			{
+				UAudioEventLibrary::PlayEvent2D(this, TEXT("Dock.Beacon"), PlayerEventAudio::BeaconMinInterval);
+			}
 		}
 		LastDockTarget = DockTarget;
 		Ship->SetNearbyStation(DockTarget);
@@ -2133,6 +2251,9 @@ void AAdastreaPlayerController::EnterShipInterior(ASpaceship* Ship)
 	if (!Ship->CanLeaveCockpit(LeaveReason))
 	{
 		UE_LOG(LogAdastrea, Warning, TEXT("EnterShipInterior: %s"), *LeaveReason);
+		// The game's one speed-limit warning: too fast to leave the seat.
+		UAudioEventLibrary::PlayEvent2D(this,
+			Ship->IsStationary() ? FName(TEXT("UI.Error")) : FName(TEXT("Flight.SpeedWarning")), 1.0f);
 		ShowHUDMessage(LeaveReason, 3.0f, true);
 		return;
 	}
@@ -2246,6 +2367,10 @@ void AAdastreaPlayerController::EnterShipInterior(ASpaceship* Ship)
 	// surround the view instead of a 3rd-person camera clipping through them.
 	AvatarPawn->SetFirstPersonView(true);
 
+	// Out of the pilot's seat, into the hum of the hull.
+	UAudioEventLibrary::PlayEvent2D(this, TEXT("Interior.CockpitExit"), 0.5f);
+	StartInteriorHum();
+
 	UE_LOG(LogAdastrea, Log, TEXT("EnterShipInterior: player walked into %s's interior."), *Ship->GetName());
 }
 
@@ -2255,6 +2380,13 @@ void AAdastreaPlayerController::ExitShipInterior(ASpaceship* Ship)
 	{
 		return;
 	}
+
+	// Back into the seat; the interior hum fades behind us.
+	if (IsOnFoot())
+	{
+		UAudioEventLibrary::PlayEvent2D(this, TEXT("Interior.CockpitEnter"), 0.5f);
+	}
+	StopInteriorHum();
 
 	// Return to the ship's cockpit (its transform was unchanged while docked).
 	if (AvatarPawn)
@@ -2378,6 +2510,7 @@ void AAdastreaPlayerController::SwitchStationRoom(EStationRoom Room)
 	const FTransform Arrival = ActiveStationInterior->GetArrivalTransform();
 	AvatarPawn->SetActorLocationAndRotation(Arrival.GetLocation(), Arrival.Rotator());
 	SetControlRotation(Arrival.Rotator());
+	UAudioEventLibrary::PlayEvent2D(this, TEXT("Interior.Door"), 0.4f);
 	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
 	{
 		H->SetCurrentInteractable(nullptr);
@@ -2437,6 +2570,9 @@ void AAdastreaPlayerController::EnterStationRoom(ASpaceship* Ship, EStationRoom 
 	bShowMouseCursor = false;
 	AvatarPawn->SetFirstPersonView(true);
 
+	// Through the airlock door into the station.
+	UAudioEventLibrary::PlayEvent2D(this, TEXT("Interior.Door"), 0.4f);
+
 	UE_LOG(LogAdastrea, Log, TEXT("EnterStationInterior: player left %s to walk the station."), *Ship->GetName());
 }
 
@@ -2458,6 +2594,9 @@ void AAdastreaPlayerController::ExitStationInterior(bool bOpenTrade)
 	Ship->SetRuntimeInputEnabled(true);
 	SetInputMode(FInputModeGameOnly());
 	bShowMouseCursor = false;
+
+	// Back through the airlock door to the ship.
+	UAudioEventLibrary::PlayEvent2D(this, TEXT("Interior.Door"), 0.4f);
 
 	// Tear the interior down (terminals are attached to it) and drop the stale prompt.
 	DestroyStationRoom(ActiveStationInterior);

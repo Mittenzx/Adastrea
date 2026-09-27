@@ -11,6 +11,7 @@ class UMaterialInterface;
 class UNiagaraSystem;
 class UNiagaraComponent;
 class UTradeItemDataAsset;
+class UAudioComponent;
 
 UENUM(BlueprintType)
 enum class EMiningStatus : uint8
@@ -169,6 +170,16 @@ private:
 	TWeakObjectPtr<UTradeItemDataAsset> LastMinedOre;
 	int32 LastMinedAmount;
 	double LastMinedTime;
+
+	/** Mining.LaserLoop while the beam is on (player ship only). Pitch follows the beam length. */
+	UPROPERTY(Transient)
+	TObjectPtr<UAudioComponent> LaserLoopAudio;
+
+	/** Seconds the beam has been off; the loop only fades after a short gap, so aim flicker doesn't retrigger it. */
+	float LaserAudioOffTime = 0.0f;
+
+	/** Start, re-pitch, or fade the laser loop to match the beam. */
+	void UpdateLaserAudio(bool bBeamActive, float BeamLength);
 
 	UCargoComponent* GetCargo() const;
 	FVector GetMuzzleLocation() const { return GetComponentLocation(); }
