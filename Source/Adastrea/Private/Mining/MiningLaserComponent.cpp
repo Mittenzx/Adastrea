@@ -12,6 +12,21 @@
 #include "NiagaraSystem.h"
 #include "EngineUtils.h"
 #include "AdastreaLog.h"
+#include "Audio/AudioEventLibrary.h"
+#include "Components/AudioComponent.h"
+
+namespace MiningEventAudio
+{
+	/** Beam-off gap before the loop fades (aim flicker at the cone edge shouldn't retrigger it). */
+	constexpr float LoopReleaseDelay = 0.15f;
+	constexpr float LoopFadeIn = 0.08f;
+	constexpr float LoopFadeOut = 0.25f;
+	/** Loop pitch at point-blank and at full range: a longer beam sounds lower. */
+	constexpr float PitchNear = 1.1f;
+	constexpr float PitchFar = 0.9f;
+	constexpr float CargoFullMinInterval = 5.0f;
+	constexpr float DepletedMinInterval = 0.5f;
+}
 
 UMiningLaserComponent::UMiningLaserComponent()
 	: bMiningEnabled(false)
@@ -80,6 +95,8 @@ void UMiningLaserComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	{
 		DustFX->DestroyComponent();
 	}
+	UAudioEventLibrary::FadeOutAndRelease(LaserLoopAudio, 0.0f);
+	LaserLoopAudio = nullptr;
 	Super::EndPlay(EndPlayReason);
 }
 
@@ -247,6 +264,49 @@ void UMiningLaserComponent::SetStatus(EMiningStatus NewStatus)
 		UE_LOG(LogAdastrea, Log, TEXT("MiningLaser status: %s -> %s"),
 			*StatusToText(Status).ToString(), *StatusToText(NewStatus).ToString());
 		Status = NewStatus;
+
+		// The hold filled up under the beam (the trigger is held, so the player is mining).
+		if (NewStatus == EMiningStatus::CargoFull && UAudioEventLibrary::IsLocalPlayerActor(GetOwner()))
+		{
+			UAudioEventLibrary::PlayEvent2D(this, TEXT("Mining.CargoFull"), MiningEventAudio::CargoFullMinInterval);
+		}
+	}
+}
+
+void UMiningLaserComponent::UpdateLaserAudio(bool bBeamActive, float BeamLength)
+{
+	using namespace MiningEventAudio;
+
+	if (bBeamActive)
+	{
+		LaserAudioOffTime = 0.0f;
+		if (!LaserLoopAudio && UAudioEventLibrary::IsLocalPlayerActor(GetOwner()))
+		{
+			LaserLoopAudio = UAudioEventLibrary::SpawnEventAttached(this, TEXT("Mining.LaserLoop"), this, false);
+			if (LaserLoopAudio)
+			{
+				LaserLoopAudio->FadeIn(LoopFadeIn, 1.0f);
+			}
+		}
+		if (LaserLoopAudio)
+		{
+			const float Pitch = FMath::Lerp(PitchNear, PitchFar, FMath::Clamp(BeamLength / FMath::Max(Range, 1.0f), 0.0f, 1.0f));
+			if (!FMath::IsNearlyEqual(LaserLoopAudio->PitchMultiplier, Pitch, 0.01f))
+			{
+				LaserLoopAudio->SetPitchMultiplier(Pitch);
+			}
+		}
+		return;
+	}
+
+	if (LaserLoopAudio)
+	{
+		LaserAudioOffTime += GetWorld() ? GetWorld()->GetDeltaSeconds() : LoopReleaseDelay;
+		if (LaserAudioOffTime >= LoopReleaseDelay)
+		{
+			UAudioEventLibrary::FadeOutAndRelease(LaserLoopAudio, LoopFadeOut);
+			LaserLoopAudio = nullptr;
+		}
 	}
 }
 
@@ -256,6 +316,7 @@ void UMiningLaserComponent::SetBeamActive(bool bActive, const FVector& HitPoint)
 	{
 		return;
 	}
+	UpdateLaserAudio(bActive, bActive ? FVector::Dist(GetMuzzleLocation(), HitPoint) : 0.0f);
 	BeamMesh->SetVisibility(bActive);
 	if (DustFX)
 	{
@@ -363,6 +424,12 @@ void UMiningLaserComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	const FString RockName = Rock->GetName();
 	const float Removed = Rock->ExtractOre(MiningPower, DeltaTime); // may destroy Rock
 	CarriedOre += Removed;
+	if (!IsValid(Rock) && UAudioEventLibrary::IsLocalPlayerActor(GetOwner()))
+	{
+		// Our beam took the last of it: the rock cracks apart where the beam hit.
+		UAudioEventLibrary::PlayEventAtLocation(this, TEXT("Mining.AsteroidDepleted"), HitPoint,
+			MiningEventAudio::DepletedMinInterval);
+	}
 	int32 Whole = FMath::FloorToInt(CarriedOre);
 	while (Whole > 0 && !Cargo->HasSpaceFor(Ore, Whole))
 	{

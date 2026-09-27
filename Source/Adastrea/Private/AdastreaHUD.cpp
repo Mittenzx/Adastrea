@@ -30,6 +30,7 @@
 #include "Engine/Engine.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetRenderingLibrary.h"
+#include "Audio/AudioEventLibrary.h"
 
 // Palette (subtle sci-fi, on-brand for a teal/cyan accent theme)
 static const FLinearColor kBg      (0.02f, 0.03f, 0.05f, 0.72f); // deep space panel
@@ -57,9 +58,64 @@ static FString HudActorName(const AActor* Actor)
 #endif
 }
 
+void AAdastreaHUD::UpdateMenuAudio()
+{
+	FMenuAudioState Now;
+	Now.bInitialized = true;
+	Now.bMap = bShowMap;
+	Now.bTradeScreen = bShowTradeScreen;
+	Now.bStationMenu = bShowStationMenu;
+	Now.bShipSelect = bShowShipSelect;
+	Now.bStationInfo = bShowStationInfo;
+	Now.bBuyMode = bBuyMode;
+	Now.StationMenuIndex = StationMenuIndex;
+	Now.TradeIndex = SelectedTradeIndex;
+	Now.ShipSelectIndex = ShipSelectIndex;
+
+	const FMenuAudioState Was = MenuAudioState;
+	MenuAudioState = Now;
+	if (!Was.bInitialized)
+	{
+		return;
+	}
+
+	const bool bOpened = (Now.bMap && !Was.bMap) || (Now.bTradeScreen && !Was.bTradeScreen)
+		|| (Now.bStationMenu && !Was.bStationMenu) || (Now.bShipSelect && !Was.bShipSelect)
+		|| (Now.bStationInfo && !Was.bStationInfo);
+	const bool bClosed = (!Now.bMap && Was.bMap) || (!Now.bTradeScreen && Was.bTradeScreen)
+		|| (!Now.bStationMenu && Was.bStationMenu) || (!Now.bShipSelect && Was.bShipSelect)
+		|| (!Now.bStationInfo && Was.bStationInfo);
+
+	// Secondary: docking's clamp, a menu confirm click, a door etc. already cover these.
+	if (bOpened)
+	{
+		UAudioEventLibrary::PlaySecondary2D(this, TEXT("UI.Open"), 0.1f);
+	}
+	else if (bClosed)
+	{
+		UAudioEventLibrary::PlaySecondary2D(this, TEXT("UI.Close"), 0.1f);
+	}
+
+	if (Now.bTradeScreen && Was.bTradeScreen && Now.bBuyMode != Was.bBuyMode)
+	{
+		UAudioEventLibrary::PlayEvent2D(this, TEXT("UI.Click"), 0.08f);
+	}
+
+	const bool bHoverMoved =
+		(Now.bStationMenu && Was.bStationMenu && Now.StationMenuIndex != Was.StationMenuIndex)
+		|| (Now.bTradeScreen && Was.bTradeScreen && Now.TradeIndex != Was.TradeIndex)
+		|| (Now.bShipSelect && Was.bShipSelect && Now.ShipSelectIndex != Was.ShipSelectIndex);
+	if (bHoverMoved)
+	{
+		UAudioEventLibrary::PlaySecondary2D(this, TEXT("UI.Hover"), 0.05f);
+	}
+}
+
 void AAdastreaHUD::DrawHUD()
 {
 	Super::DrawHUD();
+
+	UpdateMenuAudio();
 
 	APlayerController* PC = GetOwningPlayerController();
 	if (!PC)
@@ -826,9 +882,11 @@ void AAdastreaHUD::ConfirmStationMenuSelection(APlayerController* PC)
 
 	if (!Option.bAvailable)
 	{
+		UAudioEventLibrary::PlayEvent2D(this, TEXT("UI.Error"), 0.2f);
 		ShowMessage(FString::Printf(TEXT("%s is not available yet"), Option.Label), 3.0f, true);
 		return;
 	}
+	UAudioEventLibrary::PlayEvent2D(this, TEXT("UI.Click"), 0.08f);
 
 	switch (Index)
 	{
@@ -1417,6 +1475,10 @@ void AAdastreaHUD::DrawShipSelectScreen(APlayerController* PC)
 
 void AAdastreaHUD::ShowMessage(const FString& InMessage, float DurationSecs, bool bIsWarning)
 {
+	// Secondary: when the message reports something that already made its own
+	// sound (quicksave chime, trade denied, door), the toast stays quiet.
+	UAudioEventLibrary::PlaySecondary2D(this, TEXT("UI.Toast"), 0.5f);
+
 	PendingMessage = InMessage;
 	MessageDuration = FMath::Max(0.1f, DurationSecs);
 	MessageElapsed = 0.0f;

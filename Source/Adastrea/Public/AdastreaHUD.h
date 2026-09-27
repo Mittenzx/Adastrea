@@ -282,4 +282,28 @@ private:
 	/** The preview mesh component (for sizing/camera framing). */
 	UPROPERTY()
 	TObjectPtr<UStaticMeshComponent> ShipPreviewMeshComp;
+
+	/** Canvas-menu state last frame, diffed by UpdateMenuAudio(). */
+	struct FMenuAudioState
+	{
+		bool bInitialized = false;
+		bool bMap = false;
+		bool bTradeScreen = false;
+		bool bStationMenu = false;
+		bool bShipSelect = false;
+		bool bStationInfo = false;
+		bool bBuyMode = true;
+		int32 StationMenuIndex = 0;
+		int32 TradeIndex = 0;
+		int32 ShipSelectIndex = 0;
+	};
+	FMenuAudioState MenuAudioState;
+
+	/**
+	 * UI.Open / UI.Close when a canvas screen appears or goes away, UI.Hover when
+	 * its highlighted row moves, UI.Click on the buy/sell toggle. Diffing state
+	 * once a frame catches every path that opens or closes a screen (keys,
+	 * docking, undocking, kiosks) without hooking each call site.
+	 */
+	void UpdateMenuAudio();
 };

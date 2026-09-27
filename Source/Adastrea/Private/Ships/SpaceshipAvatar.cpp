@@ -19,6 +19,7 @@
 #include "Player/WorldInteractable.h"
 #include "AdastreaHUD.h"
 #include "AdastreaLog.h"
+#include "Audio/AudioEventLibrary.h"
 #include "Engine/World.h"
 #include "EngineUtils.h"
 
@@ -182,7 +183,15 @@ void ASpaceshipAvatar::Tick(float DeltaSeconds)
 		const FVector Forward = GetActorForwardVector();
 		const FVector Right = GetActorRightVector();
 		const FVector Delta = (Forward * PendingMoveInput.X + Right * PendingMoveInput.Y) * Speed * DeltaSeconds;
+		const FVector Before = GetActorLocation();
 		MoveSafe(Delta);
+		// Horizontal distance actually covered (walking into a wall makes no steps).
+		UpdateFootsteps(FVector::Dist2D(Before, GetActorLocation()), Speed);
+	}
+	else
+	{
+		// Standing still: the next step starts a fresh stride.
+		FootstepDistance = 0.0f;
 	}
 	PendingMoveInput = FVector2D::ZeroVector;
 
@@ -190,6 +199,38 @@ void ASpaceshipAvatar::Tick(float DeltaSeconds)
 	{
 		SnapToFloor();
 	}
+}
+
+void ASpaceshipAvatar::UpdateFootsteps(float MovedDistance, float MoveSpeed)
+{
+	// Only on a deck (ship interior or station), and only for the local player.
+	if (!(CurrentInterior || bWalkingStation) || !IsLocallyControlled() || !IsPlayerControlled())
+	{
+		return;
+	}
+
+	// Stride grows with speed, so steps come faster when sprinting but not linearly:
+	// crouch ~1.9 steps/s, walk ~2.4, sprint ~3.2 at the default speeds.
+	const float StrideLength = FMath::Clamp(MoveSpeed * 0.28f + 40.0f, 70.0f, 170.0f);
+
+	FootstepDistance += MovedDistance;
+	if (FootstepDistance < StrideLength)
+	{
+		return;
+	}
+	FootstepDistance = FMath::Fmod(FootstepDistance, StrideLength);
+
+	// Random variation 1..4, never the same one twice in a row.
+	int32 Index = FMath::RandRange(1, LastFootstepIndex > 0 ? 3 : 4);
+	if (LastFootstepIndex > 0 && Index >= LastFootstepIndex)
+	{
+		++Index;
+	}
+	LastFootstepIndex = Index;
+
+	const float HalfHeight = GetCapsuleComponent() ? GetCapsuleComponent()->GetScaledCapsuleHalfHeight() : 96.0f;
+	const FName EventId(*FString::Printf(TEXT("Interior.Footstep.%02d"), Index));
+	UAudioEventLibrary::PlayEventAtLocation(this, EventId, GetActorLocation() - FVector(0.0f, 0.0f, HalfHeight));
 }
 
 void ASpaceshipAvatar::MoveSafe(const FVector& WorldDelta)
