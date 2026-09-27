@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "Audio/ShipEngineSoundProfile.h"
 #include "SpaceshipDataAsset.generated.h"
 
 /**
@@ -261,6 +262,16 @@ public:
         // Yaw (degrees) the avatar faces when spawning (0 = forward/+X).
         UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Avatar Spawn", meta=(ClampMin="-360.0", ClampMax="360.0"))
         float AvatarSpawnYaw = 0.0f;
+
+    // ====================
+    // AUDIO
+    // ====================
+
+    // Engine voice override. Leave empty to derive the voice from the stats above
+    // (hull + cargo -> family and pitch, acceleration x maneuverability -> whine).
+    // See UShipEngineAudioComponent and the adastrea.EngineVoiceReport console command.
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Audio")
+    FShipEngineSoundProfile EngineSoundProfile;
 
     // ====================
     // Constructor

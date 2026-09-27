@@ -23,6 +23,7 @@ class UUserWidget;
 class UCargoComponent;
 class UMiningLaserComponent;
 class UPlayerTraderComponent;
+class UShipEngineAudioComponent;
 
 /**
  * Base spaceship actor class for player and NPC ships
@@ -89,6 +90,11 @@ public:
     // Player trader component (credits, buy/sell)
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Trading")
     TObjectPtr<UPlayerTraderComponent> PlayerTraderComponent;
+
+    // Engine voice: size/agility-derived loops driven by throttle, speed and boost.
+    // 2D for the player's ship (muffled on foot), 3D and very short range for everyone else.
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Audio")
+    TObjectPtr<UShipEngineAudioComponent> EngineAudio;
 
     // Default maximum movement speed
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement", meta=(ClampMin="0.0"))

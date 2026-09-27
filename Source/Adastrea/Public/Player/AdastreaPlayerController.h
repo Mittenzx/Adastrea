@@ -460,6 +460,11 @@ public:
 						UFUNCTION(BlueprintPure, Category="Player|Interior")
 						bool IsOnFoot() const { return AvatarPawn != nullptr && GetPawn() == static_cast<APawn*>(AvatarPawn); }
 
+							/** The player's own ship while they're out of its cockpit (walking its interior, or a
+							 * station it's docked at), else null. Used to muffle that ship's engine. */
+							UFUNCTION(BlueprintPure, Category="Player|Interior")
+							class ASpaceship* GetShipLeftOnFoot() const;
+
 						/** Input handler: V toggles between flying the ship and walking its interior. */
 												void HandleToggleInterior();
 

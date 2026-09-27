@@ -27,6 +27,7 @@
 #include "Trading/CargoComponent.h"
 #include "Trading/PlayerTraderComponent.h"
 #include "Mining/MiningLaserComponent.h"
+#include "Audio/ShipEngineAudioComponent.h"
 #include "Audio/AudioEventLibrary.h"
 #include "TimerManager.h"
 
@@ -170,6 +171,11 @@ ASpaceship::ASpaceship()
     MiningLaser = CreateDefaultSubobject<UMiningLaserComponent>(TEXT("MiningLaser"));
     MiningLaser->SetupAttachment(ShipRoot);
     MiningLaser->SetRelativeLocation(FVector(300.0f, 0.0f, -50.0f));
+
+    // Engine voice. Attached to the hull mesh; at BeginPlay it moves to the mesh bounds'
+    // centre so AI engine range is measured from the hull surface.
+    EngineAudio = CreateDefaultSubobject<UShipEngineAudioComponent>(TEXT("EngineAudio"));
+    EngineAudio->SetupAttachment(ShipMeshComponent);
 }
 
 void ASpaceship::BeginPlay()

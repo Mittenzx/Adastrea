@@ -523,6 +523,15 @@ ASpaceship* AAdastreaPlayerController::GetControlledSpaceship() const
 	return Cast<ASpaceship>(GetPawn());
 }
 
+ASpaceship* AAdastreaPlayerController::GetShipLeftOnFoot() const
+{
+	if (IsWalkingStation())
+	{
+		return StationVisitShip.Get();
+	}
+	return IsOnFoot() ? InteriorSourceShip.Get() : nullptr;
+}
+
 bool AAdastreaPlayerController::IsControllingSpaceship() const
 {
 	return GetControlledSpaceship() != nullptr;
