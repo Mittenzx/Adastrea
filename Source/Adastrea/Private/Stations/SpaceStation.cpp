@@ -13,6 +13,7 @@
 #include "Stations/TurretModule.h"
 #include "Stations/BarracksModule.h"
 #include "Stations/HabitationModule.h"
+#include "Stations/StationCoreModule.h"
 #include "AdastreaLog.h"
 
 ASpaceStation::ASpaceStation()
@@ -37,6 +38,9 @@ ASpaceStation::ASpaceStation()
 void ASpaceStation::BeginPlay()
 {
     Super::BeginPlay();
+
+    // Saved references to modules that no longer exist (e.g. deleted in the editor).
+    Modules.RemoveAll([](const ASpaceStationModule* Module) { return !IsValid(Module); });
 
     // Discover any modules that were added in the editor (via Child Actor Components or direct placement)
     TArray<AActor*> AttachedActors;
@@ -267,6 +271,9 @@ FString ASpaceStation::ExportBlueprintString(float GridSpacing, bool bPlayerBuil
     // integer because the Python side parses it with int().
     FString Result = TEXT("1.0.0;1000,1000,1000;") + FString::FromInt(FMath::RoundToInt(Spacing));
 
+    const AStationCoreModule* Core = GetCoreModule();
+    const bool bHasCore = Core && (!bPlayerBuiltOnly || Core->ActorHasTag(PlayerBuiltTag));
+
     int32 ModuleIndex = 0;
     for (const ASpaceStationModule* Module : Modules)
     {
@@ -290,8 +297,8 @@ FString ASpaceStation::ExportBlueprintString(float GridSpacing, bool bPlayerBuil
         const UClass* ModuleClass = Module->GetClass();
         const FString ItemID = ModuleClass->IsNative() ? ModuleClass->GetName() : ModuleClass->GetPathName();
 
-        // The first module anchors the station ("first placed = core").
-        const bool bIsCore = (ModuleIndex == 0);
+        // The core module anchors the station; without one, the first placed module does.
+        const bool bIsCore = bHasCore ? Module->IsA<AStationCoreModule>() : (ModuleIndex == 0);
 
         Result += FString::Printf(TEXT(";M%d:%s:%d,%d,%d:%d:%d"),
             ModuleIndex + 1, *ItemID, GX, GY, GZ, RotationDegrees, bIsCore ? 1 : 0);
@@ -748,6 +755,35 @@ int32 ASpaceStation::GetTotalResidents() const
 // ====================
 // AGGREGATE MODULE FUNCTIONALITY
 // ====================
+
+AStationCoreModule* ASpaceStation::GetCoreModule() const
+{
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (AStationCoreModule* Core = Cast<AStationCoreModule>(Module))
+        {
+            return Core;
+        }
+    }
+    return nullptr;
+}
+
+FBox ASpaceStation::GetStationBounds() const
+{
+    // Attached actors rather than Modules: this is also used before BeginPlay has
+    // discovered the level-placed modules (e.g. player spawn placement).
+    FBox Bounds = GetComponentsBoundingBox(false, true);
+    TArray<AActor*> Attached;
+    GetAttachedActors(Attached, true, true);
+    for (const AActor* Child : Attached)
+    {
+        if (const ASpaceStationModule* Module = Cast<ASpaceStationModule>(Child))
+        {
+            Bounds += Module->GetComponentsBoundingBox(false, true);
+        }
+    }
+    return Bounds;
+}
 
 float ASpaceStation::GetTotalPowerConsumption() const
 {

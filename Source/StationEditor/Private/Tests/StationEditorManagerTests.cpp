@@ -9,6 +9,8 @@
 #include "Stations/SpaceStation.h"
 #include "Stations/ReactorModule.h"
 #include "Stations/CorridorModule.h"
+#include "Stations/SolarArrayModule.h"
+#include "Stations/StationCoreModule.h"
 #include "Trading/PlayerTraderComponent.h"
 #include "Engine/Engine.h"
 #include "Engine/World.h"
@@ -257,6 +259,58 @@ bool FStationEditorTraderWalletTest::RunTest(const FString& Parameters)
 	TestNull(TEXT("No trader resolves"), Manager->GetPlayerTrader());
 	TestEqual(TEXT("No trader reads as 0 credits"), Manager->GetPlayerCredits(), 0);
 	TestFalse(TEXT("No trader: costed module unaffordable"), Manager->CanAffordModule(AReactorModule::StaticClass()));
+
+	Manager->Cancel();
+	return true;
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FStationEditorCoreFootprintTest, "Adastrea.StationEditor.CoreFootprint",
+	EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FStationEditorCoreFootprintTest::RunTest(const FString& Parameters)
+{
+	using namespace StationEditorTests;
+
+	FTestWorld TestWorld(FVector::ZeroVector);
+	FActorSpawnParameters Params;
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	AStationCoreModule* Core = TestWorld.World->SpawnActor<AStationCore_Research>(AStationCore_Research::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, Params);
+	if (!TestNotNull(TEXT("Core spawned"), Core) || !TestEqual(TEXT("Research core is 3 cells"), Core->GetFootprintCells(), 3))
+	{
+		return false;
+	}
+	TestWorld.Station->AddModuleAtLocation(Core, FVector::ZeroVector);
+
+	UStationEditorManager* Manager = MakeManager();
+	TestTrue(TEXT("BeginEditing"), Manager->BeginEditing(TestWorld.Station));
+
+	// 2x2 reactor against the 3x3 core's +Y face: 1.5 + 1 cells, rounded up to 3.
+	FVector Position;
+	TestTrue(TEXT("Attach to core"), Manager->FindAttachPosition(AReactorModule::StaticClass(), Core, FVector(0, 1, 0), Position));
+	TestEqual(TEXT("Reactor clears the core footprint"), Position, FVector(0.0f, 1200.0f, 0.0f));
+	ASpaceStationModule* Reactor = Manager->PlaceModule(AReactorModule::StaticClass(), Position, FRotator::ZeroRotator);
+	if (!TestNotNull(TEXT("Reactor placed against the core"), Reactor))
+	{
+		return false;
+	}
+
+	// A 3x1 solar array broadside to the reactor sits by its thin side (1 + 0.5
+	// cells -> 2), not its long side as the old radius model did (1 + 1.5 -> 3).
+	TestTrue(TEXT("Attach solar"), Manager->FindAttachPosition(ASolarArrayModule::StaticClass(), Reactor, FVector(0, 1, 0), Position));
+	TestEqual(TEXT("Solar array sits flush"), Position, FVector(0.0f, 2000.0f, 0.0f));
+	TestNotNull(TEXT("Solar array placed"), Manager->PlaceModule(ASolarArrayModule::StaticClass(), Position, FRotator::ZeroRotator));
+
+	// Inside the core's footprint is a collision even though it is clear of the old radius.
+	TestEqual(TEXT("Core footprint blocks"),
+		Manager->CanPlaceModule(ACorridorModule::StaticClass(), FVector(400.0f, -400.0f, 0.0f), FRotator::ZeroRotator),
+		EModulePlacementResult::CollisionDetected);
+
+	// The core is fixed.
+	TestFalse(TEXT("Core can't be removed"), Manager->CanRemoveModule(Core));
+	TestFalse(TEXT("RemoveModule refuses the core"), Manager->RemoveModule(Core));
+	TestFalse(TEXT("Core can't move"), Manager->MoveModule(Core, FVector(0.0f, -1200.0f, 0.0f)));
+	TestFalse(TEXT("Core can't rotate"), Manager->RotateModule(Core, FRotator(0.0f, 90.0f, 0.0f)));
+	TestTrue(TEXT("Export marks the core"), Manager->ExportStationBlueprint().Contains(TEXT(":StationCore_Research:0,0,0:0:1")));
 
 	Manager->Cancel();
 	return true;

@@ -452,7 +452,9 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
         if (DockAction)
         {
-            EnhancedInputComponent->BindAction(DockAction, ETriggerEvent::Triggered, this, &ASpaceship::RequestDocking);
+            // Started, not Triggered: Triggered fires every frame the key is held, which
+            // re-requested docking (and logged/alerted "No station in range") ~60x a second.
+            EnhancedInputComponent->BindAction(DockAction, ETriggerEvent::Started, this, &ASpaceship::RequestDocking);
             UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound DockAction to RequestDocking"));
         }
 

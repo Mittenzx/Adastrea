@@ -490,7 +490,7 @@ bool UStationEditorWidgetCpp::GetPlacementTarget(FVector& OutPosition)
 	{
 		// Build against the face under the cursor. (Snapping the raw surface hit
 		// point usually landed inside the module that was clicked.)
-		return EditorManager->FindAttachPosition(PendingPlacementModule, HitModule, Hit.ImpactNormal, OutPosition);
+		return EditorManager->FindAttachPosition(PendingPlacementModule, HitModule, Hit.ImpactNormal, PlacementRotation, OutPosition);
 	}
 
 	if (Hit.bBlockingHit)

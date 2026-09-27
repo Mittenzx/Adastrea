@@ -12,6 +12,7 @@
 #include "Ships/Spaceship.h"
 #include "Stations/ReactorModule.h"
 #include "Stations/SolarArrayModule.h"
+#include "Stations/StationCoreModule.h"
 #include "Audio/AudioEventLibrary.h"
 
 namespace
@@ -21,6 +22,48 @@ namespace
 	// they share this slack (1 cm) to stop float noise from flipping "touching"
 	// into "overlapping" or "not a neighbour" and making the three disagree.
 	constexpr float PlacementDistanceTolerance = 1.0f;
+
+	/** Two footprint boxes overlap (by more than the tolerance) on every axis. */
+	bool FootprintsOverlap(const FVector& PosA, const FVector& HalfA, const FVector& PosB, const FVector& HalfB)
+	{
+		const FVector Delta = (PosB - PosA).GetAbs();
+		const FVector Reach = HalfA + HalfB;
+		return Delta.X < Reach.X - PlacementDistanceTolerance
+			&& Delta.Y < Reach.Y - PlacementDistanceTolerance
+			&& Delta.Z < Reach.Z - PlacementDistanceTolerance;
+	}
+
+	/**
+	 * Face contact: the boxes are apart on exactly one axis by at most MaxGap and
+	 * share area on the other two (edge- or corner-only contact doesn't count).
+	 * OutDirection is the cardinal direction from A towards B.
+	 */
+	bool FootprintsShareFace(const FVector& PosA, const FVector& HalfA, const FVector& PosB, const FVector& HalfB, float MaxGap, FVector& OutDirection)
+	{
+		const FVector Delta = PosB - PosA;
+		const FVector Reach = HalfA + HalfB;
+		int32 SeparatedAxis = INDEX_NONE;
+		for (int32 Axis = 0; Axis < 3; ++Axis)
+		{
+			const float Gap = FMath::Abs(Delta[Axis]) - Reach[Axis];
+			if (Gap < -PlacementDistanceTolerance)
+			{
+				continue; // Overlapping span on this axis.
+			}
+			if (SeparatedAxis != INDEX_NONE || Gap > MaxGap + PlacementDistanceTolerance)
+			{
+				return false; // Apart on two axes, or too far apart.
+			}
+			SeparatedAxis = Axis;
+		}
+		if (SeparatedAxis == INDEX_NONE)
+		{
+			return false; // Overlapping, not touching.
+		}
+		OutDirection = FVector::ZeroVector;
+		OutDirection[SeparatedAxis] = FMath::Sign(Delta[SeparatedAxis]);
+		return true;
+	}
 
 	// ---- Event sounds (Editor.*) ----
 
@@ -812,6 +855,13 @@ bool UStationEditorManager::RemoveModule_Implementation(ASpaceStationModule* Mod
 		return false;
 	}
 
+	if (Module->IsA<AStationCoreModule>())
+	{
+		AddNotificationOnce(TEXT("Can't remove the station core"), ENotificationSeverity::Warning, Module);
+		PlayEditorEvent(this, TEXT("Editor.Invalid"), InvalidMinInterval);
+		return false;
+	}
+
 	if (!CanRemoveModule(Module))
 	{
 		AddNotificationOnce(FString::Printf(TEXT("Can't remove %s - it would split the station in two"), *Module->ModuleType),
@@ -863,13 +913,20 @@ bool UStationEditorManager::MoveModule_Implementation(ASpaceStationModule* Modul
 		return false;
 	}
 
+	if (Module->IsA<AStationCoreModule>())
+	{
+		AddNotificationOnce(TEXT("The station core is fixed in place"), ENotificationSeverity::Warning, Module);
+		PlayEditorEvent(this, TEXT("Editor.Invalid"), InvalidMinInterval);
+		return false;
+	}
+
 	const FVector PreviousPosition = Module->GetActorLocation();
 
 	FVector FinalPosition;
 	FRotator UnusedRotation;
 	SnapPlacement(NewPosition, Module->GetActorRotation(), FinalPosition, UnusedRotation);
 
-	if (bCheckCollisions && CheckCollisionIgnoring(Module->GetClass(), FinalPosition, Module))
+	if (bCheckCollisions && CheckCollisionIgnoring(Module->GetClass(), FinalPosition, Module->GetActorRotation(), Module))
 	{
 		AddNotificationOnce(TEXT("Can't move there - it overlaps another module"), ENotificationSeverity::Warning, Module);
 		PlayEditorEvent(this, TEXT("Editor.Invalid"), InvalidMinInterval);
@@ -927,6 +984,13 @@ bool UStationEditorManager::RotateModule_Implementation(ASpaceStationModule* Mod
 	if (!CurrentStation || !Module || !CurrentStation->Modules.Contains(Module))
 	{
 		UE_LOG(LogAdastreaStations, Warning, TEXT("StationEditorManager::RotateModule - Invalid module"));
+		return false;
+	}
+
+	if (Module->IsA<AStationCoreModule>())
+	{
+		AddNotificationOnce(TEXT("The station core is fixed in place"), ENotificationSeverity::Warning, Module);
+		PlayEditorEvent(this, TEXT("Editor.Invalid"), InvalidMinInterval);
 		return false;
 	}
 
@@ -1048,21 +1112,20 @@ EModulePlacementResult UStationEditorManager::CanPlaceModule_Implementation(TSub
 
 bool UStationEditorManager::CheckCollision(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position, FRotator Rotation) const
 {
-	return CheckCollisionIgnoring(ModuleClass, Position, nullptr);
+	return CheckCollisionIgnoring(ModuleClass, Position, Rotation, nullptr);
 }
 
-bool UStationEditorManager::CheckCollisionIgnoring(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position, const ASpaceStationModule* IgnoredModule) const
+bool UStationEditorManager::CheckCollisionIgnoring(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position, FRotator Rotation, const ASpaceStationModule* IgnoredModule) const
 {
 	if (!ModuleClass || !CurrentStation)
 	{
 		return false;
 	}
 
-	// Sphere-based collision check against each existing module's own footprint-
-	// derived radius (GetModuleEffectiveRadius), summed with this module's own -
-	// so a large module (a 3x2 DockingBay) needs more clearance than a small one
-	// (a 1x1 Corridor) instead of every module using the same fixed CollisionRadius.
-	const float ThisRadius = GetModuleEffectiveRadius(ModuleClass);
+	// Box check of each module's rotated grid footprint (GetModuleHalfExtents), so
+	// a long, thin module (a 3x1 SolarArray) can sit flush against its neighbour
+	// along its thin side instead of being held off by its long side.
+	const FVector ThisHalf = GetModuleHalfExtents(ModuleClass, Rotation);
 
 	for (ASpaceStationModule* ExistingModule : CurrentStation->Modules)
 	{
@@ -1071,9 +1134,7 @@ bool UStationEditorManager::CheckCollisionIgnoring(TSubclassOf<ASpaceStationModu
 			continue;
 		}
 
-		const float OtherRadius = GetModuleEffectiveRadius(ExistingModule->GetClass());
-		const float Distance = FVector::Dist(Position, ExistingModule->GetActorLocation());
-		if (Distance < ThisRadius + OtherRadius - PlacementDistanceTolerance)
+		if (FootprintsOverlap(Position, ThisHalf, ExistingModule->GetActorLocation(), GetPlacedModuleHalfExtents(ExistingModule)))
 		{
 			return true; // Collision detected
 		}
@@ -1103,6 +1164,41 @@ float UStationEditorManager::GetModuleEffectiveRadius(TSubclassOf<ASpaceStationM
 	return CollisionRadius;
 }
 
+FVector UStationEditorManager::GetModuleHalfExtents(TSubclassOf<ASpaceStationModule> ModuleClass, FRotator Rotation) const
+{
+	FStationModuleEntry Entry;
+	if (!ModuleClass || !ModuleCatalog || !ModuleCatalog->FindModuleByClass(ModuleClass, Entry))
+	{
+		// Not in the catalog: a cube of the configurable instance radius.
+		return FVector(CollisionRadius);
+	}
+
+	const float CellSize = GridSystem ? GridSystem->GridSize : CollisionRadius * 2.0f;
+	FVector Half = FVector(Entry.GridFootprint) * CellSize * 0.5f;
+	// Modules only turn in 90-degree yaw steps; a quarter turn swaps X and Y.
+	if (FMath::Abs(FMath::Sin(FMath::DegreesToRadians(Rotation.Yaw))) > 0.5f)
+	{
+		Swap(Half.X, Half.Y);
+	}
+	return Half;
+}
+
+FVector UStationEditorManager::GetPlacedModuleHalfExtents(const ASpaceStationModule* Module) const
+{
+	if (!Module)
+	{
+		return FVector(CollisionRadius);
+	}
+
+	// Cores aren't in the catalog; each archetype has its own footprint.
+	if (const AStationCoreModule* Core = Cast<AStationCoreModule>(Module))
+	{
+		const float CellSize = GridSystem ? GridSystem->GridSize : AStationCoreModule::GridCellSize;
+		return FVector(Core->GetFootprint()) * CellSize * 0.5f;
+	}
+	return GetModuleHalfExtents(Module->GetClass(), Module->GetActorRotation());
+}
+
 bool UStationEditorManager::IsAdjacentToExistingModule(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position, FRotator Rotation) const
 {
 	if (!CurrentStation)
@@ -1123,11 +1219,9 @@ bool UStationEditorManager::IsAdjacentToExistingModule(TSubclassOf<ASpaceStation
 		return true;
 	}
 
-	// "Neighbour" = just clear of collision (ThisRadius + OtherRadius) out to one
-	// more grid cell beyond that - i.e. touching or one cell of gap, not floating
-	// off in open space. Footprint-aware, so a big module's neighbour band starts
-	// further out than a small module's does.
-	const float ThisRadius = GetModuleEffectiveRadius(ModuleClass);
+	// "Neighbour" = footprints touching face to face, or with up to one grid cell
+	// of gap between them - not floating off in open space.
+	const FVector ThisHalf = GetModuleHalfExtents(ModuleClass, Rotation);
 	const float CellSize = GridSystem->GridSize;
 
 	for (const ASpaceStationModule* ExistingModule : CurrentStation->Modules)
@@ -1137,11 +1231,8 @@ bool UStationEditorManager::IsAdjacentToExistingModule(TSubclassOf<ASpaceStation
 			continue;
 		}
 
-		const float OtherRadius = GetModuleEffectiveRadius(ExistingModule->GetClass());
-		const float ClearDistance = ThisRadius + OtherRadius;
-		const FVector ToOther = ExistingModule->GetActorLocation() - Position;
-		const float Distance = ToOther.Size();
-		if (Distance < ClearDistance - PlacementDistanceTolerance || Distance > ClearDistance + CellSize + PlacementDistanceTolerance)
+		FVector Direction;
+		if (!FootprintsShareFace(Position, ThisHalf, ExistingModule->GetActorLocation(), GetPlacedModuleHalfExtents(ExistingModule), CellSize, Direction))
 		{
 			continue;
 		}
@@ -1149,7 +1240,6 @@ bool UStationEditorManager::IsAdjacentToExistingModule(TSubclassOf<ASpaceStation
 		// X4-style face matching: both modules need a face pointed at each other,
 		// not just be close enough (a SolarArrayModule facing the wrong way is
 		// still a neighbour by distance, but not a valid connection).
-		const FVector Direction = ToOther.GetSafeNormal();
 		const bool bThisFaces = DoesModuleFaceDirection(ModuleClass, Rotation, Direction);
 		const bool bOtherFaces = DoesModuleFaceDirection(ExistingModule->GetClass(), ExistingModule->GetActorRotation(), -Direction);
 		if (bThisFaces && bOtherFaces)
@@ -1232,6 +1322,12 @@ bool UStationEditorManager::CanRemoveModule(ASpaceStationModule* Module) const
 		return false;
 	}
 
+	// The core anchors the station.
+	if (Module->IsA<AStationCoreModule>())
+	{
+		return false;
+	}
+
 	// Compare piece counts rather than demanding exactly one piece, so a station
 	// that was already fragmented (e.g. hand-placed in the level) can still have
 	// its leaves trimmed - only a removal that makes things worse is refused.
@@ -1239,6 +1335,11 @@ bool UStationEditorManager::CanRemoveModule(ASpaceStationModule* Module) const
 }
 
 bool UStationEditorManager::FindAttachPosition(TSubclassOf<ASpaceStationModule> ModuleClass, ASpaceStationModule* ExistingModule, FVector HitNormal, FVector& OutPosition) const
+{
+	return FindAttachPosition(ModuleClass, ExistingModule, HitNormal, FRotator::ZeroRotator, OutPosition);
+}
+
+bool UStationEditorManager::FindAttachPosition(TSubclassOf<ASpaceStationModule> ModuleClass, ASpaceStationModule* ExistingModule, FVector HitNormal, FRotator Rotation, FVector& OutPosition) const
 {
 	if (!ModuleClass || !CurrentStation || !ExistingModule || !CurrentStation->Modules.Contains(ExistingModule))
 	{
@@ -1265,8 +1366,9 @@ bool UStationEditorManager::FindAttachPosition(TSubclassOf<ASpaceStationModule> 
 		Direction = FVector::ForwardVector;
 	}
 
-	// Exactly touching: the same clearance CheckCollision/IsAdjacentToExistingModule use.
-	float Distance = GetModuleEffectiveRadius(ModuleClass) + GetModuleEffectiveRadius(ExistingModule->GetClass());
+	// Exactly touching along Direction: the two footprints' half-sizes on that axis.
+	const FVector Reach = GetModuleHalfExtents(ModuleClass, Rotation) + GetPlacedModuleHalfExtents(ExistingModule);
+	float Distance = FVector::DotProduct(Reach, Direction.GetAbs());
 
 	// Round the offset up to whole cells before snapping. Snapping the raw point
 	// rounds half-cells upward in world terms (+1.5 -> 2 but -1.5 -> -1), which on
@@ -2043,7 +2145,7 @@ void UStationEditorManager::AutoGenerateConnections(ASpaceStationModule* Module)
 	}
 
 	FVector ModulePosition = Module->GetActorLocation();
-	const float ModuleRadius = GetModuleEffectiveRadius(Module->GetClass());
+	const FVector ModuleHalf = GetPlacedModuleHalfExtents(Module);
 	const float CellSize = GridSystem->GridSize;
 
 	// Check all existing modules for adjacency
@@ -2057,12 +2159,8 @@ void UStationEditorManager::AutoGenerateConnections(ASpaceStationModule* Module)
 		// Same footprint- and face-aware "neighbour" test as IsAdjacentToExistingModule,
 		// so a module that was allowed to place next to another always gets a
 		// connection to it (and vice versa - they can't disagree on who's a neighbour).
-		const float OtherRadius = GetModuleEffectiveRadius(OtherModule->GetClass());
-		const float ClearDistance = ModuleRadius + OtherRadius;
-		const FVector ToOther = OtherModule->GetActorLocation() - ModulePosition;
-		const float Distance = ToOther.Size();
-		const bool bInRange = Distance >= ClearDistance - PlacementDistanceTolerance && Distance <= ClearDistance + CellSize + PlacementDistanceTolerance;
-		const FVector Direction = ToOther.GetSafeNormal();
+		FVector Direction;
+		const bool bInRange = FootprintsShareFace(ModulePosition, ModuleHalf, OtherModule->GetActorLocation(), GetPlacedModuleHalfExtents(OtherModule), CellSize, Direction);
 		const bool bFacesMatch = bInRange
 			&& DoesModuleFaceDirection(Module->GetClass(), Module->GetActorRotation(), Direction)
 			&& DoesModuleFaceDirection(OtherModule->GetClass(), OtherModule->GetActorRotation(), -Direction);
@@ -2159,10 +2257,10 @@ int32 UStationEditorManager::QueueConstruction(TSubclassOf<ASpaceStationModule> 
 	}
 
 	// Queued builds don't exist yet, so CheckCollision can't see them.
-	const float ThisRadius = GetModuleEffectiveRadius(ModuleClass);
+	const FVector ThisHalf = GetModuleHalfExtents(ModuleClass, FinalRotation);
 	for (const FConstructionQueueItem& Queued : ConstructionQueue)
 	{
-		if (FVector::Dist(FinalPosition, Queued.TargetPosition) < ThisRadius + GetModuleEffectiveRadius(Queued.ModuleClass))
+		if (FootprintsOverlap(FinalPosition, ThisHalf, Queued.TargetPosition, GetModuleHalfExtents(Queued.ModuleClass, Queued.TargetRotation)))
 		{
 			AddNotification(FText::FromString(TEXT("Overlaps a module that is already queued")), ENotificationSeverity::Warning, nullptr);
 			return -1;

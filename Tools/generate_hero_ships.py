@@ -4,8 +4,9 @@ Adastrea hero-ship generator: Fighter / Corvette / Freighter / Cruiser / Destroy
 Replaces the old "one blocky kit at five scales" ships with five genuinely
 different silhouettes, each designed from its NAME:
 
-  Fighter   - needle/dart fuselage, swept-back delta wings, bubble canopy,
-              twin engine nacelles, wing-mounted cannons, V-tail.
+  Fighter   - Newtonian strike fighter: armoured core with a visor slit, an
+              X-frame of struts carrying four vectoring engine pods, main
+              drive, RCS quads, pod cannons/missile racks. No wings or tail.
   Corvette  - long slim spine, HAMMERHEAD bridge block, side sponsons with
               gun pods, three-engine cluster.
   Destroyer - flat, angular blade/arrowhead wedge, ventral + dorsal knife
@@ -268,49 +269,75 @@ def greebles(kit, rng, n, y0, y1, hw_pairs, z_pairs, frac=0.7, skip=None,
 # Nose = +Y. Units = the legacy "Blender units" (see module docstring).
 # ----------------------------------------------------------------------------
 def design_fighter():
+    """Newtonian strike fighter: no wings or tail - an armoured core with a slit
+    visor, an X-frame of struts carrying four vectoring engine pods (thrust in any
+    direction, like a Starfury), a main drive, RCS quads and pod-mounted guns."""
     P = {k: Kit() for k in ("Carcass", "Engine", "Weapon", "Sensor", "Cargo")}
     c = P["Carcass"]
-    # needle fuselage, long pointed nose
-    c.add(loft([(338, 1.2, 1.2, 0), (300, 6, 6, 1), (230, 18, 15, 2), (140, 32, 24, 4),
-                (40, 42, 30, 5), (-90, 44, 30, 4), (-190, 38, 26, 2), (-232, 30, 20, 1)],
-               N=12, sq=2.6))
-    # bubble canopy
-    c.add(sphere_y((0, 62, 30), 19, 60, 17, N=12, rings=7))
-    c.add(tube((0, 118, 34), (0, 176, 26), 1.5, 1.5, N=6))          # pitot-ish sensor spike
-    # swept-back delta wings (thin, tapered top)
-    wing = [(30, 70), (205, -105), (205, -190), (30, -195)]
-    c.add(prism(wing, -4, 4, s_top=0.72), mirror=True)
-    # forward canards
-    c.add(prism([(22, 225), (95, 172), (95, 150), (22, 165)], -2, 2, s_top=0.8), mirror=True)
-    # canted V-tail fins
-    c.add(_xf(prism_yz([(-128, 26), (-196, 26), (-236, 104), (-206, 104)], -2.5, 2.5), pos=(34, 0, 0), rot=(0, 24, 0)),
-          mirror=True)
-    # dorsal spine + flank intakes + wing root fairings
-    c.add(box((0, -70, 33), (9, 160, 7)))
-    c.add(box((40, -20, 2), (16, 80, 22)), mirror=True)
-    c.add(box((70, -60, 5), (34, 90, 8)), mirror=True)
-    # engines: twin nacelles flanking the tail
+    # chunky faceted armoured core (boxy superellipse, blunt nose)
+    c.add(loft([(250, 12, 10, 4), (222, 32, 24, 4), (160, 48, 36, 3), (40, 54, 42, 2),
+                (-80, 52, 40, 0), (-150, 42, 34, 0)], N=8, sq=4.5))
+    # armoured cockpit pod with a narrow visor slit, set into the nose top
+    c.add(loft([(212, 6, 3, 30), (186, 22, 12, 36), (120, 28, 18, 40), (70, 24, 14, 39), (46, 10, 6, 36)],
+               N=8, sq=3.2))
+    c.add(box((0, 176, 45), (40, 22, 5), rot=(-28, 0, 0)))              # visor brow plate
+    # cheek armour plates and dorsal reactor hump
+    c.add(box((56, 120, 0), (8, 150, 52), rot=(0, 0, -6)), mirror=True)
+    c.add(loft([(10, 8, 4, 40), (-10, 30, 18, 42), (-90, 32, 20, 42), (-120, 14, 8, 40)], N=8, sq=3.0))
+    c.add(tube((0, -55, 58), (0, -55, 70), 20, 16, N=12))              # reactor cap ring
+    # cooling vanes stacked along the aft spine (small, edge-on - not wings)
+    for k in range(6):
+        c.add(box((0, -95 - k * 11, 40), (86, 3, 22)))
+    # X-frame: two parallel square-section struts per pod + a diagonal brace
+    for sx in (-1, 1):
+        for sz in (-1, 1):
+            root, tip = (44 * sx, 0, 18 * sz), (150 * sx, 0, 75 * sz)
+            for y in (-20, -95):
+                c.add(tube((root[0], y, root[2]), (tip[0], y, tip[2]), 9, 8, N=4))
+            c.add(tube((root[0], -95, root[2]), (tip[0], -20, tip[2]), 5, 5, N=4))
+    # RCS thruster quads: nose corners and pod noses
+    for sx in (-1, 1):
+        for sz in (-1, 1):
+            c.add(box((30 * sx, 200, 20 * sz), (12, 12, 12)))
+            c.add(tube((36 * sx, 200, 20 * sz), (44 * sx, 200, 20 * sz), 3.5, 5, N=6))
+    rng = random.Random(1001)
+    greebles(c, rng, 18, -140, 150, [(-150, 40), (40, 52), (160, 46)], [(-150, 34), (40, 42), (160, 38)],
+             frac=0.8, skip=lambda x, y: (x < 32 and y > 40) or (x < 36 and -130 < y < 15),
+             sx=(6, 14), sy=(8, 22), sz=(2, 5))
+    # engines: four vectoring pods + main drive
     e = P["Engine"]
-    e.add(tube((54, -70, 4), (54, -215, 4), 24, 21, N=12), mirror=True)
-    e.add(box((0, -195, 4), (100, 46, 22)))                            # cross-beam between nacelles
-    for s in (1, -1):
-        nozzle(e, 54 * s, -215, 4, 19, 52)
-    # wing-mounted weapons: cannon pods with long barrels
+    for sx in (-1, 1):
+        for sz in (-1, 1):
+            x, z = 150 * sx, 75 * sz
+            e.add(tube((x, 45, z), (x, -190, z), 24, 22, N=10))
+            e.add(tube((x, 45, z), (x, 60, z), 16, 10, N=10))           # pod nose cap
+            nozzle(e, x, -190, z, 18, 34)
+            e.add(box((x, -60, z), (54, 26, 54)))                         # strut clamp collar
+            e.add(tube((x + 28 * sx, 20, z), (x + 38 * sx, 20, z), 4, 6, N=6))   # pod RCS
+    e.add(box((0, -165, 2), (84, 46, 64)))
+    nozzle(e, 0, -188, 2, 28, 44)
+    for sx in (-1, 1):
+        nozzle(e, 30 * sx, -180, -22, 10, 22)
+    # weapons: cannons on the upper pods, missile racks on the lower, chin guns
     w = P["Weapon"]
-    w.add(tube((150, -80, -3), (150, 40, -3), 8, 6.5, N=10), mirror=True)
-    w.add(tube((150, 40, -3), (150, 120, -3), 2.8, 2.4, N=8), mirror=True)
-    w.add(tube((108, -30, -3), (108, 30, -3), 5, 4, N=8), mirror=True)
-    # sensor: dorsal whip + small blade array
+    for sx in (-1, 1):
+        w.add(tube((150 * sx, 50, 75 + 12), (150 * sx, 190, 75 + 12), 5.5, 4.5, N=8))
+        w.add(box((150 * sx, 176, 87), (14, 20, 14)))                   # muzzle brake
+        w.add(box((150 * sx, -20, -75 - 30), (30, 90, 16)))              # missile rack
+        for dx in (-9, 0, 9):
+            w.add(tube((150 * sx + dx, 30, -106), (150 * sx + dx, -70, -106), 3.5, 3.5, N=6))
+        w.add(tube((16 * sx, 150, -36), (16 * sx, 250, -36), 3.5, 3, N=8))
+    # sensor: chin ball turret + short dorsal whip
     s = P["Sensor"]
-    s.add(tube((0, -125, 30), (0, -125, 95), 1.8, 1.2, N=6))
-    s.add(box((0, -125, 96), (34, 5, 3)))
-    # cargo: small ventral pod
-    P["Cargo"].add(loft([(60, 10, 8, -36), (30, 22, 16, -36), (-70, 24, 17, -36), (-100, 12, 9, -34)],
-                        N=8, sq=3.0))
+    s.add(sphere_y((0, 170, -38), 16, 16, 14, N=10, rings=5))
+    s.add(tube((0, -40, 62), (0, -40, 100), 1.6, 1.0, N=6))
+    # cargo: ventral pannier
+    P["Cargo"].add(loft([(60, 10, 8, -46), (30, 26, 14, -48), (-90, 28, 15, -48), (-120, 12, 8, -46)],
+                        N=8, sq=3.5))
     return dict(parts=P, mats={"Carcass": "M_Hull", "Engine": "M_Engine_Block", "Weapon": "M_Weapon_Block",
                                "Sensor": "M_Sensor_Block", "Cargo": "M_Cargo_Hold"},
-                nav={"NavGreen": (-205, -110, 2), "NavRed": (205, -110, 2),
-                     "NavWhite": (0, -276, 6), "NavBeacon": (0, -150, 78)}, nav_r=4.5)
+                nav={"NavGreen": (-150, 64, 75), "NavRed": (150, 64, 75),
+                     "NavWhite": (0, -236, 2), "NavBeacon": (0, -40, 104)}, nav_r=4.5)
 
 
 def design_corvette():

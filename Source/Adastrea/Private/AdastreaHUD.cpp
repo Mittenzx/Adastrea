@@ -1299,17 +1299,7 @@ void AAdastreaHUD::HideShipSelect()
 {
 	bShowShipSelect = false;
 	bShipCaptureReady = false;
-	// Destroy preview actor + capture.
-	if (ShipPreviewActor)
-	{
-		ShipPreviewActor->Destroy();
-		ShipPreviewActor = nullptr;
-	}
-	if (ShipPreviewCapture)
-	{
-		ShipPreviewCapture->DestroyComponent();
-		ShipPreviewCapture = nullptr;
-	}
+	DestroyShipPreview();
 	if (ShipPreviewRT)
 	{
 		ShipPreviewRT = nullptr;
@@ -1324,6 +1314,23 @@ void AAdastreaHUD::HideShipSelect()
 	UE_LOG(LogTemp, Log, TEXT("ShipSelect: screen hidden"));
 }
 
+void AAdastreaHUD::DestroyShipPreview()
+{
+	// Destroy the whole rig. Only the capture *component* used to be destroyed, so
+	// every rebuild (each ship cycled) left a capture actor and a directional light
+	// behind - and those lights lit the whole level.
+	for (TObjectPtr<AActor>* Actor : { &ShipPreviewActor, &ShipPreviewCaptureActor, &ShipPreviewLight })
+	{
+		if (IsValid(*Actor))
+		{
+			(*Actor)->Destroy();
+		}
+		*Actor = nullptr;
+	}
+	ShipPreviewCapture = nullptr;
+	ShipPreviewMeshComp = nullptr;
+}
+
 void AAdastreaHUD::RebuildShipPreview(APlayerController* PC)
 {
 	if (!PC || !PC->GetWorld())
@@ -1333,16 +1340,7 @@ void AAdastreaHUD::RebuildShipPreview(APlayerController* PC)
 	UWorld* World = PC->GetWorld();
 
 	// Tear down any existing preview.
-	if (ShipPreviewActor)
-	{
-		ShipPreviewActor->Destroy();
-		ShipPreviewActor = nullptr;
-	}
-	if (ShipPreviewCapture)
-	{
-		ShipPreviewCapture->DestroyComponent();
-		ShipPreviewCapture = nullptr;
-	}
+	DestroyShipPreview();
 
 	// Load this roster entry's ship class.
 	const TSubclassOf<AActor> ShipClass = LoadShipRosterClass(ShipSelectIndex);
@@ -1370,6 +1368,9 @@ void AAdastreaHUD::RebuildShipPreview(APlayerController* PC)
 			UStaticMeshComponent* SMComp = SMA->GetStaticMeshComponent();
 			if (SMComp && PreviewMesh)
 			{
+				// Spawned StaticMeshActors default to Static; the preview is re-meshed,
+				// scaled and turned every frame, which warned each frame.
+				SMComp->SetMobility(EComponentMobility::Movable);
 				SMComp->SetStaticMesh(PreviewMesh);
 				SMComp->SetHiddenInGame(false);
 				SMComp->SetVisibility(true, true);
@@ -1405,6 +1406,7 @@ void AAdastreaHUD::RebuildShipPreview(APlayerController* PC)
 			// (most reliable — bare HUD-attached components are fragile in PIE).
 			ASceneCapture2D* CapActor = World->SpawnActor<ASceneCapture2D>(ASceneCapture2D::StaticClass(),
 				PreviewLoc + FVector(-2400.0f, 0, 0), FRotator(0, 0, 0));
+		ShipPreviewCaptureActor = CapActor;
 		if (CapActor)
 		{
 			ShipPreviewCapture = CapActor->GetCaptureComponent2D();
@@ -1426,17 +1428,14 @@ void AAdastreaHUD::RebuildShipPreview(APlayerController* PC)
 				// Keep capture seeing the WHOLE world (not ShowOnly) so a near preview
 				// directional light can illuminate the mesh.
 				ShipPreviewCapture->PrimitiveRenderMode = ESceneCapturePrimitiveRenderMode::PRM_RenderScenePrimitives;
-				ShipPreviewCapture->CaptureScene();
+				// bCaptureEveryFrame renders it; an explicit CaptureScene() only warns.
 			}
 
 			// Add a small directional light near the preview so the mesh is lit (the far
 			// world location has no scene lights, which made the preview render black).
 			ADirectionalLight* PreviewLight = World->SpawnActor<ADirectionalLight>(
 				ADirectionalLight::StaticClass(), PreviewLoc + FVector(0, 0, 3000.0f), FRotator(-45.0f, 45.0f, 0.0f));
-			if (PreviewLight)
-			{
-				PreviewLight->SetActorScale3D(FVector(1, 1, 1));
-			}
+			ShipPreviewLight = PreviewLight;
 
 	bShipCaptureReady = ShipPreviewCapture && ShipPreviewRT;
 	UE_LOG(LogTemp, Log, TEXT("ShipSelect: preview rebuilt for roster index %d (ready=%d)"),
