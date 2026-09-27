@@ -7,6 +7,7 @@
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "Engine/Engine.h"
 #include "Engine/World.h"
+#include "EngineUtils.h"
 #include "GameFramework/PlayerController.h"
 #include "HAL/IConsoleManager.h"
 
@@ -32,10 +33,23 @@ namespace
 	// Listening/test helpers: boost has no key binding yet, and scripted PIE runs need exact throttle values.
 	FAutoConsoleCommandWithWorldAndArgs GEngineVoiceThrottleCommand(
 		TEXT("adastrea.EngineVoiceThrottle"),
-		TEXT("Set the piloted ship's throttle (0-100). Usage: adastrea.EngineVoiceThrottle 50"),
+		TEXT("Set a ship's throttle (0-100): the piloted ship, or the named ship actor. Usage: adastrea.EngineVoiceThrottle 50 [ShipActorName]"),
 		FConsoleCommandWithWorldAndArgsDelegate::CreateLambda([](const TArray<FString>& Args, UWorld* World)
 		{
-			if (ASpaceship* Ship = PlayerShip(World))
+			ASpaceship* Ship = PlayerShip(World);
+			if (Args.Num() > 1 && World)
+			{
+				Ship = nullptr;
+				for (TActorIterator<ASpaceship> It(World); It; ++It)
+				{
+					if (It->GetName() == Args[1])
+					{
+						Ship = *It;
+						break;
+					}
+				}
+			}
+			if (Ship)
 			{
 				Ship->SetThrottle(Args.IsEmpty() ? 0.0f : FCString::Atof(*Args[0]));
 				UE_LOG(LogAdastreaEngineVoice, Log, TEXT("EngineVoiceThrottle: %s throttle %.0f%%"), *Ship->GetName(), Ship->ThrottlePercentage);
