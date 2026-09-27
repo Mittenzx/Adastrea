@@ -60,6 +60,41 @@ public:
 	void SetMapVisible(bool bVisible) { bShowMap = bVisible; }
 
 	// ========================
+	// PAUSE MENU (canvas-drawn; Esc / F10 when no other screen is open)
+	// Resume, the Master/SFX/UI volume sliders (UAudioMixSubsystem), Quit.
+	// The simulation keeps running so slider changes can be heard live.
+	// ========================
+
+	/** Whether the pause menu is shown. */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|PauseMenu")
+	bool bShowPauseMenu = false;
+
+	/** Highlighted pause-menu row. */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|PauseMenu")
+	int32 PauseMenuIndex = 0;
+
+	UFUNCTION(BlueprintCallable, Category="HUD|PauseMenu")
+	void ShowPauseMenu() { bShowPauseMenu = true; PauseMenuIndex = 0; }
+
+	UFUNCTION(BlueprintCallable, Category="HUD|PauseMenu")
+	void HidePauseMenu() { bShowPauseMenu = false; }
+
+	/** True while any other full-screen canvas screen (map, station menu, trade, ship select, station info) is up. */
+	bool IsOtherScreenOpen() const { return bShowMap || bShowStationMenu || bShowTradeScreen || bShowShipSelect || bShowStationInfo; }
+
+	/** Move the highlighted row up/down (wraps). */
+	void MovePauseMenuSelection(int32 Step);
+
+	/** Left/Right on a slider row: change that volume by one step (5%). */
+	void AdjustPauseMenuValue(int32 Direction);
+
+	/** Enter: Resume or Quit (slider rows ignore Enter). Returns true if the menu should close. */
+	bool ConfirmPauseMenuSelection(APlayerController* PC);
+
+	/** Draw the pause menu. */
+	void DrawPauseMenu(APlayerController* PC);
+
+	// ========================
 	// FLIGHT HUD
 	// ========================
 

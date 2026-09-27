@@ -30,6 +30,10 @@
 #include "Engine/Engine.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetRenderingLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Audio/AudioMixSubsystem.h"
+#include "Audio/AdastreaAudioSettings.h"
+#include "Audio/AudioCatalogSubsystem.h"
 #include "Audio/AudioEventLibrary.h"
 
 // Palette (subtle sci-fi, on-brand for a teal/cyan accent theme)
@@ -131,6 +135,13 @@ void AAdastreaHUD::DrawHUD()
 			{
 				DrawSectorMap(PC, Pawn->GetActorLocation());
 			}
+		}
+
+		// Pause menu (volume sliders) draws over everything when shown.
+		if (bShowPauseMenu)
+		{
+			DrawPauseMenu(PC);
+			return;
 		}
 
 		ASpaceship* Ship = Cast<ASpaceship>(PC->GetPawn());
@@ -963,6 +974,133 @@ void AAdastreaHUD::DrawStationMenu(APlayerController* PC, AAdastreaPlayerControl
 	}
 
 	DrawText(TEXT("[UP/DOWN] select     [ENTER] confirm     [ESC/BACKSPACE] back / undock"), kLabel,
+		X + 24.0f, Y + PanelH - 30.0f, BodyFont, 0.8f);
+}
+
+// ---------------------------------------------------------------------------
+// Pause menu
+// ---------------------------------------------------------------------------
+
+namespace
+{
+	// Rows: Resume, the three volume sliders, Quit. No music slider (music is a later session).
+	enum class EPauseRow : int32 { Resume = 0, Master, SFX, UI, Quit, Count };
+	constexpr int32 kPauseRowCount = static_cast<int32>(EPauseRow::Count);
+	constexpr float kVolumeStep = 0.05f;
+
+	bool PauseRowCategory(int32 Row, EAdastreaVolumeCategory& Out)
+	{
+		switch (static_cast<EPauseRow>(Row))
+		{
+		case EPauseRow::Master: Out = EAdastreaVolumeCategory::Master; return true;
+		case EPauseRow::SFX:    Out = EAdastreaVolumeCategory::SFX; return true;
+		case EPauseRow::UI:     Out = EAdastreaVolumeCategory::UI; return true;
+		default: return false;
+		}
+	}
+}
+
+void AAdastreaHUD::MovePauseMenuSelection(int32 Step)
+{
+	PauseMenuIndex = (PauseMenuIndex + Step + kPauseRowCount) % kPauseRowCount;
+	UAudioEventLibrary::PlaySecondary2D(this, TEXT("UI.Hover"));
+}
+
+void AAdastreaHUD::AdjustPauseMenuValue(int32 Direction)
+{
+	EAdastreaVolumeCategory Category;
+	if (!PauseRowCategory(PauseMenuIndex, Category))
+	{
+		return;
+	}
+	const float Current = UAdastreaAudioSettings::Get()->GetVolume(Category);
+	// Snap to the 5% grid so repeated presses land on round numbers.
+	const float Next = FMath::Clamp(FMath::RoundToFloat(Current / kVolumeStep + Direction) * kVolumeStep, 0.0f, 1.0f);
+	if (UAudioMixSubsystem* Mix = UAudioMixSubsystem::Get(this))
+	{
+		Mix->SetCategoryVolume(Category, Next);
+	}
+	else
+	{
+		UAdastreaAudioSettings::Get()->SetVolume(Category, Next);
+		UAdastreaAudioSettings::Get()->Save();
+	}
+	// Played after the change, so the UI slider previews its own new level.
+	UAudioEventLibrary::PlayEvent2D(this, TEXT("UI.Click"));
+}
+
+bool AAdastreaHUD::ConfirmPauseMenuSelection(APlayerController* PC)
+{
+	switch (static_cast<EPauseRow>(FMath::Clamp(PauseMenuIndex, 0, kPauseRowCount - 1)))
+	{
+	case EPauseRow::Resume:
+		return true;
+	case EPauseRow::Quit:
+		UE_LOG(LogTemp, Log, TEXT("PauseMenu: quit"));
+		UKismetSystemLibrary::QuitGame(this, PC, EQuitPreference::Quit, false);
+		return true;
+	default:
+		return false;
+	}
+}
+
+void AAdastreaHUD::DrawPauseMenu(APlayerController* PC)
+{
+	UFont* TitleFont = GEngine->GetLargeFont();
+	UFont* BodyFont  = GEngine->GetSmallFont();
+	const float VW = Canvas->SizeX;
+	const float VH = Canvas->SizeY;
+
+	DrawRect(FLinearColor(0.0f, 0.0f, 0.02f, 0.72f), 0.0f, 0.0f, VW, VH);
+
+	const float PanelW = 560.0f;
+	const float RowH   = 56.0f;
+	const float PanelH = 110.0f + RowH * kPauseRowCount + 44.0f;
+	const float X = (VW - PanelW) * 0.5f;
+	const float Y = (VH - PanelH) * 0.5f;
+
+	DrawRect(kBg, X, Y, PanelW, PanelH);
+	DrawLine(X, Y, X, Y + PanelH, kBorder, 3.0f);
+	DrawText(TEXT("PAUSED"), kHeader, X + 24.0f, Y + 16.0f, TitleFont, 1.0f);
+	DrawText(TEXT("Audio"), kLabel, X + 24.0f, Y + 50.0f, BodyFont, 0.9f);
+	DrawLine(X + 16.0f, Y + 76.0f, X + PanelW - 16.0f, Y + 76.0f, kBorder, 1.0f);
+
+	const FLinearColor Accent(0.15f, 0.9f, 0.6f, 1.0f);
+	const UAdastreaAudioSettings* Settings = UAdastreaAudioSettings::Get();
+	for (int32 i = 0; i < kPauseRowCount; ++i)
+	{
+		const float RowY = Y + 88.0f + RowH * i;
+		const bool bSel = (i == PauseMenuIndex);
+		if (bSel)
+		{
+			DrawRect(FLinearColor(0.15f, 0.9f, 0.6f, 0.18f), X + 12.0f, RowY, PanelW - 24.0f, RowH - 6.0f);
+			DrawLine(X + 12.0f, RowY, X + 12.0f, RowY + RowH - 6.0f, Accent, 3.0f);
+		}
+		const FLinearColor LabelCol = bSel ? Accent : FLinearColor::White;
+
+		EAdastreaVolumeCategory Category;
+		if (PauseRowCategory(i, Category))
+		{
+			const float Value = Settings->GetVolume(Category);
+			DrawText(FString::Printf(TEXT("%s volume"), UAdastreaAudioSettings::GetCategoryLabel(Category)),
+				LabelCol, X + 28.0f, RowY + 14.0f, TitleFont, 0.8f);
+
+			// Slider track + fill + percentage.
+			const float TrackX = X + 250.0f;
+			const float TrackW = 220.0f;
+			const float TrackY = RowY + 22.0f;
+			DrawRect(FLinearColor(0.25f, 0.3f, 0.35f, 0.9f), TrackX, TrackY, TrackW, 6.0f);
+			DrawRect(bSel ? Accent : kBorder, TrackX, TrackY, TrackW * Value, 6.0f);
+			DrawText(FString::Printf(TEXT("%3.0f%%"), Value * 100.0f), LabelCol, TrackX + TrackW + 14.0f, RowY + 14.0f, BodyFont, 0.9f);
+		}
+		else
+		{
+			const TCHAR* Label = (static_cast<EPauseRow>(i) == EPauseRow::Resume) ? TEXT("Resume") : TEXT("Quit to desktop");
+			DrawText(Label, LabelCol, X + 28.0f, RowY + 14.0f, TitleFont, 0.8f);
+		}
+	}
+
+	DrawText(TEXT("[UP/DOWN] select     [LEFT/RIGHT] adjust     [ENTER] confirm     [ESC/F10] resume"), kLabel,
 		X + 24.0f, Y + PanelH - 30.0f, BodyFont, 0.8f);
 }
 
