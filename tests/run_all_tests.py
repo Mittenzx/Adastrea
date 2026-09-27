@@ -108,6 +108,7 @@ class TestRunner:
             test_files = [
                 "tests/test_procedural_generators.py",
                 "tests/test_schema_validator.py",
+                "tests/test_audio_assets.py",
             ]
 
             for test_file in test_files:
