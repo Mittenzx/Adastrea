@@ -761,6 +761,12 @@ private:
     /** Whether the previous frame counted as manoeuvring. */
     bool bThrusterAudioWasManeuvering = false;
 
+    /**
+     * World time of the last strafe/vertical input strong enough to fire thrusters, stamped in Move().
+     * (MoveAction is bound with BindAction, not BindActionValue, so GetBoundActionValue can't be used.)
+     */
+    double ThrusterAudioLastStrafeTime = -1.0;
+
     /** Timer for Dock.AirlockHiss, shortly after the clamps engage. */
     FTimerHandle AirlockHissTimerHandle;
 

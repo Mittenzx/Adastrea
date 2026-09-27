@@ -24,8 +24,12 @@ namespace
 
 	// ---- Event sounds (Editor.*) ----
 
-	/** Modules whose bounds half-diagonal reaches this (cm) get the heavy placement thunk. */
-	constexpr float LargeModuleExtent = 1500.0f;
+	/**
+	 * Modules whose bounds half-diagonal reaches this (cm) get the heavy placement thunk.
+	 * Measured in PIE: connectors are light (Corridor 305, Turret 310, DockingPort 346);
+	 * every full module is ~594-744 (CargoBay, Habitation, Reactor, labs, SolarArray, DockingBay).
+	 */
+	constexpr float LargeModuleExtent = 450.0f;
 
 	/** Editor.Invalid is a short buzz; don't let a held key or rapid clicks stack it. */
 	constexpr float InvalidMinInterval = 0.25f;

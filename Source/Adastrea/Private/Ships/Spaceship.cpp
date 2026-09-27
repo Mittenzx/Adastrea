@@ -318,18 +318,13 @@ void ASpaceship::UpdateThrusterAudio(float DeltaTime)
     ThrusterAudioLastRotation = Rotation;
     bThrusterAudioHasRotation = true;
 
-    // Strafe/vertical from the held Move value (RightInput/UpInput go stale on release).
-    float Strafe = 0.0f;
-    if (MoveAction)
-    {
-        if (const UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(InputComponent))
-        {
-            const FVector Move = EIC->GetBoundActionValue(MoveAction).Get<FVector>();
-            Strafe = FVector2D(Move.X, Move.Y).Size();
-        }
-    }
+    // Strafe/vertical: Move() stamps the time while the keys are held (RightInput/UpInput go
+    // stale on release). Allow a couple of frames of slack for input/tick ordering.
+    const double Now = GetWorld()->GetTimeSeconds();
+    const bool bStrafing = ThrusterAudioLastStrafeTime >= 0.0
+        && Now - ThrusterAudioLastStrafeTime <= FMath::Max(0.1, 2.0 * DeltaTime);
 
-    const bool bManeuvering = TurnDegPerSec > TurnThresholdDegPerSec || Strafe > StrafeThreshold;
+    const bool bManeuvering = TurnDegPerSec > TurnThresholdDegPerSec || bStrafing;
     if (bManeuvering && !bThrusterAudioWasManeuvering && ThrusterAudioQuietTime >= MinQuietSeconds)
     {
         if (UAudioEventLibrary::GetShipSizeFactor(ShipDataAsset) >= UAudioEventLibrary::HeavyShipSizeFactor)
@@ -623,6 +618,12 @@ void ASpaceship::Move(const FInputActionValue& Value)
     //   X4-style: WASD gives direct vertical + strafe velocity, throttle = cruise.
     MoveUp(MovementVector.X);
     MoveRight(MovementVector.Y);
+
+    // Thruster audio: Triggered re-fires every frame while held, so this stays fresh.
+    if (FVector2D(MovementVector.X, MovementVector.Y).Size() > ShipEventAudio::StrafeThreshold && GetWorld())
+    {
+        ThrusterAudioLastStrafeTime = GetWorld()->GetTimeSeconds();
+    }
 }
 
 FVector2D ASpaceship::NormalizeLookInputByAspectRatio(const FVector2D& LookInput, APlayerController* PC)

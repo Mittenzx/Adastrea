@@ -165,6 +165,39 @@ class TestRateLimits:
         body = _function_body(_strip_comments(_src(LIBRARY_CPP)), "UAudioEventLibrary::GetShipSizeFactor")
         assert "HullStrength" in body and "CargoCapacity" in body
 
+    def test_size_split_matches_real_roster(self):
+        """PIE found the DA_* assets far larger than ShipClasses.json; the Corvette must still puff."""
+        import math
+        code = _src(LIBRARY_CPP)
+        lo = float(re.search(r"SizeLogMin = ([0-9.]+)f", code).group(1))
+        hi = float(re.search(r"SizeLogMax = ([0-9.]+)f", code).group(1))
+        heavy = float(re.search(r"HeavyShipSizeFactor = ([0-9.]+)f", _src(LIBRARY_H)).group(1))
+
+        def factor(hull_plus_cargo):
+            return min(max((math.log10(hull_plus_cargo) - lo) / (hi - lo), 0.0), 1.0)
+
+        # hull + cargo read from the DA_* assets in PIE (2026-09-27)
+        light = {"Fighter_Viper": 630, "MittenzxMk1": 1075, "Patrol_Sentinel": 2000,
+                 "Corvette_Raptor": 2350, "Frigate_Shadowblade": 3000}
+        heavy_ships = {"Gunship_Warhammer": 5150, "Carrier_Vanguard": 6900, "Command_Sovereign": 17000,
+                       "Transport_Behemoth": 28000}
+        for name, size in light.items():
+            assert factor(size) < heavy, f"{name} should puff"
+        for name, size in heavy_ships.items():
+            assert factor(size) >= heavy, f"{name} should groan"
+
+    def test_strafe_detection_does_not_use_unbound_action_value(self):
+        """MoveAction is bound with BindAction, so GetBoundActionValue always reads zero (found in PIE)."""
+        ship = _strip_comments(_src(SHIP_CPP))
+        update = _function_body(ship, "void ASpaceship::UpdateThrusterAudio")
+        assert "GetBoundActionValue" not in update
+        assert "ThrusterAudioLastStrafeTime" in update
+        assert "ThrusterAudioLastStrafeTime = GetWorld()->GetTimeSeconds()" in _function_body(ship, "void ASpaceship::Move(")
+
+    def test_beacon_not_while_building(self):
+        body = _function_body(_strip_comments(_src(PC_CPP)), "void AAdastreaPlayerController::CheckForNearbyTradableStations")
+        assert 'TEXT("Dock.Beacon")' in body and "!IsStationEditorOpen()" in body
+
     def test_ore_tick_and_credits_ding_rate_limited(self):
         pc = _strip_comments(_src(PC_CPP))
         assert re.search(r'TEXT\("Mining\.OreTick"\),\s*PlayerEventAudio::OreTickMinInterval', pc)

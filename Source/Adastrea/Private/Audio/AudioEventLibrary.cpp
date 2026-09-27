@@ -31,10 +31,13 @@ namespace AdastreaAudioEvents
 	/** Live FScopedMute count. */
 	static int32 MuteDepth = 0;
 
-	// Roster range for the size factor: the Fighter is about 200 hull + 10 cargo,
-	// the Battleship about 4000 + 500 (Content/Data/ShipClasses.json).
-	static constexpr float SizeLogMin = 2.30103f; // log10(200)
-	static constexpr float SizeLogMax = 3.69897f; // log10(5000)
+	// Roster range for the size factor, from the real DA_* ship data assets (hull + cargo):
+	// DA_Fighter_ViperInterceptor ~630 is the smallest, DA_Transport_BehemothFreighter ~28000
+	// the largest. With HeavyShipSizeFactor 0.5 the split falls at ~4100: Fighter, Mk1,
+	// Patrol, Corvette, Frigate, Starliner and Science puff; Excavator, Gunship, Cruiser,
+	// Salvage, Carrier, Merchant, Sovereign and the colony/freight haulers groan.
+	static constexpr float SizeLogMin = 2.77815f; // log10(600)
+	static constexpr float SizeLogMax = 4.44716f; // log10(28000)
 }
 
 bool UAudioEventLibrary::IsMuted()

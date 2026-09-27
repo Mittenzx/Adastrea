@@ -62,8 +62,8 @@ public:
 	static bool IsLocalPlayerActor(const AActor* Actor);
 
 	/**
-	 * 0 (smallest: Fighter) .. 1 (largest: Battleship/capital), from log10(HullStrength + CargoCapacity)
-	 * across the roster's range. Null data = 0.3 (a light ship).
+	 * 0 (smallest: Viper fighter) .. 1 (largest: Behemoth freighter), from log10(HullStrength + CargoCapacity)
+	 * across the DA_* roster's range. Null data = 0.3 (a light ship).
 	 */
 	static float GetShipSizeFactor(const USpaceshipDataAsset* ShipData);
 

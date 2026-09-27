@@ -44,7 +44,8 @@
 
 namespace PlayerEventAudio
 {
-	constexpr float OreTickMinInterval = 0.25f;
+	/** Ore arrives about every 0.33 s while mining; tick at most twice a second. */
+	constexpr float OreTickMinInterval = 0.5f;
 	constexpr float CreditsDingMinInterval = 1.5f;
 	/** Don't re-ping the same approach: one beacon per bay per this many seconds. */
 	constexpr float BeaconMinInterval = 8.0f;
@@ -2154,8 +2155,9 @@ void AAdastreaPlayerController::CheckForNearbyTradableStations()
 			UE_LOG(LogAdastrea, Log, TEXT("Docking range: %s (%.0f cm)"),
 				DockTarget ? *DockTarget->GetName() : TEXT("left range"), DockTarget ? BestDockDist : 0.0f);
 
-			// Approach beacon: a bay just came into docking range ('E to dock').
-			if (DockTarget && !Ship->IsDocked())
+			// Approach beacon: a bay just came into docking range ('E to dock'). Not while
+			// building: placing a bay beside the ship would otherwise ping mid-edit.
+			if (DockTarget && !Ship->IsDocked() && !IsStationEditorOpen())
 			{
 				UAudioEventLibrary::PlayEvent2D(this, TEXT("Dock.Beacon"), PlayerEventAudio::BeaconMinInterval);
 			}
