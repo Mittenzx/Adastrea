@@ -470,6 +470,18 @@ public:
 																						void HandleTradeClose();
 	UFUNCTION(Exec)
 	void HandleStationMenuConfirm();
+
+	/** Esc / F10: open the pause menu (when no other screen is up) or close it. Exec for scripted tests. */
+	UFUNCTION(Exec)
+	void HandlePauseMenuKey();
+
+	/** Left/Right in the pause menu: adjust the highlighted volume slider. */
+	void HandlePauseMenuLeft();
+	void HandlePauseMenuRight();
+
+	/** Open / close the canvas pause menu (pauses ship mouse-look while open). */
+	void OpenPauseMenu();
+	void ClosePauseMenu();
 																											UFUNCTION(Exec)
 																											void ExecuteTrade(int32 Quantity);
 

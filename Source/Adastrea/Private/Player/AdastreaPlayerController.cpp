@@ -212,6 +212,14 @@ void AAdastreaPlayerController::SetupInputComponent()
 		InputComponent->BindKey(EKeys::C, IE_Pressed, this, &AAdastreaPlayerController::HandleMapCenter);
 		InputComponent->BindKey(EKeys::One, IE_Pressed, this, &AAdastreaPlayerController::HandleMapToggleShips);
 		InputComponent->BindKey(EKeys::Two, IE_Pressed, this, &AAdastreaPlayerController::HandleMapToggleStations);
+		// Pause menu (Esc / F10). Bound before the other Esc handlers so it sees the screen
+		// state from before this key press (closing the trade screen must not also open it).
+		InputComponent->BindKey(EKeys::Escape, IE_Pressed, this, &AAdastreaPlayerController::HandlePauseMenuKey);
+		InputComponent->BindKey(EKeys::F10, IE_Pressed, this, &AAdastreaPlayerController::HandlePauseMenuKey);
+		InputComponent->BindKey(EKeys::Left, IE_Pressed, this, &AAdastreaPlayerController::HandlePauseMenuLeft);
+		InputComponent->BindKey(EKeys::Left, IE_Repeat, this, &AAdastreaPlayerController::HandlePauseMenuLeft);
+		InputComponent->BindKey(EKeys::Right, IE_Pressed, this, &AAdastreaPlayerController::HandlePauseMenuRight);
+		InputComponent->BindKey(EKeys::Right, IE_Repeat, this, &AAdastreaPlayerController::HandlePauseMenuRight);
 		// Trade screen input (only acted on when the trade screen is open)
 		InputComponent->BindKey(EKeys::Up, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeSelectUp);
 		InputComponent->BindKey(EKeys::Down, IE_Pressed, this, &AAdastreaPlayerController::HandleTradeSelectDown);
@@ -752,7 +760,8 @@ void AAdastreaPlayerController::HandleTradeSelectUp()
 {
 	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
 	{
-		if (H->bShowStationMenu) { H->MoveStationMenuSelection(-1); }
+		if (H->bShowPauseMenu) { H->MovePauseMenuSelection(-1); }
+		else if (H->bShowStationMenu) { H->MoveStationMenuSelection(-1); }
 		else if (H->bShowTradeScreen) { H->MoveTradeSelection(-1); }
 	}
 }
@@ -761,7 +770,8 @@ void AAdastreaPlayerController::HandleTradeSelectDown()
 {
 	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
 	{
-		if (H->bShowStationMenu) { H->MoveStationMenuSelection(1); }
+		if (H->bShowPauseMenu) { H->MovePauseMenuSelection(1); }
+		else if (H->bShowStationMenu) { H->MoveStationMenuSelection(1); }
 		else if (H->bShowTradeScreen) { H->MoveTradeSelection(1); }
 	}
 }
@@ -838,7 +848,70 @@ void AAdastreaPlayerController::HandleStationMenuConfirm()
 {
 	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
 	{
-		if (H->bShowStationMenu) { H->ConfirmStationMenuSelection(this); }
+		if (H->bShowPauseMenu)
+		{
+			if (H->ConfirmPauseMenuSelection(this))
+			{
+				ClosePauseMenu();
+			}
+		}
+		else if (H->bShowStationMenu) { H->ConfirmStationMenuSelection(this); }
+	}
+}
+
+void AAdastreaPlayerController::HandlePauseMenuKey()
+{
+	AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD());
+	if (!H)
+	{
+		return;
+	}
+	if (H->bShowPauseMenu)
+	{
+		ClosePauseMenu();
+		return;
+	}
+	// Esc already means "back" on every other screen; only open from plain flight / on foot.
+	if (H->IsOtherScreenOpen() || IsStationEditorOpen() || IsMainMenuOpen() || IsTradingOpen())
+	{
+		return;
+	}
+	OpenPauseMenu();
+}
+
+void AAdastreaPlayerController::HandlePauseMenuLeft()
+{
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
+	{
+		if (H->bShowPauseMenu) { H->AdjustPauseMenuValue(-1); }
+	}
+}
+
+void AAdastreaPlayerController::HandlePauseMenuRight()
+{
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
+	{
+		if (H->bShowPauseMenu) { H->AdjustPauseMenuValue(1); }
+	}
+}
+
+void AAdastreaPlayerController::OpenPauseMenu()
+{
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
+	{
+		H->ShowPauseMenu();
+		bLockMouseLook = true; // arrows/mouse drive the menu, not the ship
+		UE_LOG(LogAdastrea, Log, TEXT("Pause menu opened"));
+	}
+}
+
+void AAdastreaPlayerController::ClosePauseMenu()
+{
+	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
+	{
+		H->HidePauseMenu();
+		bLockMouseLook = bTargetingModeActive; // targeting mode keeps its own cursor lock
+		UE_LOG(LogAdastrea, Log, TEXT("Pause menu closed"));
 	}
 }
 
