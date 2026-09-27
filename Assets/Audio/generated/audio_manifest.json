@@ -1,0 +1,2125 @@
+{
+  "sample_rate": 48000,
+  "bit_depth": 16,
+  "channels": 1,
+  "peak_ceiling_dbfs": -1.0,
+  "loudness_method": "BS.1770-style K-weighted gated integrated loudness; 100 ms blocks for sounds under 1 s (see generate_sfx.integrated_loudness)",
+  "sounds": [
+    {
+      "id": "Engine.Light.Low",
+      "file": "Engine/Engine_Light_Low.wav",
+      "category": "Engine",
+      "asset_name": "SW_Engine_Light_Low",
+      "sound_class": "SC_Engine",
+      "attenuation": "ATT_AIEngine",
+      "loop": true,
+      "loop_start": 0,
+      "loop_end": 288000,
+      "duration_s": 6.0,
+      "num_samples": 288000,
+      "target_lufs": -24.0,
+      "measured_lufs": -24.0,
+      "peak_dbfs": -11.96,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 39629809,
+      "params": {
+        "f0": 125.0,
+        "n_harm": 24,
+        "harm_rolloff": 1.05,
+        "lp": 7000.0,
+        "rumble": 0.25,
+        "hiss": 0.12,
+        "throb_hz": 0.0,
+        "throb_depth": 0.0,
+        "sub": 0.0,
+        "wander": 0.006,
+        "high_f0_mult": 1.18,
+        "high_bright": 1.25,
+        "f0_effective": 125.0,
+        "loop_seconds": 6.0,
+        "variant": "Low"
+      }
+    },
+    {
+      "id": "Engine.Light.High",
+      "file": "Engine/Engine_Light_High.wav",
+      "category": "Engine",
+      "asset_name": "SW_Engine_Light_High",
+      "sound_class": "SC_Engine",
+      "attenuation": "ATT_AIEngine",
+      "loop": true,
+      "loop_start": 0,
+      "loop_end": 288000,
+      "duration_s": 6.0,
+      "num_samples": 288000,
+      "target_lufs": -24.0,
+      "measured_lufs": -24.0,
+      "peak_dbfs": -12.55,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 444490090,
+      "params": {
+        "f0": 125.0,
+        "n_harm": 24,
+        "harm_rolloff": 1.05,
+        "lp": 7000.0,
+        "rumble": 0.25,
+        "hiss": 0.12,
+        "throb_hz": 0.0,
+        "throb_depth": 0.0,
+        "sub": 0.0,
+        "wander": 0.006,
+        "high_f0_mult": 1.18,
+        "high_bright": 1.25,
+        "f0_effective": 147.5,
+        "loop_seconds": 6.0,
+        "variant": "High"
+      }
+    },
+    {
+      "id": "Engine.Medium.Low",
+      "file": "Engine/Engine_Medium_Low.wav",
+      "category": "Engine",
+      "asset_name": "SW_Engine_Medium_Low",
+      "sound_class": "SC_Engine",
+      "attenuation": "ATT_AIEngine",
+      "loop": true,
+      "loop_start": 0,
+      "loop_end": 288000,
+      "duration_s": 6.0,
+      "num_samples": 288000,
+      "target_lufs": -24.0,
+      "measured_lufs": -24.0,
+      "peak_dbfs": -12.14,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 174436098,
+      "params": {
+        "f0": 80.0,
+        "n_harm": 18,
+        "harm_rolloff": 1.35,
+        "lp": 3200.0,
+        "rumble": 0.35,
+        "hiss": 0.05,
+        "throb_hz": 1.5,
+        "throb_depth": 0.1,
+        "sub": 0.0,
+        "wander": 0.005,
+        "high_f0_mult": 1.15,
+        "high_bright": 1.2,
+        "f0_effective": 80.0,
+        "loop_seconds": 6.0,
+        "variant": "Low"
+      }
+    },
+    {
+      "id": "Engine.Medium.High",
+      "file": "Engine/Engine_Medium_High.wav",
+      "category": "Engine",
+      "asset_name": "SW_Engine_Medium_High",
+      "sound_class": "SC_Engine",
+      "attenuation": "ATT_AIEngine",
+      "loop": true,
+      "loop_start": 0,
+      "loop_end": 288000,
+      "duration_s": 6.0,
+      "num_samples": 288000,
+      "target_lufs": -24.0,
+      "measured_lufs": -24.0,
+      "peak_dbfs": -12.49,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 1044577232,
+      "params": {
+        "f0": 80.0,
+        "n_harm": 18,
+        "harm_rolloff": 1.35,
+        "lp": 3200.0,
+        "rumble": 0.35,
+        "hiss": 0.05,
+        "throb_hz": 1.5,
+        "throb_depth": 0.1,
+        "sub": 0.0,
+        "wander": 0.005,
+        "high_f0_mult": 1.15,
+        "high_bright": 1.2,
+        "f0_effective": 92.0,
+        "loop_seconds": 6.0,
+        "variant": "High"
+      }
+    },
+    {
+      "id": "Engine.Heavy.Low",
+      "file": "Engine/Engine_Heavy_Low.wav",
+      "category": "Engine",
+      "asset_name": "SW_Engine_Heavy_Low",
+      "sound_class": "SC_Engine",
+      "attenuation": "ATT_AIEngine",
+      "loop": true,
+      "loop_start": 0,
+      "loop_end": 288000,
+      "duration_s": 6.0,
+      "num_samples": 288000,
+      "target_lufs": -24.0,
+      "measured_lufs": -24.0,
+      "peak_dbfs": -9.76,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 713254354,
+      "params": {
+        "f0": 52.0,
+        "n_harm": 14,
+        "harm_rolloff": 1.7,
+        "lp": 1400.0,
+        "rumble": 0.45,
+        "hiss": 0.015,
+        "throb_hz": 0.75,
+        "throb_depth": 0.25,
+        "sub": 0.15,
+        "wander": 0.004,
+        "high_f0_mult": 1.12,
+        "high_bright": 1.15,
+        "f0_effective": 52.0,
+        "loop_seconds": 6.0,
+        "variant": "Low"
+      }
+    },
+    {
+      "id": "Engine.Heavy.High",
+      "file": "Engine/Engine_Heavy_High.wav",
+      "category": "Engine",
+      "asset_name": "SW_Engine_Heavy_High",
+      "sound_class": "SC_Engine",
+      "attenuation": "ATT_AIEngine",
+      "loop": true,
+      "loop_start": 0,
+      "loop_end": 288000,
+      "duration_s": 6.0,
+      "num_samples": 288000,
+      "target_lufs": -24.0,
+      "measured_lufs": -24.0,
+      "peak_dbfs": -9.29,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 951177166,
+      "params": {
+        "f0": 52.0,
+        "n_harm": 14,
+        "harm_rolloff": 1.7,
+        "lp": 1400.0,
+        "rumble": 0.45,
+        "hiss": 0.015,
+        "throb_hz": 0.75,
+        "throb_depth": 0.25,
+        "sub": 0.15,
+        "wander": 0.004,
+        "high_f0_mult": 1.12,
+        "high_bright": 1.15,
+        "f0_effective": 58.24000000000001,
+        "loop_seconds": 6.0,
+        "variant": "High"
+      }
+    },
+    {
+      "id": "Engine.Capital.Low",
+      "file": "Engine/Engine_Capital_Low.wav",
+      "category": "Engine",
+      "asset_name": "SW_Engine_Capital_Low",
+      "sound_class": "SC_Engine",
+      "attenuation": "ATT_AIEngine",
+      "loop": true,
+      "loop_start": 0,
+      "loop_end": 288000,
+      "duration_s": 6.0,
+      "num_samples": 288000,
+      "target_lufs": -24.0,
+      "measured_lufs": -24.0,
+      "peak_dbfs": -6.88,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 40831006,
+      "params": {
+        "f0": 35.0,
+        "n_harm": 10,
+        "harm_rolloff": 2.1,
+        "lp": 520.0,
+        "rumble": 0.55,
+        "hiss": 0.0,
+        "throb_hz": 0.5,
+        "throb_depth": 0.35,
+        "sub": 0.45,
+        "wander": 0.003,
+        "high_f0_mult": 1.1,
+        "high_bright": 1.1,
+        "f0_effective": 35.0,
+        "loop_seconds": 6.0,
+        "variant": "Low"
+      }
+    },
+    {
+      "id": "Engine.Capital.High",
+      "file": "Engine/Engine_Capital_High.wav",
+      "category": "Engine",
+      "asset_name": "SW_Engine_Capital_High",
+      "sound_class": "SC_Engine",
+      "attenuation": "ATT_AIEngine",
+      "loop": true,
+      "loop_start": 0,
+      "loop_end": 288000,
+      "duration_s": 6.0,
+      "num_samples": 288000,
+      "target_lufs": -24.0,
+      "measured_lufs": -24.0,
+      "peak_dbfs": -6.9,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 717991224,
+      "params": {
+        "f0": 35.0,
+        "n_harm": 10,
+        "harm_rolloff": 2.1,
+        "lp": 520.0,
+        "rumble": 0.55,
+        "hiss": 0.0,
+        "throb_hz": 0.5,
+        "throb_depth": 0.35,
+        "sub": 0.45,
+        "wander": 0.003,
+        "high_f0_mult": 1.1,
+        "high_bright": 1.1,
+        "f0_effective": 38.5,
+        "loop_seconds": 6.0,
+        "variant": "High"
+      }
+    },
+    {
+      "id": "Engine.Whine",
+      "file": "Engine/Engine_Whine.wav",
+      "category": "Engine",
+      "asset_name": "SW_Engine_Whine",
+      "sound_class": "SC_Engine",
+      "attenuation": "ATT_AIEngine",
+      "loop": true,
+      "loop_start": 0,
+      "loop_end": 192000,
+      "duration_s": 4.0,
+      "num_samples": 192000,
+      "target_lufs": -27.0,
+      "measured_lufs": -27.0,
+      "peak_dbfs": -22.31,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 1174718892,
+      "params": {
+        "freq": 2100.0,
+        "partial2": 1.52,
+        "partial2_level": 0.35,
+        "noise_band": [
+          1700,
+          2800
+        ],
+        "noise_level": 0.25,
+        "wander": 0.004,
+        "lp": 6000.0,
+        "seconds": 4.0
+      }
+    },
+    {
+      "id": "Engine.Boost",
+      "file": "Engine/Engine_Boost.wav",
+      "category": "Engine",
+      "asset_name": "SW_Engine_Boost",
+      "sound_class": "SC_Engine",
+      "attenuation": "ATT_AIEngine",
+      "loop": true,
+      "loop_start": 0,
+      "loop_end": 192000,
+      "duration_s": 4.0,
+      "num_samples": 192000,
+      "target_lufs": -24.0,
+      "measured_lufs": -24.0,
+      "peak_dbfs": -11.05,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 1652742587,
+      "params": {
+        "band": [
+          180.0,
+          2600.0
+        ],
+        "roar_level": 1.0,
+        "tone_hz": 95.0,
+        "tone_level": 0.35,
+        "flutter_hz": 11.0,
+        "flutter_depth": 0.12,
+        "seconds": 4.0
+      }
+    },
+    {
+      "id": "Engine.BoostStart",
+      "file": "Engine/Engine_BoostStart.wav",
+      "category": "Engine",
+      "asset_name": "SW_Engine_BoostStart",
+      "sound_class": "SC_Engine",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 1.6586,
+      "num_samples": 79611,
+      "target_lufs": -24.0,
+      "measured_lufs": -24.0,
+      "peak_dbfs": -9.17,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 1468625750,
+      "params": {
+        "dur": 1.3,
+        "cutoff_from": 250.0,
+        "cutoff_to": 4000.0,
+        "thump_hz": [
+          90.0,
+          45.0
+        ],
+        "thump_level": 0.6,
+        "reverb_wet": 0.2
+      }
+    },
+    {
+      "id": "Engine.SpoolUp",
+      "file": "Engine/Engine_SpoolUp.wav",
+      "category": "Engine",
+      "asset_name": "SW_Engine_SpoolUp",
+      "sound_class": "SC_Engine",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 1.6,
+      "num_samples": 76800,
+      "target_lufs": -24.0,
+      "measured_lufs": -24.0,
+      "peak_dbfs": -12.6,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 368937096,
+      "params": {
+        "dur": 1.6,
+        "f_low": 55.0,
+        "f_high": 150.0,
+        "noise_lp": [
+          300.0,
+          2200.0
+        ],
+        "noise_level": 0.5,
+        "harmonics": 6
+      }
+    },
+    {
+      "id": "Engine.SpoolDown",
+      "file": "Engine/Engine_SpoolDown.wav",
+      "category": "Engine",
+      "asset_name": "SW_Engine_SpoolDown",
+      "sound_class": "SC_Engine",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 1.6,
+      "num_samples": 76800,
+      "target_lufs": -24.0,
+      "measured_lufs": -24.0,
+      "peak_dbfs": -8.59,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 1682663818,
+      "params": {
+        "dur": 1.6,
+        "f_low": 55.0,
+        "f_high": 150.0,
+        "noise_lp": [
+          300.0,
+          2200.0
+        ],
+        "noise_level": 0.5,
+        "harmonics": 6
+      }
+    },
+    {
+      "id": "Engine.Idle",
+      "file": "Engine/Engine_Idle.wav",
+      "category": "Engine",
+      "asset_name": "SW_Engine_Idle",
+      "sound_class": "SC_Engine",
+      "attenuation": "ATT_AIEngine",
+      "loop": true,
+      "loop_start": 0,
+      "loop_end": 288000,
+      "duration_s": 6.0,
+      "num_samples": 288000,
+      "target_lufs": -27.0,
+      "measured_lufs": -27.0,
+      "peak_dbfs": -15.99,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 1409522300,
+      "params": {
+        "f0": 58.0,
+        "harmonics": 5,
+        "rolloff": 1.8,
+        "noise_lp": 400.0,
+        "noise_level": 0.4,
+        "pulse_hz": 0.5,
+        "pulse_depth": 0.15,
+        "seconds": 6.0
+      }
+    },
+    {
+      "id": "Thruster.Puff",
+      "file": "Flight/Thruster_Puff.wav",
+      "category": "Flight",
+      "asset_name": "SW_Thruster_Puff",
+      "sound_class": "SC_World",
+      "attenuation": "ATT_World",
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 0.35,
+      "num_samples": 16800,
+      "target_lufs": -20.0,
+      "measured_lufs": -20.0,
+      "peak_dbfs": -1.32,
+      "volume": 1.0,
+      "pitch_range": [
+        0.9,
+        1.1
+      ],
+      "seed": 1356281791,
+      "params": {
+        "dur": 0.35,
+        "band": [
+          700.0,
+          4500.0
+        ],
+        "attack": 0.004,
+        "decay": 0.09,
+        "reverb_wet": 0.12
+      }
+    },
+    {
+      "id": "Thruster.HeavyGroan",
+      "file": "Flight/Thruster_HeavyGroan.wav",
+      "category": "Flight",
+      "asset_name": "SW_Thruster_HeavyGroan",
+      "sound_class": "SC_World",
+      "attenuation": "ATT_World",
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 1.4,
+      "num_samples": 67200,
+      "target_lufs": -20.0,
+      "measured_lufs": -20.0,
+      "peak_dbfs": -5.89,
+      "volume": 1.0,
+      "pitch_range": [
+        0.92,
+        1.05
+      ],
+      "seed": 2037249884,
+      "params": {
+        "dur": 1.4,
+        "f_from": 62.0,
+        "f_to": 44.0,
+        "noise_lp": 320.0,
+        "noise_level": 0.6,
+        "attack": 0.18,
+        "release": 0.7
+      }
+    },
+    {
+      "id": "Flight.CollisionBump",
+      "file": "Flight/Flight_CollisionBump.wav",
+      "category": "Flight",
+      "asset_name": "SW_Flight_CollisionBump",
+      "sound_class": "SC_World",
+      "attenuation": "ATT_World",
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 1.2199,
+      "num_samples": 58557,
+      "target_lufs": -20.0,
+      "measured_lufs": -20.0,
+      "peak_dbfs": -1.1,
+      "volume": 1.0,
+      "pitch_range": [
+        0.9,
+        1.1
+      ],
+      "seed": 34421613,
+      "params": {
+        "thump": [
+          75.0,
+          38.0,
+          0.35
+        ],
+        "clank": [
+          190.0,
+          437.0,
+          822.0,
+          1370.0
+        ],
+        "clank_decay": [
+          0.5,
+          0.3,
+          0.18,
+          0.1
+        ],
+        "clank_level": 0.45,
+        "noise_level": 0.4,
+        "reverb_wet": 0.25
+      }
+    },
+    {
+      "id": "Flight.SpeedWarning",
+      "file": "Flight/Flight_SpeedWarning.wav",
+      "category": "Flight",
+      "asset_name": "SW_Flight_SpeedWarning",
+      "sound_class": "SC_World",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 1.2,
+      "num_samples": 57600,
+      "target_lufs": -24.0,
+      "measured_lufs": -24.0,
+      "peak_dbfs": -14.62,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 1110101733,
+      "params": {
+        "notes": [
+          880.0,
+          659.25
+        ],
+        "note_len": 0.16,
+        "gap": 0.05,
+        "repeats": 2,
+        "repeat_gap": 0.12,
+        "fm_index": 0.6
+      }
+    },
+    {
+      "id": "Dock.Beacon",
+      "file": "Dock/Dock_Beacon.wav",
+      "category": "Dock",
+      "asset_name": "SW_Dock_Beacon",
+      "sound_class": "SC_World",
+      "attenuation": "ATT_World",
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 1.2238,
+      "num_samples": 58741,
+      "target_lufs": -20.0,
+      "measured_lufs": -20.0,
+      "peak_dbfs": -6.92,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 1211189827,
+      "params": {
+        "freq": 1318.5,
+        "decay": 0.55,
+        "ratio": 1.0,
+        "index": 0.8,
+        "reverb_wet": 0.35
+      }
+    },
+    {
+      "id": "Dock.ClampEngage",
+      "file": "Dock/Dock_ClampEngage.wav",
+      "category": "Dock",
+      "asset_name": "SW_Dock_ClampEngage",
+      "sound_class": "SC_World",
+      "attenuation": "ATT_World",
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 2.0676,
+      "num_samples": 99243,
+      "target_lufs": -20.0,
+      "measured_lufs": -20.0,
+      "peak_dbfs": -1.46,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 20746208,
+      "params": {
+        "servo_dur": 0.35,
+        "servo_band": [
+          300.0,
+          900.0
+        ],
+        "clamp_at": 0.38,
+        "thump": [
+          70.0,
+          40.0,
+          0.4
+        ],
+        "clank": [
+          143.0,
+          311.0,
+          587.0,
+          1043.0
+        ],
+        "clank_decay": [
+          0.7,
+          0.45,
+          0.25,
+          0.12
+        ],
+        "reverb_wet": 0.3
+      }
+    },
+    {
+      "id": "Dock.AirlockHiss",
+      "file": "Dock/Dock_AirlockHiss.wav",
+      "category": "Dock",
+      "asset_name": "SW_Dock_AirlockHiss",
+      "sound_class": "SC_World",
+      "attenuation": "ATT_World",
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 2.3624,
+      "num_samples": 113393,
+      "target_lufs": -20.0,
+      "measured_lufs": -20.0,
+      "peak_dbfs": -7.66,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 1109756647,
+      "params": {
+        "dur": 2.2,
+        "band": [
+          1800.0,
+          11000.0
+        ],
+        "attack": 0.08,
+        "decay": 0.3,
+        "sustain": 0.7,
+        "release": 1.1,
+        "seal_thud": [
+          110.0,
+          60.0,
+          0.12
+        ],
+        "seal_level": 0.5
+      }
+    },
+    {
+      "id": "Dock.Release",
+      "file": "Dock/Dock_Release.wav",
+      "category": "Dock",
+      "asset_name": "SW_Dock_Release",
+      "sound_class": "SC_World",
+      "attenuation": "ATT_World",
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 1.6,
+      "num_samples": 76800,
+      "target_lufs": -20.0,
+      "measured_lufs": -20.0,
+      "peak_dbfs": -1.1,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 1326456207,
+      "params": {
+        "clunk": [
+          180.0,
+          402.0,
+          760.0
+        ],
+        "clunk_decay": [
+          0.35,
+          0.2,
+          0.1
+        ],
+        "thump": [
+          90.0,
+          50.0,
+          0.2
+        ],
+        "hiss_at": 0.12,
+        "hiss_dur": 0.6,
+        "servo_from": 700.0,
+        "servo_to": 250.0,
+        "reverb_wet": 0.25
+      }
+    },
+    {
+      "id": "Mining.LaserLoop",
+      "file": "Mining/Mining_LaserLoop.wav",
+      "category": "Mining",
+      "asset_name": "SW_Mining_LaserLoop",
+      "sound_class": "SC_World",
+      "attenuation": "ATT_World",
+      "loop": true,
+      "loop_start": 0,
+      "loop_end": 192000,
+      "duration_s": 4.0,
+      "num_samples": 192000,
+      "target_lufs": -20.0,
+      "measured_lufs": -20.0,
+      "peak_dbfs": -10.19,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 1520333473,
+      "params": {
+        "freq": 220.0,
+        "ratio": 1.5,
+        "index": 1.4,
+        "lp": 4200.0,
+        "crackle_band": [
+          2000.0,
+          6000.0
+        ],
+        "crackle_level": 0.25,
+        "shimmer_hz": 6.0,
+        "shimmer_depth": 0.15,
+        "seconds": 4.0
+      }
+    },
+    {
+      "id": "Mining.OreTick",
+      "file": "Mining/Mining_OreTick.wav",
+      "category": "Mining",
+      "asset_name": "SW_Mining_OreTick",
+      "sound_class": "SC_World",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 0.16,
+      "num_samples": 7680,
+      "target_lufs": -24.0,
+      "measured_lufs": -24.0,
+      "peak_dbfs": -10.11,
+      "volume": 1.0,
+      "pitch_range": [
+        0.94,
+        1.1
+      ],
+      "seed": 1830168627,
+      "params": {
+        "freqs": [
+          1850.0,
+          2780.0,
+          4310.0
+        ],
+        "decays": [
+          0.05,
+          0.03,
+          0.02
+        ],
+        "dur": 0.16
+      }
+    },
+    {
+      "id": "Mining.CargoFull",
+      "file": "Mining/Mining_CargoFull.wav",
+      "category": "Mining",
+      "asset_name": "SW_Mining_CargoFull",
+      "sound_class": "SC_World",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 1.2,
+      "num_samples": 57600,
+      "target_lufs": -18.0,
+      "measured_lufs": -18.0,
+      "peak_dbfs": -5.85,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 935890354,
+      "params": {
+        "notes": [
+          987.77,
+          783.99,
+          587.33
+        ],
+        "note_step": 0.16,
+        "decay": 0.35,
+        "fm_index": 0.9
+      }
+    },
+    {
+      "id": "Mining.AsteroidDepleted",
+      "file": "Mining/Mining_AsteroidDepleted.wav",
+      "category": "Mining",
+      "asset_name": "SW_Mining_AsteroidDepleted",
+      "sound_class": "SC_World",
+      "attenuation": "ATT_World",
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 1.8,
+      "num_samples": 86400,
+      "target_lufs": -20.0,
+      "measured_lufs": -20.06,
+      "peak_dbfs": -1.1,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 258997951,
+      "params": {
+        "dur": 1.8,
+        "crack_count": 40,
+        "crack_spread": 0.35,
+        "crack_lp": 3500.0,
+        "boom": [
+          60.0,
+          32.0,
+          0.7
+        ],
+        "boom_level": 0.8,
+        "rubble_level": 0.35,
+        "reverb_wet": 0.3
+      }
+    },
+    {
+      "id": "Trade.Buy",
+      "file": "Trade/Trade_Buy.wav",
+      "category": "Trade",
+      "asset_name": "SW_Trade_Buy",
+      "sound_class": "SC_UI",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 1.2,
+      "num_samples": 57600,
+      "target_lufs": -18.0,
+      "measured_lufs": -18.0,
+      "peak_dbfs": -3.96,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 14067089,
+      "params": {
+        "notes": [
+          1046.5,
+          1568.0
+        ],
+        "step": 0.09,
+        "decay": 0.35,
+        "index": 0.8
+      }
+    },
+    {
+      "id": "Trade.Sell",
+      "file": "Trade/Trade_Sell.wav",
+      "category": "Trade",
+      "asset_name": "SW_Trade_Sell",
+      "sound_class": "SC_UI",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 1.2,
+      "num_samples": 57600,
+      "target_lufs": -18.0,
+      "measured_lufs": -18.0,
+      "peak_dbfs": -4.86,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 1387840023,
+      "params": {
+        "notes": [
+          1568.0,
+          1046.5,
+          2093.0
+        ],
+        "step": 0.07,
+        "decay": 0.3,
+        "index": 1.1
+      }
+    },
+    {
+      "id": "Trade.CreditsDing",
+      "file": "Trade/Trade_CreditsDing.wav",
+      "category": "Trade",
+      "asset_name": "SW_Trade_CreditsDing",
+      "sound_class": "SC_UI",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 1.0,
+      "num_samples": 48000,
+      "target_lufs": -24.0,
+      "measured_lufs": -24.0,
+      "peak_dbfs": -11.61,
+      "volume": 1.0,
+      "pitch_range": [
+        0.99,
+        1.01
+      ],
+      "seed": 271208987,
+      "params": {
+        "freq": 1760.0,
+        "decay": 0.4,
+        "ratio": 3.5,
+        "index": 1.0
+      }
+    },
+    {
+      "id": "Trade.Denied",
+      "file": "Trade/Trade_Denied.wav",
+      "category": "Trade",
+      "asset_name": "SW_Trade_Denied",
+      "sound_class": "SC_UI",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 0.537,
+      "num_samples": 25774,
+      "target_lufs": -18.0,
+      "measured_lufs": -18.0,
+      "peak_dbfs": -7.7,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 1366615469,
+      "params": {
+        "freq": 185.0,
+        "pulse": 0.14,
+        "pulses": 2,
+        "gap": 0.05,
+        "lp": 900.0
+      }
+    },
+    {
+      "id": "Editor.Place.Small",
+      "file": "Editor/Editor_Place_Small.wav",
+      "category": "Editor",
+      "asset_name": "SW_Editor_Place_Small",
+      "sound_class": "SC_UI",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 0.4,
+      "num_samples": 19200,
+      "target_lufs": -18.0,
+      "measured_lufs": -18.02,
+      "peak_dbfs": -1.1,
+      "volume": 1.0,
+      "pitch_range": [
+        0.96,
+        1.04
+      ],
+      "seed": 283989504,
+      "params": {
+        "thump": [
+          190.0,
+          95.0,
+          0.12
+        ],
+        "click_freqs": [
+          1200.0,
+          2650.0
+        ],
+        "click_level": 0.3,
+        "reverb_wet": 0.15
+      }
+    },
+    {
+      "id": "Editor.Place.Large",
+      "file": "Editor/Editor_Place_Large.wav",
+      "category": "Editor",
+      "asset_name": "SW_Editor_Place_Large",
+      "sound_class": "SC_UI",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 1.4018,
+      "num_samples": 67285,
+      "target_lufs": -18.0,
+      "measured_lufs": -18.01,
+      "peak_dbfs": -1.1,
+      "volume": 1.0,
+      "pitch_range": [
+        0.96,
+        1.04
+      ],
+      "seed": 1019450797,
+      "params": {
+        "thump": [
+          95.0,
+          46.0,
+          0.35
+        ],
+        "clank": [
+          160.0,
+          371.0,
+          690.0
+        ],
+        "clank_decay": [
+          0.5,
+          0.3,
+          0.15
+        ],
+        "clank_level": 0.4,
+        "reverb_wet": 0.3
+      }
+    },
+    {
+      "id": "Editor.Remove",
+      "file": "Editor/Editor_Remove.wav",
+      "category": "Editor",
+      "asset_name": "SW_Editor_Remove",
+      "sound_class": "SC_UI",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 0.5232,
+      "num_samples": 25116,
+      "target_lufs": -18.0,
+      "measured_lufs": -18.0,
+      "peak_dbfs": -1.1,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 2088410606,
+      "params": {
+        "dur": 0.45,
+        "sweep_from": 400.0,
+        "sweep_to": 3000.0,
+        "pop": [
+          420.0,
+          160.0,
+          0.05
+        ],
+        "pop_at": 0.3
+      }
+    },
+    {
+      "id": "Editor.Invalid",
+      "file": "Editor/Editor_Invalid.wav",
+      "category": "Editor",
+      "asset_name": "SW_Editor_Invalid",
+      "sound_class": "SC_UI",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 0.4214,
+      "num_samples": 20229,
+      "target_lufs": -18.0,
+      "measured_lufs": -18.0,
+      "peak_dbfs": -8.33,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 451313619,
+      "params": {
+        "freq": 160.0,
+        "pulse": 0.09,
+        "pulses": 2,
+        "gap": 0.04,
+        "lp": 700.0
+      }
+    },
+    {
+      "id": "Editor.Undo",
+      "file": "Editor/Editor_Undo.wav",
+      "category": "Editor",
+      "asset_name": "SW_Editor_Undo",
+      "sound_class": "SC_UI",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 0.47,
+      "num_samples": 22560,
+      "target_lufs": -24.0,
+      "measured_lufs": -24.0,
+      "peak_dbfs": -12.06,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 1806549677,
+      "params": {
+        "notes": [
+          880.0,
+          659.25
+        ],
+        "note_len": 0.07
+      }
+    },
+    {
+      "id": "Editor.Redo",
+      "file": "Editor/Editor_Redo.wav",
+      "category": "Editor",
+      "asset_name": "SW_Editor_Redo",
+      "sound_class": "SC_UI",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 0.47,
+      "num_samples": 22560,
+      "target_lufs": -24.0,
+      "measured_lufs": -24.0,
+      "peak_dbfs": -12.55,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 2049906165,
+      "params": {
+        "notes": [
+          659.25,
+          880.0
+        ],
+        "note_len": 0.07
+      }
+    },
+    {
+      "id": "Editor.Rotate",
+      "file": "Editor/Editor_Rotate.wav",
+      "category": "Editor",
+      "asset_name": "SW_Editor_Rotate",
+      "sound_class": "SC_UI",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 0.12,
+      "num_samples": 5760,
+      "target_lufs": -24.0,
+      "measured_lufs": -24.0,
+      "peak_dbfs": -9.24,
+      "volume": 1.0,
+      "pitch_range": [
+        0.95,
+        1.05
+      ],
+      "seed": 594793170,
+      "params": {
+        "freqs": [
+          2400.0,
+          3900.0,
+          5200.0
+        ],
+        "decays": [
+          0.012,
+          0.008,
+          0.005
+        ],
+        "ticks": 2,
+        "tick_gap": 0.028
+      }
+    },
+    {
+      "id": "Editor.Save",
+      "file": "Editor/Editor_Save.wav",
+      "category": "Editor",
+      "asset_name": "SW_Editor_Save",
+      "sound_class": "SC_UI",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 1.4,
+      "num_samples": 67200,
+      "target_lufs": -18.0,
+      "measured_lufs": -18.0,
+      "peak_dbfs": -5.6,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 1572553601,
+      "params": {
+        "notes": [
+          523.25,
+          659.25,
+          783.99,
+          1046.5
+        ],
+        "step": 0.08,
+        "decay": 0.35,
+        "index": 0.7
+      }
+    },
+    {
+      "id": "Interior.Footstep.01",
+      "file": "Interior/Interior_Footstep_01.wav",
+      "category": "Interior",
+      "asset_name": "SW_Interior_Footstep_01",
+      "sound_class": "SC_Interior",
+      "attenuation": "ATT_World",
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 0.3567,
+      "num_samples": 17120,
+      "target_lufs": -22.0,
+      "measured_lufs": -22.02,
+      "peak_dbfs": -1.1,
+      "volume": 1.0,
+      "pitch_range": [
+        0.95,
+        1.05
+      ],
+      "seed": 465846692,
+      "params": {
+        "thud": [
+          125.0,
+          80.0,
+          0.06
+        ],
+        "ring_base": [
+          430.0,
+          1010.0,
+          1780.0,
+          2890.0
+        ],
+        "ring_decay": [
+          0.12,
+          0.08,
+          0.05,
+          0.03
+        ],
+        "ring_level": 0.25,
+        "scuff_level": 0.35,
+        "variation": 1
+      }
+    },
+    {
+      "id": "Interior.Footstep.02",
+      "file": "Interior/Interior_Footstep_02.wav",
+      "category": "Interior",
+      "asset_name": "SW_Interior_Footstep_02",
+      "sound_class": "SC_Interior",
+      "attenuation": "ATT_World",
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 0.3611,
+      "num_samples": 17332,
+      "target_lufs": -22.0,
+      "measured_lufs": -22.02,
+      "peak_dbfs": -1.1,
+      "volume": 1.0,
+      "pitch_range": [
+        0.95,
+        1.05
+      ],
+      "seed": 46993438,
+      "params": {
+        "thud": [
+          125.0,
+          80.0,
+          0.06
+        ],
+        "ring_base": [
+          430.0,
+          1010.0,
+          1780.0,
+          2890.0
+        ],
+        "ring_decay": [
+          0.12,
+          0.08,
+          0.05,
+          0.03
+        ],
+        "ring_level": 0.25,
+        "scuff_level": 0.35,
+        "variation": 2
+      }
+    },
+    {
+      "id": "Interior.Footstep.03",
+      "file": "Interior/Interior_Footstep_03.wav",
+      "category": "Interior",
+      "asset_name": "SW_Interior_Footstep_03",
+      "sound_class": "SC_Interior",
+      "attenuation": "ATT_World",
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 0.3897,
+      "num_samples": 18708,
+      "target_lufs": -22.0,
+      "measured_lufs": -22.09,
+      "peak_dbfs": -1.1,
+      "volume": 1.0,
+      "pitch_range": [
+        0.95,
+        1.05
+      ],
+      "seed": 1976180872,
+      "params": {
+        "thud": [
+          125.0,
+          80.0,
+          0.06
+        ],
+        "ring_base": [
+          430.0,
+          1010.0,
+          1780.0,
+          2890.0
+        ],
+        "ring_decay": [
+          0.12,
+          0.08,
+          0.05,
+          0.03
+        ],
+        "ring_level": 0.25,
+        "scuff_level": 0.35,
+        "variation": 3
+      }
+    },
+    {
+      "id": "Interior.Footstep.04",
+      "file": "Interior/Interior_Footstep_04.wav",
+      "category": "Interior",
+      "asset_name": "SW_Interior_Footstep_04",
+      "sound_class": "SC_Interior",
+      "attenuation": "ATT_World",
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 0.4111,
+      "num_samples": 19735,
+      "target_lufs": -22.0,
+      "measured_lufs": -22.0,
+      "peak_dbfs": -1.1,
+      "volume": 1.0,
+      "pitch_range": [
+        0.95,
+        1.05
+      ],
+      "seed": 1806611755,
+      "params": {
+        "thud": [
+          125.0,
+          80.0,
+          0.06
+        ],
+        "ring_base": [
+          430.0,
+          1010.0,
+          1780.0,
+          2890.0
+        ],
+        "ring_decay": [
+          0.12,
+          0.08,
+          0.05,
+          0.03
+        ],
+        "ring_level": 0.25,
+        "scuff_level": 0.35,
+        "variation": 4
+      }
+    },
+    {
+      "id": "Interior.Door",
+      "file": "Interior/Interior_Door.wav",
+      "category": "Interior",
+      "asset_name": "SW_Interior_Door",
+      "sound_class": "SC_Interior",
+      "attenuation": "ATT_World",
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 1.1,
+      "num_samples": 52800,
+      "target_lufs": -22.0,
+      "measured_lufs": -22.0,
+      "peak_dbfs": -5.41,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 1388182013,
+      "params": {
+        "dur": 1.1,
+        "hiss_band": [
+          1500.0,
+          8000.0
+        ],
+        "hiss_level": 0.4,
+        "slide_from": 250.0,
+        "slide_to": 900.0,
+        "slide_level": 0.6,
+        "stop_at": 0.75,
+        "stop_thud": [
+          140.0,
+          70.0,
+          0.08
+        ]
+      }
+    },
+    {
+      "id": "Interior.CockpitEnter",
+      "file": "Interior/Interior_CockpitEnter.wav",
+      "category": "Interior",
+      "asset_name": "SW_Interior_CockpitEnter",
+      "sound_class": "SC_Interior",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 1.4,
+      "num_samples": 67200,
+      "target_lufs": -22.0,
+      "measured_lufs": -22.0,
+      "peak_dbfs": -4.06,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 1465040711,
+      "params": {
+        "latch": [
+          520.0,
+          1240.0,
+          2300.0
+        ],
+        "latch_decay": [
+          0.08,
+          0.05,
+          0.03
+        ],
+        "tones": [
+          392.0,
+          587.33,
+          783.99
+        ],
+        "tone_step": 0.12,
+        "tone_decay": 0.3,
+        "tone_level": 0.45
+      }
+    },
+    {
+      "id": "Interior.CockpitExit",
+      "file": "Interior/Interior_CockpitExit.wav",
+      "category": "Interior",
+      "asset_name": "SW_Interior_CockpitExit",
+      "sound_class": "SC_Interior",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 1.4,
+      "num_samples": 67200,
+      "target_lufs": -22.0,
+      "measured_lufs": -22.0,
+      "peak_dbfs": -3.41,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 941064460,
+      "params": {
+        "latch": [
+          520.0,
+          1240.0,
+          2300.0
+        ],
+        "latch_decay": [
+          0.08,
+          0.05,
+          0.03
+        ],
+        "tones": [
+          392.0,
+          587.33,
+          783.99
+        ],
+        "tone_step": 0.12,
+        "tone_decay": 0.3,
+        "tone_level": 0.45
+      }
+    },
+    {
+      "id": "Interior.ShipHum",
+      "file": "Interior/Interior_ShipHum.wav",
+      "category": "Interior",
+      "asset_name": "SW_Interior_ShipHum",
+      "sound_class": "SC_Interior",
+      "attenuation": null,
+      "loop": true,
+      "loop_start": 0,
+      "loop_end": 384000,
+      "duration_s": 8.0,
+      "num_samples": 384000,
+      "target_lufs": -30.0,
+      "measured_lufs": -30.0,
+      "peak_dbfs": -18.07,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 923029371,
+      "params": {
+        "f0": 60.0,
+        "harmonics": 6,
+        "rolloff": 1.3,
+        "air_lp": 1100.0,
+        "air_level": 0.5,
+        "lfo_hz": 0.25,
+        "lfo_depth": 0.1,
+        "seconds": 8.0
+      }
+    },
+    {
+      "id": "Interior.ConsoleChirp",
+      "file": "Interior/Interior_ConsoleChirp.wav",
+      "category": "Interior",
+      "asset_name": "SW_Interior_ConsoleChirp",
+      "sound_class": "SC_Interior",
+      "attenuation": "ATT_World",
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 0.43,
+      "num_samples": 20640,
+      "target_lufs": -24.0,
+      "measured_lufs": -24.0,
+      "peak_dbfs": -13.79,
+      "volume": 1.0,
+      "pitch_range": [
+        0.92,
+        1.08
+      ],
+      "seed": 1606776421,
+      "params": {
+        "notes": [
+          2093.0,
+          2637.0
+        ],
+        "note_len": 0.045,
+        "gap": 0.02,
+        "index": 0.8
+      }
+    },
+    {
+      "id": "UI.Hover",
+      "file": "UI/UI_Hover.wav",
+      "category": "UI",
+      "asset_name": "SW_UI_Hover",
+      "sound_class": "SC_UI",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 0.06,
+      "num_samples": 2880,
+      "target_lufs": -24.0,
+      "measured_lufs": -24.0,
+      "peak_dbfs": -10.72,
+      "volume": 1.0,
+      "pitch_range": [
+        0.98,
+        1.02
+      ],
+      "seed": 1776949738,
+      "params": {
+        "freq": 2400.0,
+        "decay": 0.018,
+        "dur": 0.06
+      }
+    },
+    {
+      "id": "UI.Click",
+      "file": "UI/UI_Click.wav",
+      "category": "UI",
+      "asset_name": "SW_UI_Click",
+      "sound_class": "SC_UI",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 0.09,
+      "num_samples": 4320,
+      "target_lufs": -18.0,
+      "measured_lufs": -18.02,
+      "peak_dbfs": -1.1,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 700738590,
+      "params": {
+        "freq": 1500.0,
+        "decay": 0.03,
+        "dur": 0.09,
+        "body": [
+          600.0,
+          300.0,
+          0.02
+        ],
+        "body_level": 0.4
+      }
+    },
+    {
+      "id": "UI.Open",
+      "file": "UI/UI_Open.wav",
+      "category": "UI",
+      "asset_name": "SW_UI_Open",
+      "sound_class": "SC_UI",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 0.4251,
+      "num_samples": 20407,
+      "target_lufs": -18.0,
+      "measured_lufs": -18.0,
+      "peak_dbfs": -5.08,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 522264617,
+      "params": {
+        "dur": 0.32,
+        "notes": [
+          659.25,
+          987.77
+        ],
+        "whoosh_from": 800.0,
+        "whoosh_to": 3500.0,
+        "whoosh_level": 0.25
+      }
+    },
+    {
+      "id": "UI.Close",
+      "file": "UI/UI_Close.wav",
+      "category": "UI",
+      "asset_name": "SW_UI_Close",
+      "sound_class": "SC_UI",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 0.3749,
+      "num_samples": 17995,
+      "target_lufs": -18.0,
+      "measured_lufs": -18.0,
+      "peak_dbfs": -4.34,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 3354618,
+      "params": {
+        "dur": 0.32,
+        "notes": [
+          659.25,
+          987.77
+        ],
+        "whoosh_from": 800.0,
+        "whoosh_to": 3500.0,
+        "whoosh_level": 0.25
+      }
+    },
+    {
+      "id": "UI.Toast",
+      "file": "UI/UI_Toast.wav",
+      "category": "UI",
+      "asset_name": "SW_UI_Toast",
+      "sound_class": "SC_UI",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 1.0,
+      "num_samples": 48000,
+      "target_lufs": -18.0,
+      "measured_lufs": -18.0,
+      "peak_dbfs": -6.8,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 543737470,
+      "params": {
+        "notes": [
+          1318.5,
+          1975.5
+        ],
+        "step": 0.1,
+        "decay": 0.3,
+        "index": 0.5
+      }
+    },
+    {
+      "id": "UI.QuickSave",
+      "file": "UI/UI_QuickSave.wav",
+      "category": "UI",
+      "asset_name": "SW_UI_QuickSave",
+      "sound_class": "SC_UI",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 1.1,
+      "num_samples": 52800,
+      "target_lufs": -18.0,
+      "measured_lufs": -18.0,
+      "peak_dbfs": -5.37,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 146361817,
+      "params": {
+        "notes": [
+          783.99,
+          987.77,
+          1174.66
+        ],
+        "step": 0.08,
+        "decay": 0.3,
+        "index": 0.6
+      }
+    },
+    {
+      "id": "UI.QuickLoad",
+      "file": "UI/UI_QuickLoad.wav",
+      "category": "UI",
+      "asset_name": "SW_UI_QuickLoad",
+      "sound_class": "SC_UI",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 1.1,
+      "num_samples": 52800,
+      "target_lufs": -18.0,
+      "measured_lufs": -18.0,
+      "peak_dbfs": -6.19,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 2027524890,
+      "params": {
+        "notes": [
+          1174.66,
+          783.99,
+          1567.98
+        ],
+        "step": 0.09,
+        "decay": 0.3,
+        "index": 0.6
+      }
+    },
+    {
+      "id": "UI.Error",
+      "file": "UI/UI_Error.wav",
+      "category": "UI",
+      "asset_name": "SW_UI_Error",
+      "sound_class": "SC_UI",
+      "attenuation": null,
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 0.4485,
+      "num_samples": 21526,
+      "target_lufs": -18.0,
+      "measured_lufs": -18.0,
+      "peak_dbfs": -7.3,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 1324290639,
+      "params": {
+        "freq": 220.0,
+        "pulse": 0.11,
+        "pulses": 2,
+        "gap": 0.045,
+        "lp": 1000.0
+      }
+    },
+    {
+      "id": "Ambient.Space",
+      "file": "Ambient/Ambient_Space.wav",
+      "category": "Ambient",
+      "asset_name": "SW_Ambient_Space",
+      "sound_class": "SC_Ambient",
+      "attenuation": null,
+      "loop": true,
+      "loop_start": 0,
+      "loop_end": 576000,
+      "duration_s": 12.0,
+      "num_samples": 576000,
+      "target_lufs": -30.0,
+      "measured_lufs": -30.0,
+      "peak_dbfs": -12.13,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 610114614,
+      "params": {
+        "bed_lp": 180.0,
+        "bed_level": 1.0,
+        "pad_freqs": [
+          55.0,
+          82.41,
+          110.0,
+          164.81
+        ],
+        "pad_level": 0.35,
+        "pad_lfo_hz": [
+          0.05,
+          0.07,
+          0.09,
+          0.11
+        ],
+        "air_band": [
+          3000.0,
+          9000.0
+        ],
+        "air_level": 0.05,
+        "seconds": 12.0
+      }
+    },
+    {
+      "id": "Ambient.StationHum",
+      "file": "Ambient/Ambient_StationHum.wav",
+      "category": "Ambient",
+      "asset_name": "SW_Ambient_StationHum",
+      "sound_class": "SC_Ambient",
+      "attenuation": "ATT_StationHum",
+      "loop": true,
+      "loop_start": 0,
+      "loop_end": 384000,
+      "duration_s": 8.0,
+      "num_samples": 384000,
+      "target_lufs": -30.0,
+      "measured_lufs": -30.0,
+      "peak_dbfs": -17.58,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 1566025687,
+      "params": {
+        "f0": 50.0,
+        "harmonics": [
+          1,
+          2,
+          3,
+          4,
+          6
+        ],
+        "levels": [
+          1.0,
+          0.6,
+          0.35,
+          0.2,
+          0.1
+        ],
+        "pulse_hz": 0.5,
+        "pulse_depth": 0.3,
+        "air_lp": 1500.0,
+        "air_level": 0.4,
+        "seconds": 8.0
+      }
+    },
+    {
+      "id": "Ambient.AsteroidCreak",
+      "file": "Ambient/Ambient_AsteroidCreak.wav",
+      "category": "Ambient",
+      "asset_name": "SW_Ambient_AsteroidCreak",
+      "sound_class": "SC_Ambient",
+      "attenuation": "ATT_World",
+      "loop": false,
+      "loop_start": 0,
+      "loop_end": null,
+      "duration_s": 3.3721,
+      "num_samples": 161860,
+      "target_lufs": -30.0,
+      "measured_lufs": -30.0,
+      "peak_dbfs": -10.43,
+      "volume": 1.0,
+      "pitch_range": [
+        0.85,
+        1.1
+      ],
+      "seed": 18721343,
+      "params": {
+        "dur": 2.6,
+        "rate_from": 18.0,
+        "rate_to": 45.0,
+        "res_freqs": [
+          230.0,
+          410.0,
+          610.0
+        ],
+        "res_q": 12.0,
+        "rumble_level": 0.4,
+        "reverb_wet": 0.35
+      }
+    },
+    {
+      "id": "Ambient.MapRoomTone",
+      "file": "Ambient/Ambient_MapRoomTone.wav",
+      "category": "Ambient",
+      "asset_name": "SW_Ambient_MapRoomTone",
+      "sound_class": "SC_Ambient",
+      "attenuation": null,
+      "loop": true,
+      "loop_start": 0,
+      "loop_end": 384000,
+      "duration_s": 8.0,
+      "num_samples": 384000,
+      "target_lufs": -33.0,
+      "measured_lufs": -33.0,
+      "peak_dbfs": -18.94,
+      "volume": 1.0,
+      "pitch_range": [
+        1.0,
+        1.0
+      ],
+      "seed": 1245061280,
+      "params": {
+        "noise_lp": 1800.0,
+        "hum_hz": 120.0,
+        "hum_level": 0.12,
+        "seconds": 8.0
+      }
+    }
+  ],
+  "groups": [
+    {
+      "id": "Interior.Footstep",
+      "category": "Interior",
+      "members": [
+        "Interior.Footstep.01",
+        "Interior.Footstep.02",
+        "Interior.Footstep.03",
+        "Interior.Footstep.04"
+      ],
+      "sound_class": "SC_Interior",
+      "attenuation": "ATT_World",
+      "pitch_range": [
+        0.95,
+        1.05
+      ]
+    }
+  ]
+}
