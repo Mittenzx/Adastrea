@@ -10,6 +10,7 @@
 #include "Mining/Asteroid.h"
 #include "EngineUtils.h"
 #include "AdastreaHUD.h"
+#include "Audio/AudioCatalogSubsystem.h"
 #include "Stations/SpaceStationModule.h"
 #include "Stations/DockingBayModule.h"
 #include "Stations/MarketplaceModule.h"
@@ -901,6 +902,10 @@ void AAdastreaPlayerController::OpenPauseMenu()
 	{
 		H->ShowPauseMenu();
 		bLockMouseLook = true; // arrows/mouse drive the menu, not the ship
+		if (UAudioCatalogSubsystem* Audio = UAudioCatalogSubsystem::Get(this))
+		{
+			Audio->PlayEvent2D(FName(TEXT("UI.Open")));
+		}
 		UE_LOG(LogAdastrea, Log, TEXT("Pause menu opened"));
 	}
 }
@@ -911,6 +916,10 @@ void AAdastreaPlayerController::ClosePauseMenu()
 	{
 		H->HidePauseMenu();
 		bLockMouseLook = bTargetingModeActive; // targeting mode keeps its own cursor lock
+		if (UAudioCatalogSubsystem* Audio = UAudioCatalogSubsystem::Get(this))
+		{
+			Audio->PlayEvent2D(FName(TEXT("UI.Close")));
+		}
 		UE_LOG(LogAdastrea, Log, TEXT("Pause menu closed"));
 	}
 }

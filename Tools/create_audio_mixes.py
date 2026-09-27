@@ -133,10 +133,14 @@ def set_class_volumes():
         if sound_class is None:
             continue
         props = sound_class.get_editor_property("properties")
+        current = props.get_editor_property("volume")
+        if abs(current - float(volume)) < 1e-4:
+            _log(f"{name}: volume already {current:.2f}")
+            continue
         props.set_editor_property("volume", float(volume))
         sound_class.set_editor_property("properties", props)
         unreal.EditorAssetLibrary.save_loaded_asset(sound_class, only_if_is_dirty=False)
-        _log(f"{name}: volume {volume}")
+        _log(f"{name}: volume {current:.2f} -> {volume}")
 
 
 def report():

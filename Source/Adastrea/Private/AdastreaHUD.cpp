@@ -33,6 +33,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Audio/AudioMixSubsystem.h"
 #include "Audio/AdastreaAudioSettings.h"
+#include "Audio/AudioCatalogSubsystem.h"
 
 // Palette (subtle sci-fi, on-brand for a teal/cyan accent theme)
 static const FLinearColor kBg      (0.02f, 0.03f, 0.05f, 0.72f); // deep space panel
@@ -944,6 +945,10 @@ namespace
 void AAdastreaHUD::MovePauseMenuSelection(int32 Step)
 {
 	PauseMenuIndex = (PauseMenuIndex + Step + kPauseRowCount) % kPauseRowCount;
+	if (UAudioCatalogSubsystem* Audio = UAudioCatalogSubsystem::Get(this))
+	{
+		Audio->PlayEvent2D(FName(TEXT("UI.Hover")));
+	}
 }
 
 void AAdastreaHUD::AdjustPauseMenuValue(int32 Direction)
@@ -964,6 +969,11 @@ void AAdastreaHUD::AdjustPauseMenuValue(int32 Direction)
 	{
 		UAdastreaAudioSettings::Get()->SetVolume(Category, Next);
 		UAdastreaAudioSettings::Get()->Save();
+	}
+	// Played after the change, so the UI slider previews its own new level.
+	if (UAudioCatalogSubsystem* Audio = UAudioCatalogSubsystem::Get(this))
+	{
+		Audio->PlayEvent2D(FName(TEXT("UI.Click")));
 	}
 }
 
