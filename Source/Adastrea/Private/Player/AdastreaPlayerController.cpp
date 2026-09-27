@@ -1024,10 +1024,7 @@ void AAdastreaPlayerController::OpenPauseMenu()
 	{
 		H->ShowPauseMenu();
 		bLockMouseLook = true; // arrows/mouse drive the menu, not the ship
-		if (UAudioCatalogSubsystem* Audio = UAudioCatalogSubsystem::Get(this))
-		{
-			Audio->PlayEvent2D(FName(TEXT("UI.Open")));
-		}
+		UAudioEventLibrary::PlaySecondary2D(this, TEXT("UI.Open"));
 		UE_LOG(LogAdastrea, Log, TEXT("Pause menu opened"));
 	}
 }
@@ -1038,10 +1035,7 @@ void AAdastreaPlayerController::ClosePauseMenu()
 	{
 		H->HidePauseMenu();
 		bLockMouseLook = bTargetingModeActive; // targeting mode keeps its own cursor lock
-		if (UAudioCatalogSubsystem* Audio = UAudioCatalogSubsystem::Get(this))
-		{
-			Audio->PlayEvent2D(FName(TEXT("UI.Close")));
-		}
+		UAudioEventLibrary::PlaySecondary2D(this, TEXT("UI.Close"));
 		UE_LOG(LogAdastrea, Log, TEXT("Pause menu closed"));
 	}
 }
