@@ -71,17 +71,21 @@ public:
 	// VOICE DERIVATION (roster-wide tuning; config=Game)
 	// ====================
 
+	// Tuned to the 17 DA_* ships (adastrea.EngineVoiceReport): hull dominates, so a carrier with
+	// little cargo still reads as big; the bounds bracket the roster (Viper 5.81 .. Genesis 9.44),
+	// giving 3 Light (Viper, Import, Mittenzx) and 3 Capital (Sovereign, Behemoth, Genesis) voices.
+
 	/** Weight of log(HullStrength) in the size score. */
 	UPROPERTY(EditAnywhere, Config, Category="Engine Voice|Derivation")
-	float SizeHullWeight = 0.65f;
+	float SizeHullWeight = 0.8f;
 
 	/** Weight of log(1 + CargoCapacity) in the size score. */
 	UPROPERTY(EditAnywhere, Config, Category="Engine Voice|Derivation")
-	float SizeCargoWeight = 0.35f;
+	float SizeCargoWeight = 0.2f;
 
 	/** Size score that maps to 0 (the smallest ship in the roster). */
 	UPROPERTY(EditAnywhere, Config, Category="Engine Voice|Derivation")
-	float SizeScoreMin = 4.3f;
+	float SizeScoreMin = 5.7f;
 
 	/** Size score that maps to 1 (the largest ship in the roster). */
 	UPROPERTY(EditAnywhere, Config, Category="Engine Voice|Derivation")
