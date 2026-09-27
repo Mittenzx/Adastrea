@@ -1,0 +1,101 @@
+{
+  "_comment": "Level stations as Station Editor builds: each starts from its archetype's unique core and grows by attaching catalog modules to an existing module's face, exactly like clicking a face in the Station Editor (UStationEditorManager::FindAttachPosition). Tools/station_layouts.py turns these into Station Editor blueprint strings and validates them; Tools/build_level_stations.py places them in the level. Directions are world axes: N=+X, S=-X, E=+Y, W=-Y. 'rot' is yaw in degrees.",
+  "GridSpacing": 400,
+  "Cores": {
+    "StationCore_TradeHub": 4,
+    "StationCore_Agricultural": 4,
+    "StationCore_Industrial": 3,
+    "StationCore_Research": 3,
+    "StationCore_Luxury": 3,
+    "StationCore_BlackMarket": 3
+  },
+  "Stations": {
+    "Station_TradeHub": {
+      "core": "StationCore_TradeHub",
+      "modules": [
+        {"id": "CorN",    "item": "CorridorModule",    "on": "core",    "dir": "N"},
+        {"id": "DockN",   "item": "DockingBayModule",  "on": "CorN",    "dir": "N"},
+        {"id": "CorS",    "item": "CorridorModule",    "on": "core",    "dir": "S"},
+        {"id": "DockS",   "item": "DockingBayModule",  "on": "CorS",    "dir": "S", "rot": 180},
+        {"id": "MarketE", "item": "MarketplaceModule", "on": "core",    "dir": "E"},
+        {"id": "MarketW", "item": "MarketplaceModule", "on": "core",    "dir": "W"},
+        {"id": "CargoE",  "item": "CargoBayModule",    "on": "MarketE", "dir": "E"},
+        {"id": "CargoW",  "item": "CargoBayModule",    "on": "MarketW", "dir": "W"},
+        {"id": "Reactor", "item": "ReactorModule",     "on": "CargoE",  "dir": "S"},
+        {"id": "Hab",     "item": "HabitationModule",  "on": "CargoW",  "dir": "S"}
+      ]
+    },
+    "Station_Agricultural": {
+      "core": "StationCore_Agricultural",
+      "modules": [
+        {"id": "CorN",     "item": "CorridorModule",    "on": "core",   "dir": "N"},
+        {"id": "Dock",     "item": "DockingBayModule",  "on": "CorN",   "dir": "N"},
+        {"id": "Market",   "item": "MarketplaceModule", "on": "core",   "dir": "S"},
+        {"id": "Cargo",    "item": "CargoBayModule",    "on": "Market", "dir": "S"},
+        {"id": "HabE",     "item": "HabitationModule",  "on": "core",   "dir": "E"},
+        {"id": "HabW",     "item": "HabitationModule",  "on": "core",   "dir": "W"},
+        {"id": "SolarE",   "item": "SolarArrayModule",  "on": "HabE",   "dir": "E"},
+        {"id": "SolarW",   "item": "SolarArrayModule",  "on": "HabW",   "dir": "W", "rot": 180},
+        {"id": "Process",  "item": "ProcessingModule",  "on": "Market", "dir": "E"},
+        {"id": "Reactor",  "item": "ReactorModule",     "on": "Market", "dir": "W"}
+      ]
+    },
+    "Station_Industrial": {
+      "core": "StationCore_Industrial",
+      "modules": [
+        {"id": "CorN",    "item": "CorridorModule",    "on": "core",   "dir": "N"},
+        {"id": "Dock",    "item": "DockingBayModule",  "on": "CorN",   "dir": "N"},
+        {"id": "Market",  "item": "MarketplaceModule", "on": "core",   "dir": "S"},
+        {"id": "Process", "item": "ProcessingModule",  "on": "core",   "dir": "E"},
+        {"id": "Fab",     "item": "FabricationModule", "on": "core",   "dir": "W"},
+        {"id": "CargoE",  "item": "CargoBayModule",    "on": "Process", "dir": "E"},
+        {"id": "CargoW",  "item": "CargoBayModule",    "on": "Fab",    "dir": "W"},
+        {"id": "Reactor", "item": "ReactorModule",     "on": "Process", "dir": "S"},
+        {"id": "Fuel",    "item": "FuelDepotModule",   "on": "Fab",    "dir": "S"}
+      ]
+    },
+    "Station_Research": {
+      "core": "StationCore_Research",
+      "modules": [
+        {"id": "CorN",     "item": "CorridorModule",    "on": "core",     "dir": "N"},
+        {"id": "Dock",     "item": "DockingBayModule",  "on": "CorN",     "dir": "N"},
+        {"id": "Market",   "item": "MarketplaceModule", "on": "core",     "dir": "S"},
+        {"id": "Science",  "item": "ScienceLabModule",  "on": "core",     "dir": "E"},
+        {"id": "Research", "item": "MaterialsLabModule", "on": "core",     "dir": "W"},
+        {"id": "Physics",  "item": "PhysicsLabModule",  "on": "Science",  "dir": "E"},
+        {"id": "SolarE",   "item": "SolarArrayModule",  "on": "Physics",  "dir": "E"},
+        {"id": "SolarW",   "item": "SolarArrayModule",  "on": "Research", "dir": "W", "rot": 180},
+        {"id": "Hab",      "item": "HabitationModule",  "on": "Science",  "dir": "S"},
+        {"id": "Reactor",  "item": "ReactorModule",     "on": "Research", "dir": "S"}
+      ]
+    },
+    "Station_Luxury": {
+      "core": "StationCore_Luxury",
+      "modules": [
+        {"id": "CorN",    "item": "CorridorModule",        "on": "core",   "dir": "N"},
+        {"id": "Dock",    "item": "DockingBayModule",      "on": "CorN",   "dir": "N"},
+        {"id": "Market",  "item": "MarketplaceModule",     "on": "core",   "dir": "E"},
+        {"id": "HabW",    "item": "HabitationModule",      "on": "core",   "dir": "W"},
+        {"id": "HabS",    "item": "HabitationModule",      "on": "core",   "dir": "S"},
+        {"id": "Shield",  "item": "ShieldGeneratorModule", "on": "HabS",   "dir": "S"},
+        {"id": "Reactor", "item": "ReactorModule",         "on": "Market", "dir": "S"},
+        {"id": "TurretE", "item": "TurretModule",          "on": "Market", "dir": "E"},
+        {"id": "TurretW", "item": "TurretModule",          "on": "HabW",   "dir": "W"}
+      ]
+    },
+    "Station_BlackMarket": {
+      "core": "StationCore_BlackMarket",
+      "modules": [
+        {"id": "CorN",     "item": "CorridorModule",    "on": "core",     "dir": "N"},
+        {"id": "Dock",     "item": "DockingBayModule",  "on": "CorN",     "dir": "N"},
+        {"id": "Market",   "item": "MarketplaceModule", "on": "core",     "dir": "S"},
+        {"id": "Cargo",    "item": "CargoBayModule",    "on": "core",     "dir": "E"},
+        {"id": "Barracks", "item": "BarracksModule",    "on": "core",     "dir": "W"},
+        {"id": "Fuel",     "item": "FuelDepotModule",   "on": "Cargo",    "dir": "E"},
+        {"id": "TurretE",  "item": "TurretModule",      "on": "Cargo",    "dir": "N"},
+        {"id": "TurretW",  "item": "TurretModule",      "on": "Barracks", "dir": "N"},
+        {"id": "Reactor",  "item": "ReactorModule",     "on": "Barracks", "dir": "S"}
+      ]
+    }
+  }
+}

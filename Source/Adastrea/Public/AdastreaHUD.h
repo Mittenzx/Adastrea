@@ -318,6 +318,16 @@ private:
 	UPROPERTY()
 	TObjectPtr<UStaticMeshComponent> ShipPreviewMeshComp;
 
+	/** Actors owning the preview capture and its light (destroyed with the preview). */
+	UPROPERTY()
+	TObjectPtr<AActor> ShipPreviewCaptureActor;
+
+	UPROPERTY()
+	TObjectPtr<AActor> ShipPreviewLight;
+
+	/** Destroy the preview ship, its capture and its light. */
+	void DestroyShipPreview();
+
 	/** Canvas-menu state last frame, diffed by UpdateMenuAudio(). */
 	struct FMenuAudioState
 	{

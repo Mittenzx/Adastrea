@@ -78,8 +78,14 @@ static FVector PushSpawnClearOfStations(UWorld* World, FVector Location)
 	UGameplayStatics::GetAllActorsOfClass(World, ASpaceStation::StaticClass(), Stations);
 	for (AActor* Station : Stations)
 	{
-		FVector Origin, Extent;
-		Station->GetActorBounds(false, Origin, Extent);
+		// The whole station, modules included: the station actor's own root has no geometry.
+		const FBox Bounds = CastChecked<ASpaceStation>(Station)->GetStationBounds();
+		if (!Bounds.IsValid)
+		{
+			continue;
+		}
+		const FVector Origin = Bounds.GetCenter();
+		const FVector Extent = Bounds.GetExtent();
 		const float Radius = Extent.Size() + ClearanceMargin;
 		const FVector Offset = Location - Origin;
 		if (Offset.SizeSquared() >= FMath::Square(Radius))

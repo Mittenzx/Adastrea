@@ -62,10 +62,35 @@ Build plot (top-down, X4-style):
   only connect through it) are flagged as **disconnected**.
 - **Undo/Redo** (Ctrl-Z / Ctrl-Y) for the whole session.
 
+### 2.2.1 Plan camera
+Opening the editor blends the view from the ship to a 3D orbit camera framed on the
+station (`UStationEditorWidgetCpp::BeginPlanCamera`); closing it blends back to the
+ship. RMB drag orbits (a right *click* still cancels placement), MMB drag or WASD
+pans, the wheel zooms, Q/E turn, F reframes the station. The flight HUD is hidden
+while the plan view is up.
+
 ### 2.3 Connection faces
 Each module has **connection faces** (N/S/E/W/Up/Down) — the sides where it can
 attach to another module. A module is **connected** if at least one face touches a
 neighbouring module's face. The **core** (first module placed) anchors the station.
+
+### 2.4 Station cores
+Level stations start from a **core module** unique to their archetype
+(`AStationCore_TradeHub`, `_Agricultural`, `_Industrial`, `_Research`, `_Luxury`,
+`_BlackMarket` in `Stations/StationCoreModule.h`). A core carries its archetype's
+hull scaled to a square footprint (3 or 4 cells) and can't be built, removed,
+moved or rotated in the editor. Everything else on the station is ordinary
+catalog modules attached by the editor's rules.
+
+The level's stations are authored in `Content/Data/LevelStationLayouts.json` as
+"attach module X to face D of module Y" steps. `Tools/station_layouts.py` resolves
+and validates them (collision, connectivity, power, usable docking berths) and
+prints each as a blueprint string (section 7); `Tools/build_level_stations.py`
+places them in the open level.
+
+In-engine, footprints are boxes: a module's catalog grid size in cells, X and Y
+swapped by a quarter-turn yaw. Two modules collide if their boxes overlap, and
+are neighbours if the boxes share a face with at most one cell of gap.
 
 ```
 Module connection faces (top-down):
@@ -130,7 +155,7 @@ Validation rules (each returns pass/fail + a message):
   module B's `S` face, etc.). Rotation re-orients a module's faces, so a directional
   module (e.g. a `SolarArrayModule` that only connects through its `W` hub face) will
   *disconnect* if rotated so that face no longer points at its neighbour.
-- The **core** is the first module placed; it anchors the station.
+- The **core** anchors the station: a station core module if it has one (§2.4), otherwise the first module placed.
 
 ### 4.2 Power balance
 - `Σ power_generation ≥ Σ power_consumption` (net ≥ 0). Uses each module's

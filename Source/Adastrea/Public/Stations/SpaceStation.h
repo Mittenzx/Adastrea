@@ -293,6 +293,19 @@ public:
     // ====================
 
     /**
+     * The station's core (anchor) module, if it has one
+     * @return The first AStationCoreModule among Modules, or nullptr
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Modules")
+    class AStationCoreModule* GetCoreModule() const;
+
+    /**
+     * World bounds of the whole station: the actor plus every attached module.
+     * AActor::GetActorBounds only covers the station actor, whose root carries no geometry.
+     */
+    FBox GetStationBounds() const;
+
+    /**
      * Get total power consumption/generation from all modules
      * Positive = station consumes power, Negative = station generates power
      * @return Net power consumption (sum of all module power values)

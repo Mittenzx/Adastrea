@@ -756,10 +756,9 @@ public:
 	 * X4-style connectivity rule: every module (after the first) must sit close
 	 * enough to an existing module to be its neighbour, so the station can never
 	 * grow a floating, disconnected piece. The first module placed on an empty
-	 * station always passes (it becomes the station's anchor/core). Distance is
-	 * judged against each module PAIR's real footprint (GetModuleEffectiveRadius),
-	 * not a fixed radius, so a large module correctly needs to sit further from
-	 * its neighbour's center than a small one does.
+	 * station always passes (it becomes the station's anchor/core). Neighbours are
+	 * judged on each module's rotated footprint box (GetModuleHalfExtents): the
+	 * boxes must share a face, touching or up to one grid cell apart.
 	 * @param ModuleClass The class of module being placed (for its footprint and faces)
 	 * @param Position Position to check
 	 * @param Rotation Rotation the module would be placed at (its faces rotate with it)
@@ -788,12 +787,23 @@ public:
 	 * size. Falls back to DefaultCollisionRadius when there's no catalog entry
 	 * (e.g. no catalog assigned), so a large module (a 3x2 DockingBay) needs more
 	 * clearance than a small one (a 1x1 Corridor) instead of every module using
-	 * the same fixed radius regardless of actual size.
+	 * the same fixed radius regardless of actual size. Placement validation uses
+	 * the footprint box (GetModuleHalfExtents) instead; this stays for Blueprints.
 	 * @param ModuleClass The module class to measure
 	 * @return Effective radius in world units (unreal-cm)
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station Editor|Validation")
 	float GetModuleEffectiveRadius(TSubclassOf<ASpaceStationModule> ModuleClass) const;
+
+	/**
+	 * Half-size (cm) of a module class's grid footprint box at a rotation - what
+	 * collision, adjacency and attach spacing are measured with. A quarter-turn yaw
+	 * swaps X and Y. Modules missing from the catalog are a CollisionRadius cube.
+	 */
+	FVector GetModuleHalfExtents(TSubclassOf<ASpaceStationModule> ModuleClass, FRotator Rotation) const;
+
+	/** GetModuleHalfExtents for a module already on the station; a core uses its archetype footprint. */
+	FVector GetPlacedModuleHalfExtents(const ASpaceStationModule* Module) const;
 
 	/**
 	 * Check if player has sufficient tech level for a module
@@ -835,6 +845,9 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category="Station Editor|Validation")
 	bool FindAttachPosition(TSubclassOf<ASpaceStationModule> ModuleClass, ASpaceStationModule* ExistingModule, FVector HitNormal, FVector& OutPosition) const;
+
+	/** FindAttachPosition for a module that will be placed at Rotation (its footprint turns with it). */
+	bool FindAttachPosition(TSubclassOf<ASpaceStationModule> ModuleClass, ASpaceStationModule* ExistingModule, FVector HitNormal, FRotator Rotation, FVector& OutPosition) const;
 
 	/**
 	 * Short player-facing reason for a placement result (status lines, tooltips).
@@ -1325,7 +1338,7 @@ protected:
 	void RefundConstructionQueue();
 
 	/** Collision test that skips one module (used when moving a module) */
-	bool CheckCollisionIgnoring(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position, const ASpaceStationModule* IgnoredModule) const;
+	bool CheckCollisionIgnoring(TSubclassOf<ASpaceStationModule> ModuleClass, FVector Position, FRotator Rotation, const ASpaceStationModule* IgnoredModule) const;
 
 	/** Number of connected pieces the station's modules form, optionally pretending one is gone */
 	int32 CountConnectedComponents(const ASpaceStationModule* ExcludedModule) const;
