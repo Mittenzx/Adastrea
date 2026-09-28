@@ -440,6 +440,9 @@ private:
 	/** Right-hand info panel frame with a heading. */
 	void DrawMapInfoPanel(float X, float Y, float W, float H, const FString& Heading, const FLinearColor& Accent);
 
+	/** Draws Text horizontally centred on CentreX (Scale is an AdastreaHUDStyle role). */
+	void DrawCentredText(const FString& Text, const FLinearColor& Color, float CentreX, float Y, float Scale);
+
 	/** Draws word-wrapped text; returns the Y below it. */
 	float DrawWrappedText(const FString& Text, const FLinearColor& Color, float X, float Y, float MaxW, UFont* Font, float Scale);
 
