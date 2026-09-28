@@ -1,3 +1,7 @@
+> **Outdated:** the Station Editor no longer uses a widget Blueprint. `WBP_StationEditor`,
+> `WBP_ModuleListItem` and `WBP_ConstructionQueueItem` were removed; `UStationEditorWidgetCpp`
+> builds its overlay in C++ over a 3D plan camera. See `docs/11-TECHNICAL_SPECS/STATION_BUILDER.md` §2.2.1.
+
 ================================================
 SPACE STATION EDITOR SYSTEM - BLUEPRINT WORKFLOW
 ================================================

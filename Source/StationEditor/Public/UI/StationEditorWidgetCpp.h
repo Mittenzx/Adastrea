@@ -15,8 +15,9 @@ class UStationEditorManager;
 class UStationModuleCatalog;
 class ASpaceStation;
 class ASpaceStationModule;
-class UModuleListItemWidget;
-class UConstructionQueueItemWidget;
+class UStationEditorButton;
+class UBorder;
+class UWidget;
 struct FStationStatistics;
 struct FConstructionQueueItem;
 struct FStationNotification;
@@ -39,11 +40,10 @@ enum class EModulePlacementResult : uint8;
  *   Shift+Click keeps building the same module
  * - Event-driven UI updates
  *
- * Usage:
- * 1. Create Blueprint widget based on this class
- * 2. Layout UI with named widgets (must match BindWidget properties)
- * 3. NO Blueprint logic needed - all handled in C++
- * 4. Assign to SpaceshipPlayerController's StationEditorWidgetClass
+ * Layout: built in C++ (BuildPlanLayout) as a light overlay on the 3D plan
+ * camera - a stats readout top-left, Close top-right, the construction queue
+ * bottom-right, and the module palette as a strip along the bottom. The
+ * controller creates this class directly; no widget Blueprint is involved.
  */
 UCLASS()
 class STATIONEDITOR_API UStationEditorWidgetCpp : public UUserWidget
@@ -58,27 +58,27 @@ public:
 	// =====================
 
 	/** Scroll box containing the list of available modules */
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional))
 	UScrollBox* ModuleListScrollBox;
 
 	/** Text block displaying power generation/consumption */
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional))
 	UTextBlock* PowerDisplayText;
 
 	/** Text block displaying current/max module count */
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional))
 	UTextBlock* ModuleCountDisplay;
 
 	/** Progress bar showing power balance */
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional))
 	UProgressBar* PowerBalanceBar;
 
 	/** Button to close the editor */
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional))
 	UButton* CloseButton;
 
 	/** Scroll box containing construction queue items */
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional))
 	UScrollBox* QueueScrollBox;
 
 	/**
@@ -91,6 +91,10 @@ public:
 	/** Optional credits readout */
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional))
 	UTextBlock* CreditsText;
+
+	/** Name of the station being edited */
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidgetOptional))
+	UTextBlock* StationNameText;
 
 	/** How long an editor notification stays on the status line (seconds) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor", meta=(ClampMin=0.5f))
@@ -108,14 +112,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Station Editor")
 	ASpaceStation* CurrentStation;
 
-	/** Widget class to use for module list items */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor")
-	TSubclassOf<UModuleListItemWidget> ModuleListItemClass;
-
-	/** Widget class to use for construction queue items */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor")
-	TSubclassOf<UConstructionQueueItemWidget> QueueItemClass;
-
 	/** Default player tech level used when initializing the editor manager (5 = mid-tier, allows testing all module types) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor", meta=(ClampMin=1, ClampMax=10))
 	int32 DefaultPlayerTechLevel = 5;
@@ -127,6 +123,38 @@ public:
 	/** Maximum line trace distance for module placement */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor", meta=(ClampMin=1000.0f))
 	float MaxTraceDistance = 10000.0f;
+
+	// =====================
+	// 3D plan camera (X4-style): while the editor is open the view leaves the
+	// ship and orbits the station. RMB drag orbits, MMB drag / WASD pans,
+	// wheel zooms, Q/E turn, F reframes the station.
+	// =====================
+
+	/** Degrees of orbit per pixel of right-mouse drag */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor|Camera", meta=(ClampMin=0.01f))
+	float OrbitSensitivity = 0.25f;
+
+	/** Fraction of the camera distance zoomed per wheel notch */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor|Camera", meta=(ClampMin=0.01f, ClampMax=0.5f))
+	float ZoomStep = 0.12f;
+
+	/** WASD pan speed, in camera distances per second */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor|Camera", meta=(ClampMin=0.01f))
+	float KeyPanSpeed = 0.6f;
+
+	/** Q/E turn speed (degrees per second) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor|Camera", meta=(ClampMin=1.0f))
+	float KeyOrbitSpeed = 90.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor|Camera", meta=(ClampMin=100.0f))
+	float MinCameraDistance = 1500.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor|Camera", meta=(ClampMin=1000.0f))
+	float MaxCameraDistance = 60000.0f;
+
+	/** Blend time when switching between the ship view and the plan camera */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Station Editor|Camera", meta=(ClampMin=0.0f))
+	float CameraBlendTime = 0.5f;
 
 	// =====================
 	// Public Functions
@@ -166,6 +194,9 @@ protected:
 	/** Called when the widget is constructed */
 	virtual void NativeConstruct() override;
 
+	/** Builds the overlay layout (BuildPlanLayout) once the widget tree exists */
+	virtual bool Initialize() override;
+
 	/** Called when the widget is destroyed */
 	virtual void NativeDestruct() override;
 
@@ -175,8 +206,23 @@ protected:
 	/** Called when a mouse button is pressed */
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
+	/** Ends a camera drag; a right-click without a drag cancels placement */
+	virtual FReply NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+
+	/** Camera orbit / pan while a mouse button drag is active */
+	virtual FReply NativeOnMouseMove(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+
+	/** Camera zoom */
+	virtual FReply NativeOnMouseWheel(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+
 	/** Editor hotkeys (rotate, cancel, undo/redo, delete) */
 	virtual FReply NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
+
+	/** Releases held camera keys */
+	virtual FReply NativeOnKeyUp(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
+
+	/** Held camera keys get dropped when focus leaves the widget */
+	virtual void NativeOnFocusLost(const FFocusEvent& InFocusEvent) override;
 
 	// =====================
 	// Event Handlers
@@ -228,6 +274,23 @@ protected:
 	 */
 	UFUNCTION()
 	void OnQueueItemCancelled(int32 QueueId);
+
+	/** Palette tile / queue row clicks from the overlay's buttons */
+	void OnPaletteTileClicked(UStationEditorButton* Tile);
+	void OnQueueRowClicked(UStationEditorButton* Row);
+
+	// =====================
+	// Overlay layout
+	// =====================
+
+	/** Replace the widget tree with the plan-mode overlay (see class comment) */
+	void BuildPlanLayout();
+
+	/** Light up the palette tile of the module being placed */
+	void UpdatePaletteHighlight();
+
+	/** Refresh the queue rows' progress text (rows are rebuilt only when the queue changes) */
+	void UpdateQueueProgress();
 
 	/** Show manager notifications (blocked removals, warnings, completions) on the status line */
 	UFUNCTION()
@@ -296,11 +359,61 @@ protected:
 	 */
 	bool GetCursorWorldPosition(FVector& OutWorldPosition, FVector& OutWorldDirection);
 
+	/** How far cursor traces reach: the camera can sit well beyond MaxTraceDistance */
+	float GetTraceDistance() const;
+
+	// =====================
+	// 3D plan camera
+	// =====================
+
+	/** Spawn the plan camera, frame the station and blend the view to it */
+	void BeginPlanCamera();
+
+	/** Blend the view back to the player's pawn and drop the plan camera */
+	void EndPlanCamera();
+
+	/** Point the orbit at the station and pick a distance that shows all of it */
+	void FrameStation();
+
+	/** Push CameraFocus/Yaw/Pitch/Distance onto the camera actor */
+	void ApplyPlanCamera();
+
+	/** WASD pan and Q/E turn from the held keys */
+	void TickPlanCamera(float DeltaTime);
+
 private:
 	/**
 	 * Ensure EditorManager exists and is valid
 	 */
 	void EnsureEditorManager();
+
+	/** Overlay pieces updated after BuildPlanLayout */
+	UPROPERTY()
+	TObjectPtr<UBorder> QueuePanel;
+
+	UPROPERTY()
+	TArray<TObjectPtr<UStationEditorButton>> PaletteButtons;
+
+	UPROPERTY()
+	TArray<TObjectPtr<UTextBlock>> QueueRowTexts;
+
+	/** The orbit camera used while the editor is open */
+	UPROPERTY()
+	TObjectPtr<class ACameraActor> PlanCamera;
+
+	/** Orbit state: the camera looks at CameraFocus from (Yaw, Pitch) at CameraDistance */
+	FVector CameraFocus = FVector::ZeroVector;
+	float CameraYaw = -45.0f;
+	float CameraPitch = -35.0f;
+	float CameraDistance = 8000.0f;
+
+	/** Mouse drags in progress, and how far the right button moved (to tell a click from a drag) */
+	bool bOrbitDragging = false;
+	bool bPanDragging = false;
+	float RightDragPixels = 0.0f;
+
+	/** Camera keys (WASD / Q / E) currently held */
+	TSet<FKey> HeldCameraKeys;
 
 	/** The editor manager instance */
 	UPROPERTY()

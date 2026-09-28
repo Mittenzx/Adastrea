@@ -85,8 +85,8 @@ public:
 
 	/**
 	 * Widget class to use for the station editor UI
-	 * Set this in Blueprint to specify your custom WBP_StationEditor widget
-	 * Note: Should be a UStationEditorWidget class from StationEditor module
+	 * Left unset, CreateStationEditorWidget() uses UStationEditorWidgetCpp, which
+	 * builds its own overlay in C++. Only set this to swap in a different class.
 	 */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Player|Station Editor")
 	TSubclassOf<UUserWidget> StationEditorWidgetClass;
