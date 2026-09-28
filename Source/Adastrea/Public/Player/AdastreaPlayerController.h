@@ -547,6 +547,13 @@ public:
 																	void HandleMapCenter();
 																	void HandleMapToggleShips();
 																	void HandleMapToggleStations();
+																	/** Map layer input: 3/4/5 pick Sector/System/Universe, U toggles Universe, Backspace up, Enter into the selection. */
+																	void HandleMapViewSector();
+																	void HandleMapViewSystem();
+																	void HandleMapViewUniverse();
+																	void HandleMapToggleUniverse();
+																	void HandleMapViewUp();
+																	void HandleMapDrillDown();
 																	AAdastreaHUD* GetMapHUD();
 
 					/** Screen-space ray from the cursor; returns the targetable station, ship or asteroid under it. */

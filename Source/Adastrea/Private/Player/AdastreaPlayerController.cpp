@@ -227,6 +227,13 @@ void AAdastreaPlayerController::SetupInputComponent()
 		InputComponent->BindKey(EKeys::C, IE_Pressed, this, &AAdastreaPlayerController::HandleMapCenter);
 		InputComponent->BindKey(EKeys::One, IE_Pressed, this, &AAdastreaPlayerController::HandleMapToggleShips);
 		InputComponent->BindKey(EKeys::Two, IE_Pressed, this, &AAdastreaPlayerController::HandleMapToggleStations);
+		// Map layers: 3 sector / 4 system / 5 universe, U universe on/off, Backspace up, Enter into the selection
+		InputComponent->BindKey(EKeys::Three, IE_Pressed, this, &AAdastreaPlayerController::HandleMapViewSector);
+		InputComponent->BindKey(EKeys::Four, IE_Pressed, this, &AAdastreaPlayerController::HandleMapViewSystem);
+		InputComponent->BindKey(EKeys::Five, IE_Pressed, this, &AAdastreaPlayerController::HandleMapViewUniverse);
+		InputComponent->BindKey(EKeys::U, IE_Pressed, this, &AAdastreaPlayerController::HandleMapToggleUniverse);
+		InputComponent->BindKey(EKeys::BackSpace, IE_Pressed, this, &AAdastreaPlayerController::HandleMapViewUp);
+		InputComponent->BindKey(EKeys::Enter, IE_Pressed, this, &AAdastreaPlayerController::HandleMapDrillDown);
 		// Pause menu (Esc / F10). Bound before the other Esc handlers so it sees the screen
 		// state from before this key press (closing the trade screen must not also open it).
 		InputComponent->BindKey(EKeys::Escape, IE_Pressed, this, &AAdastreaPlayerController::HandlePauseMenuKey);
@@ -819,6 +826,16 @@ void AAdastreaPlayerController::HandleMapClick()
 	{
 		return;
 	}
+
+	// Map controls (layer tabs, systems, sectors, buttons) take the click first;
+	// only the Sector layer falls through to station targeting.
+	if (AAdastreaHUD* MapHUD = GetMapHUD())
+	{
+		if (MapHUD->HandleMapClick(MousePos) || MapHUD->MapView != EAdastreaMapView::Sector)
+		{
+			return;
+		}
+	}
 	int32 VX = 0, VY = 0;
 	GetViewportSize(VX, VY);
 	float VW = (float)VX, VH = (float)VY;
@@ -1179,6 +1196,45 @@ void AAdastreaPlayerController::HandleMapToggleStations()
 	{
 		if (GameHUD->bShowMap) { GameHUD->bShowStations = !GameHUD->bShowStations; }
 	}
+}
+
+void AAdastreaPlayerController::HandleMapViewSector()
+{
+	if (AAdastreaHUD* G = GetMapHUD()) { if (G->bShowMap) G->SetMapView(EAdastreaMapView::Sector); }
+}
+
+void AAdastreaPlayerController::HandleMapViewSystem()
+{
+	if (AAdastreaHUD* G = GetMapHUD())
+	{
+		if (!G->bShowMap) { return; }
+		if (G->MapView == EAdastreaMapView::Sector) { G->MapViewUp(); } // focus the current sector
+		else { G->SetMapView(EAdastreaMapView::System); }
+	}
+}
+
+void AAdastreaPlayerController::HandleMapViewUniverse()
+{
+	if (AAdastreaHUD* G = GetMapHUD()) { if (G->bShowMap) G->SetMapView(EAdastreaMapView::Universe); }
+}
+
+void AAdastreaPlayerController::HandleMapToggleUniverse()
+{
+	if (AAdastreaHUD* G = GetMapHUD())
+	{
+		if (!G->bShowMap) { return; }
+		G->SetMapView(G->MapView == EAdastreaMapView::Universe ? EAdastreaMapView::System : EAdastreaMapView::Universe);
+	}
+}
+
+void AAdastreaPlayerController::HandleMapViewUp()
+{
+	if (AAdastreaHUD* G = GetMapHUD()) { if (G->bShowMap) G->MapViewUp(); }
+}
+
+void AAdastreaPlayerController::HandleMapDrillDown()
+{
+	if (AAdastreaHUD* G = GetMapHUD()) { if (G->bShowMap) G->MapDrillDown(); }
 }
 
 AAdastreaHUD* AAdastreaPlayerController::GetMapHUD()

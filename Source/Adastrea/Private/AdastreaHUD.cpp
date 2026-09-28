@@ -35,6 +35,7 @@
 #include "Audio/AdastreaAudioSettings.h"
 #include "Audio/AudioCatalogSubsystem.h"
 #include "Audio/AudioEventLibrary.h"
+#include "Universe/GalaxySubsystem.h"
 
 // Palette (subtle sci-fi, on-brand for a teal/cyan accent theme)
 static const FLinearColor kBg      (0.02f, 0.03f, 0.05f, 0.72f); // deep space panel
@@ -130,8 +131,16 @@ void AAdastreaHUD::DrawHUD()
 	// Full-screen sector map (toggled by M) draws over everything.
 		if (bShowMap)
 		{
-			APawn* Pawn = PC->GetPawn();
-			if (Pawn)
+			MapHitRects.Reset();
+			if (MapView == EAdastreaMapView::System)
+			{
+				DrawSystemMap(PC);
+			}
+			else if (MapView == EAdastreaMapView::Universe)
+			{
+				DrawUniverseMap(PC);
+			}
+			else if (APawn* Pawn = PC->GetPawn())
 			{
 				DrawSectorMap(PC, Pawn->GetActorLocation());
 			}
@@ -141,6 +150,12 @@ void AAdastreaHUD::DrawHUD()
 		if (bShowPauseMenu)
 		{
 			DrawPauseMenu(PC);
+			return;
+		}
+
+		// The map is full-screen and opaque: no flight HUD, prompts or panels over it.
+		if (bShowMap)
+		{
 			return;
 		}
 
@@ -608,7 +623,8 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 	// ---- Viewport ----
 	int32 VX = 0, VY = 0;
 	PC->GetViewportSize(VX, VY);
-	float VW = (float)VX, VH = (float)VY;
+	// Canvas size, not viewport size: they differ for high-res screenshots.
+	float VW = Canvas ? Canvas->ClipX : (float)VX, VH = Canvas ? Canvas->ClipY : (float)VY;
 
 	// Full-screen backing.
 	DrawRect(FLinearColor(0.008f, 0.012f, 0.02f, 1.0f), 0.0f, 0.0f, VW, VH);
@@ -823,10 +839,19 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 	}
 
 	// ---- HUD overlay (title, controls, legend) ----
-	DrawText(TEXT("SECTOR MAP"), FLinearColor(0.6f, 0.9f, 1.0f, 1.0f), BoxX + 16.0f, 12.0f, TitleFont, 0.9f);
+	{
+		UGalaxySubsystem* Galaxy = UGalaxySubsystem::Get(this);
+		const FGalaxySectorDef* Sector = Galaxy ? Galaxy->FindSector(GetMapCurrentSectorId()) : nullptr;
+		const FStarSystemDef* System = Galaxy ? Galaxy->FindSystem(GetMapCurrentSystemId()) : nullptr;
+		const FString SectorLabel = Sector ? Sector->Name.ToString() : TEXT("Unassigned level");
+		const FString SystemLabel = System ? System->Name.ToString() : TEXT("?");
+		DrawMapHeader(PC, VW, TEXT("SECTOR MAP"),
+			FString::Printf(TEXT("Universe  >  %s  >  %s"), *SystemLabel, *SectorLabel));
+	}
+	(void)TitleFont;
 	// Controls help (bottom)
-	DrawText(TEXT("[Q/E] orbit    [A/D] pan X   [W/S] pan Y   [R/F] zoom    LMB target    [M] close"),
-		FLinearColor(0.6f,0.7f,0.8f,0.9f), VW*0.5f - 360.0f, VH - 30.0f, MiniFont, 0.7f);
+	DrawText(TEXT("[Arrows] orbit   [=/-] zoom   [C] recenter   LMB target   [4] system   [5]/[U] universe   [M] close"),
+		FLinearColor(0.6f,0.7f,0.8f,0.9f), VW*0.5f - 330.0f, VH - 30.0f, MiniFont, 0.7f);
 	// Legend (top-right)
 	float LegY = 16.0f;
 	DrawText(TEXT("Stations"), FLinearColor(0.8f,0.9f,1.0f,1.0f), BoxX + BoxW - 130.0f, LegY, MiniFont, 0.6f);
