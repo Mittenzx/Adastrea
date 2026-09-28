@@ -1,0 +1,181 @@
+{
+  "version": 1,
+  "_notes": [
+    "Galaxy layout for the system and universe maps (UGalaxySubsystem). Edit freely; in PIE run adastrea.ReloadGalaxy to re-read.",
+    "position: universe-map coordinates in light-years. jumpLinks: systems reachable by jump lane (made two-way on load).",
+    "sectors[].level: long package name of the sector's map; leave empty for a planned sector with no level yet.",
+    "sectors[].orbitRadius (0.1-1) and orbitAngle (degrees, 0 = right, counter-clockwise): where the sector sits on the system map.",
+    "sectors[].gates: sectors in the same system reachable by gate (made two-way on load).",
+    "A level can also join a sector by placing an ASpaceSectorMap and setting its SectorId."
+  ],
+  "startSystem": "adastrea",
+  "systems": [
+    {
+      "id": "adastrea",
+      "name": "Adastrea",
+      "starClass": "G2V",
+      "starColor": [1.0, 0.86, 0.55],
+      "position": [0, 0],
+      "faction": "Adastrea Trade Compact",
+      "description": "Home system. A steady yellow star, the Compact's busiest markets, and the shipyards that built most of the fleet.",
+      "jumpLinks": ["kestrel", "varos", "lumen"],
+      "sectors": [
+        {
+          "id": "adastrea_prime",
+          "name": "Adastrea Prime",
+          "type": "Trade Hub",
+          "security": "High",
+          "faction": "Adastrea Trade Compact",
+          "description": "The core trade sector: main station, market and shipyard.",
+          "level": "/Game/Maps/TestLevel",
+          "orbitRadius": 0.32,
+          "orbitAngle": 210,
+          "gates": ["adastrea_alpha", "adastrea_cinder"]
+        },
+        {
+          "id": "adastrea_alpha",
+          "name": "Alpha Reach",
+          "type": "Industrial",
+          "security": "High",
+          "faction": "Adastrea Trade Compact",
+          "description": "Refineries and fabrication yards along the inner lane.",
+          "level": "/Game/Maps/SectorTest_Alpha",
+          "orbitRadius": 0.5,
+          "orbitAngle": 120,
+          "gates": ["adastrea_beta"]
+        },
+        {
+          "id": "adastrea_beta",
+          "name": "Beta Drift",
+          "type": "Research",
+          "security": "Medium",
+          "faction": "Adastrea Trade Compact",
+          "description": "Survey outposts studying the drift nebula.",
+          "level": "/Game/Maps/SectorTest_Beta",
+          "orbitRadius": 0.72,
+          "orbitAngle": 60,
+          "gates": ["adastrea_relay"]
+        },
+        {
+          "id": "adastrea_cinder",
+          "name": "Cinder Belt",
+          "type": "Mining",
+          "security": "Medium",
+          "faction": "Independent",
+          "description": "Dense asteroid belt. Ore and ice for the Prime refineries.",
+          "level": "/Game/Maps/MiningTest",
+          "orbitRadius": 0.6,
+          "orbitAngle": 290,
+          "gates": ["adastrea_relay"]
+        },
+        {
+          "id": "adastrea_relay",
+          "name": "Outer Relay",
+          "type": "Frontier",
+          "security": "Low",
+          "faction": "Independent",
+          "description": "Jump relay at the system edge; the lane to the rest of the galaxy.",
+          "level": "",
+          "orbitRadius": 0.92,
+          "orbitAngle": 350,
+          "gates": []
+        }
+      ]
+    },
+    {
+      "id": "kestrel",
+      "name": "Kestrel",
+      "starClass": "K5V",
+      "starColor": [1.0, 0.62, 0.32],
+      "position": [11, 6],
+      "faction": "Adastrea Trade Compact",
+      "description": "Orange dwarf with gas-giant fuel skimmers.",
+      "jumpLinks": ["thule", "corvid"],
+      "sectors": [
+        { "id": "kestrel_skim", "name": "Kestrel Skimfields", "type": "Gas Harvesting", "security": "Medium", "faction": "Adastrea Trade Compact", "description": "Fuel skimmers over the giant Kestrel IV.", "level": "", "orbitRadius": 0.45, "orbitAngle": 40, "gates": ["kestrel_port"] },
+        { "id": "kestrel_port", "name": "Kestrel Port", "type": "Trade Hub", "security": "High", "faction": "Adastrea Trade Compact", "description": "Fuel depot and waystation.", "level": "", "orbitRadius": 0.3, "orbitAngle": 200, "gates": ["kestrel_edge"] },
+        { "id": "kestrel_edge", "name": "Kestrel Edge", "type": "Frontier", "security": "Low", "faction": "Independent", "description": "Sparse outer sector, favoured by smugglers.", "level": "", "orbitRadius": 0.88, "orbitAngle": 300, "gates": [] }
+      ]
+    },
+    {
+      "id": "varos",
+      "name": "Varos",
+      "starClass": "M4V",
+      "starColor": [1.0, 0.38, 0.28],
+      "position": [-9, 8],
+      "faction": "Varos Syndicate",
+      "description": "Red dwarf held by the Syndicate. Contested lanes and high salvage value.",
+      "jumpLinks": ["nyx"],
+      "sectors": [
+        { "id": "varos_gauntlet", "name": "Varos Gauntlet", "type": "Contested", "security": "None", "faction": "Varos Syndicate", "description": "Wreck-strewn combat zone at the lane entry.", "level": "/Game/Maps/CombatArena", "orbitRadius": 0.7, "orbitAngle": 330, "gates": ["varos_hold"] },
+        { "id": "varos_hold", "name": "Syndicate Hold", "type": "Military", "security": "Low", "faction": "Varos Syndicate", "description": "Syndicate fortress station.", "level": "", "orbitRadius": 0.35, "orbitAngle": 200, "gates": ["varos_scrap"] },
+        { "id": "varos_scrap", "name": "Scrapyard Ring", "type": "Salvage", "security": "Low", "faction": "Independent", "description": "Salvage crews picking over old battle debris.", "level": "", "orbitRadius": 0.55, "orbitAngle": 60, "gates": [] }
+      ]
+    },
+    {
+      "id": "lumen",
+      "name": "Lumen",
+      "starClass": "F0V",
+      "starColor": [0.95, 0.96, 1.0],
+      "position": [-4, -10],
+      "faction": "Lumen Accord",
+      "description": "Bright white star; the Accord's research worlds.",
+      "jumpLinks": ["corvid"],
+      "sectors": [
+        { "id": "lumen_academy", "name": "Lumen Academy", "type": "Research", "security": "High", "faction": "Lumen Accord", "description": "University station and labs.", "level": "", "orbitRadius": 0.4, "orbitAngle": 90, "gates": ["lumen_array"] },
+        { "id": "lumen_array", "name": "Solar Array", "type": "Energy", "security": "High", "faction": "Lumen Accord", "description": "Solar collectors feeding the Accord's industry.", "level": "", "orbitRadius": 0.22, "orbitAngle": 250, "gates": [] }
+      ]
+    },
+    {
+      "id": "corvid",
+      "name": "Corvid",
+      "starClass": "Binary K/M",
+      "starColor": [1.0, 0.7, 0.45],
+      "position": [8, -12],
+      "faction": "Independent",
+      "description": "Binary system with unstable orbits and rich rare-metal belts.",
+      "jumpLinks": [],
+      "sectors": [
+        { "id": "corvid_belt", "name": "Twin Belt", "type": "Mining", "security": "Low", "faction": "Independent", "description": "Rare metals, dangerous tides.", "level": "", "orbitRadius": 0.6, "orbitAngle": 20, "gates": ["corvid_haven"] },
+        { "id": "corvid_haven", "name": "Corvid Haven", "type": "Trade Hub", "security": "Medium", "faction": "Independent", "description": "Free port run by the miners' guild.", "level": "", "orbitRadius": 0.38, "orbitAngle": 200, "gates": [] }
+      ]
+    },
+    {
+      "id": "thule",
+      "name": "Thule",
+      "starClass": "B8V",
+      "starColor": [0.6, 0.75, 1.0],
+      "position": [22, 2],
+      "faction": "Unclaimed",
+      "description": "Hot blue star at the frontier. Mostly unsurveyed.",
+      "jumpLinks": [],
+      "sectors": [
+        { "id": "thule_outpost", "name": "Thule Outpost", "type": "Frontier", "security": "None", "faction": "Unclaimed", "description": "A lone survey outpost.", "level": "", "orbitRadius": 0.75, "orbitAngle": 140, "gates": [] }
+      ]
+    },
+    {
+      "id": "nyx",
+      "name": "Nyx",
+      "starClass": "Neutron",
+      "starColor": [0.75, 0.55, 1.0],
+      "position": [-20, 14],
+      "faction": "Unclaimed",
+      "description": "Pulsar remnant. Radiation storms; derelicts from before the Compact.",
+      "jumpLinks": [],
+      "sectors": [
+        { "id": "nyx_derelict", "name": "Derelict Field", "type": "Anomaly", "security": "None", "faction": "Unclaimed", "description": "Ancient wrecks of unknown origin.", "level": "", "orbitRadius": 0.6, "orbitAngle": 80, "gates": [] }
+      ]
+    },
+    {
+      "id": "sable",
+      "name": "Sable",
+      "starClass": "M1V",
+      "starColor": [1.0, 0.45, 0.35],
+      "position": [-17, -6],
+      "faction": "Unclaimed",
+      "description": "Uncharted. No known jump lane yet.",
+      "jumpLinks": [],
+      "sectors": []
+    }
+  ]
+}

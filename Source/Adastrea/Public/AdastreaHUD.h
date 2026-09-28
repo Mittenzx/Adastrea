@@ -16,6 +16,19 @@ class UStaticMeshComponent;
 class UMiningLaserComponent;
 class AAsteroid;
 class AActor;
+class UGalaxySubsystem;
+
+/** Which layer of the full-screen map (M) is shown. */
+UENUM(BlueprintType)
+enum class EAdastreaMapView : uint8
+{
+	/** The loaded level in 3D: ships, stations, the player. */
+	Sector,
+	/** One star system: its sectors, gates and jump-lane exits. */
+	System,
+	/** Every star system and the jump lanes between them. */
+	Universe
+};
 
 /**
  * Adastrea in-game HUD.
@@ -119,6 +132,43 @@ public:
 	void MapZoomBy(float Delta) { MapZoom = FMath::Clamp(MapZoom + Delta, 20000.0f, 800000.0f); }
 	void MapPan(const FVector2D& WorldDelta) { MapCenter.X += WorldDelta.X; MapCenter.Y += WorldDelta.Y; }
 	void MapRecenter(const FVector& WorldPos) { MapCenter = WorldPos; }
+
+	// ---- Map layers: Sector (the level) / System / Universe (UGalaxySubsystem data) ----
+
+	/** Layer shown when the map is open. Kept between openings. */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Map")
+	EAdastreaMapView MapView = EAdastreaMapView::Sector;
+
+	/** Star system shown in the System layer (None = the player's system). */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Map")
+	FName MapSystemId;
+
+	/** Sector highlighted in the System layer. */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Map")
+	FName MapSelectedSectorId;
+
+	/** System highlighted in the Universe layer. */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Map")
+	FName MapSelectedSystemId;
+
+	/** Switch map layer. Entering System/Universe focuses the player's system if nothing is chosen. */
+	UFUNCTION(BlueprintCallable, Category="HUD|Map")
+	void SetMapView(EAdastreaMapView NewView);
+
+	/** Up one layer: Sector -> System -> Universe. */
+	void MapViewUp();
+
+	/** Down one layer into the selection: Universe (selected system) -> System -> Sector (only the loaded one). */
+	void MapDrillDown();
+
+	/** A click while the map is open. Returns true if it hit a map control (tab, system, sector, button). */
+	bool HandleMapClick(const FVector2D& ScreenPos);
+
+	/** Galaxy sector of the loaded level (None if the level isn't in Galaxy.json / has no SectorId marker). */
+	FName GetMapCurrentSectorId() const;
+
+	/** Star system the player is in (falls back to the galaxy's start system). */
+	FName GetMapCurrentSystemId() const;
 
 	// ========================
 	// TRANSIENT MESSAGE (canvas)
@@ -351,4 +401,42 @@ private:
 	 * docking, undocking, kiosks) without hooking each call site.
 	 */
 	void UpdateMenuAudio();
+
+	// ---- Galaxy map layers ----
+
+	enum class EMapHitKind : uint8 { Tab, System, Sector, JumpExit, OpenSystem, OpenSector };
+
+	/** A clickable area drawn this frame (rebuilt every map draw; later entries are on top). */
+	struct FMapHitRect
+	{
+		FVector2D Min;
+		FVector2D Max;
+		EMapHitKind Kind;
+		FName Id;
+		EAdastreaMapView View = EAdastreaMapView::Sector;
+	};
+	TArray<FMapHitRect> MapHitRects;
+
+	void AddMapHit(float X, float Y, float W, float H, EMapHitKind Kind, FName Id, EAdastreaMapView View = EAdastreaMapView::Sector);
+
+	/** Topmost hit rect under ScreenPos, or nullptr. */
+	const FMapHitRect* FindMapHit(const FVector2D& ScreenPos) const;
+
+	/** Title, Sector/System/Universe tabs and breadcrumb (shared by all layers). */
+	void DrawMapHeader(APlayerController* PC, float VW, const FString& Title, const FString& Breadcrumb);
+
+	void DrawSystemMap(APlayerController* PC);
+	void DrawUniverseMap(APlayerController* PC);
+
+	/** Right-hand info panel frame with a heading. */
+	void DrawMapInfoPanel(float X, float Y, float W, float H, const FString& Heading, const FLinearColor& Accent);
+
+	/** Draws word-wrapped text; returns the Y below it. */
+	float DrawWrappedText(const FString& Text, const FLinearColor& Color, float X, float Y, float MaxW, UFont* Font, float Scale);
+
+	void DrawCircleOutline(float X, float Y, float R, const FLinearColor& Color, float Thick, int32 Segments = 48);
+	void DrawFilledDisc(float X, float Y, float R, const FLinearColor& Color);
+
+	/** A text button (hit rect registered). Returns its width. */
+	float DrawMapButton(const FString& Label, float X, float Y, bool bHover, bool bActive, EMapHitKind Kind, FName Id, EAdastreaMapView View = EAdastreaMapView::Sector);
 };

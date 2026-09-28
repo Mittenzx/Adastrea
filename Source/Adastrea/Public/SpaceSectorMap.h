@@ -56,6 +56,13 @@ public:
 	FText SectorName;
 
 	/**
+	 * Galaxy sector this marker stands for (an "id" in Content/Data/Universe/Galaxy.json).
+	 * Links the level to its place on the system and universe maps.
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Sector Info")
+	FName SectorId;
+
+	/**
 	 * Optional description for this sector
 	 * Use for notes about planned content, themes, or special features
 	 */
