@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "AdastreaHUD.h"
+#include "AdastreaHUDStyle.h"
 #include "Stations/StationInterior.h"
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipAvatar.h"
@@ -38,6 +39,26 @@
 #include "Universe/GalaxySubsystem.h"
 #include "Universe/JumpGate.h"
 #include "EngineUtils.h"
+#include "HAL/IConsoleManager.h"
+
+static TAutoConsoleVariable<float> CVarHUDScale(
+	TEXT("adastrea.HUDScale"),
+	1.0f,
+	TEXT("Size multiplier for the cockpit flight HUD (1 = default; try 0.8 for a smaller HUD)."),
+	ECVF_Default);
+
+float AdastreaHUDStyle::LayoutScale(float CanvasW, float CanvasH)
+{
+	const float Fit = FMath::Min(CanvasW / 1920.0f, CanvasH / 1080.0f);
+	return FMath::Clamp(Fit, 0.8f, 2.5f) * FMath::Clamp(CVarHUDScale.GetValueOnGameThread(), 0.5f, 2.0f);
+}
+
+void AAdastreaHUD::DrawCentredText(const FString& Text, const FLinearColor& Color, float CentreX, float Y, float Scale)
+{
+	float W = 0.0f, H = 0.0f;
+	GetTextSize(Text, W, H, HudType::Font(), Scale);
+	DrawText(Text, Color, CentreX - W * 0.5f, Y, HudType::Font(), Scale);
+}
 
 // Palette (subtle sci-fi, on-brand for a teal/cyan accent theme)
 static const FLinearColor kBg      (0.02f, 0.03f, 0.05f, 0.72f); // deep space panel
@@ -234,7 +255,7 @@ void AAdastreaHUD::DrawHUD()
 				}
 				else
 				{
-					DrawText(TEXT("No station within range."), FLinearColor(0.9f,0.6f,0.4f,1.0f), 200.0f, 200.0f, GEngine->GetSmallFont(), 1.0f);
+					DrawText(TEXT("No station within range."), FLinearColor(0.9f,0.6f,0.4f,1.0f), 200.0f, 200.0f, HudType::Font(), HudType::Body);
 				}
 			}
 			return;
@@ -261,15 +282,14 @@ void AAdastreaHUD::DrawHUD()
 		FString DockName;
 		if (Ship->CanRequestDocking(DockDist, DockName))
 		{
-			UFont* PromptFont = GEngine->GetLargeFont();
 			const FString Line = FString::Printf(TEXT("[E]  DOCK   -   %s   (%.0f m)"), *DockName, DockDist / 100.0f);
 			float W = 0.0f, H = 0.0f;
-			GetTextSize(Line, W, H, PromptFont, 1.0f);
+			GetTextSize(Line, W, H, HudType::Font(), HudType::Heading);
 			const float X = (Canvas->SizeX - W) * 0.5f;
 			const float Y = Canvas->SizeY * 0.72f;
 			DrawRect(kBg, X - 16.0f, Y - 8.0f, W + 32.0f, H + 16.0f);
 			DrawLine(X - 16.0f, Y + H + 8.0f, X + W + 16.0f, Y + H + 8.0f, kBorder, 2.0f);
-			DrawText(Line, FLinearColor(0.15f, 0.9f, 0.6f, 1.0f), X, Y, PromptFont, 1.0f);
+			DrawText(Line, FLinearColor(0.15f, 0.9f, 0.6f, 1.0f), X, Y, HudType::Font(), HudType::Heading);
 		}
 	}
 
@@ -288,8 +308,6 @@ void AAdastreaHUD::DrawHUD()
 	DrawJumpGateMarkers(PC, Ship);
 
 	const FVector P = Ship->GetActorLocation();
-	UFont* TitleFont = GEngine->GetLargeFont();
-	UFont* BodyFont  = GEngine->GetSmallFont();
 
 	// ---- Locked target reticle (world-space box around the locked target) ----
 	AAdastreaPlayerController* AController = Cast<AAdastreaPlayerController>(PC);
@@ -398,7 +416,7 @@ void AAdastreaHUD::DrawHUD()
 
 			// Distance label under the arrow.
 			DrawText(FString::Printf(TEXT("%.0f"), TgtDist), Reticle,
-				EdgePt.X - 14.0f, EdgePt.Y + 12.0f, BodyFont, 0.6f);
+				EdgePt.X - 14.0f, EdgePt.Y + 12.0f, HudType::Font(), HudType::Caption);
 		}
 
 		// ---- Right-side target info panel ----
@@ -415,34 +433,34 @@ void AAdastreaHUD::DrawHUD()
 			DrawRect(FLinearColor(0.02f, 0.03f, 0.05f, 0.75f), PX, PY, PW, PH);
 			DrawLine(PX, PY, PX, PY + PH, kBorder, 3.0f); // teal accent edge
 
-			DrawText(TEXT("TARGET LOCKED"), FLinearColor(0.15f, 0.9f, 0.6f, 1.0f), LX, PY + 8.0f, TitleFont, 0.9f);
+			DrawText(TEXT("TARGET LOCKED"), FLinearColor(0.15f, 0.9f, 0.6f, 1.0f), LX, PY + 8.0f, HudType::Font(), HudType::Heading);
 			DrawLine(PX + 10.0f, PY + 30.0f, PX + PW - 10.0f, PY + 30.0f, kBorder, 1.0f);
 
-			DrawText(TEXT("NAME"), kLabel, LX, PY + 40.0f, BodyFont, 0.7f);
-			DrawText(TgtName, FLinearColor::White, VX, PY + 40.0f, BodyFont, 0.7f);
+			DrawText(TEXT("NAME"), kLabel, LX, PY + 40.0f, HudType::Font(), HudType::Label);
+			DrawText(TgtName, FLinearColor::White, VX, PY + 40.0f, HudType::Font(), HudType::Label);
 
-			DrawText(TEXT("DISTANCE"), kLabel, LX, PY + 62.0f, BodyFont, 0.7f);
-			DrawText(FString::Printf(TEXT("%.0f u"), TgtDist), kSpeed, VX, PY + 62.0f, BodyFont, 0.7f);
+			DrawText(TEXT("DISTANCE"), kLabel, LX, PY + 62.0f, HudType::Font(), HudType::Label);
+			DrawText(FString::Printf(TEXT("%.0f u"), TgtDist), kSpeed, VX, PY + 62.0f, HudType::Font(), HudType::Label);
 
 			// Station module info (if it's a station)
 			if (ASpaceStation* Station = Cast<ASpaceStation>(LockedTarget))
 			{
 				int32 ModuleCount = Station->GetModuleCount();
 				int32 Docks = Station->GetDockingBayModules().Num();
-				DrawText(TEXT("MODULES"), kLabel, LX, PY + 84.0f, BodyFont, 0.7f);
+				DrawText(TEXT("MODULES"), kLabel, LX, PY + 84.0f, HudType::Font(), HudType::Label);
 				DrawText(FString::Printf(TEXT("%d  (%d docks)"), ModuleCount, Docks),
-					kCargo, VX, PY + 84.0f, BodyFont, 0.7f);
+					kCargo, VX, PY + 84.0f, HudType::Font(), HudType::Label);
 			}
 			else if (Cast<ASpaceship>(LockedTarget))
 			{
-				DrawText(TEXT("TYPE"), kLabel, LX, PY + 84.0f, BodyFont, 0.7f);
-				DrawText(TEXT("Ship"), kCargo, VX, PY + 84.0f, BodyFont, 0.7f);
+				DrawText(TEXT("TYPE"), kLabel, LX, PY + 84.0f, HudType::Font(), HudType::Label);
+				DrawText(TEXT("Ship"), kCargo, VX, PY + 84.0f, HudType::Font(), HudType::Label);
 			}
 			else if (const AAsteroid* Rock = Cast<AAsteroid>(LockedTarget))
 			{
-				DrawText(TEXT("ORE"), kLabel, LX, PY + 84.0f, BodyFont, 0.7f);
+				DrawText(TEXT("ORE"), kLabel, LX, PY + 84.0f, HudType::Font(), HudType::Label);
 				DrawText(FString::Printf(TEXT("%.0f / %.0f  (%.0f%%)"), Rock->GetRemainingOre(), Rock->GetTotalOre(),
-					Rock->GetOreFraction() * 100.0f), kCargo, VX, PY + 84.0f, BodyFont, 0.7f);
+					Rock->GetOreFraction() * 100.0f), kCargo, VX, PY + 84.0f, HudType::Font(), HudType::Label);
 			}
 		}
 	}
@@ -455,8 +473,10 @@ void AAdastreaHUD::DrawHUD()
 				{
 					PC->GetViewportSize(VSizeX, VSizeY);
 					const FString Hint = TEXT("TARGETING ACTIVE - Click to lock   [ ] cycle   Y nearest   Z clear   Tab exit");
+					float HintW = 0.0f, HintH = 0.0f;
+					GetTextSize(Hint, HintW, HintH, HudType::Font(), HudType::Label);
 					DrawText(Hint, FLinearColor(0.6f, 0.7f, 0.75f, 0.9f),
-						VSizeX * 0.5f - 230.0f, VSizeY - 40.0f, BodyFont, 0.6f);
+						(VSizeX - HintW) * 0.5f, VSizeY - 40.0f, HudType::Font(), HudType::Label);
 				}
 			}
 	}
@@ -472,8 +492,6 @@ float AAdastreaHUD::DrawTelemetryPanel(ASpaceship* Ship)
 	const float CargoMax = Ship->CargoComponent ? FMath::Max(Ship->CargoComponent->CargoCapacity, 0.01f) : 1.0f;
 	const float Throttle = Ship->ThrottlePercentage;
 
-	UFont* TitleFont   = GEngine->GetLargeFont();
-	UFont* BodyFont    = GEngine->GetSmallFont();
 
 	// Panel origin (top-left, slightly inset)
 	const float PanelX = 20.0f;
@@ -498,14 +516,14 @@ float AAdastreaHUD::DrawTelemetryPanel(ASpaceship* Ship)
 
 	// ---- Title + separator ----
 	DrawText(TEXT("A D A S T R E A   //   FLIGHT TELEMETRY"),
-		kHeader, PanelX + 14.0f, TitleY, TitleFont, 0.9f);
+		kHeader, PanelX + 14.0f, TitleY, HudType::Font(), HudType::Heading);
 	DrawLine(PanelX + 12.0f, TitleY + 26.0f, PanelX + PanelW - 12.0f, TitleY + 26.0f, kBorder, 1.0f);
 
 	float Y = RowStartY;
 	auto Row = [&](const TCHAR* Label, const FString& Value, const FLinearColor& ValueColor)
 	{
-		DrawText(Label, kLabel, LabelX, Y, BodyFont, 0.9f);
-		DrawText(Value, ValueColor, ValueX, Y, BodyFont, 0.9f);
+		DrawText(Label, kLabel, LabelX, Y, HudType::Font(), HudType::Body);
+		DrawText(Value, ValueColor, ValueX, Y, HudType::Font(), HudType::Body);
 		Y += RowH;
 	};
 
@@ -527,9 +545,9 @@ float AAdastreaHUD::DrawTelemetryPanel(ASpaceship* Ship)
 
 	// ---- Position (bottom of panel) ----
 	Y += 4.0f;
-	DrawText(TEXT("POSITION"), kLabel, LabelX, Y, BodyFont, 0.8f);
+	DrawText(TEXT("POSITION"), kLabel, LabelX, Y, HudType::Font(), HudType::Label);
 	DrawText(FString::Printf(TEXT("X %8.0f   Y %8.0f   Z %8.0f"), P.X, P.Y, P.Z),
-		kPos, ValueX, Y, BodyFont, 0.8f);
+		kPos, ValueX, Y, HudType::Font(), HudType::Label);
 	Y += RowH;
 
 	// ---- 3D compass (bearing + pitch) under the ship position ----
@@ -572,7 +590,7 @@ float AAdastreaHUD::DrawTelemetryPanel(ASpaceship* Ship)
 			const float AngleRad = FMath::DegreesToRadians(HeadingClock - PointDeg) + PI;
 			const float Sx = Cx + FMath::Cos(AngleRad) * R;
 			const float Sy = Cy + FMath::Sin(AngleRad) * R;
-			DrawText(Label, Col, Sx - 7.0f, Sy - 9.0f, BodyFont, 0.75f);
+			DrawText(Label, Col, Sx - 7.0f, Sy - 9.0f, HudType::Font(), HudType::Label);
 		};
 		DrawCompassPoint(TEXT("N"), 0.0f,   NCol);
 				DrawCompassPoint(TEXT("E"), 90.0f,  PtCol);
@@ -618,12 +636,12 @@ float AAdastreaHUD::DrawTelemetryPanel(ASpaceship* Ship)
 		const float MarkY = Cy + R - (PitchHalves + 1.0f) * 0.5f * Lh;
 		DrawLine(Lx - 5.0f, MarkY, Lx + 5.0f, MarkY, kBorder, 2.0f);
 		// up/down arrows
-		DrawText(TEXT("^"), FLinearColor(0.5f,0.9f,0.7f,1.0f), Lx + 7.0f, Cy - R - 2.0f, BodyFont, 0.6f);
-		DrawText(TEXT("v"), FLinearColor(0.9f,0.5f,0.5f,1.0f), Lx + 8.0f, Cy + R - 6.0f, BodyFont, 0.6f);
+		DrawText(TEXT("^"), FLinearColor(0.5f,0.9f,0.7f,1.0f), Lx + 7.0f, Cy - R - 2.0f, HudType::Font(), HudType::Caption);
+		DrawText(TEXT("v"), FLinearColor(0.9f,0.5f,0.5f,1.0f), Lx + 8.0f, Cy + R - 6.0f, HudType::Font(), HudType::Caption);
 
 		// ---- Heading readout (degrees) ----
 		const FString HeadingStr = FString::Printf(TEXT("%03.0f."), HeadingClock);
-		DrawText(HeadingStr, kPos, Cx - 24.0f, Cy + R + 3.0f, BodyFont, 0.8f);
+		DrawText(HeadingStr, kPos, Cx - 24.0f, Cy + R + 3.0f, HudType::Font(), HudType::Label);
 
 		Y += RowH + 24.0f;
 	}
@@ -770,8 +788,6 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 		for (float gy = Start; gy <= R; gy += G) DrawAxis(gy, false);
 	}
 
-	UFont* TitleFont = GEngine->GetLargeFont();
-	UFont* MiniFont  = GEngine->GetSmallFont();
 
 	// ---- Box border (outline; the bg fill is drawn before the grid) ----
 	DrawRect(FLinearColor(0.10f, 0.55f, 0.60f, 0.9f), BoxX, BoxY, 3.0f, BoxH);      // left
@@ -811,7 +827,7 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 			FVector2D SP;
 			if (!Project(A->GetActorLocation(), SP)) continue;
 			DrawStationIcon(SP.X, SP.Y, 6.0f, FLinearColor(0.95f, 0.78f, 0.30f, 1.0f), 2.0f);
-			DrawText(HudActorName(A), FLinearColor(0.9f, 0.85f, 0.6f, 1.0f), SP.X + 9.0f, SP.Y - 6.0f, MiniFont, 0.55f);
+			DrawText(HudActorName(A), FLinearColor(0.9f, 0.85f, 0.6f, 1.0f), SP.X + 9.0f, SP.Y - 6.0f, HudType::Font(), HudType::Caption);
 		}
 	}
 	// Ships: cyan hollow diamond icon + label
@@ -823,7 +839,7 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 			FVector2D SP;
 			if (!Project(A->GetActorLocation(), SP)) continue;
 			DrawShipIcon(SP.X, SP.Y, 6.0f, FLinearColor(0.3f, 0.8f, 0.9f, 1.0f), 2.0f);
-			DrawText(HudActorName(A), FLinearColor(0.6f, 0.85f, 0.95f, 1.0f), SP.X + 8.0f, SP.Y - 6.0f, MiniFont, 0.55f);
+			DrawText(HudActorName(A), FLinearColor(0.6f, 0.85f, 0.95f, 1.0f), SP.X + 8.0f, SP.Y - 6.0f, HudType::Font(), HudType::Caption);
 		}
 	}
 
@@ -839,7 +855,7 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 			const float A0 = 2.0f * PI * Seg / 12.0f, A1 = 2.0f * PI * (Seg + 1) / 12.0f;
 			DrawLine(SP.X + FMath::Cos(A0) * GR, SP.Y + FMath::Sin(A0) * GR, SP.X + FMath::Cos(A1) * GR, SP.Y + FMath::Sin(A1) * GR, GateCol, 2.0f);
 		}
-		DrawText(It->GetDisplayName(), GateCol, SP.X + 11.0f, SP.Y - 6.0f, MiniFont, 0.6f);
+		DrawText(It->GetDisplayName(), GateCol, SP.X + 11.0f, SP.Y - 6.0f, HudType::Font(), HudType::Caption);
 	}
 
 	// ---- Player marker (bright teal arrow, "YOU") ----
@@ -851,7 +867,7 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 			DrawLine(PPt.X, PPt.Y - R, PPt.X - R, PPt.Y + R * 0.6f, FLinearColor(0.15f, 0.95f, 0.6f, 1.0f), 2.0f);
 			DrawLine(PPt.X, PPt.Y - R, PPt.X + R, PPt.Y + R * 0.6f, FLinearColor(0.15f, 0.95f, 0.6f, 1.0f), 2.0f);
 			DrawLine(PPt.X - R, PPt.Y + R * 0.6f, PPt.X + R, PPt.Y + R * 0.6f, FLinearColor(0.15f, 0.95f, 0.6f, 1.0f), 2.0f);
-			DrawText(TEXT("YOU"), FLinearColor(0.15f, 0.95f, 0.6f, 1.0f), PPt.X - 7.0f, PPt.Y + 11.0f, MiniFont, 0.6f);
+			DrawText(TEXT("YOU"), FLinearColor(0.15f, 0.95f, 0.6f, 1.0f), PPt.X - 7.0f, PPt.Y + 11.0f, HudType::Font(), HudType::Caption);
 		}
 	}
 
@@ -883,20 +899,18 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 		DrawMapHeader(PC, VW, TEXT("SECTOR MAP"),
 			FString::Printf(TEXT("Universe  >  %s  >  %s"), *SystemLabel, *SectorLabel));
 	}
-	(void)TitleFont;
 	// Controls help (bottom)
-	DrawText(TEXT("[Arrows] orbit   [=/-] zoom   [C] recenter   LMB target   [4] system   [5]/[U] universe   [M] close"),
-		FLinearColor(0.6f,0.7f,0.8f,0.9f), VW*0.5f - 330.0f, VH - 30.0f, MiniFont, 0.7f);
+	DrawCentredText(TEXT("[Arrows] orbit   [=/-] zoom   [C] recenter   LMB target   [4] system   [5]/[U] universe   [M] close"), FLinearColor(0.6f,0.7f,0.8f,0.9f), VW * 0.5f, VH - 30.0f, HudType::Label);
 	// Legend (top-right)
 	float LegY = 16.0f;
-	DrawText(TEXT("Stations"), FLinearColor(0.8f,0.9f,1.0f,1.0f), BoxX + BoxW - 130.0f, LegY, MiniFont, 0.6f);
+	DrawText(TEXT("Stations"), FLinearColor(0.8f,0.9f,1.0f,1.0f), BoxX + BoxW - 130.0f, LegY, HudType::Font(), HudType::Caption);
 	// hollow gold square (station)
 	DrawLine(BoxX + BoxW - 160.0f, LegY + 1.0f, BoxX + BoxW - 148.0f, LegY + 1.0f, FLinearColor(0.95f,0.78f,0.30f,1.0f), 2.0f);
 	DrawLine(BoxX + BoxW - 148.0f, LegY + 1.0f, BoxX + BoxW - 148.0f, LegY + 11.0f, FLinearColor(0.95f,0.78f,0.30f,1.0f), 2.0f);
 	DrawLine(BoxX + BoxW - 148.0f, LegY + 11.0f, BoxX + BoxW - 160.0f, LegY + 11.0f, FLinearColor(0.95f,0.78f,0.30f,1.0f), 2.0f);
 	DrawLine(BoxX + BoxW - 160.0f, LegY + 11.0f, BoxX + BoxW - 160.0f, LegY + 1.0f, FLinearColor(0.95f,0.78f,0.30f,1.0f), 2.0f);
 	LegY += 16.0f;
-	DrawText(TEXT("Ships"), FLinearColor(0.8f,0.9f,1.0f,1.0f), BoxX + BoxW - 130.0f, LegY, MiniFont, 0.6f);
+	DrawText(TEXT("Ships"), FLinearColor(0.8f,0.9f,1.0f,1.0f), BoxX + BoxW - 130.0f, LegY, HudType::Font(), HudType::Caption);
 	// hollow cyan diamond (ship)
 	DrawLine(BoxX + BoxW - 154.0f, LegY + 1.0f, BoxX + BoxW - 147.0f, LegY + 6.0f, FLinearColor(0.3f,0.8f,0.9f,1.0f), 2.0f);
 	DrawLine(BoxX + BoxW - 147.0f, LegY + 6.0f, BoxX + BoxW - 154.0f, LegY + 11.0f, FLinearColor(0.3f,0.8f,0.9f,1.0f), 2.0f);
@@ -906,7 +920,7 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 	// Filters (bottom-left)
 	DrawText(FString::Printf(TEXT("[1] Ships:%s   [2] Stations:%s"),
 		bShowShips ? TEXT("ON") : TEXT("OFF"), bShowStations ? TEXT("ON") : TEXT("OFF")),
-		FLinearColor(0.6f,0.7f,0.8f,0.9f), Margin, VH - 30.0f, MiniFont, 0.7f);
+		FLinearColor(0.6f,0.7f,0.8f,0.9f), Margin, VH - 30.0f, HudType::Font(), HudType::Label);
 }
 
 namespace
@@ -994,8 +1008,6 @@ void AAdastreaHUD::ConfirmStationMenuSelection(APlayerController* PC)
 
 void AAdastreaHUD::DrawStationMenu(APlayerController* PC, AAdastreaPlayerController* AdController, ASpaceship* Ship)
 {
-	UFont* TitleFont = GEngine->GetLargeFont();
-	UFont* BodyFont  = GEngine->GetSmallFont();
 	const float VW = Canvas->SizeX;
 	const float VH = Canvas->SizeY;
 
@@ -1011,8 +1023,8 @@ void AAdastreaHUD::DrawStationMenu(APlayerController* PC, AAdastreaPlayerControl
 	DrawLine(X, Y, X, Y + PanelH, kBorder, 3.0f);
 
 	const ASpaceStation* Station = AdController ? AdController->GetNearestStation() : nullptr;
-	DrawText(TEXT("STATION SERVICES"), kHeader, X + 24.0f, Y + 16.0f, TitleFont, 1.0f);
-	DrawText(Station ? HudActorName(Station) : FString(TEXT("Docked")), kLabel, X + 24.0f, Y + 52.0f, BodyFont, 0.9f);
+	DrawText(TEXT("STATION SERVICES"), kHeader, X + 24.0f, Y + 16.0f, HudType::Font(), HudType::Title);
+	DrawText(Station ? HudActorName(Station) : FString(TEXT("Docked")), kLabel, X + 24.0f, Y + 52.0f, HudType::Font(), HudType::Body);
 	DrawLine(X + 16.0f, Y + 80.0f, X + PanelW - 16.0f, Y + 80.0f, kBorder, 1.0f);
 
 	const FLinearColor Accent(0.15f, 0.9f, 0.6f, 1.0f);
@@ -1029,12 +1041,12 @@ void AAdastreaHUD::DrawStationMenu(APlayerController* PC, AAdastreaPlayerControl
 		const FLinearColor LabelCol = !Option.bAvailable ? FLinearColor(0.5f, 0.5f, 0.55f, 1.0f)
 			: (bSel ? Accent : FLinearColor::White);
 		DrawText(FString(Option.Label) + (Option.bAvailable ? TEXT("") : TEXT("   (coming soon)")),
-			LabelCol, X + 28.0f, RowY + 8.0f, TitleFont, 0.9f);
-		DrawText(Option.Blurb, kLabel, X + 28.0f, RowY + 34.0f, BodyFont, 0.8f);
+			LabelCol, X + 28.0f, RowY + 8.0f, HudType::Font(), HudType::Heading);
+		DrawText(Option.Blurb, kLabel, X + 28.0f, RowY + 34.0f, HudType::Font(), HudType::Label);
 	}
 
 	DrawText(TEXT("[UP/DOWN] select     [ENTER] confirm     [ESC/BACKSPACE] back / undock"), kLabel,
-		X + 24.0f, Y + PanelH - 30.0f, BodyFont, 0.8f);
+		X + 24.0f, Y + PanelH - 30.0f, HudType::Font(), HudType::Label);
 }
 
 // ---------------------------------------------------------------------------
@@ -1106,8 +1118,6 @@ bool AAdastreaHUD::ConfirmPauseMenuSelection(APlayerController* PC)
 
 void AAdastreaHUD::DrawPauseMenu(APlayerController* PC)
 {
-	UFont* TitleFont = GEngine->GetLargeFont();
-	UFont* BodyFont  = GEngine->GetSmallFont();
 	const float VW = Canvas->SizeX;
 	const float VH = Canvas->SizeY;
 
@@ -1121,8 +1131,8 @@ void AAdastreaHUD::DrawPauseMenu(APlayerController* PC)
 
 	DrawRect(kBg, X, Y, PanelW, PanelH);
 	DrawLine(X, Y, X, Y + PanelH, kBorder, 3.0f);
-	DrawText(TEXT("PAUSED"), kHeader, X + 24.0f, Y + 16.0f, TitleFont, 1.0f);
-	DrawText(TEXT("Audio"), kLabel, X + 24.0f, Y + 50.0f, BodyFont, 0.9f);
+	DrawText(TEXT("PAUSED"), kHeader, X + 24.0f, Y + 16.0f, HudType::Font(), HudType::Title);
+	DrawText(TEXT("Audio"), kLabel, X + 24.0f, Y + 50.0f, HudType::Font(), HudType::Body);
 	DrawLine(X + 16.0f, Y + 76.0f, X + PanelW - 16.0f, Y + 76.0f, kBorder, 1.0f);
 
 	const FLinearColor Accent(0.15f, 0.9f, 0.6f, 1.0f);
@@ -1143,7 +1153,7 @@ void AAdastreaHUD::DrawPauseMenu(APlayerController* PC)
 		{
 			const float Value = Settings->GetVolume(Category);
 			DrawText(FString::Printf(TEXT("%s volume"), UAdastreaAudioSettings::GetCategoryLabel(Category)),
-				LabelCol, X + 28.0f, RowY + 14.0f, TitleFont, 0.8f);
+				LabelCol, X + 28.0f, RowY + 14.0f, HudType::Font(), HudType::Heading);
 
 			// Slider track + fill + percentage.
 			const float TrackX = X + 250.0f;
@@ -1151,17 +1161,17 @@ void AAdastreaHUD::DrawPauseMenu(APlayerController* PC)
 			const float TrackY = RowY + 22.0f;
 			DrawRect(FLinearColor(0.25f, 0.3f, 0.35f, 0.9f), TrackX, TrackY, TrackW, 6.0f);
 			DrawRect(bSel ? Accent : kBorder, TrackX, TrackY, TrackW * Value, 6.0f);
-			DrawText(FString::Printf(TEXT("%3.0f%%"), Value * 100.0f), LabelCol, TrackX + TrackW + 14.0f, RowY + 14.0f, BodyFont, 0.9f);
+			DrawText(FString::Printf(TEXT("%3.0f%%"), Value * 100.0f), LabelCol, TrackX + TrackW + 14.0f, RowY + 14.0f, HudType::Font(), HudType::Body);
 		}
 		else
 		{
 			const TCHAR* Label = (static_cast<EPauseRow>(i) == EPauseRow::Resume) ? TEXT("Resume") : TEXT("Quit to desktop");
-			DrawText(Label, LabelCol, X + 28.0f, RowY + 14.0f, TitleFont, 0.8f);
+			DrawText(Label, LabelCol, X + 28.0f, RowY + 14.0f, HudType::Font(), HudType::Heading);
 		}
 	}
 
 	DrawText(TEXT("[UP/DOWN] select     [LEFT/RIGHT] adjust     [ENTER] confirm     [ESC/F10] resume"), kLabel,
-		X + 24.0f, Y + PanelH - 30.0f, BodyFont, 0.8f);
+		X + 24.0f, Y + PanelH - 30.0f, HudType::Font(), HudType::Label);
 }
 
 void AAdastreaHUD::MoveTradeSelection(int32 Step)
@@ -1197,15 +1207,13 @@ void AAdastreaHUD::DrawTradeScreen(APlayerController* PC, AAdastreaPlayerControl
 	ASpaceStation* Station = AdController->GetNearestTradableStation();
 	if (!Station || !Station->GetMarketplaceModule())
 	{
-		UFont* BF = GEngine->GetSmallFont();
-		DrawText(TEXT("No active market at this dock."), FLinearColor(0.9f,0.6f,0.4f,1.0f), 200.0f, 200.0f, BF, 1.0f);
+		DrawText(TEXT("No active market at this dock."), FLinearColor(0.9f,0.6f,0.4f,1.0f), 200.0f, 200.0f, HudType::Font(), HudType::Body);
 		return;
 	}
 	UMarketDataAsset* Market = Station->GetMarketplaceModule()->GetMarketData();
 	if (!Market)
 	{
-		UFont* BF = GEngine->GetSmallFont();
-		DrawText(TEXT("Station market is not configured."), FLinearColor(0.9f,0.6f,0.4f,1.0f), 200.0f, 200.0f, BF, 1.0f);
+		DrawText(TEXT("Station market is not configured."), FLinearColor(0.9f,0.6f,0.4f,1.0f), 200.0f, 200.0f, HudType::Font(), HudType::Body);
 		return;
 	}
 
@@ -1216,29 +1224,27 @@ void AAdastreaHUD::DrawTradeScreen(APlayerController* PC, AAdastreaPlayerControl
 	// Full-screen dim backdrop.
 	DrawRect(FLinearColor(0.02f, 0.03f, 0.05f, 0.94f), 0.0f, 0.0f, VW, VH);
 
-	UFont* TitleFont = GEngine->GetLargeFont();
-	UFont* BodyFont  = GEngine->GetSmallFont();
 
 	// Credits + cargo header row.
 	const int32 Credits = Ship->PlayerTraderComponent ? Ship->PlayerTraderComponent->GetCredits() : 0;
 	const float CargoUsed = Ship->CargoComponent ? (Ship->CargoComponent->CargoCapacity - Ship->CargoComponent->GetAvailableCargoSpace()) : 0.0f;
 	const float CargoMax = Ship->CargoComponent ? FMath::Max(Ship->CargoComponent->CargoCapacity, 0.01f) : 1.0f;
 
-	DrawText(TEXT("TRADING"), FLinearColor(0.15f,0.9f,0.6f,1.0f), VW*0.5f-60.0f, 18.0f, TitleFont, 1.1f);
-	DrawText(Market->GetName(), FLinearColor(0.8f,0.9f,1.0f,1.0f), VW*0.5f-60.0f, 52.0f, BodyFont, 0.8f);
-	DrawText(FString::Printf(TEXT("CREDITS: %d"), Credits), FLinearColor(0.95f,0.78f,0.30f,1.0f), 40.0f, 40.0f, BodyFont, 0.9f);
-	DrawText(FString::Printf(TEXT("CARGO: %.0f / %.0f"), CargoUsed, CargoMax), FLinearColor(0.15f,0.9f,0.6f,1.0f), 40.0f, 66.0f, BodyFont, 0.9f);
+	DrawCentredText(TEXT("TRADING"), FLinearColor(0.15f,0.9f,0.6f,1.0f), VW * 0.5f, 18.0f, HudType::Title);
+	DrawCentredText(Market->GetName(), FLinearColor(0.8f,0.9f,1.0f,1.0f), VW * 0.5f, 52.0f, HudType::Body);
+	DrawText(FString::Printf(TEXT("CREDITS: %d"), Credits), FLinearColor(0.95f,0.78f,0.30f,1.0f), 40.0f, 40.0f, HudType::Font(), HudType::Body);
+	DrawText(FString::Printf(TEXT("CARGO: %.0f / %.0f"), CargoUsed, CargoMax), FLinearColor(0.15f,0.9f,0.6f,1.0f), 40.0f, 66.0f, HudType::Font(), HudType::Body);
 	DrawText(bBuyMode ? TEXT("MODE: BUY") : TEXT("MODE: SELL"),
 		bBuyMode ? FLinearColor(0.3f,0.9f,0.4f,1.0f) : FLinearColor(0.9f,0.5f,0.3f,1.0f),
-		VW-220.0f, 40.0f, BodyFont, 0.9f);
+		VW-220.0f, 40.0f, HudType::Font(), HudType::Body);
 
 	// Column headers.
 	const float ListX = 60.0f;
 	const float PriceX = VW*0.45f;
 	const float StockX = VW*0.68f;
-	DrawText(TEXT("ITEM"), FLinearColor(0.6f,0.7f,0.8f,1.0f), ListX, 100.0f, BodyFont, 0.7f);
-	DrawText(TEXT("PRICE"), FLinearColor(0.6f,0.7f,0.8f,1.0f), PriceX, 100.0f, BodyFont, 0.7f);
-	DrawText(TEXT("STOCK"), FLinearColor(0.6f,0.7f,0.8f,1.0f), StockX, 100.0f, BodyFont, 0.7f);
+	DrawText(TEXT("ITEM"), FLinearColor(0.6f,0.7f,0.8f,1.0f), ListX, 100.0f, HudType::Font(), HudType::Label);
+	DrawText(TEXT("PRICE"), FLinearColor(0.6f,0.7f,0.8f,1.0f), PriceX, 100.0f, HudType::Font(), HudType::Label);
+	DrawText(TEXT("STOCK"), FLinearColor(0.6f,0.7f,0.8f,1.0f), StockX, 100.0f, HudType::Font(), HudType::Label);
 
 	// Item rows (scroll window around selection).
 	const int32 InventoryCount = Market->Inventory.Num();
@@ -1268,15 +1274,14 @@ void AAdastreaHUD::DrawTradeScreen(APlayerController* PC, AAdastreaPlayerControl
 		// dim items not in stock for buy mode
 		FLinearColor NameCol = FLinearColor(0.9f,0.95f,1.0f,1.0f);
 		if (bBuyMode && Entry.CurrentStock <= 0) { NameCol = FLinearColor(0.4f,0.45f,0.5f,1.0f); }
-		DrawText(ItemName, NameCol, ListX, RowY, BodyFont, 0.75f);
-		DrawText(FString::Printf(TEXT("%d cr"), ItemPrice), FLinearColor(0.95f,0.78f,0.30f,1.0f), PriceX, RowY, BodyFont, 0.75f);
-		DrawText(FString::Printf(TEXT("%d"), Entry.CurrentStock), FLinearColor(0.7f,0.8f,0.9f,1.0f), StockX, RowY, BodyFont, 0.75f);
+		DrawText(ItemName, NameCol, ListX, RowY, HudType::Font(), HudType::Body);
+		DrawText(FString::Printf(TEXT("%d cr"), ItemPrice), FLinearColor(0.95f,0.78f,0.30f,1.0f), PriceX, RowY, HudType::Font(), HudType::Body);
+		DrawText(FString::Printf(TEXT("%d"), Entry.CurrentStock), FLinearColor(0.7f,0.8f,0.9f,1.0f), StockX, RowY, HudType::Font(), HudType::Body);
 		RowY += RowH;
 	}
 
 	// Footer controls.
-	DrawText(TEXT("Up/Down: select    [B]/[S]: toggle Buy/Sell    [Space]: trade 1    [Esc]: close    [Q]: trade 5    [X]: sell all"),
-		FLinearColor(0.6f,0.7f,0.8f,0.9f), VW*0.5f - 380.0f, VH - 40.0f, BodyFont, 0.7f);
+	DrawCentredText(TEXT("Up/Down: select    [B]/[S]: toggle Buy/Sell    [Space]: trade 1    [Esc]: close    [Q]: trade 5    [X]: sell all"), FLinearColor(0.6f,0.7f,0.8f,0.9f), VW * 0.5f, VH - 40.0f, HudType::Label);
 }
 
 // ========================================================================
@@ -1593,10 +1598,8 @@ void AAdastreaHUD::DrawShipSelectScreen(APlayerController* PC)
 								ShipPreviewCapture->SetWorldRotation(FRotator(0, 0, 0));
 			}
 
-			UFont* TitleFont = GEngine->GetLargeFont();
-	UFont* BodyFont  = GEngine->GetSmallFont();
 
-	DrawText(TEXT("SHIP SELECT"), FLinearColor(0.15f,0.9f,0.6f,1.0f), VW*0.5f - 80.0f, 18.0f, TitleFont, 1.2f);
+	DrawCentredText(TEXT("SHIP SELECT"), FLinearColor(0.15f,0.9f,0.6f,1.0f), VW * 0.5f, 18.0f, HudType::Title);
 
 	// ---- Left: ship list ----
 	const float LX = 40.0f, LY = 80.0f;
@@ -1611,7 +1614,7 @@ void AAdastreaHUD::DrawShipSelectScreen(APlayerController* PC)
 		{
 			DrawRect(FLinearColor(0.15f,0.32f,0.35f,0.5f), LX, RowY, 220.0f, 24.0f);
 		}
-		DrawText(Label, bSelected ? FLinearColor(1,1,1,1) : FLinearColor(0.7f,0.8f,0.9f,1), LX+8, RowY+2, BodyFont, 0.85f);
+		DrawText(Label, bSelected ? FLinearColor(1,1,1,1) : FLinearColor(0.7f,0.8f,0.9f,1), LX+8, RowY+2, HudType::Font(), HudType::Body);
 	}
 
 	// ---- Center-right: 3D preview ----
@@ -1628,7 +1631,7 @@ void AAdastreaHUD::DrawShipSelectScreen(APlayerController* PC)
 	}
 	else
 	{
-		DrawText(TEXT("[ preview unavailable ]"), FLinearColor(0.5f,0.6f,0.7f,1), PX+PW*0.5f-110, PY+PH*0.5f, BodyFont, 0.8f);
+		DrawText(TEXT("[ preview unavailable ]"), FLinearColor(0.5f,0.6f,0.7f,1), PX+PW*0.5f-110, PY+PH*0.5f, HudType::Font(), HudType::Label);
 	}
 
 	// ---- Right: stats ----
@@ -1651,23 +1654,22 @@ void AAdastreaHUD::DrawShipSelectScreen(APlayerController* PC)
 		Lbls.Add(TEXT("MOBILITY")); Vals.Add(FString::Printf(TEXT("%.0f"), DA->GetMobilityRating()));
 		Lbls.Add(TEXT("COMBAT"));   Vals.Add(FString::Printf(TEXT("%.0f"), DA->GetCombatRating()));
 
-		DrawText(ShipName, FLinearColor(0.95f,0.78f,0.30f,1), SX, SY, TitleFont, 1.0f);
+		DrawText(ShipName, FLinearColor(0.95f,0.78f,0.30f,1), SX, SY, HudType::Font(), HudType::Heading);
 		float Y = SY + 40.0f;
 		for (int32 i = 0; i < Lbls.Num(); ++i)
 		{
-			DrawText(Lbls[i], kLabel, SX, Y, BodyFont, 0.85f);
-			DrawText(Vals[i], FLinearColor(0.85f,0.9f,0.95f,1), SX+150, Y, BodyFont, 0.85f);
+			DrawText(Lbls[i], kLabel, SX, Y, HudType::Font(), HudType::Body);
+			DrawText(Vals[i], FLinearColor(0.85f,0.9f,0.95f,1), SX+150, Y, HudType::Font(), HudType::Body);
 			Y += 24.0f;
 		}
 	}
 	else
 	{
-		DrawText(TEXT("(no data asset on this pawn)"), FLinearColor(0.6f,0.7f,0.8f,1), SX, SY, BodyFont, 0.8f);
+		DrawText(TEXT("(no data asset on this pawn)"), FLinearColor(0.6f,0.7f,0.8f,1), SX, SY, HudType::Font(), HudType::Label);
 	}
 
 	// ---- Footer controls ----
-	DrawText(TEXT("Left/Right: rotate    Up/Down or A/D: cycle ship    [Space]: select & fly    [Esc]: close"),
-		FLinearColor(0.6f,0.7f,0.8f,0.9f), VW*0.5f - 400.0f, VH - 40.0f, BodyFont, 0.7f);
+	DrawCentredText(TEXT("Left/Right: rotate    Up/Down or A/D: cycle ship    [Space]: select & fly    [Esc]: close"), FLinearColor(0.6f,0.7f,0.8f,0.9f), VW * 0.5f, VH - 40.0f, HudType::Label);
 }
 
 void AAdastreaHUD::ShowMessage(const FString& InMessage, float DurationSecs, bool bIsWarning)
@@ -1689,7 +1691,6 @@ void AAdastreaHUD::DrawTransientMessage(APlayerController* PC)
 		return;
 	}
 
-	UFont* MsgFont = GEngine->GetSmallFont();
 
 	int32 VW = 0;
 	int32 VH = 0;
@@ -1701,14 +1702,14 @@ void AAdastreaHUD::DrawTransientMessage(APlayerController* PC)
 	// Measure the text so we can center it and size the backing bar.
 	float TextW = 0.0f;
 	float TextH = 0.0f;
-	Canvas->StrLen(MsgFont, Message, TextW, TextH);
+	GetTextSize(Message, TextW, TextH, HudType::Font(), HudType::Body);
 
 	const float X = (VW - TextW) * 0.5f;
 	const float Y = 120.0f;
 	const float Pad = 10.0f;
 
 	DrawRect(FLinearColor(0.0f, 0.0f, 0.0f, 0.55f), X - Pad, Y - Pad, TextW + Pad * 2.0f, TextH + Pad * 2.0f);
-	DrawText(Message, Colour, X, Y, MsgFont, 0.8f);
+	DrawText(Message, Colour, X, Y, HudType::Font(), HudType::Body);
 }
 
 void AAdastreaHUD::SetCurrentInteractable(AActor* InActor)
@@ -1738,7 +1739,6 @@ void AAdastreaHUD::DrawInteractPrompt(APlayerController* PC)
 	}
 
 	const FText Prompt = Interactable->GetInteractPrompt_Implementation();
-	UFont* MsgFont = GEngine->GetSmallFont();
 
 	int32 VW = 0;
 	int32 VH = 0;
@@ -1747,14 +1747,14 @@ void AAdastreaHUD::DrawInteractPrompt(APlayerController* PC)
 	const FString Line = FString::Printf(TEXT("%s   [E]"), *Prompt.ToString());
 	float TextW = 0.0f;
 	float TextH = 0.0f;
-	Canvas->StrLen(MsgFont, Line, TextW, TextH);
+	GetTextSize(Line, TextW, TextH, HudType::Font(), HudType::Body);
 
 	const float X = (VW - TextW) * 0.5f;
 	const float Y = VH - 140.0f;
 	const float Pad = 10.0f;
 
 	DrawRect(FLinearColor(0.0f, 0.0f, 0.0f, 0.6f), X - Pad, Y - Pad, TextW + Pad * 2.0f, TextH + Pad * 2.0f);
-		DrawText(Line, FLinearColor(0.4f, 0.95f, 1.0f, 1.0f), X, Y, MsgFont, 0.85f);
+		DrawText(Line, FLinearColor(0.4f, 0.95f, 1.0f, 1.0f), X, Y, HudType::Font(), HudType::Body);
 	}
 
 	// ========================================================================
@@ -1785,17 +1785,14 @@ void AAdastreaHUD::DrawInteractPrompt(APlayerController* PC)
 		// Full-screen dim backdrop.
 		DrawRect(FLinearColor(0.02f, 0.03f, 0.05f, 0.94f), 0.0f, 0.0f, VW, VH);
 
-		UFont* TitleFont = GEngine->GetLargeFont();
-		UFont* BodyFont  = GEngine->GetSmallFont();
 
 		// Title + name.
-		DrawText(TEXT("STATION OVERVIEW"), FLinearColor(0.15f,0.9f,0.6f,1.0f), VW*0.5f - 90.0f, 18.0f, TitleFont, 1.2f);
-		DrawText(Station->GetTargetDisplayName_Implementation().ToString(),
-			FLinearColor(0.8f,0.9f,1.0f,1.0f), VW*0.5f - 70.0f, 52.0f, BodyFont, 0.85f);
+		DrawCentredText(TEXT("STATION OVERVIEW"), FLinearColor(0.15f,0.9f,0.6f,1.0f), VW * 0.5f, 18.0f, HudType::Title);
+		DrawCentredText(Station->GetTargetDisplayName_Implementation().ToString(), FLinearColor(0.8f,0.9f,1.0f,1.0f), VW * 0.5f, 52.0f, HudType::Body);
 
 		// Distance to observer.
 		const float Dist = FVector::Dist(Station->GetActorLocation(), ObserverPos);
-		DrawText(FString::Printf(TEXT("DISTANCE: %.0f u"), Dist), FLinearColor(0.6f,0.7f,0.8f,1.0f), 40.0f, 40.0f, BodyFont, 0.8f);
+		DrawText(FString::Printf(TEXT("DISTANCE: %.0f u"), Dist), FLinearColor(0.6f,0.7f,0.8f,1.0f), 40.0f, 40.0f, HudType::Font(), HudType::Label);
 
 		// ---- Left column: POWER + SHIELDS ----
 		const float CX = 40.0f;
@@ -1803,66 +1800,66 @@ void AAdastreaHUD::DrawInteractPrompt(APlayerController* PC)
 		const float ColW = 380.0f;
 		const float RowH = 26.0f;
 
-		DrawText(TEXT("— POWER —"), FLinearColor(0.35f,0.8f,0.9f,1.0f), CX, CY, BodyFont, 0.8f);
+		DrawText(TEXT("— POWER —"), FLinearColor(0.35f,0.8f,0.9f,1.0f), CX, CY, HudType::Font(), HudType::Heading);
 		float Y = CY + 26.0f;
 		DrawText(FString::Printf(TEXT("Generation:   %.0f"), Station->GetTotalPowerGeneration()),
-			kCargo, CX+14.0f, Y, BodyFont, 0.75f); Y += RowH;
+			kCargo, CX+14.0f, Y, HudType::Font(), HudType::Label); Y += RowH;
 		DrawText(FString::Printf(TEXT("Consumption:  %.0f"), Station->GetTotalPowerConsumption()),
-			kThrottle, CX+14.0f, Y, BodyFont, 0.75f); Y += RowH;
+			kThrottle, CX+14.0f, Y, HudType::Font(), HudType::Label); Y += RowH;
 		// Net balance; colour green on surplus, red on deficit.
 		const float Balance = Station->GetPowerBalance();
 		const FLinearColor BalCol = Balance >= 0.0f ? FLinearColor(0.3f,0.9f,0.4f,1.0f) : FLinearColor(1.0f,0.4f,0.35f,1.0f);
-		DrawText(FString::Printf(TEXT("Net balance:  %+.0f"), Balance), BalCol, CX+14.0f, Y, BodyFont, 0.75f); Y += RowH;
+		DrawText(FString::Printf(TEXT("Net balance:  %+.0f"), Balance), BalCol, CX+14.0f, Y, HudType::Font(), HudType::Label); Y += RowH;
 		// Breakdown of generation sources.
 		DrawText(FString::Printf(TEXT("        Reactor: %.0f   Solar: %.0f"),
 			Station->GetTotalReactorOutput(), Station->GetTotalSolarOutput()),
-			kLabel, CX+14.0f, Y, BodyFont, 0.7f); Y += RowH + 6.0f;
+			kLabel, CX+14.0f, Y, HudType::Font(), HudType::Label); Y += RowH + 6.0f;
 
-		DrawText(TEXT("— SHIELDS —"), FLinearColor(0.35f,0.8f,0.9f,1.0f), CX, Y, BodyFont, 0.8f); Y += 26.0f;
+		DrawText(TEXT("— SHIELDS —"), FLinearColor(0.35f,0.8f,0.9f,1.0f), CX, Y, HudType::Font(), HudType::Heading); Y += 26.0f;
 		const float Cur = Station->GetTotalCurrentShieldStrength();
 		const float Max = Station->GetTotalShieldStrength();
 		const float ShieldFrac = Max > 0.0f ? FMath::Clamp(Cur / Max, 0.0f, 1.0f) : 0.0f;
 		DrawText(FString::Printf(TEXT("Shield:  %.0f / %.0f  (%.0f%%)"), Cur, Max, ShieldFrac*100.0f),
-			FLinearColor(0.45f,0.85f,0.95f,1.0f), CX+14.0f, Y, BodyFont, 0.75f); Y += RowH;
+			FLinearColor(0.45f,0.85f,0.95f,1.0f), CX+14.0f, Y, HudType::Font(), HudType::Label); Y += RowH;
 		DrawText(FString::Printf(TEXT("Turret DPS:  %.0f"), Station->GetTotalTurretDps()),
-			FLinearColor(0.9f,0.5f,0.3f,1.0f), CX+14.0f, Y, BodyFont, 0.75f); Y += RowH + 6.0f;
+			FLinearColor(0.9f,0.5f,0.3f,1.0f), CX+14.0f, Y, HudType::Font(), HudType::Label); Y += RowH + 6.0f;
 
 		// ---- Middle column: POPULATION ----
 		const float MX = CX + ColW + 40.0f;
 		Y = CY;
-		DrawText(TEXT("— POPULATION —"), FLinearColor(0.35f,0.8f,0.9f,1.0f), MX, Y, BodyFont, 0.8f); Y += 26.0f;
+		DrawText(TEXT("— POPULATION —"), FLinearColor(0.35f,0.8f,0.9f,1.0f), MX, Y, HudType::Font(), HudType::Heading); Y += 26.0f;
 		DrawText(FString::Printf(TEXT("Residents:  %d"), Station->GetTotalResidents()),
-			kPos, MX+14.0f, Y, BodyFont, 0.75f); Y += RowH;
+			kPos, MX+14.0f, Y, HudType::Font(), HudType::Label); Y += RowH;
 		DrawText(FString::Printf(TEXT("Crew berths: %d  (barracks)"), Station->GetTotalCrewCapacity()),
-			kPos, MX+14.0f, Y, BodyFont, 0.75f); Y += RowH + 6.0f;
+			kPos, MX+14.0f, Y, HudType::Font(), HudType::Label); Y += RowH + 6.0f;
 
-		DrawText(TEXT("— STORAGE —"), FLinearColor(0.35f,0.8f,0.9f,1.0f), MX, Y, BodyFont, 0.8f); Y += 26.0f;
+		DrawText(TEXT("— STORAGE —"), FLinearColor(0.35f,0.8f,0.9f,1.0f), MX, Y, HudType::Font(), HudType::Heading); Y += 26.0f;
 		DrawText(FString::Printf(TEXT("Cargo: %d / %d stored"), Station->GetTotalCargoStored(), Station->GetTotalStorageCapacity()),
-			kCargo, MX+14.0f, Y, BodyFont, 0.75f); Y += RowH;
+			kCargo, MX+14.0f, Y, HudType::Font(), HudType::Label); Y += RowH;
 		DrawText(FString::Printf(TEXT("Fuel: %.0f / %.0f L"), Station->GetTotalFuelStored(), Station->GetTotalFuelCapacity()),
-			kCargo, MX+14.0f, Y, BodyFont, 0.75f); Y += RowH + 6.0f;
+			kCargo, MX+14.0f, Y, HudType::Font(), HudType::Label); Y += RowH + 6.0f;
 
-		DrawText(TEXT("— COMMERCE —"), FLinearColor(0.35f,0.8f,0.9f,1.0f), MX, Y, BodyFont, 0.8f); Y += 26.0f;
+		DrawText(TEXT("— COMMERCE —"), FLinearColor(0.35f,0.8f,0.9f,1.0f), MX, Y, HudType::Font(), HudType::Heading); Y += 26.0f;
 		const int32 Open = Station->GetOpenMarketplaceCount();
 		DrawText(FString::Printf(TEXT("Markets: %d open / %d total"), Open, Station->GetTotalMarketplaceCount()),
-			kCredit, MX+14.0f, Y, BodyFont, 0.75f); Y += RowH;
+			kCredit, MX+14.0f, Y, HudType::Font(), HudType::Label); Y += RowH;
 		DrawText(FString::Printf(TEXT("Docking: %d points / %d capacity"), Station->GetTotalDockingPoints(), Station->GetTotalDockingCapacity()),
-			kPos, MX+14.0f, Y, BodyFont, 0.75f); Y += RowH;
+			kPos, MX+14.0f, Y, HudType::Font(), HudType::Label); Y += RowH;
 
 		// ---- Right column: CAPABILITIES + MODULES ----
 		const float RX = MX + ColW + 40.0f;
 		Y = CY;
-		DrawText(TEXT("— CAPABILITIES —"), FLinearColor(0.35f,0.8f,0.9f,1.0f), RX, Y, BodyFont, 0.8f); Y += 26.0f;
+		DrawText(TEXT("— CAPABILITIES —"), FLinearColor(0.35f,0.8f,0.9f,1.0f), RX, Y, HudType::Font(), HudType::Heading); Y += 26.0f;
 		const FLinearColor CapYes(0.3f,0.85f,0.5f,1.0f);
 		const FLinearColor CapNo (0.6f,0.4f,0.4f,1.0f);
 		DrawText(FString::Printf(TEXT("Docking bay:   %s"), Station->HasDockingCapability() ? TEXT("YES") : TEXT("no")),
-			Station->HasDockingCapability() ? CapYes : CapNo, RX+14.0f, Y, BodyFont, 0.75f); Y += RowH;
+			Station->HasDockingCapability() ? CapYes : CapNo, RX+14.0f, Y, HudType::Font(), HudType::Label); Y += RowH;
 		DrawText(FString::Printf(TEXT("Marketplace:   %s"), Station->HasMarketplace() ? TEXT("YES") : TEXT("no")),
-			Station->HasMarketplace() ? CapYes : CapNo, RX+14.0f, Y, BodyFont, 0.75f); Y += RowH;
+			Station->HasMarketplace() ? CapYes : CapNo, RX+14.0f, Y, HudType::Font(), HudType::Label); Y += RowH;
 		DrawText(FString::Printf(TEXT("Cargo storage: %s"), Station->HasCargoStorage() ? TEXT("YES") : TEXT("no")),
-			Station->HasCargoStorage() ? CapYes : CapNo, RX+14.0f, Y, BodyFont, 0.75f); Y += RowH + 6.0f;
+			Station->HasCargoStorage() ? CapYes : CapNo, RX+14.0f, Y, HudType::Font(), HudType::Label); Y += RowH + 6.0f;
 
-		DrawText(TEXT("— MODULES BY TYPE —"), FLinearColor(0.35f,0.8f,0.9f,1.0f), RX, Y, BodyFont, 0.8f); Y += 26.0f;
+		DrawText(TEXT("— MODULES BY TYPE —"), FLinearColor(0.35f,0.8f,0.9f,1.0f), RX, Y, HudType::Font(), HudType::Heading); Y += 26.0f;
 		constexpr EStationModuleGroup Groups[] = {
 			EStationModuleGroup::Docking, EStationModuleGroup::Power, EStationModuleGroup::Storage,
 			EStationModuleGroup::Processing, EStationModuleGroup::Defence, EStationModuleGroup::Habitation,
@@ -1877,13 +1874,13 @@ void AAdastreaHUD::DrawInteractPrompt(APlayerController* PC)
 			const int32 Count = Station->GetModuleCountByGroup(Groups[i]);
 			FLinearColor CountCol = kLabel;
 			if (Count > 0) { CountCol = FLinearColor(0.7f,0.85f,0.9f,1.0f); }
-			DrawText(FString::Printf(TEXT("%-12s  %d"), GroupNames[i], Count), CountCol, RX+14.0f, Y, BodyFont, 0.72f);
+			DrawText(FString::Printf(TEXT("%-12s  %d"), GroupNames[i], Count), CountCol, RX+14.0f, Y, HudType::Font(), HudType::Label);
 			Y += 22.0f;
 		}
 
 		// Footer controls.
-		DrawText(TEXT("[N]: close    (live readout from current station systems)"),
-			FLinearColor(0.6f,0.7f,0.8f,0.9f), VW*0.5f - 240.0f, VH - 40.0f, BodyFont, 0.7f);
+		DrawCentredText(TEXT("[N]: close    (live readout from current station systems)"),
+			FLinearColor(0.6f,0.7f,0.8f,0.9f), VW * 0.5f, VH - 40.0f, HudType::Label);
 	}
 
 
@@ -1894,8 +1891,6 @@ void AAdastreaHUD::DrawMiningHUD(APlayerController* PC, ASpaceship* Ship, float 
 	{
 		return;
 	}
-	UFont* BodyFont = GEngine->GetSmallFont();
-	UFont* TitleFont = GEngine->GetLargeFont();
 	const FLinearColor kTrack(0.08f, 0.10f, 0.12f, 0.9f);
 	const FLinearColor kGood(0.30f, 1.00f, 0.50f, 1.0f);
 	const FLinearColor kWarn(1.00f, 0.55f, 0.25f, 1.0f);
@@ -1910,8 +1905,8 @@ void AAdastreaHUD::DrawMiningHUD(APlayerController* PC, ASpaceship* Ship, float 
 		}
 		const FString Hint = TEXT("MINING LASER   [T] lock asteroid ahead    [Hold LMB] fire");
 		float HW = 0.0f, HH = 0.0f;
-		GetTextSize(Hint, HW, HH, BodyFont, 0.8f);
-		DrawText(Hint, FLinearColor(0.6f, 0.7f, 0.75f, 0.85f), (Canvas->SizeX - HW) * 0.5f, Canvas->SizeY - 64.0f, BodyFont, 0.8f);
+		GetTextSize(Hint, HW, HH, HudType::Font(), HudType::Label);
+		DrawText(Hint, FLinearColor(0.6f, 0.7f, 0.75f, 0.85f), (Canvas->SizeX - HW) * 0.5f, Canvas->SizeY - 64.0f, HudType::Font(), HudType::Label);
 		return;
 	}
 
@@ -1948,7 +1943,7 @@ void AAdastreaHUD::DrawMiningHUD(APlayerController* PC, ASpaceship* Ship, float 
 			DrawLine(X1, Y0, X1 - L, Y0, BC, T); DrawLine(X1, Y0, X1, Y0 + L, BC, T);
 			DrawLine(X0, Y1, X0 + L, Y1, BC, T); DrawLine(X0, Y1, X0, Y1 - L, BC, T);
 			DrawLine(X1, Y1, X1 - L, Y1, BC, T); DrawLine(X1, Y1, X1, Y1 - L, BC, T);
-			DrawText(FString::Printf(TEXT("%.0f m"), Dist / 100.0f), BC, X1 + 6.0f, Y1 - 12.0f, BodyFont, 0.75f);
+			DrawText(FString::Printf(TEXT("%.0f m"), Dist / 100.0f), BC, X1 + 6.0f, Y1 - 12.0f, HudType::Font(), HudType::Label);
 		}
 	}
 
@@ -1960,14 +1955,14 @@ void AAdastreaHUD::DrawMiningHUD(APlayerController* PC, ASpaceship* Ship, float 
 	DrawRect(kBg, PanelX, PanelTop, PanelW, PanelH);
 	DrawLine(PanelX, PanelTop, PanelX, PanelTop + PanelH, Tint, 3.0f);
 	DrawLine(PanelX + 2, PanelTop + PanelH - 1, PanelX + PanelW - 2, PanelTop + PanelH - 1, kBorder, 1.0f);
-	DrawText(TEXT("MINING   //   TARGET"), kHeader, LabelX, PanelTop + 10.0f, TitleFont, 0.9f);
+	DrawText(TEXT("MINING   //   TARGET"), kHeader, LabelX, PanelTop + 10.0f, HudType::Font(), HudType::Heading);
 	DrawLine(PanelX + 12.0f, PanelTop + 36.0f, PanelX + PanelW - 12.0f, PanelTop + 36.0f, kBorder, 1.0f);
 
 	float Y = PanelTop + 44.0f;
 	auto Row = [&](const TCHAR* Label, const FString& Value, const FLinearColor& ValueColor)
 	{
-		DrawText(Label, kLabel, LabelX, Y, BodyFont, 0.9f);
-		DrawText(Value, ValueColor, ValueX, Y, BodyFont, 0.9f);
+		DrawText(Label, kLabel, LabelX, Y, HudType::Font(), HudType::Body);
+		DrawText(Value, ValueColor, ValueX, Y, HudType::Font(), HudType::Body);
 		Y += RowH;
 	};
 	auto Bar = [&](float Frac, const FLinearColor& Col)
@@ -2027,8 +2022,8 @@ void AAdastreaHUD::DrawMiningHUD(APlayerController* PC, ASpaceship* Ship, float 
 			FlashCol.A = FMath::Clamp(1.0f - Since / 1.5f, 0.0f, 1.0f);
 			const FString Plus = FString::Printf(TEXT("+%d"), Laser->GetLastMinedAmount());
 			float FW = 0.0f, FH = 0.0f;
-			GetTextSize(Plus, FW, FH, TitleFont, 0.9f);
-			DrawText(Plus, FlashCol, PanelX + PanelW - FW - 14.0f, Y - RowH - 4.0f - Since * 10.0f, TitleFont, 0.9f);
+			GetTextSize(Plus, FW, FH, HudType::Font(), HudType::Heading);
+			DrawText(Plus, FlashCol, PanelX + PanelW - FW - 14.0f, Y - RowH - 4.0f - Since * 10.0f, HudType::Font(), HudType::Heading);
 		}
 	}
 	else

@@ -2,7 +2,8 @@
 
 // Neon cockpit flight HUD for AAdastreaHUD (canvas-drawn, same path as the rest of the HUD).
 //
-// Layout (all sizes scale with viewport height, authored at 1080p):
+// Layout (authored at 1920x1080 and scaled by HudType::LayoutScale; text sizes come from the
+// shared type ramp in AdastreaHUDStyle.h):
 //   top-centre    heading tape (N/E/S/W, station bearings, pitch)
 //   centre        boresight + flight-path marker (where the ship is actually going)
 //   top-left      ident strip: ship, credits, cargo, coords (mining panel stacks below)
@@ -10,6 +11,7 @@
 //   bottom-right  PROPULSION: big speed readout, speed/throttle bars, FA/BOOST/CRUISE tags
 
 #include "AdastreaHUD.h"
+#include "AdastreaHUDStyle.h"
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipDataAsset.h"
 #include "Trading/CargoComponent.h"
@@ -123,29 +125,30 @@ namespace
 			Rect(TabX, Y - 3.0f * S, 60.0f * S, 3.0f * S, Edge);
 		}
 
-		void TextSize(UFont* F, const FString& T, float Scale, float& OutW, float& OutH) const
+		void TextSize(const FString& T, float Scale, float& OutW, float& OutH) const
 		{
-			C->TextSize(F, T, OutW, OutH, Scale * S, Scale * S);
+			C->TextSize(HudType::Font(), T, OutW, OutH, Scale * S, Scale * S);
 		}
 
-		void Text(const FString& T, const FLinearColor& Col, float X, float Y, UFont* F, float Scale) const
+		/** Scale is a HudType role (Caption, Label, ...); the viewport scale is applied here. */
+		void Text(const FString& T, const FLinearColor& Col, float X, float Y, float Scale) const
 		{
-			FCanvasTextItem Item(FVector2D(X, Y), FText::FromString(T), F, Col);
+			FCanvasTextItem Item(FVector2D(X, Y), FText::FromString(T), HudType::Font(), Col);
 			Item.Scale = FVector2D(Scale * S);
 			Item.BlendMode = SE_BLEND_Translucent;
 			C->DrawItem(Item);
 		}
 
 		/** Text with a magenta/cyan chromatic split; occasionally jitters sideways (glitch). */
-		void GlitchText(const FString& T, const FLinearColor& Col, float X, float Y, UFont* F, float Scale, float Seed = 0.0f) const
+		void GlitchText(const FString& T, const FLinearColor& Col, float X, float Y, float Scale, float Seed = 0.0f) const
 		{
 			const float Slot = FMath::FloorToFloat(Now * 9.0f) + Seed * 31.0f;
 			const bool bGlitch = Hash01(Slot) > 0.94f;
 			const float Jx = bGlitch ? (Hash01(Slot + 1.7f) - 0.5f) * 10.0f * S : 0.0f;
 			const float Split = (bGlitch ? 3.0f : 1.2f) * S;
-			Text(T, WithAlpha(kMagenta, 0.55f), X + Jx - Split, Y, F, Scale);
-			Text(T, WithAlpha(kCyan, 0.55f), X + Jx + Split, Y, F, Scale);
-			Text(T, Col, X + Jx, Y, F, Scale);
+			Text(T, WithAlpha(kMagenta, 0.55f), X + Jx - Split, Y, Scale);
+			Text(T, WithAlpha(kCyan, 0.55f), X + Jx + Split, Y, Scale);
+			Text(T, Col, X + Jx, Y, Scale);
 		}
 
 		/**
@@ -176,39 +179,39 @@ namespace
 		}
 
 		/** Small boxed mode tag (lit or dim). */
-		float Tag(const FString& T, float X, float Y, const FLinearColor& Col, bool bOn, UFont* F) const
+		float Tag(const FString& T, float X, float Y, const FLinearColor& Col, bool bOn) const
 		{
 			float TW = 0.0f, TH = 0.0f;
-			TextSize(F, T, 0.75f, TW, TH);
+			TextSize(T, HudType::Label, TW, TH);
 			const float W = TW + 14.0f * S, H = TH + 4.0f * S;
 			const float K = 5.0f * S;
 			if (bOn)
 			{
 				Poly({ { X + K, Y }, { X + W, Y }, { X + W - K, Y + H }, { X, Y + H } }, WithAlpha(Col, 0.85f));
-				Text(T, FLinearColor(0.02f, 0.0f, 0.05f, 1.0f), X + 7.0f * S, Y + 2.0f * S, F, 0.75f);
+				Text(T, FLinearColor(0.02f, 0.0f, 0.05f, 1.0f), X + 7.0f * S, Y + 2.0f * S, HudType::Label);
 			}
 			else
 			{
 				const FLinearColor Dim = WithAlpha(Col, 0.3f);
 				Line({ X + K, Y }, { X + W, Y }, Dim); Line({ X + W, Y }, { X + W - K, Y + H }, Dim);
 				Line({ X + W - K, Y + H }, { X, Y + H }, Dim); Line({ X, Y + H }, { X + K, Y }, Dim);
-				Text(T, Dim, X + 7.0f * S, Y + 2.0f * S, F, 0.75f);
+				Text(T, Dim, X + 7.0f * S, Y + 2.0f * S, HudType::Label);
 			}
 			return W + 6.0f * S;
 		}
 
 		/** Filled key-cap ("E", "LMB") with a glow, followed by a label. Returns total width. */
-		float KeyHint(const FString& Key, const FString& Label, float X, float Y, const FLinearColor& Col, UFont* F) const
+		float KeyHint(const FString& Key, const FString& Label, float X, float Y, const FLinearColor& Col) const
 		{
 			float KW = 0.0f, KH = 0.0f;
-			TextSize(F, Key, 0.85f, KW, KH);
+			TextSize(Key, HudType::Body, KW, KH);
 			const float W = FMath::Max(KW + 12.0f * S, KH + 6.0f * S), H = KH + 6.0f * S;
 			Rect(X - 2.0f * S, Y - 2.0f * S, W + 4.0f * S, H + 4.0f * S, WithAlpha(Col, 0.2f));
 			Rect(X, Y, W, H, Col);
-			Text(Key, FLinearColor(0.02f, 0.0f, 0.05f, 1.0f), X + (W - KW) * 0.5f, Y + 3.0f * S, F, 0.85f);
+			Text(Key, FLinearColor(0.02f, 0.0f, 0.05f, 1.0f), X + (W - KW) * 0.5f, Y + 3.0f * S, HudType::Body);
 			float LW = 0.0f, LH = 0.0f;
-			TextSize(F, Label, 0.8f, LW, LH);
-			Text(Label, kInk, X + W + 8.0f * S, Y + (H - LH) * 0.5f, F, 0.8f);
+			TextSize(Label, HudType::Label, LW, LH);
+			Text(Label, kInk, X + W + 8.0f * S, Y + (H - LH) * 0.5f, HudType::Label);
 			return W + 8.0f * S + LW;
 		}
 	};
@@ -242,11 +245,8 @@ void AAdastreaHUD::DrawCyberpunkFlightHUD(APlayerController* PC, ASpaceship* Shi
 	const float Dt = World ? World->GetDeltaSeconds() : 0.016f;
 	const float SW = Canvas->ClipX;
 	const float SH = Canvas->ClipY;
-	const FNeon N{ Canvas, FMath::Clamp(SH / 1080.0f, 0.85f, 2.5f), World ? World->GetRealTimeSeconds() : 0.0f };
+	const FNeon N{ Canvas, HudType::LayoutScale(SW, SH), World ? World->GetRealTimeSeconds() : 0.0f };
 	const float S = N.S;
-
-	UFont* Small = GEngine->GetSmallFont();
-	UFont* Large = GEngine->GetLargeFont();
 
 	// ---- Live data ----
 	const FVector Loc = Ship->GetActorLocation();
@@ -298,7 +298,7 @@ void AAdastreaHUD::DrawCyberpunkFlightHUD(APlayerController* PC, ASpaceship* Shi
 
 	// ---- Heading tape (top centre) ----
 	{
-		const float TW = 560.0f * S, TH = 30.0f * S;
+		const float TW = 460.0f * S, TH = 26.0f * S;
 		const float TX = (SW - TW) * 0.5f, TY = 22.0f * S;
 		const float Cx = SW * 0.5f;
 		const float Span = 60.0f; // degrees either side of centre
@@ -321,8 +321,8 @@ void AAdastreaHUD::DrawCyberpunkFlightHUD(APlayerController* PC, ASpaceship* Shi
 				const TCHAR* Cardinal = Deg == 0 ? TEXT("N") : Deg == 90 ? TEXT("E") : Deg == 180 ? TEXT("S") : Deg == 270 ? TEXT("W") : nullptr;
 				const FString Label = Cardinal ? FString(Cardinal) : FString::Printf(TEXT("%02d"), Deg / 10);
 				float LW = 0.0f, LH = 0.0f;
-				N.TextSize(Small, Label, 0.8f, LW, LH);
-				N.Text(Label, WithAlpha(Cardinal ? kYellow : kInk, Fade), X - LW * 0.5f, TY + 3.0f * S, Small, 0.8f);
+				N.TextSize(Label, HudType::Label, LW, LH);
+				N.Text(Label, WithAlpha(Cardinal ? kYellow : kInk, Fade), X - LW * 0.5f, TY + 3.0f * S, HudType::Label);
 			}
 		}
 
@@ -357,13 +357,13 @@ void AAdastreaHUD::DrawCyberpunkFlightHUD(APlayerController* PC, ASpaceship* Shi
 		N.GlowLine({ Cx, TY }, { Cx, TY + TH }, kMagenta, 1.5f);
 		const FString Hdg = FString::Printf(TEXT("%03.0f"), Heading);
 		float HW = 0.0f, HH = 0.0f;
-		N.TextSize(Large, Hdg, 0.9f, HW, HH);
-		N.GlitchText(Hdg, kInk, Cx - HW * 0.5f, CY + 16.0f * S, Large, 0.9f, 1.0f);
-		N.Text(TEXT("HDG"), kMute, TX, CY + 6.0f * S, Small, 0.75f);
+		N.TextSize(Hdg, HudType::Heading, HW, HH);
+		N.GlitchText(Hdg, kInk, Cx - HW * 0.5f, CY + 14.0f * S, HudType::Heading, 1.0f);
+		N.Text(TEXT("HDG"), kMute, TX, CY + 16.0f * S, HudType::Label);
 		const FString Pit = FString::Printf(TEXT("PITCH %+03.0f"), Rot.Pitch);
 		float PW = 0.0f, PH = 0.0f;
-		N.TextSize(Small, Pit, 0.75f, PW, PH);
-		N.Text(Pit, kMute, TX + TW - PW, CY + 6.0f * S, Small, 0.75f);
+		N.TextSize(Pit, HudType::Label, PW, PH);
+		N.Text(Pit, kMute, TX + TW - PW, CY + 16.0f * S, HudType::Label);
 	}
 
 	// ---- Boresight (where the nose points) + flight-path marker (where the ship is going) ----
@@ -398,103 +398,103 @@ void AAdastreaHUD::DrawCyberpunkFlightHUD(APlayerController* PC, ASpaceship* Shi
 	// ---- Ident strip (top-left) ----
 	float IdentBottom = 0.0f;
 	{
-		const float X = 24.0f * S, Y = 24.0f * S, W = 300.0f * S, H = 104.0f * S;
+		const float X = 24.0f * S, Y = 24.0f * S, W = 270.0f * S, H = 90.0f * S;
 		N.Panel(X, Y, W, H, kMagenta);
-		const float LX = X + 16.0f * S;
-		N.Text(TEXT("ADASTREA::NAV_OS  v2.0.77"), WithAlpha(kMagenta, 0.8f), LX, Y + 6.0f * S, Small, 0.65f);
-		N.GlitchText(Ship->GetShipName().ToString().ToUpper(), kInk, LX, Y + 20.0f * S, Large, 0.75f, 2.0f);
+		const float LX = X + 14.0f * S;
+		N.Text(TEXT("ADASTREA::NAV_OS  v2.0.77"), WithAlpha(kMagenta, 0.8f), LX, Y + 5.0f * S, HudType::Caption);
+		N.GlitchText(Ship->GetShipName().ToString().ToUpper(), kInk, LX, Y + 19.0f * S, HudType::Body, 2.0f);
 
 		const int64 Credits = Ship->PlayerTraderComponent ? static_cast<int64>(Ship->PlayerTraderComponent->GetCredits()) : 0;
-		N.Text(TEXT("CR"), kMute, LX, Y + 46.0f * S, Small, 0.75f);
-		N.Text(FString::Printf(TEXT("%lld"), Credits), kYellow, LX + 26.0f * S, Y + 44.0f * S, Small, 0.95f);
+		N.Text(TEXT("CR"), kMute, LX, Y + 42.0f * S, HudType::Label);
+		N.Text(FString::Printf(TEXT("%lld"), Credits), kYellow, LX + 24.0f * S, Y + 41.0f * S, HudType::Body);
 
 		if (UCargoComponent* Cargo = Ship->CargoComponent)
 		{
 			const float CargoMax = FMath::Max(Cargo->CargoCapacity, 0.01f);
 			const float Used = Cargo->CargoCapacity - Cargo->GetAvailableCargoSpace();
-			N.Text(TEXT("HOLD"), kMute, LX + 130.0f * S, Y + 46.0f * S, Small, 0.75f);
-			N.Text(FString::Printf(TEXT("%.0f/%.0f"), Used, CargoMax), kInk, LX + 170.0f * S, Y + 46.0f * S, Small, 0.75f);
-			N.SegBar(LX + 130.0f * S, Y + 64.0f * S, 140.0f * S, 5.0f * S, Used / CargoMax, 14, kCyan, kYellow);
+			N.Text(TEXT("HOLD"), kMute, LX + 118.0f * S, Y + 42.0f * S, HudType::Label);
+			N.Text(FString::Printf(TEXT("%.0f/%.0f"), Used, CargoMax), kInk, LX + 156.0f * S, Y + 42.0f * S, HudType::Label);
+			N.SegBar(LX + 118.0f * S, Y + 59.0f * S, 112.0f * S, 4.0f * S, Used / CargoMax, 14, kCyan, kYellow);
 		}
 
 		N.Text(FString::Printf(TEXT("X %+08.0f  Y %+08.0f  Z %+08.0f"), Loc.X / 100.0f, Loc.Y / 100.0f, Loc.Z / 100.0f),
-			kMute, LX, Y + H - 22.0f * S, Small, 0.65f);
+			kMute, LX, Y + H - 18.0f * S, HudType::Caption);
 		IdentBottom = Y + H;
 	}
 
 	// ---- Defence grid (bottom-left): shield + hull ----
 	{
-		const float W = 400.0f * S, H = 130.0f * S;
+		const float W = 330.0f * S, H = 112.0f * S;
 		const float X = 24.0f * S, Y = SH - H - 24.0f * S;
 		const FLinearColor Edge = HullHitFlash > 0.0f ? kRed : (bCritical ? FLinearColor::LerpUsingHSV(kMagenta, kRed, AlarmPulse) : kMagenta);
 		N.Panel(X, Y, W, H, Edge);
-		const float LX = X + 16.0f * S;
-		N.GlitchText(TEXT("// DEFENCE GRID"), kMagenta, LX, Y + 8.0f * S, Small, 0.9f, 3.0f);
+		const float LX = X + 14.0f * S;
+		N.GlitchText(TEXT("// DEFENCE GRID"), kMagenta, LX, Y + 6.0f * S, HudType::Body, 3.0f);
 
 		auto Row = [&](float RY, const TCHAR* Label, float Frac, float Cur, float Max,
 			const FLinearColor& From, const FLinearColor& To, bool bFlash, bool bOffline)
 		{
-			N.Text(Label, kMute, LX, RY + 2.0f * S, Small, 0.8f);
-			const float BX = LX + 52.0f * S, BW = W - 150.0f * S, BH = 14.0f * S;
+			N.Text(Label, kMute, LX, RY, HudType::Label);
+			const float BX = LX + 44.0f * S, BW = W - 124.0f * S, BH = 11.0f * S;
 			const float Alpha = bFlash ? 0.5f + 0.5f * AlarmPulse : 1.0f;
-			N.SegBar(BX, RY + 2.0f * S, BW, BH, bOffline ? 0.0f : Frac, 20, From, To, Alpha);
+			N.SegBar(BX, RY + 1.0f * S, BW, BH, bOffline ? 0.0f : Frac, 20, From, To, Alpha);
 			const FString Val = bOffline ? FString(TEXT("OFFLINE")) : FString::Printf(TEXT("%3.0f%%"), Frac * 100.0f);
-			N.Text(Val, bOffline ? kMute : To, BX + BW + 10.0f * S, RY - 2.0f * S, Large, 0.8f);
+			N.Text(Val, bOffline ? kMute : To, BX + BW + 8.0f * S, RY - 1.0f * S, HudType::Body);
 			if (!bOffline)
 			{
-				N.Text(FString::Printf(TEXT("%.0f / %.0f"), Cur, Max), WithAlpha(kMute, 0.8f), BX, RY + BH + 5.0f * S, Small, 0.6f);
+				N.Text(FString::Printf(TEXT("%.0f / %.0f"), Cur, Max), WithAlpha(kMute, 0.8f), BX, RY + BH + 3.0f * S, HudType::Caption);
 			}
 		};
 
 		const FLinearColor ShieldTo = ShieldHitFlash > 0.0f ? FLinearColor::White : kCyan;
-		Row(Y + 36.0f * S, TEXT("SHLD"), ShieldFrac, Shield, ShieldMax, FLinearColor(0.1f, 0.4f, 1.0f, 1.0f), ShieldTo, false, ShieldMax <= 0.0f);
+		Row(Y + 30.0f * S, TEXT("SHLD"), ShieldFrac, Shield, ShieldMax, FLinearColor(0.1f, 0.4f, 1.0f, 1.0f), ShieldTo, false, ShieldMax <= 0.0f);
 
 		const FLinearColor HullCol = HullFrac > 0.5f ? kMagenta : (HullFrac > 0.25f ? kYellow : kRed);
-		Row(Y + 76.0f * S, TEXT("HULL"), HullFrac, Hull, HullMax, WithAlpha(kRed, 1.0f), HullCol, bCritical, false);
+		Row(Y + 62.0f * S, TEXT("HULL"), HullFrac, Hull, HullMax, WithAlpha(kRed, 1.0f), HullCol, bCritical, false);
 
 		const TCHAR* Status = bCritical ? TEXT("HULL CRITICAL") : (HullFrac < 0.6f ? TEXT("DAMAGED") : TEXT("NOMINAL"));
 		const FString Foot = FString::Printf(TEXT("ARMOR %.0f   //   %s"), Armor, Status);
-		N.Text(Foot, bCritical ? WithAlpha(kRed, 0.5f + 0.5f * AlarmPulse) : kMute, LX, Y + H - 18.0f * S, Small, 0.65f);
+		N.Text(Foot, bCritical ? WithAlpha(kRed, 0.5f + 0.5f * AlarmPulse) : kMute, LX, Y + H - 17.0f * S, HudType::Caption);
 	}
 
 	// ---- Propulsion (bottom-right): speed, speed bar, throttle, mode tags ----
 	{
-		const float W = 400.0f * S, H = 130.0f * S;
+		const float W = 330.0f * S, H = 112.0f * S;
 		const float X = SW - W - 24.0f * S, Y = SH - H - 24.0f * S;
 		N.Panel(X, Y, W, H, kCyan, false);
-		const float LX = X + 16.0f * S;
-		const float RX = X + W - 16.0f * S;
+		const float LX = X + 14.0f * S;
+		const float RX = X + W - 14.0f * S;
 
 		const FString Head = TEXT("PROPULSION //");
 		float TW = 0.0f, TH = 0.0f;
-		N.TextSize(Small, Head, 0.9f, TW, TH);
-		N.GlitchText(Head, kCyan, RX - TW, Y + 8.0f * S, Small, 0.9f, 4.0f);
+		N.TextSize(Head, HudType::Body, TW, TH);
+		N.GlitchText(Head, kCyan, RX - TW, Y + 6.0f * S, HudType::Body, 4.0f);
 
 		// Big speed readout in m/s (world units are cm)
 		const FString Spd = FString::Printf(TEXT("%04d"), FMath::RoundToInt(Speed / 100.0f));
-		N.GlitchText(Spd, kInk, LX, Y + 6.0f * S, Large, 2.0f, 5.0f);
+		N.GlitchText(Spd, kInk, LX, Y + 2.0f * S, HudType::Display, 5.0f);
 		float SpW = 0.0f, SpH = 0.0f;
-		N.TextSize(Large, Spd, 2.0f, SpW, SpH);
-		N.Text(TEXT("M/S"), kCyan, LX + SpW + 6.0f * S, Y + 16.0f * S, Small, 0.8f);
-		N.Text(FString::Printf(TEXT("MAX %d"), FMath::RoundToInt(MaxSpeed / 100.0f)), kMute, LX + SpW + 6.0f * S, Y + 32.0f * S, Small, 0.65f);
+		N.TextSize(Spd, HudType::Display, SpW, SpH);
+		N.Text(TEXT("M/S"), kCyan, LX + SpW + 6.0f * S, Y + 10.0f * S, HudType::Label);
+		N.Text(FString::Printf(TEXT("MAX %d"), FMath::RoundToInt(MaxSpeed / 100.0f)), kMute, LX + SpW + 6.0f * S, Y + 25.0f * S, HudType::Caption);
 
 		// Speed vs. effective max, then throttle setting
-		const float BX = LX + 44.0f * S, BW = W - 72.0f * S;
-		N.Text(TEXT("SPD"), kMute, LX, Y + 62.0f * S, Small, 0.7f);
-		N.SegBar(BX, Y + 64.0f * S, BW, 7.0f * S, Speed / MaxSpeed, 30, kCyan, kCyan);
-		N.Text(TEXT("THR"), kMute, LX, Y + 78.0f * S, Small, 0.7f);
-		N.SegBar(BX, Y + 80.0f * S, BW, 11.0f * S, Throttle, 30, kCyan, Ship->bBoostActive ? kYellow : kMagenta);
+		const float BX = LX + 36.0f * S, BW = W - 64.0f * S;
+		N.Text(TEXT("SPD"), kMute, LX, Y + 45.0f * S, HudType::Label);
+		N.SegBar(BX, Y + 48.0f * S, BW, 6.0f * S, Speed / MaxSpeed, 30, kCyan, kCyan);
+		N.Text(TEXT("THR"), kMute, LX, Y + 61.0f * S, HudType::Label);
+		N.SegBar(BX, Y + 63.0f * S, BW, 10.0f * S, Throttle, 30, kCyan, Ship->bBoostActive ? kYellow : kMagenta);
 		const FString Thr = FString::Printf(TEXT("%3.0f%%"), Throttle * 100.0f);
 		float ThW = 0.0f, ThH = 0.0f;
-		N.TextSize(Small, Thr, 0.7f, ThW, ThH);
-		N.Text(Thr, kInk, RX - ThW, Y + 94.0f * S, Small, 0.7f);
+		N.TextSize(Thr, HudType::Label, ThW, ThH);
+		N.Text(Thr, kInk, RX - ThW, Y + 77.0f * S, HudType::Label);
 
 		// Mode tags
 		float TagX = LX;
-		const float TagY = Y + H - 24.0f * S;
-		TagX += N.Tag(TEXT("FA"), TagX, TagY, kCyan, Ship->bFlightAssistEnabled, Small);
-		TagX += N.Tag(TEXT("BOOST"), TagX, TagY, kYellow, Ship->bBoostActive, Small);
-		TagX += N.Tag(TEXT("CRUISE"), TagX, TagY, kMagenta, Ship->bTravelModeActive, Small);
+		const float TagY = Y + H - 23.0f * S;
+		TagX += N.Tag(TEXT("FA"), TagX, TagY, kCyan, Ship->bFlightAssistEnabled);
+		TagX += N.Tag(TEXT("BOOST"), TagX, TagY, kYellow, Ship->bBoostActive);
+		TagX += N.Tag(TEXT("CRUISE"), TagX, TagY, kMagenta, Ship->bTravelModeActive);
 	}
 
 	// ---- Docking prompt (lower centre; only while RequestDocking would succeed) ----
@@ -505,10 +505,10 @@ void AAdastreaHUD::DrawCyberpunkFlightHUD(APlayerController* PC, ASpaceship* Shi
 		const FString Station = DockDisplayName(Ship, DockName).Replace(TEXT("_"), TEXT(" ")).ToUpper();
 		const FString Dist = FString::Printf(TEXT("%.0f M"), DockDist / 100.0f);
 		float NW = 0.0f, NH = 0.0f, DW = 0.0f, DH = 0.0f;
-		N.TextSize(Large, Station, 0.95f, NW, NH);
-		N.TextSize(Large, Dist, 0.8f, DW, DH);
+		N.TextSize(Station, HudType::Heading, NW, NH);
+		N.TextSize(Dist, HudType::Body, DW, DH);
 
-		const float W = FMath::Max(NW + DW + 150.0f * S, 440.0f * S), H = 74.0f * S;
+		const float W = FMath::Max(NW + DW + 130.0f * S, 380.0f * S), H = 64.0f * S;
 		const float X = (SW - W) * 0.5f, Y = SH * 0.66f;
 		N.Panel(X, Y, W, H, kCyan);
 
@@ -523,15 +523,15 @@ void AAdastreaHUD::DrawCyberpunkFlightHUD(APlayerController* PC, ASpaceship* Shi
 			N.Line({ X + W + 30.0f * S - CX, CY + R }, { X + W + 22.0f * S - CX, CY }, WithAlpha(kCyan, A), 2.0f);
 		}
 
-		const float LX = X + 18.0f * S;
-		N.GlitchText(TEXT("DOCKING CLEARANCE // AVAILABLE"), kMagenta, LX, Y + 7.0f * S, Small, 0.75f, 6.0f);
-		const float KeyW = N.KeyHint(TEXT("E"), TEXT(""), LX, Y + 30.0f * S, kCyan, Large);
-		N.GlitchText(Station, kInk, LX + KeyW + 6.0f * S, Y + 30.0f * S, Large, 0.95f, 7.0f);
-		N.Text(Dist, kCyan, X + W - DW - 18.0f * S, Y + 32.0f * S, Large, 0.8f);
+		const float LX = X + 16.0f * S;
+		N.GlitchText(TEXT("DOCKING CLEARANCE // AVAILABLE"), kMagenta, LX, Y + 6.0f * S, HudType::Label, 6.0f);
+		const float KeyW = N.KeyHint(TEXT("E"), TEXT(""), LX, Y + 26.0f * S, kCyan);
+		N.GlitchText(Station, kInk, LX + KeyW + 6.0f * S, Y + 26.0f * S, HudType::Heading, 7.0f);
+		N.Text(Dist, kCyan, X + W - DW - 16.0f * S, Y + 28.0f * S, HudType::Body);
 
 		// Approach bar: fills as you close in on the docking point
 		const float Range = FMath::Max(Ship->GetEffectiveDockingRange(), 1.0f);
-		N.SegBar(LX, Y + H - 12.0f * S, W - 36.0f * S, 4.0f * S, 1.0f - DockDist / Range, 32, kMagenta, kCyan);
+		N.SegBar(LX, Y + H - 10.0f * S, W - 32.0f * S, 3.0f * S, 1.0f - DockDist / Range, 32, kMagenta, kCyan);
 	}
 
 	// ---- Mining controls hint (bottom centre; while the laser is fitted and nothing is locked) ----
@@ -541,9 +541,9 @@ void AAdastreaHUD::DrawCyberpunkFlightHUD(APlayerController* PC, ASpaceship* Shi
 		{
 			const float Y = SH - 58.0f * S;
 			float Hx = SW * 0.5f - 170.0f * S;
-			N.Text(TEXT("MINING LASER //"), WithAlpha(kYellow, 0.9f), Hx - 10.0f * S, Y - 20.0f * S, Small, 0.7f);
-			Hx += N.KeyHint(TEXT("T"), TEXT("LOCK ASTEROID"), Hx, Y, kYellow, Small) + 26.0f * S;
-			N.KeyHint(TEXT("LMB"), TEXT("HOLD TO FIRE"), Hx, Y, kYellow, Small);
+			N.Text(TEXT("MINING LASER //"), WithAlpha(kYellow, 0.9f), Hx - 10.0f * S, Y - 20.0f * S, HudType::Label);
+			Hx += N.KeyHint(TEXT("T"), TEXT("LOCK ASTEROID"), Hx, Y, kYellow) + 26.0f * S;
+			N.KeyHint(TEXT("LMB"), TEXT("HOLD TO FIRE"), Hx, Y, kYellow);
 		}
 	}
 
@@ -558,10 +558,8 @@ void AAdastreaHUD::DrawCyberMiningHUD(APlayerController* PC, ASpaceship* Ship, U
 		return;
 	}
 	UWorld* World = GetWorld();
-	const FNeon N{ Canvas, FMath::Clamp(Canvas->ClipY / 1080.0f, 0.85f, 2.5f), World ? World->GetRealTimeSeconds() : 0.0f };
+	const FNeon N{ Canvas, HudType::LayoutScale(Canvas->ClipX, Canvas->ClipY), World ? World->GetRealTimeSeconds() : 0.0f };
 	const float S = N.S;
-	UFont* Small = GEngine->GetSmallFont();
-	UFont* Large = GEngine->GetLargeFont();
 
 	UAsteroidDataAsset* Type = Rock->GetAsteroidType();
 	UTradeItemDataAsset* Ore = Laser->GetTargetOre();
@@ -604,67 +602,67 @@ void AAdastreaHUD::DrawCyberMiningHUD(APlayerController* PC, ASpaceship* Ship, U
 
 			// Tag at the bracket's top-right: name, distance, yield sliver
 			const float TX = X1 + 8.0f * S, TY = Y0;
-			N.Rect(TX, TY, 3.0f * S, 34.0f * S, BC);
-			N.Text(RockName, BC, TX + 8.0f * S, TY, Small, 0.75f);
+			N.Rect(TX, TY, 3.0f * S, 36.0f * S, BC);
+			N.Text(RockName, BC, TX + 8.0f * S, TY, HudType::Label);
 			N.Text(FString::Printf(TEXT("%.0f M%s"), Dist / 100.0f, bInRange ? TEXT("") : TEXT("  // OUT OF RANGE")),
-				bInRange ? kInk : kYellow, TX + 8.0f * S, TY + 13.0f * S, Small, 0.7f);
-			N.SegBar(TX + 8.0f * S, TY + 28.0f * S, 90.0f * S, 4.0f * S, Rock->GetOreFraction(), 10, Tint, Tint);
+				bInRange ? kInk : kYellow, TX + 8.0f * S, TY + 15.0f * S, HudType::Caption);
+			N.SegBar(TX + 8.0f * S, TY + 31.0f * S, 90.0f * S, 4.0f * S, Rock->GetOreFraction(), 10, Tint, Tint);
 		}
 	}
 
-	// ---- Mining uplink panel (stacked under the ident strip) ----
-	const float X = 24.0f * S, W = 300.0f * S, H = 212.0f * S;
+	// ---- Mining uplink panel (stacked under the ident strip, same width) ----
+	const float X = 24.0f * S, W = 270.0f * S, H = 198.0f * S;
 	const float Y = PanelTop;
 	N.Panel(X, Y, W, H, Tint);
-	const float LX = X + 16.0f * S, RX = X + W - 16.0f * S, BW = W - 32.0f * S;
+	const float LX = X + 14.0f * S, RX = X + W - 14.0f * S, BW = W - 28.0f * S;
 
-	auto RightText = [&](const FString& Str, const FLinearColor& Col, float RY, UFont* F, float Scale)
+	auto RightText = [&](const FString& Str, const FLinearColor& Col, float RY, float Scale)
 	{
 		float TW = 0.0f, TH = 0.0f;
-		N.TextSize(F, Str, Scale, TW, TH);
-		N.Text(Str, Col, RX - TW, RY, F, Scale);
+		N.TextSize(Str, Scale, TW, TH);
+		N.Text(Str, Col, RX - TW, RY, Scale);
 	};
 
-	N.GlitchText(TEXT("// MINING UPLINK"), Tint, LX, Y + 8.0f * S, Small, 0.8f, 8.0f);
-	RightText(TEXT("LOCKED"), kGreen, Y + 8.0f * S, Small, 0.7f);
-	N.GlitchText(RockName, kInk, LX, Y + 22.0f * S, Large, 0.8f, 9.0f);
+	N.GlitchText(TEXT("// MINING UPLINK"), Tint, LX, Y + 6.0f * S, HudType::Body, 8.0f);
+	RightText(TEXT("LOCKED"), kGreen, Y + 7.0f * S, HudType::Label);
+	N.GlitchText(RockName, kInk, LX, Y + 22.0f * S, HudType::Body, 9.0f);
 
 	// Ore + hardness
-	N.Text(TEXT("ORE"), kMute, LX, Y + 46.0f * S, Small, 0.7f);
-	N.Text(Ore ? Ore->ItemName.ToString().ToUpper() : FString(TEXT("NONE")), Ore ? Tint : kYellow, LX + 34.0f * S, Y + 46.0f * S, Small, 0.7f);
-	RightText(FString::Printf(TEXT("HARDNESS %.1f"), Type ? Type->Hardness : 1.0f), kMute, Y + 46.0f * S, Small, 0.7f);
+	N.Text(TEXT("ORE"), kMute, LX, Y + 42.0f * S, HudType::Label);
+	N.Text(Ore ? Ore->ItemName.ToString().ToUpper() : FString(TEXT("NONE")), Ore ? Tint : kYellow, LX + 34.0f * S, Y + 42.0f * S, HudType::Label);
+	RightText(FString::Printf(TEXT("HARDNESS %.1f"), Type ? Type->Hardness : 1.0f), kMute, Y + 42.0f * S, HudType::Label);
 
 	// Remaining yield
-	N.Text(TEXT("YIELD"), kMute, LX, Y + 64.0f * S, Small, 0.7f);
+	N.Text(TEXT("YIELD"), kMute, LX, Y + 59.0f * S, HudType::Label);
 	RightText(FString::Printf(TEXT("%.0f / %.0f  (%.0f%%)"), Rock->GetRemainingOre(), Rock->GetTotalOre(), Rock->GetOreFraction() * 100.0f),
-		kInk, Y + 64.0f * S, Small, 0.7f);
-	N.SegBar(LX, Y + 79.0f * S, BW, 6.0f * S, Rock->GetOreFraction(), 24, Tint, Tint);
+		kInk, Y + 59.0f * S, HudType::Label);
+	N.SegBar(LX, Y + 75.0f * S, BW, 5.0f * S, Rock->GetOreFraction(), 24, Tint, Tint);
 
 	// Range
-	N.Text(TEXT("RANGE"), kMute, LX, Y + 94.0f * S, Small, 0.7f);
+	N.Text(TEXT("RANGE"), kMute, LX, Y + 86.0f * S, HudType::Label);
 	N.Text(FString::Printf(TEXT("%.0f M  //  %s"), Dist / 100.0f, bInRange ? TEXT("IN RANGE") : TEXT("CLOSE IN")),
-		bInRange ? kGreen : kYellow, LX + 48.0f * S, Y + 94.0f * S, Small, 0.7f);
-	RightText(FString::Printf(TEXT("MAX %.0f"), Laser->Range / 100.0f), kMute, Y + 94.0f * S, Small, 0.7f);
+		bInRange ? kGreen : kYellow, LX + 44.0f * S, Y + 86.0f * S, HudType::Label);
+	RightText(FString::Printf(TEXT("MAX %.0f"), Laser->Range / 100.0f), kMute, Y + 86.0f * S, HudType::Label);
 
 	// Laser state: lit tag while the beam is on (or blocked), status text beside it
 	{
 		const bool bHeld = Laser->IsTriggerHeld();
 		const FString Beam = bFiring ? TEXT("BEAM ON") : (bHeld ? TEXT("BLOCKED") : TEXT("BEAM OFF"));
 		const FLinearColor BeamCol = bFiring ? kGreen : (bHeld ? kYellow : kMute);
-		const float TagW = N.Tag(Beam, LX, Y + 112.0f * S, BeamCol, bFiring || bHeld, Small);
-		N.Text(UMiningLaserComponent::StatusToText(Status).ToString().ToUpper(), bFiring ? kGreen : kInk, LX + TagW + 4.0f * S, Y + 114.0f * S, Small, 0.7f);
+		const float TagW = N.Tag(Beam, LX, Y + 104.0f * S, BeamCol, bFiring || bHeld);
+		N.Text(UMiningLaserComponent::StatusToText(Status).ToString().ToUpper(), bFiring ? kGreen : kInk, LX + TagW + 4.0f * S, Y + 106.0f * S, HudType::Label);
 		if (bFiring)
 		{
 			const float Lamp = 0.4f + 0.6f * FMath::Abs(FMath::Sin(N.Now * 8.0f));
-			N.Rect(RX - 10.0f * S, Y + 115.0f * S, 10.0f * S, 10.0f * S, WithAlpha(kGreen, Lamp));
+			N.Rect(RX - 10.0f * S, Y + 108.0f * S, 10.0f * S, 10.0f * S, WithAlpha(kGreen, Lamp));
 		}
 	}
 
 	// Extraction progress toward the next whole unit
-	N.Text(TEXT("EXTRACT"), kMute, LX, Y + 138.0f * S, Small, 0.7f);
+	N.Text(TEXT("EXTRACT"), kMute, LX, Y + 129.0f * S, HudType::Label);
 	RightText(FString::Printf(TEXT("%.1f U/S   NEXT %.0f%%"), bFiring ? Laser->GetExtractionRate() : 0.0f, Laser->GetUnitProgress() * 100.0f),
-		bFiring ? kGreen : kMute, Y + 138.0f * S, Small, 0.7f);
-	N.SegBar(LX, Y + 153.0f * S, BW, 6.0f * S, Laser->GetUnitProgress(), 24, kCyan, kGreen, bFiring ? 1.0f : 0.5f);
+		bFiring ? kGreen : kMute, Y + 129.0f * S, HudType::Label);
+	N.SegBar(LX, Y + 145.0f * S, BW, 5.0f * S, Laser->GetUnitProgress(), 24, kCyan, kGreen, bFiring ? 1.0f : 0.5f);
 
 	// Hold fill + ore in hold, with a "+N" pop after each delivery
 	if (UCargoComponent* Cargo = Ship->CargoComponent)
@@ -673,24 +671,24 @@ void AAdastreaHUD::DrawCyberMiningHUD(APlayerController* PC, ASpaceship* Ship, U
 		const float Used = Cargo->CargoCapacity - Cargo->GetAvailableCargoSpace();
 		const float Frac = Used / Cap;
 		const bool bFull = Frac > 0.9f;
-		N.Text(TEXT("HOLD"), kMute, LX, Y + 168.0f * S, Small, 0.7f);
-		RightText(FString::Printf(TEXT("%.0f / %.0f%s"), Used, Cap, bFull ? TEXT("  // FULL") : TEXT("")), bFull ? kRed : kCyan, Y + 168.0f * S, Small, 0.7f);
-		N.SegBar(LX, Y + 183.0f * S, BW, 6.0f * S, Frac, 24, kCyan, bFull ? kRed : kMagenta);
+		N.Text(TEXT("HOLD"), kMute, LX, Y + 156.0f * S, HudType::Label);
+		RightText(FString::Printf(TEXT("%.0f / %.0f%s"), Used, Cap, bFull ? TEXT("  // FULL") : TEXT("")), bFull ? kRed : kCyan, Y + 156.0f * S, HudType::Label);
+		N.SegBar(LX, Y + 172.0f * S, BW, 5.0f * S, Frac, 24, kCyan, bFull ? kRed : kMagenta);
 		N.Text(Ore ? FString::Printf(TEXT("IN HOLD  %s x%d"), *Ore->ItemName.ToString().ToUpper(), Cargo->GetItemQuantity(Ore)) : FString(TEXT("IN HOLD  -")),
-			kMute, LX, Y + 193.0f * S, Small, 0.65f);
+			kMute, LX, Y + 180.0f * S, HudType::Caption);
 
 		const float Since = Laser->GetSecondsSinceLastMined();
 		if (Laser->GetLastMinedOre() && Since < 1.5f)
 		{
 			const FString Plus = FString::Printf(TEXT("+%d"), Laser->GetLastMinedAmount());
 			float PW = 0.0f, PH = 0.0f;
-			N.TextSize(Large, Plus, 0.9f, PW, PH);
+			N.TextSize(Plus, HudType::Heading, PW, PH);
 			N.GlitchText(Plus, WithAlpha(kGreen, FMath::Clamp(1.0f - Since / 1.5f, 0.0f, 1.0f)),
-				RX - PW, Y + 188.0f * S - Since * 14.0f * S, Large, 0.9f, 10.0f);
+				RX - PW, Y + 176.0f * S - Since * 14.0f * S, HudType::Heading, 10.0f);
 		}
 	}
 	else
 	{
-		N.Text(TEXT("HOLD  // NO CARGO BAY"), kYellow, LX, Y + 168.0f * S, Small, 0.7f);
+		N.Text(TEXT("HOLD  // NO CARGO BAY"), kYellow, LX, Y + 156.0f * S, HudType::Label);
 	}
 }
