@@ -636,7 +636,11 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 		if (bCurrent)
 		{
 			DrawCircleOutline(P.X, P.Y, 18.0f, You, 2.0f, 32);
-			DrawText(TEXT("YOU ARE HERE"), You, P.X - 32.0f, P.Y - 34.0f, HudType::Font(), HudType::Caption);
+			// Backing plate so gate/lane lines don't run through the tag.
+			float YW = 0.0f, YH = 0.0f;
+			GetTextSize(TEXT("YOU ARE HERE"), YW, YH, HudType::Font(), HudType::Caption);
+			DrawRect(BoxFill, P.X - YW * 0.5f - 3.0f, P.Y - 34.0f - 1.0f, YW + 6.0f, YH + 2.0f);
+			DrawText(TEXT("YOU ARE HERE"), You, P.X - YW * 0.5f, P.Y - 34.0f, HudType::Font(), HudType::Caption);
 		}
 		if (bSelected)
 		{
@@ -647,8 +651,15 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 			DrawLine(P.X + B, P.Y + B, P.X + B - K, P.Y + B, Select, 2.0f); DrawLine(P.X + B, P.Y + B, P.X + B, P.Y + B - K, Select, 2.0f);
 		}
 		const FLinearColor LabelCol = (bHover || bSelected) ? FLinearColor::White : Body;
-		DrawText(S.Name.ToString(), LabelCol, P.X + 20.0f, P.Y - 12.0f, HudType::Font(), HudType::Label);
-		DrawText(bBuilt ? S.Type : FString::Printf(TEXT("%s  (planned)"), *S.Type), Dim, P.X + 20.0f, P.Y + 2.0f, HudType::Font(), HudType::Caption);
+		const FString NameStr = S.Name.ToString();
+		const FString TypeStr = bBuilt ? S.Type : FString::Printf(TEXT("%s  (planned)"), *S.Type);
+		// Backing plate so gate/lane lines don't run through the label.
+		float NW = 0.0f, NH = 0.0f, SW = 0.0f, SH = 0.0f;
+		GetTextSize(NameStr, NW, NH, HudType::Font(), HudType::Label);
+		GetTextSize(TypeStr, SW, SH, HudType::Font(), HudType::Caption);
+		DrawRect(BoxFill, P.X + 17.0f, P.Y - 13.0f, FMath::Max(NW, SW) + 6.0f, 14.0f + SH + 2.0f);
+		DrawText(NameStr, LabelCol, P.X + 20.0f, P.Y - 12.0f, HudType::Font(), HudType::Label);
+		DrawText(TypeStr, Dim, P.X + 20.0f, P.Y + 2.0f, HudType::Font(), HudType::Caption);
 		AddMapHit(P.X - 16.0f, P.Y - 16.0f, 32.0f, 32.0f, EMapHitKind::Sector, S.Id);
 	}
 
@@ -666,7 +677,7 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 		if (!Sys->Faction.IsEmpty()) { DrawText(FString::Printf(TEXT("Faction  %s"), *Sys->Faction), Body, TX, Y, HudType::Font(), HudType::Label); Y += 16.0f; }
 		DrawText(FString::Printf(TEXT("Sectors  %d  (%d built)"), Sys->Sectors.Num(), Sys->NumBuiltSectors()), Body, TX, Y, HudType::Font(), HudType::Label); Y += 16.0f;
 		Y = DrawWrappedText(FString::Printf(TEXT("Jump lanes  %s"), *JoinSystemNames(Galaxy, Sys->JumpLinks)), Body, TX, Y, TW, HudType::Font(), HudType::Label);
-		Y = DrawWrappedText(Sys->Description.ToString(), Dim, TX, Y + 4.0f, TW, HudType::Font(), HudType::Caption);
+		Y = DrawWrappedText(Sys->Description.ToString(), Dim, TX, Y + 4.0f, TW, HudType::Font(), HudType::Label);
 		Y += 8.0f;
 		DrawRect(FLinearColor(0.2f, 0.4f, 0.5f, 0.5f), TX, Y, TW, 1.0f);
 		Y += 10.0f;
@@ -692,7 +703,7 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 				Y = DrawWrappedText(FString::Printf(TEXT("Lane gates  %s"), *FString::Join(Lanes, TEXT(", "))),
 					FLinearColor(0.8f, 0.65f, 1.0f, 1.0f), TX, Y, TW, HudType::Font(), HudType::Label);
 			}
-			Y = DrawWrappedText(Sel->Description.ToString(), Dim, TX, Y + 4.0f, TW, HudType::Font(), HudType::Caption);
+			Y = DrawWrappedText(Sel->Description.ToString(), Dim, TX, Y + 4.0f, TW, HudType::Font(), HudType::Label);
 			Y += 10.0f;
 			if (Sel->Id == CurrentSectorId)
 			{
@@ -891,7 +902,7 @@ void AAdastreaHUD::DrawUniverseMap(APlayerController* PC)
 				}
 			}
 			Y = DrawWrappedText(FString::Printf(TEXT("Jump lanes  %s"), *JoinSystemNames(Galaxy, Sel->JumpLinks)), Body, TX, Y, TW, HudType::Font(), HudType::Label);
-			Y = DrawWrappedText(Sel->Description.ToString(), Dim, TX, Y + 4.0f, TW, HudType::Font(), HudType::Caption);
+			Y = DrawWrappedText(Sel->Description.ToString(), Dim, TX, Y + 4.0f, TW, HudType::Font(), HudType::Label);
 			Y += 8.0f;
 			DrawRect(FLinearColor(0.2f, 0.4f, 0.5f, 0.5f), TX, Y, TW, 1.0f);
 			Y += 10.0f;
