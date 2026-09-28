@@ -8,6 +8,7 @@
 #include "AdastreaHUD.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/StaticMeshComponent.h"
+#include "Engine/StaticMesh.h"
 #include "Materials/MaterialInterface.h"
 #include "Materials/Material.h"
 #include "AdastreaLog.h"
@@ -190,6 +191,7 @@ void ASpaceship::BeginPlay()
     // (a BP-component-graph edit that resisted MCP/-ExecutePythonScript). We map
     // the hull per ship class here in code, which is robust and main-side.
     ApplyShipHullMaterial();
+    AttachShipWindows();
 
     // Initialize hull integrity from data asset if available
     if (ShipDataAsset)
@@ -1047,6 +1049,40 @@ FText ASpaceship::GetShipClass() const
 
     // Default fallback
     return FText::FromString("Starship");
+}
+
+void ASpaceship::AttachShipWindows()
+{
+    if (!ShipMeshComponent || !ShipMeshComponent->GetStaticMesh() || WindowMeshComponent)
+    {
+        return;
+    }
+
+    // SM_Ship_Battleship_01_Assembled[_UniqueUV] -> SM_Ship_Battleship_01_Windows
+    FString Base = ShipMeshComponent->GetStaticMesh()->GetName();
+    const int32 Cut = Base.Find(TEXT("_Assembled"));
+    if (Cut == INDEX_NONE)
+    {
+        return;
+    }
+    Base.LeftInline(Cut);
+    const FString WinName = Base + TEXT("_Windows");
+    const FString WinPath = FString::Printf(TEXT("/AdastreaShips/Meshes/Ships/%s.%s"), *WinName, *WinName);
+    UStaticMesh* WinMesh = LoadObject<UStaticMesh>(nullptr, *WinPath, nullptr, LOAD_NoWarn | LOAD_Quiet);
+    if (!WinMesh)
+    {
+        return;
+    }
+
+    WindowMeshComponent = NewObject<UStaticMeshComponent>(this, TEXT("ShipWindows"));
+    WindowMeshComponent->SetStaticMesh(WinMesh);
+    WindowMeshComponent->SetupAttachment(ShipMeshComponent);
+    WindowMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    WindowMeshComponent->SetCastShadow(false);
+    WindowMeshComponent->SetCanEverAffectNavigation(false);
+    WindowMeshComponent->RegisterComponent();
+    AddInstanceComponent(WindowMeshComponent);
+    UE_LOG(LogAdastreaShips, Log, TEXT("AttachShipWindows: %s gets %s"), *GetName(), *WinName);
 }
 
 void ASpaceship::ApplyShipHullMaterial()

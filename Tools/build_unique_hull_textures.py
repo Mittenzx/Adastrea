@@ -622,6 +622,11 @@ def compose(B, size, px_per_m):
     E += (wlit[..., None] * lit_col * 0.7)
     E = np.clip(E, 0, 1)
 
+    # PBR conformance (Tools/texture_benchmark.py): binary metallic, bright bare
+    # metal, no contact shading left in albedo (undoes the 0.35 AO multiply above)
+    from pbr_conform_textures import conform_arrays
+    D, M, AO = conform_arrays(D, M, AO, E, unshade=0.35)
+
     # -- SKIN: 1 = re-skinnable hull panel, 0 = livery/window/emissive --
     fixed = np.clip(np.maximum.reduce([liv1, liv2, wglass, wlit, gA * glow]), 0, 1)
     SKIN = 1.0 - fixed

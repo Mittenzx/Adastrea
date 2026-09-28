@@ -26,6 +26,25 @@ TEXDIR = os.path.join(BASE, "Textures")
 # Master switch: disable weathering/grime for clean, shiny new ships.
 # Set True to enable the Phase-3 dirt/streak/scratch pass.
 WEATHERING = False
+
+# PBR conformance pass for gen_texture_set (scored by Tools/texture_benchmark.py):
+# painted plating is dielectric (metallic 0), only bolts/rivets/seam catch-lights
+# are bare metal (metallic 1, albedo >= 180 sRGB), dielectric albedo stays in
+# 30-240 sRGB, cavity shading lives in AO/normal instead of albedo, and AO is not
+# crushed to black. False restores the pre-2026-09-28 look.
+PBR_CONFORM = True
+
+# Large-hull readability (2026-09-28, user: "on a huge ship it's tiled and looks
+# noisy"): no glowing hairline on every panel seam, bigger default panels, and
+# window rows spaced further apart / less filled. The texture repeats many times
+# across a capital hull, so every per-tile feature multiplies into noise.
+HULL_SEAM_GLOW = False       # True = old emissive grid on every panel groove
+HULL_PANEL_SCALE = 3.0       # default 12 cells per tile / this (snapped so cells divide the tile)
+# Windows are separate geometry/decals on the ship meshes (user, 2026-09-28), not
+# baked into the tiling hull texture; True brings the painted window bands back.
+HULL_WINDOWS = False
+HULL_WINDOW_ROW_SPACING = 2.5
+HULL_WINDOW_DENSITY = 0.55
 os.makedirs(TEXDIR, exist_ok=True)
 
 # ----------------------------------------------------------------------------
@@ -272,7 +291,11 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     """
     rng = np.random.default_rng(seed)
     W = H = size
-    cells = variant.get('cells', 12)          # panel grid resolution (was 8)
+    cells = variant.get('cells', max(2, int(round(12 / HULL_PANEL_SCALE))))  # panel grid resolution
+    if 'cells' not in variant:
+        # snap to a divisor of the tile so the last panel isn't a sliver (seam on repeat)
+        while W % cells:
+            cells += 1
     cell = max(6, W // cells)
     # -- height field: base + panel grid --
     h = np.ones((H, W), dtype=np.float32) * 0.5
@@ -314,7 +337,7 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     accent = np.array(variant.get('accent', [0.1, 0.15, 0.2]))
     D = np.empty((H, W, 4), dtype=np.float32)
     for ch in range(3):
-        D[..., ch] = np.clip(base[ch] - (0.5 - h) * 0.92, 0, 1)  # stronger relief contrast (was 0.72 -- too flat/low-contrast per X4-benchmark review)
+        D[..., ch] = np.clip(base[ch] - (0.5 - h) * (0.30 if PBR_CONFORM else 0.92), 0, 1)  # stronger relief contrast (was 0.72 -- too flat/low-contrast per X4-benchmark review)
     # per-panel tonal variation: modulate each panel's brightness slightly so the
     # plating doesn't read as one uniform flat (real panels show tone variation).
     # Build a coarse panel-locked noise field (V=row, U=col), plus gentle wear streaking.
@@ -324,14 +347,22 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     # Organic per-panel tonal variation: coarse random noise field upscaled to
     # full res (nearest-neighbour -> blocky 'plate' tones), plus a faint smooth
     # low-freq blend. No repeating sine (which caused periodic striping).
-    nsz = 4
-    noise = rng.random((H // nsz + 1, W // nsz + 1)) - 0.5
-    rsz = np.kron(noise, np.ones((nsz, nsz)))[:H, :W].astype(np.float32)
-    # soft plate edges: box-blur the blocky field (separable, shape-safe)
-    rsz = (rsz[:-2, :] + rsz[1:-1, :] + rsz[2:, :]) / 3.0
-    rsz = (rsz[:, :-2] + rsz[:, 1:-1] + rsz[:, 2:]) / 3.0
-    pad = np.pad(rsz, 1, mode='edge')
-    tone = 0.17 * pad  # was 0.10 -- more per-plate brightness variance breaks the "flat wrap" look
+    if PBR_CONFORM:
+        # tileable fBm: amplitude ~ wavelength gives the ~1/f^2 power spectrum of
+        # real painted metal (paint build-up, fading) instead of 4 px white noise
+        pad = _fbm_tile(rng, H, W, (W // 4, W // 8, W // 16, W // 32, W // 64, W // 128))
+        # + fine paint grain (4-16 px): mips away at distance, reads close up
+        grain = _fbm_tile(rng, H, W, (16, 8, 4))
+        tone = 0.10 * pad + 0.20 * grain
+    else:
+        nsz = 4
+        noise = rng.random((H // nsz + 1, W // nsz + 1)) - 0.5
+        rsz = np.kron(noise, np.ones((nsz, nsz)))[:H, :W].astype(np.float32)
+        # soft plate edges: box-blur the blocky field (separable, shape-safe)
+        rsz = (rsz[:-2, :] + rsz[1:-1, :] + rsz[2:, :]) / 3.0
+        rsz = (rsz[:, :-2] + rsz[:, 1:-1] + rsz[:, 2:]) / 3.0
+        pad = np.pad(rsz, 1, mode='edge')
+        tone = 0.17 * pad  # was 0.10 -- more per-plate brightness variance breaks the "flat wrap" look
     # clean plate tones only — no wear/weathering (shiny new ships)
     for ch in range(3):
         D[..., ch] = np.clip(D[..., ch] * (1 + tone), 0, 1)
@@ -347,6 +378,7 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     # at seams (like light catching a bevel), kept sparse so they read as detail.
     stripe = np.zeros((H, W), dtype=bool)
     fixed = np.zeros((H, W), dtype=bool)
+    bare = np.zeros((H, W), dtype=bool)   # bare-metal fasteners (PBR_CONFORM)
     for i in range(cell, W, cell):
         # only a few, thin, short highlight marks per seam (not many dashes)
         for k in range(2):
@@ -363,13 +395,14 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     E = np.zeros((H, W, 4), dtype=np.float32)
     E[..., 3] = 1.0
     em = np.array(variant.get('emissive', [0.2, 0.55, 1.0]))
-    E[stripe] = [em[0]*0.7, em[1]*0.7, em[2]*0.7, 1.0]  # brighter seam glow (pops w/o Lumen)
-    # hairline emissive along every panel groove: thin bright line so the panel
-    # grid reads even at flight distance (self-emissive accents per main's ask)
-    for i in range(cell, W, cell):
-        E[max(0,i-1):i+1, :] = [em[0]*0.5, em[1]*0.5, em[2]*0.5, 1.0]
-    for j in range(cell, H, cell):
-        E[:, max(0,j-1):j+1] = [em[0]*0.5, em[1]*0.5, em[2]*0.5, 1.0]
+    if HULL_SEAM_GLOW:
+        E[stripe] = [em[0]*0.7, em[1]*0.7, em[2]*0.7, 1.0]  # brighter seam glow (pops w/o Lumen)
+        # hairline emissive along every panel groove: thin bright line so the panel
+        # grid reads even at flight distance (self-emissive accents per main's ask)
+        for i in range(cell, W, cell):
+            E[max(0,i-1):i+1, :] = [em[0]*0.5, em[1]*0.5, em[2]*0.5, 1.0]
+        for j in range(cell, H, cell):
+            E[:, max(0,j-1):j+1] = [em[0]*0.5, em[1]*0.5, em[2]*0.5, 1.0]
 
     # ---- Phase 4: material quality (shader knobs) ----
     # roughness: smooth metal with anisotropic grain + rough grooves. A directional
@@ -381,6 +414,14 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     rg_y, rg_x = np.mgrid[0:H, 0:W].astype(np.float32)
     aniso = 0.14 * np.sin(rg_x * 0.06 + 11.7) * np.sin(rg_y * 0.011 + 3.3)
     aniso += 0.07 * np.sin(rg_x * 0.013 + rg_y * 0.02)  # stronger anisotropic grain (varied sheen)
+    if PBR_CONFORM:
+        # the sine grain above is periodic (reads as a dimple lattice when the tile
+        # repeats across a big hull); use tileable fBm, streaked along U instead
+        streak = _fbm_tile(rng, H, W, (W // 8, W // 32, W // 128, 8))
+        streak = 0.5 * (streak + np.roll(streak, W // 64, axis=1))
+        aniso = 0.16 * streak
+        # fine smudges / polish marks (8-32 px): break reflections up close, mip out at range
+        aniso += 0.07 * _fbm_tile(rng, H, W, (32, 16, 8))
     R = np.clip(R + aniso, 0.05, 1.0)
     # accent/edge regions read as machined (slightly smoother, metal-bare)
     R[stripe] = np.maximum(0.05, R[stripe] - 0.12)
@@ -412,19 +453,19 @@ def gen_texture_set(name, variant, size=2048, seed=1):
     # lit (cool/warm interior light) or dark (unlit/reflective), and only thin
     # vertical stiffener mullions at intervals (NOT a centered crossbar). They run
     # along the hull as bands, recessed slightly, rather than being square panes.
-    if variant.get('windows'):
+    if HULL_WINDOWS and variant.get('windows'):
         wc = variant['windows']
         cols_n = wc.get('cols', 12)
         wcell = W // cols_n
         cool = np.array(wc.get('cool', [0.3, 0.65, 1.0]))
         warm = np.array(wc.get('warm', [1.0, 0.6, 0.25]))
         litfrac = wc.get('frac', 0.5)
-        density = wc.get('density', 0.9)
+        density = wc.get('density', HULL_WINDOW_DENSITY)
         rail = max(3, int(wcell*0.06))          # armored top/bottom rail thickness
         band_h = max(4, int(wcell*0.24))        # glass band height (narrow!)
         band_w = int(wcell*0.85)                # glass band width (long)
         mull = max(1, int(wcell*0.025))         # thin vertical stiffener
-        row_step = max(int(wcell*1.6), 2)
+        row_step = max(int(wcell*1.6*HULL_WINDOW_ROW_SPACING), 2)
         for ri, j0 in enumerate(range(wcell//2 + wcell, H - wcell*2, row_step)):
             stagger = int(wcell//2) if ri % 2 else int(rng.integers(0, wcell//3))
             for i in range(wcell//2 + stagger + wcell, W - wcell, wcell):
@@ -571,7 +612,7 @@ def gen_texture_set(name, variant, size=2048, seed=1):
                         if dx*dx+dy*dy<9:
                             yy,xx=by+dy,bx+dx
                             if 0<=yy<H and 0<=xx<W:
-                                h[yy,xx]=0.12; AO[yy,xx]=0.3; D[yy,xx]=[0.6,0.62,0.65,1.0]
+                                h[yy,xx]=0.12; AO[yy,xx]=0.3; D[yy,xx]=[0.6,0.62,0.65,1.0]; bare[yy,xx]=True
         # rivet/screw rows along a horizontal seam
         for _ in range(2):
             ry0 = int(rng.integers(H*0.15, H*0.85)); rx0 = int(rng.integers(0, W//4))
@@ -582,7 +623,7 @@ def gen_texture_set(name, variant, size=2048, seed=1):
                         if dx*dx+dy*dy<4:
                             yy,xx=ry0+dy,xx0+dx
                             if 0<=yy<H and 0<=xx<W:
-                                h[yy,xx]=0.10; AO[yy,xx]=0.28; D[yy,xx]=[0.5,0.52,0.55,1.0]
+                                h[yy,xx]=0.10; AO[yy,xx]=0.28; D[yy,xx]=[0.5,0.52,0.55,1.0]; bare[yy,xx]=True
         # vent slat grill (2-3 short slat stacks)
         for _ in range(rng.integers(2,4)):
             gw=int(rng.integers(W//30, W//18)); gx0=int(rng.integers(0,W-gw))
@@ -624,7 +665,9 @@ def gen_texture_set(name, variant, size=2048, seed=1):
                 by = int(oy + (bp-ox)*ang)
                 if 0<=by<H-8:
                     h[by:by+3, bp:bp+3]=0.14; AO[by:by+3, bp:bp+3]=0.35
-                    D[by:by+3, bp:bp+3]=[0.5,0.52,0.55,1.0]
+                    D[by:by+3, bp:bp+3]=[0.5,0.52,0.55,1.0]; bare[by:by+3, bp:bp+3]=True
+    if PBR_CONFORM:
+        D, M, AO = _pbr_conform(D, M, AO, E, stripe | bare, base)
     # smooth the macro height a touch, then add high-freq noise
     hn = h.copy()
     # np.gradient returns (d/d axis0 = rows = image V/up, d/d axis1 = cols = U/right).
@@ -674,6 +717,55 @@ def gen_texture_set(name, variant, size=2048, seed=1):
         bpy.data.images[fname].save()
     return {suf: f"T_{name}{suf}.png" for suf in maps}
 
+
+
+def _fbm_tile(rng, H, W, wavelengths):
+    """Tileable fBm in [-0.5, 0.5]-ish: random grids upsampled with wrap-around
+    bicubic-like smoothing (FFT low-pass), amplitude proportional to wavelength."""
+    out = np.zeros((H, W), np.float32)
+    fy = np.fft.fftfreq(H)[:, None]
+    fx = np.fft.fftfreq(W)[None, :]
+    fr = np.sqrt(fx * fx + fy * fy)
+    for wl in wavelengths:
+        wl = max(2, int(wl))
+        n = rng.standard_normal((H, W)).astype(np.float32)
+        # Gaussian low-pass at this wavelength; periodic by construction
+        g = np.exp(-(fr * wl) ** 2 * 2.0)
+        band = np.real(np.fft.ifft2(np.fft.fft2(n) * g)).astype(np.float32)
+        band /= max(float(band.std()), 1e-6)
+        out += band * (wl / float(wavelengths[0]))
+    out /= max(float(out.std()), 1e-6)
+    return np.clip(out * 0.25, -0.5, 0.5)
+
+
+def _srgb_lum(rgb):
+    lin = np.where(rgb <= 0.04045, rgb / 12.92, ((rgb + 0.055) / 1.055) ** 2.4)
+    y = lin[..., 0] * 0.2126 + lin[..., 1] * 0.7152 + lin[..., 2] * 0.0722
+    return np.where(y <= 0.0031308, y * 12.92, 1.055 * np.power(np.maximum(y, 0), 1 / 2.4) - 0.055)
+
+
+def _pbr_conform(D, M, AO, E, metal_mask, base):
+    """Make a gen_texture_set output physically plausible (see PBR_CONFORM)."""
+    emissive = E[..., :3].max(axis=-1) > 0.05
+    # metallic is binary: paint/primer/glass = 0, exposed fasteners and catch-light
+    # seam edges = 1 (UE: "treat Metallic as a binary property")
+    M = np.where(metal_mask, 1.0, 0.0).astype(np.float32)
+    # bare metal reflectance 70-100 % (>= 180 sRGB): light steel tinted by the paint
+    steel = np.clip(0.76 + 0.10 * (np.asarray(base, np.float32) - 0.5), 0.72, 0.86)
+    D[metal_mask, 0:3] = steel
+    # dielectric albedo into [40, 235] sRGB luminance with soft knees (linear
+    # remap of [0, 80] -> [40, 80] and [200, 255] -> [200, 235]) so the
+    # tonal variation survives instead of clamping to one flat value
+    diel = ~metal_mask & ~emissive
+    lum = _srgb_lum(D[..., :3])
+    lo, klo, khi, hi = 40.0 / 255, 80.0 / 255, 200.0 / 255, 235.0 / 255
+    target = np.where(lum < klo, lo + lum * (klo - lo) / klo, lum)
+    target = np.where(lum > khi, khi + (lum - khi) * (hi - khi) / (1.0 - khi), target)
+    scale = np.where(diel, target / np.maximum(lum, 1e-3), 1.0)
+    D[..., :3] = np.clip(D[..., :3] * scale[..., None], 0.0, 1.0)
+    # AO: keep contact shadow in seams, but never crush to black
+    AO = np.clip(AO, 0.22, 1.0)
+    return D, M, AO
 
 
 def _to4(gray):
