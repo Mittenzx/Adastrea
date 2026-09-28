@@ -60,8 +60,8 @@ AAdastreaPlayerController::AAdastreaPlayerController()
 	// StationEditorWidgetClass is resolved lazily in CreateStationEditorWidget()
 	// instead of here - a ConstructorHelpers::FClassFinder load in the constructor
 	// runs during CDO construction, very early in engine startup, before there's
-	// any guarantee the StationEditor module (which WBP_StationEditor's parent
-	// class UStationEditorWidgetCpp lives in) has been loaded. Adastrea doesn't
+	// any guarantee the StationEditor module (which UStationEditorWidgetCpp
+	// lives in) has been loaded. Adastrea doesn't
 	// module-depend on StationEditor by design (see the circular-dependency fix
 	// doc), so that's a real race, not a hypothetical one: it crashed the editor
 	// on startup (EXCEPTION_ACCESS_VIOLATION chasing a null class) the one time
@@ -1404,15 +1404,17 @@ UUserWidget* AAdastreaPlayerController::CreateStationEditorWidget()
 		return StationEditorWidget;
 	}
 
-	// Lazily resolve the default WBP_StationEditor if nothing was assigned in
+	// Lazily resolve the default editor widget class if nothing was assigned in
 	// Blueprint. Deliberately NOT done in the constructor (CDO construction runs
 	// too early in engine startup for a cross-module Blueprint load to be safe -
 	// see the comment on the StationEditorWidgetClass default above). By the time
 	// a player actually opens the editor at runtime, every module is loaded.
 	if (!StationEditorWidgetClass)
 	{
+		// The native class builds its own plan-mode overlay (the old WBP panel
+		// layout is retired); loaded by path since Adastrea can't link StationEditor.
 		StationEditorWidgetClass = StaticLoadClass(UUserWidget::StaticClass(), nullptr,
-			TEXT("/Game/UI/Stations/WBP_StationEditor.WBP_StationEditor_C"));
+			TEXT("/Script/StationEditor.StationEditorWidgetCpp"));
 	}
 
 	// Check if widget class is assigned

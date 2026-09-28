@@ -222,6 +222,15 @@ void AAdastreaHUD::DrawHUD()
 			return; // only draw once we're flying the ship
 		}
 
+		// The Station Editor's 3D plan view replaces the ship view; no flight HUD over it.
+		if (const AAdastreaPlayerController* AdPC = Cast<AAdastreaPlayerController>(PC))
+		{
+			if (AdPC->IsStationEditorOpen())
+			{
+				return;
+			}
+		}
+
 	// ---- Docking prompt (shown only while RequestDocking would succeed; the cockpit HUD draws its own) ----
 	if (!bCyberpunkFlightHUD)
 	{

@@ -287,7 +287,6 @@ The following properties are available in Blueprint for direct access:
 See the following for reference:
 
 - `Content/UI/HUD/WBP_SpaceShipHUD.uasset` - Example HUD layout patterns
-- `Content/UI/Stations/WBP_StationEditor.uasset` - Similar panel-based UI
 - `Source/Adastrea/UI/ShipCustomizationWidget.h` - Similar stat display widget
 
 ## Integration with Other Systems

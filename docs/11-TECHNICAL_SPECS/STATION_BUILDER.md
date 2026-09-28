@@ -69,6 +69,11 @@ ship. RMB drag orbits (a right *click* still cancels placement), MMB drag or WAS
 pans, the wheel zooms, Q/E turn, F reframes the station. The flight HUD is hidden
 while the plan view is up.
 
+The UI over it is a light overlay built in C++ (`BuildPlanLayout`), not a widget
+Blueprint: stats top-left, Close top-right, the construction queue bottom-right
+(only while something is queued) and the module palette as a strip of
+group-coloured tiles along the bottom.
+
 ### 2.3 Connection faces
 Each module has **connection faces** (N/S/E/W/Up/Down) — the sides where it can
 attach to another module. A module is **connected** if at least one face touches a
