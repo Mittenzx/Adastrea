@@ -20,7 +20,7 @@ SOURCES = {
     "fleet":   (os.path.join(HERE, "build_fleet_hull_textures.py"), False),
     "station": (os.path.join(HERE, "build_station_hull_textures.py"), False),
     "shells":  (os.path.join(HERE, "build_station_module_shells.py"), False),
-    "v2":      (os.path.join(os.path.dirname(HERE), ".claude", "worktrees", "laughing-blackwell-aba632", "Tools", "regen_ship_hull_textures_v2.py"), True),
+    "v2":      (os.path.join(HERE, "regen_ship_hull_textures_v2.py"), True),
 }
 
 def extract(path):

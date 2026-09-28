@@ -165,6 +165,16 @@ public:
          * so ships render textured. Maps hull by ship class. */
         void ApplyShipHullMaterial();
 
+        /** Attach the hull's separate window geometry (called in BeginPlay). Windows are
+         * not part of the tiling hull texture: Tools/build_ship_windows.py exports
+         * SM_Ship_<X>_01_Windows in the hull's object space, so it goes on the ship
+         * mesh at identity. Found from the hull mesh name; nothing happens if absent. */
+        void AttachShipWindows();
+
+        /** Runtime-created by AttachShipWindows; null when the hull has no window mesh. */
+        UPROPERTY(VisibleInstanceOnly, Transient, Category="Components")
+        TObjectPtr<UStaticMeshComponent> WindowMeshComponent;
+
     /**
      * Get the current hull integrity
      * @return The current hull integrity value

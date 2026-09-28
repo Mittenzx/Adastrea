@@ -669,6 +669,11 @@ def compose(B, px_per_m):
     E += (gA * cmd_m[..., 0] * smoothstep(0.55, 0.9, plate))[..., None] * C['gold_emis'] * 0.35
     E += floorline[..., None] * C['gold_emis'] * 0.25
     E = np.clip(E, 0, 1)
+    # PBR conformance (Tools/texture_benchmark.py): binary metallic, dark "metal" as a
+    # dark coating, bright bare metal, undo the 0.30 contact shading multiplied into D
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from pbr_conform_textures import conform_arrays
+    D, M, AO = conform_arrays(D, M, AO, E, coat_dark=True, unshade=0.30)
     return D, N, R, M, AO, E, {"wear_mean": float(wear.mean()), "dirt_mean": float(dirt.mean())}
 
 

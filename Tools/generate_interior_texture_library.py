@@ -265,12 +265,63 @@ def convexity(cv, h_mm, radius_mm):
     return (h_mm - blur(h_mm, radius_mm / cv.mmpp)).astype(np.float32)
 
 
+def _srgb_lum(rgb):
+    lin = np.where(rgb <= 0.04045, rgb / 12.92, ((rgb + 0.055) / 1.055) ** 2.4)
+    y = lin[..., 0] * 0.2126 + lin[..., 1] * 0.7152 + lin[..., 2] * 0.0722
+    return np.where(y <= 0.0031308, y * 12.92, 1.055 * np.power(np.maximum(y, 0), 1 / 2.4) - 0.055)
+
+
+# PBR conformance applied to every set on write (scored by Tools/texture_benchmark.py).
+# False writes the sets exactly as the per-set recipes author them.
+PBR_CONFORM = True
+
+
+def pbr_conform(name, cv, D, R, M, AO, E):
+    """Physically plausible maps without re-authoring each recipe:
+    metallic snapped to 0/1 (anti-aliased edges kept); metal darker than 150 sRGB
+    becomes a dark coating (dielectric) so dark interiors stay dark; bare-metal albedo lifted to
+    >= 180 sRGB (Substance validator: 70-100 % reflectance) by a soft-knee remap that
+    keeps relative variation; dielectric albedo soft-kneed into 35-240 sRGB; AO
+    floored at 0.2; a faint smudge/fingerprint breakup so no roughness map is flat."""
+    s = M.astype(np.float32)
+    t = np.clip((s - 0.35) / 0.30, 0, 1)
+    M = t * t * (3 - 2 * t)
+    lum = _srgb_lum(np.clip(D, 0, 1))
+    # "dark metal" (gunmetal decks, blackened steel) doesn't exist as bare metal:
+    # it is a dark coating, i.e. a dielectric. Keep its albedo (the interior mood)
+    # and only lift genuinely bright bare metal to the metal range.
+    coated = np.clip((150 / 255 - lum) / (20 / 255), 0, 1)
+    # ...except coloured metals (copper, brass, gold): those stay metal and get lifted
+    mx, mn = D.max(axis=-1), D.min(axis=-1)
+    sat = (mx - mn) / np.maximum(mx, 1e-3)
+    coated = coated * np.clip((0.35 - sat) / 0.1, 0, 1)
+    M = M * (1 - coated)
+    # metal: [0, 235] -> [182, 235]
+    met_t = np.where(lum < 235 / 255, 182 / 255 + lum * (53 / 235), lum)
+    # dielectric: [0, 70] -> [35, 70], [215, 255] -> [215, 240]
+    die_t = np.where(lum < 70 / 255, 35 / 255 + lum * (35 / 70), lum)
+    die_t = np.where(lum > 215 / 255, 215 / 255 + (lum - 215 / 255) * (25 / 40), die_t)
+    lit = E.max(axis=-1) > 0.15 if E.ndim == 3 else E > 0.15
+    target = M * met_t + (1 - M) * die_t
+    scale = np.where(lit, 1.0, target / np.maximum(lum, 1e-3))
+    D = np.clip(D * scale[..., None], 0, 1)
+    AO = np.clip(AO, 0.2, 1.0)
+    rng = np.random.default_rng(sum(map(ord, name)))  # deterministic per set
+    # paint/powder-coat grain on dielectrics (+-2.5 %, 2-12 mm): mips out at range
+    grain = 0.025 * fbm(cv, rng, 12.0, 3)
+    D = np.where(lit[..., None], D, np.clip(D * (1 + grain * (1 - M))[..., None], 0, 1))
+    R = np.clip(R + 0.035 * fbm(cv, rng, 120.0, 4) + 0.015 * noise(cv, rng, 3.0), 0.02, 1.0)
+    return D, R, M.astype(np.float32), AO
+
+
 def write_set(name, cv, D, H, R, M, AO, E=None, extra=None, nstrength=1.0,
               micro=None, micro_amp=0.0):
     os.makedirs(OUT, exist_ok=True)
     N = normal_from_height(cv, H, nstrength, micro, micro_amp)
     if E is None:
         E = np.zeros_like(D)
+    if PBR_CONFORM:
+        D, R, M, AO = pbr_conform(name, cv, D, R, M, AO, E)
     maps = {"D": D, "N": N, "E": E, "R": R, "M": M, "AO": AO}
     if extra:
         maps.update(extra)
@@ -991,7 +1042,8 @@ def console(cv, rng):
     col = mix(col, cv.rgb((0.3, 0.3, 0.31)), sc * 0.35)
     R = np.clip(R - sc * 0.15 + 0.03 * noise(cv, rng, 2.0), 0.03, 1)
     AO = cavity_ao(cv, H, 6, 1.5, 0.6)
-    col = col * AO[..., None] ** 0.3
+    if not PBR_CONFORM:
+        col = col * AO[..., None] ** 0.3   # cavity shading belongs in AO, not albedo
     return dict(D=col, H=H, R=R, M=M, AO=AO, E=np.clip(E, 0, 1),
                 micro=noise(cv, rng, 0.8), micro_amp=0.04, nstrength=0.8)
 
