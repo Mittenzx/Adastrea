@@ -6,6 +6,12 @@
 
 #include "AdastreaHUD.h"
 #include "Universe/GalaxySubsystem.h"
+#include "Universe/JumpGate.h"
+#include "Ships/Spaceship.h"
+#include "Player/AdastreaPlayerController.h"
+#include "UI/AdastreaHUDWidget.h"
+#include "Blueprint/UserWidget.h"
+#include "EngineUtils.h"
 #include "Audio/AudioEventLibrary.h"
 #include "GameFramework/PlayerController.h"
 #include "Engine/Canvas.h"
@@ -523,6 +529,7 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 	}
 
 	// ---- Jump-lane exits at the rim, pointing towards each linked system ----
+	TMap<FName, FVector2D> LaneExitBase; // system id -> rim point (lane-gate lines end here)
 	for (const FName LinkId : Sys->JumpLinks)
 	{
 		const FStarSystemDef* Other = Galaxy->FindSystem(LinkId);
@@ -536,6 +543,7 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 		const FVector2D Tip = FVector2D(Cx, Cy) + S * (R + 22.0f);
 		const FVector2D Base = FVector2D(Cx, Cy) + S * (R + 8.0f);
 		const FVector2D Perp(-S.Y, S.X);
+		LaneExitBase.Add(LinkId, Base);
 
 		const FString Label = FString::Printf(TEXT("%s  >"), *Other->Name.ToString().ToUpper());
 		float TW = 0, TH = 0;
@@ -582,6 +590,23 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 			DrawLine(M.X, M.Y - 4.0f, M.X + 4.0f, M.Y, Col, 1.5f);
 			DrawLine(M.X + 4.0f, M.Y, M.X, M.Y + 4.0f, Col, 1.5f);
 			DrawLine(M.X, M.Y + 4.0f, M.X - 4.0f, M.Y, Col, 1.5f);
+		}
+	}
+
+	// ---- Lane gates: sector -> rim exit of the system they jump to ----
+	for (const FGalaxySectorDef& S : Sys->Sectors)
+	{
+		for (const FName LaneId : S.LaneGates)
+		{
+			const FGalaxySectorDef* To = Galaxy->FindSector(LaneId);
+			const FVector2D* Exit = To ? LaneExitBase.Find(To->SystemId) : nullptr;
+			if (!Exit)
+			{
+				continue;
+			}
+			const FVector2D A = SectorPos(S);
+			const bool bHot = S.Id == MapSelectedSectorId;
+			DrawLine(A.X, A.Y, Exit->X, Exit->Y, bHot ? FLinearColor(0.8f, 0.62f, 1.0f, 0.95f) : FLinearColor(0.7f, 0.5f, 1.0f, 0.5f), bHot ? 2.5f : 1.5f);
 		}
 	}
 
@@ -655,6 +680,18 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 			DrawText(bBuilt ? FString::Printf(TEXT("Level  %s"), *LevelShortName(Sel->Level)) : FString(TEXT("PLANNED - no level yet")),
 				bBuilt ? Built : FLinearColor(0.95f, 0.7f, 0.35f, 1.0f), TX, Y, Small, 0.72f); Y += 16.0f;
 			Y = DrawWrappedText(FString::Printf(TEXT("Gates  %s"), *JoinSectorNames(Galaxy, Sel->Gates)), Body, TX, Y, TW, Small, 0.72f);
+			if (Sel->LaneGates.Num())
+			{
+				TArray<FString> Lanes;
+				for (const FName LaneId : Sel->LaneGates)
+				{
+					const FGalaxySectorDef* To = Galaxy->FindSector(LaneId);
+					const FStarSystemDef* ToSys = To ? Galaxy->FindSystem(To->SystemId) : nullptr;
+					Lanes.Add(To ? FString::Printf(TEXT("%s (%s)"), *To->Name.ToString(), ToSys ? *ToSys->Name.ToString() : TEXT("?")) : LaneId.ToString());
+				}
+				Y = DrawWrappedText(FString::Printf(TEXT("Lane gates  %s"), *FString::Join(Lanes, TEXT(", "))),
+					FLinearColor(0.8f, 0.65f, 1.0f, 1.0f), TX, Y, TW, Small, 0.72f);
+			}
 			Y = DrawWrappedText(Sel->Description.ToString(), Dim, TX, Y + 4.0f, TW, Small, 0.68f);
 			Y += 10.0f;
 			if (Sel->Id == CurrentSectorId)
@@ -662,9 +699,23 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 				const bool bHover = bMouse && Mouse.X >= TX && Mouse.X <= TX + 180.0f && Mouse.Y >= Y && Mouse.Y <= Y + 24.0f;
 				DrawMapButton(TEXT("VIEW SECTOR MAP"), TX, Y, bHover, false, EMapHitKind::OpenSector, Sel->Id);
 			}
-			else if (bBuilt)
+			else if (!CurrentSectorId.IsNone())
 			{
-				Y = DrawWrappedText(TEXT("Travel between sectors isn't wired up yet."), Dim, TX, Y, TW, Small, 0.65f);
+				// Gate route from the player's sector.
+				const TArray<FName> Route = Galaxy->FindRoute(CurrentSectorId, Sel->Id);
+				if (Route.Num())
+				{
+					Y = DrawWrappedText(FString::Printf(TEXT("Route (%d jump%s)  %s"), Route.Num(), Route.Num() == 1 ? TEXT("") : TEXT("s"),
+						*JoinSectorNames(Galaxy, Route).Replace(TEXT(", "), TEXT(" > "))), FLinearColor(0.8f, 0.65f, 1.0f, 1.0f), TX, Y, TW, Small, 0.68f);
+					if (!bBuilt)
+					{
+						Y = DrawWrappedText(TEXT("Its gate is offline until the sector has a level."), Dim, TX, Y, TW, Small, 0.65f);
+					}
+				}
+				else
+				{
+					Y = DrawWrappedText(TEXT("No gate route from your sector."), Dim, TX, Y, TW, Small, 0.65f);
+				}
 			}
 		}
 		else
@@ -673,7 +724,7 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 		}
 
 		// Legend (panel bottom).
-		const float LY = L.PanelY + L.PanelH - 78.0f;
+		const float LY = L.PanelY + L.PanelH - 96.0f;
 		DrawRect(FLinearColor(0.2f, 0.4f, 0.5f, 0.5f), TX, LY - 8.0f, TW, 1.0f);
 		DrawCircleOutline(TX + 6.0f, LY + 6.0f, 6.0f, Built, 2.0f, 6); DrawFilledDisc(TX + 6.0f, LY + 6.0f, 2.5f, Built);
 		DrawText(TEXT("Sector with a level"), Body, TX + 20.0f, LY, Small, 0.65f);
@@ -683,6 +734,8 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 		DrawText(TEXT("Gate"), Body, TX + 20.0f, LY + 36.0f, Small, 0.65f);
 		DrawCircleOutline(TX + 6.0f, LY + 60.0f, 6.0f, You, 2.0f, 16);
 		DrawText(TEXT("Your sector"), Body, TX + 20.0f, LY + 54.0f, Small, 0.65f);
+		DrawLine(TX, LY + 78.0f, TX + 13.0f, LY + 78.0f, FLinearColor(0.7f, 0.5f, 1.0f, 0.9f), 2.0f);
+		DrawText(TEXT("Lane gate (to another system)"), Body, TX + 20.0f, LY + 72.0f, Small, 0.65f);
 	}
 
 	DrawMapHeader(PC, L.VW, TEXT("SYSTEM MAP"), FString::Printf(TEXT("Universe  >  %s"), *Sys->Name.ToString()));
@@ -893,4 +946,113 @@ void AAdastreaHUD::DrawUniverseMap(APlayerController* PC)
 	DrawMapHeader(PC, L.VW, TEXT("UNIVERSE MAP"), TEXT("Universe"));
 	DrawText(TEXT("LMB select   click again / [Enter] open system   [3] sector   [4] system   [M] close"),
 		Help, L.VW * 0.5f - 280.0f, L.VH - 30.0f, Small, 0.7f);
+}
+
+// ---------------------------------------------------------------------------
+// Flight HUD: jump gates
+// ---------------------------------------------------------------------------
+
+void AAdastreaHUD::DrawJumpGateMarkers(APlayerController* PC, ASpaceship* Ship)
+{
+	if (!PC || !Ship || !Canvas || !GEngine || Ship->IsDocked())
+	{
+		return;
+	}
+	UFont* Small = GEngine->GetSmallFont();
+	const FVector ShipLoc = Ship->GetActorLocation();
+	auto FormatDist = [](float Cm)
+	{
+		return Cm < 100000.0f ? FString::Printf(TEXT("%.0f m"), Cm / 100.0f) : FString::Printf(TEXT("%.1f km"), Cm / 100000.0f);
+	};
+
+	int32 ViewX = 0, ViewY = 0;
+	PC->GetViewportSize(ViewX, ViewY);
+	const float ViewToCanvas = ViewX > 0 ? Canvas->ClipX / ViewX : 1.0f;
+
+	AJumpGate* Nearest = nullptr;
+	float NearestDist = TNumericLimits<float>::Max();
+	for (TActorIterator<AJumpGate> It(GetWorld()); It; ++It)
+	{
+		AJumpGate* Gate = *It;
+		const float Dist = FVector::Dist(ShipLoc, Gate->GetActorLocation());
+		if (Dist < NearestDist)
+		{
+			NearestDist = Dist;
+			Nearest = Gate;
+		}
+
+		FVector2D SP;
+		if (!PC->ProjectWorldLocationToScreen(Gate->GetActorLocation(), SP, false))
+		{
+			continue;
+		}
+		SP *= ViewToCanvas; // viewport pixels -> canvas pixels (differ in high-res shots)
+		if (SP.X < 0.0f || SP.Y < 0.0f || SP.X > Canvas->ClipX || SP.Y > Canvas->ClipY)
+		{
+			continue;
+		}
+		const FLinearColor Col = Gate->IsOnline() ? FLinearColor(0.7f, 0.5f, 1.0f, 0.95f) : FLinearColor(1.0f, 0.62f, 0.2f, 0.95f);
+		const float R = 10.0f;
+		DrawLine(SP.X, SP.Y - R, SP.X + R, SP.Y, Col, 2.0f);
+		DrawLine(SP.X + R, SP.Y, SP.X, SP.Y + R, Col, 2.0f);
+		DrawLine(SP.X, SP.Y + R, SP.X - R, SP.Y, Col, 2.0f);
+		DrawLine(SP.X - R, SP.Y, SP.X, SP.Y - R, Col, 2.0f);
+		DrawText(FString::Printf(TEXT("%s  %s"), *Gate->GetDisplayName().ToUpper(), *FormatDist(Dist)), Col, SP.X + 14.0f, SP.Y - 7.0f, Small, 0.7f);
+	}
+
+	// Approach prompt for the nearest gate.
+	if (Nearest && NearestDist < 300000.0f)
+	{
+		const bool bOnline = Nearest->IsOnline();
+		const FString Line = bOnline
+			? FString::Printf(TEXT("JUMP GATE  >>  %s   (%s)   -   fly through the ring to jump"), *Nearest->GetDestinationName().ToUpper(), *FormatDist(NearestDist))
+			: FString::Printf(TEXT("JUMP GATE OFFLINE  >>  %s   -   no level built for this sector yet"), *Nearest->GetDestinationName().ToUpper());
+		UFont* Font = GEngine->GetMediumFont();
+		float W = 0.0f, H = 0.0f;
+		GetTextSize(Line, W, H, Font, 1.0f);
+		const float X = (Canvas->ClipX - W) * 0.5f;
+		const float Y = Canvas->ClipY * 0.58f;
+		DrawRect(FLinearColor(0.02f, 0.02f, 0.06f, 0.75f), X - 14.0f, Y - 6.0f, W + 28.0f, H + 12.0f);
+		DrawText(Line, bOnline ? FLinearColor(0.75f, 0.6f, 1.0f, 1.0f) : FLinearColor(1.0f, 0.62f, 0.2f, 1.0f), X, Y, Font, 1.0f);
+	}
+}
+
+// ---------------------------------------------------------------------------
+// Ship UMG widgets under the map
+// ---------------------------------------------------------------------------
+
+void AAdastreaHUD::SyncShipWidgetsForMap(APlayerController* PC)
+{
+	if (bShowMap)
+	{
+		// UMG draws above the canvas, so the ship's widgets would sit on top of the map.
+		TArray<UUserWidget*, TInlineAllocator<2>> ShipWidgets;
+		if (const AAdastreaPlayerController* AdPC = Cast<AAdastreaPlayerController>(PC))
+		{
+			ShipWidgets.Add(AdPC->HUDWidget);
+		}
+		if (const ASpaceship* Ship = PC ? Cast<ASpaceship>(PC->GetPawn()) : nullptr)
+		{
+			ShipWidgets.Add(Ship->GetDockingPromptWidget());
+		}
+		for (UUserWidget* Widget : ShipWidgets)
+		{
+			if (Widget && Widget->GetVisibility() != ESlateVisibility::Collapsed)
+			{
+				WidgetsHiddenForMap.Add(Widget, (uint8)Widget->GetVisibility());
+				Widget->SetVisibility(ESlateVisibility::Collapsed);
+			}
+		}
+	}
+	else if (WidgetsHiddenForMap.Num())
+	{
+		for (const TPair<TWeakObjectPtr<UUserWidget>, uint8>& Hidden : WidgetsHiddenForMap)
+		{
+			if (UUserWidget* Widget = Hidden.Key.Get())
+			{
+				Widget->SetVisibility((ESlateVisibility)Hidden.Value);
+			}
+		}
+		WidgetsHiddenForMap.Reset();
+	}
 }

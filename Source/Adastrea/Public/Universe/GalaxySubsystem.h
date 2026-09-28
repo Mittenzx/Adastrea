@@ -4,7 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "Player/AdastreaSaveGame.h"
 #include "GalaxySubsystem.generated.h"
+
+class APlayerController;
+class AJumpGate;
 
 /**
  * One sector inside a star system.
@@ -54,6 +58,13 @@ struct ADASTREA_API FGalaxySectorDef
 	/** Sectors in the same system reachable by gate. Links are made two-way on load. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|Sector")
 	TArray<FName> Gates;
+
+	/**
+	 * Sectors in OTHER systems reachable by a jump-lane gate from this sector.
+	 * The two systems must be joined by a jump lane. Made two-way on load.
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|Sector")
+	TArray<FName> LaneGates;
 
 	/** Owning system (filled in on load). */
 	UPROPERTY(BlueprintReadOnly, Category="Galaxy|Sector")
@@ -172,6 +183,36 @@ public:
 	/** Bumped on every (re)load so cached UI can notice. */
 	int32 GetRevision() const { return Revision; }
 
+	// ---- Jump-gate travel ----
+
+	/** Every sector a jump gate in SectorId leads to (Gates + LaneGates). */
+	TArray<FName> GetGateDestinations(FName SectorId) const;
+
+	/** Shortest gate route From -> To, excluding From (empty if unreachable or From == To). */
+	UFUNCTION(BlueprintCallable, Category="Galaxy|Travel")
+	TArray<FName> FindRoute(FName FromSectorId, FName ToSectorId) const;
+
+	/**
+	 * Jump the player to another sector: snapshots the ship, credits and cargo
+	 * (via USaveGameSubsystem), remembers this sector's player-built stations,
+	 * fades out and loads the target sector's level. On arrival the player comes
+	 * out of the gate that leads back. Returns false (with a reason) if the jump
+	 * can't start: target has no level, not flying a ship, docked, already jumping...
+	 */
+	bool BeginJump(APlayerController* PC, FName TargetSectorId, FString& OutReason);
+
+	/** True between BeginJump and the arrival being applied in the new level. */
+	bool IsJumpInProgress() const { return bJumpPending; }
+
+	/** Sector the pending jump came from (the arrival gate is the one leading back there). */
+	FName GetPendingJumpFrom() const { return bJumpPending ? PendingFromSectorId : NAME_None; }
+
+	/**
+	 * Called by UJumpGateWorldSubsystem once the new level is playing and the
+	 * gates exist: moves the ship out of ArrivalGate (may be null) and applies
+	 * the snapshot. Returns true if a pending jump was completed.
+	 */
+	bool CompletePendingJump(UWorld* World, AJumpGate* ArrivalGate);
 
 private:
 	bool LoadFromFile(const FString& Path, FString& OutError);
@@ -186,6 +227,19 @@ private:
 	bool bLoadedFromFile = false;
 	int32 Revision = 0;
 
+	// Jump in flight (survives the level change: this subsystem lives on the GameInstance).
+	bool bJumpPending = false;
+	FName PendingFromSectorId;
+	FName PendingToSectorId;
+
+	/** Ship/credits/cargo/progression captured when the jump started. */
+	UPROPERTY()
+	TObjectPtr<UAdastreaSaveGame> PendingSnapshot;
+
+	/** Player-built stations per sector, so they are still there when the player comes back (this session). */
+	TMap<FName, TArray<FSavedStation>> SectorStations;
+
+	FTimerHandle JumpTimer;
 
 	TMap<FName, int32> SystemIndex;
 	TMap<FName, TPair<int32, int32>> SectorIndex; // sector -> (system, sector)

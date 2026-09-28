@@ -170,6 +170,12 @@ public:
 	/** Star system the player is in (falls back to the galaxy's start system). */
 	FName GetMapCurrentSystemId() const;
 
+	/** Hide the ship's UMG widgets (HUD widget, docking prompt) while the map is open; restore them after. */
+	void SyncShipWidgetsForMap(APlayerController* PC);
+
+	/** Flight HUD: on-screen markers for jump gates, and a prompt when one is close. */
+	void DrawJumpGateMarkers(APlayerController* PC, ASpaceship* Ship);
+
 	// ========================
 	// TRANSIENT MESSAGE (canvas)
 	// ========================
@@ -416,6 +422,9 @@ private:
 		EAdastreaMapView View = EAdastreaMapView::Sector;
 	};
 	TArray<FMapHitRect> MapHitRects;
+
+	/** Widgets hidden by SyncShipWidgetsForMap, with the ESlateVisibility to restore. */
+	TMap<TWeakObjectPtr<class UUserWidget>, uint8> WidgetsHiddenForMap;
 
 	void AddMapHit(float X, float Y, float W, float H, EMapHitKind Kind, FName Id, EAdastreaMapView View = EAdastreaMapView::Sector);
 

@@ -95,3 +95,27 @@ def test_sector_levels_exist(galaxy):
 def test_each_level_is_used_by_one_sector(galaxy):
     levels = [sec["level"] for _, sec in _sectors(galaxy) if sec.get("level")]
     assert len(levels) == len(set(levels))
+
+
+def test_lane_gates_cross_a_jump_lane(galaxy):
+    system_of = {sec["id"]: sys_["id"] for sys_, sec in _sectors(galaxy)}
+    links = {s["id"]: set(s.get("jumpLinks", [])) for s in galaxy["systems"]}
+    for a, targets in list(links.items()):
+        for b in targets:
+            links[b].add(a)
+    for system, sector in _sectors(galaxy):
+        for lane in sector.get("laneGates", []):
+            assert lane in system_of, f"{sector['id']} lane gate -> unknown sector {lane}"
+            other = system_of[lane]
+            assert other != system["id"], f"{sector['id']} lane gate -> {lane} is in the same system (use gates)"
+            assert other in links[system["id"]], f"{sector['id']} lane gate -> {lane}: no jump lane {system['id']}-{other}"
+
+
+def test_every_built_sector_can_be_left_by_gate(galaxy):
+    for _, sector in _sectors(galaxy):
+        if sector.get("level"):
+            reachable = set(sector.get("gates", [])) | set(sector.get("laneGates", []))
+            for _, other in _sectors(galaxy):
+                if sector["id"] in other.get("gates", []) + other.get("laneGates", []):
+                    reachable.add(other["id"])
+            assert reachable, f"{sector['id']} has a level but no gate out"

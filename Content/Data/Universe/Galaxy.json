@@ -6,6 +6,8 @@
     "sectors[].level: long package name of the sector's map; leave empty for a planned sector with no level yet.",
     "sectors[].orbitRadius (0.1-1) and orbitAngle (degrees, 0 = right, counter-clockwise): where the sector sits on the system map.",
     "sectors[].gates: sectors in the same system reachable by gate (made two-way on load).",
+    "sectors[].laneGates: sectors in OTHER systems reachable by a jump-lane gate; the systems must share a jumpLink (made two-way on load).",
+    "Jump gates spawn automatically in each sector's level for its gates + laneGates; fly through one to travel.",
     "A level can also join a sector by placing an ASpaceSectorMap and setting its SectorId."
   ],
   "startSystem": "adastrea",
@@ -66,7 +68,8 @@
           "level": "/Game/Maps/MiningTest",
           "orbitRadius": 0.6,
           "orbitAngle": 290,
-          "gates": ["adastrea_relay"]
+          "gates": ["adastrea_relay"],
+          "laneGates": ["varos_gauntlet"]
         },
         {
           "id": "adastrea_relay",
@@ -78,7 +81,8 @@
           "level": "",
           "orbitRadius": 0.92,
           "orbitAngle": 350,
-          "gates": []
+          "gates": [],
+          "laneGates": ["kestrel_port"]
         }
       ]
     },

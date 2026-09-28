@@ -113,9 +113,9 @@ namespace
 					Sys.Sectors.Num(), Sys.NumBuiltSectors(), Sys.JumpLinks.Num());
 				for (const FGalaxySectorDef& Sec : Sys.Sectors)
 				{
-					UE_LOG(LogAdastrea, Log, TEXT("    %s '%s' %s level=%s gates=%d"),
+					UE_LOG(LogAdastrea, Log, TEXT("    %s '%s' %s level=%s gates=%d laneGates=%d"),
 						*Sec.Id.ToString(), *Sec.Name.ToString(), *Sec.Type,
-						Sec.HasLevel() ? *Sec.Level : TEXT("(planned)"), Sec.Gates.Num());
+						Sec.HasLevel() ? *Sec.Level : TEXT("(planned)"), Sec.Gates.Num(), Sec.LaneGates.Num());
 				}
 			}
 		}));
@@ -249,6 +249,7 @@ bool UGalaxySubsystem::LoadFromFile(const FString& Path, FString& OutError)
 				Sec.OrbitRadius = FMath::Clamp(JsonNumber(SecObj, TEXT("orbitRadius"), 0.5f), 0.1f, 1.0f);
 				Sec.OrbitAngle = JsonNumber(SecObj, TEXT("orbitAngle"), 0.0f);
 				Sec.Gates = JsonNameArray(SecObj, TEXT("gates"));
+				Sec.LaneGates = JsonNameArray(SecObj, TEXT("laneGates"));
 				Sys.Sectors.Add(MoveTemp(Sec));
 			}
 		}
@@ -392,6 +393,37 @@ void UGalaxySubsystem::FinalizeGalaxy()
 			for (const FName Gate : TArray<FName>(Sys.Sectors[SecIdx].Gates))
 			{
 				Sys.Sectors[SectorIndex[Gate].Value].Gates.AddUnique(Sys.Sectors[SecIdx].Id);
+			}
+		}
+	}
+
+	// Lane gates: to a sector in a lane-linked system only, two-way.
+	for (FStarSystemDef& Sys : Systems)
+	{
+		for (FGalaxySectorDef& Sec : Sys.Sectors)
+		{
+			Sec.LaneGates.RemoveAll([&](FName Gate)
+			{
+				const TPair<int32, int32>* Where = SectorIndex.Find(Gate);
+				const bool bBad = !Where || Systems[Where->Key].Id == Sys.Id || !Sys.JumpLinks.Contains(Systems[Where->Key].Id);
+				if (bBad)
+				{
+					UE_LOG(LogAdastrea, Warning, TEXT("Galaxy: sector '%s' lane gate to '%s' dropped (unknown, same system, or no jump lane between the systems)"),
+						*Sec.Id.ToString(), *Gate.ToString());
+				}
+				return bBad;
+			});
+		}
+	}
+	for (int32 SysIdx = 0; SysIdx < Systems.Num(); ++SysIdx)
+	{
+		for (int32 SecIdx = 0; SecIdx < Systems[SysIdx].Sectors.Num(); ++SecIdx)
+		{
+			const FName FromId = Systems[SysIdx].Sectors[SecIdx].Id;
+			for (const FName Gate : TArray<FName>(Systems[SysIdx].Sectors[SecIdx].LaneGates))
+			{
+				const TPair<int32, int32> Where = SectorIndex[Gate];
+				Systems[Where.Key].Sectors[Where.Value].LaneGates.AddUnique(FromId);
 			}
 		}
 	}
