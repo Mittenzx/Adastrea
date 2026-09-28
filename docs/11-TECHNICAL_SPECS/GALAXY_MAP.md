@@ -10,6 +10,21 @@ The full-screen map (**M** while flying) has three layers:
 
 You can also click the tabs at the top. On the System and Universe layers: click to select, click again (or press **Enter**) to open the selection, and press **Backspace** to go up a layer. Clicking a rim arrow on the System layer switches to that neighbouring system.
 
+### Sector layer
+
+- **Click an object** (station, ship, jump gate or asteroid) to target it. Hover shows its name, type and range.
+- The info panel on the right shows the sector's type, security, faction and system, what's in it, your current target (range, and height above or below you), and the sector's jump gates, nearest first.
+- Your marker points along your ship's heading. Objects above or below the grid plane have a faint stem down to it.
+- Gates and your target that are outside the view get a marker on the edge of the view with their distance.
+- Labels that would overlap are moved or hidden; hover an icon to see its name.
+- `[1]` / `[2]` show or hide ships / stations. The grid spacing is shown bottom-left.
+
+### Routes
+
+- **System layer:** selecting a sector draws the gate route from your sector to it in green, with arrows, including the lane exit when the route leaves or enters the system. The panel lists the jumps.
+- **Universe layer:** selecting a system draws the jump-lane route from your system to it, and the panel shows the number of lane jumps.
+- For scripted checks: `adastrea.Map system <sectorId>` selects a sector, and `adastrea.Map universe <systemId>` selects a system.
+
 ## Jump gates (travel)
 
 Every sector's level gets a jump gate for each entry in its `gates` and `laneGates`. The gates are spawned when the level starts (`UJumpGateWorldSubsystem`), so maps need no edits.

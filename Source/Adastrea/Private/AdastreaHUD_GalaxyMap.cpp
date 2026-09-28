@@ -6,6 +6,7 @@
 
 #include "AdastreaHUD.h"
 #include "AdastreaHUDStyle.h"
+#include "AdastreaHUD_MapStyle.h"
 #include "Universe/GalaxySubsystem.h"
 #include "Universe/JumpGate.h"
 #include "Ships/Spaceship.h"
@@ -24,57 +25,6 @@
 
 namespace GalaxyMap
 {
-	// Shared layout (matches the Sector view's box in DrawSectorMap).
-	constexpr float Margin = 40.0f;
-	constexpr float HeaderH = 30.0f;
-	constexpr float FooterH = 70.0f;
-	constexpr float PanelW = 340.0f;
-	constexpr float PanelGap = 12.0f;
-
-	const FLinearColor Backdrop(0.008f, 0.012f, 0.02f, 1.0f);
-	const FLinearColor BoxFill(0.03f, 0.05f, 0.07f, 0.9f);
-	const FLinearColor BoxEdge(0.10f, 0.55f, 0.60f, 0.9f);
-	const FLinearColor Title(0.6f, 0.9f, 1.0f, 1.0f);
-	const FLinearColor Body(0.78f, 0.86f, 0.92f, 1.0f);
-	const FLinearColor Dim(0.5f, 0.6f, 0.68f, 0.9f);
-	const FLinearColor Help(0.6f, 0.7f, 0.8f, 0.9f);
-	const FLinearColor You(0.15f, 0.95f, 0.6f, 1.0f);
-	const FLinearColor Built(0.25f, 0.88f, 0.82f, 1.0f);
-	const FLinearColor Planned(0.5f, 0.56f, 0.62f, 1.0f);
-	const FLinearColor Gate(0.95f, 0.72f, 0.3f, 0.6f);
-	const FLinearColor Lane(0.35f, 0.6f, 0.72f, 0.55f);
-	const FLinearColor LaneHot(0.55f, 0.9f, 1.0f, 0.95f);
-	const FLinearColor Select(1.0f, 1.0f, 1.0f, 0.95f);
-
-	struct FLayout
-	{
-		float VW = 0, VH = 0;
-		float BoxX = 0, BoxY = 0, BoxW = 0, BoxH = 0;
-		float AreaX = 0, AreaW = 0;              // map drawing area (left of the panel)
-		float PanelX = 0, PanelY = 0, PanelH = 0, PanelWidth = 0;
-	};
-
-	FLayout MakeLayout(const UCanvas* Canvas, APlayerController* PC)
-	{
-		FLayout L;
-		int32 VX = 0, VY = 0;
-		PC->GetViewportSize(VX, VY);
-		// Canvas size, not viewport size: they differ for high-res screenshots.
-		L.VW = Canvas ? Canvas->ClipX : (float)VX;
-		L.VH = Canvas ? Canvas->ClipY : (float)VY;
-		L.BoxX = Margin;
-		L.BoxY = Margin + HeaderH;
-		L.BoxW = FMath::Max(L.VW - Margin * 2.0f, 200.0f);
-		L.BoxH = FMath::Max(L.VH - Margin * 2.0f - FooterH, 200.0f);
-		L.PanelWidth = FMath::Min(PanelW, L.BoxW * 0.4f);
-		L.PanelX = L.BoxX + L.BoxW - L.PanelWidth - PanelGap;
-		L.PanelY = L.BoxY + PanelGap;
-		L.PanelH = L.BoxH - PanelGap * 2.0f;
-		L.AreaX = L.BoxX;
-		L.AreaW = L.PanelX - L.BoxX - PanelGap;
-		return L;
-	}
-
 	bool GetMouse(APlayerController* PC, FVector2D& Out)
 	{
 		float X = 0, Y = 0;
@@ -115,10 +65,60 @@ namespace GalaxyMap
 		return Names.Num() ? FString::Join(Names, TEXT(", ")) : FString(TEXT("none"));
 	}
 
+	/** Shortest jump-lane path From -> To over star systems, both ends included (empty if unreachable). */
+	TArray<FName> FindSystemRoute(const UGalaxySubsystem* Galaxy, FName From, FName To)
+	{
+		TArray<FName> Path;
+		if (!Galaxy || !Galaxy->FindSystem(From) || !Galaxy->FindSystem(To))
+		{
+			return Path;
+		}
+		TMap<FName, FName> Prev;
+		Prev.Add(From, NAME_None);
+		TArray<FName> Queue;
+		Queue.Add(From);
+		for (int32 i = 0; i < Queue.Num() && !Prev.Contains(To); ++i)
+		{
+			const FStarSystemDef* Sys = Galaxy->FindSystem(Queue[i]);
+			for (const FName Next : Sys ? Sys->JumpLinks : TArray<FName>())
+			{
+				if (!Prev.Contains(Next) && Galaxy->FindSystem(Next))
+				{
+					Prev.Add(Next, Queue[i]);
+					Queue.Add(Next);
+				}
+			}
+		}
+		if (Prev.Contains(To))
+		{
+			for (FName Id = To; !Id.IsNone(); Id = Prev[Id])
+			{
+				Path.Insert(Id, 0);
+			}
+		}
+		return Path;
+	}
+
+	/** A thick route segment with a chevron at its middle pointing A -> B. */
+	void DrawRouteSegment(AHUD* HUD, const FVector2D& A, const FVector2D& B)
+	{
+		HUD->DrawLine(A.X, A.Y, B.X, B.Y, Route, 3.0f);
+		const FVector2D Dir = (B - A).GetSafeNormal();
+		if (Dir.IsNearlyZero() || FVector2D::Distance(A, B) < 40.0f)
+		{
+			return;
+		}
+		const FVector2D M = (A + B) * 0.5f + Dir * 5.0f;
+		const FVector2D Perp(-Dir.Y, Dir.X);
+		const FVector2D Back = M - Dir * 9.0f;
+		HUD->DrawLine(M.X, M.Y, Back.X + Perp.X * 7.0f, Back.Y + Perp.Y * 7.0f, Route, 3.0f);
+		HUD->DrawLine(M.X, M.Y, Back.X - Perp.X * 7.0f, Back.Y - Perp.Y * 7.0f, Route, 3.0f);
+	}
+
 	// adastrea.Map [sector|system|universe|off]: open the map on a layer (for scripted checks / screenshots).
 	static FAutoConsoleCommandWithWorldAndArgs GMapViewCmd(
 		TEXT("adastrea.Map"),
-		TEXT("Open the full-screen map on a layer: adastrea.Map sector|system|universe|off"),
+		TEXT("Open the full-screen map on a layer: adastrea.Map sector|system|universe|off [sectorId on system | systemId on universe]"),
 		FConsoleCommandWithWorldAndArgsDelegate::CreateLambda([](const TArray<FString>& Args, UWorld* World)
 		{
 			APlayerController* PC = World ? World->GetFirstPlayerController() : nullptr;
@@ -134,6 +134,22 @@ namespace GalaxyMap
 				return;
 			}
 			HUD->SetMapVisible(true);
+			// Optional second arg selects something: a sector id on the System layer
+			// (shows the route to it), a system id on the Universe layer.
+			const FName SelectId = Args.Num() > 1 ? FName(*Args[1]) : NAME_None;
+			const UGalaxySubsystem* Galaxy = UGalaxySubsystem::Get(World);
+			if (Arg == TEXT("system"))
+			{
+				if (const FGalaxySectorDef* Sel = Galaxy ? Galaxy->FindSector(SelectId) : nullptr)
+				{
+					HUD->MapSystemId = Sel->SystemId;
+					HUD->MapSelectedSectorId = SelectId;
+				}
+			}
+			else if (Arg != TEXT("sector") && Galaxy && Galaxy->FindSystem(SelectId))
+			{
+				HUD->MapSelectedSystemId = SelectId;
+			}
 			HUD->SetMapView(Arg == TEXT("sector") ? EAdastreaMapView::Sector
 				: Arg == TEXT("system") ? EAdastreaMapView::System : EAdastreaMapView::Universe);
 		}));
@@ -610,6 +626,41 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 		}
 	}
 
+	// ---- Plotted route: your sector -> the selected one (through lane exits when it leaves the system) ----
+	if (!CurrentSectorId.IsNone() && !MapSelectedSectorId.IsNone() && MapSelectedSectorId != CurrentSectorId)
+	{
+		TArray<FName> Path = Galaxy->FindRoute(CurrentSectorId, MapSelectedSectorId);
+		if (Path.Num())
+		{
+			Path.Insert(CurrentSectorId, 0);
+		}
+		for (int32 i = 0; i + 1 < Path.Num(); ++i)
+		{
+			const FGalaxySectorDef* From = Galaxy->FindSector(Path[i]);
+			const FGalaxySectorDef* To = Galaxy->FindSector(Path[i + 1]);
+			if (!From || !To)
+			{
+				continue;
+			}
+			const bool bFromHere = From->SystemId == Sys->Id;
+			const bool bToHere = To->SystemId == Sys->Id;
+			const FVector2D* FromExit = LaneExitBase.Find(From->SystemId);
+			const FVector2D* ToExit = LaneExitBase.Find(To->SystemId);
+			if (bFromHere && bToHere)
+			{
+				DrawRouteSegment(this, SectorPos(*From), SectorPos(*To));
+			}
+			else if (bFromHere && ToExit)
+			{
+				DrawRouteSegment(this, SectorPos(*From), *ToExit);
+			}
+			else if (bToHere && FromExit)
+			{
+				DrawRouteSegment(this, *FromExit, SectorPos(*To));
+			}
+		}
+	}
+
 	// ---- Sectors ----
 	for (const FGalaxySectorDef& S : Sys->Sectors)
 	{
@@ -713,11 +764,11 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 			else if (!CurrentSectorId.IsNone())
 			{
 				// Gate route from the player's sector.
-				const TArray<FName> Route = Galaxy->FindRoute(CurrentSectorId, Sel->Id);
-				if (Route.Num())
+				const TArray<FName> SectorRoute = Galaxy->FindRoute(CurrentSectorId, Sel->Id);
+				if (SectorRoute.Num())
 				{
-					Y = DrawWrappedText(FString::Printf(TEXT("Route (%d jump%s)  %s"), Route.Num(), Route.Num() == 1 ? TEXT("") : TEXT("s"),
-						*JoinSectorNames(Galaxy, Route).Replace(TEXT(", "), TEXT(" > "))), FLinearColor(0.8f, 0.65f, 1.0f, 1.0f), TX, Y, TW, HudType::Font(), HudType::Caption);
+					Y = DrawWrappedText(FString::Printf(TEXT("Route (%d jump%s)  %s"), SectorRoute.Num(), SectorRoute.Num() == 1 ? TEXT("") : TEXT("s"),
+						*JoinSectorNames(Galaxy, SectorRoute).Replace(TEXT(", "), TEXT(" > "))), GalaxyMap::Route, TX, Y, TW, HudType::Font(), HudType::Caption);
 					if (!bBuilt)
 					{
 						Y = DrawWrappedText(TEXT("Its gate is offline until the sector has a level."), Dim, TX, Y, TW, HudType::Font(), HudType::Caption);
@@ -735,7 +786,7 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 		}
 
 		// Legend (panel bottom).
-		const float LY = L.PanelY + L.PanelH - 96.0f;
+		const float LY = L.PanelY + L.PanelH - 114.0f;
 		DrawRect(FLinearColor(0.2f, 0.4f, 0.5f, 0.5f), TX, LY - 8.0f, TW, 1.0f);
 		DrawCircleOutline(TX + 6.0f, LY + 6.0f, 6.0f, Built, 2.0f, 6); DrawFilledDisc(TX + 6.0f, LY + 6.0f, 2.5f, Built);
 		DrawText(TEXT("Sector with a level"), Body, TX + 20.0f, LY, HudType::Font(), HudType::Caption);
@@ -747,6 +798,8 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 		DrawText(TEXT("Your sector"), Body, TX + 20.0f, LY + 54.0f, HudType::Font(), HudType::Caption);
 		DrawLine(TX, LY + 78.0f, TX + 13.0f, LY + 78.0f, FLinearColor(0.7f, 0.5f, 1.0f, 0.9f), 2.0f);
 		DrawText(TEXT("Lane gate (to another system)"), Body, TX + 20.0f, LY + 72.0f, HudType::Font(), HudType::Caption);
+		DrawLine(TX, LY + 96.0f, TX + 13.0f, LY + 96.0f, Route, 3.0f);
+		DrawText(TEXT("Route to the selected sector"), Body, TX + 20.0f, LY + 90.0f, HudType::Font(), HudType::Caption);
 	}
 
 	DrawMapHeader(PC, L.VW, TEXT("SYSTEM MAP"), FString::Printf(TEXT("Universe  >  %s"), *Sys->Name.ToString()));
@@ -843,6 +896,19 @@ void AAdastreaHUD::DrawUniverseMap(APlayerController* PC)
 		}
 	}
 
+	// ---- Plotted route: your system -> the selected one ----
+	const TArray<FName> SystemRoute = MapSelectedSystemId != CurrentSystemId
+		? FindSystemRoute(Galaxy, CurrentSystemId, MapSelectedSystemId) : TArray<FName>();
+	for (int32 i = 0; i + 1 < SystemRoute.Num(); ++i)
+	{
+		const FStarSystemDef* From = Galaxy->FindSystem(SystemRoute[i]);
+		const FStarSystemDef* To = Galaxy->FindSystem(SystemRoute[i + 1]);
+		if (From && To)
+		{
+			DrawRouteSegment(this, ToScreen(From->Position), ToScreen(To->Position));
+		}
+	}
+
 	// ---- Systems ----
 	for (const FStarSystemDef& S : Systems)
 	{
@@ -871,14 +937,17 @@ void AAdastreaHUD::DrawUniverseMap(APlayerController* PC)
 		}
 
 		const FString Name = S.Name.ToString().ToUpper();
-		float TW = 0, TH = 0;
-		GetTextSize(Name, TW, TH, HudType::Font(), HudType::Label);
-		DrawText(Name, (bHover || bSelected) ? FLinearColor::White : Body, P.X - TW * 0.5f, P.Y + CoreR + 24.0f, HudType::Font(), HudType::Label);
 		const FString Sub = S.Sectors.Num()
-			? FString::Printf(TEXT("%d sectors, %d built"), S.Sectors.Num(), S.NumBuiltSectors())
+			? FString::Printf(TEXT("%d sector%s, %d built"), S.Sectors.Num(), S.Sectors.Num() == 1 ? TEXT("") : TEXT("s"), S.NumBuiltSectors())
 			: FString(TEXT("uncharted"));
-		GetTextSize(Sub, TW, TH, HudType::Font(), HudType::Caption);
-		DrawText(Sub, Dim, P.X - TW * 0.5f, P.Y + CoreR + 39.0f, HudType::Font(), HudType::Caption);
+		float TW = 0, TH = 0, SW = 0, SH = 0;
+		GetTextSize(Name, TW, TH, HudType::Font(), HudType::Label);
+		GetTextSize(Sub, SW, SH, HudType::Font(), HudType::Caption);
+		// Backing plate so jump lanes don't run through the label.
+		const float PlateW = FMath::Max(TW, SW) + 8.0f;
+		DrawRect(BoxFill, P.X - PlateW * 0.5f, P.Y + CoreR + 23.0f, PlateW, 15.0f + SH + 2.0f);
+		DrawText(Name, (bHover || bSelected) ? FLinearColor::White : Body, P.X - TW * 0.5f, P.Y + CoreR + 24.0f, HudType::Font(), HudType::Label);
+		DrawText(Sub, Dim, P.X - SW * 0.5f, P.Y + CoreR + 39.0f, HudType::Font(), HudType::Caption);
 
 		const float HitR = FMath::Max(CoreR + 6.0f, 14.0f);
 		AddMapHit(P.X - HitR, P.Y - HitR, HitR * 2.0f, HitR * 2.0f, EMapHitKind::System, S.Id);
@@ -899,6 +968,16 @@ void AAdastreaHUD::DrawUniverseMap(APlayerController* PC)
 				{
 					DrawText(FString::Printf(TEXT("Distance  %.1f ly"), FVector2D::Distance(Here->Position, Sel->Position)), Body, TX, Y, HudType::Font(), HudType::Label);
 					Y += 16.0f;
+					if (SystemRoute.Num() > 1)
+					{
+						const int32 Jumps = SystemRoute.Num() - 1;
+						Y = DrawWrappedText(FString::Printf(TEXT("Route (%d lane jump%s)  %s"), Jumps, Jumps == 1 ? TEXT("") : TEXT("s"),
+							*JoinSystemNames(Galaxy, SystemRoute).Replace(TEXT(", "), TEXT(" > "))), Route, TX, Y, TW, HudType::Font(), HudType::Label);
+					}
+					else
+					{
+						Y = DrawWrappedText(TEXT("No jump-lane route from your system."), FLinearColor(0.95f, 0.7f, 0.35f, 1.0f), TX, Y, TW, HudType::Font(), HudType::Label);
+					}
 				}
 			}
 			Y = DrawWrappedText(FString::Printf(TEXT("Jump lanes  %s"), *JoinSystemNames(Galaxy, Sel->JumpLinks)), Body, TX, Y, TW, HudType::Font(), HudType::Label);

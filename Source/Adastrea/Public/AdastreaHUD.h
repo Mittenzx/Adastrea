@@ -170,6 +170,12 @@ public:
 	/** Star system the player is in (falls back to the galaxy's start system). */
 	FName GetMapCurrentSystemId() const;
 
+	/**
+	 * The station, ship, jump gate or asteroid drawn nearest ScreenPos on the Sector map
+	 * last frame, within Radius pixels (nullptr if none). Used for map click targeting.
+	 */
+	AActor* PickSectorMapActor(const FVector2D& ScreenPos, float Radius = 18.0f) const;
+
 	/** Hide the ship's UMG widgets (HUD widget, docking prompt) while the map is open; restore them after. */
 	void SyncShipWidgetsForMap(APlayerController* PC);
 
@@ -422,6 +428,14 @@ private:
 		EAdastreaMapView View = EAdastreaMapView::Sector;
 	};
 	TArray<FMapHitRect> MapHitRects;
+
+	/** Where each Sector-map object was drawn this frame (for hover and click picking). */
+	struct FSectorMapPick
+	{
+		FVector2D Screen;
+		TWeakObjectPtr<AActor> Actor;
+	};
+	TArray<FSectorMapPick> SectorMapPicks;
 
 	/** Widgets hidden by SyncShipWidgetsForMap, with the ESlateVisibility to restore. */
 	TMap<TWeakObjectPtr<class UUserWidget>, uint8> WidgetsHiddenForMap;
