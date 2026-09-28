@@ -36,6 +36,8 @@
 #include "Audio/AudioCatalogSubsystem.h"
 #include "Audio/AudioEventLibrary.h"
 #include "Universe/GalaxySubsystem.h"
+#include "Universe/JumpGate.h"
+#include "EngineUtils.h"
 
 // Palette (subtle sci-fi, on-brand for a teal/cyan accent theme)
 static const FLinearColor kBg      (0.02f, 0.03f, 0.05f, 0.72f); // deep space panel
@@ -55,6 +57,10 @@ static FString HudActorName(const AActor* Actor)
 	if (!Actor)
 	{
 		return FString();
+	}
+	if (const AJumpGate* Gate = Cast<AJumpGate>(Actor))
+	{
+		return Gate->GetDisplayName();
 	}
 #if WITH_EDITOR
 	return Actor->GetActorLabel();
@@ -127,6 +133,8 @@ void AAdastreaHUD::DrawHUD()
 	{
 		return;
 	}
+
+	SyncShipWidgetsForMap(PC);
 
 	// Full-screen sector map (toggled by M) draws over everything.
 		if (bShowMap)
@@ -266,6 +274,9 @@ void AAdastreaHUD::DrawHUD()
 		// Mining panel stacks under the telemetry panel (hidden unless an asteroid is locked).
 		DrawMiningHUD(PC, Ship, DrawTelemetryPanel(Ship) + 12.0f);
 	}
+
+	// ---- Jump gates: world markers + approach prompt ----
+	DrawJumpGateMarkers(PC, Ship);
 
 	const FVector P = Ship->GetActorLocation();
 	UFont* TitleFont = GEngine->GetLargeFont();
@@ -805,6 +816,21 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 			DrawShipIcon(SP.X, SP.Y, 6.0f, FLinearColor(0.3f, 0.8f, 0.9f, 1.0f), 2.0f);
 			DrawText(HudActorName(A), FLinearColor(0.6f, 0.85f, 0.95f, 1.0f), SP.X + 8.0f, SP.Y - 6.0f, MiniFont, 0.55f);
 		}
+	}
+
+	// Jump gates: violet ring + destination (always shown; they're how you leave the sector)
+	for (TActorIterator<AJumpGate> It(World); It; ++It)
+	{
+		FVector2D SP;
+		if (!Project(It->GetActorLocation(), SP)) continue;
+		const FLinearColor GateCol = It->IsOnline() ? FLinearColor(0.7f, 0.5f, 1.0f, 1.0f) : FLinearColor(1.0f, 0.62f, 0.2f, 1.0f);
+		const float GR = 8.0f;
+		for (int32 Seg = 0; Seg < 12; ++Seg)
+		{
+			const float A0 = 2.0f * PI * Seg / 12.0f, A1 = 2.0f * PI * (Seg + 1) / 12.0f;
+			DrawLine(SP.X + FMath::Cos(A0) * GR, SP.Y + FMath::Sin(A0) * GR, SP.X + FMath::Cos(A1) * GR, SP.Y + FMath::Sin(A1) * GR, GateCol, 2.0f);
+		}
+		DrawText(It->GetDisplayName(), GateCol, SP.X + 11.0f, SP.Y - 6.0f, MiniFont, 0.6f);
 	}
 
 	// ---- Player marker (bright teal arrow, "YOU") ----

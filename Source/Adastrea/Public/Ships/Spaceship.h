@@ -529,6 +529,9 @@ public:
     UFUNCTION(BlueprintPure, Category="Docking")
     bool IsDocked() const { return bIsDocked; }
 
+    /** The docking prompt widget, if one is showing (the map hides it while open). */
+    UUserWidget* GetDockingPromptWidget() const { return DockingPromptWidget; }
+
     /**
      * Check if ship is in docking sequence
      * @return True if ship is actively moving to docking point
