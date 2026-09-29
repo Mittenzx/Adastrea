@@ -31,6 +31,11 @@ enum class EShipInteriorFamily : uint8
      * Viewport/Lights/Hatch). Appended so existing serialized values keep. */
     BattleshipBridge,
     CommandXLBridge,
+    /** Full walkable Battleship deck (SM_Int_Battleship_Decks_*, Tools/
+     * build_battleship_decks.py): CIC, spine corridor, six crew rooms, hangar and
+     * engineering. Mounted at real scale (not squeezed to one room), walked on its
+     * own collision mesh, lit and entered via sockets on the Shell mesh. */
+    BattleshipDecks,
 };
 
 /**
@@ -108,6 +113,38 @@ public:
                                                  * far world coordinates that have no scene lights. */
                                                 void SetupInteriorLighting();
 
+                /** Turn the full-deck walk collision on (entering) or off (leaving), so the
+                 * deck-sized collider never sits around the ship while it flies. No-op for
+                 * the single-room kits, which have no walk-collision part. */
+                void SetWalkCollisionEnabled(bool bEnabled);
+
+                /** Max ledge (cm) the on-foot avatar steps up onto while walking this interior
+                 * (stairs, dais steps). 0 = flat-floor kits, where nothing should be climbable. */
+                UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
+                float WalkStepHeight = 0.0f;
+
+                protected:
+                        /** Full-deck kits: read Entry/Seat sockets from the shell mesh and place the
+                         * avatar spawn, exit trigger and seat prompt there. */
+                        void ApplyDeckSockets(float Scale);
+
+                        /** Full-deck kits: one point light per L_<Colour>_<RadiusM>_<N> socket
+                         * (LS_ = casts shadows) on the shell mesh. */
+                        void SpawnSocketLights();
+
+                        /** Family this interior was last configured with. */
+                        EShipInteriorFamily ConfiguredFamily = EShipInteriorFamily::None;
+
+                        /** Runtime scale of the mounted kit (full decks are 0.01: meshes are 100x). */
+                        float KitScale = 1.0f;
+
+                        /** Hidden walk-collision part of a full-deck kit (Pawn-blocking, complex-as-simple). */
+                        UPROPERTY(Transient)
+                        TObjectPtr<class UStaticMeshComponent> WalkCollision;
+
+                        UPROPERTY(Transient)
+                        TArray<TObjectPtr<class UPointLightComponent>> SocketLights;
+
                 protected:
                         /** Re-point the exported mesh's world-grid material slots to the authored
                          * M_Int_* kit materials so the interior reads as a designed room. */
@@ -116,7 +153,7 @@ public:
                 protected:
                         /** Mount a companion part mesh (Console/Deck/Lights/...) co-located with the
                          * shell, scaled identically, hidden until reveal. Attaches to SceneRoot. */
-                        void MountInteriorPart(const FString& PartPath, const FVector& Scale3D);
+                        class UStaticMeshComponent* MountInteriorPart(const FString& PartPath, const FVector& Scale3D);
 
                         /** Mount all sibling part meshes for the given shell family + prefix. */
                         void MountInteriorParts(FString Prefix, FString Family, const FVector& Scale3D);

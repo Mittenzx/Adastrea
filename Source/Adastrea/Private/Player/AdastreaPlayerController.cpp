@@ -2524,6 +2524,7 @@ void AAdastreaPlayerController::ExitShipInterior(ASpaceship* Ship)
 	if (Interior)
 	{
 		// Bring the interior back from its walk pocket and re-attach it (see EnterShipInterior).
+		Interior->SetWalkCollisionEnabled(false);
 		Interior->AttachToActor(Ship, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	}
 
