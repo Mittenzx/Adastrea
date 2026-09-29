@@ -2555,6 +2555,7 @@ void AAdastreaPlayerController::ExitShipInterior(ASpaceship* Ship)
 	if (Interior)
 	{
 		// Bring the interior back from its walk pocket (see EnterShipInterior).
+		Interior->SetWalkCollisionEnabled(false);
 		Interior->SetActorRelativeLocation(FVector::ZeroVector);
 	}
 

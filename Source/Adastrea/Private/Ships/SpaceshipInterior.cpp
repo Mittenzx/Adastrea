@@ -10,6 +10,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "Engine/Scene.h" // ELightUnits (full enum def, LightComponent.h only forward-declares it)
 #include "Engine/StaticMesh.h"
+#include "Engine/StaticMeshSocket.h"
+#include "Engine/CollisionProfile.h"
 #include "Engine/PointLight.h"
 #include "Engine/World.h"
 #include "Materials/MaterialInterface.h"
@@ -162,9 +164,23 @@ void ASpaceshipInterior::OnExitTriggerOverlap(UPrimitiveComponent* OverlappedCom
         // cockpit seat, so without this grace it bounces straight back to the ship.
         if (EntranceWorldTime > 0.0f && GetWorld()->GetTimeSeconds() - EntranceWorldTime < ExitTriggerGracePeriod)
         {
+            const float Remaining = ExitTriggerGracePeriod - (GetWorld()->GetTimeSeconds() - EntranceWorldTime);
             UE_LOG(LogAdastrea, Log,
-                TEXT("InteriorExitTrigger: ignoring spawn overlap (%.1fs < grace %.1fs)"),
+                TEXT("InteriorExitTrigger: ignoring spawn overlap (%.1fs < grace %.1fs), rechecking when it ends"),
                 GetWorld()->GetTimeSeconds() - EntranceWorldTime, ExitTriggerGracePeriod);
+            // An avatar that reaches the seat inside the grace window and stays there
+            // gets no second BeginOverlap, so look again once the grace is over (the
+            // walked-away-from-entry check below still applies).
+            TWeakObjectPtr<ASpaceshipAvatar> WeakAvatar(Avatar);
+            FTimerHandle Recheck;
+            GetWorldTimerManager().SetTimer(Recheck, FTimerDelegate::CreateWeakLambda(this, [this, WeakAvatar]()
+            {
+                ASpaceshipAvatar* A = WeakAvatar.Get();
+                if (A && ExitTrigger && ExitTrigger->IsOverlappingActor(A))
+                {
+                    OnExitTriggerOverlap(ExitTrigger, A, nullptr, 0, false, FHitResult());
+                }
+            }), Remaining + 0.05f, false);
             return;
         }
 
@@ -259,10 +275,34 @@ void ASpaceshipInterior::ConfigureInterior(UStaticMesh* ShellMesh, EShipInterior
     // human-scale (~192 units tall). If left at raw scale, the walk volume
     // becomes a gigantic void. Scale the mesh so its shell radius maps to a
     // comfortable room (~650 units ~ a few metres across for a 1.9m avatar).
+    // Full-deck kits are NOT normalized: they are authored at real size (100x in the
+    // FBX like every SM_Int_* kit), so a fixed 0.01 gives 1 design cm = 1 uu.
+    const bool bFullDeck = (Family == EShipInteriorFamily::BattleshipDecks);
+    ConfiguredFamily = Family;
+    WalkStepHeight = bFullDeck ? 45.0f : 0.0f;
+    WalkCollision = nullptr;
+    for (TObjectPtr<UPointLightComponent> L : SocketLights)
+    {
+        if (L)
+        {
+            L->DestroyComponent();
+        }
+    }
+    SocketLights.Empty();
+
     const float TargetRadius = 650.0f;
         const FBoxSphereBounds RawBounds = Mesh->GetBounds();
         float Scale = 1.0f;
-        if (RawBounds.SphereRadius > 1.0f)
+        if (bFullDeck)
+        {
+            Scale = 0.01f;
+            InteriorMesh->SetRelativeScale3D(FVector(Scale));
+            // The shell's auto-generated hull would be a ~120 m convex blob around
+            // the ship while it flies; the deck walks on its own Collision part.
+            InteriorMesh->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
+            InteriorMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        }
+        else if (RawBounds.SphereRadius > 1.0f)
         {
             Scale = TargetRadius / RawBounds.SphereRadius;
             InteriorMesh->SetRelativeScale3D(FVector(Scale, Scale, Scale));
@@ -301,6 +341,10 @@ void ASpaceshipInterior::ConfigureInterior(UStaticMesh* ShellMesh, EShipInterior
             case EShipInteriorFamily::CommandXLBridge:
                 Prefix = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_CommandXL_Bridge");
                 FamilyString = TEXT("CommandXLBridge");
+                break;
+            case EShipInteriorFamily::BattleshipDecks:
+                Prefix = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_Battleship_Decks");
+                FamilyString = TEXT("BattleshipDecks");
                 break;
             case EShipInteriorFamily::CrewQuarters:
                 Prefix = TEXT("/AdastreaShips/Meshes/Interiors/SM_Int_Freighter_CrewQuarters");
@@ -350,6 +394,11 @@ void ASpaceshipInterior::ConfigureInterior(UStaticMesh* ShellMesh, EShipInterior
                 MountInteriorParts(Prefix, FamilyString, Scale3D);
             }
         }
+        KitScale = Scale;
+        if (bFullDeck)
+        {
+            ApplyDeckSockets(Scale);
+        }
 
         // Hidden until the player enters unless asked to show now.
         InteriorMesh->SetHiddenInGame(!bShowNow);
@@ -371,7 +420,97 @@ void ASpaceshipInterior::RevealInterior()
         }
     }
     SetActorHiddenInGame(false);
+    SetWalkCollisionEnabled(true);
     SetupInteriorLighting();
+}
+
+void ASpaceshipInterior::SetWalkCollisionEnabled(bool bEnabled)
+{
+    if (WalkCollision)
+    {
+        WalkCollision->SetCollisionEnabled(bEnabled ? ECollisionEnabled::QueryOnly : ECollisionEnabled::NoCollision);
+    }
+}
+
+void ASpaceshipInterior::ApplyDeckSockets(float Scale)
+{
+    UStaticMesh* Mesh = InteriorMesh ? InteriorMesh->GetStaticMesh() : nullptr;
+    if (!Mesh)
+    {
+        return;
+    }
+    // Socket locations are in mesh space (100x); the component only carries scale.
+    if (const UStaticMeshSocket* Entry = Mesh->FindSocket(TEXT("Entry")))
+    {
+        EntryLocation = Entry->RelativeLocation * Scale;
+        EntryRotation = FRotator(0.0f, Entry->RelativeRotation.Yaw, 0.0f);
+    }
+    if (const UStaticMeshSocket* Seat = Mesh->FindSocket(TEXT("Seat")))
+    {
+        const FVector SeatLocal = Seat->RelativeLocation * Scale;
+        if (ExitTrigger)
+        {
+            ExitTrigger->SetRelativeLocation(SeatLocal);
+        }
+        if (SeatInteractable)
+        {
+            SeatInteractable->InteractionPointOffset = SeatLocal;
+        }
+    }
+    else
+    {
+        UE_LOG(LogAdastrea, Warning, TEXT("Interior %s: full-deck shell %s has no Seat socket (run Tools/import_battleship_decks.py)."),
+            *GetName(), *Mesh->GetName());
+    }
+    UE_LOG(LogAdastrea, Log, TEXT("Interior %s deck sockets: entry=(%s) yaw=%.0f"),
+        *GetName(), *EntryLocation.ToString(), EntryRotation.Yaw);
+}
+
+void ASpaceshipInterior::SpawnSocketLights()
+{
+    UStaticMesh* Mesh = InteriorMesh ? InteriorMesh->GetStaticMesh() : nullptr;
+    if (!Mesh || SocketLights.Num() > 0)
+    {
+        return;
+    }
+    // L_<Colour>_<RadiusM>_<N>; LS_ casts shadows. Intensity grows with the
+    // radius squared so a 16 m hangar flood reads as bright as a 7 m corridor tube.
+    for (const UStaticMeshSocket* Socket : Mesh->Sockets)
+    {
+        if (!Socket)
+        {
+            continue;
+        }
+        TArray<FString> Bits;
+        Socket->SocketName.ToString().ParseIntoArray(Bits, TEXT("_"));
+        if (Bits.Num() < 3 || (Bits[0] != TEXT("L") && Bits[0] != TEXT("LS")))
+        {
+            continue;
+        }
+        FLinearColor Colour(0.82f, 0.9f, 1.0f);
+        float Base = 5000.0f;
+        switch (Bits[1].IsEmpty() ? TEXT('W') : Bits[1][0])
+        {
+        case TEXT('A'): Colour = FLinearColor(1.0f, 0.62f, 0.28f); Base = 5000.0f; break;
+        case TEXT('R'): Colour = FLinearColor(1.0f, 0.1f, 0.05f);  Base = 1800.0f; break;
+        case TEXT('G'): Colour = FLinearColor(0.35f, 1.0f, 0.45f); Base = 1500.0f; break;
+        case TEXT('B'): Colour = FLinearColor(0.4f, 0.6f, 1.0f);   Base = 3000.0f; break;
+        default: break;
+        }
+        const float RadiusM = FMath::Max(1.0f, FCString::Atof(*Bits[2]));
+        UPointLightComponent* L = NewObject<UPointLightComponent>(this);
+        L->SetupAttachment(SceneRoot);
+        L->SetRelativeLocation(Socket->RelativeLocation * KitScale);
+        L->SetIntensityUnits(ELightUnits::Candelas);
+        L->SetIntensity(Base * FMath::Square(RadiusM / 8.0f));
+        L->SetAttenuationRadius(RadiusM * 100.0f);
+        L->SetLightColor(Colour);
+        L->SetSourceRadius(15.0f);
+        L->SetCastShadows(Bits[0] == TEXT("LS"));
+        L->RegisterComponent();
+        SocketLights.Add(L);
+    }
+    UE_LOG(LogAdastrea, Log, TEXT("Interior %s: %d socket lights spawned."), *GetName(), SocketLights.Num());
 }
 
 void ASpaceshipInterior::SetupInteriorLighting()
@@ -385,6 +524,13 @@ void ASpaceshipInterior::SetupInteriorLighting()
     //   2. A couple of Point/Rect fixture lights with tight attenuation where a
     //      real lamp/screen is, Cast Shadows = ON on these for depth.
     // All attach to the interior so they move/scale with the ship.
+    if (ConfiguredFamily == EShipInteriorFamily::BattleshipDecks)
+    {
+        // Lit from its own fixtures; the room-sized fill below would be one hot spot
+        // in the middle of a 120 m deck.
+        SpawnSocketLights();
+        return;
+    }
     if (InteriorLight)
     {
         return; // already spawned
@@ -459,13 +605,13 @@ void ASpaceshipInterior::SetupInteriorLighting()
         }
     }
 
-void ASpaceshipInterior::MountInteriorPart(const FString& PartPath, const FVector& Scale3D)
+UStaticMeshComponent* ASpaceshipInterior::MountInteriorPart(const FString& PartPath, const FVector& Scale3D)
 {
     UStaticMesh* PartMesh = LoadObject<UStaticMesh>(nullptr, *PartPath);
     if (!PartMesh)
     {
         UE_LOG(LogAdastrea, Log, TEXT("Interior: companion part missing (%s)."), *PartPath);
-        return;
+        return nullptr;
     }
     UStaticMeshComponent* Comp = NewObject<UStaticMeshComponent>(this);
     Comp->SetupAttachment(SceneRoot);
@@ -477,6 +623,7 @@ void ASpaceshipInterior::MountInteriorPart(const FString& PartPath, const FVecto
     Comp->RegisterComponent();
     InteriorParts.Add(Comp);
     UE_LOG(LogAdastrea, Log, TEXT("Interior: mounted companion part %s"), *PartMesh->GetName());
+    return Comp;
 }
 
 void ASpaceshipInterior::MountInteriorParts(FString Prefix, FString Family, const FVector& Scale3D)
@@ -488,8 +635,40 @@ void ASpaceshipInterior::MountInteriorParts(FString Prefix, FString Family, cons
             const int32 LastSlash = Prefix.Find(TEXT("/"), ESearchCase::IgnoreCase, ESearchDir::FromEnd);
             const FString BaseName = LastSlash >= 0 ? Prefix.Right(Prefix.Len() - LastSlash - 1) : Prefix;
             const FString ObjPath = Prefix + TEXT("_") + Suffix + TEXT(".") + BaseName + TEXT("_") + Suffix;
-            MountInteriorPart(ObjPath, Scale3D);
+            return MountInteriorPart(ObjPath, Scale3D);
         };
+
+    if (Family == TEXT("BattleshipDecks"))
+    {
+        // Zone parts (Tools/build_battleship_decks.py PARTS, minus Shell).
+        static const TCHAR* DeckParts[] = {
+            TEXT("Spine"), TEXT("CIC"), TEXT("Quarters"), TEXT("Mess"), TEXT("Medbay"),
+            TEXT("Briefing"), TEXT("Armory"), TEXT("Hangar"), TEXT("Dropship"),
+            TEXT("Engineering"), TEXT("Lights"),
+        };
+        for (const TCHAR* Suffix : DeckParts)
+        {
+            TryPart(Suffix);
+        }
+        // Walk collision: never drawn, blocks only the avatar, and only while the
+        // player is aboard (SetWalkCollisionEnabled). The mesh is complex-as-simple,
+        // so the avatar sweeps against the authored floors, ramps and railings.
+        if (UStaticMeshComponent* Col = TryPart(TEXT("Collision")))
+        {
+            Col->SetVisibility(false);
+            Col->SetCollisionObjectType(ECC_WorldStatic);
+            Col->SetCollisionResponseToAllChannels(ECR_Ignore);
+            Col->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
+            Col->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+            WalkCollision = Col;
+        }
+        else
+        {
+            UE_LOG(LogAdastrea, Warning, TEXT("Interior %s: %s has no Collision part - the avatar will fall to the base slab."),
+                *GetName(), *Prefix);
+        }
+        return;
+    }
 
     // Mount every known kit part for this family, skipping any that don't exist.
     if (Family == TEXT("CommandBridge") || Family == TEXT("CorvetteBridge")

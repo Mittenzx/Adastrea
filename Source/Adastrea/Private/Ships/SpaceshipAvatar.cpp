@@ -240,6 +240,19 @@ void ASpaceshipAvatar::MoveSafe(const FVector& WorldDelta)
 		return;
 	}
 
+	// Interiors with stairs/dais steps (CurrentInterior->WalkStepHeight > 0): lift by
+	// the step height, move, then sweep back down by the lift plus one more step, so a
+	// riser or ramp up to that height is climbed and the capsule follows stairs and
+	// ramps down instead of hovering off their lower end.
+	const float StepUp = (CurrentInterior && FMath::IsNearlyZero(WorldDelta.Z)) ? CurrentInterior->WalkStepHeight : 0.0f;
+	const FVector Start = GetActorLocation();
+	float Lifted = 0.0f;
+	if (StepUp > 0.0f)
+	{
+		AddActorWorldOffset(FVector(0.0f, 0.0f, StepUp), true);
+		Lifted = GetActorLocation().Z - Start.Z;
+	}
+
 	FHitResult Hit;
 	AddActorWorldOffset(WorldDelta, true, &Hit);
 	if (Hit.IsValidBlockingHit())
@@ -247,10 +260,25 @@ void ASpaceshipAvatar::MoveSafe(const FVector& WorldDelta)
 		// Slide the remaining distance along the surface we hit, once — enough to
 		// walk smoothly along a wall instead of stopping dead on first contact.
 		const FVector Remaining = WorldDelta * (1.0f - Hit.Time);
-		const FVector SlideDelta = FVector::VectorPlaneProject(Remaining, Hit.Normal);
+		FVector SlideDelta = FVector::VectorPlaneProject(Remaining, Hit.Normal);
+		if (StepUp > 0.0f)
+		{
+			// Climbing is the lift's job only: an upward slide off a ledge corner
+			// would otherwise ratchet the capsule up faces taller than a step.
+			SlideDelta.Z = FMath::Min(SlideDelta.Z, 0.0f);
+		}
 		if (!SlideDelta.IsNearlyZero())
 		{
 			AddActorWorldOffset(SlideDelta, true);
+		}
+	}
+
+	if (StepUp > 0.0f)
+	{
+		AddActorWorldOffset(FVector(0.0f, 0.0f, -(Lifted + StepUp)), true);
+		if (GetActorLocation().Z - Start.Z > StepUp + 1.0f)
+		{
+			SetActorLocation(Start, false); // never gain more than one step per move
 		}
 	}
 }
