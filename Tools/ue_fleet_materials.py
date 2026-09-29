@@ -50,12 +50,34 @@ def import_texture(png_abs, dest_folder, name):
     AT.import_asset_tasks([task])
     p = dest_folder + "/" + name
     if unreal.EditorAssetLibrary.does_asset_exist(p):
-        return unreal.load_asset(p)   # return the loaded Texture object, not a path
+        tex = unreal.load_asset(p)   # return the loaded Texture object, not a path
+        # data maps must be linear with the matching compression, or a lit material fails to compile
+        suffix = name.rpartition("_")[2]
+        if suffix == "N":
+            tex.set_editor_property("compression_settings", unreal.TextureCompressionSettings.TC_NORMALMAP)
+            tex.set_editor_property("srgb", False)
+        elif suffix in ("R", "M", "AO"):
+            tex.set_editor_property("compression_settings", unreal.TextureCompressionSettings.TC_MASKS)
+            tex.set_editor_property("srgb", False)
+        unreal.EditorAssetLibrary.save_asset(p)
+        return tex
     return None
+
+def sampler_type_for(tex):
+    """Sampler type the texture's compression requires (a mismatch fails the material compile)."""
+    tc = tex.get_editor_property("compression_settings")
+    if tc == unreal.TextureCompressionSettings.TC_NORMALMAP:
+        return unreal.MaterialSamplerType.SAMPLERTYPE_NORMAL
+    if tc == unreal.TextureCompressionSettings.TC_MASKS:
+        return unreal.MaterialSamplerType.SAMPLERTYPE_MASKS
+    if tex.get_editor_property("srgb"):
+        return unreal.MaterialSamplerType.SAMPLERTYPE_COLOR
+    return unreal.MaterialSamplerType.SAMPLERTYPE_LINEAR_COLOR
 
 def tex_sample(mat, tex_asset, x, y):
     node = ED.create_material_expression(mat, unreal.MaterialExpressionTextureSample, x, y)
     node.set_editor_property("texture", tex_asset)
+    node.set_editor_property("sampler_type", sampler_type_for(tex_asset))
     return node
 
 def try_connect(mat, node, output, prop_name):
