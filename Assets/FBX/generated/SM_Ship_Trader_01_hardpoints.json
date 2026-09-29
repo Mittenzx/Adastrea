@@ -1,18 +1,18 @@
 {
   "ship": "SM_Ship_Trader_01",
-  "size_class": "medium",
-  "scale": 1.65,
+  "size_class": "hero_trader",
+  "scale": 1.0,
   "carcass_dims": [
-    399.0,
-    1196.9431762695312,
-    272.10694885253906
+    374.3,
+    1273.9,
+    282.4
   ],
   "hardpoints": {
     "HP_Engine": {
       "position": [
         0.0,
-        -622.4,
-        161.7
+        -575.6,
+        -56.2
       ],
       "mount_orientation": "AXIS_FORWARD",
       "allowed_types": [
@@ -20,35 +20,23 @@
       ],
       "occupied": true
     },
-    "HP_Cargo": {
-      "position": [
-        0.0,
-        -59.8,
-        142.7
-      ],
-      "mount_orientation": "AXIS_FORWARD",
-      "allowed_types": [
-        "cargo"
-      ],
-      "occupied": true
-    },
     "HP_Nose": {
       "position": [
         0.0,
-        359.1,
-        134.5
+        -5.9,
+        28.2
       ],
       "mount_orientation": "AXIS_FORWARD",
       "allowed_types": [
         "weapon"
       ],
-      "occupied": false
+      "occupied": true
     },
     "HP_Sensor": {
       "position": [
-        0.0,
-        215.4,
-        354.9
+        -0.0,
+        468.9,
+        86.8
       ],
       "mount_orientation": "AXIS_FORWARD",
       "allowed_types": [
@@ -59,8 +47,8 @@
     "HP_Core": {
       "position": [
         0.0,
-        -418.9,
-        267.8
+        -431.2,
+        32.8
       ],
       "mount_orientation": "AXIS_FORWARD",
       "allowed_types": [
@@ -68,29 +56,17 @@
       ],
       "occupied": true
     },
-    "HP_Underslung": {
+    "HP_Cargo": {
       "position": [
         0.0,
-        -359.1,
-        140.0
+        4.0,
+        -24.1
       ],
       "mount_orientation": "AXIS_FORWARD",
       "allowed_types": [
-        "drill"
+        "cargo"
       ],
-      "occupied": false
-    },
-    "HP_Forward": {
-      "position": [
-        0.0,
-        359.1,
-        153.6
-      ],
-      "mount_orientation": "AXIS_FORWARD",
-      "allowed_types": [
-        "mining_laser"
-      ],
-      "occupied": false
+      "occupied": true
     }
   }
 }

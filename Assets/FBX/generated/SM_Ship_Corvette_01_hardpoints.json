@@ -1,18 +1,18 @@
 {
   "ship": "SM_Ship_Corvette_01",
-  "size_class": "corvette",
-  "scale": 2.0,
+  "size_class": "hero_corvette",
+  "scale": 1.0,
   "carcass_dims": [
-    460.0,
-    1223.199951171875,
-    280.5
+    421.2,
+    1556.5,
+    260.5
   ],
   "hardpoints": {
     "HP_Engine": {
       "position": [
         0.0,
-        -611.6,
-        169.0
+        -459.3,
+        0.0
       ],
       "mount_orientation": "AXIS_FORWARD",
       "allowed_types": [
@@ -20,23 +20,11 @@
       ],
       "occupied": true
     },
-    "HP_Cargo": {
-      "position": [
-        0.0,
-        -48.9,
-        155.0
-      ],
-      "mount_orientation": "AXIS_FORWARD",
-      "allowed_types": [
-        "cargo"
-      ],
-      "occupied": true
-    },
     "HP_Nose": {
       "position": [
         0.0,
-        391.4,
-        141.0
+        429.5,
+        0.0
       ],
       "mount_orientation": "AXIS_FORWARD",
       "allowed_types": [
@@ -47,8 +35,8 @@
     "HP_Sensor": {
       "position": [
         0.0,
-        220.2,
-        376.6
+        598.5,
+        0.0
       ],
       "mount_orientation": "AXIS_FORWARD",
       "allowed_types": [
@@ -59,8 +47,8 @@
     "HP_Core": {
       "position": [
         0.0,
-        -415.9,
-        286.8
+        -326.7,
+        0.0
       ],
       "mount_orientation": "AXIS_FORWARD",
       "allowed_types": [
@@ -68,29 +56,17 @@
       ],
       "occupied": true
     },
-    "HP_Underslung": {
+    "HP_Cargo": {
       "position": [
         0.0,
-        -367.0,
-        149.4
+        -32.1,
+        -73.7
       ],
       "mount_orientation": "AXIS_FORWARD",
       "allowed_types": [
-        "drill"
+        "cargo"
       ],
-      "occupied": false
-    },
-    "HP_Forward": {
-      "position": [
-        0.0,
-        367.0,
-        160.6
-      ],
-      "mount_orientation": "AXIS_FORWARD",
-      "allowed_types": [
-        "mining_laser"
-      ],
-      "occupied": false
+      "occupied": true
     }
   }
 }
