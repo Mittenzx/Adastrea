@@ -2416,8 +2416,13 @@ void AAdastreaPlayerController::EnterShipInterior(ASpaceship* Ship)
 	// Walk the interior in a pocket well below the ship, the same way station rooms
 	// are built: at the ship's own location a docked ship's interior overlaps the
 	// station's docking-bay collision and the avatar gets shoved onto the roof.
-	// Stays attached (KeepRelative), so ExitShipInterior only has to zero it again.
-	Interior->SetActorLocation(Ship->GetActorLocation() + FVector(0.0f, 0.0f, -100000.0f));
+	// Detach it first: left attached, the ship's residual rotation (turn damping, roll
+	// auto-levelling) swings a room 1 km away by metres per degree, sliding the floor out
+	// from under the (unattached) avatar. Level it too — SnapToFloor traces world -Z.
+	// ExitShipInterior snaps it back onto the ship.
+	Interior->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	Interior->SetActorLocationAndRotation(Ship->GetActorLocation() + FVector(0.0f, 0.0f, -100000.0f),
+		FRotator(0.0f, Ship->GetActorRotation().Yaw, 0.0f));
 
 	// Resolve a per-ship spawn override from the ship's data asset (durable tuning).
 	// Local space of the interior; falls back to the interior actor's defaults.
@@ -2554,8 +2559,8 @@ void AAdastreaPlayerController::ExitShipInterior(ASpaceship* Ship)
 	ASpaceshipInterior* Interior = Ship->GetInteriorInstance();
 	if (Interior)
 	{
-		// Bring the interior back from its walk pocket (see EnterShipInterior).
-		Interior->SetActorRelativeLocation(FVector::ZeroVector);
+		// Bring the interior back from its walk pocket and re-attach it (see EnterShipInterior).
+		Interior->AttachToActor(Ship, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	}
 
 	// Restore the ship's collision now that we're back at the helm. Skip the
