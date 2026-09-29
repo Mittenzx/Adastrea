@@ -51,6 +51,13 @@ MODULE_MAP = {
     "FuelDepotModule":       ("A" + "FuelDepotModule",       "/Script/Adastrea.FuelDepotModule",       "Storage"),
     "TurretModule":          ("A" + "TurretModule",          "/Script/Adastrea.TurretModule",          "Defence"),
     "ShieldGeneratorModule": ("A" + "ShieldGeneratorModule", "/Script/Adastrea.ShieldGeneratorModule", "Defence"),
+    # Ship outfitting: the general bay plus the five specialist workshops (AOutfittingModule).
+    "OutfittingModule":      ("A" + "OutfittingModule",      "/Script/Adastrea.OutfittingModule",      "Docking"),
+    "EngineWorkshopModule":  ("A" + "EngineWorkshopModule",  "/Script/Adastrea.EngineWorkshopModule",  "Docking"),
+    "ArmouryModule":         ("A" + "ArmouryModule",         "/Script/Adastrea.ArmouryModule",         "Defence"),
+    "ShieldWorkshopModule":  ("A" + "ShieldWorkshopModule",  "/Script/Adastrea.ShieldWorkshopModule",  "Defence"),
+    "HullWorksModule":       ("A" + "HullWorksModule",       "/Script/Adastrea.HullWorksModule",       "Docking"),
+    "CargoRefitModule":      ("A" + "CargoRefitModule",      "/Script/Adastrea.CargoRefitModule",      "Storage"),
     # 12 research labs (T6 base + T7 niche). Groups = Processing (research/fabrication).
     "PhysicsLabModule":        ("A" + "PhysicsLabModule",        "/Script/Adastrea.PhysicsLabModule",        "Processing"),
     "MaterialsLabModule":      ("A" + "MaterialsLabModule",      "/Script/Adastrea.MaterialsLabModule",      "Processing"),
@@ -75,9 +82,17 @@ MODULE_MAP = {
 #   - niche / contract T7      -> TL4
 TECH_TIER = {6: 2, 7: 4}  # fallback for any tier otherwise present
 RESEARCH_TL = 3  # the 5 base research labs (T6)
+# The general outfitting bay is a core module (TL2); the specialist workshops fit
+# higher-tier upgrades, so they unlock alongside the base research labs (TL3).
+TECH_OVERRIDE = {
+    "EngineWorkshopModule": 3, "ArmouryModule": 3, "ShieldWorkshopModule": 3,
+    "HullWorksModule": 3, "CargoRefitModule": 3,
+}
 
 
 def tech_level(item_id, tier):
+    if item_id in TECH_OVERRIDE:
+        return TECH_OVERRIDE[item_id]
     if item_id.endswith("LabModule"):
         return RESEARCH_TL
     return TECH_TIER.get(tier, 1)

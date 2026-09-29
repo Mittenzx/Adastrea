@@ -8072,6 +8072,180 @@
           "Qty": 1
         }
       ]
+    },
+    {
+      "RecipeID": "RCP_316_OutfittingModule",
+      "OutputItem": "OutfittingModule",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "Ingredients": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ControlUnit",
+          "Qty": 2
+        },
+        {
+          "ItemID": "StructuralFrame",
+          "Qty": 4
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_317_EngineWorkshopModule",
+      "OutputItem": "EngineWorkshopModule",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "Ingredients": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ShipEngine",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Thruster",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ControlUnit",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_318_ArmouryModule",
+      "OutputItem": "ArmouryModule",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "Ingredients": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "TurretWeapon",
+          "Qty": 1
+        },
+        {
+          "ItemID": "Railgun",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ControlUnit",
+          "Qty": 1
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_319_ShieldWorkshopModule",
+      "OutputItem": "ShieldWorkshopModule",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "Ingredients": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "ShieldEmitter",
+          "Qty": 1
+        },
+        {
+          "ItemID": "ShieldCapacitor",
+          "Qty": 2
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_320_HullWorksModule",
+      "OutputItem": "HullWorksModule",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "Ingredients": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "HullPlating",
+          "Qty": 4
+        },
+        {
+          "ItemID": "ArmourPlate",
+          "Qty": 6
+        },
+        {
+          "ItemID": "StructuralFrame",
+          "Qty": 4
+        }
+      ]
+    },
+    {
+      "RecipeID": "RCP_321_CargoRefitModule",
+      "OutputItem": "CargoRefitModule",
+      "OutputQty": 1,
+      "Tier": 6,
+      "ProducedIn": "Fabrication",
+      "Category": "Other",
+      "Acquisition": false,
+      "ResearchLevel": 1,
+      "ResearchRequired": null,
+      "ResearchProvider": null,
+      "ExpertiseLevel": 1,
+      "Ingredients": [
+        {
+          "ItemID": "ModuleShell",
+          "Qty": 2
+        },
+        {
+          "ItemID": "CargoPod",
+          "Qty": 4
+        },
+        {
+          "ItemID": "CargoComputer",
+          "Qty": 1
+        }
+      ]
     }
   ],
   "Items": {
@@ -11224,6 +11398,66 @@
       "Rarity": "VeryRare",
       "BaseValue": 3866062,
       "MaterialCategory": "Food"
+    },
+   "OutfittingModule": {
+      "ItemName": "Outfitting Bay Module",
+      "Description": "Outfitting Bay Module: a prefabricated station module where docked ships buy and fit engine, weapon, shield, hull and cargo upgrades (up to tier 2).",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 61629,
+      "MaterialCategory": "Other"
+    },
+   "EngineWorkshopModule": {
+      "ItemName": "Engine Workshop Module",
+      "Description": "Engine Workshop Module: a prefabricated station module that fits ship engine upgrades up to tier 3.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 104690,
+      "MaterialCategory": "Other"
+    },
+   "ArmouryModule": {
+      "ItemName": "Armoury Module",
+      "Description": "Armoury Module: a prefabricated station module that fits ship weapon upgrades up to tier 3.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 98532,
+      "MaterialCategory": "Other"
+    },
+   "ShieldWorkshopModule": {
+      "ItemName": "Shield Workshop Module",
+      "Description": "Shield Workshop Module: a prefabricated station module that fits ship shield upgrades up to tier 3.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 117438,
+      "MaterialCategory": "Other"
+    },
+   "HullWorksModule": {
+      "ItemName": "Hull Works Module",
+      "Description": "Hull Works Module: a prefabricated station module that fits ship hull and armour upgrades up to tier 3.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 70992,
+      "MaterialCategory": "Other"
+    },
+   "CargoRefitModule": {
+      "ItemName": "Cargo Refit Yard Module",
+      "Description": "Cargo Refit Yard Module: a prefabricated station module that fits ship cargo hold upgrades up to tier 3.",
+      "WeightKg": 597.2,
+      "VolumeM3": 1.49,
+      "StorageType": "Solid",
+      "Rarity": "Legendary",
+      "BaseValue": 96423,
+      "MaterialCategory": "Other"
     }
   },
   "Economy": {
@@ -13172,6 +13406,48 @@
       "Profit": 3006937,
       "Margin": 3.5,
       "IntendedMarkup": 4.5
+    },
+   "OutfittingModule": {
+      "IngredientCost": 41086,
+      "OutputValue": 61629,
+      "Profit": 20543,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+   "EngineWorkshopModule": {
+      "IngredientCost": 69793,
+      "OutputValue": 104690,
+      "Profit": 34897,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+   "ArmouryModule": {
+      "IngredientCost": 65688,
+      "OutputValue": 98532,
+      "Profit": 32844,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+   "ShieldWorkshopModule": {
+      "IngredientCost": 78292,
+      "OutputValue": 117438,
+      "Profit": 39146,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+   "HullWorksModule": {
+      "IngredientCost": 47328,
+      "OutputValue": 70992,
+      "Profit": 23664,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
+    },
+   "CargoRefitModule": {
+      "IngredientCost": 64282,
+      "OutputValue": 96423,
+      "Profit": 32141,
+      "Margin": 0.5,
+      "IntendedMarkup": 1.5
     }
   }
 }

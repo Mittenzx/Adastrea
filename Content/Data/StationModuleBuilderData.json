@@ -664,14 +664,14 @@
       "power": 60,
       "group": "Docking",
       "faces": "all",
-      "cost": 58000,
-      "BaseValue": 58000,
+      "cost": 61629,
+      "BaseValue": 61629,
       "WeightKg": 597.2,
       "part_family": "Module",
       "recipe": [
         { "ItemID": "ModuleShell", "Qty": 2 },
         { "ItemID": "ControlUnit", "Qty": 2 },
-        { "ItemID": "SteelAlloy", "Qty": 2 }
+        { "ItemID": "StructuralFrame", "Qty": 4 }
       ]
     },
     "EngineWorkshopModule": {
@@ -679,14 +679,15 @@
       "power": 80,
       "group": "Docking",
       "faces": "all",
-      "cost": 72000,
-      "BaseValue": 72000,
+      "cost": 104690,
+      "BaseValue": 104690,
       "WeightKg": 597.2,
       "part_family": "Module",
       "recipe": [
         { "ItemID": "ModuleShell", "Qty": 2 },
-        { "ItemID": "ControlUnit", "Qty": 2 },
-        { "ItemID": "PowerCells", "Qty": 3 }
+        { "ItemID": "ShipEngine", "Qty": 1 },
+        { "ItemID": "Thruster", "Qty": 2 },
+        { "ItemID": "ControlUnit", "Qty": 1 }
       ]
     },
     "ArmouryModule": {
@@ -694,14 +695,15 @@
       "power": 70,
       "group": "Defence",
       "faces": "all",
-      "cost": 76000,
-      "BaseValue": 76000,
+      "cost": 98532,
+      "BaseValue": 98532,
       "WeightKg": 597.2,
       "part_family": "Module",
       "recipe": [
         { "ItemID": "ModuleShell", "Qty": 2 },
-        { "ItemID": "ControlUnit", "Qty": 1 },
-        { "ItemID": "SteelAlloy", "Qty": 3 }
+        { "ItemID": "TurretWeapon", "Qty": 1 },
+        { "ItemID": "Railgun", "Qty": 1 },
+        { "ItemID": "ControlUnit", "Qty": 1 }
       ]
     },
     "ShieldWorkshopModule": {
@@ -709,14 +711,14 @@
       "power": 90,
       "group": "Defence",
       "faces": "all",
-      "cost": 82000,
-      "BaseValue": 82000,
+      "cost": 117438,
+      "BaseValue": 117438,
       "WeightKg": 597.2,
       "part_family": "Module",
       "recipe": [
         { "ItemID": "ModuleShell", "Qty": 2 },
         { "ItemID": "ShieldEmitter", "Qty": 1 },
-        { "ItemID": "AdvancedPowerCells", "Qty": 1 }
+        { "ItemID": "ShieldCapacitor", "Qty": 2 }
       ]
     },
     "HullWorksModule": {
@@ -724,14 +726,15 @@
       "power": 60,
       "group": "Docking",
       "faces": "all",
-      "cost": 64000,
-      "BaseValue": 64000,
+      "cost": 70992,
+      "BaseValue": 70992,
       "WeightKg": 597.2,
       "part_family": "Module",
       "recipe": [
         { "ItemID": "ModuleShell", "Qty": 2 },
-        { "ItemID": "SteelAlloy", "Qty": 3 },
-        { "ItemID": "ConstructionMaterials", "Qty": 1 }
+        { "ItemID": "HullPlating", "Qty": 4 },
+        { "ItemID": "ArmourPlate", "Qty": 6 },
+        { "ItemID": "StructuralFrame", "Qty": 4 }
       ]
     },
     "CargoRefitModule": {
@@ -739,14 +742,14 @@
       "power": 40,
       "group": "Storage",
       "faces": "all",
-      "cost": 52000,
-      "BaseValue": 52000,
+      "cost": 96423,
+      "BaseValue": 96423,
       "WeightKg": 597.2,
       "part_family": "Module",
       "recipe": [
         { "ItemID": "ModuleShell", "Qty": 2 },
-        { "ItemID": "SteelAlloy", "Qty": 2 },
-        { "ItemID": "ControlUnit", "Qty": 1 }
+        { "ItemID": "CargoPod", "Qty": 4 },
+        { "ItemID": "CargoComputer", "Qty": 1 }
       ]
     }
   }

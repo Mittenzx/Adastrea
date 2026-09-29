@@ -115,7 +115,7 @@ UStationEditorManager::UStationEditorManager()
 void UStationEditorManager::EnsureCatalogLoaded()
 {
 	// Default the catalog to the project's DA_StationModuleCatalog asset if none
-	// was assigned (so the station editor reliably surfaces all 27 modules).
+	// was assigned (so the station editor reliably surfaces every catalog module).
 	if (!ModuleCatalog)
 	{
 		ModuleCatalog = Cast<UStationModuleCatalog>(
