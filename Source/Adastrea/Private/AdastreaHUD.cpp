@@ -40,6 +40,10 @@
 #include "Universe/GalaxySubsystem.h"
 #include "Universe/JumpGate.h"
 #include "EngineUtils.h"
+#include "AssetRegistry/AssetRegistryModule.h"
+#include "Engine/BlueprintGeneratedClass.h"
+#include "Engine/SCS_Node.h"
+#include "Engine/SimpleConstructionScript.h"
 #include "HAL/IConsoleManager.h"
 
 static TAutoConsoleVariable<float> CVarHUDScale(
@@ -1586,63 +1590,123 @@ void AAdastreaHUD::DrawTradeScreen(APlayerController* PC, AAdastreaPlayerControl
 // SHIP SELECT SCREEN (concept prototype — canvas + SceneCapture2D preview)
 // ========================================================================
 
-// Ship roster: order = the ship Blueprints (spawnable pawns, selectable/testable).
-// This is the list the screen cycles. Later this will come from a data table /
-// the crafting tree / ship-construction facility data.
-static const TCHAR* ShipRosterClassPaths[] = {
-	TEXT("/Game/Blueprints/Ships/BP_Ship_Fighter"),
-	TEXT("/Game/Blueprints/Ships/BP_Ship_Freighter"),
-	TEXT("/Game/Blueprints/Ships/BP_Ship_Corvette"),
-	TEXT("/Game/Blueprints/Ships/BP_Ship_Cruiser"),
-	TEXT("/Game/Blueprints/Ships/BP_Ship_Destroyer"),
-};
-static const int32 ShipRosterCount = UE_ARRAY_COUNT(ShipRosterClassPaths);
+// Ship roster: every ASpaceship Blueprint in ShipRosterFolder that has a hull mesh,
+// smallest first. Each entry's preview mesh, hull material and stats are read from
+// its own class defaults, so the screen can't drift from what the ship flies (the
+// old hand-kept parallel arrays had the Cruiser and Destroyer showing other ships).
+static const TCHAR* ShipRosterFolder = TEXT("/Game/Blueprints/Ships");
 
-// Preview mesh per roster entry (an _Assembled static mesh). The roster pawns
-// don't all have meshes assigned in-editor, so we render a mesh directly.
-static const TCHAR* ShipRosterMeshPaths[] = {
-	TEXT("/AdastreaShips/Meshes/Ships/SM_Ship_Fighter_01_Assembled.SM_Ship_Fighter_01_Assembled"),
-	TEXT("/AdastreaShips/Meshes/Ships/SM_Ship_Freighter_01_Assembled.SM_Ship_Freighter_01_Assembled"),
-	// Unique-UV baked hull, same as BP_Ship_Corvette flies (its slot carries M_Corvette_Hull_Unique).
-	TEXT("/Game/Assets/Ships/SM_Ship_Corvette_01_Assembled_UniqueUV.SM_Ship_Corvette_01_Assembled_UniqueUV"),
-	TEXT("/AdastreaShips/Meshes/Ships/SM_Ship_Gunship_02_Assembled.SM_Ship_Gunship_02_Assembled"),
-	TEXT("/AdastreaShips/Meshes/Ships/SM_Ship_Miner_01_Assembled.SM_Ship_Miner_01_Assembled"),
-};
-static_assert(UE_ARRAY_COUNT(ShipRosterMeshPaths) == ShipRosterCount, "roster mesh mismatch");
+// Blueprints in that folder that are not player ships (dev/test pawns).
+static const TCHAR* ShipRosterExcluded[] = { TEXT("BP_TestShip") };
 
-// For each roster entry, optionally associate a data asset whose stats we show.
-// This decouples the readout from whatever the live pawn happens to expose.
-static const TCHAR* ShipRosterDataAssets[] = {
-	TEXT("/Game/DataAssets/Ships/DA_Fighter_ViperInterceptor"),
-	TEXT("/Game/DataAssets/Ships/DA_Transport_BehemothFreighter"),
-	TEXT("/Game/DataAssets/Ships/DA_Corvette_RaptorAssault"),
-	TEXT("/Game/DataAssets/Ships/DA_Cruiser_LifelineMedical"),
-	TEXT("/Game/DataAssets/Ships/DA_Transport_GenesisColony"),
-};
-static_assert(UE_ARRAY_COUNT(ShipRosterDataAssets) == ShipRosterCount, "roster data mismatch");
-
-static TSubclassOf<AActor> LoadShipRosterClass(int32 Index)
+static float ShipRosterMeshLength(const UStaticMeshComponent* Mesh)
 {
-	if (Index < 0 || Index >= ShipRosterCount)
+	if (!Mesh || !Mesh->GetStaticMesh())
+	{
+		return 0.0f;
+	}
+	return (Mesh->GetStaticMesh()->GetBounds().BoxExtent * 2.0f * Mesh->GetRelativeScale3D().GetAbs()).GetMax();
+}
+
+// The component that carries a ship class's hull: the native ShipMeshComponent, or
+// (BP_CommandXL, BP_Super) the largest mesh the Blueprint adds itself, found on its
+// construction-script templates (kept in cooked builds too).
+static const UStaticMeshComponent* ShipRosterHull(const UClass* ShipClass)
+{
+	const ASpaceship* Ship = ShipClass ? GetDefault<ASpaceship>(const_cast<UClass*>(ShipClass)) : nullptr;
+	if (!Ship)
 	{
 		return nullptr;
 	}
-	// Resolve the '/Game/...' path to a Blueprint class. FSoftClassPath needs the
-	// full '<asset>/<folder>/Name.Name_C' form, so append '.<name>_C'.
-		const FString ObjPath = FString(ShipRosterClassPaths[Index]);
-		const FString Path = ObjPath + TEXT(".") + FPaths::GetBaseFilename(ObjPath) + TEXT("_C");
-		const FSoftClassPath SoftPath(Path);
-		if (!SoftPath.IsValid())
+	if (Ship->ShipMeshComponent && Ship->ShipMeshComponent->GetStaticMesh())
+	{
+		return Ship->ShipMeshComponent;
+	}
+	const UStaticMeshComponent* Best = nullptr;
+	for (const UBlueprintGeneratedClass* BPClass = Cast<UBlueprintGeneratedClass>(ShipClass); BPClass;
+		BPClass = Cast<UBlueprintGeneratedClass>(BPClass->GetSuperClass()))
+	{
+		if (!BPClass->SimpleConstructionScript)
 		{
-			return nullptr;
+			continue;
 		}
-		return SoftPath.TryLoadClass<AActor>();
+		for (const USCS_Node* Node : BPClass->SimpleConstructionScript->GetAllNodes())
+		{
+			const UStaticMeshComponent* Mesh = Node ? Cast<UStaticMeshComponent>(Node->ComponentTemplate) : nullptr;
+			if (ShipRosterMeshLength(Mesh) > ShipRosterMeshLength(Best))
+			{
+				Best = Mesh;
+			}
+		}
+	}
+	return Best;
+}
+
+// Hull length (cm) as flown: mesh bounds times the Blueprint's mesh scale.
+static float ShipRosterLength(const ASpaceship* Ship)
+{
+	return Ship ? ShipRosterMeshLength(ShipRosterHull(Ship->GetClass())) : 0.0f;
+}
+
+void AAdastreaHUD::BuildShipRoster()
+{
+	ShipRoster.Reset();
+	TArray<FAssetData> Assets;
+	FAssetRegistryModule::GetRegistry().GetAssetsByPath(FName(ShipRosterFolder), Assets, /*bRecursive*/ false);
+	for (const FAssetData& Asset : Assets)
+	{
+		const FString Name = Asset.AssetName.ToString();
+		bool bExcluded = false;
+		for (const TCHAR* Skip : ShipRosterExcluded)
+		{
+			bExcluded |= Name.Equals(Skip);
+		}
+		if (bExcluded)
+		{
+			continue;
+		}
+		// '<package>.<Name>_C' is the Blueprint's generated class (also in cooked builds).
+		const FSoftClassPath ClassPath(Asset.PackageName.ToString() + TEXT(".") + Name + TEXT("_C"));
+		UClass* ShipClass = ClassPath.TryLoadClass<ASpaceship>();
+		if (!ShipClass || ShipClass->HasAnyClassFlags(CLASS_Abstract))
+		{
+			continue;
+		}
+		if (ShipRosterLength(Cast<ASpaceship>(ShipClass->GetDefaultObject())) <= 0.0f)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("ShipSelect: %s has no hull mesh, left off the roster"), *Name);
+			continue;
+		}
+		ShipRoster.Add(ShipClass);
+	}
+	ShipRoster.Sort([](const TSubclassOf<ASpaceship>& A, const TSubclassOf<ASpaceship>& B)
+	{
+		return ShipRosterLength(GetDefault<ASpaceship>(A)) < ShipRosterLength(GetDefault<ASpaceship>(B));
+	});
+	UE_LOG(LogTemp, Log, TEXT("ShipSelect: roster of %d ships from %s"), ShipRoster.Num(), ShipRosterFolder);
+}
+
+const ASpaceship* AAdastreaHUD::GetRosterShip(int32 Index) const
+{
+	return ShipRoster.IsValidIndex(Index) && ShipRoster[Index] ? GetDefault<ASpaceship>(ShipRoster[Index]) : nullptr;
 }
 
 void AAdastreaHUD::ShowShipSelect()
 {
 	bShowShipSelect = true;
+	BuildShipRoster();
+	// Open on the ship being flown, if it is on the roster.
 	ShipSelectIndex = 0;
+	if (const APlayerController* OwnerPC = GetOwningPlayerController())
+	{
+		if (const APawn* Pawn = OwnerPC->GetPawn())
+		{
+			const UClass* Flying = Pawn->GetClass();
+			ShipSelectIndex = FMath::Max(0, ShipRoster.IndexOfByPredicate(
+				[Flying](const TSubclassOf<ASpaceship>& C) { return C.Get() == Flying; }));
+		}
+	}
+	ShipSelectScroll = 0;
 	bShipCaptureReady = false;
 	if (APlayerController* PC = GetOwningPlayerController())
 	{
@@ -1705,9 +1769,9 @@ void AAdastreaHUD::RebuildShipPreview(APlayerController* PC)
 	// Tear down any existing preview.
 	DestroyShipPreview();
 
-	// Load this roster entry's ship class.
-	const TSubclassOf<AActor> ShipClass = LoadShipRosterClass(ShipSelectIndex);
-	if (!ShipClass)
+	// This roster entry's class defaults: its hull mesh and material are previewed.
+	const ASpaceship* Ship = GetRosterShip(ShipSelectIndex);
+	if (!Ship)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("ShipSelect: no class for index %d"), ShipSelectIndex);
 		bShipCaptureReady = false;
@@ -1719,11 +1783,8 @@ void AAdastreaHUD::RebuildShipPreview(APlayerController* PC)
 		// SceneCapture to see. A StaticMeshActor renders reliably (unlike a detached
 		// bare component), which is what the SceneCapture needs to pick it up.
 		const FVector PreviewLoc(90000.0f, -90000.0f, 10000.0f);
-		UStaticMesh* PreviewMesh = nullptr;
-		if (ShipSelectIndex >= 0 && ShipSelectIndex < ShipRosterCount)
-		{
-			PreviewMesh = LoadObject<UStaticMesh>(nullptr, ShipRosterMeshPaths[ShipSelectIndex]);
-		}
+		const UStaticMeshComponent* ShipMesh = ShipRosterHull(Ship->GetClass());
+		UStaticMesh* PreviewMesh = ShipMesh ? ShipMesh->GetStaticMesh() : nullptr;
 		ShipPreviewActor = World->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), PreviewLoc, FRotator::ZeroRotator);
 		ShipPreviewMeshComp = nullptr;
 		if (AStaticMeshActor* SMA = Cast<AStaticMeshActor>(ShipPreviewActor))
@@ -1735,6 +1796,22 @@ void AAdastreaHUD::RebuildShipPreview(APlayerController* PC)
 				// scaled and turned every frame, which warned each frame.
 				SMComp->SetMobility(EComponentMobility::Movable);
 				SMComp->SetStaticMesh(PreviewMesh);
+				// Wear what the ship wears in flight: its Blueprint slot overrides, then
+				// the hull material ApplyShipHullMaterial would put on slot 0.
+				for (int32 Slot = 0; Slot < ShipMesh->OverrideMaterials.Num(); ++Slot)
+				{
+					if (ShipMesh->OverrideMaterials[Slot])
+					{
+						SMComp->SetMaterial(Slot, ShipMesh->OverrideMaterials[Slot]);
+					}
+				}
+				// (Only the native hull component gets the class material in flight.)
+				UMaterialInterface* Hull = ShipMesh == Ship->ShipMeshComponent
+					? ASpaceship::ResolveHullMaterial(Ship->GetClass()->GetName(), Ship->HullMaterialOverride) : nullptr;
+				if (Hull)
+				{
+					SMComp->SetMaterial(0, Hull);
+				}
 				SMComp->SetHiddenInGame(false);
 				SMComp->SetVisibility(true, true);
 				// Normalize the preview mesh to a display radius ~1000u.
@@ -1807,7 +1884,7 @@ void AAdastreaHUD::RebuildShipPreview(APlayerController* PC)
 
 void AAdastreaHUD::CycleShipSelect(int32 Step)
 {
-	const int32 Next = FMath::Clamp(ShipSelectIndex + Step, 0, ShipRosterCount - 1);
+	const int32 Next = FMath::Clamp(ShipSelectIndex + Step, 0, FMath::Max(0, ShipRoster.Num() - 1));
 	if (Next != ShipSelectIndex)
 	{
 		ShipSelectIndex = Next;
@@ -1828,24 +1905,10 @@ void AAdastreaHUD::OrbitShipPreview(float DeltaYaw, float DeltaPitch)
 
 USpaceshipDataAsset* AAdastreaHUD::GetPreviewShipDataAsset() const
 {
-	if (ShipSelectIndex < 0 || ShipSelectIndex >= ShipRosterCount)
-	{
-		return nullptr;
-	}
-	// Show the data asset the Blueprint actually flies (it now drives speed and
-	// acceleration), so the readout can't drift from the ship. The roster table is
-	// only a fallback for a pawn without one.
-	if (TSubclassOf<AActor> ShipClass = LoadShipRosterClass(ShipSelectIndex))
-	{
-		if (const ASpaceship* ShipCDO = Cast<ASpaceship>(ShipClass->GetDefaultObject()))
-		{
-			if (ShipCDO->ShipDataAsset)
-			{
-				return ShipCDO->ShipDataAsset;
-			}
-		}
-	}
-	return LoadObject<USpaceshipDataAsset>(nullptr, ShipRosterDataAssets[ShipSelectIndex]);
+	// The data asset the Blueprint actually flies (it drives speed and acceleration),
+	// so the readout can't drift from the ship.
+	const ASpaceship* Ship = GetRosterShip(ShipSelectIndex);
+	return Ship ? Ship->ShipDataAsset.Get() : nullptr;
 }
 
 void AAdastreaHUD::SpawnSelectedShip(APlayerController* PC)
@@ -1854,11 +1917,11 @@ void AAdastreaHUD::SpawnSelectedShip(APlayerController* PC)
 	{
 		return;
 	}
-	const TSubclassOf<AActor> ShipClass = LoadShipRosterClass(ShipSelectIndex);
-	if (!ShipClass)
+	if (!ShipRoster.IsValidIndex(ShipSelectIndex) || !ShipRoster[ShipSelectIndex])
 	{
 		return;
 	}
+	const TSubclassOf<ASpaceship> ShipClass = ShipRoster[ShipSelectIndex];
 	UWorld* World = PC->GetWorld();
 	const FVector SpawnLoc = PC->GetPawn() ? PC->GetPawn()->GetActorLocation() : FVector(18000, 18000, 5000);
 	const FRotator SpawnRot = PC->GetPawn() ? PC->GetPawn()->GetActorRotation() : FRotator::ZeroRotator;
@@ -1899,31 +1962,81 @@ void AAdastreaHUD::DrawShipSelectScreen(APlayerController* PC)
 			{
 				// Rotate the model to the orbit yaw/pitch.
 				ShipPreviewActor->SetActorRotation(FRotator(ShipPreviewPitch, ShipPreviewYaw, 0.0f));
-								const FVector ActorLoc = ShipPreviewActor->GetActorLocation();
-								// We normalized the mesh to ~1000u display radius, so a fixed arm
-								// frames every ship consistently.
-								const float CamDist = 2400.0f;
-								ShipPreviewCapture->SetWorldLocation(ActorLoc + FVector(-CamDist, 0, 0));
+								// Aim at the hull's bounds centre (pivots are often at the stern or
+								// keel), from far enough that the ~1000u normalized radius fits the
+								// 20 degree capture FOV: the normalized radius spans the bounds
+								// diagonal, so a long hull fits well inside 1000 / tan(10 deg).
+								const FVector Target = ShipPreviewMeshComp ? ShipPreviewMeshComp->Bounds.Origin : ShipPreviewActor->GetActorLocation();
+								const float CamDist = 5000.0f;
+								ShipPreviewCapture->SetWorldLocation(Target + FVector(-CamDist, 0, 0));
 								ShipPreviewCapture->SetWorldRotation(FRotator(0, 0, 0));
 			}
 
 
 	DrawCentredText(TEXT("SHIP SELECT"), FLinearColor(0.15f,0.9f,0.6f,1.0f), VW * 0.5f, 18.0f, HudType::Title);
 
-	// ---- Left: ship list ----
-	const float LX = 40.0f, LY = 80.0f;
-	for (int32 i = 0; i < ShipRosterCount; ++i)
+	// ---- Left: ship list (smallest hull first; scrolls to keep the selection in view) ----
+	const float LX = 40.0f, LY = 80.0f, RowH = 30.0f, ListW = 300.0f;
+	const int32 VisibleRows = FMath::Max(3, FMath::FloorToInt((VH - LY - 90.0f) / RowH));
+	ShipSelectScroll = FMath::Clamp(ShipSelectScroll, ShipSelectIndex - VisibleRows + 1, ShipSelectIndex);
+	ShipSelectScroll = FMath::Clamp(ShipSelectScroll, 0, FMath::Max(0, ShipRoster.Num() - VisibleRows));
+	const int32 LastRow = FMath::Min(ShipRoster.Num(), ShipSelectScroll + VisibleRows);
+	// Row labels: the data asset's ship name ("Viper Interceptor"), else the Blueprint's;
+	// two Blueprints sharing one data asset get their Blueprint name added.
+	auto BlueprintLabel = [](const UClass* Cls)
 	{
-		const TSubclassOf<AActor> Cls = LoadShipRosterClass(i);
-		FString Label = Cls ? Cls->GetName() : FString(TEXT("<unknown>"));
-		Label.RemoveFromStart(TEXT("BP_"));
-		const float RowY = LY + i * 30.0f;
+		FString Name = Cls ? Cls->GetName() : FString();
+		Name.RemoveFromStart(TEXT("BP_Ship_"));
+		Name.RemoveFromStart(TEXT("BP_"));
+		Name.RemoveFromEnd(TEXT("_C"));
+		return Name.Replace(TEXT("_"), TEXT(" "));
+	};
+	TArray<FString> Labels;
+	for (int32 i = 0; i < ShipRoster.Num(); ++i)
+	{
+		const ASpaceship* Ship = GetRosterShip(i);
+		Labels.Add((Ship && Ship->ShipDataAsset && !Ship->ShipDataAsset->ShipName.IsEmpty())
+			? Ship->ShipDataAsset->ShipName.ToString() : BlueprintLabel(ShipRoster[i]));
+	}
+	TMap<FString, int32> LabelCount;
+	for (const FString& L : Labels)
+	{
+		++LabelCount.FindOrAdd(L);
+	}
+	for (int32 i = 0; i < ShipRoster.Num(); ++i)
+	{
+		if (LabelCount[Labels[i]] > 1)
+		{
+			Labels[i] += FString::Printf(TEXT(" (%s)"), *BlueprintLabel(ShipRoster[i]));
+		}
+	}
+	for (int32 i = ShipSelectScroll; i < LastRow; ++i)
+	{
+		const ASpaceship* Ship = GetRosterShip(i);
+		const FString& Label = Labels[i];
+		const float RowY = LY + (i - ShipSelectScroll) * RowH;
 		const bool bSelected = (i == ShipSelectIndex);
 		if (bSelected)
 		{
-			DrawRect(FLinearColor(0.15f,0.32f,0.35f,0.5f), LX, RowY, 220.0f, 24.0f);
+			DrawRect(FLinearColor(0.15f,0.32f,0.35f,0.5f), LX, RowY, ListW, RowH - 6.0f);
 		}
 		DrawText(Label, bSelected ? FLinearColor(1,1,1,1) : FLinearColor(0.7f,0.8f,0.9f,1), LX+8, RowY+2, HudType::Font(), HudType::Body);
+		const FString Size = FString::Printf(TEXT("%.0f m"), ShipRosterLength(Ship) / 100.0f);
+		float SW = 0.0f, SH = 0.0f;
+		GetTextSize(Size, SW, SH, HudType::Font(), HudType::Label);
+		DrawText(Size, kLabel, LX + ListW - SW - 8.0f, RowY + 4.0f, HudType::Font(), HudType::Label);
+	}
+	if (ShipSelectScroll > 0)
+	{
+		DrawText(TEXT("... more above"), kLabel, LX + 8, LY - 22.0f, HudType::Font(), HudType::Label);
+	}
+	if (LastRow < ShipRoster.Num())
+	{
+		DrawText(TEXT("... more below"), kLabel, LX + 8, LY + VisibleRows * RowH, HudType::Font(), HudType::Label);
+	}
+	if (ShipRoster.Num() == 0)
+	{
+		DrawText(TEXT("(no ships found)"), kLabel, LX + 8, LY, HudType::Font(), HudType::Body);
 	}
 
 	// ---- Center-right: 3D preview ----
@@ -1936,7 +2049,9 @@ void AAdastreaHUD::DrawShipSelectScreen(APlayerController* PC)
 
 	if (bShipCaptureReady && ShipPreviewRT)
 	{
-		DrawTexture(ShipPreviewRT, PX+20, PY+20, PW-40, PH-40, 0, 0, 1, 1, FLinearColor::White);
+		// Opaque: a SceneColorHDR capture stores INVERSE opacity in alpha (0 on the
+		// ship), so the default translucent blend drew the ship itself invisible.
+		DrawTexture(ShipPreviewRT, PX+20, PY+20, PW-40, PH-40, 0, 0, 1, 1, FLinearColor::White, BLEND_Opaque);
 	}
 	else
 	{
@@ -1953,6 +2068,11 @@ void AAdastreaHUD::DrawShipSelectScreen(APlayerController* PC)
 		TArray<FString> Lbls;
 		TArray<FString> Vals;
 		Lbls.Add(TEXT("CLASS"));    Vals.Add(ShipClass);
+		const ASpaceship* Ship = GetRosterShip(ShipSelectIndex);
+		Lbls.Add(TEXT("LENGTH"));   Vals.Add(FString::Printf(TEXT("%.0f m"), ShipRosterLength(Ship) / 100.0f));
+		Lbls.Add(TEXT("INTERIOR")); Vals.Add(Ship && Ship->InteriorFamily != EShipInteriorFamily::None
+			? StaticEnum<EShipInteriorFamily>()->GetDisplayNameTextByValue((int64)Ship->InteriorFamily).ToString()
+			: FString(TEXT("-")));
 		Lbls.Add(TEXT("MAX SPEED"));Vals.Add(FString::Printf(TEXT("%.0f u/s"), DA->MaxSpeed));
 		Lbls.Add(TEXT("ACCEL"));    Vals.Add(FString::Printf(TEXT("%.0f u/s^2"), DA->Acceleration));
 		Lbls.Add(TEXT("MANEUVER")); Vals.Add(FString::Printf(TEXT("%d/10"), DA->Maneuverability));
@@ -1978,7 +2098,8 @@ void AAdastreaHUD::DrawShipSelectScreen(APlayerController* PC)
 	}
 
 	// ---- Footer controls ----
-	DrawCentredText(TEXT("Left/Right: rotate    Up/Down or A/D: cycle ship    [Space]: select & fly    [Esc]: close"), FLinearColor(0.6f,0.7f,0.8f,0.9f), VW * 0.5f, VH - 40.0f, HudType::Label);
+	DrawCentredText(FString::Printf(TEXT("Ship %d of %d    Left/Right: rotate    Up/Down or A/D: cycle ship    [Space]: select & fly    [Esc]: close"),
+		ShipRoster.Num() ? ShipSelectIndex + 1 : 0, ShipRoster.Num()), FLinearColor(0.6f,0.7f,0.8f,0.9f), VW * 0.5f, VH - 40.0f, HudType::Label);
 }
 
 void AAdastreaHUD::ShowMessage(const FString& InMessage, float DurationSecs, bool bIsWarning)

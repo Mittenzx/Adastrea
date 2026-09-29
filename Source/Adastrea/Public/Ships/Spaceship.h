@@ -191,6 +191,11 @@ public:
          * so ships render textured. Maps hull by ship class. */
         void ApplyShipHullMaterial();
 
+        /** The hull material a ship named ShipName flies with: Override if it loads, else
+         * the class material picked from the name. Shared with the ship-select preview so
+         * it shows the hull the ship actually wears. */
+        static UMaterialInterface* ResolveHullMaterial(const FString& ShipName, const TSoftObjectPtr<UMaterialInterface>& Override);
+
         /** Attach the hull's separate window geometry (called in BeginPlay). Windows are
          * not part of the tiling hull texture: Tools/build_ship_windows.py exports
          * SM_Ship_<X>_01_Windows in the hull's object space, so it goes on the ship

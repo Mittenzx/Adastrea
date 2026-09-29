@@ -432,6 +432,21 @@ private:
 	/** Destroy the preview ship, its capture and its light. */
 	void DestroyShipPreview();
 
+	/** Ship classes the ship-select screen lists, smallest hull first. Built from every
+	 * ASpaceship Blueprint in /Game/Blueprints/Ships each time the screen opens, so a new
+	 * ship shows up without touching code; mesh, hull and stats come from each class. */
+	UPROPERTY(Transient)
+	TArray<TSubclassOf<ASpaceship>> ShipRoster;
+
+	/** First roster row drawn; the list scrolls when it is taller than the panel. */
+	int32 ShipSelectScroll = 0;
+
+	/** Rebuild ShipRoster from the asset registry. */
+	void BuildShipRoster();
+
+	/** Class defaults of roster entry Index (its mesh, hull, data asset), or null. */
+	const ASpaceship* GetRosterShip(int32 Index) const;
+
 	/** Canvas-menu state last frame, diffed by UpdateMenuAudio(). */
 	struct FMenuAudioState
 	{

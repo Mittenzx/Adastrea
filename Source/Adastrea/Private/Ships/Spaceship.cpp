@@ -1111,30 +1111,40 @@ void ASpaceship::ApplyShipHullMaterial()
         return;
     }
 
-    // A unique-UV baked hull carries its own material; the tiled class material
-    // below would be mapped across the wrong UVs.
-    if (!HullMaterialOverride.IsNull())
-    {
-        if (UMaterialInterface* Override = HullMaterialOverride.LoadSynchronous())
-        {
-            ShipMeshComponent->SetMaterial(0, Override);
-            UE_LOG(LogAdastreaShips, Log, TEXT("ApplyShipHullMaterial: %s hull set to override %s"),
-                *GetName(), *Override->GetName());
-            return;
-        }
-        UE_LOG(LogAdastreaShips, Warning, TEXT("ApplyShipHullMaterial: HullMaterialOverride %s on %s failed to load; using class material."),
-            *HullMaterialOverride.ToString(), *GetName());
-    }
-    else if (ShipMeshComponent->GetStaticMesh()->GetName().Contains(TEXT("UniqueUV")))
+    if (HullMaterialOverride.IsNull() && ShipMeshComponent->GetStaticMesh()->GetName().Contains(TEXT("UniqueUV")))
     {
         UE_LOG(LogAdastreaShips, Warning, TEXT("ApplyShipHullMaterial: %s uses unique-UV hull %s but has no HullMaterialOverride; the tiled class material will not line up."),
             *GetName(), *ShipMeshComponent->GetStaticMesh()->GetName());
     }
 
+    UMaterialInterface* Mat = ResolveHullMaterial(GetName(), HullMaterialOverride);
+    if (!Mat)
+    {
+        return;
+    }
+    ShipMeshComponent->SetMaterial(0, Mat);
+    UE_LOG(LogAdastreaShips, Log, TEXT("ApplyShipHullMaterial: %s hull set to %s"),
+        *GetName(), *Mat->GetName());
+}
+
+UMaterialInterface* ASpaceship::ResolveHullMaterial(const FString& ShipName, const TSoftObjectPtr<UMaterialInterface>& Override)
+{
+    // A unique-UV baked hull carries its own material; the tiled class material
+    // below would be mapped across the wrong UVs.
+    if (!Override.IsNull())
+    {
+        if (UMaterialInterface* OverrideMat = Override.LoadSynchronous())
+        {
+            return OverrideMat;
+        }
+        UE_LOG(LogAdastreaShips, Warning, TEXT("ResolveHullMaterial: HullMaterialOverride %s on %s failed to load; using class material."),
+            *Override.ToString(), *ShipName);
+    }
+
     // Map the ship's class to its imported hull material (assets agent authored
     // these at /Game/Materials). Default to a generic hull if unknown.
     FString HullMat = TEXT("/Game/Materials/M_Fighter_Hull");
-    const FString ActorName = GetName();
+    const FString& ActorName = ShipName;
     if (ActorName.Contains(TEXT("Freighter")))
     {
         HullMat = TEXT("/Game/Materials/M_Freighter_Hull");
@@ -1224,13 +1234,9 @@ void ASpaceship::ApplyShipHullMaterial()
     UMaterialInterface* Mat = LoadObject<UMaterialInterface>(nullptr, *HullMat);
     if (!Mat)
     {
-        UE_LOG(LogAdastreaShips, Warning, TEXT("ApplyShipHullMaterial: material %s not found."), *HullMat);
-        return;
+        UE_LOG(LogAdastreaShips, Warning, TEXT("ResolveHullMaterial: material %s not found."), *HullMat);
     }
-
-    ShipMeshComponent->SetMaterial(0, Mat);
-    UE_LOG(LogAdastreaShips, Log, TEXT("ApplyShipHullMaterial: %s hull set to %s"),
-        *GetName(), *Mat->GetName());
+    return Mat;
 }
 
 float ASpaceship::GetCurrentHullIntegrity() const
