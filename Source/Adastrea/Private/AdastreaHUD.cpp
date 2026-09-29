@@ -1828,11 +1828,22 @@ void AAdastreaHUD::OrbitShipPreview(float DeltaYaw, float DeltaPitch)
 
 USpaceshipDataAsset* AAdastreaHUD::GetPreviewShipDataAsset() const
 {
-	// Read stats from the roster's associated data asset (robust regardless of
-	// whether the live pawn exposes ShipDataAsset).
 	if (ShipSelectIndex < 0 || ShipSelectIndex >= ShipRosterCount)
 	{
 		return nullptr;
+	}
+	// Show the data asset the Blueprint actually flies (it now drives speed and
+	// acceleration), so the readout can't drift from the ship. The roster table is
+	// only a fallback for a pawn without one.
+	if (TSubclassOf<AActor> ShipClass = LoadShipRosterClass(ShipSelectIndex))
+	{
+		if (const ASpaceship* ShipCDO = Cast<ASpaceship>(ShipClass->GetDefaultObject()))
+		{
+			if (ShipCDO->ShipDataAsset)
+			{
+				return ShipCDO->ShipDataAsset;
+			}
+		}
 	}
 	return LoadObject<USpaceshipDataAsset>(nullptr, ShipRosterDataAssets[ShipSelectIndex]);
 }

@@ -119,6 +119,25 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement", meta=(ClampMin="0.0"))
     float DefaultTurningBoost;
 
+    // Converts the data asset's MaxSpeed (design units) to DefaultMaxSpeed (cm/s).
+    // 2.5 keeps the starter Viper (MaxSpeed 1200) at the 3000 it flew before the wiring.
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Movement", meta=(ClampMin="0.0"))
+    float DataAssetSpeedScale = 2.5f;
+
+    // Converts the data asset's Acceleration to DefaultAcceleration/DefaultDeceleration (cm/s^2).
+    // Keeps the Viper (Acceleration 180) at the 1000 it flew before the wiring.
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Movement", meta=(ClampMin="0.0"))
+    float DataAssetAccelerationScale = 1000.0f / 180.0f;
+
+    /**
+     * Sets top speed, acceleration and deceleration from ShipDataAsset (scaled by the
+     * DataAsset*Scale factors) and pushes them to the movement component. Called in
+     * BeginPlay before upgrades capture their base stats; call RebaseUpgradeStats()
+     * after it if the data asset changes later.
+     */
+    UFUNCTION(BlueprintCallable, Category="Movement")
+    void ApplyDataAssetMobility();
+
     // Reference to the walkable interior
         UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interior")
             TWeakObjectPtr<ASpaceshipInterior> InteriorInstance;

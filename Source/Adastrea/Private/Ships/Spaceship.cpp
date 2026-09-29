@@ -201,6 +201,7 @@ void ASpaceship::BeginPlay()
     {
         MaxHullIntegrity = ShipDataAsset->HullStrength;
         CurrentHullIntegrity = MaxHullIntegrity; // Start at full health
+        ApplyDataAssetMobility();
 
         // Ships rated for mining get a working laser; power scales with the rating.
         if (MiningLaser && ShipDataAsset->MiningRating > 0)
@@ -1396,6 +1397,35 @@ void ASpaceship::ToggleTravelMode()
             MovementComponent->MaxSpeed = DefaultMaxSpeed;
         }
     }
+}
+
+void ASpaceship::ApplyDataAssetMobility()
+{
+    if (!ShipDataAsset)
+    {
+        return;
+    }
+
+    if (ShipDataAsset->MaxSpeed > 0.0f)
+    {
+        DefaultMaxSpeed = ShipDataAsset->MaxSpeed * DataAssetSpeedScale;
+    }
+    if (ShipDataAsset->Acceleration > 0.0f)
+    {
+        // Braking matches thrust, so a heavy hull doesn't stop on a dime.
+        DefaultAcceleration = ShipDataAsset->Acceleration * DataAssetAccelerationScale;
+        DefaultDeceleration = DefaultAcceleration;
+    }
+
+    if (MovementComponent)
+    {
+        MovementComponent->MaxSpeed = GetEffectiveMaxSpeed();
+        MovementComponent->Acceleration = DefaultAcceleration;
+        MovementComponent->Deceleration = DefaultDeceleration;
+    }
+
+    UE_LOG(LogAdastreaShips, Log, TEXT("ApplyDataAssetMobility %s (%s): speed %.0f accel %.0f"),
+        *GetName(), *ShipDataAsset->GetName(), DefaultMaxSpeed, DefaultAcceleration);
 }
 
 float ASpaceship::GetEffectiveMaxSpeed() const
