@@ -27,6 +27,8 @@
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Trading/CargoComponent.h"
 #include "Trading/PlayerTraderComponent.h"
+#include "Ships/ShipUpgradeComponent.h"
+#include "Stations/SpaceStation.h"
 #include "Mining/MiningLaserComponent.h"
 #include "Audio/ShipEngineAudioComponent.h"
 #include "Audio/AudioEventLibrary.h"
@@ -166,6 +168,7 @@ ASpaceship::ASpaceship()
     // Create trading components (cargo hold + player trader) so every ship can trade
     CargoComponent = CreateDefaultSubobject<UCargoComponent>(TEXT("CargoComponent"));
     PlayerTraderComponent = CreateDefaultSubobject<UPlayerTraderComponent>(TEXT("PlayerTraderComponent"));
+    UpgradeComponent = CreateDefaultSubobject<UShipUpgradeComponent>(TEXT("UpgradeComponent"));
 
     // Mining laser on a nose hardpoint (relative offset; Blueprints can move it to a socket).
     // Stays inert unless enabled - see BeginPlay (ships with a MiningRating).
@@ -206,6 +209,21 @@ void ASpaceship::BeginPlay()
             MiningLaser->MiningPower = FMath::Max(MiningLaser->MiningPower, ShipDataAsset->MiningRating * 0.5f);
         }
     }
+
+    // Upgrades scale the stats as they stand now (data asset + Blueprint defaults).
+    if (UpgradeComponent)
+    {
+        if (ShipDataAsset)
+        {
+            UpgradeComponent->ShipTypeID = ShipDataAsset->GetFName();
+            if (ShipDataAsset->WeaponSlots > 0)
+            {
+                UpgradeComponent->CategorySlots.Add(EShipUpgradeCategory::Weapons, FMath::Clamp(ShipDataAsset->WeaponSlots, 1, 6));
+            }
+        }
+        UpgradeComponent->OnUpgradesChanged.AddUniqueDynamic(this, &ASpaceship::RecalculateUpgradedStats);
+    }
+    RebaseUpgradeStats();
 
     // Spawn the interior actor if needed
         if (!InteriorInstance.IsValid())
@@ -1394,6 +1412,131 @@ float ASpaceship::GetEffectiveMaxSpeed() const
     }
 
     return EffectiveSpeed;
+}
+
+namespace
+{
+    /** The ship's current (pre-upgrade at BeginPlay) value of an upgradeable stat. */
+    float ReadShipStat(const ASpaceship& Ship, FName StatName)
+    {
+        if (StatName == ShipUpgradeStats::MaxSpeed)        { return Ship.DefaultMaxSpeed; }
+        if (StatName == ShipUpgradeStats::Acceleration)    { return Ship.DefaultAcceleration; }
+        if (StatName == ShipUpgradeStats::BoostMultiplier) { return Ship.BoostMultiplier; }
+        if (StatName == ShipUpgradeStats::HullStrength)    { return Ship.MaxHullIntegrity; }
+        if (StatName == ShipUpgradeStats::ShieldStrength)  { return Ship.ShipDataAsset ? Ship.ShipDataAsset->ShieldStrength : 0.0f; }
+        if (StatName == ShipUpgradeStats::CargoCapacity)   { return Ship.CargoComponent ? Ship.CargoComponent->CargoCapacity : 0.0f; }
+        if (StatName == ShipUpgradeStats::WeaponDamage)    { return 1.0f; }
+        if (StatName == ShipUpgradeStats::MiningPower)     { return Ship.MiningLaser ? Ship.MiningLaser->MiningPower : 0.0f; }
+        return 0.0f;
+    }
+
+    const FName UpgradeableStats[] = {
+        ShipUpgradeStats::MaxSpeed, ShipUpgradeStats::Acceleration, ShipUpgradeStats::BoostMultiplier,
+        ShipUpgradeStats::HullStrength, ShipUpgradeStats::ShieldStrength, ShipUpgradeStats::CargoCapacity,
+        ShipUpgradeStats::WeaponDamage, ShipUpgradeStats::MiningPower,
+    };
+}
+
+void ASpaceship::RebaseUpgradeStats()
+{
+    UpgradeBaseStats.Reset();
+    for (const FName& Stat : UpgradeableStats)
+    {
+        UpgradeBaseStats.Add(Stat, ReadShipStat(*this, Stat));
+    }
+    RecalculateUpgradedStats();
+}
+
+float ASpaceship::GetBaseStat(FName StatName) const
+{
+    const float* Base = UpgradeBaseStats.Find(StatName);
+    return Base ? *Base : ReadShipStat(*this, StatName);
+}
+
+float ASpaceship::GetUpgradedStat(FName StatName) const
+{
+    const float Base = GetBaseStat(StatName);
+    return UpgradeComponent ? UpgradeComponent->GetStatModifier(StatName, Base) : Base;
+}
+
+float ASpaceship::GetMaxShieldStrength() const
+{
+    return FMath::Max(0.0f, GetUpgradedStat(ShipUpgradeStats::ShieldStrength));
+}
+
+float ASpaceship::GetWeaponDamageMultiplier() const
+{
+    return FMath::Max(0.0f, GetUpgradedStat(ShipUpgradeStats::WeaponDamage));
+}
+
+void ASpaceship::RecalculateUpgradedStats()
+{
+    if (UpgradeBaseStats.Num() == 0)
+    {
+        // Before BeginPlay: RebaseUpgradeStats() applies everything once the base is known.
+        return;
+    }
+
+    DefaultMaxSpeed = FMath::Max(0.0f, GetUpgradedStat(ShipUpgradeStats::MaxSpeed));
+    DefaultAcceleration = FMath::Max(0.0f, GetUpgradedStat(ShipUpgradeStats::Acceleration));
+    BoostMultiplier = FMath::Max(1.0f, GetUpgradedStat(ShipUpgradeStats::BoostMultiplier));
+    if (MovementComponent)
+    {
+        MovementComponent->Acceleration = DefaultAcceleration;
+        MovementComponent->MaxSpeed = GetEffectiveMaxSpeed();
+    }
+
+    const float OldMaxHull = MaxHullIntegrity;
+    MaxHullIntegrity = FMath::Max(1.0f, GetUpgradedStat(ShipUpgradeStats::HullStrength));
+    CurrentHullIntegrity = OldMaxHull > 0.0f
+        ? FMath::Clamp(CurrentHullIntegrity * (MaxHullIntegrity / OldMaxHull), 0.0f, MaxHullIntegrity)
+        : MaxHullIntegrity;
+
+    if (CargoComponent)
+    {
+        CargoComponent->CargoCapacity = FMath::Max(0.0f, GetUpgradedStat(ShipUpgradeStats::CargoCapacity));
+    }
+    if (MiningLaser)
+    {
+        MiningLaser->MiningPower = FMath::Max(0.0f, GetUpgradedStat(ShipUpgradeStats::MiningPower));
+    }
+
+    UE_LOG(LogAdastreaShips, Log, TEXT("RecalculateUpgradedStats %s: speed %.0f accel %.0f boost x%.2f hull %.0f shield %.0f cargo %.0f weapons x%.2f mining %.1f"),
+        *GetName(), DefaultMaxSpeed, DefaultAcceleration, BoostMultiplier, MaxHullIntegrity, GetMaxShieldStrength(),
+        CargoComponent ? CargoComponent->CargoCapacity : 0.0f, GetWeaponDamageMultiplier(), MiningLaser ? MiningLaser->MiningPower : 0.0f);
+}
+
+bool ASpaceship::CanRemoveUpgrade(const UShipUpgradeDataAsset* Upgrade, FText& OutReason) const
+{
+    if (!Upgrade || !UpgradeComponent || !CargoComponent)
+    {
+        return true;
+    }
+
+    // A smaller hold must still fit what's in it.
+    const float Used = CargoComponent->CargoCapacity - CargoComponent->GetAvailableCargoSpace();
+    const float NewCapacity = UpgradeComponent->PreviewStat(ShipUpgradeStats::CargoCapacity,
+        GetBaseStat(ShipUpgradeStats::CargoCapacity), nullptr, Upgrade->UpgradeID);
+    if (Used > NewCapacity + KINDA_SMALL_NUMBER)
+    {
+        OutReason = FText::Format(FText::FromString(TEXT("Hold carries {0} units; without it only {1} fit")),
+            FText::AsNumber(FMath::RoundToInt(Used)), FText::AsNumber(FMath::FloorToInt(NewCapacity)));
+        return false;
+    }
+    return true;
+}
+
+ASpaceStation* ASpaceship::GetDockedStation() const
+{
+    if (!bIsDocked || !NearbyStation)
+    {
+        return nullptr;
+    }
+    if (ASpaceStation* Station = Cast<ASpaceStation>(NearbyStation->GetAttachParentActor()))
+    {
+        return Station;
+    }
+    return Cast<ASpaceStation>(NearbyStation->GetOwner());
 }
 
 void ASpaceship::ApplyFlightAssist(float DeltaTime)

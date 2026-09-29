@@ -93,7 +93,7 @@ public:
 	void HidePauseMenu() { bShowPauseMenu = false; }
 
 	/** True while any other full-screen canvas screen (map, station menu, trade, ship select, station info) is up. */
-	bool IsOtherScreenOpen() const { return bShowMap || bShowStationMenu || bShowTradeScreen || bShowShipSelect || bShowStationInfo; }
+	bool IsOtherScreenOpen() const { return bShowMap || bShowStationMenu || bShowTradeScreen || bShowOutfitting || bShowShipSelect || bShowStationInfo; }
 
 	/** Move the highlighted row up/down (wraps). */
 	void MovePauseMenuSelection(int32 Step);
@@ -255,7 +255,7 @@ public:
 
 	/** Open the station menu (called on docking, and when leaving a sub-screen). */
 	UFUNCTION(BlueprintCallable, Category="HUD|StationMenu")
-	void ShowStationMenu() { bShowStationMenu = true; bShowTradeScreen = false; StationMenuIndex = 0; }
+	void ShowStationMenu() { bShowStationMenu = true; bShowTradeScreen = false; bShowOutfitting = false; StationMenuIndex = 0; }
 
 	UFUNCTION(BlueprintCallable, Category="HUD|StationMenu")
 	void HideStationMenu() { bShowStationMenu = false; }
@@ -263,7 +263,7 @@ public:
 	/** Move the highlighted option up/down (wraps). */
 	void MoveStationMenuSelection(int32 Step);
 
-	/** Activate the highlighted option (Trading Department, Maintenance Dock, Habitation, Undock). */
+	/** Activate the highlighted option (Trading Department, Outfitting Bay, Maintenance Dock, Habitation, Undock). */
 	void ConfirmStationMenuSelection(APlayerController* PC);
 
 	/** Leave the station (closes menu and undocks the ship). */
@@ -283,6 +283,48 @@ public:
 
 	/** Toggle buy/sell mode. */
 	void ToggleBuySellMode() { bBuyMode = !bBuyMode; }
+
+	// ========================
+	// OUTFITTING SCREEN (docked; buy, fit and sell ship upgrades at the station's
+	// outfitting modules - AdastreaHUD_Outfitting.cpp)
+	// ========================
+
+	/** Whether the docked outfitting screen is shown. */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Outfitting")
+	bool bShowOutfitting = false;
+
+	/** Selected category tab (index into the Engines/Weapons/Shields/Hull/Cargo tabs). */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Outfitting")
+	int32 OutfittingCategoryIndex = 0;
+
+	/** Selected upgrade row within the category. */
+	UPROPERTY(BlueprintReadWrite, Category="HUD|Outfitting")
+	int32 OutfittingRowIndex = 0;
+
+	/** Open the outfitting screen (from the station menu or the maintenance dock's refit kiosk). */
+	UFUNCTION(BlueprintCallable, Category="HUD|Outfitting")
+	void ShowOutfitting();
+
+	UFUNCTION(BlueprintCallable, Category="HUD|Outfitting")
+	void HideOutfitting() { bShowOutfitting = false; }
+
+	/** Whether the station the player is docked at has any outfitting module. */
+	bool IsOutfittingAvailable(APlayerController* PC) const;
+
+	/** Up/Down: move the upgrade row selection (clamped). */
+	void MoveOutfittingSelection(int32 Step);
+
+	/** Left/Right: switch category tab (wraps). */
+	void MoveOutfittingCategory(int32 Step);
+
+	/** Enter: buy and fit the selected upgrade. */
+	void ConfirmOutfittingPurchase(APlayerController* PC);
+
+	/** X: remove one fitted stack of the selected upgrade and sell it back. */
+	void SellOutfittingSelection(APlayerController* PC);
+
+	/** Draw the outfitting screen. */
+	void DrawOutfittingScreen(APlayerController* PC, ASpaceship* Ship);
 
 	// ========================
 	// SHIP SELECT SCREEN (concept prototype — later reused at construction
@@ -396,12 +438,15 @@ private:
 		bool bInitialized = false;
 		bool bMap = false;
 		bool bTradeScreen = false;
+		bool bOutfitting = false;
 		bool bStationMenu = false;
 		bool bShipSelect = false;
 		bool bStationInfo = false;
 		bool bBuyMode = true;
 		int32 StationMenuIndex = 0;
 		int32 TradeIndex = 0;
+		int32 OutfittingCategory = 0;
+		int32 OutfittingRow = 0;
 		int32 ShipSelectIndex = 0;
 	};
 	FMenuAudioState MenuAudioState;

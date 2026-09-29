@@ -26,6 +26,7 @@ namespace
 		case EStationTerminalType::ToMaintenance: return FLinearColor(0.90f, 0.30f, 0.10f);
 		case EStationTerminalType::ToHabitation:  return FLinearColor(0.20f, 0.75f, 0.45f);
 		case EStationTerminalType::Service:       return FLinearColor(0.70f, 0.40f, 0.95f);
+		case EStationTerminalType::Outfitting:    return FLinearColor(0.15f, 0.90f, 0.60f);
 		default:                                  return FLinearColor(0.20f, 0.60f, 0.95f);
 		}
 	}
@@ -108,6 +109,7 @@ FText AStationTerminal::GetInteractPrompt_Implementation() const
 	case EStationTerminalType::ToMaintenance: return FText::FromString(TEXT("Enter Maintenance Dock"));
 	case EStationTerminalType::ToHabitation:  return FText::FromString(TEXT("Enter Habitation"));
 	case EStationTerminalType::Service:       return FText::FromString(ServicePrompt);
+	case EStationTerminalType::Outfitting:    return FText::FromString(TEXT("Open Outfitting Bay"));
 	default:                                  return FText::FromString(TEXT("Return to Ship"));
 	}
 }
@@ -120,7 +122,8 @@ void AStationTerminal::Interact_Implementation(AAdastreaPlayerController* PC)
 	}
 	// Consoles chirp; the room-to-room and airlock kiosks get the door sound instead
 	// (played by the controller when the room actually changes).
-	if (TerminalType == EStationTerminalType::Service || TerminalType == EStationTerminalType::Trading)
+	if (TerminalType == EStationTerminalType::Service || TerminalType == EStationTerminalType::Trading
+		|| TerminalType == EStationTerminalType::Outfitting)
 	{
 		UAudioEventLibrary::PlayEventAtLocation(this, TEXT("Interior.ConsoleChirp"), GetActorLocation(), 0.3f);
 	}
@@ -455,12 +458,11 @@ void AStationInterior::BuildMaintenance()
 	}
 	AddBox(TEXT("FloorLane"), FVector(-700, 0, 1), FVector(650, 60, 1), Hazard, false);
 
-	// Kiosks: return to the concourse, plus service terminals (not implemented yet).
+	// Kiosks: return to the concourse, the ship refit (outfitting) terminal, and hull repair (not implemented yet).
 	AddKiosk(EStationTerminalType::ToConcourse, FVector(-1550, 0, 0), 0.0f, TEXT("CONCOURSE"));
 	AddKiosk(EStationTerminalType::Service, FVector(1500, 500, 0), 180.0f, TEXT("HULL REPAIR"),
 		TEXT("Repair Hull"), TEXT("Hull repair is not available yet"));
-	AddKiosk(EStationTerminalType::Service, FVector(1500, -500, 0), 180.0f, TEXT("SHIP REFIT"),
-		TEXT("Refit Ship"), TEXT("Ship refits are not available yet"));
+	AddKiosk(EStationTerminalType::Outfitting, FVector(1500, -500, 0), 180.0f, TEXT("SHIP REFIT"));
 
 	// Bright industrial lighting.
 	for (const float LX : { -1000.0f, -250.0f, 500.0f, 1200.0f })

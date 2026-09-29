@@ -2,7 +2,7 @@
 """
 Station Module Catalog Tests
 
-Validates the Phase 3 station module catalog derivation: all 27 craftable modules
+Validates the Phase 3 station module catalog derivation: all 33 craftable modules
 are present, their build cost derives from the authoritative crafting tree (cost-
 driven OutputValue), materials match the recipe ingredients, and tech levels /
 groups are sensible. Guards the catalog against drifting from the crafting tree.
@@ -27,7 +27,7 @@ CRAFTING_PATH = PROJECT_ROOT / "Content" / "Data" / "CraftingTree.json"
 MIRROR_PATH = PROJECT_ROOT / "Content" / "DataAssets" / "Stations" / "DA_StationModuleCatalog.uasset.txt"
 TMP_JSON = PROJECT_ROOT / "Content" / "Data" / "StationModuleCatalog.json"
 
-# The 27 expected craftable station modules (15 core + 12 research labs).
+# The 33 expected craftable station modules (15 core + 12 research labs + 6 ship outfitting).
 EXPECTED_MODULES = {
     "CorridorModule", "CargoBayModule", "DockingBayModule", "DockingPortModule",
     "HabitationModule", "BarracksModule", "MarketplaceModule", "ScienceLabModule",
@@ -36,6 +36,8 @@ EXPECTED_MODULES = {
     "PhysicsLabModule", "MaterialsLabModule", "ElectronicsLabModule", "WeaponsLabModule",
     "BiologyLabModule", "ProjectileWeaponsLab", "BeamWeaponsLab", "IonPropulsionLab",
     "GravMaterialsLab", "EncryptionLab", "OptronicsLab", "CyberneticsLab",
+    "OutfittingModule", "EngineWorkshopModule", "ArmouryModule", "ShieldWorkshopModule",
+    "HullWorksModule", "CargoRefitModule",
 }
 
 # Valid EStationModuleGroup values (must match StationModuleTypes.h).
@@ -60,7 +62,7 @@ class TestStationModuleCatalog:
 
     # ---- presence & completeness ----
 
-    def test_all_27_modules_present(self):
+    def test_all_33_modules_present(self):
         entries = load_catalog_spec()
         present = {e["item_id"] for e in entries}
         assert EXPECTED_MODULES == present, (

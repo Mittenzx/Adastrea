@@ -60,6 +60,13 @@ namespace
         // Defence
         { TEXT("TurretModule"),          TEXT("SM_StationModule_Turret_01"),          nullptr, EModuleShell::ConnectorThin, EModuleFamily::Defence },
         { TEXT("ShieldGeneratorModule"), TEXT("SM_StationModule_ShieldGenerator_01"), nullptr, EModuleShell::Standard,      EModuleFamily::Defence },
+        // Ship outfitting (AOutfittingModule + specialist workshops)
+        { TEXT("OutfittingModule"),      TEXT("SM_StationModule_Outfitting_01"),      nullptr, EModuleShell::Standard,      EModuleFamily::Utility },
+        { TEXT("EngineWorkshopModule"),  TEXT("SM_StationModule_EngineWorkshop_01"),  nullptr, EModuleShell::Standard,      EModuleFamily::Utility },
+        { TEXT("ArmouryModule"),         TEXT("SM_StationModule_Armoury_01"),         nullptr, EModuleShell::Standard,      EModuleFamily::Defence },
+        { TEXT("ShieldWorkshopModule"),  TEXT("SM_StationModule_ShieldWorkshop_01"),  nullptr, EModuleShell::Standard,      EModuleFamily::Defence },
+        { TEXT("HullWorksModule"),       TEXT("SM_StationModule_HullWorks_01"),       nullptr, EModuleShell::Standard,      EModuleFamily::Utility },
+        { TEXT("CargoRefitModule"),      TEXT("SM_StationModule_CargoRefit_01"),      nullptr, EModuleShell::Standard,      EModuleFamily::Utility },
         // Research: base + tier-1 labs + the 7 tier-4 labs, all falling back to the shared lab kit
         { TEXT("ScienceLabModule"),      TEXT("SM_StationModule_ScienceLab_01"),           ResearchLabKit, EModuleShell::Standard, EModuleFamily::Shell },
         { TEXT("ResearchLabModule"),     TEXT("SM_StationModule_ResearchLab_01"),          nullptr,        EModuleShell::Standard, EModuleFamily::Shell },

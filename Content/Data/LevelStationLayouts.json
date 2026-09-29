@@ -22,7 +22,8 @@
         {"id": "CargoE",  "item": "CargoBayModule",    "on": "MarketE", "dir": "E"},
         {"id": "CargoW",  "item": "CargoBayModule",    "on": "MarketW", "dir": "W"},
         {"id": "Reactor", "item": "ReactorModule",     "on": "CargoE",  "dir": "S"},
-        {"id": "Hab",     "item": "HabitationModule",  "on": "CargoW",  "dir": "S"}
+        {"id": "Hab",     "item": "HabitationModule",  "on": "CargoW",  "dir": "S"},
+        {"id": "Outfit", "item": "OutfittingModule", "on": "Reactor", "dir": "S"}
       ]
     },
     "Station_Agricultural": {
@@ -37,7 +38,8 @@
         {"id": "SolarE",   "item": "SolarArrayModule",  "on": "HabE",   "dir": "E"},
         {"id": "SolarW",   "item": "SolarArrayModule",  "on": "HabW",   "dir": "W", "rot": 180},
         {"id": "Process",  "item": "ProcessingModule",  "on": "Market", "dir": "E"},
-        {"id": "Reactor",  "item": "ReactorModule",     "on": "Market", "dir": "W"}
+        {"id": "Reactor",  "item": "ReactorModule",     "on": "Market", "dir": "W"},
+        {"id": "CargoRefit", "item": "CargoRefitModule", "on": "Cargo", "dir": "S"}
       ]
     },
     "Station_Industrial": {
@@ -51,7 +53,11 @@
         {"id": "CargoE",  "item": "CargoBayModule",    "on": "Process", "dir": "E"},
         {"id": "CargoW",  "item": "CargoBayModule",    "on": "Fab",    "dir": "W"},
         {"id": "Reactor", "item": "ReactorModule",     "on": "Process", "dir": "S"},
-        {"id": "Fuel",    "item": "FuelDepotModule",   "on": "Fab",    "dir": "S"}
+        {"id": "Fuel",    "item": "FuelDepotModule",   "on": "Fab",    "dir": "S"},
+        {"id": "EngineWS", "item": "EngineWorkshopModule", "on": "Reactor", "dir": "S"},
+        {"id": "HullWorks", "item": "HullWorksModule", "on": "Fuel", "dir": "S"},
+        {"id": "CargoRefit", "item": "CargoRefitModule", "on": "CargoE", "dir": "E"},
+        {"id": "Reactor2", "item": "ReactorModule", "on": "CargoW", "dir": "W"}
       ]
     },
     "Station_Research": {
@@ -66,7 +72,8 @@
         {"id": "SolarE",   "item": "SolarArrayModule",  "on": "Physics",  "dir": "E"},
         {"id": "SolarW",   "item": "SolarArrayModule",  "on": "Research", "dir": "W", "rot": 180},
         {"id": "Hab",      "item": "HabitationModule",  "on": "Science",  "dir": "S"},
-        {"id": "Reactor",  "item": "ReactorModule",     "on": "Research", "dir": "S"}
+        {"id": "Reactor",  "item": "ReactorModule",     "on": "Research", "dir": "S"},
+        {"id": "ShieldWS", "item": "ShieldWorkshopModule", "on": "Hab", "dir": "S"}
       ]
     },
     "Station_Luxury": {
@@ -80,7 +87,8 @@
         {"id": "Shield",  "item": "ShieldGeneratorModule", "on": "HabS",   "dir": "S"},
         {"id": "Reactor", "item": "ReactorModule",         "on": "Market", "dir": "S"},
         {"id": "TurretE", "item": "TurretModule",          "on": "Market", "dir": "E"},
-        {"id": "TurretW", "item": "TurretModule",          "on": "HabW",   "dir": "W"}
+        {"id": "TurretW", "item": "TurretModule",          "on": "HabW",   "dir": "W"},
+        {"id": "Outfit", "item": "OutfittingModule", "on": "Reactor", "dir": "S"}
       ]
     },
     "Station_BlackMarket": {
@@ -94,7 +102,8 @@
         {"id": "Fuel",     "item": "FuelDepotModule",   "on": "Cargo",    "dir": "E"},
         {"id": "TurretE",  "item": "TurretModule",      "on": "Cargo",    "dir": "N"},
         {"id": "TurretW",  "item": "TurretModule",      "on": "Barracks", "dir": "N"},
-        {"id": "Reactor",  "item": "ReactorModule",     "on": "Barracks", "dir": "S"}
+        {"id": "Reactor",  "item": "ReactorModule",     "on": "Barracks", "dir": "S"},
+        {"id": "Armoury", "item": "ArmouryModule", "on": "Reactor", "dir": "S"}
       ]
     }
   }

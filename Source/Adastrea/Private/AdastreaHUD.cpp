@@ -97,12 +97,15 @@ void AAdastreaHUD::UpdateMenuAudio()
 	Now.bInitialized = true;
 	Now.bMap = bShowMap;
 	Now.bTradeScreen = bShowTradeScreen;
+	Now.bOutfitting = bShowOutfitting;
 	Now.bStationMenu = bShowStationMenu;
 	Now.bShipSelect = bShowShipSelect;
 	Now.bStationInfo = bShowStationInfo;
 	Now.bBuyMode = bBuyMode;
 	Now.StationMenuIndex = StationMenuIndex;
 	Now.TradeIndex = SelectedTradeIndex;
+	Now.OutfittingCategory = OutfittingCategoryIndex;
+	Now.OutfittingRow = OutfittingRowIndex;
 	Now.ShipSelectIndex = ShipSelectIndex;
 
 	const FMenuAudioState Was = MenuAudioState;
@@ -114,10 +117,10 @@ void AAdastreaHUD::UpdateMenuAudio()
 
 	const bool bOpened = (Now.bMap && !Was.bMap) || (Now.bTradeScreen && !Was.bTradeScreen)
 		|| (Now.bStationMenu && !Was.bStationMenu) || (Now.bShipSelect && !Was.bShipSelect)
-		|| (Now.bStationInfo && !Was.bStationInfo);
+		|| (Now.bStationInfo && !Was.bStationInfo) || (Now.bOutfitting && !Was.bOutfitting);
 	const bool bClosed = (!Now.bMap && Was.bMap) || (!Now.bTradeScreen && Was.bTradeScreen)
 		|| (!Now.bStationMenu && Was.bStationMenu) || (!Now.bShipSelect && Was.bShipSelect)
-		|| (!Now.bStationInfo && Was.bStationInfo);
+		|| (!Now.bStationInfo && Was.bStationInfo) || (!Now.bOutfitting && Was.bOutfitting);
 
 	// Secondary: docking's clamp, a menu confirm click, a door etc. already cover these.
 	if (bOpened)
@@ -137,6 +140,8 @@ void AAdastreaHUD::UpdateMenuAudio()
 	const bool bHoverMoved =
 		(Now.bStationMenu && Was.bStationMenu && Now.StationMenuIndex != Was.StationMenuIndex)
 		|| (Now.bTradeScreen && Was.bTradeScreen && Now.TradeIndex != Was.TradeIndex)
+		|| (Now.bOutfitting && Was.bOutfitting
+			&& (Now.OutfittingRow != Was.OutfittingRow || Now.OutfittingCategory != Was.OutfittingCategory))
 		|| (Now.bShipSelect && Was.bShipSelect && Now.ShipSelectIndex != Was.ShipSelectIndex);
 	if (bHoverMoved)
 	{
@@ -232,6 +237,16 @@ void AAdastreaHUD::DrawHUD()
 			if (Ship)
 			{
 				DrawTradeScreen(PC, Cast<AAdastreaPlayerController>(PC), Ship);
+			}
+			return;
+		}
+
+		// Docked outfitting screen draws over everything when shown.
+		if (bShowOutfitting)
+		{
+			if (Ship)
+			{
+				DrawOutfittingScreen(PC, Ship);
 			}
 			return;
 		}
@@ -1200,22 +1215,25 @@ AActor* AAdastreaHUD::PickSectorMapActor(const FVector2D& ScreenPos, float Radiu
 
 namespace
 {
+	enum class EStationMenuAction : uint8 { Trading, Outfitting, WalkStation, Maintenance, Habitation, Undock };
+
 	struct FStationMenuOption
 	{
+		EStationMenuAction Action;
 		const TCHAR* Label;
 		const TCHAR* Blurb;
-		bool bAvailable;
 	};
 
-	// Each option leads to a different part of the station. Trading, walking the
-	// station and undocking are implemented so far.
+	// Each option leads to a different part of the station. Outfitting is only
+	// available where the station has an outfitting module (checked when drawn/used).
 	const FStationMenuOption kStationMenuOptions[] =
 	{
-		{ TEXT("Trading Department"), TEXT("Buy and sell goods at the station market"),    true  },
-		{ TEXT("Walk the Station"),   TEXT("Leave your ship and explore the station on foot"), true },
-		{ TEXT("Maintenance Dock"),   TEXT("Walk to the hangar bay: repairs, refits and ship upgrades"), true },
-		{ TEXT("Habitation"),         TEXT("Walk to the crew cabins and lounge"),          true },
-		{ TEXT("Undock"),             TEXT("Leave the station and return to flight"),      true  },
+		{ EStationMenuAction::Trading,     TEXT("Trading Department"), TEXT("Buy and sell goods at the station market") },
+		{ EStationMenuAction::Outfitting,  TEXT("Outfitting Bay"),     TEXT("Buy, fit and sell engine, weapon, shield, hull and cargo upgrades") },
+		{ EStationMenuAction::WalkStation, TEXT("Walk the Station"),   TEXT("Leave your ship and explore the station on foot") },
+		{ EStationMenuAction::Maintenance, TEXT("Maintenance Dock"),   TEXT("Walk to the hangar bay: repairs and the ship refit kiosk") },
+		{ EStationMenuAction::Habitation,  TEXT("Habitation"),         TEXT("Walk to the crew cabins and lounge") },
+		{ EStationMenuAction::Undock,      TEXT("Undock"),             TEXT("Leave the station and return to flight") },
 	};
 	constexpr int32 kStationMenuCount = UE_ARRAY_COUNT(kStationMenuOptions);
 }
@@ -1240,21 +1258,24 @@ void AAdastreaHUD::ConfirmStationMenuSelection(APlayerController* PC)
 	const FStationMenuOption& Option = kStationMenuOptions[Index];
 	UE_LOG(LogTemp, Log, TEXT("StationMenu: selected '%s'"), Option.Label);
 
-	if (!Option.bAvailable)
+	if (Option.Action == EStationMenuAction::Outfitting && !IsOutfittingAvailable(PC))
 	{
 		UAudioEventLibrary::PlayEvent2D(this, TEXT("UI.Error"), 0.2f);
-		ShowMessage(FString::Printf(TEXT("%s is not available yet"), Option.Label), 3.0f, true);
+		ShowMessage(TEXT("This station has no outfitting modules"), 3.0f, true);
 		return;
 	}
 	UAudioEventLibrary::PlayEvent2D(this, TEXT("UI.Click"), 0.08f);
 
-	switch (Index)
+	switch (Option.Action)
 	{
-	case 0: // Trading Department
+	case EStationMenuAction::Trading:
 		bShowStationMenu = false;
 		ShowTradeScreen();
 		break;
-	case 1: // Walk the Station
+	case EStationMenuAction::Outfitting:
+		ShowOutfitting();
+		break;
+	case EStationMenuAction::WalkStation:
 		if (AAdastreaPlayerController* AdPC = Cast<AAdastreaPlayerController>(PC))
 		{
 			if (ASpaceship* Ship = Cast<ASpaceship>(PC->GetPawn()))
@@ -1263,17 +1284,17 @@ void AAdastreaHUD::ConfirmStationMenuSelection(APlayerController* PC)
 			}
 		}
 		break;
-	case 2: // Maintenance Dock
-	case 3: // Habitation
+	case EStationMenuAction::Maintenance:
+	case EStationMenuAction::Habitation:
 		if (AAdastreaPlayerController* AdPC = Cast<AAdastreaPlayerController>(PC))
 		{
 			if (ASpaceship* Ship = Cast<ASpaceship>(PC->GetPawn()))
 			{
-				AdPC->EnterStationRoom(Ship, Index == 2 ? EStationRoom::Maintenance : EStationRoom::Habitation);
+				AdPC->EnterStationRoom(Ship, Option.Action == EStationMenuAction::Maintenance ? EStationRoom::Maintenance : EStationRoom::Habitation);
 			}
 		}
 		break;
-	case 4: // Undock
+	case EStationMenuAction::Undock:
 		UndockFromStationMenu(PC);
 		break;
 	default:
@@ -1303,9 +1324,11 @@ void AAdastreaHUD::DrawStationMenu(APlayerController* PC, AAdastreaPlayerControl
 	DrawLine(X + 16.0f, Y + 80.0f, X + PanelW - 16.0f, Y + 80.0f, kBorder, 1.0f);
 
 	const FLinearColor Accent(0.15f, 0.9f, 0.6f, 1.0f);
+	const bool bOutfitting = IsOutfittingAvailable(PC);
 	for (int32 i = 0; i < kStationMenuCount; ++i)
 	{
 		const FStationMenuOption& Option = kStationMenuOptions[i];
+		const bool bAvailable = Option.Action != EStationMenuAction::Outfitting || bOutfitting;
 		const float RowY = Y + 92.0f + RowH * i;
 		const bool bSel = (i == StationMenuIndex);
 		if (bSel)
@@ -1313,9 +1336,9 @@ void AAdastreaHUD::DrawStationMenu(APlayerController* PC, AAdastreaPlayerControl
 			DrawRect(FLinearColor(0.15f, 0.9f, 0.6f, 0.18f), X + 12.0f, RowY, PanelW - 24.0f, RowH - 6.0f);
 			DrawLine(X + 12.0f, RowY, X + 12.0f, RowY + RowH - 6.0f, Accent, 3.0f);
 		}
-		const FLinearColor LabelCol = !Option.bAvailable ? FLinearColor(0.5f, 0.5f, 0.55f, 1.0f)
+		const FLinearColor LabelCol = !bAvailable ? FLinearColor(0.5f, 0.5f, 0.55f, 1.0f)
 			: (bSel ? Accent : FLinearColor::White);
-		DrawText(FString(Option.Label) + (Option.bAvailable ? TEXT("") : TEXT("   (coming soon)")),
+		DrawText(FString(Option.Label) + (bAvailable ? TEXT("") : TEXT("   (none at this station)")),
 			LabelCol, X + 28.0f, RowY + 8.0f, HudType::Font(), HudType::Heading);
 		DrawText(Option.Blurb, kLabel, X + 28.0f, RowY + 34.0f, HudType::Font(), HudType::Label);
 	}

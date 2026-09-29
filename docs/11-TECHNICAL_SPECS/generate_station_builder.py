@@ -60,6 +60,13 @@ MODULE_META = {
     "ElectronicsLabModule":  {"size": (2, 2, 1), "power": 45,  "group": "Research",  "faces": "all"},
     "WeaponsLabModule":      {"size": (2, 2, 1), "power": 45,  "group": "Research",  "faces": "all"},
     "BiologyLabModule":      {"size": (2, 2, 1), "power": 40,  "group": "Research",  "faces": "all"},
+    # Ship outfitting (power mirrors AOutfittingModule and its subclasses)
+    "OutfittingModule":      {"size": (2, 2, 1), "power": 60,  "group": "Docking",   "faces": "all"},
+    "EngineWorkshopModule":  {"size": (2, 2, 1), "power": 80,  "group": "Docking",   "faces": "all"},
+    "ArmouryModule":         {"size": (2, 2, 1), "power": 70,  "group": "Defence",   "faces": "all"},
+    "ShieldWorkshopModule":  {"size": (2, 2, 1), "power": 90,  "group": "Defence",   "faces": "all"},
+    "HullWorksModule":       {"size": (2, 2, 1), "power": 60,  "group": "Docking",   "faces": "all"},
+    "CargoRefitModule":      {"size": (2, 2, 1), "power": 40,  "group": "Storage",   "faces": "all"},
 }
 
 # Face name -> unit vector (in grid cells). Module convention: +Y is "N" (forward),

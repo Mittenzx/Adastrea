@@ -1,22 +1,29 @@
 #include "Ships/ShipUpgradeComponent.h"
+#include "Ships/Spaceship.h"
+#include "Stations/OutfittingModule.h"
+#include "Trading/PlayerTraderComponent.h"
 #include "Player/PlayerProgressionComponent.h"
-// REMOVED: #include "Player/PlayerReputationComponent.h" - faction reputation system removed per Trade Simulator MVP
-#include "Player/AdastreaGameInstance.h"
 #include "AdastreaLog.h"
 #include "Kismet/GameplayStatics.h"
 
 UShipUpgradeComponent::UShipUpgradeComponent()
 	: ShipTypeID(NAME_None)
 	, MaxUpgradeSlots(20)
+	, SellBackFraction(0.5f)
 {
 	PrimaryComponentTick.bCanEverTick = false;
+
+	// Default hardpoints; ASpaceship sizes Weapons from its data asset's WeaponSlots.
+	CategorySlots.Add(EShipUpgradeCategory::Engines, 2);
+	CategorySlots.Add(EShipUpgradeCategory::Weapons, 2);
+	CategorySlots.Add(EShipUpgradeCategory::Shields, 2);
+	CategorySlots.Add(EShipUpgradeCategory::Hull, 2);
+	CategorySlots.Add(EShipUpgradeCategory::Cargo, 3);
 }
 
 void UShipUpgradeComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	UE_LOG(LogAdastrea, Log, TEXT("ShipUpgradeComponent: Initialized with %d upgrade slots"), MaxUpgradeSlots);
 }
 
 bool UShipUpgradeComponent::InstallUpgrade(UShipUpgradeDataAsset* Upgrade, bool bIgnoreRequirements)
@@ -27,46 +34,35 @@ bool UShipUpgradeComponent::InstallUpgrade(UShipUpgradeDataAsset* Upgrade, bool 
 		return false;
 	}
 
-	// Check if can install
 	FText Reason;
 	if (!bIgnoreRequirements && !CanInstallUpgrade(Upgrade, Reason))
 	{
-		UE_LOG(LogAdastrea, Warning, TEXT("ShipUpgradeComponent: Cannot install upgrade: %s"), *Reason.ToString());
+		UE_LOG(LogAdastrea, Warning, TEXT("ShipUpgradeComponent: Cannot install %s: %s"), *Upgrade->UpgradeID.ToString(), *Reason.ToString());
 		OnUpgradeInstallFailed.Broadcast(Upgrade, Reason);
 		return false;
 	}
 
-	// Check if already installed
-	FInstalledUpgrade* Existing = FindInstalledUpgrade(Upgrade->UpgradeID);
-	if (Existing)
+	int32 NewStackCount = 1;
+	if (FInstalledUpgrade* Existing = FindInstalledUpgrade(Upgrade->UpgradeID))
 	{
-		// If not unique, increase stack count
-		if (!Upgrade->bIsUnique && Existing->StackCount < Upgrade->MaxStackCount)
+		// CanInstallUpgrade already refused a stack past MaxStackCount; a forced install
+		// (save load) still respects the cap.
+		if (Existing->StackCount >= Upgrade->MaxStackCount)
 		{
-			Existing->StackCount++;
-			UE_LOG(LogAdastrea, Log, TEXT("ShipUpgradeComponent: Increased upgrade stack: %s (x%d)"),
-				*Upgrade->UpgradeID.ToString(), Existing->StackCount);
-			OnUpgradeInstalled.Broadcast(Upgrade, Existing->StackCount);
-			return true;
-		}
-		else
-		{
-			UE_LOG(LogAdastrea, Warning, TEXT("ShipUpgradeComponent: Upgrade already installed at max stacks: %s"),
-				*Upgrade->UpgradeID.ToString());
-			OnUpgradeInstallFailed.Broadcast(Upgrade, FText::FromString("Already installed"));
+			OnUpgradeInstallFailed.Broadcast(Upgrade, FText::FromString(TEXT("Already installed")));
 			return false;
 		}
+		NewStackCount = ++Existing->StackCount;
+	}
+	else
+	{
+		InstalledUpgrades.Add(FInstalledUpgrade(Upgrade, 1));
 	}
 
-	// Add new upgrade
-	FInstalledUpgrade NewUpgrade(Upgrade, 1);
-	InstalledUpgrades.Add(NewUpgrade);
-
-	UE_LOG(LogAdastrea, Log, TEXT("ShipUpgradeComponent: Installed upgrade: %s (%s)"),
-		*Upgrade->UpgradeID.ToString(), *Upgrade->DisplayName.ToString());
-
-	OnUpgradeInstalled.Broadcast(Upgrade, 1);
-
+	UE_LOG(LogAdastrea, Log, TEXT("ShipUpgradeComponent: Installed %s (%s) x%d"),
+		*Upgrade->UpgradeID.ToString(), *Upgrade->DisplayName.ToString(), NewStackCount);
+	OnUpgradeInstalled.Broadcast(Upgrade, NewStackCount);
+	OnUpgradesChanged.Broadcast();
 	return true;
 }
 
@@ -79,15 +75,17 @@ bool UShipUpgradeComponent::UninstallUpgrade(FName UpgradeID)
 		return false;
 	}
 
-	// Remove upgrade
-	InstalledUpgrades.RemoveAll([UpgradeID](const FInstalledUpgrade& Upgrade)
+	if (--Installed->StackCount <= 0)
 	{
-		return Upgrade.Upgrade && Upgrade.Upgrade->UpgradeID == UpgradeID;
-	});
+		InstalledUpgrades.RemoveAll([UpgradeID](const FInstalledUpgrade& Entry)
+		{
+			return Entry.Upgrade && Entry.Upgrade->UpgradeID == UpgradeID;
+		});
+	}
 
-	UE_LOG(LogAdastrea, Log, TEXT("ShipUpgradeComponent: Uninstalled upgrade: %s"), *UpgradeID.ToString());
+	UE_LOG(LogAdastrea, Log, TEXT("ShipUpgradeComponent: Uninstalled one stack of %s"), *UpgradeID.ToString());
 	OnUpgradeUninstalled.Broadcast(UpgradeID);
-
+	OnUpgradesChanged.Broadcast();
 	return true;
 }
 
@@ -95,43 +93,50 @@ bool UShipUpgradeComponent::CanInstallUpgrade(UShipUpgradeDataAsset* Upgrade, FT
 {
 	if (!Upgrade)
 	{
-		OutReason = FText::FromString("Invalid upgrade");
+		OutReason = FText::FromString(TEXT("Invalid upgrade"));
 		return false;
 	}
 
-	// Check slot availability
-	if (InstalledUpgrades.Num() >= MaxUpgradeSlots)
+	const FInstalledUpgrade* Existing = FindInstalledUpgrade(Upgrade->UpgradeID);
+	if (Existing && Existing->StackCount >= Upgrade->MaxStackCount)
 	{
-		// Check if we're stacking an existing upgrade
-		const FInstalledUpgrade* Existing = FindInstalledUpgrade(Upgrade->UpgradeID);
-		if (!Existing)
-		{
-			OutReason = FText::FromString("No upgrade slots available");
-			return false;
-		}
+		OutReason = FText::FromString(Upgrade->MaxStackCount == 1
+			? TEXT("Already installed")
+			: FString::Printf(TEXT("Already fitted %d times (maximum)"), Upgrade->MaxStackCount));
+		return false;
 	}
 
-	// Check ship compatibility
+	const int32 Slots = GetSlotCount(Upgrade->Category);
+	if (Slots <= 0)
+	{
+		OutReason = FText::Format(FText::FromString(TEXT("This ship has no {0} slots")), Upgrade->GetCategoryDisplayName());
+		return false;
+	}
+	if (GetUsedSlotCount(Upgrade->Category) >= Slots)
+	{
+		OutReason = FText::Format(FText::FromString(TEXT("All {0} {1} slots are full")),
+			FText::AsNumber(Slots), Upgrade->GetCategoryDisplayName());
+		return false;
+	}
+	if (GetRemainingUpgradeSlots() <= 0)
+	{
+		OutReason = FText::FromString(TEXT("No upgrade slots available"));
+		return false;
+	}
+
 	if (!Upgrade->IsCompatibleWithShipType(ShipTypeID))
 	{
-		OutReason = FText::FromString("Incompatible with this ship type");
+		OutReason = FText::FromString(TEXT("Incompatible with this ship type"));
 		return false;
 	}
 
-	// Check conflicts
 	if (HasUpgradeConflicts(Upgrade))
 	{
-		OutReason = FText::FromString("Conflicts with installed upgrade");
+		OutReason = FText::FromString(TEXT("Conflicts with an installed upgrade"));
 		return false;
 	}
 
-	// Check requirements
-	if (!CheckUpgradeRequirements(Upgrade, OutReason))
-	{
-		return false;
-	}
-
-	return true;
+	return CheckUpgradeRequirements(Upgrade, OutReason);
 }
 
 bool UShipUpgradeComponent::IsUpgradeInstalled(FName UpgradeID) const
@@ -147,67 +152,241 @@ int32 UShipUpgradeComponent::GetUpgradeStackCount(FName UpgradeID) const
 
 void UShipUpgradeComponent::UninstallAllUpgrades()
 {
+	if (InstalledUpgrades.Num() == 0)
+	{
+		return;
+	}
 	InstalledUpgrades.Empty();
 	UE_LOG(LogAdastrea, Log, TEXT("ShipUpgradeComponent: All upgrades uninstalled"));
+	OnUpgradesChanged.Broadcast();
+}
+
+// ====================
+// Outfitting
+// ====================
+
+bool UShipUpgradeComponent::CanPurchaseUpgrade(UShipUpgradeDataAsset* Upgrade, const AOutfittingModule* Module, const UPlayerTraderComponent* Wallet, FText& OutReason) const
+{
+	if (!Upgrade)
+	{
+		OutReason = FText::FromString(TEXT("Invalid upgrade"));
+		return false;
+	}
+	if (!Module || !Module->ServicesCategory(Upgrade->Category))
+	{
+		OutReason = FText::Format(FText::FromString(TEXT("No {0} workshop at this station")), Upgrade->GetCategoryDisplayName());
+		return false;
+	}
+	if (!Module->CanFit(Upgrade))
+	{
+		OutReason = FText::Format(FText::FromString(TEXT("{0} can only fit up to tier {1}")),
+			FText::FromString(Module->ModuleType), FText::AsNumber(static_cast<int32>(Module->GetMaxTier()) + 1));
+		return false;
+	}
+	if (!CanInstallUpgrade(Upgrade, OutReason))
+	{
+		return false;
+	}
+	const int32 Price = Module->GetPrice(Upgrade);
+	if (!Wallet || Wallet->GetCredits() < Price)
+	{
+		OutReason = FText::Format(FText::FromString(TEXT("Needs {0} credits")), FText::AsNumber(Price));
+		return false;
+	}
+	return true;
+}
+
+bool UShipUpgradeComponent::PurchaseUpgrade(UShipUpgradeDataAsset* Upgrade, AOutfittingModule* Module, UPlayerTraderComponent* Wallet, FText& OutReason)
+{
+	if (!CanPurchaseUpgrade(Upgrade, Module, Wallet, OutReason))
+	{
+		return false;
+	}
+
+	const int32 Price = Module->GetPrice(Upgrade);
+	if (!Wallet->RemoveCredits(Price))
+	{
+		OutReason = FText::Format(FText::FromString(TEXT("Needs {0} credits")), FText::AsNumber(Price));
+		return false;
+	}
+	if (!InstallUpgrade(Upgrade, false))
+	{
+		// Checked above, so this is unexpected; don't keep the money for nothing.
+		Wallet->AddCredits(Price);
+		OutReason = FText::FromString(TEXT("Installation failed"));
+		return false;
+	}
+
+	UE_LOG(LogAdastrea, Log, TEXT("ShipUpgradeComponent: Bought %s at %s for %d cr"),
+		*Upgrade->UpgradeID.ToString(), *Module->GetName(), Price);
+	return true;
+}
+
+bool UShipUpgradeComponent::CanSellUpgrade(FName UpgradeID, const AOutfittingModule* Module, FText& OutReason) const
+{
+	const FInstalledUpgrade* Installed = FindInstalledUpgrade(UpgradeID);
+	if (!Installed || !Installed->Upgrade)
+	{
+		OutReason = FText::FromString(TEXT("Not installed"));
+		return false;
+	}
+	const UShipUpgradeDataAsset* Upgrade = Installed->Upgrade;
+	if (!Module || !Module->ServicesCategory(Upgrade->Category))
+	{
+		OutReason = FText::Format(FText::FromString(TEXT("No {0} workshop at this station")), Upgrade->GetCategoryDisplayName());
+		return false;
+	}
+	for (const FInstalledUpgrade& Other : InstalledUpgrades)
+	{
+		if (Other.Upgrade && Other.Upgrade != Upgrade && Installed->StackCount == 1
+			&& Other.Upgrade->Requirements.PrerequisiteUpgrades.Contains(Upgrade))
+		{
+			OutReason = FText::Format(FText::FromString(TEXT("{0} depends on it")), Other.Upgrade->DisplayName);
+			return false;
+		}
+	}
+	if (const ASpaceship* Ship = Cast<ASpaceship>(GetOwner()))
+	{
+		return Ship->CanRemoveUpgrade(Upgrade, OutReason);
+	}
+	return true;
+}
+
+bool UShipUpgradeComponent::SellUpgrade(FName UpgradeID, AOutfittingModule* Module, UPlayerTraderComponent* Wallet, int32& OutRefund, FText& OutReason)
+{
+	OutRefund = 0;
+	if (!CanSellUpgrade(UpgradeID, Module, OutReason))
+	{
+		return false;
+	}
+
+	const int32 Refund = GetSellPrice(FindInstalledUpgrade(UpgradeID)->Upgrade);
+	if (!UninstallUpgrade(UpgradeID))
+	{
+		OutReason = FText::FromString(TEXT("Removal failed"));
+		return false;
+	}
+	if (Wallet && Refund > 0)
+	{
+		Wallet->AddCredits(Refund);
+	}
+	OutRefund = Refund;
+	return true;
+}
+
+int32 UShipUpgradeComponent::GetSellPrice(const UShipUpgradeDataAsset* Upgrade) const
+{
+	return Upgrade ? FMath::FloorToInt(Upgrade->Requirements.CreditCost * SellBackFraction) : 0;
+}
+
+// ====================
+// Slots
+// ====================
+
+int32 UShipUpgradeComponent::GetSlotCount(EShipUpgradeCategory Category) const
+{
+	const int32* Slots = CategorySlots.Find(Category);
+	return Slots ? FMath::Max(*Slots, 0) : 0;
+}
+
+int32 UShipUpgradeComponent::GetUsedSlotCount(EShipUpgradeCategory Category) const
+{
+	int32 Used = 0;
+	for (const FInstalledUpgrade& Installed : InstalledUpgrades)
+	{
+		if (Installed.Upgrade && Installed.Upgrade->Category == Category)
+		{
+			Used += Installed.StackCount;
+		}
+	}
+	return Used;
+}
+
+int32 UShipUpgradeComponent::GetRemainingUpgradeSlots() const
+{
+	int32 Used = 0;
+	for (const FInstalledUpgrade& Installed : InstalledUpgrades)
+	{
+		Used += Installed.StackCount;
+	}
+	return FMath::Max(0, MaxUpgradeSlots - Used);
+}
+
+// ====================
+// Stats
+// ====================
+
+namespace
+{
+	/** Accumulate Upgrade's modifiers for StatName, Stacks times. */
+	void AccumulateStat(const UShipUpgradeDataAsset* Upgrade, FName StatName, int32 Stacks, float& InOutAdd, float& InOutMult)
+	{
+		if (!Upgrade || Stacks <= 0)
+		{
+			return;
+		}
+		for (const FShipUpgradeStatModifier& Modifier : Upgrade->StatModifiers)
+		{
+			if (Modifier.StatName == StatName)
+			{
+				InOutAdd += Modifier.AdditiveBonus * Stacks;
+				InOutMult *= FMath::Pow(Modifier.MultiplicativeBonus, static_cast<float>(Stacks));
+			}
+		}
+	}
 }
 
 float UShipUpgradeComponent::GetStatModifier(FName StatName, float BaseValue) const
 {
-	float ModifiedValue = BaseValue;
+	return PreviewStat(StatName, BaseValue, nullptr, NAME_None);
+}
 
-	// Apply all installed upgrades
+float UShipUpgradeComponent::PreviewStat(FName StatName, float BaseValue, const UShipUpgradeDataAsset* AddedUpgrade, FName RemovedUpgradeID) const
+{
+	float Add = 0.0f;
+	float Mult = 1.0f;
 	for (const FInstalledUpgrade& Installed : InstalledUpgrades)
 	{
-		if (Installed.Upgrade)
+		if (!Installed.Upgrade)
 		{
-			// Apply upgrade bonus for each stack
-			for (int32 i = 0; i < Installed.StackCount; ++i)
-			{
-				ModifiedValue = Installed.Upgrade->CalculateStatBonus(StatName, ModifiedValue);
-			}
+			continue;
 		}
+		const int32 Stacks = Installed.StackCount - (Installed.Upgrade->UpgradeID == RemovedUpgradeID && !RemovedUpgradeID.IsNone() ? 1 : 0);
+		AccumulateStat(Installed.Upgrade, StatName, Stacks, Add, Mult);
 	}
-
-	return ModifiedValue;
+	AccumulateStat(AddedUpgrade, StatName, 1, Add, Mult);
+	return (BaseValue + Add) * Mult;
 }
 
 float UShipUpgradeComponent::GetStatBonusPercentage(FName StatName) const
 {
-	// Calculate percentage difference from base value of 100
-	float BaseValue = 100.0f;
-	float ModifiedValue = GetStatModifier(StatName, BaseValue);
-
-	return (ModifiedValue - BaseValue) / BaseValue;
+	constexpr float BaseValue = 100.0f;
+	return (GetStatModifier(StatName, BaseValue) - BaseValue) / BaseValue;
 }
 
 TMap<FName, float> UShipUpgradeComponent::GetAllStatModifiers() const
 {
 	TMap<FName, float> Modifiers;
-
-	// Collect all unique stat names
 	for (const FInstalledUpgrade& Installed : InstalledUpgrades)
 	{
-		if (Installed.Upgrade)
+		if (!Installed.Upgrade)
 		{
-			for (const FShipUpgradeStatModifier& StatMod : Installed.Upgrade->StatModifiers)
+			continue;
+		}
+		for (const FShipUpgradeStatModifier& StatMod : Installed.Upgrade->StatModifiers)
+		{
+			if (!Modifiers.Contains(StatMod.StatName))
 			{
-				if (!Modifiers.Contains(StatMod.StatName))
-				{
-					// Calculate cumulative modifier for this stat
-					float BonusPercentage = GetStatBonusPercentage(StatMod.StatName);
-					Modifiers.Add(StatMod.StatName, BonusPercentage);
-				}
+				Modifiers.Add(StatMod.StatName, GetStatBonusPercentage(StatMod.StatName));
 			}
 		}
 	}
-
 	return Modifiers;
 }
 
 TArray<FInstalledUpgrade> UShipUpgradeComponent::GetUpgradesByCategory(EShipUpgradeCategory Category) const
 {
 	TArray<FInstalledUpgrade> Result;
-
 	for (const FInstalledUpgrade& Installed : InstalledUpgrades)
 	{
 		if (Installed.Upgrade && Installed.Upgrade->Category == Category)
@@ -215,19 +394,12 @@ TArray<FInstalledUpgrade> UShipUpgradeComponent::GetUpgradesByCategory(EShipUpgr
 			Result.Add(Installed);
 		}
 	}
-
 	return Result;
-}
-
-int32 UShipUpgradeComponent::GetRemainingUpgradeSlots() const
-{
-	return FMath::Max(0, MaxUpgradeSlots - InstalledUpgrades.Num());
 }
 
 int32 UShipUpgradeComponent::GetTotalUpgradeValue() const
 {
 	int32 TotalValue = 0;
-
 	for (const FInstalledUpgrade& Installed : InstalledUpgrades)
 	{
 		if (Installed.Upgrade)
@@ -235,32 +407,23 @@ int32 UShipUpgradeComponent::GetTotalUpgradeValue() const
 			TotalValue += Installed.Upgrade->Requirements.CreditCost * Installed.StackCount;
 		}
 	}
-
 	return TotalValue;
 }
 
 FInstalledUpgrade* UShipUpgradeComponent::FindInstalledUpgrade(FName UpgradeID)
 {
-	for (FInstalledUpgrade& Installed : InstalledUpgrades)
+	return InstalledUpgrades.FindByPredicate([UpgradeID](const FInstalledUpgrade& Entry)
 	{
-		if (Installed.Upgrade && Installed.Upgrade->UpgradeID == UpgradeID)
-		{
-			return &Installed;
-		}
-	}
-	return nullptr;
+		return Entry.Upgrade && Entry.Upgrade->UpgradeID == UpgradeID;
+	});
 }
 
 const FInstalledUpgrade* UShipUpgradeComponent::FindInstalledUpgrade(FName UpgradeID) const
 {
-	for (const FInstalledUpgrade& Installed : InstalledUpgrades)
+	return InstalledUpgrades.FindByPredicate([UpgradeID](const FInstalledUpgrade& Entry)
 	{
-		if (Installed.Upgrade && Installed.Upgrade->UpgradeID == UpgradeID)
-		{
-			return &Installed;
-		}
-	}
-	return nullptr;
+		return Entry.Upgrade && Entry.Upgrade->UpgradeID == UpgradeID;
+	});
 }
 
 bool UShipUpgradeComponent::HasUpgradeConflicts(UShipUpgradeDataAsset* Upgrade) const
@@ -269,28 +432,14 @@ bool UShipUpgradeComponent::HasUpgradeConflicts(UShipUpgradeDataAsset* Upgrade) 
 	{
 		return false;
 	}
-
-	// Check mutually exclusive upgrades
 	for (const FInstalledUpgrade& Installed : InstalledUpgrades)
 	{
-		if (!Installed.Upgrade)
-		{
-			continue;
-		}
-
-		// Check if new upgrade conflicts with installed
-		if (Upgrade->MutuallyExclusiveWith.Contains(Installed.Upgrade))
-		{
-			return true;
-		}
-
-		// Check if installed conflicts with new
-		if (Installed.Upgrade->MutuallyExclusiveWith.Contains(Upgrade))
+		if (Installed.Upgrade && Installed.Upgrade != Upgrade
+			&& (Upgrade->MutuallyExclusiveWith.Contains(Installed.Upgrade) || Installed.Upgrade->MutuallyExclusiveWith.Contains(Upgrade)))
 		{
 			return true;
 		}
 	}
-
 	return false;
 }
 
@@ -301,80 +450,32 @@ bool UShipUpgradeComponent::CheckUpgradeRequirements(UShipUpgradeDataAsset* Upgr
 		return false;
 	}
 
-	UWorld* World = GetWorld();
-	if (!World)
-	{
-		return false;
-	}
-
 	const FShipUpgradeRequirement& Req = Upgrade->Requirements;
 
-	// Check prerequisites
 	for (UShipUpgradeDataAsset* PrereqUpgrade : Req.PrerequisiteUpgrades)
 	{
 		if (PrereqUpgrade && !IsUpgradeInstalled(PrereqUpgrade->UpgradeID))
 		{
-			OutReason = FText::Format(
-				FText::FromString("Requires {0}"),
-				PrereqUpgrade->DisplayName
-			);
+			OutReason = FText::Format(FText::FromString(TEXT("Requires {0}")), PrereqUpgrade->DisplayName);
 			return false;
 		}
 	}
 
-	// Check credits
-	UAdastreaGameInstance* GameInstance = Cast<UAdastreaGameInstance>(UGameplayStatics::GetGameInstance(World));
-	if (GameInstance && Req.CreditCost > 0)
+	// Credits are not checked here: they come out of the ship's UPlayerTraderComponent
+	// wallet when the upgrade is bought (CanPurchaseUpgrade/PurchaseUpgrade).
+
+	if (Req.RequiredPlayerLevel > 1)
 	{
-		if (GameInstance->GetPlayerCredits() < Req.CreditCost)
+		const APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
+		const APawn* PlayerPawn = PC ? PC->GetPawn() : nullptr;
+		const UPlayerProgressionComponent* Progression = PlayerPawn ? PlayerPawn->FindComponentByClass<UPlayerProgressionComponent>() : nullptr;
+		if (Progression && !Progression->MeetsLevelRequirement(Req.RequiredPlayerLevel))
 		{
-			OutReason = FText::Format(
-				FText::FromString("Requires {0} credits"),
-				FText::AsNumber(Req.CreditCost)
-			);
+			OutReason = FText::Format(FText::FromString(TEXT("Requires level {0}")), FText::AsNumber(Req.RequiredPlayerLevel));
 			return false;
 		}
 	}
 
-	// Check player level
-	APlayerController* PC = UGameplayStatics::GetPlayerController(World, 0);
-	if (PC)
-	{
-		APawn* PlayerPawn = PC->GetPawn();
-		if (PlayerPawn)
-		{
-			UPlayerProgressionComponent* ProgressionComp = PlayerPawn->FindComponentByClass<UPlayerProgressionComponent>();
-			if (ProgressionComp && Req.RequiredPlayerLevel > 1)
-			{
-				if (!ProgressionComp->MeetsLevelRequirement(Req.RequiredPlayerLevel))
-				{
-					OutReason = FText::Format(
-						FText::FromString("Requires level {0}"),
-						FText::AsNumber(Req.RequiredPlayerLevel)
-					);
-					return false;
-				}
-			}
-
-			// REMOVED: Reputation check - faction reputation system removed per Trade Simulator MVP
-			// All upgrades accessible to all players in MVP
-		}
-	}
-
-	// Check required materials via inventory system
-	// MVP NOTE: Material checking is stubbed for Trade Simulator MVP
-	// In full implementation, this would check player/ship inventory for required materials
-	if (Req.RequiredMaterials.Num() > 0)
-	{
-		UE_LOG(LogAdastrea, Verbose, TEXT("Upgrade requires materials (MVP stub): %s"), *Upgrade->GetName());
-		// NOTE: [POST-MVP][INVENTORY] Implement proper material checking when inventory system is ready
-		// Status: Deferred to post-MVP (Trade Simulator MVP complete March 2026)
-		// For Trade Simulator MVP (Weeks 1-12), assume player has required materials
-		// Related systems: InventorySystem component, MaterialDatabase, PlayerEconomy
-		// Dependencies: Inventory UI, Material definitions, Crafting system
-		// Priority: Medium - Required for full upgrade system but not for trade simulator core
-		// Current MVP Status: Week 11 of 12 (Polish & Demo Phase) - Focus on demo preparation
-	}
-
+	// RequiredMaterials are not enforced yet (no inventory hook for upgrades).
 	return true;
 }

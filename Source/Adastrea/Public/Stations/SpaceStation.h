@@ -6,11 +6,13 @@
 #include "Stations/SpaceStationModule.h"
 #include "Interfaces/IDamageable.h"
 #include "Interfaces/ITargetable.h"
+#include "Ships/ShipUpgradeDataAsset.h"
 #include "SpaceStation.generated.h"
 
 // Forward declarations
 class AMarketplaceModule;
 class ADockingBayModule;
+class AOutfittingModule;
 class UMarketDataAsset;
 class UStationLayoutDataAsset;
 
@@ -286,6 +288,25 @@ public:
      */
     UFUNCTION(BlueprintCallable, Category="Station|Trading")
     TArray<FText> GetMarketplaceNames() const;
+
+    // ====================
+    // SHIP OUTFITTING
+    // ====================
+
+    /** Every outfitting module (general bay and specialist workshops) attached to this station. */
+    UFUNCTION(BlueprintCallable, Category="Station|Outfitting")
+    TArray<AOutfittingModule*> GetOutfittingModules() const;
+
+    /**
+     * The module that fits upgrades of Category here: of those servicing it, the one with
+     * the highest tier. Null if nothing on this station services the category.
+     */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Outfitting")
+    AOutfittingModule* GetOutfittingModuleFor(EShipUpgradeCategory Category) const;
+
+    /** Whether any working outfitting module is attached. */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Station|Capabilities")
+    bool HasOutfitting() const;
 
     // ====================
     // AGGREGATE MODULE FUNCTIONALITY

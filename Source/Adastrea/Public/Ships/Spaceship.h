@@ -24,6 +24,9 @@ class UCargoComponent;
 class UMiningLaserComponent;
 class UPlayerTraderComponent;
 class UShipEngineAudioComponent;
+class UShipUpgradeComponent;
+class UShipUpgradeDataAsset;
+class ASpaceStation;
 
 /**
  * Base spaceship actor class for player and NPC ships
@@ -90,6 +93,10 @@ public:
     // Player trader component (credits, buy/sell)
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Trading")
     TObjectPtr<UPlayerTraderComponent> PlayerTraderComponent;
+
+    // Fitted upgrades (engines, weapons, shields, hull, cargo); bought at station outfitting modules
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Upgrades")
+    TObjectPtr<UShipUpgradeComponent> UpgradeComponent;
 
     // Engine voice: size/agility-derived loops driven by throttle, speed and boost.
     // 2D for the player's ship (muffled on foot), 3D and very short range for everyone else.
@@ -474,6 +481,47 @@ public:
      */
     float GetEffectiveMaxSpeed() const;
 
+    // ===== UPGRADES =====
+
+    /**
+     * Re-apply every installed upgrade to the ship's base stats: speed, acceleration, boost,
+     * hull, shields, cargo capacity and mining power. Bound to UpgradeComponent->OnUpgradesChanged.
+     * Hull keeps its current fraction when the maximum changes.
+     */
+    UFUNCTION(BlueprintCallable, Category="Upgrades")
+    void RecalculateUpgradedStats();
+
+    /**
+     * Take the ship's current stats as the pre-upgrade base and re-apply upgrades on top.
+     * Called at BeginPlay; call it again after replacing base stats in code (e.g. a new data
+     * asset on a ship with no upgrades fitted - fitted upgrades would be counted twice).
+     */
+    UFUNCTION(BlueprintCallable, Category="Upgrades")
+    void RebaseUpgradeStats();
+
+    /** A stat before upgrades (see ShipUpgradeStats); 0 for unknown stats. */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades")
+    float GetBaseStat(FName StatName) const;
+
+    /** A stat with every installed upgrade applied. */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades")
+    float GetUpgradedStat(FName StatName) const;
+
+    /** Maximum shield strength: the data asset's ShieldStrength plus shield upgrades. */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades")
+    float GetMaxShieldStrength() const;
+
+    /** Weapon damage multiplier from weapon upgrades (1 = stock), for weapon systems to scale by. */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades")
+    float GetWeaponDamageMultiplier() const;
+
+    /** Whether removing one stack of Upgrade leaves the ship valid (e.g. the hold still fits its cargo). */
+    bool CanRemoveUpgrade(const UShipUpgradeDataAsset* Upgrade, FText& OutReason) const;
+
+    /** The station the ship is docked at (the owner of its docking module), else null. */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Docking")
+    ASpaceStation* GetDockedStation() const;
+
     // ===== DOCKING FUNCTIONS =====
 
     /**
@@ -788,6 +836,9 @@ private:
 
     /** Timer for Dock.AirlockHiss, shortly after the clamps engage. */
     FTimerHandle AirlockHissTimerHandle;
+
+    /** Pre-upgrade stats keyed by ShipUpgradeStats name. */
+    TMap<FName, float> UpgradeBaseStats;
 
 public:
     /** Flight.CollisionBump on blocking hits (player ship only, rate limited). */

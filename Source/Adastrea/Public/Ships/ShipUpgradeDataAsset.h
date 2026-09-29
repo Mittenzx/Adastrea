@@ -34,6 +34,30 @@ enum class EUpgradeTier : uint8
 };
 
 /**
+ * Stat names that ASpaceship applies from installed upgrades (ASpaceship::RecalculateUpgradedStats).
+ * Upgrade data (ShipUpgradeCatalog.json or a data asset) must use exactly these names.
+ */
+namespace ShipUpgradeStats
+{
+	/** Top speed (ASpaceship::DefaultMaxSpeed) */
+	inline const FName MaxSpeed(TEXT("MaxSpeed"));
+	/** Thrust (ASpaceship::DefaultAcceleration) */
+	inline const FName Acceleration(TEXT("Acceleration"));
+	/** Boost speed multiplier (ASpaceship::BoostMultiplier) */
+	inline const FName BoostMultiplier(TEXT("BoostMultiplier"));
+	/** Maximum hull integrity (ASpaceship::MaxHullIntegrity) */
+	inline const FName HullStrength(TEXT("HullStrength"));
+	/** Maximum shield strength (ASpaceship::GetMaxShieldStrength) */
+	inline const FName ShieldStrength(TEXT("ShieldStrength"));
+	/** Hold volume (UCargoComponent::CargoCapacity) */
+	inline const FName CargoCapacity(TEXT("CargoCapacity"));
+	/** Weapon damage multiplier, base 1 (ASpaceship::GetWeaponDamageMultiplier) */
+	inline const FName WeaponDamage(TEXT("WeaponDamage"));
+	/** Mining laser extraction rate (UMiningLaserComponent::MiningPower) */
+	inline const FName MiningPower(TEXT("MiningPower"));
+}
+
+/**
  * Stat modifier applied by upgrade
  */
 USTRUCT(BlueprintType)
@@ -231,6 +255,12 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrade")
 	FText GetCategoryDisplayName() const;
+
+	/** Display name of any upgrade category ("Engines", "Cargo", ...). */
+	static FText GetCategoryName(EShipUpgradeCategory InCategory);
+
+	/** Tier as a number, 1..5. */
+	int32 GetTierNumber() const { return static_cast<int32>(Tier) + 1; }
 
 	/**
 	 * Get formatted requirements description

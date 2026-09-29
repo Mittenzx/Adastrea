@@ -658,6 +658,99 @@
         { "ItemID": "NanoInjectors", "Qty": 1 },
         { "ItemID": "RefinedMedicine_Mk2", "Qty": 1 }
       ]
+    },
+    "OutfittingModule": {
+      "size": [2, 2, 1],
+      "power": 60,
+      "group": "Docking",
+      "faces": "all",
+      "cost": 61629,
+      "BaseValue": 61629,
+      "WeightKg": 597.2,
+      "part_family": "Module",
+      "recipe": [
+        { "ItemID": "ModuleShell", "Qty": 2 },
+        { "ItemID": "ControlUnit", "Qty": 2 },
+        { "ItemID": "StructuralFrame", "Qty": 4 }
+      ]
+    },
+    "EngineWorkshopModule": {
+      "size": [2, 2, 1],
+      "power": 80,
+      "group": "Docking",
+      "faces": "all",
+      "cost": 104690,
+      "BaseValue": 104690,
+      "WeightKg": 597.2,
+      "part_family": "Module",
+      "recipe": [
+        { "ItemID": "ModuleShell", "Qty": 2 },
+        { "ItemID": "ShipEngine", "Qty": 1 },
+        { "ItemID": "Thruster", "Qty": 2 },
+        { "ItemID": "ControlUnit", "Qty": 1 }
+      ]
+    },
+    "ArmouryModule": {
+      "size": [2, 2, 1],
+      "power": 70,
+      "group": "Defence",
+      "faces": "all",
+      "cost": 98532,
+      "BaseValue": 98532,
+      "WeightKg": 597.2,
+      "part_family": "Module",
+      "recipe": [
+        { "ItemID": "ModuleShell", "Qty": 2 },
+        { "ItemID": "TurretWeapon", "Qty": 1 },
+        { "ItemID": "Railgun", "Qty": 1 },
+        { "ItemID": "ControlUnit", "Qty": 1 }
+      ]
+    },
+    "ShieldWorkshopModule": {
+      "size": [2, 2, 1],
+      "power": 90,
+      "group": "Defence",
+      "faces": "all",
+      "cost": 117438,
+      "BaseValue": 117438,
+      "WeightKg": 597.2,
+      "part_family": "Module",
+      "recipe": [
+        { "ItemID": "ModuleShell", "Qty": 2 },
+        { "ItemID": "ShieldEmitter", "Qty": 1 },
+        { "ItemID": "ShieldCapacitor", "Qty": 2 }
+      ]
+    },
+    "HullWorksModule": {
+      "size": [2, 2, 1],
+      "power": 60,
+      "group": "Docking",
+      "faces": "all",
+      "cost": 70992,
+      "BaseValue": 70992,
+      "WeightKg": 597.2,
+      "part_family": "Module",
+      "recipe": [
+        { "ItemID": "ModuleShell", "Qty": 2 },
+        { "ItemID": "HullPlating", "Qty": 4 },
+        { "ItemID": "ArmourPlate", "Qty": 6 },
+        { "ItemID": "StructuralFrame", "Qty": 4 }
+      ]
+    },
+    "CargoRefitModule": {
+      "size": [2, 2, 1],
+      "power": 40,
+      "group": "Storage",
+      "faces": "all",
+      "cost": 96423,
+      "BaseValue": 96423,
+      "WeightKg": 597.2,
+      "part_family": "Module",
+      "recipe": [
+        { "ItemID": "ModuleShell", "Qty": 2 },
+        { "ItemID": "CargoPod", "Qty": 4 },
+        { "ItemID": "CargoComputer", "Qty": 1 }
+      ]
     }
   }
 }

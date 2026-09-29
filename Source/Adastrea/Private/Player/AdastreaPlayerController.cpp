@@ -846,6 +846,7 @@ void AAdastreaPlayerController::HandleTradeSelectUp()
 		if (H->bShowPauseMenu) { H->MovePauseMenuSelection(-1); }
 		else if (H->bShowStationMenu) { H->MoveStationMenuSelection(-1); }
 		else if (H->bShowTradeScreen) { H->MoveTradeSelection(-1); }
+		else if (H->bShowOutfitting) { H->MoveOutfittingSelection(-1); }
 	}
 }
 
@@ -856,6 +857,7 @@ void AAdastreaPlayerController::HandleTradeSelectDown()
 		if (H->bShowPauseMenu) { H->MovePauseMenuSelection(1); }
 		else if (H->bShowStationMenu) { H->MoveStationMenuSelection(1); }
 		else if (H->bShowTradeScreen) { H->MoveTradeSelection(1); }
+		else if (H->bShowOutfitting) { H->MoveOutfittingSelection(1); }
 	}
 }
 
@@ -873,6 +875,12 @@ void AAdastreaPlayerController::HandleTradeExecute5()   { ExecuteTrade(5); }
 void AAdastreaPlayerController::HandleTradeSellAll()
 {
 	AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD());
+	if (H && H->bShowOutfitting)
+	{
+		// X on the outfitting screen removes and sells the selected upgrade.
+		H->SellOutfittingSelection(this);
+		return;
+	}
 	ASpaceship* Ship = GetControlledSpaceship();
 	ASpaceStation* Station = GetNearestTradableStation();
 	if (!H || !H->bShowTradeScreen || H->bBuyMode || !Ship || !Ship->CargoComponent || !Station || !Station->GetMarketplaceModule())
@@ -943,6 +951,7 @@ void AAdastreaPlayerController::HandleStationMenuConfirm()
 			}
 		}
 		else if (H->bShowStationMenu) { H->ConfirmStationMenuSelection(this); }
+		else if (H->bShowOutfitting) { H->ConfirmOutfittingPurchase(this); }
 	}
 }
 
@@ -971,6 +980,7 @@ void AAdastreaPlayerController::HandlePauseMenuLeft()
 	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
 	{
 		if (H->bShowPauseMenu) { H->AdjustPauseMenuValue(-1); }
+		else if (H->bShowOutfitting) { H->MoveOutfittingCategory(-1); }
 	}
 }
 
@@ -979,6 +989,7 @@ void AAdastreaPlayerController::HandlePauseMenuRight()
 	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
 	{
 		if (H->bShowPauseMenu) { H->AdjustPauseMenuValue(1); }
+		else if (H->bShowOutfitting) { H->MoveOutfittingCategory(1); }
 	}
 }
 
@@ -1018,6 +1029,12 @@ void AAdastreaPlayerController::HandleTradeClose()
 			// Leaving the trading department returns to the station menu.
 			H->HideTradeScreen();
 			CloseTrading();
+			H->ShowStationMenu();
+		}
+		else if (H->bShowOutfitting)
+		{
+			// Leaving the outfitting bay returns to the station menu.
+			H->HideOutfitting();
 			H->ShowStationMenu();
 		}
 	}
@@ -2811,6 +2828,22 @@ void AAdastreaPlayerController::HandleStationTerminalUsed(EStationTerminalType T
 	case EStationTerminalType::ToConcourse:   SwitchStationRoom(EStationRoom::Concourse); break;
 	case EStationTerminalType::ToMaintenance: SwitchStationRoom(EStationRoom::Maintenance); break;
 	case EStationTerminalType::ToHabitation:  SwitchStationRoom(EStationRoom::Habitation); break;
+	case EStationTerminalType::Outfitting:
+	{
+		const ASpaceship* VisitShip = StationVisitShip.Get();
+		const ASpaceStation* Station = VisitShip ? VisitShip->GetDockedStation() : nullptr;
+		if (!Station || !Station->HasOutfitting())
+		{
+			ShowHUDMessage(TEXT("This station has no outfitting modules"), 3.0f, true);
+			break;
+		}
+		ExitStationInterior(false);
+		if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
+		{
+			H->ShowOutfitting();
+		}
+		break;
+	}
 	default: break;
 	}
 }
