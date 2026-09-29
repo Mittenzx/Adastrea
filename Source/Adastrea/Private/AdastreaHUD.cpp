@@ -2,6 +2,7 @@
 
 #include "AdastreaHUD.h"
 #include "AdastreaHUDStyle.h"
+#include "AdastreaHUD_MapStyle.h"
 #include "Stations/StationInterior.h"
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipAvatar.h"
@@ -652,27 +653,28 @@ float AAdastreaHUD::DrawTelemetryPanel(ASpaceship* Ship)
 
 void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 {
+	using namespace GalaxyMap;
 	if (!PC || !PC->GetWorld())
 	{
 		return;
 	}
 	UWorld* World = PC->GetWorld();
+	SectorMapPicks.Reset();
 
-	// ---- Viewport ----
-	int32 VX = 0, VY = 0;
-	PC->GetViewportSize(VX, VY);
-	// Canvas size, not viewport size: they differ for high-res screenshots.
-	float VW = Canvas ? Canvas->ClipX : (float)VX, VH = Canvas ? Canvas->ClipY : (float)VY;
+	// ---- Layout: 3D view on the left, info panel on the right (same frame as the System/Universe layers) ----
+	const FLayout Lay = MakeLayout(Canvas, PC);
+	const float VW = Lay.VW, VH = Lay.VH;
+	const float BoxX = Lay.AreaX;
+	const float BoxY = Lay.BoxY;
+	const float BoxW = Lay.AreaW;
+	const float BoxH = Lay.BoxH;
 
-	// Full-screen backing.
-	DrawRect(FLinearColor(0.008f, 0.012f, 0.02f, 1.0f), 0.0f, 0.0f, VW, VH);
+	DrawRect(Backdrop, 0.0f, 0.0f, VW, VH);
+	DrawRect(BoxFill, Lay.BoxX, Lay.BoxY, Lay.BoxW, Lay.BoxH);
 
-	// Map view box (X4 style: big centered 3D viewport).
-	const float Margin = 40.0f;
-	const float BoxW = VW - Margin * 2.0f;
-	const float BoxH = VH - Margin * 2.0f - 70.0f;
-	const float BoxX = Margin;
-	const float BoxY = Margin + 30.0f;
+	float MouseX = 0.0f, MouseY = 0.0f;
+	const bool bMouse = PC->GetMousePosition(MouseX, MouseY);
+	const FVector2D Mouse(MouseX, MouseY);
 
 	// ---- Camera / projection ----
 	// Orbit camera looking at MapCenter from (yaw,pitch,zoom).
@@ -752,16 +754,14 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 		DrawLine(C.X, C.Y, D.X, D.Y, Col, Thick);
 	};
 
-	// ---- Box background (drawn before the grid so the grid stays visible) ----
-	DrawRect(FLinearColor(0.03f, 0.05f, 0.07f, 0.9f), BoxX, BoxY, BoxW, BoxH);
-
-	// ---- Grid on Z=0 plane (hierarchical: minor + major lines for perspective) ----
+	// ---- Grid on the map plane (Z = MapCenter.Z; hierarchical: minor + major lines for perspective) ----
+	// Adaptive minor spacing so the grid always reads at any zoom.
+	float GridStep = FMath::Pow(10.0f, FMath::FloorToFloat(FMath::LogX(10.0f, MapZoom * 0.25f)));
+	GridStep = FMath::Clamp(GridStep, 5000.0f, 50000.0f);
 	{
 		const FLinearColor kMinor = FLinearColor(0.13f, 0.20f, 0.26f, 0.6f);
 		const FLinearColor kMajor = FLinearColor(0.35f, 0.60f, 0.68f, 0.85f);
-		// Adaptive minor spacing so the grid always reads at any zoom.
-		float G = FMath::Pow(10.0f, FMath::FloorToFloat(FMath::LogX(10.0f, MapZoom * 0.25f)));
-		G = FMath::Clamp(G, 5000.0f, 50000.0f);
+		const float G = GridStep;
 		const float Major = G * 4.0f;
 		float R = MapZoom * 1.6f;
 
@@ -788,11 +788,28 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 		for (float gy = Start; gy <= R; gy += G) DrawAxis(gy, false);
 	}
 
+	// ---- Box border (the fill is drawn before the grid) ----
+	DrawRect(BoxEdge, Lay.BoxX, Lay.BoxY, 3.0f, Lay.BoxH);                  // left
+	DrawRect(BoxEdge, Lay.BoxX, Lay.BoxY, Lay.BoxW, 3.0f);                  // top
+	DrawRect(BoxEdge, Lay.BoxX, Lay.BoxY + Lay.BoxH - 3.0f, Lay.BoxW, 3.0f); // bottom
 
-	// ---- Box border (outline; the bg fill is drawn before the grid) ----
-	DrawRect(FLinearColor(0.10f, 0.55f, 0.60f, 0.9f), BoxX, BoxY, 3.0f, BoxH);      // left
-	DrawRect(FLinearColor(0.10f, 0.55f, 0.60f, 0.9f), BoxX, BoxY, BoxW, 3.0f);      // top
-	DrawRect(FLinearColor(0.10f, 0.55f, 0.60f, 0.9f), BoxX, BoxY + BoxH - 3.0f, BoxW, 3.0f); // bottom
+	// Altitude stem: a faint line from an object down (or up) to the map plane, so
+	// height above/below you reads in the perspective view. Skipped when nearly level.
+	auto DrawStem = [&](const FVector& W, const FVector2D& SP, const FLinearColor& Col)
+	{
+		if (FMath::Abs(W.Z - MapCenter.Z) < 1000.0f)
+		{
+			return;
+		}
+		FVector2D Foot;
+		if (!ProjectRaw(FVector(W.X, W.Y, MapCenter.Z), Foot))
+		{
+			return;
+		}
+		const FLinearColor C(Col.R, Col.G, Col.B, 0.35f);
+		DrawGridLine(SP, Foot, C, 1.0f);
+		DrawGridLine(Foot - FVector2D(4.0f, 0.0f), Foot + FVector2D(4.0f, 0.0f), C, 1.0f);
+	};
 
 	// ---- Object icons (type-distinct glyphs) ----
 	TArray<AActor*> Ships;
@@ -818,6 +835,23 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 		DrawLine(X - R, Y, X, Y - R, Col, Thick);
 	};
 
+	// Labels are queued and placed after every icon is drawn, most important first
+	// (gates, then stations, then ships), nudged up/down to avoid overlaps and dropped
+	// when there's no room. Hovering an icon always shows its name.
+	struct FMapLabel { FString Text; FLinearColor Color; FVector2D At; int32 Priority; };
+	TArray<FMapLabel> Labels;
+
+	// Asteroids: small dots, no labels (a field has hundreds); hovering shows the name.
+	int32 NumAsteroids = 0;
+	for (TActorIterator<AAsteroid> It(World); It; ++It)
+	{
+		++NumAsteroids;
+		FVector2D SP;
+		if (!Project(It->GetActorLocation(), SP)) continue;
+		DrawRect(GalaxyMap::Asteroid, SP.X - 1.5f, SP.Y - 1.5f, 3.0f, 3.0f);
+		SectorMapPicks.Add({ SP, *It });
+	}
+
 	// Stations: gold hollow-square icon + label
 	if (bShowStations)
 	{
@@ -826,101 +860,342 @@ void AAdastreaHUD::DrawSectorMap(APlayerController* PC, const FVector& ShipPos)
 			if (!A) continue;
 			FVector2D SP;
 			if (!Project(A->GetActorLocation(), SP)) continue;
-			DrawStationIcon(SP.X, SP.Y, 6.0f, FLinearColor(0.95f, 0.78f, 0.30f, 1.0f), 2.0f);
-			DrawText(HudActorName(A), FLinearColor(0.9f, 0.85f, 0.6f, 1.0f), SP.X + 9.0f, SP.Y - 6.0f, HudType::Font(), HudType::Caption);
+			DrawStem(A->GetActorLocation(), SP, GalaxyMap::Station);
+			DrawStationIcon(SP.X, SP.Y, 6.0f, GalaxyMap::Station, 2.0f);
+			Labels.Add({ HudActorName(A), StationText, FVector2D(SP.X + 9.0f, SP.Y - 6.0f), 1 });
+			SectorMapPicks.Add({ SP, A });
 		}
 	}
 	// Ships: cyan hollow diamond icon + label
-	if (bShowShips)
+	int32 NumOtherShips = 0;
+	for (AActor* A : Ships)
 	{
-		for (AActor* A : Ships)
-		{
-			if (!A || A == PC->GetPawn()) continue; // skip the player's own ship (shown as YOU)
-			FVector2D SP;
-			if (!Project(A->GetActorLocation(), SP)) continue;
-			DrawShipIcon(SP.X, SP.Y, 6.0f, FLinearColor(0.3f, 0.8f, 0.9f, 1.0f), 2.0f);
-			DrawText(HudActorName(A), FLinearColor(0.6f, 0.85f, 0.95f, 1.0f), SP.X + 8.0f, SP.Y - 6.0f, HudType::Font(), HudType::Caption);
-		}
+		if (!A || A == PC->GetPawn()) continue; // skip the player's own ship (shown as YOU)
+		++NumOtherShips;
+		if (!bShowShips) continue;
+		FVector2D SP;
+		if (!Project(A->GetActorLocation(), SP)) continue;
+		DrawStem(A->GetActorLocation(), SP, GalaxyMap::Ship);
+		DrawShipIcon(SP.X, SP.Y, 6.0f, GalaxyMap::Ship, 2.0f);
+		Labels.Add({ HudActorName(A), ShipText, FVector2D(SP.X + 8.0f, SP.Y - 6.0f), 2 });
+		SectorMapPicks.Add({ SP, A });
 	}
 
 	// Jump gates: violet ring + destination (always shown; they're how you leave the sector)
+	// Off-screen marker: a triangle on the box edge pointing towards something outside the view.
+	auto DrawEdgeMarker = [&](const FVector& W, const FLinearColor& Col, const FString& Label)
+	{
+		FVector2D Raw;
+		if (!ProjectRaw(W, Raw))
+		{
+			return;
+		}
+		const FVector2D C(BoxX + BoxW * 0.5f, BoxY + BoxH * 0.5f);
+		const FVector2D D = Raw - C;
+		if (D.IsNearlyZero())
+		{
+			return;
+		}
+		const float HalfW = BoxW * 0.5f - 18.0f, HalfH = BoxH * 0.5f - 18.0f;
+		const float T = FMath::Min(FMath::Abs(D.X) > 1.e-3f ? HalfW / FMath::Abs(D.X) : 1.e6f,
+			FMath::Abs(D.Y) > 1.e-3f ? HalfH / FMath::Abs(D.Y) : 1.e6f);
+		const FVector2D E = C + D * T;
+		const FVector2D N = D.GetSafeNormal();
+		const FVector2D Perp(-N.Y, N.X);
+		const FVector2D Tip = E + N * 8.0f, B1 = E - N * 4.0f + Perp * 7.0f, B2 = E - N * 4.0f - Perp * 7.0f;
+		DrawLine(Tip.X, Tip.Y, B1.X, B1.Y, Col, 2.0f);
+		DrawLine(B1.X, B1.Y, B2.X, B2.Y, Col, 2.0f);
+		DrawLine(B2.X, B2.Y, Tip.X, Tip.Y, Col, 2.0f);
+		float LW = 0.0f, LH = 0.0f;
+		GetTextSize(Label, LW, LH, HudType::Font(), HudType::Caption);
+		const float LX = FMath::Clamp(E.X - N.X * 16.0f - (N.X > 0.3f ? LW : N.X < -0.3f ? 0.0f : LW * 0.5f), BoxX + 6.0f, BoxX + BoxW - LW - 6.0f);
+		const float LY = FMath::Clamp(E.Y - N.Y * 16.0f - LH * 0.5f, BoxY + 6.0f, BoxY + BoxH - LH - 6.0f);
+		DrawRect(BoxFill, LX - 3.0f, LY - 1.0f, LW + 6.0f, LH + 2.0f);
+		DrawText(Label, Col, LX, LY, HudType::Font(), HudType::Caption);
+	};
+
+	TArray<AJumpGate*> Gates;
 	for (TActorIterator<AJumpGate> It(World); It; ++It)
 	{
+		Gates.Add(*It);
+		const FLinearColor GateCol = It->IsOnline() ? GateOnline : GateOffline;
 		FVector2D SP;
-		if (!Project(It->GetActorLocation(), SP)) continue;
-		const FLinearColor GateCol = It->IsOnline() ? FLinearColor(0.7f, 0.5f, 1.0f, 1.0f) : FLinearColor(1.0f, 0.62f, 0.2f, 1.0f);
-		const float GR = 8.0f;
-		for (int32 Seg = 0; Seg < 12; ++Seg)
+		if (!Project(It->GetActorLocation(), SP))
 		{
-			const float A0 = 2.0f * PI * Seg / 12.0f, A1 = 2.0f * PI * (Seg + 1) / 12.0f;
-			DrawLine(SP.X + FMath::Cos(A0) * GR, SP.Y + FMath::Sin(A0) * GR, SP.X + FMath::Cos(A1) * GR, SP.Y + FMath::Sin(A1) * GR, GateCol, 2.0f);
+			DrawEdgeMarker(It->GetActorLocation(), GateCol, FString::Printf(TEXT("%s  %s"), *It->GetDisplayName(),
+				*FormatDistance(FVector::Dist(ShipPos, It->GetActorLocation()))));
+			continue;
 		}
-		DrawText(It->GetDisplayName(), GateCol, SP.X + 11.0f, SP.Y - 6.0f, HudType::Font(), HudType::Caption);
+		DrawStem(It->GetActorLocation(), SP, GateCol);
+		DrawCircleOutline(SP.X, SP.Y, 8.0f, GateCol, 2.0f, 12);
+		Labels.Add({ It->GetDisplayName(), GateCol, FVector2D(SP.X + 11.0f, SP.Y - 6.0f), 0 });
+		SectorMapPicks.Add({ SP, *It });
 	}
 
-	// ---- Player marker (bright teal arrow, "YOU") ----
+	// ---- Place the queued labels ----
 	{
-		FVector2D PPt;
-		if (Project(ShipPos, PPt))
+		Labels.StableSort([](const FMapLabel& A, const FMapLabel& B) { return A.Priority < B.Priority; });
+		TArray<FBox2D> Placed;
+		for (const FMapLabel& Lbl : Labels)
 		{
-			const float R = 9.0f;
-			DrawLine(PPt.X, PPt.Y - R, PPt.X - R, PPt.Y + R * 0.6f, FLinearColor(0.15f, 0.95f, 0.6f, 1.0f), 2.0f);
-			DrawLine(PPt.X, PPt.Y - R, PPt.X + R, PPt.Y + R * 0.6f, FLinearColor(0.15f, 0.95f, 0.6f, 1.0f), 2.0f);
-			DrawLine(PPt.X - R, PPt.Y + R * 0.6f, PPt.X + R, PPt.Y + R * 0.6f, FLinearColor(0.15f, 0.95f, 0.6f, 1.0f), 2.0f);
-			DrawText(TEXT("YOU"), FLinearColor(0.15f, 0.95f, 0.6f, 1.0f), PPt.X - 7.0f, PPt.Y + 11.0f, HudType::Font(), HudType::Caption);
-		}
-	}
-
-	// ---- Locked target highlight on map ----
-	if (AAdastreaPlayerController* AController = Cast<AAdastreaPlayerController>(PC))
-	{
-		if (AActor* T = AController->GetLockedTarget())
-		{
-			FVector2D TP;
-			if (Project(T->GetActorLocation(), TP))
+			float LW = 0.0f, LH = 0.0f;
+			GetTextSize(Lbl.Text, LW, LH, HudType::Font(), HudType::Caption);
+			for (const float Nudge : { 0.0f, 12.0f, -12.0f, 24.0f, -24.0f })
 			{
-				const float R = 11.0f;
-				const FLinearColor Rc(0.15f, 0.9f, 0.6f, 1.0f);
-				DrawLine(TP.X - R, TP.Y - R, TP.X + R, TP.Y - R, Rc, 2.0f);
-				DrawLine(TP.X + R, TP.Y - R, TP.X + R, TP.Y + R, Rc, 2.0f);
-				DrawLine(TP.X + R, TP.Y + R, TP.X - R, TP.Y + R, Rc, 2.0f);
-				DrawLine(TP.X - R, TP.Y + R, TP.X - R, TP.Y - R, Rc, 2.0f);
+				const FBox2D Box(FVector2D(Lbl.At.X - 1.0f, Lbl.At.Y + Nudge), FVector2D(Lbl.At.X + LW + 1.0f, Lbl.At.Y + Nudge + LH));
+				if (Box.Max.X > BoxX + BoxW || Box.Min.Y < BoxY || Box.Max.Y > BoxY + BoxH)
+				{
+					continue;
+				}
+				if (!Placed.ContainsByPredicate([&Box](const FBox2D& Other) { return Box.Intersect(Other); }))
+				{
+					Placed.Add(Box);
+					DrawText(Lbl.Text, Lbl.Color, Lbl.At.X, Lbl.At.Y + Nudge, HudType::Font(), HudType::Caption);
+					break;
+				}
 			}
 		}
 	}
 
-	// ---- HUD overlay (title, controls, legend) ----
+	// ---- Locked target: bracket + a dashed line from you with the range ----
+	AAdastreaPlayerController* AdPC = Cast<AAdastreaPlayerController>(PC);
+	AActor* Target = AdPC ? AdPC->GetLockedTarget() : nullptr;
+	if (Target)
 	{
-		UGalaxySubsystem* Galaxy = UGalaxySubsystem::Get(this);
-		const FGalaxySectorDef* Sector = Galaxy ? Galaxy->FindSector(GetMapCurrentSectorId()) : nullptr;
-		const FStarSystemDef* System = Galaxy ? Galaxy->FindSystem(GetMapCurrentSystemId()) : nullptr;
+		FVector2D TP;
+		if (Project(Target->GetActorLocation(), TP))
+		{
+			const float R = 11.0f;
+			DrawLine(TP.X - R, TP.Y - R, TP.X + R, TP.Y - R, You, 2.0f);
+			DrawLine(TP.X + R, TP.Y - R, TP.X + R, TP.Y + R, You, 2.0f);
+			DrawLine(TP.X + R, TP.Y + R, TP.X - R, TP.Y + R, You, 2.0f);
+			DrawLine(TP.X - R, TP.Y + R, TP.X - R, TP.Y - R, You, 2.0f);
+		}
+		else
+		{
+			DrawEdgeMarker(Target->GetActorLocation(), You, FString::Printf(TEXT("TARGET  %s"),
+				*FormatDistance(FVector::Dist(ShipPos, Target->GetActorLocation()))));
+		}
+		FVector2D PP, RawT;
+		if (ProjectRaw(ShipPos, PP) && ProjectRaw(Target->GetActorLocation(), RawT))
+		{
+			// Clipped to the box, so an off-screen target still shows its direction.
+			const FLinearColor LineCol(You.R, You.G, You.B, 0.55f);
+			const float Len = FVector2D::Distance(PP, RawT);
+			const FVector2D Dir = Len > 1.0f ? (RawT - PP) / Len : FVector2D::ZeroVector;
+			for (float D = 14.0f; D < Len - 14.0f; D += 14.0f)
+			{
+				DrawGridLine(PP + Dir * D, PP + Dir * FMath::Min(D + 8.0f, Len - 14.0f), LineCol, 1.5f);
+			}
+			const FVector2D Mid = (PP + RawT) * 0.5f;
+			if (Mid.X > BoxX && Mid.X < BoxX + BoxW - 60.0f && Mid.Y > BoxY && Mid.Y < BoxY + BoxH - 16.0f)
+			{
+				const FString Range = FormatDistance(FVector::Dist(ShipPos, Target->GetActorLocation()));
+				float RW = 0.0f, RH = 0.0f;
+				GetTextSize(Range, RW, RH, HudType::Font(), HudType::Caption);
+				DrawRect(BoxFill, Mid.X - 3.0f, Mid.Y - 1.0f, RW + 6.0f, RH + 2.0f);
+				DrawText(Range, You, Mid.X, Mid.Y, HudType::Font(), HudType::Caption);
+			}
+		}
+	}
+
+	// ---- Player marker: teal arrow pointing along the ship's heading, "YOU" ----
+	{
+		FVector2D PPt;
+		if (Project(ShipPos, PPt))
+		{
+			const APawn* Pawn = PC->GetPawn();
+			FVector2D Dir(0.0f, -1.0f);
+			FVector2D Ahead;
+			if (Pawn && ProjectRaw(ShipPos + Pawn->GetActorForwardVector() * MapZoom * 0.05f, Ahead)
+				&& FVector2D::Distance(Ahead, PPt) > 2.0f)
+			{
+				Dir = (Ahead - PPt).GetSafeNormal();
+			}
+			const FVector2D Perp(-Dir.Y, Dir.X);
+			const float R = 10.0f;
+			const FVector2D Tip = PPt + Dir * R;
+			const FVector2D BaseL = PPt - Dir * R * 0.6f + Perp * R * 0.7f;
+			const FVector2D BaseR = PPt - Dir * R * 0.6f - Perp * R * 0.7f;
+			const FVector2D Notch = PPt - Dir * R * 0.2f;
+			DrawStem(ShipPos, PPt, You);
+			DrawLine(Tip.X, Tip.Y, BaseL.X, BaseL.Y, You, 2.0f);
+			DrawLine(Tip.X, Tip.Y, BaseR.X, BaseR.Y, You, 2.0f);
+			DrawLine(BaseL.X, BaseL.Y, Notch.X, Notch.Y, You, 2.0f);
+			DrawLine(BaseR.X, BaseR.Y, Notch.X, Notch.Y, You, 2.0f);
+			DrawText(TEXT("YOU"), You, PPt.X - 7.0f, PPt.Y + 13.0f, HudType::Font(), HudType::Caption);
+		}
+	}
+
+	// Short type line for an object on the map ("Station", "Jump gate to X", ...).
+	auto DescribeActor = [](const AActor* A) -> FString
+	{
+		if (const AJumpGate* G = Cast<AJumpGate>(A))
+		{
+			return G->IsOnline() ? FString::Printf(TEXT("Jump gate to %s"), *G->GetDestinationName())
+				: FString::Printf(TEXT("Jump gate to %s (offline)"), *G->GetDestinationName());
+		}
+		if (A->IsA<ASpaceStation>()) { return TEXT("Station"); }
+		if (A->IsA<ASpaceship>()) { return TEXT("Ship"); }
+		if (A->IsA<AAsteroid>()) { return TEXT("Asteroid"); }
+		return TEXT("Object");
+	};
+
+	// ---- Hover: ring the object under the cursor and show its name, type and range ----
+	if (AActor* Hovered = bMouse ? PickSectorMapActor(Mouse) : nullptr)
+	{
+		FVector2D HP;
+		if (Project(Hovered->GetActorLocation(), HP))
+		{
+			DrawCircleOutline(HP.X, HP.Y, 14.0f, Select, 1.5f, 24);
+			const FString Name = HudActorName(Hovered);
+			const FString Info = FString::Printf(TEXT("%s   %s"), *DescribeActor(Hovered),
+				*FormatDistance(FVector::Dist(ShipPos, Hovered->GetActorLocation())));
+			const FString Hint = Hovered == Target ? FString(TEXT("Targeted")) : FString(TEXT("Click to target"));
+			float NW = 0, NH = 0, IW = 0, IH = 0, HW = 0, HH = 0;
+			GetTextSize(Name, NW, NH, HudType::Font(), HudType::Label);
+			GetTextSize(Info, IW, IH, HudType::Font(), HudType::Caption);
+			GetTextSize(Hint, HW, HH, HudType::Font(), HudType::Caption);
+			const float TipW = FMath::Max3(NW, IW, HW) + 16.0f;
+			const float TipH = NH + IH + HH + 14.0f;
+			float TipX = HP.X + 18.0f, TipY = HP.Y + 14.0f;
+			if (TipX + TipW > BoxX + BoxW) { TipX = HP.X - 18.0f - TipW; }
+			if (TipY + TipH > BoxY + BoxH) { TipY = HP.Y - 14.0f - TipH; }
+			DrawRect(FLinearColor(0.02f, 0.035f, 0.05f, 0.95f), TipX, TipY, TipW, TipH);
+			DrawRect(BoxEdge, TipX, TipY, 2.0f, TipH);
+			DrawText(Name, FLinearColor::White, TipX + 8.0f, TipY + 5.0f, HudType::Font(), HudType::Label);
+			DrawText(Info, Body, TipX + 8.0f, TipY + 7.0f + NH, HudType::Font(), HudType::Caption);
+			DrawText(Hint, Dim, TipX + 8.0f, TipY + 9.0f + NH + IH, HudType::Font(), HudType::Caption);
+		}
+	}
+
+	// Grid scale (bottom-left of the 3D view).
+	DrawText(FString::Printf(TEXT("Grid  %s"), *FormatDistance(GridStep)), Dim, BoxX + 16.0f, BoxY + BoxH - 26.0f, HudType::Font(), HudType::Caption);
+
+	// ---- Info panel ----
+	UGalaxySubsystem* Galaxy = UGalaxySubsystem::Get(this);
+	const FGalaxySectorDef* Sector = Galaxy ? Galaxy->FindSector(GetMapCurrentSectorId()) : nullptr;
+	const FStarSystemDef* System = Galaxy ? Galaxy->FindSystem(GetMapCurrentSystemId()) : nullptr;
+	{
+		const float PX = Lay.PanelX, PW = Lay.PanelWidth, TX = PX + 14.0f, TW = PW - 28.0f;
+		const FLinearColor Divider(0.2f, 0.4f, 0.5f, 0.5f);
+		DrawMapInfoPanel(PX, Lay.PanelY, PW, Lay.PanelH,
+			Sector ? Sector->Name.ToString().ToUpper() : FString(TEXT("UNASSIGNED LEVEL")), Sector ? Built : BoxEdge);
+		float Y = Lay.PanelY + 44.0f;
+		if (Sector)
+		{
+			DrawText(FString::Printf(TEXT("%s   Security: %s"), *Sector->Type, Sector->Security.IsEmpty() ? TEXT("?") : *Sector->Security), Body, TX, Y, HudType::Font(), HudType::Label); Y += 16.0f;
+			if (!Sector->Faction.IsEmpty()) { DrawText(FString::Printf(TEXT("Faction  %s"), *Sector->Faction), Body, TX, Y, HudType::Font(), HudType::Label); Y += 16.0f; }
+		}
+		if (System)
+		{
+			DrawText(FString::Printf(TEXT("System  %s  [%s]"), *System->Name.ToString(), *System->StarClass), Body, TX, Y, HudType::Font(), HudType::Label); Y += 16.0f;
+		}
+		FString Counts = FString::Printf(TEXT("Stations %d   Ships %d   Gates %d"), Stations.Num(), NumOtherShips, Gates.Num());
+		if (NumAsteroids > 0) { Counts += FString::Printf(TEXT("   Asteroids %d"), NumAsteroids); }
+		Y = DrawWrappedText(Counts, Body, TX, Y, TW, HudType::Font(), HudType::Label);
+		Y += 8.0f;
+		DrawRect(Divider, TX, Y, TW, 1.0f);
+		Y += 10.0f;
+
+		// Target.
+		DrawText(TEXT("TARGET"), GalaxyMap::Title, TX, Y, HudType::Font(), HudType::Label); Y += 18.0f;
+		if (Target)
+		{
+			DrawText(HudActorName(Target), FLinearColor::White, TX, Y, HudType::Font(), HudType::Body); Y += 22.0f;
+			Y = DrawWrappedText(DescribeActor(Target), Body, TX, Y, TW, HudType::Font(), HudType::Label);
+			DrawText(FString::Printf(TEXT("Range  %s"), *FormatDistance(FVector::Dist(ShipPos, Target->GetActorLocation()))), You, TX, Y, HudType::Font(), HudType::Label); Y += 16.0f;
+			const float DzM = (Target->GetActorLocation().Z - ShipPos.Z) / 100.0f;
+			if (FMath::Abs(DzM) >= 10.0f)
+			{
+				DrawText(FString::Printf(TEXT("%.0f m %s you"), FMath::Abs(DzM), DzM > 0.0f ? TEXT("above") : TEXT("below")), Dim, TX, Y, HudType::Font(), HudType::Label); Y += 16.0f;
+			}
+		}
+		else
+		{
+			Y = DrawWrappedText(TEXT("None. Click an object on the map to target it."), Dim, TX, Y, TW, HudType::Font(), HudType::Label);
+		}
+		Y += 8.0f;
+		DrawRect(Divider, TX, Y, TW, 1.0f);
+		Y += 10.0f;
+
+		// Jump gates out of the sector, nearest first.
+		const float LegendTop = Lay.PanelY + Lay.PanelH - 116.0f;
+		DrawText(TEXT("JUMP GATES"), GalaxyMap::Title, TX, Y, HudType::Font(), HudType::Label); Y += 18.0f;
+		Gates.Sort([&ShipPos](const AJumpGate& A, const AJumpGate& B)
+		{
+			return FVector::DistSquared(ShipPos, A.GetActorLocation()) < FVector::DistSquared(ShipPos, B.GetActorLocation());
+		});
+		for (const AJumpGate* G : Gates)
+		{
+			if (Y > LegendTop - 30.0f)
+			{
+				DrawText(TEXT("..."), Dim, TX, Y, HudType::Font(), HudType::Caption);
+				break;
+			}
+			const FLinearColor GateCol = G->IsOnline() ? GateOnline : GateOffline;
+			DrawCircleOutline(TX + 5.0f, Y + 7.0f, 4.0f, GateCol, 1.5f, 10);
+			DrawText(G->IsOnline() ? G->GetDestinationName() : FString::Printf(TEXT("%s (offline)"), *G->GetDestinationName()),
+				Body, TX + 16.0f, Y, HudType::Font(), HudType::Caption);
+			const FString Dist = FormatDistance(FVector::Dist(ShipPos, G->GetActorLocation()));
+			float DW = 0, DH = 0;
+			GetTextSize(Dist, DW, DH, HudType::Font(), HudType::Caption);
+			DrawText(Dist, GateCol, TX + TW - DW, Y, HudType::Font(), HudType::Caption);
+			Y += 16.0f;
+		}
+		if (Gates.Num() == 0)
+		{
+			DrawText(TEXT("None in this sector."), Dim, TX, Y, HudType::Font(), HudType::Caption);
+		}
+
+		// Legend + filters (panel bottom).
+		const float LY = LegendTop;
+		DrawRect(Divider, TX, LY - 8.0f, TW, 1.0f);
+		DrawStationIcon(TX + 6.0f, LY + 7.0f, 5.0f, GalaxyMap::Station, 2.0f);
+		DrawText(FString::Printf(TEXT("Station   [2] %s"), bShowStations ? TEXT("shown") : TEXT("hidden")), Body, TX + 20.0f, LY, HudType::Font(), HudType::Caption);
+		DrawShipIcon(TX + 6.0f, LY + 25.0f, 5.0f, GalaxyMap::Ship, 2.0f);
+		DrawText(FString::Printf(TEXT("Ship   [1] %s"), bShowShips ? TEXT("shown") : TEXT("hidden")), Body, TX + 20.0f, LY + 18.0f, HudType::Font(), HudType::Caption);
+		DrawCircleOutline(TX + 6.0f, LY + 43.0f, 5.0f, GateOnline, 2.0f, 12);
+		DrawText(TEXT("Jump gate (amber: offline)"), Body, TX + 20.0f, LY + 36.0f, HudType::Font(), HudType::Caption);
+		DrawRect(GalaxyMap::Asteroid, TX + 4.5f, LY + 59.5f, 3.0f, 3.0f);
+		DrawText(TEXT("Asteroid"), Body, TX + 20.0f, LY + 54.0f, HudType::Font(), HudType::Caption);
+		DrawLine(TX + 6.0f, LY + 73.0f, TX + 1.0f, LY + 83.0f, You, 2.0f);
+		DrawLine(TX + 6.0f, LY + 73.0f, TX + 11.0f, LY + 83.0f, You, 2.0f);
+		DrawText(TEXT("You (points along your heading)"), Body, TX + 20.0f, LY + 72.0f, HudType::Font(), HudType::Caption);
+		const FLinearColor StemCol(0.6f, 0.7f, 0.8f, 0.6f);
+		DrawLine(TX + 6.0f, LY + 90.0f, TX + 6.0f, LY + 101.0f, StemCol, 1.0f);
+		DrawLine(TX + 2.0f, LY + 101.0f, TX + 10.0f, LY + 101.0f, StemCol, 1.0f);
+		DrawText(TEXT("Height above / below the grid"), Body, TX + 20.0f, LY + 90.0f, HudType::Font(), HudType::Caption);
+	}
+
+	// ---- Header and controls help ----
+	{
 		const FString SectorLabel = Sector ? Sector->Name.ToString() : TEXT("Unassigned level");
 		const FString SystemLabel = System ? System->Name.ToString() : TEXT("?");
 		DrawMapHeader(PC, VW, TEXT("SECTOR MAP"),
 			FString::Printf(TEXT("Universe  >  %s  >  %s"), *SystemLabel, *SectorLabel));
 	}
-	// Controls help (bottom)
-	DrawCentredText(TEXT("[Arrows] orbit   [=/-] zoom   [C] recenter   LMB target   [4] system   [5]/[U] universe   [M] close"), FLinearColor(0.6f,0.7f,0.8f,0.9f), VW * 0.5f, VH - 30.0f, HudType::Label);
-	// Legend (top-right)
-	float LegY = 16.0f;
-	DrawText(TEXT("Stations"), FLinearColor(0.8f,0.9f,1.0f,1.0f), BoxX + BoxW - 130.0f, LegY, HudType::Font(), HudType::Caption);
-	// hollow gold square (station)
-	DrawLine(BoxX + BoxW - 160.0f, LegY + 1.0f, BoxX + BoxW - 148.0f, LegY + 1.0f, FLinearColor(0.95f,0.78f,0.30f,1.0f), 2.0f);
-	DrawLine(BoxX + BoxW - 148.0f, LegY + 1.0f, BoxX + BoxW - 148.0f, LegY + 11.0f, FLinearColor(0.95f,0.78f,0.30f,1.0f), 2.0f);
-	DrawLine(BoxX + BoxW - 148.0f, LegY + 11.0f, BoxX + BoxW - 160.0f, LegY + 11.0f, FLinearColor(0.95f,0.78f,0.30f,1.0f), 2.0f);
-	DrawLine(BoxX + BoxW - 160.0f, LegY + 11.0f, BoxX + BoxW - 160.0f, LegY + 1.0f, FLinearColor(0.95f,0.78f,0.30f,1.0f), 2.0f);
-	LegY += 16.0f;
-	DrawText(TEXT("Ships"), FLinearColor(0.8f,0.9f,1.0f,1.0f), BoxX + BoxW - 130.0f, LegY, HudType::Font(), HudType::Caption);
-	// hollow cyan diamond (ship)
-	DrawLine(BoxX + BoxW - 154.0f, LegY + 1.0f, BoxX + BoxW - 147.0f, LegY + 6.0f, FLinearColor(0.3f,0.8f,0.9f,1.0f), 2.0f);
-	DrawLine(BoxX + BoxW - 147.0f, LegY + 6.0f, BoxX + BoxW - 154.0f, LegY + 11.0f, FLinearColor(0.3f,0.8f,0.9f,1.0f), 2.0f);
-	DrawLine(BoxX + BoxW - 154.0f, LegY + 11.0f, BoxX + BoxW - 161.0f, LegY + 6.0f, FLinearColor(0.3f,0.8f,0.9f,1.0f), 2.0f);
-	DrawLine(BoxX + BoxW - 161.0f, LegY + 6.0f, BoxX + BoxW - 154.0f, LegY + 1.0f, FLinearColor(0.3f,0.8f,0.9f,1.0f), 2.0f);
+	DrawCentredText(TEXT("LMB target   [Arrows] orbit   [=/-] zoom   [C] recenter   [1] ships   [2] stations   [4] system   [5]/[U] universe   [M] close"),
+		Help, VW * 0.5f, VH - 30.0f, HudType::Label);
+}
 
-	// Filters (bottom-left)
-	DrawText(FString::Printf(TEXT("[1] Ships:%s   [2] Stations:%s"),
-		bShowShips ? TEXT("ON") : TEXT("OFF"), bShowStations ? TEXT("ON") : TEXT("OFF")),
-		FLinearColor(0.6f,0.7f,0.8f,0.9f), Margin, VH - 30.0f, HudType::Font(), HudType::Label);
+AActor* AAdastreaHUD::PickSectorMapActor(const FVector2D& ScreenPos, float Radius) const
+{
+	// Nearest icon within Radius. Picks are recorded in draw order (asteroids first),
+	// so a station, ship or gate wins a near-tie against an asteroid drawn under it.
+	AActor* Best = nullptr;
+	float BestD = Radius * Radius;
+	for (const FSectorMapPick& Pick : SectorMapPicks)
+	{
+		AActor* A = Pick.Actor.Get();
+		const float D = FVector2D::DistSquared(Pick.Screen, ScreenPos);
+		if (A && D <= BestD + 16.0f)
+		{
+			Best = A;
+			BestD = FMath::Min(D, BestD);
+		}
+	}
+	return Best;
 }
 
 namespace
