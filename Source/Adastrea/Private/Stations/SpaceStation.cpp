@@ -14,6 +14,7 @@
 #include "Stations/BarracksModule.h"
 #include "Stations/HabitationModule.h"
 #include "Stations/StationCoreModule.h"
+#include "Stations/OutfittingModule.h"
 #include "AdastreaLog.h"
 
 ASpaceStation::ASpaceStation()
@@ -568,6 +569,44 @@ TArray<FText> ASpaceStation::GetMarketplaceNames() const
     }
 
     return MarketplaceNames;
+}
+
+TArray<AOutfittingModule*> ASpaceStation::GetOutfittingModules() const
+{
+    TArray<AOutfittingModule*> Result;
+    for (ASpaceStationModule* Module : Modules)
+    {
+        if (AOutfittingModule* Outfitting = Cast<AOutfittingModule>(Module))
+        {
+            Result.Add(Outfitting);
+        }
+    }
+    return Result;
+}
+
+AOutfittingModule* ASpaceStation::GetOutfittingModuleFor(EShipUpgradeCategory Category) const
+{
+    AOutfittingModule* Best = nullptr;
+    for (AOutfittingModule* Outfitting : GetOutfittingModules())
+    {
+        if (Outfitting->ServicesCategory(Category) && (!Best || Outfitting->GetMaxTier() > Best->GetMaxTier()))
+        {
+            Best = Outfitting;
+        }
+    }
+    return Best;
+}
+
+bool ASpaceStation::HasOutfitting() const
+{
+    for (AOutfittingModule* Outfitting : GetOutfittingModules())
+    {
+        if (!Outfitting->IsDestroyed_Implementation())
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 TArray<ASpaceStationModule*> ASpaceStation::GetModulesByType(const FString& ModuleType) const

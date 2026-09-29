@@ -135,6 +135,31 @@ struct FSavedCargoEntry
 };
 
 /**
+ * One upgrade fitted to the player's ship (UShipUpgradeComponent)
+ */
+USTRUCT(BlueprintType)
+struct FSavedShipUpgrade
+{
+	GENERATED_BODY()
+
+	/** UShipUpgradeDataAsset::UpgradeID (catalog upgrades are resolved by this) */
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	FName UpgradeID;
+
+	/** Asset path for hand-authored upgrade assets; empty for ShipUpgradeCatalog.json upgrades */
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	FSoftObjectPath UpgradeAsset;
+
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	int32 StackCount;
+
+	FSavedShipUpgrade()
+		: UpgradeID(NAME_None)
+		, StackCount(1)
+	{}
+};
+
+/**
  * The ship the player flies: class, credits, hold and docking (save version 2+)
  */
 USTRUCT(BlueprintType)
@@ -164,6 +189,10 @@ struct FSavedPlayerShip
 
 	UPROPERTY(BlueprintReadWrite, Category="Save")
 	TArray<FSavedCargoEntry> Cargo;
+
+	/** Fitted upgrades (empty in saves made before outfitting existed) */
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	TArray<FSavedShipUpgrade> Upgrades;
 
 	UPROPERTY(BlueprintReadWrite, Category="Save")
 	bool bDocked;

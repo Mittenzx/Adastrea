@@ -5,6 +5,9 @@
 #include "Ships/ShipUpgradeDataAsset.h"
 #include "ShipUpgradeComponent.generated.h"
 
+class AOutfittingModule;
+class UPlayerTraderComponent;
+
 /**
  * Installed upgrade tracking
  */
@@ -17,7 +20,7 @@ struct FInstalledUpgrade
 	UPROPERTY(BlueprintReadOnly, Category="Upgrade")
 	UShipUpgradeDataAsset* Upgrade;
 
-	/** Number of stacks (for non-unique upgrades) */
+	/** Number of stacks (for non-unique upgrades); each stack takes one slot */
 	UPROPERTY(BlueprintReadOnly, Category="Upgrade", meta=(ClampMin="1"))
 	int32 StackCount;
 
@@ -41,41 +44,18 @@ struct FInstalledUpgrade
 /**
  * Ship Upgrade Component
  *
- * Manages ship upgrades and applies stat modifiers.
- * Tracks installed upgrades and calculates cumulative bonuses.
+ * The ship's fitted upgrades: which are installed, how many slots each category has,
+ * and what they do to the ship's stats. ASpaceship listens to OnUpgradesChanged and
+ * re-applies GetStatModifier() to its base stats (ASpaceship::RecalculateUpgradedStats).
  *
- * Usage:
- * - Attach to spaceship actor
- * - Install upgrades via InstallUpgrade()
- * - Remove upgrades via UninstallUpgrade()
- * - Query stat bonuses via GetStatModifier()
- * - Check compatibility via CanInstallUpgrade()
+ * Upgrades are bought and removed at a docked station's outfitting module:
+ * - PurchaseUpgrade(): the module must service the upgrade's category and tier, the ship
+ *   needs a free slot in that category and the wallet must cover the module's price
+ * - SellUpgrade(): the module must service the category; refunds SellBackFraction of list price
+ * - InstallUpgrade()/UninstallUpgrade(): no station or credits involved (loading a save, scripts)
  *
- * Example:
- * - Install upgrade: InstallUpgrade(UpgradeDataAsset)
- * - Check bonus: GetStatModifier("MaxSpeed", 100.0f) returns 120.0f (+20%)
- * - Remove upgrade: UninstallUpgrade(UpgradeID)
- * - List upgrades: GetInstalledUpgrades()
- *
- * Integration:
- * - Spaceship system applies upgrade bonuses to stats
- * - PlayerUnlockComponent gates upgrade availability
- * - Trading system provides upgrade purchases
- * - Material system provides upgrade materials
- *
- * ========================================
- * MVP STATUS: MINIMAL UPGRADE SYSTEM (3 functions kept)
- * ========================================
- * For MVP, only cargo capacity upgrades are critical for trading progression.
- * Most upgrade functions deferred to post-MVP. Keeping minimal set:
- * - InstallUpgrade() - Core upgrade installation
- * - CanInstallUpgrade() - Purchase validation
- * - GetStatModifier() - Apply stat bonuses (for CargoCapacity)
- *
- * All other functions (11) deferred for post-MVP advanced upgrade systems.
- * Functions remain available for C++ internal use.
- *
- * See: PHASE2_SHIPS_SYSTEM_CATEGORIZATION.md for full analysis.
+ * Stat maths: Value = (Base + sum of additive bonuses) * product of multipliers, over every
+ * installed stack, so the order upgrades were fitted in doesn't matter.
  */
 UCLASS(BlueprintType, ClassGroup=(Ships), meta=(BlueprintSpawnableComponent))
 class ADASTREA_API UShipUpgradeComponent : public UActorComponent
@@ -97,35 +77,41 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Upgrades")
 	FName ShipTypeID;
 
-	/** Maximum number of upgrades that can be installed */
+	/** Maximum number of upgrade stacks across all categories */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Upgrades", meta=(ClampMin="1", ClampMax="50"))
 	int32 MaxUpgradeSlots;
+
+	/** Slots per category; a category missing from the map has no slots. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Upgrades")
+	TMap<EShipUpgradeCategory, int32> CategorySlots;
+
+	/** Fraction of list price refunded when an upgrade is sold back */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Upgrades", meta=(ClampMin="0.0", ClampMax="1.0"))
+	float SellBackFraction;
 
 	// ====================
 	// Upgrade Management
 	// ====================
 
 	/**
-	 * Install an upgrade on this ship
+	 * Install an upgrade on this ship (no station or credits involved)
 	 * @param Upgrade Upgrade to install
-	 * @param bIgnoreRequirements Bypass requirement checks
+	 * @param bIgnoreRequirements Bypass slot, compatibility and requirement checks
 	 * @return True if installation successful
 	 */
 	UFUNCTION(BlueprintCallable, Category="Upgrades")
 	bool InstallUpgrade(UShipUpgradeDataAsset* Upgrade, bool bIgnoreRequirements = false);
 
 	/**
-	 * Uninstall an upgrade from this ship
+	 * Remove one stack of an upgrade (the whole entry when it was the last stack)
 	 * @param UpgradeID ID of upgrade to remove
-	 * @return True if uninstallation successful
-	 *
-	 * @note POST-MVP: Deferred - MVP only needs install functionality
+	 * @return True if a stack was removed
 	 */
-	// UFUNCTION(BlueprintCallable, Category="Upgrades") // DEFERRED: Post-MVP advanced upgrade management
+	UFUNCTION(BlueprintCallable, Category="Upgrades")
 	bool UninstallUpgrade(FName UpgradeID);
 
 	/**
-	 * Check if upgrade can be installed
+	 * Check if upgrade can be installed: slots, stacks, compatibility, conflicts, prerequisites
 	 * @param Upgrade Upgrade to check
 	 * @param OutReason Reason if cannot install
 	 * @return True if can install
@@ -133,33 +119,60 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Upgrades")
 	bool CanInstallUpgrade(UShipUpgradeDataAsset* Upgrade, FText& OutReason) const;
 
-	/**
-	 * Check if upgrade is installed
-	 * @param UpgradeID Upgrade to check
-	 * @return True if installed
-	 *
-	 * @note POST-MVP: Deferred - not critical for MVP trading loop
-	 */
-	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades") // DEFERRED: Post-MVP query
+	/** Check if upgrade is installed */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades")
 	bool IsUpgradeInstalled(FName UpgradeID) const;
 
-	/**
-	 * Get stack count for an upgrade
-	 * @param UpgradeID Upgrade to check
-	 * @return Stack count (0 if not installed)
-	 *
-	 * @note POST-MVP: Deferred - stacking system not needed for MVP
-	 */
-	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades") // DEFERRED: Post-MVP stacking system
+	/** Stack count for an upgrade (0 if not installed) */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades")
 	int32 GetUpgradeStackCount(FName UpgradeID) const;
 
-	/**
-	 * Uninstall all upgrades
-	 *
-	 * @note POST-MVP: Deferred - reset functionality not needed for MVP
-	 */
-	// UFUNCTION(BlueprintCallable, Category="Upgrades") // DEFERRED: Post-MVP utility
+	/** Remove every upgrade */
+	UFUNCTION(BlueprintCallable, Category="Upgrades")
 	void UninstallAllUpgrades();
+
+	// ====================
+	// Outfitting (buying and selling at a station)
+	// ====================
+
+	/**
+	 * Whether Upgrade can be bought and fitted at Module with the credits in Wallet.
+	 * @param OutReason Why not, for the outfitting screen
+	 */
+	UFUNCTION(BlueprintCallable, Category="Upgrades|Outfitting")
+	bool CanPurchaseUpgrade(UShipUpgradeDataAsset* Upgrade, const AOutfittingModule* Module, const UPlayerTraderComponent* Wallet, FText& OutReason) const;
+
+	/** Buy Upgrade at Module, paying from Wallet, and install it. */
+	UFUNCTION(BlueprintCallable, Category="Upgrades|Outfitting")
+	bool PurchaseUpgrade(UShipUpgradeDataAsset* Upgrade, AOutfittingModule* Module, UPlayerTraderComponent* Wallet, FText& OutReason);
+
+	/** Whether one stack of UpgradeID can be removed at Module. */
+	UFUNCTION(BlueprintCallable, Category="Upgrades|Outfitting")
+	bool CanSellUpgrade(FName UpgradeID, const AOutfittingModule* Module, FText& OutReason) const;
+
+	/** Remove one stack of UpgradeID at Module and refund GetSellPrice() into Wallet. */
+	UFUNCTION(BlueprintCallable, Category="Upgrades|Outfitting")
+	bool SellUpgrade(FName UpgradeID, AOutfittingModule* Module, UPlayerTraderComponent* Wallet, int32& OutRefund, FText& OutReason);
+
+	/** Credits refunded for selling one stack of Upgrade. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Outfitting")
+	int32 GetSellPrice(const UShipUpgradeDataAsset* Upgrade) const;
+
+	// ====================
+	// Slots
+	// ====================
+
+	/** Slots this ship has for Category */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Slots")
+	int32 GetSlotCount(EShipUpgradeCategory Category) const;
+
+	/** Slots in use for Category (one per installed stack) */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Slots")
+	int32 GetUsedSlotCount(EShipUpgradeCategory Category) const;
+
+	/** Remaining slots across all categories (MaxUpgradeSlots minus installed stacks) */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Slots")
+	int32 GetRemainingUpgradeSlots() const;
 
 	// ====================
 	// Stat Modifiers
@@ -167,7 +180,7 @@ public:
 
 	/**
 	 * Get modified stat value with all upgrade bonuses applied
-	 * @param StatName Name of stat
+	 * @param StatName Name of stat (see ShipUpgradeStats)
 	 * @param BaseValue Base value before modifiers
 	 * @return Modified value after all upgrades
 	 */
@@ -175,72 +188,37 @@ public:
 	float GetStatModifier(FName StatName, float BaseValue) const;
 
 	/**
-	 * Get total bonus percentage for a stat (as decimal, 0.25 = 25%)
-	 * @param StatName Name of stat
-	 * @return Total bonus percentage
-	 *
-	 * @note POST-MVP: Deferred - GetStatModifier() is sufficient for MVP
+	 * A stat as it would be with one more stack of AddedUpgrade and/or one fewer of
+	 * RemovedUpgradeID - the outfitting screen's before/after preview.
 	 */
-	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Stats") // DEFERRED: Post-MVP analytics
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Stats")
+	float PreviewStat(FName StatName, float BaseValue, const UShipUpgradeDataAsset* AddedUpgrade, FName RemovedUpgradeID) const;
+
+	/** Get total bonus percentage for a stat (as decimal, 0.25 = 25%) */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Stats")
 	float GetStatBonusPercentage(FName StatName) const;
 
-	/**
-	 * Get all stat modifiers from upgrades
-	 * @return Map of stat name to total modifier value
-	 *
-	 * @note POST-MVP: Deferred - bulk query not needed for MVP
-	 */
-	// UFUNCTION(BlueprintCallable, Category="Upgrades|Stats") // DEFERRED: Post-MVP bulk operations
+	/** Map of every modified stat to its total bonus percentage */
 	TMap<FName, float> GetAllStatModifiers() const;
 
 	// ====================
 	// Query Functions
 	// ====================
 
-	/**
-	 * Get all installed upgrades
-	 * @return Array of installed upgrades
-	 *
-	 * @note POST-MVP: Deferred - list query not needed for MVP
-	 */
-	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Query") // DEFERRED: Post-MVP query
+	/** Get all installed upgrades */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Query")
 	TArray<FInstalledUpgrade> GetInstalledUpgrades() const { return InstalledUpgrades; }
 
-	/**
-	 * Get installed upgrades by category
-	 * @param Category Category to filter
-	 * @return Array of installed upgrades in category
-	 *
-	 * @note POST-MVP: Deferred - category filtering not needed for MVP
-	 */
-	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Query") // DEFERRED: Post-MVP filtering
+	/** Get installed upgrades in one category */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Query")
 	TArray<FInstalledUpgrade> GetUpgradesByCategory(EShipUpgradeCategory Category) const;
 
-	/**
-	 * Get number of installed upgrades
-	 * @return Upgrade count
-	 *
-	 * @note POST-MVP: Deferred - count query not needed for MVP
-	 */
-	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Query") // DEFERRED: Post-MVP query
+	/** Number of installed upgrade entries */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Query")
 	int32 GetInstalledUpgradeCount() const { return InstalledUpgrades.Num(); }
 
-	/**
-	 * Get remaining upgrade slots
-	 * @return Number of available slots
-	 *
-	 * @note POST-MVP: Deferred - slot tracking not needed for simple MVP upgrades
-	 */
-	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Query") // DEFERRED: Post-MVP slot system
-	int32 GetRemainingUpgradeSlots() const;
-
-	/**
-	 * Get total value of all installed upgrades
-	 * @return Total credit value
-	 *
-	 * @note POST-MVP: Deferred - value calculation not needed for MVP
-	 */
-	// UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Query") // DEFERRED: Post-MVP analytics
+	/** Total list value of all installed upgrades */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Upgrades|Query")
 	int32 GetTotalUpgradeValue() const;
 
 	// ====================
@@ -262,35 +240,23 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="Upgrades|Events")
 	FOnUpgradeInstallFailed OnUpgradeInstallFailed;
 
+	/** Fired after any install, uninstall or clear: the ship's stats need recalculating */
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUpgradesChanged);
+	UPROPERTY(BlueprintAssignable, Category="Upgrades|Events")
+	FOnUpgradesChanged OnUpgradesChanged;
+
 protected:
 	virtual void BeginPlay() override;
 
-	/**
-	 * Find installed upgrade by ID
-	 * @param UpgradeID ID to find
-	 * @return Pointer to installed upgrade, or nullptr
-	 */
+	/** Find installed upgrade by ID */
 	FInstalledUpgrade* FindInstalledUpgrade(FName UpgradeID);
 
-	/**
-	 * Find installed upgrade (const version)
-	 * @param UpgradeID ID to find
-	 * @return Pointer to installed upgrade, or nullptr
-	 */
+	/** Find installed upgrade (const version) */
 	const FInstalledUpgrade* FindInstalledUpgrade(FName UpgradeID) const;
 
-	/**
-	 * Check if upgrade conflicts with installed upgrades
-	 * @param Upgrade Upgrade to check
-	 * @return True if conflicts exist
-	 */
+	/** Check if upgrade conflicts with installed upgrades */
 	bool HasUpgradeConflicts(UShipUpgradeDataAsset* Upgrade) const;
 
-	/**
-	 * Check requirements for installing upgrade
-	 * @param Upgrade Upgrade to check
-	 * @param OutReason Reason if requirements not met
-	 * @return True if requirements met
-	 */
+	/** Prerequisites and player level */
 	bool CheckUpgradeRequirements(UShipUpgradeDataAsset* Upgrade, FText& OutReason) const;
 };

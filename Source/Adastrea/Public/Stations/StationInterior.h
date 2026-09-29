@@ -37,6 +37,8 @@ enum class EStationTerminalType : uint8
 	ToMaintenance,
 	/** Walk through to the habitation deck. */
 	ToHabitation,
+	/** Return to the ship and open the outfitting screen (needs an outfitting module on the station). */
+	Outfitting,
 	/** A room-specific service; shows its message (not implemented yet). */
 	Service,
 };

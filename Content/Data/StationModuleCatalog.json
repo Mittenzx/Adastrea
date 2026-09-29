@@ -252,6 +252,111 @@
       "recipe_tier": 6
     },
     {
+      "item_id": "OutfittingModule",
+      "cpp_class": "AOutfittingModule",
+      "class_path": "/Script/Adastrea.OutfittingModule",
+      "display_name": "Outfitting",
+      "description": "Outfitting Bay Module: a prefabricated station module where docked ships buy and fit engine, weapon, shield, hull and cargo upgrades (up to tier 2).",
+      "group": "Docking",
+      "required_tech_level": 2,
+      "build_cost_credits": 61629,
+      "build_time_seconds": 180.0,
+      "materials": {
+        "ModuleShell": 2,
+        "ControlUnit": 2,
+        "StructuralFrame": 4
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "EngineWorkshopModule",
+      "cpp_class": "AEngineWorkshopModule",
+      "class_path": "/Script/Adastrea.EngineWorkshopModule",
+      "display_name": "Engine Workshop",
+      "description": "Engine Workshop Module: a prefabricated station module that fits ship engine upgrades up to tier 3.",
+      "group": "Docking",
+      "required_tech_level": 3,
+      "build_cost_credits": 104690,
+      "build_time_seconds": 300.0,
+      "materials": {
+        "ModuleShell": 2,
+        "ShipEngine": 1,
+        "Thruster": 2,
+        "ControlUnit": 1
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "ArmouryModule",
+      "cpp_class": "AArmouryModule",
+      "class_path": "/Script/Adastrea.ArmouryModule",
+      "display_name": "Armoury",
+      "description": "Armoury Module: a prefabricated station module that fits ship weapon upgrades up to tier 3.",
+      "group": "Defence",
+      "required_tech_level": 3,
+      "build_cost_credits": 98532,
+      "build_time_seconds": 240.0,
+      "materials": {
+        "ModuleShell": 2,
+        "TurretWeapon": 1,
+        "Railgun": 1,
+        "ControlUnit": 1
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "ShieldWorkshopModule",
+      "cpp_class": "AShieldWorkshopModule",
+      "class_path": "/Script/Adastrea.ShieldWorkshopModule",
+      "display_name": "Shield Workshop",
+      "description": "Shield Workshop Module: a prefabricated station module that fits ship shield upgrades up to tier 3.",
+      "group": "Defence",
+      "required_tech_level": 3,
+      "build_cost_credits": 117438,
+      "build_time_seconds": 300.0,
+      "materials": {
+        "ModuleShell": 2,
+        "ShieldEmitter": 1,
+        "ShieldCapacitor": 2
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "HullWorksModule",
+      "cpp_class": "AHullWorksModule",
+      "class_path": "/Script/Adastrea.HullWorksModule",
+      "display_name": "Hull Works",
+      "description": "Hull Works Module: a prefabricated station module that fits ship hull and armour upgrades up to tier 3.",
+      "group": "Docking",
+      "required_tech_level": 3,
+      "build_cost_credits": 70992,
+      "build_time_seconds": 180.0,
+      "materials": {
+        "ModuleShell": 2,
+        "HullPlating": 4,
+        "ArmourPlate": 6,
+        "StructuralFrame": 4
+      },
+      "recipe_tier": 6
+    },
+    {
+      "item_id": "CargoRefitModule",
+      "cpp_class": "ACargoRefitModule",
+      "class_path": "/Script/Adastrea.CargoRefitModule",
+      "display_name": "Cargo Refit",
+      "description": "Cargo Refit Yard Module: a prefabricated station module that fits ship cargo hold upgrades up to tier 3.",
+      "group": "Storage",
+      "required_tech_level": 3,
+      "build_cost_credits": 96423,
+      "build_time_seconds": 240.0,
+      "materials": {
+        "ModuleShell": 2,
+        "CargoPod": 4,
+        "CargoComputer": 1
+      },
+      "recipe_tier": 6
+    },
+    {
       "item_id": "PhysicsLabModule",
       "cpp_class": "APhysicsLabModule",
       "class_path": "/Script/Adastrea.PhysicsLabModule",

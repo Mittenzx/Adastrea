@@ -3,7 +3,7 @@
 Run inside the editor (remote execution or the Python console), after the C++ with
 EShipInteriorFamily::BattleshipDecks is built:
 
-    py "C:/Users/akuma/Adastrea/Tools/import_battleship_decks.py" [--no-bp] [--dry-run]
+    py "C:/Users/akuma/Adastrea/Tools/import_battleship_decks.py" [--no-bp | --bp-only] [--dry-run]
 
 Steps:
   1. Materials for the new slots: MI_Int_Grate / MI_Int_Hazard / MI_Int_Bulkhead
@@ -130,6 +130,10 @@ def wire_bp(shell_path):
 
 def main(argv):
     art.DRY_RUN = "--dry-run" in argv
+    if "--bp-only" in argv:
+        # e.g. after a merge took another branch's BP_Battleship: re-wire it only
+        art.log("RESULT_OK" if wire_bp("%s/%s_Shell" % (MESH_DIR, PREFIX)) else "RESULT_FAIL")
+        return
     with open(os.path.join(art.GEN_DIR, PREFIX + "_contract.json")) as fh:
         contract = json.load(fh)
     ok = build_materials()

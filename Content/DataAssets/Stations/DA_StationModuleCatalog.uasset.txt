@@ -2,7 +2,17 @@
 # Station Module Catalog Configuration
 # Source: CraftingTree.json (authoritative) via generate_station_module_catalog.py
 
-ModuleCount: 27
+ModuleCount: 33
+
+Module: ArmouryModule
+  Class: /Script/Adastrea.ArmouryModule
+  DisplayName: Armoury
+  Group: Defence
+  RequiredTechLevel: 3
+  BuildCost.Credits: 98532
+  BuildTime: 240.0
+  Materials: ControlUnitx1, ModuleShellx2, Railgunx1, TurretWeaponx1
+  Description: Armoury Module: a prefabricated station module that fits ship weapon upgrades up to tier 3.
 
 Module: BarracksModule
   Class: /Script/Adastrea.BarracksModule
@@ -43,6 +53,16 @@ Module: CargoBayModule
   BuildTime: 180.0
   Materials: CargoPodx1, ConstructionMaterialsx1, ModuleShellx3
   Description: Cargo Bay Module: a prefabricated station module ready for assembly.
+
+Module: CargoRefitModule
+  Class: /Script/Adastrea.CargoRefitModule
+  DisplayName: Cargo Refit
+  Group: Storage
+  RequiredTechLevel: 3
+  BuildCost.Credits: 96423
+  BuildTime: 240.0
+  Materials: CargoComputerx1, CargoPodx4, ModuleShellx2
+  Description: Cargo Refit Yard Module: a prefabricated station module that fits ship cargo hold upgrades up to tier 3.
 
 Module: CorridorModule
   Class: /Script/Adastrea.CorridorModule
@@ -104,6 +124,16 @@ Module: EncryptionLab
   Materials: ElectronicsLabModulex1, EncryptedCircuit_Mk2x1, ModuleShellx1, QuantumProcessor_Mk2x1
   Description: Refined encryption lab, produced by advanced fabrication.
 
+Module: EngineWorkshopModule
+  Class: /Script/Adastrea.EngineWorkshopModule
+  DisplayName: Engine Workshop
+  Group: Docking
+  RequiredTechLevel: 3
+  BuildCost.Credits: 104690
+  BuildTime: 300.0
+  Materials: ControlUnitx1, ModuleShellx2, ShipEnginex1, Thrusterx2
+  Description: Engine Workshop Module: a prefabricated station module that fits ship engine upgrades up to tier 3.
+
 Module: FabricationModule
   Class: /Script/Adastrea.FabricationModule
   DisplayName: Fabrication
@@ -144,6 +174,16 @@ Module: HabitationModule
   Materials: HabitationPodx1, LifeSupportUnitx2, ModuleShellx3
   Description: Habitation Module: a prefabricated station module ready for assembly.
 
+Module: HullWorksModule
+  Class: /Script/Adastrea.HullWorksModule
+  DisplayName: Hull Works
+  Group: Docking
+  RequiredTechLevel: 3
+  BuildCost.Credits: 70992
+  BuildTime: 180.0
+  Materials: ArmourPlatex6, HullPlatingx4, ModuleShellx2, StructuralFramex4
+  Description: Hull Works Module: a prefabricated station module that fits ship hull and armour upgrades up to tier 3.
+
 Module: IonPropulsionLab
   Class: /Script/Adastrea.IonPropulsionLab
   DisplayName: Ion Propulsion Lab
@@ -183,6 +223,16 @@ Module: OptronicsLab
   BuildTime: 1140.0
   Materials: ElectronicsLabModulex1, FiberOpticCable_Mk2x1, ModuleShellx1, OpticalLens_Mk2x2
   Description: Refined optronics lab, produced by advanced fabrication.
+
+Module: OutfittingModule
+  Class: /Script/Adastrea.OutfittingModule
+  DisplayName: Outfitting
+  Group: Docking
+  RequiredTechLevel: 2
+  BuildCost.Credits: 61629
+  BuildTime: 180.0
+  Materials: ControlUnitx2, ModuleShellx2, StructuralFramex4
+  Description: Outfitting Bay Module: a prefabricated station module where docked ships buy and fit engine, weapon, shield, hull and cargo upgrades (up to tier 2).
 
 Module: PhysicsLabModule
   Class: /Script/Adastrea.PhysicsLabModule
@@ -243,6 +293,16 @@ Module: ShieldGeneratorModule
   BuildTime: 240.0
   Materials: AdvancedPowerCellsx2, ModuleShellx2, ShieldEmitterx1
   Description: Shield Generator Module: a prefabricated station module ready for assembly.
+
+Module: ShieldWorkshopModule
+  Class: /Script/Adastrea.ShieldWorkshopModule
+  DisplayName: Shield Workshop
+  Group: Defence
+  RequiredTechLevel: 3
+  BuildCost.Credits: 117438
+  BuildTime: 300.0
+  Materials: ModuleShellx2, ShieldCapacitorx2, ShieldEmitterx1
+  Description: Shield Workshop Module: a prefabricated station module that fits ship shield upgrades up to tier 3.
 
 Module: SolarArrayModule
   Class: /Script/Adastrea.SolarArrayModule

@@ -1,18 +1,18 @@
 {
   "ship": "SM_Ship_Smuggler_01",
-  "size_class": "small",
+  "size_class": "hero_smuggler",
   "scale": 1.0,
   "carcass_dims": [
-    262.5,
-    568.6137390136719,
-    138.45418548583984
+    342.1,
+    611.8,
+    97.7
   ],
   "hardpoints": {
     "HP_Engine": {
       "position": [
         0.0,
-        -295.7,
-        67.0
+        -284.1,
+        -14.2
       ],
       "mount_orientation": "AXIS_FORWARD",
       "allowed_types": [
@@ -20,35 +20,23 @@
       ],
       "occupied": true
     },
-    "HP_Cargo": {
-      "position": [
-        0.0,
-        -28.4,
-        50.3
-      ],
-      "mount_orientation": "AXIS_FORWARD",
-      "allowed_types": [
-        "cargo"
-      ],
-      "occupied": true
-    },
     "HP_Nose": {
       "position": [
         0.0,
-        193.3,
-        44.8
+        219.4,
+        -19.3
       ],
       "mount_orientation": "AXIS_FORWARD",
       "allowed_types": [
         "weapon"
       ],
-      "occupied": false
+      "occupied": true
     },
     "HP_Sensor": {
       "position": [
         0.0,
-        102.4,
-        175.0
+        -96.9,
+        20.0
       ],
       "mount_orientation": "AXIS_FORWARD",
       "allowed_types": [
@@ -59,38 +47,26 @@
     "HP_Core": {
       "position": [
         0.0,
-        -199.0,
-        130.7
+        -45.6,
+        -12.5
       ],
       "mount_orientation": "AXIS_FORWARD",
       "allowed_types": [
         "reactor"
       ],
-      "occupied": false
+      "occupied": true
     },
-    "HP_Underslung": {
+    "HP_Cargo": {
       "position": [
         0.0,
-        -170.6,
-        53.1
+        -11.4,
+        20.9
       ],
       "mount_orientation": "AXIS_FORWARD",
       "allowed_types": [
-        "drill"
+        "cargo"
       ],
-      "occupied": false
-    },
-    "HP_Forward": {
-      "position": [
-        0.0,
-        170.6,
-        61.4
-      ],
-      "mount_orientation": "AXIS_FORWARD",
-      "allowed_types": [
-        "mining_laser"
-      ],
-      "occupied": false
+      "occupied": true
     }
   }
 }

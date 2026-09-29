@@ -11,6 +11,8 @@
 #include "Stations/CorridorModule.h"
 #include "Stations/SolarArrayModule.h"
 #include "Stations/StationCoreModule.h"
+#include "Stations/OutfittingModule.h"
+#include "StationModuleCatalog.h"
 #include "Trading/PlayerTraderComponent.h"
 #include "Engine/Engine.h"
 #include "Engine/World.h"
@@ -313,6 +315,71 @@ bool FStationEditorCoreFootprintTest::RunTest(const FString& Parameters)
 	TestTrue(TEXT("Export marks the core"), Manager->ExportStationBlueprint().Contains(TEXT(":StationCore_Research:0,0,0:0:1")));
 
 	Manager->Cancel();
+	return true;
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FStationEditorOutfittingModulesTest, "Adastrea.StationEditor.OutfittingModules",
+	EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FStationEditorOutfittingModulesTest::RunTest(const FString& Parameters)
+{
+	using namespace StationEditorTests;
+
+	// Every outfitting module is in the buildable catalog with a real footprint and cost.
+	UStationModuleCatalog* Catalog = NewObject<UStationModuleCatalog>();
+	Catalog->LoadCatalogFromJson();
+	Catalog->LoadFootprintsFromJson();
+	const TSubclassOf<ASpaceStationModule> OutfittingClasses[] = {
+		AOutfittingModule::StaticClass(), AEngineWorkshopModule::StaticClass(), AArmouryModule::StaticClass(),
+		AShieldWorkshopModule::StaticClass(), AHullWorksModule::StaticClass(), ACargoRefitModule::StaticClass(),
+	};
+	for (const TSubclassOf<ASpaceStationModule>& Class : OutfittingClasses)
+	{
+		FStationModuleEntry Entry;
+		if (!TestTrue(*FString::Printf(TEXT("%s in catalog"), *Class->GetName()), Catalog->FindModuleByClass(Class, Entry)))
+		{
+			continue;
+		}
+		TestTrue(*FString::Printf(TEXT("%s costs credits"), *Class->GetName()), Entry.BuildCost.Credits > 0);
+		TestTrue(*FString::Printf(TEXT("%s needs materials"), *Class->GetName()), Entry.BuildCost.Materials.Num() > 0);
+		TestEqual(*FString::Printf(TEXT("%s footprint"), *Class->GetName()), Entry.GridFootprint, FIntVector(2, 2, 1));
+		TestTrue(*FString::Printf(TEXT("%s tech level 2-3"), *Class->GetName()), Entry.RequiredTechLevel >= 2 && Entry.RequiredTechLevel <= 3);
+	}
+
+	// Build a workshop in the editor: the station gains that outfitting service.
+	FTestWorld TestWorld(FVector::ZeroVector);
+	UStationEditorManager* Manager = MakeManager();
+	TestTrue(TEXT("BeginEditing"), Manager->BeginEditing(TestWorld.Station));
+	ASpaceStationModule* Reactor = Manager->PlaceModule(AReactorModule::StaticClass(), TestWorld.Station->GetActorLocation(), FRotator::ZeroRotator);
+	if (!TestNotNull(TEXT("reactor placed"), Reactor))
+	{
+		return false;
+	}
+	TestFalse(TEXT("no outfitting yet"), TestWorld.Station->HasOutfitting());
+
+	FVector Position;
+	TestTrue(TEXT("attach position"), Manager->FindAttachPosition(AEngineWorkshopModule::StaticClass(), Reactor, FVector(1, 0, 0), Position));
+	const int32 CreditsBefore = Manager->GetPlayerCredits();
+	AOutfittingModule* Workshop = Cast<AOutfittingModule>(
+		Manager->PlaceModule(AEngineWorkshopModule::StaticClass(), Position, FRotator::ZeroRotator));
+	if (!TestNotNull(TEXT("engine workshop placed"), Workshop))
+	{
+		return false;
+	}
+	TestEqual(TEXT("build cost charged"), Manager->GetPlayerCredits(), CreditsBefore - BuildCost(Manager, AEngineWorkshopModule::StaticClass()));
+	TestTrue(TEXT("station has outfitting"), TestWorld.Station->HasOutfitting());
+	TestTrue(TEXT("workshop services engines"), TestWorld.Station->GetOutfittingModuleFor(EShipUpgradeCategory::Engines) == Workshop);
+	TestNull(TEXT("no weapons service"), TestWorld.Station->GetOutfittingModuleFor(EShipUpgradeCategory::Weapons));
+
+	// Upgrading the module in the editor raises the tier it can fit.
+	TestEqual(TEXT("workshop starts at tier 3"), Workshop->GetMaxTier(), EUpgradeTier::Tier3);
+	TestTrue(TEXT("upgrade workshop"), Manager->UpgradeModule(Workshop));
+	TestEqual(TEXT("upgraded workshop fits tier 4"), Workshop->GetMaxTier(), EUpgradeTier::Tier4);
+
+	// The workshop round-trips through the station blueprint string (save games, sharing).
+	TestTrue(TEXT("blueprint export names the workshop"), Manager->ExportStationBlueprint().Contains(TEXT("EngineWorkshopModule")));
+	Manager->Save();
+	TestTrue(TEXT("save keeps the workshop"), TestWorld.Station->Modules.Contains(Workshop));
 	return true;
 }
 

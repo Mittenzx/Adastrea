@@ -1,0 +1,60 @@
+{
+  "ship": "SM_Ship_CommandXL_01",
+  "size_class": "hero_commandxl",
+  "scale": 1.0,
+  "carcass_dims": [
+    867.5,
+    2049.7,
+    867.5
+  ],
+  "hardpoints": {
+    "HP_Engine": {
+      "position": [
+        0.0,
+        -507.4,
+        0.0
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "engine"
+      ],
+      "occupied": true
+    },
+    "HP_Nose": {
+      "position": [
+        0.0,
+        -26.0,
+        0.0
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "weapon"
+      ],
+      "occupied": true
+    },
+    "HP_Sensor": {
+      "position": [
+        -0.0,
+        157.8,
+        -0.0
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "sensor"
+      ],
+      "occupied": true
+    },
+    "HP_Core": {
+      "position": [
+        -0.0,
+        -739.2,
+        0.0
+      ],
+      "mount_orientation": "AXIS_FORWARD",
+      "allowed_types": [
+        "reactor"
+      ],
+      "occupied": true
+    }
+  }
+}
