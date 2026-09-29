@@ -65,7 +65,12 @@ FText UShipUpgradeDataAsset::GetTierDisplayName() const
 
 FText UShipUpgradeDataAsset::GetCategoryDisplayName() const
 {
-	switch (Category)
+	return GetCategoryName(Category);
+}
+
+FText UShipUpgradeDataAsset::GetCategoryName(EShipUpgradeCategory InCategory)
+{
+	switch (InCategory)
 	{
 		case EShipUpgradeCategory::Weapons:
 			return FText::FromString("Weapons");

@@ -8,6 +8,8 @@
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipDataAsset.h"
 #include "Ships/SpaceshipInterior.h"
+#include "Ships/ShipUpgradeComponent.h"
+#include "Ships/ShipUpgradeCatalogSubsystem.h"
 #include "Stations/SpaceStation.h"
 #include "Stations/DockingBayModule.h"
 #include "Trading/CargoComponent.h"
@@ -747,6 +749,25 @@ void USaveGameSubsystem::CollectPlayerShip(ASpaceship* Ship, UAdastreaSaveGame* 
 		}
 	}
 
+	if (const UShipUpgradeComponent* Upgrades = Ship->UpgradeComponent)
+	{
+		for (const FInstalledUpgrade& Installed : Upgrades->InstalledUpgrades)
+		{
+			if (!Installed.Upgrade)
+			{
+				continue;
+			}
+			FSavedShipUpgrade& SavedUpgrade = Saved.Upgrades.AddDefaulted_GetRef();
+			SavedUpgrade.UpgradeID = Installed.Upgrade->UpgradeID;
+			// Catalog upgrades are transient (built from JSON at startup); found again by ID.
+			if (Installed.Upgrade->IsAsset())
+			{
+				SavedUpgrade.UpgradeAsset = FSoftObjectPath(Installed.Upgrade);
+			}
+			SavedUpgrade.StackCount = Installed.StackCount;
+		}
+	}
+
 	ASpaceStationModule* DockModule = Ship->GetNearbyStation();
 	if (Ship->IsDocked() && DockModule)
 	{
@@ -920,6 +941,31 @@ void USaveGameSubsystem::ApplyShipCreditsAndCargo(ASpaceship* Ship, const FSaved
 		else if (Delta < 0)
 		{
 			Trader->RemoveCredits(-Delta);
+		}
+	}
+
+	// Upgrades before cargo: they set the hold's capacity.
+	if (UShipUpgradeComponent* Upgrades = Ship->UpgradeComponent)
+	{
+		Upgrades->UninstallAllUpgrades();
+		const UShipUpgradeCatalogSubsystem* Catalog = GetGameInstance()->GetSubsystem<UShipUpgradeCatalogSubsystem>();
+		for (const FSavedShipUpgrade& Entry : Saved.Upgrades)
+		{
+			UShipUpgradeDataAsset* Upgrade = Catalog ? Catalog->FindUpgrade(Entry.UpgradeID) : nullptr;
+			if (!Upgrade && Entry.UpgradeAsset.IsValid())
+			{
+				Upgrade = Cast<UShipUpgradeDataAsset>(Entry.UpgradeAsset.TryLoad());
+			}
+			if (!Upgrade)
+			{
+				UE_LOG(LogAdastrea, Warning, TEXT("SaveGameSubsystem: Unknown ship upgrade %s dropped"), *Entry.UpgradeID.ToString());
+				continue;
+			}
+			for (int32 Stack = 0; Stack < Entry.StackCount; ++Stack)
+			{
+				// Forced: slots/tiers may have changed since the save; keep what the player paid for.
+				Upgrades->InstallUpgrade(Upgrade, true);
+			}
 		}
 	}
 

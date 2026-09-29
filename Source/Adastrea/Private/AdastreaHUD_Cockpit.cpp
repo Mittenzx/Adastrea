@@ -261,7 +261,7 @@ void AAdastreaHUD::DrawCyberpunkFlightHUD(APlayerController* PC, ASpaceship* Shi
 	const float Hull = FMath::Clamp(Ship->GetCurrentHullIntegrity(), 0.0f, HullMax);
 	const float HullFrac = Hull / HullMax;
 	// Ships have no runtime shield pool yet: show the rated capacity from the data asset as full.
-	const float ShieldMax = Ship->ShipDataAsset ? Ship->ShipDataAsset->ShieldStrength : 0.0f;
+	const float ShieldMax = Ship->GetMaxShieldStrength();
 	const float Shield = ShieldMax;
 	const float ShieldFrac = ShieldMax > 0.0f ? Shield / ShieldMax : 0.0f;
 	const float Armor = Ship->ShipDataAsset ? Ship->ShipDataAsset->ArmorRating : 0.0f;

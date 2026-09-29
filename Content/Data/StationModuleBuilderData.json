@@ -658,6 +658,96 @@
         { "ItemID": "NanoInjectors", "Qty": 1 },
         { "ItemID": "RefinedMedicine_Mk2", "Qty": 1 }
       ]
+    },
+    "OutfittingModule": {
+      "size": [2, 2, 1],
+      "power": 60,
+      "group": "Docking",
+      "faces": "all",
+      "cost": 58000,
+      "BaseValue": 58000,
+      "WeightKg": 597.2,
+      "part_family": "Module",
+      "recipe": [
+        { "ItemID": "ModuleShell", "Qty": 2 },
+        { "ItemID": "ControlUnit", "Qty": 2 },
+        { "ItemID": "SteelAlloy", "Qty": 2 }
+      ]
+    },
+    "EngineWorkshopModule": {
+      "size": [2, 2, 1],
+      "power": 80,
+      "group": "Docking",
+      "faces": "all",
+      "cost": 72000,
+      "BaseValue": 72000,
+      "WeightKg": 597.2,
+      "part_family": "Module",
+      "recipe": [
+        { "ItemID": "ModuleShell", "Qty": 2 },
+        { "ItemID": "ControlUnit", "Qty": 2 },
+        { "ItemID": "PowerCells", "Qty": 3 }
+      ]
+    },
+    "ArmouryModule": {
+      "size": [2, 2, 1],
+      "power": 70,
+      "group": "Defence",
+      "faces": "all",
+      "cost": 76000,
+      "BaseValue": 76000,
+      "WeightKg": 597.2,
+      "part_family": "Module",
+      "recipe": [
+        { "ItemID": "ModuleShell", "Qty": 2 },
+        { "ItemID": "ControlUnit", "Qty": 1 },
+        { "ItemID": "SteelAlloy", "Qty": 3 }
+      ]
+    },
+    "ShieldWorkshopModule": {
+      "size": [2, 2, 1],
+      "power": 90,
+      "group": "Defence",
+      "faces": "all",
+      "cost": 82000,
+      "BaseValue": 82000,
+      "WeightKg": 597.2,
+      "part_family": "Module",
+      "recipe": [
+        { "ItemID": "ModuleShell", "Qty": 2 },
+        { "ItemID": "ShieldEmitter", "Qty": 1 },
+        { "ItemID": "AdvancedPowerCells", "Qty": 1 }
+      ]
+    },
+    "HullWorksModule": {
+      "size": [2, 2, 1],
+      "power": 60,
+      "group": "Docking",
+      "faces": "all",
+      "cost": 64000,
+      "BaseValue": 64000,
+      "WeightKg": 597.2,
+      "part_family": "Module",
+      "recipe": [
+        { "ItemID": "ModuleShell", "Qty": 2 },
+        { "ItemID": "SteelAlloy", "Qty": 3 },
+        { "ItemID": "ConstructionMaterials", "Qty": 1 }
+      ]
+    },
+    "CargoRefitModule": {
+      "size": [2, 2, 1],
+      "power": 40,
+      "group": "Storage",
+      "faces": "all",
+      "cost": 52000,
+      "BaseValue": 52000,
+      "WeightKg": 597.2,
+      "part_family": "Module",
+      "recipe": [
+        { "ItemID": "ModuleShell", "Qty": 2 },
+        { "ItemID": "SteelAlloy", "Qty": 2 },
+        { "ItemID": "ControlUnit", "Qty": 1 }
+      ]
     }
   }
 }

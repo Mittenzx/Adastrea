@@ -420,6 +420,7 @@ void ATestGameMode::SpawnSelectedSpaceship_Implementation()
 				PlayerShip->MovementComponent->MaxSpeed = SelectedSpaceship->MaxSpeed;
 				PlayerShip->MovementComponent->Acceleration = SelectedSpaceship->Acceleration;
 			}
+			PlayerShip->RebaseUpgradeStats();
 
 			UE_LOG(LogAdastreaShips, Log, TEXT("TestGameMode: Applied data asset '%s' to spawned ship"),
 				*SelectedSpaceship->ShipName.ToString());
