@@ -11,6 +11,8 @@ materials NATIVELY in UE (MaterialEditingLibrary graph, not Blender-baked).
       Emissive  <- _E
   Emissive + Metal/Roughness growth done UE-native. Each channel connect is
   wrapped in try/except so a missing enum member logs + skips (never crashes).
+  Materials are Default Lit (Unlit discards everything but Emissive); only the
+  M_Combat_* effect materials stay Unlit.
 
 Run via:  UnrealEditor.exe <proj>.uproject -ExecutePythonScript=<this file>
 Self-contained (boot -> run -> exit). Do NOT leave an interactive editor open.
@@ -26,6 +28,8 @@ MAT_FOLDER = "/Game/Materials/"
 ED = unreal.MaterialEditingLibrary
 AT = unreal.AssetToolsHelpers.get_asset_tools()
 MP = unreal.MaterialProperty   # enum
+# Pure effect materials (beams, hits, projectiles) render Unlit; everything else is lit PBR.
+UNLIT_PREFIXES = ("M_Combat_",)
 
 def log(m):
     unreal.log("[fleet-mat] " + str(m))
@@ -70,12 +74,13 @@ def build_material(name, assets):
         unreal.EditorAssetLibrary.delete_asset(path)
     mat = AT.create_asset(name, MAT_FOLDER, unreal.Material, unreal.MaterialFactoryNew())
     ED.delete_all_material_expressions(mat)
-    mat.set_editor_property("shading_model", unreal.MaterialShadingModel.MSM_UNLIT)
+    unlit = name.startswith(UNLIT_PREFIXES)
+    mat.set_editor_property("shading_model", unreal.MaterialShadingModel.MSM_UNLIT if unlit
+                            else unreal.MaterialShadingModel.MSM_DEFAULT_LIT)
     mat.set_editor_property("blend_mode", unreal.BlendMode.BLEND_OPAQUE)
 
     y = 60
     ok = 0
-    # BaseColor (via emissive so the lit windows/night-vibe shows even unlit)
     # Emissive <- _E (intensity-scaled so it actually glows)
     if assets.get("E"):
         n = tex_sample(mat, assets["E"], -600, y); y += 120
