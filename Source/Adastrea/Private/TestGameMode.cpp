@@ -410,16 +410,8 @@ void ATestGameMode::SpawnSelectedSpaceship_Implementation()
 			PlayerShip->MaxHullIntegrity = SelectedSpaceship->HullStrength;
 			PlayerShip->CurrentHullIntegrity = SelectedSpaceship->HullStrength;
 
-			// Update movement properties from data asset
-			PlayerShip->DefaultMaxSpeed = SelectedSpaceship->MaxSpeed;
-			PlayerShip->DefaultAcceleration = SelectedSpaceship->Acceleration;
-
-			// Also apply movement properties to the movement component (runtime effect)
-			if (PlayerShip->MovementComponent)
-			{
-				PlayerShip->MovementComponent->MaxSpeed = SelectedSpaceship->MaxSpeed;
-				PlayerShip->MovementComponent->Acceleration = SelectedSpaceship->Acceleration;
-			}
+			// Movement from the data asset, scaled the same way as ASpaceship::BeginPlay
+			PlayerShip->ApplyDataAssetMobility();
 			PlayerShip->RebaseUpgradeStats();
 
 			UE_LOG(LogAdastreaShips, Log, TEXT("TestGameMode: Applied data asset '%s' to spawned ship"),
