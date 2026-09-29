@@ -95,8 +95,10 @@ SLOT_ALIASES = {
 MESH_SLOT_OVERRIDES = {
     ("SM_Int_Standard_Corridor", "M_Interior_Hab"): "/AdastreaShips/Materials/Interiors/MI_Interior_Corridor",
     ("SM_Int_Standard_Airlock", "M_Interior_Hab"):  "/AdastreaShips/Materials/Interiors/MI_Interior_Corridor",
-    ("SM_Ship_Battleship_01_Assembled_UniqueUV", "M_Assembled"): "/Game/Materials/M_Battleship_Hull_Unique",
-    ("SM_Ship_Corvette_01_Assembled_UniqueUV", "M_Assembled"):   "/Game/Materials/M_Corvette_Hull_Unique",
+    # The *_UniqueUV assets now hold the 2026-09-29 redesign hulls (tiled UVs, see
+    # Tools/generate_ship_redesigns.py), so they take the tiled class hull, not the old bake.
+    ("SM_Ship_Battleship_01_Assembled_UniqueUV", "M_Assembled"): "/Game/Materials/M_Battleship_Hull",
+    ("SM_Ship_Corvette_01_Assembled_UniqueUV", "M_Assembled"):   "/Game/Materials/M_Corvette_Hull",
 }
 # Otherwise: a material asset with the slot's exact name in one of these folders.
 MATERIAL_SEARCH_DIRS = [

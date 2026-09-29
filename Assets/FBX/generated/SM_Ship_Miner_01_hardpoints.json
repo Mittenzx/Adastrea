@@ -1,18 +1,18 @@
 {
   "ship": "SM_Ship_Miner_01",
-  "size_class": "corvette",
-  "scale": 2.0,
+  "size_class": "hero_miner",
+  "scale": 1.0,
   "carcass_dims": [
-    460.0,
-    1223.199951171875,
-    280.5
+    451.8,
+    1557.6,
+    451.8
   ],
   "hardpoints": {
     "HP_Engine": {
       "position": [
         0.0,
-        -611.6,
-        169.0
+        -689.7,
+        0.0
       ],
       "mount_orientation": "AXIS_FORWARD",
       "allowed_types": [
@@ -20,35 +20,23 @@
       ],
       "occupied": true
     },
-    "HP_Cargo": {
-      "position": [
-        0.0,
-        -48.9,
-        155.0
-      ],
-      "mount_orientation": "AXIS_FORWARD",
-      "allowed_types": [
-        "cargo"
-      ],
-      "occupied": true
-    },
     "HP_Nose": {
       "position": [
         0.0,
-        391.4,
-        141.0
+        -272.9,
+        -0.0
       ],
       "mount_orientation": "AXIS_FORWARD",
       "allowed_types": [
         "weapon"
       ],
-      "occupied": false
+      "occupied": true
     },
     "HP_Sensor": {
       "position": [
         0.0,
-        220.2,
-        376.6
+        -535.0,
+        0.0
       ],
       "mount_orientation": "AXIS_FORWARD",
       "allowed_types": [
@@ -59,36 +47,24 @@
     "HP_Core": {
       "position": [
         0.0,
-        -415.9,
-        286.8
+        533.0,
+        0.0
       ],
       "mount_orientation": "AXIS_FORWARD",
       "allowed_types": [
         "reactor"
       ],
-      "occupied": false
-    },
-    "HP_Underslung": {
-      "position": [
-        0.0,
-        -367.0,
-        149.4
-      ],
-      "mount_orientation": "AXIS_FORWARD",
-      "allowed_types": [
-        "drill"
-      ],
       "occupied": true
     },
-    "HP_Forward": {
+    "HP_Cargo": {
       "position": [
-        0.0,
-        367.0,
-        160.6
+        -0.0,
+        -90.0,
+        0.0
       ],
       "mount_orientation": "AXIS_FORWARD",
       "allowed_types": [
-        "mining_laser"
+        "cargo"
       ],
       "occupied": true
     }
