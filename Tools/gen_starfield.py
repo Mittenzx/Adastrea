@@ -16,6 +16,13 @@ v2 additions (still pure PIL/numpy, no Blender/UE needed):
      brightness uniformly in [0.5, 1.0], which reads as a flat "wall of
      medium-bright dots" instead of the sparse-bright/dense-faint look of an
      actual sky.
+
+v3 (2026-09-30): thinned out -- in game the sky read far too dense.
+  * TOTAL_STARS 32000 -> 7000 and bright glow stars 90 -> 30.
+  * "1px" stars were drawn with d.ellipse radius 1, i.e. a 3x3 blob; the
+    texture is sampled Nearest/no-mip on a 4096-wide dome, so every texel is
+    ~2 screen px and those read as big dots. Small stars are now true single
+    pixels; the 2px/3px sizes are much rarer.
 """
 import math
 import random
@@ -61,11 +68,11 @@ d = ImageDraw.Draw(img)
 rg = random.Random(123)
 cols = [(255,255,255),(200,215,255),(255,235,205),(210,230,255),(255,250,230)]
 
-# Mostly 1px pinpoints, a scattering of 2px, very few 3px. Density mixes a
+# Mostly 1px pinpoints, a few small 3x3 dots, very few 5x5. Density mixes a
 # sparse uniform "nearby stars" field with a denser Milky Way band population,
 # and brightness is skewed toward faint (real magnitude distributions have far
 # more dim stars than bright ones -- uniform brightness reads artificial).
-TOTAL_STARS = 32000
+TOTAL_STARS = 7000
 BAND_FRACTION = 0.55  # share of stars drawn concentrated in the band vs uniform sky
 
 for _ in range(TOTAL_STARS):
@@ -80,17 +87,19 @@ for _ in range(TOTAL_STARS):
     # Skewed toward dim: random()**2.5 concentrates near 0, with a floor so
     # stars never fully vanish into the background.
     b = 0.15 + 0.85 * (rg.random() ** 2.5)
-    size = 1
     r = rg.random()
-    if r < 0.10: size = 2
-    elif r < 0.14: size = 3
     c = tuple(int(v*b) for v in rg.choice(cols))
-    d.ellipse([sx-size, sy-size, sx+size, sy+size], fill=c)
+    if r < 0.93:
+        d.point((sx, sy), fill=c)              # true single-pixel star
+    elif r < 0.99:
+        d.ellipse([sx-1, sy-1, sx+1, sy+1], fill=c)
+    else:
+        d.ellipse([sx-2, sy-2, sx+2, sy+2], fill=c)
 
 # A handful of brighter 4px stars with a tiny soft glow -- also weighted
 # toward the band, matching how the brightest naked-eye stars still skew
 # toward the galactic plane on a real dark-sky map.
-for _ in range(90):
+for _ in range(30):
     if rg.random() < BAND_FRACTION:
         sx = rg.uniform(0, W)
         sy = min(max(rg.gauss(band_v(sx / W) * H, BAND_WIDTH * H), 0), H - 1)
@@ -98,11 +107,14 @@ for _ in range(90):
         sx, sy = rg.uniform(0, W), rg.uniform(0, H)
     glow = Image.new("RGB", (W, H), (0,0,0))
     dg = ImageDraw.Draw(glow)
-    dg.ellipse([sx-5, sy-5, sx+5, sy+5], fill=(255,255,255))
-    glow = glow.filter(ImageFilter.GaussianBlur(5))
-    ga = np.asarray(glow, dtype=np.float32)/255.0*0.9
+    # Tight halo plus a crisp bright core; the old 5px blur alone read as a
+    # grey smudge rather than a star.
+    dg.ellipse([sx-3, sy-3, sx+3, sy+3], fill=(255,255,255))
+    glow = glow.filter(ImageFilter.GaussianBlur(2.5))
+    ga = np.asarray(glow, dtype=np.float32)/255.0*0.6
     ar = np.asarray(img, dtype=np.float32)
     img = Image.fromarray(np.maximum(ar, ga*255).astype(np.uint8))
+    ImageDraw.Draw(img).ellipse([sx-1, sy-1, sx+1, sy+1], fill=rg.choice(cols))
 
 out = r"C:\Users\akuma\Adastrea\Assets\FBX\generated\T_Starfield.png"
 img.save(out)
