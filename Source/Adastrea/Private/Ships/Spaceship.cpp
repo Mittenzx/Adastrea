@@ -207,6 +207,7 @@ void ASpaceship::BeginPlay()
     // the hull per ship class here in code, which is robust and main-side.
     ApplyShipHullMaterial();
     AttachShipWindows();
+    FitCameraToHull();
 
     // Initialize hull integrity from data asset if available
     if (ShipDataAsset)
@@ -1132,6 +1133,38 @@ void ASpaceship::AttachShipWindows()
     WindowMeshComponent->RegisterComponent();
     AddInstanceComponent(WindowMeshComponent);
     UE_LOG(LogAdastreaShips, Log, TEXT("AttachShipWindows: %s gets %s"), *GetName(), *WinName);
+}
+
+void ASpaceship::FitCameraToHull()
+{
+    if (!CameraSpringArm)
+    {
+        return;
+    }
+
+    // Half the hull's longest side, as flown. The largest mesh, not just ShipMeshComponent:
+    // BP_CommandXL and BP_Super add their hull in the Blueprint.
+    float HalfLength = 0.0f;
+    TArray<UStaticMeshComponent*> Meshes;
+    GetComponents<UStaticMeshComponent>(Meshes);
+    for (const UStaticMeshComponent* Mesh : Meshes)
+    {
+        if (Mesh && Mesh->GetStaticMesh())
+        {
+            HalfLength = FMath::Max(HalfLength,
+                (Mesh->GetStaticMesh()->GetBounds().BoxExtent * Mesh->GetComponentScale().GetAbs()).GetMax());
+        }
+    }
+
+    // Fighters already sit clear of CameraDistance; leave their tuned framing alone.
+    if (HalfLength * 1.2f <= CameraDistance)
+    {
+        return;
+    }
+    CameraSpringArm->TargetArmLength = HalfLength * 2.5f;
+    CameraSpringArm->SocketOffset = FVector(0.0f, 0.0f, HalfLength * 0.35f);
+    UE_LOG(LogAdastreaShips, Log, TEXT("FitCameraToHull: %s half-length %.0f -> arm %.0f"),
+        *GetName(), HalfLength, CameraSpringArm->TargetArmLength);
 }
 
 void ASpaceship::ApplyShipHullMaterial()

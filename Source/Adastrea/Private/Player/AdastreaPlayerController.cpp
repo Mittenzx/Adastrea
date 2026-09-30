@@ -1092,6 +1092,13 @@ void AAdastreaPlayerController::HandleShipSelectOpen()
 {
 	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
 	{
+		// The swap replaces the possessed pawn: on foot that is the avatar, which would
+		// leave the new ship in the interior space and the old one still out there.
+		if (!GetControlledSpaceship())
+		{
+			H->ShowMessage(TEXT("Return to the helm to change ships"), 2.5f, true);
+			return;
+		}
 		H->ShowShipSelect();
 		// pause ship mouse-look so keys/cursor don't fight
 		bLockMouseLook = true;
