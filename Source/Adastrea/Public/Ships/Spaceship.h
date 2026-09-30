@@ -203,6 +203,10 @@ public:
          * mesh at identity. Found from the hull mesh name; nothing happens if absent. */
         void AttachShipWindows();
 
+        /** Push the chase camera out past the hull (called in BeginPlay). CameraDistance
+         * suits fighters; on corvettes and up it left the camera inside the hull. */
+        void FitCameraToHull();
+
         /** Runtime-created by AttachShipWindows; null when the hull has no window mesh. */
         UPROPERTY(VisibleInstanceOnly, Transient, Category="Components")
         TObjectPtr<UStaticMeshComponent> WindowMeshComponent;

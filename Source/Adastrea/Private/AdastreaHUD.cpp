@@ -6,6 +6,7 @@
 #include "Stations/StationInterior.h"
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipAvatar.h"
+#include "Ships/SpaceshipInterior.h"
 #include "Player/WorldInteractable.h"
 #include "Player/PlayerInteractableComponent.h"
 #include "Ships/SpaceshipDataAsset.h"
@@ -1936,6 +1937,14 @@ void AAdastreaHUD::SpawnSelectedShip(APlayerController* PC)
 		PC->UnPossess();
 		PC->Possess(Cast<APawn>(NewPawn));
 		PC->SetViewTarget(NewPawn);
+		// Its interior is a separate actor; it would outlive the ship.
+		if (const ASpaceship* OldShip = Cast<ASpaceship>(Old))
+		{
+			if (ASpaceshipInterior* OldInterior = OldShip->GetInteriorInstance())
+			{
+				OldInterior->Destroy();
+			}
+		}
 		if (Old) { Old->Destroy(); }
 		UE_LOG(LogTemp, Log, TEXT("ShipSelect: spawned+possessed %llx"), (void*)NewPawn);
 	}
