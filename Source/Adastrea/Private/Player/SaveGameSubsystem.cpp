@@ -897,7 +897,7 @@ ASpaceship* USaveGameSubsystem::ApplyPlayerShipClass(APlayerController* PC, ASpa
 		return CurrentShip;
 	}
 
-	// Deferred so the data asset is in place before BeginPlay reads it (hull, mining laser).
+	// Deferred so the data asset is in place before BeginPlay reads it (hull, mining drones).
 	const FTransform SpawnTransform = CurrentShip->GetActorTransform();
 	ASpaceship* NewShip = GetWorld()->SpawnActorDeferred<ASpaceship>(ShipClass, SpawnTransform, nullptr, nullptr,
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);

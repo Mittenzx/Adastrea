@@ -1,13 +1,13 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "AI/AIMinerController.h"
+#include "Drones/DroneBayComponent.h"
 #include "AdastreaLog.h"
 #include "EngineUtils.h"
 #include "Engine/World.h"
 #include "Interfaces/ITargetable.h"
 #include "Mining/Asteroid.h"
 #include "Mining/AsteroidField.h"
-#include "Mining/MiningLaserComponent.h"
 #include "Ships/Spaceship.h"
 #include "Stations/DockingBayModule.h"
 #include "Stations/SpaceStation.h"
@@ -22,11 +22,11 @@ void AAIMinerController::OnPossess(APawn* InPawn)
 
 	MinerState = EAIMinerState::SeekingAsteroid;
 
-	// Every ship carries a laser component but only ships with a MiningRating switch it on.
-	if (const ASpaceship* Ship = GetShip(); Ship && Ship->MiningLaser)
+	// Every ship has a drone bay but only ships with a MiningRating carry mining drones.
+	if (const ASpaceship* Ship = GetShip(); Ship && Ship->DroneBay)
 	{
-		Ship->MiningLaser->bMiningEnabled = true;
-		Ship->MiningLaser->MiningPower = FMath::Max(Ship->MiningLaser->MiningPower, 1.0f);
+		Ship->DroneBay->bMiningEnabled = true;
+		Ship->DroneBay->MiningPower = FMath::Max(Ship->DroneBay->MiningPower, 1.0f);
 	}
 }
 
@@ -60,8 +60,8 @@ bool AAIMinerController::IsMinable(const AAsteroid* Rock) const
 float AAIMinerController::SurfaceDistance(const AAsteroid* Rock) const
 {
 	const ASpaceship* Ship = GetShip();
-	const FVector Muzzle = Ship->MiningLaser ? Ship->MiningLaser->GetComponentLocation() : Ship->GetActorLocation();
-	return FVector::Dist(Muzzle, Rock->GetActorLocation()) - Rock->GetRadius();
+	const FVector Hatch = Ship->DroneBay ? Ship->DroneBay->GetHatchLocation() : Ship->GetActorLocation();
+	return FVector::Dist(Hatch, Rock->GetActorLocation()) - Rock->GetRadius();
 }
 
 // ---------------------------------------------------------------------------
@@ -138,17 +138,17 @@ void AAIMinerController::TickToAsteroid(float DeltaSeconds)
 		return;
 	}
 
-	if (SurfaceDistance(TargetAsteroid) > Ship->MiningLaser->Range * StandOffFraction)
+	if (SurfaceDistance(TargetAsteroid) > Ship->DroneBay->Range * StandOffFraction)
 	{
 		SteerToward(TargetAsteroid->GetActorLocation(), DeltaSeconds);
 		return;
 	}
 
-	// In laser range: stop, lock the rock and open fire.
+	// In drone range: stop, lock the rock and send the drones out.
 	Ship->SetThrottle(0.0f);
-	if (Ship->MiningLaser->SetTarget(TargetAsteroid))
+	if (Ship->DroneBay->SetTarget(TargetAsteroid))
 	{
-		Ship->MiningLaser->StartMining();
+		Ship->DroneBay->LaunchDrones();
 		MinerState = EAIMinerState::Mining;
 		UE_LOG(LogAdastreaShips, Log, TEXT("AIMiner %s mining %s"), *Ship->GetName(), *TargetAsteroid->GetName());
 	}
@@ -160,10 +160,11 @@ void AAIMinerController::TickToAsteroid(float DeltaSeconds)
 
 void AAIMinerController::AbandonAsteroid()
 {
-	if (const ASpaceship* Ship = GetShip(); Ship && Ship->MiningLaser)
+	if (const ASpaceship* Ship = GetShip(); Ship && Ship->DroneBay)
 	{
-		Ship->MiningLaser->StopMining();
-		Ship->MiningLaser->ClearTarget();
+		// Drones still out fly home to the ship wherever it goes next.
+		Ship->DroneBay->RecallDrones();
+		Ship->DroneBay->ClearTarget();
 	}
 	TargetAsteroid = nullptr;
 	MinerState = EAIMinerState::SeekingAsteroid;
@@ -176,40 +177,50 @@ void AAIMinerController::AbandonAsteroid()
 void AAIMinerController::TickMining(float DeltaSeconds)
 {
 	ASpaceship* Ship = GetShip();
-	UMiningLaserComponent* Laser = Ship->MiningLaser;
-
-	if (!IsMinable(TargetAsteroid))
-	{
-		// Rock is spent; the laser already dropped its lock. Move on to the next one.
-		AbandonAsteroid();
-		return;
-	}
-
+	UDroneBayComponent* Bay = Ship->DroneBay;
 	Ship->SetThrottle(0.0f);
-	FaceToward(TargetAsteroid->GetActorLocation(), DeltaSeconds);
 
-	switch (Laser->GetStatus())
+	if (Bay->IsHoldFull())
 	{
-	case EMiningStatus::CargoFull:
-		Laser->StopMining();
-		Laser->ClearTarget();
+		// Wait for every drone to land before leaving with the load.
+		Bay->RecallDrones();
+		if (Bay->GetDronesOut() > 0)
+		{
+			return;
+		}
+		Bay->ClearTarget();
 		TargetAsteroid = nullptr; // free the rock for other miners while we sell
 		DockedSeconds = 0.0f;
 		ChooseSellStation();
 		MinerState = TargetStation ? EAIMinerState::ToStation : EAIMinerState::SeekingAsteroid;
-		UE_LOG(LogAdastreaShips, Log, TEXT("AIMiner %s hold full, heading to %s"),
+		UE_LOG(LogAdastreaShips, Log, TEXT("AIMiner %s hold full, drones aboard, heading to %s"),
 			*Ship->GetName(), TargetStation ? *TargetStation->GetName() : TEXT("(no station)"));
-		break;
-	case EMiningStatus::OutOfRange:
-		// Drifted or the rock moved; close the gap again.
-		Laser->StopMining();
+		return;
+	}
+
+	if (!IsMinable(TargetAsteroid))
+	{
+		// Rock is spent; the drones are already heading home. Move on to the next one.
+		AbandonAsteroid();
+		return;
+	}
+
+	switch (Bay->GetStatus())
+	{
+	case EDroneBayStatus::OutOfRange:
+		// Drifted or the rock moved; close the gap again (the drones stay on the job).
 		MinerState = EAIMinerState::ToAsteroid;
-		break;
-	case EMiningStatus::NoTarget:
-		Laser->SetTarget(TargetAsteroid);
+		return;
+	case EDroneBayStatus::NoTarget:
+		Bay->SetTarget(TargetAsteroid);
 		break;
 	default:
-		break; // Mining, OffAim (still turning) or Idle: keep going.
+		break;
+	}
+	if (!Bay->IsDeployed())
+	{
+		// Recalled while the hold looked full, but there was room after all: back to work.
+		Bay->LaunchDrones();
 	}
 }
 

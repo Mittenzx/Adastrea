@@ -14,7 +14,8 @@ assert the contracts that are easy to regress without noticing in a build:
   the primary sound of the same moment
 - the load path is muted (re-docking and wallet rewrites don't sound)
 - player-only feedback is gated on the local player's pawn
-- loops (laser, interior hum) are released when their owner goes away
+- loops (interior hum) are released when their owner goes away, and drones
+  are cleaned up with their bay
 - adastrea.AudioEventLog exists for PIE evidence
 
 Run:  pytest tests/test_event_sfx_hooks.py
@@ -34,7 +35,7 @@ LIBRARY_H = ADASTREA / "Public" / "Audio" / "AudioEventLibrary.h"
 LIBRARY_CPP = ADASTREA / "Private" / "Audio" / "AudioEventLibrary.cpp"
 SHIP_CPP = ADASTREA / "Private" / "Ships" / "Spaceship.cpp"
 AVATAR_CPP = ADASTREA / "Private" / "Ships" / "SpaceshipAvatar.cpp"
-LASER_CPP = ADASTREA / "Private" / "Mining" / "MiningLaserComponent.cpp"
+DRONE_BAY_CPP = ADASTREA / "Private" / "Drones" / "DroneBayComponent.cpp"
 PC_CPP = ADASTREA / "Private" / "Player" / "AdastreaPlayerController.cpp"
 HUD_CPP = ADASTREA / "Private" / "AdastreaHUD.cpp"
 SAVE_CPP = ADASTREA / "Private" / "Player" / "SaveGameSubsystem.cpp"
@@ -44,10 +45,11 @@ WIDGET_CPP = SRC / "StationEditor" / "Public" / "UI" / "StationEditorWidgetCpp.c
 LIST_ITEM_CPP = SRC / "StationEditor" / "Public" / "UI" / "ModuleListItemWidget.cpp"
 
 # SOUND_PLAN.md section 2, as event IDs (footsteps are built as Interior.Footstep.%02d).
+# Mining.LaserLoop is gone from gameplay: ships have no beams, drones do the mining.
 REQUIRED_EVENTS = [
     "Thruster.Puff", "Thruster.HeavyGroan", "Flight.CollisionBump", "Flight.SpeedWarning",
     "Dock.Beacon", "Dock.ClampEngage", "Dock.AirlockHiss", "Dock.Release",
-    "Mining.LaserLoop", "Mining.OreTick", "Mining.CargoFull", "Mining.AsteroidDepleted",
+    "Mining.OreTick", "Mining.CargoFull", "Mining.AsteroidDepleted",
     "Trade.Buy", "Trade.Sell", "Trade.CreditsDing", "Trade.Denied",
     "Editor.Place.Small", "Editor.Place.Large", "Editor.Remove", "Editor.Invalid",
     "Editor.Undo", "Editor.Redo", "Editor.Rotate", "Editor.Save",
@@ -271,12 +273,10 @@ class TestLoadIsMuted:
 
 
 class TestLoopsAreReleased:
-    def test_laser_loop_released_on_end_play(self):
-        laser = _strip_comments(_src(LASER_CPP))
-        end_play = _function_body(laser, "void UMiningLaserComponent::EndPlay")
-        assert "FadeOutAndRelease(LaserLoopAudio" in end_play
-        update = _function_body(laser, "void UMiningLaserComponent::UpdateLaserAudio")
-        assert 'TEXT("Mining.LaserLoop")' in update and "SetPitchMultiplier" in update
+    def test_drones_destroyed_with_their_bay(self):
+        bay = _strip_comments(_src(DRONE_BAY_CPP))
+        end_play = _function_body(bay, "void UDroneBayComponent::EndPlay")
+        assert "Drone->Destroy()" in end_play
 
     def test_interior_hum_released_on_end_play(self):
         body = _function_body(_strip_comments(_src(PC_CPP)), "void AAdastreaPlayerController::EndPlay")

@@ -41,11 +41,11 @@
 #include "InputMappingContext.h"
 #include "Audio/AudioEventLibrary.h"
 #include "Components/AudioComponent.h"
-#include "Mining/MiningLaserComponent.h"
+#include "Drones/DroneBayComponent.h"
 
 namespace PlayerEventAudio
 {
-	/** Ore arrives about every 0.33 s while mining; tick at most twice a second. */
+	/** Drones unload a hopper at a time while mining; tick at most twice a second. */
 	constexpr float OreTickMinInterval = 0.5f;
 	constexpr float CreditsDingMinInterval = 1.5f;
 	/** Don't re-ping the same approach: one beacon per bay per this many seconds. */
@@ -424,9 +424,9 @@ void AAdastreaPlayerController::BindShipAudioEvents(ASpaceship* Ship)
 	{
 		return;
 	}
-	if (Ship->MiningLaser)
+	if (Ship->DroneBay)
 	{
-		Ship->MiningLaser->OnOreMined.AddUniqueDynamic(this, &AAdastreaPlayerController::HandleOreMinedAudio);
+		Ship->DroneBay->OnOreMined.AddUniqueDynamic(this, &AAdastreaPlayerController::HandleOreMinedAudio);
 	}
 	if (Ship->PlayerTraderComponent)
 	{
@@ -439,9 +439,9 @@ void AAdastreaPlayerController::UnbindShipAudioEvents()
 {
 	if (ASpaceship* Ship = AudioBoundShip.Get())
 	{
-		if (Ship->MiningLaser)
+		if (Ship->DroneBay)
 		{
-			Ship->MiningLaser->OnOreMined.RemoveDynamic(this, &AAdastreaPlayerController::HandleOreMinedAudio);
+			Ship->DroneBay->OnOreMined.RemoveDynamic(this, &AAdastreaPlayerController::HandleOreMinedAudio);
 		}
 		if (Ship->PlayerTraderComponent)
 		{

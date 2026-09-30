@@ -29,7 +29,8 @@
 #include "Trading/PlayerTraderComponent.h"
 #include "Ships/ShipUpgradeComponent.h"
 #include "Stations/SpaceStation.h"
-#include "Mining/MiningLaserComponent.h"
+#include "Drones/DroneBayComponent.h"
+#include "Mining/Asteroid.h"
 #include "Audio/ShipEngineAudioComponent.h"
 #include "Audio/AudioEventLibrary.h"
 #include "TimerManager.h"
@@ -171,11 +172,11 @@ ASpaceship::ASpaceship()
     PlayerTraderComponent = CreateDefaultSubobject<UPlayerTraderComponent>(TEXT("PlayerTraderComponent"));
     UpgradeComponent = CreateDefaultSubobject<UShipUpgradeComponent>(TEXT("UpgradeComponent"));
 
-    // Mining laser on a nose hardpoint (relative offset; Blueprints can move it to a socket).
+    // Drone bay hatch under the hull (moved to the keel at BeginPlay).
     // Stays inert unless enabled - see BeginPlay (ships with a MiningRating).
-    MiningLaser = CreateDefaultSubobject<UMiningLaserComponent>(TEXT("MiningLaser"));
-    MiningLaser->SetupAttachment(ShipRoot);
-    MiningLaser->SetRelativeLocation(FVector(300.0f, 0.0f, -50.0f));
+    DroneBay = CreateDefaultSubobject<UDroneBayComponent>(TEXT("DroneBay"));
+    DroneBay->SetupAttachment(ShipRoot);
+    DroneBay->SetRelativeLocation(FVector(0.0f, 0.0f, -150.0f));
 
     // Engine voice. Attached to the hull mesh; at BeginPlay it moves to the mesh bounds'
     // centre so AI engine range is measured from the hull surface.
@@ -214,11 +215,16 @@ void ASpaceship::BeginPlay()
         CurrentHullIntegrity = MaxHullIntegrity; // Start at full health
         ApplyDataAssetMobility();
 
-        // Ships rated for mining get a working laser; power scales with the rating.
-        if (MiningLaser && ShipDataAsset->MiningRating > 0)
+        // Ships rated for mining carry mining drones; cutting power scales with the rating,
+        // and a bigger drone complement puts more drones on the rock.
+        if (DroneBay && ShipDataAsset->MiningRating > 0)
         {
-            MiningLaser->bMiningEnabled = true;
-            MiningLaser->MiningPower = FMath::Max(MiningLaser->MiningPower, ShipDataAsset->MiningRating * 0.5f);
+            DroneBay->bMiningEnabled = true;
+            DroneBay->MiningPower = FMath::Max(DroneBay->MiningPower, ShipDataAsset->MiningRating * 0.25f);
+            if (ShipDataAsset->DroneCapacity > 0)
+            {
+                DroneBay->DroneCount = FMath::Clamp(ShipDataAsset->DroneCapacity / 2, 2, 6);
+            }
         }
     }
 
@@ -490,11 +496,9 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
             UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Bound DockAction to RequestDocking"));
         }
 
-        if (MineAction)
+        if (DroneAction)
         {
-            EnhancedInputComponent->BindAction(MineAction, ETriggerEvent::Started, this, &ASpaceship::StartMining);
-            EnhancedInputComponent->BindAction(MineAction, ETriggerEvent::Completed, this, &ASpaceship::StopMining);
-            EnhancedInputComponent->BindAction(MineAction, ETriggerEvent::Canceled, this, &ASpaceship::StopMining);
+            EnhancedInputComponent->BindAction(DroneAction, ETriggerEvent::Started, this, &ASpaceship::ToggleDrones);
         }
         if (LockAsteroidAction)
         {
@@ -503,42 +507,57 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
     }
 }
 
-void ASpaceship::StartMining()
+void ASpaceship::LaunchDrones()
 {
-    if (!MiningLaser || !MiningLaser->bMiningEnabled || bIsDocked || bIsDocking)
+    if (!DroneBay || !DroneBay->bMiningEnabled || bIsDocked || bIsDocking)
     {
         return;
     }
-    // While the targeting cursor is up (station picking), clicks belong to the picker.
-    if (const AAdastreaPlayerController* PC = Cast<AAdastreaPlayerController>(GetController()))
+    // An asteroid picked with the target cycle keys is the job, unless the bay already has one.
+    if (!DroneBay->GetTarget())
     {
-        if (PC->IsTargetingModeActive())
+        if (const AAdastreaPlayerController* PC = Cast<AAdastreaPlayerController>(GetController()))
         {
-            return;
+            if (AAsteroid* Picked = Cast<AAsteroid>(PC->GetLockedTarget()))
+            {
+                DroneBay->SetTarget(Picked);
+            }
         }
     }
-    MiningLaser->StartMining();
+    DroneBay->LaunchDrones();
 }
 
-void ASpaceship::StopMining()
+void ASpaceship::RecallDrones()
 {
-    if (MiningLaser)
+    if (DroneBay)
     {
-        MiningLaser->StopMining();
+        DroneBay->RecallDrones();
+    }
+}
+
+void ASpaceship::ToggleDrones()
+{
+    if (DroneBay && DroneBay->IsDeployed())
+    {
+        RecallDrones();
+    }
+    else
+    {
+        LaunchDrones();
     }
 }
 
 void ASpaceship::LockAsteroid()
 {
-    if (MiningLaser && MiningLaser->bMiningEnabled)
+    if (DroneBay && DroneBay->bMiningEnabled)
     {
-        const bool bOk = MiningLaser->LockNearestAhead();
+        const bool bOk = DroneBay->LockNearestAhead();
         UE_LOG(LogAdastreaShips, Log, TEXT("LockAsteroid (%s): %s"), *GetName(),
-            bOk ? *FString::Printf(TEXT("locked %s"), *GetNameSafe(MiningLaser->GetTarget())) : TEXT("nothing in the aim cone"));
+            bOk ? *FString::Printf(TEXT("locked %s"), *GetNameSafe(DroneBay->GetTarget())) : TEXT("nothing in the aim cone"));
     }
     else
     {
-        UE_LOG(LogAdastreaShips, Log, TEXT("LockAsteroid (%s): this ship has no mining laser"), *GetName());
+        UE_LOG(LogAdastreaShips, Log, TEXT("LockAsteroid (%s): this ship has no mining drones"), *GetName());
     }
 }
 
@@ -617,13 +636,13 @@ void ASpaceship::EnsureOwnInputActionsAndContext()
                 }
                 RuntimeInputMappingContext->MapKey(DockAction, EKeys::E);
 
-                // Mining: hold Left Mouse to fire the laser, T to lock the asteroid ahead.
-                if (!MineAction)
+                // Drones: T locks the asteroid ahead, L launches / recalls the mining drones.
+                if (!DroneAction)
                 {
-                    MineAction = NewObject<UInputAction>(this, TEXT("IA_Mine_Runtime"));
-                    MineAction->ValueType = EInputActionValueType::Boolean;
+                    DroneAction = NewObject<UInputAction>(this, TEXT("IA_Drones_Runtime"));
+                    DroneAction->ValueType = EInputActionValueType::Boolean;
                 }
-                RuntimeInputMappingContext->MapKey(MineAction, EKeys::LeftMouseButton);
+                RuntimeInputMappingContext->MapKey(DroneAction, EKeys::L);
                 if (!LockAsteroidAction)
                 {
                     LockAsteroidAction = NewObject<UInputAction>(this, TEXT("IA_LockAsteroid_Runtime"));
@@ -1473,7 +1492,7 @@ namespace
         if (StatName == ShipUpgradeStats::ShieldStrength)  { return Ship.ShipDataAsset ? Ship.ShipDataAsset->ShieldStrength : 0.0f; }
         if (StatName == ShipUpgradeStats::CargoCapacity)   { return Ship.CargoComponent ? Ship.CargoComponent->CargoCapacity : 0.0f; }
         if (StatName == ShipUpgradeStats::WeaponDamage)    { return 1.0f; }
-        if (StatName == ShipUpgradeStats::MiningPower)     { return Ship.MiningLaser ? Ship.MiningLaser->MiningPower : 0.0f; }
+        if (StatName == ShipUpgradeStats::MiningPower)     { return Ship.DroneBay ? Ship.DroneBay->MiningPower : 0.0f; }
         return 0.0f;
     }
 
@@ -1543,14 +1562,14 @@ void ASpaceship::RecalculateUpgradedStats()
     {
         CargoComponent->CargoCapacity = FMath::Max(0.0f, GetUpgradedStat(ShipUpgradeStats::CargoCapacity));
     }
-    if (MiningLaser)
+    if (DroneBay)
     {
-        MiningLaser->MiningPower = FMath::Max(0.0f, GetUpgradedStat(ShipUpgradeStats::MiningPower));
+        DroneBay->MiningPower = FMath::Max(0.0f, GetUpgradedStat(ShipUpgradeStats::MiningPower));
     }
 
     UE_LOG(LogAdastreaShips, Log, TEXT("RecalculateUpgradedStats %s: speed %.0f accel %.0f boost x%.2f hull %.0f shield %.0f cargo %.0f weapons x%.2f mining %.1f"),
         *GetName(), DefaultMaxSpeed, DefaultAcceleration, BoostMultiplier, MaxHullIntegrity, GetMaxShieldStrength(),
-        CargoComponent ? CargoComponent->CargoCapacity : 0.0f, GetWeaponDamageMultiplier(), MiningLaser ? MiningLaser->MiningPower : 0.0f);
+        CargoComponent ? CargoComponent->CargoCapacity : 0.0f, GetWeaponDamageMultiplier(), DroneBay ? DroneBay->MiningPower : 0.0f);
 }
 
 bool ASpaceship::CanRemoveUpgrade(const UShipUpgradeDataAsset* Upgrade, FText& OutReason) const

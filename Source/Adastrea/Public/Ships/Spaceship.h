@@ -21,7 +21,7 @@ class UDockingSettingsDataAsset;
 class ASpaceStationModule;
 class UUserWidget;
 class UCargoComponent;
-class UMiningLaserComponent;
+class UDroneBayComponent;
 class UPlayerTraderComponent;
 class UShipEngineAudioComponent;
 class UShipUpgradeComponent;
@@ -86,9 +86,10 @@ public:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Trading")
     TObjectPtr<UCargoComponent> CargoComponent;
 
-    // Mining laser mounted on the nose hardpoint (enabled for ships with a MiningRating)
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Mining")
-    TObjectPtr<UMiningLaserComponent> MiningLaser;
+    // Drone bay: mining drones fly out, cut ore and bring it home (enabled for ships with a MiningRating).
+    // Ships have no beams; mining, gas, towing and cargo transfer are drone jobs.
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Drones")
+    TObjectPtr<UDroneBayComponent> DroneBay;
 
     // Player trader component (credits, buy/sell)
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Trading")
@@ -422,19 +423,24 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
     class UInputAction* DockAction;
 
-    /** Hold to fire the mining laser (Left Mouse). */
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Mining")
-    class UInputAction* MineAction;
+    /** Launch / recall the mining drones (L). */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Drones")
+    class UInputAction* DroneAction;
 
     /** Lock the asteroid nearest the ship's nose (T). */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Mining")
     class UInputAction* LockAsteroidAction;
 
-    UFUNCTION(Exec, BlueprintCallable, Category="Mining")
-    void StartMining();
+    /** Send the mining drones to the locked asteroid (or the one ahead). */
+    UFUNCTION(Exec, BlueprintCallable, Category="Drones")
+    void LaunchDrones();
 
-    UFUNCTION(Exec, BlueprintCallable, Category="Mining")
-    void StopMining();
+    UFUNCTION(Exec, BlueprintCallable, Category="Drones")
+    void RecallDrones();
+
+    /** Launch if the drones are aboard, recall if they're out. */
+    UFUNCTION(Exec, BlueprintCallable, Category="Drones")
+    void ToggleDrones();
 
     UFUNCTION(Exec, BlueprintCallable, Category="Mining")
     void LockAsteroid();

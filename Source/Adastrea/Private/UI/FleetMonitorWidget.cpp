@@ -19,7 +19,7 @@
 #include "Components/VerticalBoxSlot.h"
 #include "EngineUtils.h"
 #include "GameFramework/PlayerController.h"
-#include "Mining/MiningLaserComponent.h"
+#include "Drones/DroneBayComponent.h"
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipDataAsset.h"
 #include "Stations/DockingBayModule.h"
@@ -114,9 +114,9 @@ namespace FleetMonitor
 		{
 			return TEXT("Docking");
 		}
-		if (const UMiningLaserComponent* Laser = Ship->MiningLaser; Laser && Laser->IsMining() && Laser->GetTarget())
+		if (const UDroneBayComponent* Bay = Ship->DroneBay; Bay && Bay->IsMining() && Bay->GetTarget())
 		{
-			return FString::Printf(TEXT("Mining %s"), *Laser->GetTarget()->GetName());
+			return FString::Printf(TEXT("Drones mining %s"), *Bay->GetTarget()->GetName());
 		}
 		if (Ship->IsOnAutopilot())
 		{
@@ -471,11 +471,12 @@ FString UFleetMonitorWidget::DescribeShipDetails(const ASpaceship* Ship) const
 	}
 	Out += FString::Printf(TEXT("Docking:   %s\n"), *Dock);
 
-	if (const UMiningLaserComponent* Laser = Ship->MiningLaser; Laser && Laser->bMiningEnabled)
+	if (const UDroneBayComponent* Bay = Ship->DroneBay; Bay && Bay->bMiningEnabled)
 	{
-		const AActor* Target = Laser->GetTarget();
-		Out += FString::Printf(TEXT("Mining:    %s%s\n"), *UMiningLaserComponent::StatusToText(Laser->GetStatus()).ToString(),
-			Target ? *FString::Printf(TEXT(" on %s (%.0f m)"), *Target->GetName(), Laser->GetTargetSurfaceDistance() / 100.0f) : TEXT(""));
+		const AActor* Target = Bay->GetTarget();
+		Out += FString::Printf(TEXT("Mining:    %s, %d/%d drones out%s\n"), *UDroneBayComponent::StatusToText(Bay->GetStatus()).ToString(),
+			Bay->GetDronesOut(), Bay->DroneCount,
+			Target ? *FString::Printf(TEXT(" on %s (%.0f m)"), *Target->GetName(), Bay->GetTargetSurfaceDistance() / 100.0f) : TEXT(""));
 	}
 
 	const FString Distance = DistanceFromPlayer(GetWorld(), Ship);
