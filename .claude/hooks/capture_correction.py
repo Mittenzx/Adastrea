@@ -29,8 +29,7 @@ def main():
         return
     if not any(re.search(p, prompt, re.I) for p in PATTERNS):
         return
-    root = Path(data.get("cwd") or ".")
-    q = root / ".claude" / "learnings-queue.jsonl"
+    q = Path(__file__).resolve().parent.parent / "learnings-queue.jsonl"
     q.parent.mkdir(parents=True, exist_ok=True)
     with q.open("a", encoding="utf-8") as f:
         f.write(json.dumps({"ts": int(time.time()), "session": data.get("session_id"),
