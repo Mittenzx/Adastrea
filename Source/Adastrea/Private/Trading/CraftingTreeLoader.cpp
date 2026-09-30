@@ -303,6 +303,17 @@ void UCraftingTreeLoader::PopulateMarketInventory(UMarketDataAsset* Market) cons
 	{
 		return;
 	}
+	// The hand-authored entries carry the station's specialization (what it produces cheaply and
+	// what it pays well for). Keep them, so prices differ between stations and trade runs pay.
+	TArray<FMarketInventoryEntry> Authored;
+	for (const FMarketInventoryEntry& Entry : Market->Inventory)
+	{
+		if (Entry.TradeItem)
+		{
+			Authored.Add(Entry);
+		}
+	}
+
 	// Broad mix: put every loaded item into the market at reference stock levels.
 	Market->Inventory.Empty();
 	int32 Index = 0;
@@ -316,9 +327,30 @@ void UCraftingTreeLoader::PopulateMarketInventory(UMarketDataAsset* Market) cons
 		Entry.DemandLevel = 1.0f;
 		Entry.LastTradePrice = Entry.TradeItem ? Entry.TradeItem->BasePrice : 0.0f;
 		Entry.bInStock = true;
-		Market->Inventory.Add(Entry);
 		++Index;
+
+		// The same goods authored for this market ("TradeItem_WaterIce" for "WaterIce"):
+		// take over its stock and supply/demand instead of listing the item twice.
+		const int32 AuthoredIndex = Entry.TradeItem ? Authored.IndexOfByPredicate([&Entry](const FMarketInventoryEntry& A)
+			{
+				return UTradeItemDataAsset::ItemIdsMatch(A.TradeItem->ItemID, Entry.TradeItem->ItemID);
+			}) : INDEX_NONE;
+		if (AuthoredIndex != INDEX_NONE)
+		{
+			const FMarketInventoryEntry& A = Authored[AuthoredIndex];
+			Entry.CurrentStock = A.CurrentStock;
+			Entry.MaxStock = A.MaxStock;
+			Entry.SupplyLevel = A.SupplyLevel;
+			Entry.DemandLevel = A.DemandLevel;
+			Entry.bInStock = A.CurrentStock > 0;
+			Authored.RemoveAt(AuthoredIndex);
+		}
+
+		Market->Inventory.Add(Entry);
 	}
+
+	// Authored goods the crafting tree doesn't know stay on sale as authored.
+	Market->Inventory.Append(Authored);
 	UE_LOG(LogTemp, Log, TEXT("CraftingTreeLoader: populated market '%s' with %d items"),
 		*Market->GetName(), Market->Inventory.Num());
 }

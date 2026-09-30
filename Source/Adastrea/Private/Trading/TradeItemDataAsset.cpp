@@ -46,6 +46,29 @@ float UTradeItemDataAsset::OnCalculateCustomPrice_Implementation(float Supply, f
     return BaseCalculatedPrice;
 }
 
+bool UTradeItemDataAsset::ItemIdsMatch(FName A, FName B)
+{
+    if (A.IsNone() || B.IsNone())
+    {
+        return false;
+    }
+    if (A == B)
+    {
+        return true;
+    }
+
+    auto Normalize = [](FName ItemID)
+    {
+        FString S = ItemID.ToString();
+        S.RemoveFromStart(TEXT("DA_"));
+        S.RemoveFromStart(TEXT("TradeItem_"));
+        S.RemoveFromStart(TEXT("Item_"));
+        S.ReplaceInline(TEXT("_"), TEXT(""));
+        return S.ToLower();
+    };
+    return Normalize(A) == Normalize(B);
+}
+
 // REMOVED: OnItemTraded_Implementation - faction tracking removed per Trade Simulator MVP
 
 #if WITH_EDITOR

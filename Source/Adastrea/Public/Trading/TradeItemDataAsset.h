@@ -251,6 +251,13 @@ public:
 	float OnCalculateCustomPrice(float Supply, float Demand, float EventMultiplier, float BaseCalculatedPrice) const;
 
 	/**
+	 * True if two item IDs name the same goods. The hand-authored trade items ("TradeItem_IronOre")
+	 * and the crafting-tree items the stations generate at runtime ("IronOre") use different IDs,
+	 * so this ignores the "DA_"/"TradeItem_"/"Item_" prefixes, underscores and case.
+	 */
+	static bool ItemIdsMatch(FName A, FName B);
+
+	/**
 	 * BlueprintNativeEvent: Called when this item is traded
 	 * Allows designers to trigger custom events on trade
 	 * @param Quantity Amount traded

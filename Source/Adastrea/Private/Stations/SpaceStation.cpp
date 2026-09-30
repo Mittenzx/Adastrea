@@ -73,6 +73,11 @@ void ASpaceStation::BeginPlay()
                 {
                     return;
                 }
+                // Trade at runtime against this station's own copy: stock and supply/demand
+                // change with every trade, and the asset is a template (it may be shared, and
+                // mutating it in PIE would leave garbage in the editor's copy).
+                UMarketDataAsset* Market = DuplicateObject<UMarketDataAsset>(StationMarket, this);
+
                 // Populate the market inventory dynamically from the crafting tree so
                 // every crafting material is tradeable at runtime (per design choice).
                 UCraftingTreeLoader* Loader = NewObject<UCraftingTreeLoader>(this);
@@ -82,13 +87,13 @@ void ASpaceStation::BeginPlay()
                     {
                         Loader->LoadCraftingTree();
                     }
-                    Loader->PopulateMarketInventory(StationMarket);
+                    Loader->PopulateMarketInventory(Market);
                 }
                 for (AMarketplaceModule* Marketplace : GetMarketplaceModules())
                 {
                     if (Marketplace)
                     {
-                        Marketplace->MarketDataAsset = StationMarket;
+                        Marketplace->MarketDataAsset = Market;
                         UE_LOG(LogAdastreaStations, Log,
                             TEXT("SpaceStation::ApplyStationMarket - Assigned market '%s' to %s on station %s"),
                             *StationMarket->GetName(), *Marketplace->GetName(), *GetName());

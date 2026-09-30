@@ -3,23 +3,11 @@
 
 namespace
 {
-	// The hand-authored trade items ("TradeItem_IronOre") and the crafting-tree items the
-	// stations generate at runtime ("IronOre") describe the same goods under different IDs.
-	// Compare IDs ignoring the "TradeItem_" prefix, case and underscores so cargo is
-	// interchangeable between them (mined ore sells at stations and feeds recipes).
-	FString NormalizeItemID(FName ItemID)
-	{
-		FString S = ItemID.ToString();
-		S.RemoveFromStart(TEXT("DA_"));
-		S.RemoveFromStart(TEXT("TradeItem_"));
-		S.RemoveFromStart(TEXT("Item_"));
-		S.ReplaceInline(TEXT("_"), TEXT(""));
-		return S.ToLower();
-	}
-
+	// Hand-authored and crafting-tree items describe the same goods under different IDs, so
+	// cargo is interchangeable between them (mined ore sells at stations and feeds recipes).
 	bool IdsMatch(FName A, FName B)
 	{
-		return !A.IsNone() && !B.IsNone() && (A == B || NormalizeItemID(A) == NormalizeItemID(B));
+		return UTradeItemDataAsset::ItemIdsMatch(A, B);
 	}
 }
 

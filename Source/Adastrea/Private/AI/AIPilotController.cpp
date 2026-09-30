@@ -315,35 +315,55 @@ void AAIPilotController::TradeAtCurrentStation()
 		}
 	}
 
-	// Find the item with the best buy-here / sell-there margin across every other market.
+	// Find the load with the best total profit (margin x the units we can afford and carry)
+	// across every other market. Ranking by per-unit margin alone picks goods too dear to buy.
 	UTradeItemDataAsset* BestItem = nullptr;
 	ASpaceStation* BestStation = nullptr;
-	int32 BestStock = 0;
+	int32 BestQuantity = 0;
 	float BestMargin = 0.0f;
+	float BestProfit = 0.0f;
+	const float FreeVolume = Cargo->GetAvailableCargoSpace();
 
-	for (TActorIterator<ASpaceStation> It(GetWorld()); It; ++It)
+	for (const FMarketInventoryEntry& Entry : Here->Inventory)
 	{
-		ASpaceStation* Other = *It;
-		UMarketDataAsset* OtherMarket = (Other != TargetStation && Other->GetDockingBayModule()) ? GetMarket(Other) : nullptr;
-		if (!OtherMarket)
+		if (!Entry.TradeItem || Entry.CurrentStock <= 0)
 		{
 			continue;
 		}
 
-		for (const FMarketInventoryEntry& Entry : Here->Inventory)
+		const float BuyPrice = Here->GetItemPrice(Entry.TradeItem, true);
+		const float UnitVolume = Entry.TradeItem->GetTotalVolume(1);
+		int32 Quantity = FMath::Min(Entry.CurrentStock, MaxUnitsPerPurchase);
+		if (BuyPrice > 0.0f)
 		{
-			if (!Entry.TradeItem || Entry.CurrentStock <= 0)
+			Quantity = FMath::Min(Quantity, FMath::FloorToInt(Trader->GetCredits() / BuyPrice));
+		}
+		if (UnitVolume > 0.0f)
+		{
+			Quantity = FMath::Min(Quantity, FMath::FloorToInt(FreeVolume / UnitVolume));
+		}
+		if (Quantity <= 0)
+		{
+			continue;
+		}
+
+		for (TActorIterator<ASpaceStation> It(GetWorld()); It; ++It)
+		{
+			ASpaceStation* Other = *It;
+			UMarketDataAsset* OtherMarket = (Other != TargetStation && Other->GetDockingBayModule()) ? GetMarket(Other) : nullptr;
+			if (!OtherMarket)
 			{
 				continue;
 			}
 
-			const float Margin = OtherMarket->GetItemPrice(Entry.TradeItem, false) - Here->GetItemPrice(Entry.TradeItem, true);
-			if (Margin > BestMargin)
+			const float Margin = OtherMarket->GetItemPrice(Entry.TradeItem, false) - BuyPrice;
+			if (Margin > 0.0f && Margin * Quantity > BestProfit)
 			{
+				BestProfit = Margin * Quantity;
 				BestMargin = Margin;
 				BestItem = Entry.TradeItem;
 				BestStation = Other;
-				BestStock = Entry.CurrentStock;
+				BestQuantity = Quantity;
 			}
 		}
 	}
@@ -353,7 +373,8 @@ void AAIPilotController::TradeAtCurrentStation()
 		return; // Nothing profitable; the next hop is chosen at random.
 	}
 
-	int32 Quantity = FMath::Min(BestStock, MaxUnitsPerPurchase);
+	// Rounding in the trader's cost/volume checks can make the estimate one unit too many.
+	int32 Quantity = BestQuantity;
 	while (Quantity > 0 && !(Trader->CanAfford(Here, BestItem, Quantity) && Cargo->HasSpaceFor(BestItem, Quantity)))
 	{
 		--Quantity;
