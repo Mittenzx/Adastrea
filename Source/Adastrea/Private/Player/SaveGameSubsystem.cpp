@@ -16,6 +16,7 @@
 #include "Trading/CraftingTreeLoader.h"
 #include "Trading/PlayerTraderComponent.h"
 #include "Trading/TradeItemDataAsset.h"
+#include "Universe/OrganisationSubsystem.h"
 #include "AdastreaLog.h"
 #include "Audio/AudioEventLibrary.h"
 #include "EngineUtils.h"
@@ -197,6 +198,14 @@ bool USaveGameSubsystem::LoadGame(const FString& SlotName)
 
 	// Apply game state
 	ApplyGameState(CurrentSaveGame);
+
+	// Only here, not in ApplyGameState: a gate jump applies its own snapshot on arrival,
+	// and rolling the economy back to it would lose a few seconds and re-bind ships.
+	UOrganisationSubsystem* Orgs = GetGameInstance()->GetSubsystem<UOrganisationSubsystem>();
+	if (Orgs && CurrentSaveGame->SaveVersion >= UAdastreaSaveGame::ORGANISATIONS_SAVE_VERSION)
+	{
+		Orgs->ImportState(CurrentSaveGame->Organisations);
+	}
 
 	// Reset playtime tracking
 	PlaytimeStartTime = FDateTime::Now();
@@ -450,6 +459,11 @@ void USaveGameSubsystem::CollectGameState(UAdastreaSaveGame* SaveGameObject)
 	if (GameInstance)
 	{
 		SaveGameObject->PlayerCredits = GameInstance->GetPlayerCredits();
+	}
+
+	if (const UOrganisationSubsystem* Orgs = GetGameInstance()->GetSubsystem<UOrganisationSubsystem>())
+	{
+		Orgs->ExportState(SaveGameObject->Organisations);
 	}
 
 	// Stations first: CollectPlayerShip refers to them by index for docking.

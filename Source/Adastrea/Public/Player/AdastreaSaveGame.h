@@ -8,6 +8,7 @@
 // REMOVED: #include "Player/PlayerReputationComponent.h" - faction reputation system removed per Trade Simulator MVP
 #include "Player/PlayerUnlockComponent.h"
 #include "Player/AchievementDataAsset.h"
+#include "Universe/OrganisationSubsystem.h"
 #include "AdastreaSaveGame.generated.h"
 
 /**
@@ -436,6 +437,10 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category="Save|World")
 	FSavedWorldState WorldState;
 
+	/** Organisation wallets, ledgers and ship roster (v3) */
+	UPROPERTY(BlueprintReadWrite, Category="Save|World")
+	FSavedOrganisations Organisations;
+
 	// ====================
 	// Game Settings
 	// ====================
@@ -492,9 +497,10 @@ public:
 	 * Current save game version.
 	 * 1: progression, GameInstance credits, pawn transform, unlocks, achievements.
 	 * 2: + PlayerShip (class, data asset, trader credits, cargo, docking) and Stations.
+	 * 3: + Organisations (wallets, ledgers, ship roster).
 	 * Fields added after a save's version keep their defaults and are not applied on load.
 	 */
-	static constexpr int32 CURRENT_SAVE_VERSION = 2;
+	static constexpr int32 CURRENT_SAVE_VERSION = 3;
 
 	/** Oldest version LoadGame still accepts */
 	static constexpr int32 MIN_SUPPORTED_SAVE_VERSION = 1;
@@ -504,4 +510,7 @@ public:
 
 	/** First version that records PlayerShip and Stations */
 	static constexpr int32 SHIP_AND_STATIONS_SAVE_VERSION = 2;
+
+	/** First version that records Organisations */
+	static constexpr int32 ORGANISATIONS_SAVE_VERSION = 3;
 };

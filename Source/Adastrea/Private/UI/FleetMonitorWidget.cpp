@@ -28,6 +28,8 @@
 #include "Stations/SpaceStationModule.h"
 #include "Styling/CoreStyle.h"
 #include "Trading/CargoComponent.h"
+#include "Universe/OrganisationSubsystem.h"
+#include "Universe/OwnershipComponent.h"
 #include "Trading/MarketDataAsset.h"
 #include "Trading/PlayerTraderComponent.h"
 #include "Trading/TradeItemDataAsset.h"
@@ -65,7 +67,8 @@ namespace FleetMonitor
 
 	FString ShipLabel(const ASpaceship* Ship)
 	{
-		const FString Name = Ship->GetShipName().ToString();
+		const UOwnershipComponent* Ownership = UOwnershipComponent::Find(Ship);
+		const FString Name = (Ownership && !Ownership->RecordName.IsEmpty()) ? Ownership->RecordName.ToString() : Ship->GetShipName().ToString();
 		const FString ActorName = Ship->GetActorNameOrLabel();
 		return (Name.IsEmpty() || Name == ActorName) ? ActorName : FString::Printf(TEXT("%s [%s]"), *Name, *ActorName);
 	}
@@ -76,6 +79,20 @@ namespace FleetMonitor
 		const FString Name = AAIPilotController::GetStationDisplayName(Station);
 		const FString ActorName = Station->GetActorNameOrLabel();
 		return Name == ActorName ? Name : FString::Printf(TEXT("%s [%s]"), *Name, *ActorName);
+	}
+
+	/** Display name of whoever owns Actor ("Unowned" if nobody). */
+	FString OwnerLabel(const AActor* Actor)
+	{
+		const UOrganisationSubsystem* Orgs = UOrganisationSubsystem::Get(Actor);
+		return Orgs ? Orgs->GetOrgDisplayName(Orgs->GetOwnerIdOf(Actor)).ToString() : FString(TEXT("Unowned"));
+	}
+
+	/** Owner and everyone above it ("Juno Marr (Person) > ..."). */
+	FString AllegianceLabel(const AActor* Actor)
+	{
+		const UOrganisationSubsystem* Orgs = UOrganisationSubsystem::Get(Actor);
+		return Orgs ? Orgs->DescribeAllegiance(Orgs->GetOwnerIdOf(Actor)) : FString(TEXT("Unowned"));
 	}
 
 	FString PilotLabel(const ASpaceship* Ship)
@@ -93,9 +110,9 @@ namespace FleetMonitor
 		{
 			return TEXT("AI Miner");
 		}
-		if (Cast<AAIPilotController>(Controller))
+		if (const AAIPilotController* Pilot = Cast<AAIPilotController>(Controller))
 		{
-			return TEXT("AI Trader");
+			return Pilot->bTradeAtStations ? TEXT("AI Trader") : TEXT("AI Patrol");
 		}
 		return Controller->GetClass()->GetName();
 	}
@@ -290,8 +307,8 @@ UFleetMonitorWidget::FRow& UFleetMonitorWidget::GetOrAddRow(AActor* Actor, UVert
 
 	FRow Row;
 	UVerticalBox* Container = WidgetTree->ConstructWidget<UVerticalBox>();
+	// No auto-wrap: wrapped lines overflow the row (its height is measured unwrapped), so summaries break lines themselves.
 	UTextBlock* HeaderText = MakeText(FString(), 10, FleetMonitor::TextColor);
-	HeaderText->SetAutoWrapText(true);
 	UFleetMonitorRowButton* Header = MakeButton(HeaderText);
 	Header->Target = Actor;
 	Header->OnRowClicked.BindUObject(this, &UFleetMonitorWidget::HandleRowClicked);
@@ -427,7 +444,7 @@ void UFleetMonitorWidget::Refresh()
 FString UFleetMonitorWidget::DescribeShipSummary(const ASpaceship* Ship) const
 {
 	using namespace FleetMonitor;
-	return FString::Printf(TEXT("%s | %s | %s"), *ShipLabel(Ship), *PilotLabel(Ship), *Objective(Ship));
+	return FString::Printf(TEXT("%s | %s\n  %s | %s"), *ShipLabel(Ship), *OwnerLabel(Ship), *PilotLabel(Ship), *Objective(Ship));
 }
 
 FString UFleetMonitorWidget::DescribeShipDetails(const ASpaceship* Ship) const
@@ -436,6 +453,16 @@ FString UFleetMonitorWidget::DescribeShipDetails(const ASpaceship* Ship) const
 
 	FString Out;
 	Out += FString::Printf(TEXT("Class:     %s (%s)\n"), *Ship->GetShipClass().ToString(), *Ship->GetClass()->GetName());
+	Out += FString::Printf(TEXT("Owner:     %s\n"), *AllegianceLabel(Ship));
+	const UOrganisationSubsystem* Orgs = UOrganisationSubsystem::Get(Ship);
+	const UOwnershipComponent* Ownership = UOwnershipComponent::Find(Ship);
+	const FShipRecord* Record = (Orgs && Ownership) ? Orgs->FindShip(Ownership->ShipRecordId) : nullptr;
+	const FOrgDef* OwnerOrg = Record ? Orgs->FindOrg(Record->OwnerId) : nullptr;
+	if (Record && OwnerOrg)
+	{
+		Out += FString::Printf(TEXT("Earned:    %s for its owner (owner's wallet %s)\n"), *FormatCredits(Record->Earnings),
+			*FormatCredits(OwnerOrg->Credits));
+	}
 	Out += FString::Printf(TEXT("Pilot:     %s"), *PilotLabel(Ship));
 	if (const AController* Controller = Ship->GetController())
 	{
@@ -501,7 +528,8 @@ FString UFleetMonitorWidget::DescribeStationSummary(const ASpaceStation* Station
 			++Inbound;
 		}
 	}
-	return FString::Printf(TEXT("%s | docked %d, inbound %d"), *FleetMonitor::StationLabel(Station), Docked, Inbound);
+	return FString::Printf(TEXT("%s\n  %s | docked %d, inbound %d"), *FleetMonitor::StationLabel(Station),
+		*FleetMonitor::OwnerLabel(Station), Docked, Inbound);
 }
 
 FString UFleetMonitorWidget::DescribeStationDetails(const ASpaceStation* Station, const TArray<ASpaceship*>& Ships) const
@@ -510,6 +538,7 @@ FString UFleetMonitorWidget::DescribeStationDetails(const ASpaceStation* Station
 
 	FString Out;
 	Out += FString::Printf(TEXT("Actor:     %s\n"), *Station->GetActorNameOrLabel());
+	Out += FString::Printf(TEXT("Owner:     %s\n"), *AllegianceLabel(Station));
 	Out += FString::Printf(TEXT("Modules:   %d\n"), Station->GetModuleCount());
 	Out += FString::Printf(TEXT("Integrity: %.0f / %.0f%s\n"), Station->GetCurrentHealth_Implementation(), Station->GetMaxHealth_Implementation(),
 		Station->IsDestroyed_Implementation() ?TEXT("  DESTROYED") : TEXT(""));

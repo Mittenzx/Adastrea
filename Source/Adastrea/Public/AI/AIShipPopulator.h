@@ -9,8 +9,14 @@
 class ASpaceship;
 
 /**
- * Drop one in a level to fill it with AI-piloted trader ships at BeginPlay.
+ * Drop one in a level to fill it with AI-piloted ships at BeginPlay.
  * Ships are spread across the level's stations and each runs an AAIPilotController.
+ *
+ * When the level's galaxy sector has ships in the organisation roster
+ * (Organisations.json), those ships are spawned, each with a UOwnershipComponent
+ * naming its owner; ShipClasses / MinerShipClasses supply the Blueprint for
+ * records that don't name one. Otherwise ShipCount traders and MinerCount
+ * miners are spawned, unowned.
  *
  * For quick testing without placing anything, use the console command
  * `adastrea.SpawnAITraders [Count]` (uses the player's ship class).
@@ -43,10 +49,24 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Population")
 	bool bSpawnOnBeginPlay = true;
 
-	/** Spawn ShipCount traders and MinerCount miners now. Returns how many were created. */
+	/** Spawn this sector's roster ships when it has any (ShipCount/MinerCount are then ignored). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Population")
+	bool bUseOrganisationRoster = true;
+
+	/** Spawn the sector's roster ships, else ShipCount traders and MinerCount miners. Returns how many were created. */
 	UFUNCTION(BlueprintCallable, Category="Population")
 	int32 Populate();
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+private:
+	/** Spawn roster ships of the level's sector that aren't already flying. Returns -1 if the sector has no roster ships. */
+	int32 SpawnRosterShips();
+
+	/** Ships bought into this sector (or restored by a load) show up without a level reload. */
+	void HandleRosterChanged();
+
+	FDelegateHandle RosterChangedHandle;
 };

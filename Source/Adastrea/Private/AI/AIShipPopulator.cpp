@@ -11,6 +11,9 @@
 #include "Mining/Asteroid.h"
 #include "Ships/Spaceship.h"
 #include "Stations/SpaceStation.h"
+#include "Universe/GalaxySubsystem.h"
+#include "Universe/OrganisationSubsystem.h"
+#include "Universe/OwnershipComponent.h"
 
 namespace
 {
@@ -27,6 +30,16 @@ namespace
 		return Valid;
 	}
 
+	TArray<ASpaceStation*> GatherStations(UWorld* World)
+	{
+		TArray<ASpaceStation*> Stations;
+		for (TActorIterator<ASpaceStation> It(World); It; ++It)
+		{
+			Stations.Add(*It);
+		}
+		return Stations;
+	}
+
 	int32 SpawnShips(UWorld* World, const TArray<TSubclassOf<ASpaceship>>& ShipClasses, int32 Count, TSubclassOf<AAIPilotController> PilotClass)
 	{
 		if (!World || Count <= 0 || ShipClasses.IsEmpty())
@@ -34,11 +47,7 @@ namespace
 			return 0;
 		}
 
-		TArray<ASpaceStation*> Stations;
-		for (TActorIterator<ASpaceStation> It(World); It; ++It)
-		{
-			Stations.Add(*It);
-		}
+		const TArray<ASpaceStation*> Stations = GatherStations(World);
 		if (Stations.IsEmpty())
 		{
 			UE_LOG(LogAdastreaShips, Warning, TEXT("AI populate: no stations in the level, nothing to fly between"));
@@ -107,10 +116,37 @@ void AAIShipPopulator::BeginPlay()
 	{
 		Populate();
 	}
+	if (UOrganisationSubsystem* Orgs = bUseOrganisationRoster ? UOrganisationSubsystem::Get(this) : nullptr)
+	{
+		RosterChangedHandle = Orgs->OnRosterChanged.AddUObject(this, &AAIShipPopulator::HandleRosterChanged);
+	}
+}
+
+void AAIShipPopulator::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if (UOrganisationSubsystem* Orgs = UOrganisationSubsystem::Get(this))
+	{
+		Orgs->OnRosterChanged.Remove(RosterChangedHandle);
+	}
+	Super::EndPlay(EndPlayReason);
+}
+
+void AAIShipPopulator::HandleRosterChanged()
+{
+	SpawnRosterShips();
 }
 
 int32 AAIShipPopulator::Populate()
 {
+	if (bUseOrganisationRoster)
+	{
+		const int32 Spawned = SpawnRosterShips();
+		if (Spawned >= 0)
+		{
+			return Spawned;
+		}
+	}
+
 	const TArray<TSubclassOf<ASpaceship>> TraderClasses = ValidClasses(ShipClasses);
 	TArray<TSubclassOf<ASpaceship>> MinerClasses = ValidClasses(MinerShipClasses);
 	if (MinerClasses.IsEmpty())
@@ -120,4 +156,96 @@ int32 AAIShipPopulator::Populate()
 
 	return SpawnShips(GetWorld(), TraderClasses, ShipCount, AAIPilotController::StaticClass())
 		+ SpawnShips(GetWorld(), MinerClasses, MinerCount, AAIMinerController::StaticClass());
+}
+
+int32 AAIShipPopulator::SpawnRosterShips()
+{
+	UWorld* World = GetWorld();
+	UOrganisationSubsystem* Orgs = UOrganisationSubsystem::Get(this);
+	const UGalaxySubsystem* Galaxy = UGalaxySubsystem::Get(this);
+	const FName SectorId = Galaxy ? Galaxy->ResolveCurrentSectorId(this) : NAME_None;
+	if (!World || !Orgs || SectorId.IsNone())
+	{
+		return -1;
+	}
+	const TArray<FShipRecord*> Roster = Orgs->GetShipsInSector(SectorId);
+	if (Roster.IsEmpty())
+	{
+		return -1;
+	}
+
+	const TArray<ASpaceStation*> Stations = GatherStations(World);
+	if (Stations.IsEmpty())
+	{
+		UE_LOG(LogAdastreaShips, Warning, TEXT("AI populate: sector '%s' has %d roster ships but no stations to fly between"),
+			*SectorId.ToString(), Roster.Num());
+		return 0;
+	}
+
+	const TArray<TSubclassOf<ASpaceship>> TraderClasses = ValidClasses(ShipClasses);
+	TArray<TSubclassOf<ASpaceship>> MinerClasses = ValidClasses(MinerShipClasses);
+	if (MinerClasses.IsEmpty())
+	{
+		MinerClasses = TraderClasses;
+	}
+
+	int32 Spawned = 0;
+	int32 Skipped = 0;
+	for (int32 i = 0; i < Roster.Num(); ++i)
+	{
+		FShipRecord& Record = *Roster[i];
+		if (Record.SpawnedShip.IsValid())
+		{
+			continue;
+		}
+
+		TSubclassOf<ASpaceship> ShipClass = Record.ShipClass.IsNull() ? nullptr : Record.ShipClass.LoadSynchronous();
+		if (!ShipClass)
+		{
+			const TArray<TSubclassOf<ASpaceship>>& Pool = Record.Role == EShipRole::Miner ? MinerClasses : TraderClasses;
+			ShipClass = Pool.IsEmpty() ? nullptr : Pool[FMath::RandRange(0, Pool.Num() - 1)];
+		}
+		if (!ShipClass)
+		{
+			++Skipped;
+			continue;
+		}
+
+		const TSubclassOf<AAIPilotController> PilotClass = Record.Role == EShipRole::Miner
+			? TSubclassOf<AAIPilotController>(AAIMinerController::StaticClass())
+			: TSubclassOf<AAIPilotController>(AAIPilotController::StaticClass());
+		ASpaceship* Ship = AAIPilotController::SpawnPilotedShip(World, ShipClass, Stations[i % Stations.Num()], PilotClass);
+		if (!Ship)
+		{
+			++Skipped;
+			continue;
+		}
+
+		if (Record.Role == EShipRole::Patrol)
+		{
+			if (AAIPilotController* Pilot = Cast<AAIPilotController>(Ship->GetController()))
+			{
+				Pilot->bTradeAtStations = false;
+			}
+		}
+
+		UOwnershipComponent* Ownership = NewObject<UOwnershipComponent>(Ship, TEXT("Ownership"));
+		Ownership->OwnerId = Record.OwnerId;
+		Ownership->ShipRecordId = Record.Id;
+		Ownership->RecordName = Record.Name;
+		Ownership->RegisterComponent();
+		Ship->AddInstanceComponent(Ownership);
+
+		Orgs->BindSpawnedShip(Record.Id, Ship);
+		++Spawned;
+	}
+
+	// Quiet when a roster change (a purchase elsewhere) had nothing new for this sector.
+	if (Spawned > 0 || Skipped > 0)
+	{
+		UE_LOG(LogAdastreaShips, Log, TEXT("AI populate: spawned %d roster ships for sector '%s' (%d in roster%s)"),
+			Spawned, *SectorId.ToString(), Roster.Num(),
+			Skipped > 0 ? *FString::Printf(TEXT(", %d skipped: no ship class or spawn failed"), Skipped) : TEXT(""));
+	}
+	return Spawned;
 }
