@@ -19,7 +19,7 @@
       "num_samples": 288000,
       "target_lufs": -24.0,
       "measured_lufs": -24.0,
-      "peak_dbfs": -11.96,
+      "peak_dbfs": -14.49,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -39,6 +39,11 @@
         "wander": 0.006,
         "high_f0_mult": 1.18,
         "high_bright": 1.25,
+        "formant_hz": 0.0,
+        "formant_gain": 0.0,
+        "drive": 1.2,
+        "combust": 0.15,
+        "flutter": 0.04,
         "f0_effective": 125.0,
         "loop_seconds": 6.0,
         "variant": "Low"
@@ -58,7 +63,7 @@
       "num_samples": 288000,
       "target_lufs": -24.0,
       "measured_lufs": -24.0,
-      "peak_dbfs": -12.55,
+      "peak_dbfs": -14.39,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -78,6 +83,11 @@
         "wander": 0.006,
         "high_f0_mult": 1.18,
         "high_bright": 1.25,
+        "formant_hz": 0.0,
+        "formant_gain": 0.0,
+        "drive": 1.2,
+        "combust": 0.15,
+        "flutter": 0.04,
         "f0_effective": 147.5,
         "loop_seconds": 6.0,
         "variant": "High"
@@ -97,7 +107,7 @@
       "num_samples": 288000,
       "target_lufs": -24.0,
       "measured_lufs": -24.0,
-      "peak_dbfs": -12.14,
+      "peak_dbfs": -13.57,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -117,6 +127,11 @@
         "wander": 0.005,
         "high_f0_mult": 1.15,
         "high_bright": 1.2,
+        "formant_hz": 320.0,
+        "formant_gain": 0.8,
+        "drive": 1.5,
+        "combust": 0.25,
+        "flutter": 0.05,
         "f0_effective": 80.0,
         "loop_seconds": 6.0,
         "variant": "Low"
@@ -136,7 +151,7 @@
       "num_samples": 288000,
       "target_lufs": -24.0,
       "measured_lufs": -24.0,
-      "peak_dbfs": -12.49,
+      "peak_dbfs": -14.0,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -156,6 +171,11 @@
         "wander": 0.005,
         "high_f0_mult": 1.15,
         "high_bright": 1.2,
+        "formant_hz": 320.0,
+        "formant_gain": 0.8,
+        "drive": 1.5,
+        "combust": 0.25,
+        "flutter": 0.05,
         "f0_effective": 92.0,
         "loop_seconds": 6.0,
         "variant": "High"
@@ -175,7 +195,7 @@
       "num_samples": 288000,
       "target_lufs": -24.0,
       "measured_lufs": -24.0,
-      "peak_dbfs": -9.76,
+      "peak_dbfs": -10.67,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -195,6 +215,11 @@
         "wander": 0.004,
         "high_f0_mult": 1.12,
         "high_bright": 1.15,
+        "formant_hz": 240.0,
+        "formant_gain": 1.6,
+        "drive": 2.0,
+        "combust": 0.35,
+        "flutter": 0.06,
         "f0_effective": 52.0,
         "loop_seconds": 6.0,
         "variant": "Low"
@@ -214,7 +239,7 @@
       "num_samples": 288000,
       "target_lufs": -24.0,
       "measured_lufs": -24.0,
-      "peak_dbfs": -9.29,
+      "peak_dbfs": -12.27,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -234,6 +259,11 @@
         "wander": 0.004,
         "high_f0_mult": 1.12,
         "high_bright": 1.15,
+        "formant_hz": 240.0,
+        "formant_gain": 1.6,
+        "drive": 2.0,
+        "combust": 0.35,
+        "flutter": 0.06,
         "f0_effective": 58.24000000000001,
         "loop_seconds": 6.0,
         "variant": "High"
@@ -253,7 +283,7 @@
       "num_samples": 288000,
       "target_lufs": -24.0,
       "measured_lufs": -24.0,
-      "peak_dbfs": -6.88,
+      "peak_dbfs": -7.11,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -273,6 +303,11 @@
         "wander": 0.003,
         "high_f0_mult": 1.1,
         "high_bright": 1.1,
+        "formant_hz": 175.0,
+        "formant_gain": 2.2,
+        "drive": 2.4,
+        "combust": 0.45,
+        "flutter": 0.07,
         "f0_effective": 35.0,
         "loop_seconds": 6.0,
         "variant": "Low"
@@ -292,7 +327,7 @@
       "num_samples": 288000,
       "target_lufs": -24.0,
       "measured_lufs": -24.0,
-      "peak_dbfs": -6.9,
+      "peak_dbfs": -8.41,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -312,6 +347,11 @@
         "wander": 0.003,
         "high_f0_mult": 1.1,
         "high_bright": 1.1,
+        "formant_hz": 175.0,
+        "formant_gain": 2.2,
+        "drive": 2.4,
+        "combust": 0.45,
+        "flutter": 0.07,
         "f0_effective": 38.5,
         "loop_seconds": 6.0,
         "variant": "High"
@@ -331,7 +371,7 @@
       "num_samples": 192000,
       "target_lufs": -27.0,
       "measured_lufs": -27.0,
-      "peak_dbfs": -22.31,
+      "peak_dbfs": -22.32,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -366,7 +406,7 @@
       "num_samples": 192000,
       "target_lufs": -24.0,
       "measured_lufs": -24.0,
-      "peak_dbfs": -11.05,
+      "peak_dbfs": -11.07,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -499,7 +539,7 @@
       "num_samples": 288000,
       "target_lufs": -27.0,
       "measured_lufs": -27.0,
-      "peak_dbfs": -15.99,
+      "peak_dbfs": -15.98,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -514,7 +554,10 @@
         "noise_level": 0.4,
         "pulse_hz": 0.5,
         "pulse_depth": 0.15,
-        "seconds": 6.0
+        "seconds": 6.0,
+        "formant_hz": 280.0,
+        "formant_gain": 3.0,
+        "drive": 1.8
       }
     },
     {
@@ -563,7 +606,7 @@
       "num_samples": 67200,
       "target_lufs": -20.0,
       "measured_lufs": -20.0,
-      "peak_dbfs": -5.89,
+      "peak_dbfs": -6.76,
       "volume": 1.0,
       "pitch_range": [
         0.92,
@@ -577,7 +620,10 @@
         "noise_lp": 320.0,
         "noise_level": 0.6,
         "attack": 0.18,
-        "release": 0.7
+        "release": 0.7,
+        "formant_hz": 230.0,
+        "formant_gain": 1.8,
+        "drive": 2.0
       }
     },
     {
@@ -590,10 +636,10 @@
       "loop": false,
       "loop_start": 0,
       "loop_end": null,
-      "duration_s": 1.2199,
-      "num_samples": 58557,
+      "duration_s": 2.0,
+      "num_samples": 96000,
       "target_lufs": -20.0,
-      "measured_lufs": -20.0,
+      "measured_lufs": -20.04,
       "peak_dbfs": -1.1,
       "volume": 1.0,
       "pitch_range": [
@@ -611,17 +657,21 @@
           190.0,
           437.0,
           822.0,
-          1370.0
+          1370.0,
+          2950.0
         ],
         "clank_decay": [
           0.5,
           0.3,
           0.18,
-          0.1
+          0.1,
+          0.04
         ],
         "clank_level": 0.45,
         "noise_level": 0.4,
-        "reverb_wet": 0.25
+        "air_level": 0.35,
+        "reverb_wet": 0.25,
+        "dur": 2.0
       }
     },
     {
@@ -638,7 +688,7 @@
       "num_samples": 57600,
       "target_lufs": -24.0,
       "measured_lufs": -24.0,
-      "peak_dbfs": -14.62,
+      "peak_dbfs": -15.59,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -654,7 +704,8 @@
         "gap": 0.05,
         "repeats": 2,
         "repeat_gap": 0.12,
-        "fm_index": 0.6
+        "fm_index": 0.6,
+        "air_level": 0.3
       }
     },
     {
@@ -667,11 +718,11 @@
       "loop": false,
       "loop_start": 0,
       "loop_end": null,
-      "duration_s": 1.2238,
-      "num_samples": 58741,
+      "duration_s": 1.2228,
+      "num_samples": 58693,
       "target_lufs": -20.0,
       "measured_lufs": -20.0,
-      "peak_dbfs": -6.92,
+      "peak_dbfs": -3.26,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -696,11 +747,11 @@
       "loop": false,
       "loop_start": 0,
       "loop_end": null,
-      "duration_s": 2.0676,
-      "num_samples": 99243,
+      "duration_s": 2.6944,
+      "num_samples": 129331,
       "target_lufs": -20.0,
       "measured_lufs": -20.0,
-      "peak_dbfs": -1.46,
+      "peak_dbfs": -1.1,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -723,15 +774,19 @@
           143.0,
           311.0,
           587.0,
-          1043.0
+          1043.0,
+          2410.0
         ],
         "clank_decay": [
           0.7,
           0.45,
           0.25,
-          0.12
+          0.12,
+          0.05
         ],
-        "reverb_wet": 0.3
+        "reverb_wet": 0.3,
+        "ring": 2.2,
+        "air_level": 0.35
       }
     },
     {
@@ -831,7 +886,7 @@
       "num_samples": 192000,
       "target_lufs": -20.0,
       "measured_lufs": -20.0,
-      "peak_dbfs": -10.19,
+      "peak_dbfs": -10.17,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -970,7 +1025,7 @@
       "num_samples": 57600,
       "target_lufs": -18.0,
       "measured_lufs": -18.0,
-      "peak_dbfs": -3.96,
+      "peak_dbfs": -4.57,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -1001,7 +1056,7 @@
       "num_samples": 57600,
       "target_lufs": -18.0,
       "measured_lufs": -18.0,
-      "peak_dbfs": -4.86,
+      "peak_dbfs": -4.87,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -1057,11 +1112,11 @@
       "loop": false,
       "loop_start": 0,
       "loop_end": null,
-      "duration_s": 0.537,
-      "num_samples": 25774,
+      "duration_s": 0.5362,
+      "num_samples": 25738,
       "target_lufs": -18.0,
       "measured_lufs": -18.0,
-      "peak_dbfs": -7.7,
+      "peak_dbfs": -7.98,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -1086,10 +1141,10 @@
       "loop": false,
       "loop_start": 0,
       "loop_end": null,
-      "duration_s": 0.4,
-      "num_samples": 19200,
+      "duration_s": 0.6,
+      "num_samples": 28800,
       "target_lufs": -18.0,
-      "measured_lufs": -18.02,
+      "measured_lufs": -18.01,
       "peak_dbfs": -1.1,
       "volume": 1.0,
       "pitch_range": [
@@ -1108,6 +1163,7 @@
           2650.0
         ],
         "click_level": 0.3,
+        "air_level": 0.3,
         "reverb_wet": 0.15
       }
     },
@@ -1121,10 +1177,10 @@
       "loop": false,
       "loop_start": 0,
       "loop_end": null,
-      "duration_s": 1.4018,
-      "num_samples": 67285,
+      "duration_s": 2.001,
+      "num_samples": 96047,
       "target_lufs": -18.0,
-      "measured_lufs": -18.01,
+      "measured_lufs": -18.04,
       "peak_dbfs": -1.1,
       "volume": 1.0,
       "pitch_range": [
@@ -1149,7 +1205,9 @@
           0.15
         ],
         "clank_level": 0.4,
-        "reverb_wet": 0.3
+        "air_level": 0.4,
+        "reverb_wet": 0.3,
+        "dur": 1.8
       }
     },
     {
@@ -1195,11 +1253,11 @@
       "loop": false,
       "loop_start": 0,
       "loop_end": null,
-      "duration_s": 0.4214,
-      "num_samples": 20229,
+      "duration_s": 0.4033,
+      "num_samples": 19360,
       "target_lufs": -18.0,
       "measured_lufs": -18.0,
-      "peak_dbfs": -8.33,
+      "peak_dbfs": -7.56,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -1228,7 +1286,7 @@
       "num_samples": 22560,
       "target_lufs": -24.0,
       "measured_lufs": -24.0,
-      "peak_dbfs": -12.06,
+      "peak_dbfs": -12.24,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -1257,7 +1315,7 @@
       "num_samples": 22560,
       "target_lufs": -24.0,
       "measured_lufs": -24.0,
-      "peak_dbfs": -12.55,
+      "peak_dbfs": -12.61,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -1322,7 +1380,7 @@
       "num_samples": 67200,
       "target_lufs": -18.0,
       "measured_lufs": -18.0,
-      "peak_dbfs": -5.6,
+      "peak_dbfs": -5.73,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -1351,8 +1409,8 @@
       "loop": false,
       "loop_start": 0,
       "loop_end": null,
-      "duration_s": 0.3567,
-      "num_samples": 17120,
+      "duration_s": 0.35,
+      "num_samples": 16800,
       "target_lufs": -22.0,
       "measured_lufs": -22.02,
       "peak_dbfs": -1.1,
@@ -1395,8 +1453,8 @@
       "loop": false,
       "loop_start": 0,
       "loop_end": null,
-      "duration_s": 0.3611,
-      "num_samples": 17332,
+      "duration_s": 0.3574,
+      "num_samples": 17156,
       "target_lufs": -22.0,
       "measured_lufs": -22.02,
       "peak_dbfs": -1.1,
@@ -1439,8 +1497,8 @@
       "loop": false,
       "loop_start": 0,
       "loop_end": null,
-      "duration_s": 0.3897,
-      "num_samples": 18708,
+      "duration_s": 0.3755,
+      "num_samples": 18026,
       "target_lufs": -22.0,
       "measured_lufs": -22.09,
       "peak_dbfs": -1.1,
@@ -1483,8 +1541,8 @@
       "loop": false,
       "loop_start": 0,
       "loop_end": null,
-      "duration_s": 0.4111,
-      "num_samples": 19735,
+      "duration_s": 0.3848,
+      "num_samples": 18472,
       "target_lufs": -22.0,
       "measured_lufs": -22.0,
       "peak_dbfs": -1.1,
@@ -1654,7 +1712,7 @@
       "num_samples": 384000,
       "target_lufs": -30.0,
       "measured_lufs": -30.0,
-      "peak_dbfs": -18.07,
+      "peak_dbfs": -16.86,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -1669,7 +1727,10 @@
         "air_level": 0.5,
         "lfo_hz": 0.25,
         "lfo_depth": 0.1,
-        "seconds": 8.0
+        "seconds": 8.0,
+        "formant_hz": 300.0,
+        "formant_gain": 1.2,
+        "drive": 1.2
       }
     },
     {
@@ -1686,7 +1747,7 @@
       "num_samples": 20640,
       "target_lufs": -24.0,
       "measured_lufs": -24.0,
-      "peak_dbfs": -13.79,
+      "peak_dbfs": -13.99,
       "volume": 1.0,
       "pitch_range": [
         0.92,
@@ -1717,7 +1778,7 @@
       "num_samples": 2880,
       "target_lufs": -24.0,
       "measured_lufs": -24.0,
-      "peak_dbfs": -10.72,
+      "peak_dbfs": -10.76,
       "volume": 1.0,
       "pitch_range": [
         0.98,
@@ -1841,7 +1902,7 @@
       "num_samples": 48000,
       "target_lufs": -18.0,
       "measured_lufs": -18.0,
-      "peak_dbfs": -6.8,
+      "peak_dbfs": -5.55,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -1872,7 +1933,7 @@
       "num_samples": 52800,
       "target_lufs": -18.0,
       "measured_lufs": -18.0,
-      "peak_dbfs": -5.37,
+      "peak_dbfs": -4.91,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -1904,7 +1965,7 @@
       "num_samples": 52800,
       "target_lufs": -18.0,
       "measured_lufs": -18.0,
-      "peak_dbfs": -6.19,
+      "peak_dbfs": -5.98,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -1932,11 +1993,11 @@
       "loop": false,
       "loop_start": 0,
       "loop_end": null,
-      "duration_s": 0.4485,
-      "num_samples": 21526,
+      "duration_s": 0.468,
+      "num_samples": 22465,
       "target_lufs": -18.0,
       "measured_lufs": -18.0,
-      "peak_dbfs": -7.3,
+      "peak_dbfs": -7.04,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -1965,7 +2026,7 @@
       "num_samples": 576000,
       "target_lufs": -30.0,
       "measured_lufs": -30.0,
-      "peak_dbfs": -12.13,
+      "peak_dbfs": -12.27,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -1974,19 +2035,23 @@
       "seed": 610114614,
       "params": {
         "bed_lp": 180.0,
-        "bed_level": 1.0,
+        "bed_level": 0.75,
         "pad_freqs": [
           55.0,
           82.41,
           110.0,
-          164.81
+          164.81,
+          220.0,
+          329.63
         ],
         "pad_level": 0.35,
         "pad_lfo_hz": [
           0.05,
           0.07,
           0.09,
-          0.11
+          0.11,
+          0.13,
+          0.06
         ],
         "air_band": [
           3000.0,
@@ -2010,7 +2075,7 @@
       "num_samples": 384000,
       "target_lufs": -30.0,
       "measured_lufs": -30.0,
-      "peak_dbfs": -17.58,
+      "peak_dbfs": -18.13,
       "volume": 1.0,
       "pitch_range": [
         1.0,
@@ -2037,7 +2102,10 @@
         "pulse_depth": 0.3,
         "air_lp": 1500.0,
         "air_level": 0.4,
-        "seconds": 8.0
+        "seconds": 8.0,
+        "formant_hz": 250.0,
+        "formant_gain": 1.4,
+        "drive": 1.4
       }
     },
     {
@@ -2089,7 +2157,7 @@
       "num_samples": 384000,
       "target_lufs": -33.0,
       "measured_lufs": -33.0,
-      "peak_dbfs": -18.94,
+      "peak_dbfs": -18.95,
       "volume": 1.0,
       "pitch_range": [
         1.0,

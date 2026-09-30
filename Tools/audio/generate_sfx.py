@@ -207,6 +207,10 @@ def env_ad(n, attack, decay, curve=4.0):
 def env_adsr(n, a, d, s, r, sustain_len=None):
     t = np.arange(n) / SR
     total = n / SR
+    if sustain_len is None and a + d + r > total:
+        # Squeeze the stages to fit, so the release always reaches 0 (a cut-off release clicks).
+        k = total / (a + d + r)
+        a, d, r = a * k, d * k, r * k
     if sustain_len is None:
         sustain_len = max(total - a - d - r, 0)
     e = np.zeros(n)
@@ -232,6 +236,24 @@ def fade_edges(x, fade_in=0.002, fade_out=0.01):
     return x
 
 
+def tail_taper(x, frac=0.25, max_s=0.08):
+    """Half-cosine fade over the end of a fixed-length layer, so a ring that hasn't
+    decayed by the end of its buffer fades out instead of being cut (a cut clicks)."""
+    x = x.copy()
+    k = min(int(x.size * frac), int(max_s * SR))
+    if k > 1:
+        x[-k:] *= 0.5 + 0.5 * np.cos(np.linspace(0, np.pi, k))
+    return x
+
+
+def transient(rng, dur=0.004, band=(5000.0, 15000.0)):
+    """Very short band-limited noise tick: the crisp 'air' at the front of a hit or a UI note.
+    Peak-normalised; mix it in around 0.1-0.3."""
+    n = max(8, int(dur * SR))
+    y = bandpass(white(rng, n), *band) * env_ad(n, 0.0003, dur, 5)
+    return y / (np.max(np.abs(y)) + 1e-12)
+
+
 def pad(x, dur):
     n = int(round(dur * SR))
     if x.size >= n:
@@ -240,10 +262,15 @@ def pad(x, dur):
 
 
 def place(dst, src, at_s, gain=1.0):
+    """Mixes src into dst at at_s. If src runs past the end of dst, the overhang is
+    faded out rather than cut; size dst so that doesn't happen for anything audible."""
     i = int(round(at_s * SR))
     j = min(dst.size, i + src.size)
     if i < dst.size:
-        dst[i:j] += gain * src[: j - i]
+        part = src[: j - i]
+        if j - i < src.size:
+            part = tail_taper(part, frac=0.5, max_s=0.03)
+        dst[i:j] += gain * part
     return dst
 
 
@@ -271,7 +298,7 @@ def modal(dur, freqs, decays, amps, rng=None, excite_noise=0.0):
         y += a * np.sin(2 * np.pi * f * t) * np.exp(-t / d)
     if excite_noise and rng is not None:
         y += excite_noise * white(rng, n) * np.exp(-t / 0.004)
-    return y
+    return tail_taper(y)
 
 
 def thump(dur, f_start, f_end, decay, drop_time=0.05):
@@ -279,7 +306,7 @@ def thump(dur, f_start, f_end, decay, drop_time=0.05):
     n = int(dur * SR)
     t = np.arange(n) / SR
     f = f_end + (f_start - f_end) * np.exp(-t / max(drop_time, 1e-4))
-    return np.sin(phase_from_freq(f)) * env_ad(n, 0.001, decay)
+    return tail_taper(np.sin(phase_from_freq(f)) * env_ad(n, 0.001, decay))
 
 
 def sweep_filter(x, cutoffs, kind="lowpass", bands=10, q_width=0.6):
@@ -334,6 +361,18 @@ def reverb_tail(x, rng, decay=0.6, wet=0.2, tone_hz=5000):
     return fade_edges(y[: max(end, x.size)], 0.0, 0.02)
 
 
+def presence(y, formant_hz, gain, drive=0.0):
+    """Makes a low sound audible on small speakers without thinning it: boosts a resonance
+    band an octave or two above the fundamental (the ear infers the fundamental from it),
+    then optionally saturates (tanh) to add harmonics. Keep the clean sub outside this."""
+    if gain > 0:
+        y = y + gain * bandpass(y, formant_hz * 0.7, formant_hz * 1.45)
+    if drive > 0:
+        y = y / (np.max(np.abs(y)) + 1e-12)
+        y = np.tanh(drive * y) / np.tanh(drive)
+    return y
+
+
 def make_loop(render, dur, xfade=0.5):
     """Render dur+xfade seconds via render(n) and fold the tail into the head (equal power)."""
     n = int(round(dur * SR))
@@ -345,11 +384,20 @@ def make_loop(render, dur, xfade=0.5):
     out = body[:n].copy()
     out[:nx] = body[:nx] * fi + body[n:n + nx] * fo
     out = out - np.mean(out)
-    # The loop is circular, so rotating it keeps it seamless. Start it at the quietest
-    # upward zero crossing so the file begins and ends near 0 (no importer DC warnings).
+    # The loop is circular, so rotating it keeps it seamless. Start it at an upward zero
+    # crossing so the file begins and ends near 0 (no importer DC warnings), choosing the one
+    # where the level just before and just after match best (a level step reads as a seam
+    # when the file is played once, or by tools that check the join).
     zc = np.nonzero((out[:-1] < 0) & (out[1:] >= 0))[0] + 1
     if zc.size:
-        k = int(zc[np.argmin(np.abs(out[zc]) + np.abs(out[zc - 1]))])
+        w = int(0.05 * SR)
+        e = np.concatenate([out, out]) ** 2
+        c = np.concatenate([[0.0], np.cumsum(e)])
+        after = (c[zc + w] - c[zc]) / w
+        before = (c[zc + out.size] - c[zc + out.size - w]) / w
+        mismatch = np.abs(10 * np.log10((after + 1e-12) / (before + 1e-12)))
+        step = (np.abs(out[zc]) + np.abs(out[zc - 1])) / (np.max(np.abs(out)) + 1e-12)
+        k = int(zc[np.argmin(mismatch + 20 * step)])
         out = np.roll(out, -k)
     return out
 
@@ -416,19 +464,28 @@ def sound(event_id, category, target, loop=False, pitch_range=(1.0, 1.0), volume
 # throb_hz / throb_depth: slow amplitude pulse. sub: level of a sine an octave below.
 # wander: pitch drift (fraction). High-revs loops use f0 * high_f0_mult, more
 # harmonics (high_bright) and faster throb.
+# Audibility and life (so big ships survive laptop speakers and don't sound frozen):
+# formant_hz / formant_gain: hull resonance boost (the ear infers the low fundamental from
+# these harmonics when the speaker can't play it). drive: tanh saturation (adds harmonics,
+# glues layers). combust: noise bursts at the firing rate f0 (texture that moves).
+# flutter: random amplitude wobble around 14 Hz (turbulence).
 ENGINE_FAMILIES = {
     "Light":   dict(f0=125.0, n_harm=24, harm_rolloff=1.05, lp=7000.0, rumble=0.25, hiss=0.12,
                     throb_hz=0.0, throb_depth=0.0, sub=0.0, wander=0.006, high_f0_mult=1.18,
-                    high_bright=1.25),
+                    high_bright=1.25, formant_hz=0.0, formant_gain=0.0, drive=1.2, combust=0.15,
+                    flutter=0.04),
     "Medium":  dict(f0=80.0, n_harm=18, harm_rolloff=1.35, lp=3200.0, rumble=0.35, hiss=0.05,
                     throb_hz=1.5, throb_depth=0.10, sub=0.0, wander=0.005, high_f0_mult=1.15,
-                    high_bright=1.2),
+                    high_bright=1.2, formant_hz=320.0, formant_gain=0.8, drive=1.5, combust=0.25,
+                    flutter=0.05),
     "Heavy":   dict(f0=52.0, n_harm=14, harm_rolloff=1.7, lp=1400.0, rumble=0.45, hiss=0.015,
                     throb_hz=0.75, throb_depth=0.25, sub=0.15, wander=0.004, high_f0_mult=1.12,
-                    high_bright=1.15),
+                    high_bright=1.15, formant_hz=240.0, formant_gain=1.6, drive=2.0, combust=0.35,
+                    flutter=0.06),
     "Capital": dict(f0=35.0, n_harm=10, harm_rolloff=2.1, lp=520.0, rumble=0.55, hiss=0.0,
                     throb_hz=0.5, throb_depth=0.35, sub=0.45, wander=0.003, high_f0_mult=1.1,
-                    high_bright=1.1),
+                    high_bright=1.1, formant_hz=175.0, formant_gain=2.2, drive=2.4, combust=0.45,
+                    flutter=0.07),
 }
 ENGINE_LOOP_SECONDS = 6.0
 
@@ -456,7 +513,15 @@ def _engine_voice(family, high, rng):
         hiss = bandpass(white(rng, n), 2500, 9000)
         hiss /= np.std(hiss) + 1e-12
         sub = np.sin(ph * 0.5)
-        y = body + P["rumble"] * 0.3 * rumble + P["hiss"] * (1.6 if high else 1.0) * 0.3 * hiss + P["sub"] * sub
+        # Combustion: band-limited noise bursts once per cycle of the fundamental.
+        burst = (0.5 + 0.5 * np.cos(ph)) ** 6
+        comb = bandpass(white(rng, n), f0 * 2, min(f0 * 12, lp_hz)) * burst
+        comb /= np.std(comb) + 1e-12
+        y = (body + P["rumble"] * 0.3 * rumble + P["hiss"] * (1.6 if high else 1.0) * 0.3 * hiss
+             + P["combust"] * 0.3 * comb)
+        y = presence(y, P["formant_hz"], P["formant_gain"], P["drive"])
+        y = y + P["sub"] * sub  # clean sub under the saturated body
+        y *= 1 + P["flutter"] * smooth_random(rng, n, 14)
         if throb_hz > 0:
             y *= 1 - P["throb_depth"] * (0.5 + 0.5 * np.sin(2 * np.pi * throb_hz * t))
         return lowpass(y, lp_hz, order=4)
@@ -551,14 +616,15 @@ def engine_spool_down(rng):
 @sound("Engine.Idle", "Engine", "Engine.layer", loop=True, attenuation="ATT_AIEngine")
 def engine_idle(rng):
     P = dict(f0=58.0, harmonics=5, rolloff=1.8, noise_lp=400.0, noise_level=0.4, pulse_hz=0.5,
-             pulse_depth=0.15, seconds=6.0)
+             pulse_depth=0.15, seconds=6.0, formant_hz=280.0, formant_gain=3.0, drive=1.8)
 
     def render(n):
         t = np.arange(n) / SR
         ph = phase_from_freq(P["f0"] * (1 + smooth_random(rng, n, 0.5, 0.003)))
         y = sum((k ** -P["rolloff"]) * np.sin(k * ph) for k in range(1, P["harmonics"] + 1))
         nz = lowpass(white(rng, n), P["noise_lp"])
-        y = y + P["noise_level"] * nz / (np.std(nz) + 1e-12) * 0.3
+        y = presence(y + P["noise_level"] * nz / (np.std(nz) + 1e-12) * 0.3, P["formant_hz"], P["formant_gain"],
+                     P["drive"])
         return y * (1 - P["pulse_depth"] * (0.5 + 0.5 * np.sin(2 * np.pi * P["pulse_hz"] * t)))
     return make_loop(render, P["seconds"]), P
 
@@ -577,7 +643,8 @@ def thruster_puff(rng):
 
 @sound("Thruster.HeavyGroan", "Flight", "World", pitch_range=(0.92, 1.05), attenuation="ATT_World")
 def thruster_heavy_groan(rng):
-    P = dict(dur=1.4, f_from=62.0, f_to=44.0, noise_lp=320.0, noise_level=0.6, attack=0.18, release=0.7)
+    P = dict(dur=1.4, f_from=62.0, f_to=44.0, noise_lp=320.0, noise_level=0.6, attack=0.18, release=0.7,
+             formant_hz=230.0, formant_gain=1.8, drive=2.0)
     n = int(P["dur"] * SR)
     t = np.arange(n) / SR
     f = P["f_from"] + (P["f_to"] - P["f_from"]) * (t / P["dur"])
@@ -585,25 +652,27 @@ def thruster_heavy_groan(rng):
     tone = np.sin(ph) + 0.5 * np.sin(2 * ph) + 0.2 * np.sin(3 * ph)
     nz = lowpass(white(rng, n), P["noise_lp"])
     y = (tone / 1.7 + P["noise_level"] * nz / (np.std(nz) + 1e-12) * 0.3)
+    y = presence(y, P["formant_hz"], P["formant_gain"], P["drive"])
     y *= env_adsr(n, P["attack"], 0.2, 0.8, P["release"])
     return fade_edges(lowpass(y, 900)), P
 
 
 @sound("Flight.CollisionBump", "Flight", "World", pitch_range=(0.9, 1.1), attenuation="ATT_World")
 def flight_collision_bump(rng):
-    P = dict(thump=(75.0, 38.0, 0.35), clank=[190.0, 437.0, 822.0, 1370.0], clank_decay=[0.5, 0.3, 0.18, 0.1],
-             clank_level=0.45, noise_level=0.4, reverb_wet=0.25)
-    body = thump(1.0, P["thump"][0], P["thump"][1], P["thump"][2])
-    clank = modal(1.0, P["clank"], P["clank_decay"], [1, 0.7, 0.5, 0.3], rng, excite_noise=0.5)
+    P = dict(thump=(75.0, 38.0, 0.35), clank=[190.0, 437.0, 822.0, 1370.0, 2950.0], clank_decay=[0.5, 0.3, 0.18, 0.1, 0.04],
+             clank_level=0.45, noise_level=0.4, air_level=0.35, reverb_wet=0.25, dur=2.0)
+    body = thump(P["dur"], P["thump"][0], P["thump"][1], P["thump"][2])
+    clank = modal(P["dur"], P["clank"], P["clank_decay"], [1, 0.7, 0.5, 0.3, 0.25], rng, excite_noise=0.5)
     n = body.size
     nz = lowpass(white(rng, n), 1800) * env_ad(n, 0.001, 0.05)
     y = body + P["clank_level"] * clank / (np.max(np.abs(clank)) + 1e-12) + P["noise_level"] * nz
-    return reverb_tail(y, rng, 0.9, P["reverb_wet"], 3500), P
+    place(y, transient(rng, 0.012, (3000.0, 16000.0)), 0.0, P["air_level"])
+    return reverb_tail(y, rng, 0.9, P["reverb_wet"], 6000), P
 
 
 @sound("Flight.SpeedWarning", "Flight", "UI.soft")
 def flight_speed_warning(rng):
-    P = dict(notes=[880.0, 659.25], note_len=0.16, gap=0.05, repeats=2, repeat_gap=0.12, fm_index=0.6)
+    P = dict(notes=[880.0, 659.25], note_len=0.16, gap=0.05, repeats=2, repeat_gap=0.12, fm_index=0.6, air_level=0.3)
     y = np.zeros(int(1.2 * SR))
     at = 0.0
     for _ in range(P["repeats"]):
@@ -611,9 +680,10 @@ def flight_speed_warning(rng):
             nn = int(P["note_len"] * SR)
             tone = fm_tone(nn, f, 2.0, P["fm_index"]) * env_adsr(nn, 0.008, 0.04, 0.6, 0.06)
             place(y, tone, at)
+            place(y, transient(rng), at, P["air_level"])
             at += P["note_len"] + P["gap"]
         at += P["repeat_gap"]
-    return reverb_tail(lowpass(y, 5000), rng, 0.4, 0.15), P
+    return reverb_tail(lowpass(y, 16000), rng, 0.4, 0.15, 8000), P
 
 
 # ---------------------------------------------------------------------------
@@ -624,23 +694,26 @@ def flight_speed_warning(rng):
 def dock_beacon(rng):
     P = dict(freq=1318.5, decay=0.55, ratio=1.0, index=0.8, reverb_wet=0.35)
     y = bell(1.0, P["freq"], P["decay"], P["ratio"], P["index"])
-    return reverb_tail(y, rng, 1.2, P["reverb_wet"]), P
+    place(y, transient(rng), 0.0, UI_AIR)
+    return reverb_tail(y, rng, 1.2, P["reverb_wet"], 8000), P
 
 
 @sound("Dock.ClampEngage", "Dock", "World", attenuation="ATT_World")
 def dock_clamp_engage(rng):
     P = dict(servo_dur=0.35, servo_band=(300.0, 900.0), clamp_at=0.38, thump=(70.0, 40.0, 0.4),
-             clank=[143.0, 311.0, 587.0, 1043.0], clank_decay=[0.7, 0.45, 0.25, 0.12], reverb_wet=0.3)
-    y = np.zeros(int(1.8 * SR))
+             clank=[143.0, 311.0, 587.0, 1043.0, 2410.0], clank_decay=[0.7, 0.45, 0.25, 0.12, 0.05], reverb_wet=0.3,
+             ring=2.2, air_level=0.35)
+    y = np.zeros(int((P["clamp_at"] + P["ring"]) * SR))
     ns = int(P["servo_dur"] * SR)
     ts = np.arange(ns) / SR
     cut = P["servo_band"][0] + (P["servo_band"][1] - P["servo_band"][0]) * ts / P["servo_dur"]
     servo = sweep_filter(white(rng, ns), cut, "bandpass", q_width=0.3) * env_adsr(ns, 0.05, 0.1, 0.8, 0.05)
     place(y, 0.4 * servo / (np.max(np.abs(servo)) + 1e-12), 0.0)
-    th = thump(1.2, *P["thump"])
-    cl = modal(1.2, P["clank"], P["clank_decay"], [1, 0.8, 0.5, 0.3], rng, excite_noise=0.6)
+    th = thump(P["ring"], *P["thump"])
+    cl = modal(P["ring"], P["clank"], P["clank_decay"], [1, 0.8, 0.5, 0.3, 0.25], rng, excite_noise=0.6)
     place(y, th + 0.6 * cl / (np.max(np.abs(cl)) + 1e-12), P["clamp_at"])
-    return reverb_tail(y, rng, 1.0, P["reverb_wet"], 3000), P
+    place(y, transient(rng, 0.015, (3000.0, 16000.0)), P["clamp_at"], P["air_level"])
+    return reverb_tail(y, rng, 1.0, P["reverb_wet"], 5500), P
 
 
 @sound("Dock.AirlockHiss", "Dock", "World", attenuation="ATT_World")
@@ -736,11 +809,15 @@ def mining_asteroid_depleted(rng):
 # TRADE
 # ---------------------------------------------------------------------------
 
+UI_AIR = 0.18  # level of the transient() tick at the front of UI and chime notes
+
+
 def _chime(rng, notes, step, decay=0.4, index=0.9, ratio=2.0, wet=0.2, total=1.2):
     y = np.zeros(int(total * SR))
     for i, f in enumerate(notes):
         place(y, bell(decay * 1.8, f, decay, ratio, index), i * step)
-    return reverb_tail(y, rng, 0.6, wet)
+        place(y, transient(rng), i * step, UI_AIR)
+    return reverb_tail(y, rng, 0.6, wet, 8000)
 
 
 @sound("Trade.Buy", "Trade", "UI")
@@ -772,6 +849,7 @@ def _soft_buzz(rng, f, dur, pulses, gap, lp=900.0, drop=0.9):
         tone = sum(((-1) ** (k + 1)) * np.sin(k * ph) / k for k in range(1, 9))  # soft saw
         tone += 0.6 * np.sin(phase_from_freq(ff * 1.012))
         place(y, lowpass(tone, lp) * env_adsr(n, 0.01, 0.05, 0.8, 0.06), i * (dur + gap))
+        place(y, transient(rng, 0.006), i * (dur + gap), UI_AIR * 2.0)
     return fade_edges(reverb_tail(y, rng, 0.3, 0.1))
 
 
@@ -787,20 +865,23 @@ def trade_denied(rng):
 
 @sound("Editor.Place.Small", "Editor", "UI", pitch_range=(0.96, 1.04))
 def editor_place_small(rng):
-    P = dict(thump=(190.0, 95.0, 0.12), click_freqs=[1200.0, 2650.0], click_level=0.3, reverb_wet=0.15)
-    th = thump(0.4, *P["thump"])
-    cl = modal(0.4, P["click_freqs"], [0.02, 0.012], [1, 0.5], rng, excite_noise=0.3)
-    return reverb_tail(th + P["click_level"] * cl, rng, 0.4, P["reverb_wet"]), P
+    P = dict(thump=(190.0, 95.0, 0.12), click_freqs=[1200.0, 2650.0], click_level=0.3, air_level=0.3, reverb_wet=0.15)
+    th = thump(0.6, *P["thump"])
+    cl = modal(0.6, P["click_freqs"], [0.02, 0.012], [1, 0.5], rng, excite_noise=0.3)
+    y = th + P["click_level"] * cl
+    place(y, transient(rng, 0.008), 0.0, P["air_level"])
+    return reverb_tail(y, rng, 0.4, P["reverb_wet"], 7000), P
 
 
 @sound("Editor.Place.Large", "Editor", "UI", pitch_range=(0.96, 1.04))
 def editor_place_large(rng):
     P = dict(thump=(95.0, 46.0, 0.35), clank=[160.0, 371.0, 690.0], clank_decay=[0.5, 0.3, 0.15],
-             clank_level=0.4, reverb_wet=0.3)
-    th = thump(1.0, *P["thump"])
-    cl = modal(1.0, P["clank"], P["clank_decay"], [1, 0.6, 0.3], rng, excite_noise=0.4)
+             clank_level=0.4, air_level=0.4, reverb_wet=0.3, dur=1.8)
+    th = thump(P["dur"], *P["thump"])
+    cl = modal(P["dur"], P["clank"], P["clank_decay"], [1, 0.6, 0.3], rng, excite_noise=0.4)
     y = th + P["clank_level"] * cl / (np.max(np.abs(cl)) + 1e-12)
-    return reverb_tail(y, rng, 0.9, P["reverb_wet"], 3500), P
+    place(y, transient(rng, 0.014, (3000.0, 16000.0)), 0.0, P["air_level"])
+    return reverb_tail(y, rng, 0.9, P["reverb_wet"], 6000), P
 
 
 @sound("Editor.Remove", "Editor", "UI")
@@ -826,8 +907,9 @@ def _blips(rng, notes, note_len=0.07, gap=0.015, index=0.5):
     y = np.zeros(int((len(notes) * (note_len + gap) + 0.3) * SR))
     for i, f in enumerate(notes):
         nn = int(note_len * SR)
-        place(y, fm_tone(nn, f, 2.0, index) * env_ad(nn, 0.003, note_len * 0.8, 3), i * (note_len + gap))
-    return reverb_tail(lowpass(y, 6000), rng, 0.3, 0.12)
+        place(y, tail_taper(fm_tone(nn, f, 2.0, index) * env_ad(nn, 0.003, note_len * 0.8, 3)), i * (note_len + gap))
+        place(y, transient(rng), i * (note_len + gap), UI_AIR)
+    return reverb_tail(lowpass(y, 14000), rng, 0.3, 0.12, 8000)
 
 
 @sound("Editor.Undo", "Editor", "UI.soft")
@@ -925,7 +1007,7 @@ def interior_cockpit_exit(rng):
 @sound("Interior.ShipHum", "Interior", "Ambient", loop=True)
 def interior_ship_hum(rng):
     P = dict(f0=60.0, harmonics=6, rolloff=1.3, air_lp=1100.0, air_level=0.5, lfo_hz=0.25, lfo_depth=0.1,
-             seconds=8.0)
+             seconds=8.0, formant_hz=300.0, formant_gain=1.2, drive=1.2)
 
     def render(n):
         t = np.arange(n) / SR
@@ -933,7 +1015,7 @@ def interior_ship_hum(rng):
         hum = sum((k ** -P["rolloff"]) * np.sin(k * ph + k) for k in range(1, P["harmonics"] + 1))
         air = lowpass(pink(rng, n), P["air_lp"])
         air /= np.std(air) + 1e-12
-        y = hum / 2 + P["air_level"] * 0.3 * air
+        y = presence(hum / 2, P["formant_hz"], P["formant_gain"], P["drive"]) / 2 + P["air_level"] * 0.3 * air
         return y * (1 - P["lfo_depth"] * (0.5 + 0.5 * np.sin(2 * np.pi * P["lfo_hz"] * t)))
     return make_loop(render, P["seconds"]), P
 
@@ -956,6 +1038,7 @@ def ui_hover(rng):
     P = dict(freq=2400.0, decay=0.018, dur=0.06)
     n = int(P["dur"] * SR)
     y = np.sin(2 * np.pi * P["freq"] * np.arange(n) / SR) * env_ad(n, 0.002, P["decay"])
+    place(y, transient(rng, 0.003, (7000.0, 16000.0)), 0.0, UI_AIR)
     return fade_edges(y, 0.001, 0.005), P
 
 
@@ -1022,8 +1105,8 @@ def ui_error(rng):
 
 @sound("Ambient.Space", "Ambient", "Ambient", loop=True)
 def ambient_space(rng):
-    P = dict(bed_lp=180.0, bed_level=1.0, pad_freqs=[55.0, 82.41, 110.0, 164.81], pad_level=0.35,
-             pad_lfo_hz=[0.05, 0.07, 0.09, 0.11], air_band=(3000.0, 9000.0), air_level=0.05, seconds=12.0)
+    P = dict(bed_lp=180.0, bed_level=0.75, pad_freqs=[55.0, 82.41, 110.0, 164.81, 220.0, 329.63], pad_level=0.35,
+             pad_lfo_hz=[0.05, 0.07, 0.09, 0.11, 0.13, 0.06], air_band=(3000.0, 9000.0), air_level=0.05, seconds=12.0)
 
     def render(n):
         t = np.arange(n) / SR
@@ -1042,7 +1125,7 @@ def ambient_space(rng):
 @sound("Ambient.StationHum", "Ambient", "Ambient", loop=True, attenuation="ATT_StationHum")
 def ambient_station_hum(rng):
     P = dict(f0=50.0, harmonics=[1, 2, 3, 4, 6], levels=[1.0, 0.6, 0.35, 0.2, 0.1], pulse_hz=0.5, pulse_depth=0.3,
-             air_lp=1500.0, air_level=0.4, seconds=8.0)
+             air_lp=1500.0, air_level=0.4, seconds=8.0, formant_hz=250.0, formant_gain=1.4, drive=1.4)
 
     def render(n):
         t = np.arange(n) / SR
@@ -1051,7 +1134,8 @@ def ambient_station_hum(rng):
         hum *= 1 - P["pulse_depth"] * (0.5 + 0.5 * np.sin(2 * np.pi * P["pulse_hz"] * t))
         air = lowpass(pink(rng, n), P["air_lp"])
         air /= np.std(air) + 1e-12
-        return hum / 2 + P["air_level"] * 0.3 * air
+        hum = presence(hum / 2, P["formant_hz"], P["formant_gain"], P["drive"]) / 2
+        return hum + P["air_level"] * 0.3 * air
     return make_loop(render, P["seconds"]), P
 
 
