@@ -108,8 +108,8 @@ protected:
 	/** Attach SM_ExtProp_<Name> at a local point with +Z along Normal and +X toward Facing. */
 	UStaticMeshComponent* AddProp(FName Name, const FVector& Loc, const FVector& Normal, const FVector& Facing, float Scale = 1.0f);
 
-	void AddLight(UStaticMeshComponent* Prop, const FLinearColor& Colour, EExteriorLightMode Mode, float Intensity, float Phase = 0.0f,
-		UStaticMeshComponent* Spinner = nullptr);
+	// One line on purpose: Tools/check_uproperty.py reads a wrapped "UStaticMeshComponent* X = nullptr);" as a member.
+	void AddLight(UStaticMeshComponent* Prop, const FLinearColor& Colour, EExteriorLightMode Mode, float Intensity, float Phase = 0.0f, UStaticMeshComponent* Spinner = nullptr);
 
 	void DressShip();
 	void DressStation(bool bDockingBay);
