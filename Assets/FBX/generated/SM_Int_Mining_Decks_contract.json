@@ -1,0 +1,673 @@
+{
+ "prefix": "SM_Int_Mining_Decks",
+ "ship": "Mining",
+ "bp": "/Game/Blueprints/Ships/BP_Ship_Mining",
+ "style": "industrial",
+ "family": "ShipDecks (generic full deck, driven by P_ sockets)",
+ "runtime_scale_on_imported_mesh": 0.01,
+ "design_bounds_cm": {
+  "min": [
+   -2390.0,
+   -915.0,
+   -20.0
+  ],
+  "max": [
+   2402.0,
+   915.0,
+   840.0
+  ]
+ },
+ "size_m": [
+  47.9,
+  18.3
+ ],
+ "parts": [
+  "Shell",
+  "Lights",
+  "Collision",
+  "Crew",
+  "Engine",
+  "Refinery",
+  "Bridge"
+ ],
+ "sockets_ue_design_cm": {
+  "L_W_06_000": [
+   537.5,
+   -327.5,
+   230,
+   0.0
+  ],
+  "X_LightSwitch_-_000": [
+   432.5,
+   -120.0,
+   125,
+   -90
+  ],
+  "L_W_06_001": [
+   1162.5,
+   -327.5,
+   230,
+   0.0
+  ],
+  "X_Coffee_-_001": [
+   1420.0,
+   -360.0,
+   0,
+   -180.0
+  ],
+  "X_MonitorWall_Chase_002": [
+   1460.0,
+   -265.2,
+   175,
+   -180.0
+  ],
+  "L_W_06_002": [
+   525.0,
+   327.5,
+   230,
+   0.0
+  ],
+  "L_W_07_003": [
+   1150.0,
+   327.5,
+   230,
+   0.0
+  ],
+  "L_A_05_004": [
+   1150.0,
+   455.0,
+   200,
+   0.0
+  ],
+  "L_W_07_005": [
+   540.0,
+   0,
+   220,
+   0.0
+  ],
+  "L_W_07_006": [
+   1140.0,
+   0,
+   220,
+   0.0
+  ],
+  "X_MonitorWall_Starboard_003": [
+   345.0,
+   90.0,
+   165,
+   -90.0
+  ],
+  "LS_A_09_007": [
+   -1817.3,
+   -221.7,
+   300.0,
+   0.0
+  ],
+  "L_A_09_008": [
+   -2260.7,
+   -221.7,
+   300.0,
+   0.0
+  ],
+  "L_A_09_009": [
+   -2260.7,
+   221.7,
+   300.0,
+   0.0
+  ],
+  "L_A_09_010": [
+   -1817.3,
+   221.7,
+   300.0,
+   0.0
+  ],
+  "L_W_08_011": [
+   -1825.0,
+   300.0,
+   350,
+   0.0
+  ],
+  "L_W_08_012": [
+   -1825.0,
+   -300.0,
+   350,
+   0.0
+  ],
+  "X_Terminal_Engineering_004": [
+   -1620.0,
+   240.0,
+   0,
+   -180.0
+  ],
+  "X_MonitorWall_Stern_005": [
+   -1590.0,
+   280.0,
+   190,
+   -180.0
+  ],
+  "LS_A_08_013": [
+   -540.0,
+   396.0,
+   180,
+   0.0
+  ],
+  "LS_W_14_014": [
+   -1125.0,
+   0,
+   620,
+   0.0
+  ],
+  "L_W_14_015": [
+   -225.0,
+   0,
+   620,
+   0.0
+  ],
+  "L_W_05_016": [
+   65.0,
+   -725.0,
+   569.0,
+   0.0
+  ],
+  "X_Terminal_Cargo_006": [
+   180.0,
+   250.0,
+   0,
+   -180.0
+  ],
+  "L_W_07_017": [
+   1925.0,
+   0,
+   230,
+   0.0
+  ],
+  "L_A_05_018": [
+   1640.0,
+   0,
+   200,
+   0.0
+  ],
+  "X_AlertButton_-_007": [
+   2010.0,
+   -110,
+   0,
+   -180.0
+  ],
+  "X_Terminal_Nav_008": [
+   1610.0,
+   300.0,
+   0,
+   -0.0
+  ],
+  "X_WallPanel_Comms_009": [
+   1550.0,
+   -365.0,
+   0,
+   -0.0
+  ],
+  "Seat": [
+   2210.0,
+   -0.0,
+   100.0,
+   0.0
+  ],
+  "Entry": [
+   1880.0,
+   -0.0,
+   100.0,
+   180.0
+  ]
+ },
+ "views": [
+  [
+   "engine",
+   [
+    -1755.0,
+    -350.0,
+    165
+   ],
+   [
+    -2039.0,
+    100.0,
+    270.0
+   ],
+   14
+  ],
+  [
+   "refinery",
+   [
+    10.0,
+    150,
+    165
+   ],
+   [
+    -1260.0,
+    -396.0,
+    250
+   ],
+   14
+  ],
+  [
+   "refinery_booth",
+   [
+    70.0,
+    785.0,
+    534.0
+   ],
+   [
+    -1260.0,
+    -396.0,
+    100
+   ],
+   16
+  ],
+  [
+   "bridge_spawn",
+   [
+    1880.0,
+    0.0,
+    165
+   ],
+   [
+    1475.0,
+    0,
+    130
+   ],
+   16
+  ],
+  [
+   "bridge_fwd",
+   [
+    1595.0,
+    -285.0,
+    210
+   ],
+   [
+    2375.0,
+    95.0,
+    200
+   ],
+   16
+  ],
+  [
+   "crew_spine",
+   [
+    1355.0,
+    0,
+    165
+   ],
+   [
+    225.0,
+    0,
+    150
+   ],
+   16
+  ]
+ ],
+ "plan_z": 240,
+ "light_count": 19,
+ "fixture_count": 10,
+ "tris": {
+  "Shell": 1688,
+  "Lights": 1852,
+  "Collision": 1564,
+  "Crew": 7916,
+  "Engine": 7644,
+  "Refinery": 6136,
+  "Bridge": 1988
+ },
+ "tris_total": 28788,
+ "slots": {
+  "Shell": [
+   "M_Int_Deck",
+   "M_Int_Shell",
+   "M_Interior_Eng",
+   "M_Int_Viewport",
+   "M_Int_Steel",
+   "M_Int_Paint",
+   "M_Int_Hatch"
+  ],
+  "Lights": [
+   "M_Int_LightsAmber",
+   "M_Int_LightsGreen",
+   "M_Int_Lights",
+   "M_Int_LightsBlue",
+   "M_Int_LightsRed",
+   "M_Int_Console"
+  ],
+  "Collision": [
+   "M_Int_Collision"
+  ],
+  "Crew": [
+   "M_Int_Steel",
+   "M_Int_Hatch",
+   "M_Int_Stations",
+   "M_Prop_Wood",
+   "M_Prop_Cardboard",
+   "M_Prop_White",
+   "M_Prop_RedPaint",
+   "M_Prop_Yellow",
+   "M_Prop_Paper",
+   "M_Prop_Blue",
+   "M_Prop_Steel",
+   "M_Prop_Olive",
+   "M_Prop_BlackPlastic",
+   "M_Prop_Green",
+   "M_Int_Galley",
+   "M_Int_Mess",
+   "M_Int_Bunks",
+   "M_Prop_Brushed",
+   "M_Int_Paint",
+   "M_Int_Viewport",
+   "M_Int_Console",
+   "M_Prop_Rubber",
+   "M_Prop_Orange",
+   "M_Int_Shell",
+   "M_Int_Grate"
+  ],
+  "Engine": [
+   "M_Int_Grate",
+   "M_Int_Steel",
+   "M_Int_Hatch",
+   "M_Int_Stations",
+   "M_Int_Paint",
+   "M_Int_Vents",
+   "M_Int_Bunks",
+   "M_Prop_Steel",
+   "M_Prop_BlackPlastic",
+   "M_Prop_RedPaint",
+   "M_Prop_Yellow",
+   "M_Prop_White",
+   "M_Int_Viewport",
+   "M_Prop_Orange",
+   "M_Prop_Green",
+   "M_Prop_Blue",
+   "M_Prop_Wood"
+  ],
+  "Refinery": [
+   "M_Int_Steel",
+   "M_Int_Hatch",
+   "M_Int_Paint",
+   "M_Int_Stations",
+   "M_Int_Vents",
+   "M_Int_Grate",
+   "M_Int_Shell",
+   "M_Int_Viewport",
+   "M_Int_Bunks",
+   "M_Prop_BlackPlastic",
+   "M_Prop_Orange",
+   "M_Prop_White",
+   "M_Prop_Blue",
+   "M_Prop_Steel",
+   "M_Prop_Green"
+  ],
+  "Bridge": [
+   "M_Int_Stations",
+   "M_Int_Hatch",
+   "M_Int_Steel",
+   "M_Int_Bunks",
+   "M_Prop_White",
+   "M_Prop_BlackPlastic",
+   "M_Prop_Screen",
+   "M_Prop_RedPaint"
+  ]
+ },
+ "walk": {
+  "entry_free": true,
+  "seat_reachable": true,
+  "rooms": {
+   "Engine": 0.87,
+   "Refinery": 0.87,
+   "Bridge": 1.0,
+   "Crew:bunks": 1.0,
+   "Crew:mess": 1.0,
+   "Crew:ready": 1.0,
+   "Crew:workshop": 0.67,
+   "Crew:spine": 1.0
+  },
+  "unreached": [],
+  "route": [
+   [
+    -155.0,
+    -40.0,
+    ""
+   ],
+   [
+    -1835.0,
+    100.0,
+    ""
+   ],
+   [
+    -1845.0,
+    140.0,
+    ""
+   ],
+   [
+    -2185.0,
+    410.0,
+    "Engine"
+   ],
+   [
+    -2015.0,
+    280.0,
+    ""
+   ],
+   [
+    -1495.0,
+    -10.0,
+    "Refinery"
+   ],
+   [
+    335.0,
+    -40.0,
+    ""
+   ],
+   [
+    1565.0,
+    -0.0,
+    "Bridge"
+   ],
+   [
+    515.0,
+    -40.0,
+    ""
+   ],
+   [
+    515.0,
+    -130.0,
+    ""
+   ],
+   [
+    415.0,
+    -350.0,
+    "Crew:bunks"
+   ],
+   [
+    585.0,
+    -50.0,
+    ""
+   ],
+   [
+    635.0,
+    -40.0,
+    ""
+   ],
+   [
+    1145.0,
+    -40.0,
+    ""
+   ],
+   [
+    1145.0,
+    -200.0,
+    "Crew:mess"
+   ],
+   [
+    1135.0,
+    -80.0,
+    ""
+   ],
+   [
+    1095.0,
+    -40.0,
+    ""
+   ],
+   [
+    505.0,
+    60.0,
+    ""
+   ],
+   [
+    505.0,
+    130.0,
+    ""
+   ],
+   [
+    415.0,
+    290.0,
+    "Crew:ready"
+   ],
+   [
+    575.0,
+    50.0,
+    ""
+   ],
+   [
+    625.0,
+    40.0,
+    ""
+   ],
+   [
+    1125.0,
+    40.0,
+    ""
+   ],
+   [
+    1125.0,
+    130.0,
+    ""
+   ],
+   [
+    1045.0,
+    220.0,
+    "Crew:workshop"
+   ],
+   [
+    1125.0,
+    130.0,
+    ""
+   ],
+   [
+    1125.0,
+    80.0,
+    ""
+   ],
+   [
+    1085.0,
+    40.0,
+    ""
+   ],
+   [
+    535.0,
+    -0.0,
+    "Crew:spine"
+   ],
+   [
+    1925.0,
+    60.0,
+    ""
+   ],
+   [
+    1955.0,
+    90.0,
+    ""
+   ],
+   [
+    2205.0,
+    80.0,
+    ""
+   ],
+   [
+    2205.0,
+    -0.0,
+    "helm"
+   ]
+  ]
+ },
+ "zones": [
+  [
+   "Engine",
+   "machinery",
+   -2375.0,
+   -1575.0,
+   -600.0,
+   600.0,
+   600
+  ],
+  [
+   "Refinery",
+   "bay",
+   -1575.0,
+   225.0,
+   -900.0,
+   900.0,
+   820
+  ],
+  [
+   "Bridge",
+   "command",
+   1475.0,
+   2375.0,
+   -475.0,
+   475.0,
+   300
+  ],
+  [
+   "Crew:bunks",
+   "room",
+   225.0,
+   850.0,
+   105.0,
+   550.0,
+   270
+  ],
+  [
+   "Crew:mess",
+   "room",
+   850.0,
+   1475.0,
+   105.0,
+   550.0,
+   270
+  ],
+  [
+   "Crew:ready",
+   "room",
+   225.0,
+   825.0,
+   -550.0,
+   -105.0,
+   270
+  ],
+  [
+   "Crew:workshop",
+   "room",
+   825.0,
+   1475.0,
+   -550.0,
+   -105.0,
+   270
+  ],
+  [
+   "Crew:spine",
+   "corridor",
+   225.0,
+   1475.0,
+   -105.0,
+   105.0,
+   250
+  ]
+ ],
+ "blender_to_ue_axes": "UE(x, y, z) = Blender(x, -y, z) * 100 * 0.01",
+ "problems": []
+}

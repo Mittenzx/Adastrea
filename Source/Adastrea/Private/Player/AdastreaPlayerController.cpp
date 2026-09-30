@@ -2452,7 +2452,8 @@ void AAdastreaPlayerController::EnterShipInterior(ASpaceship* Ship)
 		ShipRoot->GetChildrenComponents(true, ShipChildren);
 		for (USceneComponent* C : ShipChildren)
 		{
-			if (!C || C->GetOwner() == Interior)
+			// ...and its fixtures (monitors, consoles), which the interior owns.
+			if (!C || C->GetOwner() == Interior || (Interior && C->GetOwner() && C->GetOwner()->GetOwner() == Interior))
 			{
 				continue;
 			}
@@ -2538,7 +2539,8 @@ void AAdastreaPlayerController::ExitShipInterior(ASpaceship* Ship)
 		ShipRoot->GetChildrenComponents(true, ShipChildren);
 		for (USceneComponent* C : ShipChildren)
 		{
-			if (!C || C->GetOwner() == Interior)
+			// ...and its fixtures (monitors, consoles), which the interior owns.
+			if (!C || C->GetOwner() == Interior || (Interior && C->GetOwner() && C->GetOwner()->GetOwner() == Interior))
 			{
 				continue;
 			}
@@ -2557,6 +2559,7 @@ void AAdastreaPlayerController::ExitShipInterior(ASpaceship* Ship)
 	if (Interior)
 	{
 		Interior->SetActorHiddenInGame(true);
+		Interior->SetFixturesActive(false); // hide fixtures, stop feeds/klaxon
 	}
 
 	InteriorSourceShip = nullptr;

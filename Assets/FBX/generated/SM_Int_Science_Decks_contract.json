@@ -1,0 +1,713 @@
+{
+ "prefix": "SM_Int_Science_Decks",
+ "ship": "Science",
+ "bp": "/Game/Blueprints/Ships/BP_Ship_Science",
+ "style": "clean",
+ "family": "ShipDecks (generic full deck, driven by P_ sockets)",
+ "runtime_scale_on_imported_mesh": 0.01,
+ "design_bounds_cm": {
+  "min": [
+   -2000.0,
+   -577.0,
+   -20.0
+  ],
+  "max": [
+   2012.0,
+   577.0,
+   570.0
+  ]
+ },
+ "size_m": [
+  40.1,
+  11.5
+ ],
+ "parts": [
+  "Shell",
+  "Lights",
+  "Collision",
+  "Labs",
+  "Engine",
+  "Astrometrics",
+  "Bridge"
+ ],
+ "sockets_ue_design_cm": {
+  "L_W_05_000": [
+   -890.0,
+   -412.5,
+   230,
+   0.0
+  ],
+  "L_W_06_001": [
+   -890.0,
+   -205.0,
+   230,
+   0.0
+  ],
+  "L_W_07_002": [
+   -165.0,
+   -327.5,
+   230,
+   0.0
+  ],
+  "X_Coffee_-_000": [
+   130.0,
+   -360.0,
+   0,
+   -180.0
+  ],
+  "X_MonitorWall_Chase_001": [
+   170.0,
+   -265.2,
+   175,
+   -180.0
+  ],
+  "L_W_07_003": [
+   -902.5,
+   327.5,
+   230,
+   0.0
+  ],
+  "L_C_05_004": [
+   -902.5,
+   320.0,
+   210,
+   0.0
+  ],
+  "L_W_07_005": [
+   -177.5,
+   327.5,
+   230,
+   0.0
+  ],
+  "L_C_05_006": [
+   -177.5,
+   320.0,
+   210,
+   0.0
+  ],
+  "L_W_07_007": [
+   -900.0,
+   0,
+   220,
+   0.0
+  ],
+  "L_W_07_008": [
+   -100.0,
+   0,
+   220,
+   0.0
+  ],
+  "X_MonitorWall_Starboard_002": [
+   -1145.0,
+   90.0,
+   165,
+   -90.0
+  ],
+  "LS_W_07_009": [
+   -1625.0,
+   0,
+   510,
+   0.0
+  ],
+  "X_Terminal_Engineering_003": [
+   -1310.0,
+   220.0,
+   0,
+   -180.0
+  ],
+  "X_MonitorWall_Stern_004": [
+   -1280.0,
+   260.0,
+   190,
+   -180.0
+  ],
+  "L_C_08_010": [
+   635.0,
+   -0.0,
+   340,
+   0.0
+  ],
+  "L_W_09_011": [
+   500.0,
+   0,
+   340,
+   0.0
+  ],
+  "L_W_09_012": [
+   770.0,
+   0,
+   340,
+   0.0
+  ],
+  "X_Terminal_Nav_005": [
+   1040.0,
+   -330.0,
+   0,
+   -180.0
+  ],
+  "X_MonitorHang_Dorsal_006": [
+   385.0,
+   -0.0,
+   400,
+   -0.0
+  ],
+  "L_W_07_013": [
+   1535.0,
+   0,
+   230,
+   0.0
+  ],
+  "L_R_05_014": [
+   1250.0,
+   0,
+   200,
+   0.0
+  ],
+  "X_AlertButton_-_007": [
+   1620.0,
+   -110,
+   0,
+   -180.0
+  ],
+  "X_Terminal_Nav_008": [
+   1220.0,
+   300.0,
+   0,
+   -0.0
+  ],
+  "X_WallPanel_Comms_009": [
+   1160.0,
+   -340.0,
+   0,
+   -0.0
+  ],
+  "Seat": [
+   1820.0,
+   -0.0,
+   100.0,
+   0.0
+  ],
+  "Entry": [
+   1490.0,
+   -0.0,
+   100.0,
+   180.0
+  ]
+ },
+ "views": [
+  [
+   "astrometrics",
+   [
+    920.0,
+    -335.0,
+    175
+   ],
+   [
+    635.0,
+    0.0,
+    200
+   ],
+   14
+  ],
+  [
+   "bridge_spawn",
+   [
+    1490.0,
+    0.0,
+    165
+   ],
+   [
+    1085.0,
+    0,
+    130
+   ],
+   16
+  ],
+  [
+   "bridge_fwd",
+   [
+    1205.0,
+    -270.0,
+    210
+   ],
+   [
+    1985.0,
+    90.0,
+    200
+   ],
+   16
+  ],
+  [
+   "labs_spine",
+   [
+    65.0,
+    0,
+    165
+   ],
+   [
+    -1265.0,
+    0,
+    150
+   ],
+   16
+  ]
+ ],
+ "plan_z": 240,
+ "light_count": 15,
+ "fixture_count": 10,
+ "tris": {
+  "Shell": 1916,
+  "Lights": 5056,
+  "Collision": 1156,
+  "Labs": 5560,
+  "Engine": 3508,
+  "Astrometrics": 2412,
+  "Bridge": 1988
+ },
+ "tris_total": 21596,
+ "slots": {
+  "Shell": [
+   "M_Int_Deck",
+   "M_Int_Shell",
+   "M_Interior_Eng",
+   "M_Int_Clean",
+   "M_Int_Viewport",
+   "M_Int_Steel",
+   "M_Int_AccentBlue",
+   "M_Int_Hatch"
+  ],
+  "Lights": [
+   "M_Int_LightsRed",
+   "M_Int_LightsGreen",
+   "M_Int_LightsAmber",
+   "M_Int_LightsCyan",
+   "M_Int_Lights",
+   "M_Int_LightsWarm",
+   "M_Int_LightsBlue",
+   "M_Int_Console"
+  ],
+  "Collision": [
+   "M_Int_Collision"
+  ],
+  "Labs": [
+   "M_Int_Steel",
+   "M_Int_Clean",
+   "M_Int_Bunks",
+   "M_Int_Galley",
+   "M_Int_Hatch",
+   "M_Int_AccentBlue",
+   "M_Prop_BlackPlastic",
+   "M_Prop_Steel",
+   "M_Prop_Screen",
+   "M_Prop_RedPaint",
+   "M_Prop_Blue",
+   "M_Prop_Olive",
+   "M_Prop_Cardboard",
+   "M_Prop_Ceramic",
+   "M_Prop_Green",
+   "M_Prop_White",
+   "M_Prop_Paper",
+   "M_Prop_Brushed",
+   "M_Prop_Yellow",
+   "M_Int_Viewport",
+   "M_Int_Vents"
+  ],
+  "Engine": [
+   "M_Int_Grate",
+   "M_Int_Steel",
+   "M_Int_Hatch",
+   "M_Int_Vents",
+   "M_Int_Paint",
+   "M_Int_Stations",
+   "M_Int_Bunks",
+   "M_Prop_Steel",
+   "M_Prop_BlackPlastic",
+   "M_Prop_RedPaint",
+   "M_Prop_Yellow",
+   "M_Prop_White",
+   "M_Int_Viewport",
+   "M_Prop_Orange"
+  ],
+  "Astrometrics": [
+   "M_Int_Clean",
+   "M_Int_Hatch",
+   "M_Int_Steel",
+   "M_Int_Bunks",
+   "M_Int_AccentBlue",
+   "M_Prop_BlackPlastic",
+   "M_Prop_Screen"
+  ],
+  "Bridge": [
+   "M_Int_Clean",
+   "M_Int_Hatch",
+   "M_Int_Steel",
+   "M_Int_Bunks",
+   "M_Prop_White",
+   "M_Prop_BlackPlastic",
+   "M_Prop_Screen",
+   "M_Prop_RedPaint"
+  ]
+ },
+ "walk": {
+  "entry_free": true,
+  "seat_reachable": true,
+  "rooms": {
+   "Engine": 0.66,
+   "Astrometrics": 0.94,
+   "Bridge": 1.0,
+   "Labs:cabins": 0.77,
+   "Labs:mess": 1.0,
+   "Labs:lab": 1.0,
+   "Labs:spine": 1.0
+  },
+  "unreached": [],
+  "route": [
+   [
+    825.0,
+    -0.0,
+    ""
+   ],
+   [
+    795.0,
+    -100.0,
+    ""
+   ],
+   [
+    715.0,
+    -170.0,
+    ""
+   ],
+   [
+    615.0,
+    -190.0,
+    ""
+   ],
+   [
+    465.0,
+    -120.0,
+    ""
+   ],
+   [
+    445.0,
+    -60.0,
+    ""
+   ],
+   [
+    385.0,
+    -0.0,
+    ""
+   ],
+   [
+    -1745.0,
+    50.0,
+    ""
+   ],
+   [
+    -1745.0,
+    110.0,
+    "Engine"
+   ],
+   [
+    -1235.0,
+    40.0,
+    ""
+   ],
+   [
+    445.0,
+    -0.0,
+    ""
+   ],
+   [
+    475.0,
+    -100.0,
+    ""
+   ],
+   [
+    555.0,
+    -170.0,
+    ""
+   ],
+   [
+    755.0,
+    -210.0,
+    ""
+   ],
+   [
+    835.0,
+    -380.0,
+    "Astrometrics"
+   ],
+   [
+    1045.0,
+    -70.0,
+    ""
+   ],
+   [
+    1175.0,
+    -0.0,
+    "Bridge"
+   ],
+   [
+    825.0,
+    -0.0,
+    ""
+   ],
+   [
+    795.0,
+    -100.0,
+    ""
+   ],
+   [
+    715.0,
+    -170.0,
+    ""
+   ],
+   [
+    615.0,
+    -190.0,
+    ""
+   ],
+   [
+    465.0,
+    -120.0,
+    ""
+   ],
+   [
+    445.0,
+    -60.0,
+    ""
+   ],
+   [
+    385.0,
+    -0.0,
+    ""
+   ],
+   [
+    -905.0,
+    -40.0,
+    ""
+   ],
+   [
+    -905.0,
+    -180.0,
+    "Labs:cabins"
+   ],
+   [
+    -845.0,
+    -50.0,
+    ""
+   ],
+   [
+    -795.0,
+    -40.0,
+    ""
+   ],
+   [
+    -185.0,
+    -40.0,
+    ""
+   ],
+   [
+    -185.0,
+    -130.0,
+    ""
+   ],
+   [
+    -225.0,
+    -170.0,
+    ""
+   ],
+   [
+    -365.0,
+    -260.0,
+    "Labs:mess"
+   ],
+   [
+    -185.0,
+    -140.0,
+    ""
+   ],
+   [
+    -185.0,
+    -80.0,
+    ""
+   ],
+   [
+    -225.0,
+    -40.0,
+    ""
+   ],
+   [
+    -915.0,
+    50.0,
+    ""
+   ],
+   [
+    -915.0,
+    170.0,
+    "Labs:lab"
+   ],
+   [
+    -855.0,
+    50.0,
+    ""
+   ],
+   [
+    -805.0,
+    40.0,
+    ""
+   ],
+   [
+    -185.0,
+    40.0,
+    ""
+   ],
+   [
+    -185.0,
+    170.0,
+    "Labs:lab"
+   ],
+   [
+    -215.0,
+    60.0,
+    ""
+   ],
+   [
+    -255.0,
+    40.0,
+    ""
+   ],
+   [
+    -895.0,
+    -0.0,
+    "Labs:spine"
+   ],
+   [
+    445.0,
+    -0.0,
+    ""
+   ],
+   [
+    475.0,
+    -100.0,
+    ""
+   ],
+   [
+    555.0,
+    -170.0,
+    ""
+   ],
+   [
+    655.0,
+    -190.0,
+    ""
+   ],
+   [
+    805.0,
+    -120.0,
+    ""
+   ],
+   [
+    825.0,
+    -60.0,
+    ""
+   ],
+   [
+    885.0,
+    -0.0,
+    ""
+   ],
+   [
+    1605.0,
+    90.0,
+    ""
+   ],
+   [
+    1815.0,
+    80.0,
+    ""
+   ],
+   [
+    1815.0,
+    -0.0,
+    "helm"
+   ]
+  ]
+ },
+ "zones": [
+  [
+   "Engine",
+   "machinery",
+   -1985.0,
+   -1265.0,
+   -550.0,
+   550.0,
+   550
+  ],
+  [
+   "Astrometrics",
+   "bay",
+   185.0,
+   1085.0,
+   -550.0,
+   550.0,
+   400
+  ],
+  [
+   "Bridge",
+   "command",
+   1085.0,
+   1985.0,
+   -450.0,
+   450.0,
+   300
+  ],
+  [
+   "Labs:cabins",
+   "room",
+   -1265.0,
+   -515.0,
+   105.0,
+   550.0,
+   270
+  ],
+  [
+   "Labs:mess",
+   "room",
+   -515.0,
+   185.0,
+   105.0,
+   550.0,
+   270
+  ],
+  [
+   "Labs:lab",
+   "room",
+   -1265.0,
+   -540.0,
+   -550.0,
+   -105.0,
+   270
+  ],
+  [
+   "Labs:lab",
+   "room",
+   -540.0,
+   185.0,
+   -550.0,
+   -105.0,
+   270
+  ],
+  [
+   "Labs:spine",
+   "corridor",
+   -1265.0,
+   185.0,
+   -105.0,
+   105.0,
+   250
+  ]
+ ],
+ "blender_to_ue_axes": "UE(x, y, z) = Blender(x, -y, z) * 100 * 0.01",
+ "problems": []
+}

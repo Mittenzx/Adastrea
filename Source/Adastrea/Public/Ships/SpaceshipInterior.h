@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Ships/InteriorFixture.h"
 #include "SpaceshipInterior.generated.h"
 
 class UBoxComponent;
@@ -123,6 +124,43 @@ public:
                 UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior")
                 float WalkStepHeight = 0.0f;
 
+                // --- Fixtures (monitors, consoles, alert button, ...) ------------------
+
+                /** The ship this interior belongs to (its spawner/owner). */
+                UFUNCTION(BlueprintPure, Category="Interior|Fixtures")
+                class ASpaceship* GetOwningShip() const;
+
+                /** Render target showing an exterior camera on the owning ship. Created on
+                 * first use; captured only while the player is aboard and near a monitor
+                 * showing it. */
+                UFUNCTION(BlueprintCallable, Category="Interior|Fixtures")
+                class UTextureRenderTarget2D* AcquireFeed(EExteriorFeed Feed);
+
+                /** Show and run (or hide and stop) every fixture: the player boarding/leaving. */
+                UFUNCTION(BlueprintCallable, Category="Interior|Fixtures")
+                void SetFixturesActive(bool bActive);
+
+                /** Red alert: socket lights pulse red and the klaxon sounds while aboard. */
+                UFUNCTION(BlueprintCallable, Category="Interior|Fixtures")
+                void SetRedAlert(bool bOn);
+
+                UFUNCTION(BlueprintPure, Category="Interior|Fixtures")
+                bool IsRedAlert() const { return bRedAlert; }
+
+                /** Normal -> dimmed -> emergency -> normal; returns the new mode (0/1/2). */
+                UFUNCTION(BlueprintCallable, Category="Interior|Fixtures")
+                int32 CycleLighting();
+
+                UFUNCTION(BlueprintPure, Category="Interior|Fixtures")
+                int32 GetLightingMode() const { return LightingMode; }
+
+                /** Exterior feed resolution (16:9) and capture rate while aboard. */
+                UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior|Fixtures")
+                FIntPoint FeedResolution = FIntPoint(640, 360);
+
+                UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interior|Fixtures", meta=(ClampMin="1", ClampMax="30"))
+                float FeedCapturesPerSecond = 10.0f;
+
                 protected:
                         /** Full-deck kits: read Entry/Seat sockets from the shell mesh and place the
                          * avatar spawn, exit trigger and seat prompt there. */
@@ -145,6 +183,42 @@ public:
                         UPROPERTY(Transient)
                         TArray<TObjectPtr<class UPointLightComponent>> SocketLights;
 
+                        /** Authored colour/intensity of each socket light (lighting modes and red
+                         * alert are applied on top of these). */
+                        TArray<FLinearColor> SocketLightColours;
+                        TArray<float> SocketLightIntensities;
+
+                        /** Full-deck kits: one fixture per X_<Mesh>_<Arg>_<N> socket on the shell. */
+                        void SpawnFixtures(float Scale);
+
+                        /** Timer: capture the feeds that a nearby monitor is showing. */
+                        void CaptureFeeds();
+
+                        /** Timer: red-alert light pulse + klaxon. */
+                        void TickAlert();
+
+                        /** Re-apply lighting mode / alert to the socket lights. */
+                        void ApplyLighting(float AlertPulse);
+
+                        UPROPERTY(Transient)
+                        TArray<TObjectPtr<AInteriorFixture>> Fixtures;
+
+                        /** Indexed by EExteriorFeed; null until a monitor asks for that feed. */
+                        UPROPERTY(Transient)
+                        TArray<TObjectPtr<class USceneCaptureComponent2D>> FeedCaptures;
+
+                        UPROPERTY(Transient)
+                        TArray<TObjectPtr<class UTextureRenderTarget2D>> FeedTargets;
+
+                        bool bFixturesActive = false;
+                        bool bRedAlert = false;
+                        int32 LightingMode = 0;
+                        int32 NextFeedToCapture = 0;
+                        float AlertClock = 0.0f;
+                        float KlaxonClock = 0.0f;
+                        FTimerHandle FeedTimer;
+                        FTimerHandle AlertTimer;
+
                 protected:
                         /** Re-point the exported mesh's world-grid material slots to the authored
                          * M_Int_* kit materials so the interior reads as a designed room. */
@@ -160,6 +234,9 @@ public:
 
 protected:
     virtual void OnConstruction(const FTransform& Transform) override;
+
+    /** Fixtures are attached actors and feed captures live on the ship: clean both up. */
+    virtual void Destroyed() override;
 
     /** Called when the avatar overlaps the cockpit/seat trigger -> return to ship. */
         UFUNCTION()

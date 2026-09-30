@@ -33,6 +33,7 @@
 #include "Audio/ShipEngineAudioComponent.h"
 #include "Audio/AudioEventLibrary.h"
 #include "TimerManager.h"
+#include "Ships/ExteriorDressingComponent.h"
 
 namespace ShipEventAudio
 {
@@ -185,6 +186,16 @@ ASpaceship::ASpaceship()
 void ASpaceship::BeginPlay()
 {
     Super::BeginPlay();
+
+    // Nav lights, strobes, beacons and a sensor fit traced onto the hull, unless the
+    // Blueprint already places its own dressing component.
+    if (UExteriorDressingComponent::IsAutoDressingEnabled() && !FindComponentByClass<UExteriorDressingComponent>())
+    {
+        UExteriorDressingComponent* Dressing = NewObject<UExteriorDressingComponent>(this, TEXT("ExteriorDressing"));
+        Dressing->Preset = EExteriorDressingPreset::Ship;
+        Dressing->SetupAttachment(GetRootComponent());
+        Dressing->RegisterComponent();
+    }
 
     UE_LOG(LogAdastreaShips, Warning, TEXT("*** ASpaceship::BeginPlay on %s ***"), *GetName());
 

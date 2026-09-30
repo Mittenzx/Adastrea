@@ -16,12 +16,36 @@
 #include "Engine/World.h"
 #include "Materials/MaterialInterface.h"
 #include "Materials/Material.h"
+#include "Components/SceneCaptureComponent2D.h"
+#include "Engine/TextureRenderTarget2D.h"
+#include "Audio/AudioEventLibrary.h"
+#include "TimerManager.h"
+#include "Kismet/GameplayStatics.h"
 #include "AdastreaLog.h"
 
 namespace
 {
     // Defined next to ASpaceshipInterior::ApplyInteriorMaterials().
     void ApplyKitMaterialsBySlot(UStaticMeshComponent* Comp);
+
+    /** Full-deck shells from Tools/build_ship_decks.py list their sibling parts as
+     * P_<Part> sockets (Tools/import_ship_decks.py adds them), so any ship's deck
+     * mounts without a per-ship family or a hard-coded part list. */
+    bool HasDeckPartSockets(const UStaticMesh* Mesh)
+    {
+        if (!Mesh)
+        {
+            return false;
+        }
+        for (const UStaticMeshSocket* Socket : Mesh->Sockets)
+        {
+            if (Socket && Socket->SocketName.ToString().StartsWith(TEXT("P_")))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 ASpaceshipInterior::ASpaceshipInterior()
@@ -192,9 +216,22 @@ void ASpaceshipInterior::OnExitTriggerOverlap(UPrimitiveComponent* OverlappedCom
         if (FVector::DistSquared(Avatar->GetActorLocation(), LastEntryWorldLocation) <
             FMath::Square(MinDistanceFromEntryToExit))
         {
-            UE_LOG(LogAdastrea, Log,
+            UE_LOG(LogAdastrea, Verbose,
                 TEXT("InteriorExitTrigger: ignoring overlap, avatar hasn't left the entry area yet (%.0f < %.0f)"),
                 FVector::Dist(Avatar->GetActorLocation(), LastEntryWorldLocation), MinDistanceFromEntryToExit);
+            // An avatar that stepped into the trigger this close to its spawn and then
+            // walks on to the seat stays inside it and gets no second BeginOverlap, so
+            // keep looking while it is still overlapping (each recheck re-runs this test).
+            TWeakObjectPtr<ASpaceshipAvatar> WeakAvatar(Avatar);
+            FTimerHandle Recheck;
+            GetWorldTimerManager().SetTimer(Recheck, FTimerDelegate::CreateWeakLambda(this, [this, WeakAvatar]()
+            {
+                ASpaceshipAvatar* A = WeakAvatar.Get();
+                if (A && ExitTrigger && ExitTrigger->IsOverlappingActor(A))
+                {
+                    OnExitTriggerOverlap(ExitTrigger, A, nullptr, 0, false, FHitResult());
+                }
+            }), 0.25f, false);
             return;
         }
 
@@ -277,7 +314,10 @@ void ASpaceshipInterior::ConfigureInterior(UStaticMesh* ShellMesh, EShipInterior
     // comfortable room (~650 units ~ a few metres across for a 1.76 m avatar).
     // Full-deck kits are NOT normalized: they are authored at real size (100x in the
     // FBX like every SM_Int_* kit), so a fixed 0.01 gives 1 design cm = 1 uu.
-    const bool bFullDeck = (Family == EShipInteriorFamily::BattleshipDecks);
+    // Socket-driven decks (every ship but the Battleship) are recognised by their
+    // P_ part sockets, whatever family the ship is set to.
+    const bool bSocketDeck = HasDeckPartSockets(Mesh);
+    const bool bFullDeck = (Family == EShipInteriorFamily::BattleshipDecks) || bSocketDeck;
     ConfiguredFamily = Family;
     WalkStepHeight = bFullDeck ? 45.0f : 0.0f;
     WalkCollision = nullptr;
@@ -289,6 +329,16 @@ void ASpaceshipInterior::ConfigureInterior(UStaticMesh* ShellMesh, EShipInterior
         }
     }
     SocketLights.Empty();
+    SocketLightColours.Empty();
+    SocketLightIntensities.Empty();
+    for (TObjectPtr<AInteriorFixture> F : Fixtures)
+    {
+        if (F)
+        {
+            F->Destroy();
+        }
+    }
+    Fixtures.Empty();
 
     const float TargetRadius = 650.0f;
         const FBoxSphereBounds RawBounds = Mesh->GetBounds();
@@ -367,6 +417,14 @@ void ASpaceshipInterior::ConfigureInterior(UStaticMesh* ShellMesh, EShipInterior
                 break;
             }
 
+            if (bSocketDeck)
+            {
+                // Siblings share the shell's package path minus "_Shell".
+                Prefix = Mesh->GetOutermost()->GetName();
+                Prefix.RemoveFromEnd(TEXT("_Shell"));
+                FamilyString = TEXT("SocketDeck");
+            }
+
             // Legacy fallback: content that hasn't been migrated to an explicit
             // EShipInteriorFamily yet is inferred from the shell mesh's own name.
             if (Prefix.IsEmpty())
@@ -398,6 +456,7 @@ void ASpaceshipInterior::ConfigureInterior(UStaticMesh* ShellMesh, EShipInterior
         if (bFullDeck)
         {
             ApplyDeckSockets(Scale);
+            SpawnFixtures(Scale);
         }
 
         // Hidden until the player enters unless asked to show now.
@@ -422,6 +481,7 @@ void ASpaceshipInterior::RevealInterior()
     SetActorHiddenInGame(false);
     SetWalkCollisionEnabled(true);
     SetupInteriorLighting();
+    SetFixturesActive(true);
 }
 
 void ASpaceshipInterior::SetWalkCollisionEnabled(bool bEnabled)
@@ -495,6 +555,8 @@ void ASpaceshipInterior::SpawnSocketLights()
         case TEXT('R'): Colour = FLinearColor(1.0f, 0.1f, 0.05f);  Base = 1800.0f; break;
         case TEXT('G'): Colour = FLinearColor(0.35f, 1.0f, 0.45f); Base = 1500.0f; break;
         case TEXT('B'): Colour = FLinearColor(0.4f, 0.6f, 1.0f);   Base = 3000.0f; break;
+        case TEXT('C'): Colour = FLinearColor(0.3f, 0.9f, 1.0f);   Base = 2500.0f; break;  // clinical cyan
+        case TEXT('P'): Colour = FLinearColor(1.0f, 0.78f, 0.55f); Base = 4500.0f; break;  // warm (luxury)
         default: break;
         }
         const float RadiusM = FMath::Max(1.0f, FCString::Atof(*Bits[2]));
@@ -509,6 +571,8 @@ void ASpaceshipInterior::SpawnSocketLights()
         L->SetCastShadows(Bits[0] == TEXT("LS"));
         L->RegisterComponent();
         SocketLights.Add(L);
+        SocketLightColours.Add(Colour);
+        SocketLightIntensities.Add(L->Intensity);
     }
     UE_LOG(LogAdastrea, Log, TEXT("Interior %s: %d socket lights spawned."), *GetName(), SocketLights.Num());
 }
@@ -524,10 +588,11 @@ void ASpaceshipInterior::SetupInteriorLighting()
     //   2. A couple of Point/Rect fixture lights with tight attenuation where a
     //      real lamp/screen is, Cast Shadows = ON on these for depth.
     // All attach to the interior so they move/scale with the ship.
-    if (ConfiguredFamily == EShipInteriorFamily::BattleshipDecks)
+    if (ConfiguredFamily == EShipInteriorFamily::BattleshipDecks || WalkCollision)
     {
-        // Lit from its own fixtures; the room-sized fill below would be one hot spot
-        // in the middle of a 120 m deck.
+        // Full decks (the only kits with a walk-collision part) are lit from their
+        // own fixtures; the room-sized
+        // fill below would be one hot spot in the middle of a 20-120 m deck.
         SpawnSocketLights();
         return;
     }
@@ -638,17 +703,32 @@ void ASpaceshipInterior::MountInteriorParts(FString Prefix, FString Family, cons
             return MountInteriorPart(ObjPath, Scale3D);
         };
 
-    if (Family == TEXT("BattleshipDecks"))
+    if (Family == TEXT("BattleshipDecks") || Family == TEXT("SocketDeck"))
     {
-        // Zone parts (Tools/build_battleship_decks.py PARTS, minus Shell).
-        static const TCHAR* DeckParts[] = {
-            TEXT("Spine"), TEXT("CIC"), TEXT("Quarters"), TEXT("Mess"), TEXT("Medbay"),
-            TEXT("Briefing"), TEXT("Armory"), TEXT("Hangar"), TEXT("Dropship"),
-            TEXT("Engineering"), TEXT("Lights"),
-        };
-        for (const TCHAR* Suffix : DeckParts)
+        if (Family == TEXT("BattleshipDecks"))
         {
-            TryPart(Suffix);
+            // Zone parts (Tools/build_battleship_decks.py PARTS, minus Shell).
+            static const TCHAR* DeckParts[] = {
+                TEXT("Spine"), TEXT("CIC"), TEXT("Quarters"), TEXT("Mess"), TEXT("Medbay"),
+                TEXT("Briefing"), TEXT("Armory"), TEXT("Hangar"), TEXT("Dropship"),
+                TEXT("Engineering"), TEXT("Lights"),
+            };
+            for (const TCHAR* Suffix : DeckParts)
+            {
+                TryPart(Suffix);
+            }
+        }
+        else if (const UStaticMesh* Shell = InteriorMesh ? InteriorMesh->GetStaticMesh() : nullptr)
+        {
+            // P_<Part> sockets name every sibling (Tools/build_ship_decks.py).
+            for (const UStaticMeshSocket* Socket : Shell->Sockets)
+            {
+                const FString Name = Socket ? Socket->SocketName.ToString() : FString();
+                if (Name.StartsWith(TEXT("P_")) && Name != TEXT("P_Collision"))
+                {
+                    TryPart(*Name.Mid(2));
+                }
+            }
         }
         // Walk collision: never drawn, blocks only the avatar, and only while the
         // player is aboard (SetWalkCollisionEnabled). The mesh is complex-as-simple,
@@ -891,4 +971,295 @@ void ASpaceshipInterior::FitVolumeToMesh()
     EntryLocation = FVector(Origin.X - HalfDepth * 0.6f, Origin.Y, FloorZ + 100.0f);
     UE_LOG(LogAdastrea, Log, TEXT("Interior %s volume fitted to mesh bounds (d=%.0f w=%.0f h=%.0f)"),
         *GetName(), HalfDepth * 2, HalfWidth * 2, HalfHeight * 2);
+}
+
+// ----------------------------------------------------------------------------
+// Fixtures: exterior monitors, consoles, alert button, lights, intercom, ...
+// ----------------------------------------------------------------------------
+
+ASpaceship* ASpaceshipInterior::GetOwningShip() const
+{
+    return Cast<ASpaceship>(GetOwner());
+}
+
+void ASpaceshipInterior::SpawnFixtures(float Scale)
+{
+    UStaticMesh* Mesh = InteriorMesh ? InteriorMesh->GetStaticMesh() : nullptr;
+    UWorld* World = GetWorld();
+    if (!Mesh || !World)
+    {
+        return;
+    }
+    // X_<Mesh>_<Arg>_<N>: Mesh picks SM_Prop_Fx_<Mesh> and the fixture kind, Arg is the
+    // feed (monitors) or readout (consoles), "-" when unused. Yaw faces the fixture.
+    for (const UStaticMeshSocket* Socket : Mesh->Sockets)
+    {
+        if (!Socket)
+        {
+            continue;
+        }
+        TArray<FString> Bits;
+        Socket->SocketName.ToString().ParseIntoArray(Bits, TEXT("_"));
+        if (Bits.Num() < 3 || Bits[0] != TEXT("X"))
+        {
+            continue;
+        }
+        EInteriorFixtureKind Kind;
+        if (!AInteriorFixture::ParseKind(Bits[1], Kind))
+        {
+            UE_LOG(LogAdastrea, Warning, TEXT("Interior %s: unknown fixture socket %s"), *GetName(), *Socket->SocketName.ToString());
+            continue;
+        }
+        FActorSpawnParameters Params;
+        Params.Owner = this;
+        Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+        AInteriorFixture* F = World->SpawnActor<AInteriorFixture>(AInteriorFixture::StaticClass(), GetActorTransform(), Params);
+        if (!F)
+        {
+            continue;
+        }
+        F->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
+        F->SetActorRelativeLocation(Socket->RelativeLocation * Scale);
+        F->SetActorRelativeRotation(FRotator(0.0f, Socket->RelativeRotation.Yaw, 0.0f));
+        F->Setup(this, Kind, FName(*Bits[2]), FName(*Bits[1]));
+        Fixtures.Add(F);
+    }
+    if (Fixtures.Num() > 0)
+    {
+        UE_LOG(LogAdastrea, Log, TEXT("Interior %s: %d fixtures spawned."), *GetName(), Fixtures.Num());
+    }
+}
+
+void ASpaceshipInterior::SetFixturesActive(bool bActive)
+{
+    bFixturesActive = bActive;
+    for (TObjectPtr<AInteriorFixture> F : Fixtures)
+    {
+        if (F)
+        {
+            F->SetFixtureActive(bActive);
+        }
+    }
+    FTimerManager& TM = GetWorldTimerManager();
+    TM.ClearTimer(FeedTimer);
+    if (bActive && FeedCaptures.Num() > 0)
+    {
+        TM.SetTimer(FeedTimer, this, &ASpaceshipInterior::CaptureFeeds, 1.0f / FMath::Max(1.0f, FeedCapturesPerSecond), true);
+    }
+    TM.ClearTimer(AlertTimer);
+    if (bActive && bRedAlert)
+    {
+        TM.SetTimer(AlertTimer, this, &ASpaceshipInterior::TickAlert, 0.1f, true);
+    }
+    if (bActive)
+    {
+        ApplyLighting(0.0f);
+    }
+}
+
+UTextureRenderTarget2D* ASpaceshipInterior::AcquireFeed(EExteriorFeed Feed)
+{
+    const int32 Index = static_cast<int32>(Feed);
+    if (FeedTargets.IsValidIndex(Index) && FeedTargets[Index])
+    {
+        return FeedTargets[Index];
+    }
+    ASpaceship* Ship = GetOwningShip();
+    if (!Ship || !Ship->GetRootComponent())
+    {
+        return nullptr;
+    }
+    FeedTargets.SetNum(FMath::Max(FeedTargets.Num(), Index + 1));
+    FeedCaptures.SetNum(FMath::Max(FeedCaptures.Num(), Index + 1));
+
+    UTextureRenderTarget2D* RT = NewObject<UTextureRenderTarget2D>(this);
+    RT->RenderTargetFormat = RTF_RGBA8_SRGB;
+    RT->ClearColor = FLinearColor::Black;
+    RT->InitAutoFormat(FeedResolution.X, FeedResolution.Y);
+    RT->UpdateResourceImmediate(true);
+
+    // Camera placement around the hull: the visible hull meshes only, in the ship's
+    // local space. (All components would include big triggers/effects and put the
+    // cameras kilometres away.)
+    FBox B(ForceInit);
+    TArray<UStaticMeshComponent*> HullMeshes;
+    Ship->GetComponents<UStaticMeshComponent>(HullMeshes);
+    const FTransform ShipXf = Ship->GetActorTransform();
+    for (const UStaticMeshComponent* SMC : HullMeshes)
+    {
+        if (!SMC || !SMC->GetStaticMesh() || !SMC->IsVisible() || SMC->GetOwner() != Ship)
+        {
+            continue;
+        }
+        const FBox Local = SMC->CalcBounds(SMC->GetComponentTransform().GetRelativeTransform(ShipXf)).GetBox();
+        if (Local.GetExtent().GetMax() < 50000.0f)
+        {
+            B += Local;
+        }
+    }
+    const FVector C = B.IsValid ? B.GetCenter() : FVector::ZeroVector;
+    const FVector E = B.IsValid ? B.GetExtent() : FVector(1000.0f);
+    const float Len = FMath::Max(E.X, 300.0f);
+    FVector Loc = C;
+    FRotator Rot = FRotator::ZeroRotator;
+    float Fov = 80.0f;
+    switch (Feed)
+    {
+    case EExteriorFeed::Bow:       Loc = FVector(C.X + E.X + 40.0f, C.Y, C.Z); break;
+    case EExteriorFeed::Stern:     Loc = FVector(C.X - E.X - 40.0f, C.Y, C.Z); Rot = FRotator(0.0f, 180.0f, 0.0f); break;
+    case EExteriorFeed::Chase:     Loc = FVector(C.X - Len * 3.2f, C.Y, C.Z + E.Z + Len * 0.9f); Rot = FRotator(-14.0f, 0.0f, 0.0f); Fov = 60.0f; break;
+    case EExteriorFeed::Dorsal:    Loc = FVector(C.X + E.X * 0.4f, C.Y, C.Z + E.Z + Len * 0.25f); Rot = FRotator(-18.0f, 180.0f, 0.0f); Fov = 90.0f; break;
+    case EExteriorFeed::Ventral:   Loc = FVector(C.X, C.Y, C.Z - E.Z - 40.0f); Rot = FRotator(-90.0f, 0.0f, 0.0f); Fov = 100.0f; break;
+    case EExteriorFeed::Port:      Loc = FVector(C.X, C.Y - E.Y - 40.0f, C.Z); Rot = FRotator(0.0f, -90.0f, 0.0f); break;
+    case EExteriorFeed::Starboard: Loc = FVector(C.X, C.Y + E.Y + 40.0f, C.Z); Rot = FRotator(0.0f, 90.0f, 0.0f); break;
+    }
+
+    USceneCaptureComponent2D* Cap = NewObject<USceneCaptureComponent2D>(Ship);
+    Cap->SetupAttachment(Ship->GetRootComponent());
+    Cap->SetAbsolute(false, false, true);
+    Cap->SetRelativeLocationAndRotation(Loc, Rot);
+    Cap->FOVAngle = Fov;
+    Cap->TextureTarget = RT;
+    Cap->CaptureSource = ESceneCaptureSource::SCS_FinalColorLDR;
+    Cap->bCaptureEveryFrame = false;
+    Cap->bCaptureOnMovement = false;
+    Cap->bAlwaysPersistRenderingState = false;
+    Cap->LODDistanceFactor = 2.0f;
+    // A monitor feed needs no GI or reflections; keep captures cheap.
+    Cap->PostProcessSettings.bOverride_DynamicGlobalIlluminationMethod = true;
+    Cap->PostProcessSettings.DynamicGlobalIlluminationMethod = EDynamicGlobalIlluminationMethod::None;
+    Cap->PostProcessSettings.bOverride_ReflectionMethod = true;
+    Cap->PostProcessSettings.ReflectionMethod = EReflectionMethod::None;
+    Cap->ShowFlags.SetMotionBlur(false);
+    Cap->HiddenActors.Add(this);            // the interior pocket sits under the ship
+    Cap->RegisterComponent();
+
+    FeedTargets[Index] = RT;
+    FeedCaptures[Index] = Cap;
+    Cap->CaptureScene();
+    if (bFixturesActive && !GetWorldTimerManager().IsTimerActive(FeedTimer))
+    {
+        GetWorldTimerManager().SetTimer(FeedTimer, this, &ASpaceshipInterior::CaptureFeeds, 1.0f / FMath::Max(1.0f, FeedCapturesPerSecond), true);
+    }
+    UE_LOG(LogAdastrea, Log, TEXT("Interior %s: exterior feed %s created on %s."), *GetName(),
+        *AInteriorFixture::FeedName(Feed), *Ship->GetName());
+    return RT;
+}
+
+void ASpaceshipInterior::CaptureFeeds()
+{
+    // Only feeds shown on a monitor near the avatar; up to two captures per tick,
+    // round-robin, so several feeds share the budget.
+    const APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
+    const APawn* Pawn = PC ? PC->GetPawn() : nullptr;
+    if (!Pawn || !FeedCaptures.Num())
+    {
+        return;
+    }
+    TArray<bool> Wanted;
+    Wanted.Init(false, FeedCaptures.Num());
+    for (TObjectPtr<AInteriorFixture> F : Fixtures)
+    {
+        if (F && F->GetKind() == EInteriorFixtureKind::Monitor &&
+            FVector::DistSquared(F->GetActorLocation(), Pawn->GetActorLocation()) < FMath::Square(2500.0f))
+        {
+            const int32 I = static_cast<int32>(F->GetFeed());
+            if (Wanted.IsValidIndex(I))
+            {
+                Wanted[I] = true;
+            }
+        }
+    }
+    int32 Budget = 2;
+    for (int32 k = 0; k < FeedCaptures.Num() && Budget > 0; ++k)
+    {
+        const int32 I = (NextFeedToCapture + k) % FeedCaptures.Num();
+        if (Wanted[I] && FeedCaptures[I])
+        {
+            FeedCaptures[I]->CaptureScene();
+            --Budget;
+            NextFeedToCapture = I + 1;
+        }
+    }
+}
+
+void ASpaceshipInterior::SetRedAlert(bool bOn)
+{
+    bRedAlert = bOn;
+    AlertClock = 0.0f;
+    KlaxonClock = 0.0f;
+    GetWorldTimerManager().ClearTimer(AlertTimer);
+    if (bOn && bFixturesActive)
+    {
+        GetWorldTimerManager().SetTimer(AlertTimer, this, &ASpaceshipInterior::TickAlert, 0.1f, true);
+    }
+    ApplyLighting(0.0f);
+}
+
+void ASpaceshipInterior::TickAlert()
+{
+    AlertClock += 0.1f;
+    KlaxonClock -= 0.1f;
+    if (KlaxonClock <= 0.0f)
+    {
+        UAudioEventLibrary::PlayEvent2D(this, TEXT("Flight.SpeedWarning"));
+        KlaxonClock = 1.6f;
+    }
+    ApplyLighting(0.5f + 0.5f * FMath::Sin(AlertClock * 4.0f));
+}
+
+int32 ASpaceshipInterior::CycleLighting()
+{
+    LightingMode = (LightingMode + 1) % 3;
+    ApplyLighting(0.0f);
+    return LightingMode;
+}
+
+void ASpaceshipInterior::ApplyLighting(float AlertPulse)
+{
+    static const float ModeScale[] = { 1.0f, 0.35f, 0.12f };
+    const FLinearColor AlertRed(1.0f, 0.08f, 0.04f);
+    const FLinearColor Emergency(1.0f, 0.55f, 0.3f);
+    for (int32 i = 0; i < SocketLights.Num(); ++i)
+    {
+        UPointLightComponent* L = SocketLights[i];
+        if (!L || !SocketLightColours.IsValidIndex(i))
+        {
+            continue;
+        }
+        FLinearColor Col = SocketLightColours[i];
+        float Scale = ModeScale[FMath::Clamp(LightingMode, 0, 2)];
+        if (LightingMode == 2)
+        {
+            Col = FLinearColor::LerpUsingHSV(Col, Emergency, 0.6f);
+        }
+        if (bRedAlert)
+        {
+            Col = AlertRed;
+            Scale = FMath::Max(Scale, 0.2f) * (0.25f + 0.75f * AlertPulse);
+        }
+        L->SetLightColor(Col);
+        L->SetIntensity(SocketLightIntensities[i] * Scale);
+    }
+}
+
+void ASpaceshipInterior::Destroyed()
+{
+    for (TObjectPtr<AInteriorFixture> F : Fixtures)
+    {
+        if (F)
+        {
+            F->Destroy();
+        }
+    }
+    Fixtures.Empty();
+    for (TObjectPtr<USceneCaptureComponent2D> Cap : FeedCaptures)
+    {
+        if (Cap)
+        {
+            Cap->DestroyComponent();
+        }
+    }
+    FeedCaptures.Empty();
+    Super::Destroyed();
 }

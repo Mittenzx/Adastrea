@@ -1,0 +1,519 @@
+{
+ "prefix": "SM_Int_Frigate_Decks",
+ "ship": "Frigate",
+ "bp": "/Game/Blueprints/Ships/BP_Ship_Frigate",
+ "style": "stealth",
+ "family": "ShipDecks (generic full deck, driven by P_ sockets)",
+ "runtime_scale_on_imported_mesh": 0.01,
+ "design_bounds_cm": {
+  "min": [
+   -1340.0,
+   -495.0,
+   -20.0
+  ],
+  "max": [
+   1352.0,
+   495.0,
+   440.0
+  ]
+ },
+ "size_m": [
+  26.9,
+  9.9
+ ],
+ "parts": [
+  "Shell",
+  "Lights",
+  "Collision",
+  "Ops",
+  "Engine",
+  "Bridge"
+ ],
+ "sockets_ue_design_cm": {
+  "L_B_06_000": [
+   -475.0,
+   -290.0,
+   230,
+   0.0
+  ],
+  "X_LightSwitch_-_000": [
+   -575.0,
+   -115.0,
+   125,
+   -90
+  ],
+  "L_B_08_001": [
+   200.0,
+   -290.0,
+   230,
+   0.0
+  ],
+  "L_B_05_002": [
+   200.0,
+   -290.0,
+   150,
+   0.0
+  ],
+  "X_Terminal_Comms_001": [
+   338.0,
+   -235.0,
+   0,
+   -180.0
+  ],
+  "L_B_06_003": [
+   -500.0,
+   290.0,
+   230,
+   0.0
+  ],
+  "L_R_04_004": [
+   -500.0,
+   385.0,
+   210,
+   0.0
+  ],
+  "X_WallPanel_Status_002": [
+   -308.0,
+   265.0,
+   0,
+   -180.0
+  ],
+  "L_B_08_005": [
+   175.0,
+   290.0,
+   230,
+   0.0
+  ],
+  "L_B_05_006": [
+   175.0,
+   290.0,
+   260,
+   0.0
+  ],
+  "X_MonitorWall_Bow_003": [
+   -260.0,
+   290.0,
+   205,
+   -0.0
+  ],
+  "L_B_07_007": [
+   -410.0,
+   0,
+   215,
+   0.0
+  ],
+  "L_B_07_008": [
+   190.0,
+   0,
+   215,
+   0.0
+  ],
+  "X_MonitorWall_Starboard_004": [
+   -275.0,
+   85.0,
+   165,
+   -90.0
+  ],
+  "LS_W_07_009": [
+   -1025.0,
+   0,
+   380,
+   0.0
+  ],
+  "X_Terminal_Engineering_005": [
+   -770.0,
+   200.0,
+   0,
+   -180.0
+  ],
+  "X_MonitorWall_Stern_006": [
+   -740.0,
+   240.0,
+   190,
+   -180.0
+  ],
+  "L_B_07_010": [
+   975.0,
+   0,
+   220,
+   0.0
+  ],
+  "L_R_05_011": [
+   790.0,
+   0,
+   190,
+   0.0
+  ],
+  "X_AlertButton_-_007": [
+   960.0,
+   -110,
+   0,
+   -180.0
+  ],
+  "X_Terminal_Nav_008": [
+   760.0,
+   270.0,
+   0,
+   -0.0
+  ],
+  "X_WallPanel_Comms_009": [
+   700.0,
+   -270.0,
+   0,
+   -0.0
+  ],
+  "Seat": [
+   1160.0,
+   -0.0,
+   100.0,
+   0.0
+  ],
+  "Entry": [
+   830.0,
+   -0.0,
+   100.0,
+   180.0
+  ]
+ },
+ "views": [
+  [
+   "bridge_spawn",
+   [
+    830.0,
+    0.0,
+    165
+   ],
+   [
+    625.0,
+    0,
+    130
+   ],
+   16
+  ],
+  [
+   "bridge_fwd",
+   [
+    745.0,
+    -228.0,
+    210
+   ],
+   [
+    1325.0,
+    76.0,
+    200
+   ],
+   16
+  ],
+  [
+   "ops_spine",
+   [
+    505.0,
+    0,
+    165
+   ],
+   [
+    -725.0,
+    0,
+    150
+   ],
+   16
+  ]
+ ],
+ "plan_z": 235,
+ "light_count": 12,
+ "fixture_count": 10,
+ "tris": {
+  "Shell": 1480,
+  "Lights": 2060,
+  "Collision": 728,
+  "Ops": 5556,
+  "Engine": 3204,
+  "Bridge": 1244
+ },
+ "tris_total": 14272,
+ "slots": {
+  "Shell": [
+   "M_Int_Dark",
+   "M_Interior_Eng",
+   "M_Int_Viewport",
+   "M_Int_LightsBlue",
+   "M_Int_Hatch"
+  ],
+  "Lights": [
+   "M_Int_LightsRed",
+   "M_Int_LightsGreen",
+   "M_Int_LightsBlue",
+   "M_Int_LightsCyan",
+   "M_Int_Console"
+  ],
+  "Collision": [
+   "M_Int_Collision"
+  ],
+  "Ops": [
+   "M_Int_Dark",
+   "M_Int_Hatch",
+   "M_Prop_Wood",
+   "M_Prop_Cardboard",
+   "M_Prop_White",
+   "M_Prop_RedPaint",
+   "M_Prop_Yellow",
+   "M_Prop_Paper",
+   "M_Prop_Blue",
+   "M_Prop_Olive",
+   "M_Prop_BlackPlastic",
+   "M_Prop_Steel",
+   "M_Prop_Green",
+   "M_Prop_Fabric",
+   "M_Int_LightsBlue",
+   "M_Prop_Brushed",
+   "M_Int_Console",
+   "M_Prop_Screen",
+   "M_Int_Grate"
+  ],
+  "Engine": [
+   "M_Int_Grate",
+   "M_Int_Dark",
+   "M_Int_Hatch",
+   "M_Int_Vents",
+   "M_Int_LightsBlue",
+   "M_Prop_Steel",
+   "M_Prop_BlackPlastic",
+   "M_Prop_RedPaint",
+   "M_Prop_Yellow",
+   "M_Prop_White",
+   "M_Int_Viewport",
+   "M_Prop_Orange"
+  ],
+  "Bridge": [
+   "M_Int_Hatch",
+   "M_Int_Dark",
+   "M_Prop_White",
+   "M_Prop_BlackPlastic",
+   "M_Prop_Screen",
+   "M_Prop_RedPaint"
+  ]
+ },
+ "walk": {
+  "entry_free": true,
+  "seat_reachable": true,
+  "rooms": {
+   "Engine": 0.57,
+   "Bridge": 1.0,
+   "Ops:bunks": 1.0,
+   "Ops:ecm": 0.87,
+   "Ops:armory": 0.88,
+   "Ops:ops": 0.98,
+   "Ops:spine": 1.0
+  },
+  "unreached": [],
+  "route": [
+   [
+    -1065.0,
+    10.0,
+    "Engine"
+   ],
+   [
+    735.0,
+    -0.0,
+    "Bridge"
+   ],
+   [
+    -495.0,
+    -40.0,
+    ""
+   ],
+   [
+    -495.0,
+    -130.0,
+    ""
+   ],
+   [
+    -535.0,
+    -280.0,
+    "Ops:bunks"
+   ],
+   [
+    -435.0,
+    -50.0,
+    ""
+   ],
+   [
+    -385.0,
+    -40.0,
+    ""
+   ],
+   [
+    185.0,
+    -40.0,
+    ""
+   ],
+   [
+    185.0,
+    -200.0,
+    "Ops:ecm"
+   ],
+   [
+    185.0,
+    -80.0,
+    ""
+   ],
+   [
+    145.0,
+    -40.0,
+    ""
+   ],
+   [
+    -505.0,
+    40.0,
+    ""
+   ],
+   [
+    -505.0,
+    150.0,
+    "Ops:armory"
+   ],
+   [
+    -455.0,
+    40.0,
+    ""
+   ],
+   [
+    -405.0,
+    30.0,
+    ""
+   ],
+   [
+    155.0,
+    30.0,
+    ""
+   ],
+   [
+    155.0,
+    120.0,
+    ""
+   ],
+   [
+    115.0,
+    160.0,
+    ""
+   ],
+   [
+    -65.0,
+    250.0,
+    "Ops:ops"
+   ],
+   [
+    155.0,
+    130.0,
+    ""
+   ],
+   [
+    155.0,
+    70.0,
+    ""
+   ],
+   [
+    115.0,
+    30.0,
+    ""
+   ],
+   [
+    -495.0,
+    10.0,
+    "Ops:spine"
+   ],
+   [
+    865.0,
+    40.0,
+    ""
+   ],
+   [
+    885.0,
+    80.0,
+    ""
+   ],
+   [
+    935.0,
+    90.0,
+    ""
+   ],
+   [
+    1155.0,
+    80.0,
+    ""
+   ],
+   [
+    1155.0,
+    -0.0,
+    "helm"
+   ]
+  ]
+ },
+ "zones": [
+  [
+   "Engine",
+   "machinery",
+   -1325.0,
+   -725.0,
+   -450.0,
+   450.0,
+   420
+  ],
+  [
+   "Bridge",
+   "command",
+   625.0,
+   1325.0,
+   -380.0,
+   380.0,
+   290
+  ],
+  [
+   "Ops:bunks",
+   "room",
+   -725.0,
+   -225.0,
+   100.0,
+   480.0,
+   270
+  ],
+  [
+   "Ops:ecm",
+   "room",
+   -225.0,
+   625.0,
+   100.0,
+   480.0,
+   270
+  ],
+  [
+   "Ops:armory",
+   "room",
+   -725.0,
+   -275.0,
+   -480.0,
+   -100.0,
+   270
+  ],
+  [
+   "Ops:ops",
+   "room",
+   -275.0,
+   625.0,
+   -480.0,
+   -100.0,
+   270
+  ],
+  [
+   "Ops:spine",
+   "corridor",
+   -725.0,
+   625.0,
+   -100.0,
+   100.0,
+   245
+  ]
+ ],
+ "blender_to_ue_axes": "UE(x, y, z) = Blender(x, -y, z) * 100 * 0.01",
+ "problems": []
+}

@@ -147,6 +147,9 @@ public:
     virtual bool IsHostileToActor_Implementation(AActor* Observer) const override;
 
 protected:
+    /** Fits exterior props (beacons, floodlights, antennas; docking guides on bays). */
+    virtual void BeginPlay() override;
+
     /** Static mesh component for visual representation */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
     TObjectPtr<UStaticMeshComponent> MeshComponent;

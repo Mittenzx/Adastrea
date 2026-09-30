@@ -1,0 +1,2528 @@
+{
+ "props": {
+  "Mug": {
+   "mesh": "SM_Prop_Mug",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -4.2,
+     -4.2,
+     0.0
+    ],
+    [
+     6.5,
+     4.2,
+     10.0
+    ]
+   ],
+   "tris": 116,
+   "slots": [
+    "M_Prop_White",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "FoodTray": {
+   "mesh": "SM_Prop_FoodTray",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -22.0,
+     -16.0,
+     -0.5
+    ],
+    [
+     22.0,
+     16.0,
+     11.2
+    ]
+   ],
+   "tris": 264,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_Ceramic",
+    "M_Prop_Green",
+    "M_Prop_Orange",
+    "M_Prop_Blue",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "CoffeeMachine": {
+   "mesh": "SM_Prop_CoffeeMachine",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -32.0,
+     -22.0,
+     0.0
+    ],
+    [
+     4.6,
+     22.0,
+     72.0
+    ]
+   ],
+   "tris": 272,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Brushed",
+    "M_Prop_White",
+    "M_Prop_Screen",
+    "M_Int_LightsGreen",
+    "M_Int_LightsRed",
+    "M_Int_Viewport"
+   ]
+  },
+  "WaterDispenser": {
+   "mesh": "SM_Prop_WaterDispenser",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -16.0,
+     -16.0,
+     0.0
+    ],
+    [
+     20.0,
+     16.0,
+     146.0
+    ]
+   ],
+   "tris": 164,
+   "slots": [
+    "M_Prop_White",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Steel",
+    "M_Int_LightsBlue",
+    "M_Int_LightsRed",
+    "M_Prop_Blue"
+   ]
+  },
+  "VendingMachine": {
+   "mesh": "SM_Prop_VendingMachine",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -70.0,
+     -45.0,
+     0.0
+    ],
+    [
+     4.5,
+     45.0,
+     190.0
+    ]
+   ],
+   "tris": 768,
+   "slots": [
+    "M_Prop_RedPaint",
+    "M_Prop_BlackPlastic",
+    "M_Int_Viewport",
+    "M_Prop_Steel",
+    "M_Prop_Orange",
+    "M_Prop_Yellow",
+    "M_Prop_Screen",
+    "M_Int_LightsGreen",
+    "M_Prop_Brushed",
+    "M_Int_Lights",
+    "M_Prop_White"
+   ]
+  },
+  "Bottle": {
+   "mesh": "SM_Prop_Bottle",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -3.5,
+     -3.3,
+     0.0
+    ],
+    [
+     3.6,
+     3.3,
+     26.0
+    ]
+   ],
+   "tris": 104,
+   "slots": [
+    "M_Prop_Green",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Paper"
+   ]
+  },
+  "RationBox": {
+   "mesh": "SM_Prop_RationBox",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -10.3,
+     -6.3,
+     0.0
+    ],
+    [
+     10.2,
+     6.2,
+     26.0
+    ]
+   ],
+   "tris": 36,
+   "slots": [
+    "M_Prop_Cardboard",
+    "M_Prop_Orange",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "Microwave": {
+   "mesh": "SM_Prop_Microwave",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -35.0,
+     -25.0,
+     0.0
+    ],
+    [
+     1.0,
+     25.0,
+     30.0
+    ]
+   ],
+   "tris": 48,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Int_Viewport",
+    "M_Prop_BlackPlastic",
+    "M_Int_LightsGreen"
+   ]
+  },
+  "TrashBin": {
+   "mesh": "SM_Prop_TrashBin",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -23.0,
+     -23.0,
+     0.0
+    ],
+    [
+     23.0,
+     23.0,
+     74.0
+    ]
+   ],
+   "tris": 180,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Yellow"
+   ]
+  },
+  "Datapad": {
+   "mesh": "SM_Prop_Datapad",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -9.0,
+     -12.0,
+     0.0
+    ],
+    [
+     9.0,
+     12.0,
+     1.2
+    ]
+   ],
+   "tris": 36,
+   "slots": [
+    "M_Prop_BlackPlastic",
+    "M_Prop_Screen",
+    "M_Int_LightsBlue"
+   ]
+  },
+  "Clipboard": {
+   "mesh": "SM_Prop_Clipboard",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -11.0,
+     -16.0,
+     0.0
+    ],
+    [
+     11.0,
+     16.0,
+     2.2
+    ]
+   ],
+   "tris": 108,
+   "slots": [
+    "M_Prop_Wood",
+    "M_Prop_Paper",
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "Keyboard": {
+   "mesh": "SM_Prop_Keyboard",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -8.0,
+     -22.0,
+     0.0
+    ],
+    [
+     8.0,
+     22.0,
+     3.8
+    ]
+   ],
+   "tris": 540,
+   "slots": [
+    "M_Prop_BlackPlastic",
+    "M_Prop_Steel"
+   ]
+  },
+  "Binders": {
+   "mesh": "SM_Prop_Binders",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -14.0,
+     -20.7,
+     0.0
+    ],
+    [
+     15.4,
+     20.7,
+     30.0
+    ]
+   ],
+   "tris": 264,
+   "slots": [
+    "M_Prop_Blue",
+    "M_Prop_White",
+    "M_Prop_Steel",
+    "M_Prop_RedPaint",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Yellow",
+    "M_Prop_Olive"
+   ]
+  },
+  "BookStack": {
+   "mesh": "SM_Prop_BookStack",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -10.0,
+     -7.0,
+     0.0
+    ],
+    [
+     10.0,
+     7.0,
+     19.0
+    ]
+   ],
+   "tris": 60,
+   "slots": [
+    "M_Prop_RedPaint",
+    "M_Prop_Blue",
+    "M_Prop_Olive",
+    "M_Prop_Cardboard",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "DeskLamp": {
+   "mesh": "SM_Prop_DeskLamp",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -8.0,
+     -7.8,
+     0.0
+    ],
+    [
+     18.0,
+     7.8,
+     44.0
+    ]
+   ],
+   "tris": 132,
+   "slots": [
+    "M_Prop_BlackPlastic",
+    "M_Prop_Steel",
+    "M_Int_LightsWarm"
+   ]
+  },
+  "Headset": {
+   "mesh": "SM_Prop_Headset",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -12.0,
+     -4.5,
+     0.0
+    ],
+    [
+     12.0,
+     8.3,
+     16.0
+    ]
+   ],
+   "tris": 248,
+   "slots": [
+    "M_Prop_BlackPlastic",
+    "M_Prop_Fabric"
+   ]
+  },
+  "PortableCRT": {
+   "mesh": "SM_Prop_PortableCRT",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -38.0,
+     -18.0,
+     0.0
+    ],
+    [
+     2.0,
+     18.0,
+     31.2
+    ]
+   ],
+   "tris": 76,
+   "slots": [
+    "M_Prop_Olive",
+    "M_Prop_BlackPlastic",
+    "M_Int_LightsGreen",
+    "M_Prop_Steel"
+   ]
+  },
+  "Radio": {
+   "mesh": "SM_Prop_Radio",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -12.0,
+     -16.0,
+     0.0
+    ],
+    [
+     1.2,
+     16.0,
+     60.0
+    ]
+   ],
+   "tris": 136,
+   "slots": [
+    "M_Prop_Olive",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Steel",
+    "M_Prop_Screen",
+    "M_Int_LightsAmber"
+   ]
+  },
+  "Pinboard": {
+   "mesh": "SM_Prop_Pinboard",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -45.0,
+     0.0
+    ],
+    [
+     3.4,
+     45.0,
+     60.0
+    ]
+   ],
+   "tris": 216,
+   "slots": [
+    "M_Prop_Wood",
+    "M_Prop_Cardboard",
+    "M_Prop_White",
+    "M_Prop_RedPaint",
+    "M_Prop_Yellow",
+    "M_Prop_Paper",
+    "M_Prop_Blue"
+   ]
+  },
+  "WallClock": {
+   "mesh": "SM_Prop_WallClock",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     -0.0,
+     -15.0,
+     -15.0
+    ],
+    [
+     4.0,
+     15.0,
+     15.0
+    ]
+   ],
+   "tris": 320,
+   "slots": [
+    "M_Prop_BlackPlastic",
+    "M_Prop_White",
+    "M_Prop_RedPaint"
+   ]
+  },
+  "PenCup": {
+   "mesh": "SM_Prop_PenCup",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -3.5,
+     -3.5,
+     0.0
+    ],
+    [
+     3.5,
+     3.5,
+     15.0
+    ]
+   ],
+   "tris": 124,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_RedPaint",
+    "M_Prop_Blue",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Yellow"
+   ]
+  },
+  "PhotoFrame": {
+   "mesh": "SM_Prop_PhotoFrame",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -4.0,
+     -8.0,
+     0.0
+    ],
+    [
+     1.3,
+     8.0,
+     14.0
+    ]
+   ],
+   "tris": 48,
+   "slots": [
+    "M_Prop_BlackPlastic",
+    "M_Prop_Wood",
+    "M_Prop_Blue",
+    "M_Prop_Green"
+   ]
+  },
+  "Poster": {
+   "mesh": "SM_Prop_Poster",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -32.0,
+     0.0
+    ],
+    [
+     1.3,
+     32.0,
+     90.0
+    ]
+   ],
+   "tris": 60,
+   "slots": [
+    "M_Prop_Brushed",
+    "M_Prop_Blue",
+    "M_Prop_White",
+    "M_Prop_Yellow",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "ChessBoard": {
+   "mesh": "SM_Prop_ChessBoard",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -18.0,
+     -18.0,
+     0.0
+    ],
+    [
+     18.0,
+     18.0,
+     7.0
+    ]
+   ],
+   "tris": 676,
+   "slots": [
+    "M_Prop_Wood",
+    "M_Prop_BlackPlastic",
+    "M_Prop_White"
+   ]
+  },
+  "PlayingCards": {
+   "mesh": "SM_Prop_PlayingCards",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -3.2,
+     -5.5,
+     0.0
+    ],
+    [
+     27.4,
+     8.3,
+     1.3
+    ]
+   ],
+   "tris": 84,
+   "slots": [
+    "M_Prop_White",
+    "M_Prop_RedPaint"
+   ]
+  },
+  "FireExtinguisher": {
+   "mesh": "SM_Prop_FireExtinguisher",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -10.0,
+     40.0
+    ],
+    [
+     19.6,
+     13.2,
+     110.0
+    ]
+   ],
+   "tris": 212,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_RedPaint",
+    "M_Prop_White",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "FirstAidKit": {
+   "mesh": "SM_Prop_FirstAidKit",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -22.0,
+     0.0
+    ],
+    [
+     16.0,
+     22.0,
+     34.0
+    ]
+   ],
+   "tris": 60,
+   "slots": [
+    "M_Prop_White",
+    "M_Prop_Steel",
+    "M_Prop_RedPaint",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "OxygenMasks": {
+   "mesh": "SM_Prop_OxygenMasks",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -18.0,
+     -36.0
+    ],
+    [
+     14.5,
+     18.0,
+     30.0
+    ]
+   ],
+   "tris": 112,
+   "slots": [
+    "M_Prop_Yellow",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Rubber",
+    "M_Int_LightsGreen"
+   ]
+  },
+  "HazardCone": {
+   "mesh": "SM_Prop_HazardCone",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -17.0,
+     -17.0,
+     0.0
+    ],
+    [
+     17.0,
+     17.0,
+     63.0
+    ]
+   ],
+   "tris": 496,
+   "slots": [
+    "M_Prop_BlackPlastic",
+    "M_Prop_Orange",
+    "M_Prop_White"
+   ]
+  },
+  "ExitSign": {
+   "mesh": "SM_Prop_ExitSign",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -26.0,
+     0.0
+    ],
+    [
+     8.5,
+     26.0,
+     16.0
+    ]
+   ],
+   "tris": 44,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Int_LightsGreen",
+    "M_Prop_White"
+   ]
+  },
+  "AlarmBeacon": {
+   "mesh": "SM_Prop_AlarmBeacon",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     -8.0,
+     -7.8,
+     0.0
+    ],
+    [
+     8.0,
+     7.8,
+     21.5
+    ]
+   ],
+   "tris": 144,
+   "slots": [
+    "M_Prop_BlackPlastic",
+    "M_Int_LightsRed",
+    "M_Int_Viewport",
+    "M_Prop_Steel"
+   ]
+  },
+  "SafetyPlacard": {
+   "mesh": "SM_Prop_SafetyPlacard",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -20.0,
+     0.0
+    ],
+    [
+     0.7,
+     20.0,
+     28.0
+    ]
+   ],
+   "tris": 44,
+   "slots": [
+    "M_Prop_Yellow",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "Toolbox": {
+   "mesh": "SM_Prop_Toolbox",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -22.2,
+     -11.2,
+     0.0
+    ],
+    [
+     23.0,
+     11.2,
+     26.0
+    ]
+   ],
+   "tris": 132,
+   "slots": [
+    "M_Prop_RedPaint",
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "ToolChest": {
+   "mesh": "SM_Prop_ToolChest",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -30.0,
+     -45.0,
+     0.0
+    ],
+    [
+     31.5,
+     45.0,
+     129.0
+    ]
+   ],
+   "tris": 412,
+   "slots": [
+    "M_Prop_RedPaint",
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Blue"
+   ]
+  },
+  "GasRack": {
+   "mesh": "SM_Prop_GasRack",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -40.0,
+     0.0
+    ],
+    [
+     27.8,
+     40.0,
+     150.0
+    ]
+   ],
+   "tris": 472,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_Green",
+    "M_Prop_BlackPlastic",
+    "M_Prop_White",
+    "M_Prop_Blue",
+    "M_Prop_Orange"
+   ]
+  },
+  "CableSpool": {
+   "mesh": "SM_Prop_CableSpool",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -40.0,
+     -40.0,
+     0.0
+    ],
+    [
+     40.0,
+     40.0,
+     60.0
+    ]
+   ],
+   "tris": 524,
+   "slots": [
+    "M_Prop_Wood",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Orange"
+   ]
+  },
+  "JunctionBox": {
+   "mesh": "SM_Prop_JunctionBox",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -18.0,
+     -30.0
+    ],
+    [
+     12.9,
+     18.0,
+     60.0
+    ]
+   ],
+   "tris": 140,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_Yellow",
+    "M_Prop_BlackPlastic",
+    "M_Int_LightsGreen"
+   ]
+  },
+  "FuseBox": {
+   "mesh": "SM_Prop_FuseBox",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -30.0,
+     0.0
+    ],
+    [
+     16.0,
+     30.0,
+     60.0
+    ]
+   ],
+   "tris": 684,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_RedPaint",
+    "M_Int_LightsRed",
+    "M_Int_LightsGreen",
+    "M_Prop_Yellow"
+   ]
+  },
+  "ValveWheel": {
+   "mesh": "SM_Prop_ValveWheel",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     -9.0,
+     -40.0,
+     -14.2
+    ],
+    [
+     19.4,
+     40.0,
+     14.2
+    ]
+   ],
+   "tris": 516,
+   "slots": [
+    "M_Prop_Copper",
+    "M_Prop_Steel",
+    "M_Prop_RedPaint"
+   ]
+  },
+  "PressureGauge": {
+   "mesh": "SM_Prop_PressureGauge",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -7.0,
+     -7.0
+    ],
+    [
+     11.0,
+     7.0,
+     7.0
+    ]
+   ],
+   "tris": 160,
+   "slots": [
+    "M_Prop_Copper",
+    "M_Prop_Steel",
+    "M_Prop_White",
+    "M_Prop_RedPaint"
+   ]
+  },
+  "WallTools": {
+   "mesh": "SM_Prop_WallTools",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -40.0,
+     0.0
+    ],
+    [
+     5.0,
+     40.0,
+     40.0
+    ]
+   ],
+   "tris": 156,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_Brushed",
+    "M_Prop_Wood"
+   ]
+  },
+  "PartsBins": {
+   "mesh": "SM_Prop_PartsBins",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -39.0,
+     0.0
+    ],
+    [
+     18.0,
+     39.0,
+     42.0
+    ]
+   ],
+   "tris": 576,
+   "slots": [
+    "M_Prop_Blue",
+    "M_Prop_White",
+    "M_Prop_Steel",
+    "M_Prop_Yellow",
+    "M_Prop_RedPaint"
+   ]
+  },
+  "BatteryPack": {
+   "mesh": "SM_Prop_BatteryPack",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -20.3,
+     -14.3,
+     0.0
+    ],
+    [
+     20.5,
+     14.3,
+     34.0
+    ]
+   ],
+   "tris": 104,
+   "slots": [
+    "M_Prop_Olive",
+    "M_Prop_BlackPlastic",
+    "M_Prop_RedPaint",
+    "M_Prop_Yellow",
+    "M_Int_LightsGreen"
+   ]
+  },
+  "MaintDrone": {
+   "mesh": "SM_Prop_MaintDrone",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -23.6,
+     -23.6,
+     0.0
+    ],
+    [
+     23.6,
+     23.6,
+     64.0
+    ]
+   ],
+   "tris": 532,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Yellow",
+    "M_Int_LightsBlue",
+    "M_Int_LightsRed"
+   ]
+  },
+  "Helmet": {
+   "mesh": "SM_Prop_Helmet",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -12.4,
+     -14.0,
+     0.0
+    ],
+    [
+     14.0,
+     14.0,
+     26.0
+    ]
+   ],
+   "tris": 116,
+   "slots": [
+    "M_Prop_White",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Screen"
+   ]
+  },
+  "DuffelBag": {
+   "mesh": "SM_Prop_DuffelBag",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -30.5,
+     -30.0,
+     0.4
+    ],
+    [
+     30.5,
+     30.0,
+     29.3
+    ]
+   ],
+   "tris": 148,
+   "slots": [
+    "M_Prop_Olive",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "Boots": {
+   "mesh": "SM_Prop_Boots",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -12.0,
+     -11.0,
+     0.0
+    ],
+    [
+     16.0,
+     11.0,
+     26.0
+    ]
+   ],
+   "tris": 72,
+   "slots": [
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "JacketHook": {
+   "mesh": "SM_Prop_JacketHook",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -28.0,
+     -70.0
+    ],
+    [
+     15.2,
+     28.0,
+     3.0
+    ]
+   ],
+   "tris": 104,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_Olive",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Yellow"
+   ]
+  },
+  "Guitar": {
+   "mesh": "SM_Prop_Guitar",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -25.7,
+     -19.0,
+     1.9
+    ],
+    [
+     4.3,
+     19.0,
+     110.1
+    ]
+   ],
+   "tris": 260,
+   "slots": [
+    "M_Prop_Wood",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Steel"
+   ]
+  },
+  "Dumbbells": {
+   "mesh": "SM_Prop_Dumbbells",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -14.0,
+     -18.0,
+     0.3
+    ],
+    [
+     14.0,
+     18.0,
+     11.7
+    ]
+   ],
+   "tris": 200,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "PlantPot": {
+   "mesh": "SM_Prop_PlantPot",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -10.0,
+     -9.7,
+     0.0
+    ],
+    [
+     10.3,
+     9.7,
+     45.0
+    ]
+   ],
+   "tris": 184,
+   "slots": [
+    "M_Prop_Ceramic",
+    "M_Prop_Cardboard",
+    "M_Prop_Green"
+   ]
+  },
+  "LaundryBasket": {
+   "mesh": "SM_Prop_LaundryBasket",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -23.0,
+     -17.2,
+     0.0
+    ],
+    [
+     23.0,
+     17.0,
+     43.0
+    ]
+   ],
+   "tris": 148,
+   "slots": [
+    "M_Prop_Blue",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Fabric",
+    "M_Prop_White"
+   ]
+  },
+  "IVStand": {
+   "mesh": "SM_Prop_IVStand",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -22.4,
+     -25.8,
+     0.0
+    ],
+    [
+     27.0,
+     25.8,
+     190.0
+    ]
+   ],
+   "tris": 416,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Int_Viewport"
+   ]
+  },
+  "MedCabinet": {
+   "mesh": "SM_Prop_MedCabinet",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -40.0,
+     0.0
+    ],
+    [
+     30.8,
+     40.0,
+     70.0
+    ]
+   ],
+   "tris": 660,
+   "slots": [
+    "M_Prop_White",
+    "M_Int_Viewport",
+    "M_Prop_Orange",
+    "M_Prop_Blue",
+    "M_Prop_RedPaint"
+   ]
+  },
+  "SpecimenJar": {
+   "mesh": "SM_Prop_SpecimenJar",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -9.0,
+     -9.0,
+     0.0
+    ],
+    [
+     9.0,
+     9.0,
+     38.0
+    ]
+   ],
+   "tris": 196,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Int_Viewport",
+    "M_Int_LightsCyan",
+    "M_Prop_Green"
+   ]
+  },
+  "Defibrillator": {
+   "mesh": "SM_Prop_Defibrillator",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -16.0,
+     0.0
+    ],
+    [
+     16.0,
+     16.0,
+     30.0
+    ]
+   ],
+   "tris": 60,
+   "slots": [
+    "M_Prop_Orange",
+    "M_Prop_Screen",
+    "M_Int_LightsGreen",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "Barrel": {
+   "mesh": "SM_Prop_Barrel",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -30.0,
+     -29.5,
+     0.0
+    ],
+    [
+     30.0,
+     29.5,
+     90.5
+    ]
+   ],
+   "tris": 448,
+   "slots": [
+    "M_Prop_Blue",
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_White"
+   ]
+  },
+  "SmallCrate": {
+   "mesh": "SM_Prop_SmallCrate",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -27.0,
+     -21.0,
+     0.0
+    ],
+    [
+     27.0,
+     21.0,
+     36.0
+    ]
+   ],
+   "tris": 84,
+   "slots": [
+    "M_Prop_Olive",
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Yellow"
+   ]
+  },
+  "PalletBoxes": {
+   "mesh": "SM_Prop_PalletBoxes",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -61.0,
+     -50.0,
+     0.0
+    ],
+    [
+     61.0,
+     50.0,
+     87.0
+    ]
+   ],
+   "tris": 192,
+   "slots": [
+    "M_Prop_Wood",
+    "M_Prop_Cardboard",
+    "M_Prop_Yellow",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "Canisters": {
+   "mesh": "SM_Prop_Canisters",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -8.0,
+     -46.0,
+     0.0
+    ],
+    [
+     8.0,
+     46.0,
+     38.0
+    ]
+   ],
+   "tris": 208,
+   "slots": [
+    "M_Prop_RedPaint",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Yellow"
+   ]
+  },
+  "WallSpeaker": {
+   "mesh": "SM_Prop_WallSpeaker",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -14.0,
+     0.0
+    ],
+    [
+     12.8,
+     14.0,
+     22.0
+    ]
+   ],
+   "tris": 84,
+   "slots": [
+    "M_Prop_BlackPlastic",
+    "M_Prop_Steel"
+   ]
+  },
+  "WallFan": {
+   "mesh": "SM_Prop_WallFan",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -26.0,
+     0.0
+    ],
+    [
+     13.0,
+     26.0,
+     52.0
+    ]
+   ],
+   "tris": 236,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "Intercom": {
+   "mesh": "SM_Prop_Intercom",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -12.0,
+     0.0
+    ],
+    [
+     9.0,
+     12.0,
+     34.0
+    ]
+   ],
+   "tris": 96,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_RedPaint",
+    "M_Int_LightsGreen"
+   ]
+  },
+  "ServerCabinet": {
+   "mesh": "SM_Prop_ServerCabinet",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -60.0,
+     -30.0,
+     0.0
+    ],
+    [
+     1.8,
+     30.0,
+     120.0
+    ]
+   ],
+   "tris": 696,
+   "slots": [
+    "M_Prop_BlackPlastic",
+    "M_Prop_Steel",
+    "M_Int_LightsGreen",
+    "M_Int_LightsBlue",
+    "M_Int_LightsAmber",
+    "M_Int_LightsRed"
+   ]
+  },
+  "HoloProjector": {
+   "mesh": "SM_Prop_HoloProjector",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -12.0,
+     -12.0,
+     0.0
+    ],
+    [
+     12.0,
+     12.0,
+     34.3
+    ]
+   ],
+   "tris": 696,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Int_LightsCyan"
+   ]
+  }
+ },
+ "fixtures": {
+  "MonitorWall": {
+   "mesh": "SM_Prop_Fx_MonitorWall",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -58.0,
+     -35.0
+    ],
+    [
+     17.3,
+     58.0,
+     35.0
+    ]
+   ],
+   "tris": 112,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Live",
+    "M_Int_LightsRed",
+    "M_Prop_White"
+   ]
+  },
+  "MonitorHang": {
+   "mesh": "SM_Prop_Fx_MonitorHang",
+   "placement": "ceiling",
+   "bounds_cm": [
+    [
+     -6.0,
+     -50.0,
+     -105.0
+    ],
+    [
+     1.5,
+     50.0,
+     0.0
+    ]
+   ],
+   "tris": 80,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Live"
+   ]
+  },
+  "MonitorDesk": {
+   "mesh": "SM_Prop_Fx_MonitorDesk",
+   "placement": "table",
+   "bounds_cm": [
+    [
+     -12.0,
+     -32.0,
+     0.0
+    ],
+    [
+     4.0,
+     32.0,
+     54.0
+    ]
+   ],
+   "tris": 64,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Live"
+   ]
+  },
+  "Terminal": {
+   "mesh": "SM_Prop_Fx_Terminal",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -30.0,
+     -30.0,
+     0.0
+    ],
+    [
+     26.0,
+     30.0,
+     154.0
+    ]
+   ],
+   "tris": 636,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Term",
+    "M_Int_LightsGreen",
+    "M_Int_LightsAmber",
+    "M_Prop_Yellow"
+   ]
+  },
+  "WallPanel": {
+   "mesh": "SM_Prop_Fx_WallPanel",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -40.0,
+     100.0
+    ],
+    [
+     22.0,
+     40.0,
+     200.0
+    ]
+   ],
+   "tris": 252,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_RedPaint",
+    "M_Prop_Yellow",
+    "M_Prop_Blue",
+    "M_Prop_White",
+    "M_Prop_Term",
+    "M_Int_LightsGreen"
+   ]
+  },
+  "AlertButton": {
+   "mesh": "SM_Prop_Fx_AlertButton",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -20.0,
+     -19.5,
+     0.0
+    ],
+    [
+     20.0,
+     19.5,
+     124.0
+    ]
+   ],
+   "tris": 232,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Yellow",
+    "M_Prop_RedPaint",
+    "M_Int_LightsRed",
+    "M_Int_Viewport"
+   ]
+  },
+  "LightSwitch": {
+   "mesh": "SM_Prop_Fx_LightSwitch",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -8.0,
+     0.0
+    ],
+    [
+     6.0,
+     8.0,
+     20.0
+    ]
+   ],
+   "tris": 48,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_White",
+    "M_Prop_BlackPlastic",
+    "M_Int_LightsAmber"
+   ]
+  },
+  "Intercom": {
+   "mesh": "SM_Prop_Fx_Intercom",
+   "placement": "wall",
+   "bounds_cm": [
+    [
+     0.0,
+     -12.0,
+     0.0
+    ],
+    [
+     9.0,
+     12.0,
+     34.0
+    ]
+   ],
+   "tris": 120,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_RedPaint",
+    "M_Int_LightsGreen",
+    "M_Prop_Term"
+   ]
+  },
+  "Coffee": {
+   "mesh": "SM_Prop_Fx_Coffee",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -40.0,
+     -46.0,
+     0.0
+    ],
+    [
+     2.0,
+     46.0,
+     164.0
+    ]
+   ],
+   "tris": 772,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_White",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Brushed",
+    "M_Prop_Screen",
+    "M_Int_LightsGreen",
+    "M_Int_LightsRed",
+    "M_Int_Viewport",
+    "M_Prop_Blue",
+    "M_Prop_RedPaint",
+    "M_Prop_Olive"
+   ]
+  },
+  "MapTable": {
+   "mesh": "SM_Prop_Fx_MapTable",
+   "placement": "floor",
+   "bounds_cm": [
+    [
+     -56.0,
+     -56.0,
+     0.0
+    ],
+    [
+     56.0,
+     56.0,
+     124.3
+    ]
+   ],
+   "tris": 1228,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Term",
+    "M_Int_LightsCyan"
+   ]
+  }
+ },
+ "exterior": {
+  "NavLight": {
+   "mesh": "SM_ExtProp_NavLight",
+   "placement": "tip",
+   "bounds_cm": [
+    [
+     -18.0,
+     -8.5,
+     0.0
+    ],
+    [
+     18.0,
+     8.5,
+     15.5
+    ]
+   ],
+   "tris": 48,
+   "slots": [
+    "M_Prop_Hull",
+    "M_Prop_Beacon",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "Strobe": {
+   "mesh": "SM_ExtProp_Strobe",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -9.0,
+     -9.0,
+     0.0
+    ],
+    [
+     9.0,
+     9.0,
+     14.5
+    ]
+   ],
+   "tris": 200,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Beacon",
+    "M_Int_Viewport"
+   ]
+  },
+  "Beacon": {
+   "mesh": "SM_ExtProp_Beacon",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -16.0,
+     -16.0,
+     0.0
+    ],
+    [
+     16.0,
+     16.0,
+     10.0
+    ]
+   ],
+   "tris": 120,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "BeaconHead": {
+   "mesh": "SM_ExtProp_BeaconHead",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -11.0,
+     -11.0,
+     10.0
+    ],
+    [
+     11.0,
+     11.0,
+     29.0
+    ]
+   ],
+   "tris": 132,
+   "slots": [
+    "M_Prop_Beacon",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Steel"
+   ]
+  },
+  "Floodlight": {
+   "mesh": "SM_ExtProp_Floodlight",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -17.3,
+     -19.0,
+     0.0
+    ],
+    [
+     16.3,
+     19.0,
+     45.7
+    ]
+   ],
+   "tris": 116,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Beacon"
+   ]
+  },
+  "DockingGuide": {
+   "mesh": "SM_ExtProp_DockingGuide",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -60.0,
+     -14.0,
+     0.0
+    ],
+    [
+     60.0,
+     14.0,
+     5.5
+    ]
+   ],
+   "tris": 112,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_Beacon"
+   ]
+  },
+  "SpotlightTower": {
+   "mesh": "SM_ExtProp_SpotlightTower",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -26.0,
+     -27.6,
+     -0.0
+    ],
+    [
+     30.0,
+     27.6,
+     408.0
+    ]
+   ],
+   "tris": 984,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Beacon"
+   ]
+  },
+  "AntennaMast": {
+   "mesh": "SM_ExtProp_AntennaMast",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -14.0,
+     -40.9,
+     0.0
+    ],
+    [
+     14.0,
+     40.9,
+     187.5
+    ]
+   ],
+   "tris": 272,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_Brushed",
+    "M_Prop_Beacon"
+   ]
+  },
+  "WhipAntenna": {
+   "mesh": "SM_ExtProp_WhipAntenna",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -5.0,
+     -4.8,
+     0.0
+    ],
+    [
+     6.7,
+     4.8,
+     160.0
+    ]
+   ],
+   "tris": 84,
+   "slots": [
+    "M_Prop_BlackPlastic",
+    "M_Prop_Steel"
+   ]
+  },
+  "SensorDish": {
+   "mesh": "SM_ExtProp_SensorDish",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -45.8,
+     -55.0,
+     0.0
+    ],
+    [
+     22.0,
+     55.0,
+     117.4
+    ]
+   ],
+   "tris": 1972,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_Olive",
+    "M_Prop_White",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "RadarBase": {
+   "mesh": "SM_ExtProp_RadarBase",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -26.0,
+     -26.0,
+     0.0
+    ],
+    [
+     26.0,
+     26.0,
+     46.0
+    ]
+   ],
+   "tris": 148,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_Olive",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "RadarHead": {
+   "mesh": "SM_ExtProp_RadarHead",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -10.0,
+     -90.0,
+     46.0
+    ],
+    [
+     10.0,
+     90.0,
+     74.0
+    ]
+   ],
+   "tris": 272,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_White",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "CommArray": {
+   "mesh": "SM_ExtProp_CommArray",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -18.0,
+     -70.0,
+     0.0
+    ],
+    [
+     18.0,
+     70.0,
+     120.0
+    ]
+   ],
+   "tris": 252,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Brushed",
+    "M_Prop_Beacon"
+   ]
+  },
+  "SensorBall": {
+   "mesh": "SM_ExtProp_SensorBall",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -16.2,
+     -17.0,
+     0.0
+    ],
+    [
+     17.4,
+     17.0,
+     39.0
+    ]
+   ],
+   "tris": 164,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_Olive",
+    "M_Prop_Screen",
+    "M_Int_LightsBlue"
+   ]
+  },
+  "Radiator": {
+   "mesh": "SM_ExtProp_Radiator",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -40.0,
+     -10.0,
+     0.0
+    ],
+    [
+     40.0,
+     240.0,
+     20.0
+    ]
+   ],
+   "tris": 372,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_Hull",
+    "M_Prop_Copper",
+    "M_Int_LightsAmber"
+   ]
+  },
+  "SolarWing": {
+   "mesh": "SM_ExtProp_SolarWing",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -62.0,
+     -8.0,
+     0.0
+    ],
+    [
+     62.0,
+     380.0,
+     12.0
+    ]
+   ],
+   "tris": 292,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_Blue",
+    "M_Prop_Brushed"
+   ]
+  },
+  "RCSQuad": {
+   "mesh": "SM_ExtProp_RCSQuad",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -26.0,
+     -26.0,
+     0.0
+    ],
+    [
+     26.0,
+     26.0,
+     18.0
+    ]
+   ],
+   "tris": 312,
+   "slots": [
+    "M_Prop_Hull",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Steel"
+   ]
+  },
+  "FuelTank": {
+   "mesh": "SM_ExtProp_FuelTank",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -155.8,
+     -42.5,
+     0.0
+    ],
+    [
+     182.5,
+     42.0,
+     88.0
+    ]
+   ],
+   "tris": 284,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_White",
+    "M_Prop_Orange",
+    "M_Prop_Copper"
+   ]
+  },
+  "SphereTank": {
+   "mesh": "SM_ExtProp_SphereTank",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -72.0,
+     -72.0,
+     -0.6
+    ],
+    [
+     72.0,
+     72.0,
+     150.0
+    ]
+   ],
+   "tris": 492,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_White",
+    "M_Prop_Yellow"
+   ]
+  },
+  "CargoPod": {
+   "mesh": "SM_ExtProp_CargoPod",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -150.0,
+     -80.0,
+     0.0
+    ],
+    [
+     150.0,
+     80.0,
+     162.0
+    ]
+   ],
+   "tris": 300,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_Orange",
+    "M_Prop_Yellow",
+    "M_Prop_White"
+   ]
+  },
+  "TurretPD": {
+   "mesh": "SM_ExtProp_TurretPD",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -45.0,
+     -45.0,
+     0.0
+    ],
+    [
+     125.0,
+     45.0,
+     50.0
+    ]
+   ],
+   "tris": 324,
+   "slots": [
+    "M_Prop_Hull",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Olive",
+    "M_Prop_Steel",
+    "M_Prop_Screen"
+   ]
+  },
+  "MissilePod": {
+   "mesh": "SM_ExtProp_MissilePod",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -60.0,
+     -40.5,
+     0.0
+    ],
+    [
+     42.5,
+     40.0,
+     70.0
+    ]
+   ],
+   "tris": 672,
+   "slots": [
+    "M_Prop_Olive",
+    "M_Prop_BlackPlastic",
+    "M_Prop_RedPaint",
+    "M_Prop_Yellow"
+   ]
+  },
+  "AuxThruster": {
+   "mesh": "SM_ExtProp_AuxThruster",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -73.0,
+     -35.0,
+     -1.0
+    ],
+    [
+     60.0,
+     35.0,
+     51.0
+    ]
+   ],
+   "tris": 144,
+   "slots": [
+    "M_Prop_Hull",
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Int_LightsBlue"
+   ]
+  },
+  "HullVent": {
+   "mesh": "SM_ExtProp_HullVent",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -40.0,
+     -25.0,
+     0.0
+    ],
+    [
+     40.0,
+     25.0,
+     6.0
+    ]
+   ],
+   "tris": 96,
+   "slots": [
+    "M_Prop_Hull",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "AccessHatch": {
+   "mesh": "SM_ExtProp_AccessHatch",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -45.0,
+     -45.0,
+     0.0
+    ],
+    [
+     45.0,
+     45.0,
+     9.0
+    ]
+   ],
+   "tris": 104,
+   "slots": [
+    "M_Prop_Hull",
+    "M_Prop_Steel",
+    "M_Prop_Yellow",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "ConduitRun": {
+   "mesh": "SM_ExtProp_ConduitRun",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -150.0,
+     -20.0,
+     0.0
+    ],
+    [
+     150.0,
+     20.0,
+     18.0
+    ]
+   ],
+   "tris": 168,
+   "slots": [
+    "M_Prop_Copper",
+    "M_Prop_Steel"
+   ]
+  },
+  "Greeble": {
+   "mesh": "SM_ExtProp_Greeble",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -60.0,
+     -40.0,
+     0.0
+    ],
+    [
+     60.0,
+     40.0,
+     20.0
+    ]
+   ],
+   "tris": 124,
+   "slots": [
+    "M_Prop_Hull",
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Copper",
+    "M_Int_LightsGreen"
+   ]
+  },
+  "AirlockHatch": {
+   "mesh": "SM_ExtProp_AirlockHatch",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -80.0,
+     -110.0,
+     0.0
+    ],
+    [
+     80.0,
+     110.0,
+     16.0
+    ]
+   ],
+   "tris": 348,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_Hull",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Yellow",
+    "M_Prop_Beacon"
+   ]
+  },
+  "ObservationBlister": {
+   "mesh": "SM_ExtProp_ObservationBlister",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -90.0,
+     -90.0,
+     -68.0
+    ],
+    [
+     90.0,
+     90.0,
+     92.0
+    ]
+   ],
+   "tris": 292,
+   "slots": [
+    "M_Prop_Hull",
+    "M_Int_Viewport",
+    "M_Prop_Steel"
+   ]
+  },
+  "DockingClamp": {
+   "mesh": "SM_ExtProp_DockingClamp",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -40.0,
+     -51.0,
+     0.0
+    ],
+    [
+     170.0,
+     51.0,
+     50.0
+    ]
+   ],
+   "tris": 120,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_Hull",
+    "M_Prop_Yellow",
+    "M_Prop_BlackPlastic"
+   ]
+  },
+  "StationSign": {
+   "mesh": "SM_ExtProp_StationSign",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -8.0,
+     -200.0,
+     0.0
+    ],
+    [
+     5.0,
+     200.0,
+     200.0
+    ]
+   ],
+   "tris": 176,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Beacon"
+   ]
+  },
+  "HoloBillboard": {
+   "mesh": "SM_ExtProp_HoloBillboard",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -10.0,
+     -160.0,
+     0.0
+    ],
+    [
+     11.0,
+     160.0,
+     270.0
+    ]
+   ],
+   "tris": 72,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Int_LightsCyan",
+    "M_Prop_Beacon"
+   ]
+  },
+  "TrafficBeacon": {
+   "mesh": "SM_ExtProp_TrafficBeacon",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -16.0,
+     -16.0,
+     0.0
+    ],
+    [
+     16.0,
+     16.0,
+     296.0
+    ]
+   ],
+   "tris": 464,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_BlackPlastic",
+    "M_Int_LightsRed",
+    "M_Int_LightsAmber",
+    "M_Int_LightsGreen"
+   ]
+  },
+  "HabPod": {
+   "mesh": "SM_ExtProp_HabPod",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -245.1,
+     -101.5,
+     0.0
+    ],
+    [
+     245.1,
+     101.5,
+     210.0
+    ]
+   ],
+   "tris": 428,
+   "slots": [
+    "M_Prop_Hull",
+    "M_Int_Viewport",
+    "M_Int_LightsAmber",
+    "M_Prop_Steel"
+   ]
+  },
+  "DroneDock": {
+   "mesh": "SM_ExtProp_DroneDock",
+   "placement": "surface",
+   "bounds_cm": [
+    [
+     -40.0,
+     -41.0,
+     0.0
+    ],
+    [
+     40.0,
+     40.0,
+     60.0
+    ]
+   ],
+   "tris": 456,
+   "slots": [
+    "M_Prop_Steel",
+    "M_Prop_Yellow",
+    "M_Prop_BlackPlastic",
+    "M_Prop_Beacon"
+   ]
+  }
+ }
+}
