@@ -1,0 +1,733 @@
+{
+ "prefix": "SM_Int_Cruiser_Decks",
+ "ship": "Cruiser",
+ "bp": "/Game/Blueprints/Ships/BP_Ship_Cruiser",
+ "style": "clean",
+ "family": "ShipDecks (generic full deck, driven by P_ sockets)",
+ "runtime_scale_on_imported_mesh": 0.01,
+ "design_bounds_cm": {
+  "min": [
+   -2340.0,
+   -815.0,
+   -20.0
+  ],
+  "max": [
+   2352.0,
+   815.0,
+   700.0
+  ]
+ },
+ "size_m": [
+  46.9,
+  16.3
+ ],
+ "parts": [
+  "Shell",
+  "Lights",
+  "Collision",
+  "Wards",
+  "Medical",
+  "Engine",
+  "Bridge"
+ ],
+ "sockets_ue_design_cm": {
+  "L_W_07_000": [
+   -1281.7,
+   -475.0,
+   320,
+   0.0
+  ],
+  "L_W_07_001": [
+   -925.0,
+   -475.0,
+   320,
+   0.0
+  ],
+  "L_W_07_002": [
+   -568.3,
+   -475.0,
+   320,
+   0.0
+  ],
+  "X_WallPanel_Status_000": [
+   -400.0,
+   -554.0,
+   0,
+   -180.0
+  ],
+  "L_B_07_003": [
+   -695.0,
+   540.0,
+   320,
+   0.0
+  ],
+  "L_W_07_004": [
+   -1192.5,
+   475.0,
+   320,
+   0.0
+  ],
+  "L_W_07_005": [
+   -657.5,
+   475.0,
+   320,
+   0.0
+  ],
+  "X_WallPanel_Status_001": [
+   -400.0,
+   725.0,
+   0,
+   -180.0
+  ],
+  "L_W_07_006": [
+   -1110.0,
+   0,
+   280,
+   0.0
+  ],
+  "X_MonitorWall_Starboard_002": [
+   -1355.0,
+   135.0,
+   165,
+   -90.0
+  ],
+  "L_W_07_007": [
+   -105.0,
+   -475.0,
+   320,
+   0.0
+  ],
+  "L_W_07_008": [
+   405.0,
+   -475.0,
+   320,
+   0.0
+  ],
+  "X_WallPanel_Status_003": [
+   650.0,
+   -554.0,
+   0,
+   -180.0
+  ],
+  "L_W_05_009": [
+   1000.0,
+   -635.0,
+   320,
+   0.0
+  ],
+  "L_W_06_010": [
+   1000.0,
+   -325.0,
+   320,
+   0.0
+  ],
+  "L_W_08_011": [
+   50.0,
+   475.0,
+   320,
+   0.0
+  ],
+  "LS_W_06_012": [
+   50.0,
+   506.0,
+   230,
+   0.0
+  ],
+  "L_W_08_013": [
+   900.0,
+   475.0,
+   320,
+   0.0
+  ],
+  "L_C_05_014": [
+   900.0,
+   444.0,
+   210,
+   0.0
+  ],
+  "X_WallPanel_Status_004": [
+   500.0,
+   554.0,
+   0,
+   -0.0
+  ],
+  "L_W_07_015": [
+   -10.0,
+   0,
+   280,
+   0.0
+  ],
+  "L_W_07_016": [
+   790.0,
+   0,
+   280,
+   0.0
+  ],
+  "X_MonitorWall_Starboard_005": [
+   -255.0,
+   135.0,
+   165,
+   -90.0
+  ],
+  "LS_A_09_017": [
+   -1732.4,
+   -235.6,
+   340.0,
+   0.0
+  ],
+  "L_A_09_018": [
+   -2203.6,
+   -235.6,
+   340.0,
+   0.0
+  ],
+  "L_A_09_019": [
+   -2203.6,
+   235.6,
+   340.0,
+   0.0
+  ],
+  "L_A_09_020": [
+   -1732.4,
+   235.6,
+   340.0,
+   0.0
+  ],
+  "L_W_08_021": [
+   -1725.0,
+   400.0,
+   430,
+   0.0
+  ],
+  "L_W_08_022": [
+   -1725.0,
+   -400.0,
+   430,
+   0.0
+  ],
+  "X_Terminal_Engineering_006": [
+   -1520.0,
+   620.0,
+   0,
+   -180.0
+  ],
+  "X_MonitorWall_Stern_007": [
+   -1490.0,
+   290.0,
+   190,
+   -180.0
+  ],
+  "L_W_09_023": [
+   1582.5,
+   0,
+   290,
+   0.0
+  ],
+  "L_W_09_024": [
+   2067.5,
+   0,
+   290,
+   0.0
+  ],
+  "L_R_05_025": [
+   1490.0,
+   0,
+   260,
+   0.0
+  ],
+  "X_MonitorHang_Chase_008": [
+   2060.0,
+   170,
+   360,
+   -180.0
+  ],
+  "X_MonitorHang_Stern_009": [
+   2060.0,
+   -170,
+   360,
+   -180.0
+  ],
+  "X_AlertButton_-_010": [
+   1960.0,
+   -110,
+   0,
+   -180.0
+  ],
+  "X_Terminal_Nav_011": [
+   1460.0,
+   300.0,
+   0,
+   -0.0
+  ],
+  "X_WallPanel_Comms_012": [
+   1400.0,
+   -440.0,
+   0,
+   -0.0
+  ],
+  "Seat": [
+   2160.0,
+   -0.0,
+   100.0,
+   0.0
+  ],
+  "Entry": [
+   1830.0,
+   -0.0,
+   100.0,
+   180.0
+  ]
+ },
+ "views": [
+  [
+   "engine",
+   [
+    -1655.0,
+    -450.0,
+    165
+   ],
+   [
+    -1968.0,
+    100.0,
+    306.0
+   ],
+   14
+  ],
+  [
+   "bridge_spawn",
+   [
+    1830.0,
+    0.0,
+    165
+   ],
+   [
+    1325.0,
+    0,
+    130
+   ],
+   16
+  ],
+  [
+   "bridge_fwd",
+   [
+    1445.0,
+    -330.0,
+    210
+   ],
+   [
+    2325.0,
+    110.0,
+    200
+   ],
+   16
+  ],
+  [
+   "wards_spine",
+   [
+    -495.0,
+    0,
+    165
+   ],
+   [
+    -1475.0,
+    0,
+    150
+   ],
+   16
+  ],
+  [
+   "medical_spine",
+   [
+    1205.0,
+    0,
+    165
+   ],
+   [
+    -375.0,
+    0,
+    150
+   ],
+   16
+  ]
+ ],
+ "plan_z": 300,
+ "light_count": 26,
+ "fixture_count": 13,
+ "tris": {
+  "Shell": 2020,
+  "Lights": 3316,
+  "Collision": 1504,
+  "Wards": 3668,
+  "Medical": 6600,
+  "Engine": 7692,
+  "Bridge": 2336
+ },
+ "tris_total": 27136,
+ "slots": {
+  "Shell": [
+   "M_Int_Deck",
+   "M_Int_Shell",
+   "M_Interior_Eng",
+   "M_Int_Clean",
+   "M_Int_Viewport",
+   "M_Int_Steel",
+   "M_Int_AccentBlue",
+   "M_Int_Hatch"
+  ],
+  "Lights": [
+   "M_Int_LightsRed",
+   "M_Int_LightsGreen",
+   "M_Int_LightsCyan",
+   "M_Int_Lights",
+   "M_Int_LightsBlue",
+   "M_Int_LightsAmber",
+   "M_Int_LightsWarm",
+   "M_Int_Console"
+  ],
+  "Collision": [
+   "M_Int_Collision"
+  ],
+  "Wards": [
+   "M_Int_Galley",
+   "M_Int_Bunks",
+   "M_Int_Hatch",
+   "M_Int_Viewport",
+   "M_Int_Clean",
+   "M_Prop_White",
+   "M_Prop_Orange",
+   "M_Prop_Blue",
+   "M_Prop_RedPaint",
+   "M_Prop_Steel",
+   "M_Prop_BlackPlastic",
+   "M_Int_AccentBlue",
+   "M_Int_Steel"
+  ],
+  "Medical": [
+   "M_Int_Steel",
+   "M_Int_Bunks",
+   "M_Int_Hatch",
+   "M_Int_Viewport",
+   "M_Int_Clean",
+   "M_Prop_White",
+   "M_Prop_Orange",
+   "M_Prop_Blue",
+   "M_Prop_RedPaint",
+   "M_Prop_Steel",
+   "M_Prop_BlackPlastic",
+   "M_Int_Galley",
+   "M_Int_AccentBlue",
+   "M_Prop_Screen",
+   "M_Prop_Olive",
+   "M_Prop_Cardboard",
+   "M_Prop_Ceramic",
+   "M_Prop_Green",
+   "M_Prop_Yellow",
+   "M_Prop_Rubber"
+  ],
+  "Engine": [
+   "M_Int_Grate",
+   "M_Int_Steel",
+   "M_Int_Hatch",
+   "M_Int_Stations",
+   "M_Int_Paint",
+   "M_Int_Vents",
+   "M_Int_Bunks",
+   "M_Prop_Steel",
+   "M_Prop_BlackPlastic",
+   "M_Prop_RedPaint",
+   "M_Prop_Yellow",
+   "M_Prop_White",
+   "M_Int_Viewport",
+   "M_Prop_Orange",
+   "M_Prop_Green",
+   "M_Prop_Blue",
+   "M_Prop_Wood"
+  ],
+  "Bridge": [
+   "M_Int_Clean",
+   "M_Int_Hatch",
+   "M_Int_Steel",
+   "M_Int_Bunks",
+   "M_Prop_White",
+   "M_Prop_BlackPlastic",
+   "M_Prop_Screen",
+   "M_Prop_RedPaint"
+  ]
+ },
+ "walk": {
+  "entry_free": true,
+  "seat_reachable": true,
+  "rooms": {
+   "Engine": 0.9,
+   "Bridge": 1.0,
+   "Wards:ward": 1.0,
+   "Wards:cryo": 0.99,
+   "Wards:spine": 1.0,
+   "Medical:ward": 1.0,
+   "Medical:cabins": 0.82,
+   "Medical:surgery": 1.0,
+   "Medical:lab": 1.0,
+   "Medical:spine": 1.0
+  },
+  "unreached": [],
+  "route": [
+   [
+    1725.0,
+    160.0,
+    ""
+   ],
+   [
+    1655.0,
+    170.0,
+    ""
+   ],
+   [
+    1445.0,
+    160.0,
+    ""
+   ],
+   [
+    1365.0,
+    80.0,
+    ""
+   ],
+   [
+    1295.0,
+    70.0,
+    ""
+   ],
+   [
+    -1725.0,
+    60.0,
+    ""
+   ],
+   [
+    -1735.0,
+    120.0,
+    ""
+   ],
+   [
+    -1795.0,
+    200.0,
+    ""
+   ],
+   [
+    -2125.0,
+    500.0,
+    "Engine"
+   ],
+   [
+    -1985.0,
+    380.0,
+    ""
+   ],
+   [
+    -1515.0,
+    80.0,
+    ""
+   ],
+   [
+    -1445.0,
+    70.0,
+    ""
+   ],
+   [
+    1475.0,
+    -90.0,
+    ""
+   ],
+   [
+    1585.0,
+    -290.0,
+    "Bridge"
+   ],
+   [
+    1375.0,
+    -90.0,
+    ""
+   ],
+   [
+    1325.0,
+    -80.0,
+    ""
+   ],
+   [
+    -945.0,
+    -60.0,
+    ""
+   ],
+   [
+    -975.0,
+    -210.0,
+    ""
+   ],
+   [
+    -1275.0,
+    -350.0,
+    "Wards:ward"
+   ],
+   [
+    -965.0,
+    -210.0,
+    ""
+   ],
+   [
+    -965.0,
+    170.0,
+    ""
+   ],
+   [
+    -985.0,
+    210.0,
+    ""
+   ],
+   [
+    -1275.0,
+    600.0,
+    "Wards:cryo"
+   ],
+   [
+    -955.0,
+    170.0,
+    ""
+   ],
+   [
+    -955.0,
+    -0.0,
+    "Wards:spine"
+   ],
+   [
+    105.0,
+    -90.0,
+    ""
+   ],
+   [
+    105.0,
+    -180.0,
+    ""
+   ],
+   [
+    85.0,
+    -220.0,
+    ""
+   ],
+   [
+    -175.0,
+    -350.0,
+    "Medical:ward"
+   ],
+   [
+    185.0,
+    -160.0,
+    ""
+   ],
+   [
+    195.0,
+    -100.0,
+    ""
+   ],
+   [
+    255.0,
+    -80.0,
+    ""
+   ],
+   [
+    955.0,
+    -80.0,
+    ""
+   ],
+   [
+    955.0,
+    -310.0,
+    "Medical:cabins"
+   ],
+   [
+    955.0,
+    -130.0,
+    ""
+   ],
+   [
+    935.0,
+    -90.0,
+    ""
+   ],
+   [
+    35.0,
+    90.0,
+    ""
+   ],
+   [
+    35.0,
+    270.0,
+    "Medical:surgery"
+   ],
+   [
+    105.0,
+    80.0,
+    ""
+   ],
+   [
+    175.0,
+    70.0,
+    ""
+   ],
+   [
+    885.0,
+    70.0,
+    ""
+   ],
+   [
+    885.0,
+    240.0,
+    "Medical:lab"
+   ],
+   [
+    835.0,
+    80.0,
+    ""
+   ],
+   [
+    765.0,
+    70.0,
+    ""
+   ],
+   [
+    35.0,
+    30.0,
+    "Medical:spine"
+   ],
+   [
+    1475.0,
+    80.0,
+    ""
+   ],
+   [
+    1485.0,
+    110.0,
+    ""
+   ],
+   [
+    1515.0,
+    160.0,
+    ""
+   ],
+   [
+    1585.0,
+    170.0,
+    ""
+   ],
+   [
+    2145.0,
+    150.0,
+    ""
+   ],
+   [
+    2145.0,
+    -0.0,
+    "helm"
+   ]
+  ]
+ },
+ "blender_to_ue_axes": "UE(x, y, z) = Blender(x, -y, z) * 100 * 0.01",
+ "problems": []
+}

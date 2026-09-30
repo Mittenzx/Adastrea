@@ -5,6 +5,8 @@
 #include "Materials/MaterialInterface.h"
 #include "Misc/PackageName.h"
 #include "Misc/ScopeLock.h"
+#include "Ships/ExteriorDressingComponent.h"
+#include "Stations/DockingBayModule.h"
 
 // ============================================================================
 // Per-class default module meshes
@@ -553,4 +555,18 @@ void ASpaceStationModule::OnModuleDestroyed()
     // - Create debris actors
     // - Notify parent station
     // - Trigger gameplay events
+}
+
+void ASpaceStationModule::BeginPlay()
+{
+    Super::BeginPlay();
+    // Exterior props, unless the module (or its Blueprint) already carries its own dressing.
+    if (UExteriorDressingComponent::IsAutoDressingEnabled() && !FindComponentByClass<UExteriorDressingComponent>() && MeshComponent)
+    {
+        UExteriorDressingComponent* Dressing = NewObject<UExteriorDressingComponent>(this, TEXT("ExteriorDressing"));
+        Dressing->Preset = IsA<ADockingBayModule>() ? EExteriorDressingPreset::DockingBay : EExteriorDressingPreset::StationModule;
+        Dressing->TargetMesh = MeshComponent;
+        Dressing->SetupAttachment(GetRootComponent());
+        Dressing->RegisterComponent();     // BeginPlay on a component registered after the actor's -> Dress()
+    }
 }

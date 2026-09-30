@@ -1,0 +1,731 @@
+{
+ "prefix": "SM_Int_Genesis_Decks",
+ "ship": "Genesis",
+ "bp": "/Game/Blueprints/Ships/BP_Ship_Transport_Genesis",
+ "style": "clean",
+ "family": "ShipDecks (generic full deck, driven by P_ sockets)",
+ "runtime_scale_on_imported_mesh": 0.01,
+ "design_bounds_cm": {
+  "min": [
+   -4615.0,
+   -1415.0,
+   -20.0
+  ],
+  "max": [
+   4627.0,
+   1415.0,
+   1120.0
+  ]
+ },
+ "size_m": [
+  92.4,
+  28.3
+ ],
+ "parts": [
+  "Shell",
+  "Lights",
+  "Collision",
+  "Bridge",
+  "Commons",
+  "Engine",
+  "Cryohall",
+  "Farm"
+ ],
+ "sockets_ue_design_cm": {
+  "L_W_08_000": [
+   2000.0,
+   -475.0,
+   320,
+   0.0
+  ],
+  "X_Coffee_-_000": [
+   2345.0,
+   -610.0,
+   0,
+   -180.0
+  ],
+  "X_MonitorWall_Chase_001": [
+   2385.0,
+   -382.0,
+   175,
+   -180.0
+  ],
+  "L_W_05_001": [
+   2750.0,
+   -635.0,
+   320,
+   0.0
+  ],
+  "L_W_06_002": [
+   2750.0,
+   -325.0,
+   320,
+   0.0
+  ],
+  "L_W_07_003": [
+   1975.0,
+   475.0,
+   320,
+   0.0
+  ],
+  "L_W_05_004": [
+   1975.0,
+   640.0,
+   250,
+   0.0
+  ],
+  "L_W_07_005": [
+   2725.0,
+   475.0,
+   320,
+   0.0
+  ],
+  "L_W_07_006": [
+   1965.0,
+   0,
+   280,
+   0.0
+  ],
+  "L_W_07_007": [
+   2765.0,
+   0,
+   280,
+   0.0
+  ],
+  "X_MonitorWall_Starboard_002": [
+   1720.0,
+   135.0,
+   165,
+   -90.0
+  ],
+  "LS_A_12_008": [
+   -3058.4,
+   -435.6,
+   380.0,
+   0.0
+  ],
+  "L_A_12_009": [
+   -3929.6,
+   -435.6,
+   380.0,
+   0.0
+  ],
+  "L_A_12_010": [
+   -3929.6,
+   435.6,
+   380.0,
+   0.0
+  ],
+  "L_A_12_011": [
+   -3058.4,
+   435.6,
+   380.0,
+   0.0
+  ],
+  "L_W_10_012": [
+   -3050.0,
+   800.0,
+   850,
+   0.0
+  ],
+  "L_W_10_013": [
+   -3050.0,
+   -800.0,
+   850,
+   0.0
+  ],
+  "X_Terminal_Engineering_003": [
+   -2845.0,
+   640.0,
+   0,
+   -180.0
+  ],
+  "X_MonitorWall_Stern_004": [
+   -2815.0,
+   310.0,
+   190,
+   -180.0
+  ],
+  "LS_B_14_014": [
+   -2366.7,
+   0,
+   750,
+   0.0
+  ],
+  "L_B_14_015": [
+   -1500.0,
+   0,
+   750,
+   0.0
+  ],
+  "L_B_14_016": [
+   -633.3,
+   0,
+   750,
+   0.0
+  ],
+  "L_W_12_017": [
+   -1500.0,
+   0,
+   300,
+   0.0
+  ],
+  "X_WallPanel_Status_005": [
+   -225.0,
+   -310.0,
+   0,
+   -180.0
+  ],
+  "L_G_12_018": [
+   100.0,
+   -520.0,
+   600,
+   0.0
+  ],
+  "LS_P_12_019": [
+   100.0,
+   520.0,
+   600,
+   0.0
+  ],
+  "L_G_12_020": [
+   700.0,
+   -520.0,
+   600,
+   0.0
+  ],
+  "L_P_12_021": [
+   700.0,
+   520.0,
+   600,
+   0.0
+  ],
+  "L_G_12_022": [
+   1300.0,
+   -520.0,
+   600,
+   0.0
+  ],
+  "L_P_12_023": [
+   1300.0,
+   520.0,
+   600,
+   0.0
+  ],
+  "L_W_10_024": [
+   700.0,
+   0,
+   640,
+   0.0
+  ],
+  "X_Terminal_Engineering_006": [
+   -155.0,
+   -280.0,
+   0,
+   -0.0
+  ],
+  "L_C_06_025": [
+   3730.0,
+   0,
+   260,
+   0.0
+  ],
+  "L_W_09_026": [
+   3360.0,
+   0,
+   390,
+   0.0
+  ],
+  "L_W_09_027": [
+   3850.0,
+   0,
+   390,
+   0.0
+  ],
+  "L_W_09_028": [
+   4340.0,
+   0,
+   390,
+   0.0
+  ],
+  "L_R_05_029": [
+   3265.0,
+   0,
+   360,
+   0.0
+  ],
+  "X_MonitorHang_Chase_007": [
+   4335.0,
+   170,
+   460,
+   -180.0
+  ],
+  "X_MonitorHang_Stern_008": [
+   4335.0,
+   -170,
+   460,
+   -180.0
+  ],
+  "X_AlertButton_-_009": [
+   3455.0,
+   -90,
+   40,
+   -180.0
+  ],
+  "X_MapTable_-_010": [
+   4145.0,
+   -420.0,
+   0,
+   -0.0
+  ],
+  "X_WallPanel_Comms_011": [
+   3175.0,
+   -640.0,
+   0,
+   -0.0
+  ],
+  "X_MonitorWall_Bow_012": [
+   3175.0,
+   640.0,
+   200,
+   -0.0
+  ],
+  "Seat": [
+   4435.0,
+   -0.0,
+   100.0,
+   0.0
+  ],
+  "Entry": [
+   3730.0,
+   485.0,
+   100.0,
+   0.0
+  ]
+ },
+ "views": [
+  [
+   "engine",
+   [
+    -2980.0,
+    -850.0,
+    165
+   ],
+   [
+    -3494.0,
+    100.0,
+    495.0
+   ],
+   14
+  ],
+  [
+   "cryohall",
+   [
+    -365.0,
+    0,
+    165
+   ],
+   [
+    -2485.0,
+    0,
+    200
+   ],
+   14
+  ],
+  [
+   "cryo_gallery",
+   [
+    -515.0,
+    1150.0,
+    585.0
+   ],
+   [
+    -2385.0,
+    0,
+    120
+   ],
+   14
+  ],
+  [
+   "farm",
+   [
+    1335.0,
+    0,
+    165
+   ],
+   [
+    115.0,
+    60,
+    150
+   ],
+   14
+  ],
+  [
+   "bridge_spawn",
+   [
+    3730.0,
+    -485.0,
+    165
+   ],
+   [
+    4600.0,
+    0,
+    130
+   ],
+   16
+  ],
+  [
+   "bridge_fwd",
+   [
+    3220.0,
+    -450.0,
+    210
+   ],
+   [
+    4600.0,
+    150.0,
+    200
+   ],
+   16
+  ],
+  [
+   "commons_spine",
+   [
+    2980.0,
+    0,
+    165
+   ],
+   [
+    1600.0,
+    0,
+    150
+   ],
+   16
+  ]
+ ],
+ "plan_z": 300,
+ "light_count": 30,
+ "fixture_count": 13,
+ "tris": {
+  "Shell": 1944,
+  "Lights": 6204,
+  "Collision": 4012,
+  "Bridge": 3944,
+  "Commons": 5840,
+  "Engine": 14948,
+  "Cryohall": 29472,
+  "Farm": 14956
+ },
+ "tris_total": 81320,
+ "slots": {
+  "Shell": [
+   "M_Int_Deck",
+   "M_Int_Shell",
+   "M_Interior_Eng",
+   "M_Int_Clean",
+   "M_Int_Viewport",
+   "M_Int_Steel",
+   "M_Int_AccentBlue",
+   "M_Int_Hatch"
+  ],
+  "Lights": [
+   "M_Int_LightsRed",
+   "M_Int_LightsGreen",
+   "M_Int_LightsAmber",
+   "M_Int_Lights",
+   "M_Int_LightsCyan",
+   "M_Int_LightsWarm",
+   "M_Int_LightsBlue",
+   "M_Int_Console"
+  ],
+  "Collision": [
+   "M_Int_Collision"
+  ],
+  "Bridge": [
+   "M_Int_Hatch",
+   "M_Int_Clean",
+   "M_Int_Steel",
+   "M_Int_Bunks",
+   "M_Int_Deck",
+   "M_Int_Grate",
+   "M_Int_AccentBlue",
+   "M_Prop_White",
+   "M_Prop_BlackPlastic",
+   "M_Prop_Screen",
+   "M_Prop_RedPaint"
+  ],
+  "Commons": [
+   "M_Int_Galley",
+   "M_Int_Clean",
+   "M_Int_Steel",
+   "M_Int_Hatch",
+   "M_Int_Bunks",
+   "M_Prop_White",
+   "M_Prop_BlackPlastic",
+   "M_Prop_Green",
+   "M_Prop_Paper",
+   "M_Prop_RedPaint",
+   "M_Prop_Brushed",
+   "M_Prop_Blue",
+   "M_Prop_Yellow",
+   "M_Prop_Steel",
+   "M_Int_AccentBlue",
+   "M_Prop_Screen",
+   "M_Prop_Olive",
+   "M_Prop_Cardboard",
+   "M_Prop_Ceramic",
+   "M_Int_Viewport",
+   "M_Prop_Orange"
+  ],
+  "Engine": [
+   "M_Int_Grate",
+   "M_Int_Steel",
+   "M_Int_Hatch",
+   "M_Int_Stations",
+   "M_Int_Paint",
+   "M_Int_Vents",
+   "M_Int_Console",
+   "M_Int_Bunks",
+   "M_Prop_Steel",
+   "M_Prop_BlackPlastic",
+   "M_Prop_RedPaint",
+   "M_Prop_Yellow",
+   "M_Prop_White",
+   "M_Int_Viewport",
+   "M_Prop_Orange",
+   "M_Prop_Wood"
+  ],
+  "Cryohall": [
+   "M_Int_Steel",
+   "M_Int_Hatch",
+   "M_Int_Clean",
+   "M_Int_Viewport",
+   "M_Int_Grate",
+   "M_Int_AccentBlue",
+   "M_Prop_Yellow",
+   "M_Prop_BlackPlastic",
+   "M_Prop_Rubber"
+  ],
+  "Farm": [
+   "M_Int_Steel",
+   "M_Int_Hatch",
+   "M_Int_Clean",
+   "M_Int_Plant",
+   "M_Int_Vents",
+   "M_Int_AccentBlue",
+   "M_Prop_RedPaint",
+   "M_Prop_Steel",
+   "M_Prop_BlackPlastic"
+  ]
+ },
+ "walk": {
+  "entry_free": true,
+  "seat_reachable": true,
+  "rooms": {
+   "Engine": 0.85,
+   "Cryohall": 0.95,
+   "Farm": 0.91,
+   "Bridge": 1.0,
+   "Commons:mess": 1.0,
+   "Commons:cabins": 0.83,
+   "Commons:medbay": 1.0,
+   "Commons:storage": 1.0,
+   "Commons:spine": 1.0
+  },
+  "unreached": [],
+  "route": [
+   [
+    3130.0,
+    80.0,
+    ""
+   ],
+   [
+    3080.0,
+    70.0,
+    ""
+   ],
+   [
+    -3070.0,
+    90.0,
+    ""
+   ],
+   [
+    -3070.0,
+    360.0,
+    ""
+   ],
+   [
+    -3100.0,
+    410.0,
+    ""
+   ],
+   [
+    -4400.0,
+    900.0,
+    "Engine"
+   ],
+   [
+    -2950.0,
+    350.0,
+    ""
+   ],
+   [
+    -2950.0,
+    250.0,
+    ""
+   ],
+   [
+    -2870.0,
+    120.0,
+    ""
+   ],
+   [
+    -2740.0,
+    -0.0,
+    "Cryohall"
+   ],
+   [
+    -140.0,
+    -0.0,
+    "Farm"
+   ],
+   [
+    3170.0,
+    -0.0,
+    "Bridge"
+   ],
+   [
+    1960.0,
+    -90.0,
+    ""
+   ],
+   [
+    1960.0,
+    -180.0,
+    ""
+   ],
+   [
+    1940.0,
+    -220.0,
+    ""
+   ],
+   [
+    1800.0,
+    -350.0,
+    "Commons:mess"
+   ],
+   [
+    2070.0,
+    -90.0,
+    ""
+   ],
+   [
+    2120.0,
+    -80.0,
+    ""
+   ],
+   [
+    2710.0,
+    -80.0,
+    ""
+   ],
+   [
+    2710.0,
+    -310.0,
+    "Commons:cabins"
+   ],
+   [
+    2710.0,
+    -130.0,
+    ""
+   ],
+   [
+    2690.0,
+    -90.0,
+    ""
+   ],
+   [
+    1940.0,
+    110.0,
+    ""
+   ],
+   [
+    1940.0,
+    170.0,
+    ""
+   ],
+   [
+    1880.0,
+    340.0,
+    "Commons:medbay"
+   ],
+   [
+    2040.0,
+    80.0,
+    ""
+   ],
+   [
+    2110.0,
+    70.0,
+    ""
+   ],
+   [
+    2690.0,
+    70.0,
+    ""
+   ],
+   [
+    2690.0,
+    170.0,
+    ""
+   ],
+   [
+    2610.0,
+    370.0,
+    "Commons:storage"
+   ],
+   [
+    2690.0,
+    160.0,
+    ""
+   ],
+   [
+    2680.0,
+    90.0,
+    ""
+   ],
+   [
+    2620.0,
+    70.0,
+    ""
+   ],
+   [
+    1960.0,
+    10.0,
+    "Commons:spine"
+   ],
+   [
+    3410.0,
+    90.0,
+    ""
+   ],
+   [
+    3630.0,
+    210.0,
+    ""
+   ],
+   [
+    4420.0,
+    190.0,
+    ""
+   ],
+   [
+    4420.0,
+    -0.0,
+    "helm"
+   ]
+  ]
+ },
+ "blender_to_ue_axes": "UE(x, y, z) = Blender(x, -y, z) * 100 * 0.01",
+ "problems": []
+}

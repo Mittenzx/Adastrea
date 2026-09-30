@@ -1,0 +1,549 @@
+{
+ "prefix": "SM_Int_Corvette_Decks",
+ "ship": "Corvette",
+ "bp": "/Game/Blueprints/Ships/BP_Ship_Corvette",
+ "style": "military",
+ "family": "ShipDecks (generic full deck, driven by P_ sockets)",
+ "runtime_scale_on_imported_mesh": 0.01,
+ "design_bounds_cm": {
+  "min": [
+   -1965.0,
+   -665.0,
+   -20.0
+  ],
+  "max": [
+   1977.0,
+   665.0,
+   620.0
+  ]
+ },
+ "size_m": [
+  39.4,
+  13.3
+ ],
+ "parts": [
+  "Shell",
+  "Lights",
+  "Collision",
+  "Crew",
+  "Engine",
+  "Boarding",
+  "Bridge"
+ ],
+ "sockets_ue_design_cm": {
+  "L_W_06_000": [
+   62.5,
+   -335.0,
+   290,
+   0.0
+  ],
+  "L_W_06_001": [
+   687.5,
+   -335.0,
+   290,
+   0.0
+  ],
+  "X_LightSwitch_-_000": [
+   577.5,
+   -135.0,
+   125,
+   -90
+  ],
+  "L_W_06_002": [
+   50.0,
+   335.0,
+   290,
+   0.0
+  ],
+  "L_R_04_003": [
+   50.0,
+   455.0,
+   270,
+   0.0
+  ],
+  "X_WallPanel_Status_001": [
+   317.0,
+   285.0,
+   0,
+   -180.0
+  ],
+  "L_W_07_004": [
+   675.0,
+   335.0,
+   290,
+   0.0
+  ],
+  "L_W_05_005": [
+   675.0,
+   390.0,
+   220,
+   0.0
+  ],
+  "L_W_07_006": [
+   65.0,
+   0,
+   250,
+   0.0
+  ],
+  "L_W_07_007": [
+   665.0,
+   0,
+   250,
+   0.0
+  ],
+  "X_MonitorWall_Starboard_002": [
+   -130.0,
+   105.0,
+   165,
+   -90.0
+  ],
+  "LS_W_07_008": [
+   -1650.0,
+   0,
+   410,
+   0.0
+  ],
+  "X_Terminal_Engineering_003": [
+   -1395.0,
+   230.0,
+   0,
+   -180.0
+  ],
+  "X_MonitorWall_Stern_004": [
+   -1365.0,
+   270.0,
+   190,
+   -180.0
+  ],
+  "LS_R_06_009": [
+   -885.0,
+   0,
+   480,
+   0.0
+  ],
+  "L_R_06_010": [
+   -685.0,
+   0,
+   480,
+   0.0
+  ],
+  "L_W_10_011": [
+   -800.0,
+   0,
+   450,
+   0.0
+  ],
+  "L_W_10_012": [
+   -1035.0,
+   0,
+   450,
+   0.0
+  ],
+  "X_AlertButton_-_005": [
+   -325.0,
+   -250,
+   0,
+   -180.0
+  ],
+  "X_MonitorWall_Bow_006": [
+   -265.0,
+   250,
+   200,
+   -180.0
+  ],
+  "L_W_07_013": [
+   1245.0,
+   0,
+   270,
+   0.0
+  ],
+  "L_W_07_014": [
+   1705.0,
+   0,
+   270,
+   0.0
+  ],
+  "L_R_05_015": [
+   1165.0,
+   0,
+   240,
+   0.0
+  ],
+  "X_MonitorHang_Chase_007": [
+   1685.0,
+   170,
+   340,
+   -180.0
+  ],
+  "X_MonitorHang_Stern_008": [
+   1685.0,
+   -170,
+   340,
+   -180.0
+  ],
+  "X_AlertButton_-_009": [
+   1585.0,
+   -110,
+   0,
+   -180.0
+  ],
+  "X_Terminal_Nav_010": [
+   1135.0,
+   300.0,
+   0,
+   -0.0
+  ],
+  "X_WallPanel_Comms_011": [
+   1075.0,
+   -370.0,
+   0,
+   -0.0
+  ],
+  "Seat": [
+   1785.0,
+   -0.0,
+   100.0,
+   0.0
+  ],
+  "Entry": [
+   1455.0,
+   -0.0,
+   100.0,
+   180.0
+  ]
+ },
+ "views": [
+  [
+   "boarding",
+   [
+    -415.0,
+    0,
+    165
+   ],
+   [
+    -1135.0,
+    -300,
+    200
+   ],
+   14
+  ],
+  [
+   "bridge_spawn",
+   [
+    1455.0,
+    0.0,
+    165
+   ],
+   [
+    1000.0,
+    0,
+    130
+   ],
+   16
+  ],
+  [
+   "bridge_fwd",
+   [
+    1120.0,
+    -288.0,
+    210
+   ],
+   [
+    1950.0,
+    96.0,
+    200
+   ],
+   16
+  ],
+  [
+   "crew_spine",
+   [
+    880.0,
+    0,
+    165
+   ],
+   [
+    -250.0,
+    0,
+    150
+   ],
+   16
+  ]
+ ],
+ "plan_z": 270,
+ "light_count": 16,
+ "fixture_count": 12,
+ "tris": {
+  "Shell": 1688,
+  "Lights": 1652,
+  "Collision": 1040,
+  "Crew": 6068,
+  "Engine": 3204,
+  "Boarding": 3580,
+  "Bridge": 2060
+ },
+ "tris_total": 19292,
+ "slots": {
+  "Shell": [
+   "M_Int_Deck",
+   "M_Int_Shell",
+   "M_Interior_Eng",
+   "M_Int_Viewport",
+   "M_Int_Bulkhead",
+   "M_Int_Hazard",
+   "M_Int_Hatch"
+  ],
+  "Lights": [
+   "M_Int_LightsRed",
+   "M_Int_LightsGreen",
+   "M_Int_LightsAmber",
+   "M_Int_Lights",
+   "M_Int_LightsBlue",
+   "M_Int_LightsCyan",
+   "M_Int_Console"
+  ],
+  "Collision": [
+   "M_Int_Collision"
+  ],
+  "Crew": [
+   "M_Int_Bulkhead",
+   "M_Int_Hatch",
+   "M_Int_Stations",
+   "M_Int_Viewport",
+   "M_Int_Console",
+   "M_Prop_Yellow",
+   "M_Prop_BlackPlastic",
+   "M_Prop_Rubber",
+   "M_Prop_Wood",
+   "M_Prop_Cardboard",
+   "M_Prop_White",
+   "M_Prop_RedPaint",
+   "M_Prop_Paper",
+   "M_Prop_Blue",
+   "M_Prop_Steel",
+   "M_Prop_Olive",
+   "M_Prop_Green",
+   "M_Int_Hazard",
+   "M_Prop_Brushed",
+   "M_Int_Galley",
+   "M_Int_Bunks",
+   "M_Prop_Orange",
+   "M_Prop_Screen",
+   "M_Int_Shell",
+   "M_Int_Grate",
+   "M_Int_Vents"
+  ],
+  "Engine": [
+   "M_Int_Grate",
+   "M_Int_Bulkhead",
+   "M_Int_Hatch",
+   "M_Int_Vents",
+   "M_Int_Hazard",
+   "M_Int_Stations",
+   "M_Int_Bunks",
+   "M_Prop_Steel",
+   "M_Prop_BlackPlastic",
+   "M_Prop_RedPaint",
+   "M_Prop_Yellow",
+   "M_Prop_White",
+   "M_Int_Viewport",
+   "M_Prop_Orange"
+  ],
+  "Boarding": [
+   "M_Int_Bulkhead",
+   "M_Int_Hatch",
+   "M_Int_Hazard",
+   "M_Int_Viewport",
+   "M_Int_Stations",
+   "M_Prop_White",
+   "M_Prop_BlackPlastic",
+   "M_Prop_Screen",
+   "M_Prop_Yellow",
+   "M_Prop_Rubber"
+  ],
+  "Bridge": [
+   "M_Int_Stations",
+   "M_Int_Hatch",
+   "M_Int_Bulkhead",
+   "M_Int_Bunks",
+   "M_Prop_White",
+   "M_Prop_BlackPlastic",
+   "M_Prop_Screen",
+   "M_Prop_RedPaint"
+  ]
+ },
+ "walk": {
+  "entry_free": true,
+  "seat_reachable": true,
+  "rooms": {
+   "Engine": 0.67,
+   "Boarding": 0.94,
+   "Bridge": 1.0,
+   "Crew:ready": 1.0,
+   "Crew:bunks": 1.0,
+   "Crew:armory": 1.0,
+   "Crew:medbay": 1.0,
+   "Crew:spine": 1.0
+  },
+  "unreached": [],
+  "route": [
+   [
+    -1680.0,
+    50.0,
+    "Engine"
+   ],
+   [
+    -1250.0,
+    -0.0,
+    "Boarding"
+   ],
+   [
+    1100.0,
+    -0.0,
+    "Bridge"
+   ],
+   [
+    40.0,
+    -60.0,
+    ""
+   ],
+   [
+    40.0,
+    -280.0,
+    "Crew:ready"
+   ],
+   [
+    90.0,
+    -70.0,
+    ""
+   ],
+   [
+    150.0,
+    -50.0,
+    ""
+   ],
+   [
+    670.0,
+    -50.0,
+    ""
+   ],
+   [
+    670.0,
+    -150.0,
+    ""
+   ],
+   [
+    570.0,
+    -360.0,
+    "Crew:bunks"
+   ],
+   [
+    670.0,
+    -150.0,
+    ""
+   ],
+   [
+    670.0,
+    -100.0,
+    ""
+   ],
+   [
+    650.0,
+    -60.0,
+    ""
+   ],
+   [
+    70.0,
+    50.0,
+    ""
+   ],
+   [
+    70.0,
+    140.0,
+    ""
+   ],
+   [
+    90.0,
+    180.0,
+    ""
+   ],
+   [
+    220.0,
+    240.0,
+    "Crew:armory"
+   ],
+   [
+    70.0,
+    160.0,
+    ""
+   ],
+   [
+    70.0,
+    90.0,
+    ""
+   ],
+   [
+    90.0,
+    50.0,
+    ""
+   ],
+   [
+    160.0,
+    40.0,
+    ""
+   ],
+   [
+    690.0,
+    40.0,
+    ""
+   ],
+   [
+    690.0,
+    270.0,
+    "Crew:medbay"
+   ],
+   [
+    650.0,
+    60.0,
+    ""
+   ],
+   [
+    590.0,
+    40.0,
+    ""
+   ],
+   [
+    50.0,
+    -0.0,
+    "Crew:spine"
+   ],
+   [
+    1490.0,
+    60.0,
+    ""
+   ],
+   [
+    1500.0,
+    90.0,
+    ""
+   ],
+   [
+    1570.0,
+    100.0,
+    ""
+   ],
+   [
+    1770.0,
+    90.0,
+    ""
+   ],
+   [
+    1770.0,
+    -0.0,
+    "helm"
+   ]
+  ]
+ },
+ "blender_to_ue_axes": "UE(x, y, z) = Blender(x, -y, z) * 100 * 0.01",
+ "problems": []
+}

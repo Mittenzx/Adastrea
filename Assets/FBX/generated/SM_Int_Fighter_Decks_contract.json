@@ -1,0 +1,226 @@
+{
+ "prefix": "SM_Int_Fighter_Decks",
+ "ship": "Fighter",
+ "bp": "/Game/Blueprints/Ships/BP_Ship_Fighter",
+ "style": "command",
+ "family": "ShipDecks (generic full deck, driven by P_ sockets)",
+ "runtime_scale_on_imported_mesh": 0.01,
+ "design_bounds_cm": {
+  "min": [
+   -575.0,
+   -205.0,
+   -20.0
+  ],
+  "max": [
+   587.0,
+   205.0,
+   250.0
+  ]
+ },
+ "size_m": [
+  11.6,
+  4.1
+ ],
+ "parts": [
+  "Shell",
+  "Lights",
+  "Collision",
+  "Fighter_aft",
+  "Cabin",
+  "Bridge"
+ ],
+ "sockets_ue_design_cm": {
+  "L_B_04_000": [
+   -410.0,
+   0,
+   185,
+   0.0
+  ],
+  "L_W_05_001": [
+   -50.0,
+   0,
+   190,
+   0.0
+  ],
+  "X_MonitorWall_Chase_000": [
+   -245.0,
+   -60,
+   165,
+   -0.0
+  ],
+  "L_W_04_002": [
+   435.0,
+   0,
+   180,
+   0.0
+  ],
+  "X_MonitorWall_Stern_001": [
+   180.0,
+   75.0,
+   150,
+   -0.0
+  ],
+  "Seat": [
+   395.0,
+   -0.0,
+   100.0,
+   0.0
+  ],
+  "Entry": [
+   -50.0,
+   -0.0,
+   100.0,
+   0.0
+  ]
+ },
+ "views": [
+  [
+   "cabin",
+   [
+    125.0,
+    -40,
+    160
+   ],
+   [
+    -245.0,
+    40,
+    110
+   ],
+   14
+  ],
+  [
+   "bridge_spawn",
+   [
+    -50.0,
+    0.0,
+    165
+   ],
+   [
+    560.0,
+    0,
+    130
+   ],
+   16
+  ],
+  [
+   "bridge_fwd",
+   [
+    280.0,
+    -90.0,
+    180
+   ],
+   [
+    560.0,
+    30.0,
+    160
+   ],
+   16
+  ]
+ ],
+ "plan_z": 210,
+ "light_count": 3,
+ "fixture_count": 2,
+ "tris": {
+  "Shell": 744,
+  "Lights": 408,
+  "Collision": 320,
+  "Fighter_aft": 496,
+  "Cabin": 844,
+  "Bridge": 360
+ },
+ "tris_total": 3172,
+ "slots": {
+  "Shell": [
+   "M_Int_Deck",
+   "M_Int_Shell",
+   "M_Int_Viewport",
+   "M_Int_Steel",
+   "M_Int_AccentBlue",
+   "M_Int_Hatch"
+  ],
+  "Lights": [
+   "M_Int_LightsRed",
+   "M_Int_LightsGreen",
+   "M_Int_LightsBlue",
+   "M_Int_LightsAmber",
+   "M_Int_Lights",
+   "M_Int_LightsCyan",
+   "M_Int_Console"
+  ],
+  "Collision": [
+   "M_Int_Collision"
+  ],
+  "Fighter_aft": [
+   "M_Int_Hatch",
+   "M_Int_Steel",
+   "M_Int_Stations",
+   "M_Int_AccentBlue"
+  ],
+  "Cabin": [
+   "M_Int_Steel",
+   "M_Int_Bunks",
+   "M_Int_Galley",
+   "M_Int_Stations",
+   "M_Int_Viewport",
+   "M_Int_Hatch",
+   "M_Prop_Steel",
+   "M_Prop_BlackPlastic",
+   "M_Prop_Brushed",
+   "M_Prop_White",
+   "M_Prop_Screen"
+  ],
+  "Bridge": [
+   "M_Int_Stations",
+   "M_Int_Hatch",
+   "M_Int_Steel",
+   "M_Int_Bunks",
+   "M_Int_AccentBlue",
+   "M_Prop_White",
+   "M_Prop_BlackPlastic"
+  ]
+ },
+ "walk": {
+  "entry_free": true,
+  "seat_reachable": true,
+  "rooms": {
+   "Fighter_aft": 1.0,
+   "Cabin": 1.0,
+   "Bridge": 1.0
+  },
+  "unreached": [],
+  "route": [
+   [
+    -460.0,
+    -0.0,
+    "Fighter_aft"
+   ],
+   [
+    -30.0,
+    -0.0,
+    ""
+   ],
+   [
+    -30.0,
+    30.0,
+    "Cabin"
+   ],
+   [
+    180.0,
+    -0.0,
+    ""
+   ],
+   [
+    240.0,
+    -0.0,
+    "Bridge"
+   ],
+   [
+    310.0,
+    -80.0,
+    "helm"
+   ]
+  ]
+ },
+ "blender_to_ue_axes": "UE(x, y, z) = Blender(x, -y, z) * 100 * 0.01",
+ "problems": []
+}
