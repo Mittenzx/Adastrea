@@ -188,3 +188,37 @@ def test_deterministic(eid):
     # Allow a few LSBs for FFT/BLAS differences between platforms and library versions.
     diff = int(np.max(np.abs(pcm.astype(np.int32) - disk.astype(np.int32))))
     assert diff <= 4, f"{eid}: regenerated samples differ from the committed WAV by up to {diff} LSB"
+
+
+# ---------------------------------------------------------------------------
+# Quality gate (Tools/audio/audio_qa.py): small-speaker audibility, high-end air, no cut-off layers.
+# ---------------------------------------------------------------------------
+
+import audio_qa as qa  # noqa: E402
+
+
+@ids
+def test_quality_profile(eid):
+    e = SOUNDS[eid]
+    _, _, x = load(e)
+    fails = qa.check(eid, qa.analyse(x, e["loop"]))
+    assert not fails, f"{eid}: {'; '.join(fails)} (see python Tools/audio/audio_qa.py {eid})"
+
+
+def _ring(dur, cut_at=None):
+    t = np.arange(int(dur * 48000)) / 48000
+    y = 0.8 * np.sin(2 * np.pi * 190 * t) * np.exp(-t / 0.5) + 0.3 * np.sin(2 * np.pi * 2900 * t) * np.exp(-t / 0.03)
+    if cut_at is not None:
+        y[int(cut_at * 48000):] = 0.0
+    return y
+
+
+def test_cutoff_detector_finds_a_cut_ring():
+    assert qa.find_cutoffs(_ring(1.5, cut_at=1.0)) == [1.0]
+
+
+def test_cutoff_detector_ignores_natural_decay_and_new_hits():
+    assert qa.find_cutoffs(_ring(3.0)) == []
+    two_hits = _ring(1.0)
+    two_hits[24000:] += _ring(0.5)
+    assert qa.find_cutoffs(two_hits) == []
