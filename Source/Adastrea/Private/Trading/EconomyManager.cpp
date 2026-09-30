@@ -166,10 +166,11 @@ void UEconomyManager::RecordTransaction(UMarketDataAsset* Market, UTradeItemData
 	// between sessions unless explicitly saved. For persistent state, consider implementing
 	// a separate runtime market state structure that references the Data Asset template.
 
-	// Find inventory entry
+	// Find inventory entry. Match by ID like GetItemPrice does: each station builds its own
+	// crafting-tree item objects, so goods bought at one station arrive as a different object.
 	for (FMarketInventoryEntry& Entry : Market->Inventory)
 	{
-		if (Entry.TradeItem == Item)
+		if (Entry.TradeItem && (Entry.TradeItem == Item || Entry.TradeItem->ItemID == Item->ItemID))
 		{
 			if (bPlayerBought)
 			{
