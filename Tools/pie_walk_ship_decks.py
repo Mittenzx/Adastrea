@@ -214,6 +214,8 @@ class Runner:
         self.walked += (loc - self.last).length()
         self.last = loc
         ll = self.to_local(loc)
+        if ll.z > self.zmax + 150 and self.zmax > -1e8:
+            log("%s height jump to %.0f at local (%.0f,%.0f) going to wp %d" % (self.c["ship"], ll.z, ll.x, ll.y, self.wi))
         self.zmin, self.zmax = min(self.zmin, ll.z), max(self.zmax, ll.z)
         if ll.z < -150:
             self.finish(False, "fell through the floor at local (%.0f,%.0f,%.0f)" % (ll.x, ll.y, ll.z))
