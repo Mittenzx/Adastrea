@@ -28,8 +28,9 @@ ASpaceshipAvatar::ASpaceshipAvatar()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Capsule: still the collision shape movement sweeps against, and what the
-	// interior's FloorCollision/wall colliders block.
-	GetCapsuleComponent()->InitCapsuleSize(42.0f, 96.0f);
+	// interior's FloorCollision/wall colliders block. Human-sized: 176 cm tall and
+	// 68 cm across the shoulders, so 2 m wide x 2.4 m blast doors read as doors.
+	GetCapsuleComponent()->InitCapsuleSize(34.0f, 88.0f);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
 
@@ -79,8 +80,13 @@ void ASpaceshipAvatar::SetFirstPersonView(bool bEnable)
 		// pawn) but pull the camera to the mount point (arm length 0) at eye height,
 		// and let controller rotation steer it. Hide the avatar mesh so it doesn't
 		// clip into the near view.
+		// The boom mounts at the capsule centre, so eye height is measured up from
+		// the capsule's bottom; UpdateFirstPersonCamera adds crouch, bob and smoothing.
 		CameraBoom->TargetArmLength = 0.0f;
-		CameraBoom->SetRelativeLocation(FVector(0.0f, 0.0f, 165.0f)); // eye height
+		CurrentEyeHeight = bCrouchingSpeed ? CrouchEyeHeight : EyeHeight;
+		bEyeSmoothingValid = false;
+		HeadBobBlend = 0.0f;
+		CameraBoom->SetRelativeLocation(FVector(0.0f, 0.0f, CurrentEyeHeight - GetCapsuleComponent()->GetScaledCapsuleHalfHeight()));
 		CameraBoom->SetRelativeRotation(FRotator::ZeroRotator);
 		CameraBoom->bUsePawnControlRotation = true;
 		FollowCamera->bUsePawnControlRotation = true;
@@ -168,28 +174,44 @@ void ASpaceshipAvatar::Tick(float DeltaSeconds)
 		}
 	}
 
-	if (!PendingMoveInput.IsNearlyZero())
+	// Ease the planar velocity toward the input direction instead of starting and
+	// stopping dead: a person takes a step or two to reach walking pace and to stop.
+	float Speed = WalkSpeed;
+	if (bSprinting)
 	{
-		float Speed = WalkSpeed;
-		if (bSprinting)
-		{
-			Speed *= SprintMultiplier;
-		}
-		else if (bCrouchingSpeed)
-		{
-			Speed *= CrouchMultiplier;
-		}
+		Speed *= SprintMultiplier;
+	}
+	else if (bCrouchingSpeed)
+	{
+		Speed *= CrouchMultiplier;
+	}
+	FVector InputDir = GetActorForwardVector() * PendingMoveInput.X + GetActorRightVector() * PendingMoveInput.Y;
+	InputDir.Z = 0.0f;
+	InputDir = InputDir.GetClampedToMaxSize(1.0f); // diagonals are no faster
+	const FVector TargetVelocity = InputDir * Speed;
+	const float Rate = TargetVelocity.IsNearlyZero() || FVector::DotProduct(TargetVelocity, MoveVelocity) < 0.0f
+		? Deceleration : Acceleration;
+	MoveVelocity = FMath::VInterpConstantTo(MoveVelocity, TargetVelocity, DeltaSeconds, Rate);
 
-		const FVector Forward = GetActorForwardVector();
-		const FVector Right = GetActorRightVector();
-		const FVector Delta = (Forward * PendingMoveInput.X + Right * PendingMoveInput.Y) * Speed * DeltaSeconds;
+	float MovedSpeed = 0.0f;
+	if (!MoveVelocity.IsNearlyZero(1.0f) && DeltaSeconds > 0.0f)
+	{
 		const FVector Before = GetActorLocation();
-		MoveSafe(Delta);
+		MoveSafe(MoveVelocity * DeltaSeconds);
 		// Horizontal distance actually covered (walking into a wall makes no steps).
-		UpdateFootsteps(FVector::Dist2D(Before, GetActorLocation()), Speed);
+		const float Moved = FVector::Dist2D(Before, GetActorLocation());
+		MovedSpeed = Moved / DeltaSeconds;
+		// Pressed against a wall: drop the blocked part of the velocity so the avatar
+		// doesn't carry phantom momentum when it slides off the end of the wall.
+		if (MovedSpeed < MoveVelocity.Size() * 0.5f)
+		{
+			MoveVelocity = MoveVelocity.GetSafeNormal() * MovedSpeed;
+		}
+		UpdateFootsteps(Moved, MoveVelocity.Size());
 	}
 	else
 	{
+		MoveVelocity = FVector::ZeroVector;
 		// Standing still: the next step starts a fresh stride.
 		FootstepDistance = 0.0f;
 	}
@@ -199,6 +221,63 @@ void ASpaceshipAvatar::Tick(float DeltaSeconds)
 	{
 		SnapToFloor();
 	}
+
+	if (bFirstPersonView)
+	{
+		UpdateFirstPersonCamera(DeltaSeconds, MovedSpeed);
+	}
+}
+
+float ASpaceshipAvatar::GetStrideLength(float MoveSpeed)
+{
+	// Stride grows with speed, so steps come faster when sprinting but not linearly:
+	// crouch ~1.3 steps/s, walk ~1.9, sprint ~2.5 at the default speeds.
+	return FMath::Clamp(MoveSpeed * 0.28f + 45.0f, 60.0f, 150.0f);
+}
+
+void ASpaceshipAvatar::UpdateFirstPersonCamera(float DeltaSeconds, float MoveSpeed)
+{
+	const float HalfHeight = GetCapsuleComponent() ? GetCapsuleComponent()->GetScaledCapsuleHalfHeight() : 88.0f;
+
+	// Crouch lowers the eye over about a quarter second.
+	CurrentEyeHeight = FMath::FInterpTo(CurrentEyeHeight, bCrouchingSpeed ? CrouchEyeHeight : EyeHeight, DeltaSeconds, 10.0f);
+	const float EyeOffset = CurrentEyeHeight - HalfHeight;
+
+	// Stair steps lift the capsule a riser at a time (MoveSafe/SnapToFloor); let the
+	// eye follow smoothly so climbing reads as walking, not a string of pops. Big
+	// jumps (spawn, teleport, deck change) snap straight through.
+	const float TargetEyeZ = GetActorLocation().Z + EyeOffset;
+	if (!bEyeSmoothingValid || FMath::Abs(TargetEyeZ - SmoothedEyeWorldZ) > 80.0f)
+	{
+		SmoothedEyeWorldZ = TargetEyeZ;
+		bEyeSmoothingValid = true;
+	}
+	else
+	{
+		SmoothedEyeWorldZ = FMath::FInterpTo(SmoothedEyeWorldZ, TargetEyeZ, DeltaSeconds, 12.0f);
+	}
+
+	// Head bob, locked to the footstep stride: the head is lowest just after each
+	// footfall and highest mid-stride, and sways once to each side per pair of steps.
+	const bool bOnDeck = CurrentInterior || bWalkingStation;
+	const bool bMoving = bOnDeck && MoveSpeed > 20.0f;
+	HeadBobBlend = FMath::FInterpTo(HeadBobBlend, bMoving ? 1.0f : 0.0f, DeltaSeconds, bMoving ? 4.0f : 6.0f);
+	if (bMoving)
+	{
+		GaitPhase = FMath::Fmod(GaitPhase + PI * MoveSpeed * DeltaSeconds / GetStrideLength(MoveSpeed), 2.0f * PI);
+	}
+	else if (HeadBobBlend < 0.01f)
+	{
+		GaitPhase = 0.0f;
+	}
+	const float SpeedScale = WalkSpeed > 0.0f ? FMath::Clamp(MoveSpeed / WalkSpeed, 0.4f, 1.8f) : 1.0f;
+	const float BobZ = HeadBobVertical * SpeedScale * (FMath::Abs(FMath::Sin(GaitPhase)) - 0.5f) * 2.0f;
+	const float BobY = HeadBobLateral * SpeedScale * FMath::Sin(GaitPhase);
+
+	CameraBoom->SetRelativeLocation(FVector(
+		0.0f,
+		BobY * HeadBobBlend,
+		EyeOffset + (SmoothedEyeWorldZ - TargetEyeZ) + BobZ * HeadBobBlend));
 }
 
 void ASpaceshipAvatar::UpdateFootsteps(float MovedDistance, float MoveSpeed)
@@ -209,9 +288,7 @@ void ASpaceshipAvatar::UpdateFootsteps(float MovedDistance, float MoveSpeed)
 		return;
 	}
 
-	// Stride grows with speed, so steps come faster when sprinting but not linearly:
-	// crouch ~1.9 steps/s, walk ~2.4, sprint ~3.2 at the default speeds.
-	const float StrideLength = FMath::Clamp(MoveSpeed * 0.28f + 40.0f, 70.0f, 170.0f);
+	const float StrideLength = GetStrideLength(MoveSpeed);
 
 	FootstepDistance += MovedDistance;
 	if (FootstepDistance < StrideLength)
@@ -228,7 +305,7 @@ void ASpaceshipAvatar::UpdateFootsteps(float MovedDistance, float MoveSpeed)
 	}
 	LastFootstepIndex = Index;
 
-	const float HalfHeight = GetCapsuleComponent() ? GetCapsuleComponent()->GetScaledCapsuleHalfHeight() : 96.0f;
+	const float HalfHeight = GetCapsuleComponent() ? GetCapsuleComponent()->GetScaledCapsuleHalfHeight() : 88.0f;
 	const FName EventId(*FString::Printf(TEXT("Interior.Footstep.%02d"), Index));
 	UAudioEventLibrary::PlayEventAtLocation(this, EventId, GetActorLocation() - FVector(0.0f, 0.0f, HalfHeight));
 }

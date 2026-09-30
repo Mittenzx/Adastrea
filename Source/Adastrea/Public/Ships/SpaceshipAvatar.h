@@ -155,12 +155,33 @@ protected:
 	TObjectPtr<UInputMappingContext> AvatarMappingContext;
 
 	// --- Movement tuning ---
+	/** Walking pace (cm/s). ~1.9 m/s is a brisk human walk. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Avatar|Movement")
-	float WalkSpeed = 300.0f;
+	float WalkSpeed = 190.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Avatar|Movement")
-	float SprintMultiplier = 1.8f;
+	float SprintMultiplier = 2.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Avatar|Movement")
-	float CrouchMultiplier = 0.45f;
+	float CrouchMultiplier = 0.5f;
+	/** How fast the avatar gets up to speed (cm/s^2). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Avatar|Movement")
+	float Acceleration = 900.0f;
+	/** How fast the avatar comes to a stop once the keys are released (cm/s^2). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Avatar|Movement")
+	float Deceleration = 1400.0f;
+
+	// --- First-person camera ---
+	/** Eye height above the floor when standing (cm). The capsule is 176 cm tall. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Avatar|Camera")
+	float EyeHeight = 162.0f;
+	/** Eye height above the floor while crouched (cm). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Avatar|Camera")
+	float CrouchEyeHeight = 112.0f;
+	/** Head bob at walking pace: vertical dip at each footfall (cm). Scales with speed. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Avatar|Camera")
+	float HeadBobVertical = 1.4f;
+	/** Head bob at walking pace: side-to-side sway over each pair of steps (cm). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Avatar|Camera")
+	float HeadBobLateral = 0.9f;
 
 	// --- Interaction ---
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Avatar|Interaction")
@@ -180,4 +201,28 @@ protected:
 
 	/** Accumulate the distance actually moved this frame and play a footstep every stride. */
 	void UpdateFootsteps(float MovedDistance, float MoveSpeed);
+
+	/** Stride length for a given speed: longer strides when moving faster. */
+	static float GetStrideLength(float MoveSpeed);
+
+	// --- Walk feel (first person) ---
+
+	/** Current planar velocity (cm/s); eased toward the input direction by Acceleration/Deceleration. */
+	FVector MoveVelocity = FVector::ZeroVector;
+
+	/** Gait phase: advances by PI per stride, so each footfall lands on a multiple of PI. */
+	float GaitPhase = 0.0f;
+
+	/** 0..1 head-bob strength, eased in when moving and out when standing still. */
+	float HeadBobBlend = 0.0f;
+
+	/** Current eye height above the floor, eased between EyeHeight and CrouchEyeHeight. */
+	float CurrentEyeHeight = 162.0f;
+
+	/** Smoothed world Z of the eye, so stair steps and floor snaps glide instead of popping. */
+	float SmoothedEyeWorldZ = 0.0f;
+	bool bEyeSmoothingValid = false;
+
+	/** Place the first-person camera: eye height, crouch, stair smoothing and head bob. */
+	void UpdateFirstPersonCamera(float DeltaSeconds, float MoveSpeed);
 };

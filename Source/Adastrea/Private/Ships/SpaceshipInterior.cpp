@@ -309,9 +309,9 @@ void ASpaceshipInterior::ConfigureInterior(UStaticMesh* ShellMesh, EShipInterior
 
     // Normalize the interior to a human-walkable size. The authored interior
     // shells are large (radius 8k-60k, ship-shell scale), but the avatar is
-    // human-scale (~192 units tall). If left at raw scale, the walk volume
+    // human-scale (176 units tall). If left at raw scale, the walk volume
     // becomes a gigantic void. Scale the mesh so its shell radius maps to a
-    // comfortable room (~650 units ~ a few metres across for a 1.9m avatar).
+    // comfortable room (~650 units ~ a few metres across for a 1.76 m avatar).
     // Full-deck kits are NOT normalized: they are authored at real size (100x in the
     // FBX like every SM_Int_* kit), so a fixed 0.01 gives 1 design cm = 1 uu.
     // Socket-driven decks (every ship but the Battleship) are recognised by their
