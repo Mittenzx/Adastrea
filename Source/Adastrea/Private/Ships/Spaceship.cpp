@@ -307,6 +307,8 @@ void ASpaceship::Tick(float DeltaTime)
             return;
         }
 
+    TickSwapShowcase(DeltaTime);
+
         // Update X4-style mouse position flight controls every frame (when enabled)
         // This allows continuous rotation based on cursor position, not mouse movement
     if (bUseMousePositionFlight && bFlightAssistEnabled)
@@ -1142,8 +1144,23 @@ void ASpaceship::FitCameraToHull()
         return;
     }
 
-    // Half the hull's longest side, as flown. The largest mesh, not just ShipMeshComponent:
-    // BP_CommandXL and BP_Super add their hull in the Blueprint.
+    const float HalfLength = GetHullHalfLength();
+
+    // Fighters already sit clear of CameraDistance; leave their tuned framing alone.
+    if (HalfLength * 1.2f <= CameraDistance)
+    {
+        return;
+    }
+    CameraSpringArm->TargetArmLength = HalfLength * 2.5f;
+    CameraSpringArm->SocketOffset = FVector(0.0f, 0.0f, HalfLength * 0.35f);
+    UE_LOG(LogAdastreaShips, Log, TEXT("FitCameraToHull: %s half-length %.0f -> arm %.0f"),
+        *GetName(), HalfLength, CameraSpringArm->TargetArmLength);
+}
+
+float ASpaceship::GetHullHalfLength() const
+{
+    // The largest mesh, not just ShipMeshComponent: BP_CommandXL and BP_Super add their
+    // hull in the Blueprint.
     float HalfLength = 0.0f;
     TArray<UStaticMeshComponent*> Meshes;
     GetComponents<UStaticMeshComponent>(Meshes);
@@ -1155,16 +1172,57 @@ void ASpaceship::FitCameraToHull()
                 (Mesh->GetStaticMesh()->GetBounds().BoxExtent * Mesh->GetComponentScale().GetAbs()).GetMax());
         }
     }
+    return HalfLength;
+}
 
-    // Fighters already sit clear of CameraDistance; leave their tuned framing alone.
-    if (HalfLength * 1.2f <= CameraDistance)
+namespace SwapShowcase
+{
+    constexpr float Duration = 4.0f;
+    /** How far the arm pulls out at the middle of the orbit, as a multiple of its length. */
+    constexpr float PullOut = 0.8f;
+    /** Camera drop below the ship's plane at the middle of the orbit (deg). */
+    constexpr float Pitch = 18.0f;
+}
+
+void ASpaceship::PlaySwapShowcase()
+{
+    if (!CameraSpringArm)
     {
         return;
     }
-    CameraSpringArm->TargetArmLength = HalfLength * 2.5f;
-    CameraSpringArm->SocketOffset = FVector(0.0f, 0.0f, HalfLength * 0.35f);
-    UE_LOG(LogAdastreaShips, Log, TEXT("FitCameraToHull: %s half-length %.0f -> arm %.0f"),
-        *GetName(), HalfLength, CameraSpringArm->TargetArmLength);
+    SwapShowcaseTime = 0.0f;
+    SwapShowcaseArmLength = CameraSpringArm->TargetArmLength;
+    // The orbit is faster than the rotation lag; it would trail the whole way round.
+    CameraSpringArm->bEnableCameraRotationLag = false;
+}
+
+void ASpaceship::TickSwapShowcase(float DeltaTime)
+{
+    if (SwapShowcaseTime < 0.0f || !CameraSpringArm)
+    {
+        return;
+    }
+
+    SwapShowcaseTime += DeltaTime;
+    // Free look takes the camera; or the orbit is done. Either way, hand it back.
+    if (bFreeLookActive || SwapShowcaseTime >= SwapShowcase::Duration)
+    {
+        SwapShowcaseTime = -1.0f;
+        CameraSpringArm->TargetArmLength = SwapShowcaseArmLength;
+        CameraSpringArm->bEnableCameraRotationLag = true;
+        if (!bFreeLookActive)
+        {
+            CameraSpringArm->SetRelativeRotation(FRotator::ZeroRotator);
+        }
+        return;
+    }
+
+    // One eased turn, starting and ending behind the ship; pulled out and dipped mid-way.
+    const float Alpha = SwapShowcaseTime / SwapShowcase::Duration;
+    const float Turn = FMath::InterpEaseInOut(0.0f, 1.0f, Alpha, 2.0f);
+    const float Swell = FMath::Sin(Alpha * PI);
+    CameraSpringArm->TargetArmLength = SwapShowcaseArmLength * (1.0f + SwapShowcase::PullOut * Swell);
+    CameraSpringArm->SetRelativeRotation(FRotator(-SwapShowcase::Pitch * Swell, Turn * 360.0f, 0.0f));
 }
 
 void ASpaceship::ApplyShipHullMaterial()

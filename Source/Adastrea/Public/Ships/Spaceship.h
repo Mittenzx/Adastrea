@@ -211,6 +211,13 @@ public:
         UPROPERTY(VisibleInstanceOnly, Transient, Category="Components")
         TObjectPtr<UStaticMeshComponent> WindowMeshComponent;
 
+        /** Swing the chase camera once around the ship from further out, then settle back
+         * behind it. Played after a ship-select swap so the new ship is seen from all sides. */
+        void PlaySwapShowcase();
+
+        /** Half the hull's longest side (cm), from the largest static mesh on the ship. */
+        float GetHullHalfLength() const;
+
     /**
      * Get the current hull integrity
      * @return The current hull integrity value
@@ -781,6 +788,15 @@ protected:
     TObjectPtr<UUserWidget> TradingWidget;
 
 private:
+    /** Seconds into PlaySwapShowcase; negative when it isn't playing. */
+    float SwapShowcaseTime = -1.0f;
+
+    /** Arm length to return to when the showcase ends. */
+    float SwapShowcaseArmLength = 0.0f;
+
+    /** Advance the swap showcase camera (from Tick). */
+    void TickSwapShowcase(float DeltaTime);
+
     // Current velocity for inertia-based movement
     FVector CurrentVelocity;
 

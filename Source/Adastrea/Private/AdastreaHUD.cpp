@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "AdastreaHUD.h"
+#include "AdastreaGameMode.h"
 #include "AdastreaHUDStyle.h"
 #include "AdastreaHUD_MapStyle.h"
 #include "Stations/StationInterior.h"
@@ -260,6 +261,11 @@ void AAdastreaHUD::DrawHUD()
 		if (bShowShipSelect)
 		{
 			DrawShipSelectScreen(PC);
+			// Again on top: the screen covers the one drawn above ("Already flying ...").
+			if (!PendingMessage.IsEmpty())
+			{
+				DrawTransientMessage(PC);
+			}
 			return;
 		}
 
@@ -1923,9 +1929,23 @@ void AAdastreaHUD::SpawnSelectedShip(APlayerController* PC)
 		return;
 	}
 	const TSubclassOf<ASpaceship> ShipClass = ShipRoster[ShipSelectIndex];
+	const ASpaceship* Picked = GetRosterShip(ShipSelectIndex);
+
+	// Swapping for the ship already being flown would respawn it in place: nothing to see.
+	if (PC->GetPawn() && PC->GetPawn()->GetClass() == ShipClass)
+	{
+		const FString Name = Picked && Picked->ShipDataAsset && !Picked->ShipDataAsset->ShipName.IsEmpty()
+			? Picked->ShipDataAsset->ShipName.ToString() : ShipClass->GetName();
+		ShowMessage(FString::Printf(TEXT("Already flying the %s - pick another ship"), *Name), 2.5f, true);
+		UE_LOG(LogTemp, Log, TEXT("ShipSelect: %s is already the flown ship, not respawned"), *ShipClass->GetName());
+		return;
+	}
+
 	UWorld* World = PC->GetWorld();
-	const FVector SpawnLoc = PC->GetPawn() ? PC->GetPawn()->GetActorLocation() : FVector(18000, 18000, 5000);
+	const FVector OldLoc = PC->GetPawn() ? PC->GetPawn()->GetActorLocation() : FVector(18000, 18000, 5000);
 	const FRotator SpawnRot = PC->GetPawn() ? PC->GetPawn()->GetActorRotation() : FRotator::ZeroRotator;
+	// Out beside any station the ship would overlap; the new hull may be far longer than the old.
+	const FVector SpawnLoc = AAdastreaGameMode::PushSpawnClearOfStations(World, OldLoc, ShipRosterLength(Picked) * 0.5f);
 
 	FActorSpawnParameters Params;
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
@@ -1937,6 +1957,11 @@ void AAdastreaHUD::SpawnSelectedShip(APlayerController* PC)
 		PC->UnPossess();
 		PC->Possess(Cast<APawn>(NewPawn));
 		PC->SetViewTarget(NewPawn);
+		// Show off the new ship: one camera orbit around it before settling behind.
+		if (ASpaceship* NewShip = Cast<ASpaceship>(NewPawn))
+		{
+			NewShip->PlaySwapShowcase();
+		}
 		// Its interior is a separate actor; it would outlive the ship.
 		if (const ASpaceship* OldShip = Cast<ASpaceship>(Old))
 		{

@@ -87,6 +87,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Player Spawn")
 	FVector FallbackSpawnLocation;
 
+	/** Location, moved out beside any station whose bounds (plus ExtraClearance) it falls
+	 * inside. Pass the ship's half-length so a big hull doesn't overlap the station. */
+	static FVector PushSpawnClearOfStations(UWorld* World, FVector Location, float ExtraClearance = 0.0f);
+
 protected:
 	/**
 	 * Force PlayerControllerClass to the C++ controller BEFORE any player login

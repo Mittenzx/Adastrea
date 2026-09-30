@@ -70,7 +70,7 @@ void AAdastreaGameMode::BeginPlay()
 // The sector center is typically where the hub station sits, so spawning there
 // would put the ship inside the hub's hull. Pushes out horizontally along the
 // station->spawn direction (-X when they coincide, so the ship faces the station).
-static FVector PushSpawnClearOfStations(UWorld* World, FVector Location)
+FVector AAdastreaGameMode::PushSpawnClearOfStations(UWorld* World, FVector Location, float ExtraClearance)
 {
 	static constexpr float ClearanceMargin = 2000.0f;
 
@@ -86,7 +86,7 @@ static FVector PushSpawnClearOfStations(UWorld* World, FVector Location)
 		}
 		const FVector Origin = Bounds.GetCenter();
 		const FVector Extent = Bounds.GetExtent();
-		const float Radius = Extent.Size() + ClearanceMargin;
+		const float Radius = Extent.Size() + ClearanceMargin + ExtraClearance;
 		const FVector Offset = Location - Origin;
 		if (Offset.SizeSquared() >= FMath::Square(Radius))
 		{
