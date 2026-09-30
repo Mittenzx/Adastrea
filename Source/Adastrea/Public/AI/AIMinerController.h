@@ -14,9 +14,9 @@ enum class EAIMinerState : uint8
 {
 	/** Find the nearest minable asteroid. */
 	SeekingAsteroid,
-	/** Flying out to laser range of the chosen asteroid. */
+	/** Flying out to drone range of the chosen asteroid. */
 	ToAsteroid,
-	/** Facing the asteroid with the mining laser firing. */
+	/** Holding position while the mining drones work the rock. */
 	Mining,
 	/** Cargo full: flying to the station that pays best for the ore. */
 	ToStation,
@@ -25,13 +25,14 @@ enum class EAIMinerState : uint8
 };
 
 /**
- * AI miner: fly to the nearest asteroid, mine it with the ship's UMiningLaserComponent
- * until the hold is full, sell everything at the station that pays the most for the
- * ore, then head back out. Reuses AAIPilotController's steering and docking.
+ * AI miner: fly to the nearest asteroid, send the ship's mining drones (UDroneBayComponent)
+ * at it until the hold is full, wait for the drones to come home, sell everything at the
+ * station that pays the most for the ore, then head back out. Reuses AAIPilotController's
+ * steering and docking.
  *
- * The laser does the actual work (targeting, range and aim checks, moving ore into
- * the UCargoComponent); this controller only positions and aims the ship. The laser
- * is force-enabled on possession, so any ship class can be used as a miner.
+ * The drones do the actual work (cutting, ferrying ore into the UCargoComponent); this
+ * controller only positions the ship. Mining drones are force-enabled on possession, so
+ * any ship class can be used as a miner.
  */
 UCLASS(BlueprintType, Blueprintable)
 class ADASTREA_API AAIMinerController : public AAIPilotController
@@ -41,7 +42,7 @@ class ADASTREA_API AAIMinerController : public AAIPilotController
 public:
 	virtual void OnPossess(APawn* InPawn) override;
 
-	/** Fraction of the laser's range to park at (the laser stops working beyond its range). */
+	/** Fraction of the drones' work range to park at (drones won't work rocks beyond it). */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI Miner", meta=(ClampMin="0.1", ClampMax="0.95"))
 	float StandOffFraction = 0.5f;
 
@@ -69,10 +70,10 @@ private:
 
 	bool IsMinable(const AAsteroid* Rock) const;
 
-	/** Distance from the laser muzzle to the rock's surface (cm). */
+	/** Distance from the drone bay hatch to the rock's surface (cm). */
 	float SurfaceDistance(const AAsteroid* Rock) const;
 
-	/** Stop firing, drop the lock, and go back to looking for a rock. */
+	/** Recall the drones, drop the lock, and go back to looking for a rock. */
 	void AbandonAsteroid();
 
 	/** Pick the station that pays the most for what's in the hold. */

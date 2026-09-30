@@ -53,7 +53,7 @@ namespace ShipUpgradeStats
 	inline const FName CargoCapacity(TEXT("CargoCapacity"));
 	/** Weapon damage multiplier, base 1 (ASpaceship::GetWeaponDamageMultiplier) */
 	inline const FName WeaponDamage(TEXT("WeaponDamage"));
-	/** Mining laser extraction rate (UMiningLaserComponent::MiningPower) */
+	/** Mining drone cutting rate (UDroneBayComponent::MiningPower) */
 	inline const FName MiningPower(TEXT("MiningPower"));
 }
 

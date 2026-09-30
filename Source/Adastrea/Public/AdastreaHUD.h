@@ -13,7 +13,7 @@ class USceneCaptureComponent2D;
 class UTextureRenderTarget2D;
 class USpaceshipDataAsset;
 class UStaticMeshComponent;
-class UMiningLaserComponent;
+class UDroneBayComponent;
 class AAsteroid;
 class AActor;
 class UGalaxySubsystem;
@@ -118,8 +118,8 @@ public:
 	/** Neon cockpit HUD: heading tape, flight reticle, defence (shield/hull) and propulsion panels. */
 	void DrawCyberpunkFlightHUD(APlayerController* PC, ASpaceship* Ship);
 
-	/** Neon lock brackets + mining uplink panel for a locked asteroid (cockpit HUD counterpart of DrawMiningHUD). */
-	void DrawCyberMiningHUD(APlayerController* PC, ASpaceship* Ship, UMiningLaserComponent* Laser, AAsteroid* Rock, float PanelTop);
+	/** Neon lock brackets + drone mining uplink panel for a locked asteroid (cockpit HUD counterpart of DrawMiningHUD). */
+	void DrawCyberMiningHUD(APlayerController* PC, ASpaceship* Ship, UDroneBayComponent* Bay, AAsteroid* Rock, float PanelTop);
 
 	/** Legacy telemetry panel + compass (top-left). Returns the panel's bottom edge Y. */
 	float DrawTelemetryPanel(ASpaceship* Ship);
@@ -272,7 +272,7 @@ public:
 	/** Draw the station option menu. */
 	void DrawStationMenu(APlayerController* PC, AAdastreaPlayerController* AdController, ASpaceship* Ship);
 
-	/** Draw the mining lock brackets and the target / laser / hold panel at PanelTop (flight HUD; hidden with no asteroid locked). */
+	/** Draw the mining lock brackets and the target / drones / hold panel at PanelTop (flight HUD; hidden with no asteroid locked). */
 	void DrawMiningHUD(APlayerController* PC, ASpaceship* Ship, float PanelTop);
 
 	/** Draw the docked trading screen (market list, credits, cargo, buy/sell). */

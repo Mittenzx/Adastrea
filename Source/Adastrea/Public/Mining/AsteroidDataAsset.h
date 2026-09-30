@@ -37,7 +37,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ore", meta=(ClampMin="1.0"))
 	float OreUnitsAtUnitScale;
 
-	/** Divides the laser's mining power. 1 = soft, 3 = very tough rock. */
+	/** Divides the drones' cutting power. 1 = soft, 3 = very tough rock. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ore", meta=(ClampMin="0.1"))
 	float Hardness;
 

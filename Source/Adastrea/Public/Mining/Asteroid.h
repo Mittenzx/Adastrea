@@ -14,7 +14,7 @@ class AAsteroid;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAsteroidDepleted, AAsteroid*, Asteroid);
 
 /**
- * A harvestable, targetable asteroid. Ore is drained by a mining laser via
+ * A harvestable, targetable asteroid. Ore is drilled out by mining drones via
  * ExtractOre(); the rock shrinks as it empties and is destroyed when depleted.
  */
 UCLASS()
@@ -36,8 +36,8 @@ public:
 
 	/**
 	 * Drain ore from the rock.
-	 * @param MiningPower Laser power (1.0 = reference)
-	 * @param DeltaTime   Seconds of beam contact
+	 * @param MiningPower Drone cutting power (1.0 = reference)
+	 * @param DeltaTime   Seconds of drilling
 	 * @return Ore units removed this call (fractional)
 	 */
 	float ExtractOre(float MiningPower, float DeltaTime);

@@ -18,7 +18,7 @@
 #include "Trading/PlayerTraderComponent.h"
 #include "Stations/SpaceStation.h"
 #include "Stations/SpaceStationModule.h"
-#include "Mining/MiningLaserComponent.h"
+#include "Drones/DroneBayComponent.h"
 #include "Mining/Asteroid.h"
 #include "Mining/AsteroidDataAsset.h"
 #include "Trading/TradeItemDataAsset.h"
@@ -534,16 +534,18 @@ void AAdastreaHUD::DrawCyberpunkFlightHUD(APlayerController* PC, ASpaceship* Shi
 		N.SegBar(LX, Y + H - 10.0f * S, W - 32.0f * S, 3.0f * S, 1.0f - DockDist / Range, 32, kMagenta, kCyan);
 	}
 
-	// ---- Mining controls hint (bottom centre; while the laser is fitted and nothing is locked) ----
-	if (const UMiningLaserComponent* Laser = Ship->MiningLaser)
+	// ---- Drone controls hint (bottom centre; while mining drones are carried and nothing is locked) ----
+	if (const UDroneBayComponent* Bay = Ship->DroneBay)
 	{
-		if (Laser->bMiningEnabled && !Laser->GetTarget())
+		if (Bay->bMiningEnabled && !Bay->GetTarget())
 		{
 			const float Y = SH - 58.0f * S;
 			float Hx = SW * 0.5f - 170.0f * S;
-			N.Text(TEXT("MINING LASER //"), WithAlpha(kYellow, 0.9f), Hx - 10.0f * S, Y - 20.0f * S, HudType::Label);
+			const int32 Out = Bay->GetDronesOut();
+			N.Text(Out > 0 ? FString::Printf(TEXT("MINING DRONES // %d RETURNING"), Out) : FString(TEXT("MINING DRONES //")),
+				WithAlpha(kYellow, 0.9f), Hx - 10.0f * S, Y - 20.0f * S, HudType::Label);
 			Hx += N.KeyHint(TEXT("T"), TEXT("LOCK ASTEROID"), Hx, Y, kYellow) + 26.0f * S;
-			N.KeyHint(TEXT("LMB"), TEXT("HOLD TO FIRE"), Hx, Y, kYellow);
+			N.KeyHint(TEXT("L"), TEXT("LAUNCH / RECALL"), Hx, Y, kYellow);
 		}
 	}
 
@@ -551,9 +553,9 @@ void AAdastreaHUD::DrawCyberpunkFlightHUD(APlayerController* PC, ASpaceship* Shi
 	DrawMiningHUD(PC, Ship, IdentBottom + 12.0f * S);
 }
 
-void AAdastreaHUD::DrawCyberMiningHUD(APlayerController* PC, ASpaceship* Ship, UMiningLaserComponent* Laser, AAsteroid* Rock, float PanelTop)
+void AAdastreaHUD::DrawCyberMiningHUD(APlayerController* PC, ASpaceship* Ship, UDroneBayComponent* Bay, AAsteroid* Rock, float PanelTop)
 {
-	if (!Canvas || !PC || !Ship || !Laser || !Rock)
+	if (!Canvas || !PC || !Ship || !Bay || !Rock)
 	{
 		return;
 	}
@@ -562,16 +564,16 @@ void AAdastreaHUD::DrawCyberMiningHUD(APlayerController* PC, ASpaceship* Ship, U
 	const float S = N.S;
 
 	UAsteroidDataAsset* Type = Rock->GetAsteroidType();
-	UTradeItemDataAsset* Ore = Laser->GetTargetOre();
+	UTradeItemDataAsset* Ore = Bay->GetTargetOre();
 	FLinearColor Tint = Type ? Type->OreTint : kCyan;
 	Tint.A = 1.0f;
-	const EMiningStatus Status = Laser->GetStatus();
-	const bool bFiring = Status == EMiningStatus::Mining;
-	const bool bInRange = Laser->IsTargetInRange();
-	const float Dist = Laser->GetTargetSurfaceDistance();
+	const EDroneBayStatus Status = Bay->GetStatus();
+	const bool bFiring = Status == EDroneBayStatus::Mining;
+	const bool bInRange = Bay->IsTargetInRange();
+	const float Dist = Bay->GetTargetSurfaceDistance();
 	const FString RockName = Rock->GetTargetDisplayName_Implementation().ToString().ToUpper();
 
-	// ---- Lock brackets around the asteroid (ore tint; yellow when out of range; pulse + orbiting ticks while firing) ----
+	// ---- Lock brackets around the asteroid (ore tint; yellow when out of range; pulse + orbiting ticks while drones work it) ----
 	{
 		FVector2D Centre, Edge;
 		const FVector CamRight = PC->PlayerCameraManager ? FRotationMatrix(PC->PlayerCameraManager->GetCameraRotation()).GetScaledAxis(EAxis::Y) : FVector::RightVector;
@@ -591,7 +593,7 @@ void AAdastreaHUD::DrawCyberMiningHUD(APlayerController* PC, ASpaceship* Ship, U
 
 			if (bFiring)
 			{
-				// Four ticks orbiting the rock while the beam is on
+				// Four ticks orbiting the rock while the drones work it
 				for (int32 i = 0; i < 4; ++i)
 				{
 					const float A = N.Now * 2.5f + i * HALF_PI;
@@ -610,7 +612,7 @@ void AAdastreaHUD::DrawCyberMiningHUD(APlayerController* PC, ASpaceship* Ship, U
 		}
 	}
 
-	// ---- Mining uplink panel (stacked under the ident strip, same width) ----
+	// ---- Drone mining uplink panel (stacked under the ident strip, same width) ----
 	const float X = 24.0f * S, W = 270.0f * S, H = 198.0f * S;
 	const float Y = PanelTop;
 	N.Panel(X, Y, W, H, Tint);
@@ -642,15 +644,15 @@ void AAdastreaHUD::DrawCyberMiningHUD(APlayerController* PC, ASpaceship* Ship, U
 	N.Text(TEXT("RANGE"), kMute, LX, Y + 86.0f * S, HudType::Label);
 	N.Text(FString::Printf(TEXT("%.0f M  //  %s"), Dist / 100.0f, bInRange ? TEXT("IN RANGE") : TEXT("CLOSE IN")),
 		bInRange ? kGreen : kYellow, LX + 44.0f * S, Y + 86.0f * S, HudType::Label);
-	RightText(FString::Printf(TEXT("MAX %.0f"), Laser->Range / 100.0f), kMute, Y + 86.0f * S, HudType::Label);
+	RightText(FString::Printf(TEXT("MAX %.0f"), Bay->Range / 100.0f), kMute, Y + 86.0f * S, HudType::Label);
 
-	// Laser state: lit tag while the beam is on (or blocked), status text beside it
+	// Drone state: lit tag with drones out / cutting, status text beside it
 	{
-		const bool bHeld = Laser->IsTriggerHeld();
-		const FString Beam = bFiring ? TEXT("BEAM ON") : (bHeld ? TEXT("BLOCKED") : TEXT("BEAM OFF"));
-		const FLinearColor BeamCol = bFiring ? kGreen : (bHeld ? kYellow : kMute);
-		const float TagW = N.Tag(Beam, LX, Y + 104.0f * S, BeamCol, bFiring || bHeld);
-		N.Text(UMiningLaserComponent::StatusToText(Status).ToString().ToUpper(), bFiring ? kGreen : kInk, LX + TagW + 4.0f * S, Y + 106.0f * S, HudType::Label);
+		const bool bOut = Bay->GetDronesOut() > 0;
+		const FString Tag = FString::Printf(TEXT("DRONES %d/%d"), Bay->GetDronesOut(), Bay->DroneCount);
+		const FLinearColor TagCol = bFiring ? kGreen : (bOut || Bay->IsDeployed() ? kYellow : kMute);
+		const float TagW = N.Tag(Tag, LX, Y + 104.0f * S, TagCol, bFiring || bOut);
+		N.Text(UDroneBayComponent::StatusToText(Status).ToString().ToUpper(), bFiring ? kGreen : kInk, LX + TagW + 4.0f * S, Y + 106.0f * S, HudType::Label);
 		if (bFiring)
 		{
 			const float Lamp = 0.4f + 0.6f * FMath::Abs(FMath::Sin(N.Now * 8.0f));
@@ -658,11 +660,13 @@ void AAdastreaHUD::DrawCyberMiningHUD(APlayerController* PC, ASpaceship* Ship, U
 		}
 	}
 
-	// Extraction progress toward the next whole unit
+	// Cutting rate, and ore on its way home in drone hoppers
+	const float Transit = Bay->GetOreInTransit();
+	const float TransitCap = FMath::Max(Bay->HopperCapacity * Bay->DroneCount, 1.0f);
 	N.Text(TEXT("EXTRACT"), kMute, LX, Y + 129.0f * S, HudType::Label);
-	RightText(FString::Printf(TEXT("%.1f U/S   NEXT %.0f%%"), bFiring ? Laser->GetExtractionRate() : 0.0f, Laser->GetUnitProgress() * 100.0f),
+	RightText(FString::Printf(TEXT("%.1f U/S   %d CUTTING   %.0f U INBOUND"), Bay->GetExtractionRate(), Bay->GetDronesCutting(), Transit),
 		bFiring ? kGreen : kMute, Y + 129.0f * S, HudType::Label);
-	N.SegBar(LX, Y + 145.0f * S, BW, 5.0f * S, Laser->GetUnitProgress(), 24, kCyan, kGreen, bFiring ? 1.0f : 0.5f);
+	N.SegBar(LX, Y + 145.0f * S, BW, 5.0f * S, Transit / TransitCap, 24, kCyan, kGreen, bFiring ? 1.0f : 0.5f);
 
 	// Hold fill + ore in hold, with a "+N" pop after each delivery
 	if (UCargoComponent* Cargo = Ship->CargoComponent)
@@ -677,10 +681,10 @@ void AAdastreaHUD::DrawCyberMiningHUD(APlayerController* PC, ASpaceship* Ship, U
 		N.Text(Ore ? FString::Printf(TEXT("IN HOLD  %s x%d"), *Ore->ItemName.ToString().ToUpper(), Cargo->GetItemQuantity(Ore)) : FString(TEXT("IN HOLD  -")),
 			kMute, LX, Y + 180.0f * S, HudType::Caption);
 
-		const float Since = Laser->GetSecondsSinceLastMined();
-		if (Laser->GetLastMinedOre() && Since < 1.5f)
+		const float Since = Bay->GetSecondsSinceLastMined();
+		if (Bay->GetLastMinedOre() && Since < 1.5f)
 		{
-			const FString Plus = FString::Printf(TEXT("+%d"), Laser->GetLastMinedAmount());
+			const FString Plus = FString::Printf(TEXT("+%d"), Bay->GetLastMinedAmount());
 			float PW = 0.0f, PH = 0.0f;
 			N.TextSize(Plus, HudType::Heading, PW, PH);
 			N.GlitchText(Plus, WithAlpha(kGreen, FMath::Clamp(1.0f - Since / 1.5f, 0.0f, 1.0f)),
