@@ -1,0 +1,108 @@
+{
+  "version": 1,
+  "_notes": [
+    "Who owns what (UOrganisationSubsystem). Edit freely; in PIE run adastrea.ReloadOrgs, then adastrea.OrgInfo to check.",
+    "organisations[].kind: person (1-2 ships), outfit (family / small company, 2-6), guild (specialists, no territory, up to 8 of its own), authority (governs sectors, up to 20).",
+    "organisations[].parent: allegiance. A captain's outfit or guild, a guild's chartering authority. Leave out for independents. Standing is inherited through parents.",
+    "organisations[].governs: authority only. Sector ids from Galaxy.json; at most 3, all in one system. Sectors nobody governs are independent space.",
+    "ships[]: one ship each, or 'count' for numbered ships sharing a name. role: trader, miner or patrol (patrols fly between stations without trading until patrol AI exists).",
+    "ships[].sector: where the ship is. A level's AAIShipPopulator spawns that sector's ships. ships[].class (optional): Blueprint class path, else the populator picks one for the role.",
+    "relations[]: standing -100 (war) .. 100 (allies) between two organisations, symmetric. Unlisted pairs sharing an allegiance default to 50, others to 0.",
+    "organisations[].taxRate: authority only. Share of the profit other owners' ships make in its sectors (default 0.08). targetFleet: fleet size an authority keeps up (default: what it starts with).",
+    "economy: every tickSeconds of game time ships not in the level being played earn offscreenIncome, all ships cost upkeep, authorities get sectorIncome per governed sector.",
+    "economy: owners in debt sell a ship that isn't in view (for shipPrice x resaleFraction); owners with shipPrice x (1 + reserveFraction) buy one, up to their cap. adastrea.EconomyTick N runs ticks now."
+  ],
+  "economy": {
+    "tickSeconds": 60,
+    "shipPrice": { "trader": 400000, "miner": 350000, "patrol": 450000 },
+    "upkeep": { "trader": 700, "miner": 600, "patrol": 600 },
+    "offscreenIncome": { "trader": 3000, "miner": 3000, "patrol": 0 },
+    "sectorIncome": 2500,
+    "resaleFraction": 0.6,
+    "reserveFraction": 0.5
+  },
+  "organisations": [
+    { "id": "trade_compact", "name": "Adastrea Trade Compact", "kind": "authority", "governs": ["adastrea_prime", "adastrea_alpha", "adastrea_beta"],
+      "seat": "Prime Station", "home": "adastrea_prime", "colour": [0.95, 0.75, 0.3], "credits": 250000, "taxRate": 0.10,
+      "description": "Council of merchant houses that keeps the Adastrea inner lanes safe and taxed." },
+    { "id": "kestrel_port_authority", "name": "Kestrel Port Authority", "kind": "authority", "governs": ["kestrel_port", "kestrel_skim"],
+      "seat": "Kestrel Port", "home": "kestrel_port", "colour": [1.0, 0.55, 0.3], "credits": 90000, "taxRate": 0.08,
+      "description": "Harbourmasters of the Kestrel fuel depot. Old friends of the Compact." },
+    { "id": "varos_syndicate", "name": "Varos Syndicate", "kind": "authority", "governs": ["varos_hold", "varos_gauntlet"],
+      "seat": "Syndicate Hold", "home": "varos_hold", "colour": [0.85, 0.2, 0.2], "credits": 120000, "taxRate": 0.15,
+      "description": "A clan of old warship crews ruling Varos from their fortress station." },
+    { "id": "lumen_accord", "name": "Lumen Accord", "kind": "authority", "governs": ["lumen_academy", "lumen_array"],
+      "seat": "Lumen Academy", "home": "lumen_academy", "colour": [0.55, 0.85, 1.0], "credits": 150000, "taxRate": 0.06,
+      "description": "Scholars' council governing from the university station." },
+    { "id": "haven_moot", "name": "Haven Moot", "kind": "authority", "governs": ["corvid_haven"],
+      "seat": "Corvid Haven", "home": "corvid_haven", "colour": [0.6, 0.9, 0.5], "credits": 60000, "taxRate": 0.05,
+      "description": "Open assembly of the free port's captains and miners." },
+
+    { "id": "prime_hauliers", "name": "Prime Hauliers' Guild", "kind": "guild", "parent": "trade_compact", "home": "adastrea_prime",
+      "industries": ["Transport", "Trading"], "colour": [0.9, 0.85, 0.5], "credits": 40000,
+      "description": "Freight captains who move goods between the Prime stations." },
+    { "id": "deep_seam", "name": "Deep Seam Miners' Guild", "kind": "guild", "parent": "haven_moot", "home": "corvid_belt",
+      "industries": ["Mining", "Refining"], "colour": [0.7, 0.55, 0.35], "credits": 30000,
+      "description": "Rock-cutters from the Twin Belt, now working the Cinder Belt and Prime's asteroid field too." },
+    { "id": "haven_freight", "name": "Haven Freight Union", "kind": "guild", "parent": "haven_moot", "home": "corvid_haven",
+      "industries": ["Transport"], "colour": [0.5, 0.8, 0.6], "credits": 20000,
+      "description": "Haulers carrying Corvid ore out to the lanes." },
+    { "id": "scrapyard_coop", "name": "Scrapyard Co-op", "kind": "guild", "parent": "varos_syndicate", "home": "varos_scrap",
+      "industries": ["Salvage"], "colour": [0.6, 0.6, 0.55], "credits": 15000,
+      "description": "Salvage crews licensed by the Syndicate to strip the old battlefield." },
+
+    { "id": "vance_daughters", "name": "Vance & Daughters", "kind": "outfit", "parent": "prime_hauliers", "home": "adastrea_prime",
+      "credits": 12000, "description": "Three generations of Prime freighter captains." },
+    { "id": "doss_family", "name": "Doss Family", "kind": "outfit", "parent": "deep_seam", "home": "adastrea_cinder",
+      "credits": 8000, "description": "Miners who followed the guild from Corvid to the Cinder Belt." },
+
+    { "id": "juno_marr", "name": "Juno Marr", "kind": "person", "home": "adastrea_prime", "credits": 3000,
+      "description": "Independent trader, owes nobody anything." },
+    { "id": "rust_kael", "name": "\"Rust\" Kael", "kind": "person", "home": "adastrea_prime", "credits": 1500,
+      "description": "Independent miner working Prime's asteroid field." },
+    { "id": "ira_vell", "name": "Ira Vell", "kind": "person", "parent": "deep_seam", "home": "adastrea_cinder", "credits": 2000,
+      "description": "Deep Seam member flying her own miner." },
+    { "id": "okon_tarr", "name": "Okon Tarr", "kind": "person", "parent": "haven_freight", "home": "corvid_haven", "credits": 2500,
+      "description": "Haven Freight Union captain." }
+  ],
+  "ships": [
+    { "owner": "trade_compact", "role": "patrol", "name": "Compact Patrol", "count": 3, "sector": "adastrea_prime" },
+    { "owner": "prime_hauliers", "role": "trader", "name": "Guild Bulk Carrier", "sector": "adastrea_prime" },
+    { "owner": "vance_daughters", "role": "trader", "name": "Vance Endeavour", "sector": "adastrea_prime" },
+    { "owner": "vance_daughters", "role": "trader", "name": "Vance Providence", "sector": "adastrea_prime" },
+    { "owner": "juno_marr", "role": "trader", "name": "Juno's Wake", "sector": "adastrea_prime" },
+    { "owner": "doss_family", "role": "miner", "name": "Doss Pick", "count": 2, "sector": "adastrea_prime" },
+    { "owner": "rust_kael", "role": "miner", "name": "Rustbucket", "sector": "adastrea_prime" },
+
+    { "owner": "trade_compact", "role": "patrol", "name": "Compact Patrol", "count": 2, "sector": "adastrea_alpha" },
+    { "owner": "prime_hauliers", "role": "trader", "name": "Guild Bulk Carrier", "count": 2, "sector": "adastrea_alpha" },
+    { "owner": "trade_compact", "role": "patrol", "name": "Compact Survey Cutter", "sector": "adastrea_beta" },
+
+    { "owner": "doss_family", "role": "miner", "name": "Doss Pick", "sector": "adastrea_cinder" },
+    { "owner": "doss_family", "role": "trader", "name": "Doss Ore Hauler", "sector": "adastrea_cinder" },
+    { "owner": "ira_vell", "role": "miner", "name": "Seamstress", "sector": "adastrea_cinder" },
+    { "owner": "deep_seam", "role": "trader", "name": "Deep Seam Hauler", "sector": "adastrea_cinder" },
+
+    { "owner": "varos_syndicate", "role": "patrol", "name": "Syndicate Raider", "count": 4, "sector": "varos_gauntlet" },
+    { "owner": "varos_syndicate", "role": "patrol", "name": "Syndicate Guard", "count": 2, "sector": "varos_hold" },
+    { "owner": "scrapyard_coop", "role": "trader", "name": "Co-op Salvager", "count": 3, "sector": "varos_scrap" },
+
+    { "owner": "kestrel_port_authority", "role": "patrol", "name": "Harbour Cutter", "count": 2, "sector": "kestrel_port" },
+    { "owner": "lumen_accord", "role": "patrol", "name": "Accord Warden", "count": 2, "sector": "lumen_academy" },
+
+    { "owner": "haven_moot", "role": "patrol", "name": "Moot Picket", "count": 4, "sector": "corvid_haven" },
+    { "owner": "haven_freight", "role": "trader", "name": "Union Freighter", "sector": "corvid_haven" },
+    { "owner": "okon_tarr", "role": "trader", "name": "Tarr's Burden", "sector": "corvid_haven" },
+    { "owner": "deep_seam", "role": "miner", "name": "Deep Seam Cutter", "count": 3, "sector": "corvid_belt" }
+  ],
+  "relations": [
+    { "a": "trade_compact", "b": "kestrel_port_authority", "standing": 50, "note": "old fuel-supply pact" },
+    { "a": "trade_compact", "b": "lumen_accord", "standing": 40, "note": "trade pact" },
+    { "a": "trade_compact", "b": "varos_syndicate", "standing": -60, "note": "Syndicate raids on Compact haulers" },
+    { "a": "haven_moot", "b": "varos_syndicate", "standing": -20, "note": "border friction" },
+    { "a": "haven_moot", "b": "lumen_accord", "standing": 10 },
+    { "a": "haven_moot", "b": "trade_compact", "standing": 15, "note": "Compact buys Corvid ore" },
+    { "a": "scrapyard_coop", "b": "trade_compact", "standing": 10, "note": "sells salvage to Prime despite the Syndicate" },
+    { "a": "deep_seam", "b": "prime_hauliers", "standing": 30, "note": "hauliers carry Deep Seam ore to Prime" }
+  ]
+}

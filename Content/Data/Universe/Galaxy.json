@@ -92,12 +92,12 @@
       "starClass": "K5V",
       "starColor": [1.0, 0.62, 0.32],
       "position": [11, 6],
-      "faction": "Adastrea Trade Compact",
+      "faction": "Kestrel Port Authority",
       "description": "Orange dwarf with gas-giant fuel skimmers.",
       "jumpLinks": ["thule", "corvid"],
       "sectors": [
-        { "id": "kestrel_skim", "name": "Kestrel Skimfields", "type": "Gas Harvesting", "security": "Medium", "faction": "Adastrea Trade Compact", "description": "Fuel skimmers over the giant Kestrel IV.", "level": "", "orbitRadius": 0.45, "orbitAngle": 40, "gates": ["kestrel_port"] },
-        { "id": "kestrel_port", "name": "Kestrel Port", "type": "Trade Hub", "security": "High", "faction": "Adastrea Trade Compact", "description": "Fuel depot and waystation.", "level": "", "orbitRadius": 0.3, "orbitAngle": 200, "gates": ["kestrel_edge"] },
+        { "id": "kestrel_skim", "name": "Kestrel Skimfields", "type": "Gas Harvesting", "security": "Medium", "faction": "Kestrel Port Authority", "description": "Fuel skimmers over the giant Kestrel IV.", "level": "", "orbitRadius": 0.45, "orbitAngle": 40, "gates": ["kestrel_port"] },
+        { "id": "kestrel_port", "name": "Kestrel Port", "type": "Trade Hub", "security": "High", "faction": "Kestrel Port Authority", "description": "Fuel depot and waystation.", "level": "", "orbitRadius": 0.3, "orbitAngle": 200, "gates": ["kestrel_edge"] },
         { "id": "kestrel_edge", "name": "Kestrel Edge", "type": "Frontier", "security": "Low", "faction": "Independent", "description": "Sparse outer sector, favoured by smugglers.", "level": "", "orbitRadius": 0.88, "orbitAngle": 300, "gates": [] }
       ]
     },
@@ -141,7 +141,7 @@
       "jumpLinks": [],
       "sectors": [
         { "id": "corvid_belt", "name": "Twin Belt", "type": "Mining", "security": "Low", "faction": "Independent", "description": "Rare metals, dangerous tides.", "level": "", "orbitRadius": 0.6, "orbitAngle": 20, "gates": ["corvid_haven"] },
-        { "id": "corvid_haven", "name": "Corvid Haven", "type": "Trade Hub", "security": "Medium", "faction": "Independent", "description": "Free port run by the miners' guild.", "level": "", "orbitRadius": 0.38, "orbitAngle": 200, "gates": [] }
+        { "id": "corvid_haven", "name": "Corvid Haven", "type": "Trade Hub", "security": "Medium", "faction": "Haven Moot", "description": "Free port run by the miners' guild.", "level": "", "orbitRadius": 0.38, "orbitAngle": 200, "gates": [] }
       ]
     },
     {
