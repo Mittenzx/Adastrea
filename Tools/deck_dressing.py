@@ -288,7 +288,7 @@ def d_engine(b):
     prop(p, "FuseBox", x1, dw + 330, 110, 180.0, collide=False)
     prop(p, "JunctionBox", x1, dw + 120, 150, 180.0, collide=False)
     prop(p, "JunctionBox", x1, -dw - 120, 150, 180.0, collide=False)
-    fixture("Terminal", "Engineering", x1 - 30, -dw - 330 - 150 if b.W > 1100 else -dw - 110, 0, 180.0)
+    fixture("Terminal", "Engineering", x1 - 30, -dw - 330 - 150 if b.W > 1250 else -dw - 110, 0, 180.0)
     prop(p, "FireExtinguisher", x1, dw + 60, 0, 180.0, collide=False)
     prop(p, "AlarmBeacon", x1 - 20, 0, h - 30, 0.0, collide=False)
     prop(p, "HazardCone", x1 - 250, dw + 120, 0, 0.0)

@@ -113,7 +113,9 @@ def contracts(names):
     for fp in sorted(glob.glob(os.path.join(art.GEN_DIR, "SM_Int_*_Decks_contract.json"))):
         with open(fp) as fh:
             c = json.load(fh)
-        if "ship" not in c:                       # the Battleship's contract (own importer)
+        # the Battleship's contract has its own importer (Tools/import_battleship_decks.py);
+        # it carries "ship" too now, for Tools/pie_walk_ship_decks.py
+        if "ship" not in c or c.get("family") == "BattleshipDecks":
             continue
         if names and c["ship"] not in names:
             continue

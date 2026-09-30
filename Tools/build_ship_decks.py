@@ -46,6 +46,10 @@ BP = "/Game/Blueprints/Ships/"
 # Ship specs. Lengths/heights in design cm.
 # ----------------------------------------------------------------------------
 SHIPS = {
+    # Ship scale (2026-09-30): people-sized spaces stay the same size on every
+    # hull (2.0-2.4 m spine, 2.7-2.9 m deckheads, rooms 4.5-5.3 m deep); a bigger
+    # ship gets more and bigger machinery/cargo bays, not bigger rooms. Tuned
+    # against Tools/interior_benchmark.py (Space group).
     # --- Viper Interceptor (crew 1-2): cockpit, crew nook, avionics crawl bay ---
     "Fighter": dict(
         bp=BP + "BP_Ship_Fighter", style="command", door=(130, 205), main_door=(130, 205),
@@ -54,154 +58,156 @@ SHIPS = {
               ("bridge", "cockpit", 400, 300, 220, {"nose": 0.55, "chamfer": 150, "sill": 70, "seats": 1})]),
     # --- Sentinel Patrol Ship (8-16): brig, armory, bunks, galley ---
     "Patrol": dict(
-        bp=BP + "BP_Ship_Patrol", style="patrol", door=(140, 220), main_door=(180, 230),
+        bp=BP + "BP_Ship_Patrol", style="patrol", door=(140, 215), main_door=(180, 225),
         segs=[("bay", "engine", 520, 900, 420, {}),
-              ("block", 1150, 1000, 300, dict(spine=220, hs=260, name="Crew",
+              ("block", 1150, 960, 270, dict(spine=200, hs=245, name="Crew",
                   port=[("bunks", 575, {}), ("galley", 575, {})],
                   stbd=[("brig", 700, {}), ("armory", 450, {})])),
-              ("bridge", "small", 760, 820, 320, {"nose": 0.5, "chamfer": 260})]),
+              ("bridge", "small", 700, 760, 290, {"nose": 0.5, "chamfer": 240})]),
     # --- Merchant Trader (8-15, cargo 5000): big container hold ---
     "Trading": dict(
-        bp=BP + "BP_Ship_Trading", style="industrial", door=(140, 220), main_door=(240, 250),
+        bp=BP + "BP_Ship_Trading", style="industrial", door=(140, 215), main_door=(240, 240),
         segs=[("bay", "engine", 520, 1000, 420, {}),
               ("bay", "hold", 1500, 1400, 720, {}),
-              ("block", 900, 1000, 300, dict(spine=220, hs=260, name="Crew",
+              ("block", 900, 960, 270, dict(spine=200, hs=245, name="Crew",
                   port=[("bunks", 450, {}), ("galley", 450, {})],
                   stbd=[("airlock", 340, {}), ("workshop", 560, {})])),
-              ("bridge", "small", 720, 760, 310, {"nose": 0.55, "chamfer": 220})]),
+              ("bridge", "small", 680, 740, 290, {"nose": 0.55, "chamfer": 210})]),
     # --- Shadowblade Stealth Frigate (12-18): ops room, ECM core ---
     "Frigate": dict(
-        bp=BP + "BP_Ship_Frigate", style="stealth", door=(140, 220), main_door=(180, 230),
+        bp=BP + "BP_Ship_Frigate", style="stealth", door=(140, 215), main_door=(180, 225),
         segs=[("bay", "engine", 600, 900, 420, {}),
-              ("block", 1350, 1000, 300, dict(spine=220, hs=250, name="Ops",
+              ("block", 1350, 960, 270, dict(spine=200, hs=245, name="Ops",
                   port=[("bunks", 500, {}), ("ecm", 850, {})],
                   stbd=[("armory", 450, {}), ("ops", 900, {})])),
-              ("bridge", "small", 760, 820, 300, {"nose": 0.4, "chamfer": 300})]),
+              ("bridge", "small", 700, 760, 290, {"nose": 0.4, "chamfer": 280})]),
     # --- Phoenix Salvage Ship (10-20): salvage bay with claw crane ---
     "Utility": dict(
-        bp=BP + "BP_Ship_Utility", style="industrial", door=(140, 220), main_door=(240, 250),
+        bp=BP + "BP_Ship_Utility", style="industrial", door=(140, 215), main_door=(240, 240),
         segs=[("bay", "engine", 520, 1000, 420, {}),
               ("bay", "salvage", 1300, 1300, 680, {}),
-              ("block", 850, 1000, 300, dict(spine=220, hs=260, name="Crew",
+              ("block", 850, 960, 270, dict(spine=200, hs=245, name="Crew",
                   port=[("bunks", 425, {}), ("galley", 425, {})],
                   stbd=[("workshop", 850, {})])),
-              ("bridge", "small", 720, 820, 320, {"nose": 0.55, "chamfer": 240})]),
+              ("bridge", "small", 680, 760, 290, {"nose": 0.55, "chamfer": 220})]),
     # --- Warhammer Gunship (15-25): magazine, fire control ---
     "Gunship": dict(
-        bp=BP + "BP_Ship_Gunship", style="military", door=(160, 230), main_door=(200, 240),
+        bp=BP + "BP_Ship_Gunship", style="military", door=(150, 215), main_door=(200, 235),
         segs=[("bay", "engine", 600, 1000, 450, {}),
-              ("block", 720, 1100, 330, dict(spine=240, hs=280, name="Weapons",
+              ("block", 720, 1000, 270, dict(spine=200, hs=245, name="Weapons",
                   port=[("magazine", 720, {})], stbd=[("gunnery", 720, {})])),
-              ("block", 760, 1100, 330, dict(spine=240, hs=280, name="Crew",
+              ("block", 760, 1000, 270, dict(spine=200, hs=245, name="Crew",
                   port=[("bunks", 760, {})], stbd=[("galley", 380, {}), ("armory", 380, {})])),
-              ("bridge", "mid", 950, 960, 340, {"nose": 0.5, "chamfer": 280})]),
+              ("bridge", "mid", 850, 880, 300, {"nose": 0.5, "chamfer": 260})]),
     # --- Raptor Assault Corvette (15-40): boarding bay with breaching pods ---
     "Corvette": dict(
-        bp=BP + "BP_Ship_Corvette", style="military", door=(160, 230), main_door=(240, 250),
+        bp=BP + "BP_Ship_Corvette", style="military", door=(150, 215), main_door=(240, 240),
         segs=[("bay", "engine", 600, 1000, 450, {}),
               ("bay", "boarding", 1100, 1300, 600, {}),
-              ("block", 1250, 1100, 330, dict(spine=240, hs=280, name="Crew",
+              ("block", 1250, 1000, 270, dict(spine=200, hs=245, name="Crew",
                   port=[("ready", 625, {}), ("bunks", 625, {})],
                   stbd=[("armory", 600, {}), ("medbay", 650, {})])),
-              ("bridge", "mid", 950, 960, 340, {"nose": 0.5, "chamfer": 280})]),
+              ("bridge", "mid", 850, 880, 300, {"nose": 0.5, "chamfer": 260})]),
     # --- Destroyer (Warhammer-line): torpedo room, CIC ---
     "Destroyer": dict(
-        bp=BP + "BP_Ship_Destroyer", style="military", door=(180, 240), main_door=(260, 260),
-        segs=[("bay", "engine", 850, 1300, 700, {}),
-              ("bay", "torpedo", 950, 1200, 480, {}),
-              ("block", 1700, 1300, 350, dict(spine=260, hs=290, name="Crew",
+        bp=BP + "BP_Ship_Destroyer", style="military", door=(150, 215), main_door=(240, 240),
+        segs=[("bay", "engine", 800, 1200, 600, {}),
+              ("bay", "torpedo", 900, 1000, 380, {}),
+              ("block", 1700, 1100, 270, dict(spine=200, hs=245, name="Crew",
                   port=[("bunks", 650, {}), ("mess", 1050, {})],
                   stbd=[("armory", 520, {}), ("medbay", 560, {}), ("briefing", 620, {})])),
-              ("bridge", "cic", 1350, 1300, 450, {"nose": 0.45, "chamfer": 380})]),
+              ("bridge", "cic", 1100, 1000, 320, {"nose": 0.45, "chamfer": 320})]),
     # --- Odyssey Research Vessel (20-45): labs, astrometrics ---
     "Science": dict(
-        bp=BP + "BP_Ship_Science", style="clean", door=(160, 230), main_door=(240, 250),
-        segs=[("bay", "engine", 720, 1200, 650, {"style": "industrial"}),
-              ("block", 1450, 1400, 340, dict(spine=260, hs=300, name="Labs",
+        bp=BP + "BP_Ship_Science", style="clean", door=(150, 215), main_door=(220, 240),
+        segs=[("bay", "engine", 720, 1100, 550, {"style": "industrial"}),
+              ("block", 1450, 1100, 270, dict(spine=210, hs=250, name="Labs",
                   port=[("cabins", 750, {}), ("mess", 700, {})],
                   stbd=[("lab", 725, {}), ("lab", 725, {"bio": True})])),
-              ("bay", "astro", 950, 1400, 560, {"win": "both", "name": "Astrometrics"}),
-              ("bridge", "mid", 950, 1000, 340, {"nose": 0.55, "chamfer": 300})]),
+              ("bay", "astro", 900, 1100, 400, {"win": "both", "name": "Astrometrics"}),
+              ("bridge", "mid", 900, 900, 300, {"nose": 0.55, "chamfer": 270})]),
     # --- Behemoth Heavy Freighter, container ship ---
     "Freighter": dict(
-        bp=BP + "BP_Ship_Freighter", style="industrial", door=(160, 230), main_door=(260, 260),
-        segs=[("bay", "engine", 850, 1400, 720, {}),
+        bp=BP + "BP_Ship_Freighter", style="industrial", door=(150, 215), main_door=(260, 250),
+        segs=[("bay", "engine", 800, 1200, 600, {}),
               ("bay", "hold", 2500, 1900, 820, {}),
-              ("block", 950, 1200, 320, dict(spine=240, hs=270, name="Crew",
+              ("block", 950, 1100, 270, dict(spine=200, hs=245, name="Crew",
                   port=[("bunks", 475, {}), ("mess", 475, {})],
                   stbd=[("airlock", 350, {}), ("workshop", 600, {})])),
-              ("bridge", "mid", 950, 1000, 340, {"nose": 0.55, "chamfer": 300})]),
+              ("bridge", "mid", 900, 900, 300, {"nose": 0.55, "chamfer": 270})]),
     # --- Behemoth hauler: bulk tank hold ---
     "Behemoth": dict(
-        bp=BP + "BP_Ship_Transport_Behemoth", style="industrial", door=(160, 230), main_door=(260, 260),
-        segs=[("bay", "engine", 900, 1400, 720, {}),
+        bp=BP + "BP_Ship_Transport_Behemoth", style="industrial", door=(150, 215), main_door=(260, 250),
+        segs=[("bay", "engine", 800, 1200, 600, {}),
               ("bay", "tankhold", 2400, 1800, 900, {}),
-              ("block", 1000, 1200, 320, dict(spine=240, hs=270, name="Crew",
+              ("block", 1000, 1100, 270, dict(spine=200, hs=245, name="Crew",
                   port=[("cabins", 600, {}), ("galley", 400, {})],
                   stbd=[("storage", 500, {}), ("medbay", 500, {})])),
-              ("bridge", "mid", 950, 1000, 340, {"nose": 0.5, "chamfer": 300})]),
+              ("bridge", "mid", 900, 900, 300, {"nose": 0.5, "chamfer": 270})]),
     # --- Excavator Mining Barge (25-50): ore refinery ---
     "Mining": dict(
-        bp=BP + "BP_Ship_Mining", style="industrial", door=(160, 230), main_door=(260, 260),
-        segs=[("bay", "engine", 850, 1400, 720, {}),
+        bp=BP + "BP_Ship_Mining", style="industrial", door=(150, 215), main_door=(260, 250),
+        segs=[("bay", "engine", 800, 1200, 600, {}),
               ("bay", "refinery", 1800, 1800, 820, {}),
-              ("block", 1250, 1300, 330, dict(spine=260, hs=280, name="Crew",
+              ("block", 1250, 1100, 270, dict(spine=210, hs=250, name="Crew",
                   port=[("bunks", 625, {}), ("mess", 625, {})],
                   stbd=[("ready", 600, {"eva": True}), ("workshop", 650, {})])),
-              ("bridge", "mid", 950, 1100, 340, {"nose": 0.5, "chamfer": 320})]),
+              ("bridge", "mid", 900, 950, 300, {"nose": 0.5, "chamfer": 280})]),
     # --- Lifeline Medical Cruiser (35-120): wards, surgery, cryo ---
+    # (2.4 m spine: two gurneys pass; 6 m deep wards fit the triage station + bed row)
     "Cruiser": dict(
-        bp=BP + "BP_Ship_Cruiser", style="clean", door=(200, 240), main_door=(280, 260),
-        segs=[("bay", "engine", 850, 1400, 680, {"style": "industrial"}),
-              ("block", 1100, 1600, 360, dict(spine=300, hs=310, name="Wards",
+        bp=BP + "BP_Ship_Cruiser", style="clean", door=(180, 220), main_door=(240, 245),
+        segs=[("bay", "engine", 800, 1200, 580, {"style": "industrial"}),
+              ("block", 1100, 1500, 280, dict(spine=240, hs=255, name="Wards",
                   port=[("ward", 1100, {"triage": True})], stbd=[("cryo", 1100, {})])),
-              ("block", 1700, 1600, 360, dict(spine=300, hs=310, name="Medical",
+              ("block", 1700, 1500, 280, dict(spine=240, hs=255, name="Medical",
                   port=[("ward", 1050, {}), ("cabins", 650, {})],
                   stbd=[("surgery", 850, {}), ("lab", 850, {})])),
-              ("bridge", "mid", 1000, 1100, 360, {"nose": 0.55, "chamfer": 320})]),
+              ("bridge", "mid", 900, 950, 300, {"nose": 0.55, "chamfer": 280})]),
     # --- Vanguard Escort Carrier (40-85): fighter hangar ---
     "Carrier": dict(
-        bp=BP + "BP_Ship_Carrier", style="military", door=(180, 240), main_door=(300, 270),
-        segs=[("bay", "engine", 950, 1600, 820, {}),
-              ("bay", "hangar", 2800, 2400, 1000, {"craft": 3}),
-              ("block", 1450, 1400, 350, dict(spine=260, hs=290, name="Crew",
+        bp=BP + "BP_Ship_Carrier", style="military", door=(160, 215), main_door=(280, 250),
+        segs=[("bay", "engine", 900, 1300, 650, {}),
+              ("bay", "hangar", 2800, 1600, 600, {"craft": 3}),     # craft auto-scale to ~5 m
+              ("block", 1450, 1100, 270, dict(spine=210, hs=250, name="Crew",
                   port=[("briefing", 700, {}), ("bunks", 750, {})],
                   stbd=[("magazine", 700, {}), ("mess", 750, {})])),
-              ("bridge", "cic", 1350, 1300, 450, {"nose": 0.45, "chamfer": 380})]),
+              ("bridge", "cic", 1100, 1000, 320, {"nose": 0.45, "chamfer": 320})]),
     # --- Starliner Luxury Cruiser (40-200): suites, atrium, dining ---
+    # (liner cabins: a little deeper and higher than crew spaces, atrium kept grand)
     "Luxury": dict(
-        bp=BP + "BP_Ship_Luxury", style="luxury", door=(200, 240), main_door=(300, 270),
-        segs=[("bay", "engine", 850, 1400, 680, {"style": "industrial"}),
-              ("block", 1500, 1600, 340, dict(spine=300, hs=300, name="Suites",
+        bp=BP + "BP_Ship_Luxury", style="luxury", door=(170, 225), main_door=(260, 250),
+        segs=[("bay", "engine", 800, 1200, 580, {"style": "industrial"}),
+              ("block", 1500, 1300, 290, dict(spine=240, hs=270, name="Suites",
                   port=[("cabins", 750, {"lux": True, "win": True}), ("cabins", 750, {"lux": True, "win": True})],
                   stbd=[("cabins", 750, {"lux": True, "win": True}), ("lounge", 750, {"win": True})])),
-              ("bay", "atrium", 1700, 2200, 820, {"win": "y0", "name": "Atrium"}),
-              ("block", 900, 1400, 340, dict(spine=300, hs=300, name="Dining",
+              ("bay", "atrium", 1500, 1900, 700, {"win": "y0", "name": "Atrium"}),
+              ("block", 900, 1200, 290, dict(spine=240, hs=270, name="Dining",
                   port=[("mess", 900, {"dining": True, "win": True})],
                   stbd=[("mess", 900, {"dining": True, "win": True})])),
-              ("bridge", "mid", 1000, 1000, 340, {"nose": 0.55, "chamfer": 300, "style": "command"})]),
+              ("bridge", "mid", 900, 900, 300, {"nose": 0.55, "chamfer": 270, "style": "command"})]),
     # --- Genesis Colony Ship (80-3000): cryo hall, hydroponics ---
     "Genesis": dict(
-        bp=BP + "BP_Ship_Transport_Genesis", style="clean", door=(200, 240), main_door=(320, 280),
-        segs=[("bay", "engine", 1800, 2200, 1100, {"style": "industrial"}),
-              ("bay", "cryohall", 2600, 2800, 900, {}),
-              ("bay", "farm", 1800, 2600, 700, {}),
-              ("block", 1500, 1600, 360, dict(spine=300, hs=310, name="Commons",
+        bp=BP + "BP_Ship_Transport_Genesis", style="clean", door=(170, 220), main_door=(280, 250),
+        segs=[("bay", "engine", 1400, 1800, 800, {"style": "industrial"}),
+              ("bay", "cryohall", 2400, 2200, 600, {}),
+              ("bay", "farm", 1800, 2200, 550, {}),
+              ("block", 1500, 1200, 280, dict(spine=220, hs=250, name="Commons",
                   port=[("mess", 800, {}), ("cabins", 700, {})],
                   stbd=[("medbay", 750, {}), ("storage", 750, {})])),
-              ("bridge", "cic", 1500, 1500, 460, {"nose": 0.5, "chamfer": 420})]),
+              ("bridge", "cic", 1100, 1100, 330, {"nose": 0.5, "chamfer": 340})]),
     # --- Sovereign Command Cruiser (200-500): fleet flagship ---
     "CommandXL": dict(
-        bp=BP + "BP_CommandXL", style="command", door=(200, 240), main_door=(320, 280),
-        segs=[("bay", "engine", 1800, 2400, 1200, {}),
-              ("bay", "hangar", 2100, 2600, 1000, {"craft": 2, "name": "Hangar"}),
-              ("block", 1650, 1800, 400, dict(spine=320, hs=330, name="Crew",
+        bp=BP + "BP_CommandXL", style="command", door=(170, 220), main_door=(280, 250),
+        segs=[("bay", "engine", 1400, 1800, 800, {}),
+              ("bay", "hangar", 2100, 1600, 600, {"craft": 2, "name": "Hangar"}),
+              ("block", 1650, 1200, 280, dict(spine=220, hs=255, name="Crew",
                   port=[("bunks", 850, {}), ("mess", 800, {})],
                   stbd=[("armory", 650, {}), ("medbay", 1000, {})])),
-              ("block", 1450, 1800, 400, dict(spine=320, hs=330, name="Staff",
+              ("block", 1450, 1400, 280, dict(spine=220, hs=255, name="Staff",   # war room table
                   port=[("cabins", 750, {"lux": True}), ("briefing", 700, {})],
                   stbd=[("ops", 1450, {"big": True})])),
-              ("bridge", "flag", 1750, 2400, 650, {"nose": 0.45, "chamfer": 560})]),
+              ("bridge", "flag", 1200, 1200, 340, {"nose": 0.45, "chamfer": 360})]),
 }
 
 
@@ -209,6 +215,8 @@ SHIPS = {
 # Layout
 # ----------------------------------------------------------------------------
 SPACES = []          # (name, x0, x1, y0, y1) for the walk check
+ZONES = []           # (name, kind, x0, x1, y0, y1, ceiling) for Tools/interior_benchmark.py
+BAY_KIND = {"engine": "machinery", "fighter_aft": "machinery", "fighter_cabin": "room"}
 
 
 class style_scope:
@@ -312,6 +320,7 @@ def build_ship(key):
     prefix = f"SM_Int_{key}_Decks"
     dk.reset(prefix, spec["style"])
     SPACES.clear()
+    ZONES.clear()
     segs = spec["segs"]
     total = sum(s[2] if s[0] != "block" else s[1] for s in segs)
     x = -total / 2
@@ -377,6 +386,8 @@ def build_ship(key):
                         seg_box(si["part"], dk.CO, tuple(q0 + nn * 8 + e * 10), tuple(q1 + nn * 8 - e * 10), 3,
                                 top + 40, H - 30)
                 SPACES.append((si["part"], x0 + 30, x1 - c, -W / 2 + 30, W / 2 - 30))
+                ZONES.append((si["part"], "room" if si["seg"][1] == "cockpit" else "command",
+                              x0, x1, -W / 2, W / 2, H))
                 continue
             box(sh, "floor", x0, x1, -W / 2, W / 2, -20, 0)
             box(sh, "wall", x0, x1, -W / 2, W / 2, H, H + 20)
@@ -390,6 +401,7 @@ def build_ship(key):
                     else:
                         wall(sh, wslot, p0, p1, 0, H, frames=False)
                 SPACES.append((si["part"], x0 + 30, x1 - 30, -W / 2 + 30, W / 2 - 30))
+                ZONES.append((si["part"], BAY_KIND.get(si["seg"][1], "bay"), x0, x1, -W / 2, W / 2, H))
 
     # ---- transverse walls between segments + stern wall ---------------------
     first = seg_info[0]
@@ -446,6 +458,8 @@ def build_ship(key):
                     dd.dress_room(kind, rm)
                     SPACES.append((f"{si['part']}:{kind}", ra + 40, rb - 40,
                                    *sorted((side * (sw / 2 + 40), side * (W / 2 - 40)))))
+                    ZONES.append((f"{si['part']}:{kind}", "room", ra, rb,
+                                  *sorted((side * sw / 2, side * W / 2)), H))
                 ops = [(d - x0, dw, 0, dh) for d in doors[side]]
                 p0, p1 = (x0, side * sw / 2), (x1, side * sw / 2)
                 wall(sh, "wall", p0, p1, 0, H, openings=ops)
@@ -453,6 +467,7 @@ def build_ship(key):
             dd.dress_corridor(part, x0, x1, sw, hs, doors)
             # corridor walls run on above the lowered ceiling to the block height
         SPACES.append((f"{si['part']}:spine", x0 + 30, x1 - 30, -sw / 2 + 40, sw / 2 - 40))
+        ZONES.append((f"{si['part']}:spine", "corridor", x0, x1, -sw / 2, sw / 2, hs))
 
     # ---- bays + bridge -----------------------------------------------------
     for i, si in enumerate(seg_info):
@@ -503,7 +518,7 @@ def build_ship(key):
 # ----------------------------------------------------------------------------
 # Walk check: collision raster at body height + flood fill from Entry
 # ----------------------------------------------------------------------------
-def walk_check(col_obj, cell=10.0, z_lo=46.0, z_hi=190.0, radius=42.0):   # avatar capsule r42 hh96
+def walk_check(col_obj, cell=10.0, z_lo=46.0, z_hi=176.0, radius=34.0):   # avatar capsule r34 hh88 (PR #537)
     import numpy as np
     me = col_obj.data
     me.calc_loop_triangles()
@@ -727,6 +742,7 @@ def run(key, dry):
         "tris": tris, "tris_total": sum(tris.values()),
         "slots": {n: [m.name for m in ob.data.materials] for n, ob in objs.items()},
         "walk": {k: v for k, v in wc.items()},
+        "zones": [list(z) for z in ZONES],
         "blender_to_ue_axes": "UE(x, y, z) = Blender(x, -y, z) * 100 * 0.01",
         "problems": problems,
     }
@@ -737,6 +753,12 @@ def run(key, dry):
     if not dry:
         with open(os.path.join(GEN, prefix + "_contract.json"), "w") as f:
             json.dump(contract, f, indent=1)
+    else:
+        # dry runs still hand the benchmark the zone boxes (Tools/interior_benchmark.py)
+        zdir = os.path.join(os.path.dirname(GEN), "..", "..", "Saved", "InteriorBenchmark")
+        os.makedirs(zdir, exist_ok=True)
+        with open(os.path.join(zdir, prefix + "_zones.json"), "w") as f:
+            json.dump(contract["zones"], f, indent=1)
     if problems:
         print("CONTRACT_PROBLEMS", key, len(problems), problems[:12])
     return contract
