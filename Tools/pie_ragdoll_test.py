@@ -114,7 +114,8 @@ class Runner:
                 check("board", False, "never became the avatar")
                 self.done()
         elif self.stage == "dummies" and self.since() > 3:
-            ds = [b for b in bodies() if b != self.avatar]
+            # the dummies only: boarding also brings the ship's crew (AdastreaNPC) aboard
+            ds = [b for b in bodies() if b != self.avatar and not isinstance(b, unreal.AdastreaNPC)]
             check("3 dummies spawned", len(ds) == 3, str(len(ds)))
             standing = [b for b in ds if abs(b.get_actor_location().z - 88.0 - self.floor) < 30]
             check("dummies stand on deck", len(standing) == len(ds),
@@ -147,7 +148,7 @@ class Runner:
             self.go("helm")
         elif self.stage == "helm" and self.since() > 2:
             for b in bodies():
-                if b != self.avatar:
+                if b != self.avatar and not isinstance(b, unreal.AdastreaNPC):
                     b.destroy_actor()
             cmd("adastrea.Ragdoll push")
             self.go("sit")
