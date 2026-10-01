@@ -203,9 +203,13 @@ public:
          * mesh at identity. Found from the hull mesh name; nothing happens if absent. */
         void AttachShipWindows();
 
-        /** Push the chase camera out past the hull (called in BeginPlay). CameraDistance
-         * suits fighters; on corvettes and up it left the camera inside the hull. */
+        /** Frame the chase camera on the hull (called in BeginPlay): pivot on the hull's
+         * centre, distance scaled to its size, ship in the bottom middle of the screen.
+         * Applies to every ship so the view behind each one is consistent. */
         void FitCameraToHull();
+
+        /** All visible static meshes on the ship, in ShipRoot's (unscaled) frame. */
+        FBox GetHullLocalBounds() const;
 
         /** Runtime-created by AttachShipWindows; null when the hull has no window mesh. */
         UPROPERTY(VisibleInstanceOnly, Transient, Category="Components")
@@ -215,7 +219,7 @@ public:
          * behind it. Played after a ship-select swap so the new ship is seen from all sides. */
         void PlaySwapShowcase();
 
-        /** Half the hull's longest side (cm), from the largest static mesh on the ship. */
+        /** Half the hull's longest side (cm), from the combined static mesh bounds. */
         float GetHullHalfLength() const;
 
     /**

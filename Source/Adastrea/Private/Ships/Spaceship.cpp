@@ -1158,42 +1158,79 @@ void ASpaceship::AttachShipWindows()
     UE_LOG(LogAdastreaShips, Log, TEXT("AttachShipWindows: %s gets %s"), *GetName(), *WinName);
 }
 
-void ASpaceship::FitCameraToHull()
+namespace ChaseFraming
 {
-    if (!CameraSpringArm)
-    {
-        return;
-    }
-
-    const float HalfLength = GetHullHalfLength();
-
-    // Fighters already sit clear of CameraDistance; leave their tuned framing alone.
-    if (HalfLength * 1.2f <= CameraDistance)
-    {
-        return;
-    }
-    CameraSpringArm->TargetArmLength = HalfLength * 2.5f;
-    CameraSpringArm->SocketOffset = FVector(0.0f, 0.0f, HalfLength * 0.35f);
-    UE_LOG(LogAdastreaShips, Log, TEXT("FitCameraToHull: %s half-length %.0f -> arm %.0f"),
-        *GetName(), HalfLength, CameraSpringArm->TargetArmLength);
+    /** How much of the screen's half-height the hull's silhouette (seen from behind) fills. */
+    constexpr float Fill = 0.45f;
+    /** How far the camera sits above the ship's plane, looking down at it (deg). */
+    constexpr float Elevation = 12.0f;
+    /** Where the hull centre lands below screen centre, as a fraction of the half-height
+     * (0.4 puts it about 70% of the way down: bottom middle). */
+    constexpr float ScreenDrop = 0.4f;
 }
 
-float ASpaceship::GetHullHalfLength() const
+void ASpaceship::FitCameraToHull()
 {
-    // The largest mesh, not just ShipMeshComponent: BP_CommandXL and BP_Super add their
-    // hull in the Blueprint.
-    float HalfLength = 0.0f;
+    if (!CameraSpringArm || !Camera)
+    {
+        return;
+    }
+
+    // Same rule for every ship: pivot on the hull's real centre (hull pivots are not
+    // centred, and BP_CommandXL / BP_Super add their hull in the Blueprint), back off
+    // in proportion to its size, and aim so the hull sits in the bottom middle.
+    const FBox Hull = GetHullLocalBounds();
+    if (!Hull.IsValid)
+    {
+        return;
+    }
+    const FVector Ext = Hull.GetExtent();
+
+    FTransform Frame = ShipRoot->GetComponentTransform();
+    Frame.SetScale3D(FVector::OneVector);
+    CameraSpringArm->SetWorldLocation(Frame.TransformPosition(Hull.GetCenter()));
+
+    // UE holds the horizontal FOV, so the vertical half-angle follows from the aspect.
+    const float TanHalfV = FMath::Tan(FMath::DegreesToRadians(Camera->FieldOfView * 0.5f))
+        / FMath::Max(Camera->AspectRatio, 1.0f);
+    const float ElevRad = FMath::DegreesToRadians(ChaseFraming::Elevation);
+
+    // Size by what the camera sees from behind (beam, and height plus the deck tilted
+    // into view), measured at the stern, so long and wide hulls fill the same share.
+    const float Silhouette = FMath::Max3<float>(Ext.Y, Ext.Z + Ext.X * FMath::Sin(ElevRad), 100.0f);
+    const float Dist = Ext.X + Silhouette / (ChaseFraming::Fill * TanHalfV);
+    CameraSpringArm->TargetArmLength = Dist * FMath::Cos(ElevRad);
+    CameraSpringArm->SocketOffset = FVector(0.0f, 0.0f, Dist * FMath::Sin(ElevRad));
+
+    const float DropDeg = FMath::RadiansToDegrees(FMath::Atan(ChaseFraming::ScreenDrop * TanHalfV));
+    Camera->SetRelativeRotation(FRotator(DropDeg - ChaseFraming::Elevation, 0.0f, 0.0f));
+
+    UE_LOG(LogAdastreaShips, Log, TEXT("FitCameraToHull: %s extent %s centre %s -> arm %.0f"),
+        *GetName(), *Ext.ToString(), *Hull.GetCenter().ToString(), CameraSpringArm->TargetArmLength);
+}
+
+FBox ASpaceship::GetHullLocalBounds() const
+{
+    FTransform Frame = ShipRoot->GetComponentTransform();
+    Frame.SetScale3D(FVector::OneVector);
+
+    FBox Box(ForceInit);
     TArray<UStaticMeshComponent*> Meshes;
     GetComponents<UStaticMeshComponent>(Meshes);
     for (const UStaticMeshComponent* Mesh : Meshes)
     {
-        if (Mesh && Mesh->GetStaticMesh())
+        if (Mesh && Mesh->GetStaticMesh() && Mesh->IsVisible() && !Mesh->bHiddenInGame)
         {
-            HalfLength = FMath::Max(HalfLength,
-                (Mesh->GetStaticMesh()->GetBounds().BoxExtent * Mesh->GetComponentScale().GetAbs()).GetMax());
+            Box += Mesh->CalcBounds(Mesh->GetComponentTransform().GetRelativeTransform(Frame)).GetBox();
         }
     }
-    return HalfLength;
+    return Box;
+}
+
+float ASpaceship::GetHullHalfLength() const
+{
+    const FBox Box = GetHullLocalBounds();
+    return Box.IsValid ? Box.GetExtent().GetMax() : 0.0f;
 }
 
 namespace SwapShowcase
