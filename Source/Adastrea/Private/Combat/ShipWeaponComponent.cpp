@@ -1,5 +1,6 @@
 #include "Combat/ShipWeaponComponent.h"
 #include "Combat/CombatProjectileSubsystem.h"
+#include "Combat/ShipHealthComponent.h"
 #include "Ships/Spaceship.h"
 #include "Player/AdastreaPlayerController.h"
 #include "AdastreaLog.h"
@@ -171,7 +172,7 @@ void UShipWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	}
 
 	ASpaceship* Ship = GetShip();
-	if (Ship && (Ship->IsDocked() || Ship->IsDocking()))
+	if (Ship && (Ship->IsDocked() || Ship->IsDocking() || (Ship->HealthComponent && Ship->HealthComponent->IsDestroyed())))
 	{
 		bTriggerHeld = false;
 	}

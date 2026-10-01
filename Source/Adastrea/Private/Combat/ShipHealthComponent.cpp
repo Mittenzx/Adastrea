@@ -22,6 +22,7 @@ UShipHealthComponent::UShipHealthComponent()
 	ShieldRechargeRate = 20.0f;
 	bTrainingTarget = false;
 	TrainingRespawnDelay = 5.0f;
+	Team = 0;
 
 	CurrentShield = 0.0f;
 	LastMaxShield = 0.0f;
