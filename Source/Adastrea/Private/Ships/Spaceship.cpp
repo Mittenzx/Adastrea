@@ -34,6 +34,7 @@
 #include "Audio/ShipEngineAudioComponent.h"
 #include "Combat/ShipHealthComponent.h"
 #include "Combat/CombatTeams.h"
+#include "Rescue/PlayerRescueSubsystem.h"
 #include "Combat/ShipWeaponComponent.h"
 #include "Audio/AudioEventLibrary.h"
 #include "TimerManager.h"
@@ -699,9 +700,13 @@ void ASpaceship::SetWrecked(bool bWreck)
 
     if (bWreck)
     {
-        if (AAdastreaPlayerController* PC = Cast<AAdastreaPlayerController>(GetController()))
+        // The pilot ejects and a tow drone fetches the wreck (UPlayerRescueSubsystem).
+        if (APlayerController* PC = Cast<APlayerController>(GetController()))
         {
-            PC->ShowHUDMessage(TEXT("SHIP DISABLED - engines, weapons and power offline"), 6.0f, true);
+            if (UPlayerRescueSubsystem* Rescue = UPlayerRescueSubsystem::Get(this))
+            {
+                Rescue->BeginRescue(this, PC);
+            }
         }
     }
     UE_LOG(LogAdastreaShips, Log, TEXT("%s %s"), *GetName(), bWreck ? TEXT("is a wreck") : TEXT("repaired"));

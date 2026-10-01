@@ -69,6 +69,13 @@ public:
 	/** One-line summary of what the pilot is doing right now (e.g. "Flying to Station_Agricultural"), for debug UI. */
 	virtual FString GetObjectiveDescription() const;
 
+	/**
+	 * Drop the current run and fly to Station (undocking first if needed), e.g. to
+	 * ferry a rescued pilot. Normal trading resumes after docking there.
+	 * False if the station has no docking bay.
+	 */
+	bool FerryTo(ASpaceStation* Station);
+
 	/** Display name for a station: its StationName, else the actor's name. */
 	static FString GetStationDisplayName(const ASpaceStation* Station);
 

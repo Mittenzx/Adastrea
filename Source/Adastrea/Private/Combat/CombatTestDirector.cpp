@@ -1,6 +1,5 @@
 #include "Combat/CombatTestDirector.h"
 #include "AI/HostileFighterController.h"
-#include "Combat/ShipHealthComponent.h"
 #include "Ships/Spaceship.h"
 #include "Player/AdastreaPlayerController.h"
 #include "Engine/World.h"
@@ -26,10 +25,8 @@ ACombatTestDirector::ACombatTestDirector()
 	FirstWaveDelay = 8.0f;
 	WaveDelay = 6.0f;
 	SpawnDistance = 25000.0f;
-	PlayerRepairDelay = 5.0f;
 
 	WaveClock = 0.0f;
-	RepairClock = 0.0f;
 	WavesSent = 0;
 }
 
@@ -123,8 +120,6 @@ void ACombatTestDirector::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	TickPlayerRepair(DeltaSeconds);
-
 	if (!bAutoWaves || !Cast<ASpaceship>(UGameplayStatics::GetPlayerPawn(this, 0)))
 	{
 		return;
@@ -145,33 +140,6 @@ void ACombatTestDirector::Tick(float DeltaSeconds)
 			{
 				PC->ShowHUDMessage(FString::Printf(TEXT("Hostiles inbound: wave %d (%d)"), WavesSent, WaveSize), 3.0f, true);
 			}
-		}
-	}
-}
-
-void ACombatTestDirector::TickPlayerRepair(float DeltaSeconds)
-{
-	ASpaceship* Player = Cast<ASpaceship>(UGameplayStatics::GetPlayerPawn(this, 0));
-	UShipHealthComponent* Health = Player ? Player->HealthComponent.Get() : nullptr;
-	if (!Health || !Health->IsDestroyed())
-	{
-		RepairClock = 0.0f;
-		return;
-	}
-	AAdastreaPlayerController* PC = Cast<AAdastreaPlayerController>(Player->GetController());
-	if (RepairClock == 0.0f && PC)
-	{
-		PC->ShowHUDMessage(FString::Printf(TEXT("SHIP DISABLED - emergency repair in %.0f s"), PlayerRepairDelay), PlayerRepairDelay, true);
-	}
-	RepairClock += DeltaSeconds;
-	if (RepairClock >= PlayerRepairDelay)
-	{
-		Health->Restore();
-		RepairClock = 0.0f;
-		UE_LOG(LogAdastreaCombat, Log, TEXT("CombatTest: repaired the player's ship"));
-		if (PC)
-		{
-			PC->ShowHUDMessage(TEXT("Hull and shields restored"), 2.0f, false);
 		}
 	}
 }
