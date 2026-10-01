@@ -537,6 +537,9 @@ public:
 																																	/** Input handler: N toggles the station information overview screen. */
 																																	void HandleStationInfoToggle();
 
+	/** Input handler: H opens/closes the HUD layout editor (move and scale cockpit panels). */
+	void HandleHudEditToggle();
+
 																																	/** Map camera/orbit/filter input handlers. */
 																	void HandleMapOrbitUp();
 																	void HandleMapOrbitDown();

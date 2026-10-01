@@ -216,6 +216,14 @@ namespace
 		}
 	};
 
+	/** Applies a panel's layout-editor offset/scale to everything drawn in its scope. */
+	struct FHudElementScope
+	{
+		AAdastreaHUD& HUD;
+		FHudElementScope(AAdastreaHUD& InHUD, EHudElement Element) : HUD(InHUD) { HUD.BeginHudElement(Element); }
+		~FHudElementScope() { HUD.EndHudElement(); }
+	};
+
 	/** Readable name for a docking module: its station's StationName, else a tidied actor name. */
 	FString DockDisplayName(const ASpaceship* Ship, const FString& Fallback)
 	{
@@ -298,6 +306,7 @@ void AAdastreaHUD::DrawCyberpunkFlightHUD(APlayerController* PC, ASpaceship* Shi
 
 	// ---- Heading tape (top centre) ----
 	{
+		const FHudElementScope Layout(*this, EHudElement::HeadingTape);
 		const float TW = 460.0f * S, TH = 26.0f * S;
 		const float TX = (SW - TW) * 0.5f, TY = 22.0f * S;
 		const float Cx = SW * 0.5f;
@@ -398,6 +407,7 @@ void AAdastreaHUD::DrawCyberpunkFlightHUD(APlayerController* PC, ASpaceship* Shi
 	// ---- Ident strip (top-left) ----
 	float IdentBottom = 0.0f;
 	{
+		const FHudElementScope Layout(*this, EHudElement::Ident);
 		const float X = 24.0f * S, Y = 24.0f * S, W = 270.0f * S, H = 90.0f * S;
 		N.Panel(X, Y, W, H, kMagenta);
 		const float LX = X + 14.0f * S;
@@ -424,6 +434,7 @@ void AAdastreaHUD::DrawCyberpunkFlightHUD(APlayerController* PC, ASpaceship* Shi
 
 	// ---- Defence grid (bottom-left): shield + hull ----
 	{
+		const FHudElementScope Layout(*this, EHudElement::Defence);
 		const float W = 330.0f * S, H = 112.0f * S;
 		const float X = 24.0f * S, Y = SH - H - 24.0f * S;
 		const FLinearColor Edge = HullHitFlash > 0.0f ? kRed : (bCritical ? FLinearColor::LerpUsingHSV(kMagenta, kRed, AlarmPulse) : kMagenta);
@@ -459,6 +470,7 @@ void AAdastreaHUD::DrawCyberpunkFlightHUD(APlayerController* PC, ASpaceship* Shi
 
 	// ---- Propulsion (bottom-right): speed, speed bar, throttle, mode tags ----
 	{
+		const FHudElementScope Layout(*this, EHudElement::Propulsion);
 		const float W = 330.0f * S, H = 112.0f * S;
 		const float X = SW - W - 24.0f * S, Y = SH - H - 24.0f * S;
 		N.Panel(X, Y, W, H, kCyan, false);
@@ -502,6 +514,7 @@ void AAdastreaHUD::DrawCyberpunkFlightHUD(APlayerController* PC, ASpaceship* Shi
 	FString DockName;
 	if (Ship->CanRequestDocking(DockDist, DockName))
 	{
+		const FHudElementScope Layout(*this, EHudElement::Docking);
 		const FString Station = DockDisplayName(Ship, DockName).Replace(TEXT("_"), TEXT(" ")).ToUpper();
 		const FString Dist = FString::Printf(TEXT("%.0f M"), DockDist / 100.0f);
 		float NW = 0.0f, NH = 0.0f, DW = 0.0f, DH = 0.0f;
@@ -539,6 +552,7 @@ void AAdastreaHUD::DrawCyberpunkFlightHUD(APlayerController* PC, ASpaceship* Shi
 	{
 		if (Bay->bMiningEnabled && !Bay->GetTarget())
 		{
+			const FHudElementScope Layout(*this, EHudElement::DroneHint);
 			const float Y = SH - 58.0f * S;
 			float Hx = SW * 0.5f - 170.0f * S;
 			const int32 Out = Bay->GetDronesOut();
@@ -613,6 +627,7 @@ void AAdastreaHUD::DrawCyberMiningHUD(APlayerController* PC, ASpaceship* Ship, U
 	}
 
 	// ---- Drone mining uplink panel (stacked under the ident strip, same width) ----
+	const FHudElementScope Layout(*this, EHudElement::Mining);
 	const float X = 24.0f * S, W = 270.0f * S, H = 198.0f * S;
 	const float Y = PanelTop;
 	N.Panel(X, Y, W, H, Tint);

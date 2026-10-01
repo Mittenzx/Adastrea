@@ -265,6 +265,8 @@ void AAdastreaPlayerController::SetupInputComponent()
 		// P: open the ship-select screen
 		InputComponent->BindKey(EKeys::P, IE_Pressed, this, &AAdastreaPlayerController::HandleShipSelectOpen);
 		InputComponent->BindKey(EKeys::N, IE_Pressed, this, &AAdastreaPlayerController::HandleStationInfoToggle);
+		// H: HUD layout editor (drag / mouse-wheel the cockpit panels)
+		InputComponent->BindKey(EKeys::H, IE_Pressed, this, &AAdastreaPlayerController::HandleHudEditToggle);
 		// G: open/close the full Station Editor (module placement, undo/redo, construction
 		// queue). Was previously unreachable - IA_OpenStationEditor/StationEditorAction were
 		// declared but never bound to ToggleStationEditor(). G is unused by any other system.
@@ -967,6 +969,11 @@ void AAdastreaPlayerController::HandlePauseMenuKey()
 		ClosePauseMenu();
 		return;
 	}
+	if (H->bHudEditMode)
+	{
+		HandleHudEditToggle(); // Esc finishes the HUD layout editor
+		return;
+	}
 	// Esc already means "back" on every other screen; only open from plain flight / on foot.
 	if (H->IsOtherScreenOpen() || IsStationEditorOpen() || IsMainMenuOpen() || IsTradingOpen())
 	{
@@ -1250,6 +1257,40 @@ void AAdastreaPlayerController::HandleMapToggle()
 		bEnableMouseOverEvents = false;
 		bLockMouseLook = false;
 		UE_LOG(LogAdastrea, Log, TEXT("Map closed - ship look restored"));
+	}
+}
+
+void AAdastreaPlayerController::HandleHudEditToggle()
+{
+	AAdastreaHUD* GameHUD = Cast<AAdastreaHUD>(GetHUD());
+	if (!GameHUD)
+	{
+		return;
+	}
+
+	// Only over the cockpit flight HUD: not on foot, in a menu, or on another screen.
+	const bool bOpen = !GameHUD->bHudEditMode;
+	if (bOpen && (!Cast<ASpaceship>(GetPawn()) || !GameHUD->bCyberpunkFlightHUD
+		|| GameHUD->IsOtherScreenOpen() || GameHUD->bShowPauseMenu || IsStationEditorOpen()))
+	{
+		return;
+	}
+
+	GameHUD->SetHudEditMode(bOpen);
+	if (bOpen)
+	{
+		SetInputMode(FInputModeGameAndUI());
+		bShowMouseCursor = true;
+		bTargetingModeActive = false; // LMB drags panels instead of picking targets
+		bLockMouseLook = true;
+		UE_LOG(LogAdastrea, Log, TEXT("HUD layout editor opened"));
+	}
+	else
+	{
+		SetInputMode(FInputModeGameOnly());
+		bShowMouseCursor = false;
+		bLockMouseLook = false;
+		UE_LOG(LogAdastrea, Log, TEXT("HUD layout editor closed"));
 	}
 }
 
