@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "Characters/AdastreaCharacter.h"
 #include "SpaceshipAvatar.generated.h"
 
 class UCameraComponent;
@@ -33,7 +33,7 @@ struct FInputActionValue;
  * flat, single-level rooms this avatar walks in the once-established.
  */
 UCLASS()
-class ADASTREA_API ASpaceshipAvatar : public ACharacter
+class ADASTREA_API ASpaceshipAvatar : public AAdastreaCharacter
 {
 	GENERATED_BODY()
 
@@ -111,6 +111,13 @@ protected:
 	void SnapToFloor();
 
 	void Interact();
+
+	// --- Ragdoll (AAdastreaCharacter) ---
+	virtual void OnRagdollChanged(bool bRagdoll) override;
+	virtual FVector GetRagdollInheritVelocity() const override { return MoveVelocity; }
+
+	/** View to return to when the ragdoll ends (ragdolling forces third-person). */
+	bool bFirstPersonBeforeRagdoll = false;
 
 	// --- Components ---
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
