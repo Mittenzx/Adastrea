@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "Player/AdastreaPlayerController.h"
+#include "Combat/CombatTestDirector.h"
 #include "Trading/CargoComponent.h"
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipAvatar.h"
@@ -795,6 +796,27 @@ void AAdastreaPlayerController::LockTarget(const FString& NameFragment)
 		}
 	}
 	UE_LOG(LogAdastrea, Log, TEXT("LockTarget: nothing in range matches '%s'"), *NameFragment);
+}
+
+void AAdastreaPlayerController::SpawnHostiles(const FString& Count)
+{
+	const int32 N = Count.IsEmpty() ? 2 : FMath::Clamp(FCString::Atoi(*Count), 1, 12);
+	ACombatTestDirector::SpawnHostilesNearPlayer(GetWorld(), N, 25000.0f);
+}
+
+void AAdastreaPlayerController::ClearHostiles()
+{
+	const int32 Removed = ACombatTestDirector::ClearHostiles(GetWorld());
+	UE_LOG(LogAdastrea, Log, TEXT("ClearHostiles: removed %d"), Removed);
+}
+
+void AAdastreaPlayerController::HostileWaves(const FString& OnOff)
+{
+	if (ACombatTestDirector* Director = ACombatTestDirector::Find(GetWorld()))
+	{
+		Director->bAutoWaves = OnOff.IsEmpty() ? !Director->bAutoWaves : FCString::Atoi(*OnOff) != 0;
+		ShowHUDMessage(Director->bAutoWaves ? TEXT("Hostile waves on") : TEXT("Hostile waves paused"), 2.0f, false);
+	}
 }
 
 void AAdastreaPlayerController::HandleClearTarget()

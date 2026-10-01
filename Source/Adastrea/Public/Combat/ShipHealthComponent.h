@@ -42,6 +42,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat", meta=(ClampMin="0.0"))
 	float TrainingRespawnDelay;
 
+	/** Side the ship fights on. Bolts don't hit ships on the shooter's team; 0 (neutral/player) never matches. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
+	int32 Team;
+
 	UPROPERTY(BlueprintAssignable, Category="Combat")
 	FOnShipDamaged OnDamaged;
 

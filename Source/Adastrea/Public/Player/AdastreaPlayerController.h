@@ -578,6 +578,18 @@ public:
 	UFUNCTION(Exec)
 	void LockTarget(const FString& NameFragment);
 
+	/** Console: spawn hostile fighters ahead of the player (default 2). */
+	UFUNCTION(Exec)
+	void SpawnHostiles(const FString& Count);
+
+	/** Console: remove every hostile ship. */
+	UFUNCTION(Exec)
+	void ClearHostiles();
+
+	/** Console: HostileWaves 0 pauses the CombatTest director's waves, 1 resumes them. */
+	UFUNCTION(Exec)
+	void HostileWaves(const FString& OnOff);
+
 	/**
 	 * Toggle the station editor UI
 	 * Called when StationEditorAction input is triggered

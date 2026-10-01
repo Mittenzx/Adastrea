@@ -4,15 +4,19 @@
 //   gun crosshair   where the forward guns converge (the nose's aim point)
 //   lead pip        where to put the crosshair so bolts meet the locked target
 //   hit marker      ticks around the crosshair when one of your bolts lands
+//   hostile markers red brackets on hostile ships, edge arrows when they're out of view
 
 #include "AdastreaHUD.h"
 #include "AdastreaHUDStyle.h"
+#include "AI/HostileFighterController.h"
 #include "Combat/CombatProjectileSubsystem.h"
 #include "Combat/ShipHealthComponent.h"
 #include "Combat/ShipWeaponComponent.h"
 #include "Ships/Spaceship.h"
 #include "Player/AdastreaPlayerController.h"
 #include "Engine/Canvas.h"
+#include "EngineUtils.h"
+#include "Camera/PlayerCameraManager.h"
 
 namespace
 {
@@ -20,6 +24,10 @@ namespace
 	const FLinearColor kLeadPip(1.0f, 0.62f, 0.2f, 1.0f);
 	const FLinearColor kLeadOnTarget(0.35f, 1.0f, 0.45f, 1.0f);
 	const FLinearColor kHitMarker(1.0f, 1.0f, 1.0f, 1.0f);
+	const FLinearColor kHostile(1.0f, 0.3f, 0.25f, 0.95f);
+
+	/** Hostiles further away than this (cm) get no marker. */
+	constexpr float kHostileMarkerRange = 80000.0f;
 
 	constexpr float HitMarkerTime = 0.15f;
 
@@ -77,6 +85,62 @@ void AAdastreaHUD::DrawCombatOverlay(APlayerController* PC, ASpaceship* Ship)
 		}
 	}
 	CombatHitMarker = FMath::Max(CombatHitMarker - Dt, 0.0f);
+
+	// ---- Hostile markers: brackets on screen, arrows at the edge when out of view ----
+	{
+		const FVector2D Centre(Canvas->ClipX * 0.5f, Canvas->ClipY * 0.5f);
+		const float Margin = 50.0f * S;
+		for (TActorIterator<ASpaceship> It(GetWorld()); It; ++It)
+		{
+			const ASpaceship* Hostile = *It;
+			if (!AHostileFighterController::IsHostileShip(Hostile) || Hostile->IsHidden())
+			{
+				continue;
+			}
+			const float Dist = FVector::Dist(Ship->GetActorLocation(), Hostile->GetActorLocation());
+			if (Dist > kHostileMarkerRange)
+			{
+				continue;
+			}
+			FVector2D P;
+			const bool bAhead = FVector::DotProduct(PC->PlayerCameraManager->GetActorForwardVector(),
+				Hostile->GetActorLocation() - PC->PlayerCameraManager->GetCameraLocation()) > 0.0f;
+			const bool bProjected = PC->ProjectWorldLocationToScreen(Hostile->GetActorLocation(), P);
+			if (bAhead && bProjected && P.X > Margin && P.X < Canvas->ClipX - Margin && P.Y > Margin && P.Y < Canvas->ClipY - Margin)
+			{
+				const float B = 14.0f * S, L = 6.0f * S;
+				for (const FVector2D D : { FVector2D(1, 1), FVector2D(-1, 1), FVector2D(1, -1), FVector2D(-1, -1) })
+				{
+					DrawLine(P.X + D.X * B, P.Y + D.Y * B, P.X + D.X * (B - L), P.Y + D.Y * B, kHostile, 1.5f);
+					DrawLine(P.X + D.X * B, P.Y + D.Y * B, P.X + D.X * B, P.Y + D.Y * (B - L), kHostile, 1.5f);
+				}
+				DrawText(FString::Printf(TEXT("%.0f m"), Dist / 100.0f), kHostile, P.X + B + 4.0f, P.Y - 6.0f * S,
+					HudType::Font(), HudType::Caption * S);
+			}
+			else
+			{
+				// Behind the camera the projection mirrors; flip it so the arrow points the right way.
+				FVector2D Dir = (bProjected ? P : Centre) - Centre;
+				if (!bAhead)
+				{
+					Dir = -Dir;
+				}
+				if (Dir.IsNearlyZero())
+				{
+					Dir = FVector2D(0.0f, 1.0f);
+				}
+				Dir.Normalize();
+				const float Scale = FMath::Min((Canvas->ClipX * 0.5f - Margin) / FMath::Max(FMath::Abs(Dir.X), 0.001f),
+					(Canvas->ClipY * 0.5f - Margin) / FMath::Max(FMath::Abs(Dir.Y), 0.001f));
+				const FVector2D Edge = Centre + Dir * Scale;
+				const FVector2D N(-Dir.Y, Dir.X);
+				const FVector2D Tip = Edge + Dir * 14.0f * S;
+				DrawLine(Tip.X, Tip.Y, Edge.X + N.X * 7.0f * S, Edge.Y + N.Y * 7.0f * S, kHostile, 2.0f);
+				DrawLine(Tip.X, Tip.Y, Edge.X - N.X * 7.0f * S, Edge.Y - N.Y * 7.0f * S, kHostile, 2.0f);
+				DrawLine(Edge.X + N.X * 7.0f * S, Edge.Y + N.Y * 7.0f * S, Edge.X - N.X * 7.0f * S, Edge.Y - N.Y * 7.0f * S, kHostile, 2.0f);
+			}
+		}
+	}
 
 	// ---- Lead pip on the locked target (ships only: stations and rocks don't move) ----
 	const AAdastreaPlayerController* AdPC = Cast<AAdastreaPlayerController>(PC);

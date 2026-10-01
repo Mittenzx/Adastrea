@@ -114,6 +114,8 @@ void UCombatProjectileSubsystem::StepBolts(float DeltaTime)
 		const FVector From = Bolt.Position;
 		const FVector To = From + Bolt.Velocity * StepTime;
 		AActor* Instigator = Bolt.Instigator.Get();
+		const UShipHealthComponent* InstigatorHealth = Instigator ? Instigator->FindComponentByClass<UShipHealthComponent>() : nullptr;
+		const int32 InstigatorTeam = InstigatorHealth ? InstigatorHealth->Team : 0;
 
 		// Nearest ship hull along the path.
 		float BestTime = 2.0f;
@@ -123,7 +125,8 @@ void UCombatProjectileSubsystem::StepBolts(float DeltaTime)
 		{
 			UShipHealthComponent* Target = WeakTarget.Get();
 			const AActor* Owner = Target->GetOwner();
-			if (Target->IsDestroyed() || Owner == Instigator || Owner->IsHidden())
+			if (Target->IsDestroyed() || Owner == Instigator || Owner->IsHidden()
+				|| (InstigatorTeam != 0 && Target->Team == InstigatorTeam))
 			{
 				continue;
 			}

@@ -2,6 +2,7 @@
 
 #include "AdastreaHUD.h"
 #include "Combat/ShipHealthComponent.h"
+#include "AI/HostileFighterController.h"
 #include "AdastreaGameMode.h"
 #include "AdastreaHUDStyle.h"
 #include "AdastreaHUD_MapStyle.h"
@@ -406,7 +407,9 @@ void AAdastreaHUD::DrawHUD()
 			&& ScreenPt.Y >= Margin && ScreenPt.Y <= VH - Margin
 			&& ScreenPt.X > 0 && ScreenPt.Y > 0; // valid (not behind camera when out of view)
 
-		const FLinearColor Reticle = FLinearColor(0.15f, 0.9f, 0.6f, 1.0f); // teal-green
+		// Teal-green; red for a hostile.
+		const FLinearColor Reticle = AHostileFighterController::IsHostileShip(LockedTarget)
+			? FLinearColor(1.0f, 0.3f, 0.25f, 1.0f) : FLinearColor(0.15f, 0.9f, 0.6f, 1.0f);
 
 		if (bOnScreen)
 		{
