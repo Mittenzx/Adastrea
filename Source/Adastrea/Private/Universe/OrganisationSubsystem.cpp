@@ -22,7 +22,7 @@ const FName UOrganisationSubsystem::PlayerOrgId(TEXT("player"));
 
 namespace
 {
-	FString JsonString(const TSharedPtr<FJsonObject>& Obj, const TCHAR* Field)
+	FString OrgJsonString(const TSharedPtr<FJsonObject>& Obj, const TCHAR* Field)
 	{
 		FString Out;
 		Obj->TryGetStringField(Field, Out);
@@ -31,7 +31,7 @@ namespace
 
 	FName JsonName(const TSharedPtr<FJsonObject>& Obj, const TCHAR* Field)
 	{
-		const FString S = JsonString(Obj, Field);
+		const FString S = OrgJsonString(Obj, Field);
 		return S.IsEmpty() ? NAME_None : FName(*S);
 	}
 
@@ -41,7 +41,7 @@ namespace
 		return Obj->TryGetNumberField(Field, Out) ? FMath::RoundToInt((float)Out) : Default;
 	}
 
-	float JsonNumber(const TSharedPtr<FJsonObject>& Obj, const TCHAR* Field, float Default)
+	float OrgJsonNumber(const TSharedPtr<FJsonObject>& Obj, const TCHAR* Field, float Default)
 	{
 		double Out = Default;
 		return Obj->TryGetNumberField(Field, Out) ? (float)Out : Default;
@@ -88,7 +88,7 @@ namespace
 		return Out;
 	}
 
-	TArray<FName> JsonNameArray(const TSharedPtr<FJsonObject>& Obj, const TCHAR* Field)
+	TArray<FName> OrgJsonNameArray(const TSharedPtr<FJsonObject>& Obj, const TCHAR* Field)
 	{
 		TArray<FName> Out;
 		for (const FString& S : JsonStringArray(Obj, Field))
@@ -377,22 +377,22 @@ bool UOrganisationSubsystem::LoadFromFile(const FString& Path, FString& OutError
 			UE_LOG(LogAdastrea, Warning, TEXT("Organisations: skipping an organisation with a missing or duplicate id '%s'"), *Org.Id.ToString());
 			continue;
 		}
-		const FString KindText = JsonString(Obj, TEXT("kind"));
+		const FString KindText = OrgJsonString(Obj, TEXT("kind"));
 		if (!ParseKind(KindText, Org.Kind))
 		{
 			UE_LOG(LogAdastrea, Warning, TEXT("Organisations: '%s' has unknown kind '%s' (person, outfit, guild, authority); treating as person"),
 				*Org.Id.ToString(), *KindText);
 		}
-		const FString Name = JsonString(Obj, TEXT("name"));
+		const FString Name = OrgJsonString(Obj, TEXT("name"));
 		Org.Name = FText::FromString(Name.IsEmpty() ? Org.Id.ToString() : Name);
 		Org.ParentId = JsonName(Obj, TEXT("parent"));
-		Org.Governs = JsonNameArray(Obj, TEXT("governs"));
-		Org.Seat = JsonString(Obj, TEXT("seat"));
+		Org.Governs = OrgJsonNameArray(Obj, TEXT("governs"));
+		Org.Seat = OrgJsonString(Obj, TEXT("seat"));
 		Org.HomeSectorId = JsonName(Obj, TEXT("home"));
 		Org.Industries = JsonStringArray(Obj, TEXT("industries"));
-		Org.Description = FText::FromString(JsonString(Obj, TEXT("description")));
+		Org.Description = FText::FromString(OrgJsonString(Obj, TEXT("description")));
 		Org.Credits = FMath::Max(0, JsonInt(Obj, TEXT("credits"), 0));
-		Org.TaxRate = FMath::Clamp(JsonNumber(Obj, TEXT("taxRate"), Org.TaxRate), 0.0f, 0.5f);
+		Org.TaxRate = FMath::Clamp(OrgJsonNumber(Obj, TEXT("taxRate"), Org.TaxRate), 0.0f, 0.5f);
 		// -1: filled from the roster in Finalize().
 		Org.TargetFleetSize = JsonInt(Obj, TEXT("targetFleet"), -1);
 
@@ -419,13 +419,13 @@ bool UOrganisationSubsystem::LoadFromFile(const FString& Path, FString& OutError
 		FShipRecord Base;
 		Base.OwnerId = JsonName(Obj, TEXT("owner"));
 		Base.SectorId = JsonName(Obj, TEXT("sector"));
-		const FString RoleText = JsonString(Obj, TEXT("role"));
+		const FString RoleText = OrgJsonString(Obj, TEXT("role"));
 		if (!RoleText.IsEmpty() && !ParseRole(RoleText, Base.Role))
 		{
 			UE_LOG(LogAdastrea, Warning, TEXT("Organisations: ship of '%s' has unknown role '%s' (trader, miner, patrol); treating as trader"),
 				*Base.OwnerId.ToString(), *RoleText);
 		}
-		const FString ClassPath = JsonString(Obj, TEXT("class"));
+		const FString ClassPath = OrgJsonString(Obj, TEXT("class"));
 		if (!ClassPath.IsEmpty())
 		{
 			Base.ShipClass = TSoftClassPtr<ASpaceship>(FSoftObjectPath(ClassPath));
@@ -436,7 +436,7 @@ bool UOrganisationSubsystem::LoadFromFile(const FString& Path, FString& OutError
 			continue;
 		}
 
-		const FString Name = JsonString(Obj, TEXT("name"));
+		const FString Name = OrgJsonString(Obj, TEXT("name"));
 		const FName ExplicitId = JsonName(Obj, TEXT("id"));
 		const int32 Count = FMath::Clamp(JsonInt(Obj, TEXT("count"), 1), 1, 50);
 		for (int32 i = 1; i <= Count; ++i)
@@ -469,7 +469,7 @@ bool UOrganisationSubsystem::LoadFromFile(const FString& Path, FString& OutError
 		Rel.A = JsonName(Obj, TEXT("a"));
 		Rel.B = JsonName(Obj, TEXT("b"));
 		Rel.Standing = FMath::Clamp(JsonInt(Obj, TEXT("standing"), 0), -100, 100);
-		Rel.Note = JsonString(Obj, TEXT("note"));
+		Rel.Note = OrgJsonString(Obj, TEXT("note"));
 		if (!Rel.A.IsNone() && !Rel.B.IsNone() && Rel.A != Rel.B)
 		{
 			Relations.Add(MoveTemp(Rel));
@@ -488,13 +488,13 @@ void UOrganisationSubsystem::LoadEconomy(const TSharedPtr<FJsonObject>& Root)
 		return;
 	}
 	const TSharedPtr<FJsonObject>& E = *EconomyObj;
-	Economy.TickSeconds = FMath::Max(1.0f, JsonNumber(E, TEXT("tickSeconds"), Economy.TickSeconds));
+	Economy.TickSeconds = FMath::Max(1.0f, OrgJsonNumber(E, TEXT("tickSeconds"), Economy.TickSeconds));
 	JsonPerRole(E, TEXT("shipPrice"), Economy.ShipPrice);
 	JsonPerRole(E, TEXT("upkeep"), Economy.Upkeep);
 	JsonPerRole(E, TEXT("offscreenIncome"), Economy.OffscreenIncome);
 	Economy.SectorIncome = FMath::Max(0, JsonInt(E, TEXT("sectorIncome"), Economy.SectorIncome));
-	Economy.ResaleFraction = FMath::Clamp(JsonNumber(E, TEXT("resaleFraction"), Economy.ResaleFraction), 0.0f, 1.0f);
-	Economy.ReserveFraction = FMath::Max(0.0f, JsonNumber(E, TEXT("reserveFraction"), Economy.ReserveFraction));
+	Economy.ResaleFraction = FMath::Clamp(OrgJsonNumber(E, TEXT("resaleFraction"), Economy.ResaleFraction), 0.0f, 1.0f);
+	Economy.ReserveFraction = FMath::Max(0.0f, OrgJsonNumber(E, TEXT("reserveFraction"), Economy.ReserveFraction));
 }
 
 void UOrganisationSubsystem::Finalize()

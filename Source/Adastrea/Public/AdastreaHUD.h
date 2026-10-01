@@ -373,6 +373,7 @@ public:
 	void OrbitShipPreview(float DeltaYaw, float DeltaPitch);
 
 	/** Spawn the currently selected ship as the player's pawn. */
+	UFUNCTION(BlueprintCallable, Category="HUD|ShipSelect")
 	void SpawnSelectedShip(APlayerController* PC);
 
 	/** Get the preview pawn's data asset (for stats readout). */
