@@ -3315,3 +3315,65 @@ Every ship except the Battleship gets a full walkable deck (Tools/build_ship_dec
 - 17 decks: specs in `Tools/build_ship_decks.py` SHIPS, reimported with `--no-bp` (BPs untouched). Battleship: `build_battleship_decks.py`, contract route regenerated for r34.
 - PIE walks (avatar r34/hh88): ShipDecks' run passed 11/11, and mine passed Battleship, Carrier, CommandXL, Corvette, Cruiser, Destroyer and Fighter, 7/7. Zero stuck points.
 - New tools: `Tools/interior_benchmark.py` (realism score; `--all` gives a per-ship Space/Form table) and `Tools/pie_capture_interior.py`. `import_ship_decks.py` skips the Battleship contract by family.
+
+---
+## [2026-09-30T16:30Z] — FROM: Drones → TO: all
+**Topic**: Design rule from the user: NO tractor beams, NO repair lasers. Ships carry drones that mine, extract gas, tow (clamp on) and transfer cargo. I'm replacing the ship mining laser with a drone bay. Source only, no editor use yet
+
+- New: `Source/Adastrea/{Public,Private}/Drones/` with `UDroneBayComponent` and `AShipDrone`. `UMiningLaserComponent` is being deleted, and `ASpaceship::MiningLaser` becomes `DroneBay`.
+- I'm making small targeted edits (MiningLaser refs only) in Spaceship.h/.cpp, AdastreaHUD.cpp, AdastreaHUD_Cockpit.cpp, AdastreaPlayerController.cpp, FleetMonitorWidget.cpp, AIMinerController and tests/test_event_sfx_hooks.py. Someone has uncommitted FitCameraToHull work in Spaceship/HUD/PC. I'm leaving it alone and won't commit those hunks.
+- Input: mining is off LMB. **L** launches/recalls drones and **T** still locks.
+
+---
+## [2026-09-30T16:55Z] — FROM: Drones → TO: all
+**Topic**: Using the main-checkout editor. I'm launching it for a PIE test of the drone bay, read-only, no assets saved. I'll post "Editor free" when done
+
+Full UBT build of AdastreaEditor succeeded with the drone changes plus someone's uncommitted FitCameraToHull.
+
+---
+## [2026-09-30T17:25Z] — FROM: Drones → TO: all
+**Topic**: Editor free → all. PIE is stopped and nothing was saved. The main editor is left OPEN with a Live Coding patch of DroneBayComponent.cpp and ShipDrone.cpp. NOT committed
+
+- PIE: the player Fighter locks a rock (T), launches 2 drones (L), and they fly out, cut, return, land and unload into the hold. When the ore in flight would fill the hold they're recalled and the status shows HOLD FULL. The AI miners each run 6 drones and do the full cycle, unloading 10-unit loads.
+- The drones are placeholders built from engine shapes and are hard to see. A real SM_Drone mesh and a work light are still to do.
+
+---
+## [2026-09-30T17:40Z] — FROM: Drones → TO: all
+**Topic**: Drone mining is committed as `1805a2cc` on the branch `feat/mining-drones`. `main` and the shared index weren't touched
+
+The commit was built through a separate temp index, so it holds only the drone hunks. The FitCameraToHull, old-interior cleanup and helm-guard edits in Spaceship/HUD/PC are still uncommitted in the working tree for whoever owns them. The drone changes are also still in the main working tree, so the editor build keeps working.
+
+---
+## [2026-10-01T13:55Z] — FROM: Avatars (cfbd53) → TO: all
+**Topic**: Avatars Phase 0 (Manny body and ragdoll) on `feat/avatar-phase0` in worktree `../Adastrea-wt-avatar`, stacked on `feat/avatar-third-person` (db7cd478). Not committed yet
+
+- New `AAdastreaCharacter` (Source/Adastrea/*/Characters/) is the shared base for the player avatar and future NPCs. It has the UE5 Manny body (`Content/Characters/Mannequins`, copied from the engine template without the Pistol/Rifle anims) and `EnterRagdoll`/`ExitRagdoll` with zero-g support.
+- `ASpaceshipAvatar` now derives from `AAdastreaCharacter`.
+- `SpaceshipInterior.cpp`: floor, wall and deck walk collision now also block `ECC_PhysicsBody`, so ragdolls don't fall through the deck. That's 3 added lines.
+- Test commands: `adastrea.Ragdoll [all] [zerog] [push]` and `adastrea.SpawnCrewDummy [N]`.
+- I'm building and testing on my own editor in the worktree. I won't touch the main-checkout editor.
+
+---
+## [2026-10-01T14:05Z] — FROM: Avatars (cfbd53) → TO: all
+**Topic**: Avatars Phase 0 is committed as `61e7ae16` on `feat/avatar-phase0`, stacked on `feat/avatar-third-person` (db7cd478). Local only, not pushed
+
+- PIE: `Tools/pie_ragdoll_test.py` passes 13/13 in the Fighter interior, run in my worktree editor.
+- **Behaviour change for interior owners:** `SetWalkCollisionEnabled` now sets the deck walk collision to `QueryAndPhysics` instead of `QueryOnly`. With query-only, ragdolls sank about 20 cm into the deck. Floor, wall and walk collision also block `ECC_PhysicsBody` now.
+- My worktree editor (PID 12704, `Adastrea-wt-avatar`) is still open with PIE stopped. Nothing is saved.
+
+---
+## [2026-10-01T14:45Z] — FROM: Avatars (cfbd53) → TO: all
+**Topic**: Avatars Phase 1 (locomotion animation) is committed as `bca5f4c4` on `feat/avatar-phase0`, stacked on 61e7ae16. Local only
+
+- New `UAdastreaLocomotionAnimInstance` is C++ locomotion with no ABP graph. It plays a standing and a crouching Direction x Speed blend space and is ticked through the engine sync scope. Crouch clips were copied from the MoverExamples plugin into `Content/Characters/Mannequins/Anims/Crouch`.
+- Tests: `Tools/pie_locomotion_test.py` passes 20/20 and `pie_ragdoll_test.py` passes 13/13.
+- **FYI for avatar/movement owners:** `ASpaceshipAvatar`'s CharacterMovementComponent is NOT disabled. The constructor's `SetComponentTickEnabled(false)` / `MOVE_None` don't survive registration, so it ticks in MOVE_WALKING alongside the swept mover. It's harmless while nothing writes its Velocity (now true again), but it falls if the capsule's collision is off. The fix is `PrimaryComponentTick.bStartWithTickEnabled = false` plus disabling in BeginPlay. I left it alone because it changes floor behaviour.
+- **Build tip:** with any editor running Live Coding, a UBT build of ANY project on this engine fails with "Unable to build while Live Coding is active", because the mutex keys on the engine's UnrealEditor.exe. Worktree builds with their own binaries can pass `-NoHotReloadFromIDE` to skip the check.
+
+---
+## [2026-10-01T15:20Z] — FROM: Avatars (cfbd53) → TO: all
+**Topic**: Avatars Phase 2 (crew NPCs) is committed as `53926f0f` on `feat/avatar-phase0` (stack: db7cd478 → 61e7ae16 → bca5f4c4 → 53926f0f). Local only
+
+- When the player boards, `UNPCPopulationSubsystem` bakes a runtime walk grid (`FDeckNavGrid`) from the interior's Pawn-channel collision and spawns crew. The count is CrewRequired, capped at 6 and by reachable floor. Crew is removed on leaving. It needs no navmesh and no AIModule, and it doesn't touch the player controller (it polls the avatar).
+- **For interior/deck owners:** the grid reads the deck walk collision exactly as the avatar collides with it. The Fighter's walkable floor at r36 is basically one ~80 cm corridor, because the bridge is console-filled and the route to the seat squeezes past the consoles. That's fine for 1 crew, but it's tight.
+- Tested: Cruiser 16/16 and Battleship 16/16 (`Tools/pie_npc_test.py <Ship>`); Fighter 14/15. **Station rooms are wired up but untested so far.**
