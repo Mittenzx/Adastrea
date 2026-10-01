@@ -2,6 +2,7 @@
 
 #include "Player/AdastreaPlayerController.h"
 #include "Combat/CombatTestDirector.h"
+#include "Combat/ShipHealthComponent.h"
 #include "Trading/CargoComponent.h"
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipAvatar.h"
@@ -808,6 +809,28 @@ void AAdastreaPlayerController::ClearHostiles()
 {
 	const int32 Removed = ACombatTestDirector::ClearHostiles(GetWorld());
 	UE_LOG(LogAdastrea, Log, TEXT("ClearHostiles: removed %d"), Removed);
+}
+
+void AAdastreaPlayerController::ClearWrecks()
+{
+	TArray<ASpaceship*> Wrecks;
+	for (TActorIterator<ASpaceship> It(GetWorld()); It; ++It)
+	{
+		const UShipHealthComponent* Health = It->HealthComponent;
+		if (It->IsWrecked() && *It != GetPawn() && !(Health && Health->bTrainingTarget))
+		{
+			Wrecks.Add(*It);
+		}
+	}
+	for (ASpaceship* Wreck : Wrecks)
+	{
+		if (LockedTargetActor == Wreck)
+		{
+			LockedTargetActor = nullptr;
+		}
+		Wreck->Destroy();
+	}
+	UE_LOG(LogAdastrea, Log, TEXT("ClearWrecks: removed %d"), Wrecks.Num());
 }
 
 void AAdastreaPlayerController::HostileWaves(const FString& OnOff)

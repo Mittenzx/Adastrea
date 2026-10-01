@@ -405,9 +405,28 @@ void UExteriorDressingComponent::DressStation(bool bDockingBay)
 	}
 }
 
+void UExteriorDressingComponent::SetLightsOn(bool bOn)
+{
+	bLightsOn = bOn;
+	if (!bOn)
+	{
+		for (FExteriorDressingLight& L : Lights)
+		{
+			if (L.MID)
+			{
+				L.MID->SetScalarParameterValue(TEXT("Intensity"), 0.0f);
+			}
+		}
+	}
+}
+
 void UExteriorDressingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (!bLightsOn)
+	{
+		return;
+	}
 	Clock += DeltaTime;
 	if (TargetMesh && !TargetMesh->WasRecentlyRendered(0.5f))
 	{

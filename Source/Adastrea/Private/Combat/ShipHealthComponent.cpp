@@ -46,6 +46,7 @@ void UShipHealthComponent::BeginPlay()
 	}
 	LastMaxShield = GetMaxShield();
 	CurrentShield = LastMaxShield;
+	SpawnTransform = GetOwner()->GetActorTransform();
 
 	if (UCombatProjectileSubsystem* Combat = UCombatProjectileSubsystem::Get(this))
 	{
@@ -106,11 +107,9 @@ float UShipHealthComponent::ApplyDamage(float Amount, AActor* DamageInstigator)
 		bDestroyed = true;
 		DestroyedTime = GetWorld()->GetTimeSeconds();
 		UE_LOG(LogAdastreaCombat, Log, TEXT("%s destroyed by %s"), *Ship->GetName(), *GetNameSafe(DamageInstigator));
+		// Ships are never blown up: they're disabled and become drifting wrecks.
+		Ship->SetWrecked(true);
 		OnDestroyed.Broadcast(DamageInstigator);
-		if (bTrainingTarget)
-		{
-			Ship->SetActorHiddenInGame(true);
-		}
 	}
 	return ShieldDamage + HullDamage;
 }
@@ -129,7 +128,12 @@ void UShipHealthComponent::Restore()
 	if (bDestroyed)
 	{
 		bDestroyed = false;
-		Ship->SetActorHiddenInGame(false);
+		Ship->SetWrecked(false);
+		// Training targets go back to where they were placed (wrecks tumble and drift).
+		if (bTrainingTarget)
+		{
+			Ship->SetActorTransform(SpawnTransform);
+		}
 	}
 }
 

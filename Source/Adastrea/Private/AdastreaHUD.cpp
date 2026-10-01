@@ -498,10 +498,10 @@ void AAdastreaHUD::DrawHUD()
 			{
 				// Shield and hull bars, so you can watch a target go down.
 				const UShipHealthComponent* TgtHealth = TgtShipStats->HealthComponent;
-				if (TgtHealth && TgtHealth->IsDestroyed())
+				if (TgtShipStats->IsWrecked())
 				{
 					DrawText(TEXT("STATUS"), kLabel, LX, PY + 84.0f, HudType::Font(), HudType::Label);
-					DrawText(TEXT("DESTROYED"), FLinearColor(1.0f, 0.35f, 0.3f, 1.0f), VX, PY + 84.0f, HudType::Font(), HudType::Label);
+					DrawText(TEXT("WRECK - DISABLED"), FLinearColor(0.65f, 0.6f, 0.55f, 1.0f), VX, PY + 84.0f, HudType::Font(), HudType::Label);
 				}
 				else
 				{

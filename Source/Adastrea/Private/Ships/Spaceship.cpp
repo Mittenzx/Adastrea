@@ -37,6 +37,7 @@
 #include "Audio/AudioEventLibrary.h"
 #include "TimerManager.h"
 #include "Ships/ExteriorDressingComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 
 namespace ShipEventAudio
 {
@@ -328,6 +329,13 @@ void ASpaceship::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
+    // A wreck drifts whether or not anyone is aboard, and nothing flies it.
+    if (bWrecked)
+    {
+        TickWreck(DeltaTime);
+        return;
+    }
+
         // Only apply flight physics if ship is possessed by a controller
         // This avoids unnecessary CPU usage on unpossessed NPC ships
         if (!GetController())
@@ -596,6 +604,108 @@ void ASpaceship::LockAsteroid()
     {
         UE_LOG(LogAdastreaShips, Log, TEXT("LockAsteroid (%s): this ship has no mining drones"), *GetName());
     }
+}
+
+namespace ShipWreck
+{
+    /** Tumble rate range (deg/s per axis). */
+    constexpr float MaxSpin = 9.0f;
+    /** Fraction of drift speed lost per second, so wrecks slow and stay near the fight. */
+    constexpr float DriftDamping = 0.25f;
+    const TCHAR* OverlayMaterial = TEXT("/Game/Materials/M_Wreck_Overlay.M_Wreck_Overlay");
+}
+
+void ASpaceship::SetWrecked(bool bWreck)
+{
+    if (bWrecked == bWreck)
+    {
+        return;
+    }
+    bWrecked = bWreck;
+
+    if (bWreck)
+    {
+        WreckVelocity = GetVelocity();
+        WreckSpin = FRotator(FMath::FRandRange(-1.0f, 1.0f), FMath::FRandRange(-1.0f, 1.0f), FMath::FRandRange(-1.0f, 1.0f)) * ShipWreck::MaxSpin;
+        SetThrottle(0.0f);
+        bBoostActive = false;
+        FireStopped();
+        if (DroneBay)
+        {
+            DroneBay->RecallDrones();
+        }
+        if (MovementComponent)
+        {
+            MovementComponent->StopMovementImmediately();
+            MovementComponent->Deactivate();
+        }
+        // Keep the chase camera level while the hull tumbles.
+        if (CameraSpringArm)
+        {
+            CameraSpringArm->SetUsingAbsoluteRotation(true);
+        }
+    }
+    else
+    {
+        WreckVelocity = FVector::ZeroVector;
+        WreckSpin = FRotator::ZeroRotator;
+        // Throttle input still moves the lever on a wreck; come back to life at a standstill.
+        SetThrottle(0.0f);
+        if (MovementComponent)
+        {
+            MovementComponent->Activate();
+        }
+        if (CameraSpringArm)
+        {
+            CameraSpringArm->SetUsingAbsoluteRotation(false);
+            CameraSpringArm->SetRelativeRotation(FRotator::ZeroRotator);
+        }
+    }
+
+    // Dark hull, no window glow, no nav lights, no engine plumes.
+    UMaterialInterface* Overlay = bWreck ? LoadObject<UMaterialInterface>(nullptr, ShipWreck::OverlayMaterial) : nullptr;
+    TArray<UStaticMeshComponent*> Meshes;
+    GetComponents<UStaticMeshComponent>(Meshes);
+    for (UStaticMeshComponent* Mesh : Meshes)
+    {
+        if (Mesh == ShipMeshComponent || Mesh->GetAttachParent() == ShipMeshComponent)
+        {
+            Mesh->SetOverlayMaterial(Overlay);
+        }
+    }
+    if (WindowMeshComponent)
+    {
+        WindowMeshComponent->SetVisibility(!bWreck);
+    }
+    if (UExteriorDressingComponent* Dressing = FindComponentByClass<UExteriorDressingComponent>())
+    {
+        Dressing->SetLightsOn(!bWreck);
+    }
+    TArray<UFXSystemComponent*> Effects;
+    GetComponents<UFXSystemComponent>(Effects);
+    for (UFXSystemComponent* Fx : Effects)
+    {
+        if (bWreck)
+        {
+            Fx->Deactivate();
+        }
+    }
+
+    if (bWreck)
+    {
+        if (AAdastreaPlayerController* PC = Cast<AAdastreaPlayerController>(GetController()))
+        {
+            PC->ShowHUDMessage(TEXT("SHIP DISABLED - engines, weapons and power offline"), 6.0f, true);
+        }
+    }
+    UE_LOG(LogAdastreaShips, Log, TEXT("%s %s"), *GetName(), bWreck ? TEXT("is a wreck") : TEXT("repaired"));
+}
+
+void ASpaceship::TickWreck(float DeltaTime)
+{
+    WreckVelocity *= FMath::Max(0.0f, 1.0f - ShipWreck::DriftDamping * DeltaTime);
+    AddActorWorldOffset(WreckVelocity * DeltaTime);
+    AddActorLocalRotation(WreckSpin * DeltaTime);
 }
 
 void ASpaceship::FireStarted()
@@ -2292,6 +2402,10 @@ void ASpaceship::ShowDockingPrompt(bool bShow)
 
 void ASpaceship::RequestDocking()
 {
+    if (bWrecked)
+    {
+        return;
+    }
     #if DOCKING_DEBUG_ENABLED
 
     // Debug print - function entry

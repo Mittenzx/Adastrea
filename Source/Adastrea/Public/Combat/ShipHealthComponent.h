@@ -15,8 +15,12 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnShipDestroyed, AActor*, DamageIns
  * reduced by the data asset's ArmorRating.
  *
  * Ship hulls fly with collision off, so hits are tested against the hull's bounding
- * box (SegmentHit) rather than physics. Training targets (bTrainingTarget, used for
- * the CombatTest dummies) vanish when destroyed and come back at full strength.
+ * box (SegmentHit) rather than physics.
+ *
+ * At zero hull a ship is disabled, never blown up: it becomes a drifting wreck
+ * (ASpaceship::SetWrecked) until repaired with Restore(). Training targets (the
+ * CombatTest dummies) are repaired and put back where they were placed after
+ * TrainingRespawnDelay.
  */
 UCLASS(ClassGroup=(Combat), meta=(BlueprintSpawnableComponent))
 class ADASTREA_API UShipHealthComponent : public UActorComponent
@@ -34,11 +38,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat", meta=(ClampMin="0.0"))
 	float ShieldRechargeRate;
 
-	/** Respawn at full strength a few seconds after being destroyed (combat test dummies). */
+	/** Repair at full strength, back at the placed position, a few seconds after being wrecked (combat test dummies). */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
 	bool bTrainingTarget;
 
-	/** Seconds a destroyed training target stays gone. */
+	/** Seconds a training target stays a wreck. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat", meta=(ClampMin="0.0"))
 	float TrainingRespawnDelay;
 
@@ -89,6 +93,8 @@ private:
 
 	float CurrentShield;
 	float LastMaxShield;
+	/** Where the ship was at BeginPlay; training targets return here when repaired. */
+	FTransform SpawnTransform;
 	double LastHitTime;
 	double DestroyedTime;
 	bool bDestroyed;
