@@ -157,7 +157,8 @@ void UShipWeaponComponent::FireNextGun(float Age)
 		Dir = FMath::VRandCone(Dir, FMath::DegreesToRadians(SpreadDegrees));
 	}
 	const float Damage = BoltDamage * Ship->GetWeaponDamageMultiplier();
-	Combat->FireBolt(Muzzle, Dir * BoltSpeed + Ship->GetVelocity(), Damage, Range / BoltSpeed, BoltLength, Ship, Age);
+	const int32 Team = Ship->HealthComponent ? Ship->HealthComponent->Team : 0;
+	Combat->FireBolt(Muzzle, Dir * BoltSpeed + Ship->GetVelocity(), Damage, Range / BoltSpeed, BoltLength, Ship, Team, Age);
 	++ShotsFired;
 }
 

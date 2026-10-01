@@ -1,5 +1,6 @@
 #include "Combat/CombatProjectileSubsystem.h"
 #include "Combat/ShipHealthComponent.h"
+#include "Combat/CombatTeams.h"
 #include "Components/InstancedStaticMeshComponent.h"
 #include "Engine/StaticMesh.h"
 #include "Engine/World.h"
@@ -57,7 +58,7 @@ void UCombatProjectileSubsystem::Deinitialize()
 	Super::Deinitialize();
 }
 
-void UCombatProjectileSubsystem::FireBolt(const FVector& Start, const FVector& Velocity, float Damage, float Life, float Length, AActor* Instigator, float Age)
+void UCombatProjectileSubsystem::FireBolt(const FVector& Start, const FVector& Velocity, float Damage, float Life, float Length, AActor* Instigator, int32 Team, float Age)
 {
 	FCombatBolt& Bolt = Bolts.AddDefaulted_GetRef();
 	Bolt.Position = Start;
@@ -66,6 +67,7 @@ void UCombatProjectileSubsystem::FireBolt(const FVector& Start, const FVector& V
 	Bolt.Damage = Damage;
 	Bolt.Length = Length;
 	Bolt.PendingTime = FMath::Max(Age, 0.0f);
+	Bolt.Team = Team;
 	Bolt.Instigator = Instigator;
 }
 
@@ -114,8 +116,6 @@ void UCombatProjectileSubsystem::StepBolts(float DeltaTime)
 		const FVector From = Bolt.Position;
 		const FVector To = From + Bolt.Velocity * StepTime;
 		AActor* Instigator = Bolt.Instigator.Get();
-		const UShipHealthComponent* InstigatorHealth = Instigator ? Instigator->FindComponentByClass<UShipHealthComponent>() : nullptr;
-		const int32 InstigatorTeam = InstigatorHealth ? InstigatorHealth->Team : 0;
 
 		// Nearest ship hull along the path.
 		float BestTime = 2.0f;
@@ -127,7 +127,7 @@ void UCombatProjectileSubsystem::StepBolts(float DeltaTime)
 			const AActor* Owner = Target->GetOwner();
 			// Wrecks still stop bolts (they just take no more damage).
 			if (Owner == Instigator || Owner->IsHidden()
-				|| (InstigatorTeam != 0 && Target->Team == InstigatorTeam))
+				|| (Bolt.Team != CombatTeam::Neutral && Target->Team == Bolt.Team))
 			{
 				continue;
 			}

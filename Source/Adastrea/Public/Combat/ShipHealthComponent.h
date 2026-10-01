@@ -46,7 +46,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat", meta=(ClampMin="0.0"))
 	float TrainingRespawnDelay;
 
-	/** Side the ship fights on. Bolts don't hit ships on the shooter's team; 0 (neutral/player) never matches. */
+	/** Side the ship fights on (CombatTeam). Bolts don't hit ships on the shooter's team; Neutral never matches. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
 	int32 Team;
 

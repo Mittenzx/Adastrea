@@ -33,6 +33,7 @@
 #include "Mining/Asteroid.h"
 #include "Audio/ShipEngineAudioComponent.h"
 #include "Combat/ShipHealthComponent.h"
+#include "Combat/CombatTeams.h"
 #include "Combat/ShipWeaponComponent.h"
 #include "Audio/AudioEventLibrary.h"
 #include "TimerManager.h"
@@ -296,6 +297,11 @@ void ASpaceship::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEv
 
 void ASpaceship::PossessedBy(AController* NewController)
 {
+    // The player's ship is on the civil side: station turrets and traders are friends.
+    if (HealthComponent && NewController && NewController->IsPlayerController())
+    {
+        HealthComponent->Team = CombatTeam::Civil;
+    }
     Super::PossessedBy(NewController);
     UE_LOG(LogAdastreaShips, Warning, TEXT("*** SHIP POSSESSED: %s by controller %s ***"),
         *GetName(),

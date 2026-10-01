@@ -2,6 +2,8 @@
 
 #include "AI/AIPilotController.h"
 #include "AdastreaLog.h"
+#include "Combat/CombatTeams.h"
+#include "Combat/ShipHealthComponent.h"
 #include "EngineUtils.h"
 #include "Engine/World.h"
 #include "GameFramework/FloatingPawnMovement.h"
@@ -35,6 +37,11 @@ void AAIPilotController::OnPossess(APawn* InPawn)
 	State = EAIPilotState::Choosing;
 	if (ASpaceship* Ship = Cast<ASpaceship>(InPawn))
 	{
+		// Traders and miners are civilians: station turrets and the player don't hit them.
+		if (Ship->HealthComponent)
+		{
+			Ship->HealthComponent->Team = CombatTeam::Civil;
+		}
 		Ship->SetThrottle(0.0f);
 	}
 }

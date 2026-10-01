@@ -5,9 +5,24 @@
 #include "Engine/StaticMesh.h"
 #include "Engine/StaticMeshSocket.h"
 #include "Misc/PackageName.h"
+#include "AI/HostileFighterController.h"
+#include "Combat/CombatProjectileSubsystem.h"
+#include "Combat/CombatTeams.h"
+#include "Combat/ShipWeaponComponent.h"
+#include "Ships/Spaceship.h"
+#include "EngineUtils.h"
+
+namespace StationTurret
+{
+    /** Seconds between target re-picks. */
+    constexpr float RetargetInterval = 0.5f;
+    constexpr float BoltLength = 900.0f;
+}
 
 ATurretModule::ATurretModule()
 {
+    PrimaryActorTick.bCanEverTick = true;
+
     TurretHeadComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretHead"));
     TurretHeadComponent->SetupAttachment(MeshComponent);
 
@@ -48,9 +63,116 @@ ATurretModule::ATurretModule()
     ModulePower = 25.0f;
     ModuleGroup = EStationModuleGroup::Defence;
 
-    DamagePerShot = 10.0f;
-    EngagementRange = 12000.0f;
-    FireRate = 2.0f;
+    DamagePerShot = 20.0f;
+    EngagementRange = 20000.0f;
+    FireRate = 3.0f;
+}
+
+FVector ATurretModule::GetHeadPivot() const
+{
+    if (TurretHeadComponent && TurretHeadComponent->GetStaticMesh())
+    {
+        return TurretHeadComponent->GetSocketLocation(TEXT("PitchAxis"));
+    }
+    return GetActorLocation() + GetActorUpVector() * 150.0f;
+}
+
+AActor* ATurretModule::FindTarget() const
+{
+    const FVector Pivot = GetHeadPivot();
+    AActor* Best = nullptr;
+    float BestDistSq = FMath::Square(EngagementRange);
+    for (TActorIterator<ASpaceship> It(GetWorld()); It; ++It)
+    {
+        ASpaceship* Ship = *It;
+        if (Ship->IsWrecked() || Ship->IsHidden() || !AHostileFighterController::IsHostileShip(Ship))
+        {
+            continue;
+        }
+        const float DistSq = FVector::DistSquared(Pivot, Ship->GetActorLocation());
+        if (DistSq < BestDistSq)
+        {
+            BestDistSq = DistSq;
+            Best = Ship;
+        }
+    }
+    return Best;
+}
+
+void ATurretModule::Fire(const FVector& Direction)
+{
+    UCombatProjectileSubsystem* Combat = UCombatProjectileSubsystem::Get(this);
+    if (!Combat)
+    {
+        return;
+    }
+    FVector Muzzle = GetHeadPivot() + Direction * 200.0f;
+    if (TurretHeadComponent && TurretHeadComponent->GetStaticMesh())
+    {
+        Muzzle = TurretHeadComponent->GetSocketLocation(bLeftBarrel ? TEXT("Muzzle_L") : TEXT("Muzzle_R"));
+    }
+    bLeftBarrel = !bLeftBarrel;
+
+    const FVector Dir = FMath::VRandCone(Direction, FMath::DegreesToRadians(SpreadDegrees));
+    Combat->FireBolt(Muzzle, Dir * BoltSpeed, DamagePerShot, EngagementRange * 1.2f / BoltSpeed,
+        StationTurret::BoltLength, this, CombatTeam::Civil);
+    ++ShotsFired;
+}
+
+void ATurretModule::Tick(float DeltaSeconds)
+{
+    Super::Tick(DeltaSeconds);
+
+    Cooldown = FMath::Max(Cooldown - DeltaSeconds, 0.0f);
+    if (!CanFire())
+    {
+        CurrentTarget = nullptr;
+        return;
+    }
+
+    // Re-pick now and then (and at once when the target is wrecked or gone).
+    RetargetClock -= DeltaSeconds;
+    const ASpaceship* TargetShip = Cast<ASpaceship>(CurrentTarget.Get());
+    if (RetargetClock <= 0.0f || !TargetShip || TargetShip->IsWrecked())
+    {
+        RetargetClock = StationTurret::RetargetInterval;
+        CurrentTarget = FindTarget();
+        TargetShip = Cast<ASpaceship>(CurrentTarget.Get());
+    }
+    if (!TargetShip)
+    {
+        return;
+    }
+
+    // Aim at the lead point; turrets don't move, so only the target's velocity counts.
+    const FVector Pivot = GetHeadPivot();
+    FVector Lead = TargetShip->GetActorLocation();
+    UShipWeaponComponent::ComputeLeadPoint(Pivot, FVector::ZeroVector, TargetShip->GetActorLocation(), TargetShip->GetVelocity(), BoltSpeed, Lead);
+    const FVector WantDir = (Lead - Pivot).GetSafeNormal();
+
+    // Slew the head (yaw about the base's up axis, pitch within limits).
+    FVector AimDir = WantDir;
+    if (TurretHeadComponent && MeshComponent)
+    {
+        const FVector LocalDir = MeshComponent->GetComponentTransform().InverseTransformVectorNoScale(WantDir);
+        FRotator Want = LocalDir.Rotation();
+        Want.Pitch = FMath::Clamp(Want.Pitch, MinPitch, MaxPitch);
+        Want.Roll = 0.0f;
+        const FRotator Now = TurretHeadComponent->GetRelativeRotation();
+        TurretHeadComponent->SetRelativeRotation(FMath::RInterpConstantTo(Now, Want, DeltaSeconds, TurnRate));
+        AimDir = TurretHeadComponent->GetForwardVector();
+    }
+
+    const float OffDeg = FMath::RadiansToDegrees(FMath::Acos(FMath::Clamp(FVector::DotProduct(AimDir, WantDir), -1.0f, 1.0f)));
+    if (OffDeg > FireConeDegrees)
+    {
+        return;
+    }
+    while (Cooldown <= 0.0f)
+    {
+        Fire(AimDir);
+        Cooldown += 1.0f / FireRate;
+    }
 }
 
 bool ATurretModule::CanFire() const

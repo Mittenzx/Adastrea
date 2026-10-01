@@ -2,6 +2,7 @@
 
 #include "AI/HostileFighterController.h"
 #include "Combat/ShipHealthComponent.h"
+#include "Combat/CombatTeams.h"
 #include "Combat/ShipWeaponComponent.h"
 #include "Ships/Spaceship.h"
 #include "Engine/World.h"
@@ -10,7 +11,6 @@
 
 namespace HostileFighter
 {
-	constexpr int32 Team = 1;
 	/** Throttle on an attack run once inside three break-off distances: slow enough to track. */
 	constexpr float CloseThrottle = 70.0f;
 	constexpr float IdleThrottle = 20.0f;
@@ -36,7 +36,7 @@ void AHostileFighterController::OnPossess(APawn* InPawn)
 	}
 	if (Ship->HealthComponent)
 	{
-		Ship->HealthComponent->Team = HostileFighter::Team;
+		Ship->HealthComponent->Team = CombatTeam::Hostile;
 	}
 	if (Ship->WeaponComponent)
 	{

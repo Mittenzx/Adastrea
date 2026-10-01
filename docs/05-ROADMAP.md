@@ -148,8 +148,12 @@ sessions happens in `AGENT_BOARD.md`.
   `SpawnHostiles N`, `ClearHostiles`). Milestone 3: ships are never blown up. At zero hull every
   ship (player, hostiles, traders, dummies) is disabled and becomes a wreck: engines, guns, lights
   and windows go dark, a scorch overlay goes on the hull, and it drifts to a stop while tumbling.
-  AI pilots abandon wrecks; `ClearWrecks` removes them. Next: station turrets, and what happens to
-  a disabled player outside CombatTest. The old `Combat/`
+  AI pilots abandon wrecks; `ClearWrecks` removes them. Milestone 4: station turrets
+  (`ATurretModule`) pick the nearest live hostile within 200 m, slew their heads onto the lead
+  point and fire alternate barrels. Teams (`CombatTeam`): the player, traders and turrets are
+  Civil and never hit each other; hostiles are Hostile; dummies are Neutral. CombatTest has a
+  4-turret station 120 m from the spawn. Next: what happens to a disabled player outside
+  CombatTest, combat audio, bolt and impact-flash look, and turrets on capital ships. The old `Combat/`
   module archived in `e155151d` is reference only.
 
 ---
@@ -174,7 +178,7 @@ not dead code:
 
 | System | Status |
 |--------|--------|
-| Combat | Being rebuilt: guns, shields, damage, hostile AI fighters and wrecks live (see Open work); turrets next |
+| Combat | Being rebuilt: guns, shields, damage, hostile AI fighters, wrecks and station turrets live (see Open work) |
 | Navigation/Autopilot | Complete, disabled |
 | Quest System | Complete, disabled |
 | Faction Diplomacy | Complete, disabled |
