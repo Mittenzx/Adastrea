@@ -5,6 +5,10 @@
 #include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/SpotLightComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Engine/StaticMesh.h"
+#include "Materials/MaterialInstanceDynamic.h"
+#include "UObject/ConstructorHelpers.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "EnhancedInputComponent.h"
@@ -46,9 +50,15 @@ ASpaceshipAvatar::ASpaceshipAvatar()
 	// Camera boom + follow camera.
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 500.0f;
+	CameraBoom->TargetArmLength = ThirdPersonArmLength;
 	CameraBoom->bUsePawnControlRotation = true;  // rotate boom with controller (mouse look)
 	CameraBoom->SetRelativeRotation(FRotator(-12.0f, 0.0f, 0.0f)); // slight downward tilt
+	// Ship-interior walls and walk collision block only the Pawn channel (not Camera),
+	// so probe Pawn — otherwise the third-person camera swings straight through them.
+	// The spring arm ignores its own actor, so the capsule never pulls it in.
+	CameraBoom->bDoCollisionTest = true;
+	CameraBoom->ProbeChannel = ECC_Pawn;
+	CameraBoom->ProbeSize = 10.0f;
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
@@ -68,6 +78,69 @@ ASpaceshipAvatar::ASpaceshipAvatar()
 	Flashlight->SetVisibility(false);
 
 	bUseControllerRotationYaw = true; // character faces where we look
+
+	// Placeholder suited body built from engine basic shapes, so third-person has
+	// something to look at until a real character mesh exists. Sized to the 176 cm
+	// capsule (half-height 88): legs, torso, helmet, and a visor showing facing.
+	// Purely visual — no collision, and hidden in first-person (SetBodyVisible).
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> CylinderMesh(TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
+	auto AddBodyPart = [this](const TCHAR* Name, UStaticMesh* PartMesh, const FVector& Location, const FVector& Scale)
+	{
+		UStaticMeshComponent* Part = CreateDefaultSubobject<UStaticMeshComponent>(Name);
+		Part->SetupAttachment(GetCapsuleComponent());
+		Part->SetStaticMesh(PartMesh);
+		Part->SetRelativeLocation(Location);
+		Part->SetRelativeScale3D(Scale);
+		Part->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		Part->SetGenerateOverlapEvents(false);
+		Part->SetCanEverAffectNavigation(false);
+		Part->SetVisibility(false); // shown when switching to third-person
+		BodyParts.Add(Part);
+	};
+	// Basic shapes are 100 cm across, centred on their origin.
+	AddBodyPart(TEXT("BodyLegs"),   CylinderMesh.Object, FVector(0.0f, 0.0f, -46.0f), FVector(0.46f, 0.36f, 0.84f));
+	AddBodyPart(TEXT("BodyTorso"),  CylinderMesh.Object, FVector(0.0f, 0.0f, 24.0f),  FVector(0.60f, 0.40f, 0.56f));
+	AddBodyPart(TEXT("BodyPack"),   CubeMesh.Object,     FVector(-24.0f, 0.0f, 28.0f), FVector(0.14f, 0.40f, 0.44f));
+	AddBodyPart(TEXT("BodyHelmet"), SphereMesh.Object,   FVector(0.0f, 0.0f, 68.0f),  FVector(0.32f));
+	AddBodyPart(TEXT("BodyVisor"),  SphereMesh.Object,   FVector(9.0f, 0.0f, 70.0f),  FVector(0.18f, 0.24f, 0.14f));
+}
+
+void ASpaceshipAvatar::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// Tint the placeholder body: light suit, dark visor (BasicShapeMaterial exposes "Color").
+	for (UStaticMeshComponent* Part : BodyParts)
+	{
+		if (UMaterialInstanceDynamic* MID = Part ? Part->CreateDynamicMaterialInstance(0) : nullptr)
+		{
+			const bool bVisor = Part->GetFName() == TEXT("BodyVisor");
+			MID->SetVectorParameterValue(TEXT("Color"), bVisor ? FLinearColor(0.02f, 0.03f, 0.05f) : FLinearColor(0.55f, 0.57f, 0.6f));
+		}
+	}
+	SetBodyVisible(!bFirstPersonView);
+}
+
+void ASpaceshipAvatar::SetBodyVisible(bool bVisible)
+{
+	// The placeholder only stands in until a real body exists: once the character
+	// mesh has a skeletal mesh assigned, it is the body and the basic shapes stay hidden.
+	const bool bHasRealBody = GetMesh() && GetMesh()->GetSkeletalMeshAsset();
+	for (UStaticMeshComponent* Part : BodyParts)
+	{
+		if (Part)
+		{
+			Part->SetVisibility(bVisible && !bHasRealBody);
+			Part->SetHiddenInGame(!bVisible || bHasRealBody);
+		}
+	}
+	if (GetMesh())
+	{
+		GetMesh()->SetVisibility(bVisible, true);
+		GetMesh()->SetHiddenInGame(!bVisible, true);
+	}
 }
 
 void ASpaceshipAvatar::SetFirstPersonView(bool bEnable)
@@ -89,26 +162,26 @@ void ASpaceshipAvatar::SetFirstPersonView(bool bEnable)
 		CameraBoom->SetRelativeLocation(FVector(0.0f, 0.0f, CurrentEyeHeight - GetCapsuleComponent()->GetScaledCapsuleHalfHeight()));
 		CameraBoom->SetRelativeRotation(FRotator::ZeroRotator);
 		CameraBoom->bUsePawnControlRotation = true;
+		CameraBoom->SocketOffset = FVector::ZeroVector;
+		CameraBoom->bEnableCameraLag = false;
 		FollowCamera->bUsePawnControlRotation = true;
-		if (GetMesh())
-		{
-			GetMesh()->SetVisibility(false, true);
-			GetMesh()->SetHiddenInGame(true, true);
-		}
+		SetBodyVisible(false);
 	}
 	else
 	{
-		// Third-person: restore the follow boom behind the avatar.
-		CameraBoom->SetRelativeLocation(FVector::ZeroVector);
-		CameraBoom->TargetArmLength = 500.0f;
+		// Third-person: a short over-the-shoulder boom from shoulder height, so the
+		// camera fits ship corridors; it pulls in against walls (ProbeChannel = Pawn).
+		// A little positional lag smooths stair steps and floor snaps.
+		CameraBoom->SetRelativeLocation(FVector(0.0f, 0.0f, ThirdPersonMountHeight));
+		CameraBoom->TargetArmLength = ThirdPersonArmLength;
+		CameraBoom->SocketOffset = ThirdPersonSocketOffset;
 		CameraBoom->SetRelativeRotation(FRotator(-12.0f, 0.0f, 0.0f));
 		CameraBoom->bUsePawnControlRotation = true;
+		CameraBoom->bEnableCameraLag = true;
+		CameraBoom->CameraLagSpeed = 15.0f;
 		FollowCamera->bUsePawnControlRotation = false;
-		if (GetMesh())
-		{
-			GetMesh()->SetVisibility(true, true);
-			GetMesh()->SetHiddenInGame(false, true);
-		}
+		FollowCamera->SetRelativeRotation(FRotator::ZeroRotator);
+		SetBodyVisible(true);
 	}
 }
 
@@ -119,6 +192,12 @@ void ASpaceshipAvatar::SetFlashlightEnabled(bool bEnable)
 	{
 		Flashlight->SetVisibility(bEnable);
 	}
+}
+
+void ASpaceshipAvatar::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	SetActorHiddenInGame(false);
 }
 
 void ASpaceshipAvatar::UnPossessed()
@@ -143,6 +222,9 @@ void ASpaceshipAvatar::UnPossessed()
 	}
 
 	CurrentInteractable = nullptr;
+	// The avatar is parked (not destroyed) when the player returns to the helm, and
+	// its third-person body would otherwise be left standing where the deck was.
+	SetActorHiddenInGame(true);
 	Super::UnPossessed();
 }
 
@@ -217,7 +299,8 @@ void ASpaceshipAvatar::Tick(float DeltaSeconds)
 	}
 	PendingMoveInput = FVector2D::ZeroVector;
 
-	if (bFirstPersonView && (CurrentInterior || bWalkingStation))
+	// Hold the deck in either view — third-person walks the same stairs and ramps.
+	if (CurrentInterior || bWalkingStation)
 	{
 		SnapToFloor();
 	}
@@ -475,8 +558,8 @@ void ASpaceshipAvatar::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		}
 		AvatarMappingContext->MapKey(FlashlightAction, EKeys::F);
 
-		// Toggle first-/third-person while walking (entering an interior forces
-		// first-person by default, but the player can switch back and forth).
+		// Toggle first-/third-person while on foot in a ship or station (entering
+		// starts in first-person; T switches back and forth).
 		if (!ToggleViewAction)
 		{
 			ToggleViewAction = NewObject<UInputAction>(this, TEXT("IA_AvatarToggleView_Runtime"));

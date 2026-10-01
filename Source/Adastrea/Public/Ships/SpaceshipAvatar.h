@@ -9,6 +9,7 @@
 class UCameraComponent;
 class USpringArmComponent;
 class USpotLightComponent;
+class UStaticMeshComponent;
 class UInputAction;
 class UInputMappingContext;
 class IWorldInteractable;
@@ -39,8 +40,10 @@ class ADASTREA_API ASpaceshipAvatar : public ACharacter
 public:
 	ASpaceshipAvatar();
 
+	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void PossessedBy(AController* NewController) override;
 	virtual void UnPossessed() override;
 
 	/** The ship we left, which owns the interior we're standing in. */
@@ -59,7 +62,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Avatar")
 	void SitDown();
 
-	/** Switch to a first-person (eyes-height) camera inside an interior. */
+	/** Switch between the first-person (eye-height) camera and the over-the-shoulder
+	 * third-person camera. Toggled with T while on foot in a ship or station. */
 	UFUNCTION(BlueprintCallable, Category="Avatar|Camera")
 	void SetFirstPersonView(bool bEnable);
 
@@ -119,6 +123,14 @@ protected:
 	 * default; toggled with F. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Avatar|Flashlight")
 	TObjectPtr<USpotLightComponent> Flashlight;
+
+	/** Placeholder suited body (engine basic shapes) so the avatar is visible in
+	 * third-person until a real character mesh exists. Hidden in first-person. */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Avatar|Body")
+	TArray<TObjectPtr<UStaticMeshComponent>> BodyParts;
+
+	/** Show/hide the avatar's body (placeholder parts and any skeletal mesh). */
+	void SetBodyVisible(bool bVisible);
 
 	/** True while in first-person (interior) view — the camera rides at eye height. */
 	bool bFirstPersonView = false;
@@ -182,6 +194,18 @@ protected:
 	/** Head bob at walking pace: side-to-side sway over each pair of steps (cm). */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Avatar|Camera")
 	float HeadBobLateral = 0.9f;
+
+	// --- Third-person camera ---
+	/** Boom length behind the avatar (cm). Short, since decks and corridors are tight;
+	 * the boom also pulls in against walls (it probes the Pawn channel they block). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Avatar|Camera")
+	float ThirdPersonArmLength = 260.0f;
+	/** Boom mount height above the capsule centre (cm) — roughly shoulder height. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Avatar|Camera")
+	float ThirdPersonMountHeight = 55.0f;
+	/** Over-the-shoulder offset at the camera end of the boom (cm). */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Avatar|Camera")
+	FVector ThirdPersonSocketOffset = FVector(0.0f, 45.0f, 15.0f);
 
 	// --- Interaction ---
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Avatar|Interaction")
