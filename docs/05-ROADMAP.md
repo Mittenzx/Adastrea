@@ -154,8 +154,10 @@ sessions happens in `AGENT_BOARD.md`.
   Civil and never hit each other; hostiles are Hostile; dummies are Neutral. CombatTest has a
   4-turret station 120 m from the spawn. For the time being station shields are
   incomprehensibly strong: stations and their modules take no combat damage (bolts just stop).
-  Next: what happens to a disabled player outside
-  CombatTest, combat audio, bolt and impact-flash look, and turrets on capital ships. The old `Combat/`
+  Disabled player (`UPlayerRescueSubsystem`): a tow drone from the nearest friendly station
+  clamps onto the wreck and hauls it in. The pilot ejects in an escape pod to that station, or to
+  a nearer trader in flight, which ferries them there. The ship is repaired free and re-boarded,
+  then docks normally. Next: combat audio, bolt and impact-flash look, turrets on capital ships. The old `Combat/`
   module archived in `e155151d` is reference only.
 
 ---

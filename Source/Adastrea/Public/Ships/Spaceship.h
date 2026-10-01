@@ -488,6 +488,9 @@ public:
     UFUNCTION(BlueprintCallable, BlueprintPure, Category="Combat")
     bool IsWrecked() const { return bWrecked; }
 
+    /** Stop a wreck drifting and tumbling (a tow drone has clamped on and moves it now). */
+    void StopWreckDrift() { WreckVelocity = FVector::ZeroVector; WreckSpin = FRotator::ZeroRotator; }
+
     // Enhanced Input callbacks
     void Move(const FInputActionValue& Value);
     void Look(const FInputActionValue& Value);

@@ -7,8 +7,8 @@
 class ASpaceship;
 
 /**
- * Runs the CombatTest level: sends waves of hostile fighters at the player and, when
- * the player's ship is disabled, repairs it after a few seconds so testing can go on.
+ * Runs the CombatTest level: sends waves of hostile fighters at the player. (A disabled
+ * player is rescued by UPlayerRescueSubsystem: pod to the station, tow for the ship.)
  *
  * Waves come in ahead of the player at SpawnDistance; the next wave follows
  * WaveDelay seconds after the last hostile of the previous one is gone.
@@ -44,10 +44,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat Test", meta=(ClampMin="1000.0"))
 	float SpawnDistance;
 
-	/** Seconds a disabled player ship waits before it is repaired. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat Test", meta=(ClampMin="0.0"))
-	float PlayerRepairDelay;
-
 	/** Spawn Count hostiles ahead of the player. Returns how many spawned. */
 	static int32 SpawnHostilesNearPlayer(UWorld* World, int32 Count, float Distance, TSubclassOf<ASpaceship> ShipClass = nullptr);
 
@@ -65,9 +61,6 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	void TickPlayerRepair(float DeltaSeconds);
-
 	float WaveClock;
-	float RepairClock;
 	int32 WavesSent;
 };

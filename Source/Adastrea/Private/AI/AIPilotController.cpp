@@ -71,6 +71,24 @@ void AAIPilotController::Tick(float DeltaSeconds)
 	}
 }
 
+bool AAIPilotController::FerryTo(ASpaceStation* Station)
+{
+	if (!Station || !Station->GetDockingBayModule() || !GetShip())
+	{
+		return false;
+	}
+	if (State == EAIPilotState::Docked)
+	{
+		UndockShip();
+	}
+	TargetStation = Station;
+	PlannedDestination = nullptr;
+	DockedSeconds = 0.0f;
+	State = EAIPilotState::Flying;
+	UE_LOG(LogAdastrea, Log, TEXT("%s: ferrying to %s"), *GetName(), *GetStationDisplayName(Station));
+	return true;
+}
+
 void AAIPilotController::OnShipWrecked()
 {
 	if (State == EAIPilotState::Docked)
