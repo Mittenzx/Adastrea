@@ -103,7 +103,7 @@ private:
 	 * motion; a backward walk is usually slower than a forward one). */
 	struct FStride
 	{
-		const UBlendSpace* BlendSpace = nullptr;
+		TWeakObjectPtr<const UBlendSpace> BlendSpace;
 		int32 SpeedAxis = INDEX_NONE;
 		int32 DirectionAxis = INDEX_NONE;
 		float AxisValue = 0.0f;

@@ -130,7 +130,7 @@ void UAdastreaLocomotionAnimInstance::SetLayerInput(FAdastreaLocomotionProxy::FL
 	{
 		return;
 	}
-	if (Stride.BlendSpace != BlendSpace)
+	if (Stride.BlendSpace.Get() != BlendSpace)
 	{
 		MeasureStride(Stride, BlendSpace);
 	}
