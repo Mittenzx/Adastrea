@@ -11,6 +11,7 @@
 //   bottom-right  PROPULSION: big speed readout, speed/throttle bars, FA/BOOST/CRUISE tags
 
 #include "AdastreaHUD.h"
+#include "Combat/ShipHealthComponent.h"
 #include "AdastreaHUDStyle.h"
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipDataAsset.h"
@@ -268,9 +269,9 @@ void AAdastreaHUD::DrawCyberpunkFlightHUD(APlayerController* PC, ASpaceship* Shi
 	const float HullMax = FMath::Max(Ship->GetMaxHullIntegrity(), 1.0f);
 	const float Hull = FMath::Clamp(Ship->GetCurrentHullIntegrity(), 0.0f, HullMax);
 	const float HullFrac = Hull / HullMax;
-	// Ships have no runtime shield pool yet: show the rated capacity from the data asset as full.
-	const float ShieldMax = Ship->GetMaxShieldStrength();
-	const float Shield = ShieldMax;
+	const UShipHealthComponent* Health = Ship->HealthComponent;
+	const float ShieldMax = Health ? Health->GetMaxShield() : Ship->GetMaxShieldStrength();
+	const float Shield = Health ? FMath::Clamp(Health->GetShield(), 0.0f, ShieldMax) : ShieldMax;
 	const float ShieldFrac = ShieldMax > 0.0f ? Shield / ShieldMax : 0.0f;
 	const float Armor = Ship->ShipDataAsset ? Ship->ShipDataAsset->ArmorRating : 0.0f;
 

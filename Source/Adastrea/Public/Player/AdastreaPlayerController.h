@@ -574,6 +574,10 @@ public:
 	void HandleNearestTarget();
 	void HandleClearTarget();
 
+	/** Console: lock the nearest target whose name contains NameFragment (nearest of all if empty). */
+	UFUNCTION(Exec)
+	void LockTarget(const FString& NameFragment);
+
 	/**
 	 * Toggle the station editor UI
 	 * Called when StationEditorAction input is triggered

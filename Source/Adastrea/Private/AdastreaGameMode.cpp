@@ -189,8 +189,16 @@ void AAdastreaGameMode::SpawnPlayerSpaceship()
 	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (PC)
 	{
+		// The controller already owns the GameMode's default pawn (a ship at the PlayerStart).
+		// Left behind, it sits inside the player's hull, and with combat it soaks up their shots.
+		APawn* DefaultPawn = PC->GetPawn();
 		PC->Possess(PlayerShip);
 		UE_LOG(LogAdastrea, Log, TEXT("AdastreaGameMode: Player controller possessed spaceship"));
+		if (DefaultPawn && DefaultPawn != PlayerShip && DefaultPawn->IsA<ASpaceship>())
+		{
+			UE_LOG(LogAdastrea, Log, TEXT("AdastreaGameMode: Removed the unused default pawn %s"), *DefaultPawn->GetName());
+			DefaultPawn->Destroy();
+		}
 	}
 	else
 	{
