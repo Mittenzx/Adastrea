@@ -152,7 +152,9 @@ sessions happens in `AGENT_BOARD.md`.
   (`ATurretModule`) pick the nearest live hostile within 200 m, slew their heads onto the lead
   point and fire alternate barrels. Teams (`CombatTeam`): the player, traders and turrets are
   Civil and never hit each other; hostiles are Hostile; dummies are Neutral. CombatTest has a
-  4-turret station 120 m from the spawn. Next: what happens to a disabled player outside
+  4-turret station 120 m from the spawn. For the time being station shields are
+  incomprehensibly strong: stations and their modules take no combat damage (bolts just stop).
+  Next: what happens to a disabled player outside
   CombatTest, combat audio, bolt and impact-flash look, and turrets on capital ships. The old `Combat/`
   module archived in `e155151d` is reference only.
 
