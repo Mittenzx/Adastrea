@@ -82,6 +82,9 @@ protected:
 	/** Per-frame behaviour; the base class is the station-to-station trader. */
 	virtual void TickPilot(float DeltaSeconds);
 
+	/** The ship was just disabled; the pilot is about to abandon it (frees a docking slot). */
+	virtual void OnShipWrecked();
+
 	enum class EApproachResult : uint8
 	{
 		Flying,

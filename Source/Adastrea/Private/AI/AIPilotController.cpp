@@ -48,9 +48,27 @@ void AAIPilotController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	if (GetShip())
+	ASpaceship* Ship = GetShip();
+	if (Ship && Ship->IsWrecked())
+	{
+		// Disabled: nobody flies a wreck. Leave it drifting and go.
+		UE_LOG(LogAdastrea, Log, TEXT("%s: %s was disabled; pilot abandons the wreck"), *GetName(), *Ship->GetName());
+		OnShipWrecked();
+		UnPossess();
+		Destroy();
+		return;
+	}
+	if (Ship)
 	{
 		TickPilot(DeltaSeconds);
+	}
+}
+
+void AAIPilotController::OnShipWrecked()
+{
+	if (State == EAIPilotState::Docked)
+	{
+		UndockShip();
 	}
 }
 

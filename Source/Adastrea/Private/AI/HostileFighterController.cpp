@@ -56,6 +56,13 @@ void AHostileFighterController::OnPossess(APawn* InPawn)
 	UE_LOG(LogAdastreaCombat, Log, TEXT("Hostile pilot took %s"), *Ship->GetName());
 }
 
+void AHostileFighterController::OnShipWrecked()
+{
+	UE_LOG(LogAdastreaCombat, Log, TEXT("Hostile %s disabled"), GetShip() ? *GetShip()->GetName() : TEXT("?"));
+	SetFiring(false);
+	Super::OnShipWrecked();
+}
+
 void AHostileFighterController::OnUnPossess()
 {
 	SetFiring(false);
@@ -151,17 +158,6 @@ void AHostileFighterController::TickPilot(float DeltaSeconds)
 	ASpaceship* Ship = GetShip();
 	if (!Ship)
 	{
-		return;
-	}
-
-	// Shot down: remove the ship and its pilot (wreck and debris come with ship destruction).
-	if (Ship->HealthComponent && Ship->HealthComponent->IsDestroyed())
-	{
-		UE_LOG(LogAdastreaCombat, Log, TEXT("Hostile %s shot down"), *Ship->GetName());
-		SetFiring(false);
-		UnPossess();
-		Ship->Destroy();
-		Destroy();
 		return;
 	}
 

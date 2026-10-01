@@ -360,6 +360,10 @@ EShipEngineVoiceMode UShipEngineAudioComponent::ResolveMode() const
 	const ASpaceship* Ship = GetShip();
 	const UWorld* World = GetWorld();
 	const APlayerController* PC = World ? World->GetFirstPlayerController() : nullptr;
+	if (Ship && Ship->IsWrecked())
+	{
+		return EShipEngineVoiceMode::Off;   // dead engines
+	}
 	if (Ship && PC)
 	{
 		if (PC->GetPawn() == Ship)

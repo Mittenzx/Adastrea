@@ -125,7 +125,8 @@ void UCombatProjectileSubsystem::StepBolts(float DeltaTime)
 		{
 			UShipHealthComponent* Target = WeakTarget.Get();
 			const AActor* Owner = Target->GetOwner();
-			if (Target->IsDestroyed() || Owner == Instigator || Owner->IsHidden()
+			// Wrecks still stop bolts (they just take no more damage).
+			if (Owner == Instigator || Owner->IsHidden()
 				|| (InstigatorTeam != 0 && Target->Team == InstigatorTeam))
 			{
 				continue;
@@ -155,8 +156,7 @@ void UCombatProjectileSubsystem::StepBolts(float DeltaTime)
 		}
 		if (BestShip)
 		{
-			BestShip->ApplyDamage(Bolt.Damage, Instigator);
-			if (Instigator)
+			if (BestShip->ApplyDamage(Bolt.Damage, Instigator) > 0.0f && Instigator)
 			{
 				++HitCounts.FindOrAdd(Instigator);
 			}

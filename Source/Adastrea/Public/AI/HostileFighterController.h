@@ -27,8 +27,7 @@ enum class EHostileFighterState : uint8
  * it breaks off to a point beside and past the target, then comes round again.
  *
  * Hostile ships are on team 1 (UShipHealthComponent::Team), so they don't shoot
- * each other. Destroyed hostiles are removed (wreck and debris come with ship
- * destruction).
+ * each other. A disabled hostile's pilot bails out and the ship stays as a wreck.
  */
 UCLASS(BlueprintType, Blueprintable)
 class ADASTREA_API AHostileFighterController : public AAIPilotController
@@ -88,6 +87,7 @@ public:
 
 protected:
 	virtual void TickPilot(float DeltaSeconds) override;
+	virtual void OnShipWrecked() override;
 
 private:
 	/** The player's ship if it can be attacked (flown, not docked, not destroyed), else null. */

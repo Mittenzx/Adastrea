@@ -145,7 +145,11 @@ sessions happens in `AGENT_BOARD.md`.
   Milestone 2 is done too: hostile fighters (`AHostileFighterController`) make attack runs on the
   player, firing on the lead point, then break off and come round again. In CombatTest a director
   sends waves of 2 and repairs the player 5 s after they're disabled (console: `HostileWaves 0/1`,
-  `SpawnHostiles N`, `ClearHostiles`). Next: ship destruction and debris, station turrets. The old `Combat/`
+  `SpawnHostiles N`, `ClearHostiles`). Milestone 3: ships are never blown up. At zero hull every
+  ship (player, hostiles, traders, dummies) is disabled and becomes a wreck: engines, guns, lights
+  and windows go dark, a scorch overlay goes on the hull, and it drifts to a stop while tumbling.
+  AI pilots abandon wrecks; `ClearWrecks` removes them. Next: station turrets, and what happens to
+  a disabled player outside CombatTest. The old `Combat/`
   module archived in `e155151d` is reference only.
 
 ---
@@ -170,7 +174,7 @@ not dead code:
 
 | System | Status |
 |--------|--------|
-| Combat | Being rebuilt: guns, shields, damage and hostile AI fighters live (see Open work); destruction, turrets next |
+| Combat | Being rebuilt: guns, shields, damage, hostile AI fighters and wrecks live (see Open work); turrets next |
 | Navigation/Autopilot | Complete, disabled |
 | Quest System | Complete, disabled |
 | Faction Diplomacy | Complete, disabled |

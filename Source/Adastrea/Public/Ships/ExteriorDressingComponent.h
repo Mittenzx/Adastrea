@@ -92,6 +92,9 @@ public:
 	UFUNCTION(BlueprintPure, Category="Exterior Dressing")
 	int32 GetPropCount() const { return Props.Num(); }
 
+	/** Nav lights and beacons on or dark (a wrecked ship's go out). */
+	void SetLightsOn(bool bOn);
+
 	/** True when the adastrea.ExteriorDressing cvar allows automatic dressing. */
 	static bool IsAutoDressingEnabled();
 
@@ -119,6 +122,8 @@ protected:
 
 	UPROPERTY(Transient)
 	TArray<FExteriorDressingLight> Lights;
+
+	bool bLightsOn = true;
 
 	/** Local bounds of the target mesh (component space). */
 	FBox LocalBox;

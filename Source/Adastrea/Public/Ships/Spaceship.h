@@ -477,6 +477,17 @@ public:
     void FireStarted();
     void FireStopped();
 
+    /**
+     * Wreck state: a ship at zero hull is disabled, not destroyed. Engines, guns, lights
+     * and window glow go out, the hull darkens, and it drifts on its last velocity with a
+     * slow tumble, ignoring flight input and AI throttle. SetWrecked(false) repairs it.
+     * Driven by UShipHealthComponent.
+     */
+    void SetWrecked(bool bWreck);
+
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category="Combat")
+    bool IsWrecked() const { return bWrecked; }
+
     // Enhanced Input callbacks
     void Move(const FInputActionValue& Value);
     void Look(const FInputActionValue& Value);
@@ -685,6 +696,13 @@ public:
 
 
 protected:
+    /** Wreck drift: linear (cm/s) and tumble (deg/s), captured when the ship was disabled. */
+    FVector WreckVelocity = FVector::ZeroVector;
+    FRotator WreckSpin = FRotator::ZeroRotator;
+    bool bWrecked = false;
+
+    void TickWreck(float DeltaTime);
+
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaTime) override;
     virtual void PossessedBy(AController* NewController) override;

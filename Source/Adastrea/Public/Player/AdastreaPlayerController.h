@@ -586,6 +586,10 @@ public:
 	UFUNCTION(Exec)
 	void ClearHostiles();
 
+	/** Console: remove every wreck except your own ship and the CombatTest dummies. */
+	UFUNCTION(Exec)
+	void ClearWrecks();
+
 	/** Console: HostileWaves 0 pauses the CombatTest director's waves, 1 resumes them. */
 	UFUNCTION(Exec)
 	void HostileWaves(const FString& OnOff);

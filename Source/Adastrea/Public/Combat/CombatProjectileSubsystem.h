@@ -35,7 +35,7 @@ struct FCombatFlash
  * Flies every projectile in the world. Each tick a bolt sweeps its path against the
  * registered ship hulls (UShipHealthComponent::SegmentHit; hulls have no collision)
  * and against world geometry (stations, asteroids) with a visibility trace; the
- * nearest hit wins. Ships take damage, anything else just stops the bolt.
+ * nearest hit wins. Live ships take damage; wrecks and anything else just stop the bolt.
  *
  * Bolts and impact flashes are drawn as two instanced meshes on one transient actor,
  * so a busy fight costs two draw calls rather than an actor per shot.
@@ -60,7 +60,7 @@ public:
 	void RegisterTarget(UShipHealthComponent* Target);
 	void UnregisterTarget(UShipHealthComponent* Target);
 
-	/** Hits landed by this instigator since play began (HUD hit marker). */
+	/** Damaging hits landed by this instigator since play began (HUD hit marker). */
 	int32 GetHitCount(const AActor* Instigator) const;
 
 	int32 GetBoltCount() const { return Bolts.Num(); }
