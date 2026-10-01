@@ -20,6 +20,8 @@ struct FCombatBolt
 	float Length;
 	/** Seconds the bolt has already flown when it is first stepped (fired part-way through a frame). */
 	float PendingTime;
+	/** Shooter's team (CombatTeam); ships on the same team aren't hit. */
+	int32 Team;
 	TWeakObjectPtr<AActor> Instigator;
 };
 
@@ -55,7 +57,7 @@ public:
 	 * ago it was fired within this frame, so shots fired together at a low frame rate spread out
 	 * along the path instead of flying in a clump.
 	 */
-	void FireBolt(const FVector& Start, const FVector& Velocity, float Damage, float Life, float Length, AActor* Instigator, float Age = 0.0f);
+	void FireBolt(const FVector& Start, const FVector& Velocity, float Damage, float Life, float Length, AActor* Instigator, int32 Team, float Age = 0.0f);
 
 	void RegisterTarget(UShipHealthComponent* Target);
 	void UnregisterTarget(UShipHealthComponent* Target);
