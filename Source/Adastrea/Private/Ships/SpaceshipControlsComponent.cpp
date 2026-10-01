@@ -8,6 +8,7 @@
 // Priority: Low - Post-MVP feature for expanded gameplay depth
 // #include "Combat/WeaponComponent.h"
 #include "AdastreaLog.h"
+#include "AdastreaHUD.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputAction.h"
@@ -521,6 +522,18 @@ void USpaceshipControlsComponent::HandleSpeed(const FInputActionValue& Value)
 	if (FMath::IsNearlyZero(ScrollValue))
 	{
 		return;
+	}
+
+	// The HUD layout editor uses the wheel to scale panels.
+	if (const APawn* Pawn = Cast<APawn>(GetOwner()))
+	{
+		if (const APlayerController* PC = Cast<APlayerController>(Pawn->GetController()))
+		{
+			if (const AAdastreaHUD* HUD = Cast<AAdastreaHUD>(PC->GetHUD()); HUD && HUD->bHudEditMode)
+			{
+				return;
+			}
+		}
 	}
 
 	if (ScrollValue > 0.0f)

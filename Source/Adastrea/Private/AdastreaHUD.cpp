@@ -169,6 +169,12 @@ void AAdastreaHUD::DrawHUD()
 
 	SyncShipWidgetsForMap(PC);
 
+	// Another screen took over (it owns the cursor now): drop out of the HUD layout editor.
+	if (bHudEditMode && (IsOtherScreenOpen() || bShowPauseMenu || !Cast<ASpaceship>(PC->GetPawn())))
+	{
+		SetHudEditMode(false);
+	}
+
 	// Full-screen sector map (toggled by M) draws over everything.
 		if (bShowMap)
 		{
@@ -333,6 +339,9 @@ void AAdastreaHUD::DrawHUD()
 
 	// ---- Jump gates: world markers + approach prompt ----
 	DrawJumpGateMarkers(PC, Ship);
+
+	// ---- HUD layout editor (H): outlines and drag/scale handling over the cockpit panels ----
+	DrawHudLayoutEditor(PC);
 
 	const FVector P = Ship->GetActorLocation();
 

@@ -30,6 +30,19 @@ enum class EAdastreaMapView : uint8
 	Universe
 };
 
+/** Cockpit flight HUD panels the player can move and scale in the layout editor (H). */
+enum class EHudElement : uint8
+{
+	HeadingTape,
+	Ident,
+	Mining,
+	Defence,
+	Propulsion,
+	Docking,
+	DroneHint,
+	Count
+};
+
 /**
  * Adastrea in-game HUD.
  *
@@ -404,7 +417,53 @@ public:
 	/** Draw the full station overview panel (power/shields/crew/capabilities). */
 	void DrawStationInfoScreen(APlayerController* PC, ASpaceStation* Station, const FVector& ObserverPos);
 
+	// ========================
+	// HUD LAYOUT EDITOR (H while flying; AdastreaHUD_Layout.cpp)
+	// Drag a cockpit panel to move it, mouse wheel over it to scale it, right-click
+	// to reset it, Home to reset all. Saved to GameUserSettings.ini.
+	// ========================
+
+	/** Whether the layout editor is open. */
+	UPROPERTY(BlueprintReadOnly, Category="HUD|Layout")
+	bool bHudEditMode = false;
+
+	UFUNCTION(BlueprintCallable, Category="HUD|Layout")
+	void SetHudEditMode(bool bEnable);
+
+	/** Put every panel back at its default position and size. */
+	UFUNCTION(BlueprintCallable, Category="HUD|Layout")
+	void ResetHudLayout();
+
+	/** Apply a panel's saved offset/scale to everything drawn until EndHudElement. */
+	void BeginHudElement(EHudElement Element);
+	void EndHudElement();
+
+	/** Outlines, labels and mouse handling for the layout editor (drawn over the flight HUD). */
+	void DrawHudLayoutEditor(APlayerController* PC);
+
 private:
+	/** Player offset (1080p layout pixels) and scale for one cockpit panel. */
+	struct FHudElementLayout
+	{
+		FVector2D Offset = FVector2D::ZeroVector;
+		float Scale = 1.0f;
+	};
+	FHudElementLayout HudLayout[static_cast<int32>(EHudElement::Count)];
+	bool bHudLayoutLoaded = false;
+
+	/** Bit per EHudElement drawn this frame (the editor shows placeholders for the rest). */
+	uint32 HudElementsDrawn = 0;
+
+	/** Panel being dragged (Count = none), and where the drag started. */
+	EHudElement HudDragElement = EHudElement::Count;
+	FVector2D HudDragStartMouse = FVector2D::ZeroVector;
+	FVector2D HudDragStartOffset = FVector2D::ZeroVector;
+
+	void LoadHudLayout();
+	void SaveHudLayout() const;
+
+	/** On-screen rect of a panel with its layout applied. */
+	void GetHudElementRect(EHudElement Element, FVector2D& OutMin, FVector2D& OutMax) const;
 	/** Last-frame shield/hull values and hit-flash timers for the cockpit HUD damage flash. */
 	float LastHudShield = -1.0f;
 	float LastHudHull = -1.0f;
