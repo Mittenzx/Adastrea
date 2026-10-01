@@ -3,6 +3,8 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/PointLightComponent.h"
+#include "Materials/MaterialInstanceDynamic.h"
 #include "Engine/StaticMesh.h"
 #include "Materials/MaterialInterface.h"
 #include "UObject/ConstructorHelpers.h"
@@ -12,6 +14,21 @@ namespace EscapePodTuning
 	/** Seconds of ejection burn before the pod turns for its pickup. */
 	constexpr float EjectSeconds = 1.2f;
 	constexpr float EjectKick = 2500.0f;
+
+	/** Distress beacon: blue, a quick double flash every BeaconPeriod seconds. */
+	const FLinearColor BeaconColour(0.05f, 0.2f, 1.0f);
+	constexpr float BeaconPeriod = 1.4f;
+	constexpr float BeaconLensIntensity = 25.0f;
+	constexpr float BeaconLightIntensity = 25000.0f;   // cd
+	constexpr float BeaconLightRadius = 4000.0f;
+
+	/** 0..1 beacon brightness at time T: two short flashes per period, a faint glow between. */
+	float BeaconPulse(float T)
+	{
+		const float Phase = FMath::Fmod(T, BeaconPeriod) / BeaconPeriod;
+		auto Flash = [](float P, float At) { return FMath::Exp(-FMath::Square((P - At) / 0.035f)); };
+		return FMath::Max(0.08f, FMath::Max(Flash(Phase, 0.1f), Flash(Phase, 0.24f)));
+	}
 }
 
 AEscapePod::AEscapePod()
@@ -33,7 +50,7 @@ AEscapePod::AEscapePod()
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> ConeMesh(TEXT("/Engine/BasicShapes/Cone.Cone"));
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> HullMat(TEXT("/Game/Materials/M_Mining_Hull.M_Mining_Hull"));
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> LampMat(TEXT("/Game/Materials/M_NavLights.M_NavLights"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> BeaconMat(TEXT("/AdastreaShips/Materials/Interiors/M_PropBeacon.M_PropBeacon"));
 
 	auto MakePart = [this](const TCHAR* Name, UStaticMesh* Mesh, UMaterialInterface* Mat)
 	{
@@ -59,10 +76,18 @@ AEscapePod::AEscapePod()
 	Thruster->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f));
 	Thruster->SetRelativeScale3D(FVector(0.8f, 0.8f, 0.6f));
 
-	Beacon = MakePart(TEXT("Beacon"), SphereMesh.Object, LampMat.Object);
-	Beacon->SetRelativeLocation(FVector(0.0f, 0.0f, 85.0f));
-	Beacon->SetRelativeScale3D(FVector(0.35f));
+	Beacon = MakePart(TEXT("Beacon"), SphereMesh.Object, BeaconMat.Object);
+	Beacon->SetRelativeLocation(FVector(0.0f, 0.0f, 90.0f));
+	Beacon->SetRelativeScale3D(FVector(0.5f));
 	Beacon->SetCastShadow(false);
+
+	BeaconLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("BeaconLight"));
+	BeaconLight->SetupAttachment(Beacon);
+	BeaconLight->SetLightColor(EscapePodTuning::BeaconColour);
+	BeaconLight->SetIntensityUnits(ELightUnits::Candelas);
+	BeaconLight->SetIntensity(0.0f);
+	BeaconLight->SetAttenuationRadius(EscapePodTuning::BeaconLightRadius);
+	BeaconLight->SetCastShadows(false);
 
 	CameraArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraArm"));
 	CameraArm->SetupAttachment(Root);
@@ -74,6 +99,16 @@ AEscapePod::AEscapePod()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(CameraArm, USpringArmComponent::SocketName);
+}
+
+void AEscapePod::BeginPlay()
+{
+	Super::BeginPlay();
+	BeaconMID = Beacon->CreateDynamicMaterialInstance(0);
+	if (BeaconMID)
+	{
+		BeaconMID->SetVectorParameterValue(TEXT("Color"), EscapePodTuning::BeaconColour);
+	}
 }
 
 void AEscapePod::Launch(const FVector& InheritedVelocity, const FVector& Up)
@@ -98,6 +133,13 @@ void AEscapePod::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	StateTime += DeltaSeconds;
+
+	const float Pulse = EscapePodTuning::BeaconPulse(GetWorld()->GetTimeSeconds());
+	if (BeaconMID)
+	{
+		BeaconMID->SetScalarParameterValue(TEXT("Intensity"), EscapePodTuning::BeaconLensIntensity * Pulse);
+	}
+	BeaconLight->SetIntensity(EscapePodTuning::BeaconLightIntensity * Pulse);
 
 	switch (State)
 	{

@@ -5,6 +5,8 @@
 #include "EscapePod.generated.h"
 
 class UCameraComponent;
+class UMaterialInstanceDynamic;
+class UPointLightComponent;
 class USpringArmComponent;
 class UStaticMeshComponent;
 
@@ -20,7 +22,7 @@ enum class EEscapePodState : uint8
 };
 
 /**
- * The player's escape pod: a small drone that carries the pilot from a disabled ship
+ * The player's escape pod: a small drone with a pulsing blue distress beacon that carries the pilot from a disabled ship
  * to a friendly station or ship. The player possesses it (the camera follows it) but
  * has no controls; UPlayerRescueSubsystem sets where it goes.
  */
@@ -67,8 +69,17 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category="Escape Pod")
 	TObjectPtr<UStaticMeshComponent> Thruster;
 
+	/** Blue distress beacon: pulses so the pod can be spotted against dark hulls and space. */
 	UPROPERTY(VisibleAnywhere, Category="Escape Pod")
 	TObjectPtr<UStaticMeshComponent> Beacon;
+
+	UPROPERTY(VisibleAnywhere, Category="Escape Pod")
+	TObjectPtr<UPointLightComponent> BeaconLight;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UMaterialInstanceDynamic> BeaconMID;
+
+	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleAnywhere, Category="Escape Pod")
 	TObjectPtr<USpringArmComponent> CameraArm;
