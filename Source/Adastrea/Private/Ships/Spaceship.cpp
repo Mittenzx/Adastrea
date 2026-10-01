@@ -296,6 +296,27 @@ void ASpaceship::PossessedBy(AController* NewController)
         NewController ? *NewController->GetName() : TEXT("nullptr"));
 }
 
+void ASpaceship::UnPossessed()
+{
+    // Take our priority-10 mapping context off the player before letting go. Every
+    // ship adds its own, all mapping the same keys at the same priority; one left
+    // behind by a swapped-out (even destroyed) ship can win WASD, mouse and R/F, and
+    // the ship now being flown gets no input at all.
+    if (APlayerController* PC = Cast<APlayerController>(GetController()))
+    {
+        if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
+            ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
+        {
+            if (RuntimeInputMappingContext)
+            {
+                Subsystem->RemoveMappingContext(RuntimeInputMappingContext);
+                UE_LOG(LogAdastreaInput, Log, TEXT("ASpaceship: Removed runtime input mapping context from %s"), *GetName());
+            }
+        }
+    }
+    Super::UnPossessed();
+}
+
 void ASpaceship::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
