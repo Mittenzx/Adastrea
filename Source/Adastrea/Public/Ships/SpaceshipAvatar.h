@@ -115,6 +115,10 @@ protected:
 	// --- Ragdoll (AAdastreaCharacter) ---
 	virtual void OnRagdollChanged(bool bRagdoll) override;
 	virtual FVector GetRagdollInheritVelocity() const override { return MoveVelocity; }
+	virtual FVector GetLocomotionVelocity() const override { return MoveVelocity; }
+
+	/** Crouch (C) is a slower walk here, not CharacterMovement's crouch: pose it too. */
+	virtual bool WantsCrouchPose() const override { return bCrouchingSpeed; }
 
 	/** View to return to when the ragdoll ends (ragdolling forces third-person). */
 	bool bFirstPersonBeforeRagdoll = false;

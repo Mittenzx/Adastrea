@@ -1,11 +1,12 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "Characters/AdastreaCharacter.h"
+#include "Characters/AdastreaLocomotionAnimInstance.h"
+#include "Animation/BlendSpace.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerController.h"
-#include "Animation/AnimInstance.h"
 #include "Engine/SkeletalMesh.h"
 #include "Engine/World.h"
 #include "EngineUtils.h"
@@ -25,8 +26,12 @@ AAdastreaCharacter::AAdastreaCharacter()
 	// physics asset (PA_Mannequin), which is what the ragdoll simulates.
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> MannyMesh(
 		TEXT("/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"));
-	static ConstructorHelpers::FClassFinder<UAnimInstance> MannyAnim(
-		TEXT("/Game/Characters/Mannequins/Anims/Unarmed/ABP_Unarmed"));
+	static ConstructorHelpers::FObjectFinder<UBlendSpace> StandBlendSpace(
+		TEXT("/Game/Characters/Mannequins/Anims/Unarmed/BS_Idle_Walk_Run.BS_Idle_Walk_Run"));
+	static ConstructorHelpers::FObjectFinder<UBlendSpace> CrouchBlendSpace(
+		TEXT("/Game/Characters/Mannequins/Anims/Crouch/BS_MM_CrouchStrafe.BS_MM_CrouchStrafe"));
+	StandLocomotion = StandBlendSpace.Object;
+	CrouchLocomotion = CrouchBlendSpace.Object;
 
 	if (USkeletalMeshComponent* Body = GetMesh())
 	{
@@ -34,10 +39,9 @@ AAdastreaCharacter::AAdastreaCharacter()
 		{
 			Body->SetSkeletalMeshAsset(MannyMesh.Object);
 		}
-		if (MannyAnim.Succeeded())
-		{
-			Body->SetAnimInstanceClass(MannyAnim.Class);
-		}
+		// Code-driven locomotion (no Animation Blueprint graph): see UAdastreaLocomotionAnimInstance.
+		Body->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+		Body->SetAnimInstanceClass(UAdastreaLocomotionAnimInstance::StaticClass());
 		// Feet on the capsule bottom; Mannequin assets face +Y, actors face +X.
 		Body->SetRelativeLocationAndRotation(
 			FVector(0.0f, 0.0f, -GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight()),
@@ -82,6 +86,7 @@ void AAdastreaCharacter::EnterRagdoll(FVector Impulse, FName HitBone)
 
 	if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
 	{
+		PreRagdollMovementMode = MoveComp->MovementMode;
 		MoveComp->StopMovementImmediately();
 		MoveComp->DisableMovement();
 	}
@@ -147,11 +152,9 @@ void AAdastreaCharacter::ExitRagdoll()
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
 	{
-		// Subclasses that drive movement themselves keep it off (see ASpaceshipAvatar).
-		if (MoveComp->IsComponentTickEnabled())
-		{
-			MoveComp->SetMovementMode(MOVE_Falling);
-		}
+		// Back to whatever it was doing: walking/falling bodies land on their own, and
+		// subclasses that drive movement themselves get MOVE_None back.
+		MoveComp->SetMovementMode(PreRagdollMovementMode == MOVE_None ? MOVE_None : MOVE_Falling);
 	}
 
 	OnRagdollChanged(false);

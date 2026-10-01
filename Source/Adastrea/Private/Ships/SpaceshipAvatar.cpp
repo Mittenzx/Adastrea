@@ -138,8 +138,11 @@ void ASpaceshipAvatar::SetBodyVisible(bool bVisible)
 	}
 	if (GetMesh())
 	{
-		GetMesh()->SetVisibility(bVisible, true);
-		GetMesh()->SetHiddenInGame(!bVisible, true);
+		// First person hides the body from the player's own camera only (owner-no-see),
+		// so it still casts its shadow on the deck and other players/cameras see it.
+		GetMesh()->SetVisibility(true, true);
+		GetMesh()->SetHiddenInGame(false, true);
+		GetMesh()->SetOwnerNoSee(!bVisible);
 	}
 }
 
@@ -304,13 +307,6 @@ void ASpaceshipAvatar::Tick(float DeltaSeconds)
 		FootstepDistance = 0.0f;
 	}
 	PendingMoveInput = FVector2D::ZeroVector;
-
-	// CharacterMovement doesn't run here, but GetVelocity() and the body's anim
-	// blueprint read its Velocity, so publish the hand-rolled one.
-	if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
-	{
-		MoveComp->Velocity = MoveVelocity;
-	}
 
 	// Hold the deck in either view — third-person walks the same stairs and ramps.
 	if (CurrentInterior || bWalkingStation)
