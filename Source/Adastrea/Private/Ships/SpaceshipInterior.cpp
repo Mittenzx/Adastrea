@@ -81,6 +81,7 @@ ASpaceshipInterior::ASpaceshipInterior()
         FloorCollision->SetCollisionObjectType(ECC_WorldStatic);
         FloorCollision->SetCollisionResponseToAllChannels(ECR_Ignore);
         FloorCollision->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
+        FloorCollision->SetCollisionResponseToChannel(ECC_PhysicsBody, ECR_Block); // ragdolls land on the deck
 
     // Four thin walls enclosing the walkable footprint (real collision, same reasoning
     // as FloorCollision — see header comment).
@@ -92,6 +93,7 @@ ASpaceshipInterior::ASpaceshipInterior()
         Wall->SetCollisionObjectType(ECC_WorldStatic);
         Wall->SetCollisionResponseToAllChannels(ECR_Ignore);
         Wall->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
+        Wall->SetCollisionResponseToChannel(ECC_PhysicsBody, ECR_Block);
         return Wall;
     };
     WallNorth = MakeWall(TEXT("WallNorth"));
@@ -488,7 +490,9 @@ void ASpaceshipInterior::SetWalkCollisionEnabled(bool bEnabled)
 {
     if (WalkCollision)
     {
-        WalkCollision->SetCollisionEnabled(bEnabled ? ECollisionEnabled::QueryOnly : ECollisionEnabled::NoCollision);
+        // Physics as well as queries: the avatar only sweeps, but ragdolled bodies
+        // are simulated and would sink through a query-only deck.
+        WalkCollision->SetCollisionEnabled(bEnabled ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision);
     }
 }
 
@@ -739,6 +743,7 @@ void ASpaceshipInterior::MountInteriorParts(FString Prefix, FString Family, cons
             Col->SetCollisionObjectType(ECC_WorldStatic);
             Col->SetCollisionResponseToAllChannels(ECR_Ignore);
             Col->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
+            Col->SetCollisionResponseToChannel(ECC_PhysicsBody, ECR_Block); // ragdolls land on the deck
             Col->SetCollisionEnabled(ECollisionEnabled::NoCollision);
             WalkCollision = Col;
         }

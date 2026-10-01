@@ -138,8 +138,11 @@ void ASpaceshipAvatar::SetBodyVisible(bool bVisible)
 	}
 	if (GetMesh())
 	{
-		GetMesh()->SetVisibility(bVisible, true);
-		GetMesh()->SetHiddenInGame(!bVisible, true);
+		// First person hides the body from the player's own camera only (owner-no-see),
+		// so it still casts its shadow on the deck and other players/cameras see it.
+		GetMesh()->SetVisibility(true, true);
+		GetMesh()->SetHiddenInGame(false, true);
+		GetMesh()->SetOwnerNoSee(!bVisible);
 	}
 }
 
@@ -231,6 +234,12 @@ void ASpaceshipAvatar::UnPossessed()
 void ASpaceshipAvatar::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	// Limp: the base class keeps the capsule on the pelvis; no walking or floor snap.
+	if (IsRagdoll())
+	{
+		return;
+	}
 
 	// Keep the interactable prompt current every frame.
 	if (APlayerController* PC = Cast<APlayerController>(GetController()))
@@ -670,7 +679,7 @@ void ASpaceshipAvatar::UpdateInteractableScan(APlayerController* PC)
 
 void ASpaceshipAvatar::Interact()
 {
-	if (!CurrentInteractable)
+	if (!CurrentInteractable || IsRagdoll())
 	{
 		return;
 	}
@@ -690,6 +699,10 @@ void ASpaceshipAvatar::Interact()
 
 void ASpaceshipAvatar::SitDown()
 {
+	// Get up first: the helm swap parks this actor, and a still-simulating body
+	// would be left lying on the deck.
+	ExitRagdoll();
+
 	// Return possession to the ship at its saved cockpit transform.
 	if (AAdastreaPlayerController* PC = Cast<AAdastreaPlayerController>(GetController()))
 	{
@@ -704,6 +717,33 @@ void ASpaceshipAvatar::SitDown()
 		else
 		{
 			UE_LOG(LogAdastrea, Warning, TEXT("SpaceshipAvatar: SitDown but no SourceShip to return to."));
+		}
+	}
+}
+
+void ASpaceshipAvatar::OnRagdollChanged(bool bRagdoll)
+{
+	MoveVelocity = FVector::ZeroVector;
+	PendingMoveInput = FVector2D::ZeroVector;
+	if (bRagdoll)
+	{
+		// First-person hides the body and would put the camera inside the falling
+		// head; watch the fall from the third-person boom instead.
+		bFirstPersonBeforeRagdoll = bFirstPersonView;
+		if (bFirstPersonView)
+		{
+			SetFirstPersonView(false);
+		}
+	}
+	else
+	{
+		if (bFirstPersonBeforeRagdoll)
+		{
+			SetFirstPersonView(true);
+		}
+		if (CurrentInterior || bWalkingStation)
+		{
+			SnapToFloor();
 		}
 	}
 }
