@@ -138,15 +138,17 @@ sessions happens in `AGENT_BOARD.md`.
   performance haven't been checked interactively, and the HUD shows object names instead of
   station/ship names. See the known-issues list in
   [PACKAGING.md](09-SETUP_GUIDES/PACKAGING.md#known-issues--remaining-blockers)
-- **What to build next is an open product decision.** Combat is the most likely candidate, since
-  targeting, the defence HUD and turret modules are already in place.
+- **Combat is being rebuilt (lean, X4-style).** Milestone 1 is done: fixed forward guns (hold LMB),
+  bolts with hit flashes, shields that soak damage and recharge, armor, a lead pip and hit marker,
+  and shield/hull bars on the locked target. Test it in `/Game/Maps/CombatTest` (training-target
+  dummies respawn 5 s after being destroyed; `LockTarget <name>` locks from the console). Next:
+  hostile AI that shoots back, ship destruction and debris, station turrets. The old `Combat/`
+  module archived in `e155151d` is reference only.
 
 ---
 
 ## ⚠️ Known issues and polish backlog
 
-- Shields have no runtime pool. The HUD shield bar shows the DataAsset's rated `ShieldStrength`
-  as full
 - Two interior-contract pytest tests are order-sensitive (use `-p no:randomly`)
 - `test_event_sfx_hooks.py::TestHookPlacement::test_editor_widget_hooks` fails: it still checks
   `ModuleListItemWidget.cpp`, which was removed with the old Station Editor panels. The UI hover
@@ -165,7 +167,7 @@ not dead code:
 
 | System | Status |
 |--------|--------|
-| Combat | Complete, disabled (likely next, see above) |
+| Combat | Being rebuilt: guns, shields and damage live (see Open work); AI combat, destruction, turrets next |
 | Navigation/Autopilot | Complete, disabled |
 | Quest System | Complete, disabled |
 | Faction Diplomacy | Complete, disabled |

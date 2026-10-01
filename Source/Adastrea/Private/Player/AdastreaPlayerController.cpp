@@ -783,6 +783,20 @@ void AAdastreaPlayerController::HandleNearestTarget()
 	UE_LOG(LogAdastrea, Log, TEXT("NEAREST TARGET: %s"), *LockedTargetActor->GetName());
 }
 
+void AAdastreaPlayerController::LockTarget(const FString& NameFragment)
+{
+	for (AActor* Candidate : GetCycleTargets())
+	{
+		if (NameFragment.IsEmpty() || Candidate->GetName().Contains(NameFragment))
+		{
+			LockedTargetActor = Candidate;
+			UE_LOG(LogAdastrea, Log, TEXT("LockTarget: %s"), *Candidate->GetName());
+			return;
+		}
+	}
+	UE_LOG(LogAdastrea, Log, TEXT("LockTarget: nothing in range matches '%s'"), *NameFragment);
+}
+
 void AAdastreaPlayerController::HandleClearTarget()
 {
 	if (IsControllingSpaceship())

@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "AdastreaHUD.h"
+#include "Combat/ShipHealthComponent.h"
 #include "AdastreaGameMode.h"
 #include "AdastreaHUDStyle.h"
 #include "AdastreaHUD_MapStyle.h"
@@ -340,6 +341,9 @@ void AAdastreaHUD::DrawHUD()
 	// ---- Jump gates: world markers + approach prompt ----
 	DrawJumpGateMarkers(PC, Ship);
 
+	// ---- Combat: gun crosshair, lead pip, hit marker ----
+	DrawCombatOverlay(PC, Ship);
+
 	// ---- HUD layout editor (H): outlines and drag/scale handling over the cockpit panels ----
 	DrawHudLayoutEditor(PC);
 
@@ -487,10 +491,30 @@ void AAdastreaHUD::DrawHUD()
 				DrawText(FString::Printf(TEXT("%d  (%d docks)"), ModuleCount, Docks),
 					kCargo, VX, PY + 84.0f, HudType::Font(), HudType::Label);
 			}
-			else if (Cast<ASpaceship>(LockedTarget))
+			else if (const ASpaceship* TgtShipStats = Cast<ASpaceship>(LockedTarget))
 			{
-				DrawText(TEXT("TYPE"), kLabel, LX, PY + 84.0f, HudType::Font(), HudType::Label);
-				DrawText(TEXT("Ship"), kCargo, VX, PY + 84.0f, HudType::Font(), HudType::Label);
+				// Shield and hull bars, so you can watch a target go down.
+				const UShipHealthComponent* TgtHealth = TgtShipStats->HealthComponent;
+				if (TgtHealth && TgtHealth->IsDestroyed())
+				{
+					DrawText(TEXT("STATUS"), kLabel, LX, PY + 84.0f, HudType::Font(), HudType::Label);
+					DrawText(TEXT("DESTROYED"), FLinearColor(1.0f, 0.35f, 0.3f, 1.0f), VX, PY + 84.0f, HudType::Font(), HudType::Label);
+				}
+				else
+				{
+					const float ShieldMax = TgtHealth ? TgtHealth->GetMaxShield() : 0.0f;
+					const float HullMax = FMath::Max(TgtShipStats->GetMaxHullIntegrity(), 1.0f);
+					auto Bar = [&](const TCHAR* Label, float Y, float Value, float Max, const FLinearColor& Col)
+					{
+						const float BW = PW - (VX - PX) - 14.0f;
+						const float Frac = Max > 0.0f ? FMath::Clamp(Value / Max, 0.0f, 1.0f) : 0.0f;
+						DrawText(Label, kLabel, LX, PY + Y, HudType::Font(), HudType::Label);
+						DrawRect(FLinearColor(1.0f, 1.0f, 1.0f, 0.08f), VX, PY + Y + 3.0f, BW, 10.0f);
+						DrawRect(Col, VX, PY + Y + 3.0f, BW * Frac, 10.0f);
+					};
+					Bar(TEXT("SHIELD"), 84.0f, TgtHealth ? TgtHealth->GetShield() : 0.0f, ShieldMax, FLinearColor(0.3f, 0.75f, 1.0f, 0.9f));
+					Bar(TEXT("HULL"), 104.0f, TgtShipStats->GetCurrentHullIntegrity(), HullMax, FLinearColor(1.0f, 0.62f, 0.2f, 0.9f));
+				}
 			}
 			else if (const AAsteroid* Rock = Cast<AAsteroid>(LockedTarget))
 			{

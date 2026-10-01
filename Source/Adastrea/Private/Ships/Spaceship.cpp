@@ -32,6 +32,8 @@
 #include "Drones/DroneBayComponent.h"
 #include "Mining/Asteroid.h"
 #include "Audio/ShipEngineAudioComponent.h"
+#include "Combat/ShipHealthComponent.h"
+#include "Combat/ShipWeaponComponent.h"
 #include "Audio/AudioEventLibrary.h"
 #include "TimerManager.h"
 #include "Ships/ExteriorDressingComponent.h"
@@ -178,6 +180,9 @@ ASpaceship::ASpaceship()
     DroneBay->SetupAttachment(ShipRoot);
     DroneBay->SetRelativeLocation(FVector(0.0f, 0.0f, -150.0f));
 
+    HealthComponent = CreateDefaultSubobject<UShipHealthComponent>(TEXT("HealthComponent"));
+    WeaponComponent = CreateDefaultSubobject<UShipWeaponComponent>(TEXT("WeaponComponent"));
+
     // Engine voice. Attached to the hull mesh; at BeginPlay it moves to the mesh bounds'
     // centre so AI engine range is measured from the hull surface.
     EngineAudio = CreateDefaultSubobject<UShipEngineAudioComponent>(TEXT("EngineAudio"));
@@ -298,6 +303,8 @@ void ASpaceship::PossessedBy(AController* NewController)
 
 void ASpaceship::UnPossessed()
 {
+    FireStopped();
+
     // Take our priority-10 mapping context off the player before letting go. Every
     // ship adds its own, all mapping the same keys at the same priority; one left
     // behind by a swapped-out (even destroyed) ship can win WASD, mouse and R/F, and
@@ -528,6 +535,12 @@ void ASpaceship::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
         {
             EnhancedInputComponent->BindAction(LockAsteroidAction, ETriggerEvent::Started, this, &ASpaceship::LockAsteroid);
         }
+        if (FireAction)
+        {
+            EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &ASpaceship::FireStarted);
+            EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Completed, this, &ASpaceship::FireStopped);
+            EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Canceled, this, &ASpaceship::FireStopped);
+        }
     }
 }
 
@@ -582,6 +595,38 @@ void ASpaceship::LockAsteroid()
     else
     {
         UE_LOG(LogAdastreaShips, Log, TEXT("LockAsteroid (%s): this ship has no mining drones"), *GetName());
+    }
+}
+
+void ASpaceship::FireStarted()
+{
+    if (!WeaponComponent || bIsDocked || bIsDocking)
+    {
+        return;
+    }
+    // LMB also picks targets (Tab targeting mode) and clicks the map and menus.
+    if (const AAdastreaPlayerController* PC = Cast<AAdastreaPlayerController>(GetController()))
+    {
+        if (PC->IsTargetingModeActive())
+        {
+            return;
+        }
+        if (const AAdastreaHUD* HUD = Cast<AAdastreaHUD>(PC->GetHUD()))
+        {
+            if (HUD->IsOtherScreenOpen() || HUD->bShowPauseMenu)
+            {
+                return;
+            }
+        }
+    }
+    WeaponComponent->SetTriggerHeld(true);
+}
+
+void ASpaceship::FireStopped()
+{
+    if (WeaponComponent)
+    {
+        WeaponComponent->SetTriggerHeld(false);
     }
 }
 
@@ -673,6 +718,14 @@ void ASpaceship::EnsureOwnInputActionsAndContext()
                     LockAsteroidAction->ValueType = EInputActionValueType::Boolean;
                 }
                 RuntimeInputMappingContext->MapKey(LockAsteroidAction, EKeys::T);
+
+                // Guns: hold LMB. (In Tab targeting mode LMB picks targets instead; see FireStarted.)
+                if (!FireAction)
+                {
+                    FireAction = NewObject<UInputAction>(this, TEXT("IA_Fire_Runtime"));
+                    FireAction->ValueType = EInputActionValueType::Boolean;
+                }
+                RuntimeInputMappingContext->MapKey(FireAction, EKeys::LeftMouseButton);
     }
 
     // Add the mapping context to the local player's input subsystem

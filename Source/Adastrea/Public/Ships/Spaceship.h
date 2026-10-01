@@ -22,6 +22,8 @@ class ASpaceStationModule;
 class UUserWidget;
 class UCargoComponent;
 class UDroneBayComponent;
+class UShipHealthComponent;
+class UShipWeaponComponent;
 class UPlayerTraderComponent;
 class UShipEngineAudioComponent;
 class UShipUpgradeComponent;
@@ -90,6 +92,14 @@ public:
     // Ships have no beams; mining, gas, towing and cargo transfer are drone jobs.
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Drones")
     TObjectPtr<UDroneBayComponent> DroneBay;
+
+    // Shields and damage: shields soak hits and recharge, the rest goes to CurrentHullIntegrity.
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Combat")
+    TObjectPtr<UShipHealthComponent> HealthComponent;
+
+    // Fixed forward guns (LMB held). Aim by flying; they converge on the locked target.
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Combat")
+    TObjectPtr<UShipWeaponComponent> WeaponComponent;
 
     // Player trader component (credits, buy/sell)
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Trading")
@@ -459,6 +469,13 @@ public:
 
     UFUNCTION(Exec, BlueprintCallable, Category="Mining")
     void LockAsteroid();
+
+    /** Fire the forward guns (LMB, held). */
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat")
+    class UInputAction* FireAction;
+
+    void FireStarted();
+    void FireStopped();
 
     // Enhanced Input callbacks
     void Move(const FInputActionValue& Value);

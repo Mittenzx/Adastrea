@@ -195,6 +195,9 @@ public:
 	/** Flight HUD: on-screen markers for jump gates, and a prompt when one is close. */
 	void DrawJumpGateMarkers(APlayerController* PC, ASpaceship* Ship);
 
+	/** Flight HUD: gun crosshair, lead pip on the locked ship, hit marker (AdastreaHUD_Combat.cpp). */
+	void DrawCombatOverlay(APlayerController* PC, ASpaceship* Ship);
+
 	// ========================
 	// TRANSIENT MESSAGE (canvas)
 	// ========================
@@ -469,6 +472,10 @@ private:
 	float LastHudHull = -1.0f;
 	float ShieldHitFlash = 0.0f;
 	float HullHitFlash = 0.0f;
+
+	/** Combat overlay: the player's hit count last frame, and the hit-marker timer. */
+	int32 CombatLastHitCount = 0;
+	float CombatHitMarker = 0.0f;
 
 	/** The camera that renders the preview ship into ShipPreviewRT. */
 	UPROPERTY()
