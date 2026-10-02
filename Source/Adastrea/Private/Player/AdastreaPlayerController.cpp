@@ -994,7 +994,7 @@ void AAdastreaPlayerController::HandleTradeSellAll()
 	}
 	ASpaceship* Ship = GetControlledSpaceship();
 	ASpaceStation* Station = GetNearestTradableStation();
-	if (!H || !H->bShowTradeScreen || H->bBuyMode || !Ship || !Ship->CargoComponent || !Station || !Station->GetMarketplaceModule())
+	if (!H || !H->bShowTradeScreen || !Ship || !Ship->CargoComponent || !Station || !Station->GetMarketplaceModule())
 	{
 		return;
 	}
@@ -1003,11 +1003,10 @@ void AAdastreaPlayerController::HandleTradeSellAll()
 	{
 		return;
 	}
-	const int32 Held = Ship->CargoComponent->GetItemQuantity(Market->Inventory[H->SelectedTradeIndex].TradeItem);
-	if (Held > 0)
-	{
-		ExecuteTrade(Held);
-	}
+	// X: sell the whole stack in sell mode, buy as many as possible in buy mode.
+	// ExecuteTrade clamps MAX_int32 down to what the hold, credits and stock allow.
+	ExecuteTrade(H->bBuyMode ? MAX_int32
+		: FMath::Max(Ship->CargoComponent->GetItemQuantity(Market->Inventory[H->SelectedTradeIndex].TradeItem), 1));
 }
 
 void AAdastreaPlayerController::ExecuteTrade(int32 Quantity)
@@ -1039,9 +1038,43 @@ void AAdastreaPlayerController::ExecuteTrade(int32 Quantity)
 	{
 		return;
 	}
-	const bool bOK = H->bBuyMode
+	// Trade as many of the requested units as are possible (Q on 3 affordable buys 3),
+	// and tell the player what happened or why nothing did.
+	const FString ItemName = Item->ItemName.ToString();
+	if (H->bBuyMode)
+	{
+		FString Limit;
+		Quantity = AAdastreaHUD::GetMaxBuyQuantity(Ship->PlayerTraderComponent, Ship->CargoComponent, Market, Entry, Quantity, &Limit);
+		if (Quantity <= 0)
+		{
+			H->SetTradeMessage(Limit == TEXT("stock") ? FString::Printf(TEXT("%s is out of stock here"), *ItemName)
+				: Limit == TEXT("credits") ? FString::Printf(TEXT("Not enough credits for %s"), *ItemName)
+				: FString(TEXT("No room in your hold")), false);
+		}
+	}
+	else
+	{
+		Quantity = FMath::Min(Quantity, Ship->CargoComponent->GetItemQuantity(Item));
+		if (Quantity <= 0)
+		{
+			H->SetTradeMessage(FString::Printf(TEXT("You have no %s to sell"), *ItemName), false);
+		}
+	}
+	const int32 Total = Quantity <= 0 ? 0 : (H->bBuyMode
+		? Ship->PlayerTraderComponent->GetBuyCost(Market, Item, Quantity)
+		: Ship->PlayerTraderComponent->GetSellValue(Market, Item, Quantity));
+	const bool bOK = Quantity > 0 && (H->bBuyMode
 		? Ship->PlayerTraderComponent->BuyItem(Market, Item, Quantity, Ship->CargoComponent)
-		: Ship->PlayerTraderComponent->SellItem(Market, Item, Quantity, Ship->CargoComponent);
+		: Ship->PlayerTraderComponent->SellItem(Market, Item, Quantity, Ship->CargoComponent));
+	if (bOK)
+	{
+		H->SetTradeMessage(FString::Printf(TEXT("%s %d x %s for %s cr"), H->bBuyMode ? TEXT("Bought") : TEXT("Sold"),
+			Quantity, *ItemName, *FText::AsNumber(Total).ToString()), true);
+	}
+	else if (Quantity > 0)
+	{
+		H->SetTradeMessage(FString::Printf(TEXT("Trade failed: %s"), *ItemName), false);
+	}
 	// Denied covers can't afford, no stock, no hold space and nothing to sell.
 	UAudioEventLibrary::PlayEvent2D(this,
 		!bOK ? FName(TEXT("Trade.Denied")) : (H->bBuyMode ? FName(TEXT("Trade.Buy")) : FName(TEXT("Trade.Sell"))),

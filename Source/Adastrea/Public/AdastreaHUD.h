@@ -254,7 +254,7 @@ public:
 
 	/** Show the trading screen (set when docked at a market). */
 	UFUNCTION(BlueprintCallable, Category="HUD|Trading")
-	void ShowTradeScreen() { bShowTradeScreen = true; SelectedTradeIndex = 0; }
+	void ShowTradeScreen() { bShowTradeScreen = true; SelectedTradeIndex = 0; TradeMessage.Reset(); }
 
 	/** Hide the trading screen (set when undocked / closing). */
 	UFUNCTION(BlueprintCallable, Category="HUD|Trading")
@@ -302,6 +302,17 @@ public:
 
 	/** Toggle buy/sell mode. */
 	void ToggleBuySellMode() { bBuyMode = !bBuyMode; }
+
+	/**
+	 * Most units of Entry's item the player can buy right now, capped at Wanted:
+	 * limited by station stock, credits and free hold space. OutLimit names
+	 * whichever of those capped it ("stock", "credits", "hold space").
+	 */
+	static int32 GetMaxBuyQuantity(const class UPlayerTraderComponent* Trader, const class UCargoComponent* Cargo,
+		class UMarketDataAsset* Market, const struct FMarketInventoryEntry& Entry, int32 Wanted, FString* OutLimit = nullptr);
+
+	/** Show a one-line trade result on the trade screen for a few seconds. */
+	void SetTradeMessage(const FString& Message, bool bSuccess);
 
 	// ========================
 	// OUTFITTING SCREEN (docked; buy, fit and sell ship upgrades at the station's
@@ -535,6 +546,11 @@ private:
 		int32 ShipSelectIndex = 0;
 	};
 	FMenuAudioState MenuAudioState;
+
+	/** Last trade result shown on the trade screen (SetTradeMessage). */
+	FString TradeMessage;
+	bool bTradeMessageOK = true;
+	double TradeMessageTime = -100.0;
 
 	/**
 	 * UI.Open / UI.Close when a canvas screen appears or goes away, UI.Hover when
