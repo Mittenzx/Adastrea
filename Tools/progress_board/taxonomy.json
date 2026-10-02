@@ -274,6 +274,10 @@
         {
           "text": "Bolt and impact-flash look pass",
           "done": false
+        },
+        {
+          "text": "Old war machines and minefields in the Graveyard: disable, take no prisoners",
+          "done": false
         }
       ]
     },
@@ -883,6 +887,10 @@
             {
               "text": "Cargo-transfer drones between ships",
               "done": false
+            },
+            {
+              "text": "Asteroid fields spawn the ores listed in the sector's resources",
+              "done": false
             }
           ]
         },
@@ -949,6 +957,14 @@
             {
               "text": "Show security and danger zones on the galaxy map",
               "done": false
+            },
+            {
+              "text": "Region tints and names on the universe map",
+              "done": false
+            },
+            {
+              "text": "Sector resources and POIs in the system map info panel",
+              "done": false
             }
           ]
         },
@@ -1002,10 +1018,46 @@
             },
             {
               "text": "Draw up a full galaxy plan, how many sectors, what resources, POI",
-              "done": false
+              "done": true
             },
             {
               "text": "sub divide galaxy into area's, decide on types of area, dangerous areas, what dangers",
+              "done": true
+            },
+            {
+              "text": "Regions, hazard ratings, resources and POIs in Galaxy.json (galaxy plan step 1)",
+              "done": false
+            },
+            {
+              "text": "Galaxy validation script: every raw resource has a sector, every sector a gate, every region reachable",
+              "done": false
+            },
+            {
+              "text": "Hand-build a level for each existing sector that has none yet",
+              "done": false
+            },
+            {
+              "text": "Wave 1 new systems: Meridian (food & habitat) and Halt (Syndicate toll gate)",
+              "done": false
+            },
+            {
+              "text": "Wave 1: add Nyx Storm and Thule Corona sectors",
+              "done": false
+            },
+            {
+              "text": "Hidden jump lanes (Sable Dark) that appear once discovered",
+              "done": false
+            },
+            {
+              "text": "New organisations for new systems (Meridian under the Compact, Halt/Brand under the Syndicate, Free Belts guilds)",
+              "done": false
+            },
+            {
+              "text": "Wave 2: Free Belts (Tamsin, Orrin) and Marches (Halt, Brand) filled out, ~40 sectors",
+              "done": false
+            },
+            {
+              "text": "Wave 3: Pale Expanse and Sable Dark in full, ~60 sectors",
               "done": false
             }
           ]
@@ -1034,6 +1086,22 @@
           "todo": [
             {
               "text": "Verify star dome and asteroids render in the packaged build",
+              "done": false
+            },
+            {
+              "text": "Hazard effects: radiation storm (shield drain, countdown waves)",
+              "done": false
+            },
+            {
+              "text": "Hazard effects: nebula (short sensor range, blank map beyond it)",
+              "done": false
+            },
+            {
+              "text": "Hazard effects: debris (hull damage at high speed)",
+              "done": false
+            },
+            {
+              "text": "Hazard effects: gravity tides, heat, gas storms (wave 2)",
               "done": false
             }
           ]
@@ -1306,6 +1374,10 @@
             {
               "text": "Combat mix: duck ambience during fights",
               "done": false
+            },
+            {
+              "text": "Ambience per hazard: radiation crackle, nebula hum, gas storm thunder",
+              "done": false
             }
           ]
         },
@@ -1446,6 +1518,121 @@
           "todo": [
             {
               "text": "Delete orphaned DataAssets (DA_Weapon_*, DA_Quest_*, ...) in the editor",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "art.spaceprops",
+          "name": "Space props & sector kits",
+          "status": "planned",
+          "summary": "Asteroids, ice, wrecks, derelicts, war platforms and pirate bases that hand-built sectors are made from.",
+          "paths": [
+            "SpaceProps",
+            "WreckField",
+            "Derelict"
+          ],
+          "words": [
+            "asteroid",
+            "asteroids",
+            "wreck field",
+            "derelict",
+            "debris"
+          ],
+          "todo": [
+            {
+              "text": "Asteroid meshes: 3 families (metal, rare metal, carbon/crystal), 4-5 shapes each, with LODs",
+              "done": false
+            },
+            {
+              "text": "Asteroid materials: an ore-vein variant per ore (iron, copper, titanium, cobalt, tungsten, platinum, uranium glow, carbon crystal)",
+              "done": false
+            },
+            {
+              "text": "Ice and comet field meshes + icy material (Tamsin, Meridian Reach, Cinder)",
+              "done": false
+            },
+            {
+              "text": "Wreck field debris kit: hull chunks, ribs, plating, scorched, reusing hull materials",
+              "done": false
+            },
+            {
+              "text": "Old-empire derelict ship: large hull in its own (non-Compact) style, explorable exterior",
+              "done": false
+            },
+            {
+              "text": "Old-war defence platform mesh and materials (Requiem, Graveyard)",
+              "done": false
+            },
+            {
+              "text": "Space mine mesh + armed/blinking material (Ashfall, Varos Gauntlet)",
+              "done": false
+            },
+            {
+              "text": "Pirate base exterior kit cobbled from salvage (Sable Dark, Lantern)",
+              "done": false
+            },
+            {
+              "text": "Small props: survey beacon, smuggler cache container, jump relay buoy",
+              "done": false
+            },
+            {
+              "text": "Gas skim zone visuals: gas pocket / cloud mesh and material (Kestrel Skim, Orrin)",
+              "done": false
+            },
+            {
+              "text": "Agriculture station look: greenhouse / farm ring module textures (Meridian, Lumen Shade)",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "art.spacefx",
+          "name": "Hazard VFX, nebulae & planets",
+          "status": "planned",
+          "summary": "Visuals for sector hazards (radiation, nebula, gas storms, heat) plus planets and star types.",
+          "paths": [
+            "SectorHazard",
+            "Nebula"
+          ],
+          "words": [
+            "nebula",
+            "radiation",
+            "hazard",
+            "vfx",
+            "niagara"
+          ],
+          "todo": [
+            {
+              "text": "Nebula volume and material: ionised blue (Beta Drift) and dark (Murk, Sable)",
+              "done": false
+            },
+            {
+              "text": "Radiation storm VFX + screen effect, with a countdown wave (Nyx pulsar, Thule)",
+              "done": false
+            },
+            {
+              "text": "Gas storm lightning / EMP burst VFX (Kestrel Skim, Orrin)",
+              "done": false
+            },
+            {
+              "text": "Heat shimmer and corona glare near hot stars (Thule Corona, Lumen Array)",
+              "done": false
+            },
+            {
+              "text": "Gravity tide visual: drifting dust streams (Corvid, Hollow)",
+              "done": false
+            },
+            {
+              "text": "Debris field dust and impact sparks at speed (Cinder, Ashfall, Halt Shoals)",
+              "done": false
+            },
+            {
+              "text": "Planet textures: gas giant Kestrel IV, garden world Meridian, dead fortress world Requiem, rogue mass Hollow",
+              "done": false
+            },
+            {
+              "text": "Star materials per class: pulsar (Nyx), blue B8V (Thule), binary (Corvid), red dwarf (Varos, Sable)",
               "done": false
             }
           ]

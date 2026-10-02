@@ -34,11 +34,17 @@ PR_RE = re.compile(r"Merge pull request #(\d+) from [^/\s]+/(\S+)")
 BULK_FILES = 250
 
 
-def git(*args):
+GIT_TIMEOUT = 180
+
+
+def git(*args, stdin=None):
     # Under pythonw (the always-on scheduled task) every console child would
     # flash its own window on each poll; CREATE_NO_WINDOW keeps git hidden.
+    # The timeout stops one hung git (index lock, AV scan) wedging the board.
     flags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
-    out = subprocess.run(["git", "-C", str(REPO), *args], capture_output=True, creationflags=flags)
+    out = subprocess.run(["git", "-C", str(REPO), *args], capture_output=True, creationflags=flags,
+                         input=stdin.encode() if stdin is not None else None,
+                         stdin=None if stdin is not None else subprocess.DEVNULL, timeout=GIT_TIMEOUT)
     return out.stdout.decode("utf-8", "replace")
 
 
@@ -146,20 +152,14 @@ def load_graph(ref):
     return pr_of, in_flight
 
 
-def build():
-    tax = json.loads(TAXONOMY.read_text(encoding="utf-8"))
-    flat = flatten(tax["nodes"])
-    rules = [(n["id"], Rule(n)) for n, _ in flat]
-    parent_of = {n["id"]: p for n, p in flat}
+# sha -> (date, author, subject, files). Commits never change, so each one is
+# read from git once; later rebuilds only fetch the commits that are new.
+COMMIT_CACHE = {}
+HITS_CACHE = {}  # sha -> node ids it was sorted into, plus "sig" for the rules
+LOG_FORMAT = "--pretty=format:\x1e%H\x1f%aI\x1f%an\x1f%s"
 
-    ref = main_ref()
-    pr_of, in_flight = load_graph(ref)
 
-    raw = git("log", "--branches", "--remotes", "--no-merges", "--name-only",
-              "--pretty=format:\x1e%H\x1f%aI\x1f%an\x1f%s")
-    commits = {}
-    node_commits = {n["id"]: set() for n, _ in flat}
-    unsorted = []
+def parse_log(raw):
     for block in raw.split("\x1e"):
         if not block.strip():
             continue
@@ -169,13 +169,49 @@ def build():
             continue
         sha, date, author, subject = parts
         files = [f.strip().lower() for f in rest.splitlines() if f.strip()]
+        COMMIT_CACHE[sha] = (date, author, subject, files)
+
+
+def load_commits():
+    shas = git("rev-list", "--branches", "--remotes", "--no-merges").split()
+    missing = [s for s in shas if s not in COMMIT_CACHE]
+    if len(missing) > 500:
+        parse_log(git("log", "--branches", "--remotes", "--no-merges", "--name-only", LOG_FORMAT))
+    elif missing:
+        parse_log(git("log", "--no-walk=unsorted", "--stdin", "--name-only", LOG_FORMAT,
+                      stdin="\n".join(missing) + "\n"))
+    return [s for s in shas if s in COMMIT_CACHE]
+
+
+def build():
+    tax = json.loads(TAXONOMY.read_text(encoding="utf-8"))
+    flat = flatten(tax["nodes"])
+    rules = [(n["id"], Rule(n)) for n, _ in flat]
+    parent_of = {n["id"]: p for n, p in flat}
+    # Sorting is the slow part; reuse each commit's result until the match
+    # rules change (ticking a to-do rewrites the file but not the rules).
+    sig = json.dumps([(n["id"], p, n.get("scopes"), n.get("paths"), n.get("words"), n.get("pathsOnly"))
+                      for n, p in flat])
+    if HITS_CACHE.get("sig") != sig:
+        HITS_CACHE.clear()
+        HITS_CACHE["sig"] = sig
+
+    ref = main_ref()
+    pr_of, in_flight = load_graph(ref)
+
+    commits = {}
+    node_commits = {n["id"]: set() for n, _ in flat}
+    unsorted = []
+    for sha in load_commits():
+        date, author, subject, files = COMMIT_CACHE[sha]
         if not files:  # empty bot commits ("Initial plan")
             continue
-        m = SCOPE_RE.match(subject)
-        scopes = {s.strip().lower() for s in m.group(1).split(",")} if m else set()
-        path_files = files if len(files) < BULK_FILES else []
-
-        hits = [nid for nid, rule in rules if rule.matches(scopes, subject, path_files)]
+        hits = HITS_CACHE.get(sha)
+        if hits is None:
+            m = SCOPE_RE.match(subject)
+            scopes = {s.strip().lower() for s in m.group(1).split(",")} if m else set()
+            path_files = files if len(files) < BULK_FILES else []
+            hits = HITS_CACHE[sha] = [nid for nid, rule in rules if rule.matches(scopes, subject, path_files)]
         if not hits:
             unsorted.append(sha)
         for nid in hits:
@@ -202,7 +238,6 @@ def build():
     return {
         "generated": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
         "main": ref,
-        "head": git("rev-parse", "--abbrev-ref", "HEAD").strip(),
         "github": GITHUB,
         "nodes": tax["nodes"],
         "unsorted": by_date(unsorted),
@@ -213,22 +248,36 @@ def build():
 # ---------------------------------------------------------------- server
 
 class Cache:
+    """Holds the last good board data. A background thread rebuilds it when
+    refs or taxonomy.json change, so requests never wait on git."""
+
     def __init__(self):
         self.lock = threading.Lock()
         self.key = None
         self.body = None
         self.etag = None
+        self.error = None
+
+    def refresh(self, force=False):
+        with self.lock:
+            key = ref_state() + str(TAXONOMY.stat().st_mtime_ns)
+            if key == self.key and not force:
+                return
+            t = time.time()
+            body = json.dumps(build(), separators=(",", ":")).encode()
+            self.body, self.etag, self.key, self.error = body, hashlib.sha1(body).hexdigest()[:16], key, None
+            print(f"rebuilt board data in {time.time() - t:.1f}s ({len(body) // 1024} KB)")
+
+    def loop(self, every=5):
+        while True:
+            try:
+                self.refresh()
+            except Exception as e:  # keep the last good data; the page shows the error
+                self.error = f"{type(e).__name__}: {e}"
+            time.sleep(every)
 
     def get(self):
-        key = ref_state() + str(TAXONOMY.stat().st_mtime_ns)
-        with self.lock:
-            if key != self.key:
-                t = time.time()
-                self.body = json.dumps(build(), separators=(",", ":")).encode()
-                self.etag = hashlib.sha1(self.body).hexdigest()[:16]
-                self.key = key
-                print(f"rebuilt board data in {time.time() - t:.1f}s ({len(self.body) // 1024} KB)")
-            return self.body, self.etag
+        return self.body, self.etag
 
 
 CACHE = Cache()
@@ -273,10 +322,10 @@ class Handler(BaseHTTPRequestHandler):
         if path in ("/", "/index.html"):
             self.send(200, INDEX.read_bytes(), "text/html; charset=utf-8")
         elif path == "/api/data":
-            try:
-                body, etag = CACHE.get()
-            except Exception as e:  # keep serving; the page shows the error
-                self.send(500, json.dumps({"error": str(e)}).encode(), "application/json")
+            body, etag = CACHE.get()
+            if body is None:
+                msg = CACHE.error or "warming up: reading git history"
+                self.send(503, json.dumps({"error": msg}).encode(), "application/json")
                 return
             if self.headers.get("If-None-Match") == etag:
                 self.send(304, b"", None, etag)
@@ -292,6 +341,7 @@ class Handler(BaseHTTPRequestHandler):
         try:
             req = json.loads(self.rfile.read(int(self.headers.get("Content-Length", 0))) or b"{}")
             edit_todo(req)
+            CACHE.refresh(force=True)
             body, etag = CACHE.get()
             self.send(200, body, "application/json", etag)
         except Exception as e:
@@ -325,8 +375,8 @@ def main():
         for s in data["unsorted"][:40]:
             print("   ", data["commits"][s]["s"])
         return
-    CACHE.get()
     server = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
+    threading.Thread(target=CACHE.loop, daemon=True).start()
     print(f"Adastrea progress board on http://localhost:{args.port}")
     server.serve_forever()
 

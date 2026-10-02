@@ -401,12 +401,22 @@ $("#expandAll").onclick = () => { Object.keys(data.byId).forEach(id => state.ope
 $("#collapseAll").onclick = () => { state.open.clear(); store.set("open", []); render(); };
 let qt; $("#q").addEventListener("input", e => { clearTimeout(qt); qt = setTimeout(() => { state.q = e.target.value.trim().toLowerCase(); render(); }, 120); });
 
+let polling = false;
 async function poll() {
+  if (polling) return;
+  polling = true;
+  const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 30000);
   try {
-    const r = await fetch("/api/data", { headers: etag ? { "If-None-Match": etag } : {} });
+    const r = await fetch("/api/data", { headers: etag ? { "If-None-Match": etag } : {}, signal: ctl.signal });
+    if (r.status === 503) {  // server up, first build still running
+      const e = await r.json().catch(() => ({}));
+      $("#live").textContent = e.error || "warming up…";
+      if (e.error && !e.error.startsWith("warming")) throw new Error(e.error);
+      setTimeout(poll, 2000);
+      return;
+    }
     if (r.status === 200) {
       const d = prep(await r.json());
-      if (d.error) throw new Error(d.error);
       const shas = new Set(Object.keys(d.commits));
       freshShas = seen ? new Set([...shas].filter(s => !seen.has(s))) : new Set();
       seen = shas; data = d; etag = r.headers.get("ETag");
@@ -416,7 +426,12 @@ async function poll() {
   } catch (err) {
     $("#dot").classList.add("err");
     $("#err").style.display = "block";
-    $("#err").textContent = `Can't reach the board server (${err.message}). Start it with: python Tools/progress_board/server.py`;
+    $("#err").textContent = err.name === "AbortError"
+      ? "The board server is slow to answer; retrying. Showing the last data it sent."
+      : `Can't reach the board server (${err.message}). It restarts on its own within 2 minutes.`;
+  } finally {
+    clearTimeout(timer);
+    polling = false;
   }
 }
 setInterval(() => {
