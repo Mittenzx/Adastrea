@@ -476,6 +476,10 @@
             {
               "text": "Authorities that govern sectors and set security",
               "done": false
+            },
+            {
+              "text": "Give new sector levels their own traffic: org ships in Organisations.json for each built sector",
+              "done": false
             }
           ]
         },
@@ -852,6 +856,10 @@
             {
               "text": "Show station and ship names, not object names, in the packaged HUD",
               "done": false
+            },
+            {
+              "text": "Station markets buy and sell the 21 new raw resources (nickel, cobalt, gases, salvage...)",
+              "done": false
             }
           ]
         },
@@ -868,7 +876,10 @@
             "Mining/",
             "Drones/",
             "generate_asteroid_rocks",
-            "Maps/MiningTest"
+            "Maps/MiningTest",
+            "ue_make_resource_types",
+            "DataAssets/Mining",
+            "AsteroidField"
           ],
           "words": [
             "mining",
@@ -890,6 +901,10 @@
             },
             {
               "text": "Asteroid fields spawn the ores listed in the sector's resources",
+              "done": true
+            },
+            {
+              "text": "Decide if gas skimming and wreck salvage need their own drone behaviour (today they reuse mining)",
               "done": false
             }
           ]
@@ -956,15 +971,15 @@
           "todo": [
             {
               "text": "Show security and danger zones on the galaxy map",
-              "done": false
+              "done": true
             },
             {
               "text": "Region tints and names on the universe map",
-              "done": false
+              "done": true
             },
             {
               "text": "Sector resources and POIs in the system map info panel",
-              "done": false
+              "done": true
             }
           ]
         },
@@ -994,13 +1009,20 @@
         {
           "id": "world.galaxy",
           "name": "Galaxy data & sectors",
-          "status": "live",
-          "summary": "GalaxySubsystem and Galaxy.json define sectors, security and lanes.",
+          "status": "building",
+          "summary": "Galaxy plan (6 regions, ~20 systems, ~60 sectors); Galaxy.json regions/hazards/resources/POIs; hand-built sector levels. PR #563 open.",
           "paths": [
             "GalaxySubsystem",
             "Galaxy.json",
             "generate_sector_layout",
-            "Maps/Sector"
+            "Maps/Sector",
+            "SectorLayouts",
+            "build_sector_level",
+            "validate_galaxy",
+            "gen_galaxy_overview",
+            "Maps/Sectors",
+            "docs/galaxy",
+            "GALAXY_PLAN"
           ],
           "words": [
             "galaxy",
@@ -1026,14 +1048,14 @@
             },
             {
               "text": "Regions, hazard ratings, resources and POIs in Galaxy.json (galaxy plan step 1)",
-              "done": false
+              "done": true
             },
             {
               "text": "Galaxy validation script: every raw resource has a sector, every sector a gate, every region reachable",
-              "done": false
+              "done": true
             },
             {
-              "text": "Hand-build a level for each existing sector that has none yet",
+              "text": "Hand-build a level for each existing sector that has none yet (4 of 12: Outer Relay, Kestrel Port, Skimfields, Edge)",
               "done": false
             },
             {
@@ -1059,7 +1081,22 @@
             {
               "text": "Wave 3: Pale Expanse and Sable Dark in full, ~60 sectors",
               "done": false
+            },
+            {
+              "text": "Sector level builder (SectorLayouts.json + build_sector_level.py)",
+              "done": true
+            },
+            {
+              "text": "Merge PR #563 (galaxy plan, resource fields, first 4 sector levels)",
+              "done": false
+            },
+            {
+              "text": "Galaxy overview map page (docs/galaxy, Tools/gen_galaxy_overview.py)",
+              "done": true
             }
+          ],
+          "scopes": [
+            "galaxy"
           ]
         },
         {
@@ -1138,6 +1175,10 @@
           "todo": [
             {
               "text": "Decide whether to revive quests; rescue and pod jobs are a natural first quest type",
+              "done": false
+            },
+            {
+              "text": "Hidden POIs (smuggler caches, pirate bases) found by scanning, then shown on maps",
               "done": false
             }
           ]
@@ -1583,6 +1624,10 @@
             {
               "text": "Agriculture station look: greenhouse / farm ring module textures (Meridian, Lumen Shade)",
               "done": false
+            },
+            {
+              "text": "Replace placeholder rock meshes for gas pockets and wreck debris (DA_Asteroid_Hydrogen, _ScrapMetal ...)",
+              "done": false
             }
           ]
         },
@@ -1593,14 +1638,19 @@
           "summary": "Visuals for sector hazards (radiation, nebula, gas storms, heat) plus planets and star types.",
           "paths": [
             "SectorHazard",
-            "Nebula"
+            "Nebula",
+            "ue_make_planet_materials",
+            "Materials/Planets",
+            "SM_PlanetSphere"
           ],
           "words": [
             "nebula",
             "radiation",
-            "hazard",
             "vfx",
-            "niagara"
+            "niagara",
+            "gas giant",
+            "planet material",
+            "hazard vfx"
           ],
           "todo": [
             {
@@ -1628,7 +1678,7 @@
               "done": false
             },
             {
-              "text": "Planet textures: gas giant Kestrel IV, garden world Meridian, dead fortress world Requiem, rogue mass Hollow",
+              "text": "Planet textures: gas giant Kestrel IV (placeholder banded material done), garden world Meridian, dead fortress world Requiem, rogue mass Hollow",
               "done": false
             },
             {
