@@ -156,8 +156,11 @@ sessions happens in `AGENT_BOARD.md`.
   incomprehensibly strong: stations and their modules take no combat damage (bolts just stop).
   Disabled player (`UPlayerRescueSubsystem`): a tow drone from the nearest friendly station
   clamps onto the wreck and hauls it in. The pilot ejects in an escape pod to that station, or to
-  a nearer trader in flight, which ferries them there. The ship is repaired free and re-boarded,
-  then docks normally. Sector security and patrols (`UDistressSubsystem`, `APatrolController`):
+  a nearer trader in flight, which ferries them there. When the pod is taken aboard, the pilot
+  wakes on foot in a medical bay (`EStationRoom::Medical`, also reachable from the concourse),
+  checked over by the medics, and waits in the station. The towed ship is repaired free and
+  docks; the pilot boards it at the airlock (refused until it's in). `Tools/pie_medbay_test.py`
+  checks the flow. Sector security and patrols (`UDistressSubsystem`, `APatrolController`):
   a Civil ship shot by a hostile raises a distress call. The sector's security (the `security`
   field in Galaxy.json) decides the answer: High sends up to 3 patrols at once, Medium 2 after
   15 s, Low 1 after 40 s, None nobody. Roster ships with the Patrol role fly between stations,

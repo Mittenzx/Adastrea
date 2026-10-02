@@ -2,6 +2,7 @@
 
 #include "Player/AdastreaPlayerController.h"
 #include "AI/PatrolController.h"
+#include "Rescue/PlayerRescueSubsystem.h"
 #include "Combat/CombatTestDirector.h"
 #include "Combat/ShipHealthComponent.h"
 #include "Trading/CargoComponent.h"
@@ -2837,6 +2838,13 @@ void AAdastreaPlayerController::ExitStationInterior(bool bOpenTrade)
 	{
 		return;
 	}
+	// Woken in a medical bay after a rescue: the ship may not be in yet.
+	if (const UPlayerRescueSubsystem* Rescue = UPlayerRescueSubsystem::Get(this); Rescue && Rescue->IsRescueUnderway() && !Ship->IsDocked())
+	{
+		const FString Reason = Rescue->GetTransitBlockReason();
+		ShowHUDMessage(Reason.IsEmpty() ? TEXT("Your ship hasn't been towed in yet") : Reason, 3.0f, true);
+		return;
+	}
 
 	if (AvatarPawn)
 	{
@@ -2961,6 +2969,15 @@ void AAdastreaPlayerController::DebugStationRooms()
 
 void AAdastreaPlayerController::HandleStationTerminalUsed(EStationTerminalType Type)
 {
+	// Woken in a trader's sick bay: no going anywhere until it docks.
+	if (const UPlayerRescueSubsystem* Rescue = UPlayerRescueSubsystem::Get(this))
+	{
+		if (const FString Reason = Rescue->GetTransitBlockReason(); !Reason.IsEmpty())
+		{
+			ShowHUDMessage(Reason, 3.0f, true);
+			return;
+		}
+	}
 	switch (Type)
 	{
 	case EStationTerminalType::Trading:       ExitStationInterior(true); break;
@@ -2968,6 +2985,7 @@ void AAdastreaPlayerController::HandleStationTerminalUsed(EStationTerminalType T
 	case EStationTerminalType::ToConcourse:   SwitchStationRoom(EStationRoom::Concourse); break;
 	case EStationTerminalType::ToMaintenance: SwitchStationRoom(EStationRoom::Maintenance); break;
 	case EStationTerminalType::ToHabitation:  SwitchStationRoom(EStationRoom::Habitation); break;
+	case EStationTerminalType::ToMedical:     SwitchStationRoom(EStationRoom::Medical); break;
 	case EStationTerminalType::Outfitting:
 	{
 		const ASpaceship* VisitShip = StationVisitShip.Get();
