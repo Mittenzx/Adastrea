@@ -43,6 +43,68 @@ namespace GalaxyMap
 
 	FString Upper(const FText& T) { return T.ToString().ToUpper(); }
 
+	/** Green (High) .. red (None): how fast help comes. */
+	FLinearColor SecurityColor(ESectorSecurity Level)
+	{
+		switch (Level)
+		{
+		case ESectorSecurity::High:		return FLinearColor(0.3f, 0.9f, 0.5f, 1.0f);
+		case ESectorSecurity::Medium:	return FLinearColor(0.85f, 0.9f, 0.35f, 1.0f);
+		case ESectorSecurity::Low:		return FLinearColor(1.0f, 0.6f, 0.25f, 1.0f);
+		default:						return FLinearColor(1.0f, 0.3f, 0.25f, 1.0f);
+		}
+	}
+
+	/** Dim (None) .. pink (Extreme): what the sector itself does to you. */
+	FLinearColor HazardColor(ESectorHazard Level)
+	{
+		switch (Level)
+		{
+		case ESectorHazard::Mild:		return FLinearColor(1.0f, 0.85f, 0.3f, 1.0f);
+		case ESectorHazard::Severe:		return FLinearColor(1.0f, 0.45f, 0.2f, 1.0f);
+		case ESectorHazard::Extreme:	return FLinearColor(1.0f, 0.25f, 0.6f, 1.0f);
+		default:						return Dim;
+		}
+	}
+
+	/** "RadiationStorm" -> "Radiation Storm". */
+	FString Pretty(const FString& Id) { return FName::NameToDisplayString(Id, false); }
+
+	FString JoinHazards(const FGalaxySectorDef& S)
+	{
+		TArray<FString> Parts;
+		for (const FSectorHazardDef& H : S.Hazards)
+		{
+			Parts.Add(FString::Printf(TEXT("%s (%s)"), *Pretty(H.Type), *UGalaxySubsystem::HazardToString(H.Severity)));
+		}
+		return FString::Join(Parts, TEXT(", "));
+	}
+
+	FString JoinResources(const FGalaxySectorDef& S)
+	{
+		TArray<FString> Parts;
+		for (const FSectorResourceDef& R : S.Resources)
+		{
+			Parts.Add(R.Richness.IsEmpty() ? Pretty(R.Item.ToString()) : FString::Printf(TEXT("%s (%s)"), *Pretty(R.Item.ToString()), *R.Richness));
+		}
+		return Parts.Num() ? FString::Join(Parts, TEXT(", ")) : FString(TEXT("none known"));
+	}
+
+	/** Known (not hidden) points of interest; gates are left out, they have their own line. */
+	FString JoinPois(const FGalaxySectorDef& S)
+	{
+		TArray<FString> Parts;
+		for (const FSectorPoiDef& P : S.Pois)
+		{
+			if (P.bHidden || P.Type == TEXT("JumpGate"))
+			{
+				continue;
+			}
+			Parts.Add(P.Name.IsEmpty() ? Pretty(P.Type) : FString::Printf(TEXT("%s (%s)"), *P.Name.ToString(), *Pretty(P.Type)));
+		}
+		return Parts.Num() ? FString::Join(Parts, TEXT(", ")) : FString(TEXT("none charted"));
+	}
+
 	FString JoinSystemNames(const UGalaxySubsystem* Galaxy, const TArray<FName>& Ids)
 	{
 		TArray<FString> Names;
@@ -672,6 +734,13 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 		const FLinearColor Col = bBuilt ? Built : Planned;
 		const float HexR = bHover || bSelected ? 12.0f : 10.0f;
 
+		// Hazard ring: the sector itself is dangerous (thicker the worse it is).
+		if (S.Hazard != ESectorHazard::None)
+		{
+			const FLinearColor HC = HazardColor(S.Hazard);
+			DrawCircleOutline(P.X, P.Y, 22.0f, FLinearColor(HC.R, HC.G, HC.B, 0.75f), 1.0f + static_cast<float>(S.Hazard), 28);
+		}
+
 		// Hexagon outline (+ filled core when a level exists).
 		for (int32 i = 0; i < 6; ++i)
 		{
@@ -705,12 +774,19 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 		const FString NameStr = S.Name.ToString();
 		const FString TypeStr = bBuilt ? S.Type : FString::Printf(TEXT("%s  (planned)"), *S.Type);
 		// Backing plate so gate/lane lines don't run through the label.
-		float NW = 0.0f, NH = 0.0f, SW = 0.0f, SH = 0.0f;
+		const ESectorSecurity Sec = UGalaxySubsystem::ParseSecurity(S.Security);
+		const FString SecStr = FString::Printf(TEXT("Sec %s"), *UGalaxySubsystem::SecurityToString(Sec));
+		const FString HazStr = FString::Printf(TEXT("Hazard %s"), *UGalaxySubsystem::HazardToString(S.Hazard));
+		float NW = 0.0f, NH = 0.0f, SW = 0.0f, SH = 0.0f, CW = 0.0f, CH = 0.0f, ZW = 0.0f, ZH = 0.0f;
 		GetTextSize(NameStr, NW, NH, HudType::Font(), HudType::Label);
 		GetTextSize(TypeStr, SW, SH, HudType::Font(), HudType::Caption);
-		DrawRect(BoxFill, P.X + 17.0f, P.Y - 13.0f, FMath::Max(NW, SW) + 6.0f, 14.0f + SH + 2.0f);
+		GetTextSize(SecStr, CW, CH, HudType::Font(), HudType::Caption);
+		GetTextSize(HazStr, ZW, ZH, HudType::Font(), HudType::Caption);
+		DrawRect(BoxFill, P.X + 17.0f, P.Y - 13.0f, FMath::Max3(NW, SW, CW + 10.0f + ZW) + 6.0f, 14.0f + SH + CH + 4.0f);
 		DrawText(NameStr, LabelCol, P.X + 20.0f, P.Y - 12.0f, HudType::Font(), HudType::Label);
 		DrawText(TypeStr, Dim, P.X + 20.0f, P.Y + 2.0f, HudType::Font(), HudType::Caption);
+		DrawText(SecStr, SecurityColor(Sec), P.X + 20.0f, P.Y + 4.0f + SH, HudType::Font(), HudType::Caption);
+		DrawText(HazStr, HazardColor(S.Hazard), P.X + 30.0f + CW, P.Y + 4.0f + SH, HudType::Font(), HudType::Caption);
 		AddMapHit(P.X - 16.0f, P.Y - 16.0f, 32.0f, 32.0f, EMapHitKind::Sector, S.Id);
 	}
 
@@ -725,6 +801,10 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 		DrawMapInfoPanel(PX, L.PanelY, PW, L.PanelH, FString::Printf(TEXT("%s SYSTEM"), *Upper(Sys->Name)), Sys->StarColor);
 		float Y = L.PanelY + 44.0f;
 		DrawText(FString::Printf(TEXT("Star  %s"), *Sys->StarClass), Body, TX, Y, HudType::Font(), HudType::Label); Y += 16.0f;
+		if (const FGalaxyRegionDef* Region = Galaxy->FindRegion(Sys->Region))
+		{
+			DrawText(FString::Printf(TEXT("Region  %s (%s)"), *Region->Name.ToString(), *Region->Type), Region->Color, TX, Y, HudType::Font(), HudType::Label); Y += 16.0f;
+		}
 		if (!Sys->Faction.IsEmpty()) { DrawText(FString::Printf(TEXT("Faction  %s"), *Sys->Faction), Body, TX, Y, HudType::Font(), HudType::Label); Y += 16.0f; }
 		DrawText(FString::Printf(TEXT("Sectors  %d  (%d built)"), Sys->Sectors.Num(), Sys->NumBuiltSectors()), Body, TX, Y, HudType::Font(), HudType::Label); Y += 16.0f;
 		Y = DrawWrappedText(FString::Printf(TEXT("Jump lanes  %s"), *JoinSystemNames(Galaxy, Sys->JumpLinks)), Body, TX, Y, TW, HudType::Font(), HudType::Label);
@@ -737,7 +817,13 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 		{
 			const bool bBuilt = Sel->HasLevel();
 			DrawText(Upper(Sel->Name), bBuilt ? Built : Planned, TX, Y, HudType::Font(), HudType::Body); Y += 22.0f;
-			DrawText(FString::Printf(TEXT("%s   Security: %s"), *Sel->Type, Sel->Security.IsEmpty() ? TEXT("?") : *Sel->Security), Body, TX, Y, HudType::Font(), HudType::Label); Y += 16.0f;
+			const ESectorSecurity SelSec = UGalaxySubsystem::ParseSecurity(Sel->Security);
+			DrawText(Sel->Type, Body, TX, Y, HudType::Font(), HudType::Label); Y += 16.0f;
+			DrawText(FString::Printf(TEXT("Security  %s"), *UGalaxySubsystem::SecurityToString(SelSec)), SecurityColor(SelSec), TX, Y, HudType::Font(), HudType::Label); Y += 16.0f;
+			Y = DrawWrappedText(Sel->Hazards.Num()
+					? FString::Printf(TEXT("Hazard  %s: %s"), *UGalaxySubsystem::HazardToString(Sel->Hazard), *JoinHazards(*Sel))
+					: FString::Printf(TEXT("Hazard  %s"), *UGalaxySubsystem::HazardToString(Sel->Hazard)),
+				HazardColor(Sel->Hazard), TX, Y, TW, HudType::Font(), HudType::Label);
 			if (!Sel->Faction.IsEmpty()) { DrawText(FString::Printf(TEXT("Faction  %s"), *Sel->Faction), Body, TX, Y, HudType::Font(), HudType::Label); Y += 16.0f; }
 			DrawText(bBuilt ? FString::Printf(TEXT("Level  %s"), *LevelShortName(Sel->Level)) : FString(TEXT("PLANNED - no level yet")),
 				bBuilt ? Built : FLinearColor(0.95f, 0.7f, 0.35f, 1.0f), TX, Y, HudType::Font(), HudType::Label); Y += 16.0f;
@@ -754,6 +840,8 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 				Y = DrawWrappedText(FString::Printf(TEXT("Lane gates  %s"), *FString::Join(Lanes, TEXT(", "))),
 					FLinearColor(0.8f, 0.65f, 1.0f, 1.0f), TX, Y, TW, HudType::Font(), HudType::Label);
 			}
+			Y = DrawWrappedText(FString::Printf(TEXT("Resources  %s"), *JoinResources(*Sel)), Body, TX, Y, TW, HudType::Font(), HudType::Caption);
+			Y = DrawWrappedText(FString::Printf(TEXT("Points of interest  %s"), *JoinPois(*Sel)), Body, TX, Y, TW, HudType::Font(), HudType::Caption);
 			Y = DrawWrappedText(Sel->Description.ToString(), Dim, TX, Y + 4.0f, TW, HudType::Font(), HudType::Label);
 			Y += 10.0f;
 			if (Sel->Id == CurrentSectorId)
@@ -786,7 +874,7 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 		}
 
 		// Legend (panel bottom).
-		const float LY = L.PanelY + L.PanelH - 114.0f;
+		const float LY = L.PanelY + L.PanelH - 132.0f;
 		DrawRect(FLinearColor(0.2f, 0.4f, 0.5f, 0.5f), TX, LY - 8.0f, TW, 1.0f);
 		DrawCircleOutline(TX + 6.0f, LY + 6.0f, 6.0f, Built, 2.0f, 6); DrawFilledDisc(TX + 6.0f, LY + 6.0f, 2.5f, Built);
 		DrawText(TEXT("Sector with a level"), Body, TX + 20.0f, LY, HudType::Font(), HudType::Caption);
@@ -800,6 +888,8 @@ void AAdastreaHUD::DrawSystemMap(APlayerController* PC)
 		DrawText(TEXT("Lane gate (to another system)"), Body, TX + 20.0f, LY + 72.0f, HudType::Font(), HudType::Caption);
 		DrawLine(TX, LY + 96.0f, TX + 13.0f, LY + 96.0f, Route, 3.0f);
 		DrawText(TEXT("Route to the selected sector"), Body, TX + 20.0f, LY + 90.0f, HudType::Font(), HudType::Caption);
+		DrawCircleOutline(TX + 6.0f, LY + 114.0f, 6.0f, HazardColor(ESectorHazard::Severe), 2.0f, 16);
+		DrawText(TEXT("Hazard ring (yellow mild .. pink extreme)"), Body, TX + 20.0f, LY + 108.0f, HudType::Font(), HudType::Caption);
 	}
 
 	DrawMapHeader(PC, L.VW, TEXT("SYSTEM MAP"), FString::Printf(TEXT("Universe  >  %s"), *Sys->Name.ToString()));
@@ -874,6 +964,47 @@ void AAdastreaHUD::DrawUniverseMap(APlayerController* PC)
 		DrawLine(BarX, BarY - 4.0f, BarX, BarY + 4.0f, Dim, 2.0f);
 		DrawLine(BarX + BarW, BarY - 4.0f, BarX + BarW, BarY + 4.0f, Dim, 2.0f);
 		DrawText(TEXT("10 ly"), Dim, BarX + BarW + 8.0f, BarY - 7.0f, HudType::Font(), HudType::Caption);
+	}
+
+	// ---- Regions: a soft tint around each member system, the region's name above them ----
+	{
+		// Kept inside the fit padding so the tint never spills past the map box.
+		const float TintR = FMath::Clamp(3.0f * Scale, 30.0f, Pad - 10.0f);
+		for (const FStarSystemDef& S : Systems)
+		{
+			if (const FGalaxyRegionDef* Region = Galaxy->FindRegion(S.Region))
+			{
+				const FVector2D P = ToScreen(S.Position);
+				const FLinearColor RC = Region->Color;
+				DrawFilledDisc(P.X, P.Y, TintR, FLinearColor(RC.R, RC.G, RC.B, 0.07f));
+				DrawFilledDisc(P.X, P.Y, TintR * 0.6f, FLinearColor(RC.R, RC.G, RC.B, 0.06f));
+				DrawCircleOutline(P.X, P.Y, TintR, FLinearColor(RC.R, RC.G, RC.B, 0.35f), 1.0f, 48);
+			}
+		}
+		for (const FGalaxyRegionDef& Region : Galaxy->GetRegionDefs())
+		{
+			FVector2D Sum = FVector2D::ZeroVector;
+			float Top = TNumericLimits<float>::Max();
+			int32 N = 0;
+			for (const FStarSystemDef& S : Systems)
+			{
+				if (S.Region == Region.Id)
+				{
+					const FVector2D P = ToScreen(S.Position);
+					Sum += P;
+					Top = FMath::Min(Top, P.Y);
+					++N;
+				}
+			}
+			if (N > 0)
+			{
+				const FString Label = Region.Name.ToString().ToUpper();
+				float RW = 0.0f, RH = 0.0f;
+				GetTextSize(Label, RW, RH, HudType::Font(), HudType::Caption);
+				DrawText(Label, FLinearColor(Region.Color.R, Region.Color.G, Region.Color.B, 0.7f),
+					Sum.X / N - RW * 0.5f, Top - TintR * 0.7f - RH, HudType::Font(), HudType::Caption);
+			}
+		}
 	}
 
 	// ---- Jump lanes (each pair once) ----
@@ -961,6 +1092,10 @@ void AAdastreaHUD::DrawUniverseMap(APlayerController* PC)
 			DrawMapInfoPanel(PX, L.PanelY, PW, L.PanelH, Upper(Sel->Name), Sel->StarColor);
 			float Y = L.PanelY + 44.0f;
 			DrawText(FString::Printf(TEXT("Star  %s"), *Sel->StarClass), Body, TX, Y, HudType::Font(), HudType::Label); Y += 16.0f;
+			if (const FGalaxyRegionDef* Region = Galaxy->FindRegion(Sel->Region))
+			{
+				DrawText(FString::Printf(TEXT("Region  %s (%s)"), *Region->Name.ToString(), *Region->Type), Region->Color, TX, Y, HudType::Font(), HudType::Label); Y += 16.0f;
+			}
 			if (!Sel->Faction.IsEmpty()) { DrawText(FString::Printf(TEXT("Faction  %s"), *Sel->Faction), Body, TX, Y, HudType::Font(), HudType::Label); Y += 16.0f; }
 			if (const FStarSystemDef* Here = Galaxy->FindSystem(CurrentSystemId))
 			{
@@ -998,6 +1133,10 @@ void AAdastreaHUD::DrawUniverseMap(APlayerController* PC)
 				}
 				const bool bBuilt = Sec.HasLevel();
 				DrawFilledDisc(TX + 4.0f, Y + 6.0f, 3.0f, bBuilt ? Built : Planned);
+				if (Sec.Hazard != ESectorHazard::None)
+				{
+					DrawCircleOutline(TX + 4.0f, Y + 6.0f, 5.5f, HazardColor(Sec.Hazard), 1.5f, 12);
+				}
 				DrawText(Sec.Name.ToString(), Body, TX + 14.0f, Y, HudType::Font(), HudType::Caption);
 				const FString Tag = bBuilt ? LevelShortName(Sec.Level) : FString(TEXT("planned"));
 				float SW = 0, SH = 0;
@@ -1023,6 +1162,19 @@ void AAdastreaHUD::DrawUniverseMap(APlayerController* PC)
 			DrawText(FString::Printf(TEXT("Systems  %d"), Systems.Num()), Body, TX, Y, HudType::Font(), HudType::Label); Y += 16.0f;
 			DrawText(FString::Printf(TEXT("Sectors  %d  (%d built)"), NumSectors, NumBuilt), Body, TX, Y, HudType::Font(), HudType::Label); Y += 22.0f;
 			Y = DrawWrappedText(TEXT("Click a system for details. Click it again, or press Enter, to open its system map."), Dim, TX, Y, TW, HudType::Font(), HudType::Caption);
+			if (Galaxy->GetRegionDefs().Num())
+			{
+				Y += 10.0f;
+				DrawText(TEXT("REGIONS"), GalaxyMap::Title, TX, Y, HudType::Font(), HudType::Label);
+				Y += 18.0f;
+				for (const FGalaxyRegionDef& Region : Galaxy->GetRegionDefs())
+				{
+					DrawFilledDisc(TX + 5.0f, Y + 7.0f, 4.5f, Region.Color);
+					DrawText(FString::Printf(TEXT("%s  (%s)"), *Region.Name.ToString(), *Region.Type), Body, TX + 16.0f, Y, HudType::Font(), HudType::Label);
+					Y += 16.0f;
+					Y = DrawWrappedText(Region.Description.ToString(), Dim, TX + 16.0f, Y, TW - 16.0f, HudType::Font(), HudType::Caption) + 4.0f;
+				}
+			}
 			if (!Galaxy->IsLoadedFromFile())
 			{
 				DrawWrappedText(TEXT("Galaxy.json is missing or invalid; showing the built-in fallback galaxy."),

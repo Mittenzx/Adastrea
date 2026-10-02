@@ -243,7 +243,7 @@ Proposed `Galaxy.json` field:
 
 ```json
 "pois": [
-  { "type": "Station",       "id": "corvid_haven_port", "name": "Haven Port" },
+  { "type": "Station",       "name": "Haven Port" },
   { "type": "AsteroidField", "resources": ["CobaltOre", "TungstenOre"], "richness": "High" },
   { "type": "WreckField",    "size": "Small" }
 ]
@@ -268,8 +268,12 @@ All in `Galaxy.json`, read by `UGalaxySubsystem`:
 
 ## 8. Build order
 
-1. Add `regions`, `hazard`, `resources` and `pois` to `Galaxy.json` and `UGalaxySubsystem`; fill
-   them in for today's 17 sectors. Show region tint and hazard rating on the galaxy map.
+1. **Built.** `regions`, `hazard`/`hazards`, `resources` and `pois` in `Galaxy.json`, read by
+   `UGalaxySubsystem` (`FGalaxyRegionDef`, `ESectorHazard`, `FSectorResourceDef`, `FSectorPoiDef`) and
+   filled in for today's 17 sectors. The universe map tints and names each region; the system map
+   shows each sector's security and hazard, a hazard ring, and its resources and points of interest.
+   Not yet placed in any sector: food crops (Meridian), Helium-3 (Thule Corona), silver, carbon
+   crystal and precious stones (Pale Expanse).
 2. Reusable pieces for hand-building: asteroid fields that spawn a given ore list, wreck fields,
    ice fields, gas skim zones (placeable actors, not template levels).
 3. Wave 1: hand-build a level for each of today's 17 sectors that doesn't have one, then Meridian,

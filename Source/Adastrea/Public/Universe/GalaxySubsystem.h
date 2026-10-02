@@ -25,6 +25,96 @@ enum class ESectorSecurity : uint8
 };
 
 /**
+ * What a sector itself does to a ship (radiation, debris, mines...), separate from
+ * security, which is how fast help comes. See docs/11-TECHNICAL_SPECS/GALAXY_PLAN.md.
+ */
+UENUM(BlueprintType)
+enum class ESectorHazard : uint8
+{
+	None,
+	Mild,
+	Severe,
+	Extreme
+};
+
+/**
+ * A region: a group of systems with one character (who runs it, how safe, what it's for).
+ * Type is one of Heartland, March, Frontier, Ruin, Wilds, Haven.
+ */
+USTRUCT(BlueprintType)
+struct ADASTREA_API FGalaxyRegionDef
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|Region")
+	FName Id;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|Region")
+	FText Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|Region")
+	FString Type;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|Region")
+	FText Description;
+
+	/** Tint on the universe map. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|Region")
+	FLinearColor Color = FLinearColor(0.4f, 0.6f, 0.7f, 1.0f);
+};
+
+/** One environmental hazard in a sector ("RadiationStorm", "Nebula", "Debris", "Minefield"...). */
+USTRUCT(BlueprintType)
+struct ADASTREA_API FSectorHazardDef
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|Sector")
+	FString Type;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|Sector")
+	ESectorHazard Severity = ESectorHazard::Mild;
+};
+
+/** A raw resource found in a sector. Item is a crafting-tree item id ("TitaniumOre"). */
+USTRUCT(BlueprintType)
+struct ADASTREA_API FSectorResourceDef
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|Sector")
+	FName Item;
+
+	/** "Low", "Medium" or "High". */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|Sector")
+	FString Richness;
+};
+
+/**
+ * A point of interest inside a sector: the brief for what its level contains
+ * ("Station", "AsteroidField", "WreckField", "Derelict", "JumpGate"...).
+ */
+USTRUCT(BlueprintType)
+struct ADASTREA_API FSectorPoiDef
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|Sector")
+	FString Type;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|Sector")
+	FText Name;
+
+	/** Crafting-tree item ids (for fields and skim zones). */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|Sector")
+	TArray<FName> Resources;
+
+	/** Not shown on the map until found (pirate bases, smuggler caches). */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|Sector")
+	bool bHidden = false;
+};
+
+/**
  * One sector inside a star system.
  *
  * A sector is the playable unit: at most one level (umap) per sector. Sectors
@@ -50,6 +140,19 @@ struct ADASTREA_API FGalaxySectorDef
 	/** "High", "Medium", "Low" or "None". */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|Sector")
 	FString Security;
+
+	/** Overall hazard rating; when the JSON leaves it out, the worst of Hazards. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|Sector")
+	ESectorHazard Hazard = ESectorHazard::None;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|Sector")
+	TArray<FSectorHazardDef> Hazards;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|Sector")
+	TArray<FSectorResourceDef> Resources;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|Sector")
+	TArray<FSectorPoiDef> Pois;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|Sector")
 	FString Faction;
@@ -112,6 +215,10 @@ struct ADASTREA_API FStarSystemDef
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|System")
 	FString Faction;
+
+	/** Region id from the JSON's "regions" (NAME_None = no region). */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|System")
+	FName Region;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Galaxy|System")
 	FText Description;
@@ -197,6 +304,18 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Galaxy", meta=(WorldContext="WorldContextObject"))
 	ESectorSecurity GetCurrentSecurity(const UObject* WorldContextObject) const;
 
+	/** "Mild", "Severe", "Extreme"; anything else is None. */
+	static ESectorHazard ParseHazard(const FString& Text);
+	static FString HazardToString(ESectorHazard Level);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Galaxy")
+	TArray<FGalaxyRegionDef> GetRegions() const { return Regions; }
+
+	/** Native, no-copy access to all regions. */
+	const TArray<FGalaxyRegionDef>& GetRegionDefs() const { return Regions; }
+
+	const FGalaxyRegionDef* FindRegion(FName RegionId) const;
+
 	/** True if the galaxy came from the JSON file (false = built-in fallback). */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Galaxy")
 	bool IsLoadedFromFile() const { return bLoadedFromFile; }
@@ -247,6 +366,9 @@ private:
 
 	UPROPERTY()
 	TArray<FStarSystemDef> Systems;
+
+	UPROPERTY()
+	TArray<FGalaxyRegionDef> Regions;
 
 	FName StartSystemId;
 	bool bLoadedFromFile = false;
