@@ -391,6 +391,7 @@
           "orbitRadius": 0.4,
           "orbitAngle": 90,
           "gates": ["lumen_array"],
+          "laneGates": ["adastrea_alpha"],
           "resources": [
             { "item": "Silicon", "richness": "Low" }
           ],
@@ -454,6 +455,7 @@
           "orbitRadius": 0.6,
           "orbitAngle": 20,
           "gates": ["corvid_haven"],
+          "laneGates": ["lumen_array"],
           "resources": [
             { "item": "TitaniumOre", "richness": "High" },
             { "item": "CobaltOre", "richness": "High" },
@@ -482,6 +484,7 @@
           "orbitRadius": 0.38,
           "orbitAngle": 200,
           "gates": [],
+          "laneGates": ["kestrel_skim"],
           "resources": [
             { "item": "WaterIce", "richness": "Medium" }
           ],
@@ -520,6 +523,7 @@
           "orbitRadius": 0.75,
           "orbitAngle": 140,
           "gates": [],
+          "laneGates": ["kestrel_edge"],
           "resources": [
             { "item": "Platinum", "richness": "High" },
             { "item": "Palladium", "richness": "Medium" },
@@ -562,6 +566,7 @@
           "orbitRadius": 0.6,
           "orbitAngle": 80,
           "gates": [],
+          "laneGates": ["varos_scrap"],
           "resources": [
             { "item": "DerelictHullPlate", "richness": "High" },
             { "item": "SalvagedComponents", "richness": "High" },
