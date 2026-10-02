@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "Player/AdastreaPlayerController.h"
+#include "AI/PatrolController.h"
 #include "Combat/CombatTestDirector.h"
 #include "Combat/ShipHealthComponent.h"
 #include "Trading/CargoComponent.h"
@@ -803,6 +804,34 @@ void AAdastreaPlayerController::SpawnHostiles(const FString& Count)
 {
 	const int32 N = Count.IsEmpty() ? 2 : FMath::Clamp(FCString::Atoi(*Count), 1, 12);
 	ACombatTestDirector::SpawnHostilesNearPlayer(GetWorld(), N, 25000.0f);
+}
+
+void AAdastreaPlayerController::SpawnPatrols(const FString& Count)
+{
+	const int32 N = Count.IsEmpty() ? 2 : FMath::Clamp(FCString::Atoi(*Count), 1, 8);
+	const ASpaceship* PlayerShip = Cast<ASpaceship>(GetPawn());
+	if (!PlayerShip)
+	{
+		UE_LOG(LogAdastrea, Log, TEXT("SpawnPatrols: fly a ship first (patrols use its class)"));
+		return;
+	}
+	ASpaceStation* Nearest = nullptr;
+	float BestDistSq = TNumericLimits<float>::Max();
+	for (TActorIterator<ASpaceStation> It(GetWorld()); It; ++It)
+	{
+		const float DistSq = FVector::DistSquared(It->GetActorLocation(), PlayerShip->GetActorLocation());
+		if (DistSq < BestDistSq)
+		{
+			BestDistSq = DistSq;
+			Nearest = *It;
+		}
+	}
+	int32 Spawned = 0;
+	for (int32 i = 0; i < N; ++i)
+	{
+		Spawned += APatrolController::SpawnPatrol(GetWorld(), PlayerShip->GetClass(), Nearest) ? 1 : 0;
+	}
+	UE_LOG(LogAdastrea, Log, TEXT("SpawnPatrols: spawned %d at %s"), Spawned, Nearest ? *Nearest->GetName() : TEXT("the origin"));
 }
 
 void AAdastreaPlayerController::ClearHostiles()

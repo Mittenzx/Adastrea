@@ -18,6 +18,11 @@
 
 namespace
 {
+	TAutoConsoleVariable<int32> CVarSecurityOverride(
+		TEXT("adastrea.Security"),
+		-1,
+		TEXT("Override the current sector's security for testing: -1 = the sector's own, 0 = None, 1 = Low, 2 = Medium, 3 = High."));
+
 	FString JsonString(const TSharedPtr<FJsonObject>& Obj, const TCHAR* Field)
 	{
 		FString Out;
@@ -513,4 +518,43 @@ FName UGalaxySubsystem::ResolveCurrentSectorId(const UObject* WorldContextObject
 		}
 	}
 	return NAME_None;
+}
+
+ESectorSecurity UGalaxySubsystem::ParseSecurity(const FString& Text)
+{
+	if (Text.Equals(TEXT("High"), ESearchCase::IgnoreCase))
+	{
+		return ESectorSecurity::High;
+	}
+	if (Text.Equals(TEXT("Medium"), ESearchCase::IgnoreCase))
+	{
+		return ESectorSecurity::Medium;
+	}
+	if (Text.Equals(TEXT("Low"), ESearchCase::IgnoreCase))
+	{
+		return ESectorSecurity::Low;
+	}
+	return ESectorSecurity::None;
+}
+
+FString UGalaxySubsystem::SecurityToString(ESectorSecurity Level)
+{
+	switch (Level)
+	{
+	case ESectorSecurity::High:		return TEXT("High");
+	case ESectorSecurity::Medium:	return TEXT("Medium");
+	case ESectorSecurity::Low:		return TEXT("Low");
+	default:						return TEXT("None");
+	}
+}
+
+ESectorSecurity UGalaxySubsystem::GetCurrentSecurity(const UObject* WorldContextObject) const
+{
+	const int32 Override = CVarSecurityOverride.GetValueOnGameThread();
+	if (Override >= 0)
+	{
+		return static_cast<ESectorSecurity>(FMath::Min(Override, static_cast<int32>(ESectorSecurity::High)));
+	}
+	const FGalaxySectorDef* Sector = FindSector(ResolveCurrentSectorId(WorldContextObject));
+	return Sector ? ParseSecurity(Sector->Security) : ESectorSecurity::None;
 }

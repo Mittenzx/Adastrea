@@ -157,8 +157,17 @@ sessions happens in `AGENT_BOARD.md`.
   Disabled player (`UPlayerRescueSubsystem`): a tow drone from the nearest friendly station
   clamps onto the wreck and hauls it in. The pilot ejects in an escape pod to that station, or to
   a nearer trader in flight, which ferries them there. The ship is repaired free and re-boarded,
-  then docks normally. Next: combat audio, bolt and impact-flash look, turrets on capital ships. The old `Combat/`
-  module archived in `e155151d` is reference only.
+  then docks normally. Sector security and patrols (`UDistressSubsystem`, `APatrolController`):
+  a Civil ship shot by a hostile raises a distress call. The sector's security (the `security`
+  field in Galaxy.json) decides the answer: High sends up to 3 patrols at once, Medium 2 after
+  15 s, Low 1 after 40 s, None nobody. Roster ships with the Patrol role fly between stations,
+  attack hostiles within 250 m, and answer calls. Test with `adastrea.Security 0-3`,
+  `SpawnPatrols [N]` and `Tools/pie_distress_test.py`. Hostiles and patrols share their attack
+  runs (`ACombatPilotController`). What combat is for (goal-driven pirates, stolen cargo,
+  boarding, capture) is designed in `11-TECHNICAL_SPECS/PIRACY_AND_LAW.md`; step 1 of its build
+  order is done. Next: its step 2 (pirate organisations with needs), plus combat audio, bolt and
+  impact-flash look, turrets on capital ships. The old `Combat/` module archived in `e155151d`
+  is reference only.
 
 ---
 
@@ -182,7 +191,7 @@ not dead code:
 
 | System | Status |
 |--------|--------|
-| Combat | Being rebuilt: guns, shields, damage, hostile AI fighters, wrecks and station turrets live (see Open work) |
+| Combat | Being rebuilt: guns, shields, damage, hostile AI fighters, wrecks, station turrets, player rescue, and patrols answering distress calls by sector security (see Open work) |
 | Navigation/Autopilot | Complete, disabled |
 | Quest System | Complete, disabled |
 | Faction Diplomacy | Complete, disabled |

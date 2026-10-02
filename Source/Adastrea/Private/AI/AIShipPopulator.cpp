@@ -3,6 +3,7 @@
 #include "AI/AIShipPopulator.h"
 #include "AI/AIMinerController.h"
 #include "AI/AIPilotController.h"
+#include "AI/PatrolController.h"
 #include "AdastreaLog.h"
 #include "EngineUtils.h"
 #include "Engine/World.h"
@@ -211,22 +212,20 @@ int32 AAIShipPopulator::SpawnRosterShips()
 			continue;
 		}
 
-		const TSubclassOf<AAIPilotController> PilotClass = Record.Role == EShipRole::Miner
-			? TSubclassOf<AAIPilotController>(AAIMinerController::StaticClass())
-			: TSubclassOf<AAIPilotController>(AAIPilotController::StaticClass());
+		TSubclassOf<AAIPilotController> PilotClass = AAIPilotController::StaticClass();
+		if (Record.Role == EShipRole::Miner)
+		{
+			PilotClass = AAIMinerController::StaticClass();
+		}
+		else if (Record.Role == EShipRole::Patrol)
+		{
+			PilotClass = APatrolController::StaticClass();
+		}
 		ASpaceship* Ship = AAIPilotController::SpawnPilotedShip(World, ShipClass, Stations[i % Stations.Num()], PilotClass);
 		if (!Ship)
 		{
 			++Skipped;
 			continue;
-		}
-
-		if (Record.Role == EShipRole::Patrol)
-		{
-			if (AAIPilotController* Pilot = Cast<AAIPilotController>(Ship->GetController()))
-			{
-				Pilot->bTradeAtStations = false;
-			}
 		}
 
 		UOwnershipComponent* Ownership = NewObject<UOwnershipComponent>(Ship, TEXT("Ownership"));

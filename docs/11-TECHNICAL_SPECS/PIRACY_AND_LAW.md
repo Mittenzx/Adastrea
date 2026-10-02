@@ -4,7 +4,7 @@ Design for what combat is *for*: who attacks whom, why, and what happens afterwa
 Builds on the combat rebuild (guns, shields, wrecks, station turrets, player rescue) and on
 `UOrganisationSubsystem` (Authorities, independent orgs, owned ship records).
 
-Status: design agreed 2026-10-02; nothing below is built yet unless marked.
+Status: design agreed 2026-10-02. Built so far: step 1 of the build order (marked **Built**).
 
 ## Setting: people are the scarcest resource
 
@@ -38,6 +38,12 @@ empires' wars, which left few people alive. **People are worth more than ships o
   no AI yet) that answer distress beacons quickly. Low security means a slow answer; none means
   no answer.
 - Being safe near certain stations follows from this, and the map can show it.
+- **Built (step 1):** a sector's level comes from the `security` field in `Galaxy.json` (already
+  shown on the galaxy map). `UDistressSubsystem` raises a call when a hostile shoots a Civil ship
+  and sends the nearest free `APatrolController`s: High up to 3 at once, Medium 2 after 15 s,
+  Low 1 after 40 s, None nobody. Patrols also attack hostiles within 250 m without a call. In
+  this first version security is set per sector; it doesn't yet fall off with distance from the
+  seat station.
 
 ## 2. Pirates are organisations with a goal
 

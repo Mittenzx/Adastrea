@@ -11,6 +11,20 @@ class APlayerController;
 class AJumpGate;
 
 /**
+ * How well a sector is policed. Decides whether patrols answer a distress call, how
+ * many come and how long they take (see UDistressSubsystem).
+ */
+UENUM(BlueprintType)
+enum class ESectorSecurity : uint8
+{
+	/** Nobody answers. */
+	None,
+	Low,
+	Medium,
+	High
+};
+
+/**
  * One sector inside a star system.
  *
  * A sector is the playable unit: at most one level (umap) per sector. Sectors
@@ -171,6 +185,17 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category="Galaxy", meta=(WorldContext="WorldContextObject"))
 	FName ResolveCurrentSectorId(const UObject* WorldContextObject) const;
+
+	/** A sector's "security" text ("High", "Medium", "Low"); anything else is None. */
+	static ESectorSecurity ParseSecurity(const FString& Text);
+	static FString SecurityToString(ESectorSecurity Level);
+
+	/**
+	 * Security of the sector the world is (None for levels outside the galaxy, such as
+	 * CombatTest). The console variable adastrea.Security 0-3 overrides it for testing.
+	 */
+	UFUNCTION(BlueprintCallable, Category="Galaxy", meta=(WorldContext="WorldContextObject"))
+	ESectorSecurity GetCurrentSecurity(const UObject* WorldContextObject) const;
 
 	/** True if the galaxy came from the JSON file (false = built-in fallback). */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Galaxy")

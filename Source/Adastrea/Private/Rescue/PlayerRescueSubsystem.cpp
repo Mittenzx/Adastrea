@@ -3,7 +3,7 @@
 #include "Rescue/TowDrone.h"
 #include "AI/AIMinerController.h"
 #include "AI/AIPilotController.h"
-#include "AI/HostileFighterController.h"
+#include "AI/CombatPilotController.h"
 #include "Combat/ShipHealthComponent.h"
 #include "Player/AdastreaPlayerController.h"
 #include "Ships/Spaceship.h"
@@ -96,9 +96,9 @@ ASpaceship* UPlayerRescueSubsystem::FindPickupShip(const FVector& Location, floa
 	{
 		ASpaceship* Ship = *It;
 		const AAIPilotController* Pilot = Cast<AAIPilotController>(Ship->GetController());
-		// Traders in flight only: miners are busy with rocks, hostiles aren't friends,
-		// and a docked ship can't come and fetch anyone.
-		if (!Pilot || Pilot->IsA<AAIMinerController>() || Pilot->IsA<AHostileFighterController>()
+		// Traders in flight only: miners are busy with rocks, fighters (hostiles and
+		// patrols) are busy fighting, and a docked ship can't come and fetch anyone.
+		if (!Pilot || Pilot->IsA<AAIMinerController>() || Pilot->IsA<ACombatPilotController>()
 			|| Ship->IsWrecked() || Ship->IsDocked() || Ship->IsDocking())
 		{
 			continue;
