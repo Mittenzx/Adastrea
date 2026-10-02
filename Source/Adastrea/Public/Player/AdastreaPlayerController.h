@@ -582,6 +582,10 @@ public:
 	UFUNCTION(Exec)
 	void SpawnHostiles(const FString& Count);
 
+	/** Console: spawn patrol ships (default 2) at the station nearest the player, flying your ship's class. */
+	UFUNCTION(Exec)
+	void SpawnPatrols(const FString& Count);
+
 	/** Console: remove every hostile ship. */
 	UFUNCTION(Exec)
 	void ClearHostiles();

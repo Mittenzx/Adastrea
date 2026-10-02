@@ -1,5 +1,6 @@
 #include "Combat/ShipHealthComponent.h"
 #include "Combat/CombatProjectileSubsystem.h"
+#include "Combat/DistressSubsystem.h"
 #include "Ships/Spaceship.h"
 #include "Ships/SpaceshipDataAsset.h"
 #include "Engine/World.h"
@@ -101,6 +102,10 @@ float UShipHealthComponent::ApplyDamage(float Amount, AActor* DamageInstigator)
 	}
 
 	OnDamaged.Broadcast(ShieldDamage, HullDamage, DamageInstigator);
+	if (UDistressSubsystem* Distress = UDistressSubsystem::Get(this))
+	{
+		Distress->ReportAttack(Ship, DamageInstigator);
+	}
 
 	if (Ship->CurrentHullIntegrity <= 0.0f)
 	{

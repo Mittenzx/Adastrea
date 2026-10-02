@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "Player/AdastreaPlayerController.h"
+#include "AI/PatrolController.h"
+#include "Rescue/PlayerRescueSubsystem.h"
 #include "Combat/CombatTestDirector.h"
 #include "Combat/ShipHealthComponent.h"
 #include "Trading/CargoComponent.h"
@@ -803,6 +805,34 @@ void AAdastreaPlayerController::SpawnHostiles(const FString& Count)
 {
 	const int32 N = Count.IsEmpty() ? 2 : FMath::Clamp(FCString::Atoi(*Count), 1, 12);
 	ACombatTestDirector::SpawnHostilesNearPlayer(GetWorld(), N, 25000.0f);
+}
+
+void AAdastreaPlayerController::SpawnPatrols(const FString& Count)
+{
+	const int32 N = Count.IsEmpty() ? 2 : FMath::Clamp(FCString::Atoi(*Count), 1, 8);
+	const ASpaceship* PlayerShip = Cast<ASpaceship>(GetPawn());
+	if (!PlayerShip)
+	{
+		UE_LOG(LogAdastrea, Log, TEXT("SpawnPatrols: fly a ship first (patrols use its class)"));
+		return;
+	}
+	ASpaceStation* Nearest = nullptr;
+	float BestDistSq = TNumericLimits<float>::Max();
+	for (TActorIterator<ASpaceStation> It(GetWorld()); It; ++It)
+	{
+		const float DistSq = FVector::DistSquared(It->GetActorLocation(), PlayerShip->GetActorLocation());
+		if (DistSq < BestDistSq)
+		{
+			BestDistSq = DistSq;
+			Nearest = *It;
+		}
+	}
+	int32 Spawned = 0;
+	for (int32 i = 0; i < N; ++i)
+	{
+		Spawned += APatrolController::SpawnPatrol(GetWorld(), PlayerShip->GetClass(), Nearest) ? 1 : 0;
+	}
+	UE_LOG(LogAdastrea, Log, TEXT("SpawnPatrols: spawned %d at %s"), Spawned, Nearest ? *Nearest->GetName() : TEXT("the origin"));
 }
 
 void AAdastreaPlayerController::ClearHostiles()
@@ -2808,6 +2838,13 @@ void AAdastreaPlayerController::ExitStationInterior(bool bOpenTrade)
 	{
 		return;
 	}
+	// Woken in a medical bay after a rescue: the ship may not be in yet.
+	if (const UPlayerRescueSubsystem* Rescue = UPlayerRescueSubsystem::Get(this); Rescue && Rescue->IsRescueUnderway() && !Ship->IsDocked())
+	{
+		const FString Reason = Rescue->GetTransitBlockReason();
+		ShowHUDMessage(Reason.IsEmpty() ? TEXT("Your ship hasn't been towed in yet") : Reason, 3.0f, true);
+		return;
+	}
 
 	if (AvatarPawn)
 	{
@@ -2932,6 +2969,15 @@ void AAdastreaPlayerController::DebugStationRooms()
 
 void AAdastreaPlayerController::HandleStationTerminalUsed(EStationTerminalType Type)
 {
+	// Woken in a trader's sick bay: no going anywhere until it docks.
+	if (const UPlayerRescueSubsystem* Rescue = UPlayerRescueSubsystem::Get(this))
+	{
+		if (const FString Reason = Rescue->GetTransitBlockReason(); !Reason.IsEmpty())
+		{
+			ShowHUDMessage(Reason, 3.0f, true);
+			return;
+		}
+	}
 	switch (Type)
 	{
 	case EStationTerminalType::Trading:       ExitStationInterior(true); break;
@@ -2939,6 +2985,7 @@ void AAdastreaPlayerController::HandleStationTerminalUsed(EStationTerminalType T
 	case EStationTerminalType::ToConcourse:   SwitchStationRoom(EStationRoom::Concourse); break;
 	case EStationTerminalType::ToMaintenance: SwitchStationRoom(EStationRoom::Maintenance); break;
 	case EStationTerminalType::ToHabitation:  SwitchStationRoom(EStationRoom::Habitation); break;
+	case EStationTerminalType::ToMedical:     SwitchStationRoom(EStationRoom::Medical); break;
 	case EStationTerminalType::Outfitting:
 	{
 		const ASpaceship* VisitShip = StationVisitShip.Get();

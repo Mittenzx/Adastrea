@@ -27,6 +27,7 @@ namespace
 		case EStationTerminalType::ToHabitation:  return FLinearColor(0.20f, 0.75f, 0.45f);
 		case EStationTerminalType::Service:       return FLinearColor(0.70f, 0.40f, 0.95f);
 		case EStationTerminalType::Outfitting:    return FLinearColor(0.15f, 0.90f, 0.60f);
+		case EStationTerminalType::ToMedical:     return FLinearColor(0.85f, 0.95f, 1.00f);
 		default:                                  return FLinearColor(0.20f, 0.60f, 0.95f);
 		}
 	}
@@ -108,6 +109,7 @@ FText AStationTerminal::GetInteractPrompt_Implementation() const
 	case EStationTerminalType::ToConcourse:   return FText::FromString(TEXT("Go to Concourse"));
 	case EStationTerminalType::ToMaintenance: return FText::FromString(TEXT("Enter Maintenance Dock"));
 	case EStationTerminalType::ToHabitation:  return FText::FromString(TEXT("Enter Habitation"));
+	case EStationTerminalType::ToMedical:     return FText::FromString(TEXT("Enter Medical Bay"));
 	case EStationTerminalType::Service:       return FText::FromString(ServicePrompt);
 	case EStationTerminalType::Outfitting:    return FText::FromString(TEXT("Open Outfitting Bay"));
 	default:                                  return FText::FromString(TEXT("Return to Ship"));
@@ -358,6 +360,7 @@ void AStationInterior::BuildLayout()
 	{
 	case EStationRoom::Maintenance: BuildMaintenance(); break;
 	case EStationRoom::Habitation:  BuildHabitation();  break;
+	case EStationRoom::Medical:     BuildMedical();     break;
 	default:                        BuildConcourse();   break;
 	}
 }
@@ -404,6 +407,7 @@ void AStationInterior::BuildConcourse()
 	AddKiosk(EStationTerminalType::Trading,       FVector(  200,  640, 0), -90.0f, TEXT("TRADING DEPARTMENT"));
 	AddKiosk(EStationTerminalType::ToMaintenance, FVector(  500, -640, 0),  90.0f, TEXT("MAINTENANCE DOCK"));
 	AddKiosk(EStationTerminalType::ToHabitation,  FVector( 1350,    0, 0), 180.0f, TEXT("HABITATION"));
+	AddKiosk(EStationTerminalType::ToMedical,     FVector( -250, -640, 0),  90.0f, TEXT("MEDICAL BAY"));
 
 	// General lighting (this location has no scene lights).
 	AddLight(FVector(-1200, 0, H - 60.0f), FLinearColor(1.0f, 0.8f, 0.5f), 4000.0f, 900.0f);
@@ -534,5 +538,68 @@ void AStationInterior::BuildHabitation()
 	for (const float LX : { -700.0f, -100.0f, 500.0f })
 	{
 		AddLight(FVector(LX, -150, H - 60.0f), FLinearColor(1.0f, 0.85f, 0.65f), 5000.0f, 1000.0f);
+	}
+}
+
+// --------------------------------------------------------------------
+// Medical bay: beds with curtains along the north wall, a scanner arch and the
+// treatment bed in the middle, supply cabinets to the south. Rescued pilots wake here.
+// --------------------------------------------------------------------
+void AStationInterior::BuildMedical()
+{
+	const float HalfLen = 900.0f;
+	const float HalfWid = 600.0f;
+	const float H = 350.0f;
+	const FLinearColor WallCol(0.62f, 0.68f, 0.72f);
+	const FLinearColor Linen(0.88f, 0.90f, 0.92f);
+	const FLinearColor Frame(0.35f, 0.40f, 0.45f);
+	const FLinearColor Curtain(0.45f, 0.70f, 0.72f);
+	const FLinearColor MedCross(0.20f, 0.75f, 0.85f);
+	ArrivalLocal = FVector(-750.0f, 0.0f, 100.0f);
+	SurfaceRoom = TEXT("Med");
+
+	BuildShell(HalfLen, HalfWid, H, WallCol);
+
+	// Four recovery beds against the north wall, curtains between them.
+	for (int32 i = 0; i < 4; ++i)
+	{
+		const float BX = -450.0f + i * 300.0f;
+		AddBox(*FString::Printf(TEXT("BedFrame_%d"), i), FVector(BX, 450, 30), FVector(55, 100, 30), Frame);
+		AddBox(*FString::Printf(TEXT("BedSheet_%d"), i), FVector(BX, 450, 64), FVector(52, 96, 4), Linen, false);
+		AddBox(*FString::Printf(TEXT("BedPillow_%d"), i), FVector(BX, 530, 72), FVector(40, 16, 6), Linen, false);
+		AddBox(*FString::Printf(TEXT("BedMonitor_%d"), i), FVector(BX + 75.0f, 585, 170), FVector(30, 6, 22), MedCross, false);
+		AddBox(*FString::Printf(TEXT("Curtain_%d"), i), FVector(BX + 150.0f, 450, 140), FVector(2, 120, 110), Curtain, false);
+		AddLight(FVector(BX, 450, H - 60.0f), FLinearColor(0.95f, 0.98f, 1.0f), 7000.0f, 600.0f);
+	}
+
+	// Treatment bed under a scanner arch in the middle of the room.
+	AddBox(TEXT("TreatmentBase"), FVector(100, 0, 40), FVector(110, 50, 40), Frame);
+	AddBox(TEXT("TreatmentPad"), FVector(100, 0, 84), FVector(105, 46, 4), Linen, false);
+	AddBox(TEXT("ScannerPostN"), FVector(100, 90, 120), FVector(15, 10, 120), Frame);
+	AddBox(TEXT("ScannerPostS"), FVector(100, -90, 120), FVector(15, 10, 120), Frame);
+	AddBox(TEXT("ScannerArch"), FVector(100, 0, 245), FVector(15, 100, 10), Frame, false);
+	AddBox(TEXT("ScannerGlow"), FVector(100, 0, 233), FVector(10, 85, 2), MedCross, false);
+	AddLight(FVector(100, 0, 200), MedCross, 1500.0f, 350.0f);
+
+	// Supply cabinets and a desk along the south wall, a medical cross above them.
+	for (int32 i = 0; i < 3; ++i)
+	{
+		AddBox(*FString::Printf(TEXT("Cabinet_%d"), i), FVector(-300.0f + i * 220.0f, -560, 110), FVector(90, 30, 110), Linen);
+	}
+	AddBox(TEXT("Desk_Med"), FVector(500, -500, 40), FVector(120, 45, 40), Frame);
+	AddBox(TEXT("CrossV"), FVector(-80, -588, 260), FVector(2, 18, 55), MedCross, false);
+	AddBox(TEXT("CrossH"), FVector(-80, -588, 260), FVector(2, 55, 18), MedCross, false);
+	AddBox(TEXT("FloorStripe"), FVector(-450, 0, 1), FVector(400, 40, 1), MedCross, false);
+
+	// Kiosks: back to the concourse, and the medical officer.
+	AddKiosk(EStationTerminalType::ToConcourse, FVector(-850, 0, 0), 0.0f, TEXT("CONCOURSE"));
+	AddKiosk(EStationTerminalType::Service, FVector(820, -300, 0), 180.0f, TEXT("MEDICAL OFFICER"),
+		TEXT("Talk to the Medical Officer"),
+		TEXT("\"You're fit to fly. No charge - out here a living pilot is worth more than credits.\""));
+
+	// Bright, cool clinical lighting.
+	for (const float LX : { -500.0f, 100.0f, 650.0f })
+	{
+		AddLight(FVector(LX, -100, H - 50.0f), FLinearColor(0.92f, 0.97f, 1.0f), 16000.0f, 1400.0f);
 	}
 }

@@ -21,6 +21,8 @@ enum class EStationRoom : uint8
 	Maintenance,
 	/** Lounge and crew cabins. */
 	Habitation,
+	/** Sick bay: where rescued pilots wake up (see UPlayerRescueSubsystem). */
+	Medical,
 };
 
 /** What an on-foot station terminal does when the player presses E on it. */
@@ -37,6 +39,8 @@ enum class EStationTerminalType : uint8
 	ToMaintenance,
 	/** Walk through to the habitation deck. */
 	ToHabitation,
+	/** Walk through to the medical bay. */
+	ToMedical,
 	/** Return to the ship and open the outfitting screen (needs an outfitting module on the station). */
 	Outfitting,
 	/** A room-specific service; shows its message (not implemented yet). */
@@ -114,6 +118,7 @@ protected:
 	void BuildConcourse();
 	void BuildMaintenance();
 	void BuildHabitation();
+	void BuildMedical();
 
 	/** Floor, ceiling and four outer walls for a room of the given half-extents. */
 	void BuildShell(float HalfLen, float HalfWid, float H, const FLinearColor& WallCol);

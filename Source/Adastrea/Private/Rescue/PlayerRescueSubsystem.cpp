@@ -3,15 +3,15 @@
 #include "Rescue/TowDrone.h"
 #include "AI/AIMinerController.h"
 #include "AI/AIPilotController.h"
-#include "AI/HostileFighterController.h"
+#include "AI/CombatPilotController.h"
 #include "Combat/ShipHealthComponent.h"
 #include "Player/AdastreaPlayerController.h"
 #include "Ships/Spaceship.h"
 #include "Stations/DockingBayModule.h"
 #include "Stations/SpaceStation.h"
+#include "Stations/StationInterior.h"
 #include "Engine/World.h"
-#include "Camera/CameraActor.h"
-#include "Camera/CameraComponent.h"
+#include "Camera/PlayerCameraManager.h"
 #include "EngineUtils.h"
 #include "AdastreaLog.h"
 
@@ -25,11 +25,12 @@ namespace PlayerRescue
 	constexpr float StationArrival = 600.0f;
 	/** Extra margin beyond the pickup ship's hull for the pod to be taken aboard (cm). */
 	constexpr float ShipArrivalMargin = 400.0f;
-	constexpr float CameraBlendSeconds = 1.5f;
-	/** Tow shot: camera this far to the side of the wreck, above it, and back along the path (cm). */
-	constexpr float TowShotSide = 3500.0f;
-	constexpr float TowShotUp = 1200.0f;
-	constexpr float TowShotBack = 1500.0f;
+	/** Waking up: fade to black, hold, then fade in on the medical bay (s). */
+	constexpr float FadeOutSeconds = 1.0f;
+	constexpr float BlackSeconds = 0.8f;
+	constexpr float FadeInSeconds = 3.0f;
+	/** Ask the repaired ship to dock again this often until it's in (s). */
+	constexpr float DockRetrySeconds = 3.0f;
 }
 
 UPlayerRescueSubsystem* UPlayerRescueSubsystem::Get(const UObject* WorldContext)
@@ -96,9 +97,9 @@ ASpaceship* UPlayerRescueSubsystem::FindPickupShip(const FVector& Location, floa
 	{
 		ASpaceship* Ship = *It;
 		const AAIPilotController* Pilot = Cast<AAIPilotController>(Ship->GetController());
-		// Traders in flight only: miners are busy with rocks, hostiles aren't friends,
-		// and a docked ship can't come and fetch anyone.
-		if (!Pilot || Pilot->IsA<AAIMinerController>() || Pilot->IsA<AHostileFighterController>()
+		// Traders in flight only: miners are busy with rocks, fighters (hostiles and
+		// patrols) are busy fighting, and a docked ship can't come and fetch anyone.
+		if (!Pilot || Pilot->IsA<AAIMinerController>() || Pilot->IsA<ACombatPilotController>()
 			|| Ship->IsWrecked() || Ship->IsDocked() || Ship->IsDocking())
 		{
 			continue;
@@ -215,9 +216,10 @@ void UPlayerRescueSubsystem::TickRescue(float DeltaTime)
 	}
 
 	ASpaceStation* Home = Station.Get();
-	AEscapePod* EscapePod = Pod.Get();
 	ADockingBayModule* Bay = Home ? Home->GetDockingBayModule() : nullptr;
-	if (!Ship || !PC || !EscapePod || !Bay)
+	AEscapePod* EscapePod = Pod.Get();
+	const bool bInPod = !bAwake && WakeClock < 0.0f;
+	if (!Ship || !PC || !Bay || (bInPod && !EscapePod))
 	{
 		UE_LOG(LogAdastreaCombat, Warning, TEXT("Rescue: lost track (%s); giving up"), *GetStatus());
 		Reset();
@@ -225,95 +227,171 @@ void UPlayerRescueSubsystem::TickRescue(float DeltaTime)
 	}
 	const FString StationName = AAIPilotController::GetStationDisplayName(Home);
 
-	// Riding with a trader: once aboard, have it ferry us to the tow's station.
-	if (ASpaceship* Trader = PickupShip.Get(); Trader && !bPilotAtStation)
+	if (bInPod)
 	{
-		AAIPilotController* Pilot = Cast<AAIPilotController>(Trader->GetController());
-		if (Trader->IsWrecked() || !Pilot)
+		// Heading for a trader that was disabled first: make for the station instead.
+		ASpaceship* Trader = PickupShip.Get();
+		if (EscapePod->GetDestination() != Bay && (!Trader || Trader->IsWrecked() || !Trader->GetController()))
 		{
-			// The ride was lost: the pod heads for the station on its own.
 			PickupShip = nullptr;
-			bFerryOrdered = false;
 			EscapePod->SetDestination(Bay, PlayerRescue::StationArrival);
-			PC->SetViewTargetWithBlend(EscapePod, PlayerRescue::CameraBlendSeconds);
 			Message(TEXT("Your ride was disabled - the pod is heading for the station"), 4.0f, true);
 		}
-		else if (EscapePod->HasArrived() && !bFerryOrdered)
+		else if (EscapePod->HasArrived())
 		{
-			bFerryOrdered = Pilot->FerryTo(Home);
-			PC->SetViewTargetWithBlend(Trader, PlayerRescue::CameraBlendSeconds);
-			Message(FString::Printf(TEXT("Aboard %s - heading to %s"), *Trader->GetShipName().ToString(), *StationName), 5.0f);
+			if (Trader && EscapePod->GetDestination() == Trader)
+			{
+				if (AAIPilotController* Pilot = Cast<AAIPilotController>(Trader->GetController()))
+				{
+					bFerryOrdered = Pilot->FerryTo(Home);
+				}
+			}
+			else
+			{
+				bPilotAtStation = true;
+			}
+			BeginWake();
 		}
-		else if (bFerryOrdered && Trader->IsDocked() && Trader->GetDockedStation() == Home)
+	}
+	else if (WakeClock >= 0.0f)
+	{
+		WakeClock += DeltaTime;
+		if (WakeClock >= PlayerRescue::FadeOutSeconds + PlayerRescue::BlackSeconds)
+		{
+			WakeClock = -1.0f;
+			WakeInMedicalBay();
+		}
+	}
+	else if (!bPilotAtStation)
+	{
+		// Awake in a trader's sick bay: ashore once it docks at the tow's station.
+		ASpaceship* Trader = PickupShip.Get();
+		if (!Trader || Trader->IsWrecked() || !Trader->GetController())
 		{
 			bPilotAtStation = true;
+			Message(FString::Printf(TEXT("Your ride was disabled - a station shuttle brought you to %s"), *StationName), 5.0f, true);
 		}
-	}
-	else if (!PickupShip.IsValid() && EscapePod->HasArrived() && EscapePod->GetDestination() == Bay)
-	{
-		bPilotAtStation = true;
-	}
-
-	// At the station: watch the tow bring the ship in.
-	if (bPilotAtStation && !bWatchingTow)
-	{
-		bWatchingTow = true;
-		EscapePod->SetDestination(Bay, PlayerRescue::StationArrival);
-		FActorSpawnParameters CamParams;
-		CamParams.ObjectFlags |= RF_Transient;
-		WatchCamera = GetWorld()->SpawnActor<ACameraActor>(ACameraActor::StaticClass(), GetTowShot(Ship, Bay), CamParams);
-		if (WatchCamera)
+		else if (Trader->IsDocked() && Trader->GetDockedStation() == Home)
 		{
-			WatchCamera->GetCameraComponent()->SetConstraintAspectRatio(false);
-			PC->SetViewTargetWithBlend(WatchCamera, PlayerRescue::CameraBlendSeconds);
+			bPilotAtStation = true;
+			Message(FString::Printf(TEXT("%s has docked at %s - you can go ashore"), *Trader->GetShipName().ToString(), *StationName), 5.0f);
 		}
-		Message(FString::Printf(TEXT("Safe aboard %s - waiting for the tow"), *StationName), 5.0f);
+		else if (!bFerryOrdered)
+		{
+			if (AAIPilotController* Pilot = Cast<AAIPilotController>(Trader->GetController()))
+			{
+				bFerryOrdered = Pilot->FerryTo(Home);
+			}
+		}
 	}
 
-	// Keep the tow shot framed as the wreck comes in.
-	if (WatchCamera)
+	// The ship: towed in, repaired, docked with nobody aboard.
+	if (!bShipSentToDock)
 	{
-		const FTransform Shot = GetTowShot(Ship, Bay);
-		WatchCamera->SetActorLocationAndRotation(
-			FMath::VInterpTo(WatchCamera->GetActorLocation(), Shot.GetLocation(), DeltaTime, 2.0f),
-			FMath::RInterpTo(WatchCamera->GetActorRotation(), Shot.Rotator(), DeltaTime, 2.0f));
+		ATowDrone* Drone = Tow.Get();
+		if (!Drone)
+		{
+			// Lost the tow: the station brings it in another way.
+			UE_LOG(LogAdastreaCombat, Warning, TEXT("Rescue: tow drone lost; moving the wreck to the bay"));
+			const FVector Out = (Ship->GetActorLocation() - Bay->GetActorLocation()).GetSafeNormal();
+			Ship->SetActorLocation(Bay->GetActorLocation() + Out * PlayerRescue::DropDistance);
+			DockTowedShip();
+		}
+		else if (Drone->HasDelivered())
+		{
+			DockTowedShip();
+		}
+	}
+	else if (!Ship->IsDocked() && !Ship->IsDocking())
+	{
+		DockRetryClock += DeltaTime;
+		if (DockRetryClock >= PlayerRescue::DockRetrySeconds)
+		{
+			DockRetryClock = 0.0f;
+			Ship->SetNearbyStation(Bay);
+			Ship->RequestDocking();
+		}
 	}
 
-	ATowDrone* Drone = Tow.Get();
-	if (!Drone)
+	// Done once the pilot is at the station and the ship is docked there.
+	if (bAwake && bPilotAtStation && bShipSentToDock && Ship->IsDocked())
 	{
-		UE_LOG(LogAdastreaCombat, Warning, TEXT("Rescue: tow drone lost; repairing in place"));
-		FallbackClock = 0.0f;
-		return;
-	}
-	if (bPilotAtStation && Drone->HasDelivered())
-	{
-		Reunite();
+		const AAdastreaPlayerController* APC = Cast<AAdastreaPlayerController>(PC);
+		if (APC && APC->IsWalkingStation())
+		{
+			Message(FString::Printf(TEXT("Your ship is docked at %s, repaired free of charge. Board it at the airlock."), *StationName), 6.0f);
+			Reset();
+		}
+		else
+		{
+			ReuniteInShip();
+		}
 	}
 }
 
-FTransform UPlayerRescueSubsystem::GetTowShot(const ASpaceship* Ship, const AActor* Bay)
+FString UPlayerRescueSubsystem::GetTransitBlockReason() const
 {
-	// Off to the side of the tow path and a little above, looking past the wreck at the station.
-	const FVector WreckLoc = Ship->GetActorLocation();
-	const FVector Path = (Bay->GetActorLocation() - WreckLoc).GetSafeNormal();
-	FVector Side = FVector::CrossProduct(Path, FVector::UpVector).GetSafeNormal();
-	if (Side.IsNearlyZero())
+	if (!IsRescueUnderway() || !bAwake || bPilotAtStation)
 	{
-		Side = FVector::RightVector;
+		return FString();
 	}
-	const FVector Eye = WreckLoc + Side * PlayerRescue::TowShotSide + FVector::UpVector * PlayerRescue::TowShotUp - Path * PlayerRescue::TowShotBack;
-	const FVector Focus = FMath::Lerp(WreckLoc, Bay->GetActorLocation(), 0.3f);
-	return FTransform((Focus - Eye).Rotation(), Eye);
+	const ASpaceship* Trader = PickupShip.Get();
+	return FString::Printf(TEXT("Still in flight aboard %s - wait until it docks"),
+		Trader ? *Trader->GetShipName().ToString() : TEXT("the trader"));
 }
 
-void UPlayerRescueSubsystem::Reunite()
+void UPlayerRescueSubsystem::BeginWake()
+{
+	WakeClock = 0.0f;
+	if (APlayerController* PC = PlayerController.Get(); PC && PC->PlayerCameraManager)
+	{
+		PC->PlayerCameraManager->StartCameraFade(0.0f, 1.0f, PlayerRescue::FadeOutSeconds, FLinearColor::Black, false, true);
+	}
+}
+
+void UPlayerRescueSubsystem::WakeInMedicalBay()
 {
 	ASpaceship* Ship = Wreck.Get();
 	APlayerController* PC = PlayerController.Get();
+	AAdastreaPlayerController* APC = Cast<AAdastreaPlayerController>(PC);
+	bAwake = true;
+	if (APC && Ship)
+	{
+		APC->EnterStationRoom(Ship, EStationRoom::Medical);
+	}
+	if (PC && PC->PlayerCameraManager)
+	{
+		PC->PlayerCameraManager->StartCameraFade(1.0f, 0.0f, PlayerRescue::FadeInSeconds, FLinearColor::Black);
+	}
+	if (!APC || !APC->IsWalkingStation())
+	{
+		// No interior to wake in: stay with the pod; the pilot re-boards the ship when it docks.
+		UE_LOG(LogAdastreaCombat, Warning, TEXT("Rescue: couldn't open the medical bay; the pilot waits in the pod"));
+		return;
+	}
+	if (AEscapePod* EscapePod = Pod.Get())
+	{
+		EscapePod->Destroy();
+	}
+
+	const FString StationName = AAIPilotController::GetStationDisplayName(Station.Get());
+	if (const ASpaceship* Trader = PickupShip.Get(); Trader && !bPilotAtStation)
+	{
+		Message(FString::Printf(TEXT("You wake in the sick bay aboard %s. The crew have checked you over; they're taking you to %s."),
+			*Trader->GetShipName().ToString(), *StationName), 7.0f);
+	}
+	else
+	{
+		Message(FString::Printf(TEXT("You wake in the medical bay of %s. The medics have checked you over - your ship is being towed in."),
+			*StationName), 7.0f);
+	}
+}
+
+void UPlayerRescueSubsystem::DockTowedShip()
+{
+	ASpaceship* Ship = Wreck.Get();
 	ASpaceStation* Home = Station.Get();
 	ADockingBayModule* Bay = Home ? Home->GetDockingBayModule() : nullptr;
-
 	if (ATowDrone* Drone = Tow.Get())
 	{
 		Drone->Release();
@@ -322,22 +400,26 @@ void UPlayerRescueSubsystem::Reunite()
 	{
 		Ship->HealthComponent->Restore();   // free repair; clears the wreck state
 	}
-	PC->Possess(Ship);
-	if (AEscapePod* EscapePod = Pod.Get())
-	{
-		EscapePod->Destroy();
-	}
-	if (WatchCamera)
-	{
-		WatchCamera->Destroy();
-		WatchCamera = nullptr;
-	}
+	bShipSentToDock = true;
+	DockRetryClock = 0.0f;
 	if (Bay)
 	{
 		Ship->SetNearbyStation(Bay);
 		Ship->RequestDocking();
 	}
-	Message(FString::Printf(TEXT("%s repaired your ship free of charge - docking"), *AAIPilotController::GetStationDisplayName(Home)), 5.0f);
+	UE_LOG(LogAdastreaCombat, Log, TEXT("Rescue: %s towed in and repaired; docking"), *Ship->GetName());
+}
+
+void UPlayerRescueSubsystem::ReuniteInShip()
+{
+	ASpaceship* Ship = Wreck.Get();
+	APlayerController* PC = PlayerController.Get();
+	PC->Possess(Ship);
+	if (AEscapePod* EscapePod = Pod.Get())
+	{
+		EscapePod->Destroy();
+	}
+	Message(FString::Printf(TEXT("%s repaired your ship free of charge"), *AAIPilotController::GetStationDisplayName(Station.Get())), 5.0f);
 	Reset();
 }
 
@@ -352,13 +434,11 @@ void UPlayerRescueSubsystem::Reset()
 	bPending = false;
 	bFerryOrdered = false;
 	bPilotAtStation = false;
-	bWatchingTow = false;
+	WakeClock = -1.0f;
+	bAwake = false;
+	bShipSentToDock = false;
+	DockRetryClock = 0.0f;
 	FallbackClock = -1.0f;
-	if (WatchCamera)
-	{
-		WatchCamera->Destroy();
-	}
-	WatchCamera = nullptr;
 }
 
 FString UPlayerRescueSubsystem::GetStatus() const
@@ -373,8 +453,8 @@ FString UPlayerRescueSubsystem::GetStatus() const
 	}
 	const ATowDrone* Drone = Tow.Get();
 	const AEscapePod* EscapePod = Pod.Get();
-	return FString::Printf(TEXT("tow=%s pod=%s pickup=%s ferry=%d atStation=%d"),
+	return FString::Printf(TEXT("tow=%s pod=%s pickup=%s ferry=%d awake=%d atStation=%d shipSent=%d"),
 		Drone ? *UEnum::GetValueAsString(Drone->GetTowState()) : TEXT("none"),
 		EscapePod ? *UEnum::GetValueAsString(EscapePod->GetPodState()) : TEXT("none"),
-		*GetNameSafe(PickupShip.Get()), bFerryOrdered, bPilotAtStation);
+		*GetNameSafe(PickupShip.Get()), bFerryOrdered, bAwake, bPilotAtStation, bShipSentToDock);
 }

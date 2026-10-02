@@ -9,7 +9,6 @@ class APlayerController;
 class ASpaceship;
 class ASpaceStation;
 class ATowDrone;
-class ACameraActor;
 
 /**
  * What happens when the player's ship is disabled (it is never destroyed, see
@@ -18,11 +17,13 @@ class ACameraActor;
  *  1. A tow drone launches from the nearest friendly station with a docking bay,
  *     clamps onto the wreck and hauls it to a point just outside the bay.
  *  2. The pilot ejects in an escape pod (the player possesses it and watches) that
- *     flies to that station, or to a friendly trader if one is closer. A trader that
- *     takes the pod aboard ferries the pilot to the tow's station.
- *  3. Once the pilot is at the station, the camera watches the tow come in. When both
- *     are there, the ship is repaired free of charge, the pilot re-boards it, and it
- *     docks through the normal docking flow.
+ *     flies to that station, or to a friendly trader if one is closer.
+ *  3. When the pod is taken aboard, the screen fades and the pilot wakes on foot in a
+ *     medical bay (EStationRoom::Medical), checked over by the medics. Aboard a trader,
+ *     that's the trader's sick bay until it has ferried them to the tow's station.
+ *  4. The pilot waits in the station. When the tow arrives the ship is repaired free
+ *     of charge and docked; the pilot boards it through the airlock as usual. Until
+ *     then the airlock, trading and outfitting terminals say the ship isn't in yet.
  *
  * With no friendly station anywhere, the ship is repaired where it lies after
  * FallbackRepairSeconds.
@@ -41,6 +42,12 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Rescue")
 	bool IsRescueUnderway() const { return Wreck.IsValid(); }
 
+	/**
+	 * Why the pilot can't leave the room they're in yet, or empty if they can: still in
+	 * flight aboard the trader that picked them up.
+	 */
+	FString GetTransitBlockReason() const;
+
 	/** One-line status for logs and debug UI. */
 	FString GetStatus() const;
 
@@ -52,12 +59,15 @@ public:
 private:
 	void StartRescue();
 	void TickRescue(float DeltaTime);
-	void Reunite();
+	/** Fade out; the pilot wakes in the medical bay once the screen is black. */
+	void BeginWake();
+	void WakeInMedicalBay();
+	/** The tow has delivered: repair the ship and dock it with nobody aboard. */
+	void DockTowedShip();
+	/** No on-foot interior available: put the pilot straight back in the repaired ship (the old flow). */
+	void ReuniteInShip();
 	void Message(const FString& Text, float Seconds, bool bWarning = false) const;
 	void Reset();
-
-	/** Where the camera watching the tow should be: beside the wreck, looking past it at the station. */
-	static FTransform GetTowShot(const ASpaceship* Ship, const AActor* Bay);
 
 	/** Nearest station with a docking bay to Location, or null. */
 	ASpaceStation* FindNearestFriendlyStation(const FVector& Location) const;
@@ -73,12 +83,14 @@ private:
 
 	bool bPending = false;
 	bool bFerryOrdered = false;
+	/** The pilot is at the tow's station (awake in its medical bay). */
 	bool bPilotAtStation = false;
-	/** The camera has switched to watching the tow come in. */
-	bool bWatchingTow = false;
+	/** Seconds since the wake fade-out began; negative when not fading. */
+	float WakeClock = -1.0f;
+	/** The pilot is awake on foot (in a station or a trader's medical bay). */
+	bool bAwake = false;
+	/** The towed ship has been repaired and sent in to dock. */
+	bool bShipSentToDock = false;
+	float DockRetryClock = 0.0f;
 	float FallbackClock = -1.0f;
-
-	/** Camera that watches the tow come in once the pilot is at the station. */
-	UPROPERTY(Transient)
-	TObjectPtr<ACameraActor> WatchCamera;
 };
