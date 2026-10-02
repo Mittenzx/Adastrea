@@ -851,14 +851,21 @@
           "todo": [
             {
               "text": "Stolen cargo tag and fence markets (piracy step 3)",
-              "done": false
+              "done": true,
+              "doneAt": "2026-10-03"
             },
             {
               "text": "Show station and ship names, not object names, in the packaged HUD",
-              "done": false
+              "done": true,
+              "doneAt": "2026-10-03"
             },
             {
               "text": "Station markets buy and sell the 21 new raw resources (nickel, cobalt, gases, salvage...)",
+              "done": true,
+              "doneAt": "2026-10-03"
+            },
+            {
+              "text": "Standing loss with the Authority when customs seizes stolen goods (piracy step 4)",
               "done": false
             }
           ]
@@ -893,11 +900,13 @@
           "todo": [
             {
               "text": "Gas extraction drones",
-              "done": false
+              "done": true,
+              "doneAt": "2026-10-03"
             },
             {
               "text": "Cargo-transfer drones between ships",
-              "done": false
+              "done": true,
+              "doneAt": "2026-10-03"
             },
             {
               "text": "Asteroid fields spawn the ores listed in the sector's resources",
@@ -905,6 +914,11 @@
             },
             {
               "text": "Decide if gas skimming and wreck salvage need their own drone behaviour (today they reuse mining)",
+              "done": true,
+              "doneAt": "2026-10-03"
+            },
+            {
+              "text": "AI traders use cargo drones to trade ship-to-ship",
               "done": false
             }
           ]
@@ -929,10 +943,16 @@
           "todo": [
             {
               "text": "Build the C++ CraftingManager that runs recipes",
-              "done": false
+              "done": true,
+              "doneAt": "2026-10-03"
             },
             {
               "text": "Crafting UI at production modules",
+              "done": true,
+              "doneAt": "2026-10-03"
+            },
+            {
+              "text": "Research system to unlock the 114 research-gated recipes (listed but locked on the Production Floor)",
               "done": false
             }
           ]
@@ -1495,6 +1515,44 @@
           "todo": [
             {
               "text": "Scorch and wreck overlay polish",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "art.hulldetail",
+          "name": "Hull detailing",
+          "status": "building",
+          "summary": "Geometric hull detail: armour plating + chamfers baked into the hull, plus a per-ship _Detail kit attached at spawn. Corvette done (PR #562).",
+          "paths": [
+            "hull_detail_showcase",
+            "build_ship_hull_detail",
+            "ue_import_ship_detail",
+            "_Detail.",
+            "ShipDetail"
+          ],
+          "words": [
+            "plating",
+            "greeble",
+            "greebles",
+            "hull detail",
+            "detail kit"
+          ],
+          "todo": [
+            {
+              "text": "Corvette: plated, chamfered hull + detail kit (RCS, hatches, radiators), live in game (PR #562)",
+              "done": true
+            },
+            {
+              "text": "Roll detail kits out to the other redesign hulls (Battleship next)",
+              "done": false
+            },
+            {
+              "text": "Hatch placement: visibility check so hatches don't land behind side pods",
+              "done": false
+            },
+            {
+              "text": "Auto-exposure blows light hulls out to white against the starfield",
               "done": false
             }
           ]
