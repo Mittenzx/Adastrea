@@ -345,6 +345,9 @@ void AAdastreaHUD::DrawHUD()
 	// ---- Combat: gun crosshair, lead pip, hit marker ----
 	DrawCombatOverlay(PC, Ship);
 
+	// ---- Pirate hail: comms panel with the demand (J comply / K refuse) ----
+	DrawRaidComms(PC);
+
 	// ---- HUD layout editor (H): outlines and drag/scale handling over the cockpit panels ----
 	DrawHudLayoutEditor(PC);
 

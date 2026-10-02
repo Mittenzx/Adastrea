@@ -395,6 +395,7 @@ bool UOrganisationSubsystem::LoadFromFile(const FString& Path, FString& OutError
 		Org.TaxRate = FMath::Clamp(OrgJsonNumber(Obj, TEXT("taxRate"), Org.TaxRate), 0.0f, 0.5f);
 		// -1: filled from the roster in Finalize().
 		Org.TargetFleetSize = JsonInt(Obj, TEXT("targetFleet"), -1);
+		Org.bPirate = Obj->HasField(TEXT("pirate"));
 
 		const TArray<TSharedPtr<FJsonValue>>& Colour = JsonObjectArray(Obj, TEXT("colour"));
 		if (Colour.Num() >= 3)
@@ -956,7 +957,8 @@ void UOrganisationSubsystem::RunEconomyTick()
 	bool bRosterChanged = false;
 	for (FOrgDef& Org : Orgs)
 	{
-		if (Org.Id == PlayerOrgId)
+		// Pirates can't buy hulls legally: their ships come from raids (UPirateSubsystem).
+		if (Org.Id == PlayerOrgId || Org.bPirate)
 		{
 			continue;
 		}

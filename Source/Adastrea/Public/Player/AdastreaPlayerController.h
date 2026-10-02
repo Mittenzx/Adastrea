@@ -594,6 +594,14 @@ public:
 	UFUNCTION(Exec)
 	void ClearWrecks();
 
+	/** J / console: comply with the pirate demand in the comms panel (their drones take the goods). */
+	UFUNCTION(Exec)
+	void RaidComply();
+
+	/** K / console: refuse the pirate demand in the comms panel (they attack). */
+	UFUNCTION(Exec)
+	void RaidRefuse();
+
 	/** Console: HostileWaves 0 pauses the CombatTest director's waves, 1 resumes them. */
 	UFUNCTION(Exec)
 	void HostileWaves(const FString& OnOff);

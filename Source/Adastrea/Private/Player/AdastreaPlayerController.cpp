@@ -4,6 +4,7 @@
 #include "AI/PatrolController.h"
 #include "Rescue/PlayerRescueSubsystem.h"
 #include "Combat/CombatTestDirector.h"
+#include "Combat/RaidSubsystem.h"
 #include "Combat/ShipHealthComponent.h"
 #include "Trading/CargoComponent.h"
 #include "Ships/Spaceship.h"
@@ -275,6 +276,9 @@ void AAdastreaPlayerController::SetupInputComponent()
 		// queue). Was previously unreachable - IA_OpenStationEditor/StationEditorAction were
 		// declared but never bound to ToggleStationEditor(). G is unused by any other system.
 		InputComponent->BindKey(EKeys::G, IE_Pressed, this, &AAdastreaPlayerController::ToggleStationEditor);
+		// J / K: answer a pirate hail in the comms panel (comply / refuse).
+		InputComponent->BindKey(EKeys::J, IE_Pressed, this, &AAdastreaPlayerController::RaidComply);
+		InputComponent->BindKey(EKeys::K, IE_Pressed, this, &AAdastreaPlayerController::RaidRefuse);
 	}
 
 	// F5 / F9: quicksave / quickload through Enhanced Input. Bound on the
@@ -833,6 +837,22 @@ void AAdastreaPlayerController::SpawnPatrols(const FString& Count)
 		Spawned += APatrolController::SpawnPatrol(GetWorld(), PlayerShip->GetClass(), Nearest) ? 1 : 0;
 	}
 	UE_LOG(LogAdastrea, Log, TEXT("SpawnPatrols: spawned %d at %s"), Spawned, Nearest ? *Nearest->GetName() : TEXT("the origin"));
+}
+
+void AAdastreaPlayerController::RaidComply()
+{
+	if (URaidSubsystem* Raids = URaidSubsystem::Get(this); Raids && Raids->GetPlayerHail())
+	{
+		Raids->AnswerPlayerHail(true);
+	}
+}
+
+void AAdastreaPlayerController::RaidRefuse()
+{
+	if (URaidSubsystem* Raids = URaidSubsystem::Get(this); Raids && Raids->GetPlayerHail())
+	{
+		Raids->AnswerPlayerHail(false);
+	}
 }
 
 void AAdastreaPlayerController::ClearHostiles()

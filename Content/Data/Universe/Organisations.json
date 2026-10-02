@@ -10,6 +10,7 @@
     "relations[]: standing -100 (war) .. 100 (allies) between two organisations, symmetric. Unlisted pairs sharing an allegiance default to 50, others to 0.",
     "organisations[].taxRate: authority only. Share of the profit other owners' ships make in its sectors (default 0.08). targetFleet: fleet size an authority keeps up (default: what it starts with).",
     "economy: every tickSeconds of game time ships not in the level being played earn offscreenIncome, all ships cost upkeep, authorities get sectorIncome per governed sector.",
+    "organisations[].pirate: makes the organisation a pirate gang (no parent; UPirateSubsystem). needs: starting level 0-100 of people, access, parts, supplies, information, cash. upkeep: level lost per economy tick for any of them (defaults 0.5/0.3/2/4/1.5/1). Gangs raid to fill their shortages; parts decide how many ships they can send. adastrea.PirateInfo shows them.",
     "economy: owners in debt sell a ship that isn't in view (for shipPrice x resaleFraction); owners with shipPrice x (1 + reserveFraction) buy one, up to their cap. adastrea.EconomyTick N runs ticks now."
   ],
   "economy": {
@@ -63,7 +64,14 @@
     { "id": "ira_vell", "name": "Ira Vell", "kind": "person", "parent": "deep_seam", "home": "adastrea_cinder", "credits": 2000,
       "description": "Deep Seam member flying her own miner." },
     { "id": "okon_tarr", "name": "Okon Tarr", "kind": "person", "parent": "haven_freight", "home": "corvid_haven", "credits": 2500,
-      "description": "Haven Freight Union captain." }
+      "description": "Haven Freight Union captain." },
+    { "id": "cinder_wolves", "name": "Cinder Wolves", "kind": "outfit", "home": "adastrea_relay", "credits": 12000, "colour": [0.85, 0.22, 0.15],
+      "description": "Raiders working out of the Relay, preying on the Cinder and Beta lanes. Short of parts, never of nerve.",
+      "pirate": { "needs": { "people": 45, "access": 15, "parts": 65, "supplies": 40, "information": 35, "cash": 30 } } },
+    { "id": "ashen_reach", "name": "The Ashen Reach", "kind": "outfit", "home": "varos_gauntlet", "credits": 6000, "colour": [0.6, 0.3, 0.75],
+      "description": "A ragged gang holed up in the Varos Gauntlet, living off whatever comes through.",
+      "pirate": { "needs": { "people": 30, "access": 10, "parts": 40, "supplies": 25, "information": 50, "cash": 35 },
+                  "upkeep": { "supplies": 5 } } }
   ],
   "ships": [
     { "owner": "trade_compact", "role": "patrol", "name": "Compact Patrol", "count": 3, "sector": "adastrea_prime" },

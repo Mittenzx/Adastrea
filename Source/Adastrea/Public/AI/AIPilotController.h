@@ -76,6 +76,13 @@ public:
 	 */
 	bool FerryTo(ASpaceStation* Station);
 
+	/**
+	 * Stop where we are (a pirate demand we complied with: their drones are taking the
+	 * cargo) until released. Docked ships aren't held.
+	 */
+	void SetHeldByRaiders(bool bHeld);
+	bool IsHeldByRaiders() const { return bHeldByRaiders; }
+
 	/** Display name for a station: its StationName, else the actor's name. */
 	static FString GetStationDisplayName(const ASpaceStation* Station);
 
@@ -145,6 +152,8 @@ private:
 
 	/** Sell everything, then load the item with the best margin to another station. */
 	void TradeAtCurrentStation();
+
+	bool bHeldByRaiders = false;
 
 	/** Station the current cargo run was planned for (set by TradeAtCurrentStation). */
 	UPROPERTY()

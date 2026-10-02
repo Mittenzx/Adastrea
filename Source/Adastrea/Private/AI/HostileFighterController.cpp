@@ -14,7 +14,8 @@ bool AHostileFighterController::IsHostileShip(const AActor* Actor)
 	return Pawn && Cast<AHostileFighterController>(Pawn->GetController()) != nullptr;
 }
 
-ASpaceship* AHostileFighterController::SpawnHostile(UWorld* World, TSubclassOf<ASpaceship> ShipClass, const FVector& Location, const FRotator& Facing)
+ASpaceship* AHostileFighterController::SpawnHostile(UWorld* World, TSubclassOf<ASpaceship> ShipClass, const FVector& Location, const FRotator& Facing,
+	TSubclassOf<AHostileFighterController> PilotClass)
 {
 	if (!World || !ShipClass)
 	{
@@ -28,7 +29,11 @@ ASpaceship* AHostileFighterController::SpawnHostile(UWorld* World, TSubclassOf<A
 	{
 		return nullptr;
 	}
-	AHostileFighterController* Pilot = World->SpawnActor<AHostileFighterController>(AHostileFighterController::StaticClass(), FTransform::Identity, Params);
+	if (!PilotClass)
+	{
+		PilotClass = AHostileFighterController::StaticClass();
+	}
+	AHostileFighterController* Pilot = World->SpawnActor<AHostileFighterController>(PilotClass, FTransform::Identity, Params);
 	if (!Pilot)
 	{
 		Ship->Destroy();
