@@ -4,7 +4,7 @@ Design for what combat is *for*: who attacks whom, why, and what happens afterwa
 Builds on the combat rebuild (guns, shields, wrecks, station turrets, player rescue) and on
 `UOrganisationSubsystem` (Authorities, independent orgs, owned ship records).
 
-Status: design agreed 2026-10-02. Built so far: step 1 of the build order (marked **Built**).
+Status: design agreed 2026-10-02. Built so far: steps 1 and 2 of the build order (marked **Built**).
 
 ## Setting: people are the scarcest resource
 
@@ -89,6 +89,56 @@ way, are worth more. Roughly most valuable first:
 - This uses systems that already exist: the economy and crafting tree supply the goods, drones
   are equipment they want, and organisation wallets already track their finances.
 
+### 2b. Built (step 2)
+
+- **Gangs.** An organisation with a `pirate` block in `Organisations.json` is a gang
+  (`UPirateSubsystem`): the Cinder Wolves (home: the Relay, Low security) and the Ashen Reach
+  (Varos Gauntlet, None). The block gives starting levels (0-100) for the six needs and,
+  optionally, how much each falls per economy tick. Levels are saved with the organisations.
+  Pirates never buy ships at lawful yards.
+- **Levels.** They fall every economy tick (upkeep) and when a raider is disabled (parts -12,
+  people -4). Raids raise them: cargo maps to a need by item category and name (fuel, food,
+  water, medicine: supplies; components, alloys, electronics: parts; data: information;
+  anything else is fenced for cash at a poor rate), and stripping a wreck gives parts.
+  People and access are tracked but nothing fills them until boarding and capture.
+- **Strength.** Parts decide how many raiders a gang can send (1 to 3; none below 8, so a gang
+  that keeps losing ships fades out).
+- **Desperation.** While the biggest raidable shortage stays below 30 it builds from 0 to 1
+  over 10 minutes (and eases twice as fast once the shortage is filled). It divides the cost of
+  risk by up to 3, raises the share demanded from half the cargo to all of it, and widens
+  auto-raids' reach from 2 to 4 gate hops from home.
+- **Choosing a target** (`URaidSubsystem`): every ship in the level that isn't a raider or a
+  patrol. Value is what its cargo (and a cut of its credits, when short of cash) is worth in
+  need points, weighed by shortage and importance; AI traders x1.25; wrecks add salvage.
+  Risk: sector security, patrols within 3 km, an armed target (the player), gate hops from home.
+- **Encounter.** Raiders lie in wait ahead of a moving target, or of where an AI trader is
+  heading (they fly no faster than their prey). They hail over comms from 2.5 km, close in and
+  hold 300 m off it. The hail names the need ("We're
+  running short of fuel and food. Hand over 20 Helium-3 and we let you go.").
+  - The player sees a **comms panel**: the gang's name in its colour, the line, what they want,
+    a 20 s countdown, **J comply / K refuse**. Silence, or shooting a raider, is a refusal.
+  - AI traders decide in 3 s: more likely to refuse with patrols near or in secure space.
+  - **Comply:** the target stops (AI traders hold still), and the raiders' **loot drones**
+    (`ALootDrone`) fly over, clamp on, take the demand and fly it back. Moving more than 1 km
+    from where you agreed counts as refusing.
+  - **Refuse:** the raiders disable the target (never destroy it), then drones strip the wreck's
+    whole hold plus salvage.
+  - **Retreat:** a raider whose shields fail breaks off and runs; once all have, or the job is
+    done, they leave the level (despawn 3 km out). Raiders fight back against whoever shoots
+    them. Patrols treat them as hostiles, so distress calls still work.
+- **Auto-raids** (not in CombatTest): every minute after the first two, each gang with ships to
+  spare and within reach may raid, more readily in lawless space and when desperate.
+- **Console:** `adastrea.PirateInfo`, `adastrea.PirateNeed Gang|all Need Level`,
+  `adastrea.PirateDesperation Gang|all 0-1`, `adastrea.PirateUpkeep [N]`, `adastrea.PirateUpkeepScale`,
+  `adastrea.Raid [Gang] [TargetName] [DistanceM]`, `adastrea.ClearRaids`, `adastrea.AutoRaids 0/1`,
+  `adastrea.RaidAIComply -1/0/1`, `adastrea.RaidTrader Item Units [DistanceM]`, `RaidComply`,
+  `RaidRefuse`. Test: `Tools/pie_raid_test.py` in CombatTest (scoring, AI comply, AI refuse,
+  player comply, player refuse with raiders breaking off). A trader that refuses can still
+  shelter under a station: bolts stop at the station's shields.
+- **Not yet:** stolen tags on taken cargo (step 3), standing (step 4), boarding and captives
+  (step 5), so pods and people aren't targets yet. Raiders spawn at the edge of the level rather
+  than flying from a base.
+
 ## 3. Stolen cargo
 
 - Cargo taken by force carries a **stolen** tag and its rightful owner organisation.
@@ -148,8 +198,8 @@ way, are worth more. Roughly most valuable first:
 ## Build order
 
 1. Sector security level and Authority patrols that answer beacons
-2. Pirate organisation with need levels; raider AI: choose a target by need → demand → disable
-   → drone loot → retreat
+2. **Built.** Pirate organisation with need levels; raider AI: choose a target by need → demand
+   → disable → drone loot → retreat
 3. Stolen tag on cargo, lawful station scans, fence markets
 4. Standing with each organisation instead of fixed sides; witnesses; the player can turn pirate
 5. Automatic boarding, change of ownership, registration, independent refit yards

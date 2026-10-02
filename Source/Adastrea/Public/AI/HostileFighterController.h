@@ -22,8 +22,9 @@ public:
 	/** Whether a ship is flown by a hostile pilot. */
 	static bool IsHostileShip(const AActor* Actor);
 
-	/** Spawn a hostile fighter of ShipClass at Location, facing Facing, and start it hunting. */
-	static ASpaceship* SpawnHostile(UWorld* World, TSubclassOf<ASpaceship> ShipClass, const FVector& Location, const FRotator& Facing);
+	/** Spawn a hostile fighter of ShipClass at Location, facing Facing, flown by a PilotClass (default: this class). */
+	static ASpaceship* SpawnHostile(UWorld* World, TSubclassOf<ASpaceship> ShipClass, const FVector& Location, const FRotator& Facing,
+		TSubclassOf<AHostileFighterController> PilotClass = nullptr);
 
 protected:
 	virtual ASpaceship* FindTarget() const override;

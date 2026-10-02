@@ -198,6 +198,9 @@ public:
 	/** Flight HUD: gun crosshair, lead pip on the locked ship, hit marker (AdastreaHUD_Combat.cpp). */
 	void DrawCombatOverlay(APlayerController* PC, ASpaceship* Ship);
 
+	/** Comms panel for a pirate hail aimed at the player: who, what they demand, the countdown, J comply / K refuse. */
+	void DrawRaidComms(APlayerController* PC);
+
 	// ========================
 	// TRANSIENT MESSAGE (canvas)
 	// ========================

@@ -65,10 +65,21 @@ void AAIPilotController::Tick(float DeltaSeconds)
 		Destroy();
 		return;
 	}
+	if (Ship && bHeldByRaiders)
+	{
+		Ship->SetThrottle(0.0f);
+		return;
+	}
 	if (Ship)
 	{
 		TickPilot(DeltaSeconds);
 	}
+}
+
+void AAIPilotController::SetHeldByRaiders(bool bHeld)
+{
+	bHeldByRaiders = bHeld && State != EAIPilotState::Docked;
+	UE_LOG(LogAdastrea, Log, TEXT("%s: %s"), *GetName(), bHeldByRaiders ? TEXT("held by raiders, engines cut") : TEXT("released by raiders"));
 }
 
 bool AAIPilotController::FerryTo(ASpaceStation* Station)

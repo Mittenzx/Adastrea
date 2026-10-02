@@ -168,8 +168,14 @@ sessions happens in `AGENT_BOARD.md`.
   `SpawnPatrols [N]` and `Tools/pie_distress_test.py`. Hostiles and patrols share their attack
   runs (`ACombatPilotController`). What combat is for (goal-driven pirates, stolen cargo,
   boarding, capture) is designed in `11-TECHNICAL_SPECS/PIRACY_AND_LAW.md`; step 1 of its build
-  order is done. Next: its step 2 (pirate organisations with needs), plus combat audio, bolt and
-  impact-flash look, turrets on capital ships. The old `Combat/` module archived in `e155151d`
+  order is done, and so is step 2: pirate gangs (`UPirateSubsystem`) track six need levels
+  that fall with upkeep and losses, and raid (`URaidSubsystem`, `ARaiderController`) for what
+  they lack. Raiders pick a target by need against risk, hail it with a demand (the player
+  answers in a comms panel, J comply / K refuse), take the goods with loot drones if it
+  complies, disable and strip it if not, and break off when their shields fail. Test with
+  `adastrea.Raid`, `adastrea.PirateInfo` and `Tools/pie_raid_test.py`. Next: its step 3
+  (stolen cargo, station scans, fences), plus combat audio, bolt and impact-flash look, turrets
+  on capital ships. The old `Combat/` module archived in `e155151d`
   is reference only.
 
 ---
@@ -194,7 +200,7 @@ not dead code:
 
 | System | Status |
 |--------|--------|
-| Combat | Being rebuilt: guns, shields, damage, hostile AI fighters, wrecks, station turrets, player rescue, and patrols answering distress calls by sector security (see Open work) |
+| Combat | Being rebuilt: guns, shields, damage, hostile AI fighters, wrecks, station turrets, player rescue, patrols answering distress calls by sector security, and pirate gangs raiding for what they need (see Open work) |
 | Navigation/Autopilot | Complete, disabled |
 | Quest System | Complete, disabled |
 | Faction Diplomacy | Complete, disabled |

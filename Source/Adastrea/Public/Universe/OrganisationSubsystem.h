@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "Tickable.h"
+#include "Universe/PirateTypes.h"
 #include "OrganisationSubsystem.generated.h"
 
 class AActor;
@@ -91,6 +92,10 @@ struct ADASTREA_API FOrgDef
 	/** Authority only: fleet size it keeps up by replacing lost/sold ships (it doesn't expand). Set from the roster on load. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organisation")
 	int32 TargetFleetSize = 0;
+
+	/** A pirate gang (has a "pirate" block; see UPirateSubsystem). Pirates don't buy ships at lawful yards. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Organisation")
+	bool bPirate = false;
 };
 
 /** Running totals for one organisation, shown by adastrea.OrgInfo. */
@@ -215,6 +220,10 @@ struct ADASTREA_API FSavedOrganisations
 	/** Game seconds into the current economy tick. */
 	UPROPERTY(BlueprintReadWrite, Category="Save")
 	float TickProgress = 0.0f;
+
+	/** Pirate gangs' need levels (UPirateSubsystem). */
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	TMap<FName, FPirateNeeds> PirateNeeds;
 };
 
 /**

@@ -17,6 +17,7 @@
 #include "Trading/PlayerTraderComponent.h"
 #include "Trading/TradeItemDataAsset.h"
 #include "Universe/OrganisationSubsystem.h"
+#include "Universe/PirateSubsystem.h"
 #include "AdastreaLog.h"
 #include "Audio/AudioEventLibrary.h"
 #include "EngineUtils.h"
@@ -205,6 +206,10 @@ bool USaveGameSubsystem::LoadGame(const FString& SlotName)
 	if (Orgs && CurrentSaveGame->SaveVersion >= UAdastreaSaveGame::ORGANISATIONS_SAVE_VERSION)
 	{
 		Orgs->ImportState(CurrentSaveGame->Organisations);
+		if (UPirateSubsystem* Pirates = GetGameInstance()->GetSubsystem<UPirateSubsystem>())
+		{
+			Pirates->ImportState(CurrentSaveGame->Organisations.PirateNeeds);
+		}
 	}
 
 	// Reset playtime tracking
@@ -464,6 +469,10 @@ void USaveGameSubsystem::CollectGameState(UAdastreaSaveGame* SaveGameObject)
 	if (const UOrganisationSubsystem* Orgs = GetGameInstance()->GetSubsystem<UOrganisationSubsystem>())
 	{
 		Orgs->ExportState(SaveGameObject->Organisations);
+	}
+	if (const UPirateSubsystem* Pirates = GetGameInstance()->GetSubsystem<UPirateSubsystem>())
+	{
+		Pirates->ExportState(SaveGameObject->Organisations.PirateNeeds);
 	}
 
 	// Stations first: CollectPlayerShip refers to them by index for docking.
