@@ -55,7 +55,7 @@ namespace
 	}
 
 	/** Every object in an array field (non-objects skipped). */
-	TArray<TSharedPtr<FJsonObject>> JsonObjectArray(const TSharedPtr<FJsonObject>& Obj, const TCHAR* Field)
+	TArray<TSharedPtr<FJsonObject>> JsonObjectItems(const TSharedPtr<FJsonObject>& Obj, const TCHAR* Field)
 	{
 		TArray<TSharedPtr<FJsonObject>> Out;
 		const TArray<TSharedPtr<FJsonValue>>* Values = nullptr;
@@ -280,7 +280,7 @@ bool UGalaxySubsystem::LoadFromFile(const FString& Path, FString& OutError)
 				Sec.OrbitAngle = JsonNumber(SecObj, TEXT("orbitAngle"), 0.0f);
 				Sec.Gates = JsonNameArray(SecObj, TEXT("gates"));
 				Sec.LaneGates = JsonNameArray(SecObj, TEXT("laneGates"));
-				for (const TSharedPtr<FJsonObject>& HazObj : JsonObjectArray(SecObj, TEXT("hazards")))
+				for (const TSharedPtr<FJsonObject>& HazObj : JsonObjectItems(SecObj, TEXT("hazards")))
 				{
 					FSectorHazardDef Haz;
 					Haz.Type = JsonString(HazObj, TEXT("type"));
@@ -302,7 +302,7 @@ bool UGalaxySubsystem::LoadFromFile(const FString& Path, FString& OutError)
 						Sec.Hazard = FMath::Max(Sec.Hazard, Haz.Severity);
 					}
 				}
-				for (const TSharedPtr<FJsonObject>& ResObj : JsonObjectArray(SecObj, TEXT("resources")))
+				for (const TSharedPtr<FJsonObject>& ResObj : JsonObjectItems(SecObj, TEXT("resources")))
 				{
 					FSectorResourceDef Res;
 					Res.Item = FName(*JsonString(ResObj, TEXT("item")));
@@ -312,7 +312,7 @@ bool UGalaxySubsystem::LoadFromFile(const FString& Path, FString& OutError)
 						Sec.Resources.Add(MoveTemp(Res));
 					}
 				}
-				for (const TSharedPtr<FJsonObject>& PoiObj : JsonObjectArray(SecObj, TEXT("pois")))
+				for (const TSharedPtr<FJsonObject>& PoiObj : JsonObjectItems(SecObj, TEXT("pois")))
 				{
 					FSectorPoiDef Poi;
 					Poi.Type = JsonString(PoiObj, TEXT("type"));
@@ -337,7 +337,7 @@ bool UGalaxySubsystem::LoadFromFile(const FString& Path, FString& OutError)
 	}
 
 	Regions.Reset();
-	for (const TSharedPtr<FJsonObject>& RegObj : JsonObjectArray(Root, TEXT("regions")))
+	for (const TSharedPtr<FJsonObject>& RegObj : JsonObjectItems(Root, TEXT("regions")))
 	{
 		FGalaxyRegionDef Region;
 		Region.Id = FName(*JsonString(RegObj, TEXT("id")));
