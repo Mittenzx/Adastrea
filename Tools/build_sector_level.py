@@ -5,7 +5,7 @@ e.g. "Tools/build_sector_level.py adastrea_relay". Optional: --dry-run (check on
 
 Creates the level if it doesn't exist (else opens it), removes everything a previous run placed
 (actors tagged SectorKit), then places:
-  - the space environment TestLevel uses: star dome, sun (coloured and angled from the system's
+  - TestLevel's World Settings game mode (BP_SpaceGameMode), and the space environment it uses: star dome, sun (coloured and angled from the system's
     star and the sector's orbit), dim sky light, fixed-exposure post process
   - the sector marker (ASpaceSectorMap with the sector id) and the AI ship populator
   - player start, stations (built module by module through build_level_stations), fields, props
@@ -31,6 +31,9 @@ PRIME_SUN = 32.0             # TestLevel's sun at orbitRadius 0.32
 STATION_CLASS = "/Game/Blueprints/Stations/BP_SpaceStation.BP_SpaceStation_C"
 SECTOR_MAP_CLASS = "/Game/DataAssets/Sectors/SpaceSectorMap_Blueprint.SpaceSectorMap_Blueprint_C"
 MARKETS = "/Game/DataAssets/Trading/Markets"
+# TestLevel's World Settings override: the real game mode. Without it a level falls back to the
+# project default BP_TestGameMode, which double-spawns and leaves the player without a ship.
+GAME_MODE = "/Game/Blueprints/GameModes/BP_SpaceGameMode.BP_SpaceGameMode_C"
 
 
 def load_json(rel):
@@ -74,6 +77,7 @@ def check_clearance(layout, spots):
     items = [(s["layout"], s["pos"], 15000.0) for s in layout.get("stations", [])]
     items += [(f["label"], f["pos"], float(f.get("radius", 20000))) for f in layout.get("fields", [])]
     items += [(p["label"], p["pos"], 5000.0) for p in layout.get("props", [])]
+    items += [(p["label"], p["pos"], float(p["radius"])) for p in layout.get("planets", [])]
     for name, pos, radius in items:
         for dest, g in spots.items():
             gap = math.dist(pos, g) - radius
@@ -126,6 +130,9 @@ def main():
             for child in a.get_attached_actors():
                 eas.destroy_actor(child)
             eas.destroy_actor(a)
+
+    world = unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem).get_editor_world()
+    world.get_world_settings().set_editor_property("default_game_mode", unreal.load_class(None, GAME_MODE))
 
     # --- Environment (TestLevel's recipe) ---
     dome = tagged(eas.spawn_actor_from_class(unreal.StaticMeshActor, unreal.Vector(0, 0, 0)))
@@ -194,6 +201,16 @@ def main():
         a.regenerate()
         types = [t.get_name() for t in a.get_editor_property("asteroid_types")]
         unreal.log(f"build_sector_level: field {f['label']}: {a.get_rock_count()} rocks of {types}")
+
+    # --- Planets: SM_PlanetSphere (radius 50 cm, poles on Z) scaled up, with a planet material ---
+    for pl in layout.get("planets", []):
+        a = tagged(eas.spawn_actor_from_class(unreal.StaticMeshActor, vec(pl["pos"]),
+                                              unreal.Rotator(roll=pl.get("tilt", 0.0), pitch=0.0, yaw=pl.get("yaw", 0.0))))
+        a.set_actor_label(pl["label"])
+        a.static_mesh_component.set_static_mesh(unreal.load_asset("/Game/Meshes/Environment/SM_PlanetSphere"))
+        a.static_mesh_component.set_material(0, unreal.load_asset(pl["material"]))
+        k = float(pl["radius"]) / 50.0
+        a.set_actor_scale3d(unreal.Vector(k, k, k))
 
     # --- Props ---
     for p in layout.get("props", []):

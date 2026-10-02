@@ -4,6 +4,7 @@
     "Positions are cm from the sector marker at the origin. N=+X, E=+Y. Jump gates spawn 2 km (200000) out toward their destination; the builder refuses content within 400 m of one.",
     "stations[].layout: a station in LevelStationLayouts.json (also its actor label). market: an asset in /Game/DataAssets/Trading/Markets. Stations stay at yaw 0: their modules are laid out on world axes.",
     "fields[]: an AAsteroidField; ores are crafting item ids (the sector POI's resources). Rock, ice, gas pockets and wreck debris are all fields.",
+    "planets[]: a sphere of the given radius (cm) with a planet material (Tools/ue_make_planet_materials.py); tilt rolls its bands.",
     "props[]: plain meshes (beacons, caches, derelicts) until those POIs get gameplay. hidden: not shown on maps once POI discovery exists.",
     "sun: the star's light; intensity falls off with the sector's orbitRadius unless set here. Everything the builder places is tagged SectorKit and rebuilt on every run; hand-placed extras without the tag are kept."
   ],
@@ -21,6 +22,44 @@
       ],
       "props": [
         {"label": "Relay_SmugglerCache", "poi": "SmugglerCache", "mesh": "/Game/Assets/All/SM_Obj_AsteroidDerelict_01", "pos": [-150000, 22000, 9000], "rot": [0, 35, 12], "scale": 4, "hidden": true}
+      ]
+    },
+    "kestrel_port": {
+      "level": "/Game/Maps/Sectors/Kestrel_Port",
+      "brief": "The Kestrel Port Authority's seat and the busiest fuel stop on the lanes: the port itself facing arrivals from Adastrea, a waystation where crews rest between jumps, and a little ice for the port's water.",
+      "playerStart": [10000, 62000, 3000],
+      "stations": [
+        {"layout": "Kestrel_Port", "name": "Kestrel Port", "market": "DA_Market_TradeHub", "pos": [-15000, 92000, 0]},
+        {"layout": "Kestrel_Waystation", "name": "Kestrel Waystation", "market": "DA_Market_Agricultural", "pos": [-98000, 18000, 2000]}
+      ],
+      "fields": [
+        {"label": "Port_IceField", "ores": ["WaterIce"], "count": 25, "radius": 18000, "vertical": 0.3, "scale": 10, "seed": 2205, "pos": [-12000, -118000, -5000]}
+      ]
+    },
+    "kestrel_skim": {
+      "level": "/Game/Maps/Sectors/Kestrel_Skimfields",
+      "brief": "Fuel skimmers over the giant Kestrel IV: the planet fills the sky below, gas pockets drift in its upper storm bands, and the Skimmer Platform turns what the drones bring up into fuel.",
+      "sun": {"pitch": -18},
+      "playerStart": [30000, -40000, 4000],
+      "planets": [
+        {"label": "Kestrel_IV", "material": "/Game/Materials/Planets/MI_PlanetBands_KestrelIV", "radius": 1000000, "pos": [-60000, -120000, -1110000], "tilt": 8, "yaw": 25}
+      ],
+      "stations": [
+        {"layout": "Kestrel_SkimmerPlatform", "name": "Skimmer Platform", "market": "DA_Market_Industrial", "pos": [52000, -78000, -30000]}
+      ],
+      "fields": [
+        {"label": "KestrelIV_StormBands", "ores": ["Hydrogen", "MethaneGas", "NitrogenGas"], "count": 70, "radius": 42000, "vertical": 0.2, "scale": 10, "seed": 9104, "pos": [10000, -125000, -78000]}
+      ]
+    },
+    "kestrel_edge": {
+      "level": "/Game/Maps/Sectors/Kestrel_Edge",
+      "brief": "Sparse outer space at the edge of Kestrel, low security and favoured by smugglers: a thin zinc and manganese field, and a cache tucked into a dead rock away from both lanes.",
+      "playerStart": [20000, 20000, 3000],
+      "fields": [
+        {"label": "Edge_Rocks", "ores": ["ZincOre", "ManganeseOre"], "count": 40, "radius": 34000, "vertical": 0.4, "scale": 10, "seed": 6061, "pos": [62000, 98000, 0]}
+      ],
+      "props": [
+        {"label": "Edge_SmugglerCache", "poi": "SmugglerCache", "mesh": "/Game/Assets/All/SM_Obj_AsteroidDerelict_01", "pos": [-92000, -148000, 11000], "rot": [10, 210, 0], "scale": 4, "hidden": true}
       ]
     }
   }

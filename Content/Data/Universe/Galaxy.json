@@ -218,7 +218,7 @@
           ],
           "faction": "Kestrel Port Authority",
           "description": "Fuel skimmers over the giant Kestrel IV.",
-          "level": "",
+          "level": "/Game/Maps/Sectors/Kestrel_Skimfields",
           "orbitRadius": 0.45,
           "orbitAngle": 40,
           "gates": ["kestrel_port"],
@@ -241,7 +241,7 @@
           "hazard": "None",
           "faction": "Kestrel Port Authority",
           "description": "Fuel depot and waystation.",
-          "level": "",
+          "level": "/Game/Maps/Sectors/Kestrel_Port",
           "orbitRadius": 0.3,
           "orbitAngle": 200,
           "gates": ["kestrel_edge"],
@@ -249,8 +249,8 @@
             { "item": "WaterIce", "richness": "Low" }
           ],
           "pois": [
-            { "type": "Station", "name": "Kestrel Fuel Depot" },
-            { "type": "Station", "name": "Waystation" },
+            { "type": "Station", "name": "Kestrel Port" },
+            { "type": "Station", "name": "Kestrel Waystation" },
             { "type": "JumpGate" }
           ]
         },
@@ -265,7 +265,7 @@
           ],
           "faction": "Independent",
           "description": "Sparse outer sector, favoured by smugglers.",
-          "level": "",
+          "level": "/Game/Maps/Sectors/Kestrel_Edge",
           "orbitRadius": 0.88,
           "orbitAngle": 300,
           "gates": [],
