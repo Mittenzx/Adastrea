@@ -36,7 +36,7 @@ With several editors open, `--root <checkout>` picks the editor by project_root 
 | `dock [ref]` / `undock` | fly to the station's bay and request docking / leave the dock |
 | `wait <s>` | do nothing |
 | `cmd <console command>` | e.g. `cmd SpawnHostiles 2`, `cmd adastrea.Security 3` |
-| `shot <name>` | screenshot to `Saved/Screenshots/Claude/<name>.png` (read it with Read) |
+| `shot <name>` | screenshot of the PIE viewport to `Saved/Screenshots/WindowsEditor/Claude/<name>.png` (the path is in the result; read it with Read) |
 
 Console equivalents from the PIE console: `claude.Run <commands>`, `claude.State`, `claude.Cancel`.
 

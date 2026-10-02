@@ -40,7 +40,7 @@ class FClaudeLogCapture;
  *   undock                     leave the dock
  *   wait <seconds>             do nothing
  *   cmd <console command>      run a console command (e.g. "cmd SpawnHostiles 2")
- *   shot <name>                screenshot to Saved/Screenshots/Claude/<name>.png
+ *   shot <name>                screenshot of the game viewport to Saved/Screenshots/<platform>/Claude/<name>.png
  * Each command logs "CLAUDE done <cmd> ok|FAIL <note>" and goes into the state's history.
  *
  * The state also counts the log's errors and warnings since PIE started (with the latest few

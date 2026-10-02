@@ -21,6 +21,8 @@
 #include "Misc/OutputDevice.h"
 #include "Misc/ScopeLock.h"
 #include "UnrealClient.h"
+#include "HighResScreenshot.h"
+#include "Engine/GameViewportClient.h"
 #include "EngineUtils.h"
 #include "Engine/World.h"
 #include "Engine/Engine.h"
@@ -501,7 +503,21 @@ void UClaudeDriverSubsystem::StartCurrent()
 	{
 		const FString Name = Args.Num() > 0 ? Args[0] : FString::Printf(TEXT("shot_%.0f"), GetWorld()->GetTimeSeconds());
 		const FString Path = FPaths::ConvertRelativePathToFull(FPaths::ScreenShotDir() / TEXT("Claude") / Name + TEXT(".png"));
-		FScreenshotRequest::RequestScreenshot(Path, false, false);
+		// Shoot the game's own viewport: a plain screenshot request is taken by whichever
+		// viewport draws next, which in PIE is often the level editor's.
+		UGameViewportClient* GameViewport = GetWorld()->GetGameViewport();
+		FViewport* Viewport = GameViewport ? GameViewport->Viewport : nullptr;
+		if (!Viewport)
+		{
+			Finish(false, TEXT("no game viewport"));
+			return;
+		}
+		FHighResScreenshotConfig& Config = GetHighResScreenshotConfig();
+		Config.SetResolution(Viewport->GetSizeXY().X, Viewport->GetSizeXY().Y);
+		Config.SetFilename(Path);
+		Config.bMaskEnabled = false;
+		Config.SetHDRCapture(false);
+		Viewport->TakeHighResScreenShot();
 		Finish(true, Path);
 		return;
 	}

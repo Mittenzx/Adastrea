@@ -39,7 +39,7 @@ class Editor:
     def __init__(self, root, pid=None):
         self.rex = rexlib.RemoteExecution()
         self.rex.start()
-        deadline = time.time() + 5.0
+        deadline = time.time() + 20.0
         nodes = []
         while time.time() < deadline:
             nodes = [n for n in self.rex.remote_nodes if norm(n.get("project_root", "")) == norm(root)]
