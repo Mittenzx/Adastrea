@@ -274,8 +274,12 @@ All in `Galaxy.json`, read by `UGalaxySubsystem`:
    shows each sector's security and hazard, a hazard ring, and its resources and points of interest.
    Not yet placed in any sector: food crops (Meridian), Helium-3 (Thule Corona), silver, carbon
    crystal and precious stones (Pale Expanse).
-2. Reusable pieces for hand-building: asteroid fields that spawn a given ore list, wreck fields,
-   ice fields, gas skim zones (placeable actors, not template levels).
+2. Reusable pieces for hand-building. One actor, `AAsteroidField`, makes every kind of field:
+   set its `Ores` to crafting item ids (copied from the sector's POI) and the editor picks every
+   rock type that yields them. A wreck field is debris rocks yielding scrap and salvage, a gas skim
+   zone is gas pockets yielding hydrogen or methane, so drones mine, salvage and skim through the
+   same mining code. Each raw item gets a trade item and a rock type (`DA_Asteroid_<Item>`).
+   `Tools/validate_galaxy.py` checks the data (item ids, allowed values, every sector reachable).
 3. Wave 1: hand-build a level for each of today's 17 sectors that doesn't have one, then Meridian,
    Halt and the missing sectors of Nyx and Thule (~24 sectors). Hazard effects for radiation,
    nebula and debris.

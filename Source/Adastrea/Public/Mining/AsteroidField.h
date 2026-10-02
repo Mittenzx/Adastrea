@@ -38,9 +38,22 @@ class ADASTREA_API AAsteroidField : public AActor
 public:
 	AAsteroidField();
 
-	/** Asteroid types to scatter; each is picked with weight = its Rarity. */
+	/**
+	 * What the field yields, as crafting-tree item ids ("IronOre", "WaterIce", "ScrapMetal",
+	 * "Hydrogen"...), normally copied from the sector's POI in Galaxy.json. When set, the editor
+	 * fills AsteroidTypes with every asteroid type whose ore item has one of these ids, so the
+	 * same actor makes asteroid, ice, wreck-debris and gas-pocket fields.
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Field")
+	TArray<FName> Ores;
+
+	/** Asteroid types to scatter; each is picked with weight = its Rarity. Filled from Ores when Ores is set. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Field")
 	TArray<TObjectPtr<UAsteroidDataAsset>> AsteroidTypes;
+
+	/** Fill AsteroidTypes from Ores (editor only; the result is saved with the level). */
+	UFUNCTION(BlueprintCallable, CallInEditor, Category="Field")
+	void ResolveOreTypes();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Field", meta=(ClampMin="1", ClampMax="2000"))
 	int32 AsteroidCount;
