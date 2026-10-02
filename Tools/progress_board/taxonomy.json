@@ -1,0 +1,1668 @@
+{
+  "_help": "The progress board tree. Each node: id, name, status (live | building | deferred | planned), summary, todo (list of {text, done}; editable from the board), and match rules. A commit belongs to a node when its scope is in `scopes`, a changed file path contains one of `paths` (case-insensitive; * wildcards allowed), or its subject matches one of `words` (regex, word-start). Parents include their children's commits. Edit freely: the board reloads this file live.",
+  "nodes": [
+    {
+      "id": "combat",
+      "name": "Combat",
+      "status": "building",
+      "summary": "Lean X4-style rebuild: forward guns, shields, hostile AI, wrecks, turrets, rescue, patrols.",
+      "scopes": [
+        "combat"
+      ],
+      "children": [
+        {
+          "id": "combat.weapons",
+          "name": "Weapon systems",
+          "status": "live",
+          "summary": "Fixed forward guns (hold LMB), bolts, hit flashes, lead pip and hit marker.",
+          "paths": [
+            "ShipWeaponComponent",
+            "CombatProjectileSubsystem",
+            "SpaceshipWeaponModule"
+          ],
+          "words": [
+            "gun",
+            "guns",
+            "bolt",
+            "weapon",
+            "projectile",
+            "lead pip",
+            "hit marker"
+          ],
+          "todo": [
+            {
+              "text": "Bolt and impact-flash look",
+              "done": false
+            },
+            {
+              "text": "Weapon variety beyond fixed forward guns",
+              "done": false
+            },
+            {
+              "text": "Weapon fittings bought through outfitting",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "combat.shields",
+          "name": "Shields, hull & damage",
+          "status": "live",
+          "summary": "Shields soak damage and recharge, then armor, then hull. Target shield/hull bars.",
+          "paths": [
+            "ShipHealthComponent",
+            "IDamageable",
+            "ShieldModuleDataAsset"
+          ],
+          "words": [
+            "shield",
+            "shields",
+            "armor",
+            "armour",
+            "damage"
+          ],
+          "todo": [
+            {
+              "text": "Shield impact visuals on the hull",
+              "done": false
+            },
+            {
+              "text": "Shield and armor stats per ship class from data assets",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "combat.ai",
+          "name": "Combat AI",
+          "status": "live",
+          "summary": "Hostile fighters make attack runs on the lead point, break off and come round again.",
+          "paths": [
+            "HostileFighterController",
+            "CombatPilotController"
+          ],
+          "words": [
+            "hostile",
+            "hostiles",
+            "attack run",
+            "dogfight"
+          ],
+          "todo": [
+            {
+              "text": "Goal-driven raiders: pick a target by need, demand, disable, loot, retreat (piracy step 2)",
+              "done": false
+            },
+            {
+              "text": "Hostiles surrender or flee instead of fighting to the wreck",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "combat.wrecks",
+          "name": "Wrecks (no explosions)",
+          "status": "live",
+          "summary": "At zero hull every ship is disabled and drifts as a dark, scorched wreck. Ships never explode.",
+          "words": [
+            "wreck",
+            "wrecks",
+            "disabled ship",
+            "scorch"
+          ],
+          "todo": [
+            {
+              "text": "Salvage and loot wrecks with drones",
+              "done": false
+            },
+            {
+              "text": "Recover or claim abandoned AI wrecks",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "combat.turrets",
+          "name": "Station turrets",
+          "status": "live",
+          "summary": "Turret modules pick the nearest hostile in 200 m and fire alternate barrels.",
+          "paths": [
+            "TurretModule"
+          ],
+          "words": [
+            "turret",
+            "turrets"
+          ],
+          "todo": [
+            {
+              "text": "Turrets on capital ships",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "combat.security",
+          "name": "Sector security & patrols",
+          "status": "live",
+          "summary": "Distress calls answered by patrols, scaled by the sector's security level.",
+          "paths": [
+            "DistressSubsystem",
+            "PatrolController",
+            "pie_distress_test"
+          ],
+          "words": [
+            "distress",
+            "patrol",
+            "patrols",
+            "security"
+          ],
+          "todo": [
+            {
+              "text": "Security falls off with distance from the Authority's seat station",
+              "done": false
+            },
+            {
+              "text": "Show sector security on the map and HUD on sector entry",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "combat.teams",
+          "name": "Teams & targeting",
+          "status": "live",
+          "summary": "Civil / Hostile / Neutral teams; lock and cycle targets; combat HUD.",
+          "scopes": [
+            "targeting"
+          ],
+          "paths": [
+            "CombatTeams",
+            "ITargetable",
+            "AdastreaHUD_Combat"
+          ],
+          "words": [
+            "target",
+            "targeting",
+            "lock target",
+            "team",
+            "teams"
+          ],
+          "todo": [
+            {
+              "text": "Replace fixed teams with standing per organisation (piracy step 4)",
+              "done": false
+            },
+            {
+              "text": "Target info: show owner organisation and standing",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "combat.testbed",
+          "name": "CombatTest level & director",
+          "status": "live",
+          "summary": "Blank test map with respawning dummies, hostile waves and console commands.",
+          "paths": [
+            "CombatTestDirector",
+            "Maps/CombatTest",
+            "Maps/CombatArena"
+          ],
+          "words": [
+            "CombatTest",
+            "dummies",
+            "dummy"
+          ],
+          "todo": [
+            {
+              "text": "Scenario presets for pirates vs patrols in CombatTest",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "combat.piracy",
+          "name": "Piracy & law",
+          "status": "planned",
+          "summary": "Designed: goal-driven pirates, stolen cargo, auto-boarding, capture, player piracy, guild hubs.",
+          "paths": [
+            "PIRACY_AND_LAW"
+          ],
+          "words": [
+            "pirate",
+            "pirates",
+            "piracy",
+            "boarding",
+            "bounty"
+          ],
+          "todo": [
+            {
+              "text": "Step 2: pirate organisation with need levels and raider AI",
+              "done": false
+            },
+            {
+              "text": "Step 3: stolen cargo tag, lawful station scans, fence markets",
+              "done": false
+            },
+            {
+              "text": "Step 4: standing per organisation, witnesses, player can turn pirate",
+              "done": false
+            },
+            {
+              "text": "Step 5: automatic boarding, change of ownership, refit yards",
+              "done": false
+            },
+            {
+              "text": "Step 6: player capture, kill-switch ship, working off the debt",
+              "done": false
+            },
+            {
+              "text": "Step 7: guild hub ships with on-board rules",
+              "done": false
+            },
+            {
+              "text": "Decide kill-switch death (succession proposal)",
+              "done": false
+            }
+          ]
+        }
+      ],
+      "todo": [
+        {
+          "text": "Combat audio (guns, hits, shield impacts)",
+          "done": false
+        },
+        {
+          "text": "Bolt and impact-flash look pass",
+          "done": false
+        }
+      ]
+    },
+    {
+      "id": "rescue",
+      "name": "Player rescue & survival",
+      "status": "live",
+      "summary": "A disabled player ejects, a drone tows the wreck home, you wake in the medical bay.",
+      "scopes": [
+        "rescue"
+      ],
+      "children": [
+        {
+          "id": "rescue.pod",
+          "name": "Escape pod & beacon",
+          "status": "live",
+          "summary": "Pilot ejects in a pod with a pulsing distress beacon; nearby traders pick it up.",
+          "paths": [
+            "EscapePod",
+            "RescueFlight"
+          ],
+          "words": [
+            "escape pod",
+            "eject",
+            "ejects",
+            "beacon"
+          ],
+          "todo": [
+            {
+              "text": "AI pilots eject in pods too; pods can be collected",
+              "done": false
+            },
+            {
+              "text": "Destroying a pod counts as killing (standing hit)",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "rescue.tow",
+          "name": "Tow drone & repair",
+          "status": "live",
+          "summary": "The nearest friendly station sends a tow drone; the ship is repaired free and docks.",
+          "paths": [
+            "TowDrone",
+            "PlayerRescueSubsystem"
+          ],
+          "words": [
+            "tow",
+            "tows",
+            "towed"
+          ],
+          "todo": [
+            {
+              "text": "Charge for tow and repair outside your own organisation's space",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "rescue.medbay",
+          "name": "Medical bay wake-up",
+          "status": "live",
+          "summary": "Wake on foot in the station medical bay and wait for your ship.",
+          "paths": [
+            "pie_medbay_test"
+          ],
+          "words": [
+            "medical bay",
+            "medbay",
+            "medics"
+          ],
+          "todo": [
+            {
+              "text": "Medbay dressing and medic NPC animations",
+              "done": false
+            }
+          ]
+        }
+      ],
+      "todo": [
+        {
+          "text": "Escape pod pickup as a paid job (return pods to their organisation)",
+          "done": false
+        }
+      ]
+    },
+    {
+      "id": "ai",
+      "name": "AI & NPCs",
+      "status": "live",
+      "summary": "Lightweight AI traders and miners work the sector; crew walk decks; organisations own assets.",
+      "scopes": [
+        "ai",
+        "director"
+      ],
+      "children": [
+        {
+          "id": "ai.traders",
+          "name": "AI traders",
+          "status": "live",
+          "summary": "Traders find profitable runs between stations.",
+          "paths": [
+            "AIPilotController",
+            "AIShipPopulator"
+          ],
+          "words": [
+            "AI trader",
+            "AI traders",
+            "traders"
+          ],
+          "todo": [
+            {
+              "text": "Traders react to distress and avoid low-security lanes",
+              "done": false
+            },
+            {
+              "text": "Traders carry and transfer cargo with drones",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "ai.miners",
+          "name": "AI miners",
+          "status": "live",
+          "summary": "Miners mine until full, then sell at the best-paying station.",
+          "paths": [
+            "AIMinerController"
+          ],
+          "words": [
+            "AI miner",
+            "AI miners",
+            "miners"
+          ],
+          "todo": [
+            {
+              "text": "Gas-extraction miners",
+              "done": false
+            },
+            {
+              "text": "Miners haul by drone to nearby stations",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "ai.crew",
+          "name": "Crew NPCs on foot",
+          "status": "live",
+          "summary": "Crew NPCs walk ship decks and stations (avatar phase 2).",
+          "paths": [
+            "Characters/AdastreaNPC",
+            "NPCPopulationSubsystem",
+            "DeckNavGrid",
+            "pie_npc_test"
+          ],
+          "words": [
+            "NPC",
+            "NPCs",
+            "crew"
+          ],
+          "todo": [
+            {
+              "text": "Crew jobs on deck (stations, consoles, idle spots)",
+              "done": false
+            },
+            {
+              "text": "Hire and assign crew (people are scarce)",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "ai.orgs",
+          "name": "Organisations",
+          "status": "live",
+          "summary": "Organisations own ships and stations, with a small-scale economy.",
+          "scopes": [
+            "orgs"
+          ],
+          "paths": [
+            "OrganisationSubsystem",
+            "OwnershipComponent"
+          ],
+          "words": [
+            "organisation",
+            "organisations",
+            "organization"
+          ],
+          "todo": [
+            {
+              "text": "Pirate organisations with need levels",
+              "done": false
+            },
+            {
+              "text": "Authorities that govern sectors and set security",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "ai.advanced",
+          "name": "Advanced AI (faction/personnel)",
+          "status": "deferred",
+          "summary": "Older, larger AI framework. Complete but disabled; live AI is the lean controllers.",
+          "words": [
+            "FactionLogic",
+            "PersonnelLogic",
+            "advanced AI"
+          ],
+          "todo": [
+            {
+              "text": "Decide which deferred AI pieces to revive (faction diplomacy, personnel)",
+              "done": false
+            }
+          ]
+        }
+      ],
+      "todo": []
+    },
+    {
+      "id": "ships",
+      "name": "Ships",
+      "status": "live",
+      "summary": "17-ship data-driven roster, X4-style flight, walkable interiors, outfitting.",
+      "scopes": [
+        "ships",
+        "fleet"
+      ],
+      "children": [
+        {
+          "id": "ships.flight",
+          "name": "Flight model & controls",
+          "status": "live",
+          "summary": "Flight assist, throttle, boost, travel mode; Enhanced Input.",
+          "scopes": [
+            "input",
+            "throttle"
+          ],
+          "paths": [
+            "SpaceshipControlsComponent",
+            "Input/",
+            "check_input_config",
+            "Ships/Spaceship.cpp",
+            "Ships/Spaceship.h"
+          ],
+          "words": [
+            "flight",
+            "throttle",
+            "boost",
+            "travel mode",
+            "input"
+          ],
+          "todo": [
+            {
+              "text": "Autopilot / fly-to-target for long runs",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "ships.roster",
+          "name": "Hulls & roster",
+          "status": "live",
+          "summary": "Distinct hull per class, redesigned slab-hull ships, data assets drive stats.",
+          "scopes": [
+            "shipselect",
+            "ship-select"
+          ],
+          "paths": [
+            "SpaceshipDataAsset",
+            "generate_ship_redesigns",
+            "ue_import_ship_redesigns",
+            "generate_hero_ships",
+            "hand_ships",
+            "DataAssets/Ships"
+          ],
+          "words": [
+            "hull",
+            "hulls",
+            "roster",
+            "redesign",
+            "ship select",
+            "battleship",
+            "corvette",
+            "fighter",
+            "freighter",
+            "cruiser"
+          ],
+          "todo": [
+            {
+              "text": "Patrol role ships in the roster with their own look",
+              "done": false
+            },
+            {
+              "text": "Capital-ship turrets and hardpoints",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "ships.interiors",
+          "name": "Ship interiors & decks",
+          "status": "live",
+          "summary": "Full-deck walkable interiors for 17 ships, capital bridges, props.",
+          "scopes": [
+            "interior",
+            "interiors"
+          ],
+          "paths": [
+            "SpaceshipInterior",
+            "InteriorFixture",
+            "deck_",
+            "_decks",
+            "build_capital_interiors",
+            "build_corvette_bridge",
+            "build_fighter_cabin",
+            "build_interior_props",
+            "pie_walk_ship_decks",
+            "interior_benchmark"
+          ],
+          "words": [
+            "interior",
+            "interiors",
+            "deck",
+            "decks",
+            "bridge"
+          ],
+          "todo": [
+            {
+              "text": "Medbay and brig rooms on capital decks (for captives)",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "ships.outfitting",
+          "name": "Outfitting & upgrades",
+          "status": "live",
+          "summary": "Ship upgrades bought and fitted at station outfitting modules.",
+          "scopes": [
+            "outfitting"
+          ],
+          "paths": [
+            "ShipUpgrade",
+            "OutfittingModule",
+            "AdastreaHUD_Outfitting"
+          ],
+          "words": [
+            "outfitting",
+            "upgrade",
+            "upgrades"
+          ],
+          "todo": [
+            {
+              "text": "Weapons and shields as outfitting upgrades",
+              "done": false
+            },
+            {
+              "text": "Refit yards that re-register captured ships (piracy step 5)",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "ships.camera",
+          "name": "Cameras",
+          "status": "live",
+          "summary": "Chase camera framed to hull, 1st/3rd person in interiors.",
+          "scopes": [
+            "camera"
+          ],
+          "words": [
+            "camera",
+            "chase cam"
+          ],
+          "todo": [
+            {
+              "text": "Combat camera shake and target-follow option",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "ships.docking",
+          "name": "Docking",
+          "status": "live",
+          "summary": "Range gate, dock prompt, services menu; player-built bays get docking points.",
+          "scopes": [
+            "docking"
+          ],
+          "paths": [
+            "DockingBayModule",
+            "DockingPortModule",
+            "DockingDebug",
+            "DockingSettingsDataAsset"
+          ],
+          "words": [
+            "dock",
+            "docking",
+            "docked",
+            "undock"
+          ],
+          "todo": [
+            {
+              "text": "Docking-type variety: S/M/L/XL bays, X4-style (on hold pending direction)",
+              "done": false
+            }
+          ]
+        }
+      ],
+      "todo": []
+    },
+    {
+      "id": "stations",
+      "name": "Stations",
+      "status": "live",
+      "summary": "In-game Station Editor, unique cores, 27 module meshes, walkable station interiors.",
+      "scopes": [
+        "stations",
+        "station",
+        "station-modules"
+      ],
+      "children": [
+        {
+          "id": "stations.editor",
+          "name": "Station Editor",
+          "status": "live",
+          "summary": "X4-style plan mode: 3D plan camera, construction queue, undo/redo, power gate.",
+          "scopes": [
+            "station-editor",
+            "station-builder"
+          ],
+          "paths": [
+            "Source/StationEditor",
+            "check_station_editor",
+            "StationEditor"
+          ],
+          "words": [
+            "station editor",
+            "station builder",
+            "plan mode"
+          ],
+          "todo": [
+            {
+              "text": "Move UI hover hooks to UStationEditorWidgetCpp (fixes test_editor_widget_hooks)",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "stations.modules",
+          "name": "Modules & cores",
+          "status": "live",
+          "summary": "Dedicated meshes for all 27 module types, unique core per archetype, UCX collision.",
+          "paths": [
+            "SpaceStationModule",
+            "StationCoreModule",
+            "Stations/*Module",
+            "Stations/*Lab",
+            "generate_station_",
+            "build_station_",
+            "render_station_",
+            "SpaceStations/"
+          ],
+          "words": [
+            "module",
+            "modules",
+            "core",
+            "cores",
+            "socket",
+            "sockets"
+          ],
+          "todo": [
+            {
+              "text": "Station shield visuals (stations are invulnerable for now)",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "stations.layouts",
+          "name": "Level stations & layouts",
+          "status": "live",
+          "summary": "Level stations built from LevelStationLayouts.json using the editor's attach rules.",
+          "paths": [
+            "StationLayoutLoader",
+            "LevelStationLayouts",
+            "station_layouts.py",
+            "build_level_stations",
+            "UStationLayoutDataAsset"
+          ],
+          "words": [
+            "layout",
+            "layouts",
+            "level stations"
+          ],
+          "todo": [
+            {
+              "text": "Authority seat stations in Galaxy.json layouts",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "stations.interiors",
+          "name": "Station interiors",
+          "status": "live",
+          "summary": "Walk / Maintenance / Habitation / Medical rooms.",
+          "paths": [
+            "StationInterior"
+          ],
+          "words": [
+            "station interior",
+            "concourse"
+          ],
+          "todo": [
+            {
+              "text": "Fence market back rooms on lawless stations",
+              "done": false
+            },
+            {
+              "text": "Station NPCs in the concourse",
+              "done": false
+            }
+          ]
+        }
+      ],
+      "todo": []
+    },
+    {
+      "id": "economy",
+      "name": "Economy",
+      "status": "live",
+      "summary": "Trading, mining with drones, credits; crafting recipes exist but don't run yet.",
+      "scopes": [
+        "economy",
+        "balance"
+      ],
+      "children": [
+        {
+          "id": "economy.trading",
+          "name": "Trading & markets",
+          "status": "live",
+          "summary": "Buy/sell against station marketplaces; credits and cargo on the player.",
+          "scopes": [
+            "trading"
+          ],
+          "paths": [
+            "Trading/",
+            "MarketplaceModule",
+            "TradingInterfaceWidget",
+            "trade_profit",
+            "validate_trade_content",
+            "ue_populate_market",
+            "generate_mvp_trading_content"
+          ],
+          "words": [
+            "trade",
+            "trading",
+            "market",
+            "markets",
+            "credits",
+            "cargo"
+          ],
+          "todo": [
+            {
+              "text": "Stolen cargo tag and fence markets (piracy step 3)",
+              "done": false
+            },
+            {
+              "text": "Show station and ship names, not object names, in the packaged HUD",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "economy.mining",
+          "name": "Mining & drones",
+          "status": "live",
+          "summary": "Mining drones replaced the mining laser; asteroid fields; mining HUD.",
+          "scopes": [
+            "mining",
+            "drones"
+          ],
+          "paths": [
+            "Mining/",
+            "Drones/",
+            "generate_asteroid_rocks",
+            "Maps/MiningTest"
+          ],
+          "words": [
+            "mining",
+            "mine",
+            "asteroid",
+            "asteroids",
+            "drone",
+            "drones",
+            "ore"
+          ],
+          "todo": [
+            {
+              "text": "Gas extraction drones",
+              "done": false
+            },
+            {
+              "text": "Cargo-transfer drones between ships",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "economy.crafting",
+          "name": "Crafting",
+          "status": "building",
+          "summary": "68-recipe tree feeds module build costs. CraftingManager not built yet.",
+          "scopes": [
+            "crafting"
+          ],
+          "paths": [
+            "CraftingTree",
+            "Crafting"
+          ],
+          "words": [
+            "crafting",
+            "recipe",
+            "recipes"
+          ],
+          "todo": [
+            {
+              "text": "Build the C++ CraftingManager that runs recipes",
+              "done": false
+            },
+            {
+              "text": "Crafting UI at production modules",
+              "done": false
+            }
+          ]
+        }
+      ],
+      "todo": []
+    },
+    {
+      "id": "world",
+      "name": "World & travel",
+      "status": "live",
+      "summary": "Data-driven galaxy, star system and universe maps, jump gates between sectors.",
+      "children": [
+        {
+          "id": "world.map",
+          "name": "Galaxy & sector maps",
+          "status": "live",
+          "summary": "Star system and universe map layers, sector info panel, plotted routes.",
+          "scopes": [
+            "map"
+          ],
+          "paths": [
+            "AdastreaHUD_GalaxyMap",
+            "AdastreaHUD_MapStyle",
+            "SectorMapWidget",
+            "UniverseMapWidget",
+            "SpaceSectorMap",
+            "UI/Sector"
+          ],
+          "words": [
+            "map",
+            "galaxy map",
+            "sector map",
+            "route"
+          ],
+          "todo": [
+            {
+              "text": "Show security and danger zones on the galaxy map",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "world.gates",
+          "name": "Jump gates & travel",
+          "status": "live",
+          "summary": "Jump gates between sectors and across jump lanes.",
+          "scopes": [
+            "travel"
+          ],
+          "paths": [
+            "JumpGate"
+          ],
+          "words": [
+            "jump gate",
+            "jump gates",
+            "jump lane"
+          ],
+          "todo": [
+            {
+              "text": "Gate travel for AI traders and patrols",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "world.galaxy",
+          "name": "Galaxy data & sectors",
+          "status": "live",
+          "summary": "GalaxySubsystem and Galaxy.json define sectors, security and lanes.",
+          "paths": [
+            "GalaxySubsystem",
+            "Galaxy.json",
+            "generate_sector_layout",
+            "Maps/Sector"
+          ],
+          "words": [
+            "galaxy",
+            "sector",
+            "sectors"
+          ],
+          "todo": [
+            {
+              "text": "Authorities and their seat stations in Galaxy.json",
+              "done": false
+            },
+            {
+              "text": "Ungoverned sectors with no security",
+              "done": false
+            },
+            {
+              "text": "Draw up a full galaxy plan, how many sectors, what resources, POI",
+              "done": false
+            },
+            {
+              "text": "sub divide galaxy into area's, decide on types of area, dangerous areas, what dangers",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "world.space",
+          "name": "Space environment",
+          "status": "live",
+          "summary": "Starfield, star dome, deep-space post process, planets.",
+          "scopes": [
+            "env"
+          ],
+          "paths": [
+            "gen_starfield",
+            "gen_dense_dome",
+            "StarDome",
+            "Planets/"
+          ],
+          "words": [
+            "starfield",
+            "star dome",
+            "skybox",
+            "nebula",
+            "planet"
+          ],
+          "todo": [
+            {
+              "text": "Verify star dome and asteroids render in the packaged build",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "world.navigation",
+          "name": "Navigation / autopilot / way network",
+          "status": "deferred",
+          "summary": "Complete but disabled.",
+          "words": [
+            "autopilot",
+            "navigation",
+            "way network",
+            "waypoint"
+          ],
+          "todo": [
+            {
+              "text": "Decide whether to revive autopilot and the way network",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "world.quests",
+          "name": "Quests & exploration",
+          "status": "deferred",
+          "summary": "Quest system complete but disabled; exploration/scanning partial.",
+          "words": [
+            "quest",
+            "quests",
+            "scanning",
+            "exploration"
+          ],
+          "todo": [
+            {
+              "text": "Decide whether to revive quests; rescue and pod jobs are a natural first quest type",
+              "done": false
+            }
+          ]
+        }
+      ],
+      "todo": []
+    },
+    {
+      "id": "characters",
+      "name": "Characters on foot",
+      "status": "live",
+      "summary": "Human-sized avatar with Manny body, code-driven locomotion and ragdoll.",
+      "scopes": [
+        "avatar",
+        "avatars"
+      ],
+      "children": [
+        {
+          "id": "characters.avatar",
+          "name": "Avatar & body",
+          "status": "live",
+          "summary": "Manny body, torch, third-person view in interiors.",
+          "paths": [
+            "SpaceshipAvatar",
+            "Characters/AdastreaCharacter",
+            "pie_ragdoll_test"
+          ],
+          "words": [
+            "avatar",
+            "manny",
+            "ragdoll",
+            "third-person",
+            "on foot",
+            "on-foot"
+          ],
+          "todo": [
+            {
+              "text": "Captured-player servitude: work aboard a pirate ship (piracy step 6)",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "characters.locomotion",
+          "name": "Locomotion & animation",
+          "status": "live",
+          "summary": "Code-driven locomotion animation, stride cache, a walk that feels like walking.",
+          "paths": [
+            "AdastreaLocomotionAnimInstance",
+            "pie_locomotion_test",
+            "ue_walk_test"
+          ],
+          "words": [
+            "locomotion",
+            "walk",
+            "stride",
+            "animation"
+          ],
+          "todo": [
+            {
+              "text": "Turn-in-place and stairs polish",
+              "done": false
+            }
+          ]
+        }
+      ],
+      "todo": []
+    },
+    {
+      "id": "ui",
+      "name": "HUD & UI",
+      "status": "live",
+      "summary": "Neon cockpit HUD, layout editor, menus, fleet monitor.",
+      "scopes": [
+        "hud",
+        "ui"
+      ],
+      "children": [
+        {
+          "id": "ui.cockpit",
+          "name": "Cockpit flight HUD",
+          "status": "live",
+          "summary": "Heading tape, boresight, flight-path marker, shield/hull bars, shared type ramp.",
+          "paths": [
+            "AdastreaHUD.cpp",
+            "AdastreaHUD.h",
+            "AdastreaHUD_Cockpit",
+            "AdastreaHUDStyle",
+            "AdastreaHUDWidget"
+          ],
+          "words": [
+            "HUD",
+            "cockpit",
+            "font",
+            "type ramp"
+          ],
+          "todo": [
+            {
+              "text": "Combat HUD: incoming-fire direction indicator",
+              "done": false
+            },
+            {
+              "text": "Distress call and patrol-response notifications",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "ui.layout",
+          "name": "HUD layout editor",
+          "status": "live",
+          "summary": "Move and scale cockpit HUD panels.",
+          "paths": [
+            "AdastreaHUD_Layout"
+          ],
+          "words": [
+            "layout editor"
+          ],
+          "todo": [
+            {
+              "text": "Save HUD layouts per player profile",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "ui.menus",
+          "name": "Menus",
+          "status": "live",
+          "summary": "Main menu, pause menu, settings.",
+          "paths": [
+            "MainMenuWidget",
+            "TestSettingsWidget",
+            "Content/UI"
+          ],
+          "words": [
+            "menu",
+            "pause menu",
+            "settings"
+          ],
+          "todo": [
+            {
+              "text": "Settings menu: graphics and controls",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "ui.fleetmonitor",
+          "name": "Fleet monitor (debug)",
+          "status": "live",
+          "summary": "Debug list of every ship and station with pilot, cargo and objectives.",
+          "paths": [
+            "FleetMonitor"
+          ],
+          "words": [
+            "fleet monitor"
+          ],
+          "todo": [
+            {
+              "text": "Show combat state, wrecks and distress calls",
+              "done": false
+            }
+          ]
+        }
+      ],
+      "todo": []
+    },
+    {
+      "id": "audio",
+      "name": "Audio",
+      "status": "live",
+      "summary": "Event-ID audio catalog, per-ship engine voices, mix subsystem, generated sounds.",
+      "scopes": [
+        "audio",
+        "mix"
+      ],
+      "children": [
+        {
+          "id": "audio.catalog",
+          "name": "Catalog & event SFX",
+          "status": "live",
+          "summary": "UAudioCatalogSubsystem; gameplay moments hooked to event IDs.",
+          "paths": [
+            "AudioCatalog",
+            "AudioEventLibrary",
+            "event_sfx"
+          ],
+          "words": [
+            "EventSFX",
+            "catalog",
+            "sfx"
+          ],
+          "todo": [
+            {
+              "text": "Hook combat events (fire, hit, shield break, disable) to catalog IDs",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "audio.engine",
+          "name": "Engine voices",
+          "status": "live",
+          "summary": "UShipEngineAudioComponent, size-mapped across the roster.",
+          "paths": [
+            "ShipEngineAudio",
+            "ShipEngineSoundProfile",
+            "ShipEngineVoice"
+          ],
+          "words": [
+            "engine voice",
+            "engine-voice"
+          ],
+          "todo": []
+        },
+        {
+          "id": "audio.mix",
+          "name": "Mix & ambience",
+          "status": "live",
+          "summary": "Interior muffle, menu duck, ambience beds, volume sliders.",
+          "paths": [
+            "AudioMixSubsystem",
+            "create_audio_mixes",
+            "AdastreaAudioSettings"
+          ],
+          "words": [
+            "mix",
+            "duck",
+            "ambience",
+            "muffle"
+          ],
+          "todo": [
+            {
+              "text": "Combat mix: duck ambience during fights",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "audio.generator",
+          "name": "Sound generator & QA",
+          "status": "live",
+          "summary": "Sounds generated by script, QA gate, blind A/B listening board.",
+          "paths": [
+            "Tools/audio",
+            "import_audio_assets",
+            "Content/Audio"
+          ],
+          "words": [
+            "QA gate",
+            "generator",
+            "listening"
+          ],
+          "todo": [
+            {
+              "text": "Generate combat SFX through the QA gate and listening board",
+              "done": false
+            }
+          ]
+        }
+      ],
+      "todo": [
+        {
+          "text": "Combat audio pass",
+          "done": false
+        }
+      ]
+    },
+    {
+      "id": "art",
+      "name": "Art & materials",
+      "status": "live",
+      "summary": "PBR texture sets, baked hulls, ship windows as geometry, interior texture library.",
+      "scopes": [
+        "art",
+        "materials",
+        "textures",
+        "uv",
+        "visuals",
+        "windows",
+        "renderer",
+        "assets"
+      ],
+      "children": [
+        {
+          "id": "art.hulls",
+          "name": "Hull textures & materials",
+          "status": "live",
+          "summary": "PBR-correct sets, calmer hulls, unique-UV baked hulls, lit fleet materials.",
+          "paths": [
+            "hull_textures",
+            "ue_hull_tex",
+            "regen_ship_hull",
+            "ue_fleet_materials",
+            "ue_skin",
+            "pbr_conform",
+            "strip_baked_windows",
+            "texture_benchmark",
+            "render_texture_lookdev"
+          ],
+          "words": [
+            "hull texture",
+            "PBR",
+            "material",
+            "materials",
+            "texture",
+            "textures"
+          ],
+          "todo": [
+            {
+              "text": "Scorch and wreck overlay polish",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "art.windows",
+          "name": "Windows & nav lights",
+          "status": "live",
+          "summary": "Ship windows as geometry; navigation lights.",
+          "paths": [
+            "build_ship_windows",
+            "ue_import_ship_windows",
+            "ue_navlights"
+          ],
+          "words": [
+            "window",
+            "windows",
+            "nav light",
+            "navlights"
+          ],
+          "todo": []
+        },
+        {
+          "id": "art.interiorlib",
+          "name": "Interior texture library",
+          "status": "live",
+          "summary": "16 interior sets and the M_IntSurface_Oriented master.",
+          "paths": [
+            "generate_interior_texture_library",
+            "render_interior_texture_tests",
+            "bake_interior_unique",
+            "prop_materials"
+          ],
+          "words": [
+            "texture library"
+          ],
+          "todo": []
+        },
+        {
+          "id": "art.pipeline",
+          "name": "Blender pipeline & sourcing",
+          "status": "live",
+          "summary": "Procedural Blender generators, BlenderKit sourcing, render/lookdev tools.",
+          "paths": [
+            "generate_adastrea_assets",
+            "blenderkit",
+            "render_",
+            "hand_render",
+            "fbx2obj",
+            "ue_import_all_meshes",
+            "import_art_gap_assets",
+            "qa_assets",
+            "Assets/FBX"
+          ],
+          "words": [
+            "blender",
+            "blenderkit",
+            "render",
+            "import",
+            "reimport"
+          ],
+          "todo": [
+            {
+              "text": "Delete orphaned DataAssets (DA_Weapon_*, DA_Quest_*, ...) in the editor",
+              "done": false
+            }
+          ]
+        }
+      ],
+      "todo": []
+    },
+    {
+      "id": "save",
+      "name": "Save & persistence",
+      "status": "live",
+      "summary": "Save v2: ship, cargo, docking, player-built stations; F5/F9 quicksave.",
+      "scopes": [
+        "save",
+        "quicksave",
+        "load"
+      ],
+      "paths": [
+        "SaveGame",
+        "AdastreaSaveGame"
+      ],
+      "words": [
+        "save",
+        "saves",
+        "quicksave",
+        "quickload"
+      ],
+      "todo": [
+        {
+          "text": "Save combat state: wrecks, hostiles, distress, rescue in progress",
+          "done": false
+        },
+        {
+          "text": "Re-check save v2 against the deferred systems",
+          "done": false
+        }
+      ]
+    },
+    {
+      "id": "tech",
+      "name": "Engine, tools & process",
+      "status": "live",
+      "summary": "Build, packaging, tests, CI, agent coordination, docs.",
+      "children": [
+        {
+          "id": "tech.framework",
+          "name": "Game framework",
+          "status": "live",
+          "summary": "Game mode, player controller, game instance, spawning, startup map.",
+          "scopes": [
+            "gamemode",
+            "spawn",
+            "gameplay",
+            "level",
+            "maps"
+          ],
+          "paths": [
+            "AdastreaGameMode",
+            "AdastreaPlayerController",
+            "AdastreaGameInstance",
+            "AdastreaGameState",
+            "TestGameMode",
+            "Maps/TestLevel"
+          ],
+          "words": [
+            "game mode",
+            "gamemode",
+            "spawn",
+            "spawning"
+          ],
+          "todo": []
+        },
+        {
+          "id": "tech.packaging",
+          "name": "Build & packaging",
+          "status": "building",
+          "summary": "Win64 package builds and boots into TestLevel.",
+          "scopes": [
+            "packaging",
+            "build",
+            "config",
+            "startup",
+            "start"
+          ],
+          "paths": [
+            "package_win64",
+            "build_with_ue_tools",
+            "Config/",
+            ".Build.cs",
+            ".Target.cs",
+            ".uproject"
+          ],
+          "words": [
+            "packaging",
+            "package",
+            "build",
+            "compile"
+          ],
+          "todo": [
+            {
+              "text": "Proper play-through of the packaged build",
+              "done": false
+            },
+            {
+              "text": "Profile packaged performance (~9 fps first run) and bundle a PSO cache",
+              "done": false
+            },
+            {
+              "text": "Public getters for station and ship names in the packaged HUD",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "tech.tests",
+          "name": "Tests & validation",
+          "status": "live",
+          "summary": "~590 pytest tests, UE automation tests, PIE harness, validators.",
+          "scopes": [
+            "tests",
+            "validation",
+            "ci",
+            "debug"
+          ],
+          "paths": [
+            "tests/",
+            "Tests/",
+            ".github/",
+            "check_",
+            "validate_",
+            "Validator",
+            "SmokeTest",
+            "pie_"
+          ],
+          "words": [
+            "test",
+            "tests",
+            "pytest",
+            "CI",
+            "validation"
+          ],
+          "todo": [
+            {
+              "text": "Fix order-sensitive interior-contract tests (run without -p no:randomly)",
+              "done": false
+            },
+            {
+              "text": "Fix test_event_sfx_hooks editor widget check",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "tech.agents",
+          "name": "Agent workflow",
+          "status": "live",
+          "summary": "AGENT_BOARD coordination, hooks, Claude driver, skills.",
+          "scopes": [
+            "board",
+            "hooks",
+            "claude",
+            "tools"
+          ],
+          "paths": [
+            "AGENT_BOARD",
+            ".claude/",
+            "claude_play",
+            "ClaudeDriver",
+            "CLAUDE.md",
+            "Tools/progress_board"
+          ],
+          "words": [
+            "board",
+            "agent",
+            "hook",
+            "hooks"
+          ],
+          "pathsOnly": true,
+          "todo": [
+            {
+              "text": "Auto-start the progress board server at login",
+              "done": false
+            }
+          ]
+        },
+        {
+          "id": "tech.docs",
+          "name": "Docs & design",
+          "status": "live",
+          "summary": "Roadmap, setting lore, technical specs.",
+          "scopes": [
+            "docs",
+            "roadmap",
+            "design",
+            "mvp"
+          ],
+          "paths": [
+            "docs/",
+            "Docs/",
+            "README",
+            "ROADMAP"
+          ],
+          "words": [
+            "docs",
+            "readme",
+            "roadmap"
+          ],
+          "pathsOnly": true,
+          "todo": [
+            {
+              "text": "Keep 05-ROADMAP.md in step with the board",
+              "done": false
+            }
+          ]
+        }
+      ],
+      "todo": []
+    }
+  ]
+}

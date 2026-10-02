@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adastrea Progress</title>
+<style>
+:root {
+  --bg: #0b0e14; --panel: #121722; --panel-2: #171d2a; --line: #232b3b;
+  --text: #e3e8f2; --dim: #8b95a8; --faint: #5b6578;
+  --accent: #6cc4ff; --accent-soft: rgba(108,196,255,.12);
+  --live: #5fd38d; --building: #f2b84b; --planned: #8c9cff; --deferred: #6b7486;
+  --hot: #ff8a5c; --warm: #f2b84b; --cool: #3d6a8a;
+  --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text);
+  font: 14px/1.45 "Segoe UI", system-ui, -apple-system, sans-serif; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+
+header { padding: 22px 24px 10px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; }
+h1 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: .2px; }
+h1 span { color: var(--accent); }
+.livebar { color: var(--dim); font-size: 12.5px; display: flex; gap: 8px; align-items: center; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--live); box-shadow: 0 0 0 0 rgba(95,211,141,.6); animation: pulse 2.4s infinite; }
+.dot.err { background: #e5534b; animation: none; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(95,211,141,.55) } 70% { box-shadow: 0 0 0 7px rgba(95,211,141,0) } 100% { box-shadow: 0 0 0 0 rgba(95,211,141,0) } }
+
+.top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 16px; padding: 6px 24px 14px; }
+.stats { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 10px; }
+.stat { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+.stat b { display: block; font-size: 24px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.stat small { color: var(--dim); font-size: 12px; }
+.chart { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px 8px; }
+.chart .lbl { display: flex; justify-content: space-between; color: var(--dim); font-size: 12px; margin-bottom: 4px; }
+.chart svg { width: 100%; height: 70px; display: block; }
+.chart rect { fill: var(--cool); }
+.chart rect.recent { fill: var(--accent); }
+.chart rect:hover { fill: var(--text); }
+
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 0 24px 12px; }
+.controls input[type=search] { flex: 1 1 220px; max-width: 340px; background: var(--panel); border: 1px solid var(--line);
+  border-radius: 8px; color: var(--text); padding: 7px 10px; font: inherit; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { background: var(--panel); border: 0; padding: 6px 11px; cursor: pointer; color: var(--dim); }
+.seg button.on { background: var(--accent-soft); color: var(--accent); }
+.btn { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 6px 11px; cursor: pointer; color: var(--dim); }
+.btn:hover, .seg button:hover { color: var(--text); }
+.btn.on { color: var(--accent); border-color: var(--accent); }
+
+main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; padding: 0 24px 40px; }
+.tree { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.feed { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; align-self: start;
+  position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow: auto; }
+.feed h2, .tree-head { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); font-weight: 600; margin: 0 0 8px; }
+.tree-head { display: grid; grid-template-columns: minmax(0,1fr) 120px 56px 82px; gap: 12px; padding: 10px 14px; margin: 0;
+  border-bottom: 1px solid var(--line); }
+.tree-head span:not(:first-child) { text-align: right; }
+
+.node > .row { display: grid; grid-template-columns: minmax(0,1fr) 120px 56px 82px; gap: 12px; align-items: center;
+  padding: 8px 14px; cursor: pointer; border-left: 3px solid transparent; border-bottom: 1px solid var(--line); }
+.node > .row:hover { background: var(--panel-2); }
+.node.d0 > .row { padding-top: 11px; padding-bottom: 11px; }
+.node.d0 > .row .name { font-size: 15.5px; font-weight: 600; }
+.row .title { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.chev { width: 14px; flex: none; color: var(--faint); transition: transform .15s; font-size: 11px; }
+.node.open > .row .chev { transform: rotate(90deg); color: var(--accent); }
+.name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 0 0 auto; max-width: 75%; }
+.sum { color: var(--faint); font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 1 1 0; }
+.pill { flex: none; font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; padding: 1px 7px; border-radius: 99px; border: 1px solid; }
+.pill.live { color: var(--live); border-color: rgba(95,211,141,.35); }
+.pill.building { color: var(--building); border-color: rgba(242,184,75,.4); }
+.pill.planned { color: var(--planned); border-color: rgba(140,156,255,.4); }
+.pill.deferred { color: var(--deferred); border-color: rgba(107,116,134,.5); }
+.hotdot { flex: none; font-size: 10.5px; color: var(--hot); }
+.count { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.count.zero { color: var(--faint); font-weight: 400; }
+.ago { text-align: right; color: var(--dim); font-size: 12.5px; }
+.spark { width: 120px; height: 22px; display: block; }
+.spark rect { fill: var(--cool); }
+.spark rect.on { fill: var(--accent); }
+.heat-hot > .row { border-left-color: var(--hot); }
+.heat-warm > .row { border-left-color: var(--warm); }
+.heat-cool > .row { border-left-color: var(--cool); }
+.children { display: none; }
+.node.open > .children { display: block; }
+.d1 > .row { padding-left: 34px; } .d2 > .row { padding-left: 54px; }
+
+.detail { display: none; padding: 10px 14px 14px 40px; border-bottom: 1px solid var(--line); background: #0f141e; }
+.node.open > .detail { display: block; }
+.d1 > .detail { padding-left: 60px; }
+.detail p { margin: 0 0 8px; color: var(--dim); }
+.todo { margin: 0 0 12px; }
+.todo h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--building); font-weight: 600; margin: 0 0 4px; }
+.todo ul { list-style: none; margin: 0; padding: 0; }
+.todo li { display: flex; align-items: flex-start; gap: 8px; padding: 3px 0; font-size: 13.5px; }
+.todo li input { margin: 3px 0 0; accent-color: var(--live); cursor: pointer; flex: none; }
+.todo li span { flex: 1; min-width: 0; }
+.todo li.done span { color: var(--faint); text-decoration: line-through; }
+.todo li small { color: var(--faint); font-size: 11.5px; white-space: nowrap; }
+.todo li .x { visibility: hidden; background: none; border: 0; color: var(--faint); cursor: pointer; padding: 0 4px; font-size: 14px; line-height: 1; }
+.todo li:hover .x { visibility: visible; }
+.todo li .x:hover { color: #e5534b; }
+.todo .add { margin-top: 4px; width: 100%; max-width: 520px; background: transparent; border: 1px dashed var(--line); border-radius: 6px;
+  color: var(--text); padding: 5px 8px; font: inherit; font-size: 13px; }
+.todo .add:focus { outline: none; border-color: var(--accent); border-style: solid; }
+.todo .donecount { background: none; border: 0; color: var(--faint); cursor: pointer; font-size: 12px; padding: 2px 0; }
+.tdc { flex: none; font-size: 11px; color: #f5d08a; background: rgba(242,184,75,.1); border-radius: 99px; padding: 0 7px; }
+.next { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; align-items: center; }
+.next b { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--building); font-weight: 600; margin-right: 2px; }
+.next span { background: rgba(242,184,75,.08); border: 1px solid rgba(242,184,75,.25); color: #f5d08a; padding: 2px 8px; border-radius: 6px; font-size: 12.5px; }
+.commits { list-style: none; margin: 0; padding: 0; }
+.commits li { display: grid; grid-template-columns: 56px minmax(0,1fr) auto; gap: 10px; padding: 4px 0; font-size: 13px; align-items: baseline; }
+.commits .date { color: var(--faint); font-size: 12px; font-variant-numeric: tabular-nums; }
+.commits .msg { min-width: 0; }
+.commits .chips { display: flex; gap: 5px; }
+.type { font-family: var(--mono); font-size: 11px; color: var(--faint); margin-right: 6px; }
+.type.feat { color: var(--live); } .type.fix { color: var(--hot); }
+.chip { font-size: 11px; padding: 0 6px; border-radius: 5px; border: 1px solid var(--line); color: var(--dim); text-decoration: none; white-space: nowrap; }
+a.chip:hover { color: var(--accent); border-color: var(--accent); }
+.chip.wip { color: var(--building); border-color: rgba(242,184,75,.4); }
+.more { margin-top: 6px; background: none; border: 0; color: var(--accent); cursor: pointer; padding: 0; font-size: 12.5px; }
+.new { animation: glow 3s ease-out 1; }
+@keyframes glow { 0% { background: rgba(108,196,255,.25) } 100% { background: transparent } }
+.flash > .row { animation: glow 1.6s ease-out 1; }
+.hidden { display: none !important; }
+.empty { color: var(--faint); font-size: 13px; }
+
+.day { color: var(--faint); font-size: 11.5px; text-transform: uppercase; letter-spacing: .07em; margin: 12px 0 4px; }
+.day:first-of-type { margin-top: 2px; }
+.fi { padding: 5px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+.fi:last-child { border-bottom: 0; }
+.fi .areas { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
+.fi .areas button { font-size: 11px; background: var(--accent-soft); border: 0; color: var(--accent); border-radius: 5px; padding: 0 6px; cursor: pointer; }
+.err-box { margin: 0 24px 12px; padding: 10px 14px; border: 1px solid #e5534b; border-radius: 8px; color: #ffb3ae; display: none; }
+
+@media (max-width: 1250px) { .sum { display: none; } }
+@media (max-width: 1000px) {
+  .top { grid-template-columns: 1fr; }
+  main { grid-template-columns: 1fr; }
+  .feed { position: static; max-height: none; }
+}
+@media (max-width: 640px) {
+  header, .top, .controls, main { padding-left: 16px; padding-right: 16px; }
+  .stats { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .tree-head, .node > .row { grid-template-columns: minmax(0,1fr) 44px 64px; }
+  .tree-head span:nth-child(2), .spark { display: none; }
+  .sum { display: none; }
+  .d1 > .row { padding-left: 24px; } .d2 > .row { padding-left: 34px; }
+  .detail, .d1 > .detail { padding-left: 16px; }
+  .commits li { grid-template-columns: 48px minmax(0,1fr); }
+  .commits .chips { grid-column: 2; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Adastrea <span>progress</span></h1>
+  <div class="livebar"><span class="dot" id="dot"></span><span id="live">connecting…</span></div>
+</header>
+<div class="err-box" id="err"></div>
+
+<section class="top">
+  <div class="stats" id="stats"></div>
+  <div class="chart">
+    <div class="lbl"><span>Commits per week</span><span id="chartRange"></span></div>
+    <svg id="weekly" preserveAspectRatio="none"></svg>
+  </div>
+</section>
+
+<div class="controls">
+  <input type="search" id="q" placeholder="Search systems and commits…">
+  <div class="seg" id="win">
+    <button data-d="7">7 days</button><button data-d="30">30 days</button><button data-d="90">90 days</button><button data-d="0">All time</button>
+  </div>
+  <button class="btn" id="activeOnly" title="Hide branches with no commits in the selected window">Active only</button>
+  <button class="btn" id="expandAll">Expand all</button>
+  <button class="btn" id="collapseAll">Collapse all</button>
+</div>
+
+<main>
+  <section class="tree" id="tree">
+    <div class="tree-head"><span>System</span><span>Last 16 weeks</span><span>Commits</span><span>Last work</span></div>
+    <div id="nodes"></div>
+  </section>
+  <aside class="feed"><h2>Recent activity</h2><div id="feed"></div></aside>
+</main>
+
+<script>
+const DAY = 864e5, WEEKS = 16;
+const store = {
+  get(k, d) { try { const v = localStorage.getItem("adb." + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem("adb." + k, JSON.stringify(v)); } catch {} },
+};
+let data = null, etag = null, lastOk = 0, seen = null, freshShas = new Set();
+const state = {
+  win: store.get("win", 30), open: new Set(store.get("open", ["combat"])),
+  activeOnly: store.get("activeOnly", false), q: "", showAll: new Set(), showDone: new Set(),
+};
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function ago(t) {
+  const s = (Date.now() - t) / 1000;
+  if (s < 90) return "just now";
+  if (s < 3600) return Math.round(s / 60) + "m ago";
+  if (s < 86400) return Math.round(s / 3600) + "h ago";
+  const d = Math.round(s / 86400);
+  if (d < 45) return d + "d ago";
+  if (d < 365) return Math.round(d / 30) + "mo ago";
+  return (d / 365).toFixed(1) + "y ago";
+}
+const fmtDay = t => new Date(t).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+const cutoff = () => state.win ? Date.now() - state.win * DAY : 0;
+
+function prep(d) {
+  for (const c of Object.values(d.commits)) c.t = Date.parse(c.d);
+  d.byId = {}; d.parent = {};
+  (function walk(ns, p) { for (const n of ns) { d.byId[n.id] = n; d.parent[n.id] = p; walk(n.children || [], n.id); } })(d.nodes, null);
+  d.byId.unsorted = { id: "unsorted", name: "Unsorted", status: "", commits: d.unsorted,
+    summary: "Commits no branch claims yet. Add scopes, paths or words to taxonomy.json to sort them." };
+  return d;
+}
+
+function openTodos(n) {
+  return (n.todo || []).filter(t => !t.done).length + (n.children || []).reduce((a, k) => a + openTodos(k), 0);
+}
+
+function todoBlock(n) {
+  if (n.id === "unsorted") return "";
+  const items = (n.todo || []).map((t, i) => ({ ...t, i }));
+  const open = items.filter(t => !t.done), done = items.filter(t => t.done);
+  const li = t => `<li class="${t.done ? "done" : ""}"><input type="checkbox" data-todo="toggle" data-id="${n.id}" data-i="${t.i}" ${t.done ? "checked" : ""}>` +
+    `<span>${esc(t.text)}</span>${t.doneAt ? `<small>${fmtDay(Date.parse(t.doneAt))}</small>` : ""}` +
+    `<button class="x" title="Delete" data-todo="delete" data-id="${n.id}" data-i="${t.i}">×</button></li>`;
+  const showDone = state.showDone.has(n.id);
+  return `<div class="todo"><h3>To do${open.length ? ` · ${open.length}` : ""}</h3><ul>${open.map(li).join("")}` +
+    (showDone ? done.map(li).join("") : "") + `</ul>` +
+    (done.length ? `<button class="donecount" data-showdone="${n.id}">${showDone ? "Hide" : "Show"} ${done.length} done</button>` : "") +
+    `<input class="add" data-add="${n.id}" placeholder="Add a to-do… (Enter)"></div>`;
+}
+
+function weeksOf(shas) {
+  const now = Date.now(), b = new Array(WEEKS).fill(0);
+  for (const s of shas) { const w = Math.floor((now - data.commits[s].t) / (7 * DAY)); if (w < WEEKS) b[WEEKS - 1 - w]++; }
+  return b;
+}
+function spark(shas) {
+  const b = weeksOf(shas), m = Math.max(1, ...b), w = 120 / WEEKS;
+  const recent = state.win ? Math.ceil(state.win / 7) : WEEKS;
+  return `<svg class="spark" viewBox="0 0 120 22" preserveAspectRatio="none">` + b.map((v, i) =>
+    `<rect x="${i * w + .5}" y="${22 - (v ? Math.max(2, v / m * 22) : 1)}" width="${w - 1.5}" height="${v ? Math.max(2, v / m * 22) : 1}" class="${i >= WEEKS - recent ? "on" : ""}"><title>${v} commits</title></rect>`).join("") + `</svg>`;
+}
+
+function matchesQ(n) {
+  if (!state.q) return true;
+  const q = state.q;
+  if ((n.name + " " + (n.summary || "") + " " + (n.todo || []).map(t => t.text).join(" ")).toLowerCase().includes(q)) return true;
+  if (n.commits.some(s => data.commits[s].s.toLowerCase().includes(q))) return true;
+  return (n.children || []).some(matchesQ);
+}
+
+function commitLi(s) {
+  const c = data.commits[s];
+  const m = c.s.match(/^(\w+)(?:\(([^)]*)\))?!?:\s*(.*)$/);
+  const type = m ? m[1] : "", msg = m ? m[3] : c.s;
+  let chips = "";
+  if (c.pr) chips += `<a class="chip" href="${data.github}/pull/${c.pr}" target="_blank" title="${esc(c.b || "")}">#${c.pr}</a>`;
+  if (c.wip) chips += `<span class="chip wip" title="Not on main yet">in flight · ${esc(c.wip)}</span>`;
+  chips += `<a class="chip" href="${data.github}/commit/${s}" target="_blank" style="font-family:var(--mono)">${s.slice(0, 7)}</a>`;
+  return `<li class="${freshShas.has(s) ? "new" : ""}"><span class="date">${fmtDay(c.t)}</span>` +
+    `<span class="msg">${type ? `<span class="type ${type}">${esc(type)}</span>` : ""}${esc(msg)}</span><span class="chips">${chips}</span></li>`;
+}
+
+function renderNode(n, depth) {
+  if (!matchesQ(n)) return "";
+  const cut = cutoff();
+  const inWin = n.commits.filter(s => data.commits[s].t >= cut);
+  if (state.activeOnly && !inWin.length) return "";
+  const last = n.commits.length ? data.commits[n.commits[0]].t : 0;
+  const age = last ? (Date.now() - last) / DAY : 1e9;
+  const heat = age < 3 ? "heat-hot" : age < 14 ? "heat-warm" : age < 60 ? "heat-cool" : "";
+  const open = state.open.has(n.id) || (state.q && depth === 0);
+  const kids = (n.children || []).map(k => renderNode(k, depth + 1)).join("");
+
+  let detail = "";
+  if (n.summary) detail += `<p>${esc(n.summary)}</p>`;
+  detail += todoBlock(n);
+  if (!n.children || !n.children.length) {
+    let list = state.q ? n.commits.filter(s => data.commits[s].s.toLowerCase().includes(state.q)) : inWin;
+    let note = "";
+    if (!list.length && !state.q) { list = n.commits.slice(0, 5); note = list.length ? `<p class="empty">Nothing in this window. Most recent work:</p>` : `<p class="empty">No commits yet.</p>`; }
+    const lim = state.showAll.has(n.id) ? list.length : 12;
+    detail += note + `<ul class="commits">${list.slice(0, lim).map(commitLi).join("")}</ul>`;
+    if (list.length > lim) detail += `<button class="more" data-more="${n.id}">Show all ${list.length}</button>`;
+  }
+
+  return `<div class="node d${depth} ${heat} ${open ? "open" : ""}" data-id="${n.id}">
+    <div class="row"><div class="title"><span class="chev">▶</span><span class="name">${esc(n.name)}</span>` +
+    (n.status ? `<span class="pill ${n.status}">${n.status}</span>` : "") +
+    (openTodos(n) ? `<span class="tdc" title="Open to-dos in this branch">${openTodos(n)} to do</span>` : "") +
+    (age < 2 ? `<span class="hotdot" title="Touched in the last 48h">●</span>` : "") +
+    `<span class="sum">${esc(n.summary || "")}</span></div>
+    ${spark(n.commits)}<span class="count ${inWin.length ? "" : "zero"}">${inWin.length}</span><span class="ago">${last ? ago(last) : "—"}</span></div>
+    ${detail ? `<div class="detail">${detail}</div>` : ""}<div class="children">${kids}</div></div>`;
+}
+
+function renderTop() {
+  const all = Object.values(data.commits), now = Date.now();
+  const n7 = all.filter(c => c.t >= now - 7 * DAY).length, n30 = all.filter(c => c.t >= now - 30 * DAY).length;
+  const prs = new Set(all.filter(c => c.pr && c.t >= now - 30 * DAY).map(c => c.pr)).size;
+  const leaves = Object.values(data.byId).filter(n => n.id !== "unsorted" && !(n.children || []).length);
+  const active = leaves.filter(n => n.commits.length && data.commits[n.commits[0]].t >= now - 7 * DAY).length;
+  const todoOpen = data.nodes.reduce((a, n) => a + openTodos(n), 0);
+  const todoDone7 = Object.values(data.byId).reduce((a, n) => a + (n.todo || []).filter(t => t.done && t.doneAt && Date.parse(t.doneAt) >= now - 7 * DAY).length, 0);
+  $("#stats").innerHTML = [[n7, "commits this week"], [todoOpen, `open to-dos${todoDone7 ? ` · ${todoDone7} done this week` : ""}`], [n30, "commits in 30 days"], [prs, "PRs merged in 30 days"], [`${active}<small style="font-size:14px;color:var(--dim)">/${leaves.length}</small>`, "systems touched this week"]]
+    .map(([v, l]) => `<div class="stat"><b>${v}</b><small>${l}</small></div>`).join("");
+
+  const W = 26, b = new Array(W).fill(0);
+  for (const c of all) { const w = Math.floor((now - c.t) / (7 * DAY)); if (w < W) b[W - 1 - w]++; }
+  const m = Math.max(1, ...b), bw = 100 / W;
+  const svg = $("#weekly"); svg.setAttribute("viewBox", "0 0 100 70");
+  svg.innerHTML = b.map((v, i) => { const h = v ? Math.max(1.5, v / m * 66) : .6;
+    const wk = new Date(now - (W - 1 - i) * 7 * DAY);
+    return `<rect x="${i * bw + .25}" y="${70 - h}" width="${bw - .7}" height="${h}" class="${i >= W - 4 ? "recent" : ""}"><title>Week of ${fmtDay(wk - 6 * DAY)}: ${v} commits</title></rect>`; }).join("");
+  $("#chartRange").textContent = `last 26 weeks · peak ${m}`;
+}
+
+function renderFeed() {
+  const shas = Object.keys(data.commits).sort((a, b) => data.commits[b].t - data.commits[a].t).slice(0, 40);
+  let html = "", day = "";
+  for (const s of shas) {
+    const c = data.commits[s], d = new Date(c.t).toDateString();
+    if (d !== day) { day = d; html += `<div class="day">${Date.now() - c.t < DAY && new Date().toDateString() === d ? "Today" : fmtDay(c.t)}</div>`; }
+    const leaves = (c.n || []).filter(id => !(data.byId[id].children || []).length).slice(0, 4);
+    html += `<div class="fi ${freshShas.has(s) ? "new" : ""}">${esc(c.s.replace(/^\w+(\([^)]*\))?!?:\s*/, ""))}` +
+      (c.wip ? ` <span class="chip wip">in flight</span>` : c.pr ? ` <a class="chip" href="${data.github}/pull/${c.pr}" target="_blank">#${c.pr}</a>` : "") +
+      `<div class="areas">${leaves.map(id => `<button data-goto="${id}">${esc(data.byId[id].name)}</button>`).join("")}</div></div>`;
+  }
+  $("#feed").innerHTML = html;
+}
+
+function render() {
+  if (!data) return;
+  const typing = document.activeElement?.dataset?.add ? { id: document.activeElement.dataset.add, v: document.activeElement.value } : null;
+  const drafts = [...document.querySelectorAll("[data-add]")].filter(x => x.value).map(x => [x.dataset.add, x.value]);
+  renderTop();
+  $("#nodes").innerHTML = data.nodes.map(n => renderNode(n, 0)).join("") + renderNode(data.byId.unsorted, 0);
+  renderFeed();
+  document.querySelectorAll("#win button").forEach(b => b.classList.toggle("on", +b.dataset.d === state.win));
+  $("#activeOnly").classList.toggle("on", state.activeOnly);
+  for (const [id, v] of drafts) { const x = document.querySelector(`[data-add="${CSS.escape(id)}"]`); if (x && !(typing && typing.id === id && typing.v === "")) x.value = v; }
+  if (typing) document.querySelector(`[data-add="${CSS.escape(typing.id)}"]`)?.focus();
+}
+
+function goto(id) {
+  for (let p = id; p; p = data.parent[p]) state.open.add(p);
+  store.set("open", [...state.open]);
+  render();
+  const el = document.querySelector(`.node[data-id="${CSS.escape(id)}"]`);
+  if (el) { el.scrollIntoView({ behavior: "smooth", block: "center" }); el.classList.add("flash"); }
+}
+
+async function todo(req) {
+  try {
+    const r = await fetch("/api/todo", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(req) });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || r.status);
+    data = prep(d); etag = r.headers.get("ETag"); seen = new Set(Object.keys(d.commits)); freshShas = new Set();
+    render();
+    if (req.op === "add") document.querySelector(`[data-add="${CSS.escape(req.id)}"]`)?.focus();
+  } catch (err) { alert("Couldn't save the to-do: " + err.message); }
+}
+document.addEventListener("keydown", e => {
+  const a = e.target.closest?.("[data-add]");
+  if (a && e.key === "Enter" && a.value.trim()) { const text = a.value.trim(); a.value = ""; todo({ id: a.dataset.add, op: "add", text }); }
+});
+
+document.addEventListener("click", e => {
+  const td = e.target.closest("[data-todo]");
+  if (td) { todo({ id: td.dataset.id, op: td.dataset.todo, index: +td.dataset.i }); return; }
+  const sd = e.target.closest("[data-showdone]");
+  if (sd) { const id = sd.dataset.showdone; state.showDone.has(id) ? state.showDone.delete(id) : state.showDone.add(id); render(); return; }
+  const more = e.target.closest("[data-more]");
+  if (more) { state.showAll.add(more.dataset.more); render(); return; }
+  const g = e.target.closest("[data-goto]");
+  if (g) { goto(g.dataset.goto); return; }
+  if (e.target.closest("a")) return;
+  const row = e.target.closest(".row");
+  if (row) {
+    const id = row.parentElement.dataset.id;
+    state.open.has(id) ? state.open.delete(id) : state.open.add(id);
+    row.parentElement.classList.toggle("open");
+    store.set("open", [...state.open]);
+  }
+});
+$("#win").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; state.win = +b.dataset.d; store.set("win", state.win); render(); });
+$("#activeOnly").onclick = () => { state.activeOnly = !state.activeOnly; store.set("activeOnly", state.activeOnly); render(); };
+$("#expandAll").onclick = () => { Object.keys(data.byId).forEach(id => state.open.add(id)); store.set("open", [...state.open]); render(); };
+$("#collapseAll").onclick = () => { state.open.clear(); store.set("open", []); render(); };
+let qt; $("#q").addEventListener("input", e => { clearTimeout(qt); qt = setTimeout(() => { state.q = e.target.value.trim().toLowerCase(); render(); }, 120); });
+
+async function poll() {
+  try {
+    const r = await fetch("/api/data", { headers: etag ? { "If-None-Match": etag } : {} });
+    if (r.status === 200) {
+      const d = prep(await r.json());
+      if (d.error) throw new Error(d.error);
+      const shas = new Set(Object.keys(d.commits));
+      freshShas = seen ? new Set([...shas].filter(s => !seen.has(s))) : new Set();
+      seen = shas; data = d; etag = r.headers.get("ETag");
+      render();
+    } else if (r.status !== 304) throw new Error(`server returned ${r.status}`);
+    lastOk = Date.now(); $("#dot").classList.remove("err"); $("#err").style.display = "none";
+  } catch (err) {
+    $("#dot").classList.add("err");
+    $("#err").style.display = "block";
+    $("#err").textContent = `Can't reach the board server (${err.message}). Start it with: python Tools/progress_board/server.py`;
+  }
+}
+setInterval(() => {
+  if (lastOk) $("#live").textContent = `live · checked ${ago(lastOk)}`;
+}, 1000);
+poll(); setInterval(poll, 15000);
+</script>
+</body>
+</html>
