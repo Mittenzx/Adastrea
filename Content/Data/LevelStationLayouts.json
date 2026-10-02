@@ -105,6 +105,67 @@
         {"id": "Reactor",  "item": "ReactorModule",     "on": "Barracks", "dir": "S"},
         {"id": "Armoury", "item": "ArmouryModule", "on": "Reactor", "dir": "S"}
       ]
+    },
+    "Relay_Waystation": {
+      "_note": "Outer Relay (adastrea_relay): independent fuel stop and free market beside the lane gate to Kestrel.",
+      "core": "StationCore_Industrial",
+      "modules": [
+        {"id": "CorN",    "item": "CorridorModule",    "on": "core",   "dir": "N"},
+        {"id": "DockN",   "item": "DockingBayModule",  "on": "CorN",   "dir": "N"},
+        {"id": "Fuel",    "item": "FuelDepotModule",   "on": "core",   "dir": "E"},
+        {"id": "Fuel2",   "item": "FuelDepotModule",   "on": "Fuel",   "dir": "E"},
+        {"id": "Market",  "item": "MarketplaceModule", "on": "core",   "dir": "W"},
+        {"id": "Cargo",   "item": "CargoBayModule",    "on": "Market", "dir": "W"},
+        {"id": "Hab",     "item": "HabitationModule",  "on": "core",   "dir": "S"},
+        {"id": "Reactor", "item": "ReactorModule",     "on": "Hab",    "dir": "S"},
+        {"id": "Turret",  "item": "TurretModule",      "on": "Fuel2",  "dir": "S"}
+      ]
+    },
+    "Kestrel_Port": {
+      "_note": "Kestrel Port (kestrel_port): the Port Authority's seat. Fuel depot, harbour and market; turrets because it is High security.",
+      "core": "StationCore_TradeHub",
+      "modules": [
+        {"id": "CorN",    "item": "CorridorModule",    "on": "core",    "dir": "N"},
+        {"id": "DockN",   "item": "DockingBayModule",  "on": "CorN",    "dir": "N"},
+        {"id": "CorS",    "item": "CorridorModule",    "on": "core",    "dir": "S"},
+        {"id": "DockS",   "item": "DockingBayModule",  "on": "CorS",    "dir": "S", "rot": 180},
+        {"id": "Market",  "item": "MarketplaceModule", "on": "core",    "dir": "W"},
+        {"id": "Cargo",   "item": "CargoBayModule",    "on": "Market",  "dir": "W"},
+        {"id": "FuelE",   "item": "FuelDepotModule",   "on": "core",    "dir": "E"},
+        {"id": "FuelE2",  "item": "FuelDepotModule",   "on": "FuelE",   "dir": "E"},
+        {"id": "Reactor", "item": "ReactorModule",     "on": "FuelE",   "dir": "N"},
+        {"id": "Hab",     "item": "HabitationModule",  "on": "Market",  "dir": "N"},
+        {"id": "TurretE", "item": "TurretModule",      "on": "FuelE2",  "dir": "E"},
+        {"id": "TurretW", "item": "TurretModule",      "on": "Cargo",   "dir": "W"}
+      ]
+    },
+    "Kestrel_Waystation": {
+      "_note": "Waystation (kestrel_port): where crews rest between jumps. Habitation, food and an outfitter.",
+      "core": "StationCore_Agricultural",
+      "modules": [
+        {"id": "CorN",    "item": "CorridorModule",    "on": "core",    "dir": "N"},
+        {"id": "Dock",    "item": "DockingBayModule",  "on": "CorN",    "dir": "N"},
+        {"id": "Market",  "item": "MarketplaceModule", "on": "core",    "dir": "S"},
+        {"id": "HabE",    "item": "HabitationModule",  "on": "core",    "dir": "E"},
+        {"id": "HabW",    "item": "HabitationModule",  "on": "core",    "dir": "W"},
+        {"id": "Solar",   "item": "SolarArrayModule",  "on": "HabE",    "dir": "E"},
+        {"id": "Reactor", "item": "ReactorModule",     "on": "HabW",    "dir": "W"},
+        {"id": "Outfit",  "item": "OutfittingModule",  "on": "Market",  "dir": "S"}
+      ]
+    },
+    "Kestrel_SkimmerPlatform": {
+      "_note": "Skimmer Platform (kestrel_skim): processes gas skimmed from Kestrel IV's storm bands into fuel.",
+      "core": "StationCore_Industrial",
+      "modules": [
+        {"id": "CorN",    "item": "CorridorModule",    "on": "core",    "dir": "N"},
+        {"id": "Dock",    "item": "DockingBayModule",  "on": "CorN",    "dir": "N"},
+        {"id": "Proc",    "item": "ProcessingModule",  "on": "core",    "dir": "E"},
+        {"id": "Fuel",    "item": "FuelDepotModule",   "on": "Proc",    "dir": "E"},
+        {"id": "Fuel2",   "item": "FuelDepotModule",   "on": "Fuel",    "dir": "E"},
+        {"id": "Market",  "item": "MarketplaceModule", "on": "core",    "dir": "W"},
+        {"id": "Hab",     "item": "HabitationModule",  "on": "core",    "dir": "S"},
+        {"id": "Reactor", "item": "ReactorModule",     "on": "Hab",     "dir": "S"}
+      ]
     }
   }
 }

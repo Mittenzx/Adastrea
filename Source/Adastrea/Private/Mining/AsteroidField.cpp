@@ -11,6 +11,8 @@
 #include "GameFramework/Pawn.h"
 #include "Camera/PlayerCameraManager.h"
 #include "Materials/MaterialInterface.h"
+#include "Trading/TradeItemDataAsset.h"
+#include "AssetRegistry/AssetRegistryModule.h"
 #include "AdastreaLog.h"
 
 AAsteroidField::AAsteroidField()
@@ -34,7 +36,78 @@ AAsteroidField::AAsteroidField()
 void AAsteroidField::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
+#if WITH_EDITOR
+	if (Ores.Num() > 0 && GetWorld() && !GetWorld()->IsGameWorld())
+	{
+		ResolveOreTypes();
+	}
+#endif
 	Regenerate();
+}
+
+namespace
+{
+	/**
+	 * Crafting id "Helium3" matches trade item id "TradeItem_Helium-3": letters and digits only,
+	 * case-insensitive, without the "TradeItem_" prefix.
+	 */
+	FString CanonicalItemId(const FString& Id)
+	{
+		FString Out;
+		for (const TCHAR C : Id)
+		{
+			if (FChar::IsAlnum(C))
+			{
+				Out.AppendChar(FChar::ToLower(C));
+			}
+		}
+		Out.RemoveFromStart(TEXT("tradeitem"));
+		return Out;
+	}
+}
+
+void AAsteroidField::ResolveOreTypes()
+{
+	if (Ores.Num() == 0)
+	{
+		return;
+	}
+	TSet<FString> Wanted;
+	for (const FName Ore : Ores)
+	{
+		Wanted.Add(CanonicalItemId(Ore.ToString()));
+	}
+
+	TArray<FAssetData> Assets;
+	FModuleManager::LoadModuleChecked<FAssetRegistryModule>(TEXT("AssetRegistry")).Get()
+		.GetAssetsByClass(UAsteroidDataAsset::StaticClass()->GetClassPathName(), Assets, /*bSearchSubClasses=*/true);
+	TArray<TObjectPtr<UAsteroidDataAsset>> Found;
+	TSet<FString> Matched;
+	for (const FAssetData& Data : Assets)
+	{
+		UAsteroidDataAsset* Type = Cast<UAsteroidDataAsset>(Data.GetAsset());
+		if (!Type || !Type->OreItem)
+		{
+			continue;
+		}
+		const FString Id = CanonicalItemId(Type->OreItem->ItemID.ToString());
+		if (Wanted.Contains(Id))
+		{
+			Found.Add(Type);
+			Matched.Add(Id);
+		}
+	}
+	for (const FString& Id : Wanted)
+	{
+		if (!Matched.Contains(Id))
+		{
+			UE_LOG(LogAdastrea, Warning, TEXT("AsteroidField %s: no asteroid type yields '%s'"), *GetName(), *Id);
+		}
+	}
+	if (Found.Num() > 0)
+	{
+		AsteroidTypes = MoveTemp(Found);
+	}
 }
 
 void AAsteroidField::BeginPlay()

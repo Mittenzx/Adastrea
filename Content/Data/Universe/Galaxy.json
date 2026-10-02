@@ -8,9 +8,57 @@
     "sectors[].gates: sectors in the same system reachable by gate (made two-way on load).",
     "sectors[].laneGates: sectors in OTHER systems reachable by a jump-lane gate; the systems must share a jumpLink (made two-way on load).",
     "Jump gates spawn automatically in each sector's level for its gates + laneGates; fly through one to travel.",
-    "A level can also join a sector by placing an ASpaceSectorMap and setting its SectorId."
+    "A level can also join a sector by placing an ASpaceSectorMap and setting its SectorId.",
+    "regions[]: id, name, type (Heartland, March, Frontier, Ruin, Wilds, Haven), color, description. systems[].region: the region's id. See docs/11-TECHNICAL_SPECS/GALAXY_PLAN.md.",
+    "sectors[].hazard: None, Mild, Severe or Extreme (left out = the worst of hazards[]). hazards[]: {type, severity}, types RadiationStorm, Nebula, GravityTide, Debris, Minefield, Heat, GasStorm, Distance, WarMachines.",
+    "sectors[].resources[]: {item, richness}; item is a CraftingTree.json item id, richness Low, Medium or High.",
+    "sectors[].pois[]: {type, name?, resources?, hidden?}; the brief for what the sector's hand-built level contains."
   ],
   "startSystem": "adastrea",
+  "regions": [
+    {
+      "id": "compact_core",
+      "name": "Compact Core",
+      "type": "Heartland",
+      "color": [0.95, 0.78, 0.35],
+      "description": "The safe heart of known space: markets, shipyards, research and the food that keeps people alive."
+    },
+    {
+      "id": "varos_marches",
+      "name": "Varos Marches",
+      "type": "March",
+      "color": [0.85, 0.35, 0.3],
+      "description": "The Syndicate's military border. Tolls, scans and salvage; the way to the Graveyard."
+    },
+    {
+      "id": "free_belts",
+      "name": "Free Belts",
+      "type": "Frontier",
+      "color": [0.4, 0.8, 0.55],
+      "description": "Mining and gas country run by the Haven Moot. The space itself is the danger."
+    },
+    {
+      "id": "graveyard",
+      "name": "The Graveyard",
+      "type": "Ruin",
+      "color": [0.6, 0.55, 0.75],
+      "description": "Where the old empires' fleets died. Salvage everywhere, and their war machines are still awake."
+    },
+    {
+      "id": "pale_expanse",
+      "name": "Pale Expanse",
+      "type": "Wilds",
+      "color": [0.55, 0.75, 1.0],
+      "description": "Unsurveyed hot stars. The rarest metals and Helium-3, radiation, heat, and nobody to call."
+    },
+    {
+      "id": "sable_dark",
+      "name": "Sable Dark",
+      "type": "Haven",
+      "color": [0.5, 0.3, 0.6],
+      "description": "Pirate space behind dark nebulae, reached only by hidden lanes. Fences, refits and no law."
+    }
+  ],
   "systems": [
     {
       "id": "adastrea",
@@ -19,6 +67,7 @@
       "starColor": [1.0, 0.86, 0.55],
       "position": [0, 0],
       "faction": "Adastrea Trade Compact",
+      "region": "compact_core",
       "description": "Home system. A steady yellow star, the Compact's busiest markets, and the shipyards that built most of the fleet.",
       "jumpLinks": ["kestrel", "varos", "lumen"],
       "sectors": [
@@ -27,62 +76,123 @@
           "name": "Adastrea Prime",
           "type": "Trade Hub",
           "security": "High",
+          "hazard": "None",
           "faction": "Adastrea Trade Compact",
           "description": "The core trade sector: main station, market and shipyard.",
           "level": "/Game/Maps/TestLevel",
           "orbitRadius": 0.32,
           "orbitAngle": 210,
-          "gates": ["adastrea_alpha", "adastrea_cinder"]
+          "gates": ["adastrea_alpha", "adastrea_cinder"],
+          "resources": [
+            { "item": "IronOre", "richness": "Medium" },
+            { "item": "Silicon", "richness": "Low" }
+          ],
+          "pois": [
+            { "type": "Station", "name": "Prime Station" },
+            { "type": "Shipyard", "name": "Prime Yards" },
+            { "type": "AsteroidField", "name": "Prime Field", "resources": ["IronOre", "Silicon"] },
+            { "type": "JumpGate" }
+          ]
         },
         {
           "id": "adastrea_alpha",
           "name": "Alpha Reach",
           "type": "Industrial",
           "security": "High",
+          "hazard": "None",
           "faction": "Adastrea Trade Compact",
           "description": "Refineries and fabrication yards along the inner lane.",
           "level": "/Game/Maps/SectorTest_Alpha",
           "orbitRadius": 0.5,
           "orbitAngle": 120,
-          "gates": ["adastrea_beta"]
+          "gates": ["adastrea_beta"],
+          "resources": [
+            { "item": "NickelOre", "richness": "Medium" },
+            { "item": "AluminiumOre", "richness": "Medium" }
+          ],
+          "pois": [
+            { "type": "Station", "name": "Alpha Refinery" },
+            { "type": "Station", "name": "Fabrication Yards" },
+            { "type": "AsteroidField", "resources": ["NickelOre", "AluminiumOre"] },
+            { "type": "JumpGate" }
+          ]
         },
         {
           "id": "adastrea_beta",
           "name": "Beta Drift",
           "type": "Research",
           "security": "Medium",
+          "hazard": "Mild",
+          "hazards": [
+            { "type": "Nebula", "severity": "Mild" }
+          ],
           "faction": "Adastrea Trade Compact",
           "description": "Survey outposts studying the drift nebula.",
           "level": "/Game/Maps/SectorTest_Beta",
           "orbitRadius": 0.72,
           "orbitAngle": 60,
-          "gates": ["adastrea_relay"]
+          "gates": ["adastrea_relay"],
+          "resources": [
+            { "item": "Hydrogen", "richness": "Low" },
+            { "item": "NobleGas", "richness": "Low" }
+          ],
+          "pois": [
+            { "type": "Station", "name": "Drift Survey Outpost" },
+            { "type": "GasSkimZone", "name": "Drift Nebula", "resources": ["Hydrogen", "NobleGas"] },
+            { "type": "SurveyBeacon" },
+            { "type": "JumpGate" }
+          ]
         },
         {
           "id": "adastrea_cinder",
           "name": "Cinder Belt",
           "type": "Mining",
           "security": "Medium",
+          "hazard": "Mild",
+          "hazards": [
+            { "type": "Debris", "severity": "Mild" }
+          ],
           "faction": "Independent",
           "description": "Dense asteroid belt. Ore and ice for the Prime refineries.",
           "level": "/Game/Maps/MiningTest",
           "orbitRadius": 0.6,
           "orbitAngle": 290,
           "gates": ["adastrea_relay"],
-          "laneGates": ["varos_gauntlet"]
+          "laneGates": ["varos_gauntlet"],
+          "resources": [
+            { "item": "IronOre", "richness": "High" },
+            { "item": "CopperOre", "richness": "High" },
+            { "item": "NickelOre", "richness": "Medium" },
+            { "item": "WaterIce", "richness": "Medium" }
+          ],
+          "pois": [
+            { "type": "AsteroidField", "name": "Cinder Belt", "resources": ["IronOre", "CopperOre", "NickelOre"] },
+            { "type": "IceField", "resources": ["WaterIce"] },
+            { "type": "Station", "name": "Cinder Mining Post" },
+            { "type": "JumpGate" }
+          ]
         },
         {
           "id": "adastrea_relay",
           "name": "Outer Relay",
           "type": "Frontier",
           "security": "Low",
+          "hazard": "None",
           "faction": "Independent",
           "description": "Jump relay at the system edge; the lane to the rest of the galaxy.",
-          "level": "",
+          "level": "/Game/Maps/Sectors/Adastrea_OuterRelay",
           "orbitRadius": 0.92,
           "orbitAngle": 350,
           "gates": [],
-          "laneGates": ["kestrel_port"]
+          "laneGates": ["kestrel_port"],
+          "resources": [
+            { "item": "WaterIce", "richness": "Low" }
+          ],
+          "pois": [
+            { "type": "JumpGate", "name": "Edge Relay" },
+            { "type": "WreckField" },
+            { "type": "SmugglerCache", "hidden": true }
+          ]
         }
       ]
     },
@@ -93,12 +203,82 @@
       "starColor": [1.0, 0.62, 0.32],
       "position": [11, 6],
       "faction": "Kestrel Port Authority",
+      "region": "compact_core",
       "description": "Orange dwarf with gas-giant fuel skimmers.",
       "jumpLinks": ["thule", "corvid"],
       "sectors": [
-        { "id": "kestrel_skim", "name": "Kestrel Skimfields", "type": "Gas Harvesting", "security": "Medium", "faction": "Kestrel Port Authority", "description": "Fuel skimmers over the giant Kestrel IV.", "level": "", "orbitRadius": 0.45, "orbitAngle": 40, "gates": ["kestrel_port"] },
-        { "id": "kestrel_port", "name": "Kestrel Port", "type": "Trade Hub", "security": "High", "faction": "Kestrel Port Authority", "description": "Fuel depot and waystation.", "level": "", "orbitRadius": 0.3, "orbitAngle": 200, "gates": ["kestrel_edge"] },
-        { "id": "kestrel_edge", "name": "Kestrel Edge", "type": "Frontier", "security": "Low", "faction": "Independent", "description": "Sparse outer sector, favoured by smugglers.", "level": "", "orbitRadius": 0.88, "orbitAngle": 300, "gates": [] }
+        {
+          "id": "kestrel_skim",
+          "name": "Kestrel Skimfields",
+          "type": "Gas Harvesting",
+          "security": "Medium",
+          "hazard": "Mild",
+          "hazards": [
+            { "type": "GasStorm", "severity": "Mild" }
+          ],
+          "faction": "Kestrel Port Authority",
+          "description": "Fuel skimmers over the giant Kestrel IV.",
+          "level": "/Game/Maps/Sectors/Kestrel_Skimfields",
+          "orbitRadius": 0.45,
+          "orbitAngle": 40,
+          "gates": ["kestrel_port"],
+          "resources": [
+            { "item": "Hydrogen", "richness": "High" },
+            { "item": "MethaneGas", "richness": "High" },
+            { "item": "NitrogenGas", "richness": "Medium" }
+          ],
+          "pois": [
+            { "type": "GasSkimZone", "name": "Kestrel IV storm bands", "resources": ["Hydrogen", "MethaneGas", "NitrogenGas"] },
+            { "type": "Station", "name": "Skimmer Platform" },
+            { "type": "JumpGate" }
+          ]
+        },
+        {
+          "id": "kestrel_port",
+          "name": "Kestrel Port",
+          "type": "Trade Hub",
+          "security": "High",
+          "hazard": "None",
+          "faction": "Kestrel Port Authority",
+          "description": "Fuel depot and waystation.",
+          "level": "/Game/Maps/Sectors/Kestrel_Port",
+          "orbitRadius": 0.3,
+          "orbitAngle": 200,
+          "gates": ["kestrel_edge"],
+          "resources": [
+            { "item": "WaterIce", "richness": "Low" }
+          ],
+          "pois": [
+            { "type": "Station", "name": "Kestrel Port" },
+            { "type": "Station", "name": "Kestrel Waystation" },
+            { "type": "JumpGate" }
+          ]
+        },
+        {
+          "id": "kestrel_edge",
+          "name": "Kestrel Edge",
+          "type": "Frontier",
+          "security": "Low",
+          "hazard": "Mild",
+          "hazards": [
+            { "type": "Debris", "severity": "Mild" }
+          ],
+          "faction": "Independent",
+          "description": "Sparse outer sector, favoured by smugglers.",
+          "level": "/Game/Maps/Sectors/Kestrel_Edge",
+          "orbitRadius": 0.88,
+          "orbitAngle": 300,
+          "gates": [],
+          "resources": [
+            { "item": "ZincOre", "richness": "Low" },
+            { "item": "ManganeseOre", "richness": "Low" }
+          ],
+          "pois": [
+            { "type": "AsteroidField", "resources": ["ZincOre", "ManganeseOre"] },
+            { "type": "SmugglerCache", "hidden": true },
+            { "type": "JumpGate" }
+          ]
+        }
       ]
     },
     {
@@ -108,12 +288,84 @@
       "starColor": [1.0, 0.38, 0.28],
       "position": [-9, 8],
       "faction": "Varos Syndicate",
+      "region": "varos_marches",
       "description": "Red dwarf held by the Syndicate. Contested lanes and high salvage value.",
       "jumpLinks": ["nyx"],
       "sectors": [
-        { "id": "varos_gauntlet", "name": "Varos Gauntlet", "type": "Contested", "security": "None", "faction": "Varos Syndicate", "description": "Wreck-strewn combat zone at the lane entry.", "level": "/Game/Maps/CombatArena", "orbitRadius": 0.7, "orbitAngle": 330, "gates": ["varos_hold"] },
-        { "id": "varos_hold", "name": "Syndicate Hold", "type": "Military", "security": "Low", "faction": "Varos Syndicate", "description": "Syndicate fortress station.", "level": "", "orbitRadius": 0.35, "orbitAngle": 200, "gates": ["varos_scrap"] },
-        { "id": "varos_scrap", "name": "Scrapyard Ring", "type": "Salvage", "security": "Low", "faction": "Independent", "description": "Salvage crews picking over old battle debris.", "level": "", "orbitRadius": 0.55, "orbitAngle": 60, "gates": [] }
+        {
+          "id": "varos_gauntlet",
+          "name": "Varos Gauntlet",
+          "type": "Contested",
+          "security": "None",
+          "hazard": "Severe",
+          "hazards": [
+            { "type": "Minefield", "severity": "Severe" },
+            { "type": "Debris", "severity": "Mild" }
+          ],
+          "faction": "Varos Syndicate",
+          "description": "Wreck-strewn combat zone at the lane entry.",
+          "level": "/Game/Maps/CombatArena",
+          "orbitRadius": 0.7,
+          "orbitAngle": 330,
+          "gates": ["varos_hold"],
+          "resources": [
+            { "item": "ScrapMetal", "richness": "High" },
+            { "item": "SalvagedComponents", "richness": "Medium" }
+          ],
+          "pois": [
+            { "type": "WreckField", "name": "The Gauntlet", "resources": ["ScrapMetal", "SalvagedComponents"] },
+            { "type": "Minefield" },
+            { "type": "JumpGate" }
+          ]
+        },
+        {
+          "id": "varos_hold",
+          "name": "Syndicate Hold",
+          "type": "Military",
+          "security": "Low",
+          "hazard": "None",
+          "faction": "Varos Syndicate",
+          "description": "Syndicate fortress station.",
+          "level": "",
+          "orbitRadius": 0.35,
+          "orbitAngle": 200,
+          "gates": ["varos_scrap"],
+          "resources": [
+            { "item": "ZincOre", "richness": "Low" }
+          ],
+          "pois": [
+            { "type": "Station", "name": "Varos Hold (fortress)" },
+            { "type": "JumpGate" }
+          ]
+        },
+        {
+          "id": "varos_scrap",
+          "name": "Scrapyard Ring",
+          "type": "Salvage",
+          "security": "Low",
+          "hazard": "Mild",
+          "hazards": [
+            { "type": "Debris", "severity": "Mild" }
+          ],
+          "faction": "Independent",
+          "description": "Salvage crews picking over old battle debris.",
+          "level": "",
+          "orbitRadius": 0.55,
+          "orbitAngle": 60,
+          "gates": [],
+          "resources": [
+            { "item": "ScrapMetal", "richness": "High" },
+            { "item": "DerelictHullPlate", "richness": "High" },
+            { "item": "SalvagedComponents", "richness": "High" },
+            { "item": "ManganeseOre", "richness": "Low" }
+          ],
+          "pois": [
+            { "type": "WreckField", "name": "Old Battlefield", "resources": ["ScrapMetal", "DerelictHullPlate", "SalvagedComponents"] },
+            { "type": "Station", "name": "Scrapyard Co-op" },
+            { "type": "Derelict" },
+            { "type": "JumpGate" }
+          ]
+        }
       ]
     },
     {
@@ -123,11 +375,57 @@
       "starColor": [0.95, 0.96, 1.0],
       "position": [-4, -10],
       "faction": "Lumen Accord",
+      "region": "compact_core",
       "description": "Bright white star; the Accord's research worlds.",
       "jumpLinks": ["corvid"],
       "sectors": [
-        { "id": "lumen_academy", "name": "Lumen Academy", "type": "Research", "security": "High", "faction": "Lumen Accord", "description": "University station and labs.", "level": "", "orbitRadius": 0.4, "orbitAngle": 90, "gates": ["lumen_array"] },
-        { "id": "lumen_array", "name": "Solar Array", "type": "Energy", "security": "High", "faction": "Lumen Accord", "description": "Solar collectors feeding the Accord's industry.", "level": "", "orbitRadius": 0.22, "orbitAngle": 250, "gates": [] }
+        {
+          "id": "lumen_academy",
+          "name": "Lumen Academy",
+          "type": "Research",
+          "security": "High",
+          "hazard": "None",
+          "faction": "Lumen Accord",
+          "description": "University station and labs.",
+          "level": "",
+          "orbitRadius": 0.4,
+          "orbitAngle": 90,
+          "gates": ["lumen_array"],
+          "laneGates": ["adastrea_alpha"],
+          "resources": [
+            { "item": "Silicon", "richness": "Low" }
+          ],
+          "pois": [
+            { "type": "Station", "name": "Lumen University" },
+            { "type": "Station", "name": "Labs" },
+            { "type": "JumpGate" }
+          ]
+        },
+        {
+          "id": "lumen_array",
+          "name": "Solar Array",
+          "type": "Energy",
+          "security": "High",
+          "hazard": "Mild",
+          "hazards": [
+            { "type": "Heat", "severity": "Mild" }
+          ],
+          "faction": "Lumen Accord",
+          "description": "Solar collectors feeding the Accord's industry.",
+          "level": "",
+          "orbitRadius": 0.22,
+          "orbitAngle": 250,
+          "gates": [],
+          "resources": [
+            { "item": "Silicon", "richness": "Medium" },
+            { "item": "LithiumOre", "richness": "Low" }
+          ],
+          "pois": [
+            { "type": "Station", "name": "Solar Collector Array" },
+            { "type": "AsteroidField", "resources": ["Silicon", "LithiumOre"] },
+            { "type": "JumpGate" }
+          ]
+        }
       ]
     },
     {
@@ -137,11 +435,65 @@
       "starColor": [1.0, 0.7, 0.45],
       "position": [8, -12],
       "faction": "Independent",
+      "region": "free_belts",
       "description": "Binary system with unstable orbits and rich rare-metal belts.",
       "jumpLinks": [],
       "sectors": [
-        { "id": "corvid_belt", "name": "Twin Belt", "type": "Mining", "security": "Low", "faction": "Independent", "description": "Rare metals, dangerous tides.", "level": "", "orbitRadius": 0.6, "orbitAngle": 20, "gates": ["corvid_haven"] },
-        { "id": "corvid_haven", "name": "Corvid Haven", "type": "Trade Hub", "security": "Medium", "faction": "Haven Moot", "description": "Free port run by the miners' guild.", "level": "", "orbitRadius": 0.38, "orbitAngle": 200, "gates": [] }
+        {
+          "id": "corvid_belt",
+          "name": "Twin Belt",
+          "type": "Mining",
+          "security": "Low",
+          "hazard": "Severe",
+          "hazards": [
+            { "type": "GravityTide", "severity": "Severe" },
+            { "type": "Debris", "severity": "Mild" }
+          ],
+          "faction": "Independent",
+          "description": "Rare metals, dangerous tides.",
+          "level": "",
+          "orbitRadius": 0.6,
+          "orbitAngle": 20,
+          "gates": ["corvid_haven"],
+          "laneGates": ["lumen_array"],
+          "resources": [
+            { "item": "TitaniumOre", "richness": "High" },
+            { "item": "CobaltOre", "richness": "High" },
+            { "item": "TungstenOre", "richness": "Medium" },
+            { "item": "ChromiumOre", "richness": "Medium" },
+            { "item": "LithiumOre", "richness": "Medium" }
+          ],
+          "pois": [
+            { "type": "AsteroidField", "name": "Twin Belt", "resources": ["TitaniumOre", "CobaltOre", "TungstenOre", "ChromiumOre", "LithiumOre"] },
+            { "type": "Station", "name": "Deep Seam Camp" },
+            { "type": "JumpGate" }
+          ]
+        },
+        {
+          "id": "corvid_haven",
+          "name": "Corvid Haven",
+          "type": "Trade Hub",
+          "security": "Medium",
+          "hazard": "Mild",
+          "hazards": [
+            { "type": "GravityTide", "severity": "Mild" }
+          ],
+          "faction": "Haven Moot",
+          "description": "Free port run by the miners' guild.",
+          "level": "",
+          "orbitRadius": 0.38,
+          "orbitAngle": 200,
+          "gates": [],
+          "laneGates": ["kestrel_skim"],
+          "resources": [
+            { "item": "WaterIce", "richness": "Medium" }
+          ],
+          "pois": [
+            { "type": "Station", "name": "Haven Free Port" },
+            { "type": "IceField", "resources": ["WaterIce"] },
+            { "type": "JumpGate" }
+          ]
+        }
       ]
     },
     {
@@ -151,10 +503,40 @@
       "starColor": [0.6, 0.75, 1.0],
       "position": [22, 2],
       "faction": "Unclaimed",
+      "region": "pale_expanse",
       "description": "Hot blue star at the frontier. Mostly unsurveyed.",
       "jumpLinks": [],
       "sectors": [
-        { "id": "thule_outpost", "name": "Thule Outpost", "type": "Frontier", "security": "None", "faction": "Unclaimed", "description": "A lone survey outpost.", "level": "", "orbitRadius": 0.75, "orbitAngle": 140, "gates": [] }
+        {
+          "id": "thule_outpost",
+          "name": "Thule Outpost",
+          "type": "Frontier",
+          "security": "None",
+          "hazard": "Severe",
+          "hazards": [
+            { "type": "RadiationStorm", "severity": "Severe" },
+            { "type": "Distance", "severity": "Severe" }
+          ],
+          "faction": "Unclaimed",
+          "description": "A lone survey outpost.",
+          "level": "",
+          "orbitRadius": 0.75,
+          "orbitAngle": 140,
+          "gates": [],
+          "laneGates": ["kestrel_edge"],
+          "resources": [
+            { "item": "Platinum", "richness": "High" },
+            { "item": "Palladium", "richness": "Medium" },
+            { "item": "RareEarthElements", "richness": "Medium" },
+            { "item": "GoldOre", "richness": "Low" }
+          ],
+          "pois": [
+            { "type": "Station", "name": "Thule Survey Outpost" },
+            { "type": "AsteroidField", "resources": ["Platinum", "Palladium", "RareEarthElements", "GoldOre"] },
+            { "type": "SurveyBeacon" },
+            { "type": "JumpGate" }
+          ]
+        }
       ]
     },
     {
@@ -164,10 +546,39 @@
       "starColor": [0.75, 0.55, 1.0],
       "position": [-20, 14],
       "faction": "Unclaimed",
+      "region": "graveyard",
       "description": "Pulsar remnant. Radiation storms; derelicts from before the Compact.",
       "jumpLinks": [],
       "sectors": [
-        { "id": "nyx_derelict", "name": "Derelict Field", "type": "Anomaly", "security": "None", "faction": "Unclaimed", "description": "Ancient wrecks of unknown origin.", "level": "", "orbitRadius": 0.6, "orbitAngle": 80, "gates": [] }
+        {
+          "id": "nyx_derelict",
+          "name": "Derelict Field",
+          "type": "Anomaly",
+          "security": "None",
+          "hazard": "Extreme",
+          "hazards": [
+            { "type": "RadiationStorm", "severity": "Extreme" },
+            { "type": "WarMachines", "severity": "Severe" }
+          ],
+          "faction": "Unclaimed",
+          "description": "Ancient wrecks of unknown origin.",
+          "level": "",
+          "orbitRadius": 0.6,
+          "orbitAngle": 80,
+          "gates": [],
+          "laneGates": ["varos_scrap"],
+          "resources": [
+            { "item": "DerelictHullPlate", "richness": "High" },
+            { "item": "SalvagedComponents", "richness": "High" },
+            { "item": "UraniumOre", "richness": "Medium" }
+          ],
+          "pois": [
+            { "type": "Derelict", "name": "Pre-Compact wrecks" },
+            { "type": "WreckField", "resources": ["DerelictHullPlate", "SalvagedComponents"] },
+            { "type": "WarPlatform" },
+            { "type": "AsteroidField", "resources": ["UraniumOre"] }
+          ]
+        }
       ]
     },
     {
@@ -177,6 +588,7 @@
       "starColor": [1.0, 0.45, 0.35],
       "position": [-17, -6],
       "faction": "Unclaimed",
+      "region": "sable_dark",
       "description": "Uncharted. No known jump lane yet.",
       "jumpLinks": [],
       "sectors": []

@@ -54,6 +54,25 @@ namespace
 		return Out;
 	}
 
+	/** Every object in an array field (non-objects skipped). */
+	TArray<TSharedPtr<FJsonObject>> JsonObjectItems(const TSharedPtr<FJsonObject>& Obj, const TCHAR* Field)
+	{
+		TArray<TSharedPtr<FJsonObject>> Out;
+		const TArray<TSharedPtr<FJsonValue>>* Values = nullptr;
+		if (Obj->TryGetArrayField(Field, Values))
+		{
+			for (const TSharedPtr<FJsonValue>& V : *Values)
+			{
+				const TSharedPtr<FJsonObject> Item = V.IsValid() ? V->AsObject() : nullptr;
+				if (Item.IsValid())
+				{
+					Out.Add(Item);
+				}
+			}
+		}
+		return Out;
+	}
+
 	/** Reads [a, b, ...] into Out; returns the number of components read. */
 	int32 JsonFloats(const TSharedPtr<FJsonObject>& Obj, const TCHAR* Field, float* Out, int32 Max)
 	{
@@ -111,16 +130,21 @@ namespace
 				Galaxy->IsLoadedFromFile() ? TEXT("Galaxy.json") : TEXT("built-in"),
 				Galaxy->GetSystems().Num(), *Galaxy->GetStartSystemId().ToString(),
 				*Galaxy->ResolveCurrentSectorId(World).ToString());
+			for (const FGalaxyRegionDef& Region : Galaxy->GetRegionDefs())
+			{
+				UE_LOG(LogAdastrea, Log, TEXT("  region %s '%s' (%s)"), *Region.Id.ToString(), *Region.Name.ToString(), *Region.Type);
+			}
 			for (const FStarSystemDef& Sys : Galaxy->GetSystems())
 			{
-				UE_LOG(LogAdastrea, Log, TEXT("  %s '%s' [%s] at (%.1f, %.1f) ly, %d sectors (%d built), lanes: %d"),
-					*Sys.Id.ToString(), *Sys.Name.ToString(), *Sys.StarClass, Sys.Position.X, Sys.Position.Y,
+				UE_LOG(LogAdastrea, Log, TEXT("  %s '%s' [%s] region=%s at (%.1f, %.1f) ly, %d sectors (%d built), lanes: %d"),
+					*Sys.Id.ToString(), *Sys.Name.ToString(), *Sys.StarClass, *Sys.Region.ToString(), Sys.Position.X, Sys.Position.Y,
 					Sys.Sectors.Num(), Sys.NumBuiltSectors(), Sys.JumpLinks.Num());
 				for (const FGalaxySectorDef& Sec : Sys.Sectors)
 				{
-					UE_LOG(LogAdastrea, Log, TEXT("    %s '%s' %s level=%s gates=%d laneGates=%d"),
-						*Sec.Id.ToString(), *Sec.Name.ToString(), *Sec.Type,
-						Sec.HasLevel() ? *Sec.Level : TEXT("(planned)"), Sec.Gates.Num(), Sec.LaneGates.Num());
+					UE_LOG(LogAdastrea, Log, TEXT("    %s '%s' %s security=%s hazard=%s level=%s gates=%d laneGates=%d resources=%d pois=%d"),
+						*Sec.Id.ToString(), *Sec.Name.ToString(), *Sec.Type, *Sec.Security, *UGalaxySubsystem::HazardToString(Sec.Hazard),
+						Sec.HasLevel() ? *Sec.Level : TEXT("(planned)"), Sec.Gates.Num(), Sec.LaneGates.Num(),
+						Sec.Resources.Num(), Sec.Pois.Num());
 				}
 			}
 		}));
@@ -213,6 +237,7 @@ bool UGalaxySubsystem::LoadFromFile(const FString& Path, FString& OutError)
 		Sys.Name = FText::FromString(SysName.IsEmpty() ? Sys.Id.ToString() : SysName);
 		Sys.StarClass = JsonString(SysObj, TEXT("starClass"));
 		Sys.Faction = JsonString(SysObj, TEXT("faction"));
+		Sys.Region = FName(*JsonString(SysObj, TEXT("region")));
 		Sys.Description = FText::FromString(JsonString(SysObj, TEXT("description")));
 		Sys.JumpLinks = JsonNameArray(SysObj, TEXT("jumpLinks"));
 
@@ -255,6 +280,50 @@ bool UGalaxySubsystem::LoadFromFile(const FString& Path, FString& OutError)
 				Sec.OrbitAngle = JsonNumber(SecObj, TEXT("orbitAngle"), 0.0f);
 				Sec.Gates = JsonNameArray(SecObj, TEXT("gates"));
 				Sec.LaneGates = JsonNameArray(SecObj, TEXT("laneGates"));
+				for (const TSharedPtr<FJsonObject>& HazObj : JsonObjectItems(SecObj, TEXT("hazards")))
+				{
+					FSectorHazardDef Haz;
+					Haz.Type = JsonString(HazObj, TEXT("type"));
+					Haz.Severity = ParseHazard(JsonString(HazObj, TEXT("severity")));
+					if (!Haz.Type.IsEmpty())
+					{
+						Sec.Hazards.Add(MoveTemp(Haz));
+					}
+				}
+				FString HazardText;
+				if (SecObj->TryGetStringField(TEXT("hazard"), HazardText))
+				{
+					Sec.Hazard = ParseHazard(HazardText);
+				}
+				else
+				{
+					for (const FSectorHazardDef& Haz : Sec.Hazards)
+					{
+						Sec.Hazard = FMath::Max(Sec.Hazard, Haz.Severity);
+					}
+				}
+				for (const TSharedPtr<FJsonObject>& ResObj : JsonObjectItems(SecObj, TEXT("resources")))
+				{
+					FSectorResourceDef Res;
+					Res.Item = FName(*JsonString(ResObj, TEXT("item")));
+					Res.Richness = JsonString(ResObj, TEXT("richness"));
+					if (!Res.Item.IsNone())
+					{
+						Sec.Resources.Add(MoveTemp(Res));
+					}
+				}
+				for (const TSharedPtr<FJsonObject>& PoiObj : JsonObjectItems(SecObj, TEXT("pois")))
+				{
+					FSectorPoiDef Poi;
+					Poi.Type = JsonString(PoiObj, TEXT("type"));
+					Poi.Name = FText::FromString(JsonString(PoiObj, TEXT("name")));
+					Poi.Resources = JsonNameArray(PoiObj, TEXT("resources"));
+					PoiObj->TryGetBoolField(TEXT("hidden"), Poi.bHidden);
+					if (!Poi.Type.IsEmpty())
+					{
+						Sec.Pois.Add(MoveTemp(Poi));
+					}
+				}
 				Sys.Sectors.Add(MoveTemp(Sec));
 			}
 		}
@@ -267,6 +336,27 @@ bool UGalaxySubsystem::LoadFromFile(const FString& Path, FString& OutError)
 		return false;
 	}
 
+	Regions.Reset();
+	for (const TSharedPtr<FJsonObject>& RegObj : JsonObjectItems(Root, TEXT("regions")))
+	{
+		FGalaxyRegionDef Region;
+		Region.Id = FName(*JsonString(RegObj, TEXT("id")));
+		if (Region.Id.IsNone())
+		{
+			continue;
+		}
+		const FString RegName = JsonString(RegObj, TEXT("name"));
+		Region.Name = FText::FromString(RegName.IsEmpty() ? Region.Id.ToString() : RegName);
+		Region.Type = JsonString(RegObj, TEXT("type"));
+		Region.Description = FText::FromString(JsonString(RegObj, TEXT("description")));
+		float Color[3];
+		if (JsonFloats(RegObj, TEXT("color"), Color, 3) == 3)
+		{
+			Region.Color = FLinearColor(Color[0], Color[1], Color[2], 1.0f);
+		}
+		Regions.Add(MoveTemp(Region));
+	}
+
 	Systems = MoveTemp(Loaded);
 	StartSystemId = FName(*JsonString(Root, TEXT("startSystem")));
 	return true;
@@ -275,6 +365,7 @@ bool UGalaxySubsystem::LoadFromFile(const FString& Path, FString& OutError)
 void UGalaxySubsystem::BuildDefaultGalaxy()
 {
 	Systems.Reset();
+	Regions.Reset();
 
 	FStarSystemDef Home;
 	Home.Id = TEXT("adastrea");
@@ -352,6 +443,16 @@ void UGalaxySubsystem::FinalizeGalaxy()
 		for (int32 SecIdx = 0; SecIdx < Systems[SysIdx].Sectors.Num(); ++SecIdx)
 		{
 			SectorIndex.Add(Systems[SysIdx].Sectors[SecIdx].Id, TPair<int32, int32>(SysIdx, SecIdx));
+		}
+	}
+
+	// Regions: drop systems' links to unknown regions.
+	for (FStarSystemDef& Sys : Systems)
+	{
+		if (!Sys.Region.IsNone() && !FindRegion(Sys.Region))
+		{
+			UE_LOG(LogAdastrea, Warning, TEXT("Galaxy: system '%s' is in unknown region '%s'"), *Sys.Id.ToString(), *Sys.Region.ToString());
+			Sys.Region = NAME_None;
 		}
 	}
 
@@ -546,6 +647,39 @@ FString UGalaxySubsystem::SecurityToString(ESectorSecurity Level)
 	case ESectorSecurity::Low:		return TEXT("Low");
 	default:						return TEXT("None");
 	}
+}
+
+ESectorHazard UGalaxySubsystem::ParseHazard(const FString& Text)
+{
+	if (Text.Equals(TEXT("Extreme"), ESearchCase::IgnoreCase))
+	{
+		return ESectorHazard::Extreme;
+	}
+	if (Text.Equals(TEXT("Severe"), ESearchCase::IgnoreCase))
+	{
+		return ESectorHazard::Severe;
+	}
+	if (Text.Equals(TEXT("Mild"), ESearchCase::IgnoreCase))
+	{
+		return ESectorHazard::Mild;
+	}
+	return ESectorHazard::None;
+}
+
+FString UGalaxySubsystem::HazardToString(ESectorHazard Level)
+{
+	switch (Level)
+	{
+	case ESectorHazard::Extreme:	return TEXT("Extreme");
+	case ESectorHazard::Severe:		return TEXT("Severe");
+	case ESectorHazard::Mild:		return TEXT("Mild");
+	default:						return TEXT("None");
+	}
+}
+
+const FGalaxyRegionDef* UGalaxySubsystem::FindRegion(FName RegionId) const
+{
+	return RegionId.IsNone() ? nullptr : Regions.FindByPredicate([RegionId](const FGalaxyRegionDef& R) { return R.Id == RegionId; });
 }
 
 ESectorSecurity UGalaxySubsystem::GetCurrentSecurity(const UObject* WorldContextObject) const
