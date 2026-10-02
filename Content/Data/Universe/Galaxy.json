@@ -180,7 +180,7 @@
           "hazard": "None",
           "faction": "Independent",
           "description": "Jump relay at the system edge; the lane to the rest of the galaxy.",
-          "level": "",
+          "level": "/Game/Maps/Sectors/Adastrea_OuterRelay",
           "orbitRadius": 0.92,
           "orbitAngle": 350,
           "gates": [],

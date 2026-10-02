@@ -105,6 +105,21 @@
         {"id": "Reactor",  "item": "ReactorModule",     "on": "Barracks", "dir": "S"},
         {"id": "Armoury", "item": "ArmouryModule", "on": "Reactor", "dir": "S"}
       ]
+    },
+    "Relay_Waystation": {
+      "_note": "Outer Relay (adastrea_relay): independent fuel stop and free market beside the lane gate to Kestrel.",
+      "core": "StationCore_Industrial",
+      "modules": [
+        {"id": "CorN",    "item": "CorridorModule",    "on": "core",   "dir": "N"},
+        {"id": "DockN",   "item": "DockingBayModule",  "on": "CorN",   "dir": "N"},
+        {"id": "Fuel",    "item": "FuelDepotModule",   "on": "core",   "dir": "E"},
+        {"id": "Fuel2",   "item": "FuelDepotModule",   "on": "Fuel",   "dir": "E"},
+        {"id": "Market",  "item": "MarketplaceModule", "on": "core",   "dir": "W"},
+        {"id": "Cargo",   "item": "CargoBayModule",    "on": "Market", "dir": "W"},
+        {"id": "Hab",     "item": "HabitationModule",  "on": "core",   "dir": "S"},
+        {"id": "Reactor", "item": "ReactorModule",     "on": "Hab",    "dir": "S"},
+        {"id": "Turret",  "item": "TurretModule",      "on": "Fuel2",  "dir": "S"}
+      ]
     }
   }
 }

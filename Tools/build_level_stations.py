@@ -24,12 +24,15 @@ import station_layouts  # noqa: E402
 DRY_RUN = "--dry-run" in sys.argv
 
 
-def main():
+def main(labels=None, save=True, dry_run=DRY_RUN):
+    """Build every layout whose label matches a station in the open level (or only `labels`)."""
     stations, cell, errors = station_layouts.load_all()
     if errors:
         for e in errors:
             unreal.log_error("build_level_stations: " + e)
         return
+    if labels is not None:
+        stations = {k: v for k, v in stations.items() if k in labels}
 
     actor_sub = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
     level_stations = {
@@ -46,7 +49,7 @@ def main():
 
         old = [m for m in station.get_attached_actors() if isinstance(m, unreal.SpaceStationModule)]
         unreal.log(f"build_level_stations: {label}: replacing {len(old)} module(s) with {len(modules)}")
-        if DRY_RUN:
+        if dry_run:
             continue
 
         for m in old:
@@ -67,9 +70,10 @@ def main():
                                   unreal.AttachmentRule.KEEP_WORLD, unreal.AttachmentRule.KEEP_WORLD, False)
             actor.set_actor_label(f"{label}_{m.id}")
 
-    if not DRY_RUN:
+    if save and not dry_run:
         unreal.get_editor_subsystem(unreal.LevelEditorSubsystem).save_current_level()
         unreal.log("build_level_stations: level saved")
 
 
-main()
+if __name__ == "__main__":
+    main()
