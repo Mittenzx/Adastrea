@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "UI/SectorMapWidget.h"
+#include "AdastreaNames.h"
 #include "SpaceSectorMap.h"
 #include "AdastreaLog.h"
 #include "Kismet/GameplayStatics.h"
@@ -443,7 +444,7 @@ void USectorMapWidget::UpdateObjectTracking()
 	{
 		if (Actor)
 		{
-			ObjectNames.Add(FText::FromString(Actor->GetName()));
+			ObjectNames.Add(FText::FromString(AdastreaNames::ForActor(Actor)));
 		}
 	}
 

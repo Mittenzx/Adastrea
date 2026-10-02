@@ -668,7 +668,7 @@ void AAdastreaHUD::DrawCyberMiningHUD(APlayerController* PC, ASpaceship* Ship, U
 		const FString Tag = FString::Printf(TEXT("DRONES %d/%d"), Bay->GetDronesOut(), Bay->DroneCount);
 		const FLinearColor TagCol = bFiring ? kGreen : (bOut || Bay->IsDeployed() ? kYellow : kMute);
 		const float TagW = N.Tag(Tag, LX, Y + 104.0f * S, TagCol, bFiring || bOut);
-		N.Text(UDroneBayComponent::StatusToText(Status).ToString().ToUpper(), bFiring ? kGreen : kInk, LX + TagW + 4.0f * S, Y + 106.0f * S, HudType::Label);
+		N.Text(Bay->GetStatusText().ToString().ToUpper(), bFiring ? kGreen : kInk, LX + TagW + 4.0f * S, Y + 106.0f * S, HudType::Label);
 		if (bFiring)
 		{
 			const float Lamp = 0.4f + 0.6f * FMath::Abs(FMath::Sin(N.Now * 8.0f));

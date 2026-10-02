@@ -269,6 +269,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Save")
 	void ApplyGameState(UAdastreaSaveGame* SaveGameObject);
 
+	/** True while ApplyGameState runs (re-docking a loaded ship shouldn't count as arriving: no customs scan). */
+	bool IsApplyingSave() const { return bApplyingSave; }
+
 	// ====================
 	// Events
 	// ====================
@@ -294,6 +297,8 @@ public:
 	FOnAutoSaveTriggered OnAutoSaveTriggered;
 
 protected:
+	bool bApplyingSave = false;
+
 	/** Auto-save timer handle */
 	FTimerHandle AutoSaveTimerHandle;
 

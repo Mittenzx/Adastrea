@@ -62,6 +62,22 @@ int32 UCraftingTreeLoader::LoadCraftingTree()
 		return 0;
 	}
 
+	// Items carry no category of their own; the recipe that makes (or gathers) an item does.
+	TMap<FString, FString> RecipeCategory;
+	const TArray<TSharedPtr<FJsonValue>>* RecipesArr = nullptr;
+	if (Root->TryGetArrayField(TEXT("Recipes"), RecipesArr))
+	{
+		for (const TSharedPtr<FJsonValue>& Val : *RecipesArr)
+		{
+			const TSharedPtr<FJsonObject> Obj = Val->AsObject();
+			FString Output, Category;
+			if (Obj.IsValid() && Obj->TryGetStringField(TEXT("OutputItem"), Output) && Obj->TryGetStringField(TEXT("Category"), Category))
+			{
+				RecipeCategory.FindOrAdd(Output, Category);
+			}
+		}
+	}
+
 	// The Items map holds per-item metadata: {ItemName, Description, WeightKg, VolumeM3, StorageType, Rarity, BaseValue, MaterialCategory}.
 	const TSharedPtr<FJsonObject>* ItemsObj = nullptr;
 	if (Root->TryGetObjectField(TEXT("Items"), ItemsObj) && ItemsObj->IsValid())
@@ -73,6 +89,19 @@ int32 UCraftingTreeLoader::LoadCraftingTree()
 			if (!ItemObj.IsValid())
 			{
 				continue;
+			}
+
+			const FString* Category = RecipeCategory.Find(ItemID);
+
+			// Raw resources are the trade item assets the drones mine (ue_make_resource_types.py):
+			// use the same object, so mined ore and the market's ore are one item with one price.
+			if (Category && *Category == TEXT("RawMaterials"))
+			{
+				if (UTradeItemDataAsset* Asset = LoadRawResourceAsset(ItemID))
+				{
+					ItemPool.Add(ItemID, Asset);
+					continue;
+				}
 			}
 
 			// Build a transient trade item.
@@ -114,12 +143,9 @@ int32 UCraftingTreeLoader::LoadCraftingTree()
 			Item->bAffectedBySupplyDemand = true;
 			Item->bAffectedByMarketEvents = true;
 
-			// Derive trade category from material category where possible, else the item name.
-			FString TradeCat = TEXT("RefinedGoods");
-			if (ItemObj->TryGetStringField(TEXT("Category"), TradeCat))
-			{
-				// no-op: some items carry Category, fall through to mapping below
-			}
+			// Trade category from the recipe that makes the item (an item-level Category wins).
+			FString TradeCat = Category ? *Category : FString(TEXT("RefinedGoods"));
+			ItemObj->TryGetStringField(TEXT("Category"), TradeCat);
 			Item->Category = MapTradeCategory(TradeCat);
 
 			ItemPool.Add(ItemID, Item);
@@ -129,6 +155,14 @@ int32 UCraftingTreeLoader::LoadCraftingTree()
 	bLoaded = ItemPool.Num() > 0;
 	UE_LOG(LogTemp, Log, TEXT("CraftingTreeLoader: loaded %d trade items from crafting tree"), ItemPool.Num());
 	return ItemPool.Num();
+}
+
+UTradeItemDataAsset* UCraftingTreeLoader::LoadRawResourceAsset(const FString& ItemID)
+{
+	// The one asset whose name doesn't follow DA_TradeItem_<CraftingId>.
+	const FString AssetName = ItemID == TEXT("Helium3") ? FString(TEXT("DA_TradeItem_Helium-3")) : TEXT("DA_TradeItem_") + ItemID;
+	const FString Path = FString::Printf(TEXT("/Game/DataAssets/Trading/Items/%s.%s"), *AssetName, *AssetName);
+	return LoadObject<UTradeItemDataAsset>(nullptr, *Path, nullptr, LOAD_NoWarn | LOAD_Quiet);
 }
 
 UTradeItemDataAsset* UCraftingTreeLoader::GetTradeItem(const FString& ItemID) const

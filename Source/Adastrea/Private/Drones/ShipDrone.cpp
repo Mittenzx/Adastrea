@@ -29,6 +29,11 @@ namespace ShipDroneTuning
 	/** A drone that can't get home in this long lands where it is. */
 	constexpr float ReturnTimeout = 45.0f;
 	constexpr float DrillSpinDegPerSec = 900.0f;
+	/** Gas skimming: how deep in the pocket the drone works (fraction of its radius), the intake
+	 *  fan's spin, and how fast the drone drifts around the pocket while it fills (deg/s). */
+	constexpr float SkimDepth = 0.6f;
+	constexpr float IntakeSpinDegPerSec = 540.0f;
+	constexpr float SkimDriftDegPerSec = 8.0f;
 	constexpr float DepletedMinInterval = 0.5f;
 }
 
@@ -126,7 +131,8 @@ void AShipDrone::SetState(EShipDroneState NewState)
 	{
 		UE_LOG(LogAdastrea, Verbose, TEXT("%s: state %d -> %d (ore %.1f)"), *GetName(), (int32)State, (int32)NewState, OreAboard);
 	}
-	SetCutting(NewState == EShipDroneState::Cutting);
+	// Drill dust only where something is being drilled.
+	SetCutting(NewState == EShipDroneState::Cutting && !bSkimming);
 	State = NewState;
 	StateTime = 0.0f;
 }
@@ -182,6 +188,11 @@ bool AShipDrone::ChooseWorkSpot()
 
 	WorkRock = Rock;
 	WorkDirLocal = Rock->GetActorQuat().UnrotateVector(Dir);
+	bSkimming = Type && Type->GetResourceKind() == EResourceKind::Gas;
+	if (bSkimming)
+	{
+		WorkSurfaceFraction = ShipDroneTuning::SkimDepth; // inside the cloud, not on a surface
+	}
 	return true;
 }
 
@@ -194,7 +205,7 @@ FVector AShipDrone::GetWorkPoint() const
 	}
 	// The rock shrinks as it empties; the spot follows its surface in.
 	const FVector Dir = Rock->GetActorQuat().RotateVector(WorkDirLocal);
-	const float DrillReach = 200.0f * GetActorScale3D().X;
+	const float DrillReach = bSkimming ? 0.0f : 200.0f * GetActorScale3D().X;
 	return Rock->GetActorLocation() + Dir * (Rock->GetRadius() * WorkSurfaceFraction + DrillReach);
 }
 
@@ -329,12 +340,29 @@ void AShipDrone::TickCutting(float DeltaSeconds)
 		return;
 	}
 
-	// Clamped on: hold the spot, drill pointing into the rock.
 	Velocity = FVector::ZeroVector;
-	const FVector Spot = GetWorkPoint();
-	SetActorLocation(FMath::VInterpTo(GetActorLocation(), Spot, DeltaSeconds, 8.0f));
-	SetActorRotation(FMath::RInterpTo(GetActorRotation(), (Rock->GetActorLocation() - Spot).Rotation(), DeltaSeconds, 6.0f));
-	Drill->AddLocalRotation(FRotator(0.0f, ShipDroneTuning::DrillSpinDegPerSec * DeltaSeconds, 0.0f));
+	if (bSkimming)
+	{
+		// In the pocket: drift slowly round it, intake ring spinning, nose into the drift.
+		WorkDirLocal = FRotator(0.0f, ShipDroneTuning::SkimDriftDegPerSec * DeltaSeconds, 0.0f).RotateVector(WorkDirLocal);
+		const FVector Spot = GetWorkPoint();
+		const FVector Drift = Spot - GetActorLocation();
+		SetActorLocation(FMath::VInterpTo(GetActorLocation(), Spot, DeltaSeconds, 2.0f));
+		if (Drift.SizeSquared() > 1.0f)
+		{
+			SetActorRotation(FMath::RInterpTo(GetActorRotation(), Drift.Rotation(), DeltaSeconds, 2.0f));
+		}
+		Clamp->AddLocalRotation(FRotator(0.0f, ShipDroneTuning::IntakeSpinDegPerSec * DeltaSeconds, 0.0f));
+	}
+	else
+	{
+		// Clamped on: hold the spot, drill pointing into the rock.
+		const FVector Spot = GetWorkPoint();
+		SetActorLocation(FMath::VInterpTo(GetActorLocation(), Spot, DeltaSeconds, 8.0f));
+		SetActorRotation(FMath::RInterpTo(GetActorRotation(), (Rock->GetActorLocation() - Spot).Rotation(), DeltaSeconds, 6.0f));
+		Drill->AddLocalRotation(FRotator(0.0f, ShipDroneTuning::DrillSpinDegPerSec * DeltaSeconds, 0.0f));
+	}
+	const FVector Spot = GetActorLocation();
 
 	const UAsteroidDataAsset* Type = Rock->GetAsteroidType();
 	UTradeItemDataAsset* Ore = Type ? Type->OreItem.Get() : nullptr;

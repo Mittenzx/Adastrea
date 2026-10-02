@@ -4,6 +4,7 @@
 #include "Stations/UStationLayoutDataAsset.h"
 #include "Stations/MarketplaceModule.h"
 #include "Trading/CraftingTreeLoader.h"
+#include "Trading/CraftingManager.h"
 #include "Stations/DockingBayModule.h"
 #include "Stations/ReactorModule.h"
 #include "Stations/SolarArrayModule.h"
@@ -16,6 +17,16 @@
 #include "Stations/StationCoreModule.h"
 #include "Stations/OutfittingModule.h"
 #include "AdastreaLog.h"
+#include "AdastreaNames.h"
+#include "Trading/MarketDataAsset.h"
+#include "Trading/TradeItemDataAsset.h"
+#include "Universe/GalaxySubsystem.h"
+#include "Universe/OrganisationSubsystem.h"
+#include "Universe/PirateSubsystem.h"
+#include "Ships/Spaceship.h"
+#include "Trading/CargoComponent.h"
+#include "Trading/PlayerTraderComponent.h"
+#include "UObject/ObjectSaveContext.h"
 
 ASpaceStation::ASpaceStation()
 {
@@ -77,10 +88,19 @@ void ASpaceStation::BeginPlay()
                 // change with every trade, and the asset is a template (it may be shared, and
                 // mutating it in PIE would leave garbage in the editor's copy).
                 UMarketDataAsset* Market = DuplicateObject<UMarketDataAsset>(StationMarket, this);
+                TArray<FName> AuthoredItemIds;
+                for (const FMarketInventoryEntry& Entry : Market->Inventory)
+                {
+                    if (Entry.TradeItem)
+                    {
+                        AuthoredItemIds.Add(Entry.TradeItem->ItemID);
+                    }
+                }
 
                 // Populate the market inventory dynamically from the crafting tree so
                 // every crafting material is tradeable at runtime (per design choice).
-                UCraftingTreeLoader* Loader = NewObject<UCraftingTreeLoader>(this);
+                const UCraftingManager* Crafting = UCraftingManager::Get(this);
+                UCraftingTreeLoader* Loader = Crafting ? Crafting->GetLoader() : NewObject<UCraftingTreeLoader>(this);
                 if (Loader)
                 {
                     if (!Loader->IsLoaded())
@@ -89,6 +109,9 @@ void ASpaceStation::BeginPlay()
                     }
                     Loader->PopulateMarketInventory(Market);
                 }
+                ApplyRegionalSupply(Market, AuthoredItemIds);
+                Market->bBuysStolenGoods = BuysStolenGoods();
+                Market->StolenGoodsRate = FenceRate;
                 for (AMarketplaceModule* Marketplace : GetMarketplaceModules())
                 {
                     if (Marketplace)
@@ -100,6 +123,154 @@ void ASpaceStation::BeginPlay()
                     }
                 }
             }
+
+namespace StationMarketSupply
+{
+    /** Supply/demand/stock for a raw resource by how close its source is. */
+    struct FTier { float Supply; float Demand; int32 MinStock; int32 MaxStock; };
+    const FTier LocalHigh   { 1.35f, 0.85f, 30000, 60000 };
+    const FTier LocalMedium { 1.25f, 0.90f, 20000, 40000 };
+    const FTier LocalLow    { 1.15f, 0.95f, 12000, 24000 };
+    const FTier InSystem    { 1.00f, 1.00f,  4000, 10000 };
+    const FTier Imported    { 0.85f, 1.20f,   400,  2000 };
+
+    const FTier& ForRichness(const FString& Richness)
+    {
+        return Richness == TEXT("High") ? LocalHigh : Richness == TEXT("Low") ? LocalLow : LocalMedium;
+    }
+
+    /** Richness of Item in Sector ("" if the sector doesn't have it; fields count as Medium). */
+    FString FindRichness(const FGalaxySectorDef& Sector, FName Item)
+    {
+        for (const FSectorResourceDef& Res : Sector.Resources)
+        {
+            if (UTradeItemDataAsset::ItemIdsMatch(Res.Item, Item))
+            {
+                return Res.Richness.IsEmpty() ? FString(TEXT("Medium")) : Res.Richness;
+            }
+        }
+        for (const FSectorPoiDef& Poi : Sector.Pois)
+        {
+            for (const FName& Res : Poi.Resources)
+            {
+                if (UTradeItemDataAsset::ItemIdsMatch(Res, Item))
+                {
+                    return TEXT("Medium");
+                }
+            }
+        }
+        return FString();
+    }
+}
+
+void ASpaceStation::ApplyRegionalSupply(UMarketDataAsset* Market, const TArray<FName>& AuthoredItemIds) const
+{
+    using namespace StationMarketSupply;
+    const UGalaxySubsystem* Galaxy = UGalaxySubsystem::Get(this);
+    const FGalaxySectorDef* Sector = Galaxy && Market ? Galaxy->FindSector(Galaxy->ResolveCurrentSectorId(this)) : nullptr;
+    if (!Sector)
+    {
+        return; // Levels outside the galaxy (test maps) keep flat prices.
+    }
+    const FStarSystemDef* System = Galaxy->FindSystem(Sector->SystemId);
+
+    int32 Local = 0, Near = 0, Far = 0;
+    for (FMarketInventoryEntry& Entry : Market->Inventory)
+    {
+        const UTradeItemDataAsset* Item = Entry.TradeItem;
+        if (!Item || Item->Category != ETradeItemCategory::RawMaterials
+            || AuthoredItemIds.ContainsByPredicate([Item](FName Id) { return UTradeItemDataAsset::ItemIdsMatch(Id, Item->ItemID); }))
+        {
+            continue;
+        }
+
+        const FTier* Tier = &Imported;
+        const FString Richness = FindRichness(*Sector, Item->ItemID);
+        if (!Richness.IsEmpty())
+        {
+            Tier = &ForRichness(Richness);
+            ++Local;
+        }
+        else if (System && System->Sectors.ContainsByPredicate([Item](const FGalaxySectorDef& S) { return !FindRichness(S, Item->ItemID).IsEmpty(); }))
+        {
+            Tier = &InSystem;
+            ++Near;
+        }
+        else
+        {
+            ++Far;
+        }
+
+        // Deterministic per station and item, so the same station always looks the same.
+        const uint32 Hash = HashCombine(GetTypeHash(GetFName()), GetTypeHash(Item->ItemID));
+        Entry.SupplyLevel = Tier->Supply;
+        Entry.DemandLevel = Tier->Demand;
+        Entry.MaxStock = Tier->MaxStock * 2;
+        Entry.CurrentStock = Tier->MinStock + int32(Hash % uint32(Tier->MaxStock - Tier->MinStock + 1));
+        Entry.bInStock = Entry.CurrentStock > 0;
+    }
+    UE_LOG(LogAdastreaStations, Log,
+        TEXT("SpaceStation::ApplyRegionalSupply - %s in %s: %d raw resources local, %d from this system, %d imported"),
+        *GetDisplayNameString(), *Sector->Id.ToString(), Local, Near, Far);
+}
+
+EStationLaw ASpaceStation::GetEffectiveLaw() const
+{
+    if (Law != EStationLaw::Auto)
+    {
+        return Law;
+    }
+    // A station whose market is a black market fences, whatever the sector.
+    if (StationMarket && StationMarket->MarketType == EMarketType::BlackMarket)
+    {
+        return EStationLaw::Fence;
+    }
+    const UPirateSubsystem* Pirates = UPirateSubsystem::Get(this);
+    const UOrganisationSubsystem* Orgs = UOrganisationSubsystem::Get(this);
+    if (Pirates && Orgs && Pirates->IsPirate(Orgs->GetOwnerIdOf(this)))
+    {
+        return EStationLaw::Fence;
+    }
+    const UGalaxySubsystem* Galaxy = UGalaxySubsystem::Get(this);
+    const ESectorSecurity Security = Galaxy ? Galaxy->GetCurrentSecurity(this) : ESectorSecurity::High;
+    return Security >= ESectorSecurity::Medium ? EStationLaw::Lawful : EStationLaw::Fence;
+}
+
+FCustomsResult ASpaceStation::ScanDockedShip(ASpaceship* Ship)
+{
+    FCustomsResult Result;
+    UCargoComponent* Cargo = Ship ? Ship->CargoComponent.Get() : nullptr;
+    if (!Cargo || GetEffectiveLaw() != EStationLaw::Lawful)
+    {
+        return Result;
+    }
+    Result.bScanned = true;
+    float Value = 0.0f;
+    for (const FCargoEntry& Entry : Cargo->RemoveAllStolen())
+    {
+        Result.UnitsConfiscated += Entry.Quantity;
+        Value += Entry.Item ? Entry.Item->BasePrice * Entry.Quantity : 0.0f;
+        UE_LOG(LogAdastreaStations, Log, TEXT("Customs at %s: confiscated %d x %s stolen from %s"),
+            *GetDisplayNameString(), Entry.Quantity, Entry.Item ? *Entry.Item->ItemName.ToString() : TEXT("?"), *Entry.StolenFrom.ToString());
+    }
+    if (Result.UnitsConfiscated == 0)
+    {
+        return Result;
+    }
+    if (UPlayerTraderComponent* Trader = Ship->PlayerTraderComponent)
+    {
+        Result.Fine = FMath::Min(FMath::RoundToInt(Value * StolenGoodsFineRate), Trader->GetCredits());
+        Trader->RemoveCredits(Result.Fine);
+    }
+    if (UOrganisationSubsystem* Orgs = UOrganisationSubsystem::Get(this); Orgs && Result.Fine > 0)
+    {
+        Orgs->GrantCredits(Orgs->GetOwnerIdOf(this), Result.Fine);
+    }
+    // Standing with the authority drops here once standing exists (build order step 4).
+    UE_LOG(LogAdastreaStations, Log, TEXT("Customs at %s: %d stolen units confiscated, fined %d cr"),
+        *GetDisplayNameString(), Result.UnitsConfiscated, Result.Fine);
+    return Result;
+}
 
 void ASpaceStation::AddModule(ASpaceStationModule* Module)
 {
@@ -1088,7 +1259,30 @@ int32 ASpaceStation::GetTargetPriority_Implementation() const
 
 FText ASpaceStation::GetTargetDisplayName_Implementation() const
 {
-    return StationName;
+    return FText::FromString(GetDisplayNameString());
+}
+
+FString ASpaceStation::GetDisplayNameString() const
+{
+    const FString Name = StationName.ToString();
+    if (!Name.IsEmpty() && Name != TEXT("Space Station"))
+    {
+        return Name;
+    }
+#if WITH_EDITOR
+    const FString Label = GetActorLabel(false);
+#else
+    const FString& Label = SavedLabel;
+#endif
+    return Label.IsEmpty() ? AdastreaNames::Readable(GetClass()->GetName()) : Label;
+}
+
+void ASpaceStation::PreSave(FObjectPreSaveContext ObjectSaveContext)
+{
+    Super::PreSave(ObjectSaveContext);
+#if WITH_EDITOR
+    SavedLabel = GetActorLabel(false);
+#endif
 }
 
 UTexture2D* ASpaceStation::GetTargetIcon_Implementation() const

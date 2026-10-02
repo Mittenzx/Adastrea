@@ -958,6 +958,7 @@ void AAdastreaPlayerController::HandleTradeSelectUp()
 		else if (H->bShowStationMenu) { H->MoveStationMenuSelection(-1); }
 		else if (H->bShowTradeScreen) { H->MoveTradeSelection(-1); }
 		else if (H->bShowOutfitting) { H->MoveOutfittingSelection(-1); }
+		else if (H->bShowCrafting) { H->MoveCraftingSelection(-1); }
 	}
 }
 
@@ -969,6 +970,7 @@ void AAdastreaPlayerController::HandleTradeSelectDown()
 		else if (H->bShowStationMenu) { H->MoveStationMenuSelection(1); }
 		else if (H->bShowTradeScreen) { H->MoveTradeSelection(1); }
 		else if (H->bShowOutfitting) { H->MoveOutfittingSelection(1); }
+		else if (H->bShowCrafting) { H->MoveCraftingSelection(1); }
 	}
 }
 
@@ -977,11 +979,31 @@ void AAdastreaPlayerController::HandleTradeToggleMode()
 	if (AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD()))
 	{
 		if (H->bShowTradeScreen) { H->ToggleBuySellMode(); }
+		else if (H->bShowCrafting) { H->ToggleCraftingFocus(); }
 	}
 }
 
-void AAdastreaPlayerController::HandleTradeExecute1()   { ExecuteTrade(1); }
-void AAdastreaPlayerController::HandleTradeExecute5()   { ExecuteTrade(5); }
+void AAdastreaPlayerController::HandleTradeExecute1()
+{
+	AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD());
+	if (H && H->bShowCrafting)
+	{
+		H->QueueCraftingSelection(this, 1);
+		return;
+	}
+	ExecuteTrade(1);
+}
+
+void AAdastreaPlayerController::HandleTradeExecute5()
+{
+	AAdastreaHUD* H = Cast<AAdastreaHUD>(GetHUD());
+	if (H && H->bShowCrafting)
+	{
+		H->QueueCraftingSelection(this, 5);
+		return;
+	}
+	ExecuteTrade(5);
+}
 
 void AAdastreaPlayerController::HandleTradeSellAll()
 {
@@ -990,6 +1012,13 @@ void AAdastreaPlayerController::HandleTradeSellAll()
 	{
 		// X on the outfitting screen removes and sells the selected upgrade.
 		H->SellOutfittingSelection(this);
+		return;
+	}
+	if (H && H->bShowCrafting)
+	{
+		// X on the production screen: cancel the selected job, or queue as many runs as the hold allows.
+		if (H->bCraftingJobsFocus) { H->CancelCraftingSelection(this); }
+		else { H->QueueCraftingSelection(this, 0); }
 		return;
 	}
 	ASpaceship* Ship = GetControlledSpaceship();
@@ -1003,7 +1032,8 @@ void AAdastreaPlayerController::HandleTradeSellAll()
 	{
 		return;
 	}
-	const int32 Held = Ship->CargoComponent->GetItemQuantity(Market->Inventory[H->SelectedTradeIndex].TradeItem);
+	// Stolen goods only count where the market buys them (fences).
+	const int32 Held = UPlayerTraderComponent::GetSellableQuantity(Market, Market->Inventory[H->SelectedTradeIndex].TradeItem, Ship->CargoComponent);
 	if (Held > 0)
 	{
 		ExecuteTrade(Held);
@@ -1063,6 +1093,7 @@ void AAdastreaPlayerController::HandleStationMenuConfirm()
 		}
 		else if (H->bShowStationMenu) { H->ConfirmStationMenuSelection(this); }
 		else if (H->bShowOutfitting) { H->ConfirmOutfittingPurchase(this); }
+		else if (H->bShowCrafting) { H->QueueCraftingSelection(this, 1); }
 	}
 }
 
@@ -1097,6 +1128,7 @@ void AAdastreaPlayerController::HandlePauseMenuLeft()
 	{
 		if (H->bShowPauseMenu) { H->AdjustPauseMenuValue(-1); }
 		else if (H->bShowOutfitting) { H->MoveOutfittingCategory(-1); }
+		else if (H->bShowCrafting) { H->MoveCraftingFacility(-1); }
 	}
 }
 
@@ -1106,6 +1138,7 @@ void AAdastreaPlayerController::HandlePauseMenuRight()
 	{
 		if (H->bShowPauseMenu) { H->AdjustPauseMenuValue(1); }
 		else if (H->bShowOutfitting) { H->MoveOutfittingCategory(1); }
+		else if (H->bShowCrafting) { H->MoveCraftingFacility(1); }
 	}
 }
 
@@ -1151,6 +1184,11 @@ void AAdastreaPlayerController::HandleTradeClose()
 		{
 			// Leaving the outfitting bay returns to the station menu.
 			H->HideOutfitting();
+			H->ShowStationMenu();
+		}
+		else if (H->bShowCrafting)
+		{
+			H->HideCrafting();
 			H->ShowStationMenu();
 		}
 	}

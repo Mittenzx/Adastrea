@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "AdastreaHUD.h"
+#include "AdastreaNames.h"
 #include "Combat/ShipHealthComponent.h"
 #include "AI/HostileFighterController.h"
 #include "AdastreaGameMode.h"
@@ -80,23 +81,11 @@ static const FLinearColor kSpeed   (0.35f, 0.72f, 0.95f, 1.00f); // cyan
 static const FLinearColor kThrottle(0.80f, 0.55f, 0.90f, 1.00f); // violet
 static const FLinearColor kPos     (0.75f, 0.75f, 0.80f, 1.00f); // soft white
 
-// AActor::GetActorLabel() only exists in editor builds (WITH_EDITOR). Packaged (Game)
-// builds fall back to the object name so the HUD still compiles and shows something.
+// Names come from game data, not actor labels: packaged builds have no labels, and
+// object names ("BP_TradeStation_C_2") mean nothing to the player.
 static FString HudActorName(const AActor* Actor)
 {
-	if (!Actor)
-	{
-		return FString();
-	}
-	if (const AJumpGate* Gate = Cast<AJumpGate>(Actor))
-	{
-		return Gate->GetDisplayName();
-	}
-#if WITH_EDITOR
-	return Actor->GetActorLabel();
-#else
-	return Actor->GetName();
-#endif
+	return AdastreaNames::ForActor(Actor);
 }
 
 void AAdastreaHUD::UpdateMenuAudio()
@@ -106,6 +95,7 @@ void AAdastreaHUD::UpdateMenuAudio()
 	Now.bMap = bShowMap;
 	Now.bTradeScreen = bShowTradeScreen;
 	Now.bOutfitting = bShowOutfitting;
+	Now.bCrafting = bShowCrafting;
 	Now.bStationMenu = bShowStationMenu;
 	Now.bShipSelect = bShowShipSelect;
 	Now.bStationInfo = bShowStationInfo;
@@ -114,6 +104,7 @@ void AAdastreaHUD::UpdateMenuAudio()
 	Now.TradeIndex = SelectedTradeIndex;
 	Now.OutfittingCategory = OutfittingCategoryIndex;
 	Now.OutfittingRow = OutfittingRowIndex;
+	Now.CraftingRow = bCraftingJobsFocus ? -1 - CraftingJobIndex : CraftingRowIndex + 1000 * CraftingFacilityIndex;
 	Now.ShipSelectIndex = ShipSelectIndex;
 
 	const FMenuAudioState Was = MenuAudioState;
@@ -125,10 +116,12 @@ void AAdastreaHUD::UpdateMenuAudio()
 
 	const bool bOpened = (Now.bMap && !Was.bMap) || (Now.bTradeScreen && !Was.bTradeScreen)
 		|| (Now.bStationMenu && !Was.bStationMenu) || (Now.bShipSelect && !Was.bShipSelect)
-		|| (Now.bStationInfo && !Was.bStationInfo) || (Now.bOutfitting && !Was.bOutfitting);
+		|| (Now.bStationInfo && !Was.bStationInfo) || (Now.bOutfitting && !Was.bOutfitting)
+		|| (Now.bCrafting && !Was.bCrafting);
 	const bool bClosed = (!Now.bMap && Was.bMap) || (!Now.bTradeScreen && Was.bTradeScreen)
 		|| (!Now.bStationMenu && Was.bStationMenu) || (!Now.bShipSelect && Was.bShipSelect)
-		|| (!Now.bStationInfo && Was.bStationInfo) || (!Now.bOutfitting && Was.bOutfitting);
+		|| (!Now.bStationInfo && Was.bStationInfo) || (!Now.bOutfitting && Was.bOutfitting)
+		|| (!Now.bCrafting && Was.bCrafting);
 
 	// Secondary: docking's clamp, a menu confirm click, a door etc. already cover these.
 	if (bOpened)
@@ -150,6 +143,7 @@ void AAdastreaHUD::UpdateMenuAudio()
 		|| (Now.bTradeScreen && Was.bTradeScreen && Now.TradeIndex != Was.TradeIndex)
 		|| (Now.bOutfitting && Was.bOutfitting
 			&& (Now.OutfittingRow != Was.OutfittingRow || Now.OutfittingCategory != Was.OutfittingCategory))
+		|| (Now.bCrafting && Was.bCrafting && Now.CraftingRow != Was.CraftingRow)
 		|| (Now.bShipSelect && Was.bShipSelect && Now.ShipSelectIndex != Was.ShipSelectIndex);
 	if (bHoverMoved)
 	{
@@ -242,6 +236,11 @@ void AAdastreaHUD::DrawHUD()
 			{
 				DrawStationMenu(PC, Cast<AAdastreaPlayerController>(PC), Ship);
 			}
+			// On top of the menu's dimming (e.g. the customs report on docking).
+			if (!PendingMessage.IsEmpty())
+			{
+				DrawTransientMessage(PC);
+			}
 			return;
 		}
 
@@ -261,6 +260,20 @@ void AAdastreaHUD::DrawHUD()
 			if (Ship)
 			{
 				DrawOutfittingScreen(PC, Ship);
+			}
+			return;
+		}
+
+		// Docked production screen draws over everything when shown.
+		if (bShowCrafting)
+		{
+			if (Ship)
+			{
+				DrawCraftingScreen(PC, Ship);
+			}
+			if (!PendingMessage.IsEmpty())
+			{
+				DrawTransientMessage(PC);
 			}
 			return;
 		}
@@ -1265,7 +1278,7 @@ AActor* AAdastreaHUD::PickSectorMapActor(const FVector2D& ScreenPos, float Radiu
 
 namespace
 {
-	enum class EStationMenuAction : uint8 { Trading, Outfitting, WalkStation, Maintenance, Habitation, Undock };
+	enum class EStationMenuAction : uint8 { Trading, Outfitting, Production, WalkStation, Maintenance, Habitation, Undock };
 
 	struct FStationMenuOption
 	{
@@ -1280,6 +1293,7 @@ namespace
 	{
 		{ EStationMenuAction::Trading,     TEXT("Trading Department"), TEXT("Buy and sell goods at the station market") },
 		{ EStationMenuAction::Outfitting,  TEXT("Outfitting Bay"),     TEXT("Buy, fit and sell engine, weapon, shield, hull and cargo upgrades") },
+		{ EStationMenuAction::Production,  TEXT("Production Floor"),   TEXT("Refine ore and fabricate parts at the station's modules") },
 		{ EStationMenuAction::WalkStation, TEXT("Walk the Station"),   TEXT("Leave your ship and explore the station on foot") },
 		{ EStationMenuAction::Maintenance, TEXT("Maintenance Dock"),   TEXT("Walk to the hangar bay: repairs and the ship refit kiosk") },
 		{ EStationMenuAction::Habitation,  TEXT("Habitation"),         TEXT("Walk to the crew cabins and lounge") },
@@ -1314,6 +1328,12 @@ void AAdastreaHUD::ConfirmStationMenuSelection(APlayerController* PC)
 		ShowMessage(TEXT("This station has no outfitting modules"), 3.0f, true);
 		return;
 	}
+	if (Option.Action == EStationMenuAction::Production && !IsCraftingAvailable(PC))
+	{
+		UAudioEventLibrary::PlayEvent2D(this, TEXT("UI.Error"), 0.2f);
+		ShowMessage(TEXT("This station has no processing or fabrication modules"), 3.0f, true);
+		return;
+	}
 	UAudioEventLibrary::PlayEvent2D(this, TEXT("UI.Click"), 0.08f);
 
 	switch (Option.Action)
@@ -1324,6 +1344,9 @@ void AAdastreaHUD::ConfirmStationMenuSelection(APlayerController* PC)
 		break;
 	case EStationMenuAction::Outfitting:
 		ShowOutfitting();
+		break;
+	case EStationMenuAction::Production:
+		ShowCrafting();
 		break;
 	case EStationMenuAction::WalkStation:
 		if (AAdastreaPlayerController* AdPC = Cast<AAdastreaPlayerController>(PC))
@@ -1375,10 +1398,12 @@ void AAdastreaHUD::DrawStationMenu(APlayerController* PC, AAdastreaPlayerControl
 
 	const FLinearColor Accent(0.15f, 0.9f, 0.6f, 1.0f);
 	const bool bOutfitting = IsOutfittingAvailable(PC);
+	const bool bCrafting = IsCraftingAvailable(PC);
 	for (int32 i = 0; i < kStationMenuCount; ++i)
 	{
 		const FStationMenuOption& Option = kStationMenuOptions[i];
-		const bool bAvailable = Option.Action != EStationMenuAction::Outfitting || bOutfitting;
+		const bool bAvailable = (Option.Action != EStationMenuAction::Outfitting || bOutfitting)
+			&& (Option.Action != EStationMenuAction::Production || bCrafting);
 		const float RowY = Y + 92.0f + RowH * i;
 		const bool bSel = (i == StationMenuIndex);
 		if (bSel)
@@ -2493,7 +2518,7 @@ void AAdastreaHUD::DrawMiningHUD(APlayerController* PC, ASpaceship* Ship, float 
 
 	// Drone state.
 	const FLinearColor StatusColor = bFiring ? kGood : (Status == EDroneBayStatus::Stowed ? kSpeed : kWarn);
-	Row(TEXT("DRONES"), FString::Printf(TEXT("%s   -   %d/%d out, %d cutting"), *UDroneBayComponent::StatusToText(Status).ToString(),
+	Row(TEXT("DRONES"), FString::Printf(TEXT("%s   -   %d/%d out, %d cutting"), *Bay->GetStatusText().ToString(),
 		Bay->GetDronesOut(), Bay->DroneCount, Bay->GetDronesCutting()), StatusColor);
 	if (bFiring)
 	{

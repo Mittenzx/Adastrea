@@ -9,6 +9,7 @@
 #include "Player/PlayerUnlockComponent.h"
 #include "Player/AchievementDataAsset.h"
 #include "Universe/OrganisationSubsystem.h"
+#include "Trading/CraftingManager.h"
 #include "AdastreaSaveGame.generated.h"
 
 /**
@@ -128,6 +129,10 @@ struct FSavedCargoEntry
 
 	UPROPERTY(BlueprintReadWrite, Category="Save")
 	int32 Quantity;
+
+	/** Owner the goods were stolen from (FCargoEntry::StolenFrom); None = clean. */
+	UPROPERTY(BlueprintReadWrite, Category="Save")
+	FName StolenFrom;
 
 	FSavedCargoEntry()
 		: ItemID(NAME_None)
@@ -440,6 +445,10 @@ public:
 	/** Organisation wallets, ledgers and ship roster (v3) */
 	UPROPERTY(BlueprintReadWrite, Category="Save|World")
 	FSavedOrganisations Organisations;
+
+	/** Production orders running or waiting for collection at stations (UCraftingManager) */
+	UPROPERTY(BlueprintReadWrite, Category="Save|World")
+	TArray<FCraftingJob> CraftingJobs;
 
 	// ====================
 	// Game Settings
