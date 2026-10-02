@@ -41,6 +41,15 @@
 #include "Ships/ExteriorDressingComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 
+namespace ShipDetail
+{
+    /** Attach the hull's detail kit: RCS quads, hatches, radiators and similar parts that
+     * Tools/build_ship_hull_detail.py exports as SM_Ship_<X>_01_Detail in the hull's object
+     * space, so it goes on the ship mesh at identity. Found from the hull mesh name;
+     * nothing happens if absent. The component is kept alive by AddInstanceComponent. */
+    void Attach(AActor* Ship, UStaticMeshComponent* ShipMeshComponent);
+}
+
 namespace ShipEventAudio
 {
     /** Turn rate (deg/s) that counts as a rotation burst. */
@@ -215,6 +224,7 @@ void ASpaceship::BeginPlay()
     // the hull per ship class here in code, which is robust and main-side.
     ApplyShipHullMaterial();
     AttachShipWindows();
+    ShipDetail::Attach(this, ShipMeshComponent);
     FitCameraToHull();
 
     // Initialize hull integrity from data asset if available
@@ -1330,6 +1340,48 @@ void ASpaceship::AttachShipWindows()
     WindowMeshComponent->RegisterComponent();
     AddInstanceComponent(WindowMeshComponent);
     UE_LOG(LogAdastreaShips, Log, TEXT("AttachShipWindows: %s gets %s"), *GetName(), *WinName);
+}
+
+void ShipDetail::Attach(AActor* Ship, UStaticMeshComponent* ShipMeshComponent)
+{
+    if (!Ship || !ShipMeshComponent || !ShipMeshComponent->GetStaticMesh())
+    {
+        return;
+    }
+    for (const UActorComponent* Existing : Ship->GetInstanceComponents())
+    {
+        if (Existing && Existing->GetFName() == TEXT("ShipDetail"))
+        {
+            return;
+        }
+    }
+
+    // SM_Ship_Corvette_01_Assembled[_UniqueUV] -> SM_Ship_Corvette_01_Detail
+    FString Base = ShipMeshComponent->GetStaticMesh()->GetName();
+    const int32 Cut = Base.Find(TEXT("_Assembled"));
+    if (Cut == INDEX_NONE)
+    {
+        return;
+    }
+    Base.LeftInline(Cut);
+    const FString DetailName = Base + TEXT("_Detail");
+    const FString DetailPath = FString::Printf(TEXT("/AdastreaShips/Meshes/Ships/%s.%s"), *DetailName, *DetailName);
+    UStaticMesh* DetailMesh = LoadObject<UStaticMesh>(nullptr, *DetailPath, nullptr, LOAD_NoWarn | LOAD_Quiet);
+    if (!DetailMesh)
+    {
+        return;
+    }
+
+    // Small parts on the hull: they cast shadows, but never collide (the hull's own
+    // convex collision already covers them).
+    UStaticMeshComponent* Detail = NewObject<UStaticMeshComponent>(Ship, TEXT("ShipDetail"));
+    Detail->SetStaticMesh(DetailMesh);
+    Detail->SetupAttachment(ShipMeshComponent);
+    Detail->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    Detail->SetCanEverAffectNavigation(false);
+    Detail->RegisterComponent();
+    Ship->AddInstanceComponent(Detail);
+    UE_LOG(LogAdastreaShips, Log, TEXT("ShipDetail::Attach: %s gets %s"), *Ship->GetName(), *DetailName);
 }
 
 namespace ChaseFraming
