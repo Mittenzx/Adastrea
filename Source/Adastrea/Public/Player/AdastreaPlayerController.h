@@ -521,9 +521,12 @@ public:
 																											UFUNCTION(Exec)
 																											void ExecuteTrade(int32 Quantity);
 
-	/** Sell (in sell mode) the whole held quantity of the selected market item. Key: X. */
+	/** Trade screen X: set the quantity to the most the mode allows (outfitting: sell the upgrade). */
 	UFUNCTION(Exec)
 	void HandleTradeSellAll();
+
+	/** Trade screen Enter / Space: trade the chosen quantity, or plan the highlighted run. */
+	void ConfirmTradeScreen(class AAdastreaHUD* H);
 
 																											/** Ship-select screen input handlers. */
 																											void HandleShipSelectPrev();

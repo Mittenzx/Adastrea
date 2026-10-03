@@ -252,9 +252,21 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category="HUD|Trading")
 	int32 SelectedTradeIndex = 0;
 
+	/** Trade screen view: 0 = Market, 1 = Opportunities (Tab switches). */
+	int32 TradeTab = 0;
+
+	/** Market category filter: 0 = all, otherwise ETradeItemCategory + 1 ([ and ] cycle). */
+	int32 TradeCategory = 0;
+
+	/** Units the confirm key trades (Left/Right adjust, X = max). */
+	int32 TradeQuantity = 1;
+
+	/** Highlighted run card on the Opportunities view. */
+	int32 TradeRunIndex = 0;
+
 	/** Show the trading screen (set when docked at a market). */
 	UFUNCTION(BlueprintCallable, Category="HUD|Trading")
-	void ShowTradeScreen() { bShowTradeScreen = true; SelectedTradeIndex = 0; TradeMessage.Reset(); }
+	void ShowTradeScreen();
 
 	/** Hide the trading screen (set when undocked / closing). */
 	UFUNCTION(BlueprintCallable, Category="HUD|Trading")
@@ -313,6 +325,24 @@ public:
 
 	/** Show a one-line trade result on the trade screen for a few seconds. */
 	void SetTradeMessage(const FString& Message, bool bSuccess);
+
+	/** Switch between the Market and Opportunities views. */
+	void ToggleTradeTab();
+
+	/** Step the Market view's category filter (All, then each category that has items). */
+	void CycleTradeCategory(int32 Step);
+
+	/** Change the trade quantity by Step, clamped to 1..GetTradeMaxQuantity(). */
+	void AdjustTradeQuantity(int32 Step);
+
+	/** Set the trade quantity to the most the current mode allows. */
+	void SetTradeQuantityMax();
+
+	/** Most units the current mode allows for the selected item (buy: stock, credits, space; sell: held). */
+	int32 GetTradeMaxQuantity() const;
+
+	/** Opportunities view: open the highlighted run in the Market view, buying as many as fit. */
+	void PlanSelectedTradeRun();
 
 	// ========================
 	// OUTFITTING SCREEN (docked; buy, fit and sell ship upgrades at the station's
@@ -597,6 +627,52 @@ private:
 	FString TradeMessage;
 	bool bTradeMessageOK = true;
 	double TradeMessageTime = -100.0;
+
+	/** Credits when the trade screen opened, for the session delta in its header. */
+	int32 TradeSessionStartCredits = 0;
+
+	/** Another market in the level the player can sell to (AdastreaHUD_Trade.cpp). */
+	struct FTradeMarketRef
+	{
+		TWeakObjectPtr<class UMarketDataAsset> Market;
+		FString Name;
+		float DistanceKm = 0.0f;
+		bool bHere = false;
+	};
+
+	/** A profitable buy-here, sell-there run. */
+	struct FTradeRun
+	{
+		int32 InventoryIndex = INDEX_NONE;
+		int32 MarketRef = INDEX_NONE;
+		int32 BuyHere = 0;
+		int32 SellThere = 0;
+		int32 Units = 0;
+	};
+
+	/** Markets in the level and the best runs from here, rebuilt about once a second. */
+	TArray<FTradeMarketRef> TradeMarkets;
+	TArray<FTradeRun> TradeRuns;
+	double TradeCacheTime = -100.0;
+	TWeakObjectPtr<class UMarketDataAsset> TradeCacheMarket;
+
+	/** Rebuild TradeMarkets / TradeRuns when stale or the docked market changed. */
+	void RefreshTradeCache(ASpaceship* Ship, ASpaceStation* Station, class UMarketDataAsset* Here, bool bForce = false);
+
+	/** Whether Entry passes the Market view's category filter. */
+	bool IsTradeEntryVisible(const struct FMarketInventoryEntry& Entry) const;
+
+	/** The docked market, or null. */
+	class UMarketDataAsset* GetDockedMarket() const;
+
+	void DrawTradeMarketView(ASpaceship* Ship, ASpaceStation* Station, class UMarketDataAsset* Market, float VW, float VH);
+	void DrawTradeOpportunitiesView(ASpaceship* Ship, ASpaceStation* Station, class UMarketDataAsset* Market, float VW, float VH);
+
+	/** Each known market's buy and sell price for Item as a range on a shared scale. */
+	void DrawTradeAcrossMarkets(ASpaceship* Ship, class UTradeItemDataAsset* Item, float X, float Y, float W, float RowH, int32 MaxRows);
+
+	/** The hold as a grid of cells coloured by commodity; PlannedUnits of PlannedItem outlined. */
+	void DrawTradeHoldGrid(ASpaceship* Ship, class UTradeItemDataAsset* PlannedItem, int32 PlannedUnits, float X, float Y, float W, int32 Columns, int32 Rows);
 
 	/**
 	 * UI.Open / UI.Close when a canvas screen appears or goes away, UI.Hover when
