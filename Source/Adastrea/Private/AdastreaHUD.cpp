@@ -1719,6 +1719,49 @@ static float ShipRosterLength(const ASpaceship* Ship)
 	return Ship ? ShipRosterMeshLength(ShipRosterHull(Ship->GetClass())) : 0.0f;
 }
 
+// X4-style list groups. X4's S/M/L/XL split doesn't fit this roster (every hull is
+// 7-60 m), so ships group by purpose, read from the data asset's class ("Mining
+// Barge", "Escort Carrier"); support roles are tested first so a "Medical Cruiser"
+// isn't filed under combat.
+static int32 ShipPurpose(const ASpaceship* Ship)
+{
+	const FString Role = Ship && Ship->ShipDataAsset ? Ship->ShipDataAsset->ShipClass.ToString() : FString();
+	auto Has = [&Role](std::initializer_list<const TCHAR*> Words)
+	{
+		for (const TCHAR* Word : Words)
+		{
+			if (Role.Contains(Word)) { return true; }
+		}
+		return false;
+	};
+	if (Has({ TEXT("Mining"), TEXT("Salvage"), TEXT("Utility"), TEXT("Construct") })) { return 2; }
+	if (Has({ TEXT("Research"), TEXT("Science"), TEXT("Medical"), TEXT("Multi") })) { return 3; }
+	if (Has({ TEXT("Trad"), TEXT("Freight"), TEXT("Transport"), TEXT("Liner"), TEXT("Colony"), TEXT("Cargo") })) { return 1; }
+	if (Has({ TEXT("Interceptor"), TEXT("Fighter"), TEXT("Gunship"), TEXT("Patrol"), TEXT("Corvette"), TEXT("Frigate"),
+		TEXT("Destroyer"), TEXT("Cruiser"), TEXT("Battleship"), TEXT("Carrier"), TEXT("Assault") })) { return 0; }
+	return 3;
+}
+static const TCHAR* ShipPurposeNames[] = { TEXT("COMBAT"), TEXT("TRADE & TRANSPORT"), TEXT("MINING & SALVAGE"), TEXT("SUPPORT & SPECIAL") };
+
+// The preview fills the screen: horizontal FOV, and a render target the viewport's
+// shape (long edge capped so a 4K screen doesn't capture at 4K every frame).
+static constexpr float ShipPreviewFOV = 40.0f;
+static TAutoConsoleVariable<float> CVarShipPreviewExposure(
+	TEXT("adastrea.ShipPreviewExposure"),
+	-3.0f,
+	TEXT("Exposure bias (stops) of the ship-select preview's fixed exposure."),
+	ECVF_Default);
+static FIntPoint ShipPreviewTargetSize(const APlayerController* PC)
+{
+	int32 X = 1280, Y = 720;
+	if (PC)
+	{
+		PC->GetViewportSize(X, Y);
+	}
+	const float Scale = FMath::Min(1.0f, 1600.0f / FMath::Max(1, FMath::Max(X, Y)));
+	return FIntPoint(FMath::Max(64, FMath::RoundToInt(X * Scale)), FMath::Max(64, FMath::RoundToInt(Y * Scale)));
+}
+
 void AAdastreaHUD::BuildShipRoster()
 {
 	ShipRoster.Reset();
@@ -1750,9 +1793,13 @@ void AAdastreaHUD::BuildShipRoster()
 		}
 		ShipRoster.Add(ShipClass);
 	}
+	// Grouped by purpose (the list's sections), smallest hull first within each.
 	ShipRoster.Sort([](const TSubclassOf<ASpaceship>& A, const TSubclassOf<ASpaceship>& B)
 	{
-		return ShipRosterLength(GetDefault<ASpaceship>(A)) < ShipRosterLength(GetDefault<ASpaceship>(B));
+		const ASpaceship* ShipA = GetDefault<ASpaceship>(A);
+		const ASpaceship* ShipB = GetDefault<ASpaceship>(B);
+		const int32 PurposeA = ShipPurpose(ShipA), PurposeB = ShipPurpose(ShipB);
+		return PurposeA != PurposeB ? PurposeA < PurposeB : ShipRosterLength(ShipA) < ShipRosterLength(ShipB);
 	});
 	UE_LOG(LogTemp, Log, TEXT("ShipSelect: roster of %d ships from %s"), ShipRoster.Num(), ShipRosterFolder);
 }
@@ -1778,6 +1825,9 @@ void AAdastreaHUD::ShowShipSelect()
 		}
 	}
 	ShipSelectScroll = 0;
+	ShipPreviewDistance = 6500.0f;
+	bShipPreviewDragging = false;
+	ShipPreviewLastTouched = -100.0;
 	bShipCaptureReady = false;
 	if (APlayerController* PC = GetOwningPlayerController())
 	{
@@ -1903,10 +1953,11 @@ void AAdastreaHUD::RebuildShipPreview(APlayerController* PC)
 			UE_LOG(LogTemp, Warning, TEXT("ShipSelect: no mesh at path for index %d"), ShipSelectIndex);
 		}
 
-	// Render target for the capture.
+	// Render target for the capture: the screen's shape, as the preview fills it.
 	if (!ShipPreviewRT)
 	{
-		ShipPreviewRT = UKismetRenderingLibrary::CreateRenderTarget2D(World, 512, 512, RTF_RGBA8);
+		const FIntPoint Size = ShipPreviewTargetSize(PC);
+		ShipPreviewRT = UKismetRenderingLibrary::CreateRenderTarget2D(World, Size.X, Size.Y, RTF_RGBA8);
 	}
 	if (ShipPreviewRT)
 	{
@@ -1932,8 +1983,19 @@ void AAdastreaHUD::RebuildShipPreview(APlayerController* PC)
 				ShipPreviewCapture->ShowFlags.SetFog(false);
 				ShipPreviewCapture->ShowFlags.SetSkyLighting(false);
 				ShipPreviewCapture->ShowFlags.SetDynamicShadows(false);
-				ShipPreviewCapture->FOVAngle = 20.0f;
-				ShipPreviewCapture->CaptureSource = SCS_SceneColorHDR;
+				ShipPreviewCapture->FOVAngle = ShipPreviewFOV;
+				// Final colour: tonemapped like the game view (HDR scene colour blew the hull out to white).
+				ShipPreviewCapture->CaptureSource = SCS_FinalColorLDR;
+				ShipPreviewCapture->bAlwaysPersistRenderingState = true;
+				// Fixed exposure: auto exposure adapts to the black backdrop and washes the hull out.
+				FPostProcessSettings& PP = ShipPreviewCapture->PostProcessSettings;
+				PP.bOverride_AutoExposureMethod = true;
+				PP.AutoExposureMethod = AEM_Manual;
+				PP.bOverride_AutoExposureApplyPhysicalCameraExposure = true;
+				PP.AutoExposureApplyPhysicalCameraExposure = false;
+				PP.bOverride_AutoExposureBias = true;
+				PP.bOverride_BloomIntensity = true;
+				PP.BloomIntensity = 0.2f;
 				ShipPreviewCapture->bCaptureEveryFrame = true;
 				ShipPreviewCapture->bUseRayTracingIfEnabled = false;
 				// Keep capture seeing the WHOLE world (not ShowOnly) so a near preview
@@ -1970,6 +2032,8 @@ void AAdastreaHUD::CycleShipSelect(int32 Step)
 
 void AAdastreaHUD::OrbitShipPreview(float DeltaYaw, float DeltaPitch)
 {
+	// The idle turntable holds off while the player is turning the ship themselves.
+	ShipPreviewLastTouched = GetWorld() ? GetWorld()->GetRealTimeSeconds() : 0.0;
 	ShipPreviewYaw = FMath::Fmod(ShipPreviewYaw + DeltaYaw, 360.0f);
 	ShipPreviewPitch = FMath::Clamp(ShipPreviewPitch + DeltaPitch, -60.0f, 60.0f);
 }
@@ -2040,8 +2104,59 @@ void AAdastreaHUD::SpawnSelectedShip(APlayerController* PC)
 	HideShipSelect();
 }
 
+// X4-style ship select: the ship fills the screen on a slow turntable, with translucent
+// panels over it - hulls grouped by purpose on the left, ship information on the
+// right (bars against the best on the roster, deltas and a tick for the ship being
+// flown) and a confirm bar along the bottom. Mouse: click a row or button, drag the
+// ship to orbit it, wheel to zoom (over the list, to step through it).
+namespace ShipSelectUI
+{
+	static const FLinearColor Panel    (0.004f, 0.008f, 0.014f, 0.86f);
+	static const FLinearColor Strip    (0.012f, 0.025f, 0.040f, 0.96f);
+	static const FLinearColor Group    (0.010f, 0.030f, 0.050f, 0.95f);
+	static const FLinearColor Row      (0.010f, 0.018f, 0.030f, 0.60f);
+	static const FLinearColor Hover    (0.020f, 0.060f, 0.090f, 0.90f);
+	static const FLinearColor Selected (0.020f, 0.150f, 0.200f, 0.95f);
+	static const FLinearColor Text     (0.90f, 0.94f, 0.97f, 1.00f);
+	static const FLinearColor Dim      (0.62f, 0.70f, 0.76f, 1.00f);
+	static const FLinearColor Better   (0.40f, 0.90f, 0.50f, 1.00f);
+	static const FLinearColor Worse    (0.95f, 0.45f, 0.40f, 1.00f);
+	static const FLinearColor BarBack  (0.030f, 0.050f, 0.070f, 0.95f);
+	static const FLinearColor BarFill  (0.22f, 0.72f, 0.82f, 1.00f);
+	static const FLinearColor Confirm  (0.015f, 0.200f, 0.240f, 0.95f);
+	static const FLinearColor ConfirmHi(0.030f, 0.320f, 0.380f, 1.00f);
+
+	// One bar row of the information panel; a new Section starts a new heading.
+	struct FStat
+	{
+		const TCHAR* Section;
+		const TCHAR* Label;
+		const TCHAR* Unit;
+		float (*Get)(const USpaceshipDataAsset&);
+	};
+	static const FStat Stats[] =
+	{
+		{ TEXT("DEFENSE"),    TEXT("Hull"),          TEXT(""),       [](const USpaceshipDataAsset& D) { return D.HullStrength; } },
+		{ TEXT("DEFENSE"),    TEXT("Armor"),         TEXT(""),       [](const USpaceshipDataAsset& D) { return D.ArmorRating; } },
+		{ TEXT("DEFENSE"),    TEXT("Shield"),        TEXT(""),       [](const USpaceshipDataAsset& D) { return D.ShieldStrength; } },
+		{ TEXT("DEFENSE"),    TEXT("Shield regen"),  TEXT(" /s"),    [](const USpaceshipDataAsset& D) { return D.ShieldRechargeRate; } },
+		{ TEXT("PROPULSION"), TEXT("Max speed"),     TEXT(" u/s"),   [](const USpaceshipDataAsset& D) { return D.MaxSpeed; } },
+		{ TEXT("PROPULSION"), TEXT("Acceleration"),  TEXT(" u/s2"),  [](const USpaceshipDataAsset& D) { return D.Acceleration; } },
+		{ TEXT("PROPULSION"), TEXT("Maneuver"),      TEXT(" /10"),   [](const USpaceshipDataAsset& D) { return (float)D.Maneuverability; } },
+		{ TEXT("PROPULSION"), TEXT("Jump range"),    TEXT(" ly"),    [](const USpaceshipDataAsset& D) { return D.JumpRange; } },
+		{ TEXT("ARMAMENT"),   TEXT("Weapon slots"),  TEXT(""),       [](const USpaceshipDataAsset& D) { return (float)D.WeaponSlots; } },
+		{ TEXT("ARMAMENT"),   TEXT("Weapon power"),  TEXT(""),       [](const USpaceshipDataAsset& D) { return D.WeaponPowerCapacity; } },
+		{ TEXT("ARMAMENT"),   TEXT("Point defense"), TEXT(""),       [](const USpaceshipDataAsset& D) { return D.PointDefenseRating; } },
+		{ TEXT("STORAGE"),    TEXT("Cargo"),         TEXT(" m3"),    [](const USpaceshipDataAsset& D) { return D.CargoCapacity; } },
+		{ TEXT("STORAGE"),    TEXT("Fuel"),          TEXT(""),       [](const USpaceshipDataAsset& D) { return D.FuelCapacity; } },
+		{ TEXT("STORAGE"),    TEXT("Drones"),        TEXT(""),       [](const USpaceshipDataAsset& D) { return (float)D.DroneCapacity; } },
+		{ TEXT("STORAGE"),    TEXT("Hangar"),        TEXT(""),       [](const USpaceshipDataAsset& D) { return (float)D.HangarCapacity; } },
+	};
+}
+
 void AAdastreaHUD::DrawShipSelectScreen(APlayerController* PC)
 {
+	namespace SS = ShipSelectUI;
 	if (!PC) { return; }
 	// Ensure the preview capture is built (first draw / after opening).
 	if (!bShipCaptureReady)
@@ -2051,34 +2166,191 @@ void AAdastreaHUD::DrawShipSelectScreen(APlayerController* PC)
 	int32 VX = 0, VY = 0;
 	PC->GetViewportSize(VX, VY);
 	const float VW = (float)VX, VH = (float)VY;
+	UFont* Font = HudType::Font();
+	const UWorld* World = GetWorld();
+	const double Now = World ? World->GetRealTimeSeconds() : 0.0;
 
-	// Full-screen dim backdrop.
-		DrawRect(FLinearColor(0.02f, 0.03f, 0.05f, 0.92f), 0.0f, 0.0f, VW, VH);
+	// ---- Layout ----
+	const float Margin = 24.0f, TopH = 56.0f, FootH = 64.0f, StripH = 34.0f, RowH = 32.0f;
+	const float ListW = FMath::Clamp(VW * 0.22f, 280.0f, 400.0f);
+	const float InfoW = FMath::Clamp(VW * 0.25f, 320.0f, 440.0f);
+	const float PanelY = TopH + 16.0f, PanelB = VH - FootH - 16.0f;
+	const FBox2D ListRect(FVector2D(Margin, PanelY), FVector2D(Margin + ListW, PanelB));
+	const FBox2D InfoRect(FVector2D(VW - Margin - InfoW, PanelY), FVector2D(VW - Margin, PanelB));
+	const FBox2D FootRect(FVector2D(0.0f, VH - FootH), FVector2D(VW, VH));
+	const float BtnH = 40.0f, BtnY = VH - FootH + (FootH - BtnH) * 0.5f;
+	const FBox2D ConfirmRect(FVector2D(VW - Margin - 230.0f, BtnY), FVector2D(VW - Margin, BtnY + BtnH));
+	const FBox2D CloseRect(FVector2D(ConfirmRect.Min.X - 12.0f - 150.0f, BtnY), FVector2D(ConfirmRect.Min.X - 12.0f, BtnY + BtnH));
 
-		// Apply current preview orbit to the preview ship + capture each frame.
-			if (bShipCaptureReady && ShipPreviewCapture && ShipPreviewActor)
-			{
-				// Rotate the model to the orbit yaw/pitch.
-				ShipPreviewActor->SetActorRotation(FRotator(ShipPreviewPitch, ShipPreviewYaw, 0.0f));
-								// Aim at the hull's bounds centre (pivots are often at the stern or
-								// keel), from far enough that the ~1000u normalized radius fits the
-								// 20 degree capture FOV: the normalized radius spans the bounds
-								// diagonal, so a long hull fits well inside 1000 / tan(10 deg).
-								const FVector Target = ShipPreviewMeshComp ? ShipPreviewMeshComp->Bounds.Origin : ShipPreviewActor->GetActorLocation();
-								const float CamDist = 5000.0f;
-								ShipPreviewCapture->SetWorldLocation(Target + FVector(-CamDist, 0, 0));
-								ShipPreviewCapture->SetWorldRotation(FRotator(0, 0, 0));
-			}
+	const UClass* FlownClass = PC->GetPawn() ? PC->GetPawn()->GetClass() : nullptr;
 
+	// ---- List rows: a header per purpose group, then its ships (the roster is sorted that way) ----
+	struct FListRow { int32 Roster; int32 Group; }; // Roster INDEX_NONE: group header
+	TArray<FListRow> Rows;
+	int32 GroupCounts[UE_ARRAY_COUNT(ShipPurposeNames)] = {};
+	int32 SelectedRow = 0;
+	for (int32 i = 0, LastClass = INDEX_NONE; i < ShipRoster.Num(); ++i)
+	{
+		const int32 Group = ShipPurpose(GetRosterShip(i));
+		++GroupCounts[Group];
+		if (Group != LastClass)
+		{
+			Rows.Add({ INDEX_NONE, Group });
+			LastClass = Group;
+		}
+		if (i == ShipSelectIndex)
+		{
+			SelectedRow = Rows.Num();
+		}
+		Rows.Add({ i, Group });
+	}
+	const float RowsTop = PanelY + StripH + 6.0f;
+	const int32 VisibleRows = FMath::Max(3, FMath::FloorToInt((PanelB - RowsTop - 6.0f) / RowH));
+	// Keep the selection in view, along with its group header when it leads the group.
+	const int32 SelectedTop = (SelectedRow > 0 && Rows[SelectedRow - 1].Roster == INDEX_NONE) ? SelectedRow - 1 : SelectedRow;
+	ShipSelectScroll = FMath::Clamp(ShipSelectScroll, SelectedRow - VisibleRows + 1, SelectedTop);
+	ShipSelectScroll = FMath::Clamp(ShipSelectScroll, 0, FMath::Max(0, Rows.Num() - VisibleRows));
+	const int32 LastRow = FMath::Min(Rows.Num(), ShipSelectScroll + VisibleRows);
+	auto RowRect = [&](int32 Row)
+	{
+		const float Y = RowsTop + (Row - ShipSelectScroll) * RowH;
+		return FBox2D(FVector2D(ListRect.Min.X + 6.0f, Y), FVector2D(ListRect.Max.X - 10.0f, Y + RowH - 4.0f));
+	};
 
-	DrawCentredText(TEXT("SHIP SELECT"), FLinearColor(0.15f,0.9f,0.6f,1.0f), VW * 0.5f, 18.0f, HudType::Title);
+	// ---- Mouse ----
+	float MX = -1.0f, MY = -1.0f;
+	const bool bHasMouse = PC->GetMousePosition(MX, MY);
+	const FVector2D Mouse(MX, MY);
+	auto Inside = [&](const FBox2D& R) { return bHasMouse && R.IsInsideOrOn(Mouse); };
+	const bool bOverUI = Inside(ListRect) || Inside(InfoRect) || Inside(FootRect) || MY < TopH;
+	int32 HoverRoster = INDEX_NONE;
+	for (int32 r = ShipSelectScroll; r < LastRow; ++r)
+	{
+		if (Rows[r].Roster != INDEX_NONE && Inside(RowRect(r)))
+		{
+			HoverRoster = Rows[r].Roster;
+		}
+	}
+	const bool bHoverConfirm = Inside(ConfirmRect), bHoverClose = Inside(CloseRect);
+	if (PC->WasInputKeyJustPressed(EKeys::LeftMouseButton))
+	{
+		if (bHoverConfirm)
+		{
+			SpawnSelectedShip(PC);
+			if (!bShowShipSelect) { return; }
+		}
+		else if (bHoverClose)
+		{
+			HideShipSelect();
+			return;
+		}
+		else if (HoverRoster != INDEX_NONE)
+		{
+			CycleShipSelect(HoverRoster - ShipSelectIndex);
+		}
+		else if (bHasMouse && !bOverUI)
+		{
+			bShipPreviewDragging = true;
+			ShipPreviewDragLast = Mouse;
+		}
+	}
+	if (bShipPreviewDragging)
+	{
+		if (bHasMouse && PC->IsInputKeyDown(EKeys::LeftMouseButton))
+		{
+			// The near side of the hull follows the cursor; dragging down looks from above.
+			const FVector2D Delta = Mouse - ShipPreviewDragLast;
+			ShipPreviewDragLast = Mouse;
+			OrbitShipPreview(-Delta.X * 0.35f, Delta.Y * 0.25f);
+		}
+		else
+		{
+			bShipPreviewDragging = false;
+		}
+	}
+	const int32 Wheel = (PC->WasInputKeyJustPressed(EKeys::MouseScrollUp) ? 1 : 0)
+		- (PC->WasInputKeyJustPressed(EKeys::MouseScrollDown) ? 1 : 0);
+	if (Wheel != 0 && bHasMouse)
+	{
+		if (Inside(ListRect))
+		{
+			CycleShipSelect(-Wheel);
+		}
+		else if (!bOverUI)
+		{
+			ShipPreviewDistance = FMath::Clamp(ShipPreviewDistance * (Wheel > 0 ? 0.88f : 1.0f / 0.88f), 3200.0f, 14000.0f);
+			ShipPreviewLastTouched = Now;
+		}
+	}
 
-	// ---- Left: ship list (smallest hull first; scrolls to keep the selection in view) ----
-	const float LX = 40.0f, LY = 80.0f, RowH = 30.0f, ListW = 300.0f;
-	const int32 VisibleRows = FMath::Max(3, FMath::FloorToInt((VH - LY - 90.0f) / RowH));
-	ShipSelectScroll = FMath::Clamp(ShipSelectScroll, ShipSelectIndex - VisibleRows + 1, ShipSelectIndex);
-	ShipSelectScroll = FMath::Clamp(ShipSelectScroll, 0, FMath::Max(0, ShipRoster.Num() - VisibleRows));
-	const int32 LastRow = FMath::Min(ShipRoster.Num(), ShipSelectScroll + VisibleRows);
+	// ---- Preview: a turntable that idles round once the player lets go ----
+	if (!bShipPreviewDragging && Now - ShipPreviewLastTouched > 3.0 && World)
+	{
+		ShipPreviewYaw = FMath::Fmod(ShipPreviewYaw + 9.0f * World->GetDeltaSeconds(), 360.0f);
+	}
+	if (ShipPreviewRT)
+	{
+		const FIntPoint Want = ShipPreviewTargetSize(PC);
+		if (ShipPreviewRT->SizeX != Want.X || ShipPreviewRT->SizeY != Want.Y)
+		{
+			ShipPreviewRT->ResizeTarget(Want.X, Want.Y);
+		}
+	}
+	if (bShipCaptureReady && ShipPreviewCapture && ShipPreviewActor)
+	{
+		// The ship spins on the turntable; the camera orbits up and down around it,
+		// aimed at the hull's bounds centre (pivots are often at the stern or keel).
+		ShipPreviewActor->SetActorRotation(FRotator(0.0f, ShipPreviewYaw, 0.0f));
+		const FVector Target = ShipPreviewMeshComp ? ShipPreviewMeshComp->Bounds.Origin : ShipPreviewActor->GetActorLocation();
+		const FRotator CamRot(-ShipPreviewPitch, 0.0f, 0.0f);
+		ShipPreviewCapture->SetWorldLocationAndRotation(Target - CamRot.Vector() * ShipPreviewDistance, CamRot);
+		ShipPreviewCapture->PostProcessSettings.AutoExposureBias = CVarShipPreviewExposure.GetValueOnGameThread();
+	}
+
+	// ---- Backdrop: the preview fills the screen ----
+	DrawRect(FLinearColor(0.01f, 0.015f, 0.025f, 1.0f), 0.0f, 0.0f, VW, VH);
+	if (bShipCaptureReady && ShipPreviewRT)
+	{
+		// Opaque: a SceneColorHDR capture stores INVERSE opacity in alpha (0 on the
+		// ship), so the default translucent blend drew the ship itself invisible.
+		DrawTexture(ShipPreviewRT, 0.0f, 0.0f, VW, VH, 0, 0, 1, 1, FLinearColor::White, BLEND_Opaque);
+	}
+	else
+	{
+		DrawCentredText(TEXT("[ preview unavailable ]"), SS::Dim, VW * 0.5f, VH * 0.5f, HudType::Label);
+	}
+
+	auto DrawBox = [this](const FBox2D& R, const FLinearColor& Fill, const FLinearColor& Edge)
+	{
+		DrawRect(Fill, R.Min.X, R.Min.Y, R.GetSize().X, R.GetSize().Y);
+		DrawLine(R.Min.X, R.Min.Y, R.Max.X, R.Min.Y, Edge, 1.0f);
+		DrawLine(R.Min.X, R.Max.Y, R.Max.X, R.Max.Y, Edge, 1.0f);
+		DrawLine(R.Min.X, R.Min.Y, R.Min.X, R.Max.Y, Edge, 1.0f);
+		DrawLine(R.Max.X, R.Min.Y, R.Max.X, R.Max.Y, Edge, 1.0f);
+	};
+	auto DrawRight = [this, Font](const FString& S, const FLinearColor& Color, float RightX, float Y, float Scale)
+	{
+		float W = 0.0f, H = 0.0f;
+		GetTextSize(S, W, H, Font, Scale);
+		DrawText(S, Color, RightX - W, Y, Font, Scale);
+		return W;
+	};
+	auto DrawPanelStrip = [&](const FBox2D& R, const TCHAR* Title, const FString& Right)
+	{
+		DrawRect(SS::Panel, R.Min.X, R.Min.Y, R.GetSize().X, R.GetSize().Y);
+		DrawRect(SS::Strip, R.Min.X, R.Min.Y, R.GetSize().X, StripH);
+		DrawLine(R.Min.X, R.Min.Y, R.Max.X, R.Min.Y, kBorder, 2.0f);
+		DrawText(Title, SS::Text, R.Min.X + 12.0f, R.Min.Y + 8.0f, Font, HudType::Body);
+		DrawRight(Right, SS::Dim, R.Max.X - 12.0f, R.Min.Y + 10.0f, HudType::Label);
+	};
+	const FLinearColor EdgeDim(kBorder.R, kBorder.G, kBorder.B, 0.35f);
+
+	// ---- Top bar ----
+	DrawRect(FLinearColor(SS::Strip.R, SS::Strip.G, SS::Strip.B, 0.85f), 0.0f, 0.0f, VW, TopH);
+	DrawLine(0.0f, TopH, VW, TopH, EdgeDim, 1.0f);
+	DrawText(TEXT("SHIP SELECT"), kHeader, Margin, 16.0f, Font, HudType::Title);
+	DrawRight(TEXT("Choose a hull to fly"), SS::Dim, VW - Margin, 20.0f, HudType::Label);
+
 	// Row labels: the data asset's ship name ("Viper Interceptor"), else the Blueprint's;
 	// two Blueprints sharing one data asset get their Blueprint name added.
 	auto BlueprintLabel = [](const UClass* Cls)
@@ -2108,96 +2380,171 @@ void AAdastreaHUD::DrawShipSelectScreen(APlayerController* PC)
 			Labels[i] += FString::Printf(TEXT(" (%s)"), *BlueprintLabel(ShipRoster[i]));
 		}
 	}
-	for (int32 i = ShipSelectScroll; i < LastRow; ++i)
+
+	// ---- Left: ships by purpose ----
+	DrawPanelStrip(ListRect, TEXT("AVAILABLE SHIPS"), FString::Printf(TEXT("%d"), ShipRoster.Num()));
+	for (int32 r = ShipSelectScroll; r < LastRow; ++r)
 	{
-		const ASpaceship* Ship = GetRosterShip(i);
-		const FString& Label = Labels[i];
-		const float RowY = LY + (i - ShipSelectScroll) * RowH;
-		const bool bSelected = (i == ShipSelectIndex);
+		const FBox2D R = RowRect(r);
+		const FListRow& Entry = Rows[r];
+		if (Entry.Roster == INDEX_NONE)
+		{
+			DrawRect(SS::Group, R.Min.X, R.Min.Y, R.GetSize().X, R.GetSize().Y);
+			DrawText(ShipPurposeNames[Entry.Group], kHeader, R.Min.X + 8.0f, R.Min.Y + 7.0f, Font, HudType::Label);
+			DrawRight(FString::FromInt(GroupCounts[Entry.Group]), SS::Dim, R.Max.X - 8.0f, R.Min.Y + 7.0f, HudType::Label);
+			continue;
+		}
+		const ASpaceship* Ship = GetRosterShip(Entry.Roster);
+		const bool bSelected = Entry.Roster == ShipSelectIndex;
+		DrawRect(bSelected ? SS::Selected : Entry.Roster == HoverRoster ? SS::Hover : SS::Row,
+			R.Min.X, R.Min.Y, R.GetSize().X, R.GetSize().Y);
 		if (bSelected)
 		{
-			DrawRect(FLinearColor(0.15f,0.32f,0.35f,0.5f), LX, RowY, ListW, RowH - 6.0f);
+			DrawLine(R.Min.X, R.Min.Y, R.Min.X, R.Max.Y, kBorder, 3.0f);
 		}
-		DrawText(Label, bSelected ? FLinearColor(1,1,1,1) : FLinearColor(0.7f,0.8f,0.9f,1), LX+8, RowY+2, HudType::Font(), HudType::Body);
-		const FString Size = FString::Printf(TEXT("%.0f m"), ShipRosterLength(Ship) / 100.0f);
-		float SW = 0.0f, SH = 0.0f;
-		GetTextSize(Size, SW, SH, HudType::Font(), HudType::Label);
-		DrawText(Size, kLabel, LX + ListW - SW - 8.0f, RowY + 4.0f, HudType::Font(), HudType::Label);
+		DrawText(Labels[Entry.Roster], bSelected ? FLinearColor::White : SS::Text, R.Min.X + 14.0f, R.Min.Y + 5.0f, Font, HudType::Body);
+		FString RoleText = Ship && Ship->ShipDataAsset ? Ship->ShipDataAsset->ShipClass.ToString() : FString();
+		RoleText += FString::Printf(TEXT("%s%.0f m"), RoleText.IsEmpty() ? TEXT("") : TEXT("   "), ShipRosterLength(Ship) / 100.0f);
+		const float RoleW = DrawRight(RoleText, bSelected ? SS::Text : SS::Dim, R.Max.X - 8.0f, R.Min.Y + 7.0f, HudType::Label);
+		if (ShipRoster[Entry.Roster].Get() == FlownClass)
+		{
+			DrawRight(TEXT("IN USE"), kCargo, R.Max.X - 8.0f - RoleW - 12.0f, R.Min.Y + 7.0f, HudType::Caption);
+		}
 	}
-	if (ShipSelectScroll > 0)
+	if (Rows.Num() > VisibleRows)
 	{
-		DrawText(TEXT("... more above"), kLabel, LX + 8, LY - 22.0f, HudType::Font(), HudType::Label);
-	}
-	if (LastRow < ShipRoster.Num())
-	{
-		DrawText(TEXT("... more below"), kLabel, LX + 8, LY + VisibleRows * RowH, HudType::Font(), HudType::Label);
+		// Scrollbar along the list's right edge.
+		const float TrackY = RowsTop, TrackH = VisibleRows * RowH - 4.0f;
+		const float ThumbH = FMath::Max(24.0f, TrackH * VisibleRows / Rows.Num());
+		const float ThumbY = TrackY + (TrackH - ThumbH) * ShipSelectScroll / FMath::Max(1, Rows.Num() - VisibleRows);
+		DrawRect(SS::BarBack, ListRect.Max.X - 7.0f, TrackY, 3.0f, TrackH);
+		DrawRect(kBorder, ListRect.Max.X - 7.0f, ThumbY, 3.0f, ThumbH);
 	}
 	if (ShipRoster.Num() == 0)
 	{
-		DrawText(TEXT("(no ships found)"), kLabel, LX + 8, LY, HudType::Font(), HudType::Body);
+		DrawText(TEXT("(no ships found)"), SS::Dim, ListRect.Min.X + 14.0f, RowsTop + 6.0f, Font, HudType::Body);
 	}
 
-	// ---- Center-right: 3D preview ----
-	const float PX = VW*0.5f - 40.0f, PY = 60.0f, PW = 460.0f, PH = 460.0f;
-	DrawRect(FLinearColor(0.03f,0.06f,0.09f,0.95f), PX, PY, PW, PH);   // preview stage
-	DrawLine(PX, PY, PX+PW, PY, kBorder, 2.0f);
-	DrawLine(PX, PY+PH, PX+PW, PY+PH, kBorder, 2.0f);
-	DrawLine(PX, PY, PX, PY+PH, kBorder, 2.0f);
-	DrawLine(PX+PW, PY, PX+PW, PY+PH, kBorder, 2.0f);
+	// ---- Right: ship information ----
+	DrawPanelStrip(InfoRect, TEXT("SHIP INFORMATION"), FString());
+	const ASpaceship* Ship = GetRosterShip(ShipSelectIndex);
+	const USpaceshipDataAsset* DA = Ship ? Ship->ShipDataAsset.Get() : nullptr;
+	const ASpaceship* Flown = FlownClass && FlownClass->IsChildOf(ASpaceship::StaticClass())
+		? GetDefault<ASpaceship>(const_cast<UClass*>(FlownClass)) : nullptr;
+	const USpaceshipDataAsset* FlownDA = Flown ? Flown->ShipDataAsset.Get() : nullptr;
+	const bool bCompare = DA && FlownDA && Ship && Flown->GetClass() != Ship->GetClass();
+	const float IX = InfoRect.Min.X + 16.0f, IR = InfoRect.Max.X - 16.0f;
+	float Y = PanelY + StripH + 12.0f;
+	if (Ship && ShipRoster.IsValidIndex(ShipSelectIndex))
+	{
+		DrawText(Labels[ShipSelectIndex], SS::Text, IX, Y, Font, HudType::Heading);
+		Y += 26.0f;
+		FString Sub = DA && !DA->ShipClass.IsEmpty() ? DA->ShipClass.ToString() : FString(ShipPurposeNames[ShipPurpose(Ship)]);
+		if (DA && !DA->Manufacturer.IsEmpty()) { Sub += TEXT("  |  ") + DA->Manufacturer.ToString(); }
+		DrawText(Sub, kHeader, IX, Y, Font, HudType::Label);
+		Y += 22.0f;
+		if (DA && !DA->Description.IsEmpty())
+		{
+			FString Desc = DA->Description.ToString();
+			if (Desc.Len() > 220) { Desc = Desc.Left(217).TrimEnd() + TEXT("..."); }
+			Y = DrawWrappedText(Desc, SS::Dim, IX, Y + 2.0f, IR - IX, Font, HudType::Caption) + 6.0f;
+		}
 
-	if (bShipCaptureReady && ShipPreviewRT)
-	{
-		// Opaque: a SceneColorHDR capture stores INVERSE opacity in alpha (0 on the
-		// ship), so the default translucent blend drew the ship itself invisible.
-		DrawTexture(ShipPreviewRT, PX+20, PY+20, PW-40, PH-40, 0, 0, 1, 1, FLinearColor::White, BLEND_Opaque);
-	}
-	else
-	{
-		DrawText(TEXT("[ preview unavailable ]"), FLinearColor(0.5f,0.6f,0.7f,1), PX+PW*0.5f-110, PY+PH*0.5f, HudType::Font(), HudType::Label);
-	}
-
-	// ---- Right: stats ----
-	const float SX = PX + PW + 30.0f, SY = 80.0f;
-	USpaceshipDataAsset* DA = GetPreviewShipDataAsset();
-	if (DA)
-	{
-		const FString ShipName = DA->ShipName.ToString();
-		const FString ShipClass = DA->ShipClass.ToString();
-		TArray<FString> Lbls;
-		TArray<FString> Vals;
-		Lbls.Add(TEXT("CLASS"));    Vals.Add(ShipClass);
-		const ASpaceship* Ship = GetRosterShip(ShipSelectIndex);
-		Lbls.Add(TEXT("LENGTH"));   Vals.Add(FString::Printf(TEXT("%.0f m"), ShipRosterLength(Ship) / 100.0f));
-		Lbls.Add(TEXT("INTERIOR")); Vals.Add(Ship && Ship->InteriorFamily != EShipInteriorFamily::None
+		// General facts (no bars).
+		auto Fact = [&](const TCHAR* Label, const FString& Value)
+		{
+			DrawText(Label, kLabel, IX, Y, Font, HudType::Label);
+			DrawRight(Value, SS::Text, IR, Y, HudType::Label);
+			Y += 20.0f;
+		};
+		Y += 6.0f;
+		Fact(TEXT("Length"), FString::Printf(TEXT("%.0f m"), ShipRosterLength(Ship) / 100.0f));
+		if (DA) { Fact(TEXT("Crew"), FString::Printf(TEXT("%d / %d"), DA->CrewRequired, DA->MaxCrew)); }
+		Fact(TEXT("Interior"), Ship->InteriorFamily != EShipInteriorFamily::None
 			? StaticEnum<EShipInteriorFamily>()->GetDisplayNameTextByValue((int64)Ship->InteriorFamily).ToString()
 			: FString(TEXT("-")));
-		Lbls.Add(TEXT("MAX SPEED"));Vals.Add(FString::Printf(TEXT("%.0f u/s"), DA->MaxSpeed));
-		Lbls.Add(TEXT("ACCEL"));    Vals.Add(FString::Printf(TEXT("%.0f u/s^2"), DA->Acceleration));
-		Lbls.Add(TEXT("MANEUVER")); Vals.Add(FString::Printf(TEXT("%d/10"), DA->Maneuverability));
-		Lbls.Add(TEXT("HULL"));     Vals.Add(FString::Printf(TEXT("%.0f"), DA->HullStrength));
-		Lbls.Add(TEXT("SHIELD"));   Vals.Add(FString::Printf(TEXT("%.0f"), DA->ShieldStrength));
-		Lbls.Add(TEXT("CARGO"));    Vals.Add(FString::Printf(TEXT("%.0f m^3"), DA->CargoCapacity));
-		Lbls.Add(TEXT("JUMP RANGE"));Vals.Add(FString::Printf(TEXT("%.0f ly"), DA->JumpRange));
-		Lbls.Add(TEXT("MOBILITY")); Vals.Add(FString::Printf(TEXT("%.0f"), DA->GetMobilityRating()));
-		Lbls.Add(TEXT("COMBAT"));   Vals.Add(FString::Printf(TEXT("%.0f"), DA->GetCombatRating()));
-
-		DrawText(ShipName, FLinearColor(0.95f,0.78f,0.30f,1), SX, SY, HudType::Font(), HudType::Heading);
-		float Y = SY + 40.0f;
-		for (int32 i = 0; i < Lbls.Num(); ++i)
+	}
+	if (DA)
+	{
+		// Bars run against the best on the roster; the white tick and the +/- are the ship being flown.
+		constexpr int32 NumStats = UE_ARRAY_COUNT(SS::Stats);
+		float Best[NumStats] = {};
+		for (int32 i = 0; i < ShipRoster.Num(); ++i)
 		{
-			DrawText(Lbls[i], kLabel, SX, Y, HudType::Font(), HudType::Body);
-			DrawText(Vals[i], FLinearColor(0.85f,0.9f,0.95f,1), SX+150, Y, HudType::Font(), HudType::Body);
-			Y += 24.0f;
+			const ASpaceship* Other = GetRosterShip(i);
+			if (const USpaceshipDataAsset* OtherDA = Other ? Other->ShipDataAsset.Get() : nullptr)
+			{
+				for (int32 s = 0; s < NumStats; ++s)
+				{
+					Best[s] = FMath::Max(Best[s], SS::Stats[s].Get(*OtherDA));
+				}
+			}
+		}
+		const float BarX = IX + 120.0f, BarW = FMath::Max(40.0f, IR - 120.0f - BarX);
+		const TCHAR* Section = nullptr;
+		for (int32 s = 0; s < NumStats; ++s)
+		{
+			const SS::FStat& Stat = SS::Stats[s];
+			if (!Section || FCString::Strcmp(Section, Stat.Section) != 0)
+			{
+				if (Y + 46.0f > PanelB - 8.0f) { break; }
+				Section = Stat.Section;
+				Y += 8.0f;
+				DrawText(Section, kHeader, IX, Y, Font, HudType::Caption);
+				DrawLine(IX, Y + 16.0f, IR, Y + 16.0f, EdgeDim, 1.0f);
+				Y += 22.0f;
+			}
+			if (Y + 20.0f > PanelB - 8.0f) { break; }
+			const float Value = Stat.Get(*DA);
+			DrawText(Stat.Label, kLabel, IX, Y, Font, HudType::Label);
+			DrawRect(SS::BarBack, BarX, Y + 6.0f, BarW, 5.0f);
+			if (Best[s] > 0.0f)
+			{
+				DrawRect(SS::BarFill, BarX, Y + 6.0f, BarW * FMath::Clamp(Value / Best[s], 0.0f, 1.0f), 5.0f);
+				if (bCompare)
+				{
+					const float TickX = BarX + BarW * FMath::Clamp(Stat.Get(*FlownDA) / Best[s], 0.0f, 1.0f);
+					DrawLine(TickX, Y + 3.0f, TickX, Y + 14.0f, FLinearColor::White, 2.0f);
+				}
+			}
+			DrawRight(FString::Printf(TEXT("%.0f%s"), Value, Stat.Unit), SS::Text, IR - 50.0f, Y, HudType::Label);
+			if (bCompare)
+			{
+				const float Delta = Value - Stat.Get(*FlownDA);
+				if (FMath::Abs(Delta) >= 0.5f)
+				{
+					DrawRight(FString::Printf(TEXT("%+.0f"), Delta), Delta > 0.0f ? SS::Better : SS::Worse, IR, Y + 1.0f, HudType::Caption);
+				}
+			}
+			Y += 20.0f;
 		}
 	}
 	else
 	{
-		DrawText(TEXT("(no data asset on this pawn)"), FLinearColor(0.6f,0.7f,0.8f,1), SX, SY, HudType::Font(), HudType::Label);
+		DrawText(TEXT("(no data asset on this ship)"), SS::Dim, IX, Y, Font, HudType::Label);
 	}
 
-	// ---- Footer controls ----
-	DrawCentredText(FString::Printf(TEXT("Ship %d of %d    Left/Right: rotate    Up/Down or A/D: cycle ship    [Space]: select & fly    [Esc]: close"),
-		ShipRoster.Num() ? ShipSelectIndex + 1 : 0, ShipRoster.Num()), FLinearColor(0.6f,0.7f,0.8f,0.9f), VW * 0.5f, VH - 40.0f, HudType::Label);
+	// ---- Footer: hints, close and confirm ----
+	DrawRect(FLinearColor(SS::Strip.R, SS::Strip.G, SS::Strip.B, 0.90f), FootRect.Min.X, FootRect.Min.Y, VW, FootH);
+	DrawLine(0.0f, FootRect.Min.Y, VW, FootRect.Min.Y, EdgeDim, 1.0f);
+	DrawText(TEXT("[Drag] rotate    [Wheel] zoom    [Up/Down] ship    [Left/Right] turn"),
+		SS::Dim, Margin, FootRect.Min.Y + FootH * 0.5f - 7.0f, Font, HudType::Label);
+	if (bCompare)
+	{
+		DrawText(TEXT("+/- and white ticks compare with the ship you are flying"), kLabel,
+			Margin, FootRect.Min.Y + FootH * 0.5f + 9.0f, Font, HudType::Caption);
+	}
+	auto Button = [&](const FBox2D& R, const FString& Label, const FLinearColor& Fill, const FLinearColor& TextColor)
+	{
+		DrawBox(R, Fill, kBorder);
+		float W = 0.0f, H = 0.0f;
+		GetTextSize(Label, W, H, Font, HudType::Body);
+		DrawText(Label, TextColor, R.GetCenter().X - W * 0.5f, R.GetCenter().Y - H * 0.5f, Font, HudType::Body);
+	};
+	Button(CloseRect, TEXT("CLOSE  [Esc]"), bHoverClose ? SS::Hover : SS::Group, SS::Text);
+	const bool bAlreadyFlown = Ship && Ship->GetClass() == FlownClass;
+	Button(ConfirmRect, bAlreadyFlown ? TEXT("CURRENT SHIP") : TEXT("CONFIRM  [Space]"),
+		bAlreadyFlown ? SS::Group : bHoverConfirm ? SS::ConfirmHi : SS::Confirm, bAlreadyFlown ? SS::Dim : FLinearColor::White);
 }
 
 void AAdastreaHUD::ShowMessage(const FString& InMessage, float DurationSecs, bool bIsWarning)
